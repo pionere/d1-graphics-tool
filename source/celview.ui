@@ -174,10 +174,16 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="sizeHint" stdset="0">
+          <property name="minimumSize">
            <size>
             <width>77</width>
-            <height>20</height>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>77</width>
+            <height>16777215</height>
            </size>
           </property>
          </spacer>
@@ -303,10 +309,16 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="sizeHint" stdset="0">
+          <property name="minimumSize">
            <size>
             <width>77</width>
-            <height>20</height>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>77</width>
+            <height>16777215</height>
            </size>
           </property>
          </spacer>
@@ -329,10 +341,16 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="sizeHint" stdset="0">
+          <property name="minimumSize">
            <size>
             <width>77</width>
-            <height>20</height>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>77</width>
+            <height>16777215</height>
            </size>
           </property>
          </spacer>
@@ -520,10 +538,16 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="sizeHint" stdset="0">
+          <property name="minimumSize">
            <size>
             <width>77</width>
-            <height>20</height>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>77</width>
+            <height>16777215</height>
            </size>
           </property>
          </spacer>
@@ -546,10 +570,16 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="sizeHint" stdset="0">
+          <property name="minimumSize">
            <size>
             <width>40</width>
-            <height>20</height>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>40</width>
+            <height>16777215</height>
            </size>
           </property>
          </spacer>
@@ -725,10 +755,16 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="sizeHint" stdset="0">
+          <property name="minimumSize">
            <size>
             <width>40</width>
-            <height>20</height>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>40</width>
+            <height>16777215</height>
            </size>
           </property>
          </spacer>
