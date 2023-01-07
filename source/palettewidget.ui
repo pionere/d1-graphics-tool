@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>450</width>
-    <height>240</height>
+    <height>200</height>
    </rect>
   </property>
   <property name="sizeHint" stdset="0">
    <size>
     <width>450</width>
-    <height>240</height>
+    <height>200</height>
    </size>
   </property>
   <property name="sizePolicy">
