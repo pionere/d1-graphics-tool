@@ -356,8 +356,5 @@ void ExportDialog::on_exportCancelButton_clicked()
 
 void ExportDialog::on_oneFileForAllFramesRadioButton_toggled(bool checked)
 {
-    if (checked && !ui->levelFramesSettingsWidget->isEnabled())
-        ui->spritesSettingsWidget->setEnabled(true);
-    else
-        ui->spritesSettingsWidget->setEnabled(false);
+    ui->spritesSettingsWidget->setEnabled(checked && ui->levelFramesSettingsWidget->isEnabled());
 }
