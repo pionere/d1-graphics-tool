@@ -4,6 +4,7 @@
 #include <QDataStream>
 #include <QFile>
 #include <QFileInfo>
+#include <QMessageBox>
 
 bool D1Amp::load(QString filePath, int tileCount, const OpenAsParam &params)
 {

@@ -4,6 +4,7 @@
 #include <QDataStream>
 #include <QFile>
 #include <QFileInfo>
+#include <QMessageBox>
 
 bool D1Sol::load(QString filePath)
 {

@@ -3,6 +3,7 @@
 #include <QBuffer>
 #include <QFile>
 #include <QFileInfo>
+#include <QMessageBox>
 #include <QPainter>
 
 bool D1Min::load(QString filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const OpenAsParam &params)

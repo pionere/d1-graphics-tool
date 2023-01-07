@@ -3,6 +3,7 @@
 #include <QBuffer>
 #include <QFile>
 #include <QFileInfo>
+#include <QMessageBox>
 #include <QPainter>
 
 #define TILE_SIZE (2 * 2)
