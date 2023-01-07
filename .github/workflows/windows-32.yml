@@ -42,7 +42,7 @@ jobs:
       with:
         type: 'zip'
         filename: 'D1GraphicsTool1.zip'
-        path: 'dist/*'
+        directory: 'dist'
 
     #- name: Show content of workspace
     #  run: find $RUNNER_WORKSPACE

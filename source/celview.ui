@@ -98,7 +98,7 @@
           <property name="minimumSize">
            <size>
             <width>48</width>
-            <height>60</height>
+            <height>0</height>
            </size>
           </property>
           <property name="text">
@@ -298,7 +298,7 @@
           <property name="minimumSize">
            <size>
             <width>48</width>
-            <height>60</height>
+            <height>0</height>
            </size>
           </property>
           <property name="text">
@@ -527,7 +527,7 @@
           <property name="minimumSize">
            <size>
             <width>48</width>
-            <height>60</height>
+            <height>0</height>
            </size>
           </property>
           <property name="text">
