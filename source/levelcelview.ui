@@ -489,7 +489,7 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="12">
+        <item row="1" column="12" colspan="2">
          <spacer name="tilRightHorizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -502,7 +502,7 @@
           </property>
          </spacer>
         </item>
-        <item row="1" column="13">
+        <item row="1" column="14">
          <widget class="QLineEdit" name="tilFrameWidthEdit">
           <property name="minimumSize">
            <size>
@@ -527,14 +527,14 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="14">
+        <item row="1" column="15">
          <widget class="QLabel" name="tilFrameWidthLabel">
           <property name="text">
            <string>px *</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="15">
+        <item row="1" column="16">
          <widget class="QLineEdit" name="tilFrameHeightEdit">
           <property name="minimumSize">
            <size>
@@ -559,7 +559,7 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="16">
+        <item row="1" column="17">
          <widget class="QLabel" name="tilFrameHeightLabel">
           <property name="text">
            <string>px</string>
@@ -758,7 +758,7 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="12">
+        <item row="2" column="12" colspan="2">
          <spacer name="minRightHorizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -771,7 +771,7 @@
           </property>
          </spacer>
         </item>
-        <item row="2" column="13">
+        <item row="2" column="14">
          <widget class="QLineEdit" name="minFrameWidthEdit">
           <property name="minimumSize">
            <size>
@@ -796,14 +796,14 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="14">
+        <item row="2" column="15">
          <widget class="QLabel" name="minFrameWidthLabel">
           <property name="text">
            <string>px *</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="15">
+        <item row="2" column="16">
          <widget class="QLineEdit" name="minFrameHeightEdit">
           <property name="minimumSize">
            <size>
@@ -828,7 +828,7 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="16">
+        <item row="2" column="17">
          <widget class="QLabel" name="minFrameHeightLabel">
           <property name="text">
            <string>px</string>
@@ -1027,7 +1027,7 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="12">
+        <item row="3" column="12" colspan="2">
          <spacer name="framesRightHorizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -1040,7 +1040,7 @@
           </property>
          </spacer>
         </item>
-        <item row="3" column="13">
+        <item row="3" column="14">
          <widget class="QLineEdit" name="celFrameWidthEdit">
           <property name="minimumSize">
            <size>
@@ -1065,14 +1065,14 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="14">
+        <item row="3" column="15">
          <widget class="QLabel" name="celFrameWidthLabel">
           <property name="text">
            <string>px *</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="15">
+        <item row="3" column="16">
          <widget class="QLineEdit" name="celFrameHeightEdit">
           <property name="minimumSize">
            <size>
@@ -1097,7 +1097,7 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="16">
+        <item row="3" column="17">
          <widget class="QLabel" name="celFrameHeightLabel">
           <property name="text">
            <string>px</string>
