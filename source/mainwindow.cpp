@@ -789,7 +789,7 @@ void MainWindow::saveFile(const SaveAsParam &params)
         if (filePath.toLower().endsWith("cel")) {
             change = D1Cel::save(*this->gfx, params);
         } else if (filePath.toLower().endsWith("cl2")) {
-            change = D1Cl2::save(*this->gfx, false, params);
+            change = D1Cl2::save(*this->gfx, params);
         } else {
             QMessageBox::critical(this, "Error", "Not supported.");
             // Clear loading message from status bar
