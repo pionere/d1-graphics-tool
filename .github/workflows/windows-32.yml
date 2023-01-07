@@ -37,13 +37,6 @@ jobs:
         windeployqt D1GraphicsTool.exe --no-compiler-runtime --no-opengl-sw --no-system-d3d-compiler --no-virtualkeyboard --no-translations --no-quick-import
       shell: cmd
 
-    - name: Create zip
-      uses: thedoctor0/zip-release@main
-      with:
-        type: 'zip'
-        filename: 'D1GraphicsTool1.zip'
-        directory: 'dist'
-
     #- name: Show content of workspace
     #  run: find $RUNNER_WORKSPACE
     #  shell: bash
@@ -54,6 +47,13 @@ jobs:
       with:
         name: D1GraphicsTool-Windows-x86
         path: dist
+
+    - name: Create zip
+      uses: thedoctor0/zip-release@main
+      with:
+        type: 'zip'
+        filename: '../D1GraphicsTool1.zip'
+        directory: 'dist'
 
     - name: Upload1
       if: ${{ !env.ACT }}

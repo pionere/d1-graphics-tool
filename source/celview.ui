@@ -163,22 +163,10 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="4">
+        <item row="0" column="4" colspan="2">
          <spacer name="groupLeftHorizontalSpacer_0">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>77</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>77</width>
-            <height>16777215</height>
-           </size>
           </property>
          </spacer>
         </item>
@@ -279,18 +267,6 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="minimumSize">
-           <size>
-            <width>77</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>77</width>
-            <height>16777215</height>
-           </size>
-          </property>
          </spacer>
         </item>
         <item row="1" column="0">
@@ -310,18 +286,6 @@
          <spacer name="groupLeftHorizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>77</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>77</width>
-            <height>16777215</height>
-           </size>
           </property>
          </spacer>
         </item>
@@ -508,18 +472,6 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="minimumSize">
-           <size>
-            <width>77</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>77</width>
-            <height>16777215</height>
-           </size>
-          </property>
          </spacer>
         </item>
         <item row="2" column="0">
@@ -539,18 +491,6 @@
          <spacer name="framesLeftHorizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
           </property>
          </spacer>
         </item>
@@ -724,18 +664,6 @@
          <spacer name="framesRightHorizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
           </property>
          </spacer>
         </item>
