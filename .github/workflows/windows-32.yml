@@ -45,7 +45,7 @@ jobs:
         path: 'dist'
 
     - name: Create zip2
-      run: git archive -o D1GraphicsTool2.zip dist
+      run: git archive -o D1GraphicsTool2.zip -path dist
 
     - name: Upload
       if: ${{ !env.ACT }}
