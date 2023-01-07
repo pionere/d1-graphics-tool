@@ -320,12 +320,6 @@
         </item>
         <item row="1" column="7">
          <widget class="QLineEdit" name="groupIndexEdit">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
           <property name="minimumSize">
            <size>
             <width>48</width>
@@ -373,12 +367,6 @@
         </item>
         <item row="1" column="9">
          <widget class="QLineEdit" name="groupNumberEdit">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
           <property name="minimumSize">
            <size>
             <width>48</width>
