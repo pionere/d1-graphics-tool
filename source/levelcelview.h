@@ -114,6 +114,7 @@ private slots:
     void playGroup();
 
     void dragEnterEvent(QDragEnterEvent *event);
+    void dragMoveEvent(QDragMoveEvent *event);
     void dropEvent(QDropEvent *event);
 
 private:
