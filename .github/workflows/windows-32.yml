@@ -37,8 +37,8 @@ jobs:
         windeployqt D1GraphicsTool.exe --no-compiler-runtime --no-opengl-sw --no-system-d3d-compiler --no-virtualkeyboard --no-translations --no-quick-import
       shell: cmd
 
-    #- name: create zip
-    #    run: zip -r -q D1GraphicsTool.zip dist
+    - name: create zip
+      run: zip -r -q D1GraphicsTool.zip dist
     - name: Upload
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v3
