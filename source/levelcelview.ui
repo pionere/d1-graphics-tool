@@ -37,12 +37,6 @@
    </property>
    <item>
     <widget class="QWidget" name="celFrameWidget" native="true">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>0</height>
-      </size>
-     </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <property name="spacing">
        <number>4</number>
@@ -88,14 +82,8 @@
          <widget class="QLabel" name="zoomLabel">
           <property name="minimumSize">
            <size>
-            <width>0</width>
+            <width>48</width>
             <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
            </size>
           </property>
           <property name="text">
@@ -165,28 +153,10 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
          </spacer>
         </item>
         <item row="0" column="6" colspan="2">
          <widget class="QPushButton" name="stopButton">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
-           </size>
-          </property>
           <property name="text">
            <string>Stop</string>
           </property>
@@ -216,18 +186,6 @@
         </item>
         <item row="0" column="9" colspan="2">
          <widget class="QPushButton" name="playButton">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
-           </size>
-          </property>
           <property name="text">
            <string>Play</string>
           </property>
@@ -289,12 +247,6 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
          </spacer>
         </item>
         <item row="1" column="0">
@@ -306,7 +258,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Tiles :</string>
+           <string>Tiles:</string>
           </property>
          </widget>
         </item>
@@ -314,12 +266,6 @@
          <spacer name="tilLeftHorizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>77</width>
-            <height>20</height>
-           </size>
           </property>
          </spacer>
         </item>
@@ -494,12 +440,6 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>77</width>
-            <height>20</height>
-           </size>
-          </property>
          </spacer>
         </item>
         <item row="1" column="14">
@@ -575,7 +515,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Sub-tiles :</string>
+           <string>Sub-tiles:</string>
           </property>
          </widget>
         </item>
@@ -583,12 +523,6 @@
          <spacer name="minLeftHorizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>77</width>
-            <height>20</height>
-           </size>
           </property>
          </spacer>
         </item>
@@ -763,12 +697,6 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>77</width>
-            <height>20</height>
-           </size>
-          </property>
          </spacer>
         </item>
         <item row="2" column="14">
@@ -844,7 +772,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Frames :</string>
+           <string>Frames:</string>
           </property>
          </widget>
         </item>
@@ -852,12 +780,6 @@
          <spacer name="framesLeftHorizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
           </property>
          </spacer>
         </item>
@@ -1031,12 +953,6 @@
          <spacer name="framesRightHorizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
           </property>
          </spacer>
         </item>
