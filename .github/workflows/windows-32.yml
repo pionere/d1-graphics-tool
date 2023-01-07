@@ -42,7 +42,7 @@ jobs:
       with:
         type: 'zip'
         filename: 'D1GraphicsTool1.zip'
-        path: 'dist/'
+        path: 'dist/*'
 
     #- name: Show content of workspace
     #  run: find $RUNNER_WORKSPACE
@@ -60,4 +60,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         path: D1GraphicsTool1.zip
-        name: D1GraphicsTool-Windows-x86_1.zip
+        name: D1GraphicsTool-Windows-x86_1

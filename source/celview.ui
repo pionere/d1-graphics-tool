@@ -93,18 +93,18 @@
       </item>
       <item>
        <layout class="QGridLayout" name="celControlsGridLayout">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>160</height>
+         </size>
+        </property>
         <item row="0" column="0">
          <widget class="QLabel" name="zoomLabel">
           <property name="minimumSize">
            <size>
-            <width>0</width>
+            <width>48</width>
             <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
            </size>
           </property>
           <property name="text">
@@ -190,18 +190,6 @@
         </item>
         <item row="0" column="6" colspan="2">
          <widget class="QPushButton" name="stopButton">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
-           </size>
-          </property>
           <property name="text">
            <string>Stop</string>
           </property>
@@ -231,18 +219,6 @@
         </item>
         <item row="0" column="9" colspan="2">
          <widget class="QPushButton" name="playButton">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
-           </size>
-          </property>
           <property name="text">
            <string>Play</string>
           </property>
