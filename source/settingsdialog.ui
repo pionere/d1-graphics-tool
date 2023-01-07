@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>376</width>
+    <width>200</width>
     <height>120</height>
    </rect>
   </property>
@@ -20,6 +20,20 @@
       <string>Palettes and translations</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="defaultPaletteColorLabel">
+        <property name="text">
+         <string>Default palette color:</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="2">
        <widget class="QLineEdit" name="defaultPaletteColorLineEdit">
         <property name="sizePolicy">
@@ -27,16 +41,6 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="readOnly">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="paletteSelectionBorderColorLabel">
-        <property name="text">
-         <string>Selection border color:</string>
         </property>
        </widget>
       </item>
@@ -47,17 +51,17 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="3">
-       <widget class="QPushButton" name="paletteSelectionBorderColorPushButton">
-        <property name="text">
-         <string>Pick</string>
+      <item row="1" column="0">
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
-       </widget>
+       </spacer>
       </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="defaultPaletteColorLabel">
+      <item row="1" column="1">
+       <widget class="QLabel" name="paletteSelectionBorderColorLabel">
         <property name="text">
-         <string>Default palette color:</string>
+         <string>Selection border color:</string>
         </property>
        </widget>
       </item>
@@ -69,36 +73,14 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="readOnly">
-         <bool>false</bool>
-        </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="1" column="3">
+       <widget class="QPushButton" name="paletteSelectionBorderColorPushButton">
+        <property name="text">
+         <string>Pick</string>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="1" column="0">
-       <spacer name="horizontalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -122,10 +104,14 @@
        <number>4</number>
       </property>
       <item>
-       <widget class="QPushButton" name="settingsOkButton">
-        <property name="alignment">
-         <set>Qt::AlignRight</set>
+       <spacer name="groupLeftHorizontalSpacer_0">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="settingsOkButton">
         <property name="text">
          <string>Ok</string>
         </property>
@@ -133,9 +119,6 @@
       </item>
       <item>
        <widget class="QPushButton" name="settingsCancelButton">
-        <property name="alignment">
-         <set>Qt::AlignRight</set>
-        </property>
         <property name="text">
          <string>Cancel</string>
         </property>
