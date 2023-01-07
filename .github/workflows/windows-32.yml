@@ -41,8 +41,11 @@ jobs:
       uses: thedoctor0/zip-release@main
       with:
         type: 'zip'
-        filename: 'D1GraphicsTool.zip'
+        filename: 'D1GraphicsTool1.zip'
         path: 'dist'
+
+    - name: Create zip2
+      run: git archive -o D1GraphicsTool2.zip dist
 
     - name: Upload
       if: ${{ !env.ACT }}
@@ -51,8 +54,14 @@ jobs:
         name: D1GraphicsTool-Windows-x86
         path: dist
 
+    - name: Upload1
+      uses: actions/upload-artifact@v3
+      with:
+        path: D1GraphicsTool1.zip
+        name: D1GraphicsTool-Windows-x86_1.zip
+
     - name: Upload2
       uses: actions/upload-artifact@v3
       with:
-        path: ${{ env.buildDir }}/D1GraphicsTool.zip
-        name: D1GraphicsTool-Windows-x86.zip
+        path: D1GraphicsTool2.zip
+        name: D1GraphicsTool-Windows-x86_2.zip
