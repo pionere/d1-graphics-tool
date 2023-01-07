@@ -351,14 +351,14 @@ static QString prepareFilePath(QString filePath, const char *filter)
     return filePath;
 }
 
-QString MainWindow::fileDialog(bool save, const char *title, const char *filter)
+QString MainWindow::fileDialog(FILE_DIALOG_MODE mode, const char *title, const char *filter)
 {
     QString filePath = prepareFilePath(this->lastFilePath, filter);
 
-    if (save) {
-        filePath = QFileDialog::getSaveFileName(this, title, filePath, filter);
-    } else {
+    if (mode == FILE_DIALOG_MODE::OPEN) {
         filePath = QFileDialog::getOpenFileName(this, title, filePath, filter);
+    } else {
+        filePath = QFileDialog::getSaveFileName(this, title, filePath, filter, nullptr, mode == FILE_DIALOG_MODE::SAVE_NO_CONF ? QFileDialog::DontConfirmOverwrite : 0);
     }
 
     if (!filePath.isEmpty()) {
@@ -420,7 +420,7 @@ void MainWindow::on_actionNew_Tileset_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString openFilePath = this->fileDialog(false, "Open Graphics", "CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)");
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, "Open Graphics", "CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)");
 
     if (!openFilePath.isEmpty()) {
         OpenAsParam params;
@@ -954,7 +954,7 @@ void MainWindow::on_actionAdd_Frame_triggered()
 void MainWindow::on_actionReplace_Frame_triggered()
 {
     QString filter = imageNameFilter();
-    QString imgFilePath = this->fileDialog(false, "Replacement Image File", filter.toLatin1().data());
+    QString imgFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, "Replacement Image File", filter.toLatin1().data());
 
     if (imgFilePath.isEmpty()) {
         return;
@@ -1012,7 +1012,7 @@ void MainWindow::on_actionDel_Tile_triggered()
 
 void MainWindow::on_actionNew_PAL_triggered()
 {
-    QString palFilePath = this->fileDialog(true, "New Palette File", "PAL Files (*.pal *.PAL)");
+    QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, "New Palette File", "PAL Files (*.pal *.PAL)");
 
     if (palFilePath.isEmpty()) {
         return;
@@ -1043,7 +1043,7 @@ void MainWindow::on_actionNew_PAL_triggered()
 
 void MainWindow::on_actionOpen_PAL_triggered()
 {
-    QString palFilePath = this->fileDialog(false, "Load Palette File", "PAL Files (*.pal *.PAL)");
+    QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, "Load Palette File", "PAL Files (*.pal *.PAL)");
 
     if (!palFilePath.isEmpty() && this->loadPal(palFilePath)) {
         this->palWidget->selectPath(palFilePath);
@@ -1065,7 +1065,7 @@ void MainWindow::on_actionSave_PAL_triggered()
 
 void MainWindow::on_actionSave_PAL_as_triggered()
 {
-    QString palFilePath = this->fileDialog(true, "Save Palette File as...", "PAL Files (*.pal *.PAL)");
+    QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, "Save Palette File as...", "PAL Files (*.pal *.PAL)");
 
     if (palFilePath.isEmpty()) {
         return;
@@ -1111,7 +1111,7 @@ void MainWindow::on_actionClose_PAL_triggered()
 
 void MainWindow::on_actionNew_Translation_1_triggered()
 {
-    QString trnFilePath = this->fileDialog(true, "New Translation File", "TRN Files (*.trn *.TRN)");
+    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, "New Translation File", "TRN Files (*.trn *.TRN)");
 
     if (trnFilePath.isEmpty()) {
         return;
@@ -1142,7 +1142,7 @@ void MainWindow::on_actionNew_Translation_1_triggered()
 
 void MainWindow::on_actionOpen_Translation_1_triggered()
 {
-    QString trnFilePath = this->fileDialog(false, "Load Translation File", "TRN Files (*.trn *.TRN)");
+    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, "Load Translation File", "TRN Files (*.trn *.TRN)");
 
     if (!trnFilePath.isEmpty() && this->loadTrn1(trnFilePath)) {
         this->trn1Widget->selectPath(trnFilePath);
@@ -1164,7 +1164,7 @@ void MainWindow::on_actionSave_Translation_1_triggered()
 
 void MainWindow::on_actionSave_Translation_1_as_triggered()
 {
-    QString trnFilePath = this->fileDialog(true, "Save Translation File as...", "TRN Files (*.trn *.TRN)");
+    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, "Save Translation File as...", "TRN Files (*.trn *.TRN)");
 
     if (trnFilePath.isEmpty()) {
         return;
@@ -1210,7 +1210,7 @@ void MainWindow::on_actionClose_Translation_1_triggered()
 
 void MainWindow::on_actionNew_Translation_2_triggered()
 {
-    QString trnFilePath = this->fileDialog(true, "New Translation File", "TRN Files (*.trn *.TRN)");
+    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, "New Translation File", "TRN Files (*.trn *.TRN)");
 
     if (trnFilePath.isEmpty()) {
         return;
@@ -1241,7 +1241,7 @@ void MainWindow::on_actionNew_Translation_2_triggered()
 
 void MainWindow::on_actionOpen_Translation_2_triggered()
 {
-    QString trnFilePath = this->fileDialog(false, "Load Translation File", "TRN Files (*.trn *.TRN)");
+    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, "Load Translation File", "TRN Files (*.trn *.TRN)");
 
     if (!trnFilePath.isEmpty() && this->loadTrn2(trnFilePath)) {
         this->trn2Widget->selectPath(trnFilePath);
@@ -1263,7 +1263,7 @@ void MainWindow::on_actionSave_Translation_2_triggered()
 
 void MainWindow::on_actionSave_Translation_2_as_triggered()
 {
-    QString trnFilePath = this->fileDialog(true, "Save Translation File as...", "TRN Files (*.trn *.TRN)");
+    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, "Save Translation File as...", "TRN Files (*.trn *.TRN)");
 
     if (trnFilePath.isEmpty()) {
         return;
