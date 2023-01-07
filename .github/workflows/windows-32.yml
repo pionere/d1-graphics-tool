@@ -71,7 +71,10 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: D1GraphicsTool-Windows-x86_1.zip
-    - run: mv ${{github.workspace}}/D1GraphicsTool-Windows-x86_1.zip ${{github.workspace}}/D1GraphicsTool-Windows-x86.zip
+    - name: Show content of workspace
+      run: find $RUNNER_WORKSPACE
+      shell: bash
+    #- run: mv ${{github.workspace}}/D1GraphicsTool-Windows-x86_1.zip ${{github.workspace}}/D1GraphicsTool-Windows-x86.zip
 
     - name: Create release notes
       run: |
