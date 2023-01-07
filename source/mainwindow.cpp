@@ -358,7 +358,7 @@ QString MainWindow::fileDialog(FILE_DIALOG_MODE mode, const char *title, const c
     if (mode == FILE_DIALOG_MODE::OPEN) {
         filePath = QFileDialog::getOpenFileName(this, title, filePath, filter);
     } else {
-        filePath = QFileDialog::getSaveFileName(this, title, filePath, filter, nullptr, mode == FILE_DIALOG_MODE::SAVE_NO_CONF ? QFileDialog::DontConfirmOverwrite : 0);
+        filePath = QFileDialog::getSaveFileName(this, title, filePath, filter, nullptr, mode == FILE_DIALOG_MODE::SAVE_NO_CONF ? QFileDialog::DontConfirmOverwrite : QFileDialog::Options());
     }
 
     if (!filePath.isEmpty()) {

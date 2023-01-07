@@ -114,7 +114,7 @@ bool D1Min::save(const SaveAsParam &params)
     }
 
     // write to file
-    QDataStream out(outFile);
+    QDataStream out(&outFile);
     out.setByteOrder(QDataStream::LittleEndian);
     for (int i = 0; i < this->celFrameIndices.size(); i++) {
         QList<quint16> &celFrameIndicesList = this->celFrameIndices[i];

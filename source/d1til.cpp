@@ -80,7 +80,7 @@ bool D1Til::save(const SaveAsParam &params)
     }
 
     // write to file
-    QDataStream out(outFile);
+    QDataStream out(&outFile);
     out.setByteOrder(QDataStream::LittleEndian);
     for (int i = 0; i < this->subtileIndices.count(); i++) {
         QList<quint16> &subtileIndicesList = this->subtileIndices[i];

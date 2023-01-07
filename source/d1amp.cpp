@@ -90,7 +90,7 @@ bool D1Amp::save(const SaveAsParam &params)
     }
 
     // write to file
-    QDataStream out(outFile);
+    QDataStream out(&outFile);
     for (int i = 0; i < this->types.size(); i++) {
         out << this->types[i];
         out << this->properties[i];

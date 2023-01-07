@@ -67,7 +67,7 @@ bool D1Sol::save(const SaveAsParam &params)
     }
 
     // write to file
-    QDataStream out(outFile);
+    QDataStream out(&outFile);
     for (int i = 0; i < this->subProperties.size(); i++) {
         out << this->subProperties[i];
     }
