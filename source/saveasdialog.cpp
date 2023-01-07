@@ -86,7 +86,7 @@ void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
     if (this->isTileset) {
         filter = "CEL Files (*.cel *.CEL)";
     } else {
-        filter = "CEL/CL2/CLX Files (*.cel *.CEL *.cl2 *.CL2 *.clx *.CLX)";
+        filter = "CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)";
     }
 
     MainWindow *qw = (MainWindow *)this->parentWidget();

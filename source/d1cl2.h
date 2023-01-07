@@ -11,17 +11,17 @@ class D1Cl2Frame {
     friend class D1Cl2;
 
 public:
-    static bool load(D1GfxFrame &frame, QByteArray rawFrameData, bool isClx, const OpenAsParam &params);
+    static bool load(D1GfxFrame &frame, QByteArray rawFrameData, const OpenAsParam &params);
 
 private:
-    static quint16 computeWidthFromHeader(QByteArray &rawFrameData, bool isClx);
+    static quint16 computeWidthFromHeader(QByteArray &rawFrameData);
 };
 
 class D1Cl2 {
 public:
-    static bool load(D1Gfx &gfx, QString cl2FilePath, bool isClx, const OpenAsParam &params);
-    static bool save(D1Gfx &gfx, bool isClx, const SaveAsParam &params);
+    static bool load(D1Gfx &gfx, QString cl2FilePath, const OpenAsParam &params);
+    static bool save(D1Gfx &gfx, const SaveAsParam &params);
 
 protected:
-    static bool writeFileData(D1Gfx &gfx, QFile &outFile, bool isClx, const SaveAsParam &params);
+    static bool writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params);
 };

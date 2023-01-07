@@ -420,7 +420,7 @@ void MainWindow::on_actionNew_Tileset_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString openFilePath = this->fileDialog(false, "Open Graphics", "CEL/CL2/CLX Files (*.cel *.CEL *.cl2 *.CL2 *.clx *.CLX)");
+    QString openFilePath = this->fileDialog(false, "Open Graphics", "CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)");
 
     if (!openFilePath.isEmpty()) {
         OpenAsParam params;
@@ -445,7 +445,7 @@ void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 {
     for (const QUrl &url : event->mimeData()->urls()) {
         QString path = url.toLocalFile().toLower();
-        if (path.endsWith(".cel") || path.endsWith(".cl2") || path.endsWith(".clx")) {
+        if (path.endsWith(".cel") || path.endsWith(".cl2")) {
             event->acceptProposedAction();
             return;
         }
@@ -470,8 +470,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     // Check file extension
     if (!openFilePath.isEmpty()
         && !openFilePath.toLower().endsWith(".cel")
-        && !openFilePath.toLower().endsWith(".cl2")
-        && !openFilePath.endsWith(".clx")) {
+        && !openFilePath.toLower().endsWith(".cl2")) {
         return;
     }
 
@@ -565,13 +564,8 @@ void MainWindow::openFile(const OpenAsParam &params)
             return;
         }
     } else if (openFilePath.toLower().endsWith(".cl2")) {
-        if (!D1Cl2::load(*this->gfx, openFilePath, false, params)) {
+        if (!D1Cl2::load(*this->gfx, openFilePath, params)) {
             QMessageBox::critical(this, "Error", "Failed loading CL2 file: " + openFilePath);
-            return;
-        }
-    } else if (openFilePath.toLower().endsWith(".clx")) {
-        if (!D1Cl2::load(*this->gfx, openFilePath, true, params)) {
-            QMessageBox::critical(this, "Error", "Failed loading CLX file: " + openFilePath);
             return;
         }
     } else {
@@ -796,8 +790,6 @@ void MainWindow::saveFile(const SaveAsParam &params)
             change = D1Cel::save(*this->gfx, params);
         } else if (filePath.toLower().endsWith("cl2")) {
             change = D1Cl2::save(*this->gfx, false, params);
-        } else if (filePath.toLower().endsWith("clx")) {
-            change = D1Cl2::save(*this->gfx, true, params);
         } else {
             QMessageBox::critical(this, "Error", "Not supported.");
             // Clear loading message from status bar

@@ -6,7 +6,7 @@
 #include <QList>
 #include <QMessageBox>
 
-quint16 D1Cl2Frame::computeWidthFromHeader(QByteArray &rawFrameData, bool isClx)
+quint16 D1Cl2Frame::computeWidthFromHeader(QByteArray &rawFrameData)
 {
     QDataStream in(rawFrameData);
     in.setByteOrder(QDataStream::LittleEndian);
@@ -18,10 +18,6 @@ quint16 D1Cl2Frame::computeWidthFromHeader(QByteArray &rawFrameData, bool isClx)
         return 0; // invalid header
 
     quint16 celFrameWidth = 0;
-    if (isClx) {
-        in >> celFrameWidth;
-        return celFrameWidth;
-    }
 
     // Decode the 32 pixel-lines blocks to calculate the image width
     quint16 lastFrameOffset = celFrameHeaderSize;
@@ -59,7 +55,7 @@ quint16 D1Cl2Frame::computeWidthFromHeader(QByteArray &rawFrameData, bool isClx)
     return celFrameWidth;
 }
 
-bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, bool isClx, const OpenAsParam &params)
+bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &params)
 {
     if (rawData.size() == 0)
         return false;
@@ -76,7 +72,7 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, bool isClx, const O
         in >> offset;
         frameDataStartOffset += offset;
         // If header is present, try to compute frame width from frame header
-        width = D1Cl2Frame::computeWidthFromHeader(rawData, isClx);
+        width = D1Cl2Frame::computeWidthFromHeader(rawData);
         frame.clipped = true;
     } else {
         if (params.clipped == OPEN_CLIPPING_TYPE::CLIPPED_TRUE) {
@@ -86,7 +82,7 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, bool isClx, const O
             in >> offset;
             frameDataStartOffset += offset;
             // If header is present, try to compute frame width from frame header
-            width = D1Cl2Frame::computeWidthFromHeader(rawData, isClx);
+            width = D1Cl2Frame::computeWidthFromHeader(rawData);
             frame.clipped = true;
         }
     }
@@ -151,7 +147,7 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, bool isClx, const O
     return true;
 }
 
-bool D1Cl2::load(D1Gfx &gfx, QString filePath, bool isClx, const OpenAsParam &params)
+bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
 {
     // Opening CL2 file with a QBuffer to load it in RAM
     if (!QFile::exists(filePath))
@@ -278,7 +274,7 @@ bool D1Cl2::load(D1Gfx &gfx, QString filePath, bool isClx, const OpenAsParam &pa
         QByteArray cl2FrameRawData = fileBuffer.read(cl2FrameSize);
 
         D1GfxFrame frame;
-        if (!D1Cl2Frame::load(frame, cl2FrameRawData, isClx, params)) {
+        if (!D1Cl2Frame::load(frame, cl2FrameRawData, params)) {
             // TODO: log?
             continue;
         }
@@ -289,7 +285,7 @@ bool D1Cl2::load(D1Gfx &gfx, QString filePath, bool isClx, const OpenAsParam &pa
     return true;
 }
 
-static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, bool isClx, int subHeaderSize)
+static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize)
 {
     const int RLE_LEN = 4; // number of matching colors to switch from bmp encoding to RLE
 
@@ -367,13 +363,10 @@ static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, bool isClx, int s
             first = false;
         }
     }
-    if (isClx) {
-        *(quint16 *)&pHeader[2] = SwapLE16(frame->getWidth());
-    }
     return pBuf;
 }
 
-bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, bool isClx, const SaveAsParam &params)
+bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
 {
     const int numFrames = gfx.frames.count();
 
@@ -460,7 +453,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, bool isClx, const SaveAsPa
 
         for (int n = 0; n < ni; n++, idx++) {
             D1GfxFrame *frame = gfx.getFrame(idx); // TODO: what if the groups are not continuous?
-            pBuf = writeFrameData(frame, pBuf, isClx, subHeaderSize);
+            pBuf = writeFrameData(frame, pBuf, subHeaderSize);
             *(quint32 *)&hdr[4 + 4 * (n + 1)] = SwapLE32(pBuf - hdr);
         }
         hdr += 4 + 4 * (ni + 1);
@@ -473,7 +466,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, bool isClx, const SaveAsPa
     return true;
 }
 
-bool D1Cl2::save(D1Gfx &gfx, bool isClx, const SaveAsParam &params)
+bool D1Cl2::save(D1Gfx &gfx, const SaveAsParam &params)
 {
     QString filePath = gfx.gfxFilePath;
     if (!params.celFilePath.isEmpty()) {
@@ -493,7 +486,7 @@ bool D1Cl2::save(D1Gfx &gfx, bool isClx, const SaveAsParam &params)
         return false;
     }
 
-    bool result = D1Cl2::writeFileData(gfx, outFile, isClx, params);
+    bool result = D1Cl2::writeFileData(gfx, outFile, params);
 
     outFile.close();
 
