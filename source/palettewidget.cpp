@@ -371,24 +371,23 @@ void PaletteWidget::initialize(D1Pal *p, D1Trn *t, LevelCelView *lc, D1PalHits *
 
 void PaletteWidget::initializeUi()
 {
-    ui->monsterTrnPushButton->setVisible(this->isTrn);
-    if (this->isTrn) {
-        this->ui->translationPickPushButton->setEnabled(true);
-        this->ui->translationClearPushButton->setEnabled(true);
-        this->ui->colorLineEdit->setEnabled(false);
-        this->ui->colorPickPushButton->setEnabled(false);
-        this->ui->colorClearPushButton->setEnabled(false);
-    } else {
-        this->ui->translationIndexLineEdit->hide();
-        this->ui->translationLabel->hide();
-    }
+    bool isTrnWidget = this->isTrn;
+
+    this->ui->monsterTrnPushButton->setVisible(isTrnWidget);
+    this->ui->translationClearPushButton->setVisible(isTrnWidget);
+    this->ui->translationPickPushButton->setVisible(isTrnWidget);
+    this->ui->colorLineEdit->setReadOnly(!isTrnWidget);
+    this->ui->colorPickPushButton->setVisible(!isTrnWidget);
+    this->ui->colorClearPushButton->setVisible(!isTrnWidget);
+    this->ui->translationIndexLineEdit->setVisible(isTrnWidget);
+    this->ui->translationLabel->setVisible(isTrnWidget);
 
     this->initializePathComboBox();
     this->initializeDisplayComboBox();
 
     this->refreshColorLineEdit();
     this->refreshIndexLineEdit();
-    if (this->isTrn)
+    if (isTrnWidget)
         this->refreshTranslationIndexLineEdit();
 
     this->displayColors();
