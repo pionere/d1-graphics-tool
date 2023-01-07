@@ -6,15 +6,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1075</width>
-    <height>600</height>
+    <width>1200</width>
+    <height>820</height>
    </rect>
-  </property>
-  <property name="sizeHint" stdset="0">
-   <size>
-    <width>1075</width>
-    <height>600</height>
-   </size>
   </property>
   <property name="sizePolicy">
    <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
@@ -78,7 +72,7 @@
     <item alignment="Qt::AlignTop">
      <widget class="QFrame" name="palFrame">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
