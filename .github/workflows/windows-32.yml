@@ -39,14 +39,16 @@ jobs:
 
     - name: create zip
       run: zip -r -q D1GraphicsTool.zip dist
+
     - name: Upload
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v3
       with:
         name: D1GraphicsTool-Windows-x86
         path: dist
-    #- name: Upload2
-    #  uses: actions/upload-artifact@v3
-    #  with:
-    #    path: ${{ env.buildDir }}/D1GraphicsTool.zip
-    #    name: D1GraphicsTool-Windows-x86.zip
+
+    - name: Upload2
+      uses: actions/upload-artifact@v3
+      with:
+        path: ${{ env.buildDir }}/D1GraphicsTool.zip
+        name: D1GraphicsTool-Windows-x86.zip
