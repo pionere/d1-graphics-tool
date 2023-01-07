@@ -1,11 +1,12 @@
 name: clang-format check
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    types: [ opened, synchronize ]
+on: [ push, pull_request ]
+#on:
+#  push:
+#    branches:
+#      - master
+#  pull_request:
+#    types: [ opened, synchronize ]
 
 jobs:
   formatting-check:
@@ -17,7 +18,8 @@ jobs:
         fetch-depth: 0
 
     - name: Formatting Check (Source)
-      uses: jidicula/clang-format-action@v4.3.1
+      #uses: jidicula/clang-format-action@v4.3.1
+      uses: pionere/clang-format-action@v1
       with:
         clang-format-version: '13'
         check-path: 'source'
