@@ -471,13 +471,13 @@ bool D1Cl2::save(D1Gfx &gfx, const SaveAsParam &params)
     QString filePath = gfx.gfxFilePath;
     if (!params.celFilePath.isEmpty()) {
         filePath = params.celFilePath;
-        /*if (QFile::exists(filePath)) {
+        if (QFile::exists(filePath)) {
             QMessageBox::StandardButton reply;
-            reply = QMessageBox::question(nullptr, "Confirmation", "Are you sure you want to overwrite the CL2 file?", QMessageBox::Yes | QMessageBox::No);
+            reply = QMessageBox::question(nullptr, "Confirmation", "Are you sure you want to overwrite " + filePath + "?", QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) {
                 return false;
             }
-        }*/
+        }
     }
 
     QFile outFile = QFile(filePath);
@@ -487,8 +487,6 @@ bool D1Cl2::save(D1Gfx &gfx, const SaveAsParam &params)
     }
 
     bool result = D1Cl2::writeFileData(gfx, outFile, params);
-
-    outFile.close();
 
     if (result) {
         gfx.gfxFilePath = filePath; // D1Cl2::load(gfx, filePath);
