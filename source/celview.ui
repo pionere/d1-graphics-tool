@@ -93,18 +93,12 @@
       </item>
       <item>
        <layout class="QGridLayout" name="celControlsGridLayout">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>160</height>
-         </size>
-        </property>
         <item row="0" column="0">
          <widget class="QLabel" name="zoomLabel">
           <property name="minimumSize">
            <size>
             <width>48</width>
-            <height>0</height>
+            <height>60</height>
            </size>
           </property>
           <property name="text">
@@ -304,7 +298,7 @@
           <property name="minimumSize">
            <size>
             <width>48</width>
-            <height>0</height>
+            <height>60</height>
            </size>
           </property>
           <property name="text">
@@ -533,7 +527,7 @@
           <property name="minimumSize">
            <size>
             <width>48</width>
-            <height>0</height>
+            <height>60</height>
            </size>
           </property>
           <property name="text">
