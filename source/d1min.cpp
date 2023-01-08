@@ -222,7 +222,7 @@ void D1Min::setSubtileWidth(int width)
             QList<quint16> &celFrameIndicesList = this->celFrameIndices[i];
             for (int y = 0; y < this->subtileHeight; y++) {
                 for (int dx = 0; dx < diff; dx++) {
-                    celFrameIndicesList.erase((y + 1) * width);
+                    celFrameIndicesList.takeAt((y + 1) * width);
                 }
             }
         }
