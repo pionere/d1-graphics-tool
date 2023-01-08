@@ -202,7 +202,7 @@ void D1Min::setSubtileWidth(int width)
         for (int i = 0; i < this->celFrameIndices.size() && !hasFrame; i++) {
             QList<quint16> &celFrameIndicesList = this->celFrameIndices[i];
             for (int y = 0; y < this->subtileHeight; y++) {
-                for (int x = width; x < prevWidth; dx++) {
+                for (int x = width; x < prevWidth; x++) {
                     if (celFrameIndicesList[y * width + x] != 0) {
                         hasFrame = true;
                         break;

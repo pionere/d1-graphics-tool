@@ -750,7 +750,7 @@ void LevelCelView::on_minFrameWidthEdit_returnPressed()
 {
     unsigned width = this->ui->minFrameWidthEdit->text().toUInt();
 
-    this->min->setFrameWidth(width);
+    this->min->setSubtileWidth(width);
 }
 
 void LevelCelView::on_minFrameHeightEdit_returnPressed()
