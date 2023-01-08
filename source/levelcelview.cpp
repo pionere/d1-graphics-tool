@@ -746,6 +746,20 @@ void LevelCelView::on_tileIndexEdit_returnPressed()
     }
 }
 
+void LevelCelView::on_minFrameWidthEdit_returnPressed()
+{
+    unsigned width = this->ui->minFrameWidthEdit->text().toUInt();
+
+    this->min->setFrameWidth(width);
+}
+
+void LevelCelView::on_minFrameHeightEdit_returnPressed()
+{
+    unsigned height = this->ui->minFrameHeightEdit->text().toUInt();
+
+    this->min->setSubtileHeight(height);
+}
+
 void LevelCelView::on_zoomOutButton_clicked()
 {
     if (this->currentZoomFactor - 1 >= 1)
