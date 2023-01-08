@@ -242,25 +242,26 @@ void D1Min::setSubtileHeight(int height)
     if (height == 0) {
         return;
     }
-    int prevHeight = this->subtileHeight;
-    int diff = height - prevHeight;
+    int width = this->subtileWidth;
+    int diff = height - this->subtileHeight;
     if (diff > 0) {
         // extend the subtile-height
-        int n = diff * this->subtileWidth;
+        int n = diff * width;
         for (int i = 0; i < this->celFrameIndices.size(); i++) {
             QList<quint16> &celFrameIndicesList = this->celFrameIndices[i];
             for (int j = 0; j < n; j++) {
-                celFrameIndicesList.append(0);
+                celFrameIndicesList.push_front(0);
             }
         }
     } else if (diff < 0) {
+        diff = -diff;
         // check if there is a non-zero frame in the subtiles
         bool hasFrame = false;
-        int sx = this->subtileWidth * height;
+        int n = diff * width;
         for (int i = 0; i < this->celFrameIndices.size() && !hasFrame; i++) {
             QList<quint16> &celFrameIndicesList = this->celFrameIndices[i];
-            for (auto iter = celFrameIndicesList.cbegin() + sx; iter != celFrameIndicesList.cend(); iter++) {
-                if (*iter != 0) {
+            for (int j = 0; j < n; j++) {
+                if (celFrameIndicesList[j] != 0) {
                     hasFrame = true;
                     break;
                 }
@@ -276,7 +277,7 @@ void D1Min::setSubtileHeight(int height)
         // reduce the subtile-height
         for (int i = 0; i < this->celFrameIndices.size(); i++) {
             QList<quint16> &celFrameIndicesList = this->celFrameIndices[i];
-            celFrameIndicesList.erase(celFrameIndicesList.begin() + sx, celFrameIndicesList.end());
+            celFrameIndicesList.erase(celFrameIndicesList.begin(), celFrameIndicesList.begin() + n);
         }
     } else {
         return;
