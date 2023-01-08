@@ -101,7 +101,7 @@
           </property>
           <property name="maximumSize">
            <size>
-            <width>30</width>
+            <width>24</width>
             <height>16777215</height>
            </size>
           </property>
@@ -133,7 +133,7 @@
          <widget class="QPushButton" name="zoomInButton">
           <property name="minimumSize">
            <size>
-            <width>30</width>
+            <width>24</width>
             <height>0</height>
            </size>
           </property>
@@ -984,7 +984,7 @@
         <item row="3" column="15">
          <widget class="QLabel" name="celFrameWidthLabel">
           <property name="text">
-           <string>px *</string>
+           <string> *</string>
           </property>
          </widget>
         </item>
@@ -1010,13 +1010,6 @@
           </property>
           <property name="readOnly">
            <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="17">
-         <widget class="QLabel" name="celFrameHeightLabel">
-          <property name="text">
-           <string>px</string>
           </property>
          </widget>
         </item>

@@ -449,8 +449,8 @@ void LevelCelView::displayFrame()
         ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
 
     // Set current frame width and height
-    this->ui->celFrameWidthEdit->setText(QString::number(celFrame.width()));
-    this->ui->celFrameHeightEdit->setText(QString::number(celFrame.height()));
+    this->ui->celFrameWidthEdit->setText(QString::number(celFrame.width()) + "px");
+    this->ui->celFrameHeightEdit->setText(QString::number(celFrame.height()) + "px");
 
     // Set current frame text
     this->ui->frameIndexEdit->setText(
