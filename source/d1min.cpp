@@ -203,7 +203,7 @@ void D1Min::setSubtileWidth(int width)
             QList<quint16> &celFrameIndicesList = this->celFrameIndices[i];
             for (int y = 0; y < this->subtileHeight; y++) {
                 for (int x = width; x < prevWidth; x++) {
-                    if (celFrameIndicesList[y * width + x] != 0) {
+                    if (celFrameIndicesList[y * prevWidth + x] != 0) {
                         hasFrame = true;
                         break;
                     }
@@ -239,6 +239,49 @@ quint16 D1Min::getSubtileHeight()
 
 void D1Min::setSubtileHeight(int height)
 {
+    if (height == 0) {
+        return;
+    }
+    int prevHeight = this->subtileHeight;
+    int diff = height - prevHeight;
+    if (diff > 0) {
+        // extend the subtile-height
+        int n = diff * this->subtileWidth;
+        for (int i = 0; i < this->celFrameIndices.size(); i++) {
+            QList<quint16> &celFrameIndicesList = this->celFrameIndices[i];
+            for (int j = 0; j < n; j++) {
+                celFrameIndicesList.append(0);
+            }
+        }
+    } else if (diff < 0) {
+        // check if there is a non-zero frame in the subtiles
+        bool hasFrame = false;
+        int sx = this->subtileWidth * height;
+        for (int i = 0; i < this->celFrameIndices.size() && !hasFrame; i++) {
+            QList<quint16> &celFrameIndicesList = this->celFrameIndices[i];
+            for (auto iter = celFrameIndicesList.cbegin() + sx; iter != celFrameIndicesList.cend(); iter++) {
+                if (*iter != 0) {
+                    hasFrame = true;
+                    break;
+                }
+            }
+        }
+        if (hasFrame) {
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(nullptr, "Confirmation", "Non-transparent frames are going to be eliminited. Are you sure you want to proceed?", QMessageBox::Yes | QMessageBox::No);
+            if (reply != QMessageBox::Yes) {
+                return;
+            }
+        }
+        // reduce the subtile-height
+        for (int i = 0; i < this->celFrameIndices.size(); i++) {
+            QList<quint16> &celFrameIndicesList = this->celFrameIndices[i];
+            celFrameIndicesList.erase(celFrameIndicesList.begin() + sx, celFrameIndicesList.end());
+        }
+    } else {
+        return;
+    }
+    this->subtileHeight = height;
 }
 
 QList<quint16> &D1Min::getCelFrameIndices(int subTileIndex)

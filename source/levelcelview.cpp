@@ -751,6 +751,7 @@ void LevelCelView::on_minFrameWidthEdit_returnPressed()
     unsigned width = this->ui->minFrameWidthEdit->text().toUInt();
 
     this->min->setSubtileWidth(width);
+    this->displayFrame();
 }
 
 void LevelCelView::on_minFrameHeightEdit_returnPressed()
@@ -758,6 +759,7 @@ void LevelCelView::on_minFrameHeightEdit_returnPressed()
     unsigned height = this->ui->minFrameHeightEdit->text().toUInt();
 
     this->min->setSubtileHeight(height);
+    this->displayFrame();
 }
 
 void LevelCelView::on_zoomOutButton_clicked()
