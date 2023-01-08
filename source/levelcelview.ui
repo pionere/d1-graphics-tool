@@ -209,7 +209,7 @@
            <string>Current playback delay</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignRight</set>
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -239,7 +239,7 @@
           </item>
          </widget>
         </item>
-        <item row="0" column="15" colspan="3">
+        <item row="0" column="15" colspan="2">
          <spacer name="horizontalSpacer_2">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -443,21 +443,18 @@
          <widget class="QLineEdit" name="tilFrameWidthEdit">
           <property name="minimumSize">
            <size>
-            <width>32</width>
+            <width>40</width>
             <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>32</width>
+            <width>40</width>
             <height>16777215</height>
            </size>
           </property>
-          <property name="toolTip">
-           <string>Current frame width</string>
-          </property>
           <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignVCenter</set>
+           <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
            <bool>true</bool>
@@ -466,8 +463,20 @@
         </item>
         <item row="1" column="15">
          <widget class="QLabel" name="tilFrameWidthLabel">
+          <property name="minimumSize">
+           <size>
+            <width>8</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>8</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="text">
-           <string>px *</string>
+           <string>*</string>
           </property>
          </widget>
         </item>
@@ -475,31 +484,21 @@
          <widget class="QLineEdit" name="tilFrameHeightEdit">
           <property name="minimumSize">
            <size>
-            <width>32</width>
+            <width>40</width>
             <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>32</width>
+            <width>40</width>
             <height>16777215</height>
            </size>
           </property>
-          <property name="toolTip">
-           <string>Current frame height</string>
-          </property>
           <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignVCenter</set>
+           <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
            <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="17">
-         <widget class="QLabel" name="tilFrameHeightLabel">
-          <property name="text">
-           <string>px</string>
           </property>
          </widget>
         </item>
@@ -700,31 +699,37 @@
          <widget class="QLineEdit" name="minFrameWidthEdit">
           <property name="minimumSize">
            <size>
-            <width>32</width>
+            <width>40</width>
             <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>32</width>
+            <width>40</width>
             <height>16777215</height>
            </size>
           </property>
-          <property name="toolTip">
-           <string>Current frame width</string>
-          </property>
           <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignVCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
         <item row="2" column="15">
          <widget class="QLabel" name="minFrameWidthLabel">
+          <property name="minimumSize">
+           <size>
+            <width>8</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>8</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="text">
-           <string>px *</string>
+           <string>*</string>
           </property>
          </widget>
         </item>
@@ -732,31 +737,18 @@
          <widget class="QLineEdit" name="minFrameHeightEdit">
           <property name="minimumSize">
            <size>
-            <width>32</width>
+            <width>40</width>
             <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>32</width>
+            <width>40</width>
             <height>16777215</height>
            </size>
           </property>
-          <property name="toolTip">
-           <string>Current frame height</string>
-          </property>
           <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignVCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="17">
-         <widget class="QLabel" name="minFrameHeightLabel">
-          <property name="text">
-           <string>px</string>
+           <set>Qt::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -957,13 +949,13 @@
          <widget class="QLineEdit" name="celFrameWidthEdit">
           <property name="minimumSize">
            <size>
-            <width>32</width>
+            <width>40</width>
             <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>32</width>
+            <width>40</width>
             <height>16777215</height>
            </size>
           </property>
@@ -971,7 +963,7 @@
            <string>Current frame width</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignVCenter</set>
+           <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
            <bool>true</bool>
@@ -980,8 +972,20 @@
         </item>
         <item row="3" column="15">
          <widget class="QLabel" name="celFrameWidthLabel">
+          <property name="minimumSize">
+           <size>
+            <width>8</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>8</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="text">
-           <string>px *</string>
+           <string>*</string>
           </property>
          </widget>
         </item>
@@ -989,13 +993,13 @@
          <widget class="QLineEdit" name="celFrameHeightEdit">
           <property name="minimumSize">
            <size>
-            <width>32</width>
+            <width>40</width>
             <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>32</width>
+            <width>40</width>
             <height>16777215</height>
            </size>
           </property>
@@ -1003,17 +1007,10 @@
            <string>Current frame height</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignVCenter</set>
+           <set>Qt::AlignCenter</set>
           </property>
           <property name="readOnly">
            <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="17">
-         <widget class="QLabel" name="celFrameHeightLabel">
-          <property name="text">
-           <string>px</string>
           </property>
          </widget>
         </item>
