@@ -712,9 +712,6 @@
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
          </widget>
         </item>
         <item row="2" column="15">
@@ -752,9 +749,6 @@
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
           </property>
          </widget>
         </item>
