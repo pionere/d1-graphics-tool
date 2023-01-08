@@ -1,8 +1,28 @@
 # Changelog
-All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## Nightly
+### Added
+- animation with configurable playback speed
+- animation with palette cycling of diablo1
+- save menu option to store the current graphics
+- save as menu option to convert between cel/cl2, add new groups or store to a different location
+- open as menu option to open files with parameters
+  1. use width 96 to open wlbat.cl2, whbat.cl2 and wmbat.cl2 graphics of the warrior
+  2. use height of 8 to open the hellfire town tileset
+- new menu option to open a clean cel, cl2 or tileset graphics
+- drag and drop support for image files
+- edit fields to modify subtiles of tiles, frames of subtiles, frame-types
+- button to apply trn-adjustments of the game (done to normal monster-trns)
+- context menu + menu option to add, insert, delete or replace frames
+- context menu + menu option to create or delete tiles and subtiles
+- drag and drop support for palette and color translation files
+- context menu to undo/redo the modifications of the palette/translation
+- icon buttons to create/load/save palette/translation in place
+- file dialogs start from the last used folder/file (even after restart)
+
+### Fixed
+- memory leaks
+- bunch of bugfixes
 
 ## 0.5.0 - 2021-08-12
 ### Added
@@ -131,3 +151,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Full PAL viewing support.
 - Incomplete CEL viewing support.
+
+## 0.0.0
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
