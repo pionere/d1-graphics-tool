@@ -41,7 +41,7 @@
       <number>4</number>
      </property>
      <item>
-      <widget class="QGroupBox" name="flagsGroupBox">
+      <widget class="QGroupBox" name="solFlagsGroupBox">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -55,7 +55,7 @@
         </size>
        </property>
        <property name="title">
-        <string>Flags</string>
+        <string>SOL-Flags</string>
        </property>
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="0" column="0">
@@ -111,6 +111,97 @@
       </widget>
      </item>
      <item>
+      <widget class="QGroupBox" name="tmiFlagsGroupBox">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>80</height>
+        </size>
+       </property>
+       <property name="title">
+        <string>TMI-Flags</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="QCheckBox" name="tmi0">
+          <property name="text">
+           <string>Transp. Wall</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="tmiLeftLabel">
+          <property name="text">
+           <string>Left floor:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QCheckBox" name="tmi1">
+          <property name="text">
+           <string>Second pass</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QCheckBox" name="tmi2">
+          <property name="text">
+           <string>Foliage</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="4">
+         <widget class="QCheckBox" name="tmi3">
+          <property name="text">
+           <string>Transparent</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLabel" name="tmiRightLabel">
+          <property name="text">
+           <string>Right floor:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QCheckBox" name="tmi4">
+          <property name="text">
+           <string>Second pass</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QCheckBox" name="tmi5">
+          <property name="text">
+           <string>Foliage</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="4">
+         <widget class="QCheckBox" name="tmi6">
+          <property name="text">
+           <string>Transparent</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <property name="spacing">
         <number>4</number>
@@ -133,7 +224,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Frames :</string>
+          <string>Frames:</string>
          </property>
         </widget>
        </item>

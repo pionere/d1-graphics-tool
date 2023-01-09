@@ -38,6 +38,14 @@ void LevelTabSubTileWidget::update()
     this->ui->sol5->setEnabled(hasSubtile);
     this->ui->sol7->setEnabled(hasSubtile);
 
+    this->ui->tmi0->setEnabled(hasSubtile);
+    this->ui->tmi1->setEnabled(hasSubtile);
+    this->ui->tmi2->setEnabled(hasSubtile);
+    this->ui->tmi3->setEnabled(hasSubtile);
+    this->ui->tmi4->setEnabled(hasSubtile);
+    this->ui->tmi5->setEnabled(hasSubtile);
+    this->ui->tmi7->setEnabled(hasSubtile);
+
     this->ui->framesComboBox->setEnabled(hasSubtile);
 
     if (!hasSubtile) {
@@ -49,6 +57,14 @@ void LevelTabSubTileWidget::update()
         this->ui->sol5->setChecked(false);
         this->ui->sol7->setChecked(false);
 
+        this->ui->tmi0->setChecked(false);
+        this->ui->tmi1->setChecked(false);
+        this->ui->tmi2->setChecked(false);
+        this->ui->tmi3->setChecked(false);
+        this->ui->tmi4->setChecked(false);
+        this->ui->tmi5->setChecked(false);
+        this->ui->tmi7->setChecked(false);
+
         this->ui->framesComboBox->setCurrentIndex(-1);
         this->ui->framesComboBox->setEnabled(false);
         this->ui->framesPrevButton->setEnabled(false);
@@ -59,16 +75,26 @@ void LevelTabSubTileWidget::update()
     }
 
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
-    quint8 sol = this->sol->getSubtileProperties(subtileIdx);
+    quint8 solFlags = this->sol->getSubtileProperties(subtileIdx);
+    quint8 tmiFlags = this->tmi->getSubtileProperties(subtileIdx);
     QList<quint16> &frames = this->min->getCelFrameIndices(subtileIdx);
 
-    this->ui->sol0->setChecked((sol & 1 << 0) != 0);
-    this->ui->sol1->setChecked((sol & 1 << 1) != 0);
-    this->ui->sol2->setChecked((sol & 1 << 2) != 0);
-    this->ui->sol3->setChecked((sol & 1 << 3) != 0);
-    this->ui->sol4->setChecked((sol & 1 << 4) != 0);
-    this->ui->sol5->setChecked((sol & 1 << 5) != 0);
-    this->ui->sol7->setChecked((sol & 1 << 7) != 0);
+    this->ui->sol0->setChecked((solFlags & 1 << 0) != 0);
+    this->ui->sol1->setChecked((solFlags & 1 << 1) != 0);
+    this->ui->sol2->setChecked((solFlags & 1 << 2) != 0);
+    this->ui->sol3->setChecked((solFlags & 1 << 3) != 0);
+    this->ui->sol4->setChecked((solFlags & 1 << 4) != 0);
+    this->ui->sol5->setChecked((solFlags & 1 << 5) != 0);
+    this->ui->sol7->setChecked((solFlags & 1 << 7) != 0);
+
+    this->ui->tmi0->setChecked((tmiFlags & 1 << 0) != 0);
+    this->ui->tmi1->setChecked((tmiFlags & 1 << 1) != 0);
+    this->ui->tmi2->setChecked((tmiFlags & 1 << 2) != 0);
+    this->ui->tmi3->setChecked((tmiFlags & 1 << 3) != 0);
+    this->ui->tmi4->setChecked((tmiFlags & 1 << 4) != 0);
+    this->ui->tmi5->setChecked((tmiFlags & 1 << 5) != 0);
+    this->ui->tmi6->setChecked((tmiFlags & 1 << 6) != 0);
+
     // update combo box of the frames
     while (this->ui->framesComboBox->count() > frames.count())
         this->ui->framesComboBox->removeItem(0);
@@ -125,6 +151,34 @@ quint8 LevelTabSubTileWidget::readSol()
     return flags;
 }
 
+void LevelTabSubTileWidget::updateTmiProperty()
+{
+    int subTileIdx = this->levelCelView->getCurrentSubtileIndex();
+    quint8 flags = this->readTmi();
+
+    this->tmi->setSubtileProperties(subTileIdx, flags);
+}
+
+quint8 LevelTabSubTileWidget::readTmi()
+{
+    quint8 flags = 0;
+    if (this->ui->tmi0->checkState())
+        flags |= 1 << 0;
+    if (this->ui->tmi1->checkState())
+        flags |= 1 << 1;
+    if (this->ui->tmi2->checkState())
+        flags |= 1 << 2;
+    if (this->ui->tmi3->checkState())
+        flags |= 1 << 3;
+    if (this->ui->tmi4->checkState())
+        flags |= 1 << 4;
+    if (this->ui->tmi5->checkState())
+        flags |= 1 << 5;
+    if (this->ui->tmi6->checkState())
+        flags |= 1 << 6;
+    return flags;
+}
+
 void LevelTabSubTileWidget::on_sol0_clicked()
 {
     this->updateSolProperty();
@@ -158,6 +212,41 @@ void LevelTabSubTileWidget::on_sol5_clicked()
 void LevelTabSubTileWidget::on_sol7_clicked()
 {
     this->updateSolProperty();
+}
+
+void LevelTabSubTileWidget::on_tmi0_clicked()
+{
+    this->updateTmiProperty();
+}
+
+void LevelTabSubTileWidget::on_tmi1_clicked()
+{
+    this->updateTmiProperty();
+}
+
+void LevelTabSubTileWidget::on_tmi2_clicked()
+{
+    this->updateTmiProperty();
+}
+
+void LevelTabSubTileWidget::on_tmi3_clicked()
+{
+    this->updateTmiProperty();
+}
+
+void LevelTabSubTileWidget::on_tmi4_clicked()
+{
+    this->updateTmiProperty();
+}
+
+void LevelTabSubTileWidget::on_tmi5_clicked()
+{
+    this->updateTmiProperty();
+}
+
+void LevelTabSubTileWidget::on_tmi6_clicked()
+{
+    this->updateTmiProperty();
 }
 
 void LevelTabSubTileWidget::on_framesPrevButton_clicked()
