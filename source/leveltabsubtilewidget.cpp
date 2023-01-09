@@ -44,7 +44,7 @@ void LevelTabSubTileWidget::update()
     this->ui->tmi3->setEnabled(hasSubtile);
     this->ui->tmi4->setEnabled(hasSubtile);
     this->ui->tmi5->setEnabled(hasSubtile);
-    this->ui->tmi7->setEnabled(hasSubtile);
+    this->ui->tmi6->setEnabled(hasSubtile);
 
     this->ui->framesComboBox->setEnabled(hasSubtile);
 
@@ -63,7 +63,7 @@ void LevelTabSubTileWidget::update()
         this->ui->tmi3->setChecked(false);
         this->ui->tmi4->setChecked(false);
         this->ui->tmi5->setChecked(false);
-        this->ui->tmi7->setChecked(false);
+        this->ui->tmi6->setChecked(false);
 
         this->ui->framesComboBox->setCurrentIndex(-1);
         this->ui->framesComboBox->setEnabled(false);
