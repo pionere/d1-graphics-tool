@@ -251,7 +251,6 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
     unsigned tileWidth = this->min->getSubtileWidth() * MICRO_WIDTH * TILE_WIDTH * TILE_HEIGHT;
     unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
-    // If only one file will contain all tiles
     constexpr unsigned TILES_PER_LINE = 4;
     QImage tempOutputImage;
     unsigned tempOutputImageWidth = 0;

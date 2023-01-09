@@ -12,6 +12,7 @@
 - new menu option to open a clean cel, cl2 or tileset graphics
 - drag and drop support for image files
 - edit fields to modify subtiles of tiles, frames of subtiles, frame-types
+- width/height of subtiles are editable
 - button to apply trn-adjustments of the game (done to normal monster-trns)
 - context menu + menu option to add, insert, delete or replace frames
 - context menu + menu option to create or delete tiles and subtiles
@@ -19,6 +20,8 @@
 - context menu to undo/redo the modifications of the palette/translation
 - icon buttons to create/load/save palette/translation in place
 - file dialogs start from the last used folder/file (even after restart)
+- export to any kind of image format which are supported by Qt (JPEG, WEBP, etc...)
+- support TMI metadata
 
 ### Fixed
 - memory leaks

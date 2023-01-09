@@ -23,7 +23,7 @@ SaveAsDialog::~SaveAsDialog()
     delete ui;
 }
 
-void SaveAsDialog::initialize(QJsonObject *cfg, D1Gfx *g, D1Min *min, D1Til *til, D1Sol *sol, D1Amp *amp)
+void SaveAsDialog::initialize(QJsonObject *cfg, D1Gfx *g, D1Min *min, D1Til *til, D1Sol *sol, D1Amp *amp, D1Tmi *tmi)
 {
     // initialize the configuration pointer
     this->configuration = cfg;
@@ -40,12 +40,8 @@ void SaveAsDialog::initialize(QJsonObject *cfg, D1Gfx *g, D1Min *min, D1Til *til
     this->ui->outputTilFileEdit->setText(til == nullptr ? "" : til->getFilePath());
     this->ui->outputSolFileEdit->setText(sol == nullptr ? "" : sol->getFilePath());
     this->ui->outputAmpFileEdit->setText(amp == nullptr ? "" : amp->getFilePath());
+    this->ui->outputTmiFileEdit->setText(tmi == nullptr ? "" : tmi->getFilePath());
 
-    this->update();
-}
-
-void SaveAsDialog::update()
-{
     bool isTilesetGfx = this->isTileset;
 
     this->ui->celSettingsGroupBox->setEnabled(!isTilesetGfx);
@@ -80,9 +76,9 @@ void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
             this->ui->outputTilFileEdit->setText(saveFilePath + (upperCase ? "TIL" : "til"));
             this->ui->outputSolFileEdit->setText(saveFilePath + (upperCase ? "SOL" : "sol"));
             this->ui->outputAmpFileEdit->setText(saveFilePath + (upperCase ? "AMP" : "amp"));
+            this->ui->outputTmiFileEdit->setText(saveFilePath + (upperCase ? "TMI" : "tmi"));
         }
     }
-    this->update();
 }
 
 void SaveAsDialog::on_outputMinFileBrowseButton_clicked()
@@ -94,8 +90,6 @@ void SaveAsDialog::on_outputMinFileBrowseButton_clicked()
         return;
 
     this->ui->outputMinFileEdit->setText(saveFilePath);
-
-    this->update();
 }
 
 void SaveAsDialog::on_outputTilFileBrowseButton_clicked()
@@ -107,8 +101,6 @@ void SaveAsDialog::on_outputTilFileBrowseButton_clicked()
         return;
 
     this->ui->outputTilFileEdit->setText(saveFilePath);
-
-    this->update();
 }
 
 void SaveAsDialog::on_outputSolFileBrowseButton_clicked()
@@ -120,8 +112,6 @@ void SaveAsDialog::on_outputSolFileBrowseButton_clicked()
         return;
 
     this->ui->outputSolFileEdit->setText(saveFilePath);
-
-    this->update();
 }
 
 void SaveAsDialog::on_outputAmpFileBrowseButton_clicked()
@@ -133,8 +123,17 @@ void SaveAsDialog::on_outputAmpFileBrowseButton_clicked()
         return;
 
     this->ui->outputAmpFileEdit->setText(saveFilePath);
+}
 
-    this->update();
+void SaveAsDialog::on_outputTmiFileBrowseButton_clicked()
+{
+    MainWindow *qw = (MainWindow *)this->parentWidget();
+    QString saveFilePath = qw->fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, "Save TMI as...", "TMI Files (*.tmi *.TMI)");
+
+    if (saveFilePath.isEmpty())
+        return;
+
+    this->ui->outputTmiFileEdit->setText(saveFilePath);
 }
 
 void SaveAsDialog::on_saveButton_clicked()
@@ -160,6 +159,7 @@ void SaveAsDialog::on_saveButton_clicked()
     params.tilFilePath = this->ui->outputTilFileEdit->text();
     params.solFilePath = this->ui->outputSolFileEdit->text();
     params.ampFilePath = this->ui->outputAmpFileEdit->text();
+    params.tmiFilePath = this->ui->outputTmiFileEdit->text();
 
     MainWindow *qw = (MainWindow *)this->parentWidget();
     this->close();

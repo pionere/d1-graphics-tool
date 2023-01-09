@@ -13,6 +13,7 @@
 #include "d1palhits.h"
 #include "d1sol.h"
 #include "d1til.h"
+#include "d1tmi.h"
 #include "d1trn.h"
 #include "exportdialog.h"
 #include "levelcelview.h"
@@ -149,6 +150,7 @@ private:
     QPointer<D1Til> til;
     QPointer<D1Sol> sol;
     QPointer<D1Amp> amp;
+    QPointer<D1Tmi> tmi;
 
     QMap<QString, D1Pal *> pals;  // key: path, value: pointer to palette
     QMap<QString, D1Trn *> trn1s; // key: path, value: pointer to translation

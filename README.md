@@ -8,7 +8,7 @@
 [![Linux](https://github.com/pionere/d1-graphics-tool/actions/workflows/linux.yml/badge.svg)](https://github.com/pionere/d1-graphics-tool/actions/workflows/linux.yml)
 -->
 
-Diablo 1 Graphics Tool can display and edit non-standard assets of Diablo 1 (CEL/CL2 graphics files and PAL/TRN/TIL/MIN/SOL/AMP metadata).
+Diablo 1 Graphics Tool can display and edit non-standard assets of Diablo 1 (CEL/CL2 graphics files and PAL/TRN/TIL/MIN/SOL/AMP/TMI metadata).
 
 ![Screenshot 1](/resources/demo001.gif)
 
@@ -20,7 +20,7 @@ Go to the [releases page](https://github.com/pionere/d1-graphics-tool/releases) 
 - Mono and multi-group CL2 support with animation.
 - PAL/TRN support.
 - Palette hits and color translation hits display.
-- Exporting to (multiple) image files (PNG, BMP, JPG, etc...).
+- Exporting to (multiple) image files (PNG, BMP, JPG, WEBP, etc...).
 
 For a full list of features and changes see our [changelog](CHANGELOG.md).
 
