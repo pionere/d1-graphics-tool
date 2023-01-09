@@ -142,7 +142,7 @@ bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
 
             progress.setValue(100 * (i - tileFrom) / n);
 
-            QString outputFilePath = outputFilePathBase +
+            QString outputFilePath = outputFilePathBase
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
 
             this->til->getTileImage(i).save(outputFilePath);
@@ -259,7 +259,7 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
 
             progress.setValue(100 * (i - tileFrom) / n);
 
-            QString outputFilePath = outputFilePathBase +
+            QString outputFilePath = outputFilePathBase
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
 
             this->til->getFlatTileImage(i).save(outputFilePath);
