@@ -104,8 +104,6 @@ install(TARGETS D1GraphicsTool
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
-message(STATUS "CMAKE_BUILD_TYPE:   ${CMAKE_BUILD_TYPE}")
-
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(D1GraphicsTool)
 endif()

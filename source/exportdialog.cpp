@@ -110,12 +110,22 @@ bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
         + QFileInfo(this->til->getFilePath()).fileName().replace(".", "_");
 
     int n = this->til->getTileCount();
+    int tileFrom = this->ui->contentRangeFromEdit->text().toUInt();
+    if (tileFrom != 0) {
+        tileFrom--;
+    }
+    int tileTo = this->ui->contentRangeToEdit->text().toUInt();
+    if (tileTo == 0 || tileTo > n) {
+        tileTo = n;
+    }
+    tileTo--;
+    n = tileTo - tileFrom + 1;
     // nothing to export
     if (n == 0) {
         return true;
     }
     // single tile
-    if (n == 1) {
+    if (n == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
         QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
         this->til->getTileImage(0).save(outputFilePath);
@@ -125,12 +135,12 @@ bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
     // multiple tiles
     if (this->ui->filesCountComboBox->currentIndex() != 0) {
         // one file for each tile (indexed)
-        for (int i = 0; i < n; i++) {
+        for (int i = tileFrom; i <= tileTo; i++) {
             if (progress.wasCanceled()) {
                 return false;
             }
 
-            progress.setValue(100 * i / n);
+            progress.setValue(100 * (i - tileFrom) / n);
 
             QString outputFilePath = outputFilePathBase + "_tile"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
@@ -168,11 +178,11 @@ bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
 
     if (placement == 0) { // groupped
         unsigned dx = 0, dy = 0;
-        for (int i = 0; i < n; i++) {
+        for (int i = tileFrom; i <= tileTo; i++) {
             if (progress.wasCanceled()) {
                 return false;
             }
-            progress.setValue(100 * i / n);
+            progress.setValue(100 * (i - tileFrom) / n);
 
             const QImage image = this->til->getTileImage(i);
 
@@ -186,11 +196,11 @@ bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
         }
     } else {
         int cursor = 0;
-        for (int i = 0; i < n; i++) {
+        for (int i = tileFrom; i <= tileTo; i++) {
             if (progress.wasCanceled()) {
                 return false;
             }
-            progress.setValue(100 * i / n);
+            progress.setValue(100 * (i - tileFrom) / n);
 
             const QImage image = this->til->getTileImage(i);
             if (placement == 2) { // tiles on one column
@@ -218,12 +228,22 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
         + QFileInfo(this->til->getFilePath()).fileName().replace(".", "_");
 
     int n = this->til->getTileCount();
+    int tileFrom = this->ui->contentRangeFromEdit->text().toUInt();
+    if (tileFrom != 0) {
+        tileFrom--;
+    }
+    int tileTo = this->ui->contentRangeToEdit->text().toUInt();
+    if (tileTo == 0 || tileTo > n) {
+        tileTo = n;
+    }
+    tileTo--;
+    n = tileTo - tileFrom + 1;
     // nothing to export
-    if (n == 0) {
+    if (n <= 0) {
         return true;
     }
     // single tile
-    if (n == 1) {
+    if (n == 1 && tileFrom == 0) {
         // one file for the only subtile (not indexed)
         QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
         this->til->getFlatTileImage(0).save(outputFilePath);
@@ -232,12 +252,12 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
     // multiple tiles
     if (this->ui->filesCountComboBox->currentIndex() != 0) {
         // one file for each subtile (indexed)
-        for (int i = 0; i < n; i++) {
+        for (int i = tileFrom; i <= tileTo; i++) {
             if (progress.wasCanceled()) {
                 return false;
             }
 
-            progress.setValue(100 * i / n);
+            progress.setValue(100 * (i - tileFrom) / n);
 
             QString outputFilePath = outputFilePathBase + "_tile_"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
@@ -275,11 +295,11 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
 
     if (placement == 0) { // groupped
         unsigned dx = 0, dy = 0;
-        for (int i = 0; i < n; i++) {
+        for (int i = tileFrom; i <= tileTo; i++) {
             if (progress.wasCanceled()) {
                 return false;
             }
-            progress.setValue(100 * i / n);
+            progress.setValue(100 * (i - tileFrom) / n);
 
             const QImage image = this->til->getFlatTileImage(i);
 
@@ -293,11 +313,11 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
         }
     } else {
         int cursor = 0;
-        for (int i = 0; i < n; i++) {
+        for (int i = tileFrom; i <= tileTo; i++) {
             if (progress.wasCanceled()) {
                 return false;
             }
-            progress.setValue(100 * i / n);
+            progress.setValue(100 * (i - tileFrom) / n);
 
             const QImage image = this->til->getFlatTileImage(i);
             if (placement == 2) { // subtiles on one column
@@ -325,12 +345,22 @@ bool ExportDialog::exportLevelSubtiles(QProgressDialog &progress)
         + QFileInfo(this->min->getFilePath()).fileName().replace(".", "_");
 
     int n = this->min->getSubtileCount();
+    int subtileFrom = this->ui->contentRangeFromEdit->text().toUInt();
+    if (subtileFrom != 0) {
+        subtileFrom--;
+    }
+    int subtileTo = this->ui->contentRangeToEdit->text().toUInt();
+    if (subtileTo == 0 || subtileTo > n) {
+        subtileTo = n;
+    }
+    subtileTo--;
+    n = subtileTo - subtileFrom + 1;
     // nothing to export
-    if (n == 0) {
+    if (n <= 0) {
         return true;
     }
     // single subtile
-    if (n == 1) {
+    if (n == 1 && subtileFrom == 0) {
         // one file for the only subtile (not indexed)
         QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
         this->min->getSubtileImage(0).save(outputFilePath);
@@ -339,12 +369,12 @@ bool ExportDialog::exportLevelSubtiles(QProgressDialog &progress)
     // multiple subtiles
     if (this->ui->filesCountComboBox->currentIndex() != 0) {
         // one file for each subtile (indexed)
-        for (int i = 0; i < n; i++) {
+        for (int i = subtileFrom; i <= subtileTo; i++) {
             if (progress.wasCanceled()) {
                 return false;
             }
 
-            progress.setValue(100 * i / n);
+            progress.setValue(100 * (i - subtileFrom) / n);
 
             QString outputFilePath = outputFilePathBase + "_subtile"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
@@ -372,6 +402,9 @@ bool ExportDialog::exportLevelSubtiles(QProgressDialog &progress)
     } else { // placement == 1 -- subtiles on one line
         tempOutputImageWidth = subtileWidth * n;
         tempOutputImageHeight = subtileHeight;
+        if ((n % (TILE_WIDTH * TILE_HEIGHT)) == 0) {
+            tempOutputImageWidth += subtileWidth; // add an extra subtile to ensure it is not recognized as a flat tile
+        }
     }
 
     tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
@@ -381,11 +414,11 @@ bool ExportDialog::exportLevelSubtiles(QProgressDialog &progress)
 
     if (placement == 0) { // groupped
         unsigned dx = 0, dy = 0;
-        for (int i = 0; i < n; i++) {
+        for (int i = subtileFrom; i <= subtileTo; i++) {
             if (progress.wasCanceled()) {
                 return false;
             }
-            progress.setValue(100 * i / n);
+            progress.setValue(100 * (i - subtileFrom) / n);
 
             const QImage image = this->min->getSubtileImage(i);
 
@@ -399,11 +432,11 @@ bool ExportDialog::exportLevelSubtiles(QProgressDialog &progress)
         }
     } else {
         int cursor = 0;
-        for (int i = 0; i < n; i++) {
+        for (int i = subtileFrom; i <= subtileTo; i++) {
             if (progress.wasCanceled()) {
                 return false;
             }
-            progress.setValue(100 * i / n);
+            progress.setValue(100 * (i - subtileFrom) / n);
 
             const QImage image = this->min->getSubtileImage(i);
             if (placement == 2) { // subtiles on one column
@@ -431,12 +464,22 @@ bool ExportDialog::exportFrames(QProgressDialog &progress)
         + QFileInfo(this->gfx->getFilePath()).fileName().replace(".", "_");
 
     int n = this->gfx->getFrameCount();
+    int frameFrom = this->ui->contentRangeFromEdit->text().toUInt();
+    if (frameFrom != 0) {
+        frameFrom--;
+    }
+    int frameTo = this->ui->contentRangeToEdit->text().toUInt();
+    if (frameTo == 0 || frameTo > n) {
+        frameTo = n;
+    }
+    frameTo--;
+    n = frameTo - frameFrom + 1;
     // nothing to export
-    if (n == 0) {
+    if (n <= 0) {
         return true;
     }
     // single frame
-    if (n == 1) {
+    if (n == 1 && frameFrom == 0) {
         // one file for the only frame (not indexed)
         QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
         this->gfx->getFrameImage(0).save(outputFilePath);
@@ -445,12 +488,12 @@ bool ExportDialog::exportFrames(QProgressDialog &progress)
     // multiple frames
     if (this->ui->filesCountComboBox->currentIndex() != 0) {
         // one file for each frame (indexed)
-        for (int i = 0; i < n; i++) {
+        for (int i = frameFrom; i <= frameTo; i++) {
             if (progress.wasCanceled()) {
                 return false;
             }
 
-            progress.setValue(100 * i / n);
+            progress.setValue(100 * (i - frameFrom) / n);
 
             QString outputFilePath = outputFilePathBase + "_frame"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
@@ -470,8 +513,8 @@ bool ExportDialog::exportFrames(QProgressDialog &progress)
             // artifical grouping of a tileset
             int groupImageWidth = 0;
             int groupImageHeight = 0;
-            for (int i = 0; i < n; i++) {
-                if ((i % EXPORT_LVLFRAMES_PER_LINE) == 0) {
+            for (int i = frameFrom; i <= frameTo; i++) {
+                if (((i - frameFrom) % EXPORT_LVLFRAMES_PER_LINE) == 0) {
                     tempOutputImageWidth = std::max(groupImageWidth, tempOutputImageWidth);
                     tempOutputImageHeight += groupImageHeight;
                     groupImageWidth = 0;
@@ -488,6 +531,9 @@ bool ExportDialog::exportFrames(QProgressDialog &progress)
                 int groupImageHeight = 0;
                 for (unsigned int j = this->gfx->getGroupFrameIndices(i).first;
                      j <= this->gfx->getGroupFrameIndices(i).second; j++) {
+                    if (j < (unsigned)frameFrom || j > (unsigned)frameTo) {
+                        continue;
+                    }
                     groupImageWidth += this->gfx->getFrameWidth(j);
                     groupImageHeight = std::max(this->gfx->getFrameHeight(j), groupImageHeight);
                 }
@@ -496,12 +542,12 @@ bool ExportDialog::exportFrames(QProgressDialog &progress)
             }
         }
     } else if (placement == 2) { // frames on one column
-        for (int i = 0; i < n; i++) {
+        for (int i = frameFrom; i <= frameTo; i++) {
             tempOutputImageWidth = std::max(this->gfx->getFrameWidth(i), tempOutputImageWidth);
             tempOutputImageHeight += this->gfx->getFrameHeight(i);
         }
     } else { // placement == 1 -- frames on one line
-        for (int i = 0; i < n; i++) {
+        for (int i = frameFrom; i <= frameTo; i++) {
             tempOutputImageWidth += this->gfx->getFrameWidth(i);
             tempOutputImageHeight = std::max(this->gfx->getFrameHeight(i), tempOutputImageHeight);
         }
@@ -517,13 +563,13 @@ bool ExportDialog::exportFrames(QProgressDialog &progress)
             int cursorY = 0;
             int cursorX = 0;
             int groupImageHeight = 0;
-            for (int i = 0; i < n; i++) {
+            for (int i = frameFrom; i <= frameTo; i++) {
                 if (progress.wasCanceled()) {
                     return false;
                 }
-                progress.setValue(100 * i / n);
+                progress.setValue(100 * (i - frameFrom) / n);
 
-                if ((i % EXPORT_LVLFRAMES_PER_LINE) == 0) {
+                if (((i - frameFrom) % EXPORT_LVLFRAMES_PER_LINE) == 0) {
                     cursorY += groupImageHeight;
                     cursorX = 0;
                     groupImageHeight = 0;
@@ -542,10 +588,13 @@ bool ExportDialog::exportFrames(QProgressDialog &progress)
                 int groupImageHeight = 0;
                 for (unsigned int j = this->gfx->getGroupFrameIndices(i).first;
                      j <= this->gfx->getGroupFrameIndices(i).second; j++) {
+                    if (j < (unsigned)frameFrom || j > (unsigned)frameTo) {
+                        continue;
+                    }
                     if (progress.wasCanceled()) {
                         return false;
                     }
-                    progress.setValue(100 * j / n);
+                    progress.setValue(100 * (j - frameFrom) / n);
 
                     const QImage image = this->gfx->getFrameImage(j);
                     painter.drawImage(cursorX, cursorY, image);
@@ -557,11 +606,11 @@ bool ExportDialog::exportFrames(QProgressDialog &progress)
         }
     } else {
         int cursor = 0;
-        for (int i = 0; i < n; i++) {
+        for (int i = frameFrom; i <= frameTo; i++) {
             if (progress.wasCanceled()) {
                 return false;
             }
-            progress.setValue(100 * i / n);
+            progress.setValue(100 * (i - frameFrom) / n);
 
             const QImage image = this->gfx->getFrameImage(i);
             if (placement == 2) { // frames on one column
