@@ -104,10 +104,10 @@ void ExportDialog::on_outputFolderBrowseButton_clicked()
 
 bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
 {
-    progress.setLabelText("Exporting " + QFileInfo(this->til->getFilePath()).fileName() + " level tiles...");
+    progress.setLabelText("Exporting " + QFileInfo(this->til->getFilePath()).fileName() + " 2.5d level tiles...");
 
     QString outputFilePathBase = ui->outputFolderEdit->text() + "/"
-        + QFileInfo(this->til->getFilePath()).fileName().replace(".", "_");
+        + QFileInfo(this->til->getFilePath()).fileName().replace(".", "_25d_");
 
     int n = this->til->getTileCount();
     int tileFrom = this->ui->contentRangeFromEdit->text().toUInt();
@@ -142,7 +142,7 @@ bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
 
             progress.setValue(100 * (i - tileFrom) / n);
 
-            QString outputFilePath = outputFilePathBase + "_tile"
+            QString outputFilePath = outputFilePathBase +
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
 
             this->til->getTileImage(i).save(outputFilePath);
@@ -225,7 +225,7 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
     progress.setLabelText("Exporting " + QFileInfo(this->min->getFilePath()).fileName() + " flat level tiles...");
 
     QString outputFilePathBase = ui->outputFolderEdit->text() + "/"
-        + QFileInfo(this->til->getFilePath()).fileName().replace(".", "_");
+        + QFileInfo(this->til->getFilePath()).fileName().replace(".", "_flat_");
 
     int n = this->til->getTileCount();
     int tileFrom = this->ui->contentRangeFromEdit->text().toUInt();
@@ -244,14 +244,14 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
     }
     // single tile
     if (n == 1 && tileFrom == 0) {
-        // one file for the only subtile (not indexed)
+        // one file for the only tile (not indexed)
         QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
         this->til->getFlatTileImage(0).save(outputFilePath);
         return true;
     }
     // multiple tiles
     if (this->ui->filesCountComboBox->currentIndex() != 0) {
-        // one file for each subtile (indexed)
+        // one file for each tile (indexed)
         for (int i = tileFrom; i <= tileTo; i++) {
             if (progress.wasCanceled()) {
                 return false;
@@ -259,14 +259,14 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
 
             progress.setValue(100 * (i - tileFrom) / n);
 
-            QString outputFilePath = outputFilePathBase + "_tile_"
+            QString outputFilePath = outputFilePathBase +
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
 
             this->til->getFlatTileImage(i).save(outputFilePath);
         }
         return true;
     }
-    // one file for all subtiles
+    // one file for all tiles
 
     unsigned tileWidth = this->min->getSubtileWidth() * MICRO_WIDTH * TILE_WIDTH * TILE_HEIGHT;
     unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
@@ -280,10 +280,10 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
     if (placement == 0) { // groupped
         tempOutputImageWidth = tileWidth * TILES_PER_LINE;
         tempOutputImageHeight = tileHeight * ((n + (TILES_PER_LINE - 1)) / TILES_PER_LINE);
-    } else if (placement == 2) { // subtiles on one column
+    } else if (placement == 2) { // tiles on one column
         tempOutputImageWidth = tileWidth;
         tempOutputImageHeight = tileHeight * n;
-    } else { // placement == 1 -- subtiles on one line
+    } else { // placement == 1 -- tiles on one line
         tempOutputImageWidth = tileWidth * n;
         tempOutputImageHeight = tileHeight;
     }
@@ -320,10 +320,10 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
             progress.setValue(100 * (i - tileFrom) / n);
 
             const QImage image = this->til->getFlatTileImage(i);
-            if (placement == 2) { // subtiles on one column
+            if (placement == 2) { // tiles on one column
                 painter.drawImage(0, cursor, image);
                 cursor += image.height();
-            } else { // placement == 1 -- subtiles on one line
+            } else { // placement == 1 -- tiles on one line
                 painter.drawImage(cursor, 0, image);
                 cursor += image.width();
             }
