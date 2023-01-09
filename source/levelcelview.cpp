@@ -97,21 +97,28 @@ LevelCelView::~LevelCelView()
     delete tabFrameWidget;
 }
 
-void LevelCelView::initialize(D1Gfx *g, D1Min *m, D1Til *t, D1Sol *s, D1Amp *a)
+void LevelCelView::initialize(D1Gfx *g, D1Min *m, D1Til *t, D1Sol *s, D1Amp *a, D1Tmi *i)
 {
     this->gfx = g;
     this->min = m;
     this->til = t;
     this->sol = s;
     this->amp = a;
+    this->tmi = i;
 
+    this->update();
+}
+
+int LevelCelView::update()
+{
     // Displaying CEL file path information
-    QFileInfo celFileInfo(this->gfx->getFilePath());
+    QFileInfo gfxFileInfo(this->gfx->getFilePath());
     QFileInfo minFileInfo(this->min->getFilePath());
     QFileInfo tilFileInfo(this->til->getFilePath());
     QFileInfo solFileInfo(this->sol->getFilePath());
     QFileInfo ampFileInfo(this->amp->getFilePath());
-    ui->celLabel->setText(celFileInfo.fileName() + ", " + minFileInfo.fileName() + ", " + tilFileInfo.fileName() + ", " + solFileInfo.fileName() + ", " + ampFileInfo.fileName());
+    QFileInfo tmiFileInfo(this->tmi->getFilePath());
+    ui->celLabel->setText(gfxFileInfo.fileName() + ", " + minFileInfo.fileName() + ", " + tilFileInfo.fileName() + ", " + solFileInfo.fileName() + ", " + ampFileInfo.fileName() + ", " + tmiFileInfo.fileName());
 
     ui->frameNumberEdit->setText(
         QString::number(this->gfx->getFrameCount()));
@@ -123,7 +130,7 @@ void LevelCelView::initialize(D1Gfx *g, D1Min *m, D1Til *t, D1Sol *s, D1Amp *a)
         QString::number(this->til->getTileCount()));
 
     this->tabTileWidget->initialize(this, this->til, this->min, this->amp);
-    this->tabSubTileWidget->initialize(this, this->gfx, this->min, this->sol);
+    this->tabSubTileWidget->initialize(this, this->gfx, this->min, this->sol, this->tmi);
     this->tabFrameWidget->initialize(this, this->gfx);
 }
 
@@ -274,7 +281,7 @@ void LevelCelView::insertFrames(QStringList imagefilePaths, bool append)
         }
     }
     // update the view
-    this->initialize(this->gfx, this->min, this->til, this->sol, this->amp);
+    this->update();
     this->displayFrame();
 }
 
@@ -285,7 +292,7 @@ void LevelCelView::replaceCurrentFrame(QString imagefilePath)
     if (frame != nullptr) {
         LevelTabFrameWidget::selectFrameType(frame);
         // update the view
-        this->initialize(this->gfx, this->min, this->til, this->sol, this->amp);
+        this->update();
         this->displayFrame();
     }
 }
@@ -331,7 +338,7 @@ void LevelCelView::removeCurrentFrame()
         }
     }
     // update the view
-    this->initialize(this->gfx, this->min, this->til, this->sol, this->amp);
+    this->update();
     this->displayFrame();
 }
 
@@ -339,10 +346,11 @@ void LevelCelView::createSubtile()
 {
     this->min->createSubtile();
     this->sol->createSubtile();
+    this->tmi->createSubtile();
     // jump to the new subtile
     this->currentSubtileIndex = this->min->getSubtileCount() - 1;
     // update the view
-    this->initialize(this->gfx, this->min, this->til, this->sol, this->amp);
+    this->update();
     this->displayFrame();
 }
 
@@ -366,6 +374,7 @@ void LevelCelView::removeCurrentSubtile()
     }
     this->min->removeSubtile(this->currentSubtileIndex);
     this->sol->removeSubtile(this->currentSubtileIndex);
+    this->tmi->removeSubtile(this->currentSubtileIndex);
     // update subtile index if necessary
     if (this->currentSubtileIndex == this->min->getSubtileCount()) {
         this->currentSubtileIndex = std::max(0, this->currentSubtileIndex - 1);
@@ -382,7 +391,7 @@ void LevelCelView::removeCurrentSubtile()
         }
     }
     // update the view
-    this->initialize(this->gfx, this->min, this->til, this->sol, this->amp);
+    this->update();
     this->displayFrame();
 }
 
@@ -393,7 +402,7 @@ void LevelCelView::createTile()
     // jump to the new tile
     this->currentTileIndex = this->til->getTileCount() - 1;
     // update the view
-    this->initialize(this->gfx, this->min, this->til, this->sol, this->amp);
+    this->update();
     this->displayFrame();
 }
 
@@ -406,7 +415,7 @@ void LevelCelView::removeCurrentTile()
         this->currentTileIndex = std::max(0, this->currentTileIndex - 1);
     }
     // update the view
-    this->initialize(this->gfx, this->min, this->til, this->sol, this->amp);
+    this->update();
     this->displayFrame();
 }
 

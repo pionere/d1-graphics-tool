@@ -42,6 +42,8 @@ set(PROJECT_SOURCES
         source/d1sol.h
         source/d1til.cpp
         source/d1til.h
+        source/d1tmi.cpp
+        source/d1tmi.h
         source/d1trn.cpp
         source/d1trn.h
         source/exportdialog.cpp

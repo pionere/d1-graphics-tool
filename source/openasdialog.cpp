@@ -35,6 +35,7 @@ void OpenAsDialog::initialize(QJsonObject *cfg)
     ui->minFileEdit->setText("");
     ui->solFileEdit->setText("");
     ui->ampFileEdit->setText("");
+    ui->tmiFileEdit->setText("");
     ui->minWidthEdit->setText("0");
     ui->minHeightEdit->setText("0");
 
@@ -85,11 +86,18 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
             } else {
                 ui->ampFileEdit->setText("");
             }
+            QString tmiFilePath = basePath + "tmi";
+            if (QFileInfo::exists(tmiFilePath)) {
+                ui->tmiFileEdit->setText(tmiFilePath);
+            } else {
+                ui->tmiFileEdit->setText("");
+            }
         } else {
             ui->tilFileEdit->setText("");
             ui->minFileEdit->setText("");
             ui->solFileEdit->setText("");
             ui->ampFileEdit->setText("");
+            ui->tmiFileEdit->setText("");
         }
     }
 
@@ -155,6 +163,17 @@ void OpenAsDialog::on_ampFileBrowseButton_clicked()
     ui->ampFileEdit->setText(openFilePath);
 }
 
+void OpenAsDialog::on_tmiFileBrowseButton_clicked()
+{
+    MainWindow *qw = (MainWindow *)this->parentWidget();
+    QString openFilePath = qw->fileDialog(FILE_DIALOG_MODE::OPEN, "Open TMI file", "TMI Files (*.tmi *.TMI)");
+
+    if (openFilePath.isEmpty())
+        return;
+
+    ui->tmiFileEdit->setText(openFilePath);
+}
+
 void OpenAsDialog::on_openButton_clicked()
 {
     OpenAsParam params;
@@ -183,6 +202,7 @@ void OpenAsDialog::on_openButton_clicked()
     params.minFilePath = ui->minFileEdit->text();
     params.solFilePath = ui->solFileEdit->text();
     params.ampFilePath = ui->ampFileEdit->text();
+    params.tmiFilePath = ui->tmiFileEdit->text();
     params.minWidth = ui->minWidthEdit->text().toUShort();
     params.minHeight = ui->minHeightEdit->text().toUShort();
 

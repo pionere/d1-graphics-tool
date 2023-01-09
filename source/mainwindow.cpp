@@ -553,6 +553,17 @@ void MainWindow::openFile(const OpenAsParam &params)
             return;
         }
 
+        // Loading TMI
+        this->tmi = new D1Tmi();
+        QString tmiFilePath = params.tmiFilePath;
+        if (!openFilePath.isEmpty() && tmiFilePath.isEmpty()) {
+            tmiFilePath = basePath + ".tmi";
+        }
+        if (!this->tmi->load(tmiFilePath, this->sol, params)) {
+            QMessageBox::critical(this, "Error", "Failed loading TMI file: " + tmiFilePath);
+            return;
+        }
+
         // Loading CEL
         if (!D1CelTileset::load(*this->gfx, celFrameTypes, openFilePath, params)) {
             QMessageBox::critical(this, "Error", "Failed loading level CEL file: " + openFilePath);
@@ -613,7 +624,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     if (isTileset) {
         this->levelCelView = new LevelCelView();
-        this->levelCelView->initialize(this->gfx, this->min, this->til, this->sol, this->amp);
+        this->levelCelView->initialize(this->gfx, this->min, this->til, this->sol, this->amp, this->tmi);
 
         // Refresh CEL view if a PAL or TRN is modified
         QObject::connect(this->palWidget, &PaletteWidget::modified, this->levelCelView, &LevelCelView::displayFrame);
@@ -810,6 +821,9 @@ void MainWindow::saveFile(const SaveAsParam &params)
     if (this->amp != nullptr) {
         change |= this->amp->save(params);
     }
+    if (this->tmi != nullptr) {
+        change |= this->tmi->save(params);
+    }
 
     if (change) {
         // update view
@@ -817,7 +831,7 @@ void MainWindow::saveFile(const SaveAsParam &params)
             this->celView->initialize(this->gfx);
         }
         if (this->levelCelView != nullptr) {
-            this->levelCelView->initialize(this->gfx, this->min, this->til, this->sol, this->amp);
+            this->levelCelView->initialize(this->gfx, this->min, this->til, this->sol, this->amp, this->tmi);
         }
     }
 
@@ -877,7 +891,7 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_actionSaveAs_triggered()
 {
-    this->saveAsDialog->initialize(this->configuration, this->gfx, this->min, this->til, this->sol, this->amp);
+    this->saveAsDialog->initialize(this->configuration, this->gfx, this->min, this->til, this->sol, this->amp, this->tmi);
     this->saveAsDialog->show();
 }
 
@@ -905,6 +919,7 @@ void MainWindow::on_actionClose_triggered()
     delete this->til;
     delete this->sol;
     delete this->amp;
+    delete this->tmi;
     delete this->palHits;
 
     // update available menu entries

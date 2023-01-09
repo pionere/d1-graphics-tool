@@ -15,6 +15,7 @@
 #include "d1min.h"
 #include "d1sol.h"
 #include "d1til.h"
+#include "d1tmi.h"
 #include "leveltabframewidget.h"
 #include "leveltabsubtilewidget.h"
 #include "leveltabtilewidget.h"
@@ -53,7 +54,7 @@ public:
     explicit LevelCelView(QWidget *parent = nullptr);
     ~LevelCelView();
 
-    void initialize(D1Gfx *gfx, D1Min *min, D1Til *til, D1Sol *sol, D1Amp *amp);
+    void initialize(D1Gfx *gfx, D1Min *min, D1Til *til, D1Sol *sol, D1Amp *amp, D1Tmi *tmi);
 
     int getCurrentFrameIndex();
     int getCurrentSubtileIndex();
@@ -68,6 +69,9 @@ public:
     void removeCurrentTile();
 
     void displayFrame();
+
+private:
+    void update();
 
 signals:
     void frameRefreshed();
@@ -132,6 +136,7 @@ private:
     D1Til *til;
     D1Sol *sol;
     D1Amp *amp;
+    D1Tmi *tmi;
     int currentFrameIndex = 0;
     int currentSubtileIndex = 0;
     int currentTileIndex = 0;

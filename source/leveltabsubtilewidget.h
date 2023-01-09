@@ -10,6 +10,7 @@ class LevelCelView;
 class D1Gfx;
 class D1Min;
 class D1Sol;
+class D1Tmi;
 
 class LevelTabSubTileWidget : public QWidget {
     Q_OBJECT
@@ -18,7 +19,7 @@ public:
     explicit LevelTabSubTileWidget();
     ~LevelTabSubTileWidget();
 
-    void initialize(LevelCelView *v, D1Gfx *g, D1Min *m, D1Sol *s);
+    void initialize(LevelCelView *v, D1Gfx *gfx D1Min *min, D1Sol *sol, D1Tmi *tmi);
     void update();
 
 private slots:
@@ -45,6 +46,7 @@ private:
     D1Gfx *gfx;
     D1Min *min;
     D1Sol *sol;
+    D1Tmi *tmi;
 
     bool onUpdate = false;
     int lastSubtileIndex = -1;

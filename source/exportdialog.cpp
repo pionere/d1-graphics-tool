@@ -30,25 +30,6 @@ void ExportDialog::initialize(QJsonObject *cfg, D1Gfx *g, D1Min *m, D1Til *t, D1
     this->sol = s;
     this->amp = a;
 
-    /*bool multiFrame = this->gfx->getFrameCount() > 1;
-    // disable if there's only one frame
-    ui->filesSettingWidget->setEnabled(multiFrame);
-
-    // disable if there is only one frame or not all frames have the same width/height
-    ui->spritesSettingsWidget->setEnabled(multiFrame && this->gfx->isFrameSizeConstant() && ui->oneFileForAllFramesRadioButton->isChecked());
-
-    // If there's only one group
-    if (this->gfx->getGroupCount() == 1) {
-        ui->allFramesOnOneLineRadioButton->setChecked(true);
-        ui->oneFrameGroupPerLineRadioButton->setEnabled(false);
-    } else {
-        ui->oneFrameGroupPerLineRadioButton->setChecked(true);
-        ui->oneFrameGroupPerLineRadioButton->setEnabled(true);
-    }
-
-    // disable if not a CEL level file or data is missing
-    ui->levelFramesSettingsWidget->setEnabled(this->gfx->getType() == D1CEL_TYPE::V1_LEVEL && this->min != nullptr && this->til != nullptr);*/
-
     // initialize the format combobox
     QList<QByteArray> formats = QImageWriter::supportedImageFormats();
     QStringList formatTxts;
@@ -271,7 +252,6 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
     unsigned tileWidth = this->min->getSubtileWidth() * MICRO_WIDTH * TILE_WIDTH * TILE_HEIGHT;
     unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
-    // If only one file will contain all tiles
     constexpr unsigned TILES_PER_LINE = 4;
     QImage tempOutputImage;
     unsigned tempOutputImageWidth = 0;
@@ -388,7 +368,6 @@ bool ExportDialog::exportLevelSubtiles(QProgressDialog &progress)
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
-    // If only one file will contain all subtiles
     QImage tempOutputImage;
     unsigned tempOutputImageWidth = 0;
     unsigned tempOutputImageHeight = 0;

@@ -27,6 +27,7 @@ public:
     QString minFilePath;
     QString solFilePath;
     QString ampFilePath;
+    QString tmiFilePath;
     quint16 minWidth = 0;
     quint16 minHeight = 0;
 };
@@ -56,6 +57,7 @@ private slots:
     void on_minFileBrowseButton_clicked();
     void on_solFileBrowseButton_clicked();
     void on_ampFileBrowseButton_clicked();
+    void on_tmiFileBrowseButton_clicked();
     void on_openButton_clicked();
     void on_openCancelButton_clicked();
 

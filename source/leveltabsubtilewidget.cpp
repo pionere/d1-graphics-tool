@@ -15,12 +15,13 @@ LevelTabSubTileWidget::~LevelTabSubTileWidget()
     delete ui;
 }
 
-void LevelTabSubTileWidget::initialize(LevelCelView *v, D1Gfx *g, D1Min *m, D1Sol *s)
+void LevelTabSubTileWidget::initialize(LevelCelView *v, D1Gfx *g, D1Min *m, D1Sol *s, D1Tmi *t)
 {
     this->levelCelView = v;
     this->gfx = g;
     this->min = m;
     this->sol = s;
+    this->tmi = t;
 }
 
 void LevelTabSubTileWidget::update()
