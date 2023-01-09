@@ -24,7 +24,7 @@ jobs:
         cache: 'true'
 
     - name: Configure
-      run: cmake -S. -Bbuild -A Win32 -D CMAKE_BUILD_TYPE="Release"
+      run: cmake -S. -Bbuild -A Win32
 
     - name: Make
       run: cmake --build build -j $(nproc)

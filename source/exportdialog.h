@@ -32,7 +32,6 @@ private slots:
     void on_outputFolderBrowseButton_clicked();
     void on_exportButton_clicked();
     void on_exportCancelButton_clicked();
-    // void on_oneFileForAllFramesRadioButton_toggled(bool checked);
 
 private:
     QString getFileFormatExtension();
