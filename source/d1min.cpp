@@ -226,8 +226,6 @@ void D1Min::setSubtileWidth(int width)
                 }
             }
         }
-    } else {
-        return;
     }
     this->subtileWidth = width;
 }
@@ -279,8 +277,6 @@ void D1Min::setSubtileHeight(int height)
             QList<quint16> &celFrameIndicesList = this->celFrameIndices[i];
             celFrameIndicesList.erase(celFrameIndicesList.begin(), celFrameIndicesList.begin() + n);
         }
-    } else {
-        return;
     }
     this->subtileHeight = height;
 }

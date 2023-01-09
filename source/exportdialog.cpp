@@ -9,7 +9,7 @@
 
 ExportDialog::ExportDialog(QWidget *parent)
     : QDialog(parent)
-    , ui(new Ui::ExportDialog)
+    , ui(new Ui::ExportDialog())
 {
     ui->setupUi(this);
 }
@@ -29,7 +29,7 @@ void ExportDialog::initialize(QJsonObject *cfg, D1Gfx *g, D1Min *m, D1Til *t, D1
     this->sol = s;
     this->amp = a;
 
-    bool multiFrame = this->gfx->getFrameCount() > 1;
+    /*bool multiFrame = this->gfx->getFrameCount() > 1;
     // disable if there's only one frame
     ui->filesSettingWidget->setEnabled(multiFrame);
 
@@ -46,17 +46,54 @@ void ExportDialog::initialize(QJsonObject *cfg, D1Gfx *g, D1Min *m, D1Til *t, D1
     }
 
     // disable if not a CEL level file or data is missing
-    ui->levelFramesSettingsWidget->setEnabled(this->gfx->getType() == D1CEL_TYPE::V1_LEVEL && this->min != nullptr && this->til != nullptr);
+    ui->levelFramesSettingsWidget->setEnabled(this->gfx->getType() == D1CEL_TYPE::V1_LEVEL && this->min != nullptr && this->til != nullptr);*/
+
+    // initialize the format combobox
+    QList<QByteArray> formats = QImageWriter::supportedImageFormats();
+    QStringList formatTxts;
+    for (QByteArray &format : formats) {
+        QString fmt = format;
+        formatTxts.append(fmt.toUpper());
+    }
+    // - remember the last selected format
+    QComboBox &fmtBox = this->ui->formatComboBox;
+    QString lastFmt = fmtBox->currentText();
+    if (lastFmt.isEmpty()) {
+        lastFmt = "PNG";
+    }
+    fmtBox->clear();
+    fmtBox->addItems(formatTxts);
+    fmtBox->setCurrentIndex(fmtBox->findText(lastFmt));
+
+    // initialize files count
+    /*this->ui->filesCountComboBox->setEnabled(multiFrame);
+    if (!multiFrame) {
+        this->ui->filesCountComboBox->setCurrentIndex(0);
+    }*/
+
+    // initialize content type
+    bool isTileset = this->gfx->getType() == D1CEL_TYPE::V1_LEVEL;
+    this->ui->contentTypeComboBox->setEnabled(isTileset);
+    if (!isTileset) {
+        this->ui->contentTypeComboBox->setCurrentIndex(0);
+    }
+
+    // initialize content placement
+    /*this->ui->contentPlacementComboBox->setEnabled(multiFrame);
+    if (!multiFrame) {
+        this->ui->contentPlacementComboBox->setCurrentIndex(0);
+    }*/
 }
 
 QString ExportDialog::getFileFormatExtension()
 {
-    if (ui->pngRadioButton->isChecked())
+    return "." + this->ui->formatComboBox->currentText()->toLower();
+    /*if (ui->pngRadioButton->isChecked())
         return ".png";
     if (ui->bmpRadioButton->isChecked())
         return ".bmp";
 
-    return QString();
+    return QString();*/
 }
 
 void ExportDialog::on_outputFolderBrowseButton_clicked()
@@ -70,57 +107,110 @@ void ExportDialog::on_outputFolderBrowseButton_clicked()
     ui->outputFolderEdit->setText(selectedDirectory);
 }
 
-bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
+bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
 {
-    if (this->min == nullptr || this->til == nullptr) {
-        return true;
-    }
-
     progress.setLabelText("Exporting " + QFileInfo(this->til->getFilePath()).fileName() + " level tiles...");
 
     QString outputFilePathBase = ui->outputFolderEdit->text() + "/"
         + QFileInfo(this->til->getFilePath()).fileName().replace(".", "_");
 
-    unsigned tileWidth = this->min->getSubtileWidth() * 2 * MICRO_WIDTH;
-    unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT + 32;
-    unsigned n = this->til->getTileCount();
-
-    // If only one file will contain all tiles
-    constexpr unsigned tiles_per_line = 8;
-    QImage tempOutputImage;
-    unsigned tempOutputImageWidth = 0;
-    unsigned tempOutputImageHeight = 0;
-    bool oneFileForAll = ui->oneFileForAllFramesRadioButton->isChecked();
-    if (oneFileForAll) {
-        tempOutputImageWidth = tileWidth * tiles_per_line;
-        tempOutputImageHeight = tileHeight * ((n + (tiles_per_line - 1)) / tiles_per_line);
-        tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
-        tempOutputImage.fill(Qt::transparent);
+    int n = this->til->getTileCount();
+    // nothing to export
+    if (n == 0) {
+        return true;
+    }
+    // single tile
+    if (n == 1) {
+        // one file for the only tile (not indexed)
+        QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
+        this->til->getTileImage(0).save(outputFilePath);
+        return true;
     }
 
-    QPainter painter(&tempOutputImage);
-    unsigned dx = 0, dy = 0;
-    for (unsigned i = 0; i < n; i++) {
-        if (progress.wasCanceled()) {
-            return false;
-        }
-        progress.setValue(100 * i / n);
-
-        // If only one file will contain all tiles
-        if (oneFileForAll) {
-            painter.drawImage(dx, dy, this->til->getTileImage(i));
-
-            dx += tileWidth;
-            if (dx >= tempOutputImageWidth) {
-                dx = 0;
-                dy += tileHeight;
+    // multiple tiles
+    // if (!ui->oneFileForAllFramesRadioButton->isChecked()) {
+    if (this->ui->filesCountComboBox->currentIndex() != 0) {
+        // one file for each tile (indexed)
+        for (int i = 0; i < n; i++) {
+            if (progress.wasCanceled()) {
+                return false;
             }
-        } else {
+
+            progress.setValue(100 * i / n);
+
             QString outputFilePath = outputFilePathBase + "_tile"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
 
             this->til->getTileImage(i).save(outputFilePath);
         }
+        return true;
+    }
+    // one file for all tiles
+
+    unsigned tileWidth = this->min->getSubtileWidth() * 2 * MICRO_WIDTH;
+    unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT + 32;
+
+    // If only one file will contain all tiles
+    constexpr unsigned TILES_PER_LINE = 8;
+    QImage tempOutputImage;
+    unsigned tempOutputImageWidth = 0;
+    unsigned tempOutputImageHeight = 0;
+    // bool oneFileForAll = ui->oneFileForAllFramesRadioButton->isChecked();
+    int placement = this->ui->contentPlacementComboBox->currentIndex();
+    if (placement == 0) { // groupped
+        tempOutputImageWidth = tileWidth * TILES_PER_LINE;
+        tempOutputImageHeight = tileHeight * ((n + (TILES_PER_LINE - 1)) / TILES_PER_LINE);
+    //} else if (ui->allFramesOnOneColumnRadioButton->isChecked()) {
+    } else if (placement == 2) { // tiles on one column
+        tempOutputImageWidth = tileWidth;
+        tempOutputImageHeight = tileHeight * n;
+    //} else if (ui->allFramesOnOneLineRadioButton->isChecked()) {
+    } else { // placement == 1 -- tiles on one line
+        tempOutputImageWidth = tileWidth * n;
+        tempOutputImageHeight = tileHeight;
+    }
+
+    tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
+    tempOutputImage.fill(Qt::transparent);
+
+    QPainter painter(&tempOutputImage);
+
+    if (placement == 0) { // groupped
+        unsigned dx = 0, dy = 0;
+        for (unsigned i = 0; i < n; i++) {
+            if (progress.wasCanceled()) {
+                return false;
+            }
+            progress.setValue(100 * i / n);
+
+            const QImage image = this->til->getTileImage(i);
+
+            painter.drawImage(dx, dy, image);
+
+            dx += image.width();
+            if (dx >= tempOutputImageWidth) {
+                dx = 0;
+                dy += image.height();
+            }
+        }
+    } else {
+        quint32 cursor = 0;
+        for (int i = 0; i < n; i++) {
+            if (progress.wasCanceled()) {
+                return false;
+            }
+            progress.setValue(100 * i / n);
+
+            //if (ui->allFramesOnOneColumnRadioButton->isChecked()) {
+            const QImage image = this->til->getTileImage(i);
+            if (placement == 2) { // tiles on one column
+                painter.drawImage(0, cursor, image);
+                cursor += image.height();
+            } else { // placement == 1 -- tiles on one line
+                painter.drawImage(cursor, 0, image);
+                cursor += image.width();
+            }
+        }
     }
 
     if (oneFileForAll) {
@@ -128,102 +218,264 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
         QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
         tempOutputImage.save(outputFilePath);
     }
+    return true;
+}
+
+int getTileCount();
+    QList<quint16> &getSubtileIndices(int tileIndex);
+
+bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
+{
+    progress.setLabelText("Exporting " + QFileInfo(this->min->getFilePath()).fileName() + " flat level tiles...");
+
+    QString outputFilePathBase = ui->outputFolderEdit->text() + "/"
+        + QFileInfo(this->til->getFilePath()).fileName().replace(".", "_");
+
+    int n = this->til->getTileCount();
+    // nothing to export
+    if (n == 0) {
+        return true;
+    }
+    // single tile
+    if (n == 1) {
+        // one file for the only subtile (not indexed)
+        QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
+        this->til->getFlatTileImage(0).save(outputFilePath);
+        return true;
+    }
+    // multiple tiles
+    // if (!ui->oneFileForAllFramesRadioButton->isChecked()) {
+    if (this->ui->filesCountComboBox->currentIndex() != 0) {
+        // one file for each subtile (indexed)
+        for (int i = 0; i < n; i++) {
+            if (progress.wasCanceled()) {
+                return false;
+            }
+
+            progress.setValue(100 * i / n);
+
+            QString outputFilePath = outputFilePathBase + "_tile_"
+                + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
+
+            this->til->getFlatTileImage(i).save(outputFilePath);
+        }
+        return true;
+    }
+    // one file for all subtiles
+
+    unsigned tileWidth = this->min->getSubtileWidth() * MICRO_WIDTH * TILE_WIDTH * TILE_HEIGHT;
+    unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    // If only one file will contain all tiles
+    constexpr unsigned TILES_PER_LINE = 4;
+    QImage tempOutputImage;
+    unsigned tempOutputImageWidth = 0;
+    unsigned tempOutputImageHeight = 0;
+    // bool oneFileForAll = ui->oneFileForAllFramesRadioButton->isChecked();
+    int placement = this->ui->contentPlacementComboBox->currentIndex();
+    if (placement == 0) { // groupped
+        tempOutputImageWidth = tileWidth * TILES_PER_LINE;
+        tempOutputImageHeight = tileHeight * ((n + (TILES_PER_LINE - 1)) / TILES_PER_LINE);
+    //} else if (ui->allFramesOnOneColumnRadioButton->isChecked()) {
+    } else if (placement == 2) { // subtiles on one column
+        tempOutputImageWidth = tileWidth;
+        tempOutputImageHeight = tileHeight * n;
+    //} else if (ui->allFramesOnOneLineRadioButton->isChecked()) {
+    } else { // placement == 1 -- subtiles on one line
+        tempOutputImageWidth = tileWidth * n;
+        tempOutputImageHeight = tileHeight;
+    }
+
+    tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
+    tempOutputImage.fill(Qt::transparent);
+
+    QPainter painter(&tempOutputImage);
+
+    if (placement == 0) { // groupped
+        unsigned dx = 0, dy = 0;
+        for (unsigned i = 0; i < n; i++) {
+            if (progress.wasCanceled()) {
+                return false;
+            }
+            progress.setValue(100 * i / n);
+
+            const QImage image = this->til->getFlatTileImage(i);
+
+            painter.drawImage(dx, dy, image);
+
+            dx += image.width();
+            if (dx >= tempOutputImageWidth) {
+                dx = 0;
+                dy += image.height();
+            }
+        }
+    } else {
+        int cursor = 0;
+        for (int i = 0; i < n; i++) {
+            if (progress.wasCanceled()) {
+                return false;
+            }
+            progress.setValue(100 * i / n);
+
+            //if (ui->allFramesOnOneColumnRadioButton->isChecked()) {
+            const QImage image = this->til->getFlatTileImage(i);
+            if (placement == 2) { // subtiles on one column
+                painter.drawImage(0, cursor, image);
+                cursor += image.height();
+            } else { // placement == 1 -- subtiles on one line
+                painter.drawImage(cursor, 0, image);
+                cursor += image.width();
+            }
+        }
+    }
+
+    painter.end();
+
+    QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
+    tempOutputImage.save(outputFilePath);
     return true;
 }
 
 bool ExportDialog::exportLevelSubtiles(QProgressDialog &progress)
 {
-    if (this->min == nullptr) {
-        return true;
-    }
-
-    progress.setLabelText("Exporting " + QFileInfo(this->min->getFilePath()).fileName() + " level sub-tiles...");
+    progress.setLabelText("Exporting " + QFileInfo(this->min->getFilePath()).fileName() + " level subtiles...");
 
     QString outputFilePathBase = ui->outputFolderEdit->text() + "/"
         + QFileInfo(this->min->getFilePath()).fileName().replace(".", "_");
 
-    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
-    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
-    unsigned n = this->min->getSubtileCount();
-
-    // If only one file will contain all sub-tiles
-    constexpr unsigned subtiles_per_line = 16;
-    QImage tempOutputImage;
-    unsigned tempOutputImageWidth = 0;
-    unsigned tempOutputImageHeight = 0;
-    bool oneFileForAll = ui->oneFileForAllFramesRadioButton->isChecked();
-    if (oneFileForAll) {
-        tempOutputImageWidth = subtileWidth * subtiles_per_line;
-        tempOutputImageHeight = subtileHeight * ((n + (subtiles_per_line - 1)) / subtiles_per_line);
-        tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
-        tempOutputImage.fill(Qt::transparent);
+    int n = this->min->getSubtileCount();
+    // nothing to export
+    if (n == 0) {
+        return true;
     }
-
-    QPainter painter(&tempOutputImage);
-    unsigned dx = 0, dy = 0;
-    for (unsigned i = 0; i < n; i++) {
-        if (progress.wasCanceled()) {
-            return false;
-        }
-        progress.setValue(100 * i / n);
-
-        // If only one file will contain all sub-tiles
-        if (oneFileForAll) {
-            painter.drawImage(dx, dy, this->min->getSubtileImage(i));
-
-            dx += subtileWidth;
-            if (dx >= tempOutputImageWidth) {
-                dx = 0;
-                dy += subtileHeight;
+    // single subtile
+    if (n == 1) {
+        // one file for the only subtile (not indexed)
+        QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
+        this->min->getSubtileImage(0).save(outputFilePath);
+        return true;
+    }
+    // multiple subtiles
+    // if (!ui->oneFileForAllFramesRadioButton->isChecked()) {
+    if (this->ui->filesCountComboBox->currentIndex() != 0) {
+        // one file for each subtile (indexed)
+        for (int i = 0; i < n; i++) {
+            if (progress.wasCanceled()) {
+                return false;
             }
-        } else {
-            QString outputFilePath = outputFilePathBase + "_sub-tile"
+
+            progress.setValue(100 * i / n);
+
+            QString outputFilePath = outputFilePathBase + "_subtile"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
 
             this->min->getSubtileImage(i).save(outputFilePath);
         }
+        return true;
+    }
+    // one file for all subtiles
+
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    // If only one file will contain all subtiles
+    QImage tempOutputImage;
+    unsigned tempOutputImageWidth = 0;
+    unsigned tempOutputImageHeight = 0;
+    // bool oneFileForAll = ui->oneFileForAllFramesRadioButton->isChecked();
+    int placement = this->ui->contentPlacementComboBox->currentIndex();
+    if (placement == 0) { // groupped
+        tempOutputImageWidth = subtileWidth * EXPORT_SUBTILES_PER_LINE;
+        tempOutputImageHeight = subtileHeight * ((n + (EXPORT_SUBTILES_PER_LINE - 1)) / EXPORT_SUBTILES_PER_LINE);
+    //} else if (ui->allFramesOnOneColumnRadioButton->isChecked()) {
+    } else if (placement == 2) { // subtiles on one column
+        tempOutputImageWidth = subtileWidth;
+        tempOutputImageHeight = subtileHeight * n;
+    //} else if (ui->allFramesOnOneLineRadioButton->isChecked()) {
+    } else { // placement == 1 -- subtiles on one line
+        tempOutputImageWidth = subtileWidth * n;
+        tempOutputImageHeight = subtileHeight;
     }
 
-    if (oneFileForAll) {
-        painter.end();
-        QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
-        tempOutputImage.save(outputFilePath);
+    tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
+    tempOutputImage.fill(Qt::transparent);
+
+    QPainter painter(&tempOutputImage);
+
+    if (placement == 0) { // groupped
+        unsigned dx = 0, dy = 0;
+        for (unsigned i = 0; i < n; i++) {
+            if (progress.wasCanceled()) {
+                return false;
+            }
+            progress.setValue(100 * i / n);
+
+            const QImage image = this->min->getSubtileImage(i);
+
+            painter.drawImage(dx, dy, image);
+
+            dx += image.width();
+            if (dx >= tempOutputImageWidth) {
+                dx = 0;
+                dy += image.height();
+            }
+        }
+    } else {
+        int cursor = 0;
+        for (int i = 0; i < n; i++) {
+            if (progress.wasCanceled()) {
+                return false;
+            }
+            progress.setValue(100 * i / n);
+
+            //if (ui->allFramesOnOneColumnRadioButton->isChecked()) {
+            const QImage image = this->min->getSubtileImage(i);
+            if (placement == 2) { // subtiles on one column
+                painter.drawImage(0, cursor, image);
+                cursor += image.height();
+            } else { // placement == 1 -- subtiles on one line
+                painter.drawImage(cursor, 0, image);
+                cursor += image.width();
+            }
+        }
     }
+
+    painter.end();
+
+    QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
+    tempOutputImage.save(outputFilePath);
     return true;
 }
 
-bool ExportDialog::exportLevel(QProgressDialog &progress)
-{
-    if (ui->exportLevelTiles->isChecked()) {
-        return this->exportLevelTiles(progress);
-    } else if (ui->exportLevelSubtiles->isChecked()) {
-        return this->exportLevelSubtiles(progress);
-    }
-    return true;
-}
-
-bool ExportDialog::exportSprites(QProgressDialog &progress)
+bool ExportDialog::exportFrames(QProgressDialog &progress)
 {
     progress.setLabelText("Exporting " + QFileInfo(this->gfx->getFilePath()).fileName() + " frames...");
 
     QString outputFilePathBase = ui->outputFolderEdit->text() + "/"
         + QFileInfo(this->gfx->getFilePath()).fileName().replace(".", "_");
+
+    int n = this->gfx->getFrameCount();
+    // nothing to export
+    if (n == 0) {
+        return true;
+    }
     // single frame
-    if (this->gfx->getFrameCount() == 1) {
-        // one file for each frame (not indexed)
+    if (n == 1) {
+        // one file for the only frame (not indexed)
         QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
         this->gfx->getFrameImage(0).save(outputFilePath);
         return true;
     }
     // multiple frames
-    if (!ui->oneFileForAllFramesRadioButton->isChecked()) {
+    // if (!ui->oneFileForAllFramesRadioButton->isChecked()) {
+    if (this->ui->filesCountComboBox->currentIndex() != 0) {
         // one file for each frame (indexed)
-        for (int i = 0; i < this->gfx->getFrameCount(); i++) {
+        for (int i = 0; i < n; i++) {
             if (progress.wasCanceled()) {
                 return false;
             }
 
-            progress.setValue(100 * i / this->gfx->getFrameCount());
+            progress.setValue(100 * i / n);
 
             QString outputFilePath = outputFilePathBase + "_frame"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
@@ -234,29 +486,50 @@ bool ExportDialog::exportSprites(QProgressDialog &progress)
     }
     // one file for all frames
     QImage tempOutputImage;
-    quint16 tempOutputImageWidth = 0;
-    quint16 tempOutputImageHeight = 0;
+    quint32 tempOutputImageWidth = 0;
+    quint32 tempOutputImageHeight = 0;
     // If only one file will contain all frames
-    if (ui->oneFrameGroupPerLineRadioButton->isChecked()) {
-        for (int i = 0; i < this->gfx->getGroupCount(); i++) {
-            quint16 groupImageWidth = 0;
-            quint16 groupImageHeight = 0;
-            for (unsigned int j = this->gfx->getGroupFrameIndices(i).first;
-                 j <= this->gfx->getGroupFrameIndices(i).second; j++) {
-                groupImageWidth += this->gfx->getFrameWidth(j);
-                groupImageHeight = std::max(this->gfx->getFrameHeight(j), groupImageHeight);
+    // if (ui->oneFrameGroupPerLineRadioButton->isChecked()) {
+    int placement = this->ui->contentPlacementComboBox->currentIndex();
+    if (placement == 0) { // groupped
+        if (this->gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
+            // artifical grouping of a tileset
+            quint32 groupImageWidth = 0;
+            quint32 groupImageHeight = 0;
+            for (int i = 0; i < n; i++) {
+                if ((i % EXPORT_LVLFRAMES_PER_LINE) == 0) {
+                    tempOutputImageWidth = std::max(groupImageWidth, tempOutputImageWidth);
+                    tempOutputImageHeight += groupImageHeight;
+                    groupImageWidth = 0;
+                    groupImageHeight = 0;
+                }
+                groupImageWidth += this->gfx->getFrameWidth(i);
+                groupImageHeight = std::max(this->gfx->getFrameHeight(i), groupImageHeight);
             }
             tempOutputImageWidth = std::max(groupImageWidth, tempOutputImageWidth);
             tempOutputImageHeight += groupImageHeight;
+        } else {
+            for (int i = 0; i < this->gfx->getGroupCount(); i++) {
+                quint32 groupImageWidth = 0;
+                quint32 groupImageHeight = 0;
+                for (unsigned int j = this->gfx->getGroupFrameIndices(i).first;
+                     j <= this->gfx->getGroupFrameIndices(i).second; j++) {
+                    groupImageWidth += this->gfx->getFrameWidth(j);
+                    groupImageHeight = std::max(this->gfx->getFrameHeight(j), groupImageHeight);
+                }
+                tempOutputImageWidth = std::max(groupImageWidth, tempOutputImageWidth);
+                tempOutputImageHeight += groupImageHeight;
+            }
         }
-
-    } else if (ui->allFramesOnOneColumnRadioButton->isChecked()) {
-        for (int i = 0; i < this->gfx->getGroupCount(); i++) {
+    //} else if (ui->allFramesOnOneColumnRadioButton->isChecked()) {
+    } else if (placement == 2) { // frames on one column
+        for (int i = 0; i < n; i++) {
             tempOutputImageWidth = std::max(this->gfx->getFrameWidth(i), tempOutputImageWidth);
             tempOutputImageHeight += this->gfx->getFrameHeight(i);
         }
-    } else if (ui->allFramesOnOneLineRadioButton->isChecked()) {
-        for (int i = 0; i < this->gfx->getGroupCount(); i++) {
+    //} else if (ui->allFramesOnOneLineRadioButton->isChecked()) {
+    } else { // placement == 1 -- frames on one line
+        for (int i = 0; i < n; i++) {
             tempOutputImageWidth += this->gfx->getFrameWidth(i);
             tempOutputImageHeight = std::max(this->gfx->getFrameHeight(i), tempOutputImageHeight);
         }
@@ -266,38 +539,66 @@ bool ExportDialog::exportSprites(QProgressDialog &progress)
 
     QPainter painter(&tempOutputImage);
 
-    if (ui->oneFrameGroupPerLineRadioButton->isChecked()) {
-        quint32 cursorY = 0;
-        for (int i = 0; i < this->gfx->getGroupCount(); i++) {
-            quint32 cursorX = 0;
-            quint16 groupImageHeight = 0;
-            for (unsigned int j = this->gfx->getGroupFrameIndices(i).first;
-                 j <= this->gfx->getGroupFrameIndices(i).second; j++) {
+    // if (ui->oneFrameGroupPerLineRadioButton->isChecked()) {
+    if (placement == 0) { // groupped
+        if (this->gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
+            // artifical grouping of a tileset
+            int cursorY = 0;
+            int cursorX = 0;
+            int groupImageHeight = 0;
+            for (int i = 0; i < n; i++) {
                 if (progress.wasCanceled()) {
                     return false;
                 }
-                progress.setValue(100 * j / this->gfx->getFrameCount());
+                progress.setValue(100 * i / n);
 
-                painter.drawImage(cursorX, cursorY, this->gfx->getFrameImage(j));
-                cursorX += this->gfx->getFrameWidth(j);
-                groupImageHeight = std::max(this->gfx->getFrameHeight(j), groupImageHeight);
+                if ((i % EXPORT_LVLFRAMES_PER_LINE) == 0) {
+                    cursorY += groupImageHeight;
+                    cursorX = 0;
+                    groupImageHeight = 0;
+                }
+
+                const QImage image = this->gfx->getFrameImage(i);
+                painter.drawImage(cursorX, cursorY, image);
+
+                cursorX += image.width();
+                groupImageHeight = std::max(image.height(), groupImageHeight);
             }
-            cursorY += groupImageHeight;
+        } else {
+            int cursorY = 0;
+            for (int i = 0; i < this->gfx->getGroupCount(); i++) {
+                int groupImageHeight = 0;
+                for (unsigned int j = this->gfx->getGroupFrameIndices(i).first;
+                     j <= this->gfx->getGroupFrameIndices(i).second; j++) {
+                    if (progress.wasCanceled()) {
+                        return false;
+                    }
+                    progress.setValue(100 * j / n);
+
+                    const QImage image = this->gfx->getFrameImage(j);
+                    painter.drawImage(cursorX, cursorY, image);
+                    cursorX += image.width();
+                    groupImageHeight = std::max(image.height(), groupImageHeight);
+                }
+                cursorY += groupImageHeight;
+            }
         }
     } else {
-        quint32 cursor = 0;
-        for (int i = 0; i < this->gfx->getFrameCount(); i++) {
+        int cursor = 0;
+        for (int i = 0; i < n; i++) {
             if (progress.wasCanceled()) {
                 return false;
             }
-            progress.setValue(100 * i / this->gfx->getFrameCount());
+            progress.setValue(100 * i / n);
 
-            if (ui->allFramesOnOneColumnRadioButton->isChecked()) {
-                painter.drawImage(0, cursor, this->gfx->getFrameImage(i));
-                cursor += this->gfx->getFrameHeight(i);
-            } else {
-                painter.drawImage(cursor, 0, this->gfx->getFrameImage(i));
-                cursor += this->gfx->getFrameWidth(i);
+            //if (ui->allFramesOnOneColumnRadioButton->isChecked()) {
+            const QImage image = this->gfx->getFrameImage(i);
+            if (placement == 2) { // frames on one column
+                painter.drawImage(0, cursor, image);
+                cursor += image.height();
+            } else { // placement == 1 -- frames on one line
+                painter.drawImage(cursor, 0, image);
+                cursor += image.width();
             }
         }
     }
@@ -332,10 +633,19 @@ void ExportDialog::on_exportButton_clicked()
         progress.setValue(0);
         progress.show();
 
-        if (this->gfx->getType() == D1CEL_TYPE::V1_LEVEL && !ui->exportLevelFrames->isChecked()) {
-            result = this->exportLevel(progress);
-        } else {
-            result = this->exportSprites(progress);
+        switch (this->ui->contentTypeComboBox->currentIndex()) {
+        case 0:
+            result = this->exportFrames(progress);
+            break;
+        case 1:
+            result = this->exportLevelSubtiles(progress);
+            break;
+        case 2:
+            result = this->exportLevelTiles(progress);
+            break;
+        default: // case 3:
+            result = this->exportLevelTiles25D(progress);
+            break;
         }
     } catch (...) {
         QMessageBox::critical(this, "Error", "Export Failed.");
@@ -354,7 +664,7 @@ void ExportDialog::on_exportCancelButton_clicked()
     this->close();
 }
 
-void ExportDialog::on_oneFileForAllFramesRadioButton_toggled(bool checked)
+/*void ExportDialog::on_oneFileForAllFramesRadioButton_toggled(bool checked)
 {
     ui->spritesSettingsWidget->setEnabled(checked && ui->levelFramesSettingsWidget->isEnabled());
-}
+}*/

@@ -371,23 +371,23 @@ void PaletteWidget::initialize(D1Pal *p, D1Trn *t, LevelCelView *lc, D1PalHits *
 
 void PaletteWidget::initializeUi()
 {
-    bool isTrnWidget = this->isTrn;
+    bool trnMode = this->isTrn;
 
-    this->ui->monsterTrnPushButton->setVisible(isTrnWidget);
-    this->ui->translationClearPushButton->setVisible(isTrnWidget);
-    this->ui->translationPickPushButton->setVisible(isTrnWidget);
-    this->ui->colorLineEdit->setReadOnly(!isTrnWidget);
-    this->ui->colorPickPushButton->setVisible(!isTrnWidget);
-    this->ui->colorClearPushButton->setVisible(!isTrnWidget);
-    this->ui->translationIndexLineEdit->setVisible(isTrnWidget);
-    this->ui->translationLabel->setVisible(isTrnWidget);
+    this->ui->monsterTrnPushButton->setVisible(trnMode);
+    this->ui->translationClearPushButton->setVisible(trnMode);
+    this->ui->translationPickPushButton->setVisible(trnMode);
+    this->ui->colorLineEdit->setReadOnly(!trnMode);
+    this->ui->colorPickPushButton->setVisible(!trnMode);
+    this->ui->colorClearPushButton->setVisible(!trnMode);
+    this->ui->translationIndexLineEdit->setVisible(trnMode);
+    this->ui->translationLabel->setVisible(trnMode);
 
     this->initializePathComboBox();
     this->initializeDisplayComboBox();
 
     this->refreshColorLineEdit();
     this->refreshIndexLineEdit();
-    if (isTrnWidget)
+    if (trnMode)
         this->refreshTranslationIndexLineEdit();
 
     this->displayColors();
