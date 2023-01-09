@@ -46,10 +46,10 @@ jobs:
         version: '6.2.4'
 
     - name: Configure
-      run: cmake -S. -Bbuild -D CMAKE_BUILD_TYPE="Release"
+      run: cmake -S. -Bbuild
 
     - name: Make
-      run: cmake --build build -j $(nproc)
+      run: cmake --build build -j $(nproc) --config Release
 
     - name: Package
       run: |
@@ -91,10 +91,10 @@ jobs:
         arch: 'win32_msvc2019'
 
     - name: Configure
-      run: cmake -S. -Bbuild -A Win32 -D CMAKE_BUILD_TYPE="Release"
+      run: cmake -S. -Bbuild -A Win32
 
     - name: Make
-      run: cmake --build build -j $(nproc)
+      run: cmake --build build -j $(nproc) --config Release
 
     - name: Package
       run: |
