@@ -137,6 +137,18 @@
         </item>
         <item row="0" column="1">
          <widget class="QLabel" name="tmiLeftLabel">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="text">
            <string>Left floor:</string>
           </property>
@@ -172,6 +184,18 @@
         </item>
         <item row="1" column="1">
          <widget class="QLabel" name="tmiRightLabel">
+          <property name="minimumSize">
+           <size>
+            <width>90</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>90</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="text">
            <string>Right floor:</string>
           </property>
