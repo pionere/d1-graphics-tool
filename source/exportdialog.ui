@@ -111,13 +111,13 @@
        <widget class="QComboBox" name="contentTypeComboBox">
         <property name="minimumSize">
          <size>
-          <width>80</width>
+          <width>90</width>
           <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>90</width>
           <height>16777215</height>
          </size>
         </property>
@@ -161,19 +161,19 @@
        <widget class="QComboBox" name="contentPlacementComboBox">
         <property name="minimumSize">
          <size>
-          <width>100</width>
+          <width>90</width>
           <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>100</width>
+          <width>90</width>
           <height>16777215</height>
          </size>
         </property>
         <item>
          <property name="text">
-          <string>Groupped</string>
+          <string>Grouped</string>
          </property>
         </item>
         <item>
@@ -204,6 +204,18 @@
       </item>
       <item row="2" column="1">
        <widget class="QWidget" name="rangeFieldsWidget" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>120</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <property name="spacing">
           <number>4</number>

@@ -160,7 +160,7 @@ bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
     unsigned tempOutputImageWidth = 0;
     unsigned tempOutputImageHeight = 0;
     int placement = this->ui->contentPlacementComboBox->currentIndex();
-    if (placement == 0) { // groupped
+    if (placement == 0) { // grouped
         tempOutputImageWidth = tileWidth * TILES_PER_LINE;
         tempOutputImageHeight = tileHeight * ((n + (TILES_PER_LINE - 1)) / TILES_PER_LINE);
     } else if (placement == 2) { // tiles on one column
@@ -176,7 +176,7 @@ bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
 
     QPainter painter(&tempOutputImage);
 
-    if (placement == 0) { // groupped
+    if (placement == 0) { // grouped
         unsigned dx = 0, dy = 0;
         for (int i = tileFrom; i <= tileTo; i++) {
             if (progress.wasCanceled()) {
@@ -277,7 +277,7 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
     unsigned tempOutputImageWidth = 0;
     unsigned tempOutputImageHeight = 0;
     int placement = this->ui->contentPlacementComboBox->currentIndex();
-    if (placement == 0) { // groupped
+    if (placement == 0) { // grouped
         tempOutputImageWidth = tileWidth * TILES_PER_LINE;
         tempOutputImageHeight = tileHeight * ((n + (TILES_PER_LINE - 1)) / TILES_PER_LINE);
     } else if (placement == 2) { // tiles on one column
@@ -293,7 +293,7 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
 
     QPainter painter(&tempOutputImage);
 
-    if (placement == 0) { // groupped
+    if (placement == 0) { // grouped
         unsigned dx = 0, dy = 0;
         for (int i = tileFrom; i <= tileTo; i++) {
             if (progress.wasCanceled()) {
@@ -393,7 +393,7 @@ bool ExportDialog::exportLevelSubtiles(QProgressDialog &progress)
     unsigned tempOutputImageWidth = 0;
     unsigned tempOutputImageHeight = 0;
     int placement = this->ui->contentPlacementComboBox->currentIndex();
-    if (placement == 0) { // groupped
+    if (placement == 0) { // grouped
         tempOutputImageWidth = subtileWidth * EXPORT_SUBTILES_PER_LINE;
         tempOutputImageHeight = subtileHeight * ((n + (EXPORT_SUBTILES_PER_LINE - 1)) / EXPORT_SUBTILES_PER_LINE);
     } else if (placement == 2) { // subtiles on one column
@@ -412,7 +412,7 @@ bool ExportDialog::exportLevelSubtiles(QProgressDialog &progress)
 
     QPainter painter(&tempOutputImage);
 
-    if (placement == 0) { // groupped
+    if (placement == 0) { // grouped
         unsigned dx = 0, dy = 0;
         for (int i = subtileFrom; i <= subtileTo; i++) {
             if (progress.wasCanceled()) {
@@ -508,7 +508,7 @@ bool ExportDialog::exportFrames(QProgressDialog &progress)
     int tempOutputImageHeight = 0;
 
     int placement = this->ui->contentPlacementComboBox->currentIndex();
-    if (placement == 0) { // groupped
+    if (placement == 0) { // grouped
         if (this->gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
             // artifical grouping of a tileset
             int groupImageWidth = 0;
@@ -557,7 +557,7 @@ bool ExportDialog::exportFrames(QProgressDialog &progress)
 
     QPainter painter(&tempOutputImage);
 
-    if (placement == 0) { // groupped
+    if (placement == 0) { // grouped
         if (this->gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
             // artifical grouping of a tileset
             int cursorY = 0;
