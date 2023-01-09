@@ -538,7 +538,7 @@ bool ExportDialog::exportFrames(QProgressDialog &progress)
         } else {
             int cursorY = 0;
             for (int i = 0; i < this->gfx->getGroupCount(); i++) {
-	            int cursorX = 0;
+                int cursorX = 0;
                 int groupImageHeight = 0;
                 for (unsigned int j = this->gfx->getGroupFrameIndices(i).first;
                      j <= this->gfx->getGroupFrameIndices(i).second; j++) {
