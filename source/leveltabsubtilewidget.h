@@ -19,7 +19,7 @@ public:
     explicit LevelTabSubTileWidget();
     ~LevelTabSubTileWidget();
 
-    void initialize(LevelCelView *v, D1Gfx *gfx D1Min *min, D1Sol *sol, D1Tmi *tmi);
+    void initialize(LevelCelView *v, D1Gfx *gfx, D1Min *min, D1Sol *sol, D1Tmi *tmi);
     void update();
 
 private slots:

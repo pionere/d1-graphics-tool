@@ -109,7 +109,7 @@ void LevelCelView::initialize(D1Gfx *g, D1Min *m, D1Til *t, D1Sol *s, D1Amp *a, 
     this->update();
 }
 
-int LevelCelView::update()
+void LevelCelView::update()
 {
     // Displaying CEL file path information
     QFileInfo gfxFileInfo(this->gfx->getFilePath());

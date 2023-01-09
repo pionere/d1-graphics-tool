@@ -47,17 +47,17 @@ bool D1Tmi::load(QString filePath, D1Sol *sol, const OpenAsParam &params)
     if (tmiSubtileCount == 0) {
         // prepare list based on the sol-flags
         for (int i = 0; i < subtileCount; i++) {
-            quint8 sol = sol->getSubtileProperties(i);
+            quint8 solFlags = sol->getSubtileProperties(i);
             quint8 tmi = 0;
-            if (sol & (1 << (4 - 1))) {
+            if (solFlags & (1 << (4 - 1))) {
                 // sol: enabled transparency -> tmi: enable transparency on the wall
                 tmi |= 1 << (1 - 1);
             }
-            if (sol & (1 << (5 - 1))) {
+            if (solFlags & (1 << (5 - 1))) {
                 // sol: left floor {CEL FRAME} has transparent part -> tmi: left floor {CEL FRAME} has transparent part
                 tmi |= 1 << (4 - 1);
             }
-            if (sol & (1 << (6 - 1))) {
+            if (solFlags & (1 << (6 - 1))) {
                 // sol: right floor {CEL FRAME} has transparent part -> tmi: right floor {CEL FRAME} has transparent part
                 tmi |= 1 << (7 - 1);
             }

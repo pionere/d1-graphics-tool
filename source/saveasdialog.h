@@ -9,6 +9,7 @@ class D1Min;
 class D1Til;
 class D1Sol;
 class D1Amp;
+class D1Tmi;
 
 enum class SAVE_CLIPPING_TYPE {
     CLIPPED_AUTODETECT,
@@ -39,7 +40,7 @@ public:
     explicit SaveAsDialog(QWidget *parent = nullptr);
     ~SaveAsDialog();
 
-    void initialize(QJsonObject *cfg, D1Gfx *gfx, D1Min *min, D1Til *til, D1Sol *sol, D1Amp *amp);
+    void initialize(QJsonObject *cfg, D1Gfx *gfx, D1Min *min, D1Til *til, D1Sol *sol, D1Amp *amp, D1Tmi *tmi);
 
 private slots:
     void on_outputCelFileBrowseButton_clicked();
