@@ -30,7 +30,7 @@ int D1GfxFrame::getHeight() const
 
 D1GfxPixel D1GfxFrame::getPixel(int x, int y) const
 {
-    if (x >= 0 && x < this->width && y >= 0 &# y < this->height)
+    if (x >= 0 && x < this->width && y >= 0 && y < this->height)
         return this->pixels[y][x];
 
     return {};
