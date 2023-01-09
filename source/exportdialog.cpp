@@ -1,9 +1,9 @@
 #include "exportdialog.h"
 
 #include <QFileDialog>
+#include <QImageWriter>
 #include <QMessageBox>
 #include <QPainter>
-#include <QImageWriter>
 #include <algorithm>
 
 #include "ui_exportdialog.h"
@@ -88,7 +88,7 @@ void ExportDialog::initialize(QJsonObject *cfg, D1Gfx *g, D1Min *m, D1Til *t, D1
 
 QString ExportDialog::getFileFormatExtension()
 {
-    return "." + this->ui->formatComboBox->currentText()->toLower();
+    return "." + this->ui->formatComboBox->currentText().toLower();
 }
 
 void ExportDialog::on_outputFolderBrowseButton_clicked()
@@ -168,7 +168,7 @@ bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
 
     if (placement == 0) { // groupped
         unsigned dx = 0, dy = 0;
-        for (unsigned i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             if (progress.wasCanceled()) {
                 return false;
             }
@@ -185,7 +185,7 @@ bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
             }
         }
     } else {
-        quint32 cursor = 0;
+        int cursor = 0;
         for (int i = 0; i < n; i++) {
             if (progress.wasCanceled()) {
                 return false;
@@ -203,11 +203,10 @@ bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
         }
     }
 
-    if (oneFileForAll) {
-        painter.end();
-        QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
-        tempOutputImage.save(outputFilePath);
-    }
+    painter.end();
+
+    QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
+    tempOutputImage.save(outputFilePath);
     return true;
 }
 
@@ -276,7 +275,7 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
 
     if (placement == 0) { // groupped
         unsigned dx = 0, dy = 0;
-        for (unsigned i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             if (progress.wasCanceled()) {
                 return false;
             }
@@ -382,7 +381,7 @@ bool ExportDialog::exportLevelSubtiles(QProgressDialog &progress)
 
     if (placement == 0) { // groupped
         unsigned dx = 0, dy = 0;
-        for (unsigned i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             if (progress.wasCanceled()) {
                 return false;
             }
@@ -462,15 +461,15 @@ bool ExportDialog::exportFrames(QProgressDialog &progress)
     }
     // one file for all frames
     QImage tempOutputImage;
-    quint32 tempOutputImageWidth = 0;
-    quint32 tempOutputImageHeight = 0;
+    int tempOutputImageWidth = 0;
+    int tempOutputImageHeight = 0;
 
     int placement = this->ui->contentPlacementComboBox->currentIndex();
     if (placement == 0) { // groupped
         if (this->gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
             // artifical grouping of a tileset
-            quint32 groupImageWidth = 0;
-            quint32 groupImageHeight = 0;
+            int groupImageWidth = 0;
+            int groupImageHeight = 0;
             for (int i = 0; i < n; i++) {
                 if ((i % EXPORT_LVLFRAMES_PER_LINE) == 0) {
                     tempOutputImageWidth = std::max(groupImageWidth, tempOutputImageWidth);
@@ -485,8 +484,8 @@ bool ExportDialog::exportFrames(QProgressDialog &progress)
             tempOutputImageHeight += groupImageHeight;
         } else {
             for (int i = 0; i < this->gfx->getGroupCount(); i++) {
-                quint32 groupImageWidth = 0;
-                quint32 groupImageHeight = 0;
+                int groupImageWidth = 0;
+                int groupImageHeight = 0;
                 for (unsigned int j = this->gfx->getGroupFrameIndices(i).first;
                      j <= this->gfx->getGroupFrameIndices(i).second; j++) {
                     groupImageWidth += this->gfx->getFrameWidth(j);
