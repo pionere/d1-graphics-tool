@@ -148,6 +148,7 @@ private:
     QMenu *frameMenu;
     QMenu *subtileMenu;
     QMenu *tileMenu;
+    QMenu *tilesetMenu;
 
     QUndoStack *undoStack;
     QAction *undoAction;

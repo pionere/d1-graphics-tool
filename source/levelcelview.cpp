@@ -744,7 +744,7 @@ void LevelCelView::removeCurrentTile()
 
 void LevelCelView::collectFrameUsers(int frameIndex, QList<int> users)
 {
-    unsigned refIndex = frameIndex +  1;
+    unsigned refIndex = frameIndex + 1;
 
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         const QList<quint16> &frameIndices = this->min->getCelFrameIndices(i);
@@ -787,7 +787,7 @@ void LevelCelView::reportUsage()
                 frameUses += QString::number(user + 1) + ", ";
             }
             frameUses.chop(2);
-            frameUses += "."
+            frameUses += ".";
         }
     }
 
@@ -806,7 +806,7 @@ void LevelCelView::reportUsage()
                 subtileUses += QString::number(user + 1) + ", ";
             }
             subtileUses.chop(2);
-            subtileUses += "."
+            subtileUses += ".";
         }
     }
 
