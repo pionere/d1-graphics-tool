@@ -6,8 +6,8 @@
 #include <QFileInfo>
 #include <QGraphicsPixmapItem>
 #include <QMenu>
-#include <QMimeData>
 #include <QMessageBox>
+#include <QMimeData>
 
 #include "mainwindow.h"
 #include "ui_celview.h"

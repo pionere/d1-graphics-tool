@@ -175,7 +175,7 @@ void D1Til::insertTile(int tileIndex, const QImage &image)
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     QImage subImage = QImage(subtileWidth, subtileHeight, QImage::Format_ARGB32);
-    for (int y = 0; y < image.height(); y + = subtileHeight) {
+    for (int y = 0; y < image.height(); y += subtileHeight) {
         for (int x = 0; x < image.width(); x += subtileWidth) {
             // subImage.fill(Qt::transparent);
 

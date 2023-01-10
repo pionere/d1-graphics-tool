@@ -726,7 +726,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->palWidget->selectPath(firstPaletteFound);
 
     // Adding the CelView to the main frame
-    this->ui->mainFrame->layout()->addWidget(isTileset ? (Qwidget *)this->levelCelView : this->celView);
+    this->ui->mainFrame->layout()->addWidget(isTileset ? (QWidget *)this->levelCelView : this->celView);
 
     // Adding the PalView to the pal frame
     // this->ui->palFrame->layout()->addWidget( this->palView );

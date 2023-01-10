@@ -294,7 +294,7 @@ void D1Min::insertSubtile(int subtileIndex, const QImage &image)
 
     int frameIndex = this->gfx->getFrameCount();
     QImage subImage = QImage(MICRO_WIDTH, MICRO_HEIGHT, QImage::Format_ARGB32);
-    for (int y = 0; y < image.height(); y + = MICRO_HEIGHT) {
+    for (int y = 0; y < image.height(); y += MICRO_HEIGHT) {
         for (int x = 0; x < image.width(); x += MICRO_WIDTH) {
             // subImage.fill(Qt::transparent);
 
