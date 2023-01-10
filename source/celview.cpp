@@ -7,6 +7,7 @@
 #include <QGraphicsPixmapItem>
 #include <QMenu>
 #include <QMimeData>
+#include <QMessageBox>
 
 #include "mainwindow.h"
 #include "ui_celview.h"
@@ -23,10 +24,10 @@ void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
 
-    qDebug() << "Clicked: " << event->scenePos().x() << "," << event->scenePos().y();
+    int x = event->scenePos().x();
+    int y = event->scenePos().y();
 
-    quint16 x = (quint16)event->scenePos().x();
-    quint16 y = (quint16)event->scenePos().y();
+    qDebug() << "Clicked: " << x << "," << y;
 
     emit this->framePixelClicked(x, y);
 }
@@ -54,7 +55,7 @@ void CelScene::dropEvent(QGraphicsSceneDragDropEvent *event)
         filePaths.append(url.toLocalFile());
     }
     // try to insert as frames
-    ((MainWindow *)this->view->window())->openImageFiles(filePaths, false);
+    ((MainWindow *)this->view->window())->openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
 }
 
 void CelScene::contextMenuEvent(QContextMenuEvent *event)
@@ -110,21 +111,18 @@ int CelView::getCurrentFrameIndex()
     return this->currentFrameIndex;
 }
 
-void CelView::framePixelClicked(quint16 x, quint16 y)
+void CelView::framePixelClicked(unsigned x, unsigned y)
 {
-    quint8 index = 0;
+    int frameIndex = this->currentFrameIndex;
 
-    // If the the click event lands in the scene spacing, ignore
-    if (x < CEL_SCENE_SPACING
-        || x >= (CEL_SCENE_SPACING + this->gfx->getFrameWidth(this->currentFrameIndex))
-        || y < CEL_SCENE_SPACING
-        || y >= (CEL_SCENE_SPACING + this->gfx->getFrameHeight(this->currentFrameIndex)))
-        return;
+    int tx = x - CEL_SCENE_SPACING;
+    if (tx < 0 || tx >= this->gfx->getFrameWidth(frameIndex))
+        return; // click is left or right from the frame -> ignore
+    int ty = y - CEL_SCENE_SPACING;
+    if (ty < 0 || ty >= this->gfx->getFrameHeight(frameIndex))
+        return; // click is up or down from the frame -> ignore
 
-    index = this->gfx->getFrame(
-                         this->currentFrameIndex)
-                ->getPixel(x - CEL_SCENE_SPACING, y - CEL_SCENE_SPACING)
-                .getPaletteIndex();
+    index = this->gfx->getFrame(frameIndex)->getPixel(tx, ty).getPaletteIndex();
 
     emit this->colorIndexClicked(index);
 }
@@ -149,6 +147,7 @@ void CelView::insertImageFiles(IMAGE_FILE_MODE mode, QStringList imagefilePaths,
         for (int i = imagefilePaths.count() - 1; i >= 0; i--) {
             this->insertFrame(mode, this->currentFrameIndex, imagefilePaths[i]);
         }
+        int deltaFrameCount = this->gfx->getFrameCount() - prevFrameCount;
         if (deltaFrameCount == 0) {
             return; // no new frame -> done
         }

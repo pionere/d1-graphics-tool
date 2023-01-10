@@ -180,8 +180,8 @@ void D1Til::insertTile(int tileIndex, const QImage &image)
             // subImage.fill(Qt::transparent);
 
             // bool hasColor = false;
-            for (int j = 0; j < subtileHeight; j++) {
-                for (int i = 0; i < subtileWidth; i++) {
+            for (unsigned j = 0; j < subtileHeight; j++) {
+                for (unsigned i = 0; i < subtileWidth; i++) {
                     const QColor color = image.pixelColor(x + i, y + j);
                     // if (color.alpha() >= COLOR_ALPHA_LIMIT) {
                     //    hasColor = true;

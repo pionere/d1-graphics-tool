@@ -6,6 +6,8 @@
 #include <QMessageBox>
 #include <QPainter>
 
+#include "d1image.h"
+
 bool D1Min::load(QString filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const OpenAsParam &params)
 {
     // prepare file data source
@@ -289,7 +291,7 @@ QList<quint16> &D1Min::getCelFrameIndices(int subtileIndex)
 void D1Min::insertSubtile(int subtileIndex, const QImage &image)
 {
     QList<quint16> celFrameIndicesList;
- 
+
     int frameIndex = this->gfx->getFrameCount();
     QImage subImage = QImage(MICRO_WIDTH, MICRO_HEIGHT, QImage::Format_ARGB32);
     for (int y = 0; y < image.height(); y + = MICRO_HEIGHT) {

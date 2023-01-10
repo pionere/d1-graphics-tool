@@ -136,7 +136,6 @@ bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
     }
     QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
 
-
     unsigned tileWidth = this->min->getSubtileWidth() * 2 * MICRO_WIDTH;
     unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT + 32;
 
@@ -147,7 +146,7 @@ bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
     int placement = this->ui->contentPlacementComboBox->currentIndex();
     if (placement == 0) { // grouped
         tempOutputImageWidth = tileWidth * TILES_PER_LINE;
-        tempOutputImageHeight = tileHeight * ((n + (TILES_PER_LINE - 1)) / TILES_PER_LINE);
+        tempOutputImageHeight = tileHeight * ((amount + (TILES_PER_LINE - 1)) / TILES_PER_LINE);
     } else if (placement == 2) { // tiles on one column
         tempOutputImageWidth = tileWidth;
         tempOutputImageHeight = tileHeight * amount;
@@ -370,8 +369,8 @@ bool ExportDialog::exportLevelSubtiles(QProgressDialog &progress)
         return true;
     }
     // one file for all subtiles
-    if (tileFrom != 0 || tileTo < count - 1) {
-        outputFilePathBase += QString::number(tileFrom + 1) + "_" + QString::number(tileTo + 1);
+    if (subtileFrom != 0 || subtileTo < count - 1) {
+        outputFilePathBase += QString::number(subtileFrom + 1) + "_" + QString::number(subtileTo + 1);
     }
     QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
 
@@ -491,8 +490,8 @@ bool ExportDialog::exportFrames(QProgressDialog &progress)
         return true;
     }
     // one file for all frames
-    if (tileFrom != 0 || tileTo < count - 1) {
-		outputFilePathBase += QString::number(tileFrom + 1) + "_" + QString::number(tileTo + 1);
+    if (frameFrom != 0 || frameTo < count - 1) {
+        outputFilePathBase += QString::number(frameFrom + 1) + "_" + QString::number(frameTo + 1);
     }
     QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
 

@@ -20,6 +20,8 @@ class CelScene;
 class CelView;
 } // namespace Ui
 
+enum class IMAGE_FILE_MODE;
+
 class CelScene : public QGraphicsScene {
     Q_OBJECT
 
@@ -34,7 +36,7 @@ private slots:
     void contextMenuEvent(QContextMenuEvent *event);
 
 signals:
-    void framePixelClicked(quint16, quint16);
+    void framePixelClicked(unsigned x, unsigned y);
 
 private:
     QWidget *view;
@@ -49,8 +51,8 @@ public:
 
     void initialize(D1Gfx *gfx);
     int getCurrentFrameIndex();
-    void framePixelClicked(quint16, quint16);
-    void insertFrames(QStringList imagefilePaths, bool append);
+    void framePixelClicked(unsigned x, unsigned y);
+    void insertImageFiles(IMAGE_FILE_MODE mode, QStringList imagefilePaths, bool append);
     void replaceCurrentFrame(QString imagefilePath);
     void removeCurrentFrame();
 
@@ -61,6 +63,7 @@ signals:
     void colorIndexClicked(quint8);
 
 private:
+    void insertFrame(IMAGE_FILE_MODE mode, int index, QString imagefilePath);
     void updateGroupIndex();
     void setGroupIndex();
 

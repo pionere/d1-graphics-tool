@@ -9,6 +9,7 @@
 #include <QMessageBox>
 #include <QMimeData>
 
+#include "d1image.h"
 #include "mainwindow.h"
 #include "ui_levelcelview.h"
 
@@ -24,10 +25,10 @@ void LevelCelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
 
-    qDebug() << "Clicked: " << event->scenePos().x() << "," << event->scenePos().y();
+    int x = event->scenePos().x();
+    int y = event->scenePos().y();
 
-    quint16 x = (quint16)event->scenePos().x();
-    quint16 y = (quint16)event->scenePos().y();
+    qDebug() << "Clicked: " << x << "," << y;
 
     emit this->framePixelClicked(x, y);
 }
@@ -55,7 +56,7 @@ void LevelCelScene::dropEvent(QGraphicsSceneDragDropEvent *event)
         filePaths.append(url.toLocalFile());
     }
     // try to insert as frames
-    ((MainWindow *)this->view->window())->openImageFiles(filePaths, false);
+    ((MainWindow *)this->view->window())->openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
 }
 
 void LevelCelScene::contextMenuEvent(QContextMenuEvent *event)
@@ -149,7 +150,7 @@ int LevelCelView::getCurrentTileIndex()
     return this->currentTileIndex;
 }
 
-void LevelCelView::framePixelClicked(quint16 x, quint16 y)
+void LevelCelView::framePixelClicked(unsigned x, unsigned y)
 {
     quint8 index = 0;
 
@@ -211,10 +212,10 @@ void LevelCelView::framePixelClicked(quint16 x, quint16 y)
         //      / \  
         // g(x)/ 3 \
         //
-        // f(x) = 0.5x + (tileHeight - 2 * subtileShiftY)
-        int ftx = tx / 2 + tileHeight - 2 * subtileShiftY;
-        // g(tx) = -0.5x + tileHeight
-        int gtx = -tx / 2 + tileHeight;
+        // f(x) = (tileHeight - 2 * subtileShiftY) + 0.5x
+        unsigned ftx = (tileHeight - 2 * subtileShiftY) + tx / 2;
+        // g(tx) = tileHeight - 0.5x 
+        unsigned gtx = tileHeight - tx / 2;
         // qDebug() << "fx=" << ftx << ", gx=" << gtx;
         int tSubtile = 0;
         if (ty < ftx) {
@@ -259,7 +260,7 @@ void LevelCelView::insertImageFiles(IMAGE_FILE_MODE mode, QStringList imagefileP
 
 void LevelCelView::assignFrames(const QImage &image, int subtileIndex, int frameIndex)
 {
-    QList<quint16> *frameIndices = nullptr;    
+    QList<quint16> *frameIndices = nullptr;
     if (subtileIndex >= 0) {
         frameIndices = &this->min->getCelFrameIndices(subtileIndex);
         frameIndices->clear();
@@ -542,7 +543,7 @@ void LevelCelView::insertTile(IMAGE_FILE_MODE mode, int index, QString &imagefil
         return;
     }*/
 
-    QImage subImage = QImage(tileWidth, tileHeight, QImage::Format_ARGB32)
+    QImage subImage = QImage(tileWidth, tileHeight, QImage::Format_ARGB32);
     for (int y = 0; y < image.height(); y + = tileHeight) {
         for (int x = 0; x < image.width(); x += tileWidth) {
             // subImage.fill(Qt::transparent);
@@ -788,7 +789,6 @@ void LevelCelView::replaceCurrentTile(QString imagefilePath)
     this->displayFrame();
 }
 
-
 void LevelCelView::removeCurrentTile()
 {
     this->til->removeTile(this->currentTileIndex);
@@ -938,7 +938,7 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
     }
     frameMenu.addAction(&action3);
 
-    contextMenu.addMenu(frameMenu);
+    contextMenu.addMenu(&frameMenu);
 
     QMenu subtileMenu(tr("Subtile"), this);
     subtileMenu.setToolTipsVisible(true);
@@ -974,7 +974,7 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
     }
     subtileMenu.addAction(&action8);
 
-    contextMenu.addMenu(subtileMenu);
+    contextMenu.addMenu(&subtileMenu);
 
     QMenu tileMenu(tr("Tile"), this);
     tileMenu.setToolTipsVisible(true);
@@ -1013,7 +1013,7 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
     }
     tileMenu.addAction(&action13);
 
-    contextMenu.addMenu(tileMenu);
+    contextMenu.addMenu(&tileMenu);
 
     contextMenu.exec(mapToGlobal(pos));
 }

@@ -198,13 +198,13 @@ void MainWindow::updateWindow()
     this->undoStack->clear();
     // update menu options
     bool hasFrame = this->gfx->getFrameCount() != 0;
-    this->frameMenu->action()[2]->setEnabled(hasFrame); // replace frame
-    this->frameMenu->action()[3]->setEnabled(hasFrame); // delete frame
+    this->frameMenu->actions()[2]->setEnabled(hasFrame); // replace frame
+    this->frameMenu->actions()[3]->setEnabled(hasFrame); // delete frame
     if (this->levelCelView != nullptr) {
         bool hasSubtile = this->min->getSubtileCount() != 0;
         this->subtileMenu->actions()[3]->setEnabled(hasSubtile); // replace subtile
         this->subtileMenu->actions()[4]->setEnabled(hasSubtile); // delete subtile
-        this->tileMenu->actions()[0]->setEnabled(hasSubtile); // create tile
+        this->tileMenu->actions()[0]->setEnabled(hasSubtile);    // create tile
         bool hasTile = this->til->getTileCount() != 0;
         this->tileMenu->actions()[3]->setEnabled(hasTile); // replace tile
         this->tileMenu->actions()[4]->setEnabled(hasTile); // delete tile
@@ -726,7 +726,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->palWidget->selectPath(firstPaletteFound);
 
     // Adding the CelView to the main frame
-    this->ui->mainFrame->layout()->addWidget(isTileset ? this->levelCelView : this->celView);
+    this->ui->mainFrame->layout()->addWidget(isTileset ? (Qwidget *)this->levelCelView : this->celView);
 
     // Adding the PalView to the pal frame
     // this->ui->palFrame->layout()->addWidget( this->palView );

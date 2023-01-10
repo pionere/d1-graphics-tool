@@ -44,7 +44,7 @@ protected:
     void contextMenuEvent(QContextMenuEvent *event);
 
 signals:
-    void framePixelClicked(quint16, quint16);
+    void framePixelClicked(unsigned x, unsigned y);
 
 private:
     QWidget *view;
@@ -62,7 +62,7 @@ public:
     int getCurrentFrameIndex();
     int getCurrentSubtileIndex();
     int getCurrentTileIndex();
-    void framePixelClicked(quint16, quint16);
+    void framePixelClicked(unsigned x, unsigned y);
     void insertImageFiles(IMAGE_FILE_MODE mode, QStringList imagefilePaths, bool append);
     void replaceCurrentFrame(QString imagefilePath);
     void removeCurrentFrame();
