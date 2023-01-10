@@ -75,7 +75,7 @@ LevelCelView::LevelCelView(QWidget *parent)
     ui->stopButton->setEnabled(false);
     this->playTimer.connect(&this->playTimer, SIGNAL(timeout()), this, SLOT(playGroup()));
     ui->tilesTabs->addTab(this->tabTileWidget, "Tile properties");
-    ui->tilesTabs->addTab(this->tabSubTileWidget, "Sub-Tile properties");
+    ui->tilesTabs->addTab(this->tabSubTileWidget, "Subtile properties");
     ui->tilesTabs->addTab(this->tabFrameWidget, "Frame properties");
 
     // If a pixel of the frame, subtile or tile was clicked get pixel color index and notify the palette widgets
@@ -153,36 +153,37 @@ void LevelCelView::framePixelClicked(quint16 x, quint16 y)
 {
     quint8 index = 0;
 
-    quint16 celFrameWidth = this->gfx->getFrameWidth(this->currentFrameIndex);
-    quint16 subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
-    quint16 tileWidth = subtileWidth * 2;
+    unsigned celFrameWidth = MICRO_WIDTH; // this->gfx->getFrameWidth(this->currentFrameIndex);
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned tileWidth = subtileWidth * TILE_WIDTH;
 
-    quint16 celFrameHeight = this->gfx->getFrameHeight(this->currentFrameIndex);
-    quint16 subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
-    quint16 tileHeight = subtileHeight + 32;
+    unsigned celFrameHeight = MICRO_HEIGHT; // this->gfx->getFrameHeight(this->currentFrameIndex);
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+    unsigned subtileShiftY = subtileWidth / 4;
+    unsigned tileHeight = subtileHeight + 2 * subtileShiftY;
 
-    if (x > CEL_SCENE_SPACING && x < (celFrameWidth + CEL_SCENE_SPACING)
-        && y > CEL_SCENE_SPACING && y < (celFrameHeight + CEL_SCENE_SPACING)
+    if (x >= CEL_SCENE_SPACING && x < (celFrameWidth + CEL_SCENE_SPACING)
+        && y >= CEL_SCENE_SPACING && y < (celFrameHeight + CEL_SCENE_SPACING)
         && this->gfx->getFrameCount() != 0) {
         // If CEL frame color is clicked, select it in the palette widgets
         D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
         index = frame->getPixel(x - CEL_SCENE_SPACING, y - CEL_SCENE_SPACING).getPaletteIndex();
 
         emit this->colorIndexClicked(index);
-    } else if (x > (celFrameWidth + CEL_SCENE_SPACING * 2)
+    } else if (x >= (celFrameWidth + CEL_SCENE_SPACING * 2)
         && x < (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 2)
-        && y > CEL_SCENE_SPACING
+        && y >= CEL_SCENE_SPACING
         && y < (subtileHeight + CEL_SCENE_SPACING)
         && this->min->getSubtileCount() != 0) {
         // When a CEL frame is clicked in the subtile, display the corresponding CEL frame
 
         // Adjust coordinates
-        quint16 stx = x - celFrameWidth - CEL_SCENE_SPACING * 2;
-        quint16 sty = y - CEL_SCENE_SPACING;
+        unsigned stx = x - celFrameWidth - CEL_SCENE_SPACING * 2;
+        unsigned sty = y - CEL_SCENE_SPACING;
 
         // qDebug() << "Subtile clicked: " << stx << "," << sty;
 
-        quint8 stFrame = (sty / 32) * 2 + (stx / 32);
+        int stFrame = (sty / MICRO_HEIGHT) * TILE_WIDTH + (stx / MICRO_WIDTH);
         QList<quint16> &minFrames = this->min->getCelFrameIndices(this->currentSubtileIndex);
         quint16 frameIndex = minFrames.count() > stFrame ? minFrames.at(stFrame) : 0;
 
@@ -190,40 +191,44 @@ void LevelCelView::framePixelClicked(quint16 x, quint16 y)
             this->currentFrameIndex = frameIndex - 1;
             this->displayFrame();
         }
-    } else if (x > (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
+    } else if (x >= (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
         && x < (celFrameWidth + subtileWidth + tileWidth + CEL_SCENE_SPACING * 3)
-        && y > CEL_SCENE_SPACING
+        && y >= CEL_SCENE_SPACING
         && y < tileHeight + CEL_SCENE_SPACING
         && this->til->getTileCount() != 0) {
         // When a subtile is clicked in the tile, display the corresponding subtile
 
         // Adjust coordinates
-        quint16 tx = x - celFrameWidth - subtileWidth - CEL_SCENE_SPACING * 3;
-        quint16 ty = y - CEL_SCENE_SPACING;
+        unsigned tx = x - celFrameWidth - subtileWidth - CEL_SCENE_SPACING * 3;
+        unsigned ty = y - CEL_SCENE_SPACING;
 
         // qDebug() << "Tile clicked" << tx << "," << ty;
 
-        // Ground squares must be clicked
-        // The four squares can be delimited by the following functions
-        // f(x) = 0.5x + (tileHeight - 4*16)
-        // g(x) = -0.5x + tileHeight
-        // f(tx)
-        int ftx = tx / 2 + tileHeight - 64;
-        // g(tx)
+        // Split the area based on the ground squares
+        // f(x)\ 0 /
+        //      \ /
+        //   2   *   1
+        //      / \  
+        // g(x)/ 3 \
+        //
+        // f(x) = 0.5x + (tileHeight - 2 * subtileShiftY)
+        int ftx = tx / 2 + tileHeight - 2 * subtileShiftY;
+        // g(tx) = -0.5x + tileHeight
         int gtx = -tx / 2 + tileHeight;
         // qDebug() << "fx=" << ftx << ", gx=" << gtx;
         int tSubtile = 0;
         if (ty < ftx) {
             if (ty < gtx) {
-                // tx to allow selecting subtile 1 and 2 if tile is clicked on the bottom left and bottom right side
-                if (tx < 32)
+                // limit the area of 0 horizontally
+                if (tx < subtileWidth / 2)
                     tSubtile = 2;
-                else if (tx > 96)
+                else if (tx >= (subtileWidth / 2 + subtileWidth))
                     tSubtile = 1;
                 else
                     tSubtile = 0;
-            } else
+            } else {
                 tSubtile = 1;
+            }
         } else {
             if (ty < gtx)
                 tSubtile = 2;
@@ -239,43 +244,138 @@ void LevelCelView::framePixelClicked(quint16 x, quint16 y)
     }
 }
 
-void LevelCelView::insertFrames(QStringList imagefilePaths, bool append)
+void LevelCelView::insertImageFiles(IMAGE_FILE_MODE mode, QStringList imagefilePaths, bool append)
+{
+    if (mode == IMAGE_FILE_MODE::FRAME || mode == IMAGE_FILE_MODE::AUTO) {
+        this->insertFrames(mode, imagefilePaths, append);
+    }
+    if (mode == IMAGE_FILE_MODE::SUBTILE || mode == IMAGE_FILE_MODE::AUTO) {
+        this->insertSubtiles(mode, imagefilePaths, append);
+    }
+    if (mode == IMAGE_FILE_MODE::TILE || mode == IMAGE_FILE_MODE::AUTO) {
+        this->insertTiles(mode, imagefilePaths, append);
+    }
+}
+
+void LevelCelView::assignFrames(const QImage &image, int subtileIndex, int frameIndex)
+{
+    QList<quint16> *frameIndices = nullptr;    
+    if (subtileIndex >= 0) {
+        frameIndices = &this->min->getCelFrameIndices(subtileIndex);
+        frameIndices->clear();
+    }
+    // TODO: merge with D1Min::insertSubtile ?
+    QImage subImage = QImage(MICRO_WIDTH, MICRO_HEIGHT, QImage::Format_ARGB32);
+    for (int y = 0; y < image.height(); y + = MICRO_HEIGHT) {
+        for (int x = 0; x < image.width(); x += MICRO_WIDTH) {
+            // subImage.fill(Qt::transparent);
+
+            bool hasColor = false;
+            for (int j = 0; j < MICRO_HEIGHT; j++) {
+                for (int i = 0; i < MICRO_WIDTH; i++) {
+                    const QColor color = image.pixelColor(x + i, y + j);
+                    if (color.alpha() >= COLOR_ALPHA_LIMIT) {
+                        hasColor = true;
+                    }
+                    subImage.setPixelColor(i, j, color);
+                }
+            }
+            if (frameIndices != nullptr) {
+                frameIndices->append(hasColor ? frameIndex + 1 : 0);
+            }
+            if (!hasColor) {
+                continue;
+            }
+
+            D1GfxFrame *frame = this->gfx->insertFrame(frameIndex, subImage);
+            LevelTabFrameWidget::selectFrameType(frame);
+            frameIndex++;
+        }
+    }
+}
+
+void LevelCelView::insertFrame(IMAGE_FILE_MODE mode, int index, QString &imagefilePath)
+{
+    QImage image = QImage(imagefilePath);
+    if (image.isNull()) {
+        if (mode != IMAGE_FILE_MODE::AUTO) {
+            QMessageBox::critical(nullptr, "Error", "Failed open image file: " + imagefilePath);
+        }
+        return;
+    }
+
+    if ((image.width() % MICRO_WIDTH) != 0 || (image.height() % MICRO_HEIGHT) != 0) {
+        return;
+    }
+
+    if (mode == IMAGE_FILE_MODE::AUTO
+        && image.width() != MICRO_WIDTH && image.height() != MICRO_HEIGHT && image.width() != MICRO_WIDTH * EXPORT_LVLFRAMES_PER_LINE) {
+        // not a column of micros
+        // not a row or micros
+        // not a grouped micros from an export -> ignore
+        return;
+    }
+
+    this->assignFrames(image, -1, index);
+    /*QImage subImage = QImage(MICRO_WIDTH, MICRO_HEIGHT, QImage::Format_ARGB32);
+    for (int y = 0; y < image.height(); y + = MICRO_HEIGHT) {
+        for (int x = 0; x < image.width(); x += MICRO_WIDTH) {
+            // subImage.fill(Qt::transparent);
+
+            bool hasColor = false;
+            for (int j = 0; j < MICRO_HEIGHT; j++) {
+                for (int i = 0; i < MICRO_WIDTH; i++) {
+                    const QColor color = image.pixelColor(x + i, y + j);
+                    if (color.alpha() >= COLOR_ALPHA_LIMIT) {
+                        hasColor = true;
+                    }
+                    subImage.setPixelColor(i, j, color);
+                }
+            }
+
+            if (!hasColor) {
+                continue;
+            }
+
+            D1GfxFrame *frame = this->gfx->insertFrame(index, subImage);
+            LevelTabFrameWidget::selectFrameType(frame);
+            index++;
+        }
+    }*/
+}
+
+void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, QStringList imagefilePaths, bool append)
 {
     int prevFrameCount = this->gfx->getFrameCount();
 
     if (append) {
         // append the frame(s)
         for (int i = 0; i < imagefilePaths.count(); i++) {
-            int index = this->gfx->getFrameCount();
-            D1GfxFrame *frame = this->gfx->insertFrame(index, imagefilePaths[i]);
-            if (frame != nullptr) {
-                LevelTabFrameWidget::selectFrameType(frame);
-            }
+            this->insertFrame(mode, this->gfx->getFrameCount(), imagefilePaths[i]);
+        }
+        int deltaFrameCount = this->gfx->getFrameCount() - prevFrameCount;
+        if (deltaFrameCount == 0) {
+            return; // no new frame -> done
         }
         // jump to the first appended frame
-        int deltaFrameCount = this->gfx->getFrameCount() - prevFrameCount;
-        if (deltaFrameCount > 0) {
-            this->currentFrameIndex = prevFrameCount;
-        }
+        this->currentFrameIndex = prevFrameCount;
     } else {
         // insert the frame(s)
-        for (int i = 1; i <= imagefilePaths.count(); i++) {
-            D1GfxFrame *frame = this->gfx->insertFrame(this->currentFrameIndex, imagefilePaths[imagefilePaths.count() - i]);
-            if (frame != nullptr) {
-                LevelTabFrameWidget::selectFrameType(frame);
-            }
+        for (int i = imagefilePaths.count() - 1; i >= 0; i--) {
+            this->insertFrame(mode, this->currentFrameIndex, imagefilePaths[i]);
+        }
+        int deltaFrameCount = this->gfx->getFrameCount() - prevFrameCount;
+        if (deltaFrameCount == 0) {
+            return; // no new frame -> done
         }
         // shift references
-        int deltaFrameCount = this->gfx->getFrameCount() - prevFrameCount;
-        if (deltaFrameCount > 0) {
-            unsigned refIndex = this->currentFrameIndex + 1;
-            // shift frame indices of the subtiles
-            for (int i = 0; i < this->min->getSubtileCount(); i++) {
-                QList<quint16> &frameIndices = this->min->getCelFrameIndices(i);
-                for (int n = 0; n < frameIndices.count(); n++) {
-                    if (frameIndices[n] >= refIndex) {
-                        frameIndices[n] += deltaFrameCount;
-                    }
+        unsigned refIndex = this->currentFrameIndex + 1;
+        // shift frame indices of the subtiles
+        for (int i = 0; i < this->min->getSubtileCount(); i++) {
+            QList<quint16> &frameIndices = this->min->getCelFrameIndices(i);
+            for (int n = 0; n < frameIndices.count(); n++) {
+                if (frameIndices[n] >= refIndex) {
+                    frameIndices[n] += deltaFrameCount;
                 }
             }
         }
@@ -285,9 +385,234 @@ void LevelCelView::insertFrames(QStringList imagefilePaths, bool append)
     this->displayFrame();
 }
 
+void LevelCelView::assignSubtiles(const QImage &image, int tileIndex, int subtileIndex)
+{
+    QList<quint16> *subtileIndices = nullptr;
+    if (tileIndex >= 0) {
+        subtileIndices = &this->til->getSubtileIndices(tileIndex);
+        subtileIndices->clear();
+    }
+    // TODO: merge with D1Til::insertTile ?
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    QImage subImage = QImage(subtileWidth, subtileHeight, QImage::Format_ARGB32);
+    for (int y = 0; y < image.height(); y + = subtileHeight) {
+        for (int x = 0; x < image.width(); x += subtileWidth) {
+            // subImage.fill(Qt::transparent);
+
+            bool hasColor = false;
+            for (int j = 0; j < subtileHeight; j++) {
+                for (int i = 0; i < subtileWidth; i++) {
+                    const QColor color = image.pixelColor(x + i, y + j);
+                    if (color.alpha() >= COLOR_ALPHA_LIMIT) {
+                        hasColor = true;
+                    }
+                    subImage.setPixelColor(i, j, color);
+                }
+            }
+
+            if (subtileIndices != nullptr) {
+                subtileIndices->append(subtileIndex);
+            } else if (!hasColor) {
+                continue;
+            }
+
+            this->min->insertSubtile(subtileIndex, subImage);
+            subtileIndex++;
+        }
+    }
+}
+
+void LevelCelView::insertSubtile(IMAGE_FILE_MODE mode, int index, QString &imagefilePath)
+{
+    QImage image = QImage(imagefilePath);
+    if (image.isNull()) {
+        if (mode != IMAGE_FILE_MODE::AUTO) {
+            QMessageBox::critical(nullptr, "Error", "Failed open image file: " + imagefilePath);
+        }
+        return;
+    }
+
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    if ((image.width() % subtileWidth) != 0 || (image.height() % subtileHeight) != 0) {
+        return;
+    }
+
+    if (mode == IMAGE_FILE_MODE::AUTO
+        && image.width() != subtileWidth && image.height() != subtileHeight && image.width() != subtileWidth * EXPORT_SUBTILES_PER_LINE) {
+        // not a column of subtiles
+        // not a row or subtiles
+        // not a grouped subtiles from an export -> ignore
+        return;
+    }
+
+    this->assignSubtiles(image, -1, index);
+    /*QImage subImage = QImage(subtileWidth, subtileHeight, QImage::Format_ARGB32);
+    for (int y = 0; y < image.height(); y + = subtileHeight) {
+        for (int x = 0; x < image.width(); x += subtileWidth) {
+            // subImage.fill(Qt::transparent);
+
+            bool hasColor = false;
+            for (int j = 0; j < subtileHeight; j++) {
+                for (int i = 0; i < subtileWidth; i++) {
+                    const QColor color = image.pixelColor(x + i, y + j);
+                    if (color.alpha() >= COLOR_ALPHA_LIMIT) {
+                        hasColor = true;
+                    }
+                    subImage.setPixelColor(i, j, color);
+                }
+            }
+
+            if (!hasColor) {
+                continue;
+            }
+
+            this->min->insertSubtile(index, subImage);
+            index++;
+        }
+    }*/
+}
+
+void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, QStringList imagefilePaths, bool append)
+{
+    int prevSubtileCount = this->min->getSubtileCount();
+
+    if (append) {
+        // append the frame(s)
+        for (int i = 0; i < imagefilePaths.count(); i++) {
+            this->insertSubtile(mode, this->min->getSubtileCount(), imagefilePaths[i]);
+        }
+        int deltaSubtileCount = this->min->getSubtileCount() - prevSubtileCount;
+        if (deltaSubtileCount == 0) {
+            return; // no new subtile -> done
+        }
+        // jump to the first appended subtile
+        this->currentSubtileIndex = prevSubtileCount;
+    } else {
+        // insert the frame(s)
+        for (int i = imagefilePaths.count() - 1; i >= 0; i--) {
+            this->insertSubtile(mode, this->currentSubtileIndex, imagefilePaths[i]);
+        }
+        int deltaSubtileCount = this->min->getSubtileCount() - prevSubtileCount;
+        if (deltaSubtileCount == 0) {
+            return; // no new subtile -> done
+        }
+        // shift references
+        unsigned refIndex = this->currentSubtileIndex;
+        // shift subtile indices of the tiles
+        for (int i = 0; i < this->til->getTileCount(); i++) {
+            QList<quint16> &subtileIndices = this->til->getSubtileIndices(i);
+            for (int n = 0; n < subtileIndices.count(); n++) {
+                if (subtileIndices[n] >= refIndex) {
+                    subtileIndices[n] += deltaFrameCount;
+                }
+            }
+        }
+    }
+    // update the view
+    this->update();
+    this->displayFrame();
+}
+
+void LevelCelView::insertTile(IMAGE_FILE_MODE mode, int index, QString &imagefilePath)
+{
+    QImage image = QImage(imagefilePath);
+    if (image.isNull()) {
+        if (mode != IMAGE_FILE_MODE::AUTO) {
+            QMessageBox::critical(nullptr, "Error", "Failed open image file: " + imagefilePath);
+        }
+        return;
+    }
+
+    unsigned tileWidth = this->min->getSubtileWidth() * MICRO_WIDTH * TILE_WIDTH * TILE_HEIGHT;
+    unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    if ((image.width() % tileWidth) != 0 || (image.height() % tileHeight) != 0) {
+        return;
+    }
+
+    /*if (mode == IMAGE_FILE_MODE::AUTO
+        && image.width() != subtileWidth && image.height() != subtileHeight && image.width() != subtileWidth * EXPORT_TILES_PER_LINE) {
+        // not a column of tiles
+        // not a row or tiles
+        // not a grouped tiles from an export -> ignore
+        return;
+    }*/
+
+    QImage subImage = QImage(tileWidth, tileHeight, QImage::Format_ARGB32)
+    for (int y = 0; y < image.height(); y + = tileHeight) {
+        for (int x = 0; x < image.width(); x += tileWidth) {
+            // subImage.fill(Qt::transparent);
+
+            bool hasColor = false;
+            for (int j = 0; j < tileHeight; j++) {
+                for (int i = 0; i < tileWidth; i++) {
+                    const QColor color = image.pixelColor(x + i, y + j);
+                    if (color.alpha() >= COLOR_ALPHA_LIMIT) {
+                        hasColor = true;
+                    }
+                    subImage.setPixelColor(i, j, color);
+                }
+            }
+
+            if (!hasColor) {
+                continue;
+            }
+
+            this->til->insertTile(index, subImage);
+            index++;
+        }
+    }
+}
+
+void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, QStringList imagefilePaths, bool append)
+{
+    int prevTileCount = this->til->getTileCount();
+
+    if (append) {
+        // append the frame(s)
+        for (int i = 0; i < imagefilePaths.count(); i++) {
+            this->insertTile(mode, this->til->getTileCount(), imagefilePaths[i]);
+        }
+        int deltaTileCount = this->til->getTileCount() - prevTileCount;
+        if (deltaTileCount == 0) {
+            return; // no new tile -> done
+        }
+        // jump to the first appended tile
+        this->currentTileIndex = prevTileCount;
+    } else {
+        // insert the frame(s)
+        for (int i = imagefilePaths.count() - 1; i >= 0; i--) {
+            this->insertSubtile(mode, this->currentTileIndex, imagefilePaths[i]);
+        }
+        int deltaTileCount = this->til->getTileCount() - prevTileCount;
+        if (deltaTileCount == 0) {
+            return; // no new tile -> done
+        }
+    }
+    // update the view
+    this->update();
+    this->displayFrame();
+}
+
 void LevelCelView::replaceCurrentFrame(QString imagefilePath)
 {
-    D1GfxFrame *frame = this->gfx->replaceFrame(this->currentFrameIndex, imagefilePath);
+    QImage image = QImage(imagefilePath);
+
+    if (image.isNull()) {
+        QMessageBox::critical(nullptr, "Error", "Failed open image file: " + imagefilePath);
+        return;
+    }
+
+    if (image.width() != MICRO_WIDTH || image.height() != MICRO_HEIGHT) {
+        QMessageBox::warning(this, "Warning", "The image must be 32px * 32px to be used as a level-frame.");
+        return;
+    }
+
+    D1GfxFrame *frame = this->gfx->replaceFrame(this->currentFrameIndex, image);
 
     if (frame != nullptr) {
         LevelTabFrameWidget::selectFrameType(frame);
@@ -354,6 +679,35 @@ void LevelCelView::createSubtile()
     this->displayFrame();
 }
 
+void LevelCelView::replaceCurrentSubtile(QString imagefilePath)
+{
+    QImage image = QImage(imagefilePath);
+
+    if (image.isNull()) {
+        QMessageBox::critical(nullptr, "Error", "Failed open image file: " + imagefilePath);
+        return;
+    }
+
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    if (image.width() != subtileWidth || image.height() != subtileHeight) {
+        QMessageBox::warning(this, "Warning", "The image must be " + QString::number(subtileWidth) + "px * " + QString::number(subtileHeight) + "px to be used as a subtile.");
+        return;
+    }
+
+    int subtileIndex = this->currentSubtileIndex;
+    this->assignFrames(image, subtileIndex, this->gfx->getFrameCount());
+
+    // reset subtile flags
+    this->sol->setSubtileProperties(subtileIndex, 0);
+    this->tmi->setSubtileProperties(subtileIndex, 0);
+
+    // update the view
+    this->update();
+    this->displayFrame();
+}
+
 void LevelCelView::removeCurrentSubtile()
 {
     // check if the subtile is used
@@ -405,6 +759,35 @@ void LevelCelView::createTile()
     this->update();
     this->displayFrame();
 }
+
+void LevelCelView::replaceCurrentTile(QString imagefilePath)
+{
+    QImage image = QImage(imagefilePath);
+
+    if (image.isNull()) {
+        QMessageBox::critical(nullptr, "Error", "Failed open image file: " + imagefilePath);
+        return;
+    }
+
+    unsigned tileWidth = this->min->getSubtileWidth() * MICRO_WIDTH * TILE_WIDTH * TILE_HEIGHT;
+    unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    if (image.width() != tileWidth || image.height() != tileHeight) {
+        QMessageBox::warning(this, "Warning", "The image must be " + QString::number(tileWidth) + "px * " + QString::number(tileHeight) + "px to be used as a tile.");
+        return;
+    }
+
+    int tileIndex = this->currentTileIndex;
+    this->assignSubtiles(image, tileIndex, this->min->getSubtileCount());
+
+    // reset tile flags
+    this->amp->setTileProperties(tileIndex, 0);
+
+    // update the view
+    this->update();
+    this->displayFrame();
+}
+
 
 void LevelCelView::removeCurrentTile()
 {
@@ -525,66 +908,112 @@ void LevelCelView::playGroup()
 void LevelCelView::ShowContextMenu(const QPoint &pos)
 {
     QMenu contextMenu(tr("Context menu"), this);
-    contextMenu.setToolTipsVisible(true);
 
-    QAction action0("Insert Frame", this);
+    QMenu frameMenu(tr("Frame"), this);
+    frameMenu.setToolTipsVisible(true);
+
+    QAction action0("Insert", this);
     action0.setToolTip("Add new frames before the current one");
     QObject::connect(&action0, SIGNAL(triggered()), this, SLOT(on_actionInsert_Frame_triggered()));
-    contextMenu.addAction(&action0);
+    frameMenu.addAction(&action0);
 
-    QAction action1("Add Frame", this);
+    QAction action1("Add", this);
     action1.setToolTip("Add new frames at the end");
     QObject::connect(&action1, SIGNAL(triggered()), this, SLOT(on_actionAdd_Frame_triggered()));
-    contextMenu.addAction(&action1);
+    frameMenu.addAction(&action1);
 
-    QAction action2("Replace Frame", this);
+    QAction action2("Replace", this);
     action2.setToolTip("Replace the current frame");
     QObject::connect(&action2, SIGNAL(triggered()), this, SLOT(on_actionReplace_Frame_triggered()));
     if (this->gfx->getFrameCount() == 0) {
         action2.setEnabled(false);
     }
-    contextMenu.addAction(&action2);
+    frameMenu.addAction(&action2);
 
-    QAction action3("Del Frame", this);
+    QAction action3("Delete", this);
     action3.setToolTip("Delete the current frame");
     QObject::connect(&action3, SIGNAL(triggered()), this, SLOT(on_actionDel_Frame_triggered()));
     if (this->gfx->getFrameCount() == 0) {
         action3.setEnabled(false);
     }
-    contextMenu.addAction(&action3);
+    frameMenu.addAction(&action3);
 
-    contextMenu.addSeparator();
+    contextMenu.addMenu(frameMenu);
 
-    QAction action5("Create Subtile", this);
-    action5.setToolTip("Create a new subtile");
-    QObject::connect(&action5, SIGNAL(triggered()), this, SLOT(on_actionCreate_Subtile_triggered()));
-    contextMenu.addAction(&action5);
+    QMenu subtileMenu(tr("Subtile"), this);
+    subtileMenu.setToolTipsVisible(true);
 
-    QAction action6("Delete Subtile", this);
-    action6.setToolTip("Delete the current subtile");
-    QObject::connect(&action6, SIGNAL(triggered()), this, SLOT(on_actionDel_Subtile_triggered()));
-    if (this->min->getSubtileCount() == 0) {
-        action6.setEnabled(false);
-    }
-    contextMenu.addAction(&action6);
+    QAction action4("Create", this);
+    action4.setToolTip("Create a new subtile");
+    QObject::connect(&action4, SIGNAL(triggered()), this, SLOT(on_actionCreate_Subtile_triggered()));
+    subtileMenu.addAction(&action4);
 
-    contextMenu.addSeparator();
+    QAction action5("Insert", this);
+    action5.setToolTip("Add new subtiles before the current one");
+    QObject::connect(&action5, SIGNAL(triggered()), this, SLOT(on_actionInsert_Subtile_triggered()));
+    subtileMenu.addAction(&action5);
 
-    QAction action7("Create Tile", this);
-    action7.setToolTip("Create a new tile");
-    QObject::connect(&action7, SIGNAL(triggered()), this, SLOT(on_actionCreate_Tile_triggered()));
+    QAction action6("Add", this);
+    action6.setToolTip("Add new subtiles at the end");
+    QObject::connect(&action6, SIGNAL(triggered()), this, SLOT(on_actionAdd_Subtile_triggered()));
+    subtileMenu.addAction(&action6);
+
+    QAction action7("Replace", this);
+    action7.setToolTip("Replace the current subtile");
+    QObject::connect(&action7, SIGNAL(triggered()), this, SLOT(on_actionReplace_Subtile_triggered()));
     if (this->min->getSubtileCount() == 0) {
         action7.setEnabled(false);
     }
-    contextMenu.addAction(&action7);
+    subtileMenu.addAction(&action7);
 
-    QAction action8("Delete Tile", this);
-    action8.setToolTip("Delete the current tile");
-    QObject::connect(&action8, SIGNAL(triggered()), this, SLOT(on_actionDel_Tile_triggered()));
-    if (this->til->getTileCount() == 0) {
+    QAction action8("Delete", this);
+    action8.setToolTip("Delete the current subtile");
+    QObject::connect(&action8, SIGNAL(triggered()), this, SLOT(on_actionDel_Subtile_triggered()));
+    if (this->min->getSubtileCount() == 0) {
         action8.setEnabled(false);
     }
-    contextMenu.addAction(&action8);
+    subtileMenu.addAction(&action8);
+
+    contextMenu.addMenu(subtileMenu);
+
+    QMenu tileMenu(tr("Tile"), this);
+    tileMenu.setToolTipsVisible(true);
+
+    QAction action9("Create", this);
+    action9.setToolTip("Create a new tile");
+    QObject::connect(&action9, SIGNAL(triggered()), this, SLOT(on_actionCreate_Tile_triggered()));
+    if (this->min->getSubtileCount() == 0) {
+        action9.setEnabled(false);
+    }
+    tileMenu.addAction(&action9);
+
+    QAction action10("Insert", this);
+    action10.setToolTip("Add new tiles before the current one");
+    QObject::connect(&action10, SIGNAL(triggered()), this, SLOT(on_actionInsert_Tile_triggered()));
+    tileMenu.addAction(&action10);
+
+    QAction action11("Add", this);
+    action11.setToolTip("Add new tiles at the end");
+    QObject::connect(&action11, SIGNAL(triggered()), this, SLOT(on_actionAdd_Tile_triggered()));
+    tileMenu.addAction(&action11);
+
+    QAction action12("Replace", this);
+    action12.setToolTip("Replace the current tile");
+    QObject::connect(&action12, SIGNAL(triggered()), this, SLOT(on_actionReplace_Tile_triggered()));
+    if (this->til->getTileCount() == 0) {
+        action12.setEnabled(false);
+    }
+    tileMenu.addAction(&action12);
+
+    QAction action13("Delete", this);
+    action13.setToolTip("Delete the current tile");
+    QObject::connect(&action13, SIGNAL(triggered()), this, SLOT(on_actionDel_Tile_triggered()));
+    if (this->til->getTileCount() == 0) {
+        action13.setEnabled(false);
+    }
+    tileMenu.addAction(&action13);
+
+    contextMenu.addMenu(tileMenu);
 
     contextMenu.exec(mapToGlobal(pos));
 }
@@ -614,6 +1043,21 @@ void LevelCelView::on_actionCreate_Subtile_triggered()
     ((MainWindow *)this->window())->on_actionCreate_Subtile_triggered();
 }
 
+void LevelCelView::on_actionInsert_Subtile_triggered()
+{
+    ((MainWindow *)this->window())->on_actionInsert_Subtile_triggered();
+}
+
+void LevelCelView::on_actionAdd_Subtile_triggered()
+{
+    ((MainWindow *)this->window())->on_actionAdd_Subtile_triggered();
+}
+
+void LevelCelView::on_actionReplace_Subtile_triggered()
+{
+    ((MainWindow *)this->window())->on_actionReplace_Subtile_triggered();
+}
+
 void LevelCelView::on_actionDel_Subtile_triggered()
 {
     ((MainWindow *)this->window())->on_actionDel_Subtile_triggered();
@@ -622,6 +1066,21 @@ void LevelCelView::on_actionDel_Subtile_triggered()
 void LevelCelView::on_actionCreate_Tile_triggered()
 {
     ((MainWindow *)this->window())->on_actionCreate_Tile_triggered();
+}
+
+void LevelCelView::on_actionInsert_Tile_triggered()
+{
+    ((MainWindow *)this->window())->on_actionInsert_Tile_triggered();
+}
+
+void LevelCelView::on_actionAdd_Tile_triggered()
+{
+    ((MainWindow *)this->window())->on_actionAdd_Tile_triggered();
+}
+
+void LevelCelView::on_actionReplace_Tile_triggered()
+{
+    ((MainWindow *)this->window())->on_actionReplace_Tile_triggered();
 }
 
 void LevelCelView::on_actionDel_Tile_triggered()
@@ -860,5 +1319,5 @@ void LevelCelView::dropEvent(QDropEvent *event)
         filePaths.append(url.toLocalFile());
     }
     // try to insert as frames
-    ((MainWindow *)this->window())->openImageFiles(filePaths, false);
+    ((MainWindow *)this->window())->openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
 }

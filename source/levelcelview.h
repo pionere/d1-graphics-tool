@@ -6,6 +6,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneDragDropEvent>
 #include <QGraphicsSceneMouseEvent>
+#include <QImage>
 #include <QPoint>
 #include <QTimer>
 #include <QWidget>
@@ -26,6 +27,8 @@ namespace Ui {
 class LevelCelScene;
 class LevelCelView;
 } // namespace Ui
+
+enum class IMAGE_FILE_MODE;
 
 class LevelCelScene : public QGraphicsScene {
     Q_OBJECT
@@ -60,18 +63,28 @@ public:
     int getCurrentSubtileIndex();
     int getCurrentTileIndex();
     void framePixelClicked(quint16, quint16);
-    void insertFrames(QStringList imagefilePaths, bool append);
+    void insertImageFiles(IMAGE_FILE_MODE mode, QStringList imagefilePaths, bool append);
     void replaceCurrentFrame(QString imagefilePath);
     void removeCurrentFrame();
     void createSubtile();
+    void replaceCurrentSubtile(QString imagefilePath);
     void removeCurrentSubtile();
     void createTile();
+    void replaceCurrentTile(QString imagefilePath);
     void removeCurrentTile();
 
     void displayFrame();
 
 private:
     void update();
+    void insertFrame(IMAGE_FILE_MODE mode, int index, QString imagefilePath);
+    void insertFrames(IMAGE_FILE_MODE mode, QStringList imagefilePaths, bool append);
+    void insertSubtile(IMAGE_FILE_MODE mode, int index, QString imagefilePath);
+    void insertSubtiles(IMAGE_FILE_MODE mode, QStringList imagefilePaths, bool append);
+    void insertTile(IMAGE_FILE_MODE mode, int index, QString imagefilePath);
+    void insertTiles(IMAGE_FILE_MODE mode, QStringList imagefilePaths, bool append);
+    void assignFrames(const QImage &image, int subtileIndex, int frameIndex);
+    void assignSubtiles(const QImage &image, int tileIndex, int subtileIndex);
 
 signals:
     void frameRefreshed();
@@ -86,8 +99,14 @@ private slots:
     void on_actionReplace_Frame_triggered();
     void on_actionDel_Frame_triggered();
     void on_actionCreate_Subtile_triggered();
+    void on_actionInsert_Subtile_triggered();
+    void on_actionAdd_Subtile_triggered();
+    void on_actionReplace_Subtile_triggered();
     void on_actionDel_Subtile_triggered();
     void on_actionCreate_Tile_triggered();
+    void on_actionInsert_Tile_triggered();
+    void on_actionAdd_Tile_triggered();
+    void on_actionReplace_Tile_triggered();
     void on_actionDel_Tile_triggered();
 
     void on_firstFrameButton_clicked();

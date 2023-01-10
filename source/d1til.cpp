@@ -108,7 +108,9 @@ QImage D1Til::getTileImage(int tileIndex)
         subtileHeight + 2 * subtileShiftY, QImage::Format_ARGB32);
     tile.fill(Qt::transparent);
     QPainter tilePainter(&tile);
-
+    //      0
+    //    2   1
+    //      3
     tilePainter.drawImage(subtileWidth / 2, 0,
         this->min->getSubtileImage(
             this->subtileIndices.at(tileIndex).at(0)));
@@ -163,6 +165,38 @@ int D1Til::getTileCount()
 QList<quint16> &D1Til::getSubtileIndices(int tileIndex)
 {
     return const_cast<QList<quint16> &>(this->subtileIndices.at(tileIndex));
+}
+
+void D1Til::insertTile(int tileIndex, const QImage &image)
+{
+    QList<quint16> subtileIndices;
+
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    QImage subImage = QImage(subtileWidth, subtileHeight, QImage::Format_ARGB32);
+    for (int y = 0; y < image.height(); y + = subtileHeight) {
+        for (int x = 0; x < image.width(); x += subtileWidth) {
+            // subImage.fill(Qt::transparent);
+
+            // bool hasColor = false;
+            for (int j = 0; j < subtileHeight; j++) {
+                for (int i = 0; i < subtileWidth; i++) {
+                    const QColor color = image.pixelColor(x + i, y + j);
+                    // if (color.alpha() >= COLOR_ALPHA_LIMIT) {
+                    //    hasColor = true;
+                    // }
+                    subImage.setPixelColor(i, j, color);
+                }
+            }
+
+            int index = this->min->getSubtileCount();
+            subtileIndices.append(index);
+            this->min->insertSubtile(index, subImage);
+        }
+    }
+
+    this->subtileIndices.insert(tileIndex, subtileIndices);
 }
 
 void D1Til::createTile()
