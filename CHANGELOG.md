@@ -10,17 +10,18 @@
   1. use width 96 to open wlbat.cl2, whbat.cl2 and wmbat.cl2 graphics of the warrior
   2. use height of 8 to open the hellfire town tileset
 - new menu option to open a clean cel, cl2 or tileset graphics
-- drag and drop support for image files
+- drag and drop support for image files to insert frames, tiles or subtiles
 - edit fields to modify subtiles of tiles, frames of subtiles, frame-types
 - width/height of subtiles are editable
 - button to apply trn-adjustments of the game (done to normal monster-trns)
 - context menu + menu option to add, insert, delete or replace frames
-- context menu + menu option to create or delete tiles and subtiles
+- context menu + menu option to create, add, insert, delete or replace tiles and subtiles
 - drag and drop support for palette and color translation files
 - context menu to undo/redo the modifications of the palette/translation
 - icon buttons to create/load/save palette/translation in place
 - file dialogs start from the last used folder/file (even after restart)
 - export to any kind of image format which are supported by Qt (JPEG, WEBP, etc...)
+- option to limit the range of the exported items
 - support TMI metadata
 
 ### Fixed

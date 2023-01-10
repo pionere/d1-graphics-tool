@@ -30,6 +30,13 @@ enum class FILE_DIALOG_MODE {
     SAVE_NO_CONF, // save without confirm
 };
 
+enum class IMAGE_FILE_MODE {
+    FRAME,   // open as frames
+    SUBTILE, // open as subtiles
+    TILE,    // open as tiles
+    AUTO,    // auto-detect
+};
+
 namespace Ui {
 class MainWindow;
 }
@@ -46,7 +53,7 @@ public:
     void setTrn2(QString);
 
     void openFile(const OpenAsParam &params);
-    void openImageFiles(QStringList filePaths, bool append);
+    void openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append);
     void openPalFiles(QStringList filePaths, PaletteWidget *widget);
     void saveFile(const SaveAsParam &params);
 
@@ -70,6 +77,8 @@ private:
     bool loadTrn2(QString trnfilePath);
 
     void addFrames(bool append);
+    void addSubtiles(bool append);
+    void addTiles(bool append);
 
 public slots:
     void on_actionInsert_Frame_triggered();
@@ -77,8 +86,14 @@ public slots:
     void on_actionReplace_Frame_triggered();
     void on_actionDel_Frame_triggered();
     void on_actionCreate_Subtile_triggered();
+    void on_actionInsert_Subtile_triggered();
+    void on_actionAdd_Subtile_triggered();
+    void on_actionReplace_Subtile_triggered();
     void on_actionDel_Subtile_triggered();
     void on_actionCreate_Tile_triggered();
+    void on_actionInsert_Tile_triggered();
+    void on_actionAdd_Tile_triggered();
+    void on_actionReplace_Tile_triggered();
     void on_actionDel_Tile_triggered();
 
 private slots:
@@ -126,6 +141,9 @@ private:
     QString lastFilePath;
 
     QMenu *newMenu;
+    QMenu *frameMenu;
+    QMenu *subtileMenu;
+    QMenu *tileMenu;
 
     QUndoStack *undoStack;
     QAction *undoAction;
