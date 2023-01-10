@@ -907,6 +907,8 @@ void LevelCelView::playGroup()
 
 void LevelCelView::ShowContextMenu(const QPoint &pos)
 {
+    MainWindow *mw = (MainWindow *)this->window();
+
     QMenu contextMenu(tr("Context menu"), this);
 
     QMenu frameMenu(tr("Frame"), this);
@@ -914,17 +916,17 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
 
     QAction action0("Insert", this);
     action0.setToolTip("Add new frames before the current one");
-    QObject::connect(&action0, SIGNAL(triggered()), this, SLOT(on_actionInsert_Frame_triggered()));
+    QObject::connect(&action0, SIGNAL(triggered()), mw, SLOT(on_actionInsert_Frame_triggered()));
     frameMenu.addAction(&action0);
 
     QAction action1("Add", this);
     action1.setToolTip("Add new frames at the end");
-    QObject::connect(&action1, SIGNAL(triggered()), this, SLOT(on_actionAdd_Frame_triggered()));
+    QObject::connect(&action1, SIGNAL(triggered()), mw, SLOT(on_actionAdd_Frame_triggered()));
     frameMenu.addAction(&action1);
 
     QAction action2("Replace", this);
     action2.setToolTip("Replace the current frame");
-    QObject::connect(&action2, SIGNAL(triggered()), this, SLOT(on_actionReplace_Frame_triggered()));
+    QObject::connect(&action2, SIGNAL(triggered()), mw, SLOT(on_actionReplace_Frame_triggered()));
     if (this->gfx->getFrameCount() == 0) {
         action2.setEnabled(false);
     }
@@ -932,7 +934,7 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
 
     QAction action3("Delete", this);
     action3.setToolTip("Delete the current frame");
-    QObject::connect(&action3, SIGNAL(triggered()), this, SLOT(on_actionDel_Frame_triggered()));
+    QObject::connect(&action3, SIGNAL(triggered()), mw, SLOT(on_actionDel_Frame_triggered()));
     if (this->gfx->getFrameCount() == 0) {
         action3.setEnabled(false);
     }
@@ -945,22 +947,22 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
 
     QAction action4("Create", this);
     action4.setToolTip("Create a new subtile");
-    QObject::connect(&action4, SIGNAL(triggered()), this, SLOT(on_actionCreate_Subtile_triggered()));
+    QObject::connect(&action4, SIGNAL(triggered()), mw, SLOT(on_actionCreate_Subtile_triggered()));
     subtileMenu.addAction(&action4);
 
     QAction action5("Insert", this);
     action5.setToolTip("Add new subtiles before the current one");
-    QObject::connect(&action5, SIGNAL(triggered()), this, SLOT(on_actionInsert_Subtile_triggered()));
+    QObject::connect(&action5, SIGNAL(triggered()), mw, SLOT(on_actionInsert_Subtile_triggered()));
     subtileMenu.addAction(&action5);
 
     QAction action6("Add", this);
     action6.setToolTip("Add new subtiles at the end");
-    QObject::connect(&action6, SIGNAL(triggered()), this, SLOT(on_actionAdd_Subtile_triggered()));
+    QObject::connect(&action6, SIGNAL(triggered()), mw, SLOT(on_actionAdd_Subtile_triggered()));
     subtileMenu.addAction(&action6);
 
     QAction action7("Replace", this);
     action7.setToolTip("Replace the current subtile");
-    QObject::connect(&action7, SIGNAL(triggered()), this, SLOT(on_actionReplace_Subtile_triggered()));
+    QObject::connect(&action7, SIGNAL(triggered()), mw, SLOT(on_actionReplace_Subtile_triggered()));
     if (this->min->getSubtileCount() == 0) {
         action7.setEnabled(false);
     }
@@ -968,7 +970,7 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
 
     QAction action8("Delete", this);
     action8.setToolTip("Delete the current subtile");
-    QObject::connect(&action8, SIGNAL(triggered()), this, SLOT(on_actionDel_Subtile_triggered()));
+    QObject::connect(&action8, SIGNAL(triggered()), mw, SLOT(on_actionDel_Subtile_triggered()));
     if (this->min->getSubtileCount() == 0) {
         action8.setEnabled(false);
     }
@@ -981,7 +983,7 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
 
     QAction action9("Create", this);
     action9.setToolTip("Create a new tile");
-    QObject::connect(&action9, SIGNAL(triggered()), this, SLOT(on_actionCreate_Tile_triggered()));
+    QObject::connect(&action9, SIGNAL(triggered()), mw, SLOT(on_actionCreate_Tile_triggered()));
     if (this->min->getSubtileCount() == 0) {
         action9.setEnabled(false);
     }
@@ -989,17 +991,17 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
 
     QAction action10("Insert", this);
     action10.setToolTip("Add new tiles before the current one");
-    QObject::connect(&action10, SIGNAL(triggered()), this, SLOT(on_actionInsert_Tile_triggered()));
+    QObject::connect(&action10, SIGNAL(triggered()), mw, SLOT(on_actionInsert_Tile_triggered()));
     tileMenu.addAction(&action10);
 
     QAction action11("Add", this);
     action11.setToolTip("Add new tiles at the end");
-    QObject::connect(&action11, SIGNAL(triggered()), this, SLOT(on_actionAdd_Tile_triggered()));
+    QObject::connect(&action11, SIGNAL(triggered()), mw, SLOT(on_actionAdd_Tile_triggered()));
     tileMenu.addAction(&action11);
 
     QAction action12("Replace", this);
     action12.setToolTip("Replace the current tile");
-    QObject::connect(&action12, SIGNAL(triggered()), this, SLOT(on_actionReplace_Tile_triggered()));
+    QObject::connect(&action12, SIGNAL(triggered()), mw, SLOT(on_actionReplace_Tile_triggered()));
     if (this->til->getTileCount() == 0) {
         action12.setEnabled(false);
     }
@@ -1007,7 +1009,7 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
 
     QAction action13("Delete", this);
     action13.setToolTip("Delete the current tile");
-    QObject::connect(&action13, SIGNAL(triggered()), this, SLOT(on_actionDel_Tile_triggered()));
+    QObject::connect(&action13, SIGNAL(triggered()), mw, SLOT(on_actionDel_Tile_triggered()));
     if (this->til->getTileCount() == 0) {
         action13.setEnabled(false);
     }
@@ -1018,7 +1020,7 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
     contextMenu.exec(mapToGlobal(pos));
 }
 
-void LevelCelView::on_actionInsert_Frame_triggered()
+/*void LevelCelView::on_actionInsert_Frame_triggered()
 {
     ((MainWindow *)this->window())->on_actionInsert_Frame_triggered();
 }
@@ -1086,7 +1088,7 @@ void LevelCelView::on_actionReplace_Tile_triggered()
 void LevelCelView::on_actionDel_Tile_triggered()
 {
     ((MainWindow *)this->window())->on_actionDel_Tile_triggered();
-}
+}*/
 
 void LevelCelView::on_firstFrameButton_clicked()
 {

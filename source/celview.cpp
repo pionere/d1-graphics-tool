@@ -294,22 +294,24 @@ void CelView::playGroup()
 
 void CelView::ShowContextMenu(const QPoint &pos)
 {
+    MainWindow *mw = (MainWindow *)this->window();
+
     QMenu contextMenu(tr("Context menu"), this);
     contextMenu.setToolTipsVisible(true);
 
     QAction action0("Insert Frame", this);
     action0.setToolTip("Add new frames before the current one");
-    QObject::connect(&action0, SIGNAL(triggered()), this, SLOT(on_actionInsert_Frame_triggered()));
+    QObject::connect(&action0, SIGNAL(triggered()), mw, SLOT(on_actionInsert_Frame_triggered()));
     contextMenu.addAction(&action0);
 
     QAction action1("Add Frame", this);
     action1.setToolTip("Add new frames at the end");
-    QObject::connect(&action1, SIGNAL(triggered()), this, SLOT(on_actionAdd_Frame_triggered()));
+    QObject::connect(&action1, SIGNAL(triggered()), mw, SLOT(on_actionAdd_Frame_triggered()));
     contextMenu.addAction(&action1);
 
     QAction action2("Replace Frame", this);
     action2.setToolTip("Replace the current frame");
-    QObject::connect(&action2, SIGNAL(triggered()), this, SLOT(on_actionReplace_Frame_triggered()));
+    QObject::connect(&action2, SIGNAL(triggered()), mw, SLOT(on_actionReplace_Frame_triggered()));
     if (this->gfx->getFrameCount() == 0) {
         action2.setEnabled(false);
     }
@@ -317,7 +319,7 @@ void CelView::ShowContextMenu(const QPoint &pos)
 
     QAction action3("Del Frame", this);
     action3.setToolTip("Delete the current frame");
-    QObject::connect(&action3, SIGNAL(triggered()), this, SLOT(on_actionDel_Frame_triggered()));
+    QObject::connect(&action3, SIGNAL(triggered()), mw, SLOT(on_actionDel_Frame_triggered()));
     if (this->gfx->getFrameCount() == 0) {
         action3.setEnabled(false);
     }
@@ -326,7 +328,7 @@ void CelView::ShowContextMenu(const QPoint &pos)
     contextMenu.exec(mapToGlobal(pos));
 }
 
-void CelView::on_actionInsert_Frame_triggered()
+/*void CelView::on_actionInsert_Frame_triggered()
 {
     ((MainWindow *)this->window())->on_actionInsert_Frame_triggered();
 }
@@ -344,7 +346,7 @@ void CelView::on_actionReplace_Frame_triggered()
 void CelView::on_actionDel_Frame_triggered()
 {
     ((MainWindow *)this->window())->on_actionDel_Frame_triggered();
-}
+}*/
 
 void CelView::on_firstFrameButton_clicked()
 {
