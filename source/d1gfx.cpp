@@ -99,7 +99,7 @@ QImage D1Gfx::getFrameImage(quint16 frameIndex)
     return image;
 }
 
-D1GfxFrame *D1Gfx::insertFrame(quint16 idx, const QImage &image)
+D1GfxFrame *D1Gfx::insertFrame(int idx, const QImage &image)
 {
     bool clipped;
 
@@ -133,7 +133,7 @@ D1GfxFrame *D1Gfx::insertFrame(quint16 idx, const QImage &image)
     return &this->frames[idx];
 }
 
-D1GfxFrame *D1Gfx::replaceFrame(quint16 idx, const QImage &image)
+D1GfxFrame *D1Gfx::replaceFrame(int idx, const QImage &image)
 {
     bool clipped = this->frames[idx].isClipped();
 

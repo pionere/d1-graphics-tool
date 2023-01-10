@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    const char* qssName = ":/D1GraphicsTool.qss";
+    const char *qssName = ":/D1GraphicsTool.qss";
     QFile file(qssName);
     if (!file.open(QIODevice::ReadOnly)) {
         qDebug() << "Failed to open " << qssName;

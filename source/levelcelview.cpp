@@ -318,31 +318,6 @@ void LevelCelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &i
     }
 
     this->assignFrames(image, -1, index);
-    /*QImage subImage = QImage(MICRO_WIDTH, MICRO_HEIGHT, QImage::Format_ARGB32);
-    for (int y = 0; y < image.height(); y + = MICRO_HEIGHT) {
-        for (int x = 0; x < image.width(); x += MICRO_WIDTH) {
-            // subImage.fill(Qt::transparent);
-
-            bool hasColor = false;
-            for (int j = 0; j < MICRO_HEIGHT; j++) {
-                for (int i = 0; i < MICRO_WIDTH; i++) {
-                    const QColor color = image.pixelColor(x + i, y + j);
-                    if (color.alpha() >= COLOR_ALPHA_LIMIT) {
-                        hasColor = true;
-                    }
-                    subImage.setPixelColor(i, j, color);
-                }
-            }
-
-            if (!hasColor) {
-                continue;
-            }
-
-            D1GfxFrame *frame = this->gfx->insertFrame(index, subImage);
-            LevelTabFrameWidget::selectFrameType(frame);
-            index++;
-        }
-    }*/
 }
 
 void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)
@@ -451,30 +426,6 @@ void LevelCelView::insertSubtile(IMAGE_FILE_MODE mode, int index, const QString 
     }
 
     this->assignSubtiles(image, -1, index);
-    /*QImage subImage = QImage(subtileWidth, subtileHeight, QImage::Format_ARGB32);
-    for (int y = 0; y < image.height(); y + = subtileHeight) {
-        for (int x = 0; x < image.width(); x += subtileWidth) {
-            // subImage.fill(Qt::transparent);
-
-            bool hasColor = false;
-            for (int j = 0; j < subtileHeight; j++) {
-                for (int i = 0; i < subtileWidth; i++) {
-                    const QColor color = image.pixelColor(x + i, y + j);
-                    if (color.alpha() >= COLOR_ALPHA_LIMIT) {
-                        hasColor = true;
-                    }
-                    subImage.setPixelColor(i, j, color);
-                }
-            }
-
-            if (!hasColor) {
-                continue;
-            }
-
-            this->min->insertSubtile(index, subImage);
-            index++;
-        }
-    }*/
 }
 
 void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)
@@ -1019,76 +970,6 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
 
     contextMenu.exec(mapToGlobal(pos));
 }
-
-/*void LevelCelView::on_actionInsert_Frame_triggered()
-{
-    ((MainWindow *)this->window())->on_actionInsert_Frame_triggered();
-}
-
-void LevelCelView::on_actionAdd_Frame_triggered()
-{
-    ((MainWindow *)this->window())->on_actionAdd_Frame_triggered();
-}
-
-void LevelCelView::on_actionReplace_Frame_triggered()
-{
-    ((MainWindow *)this->window())->on_actionReplace_Frame_triggered();
-}
-
-void LevelCelView::on_actionDel_Frame_triggered()
-{
-    ((MainWindow *)this->window())->on_actionDel_Frame_triggered();
-}
-
-void LevelCelView::on_actionCreate_Subtile_triggered()
-{
-    ((MainWindow *)this->window())->on_actionCreate_Subtile_triggered();
-}
-
-void LevelCelView::on_actionInsert_Subtile_triggered()
-{
-    ((MainWindow *)this->window())->on_actionInsert_Subtile_triggered();
-}
-
-void LevelCelView::on_actionAdd_Subtile_triggered()
-{
-    ((MainWindow *)this->window())->on_actionAdd_Subtile_triggered();
-}
-
-void LevelCelView::on_actionReplace_Subtile_triggered()
-{
-    ((MainWindow *)this->window())->on_actionReplace_Subtile_triggered();
-}
-
-void LevelCelView::on_actionDel_Subtile_triggered()
-{
-    ((MainWindow *)this->window())->on_actionDel_Subtile_triggered();
-}
-
-void LevelCelView::on_actionCreate_Tile_triggered()
-{
-    ((MainWindow *)this->window())->on_actionCreate_Tile_triggered();
-}
-
-void LevelCelView::on_actionInsert_Tile_triggered()
-{
-    ((MainWindow *)this->window())->on_actionInsert_Tile_triggered();
-}
-
-void LevelCelView::on_actionAdd_Tile_triggered()
-{
-    ((MainWindow *)this->window())->on_actionAdd_Tile_triggered();
-}
-
-void LevelCelView::on_actionReplace_Tile_triggered()
-{
-    ((MainWindow *)this->window())->on_actionReplace_Tile_triggered();
-}
-
-void LevelCelView::on_actionDel_Tile_triggered()
-{
-    ((MainWindow *)this->window())->on_actionDel_Tile_triggered();
-}*/
 
 void LevelCelView::on_firstFrameButton_clicked()
 {

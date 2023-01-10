@@ -52,8 +52,8 @@ public:
     void initialize(D1Gfx *gfx);
     int getCurrentFrameIndex();
     void framePixelClicked(unsigned x, unsigned y);
-    void insertImageFiles(IMAGE_FILE_MODE mode, QStringList imagefilePaths, bool append);
-    void replaceCurrentFrame(QString imagefilePath);
+    void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
+    void replaceCurrentFrame(const QString &imagefilePath);
     void removeCurrentFrame();
 
     void displayFrame();
@@ -63,7 +63,7 @@ signals:
     void colorIndexClicked(quint8);
 
 private:
-    void insertFrame(IMAGE_FILE_MODE mode, int index, QString imagefilePath);
+    void insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);
     void updateGroupIndex();
     void setGroupIndex();
 
@@ -71,11 +71,6 @@ public slots:
     void ShowContextMenu(const QPoint &pos);
 
 private slots:
-    /*void on_actionInsert_Frame_triggered();
-    void on_actionAdd_Frame_triggered();
-    void on_actionReplace_Frame_triggered();
-    void on_actionDel_Frame_triggered();*/
-
     void on_firstFrameButton_clicked();
     void on_previousFrameButton_clicked();
     void on_nextFrameButton_clicked();

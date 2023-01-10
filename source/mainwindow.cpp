@@ -44,7 +44,7 @@ MainWindow::MainWindow(QWidget *parent)
     QAction *firstFileAction = (QAction *)this->ui->menuFile->actions()[0];
     this->ui->menuFile->insertMenu(firstFileAction, this->newMenu);
 
-    // Initialize 'Undo/redo' of 'Edit
+    // Initialize 'Undo/Redo' of 'Edit
     this->undoStack = new QUndoStack(this);
     this->undoAction = undoStack->createUndoAction(this, "Undo");
     this->undoAction->setShortcuts(QKeySequence::Undo);
@@ -742,17 +742,6 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->subtileMenu->setEnabled(isTileset);
     this->tileMenu->setEnabled(isTileset);
 
-    /*bool hasFrame = this->gfx->getFrameCount() != 0;
-    this->frameMenu->action()[2]->setEnabled(hasFrame); // replace frame
-    this->frameMenu->action()[3]->setEnabled(hasFrame); // delete frame
-
-    if (isTileset) {
-        bool hasSubtile = this->min->getSubtileCount() != 0;
-        this->subtileMenu->actions()[3]->setEnabled(hasSubtile); // delete subtile
-        this->tileMenu->actions()[2]->setEnabled(hasSubtile); // create tile
-        bool hasTile = this->til->getTileCount() != 0;
-        this->tileMenu->actions()[3]->setEnabled(hasTile); // delete tile
-    }*/
     this->updateWindow();
 
     // Clear loading message from status bar

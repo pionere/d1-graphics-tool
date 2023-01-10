@@ -127,7 +127,7 @@ void CelView::framePixelClicked(unsigned x, unsigned y)
     emit this->colorIndexClicked(colorIndex);
 }
 
-void CelView::insertImageFiles(IMAGE_FILE_MODE mode, QStringList imagefilePaths, bool append)
+void CelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)
 {
     int prevFrameCount = this->gfx->getFrameCount();
 
@@ -158,7 +158,7 @@ void CelView::insertImageFiles(IMAGE_FILE_MODE mode, QStringList imagefilePaths,
     this->displayFrame();
 }
 
-void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, QString imagefilePath)
+void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
 {
     QImage image = QImage(imagefilePath);
 
@@ -171,7 +171,7 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, QString imagefilePath
     }
 }
 
-void CelView::replaceCurrentFrame(QString imagefilePath)
+void CelView::replaceCurrentFrame(const QString &imagefilePath)
 {
     QImage image = QImage(imagefilePath);
 
@@ -327,26 +327,6 @@ void CelView::ShowContextMenu(const QPoint &pos)
 
     contextMenu.exec(mapToGlobal(pos));
 }
-
-/*void CelView::on_actionInsert_Frame_triggered()
-{
-    ((MainWindow *)this->window())->on_actionInsert_Frame_triggered();
-}
-
-void CelView::on_actionAdd_Frame_triggered()
-{
-    ((MainWindow *)this->window())->on_actionAdd_Frame_triggered();
-}
-
-void CelView::on_actionReplace_Frame_triggered()
-{
-    ((MainWindow *)this->window())->on_actionReplace_Frame_triggered();
-}
-
-void CelView::on_actionDel_Frame_triggered()
-{
-    ((MainWindow *)this->window())->on_actionDel_Frame_triggered();
-}*/
 
 void CelView::on_firstFrameButton_clicked()
 {
