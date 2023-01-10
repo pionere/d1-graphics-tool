@@ -482,7 +482,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, const QStringList &image
     int prevSubtileCount = this->min->getSubtileCount();
 
     if (append) {
-        // append the frame(s)
+        // append the subtile(s)
         for (int i = 0; i < imagefilePaths.count(); i++) {
             this->insertSubtile(mode, this->min->getSubtileCount(), imagefilePaths[i]);
         }
@@ -493,7 +493,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, const QStringList &image
         // jump to the first appended subtile
         this->currentSubtileIndex = prevSubtileCount;
     } else {
-        // insert the frame(s)
+        // insert the subtile(s)
         for (int i = imagefilePaths.count() - 1; i >= 0; i--) {
             this->insertSubtile(mode, this->currentSubtileIndex, imagefilePaths[i]);
         }
@@ -574,7 +574,7 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, const QStringList &imagefil
     int prevTileCount = this->til->getTileCount();
 
     if (append) {
-        // append the frame(s)
+        // append the tile(s)
         for (int i = 0; i < imagefilePaths.count(); i++) {
             this->insertTile(mode, this->til->getTileCount(), imagefilePaths[i]);
         }
@@ -585,9 +585,9 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, const QStringList &imagefil
         // jump to the first appended tile
         this->currentTileIndex = prevTileCount;
     } else {
-        // insert the frame(s)
+        // insert the tile(s)
         for (int i = imagefilePaths.count() - 1; i >= 0; i--) {
-            this->insertSubtile(mode, this->currentTileIndex, imagefilePaths[i]);
+            this->insertTile(mode, this->currentTileIndex, imagefilePaths[i]);
         }
         int deltaTileCount = this->til->getTileCount() - prevTileCount;
         if (deltaTileCount == 0) {

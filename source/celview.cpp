@@ -310,11 +310,17 @@ void CelView::ShowContextMenu(const QPoint &pos)
     QAction action2("Replace Frame", this);
     action2.setToolTip("Replace the current frame");
     QObject::connect(&action2, SIGNAL(triggered()), this, SLOT(on_actionReplace_Frame_triggered()));
+    if (this->gfx->getFrameCount() == 0) {
+        action2.setEnabled(false);
+    }
     contextMenu.addAction(&action2);
 
     QAction action3("Del Frame", this);
     action3.setToolTip("Delete the current frame");
     QObject::connect(&action3, SIGNAL(triggered()), this, SLOT(on_actionDel_Frame_triggered()));
+    if (this->gfx->getFrameCount() == 0) {
+        action3.setEnabled(false);
+    }
     contextMenu.addAction(&action3);
 
     contextMenu.exec(mapToGlobal(pos));
