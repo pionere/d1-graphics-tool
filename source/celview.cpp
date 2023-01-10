@@ -122,15 +122,16 @@ void CelView::framePixelClicked(unsigned x, unsigned y)
     if (ty < 0 || ty >= this->gfx->getFrameHeight(frameIndex))
         return; // click is up or down from the frame -> ignore
 
-    index = this->gfx->getFrame(frameIndex)->getPixel(tx, ty).getPaletteIndex();
+    int colorIndex = this->gfx->getFrame(frameIndex)->getPixel(tx, ty).getPaletteIndex();
 
-    emit this->colorIndexClicked(index);
+    emit this->colorIndexClicked(colorIndex);
 }
 
 void CelView::insertImageFiles(IMAGE_FILE_MODE mode, QStringList imagefilePaths, bool append)
 {
+    int prevFrameCount = this->gfx->getFrameCount();
+
     if (append) {
-        int prevFrameCount = this->gfx->getFrameCount();
         // append the frame(s)
         for (int i = 0; i < imagefilePaths.count(); i++) {
             this->insertFrame(mode, this->gfx->getFrameCount(), imagefilePaths[i]);
