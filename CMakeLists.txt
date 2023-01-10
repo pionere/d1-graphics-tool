@@ -76,6 +76,7 @@ set(PROJECT_SOURCES
         source/saveasdialog.ui
         source/settingsdialog.cpp
         source/settingsdialog.h
+        source/settingsdialog.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
