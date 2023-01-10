@@ -816,7 +816,7 @@ void LevelCelView::reportUsage()
         msg = frameUses;
 
         if (!subtileUses.isEmpty()) {
-            msg += "\n" + subtileUses;
+            msg += "\n\n" + subtileUses;
         }
     } else {
         msg = "The tileset is empty.";
