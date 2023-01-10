@@ -398,7 +398,7 @@ void LevelCelView::assignSubtiles(const QImage &image, int tileIndex, int subtil
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     QImage subImage = QImage(subtileWidth, subtileHeight, QImage::Format_ARGB32);
-    for (int y = 0; y < image.height(); y + = subtileHeight) {
+    for (int y = 0; y < image.height(); y += subtileHeight) {
         for (int x = 0; x < image.width(); x += subtileWidth) {
             // subImage.fill(Qt::transparent);
 
@@ -544,7 +544,7 @@ void LevelCelView::insertTile(IMAGE_FILE_MODE mode, int index, const QString &im
     }*/
 
     QImage subImage = QImage(tileWidth, tileHeight, QImage::Format_ARGB32);
-    for (int y = 0; y < image.height(); y + = tileHeight) {
+    for (int y = 0; y < image.height(); y += tileHeight) {
         for (int x = 0; x < image.width(); x += tileWidth) {
             // subImage.fill(Qt::transparent);
 
