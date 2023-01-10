@@ -742,7 +742,7 @@ void LevelCelView::removeCurrentTile()
     this->displayFrame();
 }
 
-void LevelCelView::collectFrameUsers(int frameIndex, QList<int> users)
+void LevelCelView::collectFrameUsers(int frameIndex, QList<int> &users)
 {
     unsigned refIndex = frameIndex + 1;
 
@@ -757,7 +757,7 @@ void LevelCelView::collectFrameUsers(int frameIndex, QList<int> users)
     }
 }
 
-void LevelCelView::collectSubtileUsers(int subtileIndex, QList<int> users)
+void LevelCelView::collectSubtileUsers(int subtileIndex, QList<int> &users)
 {
     for (int i = 0; i < this->til->getTileCount(); i++) {
         const QList<quint16> &subtileIndices = this->til->getSubtileIndices(i);

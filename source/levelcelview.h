@@ -78,8 +78,8 @@ public:
     void replaceCurrentTile(const QString &imagefilePath);
     void removeCurrentTile();
 
-    void collectFrameUsers(int frameIndex, QList<int> users);
-    void collectSubtileUsers(int subtileIndex, QList<int> users);
+    void collectFrameUsers(int frameIndex, QList<int> &users);
+    void collectSubtileUsers(int subtileIndex, QList<int> &users);
     void reportUsage();
 
     void displayFrame();
