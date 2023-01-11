@@ -130,7 +130,7 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
         QByteArray celFrameRawData = fileBuffer.read(offset.second - offset.first);
         D1CEL_FRAME_TYPE frameType;
         if (gfx.upscaled && !celFrameRawData.isEmpty()) {
-            frameType = (D1CEL_FRAME_TYPE)celFrameRawData[0];
+            frameType = (D1CEL_FRAME_TYPE)celFrameRawData.at(0);
             celFrameRawData.remove(0, 1);
         } else {
             auto iter = celFrameTypes.find(i + 1);
@@ -181,7 +181,7 @@ bool D1CelTileset::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &
         *(quint32 *)&buf[(ii + 1) * sizeof(quint32)] = SwapLE32(pBuf - buf);
         D1GfxFrame *frame = gfx.getFrame(ii);
         if (upscaled) {
-            *pBuf = frame->getFrameType();
+            *pBuf = (quint8)frame->getFrameType();
             pBuf++;
         }
         pBuf = D1CelTilesetFrame::writeFrameData(*frame, pBuf);
