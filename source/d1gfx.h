@@ -23,14 +23,14 @@ public:
     bool isTransparent() const;
     quint8 getPaletteIndex() const;
 
+    friend bool operator==(const D1GfxPixel &lhs, const D1GfxPixel &rhs);
+
 private:
     D1GfxPixel() = default;
 
     bool transparent = false;
     quint8 paletteIndex = 0;
 };
-
-friend bool operator==(const D1GfxPixel &lhs, const D1GfxPixel &rhs);
 
 class D1GfxFrame {
     friend class D1Cel;
