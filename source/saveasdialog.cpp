@@ -36,6 +36,8 @@ void SaveAsDialog::initialize(QJsonObject *cfg, D1Gfx *g, D1Min *min, D1Til *til
     this->ui->celClippedAutoRadioButton->setChecked(true);
     this->ui->celGroupEdit->setText("0");
 
+    this->ui->minUpscaledAutoRadioButton->setChecked(true);
+
     this->ui->outputMinFileEdit->setText(min == nullptr ? "" : min->getFilePath());
     this->ui->outputTilFileEdit->setText(til == nullptr ? "" : til->getFilePath());
     this->ui->outputSolFileEdit->setText(sol == nullptr ? "" : sol->getFilePath());
@@ -148,13 +150,20 @@ void SaveAsDialog::on_saveButton_clicked()
     // celSettingsGroupBox: groupNum, clipped
     params.groupNum = this->ui->celGroupEdit->text().toUShort();
     if (this->ui->celClippedYesRadioButton->isChecked()) {
-        params.clipped = SAVE_CLIPPING_TYPE::CLIPPED_TRUE;
+        params.clipped = SAVE_CLIPPED_TYPE::TRUE;
     } else if (this->ui->celClippedNoRadioButton->isChecked()) {
-        params.clipped = SAVE_CLIPPING_TYPE::CLIPPED_FALSE;
+        params.clipped = SAVE_CLIPPED_TYPE::FALSE;
     } else {
-        params.clipped = SAVE_CLIPPING_TYPE::CLIPPED_AUTODETECT;
+        params.clipped = SAVE_CLIPPED_TYPE::AUTODETECT;
     }
-    // tilSettingsGroupBox: min, til, sol and amp files
+    // tilSettingsGroupBox: upscaled, min, til, sol and amp files
+    if (this->ui->minUpscaledYesRadioButton->isChecked()) {
+        params.upscaled = SAVE_UPSCALED_TYPE::TRUE;
+    } else if (this->ui->minUpscaledNoRadioButton->isChecked()) {
+        params.upscaled = SAVE_UPSCALED_TYPE::FALSE;
+    } else {
+        params.upscaled = SAVE_UPSCALED_TYPE::AUTODETECT;
+    }
     params.minFilePath = this->ui->outputMinFileEdit->text();
     params.tilFilePath = this->ui->outputTilFileEdit->text();
     params.solFilePath = this->ui->outputSolFileEdit->text();

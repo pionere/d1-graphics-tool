@@ -51,7 +51,9 @@ protected:
     int width = 0;
     int height = 0;
     QList<QList<D1GfxPixel>> pixels;
+    // fields of cel/cl2-frames
     bool clipped = false;
+    // fields of tileset-frames
     D1CEL_FRAME_TYPE frameType = D1CEL_FRAME_TYPE::Unknown;
 };
 
@@ -81,8 +83,10 @@ public:
     D1GfxFrame *replaceFrame(int frameIndex, const QImage &image);
     void removeFrame(quint16 frameIndex);
 
-    D1CEL_TYPE getType();
+    D1CEL_TYPE getType() const;
     void setType(D1CEL_TYPE type);
+    bool isUpscaled() const;
+    void setUpscaled(bool upscaled);
     QString getFilePath();
     D1Pal *getPalette();
     void setPalette(D1Pal *pal);
@@ -99,4 +103,6 @@ protected:
     D1Pal *palette = nullptr;
     QList<QPair<quint16, quint16>> groupFrameIndices;
     QList<D1GfxFrame> frames;
+    // fields of tilesets
+    bool upscaled = false;
 };

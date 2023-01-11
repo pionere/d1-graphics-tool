@@ -163,7 +163,7 @@ void D1Gfx::removeFrame(quint16 idx)
     }
 }
 
-D1CEL_TYPE D1Gfx::getType()
+D1CEL_TYPE D1Gfx::getType() const
 {
     return this->type;
 }
@@ -171,6 +171,16 @@ D1CEL_TYPE D1Gfx::getType()
 void D1Gfx::setType(D1CEL_TYPE type)
 {
     this->type = type;
+}
+
+bool D1Gfx::isUpscaled() const
+{
+    return this->upscaled;
+}
+
+void D1Gfx::setUpscaled(bool upscaled)
+{
+    this->upscaled = upscaled;
 }
 
 QString D1Gfx::getFilePath()

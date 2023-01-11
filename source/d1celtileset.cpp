@@ -129,12 +129,17 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
         fileBuffer.seek(offset.first);
         QByteArray celFrameRawData = fileBuffer.read(offset.second - offset.first);
         D1CEL_FRAME_TYPE frameType;
-        auto iter = celFrameTypes.find(i + 1);
-        if (iter != celFrameTypes.end()) {
-            frameType = iter->second;
+        if (gfx.upscaled && !celFrameRawData.isEmpty()) {
+            frameType = (D1CEL_FRAME_TYPE)celFrameRawData[0];
+            celFrameRawData.remove(0, 1);
         } else {
-            qDebug() << "Unknown frame type for frame " << i + 1;
-            frameType = guessFrameType(celFrameRawData);
+            auto iter = celFrameTypes.find(i + 1);
+            if (iter != celFrameTypes.end()) {
+                frameType = iter->second;
+            } else {
+                qDebug() << "Unknown frame type for frame " << i + 1;
+                frameType = guessFrameType(celFrameRawData);
+            }
         }
         D1GfxFrame frame;
         if (!D1CelTilesetFrame::load(frame, frameType, celFrameRawData, params)) {
@@ -147,9 +152,16 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
     return true;
 }
 
-bool D1CelTileset::writeFileData(D1Gfx &gfx, QFile &outFile)
+bool D1CelTileset::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
 {
     const int numFrames = gfx.getFrameCount();
+
+    // update upscaled info
+    bool upscaled = gfx.isUpscaled();
+    if (params.upscaled != SAVE_UPSCALED_TYPE::AUTODETECT) {
+        upscaled = params.upscaled == SAVE_UPSCALED_TYPE::TRUE;
+        gfx.setUpscaled(upscaled);
+    }
 
     // calculate header size
     int headerSize = 4 + numFrames * 4 + 4;
@@ -167,8 +179,12 @@ bool D1CelTileset::writeFileData(D1Gfx &gfx, QFile &outFile)
     quint8 *pBuf = &buf[headerSize];
     for (int ii = 0; ii < numFrames; ii++) {
         *(quint32 *)&buf[(ii + 1) * sizeof(quint32)] = SwapLE32(pBuf - buf);
-
-        pBuf = D1CelTilesetFrame::writeFrameData(*gfx.getFrame(ii), pBuf);
+        D1GfxFrame *frame = gfx.getFrame(ii);
+        if (upscaled) {
+            *pBuf = frame->getFrameType();
+            pBuf++;
+        }
+        pBuf = D1CelTilesetFrame::writeFrameData(*frame, pBuf);
     }
 
     *(quint32 *)&buf[(numFrames + 1) * sizeof(quint32)] = SwapLE32(pBuf - buf);
@@ -200,7 +216,7 @@ bool D1CelTileset::save(D1Gfx &gfx, const SaveAsParam &params)
         return false;
     }
 
-    bool result = D1CelTileset::writeFileData(gfx, outFile);
+    bool result = D1CelTileset::writeFileData(gfx, outFile, params);
 
     if (result) {
         gfx.gfxFilePath = filePath; // D1CelTileset::load(gfx, filePath);

@@ -16,5 +16,5 @@ public:
     static bool save(D1Gfx &gfx, const SaveAsParam &params);
 
 private:
-    static bool writeFileData(D1Gfx &gfx, QFile &outFile);
+    static bool writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params);
 };
