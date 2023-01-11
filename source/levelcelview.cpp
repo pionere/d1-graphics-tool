@@ -1018,7 +1018,7 @@ void LevelCelView::reuseFrames(QString &report)
             const unsigned refIndex = j + 1;
             for (int i = 0; i < this->min->getSubtileCount(); i++) {
                 QList<quint16> &frameIndices = this->min->getCelFrameIndices(i);
-                for (auto iter = frameIndices.cbegin(); iter != frameIndices.cend(); iter++) {
+                for (auto iter = frameIndices.begin(); iter != frameIndices.end(); iter++) {
                     if (*iter == refIndex) {
                         *iter = i + 1;
                     }
@@ -1036,7 +1036,7 @@ void LevelCelView::reuseFrames(QString &report)
     }
 
     report = "Using frame ";
-    for (auto iter = changes.cbegin(); iter != changes.cend(); ++iter) {
+    for (auto iter = frameRemoved.cbegin(); iter != frameRemoved.cend(); ++iter) {
         report += QString::number(iter->first + 1) + " instead of " + QString::number(iter->second + 1) + ", ";
     }
     report.chop(2);
@@ -1069,7 +1069,7 @@ void LevelCelView::reuseSubtiles(QString &report)
             const unsigned refIndex = j;
             for (int i = 0; i < this->til->getTileCount(); i++) {
                 QList<quint16> &subtileIndices = this->til->getSubtileIndices(i);
-                for (auto iter = subtileIndices.cbegin(); iter != subtileIndices.cend(); iter++) {
+                for (auto iter = subtileIndices.begin(); iter != subtileIndices.end(); iter++) {
                     if (*iter == refIndex) {
                         *iter = i;
                     }
@@ -1087,7 +1087,7 @@ void LevelCelView::reuseSubtiles(QString &report)
     }
 
     report = "Using subtile ";
-    for (auto iter = changes.cbegin(); iter != changes.cend(); ++iter) {
+    for (auto iter = subtileRemoved.cbegin(); iter != subtileRemoved.cend(); ++iter) {
         report += QString::number(iter->first + 1) + " instead of " + QString::number(iter->second + 1) + ", ";
     }
     report.chop(2);
