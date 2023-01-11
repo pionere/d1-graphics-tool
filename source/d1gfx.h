@@ -23,7 +23,7 @@ public:
     bool isTransparent() const;
     quint8 getPaletteIndex() const;
 
-    friend bool operator==(const D1GfxPixel &lhs, const D1GfxPixel &rhs);
+    bool operator==(const D1GfxPixel &rhs) const;
 
 private:
     D1GfxPixel() = default;

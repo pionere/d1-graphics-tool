@@ -1026,7 +1026,7 @@ void LevelCelView::reuseFrames(QString &report)
             }
             // eliminate frame1
             this->removeFrame(j);
-            frameRemoved.append(i, j + frameRemoved.count());
+            frameRemoved.append(qMakePair(i, j + frameRemoved.count()));
             j--;
         }
     }
@@ -1077,7 +1077,7 @@ void LevelCelView::reuseSubtiles(QString &report)
             }
             // eliminate subtile 'j'
             this->removeSubtile(j);
-            subtileRemoved.append(i, j + subtileRemoved.count());
+            subtileRemoved.append(qMakePair(i, j + subtileRemoved.count()));
             j--;
         }
     }
