@@ -30,7 +30,7 @@ quint8 D1GfxPixel::getPaletteIndex() const
 
 bool D1GfxPixel::operator==(const D1GfxPixel &rhs) const
 {
-    return this->transparent == rhs.transparent && this->paletteIndex == lhs.paletteIndex;
+    return this->transparent == rhs.transparent && this->paletteIndex == rhs.paletteIndex;
 }
 
 int D1GfxFrame::getWidth() const
@@ -48,7 +48,7 @@ D1GfxPixel D1GfxFrame::getPixel(int x, int y) const
     if (x >= 0 && x < this->width && y >= 0 && y < this->height)
         return this->pixels[y][x];
 
-    return {};
+    return D1GfxPixel::transparentPixel();
 }
 
 bool D1GfxFrame::isClipped() const
