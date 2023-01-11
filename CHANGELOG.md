@@ -25,6 +25,7 @@
 - support TMI metadata
 - support upscaled tilesets
 - added usage report for frames and subtiles of tilesets
+- added jobs to cleanup tilesets
 
 ### Fixed
 - memory leaks
