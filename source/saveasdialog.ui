@@ -114,17 +114,17 @@
            </attribute>
           </widget>
          </item>
+         <item>
+          <spacer name="horizontalSpacer_2_0">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
         </layout>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <spacer name="horizontalSpacer_2_0">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
-      </item>
-      <item row="1" column="1">
+      </widget>
+    </item>
+    <item row="1" column="1">
        <widget class="QLineEdit" name="celGroupEdit">
         <property name="minimumSize">
          <size>
@@ -142,13 +142,6 @@
          <string>Number of groups</string>
         </property>
        </widget>
-      </item>
-      <item row="1" column="2">
-       <spacer name="horizontalSpacer_2_1">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
       </item>
      </layout>
     </widget>
@@ -214,17 +207,17 @@
            </attribute>
           </widget>
          </item>
+         <item>
+          <spacer name="horizontalSpacer_3_0">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
         </layout>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <spacer name="horizontalSpacer_3_0">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
-      </item>
-      <item row="1" column="0">
+      </widget>
+    </item>
+    <item row="1" column="0">
        <widget class="QLabel" name="tilMinFileLabel">
         <property name="text">
          <string>Min File:</string>
