@@ -28,7 +28,7 @@ quint8 D1GfxPixel::getPaletteIndex() const
     return this->paletteIndex;
 }
 
-bool D1GfxPixel::operator==(const D1GfxPixel &lhs, const D1GfxPixel &rhs)
+bool operator==(const D1GfxPixel &lhs, const D1GfxPixel &rhs)
 {
     return lhs.transparent == rhs.transparent && lhs.paletteIndex == lhs.paletteIndex;
 }
