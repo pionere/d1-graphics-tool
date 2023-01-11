@@ -851,7 +851,7 @@ void LevelCelView::resetFrameTypes()
 
     QString report;
     if (changes.isEmpty()) {
-        report = "No change was necessary."
+        report = "No change was necessary.";
     } else {
         // update the view
         this->tabFrameWidget->update();

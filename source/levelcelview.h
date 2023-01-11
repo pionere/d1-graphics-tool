@@ -99,7 +99,9 @@ private:
     void assignFrames(const QImage &image, int subtileIndex, int frameIndex);
     void assignSubtiles(const QImage &image, int tileIndex, int subtileIndex);
     void removeFrame(int frameIndex);
+    void removeSubtile(int subtileIndex);
     void removeUnusedFrames(QString &report);
+    void removeUnusedSubtiles(QString &report);
 
 signals:
     void frameRefreshed();
