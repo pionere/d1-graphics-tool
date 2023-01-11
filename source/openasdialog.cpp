@@ -31,6 +31,7 @@ void OpenAsDialog::initialize(QJsonObject *cfg)
     ui->celWidthEdit->setText("0");
     ui->celClippedAutoRadioButton->setChecked(true);
     // - tilSettingsGroupBox
+    ui->minUpscaledAutoRadioButton->setChecked(true);
     ui->tilFileEdit->setText("");
     ui->minFileEdit->setText("");
     ui->solFileEdit->setText("");
@@ -197,6 +198,14 @@ void OpenAsDialog::on_openButton_clicked()
         params.clipped = OPEN_CLIPPED_TYPE::FALSE;
     } else {
         params.clipped = OPEN_CLIPPED_TYPE::AUTODETECT;
+    }
+    // tileset: upscaled, width, height
+    if (ui->minUpscaledYesRadioButton->isChecked()) {
+        params.upscaled = OPEN_UPSCALED_TYPE::TRUE;
+    } else if (ui->minUpscaledNoRadioButton->isChecked()) {
+        params.upscaled = OPEN_UPSCALED_TYPE::FALSE;
+    } else {
+        params.upscaled = OPEN_UPSCALED_TYPE::AUTODETECT;
     }
     params.tilFilePath = ui->tilFileEdit->text();
     params.minFilePath = ui->minFileEdit->text();

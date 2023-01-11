@@ -173,6 +173,16 @@ void D1Gfx::setType(D1CEL_TYPE type)
     this->type = type;
 }
 
+bool D1Gfx::isUpscaled() const
+{
+    return this->upscaled;
+}
+
+void D1Gfx::setUpscaled(bool upscaled)
+{
+    this->upscaled = upscaled;
+}
+
 QString D1Gfx::getFilePath()
 {
     return this->gfxFilePath;

@@ -17,6 +17,12 @@ enum class SAVE_CLIPPED_TYPE {
     FALSE,
 };
 
+enum class SAVE_UPSCALED_TYPE {
+    AUTODETECT,
+    TRUE,
+    FALSE,
+};
+
 class SaveAsParam {
 public:
     QString celFilePath;
@@ -27,6 +33,7 @@ public:
     QString tmiFilePath;
     quint16 groupNum = 0;
     SAVE_CLIPPED_TYPE clipped = SAVE_CLIPPED_TYPE::AUTODETECT;
+    SAVE_UPSCALED_TYPE upscaled = SAVE_UPSCALED_TYPE::AUTODETECT;
 };
 
 namespace Ui {

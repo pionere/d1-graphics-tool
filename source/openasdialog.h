@@ -15,6 +15,12 @@ enum class OPEN_TILESET_TYPE {
     FALSE,
 };
 
+enum class OPEN_UPSCALED_TYPE {
+    AUTODETECT,
+    TRUE,
+    FALSE,
+};
+
 class OpenAsParam {
 public:
     QString celFilePath;
@@ -23,6 +29,7 @@ public:
     quint16 celWidth = 0;
     OPEN_CLIPPED_TYPE clipped = OPEN_CLIPPED_TYPE::AUTODETECT;
 
+    OPEN_UPSCALED_TYPE upscaled = OPEN_UPSCALED_TYPE::AUTODETECT;
     QString tilFilePath;
     QString minFilePath;
     QString solFilePath;

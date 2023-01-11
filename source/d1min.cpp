@@ -54,6 +54,12 @@ bool D1Min::load(QString filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CE
         return false;
     }
 
+    bool upscaled = params.upscaled == OPEN_UPSCALED_TYPE::TRUE;
+    if (params.upscaled == OPEN_UPSCALED_TYPE::AUTODETECT) {
+        upscaled = width != 2;
+    }
+    g->setUpscaled(upscaled);
+
     this->gfx = g;
     this->subtileWidth = width;
     this->subtileHeight = height;
@@ -86,9 +92,15 @@ bool D1Min::load(QString filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CE
         for (int j = 0; j < subtileNumberOfCelFrames; j++) {
             quint16 readWord;
             in >> readWord;
-            quint16 id = readWord & 0x0FFF;
-            celFrameIndicesList[j] = id;
-            celFrameTypes[id] = static_cast<D1CEL_FRAME_TYPE>((readWord & 0x7000) >> 12);
+            quint16 id = readWord;
+            if (!upscaled) {
+                id &= 0x0FFF;
+                celFrameTypes[id] = static_cast<D1CEL_FRAME_TYPE>((readWord & 0x7000) >> 12);
+                celFrameIndicesList[j] = id;
+            } else {
+                int idx = subtileNumberOfCelFrames - width - (j / width) * width + j % width;
+                celFrameIndicesList[idx] = id;
+            }
         }
     }
     this->minFilePath = filePath;
@@ -115,15 +127,30 @@ bool D1Min::save(const SaveAsParam &params)
         return false;
     }
 
+    bool upscaled = this->gfx->isUpscaled();
+    // update upscaled info -- done by d1celtileset
+    // if (params.upscaled != SAVE_UPSCALED_TYPE::AUTODETECT) {
+    //    upscaled = params.upscaled == SAVE_UPSCALED_TYPE::TRUE;
+    //    this->gfx->setUpscaled(upscaled);
+    // }
+
     // write to file
     QDataStream out(&outFile);
     out.setByteOrder(QDataStream::LittleEndian);
     for (int i = 0; i < this->celFrameIndices.size(); i++) {
         QList<quint16> &celFrameIndicesList = this->celFrameIndices[i];
-        for (int j = 0; j < celFrameIndicesList.count(); j++) {
-            quint16 writeWord = celFrameIndicesList[j];
-            if (writeWord != 0) {
-                writeWord |= ((quint16)this->gfx->getFrame(writeWord - 1)->getFrameType()) << 12;
+        int subtileNumberOfCelFrames = celFrameIndicesList.count();
+        for (int j = 0; j < subtileNumberOfCelFrames; j++) {
+            quint16 writeWord;
+            if (!upscaled) {
+                writeWord = celFrameIndicesList[j];
+                if (writeWord != 0) {
+                    writeWord |= ((quint16)this->gfx->getFrame(writeWord - 1)->getFrameType()) << 12;
+                }
+            } else {
+                int width = this->subtileWidth;
+                int idx = subtileNumberOfCelFrames - width - (j / width) * width + j % width;
+                writeWord = celFrameIndicesList[idx];
             }
             out << writeWord;
         }

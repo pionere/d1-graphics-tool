@@ -85,6 +85,8 @@ public:
 
     D1CEL_TYPE getType() const;
     void setType(D1CEL_TYPE type);
+    bool isUpscaled() const;
+    void setUpscaled(bool upscaled);
     QString getFilePath();
     D1Pal *getPalette();
     void setPalette(D1Pal *pal);
@@ -101,4 +103,6 @@ protected:
     D1Pal *palette = nullptr;
     QList<QPair<quint16, quint16>> groupFrameIndices;
     QList<D1GfxFrame> frames;
+    // fields of tilesets
+    bool upscaled = false;
 };
