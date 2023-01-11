@@ -988,7 +988,6 @@ void LevelCelView::cleanupTileset()
     QMessageBox::information(this, "Information", framesReport);
 }
 
-
 void LevelCelView::reuseFrames(QString &report)
 {
     QList<QPair<int, int>> frameRemoved;
@@ -1005,7 +1004,7 @@ void LevelCelView::reuseFrames(QString &report)
             bool match = true;
             for (int y = 0; y < height && match; y++) {
                 for (int x = 0; x < width; x++) {
-                    if (frame0->getPixel() == frame1->getPixel()) {
+                    if (frame0->getPixel(x, y) == frame1->getPixel(x, y)) {
                         continue;
                     }
                     match = false;
@@ -1019,7 +1018,7 @@ void LevelCelView::reuseFrames(QString &report)
             const unsigned refIndex = j + 1;
             for (int i = 0; i < this->min->getSubtileCount(); i++) {
                 const QList<quint16> &frameIndices = this->min->getCelFrameIndices(i);
-                for (auto iter = frameIndices.cbegin(); iter != frameIndices.cend(); iter++) {
+                for (auto iter = frameIndices.begin(); iter != frameIndices.end(); iter++) {
                     if (*iter == refIndex) {
                         *iter = i + 1;
                     }
@@ -1070,7 +1069,7 @@ void LevelCelView::reuseSubtiles(QString &report)
             const unsigned refIndex = j;
             for (int i = 0; i < this->til->getTileCount(); i++) {
                 const QList<quint16> &subtileIndices = this->til->getSubtileIndices(i);
-                for (auto iter = subtileIndices.cbegin(); iter != subtileIndices.cend(); iter++) {
+                for (auto iter = subtileIndices.begin(); iter != subtileIndices.end(); iter++) {
                     if (*iter == refIndex) {
                         *iter = i;
                     }
@@ -1099,7 +1098,7 @@ void LevelCelView::compressSubtiles()
 {
     // reuse frames
     QString report;
-    this->reuseFrames(QString report);
+    this->reuseFrames(report);
 
     if (report.isEmpty()) {
         report = "All frames are unique.";
@@ -1115,7 +1114,7 @@ void LevelCelView::compressTiles()
 {
     // reuse subtiles
     QString report;
-    this->reuseSubtiles(QString report);
+    this->reuseSubtiles(report);
 
     if (report.isEmpty()) {
         report = "All subtiles are unique.";

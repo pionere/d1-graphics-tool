@@ -56,7 +56,7 @@ void D1CelTilesetFrame::LoadTransparentSquare(D1GfxFrame &frame, QByteArray &raw
     int offset = 0;
     for (int i = 0; i < frame.height; i++) {
         QList<D1GfxPixel> pixelLine;
-        for (int j = 0; j < frame.width; ) {
+        for (int j = 0; j < frame.width;) {
             qint8 readByte = rawData[offset++];
             if (readByte < 0) {
                 readByte = -readByte;
@@ -136,7 +136,7 @@ void D1CelTilesetFrame::LoadRightTriangle(D1GfxFrame &frame, QByteArray &rawData
             pixelLine.append(D1GfxPixel::colorPixel(rawData[offset++]));
         }
         for (int j = 0; j < 2 * i; j++) {
-            pixelLine.append(D1GfxPixel(true, 0));
+            pixelLine.append(D1GfxPixel::transparentPixel());
         }
         offset += 2 * (i % 2);
         frame.pixels.insert(0, pixelLine);
