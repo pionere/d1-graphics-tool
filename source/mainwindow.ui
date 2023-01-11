@@ -131,6 +131,9 @@
     <property name="title">
      <string>Tileset</string>
     </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
     <addaction name="actionReportUse_Tileset"/>
     <addaction name="actionResetFrameTypes_Tileset"/>
     <addaction name="separator"/>
@@ -167,6 +170,7 @@
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuTileset"/>
    <addaction name="menuPalette"/>
    <addaction name="menuHelp"/>
   </widget>
