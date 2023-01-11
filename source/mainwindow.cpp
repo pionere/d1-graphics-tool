@@ -973,6 +973,7 @@ void MainWindow::on_actionClose_triggered()
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(false);
+    this->ui->menuTileset->setEnabled(false);
     this->ui->menuPalette->setEnabled(false);
     this->ui->actionExport->setEnabled(false);
     this->ui->actionSave->setEnabled(false);
@@ -1170,6 +1171,39 @@ void MainWindow::on_actionCleanupTileset_Tileset_triggered()
     this->ui->statusBar->repaint();
 
     this->levelCelView->cleanupTileset();
+
+    // Clear loading message from status bar
+    this->ui->statusBar->clearMessage();
+}
+
+void MainWindow::on_actionCompressSubtiles_Tileset_triggered()
+{
+    this->ui->statusBar->showMessage("Processing...");
+    this->ui->statusBar->repaint();
+
+    this->levelCelView->compressSubtiles();
+
+    // Clear loading message from status bar
+    this->ui->statusBar->clearMessage();
+}
+
+void MainWindow::on_actionCompressTiles_Tileset_triggered()
+{
+    this->ui->statusBar->showMessage("Processing...");
+    this->ui->statusBar->repaint();
+
+    this->levelCelView->compressTiles();
+
+    // Clear loading message from status bar
+    this->ui->statusBar->clearMessage();
+}
+
+void MainWindow::on_actionCompressTileset_Tileset_triggered()
+{
+    this->ui->statusBar->showMessage("Processing...");
+    this->ui->statusBar->repaint();
+
+    this->levelCelView->compressTileset();
 
     // Clear loading message from status bar
     this->ui->statusBar->clearMessage();

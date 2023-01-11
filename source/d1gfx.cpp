@@ -2,10 +2,20 @@
 
 #include "d1image.h"
 
-D1GfxPixel::D1GfxPixel(bool t, quint8 pi)
-    : transparent(t)
-    , paletteIndex(pi)
+D1GfxPixel D1GfxPixel::transparentPixel()
 {
+    D1GfxPixel pixel;
+    pixel->transparent = true;
+    pixel->paletteIndex = 0;
+    return pixel; 
+}
+
+D1GfxPixel D1GfxPixel::colorPixel(quint8 color)
+{
+    D1GfxPixel pixel;
+    pixel->transparent = false;
+    pixel->paletteIndex = color;
+    return pixel; 
 }
 
 bool D1GfxPixel::isTransparent() const
@@ -18,6 +28,11 @@ quint8 D1GfxPixel::getPaletteIndex() const
     return this->paletteIndex;
 }
 
+bool D1GfxPixel::operator==(const D1GfxPixel& lhs, const D1GfxPixel& rhs)
+{
+    return lhs.transparent == rhs.transparent && lhs.paletteIndex == lhs.paletteIndex;
+}
+ 
 int D1GfxFrame::getWidth() const
 {
     return this->width;
