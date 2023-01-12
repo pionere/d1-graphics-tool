@@ -83,6 +83,9 @@ public:
     void cleanupFrames();
     void cleanupSubtiles();
     void cleanupTileset();
+    void compressSubtiles();
+    void compressTiles();
+    void compressTileset();
 
     void displayFrame();
 
@@ -104,6 +107,8 @@ private:
     void removeSubtile(int subtileIndex);
     void removeUnusedFrames(QString &report);
     void removeUnusedSubtiles(QString &report);
+    void reuseFrames(QString &report);
+    void reuseSubtiles(QString &report);
 
 signals:
     void frameRefreshed();
