@@ -1,6 +1,7 @@
 #include "levelcelview.h"
 
 #include <algorithm>
+#include <set>
 
 #include <QAction>
 #include <QFileInfo>
@@ -311,12 +312,14 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &
         return;
     }
 
-    if (mode == IMAGE_FILE_MODE::AUTO
-        && (image.width() != MICRO_WIDTH || image.height() != MICRO_HEIGHT) && image.width() != MICRO_WIDTH * EXPORT_LVLFRAMES_PER_LINE) {
-        // not a column of micros
-        // not a row or micros
-        // not a grouped micros from an export -> ignore
-        return;
+    if (mode == IMAGE_FILE_MODE::AUTO) {
+        // check for subtile dimensions to be more lenient than EXPORT_LVLFRAMES_PER_LINE
+        unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+        unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+        if ((image.width() % subtileWidth) == 0 && (image.height() % subtileHeight) == 0) {
+            return; // this is a subtile or a tile -> ignore
+        }
     }
 
     this->assignFrames(image, -1, index);
@@ -419,12 +422,14 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString
         return;
     }
 
-    if (mode == IMAGE_FILE_MODE::AUTO
-        && (image.width() != subtileWidth || image.height() != subtileHeight) && image.width() != subtileWidth * EXPORT_SUBTILES_PER_LINE) {
-        // not a column of subtiles
-        // not a row or subtiles
-        // not a grouped subtiles from an export -> ignore
-        return;
+    if (mode == IMAGE_FILE_MODE::AUTO) {
+        // check for tile dimensions to be more lenient than EXPORT_SUBTILES_PER_LINE
+        unsigned tileWidth = subtileWidth * TILE_WIDTH * TILE_HEIGHT;
+        unsigned tileHeight = subtileHeight;
+
+        if ((image.width() % tileWidth) != 0 || (image.height() % tileHeight) != 0) {
+            return;
+        }
     }
 
     this->assignSubtiles(image, -1, index);
@@ -1152,7 +1157,7 @@ void dumpTiles(D1Til *til, D1Min *min, int from, int to, int idx)
 void LevelCelView::reuseSubtiles(QString &report)
 {
     QList<QPair<int, int>> subtileRemoved;
-    QSet<int> removedIndices;
+    std::set<int> removedIndices;
 
     dumpTiles(this->til, this->min, -1, 0, 0);
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
