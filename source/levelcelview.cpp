@@ -1308,14 +1308,14 @@ bool LevelCelView::sortFrames_impl()
     unsigned idx = 1;
 
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        QList<quint16> &frameIndices = this->min->getCelFrameIndices(n);
+        QList<quint16> &frameIndices = this->min->getCelFrameIndices(i);
         for (auto sit = frameIndices.begin(); sit != frameIndices.end(); ++sit) {
             if (*sit == 0) {
                 continue;
             }
             auto mit = remap.find(*sit);
             if (mit != remap.end()) {
-                *sit = mit->second;
+                *sit = mit.value();
             } else {
                 remap[*sit] = idx;
                 change |= *sit != idx;
@@ -1334,11 +1334,11 @@ bool LevelCelView::sortSubtiles_impl()
     unsigned idx = 0;
 
     for (int i = 0; i < this->til->getTileCount(); i++) {
-        QList<quint16> &subtileIndices = this->til->getSubtileIndices(n);
+        QList<quint16> &subtileIndices = this->til->getSubtileIndices(i);
         for (auto sit = subtileIndices.begin(); sit != subtileIndices.end(); ++sit) {
             auto mit = remap.find(*sit);
             if (mit != remap.end()) {
-                *sit = mit->second;
+                *sit = mit.value();
             } else {
                 remap[*sit] = idx;
                 change |= *sit != idx;
@@ -1373,7 +1373,7 @@ void LevelCelView::sortTileset()
     bool change = false;
 
     change |= this->sortSubtiles_impl();
-    change |= this->sortFrames();
+    change |= this->sortFrames_impl();
     if (change) {
         // update the view
         this->update();
