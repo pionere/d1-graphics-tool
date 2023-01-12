@@ -1139,7 +1139,7 @@ void dumpTiles(D1Til *til, D1Min *min, int from, int to, int idx)
     }
 
     for (int n = 0; n < min->getSubtileCount(); n++) {
-        QList<quint16> &frameIndices = min->getFrameIndices(n);
+        QList<quint16> &frameIndices = min->getCelFrameIndices(n);
         QString line = QString("Subtile %1:").arg(n + 1);
         for (auto iter = frameIndices.begin(); iter != frameIndices.end(); iter++) {
             line += QString::number(*iter + 1) + ", ";
@@ -1154,7 +1154,7 @@ void LevelCelView::reuseSubtiles(QString &report)
     QList<QPair<int, int>> subtileRemoved;
     QSet<int> removedIndices;
 
-    dumpTiles(this->til, -1, 0, 0);
+    dumpTiles(this->til, this->min, -1, 0, 0);
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         QList<quint16> &frameIndices0 = this->min->getCelFrameIndices(i);
         for (int j = i + 1; j < this->min->getSubtileCount(); j++) {
@@ -1185,7 +1185,7 @@ void LevelCelView::reuseSubtiles(QString &report)
             }
             // eliminate subtile 'j'
             this->removeSubtile(j);
-            dumpTiles(this->til, j, i, subtileRemoved.count() + 1);
+            dumpTiles(this->til, this->min, j, i, subtileRemoved.count() + 1);
             int originalIndexI = i;
             for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
                 if (*iter <= originalIndexI) {
