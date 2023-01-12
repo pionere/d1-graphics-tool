@@ -1117,7 +1117,7 @@ void dumpTiles(D1Til *til, int idx)
     QString filePath = QString("dumpTile%1.txt").arg(idx);
     QFile file = QFile(filePath);
 
-    if (!outFile.open(QIODevice::WriteOnly | QFile::Truncate)) {
+    if (!file.open(QIODevice::WriteOnly | QFile::Truncate)) {
         QMessageBox::critical(nullptr, "Error", "Failed open file: " + filePath);
         return;
     }
@@ -1128,7 +1128,8 @@ void dumpTiles(D1Til *til, int idx)
         for (auto iter = subtileIndices.begin(); iter != subtileIndices.end(); iter++) {
             line += QString::number(*iter) + ", ";
         }
-        file.write(line + "\n");
+        line += "\n";
+        file.write(line.toLatin1());
     }
 }
 
