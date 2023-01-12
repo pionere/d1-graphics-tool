@@ -101,7 +101,7 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
         if (readByte > 0x00 && readByte < 0x80) {
             for (int i = 0; i < readByte; i++) {
                 // Add transparent pixel
-                pixelLine.append(D1GfxPixel(true, 0));
+                pixelLine.append(D1GfxPixel::transparentPixel());
 
                 if (pixelLine.size() == frame.width) {
                     frame.pixels.insert(0, pixelLine);
@@ -116,7 +116,7 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
 
             for (int i = 0; i < (0xBF - readByte); i++) {
                 // Add opaque pixel
-                pixelLine.append(D1GfxPixel(false, rawData[o]));
+                pixelLine.append(D1GfxPixel::colorPixel(rawData[o]));
 
                 if (pixelLine.size() == frame.width) {
                     frame.pixels.insert(0, pixelLine);
@@ -130,7 +130,7 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
                 // Go to the next palette index offset
                 o++;
                 // Add opaque pixel
-                pixelLine.append(D1GfxPixel(false, rawData[o]));
+                pixelLine.append(D1GfxPixel::colorPixel(rawData[o]));
 
                 if (pixelLine.size() == frame.width) {
                     frame.pixels.insert(0, pixelLine);
