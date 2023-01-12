@@ -318,7 +318,7 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &
         unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
         if ((image.width() % subtileWidth) == 0 && (image.height() % subtileHeight) == 0) {
-            return; // this is a subtile or a tile -> ignore
+            return; // this is a subtile or a tile (or subtiles or tiles) -> ignore
         }
     }
 
@@ -427,8 +427,8 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString
         unsigned tileWidth = subtileWidth * TILE_WIDTH * TILE_HEIGHT;
         unsigned tileHeight = subtileHeight;
 
-        if ((image.width() % tileWidth) != 0 || (image.height() % tileHeight) != 0) {
-            return;
+        if ((image.width() % tileWidth) == 0 && (image.height() % tileHeight) == 0) {
+            return; // this is a tile (or tiles) -> ignore
         }
     }
 
