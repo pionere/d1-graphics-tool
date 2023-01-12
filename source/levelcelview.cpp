@@ -312,7 +312,7 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &
     }
 
     if (mode == IMAGE_FILE_MODE::AUTO
-        && image.width() != MICRO_WIDTH && image.height() != MICRO_HEIGHT && image.width() != MICRO_WIDTH * EXPORT_LVLFRAMES_PER_LINE) {
+        && (image.width() != MICRO_WIDTH || image.height() != MICRO_HEIGHT) && image.width() != MICRO_WIDTH * EXPORT_LVLFRAMES_PER_LINE) {
         // not a column of micros
         // not a row or micros
         // not a grouped micros from an export -> ignore
@@ -420,7 +420,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString
     }
 
     if (mode == IMAGE_FILE_MODE::AUTO
-        && image.width() != subtileWidth && image.height() != subtileHeight && image.width() != subtileWidth * EXPORT_SUBTILES_PER_LINE) {
+        && (image.width() != subtileWidth || image.height() != subtileHeight) && image.width() != subtileWidth * EXPORT_SUBTILES_PER_LINE) {
         // not a column of subtiles
         // not a row or subtiles
         // not a grouped subtiles from an export -> ignore
@@ -557,7 +557,7 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &i
     }
 
     /*if (mode == IMAGE_FILE_MODE::AUTO
-        && image.width() != subtileWidth && image.height() != subtileHeight && image.width() != subtileWidth * EXPORT_TILES_PER_LINE) {
+        && (image.width() != subtileWidth || image.height() != subtileHeight) && image.width() != subtileWidth * EXPORT_TILES_PER_LINE) {
         // not a column of tiles
         // not a row or tiles
         // not a grouped tiles from an export -> ignore
@@ -1126,7 +1126,7 @@ void dumpTiles(D1Til *til, int idx)
         QList<quint16> &subtileIndices = til->getSubtileIndices(n);
         QString line = QString("Tile %1:").arg(n + 1);
         for (auto iter = subtileIndices.begin(); iter != subtileIndices.end(); iter++) {
-            line += QString::number(*iter) + ", ";
+            line += QString::number(*iter + 1) + ", ";
         }
         line += "\n";
         file.write(line.toLatin1());
