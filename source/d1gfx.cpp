@@ -183,7 +183,7 @@ void D1Gfx::remapFrames(QMap<unsigned, unsigned> &remap)
     QList<D1GfxFrame> newFrames;
     // assert(this->groupFrameIndices.count() == 1);
     for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
-        newFrames.append(this->frames.at(iter.value()));
+        newFrames.append(this->frames.at(iter.value() - 1));
     }
     this->frames.swap(newFrames);
 }
