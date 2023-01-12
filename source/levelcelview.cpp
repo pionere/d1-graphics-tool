@@ -1062,11 +1062,11 @@ void LevelCelView::reuseFrames(QString &report)
     QList<QPair<int, int>> frameRemoved;
 
     for (int i = 0; i < this->gfx->getFrameCount(); i++) {
-        D1GfxFrame *frame0 = this->gfx->getFrame(i);
-        int width = frame0->getWidth();
-        int height = frame0->getHeight();
         for (int j = i + 1; j < this->gfx->getFrameCount(); j++) {
+            D1GfxFrame *frame0 = this->gfx->getFrame(i);
             D1GfxFrame *frame1 = this->gfx->getFrame(j);
+            int width = frame0->getWidth();
+            int height = frame0->getHeight();
             if (width != frame1->getWidth() || height != frame1->getHeight()) {
                 continue; // should not happen, but better safe than sorry
             }
@@ -1156,8 +1156,8 @@ void LevelCelView::reuseSubtiles(QString &report)
 
     dumpTiles(this->til, this->min, -1, 0, 0);
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        QList<quint16> &frameIndices0 = this->min->getCelFrameIndices(i);
         for (int j = i + 1; j < this->min->getSubtileCount(); j++) {
+            QList<quint16> &frameIndices0 = this->min->getCelFrameIndices(i);
             QList<quint16> &frameIndices1 = this->min->getCelFrameIndices(j);
             if (frameIndices0.count() != frameIndices1.count()) {
                 continue; // should not happen, but better safe than sorry
