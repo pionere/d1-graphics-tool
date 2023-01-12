@@ -1112,6 +1112,7 @@ void LevelCelView::reuseFrames(QString &report)
 void LevelCelView::reuseSubtiles(QString &report)
 {
     QList<QPair<int, int>> subtileRemoved;
+    QSet<int> removedIndices;
 
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         QList<quint16> &frameIndices0 = this->min->getCelFrameIndices(i);
@@ -1143,7 +1144,30 @@ void LevelCelView::reuseSubtiles(QString &report)
             }
             // eliminate subtile 'j'
             this->removeSubtile(j);
-            subtileRemoved.append(qMakePair(i, j + subtileRemoved.count()));
+            int originalIndexI = i;
+            for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
+                if (*iter < originalIndexI) {
+                    originalIndexI++;
+                    continue;
+                }
+                if (*iter == originalIndexI) {
+                    QMessageBox::critical(this, "Error", QString("Remove but used %1").arg(originalIndexI));
+                }
+                break;
+            }
+            int originalIndexJ = j;
+            for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
+                if (*iter < originalIndexJ) {
+                    originalIndexJ++;
+                    continue;
+                }
+                if (*iter == originalIndexJ) {
+                    QMessageBox::critical(this, "Error", QString("Double remove %1").arg(originalIndexJ));
+                }
+                break;
+            }
+            removedIndices.insert(originalIndexJ);
+            subtileRemoved.append(qMakePair(originalIndexI, originalIndexJ));
             j--;
         }
     }

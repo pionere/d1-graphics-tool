@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QImage>
+#include <QList>
 
 #include "d1min.h"
 #include "saveasdialog.h"
