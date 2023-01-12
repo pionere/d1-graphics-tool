@@ -1048,15 +1048,15 @@ void LevelCelView::reuseSubtiles(QString &report)
     QList<QPair<int, int>> subtileRemoved;
 
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        QList<quint16> &subtileIndices0 = this->min->getCelFrameIndices(i);
+        QList<quint16> &frameIndices0 = this->min->getCelFrameIndices(i);
         for (int j = i + 1; j < this->min->getSubtileCount(); j++) {
-            QList<quint16> &subtileIndices1 = this->min->getCelFrameIndices(j);
-            if (subtileIndices0.count() != subtileIndices1.count()) {
+            QList<quint16> &frameIndices1 = this->min->getCelFrameIndices(j);
+            if (frameIndices0.count() != frameIndices1.count()) {
                 continue; // should not happen, but better safe than sorry
             }
             bool match = true;
-            for (int x = 0; x < subtileIndices0.count(); x++) {
-                if (subtileIndices0[x] == subtileIndices1[x]) {
+            for (int x = 0; x < frameIndices0.count(); x++) {
+                if (frameIndices0[x] == frameIndices1[x]) {
                     continue;
                 }
                 match = false;
