@@ -743,6 +743,9 @@ void LevelCelView::removeSubtile(int subtileIndex)
         for (int n = 0; n < subtileIndices.count(); n++) {
             if (subtileIndices[n] >= refIndex) {
                 // assert(subtileIndices[n] != refIndex);
+                if (subtileIndices[n] == refIndex) {
+                    QMessageBox::critical(this, "Error", QString("Removing %1 but it is still referenced by %2 at %3").arg(refIndex).arg(i).arg(n));
+                }
                 subtileIndices[n] -= 1;
             }
         }
@@ -1109,6 +1112,26 @@ void LevelCelView::reuseFrames(QString &report)
     report += ".";
 }
 
+void dumpTiles(D1Til *til, int idx)
+{
+    QString filePath = QString("dumpTile%1.txt").arg(idx);
+    QFile file = QFile(filePath);
+
+    if (!outFile.open(QIODevice::WriteOnly | QFile::Truncate)) {
+        QMessageBox::critical(nullptr, "Error", "Failed open file: " + filePath);
+        return;
+    }
+
+    for (int n = 0; n < til->getTileCount(); n++) {
+        QList<quint16> &subtileIndices = til->getSubtileIndices(n);
+        QString line = QString("Tile %1:").arg(n + 1);
+        for (auto iter = subtileIndices.begin(); iter != subtileIndices.end(); iter++) {
+            line += QString::number(*iter) + ", ";
+        }
+        file.write(line + "\n");
+    }
+}
+
 void LevelCelView::reuseSubtiles(QString &report)
 {
     QList<QPair<int, int>> subtileRemoved;
@@ -1144,6 +1167,7 @@ void LevelCelView::reuseSubtiles(QString &report)
             }
             // eliminate subtile 'j'
             this->removeSubtile(j);
+            dumpTiles(this->til, subtileRemoved.count());
             int originalIndexI = i;
             for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
                 if (*iter < originalIndexI) {
