@@ -167,7 +167,7 @@ QList<quint16> &D1Til::getSubtileIndices(int tileIndex)
     return const_cast<QList<quint16> &>(this->subtileIndices.at(tileIndex));
 }
 
-void D1Tile::insertTile(int tileIndex, const QList<quint16> &subtileIndices)
+void D1Til::insertTile(int tileIndex, const QList<quint16> &subtileIndices)
 {
     this->subtileIndices.insert(tileIndex, subtileIndices);
 }
