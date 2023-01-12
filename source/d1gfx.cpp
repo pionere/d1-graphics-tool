@@ -178,7 +178,7 @@ void D1Gfx::removeFrame(quint16 idx)
     }
 }
 
-void D1Gfx::remapFrames(QMap<unsigned, unsigned> &remap)
+void D1Gfx::remapFrames(const QMap<unsigned, unsigned> &remap)
 {
     QList<D1GfxFrame> newFrames;
     // assert(this->groupFrameIndices.count() == 1);

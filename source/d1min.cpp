@@ -336,7 +336,7 @@ void D1Min::removeSubtile(int subtileIndex)
     this->celFrameIndices.removeAt(subtileIndex);
 }
 
-void D1Min::remapSubtiles(QMap<unsigned, unsigned> &remap)
+void D1Min::remapSubtiles(const QMap<unsigned, unsigned> &remap)
 {
     QList<QList<quint16>> newCelFrameIndices;
 

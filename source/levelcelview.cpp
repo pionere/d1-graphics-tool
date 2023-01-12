@@ -1348,6 +1348,7 @@ bool LevelCelView::sortSubtiles_impl()
             }
         }
     }
+    this->min->remapSubtiles(remap);
     this->sol->remapSubtiles(remap);
     this->tmi->remapSubtiles(remap);
     return change;

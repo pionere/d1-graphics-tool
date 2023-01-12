@@ -26,7 +26,7 @@ public:
     void insertSubtile(int subtileIndex, const QList<quint16> &frameIndicesList);
     void createSubtile();
     void removeSubtile(int subtileIndex);
-    void remapSubtiles(QMap<unsigned, unsigned> &remap);
+    void remapSubtiles(const QMap<unsigned, unsigned> &remap);
 
     QString getFilePath();
     int getSubtileCount();

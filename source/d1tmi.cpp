@@ -147,7 +147,7 @@ void D1Tmi::removeSubtile(int subtileIndex)
     this->subProperties.removeAt(subtileIndex);
 }
 
-void D1Tmi::remapSubtiles(QMap<unsigned, unsigned> &remap)
+void D1Tmi::remapSubtiles(const QMap<unsigned, unsigned> &remap)
 {
     QList<quint8> newSubProperties;
 
