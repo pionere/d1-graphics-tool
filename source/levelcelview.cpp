@@ -1112,7 +1112,7 @@ void LevelCelView::reuseFrames(QString &report)
     report += ".";
 }
 
-void dumpTiles(D1Til *til, int idx)
+void dumpTiles(D1Til *til, D1Min *min, int from, int to, int idx)
 {
     QString filePath = QString("dumpTile%1.txt").arg(idx);
     QFile file = QFile(filePath);
@@ -1122,10 +1122,26 @@ void dumpTiles(D1Til *til, int idx)
         return;
     }
 
+    if (from != -1) {
+        QString line = QString("Replaced %1 with %2").arg(from + 1).arg(to + 1);
+        line += "\n";
+        file.write(line.toLatin1());
+    }
+
     for (int n = 0; n < til->getTileCount(); n++) {
         QList<quint16> &subtileIndices = til->getSubtileIndices(n);
         QString line = QString("Tile %1:").arg(n + 1);
         for (auto iter = subtileIndices.begin(); iter != subtileIndices.end(); iter++) {
+            line += QString::number(*iter + 1) + ", ";
+        }
+        line += "\n";
+        file.write(line.toLatin1());
+    }
+
+    for (int n = 0; n < min->getSubtileCount(); n++) {
+        QList<quint16> &frameIndices = min->getFrameIndices(n);
+        QString line = QString("Subtile %1:").arg(n + 1);
+        for (auto iter = frameIndices.begin(); iter != frameIndices.end(); iter++) {
             line += QString::number(*iter + 1) + ", ";
         }
         line += "\n";
@@ -1138,7 +1154,7 @@ void LevelCelView::reuseSubtiles(QString &report)
     QList<QPair<int, int>> subtileRemoved;
     QSet<int> removedIndices;
 
-    dumpTiles(this->til, 0);
+    dumpTiles(this->til, -1, 0, 0);
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         QList<quint16> &frameIndices0 = this->min->getCelFrameIndices(i);
         for (int j = i + 1; j < this->min->getSubtileCount(); j++) {
@@ -1169,7 +1185,7 @@ void LevelCelView::reuseSubtiles(QString &report)
             }
             // eliminate subtile 'j'
             this->removeSubtile(j);
-            dumpTiles(this->til, subtileRemoved.count() + 1);
+            dumpTiles(this->til, j, i, subtileRemoved.count() + 1);
             int originalIndexI = i;
             for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
                 if (*iter <= originalIndexI) {
