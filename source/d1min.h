@@ -1,8 +1,9 @@
 #pragma once
 
+#include <map>
+
 #include <QImage>
 #include <QList>
-#include <map>
 
 #include "d1celtilesetframe.h"
 #include "d1gfx.h"

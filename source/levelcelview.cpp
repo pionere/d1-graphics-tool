@@ -1324,6 +1324,7 @@ bool LevelCelView::sortFrames_impl()
             }
         }
     }
+    this->gfx->remapFrames(remap);
     return change;
 }
 
@@ -1347,6 +1348,8 @@ bool LevelCelView::sortSubtiles_impl()
             }
         }
     }
+    this->sol->remapSubtiles(remap);
+    this->tmi->remapSubtiles(remap);
     return change;
 }
 
