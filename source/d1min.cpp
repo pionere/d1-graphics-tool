@@ -335,3 +335,13 @@ void D1Min::removeSubtile(int subtileIndex)
 {
     this->celFrameIndices.removeAt(subtileIndex);
 }
+
+void D1Min::remapSubtiles(QMap<unsigned, unsigned> &remap)
+{
+    QList<QList<quint16>> newCelFrameIndices;
+
+    for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
+        newCelFrameIndices.append(this->celFrameIndices.at(iter.value()));
+    }
+    this->celFrameIndices.swap(newCelFrameIndices);
+}

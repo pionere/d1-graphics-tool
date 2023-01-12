@@ -4,6 +4,7 @@
 
 #include <QImage>
 #include <QList>
+#include <QMap>
 
 #include "d1celtilesetframe.h"
 #include "d1gfx.h"
@@ -25,6 +26,7 @@ public:
     void insertSubtile(int subtileIndex, const QList<quint16> &frameIndicesList);
     void createSubtile();
     void removeSubtile(int subtileIndex);
+    void remapSubtiles(QMap<unsigned, unsigned> &remap);
 
     QString getFilePath();
     int getSubtileCount();
