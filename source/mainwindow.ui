@@ -144,6 +144,10 @@
     <addaction name="actionCompressSubtiles_Tileset"/>
     <addaction name="actionCompressTiles_Tileset"/>
     <addaction name="actionCompressTileset_Tileset"/>
+    <addaction name="separator"/>
+    <addaction name="actionSortFrames_Tileset"/>
+    <addaction name="actionSortSubtiles_Tileset"/>
+    <addaction name="actionSortTileset_Tileset"/>
    </widget>
    <widget class="QMenu" name="menuPalette">
     <property name="title">
@@ -342,7 +346,31 @@
     <string>Reuse subtiles in tiles and frames in subtiles</string>
    </property>
   </action>
-   <action name="actionSave_PAL">
+  <action name="actionSortFrames_Tileset">
+   <property name="text">
+    <string>Sort Frames</string>
+   </property>
+   <property name="toolTip">
+    <string>Sort the frames based on the subtiles</string>
+   </property>
+  </action>
+  <action name="actionSortSubtiles_Tileset">
+   <property name="text">
+    <string>Sort Subtiles</string>
+   </property>
+   <property name="toolTip">
+    <string>Sort the subtiles based on the tiles</string>
+   </property>
+  </action>
+  <action name="actionSortTileset_Tileset">
+   <property name="text">
+    <string>Sort Tileset</string>
+   </property>
+   <property name="toolTip">
+    <string>Sort the subtiles and frames based on the tiles</string>
+   </property>
+  </action>
+  <action name="actionSave_PAL">
    <property name="text">
     <string>Save palette</string>
    </property>

@@ -1065,6 +1065,7 @@ void LevelCelView::cleanupTileset()
 void LevelCelView::reuseFrames(QString &report)
 {
     QList<QPair<int, int>> frameRemoved;
+    std::set<int> removedIndices;
 
     for (int i = 0; i < this->gfx->getFrameCount(); i++) {
         for (int j = i + 1; j < this->gfx->getFrameCount(); j++) {
@@ -1100,7 +1101,25 @@ void LevelCelView::reuseFrames(QString &report)
             }
             // eliminate frame1
             this->removeFrame(j);
-            frameRemoved.append(qMakePair(i, j + frameRemoved.count()));
+            // calculate the original indices
+            int originalIndexI = i;
+            for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
+                if (*iter <= originalIndexI) {
+                    originalIndexI++;
+                    continue;
+                }
+                break;
+            }
+            int originalIndexJ = j;
+            for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
+                if (*iter <= originalIndexJ) {
+                    originalIndexJ++;
+                    continue;
+                }
+                break;
+            }
+            removedIndices.insert(originalIndexJ);
+            frameRemoved.append(qMakePair(originalIndexI, originalIndexJ));
             j--;
         }
     }
@@ -1159,7 +1178,6 @@ void LevelCelView::reuseSubtiles(QString &report)
     QList<QPair<int, int>> subtileRemoved;
     std::set<int> removedIndices;
 
-    dumpTiles(this->til, this->min, -1, 0, 0);
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         for (int j = i + 1; j < this->min->getSubtileCount(); j++) {
             QList<quint16> &frameIndices0 = this->min->getCelFrameIndices(i);
@@ -1190,16 +1208,13 @@ void LevelCelView::reuseSubtiles(QString &report)
             }
             // eliminate subtile 'j'
             this->removeSubtile(j);
-            dumpTiles(this->til, this->min, j, i, subtileRemoved.count() + 1);
+            // calculate the original indices
             int originalIndexI = i;
             for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
                 if (*iter <= originalIndexI) {
                     originalIndexI++;
                     continue;
                 }
-                /*if (*iter == originalIndexI) {
-                    QMessageBox::critical(this, "Error", QString("Remove but used %1").arg(originalIndexI));
-                }*/
                 break;
             }
             int originalIndexJ = j;
@@ -1208,9 +1223,6 @@ void LevelCelView::reuseSubtiles(QString &report)
                     originalIndexJ++;
                     continue;
                 }
-                /*if (*iter == originalIndexJ) {
-                    QMessageBox::critical(this, "Error", QString("Double remove %1").arg(originalIndexJ));
-                }*/
                 break;
             }
             removedIndices.insert(originalIndexJ);
@@ -1287,6 +1299,86 @@ void LevelCelView::compressTileset()
     }
 
     QMessageBox::information(this, "Information", framesReport);
+}
+
+bool LevelCelView::sortFrames_impl()
+{
+    QMap<unsigned, unsigned> remap;
+    bool change = false;
+    unsigned idx = 1;
+
+    for (int i = 0; i < this->min->getSubtileCount(); i++) {
+        QList<quint16> &frameIndices = this->min->getCelFrameIndices(n);
+        for (auto sit = frameIndices.begin(); sit != frameIndices.end(); ++sit) {
+            if (*sit == 0) {
+                continue;
+            }
+            auto mit = remap.find(*sit);
+            if (mit != remap.end()) {
+                *sit = mit->second;
+            } else {
+                remap[*sit] = idx;
+                change |= *sit != idx;
+                *sit = idx;
+                idx++;
+            }
+        }
+    }
+    return change;
+}
+
+bool LevelCelView::sortSubtiles_impl()
+{
+    QMap<unsigned, unsigned> remap;
+    bool change = false;
+    unsigned idx = 0;
+
+    for (int i = 0; i < this->til->getTileCount(); i++) {
+        QList<quint16> &subtileIndices = this->til->getSubtileIndices(n);
+        for (auto sit = subtileIndices.begin(); sit != subtileIndices.end(); ++sit) {
+            auto mit = remap.find(*sit);
+            if (mit != remap.end()) {
+                *sit = mit->second;
+            } else {
+                remap[*sit] = idx;
+                change |= *sit != idx;
+                *sit = idx;
+                idx++;
+            }
+        }
+    }
+    return change;
+}
+
+void LevelCelView::sortFrames()
+{
+    if (this->sortFrames_impl()) {
+        // update the view
+        this->update();
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::sortSubtiles()
+{
+    if (this->sortSubtiles_impl()) {
+        // update the view
+        this->update();
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::sortTileset()
+{
+    bool change = false;
+
+    change |= this->sortSubtiles_impl();
+    change |= this->sortFrames();
+    if (change) {
+        // update the view
+        this->update();
+        this->displayFrame();
+    }
 }
 
 void LevelCelView::displayFrame()
