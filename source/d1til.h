@@ -20,7 +20,7 @@ public:
 
     QImage getTileImage(int tileIndex);
     QImage getFlatTileImage(int tileIndex);
-    void insertTile(int tileIndex, const QImage &image);
+    void insertTile(int tileIndex, const QList<quint16> &subtileIndices);
     void createTile();
     void removeTile(int tileIndex);
 

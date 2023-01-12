@@ -19,7 +19,8 @@ public:
     bool save(const SaveAsParam &params);
 
     QImage getSubtileImage(int subtileIndex);
-    void insertSubtile(int subtileIndex, const QImage &image);
+
+    void insertSubtile(int subtileIndex, const QList<quint16> &frameIndicesList);
     void createSubtile();
     void removeSubtile(int subtileIndex);
 

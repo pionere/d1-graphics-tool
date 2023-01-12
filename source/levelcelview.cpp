@@ -260,12 +260,9 @@ void LevelCelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &ima
 
 void LevelCelView::assignFrames(const QImage &image, int subtileIndex, int frameIndex)
 {
-    QList<quint16> *frameIndices = nullptr;
-    if (subtileIndex >= 0) {
-        frameIndices = &this->min->getCelFrameIndices(subtileIndex);
-        frameIndices->clear();
-    }
-    // TODO: merge with D1Min::insertSubtile ?
+    QList<quint16> frameIndicesList;
+
+    // TODO: merge with LevelCelView::insertSubtile ?
     QImage subImage = QImage(MICRO_WIDTH, MICRO_HEIGHT, QImage::Format_ARGB32);
     for (int y = 0; y < image.height(); y += MICRO_HEIGHT) {
         for (int x = 0; x < image.width(); x += MICRO_WIDTH) {
@@ -281,9 +278,7 @@ void LevelCelView::assignFrames(const QImage &image, int subtileIndex, int frame
                     subImage.setPixelColor(i, j, color);
                 }
             }
-            if (frameIndices != nullptr) {
-                frameIndices->append(hasColor ? frameIndex + 1 : 0);
-            }
+            frameIndicesList.append(hasColor ? frameIndex + 1 : 0);
             if (!hasColor) {
                 continue;
             }
@@ -293,9 +288,16 @@ void LevelCelView::assignFrames(const QImage &image, int subtileIndex, int frame
             frameIndex++;
         }
     }
+
+    if (subtileIndex >= 0) {
+        this->min->getCelFrameIndices(subtileIndex).swap(frameIndicesList);
+        // reset subtile flags
+        this->sol->setSubtileProperties(subtileIndex, 0);
+        this->tmi->setSubtileProperties(subtileIndex, 0);
+    }
 }
 
-void LevelCelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
+void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
 {
     QImage image = QImage(imagefilePath);
     if (image.isNull()) {
@@ -327,7 +329,7 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, const QStringList &imagefi
     if (append) {
         // append the frame(s)
         for (int i = 0; i < imagefilePaths.count(); i++) {
-            this->insertFrame(mode, this->gfx->getFrameCount(), imagefilePaths[i]);
+            this->insertFrames(mode, this->gfx->getFrameCount(), imagefilePaths[i]);
         }
         int deltaFrameCount = this->gfx->getFrameCount() - prevFrameCount;
         if (deltaFrameCount == 0) {
@@ -338,7 +340,7 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, const QStringList &imagefi
     } else {
         // insert the frame(s)
         for (int i = imagefilePaths.count() - 1; i >= 0; i--) {
-            this->insertFrame(mode, this->currentFrameIndex, imagefilePaths[i]);
+            this->insertFrames(mode, this->currentFrameIndex, imagefilePaths[i]);
         }
         int deltaFrameCount = this->gfx->getFrameCount() - prevFrameCount;
         if (deltaFrameCount == 0) {
@@ -368,7 +370,7 @@ void LevelCelView::assignSubtiles(const QImage &image, int tileIndex, int subtil
         subtileIndices = &this->til->getSubtileIndices(tileIndex);
         subtileIndices->clear();
     }
-    // TODO: merge with D1Til::insertTile ?
+    // TODO: merge with LevelCelView::insertTile ?
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
@@ -394,13 +396,13 @@ void LevelCelView::assignSubtiles(const QImage &image, int tileIndex, int subtil
                 continue;
             }
 
-            this->min->insertSubtile(subtileIndex, subImage);
+            this->insertSubtile(subtileIndex, subImage);
             subtileIndex++;
         }
     }
 }
 
-void LevelCelView::insertSubtile(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
+void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
 {
     QImage image = QImage(imagefilePath);
     if (image.isNull()) {
@@ -435,7 +437,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, const QStringList &image
     if (append) {
         // append the subtile(s)
         for (int i = 0; i < imagefilePaths.count(); i++) {
-            this->insertSubtile(mode, this->min->getSubtileCount(), imagefilePaths[i]);
+            this->insertSubtiles(mode, this->min->getSubtileCount(), imagefilePaths[i]);
         }
         int deltaSubtileCount = this->min->getSubtileCount() - prevSubtileCount;
         if (deltaSubtileCount == 0) {
@@ -446,7 +448,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, const QStringList &image
     } else {
         // insert the subtile(s)
         for (int i = imagefilePaths.count() - 1; i >= 0; i--) {
-            this->insertSubtile(mode, this->currentSubtileIndex, imagefilePaths[i]);
+            this->insertSubtiles(mode, this->currentSubtileIndex, imagefilePaths[i]);
         }
         int deltaSubtileCount = this->min->getSubtileCount() - prevSubtileCount;
         if (deltaSubtileCount == 0) {
@@ -469,7 +471,75 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, const QStringList &image
     this->displayFrame();
 }
 
-void LevelCelView::insertTile(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
+void LevelCelView::insertSubtile(int subtileIndex, const QImage &image)
+{
+    QList<quint16> frameIndicesList;
+
+    int frameIndex = this->gfx->getFrameCount();
+    QImage subImage = QImage(MICRO_WIDTH, MICRO_HEIGHT, QImage::Format_ARGB32);
+    for (int y = 0; y < image.height(); y += MICRO_HEIGHT) {
+        for (int x = 0; x < image.width(); x += MICRO_WIDTH) {
+            // subImage.fill(Qt::transparent);
+
+            bool hasColor = false;
+            for (int j = 0; j < MICRO_HEIGHT; j++) {
+                for (int i = 0; i < MICRO_WIDTH; i++) {
+                    const QColor color = image.pixelColor(x + i, y + j);
+                    if (color.alpha() >= COLOR_ALPHA_LIMIT) {
+                        hasColor = true;
+                    }
+                    subImage.setPixelColor(i, j, color);
+                }
+            }
+
+            frameIndicesList.append(hasColor ? frameIndex + 1 : 0);
+
+            if (!hasColor) {
+                continue;
+            }
+
+            this->gfx->insertFrame(frameIndex, subImage);
+            frameIndex++;
+        }
+    }
+    this->min->insertSubtile(subtileIndex, frameIndicesList);
+    this->sol->insertSubtile(subtileIndex, 0);
+    this->tmi->insertSubtile(subtileIndex, 0);
+}
+
+void LevelCelView::insertTile(int tileIndex, const QImage &image)
+{
+    QList<quint16> subtileIndices;
+
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    QImage subImage = QImage(subtileWidth, subtileHeight, QImage::Format_ARGB32);
+    for (int y = 0; y < image.height(); y += subtileHeight) {
+        for (int x = 0; x < image.width(); x += subtileWidth) {
+            // subImage.fill(Qt::transparent);
+
+            // bool hasColor = false;
+            for (unsigned j = 0; j < subtileHeight; j++) {
+                for (unsigned i = 0; i < subtileWidth; i++) {
+                    const QColor color = image.pixelColor(x + i, y + j);
+                    // if (color.alpha() >= COLOR_ALPHA_LIMIT) {
+                    //    hasColor = true;
+                    // }
+                    subImage.setPixelColor(i, j, color);
+                }
+            }
+
+            int index = this->min->getSubtileCount();
+            subtileIndices.append(index);
+            this->insertSubtile(index, subImage);
+        }
+    }
+
+    this->til->insertTile(tileIndex, subtileIndices);
+}
+
+void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
 {
     QImage image = QImage(imagefilePath);
     if (image.isNull()) {
@@ -514,7 +584,7 @@ void LevelCelView::insertTile(IMAGE_FILE_MODE mode, int index, const QString &im
                 continue;
             }
 
-            this->til->insertTile(index, subImage);
+            this->insertTile(index, subImage);
             index++;
         }
     }
@@ -527,7 +597,7 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, const QStringList &imagefil
     if (append) {
         // append the tile(s)
         for (int i = 0; i < imagefilePaths.count(); i++) {
-            this->insertTile(mode, this->til->getTileCount(), imagefilePaths[i]);
+            this->insertTiles(mode, this->til->getTileCount(), imagefilePaths[i]);
         }
         int deltaTileCount = this->til->getTileCount() - prevTileCount;
         if (deltaTileCount == 0) {
@@ -538,7 +608,7 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, const QStringList &imagefil
     } else {
         // insert the tile(s)
         for (int i = imagefilePaths.count() - 1; i >= 0; i--) {
-            this->insertTile(mode, this->currentTileIndex, imagefilePaths[i]);
+            this->insertTiles(mode, this->currentTileIndex, imagefilePaths[i]);
         }
         int deltaTileCount = this->til->getTileCount() - prevTileCount;
         if (deltaTileCount == 0) {
@@ -650,10 +720,6 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
 
     int subtileIndex = this->currentSubtileIndex;
     this->assignFrames(image, subtileIndex, this->gfx->getFrameCount());
-
-    // reset subtile flags
-    this->sol->setSubtileProperties(subtileIndex, 0);
-    this->tmi->setSubtileProperties(subtileIndex, 0);
 
     // update the view
     this->update();
