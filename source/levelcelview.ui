@@ -455,13 +455,13 @@
          <widget class="QLineEdit" name="tilFrameWidthEdit">
           <property name="minimumSize">
            <size>
-            <width>40</width>
+            <width>50</width>
             <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>40</width>
+            <width>50</width>
             <height>16777215</height>
            </size>
           </property>
@@ -496,13 +496,13 @@
          <widget class="QLineEdit" name="tilFrameHeightEdit">
           <property name="minimumSize">
            <size>
-            <width>40</width>
+            <width>50</width>
             <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>40</width>
+            <width>50</width>
             <height>16777215</height>
            </size>
           </property>
@@ -711,13 +711,13 @@
          <widget class="QLineEdit" name="minFrameWidthEdit">
           <property name="minimumSize">
            <size>
-            <width>40</width>
+            <width>50</width>
             <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>40</width>
+            <width>50</width>
             <height>16777215</height>
            </size>
           </property>
@@ -749,13 +749,13 @@
          <widget class="QLineEdit" name="minFrameHeightEdit">
           <property name="minimumSize">
            <size>
-            <width>40</width>
+            <width>50</width>
             <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>40</width>
+            <width>50</width>
             <height>16777215</height>
            </size>
           </property>
@@ -961,13 +961,13 @@
          <widget class="QLineEdit" name="celFrameWidthEdit">
           <property name="minimumSize">
            <size>
-            <width>40</width>
+            <width>50</width>
             <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>40</width>
+            <width>50</width>
             <height>16777215</height>
            </size>
           </property>
@@ -1005,13 +1005,13 @@
          <widget class="QLineEdit" name="celFrameHeightEdit">
           <property name="minimumSize">
            <size>
-            <width>40</width>
+            <width>50</width>
             <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>40</width>
+            <width>50</width>
             <height>16777215</height>
            </size>
           </property>
