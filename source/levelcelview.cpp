@@ -1171,24 +1171,24 @@ void LevelCelView::reuseSubtiles(QString &report)
             dumpTiles(this->til, subtileRemoved.count());
             int originalIndexI = i;
             for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
-                if (*iter < originalIndexI) {
+                if (*iter <= originalIndexI) {
                     originalIndexI++;
                     continue;
                 }
-                if (*iter == originalIndexI) {
+                /*if (*iter == originalIndexI) {
                     QMessageBox::critical(this, "Error", QString("Remove but used %1").arg(originalIndexI));
-                }
+                }*/
                 break;
             }
             int originalIndexJ = j;
             for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
-                if (*iter < originalIndexJ) {
+                if (*iter <= originalIndexJ) {
                     originalIndexJ++;
                     continue;
                 }
-                if (*iter == originalIndexJ) {
+                /*if (*iter == originalIndexJ) {
                     QMessageBox::critical(this, "Error", QString("Double remove %1").arg(originalIndexJ));
-                }
+                }*/
                 break;
             }
             removedIndices.insert(originalIndexJ);
