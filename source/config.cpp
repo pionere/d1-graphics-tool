@@ -1,5 +1,6 @@
 #include "config.h"
 
+#include <QCoreApplication>
 #include <QFile>
 #include <QJsonObject>
 

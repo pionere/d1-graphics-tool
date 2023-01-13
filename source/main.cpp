@@ -18,11 +18,15 @@ int main(int argc, char *argv[])
     QString styleSheet = QTextStream(&file).readAll();
     a.setStyleSheet(styleSheet);
 
-    MainWindow w;
-    w.setWindowTitle("Diablo 1 Graphics Tool");
-    w.show();
+    int result;
 
-    int result = a.exec();
+    {
+        MainWindow w;
+        w.setWindowTitle("Diablo 1 Graphics Tool");
+        w.show();
+
+        result = a.exec();
+    }
 
     Config::storeConfiguration();
 
