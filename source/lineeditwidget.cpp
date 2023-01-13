@@ -1,5 +1,6 @@
 #include "lineeditwidget.h"
 
+#include <QCoreApplication>
 #include <QFontMetrics>
 
 LineEditWidget::LineEditWidget(QWidget *parent)
