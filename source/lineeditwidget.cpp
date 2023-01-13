@@ -30,12 +30,12 @@ void LineEditWidget::keyPressEvent(QKeyEvent *event)
     QLineEdit::keyPressEvent(event);
 }
 
-void YourButton::focusOutEvent(QFocusEvent *event)
+void LineEditWidget::focusOutEvent(QFocusEvent *event)
 {
-    if (e->reason() != Qt::OtherFocusReason) {
-        if (e->reason() == Qt::TabFocusReason) {
+    if (event->reason() != Qt::OtherFocusReason) {
+        if (event->reason() == Qt::TabFocusReason || event->reason() == Qt::BacktabFocusReason /*|| event->reason() == Qt::ShortcutFocusReason*/) {
             // submit on tabpress
-            QKeyEvent *kpEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_Enter);
+            QKeyEvent *kpEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_Enter, Qt::NoModifier);
             QCoreApplication::postEvent(this, kpEvent);
         } else {
             // cancel otherwise
@@ -43,5 +43,5 @@ void YourButton::focusOutEvent(QFocusEvent *event)
         }
     }
 
-    QLineEdit::focusOutEvent(e);
+    QLineEdit::focusOutEvent(event);
 }
