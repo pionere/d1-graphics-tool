@@ -113,7 +113,7 @@
         <item row="0" column="2">
          <widget class="LineEditWidget" name="zoomEdit">
           <property name="charWidth">
-           <number>2</number>
+           <number>3</number>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -592,7 +592,7 @@
         <item row="2" column="14">
          <widget class="LineEditWidget" name="celFrameWidthEdit">
           <property name="charWidth">
-           <number>5</number>
+           <number>7</number>
           </property>
           <property name="toolTip">
            <string>Current frame width</string>
@@ -627,7 +627,7 @@
         <item row="2" column="16">
          <widget class="LineEditWidget" name="celFrameHeightEdit">
           <property name="charWidth">
-           <number>5</number>
+           <number>7</number>
           </property>
           <property name="toolTip">
            <string>Current frame height</string>
