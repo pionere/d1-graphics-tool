@@ -12,6 +12,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
+include_directories(source)
+
 set(PROJECT_SOURCES
         source/celview.cpp
         source/celview.h
@@ -63,6 +65,8 @@ set(PROJECT_SOURCES
         source/leveltabtilewidget.cpp
         source/leveltabtilewidget.h
         source/leveltabtilewidget.ui
+        source/lineeditwidget.cpp
+        source/lineeditwidget.h
         source/main.cpp
         source/mainwindow.cpp
         source/mainwindow.h

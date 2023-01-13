@@ -24,7 +24,7 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_0">
       <item>
-       <widget class="QLineEdit" name="outputFolderEdit">
+       <widget class="LineEditWidget" name="outputFolderEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -233,18 +233,9 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QLineEdit" name="contentRangeFromEdit">
-           <property name="minimumSize">
-            <size>
-             <width>50</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>16777215</height>
-            </size>
+          <widget class="LineEditWidget" name="contentRangeFromEdit">
+           <property name="charWidth">
+            <number>5</number>
            </property>
            <property name="toolTip">
             <string>From</string>
@@ -280,18 +271,9 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="contentRangeToEdit">
-           <property name="minimumSize">
-            <size>
-             <width>50</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>16777215</height>
-            </size>
+          <widget class="LineEditWidget" name="contentRangeToEdit">
+           <property name="charWidth">
+            <number>5</number>
            </property>
            <property name="toolTip">
             <string>To</string>

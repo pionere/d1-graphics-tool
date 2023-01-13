@@ -28,7 +28,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QLineEdit" name="inputFileEdit">
+       <widget class="LineEditWidget" name="inputFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -188,18 +188,9 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="celWidthEdit">
-        <property name="minimumSize">
-         <size>
-          <width>48</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>48</width>
-          <height>16777215</height>
-         </size>
+       <widget class="LineEditWidget" name="celWidthEdit">
+        <property name="charWidth">
+         <number>5</number>
         </property>
         <property name="toolTip">
          <string>Frame width</string>
@@ -294,18 +285,9 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="minWidthEdit">
-        <property name="minimumSize">
-         <size>
-          <width>48</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>48</width>
-          <height>16777215</height>
-         </size>
+       <widget class="LineEditWidget" name="minWidthEdit">
+        <property name="charWidth">
+         <number>5</number>
         </property>
         <property name="toolTip">
          <string>Subtile width</string>
@@ -320,18 +302,9 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLineEdit" name="minHeightEdit">
-        <property name="minimumSize">
-         <size>
-          <width>48</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>48</width>
-          <height>16777215</height>
-         </size>
+       <widget class="LineEditWidget" name="minHeightEdit">
+        <property name="charWidth">
+         <number>5</number>
         </property>
         <property name="toolTip">
          <string>Subtile height</string>
@@ -346,7 +319,7 @@
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QLineEdit" name="tilFileEdit">
+       <widget class="LineEditWidget" name="tilFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -367,7 +340,7 @@
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="QLineEdit" name="minFileEdit">
+       <widget class="LineEditWidget" name="minFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -388,7 +361,7 @@
        </widget>
       </item>
       <item row="5" column="1">
-       <widget class="QLineEdit" name="solFileEdit">
+       <widget class="LineEditWidget" name="solFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -409,7 +382,7 @@
        </widget>
       </item>
       <item row="6" column="1">
-       <widget class="QLineEdit" name="ampFileEdit">
+       <widget class="LineEditWidget" name="ampFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -430,7 +403,7 @@
        </widget>
       </item>
       <item row="7" column="1">
-       <widget class="QLineEdit" name="tmiFileEdit">
+       <widget class="LineEditWidget" name="tmiFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
