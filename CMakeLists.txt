@@ -63,6 +63,8 @@ set(PROJECT_SOURCES
         source/leveltabtilewidget.cpp
         source/leveltabtilewidget.h
         source/leveltabtilewidget.ui
+        source/lineeditwidget.cpp
+        source/lineeditwidget.h
         source/main.cpp
         source/mainwindow.cpp
         source/mainwindow.h

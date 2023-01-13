@@ -1002,18 +1002,9 @@
          </widget>
         </item>
         <item row="3" column="16">
-         <widget class="QLineEdit" name="celFrameHeightEdit">
-          <property name="minimumSize">
-           <size>
-            <width>50</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>50</width>
-            <height>16777215</height>
-           </size>
+         <widget class="LineEditWidget" name="celFrameHeightEdit">
+          <property name="charWidth">
+           <number>5</number>
           </property>
           <property name="toolTip">
            <string>Current frame height</string>
