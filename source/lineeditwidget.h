@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QFocusEvent>
 #include <QKeyEvent>
 #include <QLineEdit>
 
@@ -17,4 +18,5 @@ signals:
 
 protected:
     void keyPressEvent(QKeyEvent *event);
+    void focusOutEvent(QFocusEvent *event);
 };
