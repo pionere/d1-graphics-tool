@@ -2,6 +2,11 @@
 
 #include <QFontMetrics>
 
+LineEditWidget::LineEditWidget(QWidget *parent)
+    : QLineEdit(parent)
+{
+}
+
 void LineEditWidget::setCharWidth(int value)
 {
     const int maxWidth = QFontMetrics(this->font()).maxWidth();
