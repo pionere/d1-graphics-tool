@@ -111,18 +111,9 @@
          </widget>
         </item>
         <item row="0" column="2">
-         <widget class="QLineEdit" name="zoomEdit">
-          <property name="minimumSize">
-           <size>
-            <width>24</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>24</width>
-            <height>16777215</height>
-           </size>
+         <widget class="LineEditWidget" name="zoomEdit">
+          <property name="charWidth">
+           <number>2</number>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -192,18 +183,9 @@
          </widget>
         </item>
         <item row="0" column="11">
-         <widget class="QLineEdit" name="playDelayEdit">
-          <property name="minimumSize">
-           <size>
-            <width>50</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>50</width>
-            <height>16777215</height>
-           </size>
+         <widget class="LineEditWidget" name="playDelayEdit">
+          <property name="charWidth">
+           <number>5</number>
           </property>
           <property name="toolTip">
            <string>Current playback delay</string>
@@ -328,18 +310,9 @@
          </widget>
         </item>
         <item row="1" column="7">
-         <widget class="QLineEdit" name="groupIndexEdit">
-          <property name="minimumSize">
-           <size>
-            <width>50</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>50</width>
-            <height>16777215</height>
-           </size>
+         <widget class="LineEditWidget" name="groupIndexEdit">
+          <property name="charWidth">
+           <number>5</number>
           </property>
           <property name="toolTip">
            <string>Current group</string>
@@ -375,24 +348,12 @@
          </widget>
         </item>
         <item row="1" column="9">
-         <widget class="QLineEdit" name="groupNumberEdit">
-          <property name="minimumSize">
-           <size>
-            <width>50</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>50</width>
-            <height>16777215</height>
-           </size>
+         <widget class="LineEditWidget" name="groupNumberEdit">
+          <property name="charWidth">
+           <number>5</number>
           </property>
           <property name="toolTip">
            <string>Number of groups</string>
-          </property>
-          <property name="autoFillBackground">
-           <bool>false</bool>
           </property>
           <property name="text">
            <string>0</string>
@@ -521,18 +482,9 @@
          </widget>
         </item>
         <item row="2" column="7">
-         <widget class="QLineEdit" name="frameIndexEdit">
-          <property name="minimumSize">
-           <size>
-            <width>50</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>50</width>
-            <height>16777215</height>
-           </size>
+         <widget class="LineEditWidget" name="frameIndexEdit">
+          <property name="charWidth">
+           <number>5</number>
           </property>
           <property name="toolTip">
            <string>Current frame</string>
@@ -568,24 +520,12 @@
          </widget>
         </item>
         <item row="2" column="9">
-         <widget class="QLineEdit" name="frameNumberEdit">
-          <property name="minimumSize">
-           <size>
-            <width>50</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>50</width>
-            <height>16777215</height>
-           </size>
+         <widget class="LineEditWidget" name="frameNumberEdit">
+          <property name="charWidth">
+           <number>5</number>
           </property>
           <property name="toolTip">
            <string>Number of frames</string>
-          </property>
-          <property name="autoFillBackground">
-           <bool>false</bool>
           </property>
           <property name="text">
            <string>0</string>
@@ -650,18 +590,9 @@
          </spacer>
         </item>
         <item row="2" column="14">
-         <widget class="QLineEdit" name="celFrameWidthEdit">
-          <property name="minimumSize">
-           <size>
-            <width>60</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>60</width>
-            <height>16777215</height>
-           </size>
+         <widget class="LineEditWidget" name="celFrameWidthEdit">
+          <property name="charWidth">
+           <number>5</number>
           </property>
           <property name="toolTip">
            <string>Current frame width</string>
@@ -694,18 +625,9 @@
          </widget>
         </item>
         <item row="2" column="16">
-         <widget class="QLineEdit" name="celFrameHeightEdit">
-          <property name="minimumSize">
-           <size>
-            <width>60</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>60</width>
-            <height>16777215</height>
-           </size>
+         <widget class="LineEditWidget" name="celFrameHeightEdit">
+          <property name="charWidth">
+           <number>5</number>
           </property>
           <property name="toolTip">
            <string>Current frame height</string>

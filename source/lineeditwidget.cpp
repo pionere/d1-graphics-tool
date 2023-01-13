@@ -9,7 +9,7 @@ LineEditWidget::LineEditWidget(QWidget *parent)
 
 void LineEditWidget::setCharWidth(int value)
 {
-    int maxWidth = this->fontMetrics().maxWidth();
+    int maxWidth = this->fontMetrics().horizontalAdvance('w');
 
     maxWidth *= value;
 

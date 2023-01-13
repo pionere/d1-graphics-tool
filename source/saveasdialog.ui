@@ -24,7 +24,7 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
-       <widget class="QLineEdit" name="outputCelFileEdit">
+       <widget class="LineEditWidget" name="outputCelFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -125,18 +125,9 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="celGroupEdit">
-        <property name="minimumSize">
-         <size>
-          <width>48</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>48</width>
-          <height>16777215</height>
-         </size>
+       <widget class="LineEditWidget" name="celGroupEdit">
+        <property name="charWidth">
+         <number>5</number>
         </property>
         <property name="toolTip">
          <string>Number of groups</string>
@@ -225,7 +216,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="outputMinFileEdit">
+       <widget class="LineEditWidget" name="outputMinFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -246,7 +237,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLineEdit" name="outputTilFileEdit">
+       <widget class="LineEditWidget" name="outputTilFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -267,7 +258,7 @@
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QLineEdit" name="outputSolFileEdit">
+       <widget class="LineEditWidget" name="outputSolFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -288,7 +279,7 @@
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="QLineEdit" name="outputAmpFileEdit">
+       <widget class="LineEditWidget" name="outputAmpFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
@@ -309,7 +300,7 @@
        </widget>
       </item>
       <item row="5" column="1">
-       <widget class="QLineEdit" name="outputTmiFileEdit">
+       <widget class="LineEditWidget" name="outputTmiFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
