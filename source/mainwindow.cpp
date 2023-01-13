@@ -20,6 +20,7 @@
 #include <QUndoCommand>
 #include <QUndoStack>
 
+#include "config.h"
 #include "d1cel.h"
 #include "d1celtileset.h"
 #include "d1cl2.h"
@@ -944,7 +945,7 @@ void MainWindow::on_actionSettings_triggered()
 
 void MainWindow::on_actionExport_triggered()
 {
-    this->exportDialog->initialize(this->configuration, this->gfx, this->min, this->til, this->sol, this->amp);
+    this->exportDialog->initialize(this->gfx, this->min, this->til, this->sol, this->amp);
     this->exportDialog->show();
 }
 
