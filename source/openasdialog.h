@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QDialog>
-#include <QJsonObject>
 
 enum class OPEN_CLIPPED_TYPE {
     AUTODETECT,
@@ -50,7 +49,7 @@ public:
     explicit OpenAsDialog(QWidget *parent = nullptr);
     ~OpenAsDialog();
 
-    void initialize(QJsonObject *);
+    void initialize();
 
 private:
     void update();
@@ -70,5 +69,4 @@ private slots:
 
 private:
     Ui::OpenAsDialog *ui;
-    QJsonObject *configuration;
 };
