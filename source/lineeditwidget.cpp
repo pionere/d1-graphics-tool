@@ -2,13 +2,16 @@
 
 #include <QFontMetrics>
 
-static QJsonObject theConfig;
-
 void LineEditWidget::setCharWidth(int value)
 {
-    int maxWidth = QFontMetrics(this->font()).maxWidth();
+    const int maxWidth = QFontMetrics(this->font()).maxWidth();
 
     maxWidth *= value;
+
+    const QMargins margins = this->contentsMargins();
+
+    maxWidth += margins.left() + margins.right();
+
     this->setMinimumWidth(maxWidth);
     this->setMaximumWidth(maxWidth);
 }
