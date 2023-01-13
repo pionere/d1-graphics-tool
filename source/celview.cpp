@@ -385,7 +385,7 @@ void CelView::on_frameIndexEdit_returnPressed()
 
 void CelView::on_frameIndexEdit_escPressed()
 {
-    this->ui->frameIndexEdit->setText(QString::number(this->currentFrameIndex));
+    this->ui->frameIndexEdit->setText(QString::number(this->gfx->getFrameCount() != 0 ? this->currentFrameIndex + 1 : 0));
     this->ui->frameIndexEdit->clearFocus();
 }
 
@@ -419,7 +419,7 @@ void CelView::on_groupIndexEdit_returnPressed()
 
 void CelView::on_groupIndexEdit_escPressed()
 {
-    this->ui->groupIndexEdit->setText(QString::number(this->currentGroupIndex));
+    this->ui->groupIndexEdit->setText(QString::number(this->gfx->getGroupCount() != 0 ? this->currentGroupIndex + 1 : 0));
     this->ui->groupIndexEdit->clearFocus();
 }
 

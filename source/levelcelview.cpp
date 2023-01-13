@@ -1666,7 +1666,7 @@ void LevelCelView::on_frameIndexEdit_returnPressed()
 
 void LevelCelView::on_frameIndexEdit_escPressed()
 {
-    this->ui->frameIndexEdit->setText(QString::number(this->currentFrameIndex));
+    this->ui->frameIndexEdit->setText(QString::number(this->gfx->getFrameCount() != 0 ? this->currentFrameIndex + 1 : 0));
     this->ui->frameIndexEdit->clearFocus();
 }
 
@@ -1715,7 +1715,7 @@ void LevelCelView::on_subtileIndexEdit_returnPressed()
 
 void LevelCelView::on_subtileIndexEdit_escPressed()
 {
-    this->ui->subtileIndexEdit->setText(QString::number(this->currentSubtileIndex));
+    this->ui->subtileIndexEdit->setText(QString::number(this->min->getSubtileCount() != 0 ? this->currentSubtileIndex + 1 : 0));
     this->ui->subtileIndexEdit->clearFocus();
 }
 
@@ -1764,7 +1764,7 @@ void LevelCelView::on_tileIndexEdit_returnPressed()
 
 void LevelCelView::on_tileIndexEdit_escPressed()
 {
-    this->ui->tileIndexEdit->setText(QString::number(this->currentTileIndex));
+    this->ui->tileIndexEdit->setText(QString::number(this->til->getTileCount() != 0 ? this->currentTileIndex + 1 : 0));
     this->ui->tileIndexEdit->clearFocus();
 }
 
@@ -1802,34 +1802,36 @@ void LevelCelView::on_minFrameHeightEdit_escPressed()
 
 void LevelCelView::on_zoomOutButton_clicked()
 {
-    if (this->currentZoomFactor - 1 >= 1)
+    if (this->currentZoomFactor > 1) {
         this->currentZoomFactor -= 1;
-    ui->celGraphicsView->resetTransform();
-    ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
-    ui->celGraphicsView->show();
-    ui->zoomEdit->setText(QString::number(this->currentZoomFactor));
+        ui->celGraphicsView->resetTransform();
+        ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
+        ui->celGraphicsView->show();
+    }
+    this->on_zoomEdit_escPressed();
 }
 
 void LevelCelView::on_zoomInButton_clicked()
 {
-    if (this->currentZoomFactor + 1 <= 10)
+    if (this->currentZoomFactor < 10) {
         this->currentZoomFactor += 1;
-    ui->celGraphicsView->resetTransform();
-    ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
-    ui->celGraphicsView->show();
-    ui->zoomEdit->setText(QString::number(this->currentZoomFactor));
+        ui->celGraphicsView->resetTransform();
+        ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
+        ui->celGraphicsView->show();
+    }
+    this->on_zoomEdit_escPressed();
 }
 
 void LevelCelView::on_zoomEdit_returnPressed()
 {
     quint8 zoom = this->ui->zoomEdit->text().toUShort();
 
-    if (zoom >= 1 && zoom <= 10)
+    if (zoom >= 1 && zoom <= 10) {
         this->currentZoomFactor = zoom;
-    ui->celGraphicsView->resetTransform();
-    ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
-    ui->celGraphicsView->show();
-
+        ui->celGraphicsView->resetTransform();
+        ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
+        ui->celGraphicsView->show();
+    }
     this->on_zoomEdit_escPressed();
 }
 
