@@ -209,6 +209,7 @@ private slots:
     void on_colorPickPushButton_clicked();
     void on_colorClearPushButton_clicked();
     void on_translationIndexLineEdit_returnPressed();
+    void on_translationIndexLineEdit_escPressed();
     void on_translationPickPushButton_clicked();
     void on_translationClearPushButton_clicked();
     void on_monsterTrnPushButton_clicked();

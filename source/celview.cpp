@@ -79,6 +79,12 @@ CelView::CelView(QWidget *parent)
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
     QObject::connect(this->celScene, &CelScene::framePixelClicked, this, &CelView::framePixelClicked);
 
+    // connect esc events of LineEditWidgets
+    QObject::connect(this->ui->frameIndexEdit, SIGNAL(cancel_signal()), this, SLOT(on_frameIndexEdit_escPressed()));
+    QObject::connect(this->ui->groupIndexEdit, SIGNAL(cancel_signal()), this, SLOT(on_groupIndexEdit_escPressed()));
+    QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
+    QObject::connect(this->ui->playDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_playDelayEdit_escPressed()));
+
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ShowContextMenu(const QPoint &)));
@@ -374,6 +380,13 @@ void CelView::on_frameIndexEdit_returnPressed()
         this->updateGroupIndex();
         this->displayFrame();
     }
+    this->on_frameIndexEdit_escPressed();
+}
+
+void CelView::on_frameIndexEdit_escPressed()
+{
+    this->ui->frameIndexEdit->setText(QString::number(this->currentFrameIndex));
+    this->ui->frameIndexEdit->clearFocus();
 }
 
 void CelView::on_firstGroupButton_clicked()
@@ -401,6 +414,13 @@ void CelView::on_groupIndexEdit_returnPressed()
         this->currentFrameIndex = this->gfx->getGroupFrameIndices(this->currentGroupIndex).first;
         this->displayFrame();
     }
+    this->on_groupIndexEdit_escPressed();
+}
+
+void CelView::on_groupIndexEdit_escPressed()
+{
+    this->ui->groupIndexEdit->setText(QString::number(this->currentGroupIndex));
+    this->ui->groupIndexEdit->clearFocus();
 }
 
 void CelView::on_nextGroupButton_clicked()
@@ -423,42 +443,59 @@ void CelView::on_lastGroupButton_clicked()
 
 void CelView::on_zoomOutButton_clicked()
 {
-    if (this->currentZoomFactor - 1 >= 1)
+    if (this->currentZoomFactor > 1) {
         this->currentZoomFactor -= 1;
-    ui->celGraphicsView->resetTransform();
-    ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
-    ui->celGraphicsView->show();
-    ui->zoomEdit->setText(QString::number(this->currentZoomFactor));
+        ui->celGraphicsView->resetTransform();
+        ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
+        ui->celGraphicsView->show();
+    }
+    this->on_zoomEdit_escPressed();
 }
 
 void CelView::on_zoomInButton_clicked()
 {
-    if (this->currentZoomFactor + 1 <= 10)
+    if (this->currentZoomFactor < 10) {
         this->currentZoomFactor += 1;
-    ui->celGraphicsView->resetTransform();
-    ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
-    ui->celGraphicsView->show();
-    ui->zoomEdit->setText(QString::number(this->currentZoomFactor));
+        ui->celGraphicsView->resetTransform();
+        ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
+        ui->celGraphicsView->show();
+    }
+    this->on_zoomEdit_escPressed();
 }
 
 void CelView::on_zoomEdit_returnPressed()
 {
     quint8 zoom = this->ui->zoomEdit->text().toUShort();
 
-    if (zoom >= 1 && zoom <= 10)
+    if (zoom >= 1 && zoom <= 10) {
         this->currentZoomFactor = zoom;
-    ui->celGraphicsView->resetTransform();
-    ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
-    ui->celGraphicsView->show();
-    ui->zoomEdit->setText(QString::number(this->currentZoomFactor));
+        ui->celGraphicsView->resetTransform();
+        ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
+        ui->celGraphicsView->show();
+    }
+    this->on_zoomEdit_escPressed();
 }
 
-void CelView::on_playDelayEdit_textChanged(const QString &text)
+void CelView::on_zoomEdit_escPressed()
+{
+    this->ui->zoomEdit->setText(QString::number(this->currentZoomFactor));
+    this->ui->zoomEdit->clearFocus();
+}
+
+void CelView::on_playDelayEdit_returnPressed()
 {
     quint16 playDelay = text.toUInt();
 
     if (playDelay != 0)
         this->currentPlayDelay = playDelay;
+
+    this->on_playDelayEdit_escPressed();
+}
+
+void CelView::on_playDelayEdit_escPressed()
+{
+    this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
+    this->ui->playDelayEdit->clearFocus();
 }
 
 void CelView::on_playButton_clicked()

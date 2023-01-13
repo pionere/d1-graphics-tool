@@ -63,8 +63,7 @@ void EditColorsCommand::redo()
         QColor color(
             this->newColor.red() * (1 - factor) + this->endColor.red() * factor,
             this->newColor.green() * (1 - factor) + this->endColor.green() * factor,
-            this->newColor.blue() * (1 - factor) + this->endColor.blue() * factor,
-            255);
+            this->newColor.blue() * (1 - factor) + this->endColor.blue() * factor);
 
         this->pal->setColor(i, color);
     }
@@ -287,7 +286,9 @@ PaletteWidget::PaletteWidget(QUndoStack *us, QString title)
     // When there is a modification to the PAL or TRNs then UI must be refreshed
     QObject::connect(this, &PaletteWidget::modified, this, &PaletteWidget::refresh);
 
-    QObject::connect(this->ui->colorLineEdit, SIGNAL(cancel_signal), this, SLOT(on_colorLineEdit_escPressed()));
+    // connect esc events of LineEditWidget
+    QObject::connect(this->ui->colorLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_colorLineEdit_escPressed()));
+    QObject::connect(this->ui->translationIndexLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_translationIndexLineEdit_escPressed()));
 
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -868,16 +869,17 @@ void PaletteWidget::on_colorLineEdit_returnPressed()
 {
     QColor color = QColor(ui->colorLineEdit->text());
 
-    // Build color editing command and connect it to the current palette widget
-    // to update the PAL/TRN and CEL views when undo/redo is performed
-    EditColorsCommand *command = new EditColorsCommand(
-        this->pal, this->selectedFirstColorIndex, this->selectedLastColorIndex, color, color);
-    QObject::connect(command, &EditColorsCommand::modified, this, &PaletteWidget::modify);
+    if (color.isValid()) {
+        // Build color editing command and connect it to the current palette widget
+        // to update the PAL/TRN and CEL views when undo/redo is performed
+        EditColorsCommand *command = new EditColorsCommand(
+            this->pal, this->selectedFirstColorIndex, this->selectedLastColorIndex, color, color);
+        QObject::connect(command, &EditColorsCommand::modified, this, &PaletteWidget::modify);
 
-    this->undoStack->push(command);
-
+        this->undoStack->push(command);
+    }
     // Release focus to allow keyboard shortcuts to work as expected
-    this->ui->colorLineEdit->clearFocus();
+    this->on_colorLineEdit_escPressed();
 }
 
 void PaletteWidget::on_colorLineEdit_escPressed()
@@ -920,20 +922,27 @@ void PaletteWidget::on_translationIndexLineEdit_returnPressed()
 {
     quint8 index = ui->translationIndexLineEdit->text().toUInt();
 
-    // New translations
-    QList<quint8> newTranslations;
-    for (int i = this->selectedFirstColorIndex; i <= this->selectedLastColorIndex; i++)
-        newTranslations.append(index);
+    if (index < D1PAL_COLORS) {
+        // New translations
+        QList<quint8> newTranslations;
+        for (int i = this->selectedFirstColorIndex; i <= this->selectedLastColorIndex; i++)
+            newTranslations.append(index);
 
-    // Build translation editing command and connect it to the current palette widget
-    // to update the PAL/TRN and CEL views when undo/redo is performed
-    EditTranslationsCommand *command = new EditTranslationsCommand(
-        this->trn, this->selectedFirstColorIndex, this->selectedLastColorIndex, newTranslations);
-    QObject::connect(command, &EditTranslationsCommand::modified, this, &PaletteWidget::modify);
+        // Build translation editing command and connect it to the current palette widget
+        // to update the PAL/TRN and CEL views when undo/redo is performed
+        EditTranslationsCommand *command = new EditTranslationsCommand(
+            this->trn, this->selectedFirstColorIndex, this->selectedLastColorIndex, newTranslations);
+        QObject::connect(command, &EditTranslationsCommand::modified, this, &PaletteWidget::modify);
 
-    this->undoStack->push(command);
-
+        this->undoStack->push(command);
+    }
     // Release focus to allow keyboard shortcuts to work as expected
+    this->on_translationIndexLineEdit_escPressed();
+}
+
+void PaletteWidget::on_translationIndexLineEdit_escPressed()
+{
+    this->refreshTranslationIndexLineEdit();
     this->ui->translationIndexLineEdit->clearFocus();
 }
 
