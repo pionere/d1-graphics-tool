@@ -484,7 +484,7 @@ void CelView::on_zoomEdit_escPressed()
 
 void CelView::on_playDelayEdit_returnPressed()
 {
-    quint16 playDelay = text.toUInt();
+    quint16 playDelay = this->ui->playDelayEdit->text().toUInt();
 
     if (playDelay != 0)
         this->currentPlayDelay = playDelay;
