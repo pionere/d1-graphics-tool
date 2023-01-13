@@ -20,3 +20,12 @@ void LineEditWidget::setCharWidth(int value)
     this->setMinimumWidth(maxWidth);
     this->setMaximumWidth(maxWidth);
 }
+
+void LineEditWidget::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Escape) {
+        emit cancel_signal();
+    }
+
+    QLineEdit::keyPressEvent(event);
+}

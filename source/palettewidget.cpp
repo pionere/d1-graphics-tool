@@ -287,6 +287,8 @@ PaletteWidget::PaletteWidget(QUndoStack *us, QString title)
     // When there is a modification to the PAL or TRNs then UI must be refreshed
     QObject::connect(this, &PaletteWidget::modified, this, &PaletteWidget::refresh);
 
+    QObject::connect(this->ui->colorLineEdit, SIGNAL(cancel_signal), this, SLOT(on_colorLineEdit_escPressed()));
+
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ShowContextMenu(const QPoint &)));
@@ -875,6 +877,12 @@ void PaletteWidget::on_colorLineEdit_returnPressed()
     this->undoStack->push(command);
 
     // Release focus to allow keyboard shortcuts to work as expected
+    this->ui->colorLineEdit->clearFocus();
+}
+
+void PaletteWidget::on_colorLineEdit_escPressed()
+{
+    this->refreshColorLineEdit();
     this->ui->colorLineEdit->clearFocus();
 }
 

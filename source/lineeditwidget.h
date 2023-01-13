@@ -10,4 +10,10 @@ public:
     ~LineEditWidget() = default;
 
     void setCharWidth(int width);
+
+signals:
+    void cancel_signal();
+
+protected:
+    void keyPressEvent(QKeyEvent *event);
 };

@@ -17,7 +17,7 @@ void Config::loadConfiguration()
         QFile loadJson(jsonFilePath);
         loadJson.open(QIODevice::ReadOnly);
         QJsonDocument loadJsonDoc = QJsonDocument::fromJson(loadJson.readAll());
-        theConfig.swap(loadJsonDoc.object());
+        theConfig = loadJsonDoc.object();
         loadJson.close();
 
         if (!theConfig.contains("LastFilePath")) {
