@@ -29,3 +29,19 @@ void LineEditWidget::keyPressEvent(QKeyEvent *event)
 
     QLineEdit::keyPressEvent(event);
 }
+
+void YourButton::focusOutEvent(QFocusEvent *event)
+{
+    if (e->reason() != Qt::OtherFocusReason) {
+        if (e->reason() == Qt::TabFocusReason) {
+            // submit on tabpress
+            QKeyEvent *kpEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_Enter);
+            QCoreApplication::postEvent(this, kpEvent);
+        } else {
+            // cancel otherwise
+            emit cancel_signal();
+        }
+    }
+
+    QLineEdit::focusOutEvent(e);
+}
