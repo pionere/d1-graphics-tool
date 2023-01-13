@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QFile>
 
+#include "config.h"
 #include "mainwindow.h"
 
 int main(int argc, char *argv[])
@@ -9,18 +10,19 @@ int main(int argc, char *argv[])
 
     Config::loadConfiguration();
 
-    const char *qssName = ":/D1GraphicsTool.qss";
-    QFile file(qssName);
-    if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "Failed to open " << qssName;
-        return -1;
+    { // load style-sheet
+        const char *qssName = ":/D1GraphicsTool.qss";
+        QFile file(qssName);
+        if (!file.open(QIODevice::ReadOnly)) {
+            qDebug() << "Failed to open " << qssName;
+            return -1;
+        }
+        QString styleSheet = QTextStream(&file).readAll();
+        a.setStyleSheet(styleSheet);
     }
-    QString styleSheet = QTextStream(&file).readAll();
-    a.setStyleSheet(styleSheet);
 
     int result;
-
-    {
+    { // run the application
         MainWindow w;
         w.setWindowTitle("Diablo 1 Graphics Tool");
         w.show();

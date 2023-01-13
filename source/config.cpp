@@ -2,6 +2,7 @@
 
 #include <QCoreApplication>
 #include <QFile>
+#include <QJsonDocument>
 #include <QJsonObject>
 
 static QJsonObject theConfig;
