@@ -7,6 +7,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    Config::loadConfiguration();
+
     const char *qssName = ":/D1GraphicsTool.qss";
     QFile file(qssName);
     if (!file.open(QIODevice::ReadOnly)) {
@@ -20,5 +22,9 @@ int main(int argc, char *argv[])
     w.setWindowTitle("Diablo 1 Graphics Tool");
     w.show();
 
-    return a.exec();
+    int result = a.exec();
+
+    Config::storeConfiguration();
+
+    return result;
 }
