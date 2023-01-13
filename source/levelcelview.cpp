@@ -84,6 +84,15 @@ LevelCelView::LevelCelView(QWidget *parent)
     // If a pixel of the frame, subtile or tile was clicked get pixel color index and notify the palette widgets
     QObject::connect(this->celScene, &LevelCelScene::framePixelClicked, this, &LevelCelView::framePixelClicked);
 
+    // connect esc events of LineEditWidgets
+    QObject::connect(this->ui->frameIndexEdit, SIGNAL(cancel_signal()), this, SLOT(on_frameIndexEdit_escPressed()));
+    QObject::connect(this->ui->subtileIndexEdit, SIGNAL(cancel_signal()), this, SLOT(on_subtileIndexEdit_escPressed()));
+    QObject::connect(this->ui->tileIndexEdit, SIGNAL(cancel_signal()), this, SLOT(on_tileIndexEdit_escPressed()));
+    QObject::connect(this->ui->minFrameWidthEdit, SIGNAL(cancel_signal()), this, SLOT(on_minFrameWidthEdit_escPressed()));
+    QObject::connect(this->ui->minFrameHeightEdit, SIGNAL(cancel_signal()), this, SLOT(on_minFrameHeightEdit_escPressed()));
+    QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
+    QObject::connect(this->ui->playDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_playDelayEdit_escPressed()));
+
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ShowContextMenu(const QPoint &)));
@@ -1612,6 +1621,13 @@ void LevelCelView::on_frameIndexEdit_returnPressed()
         this->currentFrameIndex = frameIndex;
         this->displayFrame();
     }
+    this->on_frameIndexEdit_escPressed();
+}
+
+void LevelCelView::on_frameIndexEdit_escPressed()
+{
+    this->ui->frameIndexEdit->setText(QString::number(this->gfx->getFrameCount() != 0 ? this->currentFrameIndex + 1 : 0));
+    this->ui->frameIndexEdit->clearFocus();
 }
 
 void LevelCelView::on_firstSubtileButton_clicked()
@@ -1654,6 +1670,13 @@ void LevelCelView::on_subtileIndexEdit_returnPressed()
         this->currentSubtileIndex = subtileIndex;
         this->displayFrame();
     }
+    this->on_subtileIndexEdit_escPressed();
+}
+
+void LevelCelView::on_subtileIndexEdit_escPressed()
+{
+    this->ui->subtileIndexEdit->setText(QString::number(this->min->getSubtileCount() != 0 ? this->currentSubtileIndex + 1 : 0));
+    this->ui->subtileIndexEdit->clearFocus();
 }
 
 void LevelCelView::on_firstTileButton_clicked()
@@ -1696,6 +1719,13 @@ void LevelCelView::on_tileIndexEdit_returnPressed()
         this->currentTileIndex = tileIndex;
         this->displayFrame();
     }
+    this->on_tileIndexEdit_escPressed();
+}
+
+void LevelCelView::on_tileIndexEdit_escPressed()
+{
+    this->ui->tileIndexEdit->setText(QString::number(this->til->getTileCount() != 0 ? this->currentTileIndex + 1 : 0));
+    this->ui->tileIndexEdit->clearFocus();
 }
 
 void LevelCelView::on_minFrameWidthEdit_returnPressed()
@@ -1704,6 +1734,14 @@ void LevelCelView::on_minFrameWidthEdit_returnPressed()
 
     this->min->setSubtileWidth(width);
     this->displayFrame();
+
+    this->on_minFrameWidthEdit_escPressed();
+}
+
+void LevelCelView::on_minFrameWidthEdit_escPressed()
+{
+    this->ui->minFrameWidthEdit->setText(QString::number(this->min->getSubtileWidth()));
+    this->ui->minFrameWidthEdit->clearFocus();
 }
 
 void LevelCelView::on_minFrameHeightEdit_returnPressed()
@@ -1712,46 +1750,71 @@ void LevelCelView::on_minFrameHeightEdit_returnPressed()
 
     this->min->setSubtileHeight(height);
     this->displayFrame();
+
+    this->on_minFrameHeightEdit_escPressed();
+}
+
+void LevelCelView::on_minFrameHeightEdit_escPressed()
+{
+    this->ui->minFrameHeightEdit->setText(QString::number(this->min->getSubtileHeight()));
+    this->ui->minFrameHeightEdit->clearFocus();
 }
 
 void LevelCelView::on_zoomOutButton_clicked()
 {
-    if (this->currentZoomFactor - 1 >= 1)
+    if (this->currentZoomFactor > 1) {
         this->currentZoomFactor -= 1;
-    ui->celGraphicsView->resetTransform();
-    ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
-    ui->celGraphicsView->show();
-    ui->zoomEdit->setText(QString::number(this->currentZoomFactor));
+        ui->celGraphicsView->resetTransform();
+        ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
+        ui->celGraphicsView->show();
+    }
+    this->on_zoomEdit_escPressed();
 }
 
 void LevelCelView::on_zoomInButton_clicked()
 {
-    if (this->currentZoomFactor + 1 <= 10)
+    if (this->currentZoomFactor < 10) {
         this->currentZoomFactor += 1;
-    ui->celGraphicsView->resetTransform();
-    ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
-    ui->celGraphicsView->show();
-    ui->zoomEdit->setText(QString::number(this->currentZoomFactor));
+        ui->celGraphicsView->resetTransform();
+        ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
+        ui->celGraphicsView->show();
+    }
+    this->on_zoomEdit_escPressed();
 }
 
 void LevelCelView::on_zoomEdit_returnPressed()
 {
     quint8 zoom = this->ui->zoomEdit->text().toUShort();
 
-    if (zoom >= 1 && zoom <= 10)
+    if (zoom >= 1 && zoom <= 10) {
         this->currentZoomFactor = zoom;
-    ui->celGraphicsView->resetTransform();
-    ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
-    ui->celGraphicsView->show();
-    ui->zoomEdit->setText(QString::number(this->currentZoomFactor));
+        ui->celGraphicsView->resetTransform();
+        ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
+        ui->celGraphicsView->show();
+    }
+    this->on_zoomEdit_escPressed();
 }
 
-void LevelCelView::on_playDelayEdit_textChanged(const QString &text)
+void LevelCelView::on_zoomEdit_escPressed()
 {
-    quint16 playDelay = text.toUInt();
+    this->ui->zoomEdit->setText(QString::number(this->currentZoomFactor));
+    this->ui->zoomEdit->clearFocus();
+}
+
+void LevelCelView::on_playDelayEdit_returnPressed()
+{
+    quint16 playDelay = this->ui->playDelayEdit->text().toUInt();
 
     if (playDelay != 0)
         this->currentPlayDelay = playDelay;
+
+    this->on_playDelayEdit_escPressed();
+}
+
+void LevelCelView::on_playDelayEdit_escPressed()
+{
+    this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
+    this->ui->playDelayEdit->clearFocus();
 }
 
 void LevelCelView::on_playButton_clicked()

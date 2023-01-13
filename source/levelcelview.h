@@ -128,27 +128,34 @@ private slots:
     void on_nextFrameButton_clicked();
     void on_lastFrameButton_clicked();
     void on_frameIndexEdit_returnPressed();
+    void on_frameIndexEdit_escPressed();
 
     void on_firstSubtileButton_clicked();
     void on_previousSubtileButton_clicked();
     void on_nextSubtileButton_clicked();
     void on_lastSubtileButton_clicked();
     void on_subtileIndexEdit_returnPressed();
+    void on_subtileIndexEdit_escPressed();
 
     void on_firstTileButton_clicked();
     void on_previousTileButton_clicked();
     void on_nextTileButton_clicked();
     void on_lastTileButton_clicked();
     void on_tileIndexEdit_returnPressed();
+    void on_tileIndexEdit_escPressed();
 
     void on_minFrameWidthEdit_returnPressed();
+    void on_minFrameWidthEdit_escPressed();
     void on_minFrameHeightEdit_returnPressed();
+    void on_minFrameHeightEdit_escPressed();
 
     void on_zoomOutButton_clicked();
     void on_zoomInButton_clicked();
     void on_zoomEdit_returnPressed();
+    void on_zoomEdit_escPressed();
 
-    void on_playDelayEdit_textChanged(const QString &text);
+    void on_playDelayEdit_returnPressed();
+    void on_playDelayEdit_escPressed();
     void on_playButton_clicked();
     void on_stopButton_clicked();
     void playGroup();

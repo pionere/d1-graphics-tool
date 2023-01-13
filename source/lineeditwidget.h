@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QKeyEvent>
 #include <QLineEdit>
 
 class LineEditWidget : public QLineEdit {
@@ -10,4 +11,10 @@ public:
     ~LineEditWidget() = default;
 
     void setCharWidth(int width);
+
+signals:
+    void cancel_signal();
+
+protected:
+    void keyPressEvent(QKeyEvent *event);
 };
