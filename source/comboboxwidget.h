@@ -14,15 +14,4 @@ public:
     ~ComboBoxWidget() = default;
 
     void setCharWidth(int width);
-
-signals:
-    void cancel_signal();
-    void returnPressed();
-
-/*protected:
-    void keyPressEvent(QKeyEvent *event);
-    void focusOutEvent(QFocusEvent *event);*/
-
-private:
-    LineEditWidget *lineEditWidget;
 };
