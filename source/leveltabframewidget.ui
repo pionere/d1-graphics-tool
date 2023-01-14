@@ -65,9 +65,18 @@
         </widget>
        </item>
        <item>
-        <widget class="ComboBoxWidget" name="frameTypeComboBox">
-         <property name="charWidth">
-          <number>20</number>
+        <widget class="QComboBox" name="frameTypeComboBox">
+         <property name="minimumSize">
+          <size>
+           <width>160</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>160</width>
+           <height>16777215</height>
+          </size>
          </property>
          <item>
           <property name="text">

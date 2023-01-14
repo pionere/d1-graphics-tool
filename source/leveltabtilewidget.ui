@@ -68,7 +68,7 @@
         </widget>
        </item>
        <item>
-        <widget class="ComboBoxWidget" name="ampTypeComboBox">
+        <widget class="QComboBox" name="ampTypeComboBox">
          <item>
           <property name="text">
            <string>None</string>
@@ -279,9 +279,18 @@
         </widget>
        </item>
        <item>
-        <widget class="ComboBoxWidget" name="subtilesComboBox">
-         <property name="charWidth">
-          <number>5</number>
+        <widget class="QComboBox" name="subtilesComboBox">
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>120</width>
+           <height>16777215</height>
+          </size>
          </property>
          <property name="editable">
           <bool>true</bool>

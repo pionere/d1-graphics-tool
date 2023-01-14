@@ -215,7 +215,7 @@
          </widget>
         </item>
         <item row="0" column="13" colspan="2">
-         <widget class="ComboBoxWidget" name="playComboBox">
+         <widget class="QComboBox" name="playComboBox">
           <item>
            <property name="text">
             <string>Normal</string>
