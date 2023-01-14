@@ -24,5 +24,5 @@ signals:
     void focusOutEvent(QFocusEvent *event);*/
 
 private:
-    LineEditWidget *lineEditWiget;
+    LineEditWidget *lineEditWidget;
 };
