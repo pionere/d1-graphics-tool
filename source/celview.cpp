@@ -74,7 +74,8 @@ void CelScene::parseZoomValue(QString &zoom, int &zoomNumerator, int &zoomDenomi
             zoomNumerator = 1;
             zoomDenominator = zoom.mid(1).toUShort();
         } else if (sepIdx == zoom.length() - 1) {
-            zoomNumerator = zoom.chop(1).toUShort();
+            zoom.chop(1);
+            zoomNumerator = zoom.toUShort();
             zoomDenominator = 1;
         } else {
             zoomNumerator = zoom.mid(0, sepIdx).toUShort();
