@@ -1829,7 +1829,7 @@ void LevelCelView::on_minFrameHeightEdit_escPressed()
     this->ui->minFrameHeightEdit->clearFocus();
 }
 
-void LevelCelView::updateQGraphicsView(quint8 zoomNumerator, quint8 zoomDenominator)
+void LevelCelView::updateQGraphicsView()
 {
     qreal zoomFactor = (qreal)this->currentZoomNumerator / this->currentZoomDenominator;
     QGraphicsView *view = this->ui->celGraphicsView;

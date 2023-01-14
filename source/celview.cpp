@@ -479,7 +479,7 @@ void CelView::on_lastGroupButton_clicked()
     this->displayFrame();
 }
 
-void CelView::updateQGraphicsView(quint8 zoomNumerator, quint8 zoomDenominator)
+void CelView::updateQGraphicsView()
 {
     qreal zoomFactor = (qreal)this->currentZoomNumerator / this->currentZoomDenominator;
     QGraphicsView *view = this->ui->celGraphicsView;
