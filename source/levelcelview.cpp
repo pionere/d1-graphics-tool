@@ -979,7 +979,7 @@ void LevelCelView::inefficientFrames()
         }
         int diff = limit;
         D1CEL_FRAME_TYPE effType = LevelTabFrameWidget::altFrameType(frame, &diff);
-        if (diff >= 0) {
+        if (effType != D1CEL_FRAME_TYPE::TransparentSquare) {
             QString line = "Frame %1 could be '%2' by changing %3 pixels.\n";
             line = line.arg(i + 1).arg(getFrameTypeName(effType)).arg(limit - diff);
             report.append(line);
