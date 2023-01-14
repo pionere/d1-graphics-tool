@@ -63,7 +63,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Automap type :</string>
+          <string>Automap type:</string>
          </property>
         </widget>
        </item>
@@ -140,18 +140,6 @@
      </item>
      <item>
       <widget class="QGroupBox" name="flagsGroupBox">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>120</height>
-        </size>
-       </property>
        <property name="title">
         <string>Automap flags</string>
        </property>
@@ -252,7 +240,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Subtiles :</string>
+          <string>Subtiles:</string>
          </property>
         </widget>
        </item>

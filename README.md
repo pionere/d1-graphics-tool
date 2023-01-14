@@ -1,5 +1,5 @@
 # Diablo 1 Graphics Tool
-[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/savagesteel/d1-graphics-tool?include_prereleases)](https://github.com/pionere/d1-graphics-tool/releases)
+[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/pionere/d1-graphics-tool?include_prereleases)](https://github.com/pionere/d1-graphics-tool/releases)
 <!--
 ![GitHub](https://img.shields.io/github/license/savagesteel/d1-graphics-tool)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/savagesteel/d1-graphics-tool?include_prereleases)

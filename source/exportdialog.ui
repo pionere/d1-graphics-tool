@@ -109,18 +109,6 @@
       </item>
       <item row="0" column="1">
        <widget class="QComboBox" name="contentTypeComboBox">
-        <property name="minimumSize">
-         <size>
-          <width>90</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>90</width>
-          <height>16777215</height>
-         </size>
-        </property>
         <item>
          <property name="text">
           <string>Frame</string>
@@ -159,18 +147,6 @@
       </item>
       <item row="1" column="1">
        <widget class="QComboBox" name="contentPlacementComboBox">
-        <property name="minimumSize">
-         <size>
-          <width>90</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>90</width>
-          <height>16777215</height>
-         </size>
-        </property>
         <item>
          <property name="text">
           <string>Grouped</string>
