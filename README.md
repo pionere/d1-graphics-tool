@@ -1,4 +1,6 @@
 # Diablo 1 Graphics Tool
+[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/savagesteel/d1-graphics-tool?include_prereleases)](https://github.com/pionere/d1-graphics-tool/releases)
+<!--
 ![GitHub](https://img.shields.io/github/license/savagesteel/d1-graphics-tool)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/savagesteel/d1-graphics-tool?include_prereleases)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/downloads-pre/savagesteel/d1-graphics-tool/latest/total)
@@ -6,6 +8,7 @@
 [![Windows-x86](https://github.com/savagesteel/d1-graphics-tool/actions/workflows/windows-32.yml/badge.svg)](https://github.com/savagesteel/d1-graphics-tool/actions/workflows/windows-32.yml)
 [![Linux](https://github.com/savagesteel/d1-graphics-tool/actions/workflows/linux.yml/badge.svg)](https://github.com/savagesteel/d1-graphics-tool/actions/workflows/linux.yml)
 [![CodeFactor](https://www.codefactor.io/repository/github/savagesteel/d1-graphics-tool/badge)](https://www.codefactor.io/repository/github/savagesteel/d1-graphics-tool)
+-->
 
 Diablo 1 Graphics Tool can open CEL/CL2 graphics files and display them with chosen color palette (PAL) and color translation (TRN) files.  
 The tool now also supports PAL/TRN/SOL/AMP editing.
