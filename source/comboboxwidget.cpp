@@ -4,7 +4,7 @@
 #include <QFontMetrics>
 
 ComboBoxWidget::ComboBoxWidget(QWidget *parent)
-    : QLineEdit(parent)
+    : QComboBox(parent)
 {
 }
 
@@ -28,7 +28,7 @@ void ComboBoxWidget::keyPressEvent(QKeyEvent *event)
         emit cancel_signal();
     }
 
-    QLineEdit::keyPressEvent(event);
+    QComboBox::keyPressEvent(event);
 }
 
 void ComboBoxWidget::focusOutEvent(QFocusEvent *event)
@@ -42,5 +42,5 @@ void ComboBoxWidget::focusOutEvent(QFocusEvent *event)
         emit cancel_signal();
     }
 
-    QLineEdit::focusOutEvent(event);
+    QComboBox::focusOutEvent(event);
 }
