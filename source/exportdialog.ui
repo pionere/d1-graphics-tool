@@ -54,7 +54,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="formatComboBox"/>
+       <widget class="ComboBoxWidget" name="formatComboBox"/>
       </item>
       <item row="0" column="2">
        <spacer name="horizontalSpacer_1_0">
@@ -71,7 +71,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QComboBox" name="filesCountComboBox">
+       <widget class="ComboBoxWidget" name="filesCountComboBox">
         <item>
          <property name="text">
           <string>One</string>
@@ -108,7 +108,10 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="contentTypeComboBox">
+       <widget class="ComboBoxWidget" name="contentTypeComboBox">
+        <property name="charWidth">
+         <number>10</number>
+        </property>
         <item>
          <property name="text">
           <string>Frame</string>
@@ -146,7 +149,10 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QComboBox" name="contentPlacementComboBox">
+       <widget class="ComboBoxWidget" name="contentPlacementComboBox">
+        <property name="charWidth">
+         <number>10</number>
+        </property>
         <item>
          <property name="text">
           <string>Grouped</string>

@@ -35,7 +35,8 @@ private slots:
 
     void on_subtilesPrevButton_clicked();
     void on_subtilesComboBox_activated(int index);
-    void on_subtilesComboBox_currentTextChanged(const QString &arg1);
+    void on_subtilesComboBox_returnPressed();
+    void on_subtilesComboBox_escPressed();
     void on_subtilesNextButton_clicked();
 
 private:

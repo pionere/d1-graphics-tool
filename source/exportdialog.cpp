@@ -36,7 +36,7 @@ void ExportDialog::initialize(D1Gfx *g, D1Min *m, D1Til *t, D1Sol *s, D1Amp *a)
         formatTxts.append(fmt.toUpper());
     }
     // - remember the last selected format
-    QComboBox *fmtBox = this->ui->formatComboBox;
+    ComboBoxWidget *fmtBox = this->ui->formatComboBox;
     QString lastFmt = fmtBox->currentText();
     if (lastFmt.isEmpty()) {
         lastFmt = "PNG";

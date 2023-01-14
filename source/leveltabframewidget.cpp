@@ -198,25 +198,6 @@ void LevelTabFrameWidget::selectFrameType(D1GfxFrame *frame)
     int limit = 0;
     D1CEL_FRAME_TYPE frameType = LevelTabFrameWidget::altFrameType(frame, &limit);
     frame->setFrameType(frameType);
-    /*D1CEL_FRAME_TYPE frameType = D1CEL_FRAME_TYPE::TransparentSquare;
-    QString tmp;
-    int limitSquare = 0, limitLeftTriangle = 0, limitRightTriangle = 0, limitLeftTrapezoid = 0, limitRightTrapezoid = 0;
-
-    if (frame->getWidth() == MICRO_WIDTH && frame->getHeight() == MICRO_HEIGHT) {
-        if (validSquare(frame, tmp, &limitSquare)) {
-            frameType = D1CEL_FRAME_TYPE::Square;
-        } else if (validLeftTriangle(frame, tmp, &limiLeftTriangle)) {
-            frameType = D1CEL_FRAME_TYPE::LeftTriangle;
-        } else if (validRightTriangle(frame, tmp, &limitRightTriangle)) {
-            frameType = D1CEL_FRAME_TYPE::RightTriangle;
-        } else if (validLeftTrapezoid(frame, tmp, &limitLeftTrapezoid)) {
-            frameType = D1CEL_FRAME_TYPE::LeftTrapezoid;
-        } else if (validRightTrapezoid(frame, tmp, &limitRightTrapezoid)) {
-            frameType = D1CEL_FRAME_TYPE::RightTrapezoid;
-        }
-    }
-
-    frame->setFrameType(frameType);*/
 }
 
 void LevelTabFrameWidget::validate()

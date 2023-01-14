@@ -11,6 +11,9 @@ LevelTabTileWidget::LevelTabTileWidget()
     , ui(new Ui::LevelTabTileWidget)
 {
     ui->setupUi(this);
+
+    // connect esc events of the ComboBoxWidget
+    QObject::connect(this->ui->subtilesComboBox, SIGNAL(cancel_signal()), this, SLOT(on_subtilesComboBox_escPressed()));
 }
 
 LevelTabTileWidget::~LevelTabTileWidget()
@@ -225,13 +228,10 @@ void LevelTabTileWidget::on_subtilesComboBox_activated(int index)
     }
 }
 
-void LevelTabTileWidget::on_subtilesComboBox_currentTextChanged(const QString &arg1)
+void LevelTabTileWidget::on_subtilesComboBox_returnPressed()
 {
     int index = this->lastSubTileEntryIndex;
     int subtileIdx = this->ui->subtilesComboBox->currentText().toInt() - 1;
-
-    if (this->onUpdate || this->ui->subtilesComboBox->currentIndex() != index)
-        return; // on update or side effect of combobox activated -> ignore
 
     if (subtileIdx >= 0 && subtileIdx < this->min->getSubtileCount()) {
         int tileIdx = this->levelCelView->getCurrentTileIndex();
@@ -243,6 +243,13 @@ void LevelTabTileWidget::on_subtilesComboBox_currentTextChanged(const QString &a
 
         this->levelCelView->displayFrame();
     }
+    this->on_subtilesComboBox_escPressed();
+}
+
+void LevelTabTileWidget::on_subtilesComboBox_escPressed()
+{
+    this->ui->subtilesComboBox->setCurrentIndex(this->lastSubTileEntryIndex);
+    this->ui->subtilesComboBox->clearFocus();
 }
 
 void LevelTabTileWidget::on_subtilesNextButton_clicked()

@@ -244,18 +244,9 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="framesComboBox">
-         <property name="minimumSize">
-          <size>
-           <width>80</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>120</width>
-           <height>16777215</height>
-          </size>
+        <widget class="ComboBoxWidget" name="framesComboBox">
+         <property name="charWidth">
+          <number>5</number>
          </property>
          <property name="editable">
           <bool>true</bool>

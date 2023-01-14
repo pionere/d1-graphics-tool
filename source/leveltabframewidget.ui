@@ -65,7 +65,10 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="frameTypeComboBox">
+        <widget class="ComboBoxWidget" name="frameTypeComboBox">
+         <property name="charWidth">
+          <number>20</number>
+         </property>
          <item>
           <property name="text">
            <string>Square</string>

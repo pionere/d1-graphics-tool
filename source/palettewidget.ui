@@ -126,10 +126,10 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_5">
         <item>
-         <widget class="QComboBox" name="pathComboBox"/>
+         <widget class="ComboBoxWidget" name="pathComboBox"/>
         </item>
         <item>
-         <widget class="QComboBox" name="displayComboBox"/>
+         <widget class="ComboBoxWidget" name="displayComboBox"/>
         </item>
        </layout>
       </item>
