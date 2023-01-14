@@ -16,74 +16,23 @@
 #include "mainwindow.h"
 #include "ui_levelcelview.h"
 
-LevelCelScene::LevelCelScene(QWidget *v)
-    : QGraphicsScene()
-    , view(v)
-{
-}
-
-void LevelCelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (event->button() != Qt::LeftButton) {
-        return;
-    }
-
-    int x = event->scenePos().x();
-    int y = event->scenePos().y();
-
-    qDebug() << "Clicked: " << x << "," << y;
-
-    emit this->framePixelClicked(x, y);
-}
-
-void LevelCelScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
-{
-    this->dragMoveEvent(event);
-}
-
-void LevelCelScene::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
-{
-    if (MainWindow::hasImageUrl(event->mimeData())) {
-        event->acceptProposedAction();
-    } else {
-        event->ignore();
-    }
-}
-
-void LevelCelScene::dropEvent(QGraphicsSceneDragDropEvent *event)
-{
-    event->acceptProposedAction();
-
-    QStringList filePaths;
-    for (const QUrl &url : event->mimeData()->urls()) {
-        filePaths.append(url.toLocalFile());
-    }
-    // try to insert as frames
-    ((MainWindow *)this->view->window())->openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
-}
-
-void LevelCelScene::contextMenuEvent(QContextMenuEvent *event)
-{
-    ((LevelCelView *)this->view)->ShowContextMenu(event->globalPos());
-}
-
 LevelCelView::LevelCelView(QWidget *parent)
     : QWidget(parent)
-    , ui(new Ui::LevelCelView)
-    , celScene(new LevelCelScene(this))
+    , ui(new Ui::LevelCelView())
+    , celScene(new CelScene(this))
 {
-    ui->setupUi(this);
-    ui->celGraphicsView->setScene(this->celScene);
-    ui->zoomEdit->setText(QString::number(this->currentZoomFactor));
-    ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
-    ui->stopButton->setEnabled(false);
+    this->ui->setupUi(this);
+    this->ui->celGraphicsView->setScene(this->celScene);
+    this->on_zoomEdit_escPressed();
+    this->on_playDelayEdit_escPressed();
+    this->ui->stopButton->setEnabled(false);
     this->playTimer.connect(&this->playTimer, SIGNAL(timeout()), this, SLOT(playGroup()));
-    ui->tilesTabs->addTab(this->tabTileWidget, "Tile properties");
-    ui->tilesTabs->addTab(this->tabSubTileWidget, "Subtile properties");
-    ui->tilesTabs->addTab(this->tabFrameWidget, "Frame properties");
+    this->ui->tilesTabs->addTab(this->tabTileWidget, "Tile properties");
+    this->ui->tilesTabs->addTab(this->tabSubTileWidget, "Subtile properties");
+    this->ui->tilesTabs->addTab(this->tabFrameWidget, "Frame properties");
 
     // If a pixel of the frame, subtile or tile was clicked get pixel color index and notify the palette widgets
-    QObject::connect(this->celScene, &LevelCelScene::framePixelClicked, this, &LevelCelView::framePixelClicked);
+    QObject::connect(this->celScene, &CelScene::framePixelClicked, this, &LevelCelView::framePixelClicked);
 
     // connect esc events of LineEditWidgets
     QObject::connect(this->ui->frameIndexEdit, SIGNAL(cancel_signal()), this, SLOT(on_frameIndexEdit_escPressed()));
@@ -97,6 +46,7 @@ LevelCelView::LevelCelView(QWidget *parent)
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ShowContextMenu(const QPoint &)));
+    QObject::connect(this->celScene, &CelScene::showContextMenu, this, &LevelCelView::ShowContextMenu);
 
     setAcceptDrops(true);
 }
@@ -1879,44 +1829,59 @@ void LevelCelView::on_minFrameHeightEdit_escPressed()
     this->ui->minFrameHeightEdit->clearFocus();
 }
 
+void LevelCelView::updateQGraphicsView(quint8 zoomNumerator, quint8 zoomDenominator)
+{
+    qreal zoomFactor = (qreal)this->currentZoomNumerator / this->currentZoomDenominator;
+    QGraphicsView *view = this->ui->celGraphicsView;
+
+    view->resetTransform();
+    view->scale(zoomFactor, zoomFactor);
+    view->show();
+}
+
 void LevelCelView::on_zoomOutButton_clicked()
 {
-    if (this->currentZoomFactor > 1) {
-        this->currentZoomFactor -= 1;
-        ui->celGraphicsView->resetTransform();
-        ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
-        ui->celGraphicsView->show();
+    if (this->currentZoomNumerator > 1 || this->currentZoomDenominator < ZOOM_LIMIT) {
+        if (this->currentZoomNumerator > 1) {
+            this->currentZoomNumerator--;
+        } else {
+            this->currentZoomDenominator++;
+        }
+        this->updateQGraphicsView();
     }
     this->on_zoomEdit_escPressed();
 }
 
 void LevelCelView::on_zoomInButton_clicked()
 {
-    if (this->currentZoomFactor < 10) {
-        this->currentZoomFactor += 1;
-        ui->celGraphicsView->resetTransform();
-        ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
-        ui->celGraphicsView->show();
+    if (this->currentZoomNumerator < ZOOM_LIMIT) {
+        if (this->currentZoomDenominator > 1) {
+            this->currentZoomDenominator--;
+        } else {
+            this->currentZoomNumerator++;
+        }
+        this->updateQGraphicsView();
     }
     this->on_zoomEdit_escPressed();
 }
 
 void LevelCelView::on_zoomEdit_returnPressed()
 {
-    quint8 zoom = this->ui->zoomEdit->text().toUShort();
+    int zoomNumerator, zoomDenominator;
 
-    if (zoom >= 1 && zoom <= 10) {
-        this->currentZoomFactor = zoom;
-        ui->celGraphicsView->resetTransform();
-        ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
-        ui->celGraphicsView->show();
+    CelScene::parseZoomValue(this->ui->zoomEdit->text(), zoomNumerator, zoomDenominator);
+
+    if (zoomNumerator <= ZOOM_LIMIT && zoomDenominator <= ZOOM_LIMIT) {
+        this->currentZoomNumerator = zoomNumerator;
+        this->currentZoomDenominator = zoomDenominator;
+        this->updateQGraphicsView();
     }
     this->on_zoomEdit_escPressed();
 }
 
 void LevelCelView::on_zoomEdit_escPressed()
 {
-    this->ui->zoomEdit->setText(QString::number(this->currentZoomFactor));
+    this->ui->zoomEdit->setText(QString::number(this->currentZoomNumerator) + ":" + QString::number(this->currentZoomDenominator));
     this->ui->zoomEdit->clearFocus();
 }
 

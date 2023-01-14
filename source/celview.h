@@ -13,10 +13,10 @@
 
 #include "d1gfx.h"
 
+#define ZOOM_LIMIT 10
 #define CEL_SCENE_SPACING 8
 
 namespace Ui {
-class CelScene;
 class CelView;
 } // namespace Ui
 
@@ -28,6 +28,8 @@ class CelScene : public QGraphicsScene {
 public:
     CelScene(QWidget *view);
 
+    static void parseZoomValue(QString &zoom, int &zoomNumerator, int &zoomDenominator);
+
 private slots:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
@@ -37,6 +39,7 @@ private slots:
 
 signals:
     void framePixelClicked(unsigned x, unsigned y);
+    void showContextMenu(const QPoint &pos);
 
 private:
     QWidget *view;
@@ -67,8 +70,7 @@ private:
     void updateGroupIndex();
     void setGroupIndex();
 
-public slots:
-    void ShowContextMenu(const QPoint &pos);
+    void updateQGraphicsView();
 
 private slots:
     void on_firstFrameButton_clicked();
@@ -100,6 +102,8 @@ private slots:
     void dragMoveEvent(QDragMoveEvent *event);
     void dropEvent(QDropEvent *event);
 
+    void ShowContextMenu(const QPoint &pos);
+
 private:
     Ui::CelView *ui;
     CelScene *celScene;
@@ -107,7 +111,8 @@ private:
     D1Gfx *gfx;
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;
-    quint8 currentZoomFactor = 1;
+    quint8 currentZoomNumerator = 1;
+    quint8 currentZoomDenominator = 1;
     quint16 currentPlayDelay = 50;
 
     QTimer playTimer;
