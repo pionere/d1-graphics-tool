@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QGraphicsPixmapItem>
+#include <QImageReader>
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
@@ -332,7 +333,7 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &
     QImageReader reader = QImageReader(imagefilePath);
     int numImages = 0;
 
-    do {
+    while (true) {
         QImage image = reader.read();
         if (image.isNull()) {
             break;
@@ -453,7 +454,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString
     QImageReader reader = QImageReader(imagefilePath);
     int numImages = 0;
 
-    do {
+    while (true) {
         QImage image = reader.read();
         if (image.isNull()) {
             break;
@@ -624,7 +625,7 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &i
     QImageReader reader = QImageReader(imagefilePath);
     int numImages = 0;
 
-    do {
+    while (true) {
         QImage image = reader.read();
         if (image.isNull()) {
             break;

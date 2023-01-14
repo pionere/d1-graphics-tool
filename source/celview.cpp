@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QGraphicsPixmapItem>
+#include <QImageReader>
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
@@ -170,7 +171,7 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
     QImageReader reader = QImageReader(imagefilePath);
     int numImages = 0;
 
-    do {
+    while (true) {
         QImage image = reader.read();
         if (image.isNull()) {
             break;
