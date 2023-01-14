@@ -65,6 +65,37 @@ void CelScene::contextMenuEvent(QContextMenuEvent *event)
     emit this->showContextMenu(event->globalPos());
 }
 
+void CelScene::parseZoomValue(QString &zoom, int &zoomNumerator, int &zoomDenominator)
+{
+    int sepIdx = zoom.indexOf(":");
+
+    if (sepIdx >= 0) {
+        if (sepIdx == 0) {
+            zoomNumerator = 1;
+            zoomDenominator = zoom.mid(1).toUShort();
+        } else if (sepIdx == zoom.length() - 1) {
+            zoom.chop(1);
+            zoomNumerator = zoom.toUShort();
+            zoomDenominator = 1;
+        } else {
+            zoomNumerator = zoom.mid(0, sepIdx).toUShort();
+            zoomDenominator = zoom.mid(sepIdx + 1).toUShort();
+            if (zoomNumerator != 1 && zoomDenominator != 1) {
+                if (zoomNumerator > zoomDenominator) {
+                    zoomNumerator = zoomNumerator / zoomDenominator;
+                    zoomDenominator = 1;
+                } else {
+                    zoomDenominator = zoomDenominator / zoomNumerator;
+                    zoomNumerator = 1;
+                }
+            }
+        }
+    } else {
+        zoomNumerator = zoom.toUShort();
+        zoomDenominator = 1;
+    }
+}
+
 CelView::CelView(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::CelView())
@@ -72,8 +103,8 @@ CelView::CelView(QWidget *parent)
 {
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(this->celScene);
-    this->ui->zoomEdit->setText(QString::number(this->currentZoomFactor));
-    this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
+    this->on_zoomEdit_escPressed();
+    this->on_playDelayEdit_escPressed();
     this->ui->stopButton->setEnabled(false);
     this->playTimer.connect(&this->playTimer, SIGNAL(timeout()), this, SLOT(playGroup()));
 
@@ -449,44 +480,60 @@ void CelView::on_lastGroupButton_clicked()
     this->displayFrame();
 }
 
+void CelView::updateQGraphicsView()
+{
+    qreal zoomFactor = (qreal)this->currentZoomNumerator / this->currentZoomDenominator;
+    QGraphicsView *view = this->ui->celGraphicsView;
+
+    view->resetTransform();
+    view->scale(zoomFactor, zoomFactor);
+    view->show();
+}
+
 void CelView::on_zoomOutButton_clicked()
 {
-    if (this->currentZoomFactor > 1) {
-        this->currentZoomFactor -= 1;
-        ui->celGraphicsView->resetTransform();
-        ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
-        ui->celGraphicsView->show();
+    if (this->currentZoomNumerator > 1 || this->currentZoomDenominator < ZOOM_LIMIT) {
+        if (this->currentZoomNumerator > 1) {
+            this->currentZoomNumerator--;
+        } else {
+            this->currentZoomDenominator++;
+        }
+        this->updateQGraphicsView();
     }
     this->on_zoomEdit_escPressed();
 }
 
 void CelView::on_zoomInButton_clicked()
 {
-    if (this->currentZoomFactor < 10) {
-        this->currentZoomFactor += 1;
-        ui->celGraphicsView->resetTransform();
-        ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
-        ui->celGraphicsView->show();
+    if (this->currentZoomNumerator < ZOOM_LIMIT) {
+        if (this->currentZoomDenominator > 1) {
+            this->currentZoomDenominator--;
+        } else {
+            this->currentZoomNumerator++;
+        }
+        this->updateQGraphicsView();
     }
     this->on_zoomEdit_escPressed();
 }
 
 void CelView::on_zoomEdit_returnPressed()
 {
-    quint8 zoom = this->ui->zoomEdit->text().toUShort();
+    int zoomNumerator, zoomDenominator;
+    QString zoom = this->ui->zoomEdit->text();
 
-    if (zoom >= 1 && zoom <= 10) {
-        this->currentZoomFactor = zoom;
-        ui->celGraphicsView->resetTransform();
-        ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
-        ui->celGraphicsView->show();
+    CelScene::parseZoomValue(zoom, zoomNumerator, zoomDenominator);
+
+    if (zoomNumerator <= ZOOM_LIMIT && zoomDenominator <= ZOOM_LIMIT) {
+        this->currentZoomNumerator = zoomNumerator;
+        this->currentZoomDenominator = zoomDenominator;
+        this->updateQGraphicsView();
     }
     this->on_zoomEdit_escPressed();
 }
 
 void CelView::on_zoomEdit_escPressed()
 {
-    this->ui->zoomEdit->setText(QString::number(this->currentZoomFactor));
+    this->ui->zoomEdit->setText(QString::number(this->currentZoomNumerator) + ":" + QString::number(this->currentZoomDenominator));
     this->ui->zoomEdit->clearFocus();
 }
 

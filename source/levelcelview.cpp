@@ -23,8 +23,8 @@ LevelCelView::LevelCelView(QWidget *parent)
 {
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(this->celScene);
-    this->ui->zoomEdit->setText(QString::number(this->currentZoomFactor));
-    this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
+    this->on_zoomEdit_escPressed();
+    this->on_playDelayEdit_escPressed();
     this->ui->stopButton->setEnabled(false);
     this->playTimer.connect(&this->playTimer, SIGNAL(timeout()), this, SLOT(playGroup()));
     this->ui->tilesTabs->addTab(this->tabTileWidget, "Tile properties");
@@ -1789,44 +1789,60 @@ void LevelCelView::on_minFrameHeightEdit_escPressed()
     this->ui->minFrameHeightEdit->clearFocus();
 }
 
+void LevelCelView::updateQGraphicsView()
+{
+    qreal zoomFactor = (qreal)this->currentZoomNumerator / this->currentZoomDenominator;
+    QGraphicsView *view = this->ui->celGraphicsView;
+
+    view->resetTransform();
+    view->scale(zoomFactor, zoomFactor);
+    view->show();
+}
+
 void LevelCelView::on_zoomOutButton_clicked()
 {
-    if (this->currentZoomFactor > 1) {
-        this->currentZoomFactor -= 1;
-        ui->celGraphicsView->resetTransform();
-        ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
-        ui->celGraphicsView->show();
+    if (this->currentZoomNumerator > 1 || this->currentZoomDenominator < ZOOM_LIMIT) {
+        if (this->currentZoomNumerator > 1) {
+            this->currentZoomNumerator--;
+        } else {
+            this->currentZoomDenominator++;
+        }
+        this->updateQGraphicsView();
     }
     this->on_zoomEdit_escPressed();
 }
 
 void LevelCelView::on_zoomInButton_clicked()
 {
-    if (this->currentZoomFactor < 10) {
-        this->currentZoomFactor += 1;
-        ui->celGraphicsView->resetTransform();
-        ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
-        ui->celGraphicsView->show();
+    if (this->currentZoomNumerator < ZOOM_LIMIT) {
+        if (this->currentZoomDenominator > 1) {
+            this->currentZoomDenominator--;
+        } else {
+            this->currentZoomNumerator++;
+        }
+        this->updateQGraphicsView();
     }
     this->on_zoomEdit_escPressed();
 }
 
 void LevelCelView::on_zoomEdit_returnPressed()
 {
-    quint8 zoom = this->ui->zoomEdit->text().toUShort();
+    int zoomNumerator, zoomDenominator;
+    QString zoom = this->ui->zoomEdit->text();
 
-    if (zoom >= 1 && zoom <= 10) {
-        this->currentZoomFactor = zoom;
-        ui->celGraphicsView->resetTransform();
-        ui->celGraphicsView->scale(this->currentZoomFactor, this->currentZoomFactor);
-        ui->celGraphicsView->show();
+    CelScene::parseZoomValue(zoom, zoomNumerator, zoomDenominator);
+
+    if (zoomNumerator <= ZOOM_LIMIT && zoomDenominator <= ZOOM_LIMIT) {
+        this->currentZoomNumerator = zoomNumerator;
+        this->currentZoomDenominator = zoomDenominator;
+        this->updateQGraphicsView();
     }
     this->on_zoomEdit_escPressed();
 }
 
 void LevelCelView::on_zoomEdit_escPressed()
 {
-    this->ui->zoomEdit->setText(QString::number(this->currentZoomFactor));
+    this->ui->zoomEdit->setText(QString::number(this->currentZoomNumerator) + ":" + QString::number(this->currentZoomDenominator));
     this->ui->zoomEdit->clearFocus();
 }
 

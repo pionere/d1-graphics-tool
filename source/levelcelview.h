@@ -99,6 +99,8 @@ private:
     bool sortFrames_impl();
     bool sortSubtiles_impl();
 
+    void updateQGraphicsView();
+
 signals:
     void frameRefreshed();
     void colorIndexClicked(quint8);
@@ -163,7 +165,8 @@ private:
     int currentFrameIndex = 0;
     int currentSubtileIndex = 0;
     int currentTileIndex = 0;
-    quint8 currentZoomFactor = 1;
+    quint8 currentZoomNumerator = 1;
+    quint8 currentZoomDenominator = 1;
     quint16 currentPlayDelay = 50;
 
     QTimer playTimer;
