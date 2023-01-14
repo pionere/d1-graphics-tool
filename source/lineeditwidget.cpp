@@ -38,7 +38,7 @@ void LineEditWidget::focusOutEvent(QFocusEvent *event)
         QKeyEvent *kpEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_Enter, Qt::NoModifier);
         QCoreApplication::postEvent(this, kpEvent);
     } else {
-        // cancel otherwise, but prevent infinite loop 
+        // cancel otherwise
         emit cancel_signal();
     }
 
