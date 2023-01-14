@@ -104,7 +104,7 @@ static bool validBottomRightTriangle(const D1GfxFrame *frame, QString &msg, int 
 
 static bool validLeftTriangle(const D1GfxFrame *frame, QString &msg, int *limit)
 {
-    if (!validBottomLeftTriangle(frame, msg)) {
+    if (!validBottomLeftTriangle(frame, msg, limit)) {
         return false;
     }
     for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
@@ -176,9 +176,9 @@ D1CEL_FRAME_TYPE LevelTabFrameWidget::altFrameType(D1GfxFrame *frame, int *limit
         if (validSquare(frame, tmp, &limitSquare)) {
             frameType = D1CEL_FRAME_TYPE::Square;
             *limit = limitSquare;
-        } else if (validLeftTriangle(frame, tmp, &limiLeftTriangle)) {
+        } else if (validLeftTriangle(frame, tmp, &limitLeftTriangle)) {
             frameType = D1CEL_FRAME_TYPE::LeftTriangle;
-            *limit = limiLeftTriangle;
+            *limit = limitLeftTriangle;
         } else if (validRightTriangle(frame, tmp, &limitRightTriangle)) {
             frameType = D1CEL_FRAME_TYPE::RightTriangle;
             *limit = limitRightTriangle;
@@ -196,7 +196,7 @@ D1CEL_FRAME_TYPE LevelTabFrameWidget::altFrameType(D1GfxFrame *frame, int *limit
 void LevelTabFrameWidget::selectFrameType(D1GfxFrame *frame)
 {
     int limit = 0;
-    D1CEL_FRAME_TYPE frameType = LevelTabFrameWidget::altFrameType(frame, limit);
+    D1CEL_FRAME_TYPE frameType = LevelTabFrameWidget::altFrameType(frame, &limit);
     frame->setFrameType(frameType);
     /*D1CEL_FRAME_TYPE frameType = D1CEL_FRAME_TYPE::TransparentSquare;
     QString tmp;
