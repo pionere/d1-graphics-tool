@@ -62,7 +62,7 @@ void CelScene::dropEvent(QGraphicsSceneDragDropEvent *event)
 
 void CelScene::contextMenuEvent(QContextMenuEvent *event)
 {
-    emit this->ShowContextMenu(event->globalPos());
+    emit this->showContextMenu(event->globalPos());
 }
 
 void CelScene::parseZoomValue(QString &zoom, int &zoomNumerator, int &zoomDenominator)
