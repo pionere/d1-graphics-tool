@@ -985,6 +985,13 @@ void LevelCelView::inefficientFrames()
             report.append(line);
         }
     }
+
+    if (report.isEmpty()) {
+        report = "The frames are optimal.";
+    } else {
+        report.chop(1);
+    }
+    QMessageBox::information(this, "Information", report);
 }
 
 void LevelCelView::removeUnusedFrames(QString &report)
