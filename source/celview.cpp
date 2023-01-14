@@ -167,14 +167,20 @@ void CelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefil
 
 void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
 {
-    QImage image = QImage(imagefilePath);
+    QImageReader reader = QImageReader(imagefilePath);
+    int numImages = 0;
 
-    if (!image.isNull()) {
-        this->gfx->insertFrame(index, image);
-        return;
+    do {
+        QImage image = reader.read();
+        if (image.isNull()) {
+            break;
+        }
+        this->gfx->insertFrame(index + numImages, image);
+        numImages++;
     }
-    if (mode != IMAGE_FILE_MODE::AUTO) {
-        QMessageBox::critical(nullptr, "Error", "Failed open image file: " + imagefilePath);
+
+    if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
+        QMessageBox::critical(this, "Error", "Failed read image file: " + imagefilePath);
     }
 }
 

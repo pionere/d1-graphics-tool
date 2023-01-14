@@ -4,6 +4,8 @@
 #include <QFocusEvent>
 #include <QKeyEvent>
 
+#include "lineeditwidget.h"
+
 class ComboBoxWidget : public QComboBox {
     Q_OBJECT
 
@@ -15,8 +17,12 @@ public:
 
 signals:
     void cancel_signal();
+    void returnPressed();
 
-protected:
+/*protected:
     void keyPressEvent(QKeyEvent *event);
-    void focusOutEvent(QFocusEvent *event);
+    void focusOutEvent(QFocusEvent *event);*/
+
+private:
+    LineEditWidget *lineEditWiget;
 };
