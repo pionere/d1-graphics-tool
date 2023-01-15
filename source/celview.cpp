@@ -57,8 +57,8 @@ void CelScene::dropEvent(QGraphicsSceneDragDropEvent *event)
         filePaths.append(url.toLocalFile());
     }
     // try to insert as frames
-    if (this->activeWindow() != this->view->window()) {
-        QMessageBox::warning(nullprt, "Err", "Sad day");
+    if (this->activeWindow() != (QWidget *)this->view->window()) {
+        QMessageBox::warning(nullptr, "Err", "Sad day");
     }
     ((MainWindow *)this->view->window())->openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
 }
