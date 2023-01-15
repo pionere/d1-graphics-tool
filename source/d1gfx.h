@@ -60,7 +60,7 @@ protected:
     // fields of cel/cl2-frames
     bool clipped = false;
     // fields of tileset-frames
-    D1CEL_FRAME_TYPE frameType = D1CEL_FRAME_TYPE::Unknown;
+    D1CEL_FRAME_TYPE frameType = D1CEL_FRAME_TYPE::TransparentSquare;
 };
 
 enum class D1CEL_TYPE {

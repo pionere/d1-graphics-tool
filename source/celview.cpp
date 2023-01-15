@@ -57,6 +57,9 @@ void CelScene::dropEvent(QGraphicsSceneDragDropEvent *event)
         filePaths.append(url.toLocalFile());
     }
     // try to insert as frames
+    if (this->activeWindow() != this->view->window()) {
+        QMessageBox::warning(nullprt, "Err", "Sad day");
+    }
     ((MainWindow *)this->view->window())->openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
 }
 
@@ -519,8 +522,9 @@ void CelView::on_zoomInButton_clicked()
 void CelView::on_zoomEdit_returnPressed()
 {
     int zoomNumerator, zoomDenominator;
+    QString zoom = this->ui->zoomEdit->text();
 
-    CelScene::parseZoomValue(this->ui->zoomEdit->text(), zoomNumerator, zoomDenominator);
+    CelScene::parseZoomValue(zoom, zoomNumerator, zoomDenominator);
 
     if (zoomNumerator <= ZOOM_LIMIT && zoomDenominator <= ZOOM_LIMIT) {
         this->currentZoomNumerator = zoomNumerator;

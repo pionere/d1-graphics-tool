@@ -141,7 +141,7 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
         // When a CEL frame is clicked in the subtile, display the corresponding CEL frame
 
         // Adjust coordinates
-        unsigned stx = x - celFrameWidth - CEL_SCENE_SPACING * 2;
+        unsigned stx = x - (celFrameWidth + CEL_SCENE_SPACING * 2);
         unsigned sty = y - CEL_SCENE_SPACING;
 
         // qDebug() << "Subtile clicked: " << stx << "," << sty;
@@ -157,12 +157,12 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
     } else if (x >= (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
         && x < (celFrameWidth + subtileWidth + tileWidth + CEL_SCENE_SPACING * 3)
         && y >= CEL_SCENE_SPACING
-        && y < tileHeight + CEL_SCENE_SPACING
+        && y < (tileHeight + CEL_SCENE_SPACING)
         && this->til->getTileCount() != 0) {
         // When a subtile is clicked in the tile, display the corresponding subtile
 
         // Adjust coordinates
-        unsigned tx = x - celFrameWidth - subtileWidth - CEL_SCENE_SPACING * 3;
+        unsigned tx = x - (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3);
         unsigned ty = y - CEL_SCENE_SPACING;
 
         // qDebug() << "Tile clicked" << tx << "," << ty;
@@ -919,6 +919,8 @@ static const char *getFrameTypeName(D1CEL_FRAME_TYPE type)
         return "Left Trapezoid";
     case D1CEL_FRAME_TYPE::RightTrapezoid:
         return "Right Trapezoid";
+    case D1CEL_FRAME_TYPE::Empty:
+        return "Empty";
     default:
         return "Unknown";
     }
@@ -1868,8 +1870,9 @@ void LevelCelView::on_zoomInButton_clicked()
 void LevelCelView::on_zoomEdit_returnPressed()
 {
     int zoomNumerator, zoomDenominator;
+    QString zoom = this->ui->zoomEdit->text();
 
-    CelScene::parseZoomValue(this->ui->zoomEdit->text(), zoomNumerator, zoomDenominator);
+    CelScene::parseZoomValue(zoom, zoomNumerator, zoomDenominator);
 
     if (zoomNumerator <= ZOOM_LIMIT && zoomDenominator <= ZOOM_LIMIT) {
         this->currentZoomNumerator = zoomNumerator;
