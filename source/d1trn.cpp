@@ -58,14 +58,14 @@ bool D1Trn::isModified() const
 void D1Trn::refreshResultingPalette()
 {
     for (int i = 0; i < D1TRN_TRANSLATIONS; i++) {
-        this->resultingPalette->setColor(
+        this->resultingPalette.setColor(
             i, this->palette->getColor(this->translations[i]));
     }
 }
 
 QColor D1Trn::getResultingColor(quint8 index)
 {
-    return this->resultingPalette->getColor(index);
+    return this->resultingPalette.getColor(index);
 }
 
 QString D1Trn::getFilePath()
@@ -92,5 +92,5 @@ void D1Trn::setPalette(D1Pal *pal)
 
 D1Pal *D1Trn::getResultingPalette()
 {
-    return this->resultingPalette;
+    return &this->resultingPalette;
 }
