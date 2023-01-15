@@ -1,5 +1,6 @@
 #include "d1pal.h"
 
+#include <QDataStream>
 #include <QTextStream>
 
 bool D1Pal::load(QString filePath)

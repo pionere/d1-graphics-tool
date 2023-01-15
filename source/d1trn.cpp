@@ -18,7 +18,7 @@ bool D1Trn::load(QString filePath)
     if (file.size() != D1TRN_TRANSLATIONS)
         return false;
 
-    int readBytes = file.read(this->translations, D1TRN_TRANSLATIONS);
+    int readBytes = file.read((char *)this->translations, D1TRN_TRANSLATIONS);
     if (readBytes < D1TRN_TRANSLATIONS)
         return false;
 
@@ -36,7 +36,7 @@ bool D1Trn::save(QString filePath)
     if (!file.open(QIODevice::WriteOnly))
         return false;
 
-    int outBytes = file.write(this->translations, D1TRN_TRANSLATIONS);
+    int outBytes = file.write((char *)this->translations, D1TRN_TRANSLATIONS);
     if (outBytes != D1TRN_TRANSLATIONS)
         return false;
 
