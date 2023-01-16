@@ -186,6 +186,7 @@ bool D1Til::setSubtileIndex(int tileIndex, int index, int subtileIndex)
         return false;
     }
     this->subtileIndices[tileIndex][index] = subtileIndex;
+    this->modified = true;
     return true;
 }
 
