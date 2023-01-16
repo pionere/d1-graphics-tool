@@ -103,7 +103,7 @@ void D1Sol::insertSubtile(int subtileIndex, quint8 value)
     this->modified = true;
 }
 
-boold D1Sol::setSubtileProperties(int subtileIndex, quint8 value)
+bool D1Sol::setSubtileProperties(int subtileIndex, quint8 value)
 {
     if (this->subProperties[subtileIndex] == value) {
         return false;

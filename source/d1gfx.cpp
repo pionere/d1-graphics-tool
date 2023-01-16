@@ -278,10 +278,10 @@ int D1Gfx::getFrameHeight(int frameIndex)
 
 bool D1Gfx::setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType)
 {
-    if (this->frames[frameIndex].frameType == frameType) {
+    if (this->frames[frameIndex].getFrameType() == frameType) {
         return false;
     }
-    this->frames[frameIndex].frameType = frameType;
+    this->frames[frameIndex].setFrameType(frameType);
     this->modified = true;
     return true;
 }

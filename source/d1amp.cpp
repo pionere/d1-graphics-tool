@@ -125,7 +125,7 @@ quint8 D1Amp::getTileProperties(quint16 tileIndex)
     return this->properties.at(tileIndex);
 }
 
-void D1Amp::setTileType(quint16 tileIndex, quint8 value)
+bool D1Amp::setTileType(quint16 tileIndex, quint8 value)
 {
     if (this->types[tileIndex] == value) {
         return false;

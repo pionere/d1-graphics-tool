@@ -165,7 +165,7 @@ bool D1Til::isModified() const
     return this->modified;
 }
 
-void D1Til::setModified();
+void D1Til::setModified()
 {
     this->modified = true;
 }

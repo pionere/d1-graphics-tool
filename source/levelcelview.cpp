@@ -44,9 +44,9 @@ LevelCelView::LevelCelView(QWidget *parent)
     QObject::connect(this->ui->playDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_playDelayEdit_escPressed()));
 
     // modified events of the tabs
-    QObject::connect(this->tabTileWidget, SIGNAL(modified()), this, &LevelCelView::updateLabel);
-    QObject::connect(this->tabSubTileWidget, SIGNAL(modified()), this, &LevelCelView::updateLabel);
-    QObject::connect(this->tabFrameWidget, SIGNAL(modified()), this, &LevelCelView::updateLabel);
+    QObject::connect(this->tabTileWidget, SIGNAL(modified()), this, SLOT(LevelCelView::updateLabel()));
+    QObject::connect(this->tabSubTileWidget, SIGNAL(modified()), this, SLOT(LevelCelView::updateLabel()));
+    QObject::connect(this->tabFrameWidget, SIGNAL(modified()), this, SLOT(LevelCelView::updateLabel()));
 
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
