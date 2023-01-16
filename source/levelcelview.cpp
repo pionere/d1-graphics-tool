@@ -92,27 +92,27 @@ void LevelCelView::updateLabel()
         label += "*";
     }
     label += ", ";
-    label = minFileInfo.fileName();
+    label += minFileInfo.fileName();
     if (this->min->isModified()) {
         label += "*";
     }
     label += ", ";
-    label = tilFileInfo.fileName();
+    label += tilFileInfo.fileName();
     if (this->til->isModified()) {
         label += "*";
     }
     label += ", ";
-    label = solFileInfo.fileName();
+    label += solFileInfo.fileName();
     if (this->sol->isModified()) {
         label += "*";
     }
     label += ", ";
-    label = ampFileInfo.fileName();
+    label += ampFileInfo.fileName();
     if (this->amp->isModified()) {
         label += "*";
     }
     label += ", ";
-    label = tmiFileInfo.fileName();
+    label += tmiFileInfo.fileName();
     if (this->tmi->isModified()) {
         label += "*";
     }
