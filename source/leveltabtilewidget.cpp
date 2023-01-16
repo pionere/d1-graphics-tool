@@ -109,20 +109,14 @@ void LevelTabTileWidget::updateSubtilesSelection(int index)
     this->ui->subtilesNextButton->setEnabled(subtileIdx < this->min->getSubtileCount() - 1);
 }
 
-void LevelTabTileWidget::updateAmpType()
-{
-    int tileIdx = this->levelCelView->getCurrentTileIndex();
-    quint8 index = this->readAmpType();
-
-    this->amp->setTileType(tileIdx, index);
-}
-
 void LevelTabTileWidget::updateAmpProperty()
 {
     int tileIdx = this->levelCelView->getCurrentTileIndex();
     quint8 flags = this->readAmpProperty();
 
-    this->amp->setTileProperties(tileIdx, flags);
+    if (this->amp->setTileProperties(tileIdx, flags)) {
+        this->levelCelView->updateLabel();
+    }
 }
 
 quint8 LevelTabTileWidget::readAmpProperty()
@@ -147,15 +141,16 @@ quint8 LevelTabTileWidget::readAmpProperty()
     return flags;
 }
 
-quint8 LevelTabTileWidget::readAmpType()
-{
-    return this->ui->ampTypeComboBox->currentIndex();
-}
-
 void LevelTabTileWidget::on_ampTypeComboBox_activated(int index)
 {
-    if (!this->onUpdate) {
-        this->updateAmpType();
+    int tileIdx = this->levelCelView->getCurrentTileIndex();
+
+    if (this->onUpdate) {
+        return;
+    }
+
+    if (this->amp->setTileType(tileIdx, index)) {
+        this->levelCelView->updateLabel();
     }
 }
 
@@ -206,16 +201,17 @@ void LevelTabTileWidget::on_subtilesPrevButton_clicked()
     QList<quint16> &subtileIndices = this->til->getSubtileIndices(tileIdx);
     int subtileIdx = subtileIndices[index] - 1;
 
-    if (subtileIdx > this->min->getSubtileCount() - 1) {
-        subtileIdx = this->min->getSubtileCount() - 1;
+    if (subtileIdx < 0) {
+        subtileIdx = 0;
     }
 
-    subtileIndices[index] = subtileIdx;
+    if (this->til->setSubtileIndex(tileIdx, index, subtileIdx)) {
+        // this->ui->subtilesComboBox->setItemText(index, QString::number(subtileIdx + 1));
+        // this->updateSubtilesSelection(index);
 
-    // this->ui->subtilesComboBox->setItemText(index, QString::number(subtileIdx + 1));
-    // this->updateSubtilesSelection(index);
-
-    this->levelCelView->displayFrame();
+        this->levelCelView->updateLabel();
+        this->levelCelView->displayFrame();
+    }
 }
 
 void LevelTabTileWidget::on_subtilesComboBox_activated(int index)
@@ -228,19 +224,20 @@ void LevelTabTileWidget::on_subtilesComboBox_activated(int index)
 void LevelTabTileWidget::on_subtilesComboBox_currentTextChanged(const QString &arg1)
 {
     int index = this->lastSubTileEntryIndex;
-    int subtileIdx = this->ui->subtilesComboBox->currentText().toInt() - 1;
 
     if (this->onUpdate || this->ui->subtilesComboBox->currentIndex() != index)
         return; // on update or side effect of combobox activated -> ignore
 
-    if (subtileIdx >= 0 && subtileIdx < this->min->getSubtileCount()) {
-        int tileIdx = this->levelCelView->getCurrentTileIndex();
+    int subtileIdx = this->ui->subtilesComboBox->currentText().toInt() - 1;
+    if (subtileIdx < 0 || subtileIdx >= this->min->getSubtileCount())
+        return; // invalid value -> ignore
 
-        this->til->getSubtileIndices(tileIdx)[index] = subtileIdx;
-
+    int tileIdx = this->levelCelView->getCurrentTileIndex();
+    if (this->til->setSubtileIndex(tileIdx, index, subtileIdx)) {
         // this->ui->subtilesComboBox->setItemText(index, QString::number(subtileIdx + 1));
         // this->updateSubtilesSelection(index);
 
+        this->levelCelView->updateLabel();
         this->levelCelView->displayFrame();
     }
 }
@@ -256,10 +253,11 @@ void LevelTabTileWidget::on_subtilesNextButton_clicked()
         subtileIdx = this->min->getSubtileCount() - 1;
     }
 
-    subtileIndices[index] = subtileIdx;
+    if (this->til->setSubtileIndex(tileIdx, index, subtileIdx)) {
+        // this->ui->subtilesComboBox->setItemText(index, QString::number(subtileIdx + 1));
+        // this->updateSubtilesSelection(index);
 
-    // this->ui->subtilesComboBox->setItemText(index, QString::number(subtileIdx + 1));
-    // this->updateSubtilesSelection(index);
-
-    this->levelCelView->displayFrame();
+        this->levelCelView->updateLabel();
+        this->levelCelView->displayFrame();
+    }
 }

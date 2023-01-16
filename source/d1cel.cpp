@@ -11,9 +11,6 @@
 bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
 {
     // Opening CEL file with a QBuffer to load it in RAM
-    if (!QFile::exists(filePath))
-        return false;
-
     QFile file = QFile(filePath);
 
     if (!file.open(QIODevice::ReadOnly))
@@ -140,6 +137,7 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
     }
 
     gfx.gfxFilePath = filePath;
+    gfx.modified = false;
     return true;
 }
 
@@ -369,6 +367,7 @@ bool D1Cel::save(D1Gfx &gfx, const SaveAsParam &params)
 
     if (result) {
         gfx.gfxFilePath = filePath; //  D1Cel::load(gfx, filePath);
+        gfx.modified = false;
     }
     return result;
 }

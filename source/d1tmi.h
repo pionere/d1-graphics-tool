@@ -24,10 +24,12 @@ public:
     void remapSubtiles(const QMap<unsigned, unsigned> &remap);
 
     QString getFilePath();
+    bool isModified() const;
     quint8 getSubtileProperties(int subtileIndex);
-    void setSubtileProperties(int subtileIndex, quint8 value);
+    bool setSubtileProperties(int subtileIndex, quint8 value);
 
 private:
     QString tmiFilePath;
+    bool modified;
     QList<quint8> subProperties;
 };

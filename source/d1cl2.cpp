@@ -150,9 +150,6 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
 bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
 {
     // Opening CL2 file with a QBuffer to load it in RAM
-    if (!QFile::exists(filePath))
-        return false;
-
     QFile file = QFile(filePath);
 
     if (!file.open(QIODevice::ReadOnly))
@@ -281,6 +278,7 @@ bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
     }
 
     gfx.gfxFilePath = filePath;
+    gfx.modified = false;
     return true;
 }
 
@@ -489,6 +487,7 @@ bool D1Cl2::save(D1Gfx &gfx, const SaveAsParam &params)
 
     if (result) {
         gfx.gfxFilePath = filePath; // D1Cl2::load(gfx, filePath);
+        gfx.modified = false;
     }
     return result;
 }

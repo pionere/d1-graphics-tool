@@ -69,6 +69,7 @@ public:
     void sortSubtiles();
     void sortTileset();
 
+    void updateLabel();
     void displayFrame();
 
 private:

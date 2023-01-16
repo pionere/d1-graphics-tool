@@ -77,6 +77,7 @@ class D1Gfx : public QObject {
     friend class D1Cel;
     friend class D1Cl2;
     friend class D1CelTileset;
+    friend class D1Min;
 
 public:
     D1Gfx() = default;
@@ -94,7 +95,8 @@ public:
     bool isUpscaled() const;
     void setUpscaled(bool upscaled);
     QString getFilePath();
-    D1Pal *getPalette();
+    bool isModified() const;
+    void setModified();
     void setPalette(D1Pal *pal);
     int getGroupCount();
     QPair<quint16, quint16> getGroupFrameIndices(int groupIndex);
@@ -102,10 +104,12 @@ public:
     D1GfxFrame *getFrame(int frameIndex);
     int getFrameWidth(int frameIndex);
     int getFrameHeight(int frameIndex);
+    bool setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType);
 
 protected:
     D1CEL_TYPE type = D1CEL_TYPE::V1_REGULAR;
     QString gfxFilePath;
+    bool modified;
     D1Pal *palette = nullptr;
     QList<QPair<quint16, quint16>> groupFrameIndices;
     QList<D1GfxFrame> frames;

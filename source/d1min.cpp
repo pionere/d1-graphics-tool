@@ -59,7 +59,7 @@ bool D1Min::load(QString filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CE
     if (params.upscaled == OPEN_UPSCALED_TYPE::AUTODETECT) {
         upscaled = width != 2;
     }
-    g->setUpscaled(upscaled);
+    g->upscaled = upscaled; // setUpscaled
 
     this->gfx = g;
     this->subtileWidth = width;
@@ -105,6 +105,7 @@ bool D1Min::load(QString filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CE
         }
     }
     this->minFilePath = filePath;
+    this->modified = !file.isOpen();
     return true;
 }
 
@@ -158,6 +159,7 @@ bool D1Min::save(const SaveAsParam &params)
     }
 
     this->minFilePath = filePath; // this->load(filePath, subtileCount);
+    this->modified = false;
 
     return true;
 }
@@ -198,6 +200,16 @@ QString D1Min::getFilePath()
     return this->minFilePath;
 }
 
+bool D1Min::isModified() const
+{
+    return this->modified;
+}
+
+void D1Min::setModified()
+{
+    this->modified = true;
+}
+
 int D1Min::getSubtileCount()
 {
     return this->celFrameIndices.count();
@@ -215,6 +227,9 @@ void D1Min::setSubtileWidth(int width)
     }
     int prevWidth = this->subtileWidth;
     int diff = width - prevWidth;
+    if (diff == 0) {
+        return;
+    }
     if (diff > 0) {
         // extend the subtile-width
         for (int i = 0; i < this->celFrameIndices.size(); i++) {
@@ -258,6 +273,7 @@ void D1Min::setSubtileWidth(int width)
         }
     }
     this->subtileWidth = width;
+    this->modified = true;
 }
 
 quint16 D1Min::getSubtileHeight()
@@ -272,6 +288,9 @@ void D1Min::setSubtileHeight(int height)
     }
     int width = this->subtileWidth;
     int diff = height - this->subtileHeight;
+    if (diff == 0) {
+        return;
+    }
     if (diff > 0) {
         // extend the subtile-height
         int n = diff * width;
@@ -309,6 +328,7 @@ void D1Min::setSubtileHeight(int height)
         }
     }
     this->subtileHeight = height;
+    this->modified = true;
 }
 
 QList<quint16> &D1Min::getCelFrameIndices(int subtileIndex)
@@ -316,9 +336,19 @@ QList<quint16> &D1Min::getCelFrameIndices(int subtileIndex)
     return const_cast<QList<quint16> &>(this->celFrameIndices.at(subtileIndex));
 }
 
+bool D1Min::setFrameIndex(int subtileIndex, int index, int frameRef)
+{
+    if (this->celFrameIndices[subtileIndex][index] == frameRef) {
+        return false;
+    }
+    this->celFrameIndices[subtileIndex][index] = frameRef;
+    return true;
+}
+
 void D1Min::insertSubtile(int subtileIndex, const QList<quint16> &frameIndicesList)
 {
     this->celFrameIndices.insert(subtileIndex, frameIndicesList);
+    this->modified = true;
 }
 
 void D1Min::createSubtile()
@@ -330,11 +360,13 @@ void D1Min::createSubtile()
         celFrameIndicesList.append(0);
     }
     this->celFrameIndices.append(celFrameIndicesList);
+    this->modified = true;
 }
 
 void D1Min::removeSubtile(int subtileIndex)
 {
     this->celFrameIndices.removeAt(subtileIndex);
+    this->modified = true;
 }
 
 void D1Min::remapSubtiles(const QMap<unsigned, unsigned> &remap)
@@ -345,4 +377,5 @@ void D1Min::remapSubtiles(const QMap<unsigned, unsigned> &remap)
         newCelFrameIndices.append(this->celFrameIndices.at(iter.value()));
     }
     this->celFrameIndices.swap(newCelFrameIndices);
+    this->modified = true;
 }

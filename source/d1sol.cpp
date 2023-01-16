@@ -43,6 +43,7 @@ bool D1Sol::load(QString filePath)
     }
 
     this->solFilePath = filePath;
+    this->modified = !file.isOpen();
     return true;
 }
 
@@ -73,6 +74,7 @@ bool D1Sol::save(const SaveAsParam &params)
     }
 
     this->solFilePath = filePath; // this->load(filePath);
+    this->modified = false;
 
     return true;
 }
@@ -80,6 +82,11 @@ bool D1Sol::save(const SaveAsParam &params)
 QString D1Sol::getFilePath()
 {
     return this->solFilePath;
+}
+
+bool D1Sol::isModified() const
+{
+    return this->modified;
 }
 
 quint16 D1Sol::getSubtileCount()
@@ -98,21 +105,29 @@ quint8 D1Sol::getSubtileProperties(int subtileIndex)
 void D1Sol::insertSubtile(int subtileIndex, quint8 value)
 {
     this->subProperties.insert(subtileIndex, value);
+    this->modified = true;
 }
 
-void D1Sol::setSubtileProperties(int subtileIndex, quint8 value)
+bool D1Sol::setSubtileProperties(int subtileIndex, quint8 value)
 {
+    if (this->subProperties[subtileIndex] == value) {
+        return false;
+    }
     this->subProperties[subtileIndex] = value;
+    this->modified = true;
+    return true;
 }
 
 void D1Sol::createSubtile()
 {
     this->subProperties.append(0);
+    this->modified = true;
 }
 
 void D1Sol::removeSubtile(int subtileIndex)
 {
     this->subProperties.removeAt(subtileIndex);
+    this->modified = true;
 }
 
 void D1Sol::remapSubtiles(const QMap<unsigned, unsigned> &remap)
@@ -123,4 +138,5 @@ void D1Sol::remapSubtiles(const QMap<unsigned, unsigned> &remap)
         newSubProperties.append(this->subProperties.at(iter.value()));
     }
     this->subProperties.swap(newSubProperties);
+    this->modified = true;
 }

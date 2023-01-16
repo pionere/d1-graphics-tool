@@ -76,6 +76,7 @@ signals:
     void colorIndexClicked(quint8);
 
 private:
+    void update();
     void insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);
     void updateGroupIndex();
     void setGroupIndex();

@@ -16,15 +16,17 @@ public:
     bool save(const SaveAsParam &params);
 
     QString getFilePath();
+    bool isModified() const;
     quint8 getTileType(quint16);
     quint8 getTileProperties(quint16);
-    void setTileType(quint16 tileIndex, quint8 value);
-    void setTileProperties(quint16 tileIndex, quint8 value);
+    bool setTileType(quint16 tileIndex, quint8 value);
+    bool setTileProperties(quint16 tileIndex, quint8 value);
     void createTile();
     void removeTile(int tileIndex);
 
 private:
     QString ampFilePath;
+    bool modified;
     QList<quint8> types;
     QList<quint8> properties;
 };

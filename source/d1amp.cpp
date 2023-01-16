@@ -56,17 +56,18 @@ bool D1Amp::load(QString filePath, int tileCount, const OpenAsParam &params)
 
     // Read AMP binary data
     QDataStream in(&fileBuffer);
-    in.setByteOrder(QDataStream::LittleEndian);
+    // in.setByteOrder(QDataStream::LittleEndian);
 
     for (int i = 0; i < ampTileCount; i++) {
-        quint8 readBytr;
-        in >> readBytr;
-        this->types[i] = readBytr;
-        in >> readBytr;
-        this->properties[i] = readBytr;
+        quint8 readByte;
+        in >> readByte;
+        this->types[i] = readByte;
+        in >> readByte;
+        this->properties[i] = readByte;
     }
 
     this->ampFilePath = filePath;
+    this->modified = !file.isOpen();
     return true;
 }
 
@@ -98,6 +99,7 @@ bool D1Amp::save(const SaveAsParam &params)
     }
 
     this->ampFilePath = filePath; // this->load(filePath, allocate);
+    this->modified = false;
 
     return true;
 }
@@ -105,6 +107,11 @@ bool D1Amp::save(const SaveAsParam &params)
 QString D1Amp::getFilePath()
 {
     return this->ampFilePath;
+}
+
+bool D1Amp::isModified() const
+{
+    return this->modified;
 }
 
 quint8 D1Amp::getTileType(quint16 tileIndex)
@@ -123,24 +130,36 @@ quint8 D1Amp::getTileProperties(quint16 tileIndex)
     return this->properties.at(tileIndex);
 }
 
-void D1Amp::setTileType(quint16 tileIndex, quint8 value)
+bool D1Amp::setTileType(quint16 tileIndex, quint8 value)
 {
+    if (this->types[tileIndex] == value) {
+        return false;
+    }
     this->types[tileIndex] = value;
+    this->modified = true;
+    return true;
 }
 
-void D1Amp::setTileProperties(quint16 tileIndex, quint8 value)
+bool D1Amp::setTileProperties(quint16 tileIndex, quint8 value)
 {
+    if (this->properties[tileIndex] == value) {
+        return false;
+    }
     this->properties[tileIndex] = value;
+    this->modified = true;
+    return true;
 }
 
 void D1Amp::createTile()
 {
     this->types.append(0);
     this->properties.append(0);
+    this->modified = true;
 }
 
 void D1Amp::removeTile(int tileIndex)
 {
     this->types.removeAt(tileIndex);
     this->properties.removeAt(tileIndex);
+    this->modified = true;
 }

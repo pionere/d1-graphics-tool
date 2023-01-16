@@ -26,11 +26,15 @@ public:
     void removeTile(int tileIndex);
 
     QString getFilePath();
+    bool isModified() const;
+    void setModified();
     int getTileCount();
     QList<quint16> &getSubtileIndices(int tileIndex);
+    bool setSubtileIndex(int tileIndex, int index, int subtileIndex);
 
 private:
     QString tilFilePath;
-    D1Min *min = nullptr;
+    bool modified;
     QList<QList<quint16>> subtileIndices;
+    D1Min *min = nullptr;
 };
