@@ -985,7 +985,7 @@ void LevelCelView::resetFrameTypes()
     } else {
         this->gfx->setModified();
         // update the view
-        this->levelCelView->updateLabel();
+        this->updateLabel();
         this->tabFrameWidget->update();
 
         report.chop(1);
