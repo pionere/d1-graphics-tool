@@ -84,6 +84,11 @@ QString D1Sol::getFilePath()
     return this->solFilePath;
 }
 
+bool D1Sol::isModified() const
+{
+    return this->modified;
+}
+
 quint16 D1Sol::getSubtileCount()
 {
     return this->subProperties.count();

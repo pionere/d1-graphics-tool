@@ -386,7 +386,7 @@ void LevelCelView::assignSubtiles(const QImage &image, int tileIndex, int subtil
     if (tileIndex >= 0) {
         subtileIndices = &this->til->getSubtileIndices(tileIndex);
         subtileIndices->clear();
-        this->til->setModfied();
+        this->til->setModified();
     }
     // TODO: merge with LevelCelView::insertTile ?
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
@@ -493,7 +493,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, const QStringList &image
             for (int n = 0; n < subtileIndices.count(); n++) {
                 if (subtileIndices[n] >= refIndex) {
                     subtileIndices[n] += deltaSubtileCount;
-                    this->til->setModfied();
+                    this->til->setModified();
                 }
             }
         }

@@ -9,11 +9,6 @@
 #define D1PAL_COLOR_BITS 8
 #define D1PAL_SIZE_BYTES 768
 
-enum class D1PAL_TYPE {
-    REGULAR,
-    JASC
-};
-
 enum class D1PAL_CYCLE_TYPE {
     CAVES,
     NEST,

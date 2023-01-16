@@ -101,6 +101,11 @@ QString D1Tmi::getFilePath()
     return this->tmiFilePath;
 }
 
+bool D1Tmi::isModified() const
+{
+    return this->modified;
+}
+
 quint8 D1Tmi::getSubtileProperties(int subtileIndex)
 {
     if (subtileIndex >= this->subProperties.count())
