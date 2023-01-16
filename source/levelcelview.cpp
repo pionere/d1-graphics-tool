@@ -988,7 +988,7 @@ void LevelCelView::resetFrameTypes()
     if (report.isEmpty()) {
         report = "No change was necessary.";
     } else {
-        this->gfx->setModfified();
+        this->gfx->setModified();
         // update the view
         this->tabFrameWidget->update();
 

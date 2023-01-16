@@ -29,6 +29,8 @@ public:
     void remapSubtiles(const QMap<unsigned, unsigned> &remap);
 
     QString getFilePath();
+    bool isModified() const;
+    void setModified();
     int getSubtileCount();
     quint16 getSubtileWidth();
     void setSubtileWidth(int width);

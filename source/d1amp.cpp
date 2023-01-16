@@ -109,6 +109,11 @@ QString D1Amp::getFilePath()
     return this->ampFilePath;
 }
 
+bool D1Amp::isModified() const
+{
+    return this->modified;
+}
+
 quint8 D1Amp::getTileType(quint16 tileIndex)
 {
     if (tileIndex >= this->types.count())

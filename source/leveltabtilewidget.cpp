@@ -144,7 +144,6 @@ quint8 LevelTabTileWidget::readAmpProperty()
 void LevelTabTileWidget::on_ampTypeComboBox_activated(int index)
 {
     int tileIdx = this->levelCelView->getCurrentTileIndex();
-    quint8 index = this->ui->ampTypeComboBox->currentIndex();
 
     if (this->onUpdate) {
         return;

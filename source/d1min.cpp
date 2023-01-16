@@ -200,6 +200,16 @@ QString D1Min::getFilePath()
     return this->minFilePath;
 }
 
+bool D1Min::isModified() const
+{
+    return this->modified;
+}
+
+void D1Min::setModified()
+{
+    this->modified = true;
+}
+
 int D1Min::getSubtileCount()
 {
     return this->celFrameIndices.count();

@@ -110,6 +110,7 @@ bool D1Sol::setSubtileProperties(int subtileIndex, quint8 value)
     }
     this->subProperties[subtileIndex] = value;
     this->modified = true;
+    return true;
 }
 
 void D1Sol::createSubtile()

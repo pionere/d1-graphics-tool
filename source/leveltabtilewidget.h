@@ -44,6 +44,7 @@ private slots:
 private:
     void updateSubtilesSelection(int index);
     quint8 readAmpType();
+    void updateAmpProperty();
     quint8 readAmpProperty();
 
     Ui::LevelTabTileWidget *ui;

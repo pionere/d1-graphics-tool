@@ -16,6 +16,7 @@ public:
     bool save(const SaveAsParam &params);
 
     QString getFilePath();
+    bool isModified() const;
     quint8 getTileType(quint16);
     quint8 getTileProperties(quint16);
     bool setTileType(quint16 tileIndex, quint8 value);
