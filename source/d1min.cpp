@@ -105,7 +105,7 @@ bool D1Min::load(QString filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CE
         }
     }
     this->minFilePath = filePath;
-    this->modified = filePath.isEmpty();
+    this->modified = !file.isOpen();
     return true;
 }
 

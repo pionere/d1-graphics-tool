@@ -57,7 +57,7 @@ bool D1Til::load(QString filePath, D1Min *m)
         this->subtileIndices.append(subtileIndicesList);
     }
     this->tilFilePath = filePath;
-    this->modified = filePath.isEmpty();
+    this->modified = !file.isOpen();
     return true;
 }
 

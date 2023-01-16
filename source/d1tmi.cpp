@@ -60,7 +60,7 @@ bool D1Tmi::load(QString filePath, D1Sol *sol, const OpenAsParam &params)
     }
 
     this->tmiFilePath = filePath;
-    this->modified = filePath.isEmpty();
+    this->modified = !file.isOpen();
     return true;
 }
 

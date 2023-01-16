@@ -151,7 +151,7 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
         gfx.frames.append(frame);
     }
     gfx.gfxFilePath = filePath;
-    gfx.modified = filePath.isEmpty();
+    gfx.modified = !file.isOpen();
     return true;
 }
 

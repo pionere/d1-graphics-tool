@@ -43,7 +43,7 @@ bool D1Sol::load(QString filePath)
     }
 
     this->solFilePath = filePath;
-    this->modified = filePath.isEmpty();
+    this->modified = !file.isOpen();
     return true;
 }
 

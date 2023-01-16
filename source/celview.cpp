@@ -56,6 +56,7 @@ void CelScene::dropEvent(QGraphicsSceneDragDropEvent *event)
     for (const QUrl &url : event->mimeData()->urls()) {
         filePaths.append(url.toLocalFile());
     }
+    // try to insert as frames
     ((MainWindow *)this->view->window())->openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
 }
 

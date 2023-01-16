@@ -67,7 +67,7 @@ bool D1Amp::load(QString filePath, int tileCount, const OpenAsParam &params)
     }
 
     this->ampFilePath = filePath;
-    this->modified = filePath.isEmpty();
+    this->modified = !file.isOpen();
     return true;
 }
 
