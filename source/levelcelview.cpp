@@ -1791,60 +1791,30 @@ void LevelCelView::on_minFrameHeightEdit_escPressed()
     this->ui->minFrameHeightEdit->clearFocus();
 }
 
-void LevelCelView::updateQGraphicsView()
-{
-    qreal zoomFactor = (qreal)this->currentZoomNumerator / this->currentZoomDenominator;
-    QGraphicsView *view = this->ui->celGraphicsView;
-
-    view->resetTransform();
-    view->scale(zoomFactor, zoomFactor);
-    view->show();
-}
-
 void LevelCelView::on_zoomOutButton_clicked()
 {
-    if (this->currentZoomNumerator > 1 || this->currentZoomDenominator < ZOOM_LIMIT) {
-        if (this->currentZoomNumerator > 1) {
-            this->currentZoomNumerator--;
-        } else {
-            this->currentZoomDenominator++;
-        }
-        this->updateQGraphicsView();
-    }
+    this->celScene->zoomOut();
     this->on_zoomEdit_escPressed();
 }
 
 void LevelCelView::on_zoomInButton_clicked()
 {
-    if (this->currentZoomNumerator < ZOOM_LIMIT) {
-        if (this->currentZoomDenominator > 1) {
-            this->currentZoomDenominator--;
-        } else {
-            this->currentZoomNumerator++;
-        }
-        this->updateQGraphicsView();
-    }
+    this->celScene->zoomIn();
     this->on_zoomEdit_escPressed();
 }
 
 void LevelCelView::on_zoomEdit_returnPressed()
 {
-    int zoomNumerator, zoomDenominator;
     QString zoom = this->ui->zoomEdit->text();
 
-    CelScene::parseZoomValue(zoom, zoomNumerator, zoomDenominator);
+    this->celScene->setZoom(zoom);
 
-    if (zoomNumerator <= ZOOM_LIMIT && zoomDenominator <= ZOOM_LIMIT) {
-        this->currentZoomNumerator = zoomNumerator;
-        this->currentZoomDenominator = zoomDenominator;
-        this->updateQGraphicsView();
-    }
     this->on_zoomEdit_escPressed();
 }
 
 void LevelCelView::on_zoomEdit_escPressed()
 {
-    this->ui->zoomEdit->setText(QString::number(this->currentZoomNumerator) + ":" + QString::number(this->currentZoomDenominator));
+    this->ui->zoomEdit->setText(this->celScene->zoomText());
     this->ui->zoomEdit->clearFocus();
 }
 
