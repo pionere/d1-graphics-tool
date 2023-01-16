@@ -95,12 +95,12 @@ void CelScene::setZoom(QString &zoom)
     this->updateQGraphicsView();
 }
 
-QString void CelView::zoomText() const
+QString CelScene::zoomText() const
 {
     return QString::number(this->currentZoomNumerator) + ":" + QString::number(this->currentZoomDenominator);
 }
 
-void CelView::updateQGraphicsView()
+void CelScene::updateQGraphicsView()
 {
     qreal zoomFactor = (qreal)this->currentZoomNumerator / this->currentZoomDenominator;
     for (QGraphicsView *view : this->views()) {
@@ -544,7 +544,7 @@ void CelView::on_zoomEdit_returnPressed()
 {
     QString zoom = this->ui->zoomEdit->text();
 
-    this->celScene->zoomIn(zoom);
+    this->celScene->setZoom(zoom);
 
     this->on_zoomEdit_escPressed();
 }
