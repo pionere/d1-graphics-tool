@@ -22,9 +22,6 @@ public:
     void initialize(LevelCelView *v, D1Gfx *gfx, D1Min *min, D1Sol *sol, D1Tmi *tmi);
     void update();
 
-signals:
-    void modified();
-
 private slots:
     void on_sol0_clicked();
     void on_sol1_clicked();

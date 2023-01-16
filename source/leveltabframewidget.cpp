@@ -290,6 +290,6 @@ void LevelTabFrameWidget::on_frameTypeComboBox_activated(int index)
 
     if (this->gfx->setFrameType(frameIdx, (D1CEL_FRAME_TYPE)index)) {
         this->validate();
-        emit this->modified();
+        this->levelCelView->updateLabel();
     }
 }

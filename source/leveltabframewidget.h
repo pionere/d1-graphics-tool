@@ -24,9 +24,6 @@ public:
     static D1CEL_FRAME_TYPE altFrameType(D1GfxFrame *frame, int *limit);
     static void selectFrameType(D1GfxFrame *frame);
 
-signals:
-    void modified();
-
 private slots:
     void on_frameTypeComboBox_activated(int index);
 

@@ -69,6 +69,7 @@ public:
     void sortSubtiles();
     void sortTileset();
 
+    void updateLabel();
     void displayFrame();
 
 private:
@@ -143,7 +144,6 @@ private slots:
     void dragMoveEvent(QDragMoveEvent *event);
     void dropEvent(QDropEvent *event);
 
-    void updateLabel();
     void ShowContextMenu(const QPoint &pos);
 
 private:

@@ -115,7 +115,7 @@ void LevelTabTileWidget::updateAmpProperty()
     quint8 flags = this->readAmpProperty();
 
     if (this->amp->setTileProperties(tileIdx, flags)) {
-        emit this->modified();
+        this->levelCelView->updateLabel();
     }
 }
 
@@ -150,7 +150,7 @@ void LevelTabTileWidget::on_ampTypeComboBox_activated(int index)
     }
 
     if (this->amp->setTileType(tileIdx, index)) {
-        emit this->modified();
+        this->levelCelView->updateLabel();
     }
 }
 
@@ -209,8 +209,8 @@ void LevelTabTileWidget::on_subtilesPrevButton_clicked()
         // this->ui->subtilesComboBox->setItemText(index, QString::number(subtileIdx + 1));
         // this->updateSubtilesSelection(index);
 
+        this->levelCelView->updateLabel();
         this->levelCelView->displayFrame();
-        // emit this->modified();
     }
 }
 
@@ -237,8 +237,8 @@ void LevelTabTileWidget::on_subtilesComboBox_currentTextChanged(const QString &a
         // this->ui->subtilesComboBox->setItemText(index, QString::number(subtileIdx + 1));
         // this->updateSubtilesSelection(index);
 
+        this->levelCelView->updateLabel();
         this->levelCelView->displayFrame();
-        // emit this->modified();
     }
 }
 
@@ -257,7 +257,7 @@ void LevelTabTileWidget::on_subtilesNextButton_clicked()
         // this->ui->subtilesComboBox->setItemText(index, QString::number(subtileIdx + 1));
         // this->updateSubtilesSelection(index);
 
+        this->levelCelView->updateLabel();
         this->levelCelView->displayFrame();
-        // emit this->modified();
     }
 }

@@ -129,7 +129,7 @@ void LevelTabSubTileWidget::updateSolProperty()
     quint8 flags = this->readSol();
 
     if (this->sol->setSubtileProperties(subTileIdx, flags)) {
-        emit this->modified();
+        this->levelCelView->updateLabel();
     }
 }
 
@@ -159,7 +159,7 @@ void LevelTabSubTileWidget::updateTmiProperty()
     quint8 flags = this->readTmi();
 
     if (this->tmi->setSubtileProperties(subTileIdx, flags)) {
-        emit this->modified();
+        this->levelCelView->updateLabel();
     }
 }
 
@@ -268,8 +268,8 @@ void LevelTabSubTileWidget::on_framesPrevButton_clicked()
         // this->ui->subtilesComboBox->setItemText(index, QString::number(frameRef));
         // this->updateFramesSelection(index);
 
+        this->levelCelView->updateLabel();
         this->levelCelView->displayFrame();
-        // emit this->modified();
     }
 }
 
@@ -296,8 +296,8 @@ void LevelTabSubTileWidget::on_framesComboBox_currentTextChanged(const QString &
         // this->ui->subtilesComboBox->setItemText(index, QString::number(frameRef));
         // this->updateFramesSelection(index);
 
+        this->levelCelView->updateLabel();
         this->levelCelView->displayFrame();
-        // emit this->modified();
     }
 }
 
@@ -316,7 +316,7 @@ void LevelTabSubTileWidget::on_framesNextButton_clicked()
         // this->ui->subtilesComboBox->setItemText(index, QString::number(frameIdx));
         // this->updateFramesSelection(index);
 
+        this->levelCelView->updateLabel();
         this->levelCelView->displayFrame();
-        // emit this->modified();
     }
 }
