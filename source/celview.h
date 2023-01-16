@@ -28,7 +28,14 @@ class CelScene : public QGraphicsScene {
 public:
     CelScene(QWidget *view);
 
-    static void parseZoomValue(QString &zoom, int &zoomNumerator, int &zoomDenominator);
+    void zoomOut();
+    void zoomIn();
+    void setZoom(QString &zoom);
+    QString zoomText() const;
+
+private:
+    static void parseZoomValue(QString &zoom, quint8 &zoomNumerator, quint8 &zoomDenominator);
+    void updateQGraphicsView();
 
 private slots:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -43,6 +50,9 @@ signals:
 
 private:
     QWidget *view;
+
+    quint8 currentZoomNumerator = 1;
+    quint8 currentZoomDenominator = 1;
 };
 
 class CelView : public QWidget {
@@ -69,8 +79,6 @@ private:
     void insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);
     void updateGroupIndex();
     void setGroupIndex();
-
-    void updateQGraphicsView();
 
 private slots:
     void on_firstFrameButton_clicked();
@@ -111,8 +119,6 @@ private:
     D1Gfx *gfx;
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;
-    quint8 currentZoomNumerator = 1;
-    quint8 currentZoomDenominator = 1;
     quint16 currentPlayDelay = 50;
 
     QTimer playTimer;

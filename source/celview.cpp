@@ -56,10 +56,6 @@ void CelScene::dropEvent(QGraphicsSceneDragDropEvent *event)
     for (const QUrl &url : event->mimeData()->urls()) {
         filePaths.append(url.toLocalFile());
     }
-    // try to insert as frames
-    if ((QWidget *)this->activeWindow() != this->view->window()) {
-        QMessageBox::warning(nullptr, "Err", "Sad day");
-    }
     ((MainWindow *)this->view->window())->openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
 }
 
@@ -68,7 +64,53 @@ void CelScene::contextMenuEvent(QContextMenuEvent *event)
     emit this->showContextMenu(event->globalPos());
 }
 
-void CelScene::parseZoomValue(QString &zoom, int &zoomNumerator, int &zoomDenominator)
+void CelScene::zoomOut()
+{
+    if (this->currentZoomNumerator > 1 || this->currentZoomDenominator < ZOOM_LIMIT) {
+        if (this->currentZoomNumerator > 1) {
+            this->currentZoomNumerator--;
+        } else {
+            this->currentZoomDenominator++;
+        }
+        this->updateQGraphicsView();
+    }
+}
+
+void CelScene::zoomIn()
+{
+    if (this->currentZoomDenominator > 1 || this->currentZoomNumerator < ZOOM_LIMIT) {
+        if (this->currentZoomDenominator > 1) {
+            this->currentZoomDenominator--;
+        } else {
+            this->currentZoomNumerator++;
+        }
+        this->updateQGraphicsView();
+    }
+}
+
+void CelScene::setZoom(QString &zoom)
+{
+    CelScene::parseZoomValue(zoom, this->currentZoomNumerator, this->currentZoomDenominator);
+
+    this->updateQGraphicsView();
+}
+
+QString void CelView::zoomText() const
+{
+    return QString::number(this->currentZoomNumerator) + ":" + QString::number(this->currentZoomDenominator);
+}
+
+void CelView::updateQGraphicsView()
+{
+    qreal zoomFactor = (qreal)this->currentZoomNumerator / this->currentZoomDenominator;
+    for (QGraphicsView *view : this->views()) {
+        view->resetTransform();
+        view->scale(zoomFactor, zoomFactor);
+        view->show();
+    }
+}
+
+void CelScene::parseZoomValue(QString &zoom, quint8 &zoomNumerator, quint8 &zoomDenominator)
 {
     int sepIdx = zoom.indexOf(":");
 
@@ -83,19 +125,22 @@ void CelScene::parseZoomValue(QString &zoom, int &zoomNumerator, int &zoomDenomi
         } else {
             zoomNumerator = zoom.mid(0, sepIdx).toUShort();
             zoomDenominator = zoom.mid(sepIdx + 1).toUShort();
-            if (zoomNumerator != 1 && zoomDenominator != 1) {
-                if (zoomNumerator > zoomDenominator) {
-                    zoomNumerator = zoomNumerator / zoomDenominator;
-                    zoomDenominator = 1;
-                } else {
-                    zoomDenominator = zoomDenominator / zoomNumerator;
-                    zoomNumerator = 1;
-                }
-            }
         }
     } else {
         zoomNumerator = zoom.toUShort();
         zoomDenominator = 1;
+    }
+    if (zoomNumerator == 0) {
+        zoomNumerator = 1;
+    }
+    if (zoomNumerator > ZOOM_LIMIT) {
+        zoomNumerator = ZOOM_LIMIT;
+    }
+    if (zoomDenominator == 0) {
+        zoomDenominator = 1;
+    }
+    if (zoomDenominator > ZOOM_LIMIT) {
+        zoomDenominator = ZOOM_LIMIT;
     }
 }
 
@@ -483,60 +528,30 @@ void CelView::on_lastGroupButton_clicked()
     this->displayFrame();
 }
 
-void CelView::updateQGraphicsView()
-{
-    qreal zoomFactor = (qreal)this->currentZoomNumerator / this->currentZoomDenominator;
-    QGraphicsView *view = this->ui->celGraphicsView;
-
-    view->resetTransform();
-    view->scale(zoomFactor, zoomFactor);
-    view->show();
-}
-
 void CelView::on_zoomOutButton_clicked()
 {
-    if (this->currentZoomNumerator > 1 || this->currentZoomDenominator < ZOOM_LIMIT) {
-        if (this->currentZoomNumerator > 1) {
-            this->currentZoomNumerator--;
-        } else {
-            this->currentZoomDenominator++;
-        }
-        this->updateQGraphicsView();
-    }
+    this->celScene->zoomOut();
     this->on_zoomEdit_escPressed();
 }
 
 void CelView::on_zoomInButton_clicked()
 {
-    if (this->currentZoomNumerator < ZOOM_LIMIT) {
-        if (this->currentZoomDenominator > 1) {
-            this->currentZoomDenominator--;
-        } else {
-            this->currentZoomNumerator++;
-        }
-        this->updateQGraphicsView();
-    }
+    this->celScene->zoomIn();
     this->on_zoomEdit_escPressed();
 }
 
 void CelView::on_zoomEdit_returnPressed()
 {
-    int zoomNumerator, zoomDenominator;
     QString zoom = this->ui->zoomEdit->text();
 
-    CelScene::parseZoomValue(zoom, zoomNumerator, zoomDenominator);
+    this->celScene->zoomIn(zoom);
 
-    if (zoomNumerator <= ZOOM_LIMIT && zoomDenominator <= ZOOM_LIMIT) {
-        this->currentZoomNumerator = zoomNumerator;
-        this->currentZoomDenominator = zoomDenominator;
-        this->updateQGraphicsView();
-    }
     this->on_zoomEdit_escPressed();
 }
 
 void CelView::on_zoomEdit_escPressed()
 {
-    this->ui->zoomEdit->setText(QString::number(this->currentZoomNumerator) + ":" + QString::number(this->currentZoomDenominator));
+    this->ui->zoomEdit->setText(this->celScene->zoomText());
     this->ui->zoomEdit->clearFocus();
 }
 
