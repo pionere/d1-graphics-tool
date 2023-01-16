@@ -127,6 +127,7 @@ D1GfxFrame *D1Gfx::insertFrame(int idx, const QImage &image)
     D1GfxFrame frame;
     D1ImageFrame::load(frame, image, clipped, this->palette);
     this->frames.insert(idx, frame);
+    this->modified = true;
 
     if (this->groupFrameIndices.isEmpty()) {
         // create new group if this is the first frame
@@ -155,6 +156,7 @@ D1GfxFrame *D1Gfx::replaceFrame(int idx, const QImage &image)
     D1GfxFrame frame;
     D1ImageFrame::load(frame, image, clipped, this->palette);
     this->frames[idx] = frame;
+    this->modified = true;
 
     return &this->frames[idx];
 }
@@ -162,6 +164,7 @@ D1GfxFrame *D1Gfx::replaceFrame(int idx, const QImage &image)
 void D1Gfx::removeFrame(quint16 idx)
 {
     this->frames.removeAt(idx);
+    this->modified = true;
 
     for (int i = 0; i < this->groupFrameIndices.count(); i++) {
         if (this->groupFrameIndices[i].second < idx)
@@ -186,6 +189,7 @@ void D1Gfx::remapFrames(const QMap<unsigned, unsigned> &remap)
         newFrames.append(this->frames.at(iter.value() - 1));
     }
     this->frames.swap(newFrames);
+    this->modified = true;
 }
 
 D1CEL_TYPE D1Gfx::getType() const
@@ -196,6 +200,17 @@ D1CEL_TYPE D1Gfx::getType() const
 void D1Gfx::setType(D1CEL_TYPE type)
 {
     this->type = type;
+    this->modified = true;
+}
+
+bool D1Gfx::isModified() const
+{
+    return this->modified;
+}
+
+void D1Gfx::setModified()
+{
+    this->modified = true;
 }
 
 bool D1Gfx::isUpscaled() const
@@ -206,16 +221,12 @@ bool D1Gfx::isUpscaled() const
 void D1Gfx::setUpscaled(bool upscaled)
 {
     this->upscaled = upscaled;
+    this->modified = true;
 }
 
 QString D1Gfx::getFilePath()
 {
     return this->gfxFilePath;
-}
-
-D1Pal *D1Gfx::getPalette()
-{
-    return this->palette;
 }
 
 void D1Gfx::setPalette(D1Pal *pal)
@@ -263,4 +274,14 @@ int D1Gfx::getFrameHeight(int frameIndex)
         return 0;
 
     return this->frames[frameIndex].getHeight();
+}
+
+bool D1Gfx::setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType)
+{
+    if (this->frames[frameIndex].frameType == frameType) {
+        return false;
+    }
+    this->frames[frameIndex].frameType = frameType;
+    this->modified = true;
+    return true;
 }

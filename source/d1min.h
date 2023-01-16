@@ -35,11 +35,13 @@ public:
     quint16 getSubtileHeight();
     void setSubtileHeight(int height);
     QList<quint16> &getCelFrameIndices(int subtileIndex);
+    bool setFrameIndex(int subtileIndex, int index, int frameRef);
 
 private:
     QString minFilePath;
-    D1Gfx *gfx = nullptr;
+    bool modified;
     quint8 subtileWidth;
     quint8 subtileHeight;
     QList<QList<quint16>> celFrameIndices;
+    D1Gfx *gfx = nullptr;
 };

@@ -25,9 +25,10 @@ public:
 
     QString getFilePath();
     quint8 getSubtileProperties(int subtileIndex);
-    void setSubtileProperties(int subtileIndex, quint8 value);
+    bool setSubtileProperties(int subtileIndex, quint8 value);
 
 private:
     QString tmiFilePath;
+    bool modified;
     QList<quint8> subProperties;
 };

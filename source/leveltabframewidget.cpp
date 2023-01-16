@@ -287,9 +287,9 @@ void LevelTabFrameWidget::validate()
 void LevelTabFrameWidget::on_frameTypeComboBox_activated(int index)
 {
     int frameIdx = this->levelCelView->getCurrentFrameIndex();
-    D1GfxFrame *frame = this->gfx->getFrame(frameIdx);
 
-    frame->setFrameType((D1CEL_FRAME_TYPE)index);
-
-    this->validate();
+    if (this->gfx->setFrameType(frameIdx, (D1CEL_FRAME_TYPE)index)) {
+        this->validate();
+        emit this->modified();
+    }
 }

@@ -151,6 +151,7 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
         gfx.frames.append(frame);
     }
     gfx.gfxFilePath = filePath;
+    gfx.modified = filePath.isEmpty();
     return true;
 }
 
@@ -159,10 +160,10 @@ bool D1CelTileset::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &
     const int numFrames = gfx.getFrameCount();
 
     // update upscaled info
-    bool upscaled = gfx.isUpscaled();
+    bool upscaled = gfx.upscaled;
     if (params.upscaled != SAVE_UPSCALED_TYPE::AUTODETECT) {
         upscaled = params.upscaled == SAVE_UPSCALED_TYPE::TRUE;
-        gfx.setUpscaled(upscaled);
+        gfx.upscaled = upscaled; // setUpscaled
     }
 
     // calculate header size
@@ -222,6 +223,7 @@ bool D1CelTileset::save(D1Gfx &gfx, const SaveAsParam &params)
 
     if (result) {
         gfx.gfxFilePath = filePath; // D1CelTileset::load(gfx, filePath);
+        gfx.modified = false;
     }
     return result;
 }

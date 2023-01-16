@@ -128,7 +128,9 @@ void LevelTabSubTileWidget::updateSolProperty()
     int subTileIdx = this->levelCelView->getCurrentSubtileIndex();
     quint8 flags = this->readSol();
 
-    this->sol->setSubtileProperties(subTileIdx, flags);
+    if (this->sol->setSubtileProperties(subTileIdx, flags)) {
+        emit this->modified();
+    }
 }
 
 quint8 LevelTabSubTileWidget::readSol()
@@ -156,7 +158,9 @@ void LevelTabSubTileWidget::updateTmiProperty()
     int subTileIdx = this->levelCelView->getCurrentSubtileIndex();
     quint8 flags = this->readTmi();
 
-    this->tmi->setSubtileProperties(subTileIdx, flags);
+    if (this->tmi->setSubtileProperties(subTileIdx, flags)) {
+        emit this->modified();
+    }
 }
 
 quint8 LevelTabSubTileWidget::readTmi()
@@ -254,18 +258,19 @@ void LevelTabSubTileWidget::on_framesPrevButton_clicked()
     int index = this->ui->framesComboBox->currentIndex();
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
     QList<quint16> &frameIndices = this->min->getCelFrameIndices(subtileIdx);
-    int frameIdx = frameIndices[index] - 1;
+    int frameRef = frameIndices[index] - 1;
 
-    if (frameIdx > this->gfx->getFrameCount() - 1) {
-        frameIdx = this->gfx->getFrameCount() - 1;
+    if (frameRef < 0) {
+        frameRef = 0;
     }
 
-    frameIndices[index] = frameIdx;
+    if (this->min->setFrameIndex(subtileIdx, index, frameRef)) {
+        // this->ui->subtilesComboBox->setItemText(index, QString::number(frameRef));
+        // this->updateFramesSelection(index);
 
-    // this->ui->subtilesComboBox->setItemText(index, QString::number(frameIdx));
-    // this->updateFramesSelection(index);
-
-    this->levelCelView->displayFrame();
+        this->levelCelView->displayFrame();
+        // emit this->modified();
+    }
 }
 
 void LevelTabSubTileWidget::on_framesComboBox_activated(int index)
@@ -278,20 +283,21 @@ void LevelTabSubTileWidget::on_framesComboBox_activated(int index)
 void LevelTabSubTileWidget::on_framesComboBox_currentTextChanged(const QString &arg1)
 {
     int index = this->lastFrameEntryIndex;
-    int frameIdx = this->ui->framesComboBox->currentText().toInt();
 
     if (this->onUpdate || this->ui->framesComboBox->currentIndex() != index)
         return; // on update or side effect of combobox activated -> ignore
 
-    if (frameIdx >= 0 && frameIdx < this->gfx->getFrameCount()) {
-        int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
+    int frameRef = this->ui->framesComboBox->currentText().toInt();
+    if (frameRef < 0 || frameRef > this->gfx->getFrameCount())
+        return; // invalid value -> ignore
 
-        this->min->getCelFrameIndices(subtileIdx)[index] = frameIdx;
-
-        // this->ui->subtilesComboBox->setItemText(index, QString::number(frameIdx));
+    int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
+    if (this->min->setFrameIndex(subtileIdx, index, frameRef)) {
+        // this->ui->subtilesComboBox->setItemText(index, QString::number(frameRef));
         // this->updateFramesSelection(index);
 
         this->levelCelView->displayFrame();
+        // emit this->modified();
     }
 }
 
@@ -300,16 +306,17 @@ void LevelTabSubTileWidget::on_framesNextButton_clicked()
     int index = this->ui->framesComboBox->currentIndex();
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
     QList<quint16> &frameIndices = this->min->getCelFrameIndices(subtileIdx);
-    int frameIdx = frameIndices[index] + 1;
+    int frameRef = frameIndices[index] + 1;
 
-    if (frameIdx < 0) {
-        frameIdx = 0;
+    if (frameRef > this->gfx->getFrameCount()) {
+        frameRef = this->gfx->getFrameCount();
     }
 
-    frameIndices[index] = frameIdx;
+    if (this->min->setFrameIndex(subtileIdx, index, frameRef)) {
+        // this->ui->subtilesComboBox->setItemText(index, QString::number(frameIdx));
+        // this->updateFramesSelection(index);
 
-    // this->ui->subtilesComboBox->setItemText(index, QString::number(frameIdx));
-    // this->updateFramesSelection(index);
-
-    this->levelCelView->displayFrame();
+        this->levelCelView->displayFrame();
+        // emit this->modified();
+    }
 }

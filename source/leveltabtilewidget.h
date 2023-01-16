@@ -21,6 +21,9 @@ public:
     void initialize(LevelCelView *v, D1Til *t, D1Min *m, D1Amp *a);
     void update();
 
+signals:
+    void modified();
+
 private slots:
     void on_ampTypeComboBox_activated(int index);
 
@@ -40,8 +43,6 @@ private slots:
 
 private:
     void updateSubtilesSelection(int index);
-    void updateAmpType();
-    void updateAmpProperty();
     quint8 readAmpType();
     quint8 readAmpProperty();
 

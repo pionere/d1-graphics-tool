@@ -43,6 +43,11 @@ LevelCelView::LevelCelView(QWidget *parent)
     QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
     QObject::connect(this->ui->playDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_playDelayEdit_escPressed()));
 
+    // modified events of the tabs
+    QObject::connect(this->tabTileWidget, SIGNAL(modified()), this, &LevelCelView::updateLabel);
+    QObject::connect(this->tabSubTileWidget, SIGNAL(modified()), this, &LevelCelView::updateLabel);
+    QObject::connect(this->tabFrameWidget, SIGNAL(modified()), this, &LevelCelView::updateLabel);
+
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ShowContextMenu(const QPoint &)));
@@ -72,16 +77,52 @@ void LevelCelView::initialize(D1Gfx *g, D1Min *m, D1Til *t, D1Sol *s, D1Amp *a, 
     this->update();
 }
 
-void LevelCelView::update()
+// Displaying CEL file path information
+void LevelCelView::updateLabel()
 {
-    // Displaying CEL file path information
     QFileInfo gfxFileInfo(this->gfx->getFilePath());
     QFileInfo minFileInfo(this->min->getFilePath());
     QFileInfo tilFileInfo(this->til->getFilePath());
     QFileInfo solFileInfo(this->sol->getFilePath());
     QFileInfo ampFileInfo(this->amp->getFilePath());
     QFileInfo tmiFileInfo(this->tmi->getFilePath());
-    ui->celLabel->setText(gfxFileInfo.fileName() + ", " + minFileInfo.fileName() + ", " + tilFileInfo.fileName() + ", " + solFileInfo.fileName() + ", " + ampFileInfo.fileName() + ", " + tmiFileInfo.fileName());
+
+    QString label = gfxFileInfo.fileName();
+    if (this->gfx->isModified()) {
+        label += "*";
+    }
+    label += ", ";
+    label = minFileInfo.fileName();
+    if (this->min->isModified()) {
+        label += "*";
+    }
+    label += ", ";
+    label = tilFileInfo.fileName();
+    if (this->til->isModified()) {
+        label += "*";
+    }
+    label += ", ";
+    label = solFileInfo.fileName();
+    if (this->sol->isModified()) {
+        label += "*";
+    }
+    label += ", ";
+    label = ampFileInfo.fileName();
+    if (this->amp->isModified()) {
+        label += "*";
+    }
+    label += ", ";
+    label = tmiFileInfo.fileName();
+    if (this->tmi->isModified()) {
+        label += "*";
+    }
+
+    this->ui->celLabel->setText(label);
+}
+
+void LevelCelView::update()
+{
+    this->updateLabel();
 
     ui->frameNumberEdit->setText(
         QString::number(this->gfx->getFrameCount()));
@@ -253,6 +294,7 @@ void LevelCelView::assignFrames(const QImage &image, int subtileIndex, int frame
 
     if (subtileIndex >= 0) {
         this->min->getCelFrameIndices(subtileIndex).swap(frameIndicesList);
+        this->min->setModified();
         // reset subtile flags
         this->sol->setSubtileProperties(subtileIndex, 0);
         this->tmi->setSubtileProperties(subtileIndex, 0);
@@ -344,6 +386,7 @@ void LevelCelView::assignSubtiles(const QImage &image, int tileIndex, int subtil
     if (tileIndex >= 0) {
         subtileIndices = &this->til->getSubtileIndices(tileIndex);
         subtileIndices->clear();
+        this->til->setModfied();
     }
     // TODO: merge with LevelCelView::insertTile ?
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
@@ -450,6 +493,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, const QStringList &image
             for (int n = 0; n < subtileIndices.count(); n++) {
                 if (subtileIndices[n] >= refIndex) {
                     subtileIndices[n] += deltaSubtileCount;
+                    this->til->setModfied();
                 }
             }
         }
@@ -662,6 +706,7 @@ void LevelCelView::removeFrame(int frameIndex)
                 } else {
                     frameIndices[n] -= 1;
                 }
+                this->min->setModified();
             }
         }
     }
@@ -742,10 +787,8 @@ void LevelCelView::removeSubtile(int subtileIndex)
         for (int n = 0; n < subtileIndices.count(); n++) {
             if (subtileIndices[n] >= refIndex) {
                 // assert(subtileIndices[n] != refIndex);
-                if (subtileIndices[n] == refIndex) {
-                    QMessageBox::critical(this, "Error", QString("Removing %1 but it is still referenced by %2 at %3").arg(refIndex).arg(i).arg(n));
-                }
                 subtileIndices[n] -= 1;
+                this->til->setModified();
             }
         }
     }
@@ -945,6 +988,7 @@ void LevelCelView::resetFrameTypes()
     if (report.isEmpty()) {
         report = "No change was necessary.";
     } else {
+        this->gfx->setModfified();
         // update the view
         this->tabFrameWidget->update();
 
@@ -1137,6 +1181,7 @@ void LevelCelView::reuseFrames(QString &report)
                 for (auto iter = frameIndices.begin(); iter != frameIndices.end(); iter++) {
                     if (*iter == refIndex) {
                         *iter = i + 1;
+                        this->min->setModified();
                     }
                 }
             }
@@ -1244,6 +1289,7 @@ void LevelCelView::reuseSubtiles(QString &report)
                 for (auto iter = subtileIndices.begin(); iter != subtileIndices.end(); iter++) {
                     if (*iter == refIndex) {
                         *iter = i;
+                        this->til->setModified();
                     }
                 }
             }
@@ -1365,12 +1411,16 @@ bool LevelCelView::sortFrames_impl()
             }
         }
     }
+    if (!change) {
+        return false;
+    }
+    this->min->setModified();
     QMap<unsigned, unsigned> backmap;
     for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
         backmap[iter.value()] = iter.key();
     }
     this->gfx->remapFrames(backmap);
-    return change;
+    return true;
 }
 
 bool LevelCelView::sortSubtiles_impl()
@@ -1393,6 +1443,10 @@ bool LevelCelView::sortSubtiles_impl()
             }
         }
     }
+    if (!change) {
+        return false;
+    }
+    this->til->setModified();
     QMap<unsigned, unsigned> backmap;
     for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
         backmap[iter.value()] = iter.key();
@@ -1400,7 +1454,7 @@ bool LevelCelView::sortSubtiles_impl()
     this->min->remapSubtiles(backmap);
     this->sol->remapSubtiles(backmap);
     this->tmi->remapSubtiles(backmap);
-    return change;
+    return true;
 }
 
 void LevelCelView::sortFrames()
@@ -1804,6 +1858,8 @@ void LevelCelView::on_minFrameWidthEdit_returnPressed()
     unsigned width = this->ui->minFrameWidthEdit->text().toUInt();
 
     this->min->setSubtileWidth(width);
+    // update view
+    this->update();
     this->displayFrame();
 
     this->on_minFrameWidthEdit_escPressed();
@@ -1820,6 +1876,8 @@ void LevelCelView::on_minFrameHeightEdit_returnPressed()
     unsigned height = this->ui->minFrameHeightEdit->text().toUInt();
 
     this->min->setSubtileHeight(height);
+    // update view
+    this->update();
     this->displayFrame();
 
     this->on_minFrameHeightEdit_escPressed();

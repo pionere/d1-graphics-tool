@@ -57,6 +57,7 @@ bool D1Til::load(QString filePath, D1Min *m)
         this->subtileIndices.append(subtileIndicesList);
     }
     this->tilFilePath = filePath;
+    this->modified = filePath.isEmpty();
     return true;
 }
 
@@ -92,6 +93,7 @@ bool D1Til::save(const SaveAsParam &params)
     }
 
     this->tilFilePath = filePath; // this->load(filePath);
+    this->modified = false;
 
     return true;
 }
@@ -158,6 +160,16 @@ QString D1Til::getFilePath()
     return this->tilFilePath;
 }
 
+bool D1Til::isModified() const
+{
+    return this->modified;
+}
+
+void D1Til::setModified();
+{
+    this->modified = true;
+}
+
 int D1Til::getTileCount()
 {
     return this->subtileIndices.count();
@@ -168,9 +180,19 @@ QList<quint16> &D1Til::getSubtileIndices(int tileIndex)
     return const_cast<QList<quint16> &>(this->subtileIndices.at(tileIndex));
 }
 
+bool D1Til::setSubtileIndex(int tileIndex, int index, int subtileIndex)
+{
+    if (this->subtileIndices[tileIndex][index] == subtileIndex) {
+        return false;
+    }
+    this->subtileIndices[tileIndex][index] = subtileIndex;
+    return true;
+}
+
 void D1Til::insertTile(int tileIndex, const QList<quint16> &subtileIndices)
 {
     this->subtileIndices.insert(tileIndex, subtileIndices);
+    this->modified = true;
 }
 
 void D1Til::createTile()
@@ -181,9 +203,11 @@ void D1Til::createTile()
         subtileIndices.append(0);
     }
     this->subtileIndices.append(subtileIndices);
+    this->modified = true;
 }
 
 void D1Til::removeTile(int tileIndex)
 {
     this->subtileIndices.removeAt(tileIndex);
+    this->modified = true;
 }

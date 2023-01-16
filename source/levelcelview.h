@@ -73,6 +73,7 @@ public:
 
 private:
     void update();
+    void updateLabel();
     void collectFrameUsers(int frameIndex, QList<int> &users) const;
     void collectSubtileUsers(int subtileIndex, QList<int> &users) const;
     void insertFrames(IMAGE_FILE_MODE mode, int index, const QImage &image);

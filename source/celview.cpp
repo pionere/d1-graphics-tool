@@ -183,9 +183,18 @@ void CelView::initialize(D1Gfx *g)
 {
     this->gfx = g;
 
+    this->update();
+}
+
+void CelView::update()
+{
     // Displaying CEL file path information
-    QFileInfo celFileInfo(this->gfx->getFilePath());
-    ui->celLabel->setText(celFileInfo.fileName());
+    QFileInfo gfxFileInfo(this->gfx->getFilePath());
+    QString label = gfxFileInfo.fileName();
+    if (this->gfx->isModified()) {
+        label += "*";
+    }
+    ui->celLabel->setText(label);
 
     ui->groupNumberEdit->setText(
         QString::number(this->gfx->getGroupCount()));
@@ -242,7 +251,7 @@ void CelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefil
         }
     }
     // update the view
-    this->initialize(this->gfx);
+    this->update();
     this->displayFrame();
 }
 
@@ -276,7 +285,7 @@ void CelView::replaceCurrentFrame(const QString &imagefilePath)
     this->gfx->replaceFrame(this->currentFrameIndex, image);
 
     // update the view
-    this->initialize(this->gfx);
+    this->update();
     this->displayFrame();
 }
 
@@ -289,7 +298,7 @@ void CelView::removeCurrentFrame()
     }
     this->updateGroupIndex();
     // update the view
-    this->initialize(this->gfx);
+    this->update();
     this->displayFrame();
 }
 
