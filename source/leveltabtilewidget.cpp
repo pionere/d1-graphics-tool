@@ -90,7 +90,7 @@ void LevelTabTileWidget::update()
     for (i = 0; i < subtiles.count(); i++) {
         this->ui->subtilesComboBox->setItemText(i, QString::number(subtiles[i] + 1));
     }
-    if (this->lastTileIndex != tileIdx) {
+    if (this->lastTileIndex != tileIdx || this->ui->subtilesComboBox->currentIndex() == -1) {
         this->lastTileIndex = tileIdx;
         this->lastSubTileEntryIndex = 0;
         this->ui->subtilesComboBox->setCurrentIndex(0);

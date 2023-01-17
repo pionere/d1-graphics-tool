@@ -104,7 +104,7 @@ void LevelTabSubTileWidget::update()
     for (i = 0; i < frames.count(); i++) {
         this->ui->framesComboBox->setItemText(i, QString::number(frames[i]));
     }
-    if (this->lastSubtileIndex != subtileIdx) {
+    if (this->lastSubtileIndex != subtileIdx || this->ui->framesComboBox->currentIndex() == -1) {
         this->lastSubtileIndex = subtileIdx;
         this->lastFrameEntryIndex = 0;
         this->ui->framesComboBox->setCurrentIndex(0);
@@ -117,10 +117,10 @@ void LevelTabSubTileWidget::update()
 void LevelTabSubTileWidget::updateFramesSelection(int index)
 {
     this->lastFrameEntryIndex = index;
-    int frameIdx = this->ui->framesComboBox->currentText().toInt();
+    int frameRef = this->ui->framesComboBox->currentText().toInt();
 
-    this->ui->framesPrevButton->setEnabled(frameIdx > 0);
-    this->ui->framesNextButton->setEnabled(frameIdx < this->gfx->getFrameCount() - 1);
+    this->ui->framesPrevButton->setEnabled(frameRef > 0);
+    this->ui->framesNextButton->setEnabled(frameRef < this->gfx->getFrameCount());
 }
 
 void LevelTabSubTileWidget::updateSolProperty()
@@ -313,7 +313,7 @@ void LevelTabSubTileWidget::on_framesNextButton_clicked()
     }
 
     if (this->min->setFrameIndex(subtileIdx, index, frameRef)) {
-        // this->ui->subtilesComboBox->setItemText(index, QString::number(frameIdx));
+        // this->ui->subtilesComboBox->setItemText(index, QString::number(frameRef));
         // this->updateFramesSelection(index);
 
         this->levelCelView->updateLabel();
