@@ -72,15 +72,15 @@ void D1PalHits::buildSubtilePalHits()
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         QMap<quint8, quint32> subtileHits;
 
-        // Retrieve the CEL frame indices of the current sub-tile
-        QList<quint16> &celFrameIndices = this->min->getCelFrameIndices(i);
+        // Retrieve the CEL frame references of the current sub-tile
+        QList<quint16> &frameReferences = this->min->getFrameReferences(i);
 
         // Go through the CEL frames
-        for (quint16 frameIndex : celFrameIndices) {
-            frameIndex--;
-
+        for (quint16 frameRef : frameReferences) {
+            if (frameRef == 0)
+                continue;
             // Go through the hits of the CEL frame and add them to the subtile hits
-            QMapIterator<quint8, quint32> it2(this->framePalHits.value(frameIndex));
+            QMapIterator<quint8, quint32> it2(this->framePalHits.value(frameRef - 1));
             while (it2.hasNext()) {
                 it2.next();
                 subtileHits.insert(it2.key(), it2.value());
