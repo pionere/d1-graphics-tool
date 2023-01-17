@@ -345,9 +345,9 @@ bool D1Min::setFrameReference(int subtileIndex, int index, int frameRef)
     return true;
 }
 
-void D1Min::insertSubtile(int subtileIndex, const QList<quint16> &frameIndicesList)
+void D1Min::insertSubtile(int subtileIndex, const QList<quint16> &frameReferencesList)
 {
-    this->frameReferences.insert(subtileIndex, frameIndicesList);
+    this->frameReferences.insert(subtileIndex, frameReferencesList);
     this->modified = true;
 }
 

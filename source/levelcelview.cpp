@@ -504,7 +504,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, const QStringList &image
 
 void LevelCelView::insertSubtile(int subtileIndex, const QImage &image)
 {
-    QList<quint16> frameIndicesList;
+    QList<quint16> frameReferencesList;
 
     int frameIndex = this->gfx->getFrameCount();
     QImage subImage = QImage(MICRO_WIDTH, MICRO_HEIGHT, QImage::Format_ARGB32);
@@ -523,7 +523,7 @@ void LevelCelView::insertSubtile(int subtileIndex, const QImage &image)
                 }
             }
 
-            frameIndicesList.append(hasColor ? frameIndex + 1 : 0);
+            frameReferencesList.append(hasColor ? frameIndex + 1 : 0);
 
             if (!hasColor) {
                 continue;
@@ -533,7 +533,7 @@ void LevelCelView::insertSubtile(int subtileIndex, const QImage &image)
             frameIndex++;
         }
     }
-    this->min->insertSubtile(subtileIndex, frameIndicesList);
+    this->min->insertSubtile(subtileIndex, frameReferencesList);
     this->sol->insertSubtile(subtileIndex, 0);
     this->tmi->insertSubtile(subtileIndex, 0);
 }
@@ -1267,7 +1267,7 @@ void LevelCelView::reuseSubtiles(QString &report)
         for (int j = i + 1; j < this->min->getSubtileCount(); j++) {
             QList<quint16> &frameReferences0 = this->min->getFrameReferences(i);
             QList<quint16> &frameReferences1 = this->min->getFrameReferences(j);
-            if (frameReferences0.count() != frameIndices1.count()) {
+            if (frameReferences0.count() != frameReferences1.count()) {
                 continue; // should not happen, but better safe than sorry
             }
             bool match = true;
