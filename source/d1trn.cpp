@@ -19,7 +19,7 @@ bool D1Trn::load(QString filePath)
         return false;
 
     int readBytes = file.read((char *)this->translations, D1TRN_TRANSLATIONS);
-    if (readBytes < D1TRN_TRANSLATIONS)
+    if (readBytes != D1TRN_TRANSLATIONS)
         return false;
 
     this->refreshResultingPalette();

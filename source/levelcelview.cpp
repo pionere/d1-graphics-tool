@@ -69,6 +69,10 @@ void LevelCelView::initialize(D1Gfx *g, D1Min *m, D1Til *t, D1Sol *s, D1Amp *a, 
     this->amp = a;
     this->tmi = i;
 
+    this->tabTileWidget->initialize(this, this->til, this->min, this->amp);
+    this->tabSubTileWidget->initialize(this, this->gfx, this->min, this->sol, this->tmi);
+    this->tabFrameWidget->initialize(this, this->gfx);
+
     this->update();
 }
 
@@ -128,9 +132,9 @@ void LevelCelView::update()
     ui->tileNumberEdit->setText(
         QString::number(this->til->getTileCount()));
 
-    this->tabTileWidget->initialize(this, this->til, this->min, this->amp);
-    this->tabSubTileWidget->initialize(this, this->gfx, this->min, this->sol, this->tmi);
-    this->tabFrameWidget->initialize(this, this->gfx);
+    this->tabTileWidget->update();
+    this->tabSubTileWidget->update();
+    this->tabFrameWidget->update();
 }
 
 int LevelCelView::getCurrentFrameIndex()
@@ -985,8 +989,7 @@ void LevelCelView::resetFrameTypes()
     } else {
         this->gfx->setModified();
         // update the view
-        this->updateLabel();
-        this->tabFrameWidget->update();
+        this->update();
 
         report.chop(1);
     }
