@@ -72,9 +72,9 @@ private:
     void setUniqueTrn(QString trnfilePath);
     void setBaseTrn(QString trnfilePath);
 
-    bool loadPal(const QString &palFilePath);
-    bool loadUniqueTrn(const QString &trnfilePath);
-    bool loadBaseTrn(const QString &trnfilePath);
+    bool loadPal(QString palFilePath);
+    bool loadUniqueTrn(QString trnfilePath);
+    bool loadBaseTrn(QString trnfilePath);
 
     void colorIndexClicked(quint8 colorIndex);
     void colorModified();
