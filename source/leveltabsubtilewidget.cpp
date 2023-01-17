@@ -104,7 +104,7 @@ void LevelTabSubTileWidget::update()
     for (i = 0; i < frames.count(); i++) {
         this->ui->framesComboBox->setItemText(i, QString::number(frames[i]));
     }
-    if (this->lastSubtileIndex != subtileIdx) {
+    if (this->lastSubtileIndex != subtileIdx || this->ui->framesComboBox->currentIndex() == -1) {
         this->lastSubtileIndex = subtileIdx;
         this->lastFrameEntryIndex = 0;
         this->ui->framesComboBox->setCurrentIndex(0);
