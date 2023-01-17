@@ -73,8 +73,8 @@ private:
     void setTrnBase(QString trnfilePath);
 
     bool loadPal(QString palFilePath);
-    bool loadTrnUnique(QString trnfilePath);
-    bool loadTrnBase(QString trnfilePath);
+    bool loadUniqueTrn(QString trnfilePath);
+    bool loadBaseTrn(QString trnfilePath);
 
     void colorIndexClicked(quint8 colorIndex);
     void colorModified(quint8 colorIndex);
@@ -188,9 +188,9 @@ private:
     QPointer<D1Amp> amp;
     QPointer<D1Tmi> tmi;
 
-    QMap<QString, D1Pal *> pals;  // key: path, value: pointer to palette
+    QMap<QString, D1Pal *> pals;       // key: path, value: pointer to palette
     QMap<QString, D1Trn *> uniqueTrns; // key: path, value: pointer to translation
-    QMap<QString, D1Trn *> baseTrns; // key: path, value: pointer to translation
+    QMap<QString, D1Trn *> baseTrns;   // key: path, value: pointer to translation
 
     // Palette hits are instantiated in main window to make them available to the three PaletteWidgets
     QPointer<D1PalHits> palHits;

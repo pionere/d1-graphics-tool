@@ -175,7 +175,7 @@ bool MainWindow::loadPal(QString palFilePath)
     return true;
 }
 
-bool MainWindow::loadTrnUnique(QString trnFilePath)
+bool MainWindow::loadUniqueTrn(QString trnFilePath)
 {
     QFileInfo trnFileInfo(trnFilePath);
     // QString path = trnFileInfo.absoluteFilePath();
@@ -196,7 +196,7 @@ bool MainWindow::loadTrnUnique(QString trnFilePath)
     return true;
 }
 
-bool MainWindow::loadTrn2(QString trnFilePath)
+bool MainWindow::loadBaseTrn(QString trnFilePath)
 {
     QFileInfo trnFileInfo(trnFilePath);
     // QString path = trnFileInfo.absoluteFilePath();
@@ -731,7 +731,7 @@ void MainWindow::openPalFiles(QStringList filePaths, PaletteWidget *widget)
         }
     } else if (widget == this->trnUniqueWidget) {
         for (QString path : filePaths) {
-            if (this->loadTrnUnique(path) && firstFound.isEmpty()) {
+            if (this->loadUniqueTrn(path) && firstFound.isEmpty()) {
                 firstFound = path;
             }
         }
@@ -740,7 +740,7 @@ void MainWindow::openPalFiles(QStringList filePaths, PaletteWidget *widget)
         }
     } else if (widget == this->trnBaseWidget) {
         for (QString path : filePaths) {
-            if (this->loadTrn2(path) && firstFound.isEmpty()) {
+            if (this->loadBaseTrn(path) && firstFound.isEmpty()) {
                 firstFound = path;
             }
         }
@@ -1329,7 +1329,7 @@ void MainWindow::on_actionOpen_Translation_Unique_triggered()
 {
     QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, "Load Translation File", "TRN Files (*.trn *.TRN)");
 
-    if (!trnFilePath.isEmpty() && this->loadTrnUnique(trnFilePath)) {
+    if (!trnFilePath.isEmpty() && this->loadUniqueTrn(trnFilePath)) {
         this->trnUniqueWidget->selectPath(trnFilePath);
     }
 }
@@ -1428,7 +1428,7 @@ void MainWindow::on_actionOpen_Translation_Base_triggered()
 {
     QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, "Load Translation File", "TRN Files (*.trn *.TRN)");
 
-    if (!trnFilePath.isEmpty() && this->loadTrn2(trnFilePath)) {
+    if (!trnFilePath.isEmpty() && this->loadBaseTrn(trnFilePath)) {
         this->trnBaseWidget->selectPath(trnFilePath);
     }
 }
