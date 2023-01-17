@@ -858,6 +858,7 @@ void PaletteWidget::on_displayComboBox_activated(int index)
         case COLORFILTER_TYPE::FRAME:
             mode = D1PALHITS_MODE::CURRENT_FRAME;
             break;
+        }
         this->palHits->setMode(mode);
     }
 

@@ -1,7 +1,7 @@
 #include "d1palhits.h"
 
-D1PalHits::D1PalHits(D1Gfx *g, D1Min *m, D1Til *t, D1Sol *s)
-    , gfx(g)
+D1PalHits::D1PalHits(D1Gfx *g, D1Min *m, D1Til *t)
+    : gfx(g)
     , min(m)
     , til(t)
 {
