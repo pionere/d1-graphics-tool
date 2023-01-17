@@ -615,9 +615,9 @@ void PaletteWidget::displayColors()
                 break;
             case D1PALHITS_MODE::CURRENT_FRAME:
                 if (this->levelCelView != nullptr) {
-                    itemIndex = this->celView->getCurrentFrameIndex();
-                } else {
                     itemIndex = this->levelCelView->getCurrentFrameIndex();
+                } else {
+                    itemIndex = this->celView->getCurrentFrameIndex();
                 }
                 break;
             }

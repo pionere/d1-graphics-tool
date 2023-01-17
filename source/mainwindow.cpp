@@ -136,7 +136,7 @@ QString MainWindow::getLastFilePath()
 void MainWindow::updateWindow()
 {
     // rebuild palette hits
-    this->palHits->buildPalHits();
+    this->palHits->update();
     this->palWidget->refresh();
     this->undoStack->clear();
     // update menu options

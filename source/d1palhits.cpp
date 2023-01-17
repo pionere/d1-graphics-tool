@@ -37,13 +37,16 @@ void D1PalHits::buildPalHits()
         D1GfxFrame *frame = this->gfx->getFrame(i);
 
         // Go through every pixels of the frame
-        for (int jx = 0; jx < frame->getWidth(); jx++) {
-            for (int jy = 0; jy < frame->getHeight(); jy++) {
+        for (int x = 0; x < frame->getWidth(); x++) {
+            for (int y = 0; y < frame->getHeight(); y++) {
                 // Retrieve the color of the pixel
-                quint8 paletteIndex = frame->getPixel(jx, jy).getPaletteIndex();
+                D1GfxPixel pixel = frame->getPixel(x, y);
+                if (pixel.isTransparent())
+                    continue;
+                quint8 paletteIndex = pixel.getPaletteIndex();
 
                 // Add one hit to the frameHits and allFramesPalHits maps
-                this->frameHits.insert(paletteIndex, frameHits.value(paletteIndex) + 1);
+                frameHits.insert(paletteIndex, frameHits.value(paletteIndex) + 1);
 
                 this->allFramesPalHits.insert(paletteIndex, frameHits.value(paletteIndex) + 1);
             }
