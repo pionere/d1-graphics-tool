@@ -322,7 +322,6 @@ bool PaletteWidget::isTrnWidget()
 void PaletteWidget::initialize(D1Pal *p, CelView *c, D1PalHits *ph)
 {
     this->isTrn = false;
-    this->isLevelCel = false;
     this->pal = p;
     this->trn = nullptr;
     this->celView = c;
@@ -335,7 +334,6 @@ void PaletteWidget::initialize(D1Pal *p, CelView *c, D1PalHits *ph)
 void PaletteWidget::initialize(D1Pal *p, LevelCelView *lc, D1PalHits *ph)
 {
     this->isTrn = false;
-    this->isLevelCel = true;
     this->pal = p;
     this->trn = nullptr;
     this->celView = nullptr;
@@ -348,7 +346,6 @@ void PaletteWidget::initialize(D1Pal *p, LevelCelView *lc, D1PalHits *ph)
 void PaletteWidget::initialize(D1Pal *p, D1Trn *t, CelView *c, D1PalHits *ph)
 {
     this->isTrn = true;
-    this->isLevelCel = false;
     this->pal = p;
     this->trn = t;
     this->celView = c;
@@ -361,7 +358,6 @@ void PaletteWidget::initialize(D1Pal *p, D1Trn *t, CelView *c, D1PalHits *ph)
 void PaletteWidget::initialize(D1Pal *p, D1Trn *t, LevelCelView *lc, D1PalHits *ph)
 {
     this->isTrn = true;
-    this->isLevelCel = true;
     this->pal = p;
     this->trn = t;
     this->celView = nullptr;
@@ -413,7 +409,7 @@ void PaletteWidget::initializeDisplayComboBox()
 
     if (!this->isTrn) {
         ui->displayComboBox->addItem("Show all frames hits", QVariant((int)COLORFILTER_TYPE::USED));
-        if (this->isLevelCel) {
+        if (this->levelCelView != nullptr) {
             ui->displayComboBox->addItem("Show current tile hits", QVariant((int)COLORFILTER_TYPE::TILE));
             ui->displayComboBox->addItem("Show current sub-tile hits", QVariant((int)COLORFILTER_TYPE::SUBTILE));
         }
@@ -590,8 +586,6 @@ void PaletteWidget::displayColors()
     this->scene->setBackgroundBrush(Qt::white);
 
     // Displaying palette colors
-    bool displayColor;
-    quint32 indexHits;
     for (int i = 0; i < D1PAL_COLORS; i++) {
         // Go to next line
         if (i % PALETTE_COLORS_PER_LINE == 0 && i != 0) {
@@ -599,33 +593,38 @@ void PaletteWidget::displayColors()
             y += dy;
         }
 
-        QBrush brush;
-        if (!this->isTrn)
-            brush = QBrush(this->pal->getColor(i));
-        else
-            brush = QBrush(this->trn->getResultingPalette()->getColor(i));
+        QColor color = this->isTrn ? this->trn->getResultingPalette()->getColor(i) : this->pal->getColor(i);
+        QBrush brush = QBrush(color);
         QPen pen(Qt::NoPen);
 
         // Check palette display filter
-        displayColor = true;
-        indexHits = 0;
 
         // if user just click "Pick" button to select color in parent palette or translation, display all colors
-        if (this->temporarilyDisplayingAllColors || this->palHits->getMode() == D1PALHITS_MODE::ALL_COLORS)
-            indexHits = 1;
-        else if (this->palHits->getMode() == D1PALHITS_MODE::ALL_FRAMES)
-            indexHits = this->palHits->getIndexHits(i);
-        else if (this->palHits->getMode() == D1PALHITS_MODE::CURRENT_TILE)
-            indexHits = this->palHits->getIndexHits(i, this->levelCelView->getCurrentTileIndex());
-        else if (this->palHits->getMode() == D1PALHITS_MODE::CURRENT_SUBTILE)
-            indexHits = this->palHits->getIndexHits(i, this->levelCelView->getCurrentSubtileIndex());
-        else if (this->palHits->getMode() == D1PALHITS_MODE::CURRENT_FRAME && !this->isLevelCel)
-            indexHits = this->palHits->getIndexHits(i, this->celView->getCurrentFrameIndex());
-        else if (this->palHits->getMode() == D1PALHITS_MODE::CURRENT_FRAME && this->isLevelCel)
-            indexHits = this->palHits->getIndexHits(i, this->levelCelView->getCurrentFrameIndex());
+        quint32 indexHits = 1;
+        if (!this->temporarilyDisplayingAllColors) {
+            int itemIndex = -1;
+            switch (this->palHits->getMode()) {
+            case D1PALHITS_MODE::ALL_COLORS:
+            case D1PALHITS_MODE::ALL_FRAMES:
+                break;
+            case D1PALHITS_MODE::CURRENT_TILE:
+                itemIndex = this->levelCelView->getCurrentTileIndex();
+                break;
+            case D1PALHITS_MODE::CURRENT_SUBTILE:
+                itemIndex = this->levelCelView->getCurrentSubtileIndex();
+                break;
+            case D1PALHITS_MODE::CURRENT_FRAME:
+                if (this->levelCelView != nullptr) {
+                    itemIndex = this->celView->getCurrentFrameIndex();
+                } else {
+                    itemIndex = this->levelCelView->getCurrentFrameIndex();
+                }
+                break;
+            }
+            indexHits = this->palHits->getIndexHits(i, itemIndex);
+        }
 
-        if (indexHits == 0)
-            displayColor = false;
+        bool displayColor = indexHits != 0;
 
         // Check translation display filter
         if (this->isTrn && ui->displayComboBox->currentData().value<COLORFILTER_TYPE>() == COLORFILTER_TYPE::TRANSLATED // "Show translated colors"
@@ -841,24 +840,25 @@ void PaletteWidget::on_pathComboBox_activated(int index)
 
 void PaletteWidget::on_displayComboBox_activated(int index)
 {
-    switch (this->ui->displayComboBox->currentData().value<COLORFILTER_TYPE>()) {
-    case COLORFILTER_TYPE::NONE:
-        if (!this->isTrn) {
-            this->palHits->setMode(D1PALHITS_MODE::ALL_COLORS);
-        }
-        break;
-    case COLORFILTER_TYPE::USED:
-        this->palHits->setMode(D1PALHITS_MODE::ALL_FRAMES);
-        break;
-    case COLORFILTER_TYPE::TILE:
-        this->palHits->setMode(D1PALHITS_MODE::CURRENT_TILE);
-        break;
-    case COLORFILTER_TYPE::SUBTILE:
-        this->palHits->setMode(D1PALHITS_MODE::CURRENT_SUBTILE);
-        break;
-    case COLORFILTER_TYPE::FRAME:
-        this->palHits->setMode(D1PALHITS_MODE::CURRENT_FRAME);
-        break;
+    if (!this->isTrn) {
+        D1PALHITS_MODE mode = D1PALHITS_MODE::ALL_COLORS;
+        switch (this->ui->displayComboBox->currentData().value<COLORFILTER_TYPE>()) {
+        case COLORFILTER_TYPE::NONE:
+            mode = D1PALHITS_MODE::ALL_COLORS;
+            break;
+        case COLORFILTER_TYPE::USED:
+            mode = D1PALHITS_MODE::ALL_FRAMES;
+            break;
+        case COLORFILTER_TYPE::TILE:
+            mode = D1PALHITS_MODE::CURRENT_TILE;
+            break;
+        case COLORFILTER_TYPE::SUBTILE:
+            mode = D1PALHITS_MODE::CURRENT_SUBTILE;
+            break;
+        case COLORFILTER_TYPE::FRAME:
+            mode = D1PALHITS_MODE::CURRENT_FRAME;
+            break;
+        this->palHits->setMode(mode);
     }
 
     this->refresh();
