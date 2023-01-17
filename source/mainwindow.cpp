@@ -657,9 +657,8 @@ void MainWindow::openFile(const OpenAsParam &params)
     while (it.hasNext()) {
         QString sPath = it.next();
 
-        if (this->loadPal(sPath)) {
+        if (this->loadPal(sPath) && firstPaletteFound.isEmpty()) {
             firstPaletteFound = sPath;
-            break;
         }
     }
     if (firstPaletteFound.isEmpty()) {
