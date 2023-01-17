@@ -48,10 +48,6 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void setPal(QString);
-    void setTrn1(QString);
-    void setTrn2(QString);
-
     void openFile(const OpenAsParam &params);
     void openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append);
     void openPalFiles(QStringList filePaths, PaletteWidget *widget);
@@ -71,9 +67,17 @@ public:
 
 private:
     void updateWindow();
+
+    void setPal(QString palFilePath);
+    void setTrnUnique(QString trnfilePath);
+    void setTrnBase(QString trnfilePath);
+
     bool loadPal(QString palFilePath);
-    bool loadTrn1(QString trnfilePath);
-    bool loadTrn2(QString trnfilePath);
+    bool loadTrnUnique(QString trnfilePath);
+    bool loadTrnBase(QString trnfilePath);
+
+    void colorIndexClicked(quint8 colorIndex);
+    void colorModified(quint8 colorIndex);
 
     void addFrames(bool append);
     void addSubtiles(bool append);
@@ -130,17 +134,17 @@ private slots:
     void on_actionSave_PAL_as_triggered();
     void on_actionClose_PAL_triggered();
 
-    void on_actionNew_Translation_1_triggered();
-    void on_actionOpen_Translation_1_triggered();
-    void on_actionSave_Translation_1_triggered();
-    void on_actionSave_Translation_1_as_triggered();
-    void on_actionClose_Translation_1_triggered();
+    void on_actionNew_Translation_Unique_triggered();
+    void on_actionOpen_Translation_Unique_triggered();
+    void on_actionSave_Translation_Unique_triggered();
+    void on_actionSave_Translation_Unique_as_triggered();
+    void on_actionClose_Translation_Unique_triggered();
 
-    void on_actionNew_Translation_2_triggered();
-    void on_actionOpen_Translation_2_triggered();
-    void on_actionSave_Translation_2_triggered();
-    void on_actionSave_Translation_2_as_triggered();
-    void on_actionClose_Translation_2_triggered();
+    void on_actionNew_Translation_Base_triggered();
+    void on_actionOpen_Translation_Base_triggered();
+    void on_actionSave_Translation_Base_triggered();
+    void on_actionSave_Translation_Base_as_triggered();
+    void on_actionClose_Translation_Base_triggered();
 
     void on_actionAbout_triggered();
     void on_actionAbout_Qt_triggered();
@@ -166,8 +170,8 @@ private:
     QPointer<LevelCelView> levelCelView;
 
     QPointer<PaletteWidget> palWidget;
-    QPointer<PaletteWidget> trn1Widget;
-    QPointer<PaletteWidget> trn2Widget;
+    QPointer<PaletteWidget> trnUniqueWidget;
+    QPointer<PaletteWidget> trnBaseWidget;
 
     OpenAsDialog openAsDialog = OpenAsDialog(this);
     SaveAsDialog saveAsDialog = SaveAsDialog(this);
@@ -175,8 +179,8 @@ private:
     ExportDialog exportDialog = ExportDialog(this);
 
     QPointer<D1Pal> pal;
-    QPointer<D1Trn> trn1;
-    QPointer<D1Trn> trn2;
+    QPointer<D1Trn> trnUnique;
+    QPointer<D1Trn> trnBase;
     QPointer<D1Gfx> gfx;
     QPointer<D1Min> min;
     QPointer<D1Til> til;
@@ -185,8 +189,8 @@ private:
     QPointer<D1Tmi> tmi;
 
     QMap<QString, D1Pal *> pals;  // key: path, value: pointer to palette
-    QMap<QString, D1Trn *> trn1s; // key: path, value: pointer to translation
-    QMap<QString, D1Trn *> trn2s; // key: path, value: pointer to translation
+    QMap<QString, D1Trn *> uniqueTrns; // key: path, value: pointer to translation
+    QMap<QString, D1Trn *> baseTrns; // key: path, value: pointer to translation
 
     // Palette hits are instantiated in main window to make them available to the three PaletteWidgets
     QPointer<D1PalHits> palHits;

@@ -99,33 +99,33 @@ MainWindow::~MainWindow()
 void MainWindow::setPal(QString path)
 {
     this->pal = this->pals[path];
-    this->trn1->setPalette(this->pal);
-    this->trn1->refreshResultingPalette();
-    this->trn2->refreshResultingPalette();
+    this->trnUnique->setPalette(this->pal);
+    this->trnUnique->refreshResultingPalette();
+    this->trnBase->refreshResultingPalette();
 
     this->palWidget->setPal(this->pal);
 }
 
-void MainWindow::setTrn1(QString path)
+void MainWindow::setTrnUnique(QString path)
 {
-    this->trn1 = this->trn1s[path];
-    this->trn1->setPalette(this->pal);
-    this->trn1->refreshResultingPalette();
-    this->trn2->setPalette(this->trn1->getResultingPalette());
-    this->trn2->refreshResultingPalette();
+    this->trnUnique = this->uniqueTrns[path];
+    this->trnUnique->setPalette(this->pal);
+    this->trnUnique->refreshResultingPalette();
+    this->trnBase->setPalette(this->trnUnique->getResultingPalette());
+    this->trnBase->refreshResultingPalette();
 
-    this->trn1Widget->setTrn(this->trn1);
+    this->trnUniqueWidget->setTrn(this->trnUnique);
 }
 
-void MainWindow::setTrn2(QString path)
+void MainWindow::setTrnBase(QString path)
 {
-    this->trn2 = this->trn2s[path];
-    this->trn2->setPalette(this->trn1->getResultingPalette());
-    this->trn2->refreshResultingPalette();
+    this->trnBase = this->baseTrns[path];
+    this->trnBase->setPalette(this->trnUnique->getResultingPalette());
+    this->trnBase->refreshResultingPalette();
 
-    this->gfx->setPalette(this->trn2->getResultingPalette());
+    this->gfx->setPalette(this->trnBase->getResultingPalette());
 
-    this->trn2Widget->setTrn(this->trn2);
+    this->trnBaseWidget->setTrn(this->trnBase);
 }
 
 QString MainWindow::getLastFilePath()
@@ -175,7 +175,7 @@ bool MainWindow::loadPal(QString palFilePath)
     return true;
 }
 
-bool MainWindow::loadTrn1(QString trnFilePath)
+bool MainWindow::loadTrnUnique(QString trnFilePath)
 {
     QFileInfo trnFileInfo(trnFilePath);
     // QString path = trnFileInfo.absoluteFilePath();
@@ -189,10 +189,10 @@ bool MainWindow::loadTrn1(QString trnFilePath)
         return false;
     }
 
-    if (this->trn1s.contains(path))
-        delete this->trn1s[path];
-    this->trn1s[path] = newTrn;
-    this->trn1Widget->addPath(path, name);
+    if (this->uniqueTrns.contains(path))
+        delete this->uniqueTrns[path];
+    this->uniqueTrns[path] = newTrn;
+    this->trnUniqueWidget->addPath(path, name);
     return true;
 }
 
@@ -210,11 +210,27 @@ bool MainWindow::loadTrn2(QString trnFilePath)
         return false;
     }
 
-    if (this->trn2s.contains(path))
-        delete this->trn2s[path];
-    this->trn2s[path] = newTrn;
-    this->trn2Widget->addPath(path, name);
+    if (this->baseTrns.contains(path))
+        delete this->baseTrns[path];
+    this->baseTrns[path] = newTrn;
+    this->trnBaseWidget->addPath(path, name);
     return true;
+}
+
+void MainWindow::colorIndexClicked(quint8 colorIndex)
+{
+    this->palWidget->selectColor(colorIndex);
+    this->trnUniqueWidget->selectColor(colorIndex);
+    this->trnBaseWidget->selectColor(colorIndex);
+}
+
+void MainWindow::colorModified(quint8 colorIndex)
+{
+    if (this->levelCelView != nullptr) {
+        this->levelCelView->displayFrame();
+    } else {
+        this->celView->displayFrame();
+    }
 }
 
 void MainWindow::paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type)
@@ -237,40 +253,40 @@ void MainWindow::paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_
             this->on_actionClose_PAL_triggered();
             break;
         }
-    } else if (widget == this->trn1Widget) {
+    } else if (widget == this->trnUniqueWidget) {
         switch (type) {
         case PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_NEW:
-            this->on_actionNew_Translation_1_triggered();
+            this->on_actionNew_Translation_Unique_triggered();
             break;
         case PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_OPEN:
-            this->on_actionOpen_Translation_1_triggered();
+            this->on_actionOpen_Translation_Unique_triggered();
             break;
         case PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_SAVE:
-            this->on_actionSave_Translation_1_triggered();
+            this->on_actionSave_Translation_Unique_triggered();
             break;
         case PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_SAVEAS:
-            this->on_actionSave_Translation_1_as_triggered();
+            this->on_actionSave_Translation_Unique_as_triggered();
             break;
         case PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_CLOSE:
-            this->on_actionClose_Translation_1_triggered();
+            this->on_actionClose_Translation_Unique_triggered();
             break;
         }
-    } else if (widget == this->trn2Widget) {
+    } else if (widget == this->trnBaseWidget) {
         switch (type) {
         case PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_NEW:
-            this->on_actionNew_Translation_2_triggered();
+            this->on_actionNew_Translation_Base_triggered();
             break;
         case PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_OPEN:
-            this->on_actionOpen_Translation_2_triggered();
+            this->on_actionOpen_Translation_Base_triggered();
             break;
         case PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_SAVE:
-            this->on_actionSave_Translation_2_triggered();
+            this->on_actionSave_Translation_Base_triggered();
             break;
         case PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_SAVEAS:
-            this->on_actionSave_Translation_2_as_triggered();
+            this->on_actionSave_Translation_Base_as_triggered();
             break;
         case PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_CLOSE:
-            this->on_actionClose_Translation_2_triggered();
+            this->on_actionClose_Translation_Base_triggered();
             break;
         }
     }
@@ -468,12 +484,12 @@ void MainWindow::openFile(const OpenAsParam &params)
     // Loading default null.trn
     D1Trn *newTrn = new D1Trn(this->pal);
     newTrn->load(D1Trn::IDENTITY_PATH);
-    this->trn1s[D1Trn::IDENTITY_PATH] = newTrn;
-    this->trn1 = newTrn;
-    newTrn = new D1Trn(this->trn1->getResultingPalette());
+    this->uniqueTrns[D1Trn::IDENTITY_PATH] = newTrn;
+    this->trnUnique = newTrn;
+    newTrn = new D1Trn(this->trnUnique->getResultingPalette());
     newTrn->load(D1Trn::IDENTITY_PATH);
-    this->trn2s[D1Trn::IDENTITY_PATH] = newTrn;
-    this->trn2 = newTrn;
+    this->baseTrns[D1Trn::IDENTITY_PATH] = newTrn;
+    this->trnBase = newTrn;
 
     QFileInfo celFileInfo = QFileInfo(openFilePath);
 
@@ -498,7 +514,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     }
 
     this->gfx = new D1Gfx();
-    this->gfx->setPalette(this->trn2->getResultingPalette());
+    this->gfx->setPalette(this->trnBase->getResultingPalette());
     if (isTileset) {
         // Loading SOL
         this->sol = new D1Sol();
@@ -566,93 +582,74 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // Add palette widgets for PAL and TRNs
     this->palWidget = new PaletteWidget(this->undoStack, "Palette");
-    this->trn2Widget = new PaletteWidget(this->undoStack, "Translation");
-    this->trn1Widget = new PaletteWidget(this->undoStack, "Unique translation");
+    this->trnBaseWidget = new PaletteWidget(this->undoStack, "Base Translation");
+    this->trnUniqueWidget = new PaletteWidget(this->undoStack, "Unique translation");
     this->ui->palFrame->layout()->addWidget(this->palWidget);
-    this->ui->palFrame->layout()->addWidget(this->trn2Widget);
-    this->ui->palFrame->layout()->addWidget(this->trn1Widget);
+    this->ui->palFrame->layout()->addWidget(this->trnBaseWidget);
+    this->ui->palFrame->layout()->addWidget(this->trnUniqueWidget);
 
     // Configuration update triggers refresh of the palette widgets
     QObject::connect(&this->settingsDialog, &SettingsDialog::configurationSaved, this->palWidget, &PaletteWidget::reloadConfig);
-    QObject::connect(&this->settingsDialog, &SettingsDialog::configurationSaved, this->trn1Widget, &PaletteWidget::reloadConfig);
-    QObject::connect(&this->settingsDialog, &SettingsDialog::configurationSaved, this->trn2Widget, &PaletteWidget::reloadConfig);
+    QObject::connect(&this->settingsDialog, &SettingsDialog::configurationSaved, this->trnUniqueWidget, &PaletteWidget::reloadConfig);
+    QObject::connect(&this->settingsDialog, &SettingsDialog::configurationSaved, this->trnBaseWidget, &PaletteWidget::reloadConfig);
     QObject::connect(&this->settingsDialog, &SettingsDialog::configurationSaved, this->palWidget, &PaletteWidget::refresh);
 
     // Palette and translation file selection
     // When a .pal or .trn file is selected in the PaletteWidget update the pal or trn
     QObject::connect(this->palWidget, &PaletteWidget::pathSelected, this, &MainWindow::setPal);
-    QObject::connect(this->trn1Widget, &PaletteWidget::pathSelected, this, &MainWindow::setTrn1);
-    QObject::connect(this->trn2Widget, &PaletteWidget::pathSelected, this, &MainWindow::setTrn2);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::pathSelected, this, &MainWindow::setTrnUnique);
+    QObject::connect(this->trnBaseWidget, &PaletteWidget::pathSelected, this, &MainWindow::setTrnBase);
 
     // Refresh PAL/TRN view chain
-    QObject::connect(this->palWidget, &PaletteWidget::refreshed, this->trn1Widget, &PaletteWidget::refresh);
-    QObject::connect(this->trn1Widget, &PaletteWidget::refreshed, this->trn2Widget, &PaletteWidget::refresh);
+    QObject::connect(this->palWidget, &PaletteWidget::refreshed, this->trnUniqueWidget, &PaletteWidget::refresh);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::refreshed, this->trnBaseWidget, &PaletteWidget::refresh);
 
     // Translation color selection
-    QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->trn2Widget, &PaletteWidget::checkTranslationsSelection);
-    QObject::connect(this->trn2Widget, &PaletteWidget::colorsSelected, this->trn1Widget, &PaletteWidget::checkTranslationsSelection);
-    QObject::connect(this->trn2Widget, &PaletteWidget::displayAllRootColors, this->palWidget, &PaletteWidget::temporarilyDisplayAllColors);
-    QObject::connect(this->trn1Widget, &PaletteWidget::displayAllRootColors, this->trn2Widget, &PaletteWidget::temporarilyDisplayAllColors);
-    QObject::connect(this->trn2Widget, &PaletteWidget::displayRootInformation, this->palWidget, &PaletteWidget::displayInfo);
-    QObject::connect(this->trn1Widget, &PaletteWidget::displayRootInformation, this->trn2Widget, &PaletteWidget::displayInfo);
-    QObject::connect(this->trn2Widget, &PaletteWidget::displayRootBorder, this->palWidget, &PaletteWidget::displayBorder);
-    QObject::connect(this->trn1Widget, &PaletteWidget::displayRootBorder, this->trn2Widget, &PaletteWidget::displayBorder);
-    QObject::connect(this->trn2Widget, &PaletteWidget::clearRootInformation, this->palWidget, &PaletteWidget::clearInfo);
-    QObject::connect(this->trn1Widget, &PaletteWidget::clearRootInformation, this->trn2Widget, &PaletteWidget::clearInfo);
-    QObject::connect(this->trn2Widget, &PaletteWidget::clearRootBorder, this->palWidget, &PaletteWidget::clearBorder);
-    QObject::connect(this->trn1Widget, &PaletteWidget::clearRootBorder, this->trn2Widget, &PaletteWidget::clearBorder);
+    QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->trnBaseWidget, &PaletteWidget::checkTranslationsSelection);
+    QObject::connect(this->trnBaseWidget, &PaletteWidget::colorsSelected, this->trnUniqueWidget, &PaletteWidget::checkTranslationsSelection);
+    QObject::connect(this->trnBaseWidget, &PaletteWidget::displayAllRootColors, this->palWidget, &PaletteWidget::temporarilyDisplayAllColors);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::displayAllRootColors, this->trnBaseWidget, &PaletteWidget::temporarilyDisplayAllColors);
+    QObject::connect(this->trnBaseWidget, &PaletteWidget::displayRootInformation, this->palWidget, &PaletteWidget::displayInfo);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::displayRootInformation, this->trnBaseWidget, &PaletteWidget::displayInfo);
+    QObject::connect(this->trnBaseWidget, &PaletteWidget::displayRootBorder, this->palWidget, &PaletteWidget::displayBorder);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::displayRootBorder, this->trnBaseWidget, &PaletteWidget::displayBorder);
+    QObject::connect(this->trnBaseWidget, &PaletteWidget::clearRootInformation, this->palWidget, &PaletteWidget::clearInfo);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::clearRootInformation, this->trnBaseWidget, &PaletteWidget::clearInfo);
+    QObject::connect(this->trnBaseWidget, &PaletteWidget::clearRootBorder, this->palWidget, &PaletteWidget::clearBorder);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::clearRootBorder, this->trnBaseWidget, &PaletteWidget::clearBorder);
 
     if (isTileset) {
+        // build a LevelCelView
         this->levelCelView = new LevelCelView();
         this->levelCelView->initialize(this->gfx, this->min, this->til, this->sol, this->amp, this->tmi);
 
-        // Refresh CEL view if a PAL or TRN is modified
-        QObject::connect(this->palWidget, &PaletteWidget::modified, this->levelCelView, &LevelCelView::displayFrame);
-        QObject::connect(this->trn1Widget, &PaletteWidget::modified, this->levelCelView, &LevelCelView::displayFrame);
-        QObject::connect(this->trn2Widget, &PaletteWidget::modified, this->levelCelView, &LevelCelView::displayFrame);
-
         // Select color when level CEL view clicked
-        QObject::connect(this->levelCelView, &LevelCelView::colorIndexClicked, this->palWidget, &PaletteWidget::selectColor);
-        QObject::connect(this->levelCelView, &LevelCelView::colorIndexClicked, this->trn1Widget, &PaletteWidget::selectColor);
-        QObject::connect(this->levelCelView, &LevelCelView::colorIndexClicked, this->trn2Widget, &PaletteWidget::selectColor);
+        QObject::connect(this->levelCelView, &LevelCelView::colorIndexClicked, this, &MainWindow::colorIndexClicked);
 
         // Refresh palette widgets when frame, subtile of tile is changed
         QObject::connect(this->levelCelView, &LevelCelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
-
-        // Initialize palette widgets
-        this->palHits = new D1PalHits(this->gfx, this->min, this->til);
-        this->palWidget->initialize(this->pal, this->levelCelView, this->palHits);
-        this->trn1Widget->initialize(this->pal, this->trn1, this->levelCelView, this->palHits);
-        this->trn2Widget->initialize(this->trn1->getResultingPalette(), this->trn2, this->levelCelView, this->palHits);
-
-        this->levelCelView->displayFrame();
-    }
-    // Otherwise build a CelView
-    else {
+    } else {
+        // build a CelView
         this->celView = new CelView();
         this->celView->initialize(this->gfx);
 
-        // Refresh CEL view if a PAL or TRN is modified
-        QObject::connect(this->palWidget, &PaletteWidget::modified, this->celView, &CelView::displayFrame);
-        QObject::connect(this->trn1Widget, &PaletteWidget::modified, this->celView, &CelView::displayFrame);
-        QObject::connect(this->trn2Widget, &PaletteWidget::modified, this->celView, &CelView::displayFrame);
-
         // Select color when CEL view clicked
-        QObject::connect(this->celView, &CelView::colorIndexClicked, this->palWidget, &PaletteWidget::selectColor);
-        QObject::connect(this->celView, &CelView::colorIndexClicked, this->trn1Widget, &PaletteWidget::selectColor);
-        QObject::connect(this->celView, &CelView::colorIndexClicked, this->trn2Widget, &PaletteWidget::selectColor);
+        QObject::connect(this->celView, &CelView::colorIndexClicked, this, &MainWindow::colorIndexClicked);
 
         // Refresh palette widgets when frame
         QObject::connect(this->celView, &CelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
-
-        // Initialize palette widgets
-        this->palHits = new D1PalHits(this->gfx);
-        this->palWidget->initialize(this->pal, this->celView, this->palHits);
-        this->trn1Widget->initialize(this->pal, this->trn1, this->celView, this->palHits);
-        this->trn2Widget->initialize(this->trn1->getResultingPalette(), this->trn2, this->celView, this->palHits);
-
-        this->celView->displayFrame();
     }
+
+    // Initialize palette widgets
+    this->palHits = new D1PalHits(this->gfx, this->min, this->til);
+    this->palWidget->initialize(this->pal, this->celView, this->levelCelView, this->palHits);
+    this->trnUniqueWidget->initialize(this->pal, this->trnUnique, this->celView, this->levelCelView, this->palHits);
+    this->trnBaseWidget->initialize(this->trnUnique->getResultingPalette(), this->trnBase, this->celView, this->levelCelView, this->palHits);
+
+    // Refresh the view if a PAL or TRN is modified
+    QObject::connect(this->palWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);
+    QObject::connect(this->trnBaseWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);
 
     // Look for all palettes in the same folder as the CEL/CL2 file
     QDirIterator it(celFileInfo.absolutePath(), QStringList() << "*.pal", QDir::Files);
@@ -660,13 +657,15 @@ void MainWindow::openFile(const OpenAsParam &params)
     while (it.hasNext()) {
         QString sPath = it.next();
 
-        if (this->loadPal(sPath) && firstPaletteFound.isEmpty()) {
+        if (this->loadPal(sPath)) {
             firstPaletteFound = sPath;
+            break;
         }
     }
-    // Select the first palette found in the same folder as the CEL/CL2 if it exists
-    if (!firstPaletteFound.isEmpty())
-        this->palWidget->selectPath(firstPaletteFound);
+    if (firstPaletteFound.isEmpty()) {
+        firstPaletteFound = D1Pal::DEFAULT_PATH;
+    }
+    this->palWidget->selectPath(firstPaletteFound); // should trigger view->displayFrame()
 
     // Adding the CelView to the main frame
     this->ui->mainFrame->layout()->addWidget(isTileset ? (QWidget *)this->levelCelView : this->celView);
@@ -730,23 +729,23 @@ void MainWindow::openPalFiles(QStringList filePaths, PaletteWidget *widget)
         if (!firstFound.isEmpty()) {
             this->palWidget->selectPath(firstFound);
         }
-    } else if (widget == this->trn1Widget) {
+    } else if (widget == this->trnUniqueWidget) {
         for (QString path : filePaths) {
-            if (this->loadTrn1(path) && firstFound.isEmpty()) {
+            if (this->loadTrnUnique(path) && firstFound.isEmpty()) {
                 firstFound = path;
             }
         }
         if (!firstFound.isEmpty()) {
-            this->trn1Widget->selectPath(firstFound);
+            this->trnUniqueWidget->selectPath(firstFound);
         }
-    } else if (widget == this->trn2Widget) {
+    } else if (widget == this->trnBaseWidget) {
         for (QString path : filePaths) {
             if (this->loadTrn2(path) && firstFound.isEmpty()) {
                 firstFound = path;
             }
         }
         if (!firstFound.isEmpty()) {
-            this->trn2Widget->selectPath(firstFound);
+            this->trnBaseWidget->selectPath(firstFound);
         }
     }
 
@@ -894,18 +893,18 @@ void MainWindow::on_actionClose_triggered()
     delete this->celView;
     delete this->levelCelView;
     delete this->palWidget;
-    delete this->trn1Widget;
-    delete this->trn2Widget;
+    delete this->trnUniqueWidget;
+    delete this->trnBaseWidget;
     delete this->gfx;
 
     qDeleteAll(this->pals);
     this->pals.clear();
 
-    qDeleteAll(this->trn1s);
-    this->trn1s.clear();
+    qDeleteAll(this->uniqueTrns);
+    this->uniqueTrns.clear();
 
-    qDeleteAll(this->trn2s);
-    this->trn2s.clear();
+    qDeleteAll(this->baseTrns);
+    this->baseTrns.clear();
 
     delete this->min;
     delete this->til;
@@ -1295,7 +1294,7 @@ void MainWindow::on_actionClose_PAL_triggered()
     this->palWidget->selectPath(D1Pal::DEFAULT_PATH);
 }
 
-void MainWindow::on_actionNew_Translation_1_triggered()
+void MainWindow::on_actionNew_Translation_Unique_triggered()
 {
     QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, "New Translation File", "TRN Files (*.trn *.TRN)");
 
@@ -1319,36 +1318,36 @@ void MainWindow::on_actionNew_Translation_1_triggered()
         return;
     }
 
-    if (this->trn1s.contains(path))
-        delete this->trn1s[path];
-    this->trn1s[path] = newTrn;
-    this->trn1Widget->addPath(path, name);
-    this->trn1Widget->selectPath(path);
+    if (this->uniqueTrns.contains(path))
+        delete this->uniqueTrns[path];
+    this->uniqueTrns[path] = newTrn;
+    this->trnUniqueWidget->addPath(path, name);
+    this->trnUniqueWidget->selectPath(path);
 }
 
-void MainWindow::on_actionOpen_Translation_1_triggered()
+void MainWindow::on_actionOpen_Translation_Unique_triggered()
 {
     QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, "Load Translation File", "TRN Files (*.trn *.TRN)");
 
-    if (!trnFilePath.isEmpty() && this->loadTrn1(trnFilePath)) {
-        this->trn1Widget->selectPath(trnFilePath);
+    if (!trnFilePath.isEmpty() && this->loadTrnUnique(trnFilePath)) {
+        this->trnUniqueWidget->selectPath(trnFilePath);
     }
 }
 
-void MainWindow::on_actionSave_Translation_1_triggered()
+void MainWindow::on_actionSave_Translation_Unique_triggered()
 {
-    QString selectedPath = this->trn1Widget->getSelectedPath();
+    QString selectedPath = this->trnUniqueWidget->getSelectedPath();
     if (selectedPath == D1Trn::IDENTITY_PATH) {
-        this->on_actionSave_Translation_1_as_triggered();
+        this->on_actionSave_Translation_Unique_as_triggered();
     } else {
-        if (!this->trn1->save(selectedPath)) {
+        if (!this->trnUnique->save(selectedPath)) {
             QMessageBox::critical(this, "Error", "Could not save TRN file.");
             return;
         }
     }
 }
 
-void MainWindow::on_actionSave_Translation_1_as_triggered()
+void MainWindow::on_actionSave_Translation_Unique_as_triggered()
 {
     QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, "Save Translation File as...", "TRN Files (*.trn *.TRN)");
 
@@ -1356,7 +1355,7 @@ void MainWindow::on_actionSave_Translation_1_as_triggered()
         return;
     }
 
-    if (!this->trn1->save(trnFilePath)) {
+    if (!this->trnUnique->save(trnFilePath)) {
         QMessageBox::critical(this, "Error", "Could not save TRN file.");
         return;
     }
@@ -1372,29 +1371,29 @@ void MainWindow::on_actionSave_Translation_1_as_triggered()
         return;
     }
 
-    if (this->trn1s.contains(path))
-        delete this->trn1s[path];
-    this->trn1s[path] = newTrn;
-    this->trn1Widget->addPath(path, name);
-    this->trn1Widget->selectPath(path);
+    if (this->uniqueTrns.contains(path))
+        delete this->uniqueTrns[path];
+    this->uniqueTrns[path] = newTrn;
+    this->trnUniqueWidget->addPath(path, name);
+    this->trnUniqueWidget->selectPath(path);
 }
 
-void MainWindow::on_actionClose_Translation_1_triggered()
+void MainWindow::on_actionClose_Translation_Unique_triggered()
 {
-    QString selectedPath = this->trn1Widget->getSelectedPath();
+    QString selectedPath = this->trnUniqueWidget->getSelectedPath();
     if (selectedPath == D1Trn::IDENTITY_PATH)
         return;
 
-    if (this->trn1s.contains(selectedPath)) {
-        delete this->trn1s[selectedPath];
-        this->trn1s.remove(selectedPath);
+    if (this->uniqueTrns.contains(selectedPath)) {
+        delete this->uniqueTrns[selectedPath];
+        this->uniqueTrns.remove(selectedPath);
     }
 
-    this->trn1Widget->removePath(selectedPath);
-    this->trn1Widget->selectPath(D1Trn::IDENTITY_PATH);
+    this->trnUniqueWidget->removePath(selectedPath);
+    this->trnUniqueWidget->selectPath(D1Trn::IDENTITY_PATH);
 }
 
-void MainWindow::on_actionNew_Translation_2_triggered()
+void MainWindow::on_actionNew_Translation_Base_triggered()
 {
     QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, "New Translation File", "TRN Files (*.trn *.TRN)");
 
@@ -1406,7 +1405,7 @@ void MainWindow::on_actionNew_Translation_2_triggered()
     QString path = trnFileInfo.absoluteFilePath();
     QString name = trnFileInfo.fileName();
 
-    D1Trn *newTrn = new D1Trn(this->trn1->getResultingPalette());
+    D1Trn *newTrn = new D1Trn(this->trnUnique->getResultingPalette());
     if (!newTrn->load(D1Trn::IDENTITY_PATH)) {
         delete newTrn;
         QMessageBox::critical(this, "Error", "Could not load TRN file.");
@@ -1418,36 +1417,36 @@ void MainWindow::on_actionNew_Translation_2_triggered()
         return;
     }
 
-    if (this->trn2s.contains(path))
-        delete this->trn2s[path];
-    this->trn2s[path] = newTrn;
-    this->trn2Widget->addPath(path, name);
-    this->trn2Widget->selectPath(path);
+    if (this->baseTrns.contains(path))
+        delete this->baseTrns[path];
+    this->baseTrns[path] = newTrn;
+    this->trnBaseWidget->addPath(path, name);
+    this->trnBaseWidget->selectPath(path);
 }
 
-void MainWindow::on_actionOpen_Translation_2_triggered()
+void MainWindow::on_actionOpen_Translation_Base_triggered()
 {
     QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, "Load Translation File", "TRN Files (*.trn *.TRN)");
 
     if (!trnFilePath.isEmpty() && this->loadTrn2(trnFilePath)) {
-        this->trn2Widget->selectPath(trnFilePath);
+        this->trnBaseWidget->selectPath(trnFilePath);
     }
 }
 
-void MainWindow::on_actionSave_Translation_2_triggered()
+void MainWindow::on_actionSave_Translation_Base_triggered()
 {
-    QString selectedPath = this->trn2Widget->getSelectedPath();
+    QString selectedPath = this->trnBaseWidget->getSelectedPath();
     if (selectedPath == D1Trn::IDENTITY_PATH) {
-        this->on_actionSave_Translation_2_as_triggered();
+        this->on_actionSave_Translation_Base_as_triggered();
     } else {
-        if (!this->trn2->save(selectedPath)) {
+        if (!this->trnBase->save(selectedPath)) {
             QMessageBox::critical(this, "Error", "Could not save TRN file.");
             return;
         }
     }
 }
 
-void MainWindow::on_actionSave_Translation_2_as_triggered()
+void MainWindow::on_actionSave_Translation_Base_as_triggered()
 {
     QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, "Save Translation File as...", "TRN Files (*.trn *.TRN)");
 
@@ -1455,7 +1454,7 @@ void MainWindow::on_actionSave_Translation_2_as_triggered()
         return;
     }
 
-    if (!this->trn2->save(trnFilePath)) {
+    if (!this->trnBase->save(trnFilePath)) {
         QMessageBox::critical(this, "Error", "Could not save TRN file.");
         return;
     }
@@ -1464,33 +1463,33 @@ void MainWindow::on_actionSave_Translation_2_as_triggered()
     QString path = trnFileInfo.absoluteFilePath();
     QString name = trnFileInfo.fileName();
 
-    D1Trn *newTrn = new D1Trn(this->trn1->getResultingPalette());
+    D1Trn *newTrn = new D1Trn(this->trnUnique->getResultingPalette());
     if (!newTrn->load(path)) {
         delete newTrn;
         QMessageBox::critical(this, "Error", "Could not load TRN file.");
         return;
     }
 
-    if (this->trn2s.contains(path))
-        delete this->trn2s[path];
-    this->trn2s[path] = newTrn;
-    this->trn2Widget->addPath(path, name);
-    this->trn2Widget->selectPath(path);
+    if (this->baseTrns.contains(path))
+        delete this->baseTrns[path];
+    this->baseTrns[path] = newTrn;
+    this->trnBaseWidget->addPath(path, name);
+    this->trnBaseWidget->selectPath(path);
 }
 
-void MainWindow::on_actionClose_Translation_2_triggered()
+void MainWindow::on_actionClose_Translation_Base_triggered()
 {
-    QString selectedPath = this->trn2Widget->getSelectedPath();
+    QString selectedPath = this->trnBaseWidget->getSelectedPath();
     if (selectedPath == D1Trn::IDENTITY_PATH)
         return;
 
-    if (this->trn2s.contains(selectedPath)) {
-        delete this->trn2s[selectedPath];
-        this->trn2s.remove(selectedPath);
+    if (this->baseTrns.contains(selectedPath)) {
+        delete this->baseTrns[selectedPath];
+        this->baseTrns.remove(selectedPath);
     }
 
-    this->trn2Widget->removePath(selectedPath);
-    this->trn2Widget->selectPath(D1Trn::IDENTITY_PATH);
+    this->trnBaseWidget->removePath(selectedPath);
+    this->trnBaseWidget->selectPath(D1Trn::IDENTITY_PATH);
 }
 
 void MainWindow::on_actionAbout_triggered()

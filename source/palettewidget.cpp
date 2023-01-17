@@ -319,48 +319,24 @@ bool PaletteWidget::isTrnWidget()
     return this->isTrn;
 }
 
-void PaletteWidget::initialize(D1Pal *p, CelView *c, D1PalHits *ph)
+void PaletteWidget::initialize(D1Pal *p, CelView *c, LevelCelView *lc, D1PalHits *ph)
 {
     this->isTrn = false;
     this->pal = p;
     this->trn = nullptr;
     this->celView = c;
-    this->levelCelView = nullptr;
-    this->palHits = ph;
-
-    this->initializeUi();
-}
-
-void PaletteWidget::initialize(D1Pal *p, LevelCelView *lc, D1PalHits *ph)
-{
-    this->isTrn = false;
-    this->pal = p;
-    this->trn = nullptr;
-    this->celView = nullptr;
     this->levelCelView = lc;
     this->palHits = ph;
 
     this->initializeUi();
 }
 
-void PaletteWidget::initialize(D1Pal *p, D1Trn *t, CelView *c, D1PalHits *ph)
+void PaletteWidget::initialize(D1Pal *p, D1Trn *t, CelView *c, LevelCelView *lc, D1PalHits *ph)
 {
     this->isTrn = true;
     this->pal = p;
     this->trn = t;
     this->celView = c;
-    this->levelCelView = nullptr;
-    this->palHits = ph;
-
-    this->initializeUi();
-}
-
-void PaletteWidget::initialize(D1Pal *p, D1Trn *t, LevelCelView *lc, D1PalHits *ph)
-{
-    this->isTrn = true;
-    this->pal = p;
-    this->trn = t;
-    this->celView = nullptr;
     this->levelCelView = lc;
     this->palHits = ph;
 

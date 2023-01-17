@@ -130,23 +130,20 @@ public:
     void setTrn(D1Trn *t);
     bool isTrnWidget();
 
-    void initialize(D1Pal *p, CelView *c, D1PalHits *ph);
-    void initialize(D1Pal *p, LevelCelView *lc, D1PalHits *ph);
-
-    void initialize(D1Pal *p, D1Trn *t, CelView *c, D1PalHits *ph);
-    void initialize(D1Pal *p, D1Trn *t, LevelCelView *lc, D1PalHits *ph);
+    void initialize(D1Pal *p, CelView *c, LevelCelView *lc, D1PalHits *ph);
+    void initialize(D1Pal *p, D1Trn *t, CelView *c, LevelCelView *lc, D1PalHits *ph);
 
     void initializeUi();
     void initializePathComboBox();
     void initializeDisplayComboBox();
 
     void reloadConfig();
-    void selectColor(quint8);
-    void checkTranslationsSelection(QList<quint8>);
+    void selectColor(quint8 colorIndex);
+    void checkTranslationsSelection(QList<quint8> indices);
 
-    void addPath(QString, QString);
-    void removePath(QString);
-    void selectPath(QString);
+    void addPath(QString path, QString name);
+    void removePath(QString path);
+    void selectPath(QString path);
     QString getSelectedPath();
 
     // color selection handlers
@@ -173,7 +170,7 @@ public:
 
 signals:
     void pathSelected(QString);
-    void colorsSelected(QList<quint8>);
+    void colorsSelected(QList<quint8> indices);
 
     void displayAllRootColors();
     void displayRootInformation(QString);

@@ -160,17 +160,17 @@
     <addaction name="actionSave_PAL_as"/>
     <addaction name="actionClose_PAL"/>
     <addaction name="separator"/>
-    <addaction name="actionNew_Translation_2"/>
-    <addaction name="actionOpen_Translation_2"/>
-    <addaction name="actionSave_Translation_2"/>
-    <addaction name="actionSave_Translation_2_as"/>
-    <addaction name="actionClose_Translation_2"/>
+    <addaction name="actionNew_Translation_Base"/>
+    <addaction name="actionOpen_Translation_Base"/>
+    <addaction name="actionSave_Translation_Base"/>
+    <addaction name="actionSave_Translation_Base_as"/>
+    <addaction name="actionClose_Translation_Base"/>
     <addaction name="separator"/>
-    <addaction name="actionNew_Translation_1"/>
-    <addaction name="actionOpen_Translation_1"/>
-    <addaction name="actionSave_Translation_1"/>
-    <addaction name="actionSave_Translation_1_as"/>
-    <addaction name="actionClose_Translation_1"/>
+    <addaction name="actionNew_Translation_Unique"/>
+    <addaction name="actionOpen_Translation_Unique"/>
+    <addaction name="actionSave_Translation_Unique"/>
+    <addaction name="actionSave_Translation_Unique_as"/>
+    <addaction name="actionClose_Translation_Unique"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -254,7 +254,7 @@
     <string>Ctrl+P</string>
    </property>
   </action>
-  <action name="actionOpen_Translation_1">
+  <action name="actionOpen_Translation_Unique">
    <property name="text">
     <string>Open unique translation...</string>
    </property>
@@ -262,9 +262,9 @@
     <string>Ctrl+U</string>
    </property>
   </action>
-  <action name="actionOpen_Translation_2">
+  <action name="actionOpen_Translation_Base">
    <property name="text">
-    <string>Open translation...</string>
+    <string>Open base translation...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+T</string>
@@ -389,22 +389,22 @@
     <string>Save palette as...</string>
    </property>
   </action>
-  <action name="actionSave_Translation_2">
+  <action name="actionSave_Translation_Base">
    <property name="text">
-    <string>Save translation</string>
+    <string>Save base translation</string>
    </property>
   </action>
-  <action name="actionSave_Translation_2_as">
+  <action name="actionSave_Translation_Base_as">
    <property name="text">
-    <string>Save translation as...</string>
+    <string>Save base translation as...</string>
    </property>
   </action>
-  <action name="actionSave_Translation_1">
+  <action name="actionSave_Translation_Unique">
    <property name="text">
     <string>Save unique translation</string>
    </property>
   </action>
-  <action name="actionSave_Translation_1_as">
+  <action name="actionSave_Translation_Unique_as">
    <property name="text">
     <string>Save unique translation as...</string>
    </property>
@@ -419,22 +419,22 @@
     <string>Close palette</string>
    </property>
   </action>
-  <action name="actionClose_Translation_2">
+  <action name="actionClose_Translation_Base">
    <property name="text">
-    <string>Close translation</string>
+    <string>Close base translation</string>
    </property>
   </action>
-  <action name="actionClose_Translation_1">
+  <action name="actionClose_Translation_Unique">
    <property name="text">
     <string>Close unique translation</string>
    </property>
   </action>
-  <action name="actionNew_Translation_2">
+  <action name="actionNew_Translation_Base">
    <property name="text">
-    <string>New translation</string>
+    <string>New base translation</string>
    </property>
   </action>
-  <action name="actionNew_Translation_1">
+  <action name="actionNew_Translation_Unique">
    <property name="text">
     <string>New unique translation</string>
    </property>
