@@ -148,10 +148,10 @@ private slots:
 
 private:
     Ui::LevelCelView *ui;
-    CelScene *celScene;
-    LevelTabTileWidget *tabTileWidget = new LevelTabTileWidget();
-    LevelTabSubTileWidget *tabSubTileWidget = new LevelTabSubTileWidget();
-    LevelTabFrameWidget *tabFrameWidget = new LevelTabFrameWidget();
+    CelScene celScene = CelScene(this);
+    LevelTabTileWidget tabTileWidget;
+    LevelTabSubTileWidget tabSubTileWidget;
+    LevelTabFrameWidget tabFrameWidget;
 
     D1Gfx *gfx;
     D1Min *min;

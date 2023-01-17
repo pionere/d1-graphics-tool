@@ -19,20 +19,19 @@
 LevelCelView::LevelCelView(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::LevelCelView())
-    , celScene(new CelScene(this))
 {
     this->ui->setupUi(this);
-    this->ui->celGraphicsView->setScene(this->celScene);
+    this->ui->celGraphicsView->setScene(&this->celScene);
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
     this->ui->stopButton->setEnabled(false);
     this->playTimer.connect(&this->playTimer, SIGNAL(timeout()), this, SLOT(playGroup()));
-    this->ui->tilesTabs->addTab(this->tabTileWidget, "Tile properties");
-    this->ui->tilesTabs->addTab(this->tabSubTileWidget, "Subtile properties");
-    this->ui->tilesTabs->addTab(this->tabFrameWidget, "Frame properties");
+    this->ui->tilesTabs->addTab(&this->tabTileWidget, "Tile properties");
+    this->ui->tilesTabs->addTab(&this->tabSubTileWidget, "Subtile properties");
+    this->ui->tilesTabs->addTab(&this->tabFrameWidget, "Frame properties");
 
     // If a pixel of the frame, subtile or tile was clicked get pixel color index and notify the palette widgets
-    QObject::connect(this->celScene, &CelScene::framePixelClicked, this, &LevelCelView::framePixelClicked);
+    QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &LevelCelView::framePixelClicked);
 
     // connect esc events of LineEditWidgets
     QObject::connect(this->ui->frameIndexEdit, SIGNAL(cancel_signal()), this, SLOT(on_frameIndexEdit_escPressed()));
@@ -46,7 +45,7 @@ LevelCelView::LevelCelView(QWidget *parent)
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ShowContextMenu(const QPoint &)));
-    QObject::connect(this->celScene, &CelScene::showContextMenu, this, &LevelCelView::ShowContextMenu);
+    QObject::connect(&this->celScene, &CelScene::showContextMenu, this, &LevelCelView::ShowContextMenu);
 
     setAcceptDrops(true);
 }
@@ -54,10 +53,6 @@ LevelCelView::LevelCelView(QWidget *parent)
 LevelCelView::~LevelCelView()
 {
     delete ui;
-    delete celScene;
-    delete tabTileWidget;
-    delete tabSubTileWidget;
-    delete tabFrameWidget;
 }
 
 void LevelCelView::initialize(D1Gfx *g, D1Min *m, D1Til *t, D1Sol *s, D1Amp *a, D1Tmi *i)
@@ -69,9 +64,9 @@ void LevelCelView::initialize(D1Gfx *g, D1Min *m, D1Til *t, D1Sol *s, D1Amp *a, 
     this->amp = a;
     this->tmi = i;
 
-    this->tabTileWidget->initialize(this, this->til, this->min, this->amp);
-    this->tabSubTileWidget->initialize(this, this->gfx, this->min, this->sol, this->tmi);
-    this->tabFrameWidget->initialize(this, this->gfx);
+    this->tabTileWidget.initialize(this, this->til, this->min, this->amp);
+    this->tabSubTileWidget.initialize(this, this->gfx, this->min, this->sol, this->tmi);
+    this->tabFrameWidget.initialize(this, this->gfx);
 
     this->update();
 }
@@ -132,9 +127,9 @@ void LevelCelView::update()
     ui->tileNumberEdit->setText(
         QString::number(this->til->getTileCount()));
 
-    this->tabTileWidget->update();
-    this->tabSubTileWidget->update();
-    this->tabFrameWidget->update();
+    this->tabTileWidget.update();
+    this->tabSubTileWidget.update();
+    this->tabFrameWidget.update();
 }
 
 int LevelCelView::getCurrentFrameIndex()
@@ -375,7 +370,6 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, const QStringList &imagefi
         }
     }
     // update the view
-    this->update();
     this->displayFrame();
 }
 
@@ -498,7 +492,6 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, const QStringList &image
         }
     }
     // update the view
-    this->update();
     this->displayFrame();
 }
 
@@ -658,7 +651,6 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, const QStringList &imagefil
         }
     }
     // update the view
-    this->update();
     this->displayFrame();
 }
 
@@ -681,7 +673,6 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
     if (frame != nullptr) {
         LevelTabFrameWidget::selectFrameType(frame);
         // update the view
-        this->update();
         this->displayFrame();
     }
 }
@@ -728,7 +719,6 @@ void LevelCelView::removeCurrentFrame()
     // remove the current frame
     this->removeFrame(this->currentFrameIndex);
     // update the view
-    this->update();
     this->displayFrame();
 }
 
@@ -740,7 +730,6 @@ void LevelCelView::createSubtile()
     // jump to the new subtile
     this->currentSubtileIndex = this->min->getSubtileCount() - 1;
     // update the view
-    this->update();
     this->displayFrame();
 }
 
@@ -765,7 +754,6 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
     this->assignFrames(image, subtileIndex, this->gfx->getFrameCount());
 
     // update the view
-    this->update();
     this->displayFrame();
 }
 
@@ -807,7 +795,6 @@ void LevelCelView::removeCurrentSubtile()
     // remove the current subtile
     this->removeSubtile(this->currentSubtileIndex);
     // update the view
-    this->update();
     this->displayFrame();
 }
 
@@ -818,7 +805,6 @@ void LevelCelView::createTile()
     // jump to the new tile
     this->currentTileIndex = this->til->getTileCount() - 1;
     // update the view
-    this->update();
     this->displayFrame();
 }
 
@@ -846,7 +832,6 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
     this->amp->setTileProperties(tileIndex, 0);
 
     // update the view
-    this->update();
     this->displayFrame();
 }
 
@@ -859,7 +844,6 @@ void LevelCelView::removeCurrentTile()
         this->currentTileIndex = std::max(0, this->currentTileIndex - 1);
     }
     // update the view
-    this->update();
     this->displayFrame();
 }
 
@@ -1099,7 +1083,6 @@ void LevelCelView::cleanupFrames()
         report = "Every frame is used.";
     } else {
         // update the view
-        this->update();
         this->displayFrame();
     }
     QMessageBox::information(this, "Information", report);
@@ -1114,7 +1097,6 @@ void LevelCelView::cleanupSubtiles()
         report = "Every subtile is used.";
     } else {
         // update the view
-        this->update();
         this->displayFrame();
     }
     QMessageBox::information(this, "Information", report);
@@ -1132,7 +1114,6 @@ void LevelCelView::cleanupTileset()
         framesReport = "Every subtile and frame are used.";
     } else {
         // update the view
-        this->update();
         this->displayFrame();
 
         if (!subtilesReport.isEmpty()) {
@@ -1339,7 +1320,6 @@ void LevelCelView::compressSubtiles()
         report = "All frames are unique.";
     } else {
         // update the view
-        this->update();
         this->displayFrame();
     }
     QMessageBox::information(this, "Information", report);
@@ -1355,7 +1335,6 @@ void LevelCelView::compressTiles()
         report = "All subtiles are unique.";
     } else {
         // update the view
-        this->update();
         this->displayFrame();
     }
     QMessageBox::information(this, "Information", report);
@@ -1373,7 +1352,6 @@ void LevelCelView::compressTileset()
         framesReport = "Every subtile and frame are unique.";
     } else {
         // update the view
-        this->update();
         this->displayFrame();
 
         if (!subtilesReport.isEmpty()) {
@@ -1460,7 +1438,6 @@ void LevelCelView::sortFrames()
 {
     if (this->sortFrames_impl()) {
         // update the view
-        this->update();
         this->displayFrame();
     }
 }
@@ -1469,7 +1446,6 @@ void LevelCelView::sortSubtiles()
 {
     if (this->sortSubtiles_impl()) {
         // update the view
-        this->update();
         this->displayFrame();
     }
 }
@@ -1482,26 +1458,19 @@ void LevelCelView::sortTileset()
     change |= this->sortFrames_impl();
     if (change) {
         // update the view
-        this->update();
         this->displayFrame();
     }
 }
 
 void LevelCelView::displayFrame()
 {
-    quint16 minPosX = 0;
-    quint16 tilPosX = 0;
-
-    this->celScene->clear();
+    this->update();
+    this->celScene.clear();
 
     // Getting the current frame/sub-tile/tile to display
     QImage celFrame = this->gfx->getFrameImage(this->currentFrameIndex);
     QImage subtile = this->min->getSubtileImage(this->currentSubtileIndex);
     QImage tile = this->til->getTileImage(this->currentTileIndex);
-
-    this->tabSubTileWidget->update();
-    this->tabTileWidget->update();
-    this->tabFrameWidget->update();
 
     // Building a gray background of the width/height of the CEL frame
     QImage celFrameBackground = QImage(celFrame.width(), celFrame.height(), QImage::Format_ARGB32);
@@ -1515,14 +1484,14 @@ void LevelCelView::displayFrame()
 
     // Resize the scene rectangle to include some padding around the CEL frame
     // the MIN subtile and the TIL tile
-    this->celScene->setSceneRect(0, 0,
+    this->celScene.setSceneRect(0, 0,
         celFrame.width() + subtile.width() + tile.width() + CEL_SCENE_SPACING * 4,
         tile.height() + CEL_SCENE_SPACING * 2);
 
     // Add the backgrond and CEL frame while aligning it in the center
-    this->celScene->addPixmap(QPixmap::fromImage(celFrameBackground))
+    this->celScene.addPixmap(QPixmap::fromImage(celFrameBackground))
         ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
-    this->celScene->addPixmap(QPixmap::fromImage(celFrame))
+    this->celScene.addPixmap(QPixmap::fromImage(celFrame))
         ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
 
     // Set current frame width and height
@@ -1534,10 +1503,10 @@ void LevelCelView::displayFrame()
         QString::number(this->gfx->getFrameCount() != 0 ? this->currentFrameIndex + 1 : 0));
 
     // MIN
-    minPosX = celFrame.width() + CEL_SCENE_SPACING * 2;
-    this->celScene->addPixmap(QPixmap::fromImage(subtileBackground))
+    int minPosX = celFrame.width() + CEL_SCENE_SPACING * 2;
+    this->celScene.addPixmap(QPixmap::fromImage(subtileBackground))
         ->setPos(minPosX, CEL_SCENE_SPACING);
-    this->celScene->addPixmap(QPixmap::fromImage(subtile))
+    this->celScene.addPixmap(QPixmap::fromImage(subtile))
         ->setPos(minPosX, CEL_SCENE_SPACING);
 
     // Set current frame width and height
@@ -1551,10 +1520,10 @@ void LevelCelView::displayFrame()
         QString::number(this->min->getSubtileCount() != 0 ? this->currentSubtileIndex + 1 : 0));
 
     // TIL
-    tilPosX = minPosX + subtile.width() + CEL_SCENE_SPACING;
-    this->celScene->addPixmap(QPixmap::fromImage(tileBackground))
+    int tilPosX = minPosX + subtile.width() + CEL_SCENE_SPACING;
+    this->celScene.addPixmap(QPixmap::fromImage(tileBackground))
         ->setPos(tilPosX, CEL_SCENE_SPACING);
-    this->celScene->addPixmap(QPixmap::fromImage(tile))
+    this->celScene.addPixmap(QPixmap::fromImage(tile))
         ->setPos(tilPosX, CEL_SCENE_SPACING);
 
     // Set current frame width and height
@@ -1858,7 +1827,6 @@ void LevelCelView::on_minFrameWidthEdit_returnPressed()
 
     this->min->setSubtileWidth(width);
     // update view
-    this->update();
     this->displayFrame();
 
     this->on_minFrameWidthEdit_escPressed();
@@ -1876,7 +1844,6 @@ void LevelCelView::on_minFrameHeightEdit_returnPressed()
 
     this->min->setSubtileHeight(height);
     // update view
-    this->update();
     this->displayFrame();
 
     this->on_minFrameHeightEdit_escPressed();
@@ -1890,13 +1857,13 @@ void LevelCelView::on_minFrameHeightEdit_escPressed()
 
 void LevelCelView::on_zoomOutButton_clicked()
 {
-    this->celScene->zoomOut();
+    this->celScene.zoomOut();
     this->on_zoomEdit_escPressed();
 }
 
 void LevelCelView::on_zoomInButton_clicked()
 {
-    this->celScene->zoomIn();
+    this->celScene.zoomIn();
     this->on_zoomEdit_escPressed();
 }
 
@@ -1904,14 +1871,14 @@ void LevelCelView::on_zoomEdit_returnPressed()
 {
     QString zoom = this->ui->zoomEdit->text();
 
-    this->celScene->setZoom(zoom);
+    this->celScene.setZoom(zoom);
 
     this->on_zoomEdit_escPressed();
 }
 
 void LevelCelView::on_zoomEdit_escPressed()
 {
-    this->ui->zoomEdit->setText(this->celScene->zoomText());
+    this->ui->zoomEdit->setText(this->celScene.zoomText());
     this->ui->zoomEdit->clearFocus();
 }
 
