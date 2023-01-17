@@ -187,11 +187,11 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
         // qDebug() << "Subtile clicked: " << stx << "," << sty;
 
         int stFrame = (sty / MICRO_HEIGHT) * TILE_WIDTH + (stx / MICRO_WIDTH);
-        QList<quint16> &minFrames = this->min->getCelFrameIndices(this->currentSubtileIndex);
-        quint16 frameIndex = minFrames.count() > stFrame ? minFrames.at(stFrame) : 0;
+        QList<quint16> &minFrames = this->min->getFrameReferences(this->currentSubtileIndex);
+        quint16 frameRef = minFrames.count() > stFrame ? minFrames.at(stFrame) : 0;
 
-        if (frameIndex > 0) {
-            this->currentFrameIndex = frameIndex - 1;
+        if (frameRef > 0) {
+            this->currentFrameIndex = frameRef - 1;
             this->displayFrame();
         }
     } else if (x >= (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
@@ -262,7 +262,7 @@ void LevelCelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &ima
 
 void LevelCelView::assignFrames(const QImage &image, int subtileIndex, int frameIndex)
 {
-    QList<quint16> frameIndicesList;
+    QList<quint16> frameReferencesList;
 
     // TODO: merge with LevelCelView::insertSubtile ?
     QImage subImage = QImage(MICRO_WIDTH, MICRO_HEIGHT, QImage::Format_ARGB32);
@@ -280,7 +280,7 @@ void LevelCelView::assignFrames(const QImage &image, int subtileIndex, int frame
                     subImage.setPixelColor(i, j, color);
                 }
             }
-            frameIndicesList.append(hasColor ? frameIndex + 1 : 0);
+            frameReferencesList.append(hasColor ? frameIndex + 1 : 0);
             if (!hasColor) {
                 continue;
             }
@@ -292,7 +292,7 @@ void LevelCelView::assignFrames(const QImage &image, int subtileIndex, int frame
     }
 
     if (subtileIndex >= 0) {
-        this->min->getCelFrameIndices(subtileIndex).swap(frameIndicesList);
+        this->min->getFrameReferences(subtileIndex).swap(frameReferencesList);
         this->min->setModified();
         // reset subtile flags
         this->sol->setSubtileProperties(subtileIndex, 0);
@@ -363,13 +363,13 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, const QStringList &imagefi
             return; // no new frame -> done
         }
         // shift references
-        unsigned refIndex = this->currentFrameIndex + 1;
+        unsigned frameRef = this->currentFrameIndex + 1;
         // shift frame indices of the subtiles
         for (int i = 0; i < this->min->getSubtileCount(); i++) {
-            QList<quint16> &frameIndices = this->min->getCelFrameIndices(i);
-            for (int n = 0; n < frameIndices.count(); n++) {
-                if (frameIndices[n] >= refIndex) {
-                    frameIndices[n] += deltaFrameCount;
+            QList<quint16> &frameReferences = this->min->getFrameReferences(i);
+            for (int n = 0; n < frameReferences.count(); n++) {
+                if (frameReferences[n] >= frameRef) {
+                    frameReferences[n] += deltaFrameCount;
                 }
             }
         }
@@ -697,13 +697,13 @@ void LevelCelView::removeFrame(int frameIndex)
     // - shift frame indices of the subtiles
     unsigned refIndex = frameIndex + 1;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        QList<quint16> &frameIndices = this->min->getCelFrameIndices(i);
-        for (int n = 0; n < frameIndices.count(); n++) {
-            if (frameIndices[n] >= refIndex) {
-                if (frameIndices[n] == refIndex) {
-                    frameIndices[n] = 0;
+        QList<quint16> &frameReferences = this->min->getFrameReferences(i);
+        for (int n = 0; n < frameReferences.count(); n++) {
+            if (frameReferences[n] >= refIndex) {
+                if (frameReferences[n] == refIndex) {
+                    frameReferences[n] = 0;
                 } else {
-                    frameIndices[n] -= 1;
+                    frameReferences[n] -= 1;
                 }
                 this->min->setModified();
             }
@@ -865,12 +865,12 @@ void LevelCelView::removeCurrentTile()
 
 void LevelCelView::collectFrameUsers(int frameIndex, QList<int> &users) const
 {
-    unsigned refIndex = frameIndex + 1;
+    unsigned frameRef = frameIndex + 1;
 
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        const QList<quint16> &frameIndices = this->min->getCelFrameIndices(i);
-        for (quint16 index : frameIndices) {
-            if (index == refIndex) {
+        const QList<quint16> &frameReferences = this->min->getFrameReferences(i);
+        for (quint16 reference : frameReferences) {
+            if (reference == frameRef) {
                 users.append(i);
                 break;
             }
@@ -1032,8 +1032,8 @@ void LevelCelView::removeUnusedFrames(QString &report)
         frameUsed.append(false);
     }
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        const QList<quint16> &frameIndices = this->min->getCelFrameIndices(i);
-        for (quint16 frameRef : frameIndices) {
+        const QList<quint16> &frameReferences = this->min->getFrameReferences(i);
+        for (quint16 frameRef : frameReferences) {
             if (frameRef != 0) {
                 frameUsed[frameRef - 1] = true;
             }
@@ -1174,11 +1174,11 @@ void LevelCelView::reuseFrames(QString &report)
                 continue;
             }
             // reuse frame0 instead of frame1
-            const unsigned refIndex = j + 1;
+            const unsigned frameRef = j + 1;
             for (int n = 0; n < this->min->getSubtileCount(); n++) {
-                QList<quint16> &frameIndices = this->min->getCelFrameIndices(n);
-                for (auto iter = frameIndices.begin(); iter != frameIndices.end(); iter++) {
-                    if (*iter == refIndex) {
+                QList<quint16> &frameReferences = this->min->getFrameReferences(n);
+                for (auto iter = frameReferences.begin(); iter != frameReferences.end(); iter++) {
+                    if (*iter == frameRef) {
                         *iter = i + 1;
                         this->min->setModified();
                     }
@@ -1248,10 +1248,10 @@ void dumpTiles(D1Til *til, D1Min *min, int from, int to, int idx)
     }
 
     for (int n = 0; n < min->getSubtileCount(); n++) {
-        QList<quint16> &frameIndices = min->getCelFrameIndices(n);
+        QList<quint16> &frameReferences = min->getFrameReferences(n);
         QString line = QString("Subtile %1:").arg(n + 1);
-        for (auto iter = frameIndices.begin(); iter != frameIndices.end(); iter++) {
-            line += QString::number(*iter + 1) + ", ";
+        for (auto iter = frameReferences.begin(); iter != frameReferences.end(); iter++) {
+            line += QString::number(*iter) + ", ";
         }
         line += "\n";
         file.write(line.toLatin1());
@@ -1265,14 +1265,14 @@ void LevelCelView::reuseSubtiles(QString &report)
 
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         for (int j = i + 1; j < this->min->getSubtileCount(); j++) {
-            QList<quint16> &frameIndices0 = this->min->getCelFrameIndices(i);
-            QList<quint16> &frameIndices1 = this->min->getCelFrameIndices(j);
-            if (frameIndices0.count() != frameIndices1.count()) {
+            QList<quint16> &frameReferences0 = this->min->getFrameReferences(i);
+            QList<quint16> &frameReferences1 = this->min->getFrameReferences(j);
+            if (frameReferences0.count() != frameIndices1.count()) {
                 continue; // should not happen, but better safe than sorry
             }
             bool match = true;
-            for (int x = 0; x < frameIndices0.count(); x++) {
-                if (frameIndices0[x] == frameIndices1[x]) {
+            for (int x = 0; x < frameReferences0.count(); x++) {
+                if (frameReferences0[x] == frameReferences1[x]) {
                     continue;
                 }
                 match = false;
@@ -1394,8 +1394,8 @@ bool LevelCelView::sortFrames_impl()
     unsigned idx = 1;
 
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        QList<quint16> &frameIndices = this->min->getCelFrameIndices(i);
-        for (auto sit = frameIndices.begin(); sit != frameIndices.end(); ++sit) {
+        QList<quint16> &frameReferences = this->min->getFrameReferences(i);
+        for (auto sit = frameReferences.begin(); sit != frameReferences.end(); ++sit) {
             if (*sit == 0) {
                 continue;
             }
