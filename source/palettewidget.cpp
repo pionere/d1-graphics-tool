@@ -440,7 +440,7 @@ void PaletteWidget::checkTranslationsSelection(QList<quint8> indexes)
     emit this->clearRootBorder();
 }
 
-void PaletteWidget::addPath(QString path, QString name)
+void PaletteWidget::addPath(const QString &path, const QString &name)
 {
     this->paths[path] = name;
 }
@@ -460,7 +460,7 @@ void PaletteWidget::selectPath(QString path)
     emit this->modified();
 }
 
-QString PaletteWidget::getSelectedPath()
+QString PaletteWidget::getSelectedPath() const
 {
     return this->paths.key(this->ui->pathComboBox->currentText());
 }
@@ -673,7 +673,7 @@ void PaletteWidget::temporarilyDisplayAllColors()
     this->displayColors();
 }
 
-void PaletteWidget::displayInfo(QString info)
+void PaletteWidget::displayInfo(const QString &info)
 {
     this->ui->informationLabel->setText(info);
 }

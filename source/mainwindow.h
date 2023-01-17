@@ -69,15 +69,15 @@ private:
     void updateWindow();
 
     void setPal(QString palFilePath);
-    void setTrnUnique(QString trnfilePath);
-    void setTrnBase(QString trnfilePath);
+    void setUniqueTrn(QString trnfilePath);
+    void setBaseTrn(QString trnfilePath);
 
-    bool loadPal(QString palFilePath);
-    bool loadUniqueTrn(QString trnfilePath);
-    bool loadBaseTrn(QString trnfilePath);
+    bool loadPal(const QString &palFilePath);
+    bool loadUniqueTrn(const QString &trnfilePath);
+    bool loadBaseTrn(const QString &trnfilePath);
 
     void colorIndexClicked(quint8 colorIndex);
-    void colorModified(quint8 colorIndex);
+    void colorModified();
 
     void addFrames(bool append);
     void addSubtiles(bool append);

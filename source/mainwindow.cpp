@@ -106,7 +106,7 @@ void MainWindow::setPal(QString path)
     this->palWidget->setPal(this->pal);
 }
 
-void MainWindow::setTrnUnique(QString path)
+void MainWindow::setUniqueTrn(QString path)
 {
     this->trnUnique = this->uniqueTrns[path];
     this->trnUnique->setPalette(this->pal);
@@ -117,7 +117,7 @@ void MainWindow::setTrnUnique(QString path)
     this->trnUniqueWidget->setTrn(this->trnUnique);
 }
 
-void MainWindow::setTrnBase(QString path)
+void MainWindow::setBaseTrn(QString path)
 {
     this->trnBase = this->baseTrns[path];
     this->trnBase->setPalette(this->trnUnique->getResultingPalette());
@@ -224,7 +224,7 @@ void MainWindow::colorIndexClicked(quint8 colorIndex)
     this->trnBaseWidget->selectColor(colorIndex);
 }
 
-void MainWindow::colorModified(quint8 colorIndex)
+void MainWindow::colorModified()
 {
     if (this->levelCelView != nullptr) {
         this->levelCelView->displayFrame();
@@ -597,8 +597,8 @@ void MainWindow::openFile(const OpenAsParam &params)
     // Palette and translation file selection
     // When a .pal or .trn file is selected in the PaletteWidget update the pal or trn
     QObject::connect(this->palWidget, &PaletteWidget::pathSelected, this, &MainWindow::setPal);
-    QObject::connect(this->trnUniqueWidget, &PaletteWidget::pathSelected, this, &MainWindow::setTrnUnique);
-    QObject::connect(this->trnBaseWidget, &PaletteWidget::pathSelected, this, &MainWindow::setTrnBase);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::pathSelected, this, &MainWindow::setUniqueTrn);
+    QObject::connect(this->trnBaseWidget, &PaletteWidget::pathSelected, this, &MainWindow::setBaseTrn);
 
     // Refresh PAL/TRN view chain
     QObject::connect(this->palWidget, &PaletteWidget::refreshed, this->trnUniqueWidget, &PaletteWidget::refresh);

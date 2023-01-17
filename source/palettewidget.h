@@ -141,10 +141,10 @@ public:
     void selectColor(quint8 colorIndex);
     void checkTranslationsSelection(QList<quint8> indices);
 
-    void addPath(QString path, QString name);
+    void addPath(const QString &path, const QString &name);
     void removePath(QString path);
     void selectPath(QString path);
-    QString getSelectedPath();
+    QString getSelectedPath() const;
 
     // color selection handlers
     void startColorSelection(int colorIndex);
@@ -155,7 +155,7 @@ public:
     void displayColors();
     void displaySelection();
     void temporarilyDisplayAllColors();
-    void displayInfo(QString);
+    void displayInfo(const QString &infoTxt);
     void clearInfo();
     void displayBorder();
     void clearBorder();
@@ -169,11 +169,11 @@ public:
     void refresh();
 
 signals:
-    void pathSelected(QString);
+    void pathSelected(QString path);
     void colorsSelected(QList<quint8> indices);
 
     void displayAllRootColors();
-    void displayRootInformation(QString);
+    void displayRootInformation(QString infoTxt);
     void clearRootInformation();
     void displayRootBorder();
     void clearRootBorder();
