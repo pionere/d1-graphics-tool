@@ -26,8 +26,8 @@ public:
     void setMode(D1PALHITS_MODE m);
 
     // Returns the number of hits for a specific index
-    quint32 getIndexHits(quint8 colorIndex) const;
-    quint32 getIndexHits(quint8 colorIndex, int itemIndex) const;
+    int getIndexHits(quint8 colorIndex, int itemIndex) const;
+
 private:
     void buildPalHits();
     void buildSubtilePalHits();

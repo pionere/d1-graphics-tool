@@ -600,7 +600,7 @@ void PaletteWidget::displayColors()
         // Check palette display filter
 
         // if user just click "Pick" button to select color in parent palette or translation, display all colors
-        quint32 indexHits = 1;
+        int indexHits = 1;
         if (!this->temporarilyDisplayingAllColors) {
             int itemIndex = -1;
             switch (this->palHits->getMode()) {
@@ -624,7 +624,7 @@ void PaletteWidget::displayColors()
             indexHits = this->palHits->getIndexHits(i, itemIndex);
         }
 
-        bool displayColor = indexHits != 0;
+        bool displayColor = indexHits > 0;
 
         // Check translation display filter
         if (this->isTrn && ui->displayComboBox->currentData().value<COLORFILTER_TYPE>() == COLORFILTER_TYPE::TRANSLATED // "Show translated colors"
