@@ -438,7 +438,7 @@ void PaletteWidget::checkTranslationsSelection(QList<quint8> indexes)
 
     this->undoStack->push(command);
 
-    this->initStopColorPicking();
+    emit this->colorPicking_stopped(); // finish color picking
 }
 
 void PaletteWidget::addPath(const QString &path, const QString &name)
@@ -521,17 +521,16 @@ void PaletteWidget::finishColorSelection()
         std::swap(this->selectedFirstColorIndex, this->selectedLastColorIndex);
     }
 
-    // emit selected colors
-    // if ((!this->isTrn && !this->pal.isNull()) || (this->isTrn && !this->trn.isNull())) {
-    QList<quint8> indexes;
-    for (int i = this->selectedFirstColorIndex; i <= this->selectedLastColorIndex; i++)
-        indexes.append(i);
-    emit this->colorsSelected(indexes);
-    // }
-
     this->refresh();
 
-    if (!this->pickingTranslationColor) {
+    if (this->pickingTranslationColor) {
+        // emit selected colors
+        QList<quint8> indexes;
+        for (int i = this->selectedFirstColorIndex; i <= this->selectedLastColorIndex; i++)
+            indexes.append(i);
+
+        emit this->colorsSelected(indexes);
+    } else {
         this->initStopColorPicking();
     }
 }
@@ -540,7 +539,7 @@ void PaletteWidget::initStopColorPicking()
 {
     this->stopTrnColorPicking();
 
-    emit this->colorPicking_stopped();
+    emit this->colorPicking_stopped(); // cancel color picking
 }
 
 void PaletteWidget::displayColors()
@@ -783,26 +782,36 @@ void PaletteWidget::refresh()
 
 void PaletteWidget::on_newPushButtonClicked()
 {
+    this->initStopColorPicking();
+
     ((MainWindow *)this->window())->paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_NEW);
 }
 
 void PaletteWidget::on_openPushButtonClicked()
 {
+    this->initStopColorPicking();
+
     ((MainWindow *)this->window())->paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_OPEN);
 }
 
 void PaletteWidget::on_savePushButtonClicked()
 {
+    this->initStopColorPicking();
+
     ((MainWindow *)this->window())->paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_SAVE);
 }
 
 void PaletteWidget::on_saveAsPushButtonClicked()
 {
+    this->initStopColorPicking();
+
     ((MainWindow *)this->window())->paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_SAVEAS);
 }
 
 void PaletteWidget::on_closePushButtonClicked()
 {
+    this->initStopColorPicking();
+
     ((MainWindow *)this->window())->paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_CLOSE);
 }
 
