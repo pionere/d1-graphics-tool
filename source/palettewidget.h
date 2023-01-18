@@ -151,14 +151,8 @@ public:
     void changeColorSelection(int colorIndex);
     void finishColorSelection();
 
-    // Display functions
-    void displayColors();
-    void displaySelection();
-    void temporarilyDisplayAllColors();
-    void displayInfo(const QString &infoTxt);
-    void clearInfo();
-    void displayBorder();
-    void clearBorder();
+    void startTrnColorPicking();
+    void stopTrnColorPicking();
 
     void refreshPathComboBox();
     void refreshColorLineEdit();
@@ -172,17 +166,19 @@ signals:
     void pathSelected(QString path);
     void colorsSelected(QList<quint8> indices);
 
-    void displayAllRootColors();
-    void displayRootInformation(QString infoTxt);
-    void clearRootInformation();
-    void displayRootBorder();
-    void clearRootBorder();
+    void colorPicking_started();
+    void colorPicking_stopped();
 
     void modified();
     void refreshed();
 
 private:
     QPushButton *addButton(QStyle::StandardPixmap type, QString tooltip, void (PaletteWidget::*callback)(void));
+    // Display functions
+    void displayColors();
+    void displaySelection();
+
+    void initStopColorPicking();
 
 public slots:
     void ShowContextMenu(const QPoint &pos);
@@ -224,11 +220,10 @@ private:
     QColor paletteDefaultColor = Qt::magenta;
 
     QColor selectionBorderColor = Qt::red;
-    quint8 selectedFirstColorIndex = 0;
-    quint8 selectedLastColorIndex = 0;
+    int selectedFirstColorIndex = 0;
+    int selectedLastColorIndex = 0;
 
     bool pickingTranslationColor = false;
-    bool temporarilyDisplayingAllColors = false;
 
     QPointer<D1Pal> pal;
     QPointer<D1Trn> trn;

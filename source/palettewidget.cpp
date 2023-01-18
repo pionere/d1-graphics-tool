@@ -350,7 +350,6 @@ void PaletteWidget::initializeUi()
     this->ui->monsterTrnPushButton->setVisible(trnMode);
     this->ui->translationClearPushButton->setVisible(trnMode);
     this->ui->translationPickPushButton->setVisible(trnMode);
-    this->ui->colorLineEdit->setReadOnly(trnMode);
     this->ui->colorPickPushButton->setVisible(!trnMode);
     this->ui->colorClearPushButton->setVisible(!trnMode);
     this->ui->translationIndexLineEdit->setVisible(trnMode);
@@ -365,7 +364,6 @@ void PaletteWidget::initializeUi()
         this->refreshTranslationIndexLineEdit();
 
     this->displayColors();
-    this->displaySelection();
 }
 
 void PaletteWidget::initializePathComboBox()
@@ -406,20 +404,17 @@ void PaletteWidget::reloadConfig()
 
 void PaletteWidget::selectColor(quint8 index)
 {
+    this->initStopColorPicking();
+
     this->selectedFirstColorIndex = index;
     this->selectedLastColorIndex = index;
-
-    this->temporarilyDisplayingAllColors = false;
 
     this->refresh();
 }
 
 void PaletteWidget::checkTranslationsSelection(QList<quint8> indexes)
 {
-    if (!this->pickingTranslationColor)
-        return;
-
-    quint8 selectionLength = this->selectedLastColorIndex - this->selectedFirstColorIndex + 1;
+    int selectionLength = this->selectedLastColorIndex - this->selectedFirstColorIndex + 1;
     if (selectionLength != indexes.length()) {
         QMessageBox::warning(this, "Warning", "Source and target selection length do not match.");
         return;
@@ -433,11 +428,7 @@ void PaletteWidget::checkTranslationsSelection(QList<quint8> indexes)
 
     this->undoStack->push(command);
 
-    this->pickingTranslationColor = false;
-    this->clearInfo();
-
-    emit this->clearRootInformation();
-    emit this->clearRootBorder();
+    emit this->colorPicking_stopped(); // finish color picking
 }
 
 void PaletteWidget::addPath(const QString &path, const QString &name)
@@ -479,6 +470,8 @@ static QRectF getColorCoordinates(quint8 index)
 
 void PaletteWidget::ShowContextMenu(const QPoint &pos)
 {
+    this->initStopColorPicking();
+
     QMenu contextMenu(tr("Context menu"), this);
     contextMenu.setToolTipsVisible(true);
 
@@ -508,7 +501,6 @@ void PaletteWidget::changeColorSelection(int colorIndex)
     this->refreshIndexLineEdit();
 
     this->displayColors();
-    this->displaySelection();
 }
 
 void PaletteWidget::finishColorSelection()
@@ -518,26 +510,25 @@ void PaletteWidget::finishColorSelection()
         std::swap(this->selectedFirstColorIndex, this->selectedLastColorIndex);
     }
 
-    if (this->isTrn) {
-        if (this->pickingTranslationColor) {
-            this->clearInfo();
-            emit this->clearRootInformation();
-            emit this->clearRootBorder();
-            this->pickingTranslationColor = false;
-        }
-    }
-
-    this->temporarilyDisplayingAllColors = false;
-
-    // emit selected colors
-    // if ((!this->isTrn && !this->pal.isNull()) || (this->isTrn && !this->trn.isNull())) {
-    QList<quint8> indexes;
-    for (int i = this->selectedFirstColorIndex; i <= this->selectedLastColorIndex; i++)
-        indexes.append(i);
-    emit this->colorsSelected(indexes);
-    // }
-
     this->refresh();
+
+    if (this->pickingTranslationColor) {
+        // emit selected colors
+        QList<quint8> indexes;
+        for (int i = this->selectedFirstColorIndex; i <= this->selectedLastColorIndex; i++)
+            indexes.append(i);
+
+        emit this->colorsSelected(indexes);
+    } else {
+        this->initStopColorPicking();
+    }
+}
+
+void PaletteWidget::initStopColorPicking()
+{
+    this->stopTrnColorPicking();
+
+    emit this->colorPicking_stopped(); // cancel color picking
 }
 
 void PaletteWidget::displayColors()
@@ -577,7 +568,7 @@ void PaletteWidget::displayColors()
 
         // if user just click "Pick" button to select color in parent palette or translation, display all colors
         int indexHits = 1;
-        if (!this->temporarilyDisplayingAllColors) {
+        if (!this->pickingTranslationColor) {
             int itemIndex = -1;
             switch (this->palHits->getMode()) {
             case D1PALHITS_MODE::ALL_COLORS:
@@ -612,6 +603,8 @@ void PaletteWidget::displayColors()
 
         x += dx;
     }
+
+    this->displaySelection();
 }
 
 void PaletteWidget::displaySelection()
@@ -667,30 +660,23 @@ void PaletteWidget::displaySelection()
     }
 }
 
-void PaletteWidget::temporarilyDisplayAllColors()
+void PaletteWidget::startTrnColorPicking()
 {
-    this->temporarilyDisplayingAllColors = true;
+    // stop previous picking
+    this->initStopColorPicking();
+
+    this->ui->graphicsView->setStyleSheet("color: rgb(255, 0, 0);");
+    this->ui->informationLabel->setText("<- Select translation");
+    this->pickingTranslationColor = true;
     this->displayColors();
 }
 
-void PaletteWidget::displayInfo(const QString &info)
-{
-    this->ui->informationLabel->setText(info);
-}
-
-void PaletteWidget::clearInfo()
-{
-    this->ui->informationLabel->clear();
-}
-
-void PaletteWidget::displayBorder()
-{
-    this->ui->graphicsView->setStyleSheet("color: rgb(255, 0, 0);");
-}
-
-void PaletteWidget::clearBorder()
+void PaletteWidget::stopTrnColorPicking()
 {
     this->ui->graphicsView->setStyleSheet("color: rgb(255, 255, 255);");
+    this->ui->informationLabel->clear();
+    this->pickingTranslationColor = false;
+    this->displayColors();
 }
 
 void PaletteWidget::refreshPathComboBox()
@@ -761,7 +747,6 @@ void PaletteWidget::refresh()
         this->trn->refreshResultingPalette();
 
     this->displayColors();
-    this->displaySelection();
     this->refreshPathComboBox();
     this->refreshColorLineEdit();
     this->refreshIndexLineEdit();
@@ -773,26 +758,36 @@ void PaletteWidget::refresh()
 
 void PaletteWidget::on_newPushButtonClicked()
 {
+    this->initStopColorPicking();
+
     ((MainWindow *)this->window())->paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_NEW);
 }
 
 void PaletteWidget::on_openPushButtonClicked()
 {
+    this->initStopColorPicking();
+
     ((MainWindow *)this->window())->paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_OPEN);
 }
 
 void PaletteWidget::on_savePushButtonClicked()
 {
+    this->initStopColorPicking();
+
     ((MainWindow *)this->window())->paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_SAVE);
 }
 
 void PaletteWidget::on_saveAsPushButtonClicked()
 {
+    this->initStopColorPicking();
+
     ((MainWindow *)this->window())->paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_SAVEAS);
 }
 
 void PaletteWidget::on_closePushButtonClicked()
 {
+    this->initStopColorPicking();
+
     ((MainWindow *)this->window())->paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_CLOSE);
 }
 
@@ -808,6 +803,8 @@ void PaletteWidget::on_actionRedo_triggered()
 
 void PaletteWidget::on_pathComboBox_activated(int index)
 {
+    this->initStopColorPicking();
+
     QString filePath = this->ui->pathComboBox->currentData().value<QString>();
 
     emit this->pathSelected(filePath);
@@ -816,6 +813,8 @@ void PaletteWidget::on_pathComboBox_activated(int index)
 
 void PaletteWidget::on_displayComboBox_activated(int index)
 {
+    this->initStopColorPicking();
+
     if (!this->isTrn) {
         D1PALHITS_MODE mode = D1PALHITS_MODE::ALL_COLORS;
         switch (this->ui->displayComboBox->currentData().value<COLORFILTER_TYPE>()) {
@@ -860,12 +859,16 @@ void PaletteWidget::on_colorLineEdit_returnPressed()
 
 void PaletteWidget::on_colorLineEdit_escPressed()
 {
+    this->initStopColorPicking();
+
     this->refreshColorLineEdit();
     this->ui->colorLineEdit->clearFocus();
 }
 
 void PaletteWidget::on_colorPickPushButton_clicked()
 {
+    this->initStopColorPicking();
+
     QColor color = QColorDialog::getColor();
     QColor colorEnd;
     if (this->selectedFirstColorIndex == this->selectedLastColorIndex) {
@@ -887,6 +890,8 @@ void PaletteWidget::on_colorPickPushButton_clicked()
 
 void PaletteWidget::on_colorClearPushButton_clicked()
 {
+    this->initStopColorPicking();
+
     // Build color editing command and connect it to the current palette widget
     // to update the PAL/TRN and CEL views when undo/redo is performed
     auto *command = new EditColorsCommand(
@@ -920,21 +925,21 @@ void PaletteWidget::on_translationIndexLineEdit_returnPressed()
 
 void PaletteWidget::on_translationIndexLineEdit_escPressed()
 {
+    this->initStopColorPicking();
+
     this->refreshTranslationIndexLineEdit();
     this->ui->translationIndexLineEdit->clearFocus();
 }
 
 void PaletteWidget::on_translationPickPushButton_clicked()
 {
-    this->pickingTranslationColor = true;
-
-    emit this->displayAllRootColors();
-    emit this->displayRootInformation("<- Select translation");
-    emit this->displayRootBorder();
+    emit this->colorPicking_started();
 }
 
 void PaletteWidget::on_translationClearPushButton_clicked()
 {
+    this->initStopColorPicking();
+
     // Build translation clearing command and connect it to the current palette widget
     // to update the PAL/TRN and CEL views when undo/redo is performed
     auto *command = new ClearTranslationsCommand(
@@ -946,6 +951,8 @@ void PaletteWidget::on_translationClearPushButton_clicked()
 
 void PaletteWidget::on_monsterTrnPushButton_clicked()
 {
+    this->initStopColorPicking();
+
     bool trnModified = false;
 
     for (int i = 0; i < D1PAL_COLORS; i++) {
