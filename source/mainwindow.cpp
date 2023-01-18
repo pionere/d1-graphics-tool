@@ -217,7 +217,7 @@ bool MainWindow::loadBaseTrn(QString trnFilePath)
     return true;
 }
 
-void MainWindow::pixelClicked(const D1GfxPixel& pixel)
+void MainWindow::pixelClicked(const D1GfxPixel &pixel)
 {
     this->palWidget->selectColor(pixel);
     this->trnUniqueWidget->selectColor(pixel);

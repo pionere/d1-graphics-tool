@@ -138,7 +138,7 @@ public:
     void initializeDisplayComboBox();
 
     void reloadConfig();
-    void selectColor(const D1GfxPixel& pixel);
+    void selectColor(const D1GfxPixel &pixel);
     void checkTranslationsSelection(QList<quint8> indices);
 
     void addPath(const QString &path, const QString &name);

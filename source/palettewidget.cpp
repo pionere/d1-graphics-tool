@@ -404,7 +404,7 @@ void PaletteWidget::reloadConfig()
         Config::value("PaletteSelectionBorderColor").toString());
 }
 
-void PaletteWidget::selectColor(const D1GfxPixel& pixel)
+void PaletteWidget::selectColor(const D1GfxPixel &pixel)
 {
     int index;
 
@@ -623,25 +623,24 @@ void PaletteWidget::displayColors()
 
 void PaletteWidget::displaySelection()
 {
+    int firstColorIndex = this->selectedFirstColorIndex;
+    int lastColorIndex = this->selectedLastColorIndex;
+    // int length = 0;
+    if (firstColorIndex > lastColorIndex) {
+        std::swap(firstColorIndex, lastColorIndex);
+    }
+    if (lastColorIndex < 0) {
+        return;
+    }
+    /*if (firstColorIndex < 0) {
+        firstColorIndex = 0;
+    }*/
     QPen pen(this->selectionBorderColor);
     pen.setStyle(Qt::SolidLine);
     pen.setJoinStyle(Qt::MiterJoin);
     pen.setWidth(PALETTE_SELECTION_WIDTH);
 
-    int first = 0;
-    int last = 0;
-    // int length = 0;
-    if (this->selectedFirstColorIndex <= this->selectedLastColorIndex) {
-        first = this->selectedFirstColorIndex;
-        last = this->selectedLastColorIndex;
-    } else {
-        // Swap first and last color if this is a backwards selection
-        first = this->selectedLastColorIndex;
-        last = this->selectedFirstColorIndex;
-    }
-    // length = last - first + 1;
-
-    for (int i = first; i <= last; i++) {
+    for (int i = firstColorIndex; i <= lastColorIndex; i++) {
         QRectF coordinates = getColorCoordinates(i);
         int a = PALETTE_SELECTION_WIDTH / 2;
         coordinates.adjust(a, a, -a, -a);
@@ -721,40 +720,49 @@ void PaletteWidget::refreshPathComboBox()
 
 void PaletteWidget::refreshColorLineEdit()
 {
-    if (this->selectedFirstColorIndex == this->selectedLastColorIndex) {
-        QColor selectedColor = this->pal->getColor(this->selectedFirstColorIndex);
-        this->ui->colorLineEdit->setText(selectedColor.name());
-    } else {
-        this->ui->colorLineEdit->setText("*");
+    int colorIndex = this->selectedFirstColorIndex;
+    QString text;
+
+    if (colorIndex != this->selectedLastColorIndex) {
+        text = "*";
+    } else if (colorIndex != -1) {
+        QColor selectedColor = this->pal->getColor(colorIndex);
+        text = selectedColor.name();
     }
+    this->ui->colorLineEdit->setText(text);
+    this->ui->colorLineEdit->setReadOnly(this->isTrn || text.isEmpty());
 }
 
 void PaletteWidget::refreshIndexLineEdit()
 {
+    QString text;
+
     int firstColorIndex = this->selectedFirstColorIndex;
     int lastColorIndex = this->selectedLastColorIndex;
-    if (firstColorIndex == lastColorIndex) {
-        this->ui->indexLineEdit->setText(QString::number(firstColorIndex));
-    } else {
+    if (firstColorIndex != lastColorIndex) {
         // If second selected color has an index less than the first one swap them
         if (firstColorIndex < lastColorIndex) {
             std::swap(firstColorIndex, lastColorIndex);
         }
-        this->ui->indexLineEdit->setText(QString::number(firstColorIndex) + "-" + QString::number(lastColorIndex));
+        text = QString::number(firstColorIndex) + "-" + QString::number(lastColorIndex);
+    } else if (colorIndex != -1) {
+        text = QString::number(firstColorIndex);
     }
+    this->ui->indexLineEdit->setText(text);
 }
 
 void PaletteWidget::refreshTranslationIndexLineEdit()
 {
-    if (this->trn.isNull())
-        return;
+    int colorIndex = this->selectedFirstColorIndex;
+    QString text;
 
-    if (this->selectedFirstColorIndex == this->selectedLastColorIndex) {
-        this->ui->translationIndexLineEdit->setText(
-            QString::number(this->trn->getTranslation(this->selectedFirstColorIndex)));
-    } else {
-        this->ui->translationIndexLineEdit->setText("*");
+    if (colorIndex != this->selectedLastColorIndex) {
+        text = "*";
+    } else if (colorIndex != -1) {
+        text = QString::number(this->trn->getTranslation(colorIndex));
     }
+    this->ui->translationIndexLineEdit->setText(text);
+    this->ui->translationIndexLineEdit->setReadOnly(text.isEmpty());
 }
 
 void PaletteWidget::modify()

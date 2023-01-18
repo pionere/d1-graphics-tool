@@ -280,10 +280,7 @@
                <bool>true</bool>
               </property>
               <property name="charWidth">
-               <number>3</number>
-              </property>
-              <property name="maxLength">
-               <number>3</number>
+               <number>7</number>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>

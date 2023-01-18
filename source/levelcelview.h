@@ -100,7 +100,7 @@ private:
 
 signals:
     void frameRefreshed();
-    void pixelClicked(const D1GfxPixel& pixel);
+    void pixelClicked(const D1GfxPixel &pixel);
 
 private slots:
     void on_firstFrameButton_clicked();

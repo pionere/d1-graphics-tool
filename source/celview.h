@@ -73,7 +73,7 @@ public:
 
 signals:
     void frameRefreshed();
-    void pixelClicked(const D1GfxPixel& pixel);
+    void pixelClicked(const D1GfxPixel &pixel);
 
 private:
     void update();
