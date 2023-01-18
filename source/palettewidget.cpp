@@ -893,16 +893,15 @@ void PaletteWidget::on_colorPickPushButton_clicked()
     this->initStopColorPicking();
 
     QColor color = QColorDialog::getColor();
-    if (!color.isValid()) {
-        return;
-    }
     QColor colorEnd;
     if (this->selectedFirstColorIndex == this->selectedLastColorIndex) {
         colorEnd = color;
     } else {
         colorEnd = QColorDialog::getColor();
     }
-
+    if (!color.isValid() || !colorEnd.isValid()) {
+        return;
+    }
     // Build color editing command and connect it to the current palette widget
     // to update the PAL/TRN and CEL views when undo/redo is performed
     EditColorsCommand *command = new EditColorsCommand(
