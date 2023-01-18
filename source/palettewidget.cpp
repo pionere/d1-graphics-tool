@@ -51,7 +51,7 @@ void EditColorsCommand::undo()
 
 void EditColorsCommand::redo()
 {
-    if (this->pal.isNull() || startColorIndex == COLORIDX_TRANSPARENT) {
+    if (this->pal.isNull()) {
         this->setObsolete(true);
         return;
     }
@@ -99,7 +99,7 @@ void EditTranslationsCommand::undo()
 
 void EditTranslationsCommand::redo()
 {
-    if (this->trn.isNull() || startColorIndex == COLORIDX_TRANSPARENT) {
+    if (this->trn.isNull()) {
         this->setObsolete(true);
         return;
     }
@@ -136,7 +136,7 @@ void ClearTranslationsCommand::undo()
 
 void ClearTranslationsCommand::redo()
 {
-    if (this->trn.isNull() || startColorIndex == COLORIDX_TRANSPARENT) {
+    if (this->trn.isNull()) {
         this->setObsolete(true);
         return;
     }
@@ -352,7 +352,6 @@ void PaletteWidget::initializeUi()
     this->ui->monsterTrnPushButton->setVisible(trnMode);
     this->ui->translationClearPushButton->setVisible(trnMode);
     this->ui->translationPickPushButton->setVisible(trnMode);
-    this->ui->colorLineEdit->setReadOnly(trnMode);
     this->ui->colorPickPushButton->setVisible(!trnMode);
     this->ui->colorClearPushButton->setVisible(!trnMode);
     this->ui->translationIndexLineEdit->setVisible(trnMode);
@@ -724,15 +723,20 @@ void PaletteWidget::refreshColorLineEdit()
 {
     int colorIndex = this->selectedFirstColorIndex;
     QString text;
+    bool active = !this->isTrn;
 
     if (colorIndex != this->selectedLastColorIndex) {
         text = "*";
     } else if (colorIndex != COLORIDX_TRANSPARENT) {
         QColor selectedColor = this->pal->getColor(colorIndex);
         text = selectedColor.name();
+    } else {
+        active = false;
     }
     this->ui->colorLineEdit->setText(text);
-    this->ui->colorLineEdit->setReadOnly(this->isTrn || text.isEmpty());
+    this->ui->colorLineEdit->setReadOnly(!active);
+    this->ui->colorPickPushButton->setEnabled(active);
+    this->ui->colorClearPushButton->setEnabled(active);
 }
 
 void PaletteWidget::refreshIndexLineEdit()
@@ -757,14 +761,19 @@ void PaletteWidget::refreshTranslationIndexLineEdit()
 {
     int colorIndex = this->selectedFirstColorIndex;
     QString text;
+    bool active = true;
 
     if (colorIndex != this->selectedLastColorIndex) {
         text = "*";
     } else if (colorIndex != COLORIDX_TRANSPARENT) {
         text = QString::number(this->trn->getTranslation(colorIndex));
+    } else {
+        active = false;
     }
     this->ui->translationIndexLineEdit->setText(text);
-    this->ui->translationIndexLineEdit->setReadOnly(text.isEmpty());
+    this->ui->translationIndexLineEdit->setReadOnly(!active);
+    this->ui->translationPickPushButton->setEnabled(active);
+    this->ui->translationClearPushButton->setEnabled(active);
 }
 
 void PaletteWidget::modify()
