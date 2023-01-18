@@ -10,6 +10,8 @@
 #include "mainwindow.h"
 #include "ui_palettewidget.h"
 
+#define COLORIDX_TRANSPARENT -1
+
 enum class COLORFILTER_TYPE {
     NONE,
     USED,
@@ -49,7 +51,7 @@ void EditColorsCommand::undo()
 
 void EditColorsCommand::redo()
 {
-    if (this->pal.isNull()) {
+    if (this->pal.isNull() || startColorIndex == COLORIDX_TRANSPARENT) {
         this->setObsolete(true);
         return;
     }
@@ -97,7 +99,7 @@ void EditTranslationsCommand::undo()
 
 void EditTranslationsCommand::redo()
 {
-    if (this->trn.isNull()) {
+    if (this->trn.isNull() || startColorIndex == COLORIDX_TRANSPARENT) {
         this->setObsolete(true);
         return;
     }
@@ -134,7 +136,7 @@ void ClearTranslationsCommand::undo()
 
 void ClearTranslationsCommand::redo()
 {
-    if (this->trn.isNull()) {
+    if (this->trn.isNull() || startColorIndex == COLORIDX_TRANSPARENT) {
         this->setObsolete(true);
         return;
     }
@@ -409,7 +411,7 @@ void PaletteWidget::selectColor(const D1GfxPixel &pixel)
     int index;
 
     if (pixel.isTransparent()) {
-        index = -1;
+        index = COLORIDX_TRANSPARENT;
     } else {
         index = pixel.getPaletteIndex();
     }
@@ -426,7 +428,7 @@ void PaletteWidget::checkTranslationsSelection(QList<quint8> indexes)
     if (!this->pickingTranslationColor)
         return;
 
-    quint8 selectionLength = this->selectedLastColorIndex - this->selectedFirstColorIndex + 1;
+    int selectionLength = this->selectedLastColorIndex - this->selectedFirstColorIndex + 1;
     if (selectionLength != indexes.length()) {
         QMessageBox::warning(this, "Warning", "Source and target selection length do not match.");
         return;
@@ -629,7 +631,7 @@ void PaletteWidget::displaySelection()
     if (firstColorIndex > lastColorIndex) {
         std::swap(firstColorIndex, lastColorIndex);
     }
-    if (lastColorIndex < 0) {
+    if (firstColorIndex == COLORIDX_TRANSPARENT) {
         return;
     }
     /*if (firstColorIndex < 0) {
@@ -646,28 +648,28 @@ void PaletteWidget::displaySelection()
         coordinates.adjust(a, a, -a, -a);
 
         // left line
-        if (i == first && i + PALETTE_COLORS_PER_LINE <= last)
+        if (i == firstColorIndex && i + PALETTE_COLORS_PER_LINE <= lastColorIndex)
             this->scene->addLine(coordinates.bottomLeft().x(), coordinates.bottomLeft().y() + PALETTE_SELECTION_WIDTH,
                 coordinates.topLeft().x(), coordinates.topLeft().y(), pen);
-        else if (i == first || i % PALETTE_COLORS_PER_LINE == 0)
+        else if (i == firstColorIndex || i % PALETTE_COLORS_PER_LINE == 0)
             this->scene->addLine(coordinates.bottomLeft().x(), coordinates.bottomLeft().y(),
                 coordinates.topLeft().x(), coordinates.topLeft().y(), pen);
 
         // right line
-        if (i == last && i - PALETTE_COLORS_PER_LINE >= first)
+        if (i == lastColorIndex && i - PALETTE_COLORS_PER_LINE >= firstColorIndex)
             this->scene->addLine(coordinates.topRight().x(), coordinates.topRight().y() - PALETTE_SELECTION_WIDTH,
                 coordinates.bottomRight().x(), coordinates.bottomRight().y(), pen);
-        else if (i == last || i % PALETTE_COLORS_PER_LINE == PALETTE_COLORS_PER_LINE - 1)
+        else if (i == lastColorIndex || i % PALETTE_COLORS_PER_LINE == PALETTE_COLORS_PER_LINE - 1)
             this->scene->addLine(coordinates.topRight().x(), coordinates.topRight().y(),
                 coordinates.bottomRight().x(), coordinates.bottomRight().y(), pen);
 
         // top line
-        if (i - PALETTE_COLORS_PER_LINE < first)
+        if (i - PALETTE_COLORS_PER_LINE < firstColorIndex)
             this->scene->addLine(coordinates.topLeft().x(), coordinates.topLeft().y(),
                 coordinates.topRight().x(), coordinates.topRight().y(), pen);
 
         // bottom line
-        if (i + PALETTE_COLORS_PER_LINE > last)
+        if (i + PALETTE_COLORS_PER_LINE > lastColorIndex)
             this->scene->addLine(coordinates.bottomLeft().x(), coordinates.bottomLeft().y(),
                 coordinates.bottomRight().x(), coordinates.bottomRight().y(), pen);
     }
@@ -725,7 +727,7 @@ void PaletteWidget::refreshColorLineEdit()
 
     if (colorIndex != this->selectedLastColorIndex) {
         text = "*";
-    } else if (colorIndex != -1) {
+    } else if (colorIndex != COLORIDX_TRANSPARENT) {
         QColor selectedColor = this->pal->getColor(colorIndex);
         text = selectedColor.name();
     }
@@ -745,7 +747,7 @@ void PaletteWidget::refreshIndexLineEdit()
             std::swap(firstColorIndex, lastColorIndex);
         }
         text = QString::number(firstColorIndex) + "-" + QString::number(lastColorIndex);
-    } else if (colorIndex != -1) {
+    } else if (firstColorIndex != COLORIDX_TRANSPARENT) {
         text = QString::number(firstColorIndex);
     }
     this->ui->indexLineEdit->setText(text);
@@ -758,7 +760,7 @@ void PaletteWidget::refreshTranslationIndexLineEdit()
 
     if (colorIndex != this->selectedLastColorIndex) {
         text = "*";
-    } else if (colorIndex != -1) {
+    } else if (colorIndex != COLORIDX_TRANSPARENT) {
         text = QString::number(this->trn->getTranslation(colorIndex));
     }
     this->ui->translationIndexLineEdit->setText(text);
