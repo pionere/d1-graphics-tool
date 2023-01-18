@@ -21,22 +21,22 @@ public:
     bool load(QString minFilePath, D1Gfx *gfx, D1Sol *sol, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const OpenAsParam &params);
     bool save(const SaveAsParam &params);
 
-    QImage getSubtileImage(int subtileIndex);
+    QImage getSubtileImage(int subtileIndex) const;
 
     void insertSubtile(int subtileIndex, const QList<quint16> &frameReferencesList);
     void createSubtile();
     void removeSubtile(int subtileIndex);
     void remapSubtiles(const QMap<unsigned, unsigned> &remap);
 
-    QString getFilePath();
+    QString getFilePath() const;
     bool isModified() const;
     void setModified();
-    int getSubtileCount();
-    quint16 getSubtileWidth();
+    int getSubtileCount() const;
+    quint16 getSubtileWidth() const;
     void setSubtileWidth(int width);
-    quint16 getSubtileHeight();
+    quint16 getSubtileHeight() const;
     void setSubtileHeight(int height);
-    QList<quint16> &getFrameReferences(int subtileIndex);
+    QList<quint16> &getFrameReferences(int subtileIndex) const;
     bool setFrameReference(int subtileIndex, int index, int frameRef);
 
 private:
