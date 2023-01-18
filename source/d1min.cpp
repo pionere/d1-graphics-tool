@@ -164,7 +164,7 @@ bool D1Min::save(const SaveAsParam &params)
     return true;
 }
 
-QImage D1Min::getSubtileImage(int subtileIndex)
+QImage D1Min::getSubtileImage(int subtileIndex) const
 {
     if (subtileIndex < 0 || subtileIndex >= this->frameReferences.size())
         return QImage();
@@ -195,7 +195,7 @@ QImage D1Min::getSubtileImage(int subtileIndex)
     return subtile;
 }
 
-QString D1Min::getFilePath()
+QString D1Min::getFilePath() const
 {
     return this->minFilePath;
 }
@@ -210,12 +210,12 @@ void D1Min::setModified()
     this->modified = true;
 }
 
-int D1Min::getSubtileCount()
+int D1Min::getSubtileCount() const
 {
     return this->frameReferences.count();
 }
 
-quint16 D1Min::getSubtileWidth()
+quint16 D1Min::getSubtileWidth() const
 {
     return this->subtileWidth;
 }
@@ -276,7 +276,7 @@ void D1Min::setSubtileWidth(int width)
     this->modified = true;
 }
 
-quint16 D1Min::getSubtileHeight()
+quint16 D1Min::getSubtileHeight() const
 {
     return this->subtileHeight;
 }
@@ -331,7 +331,7 @@ void D1Min::setSubtileHeight(int height)
     this->modified = true;
 }
 
-QList<quint16> &D1Min::getFrameReferences(int subtileIndex)
+QList<quint16> &D1Min::getFrameReferences(int subtileIndex) const
 {
     return const_cast<QList<quint16> &>(this->frameReferences.at(subtileIndex));
 }

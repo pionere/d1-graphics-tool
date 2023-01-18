@@ -1,7 +1,6 @@
 #include "settingsdialog.h"
 
 #include <QColorDialog>
-#include <QFileDialog>
 
 #include "config.h"
 #include "ui_settingsdialog.h"
