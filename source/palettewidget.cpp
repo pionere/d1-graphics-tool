@@ -730,7 +730,7 @@ void PaletteWidget::refreshIndexLineEdit()
     int lastColorIndex = this->selectedLastColorIndex;
     if (firstColorIndex != lastColorIndex) {
         // If second selected color has an index less than the first one swap them
-        if (firstColorIndex < lastColorIndex) {
+        if (firstColorIndex > lastColorIndex) {
             std::swap(firstColorIndex, lastColorIndex);
         }
         text = QString::number(firstColorIndex) + "-" + QString::number(lastColorIndex);
@@ -893,6 +893,9 @@ void PaletteWidget::on_colorPickPushButton_clicked()
     this->initStopColorPicking();
 
     QColor color = QColorDialog::getColor();
+    if (!color.isValid()) {
+        return;
+    }
     QColor colorEnd;
     if (this->selectedFirstColorIndex == this->selectedLastColorIndex) {
         colorEnd = color;
