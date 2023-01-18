@@ -154,11 +154,13 @@ public:
     // Display functions
     void displayColors();
     void displaySelection();
-    void temporarilyDisplayAllColors();
+    void startTrnColorPicking();
+    void stopTrnColorPicking();
+    /*void temporarilyDisplayAllColors();
     void displayInfo(const QString &infoTxt);
     void clearInfo();
     void displayBorder();
-    void clearBorder();
+    void clearBorder();*/
 
     void refreshPathComboBox();
     void refreshColorLineEdit();
@@ -172,17 +174,20 @@ signals:
     void pathSelected(QString path);
     void colorsSelected(QList<quint8> indices);
 
-    void displayAllRootColors();
+    void colorPicking_started();
+    void colorPicking_stopped();
+    /*void displayAllRootColors();
     void displayRootInformation(QString infoTxt);
     void clearRootInformation();
     void displayRootBorder();
-    void clearRootBorder();
+    void clearRootBorder();*/
 
     void modified();
     void refreshed();
 
 private:
     QPushButton *addButton(QStyle::StandardPixmap type, QString tooltip, void (PaletteWidget::*callback)(void));
+    void initStopColorPicking();
 
 public slots:
     void ShowContextMenu(const QPoint &pos);
@@ -228,7 +233,6 @@ private:
     int selectedLastColorIndex = 0;
 
     bool pickingTranslationColor = false;
-    bool temporarilyDisplayingAllColors = false;
 
     QPointer<D1Pal> pal;
     QPointer<D1Trn> trn;

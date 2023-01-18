@@ -417,16 +417,13 @@ void PaletteWidget::selectColor(const D1GfxPixel &pixel)
     this->selectedFirstColorIndex = index;
     this->selectedLastColorIndex = index;
 
-    this->temporarilyDisplayingAllColors = false;
-
     this->refresh();
+
+    this->initStopColorPicking();
 }
 
 void PaletteWidget::checkTranslationsSelection(QList<quint8> indexes)
 {
-    if (!this->pickingTranslationColor)
-        return;
-
     int selectionLength = this->selectedLastColorIndex - this->selectedFirstColorIndex + 1;
     if (selectionLength != indexes.length()) {
         QMessageBox::warning(this, "Warning", "Source and target selection length do not match.");
@@ -441,11 +438,7 @@ void PaletteWidget::checkTranslationsSelection(QList<quint8> indexes)
 
     this->undoStack->push(command);
 
-    this->pickingTranslationColor = false;
-    this->clearInfo();
-
-    emit this->clearRootInformation();
-    emit this->clearRootBorder();
+    this->initStopColorPicking()
 }
 
 void PaletteWidget::addPath(const QString &path, const QString &name)
@@ -487,6 +480,8 @@ static QRectF getColorCoordinates(quint8 index)
 
 void PaletteWidget::ShowContextMenu(const QPoint &pos)
 {
+    this->initStopColorPicking();
+
     QMenu contextMenu(tr("Context menu"), this);
     contextMenu.setToolTipsVisible(true);
 
@@ -526,17 +521,6 @@ void PaletteWidget::finishColorSelection()
         std::swap(this->selectedFirstColorIndex, this->selectedLastColorIndex);
     }
 
-    if (this->isTrn) {
-        if (this->pickingTranslationColor) {
-            this->clearInfo();
-            emit this->clearRootInformation();
-            emit this->clearRootBorder();
-            this->pickingTranslationColor = false;
-        }
-    }
-
-    this->temporarilyDisplayingAllColors = false;
-
     // emit selected colors
     // if ((!this->isTrn && !this->pal.isNull()) || (this->isTrn && !this->trn.isNull())) {
     QList<quint8> indexes;
@@ -546,6 +530,17 @@ void PaletteWidget::finishColorSelection()
     // }
 
     this->refresh();
+
+    if (!this->pickingTranslationColor) {
+        this->initStopColorPicking();
+    }
+}
+
+void PaletteWidget::initStopColorPicking()
+{
+    this->stopTrnColorPicking();
+
+    emit this->colorPicking_stopped();
 }
 
 void PaletteWidget::displayColors()
@@ -585,7 +580,7 @@ void PaletteWidget::displayColors()
 
         // if user just click "Pick" button to select color in parent palette or translation, display all colors
         int indexHits = 1;
-        if (!this->temporarilyDisplayingAllColors) {
+        if (!this->pickingTranslationColor) {
             int itemIndex = -1;
             switch (this->palHits->getMode()) {
             case D1PALHITS_MODE::ALL_COLORS:
@@ -626,16 +621,12 @@ void PaletteWidget::displaySelection()
 {
     int firstColorIndex = this->selectedFirstColorIndex;
     int lastColorIndex = this->selectedLastColorIndex;
-    // int length = 0;
     if (firstColorIndex > lastColorIndex) {
         std::swap(firstColorIndex, lastColorIndex);
     }
     if (firstColorIndex == COLORIDX_TRANSPARENT) {
         return;
     }
-    /*if (firstColorIndex < 0) {
-        firstColorIndex = 0;
-    }*/
     QPen pen(this->selectionBorderColor);
     pen.setStyle(Qt::SolidLine);
     pen.setJoinStyle(Qt::MiterJoin);
@@ -674,30 +665,23 @@ void PaletteWidget::displaySelection()
     }
 }
 
-void PaletteWidget::temporarilyDisplayAllColors()
+void PaletteWidget::startTrnColorPicking()
 {
-    this->temporarilyDisplayingAllColors = true;
+    // stop previous picking
+    this->initStopColorPicking();
+
+    this->ui->graphicsView->setStyleSheet("color: rgb(255, 0, 0);");
+    this->ui->informationLabel->setText("<- Select translation");
+    this->pickingTranslationColor = true;
     this->displayColors();
 }
 
-void PaletteWidget::displayInfo(const QString &info)
-{
-    this->ui->informationLabel->setText(info);
-}
-
-void PaletteWidget::clearInfo()
-{
-    this->ui->informationLabel->clear();
-}
-
-void PaletteWidget::displayBorder()
-{
-    this->ui->graphicsView->setStyleSheet("color: rgb(255, 0, 0);");
-}
-
-void PaletteWidget::clearBorder()
+void PaletteWidget::stopTrnColorPicking()
 {
     this->ui->graphicsView->setStyleSheet("color: rgb(255, 255, 255);");
+    this->ui->informationLabel->clear();
+    this->pickingTranslationColor = false;
+    this->displayColors();
 }
 
 void PaletteWidget::refreshPathComboBox()
@@ -838,6 +822,8 @@ void PaletteWidget::on_pathComboBox_activated(int index)
 
     emit this->pathSelected(filePath);
     emit this->modified();
+
+    this->initStopColorPicking();
 }
 
 void PaletteWidget::on_displayComboBox_activated(int index)
@@ -865,6 +851,8 @@ void PaletteWidget::on_displayComboBox_activated(int index)
     }
 
     this->refresh();
+
+    this->initStopColorPicking();
 }
 
 void PaletteWidget::on_colorLineEdit_returnPressed()
@@ -888,6 +876,8 @@ void PaletteWidget::on_colorLineEdit_escPressed()
 {
     this->refreshColorLineEdit();
     this->ui->colorLineEdit->clearFocus();
+
+    this->initStopColorPicking();
 }
 
 void PaletteWidget::on_colorPickPushButton_clicked()
@@ -918,6 +908,8 @@ void PaletteWidget::on_colorClearPushButton_clicked()
     QObject::connect(command, &EditColorsCommand::modified, this, &PaletteWidget::modify);
 
     this->undoStack->push(command);
+
+    this->initStopColorPicking();
 }
 
 void PaletteWidget::on_translationIndexLineEdit_returnPressed()
@@ -946,15 +938,16 @@ void PaletteWidget::on_translationIndexLineEdit_escPressed()
 {
     this->refreshTranslationIndexLineEdit();
     this->ui->translationIndexLineEdit->clearFocus();
+
+    this->initStopColorPicking();
 }
 
 void PaletteWidget::on_translationPickPushButton_clicked()
 {
-    this->pickingTranslationColor = true;
-
-    emit this->displayAllRootColors();
+    emit this->colorPicking_started();
+    /*emit this->displayAllRootColors();
     emit this->displayRootInformation("<- Select translation");
-    emit this->displayRootBorder();
+    emit this->displayRootBorder();*/
 }
 
 void PaletteWidget::on_translationClearPushButton_clicked()
@@ -966,6 +959,8 @@ void PaletteWidget::on_translationClearPushButton_clicked()
     QObject::connect(command, &ClearTranslationsCommand::modified, this, &PaletteWidget::modify);
 
     this->undoStack->push(command);
+
+    this->initStopColorPicking();
 }
 
 void PaletteWidget::on_monsterTrnPushButton_clicked()
@@ -982,4 +977,6 @@ void PaletteWidget::on_monsterTrnPushButton_clicked()
     if (trnModified) {
         emit this->modified();
     }
+
+    this->initStopColorPicking();
 }

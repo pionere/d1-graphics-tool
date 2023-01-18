@@ -607,16 +607,13 @@ void MainWindow::openFile(const OpenAsParam &params)
     // Translation color selection
     QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->trnUniqueWidget, &PaletteWidget::checkTranslationsSelection);
     QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorsSelected, this->trnBaseWidget, &PaletteWidget::checkTranslationsSelection);
-    QObject::connect(this->trnUniqueWidget, &PaletteWidget::displayAllRootColors, this->palWidget, &PaletteWidget::temporarilyDisplayAllColors);
-    QObject::connect(this->trnBaseWidget, &PaletteWidget::displayAllRootColors, this->trnUniqueWidget, &PaletteWidget::temporarilyDisplayAllColors);
-    QObject::connect(this->trnUniqueWidget, &PaletteWidget::displayRootInformation, this->palWidget, &PaletteWidget::displayInfo);
-    QObject::connect(this->trnBaseWidget, &PaletteWidget::displayRootInformation, this->trnUniqueWidget, &PaletteWidget::displayInfo);
-    QObject::connect(this->trnUniqueWidget, &PaletteWidget::displayRootBorder, this->palWidget, &PaletteWidget::displayBorder);
-    QObject::connect(this->trnBaseWidget, &PaletteWidget::displayRootBorder, this->trnUniqueWidget, &PaletteWidget::displayBorder);
-    QObject::connect(this->trnUniqueWidget, &PaletteWidget::clearRootInformation, this->palWidget, &PaletteWidget::clearInfo);
-    QObject::connect(this->trnBaseWidget, &PaletteWidget::clearRootInformation, this->trnUniqueWidget, &PaletteWidget::clearInfo);
-    QObject::connect(this->trnUniqueWidget, &PaletteWidget::clearRootBorder, this->palWidget, &PaletteWidget::clearBorder);
-    QObject::connect(this->trnBaseWidget, &PaletteWidget::clearRootBorder, this->trnUniqueWidget, &PaletteWidget::clearBorder);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorPicking_started, this->palWidget, &PaletteWidget::startTrnColorPicking);     // start color picking
+    QObject::connect(this->trnBaseWidget, &PaletteWidget::colorPicking_started, this->trnUniqueWidget, &PaletteWidget::startTrnColorPicking); // start color picking
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorPicking_stopped, this->palWidget, &PaletteWidget::stopTrnColorPicking);      // finish or cancel color picking
+    QObject::connect(this->trnBaseWidget, &PaletteWidget::colorPicking_stopped, this->trnUniqueWidget, &PaletteWidget::stopTrnColorPicking);  // finish or cancel color picking
+    QObject::connect(this->palWidget, &PaletteWidget::colorPicking_stopped, this->trnUniqueWidget, &PaletteWidget::stopTrnColorPicking);      // cancel color picking
+    QObject::connect(this->palWidget, &PaletteWidget::colorPicking_stopped, this->trnBaseWidget, &PaletteWidget::stopTrnColorPicking);        // cancel color picking
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorPicking_stopped, this->trnBaseWidget, &PaletteWidget::stopTrnColorPicking);  // cancel color picking
 
     if (isTileset) {
         // build a LevelCelView
