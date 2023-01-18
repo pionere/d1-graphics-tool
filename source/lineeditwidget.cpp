@@ -35,8 +35,7 @@ void LineEditWidget::focusOutEvent(QFocusEvent *event)
 {
     if (event->reason() == Qt::TabFocusReason || event->reason() == Qt::BacktabFocusReason /*|| event->reason() == Qt::ShortcutFocusReason*/) {
         // submit on tabpress
-        QKeyEvent *kpEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_Enter, Qt::NoModifier);
-        QCoreApplication::postEvent(this, kpEvent);
+        emit returnPressed();
     } else {
         // cancel otherwise
         emit cancel_signal();
