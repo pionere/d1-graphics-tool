@@ -20,7 +20,11 @@ signals:
 
 private slots:
     void on_defaultPaletteColorPushButton_clicked();
+    void on_defaultPaletteColorLineEdit_returnPressed();
+    void on_defaultPaletteColorLineEdit_escPressed();
     void on_paletteSelectionBorderColorPushButton_clicked();
+    void on_paletteSelectionBorderColorLineEdit_returnPressed();
+    void on_paletteSelectionBorderColorLineEdit_escPressed();
     void on_settingsOkButton_clicked();
     void on_settingsCancelButton_clicked();
 
