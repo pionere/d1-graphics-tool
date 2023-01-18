@@ -211,18 +211,15 @@ int CelView::getCurrentFrameIndex()
 
 void CelView::framePixelClicked(unsigned x, unsigned y)
 {
-    int frameIndex = this->currentFrameIndex;
+    D1GfxPixel pixel = D1GfxPixel::transparentPixel();
 
-    int tx = x - CEL_SCENE_SPACING;
-    if (tx < 0 || tx >= this->gfx->getFrameWidth(frameIndex))
-        return; // click is left or right from the frame -> ignore
-    int ty = y - CEL_SCENE_SPACING;
-    if (ty < 0 || ty >= this->gfx->getFrameHeight(frameIndex))
-        return; // click is up or down from the frame -> ignore
+    if (this->gfx->getFrameCount() != 0) {
+        D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
 
-    int colorIndex = this->gfx->getFrame(frameIndex)->getPixel(tx, ty).getPaletteIndex();
+        pixel = frame->getPixel(x - CEL_SCENE_SPACING, y - CEL_SCENE_SPACING);
+    }
 
-    emit this->colorIndexClicked(colorIndex);
+    emit this->pixelClicked(pixel);
 }
 
 void CelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)

@@ -217,11 +217,11 @@ bool MainWindow::loadBaseTrn(QString trnFilePath)
     return true;
 }
 
-void MainWindow::colorIndexClicked(quint8 colorIndex)
+void MainWindow::pixelClicked(const D1GfxPixel& pixel)
 {
-    this->palWidget->selectColor(colorIndex);
-    this->trnUniqueWidget->selectColor(colorIndex);
-    this->trnBaseWidget->selectColor(colorIndex);
+    this->palWidget->selectColor(pixel);
+    this->trnUniqueWidget->selectColor(pixel);
+    this->trnBaseWidget->selectColor(pixel);
 }
 
 void MainWindow::colorModified()
@@ -624,7 +624,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->levelCelView->initialize(this->gfx, this->min, this->til, this->sol, this->amp, this->tmi);
 
         // Select color when level CEL view clicked
-        QObject::connect(this->levelCelView, &LevelCelView::colorIndexClicked, this, &MainWindow::colorIndexClicked);
+        QObject::connect(this->levelCelView, &LevelCelView::pixelClicked, this, &MainWindow::pixelClicked);
 
         // Refresh palette widgets when frame, subtile of tile is changed
         QObject::connect(this->levelCelView, &LevelCelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
@@ -634,7 +634,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->celView->initialize(this->gfx);
 
         // Select color when CEL view clicked
-        QObject::connect(this->celView, &CelView::colorIndexClicked, this, &MainWindow::colorIndexClicked);
+        QObject::connect(this->celView, &CelView::pixelClicked, this, &MainWindow::pixelClicked);
 
         // Refresh palette widgets when frame
         QObject::connect(this->celView, &CelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);

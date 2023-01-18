@@ -404,8 +404,15 @@ void PaletteWidget::reloadConfig()
         Config::value("PaletteSelectionBorderColor").toString());
 }
 
-void PaletteWidget::selectColor(quint8 index)
+void PaletteWidget::selectColor(const D1GfxPixel& pixel)
 {
+    int index;
+
+    if (pixel.isTransparent()) {
+        index = -1;
+    } else {
+        index = pixel.getPaletteIndex();
+    }
     this->selectedFirstColorIndex = index;
     this->selectedLastColorIndex = index;
 

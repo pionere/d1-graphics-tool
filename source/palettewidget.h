@@ -138,7 +138,7 @@ public:
     void initializeDisplayComboBox();
 
     void reloadConfig();
-    void selectColor(quint8 colorIndex);
+    void selectColor(const D1GfxPixel& pixel);
     void checkTranslationsSelection(QList<quint8> indices);
 
     void addPath(const QString &path, const QString &name);
@@ -224,8 +224,8 @@ private:
     QColor paletteDefaultColor = Qt::magenta;
 
     QColor selectionBorderColor = Qt::red;
-    quint8 selectedFirstColorIndex = 0;
-    quint8 selectedLastColorIndex = 0;
+    int selectedFirstColorIndex = 0;
+    int selectedLastColorIndex = 0;
 
     bool pickingTranslationColor = false;
     bool temporarilyDisplayingAllColors = false;

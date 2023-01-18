@@ -149,8 +149,6 @@ int LevelCelView::getCurrentTileIndex()
 
 void LevelCelView::framePixelClicked(unsigned x, unsigned y)
 {
-    quint8 index = 0;
-
     unsigned celFrameWidth = MICRO_WIDTH; // this->gfx->getFrameWidth(this->currentFrameIndex);
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned tileWidth = subtileWidth * TILE_WIDTH;
@@ -160,15 +158,7 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
     unsigned subtileShiftY = subtileWidth / 4;
     unsigned tileHeight = subtileHeight + 2 * subtileShiftY;
 
-    if (x >= CEL_SCENE_SPACING && x < (celFrameWidth + CEL_SCENE_SPACING)
-        && y >= CEL_SCENE_SPACING && y < (celFrameHeight + CEL_SCENE_SPACING)
-        && this->gfx->getFrameCount() != 0) {
-        // If CEL frame color is clicked, select it in the palette widgets
-        D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
-        index = frame->getPixel(x - CEL_SCENE_SPACING, y - CEL_SCENE_SPACING).getPaletteIndex();
-
-        emit this->colorIndexClicked(index);
-    } else if (x >= (celFrameWidth + CEL_SCENE_SPACING * 2)
+    if (x >= (celFrameWidth + CEL_SCENE_SPACING * 2)
         && x < (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 2)
         && y >= CEL_SCENE_SPACING
         && y < (subtileHeight + CEL_SCENE_SPACING)
@@ -189,6 +179,7 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
             this->currentFrameIndex = frameRef - 1;
             this->displayFrame();
         }
+        return;
     } else if (x >= (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
         && x < (celFrameWidth + subtileWidth + tileWidth + CEL_SCENE_SPACING * 3)
         && y >= CEL_SCENE_SPACING
@@ -239,7 +230,18 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
             this->currentSubtileIndex = tilSubtiles.at(tSubtile);
             this->displayFrame();
         }
+        return;
     }
+    // otherwise select color based on the pixel
+    D1GfxPixel pixel = D1GfxPixel::transparentPixel();
+    if (this->gfx->getFrameCount() != 0) {
+        // If CEL frame color is clicked
+        D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
+
+        pixel = frame->getPixel(x - CEL_SCENE_SPACING, y - CEL_SCENE_SPACING);
+    }
+
+    emit this->pixelClicked(pixel);
 }
 
 void LevelCelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)
