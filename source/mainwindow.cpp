@@ -582,11 +582,11 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // Add palette widgets for PAL and TRNs
     this->palWidget = new PaletteWidget(this->undoStack, "Palette");
-    this->trnBaseWidget = new PaletteWidget(this->undoStack, "Base Translation");
     this->trnUniqueWidget = new PaletteWidget(this->undoStack, "Unique translation");
+    this->trnBaseWidget = new PaletteWidget(this->undoStack, "Base Translation");
     this->ui->palFrame->layout()->addWidget(this->palWidget);
-    this->ui->palFrame->layout()->addWidget(this->trnBaseWidget);
     this->ui->palFrame->layout()->addWidget(this->trnUniqueWidget);
+    this->ui->palFrame->layout()->addWidget(this->trnBaseWidget);
 
     // Configuration update triggers refresh of the palette widgets
     QObject::connect(&this->settingsDialog, &SettingsDialog::configurationSaved, this->palWidget, &PaletteWidget::reloadConfig);
@@ -605,18 +605,18 @@ void MainWindow::openFile(const OpenAsParam &params)
     QObject::connect(this->trnUniqueWidget, &PaletteWidget::refreshed, this->trnBaseWidget, &PaletteWidget::refresh);
 
     // Translation color selection
-    QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->trnBaseWidget, &PaletteWidget::checkTranslationsSelection);
-    QObject::connect(this->trnBaseWidget, &PaletteWidget::colorsSelected, this->trnUniqueWidget, &PaletteWidget::checkTranslationsSelection);
-    QObject::connect(this->trnBaseWidget, &PaletteWidget::displayAllRootColors, this->palWidget, &PaletteWidget::temporarilyDisplayAllColors);
-    QObject::connect(this->trnUniqueWidget, &PaletteWidget::displayAllRootColors, this->trnBaseWidget, &PaletteWidget::temporarilyDisplayAllColors);
-    QObject::connect(this->trnBaseWidget, &PaletteWidget::displayRootInformation, this->palWidget, &PaletteWidget::displayInfo);
-    QObject::connect(this->trnUniqueWidget, &PaletteWidget::displayRootInformation, this->trnBaseWidget, &PaletteWidget::displayInfo);
-    QObject::connect(this->trnBaseWidget, &PaletteWidget::displayRootBorder, this->palWidget, &PaletteWidget::displayBorder);
-    QObject::connect(this->trnUniqueWidget, &PaletteWidget::displayRootBorder, this->trnBaseWidget, &PaletteWidget::displayBorder);
-    QObject::connect(this->trnBaseWidget, &PaletteWidget::clearRootInformation, this->palWidget, &PaletteWidget::clearInfo);
-    QObject::connect(this->trnUniqueWidget, &PaletteWidget::clearRootInformation, this->trnBaseWidget, &PaletteWidget::clearInfo);
-    QObject::connect(this->trnBaseWidget, &PaletteWidget::clearRootBorder, this->palWidget, &PaletteWidget::clearBorder);
-    QObject::connect(this->trnUniqueWidget, &PaletteWidget::clearRootBorder, this->trnBaseWidget, &PaletteWidget::clearBorder);
+    QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->trnUniqueWidget, &PaletteWidget::checkTranslationsSelection);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorsSelected, this->trnBaseWidget, &PaletteWidget::checkTranslationsSelection);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::displayAllRootColors, this->palWidget, &PaletteWidget::temporarilyDisplayAllColors);
+    QObject::connect(this->trnBaseWidget, &PaletteWidget::displayAllRootColors, this->trnUniqueWidget, &PaletteWidget::temporarilyDisplayAllColors);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::displayRootInformation, this->palWidget, &PaletteWidget::displayInfo);
+    QObject::connect(this->trnBaseWidget, &PaletteWidget::displayRootInformation, this->trnUniqueWidget, &PaletteWidget::displayInfo);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::displayRootBorder, this->palWidget, &PaletteWidget::displayBorder);
+    QObject::connect(this->trnBaseWidget, &PaletteWidget::displayRootBorder, this->trnUniqueWidget, &PaletteWidget::displayBorder);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::clearRootInformation, this->palWidget, &PaletteWidget::clearInfo);
+    QObject::connect(this->trnBaseWidget, &PaletteWidget::clearRootInformation, this->trnUniqueWidget, &PaletteWidget::clearInfo);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::clearRootBorder, this->palWidget, &PaletteWidget::clearBorder);
+    QObject::connect(this->trnBaseWidget, &PaletteWidget::clearRootBorder, this->trnUniqueWidget, &PaletteWidget::clearBorder);
 
     if (isTileset) {
         // build a LevelCelView
