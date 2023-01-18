@@ -438,7 +438,7 @@ void PaletteWidget::checkTranslationsSelection(QList<quint8> indexes)
 
     this->undoStack->push(command);
 
-    this->initStopColorPicking()
+    this->initStopColorPicking();
 }
 
 void PaletteWidget::addPath(const QString &path, const QString &name)
