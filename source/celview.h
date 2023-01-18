@@ -73,7 +73,7 @@ public:
 
 signals:
     void frameRefreshed();
-    void colorIndexClicked(quint8);
+    void pixelClicked(const D1GfxPixel &pixel);
 
 private:
     void update();

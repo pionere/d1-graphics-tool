@@ -10,6 +10,8 @@
 #include "mainwindow.h"
 #include "ui_palettewidget.h"
 
+#define COLORIDX_TRANSPARENT -1
+
 enum class COLORFILTER_TYPE {
     NONE,
     USED,
@@ -402,10 +404,17 @@ void PaletteWidget::reloadConfig()
         Config::value("PaletteSelectionBorderColor").toString());
 }
 
-void PaletteWidget::selectColor(quint8 index)
+void PaletteWidget::selectColor(const D1GfxPixel &pixel)
 {
     this->initStopColorPicking();
 
+    int index;
+
+    if (pixel.isTransparent()) {
+        index = COLORIDX_TRANSPARENT;
+    } else {
+        index = pixel.getPaletteIndex();
+    }
     this->selectedFirstColorIndex = index;
     this->selectedLastColorIndex = index;
 
@@ -609,52 +618,47 @@ void PaletteWidget::displayColors()
 
 void PaletteWidget::displaySelection()
 {
+    int firstColorIndex = this->selectedFirstColorIndex;
+    int lastColorIndex = this->selectedLastColorIndex;
+    if (firstColorIndex > lastColorIndex) {
+        std::swap(firstColorIndex, lastColorIndex);
+    }
+    if (firstColorIndex == COLORIDX_TRANSPARENT) {
+        return;
+    }
     QPen pen(this->selectionBorderColor);
     pen.setStyle(Qt::SolidLine);
     pen.setJoinStyle(Qt::MiterJoin);
     pen.setWidth(PALETTE_SELECTION_WIDTH);
 
-    int first = 0;
-    int last = 0;
-    // int length = 0;
-    if (this->selectedFirstColorIndex <= this->selectedLastColorIndex) {
-        first = this->selectedFirstColorIndex;
-        last = this->selectedLastColorIndex;
-    } else {
-        // Swap first and last color if this is a backwards selection
-        first = this->selectedLastColorIndex;
-        last = this->selectedFirstColorIndex;
-    }
-    // length = last - first + 1;
-
-    for (int i = first; i <= last; i++) {
+    for (int i = firstColorIndex; i <= lastColorIndex; i++) {
         QRectF coordinates = getColorCoordinates(i);
         int a = PALETTE_SELECTION_WIDTH / 2;
         coordinates.adjust(a, a, -a, -a);
 
         // left line
-        if (i == first && i + PALETTE_COLORS_PER_LINE <= last)
+        if (i == firstColorIndex && i + PALETTE_COLORS_PER_LINE <= lastColorIndex)
             this->scene->addLine(coordinates.bottomLeft().x(), coordinates.bottomLeft().y() + PALETTE_SELECTION_WIDTH,
                 coordinates.topLeft().x(), coordinates.topLeft().y(), pen);
-        else if (i == first || i % PALETTE_COLORS_PER_LINE == 0)
+        else if (i == firstColorIndex || i % PALETTE_COLORS_PER_LINE == 0)
             this->scene->addLine(coordinates.bottomLeft().x(), coordinates.bottomLeft().y(),
                 coordinates.topLeft().x(), coordinates.topLeft().y(), pen);
 
         // right line
-        if (i == last && i - PALETTE_COLORS_PER_LINE >= first)
+        if (i == lastColorIndex && i - PALETTE_COLORS_PER_LINE >= firstColorIndex)
             this->scene->addLine(coordinates.topRight().x(), coordinates.topRight().y() - PALETTE_SELECTION_WIDTH,
                 coordinates.bottomRight().x(), coordinates.bottomRight().y(), pen);
-        else if (i == last || i % PALETTE_COLORS_PER_LINE == PALETTE_COLORS_PER_LINE - 1)
+        else if (i == lastColorIndex || i % PALETTE_COLORS_PER_LINE == PALETTE_COLORS_PER_LINE - 1)
             this->scene->addLine(coordinates.topRight().x(), coordinates.topRight().y(),
                 coordinates.bottomRight().x(), coordinates.bottomRight().y(), pen);
 
         // top line
-        if (i - PALETTE_COLORS_PER_LINE < first)
+        if (i - PALETTE_COLORS_PER_LINE < firstColorIndex)
             this->scene->addLine(coordinates.topLeft().x(), coordinates.topLeft().y(),
                 coordinates.topRight().x(), coordinates.topRight().y(), pen);
 
         // bottom line
-        if (i + PALETTE_COLORS_PER_LINE > last)
+        if (i + PALETTE_COLORS_PER_LINE > lastColorIndex)
             this->scene->addLine(coordinates.bottomLeft().x(), coordinates.bottomLeft().y(),
                 coordinates.bottomRight().x(), coordinates.bottomRight().y(), pen);
     }
@@ -700,40 +704,59 @@ void PaletteWidget::refreshPathComboBox()
 
 void PaletteWidget::refreshColorLineEdit()
 {
-    if (this->selectedFirstColorIndex == this->selectedLastColorIndex) {
-        QColor selectedColor = this->pal->getColor(this->selectedFirstColorIndex);
-        this->ui->colorLineEdit->setText(selectedColor.name());
+    int colorIndex = this->selectedFirstColorIndex;
+    QString text;
+    bool active = !this->isTrn;
+
+    if (colorIndex != this->selectedLastColorIndex) {
+        text = "*";
+    } else if (colorIndex != COLORIDX_TRANSPARENT) {
+        QColor selectedColor = this->pal->getColor(colorIndex);
+        text = selectedColor.name();
     } else {
-        this->ui->colorLineEdit->setText("*");
+        active = false;
     }
+    this->ui->colorLineEdit->setText(text);
+    this->ui->colorLineEdit->setReadOnly(!active);
+    this->ui->colorPickPushButton->setEnabled(active);
+    this->ui->colorClearPushButton->setEnabled(active);
 }
 
 void PaletteWidget::refreshIndexLineEdit()
 {
+    QString text;
+
     int firstColorIndex = this->selectedFirstColorIndex;
     int lastColorIndex = this->selectedLastColorIndex;
-    if (firstColorIndex == lastColorIndex) {
-        this->ui->indexLineEdit->setText(QString::number(firstColorIndex));
-    } else {
+    if (firstColorIndex != lastColorIndex) {
         // If second selected color has an index less than the first one swap them
         if (firstColorIndex > lastColorIndex) {
             std::swap(firstColorIndex, lastColorIndex);
         }
-        this->ui->indexLineEdit->setText(QString::number(firstColorIndex) + "-" + QString::number(lastColorIndex));
+        text = QString::number(firstColorIndex) + "-" + QString::number(lastColorIndex);
+    } else if (firstColorIndex != COLORIDX_TRANSPARENT) {
+        text = QString::number(firstColorIndex);
     }
+    this->ui->indexLineEdit->setText(text);
 }
 
 void PaletteWidget::refreshTranslationIndexLineEdit()
 {
-    if (this->trn.isNull())
-        return;
+    int colorIndex = this->selectedFirstColorIndex;
+    QString text;
+    bool active = true;
 
-    if (this->selectedFirstColorIndex == this->selectedLastColorIndex) {
-        this->ui->translationIndexLineEdit->setText(
-            QString::number(this->trn->getTranslation(this->selectedFirstColorIndex)));
+    if (colorIndex != this->selectedLastColorIndex) {
+        text = "*";
+    } else if (colorIndex != COLORIDX_TRANSPARENT) {
+        text = QString::number(this->trn->getTranslation(colorIndex));
     } else {
-        this->ui->translationIndexLineEdit->setText("*");
+        active = false;
     }
+    this->ui->translationIndexLineEdit->setText(text);
+    this->ui->translationIndexLineEdit->setReadOnly(!active);
+    this->ui->translationPickPushButton->setEnabled(active);
+    this->ui->translationClearPushButton->setEnabled(active);
 }
 
 void PaletteWidget::modify()

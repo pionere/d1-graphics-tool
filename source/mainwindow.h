@@ -76,7 +76,7 @@ private:
     bool loadUniqueTrn(QString trnfilePath);
     bool loadBaseTrn(QString trnfilePath);
 
-    void colorIndexClicked(quint8 colorIndex);
+    void pixelClicked(const D1GfxPixel &pixel);
     void colorModified();
 
     void addFrames(bool append);
