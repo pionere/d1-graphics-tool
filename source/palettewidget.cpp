@@ -366,7 +366,6 @@ void PaletteWidget::initializeUi()
         this->refreshTranslationIndexLineEdit();
 
     this->displayColors();
-    this->displaySelection();
 }
 
 void PaletteWidget::initializePathComboBox()
@@ -407,6 +406,8 @@ void PaletteWidget::reloadConfig()
 
 void PaletteWidget::selectColor(const D1GfxPixel &pixel)
 {
+    this->initStopColorPicking();
+
     int index;
 
     if (pixel.isTransparent()) {
@@ -418,8 +419,6 @@ void PaletteWidget::selectColor(const D1GfxPixel &pixel)
     this->selectedLastColorIndex = index;
 
     this->refresh();
-
-    this->initStopColorPicking();
 }
 
 void PaletteWidget::checkTranslationsSelection(QList<quint8> indexes)
@@ -511,7 +510,6 @@ void PaletteWidget::changeColorSelection(int colorIndex)
     this->refreshIndexLineEdit();
 
     this->displayColors();
-    this->displaySelection();
 }
 
 void PaletteWidget::finishColorSelection()
@@ -614,6 +612,8 @@ void PaletteWidget::displayColors()
 
         x += dx;
     }
+
+    this->displaySelection();
 }
 
 void PaletteWidget::displaySelection()
@@ -770,7 +770,6 @@ void PaletteWidget::refresh()
         this->trn->refreshResultingPalette();
 
     this->displayColors();
-    this->displaySelection();
     this->refreshPathComboBox();
     this->refreshColorLineEdit();
     this->refreshIndexLineEdit();
@@ -827,16 +826,18 @@ void PaletteWidget::on_actionRedo_triggered()
 
 void PaletteWidget::on_pathComboBox_activated(int index)
 {
+    this->initStopColorPicking();
+
     QString filePath = this->ui->pathComboBox->currentData().value<QString>();
 
     emit this->pathSelected(filePath);
     emit this->modified();
-
-    this->initStopColorPicking();
 }
 
 void PaletteWidget::on_displayComboBox_activated(int index)
 {
+    this->initStopColorPicking();
+
     if (!this->isTrn) {
         D1PALHITS_MODE mode = D1PALHITS_MODE::ALL_COLORS;
         switch (this->ui->displayComboBox->currentData().value<COLORFILTER_TYPE>()) {
@@ -860,8 +861,6 @@ void PaletteWidget::on_displayComboBox_activated(int index)
     }
 
     this->refresh();
-
-    this->initStopColorPicking();
 }
 
 void PaletteWidget::on_colorLineEdit_returnPressed()
@@ -883,14 +882,16 @@ void PaletteWidget::on_colorLineEdit_returnPressed()
 
 void PaletteWidget::on_colorLineEdit_escPressed()
 {
+    this->initStopColorPicking();
+
     this->refreshColorLineEdit();
     this->ui->colorLineEdit->clearFocus();
-
-    this->initStopColorPicking();
 }
 
 void PaletteWidget::on_colorPickPushButton_clicked()
 {
+    this->initStopColorPicking();
+
     QColor color = QColorDialog::getColor();
     QColor colorEnd;
     if (this->selectedFirstColorIndex == this->selectedLastColorIndex) {
@@ -910,6 +911,8 @@ void PaletteWidget::on_colorPickPushButton_clicked()
 
 void PaletteWidget::on_colorClearPushButton_clicked()
 {
+    this->initStopColorPicking();
+
     // Build color editing command and connect it to the current palette widget
     // to update the PAL/TRN and CEL views when undo/redo is performed
     auto *command = new EditColorsCommand(
@@ -917,8 +920,6 @@ void PaletteWidget::on_colorClearPushButton_clicked()
     QObject::connect(command, &EditColorsCommand::modified, this, &PaletteWidget::modify);
 
     this->undoStack->push(command);
-
-    this->initStopColorPicking();
 }
 
 void PaletteWidget::on_translationIndexLineEdit_returnPressed()
@@ -945,22 +946,21 @@ void PaletteWidget::on_translationIndexLineEdit_returnPressed()
 
 void PaletteWidget::on_translationIndexLineEdit_escPressed()
 {
+    this->initStopColorPicking();
+
     this->refreshTranslationIndexLineEdit();
     this->ui->translationIndexLineEdit->clearFocus();
-
-    this->initStopColorPicking();
 }
 
 void PaletteWidget::on_translationPickPushButton_clicked()
 {
     emit this->colorPicking_started();
-    /*emit this->displayAllRootColors();
-    emit this->displayRootInformation("<- Select translation");
-    emit this->displayRootBorder();*/
 }
 
 void PaletteWidget::on_translationClearPushButton_clicked()
 {
+    this->initStopColorPicking();
+
     // Build translation clearing command and connect it to the current palette widget
     // to update the PAL/TRN and CEL views when undo/redo is performed
     auto *command = new ClearTranslationsCommand(
@@ -968,12 +968,12 @@ void PaletteWidget::on_translationClearPushButton_clicked()
     QObject::connect(command, &ClearTranslationsCommand::modified, this, &PaletteWidget::modify);
 
     this->undoStack->push(command);
-
-    this->initStopColorPicking();
 }
 
 void PaletteWidget::on_monsterTrnPushButton_clicked()
 {
+    this->initStopColorPicking();
+
     bool trnModified = false;
 
     for (int i = 0; i < D1PAL_COLORS; i++) {
@@ -986,6 +986,4 @@ void PaletteWidget::on_monsterTrnPushButton_clicked()
     if (trnModified) {
         emit this->modified();
     }
-
-    this->initStopColorPicking();
 }

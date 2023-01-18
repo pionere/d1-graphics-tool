@@ -151,16 +151,8 @@ public:
     void changeColorSelection(int colorIndex);
     void finishColorSelection();
 
-    // Display functions
-    void displayColors();
-    void displaySelection();
     void startTrnColorPicking();
     void stopTrnColorPicking();
-    /*void temporarilyDisplayAllColors();
-    void displayInfo(const QString &infoTxt);
-    void clearInfo();
-    void displayBorder();
-    void clearBorder();*/
 
     void refreshPathComboBox();
     void refreshColorLineEdit();
@@ -176,17 +168,16 @@ signals:
 
     void colorPicking_started();
     void colorPicking_stopped();
-    /*void displayAllRootColors();
-    void displayRootInformation(QString infoTxt);
-    void clearRootInformation();
-    void displayRootBorder();
-    void clearRootBorder();*/
 
     void modified();
     void refreshed();
 
 private:
     QPushButton *addButton(QStyle::StandardPixmap type, QString tooltip, void (PaletteWidget::*callback)(void));
+    // Display functions
+    void displayColors();
+    void displaySelection();
+
     void initStopColorPicking();
 
 public slots:
