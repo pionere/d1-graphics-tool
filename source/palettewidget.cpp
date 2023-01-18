@@ -730,7 +730,7 @@ void PaletteWidget::refreshIndexLineEdit()
         this->ui->indexLineEdit->setText(QString::number(firstColorIndex));
     } else {
         // If second selected color has an index less than the first one swap them
-        if (firstColorIndex < lastColorIndex) {
+        if (firstColorIndex > lastColorIndex) {
             std::swap(firstColorIndex, lastColorIndex);
         }
         this->ui->indexLineEdit->setText(QString::number(firstColorIndex) + "-" + QString::number(lastColorIndex));
@@ -873,7 +873,9 @@ void PaletteWidget::on_colorPickPushButton_clicked()
     } else {
         colorEnd = QColorDialog::getColor();
     }
-
+    if (!color.isValid() || !colorEnd.isValid()) {
+        return;
+    }
     // Build color editing command and connect it to the current palette widget
     // to update the PAL/TRN and CEL views when undo/redo is performed
     EditColorsCommand *command = new EditColorsCommand(
