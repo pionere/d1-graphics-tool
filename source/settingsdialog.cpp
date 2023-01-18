@@ -20,8 +20,8 @@ SettingsDialog::~SettingsDialog()
 
 void SettingsDialog::initialize()
 {
-    this->on_defaultPaletteColorPushButton_escPressed();
-    this->on_paletteSelectionBorderColorPushButton_escPressed();
+    this->on_defaultPaletteColorLineEdit_escPressed();
+    this->on_paletteSelectionBorderColorLineEdit_escPressed();
 }
 
 void SettingsDialog::on_defaultPaletteColorPushButton_clicked()
