@@ -204,10 +204,12 @@ typedef struct UpscalePatterns {
           aa aa cc    aa  aa  cc
  */
 static const BYTE patternLineDownRight[] = {
+    // clang-format off
     3, 3,
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
     PTN_ALPHA, PTN_COLOR, PTN_COLOR,
     PTN_ALPHA, PTN_ALPHA, PTN_COLOR,
+    // clang-format on
 };
 static bool LineDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -240,10 +242,12 @@ static bool LineDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
           cc aa aa    cc  aa  aa
  */
 static const BYTE patternLineDownLeft[] = {
+    // clang-format off
     3, 3,
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
     PTN_COLOR, PTN_COLOR, PTN_ALPHA,
     PTN_COLOR, PTN_ALPHA, PTN_ALPHA,
+    // clang-format on
 };
 static bool LineDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -277,10 +281,12 @@ static bool LineDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QLi
           cc cc cc     cc  cc  cc
  */
 static const BYTE patternLineUpRight[] = {
+    // clang-format off
     3, 3,
     PTN_ALPHA, PTN_ALPHA, PTN_COLOR,
     PTN_ALPHA, PTN_COLOR, PTN_COLOR,
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
+    // clang-format on
 };
 static bool LineUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -328,10 +334,12 @@ static bool LineUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QLis
           cc cc cc    cc  cc  cc
  */
 static const BYTE patternLineUpLeft[] = {
+    // clang-format off
     3, 3,
     PTN_COLOR, PTN_ALPHA, PTN_ALPHA,
     PTN_COLOR, PTN_COLOR, PTN_ALPHA,
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
+    // clang-format on
 };
 static bool LineUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -379,10 +387,12 @@ static bool LineUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList
             aa aa aa cc    aa  aa aa  cc
  */
 static const BYTE patternSlowDownRight[] = {
+    // clang-format off
     4, 3,
     PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR,
     PTN_ALPHA, PTN_COLOR, PTN_COLOR, PTN_COLOR,
     PTN_ALPHA, PTN_ALPHA, PTN_ALPHA, PTN_COLOR,
+    // clang-format on
 };
 static bool SlowDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -428,10 +438,12 @@ static bool SlowDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
             cc aa aa aa    cc  aa aa  aa
  */
 static const BYTE patternSlowDownLeft[] = {
+    // clang-format off
     4, 3,
     PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR,
     PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_ALPHA,
     PTN_COLOR, PTN_ALPHA, PTN_ALPHA, PTN_ALPHA,
+    // clang-format on
 };
 static bool SlowDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -475,10 +487,12 @@ static bool SlowDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QLi
             cc cc cc cc    cc  cc cc  cc
  */
 static const BYTE patternSlowUpRight[] = {
+    // clang-format off
     4, 3,
     PTN_ALPHA, PTN_ALPHA, PTN_ALPHA, PTN_COLOR,
     PTN_ALPHA, PTN_COLOR, PTN_COLOR, PTN_COLOR,
     PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR,
+    // clang-format on
 };
 static bool SlowUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -540,10 +554,12 @@ static bool SlowUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QLis
             cc cc cc cc    cc  cc cc  cc
  */
 static const BYTE patternSlowUpLeft[] = {
+    // clang-format off
     4, 3,
     PTN_COLOR, PTN_ALPHA, PTN_ALPHA, PTN_ALPHA,
     PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_ALPHA,
     PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR,
+    // clang-format on
 };
 static bool SlowUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -607,11 +623,13 @@ static bool SlowUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList
           aa aa cc    aa  aa  aa
  */
 static const BYTE patternFastDownRight[] = {
+    // clang-format off
     3, 4,
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
     PTN_ALPHA, PTN_COLOR, PTN_COLOR,
     PTN_ALPHA, PTN_COLOR, PTN_COLOR,
     PTN_ALPHA, PTN_ALPHA, PTN_COLOR,
+    // clang-format on
 };
 static bool FastDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -657,11 +675,13 @@ static bool FastDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
           cc aa aa    cc  aa  aa
  */
 static const BYTE patternFastDownLeft[] = {
+    // clang-format off
     3, 4,
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
     PTN_COLOR, PTN_COLOR, PTN_ALPHA,
     PTN_COLOR, PTN_COLOR, PTN_ALPHA,
     PTN_COLOR, PTN_ALPHA, PTN_ALPHA,
+    // clang-format on
 };
 static bool FastDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -707,11 +727,13 @@ static bool FastDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QLi
           cc cc cc     cc  cc cc
  */
 static const BYTE patternFastUpRight[] = {
+    // clang-format off
     3, 4,
     PTN_ALPHA, PTN_ALPHA, PTN_COLOR,
     PTN_ALPHA, PTN_COLOR, PTN_COLOR,
     PTN_ALPHA, PTN_COLOR, PTN_COLOR,
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
+    // clang-format on
 };
 static bool FastUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -775,11 +797,13 @@ static bool FastUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QLis
           cc cc cc    cc cc  cc
  */
 static const BYTE patternFastUpLeft[] = {
+    // clang-format off
     3, 4,
     PTN_COLOR, PTN_ALPHA, PTN_ALPHA,
     PTN_COLOR, PTN_COLOR, PTN_ALPHA,
     PTN_COLOR, PTN_COLOR, PTN_ALPHA,
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
+    // clang-format on
 };
 static bool FastUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -843,10 +867,12 @@ static bool FastUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList
               aa aa aa cc    aa  aa aa  cc
  */
 static const BYTE patternAnySlowDownRight[] = {
+    // clang-format off
     2, 3,
     PTN_COLOR, PTN_COLOR,
     PTN_COLOR, PTN_COLOR,
     PTN_ALPHA, PTN_COLOR,
+    // clang-format on
 };
 static bool AnySlowDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -898,9 +924,11 @@ static bool AnySlowDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels,
             aa aa cc    aa  aa  cc
  */
 static const BYTE patternAnyFastDownRight[] = {
+    // clang-format off
     3, 2,
     PTN_ALPHA, PTN_COLOR, PTN_COLOR,
     PTN_ALPHA, PTN_ALPHA, PTN_COLOR,
+    // clang-format on
 };
 static bool AnyFastDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -950,10 +978,12 @@ static bool AnyFastDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels,
               cc aa aa aa    cc  aa aa  aa
  */
 static const BYTE patternAnySlowDownLeft[] = {
+    // clang-format off
     2, 3,
     PTN_COLOR, PTN_COLOR,
     PTN_COLOR, PTN_ALPHA,
     PTN_ALPHA, PTN_ALPHA,
+    // clang-format on
 };
 static bool AnySlowDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -1005,9 +1035,11 @@ static bool AnySlowDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
             cc aa aa    cc  aa  aa
  */
 static const BYTE patternAnyFastDownLeft[] = {
+    // clang-format off
     3, 2,
     PTN_COLOR, PTN_COLOR, PTN_ALPHA,
     PTN_COLOR, PTN_ALPHA, PTN_ALPHA,
+    // clang-format on
 };
 static bool AnyFastDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -1057,10 +1089,12 @@ static bool AnyFastDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
               cc cc cc cc    cc  cc cc  cc
  */
 static const BYTE patternAnySlowUpRight[] = {
+    // clang-format off
     2, 3,
     PTN_ALPHA, PTN_COLOR,
     PTN_COLOR, PTN_COLOR,
     PTN_COLOR, PTN_COLOR,
+    // clang-format on
 };
 static bool AnySlowUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -1131,9 +1165,11 @@ static bool AnySlowUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, Q
             cc cc cc     cc  cc cc
  */
 static const BYTE patternAnyFastUpRight[] = {
+    // clang-format off
     3, 2,
     PTN_ALPHA, PTN_COLOR, PTN_COLOR,
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
+    // clang-format on
 };
 static bool AnyFastUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -1201,10 +1237,12 @@ static bool AnyFastUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, Q
               cc cc cc cc    cc  cc cc  cc
  */
 static const BYTE patternAnySlowUpLeft[] = {
+    // clang-format off
     2, 3,
     PTN_ALPHA, PTN_ALPHA,
     PTN_COLOR, PTN_ALPHA,
     PTN_COLOR, PTN_COLOR,
+    // clang-format on
 };
 static bool AnySlowUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -1274,9 +1312,11 @@ static bool AnySlowUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
             cc cc cc    cc cc  cc
  */
 static const BYTE patternAnyFastUpLeft[] = {
+    // clang-format off
     3, 2,
     PTN_COLOR, PTN_COLOR, PTN_ALPHA,
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
+    // clang-format on
 };
 static bool AnyFastUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -1346,10 +1386,12 @@ static bool AnyFastUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
                  aa aa cc        aa aa  cc
  */
 static const BYTE patternAnySlowDownNarrow[] = {
+    // clang-format off
     2, 3,
     PTN_ALPHA, PTN_DNC,
     PTN_COLOR, PTN_ALPHA,
     PTN_ALPHA, PTN_COLOR,
+    // clang-format on
 };
 static bool AnySlowDownNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -1432,9 +1474,11 @@ static bool AnySlowDownNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels
                aa cc        aa  cc
  */
 static const BYTE patternAnyFastDownNarrow[] = {
+    // clang-format off
     3, 2,
     PTN_ALPHA, PTN_COLOR, PTN_ALPHA,
     PTN_DNC,   PTN_ALPHA, PTN_COLOR,
+    // clang-format on
 };
 static bool AnyFastDownNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -1516,10 +1560,12 @@ static bool AnyFastDownNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels
               cc aa aa       cc  aa aa
  */
 static const BYTE patternAnySlowUpNarrow[] = {
+    // clang-format off
     2, 3,
     PTN_ALPHA, PTN_COLOR,
     PTN_COLOR, PTN_ALPHA,
     PTN_ALPHA, PTN_DNC,
+    // clang-format on
 };
 static bool AnySlowUpNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -1601,9 +1647,11 @@ static bool AnySlowUpNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
             cc aa        cc   aa
  */
 static const BYTE patternAnyFastUpNarrow[] = {
+    // clang-format off
     3, 2,
     PTN_ALPHA, PTN_COLOR, PTN_ALPHA,
     PTN_COLOR, PTN_ALPHA, PTN_DNC,
+    // clang-format on
 };
 static bool AnyFastUpNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -1710,10 +1758,12 @@ static D1GfxPixel *FixColorCheck(int x, int y, QList<QList<D1GfxPixel>> &origPix
                                  f1f1                     f1f1
  */
 static const BYTE patternFixSlowDownRight[] = {
+    // clang-format off
     2, 3,
     PTN_COLOR, PTN_COLOR,
     PTN_COLOR, PTN_COLOR,
     PTN_DNC,   PTN_COLOR,
+    // clang-format on
 };
 static bool FixSlowDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -1732,12 +1782,12 @@ static bool FixSlowDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels,
         return false;
 
     int len = 1;
-    while (sx > len //&& (src - len)->a == 255 && (src + orimg_data.width - len)->a == 255 && (src + 2 * orimg_data.width - len)->a != 255
+    while (sx > len
      && newPixels[dy][dx - len * multiplier] == *fP && newPixels[dy + multiplier][dx - len * multiplier] == *fP && newPixels[dy + 2 * multiplier][dx - len * multiplier] != *fP) {
         len++;
     }
 
-    if (sx <= len //|| (src - len)->a != 255 || (src + orimg_data.width - len)->a == 255 || (src + 2 * orimg_data.width - len)->a == 255
+    if (sx <= len
      || newPixels[dy][dx - len * multiplier] != *fP || newPixels[dy + multiplier][dx - len * multiplier] == *fP || newPixels[dy + 2 * multiplier][dx - len * multiplier] == *fP)
         return false;
 
@@ -1808,9 +1858,11 @@ static bool FixSlowDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels,
                          f1f1                f1f1
  */
 static const BYTE patternFixFastDownRight[] = {
+    // clang-format off
     3, 2,
     PTN_DNC, PTN_COLOR, PTN_COLOR,
     PTN_DNC, PTN_DNC,   PTN_COLOR,
+    // clang-format on
 };
 static bool FixFastDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -1829,12 +1881,12 @@ static bool FixFastDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels,
         return false;
 
     int len = 1;
-    while (sy > len //&& (src - orimg_data.width * len)->a != 255 && (src - orimg_data.width * len + 1)->a == 255 && (src - orimg_data.width * len + 2)->a == 255
+    while (sy > len
      && newPixels[dy - len * multiplier][dx] != *fP && newPixels[dy - len * multiplier][dx + multiplier] == *fP && newPixels[dy - len * multiplier][dx + 2 * multiplier] == *fP) {
         len++;
     }
 
-    if (sy <= len //|| (src - orimg_data.width * len)->a != 255 || (src - orimg_data.width * len + 1)->a != 255 || (src - orimg_data.width * len + 2)->a != 255
+    if (sy <= len
      || newPixels[dy - len * multiplier][dx] != *fP || newPixels[dy - len * multiplier][dx + multiplier] != *fP || newPixels[dy - len * multiplier][dx + 2 * multiplier] != *fP)
         return false;
 
@@ -1903,10 +1955,12 @@ static bool FixFastDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels,
                   f1f1                   f1f1
  */
 static const BYTE patternFixSlowDownLeft[] = {
+    // clang-format off
     2, 3,
     PTN_COLOR, PTN_COLOR,
     PTN_COLOR, PTN_DNC,
     PTN_DNC,   PTN_DNC,
+    // clang-format on
 };
 static bool FixSlowDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -1925,12 +1979,12 @@ static bool FixSlowDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
         return false;
 
     int len = 1;
-    while (sx > len //&& (src - len)->a == 255 && (src + orimg_data.width - len)->a == 255 && (src + 2 * orimg_data.width - len)->a != 255
+    while (sx > len
      && newPixels[dy][dx - len * multiplier] == *fP && newPixels[dy + multiplier][dx - len * multiplier] == *fP && newPixels[dy + 2 * multiplier][dx - len * multiplier] != *fP) {
         len++;
     }
 
-    if (sx <= len //|| (src - len)->a != 255 || (src + orimg_data.width - len)->a != 255 || (src + 2 * orimg_data.width - len)->a != 255
+    if (sx <= len
      || newPixels[dy][dx - len * multiplier] != *fP || newPixels[dy + multiplier][dx - len * multiplier] != *fP || newPixels[dy + 2 * multiplier][dx - len * multiplier] != *fP)
         return false;
 
@@ -2001,9 +2055,11 @@ static bool FixSlowDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
                f1f1 f1f1         f1f1
  */
 static const BYTE patternFixFastDownLeft[] = {
+    // clang-format off
     3, 2,
     PTN_COLOR, PTN_COLOR, PTN_DNC,
     PTN_COLOR, PTN_DNC,   PTN_DNC,
+    // clang-format on
 };
 static bool FixFastDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -2022,12 +2078,12 @@ static bool FixFastDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
         return false;
 
     int len = 1;
-    while (sy > len //&& (src - orimg_data.width * len)->a == 255 && (src - orimg_data.width * len + 1)->a == 255 && (src - orimg_data.width * len + 2)->a != 255
+    while (sy > len
      && newPixels[dy - len * multiplier][dx] == *fP && newPixels[dy - len * multiplier][dx + multiplier] == *fP && newPixels[dy - len * multiplier][dx + 2 * multiplier] != *fP) {
         len++;
     }
 
-    if (sy <= len //|| (src - orimg_data.width * len)->a != 255 || (src - orimg_data.width * len + 1)->a != 255 || (src - orimg_data.width * len + 2)->a != 255
+    if (sy <= len
      || newPixels[dy - len * multiplier][dx] != *fP || newPixels[dy - len * multiplier][dx + multiplier] != *fP || newPixels[dy - len * multiplier][dx + 2 * multiplier] != *fP)
         return false;
 
@@ -2096,10 +2152,12 @@ static bool FixFastDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
                   f1f1 f1f1 f1f1 f1f1    f1f1  f1f1 f1f1  f1f1
  */
 static const BYTE patternFixSlowUpRight[] = {
+    // clang-format off
     2, 3,
     PTN_DNC,   PTN_COLOR,
     PTN_COLOR, PTN_COLOR,
     PTN_COLOR, PTN_COLOR,
+    // clang-format on
 };
 static bool FixSlowUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -2118,12 +2176,12 @@ static bool FixSlowUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, Q
         return false;
 
     int len = 1;
-    while (sx > len //&& (src - len)->a != 255 && (src + orimg_data.width - len)->a == 255 && (src + 2 * orimg_data.width - len)->a == 255
+    while (sx > len
      && newPixels[dy][dx - len * multiplier] != *fP && newPixels[dy + multiplier][dx - len * multiplier] == *fP && newPixels[dy + 2 * multiplier][dx - len * multiplier] == *fP) {
         len++;
     }
 
-    if (sx <= len //|| (src - len)->a == 255 || (src + orimg_data.width - len)->a == 255 || (src + 2 * orimg_data.width - len)->a != 255
+    if (sx <= len
      || newPixels[dy][dx - len * multiplier] == *fP || newPixels[dy + multiplier][dx - len * multiplier] == *fP || newPixels[dy + 2 * multiplier][dx - len * multiplier] != *fP)
         return false;
 
@@ -2158,9 +2216,11 @@ static bool FixSlowUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, Q
                f1f1 f1f1 f1f1     f1f1  f1f1 f1f1
  */
 static const BYTE patternFixFastUpRight[] = {
+    // clang-format off
     3, 2,
     PTN_DNC,   PTN_COLOR, PTN_COLOR,
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
+    // clang-format on
 };
 static bool FixFastUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -2179,12 +2239,12 @@ static bool FixFastUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, Q
         return false;
 
     int len = 1;
-    while (sy > len //&& (src - orimg_data.width * len)->a != 255 && (src - orimg_data.width * len + 1)->a == 255 && (src - orimg_data.width * len + 2)->a == 255
+    while (sy > len
      && newPixels[dy - len * multiplier][dx] != *fP && newPixels[dy - len * multiplier][dx + multiplier] == *fP && newPixels[dy - len * multiplier][dx + 2 * multiplier] == *fP) {
         len++;
     }
 
-    if (sy <= len //|| (src - orimg_data.width * len)->a == 255 || (src - orimg_data.width * len + 1)->a == 255 || (src - orimg_data.width * len + 2)->a != 255
+    if (sy <= len
      || newPixels[dy - len * multiplier][dx] == *fP || newPixels[dy - len * multiplier][dx + multiplier] == *fP || newPixels[dy - len * multiplier][dx + 2 * multiplier] != *fP)
         return false;
 
@@ -2217,10 +2277,12 @@ static bool FixFastUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, Q
                   f1f1 f1f1 f1f1 f1f1    f1f1  f1f1 f1f1  f1f1
  */
 static const BYTE patternFixSlowUpLeft[] = {
+    // clang-format off
     2, 3,
     PTN_DNC,   PTN_DNC,
     PTN_COLOR, PTN_DNC,
     PTN_COLOR, PTN_COLOR,
+    // clang-format on
 };
 static bool FixSlowUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -2239,12 +2301,12 @@ static bool FixSlowUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
         return false;
 
     int len = 1;
-    while (sx > len //&& (src - len)->a != 255 && (src + orimg_data.width - len)->a == 255 && (src + 2 * orimg_data.width - len)->a == 255
+    while (sx > len
      && newPixels[dy][dx - len * multiplier] != *fP && newPixels[dy + multiplier][dx - len * multiplier] == *fP && newPixels[dy + 2 * multiplier][dx - len * multiplier] == *fP) {
         len++;
     }
 
-    if (sx <= len //|| (src - len)->a != 255 || (src + orimg_data.width - len)->a != 255 || (src + 2 * orimg_data.width - len)->a != 255
+    if (sx <= len
      || newPixels[dy][dx - len * multiplier] != *fP || newPixels[dy + multiplier][dx - len * multiplier] != *fP || newPixels[dy + 2 * multiplier][dx - len * multiplier] != *fP)
         return false;
 
@@ -2279,9 +2341,11 @@ static bool FixSlowUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
                f1f1 f1f1 f1f1    f1f1 f1f1  f1f1
  */
 static const BYTE patternFixFastUpLeft[] = {
+    // clang-format off
     3, 2,
     PTN_COLOR, PTN_COLOR, PTN_DNC,
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
+    // clang-format on
 };
 static bool FixFastUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -2300,12 +2364,12 @@ static bool FixFastUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
         return false;
 
     int len = 1;
-    while (sy > len //&& (src - orimg_data.width * len)->a == 255 && (src - orimg_data.width * len + 1)->a == 255 && (src - orimg_data.width * len + 2)->a != 255
+    while (sy > len
      && newPixels[dy - len * multiplier][dx] == *fP && newPixels[dy - len * multiplier][dx + multiplier] == *fP && newPixels[dy - len * multiplier][dx + 2 * multiplier] != *fP) {
         len++;
     }
 
-    if (sy <= len //|| (src - orimg_data.width * len)->a != 255 || (src - orimg_data.width * len + 1)->a == 255 || (src - orimg_data.width * len + 2)->a == 255
+    if (sy <= len
      || newPixels[dy - len * multiplier][dx] != *fP || newPixels[dy - len * multiplier][dx + multiplier] == *fP || newPixels[dy - len * multiplier][dx + 2 * multiplier] == *fP)
         return false;
 
@@ -2344,12 +2408,14 @@ static bool FixFastUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
             aa aa aa aa     aa  aa  aa aa
  */
 static const BYTE patternLeftTriangle[] = {
+    // clang-format off
     4, 5,
     PTN_ALPHA, PTN_ALPHA, PTN_ALPHA, PTN_ALPHA,
     PTN_ALPHA, PTN_ALPHA, PTN_COLOR, PTN_COLOR,
     PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR,
     PTN_ALPHA, PTN_ALPHA, PTN_COLOR, PTN_COLOR,
     PTN_ALPHA, PTN_ALPHA, PTN_ALPHA, PTN_ALPHA,
+    // clang-format on
 };
 static bool LeftTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -2425,12 +2491,14 @@ static bool LeftTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QLi
             aa aa aa aa    aa aa  aa aa
  */
 static const BYTE patternRightTriangle[] = {
+    // clang-format off
     4, 5,
     PTN_ALPHA, PTN_ALPHA, PTN_ALPHA, PTN_ALPHA,
     PTN_COLOR, PTN_COLOR, PTN_ALPHA, PTN_ALPHA,
     PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR,
     PTN_COLOR, PTN_COLOR, PTN_ALPHA, PTN_ALPHA,
     PTN_ALPHA, PTN_ALPHA, PTN_ALPHA, PTN_ALPHA,
+    // clang-format on
 };
 static bool RightTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -2505,10 +2573,12 @@ static bool RightTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
                     cc cc cc cc cc cc cc cc    cc cc  cc cc cc cc  cc cc
  */
 static const BYTE patternTopTriangle[] = {
+    // clang-format off
     8, 3,
     PTN_ALPHA, PTN_ALPHA, PTN_ALPHA, PTN_ALPHA, PTN_ALPHA, PTN_ALPHA, PTN_ALPHA, PTN_ALPHA,
     PTN_ALPHA, PTN_ALPHA, PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_ALPHA, PTN_ALPHA,
     PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR,
+    // clang-format on
 };
 static bool TopTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -2552,9 +2622,11 @@ static bool TopTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QLis
                     aa aa cc cc cc cc aa aa    aa aa [AA cc cc AA] aa aa
  */
 static const BYTE patternBottomTriangle[] = {
+    // clang-format off
     8, 2,
     PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR,
     PTN_ALPHA, PTN_ALPHA, PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_ALPHA, PTN_ALPHA,
+    // clang-format on
 };
 static bool BottomTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
@@ -3036,7 +3108,7 @@ static D1Pal *loadPal(const UpscaleParam &params, bool &ok)
     D1Pal *result = nullptr;
     if (!params.palPath.isEmpty()) {
         result = new D1Pal();
-        if (!pal->load(params.palPath)) {
+        if (!result->load(params.palPath)) {
             delete result;
             ok = false;
             QMessageBox::critical(nullptr, "Error", "Could not load PAL file.");
@@ -3077,7 +3149,7 @@ D1GfxFrame *Upscaler::createSubtileFrame(const D1Gfx *gfx, const D1Min *min, int
     }
     int x = 0;
     int y = 0;
-    const QList<quint16> &frameReferences =  min->getFrameReferences(subtileIndex);
+    const QList<quint16> &frameReferences = min->getFrameReferences(subtileIndex);
     for (quint16 frameRef : frameReferences) {
         if (frameRef == 0) {
             for (int yy = 0; yy < MICRO_HEIGHT; yy++) {
@@ -3165,7 +3237,8 @@ void Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     // update gfx
     gfx->modified = true;
     gfx->upscaled = true;
-    gfx->groupFrameIndices = qMakePair(0, newframes.count());
+	gfx->groupFrameIndices.clear();
+    gfx->groupFrameIndices.append(qMakePair(0, newframes.count() - 1));
     gfx->frames.swap(newframes);
 
     // update min

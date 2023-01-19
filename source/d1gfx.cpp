@@ -262,7 +262,7 @@ D1GfxFrame *D1Gfx::getFrame(int frameIndex) const
     if (frameIndex < 0 || frameIndex >= this->frames.count())
         return nullptr;
 
-    return &this->frames[frameIndex];
+    return const_cast<D1GfxFrame *>(&this->frames[frameIndex]);
 }
 
 int D1Gfx::getFrameWidth(int frameIndex) const
