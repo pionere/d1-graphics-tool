@@ -3132,6 +3132,7 @@ void Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
         upscaleFrame(gfx->getFrame(i), pal == nullptr ? gfx->palette : pal, params);
     }
     gfx->upscaled = true;
+    gfx->modified = true;
 
     delete pal;
 }
@@ -3177,7 +3178,7 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<qui
 {
     QList<quint16> subtileFramesRefs;
     int x = 0;
-    for (int y = 0; y < subtileFrame->height * params.multiplier;) {
+    for (int y = 0; y < subtileFrame->height;) {
         bool hasColor = false;
         for (int yy = 0; yy < MICRO_HEIGHT && !hasColor; yy++) {
             for (int xx = 0; xx < MICRO_WIDTH; xx++) {
@@ -3207,7 +3208,7 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<qui
         }
 
         x += MICRO_WIDTH;
-        if (x == subtileFrame->width * params.multiplier) {
+        if (x == subtileFrame->width) {
             x = 0;
             y += MICRO_HEIGHT;
         }
@@ -3234,11 +3235,11 @@ void Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
         delete subtileFrame;
     }
     // update gfx
-    gfx->modified = true;
-    gfx->upscaled = true;
     gfx->groupFrameIndices.clear();
     gfx->groupFrameIndices.append(qMakePair(0, newframes.count() - 1));
     gfx->frames.swap(newframes);
+    gfx->upscaled = true;
+    gfx->modified = true;
 
     // update min
     min->subtileWidth *= params.multiplier;
