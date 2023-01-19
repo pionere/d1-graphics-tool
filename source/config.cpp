@@ -7,9 +7,14 @@
 
 static QJsonObject theConfig;
 
+QString Config::getJsonFilePath()
+{
+    return QCoreApplication::applicationDirPath() + Config::FILE_PATH;
+}
+
 void Config::loadConfiguration()
 {
-    QString jsonFilePath = QCoreApplication::applicationDirPath() + "/D1GraphicsTool.config.json";
+    QString jsonFilePath = Config::getJsonFilePath();
     bool configurationModified = false;
 
     // If configuration file exists load it otherwise create it
@@ -19,23 +24,18 @@ void Config::loadConfiguration()
         QJsonDocument loadJsonDoc = QJsonDocument::fromJson(loadJson.readAll());
         theConfig = loadJsonDoc.object();
         loadJson.close();
+    }
 
-        if (!theConfig.contains("LastFilePath")) {
-            theConfig.insert("LastFilePath", jsonFilePath);
-            configurationModified = true;
-        }
-        if (!theConfig.contains("PaletteDefaultColor")) {
-            theConfig.insert("PaletteDefaultColor", "#FF00FF");
-            configurationModified = true;
-        }
-        if (!theConfig.contains("PaletteSelectionBorderColor")) {
-            theConfig.insert("PaletteSelectionBorderColor", "#FF0000");
-            configurationModified = true;
-        }
-    } else {
-        theConfig.insert("LastFilePath", jsonFilePath);
-        theConfig.insert("PaletteDefaultColor", "#FF00FF");
-        theConfig.insert("PaletteSelectionBorderColor", "#FF0000");
+    if (!theConfig.contains(Config::CFG_LAST_FILE_PATH)) {
+        Config::setLastFilePath((jsonFilePath);
+        configurationModified = true;
+    }
+    if (!theConfig.contains(Config::CFG_PAL_DEFAULT_COLOR)) {
+        Config::setPaletteUndefinedColor(Config::DEFAULT_PAL_UNDEFINED_COLOR);
+        configurationModified = true;
+    }
+    if (!theConfig.contains(Config::CFG_PAL_SELECTION_BORDER_COLOR)) {
+        Config::setPaletteSelectionBorderColor(Config::DEFAULT_PAL_SELECTION_BORDER_COLOR);
         configurationModified = true;
     }
 
@@ -46,7 +46,7 @@ void Config::loadConfiguration()
 
 void Config::storeConfiguration()
 {
-    QString jsonFilePath = QCoreApplication::applicationDirPath() + "/D1GraphicsTool.config.json";
+    QString jsonFilePath = Config::getJsonFilePath();
 
     QFile saveJson(jsonFilePath);
     saveJson.open(QIODevice::WriteOnly);

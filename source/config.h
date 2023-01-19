@@ -1,11 +1,42 @@
 #pragma once
 
 #include <QJsonObject>
+#include <QString>
 
 class Config {
+private:
+    static constexpr const char *FILE_PATH = "/D1GraphicsTool.config.json";
+    static constexpr const char *DEFAULT_PAL_UNDEFINED_COLOR = "#ff00ff";
+    static constexpr const char *DEFAULT_PAL_SELECTION_BORDER_COLOR = "#ff0000";
+
+    static constexpr const char *CFG_LAST_FILE_PATH = "LastFilePath";
+    static constexpr const char *CFG_PAL_UNDEFINED_COLOR = "PaletteUndefinedColor";
+    static constexpr const char *CFG_PAL_SELECTION_BORDER_COLOR = "PaletteSelectionBorderColor";
+
+    static QString getJsonFilePath();
+    static QJsonValue value(const QString &name);
+    static void insert(const QString &key, const QJsonValue &value);
+
 public:
     static void loadConfiguration();
     static void storeConfiguration();
-    static QJsonValue value(const QString &name);
-    static void insert(const QString &key, const QJsonValue &value);
+
+    static QString getLastFilePath() {
+        return Config::value(Config::CFG_LAST_FILE_PATH).toString();
+    };
+    static void setLastFilePath(const QString &path) {
+        Config::insert(Config::CFG_LAST_FILE_PATH, path);
+    };
+    static QString getPaletteUndefinedColor() {
+        return Config::value(Config::CFG_PAL_DEFAULT_COLOR).toString();
+    };
+    static void setPaletteUndefinedColor(QString colorName) {
+        Config::insert(Config::CFG_PAL_DEFAULT_COLOR, colorName);
+    };
+    static QString getPaletteSelectionBorderColor() {
+        return Config::value(Config::CFG_PAL_SELECTION_BORDER_COLOR).toString();
+    };
+    static void setPaletteSelectionBorderColor(QString colorName) {
+        Config::insert(Config::CFG_PAL_SELECTION_BORDER_COLOR, colorName);
+    };
 };

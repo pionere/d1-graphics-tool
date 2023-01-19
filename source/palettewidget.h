@@ -137,7 +137,6 @@ public:
     void initializePathComboBox();
     void initializeDisplayComboBox();
 
-    void reloadConfig();
     void selectColor(const D1GfxPixel &pixel);
     void checkTranslationsSelection(QList<quint8> indices);
 
@@ -217,9 +216,6 @@ private:
 
     PaletteScene *scene;
 
-    QColor paletteDefaultColor = Qt::magenta;
-
-    QColor selectionBorderColor = Qt::red;
     int selectedFirstColorIndex = 0;
     int selectedLastColorIndex = 0;
 

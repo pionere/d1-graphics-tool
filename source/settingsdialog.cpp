@@ -19,30 +19,29 @@ SettingsDialog::~SettingsDialog()
 
 void SettingsDialog::initialize()
 {
-    this->on_defaultPaletteColorLineEdit_escPressed();
+    this->on_undefinedPaletteColorLineEdit_escPressed();
     this->on_paletteSelectionBorderColorLineEdit_escPressed();
 }
 
-void SettingsDialog::on_defaultPaletteColorPushButton_clicked()
+void SettingsDialog::on_undefinedPaletteColorPushButton_clicked()
 {
     QColor color = QColorDialog::getColor();
     if (color.isValid()) {
-        this->ui->defaultPaletteColorLineEdit->setText(color.name());
+        this->ui->undefinedPaletteColorLineEdit->setText(color.name());
     }
 }
 
-void SettingsDialog::on_defaultPaletteColorLineEdit_returnPressed()
+void SettingsDialog::on_undefinedPaletteColorLineEdit_returnPressed()
 {
-    QColor color = QColor(this->ui->defaultPaletteColorLineEdit->text());
+    QColor color = QColor(this->ui->undefinedPaletteColorLineEdit->text());
     if (!color.isValid()) {
-        this->on_defaultPaletteColorLineEdit_escPressed();
+        this->on_undefinedPaletteColorLineEdit_escPressed();
     }
 }
 
-void SettingsDialog::on_defaultPaletteColorLineEdit_escPressed()
+void SettingsDialog::on_undefinedPaletteColorLineEdit_escPressed()
 {
-    QColor palDefaultColor = QColor(Config::value("PaletteDefaultColor").toString());
-    this->ui->defaultPaletteColorLineEdit->setText(palDefaultColor.name());
+    this->ui->undefinedPaletteColorLineEdit->setText(Config::getPaletteUndefinedColor());
 }
 
 void SettingsDialog::on_paletteSelectionBorderColorPushButton_clicked()
@@ -63,19 +62,18 @@ void SettingsDialog::on_paletteSelectionBorderColorLineEdit_returnPressed()
 
 void SettingsDialog::on_paletteSelectionBorderColorLineEdit_escPressed()
 {
-    QColor palSelectionBorderColor = QColor(Config::value("PaletteSelectionBorderColor").toString());
-    this->ui->paletteSelectionBorderColorLineEdit->setText(palSelectionBorderColor.name());
+    this->ui->paletteSelectionBorderColorLineEdit->setText(Config::getPaletteSelectionBorderColor());
 }
 
 void SettingsDialog::on_settingsOkButton_clicked()
 {
-    // PaletteDefaultColor
-    QColor palDefaultColor = QColor(ui->defaultPaletteColorLineEdit->text());
-    Config::insert("PaletteDefaultColor", palDefaultColor.name());
+    // PaletteUndefinedColor
+    QColor palUndefinedColor = QColor(ui->undefinedPaletteColorLineEdit->text());
+    Config::setPaletteUndefinedColor(palUndefinedColor.name());
 
     // PaletteSelectionBorderColor
     QColor palSelectionBorderColor = QColor(ui->paletteSelectionBorderColorLineEdit->text());
-    Config::insert("PaletteSelectionBorderColor", palSelectionBorderColor.name());
+    Config::setPaletteSelectionBorderColor(palSelectionBorderColor.name());
 
     Config::storeConfiguration();
 
