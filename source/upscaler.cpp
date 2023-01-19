@@ -9,7 +9,7 @@
 #include "leveltabframewidget.h"
 #include "upscaledialog.h"
 
-template<class T, int N>
+template <class T, int N>
 constexpr int lengthof(T (&arr)[N])
 {
     return N;
@@ -1106,7 +1106,6 @@ static bool AnySlowUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, Q
     int len = 1;
     while (sx > len && origPixels[sy][sx - len].isTransparent() && !origPixels[sy + 1][sx - len].isTransparent() && !origPixels[sy + 2][sx - len].isTransparent()) {
         len++;
-        x--;
     }
 
     if (sx <= len || !origPixels[sy][sx - len].isTransparent() || !origPixels[sy + 1][sx - len].isTransparent() || origPixels[sy + 2][sx - len].isTransparent())
@@ -1783,12 +1782,12 @@ static bool FixSlowDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels,
 
     int len = 1;
     while (sx > len
-     && newPixels[dy][dx - len * multiplier] == *fP && newPixels[dy + multiplier][dx - len * multiplier] == *fP && newPixels[dy + 2 * multiplier][dx - len * multiplier] != *fP) {
+        && newPixels[dy][dx - len * multiplier] == *fP && newPixels[dy + multiplier][dx - len * multiplier] == *fP && newPixels[dy + 2 * multiplier][dx - len * multiplier] != *fP) {
         len++;
     }
 
     if (sx <= len
-     || newPixels[dy][dx - len * multiplier] != *fP || newPixels[dy + multiplier][dx - len * multiplier] == *fP || newPixels[dy + 2 * multiplier][dx - len * multiplier] == *fP)
+        || newPixels[dy][dx - len * multiplier] != *fP || newPixels[dy + multiplier][dx - len * multiplier] == *fP || newPixels[dy + 2 * multiplier][dx - len * multiplier] == *fP)
         return false;
 
     if (len <= PATLEN)
@@ -1882,12 +1881,12 @@ static bool FixFastDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels,
 
     int len = 1;
     while (sy > len
-     && newPixels[dy - len * multiplier][dx] != *fP && newPixels[dy - len * multiplier][dx + multiplier] == *fP && newPixels[dy - len * multiplier][dx + 2 * multiplier] == *fP) {
+        && newPixels[dy - len * multiplier][dx] != *fP && newPixels[dy - len * multiplier][dx + multiplier] == *fP && newPixels[dy - len * multiplier][dx + 2 * multiplier] == *fP) {
         len++;
     }
 
     if (sy <= len
-     || newPixels[dy - len * multiplier][dx] != *fP || newPixels[dy - len * multiplier][dx + multiplier] != *fP || newPixels[dy - len * multiplier][dx + 2 * multiplier] != *fP)
+        || newPixels[dy - len * multiplier][dx] != *fP || newPixels[dy - len * multiplier][dx + multiplier] != *fP || newPixels[dy - len * multiplier][dx + 2 * multiplier] != *fP)
         return false;
 
     if (len <= PATLEN)
@@ -1980,12 +1979,12 @@ static bool FixSlowDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
 
     int len = 1;
     while (sx > len
-     && newPixels[dy][dx - len * multiplier] == *fP && newPixels[dy + multiplier][dx - len * multiplier] == *fP && newPixels[dy + 2 * multiplier][dx - len * multiplier] != *fP) {
+        && newPixels[dy][dx - len * multiplier] == *fP && newPixels[dy + multiplier][dx - len * multiplier] == *fP && newPixels[dy + 2 * multiplier][dx - len * multiplier] != *fP) {
         len++;
     }
 
     if (sx <= len
-     || newPixels[dy][dx - len * multiplier] != *fP || newPixels[dy + multiplier][dx - len * multiplier] != *fP || newPixels[dy + 2 * multiplier][dx - len * multiplier] != *fP)
+        || newPixels[dy][dx - len * multiplier] != *fP || newPixels[dy + multiplier][dx - len * multiplier] != *fP || newPixels[dy + 2 * multiplier][dx - len * multiplier] != *fP)
         return false;
 
     if (len <= PATLEN)
@@ -2079,12 +2078,12 @@ static bool FixFastDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
 
     int len = 1;
     while (sy > len
-     && newPixels[dy - len * multiplier][dx] == *fP && newPixels[dy - len * multiplier][dx + multiplier] == *fP && newPixels[dy - len * multiplier][dx + 2 * multiplier] != *fP) {
+        && newPixels[dy - len * multiplier][dx] == *fP && newPixels[dy - len * multiplier][dx + multiplier] == *fP && newPixels[dy - len * multiplier][dx + 2 * multiplier] != *fP) {
         len++;
     }
 
     if (sy <= len
-     || newPixels[dy - len * multiplier][dx] != *fP || newPixels[dy - len * multiplier][dx + multiplier] != *fP || newPixels[dy - len * multiplier][dx + 2 * multiplier] != *fP)
+        || newPixels[dy - len * multiplier][dx] != *fP || newPixels[dy - len * multiplier][dx + multiplier] != *fP || newPixels[dy - len * multiplier][dx + 2 * multiplier] != *fP)
         return false;
 
     if (len <= PATLEN)
@@ -2177,12 +2176,12 @@ static bool FixSlowUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, Q
 
     int len = 1;
     while (sx > len
-     && newPixels[dy][dx - len * multiplier] != *fP && newPixels[dy + multiplier][dx - len * multiplier] == *fP && newPixels[dy + 2 * multiplier][dx - len * multiplier] == *fP) {
+        && newPixels[dy][dx - len * multiplier] != *fP && newPixels[dy + multiplier][dx - len * multiplier] == *fP && newPixels[dy + 2 * multiplier][dx - len * multiplier] == *fP) {
         len++;
     }
 
     if (sx <= len
-     || newPixels[dy][dx - len * multiplier] == *fP || newPixels[dy + multiplier][dx - len * multiplier] == *fP || newPixels[dy + 2 * multiplier][dx - len * multiplier] != *fP)
+        || newPixels[dy][dx - len * multiplier] == *fP || newPixels[dy + multiplier][dx - len * multiplier] == *fP || newPixels[dy + 2 * multiplier][dx - len * multiplier] != *fP)
         return false;
 
     if (len <= PATLEN)
@@ -2240,12 +2239,12 @@ static bool FixFastUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, Q
 
     int len = 1;
     while (sy > len
-     && newPixels[dy - len * multiplier][dx] != *fP && newPixels[dy - len * multiplier][dx + multiplier] == *fP && newPixels[dy - len * multiplier][dx + 2 * multiplier] == *fP) {
+        && newPixels[dy - len * multiplier][dx] != *fP && newPixels[dy - len * multiplier][dx + multiplier] == *fP && newPixels[dy - len * multiplier][dx + 2 * multiplier] == *fP) {
         len++;
     }
 
     if (sy <= len
-     || newPixels[dy - len * multiplier][dx] == *fP || newPixels[dy - len * multiplier][dx + multiplier] == *fP || newPixels[dy - len * multiplier][dx + 2 * multiplier] != *fP)
+        || newPixels[dy - len * multiplier][dx] == *fP || newPixels[dy - len * multiplier][dx + multiplier] == *fP || newPixels[dy - len * multiplier][dx + 2 * multiplier] != *fP)
         return false;
 
     if (len <= PATLEN)
@@ -2302,12 +2301,12 @@ static bool FixSlowUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
 
     int len = 1;
     while (sx > len
-     && newPixels[dy][dx - len * multiplier] != *fP && newPixels[dy + multiplier][dx - len * multiplier] == *fP && newPixels[dy + 2 * multiplier][dx - len * multiplier] == *fP) {
+        && newPixels[dy][dx - len * multiplier] != *fP && newPixels[dy + multiplier][dx - len * multiplier] == *fP && newPixels[dy + 2 * multiplier][dx - len * multiplier] == *fP) {
         len++;
     }
 
     if (sx <= len
-     || newPixels[dy][dx - len * multiplier] != *fP || newPixels[dy + multiplier][dx - len * multiplier] != *fP || newPixels[dy + 2 * multiplier][dx - len * multiplier] != *fP)
+        || newPixels[dy][dx - len * multiplier] != *fP || newPixels[dy + multiplier][dx - len * multiplier] != *fP || newPixels[dy + 2 * multiplier][dx - len * multiplier] != *fP)
         return false;
 
     if (len <= PATLEN)
@@ -2365,12 +2364,12 @@ static bool FixFastUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
 
     int len = 1;
     while (sy > len
-     && newPixels[dy - len * multiplier][dx] == *fP && newPixels[dy - len * multiplier][dx + multiplier] == *fP && newPixels[dy - len * multiplier][dx + 2 * multiplier] != *fP) {
+        && newPixels[dy - len * multiplier][dx] == *fP && newPixels[dy - len * multiplier][dx + multiplier] == *fP && newPixels[dy - len * multiplier][dx + 2 * multiplier] != *fP) {
         len++;
     }
 
     if (sy <= len
-     || newPixels[dy - len * multiplier][dx] != *fP || newPixels[dy - len * multiplier][dx + multiplier] == *fP || newPixels[dy - len * multiplier][dx + 2 * multiplier] == *fP)
+        || newPixels[dy - len * multiplier][dx] != *fP || newPixels[dy - len * multiplier][dx + multiplier] == *fP || newPixels[dy - len * multiplier][dx + 2 * multiplier] == *fP)
         return false;
 
     if (len <= PATLEN)
@@ -3199,7 +3198,7 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<qui
             }
             for (int yy = 0; yy < MICRO_HEIGHT; yy++) {
                 for (int xx = 0; xx < MICRO_WIDTH; xx++) {
-                    subtileFrame.pixels[y + yy].append(subtileFrame->getPixel(x + xx, y + yy));
+                    newFrame.pixels[y + yy].append(subtileFrame->getPixel(x + xx, y + yy));
                 }
             }
             LevelTabFrameWidget::selectFrameType(&newFrame);
@@ -3237,7 +3236,7 @@ void Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     // update gfx
     gfx->modified = true;
     gfx->upscaled = true;
-	gfx->groupFrameIndices.clear();
+    gfx->groupFrameIndices.clear();
     gfx->groupFrameIndices.append(qMakePair(0, newframes.count() - 1));
     gfx->frames.swap(newframes);
 
