@@ -33,7 +33,7 @@ public:
     bool isModified() const;
 
     QString getFilePath();
-
+    QColor getUndefinedColor() const;
     QColor getColor(quint8);
     void setColor(quint8, QColor);
 

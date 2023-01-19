@@ -145,6 +145,11 @@ QString D1Pal::getFilePath()
     return this->palFilePath;
 }
 
+QColor D1Pal::getUndefinedColor() const
+{
+    return this->undefinedColor;
+}
+
 QColor D1Pal::getColor(quint8 index)
 {
     return this->colors[index];

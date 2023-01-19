@@ -12,10 +12,10 @@ static quint8 getPalColor(D1Pal *pal, QColor color)
     int best = INT_MAX;
 
     for (int i = 0; i < D1PAL_COLORS; i++) {
-        if (i == 1 && pal->getFilePath() == D1Pal::DEFAULT_PATH) {
-            i = 128; // skip indices between 1 and 127 from the default palette
-        }
         QColor palColor = pal->getColor(i);
+        if (palColor == pal->getUndefinedColor()) {
+            continue;
+        }
         int currR = color.red() - palColor.red();
         int currG = color.green() - palColor.green();
         int currB = color.blue() - palColor.blue();
