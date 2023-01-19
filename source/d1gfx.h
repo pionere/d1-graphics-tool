@@ -41,6 +41,7 @@ class D1GfxFrame {
     friend class D1CelTileset;
     friend class D1CelTilesetFrame;
     friend class D1ImageFrame;
+    friend class Upscaler;
 
 public:
     D1GfxFrame() = default;
@@ -78,6 +79,7 @@ class D1Gfx : public QObject {
     friend class D1Cl2;
     friend class D1CelTileset;
     friend class D1Min;
+    friend class Upscaler;
 
 public:
     D1Gfx() = default;

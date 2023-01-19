@@ -21,6 +21,7 @@
 #include "palettewidget.h"
 #include "saveasdialog.h"
 #include "settingsdialog.h"
+#include "upscaledialog.h"
 
 #define D1_GRAPHICS_TOOL_VERSION "0.5.0"
 
@@ -52,6 +53,7 @@ public:
     void openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append);
     void openPalFiles(QStringList filePaths, PaletteWidget *widget);
     void saveFile(const SaveAsParam &params);
+    void upscale(const UpscaleParam &params);
 
     void paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type);
 
@@ -116,6 +118,8 @@ private slots:
     void on_actionSettings_triggered();
     void on_actionQuit_triggered();
 
+    void on_actionUpscale_triggered();
+
     void on_actionReportUse_Tileset_triggered();
     void on_actionResetFrameTypes_Tileset_triggered();
     void on_actionInefficientFrames_Tileset_triggered();
@@ -178,6 +182,7 @@ private:
     SaveAsDialog saveAsDialog = SaveAsDialog(this);
     SettingsDialog settingsDialog = SettingsDialog(this);
     ExportDialog exportDialog = ExportDialog(this);
+    UpscaleDialog upscaleDialog = UpscaleDialog(this);
 
     QPointer<D1Pal> pal;
     QPointer<D1Trn> trnUnique;

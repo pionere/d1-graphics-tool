@@ -83,6 +83,11 @@ set(PROJECT_SOURCES
         source/settingsdialog.cpp
         source/settingsdialog.h
         source/settingsdialog.ui
+        source/upscaledialog.cpp
+        source/upscaledialog.h
+        source/upscaledialog.ui
+        source/upscaler.cpp
+        source/upscaler.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

@@ -21,6 +21,7 @@
 #include "leveltabframewidget.h"
 #include "leveltabsubtilewidget.h"
 #include "leveltabtilewidget.h"
+#include "upscaledialog.h"
 
 namespace Ui {
 class LevelCelView;
@@ -68,6 +69,8 @@ public:
     void sortFrames();
     void sortSubtiles();
     void sortTileset();
+
+    void upscale(const UpscaleParam &params);
 
     void updateLabel();
     void displayFrame();

@@ -300,6 +300,15 @@ void CelView::removeCurrentFrame()
     this->displayFrame();
 }
 
+void CelView::upscale(const UpscaleParam &params)
+{
+    Upscaler::upscaleGfx(this->gfx, params);
+
+    // update the view
+    this->update();
+    this->displayFrame();
+}
+
 void CelView::displayFrame()
 {
     this->celScene->clear();

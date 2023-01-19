@@ -1464,6 +1464,14 @@ void LevelCelView::sortTileset()
     }
 }
 
+void LevelCelView::upscale(const UpscaleParam &params)
+{
+    Upscaler::upscaleTileset(this->gfx, this->min, params);
+
+    // update the view
+    this->displayFrame();
+}
+
 void LevelCelView::displayFrame()
 {
     this->update();
