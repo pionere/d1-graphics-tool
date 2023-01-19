@@ -614,7 +614,8 @@ void PaletteWidget::displaySelection()
     if (firstColorIndex == COLORIDX_TRANSPARENT) {
         return;
     }
-    QPen pen(QColor(Config::getPaletteSelectionBorderColor()));
+    QColor borderColor = QColor(Config::getPaletteSelectionBorderColor());
+    QPen pen(borderColor);
     pen.setStyle(Qt::SolidLine);
     pen.setJoinStyle(Qt::MiterJoin);
     pen.setWidth(PALETTE_SELECTION_WIDTH);
