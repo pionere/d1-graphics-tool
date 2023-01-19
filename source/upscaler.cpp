@@ -3160,7 +3160,7 @@ D1GfxFrame *Upscaler::createSubtileFrame(const D1Gfx *gfx, const D1Min *min, int
             D1GfxFrame *microFrame = gfx->getFrame(frameRef - 1);
             for (int yy = 0; yy < MICRO_HEIGHT; yy++) {
                 for (int xx = 0; xx < MICRO_WIDTH; xx++) {
-                    subtileFrame->pixels[y + yy].append(microFrame->getPixel(x + xx, y + yy));
+                    subtileFrame->pixels[y + yy].append(microFrame->getPixel(xx, yy));
                 }
             }
         }
@@ -3198,7 +3198,7 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<qui
             }
             for (int yy = 0; yy < MICRO_HEIGHT; yy++) {
                 for (int xx = 0; xx < MICRO_WIDTH; xx++) {
-                    newFrame.pixels[y + yy].append(subtileFrame->getPixel(x + xx, y + yy));
+                    newFrame.pixels[yy].append(subtileFrame->getPixel(x + xx, y + yy));
                 }
             }
             LevelTabFrameWidget::selectFrameType(&newFrame);
