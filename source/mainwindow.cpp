@@ -1099,11 +1099,10 @@ void MainWindow::on_actionDel_Tile_triggered()
     this->updateWindow();
 }
 
-
 void MainWindow::on_actionUpscale_triggered()
 {
-    this->upscaleDialog->initialize(this->gfx);
-    this->upscaleDialog->show();
+    this->upscaleDialog.initialize(this->gfx);
+    this->upscaleDialog.show();
 }
 
 void MainWindow::on_actionReportUse_Tileset_triggered()

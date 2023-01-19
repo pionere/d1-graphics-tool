@@ -18,7 +18,7 @@ public:
 
 static bool isPixelFixed(const D1GfxPixel *pixel, const UpscalingParam &params)
 {
-    return pixel->getPaletteIndex() >= params.firstfixcolor && p0->getPaletteIndex() <= params.lastfixcolor;
+    return pixel->getPaletteIndex() >= params.firstfixcolor && pixel->getPaletteIndex() <= params.lastfixcolor;
 }
 
 // TODO: merge with getPalColor in d1image.cpp ?
@@ -32,7 +32,7 @@ static D1GfxPixel getPalColor(const UpscalingParam &params, QColor color)
             continue;
         }
         QColor palColor = params.pal->getColor(i);
-        if (palColor == pal->getUndefinedColor()) {
+        if (palColor == params.pal->getUndefinedColor()) {
             continue;
         }
         int currR = color.red() - palColor.red();
@@ -114,6 +114,7 @@ static D1GfxPixel BilinearInterpolate(D1GfxPixel* p0, D1GfxPixel* pR, int dx, D1
 
 static void useLeftOrBottomAt(int sx, int sy, int dx, int dy, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
+    const int multiplier = params.multiplier;
     D1GfxPixel *pDest = &newPixels[dy][dx];
     bool leftFixed = isPixelFixed(&newPixels[dy][dx - multiplier], params);
     bool bottomFixed = isPixelFixed(&newPixels[dy + multiplier][dx], params);
@@ -135,13 +136,14 @@ static void useLeftOrBottomAt(int sx, int sy, int dx, int dy, QList<QList<D1GfxP
         // interpolate
         QColor cL = params.pal->getColor(pLeft->getPaletteIndex());
         QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-        QColor cDummy = D1GfxPixel::colorPixel(0);
-        BilinearInterpolateColors(cL, cD, 1, cDummy, 0, 2, *pDest);
+        QColor cDummy;
+        BilinearInterpolateColors(cL, cD, 1, cDummy, 0, cDummy, 2, *pDest);
     }
 }
 
 static void useRightOrBottomAt(int sx, int sy, int dx, int dy, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
+    const int multiplier = params.multiplier;
     D1GfxPixel *pDest = &newPixels[dy][dx];
     bool bottomFixed = isPixelFixed(&newPixels[dy + multiplier][dx], params);
     bool rightFixed = isPixelFixed(&newPixels[dy][dx + multiplier], params);
@@ -163,8 +165,8 @@ static void useRightOrBottomAt(int sx, int sy, int dx, int dy, QList<QList<D1Gfx
         // interpolate
         QColor cR = params.pal->getColor(pRight->getPaletteIndex());
         QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-        QColor cDummy = D1GfxPixel::colorPixel(0);
-        BilinearInterpolateColors(cR, cD, 1, cDummy, 0, 2, *pDest);
+        QColor cDummy;
+        BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
     }
 }
 
@@ -508,8 +510,8 @@ static bool SlowUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QLis
                     // interpolate
                     QColor cR = params.pal->getColor(pRight->getPaletteIndex());
                     QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy = D1GfxPixel::colorPixel(0);
-                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, 2, *pDest);
+                    QColor cDummy;
+                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                 }
             }
         }
@@ -576,8 +578,8 @@ static bool SlowUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList
                     // interpolate
                     QColor cL = params.pal->getColor(pLeft->getPaletteIndex());
                     QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy = D1GfxPixel::colorPixel(0);
-                    BilinearInterpolateColors(cL, cD, 1, cDummy, 0, 2, *pDest);
+                    QColor cDummy;
+                    BilinearInterpolateColors(cL, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                 }
             }
         }
@@ -747,8 +749,8 @@ static bool FastUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QLis
                     // interpolate
                     QColor cR = params.pal->getColor(pRight->getPaletteIndex());
                     QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy = D1GfxPixel::colorPixel(0);
-                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, 2, *pDest);
+                    QColor cDummy;
+                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                 }
             }
         }
@@ -820,8 +822,8 @@ static bool FastUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList
                     // interpolate
                     QColor cL = params.pal->getColor(pLeft->getPaletteIndex());
                     QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy = D1GfxPixel::colorPixel(0);
-                    BilinearInterpolateColors(cL, cD, 1, cDummy, 0, 2, *pDest);
+                    QColor cDummy;
+                    BilinearInterpolateColors(cL, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                 }
             }
         }
@@ -1109,8 +1111,8 @@ static bool AnySlowUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, Q
                     // interpolate
                     QColor cR = params.pal->getColor(pRight->getPaletteIndex());
                     QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy = D1GfxPixel::colorPixel(0);
-                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, 2, *pDest);
+                    QColor cDummy;
+                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                 }
             }
         }
@@ -1184,8 +1186,8 @@ static bool AnyFastUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, Q
                     // interpolate
                     QColor cR = params.pal->getColor(pRight->getPaletteIndex());
                     QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy = D1GfxPixel::colorPixel(0);
-                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, 2, *pDest);
+                    QColor cDummy;
+                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                 }
             }
         }
@@ -1258,8 +1260,8 @@ static bool AnySlowUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
                     // interpolate
                     QColor cL = params.pal->getColor(pLeft->getPaletteIndex());
                     QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy = D1GfxPixel::colorPixel(0);
-                    BilinearInterpolateColors(cL, cD, 1, cDummy, 0, 2, *pDest);
+                    QColor cDummy;
+                    BilinearInterpolateColors(cL, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                 }
             }
         }
@@ -1335,8 +1337,8 @@ static bool AnyFastUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
                     // interpolate
                     QColor cL = params.pal->getColor(pLeft->getPaletteIndex());
                     QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy = D1GfxPixel::colorPixel(0);
-                    BilinearInterpolateColors(cL, cD, 1, cDummy, 0, 2, *pDest);
+                    QColor cDummy;
+                    BilinearInterpolateColors(cL, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                 }
             }
         }
@@ -1409,8 +1411,8 @@ static bool AnySlowDownNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels
                     // interpolate
                     QColor cL = params.pal->getColor(pLeft->getPaletteIndex());
                     QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy = D1GfxPixel::colorPixel(0);
-                    BilinearInterpolateColors(cL, cD, 1, cDummy, 0, 2, *pDest);
+                    QColor cDummy;
+                    BilinearInterpolateColors(cL, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                 }
             }
         }
@@ -1511,8 +1513,8 @@ static bool AnyFastDownNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels
                     // interpolate
                     QColor cL = params.pal->getColor(pLeft->getPaletteIndex());
                     QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy = D1GfxPixel::colorPixel(0);
-                    BilinearInterpolateColors(cL, cD, 1, cDummy, 0, 2, *pDest);
+                    QColor cDummy;
+                    BilinearInterpolateColors(cL, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                 }
             }
         }
@@ -1585,8 +1587,8 @@ static bool AnySlowUpNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
                     // interpolate
                     QColor cR = params.pal->getColor(pRight->getPaletteIndex());
                     QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy = D1GfxPixel::colorPixel(0);
-                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, 2, *pDest);
+                    QColor cDummy;
+                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                 }
             }
         }
@@ -1672,8 +1674,8 @@ static bool AnyFastUpNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
                     // interpolate
                     QColor cR = params.pal->getColor(pRight->getPaletteIndex());
                     QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy = D1GfxPixel::colorPixel(0);
-                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, 2, *pDest);
+                    QColor cDummy;
+                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                 }
             }
         }
@@ -1799,8 +1801,8 @@ static bool FixSlowDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels,
                             // both are colored
                             QColor cR = params.pal->getColor(pLeft->getPaletteIndex());
                             QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                            QColor cDummy = D1GfxPixel::colorPixel(0);
-                            BilinearInterpolateColors(cR, cD, 1, cDummy, 0, 2, *pDest);
+                            QColor cDummy;
+                            BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                         } else {
                             // only left is colored -> use the left
                             *pDest = *pLeft;
@@ -1899,8 +1901,8 @@ static bool FixFastDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels,
                             // both are colored
                             QColor cR = params.pal->getColor(pLeft->getPaletteIndex());
                             QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                            QColor cDummy = D1GfxPixel::colorPixel(0);
-                            BilinearInterpolateColors(cR, cD, 1, cDummy, 0, 2, *pDest);
+                            QColor cDummy;
+                            BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                         } else {
                             // only left is colored -> use the left
                             *pDest = *pLeft;
@@ -1998,8 +2000,8 @@ static bool FixSlowDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
                             // both are colored
                             QColor cR = params.pal->getColor(pRight->getPaletteIndex());
                             QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                            QColor cDummy = D1GfxPixel::colorPixel(0);
-                            BilinearInterpolateColors(cR, cD, 1, cDummy, 0, 2, *pDest);
+                            QColor cDummy;
+                            BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                         } else {
                             // only right is colored -> use the right
                             *pDest = *pRight;
@@ -2098,8 +2100,8 @@ static bool FixFastDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
                             // both are colored
                             QColor cR = params.pal->getColor(pRight->getPaletteIndex());
                             QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                            QColor cDummy = D1GfxPixel::colorPixel(0);
-                            BilinearInterpolateColors(cR, cD, 1, cDummy, 0, 2, *pDest);
+                            QColor cDummy;
+                            BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                         } else {
                             // only right is colored -> use the right
                             *pDest = *pRight;
@@ -2424,8 +2426,8 @@ static bool LeftTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QLi
                     // interpolate
                     QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
                     QColor cR = params.pal->getColor(pRight->getPaletteIndex());
-                    QColor cDummy = D1GfxPixel::colorPixel(0);
-                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, 2, *pDest);
+                    QColor cDummy;
+                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                 }
             }
         }
@@ -2511,8 +2513,8 @@ static bool RightTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
                     // interpolate
                     QColor cL = params.pal->getColor(pLeft->getPaletteIndex());
                     QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy = D1GfxPixel::colorPixel(0);
-                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, 2, *pDest);
+                    QColor cDummy;
+                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                 }
             }
         }
@@ -2924,8 +2926,8 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal* pal, const UpscaleParam &p
                                 // interpolate
                                 QColor cR = upParams.pal->getColor(pRight->getPaletteIndex());
                                 QColor cD = upParams.pal->getColor(pTop->getPaletteIndex());
-                                QColor cDummy = D1GfxPixel::colorPixel(0);
-                                BilinearInterpolateColors(cR, cD, 1, cDummy, 0, 2, *pDest);
+                                QColor cDummy;
+                                BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                             }
                         }
                     }
@@ -2967,8 +2969,8 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal* pal, const UpscaleParam &p
                                 // interpolate
                                 QColor cR = upParams.pal->getColor(pRight->getPaletteIndex());
                                 QColor cD = upParams.pal->getColor(pBottom->getPaletteIndex());
-                                QColor cDummy = D1GfxPixel::colorPixel(0);
-                                BilinearInterpolateColors(cR, cD, 1, cDummy, 0, 2, *pDest);
+                                QColor cDummy;
+                                BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                             }
                         }
                     }
@@ -3029,8 +3031,8 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal* pal, const UpscaleParam &p
                                 // interpolate
                                 QColor cL = upParams.pal->getColor(pLeft->getPaletteIndex());
                                 QColor cD = upParams.pal->getColor(pTop->getPaletteIndex());
-                                QColor cDummy = D1GfxPixel::colorPixel(0);
-                                BilinearInterpolateColors(cL, cD, 1, cDummy, 0, 2, *pDest);
+                                QColor cDummy;
+                                BilinearInterpolateColors(cL, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                             }
                         }
                     }
@@ -3072,8 +3074,8 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal* pal, const UpscaleParam &p
                                 // interpolate
                                 QColor cL = upParams.pal->getColor(pLeft->getPaletteIndex());
                                 QColor cD = upParams.pal->getColor(pBottom->getPaletteIndex());
-                                QColor cDummy = D1GfxPixel::colorPixel(0);
-                                BilinearInterpolateColors(cL, cD, 1, cDummy, 0, 2, *pDest);
+                                QColor cDummy;
+                                BilinearInterpolateColors(cL, cD, 1, cDummy, 0, cDummy, 2, *pDest);
                             }
                         }
                     }

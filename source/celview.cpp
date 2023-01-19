@@ -13,6 +13,7 @@
 
 #include "mainwindow.h"
 #include "ui_celview.h"
+#include "upscaler.h"
 
 CelScene::CelScene(QWidget *v)
     : QGraphicsScene()

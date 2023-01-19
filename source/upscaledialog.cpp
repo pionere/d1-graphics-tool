@@ -1,5 +1,7 @@
 #include "upscaledialog.h"
 
+#include "d1gfx.h"
+#include "mainwindow.h"
 #include "ui_upscaledialog.h"
 
 typedef enum dungeon_type {
@@ -23,7 +25,7 @@ const int fixColors[NUM_DUNGEON_TYPES][2] = {
 /* DTYPE_HELL      */ { -1, -1 },
 /* DTYPE_CRYPT     */ {  1, 31 },
 /* DTYPE_NEST      */ {  1, 15 },
-/* DTYPE_NONE      */ { -1, -1 },    
+/* DTYPE_NONE      */ { -1, -1 },
     // clang-format on
 };
 
@@ -55,7 +57,8 @@ void UpscaleDialog::initialize(D1Gfx *gfx)
 
 void UpscaleDialog::on_palFileBrowseButton_clicked()
 {
-    QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, "Select Palette File", "PAL Files (*.pal *.PAL)");
+    MainWindow *qw = (MainWindow *)this->parentWidget();
+    QString palFilePath = qw->fileDialog(FILE_DIALOG_MODE::OPEN, "Select Palette File", "PAL Files (*.pal *.PAL)");
 
     if (!palFilePath.isEmpty()) {
         this->ui->palFileLineEdit->setText(palFilePath);

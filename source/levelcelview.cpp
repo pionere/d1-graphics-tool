@@ -15,6 +15,7 @@
 #include "d1image.h"
 #include "mainwindow.h"
 #include "ui_levelcelview.h"
+#include "upscaler.h"
 
 LevelCelView::LevelCelView(QWidget *parent)
     : QWidget(parent)
