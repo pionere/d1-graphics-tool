@@ -48,7 +48,7 @@ static D1GfxPixel getPalColor(const UpscalingParam &params, QColor color)
     return D1GfxPixel::colorPixel(res);
 }
 
-static void BilinearInterpolateColors(const QColor &c0, const QColor &cR, int dx, const QColor &cD, int dy, const QColor &cDR, int len, QColor& res)
+static void BilinearInterpolateColors(const QColor &c0, const QColor &cR, int dx, const QColor &cD, int dy, const QColor &cDR, int len, QColor &res)
 {
     res.setAlpha(255);
     res.setRed((c0.red() * (len - dx) * (len - dy) + cR.red() * dx * (len - dy) + cD.red() * (len - dx) * dy + cDR.red() * dx * dy) / (len * len));
@@ -56,7 +56,19 @@ static void BilinearInterpolateColors(const QColor &c0, const QColor &cR, int dx
     res.setBlue((c0.blue() * (len - dx) * (len - dy) + cR.blue() * dx * (len - dy) + cD.blue() * (len - dx) * dy + cDR.blue() * dx * dy) / (len * len));
 }
 
-static D1GfxPixel BilinearInterpolate(D1GfxPixel* p0, D1GfxPixel* pR, int dx, D1GfxPixel* pD, int dy, D1GfxPixel* pDR, int len, const UpscalingParam &params)
+static void BilinearInterpolate2Pixels(const D1GfxPixel *p0, const D1GfxPixel *p1, const UpscalingParam &params, D1GfxPixel &res)
+{
+    QColor c0 = params.pal->getColor(p0->getPaletteIndex());
+    QColor c1 = params.pal->getColor(p1->getPaletteIndex());
+
+    QColor cDummy;
+    QColor cRes;
+    BilinearInterpolateColors(c0, c1, 1, cDummy, 0, cDummy, 2, cRes);
+
+    res = getPalColor(params, cRes);
+}
+
+static D1GfxPixel BilinearInterpolate(D1GfxPixel *p0, D1GfxPixel *pR, int dx, D1GfxPixel *pD, int dy, D1GfxPixel *pDR, int len, const UpscalingParam &params)
 {
     QColor res = QColor(0, 0, 0);
 
@@ -118,7 +130,7 @@ static void useLeftOrBottomAt(int sx, int sy, int dx, int dy, QList<QList<D1GfxP
     D1GfxPixel *pDest = &newPixels[dy][dx];
     bool leftFixed = isPixelFixed(&newPixels[dy][dx - multiplier], params);
     bool bottomFixed = isPixelFixed(&newPixels[dy + multiplier][dx], params);
-    
+
     D1GfxPixel *pBottom = &origPixels[sy + 1][sx];
     D1GfxPixel *pLeft = &origPixels[sy][sx - 1];
     if (leftFixed || bottomFixed) {
@@ -134,10 +146,7 @@ static void useLeftOrBottomAt(int sx, int sy, int dx, int dy, QList<QList<D1GfxP
         }
     } else {
         // interpolate
-        QColor cL = params.pal->getColor(pLeft->getPaletteIndex());
-        QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-        QColor cDummy;
-        BilinearInterpolateColors(cL, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+        BilinearInterpolate2Pixels(pLeft, pBottom, params, *pDest);
     }
 }
 
@@ -163,10 +172,7 @@ static void useRightOrBottomAt(int sx, int sy, int dx, int dy, QList<QList<D1Gfx
         }
     } else {
         // interpolate
-        QColor cR = params.pal->getColor(pRight->getPaletteIndex());
-        QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-        QColor cDummy;
-        BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+        BilinearInterpolate2Pixels(pRight, pBottom, params, *pDest);
     }
 }
 
@@ -174,10 +180,12 @@ typedef enum pattern_pixel {
     PTN_ALPHA,
     PTN_COLOR,
     PTN_DNC,
-};
+} pattern_pixel;
+
+typedef quint8 BYTE;
 
 typedef struct UpscalePatterns {
-    const BYTE* pattern;
+    const BYTE *pattern;
     bool (*fnc)(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params);
 } UpscalePatterns;
 /*
@@ -508,10 +516,7 @@ static bool SlowUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QLis
                     }
                 } else {
                     // interpolate
-                    QColor cR = params.pal->getColor(pRight->getPaletteIndex());
-                    QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy;
-                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                    BilinearInterpolate2Pixels(pRight, pBottom, params, *pDest);
                 }
             }
         }
@@ -576,10 +581,7 @@ static bool SlowUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList
                     }
                 } else {
                     // interpolate
-                    QColor cL = params.pal->getColor(pLeft->getPaletteIndex());
-                    QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy;
-                    BilinearInterpolateColors(cL, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                    BilinearInterpolate2Pixels(pLeft, pBottom, params, *pDest);
                 }
             }
         }
@@ -747,10 +749,7 @@ static bool FastUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QLis
                     }
                 } else {
                     // interpolate
-                    QColor cR = params.pal->getColor(pRight->getPaletteIndex());
-                    QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy;
-                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                    BilinearInterpolate2Pixels(pRight, pBottom, params, *pDest);
                 }
             }
         }
@@ -820,10 +819,7 @@ static bool FastUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList
                     }
                 } else {
                     // interpolate
-                    QColor cL = params.pal->getColor(pLeft->getPaletteIndex());
-                    QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy;
-                    BilinearInterpolateColors(cL, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                    BilinearInterpolate2Pixels(pLeft, pBottom, params, *pDest);
                 }
             }
         }
@@ -1109,10 +1105,7 @@ static bool AnySlowUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, Q
                     }
                 } else {
                     // interpolate
-                    QColor cR = params.pal->getColor(pRight->getPaletteIndex());
-                    QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy;
-                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                    BilinearInterpolate2Pixels(pRight, pBottom, params, *pDest);
                 }
             }
         }
@@ -1164,7 +1157,7 @@ static bool AnyFastUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, Q
 
     for (int yy = 0; yy < len * multiplier; yy++) {
         for (int xx = 0; xx < multiplier; xx++) {
-            if (yy >= len * (multiplier -  xx)) {
+            if (yy >= len * (multiplier - xx)) {
                 D1GfxPixel *pDest = &newPixels[dy + yy][dx + xx];
                 bool bottomFixed = isPixelFixed(&newPixels[dy + len * multiplier][dx + xx], params);
                 bool rightFixed = isPixelFixed(&newPixels[dy + yy][dx + multiplier], params);
@@ -1184,10 +1177,7 @@ static bool AnyFastUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, Q
                     }
                 } else {
                     // interpolate
-                    QColor cR = params.pal->getColor(pRight->getPaletteIndex());
-                    QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy;
-                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                    BilinearInterpolate2Pixels(pRight, pBottom, params, *pDest);
                 }
             }
         }
@@ -1258,10 +1248,7 @@ static bool AnySlowUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
                     }
                 } else {
                     // interpolate
-                    QColor cL = params.pal->getColor(pLeft->getPaletteIndex());
-                    QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy;
-                    BilinearInterpolateColors(cL, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                    BilinearInterpolate2Pixels(pLeft, pBottom, params, *pDest);
                 }
             }
         }
@@ -1335,10 +1322,7 @@ static bool AnyFastUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
                     }
                 } else {
                     // interpolate
-                    QColor cL = params.pal->getColor(pLeft->getPaletteIndex());
-                    QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy;
-                    BilinearInterpolateColors(cL, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                    BilinearInterpolate2Pixels(pLeft, pBottom, params, *pDest);
                 }
             }
         }
@@ -1409,10 +1393,7 @@ static bool AnySlowDownNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels
                     }
                 } else {
                     // interpolate
-                    QColor cL = params.pal->getColor(pLeft->getPaletteIndex());
-                    QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy;
-                    BilinearInterpolateColors(cL, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                    BilinearInterpolate2Pixels(pLeft, pBottom, params, *pDest);
                 }
             }
         }
@@ -1511,10 +1492,7 @@ static bool AnyFastDownNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels
                     }
                 } else {
                     // interpolate
-                    QColor cL = params.pal->getColor(pLeft->getPaletteIndex());
-                    QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy;
-                    BilinearInterpolateColors(cL, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                    BilinearInterpolate2Pixels(pLeft, pBottom, params, *pDest);
                 }
             }
         }
@@ -1585,10 +1563,7 @@ static bool AnySlowUpNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
                     }
                 } else {
                     // interpolate
-                    QColor cR = params.pal->getColor(pRight->getPaletteIndex());
-                    QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy;
-                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                    BilinearInterpolate2Pixels(pRight, pBottom, params, *pDest);
                 }
             }
         }
@@ -1652,7 +1627,7 @@ static bool AnyFastUpNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
 
     for (int yy = 0; yy < len * multiplier; yy++) {
         for (int xx = 0; xx < multiplier; xx++) {
-            if (yy >= len * (multiplier -  xx)) {
+            if (yy >= len * (multiplier - xx)) {
                 D1GfxPixel *pDest = &newPixels[dy + yy][dx + xx];
                 bool bottomFixed = isPixelFixed(&newPixels[dy + len * multiplier][dx + xx], params);
                 bool rightFixed = isPixelFixed(&newPixels[dy + yy][dx + multiplier], params);
@@ -1672,10 +1647,7 @@ static bool AnyFastUpNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
                     }
                 } else {
                     // interpolate
-                    QColor cR = params.pal->getColor(pRight->getPaletteIndex());
-                    QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy;
-                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                    BilinearInterpolate2Pixels(pRight, pBottom, params, *pDest);
                 }
             }
         }
@@ -1695,13 +1667,13 @@ static bool AnyFastUpNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
     return true;
 }
 
-static D1GfxPixel* FixColorCheck(int x, int y, QList<QList<D1GfxPixel>> &origPixels, const UpscalingParam &params, const BYTE* pattern)
+static D1GfxPixel *FixColorCheck(int x, int y, QList<QList<D1GfxPixel>> &origPixels, const UpscalingParam &params, const BYTE *pattern)
 {
     int w = pattern[0];
     int h = pattern[1];
 
     D1GfxPixel *fP = NULL;
-    const BYTE* ptnCol = &pattern[2];
+    const BYTE *ptnCol = &pattern[2];
 
     for (int j = 0; j < h; j++) {
         for (int i = 0; i < w; i++, ptnCol++, src++, fm++) {
@@ -1799,10 +1771,7 @@ static bool FixSlowDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels,
                     if (!pLeft->isTransparent()) {
                         if (!pBottom->isTransparent()) {
                             // both are colored
-                            QColor cR = params.pal->getColor(pLeft->getPaletteIndex());
-                            QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                            QColor cDummy;
-                            BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                            BilinearInterpolate2Pixels(pLeft, pBottom, params, *pDest);
                         } else {
                             // only left is colored -> use the left
                             *pDest = *pLeft;
@@ -1899,10 +1868,7 @@ static bool FixFastDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels,
                     if (!pLeft->isTransparent()) {
                         if (!pBottom->isTransparent()) {
                             // both are colored
-                            QColor cR = params.pal->getColor(pLeft->getPaletteIndex());
-                            QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                            QColor cDummy;
-                            BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                            BilinearInterpolate2Pixels(pLeft, pBottom, params, *pDest);
                         } else {
                             // only left is colored -> use the left
                             *pDest = *pLeft;
@@ -1925,7 +1891,7 @@ static bool FixFastDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels,
   [f1 f1] f1 f1   f1f1 f1f1 f1f1 f1f1    f1f1  f1f1 f1f1  f1f1
   [f1 f1] f1    X f1f1 f1f1 f1f1 f1f1 -> f1f1  f1f1 f1f1  f1f1
   [f1   ]         f1f1 f1f1 f1f1         f1f1 [f1f1 f1f1] f1f1
-                  f1f1 f1f1 f1f1         f1f1 [f1f1 ????] 
+                  f1f1 f1f1 f1f1         f1f1 [f1f1 ????]
                   f1f1                   f1f1
                   f1f1                   f1f1
  */
@@ -1998,10 +1964,7 @@ static bool FixSlowDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
                     if (!pRight->isTransparent()) {
                         if (!pBottom->isTransparent()) {
                             // both are colored
-                            QColor cR = params.pal->getColor(pRight->getPaletteIndex());
-                            QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                            QColor cDummy;
-                            BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                            BilinearInterpolate2Pixels(pRight, pBottom, params, *pDest);
                         } else {
                             // only right is colored -> use the right
                             *pDest = *pRight;
@@ -2098,10 +2061,7 @@ static bool FixFastDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
                     if (!pRight->isTransparent()) {
                         if (!pBottom->isTransparent()) {
                             // both are colored
-                            QColor cR = params.pal->getColor(pRight->getPaletteIndex());
-                            QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                            QColor cDummy;
-                            BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                            BilinearInterpolate2Pixels(pRight, pBottom, params, *pDest);
                         } else {
                             // only right is colored -> use the right
                             *pDest = *pRight;
@@ -2233,7 +2193,7 @@ static bool FixFastUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, Q
 
     for (int yy = 0; yy < len * multiplier; yy++) {
         for (int xx = 0; xx < multiplier; xx++) {
-            if (yy >= len * (multiplier -  xx)) {
+            if (yy >= len * (multiplier - xx)) {
                 newPixels[dy + yy][dx + xx] = *fP;
             }
         }
@@ -2424,10 +2384,7 @@ static bool LeftTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QLi
                     }
                 } else {
                     // interpolate
-                    QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cR = params.pal->getColor(pRight->getPaletteIndex());
-                    QColor cDummy;
-                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                    BilinearInterpolate2Pixels(pRight, pBottom, params, *pDest);
                 }
             }
         }
@@ -2511,10 +2468,7 @@ static bool RightTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
                     }
                 } else {
                     // interpolate
-                    QColor cL = params.pal->getColor(pLeft->getPaletteIndex());
-                    QColor cD = params.pal->getColor(pBottom->getPaletteIndex());
-                    QColor cDummy;
-                    BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                    BilinearInterpolate2Pixels(pLeft, pBottom, params, *pDest);
                 }
             }
         }
@@ -2642,7 +2596,7 @@ static bool BottomTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, Q
     return true;
 }
 
-void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal* pal, const UpscaleParam &params)
+void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &params)
 {
     ANTI_ALIASING_MODE antiAliasingMode = params.antiAliasingMode;
     UpscalingParam upParams;
@@ -2673,35 +2627,35 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal* pal, const UpscaleParam &p
         for (y = 0; y < newHeight - multiplier; y += multiplier) {
             int x;
             for (x = 0; x < newWidth - multiplier; x += multiplier) {
-                D1GfxPixel* p0 = &newPixels[y][x];
+                D1GfxPixel *p0 = &newPixels[y][x];
                 if (p0->isTransparent())
                     continue; // skip transparent pixels
                 // skip 'protected' colors
                 if (p0->getPaletteIndex() >= upParams.firstfixcolor && p0->getPaletteIndex() <= upParams.lastfixcolor)
                     continue;
 
-                D1GfxPixel* pR = &newPixels[y][x + multiplier];
-                D1GfxPixel* pD = &newPixels[y + multiplier][x];
-                D1GfxPixel* pDR = &newPixels[y + multiplier][x + multiplier];
+                D1GfxPixel *pR = &newPixels[y][x + multiplier];
+                D1GfxPixel *pD = &newPixels[y + multiplier][x];
+                D1GfxPixel *pDR = &newPixels[y + multiplier][x + multiplier];
                 for (int j = 0; j < multiplier; j++) {
                     for (int k = 0; k < multiplier; k++) {
-                        D1GfxPixel* pp = &newPixels[y + j][x + k];
+                        D1GfxPixel *pp = &newPixels[y + j][x + k];
                         *pp = BilinearInterpolate(pp, pR, k, pD, j, pDR, multiplier, upParams);
                     }
                 }
             }
             // resample right column as if the external pixels are transparent
             if (y < newHeight - multiplier) {
-                D1GfxPixel* p0 = &newPixels[y][x];
+                D1GfxPixel *p0 = &newPixels[y][x];
                 if (p0->isTransparent())
                     continue; // skip transparent pixels
                 if (p0->getPaletteIndex() >= upParams.firstfixcolor && p0->getPaletteIndex() <= upParams.lastfixcolor)
                     continue; // skip 'protected' colors
                 D1GfxPixel pDR = D1GfxPixel::transparentPixel();
-                D1GfxPixel* pD = &newPixels[y + multiplier][x];
+                D1GfxPixel *pD = &newPixels[y + multiplier][x];
                 for (int j = 0; j < multiplier; j++) {
                     for (int k = 0; k < multiplier; k++) {
-                        D1GfxPixel* pp = &newPixels[y + j][x + k];
+                        D1GfxPixel *pp = &newPixels[y + j][x + k];
                         *pp = BilinearInterpolate(pp, &pDR, k, pD, j, &pDR, multiplier, upParams);
                     }
                 }
@@ -2709,16 +2663,16 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal* pal, const UpscaleParam &p
         }
         // resample bottom row as if the external pixels are transparent
         for (int x = 0; x < newWidth - multiplier; x += multiplier) {
-            D1GfxPixel* p0 = &newPixels[y][x];
+            D1GfxPixel *p0 = &newPixels[y][x];
             if (p0->isTransparent())
                 continue; // skip transparent pixels
             if (p0->getPaletteIndex() >= upParams.firstfixcolor && p0->getPaletteIndex() <= upParams.lastfixcolor)
                 continue; // skip 'protected' colors
-            D1GfxPixel* pR = &newPixels[y][x + multiplier];
+            D1GfxPixel *pR = &newPixels[y][x + multiplier];
             D1GfxPixel pDR = D1GfxPixel::transparentPixel();
             for (int j = 0; j < multiplier; j++) {
                 for (int k = 0; k < multiplier; k++) {
-                    D1GfxPixel* pp = &newPixels[y + j][x + k];
+                    D1GfxPixel *pp = &newPixels[y + j][x + k];
                     *pp = BilinearInterpolate(pp, pR, k, &pDR, j, &pDR, multiplier, upParams);
                 }
             }
@@ -2839,7 +2793,7 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal* pal, const UpscaleParam &p
                     bool match = true;
                     for (int yy = 0; yy < h && match; yy++) {
                         for (int xx = 0; xx < w && match; xx++, ptnCol++) {
-                            D1GfxPixel* p = &frame->pixels[y + yy][x + xx];
+                            D1GfxPixel *p = &frame->pixels[y + yy][x + xx];
                             switch (*ptnCol) {
                             case PTN_COLOR:
                                 if (p->isTransparent()) {
@@ -2924,10 +2878,7 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal* pal, const UpscaleParam &p
                                 }
                             } else {
                                 // interpolate
-                                QColor cR = upParams.pal->getColor(pRight->getPaletteIndex());
-                                QColor cD = upParams.pal->getColor(pTop->getPaletteIndex());
-                                QColor cDummy;
-                                BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                                BilinearInterpolate2Pixels(pRight, pTop, upParams, *pDest);
                             }
                         }
                     }
@@ -2967,10 +2918,7 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal* pal, const UpscaleParam &p
                                 }
                             } else {
                                 // interpolate
-                                QColor cR = upParams.pal->getColor(pRight->getPaletteIndex());
-                                QColor cD = upParams.pal->getColor(pBottom->getPaletteIndex());
-                                QColor cDummy;
-                                BilinearInterpolateColors(cR, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                                BilinearInterpolate2Pixels(pRight, pBottom, upParams, *pDest);
                             }
                         }
                     }
@@ -2987,7 +2935,7 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal* pal, const UpscaleParam &p
             }
             for (int y = 0; y < halfWidth / 2; y++) {
                 for (int x = 0; x < halfWidth; x++) {
-                    if (x < y * 2) && frame->pixels[frame->height - halfWidth + y][halfWidth + x].isTransparent()) {
+                    if ((x < y * 2) && frame->pixels[frame->height - halfWidth + y][halfWidth + x].isTransparent()) {
                         rightFloorTile = false;
                     }
                 }
@@ -3029,17 +2977,14 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal* pal, const UpscaleParam &p
                                 }
                             } else {
                                 // interpolate
-                                QColor cL = upParams.pal->getColor(pLeft->getPaletteIndex());
-                                QColor cD = upParams.pal->getColor(pTop->getPaletteIndex());
-                                QColor cDummy;
-                                BilinearInterpolateColors(cL, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                                BilinearInterpolate2Pixels(pLeft, pTop, upParams, *pDest);
                             }
                         }
                     }
                 }
                 for (int y = 0; y < halfWidth / 2; y++) {
                     for (int x = 0; x < halfWidth; x++) {
-                        if (x < y * 2)) {
+                        if (x < y * 2) {
                             int dx = halfWidth + x;
                             int dy = newPixels.count() - halfWidth + y;
 
@@ -3072,10 +3017,7 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal* pal, const UpscaleParam &p
                                 }
                             } else {
                                 // interpolate
-                                QColor cL = upParams.pal->getColor(pLeft->getPaletteIndex());
-                                QColor cD = upParams.pal->getColor(pBottom->getPaletteIndex());
-                                QColor cDummy;
-                                BilinearInterpolateColors(cL, cD, 1, cDummy, 0, cDummy, 2, *pDest);
+                                BilinearInterpolate2Pixels(pLeft, pBottom, upParams, *pDest);
                             }
                         }
                     }
@@ -3169,7 +3111,7 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<qui
 {
     QList<quint16> subtileFramesRefs;
     int x = 0;
-    for (int y = 0; y < subtileFrame->height; ) {
+    for (int y = 0; y < subtileFrame->height;) {
         bool hasColor = false;
         for (int yy = 0; yy < MICRO_HEIGHT && !hasColor; yy++) {
             for (int xx = 0; xx < MICRO_WIDTH; xx++) {
