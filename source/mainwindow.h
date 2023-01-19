@@ -78,6 +78,7 @@ private:
 
     void pixelClicked(const D1GfxPixel &pixel);
     void colorModified();
+    void reloadConfig();
 
     void addFrames(bool append);
     void addSubtiles(bool append);

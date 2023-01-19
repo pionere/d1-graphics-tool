@@ -271,9 +271,6 @@ PaletteWidget::PaletteWidget(QUndoStack *us, QString title)
     , ui(new Ui::PaletteWidget())
     , scene(new PaletteScene(this))
 {
-    // Load selection border color from JSON config file
-    this->reloadConfig();
-
     ui->setupUi(this);
     ui->graphicsView->setScene(this->scene);
     ui->groupLabel->setText(title);
@@ -393,15 +390,6 @@ void PaletteWidget::initializeDisplayComboBox()
     } else {
         ui->displayComboBox->addItem("Show translated colors", QVariant((int)COLORFILTER_TYPE::TRANSLATED));
     }
-}
-
-void PaletteWidget::reloadConfig()
-{
-    this->paletteDefaultColor = QColor(
-        Config::value("PaletteDefaultColor").toString());
-
-    this->selectionBorderColor = QColor(
-        Config::value("PaletteSelectionBorderColor").toString());
 }
 
 void PaletteWidget::selectColor(const D1GfxPixel &pixel)
@@ -626,7 +614,8 @@ void PaletteWidget::displaySelection()
     if (firstColorIndex == COLORIDX_TRANSPARENT) {
         return;
     }
-    QPen pen(this->selectionBorderColor);
+    QColor borderColor = QColor(Config::getPaletteSelectionBorderColor());
+    QPen pen(borderColor);
     pen.setStyle(Qt::SolidLine);
     pen.setJoinStyle(Qt::MiterJoin);
     pen.setWidth(PALETTE_SELECTION_WIDTH);
@@ -733,7 +722,8 @@ void PaletteWidget::refreshIndexLineEdit()
         if (firstColorIndex > lastColorIndex) {
             std::swap(firstColorIndex, lastColorIndex);
         }
-        text = QString::number(firstColorIndex) + "-" + QString::number(lastColorIndex);
+        const char *sep = (firstColorIndex < 100 && lastColorIndex < 100) ? " - " : "-";
+        text = QString::number(firstColorIndex) + sep + QString::number(lastColorIndex);
     } else if (firstColorIndex != COLORIDX_TRANSPARENT) {
         text = QString::number(firstColorIndex);
     }
@@ -915,10 +905,12 @@ void PaletteWidget::on_colorClearPushButton_clicked()
 {
     this->initStopColorPicking();
 
+    QColor undefinedColor = QColor(Config::getPaletteUndefinedColor());
+
     // Build color editing command and connect it to the current palette widget
     // to update the PAL/TRN and CEL views when undo/redo is performed
     auto *command = new EditColorsCommand(
-        this->pal, this->selectedFirstColorIndex, this->selectedLastColorIndex, this->paletteDefaultColor, this->paletteDefaultColor);
+        this->pal, this->selectedFirstColorIndex, this->selectedLastColorIndex, undefinedColor, undefinedColor);
     QObject::connect(command, &EditColorsCommand::modified, this, &PaletteWidget::modify);
 
     this->undoStack->push(command);

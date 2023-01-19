@@ -21,21 +21,14 @@
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="defaultPaletteColorLabel">
+       <widget class="QLabel" name="undefinedPaletteColorLabel">
         <property name="text">
-         <string>Default palette color:</string>
+         <string>Undefined palette color:</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
-       <widget class="LineEditWidget" name="defaultPaletteColorLineEdit">
+      <item row="0" column="1">
+       <widget class="LineEditWidget" name="undefinedPaletteColorLineEdit">
         <property name="charWidth">
          <number>8</number>
         </property>
@@ -44,28 +37,21 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="3">
-       <widget class="QPushButton" name="defaultPaletteColorPushButton">
+      <item row="0" column="2">
+       <widget class="QPushButton" name="undefinedPaletteColorPushButton">
         <property name="text">
          <string>Pick</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
-       <spacer name="horizontalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
-      </item>
-      <item row="1" column="1">
        <widget class="QLabel" name="paletteSelectionBorderColorLabel">
         <property name="text">
          <string>Selection border color:</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
+      <item row="1" column="1">
        <widget class="LineEditWidget" name="paletteSelectionBorderColorLineEdit">
         <property name="charWidth">
          <number>8</number>
@@ -75,7 +61,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="3">
+      <item row="1" column="2">
        <widget class="QPushButton" name="paletteSelectionBorderColorPushButton">
         <property name="text">
          <string>Pick</string>

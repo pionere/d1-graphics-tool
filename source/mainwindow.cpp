@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     // QCoreApplication::setAttribute( Qt::AA_EnableHighDpiScaling, true );
 
-    this->lastFilePath = Config::value("LastFilePath").toString();
+    this->lastFilePath = Config::getLastFilePath();
 
     ui->setupUi(this);
 
@@ -88,7 +88,7 @@ MainWindow::~MainWindow()
     // close modal windows
     this->on_actionClose_triggered();
     // store last path
-    Config::insert("LastFilePath", this->lastFilePath);
+    Config::setLastFilePath(this->lastFilePath);
     // cleanup memory
     delete ui;
     delete this->undoStack;
@@ -230,6 +230,23 @@ void MainWindow::colorModified()
         this->levelCelView->displayFrame();
     } else {
         this->celView->displayFrame();
+    }
+}
+
+void MainWindow::reloadConfig()
+{
+    // reload palettes
+    bool currPalChanged = false;
+    for (auto iter = this->pals.cbegin(); iter != this->pals.cend(); ++iter) {
+        bool change = iter.value()->reloadConfig();
+        if (iter.value() == this->pal) {
+            currPalChanged = true;
+        }
+    }
+    // refresh the palette widgets and the view
+    if (currPalChanged) {
+        this->palWidget->refresh();
+        this->colorModified();
     }
 }
 
@@ -589,10 +606,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->palFrame->layout()->addWidget(this->trnBaseWidget);
 
     // Configuration update triggers refresh of the palette widgets
-    QObject::connect(&this->settingsDialog, &SettingsDialog::configurationSaved, this->palWidget, &PaletteWidget::reloadConfig);
-    QObject::connect(&this->settingsDialog, &SettingsDialog::configurationSaved, this->trnUniqueWidget, &PaletteWidget::reloadConfig);
-    QObject::connect(&this->settingsDialog, &SettingsDialog::configurationSaved, this->trnBaseWidget, &PaletteWidget::reloadConfig);
-    QObject::connect(&this->settingsDialog, &SettingsDialog::configurationSaved, this->palWidget, &PaletteWidget::refresh);
+    QObject::connect(&this->settingsDialog, &SettingsDialog::configurationSaved, this, &MainWindow::reloadConfig);
 
     // Palette and translation file selection
     // When a .pal or .trn file is selected in the PaletteWidget update the pal or trn

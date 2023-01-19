@@ -3,6 +3,8 @@
 #include <QDataStream>
 #include <QTextStream>
 
+#include "config.h"
+
 bool D1Pal::load(QString filePath)
 {
     QFile file = QFile(filePath);
@@ -14,6 +16,14 @@ bool D1Pal::load(QString filePath)
         this->loadRegularPalette(file);
     } else if (!this->loadJascPalette(file)) {
         return false;
+    }
+
+    this->undefinedColor = QColor(Config::getPaletteUndefinedColor());
+    if (filePath == D1Pal::DEFAULT_PATH && this->colors[1] != this->undefinedColor) {
+        for (int i = 1; i < 128; i++) {
+            this->colors[i] = this->undefinedColor;
+            // this->modified = true; ?
+        }
     }
 
     this->palFilePath = filePath;
@@ -105,6 +115,24 @@ bool D1Pal::save(QString filePath)
         // this->palFilePath = filePath;
     }
     return true;
+}
+
+bool D1Pal::reloadConfig()
+{
+    bool change = false;
+    QColor undefColor = QColor(Config::getPaletteUndefinedColor());
+
+    for (int i = 0; i < D1PAL_COLORS; i++) {
+        if (this->colors[i] == this->undefinedColor) {
+            this->colors[i] = undefColor;
+            change = true;
+        }
+    }
+    this->undefinedColor = undefColor;
+    if (change) {
+        this->modified = true;
+    }
+    return change;
 }
 
 bool D1Pal::isModified() const

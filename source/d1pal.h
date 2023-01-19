@@ -28,6 +28,8 @@ public:
     bool load(QString);
     bool save(QString);
 
+    bool reloadConfig();
+
     bool isModified() const;
 
     QString getFilePath();
@@ -45,5 +47,6 @@ private:
     QString palFilePath;
     bool modified;
     QColor colors[D1PAL_COLORS];
+    QColor undefinedColor;
     quint8 currentCycleCounter = 3;
 };
