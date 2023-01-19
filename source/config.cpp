@@ -27,10 +27,10 @@ void Config::loadConfiguration()
     }
 
     if (!theConfig.contains(Config::CFG_LAST_FILE_PATH)) {
-        Config::setLastFilePath((jsonFilePath);
+        Config::setLastFilePath(jsonFilePath);
         configurationModified = true;
     }
-    if (!theConfig.contains(Config::CFG_PAL_DEFAULT_COLOR)) {
+    if (!theConfig.contains(Config::CFG_PAL_UNDEFINED_COLOR)) {
         Config::setPaletteUndefinedColor(Config::DEFAULT_PAL_UNDEFINED_COLOR);
         configurationModified = true;
     }

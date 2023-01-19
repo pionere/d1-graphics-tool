@@ -21,22 +21,28 @@ public:
     static void loadConfiguration();
     static void storeConfiguration();
 
-    static QString getLastFilePath() {
+    static QString getLastFilePath()
+    {
         return Config::value(Config::CFG_LAST_FILE_PATH).toString();
     };
-    static void setLastFilePath(const QString &path) {
+    static void setLastFilePath(const QString &path)
+    {
         Config::insert(Config::CFG_LAST_FILE_PATH, path);
     };
-    static QString getPaletteUndefinedColor() {
-        return Config::value(Config::CFG_PAL_DEFAULT_COLOR).toString();
+    static QString getPaletteUndefinedColor()
+    {
+        return Config::value(Config::CFG_PAL_UNDEFINED_COLOR).toString();
     };
-    static void setPaletteUndefinedColor(QString colorName) {
-        Config::insert(Config::CFG_PAL_DEFAULT_COLOR, colorName);
+    static void setPaletteUndefinedColor(QString colorName)
+    {
+        Config::insert(Config::CFG_PAL_UNDEFINED_COLOR, colorName);
     };
-    static QString getPaletteSelectionBorderColor() {
+    static QString getPaletteSelectionBorderColor()
+    {
         return Config::value(Config::CFG_PAL_SELECTION_BORDER_COLOR).toString();
     };
-    static void setPaletteSelectionBorderColor(QString colorName) {
+    static void setPaletteSelectionBorderColor(QString colorName)
+    {
         Config::insert(Config::CFG_PAL_SELECTION_BORDER_COLOR, colorName);
     };
 };
