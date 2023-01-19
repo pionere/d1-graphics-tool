@@ -1,12 +1,19 @@
 #include "upscaler.h"
 
 #include <QColor>
+#include <QMessageBox>
 
 #include "d1gfx.h"
 #include "d1min.h"
 #include "d1pal.h"
 #include "leveltabframewidget.h"
 #include "upscaledialog.h"
+
+template<class T, int N>
+constexpr int lengthof(T (&arr)[N])
+{
+    return N;
+}
 
 class UpscalingParam {
 public:
@@ -476,10 +483,10 @@ static const BYTE patternSlowUpRight[] = {
 static bool SlowUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
-    // int sx = 0, sy = y;
+    int sx = 0, sy = y;
     int dx = 0, dy = y * multiplier;
 
-    // sx += x;
+    sx += x;
     dx += x * multiplier;
 
     // on the left border or [-1; 2] is alpha or [-1; 1] is not alpha
@@ -492,7 +499,7 @@ static bool SlowUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QLis
 
     // move to [1; 0]
     dx += multiplier;
-    // sx += 1;
+    sx += 1;
 
     for (int yy = 0; yy < multiplier; yy++) {
         for (int xx = 0; xx < 2 * multiplier; xx++) {
@@ -541,10 +548,10 @@ static const BYTE patternSlowUpLeft[] = {
 static bool SlowUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
-    // int sx = 0, sy = y;
+    int sx = 0, sy = y;
     int dx = 0, dy = y * multiplier;
 
-    // sx += x;
+    sx += x;
     dx += x * multiplier;
 
     // on the right border or [4; 2] is alpha or [4; 1] is not alpha
@@ -557,7 +564,7 @@ static bool SlowUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList
 
     // move to [1; 0]
     dx += multiplier;
-    // sx += 1;
+    sx += 1;
 
     for (int yy = 0; yy < multiplier; yy++) {
         for (int xx = 0; xx < 2 * multiplier; xx++) {
@@ -709,10 +716,10 @@ static const BYTE patternFastUpRight[] = {
 static bool FastUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
-    // int sx = 0, sy = y;
+    int sx = 0, sy = y;
     int dx = 0, dy = y * multiplier;
 
-    // sx += x;
+    sx += x;
     dx += x * multiplier;
 
     // on the top border or [2; -1] is alpha or [1; -1] is not alpha
@@ -725,7 +732,7 @@ static bool FastUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QLis
 
     // move to [0; 1]
     dy += multiplier;
-    // sy += 1;
+    sy += 1;
 
     for (int yy = 0; yy < 2 * multiplier; yy++) {
         for (int xx = 0; xx < multiplier; xx++) {
@@ -777,10 +784,10 @@ static const BYTE patternFastUpLeft[] = {
 static bool FastUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
-    // int sx = 0, sy = y;
+    int sx = 0, sy = y;
     int dx = 0, dy = y * multiplier;
 
-    // sx += x;
+    sx += x;
     dx += x * multiplier;
 
     // on the top border or [0; -1] is alpha or [1; -1] is not alpha
@@ -794,8 +801,8 @@ static bool FastUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList
     // move to [2; 1]
     dx += 2 * multiplier;
     dy += multiplier;
-    // sx += 2;
-    // sy += 1;
+    sx += 2;
+    sy += 1;
 
     for (int yy = 0; yy < 2 * multiplier; yy++) {
         for (int xx = 0; xx < multiplier; xx++) {
@@ -1676,7 +1683,7 @@ static D1GfxPixel *FixColorCheck(int x, int y, QList<QList<D1GfxPixel>> &origPix
     const BYTE *ptnCol = &pattern[2];
 
     for (int j = 0; j < h; j++) {
-        for (int i = 0; i < w; i++, ptnCol++, src++, fm++) {
+        for (int i = 0; i < w; i++, ptnCol++) {
             if (*ptnCol != PTN_COLOR)
                 continue;
             D1GfxPixel *cP = &origPixels[y + j][x + i];
@@ -2450,8 +2457,8 @@ static bool RightTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
         for (int xx = 0; xx < 2 * multiplier; xx++) {
             if (yy > xx / 2) {
                 D1GfxPixel *pDest = &newPixels[dy + yy][dx + xx];
-                bool bottomFixed = isPixelFixed(&newPixels[dy + multiplier][dx], upParams);
-                bool leftFixed = isPixelFixed(&newPixels[dy][dx - multiplier], upParams);
+                bool bottomFixed = isPixelFixed(&newPixels[dy + multiplier][dx], params);
+                bool leftFixed = isPixelFixed(&newPixels[dy][dx - multiplier], params);
 
                 D1GfxPixel *pBottom = &origPixels[sy + 1][sx];
                 D1GfxPixel *pLeft = &origPixels[sy][sx - 1];
@@ -2506,15 +2513,15 @@ static const BYTE patternTopTriangle[] = {
 static bool TopTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
-    // int sx = 0, sy = y;
+    int sx = 0, sy = y;
     int dx = 0, dy = y * multiplier;
 
-    // sx += x;
+    sx += x;
     dx += x * multiplier;
 
     // move to [2; 0]
     dx += 2 * multiplier;
-    // sx += 2;
+    sx += 2;
 
     for (int yy = 0; yy < multiplier; yy++) {
         for (int xx = 0; xx < 2 * multiplier; xx++) {
@@ -2526,7 +2533,7 @@ static bool TopTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QLis
 
     // move to [4; 0]
     dx += 2 * multiplier;
-    // sx += 2;
+    sx += 2;
 
     for (int yy = 0; yy < multiplier; yy++) {
         for (int xx = 0; xx < 2 * multiplier; xx++) {
@@ -2775,10 +2782,6 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
             { patternFixFastUpLeft, FixFastUpLeft },
         };
 #endif
-        /*char tmpbuf[256];
-        snprintf(tmpbuf, 256, "f:\\matches%d_%d.txt", PATLEN, i);
-        FILE* ff = fopen(tmpbuf, "wt");
-        bool doDebugPNG = false;*/
         for (int y = 0; y < frame->height; y++) {
             for (int x = 0; x < frame->width; x++) {
                 for (int k = 0; k < lengthof(patterns); k++) {
@@ -2813,10 +2816,6 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
                     if (!match)
                         continue;
                     if (ptn.fnc(x, y, frame->pixels, newPixels, upParams)) {
-                        /*if (k >= 16) {
-                            doDebugPNG = true;
-                        }*/
-                        //fprintf(ff, "Match %d @ %d:%d\n", k, x, y);
                         break;
                     }
                 }
@@ -2854,11 +2853,11 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
                                 continue;
                             D1GfxPixel *pTop = &newPixels[dy - multiplier][dx];
                             D1GfxPixel *pRight = &newPixels[dy][dx + multiplier];
-                            if (pTop->->isTransparent()) {
+                            if (pTop->isTransparent()) {
                                 *pDest = *pRight;
                                 continue;
                             }
-                            if (pRight->->isTransparent()) {
+                            if (pRight->isTransparent()) {
                                 *pDest = *pTop;
                                 continue;
                             }
@@ -2894,11 +2893,11 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
                                 continue;
                             D1GfxPixel *pBottom = &newPixels[dy + multiplier][dx];
                             D1GfxPixel *pRight = &newPixels[dy][dx + multiplier];
-                            if (pBottom->->isTransparent()) {
+                            if (pBottom->isTransparent()) {
                                 *pDest = *pRight;
                                 continue;
                             }
-                            if (pRight->->isTransparent()) {
+                            if (pRight->isTransparent()) {
                                 *pDest = *pBottom;
                                 continue;
                             }
@@ -2953,11 +2952,11 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
                                 continue;
                             D1GfxPixel *pTop = &newPixels[dy - multiplier][dx];
                             D1GfxPixel *pLeft = &newPixels[dy][dx - multiplier];
-                            if (pTop->->isTransparent()) {
+                            if (pTop->isTransparent()) {
                                 *pDest = *pLeft;
                                 continue;
                             }
-                            if (pLeft->->isTransparent()) {
+                            if (pLeft->isTransparent()) {
                                 *pDest = *pTop;
                                 continue;
                             }
@@ -2993,11 +2992,11 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
                                 continue;
                             D1GfxPixel *pBottom = &newPixels[dy + multiplier][dx];
                             D1GfxPixel *pLeft = &newPixels[dy][dx - multiplier];
-                            if (pBottom->->isTransparent()) {
+                            if (pBottom->isTransparent()) {
                                 *pDest = *pLeft;
                                 continue;
                             }
-                            if (pLeft->->isTransparent()) {
+                            if (pLeft->isTransparent()) {
                                 *pDest = *pBottom;
                                 continue;
                             }
@@ -3030,11 +3029,6 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
     frame->pixels.swap(newPixels);
     frame->width *= multiplier;
     frame->height *= multiplier;
-
-    // cleanup memory
-    if (ownPal) {
-        delete upParams.pal;
-    }
 }
 
 static D1Pal *loadPal(const UpscaleParam &params, bool &ok)
@@ -3071,7 +3065,7 @@ void Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
     delete pal;
 }
 
-D1GfxFrame *Upscaler::createSubtileFrame(const D1Gfx *gfx, const D1Min *min)
+D1GfxFrame *Upscaler::createSubtileFrame(const D1Gfx *gfx, const D1Min *min, int subtileIndex)
 {
     D1GfxFrame *subtileFrame = new D1GfxFrame();
 
@@ -3083,7 +3077,8 @@ D1GfxFrame *Upscaler::createSubtileFrame(const D1Gfx *gfx, const D1Min *min)
     }
     int x = 0;
     int y = 0;
-    for (quint16 frameRef : min->getFrameReferences(i)) {
+    const QList<quint16> &frameReferences =  min->getFrameReferences(subtileIndex);
+    for (quint16 frameRef : frameReferences) {
         if (frameRef == 0) {
             for (int yy = 0; yy < MICRO_HEIGHT; yy++) {
                 for (int xx = 0; xx < MICRO_WIDTH; xx++) {
@@ -3107,7 +3102,7 @@ D1GfxFrame *Upscaler::createSubtileFrame(const D1Gfx *gfx, const D1Min *min)
     return subtileFrame;
 }
 
-void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<quint16>> &newFrameReferences, QList<D1GfxFrame> &newframes)
+void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<quint16>> &newFrameReferences, QList<D1GfxFrame> &newFrames)
 {
     QList<quint16> subtileFramesRefs;
     int x = 0;
@@ -3122,7 +3117,7 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<qui
             }
         }
         if (hasColor) {
-            newframes.append(D1GfxFrame());
+            newFrames.append(D1GfxFrame());
             subtileFramesRefs.append(newFrames.count());
             D1GfxFrame &newFrame = newFrames.last();
             newFrame.width = MICRO_WIDTH;
@@ -3162,7 +3157,7 @@ void Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     }
 
     for (int i = 0; i < min->getSubtileCount(); i++) {
-        D1GfxFrame *subtileFrame = Upscaler::createSubtileFrame(gfx, min);
+        D1GfxFrame *subtileFrame = Upscaler::createSubtileFrame(gfx, min, i);
         Upscaler::upscaleFrame(subtileFrame, pal == nullptr ? gfx->palette : pal, params);
         Upscaler::storeSubtileFrame(subtileFrame, newFrameReferences, newframes);
         delete subtileFrame;
