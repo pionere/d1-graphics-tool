@@ -1,13 +1,12 @@
 #pragma once
 
-#include <QProgressDialog>
-#include <QWidget>
+#include <QDialog>
 
 namespace Ui {
 class ProgressDialog;
 } // namespace Ui
 
-class ProgressDialog : public QWidget {
+class ProgressDialog : public QDialog {
     Q_OBJECT
 
 public:

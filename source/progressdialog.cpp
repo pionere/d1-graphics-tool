@@ -5,7 +5,7 @@
 static ProgressDialog *theDialog;
 
 ProgressDialog::ProgressDialog(QWidget *parent)
-    : QWidget(parent)
+    : QDialog(parent)
     , ui(new Ui::ProgressDialog())
 {
     this->ui->setupUi(this);
