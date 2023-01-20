@@ -12,7 +12,7 @@
 enum class D1PAL_CYCLE_TYPE {
     CAVES,
     HELL,
-    CRYPT
+    CRYPT,
     NEST,
 };
 
