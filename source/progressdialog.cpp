@@ -3,6 +3,7 @@
 #include <QProgressDialog>
 
 class ProgressDialogWindow : public QProgressDialog {
+    Q_OBJECT
 
 public:
     explicit ProgressDialogWindow();
@@ -19,7 +20,7 @@ ProgressDialogWindow::ProgressDialogWindow()
     this->setMinimum(0);
 }
 
-void ProgressDialog::intialize(QWidget *window)
+void ProgressDialog::initialize(QWidget *window)
 {
     theDialog.setParent(window);
 }
@@ -46,3 +47,5 @@ void ProgressDialog::incValue()
 {
     theDialog.setValue(theDialog.value() + 1);
 }
+
+#include "progressdialog.moc"
