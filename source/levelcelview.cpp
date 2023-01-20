@@ -169,11 +169,14 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
 
         // Adjust coordinates
         unsigned stx = x - (celFrameWidth + CEL_SCENE_SPACING * 2);
-        unsigned sty = y - CEL_SCENE_SPACING;
+        unsigned sty = y - CEL_SCENE_SPACING) / MICRO_HEIGHT;
 
         // qDebug() << "Subtile clicked: " << stx << "," << sty;
 
-        int stFrame = (sty / MICRO_HEIGHT) * subtileWidth / MICRO_WIDTH + (stx / MICRO_WIDTH);
+        stx /= MICRO_WIDTH;
+        sty /= MICRO_HEIGHT;
+
+        int stFrame = sty * subtileWidth / MICRO_WIDTH + stx;
         QList<quint16> &minFrames = this->min->getFrameReferences(this->currentSubtileIndex);
         quint16 frameRef = minFrames.count() > stFrame ? minFrames.at(stFrame) : 0;
 
@@ -181,6 +184,28 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
             this->currentFrameIndex = frameRef - 1;
             this->displayFrame();
         }
+        // highlight selection
+        QColor borderColor = QColor(Config::getPaletteSelectionBorderColor());
+        QPen pen(borderColor);
+        pen.setWidth(PALETTE_SELECTION_WIDTH);
+        QRectF coordinates = QRectF(stx * MICRO_WIDTH, sty * MICRO_HEIGHT, (stx + 1) * MICRO_WIDTH, (sty + 1) * MICRO_HEIGHT);
+        int a = PALETTE_SELECTION_WIDTH / 2;
+        coordinates.adjust(a, a, -a, -a);
+        // - top line
+        this->celScene->addLine(coordinates.left(), coordinates.top(), coordinates.right(), coordinates.top(), pen);
+        // - bottom line
+        this->celScene->addLine(coordinates.left(), coordinates.bottom(), coordinates.right(), coordinates.bottom(), pen);
+        // - left side
+        this->celScene->addLine(coordinates.left(), coordinates.top(), coordinates.left() coordinates.bottom(), pen);
+        // - right side
+        this->celScene->addLine(coordinates.right(), coordinates.top(), coordinates.right(), coordinates.bottom(), pen);
+        // clear after some time
+        QTimer *timer = new QTimer();
+        QObject::connect(timer, &QTimer::timeout, [this, timer](){
+            this->displayFrame();
+            timer->deleteLater();
+        });
+        timer->start(2000);
         return;
     } else if (x >= (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
         && x < (celFrameWidth + subtileWidth + tileWidth + CEL_SCENE_SPACING * 3)

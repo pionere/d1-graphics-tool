@@ -616,8 +616,8 @@ void PaletteWidget::displaySelection()
     }
     QColor borderColor = QColor(Config::getPaletteSelectionBorderColor());
     QPen pen(borderColor);
-    pen.setStyle(Qt::SolidLine);
-    pen.setJoinStyle(Qt::MiterJoin);
+    // pen.setStyle(Qt::SolidLine);
+    // pen.setJoinStyle(Qt::MiterJoin);
     pen.setWidth(PALETTE_SELECTION_WIDTH);
 
     for (int i = firstColorIndex; i <= lastColorIndex; i++) {
