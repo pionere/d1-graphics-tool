@@ -210,7 +210,7 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
             this->displayFrame();
             timer->deleteLater();
         });
-        timer->start(300);
+        timer->start(500);
         return;
     } else if (x >= (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
         && x < (celFrameWidth + subtileWidth + tileWidth + CEL_SCENE_SPACING * 3)
@@ -1501,9 +1501,10 @@ void LevelCelView::upscale(const UpscaleParam &params)
     int amount = this->min->getSubtileCount();
 
     QProgressDialog progress("Upscaling...", "Cancel", 0, amount + 1, this);
+    progress.setWindowFlags((windowFlags() | Qt::WindowStaysOnTopHint | Qt::WindowCloseButtonHint) & ~(Qt::WindowSystemMenuHint | Qt::WindowContextHelpButtonHint | Qt::MacWindowToolBarButtonHint | Qt::WindowFullscreenButtonHint | Qt::WindowMinMaxButtonsHint));
     progress.setWindowModality(Qt::WindowModal);
     progress.setMinimumDuration(0);
-    progress.setWindowTitle("Upscale");
+    // progress.setWindowTitle("Upscale");
     progress.setLabelText("Upscaling");
     progress.setValue(0);
     progress.show();
