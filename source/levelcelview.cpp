@@ -1500,14 +1500,14 @@ void LevelCelView::upscale(const UpscaleParam &params)
 {
     int amount = this->min->getSubtileCount();
 
-    ProgressDialog::show("Upscaling", amount + 1);
+    ProgressDialog::start("Upscaling", amount + 1);
 
     if (Upscaler::upscaleTileset(this->gfx, this->min, params)) {
         // update the view
         this->displayFrame();
     }
 
-    ProgressDialog::hide();
+    ProgressDialog::done();
 }
 
 void LevelCelView::displayFrame()

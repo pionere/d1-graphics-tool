@@ -10,8 +10,8 @@ public:
     explicit ProgressDialog(QWidget *parent = nullptr);
     ~ProgressDialog() = default;
 
-    static void show(const QString &label, int maxValue);
-    static void hide();
+    static void start(const QString &label, int maxValue);
+    static void done();
 
     static bool wasCanceled();
     static void incValue();
