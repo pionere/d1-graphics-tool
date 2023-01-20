@@ -2,8 +2,7 @@
 
 #include <QProgressDialog>
 
-class ProgressDialogWindow: public QProgressDialog {
-    Q_OBJECT
+class ProgressDialogWindow : public QProgressDialog {
 
 public:
     explicit ProgressDialogWindow();
