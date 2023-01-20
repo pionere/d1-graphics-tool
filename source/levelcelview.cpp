@@ -193,7 +193,7 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
         QColor borderColor = QColor(Config::getPaletteSelectionBorderColor());
         QPen pen(borderColor);
         pen.setWidth(PALETTE_SELECTION_WIDTH);
-        QRectF coordinates = QRectF(stx * MICRO_WIDTH, sty * MICRO_HEIGHT, (stx + 1) * MICRO_WIDTH, (sty + 1) * MICRO_HEIGHT);
+        QRectF coordinates = QRectF(CEL_SCENE_SPACING + celFrameWidth + CEL_SCENE_SPACING + stx * MICRO_WIDTH, CEL_SCENE_SPACING + sty * MICRO_HEIGHT, MICRO_WIDTH, MICRO_HEIGHT);
         int a = PALETTE_SELECTION_WIDTH / 2;
         coordinates.adjust(-a, -a, 0, 0);
         // - top line
