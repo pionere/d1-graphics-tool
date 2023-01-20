@@ -13,7 +13,6 @@ enum class ANTI_ALIASING_MODE {
 class UpscaleParam {
 public:
     int multiplier;
-    QString palPath;
     int firstfixcolor;
     int lastfixcolor;
     ANTI_ALIASING_MODE antiAliasingMode;
@@ -33,8 +32,6 @@ public:
     void initialize(D1Gfx *gfx);
 
 private slots:
-    void on_palFileBrowseButton_clicked();
-    void on_palFileClearButton_clicked();
     void on_levelTypeComboBox_activated(int index);
     void on_upscaleButton_clicked();
     void on_upscaleCancelButton_clicked();

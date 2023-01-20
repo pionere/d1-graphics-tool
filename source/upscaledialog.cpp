@@ -22,7 +22,7 @@ const int fixColors[NUM_DUNGEON_TYPES][2] = {
 /* DTYPE_CATHEDRAL */ { -1, -1 },
 /* DTYPE_CATACOMBS */ { -1, -1 },
 /* DTYPE_CAVES     */ {  1, 31 },
-/* DTYPE_HELL      */ { -1, -1 },
+/* DTYPE_HELL      */ {  1, 31 },
 /* DTYPE_CRYPT     */ {  1, 31 },
 /* DTYPE_NEST      */ {  1, 15 },
 /* DTYPE_NONE      */ { -1, -1 },
@@ -55,21 +55,6 @@ void UpscaleDialog::initialize(D1Gfx *gfx)
     }
 }
 
-void UpscaleDialog::on_palFileBrowseButton_clicked()
-{
-    MainWindow *qw = (MainWindow *)this->parentWidget();
-    QString palFilePath = qw->fileDialog(FILE_DIALOG_MODE::OPEN, "Select Palette File", "PAL Files (*.pal *.PAL)");
-
-    if (!palFilePath.isEmpty()) {
-        this->ui->palFileLineEdit->setText(palFilePath);
-    }
-}
-
-void UpscaleDialog::on_palFileClearButton_clicked()
-{
-    this->ui->palFileLineEdit->setText("");
-}
-
 void UpscaleDialog::on_levelTypeComboBox_activated(int index)
 {
     this->ui->firstFixColorLineEdit->setText(QString::number(fixColors[index][0]));
@@ -84,7 +69,6 @@ void UpscaleDialog::on_upscaleButton_clicked()
         this->close();
         return;
     }
-    params.palPath = this->ui->palFileLineEdit->text();
     bool firstOk, lastOk;
     params.firstfixcolor = this->ui->firstFixColorLineEdit->text().toUInt(&firstOk);
     params.lastfixcolor = this->ui->lastFixColorLineEdit->text().toUInt(&lastOk);

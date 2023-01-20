@@ -38,41 +38,13 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="palFileLabel">
-        <property name="text">
-         <string>Custom palette:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" colspan="4">
-       <widget class="LineEditWidget" name="palFileLineEdit">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="5">
-       <widget class="QPushButton" name="palFileBrowseButton">
-        <property name="text">
-         <string>Browse</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="6">
-       <widget class="QPushButton" name="palFileClearButton">
-        <property name="text">
-         <string>Clear</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
        <widget class="QLabel" name="fixColorsLabel">
         <property name="text">
          <string>Fix colors:</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="1" column="1">
        <widget class="LineEditWidget" name="firstFixColorLineEdit">
         <property name="charWidth">
          <number>3</number>
@@ -82,7 +54,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
+      <item row="1" column="2">
        <widget class="QLabel" name="fixColorsSlashLabel">
         <property name="minimumSize">
          <size>
@@ -104,7 +76,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="3">
+      <item row="1" column="3">
        <widget class="LineEditWidget" name="lastFixColorLineEdit">
         <property name="charWidth">
          <number>3</number>
@@ -114,7 +86,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="4">
+      <item row="1" column="4">
        <widget class="QComboBox" name="levelTypeComboBox">
         <item>
          <property name="text">
@@ -158,14 +130,14 @@
         </item>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="2" column="0">
        <widget class="QLabel" name="antiAliasingLabel">
         <property name="text">
          <string>Anti aliasing:</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1" colspan="2">
+      <item row="2" column="1" colspan="2">
        <widget class="QComboBox" name="antiAliasingModeComboBox">
         <item>
          <property name="text">

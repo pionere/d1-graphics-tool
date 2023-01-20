@@ -3102,39 +3102,34 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
     frame->height *= multiplier;
 }
 
-static D1Pal *loadPal(const UpscaleParam &params, bool &ok)
-{
-    D1Pal *result = nullptr;
-    if (!params.palPath.isEmpty()) {
-        result = new D1Pal();
-        if (!result->load(params.palPath)) {
-            delete result;
-            ok = false;
-            QMessageBox::critical(nullptr, "Error", "Could not load PAL file.");
-            return nullptr;
-        }
-    }
-
-    ok = true;
-    return result;
-}
-
 void Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
 {
-    bool ok;
-    D1Pal *pal = loadPal(params, ok);
+    int amount = gfx->getFrameCount();
 
-    if (!ok) {
-        return;
+    QProgressDialog progress("Upscaling...", "Cancel", 0, amount, this);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.setMinimumDuration(0);
+    progress.setWindowTitle("Upscale");
+    progress.setLabelText("Upscaling");
+    progress.setValue(0);
+    progress.show();
+
+    QList<D1GfxFrame> newFrames;
+
+    for (int i = 0; i < amount; i++) {
+        if (progress.wasCanceled()) {
+            return;
+        }
+        progress.setValue(i);
+
+        newFrames.append(*gfx->getFrame(i));
+        D1GfxFrame &newFrame = newFrames.last();
+        upscaleFrame(&newFrame, gfx->palette, params);
     }
 
-    for (int i = 0; i < gfx->getFrameCount(); i++) {
-        upscaleFrame(gfx->getFrame(i), pal == nullptr ? gfx->palette : pal, params);
-    }
+    gfx->frames.swap(newFrames);
     gfx->upscaled = true;
     gfx->modified = true;
-
-    delete pal;
 }
 
 D1GfxFrame *Upscaler::createSubtileFrame(const D1Gfx *gfx, const D1Min *min, int subtileIndex)
@@ -3174,7 +3169,7 @@ D1GfxFrame *Upscaler::createSubtileFrame(const D1Gfx *gfx, const D1Min *min, int
     return subtileFrame;
 }
 
-void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<quint16>> &newFrameReferences, QList<D1GfxFrame> &newFrames, const UpscaleParam &params)
+void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<quint16>> &newFrameReferences, QList<D1GfxFrame> &newFrames)
 {
     QList<quint16> subtileFramesRefs;
     int x = 0;
@@ -3218,26 +3213,34 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<qui
 
 void Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params)
 {
-    QList<D1GfxFrame> newframes;
+    int amount = min->getSubtileCount();
+
+    QProgressDialog progress("Upscaling...", "Cancel", 0, amount, this);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.setMinimumDuration(0);
+    progress.setWindowTitle("Upscale");
+    progress.setLabelText("Upscaling");
+    progress.setValue(0);
+    progress.show();
+
+    QList<D1GfxFrame> newFrames;
     QList<QList<quint16>> newFrameReferences;
 
-    bool ok;
-    D1Pal *pal = loadPal(params, ok);
+    for (int i = 0; i < amount; i++) {
+        if (progress.wasCanceled()) {
+            return;
+        }
+        progress.setValue(i);
 
-    if (!ok) {
-        return;
-    }
-
-    for (int i = 0; i < min->getSubtileCount(); i++) {
         D1GfxFrame *subtileFrame = Upscaler::createSubtileFrame(gfx, min, i);
-        Upscaler::upscaleFrame(subtileFrame, pal == nullptr ? gfx->palette : pal, params);
-        Upscaler::storeSubtileFrame(subtileFrame, newFrameReferences, newframes, params);
+        Upscaler::upscaleFrame(subtileFrame, gfx->palette, params);
+        Upscaler::storeSubtileFrame(subtileFrame, newFrameReferences, newFrames);
         delete subtileFrame;
     }
     // update gfx
     gfx->groupFrameIndices.clear();
-    gfx->groupFrameIndices.append(qMakePair(0, newframes.count() - 1));
-    gfx->frames.swap(newframes);
+    gfx->groupFrameIndices.append(qMakePair(0, newFrames.count() - 1));
+    gfx->frames.swap(newFrames);
     gfx->upscaled = true;
     gfx->modified = true;
 
@@ -3246,6 +3249,4 @@ void Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     min->subtileHeight *= params.multiplier;
     min->frameReferences.swap(newFrameReferences);
     min->modified = true;
-
-    delete pal;
 }
