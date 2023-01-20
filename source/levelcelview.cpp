@@ -13,13 +13,13 @@
 #include <QMessageBox>
 #include <QMimeData>
 #include <QPen>
-#include <QProgressDialog>
 #include <QRectF>
 #include <QTimer>
 
 #include "config.h"
 #include "d1image.h"
 #include "mainwindow.h"
+#include "progressdialog.h"
 #include "ui_levelcelview.h"
 #include "upscaler.h"
 
@@ -1500,20 +1500,14 @@ void LevelCelView::upscale(const UpscaleParam &params)
 {
     int amount = this->min->getSubtileCount();
 
-    QProgressDialog progress("Upscaling...", "Cancel", 0, amount + 1, this);
-    // progress.setWindowFlags((windowFlags() | Qt::WindowStaysOnTopHint | Qt::WindowCloseButtonHint) & ~(Qt::WindowSystemMenuHint | Qt::WindowTitleHint | Qt::WindowContextHelpButtonHint | Qt::MacWindowToolBarButtonHint | Qt::WindowFullscreenButtonHint | Qt::WindowMinMaxButtonsHint));
-    progress.setWindowFlags((/*progress.windowFlags() |*/ Qt::Tool | Qt::WindowStaysOnTopHint | Qt::WindowCloseButtonHint) & ~(Qt::WindowSystemMenuHint | Qt::WindowTitleHint | Qt::WindowContextHelpButtonHint | Qt::MacWindowToolBarButtonHint | Qt::WindowFullscreenButtonHint | Qt::WindowMinMaxButtonsHint));
-    progress.setWindowModality(Qt::WindowModal);
-    progress.setMinimumDuration(0);
-    // progress.setWindowTitle("Upscale");
-    progress.setLabelText("Upscaling");
-    progress.setValue(0);
-    progress.show();
+    ProgressDialog::show("Upscaling", amount + 1);
 
-    if (Upscaler::upscaleTileset(this->gfx, this->min, params, progress)) {
+    if (Upscaler::upscaleTileset(this->gfx, this->min, params)) {
         // update the view
         this->displayFrame();
     }
+
+    ProgressDialog::hide();
 }
 
 void LevelCelView::displayFrame()

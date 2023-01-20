@@ -26,10 +26,11 @@
 #include "d1cl2.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+MainWindow::MainWindow()
+    : QMainWindow(nullptr)
+    , ui(new Ui::MainWindow())
 {
+    this->setWindowTitle(D1_GRAPHICS_TOOL_TITLE);
     // QCoreApplication::setAttribute( Qt::AA_EnableHighDpiScaling, true );
 
     this->lastFilePath = Config::getLastFilePath();
@@ -1534,11 +1535,11 @@ void MainWindow::on_actionAbout_triggered()
     QString operatingSystem;
 
 #ifdef Q_PROCESSOR_X86_64
-    architecture = "(64-bit)";
+    architecture = "64";
 #endif
 
 #ifdef Q_PROCESSOR_X86_32
-    architecture = "(32-bit)";
+    architecture = "32";
 #endif
 
 #ifdef Q_OS_WIN
@@ -1553,7 +1554,7 @@ void MainWindow::on_actionAbout_triggered()
     operatingSystem = "Linux";
 #endif
 
-    QMessageBox::about(this, "About", "Diablo 1 Graphics Tool " + QString(D1_GRAPHICS_TOOL_VERSION) + " (" + operatingSystem + ") " + architecture);
+    QMessageBox::about(this, "About", QString("%1 %2 (%3) (%4-bit)").arg(D1_GRAPHICS_TOOL_TITLE).arg(D1_GRAPHICS_TOOL_VERSION).arg(operatingSystem).arg(architecture));
 }
 
 void MainWindow::on_actionAbout_Qt_triggered()
