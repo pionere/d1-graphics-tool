@@ -173,7 +173,7 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
 
         // qDebug() << "Subtile clicked: " << stx << "," << sty;
 
-        int stFrame = (sty / MICRO_HEIGHT) * TILE_WIDTH + (stx / MICRO_WIDTH);
+        int stFrame = (sty / MICRO_HEIGHT) * subtileWidth + (stx / MICRO_WIDTH);
         QList<quint16> &minFrames = this->min->getFrameReferences(this->currentSubtileIndex);
         quint16 frameRef = minFrames.count() > stFrame ? minFrames.at(stFrame) : 0;
 
