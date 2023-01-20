@@ -19,6 +19,7 @@
 #include "levelcelview.h"
 #include "openasdialog.h"
 #include "palettewidget.h"
+#include "progressdialog.h"
 #include "saveasdialog.h"
 #include "settingsdialog.h"
 #include "upscaledialog.h"
@@ -179,6 +180,7 @@ private:
     QPointer<PaletteWidget> trnUniqueWidget;
     QPointer<PaletteWidget> trnBaseWidget;
 
+    ProgressDialog progressDialog = ProgressDialog(this);
     OpenAsDialog openAsDialog = OpenAsDialog(this);
     SaveAsDialog saveAsDialog = SaveAsDialog(this);
     SettingsDialog settingsDialog = SettingsDialog(this);

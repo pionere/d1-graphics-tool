@@ -1,10 +1,14 @@
 #pragma once
 
+#include <QProgressDialog>
 #include <QWidget>
 
-class ProgressDialog {
+class ProgressDialog : public QProgressDialog {
+    Q_OBJECT
+
 public:
-    static void initialize(QWidget *window);
+    explicit ProgressDialog(QWidget *parent = nullptr);
+    ~ProgressDialog() = default;
 
     static void show(const QString &label, int maxValue);
     static void hide();

@@ -3,7 +3,6 @@
 
 #include "config.h"
 #include "mainwindow.h"
-#include "progressdialog.h"
 
 int main(int argc, char *argv[])
 {
@@ -25,9 +24,6 @@ int main(int argc, char *argv[])
     int result;
     { // run the application
         MainWindow w;
-
-        ProgressDialog::initialize(&w);
-
         w.show();
 
         result = a.exec();
