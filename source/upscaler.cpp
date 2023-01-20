@@ -69,9 +69,8 @@ static void BilinearInterpolate2Pixels(const D1GfxPixel *p0, const D1GfxPixel *p
     QColor c0 = params.pal->getColor(p0->getPaletteIndex());
     QColor c1 = params.pal->getColor(p1->getPaletteIndex());
 
-    QColor cDummy;
     QColor cRes;
-    BilinearInterpolateColors(c0, c1, 1, cDummy, 0, cDummy, 2, cRes);
+    cRes.setRgb((c0.red() + c1.red()) >> 1, (c0.green() + c1.green()) >> 1, (c0.blue() + c1.blue()) >> 1);
 
     res = getPalColor(params, cRes);
 }
@@ -3107,7 +3106,7 @@ void Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
 {
     int amount = gfx->getFrameCount();
 
-    QProgressDialog progress("Upscaling...", "Cancel", 0, amount, this);
+    QProgressDialog progress("Upscaling...", "Cancel", 0, amount);
     progress.setWindowModality(Qt::WindowModal);
     progress.setMinimumDuration(0);
     progress.setWindowTitle("Upscale");
@@ -3216,7 +3215,7 @@ void Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
 {
     int amount = min->getSubtileCount();
 
-    QProgressDialog progress("Upscaling...", "Cancel", 0, amount, this);
+    QProgressDialog progress("Upscaling...", "Cancel", 0, amount);
     progress.setWindowModality(Qt::WindowModal);
     progress.setMinimumDuration(0);
     progress.setWindowTitle("Upscale");
