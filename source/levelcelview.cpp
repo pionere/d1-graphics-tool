@@ -17,6 +17,7 @@
 #include <QRectF>
 #include <QTimer>
 
+#include "config.h"
 #include "d1image.h"
 #include "mainwindow.h"
 #include "ui_levelcelview.h"
@@ -200,7 +201,7 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
         // - bottom line
         this->celScene.addLine(coordinates.left(), coordinates.bottom(), coordinates.right(), coordinates.bottom(), pen);
         // - left side
-        this->celScene.addLine(coordinates.left(), coordinates.top(), coordinates.left() coordinates.bottom(), pen);
+        this->celScene.addLine(coordinates.left(), coordinates.top(), coordinates.left(), coordinates.bottom(), pen);
         // - right side
         this->celScene.addLine(coordinates.right(), coordinates.top(), coordinates.right(), coordinates.bottom(), pen);
         // clear after some time
