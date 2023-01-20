@@ -4,6 +4,7 @@
 #include <set>
 
 #include <QAction>
+#include <QColor>
 #include <QDebug>
 #include <QFileInfo>
 #include <QGraphicsPixmapItem>
@@ -11,7 +12,10 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QPen>
 #include <QProgressDialog>
+#include <QRectF>
+#include <QTimer>
 
 #include "d1image.h"
 #include "mainwindow.h"
@@ -169,7 +173,7 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
 
         // Adjust coordinates
         unsigned stx = x - (celFrameWidth + CEL_SCENE_SPACING * 2);
-        unsigned sty = y - CEL_SCENE_SPACING) / MICRO_HEIGHT;
+        unsigned sty = y - CEL_SCENE_SPACING;
 
         // qDebug() << "Subtile clicked: " << stx << "," << sty;
 
@@ -190,18 +194,18 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
         pen.setWidth(PALETTE_SELECTION_WIDTH);
         QRectF coordinates = QRectF(stx * MICRO_WIDTH, sty * MICRO_HEIGHT, (stx + 1) * MICRO_WIDTH, (sty + 1) * MICRO_HEIGHT);
         int a = PALETTE_SELECTION_WIDTH / 2;
-        coordinates.adjust(a, a, -a, -a);
+        coordinates.adjust(-a, -a, 0, 0);
         // - top line
-        this->celScene->addLine(coordinates.left(), coordinates.top(), coordinates.right(), coordinates.top(), pen);
+        this->celScene.addLine(coordinates.left(), coordinates.top(), coordinates.right(), coordinates.top(), pen);
         // - bottom line
-        this->celScene->addLine(coordinates.left(), coordinates.bottom(), coordinates.right(), coordinates.bottom(), pen);
+        this->celScene.addLine(coordinates.left(), coordinates.bottom(), coordinates.right(), coordinates.bottom(), pen);
         // - left side
-        this->celScene->addLine(coordinates.left(), coordinates.top(), coordinates.left() coordinates.bottom(), pen);
+        this->celScene.addLine(coordinates.left(), coordinates.top(), coordinates.left() coordinates.bottom(), pen);
         // - right side
-        this->celScene->addLine(coordinates.right(), coordinates.top(), coordinates.right(), coordinates.bottom(), pen);
+        this->celScene.addLine(coordinates.right(), coordinates.top(), coordinates.right(), coordinates.bottom(), pen);
         // clear after some time
         QTimer *timer = new QTimer();
-        QObject::connect(timer, &QTimer::timeout, [this, timer](){
+        QObject::connect(timer, &QTimer::timeout, [this, timer]() {
             this->displayFrame();
             timer->deleteLater();
         });
