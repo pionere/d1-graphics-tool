@@ -210,7 +210,7 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
             this->displayFrame();
             timer->deleteLater();
         });
-        timer->start(2000);
+        timer->start(800);
         return;
     } else if (x >= (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
         && x < (celFrameWidth + subtileWidth + tileWidth + CEL_SCENE_SPACING * 3)
