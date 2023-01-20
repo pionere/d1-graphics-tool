@@ -42,7 +42,7 @@ bool ProgressDialog::wasCanceled()
 
 void ProgressDialog::incValue()
 {
-    theDialog->setValue(theDialog->value() + 1);
+    theDialog->setValue_impl(theDialog->ui->progressBar->value() + 1);
 }
 
 void ProgressDialog::on_cancelPushButton_clicked()
