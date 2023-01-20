@@ -23,7 +23,7 @@
 - export to any kind of image format which are supported by Qt (JPEG, WEBP, etc...)
 - option to limit the range of the exported items
 - support TMI metadata
-- support upscaled tilesets
+- support upscaling of assets
 - added usage report for frames and subtiles of tilesets
 - added jobs to cleanup tilesets
 

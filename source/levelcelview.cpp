@@ -11,10 +11,12 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QProgressDialog>
 
 #include "d1image.h"
 #include "mainwindow.h"
 #include "ui_levelcelview.h"
+#include "upscaler.h"
 
 LevelCelView::LevelCelView(QWidget *parent)
     : QWidget(parent)
@@ -1422,6 +1424,24 @@ void LevelCelView::sortTileset()
     change |= this->sortSubtiles_impl();
     change |= this->sortFrames_impl();
     if (change) {
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::upscale(const UpscaleParam &params)
+{
+    int amount = this->min->getSubtileCount();
+
+    QProgressDialog progress("Upscaling...", "Cancel", 0, amount + 1, this);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.setMinimumDuration(0);
+    progress.setWindowTitle("Upscale");
+    progress.setLabelText("Upscaling");
+    progress.setValue(0);
+    progress.show();
+
+    if (Upscaler::upscaleTileset(this->gfx, this->min, params, progress)) {
         // update the view
         this->displayFrame();
     }

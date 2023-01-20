@@ -12,6 +12,7 @@
 #include <QWidget>
 
 #include "d1gfx.h"
+#include "upscaledialog.h"
 
 #define ZOOM_LIMIT 10
 #define CEL_SCENE_SPACING 8
@@ -68,6 +69,8 @@ public:
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
     void replaceCurrentFrame(const QString &imagefilePath);
     void removeCurrentFrame();
+
+    void upscale(const UpscaleParam &params);
 
     void displayFrame();
 

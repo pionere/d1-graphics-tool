@@ -25,8 +25,8 @@ public:
     D1Pal() = default;
     ~D1Pal() = default;
 
-    bool load(QString);
-    bool save(QString);
+    bool load(QString path);
+    bool save(QString path);
 
     bool reloadConfig();
 
@@ -34,8 +34,8 @@ public:
 
     QString getFilePath();
     QColor getUndefinedColor() const;
-    QColor getColor(quint8);
-    void setColor(quint8, QColor);
+    QColor getColor(quint8 index);
+    void setColor(quint8 index, QColor);
 
     void cycleColors(D1PAL_CYCLE_TYPE type);
 

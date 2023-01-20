@@ -25,6 +25,7 @@ public:
     quint8 getPaletteIndex() const;
 
     friend bool operator==(const D1GfxPixel &lhs, const D1GfxPixel &rhs);
+    friend bool operator!=(const D1GfxPixel &lhs, const D1GfxPixel &rhs);
 
 private:
     D1GfxPixel() = default;
@@ -41,6 +42,7 @@ class D1GfxFrame {
     friend class D1CelTileset;
     friend class D1CelTilesetFrame;
     friend class D1ImageFrame;
+    friend class Upscaler;
 
 public:
     D1GfxFrame() = default;
@@ -78,6 +80,7 @@ class D1Gfx : public QObject {
     friend class D1Cl2;
     friend class D1CelTileset;
     friend class D1Min;
+    friend class Upscaler;
 
 public:
     D1Gfx() = default;
@@ -94,16 +97,16 @@ public:
     void setType(D1CEL_TYPE type);
     bool isUpscaled() const;
     void setUpscaled(bool upscaled);
-    QString getFilePath();
+    QString getFilePath() const;
     bool isModified() const;
     void setModified();
     void setPalette(D1Pal *pal);
-    int getGroupCount();
-    QPair<quint16, quint16> getGroupFrameIndices(int groupIndex);
-    int getFrameCount();
-    D1GfxFrame *getFrame(int frameIndex);
-    int getFrameWidth(int frameIndex);
-    int getFrameHeight(int frameIndex);
+    int getGroupCount() const;
+    QPair<quint16, quint16> getGroupFrameIndices(int groupIndex) const;
+    int getFrameCount() const;
+    D1GfxFrame *getFrame(int frameIndex) const;
+    int getFrameWidth(int frameIndex) const;
+    int getFrameHeight(int frameIndex) const;
     bool setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType);
 
 protected:

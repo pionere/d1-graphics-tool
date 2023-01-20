@@ -14,6 +14,8 @@
 class D1Min : public QObject {
     Q_OBJECT
 
+    friend class Upscaler;
+
 public:
     D1Min() = default;
     ~D1Min() = default;

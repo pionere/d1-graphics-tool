@@ -33,6 +33,11 @@ bool operator==(const D1GfxPixel &lhs, const D1GfxPixel &rhs)
     return lhs.transparent == rhs.transparent && lhs.paletteIndex == rhs.paletteIndex;
 }
 
+bool operator!=(const D1GfxPixel &lhs, const D1GfxPixel &rhs)
+{
+    return lhs.transparent != rhs.transparent || lhs.paletteIndex != rhs.paletteIndex;
+}
+
 int D1GfxFrame::getWidth() const
 {
     return this->width;
@@ -224,7 +229,7 @@ void D1Gfx::setUpscaled(bool upscaled)
     this->modified = true;
 }
 
-QString D1Gfx::getFilePath()
+QString D1Gfx::getFilePath() const
 {
     return this->gfxFilePath;
 }
@@ -234,12 +239,12 @@ void D1Gfx::setPalette(D1Pal *pal)
     this->palette = pal;
 }
 
-int D1Gfx::getGroupCount()
+int D1Gfx::getGroupCount() const
 {
     return this->groupFrameIndices.count();
 }
 
-QPair<quint16, quint16> D1Gfx::getGroupFrameIndices(int groupIndex)
+QPair<quint16, quint16> D1Gfx::getGroupFrameIndices(int groupIndex) const
 {
     if (groupIndex < 0 || groupIndex >= this->groupFrameIndices.count())
         return qMakePair(0, 0);
@@ -247,20 +252,20 @@ QPair<quint16, quint16> D1Gfx::getGroupFrameIndices(int groupIndex)
     return this->groupFrameIndices[groupIndex];
 }
 
-int D1Gfx::getFrameCount()
+int D1Gfx::getFrameCount() const
 {
     return this->frames.count();
 }
 
-D1GfxFrame *D1Gfx::getFrame(int frameIndex)
+D1GfxFrame *D1Gfx::getFrame(int frameIndex) const
 {
     if (frameIndex < 0 || frameIndex >= this->frames.count())
         return nullptr;
 
-    return &this->frames[frameIndex];
+    return const_cast<D1GfxFrame *>(&this->frames[frameIndex]);
 }
 
-int D1Gfx::getFrameWidth(int frameIndex)
+int D1Gfx::getFrameWidth(int frameIndex) const
 {
     if (frameIndex < 0 || frameIndex >= this->frames.count())
         return 0;
@@ -268,7 +273,7 @@ int D1Gfx::getFrameWidth(int frameIndex)
     return this->frames[frameIndex].getWidth();
 }
 
-int D1Gfx::getFrameHeight(int frameIndex)
+int D1Gfx::getFrameHeight(int frameIndex) const
 {
     if (frameIndex < 0 || frameIndex >= this->frames.count())
         return 0;

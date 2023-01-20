@@ -10,9 +10,11 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QProgressDialog>
 
 #include "mainwindow.h"
 #include "ui_celview.h"
+#include "upscaler.h"
 
 CelScene::CelScene(QWidget *v)
     : QGraphicsScene()
@@ -298,6 +300,25 @@ void CelView::removeCurrentFrame()
     // update the view
     this->update();
     this->displayFrame();
+}
+
+void CelView::upscale(const UpscaleParam &params)
+{
+    int amount = this->gfx->getFrameCount();
+
+    QProgressDialog progress("Upscaling...", "Cancel", 0, amount + 1, this);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.setMinimumDuration(0);
+    progress.setWindowTitle("Upscale");
+    progress.setLabelText("Upscaling");
+    progress.setValue(0);
+    progress.show();
+
+    if (Upscaler::upscaleGfx(this->gfx, params, progress)) {
+        // update the view
+        this->update();
+        this->displayFrame();
+    }
 }
 
 void CelView::displayFrame()

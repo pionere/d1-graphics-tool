@@ -79,6 +79,10 @@ MainWindow::MainWindow(QWidget *parent)
     this->tileMenu.addAction("Delete", this, SLOT(on_actionDel_Tile_triggered()))->setToolTip("Delete the current tile");
     this->ui->menuEdit->addMenu(&this->tileMenu);
 
+    // add Upscale option to 'Edit'
+    this->ui->menuEdit->addSeparator();
+    this->ui->menuEdit->addAction("Upscale", this, SLOT(on_actionUpscale_triggered()))->setToolTip("Upscale the current graphics");
+
     this->on_actionClose_triggered();
     setAcceptDrops(true);
 }
@@ -824,6 +828,22 @@ void MainWindow::saveFile(const SaveAsParam &params)
     this->ui->statusBar->clearMessage();
 }
 
+void MainWindow::upscale(const UpscaleParam &params)
+{
+    this->ui->statusBar->showMessage("Upscaling...");
+    this->ui->statusBar->repaint();
+
+    if (this->celView != nullptr) {
+        this->celView->upscale(params);
+    }
+    if (this->levelCelView != nullptr) {
+        this->levelCelView->upscale(params);
+    }
+
+    // Clear loading message from status bar
+    this->ui->statusBar->clearMessage();
+}
+
 static QString imageNameFilter()
 {
     // get supported image file types
@@ -1077,6 +1097,12 @@ void MainWindow::on_actionDel_Tile_triggered()
 {
     this->levelCelView->removeCurrentTile();
     this->updateWindow();
+}
+
+void MainWindow::on_actionUpscale_triggered()
+{
+    this->upscaleDialog.initialize(this->gfx);
+    this->upscaleDialog.show();
 }
 
 void MainWindow::on_actionReportUse_Tileset_triggered()
