@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QList>
+#include <QProgressDialog>
 
 class D1Gfx;
 class D1GfxFrame;
@@ -10,8 +11,8 @@ class UpscaleParam;
 
 class Upscaler {
 public:
-    static void upscaleGfx(D1Gfx *gfx, const UpscaleParam &params);
-    static void upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params);
+    static bool upscaleGfx(D1Gfx *gfx, const UpscaleParam &params, QProgressDialog &progress);
+    static bool upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params, QProgressDialog &progress);
 
 private:
     static void upscaleFrame(D1GfxFrame *frame, D1Pal *palette, const UpscaleParam &params);

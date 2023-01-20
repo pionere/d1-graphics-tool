@@ -303,11 +303,21 @@ void CelView::removeCurrentFrame()
 
 void CelView::upscale(const UpscaleParam &params)
 {
-    Upscaler::upscaleGfx(this->gfx, params);
+    int amount = this->gfx->getFrameCount();
 
-    // update the view
-    this->update();
-    this->displayFrame();
+    QProgressDialog progress("Upscaling...", "Cancel", 0, amount, this);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.setMinimumDuration(0);
+    progress.setWindowTitle("Upscale");
+    progress.setLabelText("Upscaling");
+    progress.setValue(0);
+    progress.show();
+
+    if (Upscaler::upscaleGfx(this->gfx, params, progress)) {
+        // update the view
+        this->update();
+        this->displayFrame();
+    }
 }
 
 void CelView::displayFrame()

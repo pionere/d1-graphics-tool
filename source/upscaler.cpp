@@ -2,7 +2,6 @@
 
 #include <QColor>
 #include <QMessageBox>
-#include <QProgressDialog>
 
 #include "d1gfx.h"
 #include "d1min.h"
@@ -3102,34 +3101,29 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
     frame->height *= multiplier;
 }
 
-void Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
+bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params, QProgressDialog &progress)
 {
     int amount = gfx->getFrameCount();
-
-    QProgressDialog progress("Upscaling...", "Cancel", 0, amount);
-    progress.setWindowModality(Qt::WindowModal);
-    progress.setMinimumDuration(0);
-    progress.setWindowTitle("Upscale");
-    progress.setLabelText("Upscaling");
-    progress.setValue(0);
-    progress.show();
 
     QList<D1GfxFrame> newFrames;
 
     for (int i = 0; i < amount; i++) {
         if (progress.wasCanceled()) {
-            return;
+            return false;
         }
-        progress.setValue(i);
+        progress.setValue(progress.value() + 1);
 
         newFrames.append(*gfx->getFrame(i));
         D1GfxFrame &newFrame = newFrames.last();
         upscaleFrame(&newFrame, gfx->palette, params);
     }
-
+    if (progress.wasCanceled()) {
+        return false;
+    }
     gfx->frames.swap(newFrames);
     gfx->upscaled = true;
     gfx->modified = true;
+    return true;
 }
 
 D1GfxFrame *Upscaler::createSubtileFrame(const D1Gfx *gfx, const D1Min *min, int subtileIndex)
@@ -3211,31 +3205,26 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<qui
     newFrameReferences.append(subtileFramesRefs);
 }
 
-void Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params)
+bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params, QProgressDialog &progress)
 {
     int amount = min->getSubtileCount();
-
-    QProgressDialog progress("Upscaling...", "Cancel", 0, amount);
-    progress.setWindowModality(Qt::WindowModal);
-    progress.setMinimumDuration(0);
-    progress.setWindowTitle("Upscale");
-    progress.setLabelText("Upscaling");
-    progress.setValue(0);
-    progress.show();
 
     QList<D1GfxFrame> newFrames;
     QList<QList<quint16>> newFrameReferences;
 
     for (int i = 0; i < amount; i++) {
         if (progress.wasCanceled()) {
-            return;
+            return false;
         }
-        progress.setValue(i);
+        progress.setValue(progress.value() + 1);
 
         D1GfxFrame *subtileFrame = Upscaler::createSubtileFrame(gfx, min, i);
         Upscaler::upscaleFrame(subtileFrame, gfx->palette, params);
         Upscaler::storeSubtileFrame(subtileFrame, newFrameReferences, newFrames);
         delete subtileFrame;
+    }
+    if (progress.wasCanceled()) {
+        return false;
     }
     // update gfx
     gfx->groupFrameIndices.clear();
@@ -3249,4 +3238,5 @@ void Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     min->subtileHeight *= params.multiplier;
     min->frameReferences.swap(newFrameReferences);
     min->modified = true;
+    return true;
 }
