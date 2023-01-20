@@ -3,10 +3,8 @@
 #include <QWidget>
 
 class ProgressDialog {
-private:
-
 public:
-    static void intialize(QWidget *window);
+    static void initialize(QWidget *window);
 
     static void show(const QString &label, int maxValue);
     static void hide();
