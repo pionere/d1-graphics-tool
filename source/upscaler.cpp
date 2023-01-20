@@ -2,6 +2,7 @@
 
 #include <QColor>
 #include <QMessageBox>
+#include <QProgressDialog>
 
 #include "d1gfx.h"
 #include "d1min.h"
