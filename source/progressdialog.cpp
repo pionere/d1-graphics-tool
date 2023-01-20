@@ -12,7 +12,7 @@ ProgressDialog::ProgressDialog(QWidget *parent)
     theDialog = this;
 }
 
-void ProgressDialog::show(const QString &label, int maxValue)
+void ProgressDialog::start(const QString &label, int maxValue)
 {
     theDialog->setLabelText(label);
     theDialog->setMaximum(maxValue);
@@ -20,7 +20,7 @@ void ProgressDialog::show(const QString &label, int maxValue)
     theDialog->show();
 }
 
-void ProgressDialog::hide()
+void ProgressDialog::done()
 {
     theDialog->hide();
 }
