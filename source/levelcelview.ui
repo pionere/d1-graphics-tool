@@ -223,6 +223,11 @@
           </item>
           <item>
            <property name="text">
+            <string>Hell</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
             <string>Nest</string>
            </property>
           </item>

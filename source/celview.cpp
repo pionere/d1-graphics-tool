@@ -10,6 +10,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QProgressDialog>
 
 #include "mainwindow.h"
 #include "ui_celview.h"
@@ -305,7 +306,7 @@ void CelView::upscale(const UpscaleParam &params)
 {
     int amount = this->gfx->getFrameCount();
 
-    QProgressDialog progress("Upscaling...", "Cancel", 0, amount, this);
+    QProgressDialog progress("Upscaling...", "Cancel", 0, amount + 1, this);
     progress.setWindowModality(Qt::WindowModal);
     progress.setMinimumDuration(0);
     progress.setWindowTitle("Upscale");
@@ -395,22 +396,15 @@ void CelView::playGroup()
         this->currentFrameIndex = groupFrameIndices.first;
 
     MainWindow *mw = (MainWindow *)this->window();
-    switch (this->ui->playComboBox->currentIndex()) {
-    case 0: // normal
-        this->displayFrame();
-        break;
-    case 1:
-        mw->nextPaletteCycle(D1PAL_CYCLE_TYPE::CAVES);
-        break;
-    case 2:
-        mw->nextPaletteCycle(D1PAL_CYCLE_TYPE::NEST);
-        break;
-    case 3:
-        mw->nextPaletteCycle(D1PAL_CYCLE_TYPE::CRYPT);
-        break;
-    }
 
-    // this->displayFrame();
+    int cycleType = this->ui->playComboBox->currentIndex();
+    if (cycleType == 0) {
+        // normal playback
+        this->displayFrame();
+    } else {
+        mw->nextPaletteCycle((D1PAL_CYCLE_TYPE)(cycleType - 1));
+        // this->displayFrame();
+    }
 }
 
 void CelView::ShowContextMenu(const QPoint &pos)
