@@ -8,6 +8,7 @@ ProgressDialog::ProgressDialog(QWidget *parent)
     this->setWindowFlags((/*this->windowFlags() |*/ Qt::Tool | Qt::WindowStaysOnTopHint | Qt::WindowCloseButtonHint) & ~(Qt::WindowSystemMenuHint | Qt::WindowTitleHint | Qt::WindowContextHelpButtonHint | Qt::MacWindowToolBarButtonHint | Qt::WindowFullscreenButtonHint | Qt::WindowMinMaxButtonsHint));
     this->setMinimumDuration(0);
     this->setMinimum(0);
+    this->hide();
 
     theDialog = this;
 }
