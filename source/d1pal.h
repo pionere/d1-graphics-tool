@@ -12,8 +12,8 @@
 enum class D1PAL_CYCLE_TYPE {
     CAVES,
     HELL,
-    NEST,
     CRYPT
+    NEST,
 };
 
 class D1Pal : public QObject {
