@@ -4,6 +4,7 @@
 #include <set>
 
 #include <QAction>
+#include <QColor>
 #include <QDebug>
 #include <QFileInfo>
 #include <QGraphicsPixmapItem>
@@ -11,8 +12,12 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QPen>
 #include <QProgressDialog>
+#include <QRectF>
+#include <QTimer>
 
+#include "config.h"
 #include "d1image.h"
 #include "mainwindow.h"
 #include "ui_levelcelview.h"
@@ -173,7 +178,10 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
 
         // qDebug() << "Subtile clicked: " << stx << "," << sty;
 
-        int stFrame = (sty / MICRO_HEIGHT) * subtileWidth + (stx / MICRO_WIDTH);
+        stx /= MICRO_WIDTH;
+        sty /= MICRO_HEIGHT;
+
+        int stFrame = sty * subtileWidth / MICRO_WIDTH + stx;
         QList<quint16> &minFrames = this->min->getFrameReferences(this->currentSubtileIndex);
         quint16 frameRef = minFrames.count() > stFrame ? minFrames.at(stFrame) : 0;
 
@@ -181,6 +189,28 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
             this->currentFrameIndex = frameRef - 1;
             this->displayFrame();
         }
+        // highlight selection
+        QColor borderColor = QColor(Config::getPaletteSelectionBorderColor());
+        QPen pen(borderColor);
+        pen.setWidth(PALETTE_SELECTION_WIDTH);
+        QRectF coordinates = QRectF(CEL_SCENE_SPACING + celFrameWidth + CEL_SCENE_SPACING + stx * MICRO_WIDTH, CEL_SCENE_SPACING + sty * MICRO_HEIGHT, MICRO_WIDTH, MICRO_HEIGHT);
+        int a = PALETTE_SELECTION_WIDTH / 2;
+        coordinates.adjust(-a, -a, 0, 0);
+        // - top line
+        this->celScene.addLine(coordinates.left(), coordinates.top(), coordinates.right(), coordinates.top(), pen);
+        // - bottom line
+        this->celScene.addLine(coordinates.left(), coordinates.bottom(), coordinates.right(), coordinates.bottom(), pen);
+        // - left side
+        this->celScene.addLine(coordinates.left(), coordinates.top(), coordinates.left(), coordinates.bottom(), pen);
+        // - right side
+        this->celScene.addLine(coordinates.right(), coordinates.top(), coordinates.right(), coordinates.bottom(), pen);
+        // clear after some time
+        QTimer *timer = new QTimer();
+        QObject::connect(timer, &QTimer::timeout, [this, timer]() {
+            this->displayFrame();
+            timer->deleteLater();
+        });
+        timer->start(500);
         return;
     } else if (x >= (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
         && x < (celFrameWidth + subtileWidth + tileWidth + CEL_SCENE_SPACING * 3)
