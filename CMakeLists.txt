@@ -77,6 +77,9 @@ set(PROJECT_SOURCES
         source/palettewidget.cpp
         source/palettewidget.h
         source/palettewidget.ui
+        source/progressdialog.cpp
+        source/progressdialog.h
+        source/progressdialog.ui
         source/saveasdialog.cpp
         source/saveasdialog.h
         source/saveasdialog.ui

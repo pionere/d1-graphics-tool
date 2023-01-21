@@ -7,6 +7,7 @@
 #include "d1min.h"
 #include "d1pal.h"
 #include "leveltabframewidget.h"
+#include "progressdialog.h"
 #include "upscaledialog.h"
 
 template <class T, int N>
@@ -3101,23 +3102,23 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
     frame->height *= multiplier;
 }
 
-bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params, QProgressDialog &progress)
+bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
 {
     int amount = gfx->getFrameCount();
 
     QList<D1GfxFrame> newFrames;
 
     for (int i = 0; i < amount; i++) {
-        if (progress.wasCanceled()) {
+        if (ProgressDialog::wasCanceled()) {
             return false;
         }
-        progress.setValue(progress.value() + 1);
+        ProgressDialog::incValue();
 
         newFrames.append(*gfx->getFrame(i));
         D1GfxFrame &newFrame = newFrames.last();
         upscaleFrame(&newFrame, gfx->palette, params);
     }
-    if (progress.wasCanceled()) {
+    if (ProgressDialog::wasCanceled()) {
         return false;
     }
     gfx->frames.swap(newFrames);
@@ -3205,7 +3206,7 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<qui
     newFrameReferences.append(subtileFramesRefs);
 }
 
-bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params, QProgressDialog &progress)
+bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params)
 {
     int amount = min->getSubtileCount();
 
@@ -3213,17 +3214,17 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     QList<QList<quint16>> newFrameReferences;
 
     for (int i = 0; i < amount; i++) {
-        if (progress.wasCanceled()) {
+        if (ProgressDialog::wasCanceled()) {
             return false;
         }
-        progress.setValue(progress.value() + 1);
+        ProgressDialog::incValue();
 
         D1GfxFrame *subtileFrame = Upscaler::createSubtileFrame(gfx, min, i);
         Upscaler::upscaleFrame(subtileFrame, gfx->palette, params);
         Upscaler::storeSubtileFrame(subtileFrame, newFrameReferences, newFrames);
         delete subtileFrame;
     }
-    if (progress.wasCanceled()) {
+    if (ProgressDialog::wasCanceled()) {
         return false;
     }
     // update gfx

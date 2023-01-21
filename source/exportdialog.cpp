@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <algorithm>
 
+#include "progressdialog.h"
 #include "ui_exportdialog.h"
 
 ExportDialog::ExportDialog(QWidget *parent)
@@ -81,11 +82,9 @@ void ExportDialog::on_outputFolderBrowseButton_clicked()
     ui->outputFolderEdit->setText(selectedDirectory);
 }
 
-bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
+bool ExportDialog::exportLevelTiles25D()
 {
     QString fileName = QFileInfo(this->til->getFilePath()).fileName();
-
-    progress.setLabelText("Exporting " + fileName + " 2.5d level tiles...");
 
     QString outputFilePathBase = ui->outputFolderEdit->text() + "/" + fileName.replace(".", "_25d_");
 
@@ -104,6 +103,7 @@ bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
     if (amount == 0) {
         return true;
     }
+    ProgressDialog::start("Exporting " + fileName + " 2.5d level tiles...", amount + 1);
     // single tile
     if (amount == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
@@ -116,11 +116,10 @@ bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
     if (amount == 1 || this->ui->filesCountComboBox->currentIndex() != 0) {
         // one file for each tile (indexed)
         for (int i = tileFrom; i <= tileTo; i++) {
-            if (progress.wasCanceled()) {
+            if (ProgressDialog::wasCanceled()) {
                 return false;
             }
-
-            progress.setValue(100 * (i - tileFrom) / amount);
+            ProgressDialog::incValue();
 
             QString outputFilePath = outputFilePathBase
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
@@ -162,10 +161,10 @@ bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
     if (placement == 0) { // grouped
         unsigned dx = 0, dy = 0;
         for (int i = tileFrom; i <= tileTo; i++) {
-            if (progress.wasCanceled()) {
+            if (ProgressDialog::wasCanceled()) {
                 return false;
             }
-            progress.setValue(100 * (i - tileFrom) / amount);
+            ProgressDialog::incValue();
 
             const QImage image = this->til->getTileImage(i);
 
@@ -180,10 +179,10 @@ bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
     } else {
         int cursor = 0;
         for (int i = tileFrom; i <= tileTo; i++) {
-            if (progress.wasCanceled()) {
+            if (ProgressDialog::wasCanceled()) {
                 return false;
             }
-            progress.setValue(100 * (i - tileFrom) / amount);
+            ProgressDialog::incValue();
 
             const QImage image = this->til->getTileImage(i);
             if (placement == 2) { // tiles on one column
@@ -202,11 +201,9 @@ bool ExportDialog::exportLevelTiles25D(QProgressDialog &progress)
     return true;
 }
 
-bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
+bool ExportDialog::exportLevelTiles()
 {
     QString fileName = QFileInfo(this->til->getFilePath()).fileName();
-
-    progress.setLabelText("Exporting " + fileName + " flat level tiles...");
 
     QString outputFilePathBase = ui->outputFolderEdit->text() + "/" + fileName.replace(".", "_flat_");
 
@@ -225,6 +222,7 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
     if (amount <= 0) {
         return true;
     }
+    ProgressDialog::start("Exporting " + fileName + " flat level tiles...", amount + 1);
     // single tile
     if (amount == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
@@ -236,11 +234,10 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
     if (amount == 1 || this->ui->filesCountComboBox->currentIndex() != 0) {
         // one file for each tile (indexed)
         for (int i = tileFrom; i <= tileTo; i++) {
-            if (progress.wasCanceled()) {
+            if (ProgressDialog::wasCanceled()) {
                 return false;
             }
-
-            progress.setValue(100 * (i - tileFrom) / amount);
+            ProgressDialog::incValue();
 
             QString outputFilePath = outputFilePathBase
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
@@ -282,10 +279,10 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
     if (placement == 0) { // grouped
         unsigned dx = 0, dy = 0;
         for (int i = tileFrom; i <= tileTo; i++) {
-            if (progress.wasCanceled()) {
+            if (ProgressDialog::wasCanceled()) {
                 return false;
             }
-            progress.setValue(100 * (i - tileFrom) / amount);
+            ProgressDialog::incValue();
 
             const QImage image = this->til->getFlatTileImage(i);
 
@@ -300,10 +297,10 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
     } else {
         int cursor = 0;
         for (int i = tileFrom; i <= tileTo; i++) {
-            if (progress.wasCanceled()) {
+            if (ProgressDialog::wasCanceled()) {
                 return false;
             }
-            progress.setValue(100 * (i - tileFrom) / amount);
+            ProgressDialog::incValue();
 
             const QImage image = this->til->getFlatTileImage(i);
             if (placement == 2) { // tiles on one column
@@ -322,11 +319,9 @@ bool ExportDialog::exportLevelTiles(QProgressDialog &progress)
     return true;
 }
 
-bool ExportDialog::exportLevelSubtiles(QProgressDialog &progress)
+bool ExportDialog::exportLevelSubtiles()
 {
     QString fileName = QFileInfo(this->min->getFilePath()).fileName();
-
-    progress.setLabelText("Exporting " + fileName + " level subtiles...");
 
     QString outputFilePathBase = ui->outputFolderEdit->text() + "/" + fileName.replace(".", "_");
 
@@ -345,6 +340,7 @@ bool ExportDialog::exportLevelSubtiles(QProgressDialog &progress)
     if (amount <= 0) {
         return true;
     }
+    ProgressDialog::start("Exporting " + fileName + " level subtiles...", amount + 1);
     // single subtile
     if (amount == 1 && subtileFrom == 0) {
         // one file for the only subtile (not indexed)
@@ -356,11 +352,10 @@ bool ExportDialog::exportLevelSubtiles(QProgressDialog &progress)
     if (amount == 1 || this->ui->filesCountComboBox->currentIndex() != 0) {
         // one file for each subtile (indexed)
         for (int i = subtileFrom; i <= subtileTo; i++) {
-            if (progress.wasCanceled()) {
+            if (ProgressDialog::wasCanceled()) {
                 return false;
             }
-
-            progress.setValue(100 * (i - subtileFrom) / amount);
+            ProgressDialog::incValue();
 
             QString outputFilePath = outputFilePathBase + "_subtile"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
@@ -404,10 +399,10 @@ bool ExportDialog::exportLevelSubtiles(QProgressDialog &progress)
     if (placement == 0) { // grouped
         unsigned dx = 0, dy = 0;
         for (int i = subtileFrom; i <= subtileTo; i++) {
-            if (progress.wasCanceled()) {
+            if (ProgressDialog::wasCanceled()) {
                 return false;
             }
-            progress.setValue(100 * (i - subtileFrom) / amount);
+            ProgressDialog::incValue();
 
             const QImage image = this->min->getSubtileImage(i);
 
@@ -422,10 +417,10 @@ bool ExportDialog::exportLevelSubtiles(QProgressDialog &progress)
     } else {
         int cursor = 0;
         for (int i = subtileFrom; i <= subtileTo; i++) {
-            if (progress.wasCanceled()) {
+            if (ProgressDialog::wasCanceled()) {
                 return false;
             }
-            progress.setValue(100 * (i - subtileFrom) / amount);
+            ProgressDialog::incValue();
 
             const QImage image = this->min->getSubtileImage(i);
             if (placement == 2) { // subtiles on one column
@@ -444,11 +439,9 @@ bool ExportDialog::exportLevelSubtiles(QProgressDialog &progress)
     return true;
 }
 
-bool ExportDialog::exportFrames(QProgressDialog &progress)
+bool ExportDialog::exportFrames()
 {
     QString fileName = QFileInfo(this->gfx->getFilePath()).fileName();
-
-    progress.setLabelText("Exporting " + fileName + " frames...");
 
     QString outputFilePathBase = ui->outputFolderEdit->text() + "/" + fileName.replace(".", "_");
 
@@ -467,6 +460,7 @@ bool ExportDialog::exportFrames(QProgressDialog &progress)
     if (amount <= 0) {
         return true;
     }
+    ProgressDialog::start("Exporting " + fileName + " frames...", amount + 1);
     // single frame
     if (amount == 1 && frameFrom == 0) {
         // one file for the only frame (not indexed)
@@ -478,11 +472,10 @@ bool ExportDialog::exportFrames(QProgressDialog &progress)
     if (amount == 1 || this->ui->filesCountComboBox->currentIndex() != 0) {
         // one file for each frame (indexed)
         for (int i = frameFrom; i <= frameTo; i++) {
-            if (progress.wasCanceled()) {
+            if (ProgressDialog::wasCanceled()) {
                 return false;
             }
-
-            progress.setValue(100 * (i - frameFrom) / amount);
+            ProgressDialog::incValue();
 
             QString outputFilePath = outputFilePathBase + "_frame"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
@@ -558,10 +551,10 @@ bool ExportDialog::exportFrames(QProgressDialog &progress)
             int cursorX = 0;
             int groupImageHeight = 0;
             for (int i = frameFrom; i <= frameTo; i++) {
-                if (progress.wasCanceled()) {
+                if (ProgressDialog::wasCanceled()) {
                     return false;
                 }
-                progress.setValue(100 * (i - frameFrom) / amount);
+                ProgressDialog::incValue();
 
                 if (((i - frameFrom) % EXPORT_LVLFRAMES_PER_LINE) == 0) {
                     cursorY += groupImageHeight;
@@ -585,10 +578,10 @@ bool ExportDialog::exportFrames(QProgressDialog &progress)
                     if (j < (unsigned)frameFrom || j > (unsigned)frameTo) {
                         continue;
                     }
-                    if (progress.wasCanceled()) {
+                    if (ProgressDialog::wasCanceled()) {
                         return false;
                     }
-                    progress.setValue(100 * (j - frameFrom) / amount);
+                    ProgressDialog::incValue();
 
                     const QImage image = this->gfx->getFrameImage(j);
                     painter.drawImage(cursorX, cursorY, image);
@@ -601,10 +594,10 @@ bool ExportDialog::exportFrames(QProgressDialog &progress)
     } else {
         int cursor = 0;
         for (int i = frameFrom; i <= frameTo; i++) {
-            if (progress.wasCanceled()) {
+            if (ProgressDialog::wasCanceled()) {
                 return false;
             }
-            progress.setValue(100 * (i - frameFrom) / amount);
+            ProgressDialog::incValue();
 
             const QImage image = this->gfx->getFrameImage(i);
             if (placement == 2) { // frames on one column
@@ -637,33 +630,26 @@ void ExportDialog::on_exportButton_clicked()
 
     bool result;
     try {
-        // Displaying the progress dialog box
-        QProgressDialog progress("Exporting...", "Cancel", 0, 100, this);
-        progress.setWindowModality(Qt::WindowModal);
-        progress.setMinimumDuration(0);
-        progress.setWindowTitle("Export");
-        progress.setLabelText("Exporting");
-        progress.setValue(0);
-        progress.show();
-
         switch (this->ui->contentTypeComboBox->currentIndex()) {
         case 0:
-            result = this->exportFrames(progress);
+            result = this->exportFrames();
             break;
         case 1:
-            result = this->exportLevelSubtiles(progress);
+            result = this->exportLevelSubtiles();
             break;
         case 2:
-            result = this->exportLevelTiles(progress);
+            result = this->exportLevelTiles();
             break;
         default: // case 3:
-            result = this->exportLevelTiles25D(progress);
+            result = this->exportLevelTiles25D();
             break;
         }
     } catch (...) {
         QMessageBox::critical(this, "Error", "Export Failed.");
+        ProgressDialog::done();
         return;
     }
+    ProgressDialog::done();
     if (result) {
         QMessageBox::information(this, "Information", "Export successful.");
         this->close();
