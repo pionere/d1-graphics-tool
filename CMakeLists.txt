@@ -33,33 +33,33 @@ MACRO (QT4_WRAP_TS lupdate_outputs lrelease_outputs prefix)
 ENDMACRO (QT4_WRAP_TS)
 
 # Create our translation files.
-QT4_WRAP_TS(DGT_TS_FILES lrelease_outputs
-  D1GraphicsTool
+#QT4_WRAP_TS(DGT_TS_FILES lrelease_outputs
+#  D1GraphicsTool
 #  en_AU en_US en_GB fr_FR de_DE ja_JM zh_CN
-  en
-)
-
-#SET(DGT_TS_FILES
-#        translations/D1GraphicsTool_en.ts
+#  en
 #)
-message(WARNING "This is fine 0")
-qt5_add_translation(DGT_QM_FILES ${DGT_TS_FILES})
+
+SET(DGT_TS_FILES
+        translations/D1GraphicsTool_en.ts
+)
+#qt5_add_translation(DGT_QM_FILES ${DGT_TS_FILES})
 #add_custom_target(translations DEPENDS ${DGT_QM_FILES})
-message(WARNING "This is fine 1")
-if(NOT QT_TRANSLATIONS_DIR)
-  # If this directory is missing, we are in a Qt5 environment.
-  # Extract the qmake executable location
-  get_target_property(QT5_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
-  # Ask Qt5 where to put the translations
-  execute_process( COMMAND ${QT5_QMAKE_EXECUTABLE} -query QT_INSTALL_TRANSLATIONS
-  OUTPUT_VARIABLE qt_translations_dir OUTPUT_STRIP_TRAILING_WHITESPACE )
-  # make sure we have / and not \ as qmake gives on windows
-  file(TO_CMAKE_PATH "${qt_translations_dir}" qt_translations_dir)
-  set(QT_TRANSLATIONS_DIR ${qt_translations_dir} CACHE PATH "The location of the Qt translations" FORCE)
-endif()
-message(WARNING "This is fine 2")
-install(FILES ${DGT_QM_FILES} DESTINATION ${QT_TRANSLATIONS_DIR})
-message(WARNING "This is fine 3")
+
+#if(NOT QT_TRANSLATIONS_DIR)
+#  # If this directory is missing, we are in a Qt5 environment.
+#  # Extract the qmake executable location
+#  get_target_property(QT5_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
+#  # Ask Qt5 where to put the translations
+#  execute_process( COMMAND ${QT5_QMAKE_EXECUTABLE} -query QT_INSTALL_TRANSLATIONS
+#  OUTPUT_VARIABLE qt_translations_dir OUTPUT_STRIP_TRAILING_WHITESPACE )
+#  # make sure we have / and not \ as qmake gives on windows
+#  file(TO_CMAKE_PATH "${qt_translations_dir}" qt_translations_dir)
+#  set(QT_TRANSLATIONS_DIR ${qt_translations_dir} CACHE PATH "The location of the Qt translations" FORCE)
+#endif()
+
+#install(FILES ${DGT_QM_FILES} DESTINATION ${QT_TRANSLATIONS_DIR})
+qt5_create_translation(DGT_QM_FILES ${CMAKE_SOURCE_DIR} ${DGT_TS_FILES})
+
 include_directories(source)
 
 set(PROJECT_SOURCES
@@ -140,7 +140,7 @@ set(PROJECT_SOURCES
         source/upscaler.cpp
         source/upscaler.h
 )
-message(WARNING "This is fine 4")
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(D1GraphicsTool
         resources/D1GraphicsTool.rc
@@ -157,7 +157,7 @@ else()
         ${PROJECT_SOURCES}
     )
 endif()
-message(WARNING "This is fine 5")
+
 target_link_libraries(D1GraphicsTool PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 set_target_properties(D1GraphicsTool PROPERTIES
