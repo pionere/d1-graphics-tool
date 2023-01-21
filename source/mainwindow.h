@@ -24,8 +24,8 @@
 #include "settingsdialog.h"
 #include "upscaledialog.h"
 
-#define D1_GRAPHICS_TOOL_TITLE "Diablo 1 Graphics Tool"
-#define D1_GRAPHICS_TOOL_VERSION "0.5.0"
+#define D1_GRAPHICS_TOOL_TITLE QLatin1String("Diablo 1 Graphics Tool")
+#define D1_GRAPHICS_TOOL_VERSION QLatin1String("0.5.0")
 
 enum class FILE_DIALOG_MODE {
     OPEN,         // open existing

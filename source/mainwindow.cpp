@@ -1531,30 +1531,27 @@ void MainWindow::on_actionClose_Translation_Base_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QString architecture;
-    QString operatingSystem;
-
 #ifdef Q_PROCESSOR_X86_64
-    architecture = "64";
+    QLatin1String architecture = QLatin1String("64");
 #endif
 
 #ifdef Q_PROCESSOR_X86_32
-    architecture = "32";
+    QLatin1String architecture = QLatin1String("32");
 #endif
 
 #ifdef Q_OS_WIN
-    operatingSystem = "Windows";
+    QLatin1String operatingSystem = QLatin1String("Windows");
 #endif
 
 #ifdef Q_OS_MAC
-    operatingSystem = "macOS";
+    QLatin1String operatingSystem = QLatin1String("macOS");
 #endif
 
 #ifdef Q_OS_LINUX
-    operatingSystem = "Linux";
+    QLatin1String operatingSystem = QLatin1String("Linux");
 #endif
 
-    QMessageBox::about(this, "About", QString("%1 %2 (%3) (%4-bit)").arg(QCoreApplication::applicationName()).arg(QCoreApplication::applicationVersion()).arg(operatingSystem).arg(architecture));
+    QMessageBox::about(this, "About", QString("%1 %2 (%3) (%4-bit)").arg(D1_GRAPHICS_TOOL_TITLE).arg(D1_GRAPHICS_TOOL_VERSION).arg(operatingSystem).arg(architecture));
 }
 
 void MainWindow::on_actionAbout_Qt_triggered()
