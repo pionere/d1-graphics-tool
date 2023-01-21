@@ -10,7 +10,7 @@ ProgressDialog::ProgressDialog(QWidget *parent)
 {
     this->ui->setupUi(this);
 
-    this->setWindowFlags((/*this->windowFlags() |*/ Qt::Tool | Qt::WindowStaysOnTopHint | Qt::WindowCloseButtonHint) & ~(Qt::WindowSystemMenuHint | Qt::WindowTitleHint | Qt::WindowContextHelpButtonHint | Qt::MacWindowToolBarButtonHint | Qt::WindowFullscreenButtonHint | Qt::WindowMinMaxButtonsHint));
+    // this->setWindowFlags((/*this->windowFlags() |*/ Qt::Tool | Qt::WindowStaysOnTopHint | Qt::WindowCloseButtonHint) & ~(Qt::WindowSystemMenuHint | Qt::WindowTitleHint | Qt::WindowContextHelpButtonHint | Qt::MacWindowToolBarButtonHint | Qt::WindowFullscreenButtonHint | Qt::WindowMinMaxButtonsHint));
 
     theDialog = this;
 }
@@ -37,12 +37,13 @@ void ProgressDialog::done()
 
 bool ProgressDialog::wasCanceled()
 {
-    return theDialog->wasCanceled_impl();
+    return theDialog->cancelled;
 }
 
 void ProgressDialog::incValue()
 {
     theDialog->setValue_impl(theDialog->ui->progressBar->value() + 1);
+    this->ui->progressBar->repaint();
 }
 
 void ProgressDialog::on_cancelPushButton_clicked()
@@ -50,15 +51,8 @@ void ProgressDialog::on_cancelPushButton_clicked()
     this->cancelled = true;
 }
 
-bool ProgressDialog::wasCanceled_impl()
-{
-    return this->cancelled;
-}
-
 void ProgressDialog::setValue_impl(int value)
 {
     this->ui->progressBar->setValue(value);
-    this->ui->valueLabel->setText(QString("%1%%").arg(value * 100 / this->ui->progressBar->maximum()));
-    this->ui->valueLabel->repaint();
-    this->ui->progressBar->repaint();
+    this->ui->progressBar->setFormat(QString("%1%%").arg(value * 100 / this->ui->progressBar->maximum()));
 }

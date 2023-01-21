@@ -23,7 +23,6 @@ private slots:
     void on_cancelPushButton_clicked();
 
 private:
-    bool wasCanceled_impl();
     void setValue_impl(int value);
 
 private:

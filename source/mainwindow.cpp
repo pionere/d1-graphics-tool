@@ -1554,7 +1554,7 @@ void MainWindow::on_actionAbout_triggered()
     operatingSystem = "Linux";
 #endif
 
-    QMessageBox::about(this, "About", QString("%1 %2 (%3) (%4-bit)").arg(D1_GRAPHICS_TOOL_TITLE).arg(D1_GRAPHICS_TOOL_VERSION).arg(operatingSystem).arg(architecture));
+    QMessageBox::about(this, "About", QString("%1 %2 (%3) (%4-bit)").arg(QCoreApplication::applicationName()).arg(QCoreApplication::applicationVersion()).arg(operatingSystem).arg(architecture));
 }
 
 void MainWindow::on_actionAbout_Qt_triggered()

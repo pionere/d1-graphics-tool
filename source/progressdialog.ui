@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>200</width>
-    <height>120</height>
+    <width>300</width>
+    <height>220</height>
    </rect>
   </property>
   <property name="modal">
@@ -15,34 +15,14 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="progressLabel"/>
+    <widget class="QLabel" name="progressLabel">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item>
-    <widget class="QWidget" name="progressWidget" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout_1">
-      <property name="spacing">
-       <number>8</number>
-      </property>
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
-       <number>0</number>
-      </property>
-      <item>
-       <widget class="QProgressBar" name="progressBar"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="valueLabel"/>
-      </item>
-     </layout>
-    </widget>
+    <widget class="QProgressBar" name="progressBar"/>
    </item>
    <item>
     <widget class="QWidget" name="progressButtonsWidget" native="true">

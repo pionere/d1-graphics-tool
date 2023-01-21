@@ -111,6 +111,8 @@ endif()
 target_link_libraries(D1GraphicsTool PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 set_target_properties(D1GraphicsTool PROPERTIES
+    NAME "Diablo 1 Graphics Tool"
+    VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_GUI_IDENTIFIER d1-graphics-tool.savagesteel.net
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
