@@ -1552,7 +1552,7 @@ void MainWindow::on_actionClose_Translation_Base_triggered()
 #elif defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD)
 #define OS_TYPE "linux"
 #else
-#define OS_TYPE tr("unknown")
+#define OS_TYPE QApplication::tr("unknown")
 #endif
 
 void MainWindow::on_actionAbout_triggered()
