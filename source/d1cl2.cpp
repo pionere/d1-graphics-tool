@@ -4,6 +4,7 @@
 #include <QBuffer>
 #include <QByteArray>
 #include <QDataStream>
+#include <QDebug>
 #include <QList>
 #include <QMessageBox>
 
