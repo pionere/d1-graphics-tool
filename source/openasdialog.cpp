@@ -52,7 +52,7 @@ void OpenAsDialog::update()
 void OpenAsDialog::on_inputFileBrowseButton_clicked()
 {
     MainWindow *qw = (MainWindow *)this->parentWidget();
-    QString openFilePath = qw->fileDialog(FILE_DIALOG_MODE::OPEN, "Open Graphics", "CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)"); // "CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;TIL Files (*.til *.TIL)");
+    QString openFilePath = qw->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)")); // "CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;TIL Files (*.til *.TIL)");
 
     if (openFilePath.isEmpty())
         return;
@@ -120,7 +120,7 @@ void OpenAsDialog::on_isTilesetAutoRadioButton_toggled(bool checked)
 void OpenAsDialog::on_tilFileBrowseButton_clicked()
 {
     MainWindow *qw = (MainWindow *)this->parentWidget();
-    QString openFilePath = qw->fileDialog(FILE_DIALOG_MODE::OPEN, "Open TIL file", "TIL Files (*.til *.TIL)");
+    QString openFilePath = qw->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open TIL file"), tr("TIL Files (*.til *.TIL)"));
 
     if (openFilePath.isEmpty())
         return;
@@ -131,7 +131,7 @@ void OpenAsDialog::on_tilFileBrowseButton_clicked()
 void OpenAsDialog::on_minFileBrowseButton_clicked()
 {
     MainWindow *qw = (MainWindow *)this->parentWidget();
-    QString openFilePath = qw->fileDialog(FILE_DIALOG_MODE::OPEN, "Open MIN file", "MIN Files (*.min *.MIN)");
+    QString openFilePath = qw->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open MIN file"), tr("MIN Files (*.min *.MIN)"));
 
     if (openFilePath.isEmpty())
         return;
@@ -142,7 +142,7 @@ void OpenAsDialog::on_minFileBrowseButton_clicked()
 void OpenAsDialog::on_solFileBrowseButton_clicked()
 {
     MainWindow *qw = (MainWindow *)this->parentWidget();
-    QString openFilePath = qw->fileDialog(FILE_DIALOG_MODE::OPEN, "Open SOL file", "SOL Files (*.sol *.SOL)");
+    QString openFilePath = qw->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open SOL file"), tr("SOL Files (*.sol *.SOL)"));
 
     if (openFilePath.isEmpty())
         return;
@@ -153,7 +153,7 @@ void OpenAsDialog::on_solFileBrowseButton_clicked()
 void OpenAsDialog::on_ampFileBrowseButton_clicked()
 {
     MainWindow *qw = (MainWindow *)this->parentWidget();
-    QString openFilePath = qw->fileDialog(FILE_DIALOG_MODE::OPEN, "Open AMP file", "AMP Files (*.amp *.AMP)");
+    QString openFilePath = qw->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open AMP file"), tr("AMP Files (*.amp *.AMP)"));
 
     if (openFilePath.isEmpty())
         return;
@@ -164,7 +164,7 @@ void OpenAsDialog::on_ampFileBrowseButton_clicked()
 void OpenAsDialog::on_tmiFileBrowseButton_clicked()
 {
     MainWindow *qw = (MainWindow *)this->parentWidget();
-    QString openFilePath = qw->fileDialog(FILE_DIALOG_MODE::OPEN, "Open TMI file", "TMI Files (*.tmi *.TMI)");
+    QString openFilePath = qw->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open TMI file"), tr("TMI Files (*.tmi *.TMI)"));
 
     if (openFilePath.isEmpty())
         return;
@@ -177,7 +177,7 @@ void OpenAsDialog::on_openButton_clicked()
     OpenAsParam params;
     params.celFilePath = ui->inputFileEdit->text();
     if (params.celFilePath.isEmpty()) {
-        QMessageBox::warning(this, "Warning", "Input file is missing, please choose an input file.");
+        QMessageBox::warning(this, tr("Warning"), tr("Input file is missing, please choose an input file."));
         return;
     }
     if (ui->isTilesetYesRadioButton->isChecked()) {

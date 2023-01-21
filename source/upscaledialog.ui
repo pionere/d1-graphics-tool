@@ -69,7 +69,7 @@
          </size>
         </property>
         <property name="text">
-         <string>/</string>
+         <string notr="true">/</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -95,32 +95,32 @@
         </item>
         <item>
          <property name="text">
-          <string>Cathedral (L1)</string>
+          <string>(L1) Cathedral</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Catacombs (L2)</string>
+          <string>(L2) Catacombs</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Caves (L3)</string>
+          <string>(L3) Caves</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Hell (L4)</string>
+          <string>(L4) Hell</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Crypt (L5)</string>
+          <string>(L5) Crypt</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Nest (L6)</string>
+          <string>(L6) Nest</string>
          </property>
         </item>
         <item>

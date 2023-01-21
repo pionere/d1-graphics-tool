@@ -4,6 +4,7 @@
 #include <set>
 
 #include <QAction>
+#include <QApplication>
 #include <QColor>
 #include <QDebug>
 #include <QFileInfo>
@@ -33,9 +34,9 @@ LevelCelView::LevelCelView(QWidget *parent)
     this->on_playDelayEdit_escPressed();
     this->ui->stopButton->setEnabled(false);
     this->playTimer.connect(&this->playTimer, SIGNAL(timeout()), this, SLOT(playGroup()));
-    this->ui->tilesTabs->addTab(&this->tabTileWidget, "Tile properties");
-    this->ui->tilesTabs->addTab(&this->tabSubTileWidget, "Subtile properties");
-    this->ui->tilesTabs->addTab(&this->tabFrameWidget, "Frame properties");
+    this->ui->tilesTabs->addTab(&this->tabTileWidget, tr("Tile properties"));
+    this->ui->tilesTabs->addTab(&this->tabSubTileWidget, tr("Subtile properties"));
+    this->ui->tilesTabs->addTab(&this->tabFrameWidget, tr("Frame properties"));
 
     // If a pixel of the frame, subtile or tile was clicked get pixel color index and notify the palette widgets
     QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &LevelCelView::framePixelClicked);
@@ -363,7 +364,7 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &
     }
 
     if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, "Error", "Failed read image file: " + imagefilePath);
+        QMessageBox::critical(this, tr("Error"), tr("Failed read image file: %1").arg(imagefilePath));
     }
 }
 
@@ -484,7 +485,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString
     }
 
     if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, "Error", "Failed read image file: " + imagefilePath);
+        QMessageBox::critical(this, tr("Error"), tr("Failed read image file: %1").arg(imagefilePath));
     }
 }
 
@@ -655,7 +656,7 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &i
     }
 
     if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, "Error", "Failed read image file: " + imagefilePath);
+        QMessageBox::critical(this, tr("Error"), tr("Failed read image file: %1").arg(imagefilePath));
     }
 }
 
@@ -693,12 +694,12 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        QMessageBox::critical(nullptr, "Error", "Failed open image file: " + imagefilePath);
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open image file: %1").arg(imagefilePath));
         return;
     }
 
     if (image.width() != MICRO_WIDTH || image.height() != MICRO_HEIGHT) {
-        QMessageBox::warning(this, "Warning", "The image must be 32px * 32px to be used as a level-frame.");
+        QMessageBox::warning(this, tr("Warning"), tr("The image must be 32px * 32px to be used as a level-frame."));
         return;
     }
 
@@ -745,7 +746,7 @@ void LevelCelView::removeCurrentFrame()
 
     if (!frameUsers.isEmpty()) {
         QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(nullptr, "Confirmation", "The frame is used by Subtile " + QString::number(frameUsers.first() + 1) + " (and maybe others). Are you sure you want to proceed?", QMessageBox::Yes | QMessageBox::No);
+        reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("The frame is used by Subtile %1 (and maybe others). Are you sure you want to proceed?").arg(frameUsers.first() + 1), QMessageBox::Yes | QMessageBox::No);
         if (reply != QMessageBox::Yes) {
             return;
         }
@@ -772,7 +773,7 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        QMessageBox::critical(nullptr, "Error", "Failed open image file: " + imagefilePath);
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open image file: %1").arg(imagefilePath));
         return;
     }
 
@@ -780,7 +781,7 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     if (image.width() != subtileWidth || image.height() != subtileHeight) {
-        QMessageBox::warning(this, "Warning", "The image must be " + QString::number(subtileWidth) + "px * " + QString::number(subtileHeight) + "px to be used as a subtile.");
+        QMessageBox::warning(this, tr("Warning"), tr("The image must be %1px * %2px to be used as a subtile.").arg(subtileWidth).arg(subtileHeight));
         return;
     }
 
@@ -823,7 +824,7 @@ void LevelCelView::removeCurrentSubtile()
     this->collectSubtileUsers(this->currentSubtileIndex, subtileUsers);
 
     if (!subtileUsers.isEmpty()) {
-        QMessageBox::critical(nullptr, "Error", "The subtile is used by Tile " + QString::number(subtileUsers.first() + 1) + " (and maybe others).");
+        QMessageBox::critical(nullptr, tr("Error"), tr("The subtile is used by Tile %1 (and maybe others).").arg(subtileUsers.first() + 1));
         return;
     }
     // remove the current subtile
@@ -847,7 +848,7 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        QMessageBox::critical(nullptr, "Error", "Failed open image file: " + imagefilePath);
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open image file: %1").arg(imagefilePath));
         return;
     }
 
@@ -855,7 +856,7 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
     unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     if (image.width() != tileWidth || image.height() != tileHeight) {
-        QMessageBox::warning(this, "Warning", "The image must be " + QString::number(tileWidth) + "px * " + QString::number(tileHeight) + "px to be used as a tile.");
+        QMessageBox::warning(this, tr("Warning"), tr("The image must be %1px * %2px to be used as a tile.").arg(tileWidth).arg(tileHeight));
         return;
     }
 
@@ -917,11 +918,11 @@ void LevelCelView::reportUsage()
         QList<int> frameUsers;
         this->collectFrameUsers(this->currentFrameIndex, frameUsers);
 
-        frameUses = "Frame " + QString::number(this->currentFrameIndex + 1);
+        frameUses = tr("Frame %1").arg(this->currentFrameIndex + 1);
         if (frameUsers.isEmpty()) {
-            frameUses += " is not used by any subtile.";
+            frameUses += tr(" is not used by any subtile.");
         } else {
-            frameUses += " is used by subtile ";
+            frameUses += tr(" is used by subtile ");
             for (int user : frameUsers) {
                 frameUses += QString::number(user + 1) + ", ";
             }
@@ -936,11 +937,11 @@ void LevelCelView::reportUsage()
         QList<int> subtileUsers;
         this->collectSubtileUsers(this->currentSubtileIndex, subtileUsers);
 
-        subtileUses = "Subtile " + QString::number(this->currentSubtileIndex + 1);
+        subtileUses = tr("Subtile %1").arg(this->currentSubtileIndex + 1);
         if (subtileUsers.isEmpty()) {
-            subtileUses += " is not used by any tile.";
+            subtileUses += tr(" is not used by any tile.");
         } else {
-            subtileUses += " is used by tile ";
+            subtileUses += tr(" is used by tile ");
             for (int user : subtileUsers) {
                 subtileUses += QString::number(user + 1) + ", ";
             }
@@ -958,31 +959,31 @@ void LevelCelView::reportUsage()
             msg += "\n\n" + subtileUses;
         }
     } else {
-        msg = "The tileset is empty.";
+        msg = tr("The tileset is empty.");
     }
 
-    QMessageBox::information(this, "Information", msg);
+    QMessageBox::information(this, tr("Information"), msg);
 }
 
-static const char *getFrameTypeName(D1CEL_FRAME_TYPE type)
+static QString getFrameTypeName(D1CEL_FRAME_TYPE type)
 {
     switch (type) {
     case D1CEL_FRAME_TYPE::Square:
-        return "Square";
+        return QApplication::tr("Square");
     case D1CEL_FRAME_TYPE::TransparentSquare:
-        return "Transparent square";
+        return QApplication::tr("Transparent square");
     case D1CEL_FRAME_TYPE::LeftTriangle:
-        return "Left Triangle";
+        return QApplication::tr("Left Triangle");
     case D1CEL_FRAME_TYPE::RightTriangle:
-        return "Right Triangle";
+        return QApplication::tr("Right Triangle");
     case D1CEL_FRAME_TYPE::LeftTrapezoid:
-        return "Left Trapezoid";
+        return QApplication::tr("Left Trapezoid");
     case D1CEL_FRAME_TYPE::RightTrapezoid:
-        return "Right Trapezoid";
+        return QApplication::tr("Right Trapezoid");
     case D1CEL_FRAME_TYPE::Empty:
-        return "Empty";
+        return QApplication::tr("Empty");
     default:
-        return "Unknown";
+        return QApplication::tr("Unknown");
     }
 }
 
@@ -996,14 +997,14 @@ void LevelCelView::resetFrameTypes()
         LevelTabFrameWidget::selectFrameType(frame);
         D1CEL_FRAME_TYPE newType = frame->getFrameType();
         if (prevType != newType) {
-            QString line = "Changed Frame %1 from '%2' to '%3'.\n";
+            QString line = tr("Changed Frame %1 from '%2' to '%3'.\n");
             line = line.arg(i + 1).arg(getFrameTypeName(prevType)).arg(getFrameTypeName(newType));
             report.append(line);
         }
     }
 
     if (report.isEmpty()) {
-        report = "No change was necessary.";
+        report = tr("No change was necessary.");
     } else {
         this->gfx->setModified();
         // update the view
@@ -1011,7 +1012,7 @@ void LevelCelView::resetFrameTypes()
 
         report.chop(1);
     }
-    QMessageBox::information(this, "Information", report);
+    QMessageBox::information(this, tr("Information"), report);
 }
 
 void LevelCelView::inefficientFrames()
@@ -1028,18 +1029,18 @@ void LevelCelView::inefficientFrames()
         D1CEL_FRAME_TYPE effType = LevelTabFrameWidget::altFrameType(frame, &diff);
         if (effType != D1CEL_FRAME_TYPE::TransparentSquare) {
             diff = limit - diff;
-            QString line = "Frame %1 could be '%2' by changing %3 pixel%4.\n";
-            line = line.arg(i + 1).arg(getFrameTypeName(effType)).arg(diff).arg(diff == 1 ? "" : "s");
+            QString line = tr("Frame %1 could be '%2' by changing %n pixel(s).\n", "", diff);
+            line = line.arg(i + 1).arg(getFrameTypeName(effType));
             report.append(line);
         }
     }
 
     if (report.isEmpty()) {
-        report = "The frames are optimal.";
+        report = tr("The frames are optimal.");
     } else {
         report.chop(1);
     }
-    QMessageBox::information(this, "Information", report);
+    QMessageBox::information(this, tr("Information"), report);
 }
 
 void LevelCelView::removeUnusedFrames(QString &report)
@@ -1068,7 +1069,7 @@ void LevelCelView::removeUnusedFrames(QString &report)
     if (frameRemoved.isEmpty()) {
         return;
     }
-    report = "Removed frame ";
+    report = tr("Removed frame ");
     for (auto iter = frameRemoved.crbegin(); iter != frameRemoved.crend(); ++iter) {
         report += QString::number(*iter + 1) + ", ";
     }
@@ -1100,7 +1101,7 @@ void LevelCelView::removeUnusedSubtiles(QString &report)
     if (subtileRemoved.isEmpty()) {
         return;
     }
-    report = "Removed subtile ";
+    report = tr("Removed subtile ");
     for (auto iter = subtileRemoved.crbegin(); iter != subtileRemoved.crend(); ++iter) {
         report += QString::number(*iter + 1) + ", ";
     }
@@ -1114,12 +1115,12 @@ void LevelCelView::cleanupFrames()
     this->removeUnusedFrames(report);
 
     if (report.isEmpty()) {
-        report = "Every frame is used.";
+        report = tr("Every frame is used.");
     } else {
         // update the view
         this->displayFrame();
     }
-    QMessageBox::information(this, "Information", report);
+    QMessageBox::information(this, tr("Information"), report);
 }
 
 void LevelCelView::cleanupSubtiles()
@@ -1128,12 +1129,12 @@ void LevelCelView::cleanupSubtiles()
     this->removeUnusedSubtiles(report);
 
     if (report.isEmpty()) {
-        report = "Every subtile is used.";
+        report = tr("Every subtile is used.");
     } else {
         // update the view
         this->displayFrame();
     }
-    QMessageBox::information(this, "Information", report);
+    QMessageBox::information(this, tr("Information"), report);
 }
 
 void LevelCelView::cleanupTileset()
@@ -1145,7 +1146,7 @@ void LevelCelView::cleanupTileset()
     this->removeUnusedFrames(framesReport);
 
     if (framesReport.isEmpty() && subtilesReport.isEmpty()) {
-        framesReport = "Every subtile and frame are used.";
+        framesReport = tr("Every subtile and frame are used.");
     } else {
         // update the view
         this->displayFrame();
@@ -1158,7 +1159,7 @@ void LevelCelView::cleanupTileset()
         }
     }
 
-    QMessageBox::information(this, "Information", framesReport);
+    QMessageBox::information(this, tr("Information"), framesReport);
 }
 
 void LevelCelView::reuseFrames(QString &report)
@@ -1228,9 +1229,9 @@ void LevelCelView::reuseFrames(QString &report)
         return;
     }
 
-    report = "Using frame ";
+    report = tr("Using frame ");
     for (auto iter = frameRemoved.cbegin(); iter != frameRemoved.cend(); ++iter) {
-        report += QString::number(iter->first + 1) + " instead of " + QString::number(iter->second + 1) + ", ";
+        report += QString::number(iter->first + 1) + tr(" instead of ") + QString::number(iter->second + 1) + ", ";
     }
     report.chop(2);
     report += ".";
@@ -1299,9 +1300,9 @@ void LevelCelView::reuseSubtiles(QString &report)
         return;
     }
 
-    report = "Using subtile ";
+    report = tr("Using subtile ");
     for (auto iter = subtileRemoved.cbegin(); iter != subtileRemoved.cend(); ++iter) {
-        report += QString::number(iter->first + 1) + " instead of " + QString::number(iter->second + 1) + ", ";
+        report += QString::number(iter->first + 1) + tr(" instead of ") + QString::number(iter->second + 1) + ", ";
     }
     report.chop(2);
     report += ".";
@@ -1314,12 +1315,12 @@ void LevelCelView::compressSubtiles()
     this->reuseFrames(report);
 
     if (report.isEmpty()) {
-        report = "All frames are unique.";
+        report = tr("All frames are unique.");
     } else {
         // update the view
         this->displayFrame();
     }
-    QMessageBox::information(this, "Information", report);
+    QMessageBox::information(this, tr("Information"), report);
 }
 
 void LevelCelView::compressTiles()
@@ -1329,12 +1330,12 @@ void LevelCelView::compressTiles()
     this->reuseSubtiles(report);
 
     if (report.isEmpty()) {
-        report = "All subtiles are unique.";
+        report = tr("All subtiles are unique.");
     } else {
         // update the view
         this->displayFrame();
     }
-    QMessageBox::information(this, "Information", report);
+    QMessageBox::information(this, tr("Information"), report);
 }
 
 void LevelCelView::compressTileset()
@@ -1346,7 +1347,7 @@ void LevelCelView::compressTileset()
     this->reuseSubtiles(subtilesReport);
 
     if (framesReport.isEmpty() && subtilesReport.isEmpty()) {
-        framesReport = "Every subtile and frame are unique.";
+        framesReport = tr("Every subtile and frame are unique.");
     } else {
         // update the view
         this->displayFrame();
@@ -1359,7 +1360,7 @@ void LevelCelView::compressTileset()
         }
     }
 
-    QMessageBox::information(this, "Information", framesReport);
+    QMessageBox::information(this, tr("Information"), framesReport);
 }
 
 bool LevelCelView::sortFrames_impl()
@@ -1463,7 +1464,7 @@ void LevelCelView::upscale(const UpscaleParam &params)
 {
     int amount = this->min->getSubtileCount();
 
-    ProgressDialog::start("Upscaling", amount + 1);
+    ProgressDialog::start(tr("Upscaling"), amount + 1);
 
     if (Upscaler::upscaleTileset(this->gfx, this->min, params)) {
         // update the view
@@ -1569,26 +1570,26 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
     QMenu frameMenu(tr("Frame"), this);
     frameMenu.setToolTipsVisible(true);
 
-    QAction action0("Insert", this);
-    action0.setToolTip("Add new frames before the current one");
+    QAction action0(tr("Insert"), this);
+    action0.setToolTip(tr("Add new frames before the current one"));
     QObject::connect(&action0, SIGNAL(triggered()), mw, SLOT(on_actionInsert_Frame_triggered()));
     frameMenu.addAction(&action0);
 
-    QAction action1("Add", this);
-    action1.setToolTip("Add new frames at the end");
+    QAction action1(tr("Add"), this);
+    action1.setToolTip(tr("Add new frames at the end"));
     QObject::connect(&action1, SIGNAL(triggered()), mw, SLOT(on_actionAdd_Frame_triggered()));
     frameMenu.addAction(&action1);
 
-    QAction action2("Replace", this);
-    action2.setToolTip("Replace the current frame");
+    QAction action2(tr("Replace"), this);
+    action2.setToolTip(tr("Replace the current frame"));
     QObject::connect(&action2, SIGNAL(triggered()), mw, SLOT(on_actionReplace_Frame_triggered()));
     if (this->gfx->getFrameCount() == 0) {
         action2.setEnabled(false);
     }
     frameMenu.addAction(&action2);
 
-    QAction action3("Delete", this);
-    action3.setToolTip("Delete the current frame");
+    QAction action3(tr("Delete"), this);
+    action3.setToolTip(tr("Delete the current frame"));
     QObject::connect(&action3, SIGNAL(triggered()), mw, SLOT(on_actionDel_Frame_triggered()));
     if (this->gfx->getFrameCount() == 0) {
         action3.setEnabled(false);
@@ -1600,31 +1601,31 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
     QMenu subtileMenu(tr("Subtile"), this);
     subtileMenu.setToolTipsVisible(true);
 
-    QAction action4("Create", this);
-    action4.setToolTip("Create a new subtile");
+    QAction action4(tr("Create"), this);
+    action4.setToolTip(tr("Create a new subtile"));
     QObject::connect(&action4, SIGNAL(triggered()), mw, SLOT(on_actionCreate_Subtile_triggered()));
     subtileMenu.addAction(&action4);
 
-    QAction action5("Insert", this);
-    action5.setToolTip("Add new subtiles before the current one");
+    QAction action5(tr("Insert"), this);
+    action5.setToolTip(tr("Add new subtiles before the current one"));
     QObject::connect(&action5, SIGNAL(triggered()), mw, SLOT(on_actionInsert_Subtile_triggered()));
     subtileMenu.addAction(&action5);
 
-    QAction action6("Add", this);
-    action6.setToolTip("Add new subtiles at the end");
+    QAction action6(tr("Add"), this);
+    action6.setToolTip(tr("Add new subtiles at the end"));
     QObject::connect(&action6, SIGNAL(triggered()), mw, SLOT(on_actionAdd_Subtile_triggered()));
     subtileMenu.addAction(&action6);
 
-    QAction action7("Replace", this);
-    action7.setToolTip("Replace the current subtile");
+    QAction action7(tr("Replace"), this);
+    action7.setToolTip(tr("Replace the current subtile"));
     QObject::connect(&action7, SIGNAL(triggered()), mw, SLOT(on_actionReplace_Subtile_triggered()));
     if (this->min->getSubtileCount() == 0) {
         action7.setEnabled(false);
     }
     subtileMenu.addAction(&action7);
 
-    QAction action8("Delete", this);
-    action8.setToolTip("Delete the current subtile");
+    QAction action8(tr("Delete"), this);
+    action8.setToolTip(tr("Delete the current subtile"));
     QObject::connect(&action8, SIGNAL(triggered()), mw, SLOT(on_actionDel_Subtile_triggered()));
     if (this->min->getSubtileCount() == 0) {
         action8.setEnabled(false);
@@ -1636,34 +1637,34 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
     QMenu tileMenu(tr("Tile"), this);
     tileMenu.setToolTipsVisible(true);
 
-    QAction action9("Create", this);
-    action9.setToolTip("Create a new tile");
+    QAction action9(tr("Create"), this);
+    action9.setToolTip(tr("Create a new tile"));
     QObject::connect(&action9, SIGNAL(triggered()), mw, SLOT(on_actionCreate_Tile_triggered()));
     if (this->min->getSubtileCount() == 0) {
         action9.setEnabled(false);
     }
     tileMenu.addAction(&action9);
 
-    QAction action10("Insert", this);
-    action10.setToolTip("Add new tiles before the current one");
+    QAction action10(tr("Insert"), this);
+    action10.setToolTip(tr("Add new tiles before the current one"));
     QObject::connect(&action10, SIGNAL(triggered()), mw, SLOT(on_actionInsert_Tile_triggered()));
     tileMenu.addAction(&action10);
 
-    QAction action11("Add", this);
-    action11.setToolTip("Add new tiles at the end");
+    QAction action11(tr("Add"), this);
+    action11.setToolTip(tr("Add new tiles at the end"));
     QObject::connect(&action11, SIGNAL(triggered()), mw, SLOT(on_actionAdd_Tile_triggered()));
     tileMenu.addAction(&action11);
 
-    QAction action12("Replace", this);
-    action12.setToolTip("Replace the current tile");
+    QAction action12(tr("Replace"), this);
+    action12.setToolTip(tr("Replace the current tile"));
     QObject::connect(&action12, SIGNAL(triggered()), mw, SLOT(on_actionReplace_Tile_triggered()));
     if (this->til->getTileCount() == 0) {
         action12.setEnabled(false);
     }
     tileMenu.addAction(&action12);
 
-    QAction action13("Delete", this);
-    action13.setToolTip("Delete the current tile");
+    QAction action13(tr("Delete"), this);
+    action13.setToolTip(tr("Delete the current tile"));
     QObject::connect(&action13, SIGNAL(triggered()), mw, SLOT(on_actionDel_Tile_triggered()));
     if (this->til->getTileCount() == 0) {
         action13.setEnabled(false);

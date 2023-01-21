@@ -64,8 +64,8 @@ public:
     void resetPaletteCycle();
 
     QString getLastFilePath();
-    QString fileDialog(FILE_DIALOG_MODE mode, const char *title, const char *filter);
-    QStringList filesDialog(const char *title, const char *filter);
+    QString fileDialog(FILE_DIALOG_MODE mode, const QString &title, const QString &filter);
+    QStringList filesDialog(const QString &title, const QString &filter);
 
     static bool hasImageUrl(const QMimeData *mimeData);
 
@@ -164,10 +164,10 @@ private:
     Ui::MainWindow *ui;
     QString lastFilePath;
 
-    QMenu newMenu = QMenu("New");
-    QMenu frameMenu = QMenu("Frame");
-    QMenu subtileMenu = QMenu("Subtile");
-    QMenu tileMenu = QMenu("Tile");
+    QMenu newMenu = QMenu(tr("New"));
+    QMenu frameMenu = QMenu(tr("Frame"));
+    QMenu subtileMenu = QMenu(tr("Subtile"));
+    QMenu tileMenu = QMenu(tr("Tile"));
 
     QUndoStack *undoStack;
     QAction *undoAction;

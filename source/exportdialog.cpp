@@ -74,7 +74,7 @@ QString ExportDialog::getFileFormatExtension()
 void ExportDialog::on_outputFolderBrowseButton_clicked()
 {
     QString selectedDirectory = QFileDialog::getExistingDirectory(
-        this, "Select Output Folder", QString(), QFileDialog::ShowDirsOnly);
+        this, tr("Select Output Folder"), QString(), QFileDialog::ShowDirsOnly);
 
     if (selectedDirectory.isEmpty())
         return;
@@ -103,7 +103,7 @@ bool ExportDialog::exportLevelTiles25D()
     if (amount == 0) {
         return true;
     }
-    ProgressDialog::start("Exporting " + fileName + " 2.5d level tiles...", amount + 1);
+    ProgressDialog::start(tr("Exporting %1 2.5d level tiles...").arg(fileName), amount + 1);
     // single tile
     if (amount == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
@@ -222,7 +222,7 @@ bool ExportDialog::exportLevelTiles()
     if (amount <= 0) {
         return true;
     }
-    ProgressDialog::start("Exporting " + fileName + " flat level tiles...", amount + 1);
+    ProgressDialog::start(tr("Exporting %1 flat level tiles...").arg(fileName), amount + 1);
     // single tile
     if (amount == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
@@ -340,7 +340,7 @@ bool ExportDialog::exportLevelSubtiles()
     if (amount <= 0) {
         return true;
     }
-    ProgressDialog::start("Exporting " + fileName + " level subtiles...", amount + 1);
+    ProgressDialog::start(tr("Exporting %1 level subtiles...").arg(fileName), amount + 1);
     // single subtile
     if (amount == 1 && subtileFrom == 0) {
         // one file for the only subtile (not indexed)
@@ -460,7 +460,7 @@ bool ExportDialog::exportFrames()
     if (amount <= 0) {
         return true;
     }
-    ProgressDialog::start("Exporting " + fileName + " frames...", amount + 1);
+    ProgressDialog::start(tr("Exporting %1 frames...").arg(fileName), amount + 1);
     // single frame
     if (amount == 1 && frameFrom == 0) {
         // one file for the only frame (not indexed)
@@ -619,12 +619,12 @@ bool ExportDialog::exportFrames()
 void ExportDialog::on_exportButton_clicked()
 {
     if (ui->outputFolderEdit->text() == "") {
-        QMessageBox::warning(this, "Warning", "Output folder is missing, please choose an output folder.");
+        QMessageBox::warning(this, tr("Warning"), tr("Output folder is missing, please choose an output folder."));
         return;
     }
 
     if (this->gfx == nullptr) {
-        QMessageBox::critical(this, "Warning", "No graphics loaded.");
+        QMessageBox::critical(this, tr("Warning"), tr("No graphics loaded."));
         return;
     }
 
@@ -645,16 +645,16 @@ void ExportDialog::on_exportButton_clicked()
             break;
         }
     } catch (...) {
-        QMessageBox::critical(this, "Error", "Export Failed.");
+        QMessageBox::critical(this, tr("Error"), tr("Export Failed."));
         ProgressDialog::done();
         return;
     }
     ProgressDialog::done();
     if (result) {
-        QMessageBox::information(this, "Information", "Export successful.");
+        QMessageBox::information(this, tr("Information"), tr("Export successful."));
         this->close();
     } else {
-        QMessageBox::warning(this, "Export Canceled", "Export was canceled.");
+        QMessageBox::warning(this, tr("Export Canceled"), tr("Export was canceled."));
     }
 }
 

@@ -1,5 +1,7 @@
 #include "leveltabframewidget.h"
 
+#include <QApplication>
+
 #include "d1gfx.h"
 #include "levelcelview.h"
 #include "ui_leveltabframewidget.h"
@@ -44,13 +46,13 @@ void LevelTabFrameWidget::update()
 
 static bool prepareMsgTransparent(QString &msg, int x, int y)
 {
-    msg = QString("Invalid (transparent) pixel at (") + QString::number(x) + ":" + QString::number(y) + ")";
+    msg = QApplication::tr("Invalid (transparent) pixel at (%1:%2)").arg(x).arg(y);
     return false;
 }
 
 static bool prepareMsgNonTransparent(QString &msg, int x, int y)
 {
-    msg = QString("Invalid (non-transparent) pixel at (") + QString::number(x) + ":" + QString::number(y) + ")";
+    msg = QApplication::tr("Invalid (non-transparent) pixel at (%1:%2").arg(x).arg(y);
     return false;
 }
 
@@ -223,9 +225,9 @@ void LevelTabFrameWidget::validate()
     QString error, warning, tmp;
 
     if (frame->getWidth() != MICRO_WIDTH) {
-        error = "Invalid width. Must be 32px wide.";
+        error = tr("Invalid width. Must be 32px wide.");
     } else if (frame->getHeight() != MICRO_HEIGHT) {
-        error = "Invalid height. Must be 32px wide.";
+        error = tr("Invalid height. Must be 32px wide.");
     } else {
         int limit = 0;
         switch (frame->getFrameType()) {
@@ -234,27 +236,27 @@ void LevelTabFrameWidget::validate()
             break;
         case D1CEL_FRAME_TYPE::TransparentSquare:
             if (validSquare(frame, tmp, &limit)) {
-                warning = "Suggested type: 'Square'";
+                warning = tr("Suggested type: 'Square'");
                 break;
             }
             limit = 0;
             if (validLeftTriangle(frame, tmp, &limit)) {
-                warning = "Suggested type: 'Left Triangle'";
+                warning = tr("Suggested type: 'Left Triangle'");
                 break;
             }
             limit = 0;
             if (validRightTriangle(frame, tmp, &limit)) {
-                warning = "Suggested type: 'Right Triangle'";
+                warning = tr("Suggested type: 'Right Triangle'");
                 break;
             }
             limit = 0;
             if (validLeftTrapezoid(frame, tmp, &limit)) {
-                warning = "Suggested type: 'Left Trapezoid'";
+                warning = tr("Suggested type: 'Left Trapezoid'");
                 break;
             }
             limit = 0;
             if (validRightTrapezoid(frame, tmp, &limit)) {
-                warning = "Suggested type: 'Right Trapezoid'";
+                warning = tr("Suggested type: 'Right Trapezoid'");
                 break;
             }
             break;

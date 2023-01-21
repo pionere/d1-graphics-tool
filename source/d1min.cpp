@@ -51,7 +51,7 @@ bool D1Min::load(QString filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CE
     // File size check
     int subtileNumberOfCelFrames = width * height;
     if ((fileSize % (subtileNumberOfCelFrames * 2)) != 0) {
-        qDebug() << "Sub-tile width/height does not align with min-file.";
+        qDebug() << tr("Sub-tile width/height does not align with min-file.");
         return false;
     }
 
@@ -66,7 +66,7 @@ bool D1Min::load(QString filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CE
     this->subtileHeight = height;
     int minSubtileCount = fileSize / (subtileNumberOfCelFrames * 2);
     if (minSubtileCount != subtileCount) {
-        qDebug() << "The size of sol-file does not align with min-file";
+        qDebug() << tr("The size of sol-file does not align with min-file");
         // add subtiles to sol if necessary
         while (minSubtileCount > subtileCount) {
             subtileCount++;
@@ -116,7 +116,7 @@ bool D1Min::save(const SaveAsParam &params)
         filePath = params.minFilePath;
         if (QFile::exists(filePath)) {
             QMessageBox::StandardButton reply;
-            reply = QMessageBox::question(nullptr, "Confirmation", "Are you sure you want to overwrite " + filePath + "?", QMessageBox::Yes | QMessageBox::No);
+            reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to overwrite %1?").arg(filePath), QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) {
                 return false;
             }
@@ -125,7 +125,7 @@ bool D1Min::save(const SaveAsParam &params)
 
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly | QFile::Truncate)) {
-        QMessageBox::critical(nullptr, "Error", "Failed open file: " + filePath);
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open file: %1").arg(filePath));
         return false;
     }
 
@@ -257,7 +257,7 @@ void D1Min::setSubtileWidth(int width)
         }
         if (hasFrame) {
             QMessageBox::StandardButton reply;
-            reply = QMessageBox::question(nullptr, "Confirmation", "Non-transparent frames are going to be eliminited. Are you sure you want to proceed?", QMessageBox::Yes | QMessageBox::No);
+            reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Non-transparent frames are going to be eliminited. Are you sure you want to proceed?"), QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) {
                 return;
             }
@@ -316,7 +316,7 @@ void D1Min::setSubtileHeight(int height)
         }
         if (hasFrame) {
             QMessageBox::StandardButton reply;
-            reply = QMessageBox::question(nullptr, "Confirmation", "Non-transparent frames are going to be eliminited. Are you sure you want to proceed?", QMessageBox::Yes | QMessageBox::No);
+            reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Non-transparent frames are going to be eliminited. Are you sure you want to proceed?"), QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) {
                 return;
             }
