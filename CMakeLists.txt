@@ -17,7 +17,13 @@ SET(DGT_TS_FILES
         translations/D1GraphicsTool_en.ts
 )
 
-qt5_create_translation(DGT_QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${DGT_TS_FILES})
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+  qt_create_translation(DGT_QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${DGT_TS_FILES})
+  qt_add_translation(DGT_QM_FILES ${DGT_TS_FILES})
+else()
+  qt5_create_translation(DGT_QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${DGT_TS_FILES})
+  qt5_add_translation(DGT_QM_FILES ${DGT_TS_FILES})
+endif()
 
 # Create translations QRC file - ts.qrc
 set(TRANSLATIONS_QRC "${CMAKE_CURRENT_BINARY_DIR}/ts.qrc")
@@ -110,7 +116,7 @@ set(PROJECT_SOURCES
         source/upscaler.h
 )
 
-qt5_add_resources(RESOURCES
+qt_add_resources(RESOURCES
         resources/d1files.qrc
         ${TRANSLATIONS_QRC})
 
