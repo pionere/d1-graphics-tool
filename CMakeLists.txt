@@ -101,19 +101,20 @@ set(PROJECT_SOURCES
         source/upscaler.h
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(D1GraphicsTool
+qt5_add_resources(RESOURCES
         resources/D1GraphicsTool.rc
         resources/d1files.qrc
+        ${DGT_QM_FILES})
+
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    qt_add_executable(D1GraphicsTool
+        ${RESOURCES}
         MANUAL_FINALIZATION
-        ${DGT_QM_FILES}
         ${PROJECT_SOURCES}
     )
 else()
     add_executable(D1GraphicsTool
-        resources/D1GraphicsTool.rc
-        resources/d1files.qrc
-        ${DGT_QM_FILES}
+        ${RESOURCES}
         ${PROJECT_SOURCES}
     )
 endif()
