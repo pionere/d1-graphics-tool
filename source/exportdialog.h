@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QDialog>
-#include <QProgressDialog>
 
 #include "d1amp.h"
 #include "d1gfx.h"
@@ -36,10 +35,10 @@ private slots:
 private:
     QString getFileFormatExtension();
 
-    bool exportLevelTiles25D(QProgressDialog &progress);
-    bool exportLevelTiles(QProgressDialog &progress);
-    bool exportLevelSubtiles(QProgressDialog &progress);
-    bool exportFrames(QProgressDialog &progress);
+    bool exportLevelTiles25D();
+    bool exportLevelTiles();
+    bool exportLevelSubtiles();
+    bool exportFrames();
 
     Ui::ExportDialog *ui;
 
