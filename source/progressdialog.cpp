@@ -43,11 +43,18 @@ void ProgressDialog::incValue()
 {
     // theDialog->setValue_impl(theDialog->ui->progressBar->value() + 1);
     // theDialog->ui->progressBar->repaint();
+    theDialog->show();
 }
 
 void ProgressDialog::on_cancelPushButton_clicked()
 {
     this->cancelled = true;
+}
+
+void ProgressDialog::closeEvent(QCloseEvent *e)
+{
+    this->on_cancelPushButton_clicked();
+    QDialog::closeEvent(e);
 }
 
 void ProgressDialog::setValue_impl(int value)

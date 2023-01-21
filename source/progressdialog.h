@@ -23,6 +23,8 @@ private slots:
     void on_cancelPushButton_clicked();
 
 private:
+    void closeEvent(QCloseEvent *e) override;
+
     void setValue_impl(int value);
 
 private:
