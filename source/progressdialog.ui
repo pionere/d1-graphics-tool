@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>ProgressDialog</class>
  <widget class="QDialog" name="ProgressDialog">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>300</width>
-    <height>220</height>
-   </rect>
-  </property>
   <property name="modal">
    <bool>true</bool>
   </property>

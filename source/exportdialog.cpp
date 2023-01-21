@@ -646,10 +646,6 @@ void ExportDialog::on_exportButton_clicked()
         progress.setValue(0);
         progress.show();
 
-        while (!progress.wasCanceled()) {
-            progress.setValue(1 - progress.value());
-        }
-
         switch (this->ui->contentTypeComboBox->currentIndex()) {
         case 0:
             result = this->exportFrames(progress);
