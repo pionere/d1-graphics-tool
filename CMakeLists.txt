@@ -24,13 +24,15 @@ else()
 endif()
 
 # Create translations QRC file - ts.qrc
-set(TRANSLATIONS_QRC "${CMAKE_CURRENT_BINARY_DIR}/translations/ts.qrc")
-file(WRITE ${TRANSLATIONS_QRC} "<RCC>\n\t<qresource prefix=\"/\">")
+set(TRANSLATIONS_QRC "${CMAKE_CURRENT_BINARY_DIR}/ts.qrc")
+file(WRITE ${TRANSLATIONS_QRC} "<RCC>\n\t<qresource prefix=\"/translations\">")
 foreach(QM_FILE ${DGT_QM_FILES})
     get_filename_component(QM_FILE_NAME ${QM_FILE} NAME)
     file(APPEND ${TRANSLATIONS_QRC} "\n\t\t<file alias=\"${QM_FILE_NAME}\">${QM_FILE_NAME}</file>")
 endforeach()
 file(APPEND ${TRANSLATIONS_QRC} "\n\t</qresource>\n</RCC>")
+
+configure_file(${TRANSLATIONS_QRC} ${CMAKE_CURRENT_BINARY_DIR}/translations COPYONLY)
 
 # Source files
 include_directories(source)
