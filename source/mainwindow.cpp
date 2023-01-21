@@ -898,9 +898,8 @@ void MainWindow::addTiles(bool append)
 
 void MainWindow::on_actionOpenAs_triggered()
 {
-    /*this->openAsDialog.initialize();
-    this->openAsDialog.show();*/
-    this->progressDialog.start("open", 10);
+    this->openAsDialog.initialize();
+    this->openAsDialog.show();
 }
 
 void MainWindow::on_actionSave_triggered()

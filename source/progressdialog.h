@@ -22,10 +22,8 @@ public:
 private slots:
     void on_cancelPushButton_clicked();
 
-private:
+protected:
     void closeEvent(QCloseEvent *e) override;
-
-    void setValue_impl(int value);
 
 private:
     Ui::ProgressDialog *ui;
