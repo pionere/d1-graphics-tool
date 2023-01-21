@@ -39,6 +39,9 @@ MainWindow::MainWindow()
 
     this->setWindowTitle(D1_GRAPHICS_TOOL_TITLE);
 
+    // initialize the progress widget
+    this->ui->statusBar->insertWidget(0, &this->progressWidget);
+
     // initialize 'new' submenu of 'File'
     this->newMenu.addAction(tr("CEL gfx"), this, SLOT(on_actionNew_CEL_triggered()));
     this->newMenu.addAction(tr("CL2 gfx"), this, SLOT(on_actionNew_CL2_triggered()));
@@ -543,7 +546,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         // Loading SOL
         this->sol = new D1Sol();
         if (!this->sol->load(solFilePath)) {
-            QMessageBox::critical(this, tr("Error"), tr("Failed loading SOL file: %1").arg(minFilePath));
+            QMessageBox::critical(this, tr("Error"), tr("Failed loading SOL file: %1.").arg(minFilePath));
             return;
         }
 
@@ -551,14 +554,14 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->min = new D1Min();
         std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
         if (!this->min->load(minFilePath, this->gfx, this->sol, celFrameTypes, params)) {
-            QMessageBox::critical(this, tr("Error"), tr("Failed loading MIN file: %1").arg(minFilePath));
+            QMessageBox::critical(this, tr("Error"), tr("Failed loading MIN file: %1.").arg(minFilePath));
             return;
         }
 
         // Loading TIL
         this->til = new D1Til();
         if (!this->til->load(tilFilePath, this->min)) {
-            QMessageBox::critical(this, tr("Error"), tr("Failed loading TIL file: %1").arg(tilFilePath));
+            QMessageBox::critical(this, tr("Error"), tr("Failed loading TIL file: %1.").arg(tilFilePath));
             return;
         }
 
@@ -569,7 +572,7 @@ void MainWindow::openFile(const OpenAsParam &params)
             ampFilePath = basePath + ".amp";
         }
         if (!this->amp->load(ampFilePath, this->til->getTileCount(), params)) {
-            QMessageBox::critical(this, tr("Error"), tr("Failed loading AMP file: %1").arg(ampFilePath));
+            QMessageBox::critical(this, tr("Error"), tr("Failed loading AMP file: %1.").arg(ampFilePath));
             return;
         }
 
@@ -580,23 +583,23 @@ void MainWindow::openFile(const OpenAsParam &params)
             tmiFilePath = basePath + ".tmi";
         }
         if (!this->tmi->load(tmiFilePath, this->sol, params)) {
-            QMessageBox::critical(this, tr("Error"), tr("Failed loading TMI file: %1").arg(tmiFilePath));
+            QMessageBox::critical(this, tr("Error"), tr("Failed loading TMI file: %1.").arg(tmiFilePath));
             return;
         }
 
         // Loading CEL
         if (!D1CelTileset::load(*this->gfx, celFrameTypes, openFilePath, params)) {
-            QMessageBox::critical(this, tr("Error"), tr("Failed loading level CEL file: %1").arg(openFilePath));
+            QMessageBox::critical(this, tr("Error"), tr("Failed loading level CEL file: %1.").arg(openFilePath));
             return;
         }
     } else if (openFilePath.toLower().endsWith(".cel")) {
         if (!D1Cel::load(*this->gfx, openFilePath, params)) {
-            QMessageBox::critical(this, tr("Error"), tr("Failed loading CEL file: %1").arg(openFilePath));
+            QMessageBox::critical(this, tr("Error"), tr("Failed loading CEL file: %1.").arg(openFilePath));
             return;
         }
     } else if (openFilePath.toLower().endsWith(".cl2")) {
         if (!D1Cl2::load(*this->gfx, openFilePath, params)) {
-            QMessageBox::critical(this, tr("Error"), tr("Failed loading CL2 file: %1").arg(openFilePath));
+            QMessageBox::critical(this, tr("Error"), tr("Failed loading CL2 file: %1.").arg(openFilePath));
             return;
         }
     } else {

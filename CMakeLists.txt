@@ -18,23 +18,20 @@ SET(DGT_TS_FILES
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-  qt_create_translation(DGT_QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${DGT_TS_FILES})
+  qt_create_translation(DGT_QM_FILES ${CMAKE_CURRENT_SOURCE_DIR}/source ${DGT_TS_FILES})
 else()
-  qt5_create_translation(DGT_QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${DGT_TS_FILES})
+  qt5_create_translation(DGT_QM_FILES ${CMAKE_CURRENT_SOURCE_DIR}/source ${DGT_TS_FILES})
 endif()
 
-## Create translations QRC file - ts.qrc
-#set(TRANSLATIONS_QRC "${CMAKE_CURRENT_BINARY_DIR}/ts.qrc")
-#file(WRITE ${TRANSLATIONS_QRC} "<RCC>\n\t<qresource prefix=\"/\">")
-#foreach(QM_FILE ${DGT_QM_FILES})
-#    get_filename_component(QM_FILE_NAME ${QM_FILE} NAME)
-##    file(APPEND ${TRANSLATIONS_QRC} "\n\t\t<file alias=\"${QM_FILE_NAME}\">${QM_FILE_NAME}</file>")
-#    file(APPEND ${TRANSLATIONS_QRC} "\n\t\t<file>${QM_FILE_NAME}</file>")
-#endforeach()
-#file(APPEND ${TRANSLATIONS_QRC} "\n\t</qresource>\n</RCC>")
-set(TRANSLATIONS_QRC translations/ts.qrc)
-
-#configure_file(${TRANSLATIONS_QRC} ${CMAKE_CURRENT_BINARY_DIR}/translations COPYONLY)
+# Create translations QRC file - ts.qrc
+set(TRANSLATIONS_QRC "${CMAKE_CURRENT_BINARY_DIR}/ts.qrc")
+file(WRITE ${TRANSLATIONS_QRC} "<RCC>\n    <qresource prefix=\"/\">")
+foreach(QM_FILE ${DGT_QM_FILES})
+    get_filename_component(QM_FILE_NAME ${QM_FILE} NAME)
+#    file(APPEND ${TRANSLATIONS_QRC} "\n\t\t<file alias=\"${QM_FILE_NAME}\">${QM_FILE_NAME}</file>")
+    file(APPEND ${TRANSLATIONS_QRC} "\n        <file>${QM_FILE_NAME}</file>")
+endforeach()
+file(APPEND ${TRANSLATIONS_QRC} "\n    </qresource>\n</RCC>")
 
 # Source files
 include_directories(source)

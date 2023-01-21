@@ -654,7 +654,7 @@ void ExportDialog::on_exportButton_clicked()
         QMessageBox::information(this, tr("Information"), tr("Export successful."));
         this->close();
     } else {
-        QMessageBox::warning(this, tr("Export Canceled"), tr("Export was canceled."));
+        QMessageBox::warning(this, tr("Information"), tr("Export was canceled."));
     }
 }
 

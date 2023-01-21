@@ -27,8 +27,7 @@ jobs:
       run: cmake -S. -Bbuild -A Win32
 
     - name: Make
-#      run: cmake --build build -j $(nproc)
-      run: cmake --build build
+      run: cmake --build build -j $(nproc)
 
     - name: Package
       run: |
@@ -55,10 +54,3 @@ jobs:
       with:
         name: D1GraphicsTool-Translations
         path: translations
-
-    - name: Upload-translations-qrc
-      if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: D1GraphicsTool-Translations-qrc
-        path: build/ts.qrc

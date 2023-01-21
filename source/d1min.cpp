@@ -66,7 +66,7 @@ bool D1Min::load(QString filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CE
     this->subtileHeight = height;
     int minSubtileCount = fileSize / (subtileNumberOfCelFrames * 2);
     if (minSubtileCount != subtileCount) {
-        qDebug() << tr("The size of sol-file does not align with min-file");
+        qDebug() << tr("The size of sol-file does not align with min-file.");
         // add subtiles to sol if necessary
         while (minSubtileCount > subtileCount) {
             subtileCount++;
@@ -125,7 +125,7 @@ bool D1Min::save(const SaveAsParam &params)
 
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly | QFile::Truncate)) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open file: %1").arg(filePath));
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open file: %1.").arg(filePath));
         return false;
     }
 

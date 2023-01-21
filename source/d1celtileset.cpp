@@ -140,7 +140,7 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
             if (iter != celFrameTypes.end()) {
                 frameType = iter->second;
             } else {
-                qDebug() << QApplication::tr("Unknown frame type for frame %1").arg(i + 1);
+                qDebug() << QApplication::tr("Unknown frame type for frame %1.").arg(i + 1);
                 frameType = guessFrameType(celFrameRawData);
             }
         }
@@ -216,7 +216,7 @@ bool D1CelTileset::save(D1Gfx &gfx, const SaveAsParam &params)
 
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly | QFile::Truncate)) {
-        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed open file: %1").arg(filePath));
+        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed open file: %1.").arg(filePath));
         return false;
     }
 

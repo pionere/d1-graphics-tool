@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
         const char *qssName = ":/D1GraphicsTool.qss";
         QFile file(qssName);
         if (!file.open(QIODevice::ReadOnly)) {
-            qDebug() << QApplication::tr("Failed to open %1").arg(qssName);
+            qDebug() << QApplication::tr("Failed to open %1.").arg(qssName);
             return -1;
         }
         QString styleSheet = QTextStream(&file).readAll();

@@ -39,7 +39,7 @@ bool D1Amp::load(QString filePath, int tileCount, const OpenAsParam &params)
     int ampTileCount = fileSize / 2;
     if (ampTileCount != tileCount) {
         if (ampTileCount != 0) {
-            qDebug() << tr("The size of amp-file does not align with til-file");
+            qDebug() << tr("The size of amp-file does not align with til-file.");
         }
         if (ampTileCount > tileCount) {
             ampTileCount = tileCount; // skip unusable data
@@ -78,7 +78,7 @@ bool D1Amp::save(const SaveAsParam &params)
         filePath = params.ampFilePath;
         if (QFile::exists(filePath)) {
             QMessageBox::StandardButton reply;
-            reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to overwrite %1?)").arg(filePath), QMessageBox::Yes | QMessageBox::No);
+            reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to overwrite %1?").arg(filePath), QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) {
                 return false;
             }
@@ -87,7 +87,7 @@ bool D1Amp::save(const SaveAsParam &params)
 
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly | QFile::Truncate)) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open file: %1").arg(filePath));
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open file: %1.").arg(filePath));
         return false;
     }
 

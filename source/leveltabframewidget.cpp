@@ -52,7 +52,7 @@ static bool prepareMsgTransparent(QString &msg, int x, int y)
 
 static bool prepareMsgNonTransparent(QString &msg, int x, int y)
 {
-    msg = QApplication::tr("Invalid (non-transparent) pixel at (%1:%2").arg(x).arg(y);
+    msg = QApplication::tr("Invalid (non-transparent) pixel at (%1:%2)").arg(x).arg(y);
     return false;
 }
 

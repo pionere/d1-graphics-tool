@@ -364,7 +364,7 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &
     }
 
     if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed read image file: %1").arg(imagefilePath));
+        QMessageBox::critical(this, tr("Error"), tr("Failed read image file: %1.").arg(imagefilePath));
     }
 }
 
@@ -485,7 +485,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString
     }
 
     if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed read image file: %1").arg(imagefilePath));
+        QMessageBox::critical(this, tr("Error"), tr("Failed read image file: %1.").arg(imagefilePath));
     }
 }
 
@@ -656,7 +656,7 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &i
     }
 
     if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed read image file: %1").arg(imagefilePath));
+        QMessageBox::critical(this, tr("Error"), tr("Failed read image file: %1.").arg(imagefilePath));
     }
 }
 
@@ -694,7 +694,7 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open image file: %1").arg(imagefilePath));
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open image file: %1.").arg(imagefilePath));
         return;
     }
 
@@ -773,7 +773,7 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open image file: %1").arg(imagefilePath));
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open image file: %1.").arg(imagefilePath));
         return;
     }
 
@@ -848,7 +848,7 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open image file: %1").arg(imagefilePath));
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open image file: %1.").arg(imagefilePath));
         return;
     }
 
