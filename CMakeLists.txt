@@ -13,53 +13,13 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 
 # Translation files
-# QT4_WRAP_TS(lupdate_outputs lrelease_outputs prefix lang1 lang2 ... )
-MACRO (QT4_WRAP_TS lupdate_outputs lrelease_outputs prefix)
-    FOREACH (it ${ARGN})
-      SET(tsfile ${CMAKE_CURRENT_SOURCE_DIR}/translations/${prefix}_${it}.ts)
-#      SET(tsfile ${CMAKE_CURRENT_BINARY_DIR}/translations/${prefix}_${it}.ts)
-      ADD_CUSTOM_COMMAND(OUTPUT ${tsfile}
-        COMMAND ${QT_LUPDATE_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR} -ts ${tsfile}
-      )
-
-#      SET(qmfile ${CMAKE_CURRENT_BINARY_DIR}/${prefix}_${it}.qm)
-#      ADD_CUSTOM_COMMAND(OUTPUT ${qmfile}
-#        COMMAND ${QT_LRELEASE_EXECUTABLE} ${tsfile} -qm ${qmfile}
-#      )
-
-      SET(${lupdate_outputs} ${${lupdate_outputs}} ${tsfile})
-#      SET(${lrelease_outputs} ${${lrelease_outputs}} ${qmfile})
-    ENDFOREACH(it)
-ENDMACRO (QT4_WRAP_TS)
-
-# Create our translation files.
-#QT4_WRAP_TS(DGT_TS_FILES lrelease_outputs
-#  D1GraphicsTool
-#  en_AU en_US en_GB fr_FR de_DE ja_JM zh_CN
-#  en
-#)
-
 SET(DGT_TS_FILES
         translations/D1GraphicsTool_en.ts
 )
-#qt5_add_translation(DGT_QM_FILES ${DGT_TS_FILES})
-#add_custom_target(translations DEPENDS ${DGT_QM_FILES})
 
-#if(NOT QT_TRANSLATIONS_DIR)
-#  # If this directory is missing, we are in a Qt5 environment.
-#  # Extract the qmake executable location
-#  get_target_property(QT5_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
-#  # Ask Qt5 where to put the translations
-#  execute_process( COMMAND ${QT5_QMAKE_EXECUTABLE} -query QT_INSTALL_TRANSLATIONS
-#  OUTPUT_VARIABLE qt_translations_dir OUTPUT_STRIP_TRAILING_WHITESPACE )
-#  # make sure we have / and not \ as qmake gives on windows
-#  file(TO_CMAKE_PATH "${qt_translations_dir}" qt_translations_dir)
-#  set(QT_TRANSLATIONS_DIR ${qt_translations_dir} CACHE PATH "The location of the Qt translations" FORCE)
-#endif()
-
-#install(FILES ${DGT_QM_FILES} DESTINATION ${QT_TRANSLATIONS_DIR})
 qt5_create_translation(DGT_QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${DGT_TS_FILES})
 
+# Source files
 include_directories(source)
 
 set(PROJECT_SOURCES
