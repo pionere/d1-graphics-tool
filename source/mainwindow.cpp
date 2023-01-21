@@ -39,9 +39,6 @@ MainWindow::MainWindow()
 
     this->setWindowTitle(D1_GRAPHICS_TOOL_TITLE);
 
-    // initialize the progress widget
-    this->ui->statusBar->insertWidget(0, &this->progressWidget);
-
     // initialize 'new' submenu of 'File'
     this->newMenu.addAction(tr("CEL gfx"), this, SLOT(on_actionNew_CEL_triggered()));
     this->newMenu.addAction(tr("CL2 gfx"), this, SLOT(on_actionNew_CL2_triggered()));
