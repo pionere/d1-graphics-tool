@@ -26,6 +26,7 @@ void ProgressDialog::start(const QString &label, int maxValue)
     theDialog->ui->progressBar->setRange(0, maxValue);
     theDialog->setValue_impl(0);
     theDialog->cancelled = false;
+    theDialog->ui->cancelPushButton->setEnabled(true);
     theDialog->show();
 }
 
@@ -50,16 +51,17 @@ void ProgressDialog::incValue()
 void ProgressDialog::on_cancelPushButton_clicked()
 {
     this->cancelled = true;
+    this->ui->cancelPushButton->setEnabled(false);
 }
 
 void ProgressDialog::closeEvent(QCloseEvent *e)
 {
     this->on_cancelPushButton_clicked();
-    QDialog::closeEvent(e);
+    // QDialog::closeEvent(e);
 }
 
 void ProgressDialog::setValue_impl(int value)
 {
     this->ui->progressBar->setValue(value);
-    this->ui->progressBar->setFormat(QString("%1%%").arg(value * 100 / this->ui->progressBar->maximum()));
+    // this->ui->progressBar->setFormat(QString("%1%").arg(value * 100 / this->ui->progressBar->maximum()));
 }
