@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 
+#include <QApplication>
 #include <QDragEnterEvent>
 #include <QFile>
 #include <QFileDialog>
@@ -868,7 +869,7 @@ static QString imageNameFilter()
             }
         }
     }
-    QString allSupportedFormatsFilter = tr("Image files (%1)").arg(allSupportedFormats.join(' '));
+    QString allSupportedFormatsFilter = QApplication::tr("Image files (%1)").arg(allSupportedFormats.join(' '));
     return allSupportedFormatsFilter;
 }
 
@@ -1493,7 +1494,7 @@ void MainWindow::on_actionSave_Translation_Base_as_triggered()
     }
 
     if (!this->trnBase->save(trnFilePath)) {
-        QMessageBox::critical(this, tr("Error"), tr("Could not save TRN file.");
+        QMessageBox::critical(this, tr("Error"), tr("Could not save TRN file."));
         return;
     }
 
@@ -1504,7 +1505,7 @@ void MainWindow::on_actionSave_Translation_Base_as_triggered()
     D1Trn *newTrn = new D1Trn(this->trnUnique->getResultingPalette());
     if (!newTrn->load(path)) {
         delete newTrn;
-        QMessageBox::critical(this, tr("Error"), tr("Could not load TRN file.");
+        QMessageBox::critical(this, tr("Error"), tr("Could not load TRN file."));
         return;
     }
 
