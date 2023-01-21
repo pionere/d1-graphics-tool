@@ -51,12 +51,7 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Min *min, D1Til *til, D1Sol *sol, D1Am
 void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
 {
     QString filePath = this->gfx->getFilePath();
-    const char *filter;
-    if (this->isTileset) {
-        filter = tr("CEL Files (*.cel *.CEL)");
-    } else {
-        filter = tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)");
-    }
+    const QString filter = this->isTileset ? tr("CEL Files (*.cel *.CEL)") : tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)");
 
     MainWindow *qw = (MainWindow *)this->parentWidget();
     QString saveFilePath = qw->fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save Graphics as..."), filter);

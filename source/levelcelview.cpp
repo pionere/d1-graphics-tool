@@ -965,7 +965,7 @@ void LevelCelView::reportUsage()
     QMessageBox::information(this, tr("Information"), msg);
 }
 
-static const char *getFrameTypeName(D1CEL_FRAME_TYPE type)
+static QString getFrameTypeName(D1CEL_FRAME_TYPE type)
 {
     switch (type) {
     case D1CEL_FRAME_TYPE::Square:

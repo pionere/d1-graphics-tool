@@ -335,7 +335,7 @@ void MainWindow::nextPaletteCycle(D1PAL_CYCLE_TYPE type)
     this->palWidget->modify();
 }
 
-static QString prepareFilePath(QString filePath, const char *filter)
+static QString prepareFilePath(QString filePath, const QString &filter)
 {
     if (!filePath.isEmpty()) {
         // filter file-name unless it matches the filter
