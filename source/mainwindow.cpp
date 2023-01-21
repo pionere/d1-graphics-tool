@@ -30,12 +30,13 @@ MainWindow::MainWindow()
     : QMainWindow(nullptr)
     , ui(new Ui::MainWindow())
 {
-    this->setWindowTitle(D1_GRAPHICS_TOOL_TITLE);
     // QCoreApplication::setAttribute( Qt::AA_EnableHighDpiScaling, true );
 
     this->lastFilePath = Config::getLastFilePath();
 
     ui->setupUi(this);
+
+    this->setWindowTitle(D1_GRAPHICS_TOOL_TITLE);
 
     // initialize 'new' submenu of 'File'
     this->newMenu.addAction("CEL gfx", this, SLOT(on_actionNew_CEL_triggered()));
@@ -1555,7 +1556,7 @@ void MainWindow::on_actionClose_Translation_Base_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(this, tr("About"), QStringLiteral("%1 %2 (%3) (%4-bit)").arg(D1_GRAPHICS_TOOL_TITLE).arg(D1_GRAPHICS_TOOL_VERSION).arg(OS_TYPE).arg(sizeof(void*) == 8 ? "64" : "32"));
+    QMessageBox::about(this, tr("About"), QStringLiteral("%1 %2 (%3) (%4-bit)").arg(D1_GRAPHICS_TOOL_TITLE).arg(D1_GRAPHICS_TOOL_VERSION).arg(OS_TYPE).arg(sizeof(void *) == 8 ? "64" : "32"));
 }
 
 void MainWindow::on_actionAbout_Qt_triggered()
