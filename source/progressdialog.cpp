@@ -43,7 +43,8 @@ void ProgressDialog::incValue()
 {
     // theDialog->setValue_impl(theDialog->ui->progressBar->value() + 1);
     // theDialog->ui->progressBar->repaint();
-    theDialog->show();
+    // theDialog->show();
+    QCoreApplication::processEvents();
 }
 
 void ProgressDialog::on_cancelPushButton_clicked()
