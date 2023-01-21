@@ -370,7 +370,7 @@ static QString prepareFilePath(QString filePath, const char *filter)
     return filePath;
 }
 
-QString MainWindow::fileDialog(FILE_DIALOG_MODE mode, const char *title, const char *filter)
+QString MainWindow::fileDialog(FILE_DIALOG_MODE mode, const QString &title, const QString &filter)
 {
     QString filePath = prepareFilePath(this->lastFilePath, filter);
 
@@ -386,7 +386,7 @@ QString MainWindow::fileDialog(FILE_DIALOG_MODE mode, const char *title, const c
     return filePath;
 }
 
-QStringList MainWindow::filesDialog(const char *title, const char *filter)
+QStringList MainWindow::filesDialog(const QString &title, const QString &filter)
 {
     QString filePath = prepareFilePath(this->lastFilePath, filter);
 

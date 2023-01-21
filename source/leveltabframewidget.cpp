@@ -1,5 +1,7 @@
 #include "leveltabframewidget.h"
 
+#include <QApplication>
+
 #include "d1gfx.h"
 #include "levelcelview.h"
 #include "ui_leveltabframewidget.h"
@@ -44,13 +46,13 @@ void LevelTabFrameWidget::update()
 
 static bool prepareMsgTransparent(QString &msg, int x, int y)
 {
-    msg = tr("Invalid (transparent) pixel at (%1:%2)").arg(x).arg(y);
+    msg = QApplication::tr("Invalid (transparent) pixel at (%1:%2)").arg(x).arg(y);
     return false;
 }
 
 static bool prepareMsgNonTransparent(QString &msg, int x, int y)
 {
-    msg = tr("Invalid (non-transparent) pixel at (%1:%2").arg(x).arg(y);
+    msg = QApplication::tr("Invalid (non-transparent) pixel at (%1:%2").arg(x).arg(y);
     return false;
 }
 

@@ -4,6 +4,7 @@
 #include <set>
 
 #include <QAction>
+#include <QApplication>
 #include <QColor>
 #include <QDebug>
 #include <QFileInfo>
@@ -968,21 +969,21 @@ static const char *getFrameTypeName(D1CEL_FRAME_TYPE type)
 {
     switch (type) {
     case D1CEL_FRAME_TYPE::Square:
-        return tr("Square");
+        return QApplication::tr("Square");
     case D1CEL_FRAME_TYPE::TransparentSquare:
-        return tr("Transparent square");
+        return QApplication::tr("Transparent square");
     case D1CEL_FRAME_TYPE::LeftTriangle:
-        return tr("Left Triangle");
+        return QApplication::tr("Left Triangle");
     case D1CEL_FRAME_TYPE::RightTriangle:
-        return tr("Right Triangle");
+        return QApplication::tr("Right Triangle");
     case D1CEL_FRAME_TYPE::LeftTrapezoid:
-        return tr("Left Trapezoid");
+        return QApplication::tr("Left Trapezoid");
     case D1CEL_FRAME_TYPE::RightTrapezoid:
-        return tr("Right Trapezoid");
+        return QApplication::tr("Right Trapezoid");
     case D1CEL_FRAME_TYPE::Empty:
-        return tr("Empty");
+        return QApplication::tr("Empty");
     default:
-        return tr("Unknown");
+        return QApplication::tr("Unknown");
     }
 }
 

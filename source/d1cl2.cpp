@@ -1,5 +1,6 @@
 #include "d1cl2.h"
 
+#include <QApplication>
 #include <QBuffer>
 #include <QByteArray>
 #include <QDataStream>
@@ -138,7 +139,7 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
                 }
             }
         } else if (readByte == 0x00) {
-            qDebug() << tr("0x00 found");
+            qDebug() << QApplication::tr("0x00 found");
         }
     }
 
@@ -381,7 +382,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
         }
     } else {
         if (numFrames == 0 || (numFrames % numGroups) != 0) {
-            QMessageBox::critical(nullptr, tr("Error"), tr("Frames can not be split to equal groups."));
+            QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Frames can not be split to equal groups."));
             return false;
         }
         groupped = true;
@@ -470,7 +471,7 @@ bool D1Cl2::save(D1Gfx &gfx, const SaveAsParam &params)
         filePath = params.celFilePath;
         if (QFile::exists(filePath)) {
             QMessageBox::StandardButton reply;
-            reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to overwrite %1?").arg(filePath), QMessageBox::Yes | QMessageBox::No);
+            reply = QMessageBox::question(nullptr, QApplication::tr("Confirmation"), QApplication::tr("Are you sure you want to overwrite %1?").arg(filePath), QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) {
                 return false;
             }
@@ -479,7 +480,7 @@ bool D1Cl2::save(D1Gfx &gfx, const SaveAsParam &params)
 
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly | QFile::Truncate)) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open file: %1)").arg(filePath));
+        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed open file: %1)").arg(filePath));
         return false;
     }
 

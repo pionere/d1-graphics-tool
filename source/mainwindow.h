@@ -64,8 +64,8 @@ public:
     void resetPaletteCycle();
 
     QString getLastFilePath();
-    QString fileDialog(FILE_DIALOG_MODE mode, const char *title, const char *filter);
-    QStringList filesDialog(const char *title, const char *filter);
+    QString fileDialog(FILE_DIALOG_MODE mode, const QString &title, const QString &filter);
+    QStringList filesDialog(const QString &title, const QString &filter);
 
     static bool hasImageUrl(const QMimeData *mimeData);
 
