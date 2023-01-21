@@ -27,7 +27,8 @@ jobs:
       run: cmake -S. -Bbuild -A Win32
 
     - name: Make
-      run: cmake --build build -j $(nproc)
+#      run: cmake --build build -j $(nproc)
+      run: cmake --build build
 
     - name: Package
       run: |
