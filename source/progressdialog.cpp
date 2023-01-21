@@ -23,8 +23,7 @@ ProgressDialog::~ProgressDialog()
 void ProgressDialog::start(const QString &label, int maxValue)
 {
     theDialog->ui->progressLabel->setText(label);
-    theDialog->ui->progressBar->setMaximum(maxValue);
-    theDialog->ui->progressBar->setMinimum(0);
+    theDialog->ui->progressBar->setRange(0, maxValue);
     theDialog->setValue_impl(0);
     theDialog->cancelled = false;
     theDialog->show();
@@ -43,7 +42,7 @@ bool ProgressDialog::wasCanceled()
 void ProgressDialog::incValue()
 {
     theDialog->setValue_impl(theDialog->ui->progressBar->value() + 1);
-    this->ui->progressBar->repaint();
+    theDialog->ui->progressBar->repaint();
 }
 
 void ProgressDialog::on_cancelPushButton_clicked()
