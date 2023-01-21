@@ -42,10 +42,10 @@ QT4_WRAP_TS(DGT_TS_FILES lrelease_outputs
 #SET(DGT_TS_FILES
 #        translations/D1GraphicsTool_en.ts
 #)
-
+message(WARNING "This is fine 0")
 qt5_add_translation(DGT_QM_FILES ${DGT_TS_FILES})
-add_custom_target(translations DEPENDS ${DGT_QM_FILES})
-
+#add_custom_target(translations DEPENDS ${DGT_QM_FILES})
+message(WARNING "This is fine 1")
 if(NOT QT_TRANSLATIONS_DIR)
   # If this directory is missing, we are in a Qt5 environment.
   # Extract the qmake executable location
@@ -57,9 +57,9 @@ if(NOT QT_TRANSLATIONS_DIR)
   file(TO_CMAKE_PATH "${qt_translations_dir}" qt_translations_dir)
   set(QT_TRANSLATIONS_DIR ${qt_translations_dir} CACHE PATH "The location of the Qt translations" FORCE)
 endif()
-
+message(WARNING "This is fine 2")
 install(FILES ${DGT_QM_FILES} DESTINATION ${QT_TRANSLATIONS_DIR})
-
+message(WARNING "This is fine 3")
 include_directories(source)
 
 set(PROJECT_SOURCES
@@ -140,7 +140,7 @@ set(PROJECT_SOURCES
         source/upscaler.cpp
         source/upscaler.h
 )
-
+message(WARNING "This is fine 4")
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(D1GraphicsTool
         resources/D1GraphicsTool.rc
@@ -157,7 +157,7 @@ else()
         ${PROJECT_SOURCES}
     )
 endif()
-
+message(WARNING "This is fine 5")
 target_link_libraries(D1GraphicsTool PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 set_target_properties(D1GraphicsTool PROPERTIES
