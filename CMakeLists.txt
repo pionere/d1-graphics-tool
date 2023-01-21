@@ -19,6 +19,15 @@ SET(DGT_TS_FILES
 
 qt5_create_translation(DGT_QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${DGT_TS_FILES})
 
+# Create translations QRC file - ts.qrc
+set(TRANSLATIONS_QRC "${CMAKE_CURRENT_BINARY_DIR}/ts.qrc")
+file(WRITE ${TRANSLATIONS_QRC} "<RCC>\n\t<qresource prefix=\"/translations\">")
+foreach(QM_FILE ${DGT_QM_FILES})
+    get_filename_component(QM_FILE_NAME ${QM_FILE} NAME)
+    file(APPEND ${TRANSLATIONS_QRC} "\n\t\t<file alias=\"${QM_FILE_NAME}\">${QM_FILE_NAME}</file>")
+endforeach()
+file(APPEND ${TRANSLATIONS_QRC} "\n\t</qresource>\n</RCC>")
+
 # Source files
 include_directories(source)
 
@@ -102,18 +111,19 @@ set(PROJECT_SOURCES
 )
 
 qt5_add_resources(RESOURCES
-        resources/D1GraphicsTool.rc
         resources/d1files.qrc
-        ${DGT_QM_FILES})
+        ${TRANSLATIONS_QRC})
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(D1GraphicsTool
+        resources/D1GraphicsTool.rc
         ${RESOURCES}
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
 else()
     add_executable(D1GraphicsTool
+        resources/D1GraphicsTool.rc
         ${RESOURCES}
         ${PROJECT_SOURCES}
     )
