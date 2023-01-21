@@ -1529,32 +1529,36 @@ void MainWindow::on_actionClose_Translation_Base_triggered()
     this->trnBaseWidget->selectPath(D1Trn::IDENTITY_PATH);
 }
 
+#if defined(Q_OS_WIN)
+#define OS_TYPE "Windows"
+#elif defined(Q_OS_QNX)
+#define OS_TYPE "qnx"
+#elif defined(Q_OS_ANDROID)
+#define OS_TYPE "android"
+#elif defined(Q_OS_IOS)
+#define OS_TYPE "iOS"
+#elif defined(Q_OS_TVOS)
+#define OS_TYPE "tvOS"
+#elif defined(Q_OS_WATCHOS)
+#define OS_TYPE "watchOS"
+#elif defined(Q_OS_MACOS)
+#define OS_TYPE "macOS"
+#elif defined(Q_OS_DARWIN)
+#define OS_TYPE "darwin"
+#elif defined(Q_OS_WASM)
+#define OS_TYPE "wasm"
+#elif defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD)
+#define OS_TYPE "linux"
+#else
+#define OS_TYPE tr("unknown")
+#endif
+
 void MainWindow::on_actionAbout_triggered()
 {
-#ifdef Q_PROCESSOR_X86_64
-    QLatin1String architecture = QLatin1String("64");
-#endif
-
-#ifdef Q_PROCESSOR_X86_32
-    QLatin1String architecture = QLatin1String("32");
-#endif
-
-#ifdef Q_OS_WIN
-    QLatin1String operatingSystem = QLatin1String("Windows");
-#endif
-
-#ifdef Q_OS_MAC
-    QLatin1String operatingSystem = QLatin1String("macOS");
-#endif
-
-#ifdef Q_OS_LINUX
-    QLatin1String operatingSystem = QLatin1String("Linux");
-#endif
-
-    QMessageBox::about(this, "About", QString("%1 %2 (%3) (%4-bit)").arg(D1_GRAPHICS_TOOL_TITLE).arg(D1_GRAPHICS_TOOL_VERSION).arg(operatingSystem).arg(architecture));
+    QMessageBox::about(this, tr("About"), QStringLiteral("%1 %2 (%3) (%4-bit)").arg(D1_GRAPHICS_TOOL_TITLE).arg(D1_GRAPHICS_TOOL_VERSION).arg(OS_TYPE).arg(sizeof(void*) == 8 ? "64" : "32"));
 }
 
 void MainWindow::on_actionAbout_Qt_triggered()
 {
-    QMessageBox::aboutQt(this, "About Qt");
+    QMessageBox::aboutQt(this, tr("About Qt"));
 }
