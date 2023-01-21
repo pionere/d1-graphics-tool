@@ -58,7 +58,7 @@ SET(DGT_TS_FILES
 #endif()
 
 #install(FILES ${DGT_QM_FILES} DESTINATION ${QT_TRANSLATIONS_DIR})
-qt5_create_translation(DGT_QM_FILES ${CMAKE_SOURCE_DIR} ${DGT_TS_FILES})
+qt5_create_translation(DGT_QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${DGT_TS_FILES})
 
 include_directories(source)
 
