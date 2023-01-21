@@ -23,7 +23,7 @@ ProgressDialog::~ProgressDialog()
 void ProgressDialog::start(const QString &label, int maxValue)
 {
     theDialog->ui->progressLabel->setText(label);
-    // theDialog->ui->progressBar->setRange(0, maxValue);
+    theDialog->ui->progressBar->setRange(0, maxValue);
     theDialog->setValue_impl(0);
     theDialog->cancelled = false;
     theDialog->show();
@@ -41,7 +41,7 @@ bool ProgressDialog::wasCanceled()
 
 void ProgressDialog::incValue()
 {
-    // theDialog->setValue_impl(theDialog->ui->progressBar->value() + 1);
+    theDialog->setValue_impl(theDialog->ui->progressBar->value() + 1);
     // theDialog->ui->progressBar->repaint();
     // theDialog->show();
     QCoreApplication::processEvents();
@@ -60,6 +60,6 @@ void ProgressDialog::closeEvent(QCloseEvent *e)
 
 void ProgressDialog::setValue_impl(int value)
 {
-    // this->ui->progressBar->setValue(value);
-    // this->ui->progressBar->setFormat(QString("%1%%").arg(value * 100 / this->ui->progressBar->maximum()));
+    this->ui->progressBar->setValue(value);
+    this->ui->progressBar->setFormat(QString("%1%%").arg(value * 100 / this->ui->progressBar->maximum()));
 }
