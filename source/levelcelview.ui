@@ -16,9 +16,6 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
     <number>0</number>
@@ -54,11 +51,7 @@
        <number>4</number>
       </property>
       <item>
-       <widget class="QLabel" name="celLabel">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
+       <widget class="QLabel" name="celLabel"/>
       </item>
       <item>
        <widget class="QGraphicsView" name="celGraphicsView">
@@ -106,7 +99,7 @@
            </size>
           </property>
           <property name="text">
-           <string>-</string>
+           <string notr="true">-</string>
           </property>
          </widget>
         </item>
@@ -135,7 +128,7 @@
            </size>
           </property>
           <property name="text">
-           <string>+</string>
+           <string notr="true">+</string>
           </property>
          </widget>
         </item>
@@ -168,7 +161,7 @@
            </size>
           </property>
           <property name="text">
-           <string>-</string>
+           <string notr="true">-</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -218,22 +211,22 @@
          <widget class="QComboBox" name="playComboBox">
           <item>
            <property name="text">
-            <string>Caves (L3)</string>
+            <string>(L3) Caves</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Hell (L4)</string>
+            <string>(L4) Hell</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Crypt (L5)</string>
+            <string>(L5) Crypt</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Nest (L6)</string>
+            <string>(L6) Nest</string>
            </property>
           </item>
          </widget>
@@ -283,7 +276,7 @@
            <string>First group</string>
           </property>
           <property name="text">
-           <string>|&lt;</string>
+           <string notr="true">|&lt;</string>
           </property>
          </widget>
         </item>
@@ -305,7 +298,7 @@
            <string>Previous group</string>
           </property>
           <property name="text">
-           <string>&lt;</string>
+           <string notr="true">&lt;</string>
           </property>
          </widget>
         </item>
@@ -318,7 +311,7 @@
            <string>Current group</string>
           </property>
           <property name="text">
-           <string>0</string>
+           <string notr="true">0</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -340,7 +333,7 @@
            </size>
           </property>
           <property name="text">
-           <string>/</string>
+           <string notr="true">/</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -356,7 +349,7 @@
            <string>Number of groups</string>
           </property>
           <property name="text">
-           <string>0</string>
+           <string notr="true">0</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -384,7 +377,7 @@
            <string>Next group</string>
           </property>
           <property name="text">
-           <string>&gt;</string>
+           <string notr="true">&gt;</string>
           </property>
          </widget>
         </item>
@@ -406,7 +399,7 @@
            <string>Last group</string>
           </property>
           <property name="text">
-           <string>&gt;|</string>
+           <string notr="true">&gt;|</string>
           </property>
          </widget>
         </item>
@@ -445,7 +438,7 @@
            </size>
           </property>
           <property name="text">
-           <string>*</string>
+           <string notr="true">*</string>
           </property>
          </widget>
         </item>
@@ -500,7 +493,7 @@
            <string>First group</string>
           </property>
           <property name="text">
-           <string>|&lt;</string>
+           <string notr="true">|&lt;</string>
           </property>
          </widget>
         </item>
@@ -522,7 +515,7 @@
            <string>Previous group</string>
           </property>
           <property name="text">
-           <string>&lt;</string>
+           <string notr="true">&lt;</string>
           </property>
          </widget>
         </item>
@@ -533,9 +526,6 @@
           </property>
           <property name="toolTip">
            <string>Current group</string>
-          </property>
-          <property name="text">
-           <string>0</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -557,7 +547,7 @@
            </size>
           </property>
           <property name="text">
-           <string>/</string>
+           <string notr="true">/</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -571,9 +561,6 @@
           </property>
           <property name="toolTip">
            <string>Number of groups</string>
-          </property>
-          <property name="text">
-           <string>0</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -601,7 +588,7 @@
            <string>Next group</string>
           </property>
           <property name="text">
-           <string>&gt;</string>
+           <string notr="true">&gt;</string>
           </property>
          </widget>
         </item>
@@ -623,7 +610,7 @@
            <string>Last group</string>
           </property>
           <property name="text">
-           <string>&gt;|</string>
+           <string notr="true">&gt;|</string>
           </property>
          </widget>
         </item>
@@ -659,7 +646,7 @@
            </size>
           </property>
           <property name="text">
-           <string>*</string>
+           <string notr="true">*</string>
           </property>
          </widget>
         </item>
@@ -711,7 +698,7 @@
            <string>First frame</string>
           </property>
           <property name="text">
-           <string>|&lt;</string>
+           <string notr="true">|&lt;</string>
           </property>
          </widget>
         </item>
@@ -733,7 +720,7 @@
            <string>Previous frame</string>
           </property>
           <property name="text">
-           <string>&lt;</string>
+           <string notr="true">&lt;</string>
           </property>
          </widget>
         </item>
@@ -744,9 +731,6 @@
           </property>
           <property name="toolTip">
            <string>Current frame</string>
-          </property>
-          <property name="text">
-           <string>0</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -768,7 +752,7 @@
            </size>
           </property>
           <property name="text">
-           <string>/</string>
+           <string notr="true">/</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -782,9 +766,6 @@
           </property>
           <property name="toolTip">
            <string>Number of frames</string>
-          </property>
-          <property name="text">
-           <string>0</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -812,7 +793,7 @@
            <string>Next frame</string>
           </property>
           <property name="text">
-           <string>&gt;</string>
+           <string notr="true">&gt;</string>
           </property>
          </widget>
         </item>
@@ -834,7 +815,7 @@
            <string>Last frame</string>
           </property>
           <property name="text">
-           <string>&gt;|</string>
+           <string notr="true">&gt;|</string>
           </property>
          </widget>
         </item>
@@ -876,7 +857,7 @@
            </size>
           </property>
           <property name="text">
-           <string>*</string>
+           <string notr="true">*</string>
           </property>
          </widget>
         </item>

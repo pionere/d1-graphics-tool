@@ -179,7 +179,7 @@ void PaletteScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     QPointF pos = event->scenePos();
 
-    qDebug() << "Clicked: " << pos.x() << "," << pos.y();
+    qDebug() << tr("Clicked: %1:%2").arg(pos.x()).arg(pos.y());
 
     // Check if selected color has changed
     int colorIndex = getColorIndexFromCoordinates(pos);
@@ -275,11 +275,11 @@ PaletteWidget::PaletteWidget(QUndoStack *us, QString title)
     ui->graphicsView->setScene(this->scene);
     ui->groupLabel->setText(title);
 
-    this->addButton(QStyle::SP_FileDialogNewFolder, "New", &PaletteWidget::on_newPushButtonClicked); // use SP_FileIcon ?
-    this->addButton(QStyle::SP_DialogOpenButton, "Open", &PaletteWidget::on_openPushButtonClicked);
-    this->addButton(QStyle::SP_DialogSaveButton, "Save", &PaletteWidget::on_savePushButtonClicked);
-    this->addButton(QStyle::SP_DialogSaveButton, "Save As", &PaletteWidget::on_saveAsPushButtonClicked);
-    this->addButton(QStyle::SP_DialogCloseButton, "Close", &PaletteWidget::on_closePushButtonClicked); // use SP_DialogDiscardButton ?
+    this->addButton(QStyle::SP_FileDialogNewFolder, tr("New"), &PaletteWidget::on_newPushButtonClicked); // use SP_FileIcon ?
+    this->addButton(QStyle::SP_DialogOpenButton, tr("Open"), &PaletteWidget::on_openPushButtonClicked);
+    this->addButton(QStyle::SP_DialogSaveButton, tr("Save"), &PaletteWidget::on_savePushButtonClicked);
+    this->addButton(QStyle::SP_DialogSaveButton, tr("Save As"), &PaletteWidget::on_saveAsPushButtonClicked);
+    this->addButton(QStyle::SP_DialogCloseButton, tr("Close"), &PaletteWidget::on_closePushButtonClicked); // use SP_DialogDiscardButton ?
 
     // When there is a modification to the PAL or TRNs then UI must be refreshed
     QObject::connect(this, &PaletteWidget::modified, this, &PaletteWidget::refresh);
@@ -378,17 +378,17 @@ void PaletteWidget::initializePathComboBox()
 
 void PaletteWidget::initializeDisplayComboBox()
 {
-    ui->displayComboBox->addItem("Show all colors", QVariant((int)COLORFILTER_TYPE::NONE));
+    ui->displayComboBox->addItem(tr("Show all colors"), QVariant((int)COLORFILTER_TYPE::NONE));
 
     if (!this->isTrn) {
-        ui->displayComboBox->addItem("Show all frames hits", QVariant((int)COLORFILTER_TYPE::USED));
+        ui->displayComboBox->addItem(tr("Show all frames hits"), QVariant((int)COLORFILTER_TYPE::USED));
         if (this->levelCelView != nullptr) {
-            ui->displayComboBox->addItem("Show current tile hits", QVariant((int)COLORFILTER_TYPE::TILE));
-            ui->displayComboBox->addItem("Show current sub-tile hits", QVariant((int)COLORFILTER_TYPE::SUBTILE));
+            ui->displayComboBox->addItem(tr("Show current tile hits"), QVariant((int)COLORFILTER_TYPE::TILE));
+            ui->displayComboBox->addItem(tr("Show current sub-tile hits"), QVariant((int)COLORFILTER_TYPE::SUBTILE));
         }
-        ui->displayComboBox->addItem("Show current frame hits", QVariant((int)COLORFILTER_TYPE::FRAME));
+        ui->displayComboBox->addItem(tr("Show current frame hits"), QVariant((int)COLORFILTER_TYPE::FRAME));
     } else {
-        ui->displayComboBox->addItem("Show translated colors", QVariant((int)COLORFILTER_TYPE::TRANSLATED));
+        ui->displayComboBox->addItem(tr("Show translated colors"), QVariant((int)COLORFILTER_TYPE::TRANSLATED));
     }
 }
 
@@ -413,7 +413,7 @@ void PaletteWidget::checkTranslationsSelection(QList<quint8> indexes)
 {
     int selectionLength = this->selectedLastColorIndex - this->selectedFirstColorIndex + 1;
     if (selectionLength != indexes.length()) {
-        QMessageBox::warning(this, "Warning", "Source and target selection length do not match.");
+        QMessageBox::warning(this, tr("Warning"), tr("Source and target selection length do not match."));
         return;
     }
 
@@ -472,12 +472,12 @@ void PaletteWidget::ShowContextMenu(const QPoint &pos)
     QMenu contextMenu(tr("Context menu"), this);
     contextMenu.setToolTipsVisible(true);
 
-    QAction action0("Undo", this);
+    QAction action0(tr("Undo"), this);
     QObject::connect(&action0, SIGNAL(triggered()), this, SLOT(on_actionUndo_triggered()));
     action0.setEnabled(this->undoStack->canUndo());
     contextMenu.addAction(&action0);
 
-    QAction action1("Redo", this);
+    QAction action1(tr("Redo"), this);
     QObject::connect(&action1, SIGNAL(triggered()), this, SLOT(on_actionRedo_triggered()));
     action1.setEnabled(this->undoStack->canRedo());
     contextMenu.addAction(&action1);
@@ -659,7 +659,7 @@ void PaletteWidget::startTrnColorPicking()
     this->initStopColorPicking();
 
     this->ui->graphicsView->setStyleSheet("color: rgb(255, 0, 0);");
-    this->ui->informationLabel->setText("<- Select translation");
+    this->ui->informationLabel->setText(tr("<- Select translation"));
     this->pickingTranslationColor = true;
     this->displayColors();
 }

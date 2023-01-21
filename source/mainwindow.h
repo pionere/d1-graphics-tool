@@ -164,10 +164,10 @@ private:
     Ui::MainWindow *ui;
     QString lastFilePath;
 
-    QMenu newMenu = QMenu("New");
-    QMenu frameMenu = QMenu("Frame");
-    QMenu subtileMenu = QMenu("Subtile");
-    QMenu tileMenu = QMenu("Tile");
+    QMenu newMenu = QMenu(tr("New"));
+    QMenu frameMenu = QMenu(tr("Frame"));
+    QMenu subtileMenu = QMenu(tr("Subtile"));
+    QMenu tileMenu = QMenu(tr("Tile"));
 
     QUndoStack *undoStack;
     QAction *undoAction;

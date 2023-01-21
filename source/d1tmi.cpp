@@ -37,7 +37,7 @@ bool D1Tmi::load(QString filePath, D1Sol *sol, const OpenAsParam &params)
     int tmiSubtileCount = fileSize;
     if (tmiSubtileCount != subtileCount) {
         if (tmiSubtileCount != 0) {
-            qDebug() << "The size of tmi-file does not align with sol-file";
+            qDebug() << tr("The size of tmi-file does not align with sol-file");
         }
         if (tmiSubtileCount > subtileCount) {
             tmiSubtileCount = subtileCount; // skip unusable data
@@ -71,7 +71,7 @@ bool D1Tmi::save(const SaveAsParam &params)
         filePath = params.tmiFilePath;
         if (QFile::exists(filePath)) {
             QMessageBox::StandardButton reply;
-            reply = QMessageBox::question(nullptr, "Confirmation", "Are you sure you want to overwrite " + filePath + "?", QMessageBox::Yes | QMessageBox::No);
+            reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to overwrite %1?").arg(filePath), QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) {
                 return false;
             }
@@ -80,7 +80,7 @@ bool D1Tmi::save(const SaveAsParam &params)
 
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly | QFile::Truncate)) {
-        QMessageBox::critical(nullptr, "Error", "Failed open file: " + filePath);
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open file: %1").arg(filePath));
         return false;
     }
 

@@ -31,7 +31,7 @@ void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     int x = event->scenePos().x();
     int y = event->scenePos().y();
 
-    qDebug() << "Clicked: " << x << "," << y;
+    qDebug() << tr("Clicked: %1:%2").arg(x).arg(y);
 
     emit this->framePixelClicked(x, y);
 }
@@ -270,7 +270,7 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
     }
 
     if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, "Error", "Failed read image file: " + imagefilePath);
+        QMessageBox::critical(this, tr("Error"), tr("Failed read image file: %1").arg(imagefilePath));
     }
 }
 
@@ -306,7 +306,7 @@ void CelView::upscale(const UpscaleParam &params)
 {
     int amount = this->gfx->getFrameCount();
 
-    ProgressDialog::start("Upscaling", amount + 1);
+    ProgressDialog::start(tr("Upscaling"), amount + 1);
 
     if (Upscaler::upscaleGfx(this->gfx, params)) {
         // update the view
@@ -410,26 +410,26 @@ void CelView::ShowContextMenu(const QPoint &pos)
     QMenu contextMenu(tr("Context menu"), this);
     contextMenu.setToolTipsVisible(true);
 
-    QAction action0("Insert Frame", this);
-    action0.setToolTip("Add new frames before the current one");
+    QAction action0(tr("Insert Frame"), this);
+    action0.setToolTip(tr("Add new frames before the current one"));
     QObject::connect(&action0, SIGNAL(triggered()), mw, SLOT(on_actionInsert_Frame_triggered()));
     contextMenu.addAction(&action0);
 
-    QAction action1("Add Frame", this);
-    action1.setToolTip("Add new frames at the end");
+    QAction action1(tr("Add Frame"), this);
+    action1.setToolTip(tr("Add new frames at the end"));
     QObject::connect(&action1, SIGNAL(triggered()), mw, SLOT(on_actionAdd_Frame_triggered()));
     contextMenu.addAction(&action1);
 
-    QAction action2("Replace Frame", this);
-    action2.setToolTip("Replace the current frame");
+    QAction action2(tr("Replace Frame"), this);
+    action2.setToolTip(tr("Replace the current frame"));
     QObject::connect(&action2, SIGNAL(triggered()), mw, SLOT(on_actionReplace_Frame_triggered()));
     if (this->gfx->getFrameCount() == 0) {
         action2.setEnabled(false);
     }
     contextMenu.addAction(&action2);
 
-    QAction action3("Del Frame", this);
-    action3.setToolTip("Delete the current frame");
+    QAction action3(tr("Del Frame"), this);
+    action3.setToolTip(tr("Delete the current frame"));
     QObject::connect(&action3, SIGNAL(triggered()), mw, SLOT(on_actionDel_Frame_triggered()));
     if (this->gfx->getFrameCount() == 0) {
         action3.setEnabled(false);

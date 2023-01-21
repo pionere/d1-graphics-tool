@@ -81,7 +81,7 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
     if (fileSize != 0) {
         // CEL HEADER CHECKS
         if (fileSize < 4) {
-            qDebug() << "Level-cel-file is too small.";
+            qDebug() << tr("Level-cel-file is too small.");
             return false;
         }
 
@@ -93,7 +93,7 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
 
         // Trying to find file size in CEL header
         if (fileSize < (4 + numFrames * 4 + 4)) {
-            qDebug() << "Header of the level-cel-file is too small.";
+            qDebug() << tr("Header of the level-cel-file is too small.");
             return false;
         }
 
@@ -102,7 +102,7 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
         in >> fileSizeDword;
 
         if (fileSize != fileSizeDword) {
-            qDebug() << "Invalid level-cel-file header.";
+            qDebug() << tr("Invalid level-cel-file header.");
             return false;
         }
     }
@@ -139,7 +139,7 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
             if (iter != celFrameTypes.end()) {
                 frameType = iter->second;
             } else {
-                qDebug() << "Unknown frame type for frame " << i + 1;
+                qDebug() << tr("Unknown frame type for frame %1").arg(i + 1);
                 frameType = guessFrameType(celFrameRawData);
             }
         }
@@ -206,7 +206,7 @@ bool D1CelTileset::save(D1Gfx &gfx, const SaveAsParam &params)
         filePath = params.celFilePath;
         if (QFile::exists(filePath)) {
             QMessageBox::StandardButton reply;
-            reply = QMessageBox::question(nullptr, "Confirmation", "Are you sure you want to overwrite " + filePath + "?", QMessageBox::Yes | QMessageBox::No);
+            reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to overwrite %1?").arg(filePath), QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) {
                 return false;
             }
@@ -215,7 +215,7 @@ bool D1CelTileset::save(D1Gfx &gfx, const SaveAsParam &params)
 
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly | QFile::Truncate)) {
-        QMessageBox::critical(nullptr, "Error", "Failed open file: " + filePath);
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open file: %1").arg(filePath));
         return false;
     }
 

@@ -39,17 +39,17 @@ MainWindow::MainWindow()
     this->setWindowTitle(D1_GRAPHICS_TOOL_TITLE);
 
     // initialize 'new' submenu of 'File'
-    this->newMenu.addAction("CEL gfx", this, SLOT(on_actionNew_CEL_triggered()));
-    this->newMenu.addAction("CL2 gfx", this, SLOT(on_actionNew_CL2_triggered()));
-    this->newMenu.addAction("Tileset", this, SLOT(on_actionNew_Tileset_triggered()));
+    this->newMenu.addAction(tr("CEL gfx"), this, SLOT(on_actionNew_CEL_triggered()));
+    this->newMenu.addAction(tr("CL2 gfx"), this, SLOT(on_actionNew_CL2_triggered()));
+    this->newMenu.addAction(tr("Tileset"), this, SLOT(on_actionNew_Tileset_triggered()));
     QAction *firstFileAction = (QAction *)this->ui->menuFile->actions()[0];
     this->ui->menuFile->insertMenu(firstFileAction, &this->newMenu);
 
     // Initialize 'Undo/Redo' of 'Edit
     this->undoStack = new QUndoStack(this);
-    this->undoAction = undoStack->createUndoAction(this, "Undo");
+    this->undoAction = undoStack->createUndoAction(this, tr("Undo"));
     this->undoAction->setShortcuts(QKeySequence::Undo);
-    this->redoAction = undoStack->createRedoAction(this, "Redo");
+    this->redoAction = undoStack->createRedoAction(this, tr("Redo"));
     this->redoAction->setShortcuts(QKeySequence::Redo);
     this->ui->menuEdit->addAction(this->undoAction);
     this->ui->menuEdit->addAction(this->redoAction);
@@ -57,33 +57,33 @@ MainWindow::MainWindow()
 
     // Initialize 'Frame' submenu of 'Edit'
     this->frameMenu.setToolTipsVisible(true);
-    this->frameMenu.addAction("Insert", this, SLOT(on_actionInsert_Frame_triggered()))->setToolTip("Add new frames before the current one");
-    this->frameMenu.addAction("Add", this, SLOT(on_actionAdd_Frame_triggered()))->setToolTip("Add new frames at the end");
-    this->frameMenu.addAction("Replace", this, SLOT(on_actionReplace_Frame_triggered()))->setToolTip("Replace the current frame");
-    this->frameMenu.addAction("Delete", this, SLOT(on_actionDel_Frame_triggered()))->setToolTip("Delete the current frame");
+    this->frameMenu.addAction(tr("Insert"), this, SLOT(on_actionInsert_Frame_triggered()))->setToolTip(tr("Add new frames before the current one"));
+    this->frameMenu.addAction(tr("Add"), this, SLOT(on_actionAdd_Frame_triggered()))->setToolTip(tr("Add new frames at the end"));
+    this->frameMenu.addAction(tr("Replace"), this, SLOT(on_actionReplace_Frame_triggered()))->setToolTip(tr("Replace the current frame"));
+    this->frameMenu.addAction(tr("Delete"), this, SLOT(on_actionDel_Frame_triggered()))->setToolTip(tr("Delete the current frame"));
     this->ui->menuEdit->addMenu(&this->frameMenu);
 
     // Initialize 'Subtile' submenu of 'Edit'
     this->subtileMenu.setToolTipsVisible(true);
-    this->subtileMenu.addAction("Create", this, SLOT(on_actionCreate_Subtile_triggered()))->setToolTip("Create a new subtile");
-    this->subtileMenu.addAction("Insert", this, SLOT(on_actionInsert_Subtile_triggered()))->setToolTip("Add new subtiles before the current one");
-    this->subtileMenu.addAction("Add", this, SLOT(on_actionAdd_Subtile_triggered()))->setToolTip("Add new subtiles at the end");
-    this->subtileMenu.addAction("Replace", this, SLOT(on_actionReplace_Subtile_triggered()))->setToolTip("Replace the current subtile");
-    this->subtileMenu.addAction("Delete", this, SLOT(on_actionDel_Subtile_triggered()))->setToolTip("Delete the current subtile");
+    this->subtileMenu.addAction(tr("Create"), this, SLOT(on_actionCreate_Subtile_triggered()))->setToolTip(tr("Create a new subtile"));
+    this->subtileMenu.addAction(tr("Insert"), this, SLOT(on_actionInsert_Subtile_triggered()))->setToolTip(tr("Add new subtiles before the current one"));
+    this->subtileMenu.addAction(tr("Add"), this, SLOT(on_actionAdd_Subtile_triggered()))->setToolTip(tr("Add new subtiles at the end"));
+    this->subtileMenu.addAction(tr("Replace"), this, SLOT(on_actionReplace_Subtile_triggered()))->setToolTip(tr("Replace the current subtile"));
+    this->subtileMenu.addAction(tr("Delete"), this, SLOT(on_actionDel_Subtile_triggered()))->setToolTip(tr("Delete the current subtile"));
     this->ui->menuEdit->addMenu(&this->subtileMenu);
 
     // Initialize 'Tile' submenu of 'Edit'
     this->tileMenu.setToolTipsVisible(true);
-    this->tileMenu.addAction("Create", this, SLOT(on_actionCreate_Tile_triggered()))->setToolTip("Create a new tile");
-    this->tileMenu.addAction("Insert", this, SLOT(on_actionInsert_Tile_triggered()))->setToolTip("Add new tiles before the current one");
-    this->tileMenu.addAction("Add", this, SLOT(on_actionAdd_Tile_triggered()))->setToolTip("Add new tiles at the end");
-    this->tileMenu.addAction("Replace", this, SLOT(on_actionReplace_Tile_triggered()))->setToolTip("Replace the current tile");
-    this->tileMenu.addAction("Delete", this, SLOT(on_actionDel_Tile_triggered()))->setToolTip("Delete the current tile");
+    this->tileMenu.addAction(tr("Create"), this, SLOT(on_actionCreate_Tile_triggered()))->setToolTip(tr("Create a new tile"));
+    this->tileMenu.addAction(tr("Insert"), this, SLOT(on_actionInsert_Tile_triggered()))->setToolTip(tr("Add new tiles before the current one"));
+    this->tileMenu.addAction(tr("Add"), this, SLOT(on_actionAdd_Tile_triggered()))->setToolTip(tr("Add new tiles at the end"));
+    this->tileMenu.addAction(tr("Replace"), this, SLOT(on_actionReplace_Tile_triggered()))->setToolTip(tr("Replace the current tile"));
+    this->tileMenu.addAction(tr("Delete"), this, SLOT(on_actionDel_Tile_triggered()))->setToolTip(tr("Delete the current tile"));
     this->ui->menuEdit->addMenu(&this->tileMenu);
 
     // add Upscale option to 'Edit'
     this->ui->menuEdit->addSeparator();
-    this->ui->menuEdit->addAction("Upscale", this, SLOT(on_actionUpscale_triggered()))->setToolTip("Upscale the current graphics");
+    this->ui->menuEdit->addAction(tr("Upscale"), this, SLOT(on_actionUpscale_triggered()))->setToolTip(tr("Upscale the current graphics"));
 
     this->on_actionClose_triggered();
     setAcceptDrops(true);
@@ -170,7 +170,7 @@ bool MainWindow::loadPal(QString palFilePath)
     D1Pal *newPal = new D1Pal();
     if (!newPal->load(path)) {
         delete newPal;
-        QMessageBox::critical(this, "Error", "Could not load PAL file.");
+        QMessageBox::critical(this, tr("Error"), tr("Could not load PAL file."));
         return false;
     }
 
@@ -191,7 +191,7 @@ bool MainWindow::loadUniqueTrn(QString trnFilePath)
     D1Trn *newTrn = new D1Trn(this->pal);
     if (!newTrn->load(path)) {
         delete newTrn;
-        QMessageBox::critical(this, "Error", "Could not load TRN file.");
+        QMessageBox::critical(this, tr("Error"), tr("Could not load TRN file."));
         return false;
     }
 
@@ -212,7 +212,7 @@ bool MainWindow::loadBaseTrn(QString trnFilePath)
     D1Trn *newTrn = new D1Trn(this->pal);
     if (!newTrn->load(path)) {
         delete newTrn;
-        QMessageBox::critical(this, "Error", "Could not load TRN file.");
+        QMessageBox::critical(this, tr("Error"), tr("Could not load TRN file."));
         return false;
     }
 
@@ -439,7 +439,7 @@ void MainWindow::on_actionNew_Tileset_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, "Open Graphics", "CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)");
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)"));
 
     if (!openFilePath.isEmpty()) {
         OpenAsParam params;
@@ -495,7 +495,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     this->on_actionClose_triggered();
 
-    this->ui->statusBar->showMessage("Loading...");
+    this->ui->statusBar->showMessage(tr("Loading..."));
     this->ui->statusBar->repaint();
 
     // Loading default.pal
@@ -542,7 +542,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         // Loading SOL
         this->sol = new D1Sol();
         if (!this->sol->load(solFilePath)) {
-            QMessageBox::critical(this, "Error", "Failed loading SOL file: " + minFilePath);
+            QMessageBox::critical(this, tr("Error"), tr("Failed loading SOL file: %1").arg(minFilePath));
             return;
         }
 
@@ -550,14 +550,14 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->min = new D1Min();
         std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
         if (!this->min->load(minFilePath, this->gfx, this->sol, celFrameTypes, params)) {
-            QMessageBox::critical(this, "Error", "Failed loading MIN file: " + minFilePath);
+            QMessageBox::critical(this, tr("Error"), tr("Failed loading MIN file: %1").arg(minFilePath));
             return;
         }
 
         // Loading TIL
         this->til = new D1Til();
         if (!this->til->load(tilFilePath, this->min)) {
-            QMessageBox::critical(this, "Error", "Failed loading TIL file: " + tilFilePath);
+            QMessageBox::critical(this, tr("Error"), tr("Failed loading TIL file: %1").arg(tilFilePath));
             return;
         }
 
@@ -568,7 +568,7 @@ void MainWindow::openFile(const OpenAsParam &params)
             ampFilePath = basePath + ".amp";
         }
         if (!this->amp->load(ampFilePath, this->til->getTileCount(), params)) {
-            QMessageBox::critical(this, "Error", "Failed loading AMP file: " + ampFilePath);
+            QMessageBox::critical(this, tr("Error"), tr("Failed loading AMP file: %1").arg(ampFilePath));
             return;
         }
 
@@ -579,23 +579,23 @@ void MainWindow::openFile(const OpenAsParam &params)
             tmiFilePath = basePath + ".tmi";
         }
         if (!this->tmi->load(tmiFilePath, this->sol, params)) {
-            QMessageBox::critical(this, "Error", "Failed loading TMI file: " + tmiFilePath);
+            QMessageBox::critical(this, tr("Error"), tr("Failed loading TMI file: %1").arg(tmiFilePath));
             return;
         }
 
         // Loading CEL
         if (!D1CelTileset::load(*this->gfx, celFrameTypes, openFilePath, params)) {
-            QMessageBox::critical(this, "Error", "Failed loading level CEL file: " + openFilePath);
+            QMessageBox::critical(this, tr("Error"), tr("Failed loading level CEL file: %1").arg(openFilePath));
             return;
         }
     } else if (openFilePath.toLower().endsWith(".cel")) {
         if (!D1Cel::load(*this->gfx, openFilePath, params)) {
-            QMessageBox::critical(this, "Error", "Failed loading CEL file: " + openFilePath);
+            QMessageBox::critical(this, tr("Error"), tr("Failed loading CEL file: %1").arg(openFilePath));
             return;
         }
     } else if (openFilePath.toLower().endsWith(".cl2")) {
         if (!D1Cl2::load(*this->gfx, openFilePath, params)) {
-            QMessageBox::critical(this, "Error", "Failed loading CL2 file: " + openFilePath);
+            QMessageBox::critical(this, tr("Error"), tr("Failed loading CL2 file: %1").arg(openFilePath));
             return;
         }
     } else {
@@ -604,9 +604,9 @@ void MainWindow::openFile(const OpenAsParam &params)
     }
 
     // Add palette widgets for PAL and TRNs
-    this->palWidget = new PaletteWidget(this->undoStack, "Palette");
-    this->trnUniqueWidget = new PaletteWidget(this->undoStack, "Unique translation");
-    this->trnBaseWidget = new PaletteWidget(this->undoStack, "Base Translation");
+    this->palWidget = new PaletteWidget(this->undoStack, tr("Palette"));
+    this->trnUniqueWidget = new PaletteWidget(this->undoStack, tr("Unique translation"));
+    this->trnBaseWidget = new PaletteWidget(this->undoStack, tr("Base Translation"));
     this->ui->palFrame->layout()->addWidget(this->palWidget);
     this->ui->palFrame->layout()->addWidget(this->trnUniqueWidget);
     this->ui->palFrame->layout()->addWidget(this->trnBaseWidget);
@@ -714,7 +714,7 @@ void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, boo
         return;
     }
 
-    this->ui->statusBar->showMessage("Reading...");
+    this->ui->statusBar->showMessage(tr("Reading..."));
     this->ui->statusBar->repaint();
 
     if (this->celView != nullptr) {
@@ -733,7 +733,7 @@ void MainWindow::openPalFiles(QStringList filePaths, PaletteWidget *widget)
 {
     QString firstFound;
 
-    this->ui->statusBar->showMessage("Reading...");
+    this->ui->statusBar->showMessage(tr("Reading..."));
     this->ui->statusBar->repaint();
 
     if (widget == this->palWidget) {
@@ -771,7 +771,7 @@ void MainWindow::openPalFiles(QStringList filePaths, PaletteWidget *widget)
 
 void MainWindow::saveFile(const SaveAsParam &params)
 {
-    this->ui->statusBar->showMessage("Saving...");
+    this->ui->statusBar->showMessage(tr("Saving..."));
     this->ui->statusBar->repaint();
 
     bool change = false;
@@ -779,7 +779,7 @@ void MainWindow::saveFile(const SaveAsParam &params)
     if (this->gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
         if (!filePath.toLower().endsWith("cel")) {
             QMessageBox::StandardButton reply;
-            reply = QMessageBox::question(nullptr, "Confirmation", "Are you sure you want to save as " + filePath + "? Data conversion is not supported.", QMessageBox::Yes | QMessageBox::No);
+            reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to save as %1? Data conversion is not supported.").arg(filePath), QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) {
                 // Clear loading message from status bar
                 this->ui->statusBar->clearMessage();
@@ -793,7 +793,7 @@ void MainWindow::saveFile(const SaveAsParam &params)
         } else if (filePath.toLower().endsWith("cl2")) {
             change = D1Cl2::save(*this->gfx, params);
         } else {
-            QMessageBox::critical(this, "Error", "Not supported.");
+            QMessageBox::critical(this, tr("Error"), tr("Not supported."));
             // Clear loading message from status bar
             this->ui->statusBar->clearMessage();
             return;
@@ -832,7 +832,7 @@ void MainWindow::saveFile(const SaveAsParam &params)
 
 void MainWindow::upscale(const UpscaleParam &params)
 {
-    this->ui->statusBar->showMessage("Upscaling...");
+    this->ui->statusBar->showMessage(tr("Upscaling..."));
     this->ui->statusBar->repaint();
 
     if (this->celView != nullptr) {
@@ -868,14 +868,14 @@ static QString imageNameFilter()
             }
         }
     }
-    QString allSupportedFormatsFilter = QString("Image files (%1)").arg(allSupportedFormats.join(' '));
+    QString allSupportedFormatsFilter = tr("Image files (%1)").arg(allSupportedFormats.join(' '));
     return allSupportedFormatsFilter;
 }
 
 void MainWindow::addFrames(bool append)
 {
     QString filter = imageNameFilter();
-    QStringList files = this->filesDialog("Select Image Files", filter.toLatin1().data());
+    QStringList files = this->filesDialog(tr("Select Image Files"), filter.toLatin1().data());
 
     this->openImageFiles(IMAGE_FILE_MODE::FRAME, files, append);
 }
@@ -883,7 +883,7 @@ void MainWindow::addFrames(bool append)
 void MainWindow::addSubtiles(bool append)
 {
     QString filter = imageNameFilter();
-    QStringList files = this->filesDialog("Select Image Files", filter.toLatin1().data());
+    QStringList files = this->filesDialog(tr("Select Image Files"), filter.toLatin1().data());
 
     this->openImageFiles(IMAGE_FILE_MODE::SUBTILE, files, append);
 }
@@ -891,7 +891,7 @@ void MainWindow::addSubtiles(bool append)
 void MainWindow::addTiles(bool append)
 {
     QString filter = imageNameFilter();
-    QStringList files = this->filesDialog("Select Image Files", filter.toLatin1().data());
+    QStringList files = this->filesDialog(tr("Select Image Files"), filter.toLatin1().data());
 
     this->openImageFiles(IMAGE_FILE_MODE::TILE, files, append);
 }
@@ -985,13 +985,13 @@ void MainWindow::on_actionAdd_Frame_triggered()
 void MainWindow::on_actionReplace_Frame_triggered()
 {
     QString filter = imageNameFilter();
-    QString imgFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, "Replacement Image File", filter.toLatin1().data());
+    QString imgFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Replacement Image File"), filter.toLatin1().data());
 
     if (imgFilePath.isEmpty()) {
         return;
     }
 
-    this->ui->statusBar->showMessage("Reading...");
+    this->ui->statusBar->showMessage(tr("Reading..."));
     this->ui->statusBar->repaint();
 
     if (this->celView != nullptr) {
@@ -1036,13 +1036,13 @@ void MainWindow::on_actionAdd_Subtile_triggered()
 void MainWindow::on_actionReplace_Subtile_triggered()
 {
     QString filter = imageNameFilter();
-    QString imgFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, "Replacement Image File", filter.toLatin1().data());
+    QString imgFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Replacement Image File"), filter.toLatin1().data());
 
     if (imgFilePath.isEmpty()) {
         return;
     }
 
-    this->ui->statusBar->showMessage("Reading...");
+    this->ui->statusBar->showMessage(tr("Reading..."));
     this->ui->statusBar->repaint();
 
     this->levelCelView->replaceCurrentSubtile(imgFilePath);
@@ -1078,13 +1078,13 @@ void MainWindow::on_actionAdd_Tile_triggered()
 void MainWindow::on_actionReplace_Tile_triggered()
 {
     QString filter = imageNameFilter();
-    QString imgFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, "Replacement Image File", filter.toLatin1().data());
+    QString imgFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Replacement Image File"), filter.toLatin1().data());
 
     if (imgFilePath.isEmpty()) {
         return;
     }
 
-    this->ui->statusBar->showMessage("Reading...");
+    this->ui->statusBar->showMessage(tr("Reading..."));
     this->ui->statusBar->repaint();
 
     this->levelCelView->replaceCurrentTile(imgFilePath);
@@ -1114,7 +1114,7 @@ void MainWindow::on_actionReportUse_Tileset_triggered()
 
 void MainWindow::on_actionResetFrameTypes_Tileset_triggered()
 {
-    this->ui->statusBar->showMessage("Processing...");
+    this->ui->statusBar->showMessage(tr("Processing..."));
     this->ui->statusBar->repaint();
 
     this->levelCelView->resetFrameTypes();
@@ -1125,7 +1125,7 @@ void MainWindow::on_actionResetFrameTypes_Tileset_triggered()
 
 void MainWindow::on_actionInefficientFrames_Tileset_triggered()
 {
-    this->ui->statusBar->showMessage("Processing...");
+    this->ui->statusBar->showMessage(tr("Processing..."));
     this->ui->statusBar->repaint();
 
     this->levelCelView->inefficientFrames();
@@ -1136,7 +1136,7 @@ void MainWindow::on_actionInefficientFrames_Tileset_triggered()
 
 void MainWindow::on_actionCleanupFrames_Tileset_triggered()
 {
-    this->ui->statusBar->showMessage("Processing...");
+    this->ui->statusBar->showMessage(tr("Processing..."));
     this->ui->statusBar->repaint();
 
     this->levelCelView->cleanupFrames();
@@ -1147,7 +1147,7 @@ void MainWindow::on_actionCleanupFrames_Tileset_triggered()
 
 void MainWindow::on_actionCleanupSubtiles_Tileset_triggered()
 {
-    this->ui->statusBar->showMessage("Processing...");
+    this->ui->statusBar->showMessage(tr("Processing..."));
     this->ui->statusBar->repaint();
 
     this->levelCelView->cleanupSubtiles();
@@ -1158,7 +1158,7 @@ void MainWindow::on_actionCleanupSubtiles_Tileset_triggered()
 
 void MainWindow::on_actionCleanupTileset_Tileset_triggered()
 {
-    this->ui->statusBar->showMessage("Processing...");
+    this->ui->statusBar->showMessage(tr("Processing..."));
     this->ui->statusBar->repaint();
 
     this->levelCelView->cleanupTileset();
@@ -1169,7 +1169,7 @@ void MainWindow::on_actionCleanupTileset_Tileset_triggered()
 
 void MainWindow::on_actionCompressSubtiles_Tileset_triggered()
 {
-    this->ui->statusBar->showMessage("Processing...");
+    this->ui->statusBar->showMessage(tr("Processing..."));
     this->ui->statusBar->repaint();
 
     this->levelCelView->compressSubtiles();
@@ -1180,7 +1180,7 @@ void MainWindow::on_actionCompressSubtiles_Tileset_triggered()
 
 void MainWindow::on_actionCompressTiles_Tileset_triggered()
 {
-    this->ui->statusBar->showMessage("Processing...");
+    this->ui->statusBar->showMessage(tr("Processing..."));
     this->ui->statusBar->repaint();
 
     this->levelCelView->compressTiles();
@@ -1191,7 +1191,7 @@ void MainWindow::on_actionCompressTiles_Tileset_triggered()
 
 void MainWindow::on_actionCompressTileset_Tileset_triggered()
 {
-    this->ui->statusBar->showMessage("Processing...");
+    this->ui->statusBar->showMessage(tr("Processing..."));
     this->ui->statusBar->repaint();
 
     this->levelCelView->compressTileset();
@@ -1202,7 +1202,7 @@ void MainWindow::on_actionCompressTileset_Tileset_triggered()
 
 void MainWindow::on_actionSortFrames_Tileset_triggered()
 {
-    this->ui->statusBar->showMessage("Processing...");
+    this->ui->statusBar->showMessage(tr("Processing..."));
     this->ui->statusBar->repaint();
 
     this->levelCelView->sortFrames();
@@ -1213,7 +1213,7 @@ void MainWindow::on_actionSortFrames_Tileset_triggered()
 
 void MainWindow::on_actionSortSubtiles_Tileset_triggered()
 {
-    this->ui->statusBar->showMessage("Processing...");
+    this->ui->statusBar->showMessage(tr("Processing..."));
     this->ui->statusBar->repaint();
 
     this->levelCelView->sortSubtiles();
@@ -1224,7 +1224,7 @@ void MainWindow::on_actionSortSubtiles_Tileset_triggered()
 
 void MainWindow::on_actionSortTileset_Tileset_triggered()
 {
-    this->ui->statusBar->showMessage("Processing...");
+    this->ui->statusBar->showMessage(tr("Processing..."));
     this->ui->statusBar->repaint();
 
     this->levelCelView->sortTileset();
@@ -1235,7 +1235,7 @@ void MainWindow::on_actionSortTileset_Tileset_triggered()
 
 void MainWindow::on_actionNew_PAL_triggered()
 {
-    QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, "New Palette File", "PAL Files (*.pal *.PAL)");
+    QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, tr("New Palette File"), tr("PAL Files (*.pal *.PAL)"));
 
     if (palFilePath.isEmpty()) {
         return;
@@ -1248,12 +1248,12 @@ void MainWindow::on_actionNew_PAL_triggered()
     D1Pal *newPal = new D1Pal();
     if (!newPal->load(D1Pal::DEFAULT_PATH)) {
         delete newPal;
-        QMessageBox::critical(this, "Error", "Could not load PAL file.");
+        QMessageBox::critical(this, tr("Error"), tr("Could not load PAL file."));
         return;
     }
     if (!newPal->save(path)) {
         delete newPal;
-        QMessageBox::critical(this, "Error", "Could not save PAL file.");
+        QMessageBox::critical(this, tr("Error"), tr("Could not save PAL file."));
         return;
     }
 
@@ -1266,7 +1266,7 @@ void MainWindow::on_actionNew_PAL_triggered()
 
 void MainWindow::on_actionOpen_PAL_triggered()
 {
-    QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, "Load Palette File", "PAL Files (*.pal *.PAL)");
+    QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Palette File"), tr("PAL Files (*.pal *.PAL)"));
 
     if (!palFilePath.isEmpty() && this->loadPal(palFilePath)) {
         this->palWidget->selectPath(palFilePath);
@@ -1280,7 +1280,7 @@ void MainWindow::on_actionSave_PAL_triggered()
         this->on_actionSave_PAL_as_triggered();
     } else {
         if (!this->pal->save(selectedPath)) {
-            QMessageBox::critical(this, "Error", "Could not save PAL file.");
+            QMessageBox::critical(this, tr("Error"), tr("Could not save PAL file."));
             return;
         }
     }
@@ -1288,14 +1288,14 @@ void MainWindow::on_actionSave_PAL_triggered()
 
 void MainWindow::on_actionSave_PAL_as_triggered()
 {
-    QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, "Save Palette File as...", "PAL Files (*.pal *.PAL)");
+    QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, tr("Save Palette File as..."), tr("PAL Files (*.pal *.PAL)"));
 
     if (palFilePath.isEmpty()) {
         return;
     }
 
     if (!this->pal->save(palFilePath)) {
-        QMessageBox::critical(this, "Error", "Could not save PAL file.");
+        QMessageBox::critical(this, tr("Error"), tr("Could not save PAL file."));
         return;
     }
 
@@ -1306,7 +1306,7 @@ void MainWindow::on_actionSave_PAL_as_triggered()
     D1Pal *newPal = new D1Pal();
     if (!newPal->load(path)) {
         delete newPal;
-        QMessageBox::critical(this, "Error", "Could not load PAL file.");
+        QMessageBox::critical(this, tr("Error"), tr("Could not load PAL file."));
         return;
     }
 
@@ -1334,7 +1334,7 @@ void MainWindow::on_actionClose_PAL_triggered()
 
 void MainWindow::on_actionNew_Translation_Unique_triggered()
 {
-    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, "New Translation File", "TRN Files (*.trn *.TRN)");
+    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, tr("New Translation File"), tr("TRN Files (*.trn *.TRN)"));
 
     if (trnFilePath.isEmpty()) {
         return;
@@ -1347,12 +1347,12 @@ void MainWindow::on_actionNew_Translation_Unique_triggered()
     D1Trn *newTrn = new D1Trn(this->pal);
     if (!newTrn->load(D1Trn::IDENTITY_PATH)) {
         delete newTrn;
-        QMessageBox::critical(this, "Error", "Could not load TRN file.");
+        QMessageBox::critical(this, tr("Error"), tr("Could not load TRN file."));
         return;
     }
     if (!newTrn->save(path)) {
         delete newTrn;
-        QMessageBox::critical(this, "Error", "Could not save TRN file.");
+        QMessageBox::critical(this, tr("Error"), tr("Could not save TRN file."));
         return;
     }
 
@@ -1365,7 +1365,7 @@ void MainWindow::on_actionNew_Translation_Unique_triggered()
 
 void MainWindow::on_actionOpen_Translation_Unique_triggered()
 {
-    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, "Load Translation File", "TRN Files (*.trn *.TRN)");
+    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Translation File"), tr("TRN Files (*.trn *.TRN)"));
 
     if (!trnFilePath.isEmpty() && this->loadUniqueTrn(trnFilePath)) {
         this->trnUniqueWidget->selectPath(trnFilePath);
@@ -1379,7 +1379,7 @@ void MainWindow::on_actionSave_Translation_Unique_triggered()
         this->on_actionSave_Translation_Unique_as_triggered();
     } else {
         if (!this->trnUnique->save(selectedPath)) {
-            QMessageBox::critical(this, "Error", "Could not save TRN file.");
+            QMessageBox::critical(this, tr("Error"), tr("Could not save TRN file."));
             return;
         }
     }
@@ -1387,14 +1387,14 @@ void MainWindow::on_actionSave_Translation_Unique_triggered()
 
 void MainWindow::on_actionSave_Translation_Unique_as_triggered()
 {
-    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, "Save Translation File as...", "TRN Files (*.trn *.TRN)");
+    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, tr("Save Translation File as..."), tr("TRN Files (*.trn *.TRN)"));
 
     if (trnFilePath.isEmpty()) {
         return;
     }
 
     if (!this->trnUnique->save(trnFilePath)) {
-        QMessageBox::critical(this, "Error", "Could not save TRN file.");
+        QMessageBox::critical(this, tr("Error"), tr("Could not save TRN file."));
         return;
     }
 
@@ -1405,7 +1405,7 @@ void MainWindow::on_actionSave_Translation_Unique_as_triggered()
     D1Trn *newTrn = new D1Trn(this->pal);
     if (!newTrn->load(path)) {
         delete newTrn;
-        QMessageBox::critical(this, "Error", "Could not load TRN file.");
+        QMessageBox::critical(this, tr("Error"), tr("Could not load TRN file."));
         return;
     }
 
@@ -1433,7 +1433,7 @@ void MainWindow::on_actionClose_Translation_Unique_triggered()
 
 void MainWindow::on_actionNew_Translation_Base_triggered()
 {
-    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, "New Translation File", "TRN Files (*.trn *.TRN)");
+    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, tr("New Translation File"), tr("TRN Files (*.trn *.TRN)"));
 
     if (trnFilePath.isEmpty()) {
         return;
@@ -1446,12 +1446,12 @@ void MainWindow::on_actionNew_Translation_Base_triggered()
     D1Trn *newTrn = new D1Trn(this->trnUnique->getResultingPalette());
     if (!newTrn->load(D1Trn::IDENTITY_PATH)) {
         delete newTrn;
-        QMessageBox::critical(this, "Error", "Could not load TRN file.");
+        QMessageBox::critical(this, tr("Error"), tr("Could not load TRN file."));
         return;
     }
     if (!newTrn->save(path)) {
         delete newTrn;
-        QMessageBox::critical(this, "Error", "Could not save TRN file.");
+        QMessageBox::critical(this, tr("Error"), tr("Could not save TRN file."));
         return;
     }
 
@@ -1464,7 +1464,7 @@ void MainWindow::on_actionNew_Translation_Base_triggered()
 
 void MainWindow::on_actionOpen_Translation_Base_triggered()
 {
-    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, "Load Translation File", "TRN Files (*.trn *.TRN)");
+    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Translation File"), tr("TRN Files (*.trn *.TRN)"));
 
     if (!trnFilePath.isEmpty() && this->loadBaseTrn(trnFilePath)) {
         this->trnBaseWidget->selectPath(trnFilePath);
@@ -1478,7 +1478,7 @@ void MainWindow::on_actionSave_Translation_Base_triggered()
         this->on_actionSave_Translation_Base_as_triggered();
     } else {
         if (!this->trnBase->save(selectedPath)) {
-            QMessageBox::critical(this, "Error", "Could not save TRN file.");
+            QMessageBox::critical(this, tr("Error"), tr("Could not save TRN file."));
             return;
         }
     }
@@ -1486,14 +1486,14 @@ void MainWindow::on_actionSave_Translation_Base_triggered()
 
 void MainWindow::on_actionSave_Translation_Base_as_triggered()
 {
-    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, "Save Translation File as...", "TRN Files (*.trn *.TRN)");
+    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, tr("Save Translation File as..."), tr("TRN Files (*.trn *.TRN)"));
 
     if (trnFilePath.isEmpty()) {
         return;
     }
 
     if (!this->trnBase->save(trnFilePath)) {
-        QMessageBox::critical(this, "Error", "Could not save TRN file.");
+        QMessageBox::critical(this, tr("Error"), tr("Could not save TRN file.");
         return;
     }
 
@@ -1504,7 +1504,7 @@ void MainWindow::on_actionSave_Translation_Base_as_triggered()
     D1Trn *newTrn = new D1Trn(this->trnUnique->getResultingPalette());
     if (!newTrn->load(path)) {
         delete newTrn;
-        QMessageBox::critical(this, "Error", "Could not load TRN file.");
+        QMessageBox::critical(this, tr("Error"), tr("Could not load TRN file.");
         return;
     }
 

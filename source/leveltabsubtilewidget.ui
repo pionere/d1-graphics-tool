@@ -16,9 +16,6 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout_0">
    <property name="spacing">
     <number>0</number>
@@ -239,7 +236,7 @@
           <string>Previous Frame</string>
          </property>
          <property name="text">
-          <string>&lt;</string>
+          <string notr="true">&lt;</string>
          </property>
         </widget>
        </item>
@@ -280,7 +277,7 @@
           <string>Next Frame</string>
          </property>
          <property name="text">
-          <string>&gt;</string>
+          <string notr="true">&gt;</string>
          </property>
         </widget>
        </item>
