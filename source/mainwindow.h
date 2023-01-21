@@ -23,6 +23,7 @@
 #include "settingsdialog.h"
 #include "upscaledialog.h"
 
+#define D1_GRAPHICS_TOOL_TITLE "Diablo 1 Graphics Tool"
 #define D1_GRAPHICS_TOOL_VERSION "0.5.0"
 
 enum class FILE_DIALOG_MODE {
@@ -46,7 +47,7 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow();
     ~MainWindow();
 
     void openFile(const OpenAsParam &params);
