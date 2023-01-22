@@ -246,9 +246,12 @@ void MainWindow::colorModified()
 
 void MainWindow::reloadConfig()
 {
+    QMessageBox::warning(this, "reloading", "config");
+
     // update locale
     QString lang = Config::getLocale();
     if (lang != this->currLang) {
+        QMessageBox::warning(this, "language", "change");
         QLocale locale = QLocale(lang);
         QLocale::setDefault(locale);
         // remove the old translator
@@ -258,6 +261,7 @@ void MainWindow::reloadConfig()
         QString path = ":/lang_" + lang + ".qm";
         if (this->translator.load(path)) {
             qApp->installTranslator(&this->translator);
+        QMessageBox::warning(this, "new", "translator");
         }
         this->currLang = lang;
     }

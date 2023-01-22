@@ -270,7 +270,7 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
     }
 
     if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed read file: %1.").arg(imagefilePath));
+        QMessageBox::critical(this, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
     }
 }
 

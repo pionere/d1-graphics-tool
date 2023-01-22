@@ -659,7 +659,7 @@ void PaletteWidget::startTrnColorPicking()
     this->initStopColorPicking();
 
     this->ui->graphicsView->setStyleSheet("color: rgb(255, 0, 0);");
-    this->ui->informationLabel->setText(tr("<- Select colors"));
+    this->ui->informationLabel->setText(tr("<- Select color(s)"));
     this->pickingTranslationColor = true;
     this->displayColors();
 }
