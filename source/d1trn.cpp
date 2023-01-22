@@ -1,5 +1,8 @@
 #include "d1trn.h"
 
+#include <QFile>
+#include <QMessageBox>
+
 D1Trn::D1Trn(D1Pal *pal)
     : palette(QPointer<D1Pal>(pal))
 {

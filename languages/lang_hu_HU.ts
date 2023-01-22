@@ -698,7 +698,7 @@
         <location filename="../source/levelcelview.cpp" line="776"/>
         <location filename="../source/levelcelview.cpp" line="851"/>
         <source>Failed to read file: %1.</source>
-        <translation>A %1 képfájl olvasása sikertelen.</translation>
+        <translation>A %1 fájl olvasása sikertelen.</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="702"/>

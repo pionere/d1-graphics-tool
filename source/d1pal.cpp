@@ -1,6 +1,7 @@
 #include "d1pal.h"
 
 #include <QDataStream>
+#include <QMessageBox>
 #include <QTextStream>
 
 #include "config.h"
