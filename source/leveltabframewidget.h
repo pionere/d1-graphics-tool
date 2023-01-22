@@ -27,9 +27,6 @@ public:
 private slots:
     void on_frameTypeComboBox_activated(int index);
 
-    // this event is called, when a new translator is loaded or the system language is changed
-    void changeEvent(QEvent *event);
-
 private:
     void validate();
 

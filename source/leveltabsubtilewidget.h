@@ -44,9 +44,6 @@ private slots:
     void on_framesComboBox_currentTextChanged(const QString &arg1);
     void on_framesNextButton_clicked();
 
-    // this event is called, when a new translator is loaded or the system language is changed
-    void changeEvent(QEvent *event);
-
 private:
     void updateFramesSelection(int index);
     void updateSolProperty();
