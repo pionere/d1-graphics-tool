@@ -252,7 +252,7 @@ void MainWindow::reloadConfig()
         QLocale locale = QLocale(lang);
         QLocale::setDefault(locale);
         // remove the old translator
-        // qApp->removeTranslator(&this->translator);
+        qApp->removeTranslator(&this->translator);
         // load the new translator
         // QString path = QApplication::applicationDirPath() + "/lang_" + lang + ".qm";
         QString path = ":/lang_" + lang + ".qm";
