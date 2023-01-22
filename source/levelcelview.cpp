@@ -364,7 +364,7 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &
     }
 
     if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed read image file: %1.").arg(imagefilePath));
+        QMessageBox::critical(this, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
     }
 }
 
@@ -485,7 +485,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString
     }
 
     if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed read image file: %1.").arg(imagefilePath));
+        QMessageBox::critical(this, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
     }
 }
 
@@ -656,7 +656,7 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &i
     }
 
     if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed read image file: %1.").arg(imagefilePath));
+        QMessageBox::critical(this, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
     }
 }
 
@@ -694,12 +694,12 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open image file: %1.").arg(imagefilePath));
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
         return;
     }
 
     if (image.width() != MICRO_WIDTH || image.height() != MICRO_HEIGHT) {
-        QMessageBox::warning(this, tr("Warning"), tr("The image must be 32px * 32px to be used as a level-frame."));
+        QMessageBox::warning(this, tr("Warning"), tr("The image must be 32px * 32px to be used as a frame."));
         return;
     }
 
@@ -746,7 +746,7 @@ void LevelCelView::removeCurrentFrame()
 
     if (!frameUsers.isEmpty()) {
         QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("The frame is used by Subtile %1 (and maybe others). Are you sure you want to proceed?").arg(frameUsers.first() + 1), QMessageBox::Yes | QMessageBox::No);
+        reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("The frame is used by subtile %1 (and maybe others). Are you sure you want to proceed?").arg(frameUsers.first() + 1), QMessageBox::Yes | QMessageBox::No);
         if (reply != QMessageBox::Yes) {
             return;
         }
@@ -773,7 +773,7 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open image file: %1.").arg(imagefilePath));
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
         return;
     }
 
@@ -824,7 +824,7 @@ void LevelCelView::removeCurrentSubtile()
     this->collectSubtileUsers(this->currentSubtileIndex, subtileUsers);
 
     if (!subtileUsers.isEmpty()) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("The subtile is used by Tile %1 (and maybe others).").arg(subtileUsers.first() + 1));
+        QMessageBox::critical(nullptr, tr("Error"), tr("The subtile is used by tile %1 (and maybe others).").arg(subtileUsers.first() + 1));
         return;
     }
     // remove the current subtile
@@ -848,7 +848,7 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open image file: %1.").arg(imagefilePath));
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
         return;
     }
 
@@ -1557,7 +1557,7 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
 {
     MainWindow *mw = (MainWindow *)this->window();
 
-    QMenu contextMenu(tr("Context menu"), this);
+    QMenu contextMenu(this);
 
     QMenu frameMenu(tr("Frame"), this);
     frameMenu.setToolTipsVisible(true);

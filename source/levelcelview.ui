@@ -464,7 +464,7 @@
            </size>
           </property>
           <property name="text">
-           <string>Sub-tiles:</string>
+           <string>Subtiles:</string>
           </property>
          </widget>
         </item>

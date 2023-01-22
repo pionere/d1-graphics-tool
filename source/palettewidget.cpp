@@ -384,7 +384,7 @@ void PaletteWidget::initializeDisplayComboBox()
         ui->displayComboBox->addItem(tr("Show all frames hits"), QVariant((int)COLORFILTER_TYPE::USED));
         if (this->levelCelView != nullptr) {
             ui->displayComboBox->addItem(tr("Show current tile hits"), QVariant((int)COLORFILTER_TYPE::TILE));
-            ui->displayComboBox->addItem(tr("Show current sub-tile hits"), QVariant((int)COLORFILTER_TYPE::SUBTILE));
+            ui->displayComboBox->addItem(tr("Show current subtile hits"), QVariant((int)COLORFILTER_TYPE::SUBTILE));
         }
         ui->displayComboBox->addItem(tr("Show current frame hits"), QVariant((int)COLORFILTER_TYPE::FRAME));
     } else {
@@ -469,7 +469,7 @@ void PaletteWidget::ShowContextMenu(const QPoint &pos)
 {
     this->initStopColorPicking();
 
-    QMenu contextMenu(tr("Context menu"), this);
+    QMenu contextMenu(this);
     contextMenu.setToolTipsVisible(true);
 
     QAction action0(tr("Undo"), this);
@@ -659,7 +659,7 @@ void PaletteWidget::startTrnColorPicking()
     this->initStopColorPicking();
 
     this->ui->graphicsView->setStyleSheet("color: rgb(255, 0, 0);");
-    this->ui->informationLabel->setText(tr("<- Select translation"));
+    this->ui->informationLabel->setText(tr("<- Select colors"));
     this->pickingTranslationColor = true;
     this->displayColors();
 }

@@ -62,7 +62,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="celGroupLabel">
         <property name="text">
-         <string>Group count:</string>
+         <string>Groups:</string>
         </property>
        </widget>
       </item>
@@ -209,42 +209,42 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="tilMinFileLabel">
-        <property name="text">
-         <string>Min File:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="LineEditWidget" name="outputMinFileEdit">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QPushButton" name="outputMinFileBrowseButton">
-        <property name="text">
-         <string>Browse</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
        <widget class="QLabel" name="tilTilFileLabel">
         <property name="text">
          <string>Til File:</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="1" column="1">
        <widget class="LineEditWidget" name="outputTilFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
+      <item row="1" column="2">
        <widget class="QPushButton" name="outputTilFileBrowseButton">
+        <property name="text">
+         <string>Browse</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="tilMinFileLabel">
+        <property name="text">
+         <string>Min File:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="LineEditWidget" name="outputMinFileEdit">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QPushButton" name="outputMinFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>

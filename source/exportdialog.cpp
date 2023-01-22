@@ -623,11 +623,6 @@ void ExportDialog::on_exportButton_clicked()
         return;
     }
 
-    if (this->gfx == nullptr) {
-        QMessageBox::critical(this, tr("Warning"), tr("No graphics loaded."));
-        return;
-    }
-
     bool result;
     try {
         switch (this->ui->contentTypeComboBox->currentIndex()) {

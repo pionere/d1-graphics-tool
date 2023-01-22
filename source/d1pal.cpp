@@ -89,8 +89,10 @@ bool D1Pal::save(QString filePath)
 {
     QFile file = QFile(filePath);
 
-    if (!file.open(QIODevice::WriteOnly))
+    if (!file.open(QIODevice::WriteOnly)) {
+        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to open file: %1.").arg(filePath));
         return false;
+    }
 
     QDataStream out(&file);
     for (int i = 0; i < D1PAL_COLORS; i++) {

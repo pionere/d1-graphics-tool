@@ -175,7 +175,7 @@ bool MainWindow::loadPal(QString palFilePath)
     D1Pal *newPal = new D1Pal();
     if (!newPal->load(path)) {
         delete newPal;
-        QMessageBox::critical(this, tr("Error"), tr("Could not load PAL file."));
+        QMessageBox::critical(this, tr("Error"), tr("Failed loading PAL file."));
         return false;
     }
 
@@ -196,7 +196,7 @@ bool MainWindow::loadUniqueTrn(QString trnFilePath)
     D1Trn *newTrn = new D1Trn(this->pal);
     if (!newTrn->load(path)) {
         delete newTrn;
-        QMessageBox::critical(this, tr("Error"), tr("Could not load TRN file."));
+        QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return false;
     }
 
@@ -217,7 +217,7 @@ bool MainWindow::loadBaseTrn(QString trnFilePath)
     D1Trn *newTrn = new D1Trn(this->pal);
     if (!newTrn->load(path)) {
         delete newTrn;
-        QMessageBox::critical(this, tr("Error"), tr("Could not load TRN file."));
+        QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return false;
     }
 
@@ -248,7 +248,6 @@ void MainWindow::reloadConfig()
 {
     // update locale
     QString lang = Config::getLocale();
-    QMessageBox::warning(this, "Loc", lang);
     if (lang != this->currLang) {
         QLocale locale = QLocale(lang);
         QLocale::setDefault(locale);
@@ -259,7 +258,7 @@ void MainWindow::reloadConfig()
         QString path = ":/lang_" + lang + ".qm";
         if (this->translator.load(path)) {
             qApp->installTranslator(&this->translator);
-            // this->ui->retranslateUi(this);
+            this->ui->retranslateUi(this);
             /*if (this->celView != nullptr) {
             }
             if (this->levelCelView != nullptr) {
@@ -621,7 +620,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
         // Loading CEL
         if (!D1CelTileset::load(*this->gfx, celFrameTypes, openFilePath, params)) {
-            QMessageBox::critical(this, tr("Error"), tr("Failed loading level CEL file: %1.").arg(openFilePath));
+            QMessageBox::critical(this, tr("Error"), tr("Failed loading Tileset-CEL file: %1.").arg(openFilePath));
             return;
         }
     } else if (openFilePath.toLower().endsWith(".cel")) {
@@ -1284,12 +1283,11 @@ void MainWindow::on_actionNew_PAL_triggered()
     D1Pal *newPal = new D1Pal();
     if (!newPal->load(D1Pal::DEFAULT_PATH)) {
         delete newPal;
-        QMessageBox::critical(this, tr("Error"), tr("Could not load PAL file."));
+        QMessageBox::critical(this, tr("Error"), tr("Failed loading PAL file."));
         return;
     }
     if (!newPal->save(path)) {
         delete newPal;
-        QMessageBox::critical(this, tr("Error"), tr("Could not save PAL file."));
         return;
     }
 
@@ -1315,10 +1313,7 @@ void MainWindow::on_actionSave_PAL_triggered()
     if (selectedPath == D1Pal::DEFAULT_PATH) {
         this->on_actionSave_PAL_as_triggered();
     } else {
-        if (!this->pal->save(selectedPath)) {
-            QMessageBox::critical(this, tr("Error"), tr("Could not save PAL file."));
-            return;
-        }
+        this->pal->save(selectedPath);
     }
 }
 
@@ -1331,7 +1326,6 @@ void MainWindow::on_actionSave_PAL_as_triggered()
     }
 
     if (!this->pal->save(palFilePath)) {
-        QMessageBox::critical(this, tr("Error"), tr("Could not save PAL file."));
         return;
     }
 
@@ -1342,7 +1336,7 @@ void MainWindow::on_actionSave_PAL_as_triggered()
     D1Pal *newPal = new D1Pal();
     if (!newPal->load(path)) {
         delete newPal;
-        QMessageBox::critical(this, tr("Error"), tr("Could not load PAL file."));
+        QMessageBox::critical(this, tr("Error"), tr("Failed loading PAL file."));
         return;
     }
 
@@ -1383,12 +1377,11 @@ void MainWindow::on_actionNew_Translation_Unique_triggered()
     D1Trn *newTrn = new D1Trn(this->pal);
     if (!newTrn->load(D1Trn::IDENTITY_PATH)) {
         delete newTrn;
-        QMessageBox::critical(this, tr("Error"), tr("Could not load TRN file."));
+        QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return;
     }
     if (!newTrn->save(path)) {
         delete newTrn;
-        QMessageBox::critical(this, tr("Error"), tr("Could not save TRN file."));
         return;
     }
 
@@ -1415,7 +1408,6 @@ void MainWindow::on_actionSave_Translation_Unique_triggered()
         this->on_actionSave_Translation_Unique_as_triggered();
     } else {
         if (!this->trnUnique->save(selectedPath)) {
-            QMessageBox::critical(this, tr("Error"), tr("Could not save TRN file."));
             return;
         }
     }
@@ -1430,7 +1422,6 @@ void MainWindow::on_actionSave_Translation_Unique_as_triggered()
     }
 
     if (!this->trnUnique->save(trnFilePath)) {
-        QMessageBox::critical(this, tr("Error"), tr("Could not save TRN file."));
         return;
     }
 
@@ -1441,7 +1432,7 @@ void MainWindow::on_actionSave_Translation_Unique_as_triggered()
     D1Trn *newTrn = new D1Trn(this->pal);
     if (!newTrn->load(path)) {
         delete newTrn;
-        QMessageBox::critical(this, tr("Error"), tr("Could not load TRN file."));
+        QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return;
     }
 
@@ -1482,12 +1473,11 @@ void MainWindow::on_actionNew_Translation_Base_triggered()
     D1Trn *newTrn = new D1Trn(this->trnUnique->getResultingPalette());
     if (!newTrn->load(D1Trn::IDENTITY_PATH)) {
         delete newTrn;
-        QMessageBox::critical(this, tr("Error"), tr("Could not load TRN file."));
+        QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return;
     }
     if (!newTrn->save(path)) {
         delete newTrn;
-        QMessageBox::critical(this, tr("Error"), tr("Could not save TRN file."));
         return;
     }
 
@@ -1514,7 +1504,6 @@ void MainWindow::on_actionSave_Translation_Base_triggered()
         this->on_actionSave_Translation_Base_as_triggered();
     } else {
         if (!this->trnBase->save(selectedPath)) {
-            QMessageBox::critical(this, tr("Error"), tr("Could not save TRN file."));
             return;
         }
     }
@@ -1529,7 +1518,6 @@ void MainWindow::on_actionSave_Translation_Base_as_triggered()
     }
 
     if (!this->trnBase->save(trnFilePath)) {
-        QMessageBox::critical(this, tr("Error"), tr("Could not save TRN file."));
         return;
     }
 
@@ -1540,7 +1528,7 @@ void MainWindow::on_actionSave_Translation_Base_as_triggered()
     D1Trn *newTrn = new D1Trn(this->trnUnique->getResultingPalette());
     if (!newTrn->load(path)) {
         delete newTrn;
-        QMessageBox::critical(this, tr("Error"), tr("Could not load TRN file."));
+        QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return;
     }
 
@@ -1587,7 +1575,7 @@ void MainWindow::on_actionClose_Translation_Base_triggered()
 #elif defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD)
 #define OS_TYPE "linux"
 #else
-#define OS_TYPE QApplication::tr("unknown")
+#define OS_TYPE QApplication::tr("Unknown")
 #endif
 
 void MainWindow::on_actionAbout_triggered()

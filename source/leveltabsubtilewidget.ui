@@ -233,7 +233,7 @@
           </size>
          </property>
          <property name="toolTip">
-          <string>Previous Frame</string>
+          <string>Previous frame</string>
          </property>
          <property name="text">
           <string notr="true">&lt;</string>
@@ -274,7 +274,7 @@
           </size>
          </property>
          <property name="toolTip">
-          <string>Next Frame</string>
+          <string>Next frame</string>
          </property>
          <property name="text">
           <string notr="true">&gt;</string>

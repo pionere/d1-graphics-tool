@@ -481,7 +481,7 @@ bool D1Cl2::save(D1Gfx &gfx, const SaveAsParam &params)
 
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly | QFile::Truncate)) {
-        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed open file: %1.").arg(filePath));
+        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to open file: %1.").arg(filePath));
         return false;
     }
 

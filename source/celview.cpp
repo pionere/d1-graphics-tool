@@ -270,7 +270,7 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
     }
 
     if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed read image file: %1").arg(imagefilePath));
+        QMessageBox::critical(this, tr("Error"), tr("Failed read file: %1.").arg(imagefilePath));
     }
 }
 
@@ -407,7 +407,7 @@ void CelView::ShowContextMenu(const QPoint &pos)
 {
     MainWindow *mw = (MainWindow *)this->window();
 
-    QMenu contextMenu(tr("Context menu"), this);
+    QMenu contextMenu(this);
     contextMenu.setToolTipsVisible(true);
 
     QAction action0(tr("Insert Frame"), this);
