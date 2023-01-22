@@ -103,7 +103,7 @@ bool ExportDialog::exportLevelTiles25D()
     if (amount == 0) {
         return true;
     }
-    ProgressDialog::start(tr("Exporting %1 2.5d level tiles...").arg(fileName), amount + 1);
+    ProgressDialog::start(tr("Exporting %1 2.5d tiles...").arg(fileName), amount + 1);
     // single tile
     if (amount == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
@@ -222,7 +222,7 @@ bool ExportDialog::exportLevelTiles()
     if (amount <= 0) {
         return true;
     }
-    ProgressDialog::start(tr("Exporting %1 flat level tiles...").arg(fileName), amount + 1);
+    ProgressDialog::start(tr("Exporting %1 flat tiles...").arg(fileName), amount + 1);
     // single tile
     if (amount == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
@@ -340,7 +340,7 @@ bool ExportDialog::exportLevelSubtiles()
     if (amount <= 0) {
         return true;
     }
-    ProgressDialog::start(tr("Exporting %1 level subtiles...").arg(fileName), amount + 1);
+    ProgressDialog::start(tr("Exporting %1 subtiles...").arg(fileName), amount + 1);
     // single subtile
     if (amount == 1 && subtileFrom == 0) {
         // one file for the only subtile (not indexed)
@@ -623,11 +623,6 @@ void ExportDialog::on_exportButton_clicked()
         return;
     }
 
-    if (this->gfx == nullptr) {
-        QMessageBox::critical(this, tr("Warning"), tr("No graphics loaded."));
-        return;
-    }
-
     bool result;
     try {
         switch (this->ui->contentTypeComboBox->currentIndex()) {
@@ -654,7 +649,7 @@ void ExportDialog::on_exportButton_clicked()
         QMessageBox::information(this, tr("Information"), tr("Export successful."));
         this->close();
     } else {
-        QMessageBox::warning(this, tr("Export Canceled"), tr("Export was canceled."));
+        QMessageBox::warning(this, tr("Information"), tr("Export was canceled."));
     }
 }
 

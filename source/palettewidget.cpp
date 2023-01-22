@@ -179,7 +179,7 @@ void PaletteScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     QPointF pos = event->scenePos();
 
-    qDebug() << tr("Clicked: %1:%2").arg(pos.x()).arg(pos.y());
+    qDebug() << QStringLiteral("Clicked: %1:%2").arg(pos.x()).arg(pos.y());
 
     // Check if selected color has changed
     int colorIndex = getColorIndexFromCoordinates(pos);
@@ -384,11 +384,11 @@ void PaletteWidget::initializeDisplayComboBox()
         ui->displayComboBox->addItem(tr("Show all frames hits"), QVariant((int)COLORFILTER_TYPE::USED));
         if (this->levelCelView != nullptr) {
             ui->displayComboBox->addItem(tr("Show current tile hits"), QVariant((int)COLORFILTER_TYPE::TILE));
-            ui->displayComboBox->addItem(tr("Show current sub-tile hits"), QVariant((int)COLORFILTER_TYPE::SUBTILE));
+            ui->displayComboBox->addItem(tr("Show current subtile hits"), QVariant((int)COLORFILTER_TYPE::SUBTILE));
         }
         ui->displayComboBox->addItem(tr("Show current frame hits"), QVariant((int)COLORFILTER_TYPE::FRAME));
     } else {
-        ui->displayComboBox->addItem(tr("Show translated colors"), QVariant((int)COLORFILTER_TYPE::TRANSLATED));
+        ui->displayComboBox->addItem(tr("Show the altered colors"), QVariant((int)COLORFILTER_TYPE::TRANSLATED));
     }
 }
 
@@ -469,7 +469,7 @@ void PaletteWidget::ShowContextMenu(const QPoint &pos)
 {
     this->initStopColorPicking();
 
-    QMenu contextMenu(tr("Context menu"), this);
+    QMenu contextMenu(this);
     contextMenu.setToolTipsVisible(true);
 
     QAction action0(tr("Undo"), this);
@@ -591,7 +591,7 @@ void PaletteWidget::displayColors()
         bool displayColor = indexHits > 0;
 
         // Check translation display filter
-        if (this->isTrn && ui->displayComboBox->currentData().value<COLORFILTER_TYPE>() == COLORFILTER_TYPE::TRANSLATED // "Show translated colors"
+        if (this->isTrn && ui->displayComboBox->currentData().value<COLORFILTER_TYPE>() == COLORFILTER_TYPE::TRANSLATED // "Show the altered colors"
             && this->trn->getTranslation(i) == i)
             displayColor = false;
 
@@ -659,7 +659,7 @@ void PaletteWidget::startTrnColorPicking()
     this->initStopColorPicking();
 
     this->ui->graphicsView->setStyleSheet("color: rgb(255, 0, 0);");
-    this->ui->informationLabel->setText(tr("<- Select translation"));
+    this->ui->informationLabel->setText(tr("<- Select color(s)"));
     this->pickingTranslationColor = true;
     this->displayColors();
 }

@@ -364,7 +364,7 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &
     }
 
     if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed read image file: %1").arg(imagefilePath));
+        QMessageBox::critical(this, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
     }
 }
 
@@ -485,7 +485,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString
     }
 
     if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed read image file: %1").arg(imagefilePath));
+        QMessageBox::critical(this, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
     }
 }
 
@@ -656,7 +656,7 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &i
     }
 
     if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed read image file: %1").arg(imagefilePath));
+        QMessageBox::critical(this, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
     }
 }
 
@@ -694,12 +694,12 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open image file: %1").arg(imagefilePath));
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
         return;
     }
 
     if (image.width() != MICRO_WIDTH || image.height() != MICRO_HEIGHT) {
-        QMessageBox::warning(this, tr("Warning"), tr("The image must be 32px * 32px to be used as a level-frame."));
+        QMessageBox::warning(this, tr("Warning"), tr("The image must be 32px * 32px to be used as a frame."));
         return;
     }
 
@@ -746,7 +746,7 @@ void LevelCelView::removeCurrentFrame()
 
     if (!frameUsers.isEmpty()) {
         QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("The frame is used by Subtile %1 (and maybe others). Are you sure you want to proceed?").arg(frameUsers.first() + 1), QMessageBox::Yes | QMessageBox::No);
+        reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("The frame is used by subtile %1 (and maybe others). Are you sure you want to proceed?").arg(frameUsers.first() + 1), QMessageBox::Yes | QMessageBox::No);
         if (reply != QMessageBox::Yes) {
             return;
         }
@@ -773,7 +773,7 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open image file: %1").arg(imagefilePath));
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
         return;
     }
 
@@ -824,7 +824,7 @@ void LevelCelView::removeCurrentSubtile()
     this->collectSubtileUsers(this->currentSubtileIndex, subtileUsers);
 
     if (!subtileUsers.isEmpty()) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("The subtile is used by Tile %1 (and maybe others).").arg(subtileUsers.first() + 1));
+        QMessageBox::critical(nullptr, tr("Error"), tr("The subtile is used by tile %1 (and maybe others).").arg(subtileUsers.first() + 1));
         return;
     }
     // remove the current subtile
@@ -848,7 +848,7 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open image file: %1").arg(imagefilePath));
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
         return;
     }
 
@@ -918,16 +918,14 @@ void LevelCelView::reportUsage()
         QList<int> frameUsers;
         this->collectFrameUsers(this->currentFrameIndex, frameUsers);
 
-        frameUses = tr("Frame %1").arg(this->currentFrameIndex + 1);
-        if (frameUsers.isEmpty()) {
-            frameUses += tr(" is not used by any subtile.");
+        if (frameUsers.count() == 0) {
+            frameUses = tr("Frame %1 is not used by any subtile.").arg(this->currentFrameIndex + 1);
         } else {
-            frameUses += tr(" is used by subtile ");
             for (int user : frameUsers) {
                 frameUses += QString::number(user + 1) + ", ";
             }
             frameUses.chop(2);
-            frameUses += ".";
+            frameUses = tr("Frame %1 is used by subtile %2.", "", frameUsers.count()).arg(this->currentFrameIndex + 1).arg(frameUses);
         }
     }
 
@@ -937,16 +935,14 @@ void LevelCelView::reportUsage()
         QList<int> subtileUsers;
         this->collectSubtileUsers(this->currentSubtileIndex, subtileUsers);
 
-        subtileUses = tr("Subtile %1").arg(this->currentSubtileIndex + 1);
-        if (subtileUsers.isEmpty()) {
-            subtileUses += tr(" is not used by any tile.");
+        if (subtileUsers.count() == 0) {
+            subtileUses = tr("Subtile %1 is not used by any tile.").arg(this->currentSubtileIndex + 1);
         } else {
-            subtileUses += tr(" is used by tile ");
             for (int user : subtileUsers) {
                 subtileUses += QString::number(user + 1) + ", ";
             }
             subtileUses.chop(2);
-            subtileUses += ".";
+            subtileUses = tr("Subtile %1 is used by tile %2.", "", subtileUsers.count()).arg(this->currentSubtileIndex + 1).arg(subtileUses);
         }
     }
 
@@ -1069,12 +1065,11 @@ void LevelCelView::removeUnusedFrames(QString &report)
     if (frameRemoved.isEmpty()) {
         return;
     }
-    report = tr("Removed frame ");
     for (auto iter = frameRemoved.crbegin(); iter != frameRemoved.crend(); ++iter) {
         report += QString::number(*iter + 1) + ", ";
     }
     report.chop(2);
-    report += ".";
+    report = tr("Removed frame %1.", "", frameRemoved.count()).arg(report);
 }
 
 void LevelCelView::removeUnusedSubtiles(QString &report)
@@ -1101,12 +1096,11 @@ void LevelCelView::removeUnusedSubtiles(QString &report)
     if (subtileRemoved.isEmpty()) {
         return;
     }
-    report = tr("Removed subtile ");
     for (auto iter = subtileRemoved.crbegin(); iter != subtileRemoved.crend(); ++iter) {
         report += QString::number(*iter + 1) + ", ";
     }
     report.chop(2);
-    report += ".";
+    report = tr("Removed subtile %1.", "", subtileRemoved.count()).arg(report);
 }
 
 void LevelCelView::cleanupFrames()
@@ -1229,12 +1223,11 @@ void LevelCelView::reuseFrames(QString &report)
         return;
     }
 
-    report = tr("Using frame ");
     for (auto iter = frameRemoved.cbegin(); iter != frameRemoved.cend(); ++iter) {
-        report += QString::number(iter->first + 1) + tr(" instead of ") + QString::number(iter->second + 1) + ", ";
+        report += tr("%1 instead of %2").arg(iter->first + 1).arg(iter->second + 1) + ", ";
     }
     report.chop(2);
-    report += ".";
+    report = tr("Using frame %1.").arg(report);
 }
 
 void LevelCelView::reuseSubtiles(QString &report)
@@ -1300,12 +1293,11 @@ void LevelCelView::reuseSubtiles(QString &report)
         return;
     }
 
-    report = tr("Using subtile ");
     for (auto iter = subtileRemoved.cbegin(); iter != subtileRemoved.cend(); ++iter) {
-        report += QString::number(iter->first + 1) + tr(" instead of ") + QString::number(iter->second + 1) + ", ";
+        report += tr("%1 instead of %2").arg(iter->first + 1).arg(iter->second + 1) + ", ";
     }
     report.chop(2);
-    report += ".";
+    report = tr("Using subtile %1.").arg(report);
 }
 
 void LevelCelView::compressSubtiles()
@@ -1565,7 +1557,7 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
 {
     MainWindow *mw = (MainWindow *)this->window();
 
-    QMenu contextMenu(tr("Context menu"), this);
+    QMenu contextMenu(this);
 
     QMenu frameMenu(tr("Frame"), this);
     frameMenu.setToolTipsVisible(true);

@@ -1,5 +1,9 @@
 #include "d1trn.h"
 
+#include <QApplication>
+#include <QFile>
+#include <QMessageBox>
+
 D1Trn::D1Trn(D1Pal *pal)
     : palette(QPointer<D1Pal>(pal))
 {
@@ -33,12 +37,12 @@ bool D1Trn::save(QString filePath)
 {
     QFile file = QFile(filePath);
 
-    if (!file.open(QIODevice::WriteOnly))
+    if (!file.open(QIODevice::WriteOnly)) {
+        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to open file: %1.").arg(filePath));
         return false;
+    }
 
-    int outBytes = file.write((char *)this->translations, D1TRN_TRANSLATIONS);
-    if (outBytes != D1TRN_TRANSLATIONS)
-        return false;
+    file.write((char *)this->translations, D1TRN_TRANSLATIONS);
 
     if (this->trnFilePath == filePath) {
         this->modified = false;

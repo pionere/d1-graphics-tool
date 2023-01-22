@@ -78,32 +78,32 @@
          </item>
          <item>
           <property name="text">
-           <string>Vertical wall</string>
+           <string>Wall (north-west)</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Horizontal wall</string>
+           <string>Wall (north-east)</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Wall intersection</string>
+           <string>Wall intersection (north)</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Vertical wall ending</string>
+           <string>Wall ending (north-west)</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Horizontal wall ending</string>
+           <string>Wall ending (north-east)</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Corner wall</string>
+           <string>Corner wall (north)</string>
           </property>
          </item>
          <item>
@@ -118,12 +118,12 @@
          </item>
          <item>
           <property name="text">
-           <string>Horizontal wall (backside)</string>
+           <string>Wall (south-west)</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Vertical wall (backside)</string>
+           <string>Wall (south-east)</string>
           </property>
          </item>
          <item>
@@ -156,7 +156,7 @@
         <item row="1" column="0">
          <widget class="QLabel" name="label_4">
           <property name="text">
-           <string>Vertical:</string>
+           <string>Western:</string>
           </property>
          </widget>
         </item>
@@ -184,7 +184,7 @@
         <item row="2" column="0">
          <widget class="QLabel" name="label_5">
           <property name="text">
-           <string>Horizontal:</string>
+           <string>Eastern:</string>
           </property>
          </widget>
         </item>
@@ -212,7 +212,7 @@
         <item row="3" column="0">
          <widget class="QCheckBox" name="amp6">
           <property name="text">
-           <string>Dirt</string>
+           <string>External</string>
           </property>
          </widget>
         </item>

@@ -339,7 +339,7 @@ bool D1Cel::save(D1Gfx &gfx, const SaveAsParam &params)
         filePath = params.celFilePath;
         if (QFile::exists(filePath)) {
             QMessageBox::StandardButton reply;
-            reply = QMessageBox::question(nullptr, QApplication::tr("Confirmation"), QApplication::tr("Are you sure you want to overwrite %1?)").arg(filePath), QMessageBox::Yes | QMessageBox::No);
+            reply = QMessageBox::question(nullptr, QApplication::tr("Confirmation"), QApplication::tr("Are you sure you want to overwrite %1?").arg(filePath), QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) {
                 return false;
             }
@@ -348,7 +348,7 @@ bool D1Cel::save(D1Gfx &gfx, const SaveAsParam &params)
 
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly | QFile::Truncate)) {
-        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed open file: %1").arg(filePath));
+        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to open file: %1.").arg(filePath));
         return false;
     }
 

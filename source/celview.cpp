@@ -31,7 +31,7 @@ void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     int x = event->scenePos().x();
     int y = event->scenePos().y();
 
-    qDebug() << tr("Clicked: %1:%2").arg(x).arg(y);
+    qDebug() << QStringLiteral("Clicked: %1:%2").arg(x).arg(y);
 
     emit this->framePixelClicked(x, y);
 }
@@ -270,7 +270,7 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
     }
 
     if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed read image file: %1").arg(imagefilePath));
+        QMessageBox::critical(this, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
     }
 }
 
@@ -407,7 +407,7 @@ void CelView::ShowContextMenu(const QPoint &pos)
 {
     MainWindow *mw = (MainWindow *)this->window();
 
-    QMenu contextMenu(tr("Context menu"), this);
+    QMenu contextMenu(this);
     contextMenu.setToolTipsVisible(true);
 
     QAction action0(tr("Insert Frame"), this);

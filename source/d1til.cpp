@@ -34,7 +34,7 @@ bool D1Til::load(QString filePath, D1Min *m)
     // File size check
     auto fileSize = file.size();
     if (fileSize % (2 * TILE_SIZE) != 0) {
-        qDebug() << tr("Invalid til-file.");
+        qDebug() << tr("Invalid TIL file.");
         return false;
     }
 
@@ -77,7 +77,7 @@ bool D1Til::save(const SaveAsParam &params)
 
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly | QFile::Truncate)) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed open file: %1").arg(filePath));
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to open file: %1.").arg(filePath));
         return false;
     }
 

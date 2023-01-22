@@ -68,11 +68,11 @@ void SettingsDialog::on_paletteSelectionBorderColorLineEdit_escPressed()
 void SettingsDialog::on_settingsOkButton_clicked()
 {
     // PaletteUndefinedColor
-    QColor palUndefinedColor = QColor(ui->undefinedPaletteColorLineEdit->text());
+    QColor palUndefinedColor = QColor(this->ui->undefinedPaletteColorLineEdit->text());
     Config::setPaletteUndefinedColor(palUndefinedColor.name());
 
     // PaletteSelectionBorderColor
-    QColor palSelectionBorderColor = QColor(ui->paletteSelectionBorderColorLineEdit->text());
+    QColor palSelectionBorderColor = QColor(this->ui->paletteSelectionBorderColorLineEdit->text());
     Config::setPaletteSelectionBorderColor(palSelectionBorderColor.name());
 
     Config::storeConfiguration();
