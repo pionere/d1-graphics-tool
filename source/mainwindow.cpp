@@ -88,6 +88,10 @@ MainWindow::MainWindow()
     this->ui->menuEdit->addAction("Upscale", this, SLOT(on_actionUpscale_triggered()));
 
     this->on_actionClose_triggered();
+
+    // Configuration update triggers refresh of the translator and the palette widgets
+    QObject::connect(&this->settingsDialog, &SettingsDialog::configurationSaved, this, &MainWindow::reloadConfig);
+
     setAcceptDrops(true);
 
     // initialize the translators
@@ -246,12 +250,9 @@ void MainWindow::colorModified()
 
 void MainWindow::reloadConfig()
 {
-    QMessageBox::warning(this, "reloading", "config");
-
     // update locale
     QString lang = Config::getLocale();
     if (lang != this->currLang) {
-        QMessageBox::warning(this, "language", "change");
         QLocale locale = QLocale(lang);
         QLocale::setDefault(locale);
         // remove the old translator
@@ -261,7 +262,6 @@ void MainWindow::reloadConfig()
         QString path = ":/lang_" + lang + ".qm";
         if (this->translator.load(path)) {
             qApp->installTranslator(&this->translator);
-        QMessageBox::warning(this, "new", "translator");
         }
         this->currLang = lang;
     }
@@ -470,13 +470,6 @@ void MainWindow::on_actionOpen_triggered()
         params.celFilePath = openFilePath;
         this->openFile(params);
     }
-
-    // QMessageBox::information( this, "Debug", celFilePath );
-    // QMessageBox::information( this, "Debug", QString::number(cel->getFrameCount()));
-
-    // QTime timer = QTime();
-    // timer.start();
-    // QMessageBox::information( this, "time", QString::number(timer.elapsed()) );
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -509,7 +502,6 @@ void MainWindow::dropEvent(QDropEvent *event)
 void MainWindow::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange) {
-        QMessageBox::warning(this, "Retranslation", "Triggered");
         this->ui->retranslateUi(this);
         { // (re)translate the 'new' menu
             this->newMenu.setTitle(tr("New"));
@@ -698,9 +690,6 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->palFrame->layout()->addWidget(this->palWidget);
     this->ui->palFrame->layout()->addWidget(this->trnUniqueWidget);
     this->ui->palFrame->layout()->addWidget(this->trnBaseWidget);
-
-    // Configuration update triggers refresh of the translator and the palette widgets
-    QObject::connect(&this->settingsDialog, &SettingsDialog::configurationSaved, this, &MainWindow::reloadConfig);
 
     // Palette and translation file selection
     // When a .pal or .trn file is selected in the PaletteWidget update the pal or trn
