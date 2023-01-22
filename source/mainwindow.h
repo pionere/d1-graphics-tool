@@ -4,6 +4,7 @@
 #include <QMenu>
 #include <QMimeData>
 #include <QStringList>
+#include <QTranslator>
 #include <QUndoCommand>
 
 #include "celview.h"

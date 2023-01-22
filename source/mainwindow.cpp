@@ -686,7 +686,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     QObject::connect(this->trnBaseWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);
 
     // Look for all palettes in the same folder as the CEL/CL2 file
-    QDirIterator it(celFileInfo.absolutePath(), QStringList() << "*.pal", QDir::Files);
+    QDirIterator it(celFileInfo.absolutePath(), QStringList("*.pal"), QDir::Files);
     QString firstPaletteFound = QString();
     while (it.hasNext()) {
         QString sPath = it.next();

@@ -1,6 +1,7 @@
 #include "settingsdialog.h"
 
 #include <QColorDialog>
+#include <QDir>
 
 #include "config.h"
 #include "ui_settingsdialog.h"
@@ -20,10 +21,10 @@ SettingsDialog::~SettingsDialog()
 void SettingsDialog::initialize()
 {
     // initialize the available languages
-    this->ui->languageComboBox.clear();
+    this->ui->languageComboBox->clear();
 
     QString defaultLocale = Config::getLocale(); // e.g. "de_DE"
- 
+
     QDir dir(QApplication::applicationDirPath());
     QStringList fileNames = dir.entryList(QStringList("lang_*.qm"));
 
@@ -36,7 +37,7 @@ void SettingsDialog::initialize()
 
         QLocale locale = QLocale(localeName);
 
-        this->ui->languageComboBox->addItem(locale->nativeLanguageName(), QVariant(localeName));
+        this->ui->languageComboBox->addItem(locale.nativeLanguageName(), QVariant(localeName));
 
         // set default language selected
         if (defaultLocale == localeName) {
