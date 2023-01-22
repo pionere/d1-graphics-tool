@@ -114,6 +114,9 @@ private slots:
     void dragMoveEvent(QDragMoveEvent *event);
     void dropEvent(QDropEvent *event);
 
+    // this event is called, when a new translator is loaded or the system language is changed
+    void changeEvent(QEvent *event);
+
     void ShowContextMenu(const QPoint &pos);
 
 private:

@@ -470,23 +470,23 @@
     </message>
     <message>
         <location filename="../source/exportdialog.cpp" line="106"/>
-        <source>Exporting %1 2.5d level tiles...</source>
-        <translation type="unfinished"></translation>
+        <source>Exporting %1 2.5d tiles...</source>
+        <translation>2.5D-s lapok exportálása a %1 fájlból.</translation>
     </message>
     <message>
         <location filename="../source/exportdialog.cpp" line="225"/>
-        <source>Exporting %1 flat level tiles...</source>
-        <translation type="unfinished"></translation>
+        <source>Exporting %1 flat tiles...</source>
+        <translation>Feszített lapok exportálása a %1 fájlból.</translation>
     </message>
     <message>
         <location filename="../source/exportdialog.cpp" line="343"/>
-        <source>Exporting %1 level subtiles...</source>
-        <translation type="unfinished"></translation>
+        <source>Exporting %1 subtiles...</source>
+        <translation>Mezők exportálása a %1 fájlból.</translation>
     </message>
     <message>
         <location filename="../source/exportdialog.cpp" line="463"/>
         <source>Exporting %1 frames...</source>
-        <translation type="unfinished"></translation>
+        <translation>Keépkockák exportálása a %1 fájlból.</translation>
     </message>
     <message>
         <location filename="../source/exportdialog.cpp" line="622"/>
@@ -1303,7 +1303,7 @@
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="129"/>
-        <location filename="../source/mainwindow.cpp" line="46"/>
+        <location filename="../source/mainwindow.cpp" line="49"/>
         <source>Tileset</source>
         <translation>Mezőkészlet</translation>
     </message>
@@ -1566,136 +1566,136 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="44"/>
+        <location filename="../source/mainwindow.cpp" line="47"/>
         <source>CEL gfx</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="45"/>
+        <location filename="../source/mainwindow.cpp" line="48"/>
         <source>CL2 gfx</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="52"/>
+        <location filename="../source/mainwindow.cpp" line="55"/>
         <source>Undo</source>
         <translation>Visszavonás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="54"/>
+        <location filename="../source/mainwindow.cpp" line="57"/>
         <source>Redo</source>
         <translation>Ismétlés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="62"/>
-        <location filename="../source/mainwindow.cpp" line="71"/>
-        <location filename="../source/mainwindow.cpp" line="80"/>
+        <location filename="../source/mainwindow.cpp" line="65"/>
+        <location filename="../source/mainwindow.cpp" line="74"/>
+        <location filename="../source/mainwindow.cpp" line="83"/>
         <source>Insert</source>
         <translation>Beillesztése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="62"/>
+        <location filename="../source/mainwindow.cpp" line="65"/>
         <source>Add new frames before the current one</source>
         <translation>Képkocka beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="63"/>
-        <location filename="../source/mainwindow.cpp" line="72"/>
-        <location filename="../source/mainwindow.cpp" line="81"/>
+        <location filename="../source/mainwindow.cpp" line="66"/>
+        <location filename="../source/mainwindow.cpp" line="75"/>
+        <location filename="../source/mainwindow.cpp" line="84"/>
         <source>Add</source>
         <translation>Hozzáadása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="63"/>
+        <location filename="../source/mainwindow.cpp" line="66"/>
         <source>Add new frames at the end</source>
         <translation>Képkocka hozzáadása az meglévők után</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="64"/>
-        <location filename="../source/mainwindow.cpp" line="73"/>
-        <location filename="../source/mainwindow.cpp" line="82"/>
+        <location filename="../source/mainwindow.cpp" line="67"/>
+        <location filename="../source/mainwindow.cpp" line="76"/>
+        <location filename="../source/mainwindow.cpp" line="85"/>
         <source>Replace</source>
         <translation>Cseréje</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="64"/>
+        <location filename="../source/mainwindow.cpp" line="67"/>
         <source>Replace the current frame</source>
         <translation>Az aktuális képkocka kicserélése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="65"/>
-        <location filename="../source/mainwindow.cpp" line="74"/>
-        <location filename="../source/mainwindow.cpp" line="83"/>
+        <location filename="../source/mainwindow.cpp" line="68"/>
+        <location filename="../source/mainwindow.cpp" line="77"/>
+        <location filename="../source/mainwindow.cpp" line="86"/>
         <source>Delete</source>
         <translation>Törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="65"/>
+        <location filename="../source/mainwindow.cpp" line="68"/>
         <source>Delete the current frame</source>
         <translation>Az aktuális képkocka törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="70"/>
-        <location filename="../source/mainwindow.cpp" line="79"/>
+        <location filename="../source/mainwindow.cpp" line="73"/>
+        <location filename="../source/mainwindow.cpp" line="82"/>
         <source>Create</source>
         <translation>Létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="70"/>
+        <location filename="../source/mainwindow.cpp" line="73"/>
         <source>Create a new subtile</source>
         <translation>Új mező létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="71"/>
+        <location filename="../source/mainwindow.cpp" line="74"/>
         <source>Add new subtiles before the current one</source>
         <translation>Új mező beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="72"/>
+        <location filename="../source/mainwindow.cpp" line="75"/>
         <source>Add new subtiles at the end</source>
         <translation>Új mező hozzáadása a meglévők után</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="73"/>
+        <location filename="../source/mainwindow.cpp" line="76"/>
         <source>Replace the current subtile</source>
         <translation>Cserélje az aktuális mezőt</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="74"/>
+        <location filename="../source/mainwindow.cpp" line="77"/>
         <source>Delete the current subtile</source>
         <translation>Törölje az aktuális mezőt</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="79"/>
+        <location filename="../source/mainwindow.cpp" line="82"/>
         <source>Create a new tile</source>
         <translation>Új lap létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="80"/>
+        <location filename="../source/mainwindow.cpp" line="83"/>
         <source>Add new tiles before the current one</source>
         <translation>Új lap beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="81"/>
+        <location filename="../source/mainwindow.cpp" line="84"/>
         <source>Add new tiles at the end</source>
         <translation>Új lap hozzáadása a meglévők után</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="82"/>
+        <location filename="../source/mainwindow.cpp" line="85"/>
         <source>Replace the current tile</source>
         <translation>Cserélje az aktuális lapot</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="83"/>
+        <location filename="../source/mainwindow.cpp" line="86"/>
         <source>Delete the current tile</source>
         <translation>Törölje az aktuális lapot</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="88"/>
+        <location filename="../source/mainwindow.cpp" line="91"/>
         <source>Upscale</source>
         <translation>Felméretezés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="88"/>
+        <location filename="../source/mainwindow.cpp" line="91"/>
         <source>Upscale the current graphics</source>
         <translation>Az aktuális grafika felméretezése</translation>
     </message>
@@ -2265,7 +2265,7 @@
     </message>
     <message>
         <location filename="../source/palettewidget.cpp" line="662"/>
-        <source>&lt;- Select colors</source>
+        <source>&lt;- Select color(s)</source>
         <translation>Válassz színt</translation>
     </message>
 </context>

@@ -180,6 +180,9 @@ private:
     void initStopColorPicking();
 
 public slots:
+    // this event is called, when a new translator is loaded or the system language is changed
+    void changeEvent(QEvent *event);
+
     void ShowContextMenu(const QPoint &pos);
 
 private slots:

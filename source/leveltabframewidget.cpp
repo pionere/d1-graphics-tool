@@ -295,3 +295,10 @@ void LevelTabFrameWidget::on_frameTypeComboBox_activated(int index)
         this->levelCelView->updateLabel();
     }
 }
+
+void LevelTabFrameWidget::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        this->ui.retranslateUi(this);
+    }
+}

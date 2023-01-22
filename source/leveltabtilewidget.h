@@ -38,6 +38,9 @@ private slots:
     void on_subtilesComboBox_currentTextChanged(const QString &arg1);
     void on_subtilesNextButton_clicked();
 
+    // this event is called, when a new translator is loaded or the system language is changed
+    void changeEvent(QEvent *event);
+
 private:
     void updateSubtilesSelection(int index);
     void updateAmpProperty();

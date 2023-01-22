@@ -470,17 +470,17 @@
     </message>
     <message>
         <location filename="../source/exportdialog.cpp" line="106"/>
-        <source>Exporting %1 2.5d level tiles...</source>
+        <source>Exporting %1 2.5d tiles...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/exportdialog.cpp" line="225"/>
-        <source>Exporting %1 flat level tiles...</source>
+        <source>Exporting %1 flat tiles...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/exportdialog.cpp" line="343"/>
-        <source>Exporting %1 level subtiles...</source>
+        <source>Exporting %1 subtiles...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1620,131 +1620,131 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="44"/>
+        <location filename="../source/mainwindow.cpp" line="47"/>
         <source>CEL gfx</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="45"/>
+        <location filename="../source/mainwindow.cpp" line="48"/>
         <source>CL2 gfx</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="52"/>
+        <location filename="../source/mainwindow.cpp" line="55"/>
         <source>Undo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="54"/>
+        <location filename="../source/mainwindow.cpp" line="57"/>
         <source>Redo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="62"/>
-        <location filename="../source/mainwindow.cpp" line="71"/>
-        <location filename="../source/mainwindow.cpp" line="80"/>
+        <location filename="../source/mainwindow.cpp" line="65"/>
+        <location filename="../source/mainwindow.cpp" line="74"/>
+        <location filename="../source/mainwindow.cpp" line="83"/>
         <source>Insert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="62"/>
+        <location filename="../source/mainwindow.cpp" line="65"/>
         <source>Add new frames before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="63"/>
-        <location filename="../source/mainwindow.cpp" line="72"/>
-        <location filename="../source/mainwindow.cpp" line="81"/>
+        <location filename="../source/mainwindow.cpp" line="66"/>
+        <location filename="../source/mainwindow.cpp" line="75"/>
+        <location filename="../source/mainwindow.cpp" line="84"/>
         <source>Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="63"/>
+        <location filename="../source/mainwindow.cpp" line="66"/>
         <source>Add new frames at the end</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="64"/>
-        <location filename="../source/mainwindow.cpp" line="73"/>
-        <location filename="../source/mainwindow.cpp" line="82"/>
+        <location filename="../source/mainwindow.cpp" line="67"/>
+        <location filename="../source/mainwindow.cpp" line="76"/>
+        <location filename="../source/mainwindow.cpp" line="85"/>
         <source>Replace</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="64"/>
+        <location filename="../source/mainwindow.cpp" line="67"/>
         <source>Replace the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="65"/>
-        <location filename="../source/mainwindow.cpp" line="74"/>
-        <location filename="../source/mainwindow.cpp" line="83"/>
+        <location filename="../source/mainwindow.cpp" line="68"/>
+        <location filename="../source/mainwindow.cpp" line="77"/>
+        <location filename="../source/mainwindow.cpp" line="86"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="65"/>
+        <location filename="../source/mainwindow.cpp" line="68"/>
         <source>Delete the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="70"/>
-        <location filename="../source/mainwindow.cpp" line="79"/>
+        <location filename="../source/mainwindow.cpp" line="73"/>
+        <location filename="../source/mainwindow.cpp" line="82"/>
         <source>Create</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="70"/>
+        <location filename="../source/mainwindow.cpp" line="73"/>
         <source>Create a new subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="71"/>
+        <location filename="../source/mainwindow.cpp" line="74"/>
         <source>Add new subtiles before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="72"/>
+        <location filename="../source/mainwindow.cpp" line="75"/>
         <source>Add new subtiles at the end</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="73"/>
+        <location filename="../source/mainwindow.cpp" line="76"/>
         <source>Replace the current subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="74"/>
+        <location filename="../source/mainwindow.cpp" line="77"/>
         <source>Delete the current subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="79"/>
+        <location filename="../source/mainwindow.cpp" line="82"/>
         <source>Create a new tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="80"/>
+        <location filename="../source/mainwindow.cpp" line="83"/>
         <source>Add new tiles before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="81"/>
+        <location filename="../source/mainwindow.cpp" line="84"/>
         <source>Add new tiles at the end</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="82"/>
+        <location filename="../source/mainwindow.cpp" line="85"/>
         <source>Replace the current tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="83"/>
+        <location filename="../source/mainwindow.cpp" line="86"/>
         <source>Delete the current tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="88"/>
+        <location filename="../source/mainwindow.cpp" line="91"/>
         <source>Upscale</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2319,7 +2319,7 @@
     </message>
     <message>
         <location filename="../source/palettewidget.cpp" line="662"/>
-        <source>&lt;- Select colors</source>
+        <source>&lt;- Select color(s)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
