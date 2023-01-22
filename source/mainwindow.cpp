@@ -246,7 +246,7 @@ void MainWindow::colorModified()
 void MainWindow::reloadConfig()
 {
     // update locale
-    QString lang = Config::getLanguage();
+    QString lang = Config::getLocale();
     if (lang != this->currLang) {
         QLocale locale = QLocale(lang);
         QLocale::setDefault(locale);
@@ -254,8 +254,24 @@ void MainWindow::reloadConfig()
         qApp->removeTranslator(&translator);
         // load the new translator
         QString path = QApplication::applicationDirPath() + "/lang_" + lang + ".qm";
-        if (translator.load(path))
+        if (translator.load(path)) {
             qApp->installTranslator(&translator);
+            this->ui.retranslateUi(this);
+            /*if (this->celView != nullptr) {
+            }
+            if (this->levelCelView != nullptr) {
+
+            }
+            if (this->palWidget != nullptr) {
+
+            }
+            if (this->trnUniqueWidget != nullptr) {
+
+            }
+            if (this->trnBaseWidget != nullptr) {
+
+            }*/
+        }
         this->currLang = lang;
     }
     // reload palettes
