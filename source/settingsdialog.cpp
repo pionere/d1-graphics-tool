@@ -118,3 +118,11 @@ void SettingsDialog::on_settingsCancelButton_clicked()
 {
     this->close();
 }
+
+void SettingsDialog::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        this->ui->retranslateUi(this);
+    }
+    QDialog::changeEvent(event);
+}

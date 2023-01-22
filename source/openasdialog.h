@@ -67,6 +67,9 @@ private slots:
     void on_openButton_clicked();
     void on_openCancelButton_clicked();
 
+    // this event is called, when a new translator is loaded or the system language is changed
+    void changeEvent(QEvent *event);
+
 private:
     Ui::OpenAsDialog *ui;
 };

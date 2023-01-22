@@ -657,3 +657,11 @@ void ExportDialog::on_exportCancelButton_clicked()
 {
     this->close();
 }
+
+void ExportDialog::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        this->ui->retranslateUi(this);
+    }
+    QDialog::changeEvent(event);
+}

@@ -173,3 +173,11 @@ void SaveAsDialog::on_saveCancelButton_clicked()
 {
     this->close();
 }
+
+void SaveAsDialog::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        this->ui->retranslateUi(this);
+    }
+    QDialog::changeEvent(event);
+}

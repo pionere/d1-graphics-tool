@@ -41,17 +41,17 @@ MainWindow::MainWindow()
     this->setWindowTitle(D1_GRAPHICS_TOOL_TITLE);
 
     // initialize 'new' submenu of 'File'
-    this->newMenu.addAction(tr("CEL gfx"), this, SLOT(on_actionNew_CEL_triggered()));
-    this->newMenu.addAction(tr("CL2 gfx"), this, SLOT(on_actionNew_CL2_triggered()));
-    this->newMenu.addAction(tr("Tileset"), this, SLOT(on_actionNew_Tileset_triggered()));
+    this->newMenu.addAction("CEL gfx", this, SLOT(on_actionNew_CEL_triggered()));
+    this->newMenu.addAction("CL2 gfx", this, SLOT(on_actionNew_CL2_triggered()));
+    this->newMenu.addAction("Tileset", this, SLOT(on_actionNew_Tileset_triggered()));
     QAction *firstFileAction = (QAction *)this->ui->menuFile->actions()[0];
     this->ui->menuFile->insertMenu(firstFileAction, &this->newMenu);
 
     // Initialize 'Undo/Redo' of 'Edit
     this->undoStack = new QUndoStack(this);
-    this->undoAction = undoStack->createUndoAction(this, tr("Undo"));
+    this->undoAction = undoStack->createUndoAction(this);
     this->undoAction->setShortcuts(QKeySequence::Undo);
-    this->redoAction = undoStack->createRedoAction(this, tr("Redo"));
+    this->redoAction = undoStack->createRedoAction(this);
     this->redoAction->setShortcuts(QKeySequence::Redo);
     this->ui->menuEdit->addAction(this->undoAction);
     this->ui->menuEdit->addAction(this->redoAction);
@@ -59,33 +59,33 @@ MainWindow::MainWindow()
 
     // Initialize 'Frame' submenu of 'Edit'
     this->frameMenu.setToolTipsVisible(true);
-    this->frameMenu.addAction(tr("Insert"), this, SLOT(on_actionInsert_Frame_triggered()))->setToolTip(tr("Add new frames before the current one"));
-    this->frameMenu.addAction(tr("Add"), this, SLOT(on_actionAdd_Frame_triggered()))->setToolTip(tr("Add new frames at the end"));
-    this->frameMenu.addAction(tr("Replace"), this, SLOT(on_actionReplace_Frame_triggered()))->setToolTip(tr("Replace the current frame"));
-    this->frameMenu.addAction(tr("Delete"), this, SLOT(on_actionDel_Frame_triggered()))->setToolTip(tr("Delete the current frame"));
+    this->frameMenu.addAction("Insert", this, SLOT(on_actionInsert_Frame_triggered()));
+    this->frameMenu.addAction("Add", this, SLOT(on_actionAdd_Frame_triggered()));
+    this->frameMenu.addAction("Replace", this, SLOT(on_actionReplace_Frame_triggered()));
+    this->frameMenu.addAction("Delete", this, SLOT(on_actionDel_Frame_triggered()));
     this->ui->menuEdit->addMenu(&this->frameMenu);
 
     // Initialize 'Subtile' submenu of 'Edit'
     this->subtileMenu.setToolTipsVisible(true);
-    this->subtileMenu.addAction(tr("Create"), this, SLOT(on_actionCreate_Subtile_triggered()))->setToolTip(tr("Create a new subtile"));
-    this->subtileMenu.addAction(tr("Insert"), this, SLOT(on_actionInsert_Subtile_triggered()))->setToolTip(tr("Add new subtiles before the current one"));
-    this->subtileMenu.addAction(tr("Add"), this, SLOT(on_actionAdd_Subtile_triggered()))->setToolTip(tr("Add new subtiles at the end"));
-    this->subtileMenu.addAction(tr("Replace"), this, SLOT(on_actionReplace_Subtile_triggered()))->setToolTip(tr("Replace the current subtile"));
-    this->subtileMenu.addAction(tr("Delete"), this, SLOT(on_actionDel_Subtile_triggered()))->setToolTip(tr("Delete the current subtile"));
+    this->subtileMenu.addAction("Create", this, SLOT(on_actionCreate_Subtile_triggered()));
+    this->subtileMenu.addAction("Insert", this, SLOT(on_actionInsert_Subtile_triggered()));
+    this->subtileMenu.addAction("Add", this, SLOT(on_actionAdd_Subtile_triggered()));
+    this->subtileMenu.addAction("Replace", this, SLOT(on_actionReplace_Subtile_triggered()));
+    this->subtileMenu.addAction("Delete", this, SLOT(on_actionDel_Subtile_triggered()));
     this->ui->menuEdit->addMenu(&this->subtileMenu);
 
     // Initialize 'Tile' submenu of 'Edit'
     this->tileMenu.setToolTipsVisible(true);
-    this->tileMenu.addAction(tr("Create"), this, SLOT(on_actionCreate_Tile_triggered()))->setToolTip(tr("Create a new tile"));
-    this->tileMenu.addAction(tr("Insert"), this, SLOT(on_actionInsert_Tile_triggered()))->setToolTip(tr("Add new tiles before the current one"));
-    this->tileMenu.addAction(tr("Add"), this, SLOT(on_actionAdd_Tile_triggered()))->setToolTip(tr("Add new tiles at the end"));
-    this->tileMenu.addAction(tr("Replace"), this, SLOT(on_actionReplace_Tile_triggered()))->setToolTip(tr("Replace the current tile"));
-    this->tileMenu.addAction(tr("Delete"), this, SLOT(on_actionDel_Tile_triggered()))->setToolTip(tr("Delete the current tile"));
+    this->tileMenu.addAction("Create", this, SLOT(on_actionCreate_Tile_triggered()));
+    this->tileMenu.addAction("Insert", this, SLOT(on_actionInsert_Tile_triggered()));
+    this->tileMenu.addAction("Add", this, SLOT(on_actionAdd_Tile_triggered()));
+    this->tileMenu.addAction("Replace", this, SLOT(on_actionReplace_Tile_triggered()));
+    this->tileMenu.addAction("Delete", this, SLOT(on_actionDel_Tile_triggered()));
     this->ui->menuEdit->addMenu(&this->tileMenu);
 
     // add Upscale option to 'Edit'
     this->ui->menuEdit->addSeparator();
-    this->ui->menuEdit->addAction(tr("Upscale"), this, SLOT(on_actionUpscale_triggered()))->setToolTip(tr("Upscale the current graphics"));
+    this->ui->menuEdit->addAction("Upscale", this, SLOT(on_actionUpscale_triggered()));
 
     this->on_actionClose_triggered();
     setAcceptDrops(true);
@@ -258,21 +258,6 @@ void MainWindow::reloadConfig()
         QString path = ":/lang_" + lang + ".qm";
         if (this->translator.load(path)) {
             qApp->installTranslator(&this->translator);
-            this->ui->retranslateUi(this);
-            /*if (this->celView != nullptr) {
-            }
-            if (this->levelCelView != nullptr) {
-
-            }
-            if (this->palWidget != nullptr) {
-
-            }
-            if (this->trnUniqueWidget != nullptr) {
-
-            }
-            if (this->trnBaseWidget != nullptr) {
-
-            }*/
         }
         this->currLang = lang;
     }
@@ -515,6 +500,69 @@ void MainWindow::dropEvent(QDropEvent *event)
         params.celFilePath = url.toLocalFile();
         this->openFile(params);
     }
+}
+
+void MainWindow::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        this->ui->retranslateUi(this);
+        { // (re)translate the 'new' menu
+            this->newMenu.setTitle(tr("New"));
+            QList<QAction *> menuActions = this->newMenu.actions();
+            menuActions[0]->setText(tr("CEL gfx"));
+            menuActions[1]->setText(tr("CL2 gfx"));
+            menuActions[2]->setText(tr("Tileset"));
+        }
+        // (re)translate undoAction, redoAction
+        this->undoAction->setText(tr("Undo"));
+        this->redoAction->setText(tr("Redo"));
+        { // (re)translate 'Frame' submenu of 'Edit'
+            this->frameMenu.setTitle(tr("Frame"));
+            QList<QAction *> menuActions = this->frameMenu.actions();
+            menuActions[0]->setText(tr("Insert"));
+            menuActions[0]->setToolTip(tr("Add new frames before the current one"));
+            menuActions[1]->setText(tr("Add"));
+            menuActions[1]->setToolTip(tr("Add new frames at the end"));
+            menuActions[2]->setText(tr("Replace"));
+            menuActions[2]->setToolTip(tr("Replace the current frame"));
+            menuActions[3]->setText(tr("Delete"));
+            menuActions[3]->setToolTip(tr("Delete the current frame"));
+        }
+        { // (re)translate 'Subtile' submenu of 'Edit'
+            this->subtileMenu.setTitle(tr("Subtile"));
+            QList<QAction *> menuActions = this->subtileMenu.actions();
+            menuActions[0]->setText(tr("Create"));
+            menuActions[0]->setToolTip(tr("Create a new subtile"));
+            menuActions[1]->setText(tr("Insert"));
+            menuActions[1]->setToolTip(tr("Add new subtiles before the current one"));
+            menuActions[2]->setText(tr("Add"));
+            menuActions[2]->setToolTip(tr("Add new subtiles at the end"));
+            menuActions[3]->setText(tr("Replace"));
+            menuActions[3]->setToolTip(tr("Replace the current subtile"));
+            menuActions[4]->setText(tr("Delete"));
+            menuActions[4]->setToolTip(tr("Delete the current subtile"));
+        }
+        { // (re)translate 'Tile' submenu of 'Edit'
+            this->tileMenu.setTitle(tr("Tile"));
+            QList<QAction *> menuActions = this->tileMenu.actions();
+            menuActions[0]->setText(tr("Create"));
+            menuActions[0]->setToolTip(tr("Create a new tile"));
+            menuActions[1]->setText(tr("Insert"));
+            menuActions[1]->setToolTip(tr("Add new tiles before the current one"));
+            menuActions[2]->setText(tr("Add"));
+            menuActions[2]->setToolTip(tr("Add new tiles at the end"));
+            menuActions[3]->setText(tr("Replace"));
+            menuActions[3]->setToolTip(tr("Replace the current tile"));
+            menuActions[4]->setText(tr("Delete"));
+            menuActions[4]->setToolTip(tr("Delete the current tile"));
+        }
+        { // (re)translate Upscale option of 'Edit'
+            QList<QAction *> menuActions = this->ui->menuEdit->actions();
+            menuActions.back()->setText(tr("Upscale"));
+            menuActions.back()->setToolTip(tr("Upscale the current graphics"));
+        }
+    }
+    QMainWindow::changeEvent(event);
 }
 
 void MainWindow::openFile(const OpenAsParam &params)

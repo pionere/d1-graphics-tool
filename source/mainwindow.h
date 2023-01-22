@@ -161,6 +161,9 @@ private slots:
     void dragMoveEvent(QDragMoveEvent *event);
     void dropEvent(QDropEvent *event);
 
+    // this event is called, when a new translator is loaded
+    void changeEvent(QEvent *event);
+
 private:
     Ui::MainWindow *ui;
     QTranslator translator;   // translations for this application
@@ -168,10 +171,10 @@ private:
     QString currLang;         // currently loaded language e.g. "de_DE"
     QString lastFilePath;
 
-    QMenu newMenu = QMenu(tr("New"));
-    QMenu frameMenu = QMenu(tr("Frame"));
-    QMenu subtileMenu = QMenu(tr("Subtile"));
-    QMenu tileMenu = QMenu(tr("Tile"));
+    QMenu newMenu = QMenu();
+    QMenu frameMenu = QMenu();
+    QMenu subtileMenu = QMenu();
+    QMenu tileMenu = QMenu();
 
     QUndoStack *undoStack;
     QAction *undoAction;

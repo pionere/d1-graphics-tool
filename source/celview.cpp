@@ -639,10 +639,3 @@ void CelView::dropEvent(QDropEvent *event)
     // try to insert as frames
     ((MainWindow *)this->window())->openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
 }
-
-void CelView::changeEvent(QEvent *event)
-{
-    if (event->type() == QEvent::LanguageChange) {
-        this->ui->retranslateUi(this);
-    }
-}

@@ -485,13 +485,6 @@ void PaletteWidget::ShowContextMenu(const QPoint &pos)
     contextMenu.exec(mapToGlobal(pos));
 }
 
-void PaletteWidget::changeEvent(QEvent *event)
-{
-    if (event->type() == QEvent::LanguageChange) {
-        this->ui->retranslateUi(this);
-    }
-}
-
 void PaletteWidget::startColorSelection(int colorIndex)
 {
     this->selectedFirstColorIndex = colorIndex;

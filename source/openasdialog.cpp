@@ -222,3 +222,11 @@ void OpenAsDialog::on_openCancelButton_clicked()
 {
     this->close();
 }
+
+void OpenAsDialog::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        this->ui->retranslateUi(this);
+    }
+    QDialog::changeEvent(event);
+}

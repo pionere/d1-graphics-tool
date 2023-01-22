@@ -36,6 +36,9 @@ private slots:
     void on_upscaleButton_clicked();
     void on_upscaleCancelButton_clicked();
 
+    // this event is called, when a new translator is loaded or the system language is changed
+    void changeEvent(QEvent *event);
+
 private:
     Ui::UpscaleDialog *ui;
 };

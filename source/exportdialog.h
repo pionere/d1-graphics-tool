@@ -32,6 +32,9 @@ private slots:
     void on_exportButton_clicked();
     void on_exportCancelButton_clicked();
 
+    // this event is called, when a new translator is loaded or the system language is changed
+    void changeEvent(QEvent *event);
+
 private:
     QString getFileFormatExtension();
 

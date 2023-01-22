@@ -58,6 +58,9 @@ private slots:
     void on_saveButton_clicked();
     void on_saveCancelButton_clicked();
 
+    // this event is called, when a new translator is loaded or the system language is changed
+    void changeEvent(QEvent *event);
+
 private:
     Ui::SaveAsDialog *ui;
     D1Gfx *gfx;

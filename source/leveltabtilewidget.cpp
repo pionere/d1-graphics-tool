@@ -261,10 +261,3 @@ void LevelTabTileWidget::on_subtilesNextButton_clicked()
         this->levelCelView->displayFrame();
     }
 }
-
-void LevelTabTileWidget::changeEvent(QEvent *event)
-{
-    if (event->type() == QEvent::LanguageChange) {
-        this->ui->retranslateUi(this);
-    }
-}
