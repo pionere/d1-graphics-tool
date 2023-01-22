@@ -265,6 +265,6 @@ void LevelTabTileWidget::on_subtilesNextButton_clicked()
 void LevelTabTileWidget::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange) {
-        this->ui.retranslateUi(this);
+        this->ui->retranslateUi(this);
     }
 }

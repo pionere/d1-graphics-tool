@@ -643,6 +643,6 @@ void CelView::dropEvent(QDropEvent *event)
 void CelView::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange) {
-        this->ui.retranslateUi(this);
+        this->ui->retranslateUi(this);
     }
 }

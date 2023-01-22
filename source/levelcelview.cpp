@@ -1947,6 +1947,6 @@ void LevelCelView::dropEvent(QDropEvent *event)
 void LevelCelView::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange) {
-        this->ui.retranslateUi(this);
+        this->ui->retranslateUi(this);
     }
 }

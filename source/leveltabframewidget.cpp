@@ -299,6 +299,6 @@ void LevelTabFrameWidget::on_frameTypeComboBox_activated(int index)
 void LevelTabFrameWidget::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange) {
-        this->ui.retranslateUi(this);
+        this->ui->retranslateUi(this);
     }
 }

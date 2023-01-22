@@ -488,7 +488,7 @@ void PaletteWidget::ShowContextMenu(const QPoint &pos)
 void PaletteWidget::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange) {
-        this->ui.retranslateUi(this);
+        this->ui->retranslateUi(this);
     }
 }
 
