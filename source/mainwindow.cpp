@@ -247,16 +247,17 @@ void MainWindow::reloadConfig()
 {
     // update locale
     QString lang = Config::getLocale();
+    QMessageBox::warning(this, "Loc", lang);
     if (lang != this->currLang) {
         QLocale locale = QLocale(lang);
         QLocale::setDefault(locale);
         // remove the old translator
-        qApp->removeTranslator(&translator);
+        // qApp->removeTranslator(&this->translator);
         // load the new translator
-        //QString path = QApplication::applicationDirPath() + "/lang_" + lang + ".qm";
+        // QString path = QApplication::applicationDirPath() + "/lang_" + lang + ".qm";
         QString path = ":/lang_" + lang + ".qm";
-        if (translator.load(path)) {
-            qApp->installTranslator(&translator);
+        if (false && this->translator.load(path)) {
+            qApp->installTranslator(&this->translator);
             this->ui->retranslateUi(this);
             /*if (this->celView != nullptr) {
             }

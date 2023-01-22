@@ -25,7 +25,7 @@ void SettingsDialog::initialize()
 
     QString defaultLocale = Config::getLocale(); // e.g. "de_DE"
 
-    //QDir dir(QApplication::applicationDirPath());
+    // QDir dir(QApplication::applicationDirPath());
     QDir dir(":/");
     QStringList fileNames = dir.entryList(QStringList("lang_*.qm"));
 
