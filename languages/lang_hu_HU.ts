@@ -201,12 +201,12 @@
     <name>D1Amp</name>
     <message>
         <location filename="../source/d1amp.cpp" line="35"/>
-        <source>Invalid amp-file.</source>
+        <source>Invalid AMP file.</source>
         <translation>Hibás AMP fájl.</translation>
     </message>
     <message>
         <location filename="../source/d1amp.cpp" line="42"/>
-        <source>The size of amp-file does not align with til-file.</source>
+        <source>The size of AMP file does not align with TIL file.</source>
         <translation>Az AMP fájl mérete nem illeszkedik a TIL fájlhoz.</translation>
     </message>
     <message>
@@ -490,7 +490,6 @@
     </message>
     <message>
         <location filename="../source/exportdialog.cpp" line="622"/>
-        <location filename="../source/exportdialog.cpp" line="627"/>
         <source>Warning</source>
         <translation>Figyelmeztetés</translation>
     </message>
@@ -500,28 +499,28 @@
         <translation>Kimeneti könyvtár nincs beállítva. Kérlek adjál meg egyet.</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="648"/>
+        <location filename="../source/exportdialog.cpp" line="643"/>
         <source>Error</source>
         <translation>Hiba</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="648"/>
+        <location filename="../source/exportdialog.cpp" line="643"/>
         <source>Export Failed.</source>
         <translation>Exportálás sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="654"/>
-        <location filename="../source/exportdialog.cpp" line="657"/>
+        <location filename="../source/exportdialog.cpp" line="649"/>
+        <location filename="../source/exportdialog.cpp" line="652"/>
         <source>Information</source>
         <translation>Információ</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="654"/>
+        <location filename="../source/exportdialog.cpp" line="649"/>
         <source>Export successful.</source>
         <translation>Az exportálás sikeres.</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="657"/>
+        <location filename="../source/exportdialog.cpp" line="652"/>
         <source>Export was canceled.</source>
         <translation>Az exportálás megszakadt.</translation>
     </message>
@@ -1303,13 +1302,13 @@
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="129"/>
-        <location filename="../source/mainwindow.cpp" line="49"/>
+        <location filename="../source/mainwindow.cpp" line="514"/>
         <source>Tileset</source>
         <translation>Mezőkészlet</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="152"/>
-        <location filename="../source/mainwindow.cpp" line="643"/>
+        <location filename="../source/mainwindow.cpp" line="690"/>
         <source>Palette</source>
         <translation>Paletta</translation>
     </message>
@@ -1320,13 +1319,13 @@
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="190"/>
-        <location filename="../source/mainwindow.cpp" line="1595"/>
+        <location filename="../source/mainwindow.cpp" line="1631"/>
         <source>About</source>
         <translation>Névjegy</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="195"/>
-        <location filename="../source/mainwindow.cpp" line="1600"/>
+        <location filename="../source/mainwindow.cpp" line="1636"/>
         <source>About Qt</source>
         <translation>Qt névjegye</translation>
     </message>
@@ -1566,136 +1565,136 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="47"/>
+        <location filename="../source/mainwindow.cpp" line="512"/>
         <source>CEL gfx</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="48"/>
+        <location filename="../source/mainwindow.cpp" line="513"/>
         <source>CL2 gfx</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="55"/>
+        <location filename="../source/mainwindow.cpp" line="517"/>
         <source>Undo</source>
         <translation>Visszavonás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="57"/>
+        <location filename="../source/mainwindow.cpp" line="518"/>
         <source>Redo</source>
         <translation>Ismétlés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="65"/>
-        <location filename="../source/mainwindow.cpp" line="74"/>
-        <location filename="../source/mainwindow.cpp" line="83"/>
+        <location filename="../source/mainwindow.cpp" line="522"/>
+        <location filename="../source/mainwindow.cpp" line="536"/>
+        <location filename="../source/mainwindow.cpp" line="550"/>
         <source>Insert</source>
         <translation>Beillesztése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="65"/>
+        <location filename="../source/mainwindow.cpp" line="523"/>
         <source>Add new frames before the current one</source>
         <translation>Képkocka beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="66"/>
-        <location filename="../source/mainwindow.cpp" line="75"/>
-        <location filename="../source/mainwindow.cpp" line="84"/>
+        <location filename="../source/mainwindow.cpp" line="524"/>
+        <location filename="../source/mainwindow.cpp" line="538"/>
+        <location filename="../source/mainwindow.cpp" line="552"/>
         <source>Add</source>
         <translation>Hozzáadása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="66"/>
+        <location filename="../source/mainwindow.cpp" line="525"/>
         <source>Add new frames at the end</source>
         <translation>Képkocka hozzáadása az meglévők után</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="67"/>
-        <location filename="../source/mainwindow.cpp" line="76"/>
-        <location filename="../source/mainwindow.cpp" line="85"/>
+        <location filename="../source/mainwindow.cpp" line="526"/>
+        <location filename="../source/mainwindow.cpp" line="540"/>
+        <location filename="../source/mainwindow.cpp" line="554"/>
         <source>Replace</source>
         <translation>Cseréje</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="67"/>
+        <location filename="../source/mainwindow.cpp" line="527"/>
         <source>Replace the current frame</source>
         <translation>Az aktuális képkocka kicserélése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="68"/>
-        <location filename="../source/mainwindow.cpp" line="77"/>
-        <location filename="../source/mainwindow.cpp" line="86"/>
+        <location filename="../source/mainwindow.cpp" line="528"/>
+        <location filename="../source/mainwindow.cpp" line="542"/>
+        <location filename="../source/mainwindow.cpp" line="556"/>
         <source>Delete</source>
         <translation>Törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="68"/>
+        <location filename="../source/mainwindow.cpp" line="529"/>
         <source>Delete the current frame</source>
         <translation>Az aktuális képkocka törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="73"/>
-        <location filename="../source/mainwindow.cpp" line="82"/>
+        <location filename="../source/mainwindow.cpp" line="534"/>
+        <location filename="../source/mainwindow.cpp" line="548"/>
         <source>Create</source>
         <translation>Létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="73"/>
+        <location filename="../source/mainwindow.cpp" line="535"/>
         <source>Create a new subtile</source>
         <translation>Új mező létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="74"/>
+        <location filename="../source/mainwindow.cpp" line="537"/>
         <source>Add new subtiles before the current one</source>
         <translation>Új mező beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="75"/>
+        <location filename="../source/mainwindow.cpp" line="539"/>
         <source>Add new subtiles at the end</source>
         <translation>Új mező hozzáadása a meglévők után</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="76"/>
+        <location filename="../source/mainwindow.cpp" line="541"/>
         <source>Replace the current subtile</source>
         <translation>Cserélje az aktuális mezőt</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="77"/>
+        <location filename="../source/mainwindow.cpp" line="543"/>
         <source>Delete the current subtile</source>
         <translation>Törölje az aktuális mezőt</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="82"/>
+        <location filename="../source/mainwindow.cpp" line="549"/>
         <source>Create a new tile</source>
         <translation>Új lap létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="83"/>
+        <location filename="../source/mainwindow.cpp" line="551"/>
         <source>Add new tiles before the current one</source>
         <translation>Új lap beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="84"/>
+        <location filename="../source/mainwindow.cpp" line="553"/>
         <source>Add new tiles at the end</source>
         <translation>Új lap hozzáadása a meglévők után</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="85"/>
+        <location filename="../source/mainwindow.cpp" line="555"/>
         <source>Replace the current tile</source>
         <translation>Cserélje az aktuális lapot</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="86"/>
+        <location filename="../source/mainwindow.cpp" line="557"/>
         <source>Delete the current tile</source>
         <translation>Törölje az aktuális lapot</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="91"/>
+        <location filename="../source/mainwindow.cpp" line="561"/>
         <source>Upscale</source>
         <translation>Felméretezés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="91"/>
+        <location filename="../source/mainwindow.cpp" line="562"/>
         <source>Upscale the current graphics</source>
         <translation>Az aktuális grafika felméretezése</translation>
     </message>
@@ -1703,245 +1702,236 @@
         <location filename="../source/mainwindow.cpp" line="178"/>
         <location filename="../source/mainwindow.cpp" line="199"/>
         <location filename="../source/mainwindow.cpp" line="220"/>
-        <location filename="../source/mainwindow.cpp" line="581"/>
-        <location filename="../source/mainwindow.cpp" line="589"/>
-        <location filename="../source/mainwindow.cpp" line="596"/>
-        <location filename="../source/mainwindow.cpp" line="607"/>
-        <location filename="../source/mainwindow.cpp" line="618"/>
-        <location filename="../source/mainwindow.cpp" line="624"/>
-        <location filename="../source/mainwindow.cpp" line="629"/>
-        <location filename="../source/mainwindow.cpp" line="634"/>
-        <location filename="../source/mainwindow.cpp" line="832"/>
-        <location filename="../source/mainwindow.cpp" line="1287"/>
-        <location filename="../source/mainwindow.cpp" line="1292"/>
-        <location filename="../source/mainwindow.cpp" line="1319"/>
+        <location filename="../source/mainwindow.cpp" line="628"/>
+        <location filename="../source/mainwindow.cpp" line="636"/>
+        <location filename="../source/mainwindow.cpp" line="643"/>
+        <location filename="../source/mainwindow.cpp" line="654"/>
+        <location filename="../source/mainwindow.cpp" line="665"/>
+        <location filename="../source/mainwindow.cpp" line="671"/>
+        <location filename="../source/mainwindow.cpp" line="676"/>
+        <location filename="../source/mainwindow.cpp" line="681"/>
+        <location filename="../source/mainwindow.cpp" line="879"/>
         <location filename="../source/mainwindow.cpp" line="1334"/>
-        <location filename="../source/mainwindow.cpp" line="1345"/>
-        <location filename="../source/mainwindow.cpp" line="1386"/>
-        <location filename="../source/mainwindow.cpp" line="1391"/>
-        <location filename="../source/mainwindow.cpp" line="1418"/>
-        <location filename="../source/mainwindow.cpp" line="1433"/>
-        <location filename="../source/mainwindow.cpp" line="1444"/>
-        <location filename="../source/mainwindow.cpp" line="1485"/>
-        <location filename="../source/mainwindow.cpp" line="1490"/>
-        <location filename="../source/mainwindow.cpp" line="1517"/>
-        <location filename="../source/mainwindow.cpp" line="1532"/>
-        <location filename="../source/mainwindow.cpp" line="1543"/>
+        <location filename="../source/mainwindow.cpp" line="1387"/>
+        <location filename="../source/mainwindow.cpp" line="1428"/>
+        <location filename="../source/mainwindow.cpp" line="1483"/>
+        <location filename="../source/mainwindow.cpp" line="1524"/>
+        <location filename="../source/mainwindow.cpp" line="1579"/>
         <source>Error</source>
         <translation>Hiba</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.cpp" line="178"/>
-        <location filename="../source/mainwindow.cpp" line="1287"/>
-        <location filename="../source/mainwindow.cpp" line="1345"/>
+        <location filename="../source/mainwindow.cpp" line="1334"/>
+        <location filename="../source/mainwindow.cpp" line="1387"/>
         <source>Failed loading PAL file.</source>
         <translation>A PAL fájl betöltése sikertelen.</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.cpp" line="199"/>
         <location filename="../source/mainwindow.cpp" line="220"/>
-        <location filename="../source/mainwindow.cpp" line="1386"/>
-        <location filename="../source/mainwindow.cpp" line="1444"/>
-        <location filename="../source/mainwindow.cpp" line="1485"/>
-        <location filename="../source/mainwindow.cpp" line="1543"/>
+        <location filename="../source/mainwindow.cpp" line="1428"/>
+        <location filename="../source/mainwindow.cpp" line="1483"/>
+        <location filename="../source/mainwindow.cpp" line="1524"/>
+        <location filename="../source/mainwindow.cpp" line="1579"/>
         <source>Failed loading TRN file.</source>
         <translation>A TRN fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="478"/>
+        <location filename="../source/mainwindow.cpp" line="462"/>
         <source>Open Graphics</source>
         <translation>Grafika megnyitása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="478"/>
+        <location filename="../source/mainwindow.cpp" line="462"/>
         <source>CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)</source>
         <translation>CEL/CL2 Fájlok (*.cel *.CEL *.cl2 *.CL2)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="534"/>
+        <location filename="../source/mainwindow.cpp" line="581"/>
         <source>Loading...</source>
         <translation>Betöltés folyamatban...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="581"/>
+        <location filename="../source/mainwindow.cpp" line="628"/>
         <source>Failed loading SOL file: %1.</source>
         <translation>A %1 SOL file betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="589"/>
+        <location filename="../source/mainwindow.cpp" line="636"/>
         <source>Failed loading MIN file: %1.</source>
         <translation>A %1 MIN file betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="596"/>
+        <location filename="../source/mainwindow.cpp" line="643"/>
         <source>Failed loading TIL file: %1.</source>
         <translation>A %1 TIL file betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="607"/>
+        <location filename="../source/mainwindow.cpp" line="654"/>
         <source>Failed loading AMP file: %1.</source>
         <translation>A %1 AMP file betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="618"/>
+        <location filename="../source/mainwindow.cpp" line="665"/>
         <source>Failed loading TMI file: %1.</source>
         <translation>A %1 TMI file betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="624"/>
+        <location filename="../source/mainwindow.cpp" line="671"/>
         <source>Failed loading Tileset-CEL file: %1.</source>
         <translation>A %1 Mezőkészlet-CEL file betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="629"/>
+        <location filename="../source/mainwindow.cpp" line="676"/>
         <source>Failed loading CEL file: %1.</source>
         <translation>A %1 CEL file betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="634"/>
+        <location filename="../source/mainwindow.cpp" line="681"/>
         <source>Failed loading CL2 file: %1.</source>
         <translation>A %1 CL2 file betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="644"/>
+        <location filename="../source/mainwindow.cpp" line="691"/>
         <source>Unique translation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="645"/>
+        <location filename="../source/mainwindow.cpp" line="692"/>
         <source>Base Translation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="753"/>
-        <location filename="../source/mainwindow.cpp" line="772"/>
-        <location filename="../source/mainwindow.cpp" line="1030"/>
-        <location filename="../source/mainwindow.cpp" line="1081"/>
-        <location filename="../source/mainwindow.cpp" line="1123"/>
+        <location filename="../source/mainwindow.cpp" line="800"/>
+        <location filename="../source/mainwindow.cpp" line="819"/>
+        <location filename="../source/mainwindow.cpp" line="1077"/>
+        <location filename="../source/mainwindow.cpp" line="1128"/>
+        <location filename="../source/mainwindow.cpp" line="1170"/>
         <source>Reading...</source>
         <translation>Betöltés folyamatban...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="810"/>
+        <location filename="../source/mainwindow.cpp" line="857"/>
         <source>Saving...</source>
         <translation>Mentés folyamatban...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="818"/>
+        <location filename="../source/mainwindow.cpp" line="865"/>
         <source>Confirmation</source>
         <translation>Jóváhagyás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="818"/>
+        <location filename="../source/mainwindow.cpp" line="865"/>
         <source>Are you sure you want to save as %1? Data conversion is not supported.</source>
         <translation>Biztosan %1-ként akarod menteni? Adatok konvertálása nem támogatott.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="832"/>
+        <location filename="../source/mainwindow.cpp" line="879"/>
         <source>Not supported.</source>
         <translation>Nem támogatott.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="871"/>
+        <location filename="../source/mainwindow.cpp" line="918"/>
         <source>Upscaling...</source>
         <translation>Felméretezés folyamatban...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="914"/>
-        <location filename="../source/mainwindow.cpp" line="922"/>
-        <location filename="../source/mainwindow.cpp" line="930"/>
+        <location filename="../source/mainwindow.cpp" line="961"/>
+        <location filename="../source/mainwindow.cpp" line="969"/>
+        <location filename="../source/mainwindow.cpp" line="977"/>
         <source>Select Image Files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1024"/>
-        <location filename="../source/mainwindow.cpp" line="1075"/>
-        <location filename="../source/mainwindow.cpp" line="1117"/>
+        <location filename="../source/mainwindow.cpp" line="1071"/>
+        <location filename="../source/mainwindow.cpp" line="1122"/>
+        <location filename="../source/mainwindow.cpp" line="1164"/>
         <source>Replacement Image File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1153"/>
-        <location filename="../source/mainwindow.cpp" line="1164"/>
-        <location filename="../source/mainwindow.cpp" line="1175"/>
-        <location filename="../source/mainwindow.cpp" line="1186"/>
-        <location filename="../source/mainwindow.cpp" line="1197"/>
-        <location filename="../source/mainwindow.cpp" line="1208"/>
-        <location filename="../source/mainwindow.cpp" line="1219"/>
-        <location filename="../source/mainwindow.cpp" line="1230"/>
-        <location filename="../source/mainwindow.cpp" line="1241"/>
-        <location filename="../source/mainwindow.cpp" line="1252"/>
-        <location filename="../source/mainwindow.cpp" line="1263"/>
+        <location filename="../source/mainwindow.cpp" line="1200"/>
+        <location filename="../source/mainwindow.cpp" line="1211"/>
+        <location filename="../source/mainwindow.cpp" line="1222"/>
+        <location filename="../source/mainwindow.cpp" line="1233"/>
+        <location filename="../source/mainwindow.cpp" line="1244"/>
+        <location filename="../source/mainwindow.cpp" line="1255"/>
+        <location filename="../source/mainwindow.cpp" line="1266"/>
+        <location filename="../source/mainwindow.cpp" line="1277"/>
+        <location filename="../source/mainwindow.cpp" line="1288"/>
+        <location filename="../source/mainwindow.cpp" line="1299"/>
+        <location filename="../source/mainwindow.cpp" line="1310"/>
         <source>Processing...</source>
         <translation>Feldolgozás folyamatban...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1274"/>
+        <location filename="../source/mainwindow.cpp" line="1321"/>
         <source>New Palette File</source>
         <translation>Új paletta fájl</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1274"/>
-        <location filename="../source/mainwindow.cpp" line="1305"/>
-        <location filename="../source/mainwindow.cpp" line="1327"/>
+        <location filename="../source/mainwindow.cpp" line="1321"/>
+        <location filename="../source/mainwindow.cpp" line="1351"/>
+        <location filename="../source/mainwindow.cpp" line="1370"/>
         <source>PAL Files (*.pal *.PAL)</source>
         <translation>PAL Fájlok (*.pal *.PAL)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1305"/>
+        <location filename="../source/mainwindow.cpp" line="1351"/>
         <source>Load Palette File</source>
         <translation>Paletta betöltése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1327"/>
+        <location filename="../source/mainwindow.cpp" line="1370"/>
         <source>Save Palette File as...</source>
         <translation>Paletta mentése másként</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1373"/>
-        <location filename="../source/mainwindow.cpp" line="1472"/>
+        <location filename="../source/mainwindow.cpp" line="1415"/>
+        <location filename="../source/mainwindow.cpp" line="1511"/>
         <source>New Translation File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1373"/>
-        <location filename="../source/mainwindow.cpp" line="1404"/>
-        <location filename="../source/mainwindow.cpp" line="1426"/>
-        <location filename="../source/mainwindow.cpp" line="1472"/>
-        <location filename="../source/mainwindow.cpp" line="1503"/>
-        <location filename="../source/mainwindow.cpp" line="1525"/>
+        <location filename="../source/mainwindow.cpp" line="1415"/>
+        <location filename="../source/mainwindow.cpp" line="1445"/>
+        <location filename="../source/mainwindow.cpp" line="1466"/>
+        <location filename="../source/mainwindow.cpp" line="1511"/>
+        <location filename="../source/mainwindow.cpp" line="1541"/>
+        <location filename="../source/mainwindow.cpp" line="1562"/>
         <source>TRN Files (*.trn *.TRN)</source>
         <translation>TRN Fájlok (*.trn *.TRN)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1404"/>
-        <location filename="../source/mainwindow.cpp" line="1503"/>
+        <location filename="../source/mainwindow.cpp" line="1445"/>
+        <location filename="../source/mainwindow.cpp" line="1541"/>
         <source>Load Translation File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1426"/>
-        <location filename="../source/mainwindow.cpp" line="1525"/>
+        <location filename="../source/mainwindow.cpp" line="1466"/>
+        <location filename="../source/mainwindow.cpp" line="1562"/>
         <source>Save Translation File as...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.h" line="171"/>
+        <location filename="../source/mainwindow.cpp" line="510"/>
         <source>New</source>
         <translation>Új</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.h" line="172"/>
+        <location filename="../source/mainwindow.cpp" line="520"/>
         <source>Frame</source>
         <translation>Képkocka</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.h" line="173"/>
+        <location filename="../source/mainwindow.cpp" line="532"/>
         <source>Subtile</source>
         <translation>Mező</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.h" line="174"/>
+        <location filename="../source/mainwindow.cpp" line="546"/>
         <source>Tile</source>
         <translation>Lap</translation>
     </message>
@@ -2301,6 +2291,8 @@
         <location filename="../source/d1celtilesetframe.cpp" line="444"/>
         <location filename="../source/d1cl2.cpp" line="386"/>
         <location filename="../source/d1cl2.cpp" line="484"/>
+        <location filename="../source/d1pal.cpp" line="95"/>
+        <location filename="../source/d1trn.cpp" line="41"/>
         <source>Error</source>
         <translation>Hiba</translation>
     </message>
@@ -2328,6 +2320,8 @@
         <location filename="../source/d1cel.cpp" line="351"/>
         <location filename="../source/d1celtileset.cpp" line="219"/>
         <location filename="../source/d1cl2.cpp" line="484"/>
+        <location filename="../source/d1pal.cpp" line="95"/>
+        <location filename="../source/d1trn.cpp" line="41"/>
         <source>Failed to open file: %1.</source>
         <translation>Nem sikerült megnyitni a %1 fájlt.</translation>
     </message>
@@ -2473,6 +2467,7 @@
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="982"/>
+        <location filename="../source/mainwindow.cpp" line="1626"/>
         <source>Unknown</source>
         <translation>Ismeretlen</translation>
     </message>
@@ -2492,14 +2487,9 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="907"/>
+        <location filename="../source/mainwindow.cpp" line="954"/>
         <source>Image files (%1)</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.cpp" line="1590"/>
-        <source>Unknown</source>
-        <translation>Ismeretlen</translation>
     </message>
 </context>
 <context>

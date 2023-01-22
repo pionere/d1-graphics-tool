@@ -505,6 +505,7 @@ void MainWindow::dropEvent(QDropEvent *event)
 void MainWindow::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange) {
+        QMessageBox::warning(this, "Retranslation", "Triggered");
         this->ui->retranslateUi(this);
         { // (re)translate the 'new' menu
             this->newMenu.setTitle(tr("New"));
