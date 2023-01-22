@@ -9,6 +9,7 @@
 #include <QImageReader>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QLocale>
 #include <QMessageBox>
 #include <QMimeData>
 #include <QMimeDatabase>
@@ -34,6 +35,8 @@ MainWindow::MainWindow()
     // QCoreApplication::setAttribute( Qt::AA_EnableHighDpiScaling, true );
 
     this->lastFilePath = Config::getLastFilePath();
+    // initialize the translators
+    this->reloadConfig();
 
     ui->setupUi(this);
 
@@ -242,6 +245,19 @@ void MainWindow::colorModified()
 
 void MainWindow::reloadConfig()
 {
+    // update locale
+    QString lang = Config::getLanguage();
+    if (lang != this->currLang) {
+        QLocale locale = QLocale(lang);
+        QLocale::setDefault(locale);
+        // remove the old translator
+        qApp->removeTranslator(&translator);
+        // load the new translator
+        QString path = QApplication::applicationDirPath() + "/lang_" + lang + ".qm";
+        if (translator.load(path))
+            qApp->installTranslator(&translator);
+        this->currLang = lang;
+    }
     // reload palettes
     bool currPalChanged = false;
     for (auto iter = this->pals.cbegin(); iter != this->pals.cend(); ++iter) {
@@ -612,7 +628,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->palFrame->layout()->addWidget(this->trnUniqueWidget);
     this->ui->palFrame->layout()->addWidget(this->trnBaseWidget);
 
-    // Configuration update triggers refresh of the palette widgets
+    // Configuration update triggers refresh of the translator and the palette widgets
     QObject::connect(&this->settingsDialog, &SettingsDialog::configurationSaved, this, &MainWindow::reloadConfig);
 
     // Palette and translation file selection

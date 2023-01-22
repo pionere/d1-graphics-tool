@@ -9,6 +9,7 @@ private:
     static constexpr const char *DEFAULT_PAL_UNDEFINED_COLOR = "#ff00ff";
     static constexpr const char *DEFAULT_PAL_SELECTION_BORDER_COLOR = "#ff0000";
 
+    static constexpr const char *CFG_LOCALE = "Locale";
     static constexpr const char *CFG_LAST_FILE_PATH = "LastFilePath";
     static constexpr const char *CFG_PAL_UNDEFINED_COLOR = "PaletteUndefinedColor";
     static constexpr const char *CFG_PAL_SELECTION_BORDER_COLOR = "PaletteSelectionBorderColor";
@@ -21,6 +22,14 @@ public:
     static void loadConfiguration();
     static void storeConfiguration();
 
+    static QString getLocale()
+    {
+        return Config::value(Config::CFG_LOCALE).toString();
+    };
+    static void setLocale(const QString &locale)
+    {
+        Config::insert(Config::CFG_LOCALE, locale);
+    };
     static QString getLastFilePath()
     {
         return Config::value(Config::CFG_LAST_FILE_PATH).toString();

@@ -14,7 +14,11 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 
 # Translation files
 SET(DGT_TS_FILES
-        translations/D1GraphicsTool_en.ts
+        languages/lang_de_DE.ts
+        languages/lang_en_US.ts
+        languages/lang_es_ES.ts
+        languages/lang_fr_FR.ts
+        languages/lang_hu_HU.ts
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

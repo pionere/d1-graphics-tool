@@ -162,6 +162,9 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QTranslator translator;   // translations for this application
+    QTranslator translatorQt; // translations for qt
+    QString currLang;         // currently loaded language e.g. "de_DE"
     QString lastFilePath;
 
     QMenu newMenu = QMenu(tr("New"));
