@@ -35,8 +35,6 @@ MainWindow::MainWindow()
     // QCoreApplication::setAttribute( Qt::AA_EnableHighDpiScaling, true );
 
     this->lastFilePath = Config::getLastFilePath();
-    // initialize the translators
-    this->reloadConfig();
 
     ui->setupUi(this);
 
@@ -91,6 +89,9 @@ MainWindow::MainWindow()
 
     this->on_actionClose_triggered();
     setAcceptDrops(true);
+
+    // initialize the translators
+    this->reloadConfig();
 }
 
 MainWindow::~MainWindow()
@@ -257,7 +258,7 @@ void MainWindow::reloadConfig()
         // QString path = QApplication::applicationDirPath() + "/lang_" + lang + ".qm";
         QString path = ":/lang_" + lang + ".qm";
         if (this->translator.load(path)) {
-            // qApp->installTranslator(&this->translator);
+            qApp->installTranslator(&this->translator);
             // this->ui->retranslateUi(this);
             /*if (this->celView != nullptr) {
             }

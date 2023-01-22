@@ -28,7 +28,7 @@ void Config::loadConfiguration()
     }
 
     if (!theConfig.contains(Config::CFG_LOCALE)) {
-        Config::setLocale(QLocale::system().name());
+        Config::setLocale(Config::DEFAULT_LOCALE);
         configurationModified = true;
     }
     if (!theConfig.contains(Config::CFG_LAST_FILE_PATH)) {

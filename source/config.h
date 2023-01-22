@@ -6,6 +6,7 @@
 class Config {
 private:
     static constexpr const char *FILE_PATH = "/D1GraphicsTool.config.json";
+    static constexpr const char *DEFAULT_LOCALE = "en_US";
     static constexpr const char *DEFAULT_PAL_UNDEFINED_COLOR = "#ff00ff";
     static constexpr const char *DEFAULT_PAL_SELECTION_BORDER_COLOR = "#ff0000";
 
