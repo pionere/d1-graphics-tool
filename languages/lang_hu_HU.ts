@@ -1483,7 +1483,7 @@
     <message>
         <location filename="../source/mainwindow.ui" line="360"/>
         <source>Sort the frames based on the subtiles</source>
-        <translation>Képkockák rendezése a mezők sorrendjében<</translation>
+        <translation>Képkockák rendezése a mezők sorrendjében</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="365"/>
