@@ -253,10 +253,11 @@ void MainWindow::reloadConfig()
         // remove the old translator
         qApp->removeTranslator(&translator);
         // load the new translator
-        QString path = QApplication::applicationDirPath() + "/lang_" + lang + ".qm";
+        //QString path = QApplication::applicationDirPath() + "/lang_" + lang + ".qm";
+        QString path = ":/lang_" + lang + ".qm";
         if (translator.load(path)) {
             qApp->installTranslator(&translator);
-            this->ui.retranslateUi(this);
+            this->ui->retranslateUi(this);
             /*if (this->celView != nullptr) {
             }
             if (this->levelCelView != nullptr) {
