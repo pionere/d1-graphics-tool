@@ -38,7 +38,8 @@ void SettingsDialog::initialize()
 
         QLocale locale = QLocale(localeName);
 
-        this->ui->languageComboBox->addItem(locale.nativeLanguageName(), QVariant(localeName));
+        this->ui->languageComboBox->addItem(locale.nativeLanguageName().toLower(), QVariant(localeName));
+        // this->ui->languageComboBox->addItem(locale.languageToString(locale.language()), QVariant(localeName));
 
         // set default language selected
         if (defaultLocale == localeName) {
