@@ -273,7 +273,7 @@
            </size>
           </property>
           <property name="toolTip">
-           <string>First group</string>
+           <string>First tile</string>
           </property>
           <property name="text">
            <string notr="true">|&lt;</string>
@@ -295,7 +295,7 @@
            </size>
           </property>
           <property name="toolTip">
-           <string>Previous group</string>
+           <string>Previous tile</string>
           </property>
           <property name="text">
            <string notr="true">&lt;</string>
@@ -308,7 +308,7 @@
            <number>5</number>
           </property>
           <property name="toolTip">
-           <string>Current group</string>
+           <string>Current tile</string>
           </property>
           <property name="text">
            <string notr="true">0</string>
@@ -346,7 +346,7 @@
            <number>5</number>
           </property>
           <property name="toolTip">
-           <string>Number of groups</string>
+           <string>Number of tiles</string>
           </property>
           <property name="text">
            <string notr="true">0</string>
@@ -374,7 +374,7 @@
            </size>
           </property>
           <property name="toolTip">
-           <string>Next group</string>
+           <string>Next tile</string>
           </property>
           <property name="text">
            <string notr="true">&gt;</string>
@@ -396,7 +396,7 @@
            </size>
           </property>
           <property name="toolTip">
-           <string>Last group</string>
+           <string>Last tile</string>
           </property>
           <property name="text">
            <string notr="true">&gt;|</string>
@@ -490,7 +490,7 @@
            </size>
           </property>
           <property name="toolTip">
-           <string>First group</string>
+           <string>First subtile</string>
           </property>
           <property name="text">
            <string notr="true">|&lt;</string>
@@ -512,7 +512,7 @@
            </size>
           </property>
           <property name="toolTip">
-           <string>Previous group</string>
+           <string>Previous subtile</string>
           </property>
           <property name="text">
            <string notr="true">&lt;</string>
@@ -525,7 +525,7 @@
            <number>5</number>
           </property>
           <property name="toolTip">
-           <string>Current group</string>
+           <string>Current subtile</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -560,7 +560,7 @@
            <number>5</number>
           </property>
           <property name="toolTip">
-           <string>Number of groups</string>
+           <string>Number of subtiles</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -585,7 +585,7 @@
            </size>
           </property>
           <property name="toolTip">
-           <string>Next group</string>
+           <string>Next subtile</string>
           </property>
           <property name="text">
            <string notr="true">&gt;</string>
@@ -607,7 +607,7 @@
            </size>
           </property>
           <property name="toolTip">
-           <string>Last group</string>
+           <string>Last subtile</string>
           </property>
           <property name="text">
            <string notr="true">&gt;|</string>
