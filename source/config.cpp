@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QLocale>
 
 static QJsonObject theConfig;
 
@@ -26,6 +27,10 @@ void Config::loadConfiguration()
         loadJson.close();
     }
 
+    if (!theConfig.contains(Config::CFG_LOCALE)) {
+        Config::setLocale(Config::DEFAULT_LOCALE);
+        configurationModified = true;
+    }
     if (!theConfig.contains(Config::CFG_LAST_FILE_PATH)) {
         Config::setLastFilePath(jsonFilePath);
         configurationModified = true;

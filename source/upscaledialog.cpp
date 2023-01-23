@@ -92,3 +92,11 @@ void UpscaleDialog::on_upscaleCancelButton_clicked()
 {
     this->close();
 }
+
+void UpscaleDialog::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        this->ui->retranslateUi(this);
+    }
+    QDialog::changeEvent(event);
+}

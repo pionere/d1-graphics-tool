@@ -9,9 +9,35 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 
+# Translation files
+SET(DGT_TS_FILES
+        languages/lang_de_DE.ts
+        languages/lang_en_US.ts
+        languages/lang_es_ES.ts
+        languages/lang_fr_FR.ts
+        languages/lang_hu_HU.ts
+)
+
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+  qt_create_translation(DGT_QM_FILES ${CMAKE_CURRENT_SOURCE_DIR}/source ${DGT_TS_FILES})
+else()
+  qt5_create_translation(DGT_QM_FILES ${CMAKE_CURRENT_SOURCE_DIR}/source ${DGT_TS_FILES})
+endif()
+
+# Create translations QRC file - ts.qrc
+set(TRANSLATIONS_QRC "${CMAKE_CURRENT_BINARY_DIR}/ts.qrc")
+file(WRITE ${TRANSLATIONS_QRC} "<RCC>\n    <qresource prefix=\"/\">")
+foreach(QM_FILE ${DGT_QM_FILES})
+    get_filename_component(QM_FILE_NAME ${QM_FILE} NAME)
+#    file(APPEND ${TRANSLATIONS_QRC} "\n\t\t<file alias=\"${QM_FILE_NAME}\">${QM_FILE_NAME}</file>")
+    file(APPEND ${TRANSLATIONS_QRC} "\n        <file>${QM_FILE_NAME}</file>")
+endforeach()
+file(APPEND ${TRANSLATIONS_QRC} "\n    </qresource>\n</RCC>")
+
+# Source files
 include_directories(source)
 
 set(PROJECT_SOURCES
@@ -93,17 +119,21 @@ set(PROJECT_SOURCES
         source/upscaler.h
 )
 
+qt_add_resources(RESOURCES
+        resources/d1files.qrc
+        ${TRANSLATIONS_QRC})
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(D1GraphicsTool
         resources/D1GraphicsTool.rc
-        resources/d1files.qrc
+        ${RESOURCES}
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
 else()
     add_executable(D1GraphicsTool
         resources/D1GraphicsTool.rc
-        resources/d1files.qrc
+        ${RESOURCES}
         ${PROJECT_SOURCES}
     )
 endif()

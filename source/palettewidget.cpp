@@ -653,13 +653,13 @@ void PaletteWidget::displaySelection()
     }
 }
 
-void PaletteWidget::startTrnColorPicking()
+void PaletteWidget::startTrnColorPicking(bool single)
 {
     // stop previous picking
     this->initStopColorPicking();
 
     this->ui->graphicsView->setStyleSheet("color: rgb(255, 0, 0);");
-    this->ui->informationLabel->setText(tr("<- Select color(s)"));
+    this->ui->informationLabel->setText(tr("<- Select color(s)", "", single ? 1 : 2));
     this->pickingTranslationColor = true;
     this->displayColors();
 }
@@ -948,7 +948,7 @@ void PaletteWidget::on_translationIndexLineEdit_escPressed()
 
 void PaletteWidget::on_translationPickPushButton_clicked()
 {
-    emit this->colorPicking_started();
+    emit this->colorPicking_started(this->selectedFirstColorIndex == this->selectedLastColorIndex);
 }
 
 void PaletteWidget::on_translationClearPushButton_clicked()

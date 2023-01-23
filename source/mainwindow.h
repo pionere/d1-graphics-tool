@@ -4,6 +4,7 @@
 #include <QMenu>
 #include <QMimeData>
 #include <QStringList>
+#include <QTranslator>
 #include <QUndoCommand>
 
 #include "celview.h"
@@ -160,14 +161,20 @@ private slots:
     void dragMoveEvent(QDragMoveEvent *event);
     void dropEvent(QDropEvent *event);
 
+    // this event is called, when a new translator is loaded or the system language is changed
+    void changeEvent(QEvent *event);
+
 private:
     Ui::MainWindow *ui;
+    QTranslator translator;   // translations for this application
+    QTranslator translatorQt; // translations for qt
+    QString currLang;         // currently loaded language e.g. "de_DE"
     QString lastFilePath;
 
-    QMenu newMenu = QMenu(tr("New"));
-    QMenu frameMenu = QMenu(tr("Frame"));
-    QMenu subtileMenu = QMenu(tr("Subtile"));
-    QMenu tileMenu = QMenu(tr("Tile"));
+    QMenu newMenu = QMenu("New");
+    QMenu frameMenu = QMenu("Frame");
+    QMenu subtileMenu = QMenu("Subtile");
+    QMenu tileMenu = QMenu("Tile");
 
     QUndoStack *undoStack;
     QAction *undoAction;

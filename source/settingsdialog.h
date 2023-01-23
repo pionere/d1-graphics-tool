@@ -28,6 +28,9 @@ private slots:
     void on_settingsOkButton_clicked();
     void on_settingsCancelButton_clicked();
 
+    // this event is called, when a new translator is loaded or the system language is changed
+    void changeEvent(QEvent *event);
+
 private:
     Ui::SettingsDialog *ui;
 };
