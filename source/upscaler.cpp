@@ -3213,6 +3213,8 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     QList<D1GfxFrame> newFrames;
     QList<QList<quint16>> newFrameReferences;
 
+    QPair<int, QString> progress;
+    progress.first = -1;
     for (int i = 0; i < amount; i++) {
         if (ProgressDialog::wasCanceled()) {
             return false;
@@ -3220,7 +3222,9 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
         ProgressDialog::incValue();
 
         // dProgress() << QString("Upscaling %1").arg(i + 1);
-        dProgress() << qMakePair(QString("Upscaling %1").arg(i), QString("Upscaling %1").arg(i + 1));
+        // dProgress() << qMakePair(QString("Upscaling %1").arg(i), QString("Upscaling %1").arg(i + 1));
+        progress.second = QString("Upscaling %1").arg(i + 1);
+        dProgress() << progress;
 
         D1GfxFrame *subtileFrame = Upscaler::createSubtileFrame(gfx, min, i);
         Upscaler::upscaleFrame(subtileFrame, gfx->palette, params);

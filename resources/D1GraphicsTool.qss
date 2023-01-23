@@ -3,6 +3,11 @@ QLineEdit[readOnly="true"] {
   background-color: #F0F0F0;
 }
 
+QPlainTextEdit[readOnly="true"] {
+  color: #808080;
+  background-color: #F0F0F0;
+}
+
 QMessageBox {
   messagebox-text-interaction-flags: 5;
 }
