@@ -41,8 +41,8 @@ MainWindow::MainWindow()
     this->setWindowTitle(D1_GRAPHICS_TOOL_TITLE);
 
     // initialize 'new' submenu of 'File'
-    this->newMenu.addAction("CEL gfx", this, SLOT(on_actionNew_CEL_triggered()));
-    this->newMenu.addAction("CL2 gfx", this, SLOT(on_actionNew_CL2_triggered()));
+    this->newMenu.addAction("CEL graphics", this, SLOT(on_actionNew_CEL_triggered()));
+    this->newMenu.addAction("CL2 graphics", this, SLOT(on_actionNew_CL2_triggered()));
     this->newMenu.addAction("Tileset", this, SLOT(on_actionNew_Tileset_triggered()));
     QAction *firstFileAction = (QAction *)this->ui->menuFile->actions()[0];
     this->ui->menuFile->insertMenu(firstFileAction, &this->newMenu);
@@ -506,8 +506,8 @@ void MainWindow::changeEvent(QEvent *event)
         { // (re)translate the 'new' menu
             this->newMenu.setTitle(tr("New"));
             QList<QAction *> menuActions = this->newMenu.actions();
-            menuActions[0]->setText(tr("CEL gfx"));
-            menuActions[1]->setText(tr("CL2 gfx"));
+            menuActions[0]->setText(tr("CEL graphics"));
+            menuActions[1]->setText(tr("CL2 graphics"));
             menuActions[2]->setText(tr("Tileset"));
         }
         // (re)translate undoAction, redoAction

@@ -179,7 +179,7 @@ void PaletteScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     QPointF pos = event->scenePos();
 
-    qDebug() << tr("Clicked: %1:%2").arg(pos.x()).arg(pos.y());
+    qDebug() << QStringLiteral("Clicked: %1:%2").arg(pos.x()).arg(pos.y());
 
     // Check if selected color has changed
     int colorIndex = getColorIndexFromCoordinates(pos);
@@ -388,7 +388,7 @@ void PaletteWidget::initializeDisplayComboBox()
         }
         ui->displayComboBox->addItem(tr("Show current frame hits"), QVariant((int)COLORFILTER_TYPE::FRAME));
     } else {
-        ui->displayComboBox->addItem(tr("Show translated colors"), QVariant((int)COLORFILTER_TYPE::TRANSLATED));
+        ui->displayComboBox->addItem(tr("Show the altered colors"), QVariant((int)COLORFILTER_TYPE::TRANSLATED));
     }
 }
 
@@ -591,7 +591,7 @@ void PaletteWidget::displayColors()
         bool displayColor = indexHits > 0;
 
         // Check translation display filter
-        if (this->isTrn && ui->displayComboBox->currentData().value<COLORFILTER_TYPE>() == COLORFILTER_TYPE::TRANSLATED // "Show translated colors"
+        if (this->isTrn && ui->displayComboBox->currentData().value<COLORFILTER_TYPE>() == COLORFILTER_TYPE::TRANSLATED // "Show the altered colors"
             && this->trn->getTranslation(i) == i)
             displayColor = false;
 
@@ -653,13 +653,13 @@ void PaletteWidget::displaySelection()
     }
 }
 
-void PaletteWidget::startTrnColorPicking()
+void PaletteWidget::startTrnColorPicking(bool single)
 {
     // stop previous picking
     this->initStopColorPicking();
 
     this->ui->graphicsView->setStyleSheet("color: rgb(255, 0, 0);");
-    this->ui->informationLabel->setText(tr("<- Select color(s)"));
+    this->ui->informationLabel->setText(tr("<- Select color(s)", "", single ? 1 : 2));
     this->pickingTranslationColor = true;
     this->displayColors();
 }
@@ -948,7 +948,7 @@ void PaletteWidget::on_translationIndexLineEdit_escPressed()
 
 void PaletteWidget::on_translationPickPushButton_clicked()
 {
-    emit this->colorPicking_started();
+    emit this->colorPicking_started(this->selectedFirstColorIndex == this->selectedLastColorIndex);
 }
 
 void PaletteWidget::on_translationClearPushButton_clicked()

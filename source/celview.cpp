@@ -31,7 +31,7 @@ void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     int x = event->scenePos().x();
     int y = event->scenePos().y();
 
-    qDebug() << tr("Clicked: %1:%2").arg(x).arg(y);
+    qDebug() << QStringLiteral("Clicked: %1:%2").arg(x).arg(y);
 
     emit this->framePixelClicked(x, y);
 }

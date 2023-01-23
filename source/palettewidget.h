@@ -150,7 +150,7 @@ public:
     void changeColorSelection(int colorIndex);
     void finishColorSelection();
 
-    void startTrnColorPicking();
+    void startTrnColorPicking(bool single);
     void stopTrnColorPicking();
 
     void refreshPathComboBox();
@@ -165,7 +165,7 @@ signals:
     void pathSelected(QString path);
     void colorsSelected(QList<quint8> indices);
 
-    void colorPicking_started();
+    void colorPicking_started(bool single);
     void colorPicking_stopped();
 
     void modified();

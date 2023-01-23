@@ -2,14 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="hu_HU">
 <context>
-    <name>CelScene</name>
-    <message>
-        <location filename="../source/celview.cpp" line="34"/>
-        <source>Clicked: %1:%2</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>CelView</name>
     <message>
         <location filename="../source/celview.ui" line="83"/>
@@ -1021,7 +1013,7 @@
     <message>
         <location filename="../source/leveltabframewidget.ui" line="60"/>
         <source>Encoding:</source>
-        <translation type="unfinished"></translation>
+        <translation>Kódolás:</translation>
     </message>
     <message>
         <location filename="../source/leveltabframewidget.ui" line="80"/>
@@ -1093,23 +1085,23 @@
     <name>LevelTabSubTileWidget</name>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="55"/>
-        <source>SOL-Flags</source>
-        <translation type="unfinished"></translation>
+        <source>SOL flags</source>
+        <translation>SOL tulajdonságok</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="61"/>
         <source>Solid</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem járható</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="68"/>
         <source>Block light</source>
-        <translation type="unfinished"></translation>
+        <translation>Fény blokkoló</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="75"/>
         <source>Block missile</source>
-        <translation type="unfinished"></translation>
+        <translation>Lövedék blokkoló</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="82"/>
@@ -1117,53 +1109,57 @@
         <translation>Csapda</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="89"/>
         <location filename="../source/leveltabsubtilewidget.ui" line="159"/>
         <location filename="../source/leveltabsubtilewidget.ui" line="187"/>
         <source>Transparent</source>
-        <translation type="unfinished"></translation>
+        <translation>Áttetsző</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="96"/>
-        <source>Left masked</source>
-        <translation type="unfinished"></translation>
+        <location filename="../source/leveltabsubtilewidget.ui" line="89"/>
+        <source>Transparency:</source>
+        <translation>Áttetszőség:</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="103"/>
-        <source>Right masked</source>
-        <translation type="unfinished"></translation>
+        <source>Left floor</source>
+        <translation>Bal talaj</translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabsubtilewidget.ui" line="110"/>
+        <source>Right floor</source>
+        <translation>Jobb talaj</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="125"/>
-        <source>TMI-Flags</source>
-        <translation type="unfinished"></translation>
+        <source>TMI flags</source>
+        <translation>TMI tulajdonságok</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="131"/>
         <source>Transp. Wall</source>
-        <translation type="unfinished"></translation>
+        <translation>Áttetsző fal</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="138"/>
         <source>Left floor:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bal talaj:</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="145"/>
         <location filename="../source/leveltabsubtilewidget.ui" line="173"/>
         <source>Second pass</source>
-        <translation type="unfinished"></translation>
+        <translation>Második körös</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="152"/>
         <location filename="../source/leveltabsubtilewidget.ui" line="180"/>
         <source>Foliage</source>
-        <translation type="unfinished"></translation>
+        <translation>Kiálló elemek</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="166"/>
         <source>Right floor:</source>
-        <translation type="unfinished"></translation>
+        <translation>Jobb talaj:</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="217"/>
@@ -1196,72 +1192,72 @@
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="76"/>
         <source>Pillar</source>
-        <translation type="unfinished"></translation>
+        <translation>Oszlop</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="81"/>
-        <source>Vertical wall</source>
-        <translation type="unfinished"></translation>
+        <source>Wall (north-west)</source>
+        <translation>Fal (észak-nyugati)</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="86"/>
-        <source>Horizontal wall</source>
-        <translation type="unfinished"></translation>
+        <source>Wall (north-east)</source>
+        <translation>Fal (észak-keleti)</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="91"/>
-        <source>Wall intersection</source>
-        <translation type="unfinished"></translation>
+        <source>Wall intersection (north)</source>
+        <translation>Falak kereszteződése (északi)</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="96"/>
-        <source>Vertical wall ending</source>
-        <translation type="unfinished"></translation>
+        <source>Wall ending (north-west)</source>
+        <translation>Fal vége (észak-nyugati)</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="101"/>
-        <source>Horizontal wall ending</source>
-        <translation type="unfinished"></translation>
+        <source>Wall ending (north-east)</source>
+        <translation>Fal vége (észak-keleti)</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="106"/>
-        <source>Corner wall</source>
-        <translation type="unfinished"></translation>
+        <source>Corner wall (north)</source>
+        <translation>Sarok fal (északi)</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="111"/>
         <source>Wall intersection (west)</source>
-        <translation type="unfinished"></translation>
+        <translation>Falak kereszteződése (nyugati)</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="116"/>
         <source>Wall intersection (east)</source>
-        <translation type="unfinished"></translation>
+        <translation>Falak kereszteződése (keleti)</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="121"/>
-        <source>Horizontal wall (backside)</source>
-        <translation type="unfinished"></translation>
+        <source>Wall (south-west)</source>
+        <translation>Fal (dél-nyugati)</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="126"/>
-        <source>Vertical wall (backside)</source>
-        <translation type="unfinished"></translation>
+        <source>Wall (south-east)</source>
+        <translation>Fal (dél-keleti)</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="131"/>
         <source>Wall intersection (south)</source>
-        <translation type="unfinished"></translation>
+        <translation>Falak kereszteződése (déli)</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="153"/>
         <source>Automap flags</source>
-        <translation type="unfinished"></translation>
+        <translation>Térkép tulajdonságok</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="159"/>
-        <source>Vertical:</source>
-        <translation type="unfinished"></translation>
+        <source>Western:</source>
+        <translation>Nyugati:</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="166"/>
@@ -1279,17 +1275,17 @@
         <location filename="../source/leveltabtilewidget.ui" line="180"/>
         <location filename="../source/leveltabtilewidget.ui" line="208"/>
         <source>Grate</source>
-        <translation type="unfinished"></translation>
+        <translation>Rács</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="187"/>
-        <source>Horizontal:</source>
-        <translation type="unfinished"></translation>
+        <source>Eastern:</source>
+        <translation>keleti:</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="215"/>
-        <source>Dirt</source>
-        <translation>Piszok</translation>
+        <source>External</source>
+        <translation>Külső</translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="222"/>
@@ -1391,12 +1387,12 @@
     <message>
         <location filename="../source/mainwindow.ui" line="256"/>
         <source>Open unique translation...</source>
-        <translation type="unfinished"></translation>
+        <translation>Egyedi átrendelő megnyitása</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="264"/>
         <source>Open base translation...</source>
-        <translation type="unfinished"></translation>
+        <translation>Alap átrendelő megnyitása</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="272"/>
@@ -1551,52 +1547,52 @@
     <message>
         <location filename="../source/mainwindow.ui" line="401"/>
         <source>New unique translation</source>
-        <translation type="unfinished"></translation>
+        <translation>Új egyedi átrendelő</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="406"/>
         <source>Save unique translation</source>
-        <translation type="unfinished"></translation>
+        <translation>Egyedi átrendelő mentése</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="411"/>
         <source>Save unique translation as...</source>
-        <translation type="unfinished"></translation>
+        <translation>Egyedi átrendelő mentése másként</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="416"/>
         <source>Close unique translation</source>
-        <translation type="unfinished"></translation>
+        <translation>Egyedi átrendelő bezárása</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="421"/>
         <source>New base translation</source>
-        <translation type="unfinished"></translation>
+        <translation>Új alap átrendelő</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="426"/>
         <source>Save base translation</source>
-        <translation type="unfinished"></translation>
+        <translation>Alap átrendelő mentése</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="431"/>
         <source>Save base translation as...</source>
-        <translation type="unfinished"></translation>
+        <translation>Alap átrendelő mentése másként</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.ui" line="436"/>
         <source>Close base translation</source>
-        <translation type="unfinished"></translation>
+        <translation>Alap átrendelő bezárása</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.cpp" line="509"/>
-        <source>CEL gfx</source>
-        <translation type="unfinished"></translation>
+        <source>CEL graphics</source>
+        <translation>CEL grafika</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.cpp" line="510"/>
-        <source>CL2 gfx</source>
-        <translation type="unfinished"></translation>
+        <source>CL2 graphics</source>
+        <translation>CL2 grafika</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.cpp" line="514"/>
@@ -1819,12 +1815,12 @@
     <message>
         <location filename="../source/mainwindow.cpp" line="688"/>
         <source>Unique translation</source>
-        <translation type="unfinished"></translation>
+        <translation>Egyedi átrendelő</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.cpp" line="689"/>
         <source>Base Translation</source>
-        <translation type="unfinished"></translation>
+        <translation>Alap átrendelő</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.cpp" line="794"/>
@@ -1865,14 +1861,14 @@
         <location filename="../source/mainwindow.cpp" line="963"/>
         <location filename="../source/mainwindow.cpp" line="971"/>
         <source>Select Image Files</source>
-        <translation type="unfinished"></translation>
+        <translation>Kép fájlok választása</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.cpp" line="1065"/>
         <location filename="../source/mainwindow.cpp" line="1116"/>
         <location filename="../source/mainwindow.cpp" line="1158"/>
         <source>Replacement Image File</source>
-        <translation type="unfinished"></translation>
+        <translation>Helyettesítő kép fájl</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.cpp" line="1194"/>
@@ -1915,7 +1911,7 @@
         <location filename="../source/mainwindow.cpp" line="1409"/>
         <location filename="../source/mainwindow.cpp" line="1505"/>
         <source>New Translation File</source>
-        <translation type="unfinished"></translation>
+        <translation>Új átrendelő fájl</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.cpp" line="1409"/>
@@ -1931,13 +1927,13 @@
         <location filename="../source/mainwindow.cpp" line="1439"/>
         <location filename="../source/mainwindow.cpp" line="1535"/>
         <source>Load Translation File</source>
-        <translation type="unfinished"></translation>
+        <translation>Átrendelő fájl betöltése</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.cpp" line="1460"/>
         <location filename="../source/mainwindow.cpp" line="1556"/>
         <source>Save Translation File as...</source>
-        <translation type="unfinished"></translation>
+        <translation>Átrendelő fájl mentése másként</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.cpp" line="507"/>
@@ -2016,7 +2012,7 @@
     <message>
         <location filename="../source/openasdialog.ui" line="121"/>
         <source>Clipped:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tagolt:</translation>
     </message>
     <message>
         <location filename="../source/openasdialog.ui" line="186"/>
@@ -2161,20 +2157,12 @@
     </message>
 </context>
 <context>
-    <name>PaletteScene</name>
-    <message>
-        <location filename="../source/palettewidget.cpp" line="182"/>
-        <source>Clicked: %1:%2</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>PaletteWidget</name>
     <message>
         <location filename="../source/palettewidget.ui" line="194"/>
         <location filename="../source/palettewidget.ui" line="331"/>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <translation>Törlés</translation>
     </message>
     <message>
         <location filename="../source/palettewidget.ui" line="207"/>
@@ -2200,7 +2188,7 @@
     <message>
         <location filename="../source/palettewidget.ui" line="384"/>
         <source>Apply in-game TRN adjustment</source>
-        <translation type="unfinished"></translation>
+        <translation>A játékbeli TRN-módosítás elvégzése</translation>
     </message>
     <message>
         <location filename="../source/palettewidget.cpp" line="278"/>
@@ -2254,8 +2242,8 @@
     </message>
     <message>
         <location filename="../source/palettewidget.cpp" line="391"/>
-        <source>Show translated colors</source>
-        <translation type="unfinished"></translation>
+        <source>Show the altered colors</source>
+        <translation>Módosított színek</translation>
     </message>
     <message>
         <location filename="../source/palettewidget.cpp" line="416"/>
@@ -2498,22 +2486,22 @@
     <message>
         <location filename="../source/leveltabframewidget.cpp" line="49"/>
         <source>Invalid (transparent) pixel at (%1:%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>Hibás (átlátszó) képpont a (%1:%2) pozícióban.</translation>
     </message>
     <message>
         <location filename="../source/leveltabframewidget.cpp" line="55"/>
         <source>Invalid (non-transparent) pixel at (%1:%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>Hibás (nem átlátszó) képpont a (%1:%2) pozícióban.</translation>
     </message>
     <message>
         <location filename="../source/main.cpp" line="17"/>
-        <source>Failed to read %1.</source>
-        <translation type="unfinished"></translation>
+        <source>Failed to read file: %1.</source>
+        <translation>A %1 fájl olvasása sikertelen.</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.cpp" line="948"/>
         <source>Image files (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Kép fájlok (%1)</translation>
     </message>
 </context>
 <context>
@@ -2546,7 +2534,7 @@
     <message>
         <location filename="../source/saveasdialog.ui" line="58"/>
         <source>Clipped:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tagolt:</translation>
     </message>
     <message>
         <location filename="../source/saveasdialog.ui" line="65"/>
@@ -2569,7 +2557,7 @@
         <location filename="../source/saveasdialog.ui" line="110"/>
         <location filename="../source/saveasdialog.ui" line="194"/>
         <source>Preserve</source>
-        <translation type="unfinished"></translation>
+        <translation>Ne változzon</translation>
     </message>
     <message>
         <location filename="../source/saveasdialog.ui" line="133"/>
@@ -2712,7 +2700,7 @@
     <message>
         <location filename="../source/settingsdialog.ui" line="51"/>
         <source>Palettes and translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Paletták és átrendelők</translation>
     </message>
     <message>
         <location filename="../source/settingsdialog.ui" line="57"/>
@@ -2752,12 +2740,12 @@
     <message>
         <location filename="../source/upscaledialog.ui" line="20"/>
         <source>Palettes and translations</source>
-        <translation type="unfinished"></translation>
+        <translation>Paletták és átrendelők</translation>
     </message>
     <message>
         <location filename="../source/upscaledialog.ui" line="26"/>
         <source>Multiplier:</source>
-        <translation type="unfinished"></translation>
+        <translation>Szorzótényező</translation>
     </message>
     <message>
         <location filename="../source/upscaledialog.ui" line="43"/>
@@ -2808,7 +2796,7 @@
     <message>
         <location filename="../source/upscaledialog.ui" line="136"/>
         <source>Anti aliasing:</source>
-        <translation type="unfinished"></translation>
+        <translation>Élsimítás</translation>
     </message>
     <message>
         <location filename="../source/upscaledialog.ui" line="144"/>
