@@ -134,57 +134,57 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="273"/>
+        <location filename="../source/celview.cpp" line="274"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="273"/>
+        <location filename="../source/celview.cpp" line="274"/>
         <source>Failed to read file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="309"/>
+        <location filename="../source/celview.cpp" line="310"/>
         <source>Upscaling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="413"/>
+        <location filename="../source/celview.cpp" line="416"/>
         <source>Insert Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="414"/>
+        <location filename="../source/celview.cpp" line="417"/>
         <source>Add new frames before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="418"/>
+        <location filename="../source/celview.cpp" line="421"/>
         <source>Add Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="419"/>
+        <location filename="../source/celview.cpp" line="422"/>
         <source>Add new frames at the end</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="423"/>
+        <location filename="../source/celview.cpp" line="426"/>
         <source>Replace Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="424"/>
+        <location filename="../source/celview.cpp" line="427"/>
         <source>Replace the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="431"/>
+        <location filename="../source/celview.cpp" line="434"/>
         <source>Del Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="432"/>
+        <location filename="../source/celview.cpp" line="435"/>
         <source>Delete the current frame</source>
         <translation type="unfinished"></translation>
     </message>
@@ -889,121 +889,121 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1562"/>
+        <location filename="../source/levelcelview.cpp" line="1564"/>
         <source>Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1565"/>
-        <location filename="../source/levelcelview.cpp" line="1601"/>
-        <location filename="../source/levelcelview.cpp" line="1640"/>
+        <location filename="../source/levelcelview.cpp" line="1567"/>
+        <location filename="../source/levelcelview.cpp" line="1603"/>
+        <location filename="../source/levelcelview.cpp" line="1642"/>
         <source>Insert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1566"/>
+        <location filename="../source/levelcelview.cpp" line="1568"/>
         <source>Add new frames before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1570"/>
-        <location filename="../source/levelcelview.cpp" line="1606"/>
-        <location filename="../source/levelcelview.cpp" line="1645"/>
+        <location filename="../source/levelcelview.cpp" line="1572"/>
+        <location filename="../source/levelcelview.cpp" line="1608"/>
+        <location filename="../source/levelcelview.cpp" line="1647"/>
         <source>Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1571"/>
+        <location filename="../source/levelcelview.cpp" line="1573"/>
         <source>Add new frames at the end</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1575"/>
-        <location filename="../source/levelcelview.cpp" line="1611"/>
-        <location filename="../source/levelcelview.cpp" line="1650"/>
+        <location filename="../source/levelcelview.cpp" line="1577"/>
+        <location filename="../source/levelcelview.cpp" line="1613"/>
+        <location filename="../source/levelcelview.cpp" line="1652"/>
         <source>Replace</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1576"/>
+        <location filename="../source/levelcelview.cpp" line="1578"/>
         <source>Replace the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1583"/>
-        <location filename="../source/levelcelview.cpp" line="1619"/>
-        <location filename="../source/levelcelview.cpp" line="1658"/>
+        <location filename="../source/levelcelview.cpp" line="1585"/>
+        <location filename="../source/levelcelview.cpp" line="1621"/>
+        <location filename="../source/levelcelview.cpp" line="1660"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1584"/>
+        <location filename="../source/levelcelview.cpp" line="1586"/>
         <source>Delete the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1593"/>
+        <location filename="../source/levelcelview.cpp" line="1595"/>
         <source>Subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1596"/>
-        <location filename="../source/levelcelview.cpp" line="1632"/>
+        <location filename="../source/levelcelview.cpp" line="1598"/>
+        <location filename="../source/levelcelview.cpp" line="1634"/>
         <source>Create</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1597"/>
+        <location filename="../source/levelcelview.cpp" line="1599"/>
         <source>Create a new subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1602"/>
+        <location filename="../source/levelcelview.cpp" line="1604"/>
         <source>Add new subtiles before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1607"/>
+        <location filename="../source/levelcelview.cpp" line="1609"/>
         <source>Add new subtiles at the end</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1612"/>
+        <location filename="../source/levelcelview.cpp" line="1614"/>
         <source>Replace the current subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1620"/>
+        <location filename="../source/levelcelview.cpp" line="1622"/>
         <source>Delete the current subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1629"/>
+        <location filename="../source/levelcelview.cpp" line="1631"/>
         <source>Tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1633"/>
+        <location filename="../source/levelcelview.cpp" line="1635"/>
         <source>Create a new tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1641"/>
+        <location filename="../source/levelcelview.cpp" line="1643"/>
         <source>Add new tiles before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1646"/>
+        <location filename="../source/levelcelview.cpp" line="1648"/>
         <source>Add new tiles at the end</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1651"/>
+        <location filename="../source/levelcelview.cpp" line="1653"/>
         <source>Replace the current tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1659"/>
+        <location filename="../source/levelcelview.cpp" line="1661"/>
         <source>Delete the current tile</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2707,32 +2707,69 @@
     </message>
     <message>
         <location filename="../source/settingsdialog.ui" line="51"/>
-        <source>Palettes and translations</source>
+        <source>Graphics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/settingsdialog.ui" line="57"/>
-        <source>Undefined palette color:</source>
+        <source>Graphics background color:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="74"/>
-        <location filename="../source/settingsdialog.ui" line="98"/>
+        <location filename="../source/settingsdialog.ui" line="67"/>
+        <source>Background color of the graphics&apos;s window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/settingsdialog.ui" line="77"/>
+        <location filename="../source/settingsdialog.ui" line="104"/>
+        <location filename="../source/settingsdialog.ui" line="140"/>
+        <location filename="../source/settingsdialog.ui" line="167"/>
         <source>Pick</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="81"/>
+        <location filename="../source/settingsdialog.ui" line="84"/>
+        <source>Graphics transparent color:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/settingsdialog.ui" line="94"/>
+        <source>Color of the transparent pixels in the graphics&apos;s window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/settingsdialog.ui" line="114"/>
+        <source>Palettes and translations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/settingsdialog.ui" line="120"/>
+        <source>Undefined palette color:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/settingsdialog.ui" line="130"/>
+        <source>Color of the undefined (cleared) entries in the palette</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/settingsdialog.ui" line="147"/>
         <source>Selection border color:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="133"/>
+        <location filename="../source/settingsdialog.ui" line="157"/>
+        <source>Border color of the selected palette entries and subtiles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/settingsdialog.ui" line="202"/>
         <source>Ok</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="140"/>
+        <location filename="../source/settingsdialog.ui" line="209"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>

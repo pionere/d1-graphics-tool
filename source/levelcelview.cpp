@@ -1476,15 +1476,17 @@ void LevelCelView::displayFrame()
     QImage subtile = this->min->getSubtileImage(this->currentSubtileIndex);
     QImage tile = this->til->getTileImage(this->currentTileIndex);
 
+    this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
+    QColor backColor = QColor(Config::getGraphicsTransparentColor());
     // Building a gray background of the width/height of the CEL frame
     QImage celFrameBackground = QImage(celFrame.width(), celFrame.height(), QImage::Format_ARGB32);
-    celFrameBackground.fill(Qt::gray);
+    celFrameBackground.fill(backColor);
     // Building a gray background of the width/height of the MIN subtile
     QImage subtileBackground = QImage(subtile.width(), subtile.height(), QImage::Format_ARGB32);
-    subtileBackground.fill(Qt::gray);
+    subtileBackground.fill(backColor);
     // Building a gray background of the width/height of the MIN subtile
     QImage tileBackground = QImage(tile.width(), tile.height(), QImage::Format_ARGB32);
-    tileBackground.fill(Qt::gray);
+    tileBackground.fill(backColor);
 
     // Resize the scene rectangle to include some padding around the CEL frame
     // the MIN subtile and the TIL tile

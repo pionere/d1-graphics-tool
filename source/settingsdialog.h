@@ -19,6 +19,12 @@ signals:
     void configurationSaved();
 
 private slots:
+    void on_graphicsBackgroundColorPushButton_clicked();
+    void on_graphicsBackgroundColorLineEdit_returnPressed();
+    void on_graphicsBackgroundColorLineEdit_escPressed();
+    void on_graphicsTransparentColorPushButton_clicked();
+    void on_graphicsTransparentColorLineEdit_returnPressed();
+    void on_graphicsTransparentColorLineEdit_escPressed();
     void on_undefinedPaletteColorPushButton_clicked();
     void on_undefinedPaletteColorLineEdit_returnPressed();
     void on_undefinedPaletteColorLineEdit_escPressed();

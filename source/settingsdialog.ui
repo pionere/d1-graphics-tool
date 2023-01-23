@@ -46,11 +46,74 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="graphicsGroupBox">
+     <property name="title">
+      <string>Graphics</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_1">
+      <item row="0" column="0">
+       <widget class="QLabel" name="graphicsBackgroundColorLabel">
+        <property name="text">
+         <string>Graphics background color:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="LineEditWidget" name="graphicsBackgroundColorLineEdit">
+        <property name="charWidth">
+         <number>8</number>
+        </property>
+        <property name="toolTip">
+         <string>Background color of the graphics's window</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="graphicsBackgroundColorPushButton">
+        <property name="text">
+         <string>Pick</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="graphicsTransparentColorLabel">
+        <property name="text">
+         <string>Graphics transparent color:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="LineEditWidget" name="graphicsTransparentColorLineEdit">
+        <property name="charWidth">
+         <number>8</number>
+        </property>
+        <property name="toolTip">
+         <string>Color of the transparent pixels in the graphics's window</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="graphicsTransparentColorPushButton">
+        <property name="text">
+         <string>Pick</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="paletteTranslationGroupBox">
      <property name="title">
       <string>Palettes and translations</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
+     <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
        <widget class="QLabel" name="undefinedPaletteColorLabel">
         <property name="text">
@@ -62,6 +125,9 @@
        <widget class="LineEditWidget" name="undefinedPaletteColorLineEdit">
         <property name="charWidth">
          <number>8</number>
+        </property>
+        <property name="toolTip">
+         <string>Color of the undefined (cleared) entries in the palette</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -86,6 +152,9 @@
        <widget class="LineEditWidget" name="paletteSelectionBorderColorLineEdit">
         <property name="charWidth">
          <number>8</number>
+        </property>
+        <property name="toolTip">
+         <string>Border color of the selected palette entries and subtiles</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
