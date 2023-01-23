@@ -324,7 +324,7 @@ void CelView::displayFrame()
     // Getting the current frame to display
     QImage celFrame = this->gfx->getFrameImage(this->currentFrameIndex);
 
-    this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
+    this->celScene->setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
     // Building background of the width/height of the CEL frame
     QImage celFrameBackground = QImage(celFrame.width(), celFrame.height(), QImage::Format_ARGB32);

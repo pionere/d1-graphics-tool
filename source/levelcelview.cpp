@@ -1476,7 +1476,7 @@ void LevelCelView::displayFrame()
     QImage subtile = this->min->getSubtileImage(this->currentSubtileIndex);
     QImage tile = this->til->getTileImage(this->currentTileIndex);
 
-    this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
+    this->celScene->setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
     QColor backColor = QColor(Config::getGraphicsTransparentColor());
     // Building a gray background of the width/height of the CEL frame
     QImage celFrameBackground = QImage(celFrame.width(), celFrame.height(), QImage::Format_ARGB32);
