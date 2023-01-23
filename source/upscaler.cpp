@@ -1,5 +1,6 @@
 #include "upscaler.h"
 
+#include <QApplication>
 #include <QColor>
 #include <QMessageBox>
 
@@ -3223,7 +3224,7 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
 
         // dProgress() << QString("Upscaling %1").arg(i + 1);
         // dProgress() << qMakePair(QString("Upscaling %1").arg(i), QString("Upscaling %1").arg(i + 1));
-        progress.second = QString(tr("Upscaling subtile %1.")).arg(i + 1);
+        progress.second = QString(QApplication::tr("Upscaling subtile %1.")).arg(i + 1);
         dProgress() << progress;
 
         D1GfxFrame *subtileFrame = Upscaler::createSubtileFrame(gfx, min, i);
@@ -3247,7 +3248,7 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     min->frameReferences.swap(newFrameReferences);
     min->modified = true;
 
-    progress.second = QString(tr("Upscaled %1 subtile.")).arg(amount);
+    progress.second = QString(QApplication::tr("Upscaled %1 subtile.")).arg(amount);
     dProgress() << progress;
     return true;
 }
