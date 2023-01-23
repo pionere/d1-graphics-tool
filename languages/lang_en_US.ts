@@ -2282,8 +2282,23 @@
 <context>
     <name>ProgressDialog</name>
     <message>
-        <location filename="../source/progressdialog.ui" line="47"/>
+        <location filename="../source/progressdialog.ui" line="50"/>
         <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/progressdialog.ui" line="60"/>
+        <source>Logs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/progressdialog.cpp" line="89"/>
+        <source>Show details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/progressdialog.cpp" line="89"/>
+        <source>Hide details</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
