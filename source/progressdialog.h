@@ -19,7 +19,12 @@ public:
     static bool wasCanceled();
     static void incValue();
 
+    friend ProgressDialog &dProgress();
+
+    ProgressDialog &operator<<(QString text);
+
 private slots:
+    void on_detailsPushButton_clicked();
     void on_cancelPushButton_clicked();
 
 protected:

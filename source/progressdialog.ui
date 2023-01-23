@@ -35,6 +35,9 @@
        <number>4</number>
       </property>
       <item>
+       <widget class="QPushButton" name="detailsPushButton"/>
+      </item>
+      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -45,6 +48,22 @@
        <widget class="QPushButton" name="cancelPushButton">
         <property name="text">
          <string>Cancel</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="detailsGroupBox">
+     <property name="title">
+      <string>Logs</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_1">
+      <item>
+       <widget class="LineEditWidget" name="outputLineEdit">
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
       </item>

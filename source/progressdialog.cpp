@@ -26,6 +26,8 @@ void ProgressDialog::start(const QString &label, int maxValue)
     theDialog->ui->progressLabel->setText(label);
     theDialog->ui->progressBar->setRange(0, maxValue);
     theDialog->ui->progressBar->setValue(0);
+    theDialog->ui->detailsGroupBox->setVisible(true);
+    theDialog->on_detailsPushButton_clicked();
     theDialog->ui->cancelPushButton->setEnabled(true);
     theDialog->cancelled = false;
     theDialog->show();
@@ -45,6 +47,30 @@ void ProgressDialog::incValue()
 {
     theDialog->ui->progressBar->setValue(theDialog->ui->progressBar->value() + 1);
     QCoreApplication::processEvents();
+}
+
+ProgressDialog &dProgress()
+{
+    return *theDialog;
+}
+
+ProgressDialog &ProgressDialog::operator<<(QString text)
+{
+    QString currText = this->ui->outputLineEdit->text();
+    if (!currText.isEmpty()) {
+        currText.append("\n");
+    }
+    currText.append(text);
+    this->ui->outputLineEdit->setText(currText);
+    return *this;
+}
+
+void ProgressDialog::on_detailsPushButton_clicked()
+{
+    bool currVisible = this->ui->detailsGroupBox->isVisible();
+    this->ui->detailsGroupBox->setVisible(!currVisible);
+    this->ui->detailsPushButton->setText(currVisible ? tr("Show details") : tr("Hide details"));
+    this->adjustSize();
 }
 
 void ProgressDialog::on_cancelPushButton_clicked()

@@ -3219,6 +3219,8 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
         }
         ProgressDialog::incValue();
 
+        dProgress() << QString("Upscaling %1").arg(i + 1);
+
         D1GfxFrame *subtileFrame = Upscaler::createSubtileFrame(gfx, min, i);
         Upscaler::upscaleFrame(subtileFrame, gfx->palette, params);
         Upscaler::storeSubtileFrame(subtileFrame, newFrameReferences, newFrames);
