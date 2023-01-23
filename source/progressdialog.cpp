@@ -33,6 +33,7 @@ void ProgressDialog::start(const QString &label, int maxValue)
     theDialog->on_detailsPushButton_clicked();
     theDialog->ui->cancelPushButton->setEnabled(true);
     theDialog->cancelled = false;
+    theDialog->setFocus();
 }
 
 void ProgressDialog::done()
@@ -64,7 +65,7 @@ ProgressDialog &ProgressDialog::operator<<(const QString &text)
 
 ProgressDialog &ProgressDialog::operator<<(const QPair<QString, QString> &text)
 {
-    this->ui->outputTextEdit->setFocus();
+    // this->ui->outputTextEdit->setFocus();
     QTextCursor storeCursorPos = this->ui->outputTextEdit->textCursor();
     this->ui->outputTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
     this->ui->outputTextEdit->moveCursor(QTextCursor::StartOfLine, QTextCursor::MoveAnchor);
