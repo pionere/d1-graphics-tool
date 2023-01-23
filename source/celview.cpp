@@ -11,6 +11,7 @@
 #include <QMessageBox>
 #include <QMimeData>
 
+#include "config.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
 #include "ui_celview.h"
