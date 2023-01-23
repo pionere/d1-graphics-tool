@@ -134,57 +134,57 @@
         <translation>Aktuális képkocka magassága</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="273"/>
+        <location filename="../source/celview.cpp" line="274"/>
         <source>Error</source>
         <translation>Hiba</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="273"/>
+        <location filename="../source/celview.cpp" line="274"/>
         <source>Failed to read file: %1.</source>
         <translation>A %1 fájl olvasása sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="309"/>
+        <location filename="../source/celview.cpp" line="310"/>
         <source>Upscaling</source>
         <translation>Felméretezés</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="413"/>
+        <location filename="../source/celview.cpp" line="416"/>
         <source>Insert Frame</source>
         <translation>Képkocka beillesztése</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="414"/>
+        <location filename="../source/celview.cpp" line="417"/>
         <source>Add new frames before the current one</source>
         <translation>Képkocka beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="418"/>
+        <location filename="../source/celview.cpp" line="421"/>
         <source>Add Frame</source>
         <translation>Képkocka hozzáadása</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="419"/>
+        <location filename="../source/celview.cpp" line="422"/>
         <source>Add new frames at the end</source>
         <translation>Képkocka hozzáadása az meglévők után</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="423"/>
+        <location filename="../source/celview.cpp" line="426"/>
         <source>Replace Frame</source>
         <translation>Képkocka kicserélése</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="424"/>
+        <location filename="../source/celview.cpp" line="427"/>
         <source>Replace the current frame</source>
         <translation>Az aktuális képkocka kicserélése</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="431"/>
+        <location filename="../source/celview.cpp" line="434"/>
         <source>Del Frame</source>
         <translation>Képkocka törlése</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="432"/>
+        <location filename="../source/celview.cpp" line="435"/>
         <source>Delete the current frame</source>
         <translation>Az aktuális képkocka törlése</translation>
     </message>
@@ -889,121 +889,121 @@
         <translation>Felméretezés</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1562"/>
+        <location filename="../source/levelcelview.cpp" line="1564"/>
         <source>Frame</source>
         <translation>Képkocka</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1565"/>
-        <location filename="../source/levelcelview.cpp" line="1601"/>
-        <location filename="../source/levelcelview.cpp" line="1640"/>
+        <location filename="../source/levelcelview.cpp" line="1567"/>
+        <location filename="../source/levelcelview.cpp" line="1603"/>
+        <location filename="../source/levelcelview.cpp" line="1642"/>
         <source>Insert</source>
         <translation>Beillesztése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1566"/>
+        <location filename="../source/levelcelview.cpp" line="1568"/>
         <source>Add new frames before the current one</source>
         <translation>Képkocka beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1570"/>
-        <location filename="../source/levelcelview.cpp" line="1606"/>
-        <location filename="../source/levelcelview.cpp" line="1645"/>
+        <location filename="../source/levelcelview.cpp" line="1572"/>
+        <location filename="../source/levelcelview.cpp" line="1608"/>
+        <location filename="../source/levelcelview.cpp" line="1647"/>
         <source>Add</source>
         <translation>Hozzáadása</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1571"/>
+        <location filename="../source/levelcelview.cpp" line="1573"/>
         <source>Add new frames at the end</source>
         <translation>Képkocka hozzáadása az meglévők után</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1575"/>
-        <location filename="../source/levelcelview.cpp" line="1611"/>
-        <location filename="../source/levelcelview.cpp" line="1650"/>
+        <location filename="../source/levelcelview.cpp" line="1577"/>
+        <location filename="../source/levelcelview.cpp" line="1613"/>
+        <location filename="../source/levelcelview.cpp" line="1652"/>
         <source>Replace</source>
         <translation>Cseréje</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1576"/>
+        <location filename="../source/levelcelview.cpp" line="1578"/>
         <source>Replace the current frame</source>
         <translation>Az aktuális képkocka kicserélése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1583"/>
-        <location filename="../source/levelcelview.cpp" line="1619"/>
-        <location filename="../source/levelcelview.cpp" line="1658"/>
+        <location filename="../source/levelcelview.cpp" line="1585"/>
+        <location filename="../source/levelcelview.cpp" line="1621"/>
+        <location filename="../source/levelcelview.cpp" line="1660"/>
         <source>Delete</source>
         <translation>Törlése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1584"/>
+        <location filename="../source/levelcelview.cpp" line="1586"/>
         <source>Delete the current frame</source>
         <translation>Az aktuális képkocka törlése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1593"/>
+        <location filename="../source/levelcelview.cpp" line="1595"/>
         <source>Subtile</source>
         <translation>Mező</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1596"/>
-        <location filename="../source/levelcelview.cpp" line="1632"/>
+        <location filename="../source/levelcelview.cpp" line="1598"/>
+        <location filename="../source/levelcelview.cpp" line="1634"/>
         <source>Create</source>
         <translation>Létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1597"/>
+        <location filename="../source/levelcelview.cpp" line="1599"/>
         <source>Create a new subtile</source>
         <translation>Új mező létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1602"/>
+        <location filename="../source/levelcelview.cpp" line="1604"/>
         <source>Add new subtiles before the current one</source>
         <translation>Új mező beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1607"/>
+        <location filename="../source/levelcelview.cpp" line="1609"/>
         <source>Add new subtiles at the end</source>
         <translation>Új mező hozzáadása a meglévők után</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1612"/>
+        <location filename="../source/levelcelview.cpp" line="1614"/>
         <source>Replace the current subtile</source>
         <translation>Cserélje az aktuális mezőt</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1620"/>
+        <location filename="../source/levelcelview.cpp" line="1622"/>
         <source>Delete the current subtile</source>
         <translation>Törölje az aktuális mezőt</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1629"/>
+        <location filename="../source/levelcelview.cpp" line="1631"/>
         <source>Tile</source>
         <translation>Lap</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1633"/>
+        <location filename="../source/levelcelview.cpp" line="1635"/>
         <source>Create a new tile</source>
         <translation>Új lap létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1641"/>
+        <location filename="../source/levelcelview.cpp" line="1643"/>
         <source>Add new tiles before the current one</source>
         <translation>Új lap beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1646"/>
+        <location filename="../source/levelcelview.cpp" line="1648"/>
         <source>Add new tiles at the end</source>
         <translation>Új lap hozzáadása a meglévők után</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1651"/>
+        <location filename="../source/levelcelview.cpp" line="1653"/>
         <source>Replace the current tile</source>
         <translation>Cserélje az aktuális lapot</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1659"/>
+        <location filename="../source/levelcelview.cpp" line="1661"/>
         <source>Delete the current tile</source>
         <translation>Törölje az aktuális lapot</translation>
     </message>
@@ -2707,32 +2707,69 @@
     </message>
     <message>
         <location filename="../source/settingsdialog.ui" line="51"/>
+        <source>Graphics</source>
+        <translation>Grafika</translation>
+    </message>
+    <message>
+        <location filename="../source/settingsdialog.ui" line="57"/>
+        <source>Graphics background color:</source>
+        <translation>Grafika háttérszíne</translation>
+    </message>
+    <message>
+        <location filename="../source/settingsdialog.ui" line="67"/>
+        <source>Background color of the graphics&apos;s window</source>
+        <translation>A grafika ablakának háttérszíne</translation>
+    </message>
+    <message>
+        <location filename="../source/settingsdialog.ui" line="84"/>
+        <source>Graphics transparent color:</source>
+        <translation>Grafika átlátszó színe</translation>
+    </message>
+    <message>
+        <location filename="../source/settingsdialog.ui" line="94"/>
+        <source>Color of the transparent pixels in the graphics&apos;s window</source>
+        <translation>Az átlátszó képpontok színe a grafikán</translation>
+    </message>
+    <message>
+        <location filename="../source/settingsdialog.ui" line="114"/>
         <source>Palettes and translations</source>
         <translation>Paletták és átrendelők</translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="57"/>
+        <location filename="../source/settingsdialog.ui" line="120"/>
         <source>Undefined palette color:</source>
         <translation>Paletta nem definiált színe:</translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="74"/>
-        <location filename="../source/settingsdialog.ui" line="98"/>
+        <location filename="../source/settingsdialog.ui" line="77"/>
+        <location filename="../source/settingsdialog.ui" line="104"/>
+        <location filename="../source/settingsdialog.ui" line="140"/>
+        <location filename="../source/settingsdialog.ui" line="167"/>
         <source>Pick</source>
         <translation>Választ</translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="81"/>
+        <location filename="../source/settingsdialog.ui" line="130"/>
+        <source>Color of the undefined (cleared) entries in the palette</source>
+        <translation>A palettában nem meghatározott (törölt) bejegyzések színei</translation>
+    </message>
+    <message>
+        <location filename="../source/settingsdialog.ui" line="147"/>
         <source>Selection border color:</source>
         <translation>Kijelölés peremének a színe:</translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="133"/>
+        <location filename="../source/settingsdialog.ui" line="157"/>
+        <source>Border color of the selected palette entries and subtiles</source>
+        <translation>A kiválasztott paletta bejegyzések és a mezők peremének a színe</translation>
+    </message>
+    <message>
+        <location filename="../source/settingsdialog.ui" line="202"/>
         <source>Ok</source>
         <translation>Mentés</translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="140"/>
+        <location filename="../source/settingsdialog.ui" line="209"/>
         <source>Cancel</source>
         <translation>Mégse</translation>
     </message>

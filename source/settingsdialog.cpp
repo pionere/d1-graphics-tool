@@ -143,6 +143,14 @@ void SettingsDialog::on_settingsOkButton_clicked()
     QString locale = this->ui->languageComboBox->currentData().value<QString>();
     Config::setLocale(locale);
 
+    // GraphicsBackgroundColor
+    QColor gfxBackgroundColor = QColor(this->ui->graphicsBackgroundColorLineEdit->text());
+    Config::setGraphicsBackgroundColor(gfxBackgroundColor.name());
+
+    // GraphicsTransparentColor
+    QColor gfxTransparentColor = QColor(this->ui->graphicsTransparentColorLineEdit->text());
+    Config::setGraphicsTransparentColor(gfxTransparentColor.name());
+
     // PaletteUndefinedColor
     QColor palUndefinedColor = QColor(this->ui->undefinedPaletteColorLineEdit->text());
     Config::setPaletteUndefinedColor(palUndefinedColor.name());
