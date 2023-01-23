@@ -47,50 +47,10 @@ void SettingsDialog::initialize()
         }
     }
     // reset the color values
+    this->on_graphicsBackgroundColorLineEdit_escPressed();
+    this->on_graphicsTransparentColorLineEdit_escPressed();
     this->on_undefinedPaletteColorLineEdit_escPressed();
     this->on_paletteSelectionBorderColorLineEdit_escPressed();
-}
-
-void SettingsDialog::on_undefinedPaletteColorPushButton_clicked()
-{
-    QColor color = QColorDialog::getColor();
-    if (color.isValid()) {
-        this->ui->undefinedPaletteColorLineEdit->setText(color.name());
-    }
-}
-
-void SettingsDialog::on_undefinedPaletteColorLineEdit_returnPressed()
-{
-    QColor color = QColor(this->ui->undefinedPaletteColorLineEdit->text());
-    if (!color.isValid()) {
-        this->on_undefinedPaletteColorLineEdit_escPressed();
-    }
-}
-
-void SettingsDialog::on_undefinedPaletteColorLineEdit_escPressed()
-{
-    this->ui->undefinedPaletteColorLineEdit->setText(Config::getPaletteUndefinedColor());
-}
-
-void SettingsDialog::on_paletteSelectionBorderColorPushButton_clicked()
-{
-    QColor color = QColorDialog::getColor();
-    if (color.isValid()) {
-        this->ui->paletteSelectionBorderColorLineEdit->setText(color.name());
-    }
-}
-
-void SettingsDialog::on_paletteSelectionBorderColorLineEdit_returnPressed()
-{
-    QColor color = QColor(this->ui->paletteSelectionBorderColorLineEdit->text());
-    if (!color.isValid()) {
-        this->on_paletteSelectionBorderColorLineEdit_escPressed();
-    }
-}
-
-void SettingsDialog::on_paletteSelectionBorderColorLineEdit_escPressed()
-{
-    this->ui->paletteSelectionBorderColorLineEdit->setText(Config::getPaletteSelectionBorderColor());
 }
 
 void SettingsDialog::on_graphicsBackgroundColorPushButton_clicked()
@@ -133,6 +93,48 @@ void SettingsDialog::on_graphicsTransparentColorLineEdit_returnPressed()
 void SettingsDialog::on_graphicsTransparentColorLineEdit_escPressed()
 {
     this->ui->graphicsTransparentColorLineEdit->setText(Config::getGraphicsTransparentColor());
+}
+
+void SettingsDialog::on_undefinedPaletteColorPushButton_clicked()
+{
+    QColor color = QColorDialog::getColor();
+    if (color.isValid()) {
+        this->ui->undefinedPaletteColorLineEdit->setText(color.name());
+    }
+}
+
+void SettingsDialog::on_undefinedPaletteColorLineEdit_returnPressed()
+{
+    QColor color = QColor(this->ui->undefinedPaletteColorLineEdit->text());
+    if (!color.isValid()) {
+        this->on_undefinedPaletteColorLineEdit_escPressed();
+    }
+}
+
+void SettingsDialog::on_undefinedPaletteColorLineEdit_escPressed()
+{
+    this->ui->undefinedPaletteColorLineEdit->setText(Config::getPaletteUndefinedColor());
+}
+
+void SettingsDialog::on_paletteSelectionBorderColorPushButton_clicked()
+{
+    QColor color = QColorDialog::getColor();
+    if (color.isValid()) {
+        this->ui->paletteSelectionBorderColorLineEdit->setText(color.name());
+    }
+}
+
+void SettingsDialog::on_paletteSelectionBorderColorLineEdit_returnPressed()
+{
+    QColor color = QColor(this->ui->paletteSelectionBorderColorLineEdit->text());
+    if (!color.isValid()) {
+        this->on_paletteSelectionBorderColorLineEdit_escPressed();
+    }
+}
+
+void SettingsDialog::on_paletteSelectionBorderColorLineEdit_escPressed()
+{
+    this->ui->paletteSelectionBorderColorLineEdit->setText(Config::getPaletteSelectionBorderColor());
 }
 
 void SettingsDialog::on_settingsOkButton_clicked()
