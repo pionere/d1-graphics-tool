@@ -26,7 +26,8 @@ void ProgressDialog::start(const QString &label, int maxValue)
     theDialog->ui->progressLabel->setText(label);
     theDialog->ui->progressBar->setRange(0, maxValue);
     theDialog->ui->progressBar->setValue(0);
-    theDialog->ui->detailsGroupBox->setVisible(true);
+    theDialog->ui->outputTextEdit->setText("");
+    theDialog->ui->detailsGroupBox->setVisible(false);
     theDialog->on_detailsPushButton_clicked();
     theDialog->ui->cancelPushButton->setEnabled(true);
     theDialog->cancelled = false;
@@ -56,12 +57,12 @@ ProgressDialog &dProgress()
 
 ProgressDialog &ProgressDialog::operator<<(QString text)
 {
-    QString currText = this->ui->outputLineEdit->text();
+    QString currText = this->ui->outputTextEdit->text();
     if (!currText.isEmpty()) {
         currText.append("\n");
     }
     currText.append(text);
-    this->ui->outputLineEdit->setText(currText);
+    this->ui->outputTextEdit->setText(currText);
     return *this;
 }
 
