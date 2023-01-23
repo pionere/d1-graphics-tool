@@ -456,63 +456,63 @@
         <translation>Mégse</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="77"/>
+        <location filename="../source/exportdialog.cpp" line="78"/>
         <source>Select Output Folder</source>
         <translation>Válassz kimeneti könyvtárt</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="106"/>
+        <location filename="../source/exportdialog.cpp" line="113"/>
         <source>Exporting %1 2.5d tiles...</source>
         <translation>2.5D-s lapok exportálása a %1 fájlból.</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="225"/>
+        <location filename="../source/exportdialog.cpp" line="232"/>
         <source>Exporting %1 flat tiles...</source>
         <translation>Feszített lapok exportálása a %1 fájlból.</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="343"/>
+        <location filename="../source/exportdialog.cpp" line="350"/>
         <source>Exporting %1 subtiles...</source>
         <translation>Mezők exportálása a %1 fájlból.</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="463"/>
+        <location filename="../source/exportdialog.cpp" line="470"/>
         <source>Exporting %1 frames...</source>
         <translation>Keépkockák exportálása a %1 fájlból.</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="622"/>
+        <location filename="../source/exportdialog.cpp" line="629"/>
         <source>Warning</source>
         <translation>Figyelmeztetés</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="622"/>
+        <location filename="../source/exportdialog.cpp" line="629"/>
         <source>Output folder is missing, please choose an output folder.</source>
         <translation>Kimeneti könyvtár nincs beállítva. Kérlek adjál meg egyet.</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="643"/>
+        <location filename="../source/exportdialog.cpp" line="650"/>
         <source>Error</source>
         <translation>Hiba</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="643"/>
+        <location filename="../source/exportdialog.cpp" line="650"/>
         <source>Export Failed.</source>
         <translation>Exportálás sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="649"/>
-        <location filename="../source/exportdialog.cpp" line="652"/>
+        <location filename="../source/exportdialog.cpp" line="656"/>
+        <location filename="../source/exportdialog.cpp" line="659"/>
         <source>Information</source>
         <translation>Információ</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="649"/>
+        <location filename="../source/exportdialog.cpp" line="656"/>
         <source>Export successful.</source>
         <translation>Az exportálás sikeres.</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="652"/>
+        <location filename="../source/exportdialog.cpp" line="659"/>
         <source>Export was canceled.</source>
         <translation>Az exportálás megszakadt.</translation>
     </message>
@@ -762,7 +762,6 @@
         <source>Frame %1 is used by subtile %2.</source>
         <translation>
             <numerusform>Képkocka %1 használatban van a(z) %2 mező által.</numerusform>
-            <numerusform>Képkocka %1 használatban van a(z) %2 mezők által.</numerusform>
         </translation>
     </message>
     <message>
@@ -775,7 +774,6 @@
         <source>Subtile %1 is used by tile %2.</source>
         <translation>
             <numerusform>Mező %1 használatban van a(z) %2 lap által.</numerusform>
-            <numerusform>Mező %1 használatban van a(z) %2 lapok által.</numerusform>
         </translation>
     </message>
     <message>
@@ -825,16 +823,14 @@
         <location filename="../source/levelcelview.cpp" line="1072"/>
         <source>Removed frame %1.</source>
         <translation>
-            <numerusform>A(z) %1-s képkocka törlésre került.</numerusform>
-            <numerusform>A következő képkockák törlésre kerültek: %1.</numerusform>
+            <numerusform>A(z) %1 képkocka törlésre került.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../source/levelcelview.cpp" line="1103"/>
         <source>Removed subtile %1.</source>
         <translation>
-            <numerusform>A(z) %1-s mező törlésre került.</numerusform>
-            <numerusform>A következő mezők törlésre kerültek: %1.</numerusform>
+            <numerusform>A(z) %1 mező törlésre került.</numerusform>
         </translation>
     </message>
     <message>
@@ -2274,8 +2270,7 @@
         <location filename="../source/palettewidget.cpp" line="662"/>
         <source>&lt;- Select color(s)</source>
         <translation>
-            <numerusform>&lt;- Válassz egy színt</numerusform>
-            <numerusform>&lt;- Válassz színsort</numerusform>
+            <numerusform>&lt;- Válassz színt</numerusform>
         </translation>
     </message>
 </context>
@@ -2287,19 +2282,14 @@
         <translation>Mégse</translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.ui" line="60"/>
-        <source>Logs</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/progressdialog.cpp" line="89"/>
+        <location filename="../source/progressdialog.cpp" line="114"/>
         <source>Show details</source>
-        <translation type="unfinished"></translation>
+        <translation>Részletek</translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.cpp" line="89"/>
+        <location filename="../source/progressdialog.cpp" line="114"/>
         <source>Hide details</source>
-        <translation type="unfinished"></translation>
+        <translation>Csak állapot</translation>
     </message>
 </context>
 <context>
@@ -2525,6 +2515,23 @@
         <location filename="../source/mainwindow.cpp" line="948"/>
         <source>Image files (%1)</source>
         <translation>Kép fájlok (%1)</translation>
+    </message>
+    <message>
+        <location filename="../source/exportdialog.cpp" line="89"/>
+        <source>Created %1.</source>
+        <translation>%1 létrehozva.</translation>
+    </message>
+    <message>
+        <location filename="../source/upscaler.cpp" line="3227"/>
+        <source>Upscaling subtile %1.</source>
+        <translation>Mező %1 felméretezése.</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../source/upscaler.cpp" line="3251"/>
+        <source>Upscaled %n subtile(s).</source>
+        <translation>
+            <numerusform>%n mező felméretezve.</numerusform>
+        </translation>
     </message>
 </context>
 <context>

@@ -456,63 +456,63 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="77"/>
+        <location filename="../source/exportdialog.cpp" line="78"/>
         <source>Select Output Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="106"/>
+        <location filename="../source/exportdialog.cpp" line="113"/>
         <source>Exporting %1 2.5d tiles...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="225"/>
+        <location filename="../source/exportdialog.cpp" line="232"/>
         <source>Exporting %1 flat tiles...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="343"/>
+        <location filename="../source/exportdialog.cpp" line="350"/>
         <source>Exporting %1 subtiles...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="463"/>
+        <location filename="../source/exportdialog.cpp" line="470"/>
         <source>Exporting %1 frames...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="622"/>
+        <location filename="../source/exportdialog.cpp" line="629"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="622"/>
+        <location filename="../source/exportdialog.cpp" line="629"/>
         <source>Output folder is missing, please choose an output folder.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="643"/>
+        <location filename="../source/exportdialog.cpp" line="650"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="643"/>
+        <location filename="../source/exportdialog.cpp" line="650"/>
         <source>Export Failed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="649"/>
-        <location filename="../source/exportdialog.cpp" line="652"/>
+        <location filename="../source/exportdialog.cpp" line="656"/>
+        <location filename="../source/exportdialog.cpp" line="659"/>
         <source>Information</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="649"/>
+        <location filename="../source/exportdialog.cpp" line="656"/>
         <source>Export successful.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="652"/>
+        <location filename="../source/exportdialog.cpp" line="659"/>
         <source>Export was canceled.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2292,12 +2292,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.cpp" line="89"/>
+        <location filename="../source/progressdialog.cpp" line="114"/>
         <source>Show details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.cpp" line="89"/>
+        <location filename="../source/progressdialog.cpp" line="114"/>
         <source>Hide details</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2525,6 +2525,24 @@
         <location filename="../source/main.cpp" line="17"/>
         <source>Failed to read file: %1.</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/exportdialog.cpp" line="89"/>
+        <source>Created %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/upscaler.cpp" line="3227"/>
+        <source>Upscaling subtile %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../source/upscaler.cpp" line="3251"/>
+        <source>Upscaled %n subtile(s).</source>
+        <translation>
+            <numerusform>Upscaled %n subtile.</numerusform>
+            <numerusform>Upscaled %n subtiles.</numerusform>
+        </translation>
     </message>
 </context>
 <context>

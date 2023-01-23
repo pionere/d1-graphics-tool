@@ -3248,7 +3248,7 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     min->frameReferences.swap(newFrameReferences);
     min->modified = true;
 
-    progress.second = QString(QApplication::tr("Upscaled %1 subtile.")).arg(amount);
+    progress.second = QString(QApplication::tr("Upscaled %1 subtile(s).", "", amount)).arg(amount);
     dProgress() << progress;
     return true;
 }

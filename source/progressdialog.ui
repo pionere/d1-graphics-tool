@@ -56,9 +56,6 @@
    </item>
    <item>
     <widget class="QGroupBox" name="detailsGroupBox">
-     <property name="title">
-      <string>Logs</string>
-     </property>
      <layout class="QVBoxLayout" name="verticalLayout_1">
       <item>
        <widget class="QPlainTextEdit" name="outputTextEdit">
