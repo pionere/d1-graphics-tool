@@ -57,12 +57,7 @@ ProgressDialog &dProgress()
 
 ProgressDialog &ProgressDialog::operator<<(QString text)
 {
-    QString currText = this->ui->outputTextEdit->text();
-    if (!currText.isEmpty()) {
-        currText.append("\n");
-    }
-    currText.append(text);
-    this->ui->outputTextEdit->setText(currText);
+    this->ui->outputTextEdit->appendPlainText(text);
     return *this;
 }
 
