@@ -2,14 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_US">
 <context>
-    <name>CelScene</name>
-    <message>
-        <location filename="../source/celview.cpp" line="34"/>
-        <source>Clicked: %1:%2</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>CelView</name>
     <message>
         <location filename="../source/celview.ui" line="83"/>
@@ -579,43 +571,67 @@
     </message>
     <message>
         <location filename="../source/levelcelview.ui" line="276"/>
-        <location filename="../source/levelcelview.ui" line="493"/>
-        <source>First group</source>
+        <source>First tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/levelcelview.ui" line="298"/>
-        <location filename="../source/levelcelview.ui" line="515"/>
-        <source>Previous group</source>
+        <source>Previous tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/levelcelview.ui" line="311"/>
-        <location filename="../source/levelcelview.ui" line="528"/>
-        <source>Current group</source>
+        <source>Current tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/levelcelview.ui" line="349"/>
-        <location filename="../source/levelcelview.ui" line="563"/>
-        <source>Number of groups</source>
+        <source>Number of tiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/levelcelview.ui" line="377"/>
-        <location filename="../source/levelcelview.ui" line="588"/>
-        <source>Next group</source>
+        <source>Next tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/levelcelview.ui" line="399"/>
-        <location filename="../source/levelcelview.ui" line="610"/>
-        <source>Last group</source>
+        <source>Last tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/levelcelview.ui" line="467"/>
         <source>Subtiles:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.ui" line="493"/>
+        <source>First subtile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.ui" line="515"/>
+        <source>Previous subtile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.ui" line="528"/>
+        <source>Current subtile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.ui" line="563"/>
+        <source>Number of subtiles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.ui" line="588"/>
+        <source>Next subtile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.ui" line="610"/>
+        <source>Last subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1068,11 +1084,6 @@
 <context>
     <name>LevelTabSubTileWidget</name>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="55"/>
-        <source>SOL-Flags</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="61"/>
         <source>Solid</source>
         <translation type="unfinished"></translation>
@@ -1093,66 +1104,80 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="89"/>
-        <location filename="../source/leveltabsubtilewidget.ui" line="159"/>
-        <location filename="../source/leveltabsubtilewidget.ui" line="187"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="166"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="194"/>
         <source>Transparent</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../source/leveltabsubtilewidget.ui" line="55"/>
+        <source>SOL flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabsubtilewidget.ui" line="89"/>
+        <source>Transparency:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="96"/>
-        <source>Left masked</source>
+        <source>Enabled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="103"/>
-        <source>Right masked</source>
+        <source>Left floor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="125"/>
-        <source>TMI-Flags</source>
+        <location filename="../source/leveltabsubtilewidget.ui" line="110"/>
+        <source>Right floor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="131"/>
-        <source>Transp. Wall</source>
+        <location filename="../source/leveltabsubtilewidget.ui" line="132"/>
+        <source>TMI flags</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="138"/>
-        <source>Left floor:</source>
+        <source>Transp. Wall</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="145"/>
-        <location filename="../source/leveltabsubtilewidget.ui" line="173"/>
-        <source>Second pass</source>
+        <source>Left floor:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="152"/>
         <location filename="../source/leveltabsubtilewidget.ui" line="180"/>
+        <source>Second pass</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabsubtilewidget.ui" line="159"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="187"/>
         <source>Foliage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="166"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="173"/>
         <source>Right floor:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="217"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="224"/>
         <source>Frames:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="236"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="243"/>
         <source>Previous frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="277"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="284"/>
         <source>Next frame</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1175,36 +1200,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="81"/>
-        <source>Vertical wall</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/leveltabtilewidget.ui" line="86"/>
-        <source>Horizontal wall</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/leveltabtilewidget.ui" line="91"/>
-        <source>Wall intersection</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/leveltabtilewidget.ui" line="96"/>
-        <source>Vertical wall ending</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/leveltabtilewidget.ui" line="101"/>
-        <source>Horizontal wall ending</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/leveltabtilewidget.ui" line="106"/>
-        <source>Corner wall</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../source/leveltabtilewidget.ui" line="111"/>
         <source>Wall intersection (west)</source>
         <translation type="unfinished"></translation>
@@ -1215,16 +1210,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="121"/>
-        <source>Horizontal wall (backside)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/leveltabtilewidget.ui" line="126"/>
-        <source>Vertical wall (backside)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../source/leveltabtilewidget.ui" line="131"/>
         <source>Wall intersection (south)</source>
         <translation type="unfinished"></translation>
@@ -1232,11 +1217,6 @@
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="153"/>
         <source>Automap flags</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/leveltabtilewidget.ui" line="159"/>
-        <source>Vertical:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1258,13 +1238,58 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../source/leveltabtilewidget.ui" line="81"/>
+        <source>Wall (north-west)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabtilewidget.ui" line="86"/>
+        <source>Wall (north-east)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabtilewidget.ui" line="91"/>
+        <source>Wall intersection (north)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabtilewidget.ui" line="96"/>
+        <source>Wall ending (north-west)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabtilewidget.ui" line="101"/>
+        <source>Wall ending (north-east)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabtilewidget.ui" line="106"/>
+        <source>Corner wall (north)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabtilewidget.ui" line="121"/>
+        <source>Wall (south-west)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabtilewidget.ui" line="126"/>
+        <source>Wall (south-east)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabtilewidget.ui" line="159"/>
+        <source>Western:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../source/leveltabtilewidget.ui" line="187"/>
-        <source>Horizontal:</source>
+        <source>Eastern:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/leveltabtilewidget.ui" line="215"/>
-        <source>Dirt</source>
+        <source>External</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1318,260 +1343,250 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="190"/>
+        <location filename="../source/mainwindow.ui" line="193"/>
         <location filename="../source/mainwindow.cpp" line="1625"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="195"/>
+        <location filename="../source/mainwindow.ui" line="198"/>
         <location filename="../source/mainwindow.cpp" line="1630"/>
         <source>About Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="200"/>
+        <location filename="../source/mainwindow.ui" line="203"/>
         <source>Quit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="208"/>
+        <location filename="../source/mainwindow.ui" line="211"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="216"/>
+        <location filename="../source/mainwindow.ui" line="219"/>
         <source>Open...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="224"/>
+        <location filename="../source/mainwindow.ui" line="227"/>
         <source>Open As</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="232"/>
+        <location filename="../source/mainwindow.ui" line="235"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="240"/>
+        <location filename="../source/mainwindow.ui" line="243"/>
         <source>Save As</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="248"/>
+        <location filename="../source/mainwindow.ui" line="251"/>
         <source>Open palette...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="256"/>
+        <location filename="../source/mainwindow.ui" line="259"/>
         <source>Open unique translation...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="264"/>
+        <location filename="../source/mainwindow.ui" line="267"/>
         <source>Open base translation...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="272"/>
+        <location filename="../source/mainwindow.ui" line="275"/>
         <source>Export</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="280"/>
+        <location filename="../source/mainwindow.ui" line="283"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="285"/>
+        <location filename="../source/mainwindow.ui" line="288"/>
         <source>Usage Report</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="288"/>
+        <location filename="../source/mainwindow.ui" line="291"/>
         <source>List the uses of the current frame/subtile/tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="293"/>
+        <location filename="../source/mainwindow.ui" line="296"/>
         <source>Reset Frame Types</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="296"/>
+        <location filename="../source/mainwindow.ui" line="299"/>
         <source>Reinitialize the frame types of every frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="301"/>
+        <location filename="../source/mainwindow.ui" line="304"/>
         <source>Inefficient Frames</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="304"/>
+        <location filename="../source/mainwindow.ui" line="307"/>
         <source>List frames which are almost standard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="309"/>
+        <location filename="../source/mainwindow.ui" line="312"/>
         <source>Cleanup frames</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="312"/>
+        <location filename="../source/mainwindow.ui" line="315"/>
         <source>Eliminate unused frames</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="317"/>
+        <location filename="../source/mainwindow.ui" line="320"/>
         <source>Cleanup Subtiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="320"/>
+        <location filename="../source/mainwindow.ui" line="323"/>
         <source>Eliminate unused subtiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="325"/>
+        <location filename="../source/mainwindow.ui" line="328"/>
         <source>Cleanup Tileset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="328"/>
+        <location filename="../source/mainwindow.ui" line="331"/>
         <source>Eliminate unused subtiles and frames</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="333"/>
+        <location filename="../source/mainwindow.ui" line="336"/>
         <source>Compress Subtiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="336"/>
+        <location filename="../source/mainwindow.ui" line="339"/>
         <source>Reuse frames in subtiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="341"/>
+        <location filename="../source/mainwindow.ui" line="344"/>
         <source>Compress Tiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="344"/>
+        <location filename="../source/mainwindow.ui" line="347"/>
         <source>Reuse subtiles in tiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="349"/>
+        <location filename="../source/mainwindow.ui" line="352"/>
         <source>Compress Tileset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="352"/>
+        <location filename="../source/mainwindow.ui" line="355"/>
         <source>Reuse subtiles in tiles and frames in subtiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="357"/>
+        <location filename="../source/mainwindow.ui" line="360"/>
         <source>Sort Frames</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="360"/>
+        <location filename="../source/mainwindow.ui" line="363"/>
         <source>Sort the frames based on the subtiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="365"/>
+        <location filename="../source/mainwindow.ui" line="368"/>
         <source>Sort Subtiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="368"/>
+        <location filename="../source/mainwindow.ui" line="371"/>
         <source>Sort the subtiles based on the tiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="373"/>
+        <location filename="../source/mainwindow.ui" line="376"/>
         <source>Sort Tileset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="376"/>
+        <location filename="../source/mainwindow.ui" line="379"/>
         <source>Sort the subtiles and frames based on the tiles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="381"/>
+        <location filename="../source/mainwindow.ui" line="384"/>
         <source>New palette</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="386"/>
+        <location filename="../source/mainwindow.ui" line="389"/>
         <source>Save palette</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="391"/>
+        <location filename="../source/mainwindow.ui" line="394"/>
         <source>Save palette as...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="396"/>
+        <location filename="../source/mainwindow.ui" line="399"/>
         <source>Close palette</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="401"/>
+        <location filename="../source/mainwindow.ui" line="404"/>
         <source>New unique translation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="406"/>
+        <location filename="../source/mainwindow.ui" line="409"/>
         <source>Save unique translation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="411"/>
+        <location filename="../source/mainwindow.ui" line="414"/>
         <source>Save unique translation as...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="416"/>
+        <location filename="../source/mainwindow.ui" line="419"/>
         <source>Close unique translation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="421"/>
+        <location filename="../source/mainwindow.ui" line="424"/>
         <source>New base translation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="426"/>
+        <location filename="../source/mainwindow.ui" line="429"/>
         <source>Save base translation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="431"/>
+        <location filename="../source/mainwindow.ui" line="434"/>
         <source>Save base translation as...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="436"/>
+        <location filename="../source/mainwindow.ui" line="439"/>
         <source>Close base translation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.cpp" line="509"/>
-        <source>CEL gfx</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.cpp" line="510"/>
-        <source>CL2 gfx</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1745,6 +1760,16 @@
     <message>
         <location filename="../source/mainwindow.cpp" line="466"/>
         <source>CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="509"/>
+        <source>CEL graphics</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="510"/>
+        <source>CL2 graphics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2137,14 +2162,6 @@
     </message>
 </context>
 <context>
-    <name>PaletteScene</name>
-    <message>
-        <location filename="../source/palettewidget.cpp" line="182"/>
-        <source>Clicked: %1:%2</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>PaletteWidget</name>
     <message>
         <location filename="../source/palettewidget.ui" line="194"/>
@@ -2224,18 +2241,21 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../source/palettewidget.cpp" line="391"/>
+        <source>Show the altered colors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
         <location filename="../source/palettewidget.cpp" line="662"/>
         <source>&lt;- Select color(s)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">
+            <numerusform>&lt;- Select a color</numerusform>
+            <numerusform>&lt;- Select colors</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../source/palettewidget.cpp" line="389"/>
         <source>Show current frame hits</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/palettewidget.cpp" line="391"/>
-        <source>Show translated colors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2488,7 +2508,7 @@
     </message>
     <message>
         <location filename="../source/main.cpp" line="17"/>
-        <source>Failed to read %1.</source>
+        <source>Failed to read file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

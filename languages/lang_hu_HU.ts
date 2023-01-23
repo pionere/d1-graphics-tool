@@ -1109,8 +1109,8 @@
         <translation>Csapda</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="159"/>
-        <location filename="../source/leveltabsubtilewidget.ui" line="187"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="166"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="194"/>
         <source>Transparent</source>
         <translation>Áttetsző</translation>
     </message>
@@ -1118,6 +1118,11 @@
         <location filename="../source/leveltabsubtilewidget.ui" line="89"/>
         <source>Transparency:</source>
         <translation>Áttetszőség:</translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabsubtilewidget.ui" line="96"/>
+        <source>Enabled</source>
+        <translation>Engedélyezve</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="103"/>
@@ -1130,49 +1135,49 @@
         <translation>Jobb talaj</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="125"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="132"/>
         <source>TMI flags</source>
         <translation>TMI tulajdonságok</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="131"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="138"/>
         <source>Transp. Wall</source>
         <translation>Áttetsző fal</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="138"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="145"/>
         <source>Left floor:</source>
         <translation>Bal talaj:</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="145"/>
-        <location filename="../source/leveltabsubtilewidget.ui" line="173"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="152"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="180"/>
         <source>Second pass</source>
         <translation>Második körös</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="152"/>
-        <location filename="../source/leveltabsubtilewidget.ui" line="180"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="159"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="187"/>
         <source>Foliage</source>
         <translation>Kiálló elemek</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="166"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="173"/>
         <source>Right floor:</source>
         <translation>Jobb talaj:</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="217"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="224"/>
         <source>Frames:</source>
         <translation>Képkockák:</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="236"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="243"/>
         <source>Previous frame</source>
         <translation>Előző képkocka</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="277"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="284"/>
         <source>Next frame</source>
         <translation>Következő képkocka</translation>
     </message>
@@ -1338,249 +1343,249 @@
         <translation>Szerkesztés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="190"/>
+        <location filename="../source/mainwindow.ui" line="193"/>
         <location filename="../source/mainwindow.cpp" line="1625"/>
         <source>About</source>
         <translation>Névjegy</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="195"/>
+        <location filename="../source/mainwindow.ui" line="198"/>
         <location filename="../source/mainwindow.cpp" line="1630"/>
         <source>About Qt</source>
         <translation>Qt névjegye</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="200"/>
+        <location filename="../source/mainwindow.ui" line="203"/>
         <source>Quit</source>
         <translation>Kilépés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="208"/>
+        <location filename="../source/mainwindow.ui" line="211"/>
         <source>Close</source>
         <translation>Bezárás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="216"/>
+        <location filename="../source/mainwindow.ui" line="219"/>
         <source>Open...</source>
         <translation>Megnyitás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="224"/>
+        <location filename="../source/mainwindow.ui" line="227"/>
         <source>Open As</source>
         <translation>Megnyitás mint...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="232"/>
+        <location filename="../source/mainwindow.ui" line="235"/>
         <source>Save</source>
         <translation>Mentés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="240"/>
+        <location filename="../source/mainwindow.ui" line="243"/>
         <source>Save As</source>
         <translation>Mentés másként</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="248"/>
+        <location filename="../source/mainwindow.ui" line="251"/>
         <source>Open palette...</source>
         <translation>Paletta megnyitása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="256"/>
+        <location filename="../source/mainwindow.ui" line="259"/>
         <source>Open unique translation...</source>
         <translation>Egyedi átrendelő megnyitása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="264"/>
+        <location filename="../source/mainwindow.ui" line="267"/>
         <source>Open base translation...</source>
         <translation>Alap átrendelő megnyitása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="272"/>
+        <location filename="../source/mainwindow.ui" line="275"/>
         <source>Export</source>
         <translation>Exportálás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="280"/>
+        <location filename="../source/mainwindow.ui" line="283"/>
         <source>Settings</source>
         <translation>Beállítások</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="285"/>
+        <location filename="../source/mainwindow.ui" line="288"/>
         <source>Usage Report</source>
         <translation>Használati jelentés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="288"/>
+        <location filename="../source/mainwindow.ui" line="291"/>
         <source>List the uses of the current frame/subtile/tile</source>
         <translation>Listázza a felhasználóit az aktuális képkockának, mezőnek és lapnak</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="293"/>
+        <location filename="../source/mainwindow.ui" line="296"/>
         <source>Reset Frame Types</source>
         <translation>Képkockatípusok visszaállítása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="296"/>
+        <location filename="../source/mainwindow.ui" line="299"/>
         <source>Reinitialize the frame types of every frame</source>
         <translation>A képkockák típusainak alaphelyzetbe állítása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="301"/>
+        <location filename="../source/mainwindow.ui" line="304"/>
         <source>Inefficient Frames</source>
         <translation>Pazarló képkockák</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="304"/>
+        <location filename="../source/mainwindow.ui" line="307"/>
         <source>List frames which are almost standard</source>
         <translation>Majdnem standard képkockák listázása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="309"/>
+        <location filename="../source/mainwindow.ui" line="312"/>
         <source>Cleanup frames</source>
         <translation>Képkockák kiszelektálása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="312"/>
+        <location filename="../source/mainwindow.ui" line="315"/>
         <source>Eliminate unused frames</source>
         <translation>Nem használt képkockák törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="317"/>
+        <location filename="../source/mainwindow.ui" line="320"/>
         <source>Cleanup Subtiles</source>
         <translation>Mezők kiszelektálása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="320"/>
+        <location filename="../source/mainwindow.ui" line="323"/>
         <source>Eliminate unused subtiles</source>
         <translation>Nem használt mezők törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="325"/>
+        <location filename="../source/mainwindow.ui" line="328"/>
         <source>Cleanup Tileset</source>
         <translation>Mezőkészlet kiszelektálása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="328"/>
+        <location filename="../source/mainwindow.ui" line="331"/>
         <source>Eliminate unused subtiles and frames</source>
         <translation>Nem használt mezők és képkockák törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="333"/>
+        <location filename="../source/mainwindow.ui" line="336"/>
         <source>Compress Subtiles</source>
         <translation>Mezők tömörítése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="336"/>
+        <location filename="../source/mainwindow.ui" line="339"/>
         <source>Reuse frames in subtiles</source>
         <translation>Mezők tömörítése képkockák újrafelhasználásával</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="341"/>
+        <location filename="../source/mainwindow.ui" line="344"/>
         <source>Compress Tiles</source>
         <translation>Lapok tömörítése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="344"/>
+        <location filename="../source/mainwindow.ui" line="347"/>
         <source>Reuse subtiles in tiles</source>
         <translation>Lapok tömörítése mezők újrafelhasználásával</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="349"/>
+        <location filename="../source/mainwindow.ui" line="352"/>
         <source>Compress Tileset</source>
         <translation>Mezőkészlet tömörítése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="352"/>
+        <location filename="../source/mainwindow.ui" line="355"/>
         <source>Reuse subtiles in tiles and frames in subtiles</source>
         <translation>Mezőkészlet tömörítése mezők és képkockák újrafelhasználásával</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="357"/>
+        <location filename="../source/mainwindow.ui" line="360"/>
         <source>Sort Frames</source>
         <translation>Képkockák rendezése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="360"/>
+        <location filename="../source/mainwindow.ui" line="363"/>
         <source>Sort the frames based on the subtiles</source>
         <translation>Képkockák rendezése a mezők sorrendjében</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="365"/>
+        <location filename="../source/mainwindow.ui" line="368"/>
         <source>Sort Subtiles</source>
         <translation>Mezők rendezése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="368"/>
+        <location filename="../source/mainwindow.ui" line="371"/>
         <source>Sort the subtiles based on the tiles</source>
         <translation>Mezők rendezése a lapok sorrendjében</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="373"/>
+        <location filename="../source/mainwindow.ui" line="376"/>
         <source>Sort Tileset</source>
         <translation>Mezőkészlet rendezése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="376"/>
+        <location filename="../source/mainwindow.ui" line="379"/>
         <source>Sort the subtiles and frames based on the tiles</source>
         <translation>Mezők és a képkockák rendezése a lapok sorrendjében</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="381"/>
+        <location filename="../source/mainwindow.ui" line="384"/>
         <source>New palette</source>
         <translation>Új paletta</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="386"/>
+        <location filename="../source/mainwindow.ui" line="389"/>
         <source>Save palette</source>
         <translation>Paletta mentése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="391"/>
+        <location filename="../source/mainwindow.ui" line="394"/>
         <source>Save palette as...</source>
         <translation>Paletta mentése másként</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="396"/>
+        <location filename="../source/mainwindow.ui" line="399"/>
         <source>Close palette</source>
         <translation>Palette bezárása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="401"/>
+        <location filename="../source/mainwindow.ui" line="404"/>
         <source>New unique translation</source>
         <translation>Új egyedi átrendelő</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="406"/>
+        <location filename="../source/mainwindow.ui" line="409"/>
         <source>Save unique translation</source>
         <translation>Egyedi átrendelő mentése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="411"/>
+        <location filename="../source/mainwindow.ui" line="414"/>
         <source>Save unique translation as...</source>
         <translation>Egyedi átrendelő mentése másként</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="416"/>
+        <location filename="../source/mainwindow.ui" line="419"/>
         <source>Close unique translation</source>
         <translation>Egyedi átrendelő bezárása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="421"/>
+        <location filename="../source/mainwindow.ui" line="424"/>
         <source>New base translation</source>
         <translation>Új alap átrendelő</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="426"/>
+        <location filename="../source/mainwindow.ui" line="429"/>
         <source>Save base translation</source>
         <translation>Alap átrendelő mentése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="431"/>
+        <location filename="../source/mainwindow.ui" line="434"/>
         <source>Save base translation as...</source>
         <translation>Alap átrendelő mentése másként</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="436"/>
+        <location filename="../source/mainwindow.ui" line="439"/>
         <source>Close base translation</source>
         <translation>Alap átrendelő bezárása</translation>
     </message>
@@ -2265,10 +2270,13 @@
         <source>Redo</source>
         <translation>Ismétlés</translation>
     </message>
-    <message>
+    <message numerus="yes">
         <location filename="../source/palettewidget.cpp" line="662"/>
         <source>&lt;- Select color(s)</source>
-        <translation>Válassz színt</translation>
+        <translation>
+            <numerusform>&lt;- Válassz egy színt</numerusform>
+            <numerusform>&lt;- Válassz színsort</numerusform>
+        </translation>
     </message>
 </context>
 <context>
