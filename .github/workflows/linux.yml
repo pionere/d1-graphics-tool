@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: dependencies
-      run: sudo apt-get update && sudo apt-get install cmake qt6-base-dev libgl1-mesa-dev qt6-l10n-tools
+      run: sudo apt-get update && sudo apt-get install cmake qt6-base-dev libgl1-mesa-dev qt6-tools-dev qt6-l10n-tools
     - name: configure
       run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo
     - name: make
