@@ -26,7 +26,7 @@ void ProgressDialog::start(const QString &label, int maxValue)
     theDialog->ui->progressLabel->setText(label);
     theDialog->ui->progressBar->setRange(0, maxValue);
     theDialog->ui->progressBar->setValue(0);
-    theDialog->ui->outputTextEdit->setText("");
+    theDialog->ui->outputTextEdit->clear();
     theDialog->ui->detailsGroupBox->setVisible(false);
     theDialog->on_detailsPushButton_clicked();
     theDialog->ui->cancelPushButton->setEnabled(true);
