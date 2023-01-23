@@ -818,9 +818,9 @@
     <message numerus="yes">
         <location filename="../source/levelcelview.cpp" line="928"/>
         <source>Frame %1 is used by subtile %2.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Frame %1 is used by subtile %2.</numerusform>
+            <numerusform>Frame %1 is used by subtiles %2.</numerusform>
         </translation>
     </message>
     <message>
@@ -831,25 +831,25 @@
     <message numerus="yes">
         <location filename="../source/levelcelview.cpp" line="945"/>
         <source>Subtile %1 is used by tile %2.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Subtile %1 is used by tile %2.</numerusform>
+            <numerusform>Subtile %1 is used by tiles %2.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../source/levelcelview.cpp" line="1072"/>
         <source>Removed frame %1.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Removed frame %1.</numerusform>
+            <numerusform>Removed frames %1.</numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <location filename="../source/levelcelview.cpp" line="1103"/>
         <source>Removed subtile %1.</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Removed subtile %1.</numerusform>
+            <numerusform>Removed subtiles %1.</numerusform>
         </translation>
     </message>
     <message>
@@ -2248,7 +2248,7 @@
     <message numerus="yes">
         <location filename="../source/palettewidget.cpp" line="662"/>
         <source>&lt;- Select color(s)</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>&lt;- Select a color</numerusform>
             <numerusform>&lt;- Select colors</numerusform>
         </translation>

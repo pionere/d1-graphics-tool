@@ -93,6 +93,48 @@ void SettingsDialog::on_paletteSelectionBorderColorLineEdit_escPressed()
     this->ui->paletteSelectionBorderColorLineEdit->setText(Config::getPaletteSelectionBorderColor());
 }
 
+void SettingsDialog::on_graphicsBackgroundColorPushButton_clicked()
+{
+    QColor color = QColorDialog::getColor();
+    if (color.isValid()) {
+        this->ui->graphicsBackgroundColorLineEdit->setText(color.name());
+    }
+}
+
+void SettingsDialog::on_graphicsBackgroundColorLineEdit_returnPressed()
+{
+    QColor color = QColor(this->ui->graphicsBackgroundColorLineEdit->text());
+    if (!color.isValid()) {
+        this->on_graphicsBackgroundColorLineEdit_escPressed();
+    }
+}
+
+void SettingsDialog::on_graphicsBackgroundColorLineEdit_escPressed()
+{
+    this->ui->graphicsBackgroundColorLineEdit->setText(Config::getGraphicsBackgroundColor());
+}
+
+void SettingsDialog::on_graphicsTransparentColorPushButton_clicked()
+{
+    QColor color = QColorDialog::getColor();
+    if (color.isValid()) {
+        this->ui->graphicsTransparentColorLineEdit->setText(color.name());
+    }
+}
+
+void SettingsDialog::on_graphicsTransparentColorLineEdit_returnPressed()
+{
+    QColor color = QColor(this->ui->graphicsTransparentColorLineEdit->text());
+    if (!color.isValid()) {
+        this->on_graphicsTransparentColorLineEdit_escPressed();
+    }
+}
+
+void SettingsDialog::on_graphicsTransparentColorLineEdit_escPressed()
+{
+    this->ui->graphicsTransparentColorLineEdit->setText(Config::getGraphicsTransparentColor());
+}
+
 void SettingsDialog::on_settingsOkButton_clicked()
 {
     // Locale

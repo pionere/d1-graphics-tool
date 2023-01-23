@@ -43,7 +43,14 @@ void Config::loadConfiguration()
         Config::setPaletteSelectionBorderColor(Config::DEFAULT_PAL_SELECTION_BORDER_COLOR);
         configurationModified = true;
     }
-
+    if (!theConfig.contains(Config::CFG_GRAPHICS_BACKGROUND_COLOR)) {
+        Config::setGraphicsBackgroundColor(Config::DEFAULT_GRAPHICS_BACKGROUND_COLOR);
+        configurationModified = true;
+    }
+    if (!theConfig.contains(Config::CFG_GRAPHICS_TRANSPARENT_COLOR)) {
+        Config::setGraphicsTransparentColor(Config::DEFAULT_GRAPHICS_TRANSPARENT_COLOR);
+        configurationModified = true;
+    }
     if (configurationModified) {
         Config::storeConfiguration();
     }
