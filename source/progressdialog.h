@@ -22,7 +22,7 @@ public:
     friend ProgressDialog &dProgress();
 
     ProgressDialog &operator<<(const QString &text);
-    ProgressDialog &operator<<(const QPair<QString, QString> &text)
+    ProgressDialog &operator<<(const QPair<QString, QString> &text);
 
 private slots:
     void on_detailsPushButton_clicked();
