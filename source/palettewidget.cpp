@@ -871,7 +871,7 @@ void PaletteWidget::on_actionPaste_triggered()
         auto iter = colorMap.find(i);
         QColor color;
         if (iter != colorMap.end()) {
-            color = iter->value();
+            color = iter.value();
         } else {
             color = this->pal->getColor(i);
         }
