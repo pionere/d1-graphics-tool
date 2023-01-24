@@ -45,7 +45,7 @@ EditPaletteCommand::EditPaletteCommand(D1Pal *p, quint8 sci, quint8 eci, QColor 
     }
 }
 
-EditPaletteCommand::EditPaletteCommand(D1Pal *p, quint8 sci, quint8 eci, QList<QColor> &mc, QUndoCommand *parent)
+EditPaletteCommand::EditPaletteCommand(D1Pal *p, quint8 sci, quint8 eci, QList<QColor> mc, QUndoCommand *parent)
     : QUndoCommand(parent)
     , pal(p)
     , startColorIndex(sci)
@@ -867,15 +867,12 @@ void PaletteWidget::on_actionPaste_triggered()
     startColorIndex = colorMap.firstKey();
     int lastColorIndex = colorMap.lastKey();
     QList<QColor> modColors;
-    QMessageBox::warning(nullptr, "Hmm", QString("%1 to %2").arg(startColorIndex).arg(lastColorIndex));
     for (int i = startColorIndex; i <= lastColorIndex; i++) {
         auto iter = colorMap.find(i);
         QColor color;
         if (iter != colorMap.end()) {
-            QMessageBox::warning(nullptr, "Found", QString::number(i));
             color = iter->value();
         } else {
-            QMessageBox::warning(nullptr, "Not Found", QString::number(i));
             color = this->pal->getColor(i);
         }
         modColors.append(color);
