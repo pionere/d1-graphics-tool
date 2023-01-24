@@ -1,6 +1,7 @@
 #include "progressdialog.h"
 
 #include <QMessageBox>
+#include <QStyle>
 
 #include "ui_progressdialog.h"
 #include "ui_progresswidget.h"
