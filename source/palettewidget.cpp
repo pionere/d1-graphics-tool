@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include <QClipboard>
 #include <QColorDialog>
 #include <QGuiApplication>
 #include <QMessageBox>
@@ -448,7 +449,7 @@ void colorsToClipboard(int startColorIndex, int endColorIndex, D1Pal *pal)
 {
     QString text;
     for (int i = startColorIndex; i <= endColorIndex; i++) {
-        QColor palColor = this->pal->getColor(i);
+        QColor palColor = pal->getColor(i);
         text.append(QString::number(i) + palColor.name() + ';');
     }
     QClipboard *clipboard = QGuiApplication::clipboard();
@@ -483,7 +484,7 @@ void PaletteWidget::ShowContextMenu(const QPoint &pos)
     QAction action3(tr("Paste"), this);
     action3.setToolTip(tr("Paste the colors from the clipboard to the palette"));
     QObject::connect(&action3, SIGNAL(triggered()), this, SLOT(on_actionPaste_triggered()));
-    action3.setEnabled(!this->isTrn && !clipboardColors().isEmpty());
+    action3.setEnabled(!this->isTrn && !clipboardToColors().isEmpty());
     contextMenu.addAction(&action3);
 
     contextMenu.exec(mapToGlobal(pos));
@@ -837,7 +838,7 @@ void PaletteWidget::on_actionPaste_triggered()
     }
     int srcColorIndex = colors[0].first;
     for (QPair<int, QColor> &idxColor : colors) {
-        dstColorIndex = startColorIndex + idxColor.first - srcColorIndex;
+        int dstColorIndex = startColorIndex + idxColor.first - srcColorIndex;
         if (dstColorIndex > D1PAL_COLORS - 1) {
             continue;
         }
