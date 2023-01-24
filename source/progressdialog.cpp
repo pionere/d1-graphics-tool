@@ -23,12 +23,18 @@ ProgressDialog::~ProgressDialog()
 
 void ProgressDialog::start(const QString &label, int maxValue)
 {
+    theDialog->show();
+
     theDialog->ui->progressLabel->setText(label);
     theDialog->ui->progressBar->setRange(0, maxValue);
     theDialog->ui->progressBar->setValue(0);
+    theDialog->ui->outputTextEdit->clear();
+    theDialog->ui->detailsGroupBox->setVisible(true);
+    theDialog->on_detailsPushButton_clicked();
     theDialog->ui->cancelPushButton->setEnabled(true);
     theDialog->cancelled = false;
-    theDialog->show();
+    theDialog->textVersion = 0;
+    // theDialog->setFocus();
 }
 
 void ProgressDialog::done()
@@ -45,6 +51,68 @@ void ProgressDialog::incValue()
 {
     theDialog->ui->progressBar->setValue(theDialog->ui->progressBar->value() + 1);
     QCoreApplication::processEvents();
+}
+
+ProgressDialog &dProgress()
+{
+    return *theDialog;
+}
+
+ProgressDialog &ProgressDialog::operator<<(const QString &text)
+{
+    this->ui->outputTextEdit->appendPlainText(text);
+    this->textVersion++;
+    return *this;
+}
+
+void ProgressDialog::removeLastLine()
+{
+    this->ui->outputTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
+    this->ui->outputTextEdit->moveCursor(QTextCursor::StartOfLine, QTextCursor::MoveAnchor);
+    this->ui->outputTextEdit->moveCursor(QTextCursor::End, QTextCursor::KeepAnchor);
+    this->ui->outputTextEdit->textCursor().removeSelectedText();
+    this->ui->outputTextEdit->textCursor().deletePreviousChar(); // Added to trim the newline char when removing last line
+}
+
+ProgressDialog &ProgressDialog::operator<<(const QPair<QString, QString> &text)
+{
+    // this->ui->outputTextEdit->setFocus();
+    QTextCursor storeCursorPos = this->ui->outputTextEdit->textCursor();
+    if (this->ui->outputTextEdit->textCursor().selectedText() == text.first) {
+        this->removeLastLine();
+    }
+    QTextCursor lastCursorPos = this->ui->outputTextEdit->textCursor();
+    this->ui->outputTextEdit->appendPlainText(text.second);
+    if (lastCursorPos > storeCursorPos) {
+        this->ui->outputTextEdit->setTextCursor(storeCursorPos);
+    }
+    this->textVersion++;
+    return *this;
+}
+
+ProgressDialog &ProgressDialog::operator<<(QPair<int, QString> &idxText)
+{
+    // this->ui->outputTextEdit->setFocus();
+    QTextCursor storeCursorPos = this->ui->outputTextEdit->textCursor();
+    if (this->textVersion == idxText.first) {
+        this->removeLastLine();
+    }
+    QTextCursor lastCursorPos = this->ui->outputTextEdit->textCursor();
+    this->ui->outputTextEdit->appendPlainText(idxText.second);
+    if (lastCursorPos > storeCursorPos) {
+        this->ui->outputTextEdit->setTextCursor(storeCursorPos);
+    }
+    this->textVersion++;
+    idxText.first = this->textVersion;
+    return *this;
+}
+
+void ProgressDialog::on_detailsPushButton_clicked()
+{
+    bool currVisible = this->ui->detailsGroupBox->isVisible();
+    this->ui->detailsGroupBox->setVisible(!currVisible);
+    this->ui->detailsPushButton->setText(currVisible ? tr("Show details") : tr("Hide details"));
+    this->adjustSize();
 }
 
 void ProgressDialog::on_cancelPushButton_clicked()

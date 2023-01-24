@@ -1,5 +1,6 @@
 #include "exportdialog.h"
 
+#include <QApplication>
 #include <QFileDialog>
 #include <QImageWriter>
 #include <QMessageBox>
@@ -82,6 +83,12 @@ void ExportDialog::on_outputFolderBrowseButton_clicked()
     ui->outputFolderEdit->setText(selectedDirectory);
 }
 
+static void saveImage(const QImage &image, const QString &path)
+{
+    image.save(path);
+    dProgress() << QApplication::tr("Created %1.").arg(path);
+}
+
 bool ExportDialog::exportLevelTiles25D()
 {
     QString fileName = QFileInfo(this->til->getFilePath()).fileName();
@@ -108,7 +115,7 @@ bool ExportDialog::exportLevelTiles25D()
     if (amount == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
         QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
-        this->til->getTileImage(0).save(outputFilePath);
+        saveImage(this->til->getTileImage(0), outputFilePath);
         return true;
     }
 
@@ -124,7 +131,7 @@ bool ExportDialog::exportLevelTiles25D()
             QString outputFilePath = outputFilePathBase
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
 
-            this->til->getTileImage(i).save(outputFilePath);
+            saveImage(this->til->getTileImage(i), outputFilePath);
         }
         return true;
     }
@@ -197,7 +204,7 @@ bool ExportDialog::exportLevelTiles25D()
 
     painter.end();
 
-    tempOutputImage.save(outputFilePath);
+    saveImage(tempOutputImage, outputFilePath);
     return true;
 }
 
@@ -227,7 +234,7 @@ bool ExportDialog::exportLevelTiles()
     if (amount == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
         QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
-        this->til->getFlatTileImage(0).save(outputFilePath);
+        saveImage(this->til->getFlatTileImage(0), outputFilePath);
         return true;
     }
     // multiple tiles
@@ -242,7 +249,7 @@ bool ExportDialog::exportLevelTiles()
             QString outputFilePath = outputFilePathBase
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
 
-            this->til->getFlatTileImage(i).save(outputFilePath);
+            saveImage(this->til->getFlatTileImage(i), outputFilePath);
         }
         return true;
     }
@@ -315,7 +322,7 @@ bool ExportDialog::exportLevelTiles()
 
     painter.end();
 
-    tempOutputImage.save(outputFilePath);
+    saveImage(tempOutputImage, outputFilePath);
     return true;
 }
 
@@ -345,7 +352,7 @@ bool ExportDialog::exportLevelSubtiles()
     if (amount == 1 && subtileFrom == 0) {
         // one file for the only subtile (not indexed)
         QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
-        this->min->getSubtileImage(0).save(outputFilePath);
+        saveImage(this->min->getSubtileImage(0), outputFilePath);
         return true;
     }
     // multiple subtiles
@@ -360,7 +367,7 @@ bool ExportDialog::exportLevelSubtiles()
             QString outputFilePath = outputFilePathBase + "_subtile"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
 
-            this->min->getSubtileImage(i).save(outputFilePath);
+            saveImage(this->min->getSubtileImage(i), outputFilePath);
         }
         return true;
     }
@@ -435,7 +442,7 @@ bool ExportDialog::exportLevelSubtiles()
 
     painter.end();
 
-    tempOutputImage.save(outputFilePath);
+    saveImage(tempOutputImage, outputFilePath);
     return true;
 }
 
@@ -465,7 +472,7 @@ bool ExportDialog::exportFrames()
     if (amount == 1 && frameFrom == 0) {
         // one file for the only frame (not indexed)
         QString outputFilePath = outputFilePathBase + this->getFileFormatExtension();
-        this->gfx->getFrameImage(0).save(outputFilePath);
+        saveImage(this->gfx->getFrameImage(0), outputFilePath);
         return true;
     }
     // multiple frames
@@ -480,7 +487,7 @@ bool ExportDialog::exportFrames()
             QString outputFilePath = outputFilePathBase + "_frame"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
 
-            this->gfx->getFrameImage(i).save(outputFilePath);
+            saveImage(this->gfx->getFrameImage(i), outputFilePath);
         }
         return true;
     }
@@ -612,7 +619,7 @@ bool ExportDialog::exportFrames()
 
     painter.end();
 
-    tempOutputImage.save(outputFilePath);
+    saveImage(tempOutputImage, outputFilePath);
     return true;
 }
 
