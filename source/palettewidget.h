@@ -167,6 +167,8 @@ private slots:
 
     void on_actionUndo_triggered();
     void on_actionRedo_triggered();
+    void on_actionCopy_triggered();
+    void on_actionPaste_triggered();
 
     void on_pathComboBox_activated(int index);
     void on_displayComboBox_activated(int index);

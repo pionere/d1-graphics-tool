@@ -2196,82 +2196,82 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="278"/>
+        <location filename="../source/palettewidget.cpp" line="230"/>
         <source>New</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="279"/>
+        <location filename="../source/palettewidget.cpp" line="231"/>
         <source>Open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="280"/>
+        <location filename="../source/palettewidget.cpp" line="232"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="281"/>
+        <location filename="../source/palettewidget.cpp" line="233"/>
         <source>Save As</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="282"/>
+        <location filename="../source/palettewidget.cpp" line="234"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="381"/>
+        <location filename="../source/palettewidget.cpp" line="333"/>
         <source>Show all colors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="384"/>
+        <location filename="../source/palettewidget.cpp" line="336"/>
         <source>Show all frames hits</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="386"/>
+        <location filename="../source/palettewidget.cpp" line="338"/>
         <source>Show current tile hits</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="387"/>
+        <location filename="../source/palettewidget.cpp" line="339"/>
         <source>Show current subtile hits</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="389"/>
+        <location filename="../source/palettewidget.cpp" line="341"/>
         <source>Show current frame hits</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="391"/>
+        <location filename="../source/palettewidget.cpp" line="343"/>
         <source>Show the altered colors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="416"/>
+        <location filename="../source/palettewidget.cpp" line="368"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="416"/>
+        <location filename="../source/palettewidget.cpp" line="368"/>
         <source>Source and target selection length do not match.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="475"/>
+        <location filename="../source/palettewidget.cpp" line="427"/>
         <source>Undo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="480"/>
+        <location filename="../source/palettewidget.cpp" line="432"/>
         <source>Redo</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/palettewidget.cpp" line="662"/>
+        <location filename="../source/palettewidget.cpp" line="614"/>
         <source>&lt;- Select color(s)</source>
         <translation type="unfinished">
             <numerusform></numerusform>
@@ -2284,11 +2284,6 @@
     <message>
         <location filename="../source/progressdialog.ui" line="50"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/progressdialog.ui" line="60"/>
-        <source>Logs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2532,14 +2527,30 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/upscaler.cpp" line="3227"/>
+        <location filename="../source/upscaler.cpp" line="3118"/>
+        <source>Upscaling frame %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../source/upscaler.cpp" line="3133"/>
+        <source>Upscaled %1 frame(s).</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <location filename="../source/upscaler.cpp" line="3230"/>
         <source>Upscaling subtile %1.</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../source/upscaler.cpp" line="3251"/>
-        <source>Upscaled %1 subtile.</source>
-        <translation type="unfinished"></translation>
+    <message numerus="yes">
+        <location filename="../source/upscaler.cpp" line="3255"/>
+        <source>Upscaled %1 subtile(s).</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
 </context>
 <context>

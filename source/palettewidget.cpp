@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include <QColorDialog>
+#include <QGuiApplication>
 #include <QMessageBox>
 #include <QMimeData>
 
@@ -417,6 +418,43 @@ static QRectF getColorCoordinates(quint8 index)
     return coordinates;
 }
 
+QList<QPair<int, QColor>> clipboardToColors()
+{
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    QString text = clipboard->text();
+    QStringList parts = text.split(';');
+    QList<QPair<int, QColor>> result;
+    for (QString part : parts) {
+        int hashIdx = part.indexOf('#');
+        if (hashIdx < 0) {
+            break;
+        }
+        QColor color = QColor(part.right(7))
+        if (!color.isValid()) {
+            break;
+        }
+        part.chop(7);
+        bool ok;
+        int index = part.toInt(&ok);
+        if (!ok) {
+            index += result.count();
+        }
+        result.append(qMakePair(index, color));
+    }
+    return result;
+}
+
+void colorsToClipboard(int startColorIndex, int endColorIndex, D1Pal *pal)
+{
+    QString text;
+    for (int i = startColorIndex; i <= endColorIndex; i++) {
+        QColor palColor = this->pal->getColor(i);
+        text.append(QString::number(i) + palColor.name() + ';');
+    }
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    clipboard->setText(text);
+}
+
 void PaletteWidget::ShowContextMenu(const QPoint &pos)
 {
     this->initStopColorPicking();
@@ -425,14 +463,28 @@ void PaletteWidget::ShowContextMenu(const QPoint &pos)
     contextMenu.setToolTipsVisible(true);
 
     QAction action0(tr("Undo"), this);
+    action0.setToolTip(tr("Undo previous color change"));
     QObject::connect(&action0, SIGNAL(triggered()), this, SLOT(on_actionUndo_triggered()));
     action0.setEnabled(this->undoStack->canUndo());
     contextMenu.addAction(&action0);
 
     QAction action1(tr("Redo"), this);
+    action1.setToolTip(tr("Redo previous color change"));
     QObject::connect(&action1, SIGNAL(triggered()), this, SLOT(on_actionRedo_triggered()));
     action1.setEnabled(this->undoStack->canRedo());
     contextMenu.addAction(&action1);
+
+    QAction action2(tr("Copy"), this);
+    action2.setToolTip(tr("Copy the selected colors to the clipboard"));
+    QObject::connect(&action2, SIGNAL(triggered()), this, SLOT(on_actionCopy_triggered()));
+    action2.setEnabled(this->selectedFirstColorIndex != COLORIDX_TRANSPARENT);
+    contextMenu.addAction(&action2);
+
+    QAction action3(tr("Paste"), this);
+    action3.setToolTip(tr("Paste the colors from the clipboard to the palette"));
+    QObject::connect(&action3, SIGNAL(triggered()), this, SLOT(on_actionPaste_triggered()));
+    action3.setEnabled(!this->isTrn && !clipboardColors().isEmpty());
+    contextMenu.addAction(&action3);
 
     contextMenu.exec(mapToGlobal(pos));
 }
@@ -764,6 +816,33 @@ void PaletteWidget::on_actionUndo_triggered()
 void PaletteWidget::on_actionRedo_triggered()
 {
     this->undoStack->redo();
+}
+
+void PaletteWidget::on_actionCopy_triggered()
+{
+    colorsToClipboard(this->selectedFirstColorIndex, this->selectedLastColorIndex, this->isTrn ? this->trn->getResultingPalette() : this->pal);
+}
+
+void PaletteWidget::on_actionPaste_triggered()
+{
+    QList<QPair<int, QColor>> colors = clipboardToColors();
+
+    if (colors.isEmpty()) {
+        return;
+    }
+
+    int startColorIndex = this->selectedFirstColorIndex;
+    if (startColorIndex == COLORIDX_TRANSPARENT) {
+        startColorIndex = 0;
+    }
+    int srcColorIndex = colors[0].first;
+    for (QPair<int, QColor> &idxColor : colors) {
+        dstColorIndex = startColorIndex + idxColor.first - srcColorIndex;
+        if (dstColorIndex > D1PAL_COLORS - 1) {
+            continue;
+        }
+        this->pal->setColor(i, idxColor.second);
+    }
 }
 
 void PaletteWidget::on_pathComboBox_activated(int index)
