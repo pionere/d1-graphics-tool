@@ -1,5 +1,7 @@
 #include "progressdialog.h"
 
+#include <QMessageBox>
+
 #include "ui_progressdialog.h"
 
 static ProgressDialog *theDialog;
@@ -125,4 +127,25 @@ void ProgressDialog::closeEvent(QCloseEvent *e)
 {
     this->on_cancelPushButton_clicked();
     // QDialog::closeEvent(e);
+}
+
+ProgressWidget::ProgressWidget(QWidget *parent)
+    : QFrame(parent)
+    , ui(new Ui::ProgressWidget())
+{
+    this->ui->setupUi(this);
+
+    this->update();
+}
+
+void ProgressWidget::update()
+{
+    QStyle::StandardPixmap type = QStyle::SP_FileDialogNewFolder;
+    this->ui->openPushButton->setIcon(this->style()->standardIcon(type));
+    this->ui->messageLabel->setText("Sample...");
+}
+
+void ProgressWidget::on_openPushButton_clicked()
+{
+    QMessageBox::warning(nullptr, "Now", "what?");
 }

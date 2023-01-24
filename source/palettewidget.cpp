@@ -840,12 +840,12 @@ void PaletteWidget::on_actionCopy_triggered()
 
 void PaletteWidget::on_actionPaste_triggered()
 {
+    // collect the colors
     QList<QPair<int, QColor>> colors = clipboardToColors();
-
     if (colors.isEmpty()) {
         return;
     }
-
+    // shift the indices
     int startColorIndex = this->selectedFirstColorIndex;
     if (startColorIndex == COLORIDX_TRANSPARENT) {
         startColorIndex = 0;
@@ -863,7 +863,7 @@ void PaletteWidget::on_actionPaste_triggered()
     if (colorMap.isEmpty()) {
         return;
     }
-
+    // create list from the map by filling the gaps with the original colors
     startColorIndex = colorMap.firstKey();
     int lastColorIndex = colorMap.lastKey();
     QList<QColor> modColors;

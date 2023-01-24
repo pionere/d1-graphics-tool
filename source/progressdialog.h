@@ -1,9 +1,11 @@
 #pragma once
 
 #include <QDialog>
+#include <QFrame>
 
 namespace Ui {
 class ProgressDialog;
+class ProgressWidget;
 } // namespace Ui
 
 class ProgressDialog : public QDialog {
@@ -43,3 +45,19 @@ private:
 };
 
 ProgressDialog &dProgress();
+
+class ProgressWidget : public QFrame {
+    Q_OBJECT
+
+public:
+    explicit ProgressWidget(QWidget *parent = nullptr);
+    ~ProgressWidget();
+
+    void update();
+
+private slots:
+    void on_openPushButton_clicked();
+
+private:
+    Ui::ProgressWidget *ui;
+}
