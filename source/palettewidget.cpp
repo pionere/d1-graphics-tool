@@ -454,10 +454,10 @@ QList<QPair<int, QColor>> clipboardToColors()
     return result;
 }
 
-void colorsToClipboard(int startColorIndex, int endColorIndex, D1Pal *pal)
+void colorsToClipboard(int startColorIndex, int lastColorIndex, D1Pal *pal)
 {
     QString text;
-    for (int i = startColorIndex; i <= endColorIndex; i++) {
+    for (int i = startColorIndex; i <= lastColorIndex; i++) {
         QColor palColor = pal->getColor(i);
         text.append(QString::number(i) + palColor.name() + ';');
     }
@@ -867,7 +867,7 @@ void PaletteWidget::on_actionPaste_triggered()
     startColorIndex = colorMap.firstKey();
     int lastColorIndex = colorMap.lastKey();
     QList<QColor> modColors;
-    for (int i = startColorIndex; i <= endColorIndex; i++) {
+    for (int i = startColorIndex; i <= lastColorIndex; i++) {
         auto iter = colorMap.find(i);
         QColor color;
         if (iter != colorMap.end()) {
