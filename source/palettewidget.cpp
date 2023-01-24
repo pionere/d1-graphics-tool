@@ -821,7 +821,12 @@ void PaletteWidget::on_actionRedo_triggered()
 
 void PaletteWidget::on_actionCopy_triggered()
 {
-    colorsToClipboard(this->selectedFirstColorIndex, this->selectedLastColorIndex, this->isTrn ? this->trn->getResultingPalette() : this->pal);
+    D1Pal *palette = this->pal;
+
+    if (this->isTrn) {
+        palette = this->trn->getResultingPalette();
+    }
+    colorsToClipboard(this->selectedFirstColorIndex, this->selectedLastColorIndex, palette);
 }
 
 void PaletteWidget::on_actionPaste_triggered()
@@ -844,6 +849,8 @@ void PaletteWidget::on_actionPaste_triggered()
         }
         this->pal->setColor(dstColorIndex, idxColor.second);
     }
+
+    emit this->modified();
 }
 
 void PaletteWidget::on_pathComboBox_activated(int index)
