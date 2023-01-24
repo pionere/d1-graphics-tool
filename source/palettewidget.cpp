@@ -7,6 +7,7 @@
 #include <QGuiApplication>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QStyle>
 
 #include "config.h"
 #include "mainwindow.h"
