@@ -8,18 +8,17 @@ class ProgressDialog;
 class ProgressWidget;
 } // namespace Ui
 
-class enum PROGESS_STATE {
+enum class PROGESS_STATE {
     DONE,
     RUNNING,
     CANCELLED,
 };
 
-class enum PROGESS_DIALOG_STATE {
+enum class PROGESS_DIALOG_STATE {
     ACTIVE,
     OPEN,
     BACKGROUND,
 };
-
 
 class ProgressDialog : public QDialog {
     Q_OBJECT
