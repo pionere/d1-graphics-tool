@@ -28,18 +28,15 @@ enum class PWIDGET_CALLBACK_TYPE {
 };
 
 namespace Ui {
-class PaletteScene;
 class PaletteWidget;
-class EditColorsCommand;
-class EditTranslationsCommand;
 } // namespace Ui
 
-class EditColorsCommand : public QObject, public QUndoCommand {
+class EditPaletteCommand : public QObject, public QUndoCommand {
     Q_OBJECT
 
 public:
-    explicit EditColorsCommand(D1Pal *, quint8, quint8, QColor, QColor, QUndoCommand *parent = nullptr);
-    ~EditColorsCommand() = default;
+    explicit EditPaletteCommand(D1Pal *pal, quint8 startColorIndex, quint8 endColorIndex, QColor newColorStart, QColor newColorEnd, QUndoCommand *parent = nullptr);
+    ~EditPaletteCommand() = default;
 
     void undo() override;
     void redo() override;
@@ -51,17 +48,15 @@ private:
     QPointer<D1Pal> pal;
     quint8 startColorIndex;
     quint8 endColorIndex;
-    QList<QColor> initialColors;
-    QColor newColor;
-    QColor endColor;
+    QList<QColor> modColors;
 };
 
-class EditTranslationsCommand : public QObject, public QUndoCommand {
+class EditTranslationCommand : public QObject, public QUndoCommand {
     Q_OBJECT
 
 public:
-    explicit EditTranslationsCommand(D1Trn *, quint8, quint8, QList<quint8>, QUndoCommand *parent = nullptr);
-    ~EditTranslationsCommand() = default;
+    explicit EditTranslationCommand(D1Trn *trn, quint8 startColorIndex, quint8 endColorIndex, QList<quint8> *newTranslations, QUndoCommand *parent = nullptr);
+    ~EditTranslationCommand() = default;
 
     void undo() override;
     void redo() override;
@@ -73,28 +68,7 @@ private:
     QPointer<D1Trn> trn;
     quint8 startColorIndex;
     quint8 endColorIndex;
-    QList<quint8> initialTranslations;
-    QList<quint8> newTranslations;
-};
-
-class ClearTranslationsCommand : public QObject, public QUndoCommand {
-    Q_OBJECT
-
-public:
-    explicit ClearTranslationsCommand(D1Trn *, quint8, quint8, QUndoCommand *parent = nullptr);
-    ~ClearTranslationsCommand() = default;
-
-    void undo() override;
-    void redo() override;
-
-signals:
-    void modified();
-
-private:
-    QPointer<D1Trn> trn;
-    quint8 startColorIndex;
-    quint8 endColorIndex;
-    QList<quint8> initialTranslations;
+    QList<quint8> modTranslations;
 };
 
 class PaletteScene : public QGraphicsScene {

@@ -23,128 +23,80 @@ enum class COLORFILTER_TYPE {
 
 Q_DECLARE_METATYPE(COLORFILTER_TYPE)
 
-EditColorsCommand::EditColorsCommand(D1Pal *p, quint8 sci, quint8 eci, QColor nc, QColor ec, QUndoCommand *parent)
+EditPaletteCommand::EditPaletteCommand(D1Pal *p, quint8 sci, quint8 eci, QColor nc, QColor ec, QUndoCommand *parent)
     : QUndoCommand(parent)
     , pal(p)
     , startColorIndex(sci)
     , endColorIndex(eci)
-    , newColor(nc)
-    , endColor(ec)
 {
-    // Get the initial color values before doing any modification
-    for (int i = startColorIndex; i <= endColorIndex; i++)
-        initialColors.append(this->pal->getColor(i));
-}
+    float step = 1.0f / (eci - sci + 1);
 
-void EditColorsCommand::undo()
-{
-    if (this->pal.isNull()) {
-        this->setObsolete(true);
-        return;
-    }
-
-    for (int i = startColorIndex; i <= endColorIndex; i++)
-        this->pal->setColor(i, this->initialColors.at(i - this->startColorIndex));
-
-    emit this->modified();
-}
-
-void EditColorsCommand::redo()
-{
-    if (this->pal.isNull()) {
-        this->setObsolete(true);
-        return;
-    }
-
-    float step = 1.0f / (endColorIndex - startColorIndex + 1);
-
-    for (int i = startColorIndex; i <= endColorIndex; i++) {
-        float factor = (i - startColorIndex) * step;
+    for (int i = sci; i <= eci; i++) {
+        float factor = (i - sci) * step;
 
         QColor color(
-            this->newColor.red() * (1 - factor) + this->endColor.red() * factor,
-            this->newColor.green() * (1 - factor) + this->endColor.green() * factor,
-            this->newColor.blue() * (1 - factor) + this->endColor.blue() * factor);
+            nc.red() * (1 - factor) + ec.red() * factor,
+            nc.green() * (1 - factor) + ec.green() * factor,
+            nc.blue() * (1 - factor) + ec.blue() * factor);
 
-        this->pal->setColor(i, color);
+        this->modColors.append(color);
     }
-
-    emit this->modified();
 }
 
-EditTranslationsCommand::EditTranslationsCommand(D1Trn *t, quint8 sci, quint8 eci, QList<quint8> nt, QUndoCommand *parent)
-    : QUndoCommand(parent)
-    , trn(t)
-    , startColorIndex(sci)
-    , endColorIndex(eci)
-    , newTranslations(nt)
+void EditPaletteCommand::undo()
 {
-    // Get the initial color values before doing any modification
-    for (int i = startColorIndex; i <= endColorIndex; i++)
-        initialTranslations.append(this->trn->getTranslation(i));
-}
-
-void EditTranslationsCommand::undo()
-{
-    if (this->trn.isNull()) {
+    if (this->pal.isNull()) {
         this->setObsolete(true);
         return;
     }
 
-    for (int i = startColorIndex; i <= endColorIndex; i++)
-        this->trn->setTranslation(i, this->initialTranslations.at(i - this->startColorIndex));
-
-    emit this->modified();
-}
-
-void EditTranslationsCommand::redo()
-{
-    if (this->trn.isNull()) {
-        this->setObsolete(true);
-        return;
+    for (int i = startColorIndex; i <= endColorIndex; i++) {
+        QColor palColor = this->pal->getColor(i);
+        this->pal->setColor(i, this->modColors.at(i - startColorIndex));
+        this->modColors.replace(i - startColorIndex, palColor);
     }
 
-    for (int i = startColorIndex; i <= endColorIndex; i++)
-        this->trn->setTranslation(i, this->newTranslations.at(i - this->startColorIndex));
-
     emit this->modified();
 }
 
-ClearTranslationsCommand::ClearTranslationsCommand(D1Trn *t, quint8 sci, quint8 eci, QUndoCommand *parent)
+void EditPaletteCommand::redo()
+{
+    this->undo();
+}
+
+EditTranslationCommand::EditTranslationCommand(D1Trn *t, quint8 sci, quint8 eci, QList<quint8> *nt, QUndoCommand *parent)
     : QUndoCommand(parent)
     , trn(t)
     , startColorIndex(sci)
     , endColorIndex(eci)
 {
-    // Get the initial color values before doing any modification
-    for (int i = startColorIndex; i <= endColorIndex; i++)
-        initialTranslations.append(this->trn->getTranslation(i));
+    if (nt == nullptr) {
+        for (int i = startColorIndex; i <= endColorIndex; i++)
+            modTranslations.append(i);
+    } else {
+        this->modTranslations = *nt;
+    }
 }
 
-void ClearTranslationsCommand::undo()
+void EditTranslationCommand::undo()
 {
     if (this->trn.isNull()) {
         this->setObsolete(true);
         return;
     }
 
-    for (int i = startColorIndex; i <= endColorIndex; i++)
-        this->trn->setTranslation(i, this->initialTranslations.at(i - this->startColorIndex));
+    for (int i = startColorIndex; i <= endColorIndex; i++) {
+        quint8 trnValue = this->trn->getTranslation(i);
+        this->trn->setTranslation(i, this->modTranslations.at(i - startColorIndex));
+        this->modTranslations.replace(i - startColorIndex, trnValue);
+    }
 
     emit this->modified();
 }
 
-void ClearTranslationsCommand::redo()
+void EditTranslationCommand::redo()
 {
-    if (this->trn.isNull()) {
-        this->setObsolete(true);
-        return;
-    }
-
-    for (int i = startColorIndex; i <= endColorIndex; i++)
-        this->trn->setTranslation(i, i);
-
-    emit this->modified();
+    this->undo();
 }
 
 PaletteScene::PaletteScene(QWidget *v)
@@ -419,9 +371,9 @@ void PaletteWidget::checkTranslationsSelection(QList<quint8> indexes)
 
     // Build color editing command and connect it to the current palette widget
     // to update the PAL/TRN and CEL views when undo/redo is performed
-    EditTranslationsCommand *command = new EditTranslationsCommand(
-        this->trn, this->selectedFirstColorIndex, this->selectedLastColorIndex, indexes);
-    QObject::connect(command, &EditTranslationsCommand::modified, this, &PaletteWidget::modify);
+    EditTranslationCommand *command = new EditTranslationCommand(
+        this->trn, this->selectedFirstColorIndex, this->selectedLastColorIndex, &indexes);
+    QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modify);
 
     this->undoStack->push(command);
 
@@ -860,9 +812,9 @@ void PaletteWidget::on_colorLineEdit_returnPressed()
     if (color.isValid()) {
         // Build color editing command and connect it to the current palette widget
         // to update the PAL/TRN and CEL views when undo/redo is performed
-        EditColorsCommand *command = new EditColorsCommand(
+        EditPaletteCommand *command = new EditPaletteCommand(
             this->pal, this->selectedFirstColorIndex, this->selectedLastColorIndex, color, color);
-        QObject::connect(command, &EditColorsCommand::modified, this, &PaletteWidget::modify);
+        QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modify);
 
         this->undoStack->push(command);
     }
@@ -894,9 +846,9 @@ void PaletteWidget::on_colorPickPushButton_clicked()
     }
     // Build color editing command and connect it to the current palette widget
     // to update the PAL/TRN and CEL views when undo/redo is performed
-    EditColorsCommand *command = new EditColorsCommand(
+    EditPaletteCommand *command = new EditPaletteCommand(
         this->pal, this->selectedFirstColorIndex, this->selectedLastColorIndex, color, colorEnd);
-    QObject::connect(command, &EditColorsCommand::modified, this, &PaletteWidget::modify);
+    QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modify);
 
     this->undoStack->push(command);
 }
@@ -909,9 +861,9 @@ void PaletteWidget::on_colorClearPushButton_clicked()
 
     // Build color editing command and connect it to the current palette widget
     // to update the PAL/TRN and CEL views when undo/redo is performed
-    auto *command = new EditColorsCommand(
+    auto *command = new EditPaletteCommand(
         this->pal, this->selectedFirstColorIndex, this->selectedLastColorIndex, undefinedColor, undefinedColor);
-    QObject::connect(command, &EditColorsCommand::modified, this, &PaletteWidget::modify);
+    QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modify);
 
     this->undoStack->push(command);
 }
@@ -928,9 +880,9 @@ void PaletteWidget::on_translationIndexLineEdit_returnPressed()
 
         // Build translation editing command and connect it to the current palette widget
         // to update the PAL/TRN and CEL views when undo/redo is performed
-        EditTranslationsCommand *command = new EditTranslationsCommand(
-            this->trn, this->selectedFirstColorIndex, this->selectedLastColorIndex, newTranslations);
-        QObject::connect(command, &EditTranslationsCommand::modified, this, &PaletteWidget::modify);
+        EditTranslationCommand *command = new EditTranslationCommand(
+            this->trn, this->selectedFirstColorIndex, this->selectedLastColorIndex, &newTranslations);
+        QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modify);
 
         this->undoStack->push(command);
     }
@@ -957,9 +909,9 @@ void PaletteWidget::on_translationClearPushButton_clicked()
 
     // Build translation clearing command and connect it to the current palette widget
     // to update the PAL/TRN and CEL views when undo/redo is performed
-    auto *command = new ClearTranslationsCommand(
-        this->trn, this->selectedFirstColorIndex, this->selectedLastColorIndex);
-    QObject::connect(command, &ClearTranslationsCommand::modified, this, &PaletteWidget::modify);
+    EditTranslationCommand *command = new EditTranslationCommand(
+        this->trn, this->selectedFirstColorIndex, this->selectedLastColorIndex, nullptr);
+    QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modify);
 
     this->undoStack->push(command);
 }
