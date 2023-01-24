@@ -29,15 +29,15 @@ EditPaletteCommand::EditPaletteCommand(D1Pal *p, quint8 sci, quint8 eci, QColor 
     , startColorIndex(sci)
     , endColorIndex(eci)
 {
-    float step = 1.0f / (endColorIndex - startColorIndex + 1);
+    float step = 1.0f / (eci - sci + 1);
 
-    for (int i = startColorIndex; i <= endColorIndex; i++) {
-        float factor = (i - startColorIndex) * step;
+    for (int i = sci; i <= eci; i++) {
+        float factor = (i - sci) * step;
 
         QColor color(
-            this->newColor.red() * (1 - factor) + this->endColor.red() * factor,
-            this->newColor.green() * (1 - factor) + this->endColor.green() * factor,
-            this->newColor.blue() * (1 - factor) + this->endColor.blue() * factor);
+            nc.red() * (1 - factor) + ec.red() * factor,
+            nc.green() * (1 - factor) + ec.green() * factor,
+            nc.blue() * (1 - factor) + ec.blue() * factor);
 
         this->modColors.append(color);
     }
@@ -75,7 +75,7 @@ EditTranslationCommand::EditTranslationCommand(D1Trn *t, quint8 sci, quint8 eci,
             modTranslations.append(i);
     } else {
         this->modTranslations = *nt;
-    }     
+    }
 }
 
 void EditTranslationCommand::undo()
