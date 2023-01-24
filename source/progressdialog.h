@@ -6,6 +6,8 @@ namespace Ui {
 class ProgressDialog;
 } // namespace Ui
 
+ProgressDialog &dProgress();
+
 class ProgressDialog : public QDialog {
     Q_OBJECT
 

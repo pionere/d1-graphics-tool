@@ -429,7 +429,7 @@ QList<QPair<int, QColor>> clipboardToColors()
         if (hashIdx < 0) {
             break;
         }
-        QColor color = QColor(part.right(7))
+        QColor color = QColor(part.right(7));
         if (!color.isValid()) {
             break;
         }
