@@ -842,7 +842,7 @@ void PaletteWidget::on_actionPaste_triggered()
         if (dstColorIndex > D1PAL_COLORS - 1) {
             continue;
         }
-        this->pal->setColor(i, idxColor.second);
+        this->pal->setColor(dstColorIndex, idxColor.second);
     }
 }
 
