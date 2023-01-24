@@ -49,6 +49,8 @@ ProgressDialog &dProgress();
 class ProgressWidget : public QFrame {
     Q_OBJECT
 
+    friend class ProgressDialog;
+
 public:
     explicit ProgressWidget(QWidget *parent = nullptr);
     ~ProgressWidget();
