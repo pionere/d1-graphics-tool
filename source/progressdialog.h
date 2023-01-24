@@ -55,7 +55,7 @@ private:
     Ui::ProgressDialog *ui;
 
     int textVersion;
-    PROGESS_STATE status = PROGESS_STATE::DONE;
+    PROGRESS_STATE status = PROGRESS_STATE::DONE;
 };
 
 ProgressDialog &dProgress();
@@ -69,7 +69,7 @@ public:
     explicit ProgressWidget(QWidget *parent = nullptr);
     ~ProgressWidget();
 
-    void update(PROGESS_STATE status, bool active);
+    void update(PROGRESS_STATE status, bool active);
 
 private:
     void setLabelText(const QString &text);
