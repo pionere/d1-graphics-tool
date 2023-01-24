@@ -55,6 +55,9 @@ public:
 
     void update();
 
+private:
+    void setLabelText(const QString &text);
+
 private slots:
     void on_openPushButton_clicked();
 

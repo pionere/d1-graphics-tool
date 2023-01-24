@@ -2,6 +2,12 @@
 <ui version="4.0">
  <class>ProgressWidget</class>
  <widget class="QFrame" name="ProgressWidget">
+  <property name="minimumHeight">
+   <number>18</number>
+  </property>
+  <property name="maximumHeight">
+   <number>18</number>
+  </property>
   <property name="frameStyle">
    <set>QFrame::NoFrame</set>
   </property>

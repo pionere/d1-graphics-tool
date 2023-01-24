@@ -7,6 +7,7 @@
 #include "ui_progresswidget.h"
 
 static ProgressDialog *theDialog;
+static ProgressWidget *theWidget;
 
 ProgressDialog::ProgressDialog(QWidget *parent)
     : QDialog(parent)
@@ -27,6 +28,11 @@ ProgressDialog::~ProgressDialog()
 
 void ProgressDialog::start(const QString &label, int maxValue)
 {
+    if (maxValue < 0) {
+        theWidget->setLabelText(label);
+        return;
+    }
+
     theDialog->show();
 
     theDialog->ui->progressLabel->setText(label);
@@ -44,6 +50,7 @@ void ProgressDialog::start(const QString &label, int maxValue)
 void ProgressDialog::done()
 {
     theDialog->hide();
+    theWidget->setLabelText("");
 }
 
 bool ProgressDialog::wasCanceled()
@@ -138,6 +145,8 @@ ProgressWidget::ProgressWidget(QWidget *parent)
     this->ui->setupUi(this);
 
     this->update();
+
+    theWidget = this;
 }
 
 ProgressWidget::~ProgressWidget()
@@ -155,4 +164,10 @@ void ProgressWidget::update()
 void ProgressWidget::on_openPushButton_clicked()
 {
     QMessageBox::warning(nullptr, "Now", "what?");
+}
+
+void ProgressWidget::setLabelText(const QString &text)
+{
+    this->ui->messageLabel->setText(text);
+    this->ui->openPushButton->setIcon(this->style()->standardIcon(text.isEmpty() ? QStyle::SP_BrowserStop : QStyle::SP_BrowserReload));
 }
