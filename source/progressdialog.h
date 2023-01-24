@@ -6,8 +6,6 @@ namespace Ui {
 class ProgressDialog;
 } // namespace Ui
 
-ProgressDialog &dProgress();
-
 class ProgressDialog : public QDialog {
     Q_OBJECT
 
@@ -43,3 +41,5 @@ private:
     int textVersion;
     bool cancelled;
 };
+
+ProgressDialog &dProgress();
