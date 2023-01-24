@@ -8,13 +8,13 @@ class ProgressDialog;
 class ProgressWidget;
 } // namespace Ui
 
-enum class PROGESS_STATE {
+enum class PROGRESS_STATE {
     DONE,
     RUNNING,
     CANCELLED,
 };
 
-enum class PROGESS_DIALOG_STATE {
+enum class PROGRESS_DIALOG_STATE {
     ACTIVE,
     OPEN,
     BACKGROUND,
@@ -27,7 +27,7 @@ public:
     explicit ProgressDialog(QWidget *parent = nullptr);
     ~ProgressDialog();
 
-    static void start(PROGESS_DIALOG_STATE mode, const QString &label, int maxValue);
+    static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int maxValue);
     static void done();
 
     static bool wasCanceled();

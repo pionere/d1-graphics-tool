@@ -26,9 +26,9 @@ ProgressDialog::~ProgressDialog()
     delete ui;
 }
 
-void ProgressDialog::start(PROGESS_DIALOG_STATE mode, const QString &label, int maxValue)
+void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int maxValue)
 {
-    if (mode == PROGESS_DIALOG_STATE::BACKGROUND) {
+    if (mode == PROGRESS_DIALOG_STATE::BACKGROUND) {
         theDialog->ui->progressLabel->setVisible(false);
         theDialog->ui->progressBar->setVisible(false);
         theDialog->ui->progressButtonsWidget->setVisible(false);
@@ -36,14 +36,14 @@ void ProgressDialog::start(PROGESS_DIALOG_STATE mode, const QString &label, int 
         theDialog->ui->closePushButton->setVisible(true);
         theDialog->ui->outputTextEdit->clear();
         theDialog->textVersion = 0;
-        theDialog->status = PROGESS_STATE::RUNNING;
+        theDialog->status = PROGRESS_STATE::RUNNING;
 
         theWidget->ui->messageLabel->setText(label);
-        theWidget->update(theDialog->status, !theDialog->ui->outputTextEdit->toPlainText().isEmpty());
+        theWidget->update(theDialog->status, !theDialog->ui->outputTextEdit->document()->isEmpty());
         return;
     }
 
-    if (mode == PROGESS_DIALOG_STATE::OPEN) {
+    if (mode == PROGRESS_DIALOG_STATE::OPEN) {
         theDialog->showNormal();
         return;
     }
@@ -61,7 +61,7 @@ void ProgressDialog::start(PROGESS_DIALOG_STATE mode, const QString &label, int 
     theDialog->ui->closePushButton->setVisible(false);
     theDialog->ui->outputTextEdit->clear();
     theDialog->textVersion = 0;
-    theDialog->status = PROGESS_STATE::RUNNING;
+    theDialog->status = PROGRESS_STATE::RUNNING;
 }
 
 void ProgressDialog::done()
@@ -73,15 +73,15 @@ void ProgressDialog::done()
     theDialog->ui->progressButtonsWidget->setVisible(false);
     theDialog->ui->detailsGroupBox->setVisible(true);
     theDialog->ui->closePushButton->setVisible(true);
-    theDialog->status = PROGESS_STATE::DONE;
+    theDialog->status = PROGRESS_STATE::DONE;
 
     theWidget->ui->messageLabel->setText("");
-    theWidget->update(theDialog->status, !theDialog->ui->outputTextEdit->toPlainText().isEmpty());
+    theWidget->update(theDialog->status, !theDialog->ui->outputTextEdit->document()->isEmpty());
 }
 
 bool ProgressDialog::wasCanceled()
 {
-    return theDialog->status == PROGESS_STATE::CANCELLED;
+    return theDialog->status == PROGRESS_STATE::CANCELLED;
 }
 
 void ProgressDialog::incValue()
@@ -154,8 +154,8 @@ void ProgressDialog::on_detailsPushButton_clicked()
 
 void ProgressDialog::on_cancelPushButton_clicked()
 {
-    if (this->status == PROGESS_STATE::RUNNING) {
-        this->status = PROGESS_STATE::CANCELLED;
+    if (this->status == PROGRESS_STATE::RUNNING) {
+        this->status = PROGRESS_STATE::CANCELLED;
     }
     this->ui->cancelPushButton->setEnabled(false);
 }
@@ -185,7 +185,7 @@ ProgressWidget::ProgressWidget(QWidget *parent)
 {
     this->ui->setupUi(this);
 
-    this->update(PROGESS_STATE::DONE, false);
+    this->update(PROGRESS_STATE::DONE, false);
 
     theWidget = this;
 }
@@ -195,12 +195,12 @@ ProgressWidget::~ProgressWidget()
     delete ui;
 }
 
-void ProgressWidget::update(PROGESS_STATE status, bool active)
+void ProgressWidget::update(PROGRESS_STATE status, bool active)
 {
     this->ui->openPushButton->setEnabled(active);
     QStyle::StandardPixmap type;
     switch (status) {
-    case PROGESS_STATE::DONE:
+    case PROGRESS_STATE::DONE:
     case PROGRESS_STATE::CANCELLED:
         type = QStyle::SP_BrowserStop;
         break;
@@ -213,5 +213,5 @@ void ProgressWidget::update(PROGESS_STATE status, bool active)
 
 void ProgressWidget::on_openPushButton_clicked()
 {
-    ProgressDialog::start(PROGESS_DIALOG_STATE::OPEN, "", 0);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::OPEN, "", 0);
 }
