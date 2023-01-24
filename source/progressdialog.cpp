@@ -140,6 +140,11 @@ ProgressWidget::ProgressWidget(QWidget *parent)
     this->update();
 }
 
+ProgressWidget::~ProgressWidget()
+{
+    delete ui;
+}
+
 void ProgressWidget::update()
 {
     QStyle::StandardPixmap type = QStyle::SP_FileDialogNewFolder;
