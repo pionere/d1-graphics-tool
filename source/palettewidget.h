@@ -36,6 +36,7 @@ class EditPaletteCommand : public QObject, public QUndoCommand {
 
 public:
     explicit EditPaletteCommand(D1Pal *pal, quint8 startColorIndex, quint8 endColorIndex, QColor newColorStart, QColor newColorEnd, QUndoCommand *parent = nullptr);
+    explicit EditPaletteCommand(D1Pal *pal, quint8 startColorIndex, quint8 endColorIndex, QList<QColor> &modColors, QUndoCommand *parent = nullptr);
     ~EditPaletteCommand() = default;
 
     void undo() override;

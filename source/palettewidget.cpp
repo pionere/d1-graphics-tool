@@ -45,6 +45,15 @@ EditPaletteCommand::EditPaletteCommand(D1Pal *p, quint8 sci, quint8 eci, QColor 
     }
 }
 
+EditPaletteCommand::EditPaletteCommand(D1Pal *p, quint8 sci, quint8 eci, QList<QColor> &mc, QUndoCommand *parent)
+    : QUndoCommand(parent)
+    , pal(p)
+    , startColorIndex(sci)
+    , endColorIndex(eci)
+    , modColors(mc)
+{
+}
+
 void EditPaletteCommand::undo()
 {
     if (this->pal.isNull()) {
@@ -842,15 +851,40 @@ void PaletteWidget::on_actionPaste_triggered()
         startColorIndex = 0;
     }
     int srcColorIndex = colors[0].first;
+    QMap<int, QColor> colorMap;
     for (QPair<int, QColor> &idxColor : colors) {
         int dstColorIndex = startColorIndex + idxColor.first - srcColorIndex;
-        if (dstColorIndex > D1PAL_COLORS - 1) {
+        if (dstColorIndex < 0 || dstColorIndex > D1PAL_COLORS - 1) {
             continue;
         }
-        this->pal->setColor(dstColorIndex, idxColor.second);
+        colorMap[dstColorIndex] = idxColor.second;
     }
 
-    emit this->modified();
+    if (colorMap.isEmpty()) {
+        return;
+    }
+
+    startColorIndex = colorMap.firstKey();
+    int lastColorIndex = colorMap.lastKey();
+    QList<QColor> modColors;
+    for (int i = startColorIndex; i <= endColorIndex; i++) {
+        auto iter = colorMap.find(i);
+        QColor color;
+        if (iter != colorMap.end()) {
+            color = iter->value();
+        } else {
+            color = this->pal->getColor(i);
+        }
+        modColors.append(color);
+    }
+
+    // Build color editing command and connect it to the current palette widget
+    // to update the PAL/TRN and CEL views when undo/redo is performed
+    EditPaletteCommand *command = new EditPaletteCommand(
+        this->pal, startColorIndex, lastColorIndex, modColors);
+    QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modify);
+
+    this->undoStack->push(command);
 }
 
 void PaletteWidget::on_pathComboBox_activated(int index)
