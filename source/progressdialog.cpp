@@ -207,19 +207,19 @@ void ProgressWidget::update(PROGRESS_STATE status, bool active)
     QStyle::StandardPixmap type;
     switch (status) {
     case PROGRESS_STATE::DONE:
-        type = QStyle::SP_DialogOkButton; // QStyle::SP_DialogYesButton
+        type = QStyle::SP_DialogApplyButton; // QStyle::SP_DialogOkButton; // QStyle::SP_DialogYesButton
         break;
     case PROGRESS_STATE::CANCELLED:
-        type = QStyle::SP_DialogCancelButton; // QStyle::SP_DialogNoButton ? // QStyle::SP_MessageBoxWarning; // QStyle::SP_BrowserStop;
+        type = QStyle::SP_MessageBoxWarning; // QStyle::SP_DialogCancelButton; // QStyle::SP_DialogNoButton ? // QStyle::SP_MessageBoxWarning; // QStyle::SP_BrowserStop;
         break;
     case PROGRESS_STATE::RUNNING:
         type = QStyle::SP_BrowserReload;
         break;
     }
     this->ui->openPushButton->setIcon(this->style()->standardIcon(type));
-    // this->repaint();
     this->adjustSize();
-    QFrame::update();
+    this->repaint();
+    // QFrame::update();
 }
 
 void ProgressWidget::on_openPushButton_clicked()
