@@ -45,6 +45,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
 
     if (mode == PROGRESS_DIALOG_STATE::OPEN) {
         theDialog->showNormal();
+        theDialog->adjustSize();
         return;
     }
 
@@ -58,9 +59,9 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     theDialog->ui->cancelPushButton->setEnabled(true);
     theDialog->ui->progressButtonsWidget->setVisible(true);
     theDialog->ui->detailsGroupBox->setVisible(true);
-    theDialog->on_detailsPushButton_clicked();
     theDialog->ui->closePushButton->setVisible(false);
     theDialog->ui->outputTextEdit->clear();
+    theDialog->on_detailsPushButton_clicked();
     theDialog->textVersion = 0;
     theDialog->status = PROGRESS_STATE::RUNNING;
 
@@ -160,6 +161,7 @@ void ProgressDialog::on_cancelPushButton_clicked()
 {
     if (this->status == PROGRESS_STATE::RUNNING) {
         this->status = PROGRESS_STATE::CANCELLED;
+        qProgress() << tr("Process cancelled.");
     }
     this->ui->cancelPushButton->setEnabled(false);
 }
@@ -205,7 +207,7 @@ void ProgressWidget::update(PROGRESS_STATE status, bool active)
     QStyle::StandardPixmap type;
     switch (status) {
     case PROGRESS_STATE::DONE:
-        type = QStyle::SP_DialogYesButton; // QStyle::SP_DialogOkButton;
+        type = QStyle::SP_DialogOkButton; // QStyle::SP_DialogYesButton
         break;
     case PROGRESS_STATE::CANCELLED:
         type = QStyle::SP_MessageBoxWarning; // QStyle::SP_BrowserStop;
@@ -215,7 +217,9 @@ void ProgressWidget::update(PROGRESS_STATE status, bool active)
         break;
     }
     this->ui->openPushButton->setIcon(this->style()->standardIcon(type));
-    this->repaint();
+    // this->repaint();
+    this->adjustSize();
+    QFrame::update();
 }
 
 void ProgressWidget::on_openPushButton_clicked()
