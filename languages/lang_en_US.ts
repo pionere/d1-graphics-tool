@@ -179,12 +179,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="434"/>
+        <location filename="../source/celview.cpp" line="432"/>
         <source>Del Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="435"/>
+        <location filename="../source/celview.cpp" line="433"/>
         <source>Delete the current frame</source>
         <translation type="unfinished"></translation>
     </message>
@@ -895,8 +895,8 @@
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="1567"/>
-        <location filename="../source/levelcelview.cpp" line="1603"/>
-        <location filename="../source/levelcelview.cpp" line="1642"/>
+        <location filename="../source/levelcelview.cpp" line="1599"/>
+        <location filename="../source/levelcelview.cpp" line="1632"/>
         <source>Insert</source>
         <translation type="unfinished"></translation>
     </message>
@@ -907,8 +907,8 @@
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="1572"/>
-        <location filename="../source/levelcelview.cpp" line="1608"/>
-        <location filename="../source/levelcelview.cpp" line="1647"/>
+        <location filename="../source/levelcelview.cpp" line="1604"/>
+        <location filename="../source/levelcelview.cpp" line="1637"/>
         <source>Add</source>
         <translation type="unfinished"></translation>
     </message>
@@ -919,8 +919,8 @@
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="1577"/>
-        <location filename="../source/levelcelview.cpp" line="1613"/>
-        <location filename="../source/levelcelview.cpp" line="1652"/>
+        <location filename="../source/levelcelview.cpp" line="1609"/>
+        <location filename="../source/levelcelview.cpp" line="1642"/>
         <source>Replace</source>
         <translation type="unfinished"></translation>
     </message>
@@ -930,80 +930,80 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1585"/>
-        <location filename="../source/levelcelview.cpp" line="1621"/>
-        <location filename="../source/levelcelview.cpp" line="1660"/>
+        <location filename="../source/levelcelview.cpp" line="1583"/>
+        <location filename="../source/levelcelview.cpp" line="1615"/>
+        <location filename="../source/levelcelview.cpp" line="1648"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1586"/>
+        <location filename="../source/levelcelview.cpp" line="1584"/>
         <source>Delete the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1595"/>
+        <location filename="../source/levelcelview.cpp" line="1591"/>
         <source>Subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1598"/>
-        <location filename="../source/levelcelview.cpp" line="1634"/>
+        <location filename="../source/levelcelview.cpp" line="1594"/>
+        <location filename="../source/levelcelview.cpp" line="1626"/>
         <source>Create</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1599"/>
+        <location filename="../source/levelcelview.cpp" line="1595"/>
         <source>Create a new subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1604"/>
+        <location filename="../source/levelcelview.cpp" line="1600"/>
         <source>Add new subtiles before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1609"/>
+        <location filename="../source/levelcelview.cpp" line="1605"/>
         <source>Add new subtiles at the end</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1614"/>
+        <location filename="../source/levelcelview.cpp" line="1610"/>
         <source>Replace the current subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1622"/>
+        <location filename="../source/levelcelview.cpp" line="1616"/>
         <source>Delete the current subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1631"/>
+        <location filename="../source/levelcelview.cpp" line="1623"/>
         <source>Tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1635"/>
+        <location filename="../source/levelcelview.cpp" line="1627"/>
         <source>Create a new tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1643"/>
+        <location filename="../source/levelcelview.cpp" line="1633"/>
         <source>Add new tiles before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1648"/>
+        <location filename="../source/levelcelview.cpp" line="1638"/>
         <source>Add new tiles at the end</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1653"/>
+        <location filename="../source/levelcelview.cpp" line="1643"/>
         <source>Replace the current tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1661"/>
+        <location filename="../source/levelcelview.cpp" line="1649"/>
         <source>Delete the current tile</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2196,57 +2196,87 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="230"/>
+        <location filename="../source/palettewidget.cpp" line="241"/>
         <source>New</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="231"/>
+        <location filename="../source/palettewidget.cpp" line="242"/>
         <source>Open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="232"/>
+        <location filename="../source/palettewidget.cpp" line="243"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="233"/>
+        <location filename="../source/palettewidget.cpp" line="244"/>
         <source>Save As</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="234"/>
+        <location filename="../source/palettewidget.cpp" line="245"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="333"/>
+        <location filename="../source/palettewidget.cpp" line="344"/>
         <source>Show all colors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="336"/>
+        <location filename="../source/palettewidget.cpp" line="347"/>
         <source>Show all frames hits</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="338"/>
+        <location filename="../source/palettewidget.cpp" line="349"/>
         <source>Show current tile hits</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="339"/>
+        <location filename="../source/palettewidget.cpp" line="350"/>
         <source>Show current subtile hits</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="343"/>
+        <location filename="../source/palettewidget.cpp" line="354"/>
         <source>Show the altered colors</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="476"/>
+        <source>Undo previous color change</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="482"/>
+        <source>Redo previous color change</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="487"/>
+        <source>Copy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="488"/>
+        <source>Copy the selected colors to the clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="493"/>
+        <source>Paste</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="494"/>
+        <source>Paste the colors from the clipboard to the palette</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message numerus="yes">
-        <location filename="../source/palettewidget.cpp" line="614"/>
+        <location filename="../source/palettewidget.cpp" line="676"/>
         <source>&lt;- Select color(s)</source>
         <translation>
             <numerusform>&lt;- Select a color</numerusform>
@@ -2254,27 +2284,27 @@
         </translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="341"/>
+        <location filename="../source/palettewidget.cpp" line="352"/>
         <source>Show current frame hits</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="368"/>
+        <location filename="../source/palettewidget.cpp" line="379"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="368"/>
+        <location filename="../source/palettewidget.cpp" line="379"/>
         <source>Source and target selection length do not match.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="427"/>
+        <location filename="../source/palettewidget.cpp" line="475"/>
         <source>Undo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="432"/>
+        <location filename="../source/palettewidget.cpp" line="481"/>
         <source>Redo</source>
         <translation type="unfinished"></translation>
     </message>
