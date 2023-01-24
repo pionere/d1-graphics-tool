@@ -39,7 +39,7 @@ void ProgressDialog::start(PROGESS_DIALOG_STATE mode, const QString &label, int 
         theDialog->status = PROGESS_STATE::RUNNING;
 
         theWidget->ui->messageLabel->setText(label);
-        theWidget->update(theDialog->status, !theDialog->ui->outputTextEdit.isEmpty());
+        theWidget->update(theDialog->status, !theDialog->ui->outputTextEdit->toPlainText().isEmpty());
         return;
     }
 
@@ -76,7 +76,7 @@ void ProgressDialog::done()
     theDialog->status = PROGESS_STATE::DONE;
 
     theWidget->ui->messageLabel->setText("");
-    theWidget->update(theDialog->status, !theDialog->ui->outputTextEdit.isEmpty());
+    theWidget->update(theDialog->status, !theDialog->ui->outputTextEdit->toPlainText().isEmpty());
 }
 
 bool ProgressDialog::wasCanceled()
@@ -169,6 +169,14 @@ void ProgressDialog::closeEvent(QCloseEvent *e)
 {
     this->on_cancelPushButton_clicked();
     // QDialog::closeEvent(e);
+}
+
+void ProgressDialog::changeEvent(QEvent *e)
+{
+    /*if (event->type() == QEvent::WindowStateChange && this->isMinimized()) {
+        this->hide();
+    }*/
+    return QDialog::changeEvent(e);
 }
 
 ProgressWidget::ProgressWidget(QWidget *parent)

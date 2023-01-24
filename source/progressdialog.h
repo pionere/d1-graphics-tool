@@ -46,6 +46,7 @@ private slots:
 
 protected:
     void closeEvent(QCloseEvent *e) override;
+    void changeEvent(QEvent *e);
 
 private:
     void removeLastLine();
