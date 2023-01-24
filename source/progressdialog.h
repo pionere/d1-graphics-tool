@@ -60,4 +60,4 @@ private slots:
 
 private:
     Ui::ProgressWidget *ui;
-}
+};
