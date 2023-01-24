@@ -3,6 +3,7 @@
 #include <QMessageBox>
 
 #include "ui_progressdialog.h"
+#include "ui_progresswidget.h"
 
 static ProgressDialog *theDialog;
 
