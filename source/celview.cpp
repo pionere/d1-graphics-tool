@@ -307,7 +307,7 @@ void CelView::upscale(const UpscaleParam &params)
 {
     int amount = this->gfx->getFrameCount();
 
-    ProgressDialog::start(tr("Upscaling"), amount + 1);
+    ProgressDialog::start(PROGESS_DIALOG_STATE::ACTIVE, tr("Upscaling..."), amount + 1);
 
     if (Upscaler::upscaleGfx(this->gfx, params)) {
         // update the view

@@ -8,6 +8,19 @@ class ProgressDialog;
 class ProgressWidget;
 } // namespace Ui
 
+class enum PROGESS_STATE {
+    DONE,
+    RUNNING,
+    CANCELLED,
+};
+
+class enum PROGESS_DIALOG_STATE {
+    ACTIVE,
+    OPEN,
+    BACKGROUND,
+};
+
+
 class ProgressDialog : public QDialog {
     Q_OBJECT
 
@@ -15,7 +28,7 @@ public:
     explicit ProgressDialog(QWidget *parent = nullptr);
     ~ProgressDialog();
 
-    static void start(const QString &label, int maxValue);
+    static void start(PROGESS_DIALOG_STATE mode, const QString &label, int maxValue);
     static void done();
 
     static bool wasCanceled();
@@ -30,6 +43,7 @@ public:
 private slots:
     void on_detailsPushButton_clicked();
     void on_cancelPushButton_clicked();
+    void on_closePushButton_clicked();
 
 protected:
     void closeEvent(QCloseEvent *e) override;
@@ -41,7 +55,7 @@ private:
     Ui::ProgressDialog *ui;
 
     int textVersion;
-    bool cancelled;
+    PROGESS_STATE status = PROGESS_STATE::DONE;
 };
 
 ProgressDialog &dProgress();
@@ -55,7 +69,7 @@ public:
     explicit ProgressWidget(QWidget *parent = nullptr);
     ~ProgressWidget();
 
-    void update();
+    void update(PROGESS_STATE status, bool active);
 
 private:
     void setLabelText(const QString &text);
