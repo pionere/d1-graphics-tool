@@ -1,6 +1,7 @@
 #include "progressdialog.h"
 
 #include <QFontMetrics>
+#include <QMessageBox>
 #include <QStyle>
 
 #include "ui_progressdialog.h"
@@ -36,6 +37,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
         theDialog->ui->closePushButton->setVisible(true);
         theDialog->ui->outputTextEdit->clear();
         theDialog->textVersion = 0;
+        theDialog->justFailed = false;
         theDialog->status = PROGRESS_STATE::RUNNING;
 
         theWidget->update(theDialog->status, true, label);
@@ -62,6 +64,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     theDialog->on_detailsPushButton_clicked();
     theDialog->ui->outputTextEdit->clear();
     theDialog->textVersion = 0;
+    theDialog->justFailed = false;
     theDialog->status = PROGRESS_STATE::RUNNING;
 
     theWidget->update(theDialog->status, false, "");
@@ -118,6 +121,7 @@ ProgressDialog &dProgressFail()
 {
     if (theDialog->status < PROGRESS_STATE::FAIL) {
         theDialog->status = PROGRESS_STATE::FAIL;
+        theDialog->justFailed = true;
     }
     return *theDialog;
 }
@@ -126,6 +130,10 @@ ProgressDialog &ProgressDialog::operator<<(const QString &text)
 {
     this->ui->outputTextEdit->appendPlainText(text);
     this->textVersion++;
+    if (this->justFailed) {
+        this->justFailed = false;
+        QMessageBox::critical(nullptr, QApplication::tr("Error"), text);
+    }
     return *this;
 }
 

@@ -8,6 +8,8 @@
 #include <QList>
 #include <QMessageBox>
 
+#include "progressdialog.h"
+
 quint16 D1Cl2Frame::computeWidthFromHeader(QByteArray &rawFrameData)
 {
     QDataStream in(rawFrameData);
@@ -140,7 +142,7 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
                 }
             }
         } else if (readByte == 0x00) {
-            qDebug() << QApplication::tr("0x00 found");
+            dProgressWarn() << QApplication::tr("Invalid CL2 frame data (0x00 found)");
         }
     }
 
@@ -383,7 +385,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
         }
     } else {
         if (numFrames == 0 || (numFrames % numGroups) != 0) {
-            QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Frames can not be split to equal groups."));
+            dProgressFail() << QApplication::tr("Frames can not be split to equal groups.");
             return false;
         }
         groupped = true;
@@ -481,7 +483,7 @@ bool D1Cl2::save(D1Gfx &gfx, const SaveAsParam &params)
 
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly | QFile::Truncate)) {
-        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to open file: %1.").arg(filePath));
+        dProgressFail() << QApplication::tr("Failed to open file: %1.").arg(filePath);
         return false;
     }
 

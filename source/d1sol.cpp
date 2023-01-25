@@ -6,6 +6,8 @@
 #include <QFileInfo>
 #include <QMessageBox>
 
+#include "progressdialog.h"
+
 bool D1Sol::load(QString filePath)
 {
     // prepare file data source
@@ -63,7 +65,7 @@ bool D1Sol::save(const SaveAsParam &params)
 
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly | QFile::Truncate)) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to open file: %1.").arg(filePath));
+        dProgressFail() << tr("Failed to open file: %1.").arg(filePath);
         return false;
     }
 

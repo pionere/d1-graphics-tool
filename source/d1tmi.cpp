@@ -8,6 +8,7 @@
 #include <QMessageBox>
 
 #include "d1sol.h"
+#include "progressdialog.h"
 
 bool D1Tmi::load(QString filePath, D1Sol *sol, const OpenAsParam &params)
 {
@@ -37,7 +38,7 @@ bool D1Tmi::load(QString filePath, D1Sol *sol, const OpenAsParam &params)
     int tmiSubtileCount = fileSize;
     if (tmiSubtileCount != subtileCount) {
         if (tmiSubtileCount != 0) {
-            qDebug() << tr("The size of TMI file does not align with SOL file.");
+            dProgressWarn() << tr("The size of TMI file does not align with SOL file.");
         }
         if (tmiSubtileCount > subtileCount) {
             tmiSubtileCount = subtileCount; // skip unusable data
@@ -80,7 +81,7 @@ bool D1Tmi::save(const SaveAsParam &params)
 
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly | QFile::Truncate)) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to open file: %1.").arg(filePath));
+        dProgressFail() << tr("Failed to open file: %1.").arg(filePath);
         return false;
     }
 
