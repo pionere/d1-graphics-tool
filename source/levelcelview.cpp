@@ -418,7 +418,7 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &
     if (imagefilePath.toLower().endsWith(".pcx")) {
         bool clipped = false;
         D1GfxFrame frame;
-        D1Pal pal = *this->gfx->getPalette();
+        D1Pal pal = D1Pal(*this->gfx->getPalette());
         bool success = D1Pcx::load(frame, imagefilePath, clipped, &pal);
         if (success) {
             success = this->insertFrames(mode, index, frame);
@@ -426,9 +426,7 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &
         if (success) {
             // update the palette
             D1Pal *gfxPal = this->gfx->getPalette();
-            for (int i = 0; i < D1PAL_COLORS; i++) {
-                gfxPal->setColor(i, pal.getColor(i));
-            }
+            gfxPal->updateColors(pal);
             emit this->palModified();
         }
         return;
@@ -623,7 +621,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString
     if (imagefilePath.toLower().endsWith(".pcx")) {
         bool clipped = false;
         D1GfxFrame frame;
-        D1Pal pal = *this->gfx->getPalette();
+        D1Pal pal = D1Pal(*this->gfx->getPalette());
         bool success = D1Pcx::load(frame, imagefilePath, clipped, &pal);
         if (success) {
             success = this->insertSubtiles(mode, index, frame);
@@ -631,9 +629,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString
         if (success) {
             // update the palette
             D1Pal *gfxPal = this->gfx->getPalette();
-            for (int i = 0; i < D1PAL_COLORS; i++) {
-                gfxPal->setColor(i, pal.getColor(i));
-            }
+            gfxPal->updateColors(pal);
             emit this->palModified();
         }
         return;
@@ -925,7 +921,7 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &i
     if (imagefilePath.toLower().endsWith(".pcx")) {
         bool clipped = false;
         D1GfxFrame frame;
-        D1Pal pal = *this->gfx->getPalette();
+        D1Pal pal = D1Pal(*this->gfx->getPalette());
         bool success = D1Pcx::load(frame, imagefilePath, clipped, &pal);
         if (success) {
             success = this->insertTiles(mode, index, frame);
@@ -933,9 +929,7 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &i
         if (success) {
             // update the palette
             D1Pal *gfxPal = this->gfx->getPalette();
-            for (int i = 0; i < D1PAL_COLORS; i++) {
-                gfxPal->setColor(i, pal.getColor(i));
-            }
+            gfxPal->updateColors(pal);
             emit this->palModified();
         }
         return;
@@ -1002,10 +996,7 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
             LevelTabFrameWidget::selectFrameType(&frame);
             this->gfx->setFrame(this->currentFrameIndex, frame);
             // update the palette
-            D1Pal *gfxPal = this->gfx->getPalette();
-            for (int i = 0; i < D1PAL_COLORS; i++) {
-                gfxPal->setColor(i, pal.getColor(i));
-            }
+            gfxPal->updateColors(pal);
             emit this->palModified();
             // update the view
             this->displayFrame();
@@ -1098,7 +1089,7 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
     if (imagefilePath.toLower().endsWith(".pcx")) {
         bool clipped = false;
         D1GfxFrame frame;
-        D1Pal pal = *this->gfx->getPalette();
+        D1Pal pal = D1Pal(*this->gfx->getPalette());
         bool success = D1Pcx::load(frame, imagefilePath, clipped, &pal);
         if (success) {
             if (frame.getWidth() != subtileWidth || frame.getHeight() != subtileHeight) {
@@ -1109,9 +1100,7 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
             this->assignFrames(frame, subtileIndex, this->gfx->getFrameCount());
             // update the palette
             D1Pal *gfxPal = this->gfx->getPalette();
-            for (int i = 0; i < D1PAL_COLORS; i++) {
-                gfxPal->setColor(i, pal.getColor(i));
-            }
+            gfxPal->updateColors(pal);
             emit this->palModified();
             // reset subtile flags
             this->sol->setSubtileProperties(subtileIndex, 0);
@@ -1204,7 +1193,7 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
     if (imagefilePath.toLower().endsWith(".pcx")) {
         bool clipped = false;
         D1GfxFrame frame;
-        D1Pal pal = *this->gfx->getPalette();
+        D1Pal pal = D1Pal(*this->gfx->getPalette());
         bool success = D1Pcx::load(frame, imagefilePath, clipped, &pal);
         if (success) {
             if (frame.getWidth() != tileWidth || frame.getHeight() != tileHeight) {
@@ -1217,9 +1206,7 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
             this->amp->setTileProperties(tileIndex, 0);
             // update the palette
             D1Pal *gfxPal = this->gfx->getPalette();
-            for (int i = 0; i < D1PAL_COLORS; i++) {
-                gfxPal->setColor(i, pal.getColor(i));
-            }
+            gfxPal->updateColors(pal);
             emit this->palModified();
             // update the view
             this->displayFrame();
