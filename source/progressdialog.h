@@ -11,7 +11,10 @@ class ProgressWidget;
 enum class PROGRESS_STATE {
     DONE,
     RUNNING,
+    WARN,
+    ERROR,
     CANCELLED,
+    FAIL,
 };
 
 enum class PROGRESS_DIALOG_STATE {
@@ -34,6 +37,9 @@ public:
     static void incValue();
 
     friend ProgressDialog &dProgress();
+    friend ProgressDialog &dProgressWarn();
+    friend ProgressDialog &dProgressErr();
+    friend ProgressDialog &dProgressFail();
 
     ProgressDialog &operator<<(const QString &text);
     ProgressDialog &operator<<(const QPair<QString, QString> &text);
@@ -59,6 +65,9 @@ private:
 };
 
 ProgressDialog &dProgress();
+ProgressDialog &dProgressWarn();
+ProgressDialog &dProgressErr();
+ProgressDialog &dProgressFail();
 
 class ProgressWidget : public QFrame {
     Q_OBJECT

@@ -3,10 +3,10 @@
  <class>ProgressWidget</class>
  <widget class="QFrame" name="ProgressWidget">
   <property name="minimumHeight">
-   <number>18</number>
+   <number>16</number>
   </property>
   <property name="maximumHeight">
-   <number>18</number>
+   <number>16</number>
   </property>
   <property name="frameStyle">
    <set>QFrame::NoFrame</set>
@@ -16,16 +16,16 @@
     <number>4</number>
    </property>
    <property name="leftMargin">
-    <number>0</number>
+    <number>2</number>
    </property>
    <property name="topMargin">
     <number>0</number>
    </property>
    <property name="rightMargin">
-    <number>0</number>
+    <number>2</number>
    </property>
    <property name="bottomMargin">
-    <number>0</number>
+    <number>2</number>
    </property>
    <item>
     <widget class="QPushButton" name="openPushButton">

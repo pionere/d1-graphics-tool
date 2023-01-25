@@ -78,15 +78,16 @@ void ProgressDialog::done()
     theDialog->ui->progressButtonsWidget->setVisible(false);
     theDialog->ui->detailsGroupBox->setVisible(true);
     theDialog->ui->closePushButton->setVisible(true);
-    theDialog->status = PROGRESS_STATE::DONE;
-
+    if (theDialog->status == PROGRESS_STATE::RUNNING) {
+        theDialog->status = PROGRESS_STATE::DONE;
+    }
     theWidget->ui->messageLabel->setText("");
     theWidget->update(theDialog->status, !theDialog->ui->outputTextEdit->document()->isEmpty());
 }
 
 bool ProgressDialog::wasCanceled()
 {
-    return theDialog->status == PROGRESS_STATE::CANCELLED;
+    return theDialog->status >= PROGRESS_STATE::CANCELLED;
 }
 
 void ProgressDialog::incValue()
@@ -97,6 +98,30 @@ void ProgressDialog::incValue()
 
 ProgressDialog &dProgress()
 {
+    return *theDialog;
+}
+
+ProgressDialog &dProgressWarn()
+{
+    if (this->status < PROGRESS_STATE::WARN) {
+        this->status = PROGRESS_STATE::WARN;
+    }
+    return *theDialog;
+}
+
+ProgressDialog &dProgressErr()
+{
+    if (this->status < PROGRESS_STATE::ERROR) {
+        this->status = PROGRESS_STATE::ERROR;
+    }
+    return *theDialog;
+}
+
+ProgressDialog &dProgressFail()
+{
+    if (this->status < PROGRESS_STATE::FAIL) {
+        this->status = PROGRESS_STATE::FAIL;
+    }
     return *theDialog;
 }
 
@@ -159,7 +184,7 @@ void ProgressDialog::on_detailsPushButton_clicked()
 
 void ProgressDialog::on_cancelPushButton_clicked()
 {
-    if (this->status == PROGRESS_STATE::RUNNING) {
+    if (this->status < PROGRESS_STATE::CANCELLED) {
         this->status = PROGRESS_STATE::CANCELLED;
         dProgress() << tr("Process cancelled.");
     }
@@ -207,13 +232,22 @@ void ProgressWidget::update(PROGRESS_STATE status, bool active)
     QStyle::StandardPixmap type;
     switch (status) {
     case PROGRESS_STATE::DONE:
-        type = QStyle::SP_DialogApplyButton; // QStyle::SP_DialogOkButton; // QStyle::SP_DialogYesButton
-        break;
-    case PROGRESS_STATE::CANCELLED:
-        type = QStyle::SP_MessageBoxWarning; // QStyle::SP_DialogCancelButton; // QStyle::SP_DialogNoButton ? // QStyle::SP_MessageBoxWarning; // QStyle::SP_BrowserStop;
+        type = QStyle::SP_DialogApplyButton;
         break;
     case PROGRESS_STATE::RUNNING:
         type = QStyle::SP_BrowserReload;
+        break;
+    case PROGRESS_STATE::WARN:
+        type = QStyle::SP_MessageBoxWarning;
+        break;
+    case PROGRESS_STATE::ERROR:
+        type = QStyle::SP_MessageBoxCritical;
+        break;
+    case PROGRESS_STATE::CANCELLED:
+        type = QStyle::SP_DialogCancelButton;
+        break;
+    case PROGRESS_STATE::FAIL:
+        type = QStyle::SP_BrowserStop;
         break;
     }
     this->ui->openPushButton->setIcon(this->style()->standardIcon(type));
