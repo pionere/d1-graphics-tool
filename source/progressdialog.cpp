@@ -1,5 +1,6 @@
 #include "progressdialog.h"
 
+#include <QFontMetrics>
 #include <QMessageBox>
 #include <QStyle>
 
@@ -103,24 +104,24 @@ ProgressDialog &dProgress()
 
 ProgressDialog &dProgressWarn()
 {
-    if (this->status < PROGRESS_STATE::WARN) {
-        this->status = PROGRESS_STATE::WARN;
+    if (theDialog->status < PROGRESS_STATE::WARN) {
+        theDialog->status = PROGRESS_STATE::WARN;
     }
     return *theDialog;
 }
 
 ProgressDialog &dProgressErr()
 {
-    if (this->status < PROGRESS_STATE::ERROR) {
-        this->status = PROGRESS_STATE::ERROR;
+    if (theDialog->status < PROGRESS_STATE::ERROR) {
+        theDialog->status = PROGRESS_STATE::ERROR;
     }
     return *theDialog;
 }
 
 ProgressDialog &dProgressFail()
 {
-    if (this->status < PROGRESS_STATE::FAIL) {
-        this->status = PROGRESS_STATE::FAIL;
+    if (theDialog->status < PROGRESS_STATE::FAIL) {
+        theDialog->status = PROGRESS_STATE::FAIL;
     }
     return *theDialog;
 }
@@ -215,7 +216,13 @@ ProgressWidget::ProgressWidget(QWidget *parent)
     , ui(new Ui::ProgressWidget())
 {
     this->ui->setupUi(this);
-
+    int fontHeight = this->fontMetrics().height();
+    QMessageBox::warning(nullptr, "Height", QString::number(fontHeight));
+    this->setMinimumHeight(fontHeight);
+    this->setMaximumHeight(fontHeight);
+    this->ui->openPushButton->setMinimumSize(fontHeight, fontHeight);
+    this->ui->openPushButton->setMaximumSize(fontHeight, fontHeight);
+    this->ui->openPushButton->setIconSize(QSize(fontHeight, fontHeight));
     this->update(PROGRESS_STATE::DONE, false);
 
     theWidget = this;
