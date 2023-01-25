@@ -431,7 +431,12 @@ bool MainWindow::hasImageUrl(const QMimeData *mimeData)
     QMimeDatabase mimeDB;
 
     for (const QUrl &url : mimeData->urls()) {
-        QMimeType mimeType = mimeDB.mimeTypeForFile(url.toLocalFile());
+        QString fileName = url.toLocalFile();
+        // add PCX support
+        if (fileName.toLower().endsWidth(".pcx")) {
+            return true;
+        }
+        QMimeType mimeType = mimeDB.mimeTypeForFile(fileName);
         for (const QByteArray &mimeTypeName : supportedMimeTypes) {
             if (mimeType.inherits(mimeTypeName)) {
                 return true;
@@ -724,6 +729,9 @@ void MainWindow::openFile(const OpenAsParam &params)
 
         // Refresh palette widgets when frame, subtile of tile is changed
         QObject::connect(this->levelCelView, &LevelCelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
+
+        // Refresh palette widgets when the palette is changed (loading a PCX file)
+        QObject::connect(this->levelCelView, &LevelCelView::palModified, this->palWidget, &PaletteWidget::refresh);
     } else {
         // build a CelView
         this->celView = new CelView();
@@ -734,6 +742,9 @@ void MainWindow::openFile(const OpenAsParam &params)
 
         // Refresh palette widgets when frame
         QObject::connect(this->celView, &CelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
+
+        // Refresh palette widgets when the palette is changed (loading a PCX file)
+        QObject::connect(this->celView, &CelView::palModified, this->palWidget, &PaletteWidget::refresh);
     }
 
     // Initialize palette widgets
@@ -943,6 +954,10 @@ static QString imageNameFilter()
             }
         }
     }
+    // add PCX support
+    allSupportedFormats.append(".pcx");
+    allSupportedFormats.append(".PCX");
+
     QString allSupportedFormatsFilter = QApplication::tr("Image files (%1)").arg(allSupportedFormats.join(' '));
     return allSupportedFormatsFilter;
 }

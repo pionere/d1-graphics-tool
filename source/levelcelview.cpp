@@ -330,6 +330,49 @@ void LevelCelView::assignFrames(const QImage &image, int subtileIndex, int frame
     }
 }
 
+void LevelCelView::assignFrames(const D1GfxFrame &frame, int subtileIndex, int frameIndex)
+{
+    QList<quint16> frameReferencesList;
+
+    // TODO: merge with LevelCelView::insertSubtile ?
+    for (int y = 0; y < frame.height(); y += MICRO_HEIGHT) {
+        for (int x = 0; x < frame.width(); x += MICRO_WIDTH) {
+            bool hasColor = false;
+            for (int j = 0; j < MICRO_HEIGHT; j++) {
+                for (int i = 0; i < MICRO_WIDTH; i++) {
+                    if (!frame.getPixel(x + i, y + j).isTransparent()) {
+                        hasColor = true;
+                    }
+                }
+            }
+            frameReferencesList.append(hasColor ? frameIndex + 1 : 0);
+            if (!hasColor) {
+                continue;
+            }
+
+            bool clipped;
+            D1GfxFrame *subFrame = this->gfx->insertFrame(frameIndex, &clipped);
+            for (int j = 0; j < MICRO_HEIGHT; j++) {
+                QList<D1GfxPixel> pixelLine;
+                for (int i = 0; i < MICRO_WIDTH; i++) {
+                    pixelLine.append(frame.getPixel(x + i, y + j));
+                }
+                subFrame->addPixelLine(pixelLine);
+            }
+            LevelTabFrameWidget::selectFrameType(*subFrame);
+            frameIndex++;
+        }
+    }
+
+    if (subtileIndex >= 0) {
+        this->min->getFrameReferences(subtileIndex).swap(frameReferencesList);
+        this->min->setModified();
+        // reset subtile flags
+        this->sol->setSubtileProperties(subtileIndex, 0);
+        this->tmi->setSubtileProperties(subtileIndex, 0);
+    }
+}
+
 void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QImage &image)
 {
     if ((image.width() % MICRO_WIDTH) != 0 || (image.height() % MICRO_HEIGHT) != 0) {
@@ -349,8 +392,47 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QImage &i
     this->assignFrames(image, -1, index);
 }
 
+bool LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const D1GfxFrame &frame)
+{
+    if ((frame.width() % MICRO_WIDTH) != 0 || (frame.height() % MICRO_HEIGHT) != 0) {
+        return false;
+    }
+
+    if (mode == IMAGE_FILE_MODE::AUTO) {
+        // check for subtile dimensions to be more lenient than EXPORT_LVLFRAMES_PER_LINE
+        unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+        unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+        if ((frame.width() % subtileWidth) == 0 && (frame.height() % subtileHeight) == 0) {
+            return false; // this is a subtile or a tile (or subtiles or tiles) -> ignore
+        }
+    }
+
+    this->assignFrames(frame, -1, index);
+    return true;
+}
+
 void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
 {
+    if (imagefilePath.toLower().endsWith(".pcx")) {
+        bool clipped = false;
+        D1GfxFrame frame;
+        D1Pal pal = *this->gfx->getPalette();
+        bool success = D1Pcx::load(*frame, imagefilePath, clipped, &pal);
+        if (success) {
+            success = this->insertFrames(mode, index, frame);
+        }
+        if (success) {
+            // update the palette
+            D1Pal *gfxPal = this->gfx->getPalette();
+            for (int i = 0; i < D1PAL_COLORS; i++) {
+                gfxPal->setColor(i, pal.getColor(i));
+            }
+            emit this->palModified();
+        }
+        return;
+    }
+
     QImageReader reader = QImageReader(imagefilePath);
     int numImages = 0;
 
@@ -448,6 +530,52 @@ void LevelCelView::assignSubtiles(const QImage &image, int tileIndex, int subtil
     }
 }
 
+void LevelCelView::assignSubtiles(const D1GfxFrame &frame, int tileIndex, int subtileIndex)
+{
+    QList<quint16> *subtileIndices = nullptr;
+    if (tileIndex >= 0) {
+        subtileIndices = &this->til->getSubtileIndices(tileIndex);
+        subtileIndices->clear();
+        this->til->setModified();
+    }
+    // TODO: merge with LevelCelView::insertTile ?
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    for (int y = 0; y < frame.height(); y += subtileHeight) {
+        for (int x = 0; x < frame.width(); x += subtileWidth) {
+            D1GfxFrame subFrame;
+            bool hasColor = false;
+            for (unsigned j = 0; j < subtileHeight; j++) {
+                QList<D1GfxPixel> pixelLine;
+                for (unsigned i = 0; i < subtileWidth; i++) {
+                    D1GfxPixel pixel = frame.getPixel(x + i, y + j);
+                    if (!pixel.isTransparent()) {
+                        hasColor = true;
+                    }
+                    pixelLine.append(pixel);
+                }
+                subFrame.addPixelLine(pixelLine);
+            }
+            if (!hasColor) {
+                continue;
+            }
+
+            subFrame.setWidth(subtileWidth);
+            subFrame.setHeight(subtileHeight);
+
+            if (subtileIndices != nullptr) {
+                subtileIndices->append(subtileIndex);
+            } else if (!hasColor) {
+                continue;
+            }
+
+            this->insertSubtile(subtileIndex, subFrame);
+            subtileIndex++;
+        }
+    }
+}
+
 void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QImage &image)
 {
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
@@ -470,8 +598,49 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QImage 
     this->assignSubtiles(image, -1, index);
 }
 
+void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame &frame)
+{
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    if ((frame.width() % subtileWidth) != 0 || (frame.height() % subtileHeight) != 0) {
+        return;
+    }
+
+    if (mode == IMAGE_FILE_MODE::AUTO) {
+        // check for tile dimensions to be more lenient than EXPORT_SUBTILES_PER_LINE
+        unsigned tileWidth = subtileWidth * TILE_WIDTH * TILE_HEIGHT;
+        unsigned tileHeight = subtileHeight;
+
+        if ((frame.width() % tileWidth) == 0 && (frame.height() % tileHeight) == 0) {
+            return; // this is a tile (or tiles) -> ignore
+        }
+    }
+
+    this->assignSubtiles(frame, -1, index);
+}
+
 void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
 {
+    if (imagefilePath.toLower().endsWith(".pcx")) {
+        bool clipped = false;
+        D1GfxFrame frame;
+        D1Pal pal = *this->gfx->getPalette();
+        bool success = D1Pcx::load(*frame, imagefilePath, clipped, &pal);
+        if (success) {
+            success = this->insertSubtiles(mode, index, frame);
+        }
+        if (success) {
+            // update the palette
+            D1Pal *gfxPal = this->gfx->getPalette();
+            for (int i = 0; i < D1PAL_COLORS; i++) {
+                gfxPal->setColor(i, pal.getColor(i));
+            }
+            emit this->palModified();
+        }
+        return;
+    }
+
     QImageReader reader = QImageReader(imagefilePath);
     int numImages = 0;
 
@@ -557,7 +726,48 @@ void LevelCelView::insertSubtile(int subtileIndex, const QImage &image)
                 continue;
             }
 
-            this->gfx->insertFrame(frameIndex, subImage);
+            D1GfxFrame *frame = this->gfx->insertFrame(frameIndex, subImage);
+            LevelTabFrameWidget::selectFrameType(frame);
+            frameIndex++;
+        }
+    }
+    this->min->insertSubtile(subtileIndex, frameReferencesList);
+    this->sol->insertSubtile(subtileIndex, 0);
+    this->tmi->insertSubtile(subtileIndex, 0);
+}
+
+void LevelCelView::insertSubtile(int subtileIndex, const D1GfxFrame &frame)
+{
+    QList<quint16> frameReferencesList;
+
+    int frameIndex = this->gfx->getFrameCount();
+    for (int y = 0; y < frame.height(); y += MICRO_HEIGHT) {
+        for (int x = 0; x < frame.width(); x += MICRO_WIDTH) {
+            bool hasColor = false;
+            for (int j = 0; j < MICRO_HEIGHT; j++) {
+                for (int i = 0; i < MICRO_WIDTH; i++) {
+                    if (!frame.getPixel(x + i, y + j).isTransparent()) {
+                        hasColor = true;
+                    }
+                }
+            }
+
+            frameReferencesList.append(hasColor ? frameIndex + 1 : 0);
+
+            if (!hasColor) {
+                continue;
+            }
+
+            bool clipped;
+            D1GfxFrame *subFrame = this->gfx->insertFrame(frameIndex, &clipped);
+            for (int j = 0; j < MICRO_HEIGHT; j++) {
+                QList<D1GfxPixel> pixelLine;
+                for (int i = 0; i < MICRO_WIDTH; i++) {
+                    pixelLine.append(frame.getPixel(x + i, y + j));
+                }
+                subFrame->addPixelLine(pixelLine);
+            }
+            LevelTabFrameWidget::selectFrameType(*subFrame);
             frameIndex++;
         }
     }
@@ -592,6 +802,37 @@ void LevelCelView::insertTile(int tileIndex, const QImage &image)
             int index = this->min->getSubtileCount();
             subtileIndices.append(index);
             this->insertSubtile(index, subImage);
+        }
+    }
+
+    this->til->insertTile(tileIndex, subtileIndices);
+}
+
+void LevelCelView::insertTile(int tileIndex, const D1GfxFrame &frame)
+{
+    QList<quint16> subtileIndices;
+
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    for (int y = 0; y < frame.height(); y += subtileHeight) {
+        for (int x = 0; x < frame.width(); x += subtileWidth) {
+            bool clipped;
+
+            D1GfxFrame subFrame;
+            for (unsigned j = 0; j < subtileHeight; j++) {
+                QList<D1GfxPixel> pixelLine;
+                for (unsigned i = 0; i < subtileWidth; i++) {
+                    pixelLine.append(frame.getPixel(x + i, y + j));
+                }
+                subFrame.addPixelLine(pixelLine);
+            }
+            subFrame.setWidth(subtileWidth);
+            subFrame.setHeight(subtileHeight);
+
+            int index = this->min->getSubtileCount();
+            subtileIndices.append(index);
+            this->insertSubtile(index, subFrame);
         }
     }
 
@@ -641,8 +882,72 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QImage &im
     }
 }
 
+void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame &frame)
+{
+    unsigned tileWidth = this->min->getSubtileWidth() * MICRO_WIDTH * TILE_WIDTH * TILE_HEIGHT;
+    unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    if ((frame.width() % tileWidth) != 0 || (frame.height() % tileHeight) != 0) {
+        return;
+    }
+
+    /*if (mode == IMAGE_FILE_MODE::AUTO
+        && (frame.width() != subtileWidth || frame.height() != subtileHeight) && frame.width() != subtileWidth * EXPORT_TILES_PER_LINE) {
+        // not a column of tiles
+        // not a row or tiles
+        // not a grouped tiles from an export -> ignore
+        return;
+    }*/
+
+    for (int y = 0; y < frame.height(); y += tileHeight) {
+        for (int x = 0; x < frame.width(); x += tileWidth) {
+            D1GfxFrame subFrame;
+            bool hasColor = false;
+            for (unsigned j = 0; j < tileHeight; j++) {
+                QList<D1GfxPixel> pixelLine;
+                for (unsigned i = 0; i < tileWidth; i++) {
+                    D1GfxPixel pixel = frame.getPixel(x + i, y + j);
+                    if (!pixel.isTransparent()) {
+                        hasColor = true;
+                    }
+                    pixelLine.append(pixel);
+                }
+                subFrame.addPixelLine(pixelLine);
+            }
+            if (!hasColor) {
+                continue;
+            }
+
+            subFrame.setWidth(subtileWidth);
+            subFrame.setHeight(subtileHeight);
+
+            this->insertTile(index, subFrame);
+            index++;
+        }
+    }
+}
+
 void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
 {
+    if (imagefilePath.toLower().endsWith(".pcx")) {
+        bool clipped = false;
+        D1GfxFrame frame;
+        D1Pal pal = *this->gfx->getPalette();
+        bool success = D1Pcx::load(*frame, imagefilePath, clipped, &pal);
+        if (success) {
+            success = this->insertTiles(mode, index, frame);
+        }
+        if (success) {
+            // update the palette
+            D1Pal *gfxPal = this->gfx->getPalette();
+            for (int i = 0; i < D1PAL_COLORS; i++) {
+                gfxPal->setColor(i, pal.getColor(i));
+            }
+            emit this->palModified();
+        }
+        return;
+    }
+
     QImageReader reader = QImageReader(imagefilePath);
     int numImages = 0;
 
@@ -691,6 +996,30 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, const QStringList &imagefil
 
 void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
 {
+    if (imagefilePath.toLower().endsWith(".pcx")) {
+        bool clipped = false;
+        D1GfxFrame frame;
+        D1Pal pal = *this->gfx->getPalette();
+        bool success = D1Pcx::load(*frame, imagefilePath, clipped, &pal);
+        if (success) {
+            if (frame.width() != MICRO_WIDTH || frame.height() != MICRO_HEIGHT) {
+                QMessageBox::warning(this, tr("Warning"), tr("The image must be 32px * 32px to be used as a frame."));
+                return;
+            }
+            LevelTabFrameWidget::selectFrameType(frame);
+            this->gfx->setFrame(this->currentFrameIndex, frame);
+            // update the palette
+            D1Pal *gfxPal = this->gfx->getPalette();
+            for (int i = 0; i < D1PAL_COLORS; i++) {
+                gfxPal->setColor(i, pal.getColor(i));
+            }
+            emit this->palModified();
+            // update the view
+            this->displayFrame();
+        }
+        return;
+    }
+
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
@@ -770,15 +1099,42 @@ void LevelCelView::createSubtile()
 
 void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
 {
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    if (imagefilePath.toLower().endsWith(".pcx")) {
+        bool clipped = false;
+        D1GfxFrame frame;
+        D1Pal pal = *this->gfx->getPalette();
+        bool success = D1Pcx::load(*frame, imagefilePath, clipped, &pal);
+        if (success) {
+            if (frame.width() != subtileWidth || frame.height() != subtileHeight) {
+                QMessageBox::warning(this, tr("Warning"), tr("The image must be %1px * %2px to be used as a subtile.").arg(subtileWidth).arg(subtileHeight));
+                return;
+            }
+            int subtileIndex = this->currentSubtileIndex;
+            this->assignFrames(frame, subtileIndex, this->gfx->getFrameCount());
+            // update the palette
+            D1Pal *gfxPal = this->gfx->getPalette();
+            for (int i = 0; i < D1PAL_COLORS; i++) {
+                gfxPal->setColor(i, pal.getColor(i));
+            }
+            emit this->palModified();
+            // reset subtile flags
+            this->sol->setSubtileProperties(subtileIndex, 0);
+            this->tmi->setSubtileProperties(subtileIndex, 0);
+            // update the view
+            this->displayFrame();
+        }
+        return;
+    }
+
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
         QMessageBox::critical(nullptr, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
         return;
     }
-
-    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
-    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     if (image.width() != subtileWidth || image.height() != subtileHeight) {
         QMessageBox::warning(this, tr("Warning"), tr("The image must be %1px * %2px to be used as a subtile.").arg(subtileWidth).arg(subtileHeight));
@@ -787,6 +1143,10 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
 
     int subtileIndex = this->currentSubtileIndex;
     this->assignFrames(image, subtileIndex, this->gfx->getFrameCount());
+
+    // reset subtile flags
+    this->sol->setSubtileProperties(subtileIndex, 0);
+    this->tmi->setSubtileProperties(subtileIndex, 0);
 
     // update the view
     this->displayFrame();
@@ -845,15 +1205,41 @@ void LevelCelView::createTile()
 
 void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
 {
+    unsigned tileWidth = this->min->getSubtileWidth() * MICRO_WIDTH * TILE_WIDTH * TILE_HEIGHT;
+    unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    if (imagefilePath.toLower().endsWith(".pcx")) {
+        bool clipped = false;
+        D1GfxFrame frame;
+        D1Pal pal = *this->gfx->getPalette();
+        bool success = D1Pcx::load(*frame, imagefilePath, clipped, &pal);
+        if (success) {
+            if (frame.width() != tileWidth || frame.height() != tileHeight) {
+                QMessageBox::warning(this, tr("Warning"), tr("The image must be %1px * %2px to be used as a tile.").arg(tileWidth).arg(tileHeight));
+                return;
+            }
+            int tileIndex = this->currentTileIndex;
+            this->assignSubtiles(image, tileIndex, this->min->getSubtileCount());
+            // reset tile flags
+            this->amp->setTileProperties(tileIndex, 0);
+            // update the palette
+            D1Pal *gfxPal = this->gfx->getPalette();
+            for (int i = 0; i < D1PAL_COLORS; i++) {
+                gfxPal->setColor(i, pal.getColor(i));
+            }
+            emit this->palModified();
+            // update the view
+            this->displayFrame();
+        }
+        return;
+    }
+
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
         QMessageBox::critical(nullptr, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
         return;
     }
-
-    unsigned tileWidth = this->min->getSubtileWidth() * MICRO_WIDTH * TILE_WIDTH * TILE_HEIGHT;
-    unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     if (image.width() != tileWidth || image.height() != tileHeight) {
         QMessageBox::warning(this, tr("Warning"), tr("The image must be %1px * %2px to be used as a tile.").arg(tileWidth).arg(tileHeight));

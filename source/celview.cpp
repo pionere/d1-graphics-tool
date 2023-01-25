@@ -258,6 +258,20 @@ void CelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefil
 
 void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
 {
+    if (imagefilePath.toLower().endsWith(".pcx")) {
+        bool wasModified = this->gfx->isModified();
+        bool clipped;
+        D1GfxFrame *frame = this->gfx->insertFrame(index, &clipped);
+        D1Pal *pal = this->gfx->getPalette();
+        if (!D1Pcx::load(*frame, imagefilePath, clipped, pal)) {
+            this->gfx->removeFrame(index);
+            this->gfx->setModified(wasModified);
+        }
+        if (pal->isModified()) {
+            emit this->palModified();
+        }
+        return;
+    }
     QImageReader reader = QImageReader(imagefilePath);
     int numImages = 0;
 

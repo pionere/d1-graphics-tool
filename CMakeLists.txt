@@ -68,6 +68,8 @@ set(PROJECT_SOURCES
         source/d1pal.h
         source/d1palhits.cpp
         source/d1palhits.h
+        source/d1pcx.cpp
+        source/d1pcx.h
         source/d1sol.cpp
         source/d1sol.h
         source/d1til.cpp

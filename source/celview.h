@@ -48,6 +48,7 @@ private slots:
 signals:
     void framePixelClicked(unsigned x, unsigned y);
     void showContextMenu(const QPoint &pos);
+    void palModified();
 
 private:
     QWidget *view;
