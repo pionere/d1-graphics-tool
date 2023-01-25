@@ -609,7 +609,7 @@ bool LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const D1GfxFr
         unsigned tileHeight = subtileHeight;
 
         if ((frame.getWidth() % tileWidth) == 0 && (frame.getHeight() % tileHeight) == 0) {
-            return; // this is a tile (or tiles) -> ignore
+            return false; // this is a tile (or tiles) -> ignore
         }
     }
 
