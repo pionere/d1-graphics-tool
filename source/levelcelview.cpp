@@ -594,13 +594,13 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QImage 
     this->assignSubtiles(image, -1, index);
 }
 
-void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame &frame)
+bool LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame &frame)
 {
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     if ((frame.getWidth() % subtileWidth) != 0 || (frame.getHeight() % subtileHeight) != 0) {
-        return;
+        return false;
     }
 
     if (mode == IMAGE_FILE_MODE::AUTO) {
@@ -614,6 +614,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const D1GfxFr
     }
 
     this->assignSubtiles(frame, -1, index);
+    return true;
 }
 
 void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
@@ -874,13 +875,13 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QImage &im
     }
 }
 
-void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame &frame)
+bool LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame &frame)
 {
     unsigned tileWidth = this->min->getSubtileWidth() * MICRO_WIDTH * TILE_WIDTH * TILE_HEIGHT;
     unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     if ((frame.getWidth() % tileWidth) != 0 || (frame.getHeight() % tileHeight) != 0) {
-        return;
+        return false;
     }
 
     /*if (mode == IMAGE_FILE_MODE::AUTO
@@ -888,7 +889,7 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame
         // not a column of tiles
         // not a row or tiles
         // not a grouped tiles from an export -> ignore
-        return;
+        return false;
     }*/
 
     for (int y = 0; y < frame.getHeight(); y += tileHeight) {
@@ -914,6 +915,7 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame
             index++;
         }
     }
+    return true;
 }
 
 void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)

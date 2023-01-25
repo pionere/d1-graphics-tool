@@ -24,7 +24,7 @@ public:
     static constexpr const char *DEFAULT_NAME = "_default.pal";
 
     D1Pal() = default;
-    D1Pal(const D1Pal &opal);
+    D1Pal(const D1Pal &opal) = default;
     ~D1Pal() = default;
 
     bool load(QString path);
