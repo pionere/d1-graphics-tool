@@ -7,6 +7,16 @@
 
 #include "config.h"
 
+D1Pal::D1Pal(const D1Pal &opal)
+    : QObject()
+{
+    this->palFilePath = opal.palFilePath;
+    this->modified = opal.modified;
+    this->undefinedColor = opal.undefinedColor;
+    this->currentCycleCounter = opal.currentCycleCounter;
+    this->updateColors(opal);
+}
+
 bool D1Pal::load(QString filePath)
 {
     QFile file = QFile(filePath);

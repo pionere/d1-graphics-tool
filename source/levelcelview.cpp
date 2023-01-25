@@ -998,6 +998,7 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
             LevelTabFrameWidget::selectFrameType(&frame);
             this->gfx->setFrame(this->currentFrameIndex, frame);
             // update the palette
+            D1Pal *gfxPal = this->gfx->getPalette();
             gfxPal->updateColors(pal);
             emit this->palModified();
             // update the view
