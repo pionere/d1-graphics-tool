@@ -19,6 +19,7 @@
 
 #include "config.h"
 #include "d1image.h"
+#include "d1pcx.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
 #include "ui_levelcelview.h"
@@ -335,8 +336,8 @@ void LevelCelView::assignFrames(const D1GfxFrame &frame, int subtileIndex, int f
     QList<quint16> frameReferencesList;
 
     // TODO: merge with LevelCelView::insertSubtile ?
-    for (int y = 0; y < frame.height(); y += MICRO_HEIGHT) {
-        for (int x = 0; x < frame.width(); x += MICRO_WIDTH) {
+    for (int y = 0; y < frame.getHeight(); y += MICRO_HEIGHT) {
+        for (int x = 0; x < frame.getWidth(); x += MICRO_WIDTH) {
             bool hasColor = false;
             for (int j = 0; j < MICRO_HEIGHT; j++) {
                 for (int i = 0; i < MICRO_WIDTH; i++) {
@@ -359,7 +360,7 @@ void LevelCelView::assignFrames(const D1GfxFrame &frame, int subtileIndex, int f
                 }
                 subFrame->addPixelLine(pixelLine);
             }
-            LevelTabFrameWidget::selectFrameType(*subFrame);
+            LevelTabFrameWidget::selectFrameType(subFrame);
             frameIndex++;
         }
     }
@@ -394,7 +395,7 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QImage &i
 
 bool LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const D1GfxFrame &frame)
 {
-    if ((frame.width() % MICRO_WIDTH) != 0 || (frame.height() % MICRO_HEIGHT) != 0) {
+    if ((frame.getWidth() % MICRO_WIDTH) != 0 || (frame.getHeight() % MICRO_HEIGHT) != 0) {
         return false;
     }
 
@@ -403,7 +404,7 @@ bool LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const D1GfxFram
         unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
         unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
-        if ((frame.width() % subtileWidth) == 0 && (frame.height() % subtileHeight) == 0) {
+        if ((frame.getWidth() % subtileWidth) == 0 && (frame.getHeight() % subtileHeight) == 0) {
             return false; // this is a subtile or a tile (or subtiles or tiles) -> ignore
         }
     }
@@ -542,8 +543,8 @@ void LevelCelView::assignSubtiles(const D1GfxFrame &frame, int tileIndex, int su
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
-    for (int y = 0; y < frame.height(); y += subtileHeight) {
-        for (int x = 0; x < frame.width(); x += subtileWidth) {
+    for (int y = 0; y < frame.getHeight(); y += subtileHeight) {
+        for (int x = 0; x < frame.getWidth(); x += subtileWidth) {
             D1GfxFrame subFrame;
             bool hasColor = false;
             for (unsigned j = 0; j < subtileHeight; j++) {
@@ -603,7 +604,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const D1GfxFr
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
-    if ((frame.width() % subtileWidth) != 0 || (frame.height() % subtileHeight) != 0) {
+    if ((frame.getWidth() % subtileWidth) != 0 || (frame.getHeight() % subtileHeight) != 0) {
         return;
     }
 
@@ -612,7 +613,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const D1GfxFr
         unsigned tileWidth = subtileWidth * TILE_WIDTH * TILE_HEIGHT;
         unsigned tileHeight = subtileHeight;
 
-        if ((frame.width() % tileWidth) == 0 && (frame.height() % tileHeight) == 0) {
+        if ((frame.getWidth() % tileWidth) == 0 && (frame.getHeight() % tileHeight) == 0) {
             return; // this is a tile (or tiles) -> ignore
         }
     }
@@ -741,8 +742,8 @@ void LevelCelView::insertSubtile(int subtileIndex, const D1GfxFrame &frame)
     QList<quint16> frameReferencesList;
 
     int frameIndex = this->gfx->getFrameCount();
-    for (int y = 0; y < frame.height(); y += MICRO_HEIGHT) {
-        for (int x = 0; x < frame.width(); x += MICRO_WIDTH) {
+    for (int y = 0; y < frame.getHeight(); y += MICRO_HEIGHT) {
+        for (int x = 0; x < frame.getWidth(); x += MICRO_WIDTH) {
             bool hasColor = false;
             for (int j = 0; j < MICRO_HEIGHT; j++) {
                 for (int i = 0; i < MICRO_WIDTH; i++) {
@@ -767,7 +768,7 @@ void LevelCelView::insertSubtile(int subtileIndex, const D1GfxFrame &frame)
                 }
                 subFrame->addPixelLine(pixelLine);
             }
-            LevelTabFrameWidget::selectFrameType(*subFrame);
+            LevelTabFrameWidget::selectFrameType(subFrame);
             frameIndex++;
         }
     }
@@ -815,8 +816,8 @@ void LevelCelView::insertTile(int tileIndex, const D1GfxFrame &frame)
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
-    for (int y = 0; y < frame.height(); y += subtileHeight) {
-        for (int x = 0; x < frame.width(); x += subtileWidth) {
+    for (int y = 0; y < frame.getHeight(); y += subtileHeight) {
+        for (int x = 0; x < frame.getWidth(); x += subtileWidth) {
             bool clipped;
 
             D1GfxFrame subFrame;
@@ -887,20 +888,20 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame
     unsigned tileWidth = this->min->getSubtileWidth() * MICRO_WIDTH * TILE_WIDTH * TILE_HEIGHT;
     unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
-    if ((frame.width() % tileWidth) != 0 || (frame.height() % tileHeight) != 0) {
+    if ((frame.getWidth() % tileWidth) != 0 || (frame.getHeight() % tileHeight) != 0) {
         return;
     }
 
     /*if (mode == IMAGE_FILE_MODE::AUTO
-        && (frame.width() != subtileWidth || frame.height() != subtileHeight) && frame.width() != subtileWidth * EXPORT_TILES_PER_LINE) {
+        && (frame.getWidth() != subtileWidth || frame.getHeight() != subtileHeight) && frame.getWidth() != subtileWidth * EXPORT_TILES_PER_LINE) {
         // not a column of tiles
         // not a row or tiles
         // not a grouped tiles from an export -> ignore
         return;
     }*/
 
-    for (int y = 0; y < frame.height(); y += tileHeight) {
-        for (int x = 0; x < frame.width(); x += tileWidth) {
+    for (int y = 0; y < frame.getHeight(); y += tileHeight) {
+        for (int x = 0; x < frame.getWidth(); x += tileWidth) {
             D1GfxFrame subFrame;
             bool hasColor = false;
             for (unsigned j = 0; j < tileHeight; j++) {
@@ -1002,11 +1003,11 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
         D1Pal pal = *this->gfx->getPalette();
         bool success = D1Pcx::load(*frame, imagefilePath, clipped, &pal);
         if (success) {
-            if (frame.width() != MICRO_WIDTH || frame.height() != MICRO_HEIGHT) {
+            if (frame.getWidth() != MICRO_WIDTH || frame.getHeight() != MICRO_HEIGHT) {
                 QMessageBox::warning(this, tr("Warning"), tr("The image must be 32px * 32px to be used as a frame."));
                 return;
             }
-            LevelTabFrameWidget::selectFrameType(frame);
+            LevelTabFrameWidget::selectFrameType(&frame);
             this->gfx->setFrame(this->currentFrameIndex, frame);
             // update the palette
             D1Pal *gfxPal = this->gfx->getPalette();
@@ -1108,7 +1109,7 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
         D1Pal pal = *this->gfx->getPalette();
         bool success = D1Pcx::load(*frame, imagefilePath, clipped, &pal);
         if (success) {
-            if (frame.width() != subtileWidth || frame.height() != subtileHeight) {
+            if (frame.getWidth() != subtileWidth || frame.getHeight() != subtileHeight) {
                 QMessageBox::warning(this, tr("Warning"), tr("The image must be %1px * %2px to be used as a subtile.").arg(subtileWidth).arg(subtileHeight));
                 return;
             }
@@ -1214,7 +1215,7 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
         D1Pal pal = *this->gfx->getPalette();
         bool success = D1Pcx::load(*frame, imagefilePath, clipped, &pal);
         if (success) {
-            if (frame.width() != tileWidth || frame.height() != tileHeight) {
+            if (frame.getWidth() != tileWidth || frame.getHeight() != tileHeight) {
                 QMessageBox::warning(this, tr("Warning"), tr("The image must be %1px * %2px to be used as a tile.").arg(tileWidth).arg(tileHeight));
                 return;
             }

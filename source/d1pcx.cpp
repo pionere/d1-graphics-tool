@@ -6,6 +6,7 @@
 #include <QMessageBox>
 
 #include "config.h"
+#include "d1image.h"
 
 #define D1PCX_COLORS 256
 

@@ -74,6 +74,14 @@ void D1GfxFrame::setFrameType(D1CEL_FRAME_TYPE type)
 void D1GfxFrame::addPixelLine(QList<D1GfxPixel> &pixelLine)
 {
     this->pixels.append(pixelLine);
+    this->height++;
+    /* if (this->width != pixelLine.size()) {
+        if (this->width != 0) {
+            dProgressErr() << QString("Mismatching lines.");
+        }*/
+    if (this->width == 0) {
+        this->width = pixelLine.size();
+    }
 }
 
 bool D1Gfx::isFrameSizeConstant()
@@ -245,7 +253,7 @@ QString D1Gfx::getFilePath() const
     return this->gfxFilePath;
 }
 
-D1Pal *D1Gfx::setPalette()
+D1Pal *D1Gfx::getPalette()
 {
     return this->palette;
 }

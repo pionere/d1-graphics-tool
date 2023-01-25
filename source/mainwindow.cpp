@@ -433,7 +433,7 @@ bool MainWindow::hasImageUrl(const QMimeData *mimeData)
     for (const QUrl &url : mimeData->urls()) {
         QString fileName = url.toLocalFile();
         // add PCX support
-        if (fileName.toLower().endsWidth(".pcx")) {
+        if (fileName.toLower().endsWith(".pcx")) {
             return true;
         }
         QMimeType mimeType = mimeDB.mimeTypeForFile(fileName);
