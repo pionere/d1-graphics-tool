@@ -1,7 +1,6 @@
 #include "progressdialog.h"
 
 #include <QFontMetrics>
-#include <QMessageBox>
 #include <QStyle>
 
 #include "ui_progressdialog.h"
@@ -39,8 +38,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
         theDialog->textVersion = 0;
         theDialog->status = PROGRESS_STATE::RUNNING;
 
-        theWidget->ui->messageLabel->setText(label);
-        theWidget->update(theDialog->status, true);
+        theWidget->update(theDialog->status, true, label);
         return;
     }
 
@@ -66,8 +64,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     theDialog->textVersion = 0;
     theDialog->status = PROGRESS_STATE::RUNNING;
 
-    theWidget->ui->messageLabel->setText("");
-    theWidget->update(theDialog->status, false);
+    theWidget->update(theDialog->status, false, "");
 }
 
 void ProgressDialog::done()
@@ -82,13 +79,12 @@ void ProgressDialog::done()
     if (theDialog->status == PROGRESS_STATE::RUNNING) {
         theDialog->status = PROGRESS_STATE::DONE;
     }
-    theWidget->ui->messageLabel->setText("");
-    theWidget->update(theDialog->status, !theDialog->ui->outputTextEdit->document()->isEmpty());
+    theWidget->update(theDialog->status, !theDialog->ui->outputTextEdit->document()->isEmpty(), "");
 }
 
 bool ProgressDialog::wasCanceled()
 {
-    return theDialog->status >= PROGRESS_STATE::CANCELLED;
+    return theDialog->status >= PROGRESS_STATE::CANCEL;
 }
 
 void ProgressDialog::incValue()
@@ -185,8 +181,8 @@ void ProgressDialog::on_detailsPushButton_clicked()
 
 void ProgressDialog::on_cancelPushButton_clicked()
 {
-    if (this->status < PROGRESS_STATE::CANCELLED) {
-        this->status = PROGRESS_STATE::CANCELLED;
+    if (this->status < PROGRESS_STATE::CANCEL) {
+        this->status = PROGRESS_STATE::CANCEL;
         dProgress() << tr("Process cancelled.");
     }
     this->ui->cancelPushButton->setEnabled(false);
@@ -216,14 +212,13 @@ ProgressWidget::ProgressWidget(QWidget *parent)
     , ui(new Ui::ProgressWidget())
 {
     this->ui->setupUi(this);
-    int fontHeight = this->fontMetrics().height();
-    QMessageBox::warning(nullptr, "Height", QString::number(fontHeight));
+    int fontHeight = this->fontMetrics().height() + 2;
     this->setMinimumHeight(fontHeight);
     this->setMaximumHeight(fontHeight);
     this->ui->openPushButton->setMinimumSize(fontHeight, fontHeight);
     this->ui->openPushButton->setMaximumSize(fontHeight, fontHeight);
     this->ui->openPushButton->setIconSize(QSize(fontHeight, fontHeight));
-    this->update(PROGRESS_STATE::DONE, false);
+    this->update(PROGRESS_STATE::DONE, false, "");
 
     theWidget = this;
 }
@@ -233,7 +228,7 @@ ProgressWidget::~ProgressWidget()
     delete ui;
 }
 
-void ProgressWidget::update(PROGRESS_STATE status, bool active)
+void ProgressWidget::update(PROGRESS_STATE status, bool active, const QString &label)
 {
     this->ui->openPushButton->setEnabled(active);
     QStyle::StandardPixmap type;
@@ -250,14 +245,15 @@ void ProgressWidget::update(PROGRESS_STATE status, bool active)
     case PROGRESS_STATE::ERROR:
         type = QStyle::SP_MessageBoxCritical;
         break;
-    case PROGRESS_STATE::CANCELLED:
-        type = QStyle::SP_DialogCancelButton;
+    case PROGRESS_STATE::CANCEL:
+        type = QStyle::SP_TitleBarCloseButton; // QStyle::SP_DialogCancelButton;
         break;
     case PROGRESS_STATE::FAIL:
         type = QStyle::SP_BrowserStop;
         break;
     }
     this->ui->openPushButton->setIcon(this->style()->standardIcon(type));
+    this->ui->messageLabel->setText(label);
     this->adjustSize();
     this->repaint();
     // QFrame::update();

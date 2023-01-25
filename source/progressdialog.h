@@ -13,7 +13,7 @@ enum class PROGRESS_STATE {
     RUNNING,
     WARN,
     ERROR,
-    CANCELLED,
+    CANCEL,
     FAIL,
 };
 
@@ -78,10 +78,8 @@ public:
     explicit ProgressWidget(QWidget *parent = nullptr);
     ~ProgressWidget();
 
-    void update(PROGRESS_STATE status, bool active);
-
 private:
-    void setLabelText(const QString &text);
+    void update(PROGRESS_STATE status, bool active, const QString &text);
 
 private slots:
     void on_openPushButton_clicked();
