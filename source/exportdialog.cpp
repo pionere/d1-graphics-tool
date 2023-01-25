@@ -110,7 +110,7 @@ bool ExportDialog::exportLevelTiles25D()
     if (amount == 0) {
         return true;
     }
-    ProgressDialog::start(tr("Exporting %1 2.5d tiles...").arg(fileName), amount + 1);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Exporting %1 2.5d tiles...").arg(fileName), amount + 1);
     // single tile
     if (amount == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
@@ -229,7 +229,7 @@ bool ExportDialog::exportLevelTiles()
     if (amount <= 0) {
         return true;
     }
-    ProgressDialog::start(tr("Exporting %1 flat tiles...").arg(fileName), amount + 1);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Exporting %1 flat tiles...").arg(fileName), amount + 1);
     // single tile
     if (amount == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
@@ -347,7 +347,7 @@ bool ExportDialog::exportLevelSubtiles()
     if (amount <= 0) {
         return true;
     }
-    ProgressDialog::start(tr("Exporting %1 subtiles...").arg(fileName), amount + 1);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Exporting %1 subtiles...").arg(fileName), amount + 1);
     // single subtile
     if (amount == 1 && subtileFrom == 0) {
         // one file for the only subtile (not indexed)
@@ -467,7 +467,7 @@ bool ExportDialog::exportFrames()
     if (amount <= 0) {
         return true;
     }
-    ProgressDialog::start(tr("Exporting %1 frames...").arg(fileName), amount + 1);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Exporting %1 frames...").arg(fileName), amount + 1);
     // single frame
     if (amount == 1 && frameFrom == 0) {
         // one file for the only frame (not indexed)

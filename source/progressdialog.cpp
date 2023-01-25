@@ -1,8 +1,13 @@
 #include "progressdialog.h"
 
+#include <QFontMetrics>
+#include <QStyle>
+
 #include "ui_progressdialog.h"
+#include "ui_progresswidget.h"
 
 static ProgressDialog *theDialog;
+static ProgressWidget *theWidget;
 
 ProgressDialog::ProgressDialog(QWidget *parent)
     : QDialog(parent)
@@ -21,30 +26,65 @@ ProgressDialog::~ProgressDialog()
     delete ui;
 }
 
-void ProgressDialog::start(const QString &label, int maxValue)
+void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int maxValue)
 {
-    theDialog->show();
+    if (mode == PROGRESS_DIALOG_STATE::BACKGROUND) {
+        theDialog->ui->progressLabel->setVisible(false);
+        theDialog->ui->progressBar->setVisible(false);
+        theDialog->ui->progressButtonsWidget->setVisible(false);
+        theDialog->ui->detailsGroupBox->setVisible(true);
+        theDialog->ui->closePushButton->setVisible(true);
+        theDialog->ui->outputTextEdit->clear();
+        theDialog->textVersion = 0;
+        theDialog->status = PROGRESS_STATE::RUNNING;
 
+        theWidget->update(theDialog->status, true, label);
+        return;
+    }
+
+    if (mode == PROGRESS_DIALOG_STATE::OPEN) {
+        theDialog->showNormal();
+        theDialog->adjustSize();
+        return;
+    }
+
+    theDialog->showNormal();
+
+    theDialog->ui->progressLabel->setVisible(true);
     theDialog->ui->progressLabel->setText(label);
+    theDialog->ui->progressBar->setVisible(true);
     theDialog->ui->progressBar->setRange(0, maxValue);
     theDialog->ui->progressBar->setValue(0);
-    theDialog->ui->outputTextEdit->clear();
-    theDialog->ui->detailsGroupBox->setVisible(true);
-    theDialog->on_detailsPushButton_clicked();
     theDialog->ui->cancelPushButton->setEnabled(true);
-    theDialog->cancelled = false;
+    theDialog->ui->progressButtonsWidget->setVisible(true);
+    theDialog->ui->detailsGroupBox->setVisible(true);
+    theDialog->ui->closePushButton->setVisible(false);
+    theDialog->on_detailsPushButton_clicked();
+    theDialog->ui->outputTextEdit->clear();
     theDialog->textVersion = 0;
-    // theDialog->setFocus();
+    theDialog->status = PROGRESS_STATE::RUNNING;
+
+    theWidget->update(theDialog->status, false, "");
 }
 
 void ProgressDialog::done()
 {
     theDialog->hide();
+
+    theDialog->ui->progressLabel->setVisible(false);
+    theDialog->ui->progressBar->setVisible(false);
+    theDialog->ui->progressButtonsWidget->setVisible(false);
+    theDialog->ui->detailsGroupBox->setVisible(true);
+    theDialog->ui->closePushButton->setVisible(true);
+    if (theDialog->status == PROGRESS_STATE::RUNNING) {
+        theDialog->status = PROGRESS_STATE::DONE;
+    }
+    theWidget->update(theDialog->status, !theDialog->ui->outputTextEdit->document()->isEmpty(), "");
 }
 
 bool ProgressDialog::wasCanceled()
 {
-    return theDialog->cancelled;
+    return theDialog->status >= PROGRESS_STATE::CANCEL;
 }
 
 void ProgressDialog::incValue()
@@ -55,6 +95,30 @@ void ProgressDialog::incValue()
 
 ProgressDialog &dProgress()
 {
+    return *theDialog;
+}
+
+ProgressDialog &dProgressWarn()
+{
+    if (theDialog->status < PROGRESS_STATE::WARN) {
+        theDialog->status = PROGRESS_STATE::WARN;
+    }
+    return *theDialog;
+}
+
+ProgressDialog &dProgressErr()
+{
+    if (theDialog->status < PROGRESS_STATE::ERROR) {
+        theDialog->status = PROGRESS_STATE::ERROR;
+    }
+    return *theDialog;
+}
+
+ProgressDialog &dProgressFail()
+{
+    if (theDialog->status < PROGRESS_STATE::FAIL) {
+        theDialog->status = PROGRESS_STATE::FAIL;
+    }
     return *theDialog;
 }
 
@@ -117,12 +181,85 @@ void ProgressDialog::on_detailsPushButton_clicked()
 
 void ProgressDialog::on_cancelPushButton_clicked()
 {
-    this->cancelled = true;
+    if (this->status < PROGRESS_STATE::CANCEL) {
+        this->status = PROGRESS_STATE::CANCEL;
+        dProgress() << tr("Process cancelled.");
+    }
     this->ui->cancelPushButton->setEnabled(false);
+}
+
+void ProgressDialog::on_closePushButton_clicked()
+{
+    this->hide();
 }
 
 void ProgressDialog::closeEvent(QCloseEvent *e)
 {
     this->on_cancelPushButton_clicked();
     // QDialog::closeEvent(e);
+}
+
+void ProgressDialog::changeEvent(QEvent *e)
+{
+    /*if (event->type() == QEvent::WindowStateChange && this->isMinimized()) {
+        this->hide();
+    }*/
+    return QDialog::changeEvent(e);
+}
+
+ProgressWidget::ProgressWidget(QWidget *parent)
+    : QFrame(parent)
+    , ui(new Ui::ProgressWidget())
+{
+    this->ui->setupUi(this);
+    int fontHeight = this->fontMetrics().height() + 2;
+    this->setMinimumHeight(fontHeight);
+    this->setMaximumHeight(fontHeight);
+    this->ui->openPushButton->setMinimumSize(fontHeight, fontHeight);
+    this->ui->openPushButton->setMaximumSize(fontHeight, fontHeight);
+    this->ui->openPushButton->setIconSize(QSize(fontHeight, fontHeight));
+    this->update(PROGRESS_STATE::DONE, false, "");
+
+    theWidget = this;
+}
+
+ProgressWidget::~ProgressWidget()
+{
+    delete ui;
+}
+
+void ProgressWidget::update(PROGRESS_STATE status, bool active, const QString &label)
+{
+    this->ui->openPushButton->setEnabled(active);
+    QStyle::StandardPixmap type;
+    switch (status) {
+    case PROGRESS_STATE::DONE:
+        type = QStyle::SP_DialogApplyButton;
+        break;
+    case PROGRESS_STATE::RUNNING:
+        type = QStyle::SP_BrowserReload;
+        break;
+    case PROGRESS_STATE::WARN:
+        type = QStyle::SP_MessageBoxWarning;
+        break;
+    case PROGRESS_STATE::ERROR:
+        type = QStyle::SP_MessageBoxCritical;
+        break;
+    case PROGRESS_STATE::CANCEL:
+        type = QStyle::SP_TitleBarCloseButton; // QStyle::SP_DialogCancelButton;
+        break;
+    case PROGRESS_STATE::FAIL:
+        type = QStyle::SP_BrowserStop;
+        break;
+    }
+    this->ui->openPushButton->setIcon(this->style()->standardIcon(type));
+    this->ui->messageLabel->setText(label);
+    this->adjustSize();
+    this->repaint();
+    // QFrame::update();
+}
+
+void ProgressWidget::on_openPushButton_clicked()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::OPEN, "", 0);
 }

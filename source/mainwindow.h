@@ -188,6 +188,7 @@ private:
     QPointer<PaletteWidget> trnBaseWidget;
 
     ProgressDialog progressDialog = ProgressDialog(this);
+    ProgressWidget progressWidget = ProgressWidget(this);
     OpenAsDialog openAsDialog = OpenAsDialog(this);
     SaveAsDialog saveAsDialog = SaveAsDialog(this);
     SettingsDialog settingsDialog = SettingsDialog(this);
