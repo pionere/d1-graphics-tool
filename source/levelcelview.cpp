@@ -419,7 +419,7 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &
         bool clipped = false;
         D1GfxFrame frame;
         D1Pal pal = *this->gfx->getPalette();
-        bool success = D1Pcx::load(*frame, imagefilePath, clipped, &pal);
+        bool success = D1Pcx::load(frame, imagefilePath, clipped, &pal);
         if (success) {
             success = this->insertFrames(mode, index, frame);
         }
@@ -562,9 +562,6 @@ void LevelCelView::assignSubtiles(const D1GfxFrame &frame, int tileIndex, int su
                 continue;
             }
 
-            subFrame.setWidth(subtileWidth);
-            subFrame.setHeight(subtileHeight);
-
             if (subtileIndices != nullptr) {
                 subtileIndices->append(subtileIndex);
             } else if (!hasColor) {
@@ -627,7 +624,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString
         bool clipped = false;
         D1GfxFrame frame;
         D1Pal pal = *this->gfx->getPalette();
-        bool success = D1Pcx::load(*frame, imagefilePath, clipped, &pal);
+        bool success = D1Pcx::load(frame, imagefilePath, clipped, &pal);
         if (success) {
             success = this->insertSubtiles(mode, index, frame);
         }
@@ -828,8 +825,6 @@ void LevelCelView::insertTile(int tileIndex, const D1GfxFrame &frame)
                 }
                 subFrame.addPixelLine(pixelLine);
             }
-            subFrame.setWidth(subtileWidth);
-            subFrame.setHeight(subtileHeight);
 
             int index = this->min->getSubtileCount();
             subtileIndices.append(index);
@@ -919,9 +914,6 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame
                 continue;
             }
 
-            subFrame.setWidth(subtileWidth);
-            subFrame.setHeight(subtileHeight);
-
             this->insertTile(index, subFrame);
             index++;
         }
@@ -934,7 +926,7 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &i
         bool clipped = false;
         D1GfxFrame frame;
         D1Pal pal = *this->gfx->getPalette();
-        bool success = D1Pcx::load(*frame, imagefilePath, clipped, &pal);
+        bool success = D1Pcx::load(frame, imagefilePath, clipped, &pal);
         if (success) {
             success = this->insertTiles(mode, index, frame);
         }
@@ -1001,7 +993,7 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
         bool clipped = false;
         D1GfxFrame frame;
         D1Pal pal = *this->gfx->getPalette();
-        bool success = D1Pcx::load(*frame, imagefilePath, clipped, &pal);
+        bool success = D1Pcx::load(frame, imagefilePath, clipped, &pal);
         if (success) {
             if (frame.getWidth() != MICRO_WIDTH || frame.getHeight() != MICRO_HEIGHT) {
                 QMessageBox::warning(this, tr("Warning"), tr("The image must be 32px * 32px to be used as a frame."));
@@ -1107,7 +1099,7 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
         bool clipped = false;
         D1GfxFrame frame;
         D1Pal pal = *this->gfx->getPalette();
-        bool success = D1Pcx::load(*frame, imagefilePath, clipped, &pal);
+        bool success = D1Pcx::load(frame, imagefilePath, clipped, &pal);
         if (success) {
             if (frame.getWidth() != subtileWidth || frame.getHeight() != subtileHeight) {
                 QMessageBox::warning(this, tr("Warning"), tr("The image must be %1px * %2px to be used as a subtile.").arg(subtileWidth).arg(subtileHeight));
@@ -1213,14 +1205,14 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
         bool clipped = false;
         D1GfxFrame frame;
         D1Pal pal = *this->gfx->getPalette();
-        bool success = D1Pcx::load(*frame, imagefilePath, clipped, &pal);
+        bool success = D1Pcx::load(frame, imagefilePath, clipped, &pal);
         if (success) {
             if (frame.getWidth() != tileWidth || frame.getHeight() != tileHeight) {
                 QMessageBox::warning(this, tr("Warning"), tr("The image must be %1px * %2px to be used as a tile.").arg(tileWidth).arg(tileHeight));
                 return;
             }
             int tileIndex = this->currentTileIndex;
-            this->assignSubtiles(image, tileIndex, this->min->getSubtileCount());
+            this->assignSubtiles(frame, tileIndex, this->min->getSubtileCount());
             // reset tile flags
             this->amp->setTileProperties(tileIndex, 0);
             // update the palette
