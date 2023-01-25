@@ -8,6 +8,7 @@
 #include <QPainter>
 
 #include "d1image.h"
+#include "progressdialog.h"
 
 bool D1Min::load(QString filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const OpenAsParam &params)
 {
@@ -51,7 +52,7 @@ bool D1Min::load(QString filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CE
     // File size check
     int subtileNumberOfCelFrames = width * height;
     if ((fileSize % (subtileNumberOfCelFrames * 2)) != 0) {
-        qDebug() << tr("Subtile width/height does not align with MIN file.");
+        dProgressErr() << tr("Subtile width/height does not align with MIN file.");
         return false;
     }
 
@@ -66,7 +67,7 @@ bool D1Min::load(QString filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CE
     this->subtileHeight = height;
     int minSubtileCount = fileSize / (subtileNumberOfCelFrames * 2);
     if (minSubtileCount != subtileCount) {
-        qDebug() << tr("The size of SOL file does not align with MIN file.");
+        dProgressWarn() << tr("The size of SOL file does not align with MIN file.");
         // add subtiles to sol if necessary
         while (minSubtileCount > subtileCount) {
             subtileCount++;
@@ -125,7 +126,7 @@ bool D1Min::save(const SaveAsParam &params)
 
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly | QFile::Truncate)) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to open file: %1.").arg(filePath));
+        dProgressFail() << tr("Failed to open file: %1.").arg(filePath);
         return false;
     }
 

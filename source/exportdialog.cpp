@@ -647,16 +647,13 @@ void ExportDialog::on_exportButton_clicked()
             break;
         }
     } catch (...) {
-        QMessageBox::critical(this, tr("Error"), tr("Export Failed."));
+        dProgressFail() << tr("Export Failed.");
         ProgressDialog::done();
         return;
     }
     ProgressDialog::done();
     if (result) {
-        QMessageBox::information(this, tr("Information"), tr("Export successful."));
         this->close();
-    } else {
-        QMessageBox::warning(this, tr("Information"), tr("Export was canceled."));
     }
 }
 

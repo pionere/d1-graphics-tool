@@ -7,6 +7,8 @@
 #include <QFileInfo>
 #include <QMessageBox>
 
+#include "progressdialog.h"
+
 bool D1Amp::load(QString filePath, int tileCount, const OpenAsParam &params)
 {
     // prepare file data source
@@ -32,14 +34,14 @@ bool D1Amp::load(QString filePath, int tileCount, const OpenAsParam &params)
     // File size check
     auto fileSize = file.size();
     if (fileSize % 2 != 0) {
-        qDebug() << tr("Invalid AMP file.");
+        dProgressErr() << tr("Invalid AMP file.");
         return false;
     }
 
     int ampTileCount = fileSize / 2;
     if (ampTileCount != tileCount) {
         if (ampTileCount != 0) {
-            qDebug() << tr("The size of AMP file does not align with TIL file.");
+            dProgressWarn() << tr("The size of AMP file does not align with TIL file.");
         }
         if (ampTileCount > tileCount) {
             ampTileCount = tileCount; // skip unusable data
@@ -87,7 +89,7 @@ bool D1Amp::save(const SaveAsParam &params)
 
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly | QFile::Truncate)) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to open file: %1.").arg(filePath));
+        dProgressFail() << tr("Failed to open file: %1.").arg(filePath);
         return false;
     }
 

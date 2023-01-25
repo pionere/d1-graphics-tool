@@ -8,6 +8,7 @@
 #include <QMessageBox>
 
 #include "d1celframe.h"
+#include "progressdialog.h"
 
 bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
 {
@@ -259,7 +260,7 @@ bool D1Cel::writeCompFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &par
     } else {
         // update group indices
         if (numFrames == 0 || (numFrames % numGroups) != 0) {
-            QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Frames can not be split to equal groups."));
+            dProgressFail() << QApplication::tr("Frames can not be split to equal groups.");
             return false;
         }
         // update group indices
@@ -348,7 +349,7 @@ bool D1Cel::save(D1Gfx &gfx, const SaveAsParam &params)
 
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly | QFile::Truncate)) {
-        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to open file: %1.").arg(filePath));
+        dProgressFail() << QApplication::tr("Failed to open file: %1.").arg(filePath);
         return false;
     }
 
