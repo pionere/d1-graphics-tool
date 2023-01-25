@@ -6,6 +6,8 @@
 #include <QFileInfo>
 #include <QMessageBox>
 
+#include "progressdialog.h"
+
 bool D1Sol::load(QString filePath)
 {
     // prepare file data source
