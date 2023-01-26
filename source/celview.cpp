@@ -8,7 +8,6 @@
 #include <QGraphicsPixmapItem>
 #include <QImageReader>
 #include <QMenu>
-#include <QMessageBox>
 #include <QMimeData>
 
 #include "config.h"
@@ -272,6 +271,12 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
         if (!D1Pcx::load(*frame, imagefilePath, clipped, this->pal, this->gfx->getPalette(), &palMod)) {
             this->gfx->removeFrame(index);
             this->gfx->setModified(wasModified);
+            QString msg = tr("Failed to load file: %1.").arg(imagefilePath);
+            if (mode != IMAGE_FILE_MODE::AUTO) {
+                dProgressFail() << msg;
+            } else {
+                dProgressErr() << msg;
+            }
         } else if (palMod) {
             // update the palette
             emit this->palModified();
@@ -279,19 +284,22 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
         return;
     }
     QImageReader reader = QImageReader(imagefilePath);
-    int numImages = 0;
-
+    if (!reader.canRead()) {
+        QString msg = tr("Failed to read file: %1.").arg(imagefilePath);
+        if (mode != IMAGE_FILE_MODE::AUTO) {
+            dProgressFail() << msg;
+        } else {
+            dProgressErr() << msg;
+        }
+        return;
+    }
     while (true) {
         QImage image = reader.read();
         if (image.isNull()) {
             break;
         }
-        this->gfx->insertFrame(index + numImages, image);
-        numImages++;
-    }
-
-    if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
+        this->gfx->insertFrame(index, image);
+        index++;
     }
 }
 
@@ -300,6 +308,7 @@ void CelView::replaceCurrentFrame(const QString &imagefilePath)
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
+        dProgressFail() << tr("Failed to read file: %1.").arg(imagefilePath);
         return;
     }
 

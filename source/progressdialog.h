@@ -62,7 +62,6 @@ private:
 
     int textVersion;
     PROGRESS_STATE status = PROGRESS_STATE::DONE;
-    bool justFailed;
 };
 
 ProgressDialog &dProgress();

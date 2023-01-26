@@ -388,7 +388,12 @@ void LevelCelView::assignFrames(const D1GfxFrame &frame, int subtileIndex, int f
 void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QImage &image)
 {
     if ((image.width() % MICRO_WIDTH) != 0 || (image.height() % MICRO_HEIGHT) != 0) {
-        QMessageBox::warning(this, tr("Warning"), tr("The image must contain 32px * 32px blocks to be used as a frame."));
+        QString msg = tr("The image must contain 32px * 32px blocks to be used as a frame.");
+        if (mode != IMAGE_FILE_MODE::AUTO) {
+            dProgressFail() << msg;
+        } else {
+            dProgressErr() << msg;
+        }
         return;
     }
 
@@ -408,7 +413,12 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QImage &i
 bool LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const D1GfxFrame &frame)
 {
     if ((frame.getWidth() % MICRO_WIDTH) != 0 || (frame.getHeight() % MICRO_HEIGHT) != 0) {
-        QMessageBox::warning(this, tr("Warning"), tr("The image must contain 32px * 32px blocks to be used as a frame."));
+        QString msg = tr("The image must contain 32px * 32px blocks to be used as a frame.");
+        if (mode != IMAGE_FILE_MODE::AUTO) {
+            dProgressFail() << msg;
+        } else {
+            dProgressErr() << msg;
+        }
         return false;
     }
 
@@ -435,6 +445,8 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &
         bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
         if (success) {
             success = this->insertFrames(mode, index, frame);
+        } else if (mode != IMAGE_FILE_MODE::AUTO) {
+            dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
         }
         if (success && palMod) {
             // update the palette
@@ -446,7 +458,12 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &
 
     QImageReader reader = QImageReader(imagefilePath);
     if (!reader.canRead()) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
+        QString msg = tr("Failed to read file: %1.").arg(imagefilePath);
+        if (mode != IMAGE_FILE_MODE::AUTO) {
+            dProgressFail() << msg;
+        } else {
+            dProgressErr() << msg;
+        }
         return;
     }
     int prevFrameCount = this->gfx->getFrameCount();
@@ -593,7 +610,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QImage 
 
     if ((image.width() % subtileWidth) != 0 || (image.height() % subtileHeight) != 0) {
         if (mode != IMAGE_FILE_MODE::AUTO) {
-            QMessageBox::warning(this, tr("Warning"), tr("The image must contain %1px * %2px blocks to be used as a subtile.").arg(subtileWidth).arg(subtileWidth));
+            dProgressFail() << tr("The image must contain %1px * %2px blocks to be used as a subtile.").arg(subtileWidth).arg(subtileWidth);
         }
         return;
     }
@@ -618,7 +635,7 @@ bool LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const D1GfxFr
 
     if ((frame.getWidth() % subtileWidth) != 0 || (frame.getHeight() % subtileHeight) != 0) {
         if (mode != IMAGE_FILE_MODE::AUTO) {
-            QMessageBox::warning(this, tr("Warning"), tr("The image must contain %1px * %2px blocks to be used as a subtile.").arg(subtileWidth).arg(subtileWidth));
+            dProgressFail() << tr("The image must contain %1px * %2px blocks to be used as a subtile.").arg(subtileWidth).arg(subtileWidth);
         }
         return false;
     }
@@ -646,6 +663,8 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString
         bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
         if (success) {
             success = this->insertSubtiles(mode, index, frame);
+        } else if (mode != IMAGE_FILE_MODE::AUTO) {
+            dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
         }
         if (success && palMod) {
             // update the palette
@@ -657,7 +676,12 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString
 
     QImageReader reader = QImageReader(imagefilePath);
     if (!reader.canRead()) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
+        QString msg = tr("Failed to read file: %1.").arg(imagefilePath);
+        if (mode != IMAGE_FILE_MODE::AUTO) {
+            dProgressFail() << msg;
+        } else {
+            dProgressErr() << msg;
+        }
         return;
     }
     int prevSubtileCount = this->min->getSubtileCount();
@@ -858,7 +882,7 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QImage &im
 
     if ((image.width() % tileWidth) != 0 || (image.height() % tileHeight) != 0) {
         if (mode != IMAGE_FILE_MODE::AUTO) {
-            QMessageBox::warning(this, tr("Warning"), tr("The image must contain %1px * %2px blocks to be used as a tile.").arg(tileWidth).arg(tileHeight));
+            dProgressFail() << tr("The image must contain %1px * %2px blocks to be used as a tile.").arg(tileWidth).arg(tileHeight);
         }
         return;
     }
@@ -904,7 +928,7 @@ bool LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame
 
     if ((frame.getWidth() % tileWidth) != 0 || (frame.getHeight() % tileHeight) != 0) {
         if (mode != IMAGE_FILE_MODE::AUTO) {
-            QMessageBox::warning(this, tr("Warning"), tr("The image must contain %1px * %2px blocks to be used as a tile.").arg(tileWidth).arg(tileHeight));
+            dProgressFail() << tr("The image must contain %1px * %2px blocks to be used as a tile.").arg(tileWidth).arg(tileHeight);
         }
         return false;
     }
@@ -952,6 +976,8 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &i
         bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
         if (success) {
             success = this->insertTiles(mode, index, frame);
+        } else if (mode != IMAGE_FILE_MODE::AUTO) {
+            dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
         }
         if (success && palMod) {
             // update the palette
@@ -963,7 +989,12 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &i
 
     QImageReader reader = QImageReader(imagefilePath);
     if (!reader.canRead()) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
+        QString msg = tr("Failed to read file: %1.").arg(imagefilePath);
+        if (mode != IMAGE_FILE_MODE::AUTO) {
+            dProgressFail() << msg;
+        } else {
+            dProgressErr() << msg;
+        }
         return;
     }
     int prevTileCount = this->til->getTileCount();
@@ -1016,33 +1047,35 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
         D1GfxFrame frame;
         D1Pal basePal = D1Pal(*this->pal);
         bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
-        if (success) {
-            if (frame.getWidth() != MICRO_WIDTH || frame.getHeight() != MICRO_HEIGHT) {
-                QMessageBox::warning(this, tr("Warning"), tr("The image must be 32px * 32px to be used as a frame."));
-                return;
-            }
-            LevelTabFrameWidget::selectFrameType(&frame);
-            this->gfx->setFrame(this->currentFrameIndex, frame);
-            if (palMod) {
-                // update the palette
-                this->pal->updateColors(basePal);
-                emit this->palModified();
-            }
-            // update the view
-            this->displayFrame();
+        if (!success) {
+            dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
+            return;
         }
+        if (frame.getWidth() != MICRO_WIDTH || frame.getHeight() != MICRO_HEIGHT) {
+            dProgressFail() << tr("The image must be 32px * 32px to be used as a frame.");
+            return;
+        }
+        LevelTabFrameWidget::selectFrameType(&frame);
+        this->gfx->setFrame(this->currentFrameIndex, frame);
+        if (palMod) {
+            // update the palette
+            this->pal->updateColors(basePal);
+            emit this->palModified();
+        }
+        // update the view
+        this->displayFrame();
         return;
     }
 
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
+        dProgressFail() << tr("Failed to read file: %1.").arg(imagefilePath);
         return;
     }
 
     if (image.width() != MICRO_WIDTH || image.height() != MICRO_HEIGHT) {
-        QMessageBox::warning(this, tr("Warning"), tr("The image must be 32px * 32px to be used as a frame."));
+        dProgressFail() << tr("The image must be 32px * 32px to be used as a frame.");
         return;
     }
 
@@ -1121,36 +1154,38 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
         D1GfxFrame frame;
         D1Pal basePal = D1Pal(*this->pal);
         bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
-        if (success) {
-            if (frame.getWidth() != subtileWidth || frame.getHeight() != subtileHeight) {
-                QMessageBox::warning(this, tr("Warning"), tr("The image must be %1px * %2px to be used as a subtile.").arg(subtileWidth).arg(subtileHeight));
-                return;
-            }
-            int subtileIndex = this->currentSubtileIndex;
-            this->assignFrames(frame, subtileIndex, this->gfx->getFrameCount());
-            if (palMod) {
-                // update the palette
-                this->pal->updateColors(basePal);
-                emit this->palModified();
-            }
-            // reset subtile flags
-            this->sol->setSubtileProperties(subtileIndex, 0);
-            this->tmi->setSubtileProperties(subtileIndex, 0);
-            // update the view
-            this->displayFrame();
+        if (!success) {
+            dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
+            return;
         }
+        if (frame.getWidth() != subtileWidth || frame.getHeight() != subtileHeight) {
+            dProgressFail() << tr("The image must be %1px * %2px to be used as a subtile.").arg(subtileWidth).arg(subtileHeight);
+            return;
+        }
+        int subtileIndex = this->currentSubtileIndex;
+        this->assignFrames(frame, subtileIndex, this->gfx->getFrameCount());
+        if (palMod) {
+            // update the palette
+            this->pal->updateColors(basePal);
+            emit this->palModified();
+        }
+        // reset subtile flags
+        this->sol->setSubtileProperties(subtileIndex, 0);
+        this->tmi->setSubtileProperties(subtileIndex, 0);
+        // update the view
+        this->displayFrame();
         return;
     }
 
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
+        dProgressFail() << tr("Failed to read file: %1.").arg(imagefilePath);
         return;
     }
 
     if (image.width() != subtileWidth || image.height() != subtileHeight) {
-        QMessageBox::warning(this, tr("Warning"), tr("The image must be %1px * %2px to be used as a subtile.").arg(subtileWidth).arg(subtileHeight));
+        dProgressFail() << tr("The image must be %1px * %2px to be used as a subtile.").arg(subtileWidth).arg(subtileHeight);
         return;
     }
 
@@ -1226,35 +1261,37 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
         D1GfxFrame frame;
         D1Pal basePal = D1Pal(*this->pal);
         bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
-        if (success) {
-            if (frame.getWidth() != tileWidth || frame.getHeight() != tileHeight) {
-                QMessageBox::warning(this, tr("Warning"), tr("The image must be %1px * %2px to be used as a tile.").arg(tileWidth).arg(tileHeight));
-                return;
-            }
-            int tileIndex = this->currentTileIndex;
-            this->assignSubtiles(frame, tileIndex, this->min->getSubtileCount());
-            // reset tile flags
-            this->amp->setTileProperties(tileIndex, 0);
-            if (palMod) {
-                // update the palette
-                this->pal->updateColors(basePal);
-                emit this->palModified();
-            }
-            // update the view
-            this->displayFrame();
+        if (!success) {
+            dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
+            return;
         }
+        if (frame.getWidth() != tileWidth || frame.getHeight() != tileHeight) {
+            dProgressFail() << tr("The image must be %1px * %2px to be used as a tile.").arg(tileWidth).arg(tileHeight);
+            return;
+        }
+        int tileIndex = this->currentTileIndex;
+        this->assignSubtiles(frame, tileIndex, this->min->getSubtileCount());
+        // reset tile flags
+        this->amp->setTileProperties(tileIndex, 0);
+        if (palMod) {
+            // update the palette
+            this->pal->updateColors(basePal);
+            emit this->palModified();
+        }
+        // update the view
+        this->displayFrame();
         return;
     }
 
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
+        dProgressFail() << tr("Failed to read file: %1.").arg(imagefilePath);
         return;
     }
 
     if (image.width() != tileWidth || image.height() != tileHeight) {
-        QMessageBox::warning(this, tr("Warning"), tr("The image must be %1px * %2px to be used as a tile.").arg(tileWidth).arg(tileHeight));
+        dProgressFail() << tr("The image must be %1px * %2px to be used as a tile.").arg(tileWidth).arg(tileHeight);
         return;
     }
 
