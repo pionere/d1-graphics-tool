@@ -271,6 +271,12 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
         if (!D1Pcx::load(*frame, imagefilePath, clipped, this->pal, this->gfx->getPalette(), &palMod)) {
             this->gfx->removeFrame(index);
             this->gfx->setModified(wasModified);
+            QString msg = tr("Failed to load file: %1.").arg(imagefilePath);
+            if (mode != IMAGE_FILE_MODE::AUTO) {
+                dProgressFail() << msg;
+            } else {
+                dProgressErr() << msg;
+            }
         } else if (palMod) {
             // update the palette
             emit this->palModified();
@@ -279,7 +285,12 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
     }
     QImageReader reader = QImageReader(imagefilePath);
     if (!reader.canRead()) {
-        dProgressErr() << tr("Failed to read file: %1.").arg(imagefilePath);
+        QString msg = tr("Failed to read file: %1.").arg(imagefilePath);
+        if (mode != IMAGE_FILE_MODE::AUTO) {
+            dProgressFail() << msg;
+        } else {
+            dProgressErr() << msg;
+        }
         return;
     }
     while (true) {
@@ -294,9 +305,30 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
 
 void CelView::replaceCurrentFrame(const QString &imagefilePath)
 {
+    if (imagefilePath.toLower().endsWith(".pcx")) {
+        bool clipped = this->gfx->getFrame(this->currentFrameIndex)->isClipped(), palMod;
+        D1GfxFrame frame;
+        bool success = D1Pcx::load(frame, imagefilePath, clipped, this->pal, this->gfx->getPalette(), &palMod);
+        if (!success) {
+            dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
+            return;
+        }
+        this->gfx->setFrame(this->currentFrameIndex, frame);
+
+        if (palMod) {
+            // update the palette
+            emit this->palModified();
+        }
+        // update the view
+        this->update();
+        this->displayFrame();
+        return;
+    }
+
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
+        dProgressFail() << tr("Failed to read file: %1.").arg(imagefilePath);
         return;
     }
 
