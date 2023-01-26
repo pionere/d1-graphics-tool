@@ -141,17 +141,6 @@ D1GfxFrame *D1Gfx::insertFrame(int idx, bool *clipped)
     }
 
     this->frames.insert(idx, D1GfxFrame());
-    this->modified = true;
-    return &this->frames[idx];
-}
-
-D1GfxFrame *D1Gfx::insertFrame(int idx, const QImage &image)
-{
-    bool clipped;
-
-    D1GfxFrame *frame = this->insertFrame(idx, &clipped);
-    D1ImageFrame::load(*frame, image, clipped, this->palette);
-    // this->modified = true;
 
     if (this->groupFrameIndices.isEmpty()) {
         // create new group if this is the first frame
@@ -170,6 +159,19 @@ D1GfxFrame *D1Gfx::insertFrame(int idx, const QImage &image)
             this->groupFrameIndices[i].second++;
         }
     }
+
+    this->modified = true;
+    return &this->frames[idx];
+}
+
+D1GfxFrame *D1Gfx::insertFrame(int idx, const QImage &image)
+{
+    bool clipped;
+
+    D1GfxFrame *frame = this->insertFrame(idx, &clipped);
+    D1ImageFrame::load(*frame, image, clipped, this->palette);
+    // this->modified = true;
+
     return &this->frames[idx];
 }
 

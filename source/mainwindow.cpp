@@ -961,8 +961,8 @@ static QString imageNameFilter()
         }
     }
     // add PCX support
-    allSupportedFormats.append(".pcx");
-    allSupportedFormats.append(".PCX");
+    allSupportedFormats.append("*.pcx");
+    allSupportedFormats.append("*.PCX");
 
     QString allSupportedFormatsFilter = QApplication::tr("Image files (%1)").arg(allSupportedFormats.join(' '));
     return allSupportedFormatsFilter;
