@@ -266,6 +266,11 @@ void PaletteWidget::setPal(D1Pal *p)
 {
     this->pal = p;
 
+    QString path = p->getFilePath();
+    int index = this->ui->pathComboBox->findData(path);
+    this->ui->pathComboBox->setCurrentIndex(index);
+    this->ui->pathComboBox->setToolTip(path);
+
     emit this->modified();
 }
 
@@ -400,13 +405,6 @@ void PaletteWidget::removePath(QString path)
 {
     if (this->paths.contains(path))
         this->paths.remove(path);
-}
-
-void PaletteWidget::selectPath(QString path)
-{
-    int index = this->ui->pathComboBox->findData(path);
-    this->ui->pathComboBox->setCurrentIndex(index);
-    this->on_pathComboBox_activated(index);
 }
 
 QString PaletteWidget::getSelectedPath() const
@@ -890,7 +888,6 @@ void PaletteWidget::on_pathComboBox_activated(int index)
     this->initStopColorPicking();
 
     QString path = this->ui->pathComboBox->itemData(index).value<QString>();
-    this->ui->pathComboBox->setToolTip(path);
 
     emit this->pathSelected(path);
     // emit this->modified();

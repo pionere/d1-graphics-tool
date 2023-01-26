@@ -30,10 +30,8 @@
 
 #define MemFree(p)   \
     {                \
-        void *p__p;  \
-        p__p = p;    \
+        delete p;    \
         p = nullptr; \
-        delete p__p; \
     }
 
 enum class FILE_DIALOG_MODE {
@@ -188,12 +186,12 @@ private:
     QAction *undoAction;
     QAction *redoAction;
 
-    CelView *celView;
-    LevelCelView *levelCelView;
+    CelView *celView = nullptr;
+    LevelCelView *levelCelView = nullptr;
 
-    PaletteWidget *palWidget;
-    PaletteWidget *trnUniqueWidget;
-    PaletteWidget *trnBaseWidget;
+    PaletteWidget *palWidget = nullptr;
+    PaletteWidget *trnUniqueWidget = nullptr;
+    PaletteWidget *trnBaseWidget = nullptr;
 
     ProgressDialog progressDialog = ProgressDialog(this);
     ProgressWidget progressWidget = ProgressWidget(this);
@@ -203,22 +201,22 @@ private:
     ExportDialog exportDialog = ExportDialog(this);
     UpscaleDialog upscaleDialog = UpscaleDialog(this);
 
-    D1Pal *pal;
-    D1Trn *trnUnique;
-    D1Trn *trnBase;
-    D1Gfx *gfx;
-    D1Min *min;
-    D1Til *til;
-    D1Sol *sol;
-    D1Amp *amp;
-    D1Tmi *tmi;
+    D1Pal *pal = nullptr;
+    D1Trn *trnUnique = nullptr;
+    D1Trn *trnBase = nullptr;
+    D1Gfx *gfx = nullptr;
+    D1Min *min = nullptr;
+    D1Til *til = nullptr;
+    D1Sol *sol = nullptr;
+    D1Amp *amp = nullptr;
+    D1Tmi *tmi = nullptr;
 
     QMap<QString, D1Pal *> pals;       // key: path, value: pointer to palette
     QMap<QString, D1Trn *> uniqueTrns; // key: path, value: pointer to translation
     QMap<QString, D1Trn *> baseTrns;   // key: path, value: pointer to translation
 
     // Palette hits are instantiated in main window to make them available to the three PaletteWidgets
-    D1PalHits *palHits;
+    D1PalHits *palHits = nullptr;
     // buffer to store the original colors in case of color cycling
     QColor origCyclePalette[32];
 };
