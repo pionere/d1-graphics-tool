@@ -36,7 +36,7 @@ typedef struct _PcxPalette {
     quint8 data[D1PCX_COLORS][3];
 } PCXPALETTE;
 
-bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *pal)
+bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *basePal, D1Pal *resPal, bool *palMod)
 {
     // Opening PCX file
     QFile file = QFile(pcxFilePath);
@@ -71,6 +71,7 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *pa
     }
 
     // read the palette
+    *palMod = false;
     D1Pal *pcxPal = nullptr;
     int pcxPalState = 0; // 0: invalid; 1: valid and matches pal; 2: valid but does not match the pal
     if (fileSize >= sizeof(pcxhdr) + sizeof(pPalette)) {
@@ -86,12 +87,12 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *pa
             }
 
             for (int i = 0; i < D1PCX_COLORS; i++) {
-                QColor col = pal->getColor(i);
-                if (col == pal->getUndefinedColor()) {
+                QColor col = basePal->getColor(i);
+                if (col == basePal->getUndefinedColor()) {
                     continue; // color of the graphics-palette is undefined -> ignore
                 }
                 QColor pcxCol = pcxPal->getColor(i);
-                if (pcxCol == pal->getUndefinedColor()) {
+                if (pcxCol == basePal->getUndefinedColor()) {
                     continue; // color of the PCX-palette is undefined -> ignore
                 }
                 if (col != pcxCol) {
@@ -127,7 +128,7 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *pa
             for (int x = 0; x < frame.width; dataPtr++) {
                 byte = *dataPtr;
                 if (byte <= PCX_MAX_SINGLE_PIXEL) {
-                    if (pcxPal->getColor(byte) != pal->getUndefinedColor()) {
+                    if (pcxPal->getColor(byte) != basePal->getUndefinedColor()) {
                         pixelLine.append(D1GfxPixel::colorPixel(byte));
                         usedColors.insert(byte);
                     } else {
@@ -140,7 +141,7 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *pa
                 dataPtr++;
                 quint8 col = *dataPtr;
                 D1GfxPixel pCol = D1GfxPixel::transparentPixel(); // color of the PCX-palette is undefined -> transparent
-                if (pcxPal->getColor(col) != pal->getUndefinedColor()) {
+                if (pcxPal->getColor(col) != basePal->getUndefinedColor()) {
                     pCol = D1GfxPixel::colorPixel(col);
                     usedColors.insert(col);
                 }
@@ -155,7 +156,7 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *pa
 
         // update the undefined colors of the palette
         for (int i = 0; i < D1PCX_COLORS; i++) {
-            QColor col = pal->getColor(i);
+            QColor col = basePal->getColor(i);
             // if (col != undefColor) {
             //     continue; // skip colors if already defined
             // }
@@ -166,12 +167,13 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *pa
             if (pcxCol == col) {
                 continue; // same as before
             }
-            pal->setColor(i, pcxCol);
+            basePal->setColor(i, pcxCol);
+            *palMod = true;
         }
     } else {
         // read as a standard image
         if (pcxPal == nullptr) {
-            pcxPal = pal;
+            pcxPal = resPal;
         }
         QImage image = QImage(frame.width, frame.height, QImage::Format_ARGB32);
         for (int y = 0; y < frame.height; y++) {
@@ -179,7 +181,7 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *pa
                 byte = *dataPtr;
                 if (byte <= PCX_MAX_SINGLE_PIXEL) {
                     QColor color = pcxPal->getColor(byte);
-                    if (color == pal->getUndefinedColor()) {
+                    if (color == resPal->getUndefinedColor()) {
                         color = Qt::transparent;
                     }
                     image.setPixelColor(x, y, color);
@@ -190,7 +192,7 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *pa
                 dataPtr++;
                 quint8 col = *dataPtr;
                 QColor color = pcxPal->getColor(col);
-                if (color == pal->getUndefinedColor()) {
+                if (color == resPal->getUndefinedColor()) {
                     color = Qt::transparent;
                 }
                 for (int i = 0; i < byte; i++) {
@@ -201,10 +203,10 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *pa
             dataPtr += srcSkip;
         }
 
-        D1ImageFrame::load(frame, image, frame.clipped, pal);
+        D1ImageFrame::load(frame, image, frame.clipped, resPal);
     }
 
-    if (pcxPal != pal) {
+    if (pcxPal != resPal) {
         delete pcxPal;
     }
     return true;

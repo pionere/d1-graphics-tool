@@ -64,8 +64,9 @@ LevelCelView::~LevelCelView()
     delete ui;
 }
 
-void LevelCelView::initialize(D1Gfx *g, D1Min *m, D1Til *t, D1Sol *s, D1Amp *a, D1Tmi *i)
+void LevelCelView::initialize(D1Pal *p, D1Gfx *g, D1Min *m, D1Til *t, D1Sol *s, D1Amp *a, D1Tmi *i)
 {
+    this->pal = p;
     this->gfx = g;
     this->min = m;
     this->til = t;
@@ -78,6 +79,11 @@ void LevelCelView::initialize(D1Gfx *g, D1Min *m, D1Til *t, D1Sol *s, D1Amp *a, 
     this->tabFrameWidget.initialize(this, this->gfx);
 
     this->update();
+}
+
+void LevelCelView::setPal(D1Pal *p)
+{
+    this->pal = p;
 }
 
 // Displaying CEL file path information
@@ -416,17 +422,16 @@ bool LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const D1GfxFram
 void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {
-        bool clipped = false;
+        bool clipped = false, palMod;
         D1GfxFrame frame;
-        D1Pal pal = D1Pal(*this->gfx->getPalette());
-        bool success = D1Pcx::load(frame, imagefilePath, clipped, &pal);
+        D1Pal basePal = D1Pal(*this->pal);
+        bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
         if (success) {
             success = this->insertFrames(mode, index, frame);
         }
-        if (success) {
+        if (success && palMod) {
             // update the palette
-            D1Pal *gfxPal = this->gfx->getPalette();
-            gfxPal->updateColors(pal);
+            this->pal->updateColors(basePal);
             emit this->palModified();
         }
         return;
@@ -620,17 +625,16 @@ bool LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const D1GfxFr
 void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {
-        bool clipped = false;
+        bool clipped = false, palMod;
         D1GfxFrame frame;
-        D1Pal pal = D1Pal(*this->gfx->getPalette());
-        bool success = D1Pcx::load(frame, imagefilePath, clipped, &pal);
+        D1Pal basePal = D1Pal(*this->pal);
+        bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
         if (success) {
             success = this->insertSubtiles(mode, index, frame);
         }
-        if (success) {
+        if (success && palMod) {
             // update the palette
-            D1Pal *gfxPal = this->gfx->getPalette();
-            gfxPal->updateColors(pal);
+            this->pal->updateColors(basePal);
             emit this->palModified();
         }
         return;
@@ -919,17 +923,16 @@ bool LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame
 void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {
-        bool clipped = false;
+        bool clipped = false, palMod;
         D1GfxFrame frame;
-        D1Pal pal = D1Pal(*this->gfx->getPalette());
-        bool success = D1Pcx::load(frame, imagefilePath, clipped, &pal);
+        D1Pal basePal = D1Pal(*this->pal);
+        bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
         if (success) {
             success = this->insertTiles(mode, index, frame);
         }
-        if (success) {
+        if (success && palMod) {
             // update the palette
-            D1Pal *gfxPal = this->gfx->getPalette();
-            gfxPal->updateColors(pal);
+            this->pal->updateColors(basePal);
             emit this->palModified();
         }
         return;
@@ -984,10 +987,10 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, const QStringList &imagefil
 void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {
-        bool clipped = false;
+        bool clipped = false, palMod;
         D1GfxFrame frame;
-        D1Pal pal = *this->gfx->getPalette();
-        bool success = D1Pcx::load(frame, imagefilePath, clipped, &pal);
+        D1Pal basePal = D1Pal(*this->pal);
+        bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
         if (success) {
             if (frame.getWidth() != MICRO_WIDTH || frame.getHeight() != MICRO_HEIGHT) {
                 QMessageBox::warning(this, tr("Warning"), tr("The image must be 32px * 32px to be used as a frame."));
@@ -995,10 +998,11 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
             }
             LevelTabFrameWidget::selectFrameType(&frame);
             this->gfx->setFrame(this->currentFrameIndex, frame);
-            // update the palette
-            D1Pal *gfxPal = this->gfx->getPalette();
-            gfxPal->updateColors(pal);
-            emit this->palModified();
+            if (palMod) {
+                // update the palette
+                this->pal->updateColors(basePal);
+                emit this->palModified();
+            }
             // update the view
             this->displayFrame();
         }
@@ -1088,10 +1092,10 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     if (imagefilePath.toLower().endsWith(".pcx")) {
-        bool clipped = false;
+        bool clipped = false, palMod;
         D1GfxFrame frame;
-        D1Pal pal = D1Pal(*this->gfx->getPalette());
-        bool success = D1Pcx::load(frame, imagefilePath, clipped, &pal);
+        D1Pal basePal = D1Pal(*this->pal);
+        bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
         if (success) {
             if (frame.getWidth() != subtileWidth || frame.getHeight() != subtileHeight) {
                 QMessageBox::warning(this, tr("Warning"), tr("The image must be %1px * %2px to be used as a subtile.").arg(subtileWidth).arg(subtileHeight));
@@ -1099,10 +1103,11 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
             }
             int subtileIndex = this->currentSubtileIndex;
             this->assignFrames(frame, subtileIndex, this->gfx->getFrameCount());
-            // update the palette
-            D1Pal *gfxPal = this->gfx->getPalette();
-            gfxPal->updateColors(pal);
-            emit this->palModified();
+            if (palMod) {
+                // update the palette
+                this->pal->updateColors(basePal);
+                emit this->palModified();
+            }
             // reset subtile flags
             this->sol->setSubtileProperties(subtileIndex, 0);
             this->tmi->setSubtileProperties(subtileIndex, 0);
@@ -1192,10 +1197,10 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
     unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     if (imagefilePath.toLower().endsWith(".pcx")) {
-        bool clipped = false;
+        bool clipped = false, palMod;
         D1GfxFrame frame;
-        D1Pal pal = D1Pal(*this->gfx->getPalette());
-        bool success = D1Pcx::load(frame, imagefilePath, clipped, &pal);
+        D1Pal basePal = D1Pal(*this->pal);
+        bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
         if (success) {
             if (frame.getWidth() != tileWidth || frame.getHeight() != tileHeight) {
                 QMessageBox::warning(this, tr("Warning"), tr("The image must be %1px * %2px to be used as a tile.").arg(tileWidth).arg(tileHeight));
@@ -1205,10 +1210,11 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
             this->assignSubtiles(frame, tileIndex, this->min->getSubtileCount());
             // reset tile flags
             this->amp->setTileProperties(tileIndex, 0);
-            // update the palette
-            D1Pal *gfxPal = this->gfx->getPalette();
-            gfxPal->updateColors(pal);
-            emit this->palModified();
+            if (palMod) {
+                // update the palette
+                this->pal->updateColors(basePal);
+                emit this->palModified();
+            }
             // update the view
             this->displayFrame();
         }

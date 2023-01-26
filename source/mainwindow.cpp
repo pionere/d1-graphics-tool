@@ -122,6 +122,12 @@ void MainWindow::setPal(QString path)
     this->trnBase->refreshResultingPalette();
 
     this->palWidget->setPal(this->pal);
+    if (this->celView != nullptr) {
+        this->celView->setPal(this->pal);
+    }
+    if (this->levelCelView != nullptr) {
+        this->levelCelView->setPal(this->pal);
+    }
 }
 
 void MainWindow::setUniqueTrn(QString path)
@@ -722,7 +728,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     if (isTileset) {
         // build a LevelCelView
         this->levelCelView = new LevelCelView();
-        this->levelCelView->initialize(this->gfx, this->min, this->til, this->sol, this->amp, this->tmi);
+        this->levelCelView->initialize(this->pal, this->gfx, this->min, this->til, this->sol, this->amp, this->tmi);
 
         // Select color when level CEL view clicked
         QObject::connect(this->levelCelView, &LevelCelView::pixelClicked, this, &MainWindow::pixelClicked);
@@ -735,7 +741,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     } else {
         // build a CelView
         this->celView = new CelView();
-        this->celView->initialize(this->gfx);
+        this->celView->initialize(this->pal, this->gfx);
 
         // Select color when CEL view clicked
         QObject::connect(this->celView, &CelView::pixelClicked, this, &MainWindow::pixelClicked);

@@ -63,7 +63,9 @@ public:
     explicit CelView(QWidget *parent = nullptr);
     ~CelView();
 
-    void initialize(D1Gfx *gfx);
+    void initialize((D1Pal *pal, D1Gfx *gfx);
+    void setPal(D1Pal *pal);
+
     int getCurrentFrameIndex();
     void framePixelClicked(unsigned x, unsigned y);
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
@@ -121,6 +123,7 @@ private:
     Ui::CelView *ui;
     CelScene *celScene;
 
+    D1Pal *pal;
     D1Gfx *gfx;
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;

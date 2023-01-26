@@ -184,11 +184,17 @@ CelView::~CelView()
     delete celScene;
 }
 
-void CelView::initialize(D1Gfx *g)
+void CelView::initialize(D1Pal *p, D1Gfx *g)
 {
+    this->pal = p;
     this->gfx = g;
 
     this->update();
+}
+
+void CelView::setPal(D1Pal *p)
+{
+    this->pal = p;
 }
 
 void CelView::update()
@@ -261,16 +267,13 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {
         bool wasModified = this->gfx->isModified();
-        bool clipped;
+        bool clipped, palModified;
         D1GfxFrame *frame = this->gfx->insertFrame(index, &clipped);
-        D1Pal pal = D1Pal(*this->gfx->getPalette());
-        if (!D1Pcx::load(*frame, imagefilePath, clipped, &pal)) {
+        if (!D1Pcx::load(*frame, imagefilePath, clipped, this->pal, this->gfx->getPalette(), &palModified)) {
             this->gfx->removeFrame(index);
             this->gfx->setModified(wasModified);
-        } else {
+        } else if (palModified) {
             // update the palette
-            D1Pal *gfxPal = this->gfx->getPalette();
-            gfxPal->updateColors(pal);
             emit this->palModified();
         }
         return;
