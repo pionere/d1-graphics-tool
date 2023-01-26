@@ -2546,7 +2546,7 @@
     <message numerus="yes">
         <location filename="../source/upscaler.cpp" line="3133"/>
         <source>Upscaled %n frame(s).</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>Upscaled %1 frame.</numerusform>
             <numerusform>Upscaled %1 frames.</numerusform>
         </translation>
@@ -2559,7 +2559,7 @@
     <message numerus="yes">
         <location filename="../source/upscaler.cpp" line="3255"/>
         <source>Upscaled %n subtile(s).</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>Upscaled %1 subtile.</numerusform>
             <numerusform>Upscaled %1 subtiles.</numerusform>
         </translation>

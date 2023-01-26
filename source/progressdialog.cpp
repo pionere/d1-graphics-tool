@@ -73,7 +73,7 @@ void ProgressDialog::done()
     theDialog->ui->progressLabel->setVisible(false);
     theDialog->ui->progressBar->setVisible(false);
     theDialog->ui->progressButtonsWidget->setVisible(false);
-    bool detailsOpen = this->ui->detailsGroupBox->isVisible();
+    bool detailsOpen = theDialog->ui->detailsGroupBox->isVisible();
     theDialog->ui->detailsGroupBox->setVisible(true);
     theDialog->ui->closePushButton->setVisible(true);
     if (theDialog->status == PROGRESS_STATE::RUNNING) {
