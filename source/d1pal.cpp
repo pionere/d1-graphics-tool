@@ -164,6 +164,11 @@ QColor D1Pal::getUndefinedColor() const
     return this->undefinedColor;
 }
 
+void D1Pal::setUndefinedColor(QColor color)
+{
+    this->undefinedColor = color;
+}
+
 QColor D1Pal::getColor(quint8 index)
 {
     return this->colors[index];

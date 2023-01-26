@@ -36,6 +36,7 @@ public:
 
     QString getFilePath();
     QColor getUndefinedColor() const;
+    void setUndefinedColor(QColor color);
     QColor getColor(quint8 index);
     void setColor(quint8 index, QColor);
 
