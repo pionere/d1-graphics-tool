@@ -661,7 +661,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString
         if (image.isNull()) {
             break;
         }
-        this->insertSubtiles(mode, index + numImages, image);
+        this->insertSubtiles(mode, index, image);
         // update index
         int newSubtileCount = this->min->getSubtileCount();
         index += newSubtileCount - prevSubtileCount;
@@ -967,7 +967,7 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &i
         if (image.isNull()) {
             break;
         }
-        this->insertTiles(mode, index + numImages, image);
+        this->insertTiles(mode, index, image);
         // update index
         int newTileCount = this->til->getTileCount();
         index += newTileCount - prevTileCount;
