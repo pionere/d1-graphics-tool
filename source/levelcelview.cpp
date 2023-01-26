@@ -194,7 +194,7 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
         quint16 frameRef = 0;
         if (minFrames.count() > stFrame) {
             frameRef = minFrames.at(stFrame);
-            this->tabSubTileWidget->selectFrame(stFrame);
+            this->tabSubTileWidget.selectFrame(stFrame);
         }
 
         if (frameRef > 0) {
@@ -272,7 +272,7 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
         QList<quint16> &tilSubtiles = this->til->getSubtileIndices(this->currentTileIndex);
         if (tilSubtiles.count() > tSubtile) {
             this->currentSubtileIndex = tilSubtiles.at(tSubtile);
-            this->tabTileWidget->selectSubtile(tSubtile);
+            this->tabTileWidget.selectSubtile(tSubtile);
             this->displayFrame();
         }
         return;
