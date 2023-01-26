@@ -3,7 +3,6 @@
 #include <QApplication>
 #include <QByteArray>
 #include <QList>
-#include <QMessageBox>
 
 #include "config.h"
 #include "d1image.h"
@@ -42,7 +41,7 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *ba
     QFile file = QFile(pcxFilePath);
 
     if (!file.open(QIODevice::ReadOnly)) {
-        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to read file: %1.").arg(pcxFilePath));
+        dProgressErr() << QApplication::tr("Failed to read file: %1.").arg(pcxFilePath);
         return false;
     }
 
@@ -51,22 +50,22 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *ba
     PCXPALETTE pPalette;
 
     if (fileSize < sizeof(pcxhdr)) {
-        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Invalid PCX file."));
+        dProgressErr() << QApplication::tr("Invalid PCX file.");
         return false;
     }
 
     // process the header
     file.read((char *)&pcxhdr, sizeof(pcxhdr));
     if (pcxhdr.Manufacturer != 10) {
-        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Invalid PCX header."));
+        dProgressErr() << QApplication::tr("Invalid PCX header.");
         return false;
     }
     if (pcxhdr.BitsPerPixel != 8) {
-        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Unsupported PCX format (number of bits per pixel)."));
+        dProgressErr() << QApplication::tr("Unsupported PCX format (number of bits per pixel).");
         return false;
     }
     if (pcxhdr.NPlanes != 1) {
-        QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Unsupported PCX format (number of planes)."));
+        dProgressErr() << QApplication::tr("Unsupported PCX format (number of planes).");
         return false;
     }
 

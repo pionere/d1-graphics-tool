@@ -37,7 +37,6 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
         theDialog->ui->closePushButton->setVisible(true);
         theDialog->ui->outputTextEdit->clear();
         theDialog->textVersion = 0;
-        theDialog->justFailed = false;
         theDialog->status = PROGRESS_STATE::RUNNING;
 
         theWidget->update(theDialog->status, true, label);
@@ -64,7 +63,6 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     theDialog->on_detailsPushButton_clicked();
     theDialog->ui->outputTextEdit->clear();
     theDialog->textVersion = 0;
-    theDialog->justFailed = false;
     theDialog->status = PROGRESS_STATE::RUNNING;
 
     theWidget->update(theDialog->status, false, "");
@@ -72,16 +70,22 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
 
 void ProgressDialog::done()
 {
-    theDialog->hide();
-
     theDialog->ui->progressLabel->setVisible(false);
     theDialog->ui->progressBar->setVisible(false);
     theDialog->ui->progressButtonsWidget->setVisible(false);
+    bool detailsOpen = this->ui->detailsGroupBox->isVisible();
     theDialog->ui->detailsGroupBox->setVisible(true);
     theDialog->ui->closePushButton->setVisible(true);
     if (theDialog->status == PROGRESS_STATE::RUNNING) {
         theDialog->status = PROGRESS_STATE::DONE;
     }
+    if (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible())) {
+        theDialog->hide();
+    } else {
+        theDialog->showNormal();
+        theDialog->adjustSize();
+    }
+
     theWidget->update(theDialog->status, !theDialog->ui->outputTextEdit->document()->isEmpty(), "");
 }
 
@@ -121,7 +125,6 @@ ProgressDialog &dProgressFail()
 {
     if (theDialog->status < PROGRESS_STATE::FAIL) {
         theDialog->status = PROGRESS_STATE::FAIL;
-        theDialog->justFailed = true;
     }
     return *theDialog;
 }
@@ -130,10 +133,6 @@ ProgressDialog &ProgressDialog::operator<<(const QString &text)
 {
     this->ui->outputTextEdit->appendPlainText(text);
     this->textVersion++;
-    if (this->justFailed) {
-        this->justFailed = false;
-        QMessageBox::critical(nullptr, QApplication::tr("Error"), text);
-    }
     return *this;
 }
 
