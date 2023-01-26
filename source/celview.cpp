@@ -263,14 +263,14 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
         bool wasModified = this->gfx->isModified();
         bool clipped;
         D1GfxFrame *frame = this->gfx->insertFrame(index, &clipped);
-        D1Pal *pal = this->gfx->getPalette();
-        if (!D1Pcx::load(*frame, imagefilePath, clipped, pal)) {
+        D1Pal pal = D1Pal(*this->gfx->getPalette());
+        if (!D1Pcx::load(*frame, imagefilePath, clipped, &pal)) {
             this->gfx->removeFrame(index);
             this->gfx->setModified(wasModified);
         } else {
             // update the palette
             D1Pal *gfxPal = this->gfx->getPalette();
-            gfxPal->updateColors(*pal);
+            gfxPal->updateColors(pal);
             emit this->palModified();
         }
         return;
