@@ -61,6 +61,8 @@ bool D1Trn::isModified() const
 
 void D1Trn::refreshResultingPalette()
 {
+    this->resultingPalette.setUndefinedColor(this->palette->getUndefinedColor());
+
     for (int i = 0; i < D1TRN_TRANSLATIONS; i++) {
         this->resultingPalette.setColor(
             i, this->palette->getColor(this->translations[i]));
