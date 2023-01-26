@@ -333,6 +333,7 @@ void LevelCelView::assignFrames(const QImage &image, int subtileIndex, int frame
 void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QImage &image)
 {
     if ((image.width() % MICRO_WIDTH) != 0 || (image.height() % MICRO_HEIGHT) != 0) {
+        QMessageBox::warning(this, tr("Warning"), tr("The image must contain 32px * 32px blocks to be used as a frame."));
         return;
     }
 
@@ -352,19 +353,21 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QImage &i
 void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
 {
     QImageReader reader = QImageReader(imagefilePath);
-    int numImages = 0;
-
+    if (!reader.canRead()) {
+        QMessageBox::critical(this, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
+        return;
+    }
+    int prevFrameCount = this->gfx->getFrameCount();
     while (true) {
         QImage image = reader.read();
         if (image.isNull()) {
             break;
         }
-        this->insertFrames(mode, index + numImages, image);
-        numImages++;
-    }
-
-    if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
+        this->insertFrames(mode, index, image);
+        // update index
+        int newFrameCount = this->gfx->getFrameCount();
+        index += newFrameCount - prevFrameCount;
+        prevFrameCount = newFrameCount;
     }
 }
 
@@ -454,6 +457,9 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QImage 
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     if ((image.width() % subtileWidth) != 0 || (image.height() % subtileHeight) != 0) {
+        if (mode != IMAGE_FILE_MODE::AUTO) {
+            QMessageBox::warning(this, tr("Warning"), tr("The image must contain %1px * %2px blocks to be used as a subtile.").arg(subtileWidth).arg(subtileWidth));
+        }
         return;
     }
 
@@ -473,19 +479,21 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QImage 
 void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
 {
     QImageReader reader = QImageReader(imagefilePath);
-    int numImages = 0;
-
+    if (!reader.canRead()) {
+        QMessageBox::critical(this, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
+        return;
+    }
+    int prevSubtileCount = this->min->getSubtileCount();
     while (true) {
         QImage image = reader.read();
         if (image.isNull()) {
             break;
         }
-        this->insertSubtiles(mode, index + numImages, image);
-        numImages++;
-    }
-
-    if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
+        this->insertSubtiles(mode, index, image);
+        // update index
+        int newSubtileCount = this->min->getSubtileCount();
+        index += newSubtileCount - prevSubtileCount;
+        prevSubtileCount = newSubtileCount;
     }
 }
 
@@ -557,7 +565,8 @@ void LevelCelView::insertSubtile(int subtileIndex, const QImage &image)
                 continue;
             }
 
-            this->gfx->insertFrame(frameIndex, subImage);
+            D1GfxFrame *frame = this->gfx->insertFrame(frameIndex, subImage);
+            LevelTabFrameWidget::selectFrameType(frame);
             frameIndex++;
         }
     }
@@ -604,6 +613,9 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QImage &im
     unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     if ((image.width() % tileWidth) != 0 || (image.height() % tileHeight) != 0) {
+        if (mode != IMAGE_FILE_MODE::AUTO) {
+            QMessageBox::warning(this, tr("Warning"), tr("The image must contain %1px * %2px blocks to be used as a tile.").arg(tileWidth).arg(tileHeight));
+        }
         return;
     }
 
@@ -644,19 +656,21 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QImage &im
 void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
 {
     QImageReader reader = QImageReader(imagefilePath);
-    int numImages = 0;
-
+    if (!reader.canRead()) {
+        QMessageBox::critical(this, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
+        return;
+    }
+    int prevTileCount = this->til->getTileCount();
     while (true) {
         QImage image = reader.read();
         if (image.isNull()) {
             break;
         }
-        this->insertTiles(mode, index + numImages, image);
-        numImages++;
-    }
-
-    if (mode != IMAGE_FILE_MODE::AUTO && numImages == 0) {
-        QMessageBox::critical(this, tr("Error"), tr("Failed to read file: %1.").arg(imagefilePath));
+        this->insertTiles(mode, index, image);
+        // update index
+        int newTileCount = this->til->getTileCount();
+        index += newTileCount - prevTileCount;
+        prevTileCount = newTileCount;
     }
 }
 
@@ -787,6 +801,10 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
 
     int subtileIndex = this->currentSubtileIndex;
     this->assignFrames(image, subtileIndex, this->gfx->getFrameCount());
+
+    // reset subtile flags
+    this->sol->setSubtileProperties(subtileIndex, 0);
+    this->tmi->setSubtileProperties(subtileIndex, 0);
 
     // update the view
     this->displayFrame();
