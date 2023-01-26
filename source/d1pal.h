@@ -24,6 +24,7 @@ public:
     static constexpr const char *DEFAULT_NAME = "_default.pal";
 
     D1Pal() = default;
+    D1Pal(const D1Pal &opal);
     ~D1Pal() = default;
 
     bool load(QString path);
@@ -39,6 +40,7 @@ public:
     QColor getColor(quint8 index);
     void setColor(quint8 index, QColor);
 
+    void updateColors(const D1Pal &opal);
     void cycleColors(D1PAL_CYCLE_TYPE type);
 
 private:

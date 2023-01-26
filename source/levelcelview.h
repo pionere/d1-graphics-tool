@@ -15,6 +15,7 @@
 #include "d1amp.h"
 #include "d1gfx.h"
 #include "d1min.h"
+#include "d1pal.h"
 #include "d1sol.h"
 #include "d1til.h"
 #include "d1tmi.h"
@@ -36,7 +37,8 @@ public:
     explicit LevelCelView(QWidget *parent = nullptr);
     ~LevelCelView();
 
-    void initialize(D1Gfx *gfx, D1Min *min, D1Til *til, D1Sol *sol, D1Amp *amp, D1Tmi *tmi);
+    void initialize(D1Pal *pal, D1Gfx *gfx, D1Min *min, D1Til *til, D1Sol *sol, D1Amp *amp, D1Tmi *tmi);
+    void setPal(D1Pal *pal);
 
     int getCurrentFrameIndex();
     int getCurrentSubtileIndex();
@@ -80,18 +82,25 @@ private:
     void collectFrameUsers(int frameIndex, QList<int> &users) const;
     void collectSubtileUsers(int subtileIndex, QList<int> &users) const;
     void insertFrames(IMAGE_FILE_MODE mode, int index, const QImage &image);
+    bool insertFrames(IMAGE_FILE_MODE mode, int index, const D1GfxFrame &frame);
     void insertFrames(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);
     void insertFrames(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
     void insertSubtile(int subtileIndex, const QImage &image);
+    void insertSubtile(int subtileIndex, const D1GfxFrame &frame);
     void insertSubtiles(IMAGE_FILE_MODE mode, int index, const QImage &image);
+    bool insertSubtiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame &frame);
     void insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);
     void insertSubtiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
     void insertTile(int tileIndex, const QImage &image);
+    void insertTile(int tileIndex, const D1GfxFrame &frame);
     void insertTiles(IMAGE_FILE_MODE mode, int index, const QImage &image);
+    bool insertTiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame &frame);
     void insertTiles(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);
     void insertTiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
     void assignFrames(const QImage &image, int subtileIndex, int frameIndex);
+    void assignFrames(const D1GfxFrame &frame, int subtileIndex, int frameIndex);
     void assignSubtiles(const QImage &image, int tileIndex, int subtileIndex);
+    void assignSubtiles(const D1GfxFrame &frame, int tileIndex, int subtileIndex);
     void removeFrame(int frameIndex);
     void removeSubtile(int subtileIndex);
     void removeUnusedFrames(QString &report);
@@ -104,6 +113,7 @@ private:
 signals:
     void frameRefreshed();
     void pixelClicked(const D1GfxPixel &pixel);
+    void palModified();
 
 private slots:
     void on_firstFrameButton_clicked();
@@ -156,6 +166,7 @@ private:
     LevelTabSubTileWidget tabSubTileWidget;
     LevelTabFrameWidget tabFrameWidget;
 
+    D1Pal *pal;
     D1Gfx *gfx;
     D1Min *min;
     D1Til *til;

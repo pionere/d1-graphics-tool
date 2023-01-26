@@ -71,6 +71,19 @@ void D1GfxFrame::setFrameType(D1CEL_FRAME_TYPE type)
     this->frameType = type;
 }
 
+void D1GfxFrame::addPixelLine(QList<D1GfxPixel> &pixelLine)
+{
+    this->pixels.append(pixelLine);
+    this->height++;
+    /* if (this->width != pixelLine.size()) {
+        if (this->width != 0) {
+            dProgressErr() << QString("Mismatching lines.");
+        }*/
+    if (this->width == 0) {
+        this->width = pixelLine.size();
+    }
+}
+
 bool D1Gfx::isFrameSizeConstant()
 {
     if (this->frames.isEmpty()) {
@@ -119,20 +132,26 @@ QImage D1Gfx::getFrameImage(quint16 frameIndex)
     return image;
 }
 
+D1GfxFrame *D1Gfx::insertFrame(int idx, bool *clipped)
+{
+    if (!this->frames.isEmpty()) {
+        *clipped = this->frames[0].isClipped();
+    } else {
+        *clipped = this->type == D1CEL_TYPE::V2_MONO_GROUP || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
+    }
+
+    this->frames.insert(idx, D1GfxFrame());
+    this->modified = true;
+    return &this->frames[idx];
+}
+
 D1GfxFrame *D1Gfx::insertFrame(int idx, const QImage &image)
 {
     bool clipped;
 
-    if (!this->frames.isEmpty()) {
-        clipped = this->frames[0].isClipped();
-    } else {
-        clipped = this->type == D1CEL_TYPE::V2_MONO_GROUP || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
-    }
-
-    D1GfxFrame frame;
-    D1ImageFrame::load(frame, image, clipped, this->palette);
-    this->frames.insert(idx, frame);
-    this->modified = true;
+    D1GfxFrame *frame = this->insertFrame(idx, &clipped);
+    D1ImageFrame::load(*frame, image, clipped, this->palette);
+    // this->modified = true;
 
     if (this->groupFrameIndices.isEmpty()) {
         // create new group if this is the first frame
@@ -213,9 +232,9 @@ bool D1Gfx::isModified() const
     return this->modified;
 }
 
-void D1Gfx::setModified()
+void D1Gfx::setModified(bool modified)
 {
-    this->modified = true;
+    this->modified = modified;
 }
 
 bool D1Gfx::isUpscaled() const
@@ -232,6 +251,11 @@ void D1Gfx::setUpscaled(bool upscaled)
 QString D1Gfx::getFilePath() const
 {
     return this->gfxFilePath;
+}
+
+D1Pal *D1Gfx::getPalette()
+{
+    return this->palette;
 }
 
 void D1Gfx::setPalette(D1Pal *pal)
@@ -263,6 +287,12 @@ D1GfxFrame *D1Gfx::getFrame(int frameIndex) const
         return nullptr;
 
     return const_cast<D1GfxFrame *>(&this->frames[frameIndex]);
+}
+
+void D1Gfx::setFrame(int frameIndex, const D1GfxFrame &frame)
+{
+    this->frames[frameIndex] = frame;
+    this->modified = true;
 }
 
 int D1Gfx::getFrameWidth(int frameIndex) const

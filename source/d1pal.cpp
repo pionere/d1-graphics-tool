@@ -7,6 +7,16 @@
 
 #include "config.h"
 
+D1Pal::D1Pal(const D1Pal &opal)
+    : QObject()
+{
+    this->palFilePath = opal.palFilePath;
+    this->modified = opal.modified;
+    this->undefinedColor = opal.undefinedColor;
+    this->currentCycleCounter = opal.currentCycleCounter;
+    this->updateColors(opal);
+}
+
 bool D1Pal::load(QString filePath)
 {
     QFile file = QFile(filePath);
@@ -168,6 +178,13 @@ void D1Pal::setColor(quint8 index, QColor color)
 {
     this->colors[index] = color;
     this->modified = true;
+}
+
+void D1Pal::updateColors(const D1Pal &opal)
+{
+    for (int i = 0; i < D1PAL_COLORS; i++) {
+        this->colors[i] = opal.colors[i];
+    }
 }
 
 void D1Pal::cycleColors(D1PAL_CYCLE_TYPE type)

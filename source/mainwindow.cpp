@@ -122,6 +122,12 @@ void MainWindow::setPal(QString path)
     this->trnBase->refreshResultingPalette();
 
     this->palWidget->setPal(this->pal);
+    if (this->celView != nullptr) {
+        this->celView->setPal(this->pal);
+    }
+    if (this->levelCelView != nullptr) {
+        this->levelCelView->setPal(this->pal);
+    }
 }
 
 void MainWindow::setUniqueTrn(QString path)
@@ -431,7 +437,12 @@ bool MainWindow::hasImageUrl(const QMimeData *mimeData)
     QMimeDatabase mimeDB;
 
     for (const QUrl &url : mimeData->urls()) {
-        QMimeType mimeType = mimeDB.mimeTypeForFile(url.toLocalFile());
+        QString fileName = url.toLocalFile();
+        // add PCX support
+        if (fileName.toLower().endsWith(".pcx")) {
+            return true;
+        }
+        QMimeType mimeType = mimeDB.mimeTypeForFile(fileName);
         for (const QByteArray &mimeTypeName : supportedMimeTypes) {
             if (mimeType.inherits(mimeTypeName)) {
                 return true;
@@ -717,23 +728,29 @@ void MainWindow::openFile(const OpenAsParam &params)
     if (isTileset) {
         // build a LevelCelView
         this->levelCelView = new LevelCelView();
-        this->levelCelView->initialize(this->gfx, this->min, this->til, this->sol, this->amp, this->tmi);
+        this->levelCelView->initialize(this->pal, this->gfx, this->min, this->til, this->sol, this->amp, this->tmi);
 
         // Select color when level CEL view clicked
         QObject::connect(this->levelCelView, &LevelCelView::pixelClicked, this, &MainWindow::pixelClicked);
 
         // Refresh palette widgets when frame, subtile of tile is changed
         QObject::connect(this->levelCelView, &LevelCelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
+
+        // Refresh palette widgets when the palette is changed (loading a PCX file)
+        QObject::connect(this->levelCelView, &LevelCelView::palModified, this->palWidget, &PaletteWidget::refresh);
     } else {
         // build a CelView
         this->celView = new CelView();
-        this->celView->initialize(this->gfx);
+        this->celView->initialize(this->pal, this->gfx);
 
         // Select color when CEL view clicked
         QObject::connect(this->celView, &CelView::pixelClicked, this, &MainWindow::pixelClicked);
 
         // Refresh palette widgets when frame
         QObject::connect(this->celView, &CelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
+
+        // Refresh palette widgets when the palette is changed (loading a PCX file)
+        QObject::connect(this->celView, &CelView::palModified, this->palWidget, &PaletteWidget::refresh);
     }
 
     // Initialize palette widgets
@@ -895,10 +912,10 @@ void MainWindow::saveFile(const SaveAsParam &params)
     if (change) {
         // update view
         if (this->celView != nullptr) {
-            this->celView->initialize(this->gfx);
+            this->celView->initialize(this->pal, this->gfx);
         }
         if (this->levelCelView != nullptr) {
-            this->levelCelView->initialize(this->gfx, this->min, this->til, this->sol, this->amp, this->tmi);
+            this->levelCelView->initialize(this->pal, this->gfx, this->min, this->til, this->sol, this->amp, this->tmi);
         }
     }
 
@@ -943,6 +960,10 @@ static QString imageNameFilter()
             }
         }
     }
+    // add PCX support
+    allSupportedFormats.append(".pcx");
+    allSupportedFormats.append(".PCX");
+
     QString allSupportedFormatsFilter = QApplication::tr("Image files (%1)").arg(allSupportedFormats.join(' '));
     return allSupportedFormatsFilter;
 }

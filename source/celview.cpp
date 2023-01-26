@@ -12,6 +12,7 @@
 #include <QMimeData>
 
 #include "config.h"
+#include "d1pcx.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
 #include "ui_celview.h"
@@ -183,11 +184,17 @@ CelView::~CelView()
     delete celScene;
 }
 
-void CelView::initialize(D1Gfx *g)
+void CelView::initialize(D1Pal *p, D1Gfx *g)
 {
+    this->pal = p;
     this->gfx = g;
 
     this->update();
+}
+
+void CelView::setPal(D1Pal *p)
+{
+    this->pal = p;
 }
 
 void CelView::update()
@@ -258,6 +265,19 @@ void CelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefil
 
 void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
 {
+    if (imagefilePath.toLower().endsWith(".pcx")) {
+        bool wasModified = this->gfx->isModified();
+        bool clipped, palMod;
+        D1GfxFrame *frame = this->gfx->insertFrame(index, &clipped);
+        if (!D1Pcx::load(*frame, imagefilePath, clipped, this->pal, this->gfx->getPalette(), &palMod)) {
+            this->gfx->removeFrame(index);
+            this->gfx->setModified(wasModified);
+        } else if (palMod) {
+            // update the palette
+            emit this->palModified();
+        }
+        return;
+    }
     QImageReader reader = QImageReader(imagefilePath);
     int numImages = 0;
 
