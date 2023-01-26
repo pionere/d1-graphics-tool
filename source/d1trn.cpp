@@ -6,9 +6,6 @@
 
 bool D1Trn::load(QString filePath, D1Pal *pal)
 {
-    if (this->palette.isNull())
-        return false;
-
     QFile file = QFile(filePath);
 
     if (!file.open(QIODevice::ReadOnly))

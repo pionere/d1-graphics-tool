@@ -3,6 +3,7 @@
 #include <QDirIterator>
 #include <QGraphicsScene>
 #include <QMouseEvent>
+#include <QPointer>
 #include <QStyle>
 #include <QUndoCommand>
 #include <QUndoStack>

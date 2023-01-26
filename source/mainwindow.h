@@ -30,7 +30,7 @@
 
 #define MemFree(p)   \
     {                \
-        void* p__p;  \
+        void *p__p;  \
         p__p = p;    \
         p = nullptr; \
         delete p__p; \
