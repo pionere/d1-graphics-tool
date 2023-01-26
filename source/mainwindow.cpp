@@ -912,10 +912,10 @@ void MainWindow::saveFile(const SaveAsParam &params)
     if (change) {
         // update view
         if (this->celView != nullptr) {
-            this->celView->initialize(this->gfx);
+            this->celView->initialize(this->pal, this->gfx);
         }
         if (this->levelCelView != nullptr) {
-            this->levelCelView->initialize(this->gfx, this->min, this->til, this->sol, this->amp, this->tmi);
+            this->levelCelView->initialize(this->pal, this->gfx, this->min, this->til, this->sol, this->amp, this->tmi);
         }
     }
 
