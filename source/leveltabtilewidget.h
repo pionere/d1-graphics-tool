@@ -21,6 +21,8 @@ public:
     void initialize(LevelCelView *v, D1Til *t, D1Min *m, D1Amp *a);
     void update();
 
+    void selectSubtile(int index);
+
 private slots:
     void on_ampTypeComboBox_activated(int index);
 

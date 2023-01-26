@@ -114,6 +114,12 @@ void LevelTabSubTileWidget::update()
     this->onUpdate = false;
 }
 
+void LevelTabSubTileWidget::selectFrame(int index)
+{
+    this->ui->framesComboBox->setCurrentIndex(index);
+    this->updateFramesSelection(index);
+}
+
 void LevelTabSubTileWidget::updateFramesSelection(int index)
 {
     this->lastFrameEntryIndex = index;
