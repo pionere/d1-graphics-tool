@@ -593,7 +593,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QImage 
 
     if ((image.width() % subtileWidth) != 0 || (image.height() % subtileHeight) != 0) {
         if (mode != IMAGE_FILE_MODE::AUTO) {
-            dProgressErr() << tr("The image must contain %1px * %2px blocks to be used as a subtile.").arg(subtileWidth).arg(subtileWidth));
+            dProgressErr() << tr("The image must contain %1px * %2px blocks to be used as a subtile.").arg(subtileWidth).arg(subtileWidth);
         }
         return;
     }
@@ -858,7 +858,7 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QImage &im
 
     if ((image.width() % tileWidth) != 0 || (image.height() % tileHeight) != 0) {
         if (mode != IMAGE_FILE_MODE::AUTO) {
-            dProgressErr() << tr("The image must contain %1px * %2px blocks to be used as a tile.").arg(tileWidth).arg(tileHeight));
+            dProgressErr() << tr("The image must contain %1px * %2px blocks to be used as a tile.").arg(tileWidth).arg(tileHeight);
         }
         return;
     }
@@ -904,7 +904,7 @@ bool LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame
 
     if ((frame.getWidth() % tileWidth) != 0 || (frame.getHeight() % tileHeight) != 0) {
         if (mode != IMAGE_FILE_MODE::AUTO) {
-            dProgressErr() << tr("The image must contain %1px * %2px blocks to be used as a tile.").arg(tileWidth).arg(tileHeight));
+            dProgressErr() << tr("The image must contain %1px * %2px blocks to be used as a tile.").arg(tileWidth).arg(tileHeight);
         }
         return false;
     }

@@ -6,6 +6,7 @@
 
 #include "config.h"
 #include "d1image.h"
+#include "progressdialog.h"
 
 #define D1PCX_COLORS 256
 
