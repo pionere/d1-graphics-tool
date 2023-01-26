@@ -82,6 +82,7 @@ void D1GfxFrame::addPixelLine(QList<D1GfxPixel> &pixelLine)
     if (this->width == 0) {
         this->width = pixelLine.size();
     }
+    this->modified = true;
 }
 
 bool D1Gfx::isFrameSizeConstant()
@@ -292,6 +293,7 @@ D1GfxFrame *D1Gfx::getFrame(int frameIndex) const
 void D1Gfx::setFrame(int frameIndex, const D1GfxFrame &frame)
 {
     this->frames[frameIndex] = frame;
+    this->modified = true;
 }
 
 int D1Gfx::getFrameWidth(int frameIndex) const

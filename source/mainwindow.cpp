@@ -206,8 +206,8 @@ bool MainWindow::loadUniqueTrn(QString trnFilePath)
     QString &path = trnFilePath;
     QString name = trnFileInfo.fileName();
 
-    D1Trn *newTrn = new D1Trn(this->pal);
-    if (!newTrn->load(path)) {
+    D1Trn *newTrn = new D1Trn();
+    if (!newTrn->load(path, this->pal)) {
         delete newTrn;
         QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return false;
@@ -227,8 +227,8 @@ bool MainWindow::loadBaseTrn(QString trnFilePath)
     QString &path = trnFilePath;
     QString name = trnFileInfo.fileName();
 
-    D1Trn *newTrn = new D1Trn(this->pal);
-    if (!newTrn->load(path)) {
+    D1Trn *newTrn = new D1Trn();
+    if (!newTrn->load(path, this->pal)) {
         delete newTrn;
         QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return false;
@@ -598,12 +598,12 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->pal = newPal;
 
     // Loading default null.trn
-    D1Trn *newTrn = new D1Trn(this->pal);
-    newTrn->load(D1Trn::IDENTITY_PATH);
+    D1Trn *newTrn = new D1Trn();
+    newTrn->load(D1Trn::IDENTITY_PATH, this->pal);
     this->uniqueTrns[D1Trn::IDENTITY_PATH] = newTrn;
     this->trnUnique = newTrn;
-    newTrn = new D1Trn(this->trnUnique->getResultingPalette());
-    newTrn->load(D1Trn::IDENTITY_PATH);
+    newTrn = new D1Trn();
+    newTrn->load(D1Trn::IDENTITY_PATH, this->trnUnique->getResultingPalette());
     this->baseTrns[D1Trn::IDENTITY_PATH] = newTrn;
     this->trnBase = newTrn;
 
@@ -1018,12 +1018,12 @@ void MainWindow::on_actionClose_triggered()
 {
     this->undoStack->clear();
 
-    delete this->celView;
-    delete this->levelCelView;
-    delete this->palWidget;
-    delete this->trnUniqueWidget;
-    delete this->trnBaseWidget;
-    delete this->gfx;
+    MemFree(this->celView);
+    MemFree(this->levelCelView);
+    MemFree(this->palWidget);
+    MemFree(this->trnUniqueWidget);
+    MemFree(this->trnBaseWidget);
+    MemFree(this->gfx);
 
     qDeleteAll(this->pals);
     this->pals.clear();
@@ -1034,12 +1034,12 @@ void MainWindow::on_actionClose_triggered()
     qDeleteAll(this->baseTrns);
     this->baseTrns.clear();
 
-    delete this->min;
-    delete this->til;
-    delete this->sol;
-    delete this->amp;
-    delete this->tmi;
-    delete this->palHits;
+    MemFree(this->min);
+    MemFree(this->til);
+    MemFree(this->sol);
+    MemFree(this->amp);
+    MemFree(this->tmi);
+    MemFree(this->palHits);
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(false);
@@ -1397,8 +1397,11 @@ void MainWindow::on_actionSave_PAL_as_triggered()
 void MainWindow::on_actionClose_PAL_triggered()
 {
     QString selectedPath = this->palWidget->getSelectedPath();
-    if (selectedPath == D1Pal::DEFAULT_PATH)
+    if (selectedPath == D1Pal::DEFAULT_PATH) {
+        this->pal->load(D1Pal::DEFAULT_PATH);
+        this->palWidget->selectPath(D1Pal::DEFAULT_PATH);
         return;
+    }
 
     if (this->pals.contains(selectedPath)) {
         delete this->pals[selectedPath];
@@ -1421,8 +1424,8 @@ void MainWindow::on_actionNew_Translation_Unique_triggered()
     QString path = trnFileInfo.absoluteFilePath();
     QString name = trnFileInfo.fileName();
 
-    D1Trn *newTrn = new D1Trn(this->pal);
-    if (!newTrn->load(D1Trn::IDENTITY_PATH)) {
+    D1Trn *newTrn = new D1Trn();
+    if (!newTrn->load(D1Trn::IDENTITY_PATH, this->pal)) {
         delete newTrn;
         QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return;
@@ -1476,8 +1479,8 @@ void MainWindow::on_actionSave_Translation_Unique_as_triggered()
     QString path = trnFileInfo.absoluteFilePath();
     QString name = trnFileInfo.fileName();
 
-    D1Trn *newTrn = new D1Trn(this->pal);
-    if (!newTrn->load(path)) {
+    D1Trn *newTrn = new D1Trn();
+    if (!newTrn->load(path, this->pal)) {
         delete newTrn;
         QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return;
@@ -1493,8 +1496,11 @@ void MainWindow::on_actionSave_Translation_Unique_as_triggered()
 void MainWindow::on_actionClose_Translation_Unique_triggered()
 {
     QString selectedPath = this->trnUniqueWidget->getSelectedPath();
-    if (selectedPath == D1Trn::IDENTITY_PATH)
+    if (selectedPath == D1Trn::IDENTITY_PATH) {
+        this->trnUnique->load(D1Trn::IDENTITY_PATH);
+        this->trnUniqueWidget->selectPath(D1Trn::IDENTITY_PATH);
         return;
+    }
 
     if (this->uniqueTrns.contains(selectedPath)) {
         delete this->uniqueTrns[selectedPath];
@@ -1517,8 +1523,8 @@ void MainWindow::on_actionNew_Translation_Base_triggered()
     QString path = trnFileInfo.absoluteFilePath();
     QString name = trnFileInfo.fileName();
 
-    D1Trn *newTrn = new D1Trn(this->trnUnique->getResultingPalette());
-    if (!newTrn->load(D1Trn::IDENTITY_PATH)) {
+    D1Trn *newTrn = new D1Trn();
+    if (!newTrn->load(D1Trn::IDENTITY_PATH, this->trnUnique->getResultingPalette())) {
         delete newTrn;
         QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return;
@@ -1572,8 +1578,8 @@ void MainWindow::on_actionSave_Translation_Base_as_triggered()
     QString path = trnFileInfo.absoluteFilePath();
     QString name = trnFileInfo.fileName();
 
-    D1Trn *newTrn = new D1Trn(this->trnUnique->getResultingPalette());
-    if (!newTrn->load(path)) {
+    D1Trn *newTrn = new D1Trn();
+    if (!newTrn->load(path, this->trnUnique->getResultingPalette())) {
         delete newTrn;
         QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return;
@@ -1589,8 +1595,11 @@ void MainWindow::on_actionSave_Translation_Base_as_triggered()
 void MainWindow::on_actionClose_Translation_Base_triggered()
 {
     QString selectedPath = this->trnBaseWidget->getSelectedPath();
-    if (selectedPath == D1Trn::IDENTITY_PATH)
+    if (selectedPath == D1Trn::IDENTITY_PATH) {
+        this->trnBase->load(D1Trn::IDENTITY_PATH);
+        this->trnBaseWidget->selectPath(D1Trn::IDENTITY_PATH);
         return;
+    }
 
     if (this->baseTrns.contains(selectedPath)) {
         delete this->baseTrns[selectedPath];

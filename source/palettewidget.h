@@ -198,8 +198,8 @@ private:
 
     bool pickingTranslationColor = false;
 
-    QPointer<D1Pal> pal;
-    QPointer<D1Trn> trn;
+    D1Pal *pal;
+    D1Trn *trn;
 
     D1PalHits *palHits;
 

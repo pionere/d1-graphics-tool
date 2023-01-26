@@ -4,12 +4,7 @@
 #include <QFile>
 #include <QMessageBox>
 
-D1Trn::D1Trn(D1Pal *pal)
-    : palette(QPointer<D1Pal>(pal))
-{
-}
-
-bool D1Trn::load(QString filePath)
+bool D1Trn::load(QString filePath, D1Pal *pal)
 {
     if (this->palette.isNull())
         return false;
@@ -26,6 +21,7 @@ bool D1Trn::load(QString filePath)
     if (readBytes != D1TRN_TRANSLATIONS)
         return false;
 
+    this->palette = pal;
     this->refreshResultingPalette();
 
     this->trnFilePath = filePath;
