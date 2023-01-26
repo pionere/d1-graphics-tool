@@ -1497,7 +1497,7 @@ void MainWindow::on_actionClose_Translation_Unique_triggered()
 {
     QString selectedPath = this->trnUniqueWidget->getSelectedPath();
     if (selectedPath == D1Trn::IDENTITY_PATH) {
-        this->trnUnique->load(D1Trn::IDENTITY_PATH);
+        this->trnUnique->load(D1Trn::IDENTITY_PATH, this->pal);
         this->trnUniqueWidget->selectPath(D1Trn::IDENTITY_PATH);
         return;
     }
@@ -1596,7 +1596,7 @@ void MainWindow::on_actionClose_Translation_Base_triggered()
 {
     QString selectedPath = this->trnBaseWidget->getSelectedPath();
     if (selectedPath == D1Trn::IDENTITY_PATH) {
-        this->trnBase->load(D1Trn::IDENTITY_PATH);
+        this->trnBase->load(D1Trn::IDENTITY_PATH, this->trnUnique->getResultingPalette());
         this->trnBaseWidget->selectPath(D1Trn::IDENTITY_PATH);
         return;
     }
