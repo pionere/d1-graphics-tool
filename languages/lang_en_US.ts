@@ -134,52 +134,59 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="282"/>
+        <location filename="../source/celview.cpp" line="274"/>
+        <location filename="../source/celview.cpp" line="313"/>
+        <source>Failed to load file: %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/celview.cpp" line="288"/>
+        <location filename="../source/celview.cpp" line="331"/>
         <source>Failed to read file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="327"/>
+        <location filename="../source/celview.cpp" line="359"/>
         <source>Upscaling...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="433"/>
+        <location filename="../source/celview.cpp" line="465"/>
         <source>Insert Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="434"/>
+        <location filename="../source/celview.cpp" line="466"/>
         <source>Add new frames before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="438"/>
+        <location filename="../source/celview.cpp" line="470"/>
         <source>Add Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="439"/>
+        <location filename="../source/celview.cpp" line="471"/>
         <source>Add new frames at the end</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="443"/>
+        <location filename="../source/celview.cpp" line="475"/>
         <source>Replace Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="444"/>
+        <location filename="../source/celview.cpp" line="476"/>
         <source>Replace the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="449"/>
+        <location filename="../source/celview.cpp" line="481"/>
         <source>Del Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="450"/>
+        <location filename="../source/celview.cpp" line="482"/>
         <source>Delete the current frame</source>
         <translation type="unfinished"></translation>
     </message>
@@ -644,74 +651,74 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1200"/>
+        <location filename="../source/levelcelview.cpp" line="1235"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1021"/>
-        <location filename="../source/levelcelview.cpp" line="1045"/>
+        <location filename="../source/levelcelview.cpp" line="1055"/>
+        <location filename="../source/levelcelview.cpp" line="1078"/>
         <source>The image must be 32px * 32px to be used as a frame.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1092"/>
+        <location filename="../source/levelcelview.cpp" line="1125"/>
         <source>Confirmation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1092"/>
+        <location filename="../source/levelcelview.cpp" line="1125"/>
         <source>The frame is used by subtile %1 (and maybe others). Are you sure you want to proceed?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1126"/>
-        <location filename="../source/levelcelview.cpp" line="1153"/>
+        <location filename="../source/levelcelview.cpp" line="1162"/>
+        <location filename="../source/levelcelview.cpp" line="1188"/>
         <source>The image must be %1px * %2px to be used as a subtile.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1200"/>
+        <location filename="../source/levelcelview.cpp" line="1235"/>
         <source>The subtile is used by tile %1 (and maybe others).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1231"/>
-        <location filename="../source/levelcelview.cpp" line="1257"/>
+        <location filename="../source/levelcelview.cpp" line="1269"/>
+        <location filename="../source/levelcelview.cpp" line="1294"/>
         <source>The image must be %1px * %2px to be used as a tile.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1356"/>
+        <location filename="../source/levelcelview.cpp" line="1393"/>
         <source>The tileset is empty.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1359"/>
-        <location filename="../source/levelcelview.cpp" line="1409"/>
-        <location filename="../source/levelcelview.cpp" line="1437"/>
-        <location filename="../source/levelcelview.cpp" line="1515"/>
-        <location filename="../source/levelcelview.cpp" line="1529"/>
-        <location filename="../source/levelcelview.cpp" line="1554"/>
-        <location filename="../source/levelcelview.cpp" line="1713"/>
-        <location filename="../source/levelcelview.cpp" line="1728"/>
-        <location filename="../source/levelcelview.cpp" line="1753"/>
+        <location filename="../source/levelcelview.cpp" line="1396"/>
+        <location filename="../source/levelcelview.cpp" line="1446"/>
+        <location filename="../source/levelcelview.cpp" line="1474"/>
+        <location filename="../source/levelcelview.cpp" line="1552"/>
+        <location filename="../source/levelcelview.cpp" line="1566"/>
+        <location filename="../source/levelcelview.cpp" line="1591"/>
+        <location filename="../source/levelcelview.cpp" line="1750"/>
+        <location filename="../source/levelcelview.cpp" line="1765"/>
+        <location filename="../source/levelcelview.cpp" line="1790"/>
         <source>Information</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1394"/>
+        <location filename="../source/levelcelview.cpp" line="1431"/>
         <source>Changed Frame %1 from &apos;%2&apos; to &apos;%3&apos;.
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1401"/>
+        <location filename="../source/levelcelview.cpp" line="1438"/>
         <source>No change was necessary.</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="1426"/>
+        <location filename="../source/levelcelview.cpp" line="1463"/>
         <source>Frame %1 could be &apos;%2&apos; by changing %n pixel(s).
 </source>
         <translation>
@@ -720,60 +727,70 @@
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1433"/>
+        <location filename="../source/levelcelview.cpp" line="1470"/>
         <source>The frames are optimal.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1510"/>
+        <location filename="../source/levelcelview.cpp" line="1547"/>
         <source>Every frame is used.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1524"/>
+        <location filename="../source/levelcelview.cpp" line="1561"/>
         <source>Every subtile is used.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1541"/>
+        <location filename="../source/levelcelview.cpp" line="1578"/>
         <source>Every subtile and frame are used.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="449"/>
-        <location filename="../source/levelcelview.cpp" line="660"/>
-        <location filename="../source/levelcelview.cpp" line="966"/>
-        <location filename="../source/levelcelview.cpp" line="1040"/>
-        <location filename="../source/levelcelview.cpp" line="1148"/>
-        <location filename="../source/levelcelview.cpp" line="1252"/>
+        <location filename="../source/levelcelview.cpp" line="461"/>
+        <location filename="../source/levelcelview.cpp" line="679"/>
+        <location filename="../source/levelcelview.cpp" line="992"/>
+        <location filename="../source/levelcelview.cpp" line="1073"/>
+        <location filename="../source/levelcelview.cpp" line="1183"/>
+        <location filename="../source/levelcelview.cpp" line="1289"/>
         <source>Failed to read file: %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="391"/>
-        <location filename="../source/levelcelview.cpp" line="411"/>
+        <location filename="../source/levelcelview.cpp" line="416"/>
         <source>The image must contain 32px * 32px blocks to be used as a frame.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="596"/>
-        <location filename="../source/levelcelview.cpp" line="621"/>
+        <location filename="../source/levelcelview.cpp" line="449"/>
+        <location filename="../source/levelcelview.cpp" line="667"/>
+        <location filename="../source/levelcelview.cpp" line="980"/>
+        <location filename="../source/levelcelview.cpp" line="1051"/>
+        <location filename="../source/levelcelview.cpp" line="1158"/>
+        <location filename="../source/levelcelview.cpp" line="1265"/>
+        <source>Failed to load file: %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="613"/>
+        <location filename="../source/levelcelview.cpp" line="638"/>
         <source>The image must contain %1px * %2px blocks to be used as a subtile.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="861"/>
-        <location filename="../source/levelcelview.cpp" line="907"/>
+        <location filename="../source/levelcelview.cpp" line="885"/>
+        <location filename="../source/levelcelview.cpp" line="931"/>
         <source>The image must contain %1px * %2px blocks to be used as a tile.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1320"/>
+        <location filename="../source/levelcelview.cpp" line="1357"/>
         <source>Frame %1 is not used by any subtile.</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="1326"/>
+        <location filename="../source/levelcelview.cpp" line="1363"/>
         <source>Frame %1 is used by subtile %2.</source>
         <translation>
             <numerusform>Frame %1 is used by subtile %2.</numerusform>
@@ -781,12 +798,12 @@
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1337"/>
+        <location filename="../source/levelcelview.cpp" line="1374"/>
         <source>Subtile %1 is not used by any tile.</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="1343"/>
+        <location filename="../source/levelcelview.cpp" line="1380"/>
         <source>Subtile %1 is used by tile %2.</source>
         <translation>
             <numerusform>Subtile %1 is used by tile %2.</numerusform>
@@ -794,7 +811,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="1470"/>
+        <location filename="../source/levelcelview.cpp" line="1507"/>
         <source>Removed frame %1.</source>
         <translation>
             <numerusform>Removed frame %1.</numerusform>
@@ -802,7 +819,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="1501"/>
+        <location filename="../source/levelcelview.cpp" line="1538"/>
         <source>Removed subtile %1.</source>
         <translation>
             <numerusform>Removed subtile %1.</numerusform>
@@ -810,157 +827,157 @@
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1625"/>
-        <location filename="../source/levelcelview.cpp" line="1695"/>
+        <location filename="../source/levelcelview.cpp" line="1662"/>
+        <location filename="../source/levelcelview.cpp" line="1732"/>
         <source>%1 instead of %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1628"/>
+        <location filename="../source/levelcelview.cpp" line="1665"/>
         <source>Using frame %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1698"/>
+        <location filename="../source/levelcelview.cpp" line="1735"/>
         <source>Using subtile %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1708"/>
+        <location filename="../source/levelcelview.cpp" line="1745"/>
         <source>All frames are unique.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1723"/>
+        <location filename="../source/levelcelview.cpp" line="1760"/>
         <source>All subtiles are unique.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1740"/>
+        <location filename="../source/levelcelview.cpp" line="1777"/>
         <source>Every subtile and frame are unique.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1857"/>
+        <location filename="../source/levelcelview.cpp" line="1894"/>
         <source>Upscaling...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1962"/>
+        <location filename="../source/levelcelview.cpp" line="1999"/>
         <source>Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1965"/>
-        <location filename="../source/levelcelview.cpp" line="1997"/>
-        <location filename="../source/levelcelview.cpp" line="2030"/>
+        <location filename="../source/levelcelview.cpp" line="2002"/>
+        <location filename="../source/levelcelview.cpp" line="2034"/>
+        <location filename="../source/levelcelview.cpp" line="2067"/>
         <source>Insert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1966"/>
+        <location filename="../source/levelcelview.cpp" line="2003"/>
         <source>Add new frames before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1970"/>
-        <location filename="../source/levelcelview.cpp" line="2002"/>
-        <location filename="../source/levelcelview.cpp" line="2035"/>
+        <location filename="../source/levelcelview.cpp" line="2007"/>
+        <location filename="../source/levelcelview.cpp" line="2039"/>
+        <location filename="../source/levelcelview.cpp" line="2072"/>
         <source>Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1971"/>
+        <location filename="../source/levelcelview.cpp" line="2008"/>
         <source>Add new frames at the end</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1975"/>
-        <location filename="../source/levelcelview.cpp" line="2007"/>
-        <location filename="../source/levelcelview.cpp" line="2040"/>
+        <location filename="../source/levelcelview.cpp" line="2012"/>
+        <location filename="../source/levelcelview.cpp" line="2044"/>
+        <location filename="../source/levelcelview.cpp" line="2077"/>
         <source>Replace</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1976"/>
+        <location filename="../source/levelcelview.cpp" line="2013"/>
         <source>Replace the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1981"/>
-        <location filename="../source/levelcelview.cpp" line="2013"/>
-        <location filename="../source/levelcelview.cpp" line="2046"/>
+        <location filename="../source/levelcelview.cpp" line="2018"/>
+        <location filename="../source/levelcelview.cpp" line="2050"/>
+        <location filename="../source/levelcelview.cpp" line="2083"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1982"/>
+        <location filename="../source/levelcelview.cpp" line="2019"/>
         <source>Delete the current frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1989"/>
+        <location filename="../source/levelcelview.cpp" line="2026"/>
         <source>Subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1992"/>
-        <location filename="../source/levelcelview.cpp" line="2024"/>
+        <location filename="../source/levelcelview.cpp" line="2029"/>
+        <location filename="../source/levelcelview.cpp" line="2061"/>
         <source>Create</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1993"/>
+        <location filename="../source/levelcelview.cpp" line="2030"/>
         <source>Create a new subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1998"/>
+        <location filename="../source/levelcelview.cpp" line="2035"/>
         <source>Add new subtiles before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2003"/>
+        <location filename="../source/levelcelview.cpp" line="2040"/>
         <source>Add new subtiles at the end</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2008"/>
+        <location filename="../source/levelcelview.cpp" line="2045"/>
         <source>Replace the current subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2014"/>
+        <location filename="../source/levelcelview.cpp" line="2051"/>
         <source>Delete the current subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2021"/>
+        <location filename="../source/levelcelview.cpp" line="2058"/>
         <source>Tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2025"/>
+        <location filename="../source/levelcelview.cpp" line="2062"/>
         <source>Create a new tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2031"/>
+        <location filename="../source/levelcelview.cpp" line="2068"/>
         <source>Add new tiles before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2036"/>
+        <location filename="../source/levelcelview.cpp" line="2073"/>
         <source>Add new tiles at the end</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2041"/>
+        <location filename="../source/levelcelview.cpp" line="2078"/>
         <source>Replace the current tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2047"/>
+        <location filename="../source/levelcelview.cpp" line="2084"/>
         <source>Delete the current tile</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2419,42 +2436,42 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1366"/>
+        <location filename="../source/levelcelview.cpp" line="1403"/>
         <source>Square</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1368"/>
+        <location filename="../source/levelcelview.cpp" line="1405"/>
         <source>Transparent square</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1370"/>
+        <location filename="../source/levelcelview.cpp" line="1407"/>
         <source>Left Triangle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1372"/>
+        <location filename="../source/levelcelview.cpp" line="1409"/>
         <source>Right Triangle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1374"/>
+        <location filename="../source/levelcelview.cpp" line="1411"/>
         <source>Left Trapezoid</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1376"/>
+        <location filename="../source/levelcelview.cpp" line="1413"/>
         <source>Right Trapezoid</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1378"/>
+        <location filename="../source/levelcelview.cpp" line="1415"/>
         <source>Empty</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1380"/>
+        <location filename="../source/levelcelview.cpp" line="1417"/>
         <location filename="../source/mainwindow.cpp" line="1634"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
