@@ -812,8 +812,6 @@ void LevelCelView::insertTile(int tileIndex, const D1GfxFrame &frame)
 
     for (int y = 0; y < frame.getHeight(); y += subtileHeight) {
         for (int x = 0; x < frame.getWidth(); x += subtileWidth) {
-            bool clipped;
-
             D1GfxFrame subFrame;
             for (unsigned j = 0; j < subtileHeight; j++) {
                 QList<D1GfxPixel> pixelLine;

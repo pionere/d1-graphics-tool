@@ -270,7 +270,7 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
         } else {
             // update the palette
             D1Pal *gfxPal = this->gfx->getPalette();
-            gfxPal->updateColors(pal);
+            gfxPal->updateColors(*pal);
             emit this->palModified();
         }
         return;
