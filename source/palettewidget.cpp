@@ -222,7 +222,7 @@ QPushButton *PaletteWidget::addButton(QStyle::StandardPixmap type, QString toolt
     button->setIconSize(QSize(iconSize, iconSize));
     button->setMinimumSize(iconSize, iconSize);
     button->setMaximumSize(iconSize, iconSize);
-    ((QBoxLayout *)ui->groupHeader->layout())->addWidget(button, Qt::AlignLeft);
+    this->ui->horizontalLayout->addWidget(button); //, Qt::AlignLeft);
 
     QObject::connect(button, &QPushButton::clicked, this, callback);
     return button;
@@ -265,6 +265,11 @@ PaletteWidget::~PaletteWidget()
 void PaletteWidget::setPal(D1Pal *p)
 {
     this->pal = p;
+
+    QString path = p->getFilePath();
+    int index = this->ui->pathComboBox->findData(path);
+    this->ui->pathComboBox->setCurrentIndex(index);
+    this->ui->pathComboBox->setToolTip(path);
 
     emit this->modified();
 }
@@ -400,15 +405,6 @@ void PaletteWidget::removePath(QString path)
 {
     if (this->paths.contains(path))
         this->paths.remove(path);
-}
-
-void PaletteWidget::selectPath(QString path)
-{
-    this->ui->pathComboBox->setCurrentIndex(this->ui->pathComboBox->findData(path));
-    this->ui->pathComboBox->setToolTip(path);
-
-    emit this->pathSelected(path);
-    emit this->modified();
 }
 
 QString PaletteWidget::getSelectedPath() const
@@ -891,10 +887,10 @@ void PaletteWidget::on_pathComboBox_activated(int index)
 {
     this->initStopColorPicking();
 
-    QString filePath = this->ui->pathComboBox->currentData().value<QString>();
+    QString path = this->ui->pathComboBox->itemData(index).value<QString>();
 
-    emit this->pathSelected(filePath);
-    emit this->modified();
+    emit this->pathSelected(path);
+    // emit this->modified();
 }
 
 void PaletteWidget::on_displayComboBox_activated(int index)

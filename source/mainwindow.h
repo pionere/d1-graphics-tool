@@ -28,6 +28,12 @@
 #define D1_GRAPHICS_TOOL_TITLE "Diablo 1 Graphics Tool"
 #define D1_GRAPHICS_TOOL_VERSION "0.5.0"
 
+#define MemFree(p)   \
+    {                \
+        delete p;    \
+        p = nullptr; \
+    }
+
 enum class FILE_DIALOG_MODE {
     OPEN,         // open existing
     SAVE_CONF,    // save with confirm
@@ -180,12 +186,12 @@ private:
     QAction *undoAction;
     QAction *redoAction;
 
-    QPointer<CelView> celView;
-    QPointer<LevelCelView> levelCelView;
+    CelView *celView = nullptr;
+    LevelCelView *levelCelView = nullptr;
 
-    QPointer<PaletteWidget> palWidget;
-    QPointer<PaletteWidget> trnUniqueWidget;
-    QPointer<PaletteWidget> trnBaseWidget;
+    PaletteWidget *palWidget = nullptr;
+    PaletteWidget *trnUniqueWidget = nullptr;
+    PaletteWidget *trnBaseWidget = nullptr;
 
     ProgressDialog progressDialog = ProgressDialog(this);
     ProgressWidget progressWidget = ProgressWidget(this);
@@ -195,22 +201,22 @@ private:
     ExportDialog exportDialog = ExportDialog(this);
     UpscaleDialog upscaleDialog = UpscaleDialog(this);
 
-    QPointer<D1Pal> pal;
-    QPointer<D1Trn> trnUnique;
-    QPointer<D1Trn> trnBase;
-    QPointer<D1Gfx> gfx;
-    QPointer<D1Min> min;
-    QPointer<D1Til> til;
-    QPointer<D1Sol> sol;
-    QPointer<D1Amp> amp;
-    QPointer<D1Tmi> tmi;
+    D1Pal *pal = nullptr;
+    D1Trn *trnUnique = nullptr;
+    D1Trn *trnBase = nullptr;
+    D1Gfx *gfx = nullptr;
+    D1Min *min = nullptr;
+    D1Til *til = nullptr;
+    D1Sol *sol = nullptr;
+    D1Amp *amp = nullptr;
+    D1Tmi *tmi = nullptr;
 
     QMap<QString, D1Pal *> pals;       // key: path, value: pointer to palette
     QMap<QString, D1Trn *> uniqueTrns; // key: path, value: pointer to translation
     QMap<QString, D1Trn *> baseTrns;   // key: path, value: pointer to translation
 
     // Palette hits are instantiated in main window to make them available to the three PaletteWidgets
-    QPointer<D1PalHits> palHits;
+    D1PalHits *palHits = nullptr;
     // buffer to store the original colors in case of color cycling
     QColor origCyclePalette[32];
 };

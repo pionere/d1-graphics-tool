@@ -3,6 +3,7 @@
 #include <QDirIterator>
 #include <QGraphicsScene>
 #include <QMouseEvent>
+#include <QPointer>
 #include <QStyle>
 #include <QUndoCommand>
 #include <QUndoStack>
@@ -117,7 +118,6 @@ public:
 
     void addPath(const QString &path, const QString &name);
     void removePath(QString path);
-    void selectPath(QString path);
     QString getSelectedPath() const;
 
     // color selection handlers
@@ -198,8 +198,8 @@ private:
 
     bool pickingTranslationColor = false;
 
-    QPointer<D1Pal> pal;
-    QPointer<D1Trn> trn;
+    D1Pal *pal;
+    D1Trn *trn;
 
     D1PalHits *palHits;
 

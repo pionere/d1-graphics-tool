@@ -206,8 +206,8 @@ bool MainWindow::loadUniqueTrn(QString trnFilePath)
     QString &path = trnFilePath;
     QString name = trnFileInfo.fileName();
 
-    D1Trn *newTrn = new D1Trn(this->pal);
-    if (!newTrn->load(path)) {
+    D1Trn *newTrn = new D1Trn();
+    if (!newTrn->load(path, this->pal)) {
         delete newTrn;
         QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return false;
@@ -227,8 +227,8 @@ bool MainWindow::loadBaseTrn(QString trnFilePath)
     QString &path = trnFilePath;
     QString name = trnFileInfo.fileName();
 
-    D1Trn *newTrn = new D1Trn(this->pal);
-    if (!newTrn->load(path)) {
+    D1Trn *newTrn = new D1Trn();
+    if (!newTrn->load(path, this->pal)) {
         delete newTrn;
         QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return false;
@@ -598,12 +598,12 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->pal = newPal;
 
     // Loading default null.trn
-    D1Trn *newTrn = new D1Trn(this->pal);
-    newTrn->load(D1Trn::IDENTITY_PATH);
+    D1Trn *newTrn = new D1Trn();
+    newTrn->load(D1Trn::IDENTITY_PATH, this->pal);
     this->uniqueTrns[D1Trn::IDENTITY_PATH] = newTrn;
     this->trnUnique = newTrn;
-    newTrn = new D1Trn(this->trnUnique->getResultingPalette());
-    newTrn->load(D1Trn::IDENTITY_PATH);
+    newTrn = new D1Trn();
+    newTrn->load(D1Trn::IDENTITY_PATH, this->trnUnique->getResultingPalette());
     this->baseTrns[D1Trn::IDENTITY_PATH] = newTrn;
     this->trnBase = newTrn;
 
@@ -777,7 +777,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     if (firstPaletteFound.isEmpty()) {
         firstPaletteFound = D1Pal::DEFAULT_PATH;
     }
-    this->palWidget->selectPath(firstPaletteFound); // should trigger view->displayFrame()
+    this->setPal(firstPaletteFound); // should trigger view->displayFrame()
 
     // Adding the CelView to the main frame
     this->ui->mainFrame->layout()->addWidget(isTileset ? (QWidget *)this->levelCelView : this->celView);
@@ -837,7 +837,7 @@ void MainWindow::openPalFiles(QStringList filePaths, PaletteWidget *widget)
             }
         }
         if (!firstFound.isEmpty()) {
-            this->palWidget->selectPath(firstFound);
+            this->setPal(firstFound);
         }
     } else if (widget == this->trnUniqueWidget) {
         for (QString path : filePaths) {
@@ -846,7 +846,7 @@ void MainWindow::openPalFiles(QStringList filePaths, PaletteWidget *widget)
             }
         }
         if (!firstFound.isEmpty()) {
-            this->trnUniqueWidget->selectPath(firstFound);
+            this->setUniqueTrn(firstFound);
         }
     } else if (widget == this->trnBaseWidget) {
         for (QString path : filePaths) {
@@ -855,7 +855,7 @@ void MainWindow::openPalFiles(QStringList filePaths, PaletteWidget *widget)
             }
         }
         if (!firstFound.isEmpty()) {
-            this->trnBaseWidget->selectPath(firstFound);
+            this->setBaseTrn(firstFound);
         }
     }
 
@@ -1018,12 +1018,12 @@ void MainWindow::on_actionClose_triggered()
 {
     this->undoStack->clear();
 
-    delete this->celView;
-    delete this->levelCelView;
-    delete this->palWidget;
-    delete this->trnUniqueWidget;
-    delete this->trnBaseWidget;
-    delete this->gfx;
+    MemFree(this->celView);
+    MemFree(this->levelCelView);
+    MemFree(this->palWidget);
+    MemFree(this->trnUniqueWidget);
+    MemFree(this->trnBaseWidget);
+    MemFree(this->gfx);
 
     qDeleteAll(this->pals);
     this->pals.clear();
@@ -1034,12 +1034,12 @@ void MainWindow::on_actionClose_triggered()
     qDeleteAll(this->baseTrns);
     this->baseTrns.clear();
 
-    delete this->min;
-    delete this->til;
-    delete this->sol;
-    delete this->amp;
-    delete this->tmi;
-    delete this->palHits;
+    MemFree(this->min);
+    MemFree(this->til);
+    MemFree(this->sol);
+    MemFree(this->amp);
+    MemFree(this->tmi);
+    MemFree(this->palHits);
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(false);
@@ -1342,7 +1342,7 @@ void MainWindow::on_actionNew_PAL_triggered()
         delete this->pals[path];
     this->pals[path] = newPal;
     this->palWidget->addPath(path, name);
-    this->palWidget->selectPath(path);
+    this->setPal(path);
 }
 
 void MainWindow::on_actionOpen_PAL_triggered()
@@ -1350,7 +1350,7 @@ void MainWindow::on_actionOpen_PAL_triggered()
     QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Palette File"), tr("PAL Files (*.pal *.PAL)"));
 
     if (!palFilePath.isEmpty() && this->loadPal(palFilePath)) {
-        this->palWidget->selectPath(palFilePath);
+        this->setPal(palFilePath);
     }
 }
 
@@ -1391,14 +1391,17 @@ void MainWindow::on_actionSave_PAL_as_triggered()
         delete this->pals[path];
     this->pals[path] = newPal;
     this->palWidget->addPath(path, name);
-    this->palWidget->selectPath(path);
+    this->setPal(path);
 }
 
 void MainWindow::on_actionClose_PAL_triggered()
 {
     QString selectedPath = this->palWidget->getSelectedPath();
-    if (selectedPath == D1Pal::DEFAULT_PATH)
+    if (selectedPath == D1Pal::DEFAULT_PATH) {
+        this->pal->load(selectedPath);
+        this->setPal(selectedPath);
         return;
+    }
 
     if (this->pals.contains(selectedPath)) {
         delete this->pals[selectedPath];
@@ -1406,7 +1409,7 @@ void MainWindow::on_actionClose_PAL_triggered()
     }
 
     this->palWidget->removePath(selectedPath);
-    this->palWidget->selectPath(D1Pal::DEFAULT_PATH);
+    this->setPal(D1Pal::DEFAULT_PATH);
 }
 
 void MainWindow::on_actionNew_Translation_Unique_triggered()
@@ -1421,8 +1424,8 @@ void MainWindow::on_actionNew_Translation_Unique_triggered()
     QString path = trnFileInfo.absoluteFilePath();
     QString name = trnFileInfo.fileName();
 
-    D1Trn *newTrn = new D1Trn(this->pal);
-    if (!newTrn->load(D1Trn::IDENTITY_PATH)) {
+    D1Trn *newTrn = new D1Trn();
+    if (!newTrn->load(D1Trn::IDENTITY_PATH, this->pal)) {
         delete newTrn;
         QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return;
@@ -1436,7 +1439,7 @@ void MainWindow::on_actionNew_Translation_Unique_triggered()
         delete this->uniqueTrns[path];
     this->uniqueTrns[path] = newTrn;
     this->trnUniqueWidget->addPath(path, name);
-    this->trnUniqueWidget->selectPath(path);
+    this->setUniqueTrn(path);
 }
 
 void MainWindow::on_actionOpen_Translation_Unique_triggered()
@@ -1444,7 +1447,7 @@ void MainWindow::on_actionOpen_Translation_Unique_triggered()
     QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Translation File"), tr("TRN Files (*.trn *.TRN)"));
 
     if (!trnFilePath.isEmpty() && this->loadUniqueTrn(trnFilePath)) {
-        this->trnUniqueWidget->selectPath(trnFilePath);
+        this->setUniqueTrn(trnFilePath);
     }
 }
 
@@ -1476,8 +1479,8 @@ void MainWindow::on_actionSave_Translation_Unique_as_triggered()
     QString path = trnFileInfo.absoluteFilePath();
     QString name = trnFileInfo.fileName();
 
-    D1Trn *newTrn = new D1Trn(this->pal);
-    if (!newTrn->load(path)) {
+    D1Trn *newTrn = new D1Trn();
+    if (!newTrn->load(path, this->pal)) {
         delete newTrn;
         QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return;
@@ -1487,14 +1490,17 @@ void MainWindow::on_actionSave_Translation_Unique_as_triggered()
         delete this->uniqueTrns[path];
     this->uniqueTrns[path] = newTrn;
     this->trnUniqueWidget->addPath(path, name);
-    this->trnUniqueWidget->selectPath(path);
+    this->setUniqueTrn(path);
 }
 
 void MainWindow::on_actionClose_Translation_Unique_triggered()
 {
     QString selectedPath = this->trnUniqueWidget->getSelectedPath();
-    if (selectedPath == D1Trn::IDENTITY_PATH)
+    if (selectedPath == D1Trn::IDENTITY_PATH) {
+        this->trnUnique->load(selectedPath, this->pal);
+        this->setUniqueTrn(selectedPath);
         return;
+    }
 
     if (this->uniqueTrns.contains(selectedPath)) {
         delete this->uniqueTrns[selectedPath];
@@ -1502,7 +1508,7 @@ void MainWindow::on_actionClose_Translation_Unique_triggered()
     }
 
     this->trnUniqueWidget->removePath(selectedPath);
-    this->trnUniqueWidget->selectPath(D1Trn::IDENTITY_PATH);
+    this->setUniqueTrn(D1Trn::IDENTITY_PATH);
 }
 
 void MainWindow::on_actionNew_Translation_Base_triggered()
@@ -1517,8 +1523,8 @@ void MainWindow::on_actionNew_Translation_Base_triggered()
     QString path = trnFileInfo.absoluteFilePath();
     QString name = trnFileInfo.fileName();
 
-    D1Trn *newTrn = new D1Trn(this->trnUnique->getResultingPalette());
-    if (!newTrn->load(D1Trn::IDENTITY_PATH)) {
+    D1Trn *newTrn = new D1Trn();
+    if (!newTrn->load(D1Trn::IDENTITY_PATH, this->trnUnique->getResultingPalette())) {
         delete newTrn;
         QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return;
@@ -1532,7 +1538,7 @@ void MainWindow::on_actionNew_Translation_Base_triggered()
         delete this->baseTrns[path];
     this->baseTrns[path] = newTrn;
     this->trnBaseWidget->addPath(path, name);
-    this->trnBaseWidget->selectPath(path);
+    this->setBaseTrn(path);
 }
 
 void MainWindow::on_actionOpen_Translation_Base_triggered()
@@ -1540,7 +1546,7 @@ void MainWindow::on_actionOpen_Translation_Base_triggered()
     QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Translation File"), tr("TRN Files (*.trn *.TRN)"));
 
     if (!trnFilePath.isEmpty() && this->loadBaseTrn(trnFilePath)) {
-        this->trnBaseWidget->selectPath(trnFilePath);
+        this->setBaseTrn(trnFilePath);
     }
 }
 
@@ -1572,8 +1578,8 @@ void MainWindow::on_actionSave_Translation_Base_as_triggered()
     QString path = trnFileInfo.absoluteFilePath();
     QString name = trnFileInfo.fileName();
 
-    D1Trn *newTrn = new D1Trn(this->trnUnique->getResultingPalette());
-    if (!newTrn->load(path)) {
+    D1Trn *newTrn = new D1Trn();
+    if (!newTrn->load(path, this->trnUnique->getResultingPalette())) {
         delete newTrn;
         QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return;
@@ -1583,14 +1589,17 @@ void MainWindow::on_actionSave_Translation_Base_as_triggered()
         delete this->baseTrns[path];
     this->baseTrns[path] = newTrn;
     this->trnBaseWidget->addPath(path, name);
-    this->trnBaseWidget->selectPath(path);
+    this->setBaseTrn(path);
 }
 
 void MainWindow::on_actionClose_Translation_Base_triggered()
 {
     QString selectedPath = this->trnBaseWidget->getSelectedPath();
-    if (selectedPath == D1Trn::IDENTITY_PATH)
+    if (selectedPath == D1Trn::IDENTITY_PATH) {
+        this->trnBase->load(selectedPath, this->trnUnique->getResultingPalette());
+        this->setBaseTrn(selectedPath);
         return;
+    }
 
     if (this->baseTrns.contains(selectedPath)) {
         delete this->baseTrns[selectedPath];
@@ -1598,7 +1607,7 @@ void MainWindow::on_actionClose_Translation_Base_triggered()
     }
 
     this->trnBaseWidget->removePath(selectedPath);
-    this->trnBaseWidget->selectPath(D1Trn::IDENTITY_PATH);
+    this->setBaseTrn(D1Trn::IDENTITY_PATH);
 }
 
 #if defined(Q_OS_WIN)
