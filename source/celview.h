@@ -63,7 +63,7 @@ public:
     explicit CelView(QWidget *parent = nullptr);
     ~CelView();
 
-    void initialize((D1Pal *pal, D1Gfx *gfx);
+    void initialize(D1Pal *pal, D1Gfx *gfx);
     void setPal(D1Pal *pal);
 
     int getCurrentFrameIndex();
