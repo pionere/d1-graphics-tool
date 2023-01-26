@@ -100,6 +100,12 @@ void LevelTabTileWidget::update()
     this->onUpdate = false;
 }
 
+void LevelTabTileWidget::selectSubtile(int index)
+{
+    this->ui->subtilesComboBox->setCurrentIndex(index);
+    this->updateSubtilesSelection(index);
+}
+
 void LevelTabTileWidget::updateSubtilesSelection(int index)
 {
     this->lastSubTileEntryIndex = index;

@@ -191,7 +191,11 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
 
         int stFrame = sty * subtileWidth / MICRO_WIDTH + stx;
         QList<quint16> &minFrames = this->min->getFrameReferences(this->currentSubtileIndex);
-        quint16 frameRef = minFrames.count() > stFrame ? minFrames.at(stFrame) : 0;
+        quint16 frameRef = 0;
+        if (minFrames.count() > stFrame) {
+            frameRef = minFrames.at(stFrame);
+            this->tabSubTileWidget->selectFrame(stFrame);
+        }
 
         if (frameRef > 0) {
             this->currentFrameIndex = frameRef - 1;
@@ -268,6 +272,7 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
         QList<quint16> &tilSubtiles = this->til->getSubtileIndices(this->currentTileIndex);
         if (tilSubtiles.count() > tSubtile) {
             this->currentSubtileIndex = tilSubtiles.at(tSubtile);
+            this->tabTileWidget->selectSubtile(tSubtile);
             this->displayFrame();
         }
         return;
