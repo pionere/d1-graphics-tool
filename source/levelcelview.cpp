@@ -244,8 +244,8 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
         //      / \  
         // g(x)/ 3 \
         //
-        // f(x) = (tileHeight - 2 * subtileShiftY) + 0.5x
-        unsigned ftx = (tileHeight - 2 * subtileShiftY) + tx / 2;
+        // f(x) = (tileHeight - tileWidth / 2) + 0.5x
+        unsigned ftx = (tileHeight - tileWidth / 2) + tx / 2;
         // g(tx) = tileHeight - 0.5x
         unsigned gtx = tileHeight - tx / 2;
         // qDebug() << "fx=" << ftx << ", gx=" << gtx;
