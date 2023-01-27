@@ -3,11 +3,28 @@
 #include "levelcelview.h"
 #include "ui_leveltabsubtilewidget.h"
 
+QPushButton *LevelTabSubTileWidget::addButton(QStyle::StandardPixmap type, QString tooltip, void (LevelTabSubTileWidget::*callback)(void))
+{
+    QPushButton *button = new QPushButton(this->style()->standardIcon(type), "", nullptr);
+    constexpr int iconSize = 16;
+    button->setToolTip(tooltip);
+    button->setIconSize(QSize(iconSize, iconSize));
+    button->setMinimumSize(iconSize, iconSize);
+    button->setMaximumSize(iconSize, iconSize);
+    this->ui->buttonsHorizontalLayout->addWidget(button);
+
+    QObject::connect(button, &QPushButton::clicked, this, callback);
+    return button;
+}
+
 LevelTabSubTileWidget::LevelTabSubTileWidget()
     : QWidget(nullptr)
     , ui(new Ui::LevelTabSubTileWidget)
 {
     ui->setupUi(this);
+
+    this->addButton(QStyle::SP_DialogResetButton, tr("Reset flags"), &LevelTabSubTileWidget::on_clearPushButtonClicked);
+    this->addButton(QStyle::SP_DialogCancelButton, tr("Delete the current subtile"), &LevelTabSubTileWidget::on_deletePushButtonClicked);
 }
 
 LevelTabSubTileWidget::~LevelTabSubTileWidget()
@@ -129,17 +146,16 @@ void LevelTabSubTileWidget::updateFramesSelection(int index)
     this->ui->framesNextButton->setEnabled(frameRef < this->gfx->getFrameCount());
 }
 
-void LevelTabSubTileWidget::updateSolProperty()
+void LevelTabSubTileWidget::setSolProperty(quint8 flags)
 {
     int subTileIdx = this->levelCelView->getCurrentSubtileIndex();
-    quint8 flags = this->readSol();
 
     if (this->sol->setSubtileProperties(subTileIdx, flags)) {
         this->levelCelView->updateLabel();
     }
 }
 
-quint8 LevelTabSubTileWidget::readSol()
+quint8 LevelTabSubTileWidget::updateSolProperty()
 {
     quint8 flags = 0;
     if (this->ui->sol0->checkState())
@@ -156,20 +172,20 @@ quint8 LevelTabSubTileWidget::readSol()
         flags |= 1 << 5;
     if (this->ui->sol7->checkState())
         flags |= 1 << 7;
-    return flags;
+
+    this->setSolProperty(flags);
 }
 
-void LevelTabSubTileWidget::updateTmiProperty()
+void LevelTabSubTileWidget::setTmiProperty(quint8 flags)
 {
     int subTileIdx = this->levelCelView->getCurrentSubtileIndex();
-    quint8 flags = this->readTmi();
 
     if (this->tmi->setSubtileProperties(subTileIdx, flags)) {
         this->levelCelView->updateLabel();
     }
 }
 
-quint8 LevelTabSubTileWidget::readTmi()
+void LevelTabSubTileWidget::updateTmiProperty()
 {
     quint8 flags = 0;
     if (this->ui->tmi0->checkState())
@@ -186,7 +202,20 @@ quint8 LevelTabSubTileWidget::readTmi()
         flags |= 1 << 5;
     if (this->ui->tmi6->checkState())
         flags |= 1 << 6;
-    return flags;
+
+    this->setTmiProperty(flags);
+}
+
+void LevelTabSubTileWidget::on_clearPushButtonClicked()
+{
+    this->setSolProperty(0);
+    this->setTmiProperty(0);
+}
+
+void LevelTabSubTileWidget::on_deletePushButtonClicked()
+{
+    MainWindow *mw = (MainWindow *)this->window();
+    mw->on_actionDel_Subtile_triggered();
 }
 
 void LevelTabSubTileWidget::on_sol0_clicked()

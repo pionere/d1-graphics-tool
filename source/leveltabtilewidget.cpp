@@ -4,13 +4,31 @@
 #include "d1min.h"
 #include "d1til.h"
 #include "levelcelview.h"
+#include "mainwindow.h"
 #include "ui_leveltabtilewidget.h"
+
+QPushButton *LevelTabTileWidget::addButton(QStyle::StandardPixmap type, QString tooltip, void (LevelTabTileWidget::*callback)(void))
+{
+    QPushButton *button = new QPushButton(this->style()->standardIcon(type), "", nullptr);
+    constexpr int iconSize = 16;
+    button->setToolTip(tooltip);
+    button->setIconSize(QSize(iconSize, iconSize));
+    button->setMinimumSize(iconSize, iconSize);
+    button->setMaximumSize(iconSize, iconSize);
+    this->ui->buttonsHorizontalLayout->addWidget(button);
+
+    QObject::connect(button, &QPushButton::clicked, this, callback);
+    return button;
+}
 
 LevelTabTileWidget::LevelTabTileWidget()
     : QWidget(nullptr)
     , ui(new Ui::LevelTabTileWidget)
 {
     ui->setupUi(this);
+
+    this->addButton(QStyle::SP_DialogResetButton, tr("Reset flags"), &LevelTabTileWidget::on_clearPushButtonClicked);
+    this->addButton(QStyle::SP_DialogCancelButton, tr("Delete the current tile"), &LevelTabTileWidget::on_deletePushButtonClicked);
 }
 
 LevelTabTileWidget::~LevelTabTileWidget()
@@ -115,17 +133,16 @@ void LevelTabTileWidget::updateSubtilesSelection(int index)
     this->ui->subtilesNextButton->setEnabled(subtileIdx < this->min->getSubtileCount() - 1);
 }
 
-void LevelTabTileWidget::updateAmpProperty()
+void LevelTabTileWidget::setAmpProperty(quint8 flags)
 {
     int tileIdx = this->levelCelView->getCurrentTileIndex();
-    quint8 flags = this->readAmpProperty();
 
     if (this->amp->setTileProperties(tileIdx, flags)) {
         this->levelCelView->updateLabel();
     }
 }
 
-quint8 LevelTabTileWidget::readAmpProperty()
+void LevelTabTileWidget::updateAmpProperty()
 {
     quint8 flags = 0;
     if (this->ui->amp0->checkState())
@@ -144,7 +161,19 @@ quint8 LevelTabTileWidget::readAmpProperty()
         flags |= 1 << 6;
     if (this->ui->amp7->checkState())
         flags |= 1 << 7;
-    return flags;
+
+    this->setAmpProperty(flags);
+}
+
+void LevelTabTileWidget::on_clearPushButtonClicked()
+{
+    this->setAmpProperty(0);
+}
+
+void LevelTabTileWidget::on_deletePushButtonClicked()
+{
+    MainWindow *mw = (MainWindow *)this->window();
+    mw->on_actionDel_Tile_triggered();
 }
 
 void LevelTabTileWidget::on_ampTypeComboBox_activated(int index)
