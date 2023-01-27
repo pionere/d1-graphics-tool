@@ -50,8 +50,8 @@ void LevelTabTileWidget::update()
 
     bool hasTile = this->til->getTileCount() != 0;
 
-    this->ui->buttonsHorizontalLayout->children()[1]->setEnabled(hasTile); // Clear button
-    this->ui->buttonsHorizontalLayout->children()[2]->setEnabled(hasTile); // Delete button
+    ((QPushButton *)this->ui->buttonsHorizontalLayout->children()[1])->setEnabled(hasTile); // Clear button
+    ((QPushButton *)this->ui->buttonsHorizontalLayout->children()[2])->setEnabled(hasTile); // Delete button
 
     this->ui->ampTypeComboBox->setEnabled(hasTile);
 

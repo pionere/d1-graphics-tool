@@ -48,8 +48,8 @@ void LevelTabSubTileWidget::update()
 
     bool hasSubtile = this->min->getSubtileCount() != 0;
 
-    this->ui->buttonsHorizontalLayout->children()[1]->setEnabled(hasTile); // Clear button
-    this->ui->buttonsHorizontalLayout->children()[2]->setEnabled(hasTile); // Delete button
+    ((QPushButton *)this->ui->buttonsHorizontalLayout->children()[1])->setEnabled(hasTile); // Clear button
+    ((QPushButton *)this->ui->buttonsHorizontalLayout->children()[2])->setEnabled(hasTile); // Delete button
 
     this->ui->sol0->setEnabled(hasSubtile);
     this->ui->sol1->setEnabled(hasSubtile);
