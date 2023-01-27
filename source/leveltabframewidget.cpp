@@ -27,7 +27,7 @@ LevelTabFrameWidget::LevelTabFrameWidget()
 {
     ui->setupUi(this);
 
-    this->deleteButton = this->addButton(QStyle::SP_DialogCancelButton, tr("Delete the current frame"), &LevelTabFrameWidget::on_deletePushButtonClicked);
+    this->deleteButton = this->addButton(QStyle::SP_TrashIcon, tr("Delete the current frame"), &LevelTabFrameWidget::on_deletePushButtonClicked);
 }
 
 LevelTabFrameWidget::~LevelTabFrameWidget()

@@ -28,7 +28,7 @@ LevelTabTileWidget::LevelTabTileWidget()
     ui->setupUi(this);
 
     this->clearButton = this->addButton(QStyle::SP_DialogResetButton, tr("Reset flags"), &LevelTabTileWidget::on_clearPushButtonClicked);
-    this->deleteButton = this->addButton(QStyle::SP_DialogDiscardButton, tr("Delete the current tile"), &LevelTabTileWidget::on_deletePushButtonClicked);
+    this->deleteButton = this->addButton(QStyle::SP_TrashIcon, tr("Delete the current tile"), &LevelTabTileWidget::on_deletePushButtonClicked);
 }
 
 LevelTabTileWidget::~LevelTabTileWidget()

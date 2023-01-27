@@ -1001,67 +1001,72 @@
         <translation>Kódolás:</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.ui" line="80"/>
+        <location filename="../source/leveltabframewidget.ui" line="74"/>
         <source>Square</source>
         <translation>Négyzet</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.ui" line="85"/>
+        <location filename="../source/leveltabframewidget.ui" line="79"/>
         <source>Transparent square</source>
         <translation>Átlátszó négyzet</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.ui" line="90"/>
+        <location filename="../source/leveltabframewidget.ui" line="84"/>
         <source>Left Triangle</source>
         <translation>Bal Háromszög</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.ui" line="95"/>
+        <location filename="../source/leveltabframewidget.ui" line="89"/>
         <source>Right Triangle</source>
         <translation>Jobb Háromszög</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.ui" line="100"/>
+        <location filename="../source/leveltabframewidget.ui" line="94"/>
         <source>Left Trapezoid</source>
         <translation>Bal Trapézoid</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.ui" line="105"/>
+        <location filename="../source/leveltabframewidget.ui" line="99"/>
         <source>Right Trapezoid</source>
         <translation>Jobb Trapézoid</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="228"/>
+        <location filename="../source/leveltabframewidget.cpp" line="30"/>
+        <source>Delete the current frame</source>
+        <translation">Az aktuális képkocka törlése</translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabframewidget.cpp" line="253"/>
         <source>Invalid width. Must be 32px wide.</source>
         <translation>Hibás szélesség. Nem 32 képpont szélességű.</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="230"/>
+        <location filename="../source/leveltabframewidget.cpp" line="255"/>
         <source>Invalid height. Must be 32px wide.</source>
         <translation>Hibás magasság. Nem 32 képpont magasságú.</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="239"/>
+        <location filename="../source/leveltabframewidget.cpp" line="264"/>
         <source>Suggested type: &apos;Square&apos;</source>
         <translation>Javasolt típus: &apos;Négyzet&apos;</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="244"/>
+        <location filename="../source/leveltabframewidget.cpp" line="269"/>
         <source>Suggested type: &apos;Left Triangle&apos;</source>
         <translation>Javasolt típus: &apos;Bal Háromszög&apos;</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="249"/>
+        <location filename="../source/leveltabframewidget.cpp" line="274"/>
         <source>Suggested type: &apos;Right Triangle&apos;</source>
         <translation>Javasolt típus: &apos;Jobb Háromszög&apos;</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="254"/>
+        <location filename="../source/leveltabframewidget.cpp" line="279"/>
         <source>Suggested type: &apos;Left Trapezoid&apos;</source>
         <translation>Javasolt típus: &apos;Bal Trapézoid&apos;</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="259"/>
+        <location filename="../source/leveltabframewidget.cpp" line="284"/>
         <source>Suggested type: &apos;Right Trapezoid&apos;</source>
         <translation>Javasolt típus: &apos;Jobb Trapézoid&apos;</translation>
     </message>
@@ -1094,8 +1099,8 @@
         <translation>Csapda</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="166"/>
-        <location filename="../source/leveltabsubtilewidget.ui" line="194"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="157"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="185"/>
         <source>Transparent</source>
         <translation>Áttetsző</translation>
     </message>
@@ -1120,182 +1125,202 @@
         <translation>Jobb talaj</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="132"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="123"/>
         <source>TMI flags</source>
         <translation>TMI tulajdonságok</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="138"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="129"/>
         <source>Transp. Wall</source>
         <translation>Áttetsző fal</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="145"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="136"/>
         <source>Left floor:</source>
         <translation>Bal talaj:</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="152"/>
-        <location filename="../source/leveltabsubtilewidget.ui" line="180"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="143"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="171"/>
         <source>Second pass</source>
         <translation>Második körös</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="159"/>
-        <location filename="../source/leveltabsubtilewidget.ui" line="187"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="150"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="178"/>
         <source>Foliage</source>
         <translation>Kiálló elemek</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="173"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="164"/>
         <source>Right floor:</source>
         <translation>Jobb talaj:</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="224"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="203"/>
         <source>Frames:</source>
         <translation>Képkockák:</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="243"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="216"/>
         <source>Previous frame</source>
         <translation>Előző képkocka</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="284"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="245"/>
         <source>Next frame</source>
         <translation>Következő képkocka</translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabsubtilewidget.cpp" line="27"/>
+        <source>Reset flags</source>
+        <translation>SOL és TMI tulajdonságok alaphelyzetbe állítása</translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabsubtilewidget.cpp" line="28"/>
+        <source>Delete the current subtile</source>
+        <translation>Törölje az aktuális mezőt</translation>
     </message>
 </context>
 <context>
     <name>LevelTabTileWidget</name>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="63"/>
+        <location filename="../source/leveltabtilewidget.ui" line="60"/>
         <source>Automap type:</source>
         <translation>Automap típusa:</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="71"/>
+        <location filename="../source/leveltabtilewidget.ui" line="68"/>
         <source>None</source>
         <translation>Nincs megadva</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="76"/>
+        <location filename="../source/leveltabtilewidget.ui" line="73"/>
         <source>Pillar</source>
         <translation>Oszlop</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="81"/>
+        <location filename="../source/leveltabtilewidget.ui" line="78"/>
         <source>Wall (north-west)</source>
         <translation>Fal (észak-nyugati)</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="86"/>
+        <location filename="../source/leveltabtilewidget.ui" line="83"/>
         <source>Wall (north-east)</source>
         <translation>Fal (észak-keleti)</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="91"/>
+        <location filename="../source/leveltabtilewidget.ui" line="88"/>
         <source>Wall intersection (north)</source>
         <translation>Falak kereszteződése (északi)</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="96"/>
+        <location filename="../source/leveltabtilewidget.ui" line="93"/>
         <source>Wall ending (north-west)</source>
         <translation>Fal vége (észak-nyugati)</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="101"/>
+        <location filename="../source/leveltabtilewidget.ui" line="98"/>
         <source>Wall ending (north-east)</source>
         <translation>Fal vége (észak-keleti)</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="106"/>
+        <location filename="../source/leveltabtilewidget.ui" line="103"/>
         <source>Corner wall (north)</source>
         <translation>Sarok fal (északi)</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="111"/>
+        <location filename="../source/leveltabtilewidget.ui" line="108"/>
         <source>Wall intersection (west)</source>
         <translation>Falak kereszteződése (nyugati)</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="116"/>
+        <location filename="../source/leveltabtilewidget.ui" line="113"/>
         <source>Wall intersection (east)</source>
         <translation>Falak kereszteződése (keleti)</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="121"/>
+        <location filename="../source/leveltabtilewidget.ui" line="118"/>
         <source>Wall (south-west)</source>
         <translation>Fal (dél-nyugati)</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="126"/>
+        <location filename="../source/leveltabtilewidget.ui" line="123"/>
         <source>Wall (south-east)</source>
         <translation>Fal (dél-keleti)</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="131"/>
+        <location filename="../source/leveltabtilewidget.ui" line="128"/>
         <source>Wall intersection (south)</source>
         <translation>Falak kereszteződése (déli)</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="153"/>
+        <location filename="../source/leveltabtilewidget.ui" line="148"/>
         <source>Automap flags</source>
         <translation>Térkép tulajdonságok</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="159"/>
+        <location filename="../source/leveltabtilewidget.ui" line="154"/>
         <source>Western:</source>
         <translation>Nyugati:</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="166"/>
-        <location filename="../source/leveltabtilewidget.ui" line="194"/>
+        <location filename="../source/leveltabtilewidget.ui" line="161"/>
+        <location filename="../source/leveltabtilewidget.ui" line="189"/>
         <source>Door</source>
         <translation>Ajtó</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="173"/>
-        <location filename="../source/leveltabtilewidget.ui" line="201"/>
+        <location filename="../source/leveltabtilewidget.ui" line="168"/>
+        <location filename="../source/leveltabtilewidget.ui" line="196"/>
         <source>Arch</source>
         <translation>Boltív</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="180"/>
-        <location filename="../source/leveltabtilewidget.ui" line="208"/>
+        <location filename="../source/leveltabtilewidget.ui" line="175"/>
+        <location filename="../source/leveltabtilewidget.ui" line="203"/>
         <source>Grate</source>
         <translation>Rács</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="187"/>
+        <location filename="../source/leveltabtilewidget.ui" line="182"/>
         <source>Eastern:</source>
         <translation>keleti:</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="215"/>
+        <location filename="../source/leveltabtilewidget.ui" line="210"/>
         <source>External</source>
         <translation>Külső</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="222"/>
+        <location filename="../source/leveltabtilewidget.ui" line="217"/>
         <source>Stairs</source>
         <translation>Lépcső</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="252"/>
+        <location filename="../source/leveltabtilewidget.ui" line="235"/>
         <source>Subtiles:</source>
         <translation>Mezők:</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="271"/>
+        <location filename="../source/leveltabtilewidget.ui" line="248"/>
         <source>Previous SubTile</source>
         <translation>Előző mező</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="312"/>
+        <location filename="../source/leveltabtilewidget.ui" line="277"/>
         <source>Next SubTile</source>
         <translation>Következő mező</translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabtilewidget.cpp" line="30"/>
+        <source>Reset flags</source>
+        <translation>Térkép tulajdonságok alaphelyzetbe állítása</translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabtilewidget.cpp" line="31"/>
+        <source>Delete the current tile</source>
+        <translation>Törölje az aktuális lapot</translation>
     </message>
 </context>
 <context>
@@ -2288,22 +2313,22 @@
         <translation>Mégse</translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.ui" line="76"/>
+        <location filename="../source/progressdialog.ui" line="101"/>
         <source>Close</source>
         <translation>Bezárás</translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.cpp" line="186"/>
+        <location filename="../source/progressdialog.cpp" line="187"/>
         <source>Show details</source>
         <translation>Részletek</translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.cpp" line="186"/>
+        <location filename="../source/progressdialog.cpp" line="187"/>
         <source>Hide details</source>
         <translation>Csak állapot</translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.cpp" line="194"/>
+        <location filename="../source/progressdialog.cpp" line="195"/>
         <source>Process cancelled.</source>
         <translation>Folyamat megszakítva.</translation>
     </message>
@@ -2487,12 +2512,12 @@
         <translation>Ismeretlen</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="49"/>
+        <location filename="../source/leveltabframewidget.cpp" line="74"/>
         <source>Invalid (transparent) pixel at (%1:%2)</source>
         <translation>Hibás (átlátszó) képpont a (%1:%2) pozícióban.</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="55"/>
+        <location filename="../source/leveltabframewidget.cpp" line="80"/>
         <source>Invalid (non-transparent) pixel at (%1:%2)</source>
         <translation>Hibás (nem átlátszó) képpont a (%1:%2) pozícióban.</translation>
     </message>
