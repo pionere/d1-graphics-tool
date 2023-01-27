@@ -28,7 +28,7 @@ LevelTabTileWidget::LevelTabTileWidget()
     ui->setupUi(this);
 
     this->addButton(QStyle::SP_DialogResetButton, tr("Reset flags"), &LevelTabTileWidget::on_clearPushButtonClicked);
-    this->addButton(QStyle::SP_DialogCancelButton, tr("Delete the current tile"), &LevelTabTileWidget::on_deletePushButtonClicked);
+    this->addButton(QStyle::SP_DialogDiscardButton, tr("Delete the current tile"), &LevelTabTileWidget::on_deletePushButtonClicked);
 }
 
 LevelTabTileWidget::~LevelTabTileWidget()
@@ -49,6 +49,9 @@ void LevelTabTileWidget::update()
     this->onUpdate = true;
 
     bool hasTile = this->til->getTileCount() != 0;
+
+    this->ui->buttonsHorizontalLayout->children()[1]->setEnabled(hasTile); // Clear button
+    this->ui->buttonsHorizontalLayout->children()[2]->setEnabled(hasTile); // Delete button
 
     this->ui->ampTypeComboBox->setEnabled(hasTile);
 
@@ -168,6 +171,7 @@ void LevelTabTileWidget::updateAmpProperty()
 void LevelTabTileWidget::on_clearPushButtonClicked()
 {
     this->setAmpProperty(0);
+    this->update();
 }
 
 void LevelTabTileWidget::on_deletePushButtonClicked()

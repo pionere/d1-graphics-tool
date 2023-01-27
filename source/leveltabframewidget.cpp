@@ -49,6 +49,7 @@ void LevelTabFrameWidget::update()
     bool hasFrame = frame != nullptr;
 
     this->ui->frameTypeComboBox->setEnabled(hasFrame);
+    this->ui->buttonsHorizontalLayout->children()[1]->setEnabled(hasFrame); // Delete button
 
     if (!hasFrame) {
         this->ui->frameTypeComboBox->setCurrentIndex(-1);

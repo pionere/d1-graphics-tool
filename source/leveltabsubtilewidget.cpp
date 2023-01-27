@@ -25,7 +25,7 @@ LevelTabSubTileWidget::LevelTabSubTileWidget()
     ui->setupUi(this);
 
     this->addButton(QStyle::SP_DialogResetButton, tr("Reset flags"), &LevelTabSubTileWidget::on_clearPushButtonClicked);
-    this->addButton(QStyle::SP_DialogCancelButton, tr("Delete the current subtile"), &LevelTabSubTileWidget::on_deletePushButtonClicked);
+    this->addButton(QStyle::SP_TrashIcon, tr("Delete the current subtile"), &LevelTabSubTileWidget::on_deletePushButtonClicked);
 }
 
 LevelTabSubTileWidget::~LevelTabSubTileWidget()
@@ -47,6 +47,9 @@ void LevelTabSubTileWidget::update()
     this->onUpdate = true;
 
     bool hasSubtile = this->min->getSubtileCount() != 0;
+
+    this->ui->buttonsHorizontalLayout->children()[1]->setEnabled(hasTile); // Clear button
+    this->ui->buttonsHorizontalLayout->children()[2]->setEnabled(hasTile); // Delete button
 
     this->ui->sol0->setEnabled(hasSubtile);
     this->ui->sol1->setEnabled(hasSubtile);
@@ -211,6 +214,7 @@ void LevelTabSubTileWidget::on_clearPushButtonClicked()
 {
     this->setSolProperty(0);
     this->setTmiProperty(0);
+    this->update();
 }
 
 void LevelTabSubTileWidget::on_deletePushButtonClicked()
