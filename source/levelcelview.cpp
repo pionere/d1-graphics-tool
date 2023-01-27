@@ -1527,7 +1527,7 @@ void LevelCelView::checkSubtileFlags()
         }
     }
 
-    ProgressDialog.incValue();
+    ProgressDialog::incValue();
 
     // TMI:
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
