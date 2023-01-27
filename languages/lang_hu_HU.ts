@@ -796,16 +796,12 @@
     <message numerus="yes">
         <location filename="../source/levelcelview.cpp" line="1507"/>
         <source>Removed frame %1.</source>
-        <translation>
-            <numerusform>A(z) %1 képkocka törlésre került.</numerusform>
-        </translation>
+        <translation>A(z) %1 képkocka törlésre került.</translation>
     </message>
     <message numerus="yes">
         <location filename="../source/levelcelview.cpp" line="1538"/>
         <source>Removed subtile %1.</source>
-        <translation>
-            <numerusform>A(z) %1 mező törlésre került.</numerusform>
-        </translation>
+        <translation>A(z) %1 mező törlésre került.</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="1547"/>
@@ -2514,7 +2510,7 @@
     </message>
     <message>
         <location filename="../source/exportdialog.cpp" line="89"/>
-        <source>Created %1.</source>
+        <source>%1 created.</source>
         <translation>%1 létrehozva.</translation>
     </message>
     <message>

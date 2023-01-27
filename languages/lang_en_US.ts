@@ -813,18 +813,12 @@
     <message numerus="yes">
         <location filename="../source/levelcelview.cpp" line="1507"/>
         <source>Removed frame %1.</source>
-        <translation>
-            <numerusform>Removed frame %1.</numerusform>
-            <numerusform>Removed frames %1.</numerusform>
-        </translation>
+        <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
         <location filename="../source/levelcelview.cpp" line="1538"/>
         <source>Removed subtile %1.</source>
-        <translation>
-            <numerusform>Removed subtile %1.</numerusform>
-            <numerusform>Removed subtiles %1.</numerusform>
-        </translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="1662"/>
@@ -2519,7 +2513,7 @@
     </message>
     <message>
         <location filename="../source/exportdialog.cpp" line="89"/>
-        <source>Created %1.</source>
+        <source>%1 created.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -17,7 +17,6 @@ ProgressDialog::ProgressDialog(QWidget *parent)
     this->ui->setupUi(this);
 
     this->setWindowFlags((/*this->windowFlags() |*/ Qt::Tool | Qt::WindowStaysOnTopHint | Qt::WindowCloseButtonHint) & ~(Qt::WindowSystemMenuHint | Qt::WindowTitleHint | Qt::WindowContextHelpButtonHint | Qt::MacWindowToolBarButtonHint | Qt::WindowFullscreenButtonHint | Qt::WindowMinMaxButtonsHint));
-    this->setWindowTitle("");
 
     theDialog = this;
 }
@@ -30,6 +29,7 @@ ProgressDialog::~ProgressDialog()
 void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int maxValue)
 {
     if (mode == PROGRESS_DIALOG_STATE::BACKGROUND) {
+        theDialog->setWindowTitle(label);
         theDialog->ui->progressLabel->setVisible(false);
         theDialog->ui->progressBar->setVisible(false);
         theDialog->ui->progressButtonsWidget->setVisible(false);
@@ -51,6 +51,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
 
     theDialog->showNormal();
 
+    theDialog->setWindowTitle("");
     theDialog->ui->progressLabel->setVisible(true);
     theDialog->ui->progressLabel->setText(label);
     theDialog->ui->progressBar->setVisible(true);
@@ -68,7 +69,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     theWidget->update(theDialog->status, false, "");
 }
 
-void ProgressDialog::done()
+void ProgressDialog::done(bool forceOpen)
 {
     theDialog->ui->progressLabel->setVisible(false);
     theDialog->ui->progressBar->setVisible(false);
@@ -79,7 +80,7 @@ void ProgressDialog::done()
     if (theDialog->status == PROGRESS_STATE::RUNNING) {
         theDialog->status = PROGRESS_STATE::DONE;
     }
-    if (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible())) {
+    if (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible()) && !forceOpen) {
         theDialog->hide();
     } else {
         theDialog->showNormal();
