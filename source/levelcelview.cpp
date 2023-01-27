@@ -1474,14 +1474,14 @@ void LevelCelView::checkSubtileFlags()
     bool result = false;
     // SOL:
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        quint8 solFlags = this->sol->getSubtileProperties();
+        quint8 solFlags = this->sol->getSubtileProperties(i);
         if (solFlags & (1 << 1)) {
             // block light
-            if (!(solFlags & (1 << 0)) {
+            if (!(solFlags & (1 << 0))) {
                 dProgressErr() << tr("Subtile %1 blocks the light, but still passable (not solid).").arg(i + 1);
                 result = true;
             }
-            if (!(solFlags & (1 << 2)) {
+            if (!(solFlags & (1 << 2))) {
                 dProgressErr() << tr("Subtile %1 blocks the light, but it does not block missiles.").arg(i + 1);
                 result = true;
             }
@@ -1489,7 +1489,7 @@ void LevelCelView::checkSubtileFlags()
         }
         if (solFlags & (1 << 2)) {
             // block missile
-            if (!(solFlags & (1 << 0)) {
+            if (!(solFlags & (1 << 0))) {
                 dProgressErr() << tr("Subtile %1 blocks missiles, but still passable (not solid).").arg(i + 1);
                 result = true;
             }
@@ -1497,29 +1497,29 @@ void LevelCelView::checkSubtileFlags()
         }
         if (solFlags & (1 << 4)) {
             // left transparency
-            if (!(solFlags & (1 << 3)) {
+            if (!(solFlags & (1 << 3))) {
                 dProgressErr() << tr("Subtile %1 has left transparency enabled, but transparency is not enabled.").arg(i + 1);
                 result = true;
             }
         }
         if (solFlags & (1 << 5)) {
             // right transparency
-            if (!(solFlags & (1 << 3)) {
+            if (!(solFlags & (1 << 3))) {
                 dProgressErr() << tr("Subtile %1 has right transparency enabled, but transparency is not enabled.").arg(i + 1);
                 result = true;
             }
         }
         if (solFlags & (1 << 7)) {
             // trap
-            if (!(solFlags & (1 << 0)) {
+            if (!(solFlags & (1 << 0))) {
                 dProgressErr() << tr("Subtile %1 is for traps, but still passable (not solid).").arg(i + 1);
                 result = true;
             }
-            if (!(solFlags & (1 << 1)) {
+            if (!(solFlags & (1 << 1))) {
                 dProgressErr() << tr("Subtile %1 is for traps, but it does not block light.").arg(i + 1);
                 result = true;
             }
-            if (!(solFlags & (1 << 2)) {
+            if (!(solFlags & (1 << 2))) {
                 dProgressErr() << tr("Subtile %1 is for traps, but it does not block missiles.").arg(i + 1);
                 result = true;
             }
@@ -1531,7 +1531,7 @@ void LevelCelView::checkSubtileFlags()
 
     // TMI:
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        quint8 tmiFlags = this->tmi->getSubtileProperties();
+        quint8 tmiFlags = this->tmi->getSubtileProperties(i);
         if (tmiFlags & (1 << 0)) {
             // transp.wall
             // TODO: at least one not transparent frame above the floor
@@ -1539,14 +1539,14 @@ void LevelCelView::checkSubtileFlags()
         }
         if (tmiFlags & (1 << 1)) {
             // left second pass
-            if (tmiFlags & (1 << 2) {
+            if (tmiFlags & (1 << 2)) {
                 dProgressErr() << tr("Subtile %1 has both second pass and foliage enabled on the left side.").arg(i + 1);
                 result = true;
             }
         }
         if (tmiFlags & (1 << 2)) {
             // left foliage
-            if (tmiFlags & (1 << 3) {
+            if (tmiFlags & (1 << 3)) {
                 dProgressErr() << tr("Subtile %1 has both foliage and floor transparency enabled on the left side.").arg(i + 1);
                 result = true;
             }
@@ -1557,14 +1557,14 @@ void LevelCelView::checkSubtileFlags()
         }
         if (tmiFlags & (1 << 4)) {
             // right second pass
-            if (tmiFlags & (1 << 5) {
+            if (tmiFlags & (1 << 5)) {
                 dProgressErr() << tr("Subtile %1 has both second pass and foliage enabled on the right side.").arg(i + 1);
                 result = true;
             }
         }
         if (tmiFlags & (1 << 5)) {
             // right foliage
-            if (tmiFlags & (1 << 6) {
+            if (tmiFlags & (1 << 6)) {
                 dProgressErr() << tr("Subtile %1 has both foliage and floor transparency enabled on the right side.").arg(i + 1);
                 result = true;
             }
@@ -1587,23 +1587,23 @@ void LevelCelView::checkTileFlags()
     // AMP:
     bool result = false;
     for (int i = 0; i < this->til->getTileCount(); i++) {
-        quint8 ampType = this->amp->getTileType();
-        quint8 ampFlags = this->amp->getTileProperties();
+        quint8 ampType = this->amp->getTileType(i);
+        quint8 ampFlags = this->amp->getTileProperties(i);
         if (ampFlags & (1 << 0)) {
             // western door
-            if ((ampFlags & (1 << 2))) {
+            if (ampFlags & (1 << 2)) {
                 dProgressErr() << tr("Tile %1 has both west-door and west arch flags set.").arg(i + 1);
                 result = true;
             }
-            if ((ampFlags & (1 << 4))) {
+            if (ampFlags & (1 << 4)) {
                 dProgressErr() << tr("Tile %1 has both west-door and west grate flags set.").arg(i + 1);
                 result = true;
             }
-            if ((ampFlags & (1 << 6))) {
+            if (ampFlags & (1 << 6)) {
                 dProgressErr() << tr("Tile %1 has both west-door and external flags set.").arg(i + 1);
                 result = true;
             }
-            if ((ampFlags & (1 << 7))) {
+            if (ampFlags & (1 << 7)) {
                 dProgressErr() << tr("Tile %1 has both west-door and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -1614,19 +1614,19 @@ void LevelCelView::checkTileFlags()
         }
         if (ampFlags & (1 << 1)) {
             // eastern door
-            if ((ampFlags & (1 << 3))) {
+            if (ampFlags & (1 << 3)) {
                 dProgressErr() << tr("Tile %1 has both east-door and east-arch flags set.").arg(i + 1);
                 result = true;
             }
-            if ((ampFlags & (1 << 5))) {
+            if (ampFlags & (1 << 5)) {
                 dProgressErr() << tr("Tile %1 has both east-door and east-grate flags set.").arg(i + 1);
                 result = true;
             }
-            if ((ampFlags & (1 << 6))) {
+            if (ampFlags & (1 << 6)) {
                 dProgressErr() << tr("Tile %1 has both east-door and external flags set.").arg(i + 1);
                 result = true;
             }
-            if ((ampFlags & (1 << 7))) {
+            if (ampFlags & (1 << 7)) {
                 dProgressErr() << tr("Tile %1 has both east-door and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -1637,15 +1637,15 @@ void LevelCelView::checkTileFlags()
         }
         if (ampFlags & (1 << 2)) {
             // western arch
-            if ((ampFlags & (1 << 4))) {
+            if (ampFlags & (1 << 4)) {
                 dProgressErr() << tr("Tile %1 has both west-arch and west-grate flags set.").arg(i + 1);
                 result = true;
             }
-            if ((ampFlags & (1 << 6))) {
+            if (ampFlags & (1 << 6)) {
                 dProgressErr() << tr("Tile %1 has both west-arch and external flags set.").arg(i + 1);
                 result = true;
             }
-            if ((ampFlags & (1 << 7))) {
+            if (ampFlags & (1 << 7)) {
                 dProgressErr() << tr("Tile %1 has both west-arch and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -1656,15 +1656,15 @@ void LevelCelView::checkTileFlags()
         }
         if (ampFlags & (1 << 3)) {
             // eastern arch
-            if ((ampFlags & (1 << 5))) {
+            if (ampFlags & (1 << 5)) {
                 dProgressErr() << tr("Tile %1 has both east-arch and east-grate flags set.").arg(i + 1);
                 result = true;
             }
-            if ((ampFlags & (1 << 6))) {
+            if (ampFlags & (1 << 6)) {
                 dProgressErr() << tr("Tile %1 has both east-arch and external flags set.").arg(i + 1);
                 result = true;
             }
-            if ((ampFlags & (1 << 7))) {
+            if (ampFlags & (1 << 7)) {
                 dProgressErr() << tr("Tile %1 has both east-arch and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -1675,11 +1675,11 @@ void LevelCelView::checkTileFlags()
         }
         if (ampFlags & (1 << 4)) {
             // western grate
-            if ((ampFlags & (1 << 6))) {
+            if (ampFlags & (1 << 6)) {
                 dProgressErr() << tr("Tile %1 has both west-grate and external flags set.").arg(i + 1);
                 result = true;
             }
-            if ((ampFlags & (1 << 7))) {
+            if (ampFlags & (1 << 7)) {
                 dProgressErr() << tr("Tile %1 has both west-grate and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -1690,11 +1690,11 @@ void LevelCelView::checkTileFlags()
         }
         if (ampFlags & (1 << 5)) {
             // eastern grate
-            if ((ampFlags & (1 << 6))) {
+            if (ampFlags & (1 << 6)) {
                 dProgressErr() << tr("Tile %1 has both east-grate and external flags set.").arg(i + 1);
                 result = true;
             }
-            if ((ampFlags & (1 << 7))) {
+            if (ampFlags & (1 << 7)) {
                 dProgressErr() << tr("Tile %1 has both east-grate and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -1705,7 +1705,7 @@ void LevelCelView::checkTileFlags()
         }
         if (ampFlags & (1 << 6)) {
             // external
-            if ((ampFlags & (1 << 7))) {
+            if (ampFlags & (1 << 7)) {
                 dProgressErr() << tr("Tile %1 has both external and stairs flags set.").arg(i + 1);
                 result = true;
             }
