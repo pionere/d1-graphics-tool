@@ -18,7 +18,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_0">
    <property name="spacing">
-    <number>0</number>
+    <number>4</number>
    </property>
    <property name="leftMargin">
     <number>2</number>
@@ -33,262 +33,214 @@
     <number>2</number>
    </property>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout_1">
+    <widget class="QGroupBox" name="solFlagsGroupBox">
+     <property name="minimumHeight">
+      <number>80</number>
+     </property>
+     <property name="title">
+      <string>SOL flags</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_1">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="sol0">
+        <property name="text">
+         <string>Solid</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="sol1">
+        <property name="text">
+         <string>Block light</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="sol2">
+        <property name="text">
+         <string>Block missile</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QCheckBox" name="sol7">
+        <property name="text">
+         <string>Allow trap</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="solTransparencyLabel">
+        <property name="text">
+         <string>Transparency:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="sol3">
+        <property name="text">
+         <string>Enabled</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QCheckBox" name="sol4">
+        <property name="text">
+         <string>Left floor</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QCheckBox" name="sol5">
+        <property name="text">
+         <string>Right floor</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="tmiFlagsGroupBox">
+     <property name="minimumHeight">
+      <number>80</number>
+     </property>
+     <property name="title">
+      <string>TMI flags</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="tmi0">
+        <property name="text">
+         <string>Transp. Wall</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="tmiLeftLabel">
+        <property name="text">
+         <string>Left floor:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="tmi1">
+        <property name="text">
+         <string>Second pass</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QCheckBox" name="tmi2">
+        <property name="text">
+         <string>Foliage</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QCheckBox" name="tmi3">
+        <property name="text">
+         <string>Transparent</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLabel" name="tmiRightLabel">
+        <property name="text">
+         <string>Right floor:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QCheckBox" name="tmi4">
+        <property name="text">
+         <string>Second pass</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QCheckBox" name="tmi5">
+        <property name="text">
+         <string>Foliage</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QCheckBox" name="tmi6">
+        <property name="text">
+         <string>Transparent</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <property name="leftMargin">
+      <number>10</number>
+     </property>
      <property name="spacing">
-      <number>4</number>
+      <number>10</number>
      </property>
      <item>
-      <widget class="QGroupBox" name="solFlagsGroupBox">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
+      <widget class="QLabel" name="subtilesLabel">
+       <property name="text">
+        <string>Frames:</string>
        </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>80</height>
-        </size>
-       </property>
-       <property name="title">
-        <string>SOL flags</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_1">
-        <item row="0" column="0">
-         <widget class="QCheckBox" name="sol0">
-          <property name="text">
-           <string>Solid</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QCheckBox" name="sol1">
-          <property name="text">
-           <string>Block light</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QCheckBox" name="sol2">
-          <property name="text">
-           <string>Block missile</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QCheckBox" name="sol7">
-          <property name="text">
-           <string>Allow trap</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="solTransparencyLabel">
-          <property name="text">
-           <string>Transparency:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QCheckBox" name="sol3">
-          <property name="text">
-           <string>Enabled</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="QCheckBox" name="sol4">
-          <property name="text">
-           <string>Left floor</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="3">
-         <widget class="QCheckBox" name="sol5">
-          <property name="text">
-           <string>Right floor</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
       </widget>
      </item>
      <item>
-      <widget class="QGroupBox" name="tmiFlagsGroupBox">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
+      <widget class="QPushButton" name="framesPrevButton">
+       <property name="minimumWidth">
+        <number>40</number>
        </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>80</height>
-        </size>
+       <property name="maximumWidth">
+        <number>40</number>
        </property>
-       <property name="title">
-        <string>TMI flags</string>
+       <property name="toolTip">
+         <string>Previous frame</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
-         <widget class="QCheckBox" name="tmi0">
-          <property name="text">
-           <string>Transp. Wall</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="tmiLeftLabel">
-          <property name="text">
-           <string>Left floor:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QCheckBox" name="tmi1">
-          <property name="text">
-           <string>Second pass</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QCheckBox" name="tmi2">
-          <property name="text">
-           <string>Foliage</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="4">
-         <widget class="QCheckBox" name="tmi3">
-          <property name="text">
-           <string>Transparent</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="tmiRightLabel">
-          <property name="text">
-           <string>Right floor:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="QCheckBox" name="tmi4">
-          <property name="text">
-           <string>Second pass</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="3">
-         <widget class="QCheckBox" name="tmi5">
-          <property name="text">
-           <string>Foliage</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="4">
-         <widget class="QCheckBox" name="tmi6">
-          <property name="text">
-           <string>Transparent</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <property name="text">
+        <string notr="true">&lt;</string>
+       </property>
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <property name="spacing">
-        <number>4</number>
+      <widget class="QComboBox" name="framesComboBox">
+       <property name="minimumWidth">
+        <number>80</number>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignLeft</set>
+       <property name="maximumWidth">
+        <number>120</number>
        </property>
-       <item>
-        <widget class="QLabel" name="subtilesLabel">
-         <property name="minimumSize">
-          <size>
-           <width>100</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>100</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Frames:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="framesPrevButton">
-         <property name="minimumSize">
-          <size>
-           <width>40</width>
-           <height>0</height>
-          </size>
-        </property>
-          <property name="maximumSize">
-          <size>
-           <width>40</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="toolTip">
-          <string>Previous frame</string>
-         </property>
-         <property name="text">
-          <string notr="true">&lt;</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="framesComboBox">
-         <property name="minimumSize">
-          <size>
-           <width>80</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>120</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="editable">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="framesNextButton">
-         <property name="minimumSize">
-          <size>
-           <width>40</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>40</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="toolTip">
-          <string>Next frame</string>
-         </property>
-         <property name="text">
-          <string notr="true">&gt;</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="framesNextButton">
+       <property name="minimumWidth">
+        <number>40</number>
+       </property>
+       <property name="maximumWidth">
+        <number>40</number>
+       </property>
+       <property name="toolTip">
+        <string>Next frame</string>
+       </property>
+       <property name="text">
+        <string notr="true">&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>

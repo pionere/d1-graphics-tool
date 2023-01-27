@@ -18,7 +18,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_0">
    <property name="spacing">
-    <number>0</number>
+    <number>4</number>
    </property>
    <property name="leftMargin">
     <number>2</number>
@@ -33,290 +33,246 @@
     <number>2</number>
    </property>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout_1">
+    <layout class="QHBoxLayout" name="horizontalLayout_1">
+     <property name="leftMargin">
+      <number>10</number>
+     </property>
      <property name="spacing">
-      <number>4</number>
+      <number>10</number>
      </property>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_1">
-       <property name="spacing">
-        <number>4</number>
+      <widget class="QLabel" name="ampTypeLabel">
+       <property name="text">
+        <string>Automap type:</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignLeft</set>
-       </property>
-       <item>
-        <widget class="QLabel" name="ampTypeLabel">
-         <property name="minimumSize">
-          <size>
-           <width>100</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>100</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Automap type:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="ampTypeComboBox">
-         <item>
-          <property name="text">
-           <string>None</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Pillar</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Wall (north-west)</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Wall (north-east)</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Wall intersection (north)</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Wall ending (north-west)</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Wall ending (north-east)</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Corner wall (north)</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Wall intersection (west)</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Wall intersection (east)</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Wall (south-west)</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Wall (south-east)</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Wall intersection (south)</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <widget class="QGroupBox" name="flagsGroupBox">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>120</height>
-        </size>
-       </property>
-       <property name="title">
-        <string>Automap flags</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string>Western:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QCheckBox" name="amp0">
-          <property name="text">
-           <string>Door</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="QCheckBox" name="amp2">
-          <property name="text">
-           <string>Arch</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="3">
-         <widget class="QCheckBox" name="amp4">
-          <property name="text">
-           <string>Grate</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_5">
-          <property name="text">
-           <string>Eastern:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QCheckBox" name="amp1">
-          <property name="text">
-           <string>Door</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="2">
-         <widget class="QCheckBox" name="amp3">
-          <property name="text">
-           <string>Arch</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="3">
-         <widget class="QCheckBox" name="amp5">
-          <property name="text">
-           <string>Grate</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QCheckBox" name="amp6">
-          <property name="text">
-           <string>External</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QCheckBox" name="amp7">
-          <property name="text">
-           <string>Stairs</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <property name="spacing">
-        <number>4</number>
+      <widget class="QComboBox" name="ampTypeComboBox">
+       <item>
+        <property name="text">
+         <string>None</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Pillar</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Wall (north-west)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Wall (north-east)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Wall intersection (north)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Wall ending (north-west)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Wall ending (north-east)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Corner wall (north)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Wall intersection (west)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Wall intersection (east)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Wall (south-west)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Wall (south-east)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Wall intersection (south)</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_0">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignLeft</set>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="flagsGroupBox">
+     <property name="maximumHeight">
+      <number>120</number>
+     </property>
+     <property name="title">
+      <string>Automap flags</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Western:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="amp0">
+        <property name="text">
+         <string>Door</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QCheckBox" name="amp2">
+        <property name="text">
+         <string>Arch</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QCheckBox" name="amp4">
+        <property name="text">
+         <string>Grate</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Eastern:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="amp1">
+        <property name="text">
+         <string>Door</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QCheckBox" name="amp3">
+        <property name="text">
+         <string>Arch</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QCheckBox" name="amp5">
+        <property name="text">
+         <string>Grate</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="amp6">
+        <property name="text">
+         <string>External</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="amp7">
+        <property name="text">
+         <string>Stairs</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <property name="leftMargin">
+      <number>10</number>
+     </property>
+     <property name="spacing">
+      <number>10</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="subtilesLabel">
+       <property name="text">
+        <string>Subtiles:</string>
        </property>
-       <item>
-        <widget class="QLabel" name="subtilesLabel">
-         <property name="minimumSize">
-          <size>
-           <width>100</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>100</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Subtiles:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="subtilesPrevButton">
-         <property name="minimumSize">
-          <size>
-           <width>40</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>40</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="toolTip">
-          <string>Previous SubTile</string>
-         </property>
-         <property name="text">
-          <string notr="true">&lt;</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="subtilesComboBox">
-         <property name="minimumSize">
-          <size>
-           <width>80</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>120</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="editable">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="subtilesNextButton">
-         <property name="minimumSize">
-          <size>
-           <width>40</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>40</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="toolTip">
-          <string>Next SubTile</string>
-         </property>
-         <property name="text">
-          <string notr="true">&gt;</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="subtilesPrevButton">
+       <property name="minimumWidth">
+        <number>40</number>
+       </property>
+       <property name="maximumWidth">
+        <number>40</number>
+       </property>
+       <property name="toolTip">
+        <string>Previous SubTile</string>
+       </property>
+       <property name="text">
+        <string notr="true">&lt;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="subtilesComboBox">
+       <property name="minimumWidth">
+        <number>80</number>
+       </property>
+       <property name="maximumWidth">
+        <number>120</number>
+       </property>
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="subtilesNextButton">
+       <property name="minimumWidth">
+        <number>40</number>
+       </property>
+       <property name="maximumWidth">
+        <number>40</number>
+       </property>
+       <property name="toolTip">
+        <string>Next SubTile</string>
+       </property>
+       <property name="text">
+        <string notr="true">&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>

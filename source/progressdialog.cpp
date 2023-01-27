@@ -202,18 +202,21 @@ void ProgressDialog::on_closePushButton_clicked()
     this->hide();
 }
 
-void ProgressDialog::closeEvent(QCloseEvent *e)
+void ProgressDialog::closeEvent(QCloseEvent *event)
 {
     this->on_cancelPushButton_clicked();
-    // QDialog::closeEvent(e);
+    // QDialog::closeEvent(event);
 }
 
-void ProgressDialog::changeEvent(QEvent *e)
+void ProgressDialog::changeEvent(QEvent *event)
 {
     /*if (event->type() == QEvent::WindowStateChange && this->isMinimized()) {
         this->hide();
     }*/
-    return QDialog::changeEvent(e);
+    if (event->type() == QEvent::LanguageChange) {
+        this->ui->retranslateUi(this);
+    }
+    return QDialog::changeEvent(event);
 }
 
 ProgressWidget::ProgressWidget(QWidget *parent)
