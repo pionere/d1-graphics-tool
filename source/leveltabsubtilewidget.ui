@@ -34,7 +34,7 @@
    </property>
    <item>
     <widget class="QGroupBox" name="solFlagsGroupBox">
-     <property name="minimumHeight">
+     <property name="maximumHeight">
       <number>80</number>
      </property>
      <property name="title">
@@ -102,7 +102,7 @@
    </item>
    <item>
     <widget class="QGroupBox" name="tmiFlagsGroupBox">
-     <property name="minimumHeight">
+     <property name="maximumHeight">
       <number>80</number>
      </property>
      <property name="title">
