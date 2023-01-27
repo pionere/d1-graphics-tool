@@ -32,9 +32,9 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
         theDialog->setWindowTitle(label);
         theDialog->ui->progressLabel->setVisible(false);
         theDialog->ui->progressBar->setVisible(false);
-        theDialog->ui->progressButtonsWidget->setVisible(false);
+        theDialog->ui->progressButtonsWidget_1->setVisible(false);
         theDialog->ui->detailsGroupBox->setVisible(true);
-        theDialog->ui->closePushButton->setVisible(true);
+        theDialog->ui->progressButtonsWidget_2->setVisible(true);
         theDialog->ui->outputTextEdit->clear();
         theDialog->textVersion = 0;
         theDialog->status = PROGRESS_STATE::RUNNING;
@@ -51,16 +51,16 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
 
     theDialog->showNormal();
 
-    theDialog->setWindowTitle("");
+    theDialog->setWindowTitle(" ");
     theDialog->ui->progressLabel->setVisible(true);
     theDialog->ui->progressLabel->setText(label);
     theDialog->ui->progressBar->setVisible(true);
     theDialog->ui->progressBar->setRange(0, maxValue);
     theDialog->ui->progressBar->setValue(0);
     theDialog->ui->cancelPushButton->setEnabled(true);
-    theDialog->ui->progressButtonsWidget->setVisible(true);
+    theDialog->ui->progressButtonsWidget_1->setVisible(true);
     theDialog->ui->detailsGroupBox->setVisible(true);
-    theDialog->ui->closePushButton->setVisible(false);
+    theDialog->ui->progressButtonsWidget_2->setVisible(false);
     theDialog->on_detailsPushButton_clicked();
     theDialog->ui->outputTextEdit->clear();
     theDialog->textVersion = 0;
@@ -71,12 +71,13 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
 
 void ProgressDialog::done(bool forceOpen)
 {
+    theDialog->setWindowTitle(" ");
     theDialog->ui->progressLabel->setVisible(false);
     theDialog->ui->progressBar->setVisible(false);
-    theDialog->ui->progressButtonsWidget->setVisible(false);
+    theDialog->ui->progressButtonsWidget_1->setVisible(false);
     bool detailsOpen = theDialog->ui->detailsGroupBox->isVisible();
     theDialog->ui->detailsGroupBox->setVisible(true);
-    theDialog->ui->closePushButton->setVisible(true);
+    theDialog->ui->progressButtonsWidget_2->setVisible(true);
     if (theDialog->status == PROGRESS_STATE::RUNNING) {
         theDialog->status = PROGRESS_STATE::DONE;
     }
@@ -242,7 +243,7 @@ void ProgressWidget::update(PROGRESS_STATE status, bool active, const QString &l
     QStyle::StandardPixmap type;
     switch (status) {
     case PROGRESS_STATE::DONE:
-        type = QStyle::SP_DialogApplyButton;
+        type = active ? QStyle::SP_ArrowUp : QStyle::SP_DialogApplyButton;
         break;
     case PROGRESS_STATE::RUNNING:
         type = QStyle::SP_BrowserReload;
