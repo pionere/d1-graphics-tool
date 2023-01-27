@@ -1004,67 +1004,72 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.ui" line="80"/>
+        <location filename="../source/leveltabframewidget.ui" line="74"/>
         <source>Square</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.ui" line="85"/>
+        <location filename="../source/leveltabframewidget.ui" line="79"/>
         <source>Transparent square</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.ui" line="90"/>
+        <location filename="../source/leveltabframewidget.ui" line="84"/>
         <source>Left Triangle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.ui" line="95"/>
+        <location filename="../source/leveltabframewidget.ui" line="89"/>
         <source>Right Triangle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.ui" line="100"/>
+        <location filename="../source/leveltabframewidget.ui" line="94"/>
         <source>Left Trapezoid</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.ui" line="105"/>
+        <location filename="../source/leveltabframewidget.ui" line="99"/>
         <source>Right Trapezoid</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="228"/>
+        <location filename="../source/leveltabframewidget.cpp" line="30"/>
+        <source>Delete the current frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabframewidget.cpp" line="253"/>
         <source>Invalid width. Must be 32px wide.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="230"/>
+        <location filename="../source/leveltabframewidget.cpp" line="255"/>
         <source>Invalid height. Must be 32px wide.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="239"/>
+        <location filename="../source/leveltabframewidget.cpp" line="264"/>
         <source>Suggested type: &apos;Square&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="244"/>
+        <location filename="../source/leveltabframewidget.cpp" line="269"/>
         <source>Suggested type: &apos;Left Triangle&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="249"/>
+        <location filename="../source/leveltabframewidget.cpp" line="274"/>
         <source>Suggested type: &apos;Right Triangle&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="254"/>
+        <location filename="../source/leveltabframewidget.cpp" line="279"/>
         <source>Suggested type: &apos;Left Trapezoid&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="259"/>
+        <location filename="../source/leveltabframewidget.cpp" line="284"/>
         <source>Suggested type: &apos;Right Trapezoid&apos;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1092,8 +1097,8 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="166"/>
-        <location filename="../source/leveltabsubtilewidget.ui" line="194"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="157"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="185"/>
         <source>Transparent</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1123,181 +1128,201 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="132"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="123"/>
         <source>TMI flags</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="138"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="129"/>
         <source>Transp. Wall</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="145"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="136"/>
         <source>Left floor:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="152"/>
-        <location filename="../source/leveltabsubtilewidget.ui" line="180"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="143"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="171"/>
         <source>Second pass</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="159"/>
-        <location filename="../source/leveltabsubtilewidget.ui" line="187"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="150"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="178"/>
         <source>Foliage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="173"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="164"/>
         <source>Right floor:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="224"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="203"/>
         <source>Frames:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="243"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="216"/>
         <source>Previous frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.ui" line="284"/>
+        <location filename="../source/leveltabsubtilewidget.ui" line="245"/>
         <source>Next frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabsubtilewidget.cpp" line="27"/>
+        <source>Reset flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabsubtilewidget.cpp" line="28"/>
+        <source>Delete the current subtile</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>LevelTabTileWidget</name>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="63"/>
+        <location filename="../source/leveltabtilewidget.ui" line="60"/>
         <source>Automap type:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="71"/>
+        <location filename="../source/leveltabtilewidget.ui" line="68"/>
         <source>None</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="76"/>
+        <location filename="../source/leveltabtilewidget.ui" line="73"/>
         <source>Pillar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="111"/>
+        <location filename="../source/leveltabtilewidget.ui" line="108"/>
         <source>Wall intersection (west)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="116"/>
+        <location filename="../source/leveltabtilewidget.ui" line="113"/>
         <source>Wall intersection (east)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="131"/>
+        <location filename="../source/leveltabtilewidget.ui" line="128"/>
         <source>Wall intersection (south)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="153"/>
+        <location filename="../source/leveltabtilewidget.ui" line="148"/>
         <source>Automap flags</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="166"/>
-        <location filename="../source/leveltabtilewidget.ui" line="194"/>
+        <location filename="../source/leveltabtilewidget.ui" line="161"/>
+        <location filename="../source/leveltabtilewidget.ui" line="189"/>
         <source>Door</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="173"/>
-        <location filename="../source/leveltabtilewidget.ui" line="201"/>
+        <location filename="../source/leveltabtilewidget.ui" line="168"/>
+        <location filename="../source/leveltabtilewidget.ui" line="196"/>
         <source>Arch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="180"/>
-        <location filename="../source/leveltabtilewidget.ui" line="208"/>
+        <location filename="../source/leveltabtilewidget.ui" line="175"/>
+        <location filename="../source/leveltabtilewidget.ui" line="203"/>
         <source>Grate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="81"/>
+        <location filename="../source/leveltabtilewidget.ui" line="78"/>
         <source>Wall (north-west)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="86"/>
+        <location filename="../source/leveltabtilewidget.ui" line="83"/>
         <source>Wall (north-east)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="91"/>
+        <location filename="../source/leveltabtilewidget.ui" line="88"/>
         <source>Wall intersection (north)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="96"/>
+        <location filename="../source/leveltabtilewidget.ui" line="93"/>
         <source>Wall ending (north-west)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="101"/>
+        <location filename="../source/leveltabtilewidget.ui" line="98"/>
         <source>Wall ending (north-east)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="106"/>
+        <location filename="../source/leveltabtilewidget.ui" line="103"/>
         <source>Corner wall (north)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="121"/>
+        <location filename="../source/leveltabtilewidget.ui" line="118"/>
         <source>Wall (south-west)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="126"/>
+        <location filename="../source/leveltabtilewidget.ui" line="123"/>
         <source>Wall (south-east)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="159"/>
+        <location filename="../source/leveltabtilewidget.ui" line="154"/>
         <source>Western:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="187"/>
+        <location filename="../source/leveltabtilewidget.ui" line="182"/>
         <source>Eastern:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="215"/>
+        <location filename="../source/leveltabtilewidget.ui" line="210"/>
         <source>External</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="222"/>
+        <location filename="../source/leveltabtilewidget.ui" line="217"/>
         <source>Stairs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="252"/>
+        <location filename="../source/leveltabtilewidget.ui" line="235"/>
         <source>Subtiles:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="271"/>
+        <location filename="../source/leveltabtilewidget.ui" line="248"/>
         <source>Previous SubTile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.ui" line="312"/>
+        <location filename="../source/leveltabtilewidget.ui" line="277"/>
         <source>Next SubTile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabtilewidget.cpp" line="30"/>
+        <source>Reset flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/leveltabtilewidget.cpp" line="31"/>
+        <source>Delete the current tile</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2292,22 +2317,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.ui" line="76"/>
+        <location filename="../source/progressdialog.ui" line="101"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.cpp" line="186"/>
+        <location filename="../source/progressdialog.cpp" line="187"/>
         <source>Show details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.cpp" line="186"/>
+        <location filename="../source/progressdialog.cpp" line="187"/>
         <source>Hide details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.cpp" line="194"/>
+        <location filename="../source/progressdialog.cpp" line="195"/>
         <source>Process cancelled.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2491,12 +2516,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="49"/>
+        <location filename="../source/leveltabframewidget.cpp" line="74"/>
         <source>Invalid (transparent) pixel at (%1:%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="55"/>
+        <location filename="../source/leveltabframewidget.cpp" line="80"/>
         <source>Invalid (non-transparent) pixel at (%1:%2)</source>
         <translation type="unfinished"></translation>
     </message>

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QPushButton>
+#include <QStyle>
 #include <QWidget>
 
 namespace Ui {
@@ -25,12 +27,16 @@ public:
     static void selectFrameType(D1GfxFrame *frame);
 
 private slots:
+    void on_deletePushButtonClicked();
     void on_frameTypeComboBox_activated(int index);
 
 private:
+    QPushButton *addButton(QStyle::StandardPixmap type, QString tooltip, void (LevelTabFrameWidget::*callback)(void));
     void validate();
 
+private:
     Ui::LevelTabFrameWidget *ui;
+    QPushButton *deleteButton;
     LevelCelView *levelCelView;
     D1Gfx *gfx;
 };

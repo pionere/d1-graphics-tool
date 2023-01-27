@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QPushButton>
+#include <QStyle>
 #include <QWidget>
 
 namespace Ui {
@@ -24,6 +26,9 @@ public:
     void selectSubtile(int index);
 
 private slots:
+    void on_clearPushButtonClicked();
+    void on_deletePushButtonClicked();
+
     void on_ampTypeComboBox_activated(int index);
 
     void on_amp0_clicked();
@@ -41,11 +46,15 @@ private slots:
     void on_subtilesNextButton_clicked();
 
 private:
+    QPushButton *addButton(QStyle::StandardPixmap type, QString tooltip, void (LevelTabTileWidget::*callback)(void));
     void updateSubtilesSelection(int index);
+    void setAmpProperty(quint8 flags);
     void updateAmpProperty();
-    quint8 readAmpProperty();
 
+private:
     Ui::LevelTabTileWidget *ui;
+    QPushButton *clearButton;
+    QPushButton *deleteButton;
     LevelCelView *levelCelView;
     D1Til *til;
     D1Min *min;

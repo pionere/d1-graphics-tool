@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QPushButton>
+#include <QStyle>
 #include <QWidget>
 
 namespace Ui {
@@ -25,6 +27,9 @@ public:
     void selectFrame(int index);
 
 private slots:
+    void on_clearPushButtonClicked();
+    void on_deletePushButtonClicked();
+
     void on_sol0_clicked();
     void on_sol1_clicked();
     void on_sol2_clicked();
@@ -47,13 +52,16 @@ private slots:
     void on_framesNextButton_clicked();
 
 private:
+    QPushButton *addButton(QStyle::StandardPixmap type, QString tooltip, void (LevelTabSubTileWidget::*callback)(void));
     void updateFramesSelection(int index);
+    void setSolProperty(quint8 flags);
     void updateSolProperty();
-    quint8 readSol();
+    void setTmiProperty(quint8 flags);
     void updateTmiProperty();
-    quint8 readTmi();
 
     Ui::LevelTabSubTileWidget *ui;
+    QPushButton *clearButton;
+    QPushButton *deleteButton;
     LevelCelView *levelCelView;
     D1Gfx *gfx;
     D1Min *min;
