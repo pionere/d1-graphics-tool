@@ -31,7 +31,7 @@ private slots:
     void on_frameTypeComboBox_activated(int index);
 
 private:
-    QPushButton *addButton(QStyle::StandardPixmap type, QString tooltip, void (*callback)(void));
+    QPushButton *addButton(QStyle::StandardPixmap type, QString tooltip, void (LevelTabFrameWidget::*callback)(void));
     void validate();
 
 private:

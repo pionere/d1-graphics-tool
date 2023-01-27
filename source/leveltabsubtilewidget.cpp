@@ -1,6 +1,7 @@
 #include "leveltabsubtilewidget.h"
 
 #include "levelcelview.h"
+#include "mainwindow.h"
 #include "ui_leveltabsubtilewidget.h"
 
 QPushButton *LevelTabSubTileWidget::addButton(QStyle::StandardPixmap type, QString tooltip, void (LevelTabSubTileWidget::*callback)(void))
@@ -155,7 +156,7 @@ void LevelTabSubTileWidget::setSolProperty(quint8 flags)
     }
 }
 
-quint8 LevelTabSubTileWidget::updateSolProperty()
+void LevelTabSubTileWidget::updateSolProperty()
 {
     quint8 flags = 0;
     if (this->ui->sol0->checkState())
