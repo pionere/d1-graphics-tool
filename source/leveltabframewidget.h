@@ -36,6 +36,7 @@ private:
 
 private:
     Ui::LevelTabFrameWidget *ui;
+    QPushButton *deleteButton;
     LevelCelView *levelCelView;
     D1Gfx *gfx;
 };

@@ -20,12 +20,12 @@ QPushButton *LevelTabSubTileWidget::addButton(QStyle::StandardPixmap type, QStri
 
 LevelTabSubTileWidget::LevelTabSubTileWidget()
     : QWidget(nullptr)
-    , ui(new Ui::LevelTabSubTileWidget)
+    , ui(new Ui::LevelTabSubTileWidget())
 {
     ui->setupUi(this);
 
-    this->addButton(QStyle::SP_DialogResetButton, tr("Reset flags"), &LevelTabSubTileWidget::on_clearPushButtonClicked);
-    this->addButton(QStyle::SP_TrashIcon, tr("Delete the current subtile"), &LevelTabSubTileWidget::on_deletePushButtonClicked);
+    this->clearButton = this->addButton(QStyle::SP_DialogResetButton, tr("Reset flags"), &LevelTabSubTileWidget::on_clearPushButtonClicked);
+    this->deleteButton = this->addButton(QStyle::SP_TrashIcon, tr("Delete the current subtile"), &LevelTabSubTileWidget::on_deletePushButtonClicked);
 }
 
 LevelTabSubTileWidget::~LevelTabSubTileWidget()
@@ -48,8 +48,8 @@ void LevelTabSubTileWidget::update()
 
     bool hasSubtile = this->min->getSubtileCount() != 0;
 
-    ((QPushButton *)this->ui->buttonsHorizontalLayout->children()[1])->setEnabled(hasSubtile); // Clear button
-    ((QPushButton *)this->ui->buttonsHorizontalLayout->children()[2])->setEnabled(hasSubtile); // Delete button
+    this->clearButton->setEnabled(hasSubtile);
+    this->deleteButton->setEnabled(hasSubtile);
 
     this->ui->sol0->setEnabled(hasSubtile);
     this->ui->sol1->setEnabled(hasSubtile);

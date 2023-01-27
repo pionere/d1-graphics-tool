@@ -23,11 +23,11 @@ QPushButton *LevelTabFrameWidget::addButton(QStyle::StandardPixmap type, QString
 
 LevelTabFrameWidget::LevelTabFrameWidget()
     : QWidget(nullptr)
-    , ui(new Ui::LevelTabFrameWidget)
+    , ui(new Ui::LevelTabFrameWidget())
 {
     ui->setupUi(this);
 
-    this->addButton(QStyle::SP_DialogCancelButton, tr("Delete the current frame"), &LevelTabFrameWidget::on_deletePushButtonClicked);
+    this->deleteButton = this->addButton(QStyle::SP_DialogCancelButton, tr("Delete the current frame"), &LevelTabFrameWidget::on_deletePushButtonClicked);
 }
 
 LevelTabFrameWidget::~LevelTabFrameWidget()
@@ -48,8 +48,9 @@ void LevelTabFrameWidget::update()
 
     bool hasFrame = frame != nullptr;
 
+    this->deleteButton->setEnabled(hasFrame);
+
     this->ui->frameTypeComboBox->setEnabled(hasFrame);
-    ((QPushButton *)this->ui->buttonsHorizontalLayout->children()[1])->setEnabled(hasFrame); // Delete button
 
     if (!hasFrame) {
         this->ui->frameTypeComboBox->setCurrentIndex(-1);

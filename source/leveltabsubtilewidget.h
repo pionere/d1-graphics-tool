@@ -60,6 +60,8 @@ private:
     void updateTmiProperty();
 
     Ui::LevelTabSubTileWidget *ui;
+    QPushButton *clearButton;
+    QPushButton *deleteButton;
     LevelCelView *levelCelView;
     D1Gfx *gfx;
     D1Min *min;

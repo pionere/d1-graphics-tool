@@ -53,6 +53,8 @@ private:
 
 private:
     Ui::LevelTabTileWidget *ui;
+    QPushButton *clearButton;
+    QPushButton *deleteButton;
     LevelCelView *levelCelView;
     D1Til *til;
     D1Min *min;

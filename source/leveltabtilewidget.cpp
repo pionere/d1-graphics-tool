@@ -23,12 +23,12 @@ QPushButton *LevelTabTileWidget::addButton(QStyle::StandardPixmap type, QString 
 
 LevelTabTileWidget::LevelTabTileWidget()
     : QWidget(nullptr)
-    , ui(new Ui::LevelTabTileWidget)
+    , ui(new Ui::LevelTabTileWidget())
 {
     ui->setupUi(this);
 
-    this->addButton(QStyle::SP_DialogResetButton, tr("Reset flags"), &LevelTabTileWidget::on_clearPushButtonClicked);
-    this->addButton(QStyle::SP_DialogDiscardButton, tr("Delete the current tile"), &LevelTabTileWidget::on_deletePushButtonClicked);
+    this->clearButton = this->addButton(QStyle::SP_DialogResetButton, tr("Reset flags"), &LevelTabTileWidget::on_clearPushButtonClicked);
+    this->deleteButton = this->addButton(QStyle::SP_DialogDiscardButton, tr("Delete the current tile"), &LevelTabTileWidget::on_deletePushButtonClicked);
 }
 
 LevelTabTileWidget::~LevelTabTileWidget()
@@ -50,8 +50,8 @@ void LevelTabTileWidget::update()
 
     bool hasTile = this->til->getTileCount() != 0;
 
-    ((QPushButton *)this->ui->buttonsHorizontalLayout->children()[1])->setEnabled(hasTile); // Clear button
-    ((QPushButton *)this->ui->buttonsHorizontalLayout->children()[2])->setEnabled(hasTile); // Delete button
+    this->clearButton->setEnabled(hasTile);
+    this->deleteButton->setEnabled(hasTile);
 
     this->ui->ampTypeComboBox->setEnabled(hasTile);
 
