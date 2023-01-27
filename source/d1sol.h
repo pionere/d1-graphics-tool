@@ -22,7 +22,7 @@ public:
 
     QString getFilePath();
     bool isModified() const;
-    quint16 getSubtileCount();
+    int getSubtileCount();
     quint8 getSubtileProperties(int subtileIndex);
     bool setSubtileProperties(int subtileIndex, quint8 value);
 

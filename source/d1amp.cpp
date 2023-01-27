@@ -116,23 +116,23 @@ bool D1Amp::isModified() const
     return this->modified;
 }
 
-quint8 D1Amp::getTileType(quint16 tileIndex)
+quint8 D1Amp::getTileType(int tileIndex)
 {
-    if (tileIndex >= this->types.count())
-        return 0;
+    // if (tileIndex < 0 || tileIndex >= this->types.count())
+    //    return 0;
 
     return this->types.at(tileIndex);
 }
 
-quint8 D1Amp::getTileProperties(quint16 tileIndex)
+quint8 D1Amp::getTileProperties(int tileIndex)
 {
-    if (tileIndex >= this->properties.count())
-        return 0;
+    // if (tileIndex < 0 || tileIndex >= this->properties.count())
+    //    return 0;
 
     return this->properties.at(tileIndex);
 }
 
-bool D1Amp::setTileType(quint16 tileIndex, quint8 value)
+bool D1Amp::setTileType(int tileIndex, quint8 value)
 {
     if (this->types[tileIndex] == value) {
         return false;
@@ -142,7 +142,7 @@ bool D1Amp::setTileType(quint16 tileIndex, quint8 value)
     return true;
 }
 
-bool D1Amp::setTileProperties(quint16 tileIndex, quint8 value)
+bool D1Amp::setTileProperties(int tileIndex, quint8 value)
 {
     if (this->properties[tileIndex] == value) {
         return false;

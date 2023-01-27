@@ -91,15 +91,15 @@ bool D1Sol::isModified() const
     return this->modified;
 }
 
-quint16 D1Sol::getSubtileCount()
+int D1Sol::getSubtileCount()
 {
     return this->subProperties.count();
 }
 
 quint8 D1Sol::getSubtileProperties(int subtileIndex)
 {
-    if (subtileIndex >= this->subProperties.count())
-        return 0;
+    // if (subtileIndex >= this->subProperties.count())
+    //    return 0;
 
     return this->subProperties.at(subtileIndex);
 }

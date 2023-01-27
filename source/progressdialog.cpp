@@ -139,10 +139,6 @@ ProgressDialog &ProgressDialog::operator<<(const QString &text)
     PROGRESS_TEXT_MODE mode = theDialog->textMode;
 
     if (mode == PROGRESS_TEXT_MODE::NORMAL) {
-        mode = (PROGRESS_TEXT_MODE)((int)mode + 1 + this->ui->outputTextEdit->blockCount() % 2);
-    }
-
-    if (mode == PROGRESS_TEXT_MODE::NORMAL) {
         this->ui->outputTextEdit->appendPlainText(text);
     } else { // Using <pre> tag to allow multiple spaces
         QString htmlText = QString("<p style=\"color:%1;white-space:pre\">%2</p>").arg(mode == PROGRESS_TEXT_MODE::ERROR ? "red" : "orange").arg(text);

@@ -1207,82 +1207,102 @@ void MainWindow::on_actionReportUse_Tileset_triggered()
 
 void MainWindow::on_actionResetFrameTypes_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0);
+    // ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0);
 
     this->levelCelView->resetFrameTypes();
 
     // Clear loading message from status bar
-    ProgressDialog::done();
+    // ProgressDialog::done();
 }
 
 void MainWindow::on_actionInefficientFrames_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0);
+    // ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0);
 
     this->levelCelView->inefficientFrames();
 
     // Clear loading message from status bar
-    ProgressDialog::done();
+    // ProgressDialog::done();
+}
+
+void MainWindow::on_actionCheckSubtileFlags_Tileset_triggered()
+{
+    // ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0);
+
+    this->levelCelView->checkSubtileFlags();
+
+    // Clear loading message from status bar
+    // ProgressDialog::done();
+}
+
+void MainWindow::on_actionCheckTileFlags_Tileset_triggered()
+{
+    // ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0);
+
+    this->levelCelView->checkTileFlags();
+
+    // Clear loading message from status bar
+    // ProgressDialog::done();
 }
 
 void MainWindow::on_actionCleanupFrames_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0);
+    // ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0);
 
     this->levelCelView->cleanupFrames();
 
     // Clear loading message from status bar
-    ProgressDialog::done();
+    // ProgressDialog::done();
 }
 
 void MainWindow::on_actionCleanupSubtiles_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0);
+    // ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0);
 
     this->levelCelView->cleanupSubtiles();
 
     // Clear loading message from status bar
-    ProgressDialog::done();
+    // ProgressDialog::done();
 }
 
 void MainWindow::on_actionCleanupTileset_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0);
+    // ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0);
 
     this->levelCelView->cleanupTileset();
 
     // Clear loading message from status bar
-    ProgressDialog::done();
+    // ProgressDialog::done();
 }
 
 void MainWindow::on_actionCompressSubtiles_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0);
+    // ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0);
 
     this->levelCelView->compressSubtiles();
 
     // Clear loading message from status bar
-    ProgressDialog::done();
+    // ProgressDialog::done();
 }
 
 void MainWindow::on_actionCompressTiles_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0);
+    // ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0);
 
     this->levelCelView->compressTiles();
 
     // Clear loading message from status bar
-    ProgressDialog::done();
+    // ProgressDialog::done();
 }
 
 void MainWindow::on_actionCompressTileset_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0);
+    // ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0);
 
     this->levelCelView->compressTileset();
 
     // Clear loading message from status bar
-    ProgressDialog::done();
+    // ProgressDialog::done();
 }
 
 void MainWindow::on_actionSortFrames_Tileset_triggered()

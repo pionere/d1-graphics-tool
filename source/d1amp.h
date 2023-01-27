@@ -17,10 +17,10 @@ public:
 
     QString getFilePath();
     bool isModified() const;
-    quint8 getTileType(quint16);
-    quint8 getTileProperties(quint16);
-    bool setTileType(quint16 tileIndex, quint8 value);
-    bool setTileProperties(quint16 tileIndex, quint8 value);
+    quint8 getTileType(int tileIndex);
+    quint8 getTileProperties(int tileIndex);
+    bool setTileType(int tileIndex, quint8 value);
+    bool setTileProperties(int tileIndex, quint8 value);
     void createTile();
     void removeTile(int tileIndex);
 
