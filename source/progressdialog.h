@@ -23,6 +23,12 @@ enum class PROGRESS_DIALOG_STATE {
     BACKGROUND,
 };
 
+enum class PROGRESS_TEXT_MODE {
+    NORMAL,
+    WARNING,
+    ERROR,
+};
+
 class ProgressDialog : public QDialog {
     Q_OBJECT
 
@@ -62,6 +68,7 @@ private:
 
     int textVersion;
     PROGRESS_STATE status = PROGRESS_STATE::DONE;
+    PROGRESS_TEXT_MODE textMode = PROGRESS_TEXT_MODE::NORMAL;
 };
 
 ProgressDialog &dProgress();

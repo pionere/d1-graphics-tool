@@ -960,7 +960,7 @@
     <message>
         <location filename="../source/levelcelview.cpp" line="2011"/>
         <source>Delete the current subtile</source>
-        <translation>Törölje az aktuális mezőt</translation>
+        <translation>Az aktuális mező törlése</translation>
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="2018"/>
@@ -990,7 +990,7 @@
     <message>
         <location filename="../source/levelcelview.cpp" line="2044"/>
         <source>Delete the current tile</source>
-        <translation>Törölje az aktuális lapot</translation>
+        <translation>Az aktuális lap törlése</translation>
     </message>
 </context>
 <context>
@@ -1033,7 +1033,7 @@
     <message>
         <location filename="../source/leveltabframewidget.cpp" line="30"/>
         <source>Delete the current frame</source>
-        <translation">Az aktuális képkocka törlése</translation>
+        <translation>Az aktuális képkocka törlése</translation>
     </message>
     <message>
         <location filename="../source/leveltabframewidget.cpp" line="253"/>
@@ -1179,7 +1179,7 @@
     <message>
         <location filename="../source/leveltabsubtilewidget.cpp" line="28"/>
         <source>Delete the current subtile</source>
-        <translation>Törölje az aktuális mezőt</translation>
+        <translation>Az aktuális mező törlése</translation>
     </message>
 </context>
 <context>
@@ -1320,7 +1320,7 @@
     <message>
         <location filename="../source/leveltabtilewidget.cpp" line="31"/>
         <source>Delete the current tile</source>
-        <translation>Törölje az aktuális lapot</translation>
+        <translation>Az aktuális lap törlése</translation>
     </message>
 </context>
 <context>
@@ -1696,7 +1696,7 @@
     <message>
         <location filename="../source/mainwindow.cpp" line="554"/>
         <source>Delete the current subtile</source>
-        <translation>Törölje az aktuális mezőt</translation>
+        <translation>Az aktuális mező törlése</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.cpp" line="560"/>
@@ -1721,7 +1721,7 @@
     <message>
         <location filename="../source/mainwindow.cpp" line="568"/>
         <source>Delete the current tile</source>
-        <translation>Törölje az aktuális lapot</translation>
+        <translation>Az aktuális lap törlése</translation>
     </message>
     <message>
         <location filename="../source/mainwindow.cpp" line="572"/>
