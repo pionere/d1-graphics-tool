@@ -7,7 +7,7 @@
 #include "mainwindow.h"
 #include "ui_leveltabframewidget.h"
 
-QPushButton *LevelTabFrameWidget::addButton(QStyle::StandardPixmap type, QString tooltip, void (*callback)(void))
+QPushButton *LevelTabFrameWidget::addButton(QStyle::StandardPixmap type, QString tooltip, void (LevelTabFrameWidget::*callback)(void))
 {
     QPushButton *button = new QPushButton(this->style()->standardIcon(type), "", nullptr);
     constexpr int iconSize = 16;
