@@ -1484,7 +1484,7 @@ bool LevelCelView::removeUnusedFrames()
         }
     }
     // remove the unused frames
-    bool result = false;;
+    bool result = false;
     for (int i = this->gfx->getFrameCount() - 1; i >= 0; i--) {
         if (!frameUsed[i]) {
             this->removeFrame(i);

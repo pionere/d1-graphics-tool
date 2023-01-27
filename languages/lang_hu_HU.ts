@@ -793,12 +793,12 @@
         <source>The frames are optimal.</source>
         <translation>A képkockák optimálisak.</translation>
     </message>
-    <message numerus="yes">
+    <message>
         <location filename="../source/levelcelview.cpp" line="1507"/>
         <source>Removed frame %1.</source>
         <translation>A(z) %1 képkocka törlésre került.</translation>
     </message>
-    <message numerus="yes">
+    <message>
         <location filename="../source/levelcelview.cpp" line="1538"/>
         <source>Removed subtile %1.</source>
         <translation>A(z) %1 mező törlésre került.</translation>

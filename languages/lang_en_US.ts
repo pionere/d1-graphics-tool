@@ -810,12 +810,12 @@
             <numerusform>Subtile %1 is used by tiles %2.</numerusform>
         </translation>
     </message>
-    <message numerus="yes">
+    <message>
         <location filename="../source/levelcelview.cpp" line="1507"/>
         <source>Removed frame %1.</source>
         <translation type="unfinished"></translation>
     </message>
-    <message numerus="yes">
+    <message>
         <location filename="../source/levelcelview.cpp" line="1538"/>
         <source>Removed subtile %1.</source>
         <translation type="unfinished"></translation>
