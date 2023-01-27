@@ -1347,53 +1347,51 @@ void LevelCelView::collectSubtileUsers(int subtileIndex, QList<int> &users) cons
 
 void LevelCelView::reportUsage()
 {
-    QString frameUses;
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Scanning..."), 2);
 
-    if (this->gfx->getFrameCount() > this->currentFrameIndex) {
+    bool hasFrame = this->gfx->getFrameCount() > this->currentFrameIndex;
+    if (hasFrame) {
         QList<int> frameUsers;
         this->collectFrameUsers(this->currentFrameIndex, frameUsers);
 
         if (frameUsers.count() == 0) {
-            frameUses = tr("Frame %1 is not used by any subtile.").arg(this->currentFrameIndex + 1);
+            dProgress() << tr("Frame %1 is not used by any subtile.").arg(this->currentFrameIndex + 1);
         } else {
+            QString frameUses;
             for (int user : frameUsers) {
                 frameUses += QString::number(user + 1) + ", ";
             }
             frameUses.chop(2);
-            frameUses = tr("Frame %1 is used by subtile %2.", "", frameUsers.count()).arg(this->currentFrameIndex + 1).arg(frameUses);
+            dProgress() << tr("Frame %1 is used by subtile %2.", "", frameUsers.count()).arg(this->currentFrameIndex + 1).arg(frameUses);
         }
+
+        dProgress() << "\n";
     }
 
-    QString subtileUses;
+    ProgressDialog::incValue();
 
-    if (this->min->getSubtileCount() > this->currentSubtileIndex) {
+    bool hasSubtile = this->min->getSubtileCount() > this->currentSubtileIndex;
+    if (hasSubtile) {
         QList<int> subtileUsers;
         this->collectSubtileUsers(this->currentSubtileIndex, subtileUsers);
 
         if (subtileUsers.count() == 0) {
-            subtileUses = tr("Subtile %1 is not used by any tile.").arg(this->currentSubtileIndex + 1);
+            dProgress() << tr("Subtile %1 is not used by any tile.").arg(this->currentSubtileIndex + 1);
         } else {
+            QString subtileUses;
             for (int user : subtileUsers) {
                 subtileUses += QString::number(user + 1) + ", ";
             }
             subtileUses.chop(2);
-            subtileUses = tr("Subtile %1 is used by tile %2.", "", subtileUsers.count()).arg(this->currentSubtileIndex + 1).arg(subtileUses);
+            dProgress() << tr("Subtile %1 is used by tile %2.", "", subtileUsers.count()).arg(this->currentSubtileIndex + 1).arg(subtileUses);
         }
     }
 
-    QString msg;
-
-    if (!frameUses.isEmpty()) {
-        msg = frameUses;
-
-        if (!subtileUses.isEmpty()) {
-            msg += "\n\n" + subtileUses;
-        }
-    } else {
-        msg = tr("The tileset is empty.");
+    if (!hasFrame && !hasSubtile) {
+        dProgress() << tr("The tileset is empty.");
     }
 
-    QMessageBox::information(this, tr("Information"), msg);
+    ProgressDialog::done(true);
 }
 
 static QString getFrameTypeName(D1CEL_FRAME_TYPE type)
@@ -1420,37 +1418,36 @@ static QString getFrameTypeName(D1CEL_FRAME_TYPE type)
 
 void LevelCelView::resetFrameTypes()
 {
-    QString report;
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Checking frames..."), 1);
 
+    bool result = false;
     for (int i = 0; i < this->gfx->getFrameCount(); i++) {
         D1GfxFrame *frame = this->gfx->getFrame(i);
         D1CEL_FRAME_TYPE prevType = frame->getFrameType();
         LevelTabFrameWidget::selectFrameType(frame);
         D1CEL_FRAME_TYPE newType = frame->getFrameType();
         if (prevType != newType) {
-            QString line = tr("Changed Frame %1 from '%2' to '%3'.\n");
-            line = line.arg(i + 1).arg(getFrameTypeName(prevType)).arg(getFrameTypeName(newType));
-            report.append(line);
+            dProgress() << tr("Changed Frame %1 from '%2' to '%3'.").arg(i + 1).arg(getFrameTypeName(prevType)).arg(getFrameTypeName(newType));
+            result = true;
         }
     }
-
-    if (report.isEmpty()) {
-        report = tr("No change was necessary.");
+    if (!result) {
+        dProgress() << tr("No change was necessary.");
     } else {
         this->gfx->setModified();
         // update the view
         this->update();
-
-        report.chop(1);
     }
-    QMessageBox::information(this, tr("Information"), report);
+
+    ProgressDialog::done(true);
 }
 
 void LevelCelView::inefficientFrames()
 {
-    QString report;
-    int limit = 10;
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Scanning frames..."), 1);
 
+    int limit = 10;
+    bool result = false;
     for (int i = 0; i < this->gfx->getFrameCount(); i++) {
         D1GfxFrame *frame = this->gfx->getFrame(i);
         if (frame->getFrameType() != D1CEL_FRAME_TYPE::TransparentSquare) {
@@ -1460,21 +1457,18 @@ void LevelCelView::inefficientFrames()
         D1CEL_FRAME_TYPE effType = LevelTabFrameWidget::altFrameType(frame, &diff);
         if (effType != D1CEL_FRAME_TYPE::TransparentSquare) {
             diff = limit - diff;
-            QString line = tr("Frame %1 could be '%2' by changing %n pixel(s).\n", "", diff);
-            line = line.arg(i + 1).arg(getFrameTypeName(effType));
-            report.append(line);
+            dProgress() << tr("Frame %1 could be '%2' by changing %n pixel(s).", "", diff).arg(i + 1).arg(getFrameTypeName(effType));
+            result = true;
         }
     }
-
-    if (report.isEmpty()) {
-        report = tr("The frames are optimal.");
-    } else {
-        report.chop(1);
+    if (!result) {
+        dProgress() << tr("The frames are optimal.");
     }
-    QMessageBox::information(this, tr("Information"), report);
+
+    ProgressDialog::done(true);
 }
 
-void LevelCelView::removeUnusedFrames(QString &report)
+bool LevelCelView::removeUnusedFrames()
 {
     // collect every frame uses
     QList<bool> frameUsed;
@@ -1490,24 +1484,18 @@ void LevelCelView::removeUnusedFrames(QString &report)
         }
     }
     // remove the unused frames
-    QList<int> frameRemoved;
+    bool result = false;
     for (int i = this->gfx->getFrameCount() - 1; i >= 0; i--) {
         if (!frameUsed[i]) {
-            frameRemoved.append(i);
             this->removeFrame(i);
+            dProgress() << tr("Removed frame %1.").arg(i);
+            result = true;
         }
     }
-    if (frameRemoved.isEmpty()) {
-        return;
-    }
-    for (auto iter = frameRemoved.crbegin(); iter != frameRemoved.crend(); ++iter) {
-        report += QString::number(*iter + 1) + ", ";
-    }
-    report.chop(2);
-    report = tr("Removed frame %1.", "", frameRemoved.count()).arg(report);
+    return result;
 }
 
-void LevelCelView::removeUnusedSubtiles(QString &report)
+bool LevelCelView::removeUnusedSubtiles()
 {
     // collect every subtile uses
     QList<bool> subtileUsed;
@@ -1521,81 +1509,73 @@ void LevelCelView::removeUnusedSubtiles(QString &report)
         }
     }
     // remove the unused subtiles
-    QList<int> subtileRemoved;
+    bool result = false;
     for (int i = this->min->getSubtileCount() - 1; i >= 0; i--) {
         if (!subtileUsed[i]) {
-            subtileRemoved.append(i);
             this->removeSubtile(i);
+            dProgress() << tr("Removed subtile %1.").arg(i);
+            result = true;
         }
     }
-    if (subtileRemoved.isEmpty()) {
-        return;
-    }
-    for (auto iter = subtileRemoved.crbegin(); iter != subtileRemoved.crend(); ++iter) {
-        report += QString::number(*iter + 1) + ", ";
-    }
-    report.chop(2);
-    report = tr("Removed subtile %1.", "", subtileRemoved.count()).arg(report);
+    return result;
 }
 
 void LevelCelView::cleanupFrames()
 {
-    QString report;
-    this->removeUnusedFrames(report);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Scanning frames..."), 1);
 
-    if (report.isEmpty()) {
-        report = tr("Every frame is used.");
-    } else {
+    if (this->removeUnusedFrames()) {
         // update the view
         this->displayFrame();
+    } else {
+        dProgress() << tr("Every frame is used.");
     }
-    QMessageBox::information(this, tr("Information"), report);
+
+    ProgressDialog::done(true);
 }
 
 void LevelCelView::cleanupSubtiles()
 {
-    QString report;
-    this->removeUnusedSubtiles(report);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Scanning subtiles..."), 1);
 
-    if (report.isEmpty()) {
-        report = tr("Every subtile is used.");
-    } else {
+    if (this->removeUnusedSubtiles()) {
         // update the view
         this->displayFrame();
+    } else {
+        dProgress() << tr("Every subtile is used.");
     }
-    QMessageBox::information(this, tr("Information"), report);
+
+    ProgressDialog::done(true);
 }
 
 void LevelCelView::cleanupTileset()
 {
-    QString subtilesReport;
-    this->removeUnusedSubtiles(subtilesReport);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Scanning tileset..."), 2);
 
-    QString framesReport;
-    this->removeUnusedFrames(framesReport);
+    bool removedSubtile = this->removeUnusedSubtiles();
 
-    if (framesReport.isEmpty() && subtilesReport.isEmpty()) {
-        framesReport = tr("Every subtile and frame are used.");
-    } else {
-        // update the view
-        this->displayFrame();
-
-        if (!subtilesReport.isEmpty()) {
-            if (!framesReport.isEmpty()) {
-                framesReport += "\n\n";
-            }
-            framesReport += subtilesReport;
-        }
+    if (removedSubtile) {
+        dProgress() << "\n";
     }
 
-    QMessageBox::information(this, tr("Information"), framesReport);
+    ProgressDialog::incValue();
+
+    bool removedFrame = this->removeUnusedFrames();
+
+    if (removedSubtile || removedFrame) {
+        // update the view
+        this->displayFrame();
+    } else {
+        dProgress() << tr("Every subtile and frame are used.");
+    }
+
+    ProgressDialog::done(true);
 }
 
-void LevelCelView::reuseFrames(QString &report)
+bool LevelCelView::reuseFrames()
 {
-    QList<QPair<int, int>> frameRemoved;
     std::set<int> removedIndices;
-
+    bool result = false;
     for (int i = 0; i < this->gfx->getFrameCount(); i++) {
         for (int j = i + 1; j < this->gfx->getFrameCount(); j++) {
             D1GfxFrame *frame0 = this->gfx->getFrame(i);
@@ -1649,27 +1629,18 @@ void LevelCelView::reuseFrames(QString &report)
                 break;
             }
             removedIndices.insert(originalIndexJ);
-            frameRemoved.append(qMakePair(originalIndexI, originalIndexJ));
+            dProgress() << tr("Using frame %1 instead of %2.").arg(originalIndexI + 1).arg(originalIndexJ + 1);
+            result = true;
             j--;
         }
     }
-
-    if (frameRemoved.isEmpty()) {
-        return;
-    }
-
-    for (auto iter = frameRemoved.cbegin(); iter != frameRemoved.cend(); ++iter) {
-        report += tr("%1 instead of %2").arg(iter->first + 1).arg(iter->second + 1) + ", ";
-    }
-    report.chop(2);
-    report = tr("Using frame %1.").arg(report);
+    return result;
 }
 
-void LevelCelView::reuseSubtiles(QString &report)
+bool LevelCelView::reuseSubtiles()
 {
-    QList<QPair<int, int>> subtileRemoved;
     std::set<int> removedIndices;
-
+    bool result = false;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         for (int j = i + 1; j < this->min->getSubtileCount(); j++) {
             QList<quint16> &frameReferences0 = this->min->getFrameReferences(i);
@@ -1719,75 +1690,64 @@ void LevelCelView::reuseSubtiles(QString &report)
                 break;
             }
             removedIndices.insert(originalIndexJ);
-            subtileRemoved.append(qMakePair(originalIndexI, originalIndexJ));
+            dProgress() << tr("Using subtile %1 instead of %2.").arg(originalIndexI + 1).arg(originalIndexJ + 1);
+            result = true;
             j--;
         }
     }
-
-    if (subtileRemoved.isEmpty()) {
-        return;
-    }
-
-    for (auto iter = subtileRemoved.cbegin(); iter != subtileRemoved.cend(); ++iter) {
-        report += tr("%1 instead of %2").arg(iter->first + 1).arg(iter->second + 1) + ", ";
-    }
-    report.chop(2);
-    report = tr("Using subtile %1.").arg(report);
+    return result;
 }
 
 void LevelCelView::compressSubtiles()
 {
-    // reuse frames
-    QString report;
-    this->reuseFrames(report);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Compressing subtiles..."), 1);
 
-    if (report.isEmpty()) {
-        report = tr("All frames are unique.");
-    } else {
+    if (this->reuseFrames()) {
         // update the view
         this->displayFrame();
+    } else {
+        dProgress() << tr("All frames are unique.");
     }
-    QMessageBox::information(this, tr("Information"), report);
+
+    ProgressDialog::done(true);
 }
 
 void LevelCelView::compressTiles()
 {
-    // reuse subtiles
-    QString report;
-    this->reuseSubtiles(report);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Compressing tiles..."), 1);
 
-    if (report.isEmpty()) {
-        report = tr("All subtiles are unique.");
-    } else {
+    if (this->reuseSubtiles()) {
         // update the view
         this->displayFrame();
+    } else {
+        dProgress() << tr("All subtiles are unique.");
     }
-    QMessageBox::information(this, tr("Information"), report);
+
+    ProgressDialog::done(true);
 }
 
 void LevelCelView::compressTileset()
 {
-    QString framesReport;
-    this->reuseFrames(framesReport);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Compressing tileset..."), 2);
 
-    QString subtilesReport;
-    this->reuseSubtiles(subtilesReport);
+    bool reusedFrame = this->reuseFrames();
 
-    if (framesReport.isEmpty() && subtilesReport.isEmpty()) {
-        framesReport = tr("Every subtile and frame are unique.");
-    } else {
-        // update the view
-        this->displayFrame();
-
-        if (!subtilesReport.isEmpty()) {
-            if (!framesReport.isEmpty()) {
-                framesReport += "\n\n";
-            }
-            framesReport += subtilesReport;
-        }
+    if (reusedFrame) {
+        dProgress() << "\n";
     }
 
-    QMessageBox::information(this, tr("Information"), framesReport);
+    ProgressDialog::incValue();
+
+    bool reusedSubtile = this->reuseSubtiles();
+
+    if (reusedFrame || reusedSubtile) {
+        // update the view
+        this->displayFrame();
+    } else {
+        dProgress() << tr("Every subtile and frame are unique.");
+    }
+
+    ProgressDialog::done(true);
 }
 
 bool LevelCelView::sortFrames_impl()

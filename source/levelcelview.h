@@ -103,10 +103,10 @@ private:
     void assignSubtiles(const D1GfxFrame &frame, int tileIndex, int subtileIndex);
     void removeFrame(int frameIndex);
     void removeSubtile(int subtileIndex);
-    void removeUnusedFrames(QString &report);
-    void removeUnusedSubtiles(QString &report);
-    void reuseFrames(QString &report);
-    void reuseSubtiles(QString &report);
+    bool removeUnusedFrames();
+    bool removeUnusedSubtiles();
+    bool reuseFrames();
+    bool reuseSubtiles();
     bool sortFrames_impl();
     bool sortSubtiles_impl();
 

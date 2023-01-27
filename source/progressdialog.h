@@ -31,7 +31,7 @@ public:
     ~ProgressDialog();
 
     static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int maxValue);
-    static void done();
+    static void done(bool forceOpen = false);
 
     static bool wasCanceled();
     static void incValue();
