@@ -375,6 +375,16 @@ void PaletteWidget::selectColor(const D1GfxPixel &pixel)
     this->refresh();
 }
 
+D1GfxPixel PaletteWidget::getCurrentColor(unsigned counter)
+{
+    if (this->selectedFirstColorIndex == COLORIDX_TRANSPARENT) {
+        return D1GfxPixel::transparentPixel();
+    }
+
+    unsigned numColors = this->selectedLastColorIndex - this->selectedFirstColorIndex + 1;
+    return D1GfxPixel::colorPixel(this->selectedFirstColorIndex + (counter % numColors));
+}
+
 void PaletteWidget::checkTranslationsSelection(QList<quint8> indexes)
 {
     int selectionLength = this->selectedLastColorIndex - this->selectedFirstColorIndex + 1;

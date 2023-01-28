@@ -89,7 +89,7 @@ private:
     bool loadUniqueTrn(QString trnfilePath);
     bool loadBaseTrn(QString trnfilePath);
 
-    void pixelClicked(const D1GfxPixel &pixel);
+    void frameClicked(D1GfxFrame *frame, int x, int y, unsigned counter);
     void colorModified();
     void reloadConfig();
 
@@ -115,6 +115,9 @@ public slots:
     void on_actionAppend_Tile_triggered();
     void on_actionReplace_Tile_triggered();
     void on_actionDel_Tile_triggered();
+
+    void on_actionStart_Draw_triggered();
+    void on_actionStop_Draw_triggered();
 
 private slots:
     void on_actionNew_CEL_triggered();

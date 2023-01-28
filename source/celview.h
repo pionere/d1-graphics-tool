@@ -40,6 +40,7 @@ private:
 
 private slots:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
     void dragMoveEvent(QGraphicsSceneDragDropEvent *event);
     void dropEvent(QGraphicsSceneDragDropEvent *event);
@@ -54,6 +55,9 @@ private:
 
     quint8 currentZoomNumerator = 1;
     quint8 currentZoomDenominator = 1;
+    int lastx;
+    int lasty;
+    unsigned lastCounter;
 };
 
 class CelView : public QWidget {
@@ -69,7 +73,7 @@ public:
     void changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel, bool all);
 
     int getCurrentFrameIndex();
-    void framePixelClicked(unsigned x, unsigned y);
+    void framePixelClicked(unsigned x, unsigned y, unsigned counter);
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
     void addToCurrentFrame(const QString &imagefilePath);
     void replaceCurrentFrame(const QString &imagefilePath);
@@ -81,7 +85,7 @@ public:
 
 signals:
     void frameRefreshed();
-    void pixelClicked(const D1GfxPixel &pixel);
+    void frameClicked(D1GfxFrame *frame, int x, int y);
     void palModified();
 
 private:

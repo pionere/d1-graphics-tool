@@ -178,7 +178,7 @@ void LevelCelView::changeColor(quint8 startColorIndex, quint8 endColorIndex, D1G
     this->displayFrame();
 }
 
-void LevelCelView::framePixelClicked(unsigned x, unsigned y)
+void LevelCelView::framePixelClicked(unsigned x, unsigned y, unsigned counter)
 {
     unsigned celFrameWidth = MICRO_WIDTH; // this->gfx->getFrameWidth(this->currentFrameIndex);
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
@@ -293,16 +293,12 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y)
         }
         return;
     }
-    // otherwise select color based on the pixel
-    D1GfxPixel pixel = D1GfxPixel::transparentPixel();
+    // otherwise emit frame-click event
+    D1GfxFrame *frame = nullptr;
     if (this->gfx->getFrameCount() != 0) {
-        // If CEL frame color is clicked
-        D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
-
-        pixel = frame->getPixel(x - CEL_SCENE_SPACING, y - CEL_SCENE_SPACING);
+        frame = this->gfx->getFrame(this->currentFrameIndex);
     }
-
-    emit this->pixelClicked(pixel);
+    emit this->frameClicked(frame, x - CEL_SCENE_SPACING, y - CEL_SCENE_SPACING, counter);
 }
 
 void LevelCelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)

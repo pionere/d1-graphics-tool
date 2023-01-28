@@ -34,7 +34,35 @@ void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     qDebug() << QStringLiteral("Clicked: %1:%2").arg(x).arg(y);
 
-    emit this->framePixelClicked(x, y);
+    this->lastx = x;
+    this->lasty = y;
+    this->lastCounter = 0;
+
+    emit this->framePixelClicked(x, y, this->lastCounter);
+}
+
+void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (!(event->buttons() & Qt::LeftButton)) {
+        return;
+    }
+
+    if (this->view->cursor().shape() != Qt::CrossCursor) {
+        return; // ignore if not drawing
+    }
+
+    int x = event->scenePos().x();
+    int y = event->scenePos().y();
+
+    if (this->lastx == x && this->lasty == y) {
+        return;
+    }
+
+    this->lastx = x;
+    this->lasty = y;
+    this->lastCounter++;
+
+    emit this->framePixelClicked(x, y, this->lastCounter);
 }
 
 void CelScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
@@ -235,17 +263,15 @@ int CelView::getCurrentFrameIndex()
     return this->currentFrameIndex;
 }
 
-void CelView::framePixelClicked(unsigned x, unsigned y)
+void CelView::framePixelClicked(unsigned x, unsigned y, unsigned counter)
 {
-    D1GfxPixel pixel = D1GfxPixel::transparentPixel();
+    D1GfxFrame *frame = nullptr;
 
     if (this->gfx->getFrameCount() != 0) {
-        D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
-
-        pixel = frame->getPixel(x - CEL_SCENE_SPACING, y - CEL_SCENE_SPACING);
+        frame = this->gfx->getFrame(this->currentFrameIndex);
     }
 
-    emit this->pixelClicked(pixel);
+    emit this->frameClicked(frame, x - CEL_SCENE_SPACING, y - CEL_SCENE_SPACING, counter);
 }
 
 void CelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)
@@ -518,11 +544,12 @@ void CelView::playGroup()
 void CelView::ShowContextMenu(const QPoint &pos)
 {
     MainWindow *mw = (MainWindow *)this->window();
-    QAction actions[5];
+    QAction actions[7];
 
     QMenu contextMenu(this);
     contextMenu.setToolTipsVisible(true);
 
+    // 'Frame' submenu of 'Edit'
     int cursor = 0;
     actions[cursor].setText(tr("Add Layer"));
     actions[cursor].setToolTip(tr("Add the content of an image to the current frame"));
@@ -553,6 +580,19 @@ void CelView::ShowContextMenu(const QPoint &pos)
     actions[cursor].setToolTip(tr("Delete the current frame"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDel_Frame_triggered()));
     actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
+    contextMenu.addAction(&actions[cursor]);
+
+    contextMenu.addSeparator();
+
+    // drawing options of 'Edit'
+    cursor++;
+    actions[cursor].setText(tr("Start drawing"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionStart_Draw_triggered()));
+    contextMenu.addAction(&actions[cursor]);
+
+    cursor++;
+    actions[cursor].setText(tr("Stop drawing"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionStop_Draw_triggered()));
     contextMenu.addAction(&actions[cursor]);
 
     contextMenu.exec(mapToGlobal(pos));

@@ -59,6 +59,19 @@ D1GfxPixel D1GfxFrame::getPixel(int x, int y) const
     return D1GfxPixel::transparentPixel();
 }
 
+bool D1GfxFrame::setPixel(int x, int y, D1GfxPixel pixel)
+{
+    if (x < 0 || x >= this->width || y < 0 || y >= this->height) {
+        return false;
+    }
+    if (this->pixels[y][x] == pixel) {
+        return false;
+    }
+
+    this->pixels[y][x] = pixel;
+    return true;
+}
+
 bool D1GfxFrame::isClipped() const
 {
     return this->clipped;

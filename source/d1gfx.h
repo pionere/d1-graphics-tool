@@ -52,6 +52,7 @@ public:
     int getWidth() const;
     int getHeight() const;
     D1GfxPixel getPixel(int x, int y) const;
+    bool setPixel(int x, int y, D1GfxPixel pixel);
     bool isClipped() const;
     D1CEL_FRAME_TYPE getFrameType() const;
     void setFrameType(D1CEL_FRAME_TYPE type);
