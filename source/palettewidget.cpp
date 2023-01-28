@@ -742,7 +742,7 @@ void PaletteWidget::refreshTranslationIndexLineEdit()
 {
     int colorIndex = this->selectedFirstColorIndex;
     QString text;
-    bool active = colorIndex == COLORIDX_TRANSPARENT;
+    bool active = colorIndex != COLORIDX_TRANSPARENT;
 
     if (active && this->isTrn) {
         if (colorIndex != this->selectedLastColorIndex) {

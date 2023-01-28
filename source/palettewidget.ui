@@ -40,17 +40,11 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="minimumSize">
-      <size>
-       <width>256</width>
-       <height>0</height>
-      </size>
+     <property name="minimumWidth">
+      <number>256</number>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>256</width>
-       <height>16777215</height>
-      </size>
+     <property name="maximumWidth">
+      <number>256</number>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="spacing">
@@ -76,17 +70,11 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="minimumSize">
-         <size>
-          <width>128</width>
-          <height>0</height>
-         </size>
+        <property name="minimumWidth">
+         <number>128</number>
         </property>
-        <property name="maximumSize">
-         <size>
-          <width>128</width>
-          <height>16777215</height>
-         </size>
+        <property name="maximumWidth">
+         <number>128</number>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -178,17 +166,11 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="minimumSize">
-               <size>
-                <width>45</width>
-                <height>0</height>
-               </size>
+              <property name="minimumWidth">
+               <number>45</number>
               </property>
-              <property name="maximumSize">
-               <size>
-                <width>45</width>
-                <height>16777215</height>
-               </size>
+              <property name="maximumWidth">
+               <number>45</number>
               </property>
               <property name="text">
                <string>Clear</string>
@@ -229,17 +211,11 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="minimumSize">
-               <size>
-                <width>45</width>
-                <height>0</height>
-               </size>
+              <property name="minimumWidth">
+               <number>45</number>
               </property>
-              <property name="maximumSize">
-               <size>
-                <width>45</width>
-                <height>16777215</height>
-               </size>
+              <property name="maximumWidth">
+               <number>45</number>
               </property>
               <property name="text">
                <string>Pick</string>
@@ -254,17 +230,11 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="minimumSize">
-               <size>
-                <width>45</width>
-                <height>0</height>
-               </size>
+              <property name="minimumWidth">
+               <number>45</number>
               </property>
-              <property name="maximumSize">
-               <size>
-                <width>45</width>
-                <height>16777215</height>
-               </size>
+              <property name="maximumWidth">
+               <number>45</number>
               </property>
               <property name="text">
                <string>Pick</string>
@@ -273,9 +243,6 @@
             </item>
             <item row="1" column="1">
              <widget class="LineEditWidget" name="indexLineEdit">
-              <property name="readOnly">
-               <bool>true</bool>
-              </property>
               <property name="charWidth">
                <number>7</number>
               </property>
@@ -315,17 +282,11 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="minimumSize">
-               <size>
-                <width>45</width>
-                <height>0</height>
-               </size>
+              <property name="minimumWidth">
+               <number>45</number>
               </property>
-              <property name="maximumSize">
-               <size>
-                <width>45</width>
-                <height>16777215</height>
-               </size>
+              <property name="maximumWidth">
+               <number>45</number>
               </property>
               <property name="text">
                <string>Clear</string>
@@ -340,17 +301,11 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="minimumSize">
-               <size>
-                <width>8</width>
-                <height>0</height>
-               </size>
+              <property name="minimumWidth">
+               <number>8</number>
               </property>
-              <property name="maximumSize">
-               <size>
-                <width>8</width>
-                <height>16777215</height>
-               </size>
+              <property name="maximumWidth">
+               <number>8</number>
               </property>
               <property name="text">
                <string notr="true">&gt;</string>
@@ -365,17 +320,11 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="minimumSize">
-               <size>
-                <width>100</width>
-                <height>0</height>
-               </size>
+              <property name="minimumWidth">
+               <number>100</number>
               </property>
-              <property name="maximumSize">
-               <size>
-                <width>100</width>
-                <height>16777215</height>
-               </size>
+              <property name="maximumWidth">
+               <number>100</number>
               </property>
               <property name="text">
                <string>Monster TRN</string>
@@ -391,12 +340,6 @@
            <spacer name="verticalSpacer">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
             </property>
            </spacer>
           </item>
