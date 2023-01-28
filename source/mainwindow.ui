@@ -135,6 +135,9 @@
     <addaction name="actionResetFrameTypes_Tileset"/>
     <addaction name="actionInefficientFrames_Tileset"/>
     <addaction name="separator"/>
+    <addaction name="actionCheckSubtileFlags_Tileset"/>
+    <addaction name="actionCheckTileFlags_Tileset"/>
+    <addaction name="separator"/>
     <addaction name="actionCleanupFrames_Tileset"/>
     <addaction name="actionCleanupSubtiles_Tileset"/>
     <addaction name="actionCleanupTileset_Tileset"/>
@@ -307,9 +310,25 @@
     <string>List frames which are almost standard</string>
    </property>
   </action>
+  <action name="actionCheckSubtileFlags_Tileset">
+   <property name="text">
+    <string>Check Subtile Flags</string>
+   </property>
+   <property name="toolTip">
+    <string>List inconsistent subtile-flags (SOL + TMI)</string>
+   </property>
+  </action>
+  <action name="actionCheckTileFlags_Tileset">
+   <property name="text">
+    <string>Check Tile Flags</string>
+   </property>
+   <property name="toolTip">
+    <string>List inconsistent tile-flags (AMP)</string>
+   </property>
+  </action>
   <action name="actionCleanupFrames_Tileset">
    <property name="text">
-    <string>Cleanup frames</string>
+    <string>Cleanup Frames</string>
    </property>
    <property name="toolTip">
     <string>Eliminate unused frames</string>

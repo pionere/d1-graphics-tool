@@ -62,6 +62,8 @@ public:
     void reportUsage();
     void resetFrameTypes();
     void inefficientFrames();
+    void checkSubtileFlags();
+    void checkTileFlags();
     void cleanupFrames();
     void cleanupSubtiles();
     void cleanupTileset();
