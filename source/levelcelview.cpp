@@ -2277,32 +2277,32 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
     frameMenu.setToolTipsVisible(true);
 
     int cursor = 0;
-    actions[cursor] = QAction(tr("Add Layer"), this);
+    actions[cursor].setText(tr("Add Layer"));
     actions[cursor].setToolTip(tr("Add the content of an image to the current frame"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAddTo_Frame_triggered()));
     frameMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor] = QAction(tr("Insert"), this);
+    actions[cursor].setText(tr("Insert"));
     actions[cursor].setToolTip(tr("Add new frames before the current one"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionInsert_Frame_triggered()));
     frameMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor] = QAction(tr("Append"), this);
+    actions[cursor].setText(tr("Append"));
     actions[cursor].setToolTip(tr("Append new frames at the end"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAdd_Frame_triggered()));
     frameMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor] = QAction(tr("Replace"), this);
+    actions[cursor].setText(tr("Replace"));
     actions[cursor].setToolTip(tr("Replace the current frame"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionReplace_Frame_triggered()));
     actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
     frameMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor] = QAction(tr("Delete"), this);
+    actions[cursor].setText(tr("Delete"));
     actions[cursor].setToolTip(tr("Delete the current frame"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDel_Frame_triggered()));
     actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
@@ -2314,32 +2314,32 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
     subtileMenu.setToolTipsVisible(true);
 
     cursor++;
-    actions[cursor] = QAction(tr("Create"), this);
+    actions[cursor].setText(tr("Create"));
     actions[cursor].setToolTip(tr("Create a new subtile"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionCreate_Subtile_triggered()));
     subtileMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor] = QAction(tr("Insert"), this);
+    actions[cursor].setText(tr("Insert"));
     actions[cursor].setToolTip(tr("Add new subtiles before the current one"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionInsert_Subtile_triggered()));
     subtileMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor] = QAction(tr("Append"), this);
+    actions[cursor].setText(tr("Append"));
     actions[cursor].setToolTip(tr("Append new subtiles at the end"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAdd_Subtile_triggered()));
     subtileMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor] = QAction(tr("Replace"), this);
+    actions[cursor].setText(tr("Replace"));
     actions[cursor].setToolTip(tr("Replace the current subtile"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionReplace_Subtile_triggered()));
     actions[cursor].setEnabled(this->min->getSubtileCount() != 0);
     subtileMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor] = QAction(tr("Delete"), this);
+    actions[cursor].setText(tr("Delete"));
     actions[cursor].setToolTip(tr("Delete the current subtile"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDel_Subtile_triggered()));
     actions[cursor].setEnabled(this->min->getSubtileCount() != 0);
@@ -2351,33 +2351,33 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
     tileMenu.setToolTipsVisible(true);
 
     cursor++;
-    actions[cursor] = QAction(tr("Create"), this);
+    actions[cursor].setText(tr("Create"));
     actions[cursor].setToolTip(tr("Create a new tile"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionCreate_Tile_triggered()));
     actions[cursor].setEnabled(this->min->getSubtileCount() != 0);
     tileMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor] = QAction(tr("Insert"), this);
+    actions[cursor].setText(tr("Insert"));
     actions[cursor].setToolTip(tr("Add new tiles before the current one"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionInsert_Tile_triggered()));
     tileMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor] = QAction(tr("Append"), this);
+    actions[cursor].setText(tr("Append"));
     actions[cursor].setToolTip(tr("Append new tiles at the end"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAdd_Tile_triggered()));
     tileMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor] = QAction(tr("Replace"), this);
+    actions[cursor].setText(tr("Replace"));
     actions[cursor].setToolTip(tr("Replace the current tile"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionReplace_Tile_triggered()));
     actions[cursor].setEnabled(this->til->getTileCount() != 0);
     tileMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor] = QAction(tr("Delete"), this);
+    actions[cursor].setText(tr("Delete"));
     actions[cursor].setToolTip(tr("Delete the current tile"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDel_Tile_triggered()));
     actions[cursor].setEnabled(this->til->getTileCount() != 0);

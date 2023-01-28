@@ -1,6 +1,9 @@
 #include "d1gfx.h"
 
+#include <QApplication>
+
 #include "d1image.h"
+#include "progressdialog.h"
 
 D1GfxPixel D1GfxPixel::transparentPixel()
 {
@@ -74,7 +77,7 @@ void D1GfxFrame::setFrameType(D1CEL_FRAME_TYPE type)
 bool D1GfxFrame::addTo(const D1GfxFrame &frame)
 {
     if (this->width != frame.width || this->height != frame.height) {
-        dProgressFail() << tr("Mismatching frame-sizes.");
+        dProgressFail() << QApplication::tr("Mismatching frame-sizes.");
         return false;
     }
 
