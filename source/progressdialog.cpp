@@ -104,6 +104,7 @@ void ProgressDialog::incValue()
 
 ProgressDialog &dProgress()
 {
+    theDialog->textMode = PROGRESS_TEXT_MODE::NORMAL;
     return *theDialog;
 }
 
@@ -142,7 +143,6 @@ ProgressDialog &ProgressDialog::operator<<(const QString &text)
         this->ui->outputTextEdit->appendPlainText(text);
     } else { // Using <pre> tag to allow multiple spaces
         QString htmlText = QString("<p style=\"color:%1;white-space:pre\">%2</p>").arg(mode == PROGRESS_TEXT_MODE::ERROR ? "red" : "orange").arg(text);
-        theDialog->textMode = PROGRESS_TEXT_MODE::NORMAL;
         this->ui->outputTextEdit->appendHtml(htmlText);
     }
     this->textVersion++;

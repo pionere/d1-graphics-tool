@@ -1478,11 +1478,11 @@ void LevelCelView::checkSubtileFlags()
         if (solFlags & (1 << 1)) {
             // block light
             if (!(solFlags & (1 << 0))) {
-                dProgressErr() << tr("Subtile %1 blocks the light, but still passable (not solid).").arg(i + 1);
+                dProgressWarn() << tr("Subtile %1 blocks the light, but still passable (not solid).").arg(i + 1);
                 result = true;
             }
             if (!(solFlags & (1 << 2))) {
-                dProgressErr() << tr("Subtile %1 blocks the light, but it does not block missiles.").arg(i + 1);
+                dProgressWarn() << tr("Subtile %1 blocks the light, but it does not block missiles.").arg(i + 1);
                 result = true;
             }
             // TODO: at least one not transparent frame above the floor
@@ -1490,7 +1490,7 @@ void LevelCelView::checkSubtileFlags()
         if (solFlags & (1 << 2)) {
             // block missile
             if (!(solFlags & (1 << 0))) {
-                dProgressErr() << tr("Subtile %1 blocks missiles, but still passable (not solid).").arg(i + 1);
+                dProgressWarn() << tr("Subtile %1 blocks missiles, but still passable (not solid).").arg(i + 1);
                 result = true;
             }
             // TODO: at least one not transparent frame above the floor
@@ -1498,29 +1498,29 @@ void LevelCelView::checkSubtileFlags()
         if (solFlags & (1 << 4)) {
             // left transparency
             if (!(solFlags & (1 << 3))) {
-                dProgressErr() << tr("Subtile %1 has left transparency enabled, but transparency is not enabled.").arg(i + 1);
+                dProgressWarn() << tr("Subtile %1 has left transparency enabled, but transparency is not enabled.").arg(i + 1);
                 result = true;
             }
         }
         if (solFlags & (1 << 5)) {
             // right transparency
             if (!(solFlags & (1 << 3))) {
-                dProgressErr() << tr("Subtile %1 has right transparency enabled, but transparency is not enabled.").arg(i + 1);
+                dProgressWarn() << tr("Subtile %1 has right transparency enabled, but transparency is not enabled.").arg(i + 1);
                 result = true;
             }
         }
         if (solFlags & (1 << 7)) {
             // trap
             if (!(solFlags & (1 << 0))) {
-                dProgressErr() << tr("Subtile %1 is for traps, but still passable (not solid).").arg(i + 1);
+                dProgressWarn() << tr("Subtile %1 is for traps, but still passable (not solid).").arg(i + 1);
                 result = true;
             }
             if (!(solFlags & (1 << 1))) {
-                dProgressErr() << tr("Subtile %1 is for traps, but it does not block light.").arg(i + 1);
+                dProgressWarn() << tr("Subtile %1 is for traps, but it does not block light.").arg(i + 1);
                 result = true;
             }
             if (!(solFlags & (1 << 2))) {
-                dProgressErr() << tr("Subtile %1 is for traps, but it does not block missiles.").arg(i + 1);
+                dProgressWarn() << tr("Subtile %1 is for traps, but it does not block missiles.").arg(i + 1);
                 result = true;
             }
             // TODO: one above the floor is square (left or right)
@@ -1537,17 +1537,17 @@ void LevelCelView::checkSubtileFlags()
             // TODO: at least one not transparent frame above the floor
             // TODO: no left/right triangle/trapezoid frame above the floor
         }
-        if (tmiFlags & (1 << 1)) {
+        /*if (tmiFlags & (1 << 1)) {
             // left second pass
             if (tmiFlags & (1 << 2)) {
-                dProgressErr() << tr("Subtile %1 has both second pass and foliage enabled on the left side.").arg(i + 1);
+                dProgressWarn() << tr("Subtile %1 has both second pass and foliage enabled on the left side.").arg(i + 1);
                 result = true;
             }
-        }
+        }*/
         if (tmiFlags & (1 << 2)) {
             // left foliage
             if (tmiFlags & (1 << 3)) {
-                dProgressErr() << tr("Subtile %1 has both foliage and floor transparency enabled on the left side.").arg(i + 1);
+                dProgressWarn() << tr("Subtile %1 has both foliage and floor transparency enabled on the left side.").arg(i + 1);
                 result = true;
             }
         }
@@ -1555,17 +1555,17 @@ void LevelCelView::checkSubtileFlags()
             // left floor transparency
             // TODO: must be left trapezoid
         }
-        if (tmiFlags & (1 << 4)) {
+        /*if (tmiFlags & (1 << 4)) {
             // right second pass
             if (tmiFlags & (1 << 5)) {
-                dProgressErr() << tr("Subtile %1 has both second pass and foliage enabled on the right side.").arg(i + 1);
+                dProgressWarn() << tr("Subtile %1 has both second pass and foliage enabled on the right side.").arg(i + 1);
                 result = true;
             }
-        }
+        }*/
         if (tmiFlags & (1 << 5)) {
             // right foliage
             if (tmiFlags & (1 << 6)) {
-                dProgressErr() << tr("Subtile %1 has both foliage and floor transparency enabled on the right side.").arg(i + 1);
+                dProgressWarn() << tr("Subtile %1 has both foliage and floor transparency enabled on the right side.").arg(i + 1);
                 result = true;
             }
         }
@@ -1592,132 +1592,132 @@ void LevelCelView::checkTileFlags()
         if (ampFlags & (1 << 0)) {
             // western door
             if (ampFlags & (1 << 2)) {
-                dProgressErr() << tr("Tile %1 has both west-door and west arch flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both west-door and west arch flags set.").arg(i + 1);
                 result = true;
             }
             if (ampFlags & (1 << 4)) {
-                dProgressErr() << tr("Tile %1 has both west-door and west grate flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both west-door and west grate flags set.").arg(i + 1);
                 result = true;
             }
             if (ampFlags & (1 << 6)) {
-                dProgressErr() << tr("Tile %1 has both west-door and external flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both west-door and external flags set.").arg(i + 1);
                 result = true;
             }
             if (ampFlags & (1 << 7)) {
-                dProgressErr() << tr("Tile %1 has both west-door and stairs flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both west-door and stairs flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampType != 2 && ampType != 4) {
-                dProgressErr() << tr("Tile %1 has a west-door but neither a wall (north-west) nor a wall intersection (north).").arg(i + 1);
+            if (ampType != 2 && ampType != 4 && ampType != 5 && ampType != 10) {
+                dProgressWarn() << tr("Tile %1 has a west-door but neither a wall (north-west), a wall intersection (north), a wall ending (north-west) nor a wall (south-west).").arg(i + 1);
                 result = true;
             }
         }
         if (ampFlags & (1 << 1)) {
             // eastern door
             if (ampFlags & (1 << 3)) {
-                dProgressErr() << tr("Tile %1 has both east-door and east-arch flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both east-door and east-arch flags set.").arg(i + 1);
                 result = true;
             }
             if (ampFlags & (1 << 5)) {
-                dProgressErr() << tr("Tile %1 has both east-door and east-grate flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both east-door and east-grate flags set.").arg(i + 1);
                 result = true;
             }
             if (ampFlags & (1 << 6)) {
-                dProgressErr() << tr("Tile %1 has both east-door and external flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both east-door and external flags set.").arg(i + 1);
                 result = true;
             }
             if (ampFlags & (1 << 7)) {
-                dProgressErr() << tr("Tile %1 has both east-door and stairs flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both east-door and stairs flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampType != 3 && ampType != 4) {
-                dProgressErr() << tr("Tile %1 has an east-door but neither a wall (north-east) nor a wall intersection (north).").arg(i + 1);
+            if (ampType != 3 && ampType != 4 && ampType != 6 && ampType != 11) {
+                dProgressWarn() << tr("Tile %1 has an east-door but neither a wall (north-east), a wall intersection (north), a wall ending (north-east) nor a wall (south-east).").arg(i + 1);
                 result = true;
             }
         }
         if (ampFlags & (1 << 2)) {
             // western arch
             if (ampFlags & (1 << 4)) {
-                dProgressErr() << tr("Tile %1 has both west-arch and west-grate flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both west-arch and west-grate flags set.").arg(i + 1);
                 result = true;
             }
             if (ampFlags & (1 << 6)) {
-                dProgressErr() << tr("Tile %1 has both west-arch and external flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both west-arch and external flags set.").arg(i + 1);
                 result = true;
             }
             if (ampFlags & (1 << 7)) {
-                dProgressErr() << tr("Tile %1 has both west-arch and stairs flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both west-arch and stairs flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampType != 2 && ampType != 4) {
-                dProgressErr() << tr("Tile %1 has a west-arch but neither a wall (north-west) nor a wall intersection (north).").arg(i + 1);
+            if (ampType != 2 && ampType != 4 && ampType != 5) {
+                dProgressWarn() << tr("Tile %1 has a west-arch but neither a wall (north-west), a wall intersection (north) nor a wall ending (north-west).").arg(i + 1);
                 result = true;
             }
         }
         if (ampFlags & (1 << 3)) {
             // eastern arch
             if (ampFlags & (1 << 5)) {
-                dProgressErr() << tr("Tile %1 has both east-arch and east-grate flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both east-arch and east-grate flags set.").arg(i + 1);
                 result = true;
             }
             if (ampFlags & (1 << 6)) {
-                dProgressErr() << tr("Tile %1 has both east-arch and external flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both east-arch and external flags set.").arg(i + 1);
                 result = true;
             }
             if (ampFlags & (1 << 7)) {
-                dProgressErr() << tr("Tile %1 has both east-arch and stairs flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both east-arch and stairs flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampType != 3 && ampType != 4) {
-                dProgressErr() << tr("Tile %1 has an east-arch but neither a wall (north-east) nor a wall intersection (north).").arg(i + 1);
+            if (ampType != 3 && ampType != 4 && ampType != 6) {
+                dProgressWarn() << tr("Tile %1 has an east-arch but neither a wall (north-east), a wall intersection (north) nor a wall ending (north-east).").arg(i + 1);
                 result = true;
             }
         }
         if (ampFlags & (1 << 4)) {
             // western grate
             if (ampFlags & (1 << 6)) {
-                dProgressErr() << tr("Tile %1 has both west-grate and external flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both west-grate and external flags set.").arg(i + 1);
                 result = true;
             }
             if (ampFlags & (1 << 7)) {
-                dProgressErr() << tr("Tile %1 has both west-grate and stairs flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both west-grate and stairs flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampType != 2 && ampType != 4) {
-                dProgressErr() << tr("Tile %1 has a west-grate but neither a wall (north-west) nor a wall intersection (north).").arg(i + 1);
+            if (ampType != 2 && ampType != 4 && ampType != 5) {
+                dProgressWarn() << tr("Tile %1 has a west-grate but neither a wall (north-west), a wall intersection (north) nor a wall ending (north-west).").arg(i + 1);
                 result = true;
             }
         }
         if (ampFlags & (1 << 5)) {
             // eastern grate
             if (ampFlags & (1 << 6)) {
-                dProgressErr() << tr("Tile %1 has both east-grate and external flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both east-grate and external flags set.").arg(i + 1);
                 result = true;
             }
             if (ampFlags & (1 << 7)) {
-                dProgressErr() << tr("Tile %1 has both east-grate and stairs flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both east-grate and stairs flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampType != 3 && ampType != 4) {
-                dProgressErr() << tr("Tile %1 has an east-grate but neither a wall (north-east) nor a wall intersection (north).").arg(i + 1);
+            if (ampType != 3 && ampType != 4 && ampType != 6) {
+                dProgressWarn() << tr("Tile %1 has an east-grate but neither a wall (north-east), a wall intersection (north) nor a wall ending (north-east).").arg(i + 1);
                 result = true;
             }
         }
         if (ampFlags & (1 << 6)) {
             // external
             if (ampFlags & (1 << 7)) {
-                dProgressErr() << tr("Tile %1 has both external and stairs flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both external and stairs flags set.").arg(i + 1);
                 result = true;
             }
             if (ampType == 1) {
-                dProgressErr() << tr("Tile %1 is external but also a pillar.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 is external but also a pillar.").arg(i + 1);
                 result = true;
             }
         }
         if (ampFlags & (1 << 7)) {
             // stairs
             if (ampType != 0) {
-                dProgressErr() << tr("Tile %1 is stairs but its type is also set (not None).").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 is stairs but its type is also set (not None).").arg(i + 1);
                 result = true;
             }
         }
