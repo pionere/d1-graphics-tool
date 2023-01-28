@@ -36,12 +36,12 @@ bool D1Tmi::load(QString filePath, D1Sol *sol, const OpenAsParam &params)
     auto fileSize = file.size();
     int subtileCount = sol->getSubtileCount();
     int tmiSubtileCount = fileSize;
-    if (tmiSubtileCount != subtileCount) {
+    if (tmiSubtileCount != subtileCount + 1) {
         if (tmiSubtileCount != 0) {
             dProgressWarn() << tr("The size of TMI file does not align with SOL file.");
         }
-        if (tmiSubtileCount > subtileCount) {
-            tmiSubtileCount = subtileCount; // skip unusable data
+        if (tmiSubtileCount > subtileCount + 1) {
+            tmiSubtileCount = subtileCount + 1; // skip unusable data
         }
     }
 
@@ -54,8 +54,10 @@ bool D1Tmi::load(QString filePath, D1Sol *sol, const OpenAsParam &params)
     // Read TMI binary data
     QDataStream in(&fileBuffer);
 
-    for (int i = 0; i < tmiSubtileCount; i++) {
-        quint8 readByte;
+    // skip the first byte
+    quint8 readByte;
+    in >> readByte;
+    for (int i = 0; i < tmiSubtileCount - 1; i++) {
         in >> readByte;
         this->subProperties[i] = readByte;
     }
@@ -87,6 +89,7 @@ bool D1Tmi::save(const SaveAsParam &params)
 
     // write to file
     QDataStream out(&outFile);
+    out << (quint8)0; // add leading zero
     for (int i = 0; i < this->subProperties.size(); i++) {
         out << this->subProperties[i];
     }
