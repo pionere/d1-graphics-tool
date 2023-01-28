@@ -1012,6 +1012,7 @@ void PaletteWidget::on_translationIndexLineEdit_returnPressed()
             if (needsReplacement) {
                 QString replacement = index == D1PAL_COLORS ? tr("transparent pixels") : tr("color %1").arg(index);
                 QString range = this->ui->indexLineEdit->text();
+                QMessageBox::StandardButton reply;
                 reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Pixels with color %1 are going to be replaced with %2. This change is not reversible. Are you sure you want to proceed?").arg(range).arg(replacement), QMessageBox::YesToAll | QMessageBox::Yes | QMessageBox::No);
                 if (reply != QMessageBox::No) {
                     D1GfxPixel replacement = index == D1PAL_COLORS ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(index);
