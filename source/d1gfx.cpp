@@ -1,6 +1,9 @@
 #include "d1gfx.h"
 
+#include <QApplication>
+
 #include "d1image.h"
+#include "progressdialog.h"
 
 D1GfxPixel D1GfxPixel::transparentPixel()
 {
@@ -69,6 +72,25 @@ D1CEL_FRAME_TYPE D1GfxFrame::getFrameType() const
 void D1GfxFrame::setFrameType(D1CEL_FRAME_TYPE type)
 {
     this->frameType = type;
+}
+
+bool D1GfxFrame::addTo(const D1GfxFrame &frame)
+{
+    if (this->width != frame.width || this->height != frame.height) {
+        dProgressFail() << QApplication::tr("Mismatching frame-sizes.");
+        return false;
+    }
+
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            D1GfxPixel d1pix = frame.pixels[y][x];
+
+            if (!d1pix.isTransparent()) {
+                this->pixels[y][x] = d1pix;
+            }
+        }
+    }
+    return true;
 }
 
 void D1GfxFrame::addPixelLine(QList<D1GfxPixel> &pixelLine)
@@ -188,6 +210,25 @@ D1GfxFrame *D1Gfx::insertFrame(int idx, const QImage &image)
     // this->modified = true;
 
     return &this->frames[idx];
+}
+
+D1GfxFrame *D1Gfx::addToFrame(int idx, const D1GfxFrame &frame)
+{
+    if (!this->frames[idx].addTo(frame)) {
+        return nullptr;
+    }
+    this->modified = true;
+
+    return &this->frames[idx];
+}
+
+D1GfxFrame *D1Gfx::addToFrame(int idx, const QImage &image)
+{
+    bool clipped = false;
+    D1GfxFrame frame;
+    D1ImageFrame::load(frame, image, clipped, this->palette);
+
+    return this->addToFrame(idx, frame);
 }
 
 D1GfxFrame *D1Gfx::replaceFrame(int idx, const QImage &image)

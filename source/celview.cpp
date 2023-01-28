@@ -320,6 +320,49 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
     }
 }
 
+void CelView::addToCurrentFrame(const QString &imagefilePath)
+{
+    if (imagefilePath.toLower().endsWith(".pcx")) {
+        bool clipped = false, palMod;
+        D1GfxFrame frame;
+        D1Pal basePal = D1Pal(*this->pal);
+        bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
+        if (!success) {
+            dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
+            return;
+        }
+        D1GfxFrame *resFrame = this->gfx->addToFrame(this->currentFrameIndex, frame);
+        if (resFrame == nullptr) {
+            return; // error set by gfx->addToFrame
+        }
+        if (palMod) {
+            // update the palette
+            this->pal->updateColors(basePal);
+            emit this->palModified();
+        }
+        // update the view
+        this->update();
+        this->displayFrame();
+        return;
+    }
+
+    QImage image = QImage(imagefilePath);
+
+    if (image.isNull()) {
+        dProgressFail() << tr("Failed to read file: %1.").arg(imagefilePath);
+        return;
+    }
+
+    D1GfxFrame *frame = this->gfx->addToFrame(this->currentFrameIndex, image);
+    if (frame == nullptr) {
+        return; // error set by gfx->addToFrame
+    }
+
+    // update the view
+    this->update();
+    this->displayFrame();
+}
+
 void CelView::replaceCurrentFrame(const QString &imagefilePath)
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {
@@ -475,31 +518,42 @@ void CelView::playGroup()
 void CelView::ShowContextMenu(const QPoint &pos)
 {
     MainWindow *mw = (MainWindow *)this->window();
+    QAction actions[5];
 
     QMenu contextMenu(this);
     contextMenu.setToolTipsVisible(true);
 
-    QAction action0(tr("Insert Frame"), this);
-    action0.setToolTip(tr("Add new frames before the current one"));
-    QObject::connect(&action0, SIGNAL(triggered()), mw, SLOT(on_actionInsert_Frame_triggered()));
-    contextMenu.addAction(&action0);
+    int cursor = 0;
+    actions[cursor].setText(tr("Add Layer"));
+    actions[cursor].setToolTip(tr("Add the content of an image to the current frame"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAddTo_Frame_triggered()));
+    contextMenu.addAction(&actions[cursor]);
 
-    QAction action1(tr("Add Frame"), this);
-    action1.setToolTip(tr("Add new frames at the end"));
-    QObject::connect(&action1, SIGNAL(triggered()), mw, SLOT(on_actionAdd_Frame_triggered()));
-    contextMenu.addAction(&action1);
+    cursor++;
+    actions[cursor].setText(tr("Insert Frame"));
+    actions[cursor].setToolTip(tr("Add new frames before the current one"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionInsert_Frame_triggered()));
+    contextMenu.addAction(&actions[cursor]);
 
-    QAction action2(tr("Replace Frame"), this);
-    action2.setToolTip(tr("Replace the current frame"));
-    QObject::connect(&action2, SIGNAL(triggered()), mw, SLOT(on_actionReplace_Frame_triggered()));
-    action2.setEnabled(this->gfx->getFrameCount() != 0);
-    contextMenu.addAction(&action2);
+    cursor++;
+    actions[cursor].setText(tr("Append Frame"));
+    actions[cursor].setToolTip(tr("Append new frames at the end"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAdd_Frame_triggered()));
+    contextMenu.addAction(&actions[cursor]);
 
-    QAction action3(tr("Del Frame"), this);
-    action3.setToolTip(tr("Delete the current frame"));
-    QObject::connect(&action3, SIGNAL(triggered()), mw, SLOT(on_actionDel_Frame_triggered()));
-    action3.setEnabled(this->gfx->getFrameCount() != 0);
-    contextMenu.addAction(&action3);
+    cursor++;
+    actions[cursor].setText(tr("Replace Frame"));
+    actions[cursor].setToolTip(tr("Replace the current frame"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionReplace_Frame_triggered()));
+    actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
+    contextMenu.addAction(&actions[cursor]);
+
+    cursor++;
+    actions[cursor].setText(tr("Del Frame"));
+    actions[cursor].setToolTip(tr("Delete the current frame"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDel_Frame_triggered()));
+    actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
+    contextMenu.addAction(&actions[cursor]);
 
     contextMenu.exec(mapToGlobal(pos));
 }

@@ -55,6 +55,7 @@ public:
     bool isClipped() const;
     D1CEL_FRAME_TYPE getFrameType() const;
     void setFrameType(D1CEL_FRAME_TYPE type);
+    bool addTo(const D1GfxFrame &frame);
     void addPixelLine(QList<D1GfxPixel> &pixelLine);
     void replacePixels(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel);
 
@@ -93,6 +94,8 @@ public:
     QImage getFrameImage(quint16 frameIndex);
     D1GfxFrame *insertFrame(int frameIndex, bool *clipped);
     D1GfxFrame *insertFrame(int frameIndex, const QImage &image);
+    D1GfxFrame *addToFrame(int frameIndex, const QImage &image);
+    D1GfxFrame *addToFrame(int frameIndex, const D1GfxFrame &frame);
     D1GfxFrame *replaceFrame(int frameIndex, const QImage &image);
     void removeFrame(quint16 frameIndex);
     void remapFrames(const QMap<unsigned, unsigned> &remap);
