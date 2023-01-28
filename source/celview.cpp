@@ -524,13 +524,13 @@ void CelView::ShowContextMenu(const QPoint &pos)
     contextMenu.setToolTipsVisible(true);
 
     int cursor = 0;
-    actions[cursor].setText("Add Layer"));
+    actions[cursor].setText(tr("Add Layer"));
     actions[cursor].setToolTip(tr("Add the content of an image to the current frame"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAddTo_Frame_triggered()));
     contextMenu.addAction(&actions[cursor]);
 
     cursor++;
-    actions[cursor].setText("Insert Frame"));
+    actions[cursor].setText(tr("Insert Frame"));
     actions[cursor].setToolTip(tr("Add new frames before the current one"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionInsert_Frame_triggered()));
     contextMenu.addAction(&actions[cursor]);
