@@ -320,6 +320,49 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
     }
 }
 
+void CelView::addToCurrentFrame(const QString &imagefilePath)
+{
+    if (imagefilePath.toLower().endsWith(".pcx")) {
+        bool clipped = false, palMod;
+        D1GfxFrame frame;
+        D1Pal basePal = D1Pal(*this->pal);
+        bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
+        if (!success) {
+            dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
+            return;
+        }
+        D1GfxFrame *resFrame = this->gfx->addToFrame(this->currentFrameIndex, frame);
+        if (resFrame == nullptr) {
+            return; // error set by gfx->addToFrame
+        }
+        if (palMod) {
+            // update the palette
+            this->pal->updateColors(basePal);
+            emit this->palModified();
+        }
+        // update the view
+        this->update();
+        this->displayFrame();
+        return;
+    }
+
+    QImage image = QImage(imagefilePath);
+
+    if (image.isNull()) {
+        dProgressFail() << tr("Failed to read file: %1.").arg(imagefilePath);
+        return;
+    }
+
+    D1GfxFrame *frame = this->gfx->addToFrame(this->currentFrameIndex, image);
+    if (frame == nullptr) {
+        return; // error set by gfx->addToFrame
+    }
+
+    // update the view
+    this->update();
+    this->displayFrame();
+}
+
 void CelView::replaceCurrentFrame(const QString &imagefilePath)
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {

@@ -98,6 +98,7 @@ private:
     void addTiles(bool append);
 
 public slots:
+    void on_actionAddTo_Frame_triggered();
     void on_actionInsert_Frame_triggered();
     void on_actionAdd_Frame_triggered();
     void on_actionReplace_Frame_triggered();

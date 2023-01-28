@@ -62,8 +62,9 @@ MainWindow::MainWindow()
 
     // Initialize 'Frame' submenu of 'Edit'
     this->frameMenu.setToolTipsVisible(true);
+    this->frameMenu.addAction("Add Layer", this, SLOT(on_actionAddTo_Frame_triggered()));
     this->frameMenu.addAction("Insert", this, SLOT(on_actionInsert_Frame_triggered()));
-    this->frameMenu.addAction("Add", this, SLOT(on_actionAdd_Frame_triggered()));
+    this->frameMenu.addAction("Append", this, SLOT(on_actionAppend_Frame_triggered()));
     this->frameMenu.addAction("Replace", this, SLOT(on_actionReplace_Frame_triggered()));
     this->frameMenu.addAction("Delete", this, SLOT(on_actionDel_Frame_triggered()));
     this->ui->menuEdit->addMenu(&this->frameMenu);
@@ -72,7 +73,7 @@ MainWindow::MainWindow()
     this->subtileMenu.setToolTipsVisible(true);
     this->subtileMenu.addAction("Create", this, SLOT(on_actionCreate_Subtile_triggered()));
     this->subtileMenu.addAction("Insert", this, SLOT(on_actionInsert_Subtile_triggered()));
-    this->subtileMenu.addAction("Add", this, SLOT(on_actionAdd_Subtile_triggered()));
+    this->subtileMenu.addAction("Append", this, SLOT(on_actionAppend_Subtile_triggered()));
     this->subtileMenu.addAction("Replace", this, SLOT(on_actionReplace_Subtile_triggered()));
     this->subtileMenu.addAction("Delete", this, SLOT(on_actionDel_Subtile_triggered()));
     this->ui->menuEdit->addMenu(&this->subtileMenu);
@@ -81,7 +82,7 @@ MainWindow::MainWindow()
     this->tileMenu.setToolTipsVisible(true);
     this->tileMenu.addAction("Create", this, SLOT(on_actionCreate_Tile_triggered()));
     this->tileMenu.addAction("Insert", this, SLOT(on_actionInsert_Tile_triggered()));
-    this->tileMenu.addAction("Add", this, SLOT(on_actionAdd_Tile_triggered()));
+    this->tileMenu.addAction("Append", this, SLOT(on_actionAppend_Tile_triggered()));
     this->tileMenu.addAction("Replace", this, SLOT(on_actionReplace_Tile_triggered()));
     this->tileMenu.addAction("Delete", this, SLOT(on_actionDel_Tile_triggered()));
     this->ui->menuEdit->addMenu(&this->tileMenu);
@@ -547,14 +548,16 @@ void MainWindow::changeEvent(QEvent *event)
         { // (re)translate 'Frame' submenu of 'Edit'
             this->frameMenu.setTitle(tr("Frame"));
             QList<QAction *> menuActions = this->frameMenu.actions();
-            menuActions[0]->setText(tr("Insert"));
-            menuActions[0]->setToolTip(tr("Add new frames before the current one"));
-            menuActions[1]->setText(tr("Add"));
-            menuActions[1]->setToolTip(tr("Add new frames at the end"));
-            menuActions[2]->setText(tr("Replace"));
-            menuActions[2]->setToolTip(tr("Replace the current frame"));
-            menuActions[3]->setText(tr("Delete"));
-            menuActions[3]->setToolTip(tr("Delete the current frame"));
+            menuActions[0]->setText(tr("Add Layer"));
+            menuActions[0]->setToolTip(tr("Add the content of an image to the current frame"));
+            menuActions[1]->setText(tr("Insert"));
+            menuActions[1]->setToolTip(tr("Add new frames before the current one"));
+            menuActions[2]->setText(tr("Append"));
+            menuActions[2]->setToolTip(tr("Append new frames at the end"));
+            menuActions[3]->setText(tr("Replace"));
+            menuActions[3]->setToolTip(tr("Replace the current frame"));
+            menuActions[4]->setText(tr("Delete"));
+            menuActions[4]->setToolTip(tr("Delete the current frame"));
         }
         { // (re)translate 'Subtile' submenu of 'Edit'
             this->subtileMenu.setTitle(tr("Subtile"));
@@ -563,8 +566,8 @@ void MainWindow::changeEvent(QEvent *event)
             menuActions[0]->setToolTip(tr("Create a new subtile"));
             menuActions[1]->setText(tr("Insert"));
             menuActions[1]->setToolTip(tr("Add new subtiles before the current one"));
-            menuActions[2]->setText(tr("Add"));
-            menuActions[2]->setToolTip(tr("Add new subtiles at the end"));
+            menuActions[2]->setText(tr("Append"));
+            menuActions[2]->setToolTip(tr("Append new subtiles at the end"));
             menuActions[3]->setText(tr("Replace"));
             menuActions[3]->setToolTip(tr("Replace the current subtile"));
             menuActions[4]->setText(tr("Delete"));
@@ -577,8 +580,8 @@ void MainWindow::changeEvent(QEvent *event)
             menuActions[0]->setToolTip(tr("Create a new tile"));
             menuActions[1]->setText(tr("Insert"));
             menuActions[1]->setToolTip(tr("Add new tiles before the current one"));
-            menuActions[2]->setText(tr("Add"));
-            menuActions[2]->setToolTip(tr("Add new tiles at the end"));
+            menuActions[2]->setText(tr("Append"));
+            menuActions[2]->setToolTip(tr("Append new tiles at the end"));
             menuActions[3]->setText(tr("Replace"));
             menuActions[3]->setToolTip(tr("Replace the current tile"));
             menuActions[4]->setText(tr("Delete"));
@@ -1088,12 +1091,35 @@ void MainWindow::on_actionQuit_triggered()
     qApp->quit();
 }
 
+void MainWindow::on_actionAddTo_Frame_triggered()
+{
+    QString filter = imageNameFilter();
+    QString imgFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Composite Image File"), filter.toLatin1().data());
+
+    if (imgFilePath.isEmpty()) {
+        return;
+    }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0);
+
+    if (this->celView != nullptr) {
+        this->celView->addToCurrentFrame(imgFilePath);
+    }
+    if (this->levelCelView != nullptr) {
+        this->levelCelView->addToCurrentFrame(imgFilePath);
+    }
+    this->updateWindow();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
 void MainWindow::on_actionInsert_Frame_triggered()
 {
     this->addFrames(false);
 }
 
-void MainWindow::on_actionAdd_Frame_triggered()
+void MainWindow::on_actionAppend_Frame_triggered()
 {
     this->addFrames(true);
 }
@@ -1143,7 +1169,7 @@ void MainWindow::on_actionInsert_Subtile_triggered()
     this->addSubtiles(false);
 }
 
-void MainWindow::on_actionAdd_Subtile_triggered()
+void MainWindow::on_actionAppend_Subtile_triggered()
 {
     this->addSubtiles(true);
 }
@@ -1184,7 +1210,7 @@ void MainWindow::on_actionInsert_Tile_triggered()
     this->addTiles(false);
 }
 
-void MainWindow::on_actionAdd_Tile_triggered()
+void MainWindow::on_actionAppend_Tile_triggered()
 {
     this->addTiles(true);
 }
