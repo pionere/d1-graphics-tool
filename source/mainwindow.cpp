@@ -124,6 +124,8 @@ void MainWindow::changeColor(quint8 startColorIndex, quint8 endColorIndex, D1Gfx
     if (this->levelCelView != nullptr) {
         this->levelCelView->changeColor(startColorIndex, endColorIndex, pixel, all);
     }
+    // rebuild palette hits
+    this->palHits->update();
 
     // Clear loading message from status bar
     ProgressDialog::done();

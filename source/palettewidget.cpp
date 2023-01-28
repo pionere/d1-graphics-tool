@@ -747,9 +747,8 @@ void PaletteWidget::refreshTranslationIndexLineEdit()
     if (active && this->isTrn) {
         if (colorIndex != this->selectedLastColorIndex) {
             text = "*";
-        } else if (colorIndex != COLORIDX_TRANSPARENT) {
-            text = QString::number(this->trn->getTranslation(colorIndex));
         } else {
+            text = QString::number(this->trn->getTranslation(colorIndex));
         }
     }
     this->ui->translationIndexLineEdit->setText(text);
