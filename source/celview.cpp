@@ -225,6 +225,9 @@ void CelView::changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPix
         frame->replacePixels(startColorIndex, endColorIndex, pixel);
     }
     this->gfx->setModified();
+    // update the view
+    this->update();
+    this->displayFrame();
 }
 
 int CelView::getCurrentFrameIndex()

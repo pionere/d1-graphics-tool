@@ -56,11 +56,6 @@ D1GfxPixel D1GfxFrame::getPixel(int x, int y) const
     return D1GfxPixel::transparentPixel();
 }
 
-void D1GfxFrame::setPixel(int x, int y, D1GfxPixel pixel)
-{
-    this->pixels[y][x] = pixel;
-}
-
 bool D1GfxFrame::isClipped() const
 {
     return this->clipped;
@@ -91,15 +86,15 @@ void D1GfxFrame::addPixelLine(QList<D1GfxPixel> &pixelLine)
 
 void D1GfxFrame::replacePixels(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel replacement)
 {
-    for (int y = 0; y < frame.getHeight(); y++) {
-        for (int x = 0; x < frame.getWidth(); x++) {
-            D1GfxPixel d1pix = frame.getPixel(x, y);
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            D1GfxPixel d1pix = this->pixels[y][x]; // this->getPixel(x, y);
 
             if (d1pix.isTransparent())
                 continue;
 
             if (p1pix.getPaletteIndex() >= startColorIndex && p1pix.getPaletteIndex() <= endColorIndex)
-                frame.setPixel(x, y, replacement);
+                this->pixels[y][x] = replacement;
         }
     }
 }

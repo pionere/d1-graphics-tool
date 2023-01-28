@@ -174,6 +174,8 @@ void LevelCelView::changeColor(quint8 startColorIndex, quint8 endColorIndex, D1G
         frame->replacePixels(startColorIndex, endColorIndex, pixel);
     }
     this->gfx->setModified();
+    // update the view
+    this->displayFrame();
 }
 
 void LevelCelView::framePixelClicked(unsigned x, unsigned y)
