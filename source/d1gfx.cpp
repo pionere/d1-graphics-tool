@@ -93,7 +93,7 @@ void D1GfxFrame::replacePixels(quint8 startColorIndex, quint8 endColorIndex, D1G
             if (d1pix.isTransparent())
                 continue;
 
-            if (p1pix.getPaletteIndex() >= startColorIndex && p1pix.getPaletteIndex() <= endColorIndex)
+            if (d1pix.getPaletteIndex() >= startColorIndex && d1pix.getPaletteIndex() <= endColorIndex)
                 this->pixels[y][x] = replacement;
         }
     }
