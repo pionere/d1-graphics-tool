@@ -139,6 +139,7 @@ public:
 signals:
     void pathSelected(QString path);
     void colorsSelected(QList<quint8> indices);
+    void changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel, bool all);
 
     void colorPicking_started(bool single);
     void colorPicking_stopped();

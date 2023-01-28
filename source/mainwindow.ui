@@ -328,7 +328,7 @@
   </action>
   <action name="actionCleanupFrames_Tileset">
    <property name="text">
-    <string>Cleanup frames</string>
+    <string>Cleanup Frames</string>
    </property>
    <property name="toolTip">
     <string>Eliminate unused frames</string>

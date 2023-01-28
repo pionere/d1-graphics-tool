@@ -79,6 +79,8 @@ public:
 private:
     void updateWindow();
 
+    void changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel, bool all);
+
     void setPal(QString palFilePath);
     void setUniqueTrn(QString trnfilePath);
     void setBaseTrn(QString trnfilePath);

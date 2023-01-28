@@ -319,8 +319,6 @@ void PaletteWidget::initializeUi()
     this->ui->translationPickPushButton->setVisible(trnMode);
     this->ui->colorPickPushButton->setVisible(!trnMode);
     this->ui->colorClearPushButton->setVisible(!trnMode);
-    this->ui->translationIndexLineEdit->setVisible(trnMode);
-    this->ui->translationLabel->setVisible(trnMode);
 
     this->initializePathComboBox();
     this->initializeDisplayComboBox();
@@ -744,14 +742,15 @@ void PaletteWidget::refreshTranslationIndexLineEdit()
 {
     int colorIndex = this->selectedFirstColorIndex;
     QString text;
-    bool active = true;
+    bool active = colorIndex == COLORIDX_TRANSPARENT;
 
-    if (colorIndex != this->selectedLastColorIndex) {
-        text = "*";
-    } else if (colorIndex != COLORIDX_TRANSPARENT) {
-        text = QString::number(this->trn->getTranslation(colorIndex));
-    } else {
-        active = false;
+    if (active && this->isTrn) {
+        if (colorIndex != this->selectedLastColorIndex) {
+            text = "*";
+        } else if (colorIndex != COLORIDX_TRANSPARENT) {
+            text = QString::number(this->trn->getTranslation(colorIndex));
+        } else {
+        }
     }
     this->ui->translationIndexLineEdit->setText(text);
     this->ui->translationIndexLineEdit->setReadOnly(!active);
@@ -987,21 +986,39 @@ void PaletteWidget::on_colorClearPushButton_clicked()
 
 void PaletteWidget::on_translationIndexLineEdit_returnPressed()
 {
-    quint8 index = ui->translationIndexLineEdit->text().toUInt();
+    bool ok;
+    unsigned index = ui->translationIndexLineEdit->text().toUInt(&ok);
 
-    if (index < D1PAL_COLORS) {
-        // New translations
-        QList<quint8> newTranslations;
-        for (int i = this->selectedFirstColorIndex; i <= this->selectedLastColorIndex; i++)
-            newTranslations.append(index);
+    if (ok) {
+        if (this->isTrn) {
+            // New translations
+            if (index < D1PAL_COLORS) {
+                static_assert(D1PAL_COLORS <= std::numeric_limits<quint8>::max() + 1, "on_translationIndexLineEdit_returnPressed stores color indices in quint8.");
+                QList<quint8> newTranslations;
+                for (int i = this->selectedFirstColorIndex; i <= this->selectedLastColorIndex; i++)
+                    newTranslations.append(index);
 
-        // Build translation editing command and connect it to the current palette widget
-        // to update the PAL/TRN and CEL views when undo/redo is performed
-        EditTranslationCommand *command = new EditTranslationCommand(
-            this->trn, this->selectedFirstColorIndex, this->selectedLastColorIndex, &newTranslations);
-        QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modify);
+                // Build translation editing command and connect it to the current palette widget
+                // to update the PAL/TRN and CEL views when undo/redo is performed
+                EditTranslationCommand *command = new EditTranslationCommand(
+                    this->trn, this->selectedFirstColorIndex, this->selectedLastColorIndex, &newTranslations);
+                QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modify);
 
-        this->undoStack->push(command);
+                this->undoStack->push(command);
+            }
+        } else {
+            // Color replacement
+            bool needsReplacement = index <= D1PAL_COLORS && (this->selectedFirstColorIndex != this->selectedLastColorIndex || this->selectedFirstColorIndex != index);
+            if (needsReplacement) {
+                QString replacement = index == D1PAL_COLORS ? tr("transparent pixels") : tr("color %1").arg(index);
+                QString range = this->ui->indexLineEdit->text();
+                reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Pixels with color %1 are going to be replaced with %2. This change is not reversible. Are you sure you want to proceed?").arg(range).arg(replacement), QMessageBox::YesToAll | QMessageBox::Yes | QMessageBox::No);
+                if (reply != QMessageBox::No) {
+                    D1GfxPixel replacement = index == D1PAL_COLORS ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(index);
+                    emit this->changeColor(this->selectedFirstColorIndex, this->selectedLastColorIndex, replacement, reply == QMessageBox::YesToAll);
+                }
+            }
+        }
     }
     // Release focus to allow keyboard shortcuts to work as expected
     this->on_translationIndexLineEdit_escPressed();

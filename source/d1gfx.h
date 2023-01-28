@@ -52,10 +52,12 @@ public:
     int getWidth() const;
     int getHeight() const;
     D1GfxPixel getPixel(int x, int y) const;
+    void setPixel(int x, int y, D1GfxPixel pixel);
     bool isClipped() const;
     D1CEL_FRAME_TYPE getFrameType() const;
     void setFrameType(D1CEL_FRAME_TYPE type);
     void addPixelLine(QList<D1GfxPixel> &pixelLine);
+    void replacePixels(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel);
 
 protected:
     int width = 0;
