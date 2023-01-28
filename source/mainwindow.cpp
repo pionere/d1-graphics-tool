@@ -274,6 +274,8 @@ void MainWindow::frameClicked(D1GfxFrame *frame, int x, int y, unsigned counter)
         D1GfxPixel pixel = this->palWidget->getCurrentColor(counter);
         if (frame->setPixel(x, y, pixel)) {
             this->gfx->setModified();
+            // redraw the frame
+            this->colorModified();
             // rebuild palette hits
             this->palHits->update();
         }
