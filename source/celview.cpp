@@ -550,7 +550,7 @@ void CelView::ShowContextMenu(const QPoint &pos)
 
     cursor++;
     actions[cursor].setText(tr("Del Frame"));
-    action3.setToolTip(tr("Delete the current frame"));
+    actions[cursor].setToolTip(tr("Delete the current frame"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDel_Frame_triggered()));
     actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
     contextMenu.addAction(&actions[cursor]);
