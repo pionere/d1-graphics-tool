@@ -114,6 +114,23 @@ MainWindow::~MainWindow()
     delete this->redoAction;
 }
 
+void MainWindow::changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel, bool all)
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0);
+
+    if (this->celView != nullptr) {
+        this->celView->changeColor(startColorIndex, endColorIndex, pixel, all);
+    }
+    if (this->levelCelView != nullptr) {
+        this->levelCelView->changeColor(startColorIndex, endColorIndex, pixel, all);
+    }
+    // rebuild palette hits
+    this->palHits->update();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
 void MainWindow::setPal(QString path)
 {
     this->pal = this->pals[path];
@@ -724,6 +741,9 @@ void MainWindow::openFile(const OpenAsParam &params)
     QObject::connect(this->palWidget, &PaletteWidget::colorPicking_stopped, this->trnUniqueWidget, &PaletteWidget::stopTrnColorPicking);      // cancel color picking
     QObject::connect(this->palWidget, &PaletteWidget::colorPicking_stopped, this->trnBaseWidget, &PaletteWidget::stopTrnColorPicking);        // cancel color picking
     QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorPicking_stopped, this->trnBaseWidget, &PaletteWidget::stopTrnColorPicking);  // cancel color picking
+
+    // Color changing
+    QObject::connect(this->palWidget, &PaletteWidget::changeColor, this, &MainWindow::changeColor);
 
     if (isTileset) {
         // build a LevelCelView

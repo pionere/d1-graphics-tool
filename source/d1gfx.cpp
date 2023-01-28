@@ -84,6 +84,21 @@ void D1GfxFrame::addPixelLine(QList<D1GfxPixel> &pixelLine)
     }
 }
 
+void D1GfxFrame::replacePixels(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel replacement)
+{
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            D1GfxPixel d1pix = this->pixels[y][x]; // this->getPixel(x, y);
+
+            if (d1pix.isTransparent())
+                continue;
+
+            if (d1pix.getPaletteIndex() >= startColorIndex && d1pix.getPaletteIndex() <= endColorIndex)
+                this->pixels[y][x] = replacement;
+        }
+    }
+}
+
 bool D1Gfx::isFrameSizeConstant()
 {
     if (this->frames.isEmpty()) {

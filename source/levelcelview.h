@@ -44,6 +44,8 @@ public:
     int getCurrentSubtileIndex();
     int getCurrentTileIndex();
 
+    void changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel, bool all);
+
     void framePixelClicked(unsigned x, unsigned y);
 
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
