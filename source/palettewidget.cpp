@@ -375,7 +375,7 @@ void PaletteWidget::selectColor(const D1GfxPixel &pixel)
     this->refresh();
 }
 
-D1GfxPixel PaletteWidget::getCurrentColor(unsigned counter)
+D1GfxPixel PaletteWidget::getCurrentColor(unsigned counter) const
 {
     if (this->selectedFirstColorIndex == COLORIDX_TRANSPARENT) {
         return D1GfxPixel::transparentPixel();

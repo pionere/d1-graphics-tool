@@ -47,7 +47,7 @@ private slots:
     void contextMenuEvent(QContextMenuEvent *event);
 
 signals:
-    void framePixelClicked(unsigned x, unsigned y);
+    void framePixelClicked(unsigned x, unsigned y, unsigned counter);
     void showContextMenu(const QPoint &pos);
 
 private:
@@ -85,7 +85,7 @@ public:
 
 signals:
     void frameRefreshed();
-    void frameClicked(D1GfxFrame *frame, int x, int y);
+    void frameClicked(D1GfxFrame *frame, int x, int y, unsigned counter);
     void palModified();
 
 private:

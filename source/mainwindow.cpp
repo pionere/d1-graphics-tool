@@ -266,7 +266,7 @@ bool MainWindow::loadBaseTrn(QString trnFilePath)
 
 void MainWindow::frameClicked(D1GfxFrame *frame, int x, int y, unsigned counter)
 {
-    if (this->view->cursor().shape() == Qt::CrossCursor) {
+    if (this->cursor().shape() == Qt::CrossCursor) {
         // drawing
         if (frame == nullptr) {
             return;
