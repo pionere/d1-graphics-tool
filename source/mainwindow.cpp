@@ -553,6 +553,16 @@ void MainWindow::dropEvent(QDropEvent *event)
     }
 }
 
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Escape) {
+        // TODO: ignore if (this->cursor().shape() != Qt::CrossCursor)?
+        this->unsetCursor();
+    }
+
+    QMainWindow::keyPressEvent(event);
+}
+
 void MainWindow::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange) {
