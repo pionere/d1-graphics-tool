@@ -1091,10 +1091,12 @@ void PaletteWidget::on_monsterTrnPushButton_clicked()
 void PaletteWidget::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_C && (event->modifiers() & Qt::ControlModifier)) {
-        // TODO: ignore if lineedits are active?
         if (this->selectedFirstColorIndex != COLORIDX_TRANSPARENT) {
             this->on_actionCopy_triggered();
         }
+    }
+    if (event->key() == Qt::Key_V && (event->modifiers() & Qt::ControlModifier)) {
+        this->on_actionPaste_triggered();
     }
 
     QWidget::keyPressEvent(event);

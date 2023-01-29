@@ -29,7 +29,9 @@
 #include "ui_mainwindow.h"
 
 FramePixel::FramePixel(int xx, int yy, D1GfxPixel p)
-    : x(xx), y(yy), pixel(p)
+    : x(xx)
+    , y(yy)
+    , pixel(p)
 {
 }
 
