@@ -28,6 +28,11 @@
 #include "d1cl2.h"
 #include "ui_mainwindow.h"
 
+FramePixel::FramePixel(int xx, int yy, D1GfxPixel p)
+    : x(xx), y(yy), pixel(p)
+{
+}
+
 EditFrameCommand::EditFrameCommand(D1GfxFrame *f, int x, int y, D1GfxPixel newPixel)
     : QUndoCommand(nullptr)
     , frame(f)
