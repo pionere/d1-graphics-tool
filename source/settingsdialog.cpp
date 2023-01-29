@@ -2,6 +2,7 @@
 
 #include <QColorDialog>
 #include <QDir>
+#include <QMessageBox>
 
 #include "config.h"
 #include "ui_settingsdialog.h"
