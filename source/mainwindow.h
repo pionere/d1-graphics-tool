@@ -52,8 +52,10 @@ class MainWindow;
 }
 
 typedef struct FramePixel {
-    int x;
-    int y;
+    FramePixel(int x, int y, D1GfxPixel p) : posX(x), posY(y), pixel(p);
+
+    int posX;
+    int posY;
     D1GfxPixel pixel;
 } FramePixel;
 

@@ -146,7 +146,7 @@ void D1GfxFrame::replacePixels(quint8 startColorIndex, quint8 endColorIndex, D1G
 D1Gfx::~D1Gfx()
 {
     qDeleteAll(this->frames);
-    this->pals.clear();
+    this->frames.clear();
 }
 
 bool D1Gfx::isFrameSizeConstant()
@@ -265,7 +265,7 @@ D1GfxFrame *D1Gfx::replaceFrame(int idx, const QImage &image)
 
     D1GfxFrame *frame = new D1GfxFrame();
     D1ImageFrame::load(*frame, image, clipped, this->palette);
-    this->setFrame(idx, frame)
+    this->setFrame(idx, frame);
 
     return this->frames[idx];
 }
