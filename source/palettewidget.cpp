@@ -481,6 +481,7 @@ void PaletteWidget::ShowContextMenu(const QPoint &pos)
     int cursor = 0;
     actions[cursor].setText(tr("Undo"));
     actions[cursor].setToolTip(tr("Undo previous color change"));
+    actions[cursor].setShortcut(QKeySequence::Undo);
     QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionUndo_triggered()));
     actions[cursor].setEnabled(this->undoStack->canUndo());
     contextMenu.addAction(&actions[cursor]);
@@ -488,6 +489,7 @@ void PaletteWidget::ShowContextMenu(const QPoint &pos)
     cursor++;
     actions[cursor].setText(tr("Redo"));
     actions[cursor].setToolTip(tr("Redo previous color change"));
+    actions[cursor].setShortcut(QKeySequence::Redo);
     QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionRedo_triggered()));
     actions[cursor].setEnabled(this->undoStack->canRedo());
     contextMenu.addAction(&actions[cursor]);

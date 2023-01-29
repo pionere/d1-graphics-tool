@@ -97,9 +97,9 @@ MainWindow::MainWindow()
     // Initialize 'Undo/Redo' of 'Edit
     this->undoStack = new QUndoStack(this);
     this->undoAction = undoStack->createUndoAction(this, "Undo");
-    this->undoAction->setShortcuts(QKeySequence::Undo);
+    this->undoAction->setShortcut(QKeySequence::Undo);
     this->redoAction = undoStack->createRedoAction(this, "Redo");
-    this->redoAction->setShortcuts(QKeySequence::Redo);
+    this->redoAction->setShortcut(QKeySequence::Redo);
     this->ui->menuEdit->addAction(this->undoAction);
     this->ui->menuEdit->addAction(this->redoAction);
     this->ui->menuEdit->addSeparator();
