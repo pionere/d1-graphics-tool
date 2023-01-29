@@ -49,7 +49,6 @@ class D1GfxFrame : public QObject {
 
 public:
     D1GfxFrame() = default;
-    D1GfxFrame(D1GfxFrame &o);
     ~D1GfxFrame() = default;
 
     int getWidth() const;
@@ -92,7 +91,7 @@ class D1Gfx : public QObject {
 
 public:
     D1Gfx() = default;
-    ~D1Gfx() = default;
+    ~D1Gfx();
 
     bool isFrameSizeConstant();
     QImage getFrameImage(quint16 frameIndex);
@@ -117,7 +116,7 @@ public:
     QPair<quint16, quint16> getGroupFrameIndices(int groupIndex) const;
     int getFrameCount() const;
     D1GfxFrame *getFrame(int frameIndex) const;
-    void setFrame(int frameIndex, const D1GfxFrame &frame);
+    void setFrame(int frameIndex, D1GfxFrame *frame);
     int getFrameWidth(int frameIndex) const;
     int getFrameHeight(int frameIndex) const;
     bool setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType);
@@ -128,7 +127,7 @@ protected:
     bool modified;
     D1Pal *palette = nullptr;
     QList<QPair<quint16, quint16>> groupFrameIndices;
-    QList<D1GfxFrame> frames;
+    QList<D1GfxFrame *> frames;
     // fields of tilesets
     bool upscaled = false;
 };

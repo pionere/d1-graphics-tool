@@ -393,9 +393,10 @@ void CelView::replaceCurrentFrame(const QString &imagefilePath)
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {
         bool clipped = this->gfx->getFrame(this->currentFrameIndex)->isClipped(), palMod;
-        D1GfxFrame frame;
-        bool success = D1Pcx::load(frame, imagefilePath, clipped, this->pal, this->gfx->getPalette(), &palMod);
+        D1GfxFrame *frame = new D1GfxFrame();
+        bool success = D1Pcx::load(*frame, imagefilePath, clipped, this->pal, this->gfx->getPalette(), &palMod);
         if (!success) {
+            delete frame;
             dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
             return;
         }

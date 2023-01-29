@@ -32,10 +32,7 @@ EditFrameCommand::EditFrameCommand(D1GfxFrame *f, int x, int y, D1GfxPixel newPi
     : QUndoCommand(nullptr)
     , frame(f)
 {
-    FramePixel fp;
-    fp.x = x;
-    fp.y = y;
-    fp.pixel = newPixel;
+    FramePixel fp(x, y, newPixel);
 
     this->modPixels.append(fp);
 }

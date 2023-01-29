@@ -41,15 +41,6 @@ bool operator!=(const D1GfxPixel &lhs, const D1GfxPixel &rhs)
     return lhs.transparent != rhs.transparent || lhs.paletteIndex != rhs.paletteIndex;
 }
 
-D1GfxFrame::D1GfxFrame(D1GfxFrame &o)
-{
-    this->width = o.width;
-    this->height = o.height;
-    this->pixels = o.pixels;
-    this->clipped = o.clipped;
-    this->frameType = o.frameType;
-}
-
 int D1GfxFrame::getWidth() const
 {
     return this->width;
@@ -143,18 +134,24 @@ void D1GfxFrame::replacePixels(quint8 startColorIndex, quint8 endColorIndex, D1G
     }
 }
 
+D1Gfx::~D1Gfx()
+{
+    qDeleteAll(this->frames);
+    this->pals.clear();
+}
+
 bool D1Gfx::isFrameSizeConstant()
 {
     if (this->frames.isEmpty()) {
         return false;
     }
 
-    int frameWidth = this->frames[0].getWidth();
-    int frameHeight = this->frames[0].getHeight();
+    int frameWidth = this->frames[0]->getWidth();
+    int frameHeight = this->frames[0]->getHeight();
 
     for (int i = 1; i < this->frames.count(); i++) {
-        if (this->frames[i].getWidth() != frameWidth
-            || this->frames[i].getHeight() != frameHeight)
+        if (this->frames[i]->getWidth() != frameWidth
+            || this->frames[i]->getHeight() != frameHeight)
             return false;
     }
 
@@ -167,16 +164,16 @@ QImage D1Gfx::getFrameImage(quint16 frameIndex)
     if (this->palette == nullptr || frameIndex >= this->frames.count())
         return QImage();
 
-    D1GfxFrame &frame = this->frames[frameIndex];
+    D1GfxFrame *frame = this->frames[frameIndex];
 
     QImage image = QImage(
-        frame.getWidth(),
-        frame.getHeight(),
+        frame->getWidth(),
+        frame->getHeight(),
         QImage::Format_ARGB32);
 
-    for (int y = 0; y < frame.getHeight(); y++) {
-        for (int x = 0; x < frame.getWidth(); x++) {
-            D1GfxPixel d1pix = frame.getPixel(x, y);
+    for (int y = 0; y < frame->getHeight(); y++) {
+        for (int x = 0; x < frame->getWidth(); x++) {
+            D1GfxPixel d1pix = frame->getPixel(x, y);
 
             QColor color;
             if (d1pix.isTransparent())
@@ -194,12 +191,12 @@ QImage D1Gfx::getFrameImage(quint16 frameIndex)
 D1GfxFrame *D1Gfx::insertFrame(int idx, bool *clipped)
 {
     if (!this->frames.isEmpty()) {
-        *clipped = this->frames[0].isClipped();
+        *clipped = this->frames[0]->isClipped();
     } else {
         *clipped = this->type == D1CEL_TYPE::V2_MONO_GROUP || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
     }
 
-    this->frames.insert(idx, D1GfxFrame());
+    this->frames.insert(idx, new D1GfxFrame());
 
     if (this->groupFrameIndices.isEmpty()) {
         // create new group if this is the first frame
@@ -220,7 +217,7 @@ D1GfxFrame *D1Gfx::insertFrame(int idx, bool *clipped)
     }
 
     this->modified = true;
-    return &this->frames[idx];
+    return this->frames[idx];
 }
 
 D1GfxFrame *D1Gfx::insertFrame(int idx, const QImage &image)
@@ -231,17 +228,17 @@ D1GfxFrame *D1Gfx::insertFrame(int idx, const QImage &image)
     D1ImageFrame::load(*frame, image, clipped, this->palette);
     // this->modified = true;
 
-    return &this->frames[idx];
+    return this->frames[idx];
 }
 
 D1GfxFrame *D1Gfx::addToFrame(int idx, const D1GfxFrame &frame)
 {
-    if (!this->frames[idx].addTo(frame)) {
+    if (!this->frames[idx]->addTo(frame)) {
         return nullptr;
     }
     this->modified = true;
 
-    return &this->frames[idx];
+    return this->frames[idx];
 }
 
 D1GfxFrame *D1Gfx::addToFrame(int idx, const QImage &image)
@@ -255,18 +252,18 @@ D1GfxFrame *D1Gfx::addToFrame(int idx, const QImage &image)
 
 D1GfxFrame *D1Gfx::replaceFrame(int idx, const QImage &image)
 {
-    bool clipped = this->frames[idx].isClipped();
+    bool clipped = this->frames[idx]->isClipped();
 
-    D1GfxFrame frame;
-    D1ImageFrame::load(frame, image, clipped, this->palette);
-    this->frames[idx] = frame;
-    this->modified = true;
+    D1GfxFrame *frame = new D1GfxFrame();
+    D1ImageFrame::load(*frame, image, clipped, this->palette);
+    this->setFrame(idx, frame)
 
-    return &this->frames[idx];
+    return this->frames[idx];
 }
 
 void D1Gfx::removeFrame(quint16 idx)
 {
+    delete this->frames[idx];
     this->frames.removeAt(idx);
     this->modified = true;
 
@@ -287,7 +284,7 @@ void D1Gfx::removeFrame(quint16 idx)
 
 void D1Gfx::remapFrames(const QMap<unsigned, unsigned> &remap)
 {
-    QList<D1GfxFrame> newFrames;
+    QList<D1GfxFrame *> newFrames;
     // assert(this->groupFrameIndices.count() == 1);
     for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
         newFrames.append(this->frames.at(iter.value() - 1));
@@ -366,11 +363,12 @@ D1GfxFrame *D1Gfx::getFrame(int frameIndex) const
     if (frameIndex < 0 || frameIndex >= this->frames.count())
         return nullptr;
 
-    return const_cast<D1GfxFrame *>(&this->frames[frameIndex]);
+    return const_cast<D1GfxFrame *>(this->frames[frameIndex]);
 }
 
-void D1Gfx::setFrame(int frameIndex, const D1GfxFrame &frame)
+void D1Gfx::setFrame(int frameIndex, D1GfxFrame *frame)
 {
+    delete this->frames[frameIndex];
     this->frames[frameIndex] = frame;
     this->modified = true;
 }
@@ -380,7 +378,7 @@ int D1Gfx::getFrameWidth(int frameIndex) const
     if (frameIndex < 0 || frameIndex >= this->frames.count())
         return 0;
 
-    return this->frames[frameIndex].getWidth();
+    return this->frames[frameIndex]->getWidth();
 }
 
 int D1Gfx::getFrameHeight(int frameIndex) const
@@ -388,15 +386,15 @@ int D1Gfx::getFrameHeight(int frameIndex) const
     if (frameIndex < 0 || frameIndex >= this->frames.count())
         return 0;
 
-    return this->frames[frameIndex].getHeight();
+    return this->frames[frameIndex]->getHeight();
 }
 
 bool D1Gfx::setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType)
 {
-    if (this->frames[frameIndex].getFrameType() == frameType) {
+    if (this->frames[frameIndex]->getFrameType() == frameType) {
         return false;
     }
-    this->frames[frameIndex].setFrameType(frameType);
+    this->frames[frameIndex]->setFrameType(frameType);
     this->modified = true;
     return true;
 }
