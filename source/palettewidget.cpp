@@ -473,32 +473,42 @@ void PaletteWidget::ShowContextMenu(const QPoint &pos)
 {
     this->initStopColorPicking();
 
+    QAction actions[4];
+
     QMenu contextMenu(this);
     contextMenu.setToolTipsVisible(true);
 
-    QAction action0(tr("Undo"), this);
-    action0.setToolTip(tr("Undo previous color change"));
-    QObject::connect(&action0, SIGNAL(triggered()), this, SLOT(on_actionUndo_triggered()));
-    action0.setEnabled(this->undoStack->canUndo());
-    contextMenu.addAction(&action0);
+    int cursor = 0;
+    actions[cursor].setText(tr("Undo"));
+    actions[cursor].setToolTip(tr("Undo previous color change"));
+    actions[cursor].setShortcut(QKeySequence::Undo);
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionUndo_triggered()));
+    actions[cursor].setEnabled(this->undoStack->canUndo());
+    contextMenu.addAction(&actions[cursor]);
 
-    QAction action1(tr("Redo"), this);
-    action1.setToolTip(tr("Redo previous color change"));
-    QObject::connect(&action1, SIGNAL(triggered()), this, SLOT(on_actionRedo_triggered()));
-    action1.setEnabled(this->undoStack->canRedo());
-    contextMenu.addAction(&action1);
+    cursor++;
+    actions[cursor].setText(tr("Redo"));
+    actions[cursor].setToolTip(tr("Redo previous color change"));
+    actions[cursor].setShortcut(QKeySequence::Redo);
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionRedo_triggered()));
+    actions[cursor].setEnabled(this->undoStack->canRedo());
+    contextMenu.addAction(&actions[cursor]);
 
-    QAction action2(tr("Copy"), this);
-    action2.setToolTip(tr("Copy the selected colors to the clipboard"));
-    QObject::connect(&action2, SIGNAL(triggered()), this, SLOT(on_actionCopy_triggered()));
-    action2.setEnabled(this->selectedFirstColorIndex != COLORIDX_TRANSPARENT);
-    contextMenu.addAction(&action2);
+    cursor++;
+    actions[cursor].setText(tr("Copy"));
+    actions[cursor].setToolTip(tr("Copy the selected colors to the clipboard"));
+    actions[cursor].setShortcut(QKeySequence::Copy);
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionCopy_triggered()));
+    actions[cursor].setEnabled(this->selectedFirstColorIndex != COLORIDX_TRANSPARENT);
+    contextMenu.addAction(&actions[cursor]);
 
-    QAction action3(tr("Paste"), this);
-    action3.setToolTip(tr("Paste the colors from the clipboard to the palette"));
-    QObject::connect(&action3, SIGNAL(triggered()), this, SLOT(on_actionPaste_triggered()));
-    action3.setEnabled(!this->isTrn && !clipboardToColors().isEmpty());
-    contextMenu.addAction(&action3);
+    cursor++;
+    actions[cursor].setText(tr("Paste"));
+    actions[cursor].setToolTip(tr("Paste the colors from the clipboard to the palette"));
+    actions[cursor].setShortcut(QKeySequence::Paste);
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionPaste_triggered()));
+    actions[cursor].setEnabled(!this->isTrn && !clipboardToColors().isEmpty());
+    contextMenu.addAction(&actions[cursor]);
 
     contextMenu.exec(mapToGlobal(pos));
 }
@@ -1086,4 +1096,18 @@ void PaletteWidget::on_monsterTrnPushButton_clicked()
     if (trnModified) {
         emit this->modified();
     }
+}
+
+void PaletteWidget::keyPressEvent(QKeyEvent *event)
+{
+    if (event->matches(QKeySequence::Copy)) {
+        if (this->selectedFirstColorIndex != COLORIDX_TRANSPARENT) {
+            this->on_actionCopy_triggered();
+        }
+    }
+    if (event->matches(QKeySequence::Paste)) {
+        this->on_actionPaste_triggered();
+    }
+
+    QWidget::keyPressEvent(event);
 }
