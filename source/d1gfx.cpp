@@ -41,6 +41,15 @@ bool operator!=(const D1GfxPixel &lhs, const D1GfxPixel &rhs)
     return lhs.transparent != rhs.transparent || lhs.paletteIndex != rhs.paletteIndex;
 }
 
+D1GfxFrame::D1GfxFrame(D1GfxFrame &o)
+{
+    this->width = o.width;
+    this->height = o.height;
+    this->pixels = o.pixels;
+    this->clipped = o.clipped;
+    this->frameType = o.frameType;
+}
+
 int D1GfxFrame::getWidth() const
 {
     return this->width;

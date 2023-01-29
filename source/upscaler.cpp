@@ -3107,29 +3107,32 @@ bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
 {
     int amount = gfx->getFrameCount();
 
-    QList<D1GfxFrame> newFrames;
+    QList<D1GfxFrame *> newFrames;
 
     QPair<int, QString> progress;
     progress.first = -1;
     for (int i = 0; i < amount; i++) {
         if (ProgressDialog::wasCanceled()) {
+            qDeleteAll(newFrames);
             return false;
         }
         progress.second = QString(QApplication::tr("Upscaling frame %1.")).arg(i + 1);
         dProgress() << progress;
         ProgressDialog::incValue();
 
-        newFrames.append(*gfx->getFrame(i));
-        D1GfxFrame &newFrame = newFrames.last();
-        upscaleFrame(&newFrame, gfx->palette, params);
+        D1GfxFrame *newFrame = new D1GfxFrame(*gfx->getFrame(i));
+        upscaleFrame(newFrame, gfx->palette, params);
+        newFrames.append(newFrame);
     }
     if (ProgressDialog::wasCanceled()) {
+        qDeleteAll(newFrames);
         return false;
     }
     gfx->frames.swap(newFrames);
     gfx->upscaled = true;
     gfx->modified = true;
 
+    qDeleteAll(newFrames);
     progress.second = QString(QApplication::tr("Upscaled %n frame(s).", "", amount)).arg(amount);
     dProgress() << progress;
     return true;
@@ -3172,7 +3175,7 @@ D1GfxFrame *Upscaler::createSubtileFrame(const D1Gfx *gfx, const D1Min *min, int
     return subtileFrame;
 }
 
-void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<quint16>> &newFrameReferences, QList<D1GfxFrame> &newFrames)
+void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<quint16>> &newFrameReferences, QList<D1GfxFrame *> &newFrames)
 {
     QList<quint16> subtileFramesRefs;
     int x = 0;
@@ -3187,20 +3190,20 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<qui
             }
         }
         if (hasColor) {
-            newFrames.append(D1GfxFrame());
+            newFrames.append(new D1GfxFrame());
             subtileFramesRefs.append(newFrames.count());
-            D1GfxFrame &newFrame = newFrames.last();
-            newFrame.width = MICRO_WIDTH;
-            newFrame.height = MICRO_HEIGHT;
-            for (int i = 0; i < newFrame.height; i++) {
-                newFrame.pixels.append(QList<D1GfxPixel>());
+            D1GfxFrame *newFrame = newFrames.last();
+            newFrame->width = MICRO_WIDTH;
+            newFrame->height = MICRO_HEIGHT;
+            for (int i = 0; i < newFrame->height; i++) {
+                newFrame->pixels.append(QList<D1GfxPixel>());
             }
             for (int yy = 0; yy < MICRO_HEIGHT; yy++) {
                 for (int xx = 0; xx < MICRO_WIDTH; xx++) {
-                    newFrame.pixels[yy].append(subtileFrame->getPixel(x + xx, y + yy));
+                    newFrame->pixels[yy].append(subtileFrame->getPixel(x + xx, y + yy));
                 }
             }
-            LevelTabFrameWidget::selectFrameType(&newFrame);
+            LevelTabFrameWidget::selectFrameType(newFrame);
         } else {
             subtileFramesRefs.append(0);
         }
@@ -3218,13 +3221,14 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
 {
     int amount = min->getSubtileCount();
 
-    QList<D1GfxFrame> newFrames;
+    QList<D1GfxFrame *> newFrames;
     QList<QList<quint16>> newFrameReferences;
 
     QPair<int, QString> progress;
     progress.first = -1;
     for (int i = 0; i < amount; i++) {
         if (ProgressDialog::wasCanceled()) {
+            qDeleteAll(newFrames);
             return false;
         }
         progress.second = QString(QApplication::tr("Upscaling subtile %1.")).arg(i + 1);
@@ -3237,6 +3241,7 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
         delete subtileFrame;
     }
     if (ProgressDialog::wasCanceled()) {
+        qDeleteAll(newFrames);
         return false;
     }
     // update gfx
@@ -3252,6 +3257,7 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     min->frameReferences.swap(newFrameReferences);
     min->modified = true;
 
+    qDeleteAll(newFrames);
     progress.second = QString(QApplication::tr("Upscaled %n subtile(s).", "", amount)).arg(amount);
     dProgress() << progress;
     return true;

@@ -130,9 +130,10 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
         fileBuffer.seek(offset.first);
         QByteArray celFrameRawData = fileBuffer.read(offset.second - offset.first);
 
-        D1GfxFrame frame;
-        if (!D1CelFrame::load(frame, celFrameRawData, params)) {
+        D1GfxFrame *frame = new D1GfxFrame();
+        if (!D1CelFrame::load(*frame, celFrameRawData, params)) {
             // TODO: log + add placeholder?
+            delete frame;
             continue;
         }
         gfx.frames.append(frame);
