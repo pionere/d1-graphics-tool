@@ -56,15 +56,17 @@ void Config::loadConfiguration()
     }
 }
 
-void Config::storeConfiguration()
+bool Config::storeConfiguration()
 {
     QString jsonFilePath = Config::getJsonFilePath();
 
     QFile saveJson(jsonFilePath);
-    saveJson.open(QIODevice::WriteOnly);
+    if (!saveJson.open(QIODevice::WriteOnly)) {
+        return false;
+    }
     QJsonDocument saveDoc(theConfig);
     saveJson.write(saveDoc.toJson());
-    saveJson.close();
+    return true;
 }
 
 QJsonValue Config::value(const QString &name)

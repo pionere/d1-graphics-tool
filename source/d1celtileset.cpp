@@ -217,7 +217,7 @@ bool D1CelTileset::save(D1Gfx &gfx, const SaveAsParam &params)
     }
 
     QFile outFile = QFile(filePath);
-    if (!outFile.open(QIODevice::WriteOnly | QFile::Truncate)) {
+    if (!outFile.open(QIODevice::WriteOnly)) {
         dProgressFail() << QApplication::tr("Failed to open file: %1.").arg(filePath);
         return false;
     }
