@@ -197,6 +197,7 @@ private:
 
     int selectedFirstColorIndex = 0;
     int selectedLastColorIndex = 0;
+    int prevSelectedColorIndex = 0;
 
     bool pickingTranslationColor = false;
 
