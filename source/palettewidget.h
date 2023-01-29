@@ -114,6 +114,7 @@ public:
     void initializeDisplayComboBox();
 
     void selectColor(const D1GfxPixel &pixel);
+    D1GfxPixel getCurrentColor(unsigned counter) const;
     void checkTranslationsSelection(QList<quint8> indices);
 
     void addPath(const QString &path, const QString &name);
@@ -196,6 +197,7 @@ private:
 
     int selectedFirstColorIndex = 0;
     int selectedLastColorIndex = 0;
+    int prevSelectedColorIndex = 0;
 
     bool pickingTranslationColor = false;
 

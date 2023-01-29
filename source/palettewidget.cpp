@@ -375,6 +375,16 @@ void PaletteWidget::selectColor(const D1GfxPixel &pixel)
     this->refresh();
 }
 
+D1GfxPixel PaletteWidget::getCurrentColor(unsigned counter) const
+{
+    if (this->selectedFirstColorIndex == COLORIDX_TRANSPARENT) {
+        return D1GfxPixel::transparentPixel();
+    }
+
+    unsigned numColors = this->selectedLastColorIndex - this->selectedFirstColorIndex + 1;
+    return D1GfxPixel::colorPixel(this->selectedFirstColorIndex + (counter % numColors));
+}
+
 void PaletteWidget::checkTranslationsSelection(QList<quint8> indexes)
 {
     int selectionLength = this->selectedLastColorIndex - this->selectedFirstColorIndex + 1;
@@ -495,6 +505,7 @@ void PaletteWidget::ShowContextMenu(const QPoint &pos)
 
 void PaletteWidget::startColorSelection(int colorIndex)
 {
+    this->prevSelectedColorIndex = (this->selectedFirstColorIndex == this->selectedLastColorIndex) ? this->selectedFirstColorIndex : COLORIDX_TRANSPARENT;
     this->selectedFirstColorIndex = colorIndex;
     this->selectedLastColorIndex = colorIndex;
 }
@@ -510,14 +521,23 @@ void PaletteWidget::changeColorSelection(int colorIndex)
 
 void PaletteWidget::finishColorSelection()
 {
-    // If second selected color has an index less than the first one swap them
-    if (this->selectedFirstColorIndex > this->selectedLastColorIndex) {
+    if (this->selectedFirstColorIndex == this->selectedLastColorIndex) {
+        // If only one color is selected which is the same as before -> deselect the colors
+        if (this->prevSelectedColorIndex == this->selectedFirstColorIndex) {
+            this->selectedFirstColorIndex = COLORIDX_TRANSPARENT;
+            this->selectedLastColorIndex = COLORIDX_TRANSPARENT;
+        }
+    } else if (this->selectedFirstColorIndex > this->selectedLastColorIndex) {
+        // If second selected color has an index less than the first one swap them
         std::swap(this->selectedFirstColorIndex, this->selectedLastColorIndex);
     }
 
     this->refresh();
 
     if (this->pickingTranslationColor) {
+        if (this->selectedFirstColorIndex == COLORIDX_TRANSPARENT) {
+            return; // empty selection -> skip
+        }
         // emit selected colors
         QList<quint8> indexes;
         for (int i = this->selectedFirstColorIndex; i <= this->selectedLastColorIndex; i++)

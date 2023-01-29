@@ -87,7 +87,12 @@ MainWindow::MainWindow()
     this->tileMenu.addAction("Delete", this, SLOT(on_actionDel_Tile_triggered()));
     this->ui->menuEdit->addMenu(&this->tileMenu);
 
-    // add Upscale option to 'Edit'
+    // Initialize drawing options of 'Edit'
+    this->ui->menuEdit->addSeparator();
+    this->ui->menuEdit->addAction("Start drawing", this, SLOT(on_actionStart_Draw_triggered()));
+    this->ui->menuEdit->addAction("Stop drawing", this, SLOT(on_actionStop_Draw_triggered()));
+
+    // Initialize upscale option of 'Edit'
     this->ui->menuEdit->addSeparator();
     this->ui->menuEdit->addAction("Upscale", this, SLOT(on_actionUpscale_triggered()));
 
@@ -259,11 +264,28 @@ bool MainWindow::loadBaseTrn(QString trnFilePath)
     return true;
 }
 
-void MainWindow::pixelClicked(const D1GfxPixel &pixel)
+void MainWindow::frameClicked(D1GfxFrame *frame, int x, int y, unsigned counter)
 {
-    this->palWidget->selectColor(pixel);
-    this->trnUniqueWidget->selectColor(pixel);
-    this->trnBaseWidget->selectColor(pixel);
+    if (this->cursor().shape() == Qt::CrossCursor) {
+        // drawing
+        if (frame == nullptr) {
+            return;
+        }
+        D1GfxPixel pixel = this->palWidget->getCurrentColor(counter);
+        if (frame->setPixel(x, y, pixel)) {
+            this->gfx->setModified();
+            // redraw the frame
+            this->colorModified();
+            // rebuild palette hits
+            this->palHits->update();
+        }
+    } else {
+        // picking
+        const D1GfxPixel pixel = frame == nullptr ? D1GfxPixel::transparentPixel() : frame->getPixel(x, y);
+        this->palWidget->selectColor(pixel);
+        this->trnUniqueWidget->selectColor(pixel);
+        this->trnBaseWidget->selectColor(pixel);
+    }
 }
 
 void MainWindow::colorModified()
@@ -531,6 +553,16 @@ void MainWindow::dropEvent(QDropEvent *event)
     }
 }
 
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Escape) {
+        // TODO: ignore if (this->cursor().shape() != Qt::CrossCursor)?
+        this->unsetCursor();
+    }
+
+    QMainWindow::keyPressEvent(event);
+}
+
 void MainWindow::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange) {
@@ -587,10 +619,14 @@ void MainWindow::changeEvent(QEvent *event)
             menuActions[4]->setText(tr("Delete"));
             menuActions[4]->setToolTip(tr("Delete the current tile"));
         }
-        { // (re)translate Upscale option of 'Edit'
+        {
             QList<QAction *> menuActions = this->ui->menuEdit->actions();
-            menuActions.back()->setText(tr("Upscale"));
-            menuActions.back()->setToolTip(tr("Upscale the current graphics"));
+            // (re)translate the drawing options of 'Edit'
+            menuActions[0]->setText(tr("Start drawing"));
+            menuActions[1]->setText(tr("Stop drawing"));
+            // (re)translate the upscale option of 'Edit'
+            menuActions[2]->setText(tr("Upscale"));
+            menuActions[2]->setToolTip(tr("Upscale the current graphics"));
         }
     }
     QMainWindow::changeEvent(event);
@@ -754,7 +790,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->levelCelView->initialize(this->pal, this->gfx, this->min, this->til, this->sol, this->amp, this->tmi);
 
         // Select color when level CEL view clicked
-        QObject::connect(this->levelCelView, &LevelCelView::pixelClicked, this, &MainWindow::pixelClicked);
+        QObject::connect(this->levelCelView, &LevelCelView::frameClicked, this, &MainWindow::frameClicked);
 
         // Refresh palette widgets when frame, subtile of tile is changed
         QObject::connect(this->levelCelView, &LevelCelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
@@ -767,7 +803,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->celView->initialize(this->pal, this->gfx);
 
         // Select color when CEL view clicked
-        QObject::connect(this->celView, &CelView::pixelClicked, this, &MainWindow::pixelClicked);
+        QObject::connect(this->celView, &CelView::frameClicked, this, &MainWindow::frameClicked);
 
         // Refresh palette widgets when frame
         QObject::connect(this->celView, &CelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
@@ -1039,6 +1075,8 @@ void MainWindow::on_actionSaveAs_triggered()
 
 void MainWindow::on_actionClose_triggered()
 {
+    this->on_actionStop_Draw_triggered();
+
     this->undoStack->clear();
 
     MemFree(this->celView);
@@ -1238,6 +1276,16 @@ void MainWindow::on_actionDel_Tile_triggered()
 {
     this->levelCelView->removeCurrentTile();
     this->updateWindow();
+}
+
+void MainWindow::on_actionStart_Draw_triggered()
+{
+    this->setCursor(Qt::CrossCursor);
+}
+
+void MainWindow::on_actionStop_Draw_triggered()
+{
+    this->unsetCursor();
 }
 
 void MainWindow::on_actionUpscale_triggered()

@@ -16,6 +16,7 @@
 - button to apply trn-adjustments of the game (done to normal monster-trns)
 - context menu + menu option to add, insert, delete or replace frames
 - context menu + menu option to create, add, insert, delete or replace tiles and subtiles
+- icon buttons to reset flags of tiles and subtiles or to delete the current tile, subtile or frame (tileset only)
 - drag and drop support for palette and color translation files
 - context menu to undo/redo the modifications of the palette/translation
 - icon buttons to create/load/save palette/translation in place
@@ -24,8 +25,12 @@
 - option to limit the range of the exported items
 - support TMI metadata
 - support upscaling of assets
+- added basic drawing feature
 - added usage report for frames and subtiles of tilesets
+- added consistency checks for AMP, SOL and TMI flags
 - added jobs to cleanup tilesets
+- language is selectable in the options menu
+- background (+ transparent color) of the main view is configurable
 
 ### Fixed
 - memory leaks
