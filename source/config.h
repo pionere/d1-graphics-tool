@@ -25,7 +25,7 @@ private:
 
 public:
     static void loadConfiguration();
-    static void storeConfiguration();
+    static bool storeConfiguration();
 
     static QString getLocale()
     {

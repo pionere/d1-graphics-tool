@@ -21,7 +21,7 @@ void Config::loadConfiguration()
     // If configuration file exists load it otherwise create it
     if (QFile::exists(jsonFilePath)) {
         QFile loadJson(jsonFilePath);
-        loadJson.open(QIODevice::ReadOnly);
+        loadJson.open(QIODevice::ReadOnly | QIODevice::Text);
         QJsonDocument loadJsonDoc = QJsonDocument::fromJson(loadJson.readAll());
         theConfig = loadJsonDoc.object();
         loadJson.close();
@@ -56,15 +56,17 @@ void Config::loadConfiguration()
     }
 }
 
-void Config::storeConfiguration()
+bool Config::storeConfiguration()
 {
     QString jsonFilePath = Config::getJsonFilePath();
 
     QFile saveJson(jsonFilePath);
-    saveJson.open(QIODevice::WriteOnly);
+    if (!saveJson.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        return false;
+    }
     QJsonDocument saveDoc(theConfig);
     saveJson.write(saveDoc.toJson());
-    saveJson.close();
+    return true;
 }
 
 QJsonValue Config::value(const QString &name)

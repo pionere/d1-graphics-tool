@@ -2,6 +2,7 @@
 
 #include <QColorDialog>
 #include <QDir>
+#include <QMessageBox>
 
 #include "config.h"
 #include "ui_settingsdialog.h"
@@ -159,7 +160,10 @@ void SettingsDialog::on_settingsOkButton_clicked()
     QColor palSelectionBorderColor = QColor(this->ui->paletteSelectionBorderColorLineEdit->text());
     Config::setPaletteSelectionBorderColor(palSelectionBorderColor.name());
 
-    Config::storeConfiguration();
+    if (!Config::storeConfiguration()) {
+        QMessageBox::critical(this, tr("Error"), tr("Failed to store the config file in the application's directory."));
+        return;
+    }
 
     emit this->configurationSaved();
 
