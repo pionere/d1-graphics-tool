@@ -114,6 +114,7 @@ private:
     bool loadBaseTrn(QString trnfilePath);
 
     void frameClicked(D1GfxFrame *frame, int x, int y, unsigned counter);
+    void frameModified();
     void colorModified();
     void reloadConfig();
 
