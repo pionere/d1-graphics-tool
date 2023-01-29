@@ -145,9 +145,10 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
                 frameType = guessFrameType(celFrameRawData);
             }
         }
-        D1GfxFrame frame;
-        if (!D1CelTilesetFrame::load(frame, frameType, celFrameRawData, params)) {
+        D1GfxFrame *frame = new D1GfxFrame();
+        if (!D1CelTilesetFrame::load(*frame, frameType, celFrameRawData, params)) {
             // TODO: log + add placeholder?
+            delete frame;
             continue;
         }
         gfx.frames.append(frame);

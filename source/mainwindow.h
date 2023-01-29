@@ -51,6 +51,32 @@ namespace Ui {
 class MainWindow;
 }
 
+typedef struct FramePixel {
+    FramePixel(int x, int y, D1GfxPixel p);
+
+    int x;
+    int y;
+    D1GfxPixel pixel;
+} FramePixel;
+
+class EditFrameCommand : public QObject, public QUndoCommand {
+    Q_OBJECT
+
+public:
+    explicit EditFrameCommand(D1GfxFrame *frame, int x, int y, D1GfxPixel newPixel);
+    ~EditFrameCommand() = default;
+
+    void undo() override;
+    void redo() override;
+
+signals:
+    void modified();
+
+private:
+    QPointer<D1GfxFrame> frame;
+    QList<FramePixel> modPixels;
+};
+
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -90,6 +116,7 @@ private:
     bool loadBaseTrn(QString trnfilePath);
 
     void frameClicked(D1GfxFrame *frame, int x, int y, unsigned counter);
+    void frameModified();
     void colorModified();
     void reloadConfig();
 

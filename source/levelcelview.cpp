@@ -1099,18 +1099,20 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {
         bool clipped = false, palMod;
-        D1GfxFrame frame;
+        D1GfxFrame *frame = new D1GfxFrame();
         D1Pal basePal = D1Pal(*this->pal);
-        bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
+        bool success = D1Pcx::load(*frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
         if (!success) {
+            delete frame;
             dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
             return;
         }
-        if (frame.getWidth() != MICRO_WIDTH || frame.getHeight() != MICRO_HEIGHT) {
+        if (frame->getWidth() != MICRO_WIDTH || frame->getHeight() != MICRO_HEIGHT) {
+            delete frame;
             dProgressFail() << tr("The image must be 32px * 32px to be used as a frame.");
             return;
         }
-        LevelTabFrameWidget::selectFrameType(&frame);
+        LevelTabFrameWidget::selectFrameType(frame);
         this->gfx->setFrame(this->currentFrameIndex, frame);
         if (palMod) {
             // update the palette

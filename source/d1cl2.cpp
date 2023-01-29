@@ -273,9 +273,10 @@ bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
 
         QByteArray cl2FrameRawData = fileBuffer.read(cl2FrameSize);
 
-        D1GfxFrame frame;
-        if (!D1Cl2Frame::load(frame, cl2FrameRawData, params)) {
+        D1GfxFrame *frame = new D1GfxFrame();
+        if (!D1Cl2Frame::load(*frame, cl2FrameRawData, params)) {
             // TODO: log + add placeholder?
+            delete frame;
             continue;
         }
         gfx.frames.append(frame);
