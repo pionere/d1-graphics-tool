@@ -497,7 +497,7 @@ void PaletteWidget::ShowContextMenu(const QPoint &pos)
     cursor++;
     actions[cursor].setText(tr("Copy"));
     actions[cursor].setToolTip(tr("Copy the selected colors to the clipboard"));
-    actions[cursor].setShortcut(QKeySequence(Qt::CTRL + Qt::Key_C));
+    actions[cursor].setShortcut(QKeySequence::Copy);
     QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionCopy_triggered()));
     actions[cursor].setEnabled(this->selectedFirstColorIndex != COLORIDX_TRANSPARENT);
     contextMenu.addAction(&actions[cursor]);
@@ -505,7 +505,7 @@ void PaletteWidget::ShowContextMenu(const QPoint &pos)
     cursor++;
     actions[cursor].setText(tr("Paste"));
     actions[cursor].setToolTip(tr("Paste the colors from the clipboard to the palette"));
-    actions[cursor].setShortcut(QKeySequence(Qt::CTRL + Qt::Key_V));
+    actions[cursor].setShortcut(QKeySequence::Paste);
     QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionPaste_triggered()));
     actions[cursor].setEnabled(!this->isTrn && !clipboardToColors().isEmpty());
     contextMenu.addAction(&actions[cursor]);
@@ -1100,12 +1100,12 @@ void PaletteWidget::on_monsterTrnPushButton_clicked()
 
 void PaletteWidget::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_C && (event->modifiers() & Qt::ControlModifier)) {
+    if (event->matches(QKeySequence::Copy)) {
         if (this->selectedFirstColorIndex != COLORIDX_TRANSPARENT) {
             this->on_actionCopy_triggered();
         }
     }
-    if (event->key() == Qt::Key_V && (event->modifiers() & Qt::ControlModifier)) {
+    if (event->matches(QKeySequence::Paste)) {
         this->on_actionPaste_triggered();
     }
 
