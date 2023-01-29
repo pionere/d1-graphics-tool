@@ -34,7 +34,9 @@ private:
     quint8 paletteIndex = 0;
 };
 
-class D1GfxFrame {
+class D1GfxFrame : public QObject {
+    Q_OBJECT
+
     friend class D1Cel;
     friend class D1CelFrame;
     friend class D1Cl2;

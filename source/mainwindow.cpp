@@ -28,6 +28,46 @@
 #include "d1cl2.h"
 #include "ui_mainwindow.h"
 
+EditFrameCommand::EditFrameCommand(D1GfxFrame *f, int x, int y, D1GfxPixel newPixel)
+    : QUndoCommand(nullptr)
+    , frame(f)
+{
+    FramePixel fp;
+    fp.x = x;
+    fp.y = y;
+    fp.pixel = newPixel;
+
+    this->modPixels.append(fp);
+}
+
+void EditFrameCommand::undo()
+{
+    if (this->frame.isNull()) {
+        this->setObsolete(true);
+        return;
+    }
+
+    bool change = false;
+    for (int i = 0; i < this->modPixels.count(); i++) {
+        FramePixel &fp = this->modPixels[i];
+        D1GfxPixel pixel = this->frame->getPixel(fp.x, fp.y);
+        if (pixel != fp.pixel) {
+            this->frame->setPixel(fp.x, fp.y, fp.pixel);
+            fp.pixel = pixel;
+            change = true;
+        }
+    }
+
+    if (change) {
+        emit this->modified();
+    }
+}
+
+void EditFrameCommand::redo()
+{
+    this->undo();
+}
+
 MainWindow::MainWindow()
     : QMainWindow(nullptr)
     , ui(new Ui::MainWindow())
@@ -185,7 +225,6 @@ void MainWindow::updateWindow()
     // rebuild palette hits
     this->palHits->update();
     this->palWidget->refresh();
-    this->undoStack->clear();
     // update menu options
     bool hasFrame = this->gfx->getFrameCount() != 0;
     this->frameMenu.actions()[2]->setEnabled(hasFrame); // replace frame
@@ -272,13 +311,13 @@ void MainWindow::frameClicked(D1GfxFrame *frame, int x, int y, unsigned counter)
             return;
         }
         D1GfxPixel pixel = this->palWidget->getCurrentColor(counter);
-        if (frame->setPixel(x, y, pixel)) {
-            this->gfx->setModified();
-            // redraw the frame
-            this->colorModified();
-            // rebuild palette hits
-            this->palHits->update();
-        }
+
+        // Build frame editing command and connect it to the current main window widget
+        // to update the palHits and CEL views when undo/redo is performed
+        EditFrameCommand *command = new EditFrameCommand(frame, x, y, pixel);
+        QObject::connect(command, &EditFrameCommand::modified, this, &MainWindow::frameModified);
+
+        this->undoStack->push(command);
     } else {
         // picking
         const D1GfxPixel pixel = frame == nullptr ? D1GfxPixel::transparentPixel() : frame->getPixel(x, y);
@@ -286,6 +325,15 @@ void MainWindow::frameClicked(D1GfxFrame *frame, int x, int y, unsigned counter)
         this->trnUniqueWidget->selectColor(pixel);
         this->trnBaseWidget->selectColor(pixel);
     }
+}
+
+void MainWindow::frameModified()
+{
+    this->gfx->setModified();
+    // redraw the frame
+    this->colorModified();
+    // rebuild palette hits
+    this->palHits->update();
 }
 
 void MainWindow::colorModified()

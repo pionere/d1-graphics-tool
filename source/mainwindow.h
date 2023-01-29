@@ -51,6 +51,30 @@ namespace Ui {
 class MainWindow;
 }
 
+typedef struct FramePixel {
+    int x;
+    int y;
+    D1GfxPixel pixel;
+} FramePixel;
+
+class EditFrameCommand : public QObject, public QUndoCommand {
+    Q_OBJECT
+
+public:
+    explicit EditFrameCommand(D1GfxFrame *frame, int x, int y, D1GfxPixel newPixel);
+    ~EditFrameCommand() = default;
+
+    void undo() override;
+    void redo() override;
+
+signals:
+    void modified();
+
+private:
+    QPointer<D1GfxFrame> frame;
+    QList<FramePixel> modPixels;
+};
+
 class MainWindow : public QMainWindow {
     Q_OBJECT
 

@@ -185,6 +185,8 @@ private slots:
     void on_translationClearPushButton_clicked();
     void on_monsterTrnPushButton_clicked();
 
+    void keyPressEvent(QKeyEvent *event);
+
 private:
     QUndoStack *undoStack;
     Ui::PaletteWidget *ui;
