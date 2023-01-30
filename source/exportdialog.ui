@@ -109,17 +109,11 @@
       </item>
       <item row="0" column="1">
        <widget class="QComboBox" name="contentTypeComboBox">
-        <property name="minimumSize">
-         <size>
-          <width>90</width>
-          <height>0</height>
-         </size>
+        <property name="minimumWidth">
+         <number>90</number>
         </property>
-        <property name="maximumSize">
-         <size>
-          <width>90</width>
-          <height>16777215</height>
-         </size>
+        <property name="maximumWidth">
+         <number>90</number>
         </property>
         <item>
          <property name="text">
@@ -159,17 +153,11 @@
       </item>
       <item row="1" column="1">
        <widget class="QComboBox" name="contentPlacementComboBox">
-        <property name="minimumSize">
-         <size>
-          <width>90</width>
-          <height>0</height>
-         </size>
+        <property name="minimumWidth">
+         <number>90</number>
         </property>
-        <property name="maximumSize">
-         <size>
-          <width>90</width>
-          <height>16777215</height>
-         </size>
+        <property name="maximumWidth">
+         <number>90</number>
         </property>
         <item>
          <property name="text">
@@ -204,17 +192,11 @@
       </item>
       <item row="2" column="1">
        <widget class="QWidget" name="rangeFieldsWidget" native="true">
-        <property name="minimumSize">
-         <size>
-          <width>120</width>
-          <height>0</height>
-         </size>
+        <property name="minimumWidth">
+         <number>120</number>
         </property>
-        <property name="maximumSize">
-         <size>
-          <width>120</width>
-          <height>16777215</height>
-         </size>
+        <property name="maximumWidth">
+         <number>120</number>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <property name="spacing">
@@ -250,17 +232,11 @@
          </item>
          <item>
           <widget class="QLabel" name="contentRangeSepLabel">
-           <property name="minimumSize">
-            <size>
-             <width>8</width>
-             <height>0</height>
-            </size>
+           <property name="minimumWidth">
+            <number>8</number>
            </property>
-           <property name="maximumSize">
-            <size>
-             <width>8</width>
-             <height>16777215</height>
-            </size>
+           <property name="maximumWidth">
+            <number>8</number>
            </property>
            <property name="text">
             <string notr="true">-</string>

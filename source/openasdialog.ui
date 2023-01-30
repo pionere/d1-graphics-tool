@@ -202,12 +202,6 @@
    </item>
    <item>
     <widget class="QGroupBox" name="tilSettingsGroupBox">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>0</height>
-      </size>
-     </property>
      <property name="title">
       <string>Tileset Settings</string>
      </property>
