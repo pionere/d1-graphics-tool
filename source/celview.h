@@ -81,6 +81,7 @@ public:
 
     void upscale(const UpscaleParam &params);
 
+    void updateLabel();
     void displayFrame();
 
 signals:

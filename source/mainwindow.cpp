@@ -334,18 +334,26 @@ void MainWindow::frameClicked(D1GfxFrame *frame, int x, int y, unsigned counter)
 void MainWindow::frameModified()
 {
     this->gfx->setModified();
-    // redraw the frame
-    this->colorModified();
+    // update the view
+    if (this->celView != nullptr) {
+        this->celView->updateLabel();
+        this->celView->displayFrame();
+    }
+    if (this->levelCelView != nullptr) {
+        this->levelCelView->updateLabel();
+        this->levelCelView->displayFrame();
+    }
     // rebuild palette hits
     this->palHits->update();
 }
 
 void MainWindow::colorModified()
 {
+    if (this->celView != nullptr) {
+        this->celView->displayFrame();
+    }
     if (this->levelCelView != nullptr) {
         this->levelCelView->displayFrame();
-    } else {
-        this->celView->displayFrame();
     }
 }
 
