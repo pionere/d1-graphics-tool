@@ -2,7 +2,7 @@
 <ui version="4.0">
  <class>ExportDialog</class>
  <widget class="QDialog" name="ExportDialog">
-  <property name="minimumSize">
+  <property name="sizeHint">
    <size>
     <width>600</width>
     <height>0</height>
