@@ -142,7 +142,7 @@ bool UpscaleTaskDialog::loadCustomPal(const char *path, const char *colorsStr, c
 void UpscaleTaskDialog::upscaleCel(const QString &path, D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams)
 {
     QString celFilePath = params.assetsFolder + "/" + path; // "f:\\MPQE\\Work\\%s"
-    QString outFilePath = params.outFolder + "/" + path; // "f:\\outcel\\%s"
+    QString outFilePath = params.outFolder + "/" + path;    // "f:\\outcel\\%s"
 
     // Loading CEL
     D1Gfx gfx;
@@ -164,7 +164,7 @@ void UpscaleTaskDialog::upscaleCel(const QString &path, D1Pal *pal, const Upscal
 void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams)
 {
     QString cl2FilePath = params.assetsFolder + "/" + path; // "f:\\MPQE\\Work\\%s"
-    QString outFilePath = params.outFolder + "/" + path; // "f:\\outcel\\%s"
+    QString outFilePath = params.outFolder + "/" + path;    // "f:\\outcel\\%s"
 
     // Loading CL2
     D1Gfx gfx;
@@ -186,7 +186,7 @@ void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const Upscal
 void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams)
 {
     QString celFilePath = params.assetsFolder + "/" + path; // "f:\\MPQE\\Work\\%s"
-    QString outFilePath = params.outFolder + "/" + path; // "f:\\outcel\\%s"
+    QString outFilePath = params.outFolder + "/" + path;    // "f:\\outcel\\%s"
 
     QString basePath = celFilePath;
     basePath.chop(4);
@@ -214,7 +214,7 @@ void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const Upscal
         return;
     }
     // Loading CEL
-    if (!D1CelTileset::load(gfx, celFrameTypes, celFilePath, params)) {
+    if (!D1CelTileset::load(gfx, celFrameTypes, celFilePath, opParams)) {
         dProgressErr() << tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(celFilePath));
         return;
     }
