@@ -15,31 +15,6 @@ constexpr int lengthof(T (&arr)[N])
     return N;
 }
 
-typedef enum dungeon_type {
-    DTYPE_TOWN,
-    DTYPE_CATHEDRAL,
-    DTYPE_CATACOMBS,
-    DTYPE_CAVES,
-    DTYPE_HELL,
-    DTYPE_CRYPT,
-    DTYPE_NEST,
-    DTYPE_NONE,
-    NUM_DUNGEON_TYPES,
-} dungeon_type;
-
-const int fixColors[NUM_DUNGEON_TYPES][2] = {
-    // clang-format off
-/* DTYPE_TOWN      */ { -1, -1 },
-/* DTYPE_CATHEDRAL */ { -1, -1 },
-/* DTYPE_CATACOMBS */ { -1, -1 },
-/* DTYPE_CAVES     */ {  1, 31 },
-/* DTYPE_HELL      */ {  1, 31 },
-/* DTYPE_CRYPT     */ {  1, 31 },
-/* DTYPE_NEST      */ {  1, 15 },
-/* DTYPE_NONE      */ { -1, -1 },
-    // clang-format on
-};
-
 UpscaleTaskDialog::UpscaleTaskDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::UpscaleTaskDialog())
@@ -56,13 +31,6 @@ void UpscaleTaskDialog::initialize(D1Gfx *gfx)
 {
     if (this->ui->multiplierLineEdit->text().isEmpty()) {
         this->ui->multiplierLineEdit->setText("2");
-
-        if (gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
-            this->ui->antiAliasingModeComboBox->setCurrentIndex(1); // ANTI_ALIASING_MODE::TILESET
-        }
-
-        this->ui->firstFixColorLineEdit->setText("-1");
-        this->ui->lastFixColorLineEdit->setText("-1");
     }
 }
 
