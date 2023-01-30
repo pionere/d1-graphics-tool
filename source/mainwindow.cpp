@@ -743,7 +743,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         // Loading SOL
         this->sol = new D1Sol();
         if (!this->sol->load(solFilePath)) {
-            dProgressFail() << tr("Failed loading SOL file: %1.").arg(minFilePath);
+            dProgressFail() << tr("Failed loading SOL file: %1.").arg(QDir::toNativeSeparators(solFilePath));
             return;
         }
 
@@ -751,14 +751,14 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->min = new D1Min();
         std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
         if (!this->min->load(minFilePath, this->gfx, this->sol, celFrameTypes, params)) {
-            dProgressFail() << tr("Failed loading MIN file: %1.").arg(minFilePath);
+            dProgressFail() << tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath));
             return;
         }
 
         // Loading TIL
         this->til = new D1Til();
         if (!this->til->load(tilFilePath, this->min)) {
-            dProgressFail() << tr("Failed loading TIL file: %1.").arg(tilFilePath);
+            dProgressFail() << tr("Failed loading TIL file: %1.").arg(QDir::toNativeSeparators(tilFilePath));
             return;
         }
 
@@ -769,7 +769,7 @@ void MainWindow::openFile(const OpenAsParam &params)
             ampFilePath = basePath + ".amp";
         }
         if (!this->amp->load(ampFilePath, this->til->getTileCount(), params)) {
-            dProgressFail() << tr("Failed loading AMP file: %1.").arg(ampFilePath);
+            dProgressFail() << tr("Failed loading AMP file: %1.").arg(QDir::toNativeSeparators(ampFilePath));
             return;
         }
 
@@ -780,23 +780,23 @@ void MainWindow::openFile(const OpenAsParam &params)
             tmiFilePath = basePath + ".tmi";
         }
         if (!this->tmi->load(tmiFilePath, this->sol, params)) {
-            dProgressFail() << tr("Failed loading TMI file: %1.").arg(tmiFilePath);
+            dProgressFail() << tr("Failed loading TMI file: %1.").arg(QDir::toNativeSeparators(tmiFilePath));
             return;
         }
 
         // Loading CEL
         if (!D1CelTileset::load(*this->gfx, celFrameTypes, openFilePath, params)) {
-            dProgressFail() << tr("Failed loading Tileset-CEL file: %1.").arg(openFilePath);
+            dProgressFail() << tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(openFilePath));
             return;
         }
     } else if (openFilePath.toLower().endsWith(".cel")) {
         if (!D1Cel::load(*this->gfx, openFilePath, params)) {
-            dProgressFail() << tr("Failed loading CEL file: %1.").arg(openFilePath);
+            dProgressFail() << tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(openFilePath));
             return;
         }
     } else if (openFilePath.toLower().endsWith(".cl2")) {
         if (!D1Cl2::load(*this->gfx, openFilePath, params)) {
-            dProgressFail() << tr("Failed loading CL2 file: %1.").arg(openFilePath);
+            dProgressFail() << tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(openFilePath));
             return;
         }
     } else {
@@ -983,7 +983,7 @@ void MainWindow::saveFile(const SaveAsParam &params)
     if (this->gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
         if (!filePath.toLower().endsWith("cel")) {
             QMessageBox::StandardButton reply;
-            reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to save as %1? Data conversion is not supported.").arg(filePath), QMessageBox::Yes | QMessageBox::No);
+            reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to save as %1? Data conversion is not supported.").arg(QDir::toNativeSeparators(filePath)), QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) {
                 // Clear loading message from status bar
                 ProgressDialog::done();

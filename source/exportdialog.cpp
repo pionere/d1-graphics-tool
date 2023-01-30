@@ -86,7 +86,7 @@ void ExportDialog::on_outputFolderBrowseButton_clicked()
 static void saveImage(const QImage &image, const QString &path)
 {
     image.save(path);
-    dProgress() << QApplication::tr("%1 created.").arg(path);
+    dProgress() << QApplication::tr("%1 created.").arg(QDir::toNativeSeparators(path));
 }
 
 bool ExportDialog::exportLevelTiles25D()

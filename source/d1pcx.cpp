@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QByteArray>
+#include <QDir>
 #include <QList>
 
 #include "config.h"
@@ -42,7 +43,7 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *ba
     QFile file = QFile(pcxFilePath);
 
     if (!file.open(QIODevice::ReadOnly)) {
-        dProgressErr() << QApplication::tr("Failed to read file: %1.").arg(pcxFilePath);
+        dProgressErr() << QApplication::tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(pcxFilePath));
         return false;
     }
 

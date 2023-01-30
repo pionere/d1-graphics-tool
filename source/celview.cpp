@@ -314,7 +314,7 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
         if (!D1Pcx::load(*frame, imagefilePath, clipped, this->pal, this->gfx->getPalette(), &palMod)) {
             this->gfx->removeFrame(index);
             this->gfx->setModified(wasModified);
-            QString msg = tr("Failed to load file: %1.").arg(imagefilePath);
+            QString msg = tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
             if (mode != IMAGE_FILE_MODE::AUTO) {
                 dProgressFail() << msg;
             } else {
@@ -328,7 +328,7 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
     }
     QImageReader reader = QImageReader(imagefilePath);
     if (!reader.canRead()) {
-        QString msg = tr("Failed to read file: %1.").arg(imagefilePath);
+        QString msg = tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
         if (mode != IMAGE_FILE_MODE::AUTO) {
             dProgressFail() << msg;
         } else {
@@ -354,7 +354,7 @@ void CelView::addToCurrentFrame(const QString &imagefilePath)
         D1Pal basePal = D1Pal(*this->pal);
         bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
         if (!success) {
-            dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
+            dProgressFail() << tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
             return;
         }
         D1GfxFrame *resFrame = this->gfx->addToFrame(this->currentFrameIndex, frame);
@@ -375,7 +375,7 @@ void CelView::addToCurrentFrame(const QString &imagefilePath)
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        dProgressFail() << tr("Failed to read file: %1.").arg(imagefilePath);
+        dProgressFail() << tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
         return;
     }
 
@@ -397,7 +397,7 @@ void CelView::replaceCurrentFrame(const QString &imagefilePath)
         bool success = D1Pcx::load(*frame, imagefilePath, clipped, this->pal, this->gfx->getPalette(), &palMod);
         if (!success) {
             delete frame;
-            dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
+            dProgressFail() << tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
             return;
         }
         this->gfx->setFrame(this->currentFrameIndex, frame);
@@ -415,7 +415,7 @@ void CelView::replaceCurrentFrame(const QString &imagefilePath)
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        dProgressFail() << tr("Failed to read file: %1.").arg(imagefilePath);
+        dProgressFail() << tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
         return;
     }
 
