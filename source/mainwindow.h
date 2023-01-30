@@ -24,6 +24,7 @@
 #include "saveasdialog.h"
 #include "settingsdialog.h"
 #include "upscaledialog.h"
+#include "upscaletaskdialog.h"
 
 #define D1_GRAPHICS_TOOL_TITLE "Diablo 1 Graphics Tool"
 #define D1_GRAPHICS_TOOL_VERSION "0.5.0"
@@ -195,6 +196,8 @@ private slots:
     void on_actionSave_Translation_Base_as_triggered();
     void on_actionClose_Translation_Base_triggered();
 
+    void on_actionUpscaleTask_triggered();
+
     void on_actionAbout_triggered();
     void on_actionAbout_Qt_triggered();
 
@@ -237,6 +240,7 @@ private:
     SettingsDialog settingsDialog = SettingsDialog(this);
     ExportDialog exportDialog = ExportDialog(this);
     UpscaleDialog upscaleDialog = UpscaleDialog(this);
+    UpscaleTaskDialog upscaleTaskDialog = UpscaleTaskDialog(this);
 
     D1Pal *pal = nullptr;
     D1Trn *trnUnique = nullptr;

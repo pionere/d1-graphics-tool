@@ -172,6 +172,15 @@
     <addaction name="actionSave_Translation_Base_as"/>
     <addaction name="actionClose_Translation_Base"/>
    </widget>
+   <widget class="QMenu" name="menuTasks">
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <property name="title">
+     <string>Tasks</string>
+    </property>
+    <addaction name="actionUpscaleTask"/>
+   </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>Edit</string>
@@ -184,6 +193,7 @@
    <addaction name="menuEdit"/>
    <addaction name="menuTileset"/>
    <addaction name="menuPalette"/>
+   <addaction name="menuTasks"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar">
@@ -279,6 +289,14 @@
    </property>
    <property name="shortcut">
     <string notr="true">Ctrl+E</string>
+   </property>
+  </action>
+  <action name="actionUpscaleTask">
+   <property name="text">
+    <string>Upscale</string>
+   </property>
+   <property name="toolTip">
+    <string>Upscale the assets of Diablo 1 / Hellfire</string>
    </property>
   </action>
   <action name="actionSettings">

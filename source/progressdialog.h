@@ -39,6 +39,9 @@ public:
     static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int maxValue);
     static void done(bool forceOpen = false);
 
+    static void startSub(int maxValue);
+    static void doneSub();
+
     static bool wasCanceled();
     static void incValue();
 
@@ -67,6 +70,7 @@ private:
     Ui::ProgressDialog *ui;
 
     int textVersion;
+    int barCount;
     PROGRESS_STATE status = PROGRESS_STATE::DONE;
     PROGRESS_TEXT_MODE textMode = PROGRESS_TEXT_MODE::NORMAL;
 };

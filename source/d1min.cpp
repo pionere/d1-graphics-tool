@@ -137,6 +137,17 @@ bool D1Min::save(const SaveAsParam &params)
     //    upscaled = params.upscaled == SAVE_UPSCALED_TYPE::TRUE;
     //    this->gfx->setUpscaled(upscaled);
     // }
+    if (!upscaled) {
+        if (this->subtileHeight != 5 && this->subtileHeight && != 8) {
+            dProgressWarn() << tr("Subtile height is not supported by the game (Diablo 1/DevilutionX).");
+        }
+    } else {
+        if (this->subtileHeight > 8) {
+            dProgressWarn() << tr("Subtile height is not supported by the game (Diablo 1/DevilutionX).");
+        } else if (this->subtileHeight < 8) {
+            dProgressWarn() << tr("Empty subtiles are added to the saved document to match the required height of the game (DevilutionX).");
+        }
+    }
 
     // write to file
     QDataStream out(&outFile);
@@ -156,6 +167,17 @@ bool D1Min::save(const SaveAsParam &params)
                 int idx = subtileNumberOfCelFrames - width - (j / width) * width + j % width;
                 writeWord = frameReferencesList[idx];
             }
+            out << writeWord;
+        }
+        if (!upscaled) {
+            continue;
+        }
+        // if (subtileNumberOfCelFrames >= this->subtileWidth * 8) {
+        if (this->subtileHeight >= 8) {
+            continue;
+        }
+        quint16 writeWord = 0;
+        for (int j = subtileNumberOfCelFrames; j < this->subtileWidth * 8; j++) {
             out << writeWord;
         }
     }
