@@ -111,7 +111,8 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
     }
 
     gfx.groupFrameIndices.clear();
-    gfx.groupFrameIndices.append(qMakePair(0, numFrames - 1));
+    if (numFrames > 0)
+        gfx.groupFrameIndices.append(qMakePair(0, numFrames - 1));
 
     gfx.type = D1CEL_TYPE::V1_LEVEL;
 
