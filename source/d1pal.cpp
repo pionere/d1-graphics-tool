@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QDataStream>
+#include <QDir>
 #include <QMessageBox>
 #include <QTextStream>
 

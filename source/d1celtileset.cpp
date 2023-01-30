@@ -5,6 +5,7 @@
 #include <QByteArray>
 #include <QDataStream>
 #include <QDebug>
+#include <QDir>
 #include <QMessageBox>
 
 #include "d1celtilesetframe.h"

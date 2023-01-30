@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QByteArray>
+#include <QDir>
 #include <QList>
 
 #include "config.h"

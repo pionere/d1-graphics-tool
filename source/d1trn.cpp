@@ -1,6 +1,7 @@
 #include "d1trn.h"
 
 #include <QApplication>
+#include <QDir>
 #include <QFile>
 #include <QMessageBox>
 
