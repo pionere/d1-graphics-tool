@@ -2,6 +2,15 @@
 <ui version="4.0">
  <class>OpenAsDialog</class>
  <widget class="QDialog" name="OpenAsDialog">
+  <property name="minimumSizeHint">
+   <size>
+    <width>600</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Ignored"/>
+  </property>
   <property name="windowTitle">
    <string>Open As</string>
   </property>
