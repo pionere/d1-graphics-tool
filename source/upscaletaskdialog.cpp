@@ -618,7 +618,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-            dProgress() << QString(QApplication::tr("Upscaling botched tileset %1.")).arg(QDir::toNativeSeparators(botchedMINs[i][0]));
+            dProgress() << QString(QApplication::tr("Upscaling botched tileset %1.")).arg(QDir::toNativeSeparators(botchedMINs[i].path));
             // ProgressDialog::incValue();
 
             D1Pal pal;
