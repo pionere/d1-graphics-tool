@@ -324,7 +324,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-            dProgress() << QString(QApplication::tr("Upscaling object CEL %1.")).arg(QDir::toNativeSeparators(celPalPairs[i][0]));
+            dProgress() << QString(QApplication::tr("Upscaling object CEL %1.")).arg(QDir::toNativeSeparators(celPalPairs[i].path));
             // ProgressDialog::incValue();
 
             D1Pal pal;
@@ -363,7 +363,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-            dProgress() << QString(QApplication::tr("Upscaling special CEL %1.")).arg(QDir::toNativeSeparators(celPalPairs[i][0]));
+            dProgress() << QString(QApplication::tr("Upscaling special CEL %1.")).arg(QDir::toNativeSeparators(celPalPairs[i].path));
             // ProgressDialog::incValue();
 
             D1Pal pal;
@@ -580,7 +580,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-            dProgress() << QString(QApplication::tr("Upscaling tileset %1.")).arg(QDir::toNativeSeparators(celPalPairs[i][0]));
+            dProgress() << QString(QApplication::tr("Upscaling tileset %1.")).arg(QDir::toNativeSeparators(celPalPairs[i].path));
             // ProgressDialog::incValue();
 
             D1Pal pal;
