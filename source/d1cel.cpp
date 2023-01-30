@@ -49,7 +49,9 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
     if (type == D1CEL_TYPE::V1_REGULAR) {
         // Going through all frames of the CEL
         gfx.groupFrameIndices.clear();
-        gfx.groupFrameIndices.append(qMakePair(0, firstDword - 1));
+        if (firstDword > 0) {
+            gfx.groupFrameIndices.append(qMakePair(0, firstDword - 1));
+        }
         for (unsigned int i = 1; i <= firstDword; i++) {
             fileBuffer.seek(i * 4);
             quint32 celFrameStartOffset;
@@ -100,6 +102,9 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
             quint32 celFrameCount;
             in >> celFrameCount;
 
+            if (celFrameCount == 0) {
+                continue;
+            }
             gfx.groupFrameIndices.append(
                 qMakePair(frameOffsets.size(),
                     frameOffsets.size() + celFrameCount - 1));
