@@ -54,7 +54,7 @@ void UpscaleTaskDialog::on_assetsFolderBrowseButton_clicked()
     if (dirPath.isEmpty())
         return;
 
-    this->ui->assetsFolderEdit->setText(dirPath);
+    this->ui->assetsFolderLineEdit->setText(dirPath);
 }
 
 void UpscaleTaskDialog::on_outputFolderBrowseButton_clicked()
@@ -65,7 +65,7 @@ void UpscaleTaskDialog::on_outputFolderBrowseButton_clicked()
     if (dirPath.isEmpty())
         return;
 
-    this->ui->outputFolderEdit->setText(dirPath);
+    this->ui->outputFolderLineEdit->setText(dirPath);
 }
 
 void UpscaleTaskDialog::on_upscaleButton_clicked()
@@ -86,7 +86,7 @@ void UpscaleTaskDialog::on_upscaleButton_clicked()
         QMessageBox::warning(this, tr("Warning"), tr("Assets folder is missing, please set the assets folder."));
         return;
     }
-    params.outFolder = this->ui->outFolderLineEdit->text();
+    params.outFolder = this->ui->outputFolderLineEdit->text();
     if (params.outFolder.isEmpty()) {
         QMessageBox::warning(this, tr("Warning"), tr("Output folder is missing, please choose an output folder."));
         return;
@@ -141,21 +141,21 @@ bool UpscaleTaskDialog::loadCustomPal(const char *path, const char *colorsStr, c
 
 void UpscaleTaskDialog::upscaleCel(const QString &path, D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams)
 {
-    QString path = params.assetsFolder + "/" + path; // "f:\\MPQE\\Work\\%s"
-    QString outPath = params.outFolder + "/" + path; // "f:\\outcel\\%s"
+    QString celFilePath = params.assetsFolder + "/" + path; // "f:\\MPQE\\Work\\%s"
+    QString outFilePath = params.outFolder + "/" + path; // "f:\\outcel\\%s"
 
     // Loading CEL
     D1Gfx gfx;
     gfx.setPalette(pal);
-    if (!D1Cel::load(gfx, path, opParams)) {
-        dProgressErr() << QApplication::tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(path));
+    if (!D1Cel::load(gfx, celFilePath, opParams)) {
+        dProgressErr() << QApplication::tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(celFilePath));
         return;
     }
     // upscale
     ProgressDialog::startSub(gfx.getFrameCount() + 1);
     if (Upscaler::upscaleGfx(&gfx, upParams)) {
         // store the result
-        saParams.celFilePath = outPath;
+        saParams.celFilePath = outFilePath;
         D1Cel::save(gfx, saParams);
     }
     ProgressDialog::doneSub();
@@ -163,21 +163,21 @@ void UpscaleTaskDialog::upscaleCel(const QString &path, D1Pal *pal, const Upscal
 
 void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams)
 {
-    QString path = params.assetsFolder + "/" + path; // "f:\\MPQE\\Work\\%s"
-    QString outPath = params.outFolder + "/" + path; // "f:\\outcel\\%s"
+    QString cl2FilePath = params.assetsFolder + "/" + path; // "f:\\MPQE\\Work\\%s"
+    QString outFilePath = params.outFolder + "/" + path; // "f:\\outcel\\%s"
 
     // Loading CL2
     D1Gfx gfx;
     gfx.setPalette(pal);
-    if (!D1Cl2::load(gfx, path, opParams)) {
-        dProgressErr() << QApplication::tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(path));
+    if (!D1Cl2::load(gfx, cl2FilePath, opParams)) {
+        dProgressErr() << QApplication::tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(cl2FilePath));
         return;
     }
     // upscale
     ProgressDialog::startSub(gfx.getFrameCount() + 1);
     if (Upscaler::upscaleGfx(&gfx, upParams)) {
         // store the result
-        saParams.celFilePath = outPath;
+        saParams.celFilePath = outFilePath;
         D1Cl2::save(gfx, saParams);
     }
     ProgressDialog::doneSub();
@@ -185,16 +185,16 @@ void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const Upscal
 
 void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams)
 {
-    QString path = params.assetsFolder + "/" + path; // "f:\\MPQE\\Work\\%s"
-    QString outPath = params.outFolder + "/" + path; // "f:\\outcel\\%s"
+    QString celFilePath = params.assetsFolder + "/" + path; // "f:\\MPQE\\Work\\%s"
+    QString outFilePath = params.outFolder + "/" + path; // "f:\\outcel\\%s"
 
-    QString basePath = path;
+    QString basePath = celFilePath;
     basePath.chop(4);
     QString minFilePath = basePath + ".min";
     QString solFilePath = basePath + ".sol";
 
     // QString outMinPath = params.outFolder + "/" + celFileInfo.completeBaseName() + ".min"; // "f:\\outcel\\%s"
-    QString outMinPath = outPath;
+    QString outMinPath = outFilePath;
     outMinPath.chop(4);
     outMinPath += ".min";
 
@@ -214,15 +214,15 @@ void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const Upscal
         return;
     }
     // Loading CEL
-    if (!D1CelTileset::load(gfx, celFrameTypes, openFilePath, params)) {
-        dProgressErr() << tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(openFilePath));
+    if (!D1CelTileset::load(gfx, celFrameTypes, celFilePath, params)) {
+        dProgressErr() << tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(celFilePath));
         return;
     }
     // upscale
     ProgressDialog::startSub(min.getSubtileCount() + 1);
     if (Upscaler::upscaleTileset(&gfx, &min, upParams)) {
         // store the result
-        saParams.celFilePath = outPath;
+        saParams.celFilePath = outFilePath;
         D1CelTileset::save(gfx, saParams);
         saParams.minFilePath = outMinPath;
         min.save(saParams);
@@ -428,7 +428,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             { "ui_art\\title.CEL",    "ui_art\\menu.PAL" },
             { "ui_art\\logo.CEL",     "ui_art\\menu.PAL" },
             { "ui_art\\smlogo.CEL",   "ui_art\\menu.PAL" },
-            { "ui_art\\credits.CEL",  "ui_art\\credits.PAL" }
+            { "ui_art\\credits.CEL",  "ui_art\\credits.PAL" },
             { "ui_art\\black.CEL",    "" },
             { "ui_art\\heros.CEL",    "" },
             { "ui_art\\selconn.CEL",  "" },
