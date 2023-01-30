@@ -138,7 +138,7 @@ bool D1Min::save(const SaveAsParam &params)
     //    this->gfx->setUpscaled(upscaled);
     // }
     if (!upscaled) {
-        if (this->subtileHeight != 5 && this->subtileHeight && != 8) {
+        if (this->subtileHeight != 5 && this->subtileHeight != 8) {
             dProgressWarn() << tr("Subtile height is not supported by the game (Diablo 1/DevilutionX).");
         }
     } else {

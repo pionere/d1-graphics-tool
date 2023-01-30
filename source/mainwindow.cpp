@@ -1786,7 +1786,7 @@ void MainWindow::on_actionClose_Translation_Base_triggered()
 
 void MainWindow::on_actionUpscaleTask_triggered()
 {
-    this->upscaleTaskDialog->show();
+    this->upscaleTaskDialog.show();
 }
 
 #if defined(Q_OS_WIN)

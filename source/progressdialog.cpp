@@ -125,7 +125,7 @@ bool ProgressDialog::wasCanceled()
 void ProgressDialog::incValue()
 {
     QProgressBar *currProgressBar;
-    
+
     switch (theDialog->barCount) {
     case 0:
         currProgressBar = theDialog->ui->progressBar_0;

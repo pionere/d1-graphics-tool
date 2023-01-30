@@ -1,11 +1,15 @@
 #include "upscaletaskdialog.h"
 
+#include <QDir>
+
 #include "config.h"
 #include "d1cel.h"
 #include "d1gfx.h"
 #include "d1min.h"
 #include "d1pal.h"
 #include "d1sol.h"
+#include "mainwindow.h"
+#include "progressdialog.h"
 #include "ui_upscaletaskdialog.h"
 #include "upscaler.h"
 
@@ -131,7 +135,7 @@ bool UpscaleTaskDialog::loadCustomPal(const char *path, const char *colorsStr, c
     return true;
 }
 
-bool UpscaleTaskDialog::upscaleCel(const QString &path, D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams)
+void UpscaleTaskDialog::upscaleCel(const QString &path, D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams)
 {
     QString path = params.assetsFolder + "/" + path; // "f:\\MPQE\\Work\\%s"
     QString outPath = params.outFolder + "/" + path; // "f:\\outcel\\%s"
@@ -153,7 +157,7 @@ bool UpscaleTaskDialog::upscaleCel(const QString &path, D1Pal *pal, const Upscal
     ProgressDialog::doneSub();
 }
 
-bool UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams)
+void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams)
 {
     QString path = params.assetsFolder + "/" + path; // "f:\\MPQE\\Work\\%s"
     QString outPath = params.outFolder + "/" + path; // "f:\\outcel\\%s"
@@ -228,8 +232,8 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
     defaultPal.load(D1Pal::DEFAULT_PATH);
 
     { // upscale regular cel files of listfiles.txt
-    //    - skips Levels(dungeon tiles), gendata(cutscenes) and cow.CEL manually
-        QFile file(params.listfilesFile); // "f:\\listfiles.txt"
+      //  - skips Levels(dungeon tiles), gendata(cutscenes) and cow.CEL manually
+        QFile file(params.listfilesFile);
 
         if (!file.open(QIODevice::ReadOnly)) {
             dProgressFail() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(params.listfilesFile));
@@ -466,7 +470,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             ProgressDialog::incValue();
     }
     { // upscale all cl2 files of listfiles.txt
-        QFile file(params.listfilesFile); // "f:\\listfiles.txt"
+        QFile file(params.listfilesFile);
 
         if (!file.open(QIODevice::ReadOnly)) {
             dProgressFail() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(params.listfilesFile));
