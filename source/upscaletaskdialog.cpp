@@ -6,7 +6,7 @@
 #include "d1min.h"
 #include "d1pal.h"
 #include "d1sol.h"
-#include "ui_batchupscaledialog.h"
+#include "ui_upscaletaskdialog.h"
 #include "upscaler.h"
 
 template <class T, int N>
@@ -65,7 +65,6 @@ void UpscaleTaskDialog::initialize(D1Gfx *gfx)
         this->ui->lastFixColorLineEdit->setText("-1");
     }
 }
-
 
 void UpscaleTaskDialog::on_listfilesFileBrowseButton_clicked()
 {
@@ -208,9 +207,9 @@ bool UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const Upscal
     // upscale
     ProgressDialog::startSub(gfx.getFrameCount() + 1);
     if (Upscaler::upscaleGfx(&gfx, upParams)) {
-		// store the result
-		saParams.celFilePath = outPath;
-		D1Cl2::save(gfx, saParams);
+        // store the result
+        saParams.celFilePath = outPath;
+        D1Cl2::save(gfx, saParams);
     }
     ProgressDialog::doneSub();
 }
@@ -221,14 +220,14 @@ void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const Upscal
     QString outPath = params.outFolder + "/" + path; // "f:\\outcel\\%s"
 
     QString basePath = path;
-	basePath.chop(4);
+    basePath.chop(4);
     QString minFilePath = basePath + ".min";
     QString solFilePath = basePath + ".sol";
 
-    //QString outMinPath = params.outFolder + "/" + celFileInfo.completeBaseName() + ".min"; // "f:\\outcel\\%s"
-	QString outMinPath = outPath;
-	outMinPath.chop(4);
-	outMinPath += ".min";
+    // QString outMinPath = params.outFolder + "/" + celFileInfo.completeBaseName() + ".min"; // "f:\\outcel\\%s"
+    QString outMinPath = outPath;
+    outMinPath.chop(4);
+    outMinPath += ".min";
 
     // Loading SOL
     D1Sol sol = D1Sol();
@@ -253,11 +252,11 @@ void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const Upscal
     // upscale
     ProgressDialog::startSub(min.getSubtileCount() + 1);
     if (Upscaler::upscaleTileset(&gfx, &min, upParams)) {
-		// store the result
-		saParams.celFilePath = outPath;
-		D1CelTileset::save(gfx, saParams);
-		saParams.minFilePath = outMinPath;
-		min.save(saParams);
+        // store the result
+        saParams.celFilePath = outPath;
+        D1CelTileset::save(gfx, saParams);
+        saParams.minFilePath = outMinPath;
+        min.save(saParams);
     }
     ProgressDialog::doneSub();
 }
@@ -315,12 +314,13 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             UpscaleTaskDialog::upscaleCel(line, &defaultPal, params, opParams, upParams, saParams);
         }
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++)
             ProgressDialog::incValue();
     }
     { // upscale objects with level-specific palette
-        const char* celPalPairs[][4] = {
-            // celname,                   palette,                      numcolors, numfixcolors (protected colors)
+        const char *celPalPairs[][4] = {
+            // clang-format off
+            // celname,                palette,                   numcolors, numfixcolors (protected colors)
             { "Objects\\L1Doors.CEL",  "Levels\\L1Data\\L1_1.PAL",    "128",  "0" },
             { "Objects\\L2Doors.CEL",  "Levels\\L2Data\\L2_1.PAL",    "128",  "0" },
             { "Objects\\L3Doors.CEL",  "Levels\\L3Data\\L3_1.PAL",    "128", "32" },
@@ -331,6 +331,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             { "Objects\\L5Sarco.CEL",  "NLevels\\L5Data\\L5base.PAL", "256", "32" },
             { "Objects\\Urnexpld.CEL", "NLevels\\L5Data\\L5base.PAL", "256", "32" },
             { "Objects\\Urn.CEL",      "NLevels\\L5Data\\L5base.PAL", "256", "32" },
+            // clang-format on
         };
 
         SaveAsParam saParams;
@@ -358,16 +359,18 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             UpscaleTaskDialog::upscaleCel(celPalPairs[i][0], &pal, params, opParams, upParams, saParams);
         }
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 1; i++)
             ProgressDialog::incValue();
     }
     { // upscale special cells of the levels
-        const char* celPalPairs[][4] = {
-            // celname,                         palette,                   numcolors, numfixcolors (protected colors)
+        const char *celPalPairs[][4] = {
+            // clang-format off
+            // celname,                      palette,                   numcolors, numfixcolors (protected colors)
             { "Levels\\TownData\\TownS.CEL", "Levels\\TownData\\Town.PAL",  "128",  "0" },
             { "Levels\\L1Data\\L1S.CEL",     "Levels\\L1Data\\L1_1.PAL",    "128",  "0" },
             { "Levels\\L2Data\\L2S.CEL",     "Levels\\L2Data\\L2_1.PAL",    "128",  "0" },
             { "NLevels\\L5Data\\L5S.CEL",    "NLevels\\L5Data\\L5base.PAL", "128", "32" },
+            // clang-format on
         };
 
         SaveAsParam saParams;
@@ -395,11 +398,13 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             UpscaleTaskDialog::upscaleCel(celPalPairs[i][0], &pal, params, opParams, upParams, saParams);
         }
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 1; i++)
             ProgressDialog::incValue();
     }
     { // upscale cutscenes
-        const char* celPalPairs[][2] = {
+        const char *celPalPairs[][2] = {
+            // clang-format off
+            // celname,                palette
             { "Gendata\\Cut2.CEL",     "Gendata\\Cut2.pal" },
             { "Gendata\\Cut3.CEL",     "Gendata\\Cut3.pal" },
             { "Gendata\\Cut4.CEL",     "Gendata\\Cut4.pal" },
@@ -411,6 +416,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             { "Gendata\\Cuttt.CEL",    "Gendata\\Cuttt.pal" },
             { "NLevels\\CutL5.CEL",    "NLevels\\CutL5.pal" },
             { "NLevels\\CutL6.CEL",    "NLevels\\CutL6.pal" },
+            // clang-format on
         };
 
         SaveAsParam saParams;
@@ -441,12 +447,14 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             UpscaleTaskDialog::upscaleCel(celPalPairs[i][0], &pal, params, opParams, upParams, saParams);
         }
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 1; i++)
             ProgressDialog::incValue();
     }
     // UpscaleCelComp("f:\\MPQE\\Work\\towners\\animals\\cow.CEL", 2, &diapal[0][0], 128, 128, "f:\\outcel\\towners\\animals\\cow.cel");
     { // upscale non-standard CELs of the menu (converted from PCX)
-        const char* celPalPairs[][2] = {
+        const char *celPalPairs[][2] = {
+            // clang-format off
+            // celname,               palette
             { "ui_art\\mainmenu.CEL", "ui_art\\menu.PAL" },
             { "ui_art\\title.CEL",    "ui_art\\menu.PAL" },
             { "ui_art\\logo.CEL",     "ui_art\\menu.PAL" },
@@ -461,6 +469,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             // "ui_art\\lrpopup.CEL", "ui_art\\spopup.CEL", "ui_art\\srpopup.CEL", "ui_art\\smbutton.CEL"
             // "ui_art\\prog_bg.CEL", "ui_art\\prog_fil.CEL",
             // "ui_art\\sb_arrow.CEL", "ui_art\\sb_bg.CEL", "ui_art\\sb_thumb.CEL",
+            // clang-format on
         };
 
         SaveAsParam saParams;
@@ -492,7 +501,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             UpscaleTaskDialog::upscaleCel(celPalPairs[i][0], &pal, params, opParams, upParams, saParams);
         }
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 1; i++)
             ProgressDialog::incValue();
     }
     { // upscale all cl2 files of listfiles.txt
@@ -533,7 +542,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             UpscaleTaskDialog::upscaleCl2(line, &defaultPal, params, opParams, upParams, saParams);
         }
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++)
             ProgressDialog::incValue();
     }
     /*if (!params.cl2GfxFixed)*/ { // special cases to upscale cl2 files (must be done manually)
@@ -550,7 +559,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.lastfixcolor = -1;
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
 
-        const char* botchedCL2s[] = {
+        const char *botchedCL2s[] = {
             "PlrGFX\\warrior\\wlb\\wlbat.CL2", "PlrGFX\\warrior\\wlb\\wmbat.CL2", "PlrGFX\\warrior\\wlb\\whbat.CL2"
         };
 
@@ -564,12 +573,13 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             UpscaleTaskDialog::upscaleCl2(botchedCL2s[i], &defaultPal, params, opParams, upParams, saParams);
         }
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 1; i++)
             ProgressDialog::incValue();
     }
     { // // upscale tiles of the levels
-        const char* celPalPairs[][4] = {
-            // celname,                         palette,                     numcolors, numfixcolors (protected colors)
+        const char *celPalPairs[][4] = {
+            // clang-format off
+            // celname,                      palette,                    numcolors, numfixcolors (protected colors)
             { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   "128",  "0" },
             { "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1_1.PAL",     "128",  "0" },
             { "Levels\\L2Data\\L2.CEL",      "Levels\\L2Data\\L2_1.PAL",     "128",  "0" },
@@ -577,6 +587,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             { "Levels\\L4Data\\L4.CEL",      "Levels\\L4Data\\L4_1.PAL",     "128", "32" },
             { "NLevels\\L5Data\\L5.CEL",     "NLevels\\L5Data\\L5base.PAL",  "128", "32" },
             { "NLevels\\L6Data\\L6.CEL",     "NLevels\\L6Data\\L6base1.PAL", "128", "32" },
+            // clang-format on
         };
 
         SaveAsParam saParams;
@@ -604,7 +615,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             UpscaleTaskDialog::upscaleMin(celPalPairs[i][0], &pal, params, opParams, upParams, saParams);
         }
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++)
             ProgressDialog::incValue();
     }
     /*if (!params.minGfxFixed)*/ { // special cases to upscale cl2 files (must be done manually)
@@ -621,9 +632,11 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.lastfixcolor = -1;
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::TILESET;
 
-        const char* botchedMINs[][4] = {
+        const char *botchedMINs[][4] = {
+            // clang-format off
             // celname,                      palette,                  numcolors, numfixcolors (protected colors)
             { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL", "128",  "0" },
+            // clang-format on
         };
 
         for (int i = 0; i < lengthof(botchedMINs); i++) {
@@ -640,7 +653,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             UpscaleTaskDialog::upscaleMin(botchedMINs[i][0], &pal, params, opParams, upParams, saParams);
         }
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 1; i++)
             ProgressDialog::incValue();
     }
 }
