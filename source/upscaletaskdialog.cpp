@@ -27,13 +27,6 @@ UpscaleTaskDialog::~UpscaleTaskDialog()
     delete ui;
 }
 
-void UpscaleTaskDialog::initialize(D1Gfx *gfx)
-{
-    if (this->ui->multiplierLineEdit->text().isEmpty()) {
-        this->ui->multiplierLineEdit->setText("2");
-    }
-}
-
 void UpscaleTaskDialog::on_listfilesFileBrowseButton_clicked()
 {
     MainWindow *qw = (MainWindow *)this->parentWidget();
