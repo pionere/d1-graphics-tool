@@ -23,6 +23,13 @@ constexpr int lengthof(T (&arr)[N])
     return N;
 }
 
+typedef struct AssetConfig {
+    const char *path;
+    const char *palette;
+    int numcolors;
+    int fixcolors;
+} AssetConfig;
+
 UpscaleTaskDialog::UpscaleTaskDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::UpscaleTaskDialog())
@@ -115,7 +122,7 @@ void UpscaleTaskDialog::changeEvent(QEvent *event)
     QDialog::changeEvent(event);
 }
 
-bool UpscaleTaskDialog::loadCustomPal(const char *path, const char *colorsStr, const char *fixcolorsStr, const UpscaleTaskParam &params, D1Pal &pal, UpscaleParam &upParams)
+bool UpscaleTaskDialog::loadCustomPal(const char *path, int numcolors, int fixcolors, const UpscaleTaskParam &params, D1Pal &pal, UpscaleParam &upParams)
 {
     QString palPath = params.assetsFolder + "/" + path; // "f:\\MPQE\\Work\\%s"
 
@@ -124,16 +131,15 @@ bool UpscaleTaskDialog::loadCustomPal(const char *path, const char *colorsStr, c
         return false;
     }
 
-    int numFixColors = atoi(fixcolorsStr);
-    if (numFixColors != 0) {
+    if (fixcolors != 0) {
         upParams.firstfixcolor = 1;
-        upParams.lastfixcolor = numFixColors - 1;
+        upParams.lastfixcolor = fixcolors - 1;
     } else {
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
     }
     QColor undefColor = QColor(Config::getPaletteUndefinedColor());
-    for (int n = atoi(colorsStr); n < D1PAL_COLORS; n++) {
+    for (int n = numcolors; n < D1PAL_COLORS; n++) {
         pal.setColor(n, undefColor);
     }
     return true;
@@ -287,19 +293,19 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             ProgressDialog::incValue();
     }
     { // upscale objects with level-specific palette
-        const char *celPalPairs[][4] = {
+        const AssetConfig celPalPairs[] = {
             // clang-format off
-            // celname,                palette,                   numcolors, numfixcolors (protected colors)
-            { "Objects\\L1Doors.CEL",  "Levels\\L1Data\\L1_1.PAL",    "128",  "0" },
-            { "Objects\\L2Doors.CEL",  "Levels\\L2Data\\L2_1.PAL",    "128",  "0" },
-            { "Objects\\L3Doors.CEL",  "Levels\\L3Data\\L3_1.PAL",    "128", "32" },
-            { "Objects\\L5Door.CEL",   "NLevels\\L5Data\\L5base.PAL", "128", "32" },
-            { "Objects\\L5Books.CEL",  "NLevels\\L5Data\\L5base.PAL", "256", "32" },
-            { "Objects\\L5Lever.CEL",  "NLevels\\L5Data\\L5base.PAL", "128", "32" },
-            { "Objects\\L5Light.CEL",  "NLevels\\L5Data\\L5base.PAL", "128", "32" },
-            { "Objects\\L5Sarco.CEL",  "NLevels\\L5Data\\L5base.PAL", "256", "32" },
-            { "Objects\\Urnexpld.CEL", "NLevels\\L5Data\\L5base.PAL", "256", "32" },
-            { "Objects\\Urn.CEL",      "NLevels\\L5Data\\L5base.PAL", "256", "32" },
+            // celname,                palette,                 numcolors, numfixcolors (protected colors)
+            { "Objects\\L1Doors.CEL",  "Levels\\L1Data\\L1_1.PAL",    128,  0 },
+            { "Objects\\L2Doors.CEL",  "Levels\\L2Data\\L2_1.PAL",    128,  0 },
+            { "Objects\\L3Doors.CEL",  "Levels\\L3Data\\L3_1.PAL",    128, 32 },
+            { "Objects\\L5Door.CEL",   "NLevels\\L5Data\\L5base.PAL", 128, 32 },
+            { "Objects\\L5Books.CEL",  "NLevels\\L5Data\\L5base.PAL", 256, 32 },
+            { "Objects\\L5Lever.CEL",  "NLevels\\L5Data\\L5base.PAL", 128, 32 },
+            { "Objects\\L5Light.CEL",  "NLevels\\L5Data\\L5base.PAL", 128, 32 },
+            { "Objects\\L5Sarco.CEL",  "NLevels\\L5Data\\L5base.PAL", 256, 32 },
+            { "Objects\\Urnexpld.CEL", "NLevels\\L5Data\\L5base.PAL", 256, 32 },
+            { "Objects\\Urn.CEL",      "NLevels\\L5Data\\L5base.PAL", 256, 32 },
             // clang-format on
         };
 
@@ -322,23 +328,23 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             // ProgressDialog::incValue();
 
             D1Pal pal;
-            if (!UpscaleTaskDialog::loadCustomPal(celPalPairs[i][1], celPalPairs[i][2], celPalPairs[i][3], params, pal, upParams))
+            if (!UpscaleTaskDialog::loadCustomPal(celPalPairs[i].palette, celPalPairs[i].numcolors, celPalPairs[i].fixcolors, params, pal, upParams))
                 continue;
 
-            UpscaleTaskDialog::upscaleCel(celPalPairs[i][0], &pal, params, opParams, upParams, saParams);
+            UpscaleTaskDialog::upscaleCel(celPalPairs[i].path, &pal, params, opParams, upParams, saParams);
         }
 
         for (int i = 0; i < 1; i++)
             ProgressDialog::incValue();
     }
     { // upscale special cells of the levels
-        const char *celPalPairs[][4] = {
+        const AssetConfig celPalPairs[] = {
             // clang-format off
-            // celname,                      palette,                   numcolors, numfixcolors (protected colors)
-            { "Levels\\TownData\\TownS.CEL", "Levels\\TownData\\Town.PAL",  "128",  "0" },
-            { "Levels\\L1Data\\L1S.CEL",     "Levels\\L1Data\\L1_1.PAL",    "128",  "0" },
-            { "Levels\\L2Data\\L2S.CEL",     "Levels\\L2Data\\L2_1.PAL",    "128",  "0" },
-            { "NLevels\\L5Data\\L5S.CEL",    "NLevels\\L5Data\\L5base.PAL", "128", "32" },
+            // celname,                      palette,                 numcolors, numfixcolors (protected colors)
+            { "Levels\\TownData\\TownS.CEL", "Levels\\TownData\\Town.PAL",  128,  0 },
+            { "Levels\\L1Data\\L1S.CEL",     "Levels\\L1Data\\L1_1.PAL",    128,  0 },
+            { "Levels\\L2Data\\L2S.CEL",     "Levels\\L2Data\\L2_1.PAL",    128,  0 },
+            { "NLevels\\L5Data\\L5S.CEL",    "NLevels\\L5Data\\L5base.PAL", 128, 32 },
             // clang-format on
         };
 
@@ -361,10 +367,10 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             // ProgressDialog::incValue();
 
             D1Pal pal;
-            if (!UpscaleTaskDialog::loadCustomPal(celPalPairs[i][1], celPalPairs[i][2], celPalPairs[i][3], params, pal, upParams))
+            if (!UpscaleTaskDialog::loadCustomPal(celPalPairs[i].palette, celPalPairs[i].numcolors, celPalPairs[i].fixcolors, params, pal, upParams))
                 continue;
 
-            UpscaleTaskDialog::upscaleCel(celPalPairs[i][0], &pal, params, opParams, upParams, saParams);
+            UpscaleTaskDialog::upscaleCel(celPalPairs[i].path, &pal, params, opParams, upParams, saParams);
         }
 
         for (int i = 0; i < 1; i++)
@@ -546,16 +552,16 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             ProgressDialog::incValue();
     }
     { // // upscale tiles of the levels
-        const char *celPalPairs[][4] = {
+        const AssetConfig celPalPairs[] = {
             // clang-format off
-            // celname,                      palette,                    numcolors, numfixcolors (protected colors)
-            { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   "128",  "0" },
-            { "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1_1.PAL",     "128",  "0" },
-            { "Levels\\L2Data\\L2.CEL",      "Levels\\L2Data\\L2_1.PAL",     "128",  "0" },
-            { "Levels\\L3Data\\L3.CEL",      "Levels\\L3Data\\L3_1.PAL",     "128", "32" },
-            { "Levels\\L4Data\\L4.CEL",      "Levels\\L4Data\\L4_1.PAL",     "128", "32" },
-            { "NLevels\\L5Data\\L5.CEL",     "NLevels\\L5Data\\L5base.PAL",  "128", "32" },
-            { "NLevels\\L6Data\\L6.CEL",     "NLevels\\L6Data\\L6base1.PAL", "128", "32" },
+            // celname,                      palette                   numcolors, numfixcolors (protected colors)
+            { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   128,  0 },
+            { "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1_1.PAL",     128,  0 },
+            { "Levels\\L2Data\\L2.CEL",      "Levels\\L2Data\\L2_1.PAL",     128,  0 },
+            { "Levels\\L3Data\\L3.CEL",      "Levels\\L3Data\\L3_1.PAL",     128, 32 },
+            { "Levels\\L4Data\\L4.CEL",      "Levels\\L4Data\\L4_1.PAL",     128, 32 },
+            { "NLevels\\L5Data\\L5.CEL",     "NLevels\\L5Data\\L5base.PAL",  128, 32 },
+            { "NLevels\\L6Data\\L6.CEL",     "NLevels\\L6Data\\L6base1.PAL", 128, 32 },
             // clang-format on
         };
 
@@ -578,10 +584,10 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             // ProgressDialog::incValue();
 
             D1Pal pal;
-            if (!UpscaleTaskDialog::loadCustomPal(celPalPairs[i][1], celPalPairs[i][2], celPalPairs[i][3], params, pal, upParams))
+            if (!UpscaleTaskDialog::loadCustomPal(celPalPairs[i].palette, celPalPairs[i].numcolors, celPalPairs[i].fixcolors, params, pal, upParams))
                 continue;
 
-            UpscaleTaskDialog::upscaleMin(celPalPairs[i][0], &pal, params, opParams, upParams, saParams);
+            UpscaleTaskDialog::upscaleMin(celPalPairs[i].path, &pal, params, opParams, upParams, saParams);
         }
 
         for (int i = 0; i < 4; i++)
@@ -601,10 +607,10 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.lastfixcolor = -1;
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::TILESET;
 
-        const char *botchedMINs[][4] = {
+        const AssetConfig botchedMINs[] = {
             // clang-format off
-            // celname,                      palette,                  numcolors, numfixcolors (protected colors)
-            { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL", "128",  "0" },
+            // celname,                      palette,                numcolors, numfixcolors (protected colors)
+            { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL", 128,  0 },
             // clang-format on
         };
 
@@ -616,10 +622,10 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             // ProgressDialog::incValue();
 
             D1Pal pal;
-            if (!UpscaleTaskDialog::loadCustomPal(botchedMINs[i][1], botchedMINs[i][2], botchedMINs[i][3], params, pal, upParams))
+            if (!UpscaleTaskDialog::loadCustomPal(botchedMINs[i].palette, botchedMINs[i].numcolors, botchedMINs[i].fixcolors, params, pal, upParams))
                 continue;
 
-            UpscaleTaskDialog::upscaleMin(botchedMINs[i][0], &pal, params, opParams, upParams, saParams);
+            UpscaleTaskDialog::upscaleMin(botchedMINs[i].path, &pal, params, opParams, upParams, saParams);
         }
 
         for (int i = 0; i < 1; i++)
