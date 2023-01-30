@@ -73,11 +73,8 @@
        <layout class="QGridLayout" name="levelCelControlsGridLayout">
         <item row="0" column="0">
          <widget class="QLabel" name="zoomLabel">
-          <property name="minimumSize">
-           <size>
-            <width>48</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>48</number>
           </property>
           <property name="text">
            <string>Zoom:</string>
@@ -86,17 +83,11 @@
         </item>
         <item row="0" column="1">
          <widget class="QPushButton" name="zoomOutButton">
-          <property name="minimumSize">
-           <size>
-            <width>24</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>24</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>24</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>24</number>
           </property>
           <property name="text">
            <string notr="true">-</string>
@@ -115,17 +106,11 @@
         </item>
         <item row="0" column="3">
          <widget class="QPushButton" name="zoomInButton">
-          <property name="minimumSize">
-           <size>
-            <width>24</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>24</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>24</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>24</number>
           </property>
           <property name="text">
            <string notr="true">+</string>
@@ -148,17 +133,11 @@
         </item>
         <item row="0" column="8">
          <widget class="QLabel" name="slashLabel_3">
-          <property name="minimumSize">
-           <size>
-            <width>8</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>8</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>8</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>8</number>
           </property>
           <property name="text">
            <string notr="true">-</string>
@@ -190,17 +169,11 @@
         </item>
         <item row="0" column="12">
          <widget class="QLabel" name="playDelayLabel">
-          <property name="minimumSize">
-           <size>
-            <width>20</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>20</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>20</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>20</number>
           </property>
           <property name="text">
            <string>ms</string>
@@ -240,11 +213,8 @@
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="tilLabel">
-          <property name="minimumSize">
-           <size>
-            <width>48</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>48</number>
           </property>
           <property name="text">
            <string>Tiles:</string>
@@ -260,17 +230,11 @@
         </item>
         <item row="1" column="5">
          <widget class="QPushButton" name="firstTileButton">
-          <property name="minimumSize">
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>40</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>40</number>
           </property>
           <property name="toolTip">
            <string>First tile</string>
@@ -282,17 +246,11 @@
         </item>
         <item row="1" column="6">
          <widget class="QPushButton" name="previousTileButton">
-          <property name="minimumSize">
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>40</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>40</number>
           </property>
           <property name="toolTip">
            <string>Previous tile</string>
@@ -320,17 +278,11 @@
         </item>
         <item row="1" column="8">
          <widget class="QLabel" name="tilSlashLabel">
-          <property name="minimumSize">
-           <size>
-            <width>8</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>8</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>8</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>8</number>
           </property>
           <property name="text">
            <string notr="true">/</string>
@@ -361,17 +313,11 @@
         </item>
         <item row="1" column="10">
          <widget class="QPushButton" name="nextTileButton">
-          <property name="minimumSize">
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>40</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>40</number>
           </property>
           <property name="toolTip">
            <string>Next tile</string>
@@ -383,17 +329,11 @@
         </item>
         <item row="1" column="11">
          <widget class="QPushButton" name="lastTileButton">
-          <property name="minimumSize">
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>40</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>40</number>
           </property>
           <property name="toolTip">
            <string>Last tile</string>
@@ -425,17 +365,11 @@
         </item>
         <item row="1" column="15">
          <widget class="QLabel" name="tilFrameWidthLabel">
-          <property name="minimumSize">
-           <size>
-            <width>8</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>8</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>8</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>8</number>
           </property>
           <property name="text">
            <string notr="true">*</string>
@@ -457,11 +391,8 @@
         </item>
         <item row="2" column="0">
          <widget class="QLabel" name="minLabel">
-          <property name="minimumSize">
-           <size>
-            <width>48</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>48</number>
           </property>
           <property name="text">
            <string>Subtiles:</string>
@@ -477,17 +408,11 @@
         </item>
         <item row="2" column="5">
          <widget class="QPushButton" name="firstSubtileButton">
-          <property name="minimumSize">
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>40</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>40</number>
           </property>
           <property name="toolTip">
            <string>First subtile</string>
@@ -499,17 +424,11 @@
         </item>
         <item row="2" column="6">
          <widget class="QPushButton" name="previousSubtileButton">
-          <property name="minimumSize">
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>40</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>40</number>
           </property>
           <property name="toolTip">
            <string>Previous subtile</string>
@@ -534,17 +453,11 @@
         </item>
         <item row="2" column="8">
          <widget class="QLabel" name="minSlashLabel">
-          <property name="minimumSize">
-           <size>
-            <width>8</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>8</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>8</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>8</number>
           </property>
           <property name="text">
            <string notr="true">/</string>
@@ -572,17 +485,11 @@
         </item>
         <item row="2" column="10">
          <widget class="QPushButton" name="nextSubtileButton">
-          <property name="minimumSize">
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>40</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>40</number>
           </property>
           <property name="toolTip">
            <string>Next subtile</string>
@@ -594,17 +501,11 @@
         </item>
         <item row="2" column="11">
          <widget class="QPushButton" name="lastSubtileButton">
-          <property name="minimumSize">
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>40</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>40</number>
           </property>
           <property name="toolTip">
            <string>Last subtile</string>
@@ -633,17 +534,11 @@
         </item>
         <item row="2" column="15">
          <widget class="QLabel" name="minFrameWidthLabel">
-          <property name="minimumSize">
-           <size>
-            <width>8</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>8</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>8</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>8</number>
           </property>
           <property name="text">
            <string notr="true">*</string>
@@ -662,11 +557,8 @@
         </item>
         <item row="3" column="0">
          <widget class="QLabel" name="framesLabel">
-          <property name="minimumSize">
-           <size>
-            <width>48</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>48</number>
           </property>
           <property name="text">
            <string>Frames:</string>
@@ -682,17 +574,11 @@
         </item>
         <item row="3" column="5">
          <widget class="QPushButton" name="firstFrameButton">
-          <property name="minimumSize">
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>40</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>40</number>
           </property>
           <property name="toolTip">
            <string>First frame</string>
@@ -704,17 +590,11 @@
         </item>
         <item row="3" column="6">
          <widget class="QPushButton" name="previousFrameButton">
-          <property name="minimumSize">
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>40</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>40</number>
           </property>
           <property name="toolTip">
            <string>Previous frame</string>
@@ -739,17 +619,11 @@
         </item>
         <item row="3" column="8">
          <widget class="QLabel" name="slashLabel">
-          <property name="minimumSize">
-           <size>
-            <width>8</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>8</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>8</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>8</number>
           </property>
           <property name="text">
            <string notr="true">/</string>
@@ -777,17 +651,11 @@
         </item>
         <item row="3" column="10">
          <widget class="QPushButton" name="nextFrameButton">
-          <property name="minimumSize">
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>40</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>40</number>
           </property>
           <property name="toolTip">
            <string>Next frame</string>
@@ -799,17 +667,11 @@
         </item>
         <item row="3" column="11">
          <widget class="QPushButton" name="lastFrameButton">
-          <property name="minimumSize">
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>40</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>40</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>40</number>
           </property>
           <property name="toolTip">
            <string>Last frame</string>
@@ -844,17 +706,11 @@
         </item>
         <item row="3" column="15">
          <widget class="QLabel" name="celFrameWidthLabel">
-          <property name="minimumSize">
-           <size>
-            <width>8</width>
-            <height>0</height>
-           </size>
+          <property name="minimumWidth">
+           <number>8</number>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>8</width>
-            <height>16777215</height>
-           </size>
+          <property name="maximumWidth">
+           <number>8</number>
           </property>
           <property name="text">
            <string notr="true">*</string>
@@ -881,17 +737,8 @@
       </item>
       <item>
        <widget class="QTabWidget" name="tilesTabs">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>250</height>
-         </size>
+        <property name="maximumHeight">
+         <number>250</number>
         </property>
        </widget>
       </item>

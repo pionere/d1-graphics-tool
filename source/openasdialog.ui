@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>797</width>
-    <height>368</height>
+    <width>640</width>
+    <height>0</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -202,12 +202,6 @@
    </item>
    <item>
     <widget class="QGroupBox" name="tilSettingsGroupBox">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>0</height>
-      </size>
-     </property>
      <property name="title">
       <string>Tileset Settings</string>
      </property>

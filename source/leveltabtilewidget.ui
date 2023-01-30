@@ -2,20 +2,6 @@
 <ui version="4.0">
  <class>LevelTabTileWidget</class>
  <widget class="QWidget" name="LevelTabTileWidget">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>480</width>
-    <height>160</height>
-   </rect>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout_0">
    <property name="spacing">
     <number>4</number>

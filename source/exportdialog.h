@@ -50,6 +50,4 @@ private:
     D1Til *til = nullptr;
     D1Sol *sol = nullptr;
     D1Amp *amp = nullptr;
-
-    QString outputFolder;
 };
