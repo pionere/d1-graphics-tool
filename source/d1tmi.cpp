@@ -74,7 +74,7 @@ bool D1Tmi::save(const SaveAsParam &params)
         filePath = params.tmiFilePath;
         if (QFile::exists(filePath)) {
             QMessageBox::StandardButton reply;
-            reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to overwrite %1?").arg(filePath), QMessageBox::Yes | QMessageBox::No);
+            reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to overwrite %1?").arg(QDir::toNativeSeparators(filePath)), QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) {
                 return false;
             }
@@ -83,7 +83,7 @@ bool D1Tmi::save(const SaveAsParam &params)
 
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly)) {
-        dProgressFail() << tr("Failed to open file: %1.").arg(filePath);
+        dProgressFail() << tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(filePath));
         return false;
     }
 

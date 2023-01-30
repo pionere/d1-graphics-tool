@@ -458,7 +458,7 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &
         if (success) {
             success = this->insertFrames(mode, index, frame);
         } else if (mode != IMAGE_FILE_MODE::AUTO) {
-            dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
+            dProgressFail() << tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
         }
         if (success && palMod) {
             // update the palette
@@ -470,7 +470,7 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, int index, const QString &
 
     QImageReader reader = QImageReader(imagefilePath);
     if (!reader.canRead()) {
-        QString msg = tr("Failed to read file: %1.").arg(imagefilePath);
+        QString msg = tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
         if (mode != IMAGE_FILE_MODE::AUTO) {
             dProgressFail() << msg;
         } else {
@@ -676,7 +676,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString
         if (success) {
             success = this->insertSubtiles(mode, index, frame);
         } else if (mode != IMAGE_FILE_MODE::AUTO) {
-            dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
+            dProgressFail() << tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
         }
         if (success && palMod) {
             // update the palette
@@ -688,7 +688,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, int index, const QString
 
     QImageReader reader = QImageReader(imagefilePath);
     if (!reader.canRead()) {
-        QString msg = tr("Failed to read file: %1.").arg(imagefilePath);
+        QString msg = tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
         if (mode != IMAGE_FILE_MODE::AUTO) {
             dProgressFail() << msg;
         } else {
@@ -989,7 +989,7 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &i
         if (success) {
             success = this->insertTiles(mode, index, frame);
         } else if (mode != IMAGE_FILE_MODE::AUTO) {
-            dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
+            dProgressFail() << tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
         }
         if (success && palMod) {
             // update the palette
@@ -1001,7 +1001,7 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QString &i
 
     QImageReader reader = QImageReader(imagefilePath);
     if (!reader.canRead()) {
-        QString msg = tr("Failed to read file: %1.").arg(imagefilePath);
+        QString msg = tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
         if (mode != IMAGE_FILE_MODE::AUTO) {
             dProgressFail() << msg;
         } else {
@@ -1060,7 +1060,7 @@ void LevelCelView::addToCurrentFrame(const QString &imagefilePath)
         D1Pal basePal = D1Pal(*this->pal);
         bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
         if (!success) {
-            dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
+            dProgressFail() << tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
             return;
         }
         D1GfxFrame *resFrame = this->gfx->addToFrame(this->currentFrameIndex, frame);
@@ -1081,7 +1081,7 @@ void LevelCelView::addToCurrentFrame(const QString &imagefilePath)
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        dProgressFail() << tr("Failed to read file: %1.").arg(imagefilePath);
+        dProgressFail() << tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
         return;
     }
 
@@ -1104,7 +1104,7 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
         bool success = D1Pcx::load(*frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
         if (!success) {
             delete frame;
-            dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
+            dProgressFail() << tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
             return;
         }
         if (frame->getWidth() != MICRO_WIDTH || frame->getHeight() != MICRO_HEIGHT) {
@@ -1127,7 +1127,7 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        dProgressFail() << tr("Failed to read file: %1.").arg(imagefilePath);
+        dProgressFail() << tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
         return;
     }
 
@@ -1209,7 +1209,7 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
         D1Pal basePal = D1Pal(*this->pal);
         bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
         if (!success) {
-            dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
+            dProgressFail() << tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
             return;
         }
         if (frame.getWidth() != subtileWidth || frame.getHeight() != subtileHeight) {
@@ -1234,7 +1234,7 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        dProgressFail() << tr("Failed to read file: %1.").arg(imagefilePath);
+        dProgressFail() << tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
         return;
     }
 
@@ -1316,7 +1316,7 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
         D1Pal basePal = D1Pal(*this->pal);
         bool success = D1Pcx::load(frame, imagefilePath, clipped, &basePal, this->gfx->getPalette(), &palMod);
         if (!success) {
-            dProgressFail() << tr("Failed to load file: %1.").arg(imagefilePath);
+            dProgressFail() << tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
             return;
         }
         if (frame.getWidth() != tileWidth || frame.getHeight() != tileHeight) {
@@ -1340,7 +1340,7 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
     QImage image = QImage(imagefilePath);
 
     if (image.isNull()) {
-        dProgressFail() << tr("Failed to read file: %1.").arg(imagefilePath);
+        dProgressFail() << tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
         return;
     }
 
