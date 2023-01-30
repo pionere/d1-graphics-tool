@@ -16,9 +16,6 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QGroupBox" name="paletteTranslationGroupBox">
-     <property name="title">
-      <string>Palettes and translations</string>
-     </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
        <widget class="QLabel" name="multiplierLabel">
