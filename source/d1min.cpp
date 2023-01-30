@@ -116,7 +116,7 @@ bool D1Min::save(const SaveAsParam &params)
     QString filePath = this->getFilePath();
     if (!params.minFilePath.isEmpty()) {
         filePath = params.minFilePath;
-        if (QFile::exists(filePath)) {
+        if (!params.autoOverwrite && QFile::exists(filePath)) {
             QMessageBox::StandardButton reply;
             reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to overwrite %1?").arg(QDir::toNativeSeparators(filePath)), QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) {
@@ -142,9 +142,9 @@ bool D1Min::save(const SaveAsParam &params)
             dProgressWarn() << tr("Subtile height is not supported by the game (Diablo 1/DevilutionX).");
         }
     } else {
-        if (this->subtileHeight > 8) {
+        if (this->subtileHeight > 8 * this->subtileWidth / 2) {
             dProgressWarn() << tr("Subtile height is not supported by the game (Diablo 1/DevilutionX).");
-        } else if (this->subtileHeight < 8) {
+        } else if (this->subtileHeight < 8 * this->subtileWidth / 2) {
             dProgressWarn() << tr("Empty subtiles are added to the saved document to match the required height of the game (DevilutionX).");
         }
     }
@@ -172,12 +172,9 @@ bool D1Min::save(const SaveAsParam &params)
         if (!upscaled) {
             continue;
         }
-        // if (subtileNumberOfCelFrames >= this->subtileWidth * 8) {
-        if (this->subtileHeight >= 8) {
-            continue;
-        }
+        // pad with empty micros till this->subtileWidth * 8 * this->subtileWidth / 2
         quint16 writeWord = 0;
-        for (int j = subtileNumberOfCelFrames; j < this->subtileWidth * 8; j++) {
+        for (int j = subtileNumberOfCelFrames; j < this->subtileWidth * 8 * this->subtileWidth / 2; j++) {
             out << writeWord;
         }
     }

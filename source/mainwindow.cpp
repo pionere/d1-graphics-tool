@@ -554,7 +554,7 @@ bool MainWindow::hasImageUrl(const QMimeData *mimeData)
 
 void MainWindow::on_actionNew_CEL_triggered()
 {
-    OpenAsParam params;
+    OpenAsParam params = OpenAsParam();
     params.isTileset = OPEN_TILESET_TYPE::FALSE;
     params.clipped = OPEN_CLIPPED_TYPE::FALSE;
     this->openFile(params);
@@ -562,7 +562,7 @@ void MainWindow::on_actionNew_CEL_triggered()
 
 void MainWindow::on_actionNew_CL2_triggered()
 {
-    OpenAsParam params;
+    OpenAsParam params = OpenAsParam();
     params.isTileset = OPEN_TILESET_TYPE::FALSE;
     params.clipped = OPEN_CLIPPED_TYPE::TRUE;
     this->openFile(params);
@@ -570,7 +570,7 @@ void MainWindow::on_actionNew_CL2_triggered()
 
 void MainWindow::on_actionNew_Tileset_triggered()
 {
-    OpenAsParam params;
+    OpenAsParam params = OpenAsParam();
     params.isTileset = OPEN_TILESET_TYPE::TRUE;
     this->openFile(params);
 }
@@ -580,7 +580,7 @@ void MainWindow::on_actionOpen_triggered()
     QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)"));
 
     if (!openFilePath.isEmpty()) {
-        OpenAsParam params;
+        OpenAsParam params = OpenAsParam();
         params.celFilePath = openFilePath;
         this->openFile(params);
     }
@@ -606,7 +606,7 @@ void MainWindow::dropEvent(QDropEvent *event)
 {
     event->acceptProposedAction();
 
-    OpenAsParam params;
+    OpenAsParam params = OpenAsParam();
     for (const QUrl &url : event->mimeData()->urls()) {
         params.celFilePath = url.toLocalFile();
         this->openFile(params);
@@ -1123,7 +1123,7 @@ void MainWindow::on_actionSave_triggered()
         this->on_actionSaveAs_triggered();
         return;
     }
-    SaveAsParam params;
+    SaveAsParam params = SaveAsParam();
     this->saveFile(params);
 }
 

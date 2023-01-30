@@ -162,6 +162,7 @@ void SaveAsDialog::on_saveButton_clicked()
     params.solFilePath = this->ui->outputSolFileEdit->text();
     params.ampFilePath = this->ui->outputAmpFileEdit->text();
     params.tmiFilePath = this->ui->outputTmiFileEdit->text();
+    params.autoOverwrite = this->ui->autoOverwriteCheckBox->isChecked();
 
     MainWindow *qw = (MainWindow *)this->parentWidget();
     this->close();

@@ -73,7 +73,7 @@ bool D1Tmi::save(const SaveAsParam &params)
     QString filePath = this->getFilePath();
     if (!params.tmiFilePath.isEmpty()) {
         filePath = params.tmiFilePath;
-        if (QFile::exists(filePath)) {
+        if (!params.autoOverwrite && QFile::exists(filePath)) {
             QMessageBox::StandardButton reply;
             reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to overwrite %1?").arg(QDir::toNativeSeparators(filePath)), QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) {

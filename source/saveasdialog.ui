@@ -307,6 +307,20 @@
         </property>
        </widget>
       </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="autoOverwriteLabel">
+        <property name="text">
+         <string>Overwrite all:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QCheckBox" name="autoOverwriteCheckBox">
+        <property name="toolTip">
+         <string>Overwrite files without confirmation-request</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>

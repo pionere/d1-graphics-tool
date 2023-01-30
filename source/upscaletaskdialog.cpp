@@ -1,9 +1,13 @@
 #include "upscaletaskdialog.h"
 
 #include <QDir>
+#include <QFileDialog>
+#include <QMessageBox>
 
 #include "config.h"
 #include "d1cel.h"
+#include "d1celtileset.h"
+#include "d1cl2.h"
 #include "d1gfx.h"
 #include "d1min.h"
 #include "d1pal.h"
@@ -39,7 +43,7 @@ void UpscaleTaskDialog::on_listfilesFileBrowseButton_clicked()
     if (filePath.isEmpty())
         return;
 
-    this->ui->listfilesFileEdit->setText(filePath);
+    this->ui->listfilesFileLineEdit->setText(filePath);
 }
 
 void UpscaleTaskDialog::on_assetsFolderBrowseButton_clicked()
@@ -194,6 +198,8 @@ void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const Upscal
     outMinPath.chop(4);
     outMinPath += ".min";
 
+    D1Gfx gfx = D1Gfx();
+    gfx.setPalette(pal);
     // Loading SOL
     D1Sol sol = D1Sol();
     if (sol.load(solFilePath)) {
@@ -208,8 +214,6 @@ void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const Upscal
         return;
     }
     // Loading CEL
-    D1Gfx gfx = D1Gfx();
-    gfx.setPalette(pal);
     if (!D1CelTileset::load(gfx, celFrameTypes, openFilePath, params)) {
         dProgressErr() << tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(openFilePath));
         return;
@@ -240,15 +244,15 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             return;
         }
 
-        OpenAsParam opParams;
+        OpenAsParam opParams = OpenAsParam();
 
-        UpscaleParam upParams;
+        UpscaleParam upParams = UpscaleParam();
         upParams.multiplier = params.multiplier;
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
 
-        SaveAsParam saParams;
+        SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = params.autoOverwrite;
 
         while (file.canReadLine()) {
@@ -299,12 +303,12 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             // clang-format on
         };
 
-        SaveAsParam saParams;
+        SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = params.autoOverwrite;
 
-        OpenAsParam opParams;
+        OpenAsParam opParams = OpenAsParam();
 
-        UpscaleParam upParams;
+        UpscaleParam upParams = UpscaleParam();
         upParams.multiplier = params.multiplier;
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
@@ -338,12 +342,12 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             // clang-format on
         };
 
-        SaveAsParam saParams;
+        SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = params.autoOverwrite;
 
-        OpenAsParam opParams;
+        OpenAsParam opParams = OpenAsParam();
 
-        UpscaleParam upParams;
+        UpscaleParam upParams = UpscaleParam();
         upParams.multiplier = params.multiplier;
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
@@ -384,12 +388,12 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             // clang-format on
         };
 
-        SaveAsParam saParams;
+        SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = params.autoOverwrite;
 
-        OpenAsParam opParams;
+        OpenAsParam opParams = OpenAsParam();
 
-        UpscaleParam upParams;
+        UpscaleParam upParams = UpscaleParam();
         upParams.multiplier = params.multiplier;
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
@@ -437,12 +441,12 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             // clang-format on
         };
 
-        SaveAsParam saParams;
+        SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = params.autoOverwrite;
 
-        OpenAsParam opParams;
+        OpenAsParam opParams = OpenAsParam();
 
-        UpscaleParam upParams;
+        UpscaleParam upParams = UpscaleParam();
         upParams.multiplier = params.multiplier;
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
@@ -477,12 +481,12 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             return;
         }
 
-        SaveAsParam saParams;
+        SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = params.autoOverwrite;
 
-        OpenAsParam opParams;
+        OpenAsParam opParams = OpenAsParam();
 
-        UpscaleParam upParams;
+        UpscaleParam upParams = UpscaleParam();
         upParams.multiplier = params.multiplier;
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
@@ -512,13 +516,13 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
     }
     /*if (!params.cl2GfxFixed)*/ { // special cases to upscale cl2 files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
-        SaveAsParam saParams;
+        SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = params.autoOverwrite;
 
-        OpenAsParam opParams;
+        OpenAsParam opParams = OpenAsParam();
         opParams.celWidth = 96;
 
-        UpscaleParam upParams;
+        UpscaleParam upParams = UpscaleParam();
         upParams.multiplier = params.multiplier;
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
@@ -555,12 +559,12 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             // clang-format on
         };
 
-        SaveAsParam saParams;
+        SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = params.autoOverwrite;
 
-        OpenAsParam opParams;
+        OpenAsParam opParams = OpenAsParam();
 
-        UpscaleParam upParams;
+        UpscaleParam upParams = UpscaleParam();
         upParams.multiplier = params.multiplier;
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
@@ -585,13 +589,13 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
     }
     /*if (!params.minGfxFixed)*/ { // special cases to upscale cl2 files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
-        SaveAsParam saParams;
+        SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = params.autoOverwrite;
 
-        OpenAsParam opParams;
+        OpenAsParam opParams = OpenAsParam();
         opParams.minHeight = 8;
 
-        UpscaleParam upParams;
+        UpscaleParam upParams = UpscaleParam();
         upParams.multiplier = params.multiplier;
         upParams.firstfixcolor = -1;
         upParams.lastfixcolor = -1;
