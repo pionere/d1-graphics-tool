@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>OpenAsDialog</class>
  <widget class="QDialog" name="OpenAsDialog">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>797</width>
-    <height>368</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Open As</string>
   </property>
