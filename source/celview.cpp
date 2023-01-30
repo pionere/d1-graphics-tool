@@ -224,15 +224,20 @@ void CelView::setPal(D1Pal *p)
     this->pal = p;
 }
 
-void CelView::update()
+// Displaying CEL file path information
+void CelView::updateLabel()
 {
-    // Displaying CEL file path information
     QFileInfo gfxFileInfo(this->gfx->getFilePath());
     QString label = gfxFileInfo.fileName();
     if (this->gfx->isModified()) {
         label += "*";
     }
     ui->celLabel->setText(label);
+}
+
+void CelView::update()
+{
+    this->updateLabel();
 
     ui->groupNumberEdit->setText(
         QString::number(this->gfx->getGroupCount()));
