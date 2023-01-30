@@ -2,7 +2,7 @@
 <ui version="4.0">
  <class>SaveAsDialog</class>
  <widget class="QDialog" name="SaveAsDialog">
-  <property name="minimumSizeHint">
+  <property name="minimumSize">
    <size>
     <width>600</width>
     <height>0</height>
