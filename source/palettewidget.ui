@@ -2,20 +2,6 @@
 <ui version="4.0">
  <class>PaletteWidget</class>
  <widget class="QWidget" name="PaletteWidget">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>450</width>
-    <height>200</height>
-   </rect>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
     <number>0</number>
@@ -34,12 +20,6 @@
    </property>
    <item>
     <widget class="QFrame" name="groupHeader">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
      <property name="minimumWidth">
       <number>256</number>
      </property>
@@ -64,12 +44,6 @@
       </property>
       <item>
        <widget class="QLabel" name="groupLabel">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
         <property name="minimumWidth">
          <number>128</number>
         </property>
@@ -86,12 +60,6 @@
    </item>
    <item>
     <widget class="QGroupBox" name="groupBox">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <property name="spacing">
        <number>4</number>
@@ -123,10 +91,7 @@
         <item>
          <widget class="QGraphicsView" name="graphicsView">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed"/>
           </property>
           <property name="minimumSize">
            <size>
@@ -160,12 +125,6 @@
            <layout class="QGridLayout" name="gridLayout">
             <item row="1" column="5">
              <widget class="QPushButton" name="translationClearPushButton">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
               <property name="minimumWidth">
                <number>45</number>
               </property>
@@ -179,12 +138,6 @@
             </item>
             <item row="1" column="0">
              <widget class="QLabel" name="indexLabel">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
               <property name="text">
                <string>Index:</string>
               </property>
@@ -192,12 +145,6 @@
             </item>
             <item row="0" column="0">
              <widget class="QLabel" name="colorLabel">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
               <property name="text">
                <string>Color:</string>
               </property>
@@ -205,12 +152,6 @@
             </item>
             <item row="0" column="4">
              <widget class="QPushButton" name="colorPickPushButton">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
               <property name="minimumWidth">
                <number>45</number>
               </property>
@@ -224,12 +165,6 @@
             </item>
             <item row="1" column="4">
              <widget class="QPushButton" name="translationPickPushButton">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
               <property name="minimumWidth">
                <number>45</number>
               </property>
@@ -279,12 +214,6 @@
             </item>
             <item row="0" column="5">
              <widget class="QPushButton" name="colorClearPushButton">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
               <property name="minimumWidth">
                <number>45</number>
               </property>
@@ -298,12 +227,6 @@
             </item>
             <item row="1" column="2">
              <widget class="QLabel" name="translationLabel">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
               <property name="minimumWidth">
                <number>8</number>
               </property>
@@ -317,12 +240,6 @@
             </item>
             <item row="2" column="4" colspan="2">
              <widget class="QPushButton" name="monsterTrnPushButton">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
               <property name="minimumWidth">
                <number>100</number>
               </property>

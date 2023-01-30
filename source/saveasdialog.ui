@@ -2,14 +2,13 @@
 <ui version="4.0">
  <class>SaveAsDialog</class>
  <widget class="QDialog" name="SaveAsDialog">
-  <property name="sizeHint">
-   <size>
-    <width>600</width>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
     <height>0</height>
-   </size>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Ignored"/>
+   </rect>
   </property>
   <property name="windowTitle">
    <string>Save As</string>
