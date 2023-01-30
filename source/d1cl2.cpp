@@ -222,7 +222,22 @@ bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
     // CL2 FRAMES OFFSETS CALCULATION
     gfx.groupFrameIndices.clear();
     QList<QPair<quint32, quint32>> frameOffsets;
-    if (gfx.type == D1CEL_TYPE::V2_MULTIPLE_GROUPS) {
+    if (gfx.type == D1CEL_TYPE::V2_MONO_GROUP) {
+        // Going through all frames of the only group
+        if (firstDword > 0) {
+            gfx.groupFrameIndices.append(qMakePair(0, firstDword - 1));
+        }
+        for (unsigned i = 1; i <= firstDword; i++) {
+            fileBuffer.seek(i * 4);
+            quint32 cl2FrameStartOffset;
+            in >> cl2FrameStartOffset;
+            quint32 cl2FrameEndOffset;
+            in >> cl2FrameEndOffset;
+
+            frameOffsets.append(
+                qMakePair(cl2FrameStartOffset, cl2FrameEndOffset));
+        }
+    } else {
         // Going through all groups
         for (unsigned i = 0; i * 4 < firstDword; i++) {
             fileBuffer.seek(i * 4);
@@ -233,6 +248,9 @@ bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
             quint32 cl2GroupFrameCount;
             in >> cl2GroupFrameCount;
 
+            if (cl2GroupFrameCount == 0) {
+                continue;
+            }
             gfx.groupFrameIndices.append(
                 qMakePair(frameOffsets.size(),
                     frameOffsets.size() + cl2GroupFrameCount - 1));
@@ -249,19 +267,6 @@ bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
                     qMakePair(cl2GroupOffset + cl2FrameStartOffset,
                         cl2GroupOffset + cl2FrameEndOffset));
             }
-        }
-    } else {
-        // Going through all frames of the only group
-        gfx.groupFrameIndices.append(qMakePair(0, firstDword - 1));
-        for (unsigned i = 1; i <= firstDword; i++) {
-            fileBuffer.seek(i * 4);
-            quint32 cl2FrameStartOffset;
-            in >> cl2FrameStartOffset;
-            quint32 cl2FrameEndOffset;
-            in >> cl2FrameEndOffset;
-
-            frameOffsets.append(
-                qMakePair(cl2FrameStartOffset, cl2FrameEndOffset));
         }
     }
 
