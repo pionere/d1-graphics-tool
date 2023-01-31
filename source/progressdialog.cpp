@@ -117,8 +117,9 @@ void ProgressDialog::restartSub(int maxValue)
 {
     QProgressBar *currProgressBar = theDialog->barCount == 2 ? theDialog->ui->progressBar_1 : theDialog->ui->progressBar_2;
 
-    newProgressBar->setRange(0, maxValue);
-    newProgressBar->setValue(0);
+    currProgressBar->setRange(0, maxValue);
+    currProgressBar->setValue(0);
+    currProgressBar->update();
 }
 
 void ProgressDialog::doneSub()
@@ -138,7 +139,7 @@ bool ProgressDialog::wasCanceled()
     return theDialog->status >= PROGRESS_STATE::CANCEL;
 }
 
-void ProgressDialog::incValue()
+bool ProgressDialog::incValue()
 {
     QProgressBar *currProgressBar;
 
@@ -156,15 +157,15 @@ void ProgressDialog::incValue()
     }
 
     currProgressBar->setValue(currProgressBar->value() + 1);
-    QCoreApplication::processEvents();
+    return !ProgressDialog::wasCanceled();
 }
 
-void ProgressDialog::incMainValue()
+bool ProgressDialog::incMainValue(int amount)
 {
     QProgressBar *currProgressBar = theDialog->ui->progressBar_0;
 
-    currProgressBar->setValue(currProgressBar->value() + 1);
-    QCoreApplication::processEvents();
+    currProgressBar->setValue(currProgressBar->value() + amount);
+    return !ProgressDialog::wasCanceled();
 }
 
 ProgressDialog &dProgress()

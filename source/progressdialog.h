@@ -44,8 +44,8 @@ public:
     static void doneSub();
 
     static bool wasCanceled();
-    static void incValue();
-    static void incMainValue();
+    static bool incValue();
+    static bool incMainValue(int amount);
 
     friend ProgressDialog &dProgress();
     friend ProgressDialog &dProgressWarn();

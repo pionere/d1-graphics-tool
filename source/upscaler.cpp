@@ -3121,13 +3121,12 @@ bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
     QPair<int, QString> progress;
     progress.first = -1;
     for (int i = 0; i < amount; i++) {
-        if (ProgressDialog::wasCanceled()) {
+        progress.second = QString(QApplication::tr("Upscaling frame %1.")).arg(i + 1);
+        dProgress() << progress;
+        if (!ProgressDialog::incValue()) {
             qDeleteAll(newFrames);
             return false;
         }
-        progress.second = QString(QApplication::tr("Upscaling frame %1.")).arg(i + 1);
-        dProgress() << progress;
-        ProgressDialog::incValue();
 
         D1GfxFrame *newFrame = new D1GfxFrame(*gfx->getFrame(i));
         if (upscaleFrame(newFrame, gfx->palette, params))
@@ -3234,13 +3233,12 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     QPair<int, QString> progress;
     progress.first = -1;
     for (int i = 0; i < amount; i++) {
-        if (ProgressDialog::wasCanceled()) {
+        progress.second = QString(QApplication::tr("Upscaling subtile %1.")).arg(i + 1);
+        dProgress() << progress;
+        if (!ProgressDialog::incValue()) {
             qDeleteAll(newFrames);
             return false;
         }
-        progress.second = QString(QApplication::tr("Upscaling subtile %1.")).arg(i + 1);
-        dProgress() << progress;
-        ProgressDialog::incValue();
 
         D1GfxFrame *subtileFrame = Upscaler::createSubtileFrame(gfx, min, i);
         if (Upscaler::upscaleFrame(subtileFrame, gfx->palette, params))

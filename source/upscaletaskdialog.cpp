@@ -291,8 +291,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             UpscaleTaskDialog::upscaleCel(line, &defaultPal, params, opParams, upParams, saParams);
         }
 
-        for (int i = 0; i < 4; i++)
-            ProgressDialog::incMainValue();
+        ProgressDialog::incMainValue(4);
     }
     { // upscale objects with level-specific palette
         const AssetConfig celPalPairs[] = {
@@ -336,8 +335,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             UpscaleTaskDialog::upscaleCel(celPalPairs[i].path, &pal, params, opParams, upParams, saParams);
         }
 
-        for (int i = 0; i < 1; i++)
-            ProgressDialog::incMainValue();
+        ProgressDialog::incMainValue(1);
     }
     { // upscale special cells of the levels
         const AssetConfig celPalPairs[] = {
@@ -375,8 +373,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             UpscaleTaskDialog::upscaleCel(celPalPairs[i].path, &pal, params, opParams, upParams, saParams);
         }
 
-        for (int i = 0; i < 1; i++)
-            ProgressDialog::incMainValue();
+        ProgressDialog::incMainValue(1);
     }
     { // upscale cutscenes
         const char *celPalPairs[][2] = {
@@ -424,8 +421,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             UpscaleTaskDialog::upscaleCel(celPalPairs[i][0], &pal, params, opParams, upParams, saParams);
         }
 
-        for (int i = 0; i < 8; i++)
-            ProgressDialog::incMainValue();
+        ProgressDialog::incMainValue(8);
     }
     // UpscaleCelComp("f:\\MPQE\\Work\\towners\\animals\\cow.CEL", 2, &diapal[0][0], 128, 128, "f:\\outcel\\towners\\animals\\cow.cel");
     { // upscale non-standard CELs of the menu (converted from PCX)
@@ -478,8 +474,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             UpscaleTaskDialog::upscaleCel(celPalPairs[i][0], &pal, params, opParams, upParams, saParams);
         }
 
-        for (int i = 0; i < 1; i++)
-            ProgressDialog::incMainValue();
+        ProgressDialog::incMainValue(1);
     }
     { // upscale all cl2 files of listfiles.txt
         QFile file(params.listfilesFile);
@@ -519,8 +514,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             UpscaleTaskDialog::upscaleCl2(line, &defaultPal, params, opParams, upParams, saParams);
         }
 
-        for (int i = 0; i < 4; i++)
-            ProgressDialog::incMainValue();
+        ProgressDialog::incMainValue(4);
     }
     /*if (!params.cl2GfxFixed)*/ { // special cases to upscale cl2 files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
@@ -592,8 +586,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             UpscaleTaskDialog::upscaleMin(celPalPairs[i].path, &pal, params, opParams, upParams, saParams);
         }
 
-        for (int i = 0; i < 4; i++)
-            ProgressDialog::incMainValue();
+        ProgressDialog::incMainValue(4);
     }
     /*if (!params.minGfxFixed)*/ { // special cases to upscale cl2 files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
@@ -630,8 +623,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             UpscaleTaskDialog::upscaleMin(botchedMINs[i].path, &pal, params, opParams, upParams, saParams);
         }
 
-        for (int i = 0; i < 1; i++)
-            ProgressDialog::incMainValue();
+        ProgressDialog::incMainValue(1);
     }
     ProgressDialog::doneSub();
 }
