@@ -270,7 +270,7 @@ void CelView::framePixelClicked(const QPoint &pos, unsigned counter)
         frame = this->gfx->getFrame(this->currentFrameIndex);
     }
 
-	QPoint p = pos;
+    QPoint p = pos;
     p -= QPoint(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
     emit this->frameClicked(frame, p, counter);
 }

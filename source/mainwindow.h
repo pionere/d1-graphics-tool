@@ -63,7 +63,7 @@ class EditFrameCommand : public QObject, public QUndoCommand {
     Q_OBJECT
 
 public:
-    explicit EditFrameCommand(D1GfxFrame *frame, int x, int y, D1GfxPixel newPixel);
+    explicit EditFrameCommand(D1GfxFrame *frame, const QPoint &pos, D1GfxPixel newPixel);
     ~EditFrameCommand() = default;
 
     void undo() override;
