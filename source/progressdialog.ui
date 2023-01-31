@@ -14,15 +14,6 @@
     </widget>
    </item>
    <item>
-    <widget class="QProgressBar" name="progressBar_0"/>
-   </item>
-   <item>
-    <widget class="QProgressBar" name="progressBar_1"/>
-   </item>
-   <item>
-    <widget class="QProgressBar" name="progressBar_2"/>
-   </item>
-   <item>
     <widget class="QWidget" name="progressButtonsWidget_1" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <property name="spacing">

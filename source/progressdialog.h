@@ -19,7 +19,6 @@ enum class PROGRESS_STATE {
 
 enum class PROGRESS_DIALOG_STATE {
     ACTIVE,
-    OPEN,
     BACKGROUND,
 };
 
@@ -36,12 +35,12 @@ public:
     explicit ProgressDialog(QWidget *parent = nullptr);
     ~ProgressDialog();
 
-    static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int maxValue);
+    static void open();
+    static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars);
     static void done(bool forceOpen = false);
 
-    static void startSub(int maxValue);
-    static void restartSub(int maxValue);
-    static void doneSub();
+    static void incBar(const QString &label, int maxValue);
+    static void decBar();
 
     static bool wasCanceled();
     static bool incValue();
@@ -72,7 +71,8 @@ private:
     Ui::ProgressDialog *ui;
 
     int textVersion;
-    int barCount;
+    QList<QProgressBar *> progressBars;
+    int activeBars;
     bool errorOnFail;
     PROGRESS_STATE status = PROGRESS_STATE::DONE;
     PROGRESS_TEXT_MODE textMode = PROGRESS_TEXT_MODE::NORMAL;

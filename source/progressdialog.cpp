@@ -26,64 +26,59 @@ ProgressDialog::~ProgressDialog()
     delete ui;
 }
 
-void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int maxValue)
+void ProgressDialog::open()
 {
-    if (mode == PROGRESS_DIALOG_STATE::BACKGROUND) {
-        theDialog->setWindowTitle(label);
-        theDialog->ui->progressLabel->setVisible(false);
-        theDialog->ui->progressBar_0->setVisible(false);
-        theDialog->ui->progressBar_1->setVisible(false);
-        theDialog->ui->progressBar_2->setVisible(false);
-        theDialog->ui->progressButtonsWidget_1->setVisible(false);
-        theDialog->ui->detailsGroupBox->setVisible(true);
-        theDialog->ui->progressButtonsWidget_2->setVisible(true);
-        theDialog->ui->outputTextEdit->clear();
-        theDialog->textVersion = 0;
-        theDialog->barCount = 0;
-        theDialog->errorOnFail = false;
-        theDialog->status = PROGRESS_STATE::RUNNING;
+    theDialog->showNormal();
+    theDialog->adjustSize();
+}
 
+void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars)
+{
+    bool background = mode == PROGRESS_DIALOG_STATE::BACKGROUND;
+
+    theDialog->setWindowTitle(label);
+    theDialog->ui->outputTextEdit->clear();
+    theDialog->textVersion = 0;
+    theDialog->activeBars = 0;
+    theDialog->errorOnFail = false;
+    theDialog->status = PROGRESS_STATE::RUNNING;
+    theDialog->ui->progressLabel->setVisible(!background);
+    theDialog->ui->progressLabel->setText("");
+    theDialog->ui->detailsGroupBox->setVisible(background);
+    theDialog->ui->detailsPushButton->setText(background ? tr("Hide details") : tr("Show details"));
+    theDialog->ui->cancelPushButton->setEnabled(true);
+    theDialog->ui->progressButtonsWidget_1->setVisible(!background);
+    theDialog->ui->progressButtonsWidget_2->setVisible(background);
+    for (int i = 0; i < numBars; i++) {
+        QProgressBar *progressBar = new QProgressBar();
+        theDialog->ui->verticalLayout->insertWidget(1, progressBar);
+        theDialog->progressBars.append(progressBar);
+    }
+    theDialog->adjustSize();
+    for (int i = 0; i < numBars; i++) {
+        QProgressBar *progressBar = theDialog->progressBars[i];
+        progressBar->setVisible(false);
+    }
+
+    if (background) {
         theWidget->update(theDialog->status, true, label);
         return;
     }
-
-    if (mode == PROGRESS_DIALOG_STATE::OPEN) {
-        theDialog->showNormal();
-        theDialog->adjustSize();
-        return;
-    }
+    theWidget->update(theDialog->status, false, "");
 
     theDialog->showNormal();
-
-    theDialog->setWindowTitle(" ");
-    theDialog->ui->progressLabel->setVisible(true);
-    theDialog->ui->progressLabel->setText(label);
-    theDialog->ui->progressBar_0->setVisible(true);
-    theDialog->ui->progressBar_0->setRange(0, maxValue);
-    theDialog->ui->progressBar_0->setValue(0);
-    theDialog->ui->progressBar_1->setVisible(false);
-    theDialog->ui->progressBar_2->setVisible(false);
-    theDialog->ui->cancelPushButton->setEnabled(true);
-    theDialog->ui->progressButtonsWidget_1->setVisible(true);
-    theDialog->ui->detailsGroupBox->setVisible(true);
-    theDialog->ui->progressButtonsWidget_2->setVisible(false);
-    theDialog->on_detailsPushButton_clicked();
-    theDialog->ui->outputTextEdit->clear();
-    theDialog->textVersion = 0;
-    theDialog->barCount = 1;
-    theDialog->errorOnFail = false;
-    theDialog->status = PROGRESS_STATE::RUNNING;
-
-    theWidget->update(theDialog->status, false, "");
 }
 
 void ProgressDialog::done(bool forceOpen)
 {
     theDialog->setWindowTitle(" ");
     theDialog->ui->progressLabel->setVisible(false);
-    theDialog->ui->progressBar_0->setVisible(false);
-    theDialog->ui->progressBar_1->setVisible(false);
-    theDialog->ui->progressBar_2->setVisible(false);
+    for (QProgressBar *progressBar : theDialog->progressBars) {
+        theDialog->ui->verticalLayout->removeWidget(progressBar);
+    }
+    qDeleteAll(theDialog->progressBars);
+    theDialog->progressBars.clear();
+    // theDialog->activeBars = 0;
     theDialog->ui->progressButtonsWidget_1->setVisible(false);
     bool detailsOpen = theDialog->ui->detailsGroupBox->isVisible();
     theDialog->ui->detailsGroupBox->setVisible(true);
@@ -101,35 +96,30 @@ void ProgressDialog::done(bool forceOpen)
     theWidget->update(theDialog->status, !theDialog->ui->outputTextEdit->document()->isEmpty(), "");
 }
 
-void ProgressDialog::startSub(int maxValue)
+void ProgressDialog::incBar(const QString &label, int maxValue)
 {
-    QProgressBar *newProgressBar = theDialog->barCount == 1 ? theDialog->ui->progressBar_1 : theDialog->ui->progressBar_2;
+    if (!label.isEmpty()) {
+        theDialog->ui->progressLabel->setText(label);
+    }
+    QProgressBar *newProgressBar = progressBars[theDialog->activeBars];
 
     theDialog->errorOnFail = true;
-    theDialog->barCount++;
-    newProgressBar->setVisible(true);
+    theDialog->activeBars++;
     newProgressBar->setRange(0, maxValue);
     newProgressBar->setValue(0);
-    theDialog->adjustSize();
+    newProgressBar->setVisible(true);
+
+    theDialog->update();
 }
 
-void ProgressDialog::restartSub(int maxValue)
+void ProgressDialog::decBar()
 {
-    QProgressBar *currProgressBar = theDialog->barCount == 2 ? theDialog->ui->progressBar_1 : theDialog->ui->progressBar_2;
+    theDialog->activeBars--;
 
-    currProgressBar->setRange(0, maxValue);
-    currProgressBar->setValue(0);
-    currProgressBar->update();
-}
-
-void ProgressDialog::doneSub()
-{
-    QProgressBar *oldProgressBar = theDialog->barCount == 2 ? theDialog->ui->progressBar_1 : theDialog->ui->progressBar_2;
+    QProgressBar *oldProgressBar = progressBars[theDialog->activeBars];
 
     theDialog->errorOnFail = false;
-    theDialog->barCount--;
     oldProgressBar->setVisible(false);
-    theDialog->adjustSize();
 }
 
 bool ProgressDialog::wasCanceled()
@@ -141,20 +131,7 @@ bool ProgressDialog::wasCanceled()
 
 bool ProgressDialog::incValue()
 {
-    QProgressBar *currProgressBar;
-
-    switch (theDialog->barCount) {
-    case 0:
-    case 1:
-        currProgressBar = theDialog->ui->progressBar_0;
-        break;
-    case 2:
-        currProgressBar = theDialog->ui->progressBar_1;
-        break;
-    default: // case 3:
-        currProgressBar = theDialog->ui->progressBar_2;
-        break;
-    }
+    QProgressBar *currProgressBar = progressBars[theDialog->activeBars - 1];
 
     currProgressBar->setValue(currProgressBar->value() + 1);
     return !ProgressDialog::wasCanceled();
@@ -162,7 +139,7 @@ bool ProgressDialog::incValue()
 
 bool ProgressDialog::incMainValue(int amount)
 {
-    QProgressBar *currProgressBar = theDialog->ui->progressBar_0;
+    QProgressBar *currProgressBar = progressBars[0];
 
     currProgressBar->setValue(currProgressBar->value() + amount);
     return !ProgressDialog::wasCanceled();
@@ -265,7 +242,18 @@ void ProgressDialog::on_detailsPushButton_clicked()
     bool currVisible = this->ui->detailsGroupBox->isVisible();
     this->ui->detailsGroupBox->setVisible(!currVisible);
     this->ui->detailsPushButton->setText(currVisible ? tr("Show details") : tr("Hide details"));
+
+    QList<QProgressBar *> hiddenBars;
+    for (QProgressBar *progressBar : theDialog->progressBars) {
+        if (!progressBar->isVisible()) {
+            progressBar->setVisible(true);
+            hiddenBars.append(progressBar);
+        }
+    }
     this->adjustSize();
+    for (QProgressBar *progressBar : hiddenBars) {
+        progressBar->setVisible(false);
+    }
 }
 
 void ProgressDialog::on_cancelPushButton_clicked()
@@ -353,5 +341,5 @@ void ProgressWidget::update(PROGRESS_STATE status, bool active, const QString &l
 
 void ProgressWidget::on_openPushButton_clicked()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::OPEN, "", 0);
+    ProgressDialog::open();
 }

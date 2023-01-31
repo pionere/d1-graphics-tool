@@ -106,7 +106,7 @@ void UpscaleTaskDialog::on_upscaleButton_clicked()
 
     this->close();
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling assets..."), 25 + 1);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling assets..."), 2);
 
     UpscaleTaskDialog::runTask(params);
 
@@ -162,12 +162,13 @@ void UpscaleTaskDialog::upscaleCel(const QString &path, D1Pal *pal, const Upscal
         return;
     }
     // upscale
-    ProgressDialog::restartSub(gfx.getFrameCount() + 1);
+    ProgressDialog::incBar("", gfx.getFrameCount() + 1);
     if (Upscaler::upscaleGfx(&gfx, upParams)) {
         // store the result
         saParams.celFilePath = outFilePath;
         D1Cel::save(gfx, saParams);
     }
+    ProgressDialog::decBar();
 }
 
 void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams)
@@ -183,12 +184,13 @@ void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const Upscal
         return;
     }
     // upscale
-    ProgressDialog::restartSub(gfx.getFrameCount() + 1);
+    ProgressDialog::incBar("", gfx.getFrameCount() + 1);
     if (Upscaler::upscaleGfx(&gfx, upParams)) {
         // store the result
         saParams.celFilePath = outFilePath;
         D1Cl2::save(gfx, saParams);
     }
+    ProgressDialog::decBar();
 }
 
 void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams)
@@ -227,7 +229,7 @@ void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const Upscal
         return;
     }
     // upscale
-    ProgressDialog::restartSub(min.getSubtileCount() + 1);
+    ProgressDialog::incBar("", min.getSubtileCount() + 1);
     if (Upscaler::upscaleTileset(&gfx, &min, upParams)) {
         // store the result
         saParams.celFilePath = outFilePath;
@@ -235,6 +237,7 @@ void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const Upscal
         saParams.minFilePath = outMinPath;
         min.save(saParams);
     }
+    ProgressDialog::decBar();
 }
 
 void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
@@ -242,7 +245,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
     D1Pal defaultPal;
     defaultPal.load(D1Pal::DEFAULT_PATH);
 
-    ProgressDialog::startSub(1);
+    ProgressDialog::incBar("", 25 + 1);
 
     { // upscale regular cel files of listfiles.txt
       //  - skips Levels(dungeon tiles), gendata(cutscenes) and cow.CEL manually
@@ -481,8 +484,6 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             dProgressErr() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(params.listfilesFile));
         }
 
-        file.seek(0);
-
         SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = params.autoOverwrite;
 
@@ -622,5 +623,6 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         ProgressDialog::incMainValue(1);
     }
-    ProgressDialog::doneSub();
+
+    ProgressDialog::decBar();
 }
