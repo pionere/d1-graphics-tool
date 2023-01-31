@@ -200,7 +200,6 @@ quint8 *D1CelTilesetFrame::writeFrameData(D1GfxFrame &frame, quint8 *pDst)
 
 quint8 *D1CelTilesetFrame::WriteSquare(D1GfxFrame &frame, quint8 *pDst)
 {
-    int x, y;
     // int length = MICRO_WIDTH * MICRO_HEIGHT;
 
     // add opaque pixels
