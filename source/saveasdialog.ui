@@ -19,21 +19,39 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QGroupBox" name="outputFileGroupBox">
-     <property name="title">
-      <string>CEL/CL2 File</string>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_4">
-      <item>
+     <layout class="QGridLayout" name="gridLayout_1">
+      <item row="0" column="0">
+       <widget class="QLabel" name="autoOverwriteLabel">
+        <property name="text">
+         <string>CEL/CL2 File:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
        <widget class="LineEditWidget" name="outputCelFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item>
+      <item row="0" column="2">
        <widget class="QPushButton" name="outputCelFileBrowseButton">
         <property name="text">
          <string>Browse</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="autoOverwriteLabel">
+        <property name="text">
+         <string>Overwrite all:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="autoOverwriteCheckBox">
+        <property name="toolTip">
+         <string>Overwrite files without confirmation-request</string>
         </property>
        </widget>
       </item>
@@ -304,20 +322,6 @@
        <widget class="QPushButton" name="outputTmiFileBrowseButton">
         <property name="text">
          <string>Browse</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLabel" name="autoOverwriteLabel">
-        <property name="text">
-         <string>Overwrite all:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1">
-       <widget class="QCheckBox" name="autoOverwriteCheckBox">
-        <property name="toolTip">
-         <string>Overwrite files without confirmation-request</string>
         </property>
        </widget>
       </item>
