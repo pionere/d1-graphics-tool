@@ -263,12 +263,9 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = params.autoOverwrite;
 
-        while (file.canReadLine()) {
-            QString line = file.readLine();
-            size_t ls = line.size();
-            dProgress() << QString("Line %1. s:%2, 0:%3").arg(line).arg(ls).arg(line[0]);
-            if (ls <= 4)
-                continue;
+        QTextStream in(&file);
+        QString line;
+        while (in.readLineInto(&line)) {
             if (line[0] == '_')
                 continue;
             QString lineLower = line.toLower();
@@ -482,7 +479,6 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         if (!file.open(QIODevice::ReadOnly)) {
             dProgressErr() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(params.listfilesFile));
-            return;
         }
 
         file.seek(0);
@@ -498,11 +494,9 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.lastfixcolor = -1;
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
 
-        while (file.canReadLine()) {
-            QString line = file.readLine();
-            size_t ls = line.size();
-            if (ls <= 4)
-                continue;
+        QTextStream in(&file);
+        QString line;
+        while (in.readLineInto(&line)) {
             if (line[0] == '_')
                 continue;
             if (!line.toLower().endsWith(".cl2"))
