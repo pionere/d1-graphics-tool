@@ -2675,7 +2675,7 @@ static bool BottomTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, Q
     return true;
 }
 
-void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &params)
+bool Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &params)
 {
     ANTI_ALIASING_MODE antiAliasingMode = params.antiAliasingMode;
     UpscalingParam upParams;
@@ -2690,6 +2690,9 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
     for (int y = 0; y < frame->height; y++) {
         QList<D1GfxPixel> pixelLine;
         for (int x = 0; x < frame->width; x++) {
+            if (ProgressDialog::wasCanceled()) {
+                return false;
+            }
             for (int n = 0; n < multiplier; n++) {
                 pixelLine.append(frame->pixels[y][x]);
             }
@@ -2706,7 +2709,7 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
             int x;
             for (x = 0; x < newWidth - multiplier; x += multiplier) {
                 if (ProgressDialog::wasCanceled()) {
-                    return;
+                    return false;
                 }
                 D1GfxPixel *p0 = &newPixels[y][x];
                 if (p0->isTransparent())
@@ -2858,10 +2861,10 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
 #endif
         for (int y = 0; y < frame->height; y++) {
             for (int x = 0; x < frame->width; x++) {
-                if (ProgressDialog::wasCanceled()) {
-                    return;
-                }
                 for (int k = 0; k < lengthof(patterns); k++) {
+                    if (ProgressDialog::wasCanceled()) {
+                        return false;
+                    }
                     UpscalePatterns &ptn = patterns[k];
                     BYTE w = ptn.pattern[0];
                     BYTE h = ptn.pattern[1];
@@ -3106,6 +3109,7 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
     frame->pixels.swap(newPixels);
     frame->width *= multiplier;
     frame->height *= multiplier;
+    return true;
 }
 
 bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
@@ -3126,8 +3130,8 @@ bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
         ProgressDialog::incValue();
 
         D1GfxFrame *newFrame = new D1GfxFrame(*gfx->getFrame(i));
-        upscaleFrame(newFrame, gfx->palette, params);
-        newFrames.append(newFrame);
+        if (upscaleFrame(newFrame, gfx->palette, params))
+            newFrames.append(newFrame);
     }
     if (ProgressDialog::wasCanceled()) {
         qDeleteAll(newFrames);
@@ -3239,8 +3243,8 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
         ProgressDialog::incValue();
 
         D1GfxFrame *subtileFrame = Upscaler::createSubtileFrame(gfx, min, i);
-        Upscaler::upscaleFrame(subtileFrame, gfx->palette, params);
-        Upscaler::storeSubtileFrame(subtileFrame, newFrameReferences, newFrames);
+        if (Upscaler::upscaleFrame(subtileFrame, gfx->palette, params))
+            Upscaler::storeSubtileFrame(subtileFrame, newFrameReferences, newFrames);
         delete subtileFrame;
     }
     if (ProgressDialog::wasCanceled()) {

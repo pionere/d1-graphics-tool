@@ -106,7 +106,7 @@ void UpscaleTaskDialog::on_upscaleButton_clicked()
 
     this->close();
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling assets..."), 18 + 1);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling assets..."), 25 + 1);
 
     UpscaleTaskDialog::runTask(params);
 
@@ -426,7 +426,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             UpscaleTaskDialog::upscaleCel(celPalPairs[i][0], &pal, params, opParams, upParams, saParams);
         }
 
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 8; i++)
             ProgressDialog::incValue();
     }
     // UpscaleCelComp("f:\\MPQE\\Work\\towners\\animals\\cow.CEL", 2, &diapal[0][0], 128, 128, "f:\\outcel\\towners\\animals\\cow.cel");
