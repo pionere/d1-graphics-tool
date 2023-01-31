@@ -2698,7 +2698,6 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
             newPixels.append(pixelLine);
         }
     }
-
     { // resample the pixels
         int newHeight = frame->height * multiplier;
         int newWidth = frame->width * multiplier;
@@ -2706,6 +2705,9 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
         for (y = 0; y < newHeight - multiplier; y += multiplier) {
             int x;
             for (x = 0; x < newWidth - multiplier; x += multiplier) {
+                if (ProgressDialog::wasCanceled()) {
+                    return;
+                }
                 D1GfxPixel *p0 = &newPixels[y][x];
                 if (p0->isTransparent())
                     continue; // skip transparent pixels
@@ -2856,6 +2858,9 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
 #endif
         for (int y = 0; y < frame->height; y++) {
             for (int x = 0; x < frame->width; x++) {
+                if (ProgressDialog::wasCanceled()) {
+                    return;
+                }
                 for (int k = 0; k < lengthof(patterns); k++) {
                     UpscalePatterns &ptn = patterns[k];
                     BYTE w = ptn.pattern[0];
