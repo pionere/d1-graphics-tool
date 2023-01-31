@@ -3193,12 +3193,12 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<qui
             D1GfxFrame *newFrame = newFrames.last();
             newFrame->width = MICRO_WIDTH;
             newFrame->height = MICRO_HEIGHT;
-            for (int i = 0; i < newFrame->height; i++) {
+            for (int i = 0; i < MICRO_HEIGHT; i++) {
                 newFrame->pixels.append(QList<D1GfxPixel>());
             }
             for (QPoint framePos = QPoint(0, 0); framePos.y() < MICRO_HEIGHT; framePos.ry()++) {
                 for (framePos.rx() = 0; framePos.x() < MICRO_WIDTH; framePos.rx()++) {
-                    newFrame->pixels[yy].append(subtileFrame->getPixel(pos + framePos));
+                    newFrame->pixels[framePos.y()].append(subtileFrame->getPixel(pos + framePos));
                 }
             }
             LevelTabFrameWidget::selectFrameType(newFrame);
