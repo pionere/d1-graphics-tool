@@ -2,6 +2,7 @@
 
 #include <QDialog>
 #include <QFrame>
+#include <QProgressBar>
 
 namespace Ui {
 class ProgressDialog;

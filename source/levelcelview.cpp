@@ -1815,18 +1815,20 @@ bool LevelCelView::removeUnusedFrames()
         }
     }
     // remove the unused frames
-    bool result = false;
+    int result = 0;
     for (int i = this->gfx->getFrameCount() - 1; i >= 0; i--) {
-        if (!ProgressDialog::incValue())
-            return;
+        if (!ProgressDialog::incValue()) {
+            result |= 2;
+            break;
+        }
         if (!frameUsed[i]) {
             this->removeFrame(i);
             dProgress() << tr("Removed frame %1.").arg(i);
-            result = true;
+            result = 1;
         }
     }
     ProgressDialog::decBar();
-    return result;
+    return result != 0;
 }
 
 bool LevelCelView::removeUnusedSubtiles()
@@ -1844,18 +1846,20 @@ bool LevelCelView::removeUnusedSubtiles()
         }
     }
     // remove the unused subtiles
-    bool result = false;
+    int result = 0;
     for (int i = this->min->getSubtileCount() - 1; i >= 0; i--) {
-        if (!ProgressDialog::incValue())
-            return;
+        if (!ProgressDialog::incValue()) {
+            result |= 2;
+            break;
+        }
         if (!subtileUsed[i]) {
             this->removeSubtile(i);
             dProgress() << tr("Removed subtile %1.").arg(i);
-            result = true;
+            result = 1;
         }
     }
     ProgressDialog::decBar();
-    return result;
+    return result != 0;
 }
 
 void LevelCelView::cleanupFrames()
