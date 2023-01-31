@@ -171,7 +171,7 @@ static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize
             *(quint16 *)(&pHeader[(i / CEL_BLOCK_HEIGHT) * 2]) = SwapLE16(pHead - pHeader); // pHead - buf - SUB_HEADER_SIZE;
         }
         for (int j = 0; j < frame->getWidth(); j++) {
-            D1GfxPixel pixel = frame->getPixel(j, frame->getHeight() - i);
+            D1GfxPixel pixel = frame->getPixel(QPoint(j, frame->getHeight() - i));
             if (!pixel.isTransparent()) {
                 // add opaque pixel
                 if (alpha || *pHead > 126) {

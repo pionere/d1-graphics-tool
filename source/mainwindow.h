@@ -52,10 +52,9 @@ class MainWindow;
 }
 
 typedef struct FramePixel {
-    FramePixel(int x, int y, D1GfxPixel p);
+    FramePixel(const QPoint &p, D1GfxPixel px);
 
-    int x;
-    int y;
+    QPoint pos;
     D1GfxPixel pixel;
 } FramePixel;
 
@@ -63,7 +62,7 @@ class EditFrameCommand : public QObject, public QUndoCommand {
     Q_OBJECT
 
 public:
-    explicit EditFrameCommand(D1GfxFrame *frame, int x, int y, D1GfxPixel newPixel);
+    explicit EditFrameCommand(D1GfxFrame *frame, const QPoint &pos, D1GfxPixel newPixel);
     ~EditFrameCommand() = default;
 
     void undo() override;
@@ -115,7 +114,7 @@ private:
     bool loadUniqueTrn(QString trnfilePath);
     bool loadBaseTrn(QString trnfilePath);
 
-    void frameClicked(D1GfxFrame *frame, int x, int y, unsigned counter);
+    void frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter);
     void frameModified();
     void colorModified();
     void reloadConfig();

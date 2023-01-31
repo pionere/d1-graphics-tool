@@ -177,16 +177,16 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *ba
             pcxPal = resPal;
         }
         QImage image = QImage(frame.width, frame.height, QImage::Format_ARGB32);
-        for (int y = 0; y < frame.height; y++) {
-            for (int x = 0; x < frame.width; dataPtr++) {
+        for (QPoint pos = QPoint(0, 0); pos.y() < frame.height; pos.ry()++) {
+            for (pos.rx() = 0; pos.x() < frame.width; dataPtr++) {
                 byte = *dataPtr;
                 if (byte <= PCX_MAX_SINGLE_PIXEL) {
                     QColor color = pcxPal->getColor(byte);
                     if (color == resPal->getUndefinedColor()) {
                         color = Qt::transparent;
                     }
-                    image.setPixelColor(x, y, color);
-                    x++;
+                    image.setPixelColor(pos, color);
+                    pos.rx()++;
                     continue;
                 }
                 byte &= PCX_RUNLENGTH_MASK;
@@ -197,9 +197,9 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *ba
                     color = Qt::transparent;
                 }
                 for (int i = 0; i < byte; i++) {
-                    image.setPixelColor(x + i, y, color);
+                    pos.rx()++;
+                    image.setPixelColor(pos, color);
                 }
-                x += byte;
             }
             dataPtr += srcSkip;
         }

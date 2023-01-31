@@ -178,7 +178,7 @@ void LevelCelView::changeColor(quint8 startColorIndex, quint8 endColorIndex, D1G
     this->displayFrame();
 }
 
-void LevelCelView::framePixelClicked(unsigned x, unsigned y, unsigned counter)
+void LevelCelView::framePixelClicked(const QPoint &pos, unsigned counter)
 {
     unsigned celFrameWidth = MICRO_WIDTH; // this->gfx->getFrameWidth(this->currentFrameIndex);
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
@@ -189,16 +189,16 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y, unsigned counter)
     unsigned subtileShiftY = subtileWidth / 4;
     unsigned tileHeight = subtileHeight + 2 * subtileShiftY;
 
-    if (x >= (celFrameWidth + CEL_SCENE_SPACING * 2)
-        && x < (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 2)
-        && y >= CEL_SCENE_SPACING
-        && y < (subtileHeight + CEL_SCENE_SPACING)
+    if (pos.x() >= (int)(celFrameWidth + CEL_SCENE_SPACING * 2)
+        && pos.x() < (int)(celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 2)
+        && pos.y() >= CEL_SCENE_SPACING
+        && pos.y() < (int)(subtileHeight + CEL_SCENE_SPACING)
         && this->min->getSubtileCount() != 0) {
         // When a CEL frame is clicked in the subtile, display the corresponding CEL frame
 
         // Adjust coordinates
-        unsigned stx = x - (celFrameWidth + CEL_SCENE_SPACING * 2);
-        unsigned sty = y - CEL_SCENE_SPACING;
+        unsigned stx = pos.x() - (celFrameWidth + CEL_SCENE_SPACING * 2);
+        unsigned sty = pos.y() - CEL_SCENE_SPACING;
 
         // qDebug() << "Subtile clicked: " << stx << "," << sty;
 
@@ -240,16 +240,16 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y, unsigned counter)
         });
         timer->start(500);
         return;
-    } else if (x >= (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
-        && x < (celFrameWidth + subtileWidth + tileWidth + CEL_SCENE_SPACING * 3)
-        && y >= CEL_SCENE_SPACING
-        && y < (tileHeight + CEL_SCENE_SPACING)
+    } else if (pos.x() >= (int)(celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
+        && pos.x() < (int)(celFrameWidth + subtileWidth + tileWidth + CEL_SCENE_SPACING * 3)
+        && pos.y() >= CEL_SCENE_SPACING
+        && pos.y() < (int)(tileHeight + CEL_SCENE_SPACING)
         && this->til->getTileCount() != 0) {
         // When a subtile is clicked in the tile, display the corresponding subtile
 
         // Adjust coordinates
-        unsigned tx = x - (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3);
-        unsigned ty = y - CEL_SCENE_SPACING;
+        unsigned tx = pos.x() - (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3);
+        unsigned ty = pos.y() - CEL_SCENE_SPACING;
 
         // qDebug() << "Tile clicked" << tx << "," << ty;
 
@@ -298,7 +298,9 @@ void LevelCelView::framePixelClicked(unsigned x, unsigned y, unsigned counter)
     if (this->gfx->getFrameCount() != 0) {
         frame = this->gfx->getFrame(this->currentFrameIndex);
     }
-    emit this->frameClicked(frame, x - CEL_SCENE_SPACING, y - CEL_SCENE_SPACING, counter);
+    QPoint p = pos;
+    p -= QPoint(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
+    emit this->frameClicked(frame, p, counter);
 }
 
 void LevelCelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)
@@ -320,18 +322,18 @@ void LevelCelView::assignFrames(const QImage &image, int subtileIndex, int frame
 
     // TODO: merge with LevelCelView::insertSubtile ?
     QImage subImage = QImage(MICRO_WIDTH, MICRO_HEIGHT, QImage::Format_ARGB32);
-    for (int y = 0; y < image.height(); y += MICRO_HEIGHT) {
-        for (int x = 0; x < image.width(); x += MICRO_WIDTH) {
+    for (QPoint pos = QPoint(0, 0); pos.y() < image.height(); pos.ry() += MICRO_HEIGHT) {
+        for (pos.rx() = 0; pos.x() < image.width(); pos.rx() += MICRO_WIDTH) {
             // subImage.fill(Qt::transparent);
 
             bool hasColor = false;
-            for (int j = 0; j < MICRO_HEIGHT; j++) {
-                for (int i = 0; i < MICRO_WIDTH; i++) {
-                    const QColor color = image.pixelColor(x + i, y + j);
+            for (QPoint framePos = QPoint(0, 0); framePos.y() < MICRO_HEIGHT; framePos.ry()++) {
+                for (framePos.rx() = 0; framePos.x() < MICRO_WIDTH; framePos.rx()++) {
+                    const QColor color = image.pixelColor(pos + framePos);
                     if (color.alpha() >= COLOR_ALPHA_LIMIT) {
                         hasColor = true;
                     }
-                    subImage.setPixelColor(i, j, color);
+                    subImage.setPixelColor(framePos, color);
                 }
             }
             frameReferencesList.append(hasColor ? frameIndex + 1 : 0);
@@ -359,12 +361,12 @@ void LevelCelView::assignFrames(const D1GfxFrame &frame, int subtileIndex, int f
     QList<quint16> frameReferencesList;
 
     // TODO: merge with LevelCelView::insertSubtile ?
-    for (int y = 0; y < frame.getHeight(); y += MICRO_HEIGHT) {
-        for (int x = 0; x < frame.getWidth(); x += MICRO_WIDTH) {
+    for (QPoint pos = QPoint(0, 0); pos.y() < frame.getHeight(); pos.ry() += MICRO_HEIGHT) {
+        for (pos.rx() = 0; pos.x() < frame.getWidth(); pos.rx() += MICRO_WIDTH) {
             bool hasColor = false;
-            for (int j = 0; j < MICRO_HEIGHT; j++) {
-                for (int i = 0; i < MICRO_WIDTH; i++) {
-                    if (!frame.getPixel(x + i, y + j).isTransparent()) {
+            for (QPoint framePos = QPoint(0, 0); framePos.y() < MICRO_HEIGHT; framePos.ry()++) {
+                for (framePos.rx() = 0; framePos.x() < MICRO_WIDTH; framePos.rx()++) {
+                    if (!frame.getPixel(pos + framePos).isTransparent()) {
                         hasColor = true;
                     }
                 }
@@ -376,10 +378,10 @@ void LevelCelView::assignFrames(const D1GfxFrame &frame, int subtileIndex, int f
 
             bool clipped;
             D1GfxFrame *subFrame = this->gfx->insertFrame(frameIndex, &clipped);
-            for (int j = 0; j < MICRO_HEIGHT; j++) {
+            for (QPoint framePos = QPoint(0, 0); framePos.y() < MICRO_HEIGHT; framePos.ry()++) {
                 QList<D1GfxPixel> pixelLine;
-                for (int i = 0; i < MICRO_WIDTH; i++) {
-                    pixelLine.append(frame.getPixel(x + i, y + j));
+                for (framePos.rx() = 0; framePos.x() < MICRO_WIDTH; framePos.rx()++) {
+                    pixelLine.append(frame.getPixel(pos + framePos));
                 }
                 subFrame->addPixelLine(pixelLine);
             }
@@ -541,22 +543,22 @@ void LevelCelView::assignSubtiles(const QImage &image, int tileIndex, int subtil
         this->til->setModified();
     }
     // TODO: merge with LevelCelView::insertTile ?
-    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
-    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+    int subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    int subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     QImage subImage = QImage(subtileWidth, subtileHeight, QImage::Format_ARGB32);
-    for (int y = 0; y < image.height(); y += subtileHeight) {
-        for (int x = 0; x < image.width(); x += subtileWidth) {
+    for (QPoint pos = QPoint(0, 0); pos.y() < image.height(); pos.ry() += subtileHeight) {
+        for (pos.rx() = 0; pos.x() < image.width(); pos.rx() += subtileWidth) {
             // subImage.fill(Qt::transparent);
 
             bool hasColor = false;
-            for (unsigned j = 0; j < subtileHeight; j++) {
-                for (unsigned i = 0; i < subtileWidth; i++) {
-                    const QColor color = image.pixelColor(x + i, y + j);
+            for (QPoint subtilePos = QPoint(0, 0); subtilePos.y() < subtileHeight; subtilePos.ry()++) {
+                for (subtilePos.rx() = 0; subtilePos.x() < subtileWidth; subtilePos.rx()++) {
+                    const QColor color = image.pixelColor(pos + subtilePos);
                     if (color.alpha() >= COLOR_ALPHA_LIMIT) {
                         hasColor = true;
                     }
-                    subImage.setPixelColor(i, j, color);
+                    subImage.setPixelColor(subtilePos, color);
                 }
             }
 
@@ -581,17 +583,17 @@ void LevelCelView::assignSubtiles(const D1GfxFrame &frame, int tileIndex, int su
         this->til->setModified();
     }
     // TODO: merge with LevelCelView::insertTile ?
-    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
-    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+    int subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    int subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
-    for (int y = 0; y < frame.getHeight(); y += subtileHeight) {
-        for (int x = 0; x < frame.getWidth(); x += subtileWidth) {
+    for (QPoint pos = QPoint(0, 0); pos.y() < frame.getHeight(); pos.ry() += subtileHeight) {
+        for (pos.rx() = 0; pos.x() < frame.getWidth(); pos.rx() += subtileWidth) {
             D1GfxFrame subFrame;
             bool hasColor = false;
-            for (unsigned j = 0; j < subtileHeight; j++) {
+            for (QPoint subtilePos = QPoint(0, 0); subtilePos.y() < subtileHeight; subtilePos.ry()++) {
                 QList<D1GfxPixel> pixelLine;
-                for (unsigned i = 0; i < subtileWidth; i++) {
-                    D1GfxPixel pixel = frame.getPixel(x + i, y + j);
+                for (subtilePos.rx() = 0; subtilePos.x() < subtileWidth; subtilePos.rx()++) {
+                    D1GfxPixel pixel = frame.getPixel(pos + subtilePos);
                     if (!pixel.isTransparent()) {
                         hasColor = true;
                     }
@@ -757,18 +759,18 @@ void LevelCelView::insertSubtile(int subtileIndex, const QImage &image)
 
     int frameIndex = this->gfx->getFrameCount();
     QImage subImage = QImage(MICRO_WIDTH, MICRO_HEIGHT, QImage::Format_ARGB32);
-    for (int y = 0; y < image.height(); y += MICRO_HEIGHT) {
-        for (int x = 0; x < image.width(); x += MICRO_WIDTH) {
+    for (QPoint pos = QPoint(0, 0); pos.y() < image.height(); pos.ry() += MICRO_HEIGHT) {
+        for (pos.rx() = 0; pos.x() < image.width(); pos.rx() += MICRO_WIDTH) {
             // subImage.fill(Qt::transparent);
 
             bool hasColor = false;
-            for (int j = 0; j < MICRO_HEIGHT; j++) {
-                for (int i = 0; i < MICRO_WIDTH; i++) {
-                    const QColor color = image.pixelColor(x + i, y + j);
+            for (QPoint framePos = QPoint(0, 0); framePos.y() < MICRO_HEIGHT; framePos.ry()++) {
+                for (framePos.rx() = 0; framePos.x() < MICRO_WIDTH; framePos.rx()++) {
+                    const QColor color = image.pixelColor(pos + framePos);
                     if (color.alpha() >= COLOR_ALPHA_LIMIT) {
                         hasColor = true;
                     }
-                    subImage.setPixelColor(i, j, color);
+                    subImage.setPixelColor(framePos, color);
                 }
             }
 
@@ -793,12 +795,12 @@ void LevelCelView::insertSubtile(int subtileIndex, const D1GfxFrame &frame)
     QList<quint16> frameReferencesList;
 
     int frameIndex = this->gfx->getFrameCount();
-    for (int y = 0; y < frame.getHeight(); y += MICRO_HEIGHT) {
-        for (int x = 0; x < frame.getWidth(); x += MICRO_WIDTH) {
+    for (QPoint pos = QPoint(0, 0); pos.y() < frame.getHeight(); pos.ry() += MICRO_HEIGHT) {
+        for (pos.rx() = 0; pos.x() < frame.getWidth(); pos.rx() += MICRO_WIDTH) {
             bool hasColor = false;
-            for (int j = 0; j < MICRO_HEIGHT; j++) {
-                for (int i = 0; i < MICRO_WIDTH; i++) {
-                    if (!frame.getPixel(x + i, y + j).isTransparent()) {
+            for (QPoint framePos = QPoint(0, 0); framePos.y() < MICRO_HEIGHT; framePos.ry()++) {
+                for (framePos.rx() = 0; framePos.x() < MICRO_WIDTH; framePos.rx()++) {
+                    if (!frame.getPixel(pos + framePos).isTransparent()) {
                         hasColor = true;
                     }
                 }
@@ -812,10 +814,10 @@ void LevelCelView::insertSubtile(int subtileIndex, const D1GfxFrame &frame)
 
             bool clipped;
             D1GfxFrame *subFrame = this->gfx->insertFrame(frameIndex, &clipped);
-            for (int j = 0; j < MICRO_HEIGHT; j++) {
+            for (QPoint framePos = QPoint(0, 0); framePos.y() < MICRO_HEIGHT; framePos.ry()++) {
                 QList<D1GfxPixel> pixelLine;
-                for (int i = 0; i < MICRO_WIDTH; i++) {
-                    pixelLine.append(frame.getPixel(x + i, y + j));
+                for (framePos.rx() = 0; framePos.x() < MICRO_WIDTH; framePos.rx()++) {
+                    pixelLine.append(frame.getPixel(pos + framePos));
                 }
                 subFrame->addPixelLine(pixelLine);
             }
@@ -832,22 +834,22 @@ void LevelCelView::insertTile(int tileIndex, const QImage &image)
 {
     QList<quint16> subtileIndices;
 
-    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
-    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+    int subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    int subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     QImage subImage = QImage(subtileWidth, subtileHeight, QImage::Format_ARGB32);
-    for (int y = 0; y < image.height(); y += subtileHeight) {
-        for (int x = 0; x < image.width(); x += subtileWidth) {
+    for (QPoint pos = QPoint(0, 0); pos.y() < image.height(); pos.ry() += subtileHeight) {
+        for (pos.rx() = 0; pos.x() < image.width(); pos.rx() += subtileWidth) {
             // subImage.fill(Qt::transparent);
 
             // bool hasColor = false;
-            for (unsigned j = 0; j < subtileHeight; j++) {
-                for (unsigned i = 0; i < subtileWidth; i++) {
-                    const QColor color = image.pixelColor(x + i, y + j);
+            for (QPoint subtilePos = QPoint(0, 0); subtilePos.y() < subtileHeight; subtilePos.ry()++) {
+                for (subtilePos.rx() = 0; subtilePos.x() < subtileWidth; subtilePos.rx()++) {
+                    const QColor color = image.pixelColor(pos + subtilePos);
                     // if (color.alpha() >= COLOR_ALPHA_LIMIT) {
                     //    hasColor = true;
                     // }
-                    subImage.setPixelColor(i, j, color);
+                    subImage.setPixelColor(subtilePos, color);
                 }
             }
 
@@ -864,16 +866,16 @@ void LevelCelView::insertTile(int tileIndex, const D1GfxFrame &frame)
 {
     QList<quint16> subtileIndices;
 
-    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
-    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+    int subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    int subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
-    for (int y = 0; y < frame.getHeight(); y += subtileHeight) {
-        for (int x = 0; x < frame.getWidth(); x += subtileWidth) {
+    for (QPoint pos = QPoint(0, 0); pos.y() < frame.getHeight(); pos.ry() += subtileHeight) {
+        for (pos.rx() = 0; pos.x() < frame.getWidth(); pos.rx() += subtileWidth) {
             D1GfxFrame subFrame;
-            for (unsigned j = 0; j < subtileHeight; j++) {
+            for (QPoint subtilePos = QPoint(0, 0); subtilePos.y() < subtileHeight; subtilePos.ry()++) {
                 QList<D1GfxPixel> pixelLine;
-                for (unsigned i = 0; i < subtileWidth; i++) {
-                    pixelLine.append(frame.getPixel(x + i, y + j));
+                for (subtilePos.rx() = 0; subtilePos.x() < subtileWidth; subtilePos.rx()++) {
+                    pixelLine.append(frame.getPixel(pos + subtilePos));
                 }
                 subFrame.addPixelLine(pixelLine);
             }
@@ -889,8 +891,8 @@ void LevelCelView::insertTile(int tileIndex, const D1GfxFrame &frame)
 
 void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QImage &image)
 {
-    unsigned tileWidth = this->min->getSubtileWidth() * MICRO_WIDTH * TILE_WIDTH * TILE_HEIGHT;
-    unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+    int tileWidth = this->min->getSubtileWidth() * MICRO_WIDTH * TILE_WIDTH * TILE_HEIGHT;
+    int tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     if ((image.width() % tileWidth) != 0 || (image.height() % tileHeight) != 0) {
         if (mode != IMAGE_FILE_MODE::AUTO) {
@@ -908,18 +910,18 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QImage &im
     }*/
 
     QImage subImage = QImage(tileWidth, tileHeight, QImage::Format_ARGB32);
-    for (int y = 0; y < image.height(); y += tileHeight) {
-        for (int x = 0; x < image.width(); x += tileWidth) {
+    for (QPoint pos = QPoint(0, 0); pos.y() < image.height(); pos.ry() += tileHeight) {
+        for (pos.rx() = 0; pos.x() < image.width(); pos.rx() += tileWidth) {
             // subImage.fill(Qt::transparent);
 
             bool hasColor = false;
-            for (unsigned j = 0; j < tileHeight; j++) {
-                for (unsigned i = 0; i < tileWidth; i++) {
-                    const QColor color = image.pixelColor(x + i, y + j);
+            for (QPoint tilePos = QPoint(0, 0); tilePos.y() < tileHeight; tilePos.ry()++) {
+                for (tilePos.rx() = 0; tilePos.x() < tileWidth; tilePos.rx()++) {
+                    const QColor color = image.pixelColor(pos + tilePos);
                     if (color.alpha() >= COLOR_ALPHA_LIMIT) {
                         hasColor = true;
                     }
-                    subImage.setPixelColor(i, j, color);
+                    subImage.setPixelColor(tilePos, color);
                 }
             }
 
@@ -935,8 +937,8 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QImage &im
 
 bool LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame &frame)
 {
-    unsigned tileWidth = this->min->getSubtileWidth() * MICRO_WIDTH * TILE_WIDTH * TILE_HEIGHT;
-    unsigned tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+    int tileWidth = this->min->getSubtileWidth() * MICRO_WIDTH * TILE_WIDTH * TILE_HEIGHT;
+    int tileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     if ((frame.getWidth() % tileWidth) != 0 || (frame.getHeight() % tileHeight) != 0) {
         if (mode != IMAGE_FILE_MODE::AUTO) {
@@ -953,14 +955,14 @@ bool LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame
         return false;
     }*/
 
-    for (int y = 0; y < frame.getHeight(); y += tileHeight) {
-        for (int x = 0; x < frame.getWidth(); x += tileWidth) {
+    for (QPoint pos = QPoint(0, 0); pos.y() < frame.getHeight(); pos.ry() += tileHeight) {
+        for (pos.rx() = 0; pos.x() < frame.getWidth(); pos.rx() += tileWidth) {
             D1GfxFrame subFrame;
             bool hasColor = false;
-            for (unsigned j = 0; j < tileHeight; j++) {
+            for (QPoint tilePos = QPoint(0, 0); tilePos.y() < tileHeight; tilePos.ry()++) {
                 QList<D1GfxPixel> pixelLine;
-                for (unsigned i = 0; i < tileWidth; i++) {
-                    D1GfxPixel pixel = frame.getPixel(x + i, y + j);
+                for (tilePos.rx() = 0; tilePos.x() < tileWidth; tilePos.rx()++) {
+                    D1GfxPixel pixel = frame.getPixel(pos + tilePos);
                     if (!pixel.isTransparent()) {
                         hasColor = true;
                     }
@@ -1901,9 +1903,9 @@ bool LevelCelView::reuseFrames()
                 continue; // should not happen, but better safe than sorry
             }
             bool match = true;
-            for (int y = 0; y < height && match; y++) {
-                for (int x = 0; x < width; x++) {
-                    if (frame0->getPixel(x, y) == frame1->getPixel(x, y)) {
+            for (QPoint pos = QPoint(0, 0); pos.y() < height && match; pos.ry()++) {
+                for (pos.rx() = 0; pos.x() < width; pos.rx()++) {
+                    if (frame0->getPixel(pos) == frame1->getPixel(pos)) {
                         continue;
                     }
                     match = false;

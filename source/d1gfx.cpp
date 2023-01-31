@@ -60,24 +60,24 @@ int D1GfxFrame::getHeight() const
     return this->height;
 }
 
-D1GfxPixel D1GfxFrame::getPixel(int x, int y) const
+D1GfxPixel D1GfxFrame::getPixel(const QPoint &pos) const
 {
-    if (x >= 0 && x < this->width && y >= 0 && y < this->height)
-        return this->pixels[y][x];
+    if (pos.x() >= 0 && pos.x() < this->width && pos.y() >= 0 && pos.y() < this->height)
+        return this->pixels[pos.y()][pos.x()];
 
     return D1GfxPixel::transparentPixel();
 }
 
-bool D1GfxFrame::setPixel(int x, int y, D1GfxPixel pixel)
+bool D1GfxFrame::setPixel(const QPoint &pos, D1GfxPixel pixel)
 {
-    if (x < 0 || x >= this->width || y < 0 || y >= this->height) {
+    if (pos.x() < 0 || pos.x() >= this->width || pos.y() < 0 || pos.y() >= this->height) {
         return false;
     }
-    if (this->pixels[y][x] == pixel) {
+    if (this->pixels[pos.y()][pos.x()] == pixel) {
         return false;
     }
 
-    this->pixels[y][x] = pixel;
+    this->pixels[pos.y()][pos.x()] = pixel;
     return true;
 }
 
@@ -180,9 +180,9 @@ QImage D1Gfx::getFrameImage(quint16 frameIndex)
         frame->getHeight(),
         QImage::Format_ARGB32);
 
-    for (int y = 0; y < frame->getHeight(); y++) {
-        for (int x = 0; x < frame->getWidth(); x++) {
-            D1GfxPixel d1pix = frame->getPixel(x, y);
+    for (QPoint pos = QPoint(0, 0); pos.y() < frame->getHeight(); pos.ry()++) {
+        for (pos.rx() = 0; pos.x() < frame->getWidth(); pos.rx()++) {
+            D1GfxPixel d1pix = frame->getPixel(pos);
 
             QColor color;
             if (d1pix.isTransparent())
@@ -190,7 +190,7 @@ QImage D1Gfx::getFrameImage(quint16 frameIndex)
             else
                 color = this->palette->getColor(d1pix.getPaletteIndex());
 
-            image.setPixel(x, y, color.rgba());
+            image.setPixel(pos, color.rgba());
         }
     }
 

@@ -28,18 +28,17 @@
 #include "d1cl2.h"
 #include "ui_mainwindow.h"
 
-FramePixel::FramePixel(int xx, int yy, D1GfxPixel p)
-    : x(xx)
-    , y(yy)
-    , pixel(p)
+FramePixel::FramePixel(const QPoint &p, D1GfxPixel px)
+    : pos(p)
+    , pixel(px)
 {
 }
 
-EditFrameCommand::EditFrameCommand(D1GfxFrame *f, int x, int y, D1GfxPixel newPixel)
+EditFrameCommand::EditFrameCommand(D1GfxFrame *f, const QPoint &pos, D1GfxPixel newPixel)
     : QUndoCommand(nullptr)
     , frame(f)
 {
-    FramePixel fp(x, y, newPixel);
+    FramePixel fp(pos, newPixel);
 
     this->modPixels.append(fp);
 }
@@ -54,9 +53,9 @@ void EditFrameCommand::undo()
     bool change = false;
     for (int i = 0; i < this->modPixels.count(); i++) {
         FramePixel &fp = this->modPixels[i];
-        D1GfxPixel pixel = this->frame->getPixel(fp.x, fp.y);
+        D1GfxPixel pixel = this->frame->getPixel(fp.pos);
         if (pixel != fp.pixel) {
-            this->frame->setPixel(fp.x, fp.y, fp.pixel);
+            this->frame->setPixel(fp.pos, fp.pixel);
             fp.pixel = pixel;
             change = true;
         }
@@ -307,7 +306,7 @@ bool MainWindow::loadBaseTrn(QString trnFilePath)
     return true;
 }
 
-void MainWindow::frameClicked(D1GfxFrame *frame, int x, int y, unsigned counter)
+void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter)
 {
     if (this->cursor().shape() == Qt::CrossCursor) {
         // drawing
@@ -318,13 +317,13 @@ void MainWindow::frameClicked(D1GfxFrame *frame, int x, int y, unsigned counter)
 
         // Build frame editing command and connect it to the current main window widget
         // to update the palHits and CEL views when undo/redo is performed
-        EditFrameCommand *command = new EditFrameCommand(frame, x, y, pixel);
+        EditFrameCommand *command = new EditFrameCommand(frame, pos, pixel);
         QObject::connect(command, &EditFrameCommand::modified, this, &MainWindow::frameModified);
 
         this->undoStack->push(command);
     } else {
         // picking
-        const D1GfxPixel pixel = frame == nullptr ? D1GfxPixel::transparentPixel() : frame->getPixel(x, y);
+        const D1GfxPixel pixel = frame == nullptr ? D1GfxPixel::transparentPixel() : frame->getPixel(pos);
         this->palWidget->selectColor(pixel);
         this->trnUniqueWidget->selectColor(pixel);
         this->trnBaseWidget->selectColor(pixel);
