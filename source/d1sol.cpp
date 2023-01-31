@@ -64,6 +64,7 @@ bool D1Sol::save(const SaveAsParam &params)
         }
     }
 
+    QDir().mkpath(QFileInfo(filePath).absolutePath());
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly)) {
         dProgressFail() << tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(filePath));

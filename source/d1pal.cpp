@@ -100,14 +100,14 @@ bool D1Pal::loadJascPalette(QFile &file)
 
 bool D1Pal::save(QString filePath)
 {
-    QFile file = QFile(filePath);
-
-    if (!file.open(QIODevice::WriteOnly)) {
+    QDir().mkpath(QFileInfo(filePath).absolutePath());
+    QFile outFile = QFile(filePath);
+    if (!outFile.open(QIODevice::WriteOnly)) {
         QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(filePath)));
         return false;
     }
 
-    QDataStream out(&file);
+    QDataStream out(&outFile);
     for (int i = 0; i < D1PAL_COLORS; i++) {
         QColor color = this->colors[i];
         quint8 byteToWrite;

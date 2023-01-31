@@ -98,6 +98,10 @@ void UpscaleTaskDialog::on_upscaleButton_clicked()
         QMessageBox::warning(this, tr("Warning"), tr("Output folder is missing, please choose an output folder."));
         return;
     }
+    if (params.assetsFolder == params.outFolder) {
+        QMessageBox::warning(this, tr("Warning"), tr("The assets folder must differ from output folder."));
+        return;
+    }
     params.autoOverwrite = this->ui->autoOverwriteCheckBox->isChecked();
 
     this->close();
