@@ -101,7 +101,7 @@ void ProgressDialog::incBar(const QString &label, int maxValue)
     if (!label.isEmpty()) {
         theDialog->ui->progressLabel->setText(label);
     }
-    QProgressBar *newProgressBar = progressBars[theDialog->activeBars];
+    QProgressBar *newProgressBar = theDialog->progressBars[theDialog->activeBars];
 
     theDialog->errorOnFail = true;
     theDialog->activeBars++;
@@ -116,7 +116,7 @@ void ProgressDialog::decBar()
 {
     theDialog->activeBars--;
 
-    QProgressBar *oldProgressBar = progressBars[theDialog->activeBars];
+    QProgressBar *oldProgressBar = theDialog->progressBars[theDialog->activeBars];
 
     theDialog->errorOnFail = false;
     oldProgressBar->setVisible(false);
@@ -131,7 +131,7 @@ bool ProgressDialog::wasCanceled()
 
 bool ProgressDialog::incValue()
 {
-    QProgressBar *currProgressBar = progressBars[theDialog->activeBars - 1];
+    QProgressBar *currProgressBar = theDialog->progressBars[theDialog->activeBars - 1];
 
     currProgressBar->setValue(currProgressBar->value() + 1);
     return !ProgressDialog::wasCanceled();
@@ -139,7 +139,7 @@ bool ProgressDialog::incValue()
 
 bool ProgressDialog::incMainValue(int amount)
 {
-    QProgressBar *currProgressBar = progressBars[0];
+    QProgressBar *currProgressBar = theDialog->progressBars[0];
 
     currProgressBar->setValue(currProgressBar->value() + amount);
     return !ProgressDialog::wasCanceled();
