@@ -266,6 +266,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         while (file.canReadLine()) {
             QString line = file.readLine();
             size_t ls = line.size();
+            dProgress() << QString("Line %1. s:%2, 0:%3").arg(line).arg(ls).arg(line[0]);
             if (ls <= 4)
                 continue;
             if (line[0] == '_')
