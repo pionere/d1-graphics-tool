@@ -47,7 +47,7 @@ private slots:
     void contextMenuEvent(QContextMenuEvent *event);
 
 signals:
-    void framePixelClicked(unsigned x, unsigned y, unsigned counter);
+    void framePixelClicked(const QPoint &pos, unsigned counter);
     void showContextMenu(const QPoint &pos);
 
 private:
@@ -55,8 +55,7 @@ private:
 
     quint8 currentZoomNumerator = 1;
     quint8 currentZoomDenominator = 1;
-    int lastx;
-    int lasty;
+    const QPoint lastPos;
     unsigned lastCounter;
 };
 
@@ -86,7 +85,7 @@ public:
 
 signals:
     void frameRefreshed();
-    void frameClicked(D1GfxFrame *frame, int x, int y, unsigned counter);
+    void frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter);
     void palModified();
 
 private:

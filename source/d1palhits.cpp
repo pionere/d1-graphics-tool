@@ -37,10 +37,10 @@ void D1PalHits::buildPalHits()
         D1GfxFrame *frame = this->gfx->getFrame(i);
 
         // Go through every pixels of the frame
-        for (int x = 0; x < frame->getWidth(); x++) {
-            for (int y = 0; y < frame->getHeight(); y++) {
+        for (QPoint pos = QPoint(0, 0); pos.x() < frame->getWidth(); pos.rx()++) {
+            for (pos.ry() = 0; pos.y() < frame->getHeight(); pos.ry()++) {
                 // Retrieve the color of the pixel
-                D1GfxPixel pixel = frame->getPixel(x, y);
+                D1GfxPixel pixel = frame->getPixel(pos);
                 if (pixel.isTransparent())
                     continue;
                 quint8 paletteIndex = pixel.getPaletteIndex();

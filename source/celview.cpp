@@ -29,16 +29,12 @@ void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
 
-    int x = event->scenePos().x();
-    int y = event->scenePos().y();
-
-    qDebug() << QStringLiteral("Clicked: %1:%2").arg(x).arg(y);
-
-    this->lastx = x;
-    this->lasty = y;
+    this->lastPos = event->scenePos().toPoint();
     this->lastCounter = 0;
 
-    emit this->framePixelClicked(x, y, this->lastCounter);
+    qDebug() << QStringLiteral("Clicked: %1:%2").arg(this->lastPos.x()).arg(this->lastPos.y());
+
+    emit this->framePixelClicked(this->lastPos, this->lastCounter);
 }
 
 void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -51,18 +47,16 @@ void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         return; // ignore if not drawing
     }
 
-    int x = event->scenePos().x();
-    int y = event->scenePos().y();
+    QPoint currPos = event->scenePos().toPoint();
 
-    if (this->lastx == x && this->lasty == y) {
+    if (this->lastPos == currPos) {
         return;
     }
 
-    this->lastx = x;
-    this->lasty = y;
+    this->lastPos = currPos;
     this->lastCounter++;
 
-    emit this->framePixelClicked(x, y, this->lastCounter);
+    emit this->framePixelClicked(this->lastPos, this->lastCounter);
 }
 
 void CelScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
@@ -268,7 +262,7 @@ int CelView::getCurrentFrameIndex()
     return this->currentFrameIndex;
 }
 
-void CelView::framePixelClicked(unsigned x, unsigned y, unsigned counter)
+void CelView::framePixelClicked(const QPoint &pos, unsigned counter)
 {
     D1GfxFrame *frame = nullptr;
 
@@ -276,7 +270,9 @@ void CelView::framePixelClicked(unsigned x, unsigned y, unsigned counter)
         frame = this->gfx->getFrame(this->currentFrameIndex);
     }
 
-    emit this->frameClicked(frame, x - CEL_SCENE_SPACING, y - CEL_SCENE_SPACING, counter);
+	QPoint p = pos;
+    p -= QPoint(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
+    emit this->frameClicked(frame, p, counter);
 }
 
 void CelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)

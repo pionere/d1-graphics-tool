@@ -46,7 +46,7 @@ public:
 
     void changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel, bool all);
 
-    void framePixelClicked(unsigned x, unsigned y, unsigned counter);
+    void framePixelClicked(const QPoint &pos, unsigned counter);
 
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
 
