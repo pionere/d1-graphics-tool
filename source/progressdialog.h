@@ -71,6 +71,7 @@ private:
 
     int textVersion;
     int barCount;
+    bool errorOnFail;
     PROGRESS_STATE status = PROGRESS_STATE::DONE;
     PROGRESS_TEXT_MODE textMode = PROGRESS_TEXT_MODE::NORMAL;
 };

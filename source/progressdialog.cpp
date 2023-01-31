@@ -40,6 +40,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
         theDialog->ui->outputTextEdit->clear();
         theDialog->textVersion = 0;
         theDialog->barCount = 0;
+        theDialog->errorOnFail = false;
         theDialog->status = PROGRESS_STATE::RUNNING;
 
         theWidget->update(theDialog->status, true, label);
@@ -60,6 +61,8 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     theDialog->ui->progressBar_0->setVisible(true);
     theDialog->ui->progressBar_0->setRange(0, maxValue);
     theDialog->ui->progressBar_0->setValue(0);
+    theDialog->ui->progressBar_1->setVisible(false);
+    theDialog->ui->progressBar_2->setVisible(false);
     theDialog->ui->cancelPushButton->setEnabled(true);
     theDialog->ui->progressButtonsWidget_1->setVisible(true);
     theDialog->ui->detailsGroupBox->setVisible(true);
@@ -68,6 +71,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     theDialog->ui->outputTextEdit->clear();
     theDialog->textVersion = 0;
     theDialog->barCount = 1;
+    theDialog->errorOnFail = false;
     theDialog->status = PROGRESS_STATE::RUNNING;
 
     theWidget->update(theDialog->status, false, "");
@@ -101,6 +105,7 @@ void ProgressDialog::startSub(int maxValue)
 {
     QProgressBar *newProgressBar = theDialog->barCount == 1 ? theDialog->ui->progressBar_1 : theDialog->ui->progressBar_2;
 
+    theDialog->errorOnFail = true;
     theDialog->barCount++;
     newProgressBar->setVisible(true);
     newProgressBar->setRange(0, maxValue);
@@ -112,6 +117,7 @@ void ProgressDialog::doneSub()
 {
     QProgressBar *oldProgressBar = theDialog->barCount == 2 ? theDialog->ui->progressBar_1 : theDialog->ui->progressBar_2;
 
+    theDialog->errorOnFail = false;
     theDialog->barCount--;
     oldProgressBar->setVisible(false);
     theDialog->adjustSize();
@@ -128,12 +134,13 @@ void ProgressDialog::incValue()
 
     switch (theDialog->barCount) {
     case 0:
+    case 1:
         currProgressBar = theDialog->ui->progressBar_0;
         break;
-    case 1:
+    case 2:
         currProgressBar = theDialog->ui->progressBar_1;
         break;
-    default: // case 2:
+    default: // case 3:
         currProgressBar = theDialog->ui->progressBar_2;
         break;
     }
@@ -168,6 +175,9 @@ ProgressDialog &dProgressErr()
 
 ProgressDialog &dProgressFail()
 {
+    if (theDialog->errorOnFail) {
+        return dProgressErr();
+    }
     if (theDialog->status < PROGRESS_STATE::FAIL) {
         theDialog->status = PROGRESS_STATE::FAIL;
     }
