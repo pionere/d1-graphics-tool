@@ -210,7 +210,7 @@ void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const Upscal
     gfx.setPalette(pal);
     // Loading SOL
     D1Sol sol = D1Sol();
-    if (sol.load(solFilePath)) {
+    if (!sol.load(solFilePath)) {
         dProgressErr() << tr("Failed loading SOL file: %1.").arg(QDir::toNativeSeparators(solFilePath));
         return;
     }
@@ -484,6 +484,8 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             return;
         }
 
+        file.seek(0);
+
         SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = params.autoOverwrite;
 
@@ -531,7 +533,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
 
         const char *botchedCL2s[] = {
-            "PlrGFX\\warrior\\wlb\\wlbat.CL2", "PlrGFX\\warrior\\wlb\\wmbat.CL2", "PlrGFX\\warrior\\wlb\\whbat.CL2"
+            "PlrGFX\\warrior\\wlb\\wlbat.CL2", "PlrGFX\\warrior\\wmb\\wmbat.CL2", "PlrGFX\\warrior\\whb\\whbat.CL2"
         };
 
         for (int i = 0; i < lengthof(botchedCL2s); i++) {
