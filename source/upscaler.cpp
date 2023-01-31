@@ -2861,10 +2861,10 @@ bool Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
 #endif
         for (int y = 0; y < frame->height; y++) {
             for (int x = 0; x < frame->width; x++) {
+                if (ProgressDialog::wasCanceled()) {
+                    return false;
+                }
                 for (int k = 0; k < lengthof(patterns); k++) {
-                    if (ProgressDialog::wasCanceled()) {
-                        return false;
-                    }
                     UpscalePatterns &ptn = patterns[k];
                     BYTE w = ptn.pattern[0];
                     BYTE h = ptn.pattern[1];

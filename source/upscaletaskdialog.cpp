@@ -162,13 +162,12 @@ void UpscaleTaskDialog::upscaleCel(const QString &path, D1Pal *pal, const Upscal
         return;
     }
     // upscale
-    ProgressDialog::startSub(gfx.getFrameCount() + 1);
+    ProgressDialog::restartSub(gfx.getFrameCount() + 1);
     if (Upscaler::upscaleGfx(&gfx, upParams)) {
         // store the result
         saParams.celFilePath = outFilePath;
         D1Cel::save(gfx, saParams);
     }
-    ProgressDialog::doneSub();
 }
 
 void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams)
@@ -184,13 +183,12 @@ void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const Upscal
         return;
     }
     // upscale
-    ProgressDialog::startSub(gfx.getFrameCount() + 1);
+    ProgressDialog::restartSub(gfx.getFrameCount() + 1);
     if (Upscaler::upscaleGfx(&gfx, upParams)) {
         // store the result
         saParams.celFilePath = outFilePath;
         D1Cl2::save(gfx, saParams);
     }
-    ProgressDialog::doneSub();
 }
 
 void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams)
@@ -229,7 +227,7 @@ void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const Upscal
         return;
     }
     // upscale
-    ProgressDialog::startSub(min.getSubtileCount() + 1);
+    ProgressDialog::restartSub(min.getSubtileCount() + 1);
     if (Upscaler::upscaleTileset(&gfx, &min, upParams)) {
         // store the result
         saParams.celFilePath = outFilePath;
@@ -237,7 +235,6 @@ void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const Upscal
         saParams.minFilePath = outMinPath;
         min.save(saParams);
     }
-    ProgressDialog::doneSub();
 }
 
 void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
@@ -245,13 +242,14 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
     D1Pal defaultPal;
     defaultPal.load(D1Pal::DEFAULT_PATH);
 
+    ProgressDialog::startSub(1);
+
     { // upscale regular cel files of listfiles.txt
       //  - skips Levels(dungeon tiles), gendata(cutscenes) and cow.CEL manually
         QFile file(params.listfilesFile);
 
         if (!file.open(QIODevice::ReadOnly)) {
-            dProgressFail() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(params.listfilesFile));
-            return;
+            dProgressErr() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(params.listfilesFile));
         }
 
         OpenAsParam opParams = OpenAsParam();
@@ -294,7 +292,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         for (int i = 0; i < 4; i++)
-            ProgressDialog::incValue();
+            ProgressDialog::incMainValue();
     }
     { // upscale objects with level-specific palette
         const AssetConfig celPalPairs[] = {
@@ -339,7 +337,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         for (int i = 0; i < 1; i++)
-            ProgressDialog::incValue();
+            ProgressDialog::incMainValue();
     }
     { // upscale special cells of the levels
         const AssetConfig celPalPairs[] = {
@@ -378,7 +376,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         for (int i = 0; i < 1; i++)
-            ProgressDialog::incValue();
+            ProgressDialog::incMainValue();
     }
     { // upscale cutscenes
         const char *celPalPairs[][2] = {
@@ -427,7 +425,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         for (int i = 0; i < 8; i++)
-            ProgressDialog::incValue();
+            ProgressDialog::incMainValue();
     }
     // UpscaleCelComp("f:\\MPQE\\Work\\towners\\animals\\cow.CEL", 2, &diapal[0][0], 128, 128, "f:\\outcel\\towners\\animals\\cow.cel");
     { // upscale non-standard CELs of the menu (converted from PCX)
@@ -481,13 +479,13 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         for (int i = 0; i < 1; i++)
-            ProgressDialog::incValue();
+            ProgressDialog::incMainValue();
     }
     { // upscale all cl2 files of listfiles.txt
         QFile file(params.listfilesFile);
 
         if (!file.open(QIODevice::ReadOnly)) {
-            dProgressFail() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(params.listfilesFile));
+            dProgressErr() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(params.listfilesFile));
             return;
         }
 
@@ -522,7 +520,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         for (int i = 0; i < 4; i++)
-            ProgressDialog::incValue();
+            ProgressDialog::incMainValue();
     }
     /*if (!params.cl2GfxFixed)*/ { // special cases to upscale cl2 files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
@@ -595,7 +593,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         for (int i = 0; i < 4; i++)
-            ProgressDialog::incValue();
+            ProgressDialog::incMainValue();
     }
     /*if (!params.minGfxFixed)*/ { // special cases to upscale cl2 files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
@@ -633,6 +631,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         for (int i = 0; i < 1; i++)
-            ProgressDialog::incValue();
+            ProgressDialog::incMainValue();
     }
+    ProgressDialog::doneSub();
 }

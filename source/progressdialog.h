@@ -40,10 +40,12 @@ public:
     static void done(bool forceOpen = false);
 
     static void startSub(int maxValue);
+    static void restartSub(int maxValue);
     static void doneSub();
 
     static bool wasCanceled();
     static void incValue();
+    static void incMainValue();
 
     friend ProgressDialog &dProgress();
     friend ProgressDialog &dProgressWarn();
