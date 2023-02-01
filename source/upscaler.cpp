@@ -3123,7 +3123,7 @@ bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
     for (int i = 0; i < amount; i++) {
         progress.second = QString(QApplication::tr("Upscaling frame %1.")).arg(i + 1);
         dProgress() << progress;
-        if (!ProgressDialog::incValue()) {
+        if (ProgressDialog::wasCanceled()) {
             qDeleteAll(newFrames);
             return false;
         }
@@ -3131,10 +3131,10 @@ bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
         D1GfxFrame *newFrame = new D1GfxFrame(*gfx->getFrame(i));
         if (upscaleFrame(newFrame, gfx->palette, params))
             newFrames.append(newFrame);
-    }
-    if (ProgressDialog::wasCanceled()) {
-        qDeleteAll(newFrames);
-        return false;
+        if (!ProgressDialog::incValue()) {
+            qDeleteAll(newFrames);
+            return false;
+        }
     }
     gfx->frames.swap(newFrames);
     gfx->upscaled = true;
@@ -3186,6 +3186,19 @@ D1GfxFrame *Upscaler::createSubtileFrame(const D1Gfx *gfx, const D1Min *min, int
 void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<quint16>> &newFrameReferences, QList<D1GfxFrame *> &newFrames)
 {
     QList<quint16> subtileFramesRefs;
+
+    int padding = (8 * (subtileFrame->width / MICRO_WIDTH) / 2 - (subtileFrame->height / MICRO_HEIGHT)) * (subtileFrame->width / MICRO_WIDTH);
+    if (padding < 0) {
+        if (newFrameReferences.isEmpty())
+            dProgressWarn() << tr("Subtile height is not supported by the game (Diablo 1/DevilutionX).");
+    } else if (padding > 0) {
+        if (newFrameReferences.isEmpty())
+            dProgressWarn() << tr("Empty subtiles are added to match the required height of the game (DevilutionX).");
+        for (int i = 0; i < padding; i++) {
+            subtileFramesRefs.append(0);
+        }
+    }
+
     int x = 0;
     for (int y = 0; y < subtileFrame->height;) {
         bool hasColor = false;
@@ -3237,7 +3250,7 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     for (int i = 0; i < amount; i++) {
         progress.second = QString(QApplication::tr("Upscaling subtile %1.")).arg(i + 1);
         dProgress() << progress;
-        if (!ProgressDialog::incValue()) {
+        if (ProgressDialog::wasCanceled()) {
             qDeleteAll(newFrames);
             return false;
         }
@@ -3246,10 +3259,10 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
         if (Upscaler::upscaleFrame(subtileFrame, gfx->palette, params))
             Upscaler::storeSubtileFrame(subtileFrame, newFrameReferences, newFrames);
         delete subtileFrame;
-    }
-    if (ProgressDialog::wasCanceled()) {
-        qDeleteAll(newFrames);
-        return false;
+        if (!ProgressDialog::incValue()) {
+            qDeleteAll(newFrames);
+            return false;
+        }
     }
     // update gfx
     gfx->groupFrameIndices.clear();

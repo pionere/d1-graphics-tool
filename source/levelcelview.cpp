@@ -1474,14 +1474,14 @@ static QString getFrameTypeName(D1CEL_FRAME_TYPE type)
 
 void LevelCelView::resetFrameTypes()
 {
-    ProgressDialog::incBar(tr("Checking frames..."), this->gfx->getFrameCount() + 1);
+    ProgressDialog::incBar(tr("Checking frames..."), this->gfx->getFrameCount());
 
     int result = 0;
     for (int i = 0; i < this->gfx->getFrameCount(); i++) {
-        if (!ProgressDialog::incValue()) {
+        /*if (ProgressDialog::wasCanceled()) {
             result |= 2;
             break;
-        }
+        }*/
         D1GfxFrame *frame = this->gfx->getFrame(i);
         D1CEL_FRAME_TYPE prevType = frame->getFrameType();
         LevelTabFrameWidget::selectFrameType(frame);
@@ -1489,6 +1489,10 @@ void LevelCelView::resetFrameTypes()
         if (prevType != newType) {
             dProgress() << tr("Changed Frame %1 from '%2' to '%3'.").arg(i + 1).arg(getFrameTypeName(prevType)).arg(getFrameTypeName(newType));
             result = 1;
+        }
+        if (!ProgressDialog::incValue()) {
+            result |= 2;
+            break;
         }
     }
     if (result == 0) {
@@ -1504,13 +1508,14 @@ void LevelCelView::resetFrameTypes()
 
 void LevelCelView::inefficientFrames()
 {
-    ProgressDialog::incBar(tr("Scanning frames..."), this->gfx->getFrameCount() + 1);
+    ProgressDialog::incBar(tr("Scanning frames..."), this->gfx->getFrameCount());
 
     int limit = 10;
     bool result = false;
     for (int i = 0; i < this->gfx->getFrameCount(); i++) {
-        if (!ProgressDialog::incValue())
+        /*if (ProgressDialog::wasCanceled()) {
             return;
+        }*/
         D1GfxFrame *frame = this->gfx->getFrame(i);
         if (frame->getFrameType() != D1CEL_FRAME_TYPE::TransparentSquare) {
             continue;
@@ -1522,6 +1527,8 @@ void LevelCelView::inefficientFrames()
             dProgress() << tr("Frame %1 could be '%2' by changing %n pixel(s).", "", diff).arg(i + 1).arg(getFrameTypeName(effType));
             result = true;
         }
+        if (!ProgressDialog::incValue())
+            return;
     }
     if (!result) {
         dProgress() << tr("The frames are optimal.");
@@ -1532,12 +1539,12 @@ void LevelCelView::inefficientFrames()
 
 void LevelCelView::checkSubtileFlags()
 {
-    ProgressDialog::incBar(tr("Checking SOL flags..."), this->min->getSubtileCount() + 1);
+    ProgressDialog::incBar(tr("Checking SOL flags..."), this->min->getSubtileCount());
     bool result = false;
     // SOL:
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        if (!ProgressDialog::incValue())
-            return;
+        // if (ProgressDialog::wasCanceled())
+        //    return;
         quint8 solFlags = this->sol->getSubtileProperties(i);
         if (solFlags & (1 << 1)) {
             // block light
@@ -1589,15 +1596,17 @@ void LevelCelView::checkSubtileFlags()
             }
             // TODO: one above the floor is square (left or right)
         }
+        if (!ProgressDialog::incValue())
+            return;
     }
 
     ProgressDialog::decBar();
-    ProgressDialog::incBar(tr("Checking TMI flags..."), this->min->getSubtileCount() + 1);
+    ProgressDialog::incBar(tr("Checking TMI flags..."), this->min->getSubtileCount());
 
     // TMI:
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        if (!ProgressDialog::incValue())
-            return;
+        // if (ProgressDialog::wasCanceled())
+        //    return;
         quint8 tmiFlags = this->tmi->getSubtileProperties(i);
         if (tmiFlags & (1 << 0)) {
             // transp.wall
@@ -1640,6 +1649,8 @@ void LevelCelView::checkSubtileFlags()
             // right floor transparency
             // TODO: must be right trapezoid
         }
+        if (!ProgressDialog::incValue())
+            return;
     }
     if (!result) {
         dProgress() << tr("No inconsistency detected.");
@@ -1650,12 +1661,12 @@ void LevelCelView::checkSubtileFlags()
 
 void LevelCelView::checkTileFlags()
 {
-    ProgressDialog::incBar(tr("Checking AMP flags..."), this->til->getTileCount() + 1);
+    ProgressDialog::incBar(tr("Checking AMP flags..."), this->til->getTileCount());
     // AMP:
     bool result = false;
     for (int i = 0; i < this->til->getTileCount(); i++) {
-        if (!ProgressDialog::incValue())
-            return;
+        // if (ProgressDialog::wasCanceled())
+        //    return;
         quint8 ampType = this->amp->getTileType(i);
         quint8 ampFlags = this->amp->getTileProperties(i);
         if (ampFlags & (1 << 0)) {
@@ -1790,6 +1801,8 @@ void LevelCelView::checkTileFlags()
                 result = true;
             }
         }
+        if (!ProgressDialog::incValue())
+            return;
     }
     if (!result) {
         dProgress() << tr("No inconsistency detected.");
@@ -1800,7 +1813,7 @@ void LevelCelView::checkTileFlags()
 
 bool LevelCelView::removeUnusedFrames()
 {
-    ProgressDialog::incBar(tr("Removing unused frames..."), this->gfx->getFrameCount() + 1);
+    ProgressDialog::incBar(tr("Removing unused frames..."), this->gfx->getFrameCount());
     // collect every frame uses
     QList<bool> frameUsed;
     for (int i = 0; i < this->gfx->getFrameCount(); i++) {
@@ -1817,7 +1830,7 @@ bool LevelCelView::removeUnusedFrames()
     // remove the unused frames
     int result = 0;
     for (int i = this->gfx->getFrameCount() - 1; i >= 0; i--) {
-        if (!ProgressDialog::incValue()) {
+        if (ProgressDialog::wasCanceled()) {
             result |= 2;
             break;
         }
@@ -1826,6 +1839,10 @@ bool LevelCelView::removeUnusedFrames()
             dProgress() << tr("Removed frame %1.").arg(i);
             result = 1;
         }
+        if (!ProgressDialog::incValue()) {
+            result |= 2;
+            break;
+        }
     }
     ProgressDialog::decBar();
     return result != 0;
@@ -1833,7 +1850,7 @@ bool LevelCelView::removeUnusedFrames()
 
 bool LevelCelView::removeUnusedSubtiles()
 {
-    ProgressDialog::incBar(tr("Removing unused subtiles..."), this->min->getSubtileCount() + 1);
+    ProgressDialog::incBar(tr("Removing unused subtiles..."), this->min->getSubtileCount());
     // collect every subtile uses
     QList<bool> subtileUsed;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
@@ -1848,7 +1865,7 @@ bool LevelCelView::removeUnusedSubtiles()
     // remove the unused subtiles
     int result = 0;
     for (int i = this->min->getSubtileCount() - 1; i >= 0; i--) {
-        if (!ProgressDialog::incValue()) {
+        if (ProgressDialog::wasCanceled()) {
             result |= 2;
             break;
         }
@@ -1856,6 +1873,10 @@ bool LevelCelView::removeUnusedSubtiles()
             this->removeSubtile(i);
             dProgress() << tr("Removed subtile %1.").arg(i);
             result = 1;
+        }
+        if (!ProgressDialog::incValue()) {
+            result |= 2;
+            break;
         }
     }
     ProgressDialog::decBar();
@@ -1908,11 +1929,11 @@ void LevelCelView::cleanupTileset()
 
 bool LevelCelView::reuseFrames()
 {
-    ProgressDialog::incBar(tr("Reusing frames..."), this->gfx->getFrameCount() + 1);
+    ProgressDialog::incBar(tr("Reusing frames..."), this->gfx->getFrameCount());
     std::set<int> removedIndices;
     int result = 0;
     for (int i = 0; i < this->gfx->getFrameCount(); i++) {
-        if (!ProgressDialog::incValue()) {
+        if (ProgressDialog::wasCanceled()) {
             result |= 2;
             break;
         }
@@ -1972,6 +1993,10 @@ bool LevelCelView::reuseFrames()
             result = 1;
             j--;
         }
+        if (!ProgressDialog::incValue()) {
+            result |= 2;
+            break;
+        }
     }
     ProgressDialog::decBar();
     return result != 0;
@@ -1979,11 +2004,11 @@ bool LevelCelView::reuseFrames()
 
 bool LevelCelView::reuseSubtiles()
 {
-    ProgressDialog::incBar(tr("Reusing subtiles..."), this->min->getSubtileCount() + 1);
+    ProgressDialog::incBar(tr("Reusing subtiles..."), this->min->getSubtileCount());
     std::set<int> removedIndices;
     int result = 0;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        if (!ProgressDialog::incValue()) {
+        if (ProgressDialog::wasCanceled()) {
             result |= 2;
             break;
         }
@@ -2038,6 +2063,10 @@ bool LevelCelView::reuseSubtiles()
             dProgress() << tr("Using subtile %1 instead of %2.").arg(originalIndexI + 1).arg(originalIndexJ + 1);
             result = true;
             j--;
+        }
+        if (!ProgressDialog::incValue()) {
+            result |= 2;
+            break;
         }
     }
     ProgressDialog::decBar();
