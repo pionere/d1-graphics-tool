@@ -23,7 +23,7 @@ constexpr int lengthof(T (&arr)[N])
     return N;
 }
 
-typedef enum TASK_STEP {
+typedef enum task_step {
     REGULAR_CEL,
     OBJECT_CEL,
     SPECIAL_CEL,
@@ -34,7 +34,7 @@ typedef enum TASK_STEP {
     TILESET,
     FIXED_TILESET,
     NUM_STEPS,
-};
+} task_step;
 
 typedef struct AssetConfig {
     const char *path;
@@ -49,7 +49,7 @@ UpscaleTaskDialog::UpscaleTaskDialog(QWidget *parent)
 {
     this->ui->setupUi(this);
 
-    this->ui->skipStepListWidget->setHeight(this->ui->skipStepListWidget->visualItemRect(this->ui->skipStepListWidget->item(0)).height() * NUM_STEPS);
+    this->ui->skipStepListWidget->setMinimumHeight(this->ui->skipStepListWidget->sizeHintForRow(0) * NUM_STEPS);
 }
 
 UpscaleTaskDialog::~UpscaleTaskDialog()
@@ -258,8 +258,8 @@ void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const Upscal
 
 static bool skipStep(const UpscaleTaskParam &params, int index)
 {
-    for (QModelIndex &item : params.skipSteps) {
-        if (item->row() == index) {
+    for (auto item : params.skipSteps) {
+        if (item.row() == index) {
             return true;
         }
     }
