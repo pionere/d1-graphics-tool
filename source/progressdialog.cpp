@@ -51,13 +51,11 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     theDialog->ui->progressButtonsWidget_2->setVisible(background);
     for (int i = 0; i < numBars; i++) {
         QProgressBar *progressBar = new QProgressBar();
+        progressBar->setEnabled(false);
         theDialog->ui->verticalLayout->insertWidget(1 + i, progressBar);
         theDialog->progressBars.append(progressBar);
     }
     theDialog->adjustSize();
-    for (QProgressBar *progressBar : theDialog->progressBars) {
-        progressBar->setVisible(false);
-    }
 
     if (background) {
         theWidget->update(theDialog->status, true, label);
@@ -106,7 +104,7 @@ void ProgressDialog::incBar(const QString &label, int maxValue)
     theDialog->activeBars++;
     newProgressBar->setRange(0, maxValue);
     newProgressBar->setValue(0);
-    newProgressBar->setVisible(true);
+    newProgressBar->setEnabled(true);
 
     theDialog->update();
 }
@@ -118,7 +116,7 @@ void ProgressDialog::decBar()
     QProgressBar *oldProgressBar = theDialog->progressBars[theDialog->activeBars];
 
     theDialog->errorOnFail = false;
-    oldProgressBar->setVisible(false);
+    oldProgressBar->setEnabled(false);
 }
 
 bool ProgressDialog::wasCanceled()
@@ -241,18 +239,7 @@ void ProgressDialog::on_detailsPushButton_clicked()
     bool currVisible = this->ui->detailsGroupBox->isVisible();
     this->ui->detailsGroupBox->setVisible(!currVisible);
     this->ui->detailsPushButton->setText(currVisible ? tr("Show details") : tr("Hide details"));
-
-    QList<QProgressBar *> hiddenBars;
-    for (QProgressBar *progressBar : theDialog->progressBars) {
-        if (!progressBar->isVisible()) {
-            progressBar->setVisible(true);
-            hiddenBars.append(progressBar);
-        }
-    }
     this->adjustSize();
-    for (QProgressBar *progressBar : hiddenBars) {
-        progressBar->setVisible(false);
-    }
 }
 
 void ProgressDialog::on_cancelPushButton_clicked()
