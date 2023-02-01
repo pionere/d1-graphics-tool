@@ -88,6 +88,7 @@ void UpscaleTaskDialog::on_upscaleButton_clicked()
         QMessageBox::warning(this, tr("Warning"), tr("Path of listfiles.txt is missing, please choose an output file."));
         return;
     }
+    params.skipSteps = this->ui->skipStepListWidget->selectedItems();
     params.assetsFolder = this->ui->assetsFolderLineEdit->text();
     if (params.assetsFolder.isEmpty()) {
         QMessageBox::warning(this, tr("Warning"), tr("Assets folder is missing, please set the assets folder."));
@@ -240,20 +241,73 @@ void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const Upscal
     ProgressDialog::decBar();
 }
 
+static bool isRegularCel(const QString &asset)
+{
+    QString assetLower = asset.toLower();
+    if (!assetLower.endsWith(".cel"))
+        return false;
+    if (assetLower.startsWith("gendata"))
+        return false;
+    if (assetLower.startsWith("levels"))
+        return false;
+    if (assetLower.startsWith("nlevels"))
+        return false;
+    // if (lineLower.endsWith("cow.cel"))
+    //    return false;
+    return true;
+}
+
+static bool isRegularCl2(const QString &asset)
+{
+    QString assetLower = asset.toLower();
+    if (!assetLower.endsWith(".cl2"))
+        return false;
+    return true;
+}
+
+static bool isListedAsset(QList<QString> &assets, const QString &asset)
+{
+    QString assetLower = asset.toLower();
+    for (QString name : assets) {
+        if (name.toLower() == assetLower)
+            return true;
+    }
+    return false;
+}
+
 void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 {
     D1Pal defaultPal;
     defaultPal.load(D1Pal::DEFAULT_PATH);
 
-    ProgressDialog::incBar("", 25 + 1);
-
-    { // upscale regular cel files of listfiles.txt
-      //  - skips Levels(dungeon tiles), gendata(cutscenes) and cow.CEL manually
+    QList<QString> assets;
+    int numRegularCels = 0;
+    int numRegularCl2s = 0;
+    {
         QFile file(params.listfilesFile);
 
         if (!file.open(QIODevice::ReadOnly)) {
             dProgressErr() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(params.listfilesFile));
         }
+
+        QTextStream in(&file);
+        QString line;
+        while (in.readLineInto(&line)) {
+            if (line.isEmpty() || line[0] == '_')
+                continue;
+            assets.append(line);
+            if (isRegularCel(line))
+                numRegularCels++;
+            if (isRegularCl2(line))
+                numRegularCl2++;
+        }
+    }
+
+    ProgressDialog::incBar("", 25 + 1);
+
+    if (!params.skipSteps.contains(QVariant(QString("Regular CEL Files")))) {
+        // upscale regular cel files of listfiles.txt
+        //  - skips Levels(dungeon tiles), gendata(cutscenes) and cow.CEL manually
 
         OpenAsParam opParams = OpenAsParam();
 
@@ -266,35 +320,24 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = params.autoOverwrite;
 
-        QTextStream in(&file);
-        QString line;
-        while (in.readLineInto(&line)) {
-            if (line[0] == '_')
+        for (QString &asset : assets) {
+            if (!isRegularCel(asset)) {
                 continue;
-            QString lineLower = line.toLower();
-            if (!lineLower.endsWith(".cel"))
-                continue;
-            if (lineLower.startsWith("gendata"))
-                continue;
-            if (lineLower.startsWith("levels"))
-                continue;
-            if (lineLower.startsWith("nlevels"))
-                continue;
-            // if (lineLower.endsWith("cow.cel"))
-            //    continue;
+            }
 
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-            dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(QDir::toNativeSeparators(line));
+            dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(asset);
             // ProgressDialog::incValue();
 
-            UpscaleTaskDialog::upscaleCel(line, &defaultPal, params, opParams, upParams, saParams);
+            UpscaleTaskDialog::upscaleCel(asset, &defaultPal, params, opParams, upParams, saParams);
         }
 
         ProgressDialog::incMainValue(4);
     }
-    { // upscale objects with level-specific palette
+    if (!params.skipSteps.contains(QVariant(QString("Object CEL Files")))) {
+        // upscale objects with level-specific palette
         const AssetConfig celPalPairs[] = {
             // clang-format off
             // celname,                palette,                 numcolors, numfixcolors (protected colors)
@@ -323,10 +366,13 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
 
         for (int i = 0; i < lengthof(celPalPairs); i++) {
+            if (!isListedAsset(assets, celPalPairs[i].path)) {
+                continue;
+            }
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-            dProgress() << QString(QApplication::tr("Upscaling object CEL %1.")).arg(QDir::toNativeSeparators(celPalPairs[i].path));
+            dProgress() << QString(QApplication::tr("Upscaling object CEL %1.")).arg(celPalPairs[i].path);
             // ProgressDialog::incValue();
 
             D1Pal pal;
@@ -338,7 +384,8 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         ProgressDialog::incMainValue(1);
     }
-    { // upscale special cells of the levels
+    if (!params.skipSteps.contains(QVariant(QString("Special CEL Files")))) {
+        // upscale special cells of the levels
         const AssetConfig celPalPairs[] = {
             // clang-format off
             // celname,                      palette,                 numcolors, numfixcolors (protected colors)
@@ -361,10 +408,13 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
 
         for (int i = 0; i < lengthof(celPalPairs); i++) {
+            if (!isListedAsset(assets, celPalPairs[i].path)) {
+                continue;
+            }
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-            dProgress() << QString(QApplication::tr("Upscaling special CEL %1.")).arg(QDir::toNativeSeparators(celPalPairs[i].path));
+            dProgress() << QString(QApplication::tr("Upscaling special CEL %1.")).arg(celPalPairs[i].path);
             // ProgressDialog::incValue();
 
             D1Pal pal;
@@ -376,7 +426,8 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         ProgressDialog::incMainValue(1);
     }
-    { // upscale cutscenes
+    if (!params.skipSteps.contains(QVariant(QString("Cutscenes")))) {
+        // upscale cutscenes
         const char *celPalPairs[][2] = {
             // clang-format off
             // celname,                palette
@@ -406,10 +457,13 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
 
         for (int i = 0; i < lengthof(celPalPairs); i++) {
+            if (!isListedAsset(assets, celPalPairs[i][0])) {
+                continue;
+            }
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-            dProgress() << QString(QApplication::tr("Upscaling cutscene CEL %1.")).arg(QDir::toNativeSeparators(celPalPairs[i][0]));
+            dProgress() << QString(QApplication::tr("Upscaling cutscene CEL %1.")).arg(celPalPairs[i][0]);
             // ProgressDialog::incValue();
 
             QString palPath = params.assetsFolder + "/" + celPalPairs[i][1]; // "f:\\MPQE\\Work\\%s"
@@ -425,7 +479,8 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::incMainValue(8);
     }
     // UpscaleCelComp("f:\\MPQE\\Work\\towners\\animals\\cow.CEL", 2, &diapal[0][0], 128, 128, "f:\\outcel\\towners\\animals\\cow.cel");
-    { // upscale non-standard CELs of the menu (converted from PCX)
+    if (!params.skipSteps.contains(QVariant(QString("Art CEL Files")))) {
+        // upscale non-standard CELs of the menu (converted from PCX)
         const char *celPalPairs[][2] = {
             // clang-format off
             // celname,               palette
@@ -458,10 +513,13 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
 
         for (int i = 0; i < lengthof(celPalPairs); i++) {
+            if (!isListedAsset(assets, celPalPairs[i][0])) {
+                continue;
+            }
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-            dProgress() << QString(QApplication::tr("Upscaling ui-art CEL %1.")).arg(QDir::toNativeSeparators(celPalPairs[i][0]));
+            dProgress() << QString(QApplication::tr("Upscaling ui-art CEL %1.")).arg(celPalPairs[i][0]);
             // ProgressDialog::incValue();
 
             QString palPath = celPalPairs[i][1][0] == '\0' ? D1Pal::DEFAULT_PATH : (params.assetsFolder + "/" + celPalPairs[i][1]); // "f:\\MPQE\\Work\\%s"
@@ -477,13 +535,8 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         ProgressDialog::incMainValue(1);
     }
-    { // upscale all cl2 files of listfiles.txt
-        QFile file(params.listfilesFile);
-
-        if (!file.open(QIODevice::ReadOnly)) {
-            dProgressErr() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(params.listfilesFile));
-        }
-
+    if (!params.skipSteps.contains(QVariant(QString("Regular CL2 Files")))) {
+        // upscale all cl2 files of listfiles.txt
         SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = params.autoOverwrite;
 
@@ -495,26 +548,23 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.lastfixcolor = -1;
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
 
-        QTextStream in(&file);
-        QString line;
-        while (in.readLineInto(&line)) {
-            if (line[0] == '_')
-                continue;
-            if (!line.toLower().endsWith(".cl2"))
+        for (QString &asset : assets) {
+            if (!isRegularCl2(asset))
                 continue;
 
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-            dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(QDir::toNativeSeparators(line));
+            dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(asset);
             // ProgressDialog::incValue();
 
-            UpscaleTaskDialog::upscaleCl2(line, &defaultPal, params, opParams, upParams, saParams);
+            UpscaleTaskDialog::upscaleCl2(asset, &defaultPal, params, opParams, upParams, saParams);
         }
 
         ProgressDialog::incMainValue(4);
     }
-    /*if (!params.cl2GfxFixed)*/ { // special cases to upscale cl2 files (must be done manually)
+    if (!params.skipSteps.contains(QVariant(QString("Fixed CL2 Files")))) {
+        // special cases to upscale cl2 files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
         SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = params.autoOverwrite;
@@ -533,10 +583,13 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         };
 
         for (int i = 0; i < lengthof(botchedCL2s); i++) {
+            if (!isListedAsset(assets, botchedCL2s[i])) {
+                continue;
+            }
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-            dProgress() << QString(QApplication::tr("Upscaling botched asset %1.")).arg(QDir::toNativeSeparators(botchedCL2s[i]));
+            dProgress() << QString(QApplication::tr("Upscaling botched asset %1.")).arg(botchedCL2s[i]);
             // ProgressDialog::incValue();
 
             UpscaleTaskDialog::upscaleCl2(botchedCL2s[i], &defaultPal, params, opParams, upParams, saParams);
@@ -545,7 +598,8 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         for (int i = 0; i < 1; i++)
             ProgressDialog::incValue();
     }
-    { // // upscale tiles of the levels
+    if (!params.skipSteps.contains(QVariant(QString("Tilesets")))) {
+        // upscale tiles of the levels
         const AssetConfig celPalPairs[] = {
             // clang-format off
             // celname,                      palette                   numcolors, numfixcolors (protected colors)
@@ -571,10 +625,13 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::TILESET;
 
         for (int i = 0; i < lengthof(celPalPairs); i++) {
+            if (!isListedAsset(assets, celPalPairs[i].path)) {
+                continue;
+            }
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-            dProgress() << QString(QApplication::tr("Upscaling tileset %1.")).arg(QDir::toNativeSeparators(celPalPairs[i].path));
+            dProgress() << QString(QApplication::tr("Upscaling tileset %1.")).arg(celPalPairs[i].path);
             // ProgressDialog::incValue();
 
             D1Pal pal;
@@ -586,7 +643,8 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         ProgressDialog::incMainValue(4);
     }
-    /*if (!params.minGfxFixed)*/ { // special cases to upscale cl2 files (must be done manually)
+    if (!params.skipSteps.contains(QVariant(QString("Fixed Tilesets")))) {
+        // special cases to upscale cl2 files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
         SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = params.autoOverwrite;
@@ -608,10 +666,13 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         };
 
         for (int i = 0; i < lengthof(botchedMINs); i++) {
+            if (!isListedAsset(assets, botchedMINs[i].path)) {
+                continue;
+            }
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-            dProgress() << QString(QApplication::tr("Upscaling botched tileset %1.")).arg(QDir::toNativeSeparators(botchedMINs[i].path));
+            dProgress() << QString(QApplication::tr("Upscaling botched tileset %1.")).arg(botchedMINs[i].path);
             // ProgressDialog::incValue();
 
             D1Pal pal;

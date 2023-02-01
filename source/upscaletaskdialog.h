@@ -1,6 +1,9 @@
 #pragma once
 
 #include <QDialog>
+#include <QList>
+#include <QListWidgetItem>
+#include <QString>
 
 #include "d1pal.h"
 #include "openasdialog.h"
@@ -10,6 +13,7 @@
 class UpscaleTaskParam {
 public:
     QString listfilesFile;
+    QList<QListWidgetItem *> skipSteps;
     QString assetsFolder;
     QString outFolder;
     int multiplier;

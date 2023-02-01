@@ -59,55 +59,111 @@
        </widget>
       </item>
       <item row="2" column="0">
+       <widget class="QLabel" name="skipStepLabel">
+        <property name="text">
+         <string>Skip step:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QListWidget" name="skipStepListWidget">
+        <item>
+         <property name="text">
+          <string>Regular CEL Files</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Object CEL Files</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Special CEL Files</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Cutscenes</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Art CEL Files</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Regular CL2 Files</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Fixed CL2 Files</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Tilesets</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Fixed Tilesets</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="3" column="0">
        <widget class="QLabel" name="assetsFolderLabel">
         <property name="text">
          <string>Assets Folder:</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="3" column="1">
        <widget class="LineEditWidget" name="assetsFolderLineEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
+      <item row="3" column="2">
        <widget class="QPushButton" name="assetsFolderBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="4" column="0">
        <widget class="QLabel" name="outputFolderLabel">
         <property name="text">
          <string>Output Folder:</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="4" column="1">
        <widget class="LineEditWidget" name="outputFolderLineEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="3" column="2">
+      <item row="4" column="2">
        <widget class="QPushButton" name="outputFolderBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
+      <item row="5" column="0">
        <widget class="QLabel" name="autoOverwriteLabel">
         <property name="text">
          <string>Overwrite all:</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
+      <item row="5" column="1">
        <widget class="QCheckBox" name="autoOverwriteCheckBox">
         <property name="toolTip">
          <string>Overwrite files without confirmation-request</string>

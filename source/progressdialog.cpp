@@ -51,12 +51,11 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     theDialog->ui->progressButtonsWidget_2->setVisible(background);
     for (int i = 0; i < numBars; i++) {
         QProgressBar *progressBar = new QProgressBar();
-        theDialog->ui->verticalLayout->insertWidget(1, progressBar);
+        theDialog->ui->verticalLayout->insertWidget(1 + i, progressBar);
         theDialog->progressBars.append(progressBar);
     }
     theDialog->adjustSize();
-    for (int i = 0; i < numBars; i++) {
-        QProgressBar *progressBar = theDialog->progressBars[i];
+    for (QProgressBar *progressBar : theDialog->progressBars) {
         progressBar->setVisible(false);
     }
 
