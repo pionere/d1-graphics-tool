@@ -618,6 +618,32 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         // TODO: ignore if (this->cursor().shape() != Qt::CrossCursor)?
         this->unsetCursor();
     }
+    if (event->matches(QKeySequence::Copy)) {
+        QImage image;
+        if (this->celView != nullptr) {
+            image = this->celView->copyCurrent();
+        }
+        if (this->levelCelView != nullptr) {
+            image = this->levelCelView->copyCurrent();
+        }
+        if (!image.isNull()) {
+            QClipboard *clipboard = QGuiApplication::clipboard();
+            clipboard->setImage(image);
+        }
+    }
+    if (event->matches(QKeySequence::Paste)) {
+        QClipboard *clipboard = QGuiApplication::clipboard();
+        QImage image = clipboard->image();
+        if (!image.isNull()) {
+            if (this->celView != nullptr) {
+                this->celView->pasteCurrent(image);
+            }
+            if (this->levelCelView != nullptr) {
+                this->levelCelView->pasteCurrent(image);
+            }
+            this->updateWindow();
+        }
+    }
 
     QMainWindow::keyPressEvent(event);
 }

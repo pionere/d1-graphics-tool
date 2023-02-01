@@ -1373,6 +1373,55 @@ void LevelCelView::removeCurrentTile()
     this->displayFrame();
 }
 
+QImage LevelCelView::copyCurrent()
+{
+    /*if (this->ui->tilesTabs->currentIndex() == 1)
+        return this->min->getSubtileImage(this->currentSubtileIndex);
+    if (this->gfx->getFrameCount() == 0) {
+        return QImage();
+    }*/
+    return this->gfx->getFrameImage(this->currentFrameIndex);
+}
+
+void LevelCelView::pasteCurrent(const QImage &image)
+{
+    unsigned imageWidth = image.width();
+    unsigned imageHeight = image.height();
+
+    if (imageWidth == MICRO_WIDTH && imageHeight == MICRO_HEIGHT) {
+        D1GfxFrame *frame;
+        if (this->gfx->getFrameCount() != 0) {
+            frame = this->gfx->replaceFrame(this->currentFrameIndex, image);
+        } else {
+            frame = this->gfx->insertFrame(this->currentFrameIndex, image);
+        }
+        LevelTabFrameWidget::selectFrameType(frame);
+        // update the view
+        this->displayFrame();
+        return;
+    }
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    if (imageWidth == MICRO_WIDTH && imageHeight == MICRO_HEIGHT) {
+        int subtileIndex = this->currentSubtileIndex;
+        if (this->min->getSubtileCount() != 0) {
+            this->assignFrames(image, subtileIndex, this->gfx->getFrameCount());
+        } else {
+            this->assignSubtiles(image, -1, subtileIndex);
+        }
+
+        // reset subtile flags
+        this->sol->setSubtileProperties(subtileIndex, 0);
+        this->tmi->setSubtileProperties(subtileIndex, 0);
+        // update the view
+        this->displayFrame();
+        return;
+    }
+
+    QMessageBox::critical(nullptr, tr("Error"), tr("The image can not be used as a frame or as a subtile."));
+}
+
 void LevelCelView::collectFrameUsers(int frameIndex, QList<int> &users) const
 {
     unsigned frameRef = frameIndex + 1;

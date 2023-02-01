@@ -440,6 +440,26 @@ void CelView::removeCurrentFrame()
     this->displayFrame();
 }
 
+QImage CelView::copyCurrent()
+{
+    /*if (this->gfx->getFrameCount() == 0) {
+        return QImage();
+    }*/
+    return this->gfx->getFrameImage(this->currentFrameIndex);
+}
+
+void CelView::pasteCurrent(const QImage &image)
+{
+    if (this->gfx->getFrameCount() != 0) {
+        this->gfx->replaceFrame(this->currentFrameIndex, image);
+    } else {
+        this->gfx->insertFrame(this->currentFrameIndex, image);
+    }
+    // update the view
+    this->update();
+    this->displayFrame();
+}
+
 void CelView::upscale(const UpscaleParam &params)
 {
     int amount = this->gfx->getFrameCount();
