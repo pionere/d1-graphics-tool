@@ -241,6 +241,12 @@ void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const Upscal
     ProgressDialog::decBar();
 }
 
+static bool skipStep(const UpscaleTaskParam &params, const char *step)
+{
+    const QString stepName = QString(step);
+    return !params.skipSteps.contains(stepName);
+}
+
 static bool isRegularCel(const QString &asset)
 {
     QString assetLower = asset.toLower();
@@ -287,7 +293,8 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         QFile file(params.listfilesFile);
 
         if (!file.open(QIODevice::ReadOnly)) {
-            dProgressErr() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(params.listfilesFile));
+            dProgressFail() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(params.listfilesFile));
+            return;
         }
 
         QTextStream in(&file);
@@ -305,7 +312,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
     ProgressDialog::incBar("", 25 + 1);
 
-    if (!params.skipSteps.contains(QString("Regular CEL Files"))) {
+    if (!skipStep(params, "Regular CEL Files")) {
         // upscale regular cel files of listfiles.txt
         //  - skips Levels(dungeon tiles), gendata(cutscenes) and cow.CEL manually
 
@@ -336,7 +343,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         ProgressDialog::incMainValue(4);
     }
-    if (!params.skipSteps.contains(QString("Object CEL Files"))) {
+    if (!skipStep(params, "Object CEL Files")) {
         // upscale objects with level-specific palette
         const AssetConfig celPalPairs[] = {
             // clang-format off
@@ -384,7 +391,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         ProgressDialog::incMainValue(1);
     }
-    if (!params.skipSteps.contains(QString("Special CEL Files"))) {
+    if (!skipStep(params, "Special CEL Files")) {
         // upscale special cells of the levels
         const AssetConfig celPalPairs[] = {
             // clang-format off
@@ -426,7 +433,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         ProgressDialog::incMainValue(1);
     }
-    if (!params.skipSteps.contains(QString("Cutscenes"))) {
+    if (!skipStep(params, "Cutscenes")) {
         // upscale cutscenes
         const char *celPalPairs[][2] = {
             // clang-format off
@@ -479,7 +486,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::incMainValue(8);
     }
     // UpscaleCelComp("f:\\MPQE\\Work\\towners\\animals\\cow.CEL", 2, &diapal[0][0], 128, 128, "f:\\outcel\\towners\\animals\\cow.cel");
-    if (!params.skipSteps.contains(QString("Art CEL Files"))) {
+    if (!skipStep(params, "Art CEL Files")) {
         // upscale non-standard CELs of the menu (converted from PCX)
         const char *celPalPairs[][2] = {
             // clang-format off
@@ -535,7 +542,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         ProgressDialog::incMainValue(1);
     }
-    if (!params.skipSteps.contains(QString("Regular CL2 Files"))) {
+    if (!skipStep(params, "Regular CL2 Files")) {
         // upscale all cl2 files of listfiles.txt
         SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = params.autoOverwrite;
@@ -563,7 +570,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         ProgressDialog::incMainValue(4);
     }
-    if (!params.skipSteps.contains(QString("Fixed CL2 Files"))) {
+    if (!skipStep(params, "Fixed CL2 Files")) {
         // special cases to upscale cl2 files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
         SaveAsParam saParams = SaveAsParam();
@@ -598,7 +605,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         for (int i = 0; i < 1; i++)
             ProgressDialog::incValue();
     }
-    if (!params.skipSteps.contains(QString("Tilesets"))) {
+    if (!skipStep(params, "Tilesets")) {
         // upscale tiles of the levels
         const AssetConfig celPalPairs[] = {
             // clang-format off
@@ -643,7 +650,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         ProgressDialog::incMainValue(4);
     }
-    if (!params.skipSteps.contains(QString("Fixed Tilesets"))) {
+    if (!skipStep(params, "Fixed Tilesets")) {
         // special cases to upscale cl2 files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
         SaveAsParam saParams = SaveAsParam();
