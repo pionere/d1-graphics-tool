@@ -52,6 +52,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     for (int i = 0; i < numBars; i++) {
         QProgressBar *progressBar = new QProgressBar();
         progressBar->setEnabled(false);
+        progressBar->setTextVisible(false);
         theDialog->ui->verticalLayout->insertWidget(1 + i, progressBar);
         theDialog->progressBars.append(progressBar);
     }
@@ -104,6 +105,7 @@ void ProgressDialog::incBar(const QString &label, int maxValue)
     theDialog->activeBars++;
     newProgressBar->setRange(0, maxValue);
     newProgressBar->setValue(0);
+    newProgressBar->setToolTip("0%");
     newProgressBar->setEnabled(true);
 
     theDialog->update();
@@ -126,20 +128,24 @@ bool ProgressDialog::wasCanceled()
     return theDialog->status >= PROGRESS_STATE::CANCEL;
 }
 
+bool ProgressDialog::incBarValue(int index, int amount)
+{
+    QProgressBar *progressBar = this->progressBars[index];
+
+    amount += progressBar->value();
+    progressBar->setValue(amount);
+    progressBar->setToolTip(QString("%1%").arg(amount * 100 / progressBar->maximum()));
+    return !ProgressDialog::wasCanceled();
+}
+
 bool ProgressDialog::incValue()
 {
-    QProgressBar *currProgressBar = theDialog->progressBars[theDialog->activeBars - 1];
-
-    currProgressBar->setValue(currProgressBar->value() + 1);
-    return !ProgressDialog::wasCanceled();
+    return theDialog->incBarValue(theDialog->activeBars - 1, 1);
 }
 
 bool ProgressDialog::incMainValue(int amount)
 {
-    QProgressBar *currProgressBar = theDialog->progressBars[0];
-
-    currProgressBar->setValue(currProgressBar->value() + amount);
-    return !ProgressDialog::wasCanceled();
+    return theDialog->incBarValue(0, amount);
 }
 
 ProgressDialog &dProgress()

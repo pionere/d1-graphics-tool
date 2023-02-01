@@ -66,6 +66,7 @@ protected:
     void changeEvent(QEvent *e);
 
 private:
+    bool incBarValue(int index, int amount);
     void removeLastLine();
 
 private:
