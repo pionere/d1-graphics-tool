@@ -53,9 +53,9 @@ void EditFrameCommand::undo()
     bool change = false;
     for (int i = 0; i < this->modPixels.count(); i++) {
         FramePixel &fp = this->modPixels[i];
-        D1GfxPixel pixel = this->frame->getPixel(fp.pos);
+        D1GfxPixel pixel = this->frame->getPixel(fp.pos.x(), fp.pos.y());
         if (pixel != fp.pixel) {
-            this->frame->setPixel(fp.pos, fp.pixel);
+            this->frame->setPixel(fp.pos.x(), fp.pos.y(), fp.pixel);
             fp.pixel = pixel;
             change = true;
         }
@@ -323,7 +323,7 @@ void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned cou
         this->undoStack->push(command);
     } else {
         // picking
-        const D1GfxPixel pixel = frame == nullptr ? D1GfxPixel::transparentPixel() : frame->getPixel(pos);
+        const D1GfxPixel pixel = frame == nullptr ? D1GfxPixel::transparentPixel() : frame->getPixel(pos.x(), pos.y());
         this->palWidget->selectColor(pixel);
         this->trnUniqueWidget->selectColor(pixel);
         this->trnBaseWidget->selectColor(pixel);
