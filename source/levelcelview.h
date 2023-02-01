@@ -62,6 +62,9 @@ public:
     void replaceCurrentTile(const QString &imagefilePath);
     void removeCurrentTile();
 
+    QImage copyCurrent();
+    void pasteCurrent(const QImage &image);
+
     void reportUsage();
     void resetFrameTypes();
     void inefficientFrames();

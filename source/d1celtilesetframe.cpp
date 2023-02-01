@@ -17,6 +17,9 @@ bool D1CelTilesetFrame::load(D1GfxFrame &frame, D1CEL_FRAME_TYPE type, QByteArra
     frame.height = MICRO_HEIGHT;
     frame.frameType = type;
     frame.clipped = false;
+    for (int i = 0; i < frame.height; i++) {
+        frame.pixels.append(QList<D1GfxPixel>());
+    }
     switch (type) {
     case D1CEL_FRAME_TYPE::Square:
         D1CelTilesetFrame::LoadSquare(frame, rawData);
@@ -44,20 +47,19 @@ bool D1CelTilesetFrame::load(D1GfxFrame &frame, D1CEL_FRAME_TYPE type, QByteArra
 void D1CelTilesetFrame::LoadSquare(D1GfxFrame &frame, QByteArray &rawData)
 {
     int offset = 0;
-    for (int i = 0; i < frame.height; i++) {
-        QList<D1GfxPixel> pixelLine;
+    for (int i = frame.height - 1; i >= 0; i--) {
+        QList<D1GfxPixel> &pixelLine = frame.pixels[i];
         for (int j = 0; j < frame.width; j++) {
             pixelLine.append(D1GfxPixel::colorPixel(rawData[offset++]));
         }
-        frame.pixels.insert(0, pixelLine);
     }
 }
 
 void D1CelTilesetFrame::LoadTransparentSquare(D1GfxFrame &frame, QByteArray &rawData)
 {
     int offset = 0;
-    for (int i = 0; i < frame.height; i++) {
-        QList<D1GfxPixel> pixelLine;
+    for (int i = frame.height - 1; i >= 0; i--) {
+        QList<D1GfxPixel> &pixelLine = frame.pixels[i];
         for (int j = 0; j < frame.width;) {
             qint8 readByte = rawData[offset++];
             if (readByte < 0) {
@@ -75,7 +77,6 @@ void D1CelTilesetFrame::LoadTransparentSquare(D1GfxFrame &frame, QByteArray &raw
             }
             j += readByte;
         }
-        frame.pixels.insert(0, pixelLine);
     }
 }
 
@@ -84,14 +85,13 @@ void D1CelTilesetFrame::LoadBottomLeftTriangle(D1GfxFrame &frame, QByteArray &ra
     int offset = 0;
     for (int i = 1; i <= frame.height / 2; i++) {
         offset += 2 * (i % 2);
-        QList<D1GfxPixel> pixelLine;
+        QList<D1GfxPixel> &pixelLine = frame.pixels[frame.height - i];
         for (int j = 0; j < frame.width - 2 * i; j++) {
             pixelLine.append(D1GfxPixel::transparentPixel());
         }
         for (int j = 0; j < 2 * i; j++) {
             pixelLine.append(D1GfxPixel::colorPixel(rawData[offset++]));
         }
-        frame.pixels.insert(0, pixelLine);
     }
 }
 
@@ -99,7 +99,7 @@ void D1CelTilesetFrame::LoadBottomRightTriangle(D1GfxFrame &frame, QByteArray &r
 {
     int offset = 0;
     for (int i = 1; i <= frame.height / 2; i++) {
-        QList<D1GfxPixel> pixelLine;
+        QList<D1GfxPixel> &pixelLine = frame.pixels[frame.height - i];
         for (int j = 0; j < 2 * i; j++) {
             pixelLine.append(D1GfxPixel::colorPixel(rawData[offset++]));
         }
@@ -107,7 +107,6 @@ void D1CelTilesetFrame::LoadBottomRightTriangle(D1GfxFrame &frame, QByteArray &r
             pixelLine.append(D1GfxPixel::transparentPixel());
         }
         offset += 2 * (i % 2);
-        frame.pixels.insert(0, pixelLine);
     }
 }
 
@@ -117,14 +116,13 @@ void D1CelTilesetFrame::LoadLeftTriangle(D1GfxFrame &frame, QByteArray &rawData)
     int offset = 288;
     for (int i = 1; i <= frame.height / 2; i++) {
         offset += 2 * (i % 2);
-        QList<D1GfxPixel> pixelLine;
+        QList<D1GfxPixel> &pixelLine = frame.pixels[frame.height / 2 - i];
         for (int j = 0; j < 2 * i; j++) {
             pixelLine.append(D1GfxPixel::transparentPixel());
         }
         for (int j = 0; j < frame.width - 2 * i; j++) {
             pixelLine.append(D1GfxPixel::colorPixel(rawData[offset++]));
         }
-        frame.pixels.insert(0, pixelLine);
     }
 }
 
@@ -133,7 +131,7 @@ void D1CelTilesetFrame::LoadRightTriangle(D1GfxFrame &frame, QByteArray &rawData
     D1CelTilesetFrame::LoadBottomRightTriangle(frame, rawData);
     int offset = 288;
     for (int i = 1; i <= frame.height / 2; i++) {
-        QList<D1GfxPixel> pixelLine;
+        QList<D1GfxPixel> &pixelLine = frame.pixels[frame.height / 2 - i];
         for (int j = 0; j < frame.width - 2 * i; j++) {
             pixelLine.append(D1GfxPixel::colorPixel(rawData[offset++]));
         }
@@ -141,7 +139,6 @@ void D1CelTilesetFrame::LoadRightTriangle(D1GfxFrame &frame, QByteArray &rawData
             pixelLine.append(D1GfxPixel::transparentPixel());
         }
         offset += 2 * (i % 2);
-        frame.pixels.insert(0, pixelLine);
     }
 }
 
@@ -149,11 +146,10 @@ void D1CelTilesetFrame::LoadTopHalfSquare(D1GfxFrame &frame, QByteArray &rawData
 {
     int offset = 288;
     for (int i = 1; i <= frame.height / 2; i++) {
-        QList<D1GfxPixel> pixelLine;
+        QList<D1GfxPixel> &pixelLine = frame.pixels[frame.height / 2 - i];
         for (int j = 0; j < frame.width; j++) {
             pixelLine.append(D1GfxPixel::colorPixel(rawData[offset++]));
         }
-        frame.pixels.insert(0, pixelLine);
     }
 }
 

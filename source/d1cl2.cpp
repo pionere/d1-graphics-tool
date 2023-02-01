@@ -109,8 +109,8 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
                 pixelLine.append(D1GfxPixel::transparentPixel());
 
                 if (pixelLine.size() == frame.width) {
-                    frame.pixels.insert(0, pixelLine);
-                    pixelLine.clear();
+                    frame.pixels.push_front(QList<D1GfxPixel>());
+                    frame.pixels.front().swap(pixelLine);
                 }
             }
         }
@@ -124,8 +124,8 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
                 pixelLine.append(D1GfxPixel::colorPixel(rawData[o]));
 
                 if (pixelLine.size() == frame.width) {
-                    frame.pixels.insert(0, pixelLine);
-                    pixelLine.clear();
+                    frame.pixels.push_front(QList<D1GfxPixel>());
+                    frame.pixels.front().swap(pixelLine);
                 }
             }
         }
@@ -138,8 +138,8 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
                 pixelLine.append(D1GfxPixel::colorPixel(rawData[o]));
 
                 if (pixelLine.size() == frame.width) {
-                    frame.pixels.insert(0, pixelLine);
-                    pixelLine.clear();
+                    frame.pixels.push_front(QList<D1GfxPixel>());
+                    frame.pixels.front().swap(pixelLine);
                 }
             }
         } else if (readByte == 0x00) {

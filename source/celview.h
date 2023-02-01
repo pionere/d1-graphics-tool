@@ -78,6 +78,9 @@ public:
     void replaceCurrentFrame(const QString &imagefilePath);
     void removeCurrentFrame();
 
+    QImage copyCurrent();
+    void pasteCurrent(const QImage &image);
+
     void upscale(const UpscaleParam &params);
 
     void updateLabel();
