@@ -3156,27 +3156,28 @@ D1GfxFrame *Upscaler::createSubtileFrame(const D1Gfx *gfx, const D1Min *min, int
     for (int i = 0; i < subtileFrame->height; i++) {
         subtileFrame->pixels.append(QList<D1GfxPixel>());
     }
-    QPoint pos = QPoint(0, 0);
-    QList<quint16> &frameReferences = min->getFrameReferences(subtileIndex);
+    int x = 0;
+    int y = 0;
+    const QList<quint16> &frameReferences = min->getFrameReferences(subtileIndex);
     for (quint16 frameRef : frameReferences) {
         if (frameRef == 0) {
-            for (QPoint framePos = QPoint(0, 0); framePos.y() < MICRO_HEIGHT; framePos.ry()++) {
-                for (framePos.rx() = 0; framePos.x() < MICRO_WIDTH; framePos.rx()++) {
-                    subtileFrame->pixels[pos.y() + framePos.y()].append(D1GfxPixel::transparentPixel());
+            for (int yy = 0; yy < MICRO_HEIGHT; yy++) {
+                for (int xx = 0; xx < MICRO_WIDTH; xx++) {
+                    subtileFrame->pixels[y + yy].append(D1GfxPixel::transparentPixel());
                 }
             }
         } else {
             D1GfxFrame *microFrame = gfx->getFrame(frameRef - 1);
-            for (QPoint framePos = QPoint(0, 0); framePos.y() < MICRO_HEIGHT; framePos.ry()++) {
-                for (framePos.rx() = 0; framePos.x() < MICRO_WIDTH; framePos.rx()++) {
-                    subtileFrame->pixels[pos.y() + framePos.y()].append(microFrame->getPixel(framePos));
+            for (int yy = 0; yy < MICRO_HEIGHT; yy++) {
+                for (int xx = 0; xx < MICRO_WIDTH; xx++) {
+                    subtileFrame->pixels[y + yy].append(microFrame->getPixel(xx, yy));
                 }
             }
         }
-        pos.rx() += MICRO_WIDTH;
-        if (pos.x() == subtileFrame->width) {
-            pos.rx() = 0;
-            pos.ry() += MICRO_HEIGHT;
+        x += MICRO_WIDTH;
+        if (x == subtileFrame->width) {
+            x = 0;
+            y += MICRO_HEIGHT;
         }
     }
     return subtileFrame;
@@ -3185,11 +3186,12 @@ D1GfxFrame *Upscaler::createSubtileFrame(const D1Gfx *gfx, const D1Min *min, int
 void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<quint16>> &newFrameReferences, QList<D1GfxFrame *> &newFrames)
 {
     QList<quint16> subtileFramesRefs;
-    for (QPoint pos = QPoint(0, 0); pos.y() < subtileFrame->height;) {
+    int x = 0;
+    for (int y = 0; y < subtileFrame->height;) {
         bool hasColor = false;
-        for (QPoint framePos = QPoint(0, 0); framePos.y() < MICRO_HEIGHT && !hasColor; framePos.ry()++) {
-            for (framePos.rx() = 0; framePos.x() < MICRO_WIDTH; framePos.rx()++) {
-                if (!subtileFrame->getPixel(pos + framePos).isTransparent()) {
+        for (int yy = 0; yy < MICRO_HEIGHT && !hasColor; yy++) {
+            for (int xx = 0; xx < MICRO_WIDTH; xx++) {
+                if (!subtileFrame->getPixel(x + xx, y + yy).isTransparent()) {
                     hasColor = true;
                     break;
                 }
@@ -3204,9 +3206,9 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<qui
             for (int i = 0; i < MICRO_HEIGHT; i++) {
                 newFrame->pixels.append(QList<D1GfxPixel>());
             }
-            for (QPoint framePos = QPoint(0, 0); framePos.y() < MICRO_HEIGHT; framePos.ry()++) {
-                for (framePos.rx() = 0; framePos.x() < MICRO_WIDTH; framePos.rx()++) {
-                    newFrame->pixels[framePos.y()].append(subtileFrame->getPixel(pos + framePos));
+            for (int yy = 0; yy < MICRO_HEIGHT; yy++) {
+                for (int xx = 0; xx < MICRO_WIDTH; xx++) {
+                    newFrame->pixels[yy].append(subtileFrame->getPixel(x + xx, y + yy));
                 }
             }
             LevelTabFrameWidget::selectFrameType(newFrame);
@@ -3214,10 +3216,10 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<qui
             subtileFramesRefs.append(0);
         }
 
-        pos.rx() += MICRO_WIDTH;
-        if (pos.x() == subtileFrame->width) {
-            pos.rx() = 0;
-            pos.ry() += MICRO_HEIGHT;
+        x += MICRO_WIDTH;
+        if (x == subtileFrame->width) {
+            x = 0;
+            y += MICRO_HEIGHT;
         }
     }
     newFrameReferences.append(subtileFramesRefs);
@@ -3251,8 +3253,8 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     }
     // update gfx
     gfx->groupFrameIndices.clear();
-    if (!newFrames.isEmpty())
-        gfx->groupFrameIndices.append(qMakePair(0, newFrames.count() - 1));
+    if (amount > 0)
+        gfx->groupFrameIndices.append(qMakePair(0, amount - 1));
     gfx->frames.swap(newFrames);
     gfx->upscaled = true;
     gfx->modified = true;

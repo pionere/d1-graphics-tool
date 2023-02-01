@@ -200,12 +200,13 @@ quint8 *D1CelTilesetFrame::writeFrameData(D1GfxFrame &frame, quint8 *pDst)
 
 quint8 *D1CelTilesetFrame::WriteSquare(D1GfxFrame &frame, quint8 *pDst)
 {
+    int x, y;
     // int length = MICRO_WIDTH * MICRO_HEIGHT;
 
     // add opaque pixels
-    for (QPoint pos = QPoint(0, MICRO_HEIGHT - 1); pos.y() >= 0; pos.ry()--) {
-        for (pos.rx() = 0; pos.x() < MICRO_WIDTH; pos.rx()++) {
-            D1GfxPixel pixel = frame.getPixel(pos);
+    for (y = MICRO_HEIGHT - 1; y >= 0; y--) {
+        for (x = 0; x < MICRO_WIDTH; ++x) {
+            D1GfxPixel pixel = frame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid transparent pixel in a Square frame.");
                 return pDst;
@@ -219,14 +220,15 @@ quint8 *D1CelTilesetFrame::WriteSquare(D1GfxFrame &frame, quint8 *pDst)
 
 quint8 *D1CelTilesetFrame::WriteTransparentSquare(D1GfxFrame &frame, quint8 *pDst)
 {
+    int x, y;
     // int length = MICRO_WIDTH * MICRO_HEIGHT;
     bool hasColor = false;
     quint8 *pHead = pDst;
     pDst++;
-    for (QPoint pos = QPoint(0, MICRO_HEIGHT - 1); pos.y() >= 0; pos.ry()--) {
+    for (y = MICRO_HEIGHT - 1; y >= 0; y--) {
         bool alpha = false;
-        for (pos.rx() = 0; pos.x() < MICRO_WIDTH; pos.rx()++) {
-            D1GfxPixel pixel = frame.getPixel(pos);
+        for (x = 0; x < MICRO_WIDTH; x++) {
+            D1GfxPixel pixel = frame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 // add transparent pixel
                 if ((char)(*pHead) > 0) {
@@ -260,15 +262,15 @@ quint8 *D1CelTilesetFrame::WriteTransparentSquare(D1GfxFrame &frame, quint8 *pDs
 
 quint8 *D1CelTilesetFrame::WriteLeftTriangle(D1GfxFrame &frame, quint8 *pDst)
 {
-    int i;
+    int i, x, y;
     // int length = MICRO_WIDTH * MICRO_HEIGHT / 2 + MICRO_HEIGHT;
 
     // memset(pDst, 0, length); -- unnecessary for the game, and the current user did this anyway
-    QPoint pos = QPoint(0, MICRO_HEIGHT - 1);
-    for (i = MICRO_HEIGHT - 2; i >= 0; i -= 2, pos.ry()--) {
+    y = MICRO_HEIGHT - 1;
+    for (i = MICRO_HEIGHT - 2; i >= 0; i -= 2, y--) {
         // check transparent pixels
-        for (pos.rx() = 0; pos.x() < i; pos.rx()++) {
-            D1GfxPixel pixel = frame.getPixel(pos);
+        for (x = 0; x < i; x++) {
+            D1GfxPixel pixel = frame.getPixel(x, y);
             if (!pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid non-transparent pixel in the bottom part of the Left Triangle frame.");
                 return pDst;
@@ -276,8 +278,8 @@ quint8 *D1CelTilesetFrame::WriteLeftTriangle(D1GfxFrame &frame, quint8 *pDst)
         }
         pDst += i & 2;
         // add opaque pixels
-        for (pos.rx() = i; pos.x() < MICRO_WIDTH; pos.rx()++) {
-            D1GfxPixel pixel = frame.getPixel(pos);
+        for (x = i; x < MICRO_WIDTH; x++) {
+            D1GfxPixel pixel = frame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid transparent pixel in the bottom part of the Left Triangle frame.");
                 return pDst;
@@ -287,10 +289,10 @@ quint8 *D1CelTilesetFrame::WriteLeftTriangle(D1GfxFrame &frame, quint8 *pDst)
         }
     }
 
-    for (i = 2; i != MICRO_HEIGHT; i += 2, pos.ry()--) {
+    for (i = 2; i != MICRO_HEIGHT; i += 2, y--) {
         // check transparent pixels
-        for (pos.rx() = 0; pos.x() < i; pos.rx()++) {
-            D1GfxPixel pixel = frame.getPixel(pos);
+        for (x = 0; x < i; x++) {
+            D1GfxPixel pixel = frame.getPixel(x, y);
             if (!pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid non-transparent pixel in the top part of the Left Triangle frame.");
                 return pDst;
@@ -298,8 +300,8 @@ quint8 *D1CelTilesetFrame::WriteLeftTriangle(D1GfxFrame &frame, quint8 *pDst)
         }
         pDst += i & 2;
         // add opaque pixels
-        for (pos.rx() = i; pos.x() < MICRO_WIDTH; pos.rx()++) {
-            D1GfxPixel pixel = frame.getPixel(pos);
+        for (x = i; x < MICRO_WIDTH; ++x) {
+            D1GfxPixel pixel = frame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid transparent pixel in the top part of the Left Triangle frame.");
                 return pDst;
@@ -313,15 +315,15 @@ quint8 *D1CelTilesetFrame::WriteLeftTriangle(D1GfxFrame &frame, quint8 *pDst)
 
 quint8 *D1CelTilesetFrame::WriteRightTriangle(D1GfxFrame &frame, quint8 *pDst)
 {
-    int i;
+    int i, x, y;
     // int length = MICRO_WIDTH * MICRO_HEIGHT / 2 + MICRO_HEIGHT;
 
     // memset(pDst, 0, length); -- unnecessary for the game, and the current user did this anyway
-    QPoint pos = QPoint(0, MICRO_HEIGHT - 1);
-    for (i = MICRO_HEIGHT - 2; i >= 0; i -= 2, pos.ry()--) {
+    y = MICRO_HEIGHT - 1;
+    for (i = MICRO_HEIGHT - 2; i >= 0; i -= 2, y--) {
         // add opaque pixels
-        for (pos.rx() = 0; pos.x() < (MICRO_WIDTH - i); pos.rx()++) {
-            D1GfxPixel pixel = frame.getPixel(pos);
+        for (x = 0; x < (MICRO_WIDTH - i); x++) {
+            D1GfxPixel pixel = frame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid transparent pixel in the bottom part of the Right Triangle frame.");
                 return pDst;
@@ -331,8 +333,8 @@ quint8 *D1CelTilesetFrame::WriteRightTriangle(D1GfxFrame &frame, quint8 *pDst)
         }
         pDst += i & 2;
         // check transparent pixels
-        for (pos.rx() = MICRO_WIDTH - i; pos.x() < MICRO_WIDTH; pos.rx()++) {
-            D1GfxPixel pixel = frame.getPixel(pos);
+        for (x = MICRO_WIDTH - i; x < MICRO_WIDTH; x++) {
+            D1GfxPixel pixel = frame.getPixel(x, y);
             if (!pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid non-transparent pixel in the bottom part of the Right Triangle frame.");
                 return pDst;
@@ -340,10 +342,10 @@ quint8 *D1CelTilesetFrame::WriteRightTriangle(D1GfxFrame &frame, quint8 *pDst)
         }
     }
 
-    for (i = 2; i != MICRO_HEIGHT; i += 2, pos.ry()--) {
+    for (i = 2; i != MICRO_HEIGHT; i += 2, y--) {
         // add opaque pixels
-        for (pos.rx() = 0; pos.x() < (MICRO_WIDTH - i); pos.rx()++) {
-            D1GfxPixel pixel = frame.getPixel(pos);
+        for (x = 0; x < (MICRO_WIDTH - i); x++) {
+            D1GfxPixel pixel = frame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid transparent pixel in the top part of the Right Triangle frame.");
                 return pDst;
@@ -353,8 +355,8 @@ quint8 *D1CelTilesetFrame::WriteRightTriangle(D1GfxFrame &frame, quint8 *pDst)
         }
         pDst += i & 2;
         // check transparent pixels
-        for (pos.rx() = MICRO_WIDTH - i; pos.x() < MICRO_WIDTH; pos.rx()++) {
-            D1GfxPixel pixel = frame.getPixel(pos);
+        for (x = MICRO_WIDTH - i; x < MICRO_WIDTH; x++) {
+            D1GfxPixel pixel = frame.getPixel(x, y);
             if (!pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid non-transparent pixel in the top part of the Right Triangle frame.");
                 return pDst;
@@ -366,15 +368,15 @@ quint8 *D1CelTilesetFrame::WriteRightTriangle(D1GfxFrame &frame, quint8 *pDst)
 
 quint8 *D1CelTilesetFrame::WriteLeftTrapezoid(D1GfxFrame &frame, quint8 *pDst)
 {
-    int i;
+    int i, x, y;
     // int length = (MICRO_WIDTH * MICRO_HEIGHT) / 2 + MICRO_HEIGHT * (2 + MICRO_HEIGHT) / 4 + MICRO_HEIGHT / 2;
 
     // memset(pDst, 0, length); -- unnecessary for the game, and the current user did this anyway
-    QPoint pos = QPoint(0, MICRO_HEIGHT - 1);
-    for (i = MICRO_HEIGHT - 2; i >= 0; i -= 2, pos.ry()--) {
+    y = MICRO_HEIGHT - 1;
+    for (i = MICRO_HEIGHT - 2; i >= 0; i -= 2, y--) {
         // check transparent pixels
-        for (pos.rx() = 0; pos.x() < i; pos.rx()++) {
-            D1GfxPixel pixel = frame.getPixel(pos);
+        for (x = 0; x < i; x++) {
+            D1GfxPixel pixel = frame.getPixel(x, y);
             if (!pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid non-transparent pixel in the bottom part of the Left Trapezoid frame.");
                 return pDst;
@@ -382,8 +384,8 @@ quint8 *D1CelTilesetFrame::WriteLeftTrapezoid(D1GfxFrame &frame, quint8 *pDst)
         }
         pDst += i & 2;
         // add opaque pixels
-        for (pos.rx() = i; pos.x() < MICRO_WIDTH; pos.rx()++) {
-            D1GfxPixel pixel = frame.getPixel(pos);
+        for (x = i; x < MICRO_WIDTH; x++) {
+            D1GfxPixel pixel = frame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid transparent pixel in the bottom part of the Left Trapezoid frame.");
                 return pDst;
@@ -393,9 +395,9 @@ quint8 *D1CelTilesetFrame::WriteLeftTrapezoid(D1GfxFrame &frame, quint8 *pDst)
         }
     }
     // add opaque pixels
-    for (i = MICRO_HEIGHT / 2; i != 0; i--, pos.ry()--) {
-        for (pos.rx() = 0; pos.x() < MICRO_WIDTH; pos.rx()++) {
-            D1GfxPixel pixel = frame.getPixel(pos);
+    for (i = MICRO_HEIGHT / 2; i != 0; i--, y--) {
+        for (x = 0; x < MICRO_WIDTH; x++) {
+            D1GfxPixel pixel = frame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid transparent pixel in the top part of the Left Trapezoid frame.");
                 return pDst;
@@ -409,15 +411,15 @@ quint8 *D1CelTilesetFrame::WriteLeftTrapezoid(D1GfxFrame &frame, quint8 *pDst)
 
 quint8 *D1CelTilesetFrame::WriteRightTrapezoid(D1GfxFrame &frame, quint8 *pDst)
 {
-    int i;
+    int i, x, y;
     // int length = (MICRO_WIDTH * MICRO_HEIGHT) / 2 + MICRO_HEIGHT * (2 + MICRO_HEIGHT) / 4 + MICRO_HEIGHT / 2;
 
     // memset(pDst, 0, length); -- unnecessary for the game, and the current user did this anyway
-    QPoint pos = QPoint(0, MICRO_HEIGHT - 1);
-    for (i = MICRO_HEIGHT - 2; i >= 0; i -= 2, pos.ry()--) {
+    y = MICRO_HEIGHT - 1;
+    for (i = MICRO_HEIGHT - 2; i >= 0; i -= 2, y--) {
         // add opaque pixels
-        for (pos.rx() = 0; pos.x() < (MICRO_WIDTH - i); pos.rx()++) {
-            D1GfxPixel pixel = frame.getPixel(pos);
+        for (x = 0; x < (MICRO_WIDTH - i); x++) {
+            D1GfxPixel pixel = frame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid transparent pixel in the bottom part of the Right Trapezoid frame.");
                 return pDst;
@@ -427,8 +429,8 @@ quint8 *D1CelTilesetFrame::WriteRightTrapezoid(D1GfxFrame &frame, quint8 *pDst)
         }
         pDst += i & 2;
         // check transparent pixels
-        for (pos.rx() = MICRO_WIDTH - i; pos.x() < MICRO_WIDTH; pos.rx()++) {
-            D1GfxPixel pixel = frame.getPixel(pos);
+        for (x = MICRO_WIDTH - i; x < MICRO_WIDTH; x++) {
+            D1GfxPixel pixel = frame.getPixel(x, y);
             if (!pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid non-transparent pixel in the bottom part of the Right Trapezoid frame.");
                 return pDst;
@@ -436,9 +438,9 @@ quint8 *D1CelTilesetFrame::WriteRightTrapezoid(D1GfxFrame &frame, quint8 *pDst)
         }
     }
     // add opaque pixels
-    for (i = MICRO_HEIGHT / 2; i != 0; i--, pos.ry()--) {
-        for (pos.rx() = 0; pos.x() < MICRO_WIDTH; pos.rx()++) {
-            D1GfxPixel pixel = frame.getPixel(pos);
+    for (i = MICRO_HEIGHT / 2; i != 0; i--, y--) {
+        for (x = 0; x < MICRO_WIDTH; x++) {
+            D1GfxPixel pixel = frame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid transparent pixel in the top part of the Right Trapezoid frame.");
                 return pDst;

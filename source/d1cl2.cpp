@@ -324,7 +324,7 @@ static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize
         }
         first = true;
         for (int j = 0; j < frame->getWidth(); j++) {
-            D1GfxPixel pixel = frame->getPixel(QPoint(j, frame->getHeight() - i));
+            D1GfxPixel pixel = frame->getPixel(j, frame->getHeight() - i);
             if (!pixel.isTransparent()) {
                 // add opaque pixel
                 col = pixel.getPaletteIndex();

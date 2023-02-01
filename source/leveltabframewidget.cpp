@@ -69,24 +69,24 @@ void LevelTabFrameWidget::on_deletePushButtonClicked()
     mw->on_actionDel_Frame_triggered();
 }
 
-static bool prepareMsgTransparent(QString &msg, const QPoint &pos)
+static bool prepareMsgTransparent(QString &msg, int x, int y)
 {
-    msg = QApplication::tr("Invalid (transparent) pixel at (%1:%2)").arg(pos.x()).arg(pos.y());
+    msg = QApplication::tr("Invalid (transparent) pixel at (%1:%2)").arg(x).arg(y);
     return false;
 }
 
-static bool prepareMsgNonTransparent(QString &msg, const QPoint &pos)
+static bool prepareMsgNonTransparent(QString &msg, int x, int y)
 {
-    msg = QApplication::tr("Invalid (non-transparent) pixel at (%1:%2)").arg(pos.x()).arg(pos.y());
+    msg = QApplication::tr("Invalid (non-transparent) pixel at (%1:%2)").arg(x).arg(y);
     return false;
 }
 
 static bool validSquare(const D1GfxFrame *frame, QString &msg, int *limit)
 {
-    for (QPoint pos = QPoint(0, 0); pos.y() < MICRO_HEIGHT; pos.ry()++) {
-        for (pos.rx() = 0; pos.x() < MICRO_WIDTH; pos.rx()++) {
-            if (frame->getPixel(pos).isTransparent() && --*limit < 0) {
-                return prepareMsgTransparent(msg, pos);
+    for (int y = 0; y < MICRO_HEIGHT; y++) {
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            if (frame->getPixel(x, y).isTransparent() && --*limit < 0) {
+                return prepareMsgTransparent(msg, x, y);
             }
         }
     }
@@ -95,15 +95,15 @@ static bool validSquare(const D1GfxFrame *frame, QString &msg, int *limit)
 
 static bool validBottomLeftTriangle(const D1GfxFrame *frame, QString &msg, int *limit)
 {
-    for (QPoint pos = QPoint(0, MICRO_HEIGHT / 2); pos.y() < MICRO_HEIGHT; pos.ry()++) {
-        for (pos.rx() = 0; pos.x() < MICRO_WIDTH; pos.rx()++) {
-            if (frame->getPixel(pos).isTransparent()) {
-                if (pos.x() >= (pos.y() * 2 - MICRO_WIDTH) && --*limit < 0) {
-                    return prepareMsgTransparent(msg, pos);
+    for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            if (frame->getPixel(x, y).isTransparent()) {
+                if (x >= (y * 2 - MICRO_WIDTH) && --*limit < 0) {
+                    return prepareMsgTransparent(msg, x, y);
                 }
             } else {
-                if (pos.x() < (pos.y() * 2 - MICRO_WIDTH) && --*limit < 0) {
-                    return prepareMsgNonTransparent(msg, pos);
+                if (x < (y * 2 - MICRO_WIDTH) && --*limit < 0) {
+                    return prepareMsgNonTransparent(msg, x, y);
                 }
             }
         }
@@ -113,15 +113,15 @@ static bool validBottomLeftTriangle(const D1GfxFrame *frame, QString &msg, int *
 
 static bool validBottomRightTriangle(const D1GfxFrame *frame, QString &msg, int *limit)
 {
-    for (QPoint pos = QPoint(0, MICRO_HEIGHT / 2); pos.y() < MICRO_HEIGHT; pos.ry()++) {
-        for (pos.rx() = 0; pos.x() < MICRO_WIDTH; pos.rx()++) {
-            if (frame->getPixel(pos).isTransparent()) {
-                if (pos.x() < (2 * MICRO_WIDTH - pos.y() * 2) && --*limit < 0) {
-                    return prepareMsgTransparent(msg, pos);
+    for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            if (frame->getPixel(x, y).isTransparent()) {
+                if (x < (2 * MICRO_WIDTH - y * 2) && --*limit < 0) {
+                    return prepareMsgTransparent(msg, x, y);
                 }
             } else {
-                if (pos.x() >= (2 * MICRO_WIDTH - pos.y() * 2) && --*limit < 0) {
-                    return prepareMsgNonTransparent(msg, pos);
+                if (x >= (2 * MICRO_WIDTH - y * 2) && --*limit < 0) {
+                    return prepareMsgNonTransparent(msg, x, y);
                 }
             }
         }
@@ -134,15 +134,15 @@ static bool validLeftTriangle(const D1GfxFrame *frame, QString &msg, int *limit)
     if (!validBottomLeftTriangle(frame, msg, limit)) {
         return false;
     }
-    for (QPoint pos = QPoint(0, 0); pos.y() < MICRO_HEIGHT / 2; pos.ry()++) {
-        for (pos.rx() = 0; pos.x() < MICRO_WIDTH; pos.rx()++) {
-            if (frame->getPixel(pos).isTransparent()) {
-                if (pos.x() >= (MICRO_WIDTH - pos.y() * 2) && --*limit < 0) {
-                    return prepareMsgTransparent(msg, pos);
+    for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            if (frame->getPixel(x, y).isTransparent()) {
+                if (x >= (MICRO_WIDTH - y * 2) && --*limit < 0) {
+                    return prepareMsgTransparent(msg, x, y);
                 }
             } else {
-                if (pos.x() < (MICRO_WIDTH - pos.y() * 2) && --*limit < 0) {
-                    return prepareMsgNonTransparent(msg, pos);
+                if (x < (MICRO_WIDTH - y * 2) && --*limit < 0) {
+                    return prepareMsgNonTransparent(msg, x, y);
                 }
             }
         }
@@ -155,15 +155,15 @@ static bool validRightTriangle(const D1GfxFrame *frame, QString &msg, int *limit
     if (!validBottomRightTriangle(frame, msg, limit)) {
         return false;
     }
-    for (QPoint pos = QPoint(0, 0); pos.y() < MICRO_HEIGHT / 2; pos.ry()++) {
-        for (pos.rx() = 0; pos.x() < MICRO_WIDTH; pos.rx()++) {
-            if (frame->getPixel(pos).isTransparent()) {
-                if (pos.x() < pos.y() * 2 && --*limit < 0) {
-                    return prepareMsgTransparent(msg, pos);
+    for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            if (frame->getPixel(x, y).isTransparent()) {
+                if (x < y * 2 && --*limit < 0) {
+                    return prepareMsgTransparent(msg, x, y);
                 }
             } else {
-                if (pos.x() >= pos.y() * 2 && --*limit < 0) {
-                    return prepareMsgNonTransparent(msg, pos);
+                if (x >= y * 2 && --*limit < 0) {
+                    return prepareMsgNonTransparent(msg, x, y);
                 }
             }
         }
@@ -173,10 +173,10 @@ static bool validRightTriangle(const D1GfxFrame *frame, QString &msg, int *limit
 
 static bool validTopHalfSquare(const D1GfxFrame *frame, QString &msg, int *limit)
 {
-    for (QPoint pos = QPoint(0, 0); pos.y() < MICRO_HEIGHT / 2; pos.ry()++) {
-        for (pos.rx() = 0; pos.x() < MICRO_WIDTH; pos.rx()++) {
-            if (frame->getPixel(pos).isTransparent() && --*limit < 0) {
-                return prepareMsgTransparent(msg, pos);
+    for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            if (frame->getPixel(x, y).isTransparent() && --*limit < 0) {
+                return prepareMsgTransparent(msg, x, y);
             }
         }
     }
@@ -195,10 +195,10 @@ static bool validRightTrapezoid(const D1GfxFrame *frame, QString &msg, int *limi
 
 static bool validEmpty(const D1GfxFrame *frame, QString &msg, int *limit)
 {
-    for (QPoint pos = QPoint(0, 0); pos.y() < MICRO_HEIGHT; pos.ry()++) {
-        for (pos.rx() = 0; pos.x() < MICRO_WIDTH; pos.rx()++) {
-            if (!frame->getPixel(pos).isTransparent() && --*limit < 0) {
-                return prepareMsgNonTransparent(msg, pos);
+    for (int y = 0; y < MICRO_HEIGHT; y++) {
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            if (!frame->getPixel(x, y).isTransparent() && --*limit < 0) {
+                return prepareMsgNonTransparent(msg, x, y);
             }
         }
     }
