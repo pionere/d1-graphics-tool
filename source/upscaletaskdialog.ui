@@ -70,11 +70,8 @@
         <property name="selectionMode">
          <set>QAbstractItemView::MultiSelection</set>
         </property>
-        <property name="layoutMode">
-         <set>QListView::Batched</set>
-        </property>
-        <property name="batchSize">
-         <number>9</number>
+        <property name="uniformItemSizes">
+         <bool>true</bool>
         </property>
         <item>
          <property name="text">

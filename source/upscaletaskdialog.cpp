@@ -49,7 +49,11 @@ UpscaleTaskDialog::UpscaleTaskDialog(QWidget *parent)
 {
     this->ui->setupUi(this);
 
-    this->ui->skipStepListWidget->setMinimumHeight(this->ui->skipStepListWidget->sizeHintForRow(0) * NUM_STEPS + 2 * this->ui->skipStepListWidget->frameWidth());
+    // adjust the list-widget to fit its content
+    QListWidget *listWidget = this->ui->skipStepListWidget;
+    QSize gridSize = listWidget->gridSize();
+    gridSize.height = listWidget->sizeHintForRow(0) * NUM_STEPS + 2 * listWidget->frameWidth();
+    listWidget->setGridSize(gridSize);
 }
 
 UpscaleTaskDialog::~UpscaleTaskDialog()
