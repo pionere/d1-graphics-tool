@@ -16,7 +16,7 @@ ProgressDialog::ProgressDialog(QWidget *parent)
 {
     this->ui->setupUi(this);
 
-    this->setWindowFlags((/*this->windowFlags() |*/ Qt::Dialog | Qt::WindowStaysOnTopHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint) & ~(Qt::WindowSystemMenuHint | Qt::WindowContextHelpButtonHint | Qt::MacWindowToolBarButtonHint | Qt::WindowFullscreenButtonHint | Qt::WindowMaximizeButtonHint));
+    this->setWindowFlags((/*this->windowFlags() |*/ Qt::Dialog | Qt::WindowStaysOnTopHint | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint) /*& ~(Qt::WindowSystemMenuHint | Qt::WindowContextHelpButtonHint | Qt::MacWindowToolBarButtonHint | Qt::WindowFullscreenButtonHint | Qt::WindowMaximizeButtonHint)*/);
 
     theDialog = this;
 }
