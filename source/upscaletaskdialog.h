@@ -13,7 +13,7 @@
 class UpscaleTaskParam {
 public:
     QString listfilesFile;
-    QList<QListWidgetItem *> skipSteps;
+    QList<QModelIndex> skipSteps;
     QString assetsFolder;
     QString outFolder;
     int multiplier;
