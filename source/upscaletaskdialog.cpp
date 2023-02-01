@@ -3,7 +3,6 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QStringLiteral>
 
 #include "config.h"
 #include "d1cel.h"
@@ -242,7 +241,7 @@ void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const Upscal
     ProgressDialog::decBar();
 }
 
-static bool skipStep(const UpscaleTaskParam &params, const QStringLiteral &step)
+static bool skipStep(const UpscaleTaskParam &params, const QString &step)
 {
     for (QListWidgetItem *item : params.skipSteps) {
         if (item->text() == step) {
