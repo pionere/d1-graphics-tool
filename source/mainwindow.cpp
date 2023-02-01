@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 
 #include <QApplication>
+#include <QClipboard>
 #include <QDragEnterEvent>
 #include <QFile>
 #include <QFileDialog>
