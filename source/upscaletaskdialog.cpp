@@ -241,10 +241,14 @@ void UpscaleTaskDialog::upscaleMin(const QString &path, D1Pal *pal, const Upscal
     ProgressDialog::decBar();
 }
 
-static bool skipStep(const UpscaleTaskParam &params, const char *step)
+static bool skipStep(const UpscaleTaskParam &params, const QStringLiteral &step)
 {
-    const QString stepName = QString(step);
-    return !params.skipSteps.contains(stepName);
+    for (QListWidgetItem *item : params.skipSteps) {
+        if (item->text() == step) {
+            return true;
+        }
+    }
+    return false;
 }
 
 static bool isRegularCel(const QString &asset)
