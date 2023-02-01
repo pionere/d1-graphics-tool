@@ -123,9 +123,9 @@ bool ExportDialog::exportLevelTiles25D()
     if (amount == 1 || this->ui->filesCountComboBox->currentIndex() != 0) {
         // one file for each tile (indexed)
         for (int i = tileFrom; i <= tileTo; i++) {
-            if (ProgressDialog::wasCanceled()) {
-                return false;
-            }
+            // if (ProgressDialog::wasCanceled()) {
+            //    return false;
+            // }
 
             QString outputFilePath = outputFilePathBase
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
@@ -246,9 +246,9 @@ bool ExportDialog::exportLevelTiles()
     if (amount == 1 || this->ui->filesCountComboBox->currentIndex() != 0) {
         // one file for each tile (indexed)
         for (int i = tileFrom; i <= tileTo; i++) {
-            if (ProgressDialog::wasCanceled()) {
-                return false;
-            }
+            // if (ProgressDialog::wasCanceled()) {
+            //    return false;
+            // }
             QString outputFilePath = outputFilePathBase
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
 
@@ -368,9 +368,9 @@ bool ExportDialog::exportLevelSubtiles()
     if (amount == 1 || this->ui->filesCountComboBox->currentIndex() != 0) {
         // one file for each subtile (indexed)
         for (int i = subtileFrom; i <= subtileTo; i++) {
-            if (ProgressDialog::wasCanceled()) {
-                return false;
-            }
+            // if (ProgressDialog::wasCanceled()) {
+            //    return false;
+            // }
             QString outputFilePath = outputFilePathBase + "_subtile"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
 
@@ -491,9 +491,9 @@ bool ExportDialog::exportFrames()
     if (amount == 1 || this->ui->filesCountComboBox->currentIndex() != 0) {
         // one file for each frame (indexed)
         for (int i = frameFrom; i <= frameTo; i++) {
-            if (ProgressDialog::wasCanceled()) {
-                return false;
-            }
+            // if (ProgressDialog::wasCanceled()) {
+            //    return false;
+            // }
             QString outputFilePath = outputFilePathBase + "_frame"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
 

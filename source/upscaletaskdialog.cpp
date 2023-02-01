@@ -43,6 +43,14 @@ typedef struct AssetConfig {
     int fixcolors;
 } AssetConfig;
 
+typedef struct MinAssetConfig {
+    const char *path;
+    const char *palette;
+    int numcolors;
+    int fixcolors;
+    const char *solPath;
+} MinAssetConfig;
+
 UpscaleTaskDialog::UpscaleTaskDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::UpscaleTaskDialog())
@@ -51,9 +59,7 @@ UpscaleTaskDialog::UpscaleTaskDialog(QWidget *parent)
 
     // adjust the list-widget to fit its content
     QListWidget *listWidget = this->ui->skipStepListWidget;
-    QSize gridSize = listWidget->gridSize();
-    gridSize.setHeight(listWidget->sizeHintForRow(0) * NUM_STEPS + 2 * listWidget->frameWidth());
-    listWidget->setGridSize(gridSize);
+    listWidget->setMinimumHeight(listWidget->sizeHintForRow(0) * NUM_STEPS + 2 * listWidget->frameWidth());
 }
 
 UpscaleTaskDialog::~UpscaleTaskDialog()
@@ -747,10 +753,10 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
     if (steps[currStep]) { // 8
         // special cases to upscale cl2 files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
-        const char *botchedMINs[][5] = {
+        const MinAssetConfig botchedMINs[] = {
             // clang-format off
-            // celname,                      palette,                numcolors, numfixcolors (protected colors)
-            { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL", "128",  "0", "Levels\\TownData\\Town.SOL", },
+            // celname,                      palette,                numcolors, numfixcolors (protected colors), solpath
+            { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL", 128,  0, "Levels\\TownData\\Town.SOL", },
             // clang-format on
         };
         ProgressDialog::incBar("Fixed Tilesets", lengthof(botchedMINs));
@@ -768,8 +774,8 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::TILESET;
 
         for (int i = 0; i < lengthof(botchedMINs); i++) {
-            opParams.celFilePath = botchedMINs[i][0];
-            opParams.solFilePath = botchedMINs[i][4];
+            opParams.celFilePath = botchedMINs[i].path;
+            opParams.solFilePath = botchedMINs[i].solPath;
             if (!isListedAsset(assets, opParams.celFilePath)) {
                 continue;
             }
@@ -779,7 +785,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             }
 
             D1Pal pal;
-            if (UpscaleTaskDialog::loadCustomPal(botchedMINs[i][1], atoi(botchedMINs[i][2]), atoi(botchedMINs[i][3]), params, pal, upParams)) {
+            if (UpscaleTaskDialog::loadCustomPal(botchedMINs[i].palette, botchedMINs[i].numcolors, botchedMINs[i].fixcolors, params, pal, upParams)) {
                 UpscaleTaskDialog::upscaleMin(&pal, params, opParams, upParams, saParams);
             }
             if (!ProgressDialog::incValue()) {
