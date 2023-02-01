@@ -571,9 +571,9 @@ bool ExportDialog::exportFrames()
             int cursorX = 0;
             int groupImageHeight = 0;
             for (int i = frameFrom; i <= frameTo; i++) {
-				if (ProgressDialog::wasCanceled()) {
-					return false;
-				}
+                if (ProgressDialog::wasCanceled()) {
+                    return false;
+                }
 
                 if (((i - frameFrom) % EXPORT_LVLFRAMES_PER_LINE) == 0) {
                     cursorY += groupImageHeight;
@@ -600,9 +600,9 @@ bool ExportDialog::exportFrames()
                     if (j < (unsigned)frameFrom || j > (unsigned)frameTo) {
                         continue;
                     }
-					if (ProgressDialog::wasCanceled()) {
-						return false;
-					}
+                    if (ProgressDialog::wasCanceled()) {
+                        return false;
+                    }
                     const QImage image = this->gfx->getFrameImage(j);
                     painter.drawImage(cursorX, cursorY, image);
                     cursorX += image.width();

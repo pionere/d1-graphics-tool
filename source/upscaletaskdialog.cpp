@@ -52,7 +52,7 @@ UpscaleTaskDialog::UpscaleTaskDialog(QWidget *parent)
     // adjust the list-widget to fit its content
     QListWidget *listWidget = this->ui->skipStepListWidget;
     QSize gridSize = listWidget->gridSize();
-    gridSize.height = listWidget->sizeHintForRow(0) * NUM_STEPS + 2 * listWidget->frameWidth();
+    gridSize.setHeight(listWidget->sizeHintForRow(0) * NUM_STEPS + 2 * listWidget->frameWidth());
     listWidget->setGridSize(gridSize);
 }
 
@@ -747,7 +747,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
     if (steps[currStep]) { // 8
         // special cases to upscale cl2 files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
-        const char* botchedMINs[][5] = {
+        const char *botchedMINs[][5] = {
             // clang-format off
             // celname,                      palette,                numcolors, numfixcolors (protected colors)
             { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL", "128",  "0", "Levels\\TownData\\Town.SOL", },
