@@ -49,7 +49,7 @@ UpscaleTaskDialog::UpscaleTaskDialog(QWidget *parent)
 {
     this->ui->setupUi(this);
 
-    this->ui->skipStepListWidget->setMinimumHeight(this->ui->skipStepListWidget->sizeHintForRow(0) * NUM_STEPS);
+    this->ui->skipStepListWidget->setMinimumHeight(this->ui->skipStepListWidget->sizeHintForRow(0) * NUM_STEPS + 2 * this->ui->skipStepListWidget->frameWidth());
 }
 
 UpscaleTaskDialog::~UpscaleTaskDialog()
@@ -421,7 +421,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (!isListedAsset(assets, celPalPairs[i].path)) {
                 continue;
             }
-            if (ProgressDialog::wasCanceled()) {
+            if (!ProgressDialog::incValue()) {
                 return;
             }
             dProgress() << QString(QApplication::tr("Upscaling object CEL %1.")).arg(celPalPairs[i].path);
@@ -466,7 +466,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (!isListedAsset(assets, celPalPairs[i].path)) {
                 continue;
             }
-            if (ProgressDialog::wasCanceled()) {
+            if (!ProgressDialog::incValue()) {
                 return;
             }
             dProgress() << QString(QApplication::tr("Upscaling special CEL %1.")).arg(celPalPairs[i].path);
@@ -518,7 +518,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (!isListedAsset(assets, celPalPairs[i][0])) {
                 continue;
             }
-            if (ProgressDialog::wasCanceled()) {
+            if (!ProgressDialog::incValue()) {
                 return;
             }
             dProgress() << QString(QApplication::tr("Upscaling cutscene CEL %1.")).arg(celPalPairs[i][0]);
@@ -577,7 +577,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (!isListedAsset(assets, celPalPairs[i][0])) {
                 continue;
             }
-            if (ProgressDialog::wasCanceled()) {
+            if (!ProgressDialog::incValue()) {
                 return;
             }
             dProgress() << QString(QApplication::tr("Upscaling ui-art CEL %1.")).arg(celPalPairs[i][0]);
@@ -653,7 +653,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (!isListedAsset(assets, botchedCL2s[i])) {
                 continue;
             }
-            if (ProgressDialog::wasCanceled()) {
+            if (!ProgressDialog::incValue()) {
                 return;
             }
             dProgress() << QString(QApplication::tr("Upscaling botched asset %1.")).arg(botchedCL2s[i]);
@@ -697,7 +697,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (!isListedAsset(assets, celPalPairs[i].path)) {
                 continue;
             }
-            if (ProgressDialog::wasCanceled()) {
+            if (!ProgressDialog::incValue()) {
                 return;
             }
             dProgress() << QString(QApplication::tr("Upscaling tileset %1.")).arg(celPalPairs[i].path);
@@ -741,7 +741,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (!isListedAsset(assets, botchedMINs[i].path)) {
                 continue;
             }
-            if (ProgressDialog::wasCanceled()) {
+            if (!ProgressDialog::incValue()) {
                 return;
             }
             dProgress() << QString(QApplication::tr("Upscaling botched tileset %1.")).arg(botchedMINs[i].path);

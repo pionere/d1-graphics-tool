@@ -83,6 +83,8 @@ void ProgressDialog::done(bool forceOpen)
     theDialog->ui->progressButtonsWidget_2->setVisible(true);
     if (theDialog->status == PROGRESS_STATE::RUNNING) {
         theDialog->status = PROGRESS_STATE::DONE;
+    } else if (theDialog->status == PROGRESS_STATE::CANCEL) {
+        dProgress() << tr("Process cancelled.");
     }
     if (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible()) && !forceOpen) {
         theDialog->hide();
@@ -252,7 +254,6 @@ void ProgressDialog::on_cancelPushButton_clicked()
 {
     if (this->status < PROGRESS_STATE::CANCEL) {
         this->status = PROGRESS_STATE::CANCEL;
-        dProgress() << tr("Process cancelled.");
     }
     this->ui->cancelPushButton->setEnabled(false);
 }
