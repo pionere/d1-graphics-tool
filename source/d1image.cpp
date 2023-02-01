@@ -38,7 +38,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, D1
     frame.pixels.clear();
 
     for (int y = 0; y < frame.height; y++) {
-        frame.pixels.push_back();
+        frame.pixels.push_back(QList<D1GfxPixel>());
         QList<D1GfxPixel> &pixelLine = frame.pixels.back();
         for (int x = 0; x < frame.width; x++) {
             QColor color = image.pixelColor(x, y);

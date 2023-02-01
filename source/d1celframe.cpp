@@ -81,8 +81,8 @@ bool D1CelFrame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
         }
 
         if (pixelLine.size() == frame.width) {
-            frame.pixels.insert(0, pixelLine);
-            pixelLine.clear();
+            frame.pixels.push_front(QList<D1GfxPixel>());
+            frame.pixels.front().swap(pixelLine);
         }
     }
 
