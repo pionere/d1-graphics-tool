@@ -636,6 +636,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         QClipboard *clipboard = QGuiApplication::clipboard();
         QImage image = clipboard->image();
         if (!image.isNull()) {
+            ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0);
+
             if (this->celView != nullptr) {
                 this->celView->pasteCurrent(image);
             }
@@ -643,6 +645,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
                 this->levelCelView->pasteCurrent(image);
             }
             this->updateWindow();
+            // Clear loading message from status bar
+            ProgressDialog::done();
         }
     }
 
