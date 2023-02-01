@@ -23,6 +23,19 @@ constexpr int lengthof(T (&arr)[N])
     return N;
 }
 
+typedef enum TASK_STEP {
+    REGULAR_CEL,
+    OBJECT_CEL,
+    SPECIAL_CEL,
+    CUTSCENE,
+    ART_CEL,
+    REGULAR_CL2,
+    FIXED_CL2,
+    TILESET,
+    FIXED_TILESET,
+    NUM_STEPS,
+};
+
 typedef struct AssetConfig {
     const char *path;
     const char *palette;
@@ -34,7 +47,9 @@ UpscaleTaskDialog::UpscaleTaskDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::UpscaleTaskDialog())
 {
-    ui->setupUi(this);
+    this->ui->setupUi(this);
+
+    this->ui->skipStepListWidget->setHeight(this->ui->skipStepListWidget->visualItemRect(this->ui->skipStepListWidget->item(0)).height() * NUM_STEPS);
 }
 
 UpscaleTaskDialog::~UpscaleTaskDialog()
@@ -88,7 +103,7 @@ void UpscaleTaskDialog::on_upscaleButton_clicked()
         QMessageBox::warning(this, tr("Warning"), tr("Path of listfiles.txt is missing, please choose an output file."));
         return;
     }
-    params.skipSteps = this->ui->skipStepListWidget->selectedIndexes();
+    params.skipSteps = this->ui->skipStepListWidget->selectionModel()->selectedIndexes();
     params.assetsFolder = this->ui->assetsFolderLineEdit->text();
     if (params.assetsFolder.isEmpty()) {
         QMessageBox::warning(this, tr("Warning"), tr("Assets folder is missing, please set the assets folder."));
@@ -314,8 +329,8 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
     }
     int totalSteps = 0;
-    bool steps[9];
-    const int stepWeights[9] = {
+    bool steps[NUM_STEPS];
+    const int stepWeights[NUM_STEPS] = {
         // clang-format off
         4, // Regular CEL Files
         1, // Object CEL Files
