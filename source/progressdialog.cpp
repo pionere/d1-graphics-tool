@@ -16,7 +16,7 @@ ProgressDialog::ProgressDialog(QWidget *parent)
 {
     this->ui->setupUi(this);
 
-    this->setWindowFlags((/*this->windowFlags() |*/ Qt::Tool | Qt::WindowStaysOnTopHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint) & ~(Qt::WindowSystemMenuHint | Qt::WindowContextHelpButtonHint | Qt::MacWindowToolBarButtonHint | Qt::WindowFullscreenButtonHint | Qt::WindowMaximizeButtonHint));
+    this->setWindowFlags((/*this->windowFlags() |*/ Qt::Popup | Qt::WindowStaysOnTopHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint) & ~(Qt::WindowSystemMenuHint | Qt::WindowContextHelpButtonHint | Qt::MacWindowToolBarButtonHint | Qt::WindowFullscreenButtonHint | Qt::WindowMaximizeButtonHint));
 
     theDialog = this;
 }
@@ -91,6 +91,7 @@ void ProgressDialog::done(bool forceOpen)
     } else {
         theDialog->showNormal();
         theDialog->adjustSize();
+        theDialog->ui->closePushButton->setFocus();
     }
 
     theWidget->update(theDialog->status, !theDialog->ui->outputTextEdit->document()->isEmpty(), "");
