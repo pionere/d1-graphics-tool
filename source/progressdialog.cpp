@@ -11,12 +11,10 @@ static ProgressDialog *theDialog;
 static ProgressWidget *theWidget;
 
 ProgressDialog::ProgressDialog(QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent, Qt::WindowStaysOnTopHint | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint)
     , ui(new Ui::ProgressDialog())
 {
     this->ui->setupUi(this);
-
-    this->setWindowFlags((/*this->windowFlags() |*/ Qt::Tool | Qt::WindowStaysOnTopHint | Qt::WindowCloseButtonHint) & ~(Qt::WindowSystemMenuHint | Qt::WindowTitleHint | Qt::WindowContextHelpButtonHint | Qt::MacWindowToolBarButtonHint | Qt::WindowFullscreenButtonHint | Qt::WindowMinMaxButtonsHint));
 
     theDialog = this;
 }
