@@ -1403,7 +1403,7 @@ void LevelCelView::pasteCurrent(const QImage &image)
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
-    if (imageWidth == MICRO_WIDTH && imageHeight == MICRO_HEIGHT) {
+    if (imageWidth == subtileWidth && imageHeight == subtileHeight) {
         int subtileIndex = this->currentSubtileIndex;
         if (this->min->getSubtileCount() != 0) {
             this->assignFrames(image, subtileIndex, this->gfx->getFrameCount());
@@ -1419,7 +1419,7 @@ void LevelCelView::pasteCurrent(const QImage &image)
         return;
     }
 
-    QMessageBox::critical(nullptr, tr("Error"), tr("The image can not be used as a frame or as a subtile."));
+    dProgressFail() << tr("The image can not be used as a frame or as a subtile.");
 }
 
 void LevelCelView::collectFrameUsers(int frameIndex, QList<int> &users) const

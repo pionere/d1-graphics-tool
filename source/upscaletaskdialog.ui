@@ -100,7 +100,17 @@
         </item>
         <item>
          <property name="text">
-          <string>Regular CL2 Files</string>
+          <string>CL2 Files of Missiles</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>CL2 Files of Monsters</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>CL2 Files of PlrGFX</string>
          </property>
         </item>
         <item>

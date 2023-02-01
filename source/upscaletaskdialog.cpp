@@ -29,7 +29,9 @@ typedef enum task_step {
     SPECIAL_CEL,
     CUTSCENE,
     ART_CEL,
-    REGULAR_CL2,
+    REGULAR_CL2_MISSILES,
+    REGULAR_CL2_MONSTERS,
+    REGULAR_CL2_PLRGFX,
     FIXED_CL2,
     TILESET,
     FIXED_TILESET,
@@ -301,12 +303,16 @@ static bool isRegularCel(const QString &asset)
     return true;
 }
 
-static bool isRegularCl2(const QString &asset)
+static int isRegularCl2(const QString &asset)
 {
     QString assetLower = asset.toLower();
     if (!assetLower.endsWith(".cl2"))
-        return false;
-    return true;
+        return 0;
+    if (assetLower.startsWith("missiles"))
+        return 1;
+    if (assetLower.startsWith("monsters"))
+        return 2;
+    return 3;
 }
 
 static bool isListedAsset(QList<QString> &assets, const QString &asset)
@@ -326,7 +332,9 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
     QList<QString> assets;
     int numRegularCels = 0;
-    int numRegularCl2s = 0;
+    int numRegularCl2s_Missiles = 0;
+    int numRegularCl2s_Monsters = 0;
+    int numRegularCl2s_PlrGfx = 0;
     {
         QFile file(params.listfilesFile);
 
@@ -343,8 +351,19 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             assets.append(line);
             if (isRegularCel(line))
                 numRegularCels++;
-            if (isRegularCl2(line))
-                numRegularCl2s++;
+            switch (isRegularCl2(line)) {
+            case 0:
+                break;
+            case 1:
+                numRegularCl2s_Missiles++;
+                break;
+            case 2:
+                numRegularCl2s_Monsters++;
+                break;
+            default:
+                numRegularCl2s_PlrGfx++;
+                break;
+            }
         }
     }
     int totalSteps = 0;
@@ -373,8 +392,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
     ProgressDialog::incBar("", totalSteps + 1);
 
-    int currStep = 0;
-    if (steps[currStep]) {
+    if (steps[REGULAR_CEL]) {
         // upscale regular cel files of listfiles.txt
         //  - skips Levels(dungeon tiles), gendata(cutscenes) and cow.CEL manually
         ProgressDialog::incBar("Regular CEL Files", numRegularCels);
@@ -406,10 +424,9 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[currStep]);
+        ProgressDialog::incMainValue(stepWeights[REGULAR_CEL]);
     }
-    currStep++;
-    if (steps[currStep]) { // 1
+    if (steps[OBJECT_CEL]) {
         // upscale objects with level-specific palette
         const AssetConfig celPalPairs[] = {
             // clang-format off
@@ -458,10 +475,9 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[currStep]);
+        ProgressDialog::incMainValue(stepWeights[OBJECT_CEL]);
     }
-    currStep++;
-    if (steps[currStep]) { // 2
+    if (steps[SPECIAL_CEL]) {
         // upscale special cells of the levels
         const AssetConfig celPalPairs[] = {
             // clang-format off
@@ -504,10 +520,9 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[currStep]);
+        ProgressDialog::incMainValue(stepWeights[SPECIAL_CEL]);
     }
-    currStep++;
-    if (steps[currStep]) { // 3
+    if (steps[CUTSCENE]) {
         // upscale cutscenes
         const char *celPalPairs[][2] = {
             // clang-format off
@@ -561,11 +576,10 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[currStep]);
+        ProgressDialog::incMainValue(stepWeights[CUTSCENE]);
     }
-    currStep++;
     // UpscaleCelComp("f:\\MPQE\\Work\\towners\\animals\\cow.CEL", 2, &diapal[0][0], 128, 128, "f:\\outcel\\towners\\animals\\cow.cel");
-    if (steps[currStep]) { // 4
+    if (steps[ART_CEL]) {
         // upscale non-standard CELs of the menu (converted from PCX)
         const char *celPalPairs[][2] = {
             // clang-format off
@@ -623,12 +637,11 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[currStep]);
+        ProgressDialog::incMainValue(stepWeights[ART_CEL]);
     }
-    currStep++;
-    if (steps[currStep]) { // 5
-        // upscale all cl2 files of listfiles.txt
-        ProgressDialog::incBar("Regular CL2 Files", numRegularCl2s);
+    if (steps[REGULAR_CL2_MISSILES]) {
+        // upscale missiles cl2 files of listfiles.txt
+        ProgressDialog::incBar("Regular CL2 Files - Missiles", numRegularCl2s_Missiles);
 
         SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = params.autoOverwrite;
@@ -642,7 +655,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
 
         for (QString &asset : assets) {
-            if (!isRegularCl2(asset))
+            if (isRegularCl2(asset) != 1)
                 continue;
 
             dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(asset);
@@ -657,10 +670,75 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[currStep]);
+        ProgressDialog::incMainValue(stepWeights[REGULAR_CL2_MISSILES]);
     }
-    currStep++;
-    if (steps[currStep]) { // 6
+    if (steps[REGULAR_CL2_MONSTERS]) {
+        // upscale monsters cl2 files of listfiles.txt
+        ProgressDialog::incBar("Regular CL2 Files - Monsters", numRegularCl2s_Monsters);
+
+        SaveAsParam saParams = SaveAsParam();
+        saParams.autoOverwrite = params.autoOverwrite;
+
+        OpenAsParam opParams = OpenAsParam();
+
+        UpscaleParam upParams = UpscaleParam();
+        upParams.multiplier = params.multiplier;
+        upParams.firstfixcolor = -1;
+        upParams.lastfixcolor = -1;
+        upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
+
+        for (QString &asset : assets) {
+            if (isRegularCl2(asset) != 2)
+                continue;
+
+            dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(asset);
+            if (ProgressDialog::wasCanceled()) {
+                return;
+            }
+
+            UpscaleTaskDialog::upscaleCl2(asset, &defaultPal, params, opParams, upParams, saParams);
+            if (!ProgressDialog::incValue()) {
+                return;
+            }
+        }
+
+        ProgressDialog::decBar();
+        ProgressDialog::incMainValue(stepWeights[REGULAR_CL2_MONSTERS]);
+    }
+    if (steps[REGULAR_CL2_PLRGFX]) {
+        // upscale plrgfx cl2 files of listfiles.txt
+        ProgressDialog::incBar("Regular CL2 Files - PlrGfx", numRegularCl2s_PlrGfx);
+
+        SaveAsParam saParams = SaveAsParam();
+        saParams.autoOverwrite = params.autoOverwrite;
+
+        OpenAsParam opParams = OpenAsParam();
+
+        UpscaleParam upParams = UpscaleParam();
+        upParams.multiplier = params.multiplier;
+        upParams.firstfixcolor = -1;
+        upParams.lastfixcolor = -1;
+        upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
+
+        for (QString &asset : assets) {
+            if (isRegularCl2(asset) != 3)
+                continue;
+
+            dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(asset);
+            if (ProgressDialog::wasCanceled()) {
+                return;
+            }
+
+            UpscaleTaskDialog::upscaleCl2(asset, &defaultPal, params, opParams, upParams, saParams);
+            if (!ProgressDialog::incValue()) {
+                return;
+            }
+        }
+
+        ProgressDialog::decBar();
+        ProgressDialog::incMainValue(stepWeights[REGULAR_CL2_PLRGFX]);
+    }
+    if (steps[FIXED_CL2]) {
         // special cases to upscale cl2 files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
         const char *botchedCL2s[] = {
@@ -696,10 +774,9 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[currStep]);
+        ProgressDialog::incMainValue(stepWeights[FIXED_CL2]);
     }
-    currStep++;
-    if (steps[currStep]) { // 7
+    if (steps[TILESET]) {
         // upscale tiles of the levels
         const AssetConfig celPalPairs[] = {
             // clang-format off
@@ -747,10 +824,9 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[currStep]);
+        ProgressDialog::incMainValue(stepWeights[TILESET]);
     }
-    currStep++;
-    if (steps[currStep]) { // 8
+    if (steps[FIXED_TILESET]) {
         // special cases to upscale cl2 files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
         const MinAssetConfig botchedMINs[] = {
@@ -794,7 +870,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[currStep]);
+        ProgressDialog::incMainValue(stepWeights[FIXED_TILESET]);
     }
 
     ProgressDialog::decBar();
