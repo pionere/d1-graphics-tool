@@ -3,6 +3,7 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QStringLiteral>
 
 #include "config.h"
 #include "d1cel.h"
