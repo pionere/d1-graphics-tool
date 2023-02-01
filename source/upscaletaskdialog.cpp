@@ -299,13 +299,13 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (isRegularCel(line))
                 numRegularCels++;
             if (isRegularCl2(line))
-                numRegularCl2++;
+                numRegularCl2s++;
         }
     }
 
     ProgressDialog::incBar("", 25 + 1);
 
-    if (!params.skipSteps.contains(QVariant(QString("Regular CEL Files")))) {
+    if (!params.skipSteps.contains(QString("Regular CEL Files"))) {
         // upscale regular cel files of listfiles.txt
         //  - skips Levels(dungeon tiles), gendata(cutscenes) and cow.CEL manually
 
@@ -336,7 +336,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         ProgressDialog::incMainValue(4);
     }
-    if (!params.skipSteps.contains(QVariant(QString("Object CEL Files")))) {
+    if (!params.skipSteps.contains(QString("Object CEL Files"))) {
         // upscale objects with level-specific palette
         const AssetConfig celPalPairs[] = {
             // clang-format off
@@ -384,7 +384,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         ProgressDialog::incMainValue(1);
     }
-    if (!params.skipSteps.contains(QVariant(QString("Special CEL Files")))) {
+    if (!params.skipSteps.contains(QString("Special CEL Files"))) {
         // upscale special cells of the levels
         const AssetConfig celPalPairs[] = {
             // clang-format off
@@ -426,7 +426,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         ProgressDialog::incMainValue(1);
     }
-    if (!params.skipSteps.contains(QVariant(QString("Cutscenes")))) {
+    if (!params.skipSteps.contains(QString("Cutscenes"))) {
         // upscale cutscenes
         const char *celPalPairs[][2] = {
             // clang-format off
@@ -479,7 +479,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::incMainValue(8);
     }
     // UpscaleCelComp("f:\\MPQE\\Work\\towners\\animals\\cow.CEL", 2, &diapal[0][0], 128, 128, "f:\\outcel\\towners\\animals\\cow.cel");
-    if (!params.skipSteps.contains(QVariant(QString("Art CEL Files")))) {
+    if (!params.skipSteps.contains(QString("Art CEL Files"))) {
         // upscale non-standard CELs of the menu (converted from PCX)
         const char *celPalPairs[][2] = {
             // clang-format off
@@ -535,7 +535,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         ProgressDialog::incMainValue(1);
     }
-    if (!params.skipSteps.contains(QVariant(QString("Regular CL2 Files")))) {
+    if (!params.skipSteps.contains(QString("Regular CL2 Files"))) {
         // upscale all cl2 files of listfiles.txt
         SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = params.autoOverwrite;
@@ -563,7 +563,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         ProgressDialog::incMainValue(4);
     }
-    if (!params.skipSteps.contains(QVariant(QString("Fixed CL2 Files")))) {
+    if (!params.skipSteps.contains(QString("Fixed CL2 Files"))) {
         // special cases to upscale cl2 files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
         SaveAsParam saParams = SaveAsParam();
@@ -598,7 +598,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         for (int i = 0; i < 1; i++)
             ProgressDialog::incValue();
     }
-    if (!params.skipSteps.contains(QVariant(QString("Tilesets")))) {
+    if (!params.skipSteps.contains(QString("Tilesets"))) {
         // upscale tiles of the levels
         const AssetConfig celPalPairs[] = {
             // clang-format off
@@ -643,7 +643,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         ProgressDialog::incMainValue(4);
     }
-    if (!params.skipSteps.contains(QVariant(QString("Fixed Tilesets")))) {
+    if (!params.skipSteps.contains(QString("Fixed Tilesets"))) {
         // special cases to upscale cl2 files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
         SaveAsParam saParams = SaveAsParam();
