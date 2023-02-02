@@ -238,16 +238,6 @@ void ProgressDialog::removeLastLine()
 
 ProgressDialog &ProgressDialog::operator<<(const QPair<QString, QString> &text)
 {
-    // this->ui->outputTextEdit->setFocus();
-    /*QTextCursor storeCursorPos = this->ui->outputTextEdit->textCursor();
-    if (this->ui->outputTextEdit->textCursor().selectedText() == text.first) {
-        this->removeLastLine();
-    }
-    QTextCursor lastCursorPos = this->ui->outputTextEdit->textCursor();
-    this->ui->outputTextEdit->appendPlainText(text.second);
-    if (lastCursorPos > storeCursorPos) {
-        this->ui->outputTextEdit->setTextCursor(storeCursorPos);
-    }*/
     this->appendLine(text.second, this->ui->outputTextEdit->textCursor().selectedText() == text.first);
     this->textVersion++;
     return *this;
@@ -255,16 +245,6 @@ ProgressDialog &ProgressDialog::operator<<(const QPair<QString, QString> &text)
 
 ProgressDialog &ProgressDialog::operator<<(QPair<int, QString> &idxText)
 {
-    // this->ui->outputTextEdit->setFocus();
-    /*QTextCursor storeCursorPos = this->ui->outputTextEdit->textCursor();
-    if (this->textVersion == idxText.first) {
-        this->removeLastLine();
-    }
-    QTextCursor lastCursorPos = this->ui->outputTextEdit->textCursor();
-    this->ui->outputTextEdit->appendPlainText(idxText.second);
-    if (lastCursorPos > storeCursorPos) {
-        this->ui->outputTextEdit->setTextCursor(storeCursorPos);
-    }*/
     this->appendLine(idxText.second, this->textVersion == idxText.first);
     this->textVersion++;
     idxText.first = this->textVersion;
@@ -312,7 +292,7 @@ void ProgressDialog::changeEvent(QEvent *event)
 }
 
 ProgressWidget::ProgressWidget(QWidget *parent)
-    : QFrame(parent)
+    : QDialog(parent, Qt::Tool | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint)
     , ui(new Ui::ProgressWidget())
 {
     this->ui->setupUi(this);
