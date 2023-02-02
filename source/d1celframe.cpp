@@ -22,7 +22,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
         return false;
 
     quint32 frameDataStartOffset = 0;
-    quint16 width = 0;
+    unsigned width = 0;
     frame.clipped = false;
     if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
         // Checking the presence of the {CEL FRAME HEADER}
@@ -44,15 +44,16 @@ bool D1CelFrame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
             frame.clipped = true;
         }
     }
-    frame.width = params.celWidth == 0 ? width : params.celWidth;
+    if (params.celWidth != 0)
+        width = params.celWidth;
 
     // If width could not be calculated with frame header,
     // attempt to calculate it from the frame data (by identifying pixel groups line wraps)
-    if (frame.width == 0)
-        frame.width = D1CelFrame::computeWidthFromData(rawData);
+    if (width == 0)
+        width = D1CelFrame::computeWidthFromData(rawData);
 
     // if CEL width was not found, return false
-    if (frame.width == 0)
+    if (width == 0)
         return false;
 
     // READ {CEL FRAME DATA}
@@ -64,7 +65,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
         // Transparent pixels group
         if (readByte > 0x7F) {
             // A pixel line can't exceed the image width
-            if ((pixelLine.size() + (256 - readByte)) > frame.width)
+            if ((pixelLine.size() + (256 - readByte)) > width)
                 return false;
 
             for (int i = 0; i < (256 - readByte); i++)
@@ -72,7 +73,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
         } else {
             // Palette indices group
             // A pixel line can't exceed the image width
-            if ((pixelLine.size() + readByte) > frame.width)
+            if ((pixelLine.size() + readByte) > width)
                 return false;
 
             for (int i = 0; i < readByte; i++) {
@@ -81,7 +82,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
             }
         }
 
-        if (pixelLine.size() == frame.width) {
+        if (pixelLine.size() == width) {
             pixels.push_back(std::move(pixelLine));
             pixelLine.clear();
         }
@@ -89,6 +90,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
     for (auto it = pixels.rbegin(); it != pixels.rend(); ++it) {
         frame.pixels.push_back(std::move(*it));
     }
+    frame.width = width;
     frame.height = frame.pixels.size();
 
     return true;
