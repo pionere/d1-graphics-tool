@@ -2,6 +2,7 @@
 
 #include <QFontMetrics>
 #include <QMessageBox>
+#include <QScrollBar>
 #include <QStyle>
 
 #include "ui_progressdialog.h"
@@ -245,8 +246,13 @@ ProgressDialog &ProgressDialog::operator<<(QPair<int, QString> &idxText)
 
 void ProgressDialog::on_outputTextEdit_scrolled(int value)
 {
-    QTextCursor cursor = this->ui->outputTextEdit->cursorForPosition(QPoint(0, 0));
-    this->ui->outputTextEdit->setTextCursor(cursor);
+    if (this->ui->outputTextEdit->verticalScrollBar()->maximum() == value) {
+        this->ui->outputTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
+    } else {
+        this->ui->outputTextEdit->textCursor()->setPosition(value, QTextCursor::MoveAnchor);
+        // QTextCursor cursor = this->ui->outputTextEdit->cursorForPosition(QPoint(0, 0));
+        // this->ui->outputTextEdit->setTextCursor(cursor);
+    }
 }
 
 void ProgressDialog::on_detailsPushButton_clicked()
