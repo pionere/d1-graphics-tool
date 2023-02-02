@@ -354,6 +354,7 @@ bool D1Cel::save(D1Gfx &gfx, const SaveAsParam &params)
         }
     }
 
+    QDir().mkpath(QFileInfo(filePath).absolutePath());
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly)) {
         dProgressFail() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(filePath));
