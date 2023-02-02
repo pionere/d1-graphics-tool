@@ -61,6 +61,7 @@ protected:
     void changeEvent(QEvent *e);
 
 private:
+    void appendLine(const QString &line, bool replace);
     void removeLastLine();
 
 private:
