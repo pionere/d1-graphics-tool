@@ -124,16 +124,15 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *ba
         // read using the given palette
         QSet<quint8> usedColors;
         for (int y = 0; y < frame.height; y++) {
-            QList<D1GfxPixel> pixelLine;
-
+            std::vector<D1GfxPixel> pixelLine;
             for (int x = 0; x < frame.width; dataPtr++) {
                 byte = *dataPtr;
                 if (byte <= PCX_MAX_SINGLE_PIXEL) {
                     if (pcxPal->getColor(byte) != basePal->getUndefinedColor()) {
-                        pixelLine.append(D1GfxPixel::colorPixel(byte));
+                        pixelLine.push_back(D1GfxPixel::colorPixel(byte));
                         usedColors.insert(byte);
                     } else {
-                        pixelLine.append(D1GfxPixel::transparentPixel()); // color of the PCX-palette is undefined -> transparent
+                        pixelLine.push_back(D1GfxPixel::transparentPixel()); // color of the PCX-palette is undefined -> transparent
                     }
                     x++;
                     continue;
@@ -147,11 +146,11 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *ba
                     usedColors.insert(col);
                 }
                 for (int i = 0; i < byte; i++) {
-                    pixelLine.append(pCol);
+                    pixelLine.push_back(pCol);
                 }
                 x += byte;
             }
-            frame.pixels.append(pixelLine);
+            frame.pixels.push_back(std::move(pixelLine));
             dataPtr += srcSkip;
         }
 

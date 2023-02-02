@@ -1,5 +1,7 @@
 #include "upscaler.h"
 
+#include <vector>
+
 #include <QApplication>
 #include <QColor>
 #include <QMessageBox>
@@ -21,6 +23,7 @@ class UpscalingParam {
 public:
     int multiplier;
     D1Pal *pal;
+    std::vector<QColor> dynColors;
     int firstfixcolor;
     int lastfixcolor;
 };
@@ -33,17 +36,11 @@ static bool isPixelFixed(const D1GfxPixel *pixel, const UpscalingParam &params)
 // TODO: merge with getPalColor in d1image.cpp ?
 static D1GfxPixel getPalColor(const UpscalingParam &params, QColor color)
 {
-    int res = 0;
+    unsigned res = 0;
     int best = INT_MAX;
 
-    for (int i = 0; i < D1PAL_COLORS; i++) {
-        if (i >= params.firstfixcolor && i <= params.lastfixcolor) {
-            continue;
-        }
-        QColor palColor = params.pal->getColor(i);
-        if (palColor == params.pal->getUndefinedColor()) {
-            continue;
-        }
+    for (unsigned i = 0; i < params.dynColors.size(); i++) {
+        QColor palColor = params.dynColors[i];
         int currR = color.red() - palColor.red();
         int currG = color.green() - palColor.green();
         int currB = color.blue() - palColor.blue();
@@ -132,7 +129,7 @@ static D1GfxPixel BilinearInterpolate(D1GfxPixel *p0, D1GfxPixel *pR, int dx, D1
     return getPalColor(params, res);
 }
 
-static void useLeftOrBottomAt(int sx, int sy, int dx, int dy, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static void useLeftOrBottomAt(int sx, int sy, int dx, int dy, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     D1GfxPixel *pDest = &newPixels[dy][dx];
@@ -158,7 +155,7 @@ static void useLeftOrBottomAt(int sx, int sy, int dx, int dy, QList<QList<D1GfxP
     }
 }
 
-static void useRightOrBottomAt(int sx, int sy, int dx, int dy, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static void useRightOrBottomAt(int sx, int sy, int dx, int dy, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     D1GfxPixel *pDest = &newPixels[dy][dx];
@@ -194,7 +191,7 @@ typedef quint8 BYTE;
 
 typedef struct UpscalePatterns {
     const BYTE *pattern;
-    bool (*fnc)(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params);
+    bool (*fnc)(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params);
 } UpscalePatterns;
 /*
   c c c   cc cc cc    cc  cc  cc
@@ -212,7 +209,7 @@ static const BYTE patternLineDownRight[] = {
     PTN_ALPHA, PTN_ALPHA, PTN_COLOR,
     // clang-format on
 };
-static bool LineDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool LineDownRight(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     // int sx = 0, sy = y + 1;
@@ -250,7 +247,7 @@ static const BYTE patternLineDownLeft[] = {
     PTN_COLOR, PTN_ALPHA, PTN_ALPHA,
     // clang-format on
 };
-static bool LineDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool LineDownLeft(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     // int sx = 0, sy = y + 1;
@@ -289,7 +286,7 @@ static const BYTE patternLineUpRight[] = {
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
     // clang-format on
 };
-static bool LineUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool LineUpRight(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -342,7 +339,7 @@ static const BYTE patternLineUpLeft[] = {
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
     // clang-format on
 };
-static bool LineUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool LineUpLeft(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -395,7 +392,7 @@ static const BYTE patternSlowDownRight[] = {
     PTN_ALPHA, PTN_ALPHA, PTN_ALPHA, PTN_COLOR,
     // clang-format on
 };
-static bool SlowDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool SlowDownRight(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     // int sx = 0, sy = y;
@@ -407,8 +404,8 @@ static bool SlowDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
     // on the left border or [-1; 0] is alpha or [-1; 1] is not alpha
     /*if (x == 0 || origPixels[sy][sx - 1].isTransparent() || !origPixels[sy + 1][sx - 1].isTransparent()) {
         // on the bottom border or right border or [3; 3] is not alpha or [4; 3] is not alpha
-        int origHeight = origPixels.count();
-        int origWidth = origPixels[0].count();
+        int origHeight = origPixels.size();
+        int origWidth = origPixels[0].size();
         if (y == origHeight - 3 || x == origWidth - 4 || !origPixels[sy + 3][sx + 3].isTransparent() || !origPixels[sy + 3][sx + 4].isTransparent()) {
             return false;
         }
@@ -446,7 +443,7 @@ static const BYTE patternSlowDownLeft[] = {
     PTN_COLOR, PTN_ALPHA, PTN_ALPHA, PTN_ALPHA,
     // clang-format on
 };
-static bool SlowDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool SlowDownLeft(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     // int sx = 0, sy = y;
@@ -495,7 +492,7 @@ static const BYTE patternSlowUpRight[] = {
     PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR,
     // clang-format on
 };
-static bool SlowUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool SlowUpRight(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -562,7 +559,7 @@ static const BYTE patternSlowUpLeft[] = {
     PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR,
     // clang-format on
 };
-static bool SlowUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool SlowUpLeft(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -632,7 +629,7 @@ static const BYTE patternFastDownRight[] = {
     PTN_ALPHA, PTN_ALPHA, PTN_COLOR,
     // clang-format on
 };
-static bool FastDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool FastDownRight(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     // int sx = 0, sy = y;
@@ -684,7 +681,7 @@ static const BYTE patternFastDownLeft[] = {
     PTN_COLOR, PTN_ALPHA, PTN_ALPHA,
     // clang-format on
 };
-static bool FastDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool FastDownLeft(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     // int sx = 0, sy = y;
@@ -736,7 +733,7 @@ static const BYTE patternFastUpRight[] = {
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
     // clang-format on
 };
-static bool FastUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool FastUpRight(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -806,7 +803,7 @@ static const BYTE patternFastUpLeft[] = {
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
     // clang-format on
 };
-static bool FastUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool FastUpLeft(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -875,7 +872,7 @@ static const BYTE patternAnySlowDownRight[] = {
     PTN_ALPHA, PTN_COLOR,
     // clang-format on
 };
-static bool AnySlowDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool AnySlowDownRight(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -931,7 +928,7 @@ static const BYTE patternAnyFastDownRight[] = {
     PTN_ALPHA, PTN_ALPHA, PTN_COLOR,
     // clang-format on
 };
-static bool AnyFastDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool AnyFastDownRight(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -986,7 +983,7 @@ static const BYTE patternAnySlowDownLeft[] = {
     PTN_ALPHA, PTN_ALPHA,
     // clang-format on
 };
-static bool AnySlowDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool AnySlowDownLeft(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -1042,7 +1039,7 @@ static const BYTE patternAnyFastDownLeft[] = {
     PTN_COLOR, PTN_ALPHA, PTN_ALPHA,
     // clang-format on
 };
-static bool AnyFastDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool AnyFastDownLeft(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -1097,7 +1094,7 @@ static const BYTE patternAnySlowUpRight[] = {
     PTN_COLOR, PTN_COLOR,
     // clang-format on
 };
-static bool AnySlowUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool AnySlowUpRight(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -1171,7 +1168,7 @@ static const BYTE patternAnyFastUpRight[] = {
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
     // clang-format on
 };
-static bool AnyFastUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool AnyFastUpRight(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -1244,7 +1241,7 @@ static const BYTE patternAnySlowUpLeft[] = {
     PTN_COLOR, PTN_COLOR,
     // clang-format on
 };
-static bool AnySlowUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool AnySlowUpLeft(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -1318,7 +1315,7 @@ static const BYTE patternAnyFastUpLeft[] = {
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
     // clang-format on
 };
-static bool AnyFastUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool AnyFastUpLeft(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -1393,7 +1390,7 @@ static const BYTE patternAnySlowDownNarrow[] = {
     PTN_ALPHA, PTN_COLOR,
     // clang-format on
 };
-static bool AnySlowDownNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool AnySlowDownNarrow(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -1480,7 +1477,7 @@ static const BYTE patternAnyFastDownNarrow[] = {
     PTN_DNC,   PTN_ALPHA, PTN_COLOR,
     // clang-format on
 };
-static bool AnyFastDownNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool AnyFastDownNarrow(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -1567,7 +1564,7 @@ static const BYTE patternAnySlowUpNarrow[] = {
     PTN_ALPHA, PTN_DNC,
     // clang-format on
 };
-static bool AnySlowUpNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool AnySlowUpNarrow(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -1653,7 +1650,7 @@ static const BYTE patternAnyFastUpNarrow[] = {
     PTN_COLOR, PTN_ALPHA, PTN_DNC,
     // clang-format on
 };
-static bool AnyFastUpNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool AnyFastUpNarrow(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -1722,7 +1719,7 @@ static bool AnyFastUpNarrow(int x, int y, QList<QList<D1GfxPixel>> &origPixels, 
     return true;
 }
 
-static D1GfxPixel *FixColorCheck(int x, int y, QList<QList<D1GfxPixel>> &origPixels, const UpscalingParam &params, const BYTE *pattern)
+static D1GfxPixel *FixColorCheck(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, const UpscalingParam &params, const BYTE *pattern)
 {
     int w = pattern[0];
     int h = pattern[1];
@@ -1765,7 +1762,7 @@ static const BYTE patternFixSlowDownRight[] = {
     PTN_DNC,   PTN_COLOR,
     // clang-format on
 };
-static bool FixSlowDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool FixSlowDownRight(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     D1GfxPixel *fP = FixColorCheck(x, y, origPixels, params, patternFixSlowDownRight);
     if (fP == NULL)
@@ -1864,7 +1861,7 @@ static const BYTE patternFixFastDownRight[] = {
     PTN_DNC, PTN_DNC,   PTN_COLOR,
     // clang-format on
 };
-static bool FixFastDownRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool FixFastDownRight(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     D1GfxPixel *fP = FixColorCheck(x, y, origPixels, params, patternFixFastDownRight);
     if (fP == NULL)
@@ -1962,7 +1959,7 @@ static const BYTE patternFixSlowDownLeft[] = {
     PTN_DNC,   PTN_DNC,
     // clang-format on
 };
-static bool FixSlowDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool FixSlowDownLeft(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     D1GfxPixel *fP = FixColorCheck(x, y, origPixels, params, patternFixSlowDownLeft);
     if (fP == NULL)
@@ -2061,7 +2058,7 @@ static const BYTE patternFixFastDownLeft[] = {
     PTN_COLOR, PTN_DNC,   PTN_DNC,
     // clang-format on
 };
-static bool FixFastDownLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool FixFastDownLeft(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     D1GfxPixel *fP = FixColorCheck(x, y, origPixels, params, patternFixFastDownLeft);
     if (fP == NULL)
@@ -2159,7 +2156,7 @@ static const BYTE patternFixSlowUpRight[] = {
     PTN_COLOR, PTN_COLOR,
     // clang-format on
 };
-static bool FixSlowUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool FixSlowUpRight(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     D1GfxPixel *fP = FixColorCheck(x, y, origPixels, params, patternFixSlowUpRight);
     if (fP == NULL)
@@ -2222,7 +2219,7 @@ static const BYTE patternFixFastUpRight[] = {
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
     // clang-format on
 };
-static bool FixFastUpRight(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool FixFastUpRight(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     D1GfxPixel *fP = FixColorCheck(x, y, origPixels, params, patternFixFastUpRight);
     if (fP == NULL)
@@ -2284,7 +2281,7 @@ static const BYTE patternFixSlowUpLeft[] = {
     PTN_COLOR, PTN_COLOR,
     // clang-format on
 };
-static bool FixSlowUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool FixSlowUpLeft(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     D1GfxPixel *fP = FixColorCheck(x, y, origPixels, params, patternFixSlowUpLeft);
     if (fP == NULL)
@@ -2347,7 +2344,7 @@ static const BYTE patternFixFastUpLeft[] = {
     PTN_COLOR, PTN_COLOR, PTN_COLOR,
     // clang-format on
 };
-static bool FixFastUpLeft(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool FixFastUpLeft(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     D1GfxPixel *fP = FixColorCheck(x, y, origPixels, params, patternFixFastUpLeft);
     if (fP == NULL)
@@ -2417,7 +2414,7 @@ static const BYTE patternLeftTriangle[] = {
     PTN_ALPHA, PTN_ALPHA, PTN_ALPHA, PTN_ALPHA,
     // clang-format on
 };
-static bool LeftTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool LeftTriangle(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -2500,7 +2497,7 @@ static const BYTE patternRightTriangle[] = {
     PTN_ALPHA, PTN_ALPHA, PTN_ALPHA, PTN_ALPHA,
     // clang-format on
 };
-static bool RightTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool RightTriangle(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -2510,7 +2507,7 @@ static bool RightTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QL
     dx += x * multiplier;
 
     // not on the right border and [4; 2] is not alpha
-    int origWidth = origPixels[0].count();
+    int origWidth = origPixels[0].size();
     if (sx + 4 != origWidth && !origPixels[sy + 2][sx + 4].isTransparent()) {
         return false;
     }
@@ -2580,7 +2577,7 @@ static const BYTE patternTopTriangle[] = {
     PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR,
     // clang-format on
 };
-static bool TopTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool TopTriangle(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -2628,7 +2625,7 @@ static const BYTE patternBottomTriangle[] = {
     PTN_ALPHA, PTN_ALPHA, PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_COLOR, PTN_ALPHA, PTN_ALPHA,
     // clang-format on
 };
-static bool BottomTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, QList<QList<D1GfxPixel>> &newPixels, const UpscalingParam &params)
+static bool BottomTriangle(int x, int y, std::vector<std::vector<D1GfxPixel>> &origPixels, std::vector<std::vector<D1GfxPixel>> &newPixels, const UpscalingParam &params)
 {
     const int multiplier = params.multiplier;
     int sx = 0, sy = y;
@@ -2638,7 +2635,7 @@ static bool BottomTriangle(int x, int y, QList<QList<D1GfxPixel>> &origPixels, Q
     dx += x * multiplier;
 
     // not at the bottom border
-    int origHeight = origPixels.count();
+    int origHeight = origPixels.size();
     if (sy != origHeight - 2) {
         // [1; 2] .. [6; 2] is not alpha
         for (int i = 1; i < 7; i++) {
@@ -2683,22 +2680,33 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
     upParams.firstfixcolor = params.firstfixcolor;
     upParams.lastfixcolor = params.lastfixcolor;
     upParams.pal = pal;
-
-    int multiplier = upParams.multiplier;
-    // upscale the frame
-    QList<QList<D1GfxPixel>> newPixels;
-    for (int y = 0; y < frame->height; y++) {
-        QList<D1GfxPixel> pixelLine;
-        for (int x = 0; x < frame->width; x++) {
-            for (int n = 0; n < multiplier; n++) {
-                pixelLine.append(frame->pixels[y][x]);
+    { // setup dynColors
+        QColor undefColor = pal->getUndefinedColor();
+        for (int i = 0; i < D1PAL_COLORS; i++) {
+            QColor palColor = pal->getColor(i);
+            if (palColor != undefColor) {
+                upParams.dynColors.push_back(palColor);
             }
         }
-        for (int n = 0; n < multiplier; n++) {
-            newPixels.append(pixelLine);
+        if (upParams.dynColors.empty()) {
+            upParams.dynColors.push_back(undefColor);
         }
     }
 
+    int multiplier = upParams.multiplier;
+    // upscale the frame
+    std::vector<std::vector<D1GfxPixel>> newPixels;
+    for (int y = 0; y < frame->height; y++) {
+        std::vector<D1GfxPixel> pixelLine;
+        for (int x = 0; x < frame->width; x++) {
+            for (int n = 0; n < multiplier; n++) {
+                pixelLine.push_back(frame->pixels[y][x]);
+            }
+        }
+        for (int n = 0; n < multiplier; n++) {
+            newPixels.push_back(pixelLine);
+        }
+    }
     { // resample the pixels
         int newHeight = frame->height * multiplier;
         int newWidth = frame->width * multiplier;
@@ -2918,7 +2926,7 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
                     for (int x = 0; x < halfWidth; x++) {
                         if (x >= (y * 2 - halfWidth)) {
                             int dx = x;
-                            int dy = newPixels.count() - halfWidth + y;
+                            int dy = newPixels.size() - halfWidth + y;
 
                             D1GfxPixel *pDest = &newPixels[dy][dx];
                             if (!pDest->isTransparent())
@@ -2958,7 +2966,7 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
                     for (int x = 0; x < halfWidth; x++) {
                         if (x >= (halfWidth - y * 2)) {
                             int dx = x;
-                            int dy = newPixels.count() - halfWidth + y;
+                            int dy = newPixels.size() - halfWidth + y;
 
                             D1GfxPixel *pDest = &newPixels[dy][dx];
                             if (!pDest->isTransparent())
@@ -3017,7 +3025,7 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
                     for (int x = 0; x < halfWidth; x++) {
                         if (x < (2 * halfWidth - y * 2)) {
                             int dx = halfWidth + x;
-                            int dy = newPixels.count() - halfWidth + y;
+                            int dy = newPixels.size() - halfWidth + y;
 
                             D1GfxPixel *pDest = &newPixels[dy][dx];
                             if (!pDest->isTransparent())
@@ -3057,7 +3065,7 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
                     for (int x = 0; x < halfWidth; x++) {
                         if (x < y * 2) {
                             int dx = halfWidth + x;
-                            int dy = newPixels.count() - halfWidth + y;
+                            int dy = newPixels.size() - halfWidth + y;
 
                             D1GfxPixel *pDest = &newPixels[dy][dx];
                             if (!pDest->isTransparent())
@@ -3146,7 +3154,7 @@ D1GfxFrame *Upscaler::createSubtileFrame(const D1Gfx *gfx, const D1Min *min, int
     subtileFrame->height = min->getSubtileHeight() * MICRO_HEIGHT;
 
     for (int i = 0; i < subtileFrame->height; i++) {
-        subtileFrame->pixels.append(QList<D1GfxPixel>());
+        subtileFrame->pixels.push_back(std::vector<D1GfxPixel>());
     }
     int x = 0;
     int y = 0;
@@ -3155,14 +3163,14 @@ D1GfxFrame *Upscaler::createSubtileFrame(const D1Gfx *gfx, const D1Min *min, int
         if (frameRef == 0) {
             for (int yy = 0; yy < MICRO_HEIGHT; yy++) {
                 for (int xx = 0; xx < MICRO_WIDTH; xx++) {
-                    subtileFrame->pixels[y + yy].append(D1GfxPixel::transparentPixel());
+                    subtileFrame->pixels[y + yy].push_back(D1GfxPixel::transparentPixel());
                 }
             }
         } else {
             D1GfxFrame *microFrame = gfx->getFrame(frameRef - 1);
             for (int yy = 0; yy < MICRO_HEIGHT; yy++) {
                 for (int xx = 0; xx < MICRO_WIDTH; xx++) {
-                    subtileFrame->pixels[y + yy].append(microFrame->getPixel(xx, yy));
+                    subtileFrame->pixels[y + yy].push_back(microFrame->getPixel(xx, yy));
                 }
             }
         }
@@ -3191,16 +3199,16 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<qui
         }
         if (hasColor) {
             newFrames.append(new D1GfxFrame());
-            subtileFramesRefs.append(newFrames.count());
+            subtileFramesRefs.append(newFrames.size());
             D1GfxFrame *newFrame = newFrames.last();
             newFrame->width = MICRO_WIDTH;
             newFrame->height = MICRO_HEIGHT;
             for (int i = 0; i < MICRO_HEIGHT; i++) {
-                newFrame->pixels.append(QList<D1GfxPixel>());
+                newFrame->pixels.push_back(std::vector<D1GfxPixel>());
             }
             for (int yy = 0; yy < MICRO_HEIGHT; yy++) {
                 for (int xx = 0; xx < MICRO_WIDTH; xx++) {
-                    newFrame->pixels[yy].append(subtileFrame->getPixel(x + xx, y + yy));
+                    newFrame->pixels[yy].push_back(subtileFrame->getPixel(x + xx, y + yy));
                 }
             }
             LevelTabFrameWidget::selectFrameType(newFrame);

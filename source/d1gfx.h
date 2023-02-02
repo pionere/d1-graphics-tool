@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include <QImage>
 #include <QMap>
 #include <QtEndian>
@@ -60,13 +62,13 @@ public:
     D1CEL_FRAME_TYPE getFrameType() const;
     void setFrameType(D1CEL_FRAME_TYPE type);
     bool addTo(const D1GfxFrame &frame);
-    void addPixelLine(QList<D1GfxPixel> &pixelLine);
+    void addPixelLine(std::vector<D1GfxPixel> &&pixelLine);
     void replacePixels(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel);
 
 protected:
     int width = 0;
     int height = 0;
-    QList<QList<D1GfxPixel>> pixels;
+    std::vector<std::vector<D1GfxPixel>> pixels;
     // fields of cel/cl2-frames
     bool clipped = false;
     // fields of tileset-frames

@@ -115,10 +115,8 @@ bool D1GfxFrame::addTo(const D1GfxFrame &frame)
     return true;
 }
 
-void D1GfxFrame::addPixelLine(QList<D1GfxPixel> &pixelLine)
+void D1GfxFrame::addPixelLine(std::vector<D1GfxPixel> &&pixelLine)
 {
-    this->pixels.append(pixelLine);
-    this->height++;
     /* if (this->width != pixelLine.size()) {
         if (this->width != 0) {
             dProgressErr() << QString("Mismatching lines.");
@@ -126,6 +124,8 @@ void D1GfxFrame::addPixelLine(QList<D1GfxPixel> &pixelLine)
     if (this->width == 0) {
         this->width = pixelLine.size();
     }
+    this->pixels.push_back(pixelLine);
+    this->height++;
 }
 
 void D1GfxFrame::replacePixels(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel replacement)

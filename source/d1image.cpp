@@ -1,21 +1,19 @@
 #include "d1image.h"
 
 #include <climits>
+#include <vector>
 
 #include <QColor>
 #include <QImage>
 #include <QList>
 
-static quint8 getPalColor(D1Pal *pal, QColor color)
+static quint8 getPalColor(std::vector<QColor> &colors, QColor color)
 {
-    int res = 0;
+    unsigned res = 0;
     int best = INT_MAX;
 
-    for (int i = 0; i < D1PAL_COLORS; i++) {
-        QColor palColor = pal->getColor(i);
-        if (palColor == pal->getUndefinedColor()) {
-            continue;
-        }
+    for (unsigned i = 0; i < colors.size(); i++) {
+        QColor palColor = colors[i];
         int currR = color.red() - palColor.red();
         int currG = color.green() - palColor.green();
         int currB = color.blue() - palColor.blue();
@@ -37,18 +35,29 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, D1
 
     frame.pixels.clear();
 
+    std::vector<QColor> colors;
+    QColor undefColor = pal->getUndefinedColor();
+    for (int i = 0; i < D1PAL_COLORS; i++) {
+        QColor palColor = pal->getColor(i);
+        if (palColor != undefColor) {
+            colors.push_back(palColor);
+        }
+    }
+    if (colors.empty()) {
+        colors.push_back(undefColor);
+    }
     for (int y = 0; y < frame.height; y++) {
-        frame.pixels.push_back(QList<D1GfxPixel>());
-        QList<D1GfxPixel> &pixelLine = frame.pixels.back();
+        std::vector<D1GfxPixel> pixelLine;
         for (int x = 0; x < frame.width; x++) {
             QColor color = image.pixelColor(x, y);
             // if (color == QColor(Qt::transparent)) {
             if (color.alpha() < COLOR_ALPHA_LIMIT) {
-                pixelLine.append(D1GfxPixel::transparentPixel());
+                pixelLine.push_back(D1GfxPixel::transparentPixel());
             } else {
-                pixelLine.append(D1GfxPixel::colorPixel(getPalColor(pal, color)));
+                pixelLine.push_back(D1GfxPixel::colorPixel(getPalColor(colors, color)));
             }
         }
+        frame.pixels.push_back(std::move(pixelLine));
     }
 
     return true;
