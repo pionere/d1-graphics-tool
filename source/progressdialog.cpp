@@ -249,9 +249,10 @@ void ProgressDialog::on_outputTextEdit_scrolled(int value)
     if (this->ui->outputTextEdit->verticalScrollBar()->maximum() == value) {
         this->ui->outputTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
     } else {
-        this->ui->outputTextEdit->textCursor()->setPosition(value, QTextCursor::MoveAnchor);
+        QTextCursor cursorPos = this->ui->outputTextEdit->textCursor();
+        cursorPos.setPosition(value, QTextCursor::MoveAnchor);
         // QTextCursor cursor = this->ui->outputTextEdit->cursorForPosition(QPoint(0, 0));
-        // this->ui->outputTextEdit->setTextCursor(cursor);
+        this->ui->outputTextEdit->setTextCursor(cursor);
     }
 }
 
