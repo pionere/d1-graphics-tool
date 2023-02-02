@@ -110,7 +110,7 @@ bool ExportDialog::exportLevelTiles25D()
     if (amount == 0) {
         return true;
     }
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Exporting %1 2.5d tiles...").arg(fileName), amount + 1);
+    ProgressDialog::incBar(tr("Exporting 2.5d tiles..."), amount);
     // single tile
     if (amount == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
@@ -123,15 +123,17 @@ bool ExportDialog::exportLevelTiles25D()
     if (amount == 1 || this->ui->filesCountComboBox->currentIndex() != 0) {
         // one file for each tile (indexed)
         for (int i = tileFrom; i <= tileTo; i++) {
-            if (ProgressDialog::wasCanceled()) {
-                return false;
-            }
-            ProgressDialog::incValue();
+            // if (ProgressDialog::wasCanceled()) {
+            //    return false;
+            // }
 
             QString outputFilePath = outputFilePathBase
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
 
             saveImage(this->til->getTileImage(i), outputFilePath);
+            if (!ProgressDialog::incValue()) {
+                return false;
+            }
         }
         return true;
     }
@@ -171,7 +173,6 @@ bool ExportDialog::exportLevelTiles25D()
             if (ProgressDialog::wasCanceled()) {
                 return false;
             }
-            ProgressDialog::incValue();
 
             const QImage image = this->til->getTileImage(i);
 
@@ -182,6 +183,9 @@ bool ExportDialog::exportLevelTiles25D()
                 dx = 0;
                 dy += image.height();
             }
+            if (!ProgressDialog::incValue()) {
+                return false;
+            }
         }
     } else {
         int cursor = 0;
@@ -189,8 +193,6 @@ bool ExportDialog::exportLevelTiles25D()
             if (ProgressDialog::wasCanceled()) {
                 return false;
             }
-            ProgressDialog::incValue();
-
             const QImage image = this->til->getTileImage(i);
             if (placement == 2) { // tiles on one column
                 painter.drawImage(0, cursor, image);
@@ -198,6 +200,9 @@ bool ExportDialog::exportLevelTiles25D()
             } else { // placement == 1 -- tiles on one line
                 painter.drawImage(cursor, 0, image);
                 cursor += image.width();
+            }
+            if (!ProgressDialog::incValue()) {
+                return false;
             }
         }
     }
@@ -229,7 +234,7 @@ bool ExportDialog::exportLevelTiles()
     if (amount <= 0) {
         return true;
     }
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Exporting %1 flat tiles...").arg(fileName), amount + 1);
+    ProgressDialog::incBar(tr("Exporting flat tiles...").arg(fileName), amount);
     // single tile
     if (amount == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
@@ -241,15 +246,16 @@ bool ExportDialog::exportLevelTiles()
     if (amount == 1 || this->ui->filesCountComboBox->currentIndex() != 0) {
         // one file for each tile (indexed)
         for (int i = tileFrom; i <= tileTo; i++) {
-            if (ProgressDialog::wasCanceled()) {
-                return false;
-            }
-            ProgressDialog::incValue();
-
+            // if (ProgressDialog::wasCanceled()) {
+            //    return false;
+            // }
             QString outputFilePath = outputFilePathBase
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
 
             saveImage(this->til->getFlatTileImage(i), outputFilePath);
+            if (!ProgressDialog::incValue()) {
+                return false;
+            }
         }
         return true;
     }
@@ -289,7 +295,6 @@ bool ExportDialog::exportLevelTiles()
             if (ProgressDialog::wasCanceled()) {
                 return false;
             }
-            ProgressDialog::incValue();
 
             const QImage image = this->til->getFlatTileImage(i);
 
@@ -300,6 +305,9 @@ bool ExportDialog::exportLevelTiles()
                 dx = 0;
                 dy += image.height();
             }
+            if (!ProgressDialog::incValue()) {
+                return false;
+            }
         }
     } else {
         int cursor = 0;
@@ -307,8 +315,6 @@ bool ExportDialog::exportLevelTiles()
             if (ProgressDialog::wasCanceled()) {
                 return false;
             }
-            ProgressDialog::incValue();
-
             const QImage image = this->til->getFlatTileImage(i);
             if (placement == 2) { // tiles on one column
                 painter.drawImage(0, cursor, image);
@@ -316,6 +322,9 @@ bool ExportDialog::exportLevelTiles()
             } else { // placement == 1 -- tiles on one line
                 painter.drawImage(cursor, 0, image);
                 cursor += image.width();
+            }
+            if (!ProgressDialog::incValue()) {
+                return false;
             }
         }
     }
@@ -347,7 +356,7 @@ bool ExportDialog::exportLevelSubtiles()
     if (amount <= 0) {
         return true;
     }
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Exporting %1 subtiles...").arg(fileName), amount + 1);
+    ProgressDialog::incBar(tr("Exporting subtiles..."), amount);
     // single subtile
     if (amount == 1 && subtileFrom == 0) {
         // one file for the only subtile (not indexed)
@@ -359,15 +368,16 @@ bool ExportDialog::exportLevelSubtiles()
     if (amount == 1 || this->ui->filesCountComboBox->currentIndex() != 0) {
         // one file for each subtile (indexed)
         for (int i = subtileFrom; i <= subtileTo; i++) {
-            if (ProgressDialog::wasCanceled()) {
-                return false;
-            }
-            ProgressDialog::incValue();
-
+            // if (ProgressDialog::wasCanceled()) {
+            //    return false;
+            // }
             QString outputFilePath = outputFilePathBase + "_subtile"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
 
             saveImage(this->min->getSubtileImage(i), outputFilePath);
+            if (!ProgressDialog::incValue()) {
+                return false;
+            }
         }
         return true;
     }
@@ -409,8 +419,6 @@ bool ExportDialog::exportLevelSubtiles()
             if (ProgressDialog::wasCanceled()) {
                 return false;
             }
-            ProgressDialog::incValue();
-
             const QImage image = this->min->getSubtileImage(i);
 
             painter.drawImage(dx, dy, image);
@@ -420,6 +428,9 @@ bool ExportDialog::exportLevelSubtiles()
                 dx = 0;
                 dy += image.height();
             }
+            if (!ProgressDialog::incValue()) {
+                return false;
+            }
         }
     } else {
         int cursor = 0;
@@ -427,8 +438,6 @@ bool ExportDialog::exportLevelSubtiles()
             if (ProgressDialog::wasCanceled()) {
                 return false;
             }
-            ProgressDialog::incValue();
-
             const QImage image = this->min->getSubtileImage(i);
             if (placement == 2) { // subtiles on one column
                 painter.drawImage(0, cursor, image);
@@ -436,6 +445,9 @@ bool ExportDialog::exportLevelSubtiles()
             } else { // placement == 1 -- subtiles on one line
                 painter.drawImage(cursor, 0, image);
                 cursor += image.width();
+            }
+            if (!ProgressDialog::incValue()) {
+                return false;
             }
         }
     }
@@ -467,7 +479,7 @@ bool ExportDialog::exportFrames()
     if (amount <= 0) {
         return true;
     }
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Exporting %1 frames...").arg(fileName), amount + 1);
+    ProgressDialog::incBar(tr("Exporting frames..."), amount);
     // single frame
     if (amount == 1 && frameFrom == 0) {
         // one file for the only frame (not indexed)
@@ -479,15 +491,16 @@ bool ExportDialog::exportFrames()
     if (amount == 1 || this->ui->filesCountComboBox->currentIndex() != 0) {
         // one file for each frame (indexed)
         for (int i = frameFrom; i <= frameTo; i++) {
-            if (ProgressDialog::wasCanceled()) {
-                return false;
-            }
-            ProgressDialog::incValue();
-
+            // if (ProgressDialog::wasCanceled()) {
+            //    return false;
+            // }
             QString outputFilePath = outputFilePathBase + "_frame"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + this->getFileFormatExtension();
 
             saveImage(this->gfx->getFrameImage(i), outputFilePath);
+            if (!ProgressDialog::incValue()) {
+                return false;
+            }
         }
         return true;
     }
@@ -561,7 +574,6 @@ bool ExportDialog::exportFrames()
                 if (ProgressDialog::wasCanceled()) {
                     return false;
                 }
-                ProgressDialog::incValue();
 
                 if (((i - frameFrom) % EXPORT_LVLFRAMES_PER_LINE) == 0) {
                     cursorY += groupImageHeight;
@@ -574,6 +586,9 @@ bool ExportDialog::exportFrames()
 
                 cursorX += image.width();
                 groupImageHeight = std::max(image.height(), groupImageHeight);
+                if (!ProgressDialog::incValue()) {
+                    return false;
+                }
             }
         } else {
             int cursorY = 0;
@@ -588,12 +603,13 @@ bool ExportDialog::exportFrames()
                     if (ProgressDialog::wasCanceled()) {
                         return false;
                     }
-                    ProgressDialog::incValue();
-
                     const QImage image = this->gfx->getFrameImage(j);
                     painter.drawImage(cursorX, cursorY, image);
                     cursorX += image.width();
                     groupImageHeight = std::max(image.height(), groupImageHeight);
+                    if (!ProgressDialog::incValue()) {
+                        return false;
+                    }
                 }
                 cursorY += groupImageHeight;
             }
@@ -604,8 +620,6 @@ bool ExportDialog::exportFrames()
             if (ProgressDialog::wasCanceled()) {
                 return false;
             }
-            ProgressDialog::incValue();
-
             const QImage image = this->gfx->getFrameImage(i);
             if (placement == 2) { // frames on one column
                 painter.drawImage(0, cursor, image);
@@ -613,6 +627,9 @@ bool ExportDialog::exportFrames()
             } else { // placement == 1 -- frames on one line
                 painter.drawImage(cursor, 0, image);
                 cursor += image.width();
+            }
+            if (!ProgressDialog::incValue()) {
+                return false;
             }
         }
     }
@@ -629,7 +646,7 @@ void ExportDialog::on_exportButton_clicked()
         QMessageBox::warning(this, tr("Warning"), tr("Output folder is missing, please choose an output folder."));
         return;
     }
-
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Export"), 1);
     bool result;
     try {
         switch (this->ui->contentTypeComboBox->currentIndex()) {

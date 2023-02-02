@@ -2,6 +2,7 @@
 
 #include <QDialog>
 #include <QFrame>
+#include <QProgressBar>
 
 namespace Ui {
 class ProgressDialog;
@@ -19,7 +20,6 @@ enum class PROGRESS_STATE {
 
 enum class PROGRESS_DIALOG_STATE {
     ACTIVE,
-    OPEN,
     BACKGROUND,
 };
 
@@ -36,11 +36,15 @@ public:
     explicit ProgressDialog(QWidget *parent = nullptr);
     ~ProgressDialog();
 
-    static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int maxValue);
+    static void openDialog();
+    static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars);
     static void done(bool forceOpen = false);
 
+    static void incBar(const QString &label, int maxValue);
+    static void decBar();
+
     static bool wasCanceled();
-    static void incValue();
+    static bool incValue();
 
     friend ProgressDialog &dProgress();
     friend ProgressDialog &dProgressWarn();
@@ -61,6 +65,7 @@ protected:
     void changeEvent(QEvent *e);
 
 private:
+    bool incBarValue(int index, int amount);
     void appendLine(const QString &line, bool replace);
     void removeLastLine();
 
@@ -68,6 +73,8 @@ private:
     Ui::ProgressDialog *ui;
 
     int textVersion;
+    QList<QProgressBar *> progressBars;
+    int activeBars;
     PROGRESS_STATE status = PROGRESS_STATE::DONE;
     PROGRESS_TEXT_MODE textMode = PROGRESS_TEXT_MODE::NORMAL;
 };

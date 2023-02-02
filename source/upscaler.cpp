@@ -3120,21 +3120,20 @@ bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
     QPair<int, QString> progress;
     progress.first = -1;
     for (int i = 0; i < amount; i++) {
+        progress.second = QString(QApplication::tr("Upscaling frame %1.")).arg(i + 1);
+        dProgress() << progress;
         if (ProgressDialog::wasCanceled()) {
             qDeleteAll(newFrames);
             return false;
         }
-        progress.second = QString(QApplication::tr("Upscaling frame %1.")).arg(i + 1);
-        dProgress() << progress;
-        ProgressDialog::incValue();
 
         D1GfxFrame *newFrame = new D1GfxFrame(*gfx->getFrame(i));
         upscaleFrame(newFrame, gfx->palette, params);
         newFrames.append(newFrame);
-    }
-    if (ProgressDialog::wasCanceled()) {
-        qDeleteAll(newFrames);
-        return false;
+        if (!ProgressDialog::incValue()) {
+            qDeleteAll(newFrames);
+            return false;
+        }
     }
     gfx->frames.swap(newFrames);
     gfx->upscaled = true;
@@ -3235,22 +3234,21 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     QPair<int, QString> progress;
     progress.first = -1;
     for (int i = 0; i < amount; i++) {
+        progress.second = QString(QApplication::tr("Upscaling subtile %1.")).arg(i + 1);
+        dProgress() << progress;
         if (ProgressDialog::wasCanceled()) {
             qDeleteAll(newFrames);
             return false;
         }
-        progress.second = QString(QApplication::tr("Upscaling subtile %1.")).arg(i + 1);
-        dProgress() << progress;
-        ProgressDialog::incValue();
 
         D1GfxFrame *subtileFrame = Upscaler::createSubtileFrame(gfx, min, i);
         Upscaler::upscaleFrame(subtileFrame, gfx->palette, params);
         Upscaler::storeSubtileFrame(subtileFrame, newFrameReferences, newFrames);
         delete subtileFrame;
-    }
-    if (ProgressDialog::wasCanceled()) {
-        qDeleteAll(newFrames);
-        return false;
+        if (!ProgressDialog::incValue()) {
+            qDeleteAll(newFrames);
+            return false;
+        }
     }
     // update gfx
     gfx->groupFrameIndices.clear();
