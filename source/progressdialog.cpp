@@ -27,8 +27,9 @@ ProgressDialog::~ProgressDialog()
 
 void ProgressDialog::openDialog()
 {
-    theWidget->setWindowModality(Qt::NonModal);
-    theWidget->updateWidget(theDialog->status, false, "");
+    // theWidget->updateWidget(theDialog->status, false, "");
+    theWidget->setModality(false);
+
     theDialog->showNormal();
     theDialog->adjustSize();
 }
@@ -59,14 +60,15 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     }
     theDialog->adjustSize();
 
+    theWidget->updateWidget(theDialog->status, background, label);
     if (background) {
-        theWidget->setWindowModality(Qt::ApplicationModal);
-        theWidget->updateWidget(theDialog->status, true, label);
-        theWidget->setFocus();
+        // theWidget->updateWidget(theDialog->status, true, label);
+        theWidget->setModality(true);
+
         // theDialog->showMinimized();
         return;
     }
-    theWidget->updateWidget(theDialog->status, false, "");
+    // theWidget->updateWidget(theDialog->status, false, "");
 
     theDialog->showNormal();
 }
@@ -282,9 +284,8 @@ void ProgressDialog::closeEvent(QCloseEvent *event)
 void ProgressDialog::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::WindowStateChange && this->isMinimized()) {
-        theWidget->setWindowModality(Qt::ApplicationModal);
         theWidget->updateWidget(theDialog->status, true, this->windowTitle());
-        theWidget->setFocus();
+        theWidget->setModality(true);
 
         this->hide();
     }
@@ -313,6 +314,13 @@ ProgressWidget::ProgressWidget(QWidget *parent)
 ProgressWidget::~ProgressWidget()
 {
     delete ui;
+}
+
+void ProgressWidget::setModality(bool modal)
+{
+    this->setModal(modal);
+    this->hide();
+    this->show();
 }
 
 void ProgressWidget::updateWidget(PROGRESS_STATE status, bool active, const QString &label)
