@@ -320,7 +320,7 @@ ProgressWidget::~ProgressWidget()
 
 void ProgressWidget::setModality(bool modal)
 {
-    this->setModal(modal);
+    this->setWindowModality(modal ? Qt::ApplicationModal : Qt::NonModal);
     this->hide();
     this->show();
 }
