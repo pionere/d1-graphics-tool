@@ -8,9 +8,6 @@
   <property name="maximumHeight">
    <number>16</number>
   </property>
-  <property name="frameStyle">
-   <set>QFrame::NoFrame</set>
-  </property>
   <layout class="QHBoxLayout" name="horizontalLayout_0">
    <property name="spacing">
     <number>4</number>

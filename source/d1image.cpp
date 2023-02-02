@@ -57,7 +57,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, D1
                 pixelLine.push_back(D1GfxPixel::transparentPixel());
             } else {
                 auto iter = std::lower_bound(colorMap.begin(), colorMap.end(), color,
-                    [](const std::pair<QColor, D1GfxPixel> &colPix, const QColor &col) {
+                    [](const std::pair<QColor, quint8> &colPix, const QColor &col) {
                         if (colPix.first.red() < col.red())
                             return true;
                         if (colPix.first.red() != col.red())
