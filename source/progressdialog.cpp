@@ -95,9 +95,10 @@ void ProgressDialog::done(bool forceOpen)
     if (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible()) && !forceOpen) {
         theDialog->hide();
     } else {
-        theDialog->showNormal();
+        // theDialog->showNormal();
         theDialog->adjustSize();
         theDialog->ui->closePushButton->setFocus();
+        theDialog->exec();
     }
 
     theWidget->updateWidget(theDialog->status, !theDialog->ui->outputTextEdit->document()->isEmpty(), "");
@@ -296,7 +297,7 @@ void ProgressDialog::changeEvent(QEvent *event)
 }
 
 ProgressWidget::ProgressWidget(QWidget *parent)
-    : QDialog(parent, Qt::Tool | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint)
+    : QDialog(nullptr, Qt::Tool | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint)
     , ui(new Ui::ProgressWidget())
 {
     this->ui->setupUi(this);
