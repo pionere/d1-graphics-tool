@@ -190,7 +190,7 @@ ProgressDialog &dProgressFail()
     return *theDialog;
 }
 
-ProgressDialog::appendLine(const QString &line, bool replace)
+void ProgressDialog::appendLine(const QString &line, bool replace)
 {
     QPlainTextEdit *textEdit = this->ui->outputTextEdit;
     QTextCursor cursor = textEdit->textCursor();
@@ -213,8 +213,8 @@ ProgressDialog::appendLine(const QString &line, bool replace)
 
     if (!active) {
         // The user hasn't selected any text and the scrollbar is at the bottom: scroll to the bottom.
-        cursor->movePosition(QTextCursor::End, QTextCursor::MoveAnchor);
-        scrollValue = textEdit-verticalScrollBar()->maximum();
+        cursor.movePosition(QTextCursor::End, QTextCursor::MoveAnchor);
+        scrollValue = textEdit->verticalScrollBar()->maximum();
     }
     textEdit->setTextCursor(cursor);
     textEdit->verticalScrollBar()->setValue(scrollValue);
@@ -248,7 +248,7 @@ ProgressDialog &ProgressDialog::operator<<(const QPair<QString, QString> &text)
     if (lastCursorPos > storeCursorPos) {
         this->ui->outputTextEdit->setTextCursor(storeCursorPos);
     }*/
-    this->appendLine(text, this->ui->outputTextEdit->textCursor().selectedText() == text.first);
+    this->appendLine(text.second, this->ui->outputTextEdit->textCursor().selectedText() == text.first);
     this->textVersion++;
     return *this;
 }
@@ -265,7 +265,7 @@ ProgressDialog &ProgressDialog::operator<<(QPair<int, QString> &idxText)
     if (lastCursorPos > storeCursorPos) {
         this->ui->outputTextEdit->setTextCursor(storeCursorPos);
     }*/
-    this->appendLine(text, this->textVersion == idxText.first);
+    this->appendLine(idxText.second, this->textVersion == idxText.first);
     this->textVersion++;
     idxText.first = this->textVersion;
     return *this;
