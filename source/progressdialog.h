@@ -96,7 +96,7 @@ public:
     ~ProgressWidget();
 
 private:
-    void update(PROGRESS_STATE status, bool active, const QString &text);
+    void updateWidget(PROGRESS_STATE status, bool active, const QString &text);
 
 private slots:
     void on_openPushButton_clicked();

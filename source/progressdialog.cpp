@@ -28,7 +28,7 @@ ProgressDialog::~ProgressDialog()
 void ProgressDialog::openDialog()
 {
     theWidget->setWindowModality(Qt::NonModal);
-    theWidget->update(theDialog->status, false, "");
+    theWidget->updateWidget(theDialog->status, false, "");
     theDialog->showNormal();
     theDialog->adjustSize();
 }
@@ -60,12 +60,12 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     theDialog->adjustSize();
 
     if (background) {
-        theWidget->update(theDialog->status, true, label);
         theWidget->setWindowModality(Qt::ApplicationModal);
+        theWidget->updateWidget(theDialog->status, true, label);
         // theDialog->showMinimized();
         return;
     }
-    theWidget->update(theDialog->status, false, "");
+    theWidget->updateWidget(theDialog->status, false, "");
 
     theDialog->showNormal();
 }
@@ -97,7 +97,7 @@ void ProgressDialog::done(bool forceOpen)
         theDialog->ui->closePushButton->setFocus();
     }
 
-    theWidget->update(theDialog->status, !theDialog->ui->outputTextEdit->document()->isEmpty(), "");
+    theWidget->updateWidget(theDialog->status, !theDialog->ui->outputTextEdit->document()->isEmpty(), "");
 }
 
 void ProgressDialog::incBar(const QString &label, int maxValue)
@@ -282,7 +282,7 @@ void ProgressDialog::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::WindowStateChange && this->isMinimized()) {
         theWidget->setWindowModality(Qt::ApplicationModal);
-        theWidget->update(theDialog->status, true, this->windowTitle());
+        theWidget->updateWidget(theDialog->status, true, this->windowTitle());
         this->hide();
     }
     if (event->type() == QEvent::LanguageChange) {
@@ -302,7 +302,7 @@ ProgressWidget::ProgressWidget(QWidget *parent)
     this->ui->openPushButton->setMinimumSize(fontHeight, fontHeight);
     this->ui->openPushButton->setMaximumSize(fontHeight, fontHeight);
     this->ui->openPushButton->setIconSize(QSize(fontHeight, fontHeight));
-    this->update(PROGRESS_STATE::DONE, false, "");
+    this->updateWidget(PROGRESS_STATE::DONE, false, "");
 
     theWidget = this;
 }
@@ -312,7 +312,7 @@ ProgressWidget::~ProgressWidget()
     delete ui;
 }
 
-void ProgressWidget::update(PROGRESS_STATE status, bool active, const QString &label)
+void ProgressWidget::updateWidget(PROGRESS_STATE status, bool active, const QString &label)
 {
     this->ui->openPushButton->setEnabled(active);
     QStyle::StandardPixmap type;
@@ -339,7 +339,8 @@ void ProgressWidget::update(PROGRESS_STATE status, bool active, const QString &l
     this->ui->openPushButton->setIcon(this->style()->standardIcon(type));
     this->ui->messageLabel->setText(label);
     this->adjustSize();
-    this->repaint();
+    //this->repaint();
+    this->update();
     // QFrame::update();
 }
 

@@ -89,11 +89,11 @@ static void saveImage(const QImage &image, const QString &path)
     dProgress() << QApplication::tr("%1 created.").arg(QDir::toNativeSeparators(path));
 }
 
-bool ExportDialog::exportLevelTiles25D()
+bool ExportDialog::exportLevelTiles25D(const QString &outFolder)
 {
     QString fileName = QFileInfo(this->til->getFilePath()).fileName();
 
-    QString outputFilePathBase = ui->outputFolderEdit->text() + "/" + fileName.replace(".", "_25d_");
+    QString outputFilePathBase = outFolder + "/" + fileName.replace(".", "_25d_");
 
     int count = this->til->getTileCount();
     int tileFrom = this->ui->contentRangeFromEdit->text().toUInt();
@@ -213,11 +213,11 @@ bool ExportDialog::exportLevelTiles25D()
     return true;
 }
 
-bool ExportDialog::exportLevelTiles()
+bool ExportDialog::exportLevelTiles(const QString &outFolder)
 {
     QString fileName = QFileInfo(this->til->getFilePath()).fileName();
 
-    QString outputFilePathBase = ui->outputFolderEdit->text() + "/" + fileName.replace(".", "_flat_");
+    QString outputFilePathBase = outFolder + "/" + fileName.replace(".", "_flat_");
 
     int count = this->til->getTileCount();
     int tileFrom = this->ui->contentRangeFromEdit->text().toUInt();
@@ -335,11 +335,11 @@ bool ExportDialog::exportLevelTiles()
     return true;
 }
 
-bool ExportDialog::exportLevelSubtiles()
+bool ExportDialog::exportLevelSubtiles(const QString &outFolder)
 {
     QString fileName = QFileInfo(this->min->getFilePath()).fileName();
 
-    QString outputFilePathBase = ui->outputFolderEdit->text() + "/" + fileName.replace(".", "_");
+    QString outputFilePathBase = outFolder + "/" + fileName.replace(".", "_");
 
     int count = this->min->getSubtileCount();
     int subtileFrom = this->ui->contentRangeFromEdit->text().toUInt();
@@ -458,11 +458,11 @@ bool ExportDialog::exportLevelSubtiles()
     return true;
 }
 
-bool ExportDialog::exportFrames()
+bool ExportDialog::exportFrames(const QString &outFolder)
 {
     QString fileName = QFileInfo(this->gfx->getFilePath()).fileName();
 
-    QString outputFilePathBase = ui->outputFolderEdit->text() + "/" + fileName.replace(".", "_");
+    QString outputFilePathBase = outFolder + "/" + fileName.replace(".", "_");
 
     int count = this->gfx->getFrameCount();
     int frameFrom = this->ui->contentRangeFromEdit->text().toUInt();
@@ -642,35 +642,32 @@ bool ExportDialog::exportFrames()
 
 void ExportDialog::on_exportButton_clicked()
 {
-    if (ui->outputFolderEdit->text() == "") {
+    QString outFolder = this->ui->outputFolderEdit->text();
+    if (outFolder.isEmpty()) {
         QMessageBox::warning(this, tr("Warning"), tr("Output folder is missing, please choose an output folder."));
         return;
     }
+    int type = this->ui->contentTypeComboBox->currentIndex();
+    this->hide();
     ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Export"), 1);
     bool result;
-    try {
-        switch (this->ui->contentTypeComboBox->currentIndex()) {
-        case 0:
-            result = this->exportFrames();
-            break;
-        case 1:
-            result = this->exportLevelSubtiles();
-            break;
-        case 2:
-            result = this->exportLevelTiles();
-            break;
-        default: // case 3:
-            result = this->exportLevelTiles25D();
-            break;
-        }
-    } catch (...) {
-        dProgressFail() << tr("Export Failed.");
-        ProgressDialog::done();
-        return;
+    switch (type) {
+    case 0:
+        result = this->exportFrames(outFolder);
+        break;
+    case 1:
+        result = this->exportLevelSubtiles(outFolder);
+        break;
+    case 2:
+        result = this->exportLevelTiles(outFolder);
+        break;
+    default: // case 3:
+        result = this->exportLevelTiles25D(outFolder);
+        break;
     }
     ProgressDialog::done();
-    if (result) {
-        this->close();
+    if (!result) {
+        this->show();
     }
 }
 

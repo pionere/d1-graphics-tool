@@ -38,10 +38,10 @@ private slots:
 private:
     QString getFileFormatExtension();
 
-    bool exportLevelTiles25D();
-    bool exportLevelTiles();
-    bool exportLevelSubtiles();
-    bool exportFrames();
+    bool exportLevelTiles25D(const QString &outFolder);
+    bool exportLevelTiles(const QString &outFolder);
+    bool exportLevelSubtiles(const QString &outFolder);
+    bool exportFrames(const QString &outFolder);
 
     Ui::ExportDialog *ui;
 
