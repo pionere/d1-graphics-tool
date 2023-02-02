@@ -25,7 +25,7 @@ ProgressDialog::~ProgressDialog()
     delete ui;
 }
 
-void ProgressDialog::open()
+void ProgressDialog::openDialog()
 {
     theWidget->setWindowModality(Qt::NonModal);
     theWidget->update(theDialog->status, false, "");
@@ -38,7 +38,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     bool background = mode == PROGRESS_DIALOG_STATE::BACKGROUND;
 
     theDialog->setWindowTitle(label);
-    theDialog->ui->outputTextEdit->clear();
+    theDialog->ui->outputTextEdit->document()->clear();
     theDialog->textVersion = 0;
     theDialog->activeBars = 0;
     theDialog->errorOnFail = false;
@@ -230,7 +230,7 @@ ProgressDialog &ProgressDialog::operator<<(const QString &text)
 void ProgressDialog::removeLastLine()
 {
     this->ui->outputTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
-    this->ui->outputTextEdit->moveCursor(QTextCursor::StartOfBlock, QTextCursor::MoveAnchor);
+    this->ui->outputTextEdit->moveCursor(QTextCursor::StartOfLine, QTextCursor::MoveAnchor);
     this->ui->outputTextEdit->moveCursor(QTextCursor::End, QTextCursor::KeepAnchor);
     this->ui->outputTextEdit->textCursor().removeSelectedText();
     this->ui->outputTextEdit->textCursor().deletePreviousChar(); // Added to trim the newline char when removing last line
@@ -365,5 +365,5 @@ void ProgressWidget::update(PROGRESS_STATE status, bool active, const QString &l
 
 void ProgressWidget::on_openPushButton_clicked()
 {
-    ProgressDialog::open();
+    ProgressDialog::openDialog();
 }

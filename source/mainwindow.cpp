@@ -133,12 +133,12 @@ MainWindow::MainWindow()
 
     // Initialize drawing options of 'Edit'
     this->ui->menuEdit->addSeparator();
-    this->ui->menuEdit->addAction("Start drawing", this, SLOT(on_actionStart_Draw_triggered()));
-    this->ui->menuEdit->addAction("Stop drawing", this, SLOT(on_actionStop_Draw_triggered()));
+    this->startDrawAction = this->ui->menuEdit->addAction("Start drawing", this, SLOT(on_actionStart_Draw_triggered()));
+    this->stopDrawAction = this->ui->menuEdit->addAction("Stop drawing", this, SLOT(on_actionStop_Draw_triggered()));
 
     // Initialize upscale option of 'Edit'
     this->ui->menuEdit->addSeparator();
-    this->ui->menuEdit->addAction("Upscale", this, SLOT(on_actionUpscale_triggered()));
+    this->upscaleAction = this->ui->menuEdit->addAction("Upscale", this, SLOT(on_actionUpscale_triggered()));
 
     this->on_actionClose_triggered();
 
@@ -709,15 +709,12 @@ void MainWindow::changeEvent(QEvent *event)
             menuActions[4]->setText(tr("Delete"));
             menuActions[4]->setToolTip(tr("Delete the current tile"));
         }
-        {
-            QList<QAction *> menuActions = this->ui->menuEdit->actions();
-            // (re)translate the drawing options of 'Edit'
-            menuActions[0]->setText(tr("Start drawing"));
-            menuActions[1]->setText(tr("Stop drawing"));
-            // (re)translate the upscale option of 'Edit'
-            menuActions[2]->setText(tr("Upscale"));
-            menuActions[2]->setToolTip(tr("Upscale the current graphics"));
-        }
+        // (re)translate the drawing options of 'Edit'
+        this->startDrawAction->setText(tr("Start drawing"));
+        this->stopDrawAction->setText(tr("Stop drawing"));
+        // (re)translate the upscale option of 'Edit'
+        this->upscaleAction->setText(tr("Upscale"));
+        this->upscaleAction->setToolTip(tr("Upscale the current graphics"));
     }
     QMainWindow::changeEvent(event);
 }

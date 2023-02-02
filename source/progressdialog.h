@@ -36,7 +36,7 @@ public:
     explicit ProgressDialog(QWidget *parent = nullptr);
     ~ProgressDialog();
 
-    static void open();
+    static void openDialog();
     static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars);
     static void done(bool forceOpen = false);
 
