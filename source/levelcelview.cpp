@@ -383,7 +383,7 @@ void LevelCelView::assignFrames(const D1GfxFrame &frame, int subtileIndex, int f
                 for (int i = 0; i < MICRO_WIDTH; i++) {
                     pixelLine.append(frame.getPixel(x + i, y + j));
                 }
-                subFrame->addPixelLine(pixelLine);
+                subFrame->addPixelLine(std::move(pixelLine));
             }
             LevelTabFrameWidget::selectFrameType(subFrame);
             frameIndex++;
@@ -599,7 +599,7 @@ void LevelCelView::assignSubtiles(const D1GfxFrame &frame, int tileIndex, int su
                     }
                     pixelLine.append(pixel);
                 }
-                subFrame.addPixelLine(pixelLine);
+                subFrame.addPixelLine(std::move(pixelLine));
             }
             if (!hasColor) {
                 continue;
@@ -819,7 +819,7 @@ void LevelCelView::insertSubtile(int subtileIndex, const D1GfxFrame &frame)
                 for (int i = 0; i < MICRO_WIDTH; i++) {
                     pixelLine.append(frame.getPixel(x + i, y + j));
                 }
-                subFrame->addPixelLine(pixelLine);
+                subFrame->addPixelLine(std::move(pixelLine));
             }
             LevelTabFrameWidget::selectFrameType(subFrame);
             frameIndex++;
@@ -877,7 +877,7 @@ void LevelCelView::insertTile(int tileIndex, const D1GfxFrame &frame)
                 for (unsigned i = 0; i < subtileWidth; i++) {
                     pixelLine.append(frame.getPixel(x + i, y + j));
                 }
-                subFrame.addPixelLine(pixelLine);
+                subFrame.addPixelLine(std::move(pixelLine));
             }
 
             int index = this->min->getSubtileCount();
@@ -968,7 +968,7 @@ bool LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame
                     }
                     pixelLine.append(pixel);
                 }
-                subFrame.addPixelLine(pixelLine);
+                subFrame.addPixelLine(std::move(pixelLine));
             }
             if (!hasColor) {
                 continue;

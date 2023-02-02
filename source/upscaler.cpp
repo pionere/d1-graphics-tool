@@ -38,7 +38,8 @@ static D1GfxPixel getPalColor(const UpscalingParam &params, QColor color)
     int res = 0;
     int best = INT_MAX;
 
-    for (QColor palColor : params.dynColors) {
+    for (int i = 0; i < params.dynColors.count(); i++) {
+        QColor palColor = params.dynColors[i];
         int currR = color.red() - palColor.red();
         int currG = color.green() - palColor.green();
         int currB = color.blue() - palColor.blue();

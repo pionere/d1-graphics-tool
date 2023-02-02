@@ -12,7 +12,8 @@ static quint8 getPalColor(QVector<QColor> &colors, QColor color)
     int res = 0;
     int best = INT_MAX;
 
-    for (QColor palColor : colors) {
+    for (int i = 0; i < colors.count(); i++) {
+        QColor palColor = colors[i];
         int currR = color.red() - palColor.red();
         int currG = color.green() - palColor.green();
         int currB = color.blue() - palColor.blue();

@@ -60,7 +60,7 @@ public:
     D1CEL_FRAME_TYPE getFrameType() const;
     void setFrameType(D1CEL_FRAME_TYPE type);
     bool addTo(const D1GfxFrame &frame);
-    void addPixelLine(QList<D1GfxPixel> &pixelLine);
+    void addPixelLine(QList<D1GfxPixel> &&pixelLine);
     void replacePixels(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel);
 
 protected:
