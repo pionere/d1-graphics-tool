@@ -218,6 +218,10 @@ private:
     QMenu subtileMenu = QMenu("Subtile");
     QMenu tileMenu = QMenu("Tile");
 
+    QAction *startDrawAction;
+    QAction *stopDrawAction;
+    QAction *upscaleAction;
+
     QUndoStack *undoStack;
     QAction *undoAction;
     QAction *redoAction;
