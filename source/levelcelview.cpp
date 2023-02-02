@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <set>
+#include <vector>
 
 #include <QAction>
 #include <QApplication>
@@ -379,9 +380,9 @@ void LevelCelView::assignFrames(const D1GfxFrame &frame, int subtileIndex, int f
             bool clipped;
             D1GfxFrame *subFrame = this->gfx->insertFrame(frameIndex, &clipped);
             for (int j = 0; j < MICRO_HEIGHT; j++) {
-                QList<D1GfxPixel> pixelLine;
+                std::vector<D1GfxPixel> pixelLine;
                 for (int i = 0; i < MICRO_WIDTH; i++) {
-                    pixelLine.append(frame.getPixel(x + i, y + j));
+                    pixelLine.push_back(frame.getPixel(x + i, y + j));
                 }
                 subFrame->addPixelLine(std::move(pixelLine));
             }
@@ -591,13 +592,13 @@ void LevelCelView::assignSubtiles(const D1GfxFrame &frame, int tileIndex, int su
             D1GfxFrame subFrame;
             bool hasColor = false;
             for (unsigned j = 0; j < subtileHeight; j++) {
-                QList<D1GfxPixel> pixelLine;
+                std::vector<D1GfxPixel> pixelLine;
                 for (unsigned i = 0; i < subtileWidth; i++) {
                     D1GfxPixel pixel = frame.getPixel(x + i, y + j);
                     if (!pixel.isTransparent()) {
                         hasColor = true;
                     }
-                    pixelLine.append(pixel);
+                    pixelLine.push_back(pixel);
                 }
                 subFrame.addPixelLine(std::move(pixelLine));
             }
@@ -815,9 +816,9 @@ void LevelCelView::insertSubtile(int subtileIndex, const D1GfxFrame &frame)
             bool clipped;
             D1GfxFrame *subFrame = this->gfx->insertFrame(frameIndex, &clipped);
             for (int j = 0; j < MICRO_HEIGHT; j++) {
-                QList<D1GfxPixel> pixelLine;
+                std::vector<D1GfxPixel> pixelLine;
                 for (int i = 0; i < MICRO_WIDTH; i++) {
-                    pixelLine.append(frame.getPixel(x + i, y + j));
+                    pixelLine.push_back(frame.getPixel(x + i, y + j));
                 }
                 subFrame->addPixelLine(std::move(pixelLine));
             }
@@ -873,9 +874,9 @@ void LevelCelView::insertTile(int tileIndex, const D1GfxFrame &frame)
         for (int x = 0; x < frame.getWidth(); x += subtileWidth) {
             D1GfxFrame subFrame;
             for (unsigned j = 0; j < subtileHeight; j++) {
-                QList<D1GfxPixel> pixelLine;
+                std::vector<D1GfxPixel> pixelLine;
                 for (unsigned i = 0; i < subtileWidth; i++) {
-                    pixelLine.append(frame.getPixel(x + i, y + j));
+                    pixelLine.push_back(frame.getPixel(x + i, y + j));
                 }
                 subFrame.addPixelLine(std::move(pixelLine));
             }
@@ -960,13 +961,13 @@ bool LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const D1GfxFrame
             D1GfxFrame subFrame;
             bool hasColor = false;
             for (unsigned j = 0; j < tileHeight; j++) {
-                QList<D1GfxPixel> pixelLine;
+                std::vector<D1GfxPixel> pixelLine;
                 for (unsigned i = 0; i < tileWidth; i++) {
                     D1GfxPixel pixel = frame.getPixel(x + i, y + j);
                     if (!pixel.isTransparent()) {
                         hasColor = true;
                     }
-                    pixelLine.append(pixel);
+                    pixelLine.push_back(pixel);
                 }
                 subFrame.addPixelLine(std::move(pixelLine));
             }

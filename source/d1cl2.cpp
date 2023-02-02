@@ -97,8 +97,8 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
         return false;
 
     // READ {CL2 FRAME DATA}
-
-    QList<D1GfxPixel> pixelLine;
+    std::vector<std::vector<D1GfxPixel>> pixels;
+    std::vector<D1GfxPixel> pixelLine;
     for (int o = frameDataStartOffset; o < rawData.size(); o++) {
         quint8 readByte = rawData[o];
 
@@ -106,11 +106,11 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
         if (readByte > 0x00 && readByte < 0x80) {
             for (int i = 0; i < readByte; i++) {
                 // Add transparent pixel
-                pixelLine.append(D1GfxPixel::transparentPixel());
+                pixelLine.push_back(D1GfxPixel::transparentPixel());
 
                 if (pixelLine.size() == frame.width) {
-                    frame.pixels.push_front(QList<D1GfxPixel>());
-                    frame.pixels.front().swap(pixelLine);
+                    pixels.push_back(std::move(pixelLine));
+                    pixelLine.clear();
                 }
             }
         }
@@ -121,11 +121,11 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
 
             for (int i = 0; i < (0xBF - readByte); i++) {
                 // Add opaque pixel
-                pixelLine.append(D1GfxPixel::colorPixel(rawData[o]));
+                pixelLine.push_back(D1GfxPixel::colorPixel(rawData[o]));
 
                 if (pixelLine.size() == frame.width) {
-                    frame.pixels.push_front(QList<D1GfxPixel>());
-                    frame.pixels.front().swap(pixelLine);
+                    pixels.push_back(std::move(pixelLine));
+                    pixelLine.clear();
                 }
             }
         }
@@ -135,18 +135,20 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
                 // Go to the next palette index offset
                 o++;
                 // Add opaque pixel
-                pixelLine.append(D1GfxPixel::colorPixel(rawData[o]));
+                pixelLine.push_back(D1GfxPixel::colorPixel(rawData[o]));
 
                 if (pixelLine.size() == frame.width) {
-                    frame.pixels.push_front(QList<D1GfxPixel>());
-                    frame.pixels.front().swap(pixelLine);
+                    pixels.push_back(std::move(pixelLine));
+                    pixelLine.clear();
                 }
             }
         } else if (readByte == 0x00) {
             dProgressWarn() << QApplication::tr("Invalid CL2 frame data (0x00 found)");
         }
     }
-
+    for (auto it = pixels.rbegin(); it != pixels.rend(); ++it) {
+        frame.pixels.push_back(std::move(*it));
+    }
     frame.height = frame.pixels.size();
 
     return true;

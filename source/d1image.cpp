@@ -47,8 +47,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, D1
         colors.append(undefColor);
     }
     for (int y = 0; y < frame.height; y++) {
-        frame.pixels.push_back(QList<D1GfxPixel>());
-        QList<D1GfxPixel> &pixelLine = frame.pixels.back();
+        std::vector<D1GfxPixel> pixelLine;
         for (int x = 0; x < frame.width; x++) {
             QColor color = image.pixelColor(x, y);
             // if (color == QColor(Qt::transparent)) {
@@ -58,6 +57,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, D1
                 pixelLine.append(D1GfxPixel::colorPixel(getPalColor(colors, color)));
             }
         }
+        frame.pixels.push_back(std::move(pixelLine));
     }
 
     return true;

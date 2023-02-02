@@ -115,7 +115,7 @@ bool D1GfxFrame::addTo(const D1GfxFrame &frame)
     return true;
 }
 
-void D1GfxFrame::addPixelLine(QList<D1GfxPixel> &&pixelLine)
+void D1GfxFrame::addPixelLine(std::vector<D1GfxPixel> &&pixelLine)
 {
     /* if (this->width != pixelLine.size()) {
         if (this->width != 0) {
@@ -124,8 +124,7 @@ void D1GfxFrame::addPixelLine(QList<D1GfxPixel> &&pixelLine)
     if (this->width == 0) {
         this->width = pixelLine.size();
     }
-    this->pixels.push_back(QList<D1GfxPixel>());
-    this->pixels.back() = pixelLine;
+    this->pixels.push_back(pixelLine);
     this->height++;
 }
 

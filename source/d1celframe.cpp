@@ -56,7 +56,8 @@ bool D1CelFrame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
         return false;
 
     // READ {CEL FRAME DATA}
-    QList<D1GfxPixel> pixelLine;
+    std::vector<std::vector<D1GfxPixel>> pixels;
+    std::vector<D1GfxPixel> pixelLine;
     for (int o = frameDataStartOffset; o < rawData.size(); o++) {
         quint8 readByte = rawData[o];
 
@@ -67,7 +68,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
                 return false;
 
             for (int i = 0; i < (256 - readByte); i++)
-                pixelLine.append(D1GfxPixel::transparentPixel());
+                pixelLine.push_back(D1GfxPixel::transparentPixel());
         } else {
             // Palette indices group
             // A pixel line can't exceed the image width
@@ -76,16 +77,18 @@ bool D1CelFrame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
 
             for (int i = 0; i < readByte; i++) {
                 o++;
-                pixelLine.append(D1GfxPixel::colorPixel(rawData[o]));
+                pixelLine.push_back(D1GfxPixel::colorPixel(rawData[o]));
             }
         }
 
         if (pixelLine.size() == frame.width) {
-            frame.pixels.push_front(QList<D1GfxPixel>());
-            frame.pixels.front().swap(pixelLine);
+            pixels.push_back(std::move(pixelLine));
+            pixelLine.clear();
         }
     }
-
+    for (auto it = pixels.rbegin(); it != pixels.rend(); ++it) {
+        frame.pixels.push_back(std::move(*it));
+    }
     frame.height = frame.pixels.size();
 
     return true;
