@@ -124,7 +124,8 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *ba
         // read using the given palette
         QSet<quint8> usedColors;
         for (int y = 0; y < frame.height; y++) {
-            QList<D1GfxPixel> pixelLine;
+            frame.pixels.push_back(QList<D1GfxPixel>());
+            QList<D1GfxPixel> &pixelLine = frame.pixels.back();
 
             for (int x = 0; x < frame.width; dataPtr++) {
                 byte = *dataPtr;
@@ -151,7 +152,6 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *ba
                 }
                 x += byte;
             }
-            frame.pixels.append(pixelLine);
             dataPtr += srcSkip;
         }
 

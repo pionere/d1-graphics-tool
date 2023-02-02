@@ -5,17 +5,14 @@
 #include <QColor>
 #include <QImage>
 #include <QList>
+#include <QVector>
 
-static quint8 getPalColor(D1Pal *pal, QColor color)
+static quint8 getPalColor(QVector<QColor> &colors, QColor color)
 {
     int res = 0;
     int best = INT_MAX;
 
-    for (int i = 0; i < D1PAL_COLORS; i++) {
-        QColor palColor = pal->getColor(i);
-        if (palColor == pal->getUndefinedColor()) {
-            continue;
-        }
+    for (QColor palColor : colors) {
         int currR = color.red() - palColor.red();
         int currG = color.green() - palColor.green();
         int currB = color.blue() - palColor.blue();
@@ -37,6 +34,17 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, D1
 
     frame.pixels.clear();
 
+    QVector<QColor> colors;
+    QColor undefColor = pal->getUndefinedColor();
+    for (int i = 0; i < D1PAL_COLORS; i++) {
+        QColor palColor = pal->getColor(i);
+        if (palColor != undefColor) {
+            colors.append(palColor);
+        }
+    }
+    if (colors.isEmpty()) {
+        colors.append(undefColor);
+    }
     for (int y = 0; y < frame.height; y++) {
         frame.pixels.push_back(QList<D1GfxPixel>());
         QList<D1GfxPixel> &pixelLine = frame.pixels.back();
@@ -46,7 +54,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, D1
             if (color.alpha() < COLOR_ALPHA_LIMIT) {
                 pixelLine.append(D1GfxPixel::transparentPixel());
             } else {
-                pixelLine.append(D1GfxPixel::colorPixel(getPalColor(pal, color)));
+                pixelLine.append(D1GfxPixel::colorPixel(getPalColor(colors, color)));
             }
         }
     }

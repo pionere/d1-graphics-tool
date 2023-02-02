@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QColor>
 #include <QMessageBox>
+#include <QVector>
 
 #include "d1gfx.h"
 #include "d1min.h"
@@ -21,6 +22,7 @@ class UpscalingParam {
 public:
     int multiplier;
     D1Pal *pal;
+    QVector<QColor> dynColors;
     int firstfixcolor;
     int lastfixcolor;
 };
@@ -36,14 +38,7 @@ static D1GfxPixel getPalColor(const UpscalingParam &params, QColor color)
     int res = 0;
     int best = INT_MAX;
 
-    for (int i = 0; i < D1PAL_COLORS; i++) {
-        if (i >= params.firstfixcolor && i <= params.lastfixcolor) {
-            continue;
-        }
-        QColor palColor = params.pal->getColor(i);
-        if (palColor == params.pal->getUndefinedColor()) {
-            continue;
-        }
+    for (QColor palColor : params.dynColors) {
         int currR = color.red() - palColor.red();
         int currG = color.green() - palColor.green();
         int currB = color.blue() - palColor.blue();
@@ -2683,6 +2678,18 @@ bool Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
     upParams.firstfixcolor = params.firstfixcolor;
     upParams.lastfixcolor = params.lastfixcolor;
     upParams.pal = pal;
+    { // setup dynColors
+        QColor undefColor = pal->getUndefinedColor();
+        for (int i = 0; i < D1PAL_COLORS; i++) {
+            QColor palColor = pal->getColor(i);
+            if (palColor != undefColor) {
+                upParams.dynColors.append(palColor);
+            }
+        }
+        if (upParams.dynColors.isEmpty()) {
+            upParams.dynColors.append(undefColor);
+        }
+    }
 
     int multiplier = upParams.multiplier;
     // upscale the frame
