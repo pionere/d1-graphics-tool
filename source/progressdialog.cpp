@@ -251,8 +251,8 @@ void ProgressDialog::on_outputTextEdit_scrolled(int value)
     } else {
         QTextCursor cursorPos = this->ui->outputTextEdit->textCursor();
         cursorPos.setPosition(value, QTextCursor::MoveAnchor);
-        // QTextCursor cursor = this->ui->outputTextEdit->cursorForPosition(QPoint(0, 0));
-        this->ui->outputTextEdit->setTextCursor(cursor);
+        // QTextCursor cursorPos = this->ui->outputTextEdit->cursorForPosition(QPoint(0, 0));
+        this->ui->outputTextEdit->setTextCursor(cursorPos);
     }
 }
 
