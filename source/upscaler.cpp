@@ -36,10 +36,10 @@ static bool isPixelFixed(const D1GfxPixel *pixel, const UpscalingParam &params)
 // TODO: merge with getPalColor in d1image.cpp ?
 static D1GfxPixel getPalColor(const UpscalingParam &params, QColor color)
 {
-    int res = 0;
+    unsigned res = 0;
     int best = INT_MAX;
 
-    for (int i = 0; i < params.dynColors.size(); i++) {
+    for (unsigned i = 0; i < params.dynColors.size(); i++) {
         QColor palColor = params.dynColors[i];
         int currR = color.red() - palColor.red();
         int currG = color.green() - palColor.green();
@@ -404,8 +404,8 @@ static bool SlowDownRight(int x, int y, std::vector<std::vector<D1GfxPixel>> &or
     // on the left border or [-1; 0] is alpha or [-1; 1] is not alpha
     /*if (x == 0 || origPixels[sy][sx - 1].isTransparent() || !origPixels[sy + 1][sx - 1].isTransparent()) {
         // on the bottom border or right border or [3; 3] is not alpha or [4; 3] is not alpha
-        int origHeight = origPixels.count();
-        int origWidth = origPixels[0].count();
+        int origHeight = origPixels.size();
+        int origWidth = origPixels[0].size();
         if (y == origHeight - 3 || x == origWidth - 4 || !origPixels[sy + 3][sx + 3].isTransparent() || !origPixels[sy + 3][sx + 4].isTransparent()) {
             return false;
         }
@@ -2507,7 +2507,7 @@ static bool RightTriangle(int x, int y, std::vector<std::vector<D1GfxPixel>> &or
     dx += x * multiplier;
 
     // not on the right border and [4; 2] is not alpha
-    int origWidth = origPixels[0].count();
+    int origWidth = origPixels[0].size();
     if (sx + 4 != origWidth && !origPixels[sy + 2][sx + 4].isTransparent()) {
         return false;
     }
@@ -2635,7 +2635,7 @@ static bool BottomTriangle(int x, int y, std::vector<std::vector<D1GfxPixel>> &o
     dx += x * multiplier;
 
     // not at the bottom border
-    int origHeight = origPixels.count();
+    int origHeight = origPixels.size();
     if (sy != origHeight - 2) {
         // [1; 2] .. [6; 2] is not alpha
         for (int i = 1; i < 7; i++) {
@@ -2688,7 +2688,7 @@ bool Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
                 upParams.dynColors.push_back(palColor);
             }
         }
-        if (upParams.dynColors.isEmpty()) {
+        if (upParams.dynColors.empty()) {
             upParams.dynColors.push_back(undefColor);
         }
     }
@@ -2926,7 +2926,7 @@ bool Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
                     for (int x = 0; x < halfWidth; x++) {
                         if (x >= (y * 2 - halfWidth)) {
                             int dx = x;
-                            int dy = newPixels.count() - halfWidth + y;
+                            int dy = newPixels.size() - halfWidth + y;
 
                             D1GfxPixel *pDest = &newPixels[dy][dx];
                             if (!pDest->isTransparent())
@@ -2966,7 +2966,7 @@ bool Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
                     for (int x = 0; x < halfWidth; x++) {
                         if (x >= (halfWidth - y * 2)) {
                             int dx = x;
-                            int dy = newPixels.count() - halfWidth + y;
+                            int dy = newPixels.size() - halfWidth + y;
 
                             D1GfxPixel *pDest = &newPixels[dy][dx];
                             if (!pDest->isTransparent())
@@ -3025,7 +3025,7 @@ bool Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
                     for (int x = 0; x < halfWidth; x++) {
                         if (x < (2 * halfWidth - y * 2)) {
                             int dx = halfWidth + x;
-                            int dy = newPixels.count() - halfWidth + y;
+                            int dy = newPixels.size() - halfWidth + y;
 
                             D1GfxPixel *pDest = &newPixels[dy][dx];
                             if (!pDest->isTransparent())
@@ -3065,7 +3065,7 @@ bool Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
                     for (int x = 0; x < halfWidth; x++) {
                         if (x < y * 2) {
                             int dx = halfWidth + x;
-                            int dy = newPixels.count() - halfWidth + y;
+                            int dy = newPixels.size() - halfWidth + y;
 
                             D1GfxPixel *pDest = &newPixels[dy][dx];
                             if (!pDest->isTransparent())
@@ -3212,7 +3212,7 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<qui
         }
         if (hasColor) {
             newFrames.append(new D1GfxFrame());
-            subtileFramesRefs.append(newFrames.count());
+            subtileFramesRefs.append(newFrames.size());
             D1GfxFrame *newFrame = newFrames.last();
             newFrame->width = MICRO_WIDTH;
             newFrame->height = MICRO_HEIGHT;
