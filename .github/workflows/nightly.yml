@@ -125,14 +125,14 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - name: Checkout
+    - name: checkout
       uses: actions/checkout@v3
 
     - name: dependencies
       run: sudo apt-get update && sudo apt-get install cmake qt6-base-dev libgl1-mesa-dev qt6-tools-dev qt6-l10n-tools qt6-tools-dev-tools
 
     - name: configure
-      run: cmake -S. -Bbuild -D CMAKE_BUILD_TYPE="Release"
+      run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 
     - name: make
       run: cmake --build build -j $(nproc)
@@ -140,7 +140,7 @@ jobs:
     - name: create zip
       run: zip -r -q D1GraphicsTool.zip build/D1GraphicsTool
 
-    - name: Upload-Package
+    - name: upload
       uses: actions/upload-artifact@v3
       with:
         path: D1GraphicsTool.zip
@@ -196,7 +196,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Release
-      uses: softprops/action-gh-release@v0.1.14
+      uses: softprops/action-gh-release@v0.1.15
       with:
         tag_name: dgt-nightly
         body_path: ${{ github.workspace }}/RELEASE_NOTE.md
