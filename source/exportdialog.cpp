@@ -665,9 +665,6 @@ void ExportDialog::on_exportButton_clicked()
         result = this->exportLevelTiles25D(outFolder);
         break;
     }
-    if (!result) {
-        this->show();
-    }
     ProgressDialog::done();
 }
 
