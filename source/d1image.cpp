@@ -57,22 +57,22 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, D1
                 pixelLine.push_back(D1GfxPixel::transparentPixel());
             } else {
                 auto iter = std::lower_bound(colorMap.begin(), colorMap.end(), color,
-                    [](const std::pair<QColor, D1GfxPixel>& colPix, const QColor &col) {
-                    if (colorMap.first.red() < col.red())
-                        return true;
-                    if (colorMap.first.red() != col.red())
-                        return false;
-                    if (colorMap.first.green() < col.green())
-                        return true;
-                    if (colorMap.first.green() != col.green())
-                        return false;
-                    return colorMap.first.blue() < col.blue();
-                });
+                    [](const std::pair<QColor, D1GfxPixel> &colPix, const QColor &col) {
+                        if (colPix.first.red() < col.red())
+                            return true;
+                        if (colPix.first.red() != col.red())
+                            return false;
+                        if (colPix.first.green() < col.green())
+                            return true;
+                        if (colPix.first.green() != col.green())
+                            return false;
+                        return colPix.first.blue() < col.blue();
+                    });
                 quint8 index;
                 if (iter == colorMap.end() || iter->first != color) {
                     index = getPalColor(colors, color);
                     if (colorMap.size() < CACHE_SIZE) {
-                        colorMap.insert(iter, str::pair<QColor, quint8>(color, index));
+                        colorMap.insert(iter, std::pair<QColor, quint8>(color, index));
                     }
                 } else {
                     index = iter->second;

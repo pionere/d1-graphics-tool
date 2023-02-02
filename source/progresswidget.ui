@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>ProgressWidget</class>
- <widget class="QFrame" name="ProgressWidget">
+ <widget class="QDialog" name="ProgressWidget">
   <property name="minimumHeight">
    <number>16</number>
   </property>
