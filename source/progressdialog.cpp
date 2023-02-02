@@ -17,7 +17,7 @@ ProgressDialog::ProgressDialog(QWidget *parent)
 {
     this->ui->setupUi(this);
 
-    connect(this->ui->outputTextEdit->verticalScrollBar(), &QScrollBar::valueChanged, this, SLOT(ProgressDialog::on_outputTextEdit_scrolled()));
+    connect(this->ui->outputTextEdit->verticalScrollBar(), &QScrollBar::valueChanged, this, &ProgressDialog::on_outputTextEdit_scrolled);
 
     theDialog = this;
 }
@@ -29,6 +29,7 @@ ProgressDialog::~ProgressDialog()
 
 void ProgressDialog::open()
 {
+    theWidget->setWindowModality(Qt::NonModal);
     theDialog->showNormal();
     theDialog->adjustSize();
 }
@@ -61,6 +62,8 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
 
     if (background) {
         theWidget->update(theDialog->status, true, label);
+        theWidget->setWindowModality(Qt::ApplicationModal);
+        // theDialog->showMinimized();
         return;
     }
     theWidget->update(theDialog->status, false, "");
@@ -285,9 +288,11 @@ void ProgressDialog::closeEvent(QCloseEvent *event)
 
 void ProgressDialog::changeEvent(QEvent *event)
 {
-    /*if (event->type() == QEvent::WindowStateChange && this->isMinimized()) {
+    if (event->type() == QEvent::WindowStateChange && this->isMinimized()) {
+        theWidget->setWindowModality(Qt::ApplicationModal);
+
         this->hide();
-    }*/
+    }
     if (event->type() == QEvent::LanguageChange) {
         this->ui->retranslateUi(this);
     }
