@@ -57,7 +57,6 @@ public:
     ProgressDialog &operator<<(QPair<int, QString> &tdxText);
 
 private slots:
-    void on_outputTextEdit_scrolled(int value);
     void on_detailsPushButton_clicked();
     void on_cancelPushButton_clicked();
     void on_closePushButton_clicked();
@@ -68,6 +67,7 @@ protected:
 
 private:
     bool incBarValue(int index, int amount);
+    void appendLine(const QString &line, bool replace);
     void removeLastLine();
 
 private:

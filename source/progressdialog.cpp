@@ -17,8 +17,6 @@ ProgressDialog::ProgressDialog(QWidget *parent)
 {
     this->ui->setupUi(this);
 
-    connect(this->ui->outputTextEdit->verticalScrollBar(), &QScrollBar::valueChanged, this, &ProgressDialog::on_outputTextEdit_scrolled);
-
     theDialog = this;
 }
 
@@ -192,16 +190,39 @@ ProgressDialog &dProgressFail()
     return *theDialog;
 }
 
+ProgressDialog::appendLine(const QString &line, bool replace)
+{
+    QPlainTextEdit *textEdit = this->ui->outputTextEdit;
+    QTextCursor cursor = textEdit->textCursor();
+    const int scrollValue = textEdit->verticalScrollBar()->value();
+    // The user has selected text or scrolled away from the bottom: maintain position.
+    const bool active = cursor.hasSelection() || scrollValue != textEdit->verticalScrollBar()->maximum();
+
+    // remove last line if replacing the text
+    if (replace) {
+        this->removeLastLine();
+    }
+    // Append the text at the end of the document.
+    PROGRESS_TEXT_MODE mode = this->textMode;
+    if (mode == PROGRESS_TEXT_MODE::NORMAL) {
+        textEdit->appendPlainText(line);
+    } else { // Using <pre> tag to allow multiple spaces
+        QString htmlText = QString("<p style=\"color:%1;white-space:pre\">%2</p>").arg(mode == PROGRESS_TEXT_MODE::ERROR ? "red" : "orange").arg(line);
+        textEdit->appendHtml(htmlText);
+    }
+
+    if (!active) {
+        // The user hasn't selected any text and the scrollbar is at the bottom: scroll to the bottom.
+        cursor->movePosition(QTextCursor::End, QTextCursor::MoveAnchor);
+        scrollValue = textEdit-verticalScrollBar()->maximum();
+    }
+    textEdit->setTextCursor(cursor);
+    textEdit->verticalScrollBar()->setValue(scrollValue);
+}
+
 ProgressDialog &ProgressDialog::operator<<(const QString &text)
 {
-    PROGRESS_TEXT_MODE mode = theDialog->textMode;
-
-    if (mode == PROGRESS_TEXT_MODE::NORMAL) {
-        this->ui->outputTextEdit->appendPlainText(text);
-    } else { // Using <pre> tag to allow multiple spaces
-        QString htmlText = QString("<p style=\"color:%1;white-space:pre\">%2</p>").arg(mode == PROGRESS_TEXT_MODE::ERROR ? "red" : "orange").arg(text);
-        this->ui->outputTextEdit->appendHtml(htmlText);
-    }
+    this->appendLine(text, false);
     this->textVersion++;
     return *this;
 }
@@ -218,7 +239,7 @@ void ProgressDialog::removeLastLine()
 ProgressDialog &ProgressDialog::operator<<(const QPair<QString, QString> &text)
 {
     // this->ui->outputTextEdit->setFocus();
-    QTextCursor storeCursorPos = this->ui->outputTextEdit->textCursor();
+    /*QTextCursor storeCursorPos = this->ui->outputTextEdit->textCursor();
     if (this->ui->outputTextEdit->textCursor().selectedText() == text.first) {
         this->removeLastLine();
     }
@@ -226,7 +247,8 @@ ProgressDialog &ProgressDialog::operator<<(const QPair<QString, QString> &text)
     this->ui->outputTextEdit->appendPlainText(text.second);
     if (lastCursorPos > storeCursorPos) {
         this->ui->outputTextEdit->setTextCursor(storeCursorPos);
-    }
+    }*/
+    this->appendLine(text, this->ui->outputTextEdit->textCursor().selectedText() == text.first);
     this->textVersion++;
     return *this;
 }
@@ -234,7 +256,7 @@ ProgressDialog &ProgressDialog::operator<<(const QPair<QString, QString> &text)
 ProgressDialog &ProgressDialog::operator<<(QPair<int, QString> &idxText)
 {
     // this->ui->outputTextEdit->setFocus();
-    QTextCursor storeCursorPos = this->ui->outputTextEdit->textCursor();
+    /*QTextCursor storeCursorPos = this->ui->outputTextEdit->textCursor();
     if (this->textVersion == idxText.first) {
         this->removeLastLine();
     }
@@ -242,23 +264,11 @@ ProgressDialog &ProgressDialog::operator<<(QPair<int, QString> &idxText)
     this->ui->outputTextEdit->appendPlainText(idxText.second);
     if (lastCursorPos > storeCursorPos) {
         this->ui->outputTextEdit->setTextCursor(storeCursorPos);
-    }
+    }*/
+    this->appendLine(text, this->textVersion == idxText.first);
     this->textVersion++;
     idxText.first = this->textVersion;
     return *this;
-}
-
-void ProgressDialog::on_outputTextEdit_scrolled(int value)
-{
-    if (this->ui->outputTextEdit->verticalScrollBar()->maximum() == value) {
-        this->ui->outputTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
-    } else {
-        this->ui->outputTextEdit->ensureCursorVisible();
-        /*QTextCursor cursorPos = this->ui->outputTextEdit->textCursor();
-        cursorPos.setPosition(value, QTextCursor::MoveAnchor);
-        // QTextCursor cursorPos = this->ui->outputTextEdit->cursorForPosition(QPoint(0, 0));
-        this->ui->outputTextEdit->setTextCursor(cursorPos);*/
-    }
 }
 
 void ProgressDialog::on_detailsPushButton_clicked()
