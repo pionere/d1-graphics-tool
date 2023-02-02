@@ -30,6 +30,7 @@ ProgressDialog::~ProgressDialog()
 void ProgressDialog::open()
 {
     theWidget->setWindowModality(Qt::NonModal);
+    theWidget->update(theDialog->status, false, "");
     theDialog->showNormal();
     theDialog->adjustSize();
 }
@@ -252,10 +253,11 @@ void ProgressDialog::on_outputTextEdit_scrolled(int value)
     if (this->ui->outputTextEdit->verticalScrollBar()->maximum() == value) {
         this->ui->outputTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
     } else {
-        QTextCursor cursorPos = this->ui->outputTextEdit->textCursor();
+        this->ui->outputTextEdit->ensureCursorVisible();
+        /*QTextCursor cursorPos = this->ui->outputTextEdit->textCursor();
         cursorPos.setPosition(value, QTextCursor::MoveAnchor);
         // QTextCursor cursorPos = this->ui->outputTextEdit->cursorForPosition(QPoint(0, 0));
-        this->ui->outputTextEdit->setTextCursor(cursorPos);
+        this->ui->outputTextEdit->setTextCursor(cursorPos);*/
     }
 }
 
@@ -290,7 +292,7 @@ void ProgressDialog::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::WindowStateChange && this->isMinimized()) {
         theWidget->setWindowModality(Qt::ApplicationModal);
-
+        theWidget->update(theDialog->status, true, this->windowTitle());
         this->hide();
     }
     if (event->type() == QEvent::LanguageChange) {
