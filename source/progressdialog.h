@@ -57,6 +57,7 @@ public:
     ProgressDialog &operator<<(QPair<int, QString> &tdxText);
 
 private slots:
+    void on_outputTextEdit_scrolled(int value);
     void on_detailsPushButton_clicked();
     void on_cancelPushButton_clicked();
     void on_closePushButton_clicked();

@@ -16,6 +16,8 @@ ProgressDialog::ProgressDialog(QWidget *parent)
 {
     this->ui->setupUi(this);
 
+    connect(this->ui->outputTextEdit->verticalScrollBar(), &QScrollBar::valueChanged, this, SLOT(ProgressDialog::on_outputTextEdit_scrolled()));
+
     theDialog = this;
 }
 
@@ -202,7 +204,7 @@ ProgressDialog &ProgressDialog::operator<<(const QString &text)
 void ProgressDialog::removeLastLine()
 {
     this->ui->outputTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
-    this->ui->outputTextEdit->moveCursor(QTextCursor::StartOfLine, QTextCursor::MoveAnchor);
+    this->ui->outputTextEdit->moveCursor(QTextCursor::StartOfBlock, QTextCursor::MoveAnchor);
     this->ui->outputTextEdit->moveCursor(QTextCursor::End, QTextCursor::KeepAnchor);
     this->ui->outputTextEdit->textCursor().removeSelectedText();
     this->ui->outputTextEdit->textCursor().deletePreviousChar(); // Added to trim the newline char when removing last line
@@ -239,6 +241,12 @@ ProgressDialog &ProgressDialog::operator<<(QPair<int, QString> &idxText)
     this->textVersion++;
     idxText.first = this->textVersion;
     return *this;
+}
+
+void ProgressDialog::on_outputTextEdit_scrolled(int value)
+{
+    QTextCursor cursor = this->ui->outputTextEdit->cursorForPosition(QPoint(0, 0));
+    this->ui->outputTextEdit->setTextCursor(cursor);
 }
 
 void ProgressDialog::on_detailsPushButton_clicked()
