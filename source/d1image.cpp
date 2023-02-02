@@ -46,8 +46,6 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, D1
     if (colors.empty()) {
         colors.push_back(undefColor);
     }
-    std::vector<std::pair<QColor, quint8>> colorMap;
-    constexpr int CACHE_SIZE = 512;
     for (int y = 0; y < frame.height; y++) {
         std::vector<D1GfxPixel> pixelLine;
         for (int x = 0; x < frame.width; x++) {
@@ -56,28 +54,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, D1
             if (color.alpha() < COLOR_ALPHA_LIMIT) {
                 pixelLine.push_back(D1GfxPixel::transparentPixel());
             } else {
-                auto iter = std::lower_bound(colorMap.begin(), colorMap.end(), color,
-                    [](const std::pair<QColor, quint8> &colPix, const QColor &col) {
-                        if (colPix.first.red() < col.red())
-                            return true;
-                        if (colPix.first.red() != col.red())
-                            return false;
-                        if (colPix.first.green() < col.green())
-                            return true;
-                        if (colPix.first.green() != col.green())
-                            return false;
-                        return colPix.first.blue() < col.blue();
-                    });
-                quint8 index;
-                if (iter == colorMap.end() || iter->first != color) {
-                    index = getPalColor(colors, color);
-                    if (colorMap.size() < CACHE_SIZE) {
-                        colorMap.insert(iter, std::pair<QColor, quint8>(color, index));
-                    }
-                } else {
-                    index = iter->second;
-                }
-                pixelLine.push_back(D1GfxPixel::colorPixel(index));
+                pixelLine.push_back(D1GfxPixel::colorPixel(getPalColor(colors, color)));
             }
         }
         frame.pixels.push_back(std::move(pixelLine));

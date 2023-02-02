@@ -62,6 +62,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     if (background) {
         theWidget->setWindowModality(Qt::ApplicationModal);
         theWidget->updateWidget(theDialog->status, true, label);
+        theWidget->setFocus();
         // theDialog->showMinimized();
         return;
     }
@@ -283,6 +284,8 @@ void ProgressDialog::changeEvent(QEvent *event)
     if (event->type() == QEvent::WindowStateChange && this->isMinimized()) {
         theWidget->setWindowModality(Qt::ApplicationModal);
         theWidget->updateWidget(theDialog->status, true, this->windowTitle());
+        theWidget->setFocus();
+
         this->hide();
     }
     if (event->type() == QEvent::LanguageChange) {
@@ -339,7 +342,7 @@ void ProgressWidget::updateWidget(PROGRESS_STATE status, bool active, const QStr
     this->ui->openPushButton->setIcon(this->style()->standardIcon(type));
     this->ui->messageLabel->setText(label);
     this->adjustSize();
-    //this->repaint();
+    // this->repaint();
     this->update();
     // QFrame::update();
 }
