@@ -194,7 +194,7 @@ void ProgressDialog::appendLine(const QString &line, bool replace)
 {
     QPlainTextEdit *textEdit = this->ui->outputTextEdit;
     QTextCursor cursor = textEdit->textCursor();
-    const int scrollValue = textEdit->verticalScrollBar()->value();
+    int scrollValue = textEdit->verticalScrollBar()->value();
     // The user has selected text or scrolled away from the bottom: maintain position.
     const bool active = cursor.hasSelection() || scrollValue != textEdit->verticalScrollBar()->maximum();
 
