@@ -159,9 +159,14 @@ QImage D1Til::getFlatTileImage(int tileIndex)
     return tile;
 }
 
-QString D1Til::getFilePath()
+QString D1Til::getFilePath() const
 {
     return this->tilFilePath;
+}
+
+const D1Min *D1Til::getMin() const
+{
+    return this->min;
 }
 
 bool D1Til::isModified() const

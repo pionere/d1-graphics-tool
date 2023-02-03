@@ -8,6 +8,15 @@
 #include "d1sol.h"
 #include "d1til.h"
 
+typedef struct ExportParam {
+    QString outFolder;
+    QString outFileExtension;
+    bool multi;
+    int rangeFrom;
+    int rangeTo;
+    int placement;
+} ExportParam;
+
 namespace Ui {
 class ExportDialog;
 }
@@ -36,12 +45,10 @@ private slots:
     void changeEvent(QEvent *event);
 
 private:
-    QString getFileFormatExtension();
-
-    bool exportLevelTiles25D(const QString &outFolder);
-    bool exportLevelTiles(const QString &outFolder);
-    bool exportLevelSubtiles(const QString &outFolder);
-    bool exportFrames(const QString &outFolder);
+    static bool exportLevelTiles25D(const D1Til *til, const ExportParam &params);
+    static bool exportLevelTiles(const D1Til *til, const ExportParam &params);
+    static bool exportLevelSubtiles(const D1Min *min, const ExportParam &params);
+    static bool exportFrames(const D1Gfx *gfx, const ExportParam &params);
 
     Ui::ExportDialog *ui;
 

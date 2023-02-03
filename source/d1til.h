@@ -25,7 +25,8 @@ public:
     void createTile();
     void removeTile(int tileIndex);
 
-    QString getFilePath();
+    QString getFilePath() const;
+    const D1Min *getMin() const;
     bool isModified() const;
     void setModified();
     int getTileCount();
