@@ -21,6 +21,7 @@ public:
     quint8 getTileProperties(int tileIndex);
     bool setTileType(int tileIndex, quint8 value);
     bool setTileProperties(int tileIndex, quint8 value);
+    void insertTile(int tileIndex);
     void createTile();
     void removeTile(int tileIndex);
 

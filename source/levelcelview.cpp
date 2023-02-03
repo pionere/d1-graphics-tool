@@ -861,6 +861,7 @@ void LevelCelView::insertTile(int tileIndex, const QImage &image)
     }
 
     this->til->insertTile(tileIndex, subtileIndices);
+    this->amp->insertTile(tileIndex);
 }
 
 void LevelCelView::insertTile(int tileIndex, const D1GfxFrame &frame)
@@ -888,6 +889,7 @@ void LevelCelView::insertTile(int tileIndex, const D1GfxFrame &frame)
     }
 
     this->til->insertTile(tileIndex, subtileIndices);
+    this->amp->insertTile(tileIndex);
 }
 
 void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QImage &image)

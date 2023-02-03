@@ -154,6 +154,13 @@ bool D1Amp::setTileProperties(int tileIndex, quint8 value)
     return true;
 }
 
+void D1Amp::insertTile(int tileIndex)
+{
+    this->types.insert(tileIndex, 0);
+    this->properties.insert(tileIndex, 0);
+    this->modified = true;
+}
+
 void D1Amp::createTile()
 {
     this->types.append(0);

@@ -60,13 +60,13 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
         theDialog->progressBars.append(progressBar);
     }
     theDialog->adjustSize();
+    theDialog->setWindowModality(background ? Qt::NonModal : Qt::ApplicationModal);
 
-    theWidget->updateWidget(theDialog->status, false, label);
+    theWidget->updateWidget(theDialog->status, background, label);
     if (background) {
         // theWidget->updateWidget(theDialog->status, true, label);
         // theWidget->setModality(true);
         // theWidget->setFocus();
-
         theDialog->showMinimized();
         return;
     }
