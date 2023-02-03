@@ -454,7 +454,7 @@ bool ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
 {
     QString fileName = QFileInfo(gfx->getFilePath()).fileName();
 
-    QString outputFilePathBase = outFolder + "/" + fileName.replace(".", "_");
+    QString outputFilePathBase = params.outFolder + "/" + fileName.replace(".", "_");
 
     int count = gfx->getFrameCount();
     int frameFrom = params.rangeFrom;

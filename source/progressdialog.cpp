@@ -207,7 +207,7 @@ void ProgressDialog::appendLine(const QString &line, bool replace)
         this->removeLastLine();
     }
     // Append the text at the end of the document.
-    const char* color;
+    const char *color;
     switch (this->textMode) {
     case PROGRESS_TEXT_MODE::NORMAL:
         color = "black";
