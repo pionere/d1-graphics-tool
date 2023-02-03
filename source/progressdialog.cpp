@@ -94,7 +94,7 @@ void ProgressDialog::done(bool forceOpen)
     } else if (theDialog->status == PROGRESS_STATE::CANCEL) {
         dProgress() << tr("Process cancelled.");
     }
-    if (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible()) && !forceOpen) {
+    if (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible() || theDialog->isMinimized()) && !forceOpen) {
         theDialog->hide();
     } else {
         theDialog->showNormal();
