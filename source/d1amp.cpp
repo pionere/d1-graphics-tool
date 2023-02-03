@@ -108,7 +108,7 @@ bool D1Amp::save(const SaveAsParam &params)
     return true;
 }
 
-QString D1Amp::getFilePath()
+QString D1Amp::getFilePath() const
 {
     return this->ampFilePath;
 }
@@ -118,7 +118,7 @@ bool D1Amp::isModified() const
     return this->modified;
 }
 
-quint8 D1Amp::getTileType(int tileIndex)
+quint8 D1Amp::getTileType(int tileIndex) const
 {
     // if (tileIndex < 0 || tileIndex >= this->types.count())
     //    return 0;
@@ -126,7 +126,7 @@ quint8 D1Amp::getTileType(int tileIndex)
     return this->types.at(tileIndex);
 }
 
-quint8 D1Amp::getTileProperties(int tileIndex)
+quint8 D1Amp::getTileProperties(int tileIndex) const
 {
     // if (tileIndex < 0 || tileIndex >= this->properties.count())
     //    return 0;

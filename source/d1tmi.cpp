@@ -102,7 +102,7 @@ bool D1Tmi::save(const SaveAsParam &params)
     return true;
 }
 
-QString D1Tmi::getFilePath()
+QString D1Tmi::getFilePath() const
 {
     return this->tmiFilePath;
 }
@@ -112,10 +112,10 @@ bool D1Tmi::isModified() const
     return this->modified;
 }
 
-quint8 D1Tmi::getSubtileProperties(int subtileIndex)
+quint8 D1Tmi::getSubtileProperties(int subtileIndex) const
 {
-    if (subtileIndex >= this->subProperties.count())
-        return 0;
+    // if (subtileIndex >= this->subProperties.count())
+    //    return 0;
 
     return this->subProperties.at(subtileIndex);
 }

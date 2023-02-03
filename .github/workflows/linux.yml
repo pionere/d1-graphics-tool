@@ -1,11 +1,10 @@
 name: Linux
 
-on: [ push, pull_request ]
-#on:
-#  push:
-#    branches: [ "master" ]
-#  pull_request:
-#    branches: [ "master" ]
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
 
 jobs:
   build:
@@ -20,37 +19,7 @@ jobs:
       run: sudo apt-get update && sudo apt-get install cmake qt6-base-dev libgl1-mesa-dev qt6-tools-dev qt6-l10n-tools qt6-tools-dev-tools
 
     - name: configure
-      #run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo
-      run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
-
-    - name: make
-      run: cmake --build build -j $(nproc)
-
-    - name: Show content of workspace
-      run: find $RUNNER_WORKSPACE
-      shell: bash
-
-    - name: Upload-Package
-      if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: D1GraphicsTool-Linux-x64
-        path: build/D1GraphicsTool
-
-  build_b:
-
-    runs-on: ubuntu-22.04
-
-    steps:
-    - name: checkout
-      uses: actions/checkout@v3
-
-    - name: dependencies
-      run: sudo apt-get update && sudo apt-get install cmake qt6-base-dev libgl1-mesa-dev qt6-tools-dev qt6-l10n-tools qt6-tools-dev-tools
-
-    - name: configure
       run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo
-      #run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release
 
     - name: make
       run: cmake --build build -j $(nproc)

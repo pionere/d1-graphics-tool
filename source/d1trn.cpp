@@ -63,17 +63,17 @@ void D1Trn::refreshResultingPalette()
     }
 }
 
-QColor D1Trn::getResultingColor(quint8 index)
+QColor D1Trn::getResultingColor(quint8 index) const
 {
     return this->resultingPalette.getColor(index);
 }
 
-QString D1Trn::getFilePath()
+QString D1Trn::getFilePath() const
 {
     return this->trnFilePath;
 }
 
-quint8 D1Trn::getTranslation(quint8 index)
+quint8 D1Trn::getTranslation(quint8 index) const
 {
     return this->translations[index];
 }
@@ -90,7 +90,7 @@ void D1Trn::setPalette(D1Pal *pal)
     this->palette = pal;
 }
 
-D1Pal *D1Trn::getResultingPalette()
+D1Pal *D1Trn::getResultingPalette() const
 {
     return &this->resultingPalette;
 }

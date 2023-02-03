@@ -235,11 +235,6 @@ ProgressDialog &ProgressDialog::operator<<(const QString &text)
 
 void ProgressDialog::removeLastLine()
 {
-    /*this->ui->outputTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
-    this->ui->outputTextEdit->moveCursor(QTextCursor::StartOfLine, QTextCursor::MoveAnchor);
-    this->ui->outputTextEdit->moveCursor(QTextCursor::End, QTextCursor::KeepAnchor);
-    this->ui->outputTextEdit->textCursor().removeSelectedText();
-    this->ui->outputTextEdit->textCursor().deletePreviousChar(); // Added to trim the newline char when removing last line*/
     QTextCursor cursor = QTextCursor(this->ui->outputTextEdit->document()->lastBlock());
     cursor.select(QTextCursor::BlockUnderCursor);
     cursor.removeSelectedText();

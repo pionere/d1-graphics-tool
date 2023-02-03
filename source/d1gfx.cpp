@@ -339,7 +339,7 @@ QString D1Gfx::getFilePath() const
     return this->gfxFilePath;
 }
 
-D1Pal *D1Gfx::getPalette()
+D1Pal *D1Gfx::getPalette() const
 {
     return this->palette;
 }

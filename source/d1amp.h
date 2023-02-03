@@ -15,10 +15,10 @@ public:
     bool load(QString filePath, int tileCount, const OpenAsParam &params);
     bool save(const SaveAsParam &params);
 
-    QString getFilePath();
+    QString getFilePath() const;
     bool isModified() const;
-    quint8 getTileType(int tileIndex);
-    quint8 getTileProperties(int tileIndex);
+    quint8 getTileType(int tileIndex) const;
+    quint8 getTileProperties(int tileIndex) const;
     bool setTileType(int tileIndex, quint8 value);
     bool setTileProperties(int tileIndex, quint8 value);
     void insertTile(int tileIndex);
