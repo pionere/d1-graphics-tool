@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QScrollBar>
 #include <QStyle>
+#include <QTextBlock>
 
 #include "ui_progressdialog.h"
 #include "ui_progresswidget.h"
@@ -192,7 +193,9 @@ void ProgressDialog::appendLine(const QString &line, bool replace)
     // Append the text at the end of the document.
     PROGRESS_TEXT_MODE mode = this->textMode;
     if (mode == PROGRESS_TEXT_MODE::NORMAL) {
-        textEdit->appendPlainText(line);
+        // using appendHtml instead of appendPlainText because Qt can not handle mixed appends...
+        // (the new block inherits the properties of previous/selected block which might be colored due to the code below)
+        textEdit->appendHtml(line);
     } else { // Using <pre> tag to allow multiple spaces
         QString htmlText = QString("<p style=\"color:%1;white-space:pre\">%2</p>").arg(mode == PROGRESS_TEXT_MODE::ERROR ? "red" : "orange").arg(line);
         textEdit->appendHtml(htmlText);
@@ -216,16 +219,13 @@ ProgressDialog &ProgressDialog::operator<<(const QString &text)
 
 void ProgressDialog::removeLastLine()
 {
-    this->ui->outputTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
-    this->ui->outputTextEdit->moveCursor(QTextCursor::StartOfLine, QTextCursor::MoveAnchor);
-    this->ui->outputTextEdit->moveCursor(QTextCursor::End, QTextCursor::KeepAnchor);
-    this->ui->outputTextEdit->textCursor().removeSelectedText();
-    this->ui->outputTextEdit->textCursor().deletePreviousChar(); // Added to trim the newline char when removing last line
+    QTextCursor cursor = QTextCursor(this->ui->outputTextEdit->document()->lastBlock());
+    cursor.select(QTextCursor::BlockUnderCursor);
+    cursor.removeSelectedText();
 }
 
 ProgressDialog &ProgressDialog::operator<<(const QPair<QString, QString> &text)
 {
-    // this->ui->outputTextEdit->setFocus();
     this->appendLine(text.second, this->ui->outputTextEdit->textCursor().selectedText() == text.first);
     this->textVersion++;
     return *this;
@@ -233,7 +233,6 @@ ProgressDialog &ProgressDialog::operator<<(const QPair<QString, QString> &text)
 
 ProgressDialog &ProgressDialog::operator<<(QPair<int, QString> &idxText)
 {
-    // this->ui->outputTextEdit->setFocus();
     this->appendLine(idxText.second, this->textVersion == idxText.first);
     this->textVersion++;
     idxText.first = this->textVersion;
