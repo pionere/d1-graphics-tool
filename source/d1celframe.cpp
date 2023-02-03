@@ -1,6 +1,6 @@
 #include "d1celframe.h"
 
-D1CelPixelGroup::D1CelPixelGroup(bool t, quint16 c)
+D1CelPixelGroup::D1CelPixelGroup(bool t, unsigned c)
     : transparent(t)
     , pixelCount(c)
 {
@@ -11,12 +11,12 @@ bool D1CelPixelGroup::isTransparent() const
     return this->transparent;
 }
 
-quint16 D1CelPixelGroup::getPixelCount()
+unsigned D1CelPixelGroup::getPixelCount() const
 {
     return this->pixelCount;
 }
 
-bool D1CelFrame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &params)
+bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsParam &params)
 {
     if (rawData.size() == 0)
         return false;
@@ -96,7 +96,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
     return true;
 }
 
-quint16 D1CelFrame::computeWidthFromHeader(QByteArray &rawFrameData)
+unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
 {
     // Reading the frame header
     QDataStream in(rawFrameData);
@@ -109,7 +109,7 @@ quint16 D1CelFrame::computeWidthFromHeader(QByteArray &rawFrameData)
         return 0; // invalid header
 
     // Decode the 32 pixel-lines blocks to calculate the image width
-    quint16 celFrameWidth = 0;
+    unsigned celFrameWidth = 0;
     quint16 lastFrameOffset = celFrameHeaderSize;
     for (int i = 0; i < (celFrameHeaderSize / 2) - 1; i++) {
         quint16 nextFrameOffset;
@@ -117,7 +117,7 @@ quint16 D1CelFrame::computeWidthFromHeader(QByteArray &rawFrameData)
         if (nextFrameOffset == 0)
             break;
 
-        quint16 pixelCount = 0;
+        unsigned pixelCount = 0;
         for (int j = lastFrameOffset; j < nextFrameOffset; j++) {
             quint8 readByte = rawFrameData[j];
 
@@ -129,7 +129,7 @@ quint16 D1CelFrame::computeWidthFromHeader(QByteArray &rawFrameData)
             }
         }
 
-        quint16 width = pixelCount / CEL_BLOCK_HEIGHT;
+        unsigned width = pixelCount / CEL_BLOCK_HEIGHT;
         // The calculated width has to be the identical for each 32 pixel-line block
         // If it's not the case, 0 is returned
         if (celFrameWidth != 0 && celFrameWidth != width)
@@ -142,12 +142,12 @@ quint16 D1CelFrame::computeWidthFromHeader(QByteArray &rawFrameData)
     return celFrameWidth;
 }
 
-quint16 D1CelFrame::computeWidthFromData(QByteArray &rawFrameData)
+unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData)
 {
-    quint16 biggestGroupPixelCount = 0;
-    quint16 pixelCount = 0;
-    quint16 width = 0;
-    QList<D1CelPixelGroup *> pixelGroups;
+    unsigned biggestGroupPixelCount = 0;
+    unsigned pixelCount = 0;
+    unsigned width = 0;
+    std::vector<D1CelPixelGroup> pixelGroups;
 
     // Checking the presence of the {CEL FRAME HEADER}
     quint32 frameDataStartOffset = 0;
@@ -155,14 +155,14 @@ quint16 D1CelFrame::computeWidthFromData(QByteArray &rawFrameData)
         frameDataStartOffset = 0x0A;
 
     // Going through the frame data to find pixel groups
-    quint32 globalPixelCount = 0;
+    unsigned globalPixelCount = 0;
     for (int o = frameDataStartOffset; o < rawFrameData.size(); o++) {
         quint8 readByte = rawFrameData[o];
 
         // Transparent pixels group
         if (readByte > 0x80) {
             pixelCount += (256 - readByte);
-            pixelGroups.append(new D1CelPixelGroup(true, pixelCount));
+            pixelGroups.push_back(D1CelPixelGroup(true, pixelCount));
             globalPixelCount += pixelCount;
             if (pixelCount > biggestGroupPixelCount)
                 biggestGroupPixelCount = pixelCount;
@@ -176,7 +176,7 @@ quint16 D1CelFrame::computeWidthFromData(QByteArray &rawFrameData)
             o += 0x7F;
         } else {
             pixelCount += readByte;
-            pixelGroups.append(new D1CelPixelGroup(false, pixelCount));
+            pixelGroups.push_back(D1CelPixelGroup(false, pixelCount));
             globalPixelCount += pixelCount;
             if (pixelCount > biggestGroupPixelCount)
                 biggestGroupPixelCount = pixelCount;
@@ -188,9 +188,9 @@ quint16 D1CelFrame::computeWidthFromData(QByteArray &rawFrameData)
     // Going through pixel groups to find pixel-lines wraps
     pixelCount = 0;
     for (int i = 1; i < pixelGroups.size(); i++) {
-        pixelCount += pixelGroups[i - 1]->getPixelCount();
+        pixelCount += pixelGroups[i - 1].getPixelCount();
 
-        if (pixelGroups[i - 1]->isTransparent() == pixelGroups[i]->isTransparent()) {
+        if (pixelGroups[i - 1].isTransparent() == pixelGroups[i].isTransparent()) {
             // If width == 0 then it's the first pixel-line wrap and width needs to be set
             // If pixelCount is less than width then the width has to be set to the new value
             if (width == 0 || pixelCount < width)
@@ -199,8 +199,8 @@ quint16 D1CelFrame::computeWidthFromData(QByteArray &rawFrameData)
             // If the pixelCount of the last group is less than the current pixel group
             // then width is equal to this last pixel group's pixel count.
             // Mostly useful for small frames like the "J" frame in smaltext.cel
-            if (i == pixelGroups.size() - 1 && pixelGroups[i]->getPixelCount() < pixelCount)
-                width = pixelGroups[i]->getPixelCount();
+            if (i == pixelGroups.size() - 1 && pixelGroups[i].getPixelCount() < pixelCount)
+                width = pixelGroups[i].getPixelCount();
 
             pixelCount = 0;
         }
@@ -208,35 +208,31 @@ quint16 D1CelFrame::computeWidthFromData(QByteArray &rawFrameData)
         // If last pixel group is being processed and width is still unknown
         // then set the width to the pixelCount of the last two pixel groups
         if (i == pixelGroups.size() - 1 && width == 0) {
-            width = pixelGroups[i - 1]->getPixelCount() + pixelGroups[i]->getPixelCount();
+            width = pixelGroups[i - 1].getPixelCount() + pixelGroups[i].getPixelCount();
         }
     }
 
     // If width wasnt found return 0
     if (width == 0) {
-        qDeleteAll(pixelGroups);
         return 0;
     }
 
     // If width is consistent
-    if (globalPixelCount % width == 0) {
-        qDeleteAll(pixelGroups);
+    if ((globalPixelCount % width) == 0) {
         return width;
     }
 
     // Try to find  relevant width by adding pixel groups' pixel counts iteratively
     pixelCount = 0;
     for (int i = 0; i < pixelGroups.size(); i++) {
-        pixelCount += pixelGroups[i]->getPixelCount();
+        pixelCount += pixelGroups[i].getPixelCount();
         if (pixelCount > 1
-            && globalPixelCount % pixelCount == 0
+            && (globalPixelCount % pixelCount) == 0
             && pixelCount >= biggestGroupPixelCount) {
-            qDeleteAll(pixelGroups);
             return pixelCount;
         }
     }
 
-    qDeleteAll(pixelGroups);
     // If still no width found return 0
     return 0;
 }

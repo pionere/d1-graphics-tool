@@ -9,21 +9,21 @@
 class D1CelPixelGroup {
 public:
     D1CelPixelGroup() = default;
-    D1CelPixelGroup(bool, quint16);
+    D1CelPixelGroup(bool transparent, unsigned pixelCount);
 
     bool isTransparent() const;
-    quint16 getPixelCount();
+    unsigned getPixelCount() const;
 
 private:
     bool transparent = false;
-    quint16 pixelCount = 0;
+    unsigned pixelCount = 0;
 };
 
 class D1CelFrame {
 public:
-    static bool load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &params);
+    static bool load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsParam &params);
 
 private:
-    static quint16 computeWidthFromHeader(QByteArray &);
-    static quint16 computeWidthFromData(QByteArray &);
+    static unsigned computeWidthFromHeader(const QByteArray &rawData);
+    static unsigned computeWidthFromData(const QByteArray &rawData);
 };

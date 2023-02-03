@@ -20,10 +20,10 @@ public:
     void removeSubtile(int subtileIndex);
     void remapSubtiles(const QMap<unsigned, unsigned> &remap);
 
-    QString getFilePath();
+    QString getFilePath() const;
     bool isModified() const;
-    quint16 getSubtileCount();
-    quint8 getSubtileProperties(int subtileIndex);
+    int getSubtileCount() const;
+    quint8 getSubtileProperties(int subtileIndex) const;
     bool setSubtileProperties(int subtileIndex, quint8 value);
 
 private:

@@ -83,7 +83,7 @@ bool D1Sol::save(const SaveAsParam &params)
     return true;
 }
 
-QString D1Sol::getFilePath()
+QString D1Sol::getFilePath() const
 {
     return this->solFilePath;
 }
@@ -93,12 +93,12 @@ bool D1Sol::isModified() const
     return this->modified;
 }
 
-quint16 D1Sol::getSubtileCount()
+int D1Sol::getSubtileCount() const
 {
     return this->subProperties.count();
 }
 
-quint8 D1Sol::getSubtileProperties(int subtileIndex)
+quint8 D1Sol::getSubtileProperties(int subtileIndex) const
 {
     if (subtileIndex >= this->subProperties.count())
         return 0;

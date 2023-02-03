@@ -155,7 +155,7 @@ bool D1Pal::isModified() const
     return this->modified;
 }
 
-QString D1Pal::getFilePath()
+QString D1Pal::getFilePath() const
 {
     return this->palFilePath;
 }
@@ -170,7 +170,7 @@ void D1Pal::setUndefinedColor(QColor color)
     this->undefinedColor = color;
 }
 
-QColor D1Pal::getColor(quint8 index)
+QColor D1Pal::getColor(quint8 index) const
 {
     return this->colors[index];
 }

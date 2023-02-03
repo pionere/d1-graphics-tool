@@ -20,10 +20,10 @@ public:
     bool isModified() const;
 
     void refreshResultingPalette();
-    QColor getResultingColor(quint8 index);
+    QColor getResultingColor(quint8 index) const;
 
-    QString getFilePath();
-    quint8 getTranslation(quint8 index);
+    QString getFilePath() const;
+    quint8 getTranslation(quint8 index) const;
     void setTranslation(quint8 index, quint8 color);
     void setPalette(D1Pal *pal);
     D1Pal *getResultingPalette();

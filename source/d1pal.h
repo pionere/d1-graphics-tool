@@ -34,10 +34,10 @@ public:
 
     bool isModified() const;
 
-    QString getFilePath();
+    QString getFilePath() const;
     QColor getUndefinedColor() const;
     void setUndefinedColor(QColor color);
-    QColor getColor(quint8 index);
+    QColor getColor(quint8 index) const;
     void setColor(quint8 index, QColor);
 
     void updateColors(const D1Pal &opal);

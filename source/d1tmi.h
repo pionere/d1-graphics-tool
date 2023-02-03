@@ -23,9 +23,9 @@ public:
     void removeSubtile(int subtileIndex);
     void remapSubtiles(const QMap<unsigned, unsigned> &remap);
 
-    QString getFilePath();
+    QString getFilePath() const;
     bool isModified() const;
-    quint8 getSubtileProperties(int subtileIndex);
+    quint8 getSubtileProperties(int subtileIndex) const;
     bool setSubtileProperties(int subtileIndex, quint8 value);
 
 private:
