@@ -90,7 +90,7 @@ void D1Trn::setPalette(D1Pal *pal)
     this->palette = pal;
 }
 
-D1Pal *D1Trn::getResultingPalette() const
+D1Pal *D1Trn::getResultingPalette()
 {
     return &this->resultingPalette;
 }

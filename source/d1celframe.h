@@ -12,7 +12,7 @@ public:
     D1CelPixelGroup(bool transparent, unsigned pixelCount);
 
     bool isTransparent() const;
-    unsigned getPixelCount();
+    unsigned getPixelCount() const;
 
 private:
     bool transparent = false;

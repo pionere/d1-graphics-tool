@@ -11,7 +11,7 @@ bool D1CelPixelGroup::isTransparent() const
     return this->transparent;
 }
 
-unsigned D1CelPixelGroup::getPixelCount()
+unsigned D1CelPixelGroup::getPixelCount() const
 {
     return this->pixelCount;
 }

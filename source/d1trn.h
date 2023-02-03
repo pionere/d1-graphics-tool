@@ -26,7 +26,7 @@ public:
     quint8 getTranslation(quint8 index) const;
     void setTranslation(quint8 index, quint8 color);
     void setPalette(D1Pal *pal);
-    D1Pal *getResultingPalette() const;
+    D1Pal *getResultingPalette();
 
 private:
     QString trnFilePath;

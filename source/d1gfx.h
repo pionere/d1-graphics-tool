@@ -113,7 +113,7 @@ public:
     QString getFilePath() const;
     bool isModified() const;
     void setModified(bool modified = true);
-    D1Pal *getPalette() const;
+    D1Pal *getPalette();
     void setPalette(D1Pal *pal);
     int getGroupCount() const;
     QPair<quint16, quint16> getGroupFrameIndices(int groupIndex) const;
