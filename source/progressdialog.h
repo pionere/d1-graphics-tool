@@ -96,7 +96,7 @@ public:
     ~ProgressWidget();
 
 private:
-    void setModality(bool modal);
+    // void setModality(bool modal);
     void updateWidget(PROGRESS_STATE status, bool active, const QString &text);
 
 private slots:

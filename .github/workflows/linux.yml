@@ -1,10 +1,11 @@
 name: Linux
 
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+on: [ push, pull_request ]
+#on:
+#  push:
+#    branches: [ "master" ]
+#  pull_request:
+#    branches: [ "master" ]
 
 jobs:
   build:
@@ -12,16 +13,30 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v3
+    - name: checkout
+      uses: actions/checkout@v3
+
     - name: dependencies
       run: sudo apt-get update && sudo apt-get install cmake qt6-base-dev libgl1-mesa-dev qt6-tools-dev qt6-l10n-tools qt6-tools-dev-tools
+
     - name: configure
       run: cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=RelWithDebInfo
+
     - name: make
       run: cmake --build build -j $(nproc)
+
     - name: Upload-Package
       if: ${{ !env.ACT }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: D1GraphicsTool-Linux-x64
         path: build/D1GraphicsTool
+
+    - name: create zip
+      run: zip -r -q D1GraphicsTool.zip build/D1GraphicsTool
+
+    - name: Upload-Zip
+      uses: actions/upload-artifact@v3
+      with:
+        path: D1GraphicsTool.zip
+        name: D1GraphicsTool-Linux-x64.zip

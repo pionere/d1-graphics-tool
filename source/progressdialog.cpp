@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QScrollBar>
 #include <QStyle>
+#include <QTextBlock>
 
 #include "ui_progressdialog.h"
 #include "ui_progresswidget.h"
@@ -28,7 +29,7 @@ ProgressDialog::~ProgressDialog()
 void ProgressDialog::openDialog()
 {
     // theWidget->updateWidget(theDialog->status, false, "");
-    theWidget->setModality(false);
+    // theWidget->setModality(false);
 
     theDialog->showNormal();
     theDialog->adjustSize();
@@ -36,7 +37,7 @@ void ProgressDialog::openDialog()
 
 void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars)
 {
-    bool background = mode == PROGRESS_DIALOG_STATE::BACKGROUND;
+    bool background = true; // mode == PROGRESS_DIALOG_STATE::BACKGROUND;
 
     theDialog->setWindowTitle(label);
     theDialog->ui->outputTextEdit->document()->clear();
@@ -60,13 +61,13 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     }
     theDialog->adjustSize();
 
-    theWidget->updateWidget(theDialog->status, background, label);
+    theWidget->updateWidget(theDialog->status, false, label);
     if (background) {
         // theWidget->updateWidget(theDialog->status, true, label);
-        theWidget->setModality(true);
-        theWidget->setFocus();
+        // theWidget->setModality(true);
+        // theWidget->setFocus();
 
-        // theDialog->showMinimized();
+        theDialog->showMinimized();
         return;
     }
     // theWidget->updateWidget(theDialog->status, false, "");
@@ -207,21 +208,14 @@ void ProgressDialog::appendLine(const QString &line, bool replace)
         this->removeLastLine();
     }
     // Append the text at the end of the document.
-    const char *color;
-    switch (this->textMode) {
-    case PROGRESS_TEXT_MODE::NORMAL:
-        color = "black";
-        break;
-    case PROGRESS_TEXT_MODE::WARNING:
-        color = "orange";
-        break;
-    default: // case PROGRESS_TEXT_MODE::ERROR:
-        color = "red";
-        break;
+    PROGRESS_TEXT_MODE textMode = this->textMode;
+    if (textMode == PROGRESS_TEXT_MODE::NORMAL) {
+        textEdit->appendHtml(line); // because Qt can not handle mixed appends...
+    } else {
+        // Using <pre> tag to allow multiple spaces
+        QString htmlText = QString("<p style=\"color:%1;white-space:pre\">%2</p>").arg(textMode == PROGRESS_TEXT_MODE::WARNING ? "orange" : "red").arg(line);
+        textEdit->appendHtml(htmlText);
     }
-    // Using <pre> tag to allow multiple spaces
-    QString htmlText = QString("<p style=\"color:%1;white-space:pre\">%2</p>").arg(color).arg(line);
-    textEdit->appendHtml(htmlText);
 
     if (!active) {
         // The user hasn't selected any text and the scrollbar is at the bottom: scroll to the bottom.
@@ -241,11 +235,14 @@ ProgressDialog &ProgressDialog::operator<<(const QString &text)
 
 void ProgressDialog::removeLastLine()
 {
-    this->ui->outputTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
+    /*this->ui->outputTextEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
     this->ui->outputTextEdit->moveCursor(QTextCursor::StartOfLine, QTextCursor::MoveAnchor);
     this->ui->outputTextEdit->moveCursor(QTextCursor::End, QTextCursor::KeepAnchor);
     this->ui->outputTextEdit->textCursor().removeSelectedText();
-    this->ui->outputTextEdit->textCursor().deletePreviousChar(); // Added to trim the newline char when removing last line
+    this->ui->outputTextEdit->textCursor().deletePreviousChar(); // Added to trim the newline char when removing last line*/
+    QTextCursor cursor = QTextCursor(this->ui->outputTextEdit->document()->lastBlock());
+    cursor.select(QTextCursor::BlockUnderCursor);
+    cursor.removeSelectedText();
 }
 
 ProgressDialog &ProgressDialog::operator<<(const QPair<QString, QString> &text)
@@ -292,13 +289,13 @@ void ProgressDialog::closeEvent(QCloseEvent *event)
 
 void ProgressDialog::changeEvent(QEvent *event)
 {
-    if (event->type() == QEvent::WindowStateChange && this->isMinimized()) {
+    /*if (event->type() == QEvent::WindowStateChange && this->isMinimized()) {
         theWidget->updateWidget(theDialog->status, true, this->windowTitle());
         theWidget->setModality(true);
         theWidget->setFocus();
 
         this->hide();
-    }
+    }*/
     if (event->type() == QEvent::LanguageChange) {
         this->ui->retranslateUi(this);
     }
@@ -326,12 +323,12 @@ ProgressWidget::~ProgressWidget()
     delete ui;
 }
 
-void ProgressWidget::setModality(bool modal)
+/*void ProgressWidget::setModality(bool modal)
 {
     this->hide();
     this->setWindowModality(modal ? Qt::ApplicationModal : Qt::NonModal);
     this->show();
-}
+}*/
 
 void ProgressWidget::updateWidget(PROGRESS_STATE status, bool active, const QString &label)
 {
