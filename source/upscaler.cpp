@@ -3274,7 +3274,8 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
 
     // update min
     min->subtileWidth *= params.multiplier;
-    min->subtileHeight *= params.multiplier;
+    // min->subtileHeight *= params.multiplier;
+    min->subtileHeight = 8 * min->subtileWidth / 2; // padding...
     min->frameReferences.swap(newFrameReferences);
     min->modified = true;
 

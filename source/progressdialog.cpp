@@ -37,7 +37,7 @@ void ProgressDialog::openDialog()
 
 void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars)
 {
-    bool background = true; // mode == PROGRESS_DIALOG_STATE::BACKGROUND;
+    bool background = mode == PROGRESS_DIALOG_STATE::BACKGROUND;
 
     theDialog->setWindowTitle(label);
     theDialog->ui->outputTextEdit->document()->clear();
