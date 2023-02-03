@@ -19,17 +19,18 @@ public:
     bool load(QString filePath, D1Min *min);
     bool save(const SaveAsParam &params);
 
-    QImage getTileImage(int tileIndex);
-    QImage getFlatTileImage(int tileIndex);
+    QImage getTileImage(int tileIndex) const;
+    QImage getFlatTileImage(int tileIndex) const;
     void insertTile(int tileIndex, const QList<quint16> &subtileIndices);
     void createTile();
     void removeTile(int tileIndex);
 
-    QString getFilePath();
+    QString getFilePath() const;
+    const D1Min *getMin() const;
     bool isModified() const;
     void setModified();
-    int getTileCount();
-    QList<quint16> &getSubtileIndices(int tileIndex);
+    int getTileCount() const;
+    QList<quint16> &getSubtileIndices(int tileIndex) const;
     bool setSubtileIndex(int tileIndex, int index, int subtileIndex);
 
 private:

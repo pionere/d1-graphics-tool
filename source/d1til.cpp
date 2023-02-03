@@ -102,7 +102,7 @@ bool D1Til::save(const SaveAsParam &params)
     return true;
 }
 
-QImage D1Til::getTileImage(int tileIndex)
+QImage D1Til::getTileImage(int tileIndex) const
 {
     if (tileIndex < 0 || tileIndex >= this->subtileIndices.size())
         return QImage();
@@ -138,7 +138,7 @@ QImage D1Til::getTileImage(int tileIndex)
     return tile;
 }
 
-QImage D1Til::getFlatTileImage(int tileIndex)
+QImage D1Til::getFlatTileImage(int tileIndex) const
 {
     if (tileIndex < 0 || tileIndex >= this->subtileIndices.size())
         return QImage();
@@ -159,9 +159,14 @@ QImage D1Til::getFlatTileImage(int tileIndex)
     return tile;
 }
 
-QString D1Til::getFilePath()
+QString D1Til::getFilePath() const
 {
     return this->tilFilePath;
+}
+
+const D1Min *D1Til::getMin() const
+{
+    return this->min;
 }
 
 bool D1Til::isModified() const
@@ -174,12 +179,12 @@ void D1Til::setModified()
     this->modified = true;
 }
 
-int D1Til::getTileCount()
+int D1Til::getTileCount() const
 {
     return this->subtileIndices.count();
 }
 
-QList<quint16> &D1Til::getSubtileIndices(int tileIndex)
+QList<quint16> &D1Til::getSubtileIndices(int tileIndex) const
 {
     return const_cast<QList<quint16> &>(this->subtileIndices.at(tileIndex));
 }
