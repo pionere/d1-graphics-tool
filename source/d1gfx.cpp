@@ -149,7 +149,7 @@ D1Gfx::~D1Gfx()
     this->frames.clear();
 }
 
-bool D1Gfx::isFrameSizeConstant()
+bool D1Gfx::isFrameSizeConstant() const
 {
     if (this->frames.isEmpty()) {
         return false;
@@ -168,7 +168,7 @@ bool D1Gfx::isFrameSizeConstant()
 }
 
 // builds QImage from a D1CelFrame of given index
-QImage D1Gfx::getFrameImage(quint16 frameIndex)
+QImage D1Gfx::getFrameImage(quint16 frameIndex) const
 {
     if (this->palette == nullptr || frameIndex >= this->frames.count())
         return QImage();

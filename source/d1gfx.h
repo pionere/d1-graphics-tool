@@ -96,8 +96,8 @@ public:
     D1Gfx() = default;
     ~D1Gfx();
 
-    bool isFrameSizeConstant();
-    QImage getFrameImage(quint16 frameIndex);
+    bool isFrameSizeConstant() const;
+    QImage getFrameImage(quint16 frameIndex) const;
     D1GfxFrame *insertFrame(int frameIndex, bool *clipped);
     D1GfxFrame *insertFrame(int frameIndex, const QImage &image);
     D1GfxFrame *addToFrame(int frameIndex, const QImage &image);

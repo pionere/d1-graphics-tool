@@ -207,13 +207,21 @@ void ProgressDialog::appendLine(const QString &line, bool replace)
         this->removeLastLine();
     }
     // Append the text at the end of the document.
-    PROGRESS_TEXT_MODE mode = this->textMode;
-    if (mode == PROGRESS_TEXT_MODE::NORMAL) {
-        textEdit->appendPlainText(line);
-    } else { // Using <pre> tag to allow multiple spaces
-        QString htmlText = QString("<p style=\"color:%1;white-space:pre\">%2</p>").arg(mode == PROGRESS_TEXT_MODE::ERROR ? "red" : "orange").arg(line);
-        textEdit->appendHtml(htmlText);
+    const char* color;
+    switch (this->textMode) {
+    case PROGRESS_TEXT_MODE::NORMAL:
+        color = "black";
+        break;
+    case PROGRESS_TEXT_MODE::WARNING:
+        color = "orange";
+        break;
+    default: // case PROGRESS_TEXT_MODE::ERROR:
+        color = "red";
+        break;
     }
+    // Using <pre> tag to allow multiple spaces
+    QString htmlText = QString("<p style=\"color:%1;white-space:pre\">%2</p>").arg(color).arg(line);
+    textEdit->appendHtml(htmlText);
 
     if (!active) {
         // The user hasn't selected any text and the scrollbar is at the bottom: scroll to the bottom.
