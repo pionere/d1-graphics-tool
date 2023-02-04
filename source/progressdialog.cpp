@@ -69,7 +69,7 @@ void DPromise::setProgressValue(int value)
 
 ProgressThread::ProgressThread(std::function<void()> &&cf)
     : QThread()
-    , callFunc(&cf)
+    , callFunc(cf)
 {
 }
 

@@ -682,7 +682,7 @@ void ExportDialog::on_exportButton_clicked()
         }
     });
     ProgressDialog::setupAsync(future);*/
-    auto func = [type, til, min, gfx, params]() {
+    std::function<void()> func = [type, til, min, gfx, params]() {
         switch (type) {
         case 0:
             ExportDialog::exportFrames(gfx, params);
