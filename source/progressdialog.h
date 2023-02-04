@@ -38,6 +38,7 @@ class DPromise : public QObject {
 public:
     bool isCanceled();
     void cancel();
+    void setProgressValue(int value);
 
 signals:
     void progressValueChanged();
@@ -56,6 +57,8 @@ public:
     void run() override;
 
     void cancel();
+private:
+    void reportResults();
 
 signals:
     void resultReady();

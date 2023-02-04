@@ -29,7 +29,7 @@ typedef struct TaskMessage {
             bool replace;
         };
     };
-    QString msg;
+    QString text;
 } TaskMessage;
 
 // task-properties - shared
@@ -51,13 +51,20 @@ static bool taskErrorOnFail;
 
 bool DPromise::isCanceled()
 {
-    this->status >= PROGRESS_STATE::CANCEL;
+    return this->status >= PROGRESS_STATE::CANCEL;
 }
 
 void DPromise::cancel()
 {
     if (this->status < PROGRESS_STATE::CANCEL)
         this->status = PROGRESS_STATE::CANCEL;
+}
+
+void DPromise::setProgressValue(int value)
+{
+    (void)value;
+
+    emit this->progressValueChanged();
 }
 
 void ProgressThread::run()
@@ -115,7 +122,8 @@ void ProgressDialog::consumeMessages()
             break;
         }
 
-        TaskMessage msg = sharedQueue.pop();
+        TaskMessage msg = sharedQueue.front();
+        sharedQueue.pop();
 
         sharedMutex.unlock();
 
@@ -124,7 +132,7 @@ void ProgressDialog::consumeMessages()
             ProgressDialog::incValue();
             break;
         case TMSG_INCBAR:
-            ProgressDialog::incBar(msg.label, msg.value);
+            ProgressDialog::incBar(msg.text, msg.value);
             break;
         case TMSG_DECBAR:
             ProgressDialog::decBar();
@@ -133,7 +141,7 @@ void ProgressDialog::consumeMessages()
             /*switch (msg.textMode) {
             theDialog->status
             }*/
-            theDialog->appendLine(msg.textMode, msg.label, msg.replace);
+            theDialog->appendLine(msg.textMode, msg.text, msg.replace);
             break;
         }
     }
@@ -439,7 +447,7 @@ ProgressDialog &ProgressDialog::operator<<(const QString &text)
     } else {
         this->appendLine(taskTextMode, text, false);
     }
-    taskTextLastLine = text.second;
+    taskTextLastLine = text;
     taskTextVersion++;
     return *this;
 }
@@ -463,7 +471,7 @@ ProgressDialog &ProgressDialog::operator<<(QPair<int, QString> &idxText)
 {
     this->appendLine(taskTextMode, idxText.second, taskTextVersion == idxText.first);
     taskTextVersion++;
-    taskTextLastLine = text.second;
+    taskTextLastLine = idxText.second;
     idxText.first = taskTextVersion;
     return *this;
 }
