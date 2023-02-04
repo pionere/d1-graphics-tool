@@ -3,6 +3,7 @@
 #include <QDialog>
 #include <QFrame>
 #include <QProgressBar>
+#include <QtConcurrent>
 
 namespace Ui {
 class ProgressDialog;
@@ -27,6 +28,8 @@ enum class PROGRESS_TEXT_MODE {
     NORMAL,
     WARNING,
     ERROR,
+
+    PROC,
 };
 
 class ProgressDialog : public QDialog {
@@ -37,8 +40,16 @@ public:
     ~ProgressDialog();
 
     static void openDialog();
+
     static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars);
     static void done(bool forceOpen = false);
+
+    static void setupAsync(QFuture<void> &&future, bool forceOpen = false);
+    static void setupThread(QPromise<void> *promise);
+    static bool progressCanceled();
+    static void incProgressBar(const QString &label, int maxValue);
+    static void decProgressBar();
+    static bool incProgress();
 
     static void incBar(const QString &label, int maxValue);
     static void decBar();
@@ -48,6 +59,7 @@ public:
     static bool incMainValue(int amount);
 
     friend ProgressDialog &dProgress();
+    friend ProgressDialog &dProgressProc();
     friend ProgressDialog &dProgressWarn();
     friend ProgressDialog &dProgressErr();
     friend ProgressDialog &dProgressFail();
@@ -67,13 +79,13 @@ protected:
 
 private:
     bool incBarValue(int index, int amount);
-    void appendLine(const QString &line, bool replace);
+    void appendLine(PROGRESS_TEXT_MODE textMode, const QString &line, bool replace);
     void removeLastLine();
+    static void consumeMessages();
 
 private:
     Ui::ProgressDialog *ui;
 
-    int textVersion;
     QList<QProgressBar *> progressBars;
     int activeBars;
     bool errorOnFail;
@@ -82,6 +94,7 @@ private:
 };
 
 ProgressDialog &dProgress();
+ProgressDialog &dProgressProc();
 ProgressDialog &dProgressWarn();
 ProgressDialog &dProgressErr();
 ProgressDialog &dProgressFail();

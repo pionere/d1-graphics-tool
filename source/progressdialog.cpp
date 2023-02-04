@@ -1,5 +1,7 @@
 #include "progressdialog.h"
 
+#include <queue>
+
 #include <QFontMetrics>
 #include <QMessageBox>
 #include <QScrollBar>
@@ -11,6 +13,76 @@
 
 static ProgressDialog *theDialog;
 static ProgressWidget *theWidget;
+
+typedef enum task_message_type {
+    TMSG_PROGRESS,
+    TMSG_INCBAR,
+    TMSG_DECBAR,
+    TMSG_LOGMSG,
+} task_message_type;
+typedef struct TaskMessage {
+    task_message_type type;
+    union {
+        int value;
+        struct {
+            PROGRESS_TEXT_MODE textMode;
+            bool replace;
+        };
+    };
+    QString msg;
+} TaskMessage;
+
+// task-properties
+static QMutex taskMutex;
+static std::queue<TaskMessage> taskQueue;
+
+static int taskProgress;            // progression in the task's thread
+static QPromise<void> *taskPromise; // the promise object of the task
+static int taskTextVersion;
+static QString taskTextLastLine;
+
+static void sendMsg(TaskMessage &msg)
+{
+    taskMutex.lock();
+
+    taskQueue.push(msg);
+
+    taskMutex.unlock();
+
+    taskProgress++;
+    taskPromise->setProgressValue(taskProgress);
+}
+
+void ProgressDialog::consumeMessages()
+{
+    while (true) {
+        taskMutex.lock();
+
+        if (taskQueue.empty()) {
+            taskMutex.unlock();
+            break;
+        }
+
+        TaskMessage msg = taskQueue.pop();
+
+        taskMutex.unlock();
+
+        switch (msg.type) {
+        case TMSG_PROGRESS:
+            ProgressDialog::incValue();
+            break;
+        case TMSG_INCBAR:
+            ProgressDialog::incBar(msg.label, msg.value);
+            break;
+        case TMSG_DECBAR:
+            ProgressDialog::decBar();
+            break;
+        case TMSG_LOGMSG:
+            theDialog->appendLine(msg.textMode, msg.label, msg.replace);
+            break;
+        }
+    }
+}
 
 ProgressDialog::ProgressDialog(QWidget *parent)
     : QDialog(parent, Qt::WindowStaysOnTopHint | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint)
@@ -39,9 +111,11 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
 {
     bool background = mode == PROGRESS_DIALOG_STATE::BACKGROUND;
 
+    taskTextVersion = 0;
+    taskTextLastLine.clear();
+
     theDialog->setWindowTitle(label);
     theDialog->ui->outputTextEdit->document()->clear();
-    theDialog->textVersion = 0;
     theDialog->activeBars = 0;
     theDialog->errorOnFail = false;
     theDialog->status = PROGRESS_STATE::RUNNING;
@@ -92,7 +166,7 @@ void ProgressDialog::done(bool forceOpen)
     if (theDialog->status == PROGRESS_STATE::RUNNING) {
         theDialog->status = PROGRESS_STATE::DONE;
     } else if (theDialog->status == PROGRESS_STATE::CANCEL) {
-        dProgress() << tr("Process cancelled.");
+        dProgress() << QApplication::tr("Process cancelled.");
     }
     if (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible() || theDialog->isMinimized()) && !forceOpen) {
         theDialog->hide();
@@ -103,6 +177,54 @@ void ProgressDialog::done(bool forceOpen)
     }
 
     theWidget->updateWidget(theDialog->status, !theDialog->ui->outputTextEdit->document()->isEmpty(), "");
+}
+
+void ProgressDialog::setupAsync(QFuture<void> &&future, bool forceOpen = false)
+{
+    QFutureWatcher<void> watcher = new QFutureWatcher<void>();
+    QObject::connect(watcher, &QFutureWatcher<void>::progressValueChanged, [](int progress) {
+        ProgressDialog::consumeMessages();
+    });
+    QObject::connect(watcher, &QFutureWatcher<void>::finished, [forceOpen]() {
+        ProgressDialog::done(forceOpen);
+        watcher->deleteLater();
+    });
+    watcher->setFuture(future);
+}
+
+void ProgressDialog::setupThread(QPromise<void> *promise)
+{
+    taskPromise = promise;
+    taskProgress = 0;
+}
+
+bool ProgressDialog::progressCanceled()
+{
+    return taskPromise->isCanceled();
+}
+
+void ProgressDialog::incProgressBar(const QString &label, int maxValue)
+{
+    TaskMessage msg;
+    msg.type = TMSG_INCBAR;
+    msg.msg = label;
+    msg.value = maxValue;
+    sendMsg(msg);
+}
+
+void ProgressDialog::decProgressBar()
+{
+    TaskMessage msg;
+    msg.type = TMSG_DECBAR;
+    sendMsg(msg);
+}
+
+bool ProgressDialog::incProgress()
+{
+    TaskMessage msg;
+    msg.type = TMSG_PROGRESS;
+    sendMsg(msg);
+    return !taskPromise->isCanceled();
 }
 
 void ProgressDialog::incBar(const QString &label, int maxValue)
@@ -165,6 +287,12 @@ ProgressDialog &dProgress()
     return *theDialog;
 }
 
+ProgressDialog &dProgress()
+{
+    theDialog->textMode = PROGRESS_TEXT_MODE::PROC;
+    return *theDialog;
+}
+
 ProgressDialog &dProgressWarn()
 {
     if (theDialog->status < PROGRESS_STATE::WARN) {
@@ -195,7 +323,7 @@ ProgressDialog &dProgressFail()
     return *theDialog;
 }
 
-void ProgressDialog::appendLine(const QString &line, bool replace)
+void ProgressDialog::appendLine(PROGRESS_TEXT_MODE textMode, const QString &line, bool replace)
 {
     QPlainTextEdit *textEdit = this->ui->outputTextEdit;
     QTextCursor cursor = textEdit->textCursor();
@@ -208,7 +336,6 @@ void ProgressDialog::appendLine(const QString &line, bool replace)
         this->removeLastLine();
     }
     // Append the text at the end of the document.
-    PROGRESS_TEXT_MODE textMode = this->textMode;
     if (textMode == PROGRESS_TEXT_MODE::NORMAL) {
         textEdit->appendHtml(line); // because Qt can not handle mixed appends...
     } else {
@@ -228,8 +355,18 @@ void ProgressDialog::appendLine(const QString &line, bool replace)
 
 ProgressDialog &ProgressDialog::operator<<(const QString &text)
 {
-    this->appendLine(text, false);
-    this->textVersion++;
+    if (this->textMode == PROGRESS_TEXT_MODE::PROC) {
+        TaskMessage msg;
+        msg.type = TMSG_LOGMSG;
+        msg.msg = text;
+        msg.textMode = PROGRESS_TEXT_MODE::NORMAL;
+        msg.replace = false;
+        sendMsg(msg);
+    } else {
+        this->appendLine(this->textMode, text, false);
+    }
+    taskTextLastLine = text.second;
+    taskTextVersion++;
     return *this;
 }
 
@@ -242,16 +379,18 @@ void ProgressDialog::removeLastLine()
 
 ProgressDialog &ProgressDialog::operator<<(const QPair<QString, QString> &text)
 {
-    this->appendLine(text.second, this->ui->outputTextEdit->textCursor().selectedText() == text.first);
-    this->textVersion++;
+    this->appendLine(this->textMode, text.second, taskTextLastLine == text.first);
+    taskTextVersion++;
+    taskTextLastLine = text.second;
     return *this;
 }
 
 ProgressDialog &ProgressDialog::operator<<(QPair<int, QString> &idxText)
 {
-    this->appendLine(idxText.second, this->textVersion == idxText.first);
-    this->textVersion++;
-    idxText.first = this->textVersion;
+    this->appendLine(this->textMode, idxText.second, taskTextVersion == idxText.first);
+    taskTextVersion++;
+    taskTextLastLine = text.second;
+    idxText.first = taskTextVersion;
     return *this;
 }
 
