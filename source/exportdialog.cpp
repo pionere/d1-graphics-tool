@@ -682,7 +682,7 @@ void ExportDialog::on_exportButton_clicked()
         }
     });
     ProgressDialog::setupAsync(future);*/
-    ProgressThread *future = ProgressDialog::setupAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Export"), 1, [type, til, min, gfx, params]() {
+    auto func = [type, til, min, gfx, params]() {
         switch (type) {
         case 0:
             ExportDialog::exportFrames(gfx, params);
@@ -697,7 +697,8 @@ void ExportDialog::on_exportButton_clicked()
             ExportDialog::exportLevelTiles25D(til, params);
             break;
         }
-    });
+    };
+    ProgressThread *future = ProgressDialog::setupAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Export"), 1, func);
     future->start();
 }
 
