@@ -3,7 +3,6 @@
 #include <QDialog>
 #include <QFrame>
 #include <QProgressBar>
-#include <QPromise>
 #include <QtConcurrent>
 
 namespace Ui {
@@ -47,8 +46,7 @@ private:
     PROGRESS_STATE status = PROGRESS_STATE::RUNNING;
 };
 
-class ProgressThread : public QThread
-{
+class ProgressThread : public QThread {
     Q_OBJECT
 
 public:
@@ -81,7 +79,7 @@ public:
 
     /*static void setupAsync(QFuture<void> &&future, bool forceOpen = false);
     static void setupThread(QPromise<void> *promise);*/
-    static void setupAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, void (*callFunc)(), bool forceOpen = false); 
+    static void setupAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, void (*callFunc)(), bool forceOpen = false);
     static bool progressCanceled();
     static void incProgressBar(const QString &label, int maxValue);
     static void decProgressBar();

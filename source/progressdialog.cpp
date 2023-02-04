@@ -37,13 +37,13 @@ static QMutex sharedMutex;
 static std::queue<TaskMessage> sharedQueue;
 
 // task-properties - main
-//static QFutureWatcher<void> *mainWatcher;
+// static QFutureWatcher<void> *mainWatcher;
 static ProgressThread *mainWatcher;
 
 // task-properties - thread
-//static QPromise<void> *taskPromise; // the promise object of the task
+// static QPromise<void> *taskPromise; // the promise object of the task
 static DPromise *taskPromise = nullptr; // the promise object of the task - TODO: use map with QThread::currentThreadId(); ?
-static int taskProgress;            // progression in the task's thread
+static int taskProgress;                // progression in the task's thread
 static int taskTextVersion;
 static QString taskTextLastLine;
 static PROGRESS_TEXT_MODE taskTextMode = PROGRESS_TEXT_MODE::NORMAL;
@@ -64,7 +64,7 @@ void ProgressThread::run()
 {
     DPromise *promise = new DPromise();
 
-    connect(this, &DPromise::cancelTask, promise, &DPromise::cancel, Qt::QueuedConnection);
+    connect(this, &ProgressThread::cancelTask, promise, &DPromise::cancel, Qt::QueuedConnection);
 
     // wait for other task to finish
     while (taskPromise != nullptr) {
@@ -77,7 +77,7 @@ void ProgressThread::run()
     taskPromise = promise;
     connect(taskPromise, &DPromise::progressValueChanged, this, &ProgressThread::reportResults, Qt::QueuedConnection);
 
-    callFunc(arg);
+    this->callFunc();
 
     delete taskPromise;
     taskPromise = nullptr;
