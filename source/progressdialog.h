@@ -33,6 +33,40 @@ enum class PROGRESS_TEXT_MODE {
     PROC,
 };
 
+class DPromise : public QObject {
+    Q_OBJECT
+
+public:
+    bool isCanceled();
+    void cancel();
+
+signals:
+    void progressValueChanged();
+
+private:
+    PROGRESS_STATE status = PROGRESS_STATE::RUNNING;
+};
+
+class ProgressThread : public QThread
+{
+    Q_OBJECT
+
+public:
+    explicit ProgressThread(void (*callFunc)());
+    ~ProgressThread();
+
+    void run() override;
+
+    void cancel();
+
+signals:
+    void resultReady();
+    void cancelTask();
+
+private:
+    void (*callFunc)();
+};
+
 class ProgressDialog : public QDialog {
     Q_OBJECT
 
@@ -45,8 +79,9 @@ public:
     static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars);
     static void done(bool forceOpen = false);
 
-    static void setupAsync(QFuture<void> &&future, bool forceOpen = false);
-    static void setupThread(QPromise<void> *promise);
+    /*static void setupAsync(QFuture<void> &&future, bool forceOpen = false);
+    static void setupThread(QPromise<void> *promise);*/
+    static void setupAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, void (*callFunc)(), bool forceOpen = false); 
     static bool progressCanceled();
     static void incProgressBar(const QString &label, int maxValue);
     static void decProgressBar();

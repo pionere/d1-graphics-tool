@@ -83,7 +83,7 @@ void ExportDialog::on_outputFolderBrowseButton_clicked()
 static void saveImage(const QImage &image, const QString &path)
 {
     image.save(path);
-    dProgress() << QApplication::tr("%1 created.").arg(QDir::toNativeSeparators(path));
+    dProgressProc() << QApplication::tr("%1 created.").arg(QDir::toNativeSeparators(path));
 }
 
 void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &params)
@@ -664,7 +664,7 @@ void ExportDialog::on_exportButton_clicked()
     D1Til *til = this->til;
     D1Min *min = this->min;
     D1Gfx *gfx = this->gfx;
-    QFuture<void> future = QtConcurrent::run([type, til, min, gfx, params](QPromise<void> &promise) {
+    /*QFuture<void> future = QtConcurrent::run([type, til, min, gfx, params](QPromise<void> &promise) {
         Progressdialog::setupThread(&promise);
         switch (type) {
         case 0:
@@ -681,7 +681,24 @@ void ExportDialog::on_exportButton_clicked()
             break;
         }
     });
-    ProgressDialog::setupAsync(future);
+    ProgressDialog::setupAsync(future);*/
+    ProgressThread *future = ProgressDialog::setupAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Export"), 1, [type, til, min, gfx, params]() {
+        switch (type) {
+        case 0:
+            ExportDialog::exportFrames(gfx, params);
+            break;
+        case 1:
+            ExportDialog::exportLevelSubtiles(min, params);
+            break;
+        case 2:
+            ExportDialog::exportLevelTiles(til, params);
+            break;
+        default: // case 3:
+            ExportDialog::exportLevelTiles25D(til, params);
+            break;
+        }
+    });
+    future->start();
 }
 
 void ExportDialog::on_exportCancelButton_clicked()
