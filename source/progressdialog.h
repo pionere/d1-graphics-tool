@@ -52,11 +52,12 @@ class ProgressThread : public QThread {
 
 public:
     explicit ProgressThread(void (*callFunc)());
-    ~ProgressThread();
+    ~ProgressThread() = default;
 
     void run() override;
 
     void cancel();
+
 private:
     void reportResults();
 
@@ -82,7 +83,7 @@ public:
 
     /*static void setupAsync(QFuture<void> &&future, bool forceOpen = false);
     static void setupThread(QPromise<void> *promise);*/
-    static void setupAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, void (*callFunc)(), bool forceOpen = false);
+    static ProgressThread *setupAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, void (*callFunc)(), bool forceOpen = false);
     static bool progressCanceled();
     static void incProgressBar(const QString &label, int maxValue);
     static void decProgressBar();

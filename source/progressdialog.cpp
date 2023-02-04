@@ -67,6 +67,12 @@ void DPromise::setProgressValue(int value)
     emit this->progressValueChanged();
 }
 
+ProgressThread::ProgressThread(void (*cf)())
+    : QThread()
+    , callFunc(cf)
+{
+}
+
 void ProgressThread::run()
 {
     DPromise *promise = new DPromise();
@@ -261,7 +267,7 @@ void ProgressDialog::setupThread(QPromise<void> *promise)
     taskPromise = promise;
     taskProgress = 0;
 }*/
-void ProgressDialog::setupAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, void (*callFunc)(), bool forceOpen)
+ProgressThread *ProgressDialog::setupAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, void (*callFunc)(), bool forceOpen)
 {
     ProgressDialog::start(mode, label, numBars);
 
@@ -287,7 +293,7 @@ void ProgressDialog::incProgressBar(const QString &label, int maxValue)
 {
     TaskMessage msg;
     msg.type = TMSG_INCBAR;
-    msg.msg = label;
+    msg.text = label;
     msg.value = maxValue;
     sendMsg(msg);
 
@@ -440,7 +446,7 @@ ProgressDialog &ProgressDialog::operator<<(const QString &text)
     if (taskTextMode == PROGRESS_TEXT_MODE::PROC) {
         TaskMessage msg;
         msg.type = TMSG_LOGMSG;
-        msg.msg = text;
+        msg.text = text;
         msg.textMode = PROGRESS_TEXT_MODE::NORMAL;
         msg.replace = false;
         sendMsg(msg);
