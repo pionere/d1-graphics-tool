@@ -45,10 +45,10 @@ private slots:
     void changeEvent(QEvent *event);
 
 private:
-    static bool exportLevelTiles25D(const D1Til *til, const ExportParam &params);
-    static bool exportLevelTiles(const D1Til *til, const ExportParam &params);
-    static bool exportLevelSubtiles(const D1Min *min, const ExportParam &params);
-    static bool exportFrames(const D1Gfx *gfx, const ExportParam &params);
+    static void exportLevelTiles25D(const D1Til *til, const ExportParam &params);
+    static void exportLevelTiles(const D1Til *til, const ExportParam &params);
+    static void exportLevelSubtiles(const D1Min *min, const ExportParam &params);
+    static void exportFrames(const D1Gfx *gfx, const ExportParam &params);
 
     Ui::ExportDialog *ui;
 

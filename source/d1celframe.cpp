@@ -187,7 +187,7 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData)
 
     // Going through pixel groups to find pixel-lines wraps
     pixelCount = 0;
-    for (int i = 1; i < pixelGroups.size(); i++) {
+    for (unsigned i = 1; i < pixelGroups.size(); i++) {
         pixelCount += pixelGroups[i - 1].getPixelCount();
 
         if (pixelGroups[i - 1].isTransparent() == pixelGroups[i].isTransparent()) {
@@ -224,7 +224,7 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData)
 
     // Try to find  relevant width by adding pixel groups' pixel counts iteratively
     pixelCount = 0;
-    for (int i = 0; i < pixelGroups.size(); i++) {
+    for (unsigned i = 0; i < pixelGroups.size(); i++) {
         pixelCount += pixelGroups[i].getPixelCount();
         if (pixelCount > 1
             && (globalPixelCount % pixelCount) == 0

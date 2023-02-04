@@ -3,6 +3,7 @@
 #include <QDialog>
 #include <QFrame>
 #include <QProgressBar>
+#include <QPromise>
 #include <QtConcurrent>
 
 namespace Ui {
@@ -88,9 +89,7 @@ private:
 
     QList<QProgressBar *> progressBars;
     int activeBars;
-    bool errorOnFail;
     PROGRESS_STATE status = PROGRESS_STATE::DONE;
-    PROGRESS_TEXT_MODE textMode = PROGRESS_TEXT_MODE::NORMAL;
 };
 
 ProgressDialog &dProgress();
