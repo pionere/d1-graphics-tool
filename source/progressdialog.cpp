@@ -67,9 +67,9 @@ void DPromise::setProgressValue(int value)
     emit this->progressValueChanged();
 }
 
-ProgressThread::ProgressThread(void (*cf)())
+ProgressThread::ProgressThread(std::function<void()>& cf)
     : QThread()
-    , callFunc(cf)
+    , callFunc(&cf)
 {
 }
 
@@ -281,7 +281,7 @@ ProgressThread *ProgressDialog::setupAsync(PROGRESS_DIALOG_STATE mode, const QSt
         mainWatcher->deleteLater();
         mainWatcher = nullptr;
     });
-    return thread;
+    return mainWatcher;
 }
 
 bool ProgressDialog::progressCanceled()

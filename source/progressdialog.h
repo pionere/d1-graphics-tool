@@ -51,7 +51,7 @@ class ProgressThread : public QThread {
     Q_OBJECT
 
 public:
-    explicit ProgressThread(void (*callFunc)());
+    explicit ProgressThread(std::function<void()>& callFunc);
     ~ProgressThread() = default;
 
     void run() override;
@@ -66,7 +66,7 @@ signals:
     void cancelTask();
 
 private:
-    void (*callFunc)();
+    std::function<void()> *callFunc;
 };
 
 class ProgressDialog : public QDialog {
@@ -83,7 +83,7 @@ public:
 
     /*static void setupAsync(QFuture<void> &&future, bool forceOpen = false);
     static void setupThread(QPromise<void> *promise);*/
-    static ProgressThread *setupAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, void (*callFunc)(), bool forceOpen = false);
+    static ProgressThread *setupAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, std::function<void()>& callFunc, bool forceOpen = false);
     static bool progressCanceled();
     static void incProgressBar(const QString &label, int maxValue);
     static void decProgressBar();
