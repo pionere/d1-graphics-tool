@@ -271,7 +271,7 @@ ProgressThread *ProgressDialog::setupAsync(PROGRESS_DIALOG_STATE mode, const QSt
 {
     ProgressDialog::start(mode, label, numBars);
 
-    mainWatcher = new ProgressThread(callFunc);
+    mainWatcher = new ProgressThread(std::move(callFunc));
 
     QObject::connect(mainWatcher, &ProgressThread::resultReady, []() {
         ProgressDialog::consumeMessages();
