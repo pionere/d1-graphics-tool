@@ -67,7 +67,7 @@ void DPromise::setProgressValue(int value)
     emit this->progressValueChanged();
 }
 
-ProgressThread::ProgressThread(std::function<void()>& cf)
+ProgressThread::ProgressThread(std::function<void()> &&cf)
     : QThread()
     , callFunc(&cf)
 {
@@ -267,7 +267,7 @@ void ProgressDialog::setupThread(QPromise<void> *promise)
     taskPromise = promise;
     taskProgress = 0;
 }*/
-ProgressThread *ProgressDialog::setupAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, void (*callFunc)(), bool forceOpen)
+ProgressThread *ProgressDialog::setupAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, std::function<void()> &&callFunc, bool forceOpen)
 {
     ProgressDialog::start(mode, label, numBars);
 
