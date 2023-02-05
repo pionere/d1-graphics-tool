@@ -199,7 +199,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     theDialog->ui->detailsPushButton->setText(background ? tr("Hide details") : tr("Show details"));
     theDialog->ui->cancelPushButton->setEnabled(true);
     theDialog->ui->progressButtonsWidget_1->setVisible(!background);
-    theDialog->ui->progressButtonsWidget_2->setVisible(background);
+    theDialog->ui->progressButtonsWidget_2->setVisible(false);
     for (int i = 0; i < numBars; i++) {
         QProgressBar *progressBar = new QProgressBar();
         progressBar->setEnabled(false);
@@ -528,7 +528,7 @@ void ProgressDialog::on_cancelPushButton_clicked()
     if (mainWatcher != nullptr) {
         mainWatcher->cancel();
         // wait for the task to finish
-        QDialog *blocker = new QDialog(this->parentWidget(), Qt::Tool | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
+        /*QDialog *blocker = new QDialog(this->parentWidget(), Qt::Tool | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
         blocker->show();
         QTimer *timer = new QTimer();
         QObject::connect(timer, &QTimer::timeout, [this, timer, blocker]() {
@@ -537,7 +537,7 @@ void ProgressDialog::on_cancelPushButton_clicked()
                 blocker->deleteLater();
             }
         });
-        timer->start(200);
+        timer->start(200);*/
         /*while (mainWatcher != nullptr) {
             QThread::msleep(200);
         }*/
