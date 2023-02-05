@@ -40,9 +40,6 @@ static std::queue<TaskMessage> sharedQueue;
 // static QFutureWatcher<void> *mainWatcher;
 static ProgressThread *mainWatcher = nullptr;
 
-static Qt::HANDLE mainThreadId;
-static Qt::HANDLE subThreadId;
-
 // task-properties - THREAD
 // static QPromise<void> *taskPromise; // the promise object of the task
 static DPromise *taskPromise = nullptr; // the promise object of the task - TODO: use map with QThread::currentThreadId(); ?
@@ -89,7 +86,6 @@ ProgressThread::ProgressThread(std::function<void()> &&cf)
 // THREAD
 void ProgressThread::run()
 {
-    subThreadId = QThread::currentThreadId();
     DPromise *promise = new DPromise();
 
     // connect(this, &ProgressThread::cancelTask, promise, &DPromise::cancel);
@@ -99,11 +95,11 @@ void ProgressThread::run()
     taskErrorOnFail = false;
     taskPromise = promise;
     connect(taskPromise, &DPromise::progressValueChanged, this, &ProgressThread::reportResults, Qt::QueuedConnection);
-    connect(taskPromise, &DPromise::finished, this, &ProgressThread::reportReady, Qt::QueuedConnection);
+    // connect(taskPromise, &DPromise::finished, this, &ProgressThread::reportReady, Qt::QueuedConnection);
 
     this->callFunc();
 
-    taskPromise->finish();
+    // taskPromise->finish();
 
     // this->sleep(20);
     // delete taskPromise;
@@ -126,10 +122,10 @@ void ProgressThread::reportResults()
 }
 
 // MAIN
-void ProgressThread::reportReady()
+/*void ProgressThread::reportReady()
 {
     emit this->taskReady();
-}
+}*/
 
 // THREAD
 static void sendMsg(TaskMessage &msg)
@@ -217,7 +213,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     theDialog->status = PROGRESS_STATE::RUNNING;
     theDialog->ui->progressLabel->setVisible(!background);
     theDialog->ui->progressLabel->setText("");
-    theDialog->ui->detailsGroupBox->setVisible(true); // background);
+    theDialog->ui->detailsGroupBox->setVisible(background);
     theDialog->ui->detailsPushButton->setText(background ? tr("Hide details") : tr("Show details"));
     theDialog->ui->cancelPushButton->setEnabled(true);
     theDialog->ui->progressButtonsWidget_1->setVisible(!background);
@@ -229,7 +225,6 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
         theDialog->ui->verticalLayout->insertWidget(1 + i, progressBar);
         theDialog->progressBars.append(progressBar);
     }
-	theDialog->ui->outputTextEdit->setMinimumHeight(1000);
     theDialog->adjustSize();
     // theDialog->setWindowModality(background ? Qt::NonModal : Qt::ApplicationModal);
 
@@ -248,8 +243,6 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
 
 void ProgressDialog::done(bool forceOpen)
 {
-	// QMessageBox::warning(nullptr, "Done", QString("Really. %1 vs %2").arg((int)mainThreadId).arg((int)subThreadId));
-
     theDialog->setWindowTitle(" ");
     theDialog->ui->progressLabel->setVisible(false);
     for (QProgressBar *progressBar : theDialog->progressBars) {
@@ -300,20 +293,19 @@ void ProgressDialog::setupThread(QPromise<void> *promise)
 }*/
 void ProgressDialog::startAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, std::function<void()> &&callFunc, bool forceOpen)
 {
-    mainThreadId = QThread::currentThreadId();
-
     theDialog->forceOpen = forceOpen;
     ProgressDialog::start(mode, label, numBars);
 
     mainWatcher = new ProgressThread(std::move(callFunc));
 
     QObject::connect(mainWatcher, &ProgressThread::resultReady, theDialog, &ProgressDialog::on_message_ready);
-    QObject::connect(mainWatcher, &ProgressThread::taskReady, theDialog, &ProgressDialog::on_task_finished); // runs in the context of the MAIN...
-    /*QObject::connect(mainWatcher, &ProgressThread::finished, []() {
+    // QObject::connect(mainWatcher, &ProgressThread::taskReady, theDialog, &ProgressDialog::on_task_finished); // runs in the context of the MAIN...
+    QObject::connect(mainWatcher, &ProgressThread::finished, theDialog, &ProgressDialog::on_task_finished); // runs in the context of the MAIN...
+    QObject::connect(mainWatcher, &ProgressThread::finished, []() {
         // runs in the context of the THREAD
         mainWatcher->deleteLater();
         mainWatcher = nullptr;
-    });*/
+    });
 
     mainWatcher->start();
 }
@@ -422,8 +414,8 @@ bool ProgressDialog::incValue()
 // MAIN
 void ProgressDialog::incProcValue()
 {
-	int index = theDialog->activeBars - 1;
-	int amount = 1;
+    int index = theDialog->activeBars - 1;
+    int amount = 1;
     QProgressBar *progressBar = theDialog->progressBars[index];
 
     amount += progressBar->value();
@@ -578,9 +570,9 @@ void ProgressDialog::on_cancelPushButton_clicked()
             }
         });
         timer->start(200);*/
-        /*while (mainWatcher != nullptr) {
+        while (mainWatcher != nullptr) {
             QThread::msleep(200);
-        }*/
+        }
     }
 }
 

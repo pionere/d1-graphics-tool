@@ -82,8 +82,14 @@ void ExportDialog::on_outputFolderBrowseButton_clicked()
 
 static void saveImage(const QImage &image, const QString &path)
 {
-    image.save(path);
-    dProgressProc() << QApplication::tr("%1 created.").arg(QDir::toNativeSeparators(path));
+    bool result = image.save(path);
+
+    QString msg = QDir::toNativeSeparators(path);
+    if (result)
+        msg = QApplication::tr("%1 created.").arg(msg);
+    else
+        msg = QApplication::tr("Failed to create %1.").arg(msg);
+    dProgressProc() << msg;
 }
 
 void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &params)
@@ -159,6 +165,10 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &para
     }
 
     tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
+    if (tempOutputImage.isNull()) {
+        dProgressProc() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
+        return;
+    }
     tempOutputImage.fill(Qt::transparent);
 
     QPainter painter(&tempOutputImage);
@@ -279,6 +289,10 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const ExportParam &params)
     }
 
     tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
+    if (tempOutputImage.isNull()) {
+        dProgressProc() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
+        return;
+    }
     tempOutputImage.fill(Qt::transparent);
 
     QPainter painter(&tempOutputImage);
@@ -401,6 +415,10 @@ void ExportDialog::exportLevelSubtiles(const D1Min *min, const ExportParam &para
     }
 
     tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
+    if (tempOutputImage.isNull()) {
+        dProgressProc() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
+        return;
+    }
     tempOutputImage.fill(Qt::transparent);
 
     QPainter painter(&tempOutputImage);
@@ -483,7 +501,7 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
         // one file for each frame (indexed)
         for (int i = frameFrom; i <= frameTo; i++) {
             // if (ProgressDialog::progressCanceled()) {
-            //    return false;
+            //    return;
             // }
             QString outputFilePath = outputFilePathBase + "_frame"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + params.outFileExtension;
@@ -549,46 +567,37 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
             tempOutputImageHeight = std::max(gfx->getFrameHeight(i), tempOutputImageHeight);
         }
     }
-//	QMessageBox::warning(nullptr, "Image", QString("%1 x %2").arg(tempOutputImageWidth).arg(tempOutputImageHeight));
     tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
     if (tempOutputImage.isNull()) {
-		dProgressProc() << "Failed to create image.";
-		return;
+        dProgressProc() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
+        return;
     }
     tempOutputImage.fill(Qt::transparent);
 
-dProgressProc() << QString("Image prepared w:%1 h:%2").arg(tempOutputImage.width()).arg(tempOutputImage.height());
     QPainter painter(&tempOutputImage);
 
-dProgressProc() << QString("Image painting i:%1 .. %2").arg(frameFrom).arg(frameTo);
     if (params.placement == 0) { // grouped
         if (gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
             // artifical grouping of a tileset
             int cursorY = 0;
             int cursorX = 0;
             int groupImageHeight = 0;
-//			bool debug = false;
             for (int i = frameFrom; i <= frameTo; i++) {
                 if (ProgressDialog::progressCanceled()) {
                     return;
                 }
 
                 if (((i - frameFrom) % EXPORT_LVLFRAMES_PER_LINE) == 0) {
-// dProgressProc() << QString("Image painting to x:%1 y:%2 - oy:%3").arg(cursorX).arg(cursorY).arg(cursorY - groupImageHeight);
                     cursorY += groupImageHeight;
                     cursorX = 0;
                     groupImageHeight = 0;
-//					if (cursorY != 0)
-//						debug = true;
                 }
+
                 const QImage image = gfx->getFrameImage(i);
-//if (debug)
-// dProgressProc() << QString("Image %1 painting to x:%2 y:%3 w:%4 h:%5").arg(i).arg(cursorX).arg(cursorY).arg(image.width()).arg(image.height());
                 painter.drawImage(cursorX, cursorY, image);
+
                 cursorX += image.width();
                 groupImageHeight = std::max(image.height(), groupImageHeight);
-//if (debug)
-// dProgressProc() << QString("Image painted to x:%1 .. %3 y:%2").arg(cursorX).arg(cursorX + image.width()).arg(cursorY);
                 if (!ProgressDialog::incProgress()) {
                     return;
                 }
@@ -636,9 +645,9 @@ dProgressProc() << QString("Image painting i:%1 .. %2").arg(frameFrom).arg(frame
             }
         }
     }
-dProgressProc() << "Image painted";
+
     painter.end();
-dProgressProc() << "Image saving";
+
     saveImage(tempOutputImage, outputFilePath);
 }
 
@@ -663,7 +672,6 @@ void ExportDialog::on_exportButton_clicked()
     D1Min *min = this->min;
     D1Gfx *gfx = this->gfx;
     std::function<void()> func = [type, til, min, gfx, params]() {
-		try {
         switch (type) {
         case 0:
             ExportDialog::exportFrames(gfx, params);
@@ -678,9 +686,6 @@ void ExportDialog::on_exportButton_clicked()
             ExportDialog::exportLevelTiles25D(til, params);
             break;
         }
-		} catch (...) {
-			dProgressProc() << tr("Export Failed.");
-		}
     };
     /*ProgressThread *future = */ ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Export"), 1, std::move(func));
     // future->start();

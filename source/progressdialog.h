@@ -62,11 +62,11 @@ public:
 
 private:
     void reportResults();
-    void reportReady();
+    // void reportReady();
 
 signals:
     void resultReady();
-    void taskReady();
+    // void taskReady();
     void cancelTask();
 
 private:
