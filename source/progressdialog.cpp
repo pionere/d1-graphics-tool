@@ -285,9 +285,7 @@ void ProgressDialog::startAsync(PROGRESS_DIALOG_STATE mode, const QString &label
     QObject::connect(mainWatcher, &ProgressThread::finished, []() {
         // runs in the context of the THREAD
         mainWatcher->deleteLater();
-        sharedMutex.lock();
         mainWatcher = nullptr;
-        sharedMutex.unlock();
     });
 
     mainWatcher->start();
@@ -527,17 +525,23 @@ void ProgressDialog::on_cancelPushButton_clicked()
         this->status = PROGRESS_STATE::CANCEL;
     }
     this->ui->cancelPushButton->setEnabled(false);
-    sharedMutex.lock();
     if (mainWatcher != nullptr) {
         mainWatcher->cancel();
         // wait for the task to finish
-        while (mainWatcher != nullptr) {
-            sharedMutex.unlock();
+        QDialog *blocker = new QDialog(this->parentWidget(), Qt::Tool | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
+        blocker->show();
+        QTimer *timer = new QTimer();
+        QObject::connect(timer, &QTimer::timeout, [this, timer, blocker]() {
+            if (mainWatcher == nullptr) {
+                timer->deleteLater();
+                blocker->deleteLater();
+            }
+        });
+        timer->start(200);
+        /*while (mainWatcher != nullptr) {
             QThread::msleep(200);
-            sharedMutex.lock();
-        }
+        }*/
     }
-    sharedMutex.unlock();
 }
 
 void ProgressDialog::on_closePushButton_clicked()

@@ -636,7 +636,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         QClipboard *clipboard = QGuiApplication::clipboard();
         QImage image = clipboard->image();
         if (!image.isNull()) {
-            ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0);
+            /*ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0);
 
             if (this->celView != nullptr) {
                 this->celView->pasteCurrent(image);
@@ -646,7 +646,17 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             }
             this->updateWindow();
             // Clear loading message from status bar
-            ProgressDialog::done();
+            ProgressDialog::done();*/
+            std::function<void()> func = [this]() {
+                if (this->celView != nullptr) {
+                    this->celView->pasteCurrent(image);
+                }
+                if (this->levelCelView != nullptr) {
+                    this->levelCelView->pasteCurrent(image);
+                }
+                this->updateWindow();
+            };
+            ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, std::move(func));
         }
     }
 
