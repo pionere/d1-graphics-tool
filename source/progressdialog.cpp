@@ -283,8 +283,8 @@ void ProgressDialog::startAsync(PROGRESS_DIALOG_STATE mode, const QString &label
         mainWatcher->deleteLater();
         mainWatcher = nullptr;
     });*/
-    QObject::connect(mainWatcher, &ProgressThread::resultReady, theDialog, SLOT(on_message_ready), Qt::QueuedConnection);
-    QObject::connect(mainWatcher, &ProgressThread::finished, theDialog, SLOT(on_task_finished), Qt::QueuedConnection);
+    QObject::connect(mainWatcher, SIGNAL(ProgressThread::resultReady()), theDialog, SLOT(on_message_ready()), Qt::QueuedConnection);
+    QObject::connect(mainWatcher, SIGNAL(ProgressThread::finished()), theDialog, SLOT(on_task_finished()), Qt::QueuedConnection);
     QObject::connect(mainWatcher, &ProgressThread::finished, []() {
         mainWatcher->deleteLater();
         mainWatcher = nullptr;
