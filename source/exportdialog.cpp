@@ -589,9 +589,9 @@ dProgressProc() << QString("Image painting i:%1 .. %2").arg(frameFrom).arg(frame
                 groupImageHeight = std::max(image.height(), groupImageHeight);
 //if (debug)
 // dProgressProc() << QString("Image painted to x:%1 .. %3 y:%2").arg(cursorX).arg(cursorX + image.width()).arg(cursorY);
-                /*if (!ProgressDialog::incProgress()) {
+                if (!ProgressDialog::incProgress()) {
                     return;
-                }*/
+                }
             }
         } else {
             int cursorY = 0;

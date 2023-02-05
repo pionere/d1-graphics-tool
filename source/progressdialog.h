@@ -92,6 +92,7 @@ public:
     static void incProgressBar(const QString &label, int maxValue);
     static void decProgressBar();
     static bool incProgress();
+    static void incProcValue();
 
     static void incBar(const QString &label, int maxValue);
     static void decBar();

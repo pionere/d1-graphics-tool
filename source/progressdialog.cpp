@@ -162,7 +162,7 @@ void ProgressDialog::consumeMessages()
 
         switch (msg.type) {
         case TMSG_PROGRESS:
-            ProgressDialog::incValue();
+            ProgressDialog::incProcValue();
             break;
         case TMSG_INCBAR:
             ProgressDialog::incBar(msg.text, msg.value);
@@ -417,6 +417,18 @@ bool ProgressDialog::incBarValue(int index, int amount)
 bool ProgressDialog::incValue()
 {
     return theDialog->incBarValue(theDialog->activeBars - 1, 1);
+}
+
+// MAIN
+void ProgressDialog::incProcValue()
+{
+	int index = theDialog->activeBars - 1;
+	int amount = 1;
+    QProgressBar *progressBar = theDialog->progressBars[index];
+
+    amount += progressBar->value();
+    progressBar->setValue(amount);
+    progressBar->setToolTip(QString("%1%").arg(amount * 100 / progressBar->maximum()));
 }
 
 bool ProgressDialog::incMainValue(int amount)
