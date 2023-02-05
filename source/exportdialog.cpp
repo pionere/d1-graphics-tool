@@ -81,8 +81,10 @@ void ExportDialog::on_outputFolderBrowseButton_clicked()
 
 static void saveImage(const QImage &image, const QString &path)
 {
-    image.save(path);
-    dProgress() << QApplication::tr("%1 created.").arg(QDir::toNativeSeparators(path));
+    if (image.save(path))
+        dProgress() << QApplication::tr("%1 created.").arg(QDir::toNativeSeparators(path));
+    else
+        dProgressFail() << QApplication::tr("Failed to create %1.").arg(QDir::toNativeSeparators(path));
 }
 
 void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &params)
@@ -158,6 +160,10 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &para
     }
 
     tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
+    if (tempOutputImage.isNull()) {
+        dProgressFail() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
+        return;
+    }
     tempOutputImage.fill(Qt::transparent);
 
     QPainter painter(&tempOutputImage);
@@ -278,6 +284,10 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const ExportParam &params)
     }
 
     tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
+    if (tempOutputImage.isNull()) {
+        dProgressFail() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
+        return;
+    }
     tempOutputImage.fill(Qt::transparent);
 
     QPainter painter(&tempOutputImage);
@@ -400,6 +410,10 @@ void ExportDialog::exportLevelSubtiles(const D1Min *min, const ExportParam &para
     }
 
     tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
+    if (tempOutputImage.isNull()) {
+        dProgressFail() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
+        return;
+    }
     tempOutputImage.fill(Qt::transparent);
 
     QPainter painter(&tempOutputImage);
@@ -549,6 +563,10 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
         }
     }
     tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
+    if (tempOutputImage.isNull()) {
+        dProgressFail() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
+        return;
+    }
     tempOutputImage.fill(Qt::transparent);
 
     QPainter painter(&tempOutputImage);
