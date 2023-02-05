@@ -573,14 +573,16 @@ dProgressProc() << "Image painting";
                 }
 
                 if (((i - frameFrom) % EXPORT_LVLFRAMES_PER_LINE) == 0) {
+dProgressProc() << QString("Image painting to x:%1 y:%2 - oy:%3").arg(cursorX).arg(cursorY).arg(cursorY - groupImageHeight);
                     cursorY += groupImageHeight;
                     cursorX = 0;
                     groupImageHeight = 0;
                 }
 
+//dProgressProc() << QString("Image painting to x:%1 y:%2").arg(cursorX).arg(cursorY);
                 const QImage image = gfx->getFrameImage(i);
                 painter.drawImage(cursorX, cursorY, image);
-
+//dProgressProc() << QString("Image painted to x:%1 y:%2").arg(cursorX).arg(cursorY);
                 cursorX += image.width();
                 groupImageHeight = std::max(image.height(), groupImageHeight);
                 if (!ProgressDialog::incProgress()) {

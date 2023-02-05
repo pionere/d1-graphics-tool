@@ -229,6 +229,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
         theDialog->ui->verticalLayout->insertWidget(1 + i, progressBar);
         theDialog->progressBars.append(progressBar);
     }
+	theDialog->ui->outputTextEdit->setMinimumHeight(1000);
     theDialog->adjustSize();
     // theDialog->setWindowModality(background ? Qt::NonModal : Qt::ApplicationModal);
 
