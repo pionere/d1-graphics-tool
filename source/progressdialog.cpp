@@ -63,6 +63,12 @@ void DPromise::cancel()
 }
 
 // THREAD
+void DPromise::finish()
+{
+    emit this->finished();
+}
+
+// THREAD
 void DPromise::setProgressValue(int value)
 {
     (void)value;
@@ -89,8 +95,11 @@ void ProgressThread::run()
     taskErrorOnFail = false;
     taskPromise = promise;
     connect(taskPromise, &DPromise::progressValueChanged, this, &ProgressThread::reportResults, Qt::QueuedConnection);
+    connect(taskPromise, &DPromise::finished, this, &ProgressThread::reportReady, Qt::QueuedConnection);
 
     this->callFunc();
+
+    taskPromise->finish();
 
     delete taskPromise;
     taskPromise = nullptr;
@@ -107,6 +116,12 @@ void ProgressThread::cancel()
 void ProgressThread::reportResults()
 {
     emit this->resultReady();
+}
+
+// MAIN
+void ProgressThread::reportReady()
+{
+    emit this->taskReady();
 }
 
 // THREAD
@@ -284,7 +299,6 @@ void ProgressDialog::startAsync(PROGRESS_DIALOG_STATE mode, const QString &label
     QObject::connect(mainWatcher, &ProgressThread::taskReady, theDialog, &ProgressDialog::on_task_finished); // runs in the context of the MAIN...
     QObject::connect(mainWatcher, &ProgressThread::finished, []() {
         // runs in the context of the THREAD
-        emit mainWatcher->taskReady();
         mainWatcher->deleteLater();
         mainWatcher = nullptr;
     });
