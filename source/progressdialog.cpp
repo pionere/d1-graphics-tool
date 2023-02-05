@@ -297,11 +297,11 @@ void ProgressDialog::startAsync(PROGRESS_DIALOG_STATE mode, const QString &label
 
     QObject::connect(mainWatcher, &ProgressThread::resultReady, theDialog, &ProgressDialog::on_message_ready);
     QObject::connect(mainWatcher, &ProgressThread::taskReady, theDialog, &ProgressDialog::on_task_finished); // runs in the context of the MAIN...
-    QObject::connect(mainWatcher, &ProgressThread::finished, []() {
+    /*QObject::connect(mainWatcher, &ProgressThread::finished, []() {
         // runs in the context of the THREAD
         mainWatcher->deleteLater();
         mainWatcher = nullptr;
-    });
+    });*/
 
     mainWatcher->start();
 }
