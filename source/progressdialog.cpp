@@ -101,7 +101,7 @@ void ProgressThread::run()
 
     taskPromise->finish();
 
-    sleep(2);
+    sleep(20);
 
     // delete taskPromise;
     taskPromise->deleteLater();
@@ -124,6 +124,7 @@ void ProgressThread::reportResults()
 // MAIN
 void ProgressThread::reportReady()
 {
+    QMessageBox::warning(nullptr, "Ready", "Just Ready....");
     emit this->taskReady();
 }
 
@@ -243,6 +244,8 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
 
 void ProgressDialog::done(bool forceOpen)
 {
+    QMessageBox::warning(nullptr, "Done", "Really....");
+
     theDialog->setWindowTitle(" ");
     theDialog->ui->progressLabel->setVisible(false);
     for (QProgressBar *progressBar : theDialog->progressBars) {
