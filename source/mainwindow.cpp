@@ -647,7 +647,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             this->updateWindow();
             // Clear loading message from status bar
             ProgressDialog::done();*/
-            std::function<void()> func = [this]() {
+            std::function<void()> func = [this, image]() {
                 if (this->celView != nullptr) {
                     this->celView->pasteCurrent(image);
                 }
