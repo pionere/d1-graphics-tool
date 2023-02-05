@@ -36,11 +36,11 @@ typedef struct TaskMessage {
 static QMutex sharedMutex;
 static std::queue<TaskMessage> sharedQueue;
 
-// task-properties - main
+// task-properties - MAIN
 // static QFutureWatcher<void> *mainWatcher;
 static ProgressThread *mainWatcher;
 
-// task-properties - thread
+// task-properties - THREAD
 // static QPromise<void> *taskPromise; // the promise object of the task
 static DPromise *taskPromise = nullptr; // the promise object of the task - TODO: use map with QThread::currentThreadId(); ?
 static int taskProgress;                // progression in the task's thread
@@ -49,17 +49,20 @@ static QString taskTextLastLine;
 static PROGRESS_TEXT_MODE taskTextMode = PROGRESS_TEXT_MODE::NORMAL;
 static bool taskErrorOnFail;
 
+// THREAD
 bool DPromise::isCanceled()
 {
     return this->status >= PROGRESS_STATE::CANCEL;
 }
 
+// MAIN (!)
 void DPromise::cancel()
 {
     if (this->status < PROGRESS_STATE::CANCEL)
         this->status = PROGRESS_STATE::CANCEL;
 }
 
+// THREAD
 void DPromise::setProgressValue(int value)
 {
     (void)value;
@@ -67,17 +70,19 @@ void DPromise::setProgressValue(int value)
     emit this->progressValueChanged();
 }
 
+// MAIN
 ProgressThread::ProgressThread(std::function<void()> &&cf)
     : QThread()
     , callFunc(cf)
 {
 }
 
+// THREAD
 void ProgressThread::run()
 {
     DPromise *promise = new DPromise();
 
-    connect(this, &ProgressThread::cancelTask, promise, &DPromise::cancel);
+    // connect(this, &ProgressThread::cancelTask, promise, &DPromise::cancel);
 
     // wait for other task to finish
     while (taskPromise != nullptr) {
@@ -88,7 +93,7 @@ void ProgressThread::run()
     // taskTextMode = PROGRESS_TEXT_MODE::NORMAL;
     taskErrorOnFail = false;
     taskPromise = promise;
-    connect(taskPromise, &DPromise::progressValueChanged, this, &ProgressThread::reportResults);
+    connect(taskPromise, &DPromise::progressValueChanged, this, &ProgressThread::reportResults, Qt::QueuedConnection);
 
     this->callFunc();
 
@@ -96,16 +101,20 @@ void ProgressThread::run()
     taskPromise = nullptr;
 }
 
+// MAIN (!)
 void ProgressThread::cancel()
 {
-    emit this->cancelTask();
+    // emit this->cancelTask();
+    taskPromise->cancel();
 }
 
+// MAIN
 void ProgressThread::reportResults()
 {
     emit this->resultReady();
 }
 
+// THREAD
 static void sendMsg(TaskMessage &msg)
 {
     sharedMutex.lock();
@@ -118,6 +127,7 @@ static void sendMsg(TaskMessage &msg)
     taskPromise->setProgressValue(taskProgress);
 }
 
+// MAIN
 void ProgressDialog::consumeMessages()
 {
     while (true) {
@@ -275,17 +285,10 @@ void ProgressDialog::startAsync(PROGRESS_DIALOG_STATE mode, const QString &label
 
     mainWatcher = new ProgressThread(std::move(callFunc));
 
-    /*QObject::connect(mainWatcher, &ProgressThread::resultReady, []() {
-        ProgressDialog::consumeMessages();
-    });
-    QObject::connect(mainWatcher, &ProgressThread::finished, [forceOpen]() {
-        ProgressDialog::done(forceOpen);
-        mainWatcher->deleteLater();
-        mainWatcher = nullptr;
-    });*/
-    QObject::connect(mainWatcher, SIGNAL(ProgressThread::resultReady()), theDialog, SLOT(on_message_ready()), Qt::QueuedConnection);
-    QObject::connect(mainWatcher, SIGNAL(ProgressThread::finished()), theDialog, SLOT(on_task_finished()), Qt::QueuedConnection);
+    QObject::connect(mainWatcher, &ProgressThread::resultReady, theDialog, &ProgressDialog::on_message_ready);
+    QObject::connect(mainWatcher, &ProgressThread::finished, theDialog, &ProgressDialog::on_task_finished); // runs in the context of the MAIN...
     QObject::connect(mainWatcher, &ProgressThread::finished, []() {
+        // runs in the context of the THREAD
         mainWatcher->deleteLater();
         mainWatcher = nullptr;
     });
@@ -293,21 +296,25 @@ void ProgressDialog::startAsync(PROGRESS_DIALOG_STATE mode, const QString &label
     mainWatcher->start();
 }
 
+// MAIN
 void ProgressDialog::on_message_ready()
 {
     this->consumeMessages();
 }
 
+// MAIN
 void ProgressDialog::on_task_finished()
 {
     this->done(this->forceOpen);
 }
 
+// THREAD
 bool ProgressDialog::progressCanceled()
 {
     return taskPromise->isCanceled();
 }
 
+// THREAD
 void ProgressDialog::incProgressBar(const QString &label, int maxValue)
 {
     TaskMessage msg;
@@ -319,6 +326,7 @@ void ProgressDialog::incProgressBar(const QString &label, int maxValue)
     taskErrorOnFail = true;
 }
 
+// THREAD
 void ProgressDialog::decProgressBar()
 {
     TaskMessage msg;
@@ -328,6 +336,7 @@ void ProgressDialog::decProgressBar()
     taskErrorOnFail = false;
 }
 
+// THREAD
 bool ProgressDialog::incProgress()
 {
     TaskMessage msg;
@@ -336,6 +345,7 @@ bool ProgressDialog::incProgress()
     return !taskPromise->isCanceled();
 }
 
+// MAIN
 void ProgressDialog::incBar(const QString &label, int maxValue)
 {
     if (!label.isEmpty()) {
@@ -352,6 +362,7 @@ void ProgressDialog::incBar(const QString &label, int maxValue)
     theDialog->update();
 }
 
+// MAIN
 void ProgressDialog::decBar()
 {
     theDialog->activeBars--;
@@ -361,6 +372,7 @@ void ProgressDialog::decBar()
     oldProgressBar->setEnabled(false);
 }
 
+// MAIN
 bool ProgressDialog::wasCanceled()
 {
     QCoreApplication::processEvents();
@@ -368,6 +380,7 @@ bool ProgressDialog::wasCanceled()
     return theDialog->status >= PROGRESS_STATE::CANCEL;
 }
 
+// MAIN
 bool ProgressDialog::incBarValue(int index, int amount)
 {
     QProgressBar *progressBar = this->progressBars[index];
@@ -378,6 +391,7 @@ bool ProgressDialog::incBarValue(int index, int amount)
     return !ProgressDialog::wasCanceled();
 }
 
+// MAIN
 bool ProgressDialog::incValue()
 {
     return theDialog->incBarValue(theDialog->activeBars - 1, 1);
