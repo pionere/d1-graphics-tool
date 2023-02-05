@@ -21,7 +21,7 @@
     <widget class="QGroupBox" name="outputFileGroupBox">
      <layout class="QGridLayout" name="gridLayout_1">
       <item row="0" column="0">
-       <widget class="QLabel" name="autoOverwriteLabel">
+       <widget class="QLabel" name="outputCelFileLabel">
         <property name="text">
          <string>CEL/CL2 File:</string>
         </property>
