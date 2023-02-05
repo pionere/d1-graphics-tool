@@ -78,12 +78,12 @@ public:
 
     static void openDialog();
 
-    static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars);
+    static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, bool forceOpen = false);
     static void done(bool forceOpen = false);
 
     /*static void setupAsync(QFuture<void> &&future, bool forceOpen = false);
     static void setupThread(QPromise<void> *promise);*/
-    static ProgressThread *setupAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, std::function<void()> &&callFunc, bool forceOpen = false);
+    static void startAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, std::function<void()> &&callFunc, bool forceOpen = false);
     static bool progressCanceled();
     static void incProgressBar(const QString &label, int maxValue);
     static void decProgressBar();
@@ -110,6 +110,8 @@ private slots:
     void on_detailsPushButton_clicked();
     void on_cancelPushButton_clicked();
     void on_closePushButton_clicked();
+    void on_message_ready();
+    void on_task_finished();
 
 protected:
     void closeEvent(QCloseEvent *e) override;
@@ -119,7 +121,6 @@ private:
     bool incBarValue(int index, int amount);
     void appendLine(PROGRESS_TEXT_MODE textMode, const QString &line, bool replace);
     void removeLastLine();
-    static void consumeMessages();
 
 private:
     Ui::ProgressDialog *ui;
@@ -127,6 +128,7 @@ private:
     QList<QProgressBar *> progressBars;
     int activeBars;
     PROGRESS_STATE status = PROGRESS_STATE::DONE;
+    bool forceOpen;
 };
 
 ProgressDialog &dProgress();

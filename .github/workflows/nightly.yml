@@ -188,7 +188,8 @@ jobs:
     #  run: find $RUNNER_WORKSPACE
     #  shell: bash
 
-    - uses: dev-drprasad/delete-tag-and-release@v0.2.0
+    #- uses: dev-drprasad/delete-tag-and-release@v0.2.0
+    - uses: pionere/delete-tag-and-release@v1
       with:
         delete_release: true
         tag_name: dgt-nightly
@@ -196,7 +197,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Release
-      uses: softprops/action-gh-release@v0.1.14
+      uses: softprops/action-gh-release@v0.1.15
       with:
         tag_name: dgt-nightly
         body_path: ${{ github.workspace }}/RELEASE_NOTE.md

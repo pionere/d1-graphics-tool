@@ -644,8 +644,8 @@ void ExportDialog::on_exportButton_clicked()
     params.multi = this->ui->filesCountComboBox->currentIndex() != 0;
     int type = this->ui->contentTypeComboBox->currentIndex();
     this->hide();
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Export"), 1);
-    /*bool result;
+    /*ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Export"), 1);
+    bool result;
     switch (type) {
     case 0:
         result = ExportDialog::exportFrames(this->gfx, params);
@@ -698,8 +698,8 @@ void ExportDialog::on_exportButton_clicked()
             break;
         }
     };
-    ProgressThread *future = ProgressDialog::setupAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Export"), 1, std::move(func));
-    future->start();
+    /*ProgressThread *future =*/ ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Export"), 1, std::move(func));
+    // future->start();
 }
 
 void ExportDialog::on_exportCancelButton_clicked()

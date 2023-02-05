@@ -77,7 +77,7 @@ void ProgressThread::run()
 {
     DPromise *promise = new DPromise();
 
-    connect(this, &ProgressThread::cancelTask, promise, &DPromise::cancel, Qt::QueuedConnection);
+    connect(this, &ProgressThread::cancelTask, promise, &DPromise::cancel);
 
     // wait for other task to finish
     while (taskPromise != nullptr) {
@@ -88,7 +88,7 @@ void ProgressThread::run()
     // taskTextMode = PROGRESS_TEXT_MODE::NORMAL;
     taskErrorOnFail = false;
     taskPromise = promise;
-    connect(taskPromise, &DPromise::progressValueChanged, this, &ProgressThread::reportResults, Qt::QueuedConnection);
+    connect(taskPromise, &DPromise::progressValueChanged, this, &ProgressThread::reportResults);
 
     this->callFunc();
 
@@ -235,7 +235,8 @@ void ProgressDialog::done(bool forceOpen)
     if (theDialog->status == PROGRESS_STATE::RUNNING) {
         theDialog->status = PROGRESS_STATE::DONE;
     } else if (theDialog->status == PROGRESS_STATE::CANCEL) {
-        dProgress() << QApplication::tr("Process cancelled.");
+        // dProgress() << QApplication::tr("Process cancelled.");
+        theDialog->appendLine(PROGRESS_TEXT_MODE::WARNING, QApplication::tr("Process cancelled."), false);
     }
     if (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible() || theDialog->isMinimized()) && !forceOpen) {
         theDialog->hide();
@@ -267,21 +268,38 @@ void ProgressDialog::setupThread(QPromise<void> *promise)
     taskPromise = promise;
     taskProgress = 0;
 }*/
-ProgressThread *ProgressDialog::setupAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, std::function<void()> &&callFunc, bool forceOpen)
+void ProgressDialog::startAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, std::function<void()> &&callFunc, bool forceOpen)
 {
-    ProgressDialog::start(mode, label, numBars);
+    ProgressDialog::start(mode, label, numBars, forceOpen);
 
     mainWatcher = new ProgressThread(std::move(callFunc));
 
-    QObject::connect(mainWatcher, &ProgressThread::resultReady, []() {
+    /*QObject::connect(mainWatcher, &ProgressThread::resultReady, []() {
         ProgressDialog::consumeMessages();
     });
     QObject::connect(mainWatcher, &ProgressThread::finished, [forceOpen]() {
         ProgressDialog::done(forceOpen);
         mainWatcher->deleteLater();
         mainWatcher = nullptr;
+    });*/
+    QObject::connect(mainWatcher, &ProgressThread::resultReady, theDialog, SLOT(on_message_ready), Qt::QueuedConnection);
+    QObject::connect(mainWatcher, &ProgressThread::finished, theDialog, SLOT(on_task_finished), Qt::QueuedConnection);
+    QObject::connect(mainWatcher, &ProgressThread::finished, []() {
+        mainWatcher->deleteLater();
+        mainWatcher = nullptr;
     });
-    return mainWatcher;
+
+    mainWatcher->start();
+}
+
+void ProgressDialog::on_message_ready()
+{
+    this->consumeMessages();
+}
+
+void ProgressDialog::on_task_finished()
+{
+    this->done(this->forceOpen);
 }
 
 bool ProgressDialog::progressCanceled()
