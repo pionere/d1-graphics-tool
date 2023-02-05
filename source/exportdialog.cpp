@@ -643,45 +643,12 @@ void ExportDialog::on_exportButton_clicked()
     params.placement = this->ui->contentPlacementComboBox->currentIndex();
     params.multi = this->ui->filesCountComboBox->currentIndex() != 0;
     int type = this->ui->contentTypeComboBox->currentIndex();
+
     this->hide();
-    /*ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Export"), 1);
-    bool result;
-    switch (type) {
-    case 0:
-        result = ExportDialog::exportFrames(this->gfx, params);
-        break;
-    case 1:
-        result = ExportDialog::exportLevelSubtiles(this->min, params);
-        break;
-    case 2:
-        result = ExportDialog::exportLevelTiles(this->til, params);
-        break;
-    default: // case 3:
-        result = ExportDialog::exportLevelTiles25D(this->til, params);
-        break;
-    }
-    ProgressDialog::done();*/
+
     D1Til *til = this->til;
     D1Min *min = this->min;
     D1Gfx *gfx = this->gfx;
-    /*QFuture<void> future = QtConcurrent::run([type, til, min, gfx, params](QPromise<void> &promise) {
-        Progressdialog::setupThread(&promise);
-        switch (type) {
-        case 0:
-            ExportDialog::exportFrames(gfx, params);
-            break;
-        case 1:
-            ExportDialog::exportLevelSubtiles(min, params);
-            break;
-        case 2:
-            ExportDialog::exportLevelTiles(til, params);
-            break;
-        default: // case 3:
-            ExportDialog::exportLevelTiles25D(til, params);
-            break;
-        }
-    });
-    ProgressDialog::setupAsync(future);*/
     std::function<void()> func = [type, til, min, gfx, params]() {
         switch (type) {
         case 0:

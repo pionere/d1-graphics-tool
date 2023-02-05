@@ -84,11 +84,6 @@ void ProgressThread::run()
 
     // connect(this, &ProgressThread::cancelTask, promise, &DPromise::cancel);
 
-    // wait for other task to finish
-    while (taskPromise != nullptr) {
-        QThread::sleep(1);
-    }
-
     taskProgress = 0;
     // taskTextMode = PROGRESS_TEXT_MODE::NORMAL;
     taskErrorOnFail = false;
@@ -444,7 +439,7 @@ ProgressDialog &dProgressFail()
     return *theDialog;
 }
 
-void ProgressDialog::appendLine(PROGRESS_TEXT_MODE textMode, const QString &line, bool replace)
+void ProgressDialog::appendLine(PROGRESS_TEXT_MODE mode, const QString &line, bool replace)
 {
     QPlainTextEdit *textEdit = this->ui->outputTextEdit;
     QTextCursor cursor = textEdit->textCursor();
@@ -457,11 +452,12 @@ void ProgressDialog::appendLine(PROGRESS_TEXT_MODE textMode, const QString &line
         this->removeLastLine();
     }
     // Append the text at the end of the document.
-    if (textMode == PROGRESS_TEXT_MODE::NORMAL) {
-        textEdit->appendHtml(line); // because Qt can not handle mixed appends...
-    } else {
-        // Using <pre> tag to allow multiple spaces
-        QString htmlText = QString("<p style=\"color:%1;white-space:pre\">%2</p>").arg(textMode == PROGRESS_TEXT_MODE::WARNING ? "orange" : "red").arg(line);
+    if (mode == PROGRESS_TEXT_MODE::NORMAL) {
+        // using appendHtml instead of appendPlainText because Qt can not handle mixed appends...
+        // (the new block inherits the properties of previous/selected block which might be colored due to the code below)
+        textEdit->appendHtml(line);
+    } else { // Using <pre> tag to allow multiple spaces
+        QString htmlText = QString("<p style=\"color:%1;white-space:pre\">%2</p>").arg(mode == PROGRESS_TEXT_MODE::ERROR ? "red" : "orange").arg(line);
         textEdit->appendHtml(htmlText);
     }
 
@@ -529,8 +525,13 @@ void ProgressDialog::on_cancelPushButton_clicked()
         this->status = PROGRESS_STATE::CANCEL;
     }
     this->ui->cancelPushButton->setEnabled(false);
-    if (mainWatcher != nullptr)
+    if (mainWatcher != nullptr) {
         mainWatcher->cancel();
+        // wait for the task to finish
+        while (mainWatcher != nullptr) {
+            QThread::msleep(200);
+        }
+    }
 }
 
 void ProgressDialog::on_closePushButton_clicked()

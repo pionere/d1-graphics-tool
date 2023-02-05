@@ -2672,7 +2672,7 @@ static bool BottomTriangle(int x, int y, std::vector<std::vector<D1GfxPixel>> &o
     return true;
 }
 
-bool Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &params)
+void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &params)
 {
     ANTI_ALIASING_MODE antiAliasingMode = params.antiAliasingMode;
     UpscalingParam upParams;
@@ -3109,7 +3109,6 @@ bool Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
     frame->pixels.swap(newPixels);
     frame->width *= multiplier;
     frame->height *= multiplier;
-    return true;
 }
 
 bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
@@ -3129,8 +3128,8 @@ bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
         }
 
         D1GfxFrame *newFrame = new D1GfxFrame(*gfx->getFrame(i));
-        if (upscaleFrame(newFrame, gfx->palette, params))
-            newFrames.append(newFrame);
+        upscaleFrame(newFrame, gfx->palette, params);
+        newFrames.append(newFrame);
         if (!ProgressDialog::incValue()) {
             qDeleteAll(newFrames);
             return false;
@@ -3256,8 +3255,8 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
         }
 
         D1GfxFrame *subtileFrame = Upscaler::createSubtileFrame(gfx, min, i);
-        if (Upscaler::upscaleFrame(subtileFrame, gfx->palette, params))
-            Upscaler::storeSubtileFrame(subtileFrame, newFrameReferences, newFrames);
+        Upscaler::upscaleFrame(subtileFrame, gfx->palette, params);
+        Upscaler::storeSubtileFrame(subtileFrame, newFrameReferences, newFrames);
         delete subtileFrame;
         if (!ProgressDialog::incValue()) {
             qDeleteAll(newFrames);
