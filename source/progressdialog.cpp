@@ -86,23 +86,18 @@ ProgressThread::ProgressThread(std::function<void()> &&cf)
 {
 }
 
-ProgressThread::~ProgressThread()
-{
-    delete this->promise;
-}
-
 // THREAD
 void ProgressThread::run()
 {
     subThreadId = QThread::currentThreadId();
-    this->promise = new DPromise();
+    DPromise *promise = new DPromise();
 
     // connect(this, &ProgressThread::cancelTask, promise, &DPromise::cancel);
 
     taskProgress = 0;
     // taskTextMode = PROGRESS_TEXT_MODE::NORMAL;
     taskErrorOnFail = false;
-    taskPromise = this->promise;
+    taskPromise = promise;
     connect(taskPromise, &DPromise::progressValueChanged, this, &ProgressThread::reportResults, Qt::QueuedConnection);
     connect(taskPromise, &DPromise::finished, this, &ProgressThread::reportReady, Qt::QueuedConnection);
 
@@ -112,7 +107,7 @@ void ProgressThread::run()
 
     // this->sleep(20);
     // delete taskPromise;
-    //taskPromise->deleteLater();
+    taskPromise->deleteLater();
     taskPromise = nullptr;
 }
 
@@ -120,24 +115,19 @@ void ProgressThread::run()
 void ProgressThread::cancel()
 {
     // emit this->cancelTask();
-    /*if (this->promise != nullptr)
-        this->promise->cancel();*/
+    if (taskPromise != nullptr) // !this->isFinished()
+        taskPromise->cancel();
 }
 
 // MAIN
 void ProgressThread::reportResults()
 {
-    if (mainThreadId != QThread::currentThreadId())
-        return;
     emit this->resultReady();
 }
 
 // MAIN
 void ProgressThread::reportReady()
 {
-    if (mainThreadId != QThread::currentThreadId())
-        return;
-    QMessageBox::warning(nullptr, "Ready", QString("Just Ready. %1 vs %2").arg((int)mainThreadId).arg((int)subThreadId));
     emit this->taskReady();
 }
 
@@ -257,7 +247,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
 
 void ProgressDialog::done(bool forceOpen)
 {
-    QMessageBox::warning(nullptr, "Done", QString("Really. %1 vs %2").arg((int)mainThreadId).arg((int)subThreadId));
+	// QMessageBox::warning(nullptr, "Done", QString("Really. %1 vs %2").arg((int)mainThreadId).arg((int)subThreadId));
 
     theDialog->setWindowTitle(" ");
     theDialog->ui->progressLabel->setVisible(false);

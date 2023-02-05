@@ -549,11 +549,14 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
             tempOutputImageHeight = std::max(gfx->getFrameHeight(i), tempOutputImageHeight);
         }
     }
+	QMessageBox::warning(nullptr, "Image", QString("%1 x %2").arg(tempOutputImageWidth).arg(tempOutputImageHeight));
     tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
     tempOutputImage.fill(Qt::transparent);
 
+QMessageBox::warning(nullptr, "Image prepared", QString("%1 x %2").arg(tempOutputImageWidth).arg(tempOutputImageHeight));
     QPainter painter(&tempOutputImage);
 
+QMessageBox::warning(nullptr, "Image painting", QString("%1 x %2").arg(tempOutputImageWidth).arg(tempOutputImageHeight));
     if (params.placement == 0) { // grouped
         if (gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
             // artifical grouping of a tileset
@@ -625,7 +628,7 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
     }
 
     painter.end();
-
+QMessageBox::warning(nullptr, "Image painted", QString("%1 x %2").arg(tempOutputImageWidth).arg(tempOutputImageHeight));
     saveImage(tempOutputImage, outputFilePath);
 }
 
