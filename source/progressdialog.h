@@ -63,6 +63,7 @@ private:
 
 signals:
     void resultReady();
+    void taskReady();
     void cancelTask();
 
 private:
