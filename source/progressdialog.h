@@ -38,10 +38,12 @@ class DPromise : public QObject {
 public:
     bool isCanceled();
     void cancel();
+    void finish();
     void setProgressValue(int value);
 
 signals:
     void progressValueChanged();
+    void finished();
 
 private:
     PROGRESS_STATE status = PROGRESS_STATE::RUNNING;
