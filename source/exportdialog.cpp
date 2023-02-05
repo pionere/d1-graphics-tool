@@ -560,13 +560,14 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
 dProgressProc() << QString("Image prepared w:%1 h:%2").arg(tempOutputImage.width()).arg(tempOutputImage.height());
     QPainter painter(&tempOutputImage);
 
-dProgressProc() << "Image painting";
+dProgressProc() << QString("Image painting i:%1 .. %2").arg(frameFrom).arg(frameTo);
     if (params.placement == 0) { // grouped
         if (gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
             // artifical grouping of a tileset
             int cursorY = 0;
             int cursorX = 0;
             int groupImageHeight = 0;
+			bool debug = false;
             for (int i = frameFrom; i <= frameTo; i++) {
                 if (ProgressDialog::progressCanceled()) {
                     return;
@@ -577,12 +578,15 @@ dProgressProc() << QString("Image painting to x:%1 y:%2 - oy:%3").arg(cursorX).a
                     cursorY += groupImageHeight;
                     cursorX = 0;
                     groupImageHeight = 0;
+					if (cursorY != 0)
+						debug = true;
                 }
-
-//dProgressProc() << QString("Image painting to x:%1 y:%2").arg(cursorX).arg(cursorY);
+if (debug)
+ dProgressProc() << QString("Image painting to x:%1 y:%2").arg(cursorX).arg(cursorY);
                 const QImage image = gfx->getFrameImage(i);
                 painter.drawImage(cursorX, cursorY, image);
-//dProgressProc() << QString("Image painted to x:%1 y:%2").arg(cursorX).arg(cursorY);
+if (debug)
+ dProgressProc() << QString("Image painted to x:%1 y:%2").arg(cursorX).arg(cursorY);
                 cursorX += image.width();
                 groupImageHeight = std::max(image.height(), groupImageHeight);
                 if (!ProgressDialog::incProgress()) {
