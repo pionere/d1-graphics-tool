@@ -82,14 +82,10 @@ void ExportDialog::on_outputFolderBrowseButton_clicked()
 
 static void saveImage(const QImage &image, const QString &path)
 {
-    bool result = image.save(path);
-
-    QString msg = QDir::toNativeSeparators(path);
-    if (result)
-        msg = QApplication::tr("%1 created.").arg(msg);
+    if (image.save(path))
+        dProgress() << QApplication::tr("%1 created.").arg(QDir::toNativeSeparators(path));
     else
-        msg = QApplication::tr("Failed to create %1.").arg(msg);
-    dProgressProc() << msg;
+        dProgressFail() << QApplication::tr("Failed to create %1.").arg(QDir::toNativeSeparators(path));
 }
 
 void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &params)
@@ -113,7 +109,7 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &para
     if (amount == 0) {
         return;
     }
-    ProgressDialog::incProgressBar(tr("Exporting 2.5d tiles..."), amount);
+    ProgressDialog::incBar(tr("Exporting 2.5d tiles..."), amount);
     // single tile
     if (amount == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
@@ -126,7 +122,7 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &para
     if (amount == 1 || params.multi) {
         // one file for each tile (indexed)
         for (int i = tileFrom; i <= tileTo; i++) {
-            // if (ProgressDialog::progressCanceled()) {
+            // if (ProgressDialog::wasCanceled()) {
             //    return;
             // }
 
@@ -134,7 +130,7 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &para
                 + QString("%1").arg(i, 4, 10, QChar('0')) + params.outFileExtension;
 
             saveImage(til->getTileImage(i), outputFilePath);
-            if (!ProgressDialog::incProgress()) {
+            if (!ProgressDialog::incValue()) {
                 return;
             }
         }
@@ -166,7 +162,7 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &para
 
     tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
     if (tempOutputImage.isNull()) {
-        dProgressProc() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
+        dProgressFail() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
         return;
     }
     tempOutputImage.fill(Qt::transparent);
@@ -176,7 +172,7 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &para
     if (params.placement == 0) { // grouped
         unsigned dx = 0, dy = 0;
         for (int i = tileFrom; i <= tileTo; i++) {
-            if (ProgressDialog::progressCanceled()) {
+            if (ProgressDialog::wasCanceled()) {
                 return;
             }
 
@@ -189,14 +185,14 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &para
                 dx = 0;
                 dy += image.height();
             }
-            if (!ProgressDialog::incProgress()) {
+            if (!ProgressDialog::incValue()) {
                 return;
             }
         }
     } else {
         int cursor = 0;
         for (int i = tileFrom; i <= tileTo; i++) {
-            if (ProgressDialog::progressCanceled()) {
+            if (ProgressDialog::wasCanceled()) {
                 return;
             }
             const QImage image = til->getTileImage(i);
@@ -207,7 +203,7 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &para
                 painter.drawImage(cursor, 0, image);
                 cursor += image.width();
             }
-            if (!ProgressDialog::incProgress()) {
+            if (!ProgressDialog::incValue()) {
                 return;
             }
         }
@@ -239,7 +235,7 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const ExportParam &params)
     if (amount <= 0) {
         return;
     }
-    ProgressDialog::incProgressBar(tr("Exporting flat tiles...").arg(fileName), amount);
+    ProgressDialog::incBar(tr("Exporting flat tiles...").arg(fileName), amount);
     // single tile
     if (amount == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
@@ -251,14 +247,14 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const ExportParam &params)
     if (amount == 1 || params.multi) {
         // one file for each tile (indexed)
         for (int i = tileFrom; i <= tileTo; i++) {
-            // if (ProgressDialog::progressCanceled()) {
+            // if (ProgressDialog::wasCanceled()) {
             //    return;
             // }
             QString outputFilePath = outputFilePathBase
                 + QString("%1").arg(i, 4, 10, QChar('0')) + params.outFileExtension;
 
             saveImage(til->getFlatTileImage(i), outputFilePath);
-            if (!ProgressDialog::incProgress()) {
+            if (!ProgressDialog::incValue()) {
                 return;
             }
         }
@@ -290,7 +286,7 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const ExportParam &params)
 
     tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
     if (tempOutputImage.isNull()) {
-        dProgressProc() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
+        dProgressFail() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
         return;
     }
     tempOutputImage.fill(Qt::transparent);
@@ -300,7 +296,7 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const ExportParam &params)
     if (params.placement == 0) { // grouped
         unsigned dx = 0, dy = 0;
         for (int i = tileFrom; i <= tileTo; i++) {
-            if (ProgressDialog::progressCanceled()) {
+            if (ProgressDialog::wasCanceled()) {
                 return;
             }
 
@@ -313,14 +309,14 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const ExportParam &params)
                 dx = 0;
                 dy += image.height();
             }
-            if (!ProgressDialog::incProgress()) {
+            if (!ProgressDialog::incValue()) {
                 return;
             }
         }
     } else {
         int cursor = 0;
         for (int i = tileFrom; i <= tileTo; i++) {
-            if (ProgressDialog::progressCanceled()) {
+            if (ProgressDialog::wasCanceled()) {
                 return;
             }
             const QImage image = til->getFlatTileImage(i);
@@ -331,7 +327,7 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const ExportParam &params)
                 painter.drawImage(cursor, 0, image);
                 cursor += image.width();
             }
-            if (!ProgressDialog::incProgress()) {
+            if (!ProgressDialog::incValue()) {
                 return;
             }
         }
@@ -363,7 +359,7 @@ void ExportDialog::exportLevelSubtiles(const D1Min *min, const ExportParam &para
     if (amount <= 0) {
         return;
     }
-    ProgressDialog::incProgressBar(tr("Exporting subtiles..."), amount);
+    ProgressDialog::incBar(tr("Exporting subtiles..."), amount);
     // single subtile
     if (amount == 1 && subtileFrom == 0) {
         // one file for the only subtile (not indexed)
@@ -375,14 +371,14 @@ void ExportDialog::exportLevelSubtiles(const D1Min *min, const ExportParam &para
     if (amount == 1 || params.multi) {
         // one file for each subtile (indexed)
         for (int i = subtileFrom; i <= subtileTo; i++) {
-            // if (ProgressDialog::progressCanceled()) {
+            // if (ProgressDialog::wasCanceled()) {
             //    return;
             // }
             QString outputFilePath = outputFilePathBase + "_subtile"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + params.outFileExtension;
 
             saveImage(min->getSubtileImage(i), outputFilePath);
-            if (!ProgressDialog::incProgress()) {
+            if (!ProgressDialog::incValue()) {
                 return;
             }
         }
@@ -416,7 +412,7 @@ void ExportDialog::exportLevelSubtiles(const D1Min *min, const ExportParam &para
 
     tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
     if (tempOutputImage.isNull()) {
-        dProgressProc() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
+        dProgressFail() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
         return;
     }
     tempOutputImage.fill(Qt::transparent);
@@ -426,7 +422,7 @@ void ExportDialog::exportLevelSubtiles(const D1Min *min, const ExportParam &para
     if (params.placement == 0) { // grouped
         unsigned dx = 0, dy = 0;
         for (int i = subtileFrom; i <= subtileTo; i++) {
-            if (ProgressDialog::progressCanceled()) {
+            if (ProgressDialog::wasCanceled()) {
                 return;
             }
             const QImage image = min->getSubtileImage(i);
@@ -438,14 +434,14 @@ void ExportDialog::exportLevelSubtiles(const D1Min *min, const ExportParam &para
                 dx = 0;
                 dy += image.height();
             }
-            if (!ProgressDialog::incProgress()) {
+            if (!ProgressDialog::incValue()) {
                 return;
             }
         }
     } else {
         int cursor = 0;
         for (int i = subtileFrom; i <= subtileTo; i++) {
-            if (ProgressDialog::progressCanceled()) {
+            if (ProgressDialog::wasCanceled()) {
                 return;
             }
             const QImage image = min->getSubtileImage(i);
@@ -456,7 +452,7 @@ void ExportDialog::exportLevelSubtiles(const D1Min *min, const ExportParam &para
                 painter.drawImage(cursor, 0, image);
                 cursor += image.width();
             }
-            if (!ProgressDialog::incProgress()) {
+            if (!ProgressDialog::incValue()) {
                 return;
             }
         }
@@ -488,7 +484,7 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
     if (amount <= 0) {
         return;
     }
-    ProgressDialog::incProgressBar(tr("Exporting frames..."), amount);
+    ProgressDialog::incBar(tr("Exporting frames..."), amount);
     // single frame
     if (amount == 1 && frameFrom == 0) {
         // one file for the only frame (not indexed)
@@ -500,14 +496,14 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
     if (amount == 1 || params.multi) {
         // one file for each frame (indexed)
         for (int i = frameFrom; i <= frameTo; i++) {
-            // if (ProgressDialog::progressCanceled()) {
+            // if (ProgressDialog::wasCanceled()) {
             //    return;
             // }
             QString outputFilePath = outputFilePathBase + "_frame"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + params.outFileExtension;
 
             saveImage(gfx->getFrameImage(i), outputFilePath);
-            if (!ProgressDialog::incProgress()) {
+            if (!ProgressDialog::incValue()) {
                 return;
             }
         }
@@ -569,7 +565,7 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
     }
     tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
     if (tempOutputImage.isNull()) {
-        dProgressProc() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
+        dProgressFail() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
         return;
     }
     tempOutputImage.fill(Qt::transparent);
@@ -583,7 +579,7 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
             int cursorX = 0;
             int groupImageHeight = 0;
             for (int i = frameFrom; i <= frameTo; i++) {
-                if (ProgressDialog::progressCanceled()) {
+                if (ProgressDialog::wasCanceled()) {
                     return;
                 }
 
@@ -598,7 +594,7 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
 
                 cursorX += image.width();
                 groupImageHeight = std::max(image.height(), groupImageHeight);
-                if (!ProgressDialog::incProgress()) {
+                if (!ProgressDialog::incValue()) {
                     return;
                 }
             }
@@ -612,14 +608,14 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
                     if (j < (unsigned)frameFrom || j > (unsigned)frameTo) {
                         continue;
                     }
-                    if (ProgressDialog::progressCanceled()) {
+                    if (ProgressDialog::wasCanceled()) {
                         return;
                     }
                     const QImage image = gfx->getFrameImage(j);
                     painter.drawImage(cursorX, cursorY, image);
                     cursorX += image.width();
                     groupImageHeight = std::max(image.height(), groupImageHeight);
-                    if (!ProgressDialog::incProgress()) {
+                    if (!ProgressDialog::incValue()) {
                         return;
                     }
                 }
@@ -629,7 +625,7 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
     } else {
         int cursor = 0;
         for (int i = frameFrom; i <= frameTo; i++) {
-            if (ProgressDialog::progressCanceled()) {
+            if (ProgressDialog::wasCanceled()) {
                 return;
             }
             const QImage image = gfx->getFrameImage(i);
@@ -640,7 +636,7 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
                 painter.drawImage(cursor, 0, image);
                 cursor += image.width();
             }
-            if (!ProgressDialog::incProgress()) {
+            if (!ProgressDialog::incValue()) {
                 return;
             }
         }

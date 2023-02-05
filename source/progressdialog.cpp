@@ -39,6 +39,7 @@ static std::queue<TaskMessage> sharedQueue;
 // task-properties - MAIN
 // static QFutureWatcher<void> *mainWatcher;
 static ProgressThread *mainWatcher = nullptr;
+static bool taskAsync;
 
 // task-properties - THREAD
 // static QPromise<void> *taskPromise; // the promise object of the task
@@ -47,7 +48,7 @@ static int taskProgress;                // progression in the task's thread
 static int taskTextVersion;
 static QString taskTextLastLine;
 static PROGRESS_TEXT_MODE taskTextMode = PROGRESS_TEXT_MODE::NORMAL;
-static bool taskErrorOnFail;
+static int taskErrorOnFail;
 
 // THREAD
 bool DPromise::isCanceled()
@@ -63,10 +64,10 @@ void DPromise::cancel()
 }
 
 // THREAD
-void DPromise::finish()
+/*void DPromise::finish()
 {
     emit this->finished();
-}
+}*/
 
 // THREAD
 void DPromise::setProgressValue(int value)
@@ -92,7 +93,7 @@ void ProgressThread::run()
 
     taskProgress = 0;
     // taskTextMode = PROGRESS_TEXT_MODE::NORMAL;
-    taskErrorOnFail = false;
+    // taskErrorOnFail = 0;
     taskPromise = promise;
     connect(taskPromise, &DPromise::progressValueChanged, this, &ProgressThread::reportResults, Qt::QueuedConnection);
     // connect(taskPromise, &DPromise::finished, this, &ProgressThread::reportReady, Qt::QueuedConnection);
@@ -158,13 +159,13 @@ void ProgressDialog::consumeMessages()
 
         switch (msg.type) {
         case TMSG_PROGRESS:
-            ProgressDialog::incProcValue();
+            ProgressDialog::incValue_impl(msg.value);
             break;
         case TMSG_INCBAR:
-            ProgressDialog::incBar(msg.text, msg.value);
+            ProgressDialog::incBar_impl(msg.text, msg.value);
             break;
         case TMSG_DECBAR:
-            ProgressDialog::decBar();
+            ProgressDialog::decBar_impl();
             break;
         case TMSG_LOGMSG:
             /*switch (msg.textMode) {
@@ -203,7 +204,9 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
 {
     bool background = mode == PROGRESS_DIALOG_STATE::BACKGROUND;
 
+    taskAsync = false;
     taskTextVersion = 0;
+    taskErrorOnFail = 0;
     taskTextLastLine.clear();
     // taskTextMode = PROGRESS_TEXT_MODE::NORMAL;
 
@@ -295,6 +298,7 @@ void ProgressDialog::startAsync(PROGRESS_DIALOG_STATE mode, const QString &label
 {
     theDialog->forceOpen = forceOpen;
     ProgressDialog::start(mode, label, numBars);
+    taskAsync = true;
 
     mainWatcher = new ProgressThread(std::move(callFunc));
 
@@ -322,45 +326,26 @@ void ProgressDialog::on_task_finished()
     this->done(this->forceOpen);
 }
 
-// THREAD
-bool ProgressDialog::progressCanceled()
+// MAIN
+void ProgressDialog::incBar(const QString &label, int maxValue)
 {
-    return taskPromise->isCanceled();
-}
+    if (!taskAsync) {
+        // MAIN
+        ProgressDialog::incBar_impl(label, maxValue);
+    } else {
+        // THREAD
+        TaskMessage msg;
+        msg.type = TMSG_INCBAR;
+        msg.text = label;
+        msg.value = maxValue;
+        sendMsg(msg);
+    }
 
-// THREAD
-void ProgressDialog::incProgressBar(const QString &label, int maxValue)
-{
-    TaskMessage msg;
-    msg.type = TMSG_INCBAR;
-    msg.text = label;
-    msg.value = maxValue;
-    sendMsg(msg);
-
-    taskErrorOnFail = true;
-}
-
-// THREAD
-void ProgressDialog::decProgressBar()
-{
-    TaskMessage msg;
-    msg.type = TMSG_DECBAR;
-    sendMsg(msg);
-
-    taskErrorOnFail = false;
-}
-
-// THREAD
-bool ProgressDialog::incProgress()
-{
-    TaskMessage msg;
-    msg.type = TMSG_PROGRESS;
-    sendMsg(msg);
-    return !taskPromise->isCanceled();
+    taskErrorOnFail++;
 }
 
 // MAIN
-void ProgressDialog::incBar(const QString &label, int maxValue)
+void ProgressDialog::incBar_impl(const QString &label, int maxValue)
 {
     if (!label.isEmpty()) {
         theDialog->ui->progressLabel->setText(label);
@@ -379,6 +364,22 @@ void ProgressDialog::incBar(const QString &label, int maxValue)
 // MAIN
 void ProgressDialog::decBar()
 {
+    if (!taskAsync) {
+        // MAIN
+        ProgressDialog::decBar_impl();
+    } else {
+        // THREAD
+        TaskMessage msg;
+        msg.type = TMSG_DECBAR;
+        sendMsg(msg);
+    }
+
+    taskErrorOnFail--;
+}
+
+// MAIN
+void ProgressDialog::decBar_impl()
+{
     theDialog->activeBars--;
 
     QProgressBar *oldProgressBar = theDialog->progressBars[theDialog->activeBars];
@@ -386,46 +387,49 @@ void ProgressDialog::decBar()
     oldProgressBar->setEnabled(false);
 }
 
-// MAIN
 bool ProgressDialog::wasCanceled()
 {
-    QCoreApplication::processEvents();
+    if (!taskAsync) {
+        // MAIN
+        QCoreApplication::processEvents();
 
-    return theDialog->status >= PROGRESS_STATE::CANCEL;
+        return theDialog->status >= PROGRESS_STATE::CANCEL;
+    } else {
+        // THREAD
+        return taskPromise->isCanceled();
+    }
 }
 
-// MAIN
-bool ProgressDialog::incBarValue(int index, int amount)
-{
-    QProgressBar *progressBar = this->progressBars[index];
-
-    amount += progressBar->value();
-    progressBar->setValue(amount);
-    progressBar->setToolTip(QString("%1%").arg(amount * 100 / progressBar->maximum()));
-    return !ProgressDialog::wasCanceled();
-}
-
-// MAIN
 bool ProgressDialog::incValue()
 {
-    return theDialog->incBarValue(theDialog->activeBars - 1, 1);
+    return ProgressDialog::addValue(1);
+}
+
+bool ProgressDialog::addValue(int amount)
+{
+    if (!taskAsync) {
+        // MAIN
+        theDialog->incValue_impl(amount);
+        return !ProgressDialog::wasCanceled();
+    } else {
+        // THREAD
+        TaskMessage msg;
+        msg.type = TMSG_PROGRESS;
+        msg.value = amount;
+        sendMsg(msg);
+        return !taskPromise->isCanceled();
+    }
 }
 
 // MAIN
-void ProgressDialog::incProcValue()
+void ProgressDialog::incValue_impl(int amount)
 {
     int index = theDialog->activeBars - 1;
-    int amount = 1;
     QProgressBar *progressBar = theDialog->progressBars[index];
 
     amount += progressBar->value();
     progressBar->setValue(amount);
     progressBar->setToolTip(QString("%1%").arg(amount * 100 / progressBar->maximum()));
-}
-
-bool ProgressDialog::incMainValue(int amount)
-{
-    return theDialog->incBarValue(0, amount);
 }
 
 ProgressDialog &dProgress()
@@ -434,39 +438,21 @@ ProgressDialog &dProgress()
     return *theDialog;
 }
 
-ProgressDialog &dProgressProc()
-{
-    taskTextMode = PROGRESS_TEXT_MODE::PROC;
-    return *theDialog;
-}
-
 ProgressDialog &dProgressWarn()
 {
-    if (theDialog->status < PROGRESS_STATE::WARN) {
-        theDialog->status = PROGRESS_STATE::WARN;
-    }
     taskTextMode = PROGRESS_TEXT_MODE::WARNING;
     return *theDialog;
 }
 
 ProgressDialog &dProgressErr()
 {
-    if (theDialog->status < PROGRESS_STATE::ERROR) {
-        theDialog->status = PROGRESS_STATE::ERROR;
-    }
     taskTextMode = PROGRESS_TEXT_MODE::ERROR;
     return *theDialog;
 }
 
 ProgressDialog &dProgressFail()
 {
-    /*if (taskErrorOnFail) {
-        return dProgressErr();
-    }*/
-    if (theDialog->status < PROGRESS_STATE::FAIL) {
-        theDialog->status = PROGRESS_STATE::FAIL;
-    }
-    taskTextMode = PROGRESS_TEXT_MODE::ERROR;
+    taskTextMode = taskErrorOnFail ? PROGRESS_TEXT_MODE::ERROR : PROGRESS_TEXT_MODE::FAIL;
     return *theDialog;
 }
 
@@ -488,8 +474,27 @@ void ProgressDialog::appendLine(PROGRESS_TEXT_MODE mode, const QString &line, bo
         // (the new block inherits the properties of previous/selected block which might be colored due to the code below)
         textEdit->appendHtml(line);
     } else { // Using <pre> tag to allow multiple spaces
-        QString htmlText = QString("<p style=\"color:%1;white-space:pre\">%2</p>").arg(mode == PROGRESS_TEXT_MODE::ERROR ? "red" : "orange").arg(line);
+        QString htmlText = QString("<p style=\"color:%1;white-space:pre\">%2</p>").arg(mode == PROGRESS_TEXT_MODE::WARNING ? "orange" : "red").arg(line);
         textEdit->appendHtml(htmlText);
+    }
+    // update status
+    PROGRESS_STATE refStatus;
+    switch (mode) {
+    case PROGRESS_TEXT_MODE::NORMAL:
+        refStatus = PROGRESS_STATE::RUNNING;
+        break;
+    case PROGRESS_TEXT_MODE::WARNING:
+        refStatus = PROGRESS_STATE::WARN;
+        break;
+    case PROGRESS_TEXT_MODE::ERROR:
+        refStatus = PROGRESS_STATE::ERROR;
+        break;
+    case PROGRESS_TEXT_MODE::FAIL:
+        refStatus = PROGRESS_STATE::FAIL;
+        break;
+    }
+    if (this->status < refStatus) {
+        this->status = refStatus;
     }
 
     if (!active) {

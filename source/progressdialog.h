@@ -28,8 +28,7 @@ enum class PROGRESS_TEXT_MODE {
     NORMAL,
     WARNING,
     ERROR,
-
-    PROC,
+    FAIL,
 };
 
 class DPromise : public QObject {
@@ -38,12 +37,12 @@ class DPromise : public QObject {
 public:
     bool isCanceled();
     void cancel();
-    void finish();
+    // void finish();
     void setProgressValue(int value);
 
 signals:
     void progressValueChanged();
-    void finished();
+    // void finished();
 
 private:
     PROGRESS_STATE status = PROGRESS_STATE::RUNNING;
@@ -85,21 +84,16 @@ public:
     static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars);
     static void done(bool forceOpen = false);
 
-    /*static void setupAsync(QFuture<void> &&future, bool forceOpen = false);
-    static void setupThread(QPromise<void> *promise);*/
     static void startAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, std::function<void()> &&callFunc, bool forceOpen = false);
-    static bool progressCanceled();
+
     static void incProgressBar(const QString &label, int maxValue);
-    static void decProgressBar();
-    static bool incProgress();
-    static void incProcValue();
 
     static void incBar(const QString &label, int maxValue);
     static void decBar();
 
     static bool wasCanceled();
     static bool incValue();
-    static bool incMainValue(int amount);
+    static bool addValue(int amount);
 
     friend ProgressDialog &dProgress();
     friend ProgressDialog &dProgressProc();
@@ -123,6 +117,10 @@ protected:
     void changeEvent(QEvent *e);
 
 private:
+    static void incBar_impl(const QString &label, int maxValue);
+    static void decBar_impl();
+    static void incValue_impl(int amount);
+
     bool incBarValue(int index, int amount);
     void appendLine(PROGRESS_TEXT_MODE textMode, const QString &line, bool replace);
     void removeLastLine();

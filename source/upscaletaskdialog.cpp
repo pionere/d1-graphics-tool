@@ -424,7 +424,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[REGULAR_CEL]);
+        ProgressDialog::addValue(stepWeights[REGULAR_CEL]);
     }
     if (steps[OBJECT_CEL]) {
         // upscale objects with level-specific palette
@@ -475,7 +475,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[OBJECT_CEL]);
+        ProgressDialog::addValue(stepWeights[OBJECT_CEL]);
     }
     if (steps[SPECIAL_CEL]) {
         // upscale special cells of the levels
@@ -520,7 +520,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[SPECIAL_CEL]);
+        ProgressDialog::addValue(stepWeights[SPECIAL_CEL]);
     }
     if (steps[CUTSCENE]) {
         // upscale cutscenes
@@ -576,7 +576,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[CUTSCENE]);
+        ProgressDialog::addValue(stepWeights[CUTSCENE]);
     }
     // UpscaleCelComp("f:\\MPQE\\Work\\towners\\animals\\cow.CEL", 2, &diapal[0][0], 128, 128, "f:\\outcel\\towners\\animals\\cow.cel");
     if (steps[ART_CEL]) {
@@ -637,7 +637,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[ART_CEL]);
+        ProgressDialog::addValue(stepWeights[ART_CEL]);
     }
     if (steps[REGULAR_CL2_MISSILES]) {
         // upscale missiles cl2 files of listfiles.txt
@@ -670,7 +670,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[REGULAR_CL2_MISSILES]);
+        ProgressDialog::addValue(stepWeights[REGULAR_CL2_MISSILES]);
     }
     if (steps[REGULAR_CL2_MONSTERS]) {
         // upscale monsters cl2 files of listfiles.txt
@@ -703,7 +703,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[REGULAR_CL2_MONSTERS]);
+        ProgressDialog::addValue(stepWeights[REGULAR_CL2_MONSTERS]);
     }
     if (steps[REGULAR_CL2_PLRGFX]) {
         // upscale plrgfx cl2 files of listfiles.txt
@@ -736,7 +736,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[REGULAR_CL2_PLRGFX]);
+        ProgressDialog::addValue(stepWeights[REGULAR_CL2_PLRGFX]);
     }
     if (steps[FIXED_CL2]) {
         // special cases to upscale cl2 files (must be done manually)
@@ -774,7 +774,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[FIXED_CL2]);
+        ProgressDialog::addValue(stepWeights[FIXED_CL2]);
     }
     if (steps[TILESET]) {
         // upscale tiles of the levels
@@ -824,7 +824,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[TILESET]);
+        ProgressDialog::addValue(stepWeights[TILESET]);
     }
     if (steps[FIXED_TILESET]) {
         // special cases to upscale cl2 files (must be done manually)
@@ -870,7 +870,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         }
 
         ProgressDialog::decBar();
-        ProgressDialog::incMainValue(stepWeights[FIXED_TILESET]);
+        ProgressDialog::addValue(stepWeights[FIXED_TILESET]);
     }
 
     ProgressDialog::decBar();
