@@ -40,6 +40,9 @@ static std::queue<TaskMessage> sharedQueue;
 // static QFutureWatcher<void> *mainWatcher;
 static ProgressThread *mainWatcher = nullptr;
 
+static Qt::HANDLE mainThreadId;
+static Qt::HANDLE subThreadId;
+
 // task-properties - THREAD
 // static QPromise<void> *taskPromise; // the promise object of the task
 static DPromise *taskPromise = nullptr; // the promise object of the task - TODO: use map with QThread::currentThreadId(); ?
@@ -86,6 +89,7 @@ ProgressThread::ProgressThread(std::function<void()> &&cf)
 // THREAD
 void ProgressThread::run()
 {
+    subThreadId = QThread::currentThreadId();
     DPromise *promise = new DPromise();
 
     // connect(this, &ProgressThread::cancelTask, promise, &DPromise::cancel);
@@ -101,11 +105,11 @@ void ProgressThread::run()
 
     taskPromise->finish();
 
-    sleep(20);
+    this->sleep(20);
 
     // delete taskPromise;
-    taskPromise->deleteLater();
-    taskPromise = nullptr;
+    /*taskPromise->deleteLater();
+    taskPromise = nullptr;*/
 }
 
 // MAIN (!)
@@ -118,13 +122,17 @@ void ProgressThread::cancel()
 // MAIN
 void ProgressThread::reportResults()
 {
+    if (mainThreadId != QThread::currentThreadId())
+        return;
     emit this->resultReady();
 }
 
 // MAIN
 void ProgressThread::reportReady()
 {
-    QMessageBox::warning(nullptr, "Ready", "Just Ready....");
+    if (mainThreadId != QThread::currentThreadId())
+        return;
+    QMessageBox::warning(nullptr, "Ready", QString("Just Ready. %1 vs %2").arg(mainThreadId).arg(subThreadId));
     emit this->taskReady();
 }
 
@@ -244,7 +252,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
 
 void ProgressDialog::done(bool forceOpen)
 {
-    QMessageBox::warning(nullptr, "Done", "Really....");
+    QMessageBox::warning(nullptr, "Done", QString("Really. %1 vs %2").arg(mainThreadId).arg(subThreadId));
 
     theDialog->setWindowTitle(" ");
     theDialog->ui->progressLabel->setVisible(false);
@@ -296,6 +304,8 @@ void ProgressDialog::setupThread(QPromise<void> *promise)
 }*/
 void ProgressDialog::startAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, std::function<void()> &&callFunc, bool forceOpen)
 {
+    mainThreadId = QThread::currentThreadId();
+
     theDialog->forceOpen = forceOpen;
     ProgressDialog::start(mode, label, numBars);
 
