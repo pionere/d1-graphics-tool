@@ -557,7 +557,7 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
     }
     tempOutputImage.fill(Qt::transparent);
 
-dProgressProc() << "Image prepared";
+dProgressProc() << QString("Image prepared w:%1 h:%2").arg(tempOutputImage.width()).arg(tempOutputImage.height());
     QPainter painter(&tempOutputImage);
 
 dProgressProc() << "Image painting";
@@ -630,9 +630,9 @@ dProgressProc() << "Image painting";
             }
         }
     }
-
-    painter.end();
 dProgressProc() << "Image painted";
+    painter.end();
+dProgressProc() << "Image saving";
     saveImage(tempOutputImage, outputFilePath);
 }
 
@@ -657,6 +657,7 @@ void ExportDialog::on_exportButton_clicked()
     D1Min *min = this->min;
     D1Gfx *gfx = this->gfx;
     std::function<void()> func = [type, til, min, gfx, params]() {
+		try {
         switch (type) {
         case 0:
             ExportDialog::exportFrames(gfx, params);
@@ -671,6 +672,9 @@ void ExportDialog::on_exportButton_clicked()
             ExportDialog::exportLevelTiles25D(til, params);
             break;
         }
+		} catch (...) {
+			dProgressProc() << tr("Export Failed.");
+		}
     };
     /*ProgressThread *future = */ ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Export"), 1, std::move(func));
     // future->start();
