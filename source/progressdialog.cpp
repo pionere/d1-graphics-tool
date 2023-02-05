@@ -508,15 +508,17 @@ void ProgressDialog::appendLine(PROGRESS_TEXT_MODE mode, const QString &line, bo
 
 ProgressDialog &ProgressDialog::operator<<(const QString &text)
 {
-    if (taskTextMode == PROGRESS_TEXT_MODE::PROC) {
+    if (!taskAsync) {
+        // MAIN
+        this->appendLine(taskTextMode, text, false);
+    } else {
+        // THREAD
         TaskMessage msg;
         msg.type = TMSG_LOGMSG;
         msg.text = text;
-        msg.textMode = PROGRESS_TEXT_MODE::NORMAL;
+        msg.textMode = taskTextMode;
         msg.replace = false;
         sendMsg(msg);
-    } else {
-        this->appendLine(taskTextMode, text, false);
     }
     taskTextLastLine = text;
     taskTextVersion++;
@@ -532,7 +534,19 @@ void ProgressDialog::removeLastLine()
 
 ProgressDialog &ProgressDialog::operator<<(const QPair<QString, QString> &text)
 {
-    this->appendLine(taskTextMode, text.second, taskTextLastLine == text.first);
+    bool replace = taskTextLastLine == text.first;
+    if (!taskAsync) {
+        // MAIN
+        this->appendLine(taskTextMode, text.second, replace);
+    } else {
+        // THREAD
+        TaskMessage msg;
+        msg.type = TMSG_LOGMSG;
+        msg.text = text.second;
+        msg.textMode = taskTextMode;
+        msg.replace = replace;
+        sendMsg(msg);
+    }
     taskTextVersion++;
     taskTextLastLine = text.second;
     return *this;
@@ -540,7 +554,19 @@ ProgressDialog &ProgressDialog::operator<<(const QPair<QString, QString> &text)
 
 ProgressDialog &ProgressDialog::operator<<(QPair<int, QString> &idxText)
 {
-    this->appendLine(taskTextMode, idxText.second, taskTextVersion == idxText.first);
+    bool replace = taskTextVersion == idxText.first;
+    if (!taskAsync) {
+        // MAIN
+        this->appendLine(taskTextMode, idxText.second, replace);
+    } else {
+        // THREAD
+        TaskMessage msg;
+        msg.type = TMSG_LOGMSG;
+        msg.text = idxText.second;
+        msg.textMode = taskTextMode;
+        msg.replace = replace;
+        sendMsg(msg);
+    }
     taskTextVersion++;
     taskTextLastLine = idxText.second;
     idxText.first = taskTextVersion;
