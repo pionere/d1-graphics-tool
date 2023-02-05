@@ -572,8 +572,6 @@ dProgressProc() << QString("Image painting i:%1 .. %2").arg(frameFrom).arg(frame
                 /*if (ProgressDialog::progressCanceled()) {
                     return;
                 }*/
-if (debug)
- dProgressProc() << QString("Image %1 painting to x:%2 y:%3 w:%4 h:%5").arg(i).arg(cursorX).arg(cursorY).arg(image.width()).arg(image.height());
 
                 if (((i - frameFrom) % EXPORT_LVLFRAMES_PER_LINE) == 0) {
 // dProgressProc() << QString("Image painting to x:%1 y:%2 - oy:%3").arg(cursorX).arg(cursorY).arg(cursorY - groupImageHeight);
@@ -584,6 +582,8 @@ if (debug)
 						debug = true;
                 }
                 const QImage image = gfx->getFrameImage(i);
+if (debug)
+ dProgressProc() << QString("Image %1 painting to x:%2 y:%3 w:%4 h:%5").arg(i).arg(cursorX).arg(cursorY).arg(image.width()).arg(image.height());
                 painter.drawImage(cursorX, cursorY, image);
                 cursorX += image.width();
                 groupImageHeight = std::max(image.height(), groupImageHeight);
