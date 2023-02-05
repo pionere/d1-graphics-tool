@@ -78,7 +78,7 @@ public:
 
     static void openDialog();
 
-    static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, bool forceOpen = false);
+    static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars);
     static void done(bool forceOpen = false);
 
     /*static void setupAsync(QFuture<void> &&future, bool forceOpen = false);
@@ -121,6 +121,7 @@ private:
     bool incBarValue(int index, int amount);
     void appendLine(PROGRESS_TEXT_MODE textMode, const QString &line, bool replace);
     void removeLastLine();
+    void consumeMessages();
 
 private:
     Ui::ProgressDialog *ui;

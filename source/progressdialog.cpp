@@ -270,7 +270,8 @@ void ProgressDialog::setupThread(QPromise<void> *promise)
 }*/
 void ProgressDialog::startAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, std::function<void()> &&callFunc, bool forceOpen)
 {
-    ProgressDialog::start(mode, label, numBars, forceOpen);
+    theDialog->forceOpen = forceOpen;
+    ProgressDialog::start(mode, label, numBars);
 
     mainWatcher = new ProgressThread(std::move(callFunc));
 
