@@ -208,7 +208,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
         theDialog->progressBars.append(progressBar);
     }
     theDialog->adjustSize();
-    theDialog->setWindowModality(background ? Qt::NonModal : Qt::ApplicationModal);
+    // theDialog->setWindowModality(background ? Qt::NonModal : Qt::ApplicationModal);
 
     theWidget->updateWidget(theDialog->status, background, label);
     if (background) {
@@ -280,8 +280,8 @@ void ProgressDialog::startAsync(PROGRESS_DIALOG_STATE mode, const QString &label
 
     mainWatcher = new ProgressThread(std::move(callFunc));
 
-    QObject::connect(mainWatcher, &ProgressThread::resultReady, theDialog, &ProgressDialog::on_message_ready);
-    QObject::connect(mainWatcher, &ProgressThread::finished, theDialog, &ProgressDialog::on_task_finished); // runs in the context of the MAIN...
+    QObject::connect(mainWatcher, &ProgressThread::resultReady, theDialog, &ProgressDialog::on_message_ready, Qt::QueuedConnection);
+    QObject::connect(mainWatcher, &ProgressThread::finished, theDialog, &ProgressDialog::on_task_finished, Qt::QueuedConnection); // runs in the context of the MAIN...
     QObject::connect(mainWatcher, &ProgressThread::finished, []() {
         // runs in the context of the THREAD
         mainWatcher->deleteLater();
@@ -529,6 +529,7 @@ void ProgressDialog::on_cancelPushButton_clicked()
         mainWatcher->cancel();
         // wait for the task to finish
         /*QDialog *blocker = new QDialog(this->parentWidget(), Qt::Tool | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
+        blocker->setWindowModality(Qt::ApplicationModal);
         blocker->show();
         QTimer *timer = new QTimer();
         QObject::connect(timer, &QTimer::timeout, [this, timer, blocker]() {
