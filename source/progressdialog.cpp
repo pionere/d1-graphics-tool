@@ -217,7 +217,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     theDialog->status = PROGRESS_STATE::RUNNING;
     theDialog->ui->progressLabel->setVisible(!background);
     theDialog->ui->progressLabel->setText("");
-    theDialog->ui->detailsGroupBox->setVisible(background);
+    theDialog->ui->detailsGroupBox->setVisible(true); // background);
     theDialog->ui->detailsPushButton->setText(background ? tr("Hide details") : tr("Show details"));
     theDialog->ui->cancelPushButton->setEnabled(true);
     theDialog->ui->progressButtonsWidget_1->setVisible(!background);

@@ -549,14 +549,18 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
             tempOutputImageHeight = std::max(gfx->getFrameHeight(i), tempOutputImageHeight);
         }
     }
-	QMessageBox::warning(nullptr, "Image", QString("%1 x %2").arg(tempOutputImageWidth).arg(tempOutputImageHeight));
+//	QMessageBox::warning(nullptr, "Image", QString("%1 x %2").arg(tempOutputImageWidth).arg(tempOutputImageHeight));
     tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
+    if (tempOutputImage.isNull()) {
+		dProgressProc() << "Failed to create image.";
+		return;
+    }
     tempOutputImage.fill(Qt::transparent);
 
-QMessageBox::warning(nullptr, "Image prepared", QString("%1 x %2").arg(tempOutputImageWidth).arg(tempOutputImageHeight));
+dProgressProc() << "Image prepared";
     QPainter painter(&tempOutputImage);
 
-QMessageBox::warning(nullptr, "Image painting", QString("%1 x %2").arg(tempOutputImageWidth).arg(tempOutputImageHeight));
+dProgressProc() << "Image painting";
     if (params.placement == 0) { // grouped
         if (gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
             // artifical grouping of a tileset
@@ -628,7 +632,7 @@ QMessageBox::warning(nullptr, "Image painting", QString("%1 x %2").arg(tempOutpu
     }
 
     painter.end();
-QMessageBox::warning(nullptr, "Image painted", QString("%1 x %2").arg(tempOutputImageWidth).arg(tempOutputImageHeight));
+dProgressProc() << "Image painted";
     saveImage(tempOutputImage, outputFilePath);
 }
 
