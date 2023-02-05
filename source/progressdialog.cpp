@@ -101,7 +101,9 @@ void ProgressThread::run()
 
     taskPromise->finish();
 
-    //delete taskPromise;
+    sleep(2);
+
+    // delete taskPromise;
     taskPromise->deleteLater();
     taskPromise = nullptr;
 }
