@@ -62,6 +62,7 @@ public:
 
 private:
     void reportResults();
+    void reportReady();
 
 signals:
     void resultReady();
