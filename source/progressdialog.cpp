@@ -86,18 +86,23 @@ ProgressThread::ProgressThread(std::function<void()> &&cf)
 {
 }
 
+ProgressThread::~ProgressThread()
+{
+    delete this->promise;
+}
+
 // THREAD
 void ProgressThread::run()
 {
     subThreadId = QThread::currentThreadId();
-    DPromise *promise = new DPromise();
+    this->promise = new DPromise();
 
     // connect(this, &ProgressThread::cancelTask, promise, &DPromise::cancel);
 
     taskProgress = 0;
     // taskTextMode = PROGRESS_TEXT_MODE::NORMAL;
     taskErrorOnFail = false;
-    taskPromise = promise;
+    taskPromise = this->promise;
     connect(taskPromise, &DPromise::progressValueChanged, this, &ProgressThread::reportResults, Qt::QueuedConnection);
     connect(taskPromise, &DPromise::finished, this, &ProgressThread::reportReady, Qt::QueuedConnection);
 
@@ -105,18 +110,18 @@ void ProgressThread::run()
 
     taskPromise->finish();
 
-    this->sleep(20);
-
+    // this->sleep(20);
     // delete taskPromise;
-    /*taskPromise->deleteLater();
-    taskPromise = nullptr;*/
+    //taskPromise->deleteLater();
+    taskPromise = nullptr;
 }
 
 // MAIN (!)
 void ProgressThread::cancel()
 {
     // emit this->cancelTask();
-    taskPromise->cancel();
+    /*if (this->promise != nullptr)
+        this->promise->cancel();*/
 }
 
 // MAIN

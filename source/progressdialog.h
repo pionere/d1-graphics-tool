@@ -54,7 +54,7 @@ class ProgressThread : public QThread {
 
 public:
     explicit ProgressThread(std::function<void()> &&callFunc);
-    ~ProgressThread() = default;
+    ~ProgressThread();
 
     void run() override;
 
@@ -71,6 +71,7 @@ signals:
 
 private:
     std::function<void()> callFunc;
+    DPromise *promise;
 };
 
 class ProgressDialog : public QDialog {
