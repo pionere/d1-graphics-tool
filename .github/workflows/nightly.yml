@@ -185,9 +185,9 @@ jobs:
         echo '[D1GraphicsTool-Windows-x86.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Windows-x86.zip)   | D1GraphicsTool for `Windows x86`' >> RELEASE_NOTE.md
         echo '[D1GraphicsTool-Linux-x64.zip](../../releases/download/dgt-nightly/D1GraphicsTool-Linux-x64.zip)   | D1GraphicsTool for `Linux x64`' >> RELEASE_NOTE.md
 
-    - name: Show content of workspace
-      run: find $RUNNER_WORKSPACE
-      shell: bash
+    #- name: Show content of workspace
+    #  run: find $RUNNER_WORKSPACE
+    #  shell: bash
 
     #- uses: dev-drprasad/delete-tag-and-release@v0.2.0
     - uses: pionere/delete-tag-and-release@v1

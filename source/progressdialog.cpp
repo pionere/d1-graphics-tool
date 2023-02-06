@@ -59,12 +59,12 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     theDialog->adjustSize();
 
     if (background) {
-        theWidget->update(theDialog->status, true, label);
+        theWidget->updateWidget(theDialog->status, true, label);
 
         theDialog->showMinimized();
         return;
     }
-    theWidget->update(theDialog->status, false, "");
+    theWidget->updateWidget(theDialog->status, false, "");
 
     theDialog->showNormal();
 }
@@ -96,7 +96,7 @@ void ProgressDialog::done()
         theDialog->ui->closePushButton->setFocus();
     }
 
-    theWidget->update(theDialog->status, !theDialog->ui->outputTextEdit->document()->isEmpty(), "");
+    theWidget->updateWidget(theDialog->status, !theDialog->ui->outputTextEdit->document()->isEmpty(), "");
 }
 
 void ProgressDialog::incBar(const QString &label, int maxValue)
@@ -131,19 +131,16 @@ bool ProgressDialog::wasCanceled()
     return theDialog->status >= PROGRESS_STATE::CANCEL;
 }
 
-bool ProgressDialog::incBarValue(int index, int amount)
+bool ProgressDialog::incValue()
 {
-    QProgressBar *progressBar = this->progressBars[index];
+    int index = theDialog->activeBars - 1;
+    int amount = 1;
+    QProgressBar *progressBar = theDialog->progressBars[index];
 
     amount += progressBar->value();
     progressBar->setValue(amount);
     progressBar->setToolTip(QString("%1%").arg(amount * 100 / progressBar->maximum()));
     return !ProgressDialog::wasCanceled();
-}
-
-bool ProgressDialog::incValue()
-{
-    return theDialog->incBarValue(theDialog->activeBars - 1, 1);
 }
 
 ProgressDialog &dProgress()
@@ -179,9 +176,9 @@ ProgressDialog &dProgressFail()
     return *theDialog;
 }
 
-void ProgressDialog::appendLine(const QString &line, bool replace)
+void ProgressDialog::addResult_impl(const QString &line, bool replace)
 {
-    QPlainTextEdit *textEdit = this->ui->outputTextEdit;
+    QPlainTextEdit *textEdit = theDialog->ui->outputTextEdit;
     QTextCursor cursor = textEdit->textCursor();
     int scrollValue = textEdit->verticalScrollBar()->value();
     // The user has selected text or scrolled away from the bottom: maintain position.
@@ -189,16 +186,19 @@ void ProgressDialog::appendLine(const QString &line, bool replace)
 
     // remove last line if replacing the text
     if (replace) {
-        this->removeLastLine();
+        // remove last line
+        QTextCursor lastCursor = QTextCursor(textEdit->document()->lastBlock());
+        lastCursor.select(QTextCursor::BlockUnderCursor);
+        lastCursor.removeSelectedText();
     }
     // Append the text at the end of the document.
-    PROGRESS_TEXT_MODE mode = this->textMode;
+    PROGRESS_TEXT_MODE mode = theDialog->textMode;
     if (mode == PROGRESS_TEXT_MODE::NORMAL) {
         // using appendHtml instead of appendPlainText because Qt can not handle mixed appends...
         // (the new block inherits the properties of previous/selected block which might be colored due to the code below)
         textEdit->appendHtml(line);
     } else { // Using <pre> tag to allow multiple spaces
-        QString htmlText = QString("<p style=\"color:%1;white-space:pre\">%2</p>").arg(mode == PROGRESS_TEXT_MODE::ERROR ? "red" : "orange").arg(line);
+        QString htmlText = QString("<p style=\"color:%1;white-space:pre\">%2</p>").arg(mode == PROGRESS_TEXT_MODE::WARNING ? "orange" : "red").arg(line);
         textEdit->appendHtml(htmlText);
     }
 
@@ -213,28 +213,21 @@ void ProgressDialog::appendLine(const QString &line, bool replace)
 
 ProgressDialog &ProgressDialog::operator<<(const QString &text)
 {
-    this->appendLine(text, false);
+    ProgressDialog::addResult_impl(text, false);
     this->textVersion++;
     return *this;
 }
 
-void ProgressDialog::removeLastLine()
-{
-    QTextCursor cursor = QTextCursor(this->ui->outputTextEdit->document()->lastBlock());
-    cursor.select(QTextCursor::BlockUnderCursor);
-    cursor.removeSelectedText();
-}
-
 ProgressDialog &ProgressDialog::operator<<(const QPair<QString, QString> &text)
 {
-    this->appendLine(text.second, this->ui->outputTextEdit->textCursor().selectedText() == text.first);
+    ProgressDialog::addResult_impl(text.second, this->ui->outputTextEdit->textCursor().selectedText() == text.first);
     this->textVersion++;
     return *this;
 }
 
 ProgressDialog &ProgressDialog::operator<<(QPair<int, QString> &idxText)
 {
-    this->appendLine(idxText.second, this->textVersion == idxText.first);
+    ProgressDialog::addResult_impl(idxText.second, this->textVersion == idxText.first);
     this->textVersion++;
     idxText.first = this->textVersion;
     return *this;
@@ -289,7 +282,7 @@ ProgressWidget::ProgressWidget(QWidget *parent)
     this->ui->openPushButton->setMinimumSize(fontHeight, fontHeight);
     this->ui->openPushButton->setMaximumSize(fontHeight, fontHeight);
     this->ui->openPushButton->setIconSize(QSize(fontHeight, fontHeight));
-    this->update(PROGRESS_STATE::DONE, false, "");
+    this->updateWidget(PROGRESS_STATE::DONE, false, "");
 
     theWidget = this;
 }
@@ -299,7 +292,7 @@ ProgressWidget::~ProgressWidget()
     delete ui;
 }
 
-void ProgressWidget::update(PROGRESS_STATE status, bool active, const QString &label)
+void ProgressWidget::updateWidget(PROGRESS_STATE status, bool active, const QString &label)
 {
     this->ui->openPushButton->setEnabled(active);
     QStyle::StandardPixmap type;

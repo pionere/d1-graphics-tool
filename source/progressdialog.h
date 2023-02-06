@@ -65,9 +65,7 @@ protected:
     void changeEvent(QEvent *e);
 
 private:
-    bool incBarValue(int index, int amount);
-    void appendLine(const QString &line, bool replace);
-    void removeLastLine();
+    static void addResult_impl(const QString &line, bool replace);
 
 private:
     Ui::ProgressDialog *ui;
@@ -95,7 +93,7 @@ public:
     ~ProgressWidget();
 
 private:
-    void update(PROGRESS_STATE status, bool active, const QString &text);
+    void updateWidget(PROGRESS_STATE status, bool active, const QString &text);
 
 private slots:
     void on_openPushButton_clicked();
