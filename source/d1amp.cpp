@@ -25,15 +25,10 @@ bool D1Amp::load(QString filePath, int tileCount, const OpenAsParam &params)
         }
     }
 
-    QByteArray fileData = file.readAll();
-    QBuffer fileBuffer(&fileData);
-
-    if (!fileBuffer.open(QIODevice::ReadOnly)) {
-        return false;
-    }
+    const QByteArray fileData = file.readAll();
 
     // File size check
-    auto fileSize = file.size();
+    unsigned fileSize = fileData.size();
     if (fileSize % 2 != 0) {
         dProgressErr() << tr("Invalid AMP file.");
         return false;
@@ -58,7 +53,7 @@ bool D1Amp::load(QString filePath, int tileCount, const OpenAsParam &params)
     }
 
     // Read AMP binary data
-    QDataStream in(&fileBuffer);
+    QDataStream in(fileData);
     // in.setByteOrder(QDataStream::LittleEndian);
 
     for (int i = 0; i < ampTileCount; i++) {

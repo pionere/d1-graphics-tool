@@ -26,15 +26,10 @@ bool D1Min::load(QString filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CE
         }
     }
 
-    QByteArray fileData = file.readAll();
-    QBuffer fileBuffer(&fileData);
-
-    if (!fileBuffer.open(QIODevice::ReadOnly)) {
-        return false;
-    }
+    const QByteArray fileData = file.readAll();
 
     // calculate subtileWidth/Height
-    auto fileSize = file.size();
+    unsigned fileSize = fileData.size();
     int subtileCount = sol->getSubtileCount();
     int width = params.minWidth;
     if (width == 0) {
@@ -87,7 +82,7 @@ bool D1Min::load(QString filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CE
     }
 
     // Read MIN binary data
-    QDataStream in(&fileBuffer);
+    QDataStream in(fileData);
     in.setByteOrder(QDataStream::LittleEndian);
 
     for (int i = 0; i < minSubtileCount; i++) {

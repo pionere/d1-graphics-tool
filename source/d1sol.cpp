@@ -24,19 +24,14 @@ bool D1Sol::load(QString filePath)
         }
     }
 
-    QByteArray fileData = file.readAll();
-    QBuffer fileBuffer(&fileData);
+    const QByteArray fileData = file.readAll();
 
-    if (!fileBuffer.open(QIODevice::ReadOnly)) {
-        return false;
-    }
-
-    int subTileCount = file.size();
+    int subTileCount = fileData.size();
 
     this->subProperties.clear();
 
     // Read SOL binary data
-    QDataStream in(&fileBuffer);
+    QDataStream in(fileData);
     in.setByteOrder(QDataStream::LittleEndian);
 
     for (int i = 0; i < subTileCount; i++) {

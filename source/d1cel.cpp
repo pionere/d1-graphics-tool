@@ -19,16 +19,13 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
     if (!file.open(QIODevice::ReadOnly))
         return false;
 
-    QByteArray fileData = file.readAll();
-    QBuffer fileBuffer(&fileData);
-
-    if (!fileBuffer.open(QIODevice::ReadOnly))
-        return false;
+    const QByteArray fileData = file.readAll();
 
     // Read CEL binary data
-    QDataStream in(&fileBuffer);
+    QDataStream in(fileData);
     in.setByteOrder(QDataStream::LittleEndian);
 
+    QIODevice *device = in.device();
     // CEL HEADER CHECKS
 
     // Read first DWORD
@@ -36,14 +33,14 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
     in >> firstDword;
 
     // Trying to find file size in CEL header
-    if (fileBuffer.size() < (4 + firstDword * 4 + 4))
+    if (device->size() < (4 + firstDword * 4 + 4))
         return false;
 
-    fileBuffer.seek(firstDword * 4 + 4);
+    device->seek(firstDword * 4 + 4);
     quint32 fileSizeDword;
     in >> fileSizeDword;
 
-    D1CEL_TYPE type = fileBuffer.size() == fileSizeDword ? D1CEL_TYPE::V1_REGULAR : D1CEL_TYPE::V1_COMPILATION;
+    D1CEL_TYPE type = device->size() == fileSizeDword ? D1CEL_TYPE::V1_REGULAR : D1CEL_TYPE::V1_COMPILATION;
 
     QList<QPair<quint32, quint32>> frameOffsets;
     if (type == D1CEL_TYPE::V1_REGULAR) {
@@ -53,7 +50,7 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
             gfx.groupFrameIndices.append(qMakePair(0, firstDword - 1));
         }
         for (unsigned int i = 1; i <= firstDword; i++) {
-            fileBuffer.seek(i * 4);
+            device->seek(i * 4);
             quint32 celFrameStartOffset;
             in >> celFrameStartOffset;
             quint32 celFrameEndOffset;
@@ -63,42 +60,42 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
         }
     } else {
         // Read offset of the last CEL of the CEL compilation
-        fileBuffer.seek(firstDword - 4);
+        device->seek(firstDword - 4);
         quint32 lastCelOffset;
         in >> lastCelOffset;
 
         // Go to last CEL of the CEL compilation
-        if (fileBuffer.size() < (lastCelOffset + 8))
+        if (device->size() < (lastCelOffset + 8))
             return false;
 
-        fileBuffer.seek(lastCelOffset);
+        device->seek(lastCelOffset);
 
         // Read last CEL header
         quint32 lastCelFrameCount;
         in >> lastCelFrameCount;
 
         // Read the last CEL size
-        if (fileBuffer.size() < (lastCelOffset + 4 + lastCelFrameCount * 4 + 4))
+        if (device->size() < (lastCelOffset + 4 + lastCelFrameCount * 4 + 4))
             return false;
 
-        fileBuffer.seek(lastCelOffset + 4 + lastCelFrameCount * 4);
+        device->seek(lastCelOffset + 4 + lastCelFrameCount * 4);
         quint32 lastCelSize;
         in >> lastCelSize;
 
         // If the last CEL size plus the last CEL offset is equal to
         // the file size then it's a CEL compilation
-        if (fileBuffer.size() != (lastCelOffset + lastCelSize)) {
+        if (device->size() != (lastCelOffset + lastCelSize)) {
             return false;
         }
 
         // Going through all CELs
         gfx.groupFrameIndices.clear();
         for (unsigned int i = 0; i * 4 < firstDword; i++) {
-            fileBuffer.seek(i * 4);
+            device->seek(i * 4);
             quint32 celOffset;
             in >> celOffset;
 
-            fileBuffer.seek(celOffset);
+            device->seek(celOffset);
             quint32 celFrameCount;
             in >> celFrameCount;
 
@@ -114,7 +111,7 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
                 quint32 celFrameStartOffset = 0;
                 quint32 celFrameEndOffset = 0;
 
-                fileBuffer.seek(celOffset + j * 4);
+                device->seek(celOffset + j * 4);
                 in >> celFrameStartOffset;
                 in >> celFrameEndOffset;
 
@@ -134,8 +131,8 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
     gfx.frames.clear();
     // std::stack<quint16> invalidFrames;
     for (const auto &offset : frameOffsets) {
-        fileBuffer.seek(offset.first);
-        QByteArray celFrameRawData = fileBuffer.read(offset.second - offset.first);
+        device->seek(offset.first);
+        QByteArray celFrameRawData = device->read(offset.second - offset.first);
 
         D1GfxFrame *frame = new D1GfxFrame();
         if (!D1CelFrame::load(*frame, celFrameRawData, params)) {

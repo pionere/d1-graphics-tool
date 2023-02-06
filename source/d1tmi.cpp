@@ -26,15 +26,10 @@ bool D1Tmi::load(QString filePath, D1Sol *sol, const OpenAsParam &params)
         }
     }
 
-    QByteArray fileData = file.readAll();
-    QBuffer fileBuffer(&fileData);
-
-    if (!fileBuffer.open(QIODevice::ReadOnly)) {
-        return false;
-    }
+    const QByteArray fileData = file.readAll();
 
     // File size check
-    auto fileSize = file.size();
+    unsigned fileSize = fileData.size();
     int subtileCount = sol->getSubtileCount();
     int tmiSubtileCount = fileSize;
     if (tmiSubtileCount != subtileCount + 1) {
@@ -53,7 +48,8 @@ bool D1Tmi::load(QString filePath, D1Sol *sol, const OpenAsParam &params)
     }
 
     // Read TMI binary data
-    QDataStream in(&fileBuffer);
+    QDataStream in(fileData);
+    // in.setByteOrder(QDataStream::LittleEndian);
 
     // skip the first byte
     quint8 readByte;
