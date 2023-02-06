@@ -81,10 +81,10 @@ public:
 
     static void openDialog();
 
-    static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars);
-    static void done(bool forceOpen = false);
+    static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, bool forceOpen);
+    static void done();
 
-    static void startAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, std::function<void()> &&callFunc, bool forceOpen = false);
+    static void startAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, bool forceOpen, std::function<void()> &&callFunc);
 
     static void incProgressBar(const QString &label, int maxValue);
 

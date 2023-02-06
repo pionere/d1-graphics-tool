@@ -200,7 +200,7 @@ void ProgressDialog::openDialog()
     theDialog->adjustSize();
 }
 
-void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars)
+void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, bool forceOpen)
 {
     bool background = mode == PROGRESS_DIALOG_STATE::BACKGROUND;
 
@@ -210,6 +210,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     taskTextLastLine.clear();
     // taskTextMode = PROGRESS_TEXT_MODE::NORMAL;
 
+    theDialog->forceOpen = forceOpen;
     theDialog->setWindowTitle(label);
     theDialog->ui->outputTextEdit->document()->clear();
     theDialog->activeBars = 0;
@@ -244,7 +245,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     theDialog->showNormal();
 }
 
-void ProgressDialog::done(bool forceOpen)
+void ProgressDialog::done()
 {
     theDialog->setWindowTitle(" ");
     theDialog->ui->progressLabel->setVisible(false);
@@ -264,7 +265,7 @@ void ProgressDialog::done(bool forceOpen)
         // dProgress() << QApplication::tr("Process cancelled.");
         theDialog->appendLine(PROGRESS_TEXT_MODE::WARNING, QApplication::tr("Process cancelled."), false);
     }
-    if (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible() || theDialog->isMinimized()) && !forceOpen) {
+    if (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible() || theDialog->isMinimized()) && !theDialog->forceOpen) {
         theDialog->hide();
     } else {
         theDialog->showNormal();
@@ -275,29 +276,9 @@ void ProgressDialog::done(bool forceOpen)
     theWidget->updateWidget(theDialog->status, !theDialog->ui->outputTextEdit->document()->isEmpty(), "");
 }
 
-/*void ProgressDialog::setupAsync(QFuture<void> &&future, bool forceOpen = false)
+void ProgressDialog::startAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, bool forceOpen, std::function<void()> &&callFunc)
 {
-    mainWatcher = new QFutureWatcher<void>();
-    QObject::connect(mainWatcher, &QFutureWatcher<void>::progressValueChanged, [](int progress) {
-        ProgressDialog::consumeMessages();
-    });
-    QObject::connect(mainWatcher, &QFutureWatcher<void>::finished, [forceOpen]() {
-        ProgressDialog::done(forceOpen);
-        mainWatcher->deleteLater();
-        mainWatcher = nullptr;
-    });
-    mainWatcher->setFuture(future);
-}
-
-void ProgressDialog::setupThread(QPromise<void> *promise)
-{
-    taskPromise = promise;
-    taskProgress = 0;
-}*/
-void ProgressDialog::startAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, std::function<void()> &&callFunc, bool forceOpen)
-{
-    theDialog->forceOpen = forceOpen;
-    ProgressDialog::start(mode, label, numBars);
+    ProgressDialog::start(mode, label, numBars, forceOpen);
     taskAsync = true;
 
     mainWatcher = new ProgressThread(std::move(callFunc));

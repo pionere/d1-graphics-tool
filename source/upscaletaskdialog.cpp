@@ -134,7 +134,7 @@ void UpscaleTaskDialog::on_upscaleButton_clicked()
 
     this->close();
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling assets..."), 3);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling assets..."), 3, false);
 
     UpscaleTaskDialog::runTask(params);
 
