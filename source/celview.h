@@ -83,6 +83,7 @@ public:
 
     void upscale(const UpscaleParam &params);
 
+    void update();
     void updateLabel();
     void displayFrame();
 
@@ -92,7 +93,6 @@ signals:
     void palModified();
 
 private:
-    void update();
     void insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);
     void updateGroupIndex();
     void setGroupIndex();

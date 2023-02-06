@@ -175,7 +175,7 @@ void MainWindow::changeColor(quint8 startColorIndex, quint8 endColorIndex, D1Gfx
         this->levelCelView->changeColor(startColorIndex, endColorIndex, pixel, all);
     }
     // rebuild palette hits
-    this->palHits->update();
+    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -340,11 +340,12 @@ void MainWindow::frameModified()
         this->celView->displayFrame();
     }
     if (this->levelCelView != nullptr) {
-        this->levelCelView->updateLabel();
+        // this->levelCelView->updateLabel();
         this->levelCelView->displayFrame();
     }
     // rebuild palette hits
     this->palHits->update();
+    this->palWidget->refresh();
 }
 
 void MainWindow::colorModified()
@@ -928,9 +929,6 @@ void MainWindow::openFile(const OpenAsParam &params)
     // Adding the CelView to the main frame
     this->ui->mainFrame->layout()->addWidget(isTileset ? (QWidget *)this->levelCelView : this->celView);
 
-    // Adding the PalView to the pal frame
-    // this->ui->palFrame->layout()->addWidget( this->palView );
-
     // update available menu entries
     this->ui->menuEdit->setEnabled(true);
     this->ui->menuPalette->setEnabled(true);
@@ -1058,10 +1056,12 @@ void MainWindow::saveFile(const SaveAsParam &params)
     if (change) {
         // update view
         if (this->celView != nullptr) {
-            this->celView->initialize(this->pal, this->gfx);
+            this->celView->update();
+            this->celView->displayFrame();
         }
         if (this->levelCelView != nullptr) {
-            this->levelCelView->initialize(this->pal, this->gfx, this->min, this->til, this->sol, this->amp, this->tmi);
+            // this->levelCelView->update();
+            this->levelCelView->displayFrame();
         }
     }
 
@@ -1079,6 +1079,8 @@ void MainWindow::upscale(const UpscaleParam &params)
     if (this->levelCelView != nullptr) {
         this->levelCelView->upscale(params);
     }
+
+    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1437,6 +1439,8 @@ void MainWindow::on_actionCleanupFrames_Tileset_triggered()
 
     this->levelCelView->cleanupFrames();
 
+    this->updateWindow();
+
     // Clear loading message from status bar
     ProgressDialog::done();
 }
@@ -1446,6 +1450,8 @@ void MainWindow::on_actionCleanupSubtiles_Tileset_triggered()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, true);
 
     this->levelCelView->cleanupSubtiles();
+
+    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1457,6 +1463,8 @@ void MainWindow::on_actionCleanupTileset_Tileset_triggered()
 
     this->levelCelView->cleanupTileset();
 
+    this->updateWindow();
+
     // Clear loading message from status bar
     ProgressDialog::done();
 }
@@ -1466,6 +1474,8 @@ void MainWindow::on_actionCompressSubtiles_Tileset_triggered()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, true);
 
     this->levelCelView->compressSubtiles();
+
+    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1477,6 +1487,8 @@ void MainWindow::on_actionCompressTiles_Tileset_triggered()
 
     this->levelCelView->compressTiles();
 
+    this->updateWindow();
+
     // Clear loading message from status bar
     ProgressDialog::done();
 }
@@ -1486,6 +1498,8 @@ void MainWindow::on_actionCompressTileset_Tileset_triggered()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 2, true);
 
     this->levelCelView->compressTileset();
+
+    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1497,6 +1511,8 @@ void MainWindow::on_actionSortFrames_Tileset_triggered()
 
     this->levelCelView->sortFrames();
 
+    this->updateWindow();
+
     // Clear loading message from status bar
     ProgressDialog::done();
 }
@@ -1507,6 +1523,8 @@ void MainWindow::on_actionSortSubtiles_Tileset_triggered()
 
     this->levelCelView->sortSubtiles();
 
+    this->updateWindow();
+
     // Clear loading message from status bar
     ProgressDialog::done();
 }
@@ -1516,6 +1534,8 @@ void MainWindow::on_actionSortTileset_Tileset_triggered()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, false);
 
     this->levelCelView->sortTileset();
+
+    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
