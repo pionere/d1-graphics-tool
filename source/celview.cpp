@@ -252,9 +252,9 @@ void CelView::changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPix
         frame->replacePixels(startColorIndex, endColorIndex, pixel);
     }
     this->gfx->setModified();
-    // update the view
-    this->update();
-    this->displayFrame();
+    // update the view - done by the caller
+    // this->update();
+    // this->displayFrame();
 }
 
 int CelView::getCurrentFrameIndex()
@@ -301,9 +301,9 @@ void CelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefil
             return; // no new frame -> done
         }
     }
-    // update the view
-    this->update();
-    this->displayFrame();
+    // update the view - done by the caller
+    // this->update();
+    // this->displayFrame();
 }
 
 void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath)
@@ -367,9 +367,9 @@ void CelView::addToCurrentFrame(const QString &imagefilePath)
             this->pal->updateColors(basePal);
             emit this->palModified();
         }
-        // update the view
-        this->update();
-        this->displayFrame();
+        // update the view - done by the caller
+        // this->update();
+        // this->displayFrame();
         return;
     }
 
@@ -385,9 +385,9 @@ void CelView::addToCurrentFrame(const QString &imagefilePath)
         return; // error set by gfx->addToFrame
     }
 
-    // update the view
-    this->update();
-    this->displayFrame();
+    // update the view - done by the caller
+    // this->update();
+    // this->displayFrame();
 }
 
 void CelView::replaceCurrentFrame(const QString &imagefilePath)
@@ -407,9 +407,9 @@ void CelView::replaceCurrentFrame(const QString &imagefilePath)
             // update the palette
             emit this->palModified();
         }
-        // update the view
-        this->update();
-        this->displayFrame();
+        // update the view - done by the caller
+        // this->update();
+        // this->displayFrame();
         return;
     }
 
@@ -422,9 +422,9 @@ void CelView::replaceCurrentFrame(const QString &imagefilePath)
 
     this->gfx->replaceFrame(this->currentFrameIndex, image);
 
-    // update the view
-    this->update();
-    this->displayFrame();
+    // update the view - done by the caller
+    // this->update();
+    // this->displayFrame();
 }
 
 void CelView::removeCurrentFrame()
@@ -435,9 +435,9 @@ void CelView::removeCurrentFrame()
         this->currentFrameIndex = std::max(0, this->currentFrameIndex - 1);
     }
     this->updateGroupIndex();
-    // update the view
-    this->update();
-    this->displayFrame();
+    // update the view - done by the caller
+    // this->update();
+    // this->displayFrame();
 }
 
 QImage CelView::copyCurrent()
@@ -455,9 +455,9 @@ void CelView::pasteCurrent(const QImage &image)
     } else {
         this->gfx->insertFrame(this->currentFrameIndex, image);
     }
-    // update the view
-    this->update();
-    this->displayFrame();
+    // update the view - done by the caller
+    // this->update();
+    // this->displayFrame();
 }
 
 void CelView::upscale(const UpscaleParam &params)
@@ -467,9 +467,9 @@ void CelView::upscale(const UpscaleParam &params)
     ProgressDialog::incBar(tr("Upscaling..."), amount + 1);
 
     if (Upscaler::upscaleGfx(this->gfx, params)) {
-        // update the view
-        this->update();
-        this->displayFrame();
+        // update the view - done by the caller
+        // this->update();
+        // this->displayFrame();
     }
 
     ProgressDialog::decBar();

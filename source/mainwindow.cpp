@@ -242,6 +242,15 @@ void MainWindow::updateWindow()
         this->tileMenu.actions()[3]->setEnabled(hasTile); // replace tile
         this->tileMenu.actions()[4]->setEnabled(hasTile); // delete tile
     }
+    // update the view
+    if (this->celView != nullptr) {
+        this->celView->update();
+        this->celView->displayFrame();
+    }
+    if (this->levelCelView != nullptr) {
+        // this->levelCelView->update();
+        this->levelCelView->displayFrame();
+    }
 }
 
 bool MainWindow::loadPal(QString palFilePath)
@@ -334,18 +343,8 @@ void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned cou
 void MainWindow::frameModified()
 {
     this->gfx->setModified();
-    // update the view
-    if (this->celView != nullptr) {
-        this->celView->updateLabel();
-        this->celView->displayFrame();
-    }
-    if (this->levelCelView != nullptr) {
-        // this->levelCelView->updateLabel();
-        this->levelCelView->displayFrame();
-    }
-    // rebuild palette hits
-    this->palHits->update();
-    this->palWidget->refresh();
+
+    this->updateWindow();
 }
 
 void MainWindow::colorModified()
@@ -1011,7 +1010,6 @@ void MainWindow::saveFile(const SaveAsParam &params)
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Saving..."), 0, false);
 
-    bool change = false;
     QString filePath = params.celFilePath.isEmpty() ? this->gfx->getFilePath() : params.celFilePath;
     if (this->gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
         if (!filePath.toLower().endsWith("cel")) {
@@ -1023,12 +1021,12 @@ void MainWindow::saveFile(const SaveAsParam &params)
                 return;
             }
         }
-        change = D1CelTileset::save(*this->gfx, params);
+        D1CelTileset::save(*this->gfx, params);
     } else {
         if (filePath.toLower().endsWith("cel")) {
-            change = D1Cel::save(*this->gfx, params);
+            D1Cel::save(*this->gfx, params);
         } else if (filePath.toLower().endsWith("cl2")) {
-            change = D1Cl2::save(*this->gfx, params);
+            D1Cl2::save(*this->gfx, params);
         } else {
             QMessageBox::critical(this, tr("Error"), tr("Not supported."));
             // Clear loading message from status bar
@@ -1038,32 +1036,22 @@ void MainWindow::saveFile(const SaveAsParam &params)
     }
 
     if (this->min != nullptr) {
-        change |= this->min->save(params);
+        this->min->save(params);
     }
     if (this->til != nullptr) {
-        change |= this->til->save(params);
+        this->til->save(params);
     }
     if (this->sol != nullptr) {
-        change |= this->sol->save(params);
+        this->sol->save(params);
     }
     if (this->amp != nullptr) {
-        change |= this->amp->save(params);
+        this->amp->save(params);
     }
     if (this->tmi != nullptr) {
-        change |= this->tmi->save(params);
+        this->tmi->save(params);
     }
 
-    if (change) {
-        // update view
-        if (this->celView != nullptr) {
-            this->celView->update();
-            this->celView->displayFrame();
-        }
-        if (this->levelCelView != nullptr) {
-            // this->levelCelView->update();
-            this->levelCelView->displayFrame();
-        }
-    }
+    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
