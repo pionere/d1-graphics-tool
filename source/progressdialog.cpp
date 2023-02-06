@@ -259,8 +259,7 @@ void ProgressDialog::done()
     if (theDialog->status == PROGRESS_STATE::RUNNING) {
         theDialog->status = PROGRESS_STATE::DONE;
     } else if (theDialog->status == PROGRESS_STATE::CANCEL) {
-        // dProgress() << QApplication::tr("Process cancelled.");
-        ProgressDialog::addResult_impl(PROGRESS_TEXT_MODE::WARNING, QApplication::tr("Process cancelled."), false);
+        ProgressDialog::addResult_impl(PROGRESS_TEXT_MODE::NORMAL, QApplication::tr("Process cancelled."), false);
     }
     if (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible() || theDialog->isMinimized()) && !theDialog->forceOpen) {
         theDialog->hide();
@@ -445,9 +444,9 @@ void ProgressDialog::addResult_impl(PROGRESS_TEXT_MODE mode, const QString &line
     // remove last line if replacing the text
     if (replace) {
         // remove last line
-        QTextCursor cursor = QTextCursor(textEdit->document()->lastBlock());
-        cursor.select(QTextCursor::BlockUnderCursor);
-        cursor.removeSelectedText();
+        QTextCursor lastCursor = QTextCursor(textEdit->document()->lastBlock());
+        lastCursor.select(QTextCursor::BlockUnderCursor);
+        lastCursor.removeSelectedText();
     }
     // Append the text at the end of the document.
     if (mode == PROGRESS_TEXT_MODE::NORMAL) {

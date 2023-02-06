@@ -175,7 +175,7 @@ void MainWindow::changeColor(quint8 startColorIndex, quint8 endColorIndex, D1Gfx
         this->levelCelView->changeColor(startColorIndex, endColorIndex, pixel, all);
     }
     // rebuild palette hits
-    this->palHits->update();
+    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1004,6 +1004,8 @@ void MainWindow::openPalFiles(QStringList filePaths, PaletteWidget *widget)
             this->setBaseTrn(firstFound);
         }
     }
+    // rebuild palette hits
+    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1079,6 +1081,8 @@ void MainWindow::upscale(const UpscaleParam &params)
     if (this->levelCelView != nullptr) {
         this->levelCelView->upscale(params);
     }
+
+    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1437,6 +1441,8 @@ void MainWindow::on_actionCleanupFrames_Tileset_triggered()
 
     this->levelCelView->cleanupFrames();
 
+    this->updateWindow();
+
     // Clear loading message from status bar
     ProgressDialog::done();
 }
@@ -1446,6 +1452,8 @@ void MainWindow::on_actionCleanupSubtiles_Tileset_triggered()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, true);
 
     this->levelCelView->cleanupSubtiles();
+
+    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1457,6 +1465,8 @@ void MainWindow::on_actionCleanupTileset_Tileset_triggered()
 
     this->levelCelView->cleanupTileset();
 
+    this->updateWindow();
+
     // Clear loading message from status bar
     ProgressDialog::done();
 }
@@ -1466,6 +1476,8 @@ void MainWindow::on_actionCompressSubtiles_Tileset_triggered()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, true);
 
     this->levelCelView->compressSubtiles();
+
+    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1477,6 +1489,8 @@ void MainWindow::on_actionCompressTiles_Tileset_triggered()
 
     this->levelCelView->compressTiles();
 
+    this->updateWindow();
+
     // Clear loading message from status bar
     ProgressDialog::done();
 }
@@ -1486,6 +1500,8 @@ void MainWindow::on_actionCompressTileset_Tileset_triggered()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 2, true);
 
     this->levelCelView->compressTileset();
+
+    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1497,6 +1513,8 @@ void MainWindow::on_actionSortFrames_Tileset_triggered()
 
     this->levelCelView->sortFrames();
 
+    this->updateWindow();
+
     // Clear loading message from status bar
     ProgressDialog::done();
 }
@@ -1507,6 +1525,8 @@ void MainWindow::on_actionSortSubtiles_Tileset_triggered()
 
     this->levelCelView->sortSubtiles();
 
+    this->updateWindow();
+
     // Clear loading message from status bar
     ProgressDialog::done();
 }
@@ -1516,6 +1536,8 @@ void MainWindow::on_actionSortTileset_Tileset_triggered()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, false);
 
     this->levelCelView->sortTileset();
+
+    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
