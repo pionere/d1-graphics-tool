@@ -134,15 +134,15 @@ void UpscaleTaskDialog::on_upscaleButton_clicked()
 
     this->close();
 
-    /*ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling assets..."), 3, PAF_NONE);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling assets..."), 3, PAF_NONE);
 
     UpscaleTaskDialog::runTask(params);
 
-    ProgressDialog::done();*/
-    std::function<void()> func = [params]() {
+    ProgressDialog::done();
+    /*std::function<void()> func = [params]() {
         UpscaleTaskDialog::runTask(params);
     };
-    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling assets..."), 0, PAF_NONE, std::move(func));
+    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling assets..."), 0, PAF_NONE, std::move(func));*/
 }
 
 void UpscaleTaskDialog::on_upscaleCancelButton_clicked()
@@ -379,7 +379,9 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         1, // Special CEL Files
         8, // Cutscenes
         2, // Art CEL Files
-        4, // Regular CL2 Files
+        4, // Regular CL2 Files - Missiles
+        4, // Regular CL2 Files - Monsters
+        4, // Regular CL2 Files - PlrGfx
         1, // Fixed CL2 Files
         4, // Tilesets
         1, // Fixed Tilesets
