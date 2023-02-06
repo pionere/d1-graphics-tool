@@ -12,6 +12,10 @@
 static ProgressDialog *theDialog;
 static ProgressWidget *theWidget;
 
+static int taskTextVersion;
+static QString taskTextLastLine;
+static PROGRESS_TEXT_MODE taskTextMode;
+
 ProgressDialog::ProgressDialog(QWidget *parent)
     : QDialog(parent, Qt::WindowStaysOnTopHint | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint)
     , ui(new Ui::ProgressDialog())
@@ -36,10 +40,13 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
 {
     bool background = mode == PROGRESS_DIALOG_STATE::BACKGROUND;
 
+    taskTextVersion = 0;
+    taskTextLastLine.clear();
+    // taskTextMode = PROGRESS_TEXT_MODE::NORMAL;
+
     theDialog->forceOpen = forceOpen;
     theDialog->setWindowTitle(label);
     theDialog->ui->outputTextEdit->clear();
-    theDialog->textVersion = 0;
     theDialog->activeBars = 0;
     theDialog->status = PROGRESS_STATE::RUNNING;
     theDialog->ui->progressLabel->setVisible(!background);
@@ -86,7 +93,7 @@ void ProgressDialog::done()
     if (theDialog->status == PROGRESS_STATE::RUNNING) {
         theDialog->status = PROGRESS_STATE::DONE;
     } else if (theDialog->status == PROGRESS_STATE::CANCEL) {
-        dProgress() << tr("Process cancelled.");
+        ProgressDialog::addResult_impl(PROGRESS_TEXT_MODE::NORMAL, QApplication::tr("Process cancelled."), false);
     }
     if (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible() || theDialog->isMinimized()) && !theDialog->forceOpen) {
         theDialog->hide();
@@ -145,38 +152,29 @@ bool ProgressDialog::incValue()
 
 ProgressDialog &dProgress()
 {
-    theDialog->textMode = PROGRESS_TEXT_MODE::NORMAL;
+    taskTextMode = PROGRESS_TEXT_MODE::NORMAL;
     return *theDialog;
 }
 
 ProgressDialog &dProgressWarn()
 {
-    if (theDialog->status < PROGRESS_STATE::WARN) {
-        theDialog->status = PROGRESS_STATE::WARN;
-    }
-    theDialog->textMode = PROGRESS_TEXT_MODE::WARNING;
+    taskTextMode = PROGRESS_TEXT_MODE::WARNING;
     return *theDialog;
 }
 
 ProgressDialog &dProgressErr()
 {
-    if (theDialog->status < PROGRESS_STATE::ERROR) {
-        theDialog->status = PROGRESS_STATE::ERROR;
-    }
-    theDialog->textMode = PROGRESS_TEXT_MODE::ERROR;
+    taskTextMode = PROGRESS_TEXT_MODE::ERROR;
     return *theDialog;
 }
 
 ProgressDialog &dProgressFail()
 {
-    if (theDialog->status < PROGRESS_STATE::FAIL) {
-        theDialog->status = PROGRESS_STATE::FAIL;
-    }
-    theDialog->textMode = PROGRESS_TEXT_MODE::ERROR;
+    taskTextMode = PROGRESS_TEXT_MODE::FAIL;
     return *theDialog;
 }
 
-void ProgressDialog::addResult_impl(const QString &line, bool replace)
+void ProgressDialog::addResult_impl(PROGRESS_TEXT_MODE mode, const QString &line, bool replace)
 {
     QPlainTextEdit *textEdit = theDialog->ui->outputTextEdit;
     QTextCursor cursor = textEdit->textCursor();
@@ -192,7 +190,6 @@ void ProgressDialog::addResult_impl(const QString &line, bool replace)
         lastCursor.removeSelectedText();
     }
     // Append the text at the end of the document.
-    PROGRESS_TEXT_MODE mode = theDialog->textMode;
     if (mode == PROGRESS_TEXT_MODE::NORMAL) {
         // using appendHtml instead of appendPlainText because Qt can not handle mixed appends...
         // (the new block inherits the properties of previous/selected block which might be colored due to the code below)
@@ -200,6 +197,25 @@ void ProgressDialog::addResult_impl(const QString &line, bool replace)
     } else { // Using <pre> tag to allow multiple spaces
         QString htmlText = QString("<p style=\"color:%1;white-space:pre\">%2</p>").arg(mode == PROGRESS_TEXT_MODE::WARNING ? "orange" : "red").arg(line);
         textEdit->appendHtml(htmlText);
+    }
+    // update status
+    PROGRESS_STATE refStatus;
+    switch (mode) {
+    case PROGRESS_TEXT_MODE::NORMAL:
+        refStatus = PROGRESS_STATE::RUNNING;
+        break;
+    case PROGRESS_TEXT_MODE::WARNING:
+        refStatus = PROGRESS_STATE::WARN;
+        break;
+    case PROGRESS_TEXT_MODE::ERROR:
+        refStatus = PROGRESS_STATE::ERROR;
+        break;
+    case PROGRESS_TEXT_MODE::FAIL:
+        refStatus = PROGRESS_STATE::FAIL;
+        break;
+    }
+    if (theDialog->status < refStatus) {
+        theDialog->status = refStatus;
     }
 
     if (!active) {
@@ -213,23 +229,28 @@ void ProgressDialog::addResult_impl(const QString &line, bool replace)
 
 ProgressDialog &ProgressDialog::operator<<(const QString &text)
 {
-    ProgressDialog::addResult_impl(text, false);
-    this->textVersion++;
+    ProgressDialog::addResult_impl(taskTextMode, text, false);
+    taskTextLastLine = text;
+    taskTextVersion++;
     return *this;
 }
 
 ProgressDialog &ProgressDialog::operator<<(const QPair<QString, QString> &text)
 {
-    ProgressDialog::addResult_impl(text.second, this->ui->outputTextEdit->textCursor().selectedText() == text.first);
-    this->textVersion++;
+    bool replace = taskTextLastLine == text.first;
+    ProgressDialog::addResult_impl(taskTextMode, text.second, replace);
+    taskTextVersion++;
+    taskTextLastLine = text.second;
     return *this;
 }
 
 ProgressDialog &ProgressDialog::operator<<(QPair<int, QString> &idxText)
 {
-    ProgressDialog::addResult_impl(idxText.second, this->textVersion == idxText.first);
-    this->textVersion++;
-    idxText.first = this->textVersion;
+    bool replace = taskTextVersion == idxText.first;
+    ProgressDialog::addResult_impl(taskTextMode, idxText.second, replace);
+    taskTextVersion++;
+    taskTextLastLine = idxText.second;
+    idxText.first = taskTextVersion;
     return *this;
 }
 

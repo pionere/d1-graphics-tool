@@ -27,6 +27,7 @@ enum class PROGRESS_TEXT_MODE {
     NORMAL,
     WARNING,
     ERROR,
+    FAIL,
 };
 
 class ProgressDialog : public QDialog {
@@ -65,16 +66,14 @@ protected:
     void changeEvent(QEvent *e);
 
 private:
-    static void addResult_impl(const QString &line, bool replace);
+    static void addResult_impl(PROGRESS_TEXT_MODE textMode, const QString &line, bool replace);
 
 private:
     Ui::ProgressDialog *ui;
 
-    int textVersion;
     QList<QProgressBar *> progressBars;
     int activeBars;
     PROGRESS_STATE status = PROGRESS_STATE::DONE;
-    PROGRESS_TEXT_MODE textMode = PROGRESS_TEXT_MODE::NORMAL;
     bool forceOpen;
 };
 
