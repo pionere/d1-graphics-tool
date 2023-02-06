@@ -683,7 +683,7 @@ void ExportDialog::on_exportButton_clicked()
             break;
         }
     };
-    /*ProgressThread *future = */ ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Export"), 1, false, std::move(func));
+    /*ProgressThread *future = */ ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Export"), 1, PAF_NONE, std::move(func));
     // future->start();
 }
 

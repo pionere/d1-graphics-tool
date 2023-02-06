@@ -31,6 +31,12 @@ enum class PROGRESS_TEXT_MODE {
     FAIL,
 };
 
+typedef enum progress_after_flags {
+    PAF_NONE           = 0,
+    PAF_OPEN_DIALOG    = 1 << 0,
+    PAF_UPDATE_WINDOW  = 1 << 1,
+} progress_after_flags;
+
 class DPromise : public QObject {
     Q_OBJECT
 
@@ -81,10 +87,10 @@ public:
 
     static void openDialog();
 
-    static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, bool forceOpen);
+    static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, int flags);
     static void done();
 
-    static void startAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, bool forceOpen, std::function<void()> &&callFunc);
+    static void startAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, int flags, std::function<void()> &&callFunc);
 
     static void incProgressBar(const QString &label, int maxValue);
 
@@ -123,13 +129,16 @@ private:
 
     static void consumeMessages();
 
+signals:
+    void updateWindow();
+
 private:
     Ui::ProgressDialog *ui;
 
     QList<QProgressBar *> progressBars;
     int activeBars;
     PROGRESS_STATE status = PROGRESS_STATE::DONE;
-    bool forceOpen;
+    int afterFlags; // progress_after_flags
 };
 
 ProgressDialog &dProgress();
