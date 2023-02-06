@@ -145,6 +145,9 @@ MainWindow::MainWindow()
     // Configuration update triggers refresh of the translator and the palette widgets
     QObject::connect(&this->settingsDialog, &SettingsDialog::configurationSaved, this, &MainWindow::reloadConfig);
 
+    // Configuration update triggers refresh of the translator and the palette widgets
+    QObject::connect(&this->progressDialog, &ProgressDialog::updateWindow, this, &MainWindow::updateWindow);
+
     setAcceptDrops(true);
 
     // initialize the translators
@@ -166,7 +169,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel, bool all)
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, false);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
     if (this->celView != nullptr) {
         this->celView->changeColor(startColorIndex, endColorIndex, pixel, all);
@@ -174,8 +177,6 @@ void MainWindow::changeColor(quint8 startColorIndex, quint8 endColorIndex, D1Gfx
     if (this->levelCelView != nullptr) {
         this->levelCelView->changeColor(startColorIndex, endColorIndex, pixel, all);
     }
-    // rebuild palette hits
-    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -227,10 +228,14 @@ QString MainWindow::getLastFilePath()
 void MainWindow::updateWindow()
 {
     // rebuild palette hits
-    this->palHits->update();
-    this->palWidget->refresh();
+    if (this->palHits != nullptr) {
+        this->palHits->update();
+    }
+    if (this->palWidget != nullptr) {
+        this->palWidget->refresh();
+    }
     // update menu options
-    bool hasFrame = this->gfx->getFrameCount() != 0;
+    bool hasFrame = this->gfx != nullptr && this->gfx->getFrameCount() != 0;
     this->frameMenu.actions()[2]->setEnabled(hasFrame); // replace frame
     this->frameMenu.actions()[3]->setEnabled(hasFrame); // delete frame
     if (this->levelCelView != nullptr) {
@@ -636,7 +641,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         QClipboard *clipboard = QGuiApplication::clipboard();
         QImage image = clipboard->image();
         if (!image.isNull()) {
-            ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, false);
+            ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW);
 
             if (this->celView != nullptr) {
                 this->celView->pasteCurrent(image);
@@ -644,7 +649,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             if (this->levelCelView != nullptr) {
                 this->levelCelView->pasteCurrent(image);
             }
-            this->updateWindow();
+
             // Clear loading message from status bar
             ProgressDialog::done();
         }
@@ -742,7 +747,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     this->on_actionClose_triggered();
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, false);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW);
 
     // Loading default.pal
     D1Pal *newPal = new D1Pal();
@@ -951,8 +956,6 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     this->ui->menuTileset->setEnabled(isTileset);
 
-    this->updateWindow();
-
     // Clear loading message from status bar
     ProgressDialog::done();
 }
@@ -963,7 +966,7 @@ void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, boo
         return;
     }
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, false);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, PAF_UPDATE_WINDOW);
 
     if (this->celView != nullptr) {
         this->celView->insertImageFiles(mode, filePaths, append);
@@ -971,7 +974,6 @@ void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, boo
     if (this->levelCelView != nullptr) {
         this->levelCelView->insertImageFiles(mode, filePaths, append);
     }
-    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -981,7 +983,7 @@ void MainWindow::openPalFiles(QStringList filePaths, PaletteWidget *widget)
 {
     QString firstFound;
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, false);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, PAF_NONE);
 
     if (widget == this->palWidget) {
         for (QString path : filePaths) {
@@ -1018,7 +1020,7 @@ void MainWindow::openPalFiles(QStringList filePaths, PaletteWidget *widget)
 
 void MainWindow::saveFile(const SaveAsParam &params)
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Saving..."), 0, false);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Saving..."), 0, PAF_UPDATE_WINDOW);
 
     QString filePath = params.celFilePath.isEmpty() ? this->gfx->getFilePath() : params.celFilePath;
     if (this->gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
@@ -1061,15 +1063,13 @@ void MainWindow::saveFile(const SaveAsParam &params)
         this->tmi->save(params);
     }
 
-    this->updateWindow();
-
     // Clear loading message from status bar
     ProgressDialog::done();
 }
 
 void MainWindow::upscale(const UpscaleParam &params)
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling..."), 1, false);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling..."), 1, PAF_UPDATE_WINDOW);
 
     if (this->celView != nullptr) {
         this->celView->upscale(params);
@@ -1077,8 +1077,6 @@ void MainWindow::upscale(const UpscaleParam &params)
     if (this->levelCelView != nullptr) {
         this->levelCelView->upscale(params);
     }
-
-    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1225,7 +1223,7 @@ void MainWindow::on_actionAddTo_Frame_triggered()
         return;
     }
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, false);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, PAF_UPDATE_WINDOW);
 
     if (this->celView != nullptr) {
         this->celView->addToCurrentFrame(imgFilePath);
@@ -1233,7 +1231,6 @@ void MainWindow::on_actionAddTo_Frame_triggered()
     if (this->levelCelView != nullptr) {
         this->levelCelView->addToCurrentFrame(imgFilePath);
     }
-    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1258,7 +1255,7 @@ void MainWindow::on_actionReplace_Frame_triggered()
         return;
     }
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, false);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, PAF_UPDATE_WINDOW);
 
     if (this->celView != nullptr) {
         this->celView->replaceCurrentFrame(imgFilePath);
@@ -1266,7 +1263,6 @@ void MainWindow::on_actionReplace_Frame_triggered()
     if (this->levelCelView != nullptr) {
         this->levelCelView->replaceCurrentFrame(imgFilePath);
     }
-    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1308,11 +1304,9 @@ void MainWindow::on_actionReplace_Subtile_triggered()
         return;
     }
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, false);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, PAF_UPDATE_WINDOW);
 
     this->levelCelView->replaceCurrentSubtile(imgFilePath);
-
-    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1349,11 +1343,9 @@ void MainWindow::on_actionReplace_Tile_triggered()
         return;
     }
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, false);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, PAF_UPDATE_WINDOW);
 
     this->levelCelView->replaceCurrentTile(imgFilePath);
-
-    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1383,7 +1375,7 @@ void MainWindow::on_actionUpscale_triggered()
 
 void MainWindow::on_actionReportUse_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, true);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
     this->levelCelView->reportUsage();
 
@@ -1393,7 +1385,7 @@ void MainWindow::on_actionReportUse_Tileset_triggered()
 
 void MainWindow::on_actionResetFrameTypes_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, true);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
     this->levelCelView->resetFrameTypes();
 
@@ -1403,7 +1395,7 @@ void MainWindow::on_actionResetFrameTypes_Tileset_triggered()
 
 void MainWindow::on_actionInefficientFrames_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, true);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
     this->levelCelView->inefficientFrames();
 
@@ -1413,7 +1405,7 @@ void MainWindow::on_actionInefficientFrames_Tileset_triggered()
 
 void MainWindow::on_actionCheckSubtileFlags_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, true);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
     this->levelCelView->checkSubtileFlags();
 
@@ -1423,7 +1415,7 @@ void MainWindow::on_actionCheckSubtileFlags_Tileset_triggered()
 
 void MainWindow::on_actionCheckTileFlags_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, true);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
     this->levelCelView->checkTileFlags();
 
@@ -1433,11 +1425,9 @@ void MainWindow::on_actionCheckTileFlags_Tileset_triggered()
 
 void MainWindow::on_actionCleanupFrames_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, true);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
 
     this->levelCelView->cleanupFrames();
-
-    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1445,11 +1435,9 @@ void MainWindow::on_actionCleanupFrames_Tileset_triggered()
 
 void MainWindow::on_actionCleanupSubtiles_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, true);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
 
     this->levelCelView->cleanupSubtiles();
-
-    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1457,11 +1445,9 @@ void MainWindow::on_actionCleanupSubtiles_Tileset_triggered()
 
 void MainWindow::on_actionCleanupTileset_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 2, true);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 2, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
 
     this->levelCelView->cleanupTileset();
-
-    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1469,11 +1455,9 @@ void MainWindow::on_actionCleanupTileset_Tileset_triggered()
 
 void MainWindow::on_actionCompressSubtiles_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, true);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
 
     this->levelCelView->compressSubtiles();
-
-    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1481,11 +1465,9 @@ void MainWindow::on_actionCompressSubtiles_Tileset_triggered()
 
 void MainWindow::on_actionCompressTiles_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, true);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
 
     this->levelCelView->compressTiles();
-
-    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1493,11 +1475,9 @@ void MainWindow::on_actionCompressTiles_Tileset_triggered()
 
 void MainWindow::on_actionCompressTileset_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 2, true);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 2, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
 
     this->levelCelView->compressTileset();
-
-    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1505,11 +1485,9 @@ void MainWindow::on_actionCompressTileset_Tileset_triggered()
 
 void MainWindow::on_actionSortFrames_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, false);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
     this->levelCelView->sortFrames();
-
-    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1517,11 +1495,9 @@ void MainWindow::on_actionSortFrames_Tileset_triggered()
 
 void MainWindow::on_actionSortSubtiles_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, false);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
     this->levelCelView->sortSubtiles();
-
-    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1529,11 +1505,9 @@ void MainWindow::on_actionSortSubtiles_Tileset_triggered()
 
 void MainWindow::on_actionSortTileset_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, false);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
     this->levelCelView->sortTileset();
-
-    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
