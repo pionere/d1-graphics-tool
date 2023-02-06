@@ -23,7 +23,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
 
     quint32 frameDataStartOffset = 0;
     unsigned width = 0;
-    frame.clipped = false;
+    // frame.clipped = false;
     if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
         // Checking the presence of the {CEL FRAME HEADER}
         if ((quint8)rawData[0] == 0x0A && (quint8)rawData[1] == 0x00) {
@@ -64,17 +64,14 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
 
         // Transparent pixels group
         if (readByte > 0x7F) {
-            // A pixel line can't exceed the image width
-            if ((pixelLine.size() + (256 - readByte)) > width)
-                return false;
-
             for (int i = 0; i < (256 - readByte); i++)
                 pixelLine.push_back(D1GfxPixel::transparentPixel());
         } else {
             // Palette indices group
-            // A pixel line can't exceed the image width
-            if ((pixelLine.size() + readByte) > width)
-                return false;
+            if ((o + readByte) >= rawData.size()) {
+                pixelLine.push_back(D1GfxPixel::transparentPixel()); // ensure pixelLine is not empty to report error at the end
+                break;
+            }
 
             for (int i = 0; i < readByte; i++) {
                 o++;
@@ -82,7 +79,10 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
             }
         }
 
-        if (pixelLine.size() == width) {
+        if (pixelLine.size() >= width) {
+            if (pixelLine.size() > width) {
+                break;
+            }
             pixels.push_back(std::move(pixelLine));
             pixelLine.clear();
         }
@@ -93,7 +93,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
     frame.width = width;
     frame.height = frame.pixels.size();
 
-    return true;
+    return pixelLine.empty();
 }
 
 unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)

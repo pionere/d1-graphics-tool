@@ -47,7 +47,7 @@ static DPromise *taskPromise = nullptr; // the promise object of the task - TODO
 static int taskProgress;                // progression in the task's thread
 static int taskTextVersion;
 static QString taskTextLastLine;
-static PROGRESS_TEXT_MODE taskTextMode = PROGRESS_TEXT_MODE::NORMAL;
+static PROGRESS_TEXT_MODE taskTextMode;
 static int taskErrorOnFail;
 
 // THREAD
