@@ -134,11 +134,15 @@ void UpscaleTaskDialog::on_upscaleButton_clicked()
 
     this->close();
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling assets..."), 3, PAF_NONE);
+    /*ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling assets..."), 3, PAF_NONE);
 
     UpscaleTaskDialog::runTask(params);
 
-    ProgressDialog::done();
+    ProgressDialog::done();*/
+    std::function<void()> func = [params]() {
+        UpscaleTaskDialog::runTask(params);
+    }
+    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling assets..."), 0, PAF_NONE, std::move(func));
 }
 
 void UpscaleTaskDialog::on_upscaleCancelButton_clicked()
