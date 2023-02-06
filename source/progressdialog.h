@@ -37,8 +37,8 @@ public:
     ~ProgressDialog();
 
     static void openDialog();
-    static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars);
-    static void done(bool forceOpen = false);
+    static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, bool forceOpen);
+    static void done();
 
     static void incBar(const QString &label, int maxValue);
     static void decBar();
@@ -77,6 +77,7 @@ private:
     int activeBars;
     PROGRESS_STATE status = PROGRESS_STATE::DONE;
     PROGRESS_TEXT_MODE textMode = PROGRESS_TEXT_MODE::NORMAL;
+    bool forceOpen;
 };
 
 ProgressDialog &dProgress();

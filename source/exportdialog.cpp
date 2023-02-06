@@ -661,7 +661,7 @@ void ExportDialog::on_exportButton_clicked()
     params.multi = this->ui->filesCountComboBox->currentIndex() != 0;
     int type = this->ui->contentTypeComboBox->currentIndex();
     this->hide();
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Export"), 1);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Export"), 1, false);
     switch (type) {
     case 0:
         ExportDialog::exportFrames(this->gfx, params);

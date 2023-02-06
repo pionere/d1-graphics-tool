@@ -32,10 +32,11 @@ void ProgressDialog::openDialog()
     theDialog->adjustSize();
 }
 
-void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars)
+void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, bool forceOpen)
 {
     bool background = mode == PROGRESS_DIALOG_STATE::BACKGROUND;
 
+    theDialog->forceOpen = forceOpen;
     theDialog->setWindowTitle(label);
     theDialog->ui->outputTextEdit->clear();
     theDialog->textVersion = 0;
@@ -68,7 +69,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
     theDialog->showNormal();
 }
 
-void ProgressDialog::done(bool forceOpen)
+void ProgressDialog::done()
 {
     theDialog->setWindowTitle(" ");
     theDialog->ui->progressLabel->setVisible(false);
@@ -87,7 +88,7 @@ void ProgressDialog::done(bool forceOpen)
     } else if (theDialog->status == PROGRESS_STATE::CANCEL) {
         dProgress() << tr("Process cancelled.");
     }
-    if (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible() || theDialog->isMinimized()) && !forceOpen) {
+    if (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible() || theDialog->isMinimized()) && !theDialog->forceOpen) {
         theDialog->hide();
     } else {
         theDialog->showNormal();
