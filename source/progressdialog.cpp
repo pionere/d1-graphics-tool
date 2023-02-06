@@ -244,7 +244,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
 
 void ProgressDialog::done()
 {
-    if (theDialog->flags & PAF_UPDATE_WINDOW) {
+    if (theDialog->afterFlags & PAF_UPDATE_WINDOW) {
         emit theDialog->updateWindow();
     }
 
@@ -265,7 +265,7 @@ void ProgressDialog::done()
     } else if (theDialog->status == PROGRESS_STATE::CANCEL) {
         ProgressDialog::addResult_impl(PROGRESS_TEXT_MODE::NORMAL, QApplication::tr("Process cancelled."), false);
     }
-    if (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible() || theDialog->isMinimized()) && !(theDialog->flags & PAF_OPEN_DIALOG)) {
+    if (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible() || theDialog->isMinimized()) && !(theDialog->afterFlags & PAF_OPEN_DIALOG)) {
         theDialog->hide();
     } else {
         theDialog->showNormal();

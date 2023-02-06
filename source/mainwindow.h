@@ -104,6 +104,7 @@ public:
 
 private:
     void updateWindow();
+    void failWithError(const QString &error);
 
     void changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel, bool all);
 
