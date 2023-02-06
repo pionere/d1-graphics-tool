@@ -96,7 +96,6 @@ public:
     static bool addValue(int amount);
 
     friend ProgressDialog &dProgress();
-    friend ProgressDialog &dProgressProc();
     friend ProgressDialog &dProgressWarn();
     friend ProgressDialog &dProgressErr();
     friend ProgressDialog &dProgressFail();
@@ -120,11 +119,9 @@ private:
     static void incBar_impl(const QString &label, int maxValue);
     static void decBar_impl();
     static void incValue_impl(int amount);
+    static void addResult_impl(PROGRESS_TEXT_MODE textMode, const QString &line, bool replace);
 
-    bool incBarValue(int index, int amount);
-    void appendLine(PROGRESS_TEXT_MODE textMode, const QString &line, bool replace);
-    void removeLastLine();
-    void consumeMessages();
+    static void consumeMessages();
 
 private:
     Ui::ProgressDialog *ui;
@@ -136,7 +133,6 @@ private:
 };
 
 ProgressDialog &dProgress();
-ProgressDialog &dProgressProc();
 ProgressDialog &dProgressWarn();
 ProgressDialog &dProgressErr();
 ProgressDialog &dProgressFail();

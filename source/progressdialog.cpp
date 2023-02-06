@@ -168,10 +168,7 @@ void ProgressDialog::consumeMessages()
             ProgressDialog::decBar_impl();
             break;
         case TMSG_LOGMSG:
-            /*switch (msg.textMode) {
-            theDialog->status
-            }*/
-            theDialog->appendLine(msg.textMode, msg.text, msg.replace);
+            ProgressDialog::addResult_impl(msg.textMode, msg.text, msg.replace);
             break;
         }
     }
@@ -263,7 +260,7 @@ void ProgressDialog::done()
         theDialog->status = PROGRESS_STATE::DONE;
     } else if (theDialog->status == PROGRESS_STATE::CANCEL) {
         // dProgress() << QApplication::tr("Process cancelled.");
-        theDialog->appendLine(PROGRESS_TEXT_MODE::WARNING, QApplication::tr("Process cancelled."), false);
+        ProgressDialog::addResult_impl(PROGRESS_TEXT_MODE::WARNING, QApplication::tr("Process cancelled."), false);
     }
     if (theDialog->status != PROGRESS_STATE::FAIL && (!detailsOpen || !theDialog->isVisible() || theDialog->isMinimized()) && !theDialog->forceOpen) {
         theDialog->hide();
@@ -298,13 +295,13 @@ void ProgressDialog::startAsync(PROGRESS_DIALOG_STATE mode, const QString &label
 // MAIN
 void ProgressDialog::on_message_ready()
 {
-    this->consumeMessages();
+    ProgressDialog::consumeMessages();
 }
 
 // MAIN
 void ProgressDialog::on_task_finished()
 {
-    this->done(this->forceOpen);
+    ProgressDialog::done();
 }
 
 // MAIN
@@ -437,9 +434,9 @@ ProgressDialog &dProgressFail()
     return *theDialog;
 }
 
-void ProgressDialog::appendLine(PROGRESS_TEXT_MODE mode, const QString &line, bool replace)
+void ProgressDialog::addResult_impl(PROGRESS_TEXT_MODE mode, const QString &line, bool replace)
 {
-    QPlainTextEdit *textEdit = this->ui->outputTextEdit;
+    QPlainTextEdit *textEdit = theDialog->ui->outputTextEdit;
     QTextCursor cursor = textEdit->textCursor();
     int scrollValue = textEdit->verticalScrollBar()->value();
     // The user has selected text or scrolled away from the bottom: maintain position.
@@ -447,7 +444,10 @@ void ProgressDialog::appendLine(PROGRESS_TEXT_MODE mode, const QString &line, bo
 
     // remove last line if replacing the text
     if (replace) {
-        this->removeLastLine();
+        // remove last line
+        QTextCursor cursor = QTextCursor(textEdit->document()->lastBlock());
+        cursor.select(QTextCursor::BlockUnderCursor);
+        cursor.removeSelectedText();
     }
     // Append the text at the end of the document.
     if (mode == PROGRESS_TEXT_MODE::NORMAL) {
@@ -474,8 +474,8 @@ void ProgressDialog::appendLine(PROGRESS_TEXT_MODE mode, const QString &line, bo
         refStatus = PROGRESS_STATE::FAIL;
         break;
     }
-    if (this->status < refStatus) {
-        this->status = refStatus;
+    if (theDialog->status < refStatus) {
+        theDialog->status = refStatus;
     }
 
     if (!active) {
@@ -491,7 +491,7 @@ ProgressDialog &ProgressDialog::operator<<(const QString &text)
 {
     if (!taskAsync) {
         // MAIN
-        this->appendLine(taskTextMode, text, false);
+        ProgressDialog::addResult_impl(taskTextMode, text, false);
     } else {
         // THREAD
         TaskMessage msg;
@@ -506,19 +506,12 @@ ProgressDialog &ProgressDialog::operator<<(const QString &text)
     return *this;
 }
 
-void ProgressDialog::removeLastLine()
-{
-    QTextCursor cursor = QTextCursor(this->ui->outputTextEdit->document()->lastBlock());
-    cursor.select(QTextCursor::BlockUnderCursor);
-    cursor.removeSelectedText();
-}
-
 ProgressDialog &ProgressDialog::operator<<(const QPair<QString, QString> &text)
 {
     bool replace = taskTextLastLine == text.first;
     if (!taskAsync) {
         // MAIN
-        this->appendLine(taskTextMode, text.second, replace);
+        ProgressDialog::addResult_impl(taskTextMode, text.second, replace);
     } else {
         // THREAD
         TaskMessage msg;
@@ -538,7 +531,7 @@ ProgressDialog &ProgressDialog::operator<<(QPair<int, QString> &idxText)
     bool replace = taskTextVersion == idxText.first;
     if (!taskAsync) {
         // MAIN
-        this->appendLine(taskTextMode, idxText.second, replace);
+        ProgressDialog::addResult_impl(taskTextMode, idxText.second, replace);
     } else {
         // THREAD
         TaskMessage msg;
