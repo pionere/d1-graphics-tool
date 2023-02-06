@@ -228,10 +228,14 @@ QString MainWindow::getLastFilePath()
 void MainWindow::updateWindow()
 {
     // rebuild palette hits
-    this->palHits->update();
-    this->palWidget->refresh();
+    if (this->palHits != nullptr) {
+        this->palHits->update();
+    }
+    if (this->palWidget != nullptr) {
+        this->palWidget->refresh();
+    }
     // update menu options
-    bool hasFrame = this->gfx->getFrameCount() != 0;
+    bool hasFrame = this->gfx != nullptr && this->gfx->getFrameCount() != 0;
     this->frameMenu.actions()[2]->setEnabled(hasFrame); // replace frame
     this->frameMenu.actions()[3]->setEnabled(hasFrame); // delete frame
     if (this->levelCelView != nullptr) {
