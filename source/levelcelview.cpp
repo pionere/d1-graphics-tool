@@ -1542,7 +1542,11 @@ void LevelCelView::resetFrameTypes()
     if (!result) {
         dProgress() << tr("No change was necessary.");
     } else {
-        this->gfx->setModified();
+        if (this->gfx->isUpscaled()) {
+            this->gfx->setModified();
+        } else {
+            this->min->setModified();
+        }
         // update the view
         this->update();
     }
