@@ -82,11 +82,11 @@ public:
 
     void upscale(const UpscaleParam &params);
 
+    void update();
     void updateLabel();
     void displayFrame();
 
 private:
-    void update();
     void collectFrameUsers(int frameIndex, QList<int> &users) const;
     void collectSubtileUsers(int subtileIndex, QList<int> &users) const;
     void insertFrames(IMAGE_FILE_MODE mode, int index, const QImage &image);

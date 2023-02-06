@@ -242,6 +242,15 @@ void MainWindow::updateWindow()
         this->tileMenu.actions()[3]->setEnabled(hasTile); // replace tile
         this->tileMenu.actions()[4]->setEnabled(hasTile); // delete tile
     }
+    // update the view
+    if (this->celView != nullptr) {
+        this->celView->update();
+        this->celView->displayFrame();
+    }
+    if (this->levelCelView != nullptr) {
+        // this->levelCelView->update();
+        this->levelCelView->displayFrame();
+    }
 }
 
 bool MainWindow::loadPal(QString palFilePath)
@@ -334,17 +343,7 @@ void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned cou
 void MainWindow::frameModified()
 {
     this->gfx->setModified();
-    // update the view
-    if (this->celView != nullptr) {
-        this->celView->updateLabel();
-        this->celView->displayFrame();
-    }
-    if (this->levelCelView != nullptr) {
-        this->levelCelView->updateLabel();
-        this->levelCelView->displayFrame();
-    }
-    // rebuild palette hits
-    this->palHits->update();
+    this->updateWindow();
 }
 
 void MainWindow::colorModified()
@@ -928,9 +927,6 @@ void MainWindow::openFile(const OpenAsParam &params)
     // Adding the CelView to the main frame
     this->ui->mainFrame->layout()->addWidget(isTileset ? (QWidget *)this->levelCelView : this->celView);
 
-    // Adding the PalView to the pal frame
-    // this->ui->palFrame->layout()->addWidget( this->palView );
-
     // update available menu entries
     this->ui->menuEdit->setEnabled(true);
     this->ui->menuPalette->setEnabled(true);
@@ -1004,8 +1000,6 @@ void MainWindow::openPalFiles(QStringList filePaths, PaletteWidget *widget)
             this->setBaseTrn(firstFound);
         }
     }
-    // rebuild palette hits
-    this->updateWindow();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1058,12 +1052,14 @@ void MainWindow::saveFile(const SaveAsParam &params)
     }
 
     if (change) {
-        // update view
+        // update the view
         if (this->celView != nullptr) {
-            this->celView->initialize(this->pal, this->gfx);
+            this->celView->update();
+            this->celView->displayFrame();
         }
         if (this->levelCelView != nullptr) {
-            this->levelCelView->initialize(this->pal, this->gfx, this->min, this->til, this->sol, this->amp, this->tmi);
+            // this->levelCelView->update();
+            this->levelCelView->displayFrame();
         }
     }
 

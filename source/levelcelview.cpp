@@ -175,8 +175,8 @@ void LevelCelView::changeColor(quint8 startColorIndex, quint8 endColorIndex, D1G
         frame->replacePixels(startColorIndex, endColorIndex, pixel);
     }
     this->gfx->setModified();
-    // update the view
-    this->displayFrame();
+    // update the view - done by the caller
+    // this->displayFrame();
 }
 
 void LevelCelView::framePixelClicked(const QPoint &pos, unsigned counter)
@@ -531,8 +531,8 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, const QStringList &imagefi
             }
         }
     }
-    // update the view
-    this->displayFrame();
+    // update the view - done by the caller
+    // this->displayFrame();
 }
 
 void LevelCelView::assignSubtiles(const QImage &image, int tileIndex, int subtileIndex)
@@ -750,8 +750,8 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, const QStringList &image
             }
         }
     }
-    // update the view
-    this->displayFrame();
+    // update the view - done by the caller
+    // this->displayFrame();
 }
 
 void LevelCelView::insertSubtile(int subtileIndex, const QImage &image)
@@ -1053,8 +1053,8 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, const QStringList &imagefil
             return; // no new tile -> done
         }
     }
-    // update the view
-    this->displayFrame();
+    // update the view - done by the caller
+    // this->displayFrame();
 }
 
 void LevelCelView::addToCurrentFrame(const QString &imagefilePath)
@@ -1078,8 +1078,8 @@ void LevelCelView::addToCurrentFrame(const QString &imagefilePath)
             this->pal->updateColors(basePal);
             emit this->palModified();
         }
-        // update the view
-        this->displayFrame();
+        // update the view - done by the caller
+        // this->displayFrame();
         return;
     }
 
@@ -1096,8 +1096,8 @@ void LevelCelView::addToCurrentFrame(const QString &imagefilePath)
     }
 
     LevelTabFrameWidget::selectFrameType(frame);
-    // update the view
-    this->displayFrame();
+    // update the view - done by the caller
+    // this->displayFrame();
 }
 
 void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
@@ -1124,8 +1124,8 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
             this->pal->updateColors(basePal);
             emit this->palModified();
         }
-        // update the view
-        this->displayFrame();
+        // update the view - done by the caller
+        // this->displayFrame();
         return;
     }
 
@@ -1143,8 +1143,8 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
 
     D1GfxFrame *frame = this->gfx->replaceFrame(this->currentFrameIndex, image);
     LevelTabFrameWidget::selectFrameType(frame);
-    // update the view
-    this->displayFrame();
+    // update the view - done by the caller
+    // this->displayFrame();
 }
 
 void LevelCelView::removeFrame(int frameIndex)
@@ -1188,8 +1188,8 @@ void LevelCelView::removeCurrentFrame()
     }
     // remove the current frame
     this->removeFrame(this->currentFrameIndex);
-    // update the view
-    this->displayFrame();
+    // update the view - done by the caller
+    // this->displayFrame();
 }
 
 void LevelCelView::createSubtile()
@@ -1199,8 +1199,8 @@ void LevelCelView::createSubtile()
     this->tmi->createSubtile();
     // jump to the new subtile
     this->currentSubtileIndex = this->min->getSubtileCount() - 1;
-    // update the view
-    this->displayFrame();
+    // update the view - done by the caller
+    // this->displayFrame();
 }
 
 void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
@@ -1231,8 +1231,8 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
         // reset subtile flags
         this->sol->setSubtileProperties(subtileIndex, 0);
         this->tmi->setSubtileProperties(subtileIndex, 0);
-        // update the view
-        this->displayFrame();
+        // update the view - done by the caller
+        // this->displayFrame();
         return;
     }
 
@@ -1255,8 +1255,8 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
     this->sol->setSubtileProperties(subtileIndex, 0);
     this->tmi->setSubtileProperties(subtileIndex, 0);
 
-    // update the view
-    this->displayFrame();
+    // update the view - done by the caller
+    // this->displayFrame();
 }
 
 void LevelCelView::removeSubtile(int subtileIndex)
@@ -1296,8 +1296,8 @@ void LevelCelView::removeCurrentSubtile()
     }
     // remove the current subtile
     this->removeSubtile(this->currentSubtileIndex);
-    // update the view
-    this->displayFrame();
+    // update the view - done by the caller
+    // this->displayFrame();
 }
 
 void LevelCelView::createTile()
@@ -1306,8 +1306,8 @@ void LevelCelView::createTile()
     this->amp->createTile();
     // jump to the new tile
     this->currentTileIndex = this->til->getTileCount() - 1;
-    // update the view
-    this->displayFrame();
+    // update the view - done by the caller
+    // this->displayFrame();
 }
 
 void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
@@ -1337,8 +1337,8 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
             this->pal->updateColors(basePal);
             emit this->palModified();
         }
-        // update the view
-        this->displayFrame();
+        // update the view - done by the caller
+        // this->displayFrame();
         return;
     }
 
@@ -1360,8 +1360,8 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
     // reset tile flags
     this->amp->setTileProperties(tileIndex, 0);
 
-    // update the view
-    this->displayFrame();
+    // update the view - done by the caller
+    // this->displayFrame();
 }
 
 void LevelCelView::removeCurrentTile()
@@ -1372,8 +1372,8 @@ void LevelCelView::removeCurrentTile()
     if (this->currentTileIndex == this->til->getTileCount()) {
         this->currentTileIndex = std::max(0, this->currentTileIndex - 1);
     }
-    // update the view
-    this->displayFrame();
+    // update the view - done by the caller
+    // this->displayFrame();
 }
 
 QImage LevelCelView::copyCurrent()
@@ -1399,8 +1399,8 @@ void LevelCelView::pasteCurrent(const QImage &image)
             frame = this->gfx->insertFrame(this->currentFrameIndex, image);
         }
         LevelTabFrameWidget::selectFrameType(frame);
-        // update the view
-        this->displayFrame();
+        // update the view - done by the caller
+        // this->displayFrame();
         return;
     }
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
@@ -1417,8 +1417,8 @@ void LevelCelView::pasteCurrent(const QImage &image)
         // reset subtile flags
         this->sol->setSubtileProperties(subtileIndex, 0);
         this->tmi->setSubtileProperties(subtileIndex, 0);
-        // update the view
-        this->displayFrame();
+        // update the view - done by the caller
+        // this->displayFrame();
         return;
     }
 
@@ -1550,7 +1550,11 @@ void LevelCelView::resetFrameTypes()
     if (result == 0) {
         dProgress() << tr("No change was necessary.");
     } else if (result & 1) {
-        this->gfx->setModified();
+        if (this->gfx->isUpscaled()) {
+            this->gfx->setModified();
+        } else {
+            this->min->setModified();
+        }
         // update the view
         this->update();
     }
@@ -1938,8 +1942,8 @@ bool LevelCelView::removeUnusedSubtiles()
 void LevelCelView::cleanupFrames()
 {
     if (this->removeUnusedFrames()) {
-        // update the view
-        this->displayFrame();
+        // update the view - done by the caller
+        // this->displayFrame();
     } else {
         dProgress() << tr("Every frame is used.");
     }
@@ -1948,8 +1952,8 @@ void LevelCelView::cleanupFrames()
 void LevelCelView::cleanupSubtiles()
 {
     if (this->removeUnusedSubtiles()) {
-        // update the view
-        this->displayFrame();
+        // update the view - done by the caller
+        // this->displayFrame();
     } else {
         dProgress() << tr("Every subtile is used.");
     }
@@ -1970,8 +1974,8 @@ void LevelCelView::cleanupTileset()
     bool removedFrame = this->removeUnusedFrames();
 
     if (removedSubtile || removedFrame) {
-        // update the view
-        this->displayFrame();
+        // update the view - done by the caller
+        // this->displayFrame();
     } else {
         dProgress() << tr("Every subtile and frame are used.");
     }
@@ -2128,8 +2132,8 @@ bool LevelCelView::reuseSubtiles()
 void LevelCelView::compressSubtiles()
 {
     if (this->reuseFrames()) {
-        // update the view
-        this->displayFrame();
+        // update the view - done by the caller
+        // this->displayFrame();
     } else {
         dProgress() << tr("All frames are unique.");
     }
@@ -2138,8 +2142,8 @@ void LevelCelView::compressSubtiles()
 void LevelCelView::compressTiles()
 {
     if (this->reuseSubtiles()) {
-        // update the view
-        this->displayFrame();
+        // update the view - done by the caller
+        // this->displayFrame();
     } else {
         dProgress() << tr("All subtiles are unique.");
     }
@@ -2160,8 +2164,8 @@ void LevelCelView::compressTileset()
     bool reusedSubtile = this->reuseSubtiles();
 
     if (reusedFrame || reusedSubtile) {
-        // update the view
-        this->displayFrame();
+        // update the view - done by the caller
+        // this->displayFrame();
     } else {
         dProgress() << tr("Every subtile and frame are unique.");
     }
@@ -2241,16 +2245,16 @@ bool LevelCelView::sortSubtiles_impl()
 void LevelCelView::sortFrames()
 {
     if (this->sortFrames_impl()) {
-        // update the view
-        this->displayFrame();
+        // update the view - done by the caller
+        // this->displayFrame();
     }
 }
 
 void LevelCelView::sortSubtiles()
 {
     if (this->sortSubtiles_impl()) {
-        // update the view
-        this->displayFrame();
+        // update the view - done by the caller
+        // this->displayFrame();
     }
 }
 
@@ -2261,8 +2265,8 @@ void LevelCelView::sortTileset()
     change |= this->sortSubtiles_impl();
     change |= this->sortFrames_impl();
     if (change) {
-        // update the view
-        this->displayFrame();
+        // update the view - done by the caller
+        // this->displayFrame();
     }
 }
 
@@ -2273,8 +2277,8 @@ void LevelCelView::upscale(const UpscaleParam &params)
     ProgressDialog::incBar(tr("Upscaling..."), amount + 1);
 
     if (Upscaler::upscaleTileset(this->gfx, this->min, params)) {
-        // update the view
-        this->displayFrame();
+        // update the view - done by the caller
+        // this->displayFrame();
     }
 
     ProgressDialog::decBar();
