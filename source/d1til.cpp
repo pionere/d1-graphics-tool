@@ -27,15 +27,10 @@ bool D1Til::load(QString filePath, D1Min *m)
         }
     }
 
-    QByteArray fileData = file.readAll();
-    QBuffer fileBuffer(&fileData);
-
-    if (!fileBuffer.open(QIODevice::ReadOnly)) {
-        return false;
-    }
+    const QByteArray fileData = file.readAll();
 
     // File size check
-    auto fileSize = file.size();
+    unsigned fileSize = fileData.size();
     if (fileSize % (2 * TILE_SIZE) != 0) {
         dProgressErr() << tr("Invalid TIL file.");
         return false;
@@ -46,7 +41,7 @@ bool D1Til::load(QString filePath, D1Min *m)
     int tileCount = fileSize / (2 * TILE_SIZE);
 
     // Read TIL binary data
-    QDataStream in(&fileBuffer);
+    QDataStream in(fileData);
     in.setByteOrder(QDataStream::LittleEndian);
 
     this->subtileIndices.clear();
