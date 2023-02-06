@@ -10,10 +10,25 @@
 #include "saveasdialog.h"
 #include "upscaledialog.h"
 
+typedef enum task_step {
+    REGULAR_CEL,
+    OBJECT_CEL,
+    SPECIAL_CEL,
+    CUTSCENE,
+    ART_CEL,
+    REGULAR_CL2_MISSILES,
+    REGULAR_CL2_MONSTERS,
+    REGULAR_CL2_PLRGFX,
+    FIXED_CL2,
+    TILESET,
+    FIXED_TILESET,
+    NUM_STEPS,
+} task_step;
+
 class UpscaleTaskParam {
 public:
     QString listfilesFile;
-    QList<QModelIndex> skipSteps;
+    bool steps[NUM_STEPS];
     QString assetsFolder;
     QString outFolder;
     int multiplier;
