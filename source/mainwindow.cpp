@@ -641,7 +641,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         QClipboard *clipboard = QGuiApplication::clipboard();
         QImage image = clipboard->image();
         if (!image.isNull()) {
-            ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW);
+            /*ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW);
 
             if (this->celView != nullptr) {
                 this->celView->pasteCurrent(image);
@@ -651,7 +651,16 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             }
 
             // Clear loading message from status bar
-            ProgressDialog::done();
+            ProgressDialog::done();*/
+            std::function<void()> func = [this, image]() {
+                if (this->celView != nullptr) {
+                    this->celView->pasteCurrent(image);
+                }
+                if (this->levelCelView != nullptr) {
+                    this->levelCelView->pasteCurrent(image);
+                }
+            };
+            ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW, std::move(func));
         }
     }
 
@@ -941,7 +950,9 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->setPal(firstPaletteFound); // should trigger view->displayFrame()
 
     // Adding the CelView to the main frame
-    this->ui->mainFrame->layout()->addWidget(isTileset ? (QWidget *)this->levelCelView : this->celView);
+    QWidget *view = isTileset ? (QWidget *)this->levelCelView : this->celView;
+    this->ui->mainFrame->layout()->addWidget(view);
+    view->setFocus();
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(true);

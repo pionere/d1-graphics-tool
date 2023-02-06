@@ -209,7 +209,8 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
 
     theDialog->afterFlags = flags;
     theDialog->setWindowTitle(label);
-    theDialog->ui->outputTextEdit->document()->clear();
+    // theDialog->ui->outputTextEdit->document()->clear();
+    theDialog->ui->outputTextEdit->clear();
     theDialog->activeBars = 0;
     theDialog->status = PROGRESS_STATE::RUNNING;
     theDialog->ui->progressLabel->setVisible(!background);
@@ -307,7 +308,6 @@ void ProgressDialog::on_task_finished()
     ProgressDialog::done();
 }
 
-// MAIN
 void ProgressDialog::incBar(const QString &label, int maxValue)
 {
     if (!taskAsync) {
@@ -342,7 +342,6 @@ void ProgressDialog::incBar_impl(const QString &label, int maxValue)
     theDialog->update();
 }
 
-// MAIN
 void ProgressDialog::decBar()
 {
     if (!taskAsync) {
@@ -437,6 +436,7 @@ ProgressDialog &dProgressFail()
     return *theDialog;
 }
 
+// MAIN
 void ProgressDialog::addResult_impl(PROGRESS_TEXT_MODE mode, const QString &line, bool replace)
 {
     QPlainTextEdit *textEdit = theDialog->ui->outputTextEdit;
@@ -567,17 +567,6 @@ void ProgressDialog::on_cancelPushButton_clicked()
     if (mainWatcher != nullptr) {
         mainWatcher->cancel();
         // wait for the task to finish
-        /*QDialog *blocker = new QDialog(this->parentWidget(), Qt::Tool | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
-        blocker->setWindowModality(Qt::ApplicationModal);
-        blocker->show();
-        QTimer *timer = new QTimer();
-        QObject::connect(timer, &QTimer::timeout, [this, timer, blocker]() {
-            if (mainWatcher == nullptr) {
-                timer->deleteLater();
-                blocker->deleteLater();
-            }
-        });
-        timer->start(200);*/
         while (mainWatcher != nullptr) {
             QThread::msleep(200);
         }
@@ -611,7 +600,7 @@ void ProgressDialog::changeEvent(QEvent *event)
 }
 
 ProgressWidget::ProgressWidget(QWidget *parent)
-    : QDialog(parent, Qt::Tool | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint)
+    : QFrame(parent)
     , ui(new Ui::ProgressWidget())
 {
     this->ui->setupUi(this);
@@ -666,8 +655,8 @@ void ProgressWidget::updateWidget(PROGRESS_STATE status, bool active, const QStr
     this->ui->messageLabel->setText(label);
     this->adjustSize();
     // this->repaint();
-    this->update();
-    // QFrame::update();
+    // this->update();
+    QFrame::update();
 }
 
 void ProgressWidget::on_openPushButton_clicked()

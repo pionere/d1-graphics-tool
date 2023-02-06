@@ -146,7 +146,7 @@ ProgressDialog &dProgressWarn();
 ProgressDialog &dProgressErr();
 ProgressDialog &dProgressFail();
 
-class ProgressWidget : public QDialog {
+class ProgressWidget : public QFrame {
     Q_OBJECT
 
     friend class ProgressDialog;
