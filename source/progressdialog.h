@@ -32,9 +32,9 @@ enum class PROGRESS_TEXT_MODE {
 };
 
 typedef enum progress_after_flags {
-    PAF_NONE           = 0,
-    PAF_OPEN_DIALOG    = 1 << 0,
-    PAF_UPDATE_WINDOW  = 1 << 1,
+    PAF_NONE = 0,
+    PAF_OPEN_DIALOG = 1 << 0,
+    PAF_UPDATE_WINDOW = 1 << 1,
 } progress_after_flags;
 
 class DPromise : public QObject {
