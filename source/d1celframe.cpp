@@ -1,5 +1,9 @@
 #include "d1celframe.h"
 
+#include <QApplication>
+
+#include "progressdialog.h"
+
 D1CelPixelGroup::D1CelPixelGroup(bool t, unsigned c)
     : transparent(t)
     , pixelCount(c)
@@ -120,7 +124,7 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
     unsigned celFrameWidth = 0;
     quint16 lastFrameOffset = celFrameHeaderSize;
     celFrameHeaderSize /= 2;
-    for (int i = 1; i < celFrameHeaderSize; i++) {
+    for (unsigned i = 1; i < celFrameHeaderSize; i++) {
         quint16 nextFrameOffset = SwapLE16(header[i]);
         if (nextFrameOffset == 0) {
             // check if the remaining entries are zero
