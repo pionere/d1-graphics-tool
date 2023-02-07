@@ -63,7 +63,7 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
         // The calculated width has to be identical for each 32 pixel-line block
         if (celFrameWidth == 0) {
             if (width == 0)
-                return 0; // invalid data
+                return 0; // invalid data or the image is too small
         } else {
             if (celFrameWidth != width)
                 return 0; // mismatching width values

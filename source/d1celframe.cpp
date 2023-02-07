@@ -25,21 +25,20 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
 {
     unsigned width = 0;
     // frame.clipped = false;
+    // bool clipped = false;
     if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
         // Checking the presence of the {CEL FRAME HEADER}
         if ((quint8)rawData[0] == 0x0A && (quint8)rawData[1] == 0x00) {
             // If header is present, try to compute frame width from frame header
             width = D1CelFrame::computeWidthFromHeader(rawData);
-            frame.clipped = width != 0;
+            //clipped = width != 0;
+            frame.clipped = true;
         }
     } else {
         if (params.clipped == OPEN_CLIPPED_TYPE::TRUE) {
             // If header is present, try to compute frame width from frame header
             width = D1CelFrame::computeWidthFromHeader(rawData);
-            frame.clipped = width != 0;
-            if (!frame.clipped) {
-                return false; // can not be loaded as clipped
-            }
+            frame.clipped = true;
         }
     }
     if (params.celWidth != 0)
@@ -47,8 +46,27 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
 
     // If width could not be calculated with frame header,
     // attempt to calculate it from the frame data (by identifying pixel groups line wraps)
-    if (width == 0)
-        width = D1CelFrame::computeWidthFromData(rawData);
+    if (width == 0) {
+        width = D1CelFrame::computeWidthFromData(rawData, frame.clipped);
+        /*unsigned width2 = D1CelFrame::computeWidthFromData(rawData, false);
+        clipped = width != 0;
+        if (!clipped) {
+            if (width2 == 0) {
+                return false; // width was not found, return false
+            }
+            width = width2;
+        } else {
+            if (width2 != 0) {
+                if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
+                    dProgressWarn() << tr("The image could be interpreted as clipped or not clipped as well. Assuming clipped.");
+                } else if (params.clipped == OPEN_CLIPPED_TYPE::FALSE) {
+                    width = width2;
+                    clipped = false;
+                }
+            }
+        }*/
+    }
+    // frame.clipped = clipped;
 
     // if CEL width was not found, return false
     if (width == 0)
@@ -160,7 +178,7 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
         // The calculated width has to be identical for each 32 pixel-line block
         if (celFrameWidth == 0) {
             if (width == 0)
-                return 0; // invalid data
+                return 0; // invalid data or the image is too small
         } else {
             if (celFrameWidth != width)
                 return 0; // mismatching width values
@@ -173,20 +191,19 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
     return celFrameWidth;
 }
 
-unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData)
+unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool clipped)
 {
-    unsigned biggestGroupPixelCount = 0;
-    unsigned pixelCount = 0;
+    unsigned pixelCount;
     unsigned width = 0;
     std::vector<D1CelPixelGroup> pixelGroups;
 
     // Checking the presence of the {CEL FRAME HEADER}
-    quint32 frameDataStartOffset = 0;
-    if ((quint8)rawFrameData[0] == 0x0A && (quint8)rawFrameData[1] == 0x00)
-        frameDataStartOffset = 0x0A;
+    int frameDataStartOffset = 0;
+    if (clipped)
+        frameDataStartOffset = SwapLE16(*(const quint16 *)rawFrameData.constData());
 
     // Going through the frame data to find pixel groups
-    unsigned globalPixelCount = 0;
+    pixelCount = 0;
     for (int o = frameDataStartOffset; o < rawFrameData.size(); o++) {
         quint8 readByte = rawFrameData[o];
 
@@ -194,9 +211,6 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData)
             // Transparent pixels group
             pixelCount += (256 - readByte);
             pixelGroups.push_back(D1CelPixelGroup(true, pixelCount));
-            globalPixelCount += pixelCount;
-            if (pixelCount > biggestGroupPixelCount)
-                biggestGroupPixelCount = pixelCount;
             pixelCount = 0;
         } else if (readByte == 0x80) {
             // Transparent pixels group with maximum length -> part of a longer chain
@@ -209,9 +223,6 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData)
             // Palette indices pixel group
             pixelCount += readByte;
             pixelGroups.push_back(D1CelPixelGroup(false, pixelCount));
-            globalPixelCount += pixelCount;
-            if (pixelCount > biggestGroupPixelCount)
-                biggestGroupPixelCount = pixelCount;
             pixelCount = 0;
             o += readByte;
         }
@@ -247,6 +258,15 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData)
     // If width wasnt found return 0
     if (width == 0) {
         return 0;
+    }
+
+    unsigned globalPixelCount = 0;
+    unsigned biggestGroupPixelCount = 0;
+    for (const D1CelPixelGroup &pixelGroup : pixelGroups) {
+        pixelCount = pixelGroup.getPixelCount();
+        if (pixelCount > biggestGroupPixelCount)
+            biggestGroupPixelCount = pixelCount;
+        globalPixelCount += pixelCount;
     }
 
     // If width is consistent

@@ -25,5 +25,5 @@ public:
 
 private:
     static unsigned computeWidthFromHeader(const QByteArray &rawData);
-    static unsigned computeWidthFromData(const QByteArray &rawData);
+    static unsigned computeWidthFromData(const QByteArray &rawData, bool clipped);
 };
