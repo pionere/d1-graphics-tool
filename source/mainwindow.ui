@@ -293,7 +293,7 @@
   </action>
   <action name="actionUpscaleTask">
    <property name="text">
-    <string>Upscale</string>
+    <string>Upscale Assets</string>
    </property>
    <property name="toolTip">
     <string>Upscale the assets of Diablo 1 / Hellfire</string>

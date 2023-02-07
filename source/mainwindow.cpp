@@ -1080,7 +1080,7 @@ void MainWindow::saveFile(const SaveAsParam &params)
 
 void MainWindow::upscale(const UpscaleParam &params)
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling..."), 1, PAF_UPDATE_WINDOW);
+    /*ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling..."), 1, PAF_UPDATE_WINDOW);
 
     if (this->celView != nullptr) {
         this->celView->upscale(params);
@@ -1090,7 +1090,17 @@ void MainWindow::upscale(const UpscaleParam &params)
     }
 
     // Clear loading message from status bar
-    ProgressDialog::done();
+    ProgressDialog::done();*/
+    std::function<void()> func = [this, params]() {
+        if (this->celView != nullptr) {
+            this->celView->upscale(params);
+        }
+        if (this->levelCelView != nullptr) {
+            this->levelCelView->upscale(params);
+        }
+    }
+    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling..."), 1, PAF_UPDATE_WINDOW, std::move(func));
+
 }
 
 static QString imageNameFilter()

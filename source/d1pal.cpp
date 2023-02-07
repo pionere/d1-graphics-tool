@@ -8,6 +8,14 @@
 
 #include "config.h"
 
+PaletteColor::PaletteColor(const QColor &color, int index)
+    : xv(index),
+    rv(color.red()),
+    gv(color.green()),
+    bv(color.blue()),
+{
+}
+
 D1Pal::D1Pal(const D1Pal &opal)
     : QObject()
 {
@@ -179,6 +187,15 @@ void D1Pal::setColor(quint8 index, QColor color)
 {
     this->colors[index] = color;
     this->modified = true;
+}
+
+void D1Pal::getValidColors(std::vector<PaletteColor> &colors) const
+{
+    for (int i = 0; i < D1PAL_COLORS; i++) {
+        if (this->colors[i] != this->undefinedColor) {
+            colors.push_back(PaletteColor(this->colors[i], i));
+        }
+    }
 }
 
 void D1Pal::updateColors(const D1Pal &opal)
