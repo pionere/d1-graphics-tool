@@ -131,6 +131,7 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
 
     // BUILDING {CEL FRAMES}
     gfx.frames.clear();
+    // std::stack<quint16> invalidFrames;
     for (int i = 0; i < frameOffsets.count(); i++) {
         const auto &offset = frameOffsets[i];
         fileBuffer.seek(offset.first);
@@ -150,14 +151,20 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
         }
         D1GfxFrame *frame = new D1GfxFrame();
         if (!D1CelTilesetFrame::load(*frame, frameType, celFrameRawData, params)) {
-            // TODO: log + add placeholder?
-            delete frame;
-            continue;
+            quint16 frameIndex = gfx.frames.size();
+            dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(frameIndex + 1);
+            // dProgressErr() << QApplication::tr("Invalid frame %1 is eliminated.").arg(frameIndex + 1);
+            // invalidFrames.push(frameIndex);
         }
         gfx.frames.append(frame);
     }
     gfx.gfxFilePath = filePath;
     gfx.modified = !file.isOpen();
+    /*while (!invalidFrames.empty()) {
+        quint16 frameIndex = invalidFrames.top();
+        invalidFrames.pop();
+        gfx.removeFrame(frameIndex);
+    }*/
     return true;
 }
 
