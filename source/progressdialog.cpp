@@ -655,7 +655,7 @@ void ProgressWidget::updateWidget(PROGRESS_STATE status, bool active, const QStr
     this->ui->messageLabel->setText(label);
     this->adjustSize();
     this->repaint();
-    //QFrame::update();
+    // QFrame::update();
 }
 
 void ProgressWidget::on_openPushButton_clicked()
