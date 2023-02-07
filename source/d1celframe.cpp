@@ -26,24 +26,17 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
     if (rawData.size() == 0)
         return false;
 
-    quint32 frameDataStartOffset = 0;
     unsigned width = 0;
     // frame.clipped = false;
     if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
         // Checking the presence of the {CEL FRAME HEADER}
         if ((quint8)rawData[0] == 0x0A && (quint8)rawData[1] == 0x00) {
-            frameDataStartOffset += 0x0A;
             // If header is present, try to compute frame width from frame header
             width = D1CelFrame::computeWidthFromHeader(rawData);
             frame.clipped = true;
         }
     } else {
         if (params.clipped == OPEN_CLIPPED_TYPE::TRUE) {
-            QDataStream in(rawData);
-            in.setByteOrder(QDataStream::LittleEndian);
-            quint16 offset;
-            in >> offset;
-            frameDataStartOffset += offset;
             // If header is present, try to compute frame width from frame header
             width = D1CelFrame::computeWidthFromHeader(rawData);
             frame.clipped = true;
@@ -62,6 +55,10 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
         return false;
 
     // READ {CEL FRAME DATA}
+    int frameDataStartOffset = 0;
+    if (frame.clipped)
+        frameDataStartOffset = SwapLE16(*(const quint16 *)rawData.constData());
+
     std::vector<std::vector<D1GfxPixel>> pixels;
     std::vector<D1GfxPixel> pixelLine;
     for (int o = frameDataStartOffset; o < rawData.size(); o++) {
