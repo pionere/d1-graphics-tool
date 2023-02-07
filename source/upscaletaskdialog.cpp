@@ -24,18 +24,18 @@ constexpr int lengthof(T (&arr)[N])
 }
 
 typedef struct AssetConfig {
-    const QStringLiteral path;
-    const QStringLiteral palette;
+    const QString path;
+    const QString palette;
     int numcolors;
     int fixcolors;
 } AssetConfig;
 
 typedef struct MinAssetConfig {
-    const QStringLiteral path;
-    const QStringLiteral palette;
+    const QString path;
+    const QString palette;
     int numcolors;
     int fixcolors;
-    const QStringLiteral solPath;
+    const QString solPath;
 } MinAssetConfig;
 
 UpscaleTaskDialog::UpscaleTaskDialog(QWidget *parent)
@@ -157,7 +157,7 @@ void UpscaleTaskDialog::changeEvent(QEvent *event)
     QDialog::changeEvent(event);
 }
 
-bool UpscaleTaskDialog::loadCustomPal(const QStringLiteral &path, int numcolors, int fixcolors, const UpscaleTaskParam &params, D1Pal &pal, UpscaleParam &upParams)
+bool UpscaleTaskDialog::loadCustomPal(const QString &path, int numcolors, int fixcolors, const UpscaleTaskParam &params, D1Pal &pal, UpscaleParam &upParams)
 {
     QString palPath = params.assetsFolder + "/" + path; // "f:\\MPQE\\Work\\%s"
 
@@ -318,7 +318,7 @@ static bool isListedAsset(QList<QString> &assets, const QString &asset)
     return false;
 }
 
-static const QStringLiteral botchedCL2s[] = {
+static const QString botchedCL2s[] = {
     "PlrGFX\\warrior\\wlb\\wlbat.CL2", "PlrGFX\\warrior\\wmb\\wmbat.CL2", "PlrGFX\\warrior\\whb\\whbat.CL2"
 };
 static const MinAssetConfig botchedMINs[] = {
@@ -328,7 +328,7 @@ static const MinAssetConfig botchedMINs[] = {
     // clang-format on
 };
 
-static bool isListedAsset(const QStringLiteral *assets, int numAssets, const QString &asset)
+static bool isListedAsset(const QString *assets, int numAssets, const QString &asset)
 {
     QString assetLower = asset.toLower();
     for (int i = 0; i < numAssets; i++) {
@@ -553,7 +553,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
     }
     if (params.steps[CUTSCENE]) {
         // upscale cutscenes
-        const QStringLiteral celPalPairs[][2] = {
+        const QString celPalPairs[][2] = {
             // clang-format off
             // celname,                palette
             { "Gendata\\Cut2.CEL",     "Gendata\\Cut2.pal" },
@@ -611,7 +611,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
     // UpscaleCelComp("f:\\MPQE\\Work\\towners\\animals\\cow.CEL", 2, &diapal[0][0], 128, 128, "f:\\outcel\\towners\\animals\\cow.cel");
     if (params.steps[ART_CEL]) {
         // upscale non-standard CELs of the menu (converted from PCX)
-        const QStringLiteral celPalPairs[][2] = {
+        const QString celPalPairs[][2] = {
             // clang-format off
             // celname,               palette
             { "ui_art\\mainmenu.CEL", "ui_art\\menu.PAL" },
