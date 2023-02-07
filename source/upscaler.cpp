@@ -19,14 +19,13 @@ constexpr int lengthof(T (&arr)[N])
     return N;
 }
 
-class UpscalingParam {
-public:
+typedef struct UpscalingParam {
     int multiplier;
     D1Pal *pal;
-    std::vector<std::pair<QColor, int>> dynColors;
+    std::vector<PaletteColor> dynColors;
     int firstfixcolor;
     int lastfixcolor;
-};
+} UpscalingParam;
 
 static bool isPixelFixed(const D1GfxPixel *pixel, const UpscalingParam &params)
 {
@@ -39,15 +38,14 @@ static D1GfxPixel getPalColor(const UpscalingParam &params, QColor color)
     unsigned res = 0;
     int best = INT_MAX;
 
-    for (const std::pair<QColor, int> &colorIdx : params.dynColors) {
-        const QColor &palColor = colorIdx.first;
+    for (const PaletteColor &palColor : params.dynColors) {
         int currR = color.red() - palColor.red();
         int currG = color.green() - palColor.green();
         int currB = color.blue() - palColor.blue();
         int curr = currR * currR + currG * currG + currB * currB;
         if (curr < best) {
             best = curr;
-            res = colorIdx.second;
+            res = palColor.index();
         }
     }
 
@@ -2680,18 +2678,8 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
     upParams.firstfixcolor = params.firstfixcolor;
     upParams.lastfixcolor = params.lastfixcolor;
     upParams.pal = pal;
-    { // setup dynColors
-        QColor undefColor = pal->getUndefinedColor();
-        for (int i = 0; i < D1PAL_COLORS; i++) {
-            QColor palColor = pal->getColor(i);
-            if (palColor != undefColor) {
-                upParams.dynColors.push_back(std::pair<QColor, int>(palColor, i));
-            }
-        }
-        if (upParams.dynColors.empty()) {
-            upParams.dynColors.push_back(std::pair<QColor, int>(undefColor, 0));
-        }
-    }
+
+    pal->getValidColors(upParams.dynColors);
 
     int multiplier = upParams.multiplier;
     // upscale the frame

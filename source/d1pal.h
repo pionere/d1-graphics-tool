@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include <QColor>
 #include <QFile>
 #include <QObject>
@@ -14,6 +16,35 @@ enum class D1PAL_CYCLE_TYPE {
     HELL,
     CRYPT,
     NEST,
+};
+
+class PaletteColor {
+public:
+    PaletteColor(const QColor &color, int index);
+    ~PaletteColor() = default;
+
+    int red() const
+    {
+        return rv;
+    };
+    int green() const
+    {
+        return gv;
+    };
+    int blue() const
+    {
+        return bv;
+    };
+    int index() const
+    {
+        return xv;
+    };
+
+private:
+    int rv;
+    int gv;
+    int bv;
+    int xv;
 };
 
 class D1Pal : public QObject {
@@ -40,6 +71,7 @@ public:
     QColor getColor(quint8 index) const;
     void setColor(quint8 index, QColor);
 
+    void getValidColors(std::vector<PaletteColor> &colors) const;
     void updateColors(const D1Pal &opal);
     void cycleColors(D1PAL_CYCLE_TYPE type);
 
