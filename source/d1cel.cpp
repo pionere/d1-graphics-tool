@@ -1,11 +1,11 @@
 #include "d1cel.h"
 
+#include <vector>
+
 #include <QApplication>
-#include <QBuffer>
 #include <QByteArray>
 #include <QDataStream>
 #include <QDir>
-#include <QList>
 #include <QMessageBox>
 
 #include "d1celframe.h"
@@ -13,7 +13,7 @@
 
 bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
 {
-    // Opening CEL file with a QBuffer to load it in RAM
+    // Opening CEL file and load it in RAM
     QFile file = QFile(filePath);
 
     if (!file.open(QIODevice::ReadOnly))
@@ -40,9 +40,10 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
     quint32 fileSizeDword;
     in >> fileSizeDword;
 
+    // If the dword is not equal to the file size then
+    // check if it's a CEL compilation
     D1CEL_TYPE type = device->size() == fileSizeDword ? D1CEL_TYPE::V1_REGULAR : D1CEL_TYPE::V1_COMPILATION;
-
-    QList<QPair<quint32, quint32>> frameOffsets;
+    std::vector<std::pair<quint32, quint32>> frameOffsets;
     if (type == D1CEL_TYPE::V1_REGULAR) {
         // Going through all frames of the CEL
         gfx.groupFrameIndices.clear();
@@ -56,7 +57,7 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
             quint32 celFrameEndOffset;
             in >> celFrameEndOffset;
 
-            frameOffsets.append(qMakePair(celFrameStartOffset, celFrameEndOffset));
+            frameOffsets.push_back(std::pair<quint32, quint32>(celFrameStartOffset, celFrameEndOffset));
         }
     } else {
         // Read offset of the last CEL of the CEL compilation
@@ -115,8 +116,8 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
                 in >> celFrameStartOffset;
                 in >> celFrameEndOffset;
 
-                frameOffsets.append(
-                    qMakePair(celOffset + celFrameStartOffset,
+                frameOffsets.push_back(
+                    std::pair<quint32, quint32>(celOffset + celFrameStartOffset,
                         celOffset + celFrameEndOffset));
             }
         }
