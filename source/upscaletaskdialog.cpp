@@ -331,7 +331,7 @@ static const MinAssetConfig botchedMINs[] = {
 static bool isListedAsset(const QStringLiteral *assets, int numAssets, const QString &asset)
 {
     QString assetLower = asset.toLower();
-    for (int i = 0; i < numAssets; i++: assets) {
+    for (int i = 0; i < numAssets; i++) {
         QString name = assets[i];
         if (name.toLower() == assetLower)
             return true;
@@ -342,7 +342,7 @@ static bool isListedAsset(const QStringLiteral *assets, int numAssets, const QSt
 static bool isListedAsset(const MinAssetConfig *assets, int numAssets, const QString &asset)
 {
     QString assetLower = asset.toLower();
-    for (int i = 0; i < numAssets; i++: assets) {
+    for (int i = 0; i < numAssets; i++) {
         const MinAssetConfig &cfg = assets[i];
         QString name = cfg.path;
         if (name.toLower() == assetLower)

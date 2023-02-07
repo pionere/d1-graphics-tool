@@ -4,6 +4,7 @@
 #include <QList>
 #include <QListWidgetItem>
 #include <QString>
+#include <QStringLiteral>
 
 #include "d1pal.h"
 #include "openasdialog.h"

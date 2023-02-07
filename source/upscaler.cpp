@@ -3240,7 +3240,6 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     upParams.antiAliasingMode = params.antiAliasingMode;
     upParams.pal = nullptr;
 
-
     QList<D1GfxFrame *> newFrames;
     QList<QList<quint16>> newFrameReferences;
 
