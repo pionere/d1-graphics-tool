@@ -27,11 +27,11 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
     // frame.clipped = false;
     if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
         // Checking the presence of the {CEL FRAME HEADER}
-        // if ((quint8)rawData[0] == 0x0A && (quint8)rawData[1] == 0x00) {
+        if ((quint8)rawData[0] == 0x0A && (quint8)rawData[1] == 0x00) {
             // If header is present, try to compute frame width from frame header
             width = D1CelFrame::computeWidthFromHeader(rawData);
             frame.clipped = width != 0;
-        // }
+        }
     } else {
         if (params.clipped == OPEN_CLIPPED_TYPE::TRUE) {
             // If header is present, try to compute frame width from frame header

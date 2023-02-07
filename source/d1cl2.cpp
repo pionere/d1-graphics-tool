@@ -36,7 +36,7 @@ bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
     if (device->size() < (4 + firstDword * 4 + 4))
         return false;
 
-    device->seek(firstDword * 4 + 4);
+    device->seek(4 + firstDword * 4);
     quint32 fileSizeDword;
     in >> fileSizeDword;
 
