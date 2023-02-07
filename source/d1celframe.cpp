@@ -31,7 +31,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
         if ((quint8)rawData[0] == 0x0A && (quint8)rawData[1] == 0x00) {
             // If header is present, try to compute frame width from frame header
             width = D1CelFrame::computeWidthFromHeader(rawData);
-            //clipped = width != 0;
+            // clipped = width != 0;
             frame.clipped = true;
         }
     } else {
@@ -204,28 +204,39 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
 
     // Going through the frame data to find pixel groups
     pixelCount = 0;
+    bool alpha = false;
     for (int o = frameDataStartOffset; o < rawFrameData.size(); o++) {
         quint8 readByte = rawFrameData[o];
 
-        if (readByte > 0x80 /*&& readByte <= 0xFF*/) {
+        if (readByte >= 0x80 /*&& readByte <= 0xFF*/) {
             // Transparent pixels group
+            if (!alpha && pixelCount != 0) {
+                pixelGroups.push_back(D1CelPixelGroup(false, pixelCount));
+                pixelCount = 0;
+            }
+            alpha = true;
             pixelCount += (256 - readByte);
-            pixelGroups.push_back(D1CelPixelGroup(true, pixelCount));
-            pixelCount = 0;
-        } else if (readByte == 0x80) {
-            // Transparent pixels group with maximum length -> part of a longer chain
-            pixelCount += 0x80;
-        } else if (readByte == 0x7F) {
-            // Palette indices pixel group with maximum length
-            pixelCount += 0x7F;
-            o += 0x7F;
-        } else /*if (readByte >= 0x00 && readByte < 0x7F)*/ {
+            if (readByte != 0x80) {
+                pixelGroups.push_back(D1CelPixelGroup(true, pixelCount));
+                pixelCount = 0;
+            }
+        } else /*if (readByte >= 0x00 && readByte <= 0x7F)*/ {
             // Palette indices pixel group
+            if (alpha && pixelCount != 0) {
+                pixelGroups.push_back(D1CelPixelGroup(true, pixelCount));
+                pixelCount = 0;
+            }
+            alpha = true;
             pixelCount += readByte;
-            pixelGroups.push_back(D1CelPixelGroup(false, pixelCount));
-            pixelCount = 0;
+            if (readByte != 0x7F) {
+                pixelGroups.push_back(D1CelPixelGroup(false, pixelCount));
+                pixelCount = 0;
+            }
             o += readByte;
         }
+    }
+    if (pixelCount != 0) {
+        pixelGroups.push_back(D1CelPixelGroup(alpha, pixelCount));
     }
 
     // Going through pixel groups to find pixel-lines wraps
