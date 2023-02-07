@@ -1,5 +1,10 @@
 #include "d1celframe.h"
 
+#include <QApplication>
+#include <QDataStream>
+
+#include "progressdialog.h"
+
 D1CelPixelGroup::D1CelPixelGroup(bool t, unsigned c)
     : transparent(t)
     , pixelCount(c)
@@ -62,19 +67,26 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
     for (int o = frameDataStartOffset; o < rawData.size(); o++) {
         quint8 readByte = rawData[o];
 
-        // Transparent pixels group
-        if (readByte > 0x7F) {
-            for (int i = 0; i < (256 - readByte); i++)
+        if (readByte > 0x7F /*&& readByte <= 0xFF*/) {
+            // Transparent pixels group
+            for (int i = 0; i < (256 - readByte); i++) {
+                // Add transparent pixel
                 pixelLine.push_back(D1GfxPixel::transparentPixel());
-        } else {
+            }
+        } else /*if (readByte >= 0x00 && readByte <= 0x7F)*/ {
             // Palette indices group
             if ((o + readByte) >= rawData.size()) {
                 pixelLine.push_back(D1GfxPixel::transparentPixel()); // ensure pixelLine is not empty to report error at the end
                 break;
             }
 
+            if (readByte == 0x00) {
+                dProgressWarn() << QApplication::tr("Invalid CEL frame data (0x00 found)");
+            }
             for (int i = 0; i < readByte; i++) {
+                // Go to the next palette index offset
                 o++;
+                // Add opaque pixel
                 pixelLine.push_back(D1GfxPixel::colorPixel(rawData[o]));
             }
         }
@@ -118,19 +130,22 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
             break;
 
         unsigned pixelCount = 0;
+        // calculate width based on the data-block
         for (int j = lastFrameOffset; j < nextFrameOffset; j++) {
             quint8 readByte = rawFrameData[j];
 
-            if (readByte > 0x7F) {
+            if (readByte > 0x7F /*&& readByte <= 0xFF*/) {
+                // Transparent pixels group
                 pixelCount += (256 - readByte);
-            } else {
+            } else /*if (readByte >= 0x00 && readByte <= 0x7F)*/ {
+                // Palette indices group
                 pixelCount += readByte;
                 j += readByte;
             }
         }
 
         unsigned width = pixelCount / CEL_BLOCK_HEIGHT;
-        // The calculated width has to be the identical for each 32 pixel-line block
+        // The calculated width has to be identical for each 32 pixel-line block
         // If it's not the case, 0 is returned
         if (celFrameWidth != 0 && celFrameWidth != width)
             return 0;
@@ -159,8 +174,8 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData)
     for (int o = frameDataStartOffset; o < rawFrameData.size(); o++) {
         quint8 readByte = rawFrameData[o];
 
-        // Transparent pixels group
-        if (readByte > 0x80) {
+        if (readByte > 0x80 /*&& readByte <= 0xFF*/) {
+            // Transparent pixels group
             pixelCount += (256 - readByte);
             pixelGroups.push_back(D1CelPixelGroup(true, pixelCount));
             globalPixelCount += pixelCount;
@@ -168,13 +183,14 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData)
                 biggestGroupPixelCount = pixelCount;
             pixelCount = 0;
         } else if (readByte == 0x80) {
+            // Transparent pixels group with maximum length -> part of a longer chain
             pixelCount += 0x80;
-        }
-        // Palette indices pixel group
-        else if (readByte == 0x7F) {
+        } else if (readByte == 0x7F) {
+            // Palette indices pixel group with maximum length
             pixelCount += 0x7F;
             o += 0x7F;
-        } else {
+        } else /*if (readByte >= 0x00 && readByte < 0x7F)*/ {
+            // Palette indices pixel group
             pixelCount += readByte;
             pixelGroups.push_back(D1CelPixelGroup(false, pixelCount));
             globalPixelCount += pixelCount;
