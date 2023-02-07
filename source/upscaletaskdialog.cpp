@@ -24,18 +24,18 @@ constexpr int lengthof(T (&arr)[N])
 }
 
 typedef struct AssetConfig {
-    const char *path;
-    const char *palette;
+    const QStringLiteral path;
+    const QStringLiteral palette;
     int numcolors;
     int fixcolors;
 } AssetConfig;
 
 typedef struct MinAssetConfig {
-    const char *path;
-    const char *palette;
+    const QStringLiteral path;
+    const QStringLiteral palette;
     int numcolors;
     int fixcolors;
-    const char *solPath;
+    const QStringLiteral solPath;
 } MinAssetConfig;
 
 UpscaleTaskDialog::UpscaleTaskDialog(QWidget *parent)
@@ -124,7 +124,6 @@ void UpscaleTaskDialog::on_upscaleButton_clicked()
         QMessageBox::warning(this, tr("Warning"), tr("The assets folder must differ from output folder."));
         return;
     }
-    params.autoOverwrite = true; // this->ui->autoOverwriteCheckBox->isChecked();
     {
         QList<QModelIndex> skipSteps = this->ui->skipStepListWidget->selectionModel()->selectedIndexes();
         for (int i = 0; i < NUM_STEPS; ++i) {
@@ -158,7 +157,7 @@ void UpscaleTaskDialog::changeEvent(QEvent *event)
     QDialog::changeEvent(event);
 }
 
-bool UpscaleTaskDialog::loadCustomPal(const char *path, int numcolors, int fixcolors, const UpscaleTaskParam &params, D1Pal &pal, UpscaleParam &upParams)
+bool UpscaleTaskDialog::loadCustomPal(const QStringLiteral &path, int numcolors, int fixcolors, const UpscaleTaskParam &params, D1Pal &pal, UpscaleParam &upParams)
 {
     QString palPath = params.assetsFolder + "/" + path; // "f:\\MPQE\\Work\\%s"
 
@@ -319,6 +318,39 @@ static bool isListedAsset(QList<QString> &assets, const QString &asset)
     return false;
 }
 
+static const QStringLiteral botchedCL2s[] = {
+    "PlrGFX\\warrior\\wlb\\wlbat.CL2", "PlrGFX\\warrior\\wmb\\wmbat.CL2", "PlrGFX\\warrior\\whb\\whbat.CL2"
+};
+static const MinAssetConfig botchedMINs[] = {
+    // clang-format off
+    // celname,                      palette,                numcolors, numfixcolors (protected colors), solpath
+    { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL", 128,  0, "Levels\\TownData\\Town.SOL", },
+    // clang-format on
+};
+
+static bool isListedAsset(const QStringLiteral *assets, int numAssets, const QString &asset)
+{
+    QString assetLower = asset.toLower();
+    for (int i = 0; i < numAssets; i++: assets) {
+        QString name = assets[i];
+        if (name.toLower() == assetLower)
+            return true;
+    }
+    return false;
+}
+
+static bool isListedAsset(const MinAssetConfig *assets, int numAssets, const QString &asset)
+{
+    QString assetLower = asset.toLower();
+    for (int i = 0; i < numAssets; i++: assets) {
+        const MinAssetConfig &cfg = assets[i];
+        QString name = cfg.path;
+        if (name.toLower() == assetLower)
+            return true;
+    }
+    return false;
+}
+
 void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 {
     D1Pal defaultPal;
@@ -400,12 +432,13 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
 
         SaveAsParam saParams = SaveAsParam();
-        saParams.autoOverwrite = params.autoOverwrite;
+        saParams.autoOverwrite = true;
 
         for (QString &asset : assets) {
             if (!isRegularCel(asset)) {
                 continue;
             }
+
             dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(asset);
             if (ProgressDialog::wasCanceled()) {
                 return;
@@ -440,7 +473,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::incBar("Object CEL Files", lengthof(celPalPairs));
 
         SaveAsParam saParams = SaveAsParam();
-        saParams.autoOverwrite = params.autoOverwrite;
+        saParams.autoOverwrite = true;
 
         OpenAsParam opParams = OpenAsParam();
 
@@ -454,6 +487,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (!isListedAsset(assets, celPalPairs[i].path)) {
                 continue;
             }
+
             dProgress() << QString(QApplication::tr("Upscaling object CEL %1.")).arg(celPalPairs[i].path);
             if (ProgressDialog::wasCanceled()) {
                 return;
@@ -485,7 +519,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::incBar("Special CEL Files", lengthof(celPalPairs));
 
         SaveAsParam saParams = SaveAsParam();
-        saParams.autoOverwrite = params.autoOverwrite;
+        saParams.autoOverwrite = true;
 
         OpenAsParam opParams = OpenAsParam();
 
@@ -499,6 +533,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (!isListedAsset(assets, celPalPairs[i].path)) {
                 continue;
             }
+
             dProgress() << QString(QApplication::tr("Upscaling special CEL %1.")).arg(celPalPairs[i].path);
             if (ProgressDialog::wasCanceled()) {
                 return;
@@ -518,7 +553,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
     }
     if (params.steps[CUTSCENE]) {
         // upscale cutscenes
-        const char *celPalPairs[][2] = {
+        const QStringLiteral celPalPairs[][2] = {
             // clang-format off
             // celname,                palette
             { "Gendata\\Cut2.CEL",     "Gendata\\Cut2.pal" },
@@ -537,7 +572,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::incBar("Cutscenes", lengthof(celPalPairs));
 
         SaveAsParam saParams = SaveAsParam();
-        saParams.autoOverwrite = params.autoOverwrite;
+        saParams.autoOverwrite = true;
 
         OpenAsParam opParams = OpenAsParam();
 
@@ -551,6 +586,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (!isListedAsset(assets, celPalPairs[i][0])) {
                 continue;
             }
+
             dProgress() << QString(QApplication::tr("Upscaling cutscene CEL %1.")).arg(celPalPairs[i][0]);
             if (ProgressDialog::wasCanceled()) {
                 return;
@@ -575,7 +611,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
     // UpscaleCelComp("f:\\MPQE\\Work\\towners\\animals\\cow.CEL", 2, &diapal[0][0], 128, 128, "f:\\outcel\\towners\\animals\\cow.cel");
     if (params.steps[ART_CEL]) {
         // upscale non-standard CELs of the menu (converted from PCX)
-        const char *celPalPairs[][2] = {
+        const QStringLiteral celPalPairs[][2] = {
             // clang-format off
             // celname,               palette
             { "ui_art\\mainmenu.CEL", "ui_art\\menu.PAL" },
@@ -597,7 +633,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::incBar("Art CEL Files", lengthof(celPalPairs));
 
         SaveAsParam saParams = SaveAsParam();
-        saParams.autoOverwrite = params.autoOverwrite;
+        saParams.autoOverwrite = true;
 
         OpenAsParam opParams = OpenAsParam();
 
@@ -611,6 +647,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (!isListedAsset(assets, celPalPairs[i][0])) {
                 continue;
             }
+
             dProgress() << QString(QApplication::tr("Upscaling ui-art CEL %1.")).arg(celPalPairs[i][0]);
             if (ProgressDialog::wasCanceled()) {
                 return;
@@ -638,7 +675,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::incBar("Regular CL2 Files - Missiles", numRegularCl2s_Missiles);
 
         SaveAsParam saParams = SaveAsParam();
-        saParams.autoOverwrite = params.autoOverwrite;
+        saParams.autoOverwrite = true;
 
         OpenAsParam opParams = OpenAsParam();
 
@@ -649,8 +686,9 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
 
         for (QString &asset : assets) {
-            if (isRegularCl2(asset) != 1)
+            if (isRegularCl2(asset) != 1) {
                 continue;
+            }
 
             dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(asset);
             if (ProgressDialog::wasCanceled()) {
@@ -671,7 +709,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::incBar("Regular CL2 Files - Monsters", numRegularCl2s_Monsters);
 
         SaveAsParam saParams = SaveAsParam();
-        saParams.autoOverwrite = params.autoOverwrite;
+        saParams.autoOverwrite = true;
 
         OpenAsParam opParams = OpenAsParam();
 
@@ -682,8 +720,9 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
 
         for (QString &asset : assets) {
-            if (isRegularCl2(asset) != 2)
+            if (isRegularCl2(asset) != 2) {
                 continue;
+            }
 
             dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(asset);
             if (ProgressDialog::wasCanceled()) {
@@ -704,7 +743,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::incBar("Regular CL2 Files - PlrGfx", numRegularCl2s_PlrGfx);
 
         SaveAsParam saParams = SaveAsParam();
-        saParams.autoOverwrite = params.autoOverwrite;
+        saParams.autoOverwrite = true;
 
         OpenAsParam opParams = OpenAsParam();
 
@@ -715,8 +754,12 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
 
         for (QString &asset : assets) {
-            if (isRegularCl2(asset) != 3)
+            if (isRegularCl2(asset) != 3) {
                 continue;
+            }
+            if (params.steps[FIXED_CL2] && isListedAsset(botchedCL2s, lengthof(botchedCL2s), asset)) {
+                continue;
+            }
 
             dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(asset);
             if (ProgressDialog::wasCanceled()) {
@@ -735,13 +778,10 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
     if (params.steps[FIXED_CL2]) {
         // special cases to upscale cl2 files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
-        const char *botchedCL2s[] = {
-            "PlrGFX\\warrior\\wlb\\wlbat.CL2", "PlrGFX\\warrior\\wmb\\wmbat.CL2", "PlrGFX\\warrior\\whb\\whbat.CL2"
-        };
         ProgressDialog::incBar("Fixed CL2 Files", lengthof(botchedCL2s));
 
         SaveAsParam saParams = SaveAsParam();
-        saParams.autoOverwrite = params.autoOverwrite;
+        saParams.autoOverwrite = true;
 
         OpenAsParam opParams = OpenAsParam();
         opParams.celWidth = 96;
@@ -756,6 +796,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (!isListedAsset(assets, botchedCL2s[i])) {
                 continue;
             }
+
             dProgress() << QString(QApplication::tr("Upscaling botched asset %1.")).arg(botchedCL2s[i]);
             if (ProgressDialog::wasCanceled()) {
                 return;
@@ -787,7 +828,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::incBar("Tilesets", lengthof(celPalPairs));
 
         SaveAsParam saParams = SaveAsParam();
-        saParams.autoOverwrite = params.autoOverwrite;
+        saParams.autoOverwrite = true;
 
         OpenAsParam opParams = OpenAsParam();
 
@@ -802,6 +843,10 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (!isListedAsset(assets, opParams.celFilePath)) {
                 continue;
             }
+            if (params.steps[FIXED_TILESET] && isListedAsset(botchedMINs, lengthof(botchedMINs), opParams.celFilePath)) {
+                continue;
+            }
+
             dProgress() << QString(QApplication::tr("Upscaling tileset %1.")).arg(opParams.celFilePath);
             if (ProgressDialog::wasCanceled()) {
                 return;
@@ -823,16 +868,10 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
     if (params.steps[FIXED_TILESET]) {
         // special cases to upscale cl2 files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
-        const MinAssetConfig botchedMINs[] = {
-            // clang-format off
-            // celname,                      palette,                numcolors, numfixcolors (protected colors), solpath
-            { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL", 128,  0, "Levels\\TownData\\Town.SOL", },
-            // clang-format on
-        };
         ProgressDialog::incBar("Fixed Tilesets", lengthof(botchedMINs));
 
         SaveAsParam saParams = SaveAsParam();
-        saParams.autoOverwrite = params.autoOverwrite;
+        saParams.autoOverwrite = true;
 
         OpenAsParam opParams = OpenAsParam();
         opParams.minHeight = 8;

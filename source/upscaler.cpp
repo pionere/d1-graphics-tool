@@ -2671,7 +2671,7 @@ static bool BottomTriangle(int x, int y, std::vector<std::vector<D1GfxPixel>> &o
     return true;
 }
 
-void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscalingParam &upParams)
+void Upscaler::upscaleFrame(D1GfxFrame *frame, const UpscalingParam &upParams)
 {
     int multiplier = upParams.multiplier;
     // upscale the frame
@@ -3100,9 +3100,7 @@ bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
     upParams.firstfixcolor = params.firstfixcolor;
     upParams.lastfixcolor = params.lastfixcolor;
     upParams.antiAliasingMode = params.antiAliasingMode;
-    upParams.pal = pal;
-
-    pal->getValidColors(upParams.dynColors);
+    upParams.pal = nullptr;
 
     QList<D1GfxFrame *> newFrames;
     QPair<int, QString> progress;
@@ -3116,8 +3114,14 @@ bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
         }
 
         D1GfxFrame *newFrame = new D1GfxFrame(*gfx->getFrame(i));
-        upscaleFrame(newFrame, gfx->palette, upParams);
+        D1Pal *pal = gfx->palette;
+        if (pal != upParams.pal) {
+            upParams.pal = pal;
+            pal->getValidColors(upParams.dynColors);
+        }
+        upscaleFrame(newFrame, upParams);
         newFrames.append(newFrame);
+
         if (!ProgressDialog::incValue()) {
             qDeleteAll(newFrames);
             return false;
@@ -3234,9 +3238,8 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     upParams.firstfixcolor = params.firstfixcolor;
     upParams.lastfixcolor = params.lastfixcolor;
     upParams.antiAliasingMode = params.antiAliasingMode;
-    upParams.pal = pal;
+    upParams.pal = nullptr;
 
-    pal->getValidColors(upParams.dynColors);
 
     QList<D1GfxFrame *> newFrames;
     QList<QList<quint16>> newFrameReferences;
@@ -3252,9 +3255,15 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
         }
 
         D1GfxFrame *subtileFrame = Upscaler::createSubtileFrame(gfx, min, i);
-        Upscaler::upscaleFrame(subtileFrame, gfx->palette, upParams);
+        D1Pal *pal = gfx->palette;
+        if (pal != upParams.pal) {
+            upParams.pal = pal;
+            pal->getValidColors(upParams.dynColors);
+        }
+        Upscaler::upscaleFrame(subtileFrame, upParams);
         Upscaler::storeSubtileFrame(subtileFrame, newFrameReferences, newFrames);
         delete subtileFrame;
+
         if (!ProgressDialog::incValue()) {
             qDeleteAll(newFrames);
             return false;

@@ -32,7 +32,6 @@ public:
     QString assetsFolder;
     QString outFolder;
     int multiplier;
-    bool autoOverwrite;
 };
 
 namespace Ui {
@@ -47,7 +46,7 @@ public:
     ~UpscaleTaskDialog();
 
 private:
-    static bool loadCustomPal(const char *path, int numcolors, int fixcolors, const UpscaleTaskParam &params, D1Pal &pal, UpscaleParam &upParams);
+    static bool loadCustomPal(const QStringLiteral &path, int numcolors, int fixcolors, const UpscaleTaskParam &params, D1Pal &pal, UpscaleParam &upParams);
     static void upscaleCel(const QString &path, D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams);
     static void upscaleCl2(const QString &path, D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams);
     static void upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams);
