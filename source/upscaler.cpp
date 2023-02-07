@@ -21,10 +21,11 @@ constexpr int lengthof(T (&arr)[N])
 
 typedef struct UpscalingParam {
     int multiplier;
-    D1Pal *pal;
-    std::vector<PaletteColor> dynColors;
     int firstfixcolor;
     int lastfixcolor;
+    ANTI_ALIASING_MODE antiAliasingMode;
+    D1Pal *pal;
+    std::vector<PaletteColor> dynColors;
 } UpscalingParam;
 
 static bool isPixelFixed(const D1GfxPixel *pixel, const UpscalingParam &params)
@@ -2670,17 +2671,8 @@ static bool BottomTriangle(int x, int y, std::vector<std::vector<D1GfxPixel>> &o
     return true;
 }
 
-void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &params)
+void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscalingParam &upParams)
 {
-    ANTI_ALIASING_MODE antiAliasingMode = params.antiAliasingMode;
-    UpscalingParam upParams;
-    upParams.multiplier = params.multiplier;
-    upParams.firstfixcolor = params.firstfixcolor;
-    upParams.lastfixcolor = params.lastfixcolor;
-    upParams.pal = pal;
-
-    pal->getValidColors(upParams.dynColors);
-
     int multiplier = upParams.multiplier;
     // upscale the frame
     std::vector<std::vector<D1GfxPixel>> newPixels;
@@ -2755,7 +2747,7 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
     }
 
     // apply basic anti-aliasing filters
-    if (antiAliasingMode != ANTI_ALIASING_MODE::NONE) {
+    if (upParams.antiAliasingMode != ANTI_ALIASING_MODE::NONE) {
 #if PATLEN == 2
         UpscalePatterns patterns[] = {
             { patternLineDownRight, LineDownRight }, // 0
@@ -2891,7 +2883,7 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, D1Pal *pal, const UpscaleParam &p
         }
 
         // postprocess min files
-        if (antiAliasingMode == ANTI_ALIASING_MODE::TILESET) {
+        if (upParams.antiAliasingMode == ANTI_ALIASING_MODE::TILESET) {
             bool leftFloorTile = true;
             int halfWidth = frame->width / 2;
             for (int y = halfWidth; y < halfWidth; y++) {
@@ -3103,8 +3095,16 @@ bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
 {
     int amount = gfx->getFrameCount();
 
-    QList<D1GfxFrame *> newFrames;
+    UpscalingParam upParams;
+    upParams.multiplier = params.multiplier;
+    upParams.firstfixcolor = params.firstfixcolor;
+    upParams.lastfixcolor = params.lastfixcolor;
+    upParams.antiAliasingMode = params.antiAliasingMode;
+    upParams.pal = pal;
 
+    pal->getValidColors(upParams.dynColors);
+
+    QList<D1GfxFrame *> newFrames;
     QPair<int, QString> progress;
     progress.first = -1;
     for (int i = 0; i < amount; i++) {
@@ -3116,7 +3116,7 @@ bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
         }
 
         D1GfxFrame *newFrame = new D1GfxFrame(*gfx->getFrame(i));
-        upscaleFrame(newFrame, gfx->palette, params);
+        upscaleFrame(newFrame, gfx->palette, upParams);
         newFrames.append(newFrame);
         if (!ProgressDialog::incValue()) {
             qDeleteAll(newFrames);
@@ -3229,6 +3229,15 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
 {
     int amount = min->getSubtileCount();
 
+    UpscalingParam upParams;
+    upParams.multiplier = params.multiplier;
+    upParams.firstfixcolor = params.firstfixcolor;
+    upParams.lastfixcolor = params.lastfixcolor;
+    upParams.antiAliasingMode = params.antiAliasingMode;
+    upParams.pal = pal;
+
+    pal->getValidColors(upParams.dynColors);
+
     QList<D1GfxFrame *> newFrames;
     QList<QList<quint16>> newFrameReferences;
 
@@ -3243,7 +3252,7 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
         }
 
         D1GfxFrame *subtileFrame = Upscaler::createSubtileFrame(gfx, min, i);
-        Upscaler::upscaleFrame(subtileFrame, gfx->palette, params);
+        Upscaler::upscaleFrame(subtileFrame, gfx->palette, upParams);
         Upscaler::storeSubtileFrame(subtileFrame, newFrameReferences, newFrames);
         delete subtileFrame;
         if (!ProgressDialog::incValue()) {
@@ -3260,8 +3269,8 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     gfx->modified = true;
 
     // update min
-    min->subtileWidth *= params.multiplier;
-    // min->subtileHeight *= params.multiplier;
+    min->subtileWidth *= upParams.multiplier;
+    // min->subtileHeight *= upParams.multiplier;
     min->subtileHeight = 8 * min->subtileWidth / 2; // padding...
     min->frameReferences.swap(newFrameReferences);
     min->modified = true;
