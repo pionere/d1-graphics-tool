@@ -144,8 +144,8 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
         for (int j = lastFrameOffset; j < nextFrameOffset; j++) {
             if (data + j >= dataEnd)
                 return 0; // invalid data
-            quint8 readByte = data[j];
 
+            quint8 readByte = data[j];
             if (readByte > 0x7F /*&& readByte <= 0xFF*/) {
                 // Transparent pixels group
                 pixelCount += (256 - readByte);
@@ -190,7 +190,7 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData)
     for (int o = frameDataStartOffset; o < rawFrameData.size(); o++) {
         quint8 readByte = rawFrameData[o];
 
-        if (readByte > 0x80) {
+        if (readByte > 0x80 /*&& readByte <= 0xFF*/) {
             // Transparent pixels group
             pixelCount += (256 - readByte);
             pixelGroups.push_back(D1CelPixelGroup(true, pixelCount));
