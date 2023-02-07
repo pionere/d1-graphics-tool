@@ -58,6 +58,8 @@ set(PROJECT_SOURCES
         source/d1celtileset.h
         source/d1cl2.cpp
         source/d1cl2.h
+        source/d1cl2frame.cpp
+        source/d1cl2frame.h
         source/d1gfx.cpp
         source/d1gfx.h
         source/d1image.cpp
