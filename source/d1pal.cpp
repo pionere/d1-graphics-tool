@@ -12,7 +12,7 @@ PaletteColor::PaletteColor(const QColor &color, int index)
     : xv(index),
     rv(color.red()),
     gv(color.green()),
-    bv(color.blue()),
+    bv(color.blue())
 {
 }
 

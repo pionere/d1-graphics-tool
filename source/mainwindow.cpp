@@ -1098,9 +1098,8 @@ void MainWindow::upscale(const UpscaleParam &params)
         if (this->levelCelView != nullptr) {
             this->levelCelView->upscale(params);
         }
-    }
+    };
     ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling..."), 1, PAF_UPDATE_WINDOW, std::move(func));
-
 }
 
 static QString imageNameFilter()
