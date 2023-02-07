@@ -18,30 +18,23 @@ unsigned D1CelPixelGroup::getPixelCount() const
 
 bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsParam &params)
 {
-    if (rawData.size() == 0)
-        return false;
-
-    quint32 frameDataStartOffset = 0;
     unsigned width = 0;
     // frame.clipped = false;
     if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
         // Checking the presence of the {CEL FRAME HEADER}
-        if ((quint8)rawData[0] == 0x0A && (quint8)rawData[1] == 0x00) {
-            frameDataStartOffset += 0x0A;
+        // if ((quint8)rawData[0] == 0x0A && (quint8)rawData[1] == 0x00) {
             // If header is present, try to compute frame width from frame header
             width = D1CelFrame::computeWidthFromHeader(rawData);
-            frame.clipped = true;
-        }
+            frame.clipped = width != 0;
+        // }
     } else {
         if (params.clipped == OPEN_CLIPPED_TYPE::TRUE) {
-            QDataStream in(rawData);
-            in.setByteOrder(QDataStream::LittleEndian);
-            quint16 offset;
-            in >> offset;
-            frameDataStartOffset += offset;
             // If header is present, try to compute frame width from frame header
             width = D1CelFrame::computeWidthFromHeader(rawData);
-            frame.clipped = true;
+            frame.clipped = width != 0;
+            if (!frame.clipped) {
+                return false; // can not be loaded as clipped
+            }
         }
     }
     if (params.celWidth != 0)
@@ -57,24 +50,35 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
         return false;
 
     // READ {CEL FRAME DATA}
+    int frameDataStartOffset = 0;
+    if (frame.clipped)
+        frameDataStartOffset = SwapLE16(*(const quint16 *)rawData.constData());
+
     std::vector<std::vector<D1GfxPixel>> pixels;
     std::vector<D1GfxPixel> pixelLine;
     for (int o = frameDataStartOffset; o < rawData.size(); o++) {
         quint8 readByte = rawData[o];
 
-        // Transparent pixels group
-        if (readByte > 0x7F) {
-            for (int i = 0; i < (256 - readByte); i++)
+        if (readByte > 0x7F /*&& readByte <= 0xFF*/) {
+            // Transparent pixels group
+            for (int i = 0; i < (256 - readByte); i++) {
+                // Add transparent pixel
                 pixelLine.push_back(D1GfxPixel::transparentPixel());
-        } else {
+            }
+        } else /*if (readByte >= 0x00 && readByte <= 0x7F)*/ {
             // Palette indices group
             if ((o + readByte) >= rawData.size()) {
                 pixelLine.push_back(D1GfxPixel::transparentPixel()); // ensure pixelLine is not empty to report error at the end
                 break;
             }
 
+            if (readByte == 0x00) {
+                dProgressWarn() << QApplication::tr("Invalid CEL frame data (0x00 found)");
+            }
             for (int i = 0; i < readByte; i++) {
+                // Go to the next palette index offset
                 o++;
+                // Add opaque pixel
                 pixelLine.push_back(D1GfxPixel::colorPixel(rawData[o]));
             }
         }
@@ -99,41 +103,63 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
 unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
 {
     // Reading the frame header
-    QDataStream in(rawFrameData);
-    in.setByteOrder(QDataStream::LittleEndian);
+    const quint8 *data = (const quint8 *)rawFrameData.constData();
+    const quint16 *header = (const quint16 *)data;
+    const quint8 *dataEnd = data + rawFrameData.size();
 
-    quint16 celFrameHeaderSize;
-    in >> celFrameHeaderSize;
-
+    if (rawFrameData.size() < 0x0A)
+        return 0; // invalid header
+    unsigned celFrameHeaderSize = SwapLE16(header[0]);
     if (celFrameHeaderSize & 1)
         return 0; // invalid header
-
+    if (celFrameHeaderSize < 0x0A)
+        return 0; // invalid header
+    if (data + celFrameHeaderSize > dataEnd)
+        return 0; // invalid header
     // Decode the 32 pixel-lines blocks to calculate the image width
     unsigned celFrameWidth = 0;
     quint16 lastFrameOffset = celFrameHeaderSize;
-    for (int i = 0; i < (celFrameHeaderSize / 2) - 1; i++) {
-        quint16 nextFrameOffset;
-        in >> nextFrameOffset;
-        if (nextFrameOffset == 0)
+    celFrameHeaderSize /= 2;
+    for (int i = 1; i < celFrameHeaderSize; i++) {
+        quint16 nextFrameOffset = SwapLE16(header[i]);
+        if (nextFrameOffset == 0) {
+            // check if the remaining entries are zero
+            while (++i < celFrameHeaderSize) {
+                if (SwapLE16(header[i]) != 0)
+                    return 0; // invalid header
+            }
             break;
+        }
 
         unsigned pixelCount = 0;
+        // ensure the offsets are consecutive
+        if (lastFrameOffset >= nextFrameOffset)
+            return 0; // invalid data
+        // calculate width based on the data-block
         for (int j = lastFrameOffset; j < nextFrameOffset; j++) {
-            quint8 readByte = rawFrameData[j];
+            if (data + j >= dataEnd)
+                return 0; // invalid data
+            quint8 readByte = data[j];
 
             if (readByte > 0x7F) {
+                // Transparent pixels group
                 pixelCount += (256 - readByte);
             } else {
+                // Palette indices group
                 pixelCount += readByte;
                 j += readByte;
             }
         }
 
         unsigned width = pixelCount / CEL_BLOCK_HEIGHT;
-        // The calculated width has to be the identical for each 32 pixel-line block
-        // If it's not the case, 0 is returned
-        if (celFrameWidth != 0 && celFrameWidth != width)
-            return 0;
+        // The calculated width has to be identical for each 32 pixel-line block
+        if (celFrameWidth == 0) {
+            if (width == 0)
+                return 0; // invalid data
+        } else {
+            if (celFrameWidth != width)
+                return 0; // mismatching width values
+        }
 
         celFrameWidth = width;
         lastFrameOffset = nextFrameOffset;

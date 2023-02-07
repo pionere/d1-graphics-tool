@@ -3274,15 +3274,16 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     // update min
     min->subtileWidth *= upParams.multiplier;
     min->subtileHeight *= upParams.multiplier;
+    QString paddingMsg;
     if (padding != 0) {
         if (padding < 0) {
-            dProgressWarn() << QApplication::tr("Subtile height is not supported by the game (Diablo 1/DevilutionX).");
+            paddingMsg = QApplication::tr("Subtile height is not supported by the game (Diablo 1/DevilutionX).");
         } else {
             min->subtileHeight += padding / min->subtileWidth;
-            if (min->subtileHeight != 8 * min->subtileWidth / 2) {
-                dProgressErr() << QApplication::tr("Bad height %1 vs %2 after %3.").arg(min->subtileHeight).arg(min->subtileWidth).arg(padding);
-            }
-            dProgressWarn() << QApplication::tr("Empty subtiles are added to match the required height of the game (DevilutionX).");
+            // if (min->subtileHeight != 8 * min->subtileWidth / 2) {
+            //    dProgressErr() << QApplication::tr("Bad height %1 vs %2 after %3.").arg(min->subtileHeight).arg(min->subtileWidth).arg(padding);
+            // }
+            paddingMsg = QApplication::tr("Empty subtiles were added to match the required height of the game (DevilutionX).");
         }
     }
     min->frameReferences.swap(newFrameReferences);
@@ -3291,5 +3292,8 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     qDeleteAll(newFrames);
     progress.second = QString(QApplication::tr("Upscaled %n subtile(s).", "", amount)).arg(amount);
     dProgress() << progress;
+    if (padding != 0) {
+        dProgressWarn() << paddingMsg;
+    }
     return true;
 }

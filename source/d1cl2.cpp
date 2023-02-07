@@ -102,8 +102,11 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
     for (int o = frameDataStartOffset; o < rawData.size(); o++) {
         quint8 readByte = rawData[o];
 
-        // Transparent pixels
-        if (readByte > 0x00 && readByte < 0x80) {
+        if (/*readByte >= 0x00 &&*/ readByte < 0x80) {
+            // Transparent pixels
+            if (readByte == 0x00) {
+                dProgressWarn() << QApplication::tr("Invalid CL2 frame data (0x00 found)");
+            }
             for (int i = 0; i < readByte; i++) {
                 // Add transparent pixel
                 pixelLine.push_back(D1GfxPixel::transparentPixel());
@@ -113,9 +116,8 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
                     pixelLine.clear();
                 }
             }
-        }
-        // Repeat palette index
-        else if (readByte >= 0x80 && readByte < 0xBF) {
+        } else if (/*readByte >= 0x80 &&*/ readByte < 0xBF) {
+            // RLE encoded palette index
             // Go to the palette index offset
             o++;
 
@@ -128,9 +130,8 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
                     pixelLine.clear();
                 }
             }
-        }
-        // Palette indices
-        else if (readByte >= 0xBF) {
+        } else /*if (readByte >= 0xBF && readByte <= 0xFF)*/ {
+            // Palette indices
             for (int i = 0; i < (256 - readByte); i++) {
                 // Go to the next palette index offset
                 o++;
@@ -142,8 +143,6 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, QByteArray rawData, const OpenAsParam &
                     pixelLine.clear();
                 }
             }
-        } else if (readByte == 0x00) {
-            dProgressWarn() << QApplication::tr("Invalid CL2 frame data (0x00 found)");
         }
     }
     for (auto it = pixels.rbegin(); it != pixels.rend(); ++it) {
