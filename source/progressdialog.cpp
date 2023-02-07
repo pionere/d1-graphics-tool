@@ -654,9 +654,8 @@ void ProgressWidget::updateWidget(PROGRESS_STATE status, bool active, const QStr
     this->ui->openPushButton->setIcon(this->style()->standardIcon(type));
     this->ui->messageLabel->setText(label);
     this->adjustSize();
-    // this->repaint();
-    // this->update();
-    QFrame::update();
+    this->repaint();
+    //QFrame::update();
 }
 
 void ProgressWidget::on_openPushButton_clicked()

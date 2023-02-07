@@ -231,7 +231,7 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, c
 
     QString basePath = celFilePath;
     basePath.chop(4);
-    QString minFilePath = opParams.minFilePath;
+    /*QString minFilePath = opParams.minFilePath;
     if (minFilePath.isEmpty()) {
         minFilePath = basePath + ".min";
     } else {
@@ -242,7 +242,9 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, c
         solFilePath = basePath + ".sol";
     } else {
         solFilePath = params.assetsFolder + "/" + solFilePath;
-    }
+    }*/
+    QString minFilePath = basePath + ".min";
+    QString solFilePath = basePath + ".sol";
 
     QString outMinPath = outFilePath;
     outMinPath.chop(4);
@@ -321,12 +323,12 @@ static bool isListedAsset(QList<QString> &assets, const QString &asset)
 static const QString botchedCL2s[] = {
     "PlrGFX\\warrior\\wlb\\wlbat.CL2", "PlrGFX\\warrior\\wmb\\wmbat.CL2", "PlrGFX\\warrior\\whb\\whbat.CL2"
 };
-static const MinAssetConfig botchedMINs[] = {
+/*static const MinAssetConfig botchedMINs[] = {
     // clang-format off
     // celname,                      palette,                numcolors, numfixcolors (protected colors), solpath
     { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL", 128,  0, "Levels\\TownData\\Town.SOL", },
     // clang-format on
-};
+};*/
 
 static bool isListedAsset(const QString *assets, int numAssets, const QString &asset)
 {
@@ -339,7 +341,7 @@ static bool isListedAsset(const QString *assets, int numAssets, const QString &a
     return false;
 }
 
-static bool isListedAsset(const MinAssetConfig *assets, int numAssets, const QString &asset)
+/*static bool isListedAsset(const MinAssetConfig *assets, int numAssets, const QString &asset)
 {
     QString assetLower = asset.toLower();
     for (int i = 0; i < numAssets; i++) {
@@ -349,7 +351,7 @@ static bool isListedAsset(const MinAssetConfig *assets, int numAssets, const QSt
             return true;
     }
     return false;
-}
+}*/
 
 void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 {
@@ -405,7 +407,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         4, // Regular CL2 Files - PlrGfx
         1, // Fixed CL2 Files
         4, // Tilesets
-        1, // Fixed Tilesets
+        // 1, // Fixed Tilesets
         // clang-format on
     };
     {
@@ -821,6 +823,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             { "Levels\\L2Data\\L2.CEL",      "Levels\\L2Data\\L2_1.PAL",     128,  0 },
             { "Levels\\L3Data\\L3.CEL",      "Levels\\L3Data\\L3_1.PAL",     128, 32 },
             { "Levels\\L4Data\\L4.CEL",      "Levels\\L4Data\\L4_1.PAL",     128, 32 },
+            { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL",   128,  0 },
             { "NLevels\\L5Data\\L5.CEL",     "NLevels\\L5Data\\L5base.PAL",  128, 32 },
             { "NLevels\\L6Data\\L6.CEL",     "NLevels\\L6Data\\L6base1.PAL", 128, 32 },
             // clang-format on
@@ -843,9 +846,9 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (!isListedAsset(assets, opParams.celFilePath)) {
                 continue;
             }
-            if (params.steps[FIXED_TILESET] && isListedAsset(botchedMINs, lengthof(botchedMINs), opParams.celFilePath)) {
+            /*if (params.steps[FIXED_TILESET] && isListedAsset(botchedMINs, lengthof(botchedMINs), opParams.celFilePath)) {
                 continue;
-            }
+            }*/
 
             dProgress() << QString(QApplication::tr("Upscaling tileset %1.")).arg(opParams.celFilePath);
             if (ProgressDialog::wasCanceled()) {
@@ -865,7 +868,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::decBar();
         ProgressDialog::addValue(stepWeights[TILESET]);
     }
-    if (params.steps[FIXED_TILESET]) {
+    /*if (params.steps[FIXED_TILESET]) {
         // special cases to upscale cl2 files (must be done manually)
         // - width detection fails -> run in debug mode and update the width values, or alter the code to set it manually
         ProgressDialog::incBar("Fixed Tilesets", lengthof(botchedMINs));
@@ -904,7 +907,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         ProgressDialog::decBar();
         ProgressDialog::addValue(stepWeights[FIXED_TILESET]);
-    }
+    }*/
 
     ProgressDialog::decBar();
 }
