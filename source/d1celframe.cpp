@@ -1,6 +1,7 @@
 #include "d1celframe.h"
 
 #include <QApplication>
+#include <QDataStream>
 
 #include "progressdialog.h"
 
@@ -145,10 +146,10 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
                 return 0; // invalid data
             quint8 readByte = data[j];
 
-            if (readByte > 0x7F) {
+            if (readByte > 0x7F /*&& readByte <= 0xFF*/) {
                 // Transparent pixels group
                 pixelCount += (256 - readByte);
-            } else {
+            } else /*if (readByte >= 0x00 && readByte <= 0x7F)*/ {
                 // Palette indices group
                 pixelCount += readByte;
                 j += readByte;
@@ -189,8 +190,8 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData)
     for (int o = frameDataStartOffset; o < rawFrameData.size(); o++) {
         quint8 readByte = rawFrameData[o];
 
-        // Transparent pixels group
         if (readByte > 0x80) {
+            // Transparent pixels group
             pixelCount += (256 - readByte);
             pixelGroups.push_back(D1CelPixelGroup(true, pixelCount));
             globalPixelCount += pixelCount;
@@ -198,13 +199,14 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData)
                 biggestGroupPixelCount = pixelCount;
             pixelCount = 0;
         } else if (readByte == 0x80) {
+            // Transparent pixels group with maximum length -> part of a longer chain
             pixelCount += 0x80;
-        }
-        // Palette indices pixel group
-        else if (readByte == 0x7F) {
+        } else if (readByte == 0x7F) {
+            // Palette indices pixel group with maximum length
             pixelCount += 0x7F;
             o += 0x7F;
-        } else {
+        } else /*if (readByte >= 0x00 && readByte < 0x7F)*/ {
+            // Palette indices pixel group
             pixelCount += readByte;
             pixelGroups.push_back(D1CelPixelGroup(false, pixelCount));
             globalPixelCount += pixelCount;

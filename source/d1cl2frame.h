@@ -7,8 +7,8 @@
 
 class D1Cl2Frame {
 public:
-    static bool load(D1GfxFrame &frame, QByteArray rawFrameData, const OpenAsParam &params);
+    static bool load(D1GfxFrame &frame, const QByteArray rawFrameData, const OpenAsParam &params);
 
 private:
-    static quint16 computeWidthFromHeader(QByteArray &rawFrameData);
+    static unsigned computeWidthFromHeader(const QByteArray &rawFrameData);
 };

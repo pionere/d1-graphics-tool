@@ -93,7 +93,7 @@ bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
             quint32 cl2FrameEndOffset;
             in >> cl2FrameEndOffset;
 
-            frameOffsets.append(
+            frameOffsets.push_back(
                 std::pair<quint32, quint32>(cl2FrameStartOffset, cl2FrameEndOffset));
         }
     } else {
@@ -111,7 +111,7 @@ bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
                 continue;
             }
             gfx.groupFrameIndices.append(
-                std::pair<quint32, quint32>(frameOffsets.size(),
+                qMakePair(frameOffsets.size(),
                     frameOffsets.size() + cl2GroupFrameCount - 1));
 
             // Going through all frames of the group
@@ -122,7 +122,7 @@ bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
                 quint32 cl2FrameEndOffset;
                 in >> cl2FrameEndOffset;
 
-                frameOffsets.append(
+                frameOffsets.push_back(
                     std::pair<quint32, quint32>(cl2GroupOffset + cl2FrameStartOffset,
                         cl2GroupOffset + cl2FrameEndOffset));
             }
@@ -132,6 +132,7 @@ bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
     // BUILDING {CL2 FRAMES}
 
     gfx.frames.clear();
+    // std::stack<quint16> invalidFrames;
     for (const auto &offset : frameOffsets) {
         quint32 cl2FrameSize = offset.second - offset.first;
         fileBuffer.seek(offset.first);
@@ -140,15 +141,21 @@ bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
 
         D1GfxFrame *frame = new D1GfxFrame();
         if (!D1Cl2Frame::load(*frame, cl2FrameRawData, params)) {
-            // TODO: log + add placeholder?
-            delete frame;
-            continue;
+            quint16 frameIndex = gfx.frames.size();
+            dProgressErr() << QApplication::tr("Frame %1 is invalid.").arg(frameIndex + 1);
+            // dProgressErr() << QApplication::tr("Invalid frame %1 is eliminated.").arg(frameIndex + 1);
+            // invalidFrames.push(frameIndex);
         }
         gfx.frames.append(frame);
     }
 
     gfx.gfxFilePath = filePath;
     gfx.modified = false;
+    /*while (!invalidFrames.empty()) {
+        quint16 frameIndex = invalidFrames.top();
+        invalidFrames.pop();
+        gfx.removeFrame(frameIndex);
+    }*/
     return true;
 }
 
