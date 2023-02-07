@@ -30,13 +30,13 @@ typedef struct AssetConfig {
     int fixcolors;
 } AssetConfig;
 
-typedef struct MinAssetConfig {
+/*typedef struct MinAssetConfig {
     const QString path;
     const QString palette;
     int numcolors;
     int fixcolors;
     const QString solPath;
-} MinAssetConfig;
+} MinAssetConfig;*/
 
 UpscaleTaskDialog::UpscaleTaskDialog(QWidget *parent)
     : QDialog(parent)
