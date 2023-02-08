@@ -30,7 +30,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
         // Checking the presence of the {CEL FRAME HEADER}
         // If header is present, try to compute frame width from frame header
         width = D1CelFrame::computeWidthFromHeader(rawData);
-        frame.clipped = width != 0 || (rawData.size() >= SUB_HEADER_SIZE && SwapLE16(*(const quint16 *)rawFrameData.constData()) == SUB_HEADER_SIZE);
+        frame.clipped = width != 0 || (rawData.size() >= SUB_HEADER_SIZE && SwapLE16(*(const quint16 *)rawData.constData()) == SUB_HEADER_SIZE);
     } else {
         if (params.clipped == OPEN_CLIPPED_TYPE::TRUE) {
             // If header is present, try to compute frame width from frame header
