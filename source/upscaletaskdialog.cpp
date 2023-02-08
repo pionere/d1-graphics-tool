@@ -1,5 +1,7 @@
 #include "upscaletaskdialog.h"
 
+#include <set>
+
 #include <QDir>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -355,7 +357,7 @@ static void PatchMinData(int dunType, D1Min *min, D1Gfx *gfx)
         Blk2Mcr(1205, 1);
         Blk2Mcr(1212, 0);
         Blk2Mcr(1219, 0);
-        if (numtiles > 1258)
+        if (min->getSubtileCount() > 1258)
             //#ifdef HELLFIRE
             // fix bad artifact
             Blk2Mcr(1273, 7);
