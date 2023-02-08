@@ -227,7 +227,6 @@ void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const Upscal
     ProgressDialog::decBar();
 }
 
-//#define Blk2Mcr(n, x) mindata[n - 1].levelBlocks[Block2MicroTile(x, microTileLen)] = 0;
 #define Blk2Mcr(n, x) RemoveMicro(min, n, x, deletedFrames);
 static void RemoveMicro(D1Min *min, int subtileRef, int microIndex, std::set<unsigned> &deletedFrames)
 {
@@ -238,11 +237,10 @@ static void RemoveMicro(D1Min *min, int subtileRef, int microIndex, std::set<uns
     if (frameReference == 0) {
         dProgressErr() << QApplication::tr("Bad RM %1 - %2").arg(subtileIndex).arg(index);
     } else
-    deletedFrames.push_back(frameReference);
+    deletedFrames.insert(frameReference);
     min->setFrameReference(subtileIndex, index, 0);
 }
 
-//static void PatchMinData(int dunType, int microTileLen, min_image_data* mindata, int numtiles)
 static void PatchMinData(int dunType, D1Min *min, D1Gfx *gfx)
 {
     std::set<unsigned> deletedFrames;
@@ -303,28 +301,28 @@ static void PatchMinData(int dunType, D1Min *min, D1Gfx *gfx)
         Blk2Mcr(212, 9);
         Blk2Mcr(212, 10);
         Blk2Mcr(212, 11);
-        //Blk2Mcr(214, 4);
-        //Blk2Mcr(214, 6);
+        // Blk2Mcr(214, 4);
+        // Blk2Mcr(214, 6);
         Blk2Mcr(216, 2);
         Blk2Mcr(216, 4);
         Blk2Mcr(216, 6);
-        //Blk2Mcr(217, 4);
-        //Blk2Mcr(217, 6);
-        //Blk2Mcr(217, 8);
-        //Blk2Mcr(358, 4);
-        //Blk2Mcr(358, 5);
-        //Blk2Mcr(358, 6);
-        //Blk2Mcr(358, 7);
-        //Blk2Mcr(358, 8);
-        //Blk2Mcr(358, 9);
-        //Blk2Mcr(358, 10);
-        //Blk2Mcr(358, 11);
-        //Blk2Mcr(358, 12);
-        //Blk2Mcr(358, 13);
-        //Blk2Mcr(360, 4);
-        //Blk2Mcr(360, 6);
-        //Blk2Mcr(360, 8);
-        //Blk2Mcr(360, 10);
+        // Blk2Mcr(217, 4);
+        // Blk2Mcr(217, 6);
+        // Blk2Mcr(217, 8);
+        // Blk2Mcr(358, 4);
+        // Blk2Mcr(358, 5);
+        // Blk2Mcr(358, 6);
+        // Blk2Mcr(358, 7);
+        // Blk2Mcr(358, 8);
+        // Blk2Mcr(358, 9);
+        // Blk2Mcr(358, 10);
+        // Blk2Mcr(358, 11);
+        // Blk2Mcr(358, 12);
+        // Blk2Mcr(358, 13);
+        // Blk2Mcr(360, 4);
+        // Blk2Mcr(360, 6);
+        // Blk2Mcr(360, 8);
+        // Blk2Mcr(360, 10);
         // fix bad artifact
         Blk2Mcr(233, 6);
         // useless black micros
@@ -358,7 +356,7 @@ static void PatchMinData(int dunType, D1Min *min, D1Gfx *gfx)
         Blk2Mcr(1212, 0);
         Blk2Mcr(1219, 0);
         if (min->getSubtileCount() > 1258)
-            //#ifdef HELLFIRE
+            // #ifdef HELLFIRE
             // fix bad artifact
             Blk2Mcr(1273, 7);
         break;
@@ -511,7 +509,7 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, c
     }
     // Patch MIN if requested
     if (params.patchTilesets) {
-        PatchMinData(dunType, min, gfx);
+        PatchMinData(dunType, &min, &gfx);
     }
     // upscale
     ProgressDialog::incBar("", min.getSubtileCount() + 1);
@@ -553,16 +551,6 @@ static int isRegularCl2(const QString &asset)
     return 3;
 }
 
-static bool isListedAsset(QList<QString> &assets, const QString &asset)
-{
-    QString assetLower = asset.toLower();
-    for (QString name : assets) {
-        if (name.toLower() == assetLower)
-            return true;
-    }
-    return false;
-}
-
 static const AssetConfig objects[] = {
     // clang-format off
     // celname,                palette,                 numcolors, numfixcolors (protected colors)
@@ -579,7 +567,7 @@ static const AssetConfig objects[] = {
     // clang-format on
 };
 
-static const QString menuarts[][2] = {
+static const std::pair<QString, QString> menuarts[] = {
     // clang-format off
     // celname,               palette
     { "ui_art\\mainmenu.CEL", "ui_art\\menu.PAL" },
@@ -603,6 +591,16 @@ static const QString botchedCL2s[] = {
     "PlrGFX\\warrior\\wlb\\wlbat.CL2", "PlrGFX\\warrior\\wmb\\wmbat.CL2", "PlrGFX\\warrior\\whb\\whbat.CL2"
 };
 
+static bool isListedAsset(const QList<QString> &assets, const QString &asset)
+{
+    QString assetLower = asset.toLower();
+    for (const QString &name : assets) {
+        if (name.toLower() == assetLower)
+            return true;
+    }
+    return false;
+}
+
 static bool isListedAsset(const QString *assets, int numAssets, const QString &asset)
 {
     QString assetLower = asset.toLower();
@@ -614,11 +612,11 @@ static bool isListedAsset(const QString *assets, int numAssets, const QString &a
     return false;
 }
 
-static bool isListedAsset(const QString *assets[2], int numAssets, const QString &asset)
+static bool isListedAsset(const std::pair<QString, QString> *assets, int numAssets, const QString &asset)
 {
     QString assetLower = asset.toLower();
     for (int i = 0; i < numAssets; i++) {
-        const QString &name = assets[i][0];
+        const QString &name = assets[i].first;
         if (name.toLower() == assetLower)
             return true;
     }
@@ -903,20 +901,20 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
 
         for (int i = 0; i < lengthof(menuarts); i++) {
-            if (!isListedAsset(assets, menuarts[i][0])) {
+            if (!isListedAsset(assets, menuarts[i].first)) {
                 continue;
             }
 
-            dProgress() << QString(QApplication::tr("Upscaling ui-art CEL %1.")).arg(menuarts[i][0]);
+            dProgress() << QString(QApplication::tr("Upscaling ui-art CEL %1.")).arg(menuarts[i].first);
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
 
-            QString palPath = menuarts[i][1][0].isEmpty() ? D1Pal::DEFAULT_PATH : (params.assetsFolder + "/" + menuarts[i][1]); // "f:\\MPQE\\Work\\%s"
+            QString palPath = menuarts[i].second.isEmpty() ? D1Pal::DEFAULT_PATH : (params.assetsFolder + "/" + menuarts[i].second); // "f:\\MPQE\\Work\\%s"
 
             D1Pal pal;
             if (pal.load(palPath)) {
-                UpscaleTaskDialog::upscaleCel(menuarts[i][0], &pal, params, opParams, upParams, saParams);
+                UpscaleTaskDialog::upscaleCel(menuarts[i].first, &pal, params, opParams, upParams, saParams);
             } else {
                 dProgressErr() << QApplication::tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(palPath));
             }
