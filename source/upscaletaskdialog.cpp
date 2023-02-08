@@ -359,6 +359,7 @@ static void PatchMinData(int dunType, D1Min *min, D1Gfx *gfx)
             // #ifdef HELLFIRE
             // fix bad artifact
             Blk2Mcr(1273, 7);
+            Blk2Mcr(1303, 7);
         break;
     case DTYPE_CATHEDRAL:
         // patch dMiniTiles - L1.MIN
