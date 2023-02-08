@@ -190,8 +190,7 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
 
 unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool clipped)
 {
-    unsigned pixelCount;
-    unsigned width = 0;
+    unsigned pixelCount, width;
     std::vector<D1CelPixelGroup> pixelGroups;
 
     // Checking the presence of the {CEL FRAME HEADER}
@@ -237,6 +236,7 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
     }
 
     // Going through pixel groups to find pixel-lines wraps
+    width = 0;
     pixelCount = 0;
     for (unsigned i = 1; i < pixelGroups.size(); i++) {
         pixelCount += pixelGroups[i - 1].getPixelCount();
@@ -250,7 +250,7 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
             // If the pixelCount of the last group is less than the current pixel group
             // then width is equal to this last pixel group's pixel count.
             // Mostly useful for small frames like the "J" frame in smaltext.cel
-            if (i == pixelGroups.size() - 1 && pixelGroups[i].getPixelCount() < pixelCount)
+            if (i == pixelGroups.size() - 1 && pixelGroups[i].getPixelCount() < width)
                 width = pixelGroups[i].getPixelCount();
 
             pixelCount = 0;

@@ -232,13 +232,15 @@ static void RemoveMicro(D1Min *min, int subtileRef, int microIndex, std::set<uns
 {
     int subtileIndex = subtileRef - 1;
     QList<quint16> &frameReferences = min->getFrameReferences(subtileIndex);
+    // assert(min->getSubtileWidth() == 2);
     int index = frameReferences.count() - (2 + (microIndex & ~1)) + (microIndex & 1);
     unsigned frameReference = frameReferences[index];
-    if (frameReference == 0) {
-        dProgressErr() << QApplication::tr("Bad RM %1 - %2").arg(subtileIndex).arg(index);
-    } else
-    deletedFrames.insert(frameReference);
-    min->setFrameReference(subtileIndex, index, 0);
+    if (frameReference != 0) {
+        deletedFrames.insert(frameReference);
+        min->setFrameReference(subtileIndex, index, 0);
+    } else {
+        dProgressWarn() << QApplication::tr("Frame %1 of Subtile %2 is already empty.").arg(index + 1). arg(subtileIndex + 1);
+    }
 }
 
 static void PatchMinData(int dunType, D1Min *min, D1Gfx *gfx)
@@ -357,7 +359,7 @@ static void PatchMinData(int dunType, D1Min *min, D1Gfx *gfx)
         Blk2Mcr(1219, 0);
         if (min->getSubtileCount() > 1258) {
             // #ifdef HELLFIRE
-            // fix bad artifact
+            // fix bad artifacts
             Blk2Mcr(1273, 7);
             Blk2Mcr(1303, 7);
         }
@@ -452,8 +454,8 @@ static void PatchMinData(int dunType, D1Min *min, D1Gfx *gfx)
             for (int n = 0; n < frameReferences.count(); n++) {
                 if (frameReferences[n] >= refIndex) {
                     if (frameReferences[n] == refIndex) {
-                        dProgressErr() << QApplication::tr("Bad remove in %1: si=%2, fi=%3 ref=%4").arg(dunType).arg(i).arg(n).arg(refIndex);
-                        // frameReferences[n] = 0;
+                        frameReferences[n] = 0;
+                        dProgressErr() << QApplication::tr("Frame %1 was removed, but it was still used in Subtile %2 @ %3").arg(refIndex).arg(i + 1).arg(n + 1);
                     } else {
                         frameReferences[n] -= 1;
                     }
