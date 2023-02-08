@@ -258,7 +258,7 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
     }
     // If last pixel group is being processed and width is still unknown
     // then set the width to the pixelCount of the last two pixel groups
-    if (width == 0 && pixelGroups.size() > 1 && ) {
+    if (width == 0 && pixelGroups.size() > 1) {
         width = pixelGroups[pixelGroups.size() - 2].getPixelCount() + pixelGroups[pixelGroups.size() - 1].getPixelCount();
     }
 
