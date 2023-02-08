@@ -12,12 +12,12 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
     const quint16 *header = (const quint16 *)data;
     const quint8 *dataEnd = data + rawFrameData.size();
 
-    if (rawFrameData.size() < 0x0A)
+    if (rawFrameData.size() < SUB_HEADER_SIZE)
         return 0; // invalid header
     unsigned celFrameHeaderSize = SwapLE16(header[0]);
     if (celFrameHeaderSize & 1)
         return 0; // invalid header
-    if (celFrameHeaderSize < 0x0A)
+    if (celFrameHeaderSize < SUB_HEADER_SIZE)
         return 0; // invalid header
     if (data + celFrameHeaderSize > dataEnd)
         return 0; // invalid header
@@ -78,9 +78,6 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
 
 bool D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsParam &params)
 {
-    if (rawData.size() == 0)
-        return false;
-
     unsigned width = 0;
     // frame.clipped = false;
     if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
@@ -97,12 +94,13 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsP
     }
     frame.width = params.celWidth == 0 ? width : params.celWidth;
 
+    // check if a positive width was found
     if (frame.width == 0)
-        return false;
+        return rawData.size() == 0;
 
     // READ {CL2 FRAME DATA}
     int frameDataStartOffset = 0;
-    if (frame.clipped)
+    if (frame.clipped && rawData.size() >= SUB_HEADER_SIZE)
         frameDataStartOffset = SwapLE16(*(const quint16 *)rawData.constData());
 
     std::vector<std::vector<D1GfxPixel>> pixels;

@@ -952,7 +952,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     // Adding the CelView to the main frame
     QWidget *view = isTileset ? (QWidget *)this->levelCelView : this->celView;
     this->ui->mainFrame->layout()->addWidget(view);
-    view->setFocus();
+    // view->setFocus();
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(true);

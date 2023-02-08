@@ -28,12 +28,9 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
     // bool clipped = false;
     if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
         // Checking the presence of the {CEL FRAME HEADER}
-        if ((quint8)rawData[0] == 0x0A && (quint8)rawData[1] == 0x00) {
-            // If header is present, try to compute frame width from frame header
-            width = D1CelFrame::computeWidthFromHeader(rawData);
-            // clipped = width != 0;
-            frame.clipped = true;
-        }
+        // If header is present, try to compute frame width from frame header
+        width = D1CelFrame::computeWidthFromHeader(rawData);
+        frame.clipped = width != 0 || (rawData.size() >= SUB_HEADER_SIZE && SwapLE16(*(const quint16 *)rawFrameData.constData()) == SUB_HEADER_SIZE);
     } else {
         if (params.clipped == OPEN_CLIPPED_TYPE::TRUE) {
             // If header is present, try to compute frame width from frame header
@@ -68,13 +65,13 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
     }
     // frame.clipped = clipped;
 
-    // if CEL width was not found, return false
+    // check if a positive width was found
     if (width == 0)
-        return false;
+        return rawData.size() == 0;
 
     // READ {CEL FRAME DATA}
     int frameDataStartOffset = 0;
-    if (frame.clipped)
+    if (frame.clipped && rawData.size() >= SUB_HEADER_SIZE)
         frameDataStartOffset = SwapLE16(*(const quint16 *)rawData.constData());
 
     std::vector<std::vector<D1GfxPixel>> pixels;
@@ -130,12 +127,12 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
     const quint16 *header = (const quint16 *)data;
     const quint8 *dataEnd = data + rawFrameData.size();
 
-    if (rawFrameData.size() < 0x0A)
+    if (rawFrameData.size() < SUB_HEADER_SIZE)
         return 0; // invalid header
     unsigned celFrameHeaderSize = SwapLE16(header[0]);
     if (celFrameHeaderSize & 1)
         return 0; // invalid header
-    if (celFrameHeaderSize < 0x0A)
+    if (celFrameHeaderSize < SUB_HEADER_SIZE)
         return 0; // invalid header
     if (data + celFrameHeaderSize > dataEnd)
         return 0; // invalid header
@@ -199,7 +196,7 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
 
     // Checking the presence of the {CEL FRAME HEADER}
     int frameDataStartOffset = 0;
-    if (clipped)
+    if (clipped && rawFrameData.size() >= SUB_HEADER_SIZE)
         frameDataStartOffset = SwapLE16(*(const quint16 *)rawFrameData.constData());
 
     // Going through the frame data to find pixel groups
@@ -258,12 +255,11 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
 
             pixelCount = 0;
         }
-
-        // If last pixel group is being processed and width is still unknown
-        // then set the width to the pixelCount of the last two pixel groups
-        if (i == pixelGroups.size() - 1 && width == 0) {
-            width = pixelGroups[i - 1].getPixelCount() + pixelGroups[i].getPixelCount();
-        }
+    }
+    // If last pixel group is being processed and width is still unknown
+    // then set the width to the pixelCount of the last two pixel groups
+    if (width == 0 && pixelGroups.size() > 1 && ) {
+        width = pixelGroups[pixelGroups.size() - 2].getPixelCount() + pixelGroups[pixelGroups.size() - 1].getPixelCount();
     }
 
     // If width wasnt found return 0
@@ -285,10 +281,10 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
         return width;
     }
 
-    // Try to find  relevant width by adding pixel groups' pixel counts iteratively
+    // Try to find relevant width by adding pixel groups' pixel counts iteratively
     pixelCount = 0;
-    for (unsigned i = 0; i < pixelGroups.size(); i++) {
-        pixelCount += pixelGroups[i].getPixelCount();
+    for (const D1CelPixelGroup &pixelGroup : pixelGroups) {
+        pixelCount += pixelGroup.getPixelCount();
         if (pixelCount > 1
             && (globalPixelCount % pixelCount) == 0
             && pixelCount >= biggestGroupPixelCount) {
