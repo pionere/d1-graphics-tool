@@ -48,7 +48,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
     // If width could not be calculated with frame header,
     // attempt to calculate it from the frame data (by identifying pixel groups line wraps)
     if (width == 0)
-        width = D1CelFrame::computeWidthFromData(rawData);
+        width = D1CelFrame::computeWidthFromData(rawData, frame.clipped);
 
     // if CEL width was not found, return false
     if (width == 0)
@@ -154,48 +154,52 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
     return celFrameWidth;
 }
 
-unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData)
+unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool clipped)
 {
-    unsigned biggestGroupPixelCount = 0;
-    unsigned pixelCount = 0;
+    unsigned pixelCount;
     unsigned width = 0;
     std::vector<D1CelPixelGroup> pixelGroups;
 
     // Checking the presence of the {CEL FRAME HEADER}
-    quint32 frameDataStartOffset = 0;
-    if ((quint8)rawFrameData[0] == 0x0A && (quint8)rawFrameData[1] == 0x00)
-        frameDataStartOffset = 0x0A;
+    int frameDataStartOffset = 0;
+    if (clipped && rawFrameData.size() >= sizeof(quint16))
+        frameDataStartOffset = SwapLE16(*(const quint16 *)rawFrameData.constData());
 
     // Going through the frame data to find pixel groups
-    unsigned globalPixelCount = 0;
+    pixelCount = 0;
+    bool alpha = false;
     for (int o = frameDataStartOffset; o < rawFrameData.size(); o++) {
         quint8 readByte = rawFrameData[o];
 
-        if (readByte > 0x80 /*&& readByte <= 0xFF*/) {
+        if (readByte >= 0x80 /*&& readByte <= 0xFF*/) {
             // Transparent pixels group
+            if (!alpha && pixelCount != 0) {
+                pixelGroups.push_back(D1CelPixelGroup(false, pixelCount));
+                pixelCount = 0;
+            }
+            alpha = true;
             pixelCount += (256 - readByte);
-            pixelGroups.push_back(D1CelPixelGroup(true, pixelCount));
-            globalPixelCount += pixelCount;
-            if (pixelCount > biggestGroupPixelCount)
-                biggestGroupPixelCount = pixelCount;
-            pixelCount = 0;
-        } else if (readByte == 0x80) {
-            // Transparent pixels group with maximum length -> part of a longer chain
-            pixelCount += 0x80;
-        } else if (readByte == 0x7F) {
-            // Palette indices pixel group with maximum length
-            pixelCount += 0x7F;
-            o += 0x7F;
-        } else /*if (readByte >= 0x00 && readByte < 0x7F)*/ {
+            if (readByte != 0x80) {
+                pixelGroups.push_back(D1CelPixelGroup(true, pixelCount));
+                pixelCount = 0;
+            }
+        } else /*if (readByte >= 0x00 && readByte <= 0x7F)*/ {
             // Palette indices pixel group
+            if (alpha && pixelCount != 0) {
+                pixelGroups.push_back(D1CelPixelGroup(true, pixelCount));
+                pixelCount = 0;
+            }
+            alpha = true;
             pixelCount += readByte;
-            pixelGroups.push_back(D1CelPixelGroup(false, pixelCount));
-            globalPixelCount += pixelCount;
-            if (pixelCount > biggestGroupPixelCount)
-                biggestGroupPixelCount = pixelCount;
-            pixelCount = 0;
+            if (readByte != 0x7F) {
+                pixelGroups.push_back(D1CelPixelGroup(false, pixelCount));
+                pixelCount = 0;
+            }
             o += readByte;
         }
+    }
+    if (pixelCount != 0) {
+        pixelGroups.push_back(D1CelPixelGroup(alpha, pixelCount));
     }
 
     // Going through pixel groups to find pixel-lines wraps
@@ -228,6 +232,15 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData)
     // If width wasnt found return 0
     if (width == 0) {
         return 0;
+    }
+
+    unsigned globalPixelCount = 0;
+    unsigned biggestGroupPixelCount = 0;
+    for (const D1CelPixelGroup &pixelGroup : pixelGroups) {
+        pixelCount = pixelGroup.getPixelCount();
+        if (pixelCount > biggestGroupPixelCount)
+            biggestGroupPixelCount = pixelCount;
+        globalPixelCount += pixelCount;
     }
 
     // If width is consistent
