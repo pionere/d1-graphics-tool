@@ -30,13 +30,13 @@ typedef struct AssetConfig {
     int fixcolors;
 } AssetConfig;
 
-/*typedef struct MinAssetConfig {
-    const QString path;
-    const QString palette;
-    int numcolors;
-    int fixcolors;
-    const QString solPath;
-} MinAssetConfig;*/
+typedef struct MinAssetConfig {
+    const QString path;    // CEL-path
+    const QString palette; // path to the palette
+    int numcolors;         // number of usable colors
+    int fixcolors;         // fix (protected) colors at the beginning of the palette
+    int dunType;           // dungeon_type
+} MinAssetConfig;
 
 UpscaleTaskDialog::UpscaleTaskDialog(QWidget *parent)
     : QDialog(parent)
@@ -130,6 +130,7 @@ void UpscaleTaskDialog::on_upscaleButton_clicked()
             params.steps[i] = !skipStep(skipSteps, i);
         }
     }
+    params.patchTilesets = this->ui->patchTilesetsCheckBox->isChecked();
 
     this->close();
 
@@ -224,7 +225,243 @@ void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const Upscal
     ProgressDialog::decBar();
 }
 
-void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams)
+//#define Blk2Mcr(n, x) mindata[n - 1].levelBlocks[Block2MicroTile(x, microTileLen)] = 0;
+#define Blk2Mcr(n, x) RemoveMicro(min, n, x, deletedFrames);
+static void RemoveMicro(D1Min *min, int subtileRef, int microIndex, std::set<unsigned> &deletedFrames)
+{
+    int subtileIndex = subtileRef - 1;
+    QList<quint16> &frameReferences = min->getFrameReferences(subtileIndex);
+    int index = frameReferences.count() - (2 + (microIndex & ~1)) + (microIndex & 1);
+    unsigned frameReference = frameReferences[index];
+    if (frameReference == 0) {
+        dProgressErr() << QApplication::tr("Bad RM %1 - %2").arg(subtileIndex).arg(index);
+    } else
+    deletedFrames.push_back(frameReference);
+    min->setFrameReference(subtileIndex, index, 0);
+}
+
+//static void PatchMinData(int dunType, int microTileLen, min_image_data* mindata, int numtiles)
+static void PatchMinData(int dunType, D1Min *min, D1Gfx *gfx)
+{
+    std::set<unsigned> deletedFrames;
+    switch (dunType) {
+    case DTYPE_TOWN:
+        // patch dMiniTiles - Town.MIN
+        // pointless tree micros (re-drawn by dSpecial)
+        Blk2Mcr(117, 3);
+        Blk2Mcr(117, 5);
+        Blk2Mcr(128, 2);
+        Blk2Mcr(128, 3);
+        Blk2Mcr(128, 4);
+        Blk2Mcr(128, 5);
+        Blk2Mcr(128, 6);
+        Blk2Mcr(128, 7);
+        Blk2Mcr(129, 3);
+        Blk2Mcr(129, 5);
+        Blk2Mcr(129, 7);
+        Blk2Mcr(130, 2);
+        Blk2Mcr(130, 4);
+        Blk2Mcr(130, 6);
+        Blk2Mcr(156, 2);
+        Blk2Mcr(156, 3);
+        Blk2Mcr(156, 4);
+        Blk2Mcr(156, 5);
+        Blk2Mcr(156, 6);
+        Blk2Mcr(156, 7);
+        Blk2Mcr(156, 8);
+        Blk2Mcr(156, 9);
+        Blk2Mcr(156, 10);
+        Blk2Mcr(156, 11);
+        Blk2Mcr(157, 3);
+        Blk2Mcr(157, 5);
+        Blk2Mcr(157, 7);
+        Blk2Mcr(157, 9);
+        Blk2Mcr(157, 11);
+        Blk2Mcr(158, 2);
+        Blk2Mcr(158, 4);
+        Blk2Mcr(160, 2);
+        Blk2Mcr(160, 3);
+        Blk2Mcr(160, 4);
+        Blk2Mcr(160, 5);
+        Blk2Mcr(160, 6);
+        Blk2Mcr(160, 7);
+        Blk2Mcr(160, 8);
+        Blk2Mcr(160, 9);
+        Blk2Mcr(162, 2);
+        Blk2Mcr(162, 4);
+        Blk2Mcr(162, 6);
+        Blk2Mcr(162, 8);
+        Blk2Mcr(162, 10);
+        Blk2Mcr(212, 3);
+        Blk2Mcr(212, 4);
+        Blk2Mcr(212, 5);
+        Blk2Mcr(212, 6);
+        Blk2Mcr(212, 7);
+        Blk2Mcr(212, 8);
+        Blk2Mcr(212, 9);
+        Blk2Mcr(212, 10);
+        Blk2Mcr(212, 11);
+        //Blk2Mcr(214, 4);
+        //Blk2Mcr(214, 6);
+        Blk2Mcr(216, 2);
+        Blk2Mcr(216, 4);
+        Blk2Mcr(216, 6);
+        //Blk2Mcr(217, 4);
+        //Blk2Mcr(217, 6);
+        //Blk2Mcr(217, 8);
+        //Blk2Mcr(358, 4);
+        //Blk2Mcr(358, 5);
+        //Blk2Mcr(358, 6);
+        //Blk2Mcr(358, 7);
+        //Blk2Mcr(358, 8);
+        //Blk2Mcr(358, 9);
+        //Blk2Mcr(358, 10);
+        //Blk2Mcr(358, 11);
+        //Blk2Mcr(358, 12);
+        //Blk2Mcr(358, 13);
+        //Blk2Mcr(360, 4);
+        //Blk2Mcr(360, 6);
+        //Blk2Mcr(360, 8);
+        //Blk2Mcr(360, 10);
+        // fix bad artifact
+        Blk2Mcr(233, 6);
+        // useless black micros
+        Blk2Mcr(426, 1);
+        Blk2Mcr(427, 0);
+        Blk2Mcr(427, 1);
+        Blk2Mcr(429, 1);
+        // fix bad artifacts
+        Blk2Mcr(828, 12);
+        Blk2Mcr(828, 13);
+        Blk2Mcr(1018, 2);
+        // useless black micros
+        Blk2Mcr(1143, 0);
+        Blk2Mcr(1145, 0);
+        Blk2Mcr(1145, 1);
+        Blk2Mcr(1146, 0);
+        Blk2Mcr(1153, 0);
+        Blk2Mcr(1155, 1);
+        Blk2Mcr(1156, 0);
+        Blk2Mcr(1169, 1);
+        Blk2Mcr(1170, 0);
+        Blk2Mcr(1170, 1);
+        Blk2Mcr(1172, 1);
+        Blk2Mcr(1176, 1);
+        Blk2Mcr(1199, 1);
+        Blk2Mcr(1200, 0);
+        Blk2Mcr(1200, 1);
+        Blk2Mcr(1202, 1);
+        Blk2Mcr(1203, 1);
+        Blk2Mcr(1205, 1);
+        Blk2Mcr(1212, 0);
+        Blk2Mcr(1219, 0);
+        if (numtiles > 1258)
+            //#ifdef HELLFIRE
+            // fix bad artifact
+            Blk2Mcr(1273, 7);
+        break;
+    case DTYPE_CATHEDRAL:
+        // patch dMiniTiles - L1.MIN
+        // useless black micros
+        Blk2Mcr(107, 0);
+        Blk2Mcr(107, 1);
+        Blk2Mcr(109, 1);
+        Blk2Mcr(137, 1);
+        Blk2Mcr(138, 0);
+        Blk2Mcr(138, 1);
+        Blk2Mcr(140, 1);
+        break;
+    case DTYPE_CATACOMBS:
+        break;
+    case DTYPE_CAVES:
+        // patch dMiniTiles - L3.MIN
+        // fix bad artifact
+        Blk2Mcr(82, 4);
+        break;
+    case DTYPE_HELL:
+        break;
+    case DTYPE_NEST:
+        // patch dMiniTiles - L6.MIN
+        // useless black micros
+        Blk2Mcr(21, 0);
+        Blk2Mcr(21, 1);
+        // fix bad artifacts
+        Blk2Mcr(132, 7);
+        Blk2Mcr(366, 1);
+        break;
+    case DTYPE_CRYPT:
+        // patch dMiniTiles - L5.MIN
+        // useless black micros
+        Blk2Mcr(130, 0);
+        Blk2Mcr(130, 1);
+        Blk2Mcr(132, 1);
+        Blk2Mcr(134, 0);
+        Blk2Mcr(134, 1);
+        Blk2Mcr(149, 0);
+        Blk2Mcr(149, 1);
+        Blk2Mcr(149, 2);
+        Blk2Mcr(150, 0);
+        Blk2Mcr(150, 1);
+        Blk2Mcr(150, 2);
+        Blk2Mcr(150, 4);
+        Blk2Mcr(151, 0);
+        Blk2Mcr(151, 1);
+        Blk2Mcr(151, 3);
+        Blk2Mcr(152, 0);
+        Blk2Mcr(152, 1);
+        Blk2Mcr(152, 3);
+        Blk2Mcr(152, 5);
+        Blk2Mcr(153, 0);
+        Blk2Mcr(153, 1);
+        // fix bad artifact
+        Blk2Mcr(156, 2);
+        // useless black micros
+        Blk2Mcr(172, 0);
+        Blk2Mcr(172, 1);
+        Blk2Mcr(172, 2);
+        Blk2Mcr(173, 0);
+        Blk2Mcr(173, 1);
+        Blk2Mcr(174, 0);
+        Blk2Mcr(174, 1);
+        Blk2Mcr(174, 2);
+        Blk2Mcr(174, 4);
+        Blk2Mcr(175, 0);
+        Blk2Mcr(175, 1);
+        Blk2Mcr(176, 0);
+        Blk2Mcr(176, 1);
+        Blk2Mcr(176, 3);
+        Blk2Mcr(177, 0);
+        Blk2Mcr(177, 1);
+        Blk2Mcr(177, 3);
+        Blk2Mcr(177, 5);
+        Blk2Mcr(178, 0);
+        Blk2Mcr(178, 1);
+        Blk2Mcr(179, 0);
+        Blk2Mcr(179, 1);
+        break;
+    }
+    for (auto it = deletedFrames.crbegin(); it != deletedFrames.crend(); it++) {
+        unsigned refIndex = *it;
+        gfx->removeFrame(refIndex - 1);
+        // shift references
+        // - shift frame indices of the subtiles
+        for (int i = 0; i < min->getSubtileCount(); i++) {
+            QList<quint16> &frameReferences = min->getFrameReferences(i);
+            for (int n = 0; n < frameReferences.count(); n++) {
+                if (frameReferences[n] >= refIndex) {
+                    if (frameReferences[n] == refIndex) {
+                        dProgressErr() << QApplication::tr("Bad remove in %1: si=%2, fi=%3 ref=%4").arg(dunType).arg(i).arg(n).arg(refIndex);
+                        // frameReferences[n] = 0;
+                    } else {
+                        frameReferences[n] -= 1;
+                    }
+                }
+            }
+        }
+    }
+}
+
+void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams, int dunType)
 {
     QString celFilePath = params.assetsFolder + "/" + opParams.celFilePath;
     QString outFilePath = params.outFolder + "/" + opParams.celFilePath;
@@ -269,6 +506,10 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, c
     if (!D1CelTileset::load(gfx, celFrameTypes, celFilePath, opParams)) {
         dProgressErr() << tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(celFilePath));
         return;
+    }
+    // Patch MIN if requested
+    if (params.patchTilesets) {
+        PatchMinData(dunType, min, gfx);
     }
     // upscale
     ProgressDialog::incBar("", min.getSubtileCount() + 1);
@@ -320,38 +561,78 @@ static bool isListedAsset(QList<QString> &assets, const QString &asset)
     return false;
 }
 
+static const AssetConfig objects[] = {
+    // clang-format off
+    // celname,                palette,                 numcolors, numfixcolors (protected colors)
+    { "Objects\\L1Doors.CEL",  "Levels\\L1Data\\L1_1.PAL",    128,  0 },
+    { "Objects\\L2Doors.CEL",  "Levels\\L2Data\\L2_1.PAL",    128,  0 },
+    { "Objects\\L3Doors.CEL",  "Levels\\L3Data\\L3_1.PAL",    128, 32 },
+    { "Objects\\L5Door.CEL",   "NLevels\\L5Data\\L5base.PAL", 128, 32 },
+    { "Objects\\L5Books.CEL",  "NLevels\\L5Data\\L5base.PAL", 256, 32 },
+    { "Objects\\L5Lever.CEL",  "NLevels\\L5Data\\L5base.PAL", 128, 32 },
+    { "Objects\\L5Light.CEL",  "NLevels\\L5Data\\L5base.PAL", 128, 32 },
+    { "Objects\\L5Sarco.CEL",  "NLevels\\L5Data\\L5base.PAL", 256, 32 },
+    { "Objects\\Urnexpld.CEL", "NLevels\\L5Data\\L5base.PAL", 256, 32 },
+    { "Objects\\Urn.CEL",      "NLevels\\L5Data\\L5base.PAL", 256, 32 },
+    // clang-format on
+};
+
+static const QString menuarts[][2] = {
+    // clang-format off
+    // celname,               palette
+    { "ui_art\\mainmenu.CEL", "ui_art\\menu.PAL" },
+    { "ui_art\\title.CEL",    "ui_art\\menu.PAL" },
+    { "ui_art\\logo.CEL",     "ui_art\\menu.PAL" },
+    { "ui_art\\smlogo.CEL",   "ui_art\\menu.PAL" },
+    { "ui_art\\credits.CEL",  "ui_art\\credits.PAL" },
+    { "ui_art\\black.CEL",    "" },
+    { "ui_art\\heros.CEL",    "" },
+    { "ui_art\\selconn.CEL",  "" },
+    { "ui_art\\selgame.CEL",  "" },
+    { "ui_art\\selhero.CEL",  "" },
+    // "ui_art\\focus.CEL", "ui_art\\focus16.CEL", "ui_art\\focus42.CEL",
+    // "ui_art\\lrpopup.CEL", "ui_art\\spopup.CEL", "ui_art\\srpopup.CEL", "ui_art\\smbutton.CEL"
+    // "ui_art\\prog_bg.CEL", "ui_art\\prog_fil.CEL",
+    // "ui_art\\sb_arrow.CEL", "ui_art\\sb_bg.CEL", "ui_art\\sb_thumb.CEL",
+    // clang-format on
+};
+
 static const QString botchedCL2s[] = {
     "PlrGFX\\warrior\\wlb\\wlbat.CL2", "PlrGFX\\warrior\\wmb\\wmbat.CL2", "PlrGFX\\warrior\\whb\\whbat.CL2"
 };
-/*static const MinAssetConfig botchedMINs[] = {
-    // clang-format off
-    // celname,                      palette,                numcolors, numfixcolors (protected colors), solpath
-    { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL", 128,  0, "Levels\\TownData\\Town.SOL", },
-    // clang-format on
-};*/
 
 static bool isListedAsset(const QString *assets, int numAssets, const QString &asset)
 {
     QString assetLower = asset.toLower();
     for (int i = 0; i < numAssets; i++) {
-        QString name = assets[i];
+        const QString &name = assets[i];
         if (name.toLower() == assetLower)
             return true;
     }
     return false;
 }
 
-/*static bool isListedAsset(const MinAssetConfig *assets, int numAssets, const QString &asset)
+static bool isListedAsset(const QString *assets[2], int numAssets, const QString &asset)
 {
     QString assetLower = asset.toLower();
     for (int i = 0; i < numAssets; i++) {
-        const MinAssetConfig &cfg = assets[i];
-        QString name = cfg.path;
+        const QString &name = assets[i][0];
         if (name.toLower() == assetLower)
             return true;
     }
     return false;
-}*/
+}
+
+static bool isListedAsset(const AssetConfig *assets, int numAssets, const QString &asset)
+{
+    QString assetLower = asset.toLower();
+    for (int i = 0; i < numAssets; i++) {
+        const QString &name = assets[i].path;
+        if (name.toLower() == assetLower)
+            return true;
+    }
+    return false;
+}
 
 void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 {
@@ -440,6 +721,14 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             if (!isRegularCel(asset)) {
                 continue;
             }
+            if (params.steps[OBJECT_CEL] && isListedAsset(objects, lengthof(objects), asset)) {
+                ProgressDialog::incValue();
+                continue;
+            }
+            if (params.steps[ART_CEL] && isListedAsset(menuarts, lengthof(menuarts), asset)) {
+                ProgressDialog::incValue();
+                continue;
+            }
 
             dProgress() << QString(QApplication::tr("Upscaling asset %1.")).arg(asset);
             if (ProgressDialog::wasCanceled()) {
@@ -457,22 +746,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
     }
     if (params.steps[OBJECT_CEL]) {
         // upscale objects with level-specific palette
-        const AssetConfig celPalPairs[] = {
-            // clang-format off
-            // celname,                palette,                 numcolors, numfixcolors (protected colors)
-            { "Objects\\L1Doors.CEL",  "Levels\\L1Data\\L1_1.PAL",    128,  0 },
-            { "Objects\\L2Doors.CEL",  "Levels\\L2Data\\L2_1.PAL",    128,  0 },
-            { "Objects\\L3Doors.CEL",  "Levels\\L3Data\\L3_1.PAL",    128, 32 },
-            { "Objects\\L5Door.CEL",   "NLevels\\L5Data\\L5base.PAL", 128, 32 },
-            { "Objects\\L5Books.CEL",  "NLevels\\L5Data\\L5base.PAL", 256, 32 },
-            { "Objects\\L5Lever.CEL",  "NLevels\\L5Data\\L5base.PAL", 128, 32 },
-            { "Objects\\L5Light.CEL",  "NLevels\\L5Data\\L5base.PAL", 128, 32 },
-            { "Objects\\L5Sarco.CEL",  "NLevels\\L5Data\\L5base.PAL", 256, 32 },
-            { "Objects\\Urnexpld.CEL", "NLevels\\L5Data\\L5base.PAL", 256, 32 },
-            { "Objects\\Urn.CEL",      "NLevels\\L5Data\\L5base.PAL", 256, 32 },
-            // clang-format on
-        };
-        ProgressDialog::incBar("Object CEL Files", lengthof(celPalPairs));
+        ProgressDialog::incBar("Object CEL Files", lengthof(objects));
 
         SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = true;
@@ -485,19 +759,19 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.lastfixcolor = -1;
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
 
-        for (int i = 0; i < lengthof(celPalPairs); i++) {
-            if (!isListedAsset(assets, celPalPairs[i].path)) {
+        for (int i = 0; i < lengthof(objects); i++) {
+            if (!isListedAsset(assets, objects[i].path)) {
                 continue;
             }
 
-            dProgress() << QString(QApplication::tr("Upscaling object CEL %1.")).arg(celPalPairs[i].path);
+            dProgress() << QString(QApplication::tr("Upscaling object CEL %1.")).arg(objects[i].path);
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
 
             D1Pal pal;
-            if (UpscaleTaskDialog::loadCustomPal(celPalPairs[i].palette, celPalPairs[i].numcolors, celPalPairs[i].fixcolors, params, pal, upParams))
-                UpscaleTaskDialog::upscaleCel(celPalPairs[i].path, &pal, params, opParams, upParams, saParams);
+            if (UpscaleTaskDialog::loadCustomPal(objects[i].palette, objects[i].numcolors, objects[i].fixcolors, params, pal, upParams))
+                UpscaleTaskDialog::upscaleCel(objects[i].path, &pal, params, opParams, upParams, saParams);
 
             if (!ProgressDialog::incValue()) {
                 return;
@@ -613,26 +887,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
     // UpscaleCelComp("f:\\MPQE\\Work\\towners\\animals\\cow.CEL", 2, &diapal[0][0], 128, 128, "f:\\outcel\\towners\\animals\\cow.cel");
     if (params.steps[ART_CEL]) {
         // upscale non-standard CELs of the menu (converted from PCX)
-        const QString celPalPairs[][2] = {
-            // clang-format off
-            // celname,               palette
-            { "ui_art\\mainmenu.CEL", "ui_art\\menu.PAL" },
-            { "ui_art\\title.CEL",    "ui_art\\menu.PAL" },
-            { "ui_art\\logo.CEL",     "ui_art\\menu.PAL" },
-            { "ui_art\\smlogo.CEL",   "ui_art\\menu.PAL" },
-            { "ui_art\\credits.CEL",  "ui_art\\credits.PAL" },
-            { "ui_art\\black.CEL",    "" },
-            { "ui_art\\heros.CEL",    "" },
-            { "ui_art\\selconn.CEL",  "" },
-            { "ui_art\\selgame.CEL",  "" },
-            { "ui_art\\selhero.CEL",  "" },
-            // "ui_art\\focus.CEL", "ui_art\\focus16.CEL", "ui_art\\focus42.CEL",
-            // "ui_art\\lrpopup.CEL", "ui_art\\spopup.CEL", "ui_art\\srpopup.CEL", "ui_art\\smbutton.CEL"
-            // "ui_art\\prog_bg.CEL", "ui_art\\prog_fil.CEL",
-            // "ui_art\\sb_arrow.CEL", "ui_art\\sb_bg.CEL", "ui_art\\sb_thumb.CEL",
-            // clang-format on
-        };
-        ProgressDialog::incBar("Art CEL Files", lengthof(celPalPairs));
+        ProgressDialog::incBar("Art CEL Files", lengthof(menuarts));
 
         SaveAsParam saParams = SaveAsParam();
         saParams.autoOverwrite = true;
@@ -645,21 +900,21 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         upParams.lastfixcolor = -1;
         upParams.antiAliasingMode = ANTI_ALIASING_MODE::BASIC;
 
-        for (int i = 0; i < lengthof(celPalPairs); i++) {
-            if (!isListedAsset(assets, celPalPairs[i][0])) {
+        for (int i = 0; i < lengthof(menuarts); i++) {
+            if (!isListedAsset(assets, menuarts[i][0])) {
                 continue;
             }
 
-            dProgress() << QString(QApplication::tr("Upscaling ui-art CEL %1.")).arg(celPalPairs[i][0]);
+            dProgress() << QString(QApplication::tr("Upscaling ui-art CEL %1.")).arg(menuarts[i][0]);
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
 
-            QString palPath = celPalPairs[i][1][0] == '\0' ? D1Pal::DEFAULT_PATH : (params.assetsFolder + "/" + celPalPairs[i][1]); // "f:\\MPQE\\Work\\%s"
+            QString palPath = menuarts[i][1][0].isEmpty() ? D1Pal::DEFAULT_PATH : (params.assetsFolder + "/" + menuarts[i][1]); // "f:\\MPQE\\Work\\%s"
 
             D1Pal pal;
             if (pal.load(palPath)) {
-                UpscaleTaskDialog::upscaleCel(celPalPairs[i][0], &pal, params, opParams, upParams, saParams);
+                UpscaleTaskDialog::upscaleCel(menuarts[i][0], &pal, params, opParams, upParams, saParams);
             } else {
                 dProgressErr() << QApplication::tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(palPath));
             }
@@ -760,6 +1015,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
                 continue;
             }
             if (params.steps[FIXED_CL2] && isListedAsset(botchedCL2s, lengthof(botchedCL2s), asset)) {
+                ProgressDialog::incValue();
                 continue;
             }
 
@@ -815,17 +1071,17 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
     }
     if (params.steps[TILESET]) {
         // upscale tiles of the levels
-        const AssetConfig celPalPairs[] = {
+        const MinAssetConfig celPalPairs[] = {
             // clang-format off
-            // celname,                      palette                   numcolors, numfixcolors (protected colors)
-            { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   128,  0 },
-            { "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1_1.PAL",     128,  0 },
-            { "Levels\\L2Data\\L2.CEL",      "Levels\\L2Data\\L2_1.PAL",     128,  0 },
-            { "Levels\\L3Data\\L3.CEL",      "Levels\\L3Data\\L3_1.PAL",     128, 32 },
-            { "Levels\\L4Data\\L4.CEL",      "Levels\\L4Data\\L4_1.PAL",     128, 32 },
-            { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL",   128,  0 },
-            { "NLevels\\L5Data\\L5.CEL",     "NLevels\\L5Data\\L5base.PAL",  128, 32 },
-            { "NLevels\\L6Data\\L6.CEL",     "NLevels\\L6Data\\L6base1.PAL", 128, 32 },
+            // celname,                      palette                   numcolors, numfixcolors, dunType
+            { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN      },
+            { "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1_1.PAL",     128,  0, DTYPE_CATHEDRAL },
+            { "Levels\\L2Data\\L2.CEL",      "Levels\\L2Data\\L2_1.PAL",     128,  0, DTYPE_CATACOMBS },
+            { "Levels\\L3Data\\L3.CEL",      "Levels\\L3Data\\L3_1.PAL",     128, 32, DTYPE_CAVES     },
+            { "Levels\\L4Data\\L4.CEL",      "Levels\\L4Data\\L4_1.PAL",     128, 32, DTYPE_HELL      },
+            { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN      },
+            { "NLevels\\L5Data\\L5.CEL",     "NLevels\\L5Data\\L5base.PAL",  128, 32, DTYPE_CRYPT     },
+            { "NLevels\\L6Data\\L6.CEL",     "NLevels\\L6Data\\L6base1.PAL", 128, 32, DTYPE_NEST      },
             // clang-format on
         };
         ProgressDialog::incBar("Tilesets", lengthof(celPalPairs));
@@ -857,7 +1113,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
             D1Pal pal;
             if (UpscaleTaskDialog::loadCustomPal(celPalPairs[i].palette, celPalPairs[i].numcolors, celPalPairs[i].fixcolors, params, pal, upParams)) {
-                UpscaleTaskDialog::upscaleMin(&pal, params, opParams, upParams, saParams);
+                UpscaleTaskDialog::upscaleMin(&pal, params, opParams, upParams, saParams, celPalPairs[i].dunType);
             }
 
             if (!ProgressDialog::incValue()) {
