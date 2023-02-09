@@ -42,30 +42,8 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
 
     // If width could not be calculated with frame header,
     // attempt to calculate it from the frame data (by identifying pixel groups line wraps)
-    if (width == 0) {
+    if (width == 0)
         width = D1CelFrame::computeWidthFromData(rawData, frame.clipped);
-        unsigned width2 = D1CelFrame::computeWidthFromDataNew(rawData, frame.clipped);
-        if (width != width2) {
-            dProgressErr() << QApplication::tr("Width %1 vs %2").arg(width).arg(width2);
-        }
-        /*clipped = width != 0;
-        if (!clipped) {
-            if (width2 == 0) {
-                return false; // width was not found, return false
-            }
-            width = width2;
-        } else {
-            if (width2 != 0) {
-                if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
-                    dProgressWarn() << tr("The image could be interpreted as clipped or not clipped as well. Assuming clipped.");
-                } else if (params.clipped == OPEN_CLIPPED_TYPE::FALSE) {
-                    width = width2;
-                    clipped = false;
-                }
-            }
-        }*/
-    }
-    // frame.clipped = clipped;
 
     // check if a positive width was found
     if (width == 0)
@@ -190,114 +168,6 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
     return celFrameWidth;
 }
 
-unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool clipped)
-{
-    unsigned pixelCount, width;
-    std::vector<D1CelPixelGroup> pixelGroups;
-
-    // Checking the presence of the {CEL FRAME HEADER}
-    int frameDataStartOffset = 0;
-    if (clipped && rawFrameData.size() >= SUB_HEADER_SIZE)
-        frameDataStartOffset = SwapLE16(*(const quint16 *)rawFrameData.constData());
-
-    // Going through the frame data to find pixel groups
-    pixelCount = 0;
-    bool alpha = false;
-    for (int o = frameDataStartOffset; o < rawFrameData.size(); o++) {
-        quint8 readByte = rawFrameData[o];
-
-        if (readByte >= 0x80 /*&& readByte <= 0xFF*/) {
-            // Transparent pixels group
-            if (!alpha && pixelCount != 0) {
-                pixelGroups.push_back(D1CelPixelGroup(false, pixelCount));
-                pixelCount = 0;
-            }
-            alpha = true;
-            pixelCount += (256 - readByte);
-            if (readByte != 0x80) {
-                pixelGroups.push_back(D1CelPixelGroup(true, pixelCount));
-                pixelCount = 0;
-            }
-        } else /*if (readByte >= 0x00 && readByte <= 0x7F)*/ {
-            // Palette indices pixel group
-            if (alpha && pixelCount != 0) {
-                pixelGroups.push_back(D1CelPixelGroup(true, pixelCount));
-                pixelCount = 0;
-            }
-            alpha = false;
-            pixelCount += readByte;
-            if (readByte != 0x7F) {
-                pixelGroups.push_back(D1CelPixelGroup(false, pixelCount));
-                pixelCount = 0;
-            }
-            o += readByte;
-        }
-    }
-    if (pixelCount != 0) {
-        pixelGroups.push_back(D1CelPixelGroup(alpha, pixelCount));
-    }
-
-    // Going through pixel groups to find pixel-lines wraps
-    width = 0;
-    pixelCount = 0;
-    for (unsigned i = 1; i < pixelGroups.size(); i++) {
-        pixelCount += pixelGroups[i - 1].getPixelCount();
-
-        if (pixelGroups[i - 1].isTransparent() == pixelGroups[i].isTransparent()) {
-            // If width == 0 then it's the first pixel-line wrap and width needs to be set
-            // If pixelCount is less than width then the width has to be set to the new value
-            if (width == 0 || pixelCount < width)
-                width = pixelCount;
-
-            // If the pixelCount of the last group is less than the current pixel group
-            // then width is equal to this last pixel group's pixel count.
-            // Mostly useful for small frames like the "J" frame in smaltext.cel
-            if (i == pixelGroups.size() - 1 && pixelGroups[i].getPixelCount() < width)
-                width = pixelGroups[i].getPixelCount();
-
-            pixelCount = 0;
-        }
-    }
-    // If last pixel group is being processed and width is still unknown
-    // then set the width to the pixelCount of the last two pixel groups
-    if (width == 0 && pixelGroups.size() > 1) {
-        width = pixelGroups[pixelGroups.size() - 2].getPixelCount() + pixelGroups[pixelGroups.size() - 1].getPixelCount();
-    }
-
-    // If width wasnt found return 0
-    if (width == 0) {
-        return 0;
-    }
-
-    unsigned globalPixelCount = 0;
-    unsigned biggestGroupPixelCount = 0;
-    for (const D1CelPixelGroup &pixelGroup : pixelGroups) {
-        pixelCount = pixelGroup.getPixelCount();
-        if (pixelCount > biggestGroupPixelCount)
-            biggestGroupPixelCount = pixelCount;
-        globalPixelCount += pixelCount;
-    }
-
-    // If width is consistent
-    if ((globalPixelCount % width) == 0) {
-        return width;
-    }
-
-    // Try to find relevant width by adding pixel groups' pixel counts iteratively
-    pixelCount = 0;
-    for (const D1CelPixelGroup &pixelGroup : pixelGroups) {
-        pixelCount += pixelGroup.getPixelCount();
-        if (pixelCount > 1
-            && (globalPixelCount % pixelCount) == 0
-            && pixelCount >= biggestGroupPixelCount) {
-            return pixelCount;
-        }
-    }
-
-    // If still no width found return 0
-    return 0;
-}
-
 static bool isValidWidth(unsigned width, unsigned globalPixelCount, const std::vector<D1CelPixelGroup> &pixelGroups)
 {
     if ((globalPixelCount % width) != 0)
@@ -320,7 +190,7 @@ static bool isValidWidth(unsigned width, unsigned globalPixelCount, const std::v
     return true;
 }
 
-unsigned D1CelFrame::computeWidthFromDataNew(const QByteArray &rawFrameData, bool clipped)
+unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool clipped)
 {
     unsigned pixelCount, width, globalPixelCount;
     std::vector<D1CelPixelGroup> pixelGroups;

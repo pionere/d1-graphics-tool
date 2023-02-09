@@ -2,11 +2,8 @@
 
 #include <QDialog>
 
-#include "d1amp.h"
 #include "d1gfx.h"
-#include "d1min.h"
-#include "d1sol.h"
-#include "d1til.h"
+#include "d1tileset.h"
 
 typedef struct ExportParam {
     QString outFolder;
@@ -34,7 +31,7 @@ public:
     explicit ExportDialog(QWidget *parent = nullptr);
     ~ExportDialog();
 
-    void initialize(D1Gfx *gfx, D1Min *min, D1Til *til, D1Sol *sol, D1Amp *amp);
+    void initialize(D1Gfx *gfx, D1Tileset *tileset);
 
 private slots:
     void on_outputFolderBrowseButton_clicked();
@@ -53,8 +50,5 @@ private:
     Ui::ExportDialog *ui;
 
     D1Gfx *gfx = nullptr;
-    D1Min *min = nullptr;
-    D1Til *til = nullptr;
-    D1Sol *sol = nullptr;
-    D1Amp *amp = nullptr;
+    D1Tileset *tileset = nullptr;
 };

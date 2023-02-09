@@ -12,13 +12,9 @@
 #include <QWidget>
 
 #include "celview.h"
-#include "d1amp.h"
 #include "d1gfx.h"
-#include "d1min.h"
 #include "d1pal.h"
-#include "d1sol.h"
-#include "d1til.h"
-#include "d1tmi.h"
+#include "d1tileset.h"
 #include "leveltabframewidget.h"
 #include "leveltabsubtilewidget.h"
 #include "leveltabtilewidget.h"
@@ -37,7 +33,7 @@ public:
     explicit LevelCelView(QWidget *parent = nullptr);
     ~LevelCelView();
 
-    void initialize(D1Pal *pal, D1Gfx *gfx, D1Min *min, D1Til *til, D1Sol *sol, D1Amp *amp, D1Tmi *tmi);
+    void initialize(D1Pal *pal, D1Tileset *tileset);
     void setPal(D1Pal *pal);
 
     int getCurrentFrameIndex();

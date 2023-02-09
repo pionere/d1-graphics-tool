@@ -24,13 +24,10 @@ ExportDialog::~ExportDialog()
     delete ui;
 }
 
-void ExportDialog::initialize(D1Gfx *g, D1Min *m, D1Til *t, D1Sol *s, D1Amp *a)
+void ExportDialog::initialize(D1Gfx *g, D1Tileset *ts)
 {
     this->gfx = g;
-    this->min = m;
-    this->til = t;
-    this->sol = s;
-    this->amp = a;
+    this->tileset = ts;
 
     // initialize the format combobox
     QList<QByteArray> formats = QImageWriter::supportedImageFormats();
@@ -56,7 +53,7 @@ void ExportDialog::initialize(D1Gfx *g, D1Min *m, D1Til *t, D1Sol *s, D1Amp *a)
     }*/
 
     // initialize content type
-    bool isTileset = this->gfx->getType() == D1CEL_TYPE::V1_LEVEL;
+    bool isTileset = this->tileset != nullptr;
     this->ui->contentTypeComboBox->setEnabled(isTileset);
     if (!isTileset) {
         this->ui->contentTypeComboBox->setCurrentIndex(0);
@@ -664,22 +661,19 @@ void ExportDialog::on_exportButton_clicked()
 
     this->hide();
 
-    D1Til *til = this->til;
-    D1Min *min = this->min;
-    D1Gfx *gfx = this->gfx;
-    std::function<void()> func = [type, til, min, gfx, params]() {
+    std::function<void()> func = [type, this, params]() {
         switch (type) {
         case 0:
-            ExportDialog::exportFrames(gfx, params);
+            ExportDialog::exportFrames(this->gfx, params);
             break;
         case 1:
-            ExportDialog::exportLevelSubtiles(min, params);
+            ExportDialog::exportLevelSubtiles(this->tileset->min, params);
             break;
         case 2:
-            ExportDialog::exportLevelTiles(til, params);
+            ExportDialog::exportLevelTiles(this->tileset->til, params);
             break;
         default: // case 3:
-            ExportDialog::exportLevelTiles25D(til, params);
+            ExportDialog::exportLevelTiles25D(this->tileset->til, params);
             break;
         }
     };

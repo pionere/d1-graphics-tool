@@ -243,7 +243,7 @@ void MainWindow::updateWindow()
         this->subtileMenu.actions()[3]->setEnabled(hasSubtile); // replace subtile
         this->subtileMenu.actions()[4]->setEnabled(hasSubtile); // delete subtile
         this->tileMenu.actions()[0]->setEnabled(hasSubtile);    // create tile
-        bool hasTile = this->til->getTileCount() != 0;
+        bool hasTile = this->tileset->til->getTileCount() != 0;
         this->tileMenu.actions()[3]->setEnabled(hasTile); // replace tile
         this->tileMenu.actions()[4]->setEnabled(hasTile); // delete tile
     }
@@ -799,46 +799,42 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->gfx = new D1Gfx();
     this->gfx->setPalette(this->trnBase->getResultingPalette());
     if (isTileset) {
+        this->tileset = new D1Tileset();
         // Loading SOL
-        this->sol = new D1Sol();
-        if (!this->sol->load(solFilePath)) {
+        if (!this->tileset->sol->load(solFilePath)) {
             this->failWithError(tr("Failed loading SOL file: %1.").arg(QDir::toNativeSeparators(solFilePath)));
             return;
         }
 
         // Loading MIN
-        this->min = new D1Min();
         std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
-        if (!this->min->load(minFilePath, this->gfx, this->sol, celFrameTypes, params)) {
+        if (!this->tileset->min->load(minFilePath, this->gfx, this->tileset->sol, celFrameTypes, params)) {
             this->failWithError(tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath)));
             return;
         }
 
         // Loading TIL
-        this->til = new D1Til();
-        if (!this->til->load(tilFilePath, this->min)) {
+        if (!this->tileset->til->load(tilFilePath, this->tileset->min)) {
             this->failWithError(tr("Failed loading TIL file: %1.").arg(QDir::toNativeSeparators(tilFilePath)));
             return;
         }
 
         // Loading AMP
-        this->amp = new D1Amp();
         QString ampFilePath = params.ampFilePath;
         if (!openFilePath.isEmpty() && ampFilePath.isEmpty()) {
             ampFilePath = basePath + ".amp";
         }
-        if (!this->amp->load(ampFilePath, this->til->getTileCount(), params)) {
+        if (!this->tileset->amp->load(ampFilePath, this->tileset->til->getTileCount(), params)) {
             this->failWithError(tr("Failed loading AMP file: %1.").arg(QDir::toNativeSeparators(ampFilePath)));
             return;
         }
 
         // Loading TMI
-        this->tmi = new D1Tmi();
         QString tmiFilePath = params.tmiFilePath;
         if (!openFilePath.isEmpty() && tmiFilePath.isEmpty()) {
             tmiFilePath = basePath + ".tmi";
         }
-        if (!this->tmi->load(tmiFilePath, this->sol, params)) {
+        if (!this->tileset->tmi->load(tmiFilePath, this->tileset->sol, params)) {
             this->failWithError(tr("Failed loading TMI file: %1.").arg(QDir::toNativeSeparators(tmiFilePath)));
             return;
         }
@@ -898,7 +894,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     if (isTileset) {
         // build a LevelCelView
         this->levelCelView = new LevelCelView();
-        this->levelCelView->initialize(this->pal, this->gfx, this->min, this->til, this->sol, this->amp, this->tmi);
+        this->levelCelView->initialize(this->pal, this->tileset);
 
         // Select color when level CEL view clicked
         QObject::connect(this->levelCelView, &LevelCelView::frameClicked, this, &MainWindow::frameClicked);
@@ -1056,20 +1052,8 @@ void MainWindow::saveFile(const SaveAsParam &params)
         }
     }
 
-    if (this->min != nullptr) {
-        this->min->save(params);
-    }
-    if (this->til != nullptr) {
-        this->til->save(params);
-    }
-    if (this->sol != nullptr) {
-        this->sol->save(params);
-    }
-    if (this->amp != nullptr) {
-        this->amp->save(params);
-    }
-    if (this->tmi != nullptr) {
-        this->tmi->save(params);
+    if (this->tileset != nullptr) {
+        this->tileset->save(params);
     }
 
     // Clear loading message from status bar
@@ -1172,7 +1156,7 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_actionSaveAs_triggered()
 {
-    this->saveAsDialog.initialize(this->gfx, this->min, this->til, this->sol, this->amp, this->tmi);
+    this->saveAsDialog.initialize(this->gfx, this->tileset);
     this->saveAsDialog.show();
 }
 
@@ -1198,11 +1182,7 @@ void MainWindow::on_actionClose_triggered()
     qDeleteAll(this->baseTrns);
     this->baseTrns.clear();
 
-    MemFree(this->min);
-    MemFree(this->til);
-    MemFree(this->sol);
-    MemFree(this->amp);
-    MemFree(this->tmi);
+    MemFree(this->tileset);
     MemFree(this->palHits);
 
     // update available menu entries
@@ -1223,7 +1203,7 @@ void MainWindow::on_actionSettings_triggered()
 
 void MainWindow::on_actionExport_triggered()
 {
-    this->exportDialog.initialize(this->gfx, this->min, this->til, this->sol, this->amp);
+    this->exportDialog.initialize(this->gfx, this->tileset);
     this->exportDialog.show();
 }
 
@@ -1483,7 +1463,6 @@ void MainWindow::on_actionCompressSubtiles_Tileset_triggered()
         this->levelCelView->compressSubtiles();
     };
     ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW, std::move(func));
-
 }
 
 void MainWindow::on_actionCompressTiles_Tileset_triggered()
