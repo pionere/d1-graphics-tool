@@ -196,13 +196,11 @@ void UpscaleTaskDialog::upscaleCel(const QString &path, D1Pal *pal, const Upscal
         return;
     }
     // upscale
-    ProgressDialog::incBar("", gfx.getFrameCount() + 1);
-    if (Upscaler::upscaleGfx(&gfx, upParams)) {
+    if (Upscaler::upscaleGfx(&gfx, upParams, true)) {
         // store the result
         saParams.celFilePath = outFilePath;
         D1Cel::save(gfx, saParams);
     }
-    ProgressDialog::decBar();
 }
 
 void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams)
@@ -218,13 +216,11 @@ void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const Upscal
         return;
     }
     // upscale
-    ProgressDialog::incBar("", gfx.getFrameCount() + 1);
-    if (Upscaler::upscaleGfx(&gfx, upParams)) {
+    if (Upscaler::upscaleGfx(&gfx, upParams, true)) {
         // store the result
         saParams.celFilePath = outFilePath;
         D1Cl2::save(gfx, saParams);
     }
-    ProgressDialog::decBar();
 }
 
 #define Blk2Mcr(n, x) RemoveMicro(min, n, x, deletedFrames);
@@ -516,15 +512,13 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, c
         PatchMinData(dunType, &min, &gfx);
     }
     // upscale
-    ProgressDialog::incBar("", min.getSubtileCount() + 1);
-    if (Upscaler::upscaleTileset(&gfx, &min, upParams)) {
+    if (Upscaler::upscaleTileset(&gfx, &min, upParams, true)) {
         // store the result
         saParams.celFilePath = outFilePath;
         D1CelTileset::save(gfx, saParams);
         saParams.minFilePath = outMinPath;
         min.save(saParams);
     }
-    ProgressDialog::decBar();
 }
 
 static bool isRegularCel(const QString &asset)

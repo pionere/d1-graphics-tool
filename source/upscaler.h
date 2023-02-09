@@ -11,8 +11,8 @@ struct UpscalingParam;
 
 class Upscaler {
 public:
-    static bool upscaleGfx(D1Gfx *gfx, const UpscaleParam &params);
-    static bool upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params);
+    static bool upscaleGfx(D1Gfx *gfx, const UpscaleParam &params, bool silent);
+    static bool upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params, bool silent);
 
 private:
     static void upscaleFrame(D1GfxFrame *frame, const UpscalingParam &params);

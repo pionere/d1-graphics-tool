@@ -59,7 +59,7 @@ void D1Tileset::removeSubtile(int subtileIndex)
     }
 }
 
-bool D1Tileset::reuseFrames(std::set<int> &removedIndices)
+bool D1Tileset::reuseFrames(std::set<int> &removedIndices, bool silent)
 {
     ProgressDialog::incBar(QApplication::tr("Reusing frames..."), this->gfx->getFrameCount());
     int result = 0;
@@ -120,7 +120,8 @@ bool D1Tileset::reuseFrames(std::set<int> &removedIndices)
                 break;
             }
             removedIndices.insert(originalIndexJ);
-            dProgress() << QApplication::tr("Using frame %1 instead of %2.").arg(originalIndexI + 1).arg(originalIndexJ + 1);
+            if (!silent)
+                dProgress() << QApplication::tr("Using frame %1 instead of %2.").arg(originalIndexI + 1).arg(originalIndexJ + 1);
             result = 1;
             j--;
         }

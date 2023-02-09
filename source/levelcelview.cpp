@@ -1959,7 +1959,7 @@ bool LevelCelView::reuseFrames()
 {
     std::set<int> removedIndices;
 
-    bool result = this->tileset->reuseFrames(removedIndices);
+    bool result = this->tileset->reuseFrames(removedIndices, false);
 
     // update frame index if necessary
     auto it = removedIndices.lower_bound(this->currentFrameIndex);
@@ -2132,16 +2132,13 @@ void LevelCelView::sortTileset()
 
 void LevelCelView::upscale(const UpscaleParam &params)
 {
-    int amount = this->min->getSubtileCount();
+    if (Upscaler::upscaleTileset(this->gfx, this->min, params, false)) {
+        std::set<int> &removedIndices;
 
-    ProgressDialog::incBar(tr("Upscaling tileset..."), amount + 1);
-
-    if (Upscaler::upscaleTileset(this->gfx, this->min, params)) {
+        this->tileset->reuseFrames(removedIndices, true);
         // update the view - done by the caller
         // this->displayFrame();
     }
-
-    ProgressDialog::decBar();
 }
 
 void LevelCelView::displayFrame()

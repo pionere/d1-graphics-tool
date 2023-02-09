@@ -19,7 +19,7 @@ public:
 
     void createSubtile();
     void removeSubtile(int subtileIndex);
-    bool reuseFrames(std::set<int> &removedIndices);
+    bool reuseFrames(std::set<int> &removedIndices, bool silent);
     bool reuseSubtiles(std::set<int> &removedIndices);
 
     D1Gfx *gfx;

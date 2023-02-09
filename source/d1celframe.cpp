@@ -25,7 +25,6 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
 {
     unsigned width = 0;
     // frame.clipped = false;
-    // bool clipped = false;
     if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
         // Try to compute frame width from frame header
         width = D1CelFrame::computeWidthFromHeader(rawData);
