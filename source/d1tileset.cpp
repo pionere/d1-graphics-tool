@@ -1,5 +1,7 @@
 #include "d1tileset.h"
 
+#include <QApplication>
+
 #include "progressdialog.h"
 
 D1Tileset::D1Tileset(D1Gfx *g)
@@ -59,7 +61,7 @@ void D1Tileset::removeSubtile(int subtileIndex)
 
 bool D1Tileset::reuseFrames(std::set<int> &removedIndices)
 {
-    ProgressDialog::incBar(tr("Reusing frames..."), this->gfx->getFrameCount());
+    ProgressDialog::incBar(QApplication::tr("Reusing frames..."), this->gfx->getFrameCount());
     int result = 0;
     for (int i = 0; i < this->gfx->getFrameCount(); i++) {
         if (ProgressDialog::wasCanceled()) {
@@ -118,7 +120,7 @@ bool D1Tileset::reuseFrames(std::set<int> &removedIndices)
                 break;
             }
             removedIndices.insert(originalIndexJ);
-            dProgress() << tr("Using frame %1 instead of %2.").arg(originalIndexI + 1).arg(originalIndexJ + 1);
+            dProgress() << QApplication::tr("Using frame %1 instead of %2.").arg(originalIndexI + 1).arg(originalIndexJ + 1);
             result = 1;
             j--;
         }
@@ -133,7 +135,7 @@ bool D1Tileset::reuseFrames(std::set<int> &removedIndices)
 
 bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
 {
-    ProgressDialog::incBar(tr("Reusing subtiles..."), this->min->getSubtileCount());
+    ProgressDialog::incBar(QApplication::tr("Reusing subtiles..."), this->min->getSubtileCount());
     int result = 0;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         if (ProgressDialog::wasCanceled()) {
@@ -188,7 +190,7 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
                 break;
             }
             removedIndices.insert(originalIndexJ);
-            dProgress() << tr("Using subtile %1 instead of %2.").arg(originalIndexI + 1).arg(originalIndexJ + 1);
+            dProgress() << QApplication::tr("Using subtile %1 instead of %2.").arg(originalIndexI + 1).arg(originalIndexJ + 1);
             result = true;
             j--;
         }

@@ -1966,7 +1966,7 @@ bool LevelCelView::reuseFrames()
     if (it != removedIndices.begin()) {
         if (*it == this->currentFrameIndex)
             it--;
-        this->currentFrameIndex -= it - removedIndices.begin();
+        this->currentFrameIndex -= std::distance(removedIndices.begin(), it);
     }
 
     return result;
@@ -1983,7 +1983,7 @@ bool LevelCelView::reuseSubtiles()
     if (it != removedIndices.begin()) {
         if (*it == this->currentSubtileIndex)
             it--;
-        this->currentSubtileIndex -= it - removedIndices.begin();
+        this->currentSubtileIndex -= std::distance(removedIndices.begin(), it);
     }
 
     return result;
