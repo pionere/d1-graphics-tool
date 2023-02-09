@@ -23,21 +23,15 @@ unsigned D1CelPixelGroup::getPixelCount() const
 
 bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAsParam &params)
 {
-    if (rawData.size() == 0)
-        return false;
-
     unsigned width = 0;
     // frame.clipped = false;
     if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
-        // Checking the presence of the {CEL FRAME HEADER}
-        if ((quint8)rawData[0] == 0x0A && (quint8)rawData[1] == 0x00) {
-            // If header is present, try to compute frame width from frame header
-            width = D1CelFrame::computeWidthFromHeader(rawData);
-            frame.clipped = true;
-        }
+        // Try to compute frame width from frame header
+        width = D1CelFrame::computeWidthFromHeader(rawData);
+        frame.clipped = width != 0 || (rawData.size() >= SUB_HEADER_SIZE && SwapLE16(*(const quint16 *)rawData.constData()) == SUB_HEADER_SIZE);
     } else {
         if (params.clipped == OPEN_CLIPPED_TYPE::TRUE) {
-            // If header is present, try to compute frame width from frame header
+            // Try to compute frame width from frame header
             width = D1CelFrame::computeWidthFromHeader(rawData);
             frame.clipped = true;
         }
@@ -50,13 +44,13 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
     if (width == 0)
         width = D1CelFrame::computeWidthFromData(rawData, frame.clipped);
 
-    // if CEL width was not found, return false
+    // check if a positive width was found
     if (width == 0)
-        return false;
+        return rawData.size() == 0;
 
     // READ {CEL FRAME DATA}
     int frameDataStartOffset = 0;
-    if (frame.clipped)
+    if (frame.clipped && rawData.size() >= SUB_HEADER_SIZE)
         frameDataStartOffset = SwapLE16(*(const quint16 *)rawData.constData());
 
     std::vector<std::vector<D1GfxPixel>> pixels;
@@ -107,7 +101,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
 
 unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
 {
-    // Reading the frame header
+    // Reading the frame header {CEL FRAME HEADER}
     const quint8 *data = (const quint8 *)rawFrameData.constData();
     const quint16 *header = (const quint16 *)data;
     const quint8 *dataEnd = data + rawFrameData.size();

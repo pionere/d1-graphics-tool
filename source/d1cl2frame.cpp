@@ -7,7 +7,7 @@
 
 unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
 {
-    // Reading the frame header
+    // Reading the frame header {CEL FRAME HEADER}
     const quint8 *data = (const quint8 *)rawFrameData.constData();
     const quint16 *header = (const quint16 *)data;
     const quint8 *dataEnd = data + rawFrameData.size();
@@ -78,31 +78,28 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
 
 bool D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsParam &params)
 {
-    if (rawData.size() == 0)
-        return false;
-
     unsigned width = 0;
     // frame.clipped = false;
     if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
-        // Assume the presence of the {CEL FRAME HEADER}
-        // If header is present, try to compute frame width from frame header
+        // Try to compute frame width from frame header
         width = D1Cl2Frame::computeWidthFromHeader(rawData);
         frame.clipped = true;
     } else {
         if (params.clipped == OPEN_CLIPPED_TYPE::TRUE) {
-            // If header is present, try to compute frame width from frame header
+            // Try to compute frame width from frame header
             width = D1Cl2Frame::computeWidthFromHeader(rawData);
             frame.clipped = true;
         }
     }
     frame.width = params.celWidth == 0 ? width : params.celWidth;
 
+    // check if a positive width was found
     if (frame.width == 0)
-        return false;
+        return rawData.size() == 0;
 
     // READ {CL2 FRAME DATA}
     int frameDataStartOffset = 0;
-    if (frame.clipped)
+    if (frame.clipped && rawData.size() >= SUB_HEADER_SIZE)
         frameDataStartOffset = SwapLE16(*(const quint16 *)rawData.constData());
 
     std::vector<std::vector<D1GfxPixel>> pixels;
