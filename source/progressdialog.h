@@ -3,6 +3,7 @@
 #include <QDialog>
 #include <QFrame>
 #include <QProgressBar>
+#include <QtConcurrent>
 
 namespace Ui {
 class ProgressDialog;
@@ -36,6 +37,47 @@ typedef enum progress_after_flags {
     PAF_UPDATE_WINDOW = 1 << 1,
 } progress_after_flags;
 
+class DPromise : public QObject {
+    Q_OBJECT
+
+public:
+    bool isCanceled();
+    void cancel();
+    // void finish();
+    void setProgressValue(int value);
+
+signals:
+    void progressValueChanged();
+    // void finished();
+
+private:
+    PROGRESS_STATE status = PROGRESS_STATE::RUNNING;
+};
+
+class ProgressThread : public QThread {
+    Q_OBJECT
+
+public:
+    explicit ProgressThread(std::function<void()> &&callFunc);
+    ~ProgressThread() = default;
+
+    void run() override;
+
+    void cancel();
+
+private:
+    void reportResults();
+    // void reportReady();
+
+signals:
+    void resultReady();
+    // void taskReady();
+    void cancelTask();
+
+private:
+    std::function<void()> callFunc;
+};
+
 class ProgressDialog : public QDialog {
     Q_OBJECT
 
@@ -44,14 +86,20 @@ public:
     ~ProgressDialog();
 
     static void openDialog();
+
     static void start(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, int flags);
     static void done();
+
+    static void startAsync(PROGRESS_DIALOG_STATE mode, const QString &label, int numBars, int flags, std::function<void()> &&callFunc);
+
+    static void incProgressBar(const QString &label, int maxValue);
 
     static void incBar(const QString &label, int maxValue);
     static void decBar();
 
     static bool wasCanceled();
     static bool incValue();
+    static bool addValue(int amount);
 
     friend ProgressDialog &dProgress();
     friend ProgressDialog &dProgressWarn();
@@ -66,13 +114,20 @@ private slots:
     void on_detailsPushButton_clicked();
     void on_cancelPushButton_clicked();
     void on_closePushButton_clicked();
+    void on_message_ready();
+    void on_task_finished();
 
 protected:
     void closeEvent(QCloseEvent *e) override;
     void changeEvent(QEvent *e);
 
 private:
+    static void incBar_impl(const QString &label, int maxValue);
+    static void decBar_impl();
+    static void incValue_impl(int amount);
     static void addResult_impl(PROGRESS_TEXT_MODE textMode, const QString &line, bool replace);
+
+    static void consumeMessages();
 
 signals:
     void updateWindow();

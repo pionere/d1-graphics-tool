@@ -9,8 +9,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Concurrent Widgets LinguistTools)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Concurrent Widgets LinguistTools)
 
 # Translation files
 SET(DGT_TS_FILES
@@ -143,7 +143,7 @@ else()
     )
 endif()
 
-target_link_libraries(D1GraphicsTool PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(D1GraphicsTool PRIVATE Qt${QT_VERSION_MAJOR}::Concurrent Qt${QT_VERSION_MAJOR}::Widgets)
 
 set_target_properties(D1GraphicsTool PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER d1-graphics-tool.savagesteel.net
