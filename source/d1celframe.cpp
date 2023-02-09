@@ -225,7 +225,7 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
                 pixelGroups.push_back(D1CelPixelGroup(true, pixelCount));
                 pixelCount = 0;
             }
-            alpha = true;
+            alpha = false;
             pixelCount += readByte;
             if (readByte != 0x7F) {
                 pixelGroups.push_back(D1CelPixelGroup(false, pixelCount));
@@ -299,10 +299,32 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
     return 0;
 }
 
+static bool isValidWidth(int width, unsigned globalPixelCount, const std::vector<D1CelPixelGroup> &pixelGroups)
+{
+    if ((globalPixelCount % width) != 0)
+        return false;
+
+    unsigned pixelCount = 0;
+    for (unsigned i = 1; i < pixelGroups.size(); i++) {
+        unsigned currPixelCount = pixelGroups[i - 1].getPixelCount();
+        if (((pixelCount % width) + currPixelCount) > width) {
+            return false; // group does not align with width
+        }
+        pixelCount += currPixelCount;
+        if (pixelGroups[i - 1].isTransparent() == pixelGroups[i].isTransparent()) {
+            if ((pixelCount % width) != 0) {
+                return false; // last line(?) does not fit to the width
+            }
+            pixelCount = 0;
+        }
+    }
+    return true;
+}
+
 unsigned D1CelFrame::computeWidthFromDataNew(const QByteArray &rawFrameData, bool clipped)
 {
-    unsigned pixelCount, width;
-    std::vector<unsigned> pixelGroups;
+    unsigned pixelCount, width, globalPixelCount;
+    std::vector<D1CelPixelGroup> pixelGroups;
 
     // Checking the presence of the {CEL FRAME HEADER}
     int frameDataStartOffset = 0;
@@ -311,74 +333,89 @@ unsigned D1CelFrame::computeWidthFromDataNew(const QByteArray &rawFrameData, boo
 
     // Going through the frame data to find pixel groups
     pixelCount = 0;
-    int alpha = -1;
+    bool alpha = false;
     for (int o = frameDataStartOffset; o < rawFrameData.size(); o++) {
         quint8 readByte = rawFrameData[o];
 
         if (readByte >= 0x80 /*&& readByte <= 0xFF*/) {
             // Transparent pixels group
-            if (alpha == 1) {
-                pixelGroups.push_back(pixelCount);
+            if (!alpha && pixelCount != 0) {
+                pixelGroups.push_back(D1CelPixelGroup(false, pixelCount));
                 pixelCount = 0;
             }
-            if (readByte != 0x80) {
-                alpha = 1;
-            } else {
-                alpha = -1;
-            }
+            alpha = true;
             pixelCount += (256 - readByte);
+            if (readByte != 0x80) {
+                pixelGroups.push_back(D1CelPixelGroup(true, pixelCount));
+                pixelCount = 0;
+            }
         } else /*if (readByte >= 0x00 && readByte <= 0x7F)*/ {
             // Palette indices pixel group
-            if (alpha == 0) {
-                pixelGroups.push_back(pixelCount);
+            if (alpha && pixelCount != 0) {
+                pixelGroups.push_back(D1CelPixelGroup(true, pixelCount));
                 pixelCount = 0;
             }
-            if (readByte != 0x7F) {
-                alpha = 0;
-            } else {
-                alpha = -1;
-            }
+            alpha = false;
             pixelCount += readByte;
+            if (readByte != 0x7F) {
+                pixelGroups.push_back(D1CelPixelGroup(false, pixelCount));
+                pixelCount = 0;
+            }
             o += readByte;
         }
     }
     if (pixelCount != 0) {
-        pixelGroups.push_back(pixelCount);
+        pixelGroups.push_back(D1CelPixelGroup(alpha, pixelCount));
+    }
+
+    if (pixelGroups.size() <= 1) {
+        if (pixelGroups.size() == 0)
+            return 0; // empty frame
+        // single group -> completely transparent or completely opaque frame with the maximum possible (or its multiple) width
+        globalPixelCount = pixelGroups.front().getPixelCount();
+        width = pixelGroups.front().isTransparent() ? 0x80 : 0x7F; // select the smallest possible width
+        if ((globalPixelCount % width) == 0) {
+            return width;
+        }
+        return 0; // should not happen
     }
 
     // Going through pixel groups to find pixel-lines wraps
     width = 0;
-    for (unsigned len : pixelGroups) {
-        if (width == 0 || len < width)
-            width = len;
-    }
-
-    // If width wasnt found return 0
-    if (width == 0) {
-        return 0;
-    }
-
-    unsigned globalPixelCount = 0;
-    unsigned biggestGroupPixelCount = 0;
-    for (unsigned len : pixelGroups) {
-        if (len > biggestGroupPixelCount)
-            biggestGroupPixelCount = len;
-        globalPixelCount += len;
-    }
-
-    // If width is consistent
-    if ((globalPixelCount % width) == 0) {
-        return width;
-    }
-
-    // Try to find relevant width by adding pixel groups' pixel counts iteratively
     pixelCount = 0;
-    for (unsigned len : pixelGroups) {
-        pixelCount += len;
-        if (pixelCount > 1
-            && (globalPixelCount % pixelCount) == 0
-            && pixelCount >= biggestGroupPixelCount) {
-            return pixelCount;
+    for (unsigned i = 1; i < pixelGroups.size(); i++) {
+        pixelCount += pixelGroups[i - 1].getPixelCount();
+
+        if (pixelGroups[i - 1].isTransparent() == pixelGroups[i].isTransparent()) {
+            // If width == 0 then it's the first pixel-line wrap and width needs to be set
+            // If pixelCount is less than width then the width has to be set to the new value
+            if (width == 0 || pixelCount < width)
+                width = pixelCount;
+
+            // If the pixelCount of the last group is less than the current pixel group
+            // then width is equal to this last pixel group's pixel count.
+            // Mostly useful for small frames like the "J" frame in smaltext.cel
+            if (i == pixelGroups.size() - 1 && pixelGroups[i].getPixelCount() < width)
+                width = pixelGroups[i].getPixelCount();
+
+            pixelCount = 0;
+        }
+    }
+
+    globalPixelCount = 0;
+    for (const D1CelPixelGroup &pixelGroup : pixelGroups) {
+        pixelCount = pixelGroup.getPixelCount();
+        globalPixelCount += pixelCount;
+    }
+
+    if (width != 0 && isValidWidth(width, pixelGroups, globalPixelCount)) {
+        return width; // width is consistent -> done
+    }
+
+    // try possible widths
+    for (width = 2; width < globalPixelCount / 2; width++) {
+        if (isValidWidth(width, pixelGroups, globalPixelCount)) {
+            return width;
         }
     }
 

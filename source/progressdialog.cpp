@@ -329,7 +329,14 @@ void ProgressDialog::incBar(const QString &label, int maxValue)
 void ProgressDialog::incBar_impl(const QString &label, int maxValue)
 {
     if (!label.isEmpty()) {
-        theDialog->ui->progressLabel->setText(label);
+        if (theDialog->ui->progressLabel->isVisible())
+            theDialog->ui->progressLabel->setText(label);
+        else
+            theDialog->setWindowTitle(label);
+    }
+    if (theDialog->progressBars.count() <= theDialog->activeBars) {
+        addResult_impl(PROGRESS_TEXT_MODE::ERROR, QApplication::tr("Too many progression bars."), false);
+        return;
     }
     QProgressBar *newProgressBar = theDialog->progressBars[theDialog->activeBars];
 
@@ -360,6 +367,10 @@ void ProgressDialog::decBar()
 // MAIN
 void ProgressDialog::decBar_impl()
 {
+    if (theDialog->activeBars == 0) {
+        addResult_impl(PROGRESS_TEXT_MODE::ERROR, QApplication::tr("Mismatching progression bars."), false);
+        return;
+    }
     theDialog->activeBars--;
 
     QProgressBar *oldProgressBar = theDialog->progressBars[theDialog->activeBars];
