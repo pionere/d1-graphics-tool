@@ -799,7 +799,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->gfx = new D1Gfx();
     this->gfx->setPalette(this->trnBase->getResultingPalette());
     if (isTileset) {
-        this->tileset = new D1Tileset();
+        this->tileset = new D1Tileset(this->gfx);
         // Loading SOL
         if (!this->tileset->sol->load(solFilePath)) {
             this->failWithError(tr("Failed loading SOL file: %1.").arg(QDir::toNativeSeparators(solFilePath)));
