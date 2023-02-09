@@ -489,35 +489,37 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, c
 
     D1Gfx gfx = D1Gfx();
     gfx.setPalette(pal);
+    D1CelTileset tileset = D1CelTileset(&gfx);
     // Loading SOL
-    D1Sol sol = D1Sol();
-    if (!sol.load(solFilePath)) {
+    if (!tileset.sol.load(solFilePath)) {
         dProgressErr() << tr("Failed loading SOL file: %1.").arg(QDir::toNativeSeparators(solFilePath));
         return;
     }
     // Loading MIN
-    D1Min min = D1Min();
     std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
-    if (!min.load(minFilePath, &gfx, &sol, celFrameTypes, opParams)) {
+    if (!tileset.min.load(minFilePath, &tileset.gfx, &tileset.sol, celFrameTypes, opParams)) {
         dProgressErr() << tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath));
         return;
     }
     // Loading CEL
-    if (!D1CelTileset::load(gfx, celFrameTypes, celFilePath, opParams)) {
+    if (!D1CelTileset::load(tileset.gfx, celFrameTypes, celFilePath, opParams)) {
         dProgressErr() << tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(celFilePath));
         return;
     }
     // Patch MIN if requested
     if (params.patchTilesets) {
-        PatchMinData(dunType, &min, &gfx);
+        PatchMinData(dunType, &tileset.min, &tileset.gfx);
     }
     // upscale
-    if (Upscaler::upscaleTileset(&gfx, &min, upParams, true)) {
+    if (Upscaler::upscaleTileset(&tileset.gfx, &tileset.min, upParams, true)) {
+        // compress subtiles
+        std::set<int> removedIndices;
+        tileset.reuseFrames(removedIndices, true);
         // store the result
         saParams.celFilePath = outFilePath;
-        D1CelTileset::save(gfx, saParams);
+        D1CelTileset::save(tileset.gfx, saParams);
         saParams.minFilePath = outMinPath;
-        min.save(saParams);
+        tileset.min.save(saParams);
     }
 }
 
