@@ -68,6 +68,7 @@ LevelCelView::~LevelCelView()
 void LevelCelView::initialize(D1Pal *p, D1Tileset *ts)
 {
     this->pal = p;
+    this->tileset = ts;
     this->gfx = ts->gfx;
     this->min = ts->min;
     this->til = ts->til;
@@ -1179,9 +1180,7 @@ void LevelCelView::removeCurrentFrame()
 
 void LevelCelView::createSubtile()
 {
-    this->min->createSubtile();
-    this->sol->createSubtile();
-    this->tmi->createSubtile();
+    this->tileset->createSubtile();
     // jump to the new subtile
     this->currentSubtileIndex = this->min->getSubtileCount() - 1;
     // update the view - done by the caller

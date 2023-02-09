@@ -17,9 +17,10 @@ public:
 
     void save(const SaveAsParam &params);
 
+    void createSubtile();
     void removeSubtile(int subtileIndex);
-    bool removeUnusedFrames(std::set<int> &removedIndices);
-    bool removeUnusedSubtiles(std::set<int> &removedIndices);
+    bool reuseFrames(std::set<int> &removedIndices);
+    bool reuseSubtiles(std::set<int> &removedIndices);
 
     D1Gfx *gfx;
     D1Min *min;

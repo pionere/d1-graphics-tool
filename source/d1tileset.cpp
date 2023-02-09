@@ -30,6 +30,13 @@ void D1Tileset::save(const SaveAsParam &params)
     this->tmi->save(params);
 }
 
+void D1Tileset::createSubtile()
+{
+    this->min->createSubtile();
+    this->sol->createSubtile();
+    this->tmi->createSubtile();
+}
+
 void D1Tileset::removeSubtile(int subtileIndex)
 {
     this->min->removeSubtile(subtileIndex);
