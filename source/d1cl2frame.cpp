@@ -7,7 +7,7 @@
 
 unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
 {
-    // Reading the frame header
+    // Reading the frame header {CEL FRAME HEADER}
     const quint8 *data = (const quint8 *)rawFrameData.constData();
     const quint16 *header = (const quint16 *)data;
     const quint8 *dataEnd = data + rawFrameData.size();
@@ -63,7 +63,7 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
         // The calculated width has to be identical for each 32 pixel-line block
         if (celFrameWidth == 0) {
             if (width == 0)
-                return 0; // invalid data or the image is too small
+                return 0; // invalid data
         } else {
             if (celFrameWidth != width)
                 return 0; // mismatching width values
@@ -81,13 +81,12 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsP
     unsigned width = 0;
     // frame.clipped = false;
     if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
-        // Assume the presence of the {CEL FRAME HEADER}
-        // If header is present, try to compute frame width from frame header
+        // Try to compute frame width from frame header
         width = D1Cl2Frame::computeWidthFromHeader(rawData);
-        frame.clipped = true;
+        frame.clipped = true; // Assume the presence of the {CEL FRAME HEADER}
     } else {
         if (params.clipped == OPEN_CLIPPED_TYPE::TRUE) {
-            // If header is present, try to compute frame width from frame header
+            // Try to compute frame width from frame header
             width = D1Cl2Frame::computeWidthFromHeader(rawData);
             frame.clipped = true;
         }
