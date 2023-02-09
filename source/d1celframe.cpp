@@ -299,7 +299,7 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
     return 0;
 }
 
-static bool isValidWidth(int width, unsigned globalPixelCount, const std::vector<D1CelPixelGroup> &pixelGroups)
+static bool isValidWidth(unsigned width, unsigned globalPixelCount, const std::vector<D1CelPixelGroup> &pixelGroups)
 {
     if ((globalPixelCount % width) != 0)
         return false;
@@ -408,13 +408,13 @@ unsigned D1CelFrame::computeWidthFromDataNew(const QByteArray &rawFrameData, boo
         globalPixelCount += pixelCount;
     }
 
-    if (width != 0 && isValidWidth(width, pixelGroups, globalPixelCount)) {
+    if (width != 0 && isValidWidth(width, globalPixelCount, pixelGroups)) {
         return width; // width is consistent -> done
     }
 
     // try possible widths
-    for (width = 2; width < globalPixelCount / 2; width++) {
-        if (isValidWidth(width, pixelGroups, globalPixelCount)) {
+    for (width = 2; width <= globalPixelCount / 2; width++) {
+        if (isValidWidth(width, globalPixelCount, pixelGroups)) {
             return width;
         }
     }
