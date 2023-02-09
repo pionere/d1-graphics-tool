@@ -641,7 +641,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         QClipboard *clipboard = QGuiApplication::clipboard();
         QImage image = clipboard->image();
         if (!image.isNull()) {
-            ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW);
+            /*ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW);
 
             if (this->celView != nullptr) {
                 this->celView->pasteCurrent(image);
@@ -651,7 +651,16 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             }
 
             // Clear loading message from status bar
-            ProgressDialog::done();
+            ProgressDialog::done();*/
+            std::function<void()> func = [this, image]() {
+                if (this->celView != nullptr) {
+                    this->celView->pasteCurrent(image);
+                }
+                if (this->levelCelView != nullptr) {
+                    this->levelCelView->pasteCurrent(image);
+                }
+            };
+            ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW, std::move(func));
         }
     }
 
@@ -1069,7 +1078,7 @@ void MainWindow::saveFile(const SaveAsParam &params)
 
 void MainWindow::upscale(const UpscaleParam &params)
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling..."), 1, PAF_UPDATE_WINDOW);
+    /*ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling..."), 1, PAF_UPDATE_WINDOW);
 
     if (this->celView != nullptr) {
         this->celView->upscale(params);
@@ -1079,7 +1088,16 @@ void MainWindow::upscale(const UpscaleParam &params)
     }
 
     // Clear loading message from status bar
-    ProgressDialog::done();
+    ProgressDialog::done();*/
+    std::function<void()> func = [this, params]() {
+        if (this->celView != nullptr) {
+            this->celView->upscale(params);
+        }
+        if (this->levelCelView != nullptr) {
+            this->levelCelView->upscale(params);
+        }
+    };
+    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling..."), 1, PAF_UPDATE_WINDOW, std::move(func));
 }
 
 static QString imageNameFilter()
@@ -1455,32 +1473,44 @@ void MainWindow::on_actionCleanupTileset_Tileset_triggered()
 
 void MainWindow::on_actionCompressSubtiles_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
+    /*ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
 
     this->levelCelView->compressSubtiles();
 
     // Clear loading message from status bar
-    ProgressDialog::done();
+    ProgressDialog::done();*/
+    std::function<void()> func = [this]() {
+        this->levelCelView->compressSubtiles();
+    };
+    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW, std::move(func));
 }
 
 void MainWindow::on_actionCompressTiles_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
+    /*ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
 
     this->levelCelView->compressTiles();
 
     // Clear loading message from status bar
-    ProgressDialog::done();
+    ProgressDialog::done();*/
+    std::function<void()> func = [this]() {
+        this->levelCelView->compressTiles();
+    };
+    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW, std::move(func));
 }
 
 void MainWindow::on_actionCompressTileset_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 2, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
+    /*ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 2, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
 
     this->levelCelView->compressTileset();
 
     // Clear loading message from status bar
-    ProgressDialog::done();
+    ProgressDialog::done();*/
+    std::function<void()> func = [this]() {
+        this->levelCelView->compressTileset();
+    };
+    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW, std::move(func));
 }
 
 void MainWindow::on_actionSortFrames_Tileset_triggered()

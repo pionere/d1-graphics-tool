@@ -7,6 +7,7 @@
 #include <QImageWriter>
 #include <QMessageBox>
 #include <QPainter>
+#include <QtConcurrent>
 
 #include "progressdialog.h"
 #include "ui_exportdialog.h"
@@ -660,23 +661,26 @@ void ExportDialog::on_exportButton_clicked()
     params.placement = this->ui->contentPlacementComboBox->currentIndex();
     params.multi = this->ui->filesCountComboBox->currentIndex() != 0;
     int type = this->ui->contentTypeComboBox->currentIndex();
+
     this->hide();
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Export"), 1, false);
-    switch (type) {
-    case 0:
-        ExportDialog::exportFrames(this->gfx, params);
-        break;
-    case 1:
-        ExportDialog::exportLevelSubtiles(this->min, params);
-        break;
-    case 2:
-        ExportDialog::exportLevelTiles(this->til, params);
-        break;
-    default: // case 3:
-        ExportDialog::exportLevelTiles25D(this->til, params);
-        break;
-    }
-    ProgressDialog::done();
+
+    std::function<void()> func = [type, this, params]() {
+        switch (type) {
+        case 0:
+            ExportDialog::exportFrames(this->gfx, params);
+            break;
+        case 1:
+            ExportDialog::exportLevelSubtiles(this->min, params);
+            break;
+        case 2:
+            ExportDialog::exportLevelTiles(this->til, params);
+            break;
+        default: // case 3:
+            ExportDialog::exportLevelTiles25D(this->til, params);
+            break;
+        }
+    };
+    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Export"), 1, PAF_NONE, std::move(func));
 }
 
 void ExportDialog::on_exportCancelButton_clicked()
