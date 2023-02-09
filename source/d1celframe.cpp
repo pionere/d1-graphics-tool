@@ -169,13 +169,12 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
 
 unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool clipped)
 {
-    unsigned pixelCount;
-    unsigned width = 0;
+    unsigned pixelCount, width;
     std::vector<D1CelPixelGroup> pixelGroups;
 
     // Checking the presence of the {CEL FRAME HEADER}
     int frameDataStartOffset = 0;
-    if (clipped && rawFrameData.size() >= sizeof(quint16))
+    if (clipped && rawFrameData.size() >= SUB_HEADER_SIZE)
         frameDataStartOffset = SwapLE16(*(const quint16 *)rawFrameData.constData());
 
     // Going through the frame data to find pixel groups
@@ -216,6 +215,7 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
     }
 
     // Going through pixel groups to find pixel-lines wraps
+    width = 0;
     pixelCount = 0;
     for (unsigned i = 1; i < pixelGroups.size(); i++) {
         pixelCount += pixelGroups[i - 1].getPixelCount();
@@ -229,17 +229,16 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
             // If the pixelCount of the last group is less than the current pixel group
             // then width is equal to this last pixel group's pixel count.
             // Mostly useful for small frames like the "J" frame in smaltext.cel
-            if (i == pixelGroups.size() - 1 && pixelGroups[i].getPixelCount() < pixelCount)
+            if (i == pixelGroups.size() - 1 && pixelGroups[i].getPixelCount() < width)
                 width = pixelGroups[i].getPixelCount();
 
             pixelCount = 0;
         }
-
-        // If last pixel group is being processed and width is still unknown
-        // then set the width to the pixelCount of the last two pixel groups
-        if (i == pixelGroups.size() - 1 && width == 0) {
-            width = pixelGroups[i - 1].getPixelCount() + pixelGroups[i].getPixelCount();
-        }
+    }
+    // If last pixel group is being processed and width is still unknown
+    // then set the width to the pixelCount of the last two pixel groups
+    if (width == 0 && pixelGroups.size() > 1) {
+        width = pixelGroups[pixelGroups.size() - 2].getPixelCount() + pixelGroups[pixelGroups.size() - 1].getPixelCount();
     }
 
     // If width wasnt found return 0
@@ -261,10 +260,10 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
         return width;
     }
 
-    // Try to find  relevant width by adding pixel groups' pixel counts iteratively
+    // Try to find relevant width by adding pixel groups' pixel counts iteratively
     pixelCount = 0;
-    for (unsigned i = 0; i < pixelGroups.size(); i++) {
-        pixelCount += pixelGroups[i].getPixelCount();
+    for (const D1CelPixelGroup &pixelGroup : pixelGroups) {
+        pixelCount += pixelGroup.getPixelCount();
         if (pixelCount > 1
             && (globalPixelCount % pixelCount) == 0
             && pixelCount >= biggestGroupPixelCount) {
