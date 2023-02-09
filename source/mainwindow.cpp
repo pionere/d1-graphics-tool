@@ -1482,7 +1482,7 @@ void MainWindow::on_actionCompressSubtiles_Tileset_triggered()
     std::function<void()> func = [this]() {
         this->levelCelView->compressSubtiles();
     };
-    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
+    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW, std::move(func));
 
 }
 
@@ -1497,7 +1497,7 @@ void MainWindow::on_actionCompressTiles_Tileset_triggered()
     std::function<void()> func = [this]() {
         this->levelCelView->compressTiles();
     };
-    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
+    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW, std::move(func));
 }
 
 void MainWindow::on_actionCompressTileset_Tileset_triggered()
@@ -1511,7 +1511,7 @@ void MainWindow::on_actionCompressTileset_Tileset_triggered()
     std::function<void()> func = [this]() {
         this->levelCelView->compressTileset();
     };
-    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
+    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW, std::move(func));
 }
 
 void MainWindow::on_actionSortFrames_Tileset_triggered()
