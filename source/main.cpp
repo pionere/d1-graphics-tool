@@ -25,9 +25,14 @@ int main(int argc, char *argv[])
 
     int result;
     { // run the application
-        MainWindow w;
+        MainWindow w = MainWindow();
         w.show();
 
+        if (argc > 1) {
+            OpenAsParam params = OpenAsParam();
+            params.celFilePath = argv[argc - 1];
+            w.openFile(params);
+        }
         result = a.exec();
     }
 
