@@ -8,7 +8,7 @@
 #include "d1tmi.h"
 #include "saveasdialog.h"
 
-struct D1Tileset {
+class D1Tileset {
 public:
     D1Tileset(D1Gfx *gfx);
     ~D1Tileset();

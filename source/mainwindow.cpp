@@ -239,7 +239,7 @@ void MainWindow::updateWindow()
     this->frameMenu.actions()[2]->setEnabled(hasFrame); // replace frame
     this->frameMenu.actions()[3]->setEnabled(hasFrame); // delete frame
     if (this->levelCelView != nullptr) {
-        bool hasSubtile = this->min->getSubtileCount() != 0;
+        bool hasSubtile = this->tileset->min->getSubtileCount() != 0;
         this->subtileMenu.actions()[3]->setEnabled(hasSubtile); // replace subtile
         this->subtileMenu.actions()[4]->setEnabled(hasSubtile); // delete subtile
         this->tileMenu.actions()[0]->setEnabled(hasSubtile);    // create tile
@@ -920,7 +920,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     }
 
     // Initialize palette widgets
-    this->palHits = new D1PalHits(this->gfx, this->min, this->til);
+    this->palHits = new D1PalHits(this->gfx, this->tileset);
     this->palWidget->initialize(this->pal, this->celView, this->levelCelView, this->palHits);
     this->trnUniqueWidget->initialize(this->pal, this->trnUnique, this->celView, this->levelCelView, this->palHits);
     this->trnBaseWidget->initialize(this->trnUnique->getResultingPalette(), this->trnBase, this->celView, this->levelCelView, this->palHits);
@@ -1172,6 +1172,7 @@ void MainWindow::on_actionClose_triggered()
     MemFree(this->trnUniqueWidget);
     MemFree(this->trnBaseWidget);
     MemFree(this->gfx);
+    MemFree(this->tileset);
 
     qDeleteAll(this->pals);
     this->pals.clear();
@@ -1182,7 +1183,6 @@ void MainWindow::on_actionClose_triggered()
     qDeleteAll(this->baseTrns);
     this->baseTrns.clear();
 
-    MemFree(this->tileset);
     MemFree(this->palHits);
 
     // update available menu entries
