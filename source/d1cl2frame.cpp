@@ -83,7 +83,7 @@ bool D1Cl2Frame::load(D1GfxFrame &frame, const QByteArray rawData, const OpenAsP
     if (params.clipped == OPEN_CLIPPED_TYPE::AUTODETECT) {
         // Try to compute frame width from frame header
         width = D1Cl2Frame::computeWidthFromHeader(rawData);
-        frame.clipped = true;
+        frame.clipped = true; // Assume the presence of the {CEL FRAME HEADER}
     } else {
         if (params.clipped == OPEN_CLIPPED_TYPE::TRUE) {
             // Try to compute frame width from frame header

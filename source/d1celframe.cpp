@@ -167,9 +167,31 @@ unsigned D1CelFrame::computeWidthFromHeader(const QByteArray &rawFrameData)
     return celFrameWidth;
 }
 
+static bool isValidWidth(unsigned width, unsigned globalPixelCount, const std::vector<D1CelPixelGroup> &pixelGroups)
+{
+    if ((globalPixelCount % width) != 0)
+        return false;
+
+    unsigned pixelCount = 0;
+    for (unsigned i = 1; i < pixelGroups.size(); i++) {
+        unsigned currPixelCount = pixelGroups[i - 1].getPixelCount();
+        if (((pixelCount % width) + currPixelCount) > width) {
+            return false; // group does not align with width
+        }
+        pixelCount += currPixelCount;
+        if (pixelGroups[i - 1].isTransparent() == pixelGroups[i].isTransparent()) {
+            if ((pixelCount % width) != 0) {
+                return false; // last line(?) does not fit to the width
+            }
+            pixelCount = 0;
+        }
+    }
+    return true;
+}
+
 unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool clipped)
 {
-    unsigned pixelCount, width;
+    unsigned pixelCount, width, globalPixelCount;
     std::vector<D1CelPixelGroup> pixelGroups;
 
     // Checking the presence of the {CEL FRAME HEADER}
@@ -201,7 +223,7 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
                 pixelGroups.push_back(D1CelPixelGroup(true, pixelCount));
                 pixelCount = 0;
             }
-            alpha = true;
+            alpha = false;
             pixelCount += readByte;
             if (readByte != 0x7F) {
                 pixelGroups.push_back(D1CelPixelGroup(false, pixelCount));
@@ -212,6 +234,18 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
     }
     if (pixelCount != 0) {
         pixelGroups.push_back(D1CelPixelGroup(alpha, pixelCount));
+    }
+
+    if (pixelGroups.size() <= 1) {
+        if (pixelGroups.size() == 0)
+            return 0; // empty frame
+        // single group -> completely transparent or completely opaque frame with the maximum possible (or its multiple) width
+        globalPixelCount = pixelGroups.front().getPixelCount();
+        width = pixelGroups.front().isTransparent() ? 0x80 : 0x7F; // select the smallest possible width
+        if ((globalPixelCount % width) == 0) {
+            return width;
+        }
+        return 0; // should not happen
     }
 
     // Going through pixel groups to find pixel-lines wraps
@@ -235,39 +269,21 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
             pixelCount = 0;
         }
     }
-    // If last pixel group is being processed and width is still unknown
-    // then set the width to the pixelCount of the last two pixel groups
-    if (width == 0 && pixelGroups.size() > 1) {
-        width = pixelGroups[pixelGroups.size() - 2].getPixelCount() + pixelGroups[pixelGroups.size() - 1].getPixelCount();
-    }
 
-    // If width wasnt found return 0
-    if (width == 0) {
-        return 0;
-    }
-
-    unsigned globalPixelCount = 0;
-    unsigned biggestGroupPixelCount = 0;
+    globalPixelCount = 0;
     for (const D1CelPixelGroup &pixelGroup : pixelGroups) {
         pixelCount = pixelGroup.getPixelCount();
-        if (pixelCount > biggestGroupPixelCount)
-            biggestGroupPixelCount = pixelCount;
         globalPixelCount += pixelCount;
     }
 
-    // If width is consistent
-    if ((globalPixelCount % width) == 0) {
-        return width;
+    if (width != 0 && isValidWidth(width, globalPixelCount, pixelGroups)) {
+        return width; // width is consistent -> done
     }
 
-    // Try to find relevant width by adding pixel groups' pixel counts iteratively
-    pixelCount = 0;
-    for (const D1CelPixelGroup &pixelGroup : pixelGroups) {
-        pixelCount += pixelGroup.getPixelCount();
-        if (pixelCount > 1
-            && (globalPixelCount % pixelCount) == 0
-            && pixelCount >= biggestGroupPixelCount) {
-            return pixelCount;
+    // try possible widths
+    for (width = 2; width <= globalPixelCount / 2; width++) {
+        if (isValidWidth(width, globalPixelCount, pixelGroups)) {
+            return width;
         }
     }
 
