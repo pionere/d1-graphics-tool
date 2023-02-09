@@ -10,6 +10,7 @@
   1. use width 96 to open wlbat.cl2, whbat.cl2 and wmbat.cl2 graphics of the warrior
   2. use height of 8 to open the hellfire town tileset
 - new menu option to open a clean cel, cl2 or tileset graphics
+- open file from command line arguments
 - drag and drop support for image files to insert frames, tiles or subtiles
 - edit fields to modify subtiles of tiles, frames of subtiles, frame-types
 - width/height of subtiles are editable
