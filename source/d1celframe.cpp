@@ -45,8 +45,11 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
     // attempt to calculate it from the frame data (by identifying pixel groups line wraps)
     if (width == 0) {
         width = D1CelFrame::computeWidthFromData(rawData, frame.clipped);
-        /*unsigned width2 = D1CelFrame::computeWidthFromData(rawData, false);
-        clipped = width != 0;
+        unsigned width2 = D1CelFrame::computeWidthFromDataNew(rawData, frame.clipped);
+        if (width != width2) {
+            dProgressErr() << tr("Width %1 vs %2").arg(width).arg(width2);
+        }
+        /*clipped = width != 0;
         if (!clipped) {
             if (width2 == 0) {
                 return false; // width was not found, return false
@@ -285,6 +288,93 @@ unsigned D1CelFrame::computeWidthFromData(const QByteArray &rawFrameData, bool c
     pixelCount = 0;
     for (const D1CelPixelGroup &pixelGroup : pixelGroups) {
         pixelCount += pixelGroup.getPixelCount();
+        if (pixelCount > 1
+            && (globalPixelCount % pixelCount) == 0
+            && pixelCount >= biggestGroupPixelCount) {
+            return pixelCount;
+        }
+    }
+
+    // If still no width found return 0
+    return 0;
+}
+
+unsigned D1CelFrame::computeWidthFromDataNew(const QByteArray &rawFrameData, bool clipped)
+{
+    unsigned pixelCount, width;
+    std::vector<unsigned> pixelGroups;
+
+    // Checking the presence of the {CEL FRAME HEADER}
+    int frameDataStartOffset = 0;
+    if (clipped && rawFrameData.size() >= SUB_HEADER_SIZE)
+        frameDataStartOffset = SwapLE16(*(const quint16 *)rawFrameData.constData());
+
+    // Going through the frame data to find pixel groups
+    pixelCount = 0;
+    int alpha = -1;
+    for (int o = frameDataStartOffset; o < rawFrameData.size(); o++) {
+        quint8 readByte = rawFrameData[o];
+
+        if (readByte >= 0x80 /*&& readByte <= 0xFF*/) {
+            // Transparent pixels group
+            if (alpha == 1) {
+                pixelGroups.push_back(pixelCount);
+                pixelCount = 0;
+            }
+            if (readByte != 0x80) {
+                alpha = 1;
+            } else {
+                alpha = -1;
+            }
+            pixelCount += (256 - readByte);
+        } else /*if (readByte >= 0x00 && readByte <= 0x7F)*/ {
+            // Palette indices pixel group
+            if (alpha == 0) {
+                pixelGroups.push_back(pixelCount);
+                pixelCount = 0;
+            }
+            if (readByte != 0x7F) {
+                alpha = 0;
+            } else {
+                alpha = -1;
+            }
+            pixelCount += readByte;
+            o += readByte;
+        }
+    }
+    if (pixelCount != 0) {
+        pixelGroups.push_back(pixelCount);
+    }
+
+    // Going through pixel groups to find pixel-lines wraps
+    width = 0;
+    for (unsigned len : pixelGroups) {
+        if (width == 0 || len < width)
+            width = len;
+    }
+
+    // If width wasnt found return 0
+    if (width == 0) {
+        return 0;
+    }
+
+    unsigned globalPixelCount = 0;
+    unsigned biggestGroupPixelCount = 0;
+    for (unsigned len : pixelGroups) {
+        if (len > biggestGroupPixelCount)
+            biggestGroupPixelCount = len;
+        globalPixelCount += len;
+    }
+
+    // If width is consistent
+    if ((globalPixelCount % width) == 0) {
+        return width;
+    }
+
+    // Try to find relevant width by adding pixel groups' pixel counts iteratively
+    pixelCount = 0;
+    for (unsigned len : pixelGroups) {
+        pixelCount += len;
         if (pixelCount > 1
             && (globalPixelCount % pixelCount) == 0
             && pixelCount >= biggestGroupPixelCount) {
