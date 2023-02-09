@@ -1151,7 +1151,8 @@ void LevelCelView::removeFrame(int frameIndex)
 {
     // remove the frame
     this->gfx->removeFrame(frameIndex);
-    if (this->gfx->getFrameCount() == this->currentFrameIndex) {
+    // update frame index if necessary
+    if (frameIndex < this->currentFrameIndex || this->currentFrameIndex == this->gfx->getFrameCount()) {
         this->currentFrameIndex = std::max(0, this->currentFrameIndex - 1);
     }
     // shift references
@@ -1265,7 +1266,7 @@ void LevelCelView::removeSubtile(int subtileIndex)
     this->sol->removeSubtile(subtileIndex);
     this->tmi->removeSubtile(subtileIndex);
     // update subtile index if necessary
-    if (this->currentSubtileIndex == this->min->getSubtileCount()) {
+    if (subtileIndex < this->currentSubtileIndex || this->currentSubtileIndex == this->min->getSubtileCount()) {
         this->currentSubtileIndex = std::max(0, this->currentSubtileIndex - 1);
     }
     // shift references
@@ -1366,10 +1367,12 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
 
 void LevelCelView::removeCurrentTile()
 {
-    this->til->removeTile(this->currentTileIndex);
-    this->amp->removeTile(this->currentTileIndex);
+    int tileIndex = this->currentTileIndex;
+
+    this->til->removeTile(tileIndex);
+    this->amp->removeTile(tileIndex);
     // update tile index if necessary
-    if (this->currentTileIndex == this->til->getTileCount()) {
+    if (/*tileIndex < this->currentTileIndex ||*/ this->currentTileIndex == this->til->getTileCount()) {
         this->currentTileIndex = std::max(0, this->currentTileIndex - 1);
     }
     // update the view - done by the caller
@@ -2249,7 +2252,7 @@ void LevelCelView::upscale(const UpscaleParam &params)
 {
     int amount = this->min->getSubtileCount();
 
-    ProgressDialog::incBar(tr("Upscaling..."), amount + 1);
+    ProgressDialog::incBar(tr("Upscaling tileset..."), amount + 1);
 
     if (Upscaler::upscaleTileset(this->gfx, this->min, params)) {
         // update the view - done by the caller
