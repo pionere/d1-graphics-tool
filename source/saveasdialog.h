@@ -4,11 +4,7 @@
 #include <QString>
 
 class D1Gfx;
-class D1Min;
-class D1Til;
-class D1Sol;
-class D1Amp;
-class D1Tmi;
+class D1Tileset;
 
 enum class SAVE_CLIPPED_TYPE {
     AUTODETECT,
@@ -47,7 +43,7 @@ public:
     explicit SaveAsDialog(QWidget *parent = nullptr);
     ~SaveAsDialog();
 
-    void initialize(D1Gfx *gfx, D1Min *min, D1Til *til, D1Sol *sol, D1Amp *amp, D1Tmi *tmi);
+    void initialize(D1Gfx *gfx, D1Tileset *tileset);
 
 private slots:
     void on_outputCelFileBrowseButton_clicked();
@@ -64,6 +60,6 @@ private slots:
 
 private:
     Ui::SaveAsDialog *ui;
-    D1Gfx *gfx;
+    D1Gfx *gfx = nullptr;
     bool isTileset;
 };

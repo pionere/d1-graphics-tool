@@ -65,15 +65,15 @@ LevelCelView::~LevelCelView()
     delete ui;
 }
 
-void LevelCelView::initialize(D1Pal *p, D1Gfx *g, D1Min *m, D1Til *t, D1Sol *s, D1Amp *a, D1Tmi *i)
+void LevelCelView::initialize(D1Pal *p, D1Tileset *ts)
 {
     this->pal = p;
-    this->gfx = g;
-    this->min = m;
-    this->til = t;
-    this->sol = s;
-    this->amp = a;
-    this->tmi = i;
+    this->gfx = ts->gfx;
+    this->min = ts->min;
+    this->til = ts->til;
+    this->sol = ts->sol;
+    this->amp = ts->amp;
+    this->tmi = ts->tmi;
 
     this->tabTileWidget.initialize(this, this->til, this->min, this->amp);
     this->tabSubTileWidget.initialize(this, this->gfx, this->min, this->sol, this->tmi);

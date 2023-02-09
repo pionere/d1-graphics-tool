@@ -1,9 +1,8 @@
 #include "d1palhits.h"
 
-D1PalHits::D1PalHits(D1Gfx *g, D1Min *m, D1Til *t)
+D1PalHits::D1PalHits(D1Gfx *g, D1Tileset *ts)
     : gfx(g)
-    , min(m)
-    , til(t)
+    , tileset(ts)
 {
     this->update();
 }
@@ -60,15 +59,15 @@ void D1PalHits::buildSubtilePalHits()
 {
     this->subtilePalHits.clear();
 
-    if (this->min == nullptr) {
+    if (this->tileset == nullptr) {
         return;
     }
     // Go through all sub-tiles
-    for (int i = 0; i < this->min->getSubtileCount(); i++) {
+    for (int i = 0; i < this->tileset->min->getSubtileCount(); i++) {
         QMap<quint8, int> subtileHits;
 
         // Retrieve the CEL frame references of the current sub-tile
-        QList<quint16> &frameReferences = this->min->getFrameReferences(i);
+        QList<quint16> &frameReferences = this->tileset->min->getFrameReferences(i);
 
         // Go through the CEL frames
         for (quint16 frameRef : frameReferences) {
@@ -89,15 +88,15 @@ void D1PalHits::buildSubtilePalHits()
 void D1PalHits::buildTilePalHits()
 {
     this->tilePalHits.clear();
-    if (this->til == nullptr) {
+    if (this->tileset == nullptr) {
         return;
     }
     // Go through all tiles
-    for (int i = 0; i < this->til->getTileCount(); i++) {
+    for (int i = 0; i < this->tileset->til->getTileCount(); i++) {
         QMap<quint8, int> tileHits;
 
         // Retrieve the sub-tile indices of the current tile
-        QList<quint16> &subtileIndices = this->til->getSubtileIndices(i);
+        QList<quint16> &subtileIndices = this->tileset->til->getSubtileIndices(i);
 
         // Go through the sub-tiles
         for (quint16 subtileIndex : subtileIndices) {

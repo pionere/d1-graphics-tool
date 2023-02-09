@@ -9,12 +9,9 @@
 
 #include "celview.h"
 #include "d1gfx.h"
-#include "d1min.h"
 #include "d1pal.h"
 #include "d1palhits.h"
-#include "d1sol.h"
-#include "d1til.h"
-#include "d1tmi.h"
+#include "d1tileset.h"
 #include "d1trn.h"
 #include "exportdialog.h"
 #include "levelcelview.h"
@@ -246,11 +243,7 @@ private:
     D1Trn *trnUnique = nullptr;
     D1Trn *trnBase = nullptr;
     D1Gfx *gfx = nullptr;
-    D1Min *min = nullptr;
-    D1Til *til = nullptr;
-    D1Sol *sol = nullptr;
-    D1Amp *amp = nullptr;
-    D1Tmi *tmi = nullptr;
+    D1Tileset *tileset = nullptr;
 
     QMap<QString, D1Pal *> pals;       // key: path, value: pointer to palette
     QMap<QString, D1Trn *> uniqueTrns; // key: path, value: pointer to translation

@@ -23,10 +23,10 @@ SaveAsDialog::~SaveAsDialog()
     delete ui;
 }
 
-void SaveAsDialog::initialize(D1Gfx *g, D1Min *min, D1Til *til, D1Sol *sol, D1Amp *amp, D1Tmi *tmi)
+void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset)
 {
     this->gfx = g;
-    this->isTileset = this->gfx->getType() == D1CEL_TYPE::V1_LEVEL;
+    this->isTileset = tileset != nullptr;
 
     // reset fields
     this->ui->outputCelFileEdit->setText(this->gfx->getFilePath());
@@ -36,11 +36,11 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Min *min, D1Til *til, D1Sol *sol, D1Am
 
     this->ui->minUpscaledAutoRadioButton->setChecked(true);
 
-    this->ui->outputMinFileEdit->setText(min == nullptr ? "" : min->getFilePath());
-    this->ui->outputTilFileEdit->setText(til == nullptr ? "" : til->getFilePath());
-    this->ui->outputSolFileEdit->setText(sol == nullptr ? "" : sol->getFilePath());
-    this->ui->outputAmpFileEdit->setText(amp == nullptr ? "" : amp->getFilePath());
-    this->ui->outputTmiFileEdit->setText(tmi == nullptr ? "" : tmi->getFilePath());
+    this->ui->outputMinFileEdit->setText(tileset == nullptr ? "" : tileset->min->getFilePath());
+    this->ui->outputTilFileEdit->setText(tileset == nullptr ? "" : tileset->til->getFilePath());
+    this->ui->outputSolFileEdit->setText(tileset == nullptr ? "" : tileset->sol->getFilePath());
+    this->ui->outputAmpFileEdit->setText(tileset == nullptr ? "" : tileset->amp->getFilePath());
+    this->ui->outputTmiFileEdit->setText(tileset == nullptr ? "" : tileset->tmi->getFilePath());
 
     bool isTilesetGfx = this->isTileset;
 
