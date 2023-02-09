@@ -47,7 +47,7 @@ bool D1CelFrame::load(D1GfxFrame &frame, const QByteArray &rawData, const OpenAs
         width = D1CelFrame::computeWidthFromData(rawData, frame.clipped);
         unsigned width2 = D1CelFrame::computeWidthFromDataNew(rawData, frame.clipped);
         if (width != width2) {
-            dProgressErr() << tr("Width %1 vs %2").arg(width).arg(width2);
+            dProgressErr() << QApplication::tr("Width %1 vs %2").arg(width).arg(width2);
         }
         /*clipped = width != 0;
         if (!clipped) {
