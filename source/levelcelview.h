@@ -171,6 +171,7 @@ private:
     LevelTabFrameWidget tabFrameWidget;
 
     D1Pal *pal;
+    D1Tileset *tileset;
     D1Gfx *gfx;
     D1Min *min;
     D1Til *til;
