@@ -4,18 +4,6 @@
 #include "mainwindow.h"
 #include "ui_upscaledialog.h"
 
-typedef enum dungeon_type {
-    DTYPE_TOWN,
-    DTYPE_CATHEDRAL,
-    DTYPE_CATACOMBS,
-    DTYPE_CAVES,
-    DTYPE_HELL,
-    DTYPE_CRYPT,
-    DTYPE_NEST,
-    DTYPE_NONE,
-    NUM_DUNGEON_TYPES,
-} dungeon_type;
-
 const int fixColors[NUM_DUNGEON_TYPES][2] = {
     // clang-format off
 /* DTYPE_TOWN      */ { -1, -1 },
