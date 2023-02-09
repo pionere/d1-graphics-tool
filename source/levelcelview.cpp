@@ -1150,26 +1150,10 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
 void LevelCelView::removeFrame(int frameIndex)
 {
     // remove the frame
-    this->gfx->removeFrame(frameIndex);
+    this->min->removeFrame(frameIndex);
     // update frame index if necessary
     if (frameIndex < this->currentFrameIndex || this->currentFrameIndex == this->gfx->getFrameCount()) {
         this->currentFrameIndex = std::max(0, this->currentFrameIndex - 1);
-    }
-    // shift references
-    // - shift frame indices of the subtiles
-    unsigned refIndex = frameIndex + 1;
-    for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        QList<quint16> &frameReferences = this->min->getFrameReferences(i);
-        for (int n = 0; n < frameReferences.count(); n++) {
-            if (frameReferences[n] >= refIndex) {
-                if (frameReferences[n] == refIndex) {
-                    frameReferences[n] = 0;
-                } else {
-                    frameReferences[n] -= 1;
-                }
-                this->min->setModified();
-            }
-        }
     }
 }
 

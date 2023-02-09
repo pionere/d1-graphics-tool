@@ -343,6 +343,27 @@ bool D1Min::setFrameReference(int subtileIndex, int index, int frameRef)
     return true;
 }
 
+void D1Min::removeFrame(int frameIndex)
+{
+    // remove the frame
+    this->gfx->removeFrame(frameIndex);
+    // shift references
+    // - shift frame indices of the subtiles
+    unsigned refIndex = frameIndex + 1;
+    for (QList<quint16> &frameRefs : this->frameReferences) {
+        for (int n = 0; n < frameRefs.count(); n++) {
+            if (frameRefs[n] >= refIndex) {
+                if (frameRefs[n] == refIndex) {
+                    frameRefs[n] = 0;
+                } else {
+                    frameRefs[n] -= 1;
+                }
+                this->modified = true;
+            }
+        }
+    }
+}
+
 void D1Min::insertSubtile(int subtileIndex, const QList<quint16> &frameReferencesList)
 {
     this->frameReferences.insert(subtileIndex, frameReferencesList);

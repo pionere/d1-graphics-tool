@@ -25,6 +25,7 @@ public:
 
     QImage getSubtileImage(int subtileIndex) const;
 
+    void removeFrame(int frameIndex);
     void insertSubtile(int subtileIndex, const QList<quint16> &frameReferencesList);
     void createSubtile();
     void removeSubtile(int subtileIndex);
