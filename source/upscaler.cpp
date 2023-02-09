@@ -3094,7 +3094,7 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, const UpscalingParam &upParams)
 bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params, bool silent)
 {
     int amount = gfx->getFrameCount();
-    ProgressDialog::incBar(silent ? QStringLiteral("") : tr("Upscaling graphics..."), amount + 1);
+    ProgressDialog::incBar(silent ? QStringLiteral("") : QApplication::tr("Upscaling graphics..."), amount + 1);
 
     UpscalingParam upParams;
     upParams.multiplier = params.multiplier;
@@ -3229,7 +3229,7 @@ int Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<quin
 bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params, bool silent)
 {
     int amount = min->getSubtileCount();
-    ProgressDialog::incBar(silent ? QStringLiteral("") : tr("Upscaling tileset..."), amount + 1);
+    ProgressDialog::incBar(silent ? QStringLiteral("") : QApplication::tr("Upscaling tileset..."), amount + 1);
 
     UpscalingParam upParams;
     upParams.multiplier = params.multiplier;

@@ -2133,7 +2133,7 @@ void LevelCelView::sortTileset()
 void LevelCelView::upscale(const UpscaleParam &params)
 {
     if (Upscaler::upscaleTileset(this->gfx, this->min, params, false)) {
-        std::set<int> &removedIndices;
+        std::set<int> removedIndices;
 
         this->tileset->reuseFrames(removedIndices, true);
         // update the view - done by the caller
