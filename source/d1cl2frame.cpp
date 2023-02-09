@@ -7,29 +7,44 @@
 
 unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
 {
-    QDataStream in(rawFrameData);
-    in.setByteOrder(QDataStream::LittleEndian);
+    // Reading the frame header
+    const quint8 *data = (const quint8 *)rawFrameData.constData();
+    const quint16 *header = (const quint16 *)data;
+    const quint8 *dataEnd = data + rawFrameData.size();
 
-    quint16 celFrameHeaderSize;
-    in >> celFrameHeaderSize;
-
+    if (rawFrameData.size() < SUB_HEADER_SIZE)
+        return 0; // invalid header
+    unsigned celFrameHeaderSize = SwapLE16(header[0]);
     if (celFrameHeaderSize & 1)
         return 0; // invalid header
-
-    unsigned celFrameWidth = 0;
-
+    if (celFrameHeaderSize < SUB_HEADER_SIZE)
+        return 0; // invalid header
+    if (data + celFrameHeaderSize > dataEnd)
+        return 0; // invalid header
     // Decode the 32 pixel-lines blocks to calculate the image width
+    unsigned celFrameWidth = 0;
     quint16 lastFrameOffset = celFrameHeaderSize;
-    for (int i = 0; i < (celFrameHeaderSize / 2) - 1; i++) {
-        quint16 pixelCount = 0;
-        quint16 nextFrameOffset;
-        in >> nextFrameOffset;
-        if (nextFrameOffset == 0)
+    celFrameHeaderSize /= 2;
+    for (unsigned i = 1; i < celFrameHeaderSize; i++) {
+        quint16 nextFrameOffset = SwapLE16(header[i]);
+        if (nextFrameOffset == 0) {
+            // check if the remaining entries are zero
+            while (++i < celFrameHeaderSize) {
+                if (SwapLE16(header[i]) != 0)
+                    return 0; // invalid header
+            }
             break;
+        }
 
+        unsigned pixelCount = 0;
+        // ensure the offsets are consecutive
+        if (lastFrameOffset >= nextFrameOffset)
+            return 0; // invalid data
         for (int j = lastFrameOffset; j < nextFrameOffset; j++) {
-            quint8 readByte = rawFrameData[j];
+            if (data + j >= dataEnd)
+                return 0; // invalid data
 
+            quint8 readByte = data[j];
             if (/*readByte >= 0x00 &&*/ readByte < 0x80) {
                 // Transparent pixels
                 pixelCount += readByte;
@@ -45,10 +60,14 @@ unsigned D1Cl2Frame::computeWidthFromHeader(const QByteArray &rawFrameData)
         }
 
         unsigned width = pixelCount / CEL_BLOCK_HEIGHT;
-        // The calculated width has to be the identical for each 32 pixel-line block
-        // If it's not the case, 0 is returned
-        if (celFrameWidth != 0 && celFrameWidth != width)
-            return 0;
+        // The calculated width has to be identical for each 32 pixel-line block
+        if (celFrameWidth == 0) {
+            if (width == 0)
+                return 0; // invalid data
+        } else {
+            if (celFrameWidth != width)
+                return 0; // mismatching width values
+        }
 
         celFrameWidth = width;
         lastFrameOffset = nextFrameOffset;
