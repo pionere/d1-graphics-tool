@@ -376,12 +376,12 @@ void D1Min::removeSubtile(int subtileIndex)
     this->modified = true;
 }
 
-void D1Min::remapSubtiles(const QMap<unsigned, unsigned> &remap)
+void D1Min::remapSubtiles(const std::map<unsigned, unsigned> &remap)
 {
     std::vector<std::vector<unsigned>> newFrameReferences;
 
     for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
-        newFrameReferences.push_back(this->frameReferences.at(iter.value()));
+        newFrameReferences.push_back(this->frameReferences.at(iter->second));
     }
     this->frameReferences.swap(newFrameReferences);
     this->modified = true;

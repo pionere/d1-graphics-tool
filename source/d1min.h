@@ -4,7 +4,6 @@
 #include <vector>
 
 #include <QImage>
-#include <QMap>
 
 #include "d1celtilesetframe.h"
 #include "d1gfx.h"
@@ -29,7 +28,7 @@ public:
     void insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList);
     void createSubtile();
     void removeSubtile(int subtileIndex);
-    void remapSubtiles(const QMap<unsigned, unsigned> &remap);
+    void remapSubtiles(const std::map<unsigned, unsigned> &remap);
 
     QString getFilePath() const;
     bool isModified() const;

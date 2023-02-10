@@ -1,9 +1,9 @@
 #pragma once
 
+#include <map>
 #include <vector>
 
 #include <QImage>
-#include <QMap>
 #include <QtEndian>
 
 #include "d1celtilesetframe.h"
@@ -104,7 +104,7 @@ public:
     D1GfxFrame *addToFrame(int frameIndex, const D1GfxFrame &frame);
     D1GfxFrame *replaceFrame(int frameIndex, const QImage &image);
     void removeFrame(quint16 frameIndex);
-    void remapFrames(const QMap<unsigned, unsigned> &remap);
+    void remapFrames(const std::map<unsigned, unsigned> &remap);
 
     D1CEL_TYPE getType() const;
     void setType(D1CEL_TYPE type);

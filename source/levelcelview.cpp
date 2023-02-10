@@ -2010,7 +2010,7 @@ void LevelCelView::compressTileset()
 
 bool LevelCelView::sortFrames_impl()
 {
-    QMap<unsigned, unsigned> remap;
+    std::map<unsigned, unsigned> remap;
     bool change = false;
     unsigned idx = 1;
 
@@ -2022,7 +2022,7 @@ bool LevelCelView::sortFrames_impl()
             }
             auto mit = remap.find(*sit);
             if (mit != remap.end()) {
-                *sit = mit.value();
+                *sit = mit->second;
             } else {
                 remap[*sit] = idx;
                 change |= *sit != idx;
@@ -2035,9 +2035,9 @@ bool LevelCelView::sortFrames_impl()
         return false;
     }
     this->min->setModified();
-    QMap<unsigned, unsigned> backmap;
+    std::map<unsigned, unsigned> backmap;
     for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
-        backmap[iter.value()] = iter.key();
+        backmap[iter->second] = iter->first;
     }
     this->gfx->remapFrames(backmap);
     return true;
@@ -2045,16 +2045,16 @@ bool LevelCelView::sortFrames_impl()
 
 bool LevelCelView::sortSubtiles_impl()
 {
-    QMap<unsigned, unsigned> remap;
+    std::map<unsigned, unsigned> remap;
     bool change = false;
-    unsigned idx = 0;
+    int idx = 0;
 
     for (int i = 0; i < this->til->getTileCount(); i++) {
         std::vector<int> &subtileIndices = this->til->getSubtileIndices(i);
         for (auto sit = subtileIndices.begin(); sit != subtileIndices.end(); ++sit) {
             auto mit = remap.find(*sit);
             if (mit != remap.end()) {
-                *sit = mit.value();
+                *sit = mit->second;
             } else {
                 remap[*sit] = idx;
                 change |= *sit != idx;
@@ -2067,9 +2067,9 @@ bool LevelCelView::sortSubtiles_impl()
         return false;
     }
     this->til->setModified();
-    QMap<unsigned, unsigned> backmap;
+    std::map<unsigned, unsigned> backmap;
     for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
-        backmap[iter.value()] = iter.key();
+        backmap[iter->second] = iter->first;
     }
     this->min->remapSubtiles(backmap);
     this->sol->remapSubtiles(backmap);
