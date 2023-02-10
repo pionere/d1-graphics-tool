@@ -46,7 +46,7 @@ void D1Tileset::removeSubtile(int subtileIndex)
     this->tmi->removeSubtile(subtileIndex);
     // shift references
     // - shift subtile indices of the tiles
-    unsigned refIndex = subtileIndex;
+    int refIndex = subtileIndex;
     for (int i = 0; i < this->til->getTileCount(); i++) {
         std::vector<int> &subtileIndices = this->til->getSubtileIndices(i);
         for (unsigned n = 0; n < subtileIndices.size(); n++) {

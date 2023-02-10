@@ -130,7 +130,7 @@ bool D1Min::save(const SaveAsParam &params)
     //    this->gfx->setUpscaled(upscaled);
     // }
     // validate the limit of frame-references
-    unsigned limit = upscaled ? (UCHAR_MAX - 1) : ((1 << 12) - 1);
+    const unsigned limit = upscaled ? (UCHAR_MAX - 1) : ((1 << 12) - 1);
     for (const std::vector<unsigned> &frameReferencesList : this->frameReferences) {
         for (const unsigned frameRef : frameReferencesList) {
             if (frameRef > limit) {
@@ -409,7 +409,7 @@ void D1Min::remapSubtiles(const std::map<unsigned, unsigned> &remap)
     std::vector<std::vector<unsigned>> newFrameReferences;
 
     for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
-        newFrameReferences.push_back(this->frameReferences.at(iter.value()));
+        newFrameReferences.push_back(this->frameReferences.at(iter->second));
     }
     this->frameReferences.swap(newFrameReferences);
     this->modified = true;

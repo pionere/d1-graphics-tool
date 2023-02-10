@@ -149,7 +149,7 @@ void D1Tmi::remapSubtiles(const std::map<unsigned, unsigned> &remap)
     QList<quint8> newSubProperties;
 
     for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
-        newSubProperties.append(this->subProperties.at(iter.value()));
+        newSubProperties.append(this->subProperties.at(iter->second));
     }
     this->subProperties.swap(newSubProperties);
     this->modified = true;

@@ -739,7 +739,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, const QStringList &image
             return; // no new subtile -> done
         }
         // shift references
-        unsigned refIndex = this->currentSubtileIndex;
+        int refIndex = this->currentSubtileIndex;
         // shift subtile indices of the tiles
         for (int i = 0; i < this->til->getTileCount(); i++) {
             std::vector<int> &subtileIndices = this->til->getSubtileIndices(i);
@@ -1165,7 +1165,7 @@ void LevelCelView::removeCurrentFrame()
 
     this->collectFrameUsers(this->currentFrameIndex, frameUsers);
 
-    if (!frameUsers.isEmpty()) {
+    if (!frameUsers.empty()) {
         QMessageBox::StandardButton reply;
         reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("The frame is used by subtile %1 (and maybe others). Are you sure you want to proceed?").arg(frameUsers.front() + 1), QMessageBox::Yes | QMessageBox::No);
         if (reply != QMessageBox::Yes) {
@@ -1260,7 +1260,7 @@ void LevelCelView::removeCurrentSubtile()
 
     this->collectSubtileUsers(this->currentSubtileIndex, subtileUsers);
 
-    if (!subtileUsers.isEmpty()) {
+    if (!subtileUsers.empty()) {
         QMessageBox::critical(nullptr, tr("Error"), tr("The subtile is used by tile %1 (and maybe others).").arg(subtileUsers.front() + 1));
         return;
     }
@@ -2041,7 +2041,7 @@ bool LevelCelView::sortFrames_impl()
             }
             auto mit = remap.find(*sit);
             if (mit != remap.end()) {
-                *sit = mit.value();
+                *sit = mit->second;
             } else {
                 remap[*sit] = idx;
                 change |= *sit != idx;
@@ -2056,7 +2056,7 @@ bool LevelCelView::sortFrames_impl()
     this->min->setModified();
     std::map<unsigned, unsigned> backmap;
     for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
-        backmap[iter.value()] = iter.key();
+        backmap[iter->second] = iter->first;
     }
     this->gfx->remapFrames(backmap);
     return true;
@@ -2073,7 +2073,7 @@ bool LevelCelView::sortSubtiles_impl()
         for (auto sit = subtileIndices.begin(); sit != subtileIndices.end(); ++sit) {
             auto mit = remap.find(*sit);
             if (mit != remap.end()) {
-                *sit = mit.value();
+                *sit = mit->second;
             } else {
                 remap[*sit] = idx;
                 change |= *sit != idx;
@@ -2088,7 +2088,7 @@ bool LevelCelView::sortSubtiles_impl()
     this->til->setModified();
     std::map<unsigned, unsigned> backmap;
     for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
-        backmap[iter.value()] = iter.key();
+        backmap[iter->second] = iter->first;
     }
     this->min->remapSubtiles(backmap);
     this->sol->remapSubtiles(backmap);
