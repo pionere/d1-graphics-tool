@@ -218,6 +218,6 @@ void D1Til::createTile()
 
 void D1Til::removeTile(int tileIndex)
 {
-    this->subtileIndices.removeAt(tileIndex);
+    this->subtileIndices.erase(this->subtileIndices.begin() + tileIndex);
     this->modified = true;
 }

@@ -291,12 +291,12 @@ void D1Gfx::removeFrame(quint16 idx)
     }
 }
 
-void D1Gfx::remapFrames(const QMap<unsigned, unsigned> &remap)
+void D1Gfx::remapFrames(const std::map<unsigned, unsigned> &remap)
 {
     QList<D1GfxFrame *> newFrames;
     // assert(this->groupFrameIndices.count() == 1);
     for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
-        newFrames.append(this->frames.at(iter.value() - 1));
+        newFrames.append(this->frames.at(iter->second - 1));
     }
     this->frames.swap(newFrames);
     this->modified = true;
