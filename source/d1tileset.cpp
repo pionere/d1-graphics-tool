@@ -211,6 +211,9 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
             break;
         }
     }
+    auto amount = removedIndices.size();
+    dProgress() << QString(QApplication::tr("Reused %n subtile(s).", "", amount)).arg(amount);
+
     ProgressDialog::decBar();
     return result != 0;
 }

@@ -1988,8 +1988,6 @@ void LevelCelView::compressSubtiles()
     if (this->reuseFrames()) {
         // update the view - done by the caller
         // this->displayFrame();
-    } else {
-        dProgress() << tr("All frames are unique.");
     }
 }
 
@@ -1998,8 +1996,6 @@ void LevelCelView::compressTiles()
     if (this->reuseSubtiles()) {
         // update the view - done by the caller
         // this->displayFrame();
-    } else {
-        dProgress() << tr("All subtiles are unique.");
     }
 }
 
@@ -2020,8 +2016,6 @@ void LevelCelView::compressTileset()
     if (reusedFrame || reusedSubtile) {
         // update the view - done by the caller
         // this->displayFrame();
-    } else {
-        dProgress() << tr("Every subtile and frame are unique.");
     }
 
     ProgressDialog::decBar();
