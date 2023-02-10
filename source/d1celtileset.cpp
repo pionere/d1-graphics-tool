@@ -1,10 +1,8 @@
 #include "d1celtileset.h"
 
 #include <QApplication>
-#include <QBuffer>
 #include <QByteArray>
 #include <QDataStream>
-#include <QDebug>
 #include <QDir>
 #include <QMessageBox>
 
@@ -54,7 +52,7 @@ D1CEL_FRAME_TYPE guessFrameType(QByteArray &rawFrameData)
 
 bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, QString filePath, const OpenAsParam &params)
 {
-    // prepare file data source
+    // Opening Tileset-CEL file and load it in RAM
     QFile file;
     // done by the caller
     // if (!params.celFilePath.isEmpty()) {
@@ -67,26 +65,21 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
         }
     }
 
-    QByteArray fileData = file.readAll();
-    QBuffer fileBuffer(&fileData);
-
-    if (!fileBuffer.open(QIODevice::ReadOnly)) {
-        return false;
-    }
+    const QByteArray fileData = file.readAll();
 
     // Read CEL binary data
-    QDataStream in(&fileBuffer);
+    QDataStream in(fileData);
     in.setByteOrder(QDataStream::LittleEndian);
+
+    QIODevice *device = in.device();
 
     // File size check
     int numFrames = 0;
-    auto fileSize = fileBuffer.size();
+    auto fileSize = device->size();
     if (fileSize != 0) {
         // CEL HEADER CHECKS
-        if (fileSize < 4) {
-            dProgressErr() << QApplication::tr("Tileset-CEL file is too small.");
+        if (fileSize < 4)
             return false;
-        }
 
         // Read first DWORD
         quint32 readDword;
@@ -95,19 +88,15 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
         numFrames = readDword;
 
         // Trying to find file size in CEL header
-        if (fileSize < (4 + numFrames * 4 + 4)) {
-            dProgressErr() << QApplication::tr("Header of the Tileset-CEL file is too small.");
+        if (fileSize < (4 + numFrames * 4 + 4))
             return false;
-        }
 
-        fileBuffer.seek(numFrames * 4 + 4);
+        device->seek(4 + numFrames * 4);
         quint32 fileSizeDword;
         in >> fileSizeDword;
 
-        if (fileSize != fileSizeDword) {
-            dProgressErr() << QApplication::tr("Invalid Tileset-CEL file header.");
+        if (fileSize != fileSizeDword)
             return false;
-        }
     }
 
     gfx.groupFrameIndices.clear();
@@ -120,7 +109,7 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
     // CEL FRAMES OFFSETS CALCULATION
     QList<QPair<quint32, quint32>> frameOffsets;
     for (int i = 1; i <= numFrames; i++) {
-        fileBuffer.seek(i * 4);
+        device->seek(i * 4);
         quint32 celFrameStartOffset;
         in >> celFrameStartOffset;
         quint32 celFrameEndOffset;
@@ -134,8 +123,8 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
     // std::stack<quint16> invalidFrames;
     for (int i = 0; i < frameOffsets.count(); i++) {
         const auto &offset = frameOffsets[i];
-        fileBuffer.seek(offset.first);
-        QByteArray celFrameRawData = fileBuffer.read(offset.second - offset.first);
+        device->seek(offset.first);
+        QByteArray celFrameRawData = device->read(offset.second - offset.first);
         D1CEL_FRAME_TYPE frameType;
         if (gfx.upscaled && !celFrameRawData.isEmpty()) {
             frameType = (D1CEL_FRAME_TYPE)celFrameRawData.at(0);

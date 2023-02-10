@@ -26,14 +26,17 @@ bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
     in.setByteOrder(QDataStream::LittleEndian);
 
     QIODevice *device = in.device();
+    auto fileSize = device->size();
     // CL2 HEADER CHECKS
+    if (fileSize < 4)
+        return false;
 
     // Read first DWORD
     quint32 firstDword;
     in >> firstDword;
 
     // Trying to find file size in CL2 header
-    if (device->size() < (4 + firstDword * 4 + 4))
+    if (fileSize < (4 + firstDword * 4 + 4))
         return false;
 
     device->seek(4 + firstDword * 4);
@@ -42,7 +45,7 @@ bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
 
     // If the dword is not equal to the file size then
     // check if it's a CL2 with multiple groups
-    D1CEL_TYPE type = device->size() == fileSizeDword ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V2_MULTIPLE_GROUPS;
+    D1CEL_TYPE type = fileSize == fileSizeDword ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V2_MULTIPLE_GROUPS;
     if (type == D1CEL_TYPE::V2_MULTIPLE_GROUPS) {
         // Read offset of the last CL2 group header
         device->seek(firstDword - 4);
@@ -50,7 +53,7 @@ bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
         in >> lastCl2GroupHeaderOffset;
 
         // Read the number of frames of the last CL2 group
-        if (device->size() < lastCl2GroupHeaderOffset)
+        if (fileSize < (lastCl2GroupHeaderOffset + 4))
             return false;
 
         device->seek(lastCl2GroupHeaderOffset);
@@ -58,8 +61,7 @@ bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
         in >> lastCl2GroupFrameCount;
 
         // Read the last frame offset corresponding to the file size
-        if (device->size()
-            < lastCl2GroupHeaderOffset + lastCl2GroupFrameCount * 4 + 4 + 4)
+        if (fileSize < (lastCl2GroupHeaderOffset + lastCl2GroupFrameCount * 4 + 4 + 4))
             return false;
 
         device->seek(lastCl2GroupHeaderOffset + lastCl2GroupFrameCount * 4 + 4);
@@ -69,7 +71,7 @@ bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
         // to have an offset from the beginning of the file
         fileSizeDword += lastCl2GroupHeaderOffset;
 
-        if (device->size() != fileSizeDword) {
+        if (fileSize != fileSizeDword) {
             return false;
         }
     }

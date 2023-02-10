@@ -26,14 +26,17 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
     in.setByteOrder(QDataStream::LittleEndian);
 
     QIODevice *device = in.device();
+    auto fileSize = device->size();
     // CEL HEADER CHECKS
-
     // Read first DWORD
+    if (fileSize < 4)
+        return false;
+
     quint32 firstDword;
     in >> firstDword;
 
     // Trying to find file size in CEL header
-    if (device->size() < (4 + firstDword * 4 + 4))
+    if (fileSize < (4 + firstDword * 4 + 4))
         return false;
 
     device->seek(4 + firstDword * 4);
@@ -42,7 +45,7 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
 
     // If the dword is not equal to the file size then
     // check if it's a CEL compilation
-    D1CEL_TYPE type = device->size() == fileSizeDword ? D1CEL_TYPE::V1_REGULAR : D1CEL_TYPE::V1_COMPILATION;
+    D1CEL_TYPE type = fileSize == fileSizeDword ? D1CEL_TYPE::V1_REGULAR : D1CEL_TYPE::V1_COMPILATION;
     std::vector<std::pair<quint32, quint32>> frameOffsets;
     if (type == D1CEL_TYPE::V1_REGULAR) {
         // Going through all frames of the CEL
@@ -66,17 +69,16 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
         in >> lastCelOffset;
 
         // Go to last CEL of the CEL compilation
-        if (device->size() < (lastCelOffset + 8))
+        // Read last CEL header
+        if (fileSize < (lastCelOffset + 4))
             return false;
 
         device->seek(lastCelOffset);
-
-        // Read last CEL header
         quint32 lastCelFrameCount;
         in >> lastCelFrameCount;
 
         // Read the last CEL size
-        if (device->size() < (lastCelOffset + 4 + lastCelFrameCount * 4 + 4))
+        if (fileSize < (lastCelOffset + 4 + lastCelFrameCount * 4 + 4))
             return false;
 
         device->seek(lastCelOffset + 4 + lastCelFrameCount * 4);
@@ -85,7 +87,7 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
 
         // If the last CEL size plus the last CEL offset is equal to
         // the file size then it's a CEL compilation
-        if (device->size() != (lastCelOffset + lastCelSize)) {
+        if (fileSize != (lastCelOffset + lastCelSize)) {
             return false;
         }
 
@@ -96,6 +98,9 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
             quint32 celOffset;
             in >> celOffset;
 
+            if (fileSize < (celOffset + 4))
+                return false;
+
             device->seek(celOffset);
             quint32 celFrameCount;
             in >> celFrameCount;
@@ -103,6 +108,9 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
             if (celFrameCount == 0) {
                 continue;
             }
+            if (fileSize < (celOffset + celFrameCount * 4 + 4 + 4))
+                return false;
+
             gfx.groupFrameIndices.append(
                 qMakePair(frameOffsets.size(),
                     frameOffsets.size() + celFrameCount - 1));
