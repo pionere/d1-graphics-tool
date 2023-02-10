@@ -119,12 +119,11 @@ void LevelTabSubtileWidget::update()
     this->ui->tmi6->setChecked((tmiFlags & 1 << 6) != 0);
 
     // update combo box of the frames
-    while ((unsigned)this->ui->framesComboBox->count() > frames.size())
+    for (int i = this->ui->framesComboBox->count() - frames.size(); i > 0; i--)
         this->ui->framesComboBox->removeItem(0);
-    unsigned i = 0;
-    while ((unsigned)this->ui->framesComboBox->count() < frames.size())
-        this->ui->framesComboBox->insertItem(0, QString::number(++i));
-    for (i = 0; i < frames.size(); i++) {
+    for (int i = frames.size() - this->ui->framesComboBox->count(); i > 0; i--)
+        this->ui->framesComboBox->addItem("");
+    for (unsigned i = 0; i < frames.size(); i++) {
         this->ui->framesComboBox->setItemText(i, QString::number(frames[i]));
     }
     if (this->lastSubtileIndex != subtileIdx || this->ui->framesComboBox->currentIndex() == -1) {

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include <QContextMenuEvent>
 #include <QDragEnterEvent>
 #include <QDropEvent>
@@ -83,8 +85,8 @@ public:
     void displayFrame();
 
 private:
-    void collectFrameUsers(int frameIndex, QList<int> &users) const;
-    void collectSubtileUsers(int subtileIndex, QList<int> &users) const;
+    void collectFrameUsers(int frameIndex, std::vector<int> &users) const;
+    void collectSubtileUsers(int subtileIndex, std::vector<int> &users) const;
     void insertFrames(IMAGE_FILE_MODE mode, int index, const QImage &image);
     bool insertFrames(IMAGE_FILE_MODE mode, int index, const D1GfxFrame &frame);
     void insertFrames(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);

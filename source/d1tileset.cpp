@@ -48,8 +48,8 @@ void D1Tileset::removeSubtile(int subtileIndex)
     // - shift subtile indices of the tiles
     unsigned refIndex = subtileIndex;
     for (int i = 0; i < this->til->getTileCount(); i++) {
-        QList<quint16> &subtileIndices = this->til->getSubtileIndices(i);
-        for (int n = 0; n < subtileIndices.count(); n++) {
+        std::vector<int> &subtileIndices = this->til->getSubtileIndices(i);
+        for (unsigned n = 0; n < subtileIndices.size(); n++) {
             if (subtileIndices[n] >= refIndex) {
                 // assert(subtileIndices[n] != refIndex);
                 subtileIndices[n] -= 1;
@@ -172,9 +172,9 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
                 continue;
             }
             // use subtile 'i' instead of subtile 'j'
-            const unsigned refIndex = j;
+            const int refIndex = j;
             for (int n = 0; n < this->til->getTileCount(); n++) {
-                QList<quint16> &subtileIndices = this->til->getSubtileIndices(n);
+                std::vector<int> &subtileIndices = this->til->getSubtileIndices(n);
                 for (auto iter = subtileIndices.begin(); iter != subtileIndices.end(); iter++) {
                     if (*iter == refIndex) {
                         *iter = i;

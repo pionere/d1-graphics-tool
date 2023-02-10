@@ -267,7 +267,7 @@ void LevelCelView::framePixelClicked(const QPoint &pos, unsigned counter)
         // g(tx) = tileHeight - 0.5x
         unsigned gtx = tileHeight - tx / 2;
         // qDebug() << "fx=" << ftx << ", gx=" << gtx;
-        int tSubtile = 0;
+        unsigned tSubtile = 0;
         if (ty < ftx) {
             if (ty < gtx) {
                 // limit the area of 0 horizontally
@@ -287,8 +287,8 @@ void LevelCelView::framePixelClicked(const QPoint &pos, unsigned counter)
                 tSubtile = 3;
         }
 
-        QList<quint16> &tilSubtiles = this->til->getSubtileIndices(this->currentTileIndex);
-        if (tilSubtiles.count() > tSubtile) {
+        std::vector<int> &tilSubtiles = this->til->getSubtileIndices(this->currentTileIndex);
+        if (tilSubtiles.size() > tSubtile) {
             this->currentSubtileIndex = tilSubtiles.at(tSubtile);
             this->tabTileWidget.selectSubtile(tSubtile);
             this->displayFrame();
@@ -538,7 +538,7 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, const QStringList &imagefi
 
 void LevelCelView::assignSubtiles(const QImage &image, int tileIndex, int subtileIndex)
 {
-    QList<quint16> *subtileIndices = nullptr;
+    std::vector<int> *subtileIndices = nullptr;
     if (tileIndex >= 0) {
         subtileIndices = &this->til->getSubtileIndices(tileIndex);
         subtileIndices->clear();
@@ -565,7 +565,7 @@ void LevelCelView::assignSubtiles(const QImage &image, int tileIndex, int subtil
             }
 
             if (subtileIndices != nullptr) {
-                subtileIndices->append(subtileIndex);
+                subtileIndices->push_back(subtileIndex);
             } else if (!hasColor) {
                 continue;
             }
@@ -578,7 +578,7 @@ void LevelCelView::assignSubtiles(const QImage &image, int tileIndex, int subtil
 
 void LevelCelView::assignSubtiles(const D1GfxFrame &frame, int tileIndex, int subtileIndex)
 {
-    QList<quint16> *subtileIndices = nullptr;
+    std::vector<int> *subtileIndices = nullptr;
     if (tileIndex >= 0) {
         subtileIndices = &this->til->getSubtileIndices(tileIndex);
         subtileIndices->clear();
@@ -608,7 +608,7 @@ void LevelCelView::assignSubtiles(const D1GfxFrame &frame, int tileIndex, int su
             }
 
             if (subtileIndices != nullptr) {
-                subtileIndices->append(subtileIndex);
+                subtileIndices->push_back(subtileIndex);
             } else if (!hasColor) {
                 continue;
             }
@@ -742,8 +742,8 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, const QStringList &image
         unsigned refIndex = this->currentSubtileIndex;
         // shift subtile indices of the tiles
         for (int i = 0; i < this->til->getTileCount(); i++) {
-            QList<quint16> &subtileIndices = this->til->getSubtileIndices(i);
-            for (int n = 0; n < subtileIndices.count(); n++) {
+            std::vector<int> &subtileIndices = this->til->getSubtileIndices(i);
+            for (unsigned n = 0; n < subtileIndices.size(); n++) {
                 if (subtileIndices[n] >= refIndex) {
                     subtileIndices[n] += deltaSubtileCount;
                     this->til->setModified();
@@ -834,7 +834,7 @@ void LevelCelView::insertSubtile(int subtileIndex, const D1GfxFrame &frame)
 
 void LevelCelView::insertTile(int tileIndex, const QImage &image)
 {
-    QList<quint16> subtileIndices;
+    std::vector<int> subtileIndices;
 
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
@@ -856,7 +856,7 @@ void LevelCelView::insertTile(int tileIndex, const QImage &image)
             }
 
             int index = this->min->getSubtileCount();
-            subtileIndices.append(index);
+            subtileIndices.push_back(index);
             this->insertSubtile(index, subImage);
         }
     }
@@ -867,7 +867,7 @@ void LevelCelView::insertTile(int tileIndex, const QImage &image)
 
 void LevelCelView::insertTile(int tileIndex, const D1GfxFrame &frame)
 {
-    QList<quint16> subtileIndices;
+    std::vector<int> subtileIndices;
 
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
@@ -884,7 +884,7 @@ void LevelCelView::insertTile(int tileIndex, const D1GfxFrame &frame)
             }
 
             int index = this->min->getSubtileCount();
-            subtileIndices.append(index);
+            subtileIndices.push_back(index);
             this->insertSubtile(index, subFrame);
         }
     }
@@ -1161,13 +1161,13 @@ void LevelCelView::removeFrame(int frameIndex)
 void LevelCelView::removeCurrentFrame()
 {
     // check if the current frame is used
-    QList<int> frameUsers;
+    std::vector<int> frameUsers;
 
     this->collectFrameUsers(this->currentFrameIndex, frameUsers);
 
     if (!frameUsers.isEmpty()) {
         QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("The frame is used by subtile %1 (and maybe others). Are you sure you want to proceed?").arg(frameUsers.first() + 1), QMessageBox::Yes | QMessageBox::No);
+        reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("The frame is used by subtile %1 (and maybe others). Are you sure you want to proceed?").arg(frameUsers.front() + 1), QMessageBox::Yes | QMessageBox::No);
         if (reply != QMessageBox::Yes) {
             return;
         }
@@ -1256,12 +1256,12 @@ void LevelCelView::removeSubtile(int subtileIndex)
 void LevelCelView::removeCurrentSubtile()
 {
     // check if the current subtile is used
-    QList<int> subtileUsers;
+    std::vector<int> subtileUsers;
 
     this->collectSubtileUsers(this->currentSubtileIndex, subtileUsers);
 
     if (!subtileUsers.isEmpty()) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("The subtile is used by tile %1 (and maybe others).").arg(subtileUsers.first() + 1));
+        QMessageBox::critical(nullptr, tr("Error"), tr("The subtile is used by tile %1 (and maybe others).").arg(subtileUsers.front() + 1));
         return;
     }
     // remove the current subtile
@@ -1397,7 +1397,7 @@ void LevelCelView::pasteCurrent(const QImage &image)
     dProgressFail() << tr("The image can not be used as a frame or as a subtile.");
 }
 
-void LevelCelView::collectFrameUsers(int frameIndex, QList<int> &users) const
+void LevelCelView::collectFrameUsers(int frameIndex, std::vector<int> &users) const
 {
     unsigned frameRef = frameIndex + 1;
 
@@ -1405,20 +1405,20 @@ void LevelCelView::collectFrameUsers(int frameIndex, QList<int> &users) const
         const std::vector<unsigned> &frameReferences = this->min->getFrameReferences(i);
         for (unsigned reference : frameReferences) {
             if (reference == frameRef) {
-                users.append(i);
+                users.push_back(i);
                 break;
             }
         }
     }
 }
 
-void LevelCelView::collectSubtileUsers(int subtileIndex, QList<int> &users) const
+void LevelCelView::collectSubtileUsers(int subtileIndex, std::vector<int> &users) const
 {
     for (int i = 0; i < this->til->getTileCount(); i++) {
-        const QList<quint16> &subtileIndices = this->til->getSubtileIndices(i);
-        for (quint16 index : subtileIndices) {
+        const std::vector<int> &subtileIndices = this->til->getSubtileIndices(i);
+        for (int index : subtileIndices) {
             if (index == subtileIndex) {
-                users.append(i);
+                users.push_back(i);
                 break;
             }
         }
@@ -1431,10 +1431,10 @@ void LevelCelView::reportUsage()
 
     bool hasFrame = this->gfx->getFrameCount() > this->currentFrameIndex;
     if (hasFrame) {
-        QList<int> frameUsers;
+        std::vector<int> frameUsers;
         this->collectFrameUsers(this->currentFrameIndex, frameUsers);
 
-        if (frameUsers.count() == 0) {
+        if (frameUsers.size() == 0) {
             dProgress() << tr("Frame %1 is not used by any subtile.").arg(this->currentFrameIndex + 1);
         } else {
             QString frameUses;
@@ -1442,7 +1442,7 @@ void LevelCelView::reportUsage()
                 frameUses += QString::number(user + 1) + ", ";
             }
             frameUses.chop(2);
-            dProgress() << tr("Frame %1 is used by subtile %2.", "", frameUsers.count()).arg(this->currentFrameIndex + 1).arg(frameUses);
+            dProgress() << tr("Frame %1 is used by subtile %2.", "", frameUsers.size()).arg(this->currentFrameIndex + 1).arg(frameUses);
         }
 
         dProgress() << "\n";
@@ -1452,10 +1452,10 @@ void LevelCelView::reportUsage()
 
     bool hasSubtile = this->min->getSubtileCount() > this->currentSubtileIndex;
     if (hasSubtile) {
-        QList<int> subtileUsers;
+        std::vector<int> subtileUsers;
         this->collectSubtileUsers(this->currentSubtileIndex, subtileUsers);
 
-        if (subtileUsers.count() == 0) {
+        if (subtileUsers.size() == 0) {
             dProgress() << tr("Subtile %1 is not used by any tile.").arg(this->currentSubtileIndex + 1);
         } else {
             QString subtileUses;
@@ -1463,7 +1463,7 @@ void LevelCelView::reportUsage()
                 subtileUses += QString::number(user + 1) + ", ";
             }
             subtileUses.chop(2);
-            dProgress() << tr("Subtile %1 is used by tile %2.", "", subtileUsers.count()).arg(this->currentSubtileIndex + 1).arg(subtileUses);
+            dProgress() << tr("Subtile %1 is used by tile %2.", "", subtileUsers.size()).arg(this->currentSubtileIndex + 1).arg(subtileUses);
         }
     }
 
@@ -1843,10 +1843,7 @@ bool LevelCelView::removeUnusedFrames()
 {
     ProgressDialog::incBar(tr("Removing unused frames..."), this->gfx->getFrameCount());
     // collect every frame uses
-    QList<bool> frameUsed;
-    for (int i = 0; i < this->gfx->getFrameCount(); i++) {
-        frameUsed.append(false);
-    }
+    std::vector<bool> frameUsed = std::vector<bool>(this->gfx->getFrameCount());
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         const std::vector<unsigned> &frameReferences = this->min->getFrameReferences(i);
         for (unsigned frameRef : frameReferences) {
@@ -1880,13 +1877,10 @@ bool LevelCelView::removeUnusedSubtiles()
 {
     ProgressDialog::incBar(tr("Removing unused subtiles..."), this->min->getSubtileCount());
     // collect every subtile uses
-    QList<bool> subtileUsed;
-    for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        subtileUsed.append(false);
-    }
+    std::vector<bool> subtileUsed = std::vector<bool>(this->min->getSubtileCount());
     for (int i = 0; i < this->til->getTileCount(); i++) {
-        const QList<quint16> &subtileIndices = this->til->getSubtileIndices(i);
-        for (quint16 subtileIndex : subtileIndices) {
+        const std::vector<int> &subtileIndices = this->til->getSubtileIndices(i);
+        for (int subtileIndex : subtileIndices) {
             subtileUsed[subtileIndex] = true;
         }
     }
@@ -2035,7 +2029,7 @@ void LevelCelView::compressTileset()
 
 bool LevelCelView::sortFrames_impl()
 {
-    QMap<unsigned, unsigned> remap;
+    std::map<unsigned, unsigned> remap;
     bool change = false;
     unsigned idx = 1;
 
@@ -2060,7 +2054,7 @@ bool LevelCelView::sortFrames_impl()
         return false;
     }
     this->min->setModified();
-    QMap<unsigned, unsigned> backmap;
+    std::map<unsigned, unsigned> backmap;
     for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
         backmap[iter.value()] = iter.key();
     }
@@ -2070,12 +2064,12 @@ bool LevelCelView::sortFrames_impl()
 
 bool LevelCelView::sortSubtiles_impl()
 {
-    QMap<unsigned, unsigned> remap;
+    std::map<unsigned, unsigned> remap;
     bool change = false;
-    unsigned idx = 0;
+    int idx = 0;
 
     for (int i = 0; i < this->til->getTileCount(); i++) {
-        QList<quint16> &subtileIndices = this->til->getSubtileIndices(i);
+        std::vector<int> &subtileIndices = this->til->getSubtileIndices(i);
         for (auto sit = subtileIndices.begin(); sit != subtileIndices.end(); ++sit) {
             auto mit = remap.find(*sit);
             if (mit != remap.end()) {
@@ -2092,7 +2086,7 @@ bool LevelCelView::sortSubtiles_impl()
         return false;
     }
     this->til->setModified();
-    QMap<unsigned, unsigned> backmap;
+    std::map<unsigned, unsigned> backmap;
     for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
         backmap[iter.value()] = iter.key();
     }

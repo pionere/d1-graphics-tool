@@ -131,7 +131,7 @@ bool D1Min::save(const SaveAsParam &params)
     // }
     // validate the limit of frame-references
     unsigned limit = upscaled ? (UCHAR_MAX - 1) : ((1 << 12) - 1);
-    for (const std::vector<unsigned> &frameReferencesList : this->frameReferences.size()) {
+    for (const std::vector<unsigned> &frameReferencesList : this->frameReferences) {
         for (const unsigned frameRef : frameReferencesList) {
             if (frameRef > limit) {
                 dProgressFail() << tr("The frame references can not be stored in this format. The limit is %1.").arg(limit);
@@ -404,7 +404,7 @@ void D1Min::removeSubtile(int subtileIndex)
     this->modified = true;
 }
 
-void D1Min::remapSubtiles(const QMap<unsigned, unsigned> &remap)
+void D1Min::remapSubtiles(const std::map<unsigned, unsigned> &remap)
 {
     std::vector<std::vector<unsigned>> newFrameReferences;
 
