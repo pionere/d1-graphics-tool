@@ -129,6 +129,16 @@ bool D1Min::save(const SaveAsParam &params)
     //    upscaled = params.upscaled == SAVE_UPSCALED_TYPE::TRUE;
     //    this->gfx->setUpscaled(upscaled);
     // }
+    // validate the limit of frame-references
+    unsigned limit = upscaled ? (UCHAR_MAX - 1) : ((1 << 12) - 1);
+    for (const std::vector<unsigned> &frameReferencesList : this->frameReferences.size()) {
+        for (const unsigned frameRef : frameReferencesList) {
+            if (frameRef > limit) {
+                dProgressFail() << tr("The frame references can not be stored in this format. The limit is %1.").arg(limit);
+                return false;
+            }
+        }
+    }
     int padding = 0;
     if (!upscaled) {
         if (this->subtileHeight != 5 && this->subtileHeight != 8) {

@@ -91,7 +91,7 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
         if (fileSize < (4 + numFrames * 4 + 4))
             return false;
 
-        device->seek(numFrames * 4 + 4);
+        device->seek(4 + numFrames * 4);
         quint32 fileSizeDword;
         in >> fileSizeDword;
 
