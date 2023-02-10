@@ -148,7 +148,7 @@ bool D1Min::save(const SaveAsParam &params)
     out.setByteOrder(QDataStream::LittleEndian);
     for (unsigned i = 0; i < this->frameReferences.size(); i++) {
         std::vector<unsigned> &frameReferencesList = this->frameReferences[i];
-        int subtileNumberOfCelFrames = frameReferencesList.count();
+        int subtileNumberOfCelFrames = frameReferencesList.size();
         for (int j = 0; j < subtileNumberOfCelFrames; j++) {
             quint16 writeWord;
             if (!upscaled) {
@@ -178,7 +178,7 @@ bool D1Min::save(const SaveAsParam &params)
 
 QImage D1Min::getSubtileImage(int subtileIndex) const
 {
-    if (subtileIndex < 0 || subtileIndex >= this->frameReferences.size())
+    if (subtileIndex < 0 || (unsigned)subtileIndex >= this->frameReferences.size())
         return QImage();
 
     unsigned subtileWidthPx = this->subtileWidth * MICRO_WIDTH;
@@ -244,7 +244,7 @@ void D1Min::setSubtileWidth(int width)
     }
     if (diff > 0) {
         // extend the subtile-width
-        for (int i = 0; i < this->frameReferences.size(); i++) {
+        for (unsigned i = 0; i < this->frameReferences.size(); i++) {
             std::vector<unsigned> &frameReferencesList = this->frameReferences[i];
             for (int y = 0; y < this->subtileHeight; y++) {
                 auto sit = frameReferencesList.begin() + y * width + prevWidth;
@@ -255,7 +255,7 @@ void D1Min::setSubtileWidth(int width)
         diff = -diff;
         // check if there is a non-zero frame in the subtiles
         bool hasFrame = false;
-        for (int i = 0; i < this->frameReferences.size() && !hasFrame; i++) {
+        for (unsigned i = 0; i < this->frameReferences.size() && !hasFrame; i++) {
             std::vector<unsigned> &frameReferencesList = this->frameReferences[i];
             for (int y = 0; y < this->subtileHeight; y++) {
                 for (int x = width; x < prevWidth; x++) {
@@ -274,7 +274,7 @@ void D1Min::setSubtileWidth(int width)
             }
         }
         // reduce the subtile-width
-        for (int i = 0; i < this->frameReferences.size(); i++) {
+        for (unsigned i = 0; i < this->frameReferences.size(); i++) {
             std::vector<unsigned> &frameReferencesList = this->frameReferences[i];
             for (int y = 0; y < this->subtileHeight; y++) {
                 auto sit = frameReferencesList.begin() + (y + 1) * width;
@@ -304,7 +304,7 @@ void D1Min::setSubtileHeight(int height)
     if (diff > 0) {
         // extend the subtile-height
         int n = diff * width;
-        for (int i = 0; i < this->frameReferences.size(); i++) {
+        for (unsigned i = 0; i < this->frameReferences.size(); i++) {
             std::vector<unsigned> &frameReferencesList = this->frameReferences[i];
             frameReferencesList.insert(frameReferencesList.begin(), n, 0);
         }
@@ -313,7 +313,7 @@ void D1Min::setSubtileHeight(int height)
         // check if there is a non-zero frame in the subtiles
         bool hasFrame = false;
         int n = diff * width;
-        for (int i = 0; i < this->frameReferences.size() && !hasFrame; i++) {
+        for (unsigned i = 0; i < this->frameReferences.size() && !hasFrame; i++) {
             std::vector<unsigned> &frameReferencesList = this->frameReferences[i];
             for (int j = 0; j < n; j++) {
                 if (frameReferencesList[j] != 0) {
@@ -330,7 +330,7 @@ void D1Min::setSubtileHeight(int height)
             }
         }
         // reduce the subtile-height
-        for (int i = 0; i < this->frameReferences.size(); i++) {
+        for (unsigned i = 0; i < this->frameReferences.size(); i++) {
             std::vector<unsigned> &frameReferencesList = this->frameReferences[i];
             frameReferencesList.erase(frameReferencesList.begin(), frameReferencesList.begin() + n);
         }
@@ -376,7 +376,7 @@ void D1Min::removeFrame(int frameIndex)
 
 void D1Min::insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList)
 {
-    this->frameReferences.insert(subtileIndex, frameReferencesList);
+    this->frameReferences.insert(this->frameReferences.begin() + subtileIndex, frameReferencesList);
     this->modified = true;
 }
 

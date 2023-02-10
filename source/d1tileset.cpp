@@ -161,7 +161,7 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
                 continue; // should not happen, but better safe than sorry
             }
             bool match = true;
-            for (int x = 0; x < frameReferences0.size(); x++) {
+            for (unsigned x = 0; x < frameReferences0.size(); x++) {
                 if (frameReferences0[x] == frameReferences1[x]) {
                     continue;
                 }
