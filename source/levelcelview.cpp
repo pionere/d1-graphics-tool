@@ -1161,13 +1161,13 @@ void LevelCelView::removeFrame(int frameIndex)
 void LevelCelView::removeCurrentFrame()
 {
     // check if the current frame is used
-    QList<int> frameUsers;
+    std::vector<int> frameUsers;
 
     this->collectFrameUsers(this->currentFrameIndex, frameUsers);
 
-    if (!frameUsers.isEmpty()) {
+    if (!frameUsers.empty()) {
         QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("The frame is used by subtile %1 (and maybe others). Are you sure you want to proceed?").arg(frameUsers.first() + 1), QMessageBox::Yes | QMessageBox::No);
+        reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("The frame is used by subtile %1 (and maybe others). Are you sure you want to proceed?").arg(frameUsers.front() + 1), QMessageBox::Yes | QMessageBox::No);
         if (reply != QMessageBox::Yes) {
             return;
         }
@@ -1256,12 +1256,12 @@ void LevelCelView::removeSubtile(int subtileIndex)
 void LevelCelView::removeCurrentSubtile()
 {
     // check if the current subtile is used
-    QList<int> subtileUsers;
+    std::vector<int> subtileUsers;
 
     this->collectSubtileUsers(this->currentSubtileIndex, subtileUsers);
 
-    if (!subtileUsers.isEmpty()) {
-        QMessageBox::critical(nullptr, tr("Error"), tr("The subtile is used by tile %1 (and maybe others).").arg(subtileUsers.first() + 1));
+    if (!subtileUsers.empty()) {
+        QMessageBox::critical(nullptr, tr("Error"), tr("The subtile is used by tile %1 (and maybe others).").arg(subtileUsers.front() + 1));
         return;
     }
     // remove the current subtile
@@ -1397,7 +1397,7 @@ void LevelCelView::pasteCurrent(const QImage &image)
     dProgressFail() << tr("The image can not be used as a frame or as a subtile.");
 }
 
-void LevelCelView::collectFrameUsers(int frameIndex, QList<int> &users) const
+void LevelCelView::collectFrameUsers(int frameIndex, std::vector<int> &users) const
 {
     unsigned frameRef = frameIndex + 1;
 
@@ -1405,20 +1405,20 @@ void LevelCelView::collectFrameUsers(int frameIndex, QList<int> &users) const
         const std::vector<unsigned> &frameReferences = this->min->getFrameReferences(i);
         for (unsigned reference : frameReferences) {
             if (reference == frameRef) {
-                users.append(i);
+                users.push_back(i);
                 break;
             }
         }
     }
 }
 
-void LevelCelView::collectSubtileUsers(int subtileIndex, QList<int> &users) const
+void LevelCelView::collectSubtileUsers(int subtileIndex, std::vector<int> &users) const
 {
     for (int i = 0; i < this->til->getTileCount(); i++) {
         const std::vector<int> &subtileIndices = this->til->getSubtileIndices(i);
         for (int index : subtileIndices) {
             if (index == subtileIndex) {
-                users.append(i);
+                users.push_back(i);
                 break;
             }
         }
@@ -1431,10 +1431,10 @@ void LevelCelView::reportUsage()
 
     bool hasFrame = this->gfx->getFrameCount() > this->currentFrameIndex;
     if (hasFrame) {
-        QList<int> frameUsers;
+        std::vector<int> frameUsers;
         this->collectFrameUsers(this->currentFrameIndex, frameUsers);
 
-        if (frameUsers.count() == 0) {
+        if (frameUsers.size() == 0) {
             dProgress() << tr("Frame %1 is not used by any subtile.").arg(this->currentFrameIndex + 1);
         } else {
             QString frameUses;
@@ -1442,7 +1442,7 @@ void LevelCelView::reportUsage()
                 frameUses += QString::number(user + 1) + ", ";
             }
             frameUses.chop(2);
-            dProgress() << tr("Frame %1 is used by subtile %2.", "", frameUsers.count()).arg(this->currentFrameIndex + 1).arg(frameUses);
+            dProgress() << tr("Frame %1 is used by subtile %2.", "", frameUsers.size()).arg(this->currentFrameIndex + 1).arg(frameUses);
         }
 
         dProgress() << "\n";
@@ -1452,10 +1452,10 @@ void LevelCelView::reportUsage()
 
     bool hasSubtile = this->min->getSubtileCount() > this->currentSubtileIndex;
     if (hasSubtile) {
-        QList<int> subtileUsers;
+        std::vector<int> subtileUsers;
         this->collectSubtileUsers(this->currentSubtileIndex, subtileUsers);
 
-        if (subtileUsers.count() == 0) {
+        if (subtileUsers.size() == 0) {
             dProgress() << tr("Subtile %1 is not used by any tile.").arg(this->currentSubtileIndex + 1);
         } else {
             QString subtileUses;
@@ -1463,7 +1463,7 @@ void LevelCelView::reportUsage()
                 subtileUses += QString::number(user + 1) + ", ";
             }
             subtileUses.chop(2);
-            dProgress() << tr("Subtile %1 is used by tile %2.", "", subtileUsers.count()).arg(this->currentSubtileIndex + 1).arg(subtileUses);
+            dProgress() << tr("Subtile %1 is used by tile %2.", "", subtileUsers.size()).arg(this->currentSubtileIndex + 1).arg(subtileUses);
         }
     }
 
@@ -1818,10 +1818,7 @@ bool LevelCelView::removeUnusedFrames()
 {
     ProgressDialog::incBar(tr("Removing unused frames..."), this->gfx->getFrameCount());
     // collect every frame uses
-    QList<bool> frameUsed;
-    for (int i = 0; i < this->gfx->getFrameCount(); i++) {
-        frameUsed.append(false);
-    }
+    std::vector<bool> frameUsed = std::vector<bool>(this->gfx->getFrameCount());
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         const std::vector<unsigned> &frameReferences = this->min->getFrameReferences(i);
         for (unsigned frameRef : frameReferences) {
@@ -1855,10 +1852,7 @@ bool LevelCelView::removeUnusedSubtiles()
 {
     ProgressDialog::incBar(tr("Removing unused subtiles..."), this->min->getSubtileCount());
     // collect every subtile uses
-    QList<bool> subtileUsed;
-    for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        subtileUsed.append(false);
-    }
+    std::vector<bool> subtileUsed = std::vector<bool>(this->min->getSubtileCount());
     for (int i = 0; i < this->til->getTileCount(); i++) {
         const std::vector<int> &subtileIndices = this->til->getSubtileIndices(i);
         for (int subtileIndex : subtileIndices) {
