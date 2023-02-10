@@ -131,7 +131,7 @@
        </widget>
       </item>
       <item row="3" column="0">
-       <widget class="QLabel" name="outputFolderLabel">
+       <widget class="QLabel" name="patchTilesetsLabel">
         <property name="text">
          <string>Patch Tilesets:</string>
         </property>
