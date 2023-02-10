@@ -37,7 +37,7 @@ LevelCelView::LevelCelView(QWidget *parent)
     this->ui->stopButton->setEnabled(false);
     this->playTimer.connect(&this->playTimer, SIGNAL(timeout()), this, SLOT(playGroup()));
     this->ui->tilesTabs->addTab(&this->tabTileWidget, tr("Tile properties"));
-    this->ui->tilesTabs->addTab(&this->tabSubTileWidget, tr("Subtile properties"));
+    this->ui->tilesTabs->addTab(&this->tabSubtileWidget, tr("Subtile properties"));
     this->ui->tilesTabs->addTab(&this->tabFrameWidget, tr("Frame properties"));
 
     // If a pixel of the frame, subtile or tile was clicked get pixel color index and notify the palette widgets
@@ -77,7 +77,7 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts)
     this->tmi = ts->tmi;
 
     this->tabTileWidget.initialize(this, this->til, this->min, this->amp);
-    this->tabSubTileWidget.initialize(this, this->gfx, this->min, this->sol, this->tmi);
+    this->tabSubtileWidget.initialize(this, this->gfx, this->min, this->sol, this->tmi);
     this->tabFrameWidget.initialize(this, this->gfx);
 
     this->update();
@@ -145,7 +145,7 @@ void LevelCelView::update()
         QString::number(this->til->getTileCount()));
 
     this->tabTileWidget.update();
-    this->tabSubTileWidget.update();
+    this->tabSubtileWidget.update();
     this->tabFrameWidget.update();
 }
 
@@ -212,7 +212,7 @@ void LevelCelView::framePixelClicked(const QPoint &pos, unsigned counter)
         quint16 frameRef = 0;
         if (minFrames.count() > stFrame) {
             frameRef = minFrames.at(stFrame);
-            this->tabSubTileWidget.selectFrame(stFrame);
+            this->tabSubtileWidget.selectFrame(stFrame);
         }
 
         if (frameRef > 0) {

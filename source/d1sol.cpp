@@ -26,7 +26,7 @@ bool D1Sol::load(QString filePath)
 
     const QByteArray fileData = file.readAll();
 
-    int subTileCount = fileData.size();
+    int subtileCount = fileData.size();
 
     this->subProperties.clear();
 
@@ -34,7 +34,7 @@ bool D1Sol::load(QString filePath)
     QDataStream in(fileData);
     in.setByteOrder(QDataStream::LittleEndian);
 
-    for (int i = 0; i < subTileCount; i++) {
+    for (int i = 0; i < subtileCount; i++) {
         quint8 readBytr;
         in >> readBytr;
         this->subProperties.append(readBytr);

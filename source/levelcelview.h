@@ -167,7 +167,7 @@ private:
     Ui::LevelCelView *ui;
     CelScene celScene = CelScene(this);
     LevelTabTileWidget tabTileWidget;
-    LevelTabSubTileWidget tabSubTileWidget;
+    LevelTabSubtileWidget tabSubtileWidget;
     LevelTabFrameWidget tabFrameWidget;
 
     D1Pal *pal;

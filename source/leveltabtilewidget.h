@@ -62,5 +62,5 @@ private:
 
     bool onUpdate = false;
     int lastTileIndex = -1;
-    int lastSubTileEntryIndex = 0;
+    int lastSubtileEntryIndex = 0;
 };
