@@ -80,6 +80,17 @@ bool D1Til::save(const SaveAsParam &params)
         return false;
     }
 
+    // validate the limit of subtile-indices
+    const unsigned limit = UINT16_MAX - 1;
+    for (const std::vector<int> &subtileIndicesList : this->subtileIndices) {
+        for (const int subtileIndex : subtileIndicesList) {
+            if (subtileIndex > limit) {
+                dProgressFail() << tr("The subtile indices can not be stored in this format. The limit is %1.").arg(limit);
+                return false;
+            }
+        }
+    }
+
     // write to file
     QDataStream out(&outFile);
     out.setByteOrder(QDataStream::LittleEndian);
