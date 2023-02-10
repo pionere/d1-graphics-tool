@@ -98,7 +98,7 @@ bool D1Tileset::reuseFrames(std::set<int> &removedIndices, bool silent)
             // reuse frame0 instead of frame1
             const unsigned frameRef = j + 1;
             for (int n = 0; n < this->min->getSubtileCount(); n++) {
-                QList<quint16> &frameReferences = this->min->getFrameReferences(n);
+                std::vector<unsigned> &frameReferences = this->min->getFrameReferences(n);
                 for (auto iter = frameReferences.begin(); iter != frameReferences.end(); iter++) {
                     if (*iter == frameRef) {
                         *iter = i + 1;
@@ -155,13 +155,13 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
             break;
         }
         for (int j = i + 1; j < this->min->getSubtileCount(); j++) {
-            QList<quint16> &frameReferences0 = this->min->getFrameReferences(i);
-            QList<quint16> &frameReferences1 = this->min->getFrameReferences(j);
-            if (frameReferences0.count() != frameReferences1.count()) {
+            std::vector<unsigned> &frameReferences0 = this->min->getFrameReferences(i);
+            std::vector<unsigned> &frameReferences1 = this->min->getFrameReferences(j);
+            if (frameReferences0.size() != frameReferences1.size()) {
                 continue; // should not happen, but better safe than sorry
             }
             bool match = true;
-            for (int x = 0; x < frameReferences0.count(); x++) {
+            for (int x = 0; x < frameReferences0.size(); x++) {
                 if (frameReferences0[x] == frameReferences1[x]) {
                     continue;
                 }

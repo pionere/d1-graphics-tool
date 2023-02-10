@@ -1,10 +1,12 @@
 #include "leveltabsubtilewidget.h"
 
+#include <vector>
+
 #include "levelcelview.h"
 #include "mainwindow.h"
 #include "ui_leveltabsubtilewidget.h"
 
-QPushButton *LevelTabSubTileWidget::addButton(QStyle::StandardPixmap type, QString tooltip, void (LevelTabSubTileWidget::*callback)(void))
+QPushButton *LevelTabSubtileWidget::addButton(QStyle::StandardPixmap type, QString tooltip, void (LevelTabSubtileWidget::*callback)(void))
 {
     QPushButton *button = new QPushButton(this->style()->standardIcon(type), "", nullptr);
     constexpr int iconSize = 16;
@@ -18,22 +20,22 @@ QPushButton *LevelTabSubTileWidget::addButton(QStyle::StandardPixmap type, QStri
     return button;
 }
 
-LevelTabSubTileWidget::LevelTabSubTileWidget()
+LevelTabSubtileWidget::LevelTabSubtileWidget()
     : QWidget(nullptr)
-    , ui(new Ui::LevelTabSubTileWidget())
+    , ui(new Ui::LevelTabSubtileWidget())
 {
     ui->setupUi(this);
 
-    this->clearButton = this->addButton(QStyle::SP_DialogResetButton, tr("Reset flags"), &LevelTabSubTileWidget::on_clearPushButtonClicked);
-    this->deleteButton = this->addButton(QStyle::SP_TrashIcon, tr("Delete the current subtile"), &LevelTabSubTileWidget::on_deletePushButtonClicked);
+    this->clearButton = this->addButton(QStyle::SP_DialogResetButton, tr("Reset flags"), &LevelTabSubtileWidget::on_clearPushButtonClicked);
+    this->deleteButton = this->addButton(QStyle::SP_TrashIcon, tr("Delete the current subtile"), &LevelTabSubtileWidget::on_deletePushButtonClicked);
 }
 
-LevelTabSubTileWidget::~LevelTabSubTileWidget()
+LevelTabSubtileWidget::~LevelTabSubtileWidget()
 {
     delete ui;
 }
 
-void LevelTabSubTileWidget::initialize(LevelCelView *v, D1Gfx *g, D1Min *m, D1Sol *s, D1Tmi *t)
+void LevelTabSubtileWidget::initialize(LevelCelView *v, D1Gfx *g, D1Min *m, D1Sol *s, D1Tmi *t)
 {
     this->levelCelView = v;
     this->gfx = g;
@@ -42,7 +44,7 @@ void LevelTabSubTileWidget::initialize(LevelCelView *v, D1Gfx *g, D1Min *m, D1So
     this->tmi = t;
 }
 
-void LevelTabSubTileWidget::update()
+void LevelTabSubtileWidget::update()
 {
     this->onUpdate = true;
 
@@ -98,7 +100,7 @@ void LevelTabSubTileWidget::update()
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
     quint8 solFlags = this->sol->getSubtileProperties(subtileIdx);
     quint8 tmiFlags = this->tmi->getSubtileProperties(subtileIdx);
-    QList<quint16> &frames = this->min->getFrameReferences(subtileIdx);
+    std::vector<unsigned> &frames = this->min->getFrameReferences(subtileIdx);
 
     this->ui->sol0->setChecked((solFlags & 1 << 0) != 0);
     this->ui->sol1->setChecked((solFlags & 1 << 1) != 0);
@@ -117,12 +119,12 @@ void LevelTabSubTileWidget::update()
     this->ui->tmi6->setChecked((tmiFlags & 1 << 6) != 0);
 
     // update combo box of the frames
-    while (this->ui->framesComboBox->count() > frames.count())
+    while ((unsigned)this->ui->framesComboBox->count() > frames.size())
         this->ui->framesComboBox->removeItem(0);
-    int i = 0;
-    while (this->ui->framesComboBox->count() < frames.count())
+    unsigned i = 0;
+    while ((unsigned)this->ui->framesComboBox->count() < frames.size())
         this->ui->framesComboBox->insertItem(0, QString::number(++i));
-    for (i = 0; i < frames.count(); i++) {
+    for (i = 0; i < frames.size(); i++) {
         this->ui->framesComboBox->setItemText(i, QString::number(frames[i]));
     }
     if (this->lastSubtileIndex != subtileIdx || this->ui->framesComboBox->currentIndex() == -1) {
@@ -135,13 +137,13 @@ void LevelTabSubTileWidget::update()
     this->onUpdate = false;
 }
 
-void LevelTabSubTileWidget::selectFrame(int index)
+void LevelTabSubtileWidget::selectFrame(int index)
 {
     this->ui->framesComboBox->setCurrentIndex(index);
     this->updateFramesSelection(index);
 }
 
-void LevelTabSubTileWidget::updateFramesSelection(int index)
+void LevelTabSubtileWidget::updateFramesSelection(int index)
 {
     this->lastFrameEntryIndex = index;
     int frameRef = this->ui->framesComboBox->currentText().toInt();
@@ -150,16 +152,16 @@ void LevelTabSubTileWidget::updateFramesSelection(int index)
     this->ui->framesNextButton->setEnabled(frameRef < this->gfx->getFrameCount());
 }
 
-void LevelTabSubTileWidget::setSolProperty(quint8 flags)
+void LevelTabSubtileWidget::setSolProperty(quint8 flags)
 {
-    int subTileIdx = this->levelCelView->getCurrentSubtileIndex();
+    int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
 
-    if (this->sol->setSubtileProperties(subTileIdx, flags)) {
+    if (this->sol->setSubtileProperties(subtileIdx, flags)) {
         this->levelCelView->updateLabel();
     }
 }
 
-void LevelTabSubTileWidget::updateSolProperty()
+void LevelTabSubtileWidget::updateSolProperty()
 {
     quint8 flags = 0;
     if (this->ui->sol0->checkState())
@@ -180,16 +182,16 @@ void LevelTabSubTileWidget::updateSolProperty()
     this->setSolProperty(flags);
 }
 
-void LevelTabSubTileWidget::setTmiProperty(quint8 flags)
+void LevelTabSubtileWidget::setTmiProperty(quint8 flags)
 {
-    int subTileIdx = this->levelCelView->getCurrentSubtileIndex();
+    int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
 
-    if (this->tmi->setSubtileProperties(subTileIdx, flags)) {
+    if (this->tmi->setSubtileProperties(subtileIdx, flags)) {
         this->levelCelView->updateLabel();
     }
 }
 
-void LevelTabSubTileWidget::updateTmiProperty()
+void LevelTabSubtileWidget::updateTmiProperty()
 {
     quint8 flags = 0;
     if (this->ui->tmi0->checkState())
@@ -210,94 +212,94 @@ void LevelTabSubTileWidget::updateTmiProperty()
     this->setTmiProperty(flags);
 }
 
-void LevelTabSubTileWidget::on_clearPushButtonClicked()
+void LevelTabSubtileWidget::on_clearPushButtonClicked()
 {
     this->setSolProperty(0);
     this->setTmiProperty(0);
     this->update();
 }
 
-void LevelTabSubTileWidget::on_deletePushButtonClicked()
+void LevelTabSubtileWidget::on_deletePushButtonClicked()
 {
     MainWindow *mw = (MainWindow *)this->window();
     mw->on_actionDel_Subtile_triggered();
 }
 
-void LevelTabSubTileWidget::on_sol0_clicked()
+void LevelTabSubtileWidget::on_sol0_clicked()
 {
     this->updateSolProperty();
 }
 
-void LevelTabSubTileWidget::on_sol1_clicked()
+void LevelTabSubtileWidget::on_sol1_clicked()
 {
     this->updateSolProperty();
 }
 
-void LevelTabSubTileWidget::on_sol2_clicked()
+void LevelTabSubtileWidget::on_sol2_clicked()
 {
     this->updateSolProperty();
 }
 
-void LevelTabSubTileWidget::on_sol3_clicked()
+void LevelTabSubtileWidget::on_sol3_clicked()
 {
     this->updateSolProperty();
 }
 
-void LevelTabSubTileWidget::on_sol4_clicked()
+void LevelTabSubtileWidget::on_sol4_clicked()
 {
     this->updateSolProperty();
 }
 
-void LevelTabSubTileWidget::on_sol5_clicked()
+void LevelTabSubtileWidget::on_sol5_clicked()
 {
     this->updateSolProperty();
 }
 
-void LevelTabSubTileWidget::on_sol7_clicked()
+void LevelTabSubtileWidget::on_sol7_clicked()
 {
     this->updateSolProperty();
 }
 
-void LevelTabSubTileWidget::on_tmi0_clicked()
+void LevelTabSubtileWidget::on_tmi0_clicked()
 {
     this->updateTmiProperty();
 }
 
-void LevelTabSubTileWidget::on_tmi1_clicked()
+void LevelTabSubtileWidget::on_tmi1_clicked()
 {
     this->updateTmiProperty();
 }
 
-void LevelTabSubTileWidget::on_tmi2_clicked()
+void LevelTabSubtileWidget::on_tmi2_clicked()
 {
     this->updateTmiProperty();
 }
 
-void LevelTabSubTileWidget::on_tmi3_clicked()
+void LevelTabSubtileWidget::on_tmi3_clicked()
 {
     this->updateTmiProperty();
 }
 
-void LevelTabSubTileWidget::on_tmi4_clicked()
+void LevelTabSubtileWidget::on_tmi4_clicked()
 {
     this->updateTmiProperty();
 }
 
-void LevelTabSubTileWidget::on_tmi5_clicked()
+void LevelTabSubtileWidget::on_tmi5_clicked()
 {
     this->updateTmiProperty();
 }
 
-void LevelTabSubTileWidget::on_tmi6_clicked()
+void LevelTabSubtileWidget::on_tmi6_clicked()
 {
     this->updateTmiProperty();
 }
 
-void LevelTabSubTileWidget::on_framesPrevButton_clicked()
+void LevelTabSubtileWidget::on_framesPrevButton_clicked()
 {
     int index = this->ui->framesComboBox->currentIndex();
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
-    QList<quint16> &frameReferences = this->min->getFrameReferences(subtileIdx);
+    std::vector<unsigned> &frameReferences = this->min->getFrameReferences(subtileIdx);
     int frameRef = frameReferences[index] - 1;
 
     if (frameRef < 0) {
@@ -313,14 +315,14 @@ void LevelTabSubTileWidget::on_framesPrevButton_clicked()
     }
 }
 
-void LevelTabSubTileWidget::on_framesComboBox_activated(int index)
+void LevelTabSubtileWidget::on_framesComboBox_activated(int index)
 {
     if (!this->onUpdate) {
         this->updateFramesSelection(index);
     }
 }
 
-void LevelTabSubTileWidget::on_framesComboBox_currentTextChanged(const QString &arg1)
+void LevelTabSubtileWidget::on_framesComboBox_currentTextChanged(const QString &arg1)
 {
     int index = this->lastFrameEntryIndex;
 
@@ -341,11 +343,11 @@ void LevelTabSubTileWidget::on_framesComboBox_currentTextChanged(const QString &
     }
 }
 
-void LevelTabSubTileWidget::on_framesNextButton_clicked()
+void LevelTabSubtileWidget::on_framesNextButton_clicked()
 {
     int index = this->ui->framesComboBox->currentIndex();
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
-    QList<quint16> &frameReferences = this->min->getFrameReferences(subtileIdx);
+    std::vector<unsigned> &frameReferences = this->min->getFrameReferences(subtileIdx);
     int frameRef = frameReferences[index] + 1;
 
     if (frameRef > this->gfx->getFrameCount()) {

@@ -236,7 +236,7 @@ quint8 *D1CelTilesetFrame::WriteSquare(const D1GfxFrame &frame, quint8 *pDst)
             D1GfxPixel pixel = frame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid transparent pixel in a Square frame.");
-                return pDst;
+                // return pDst;
             }
             *pDst = pixel.getPaletteIndex();
             ++pDst;
@@ -300,7 +300,7 @@ quint8 *D1CelTilesetFrame::WriteLeftTriangle(const D1GfxFrame &frame, quint8 *pD
             D1GfxPixel pixel = frame.getPixel(x, y);
             if (!pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid non-transparent pixel in the bottom part of the Left Triangle frame.");
-                return pDst;
+                // return pDst;
             }
         }
         pDst += i & 2;
@@ -309,7 +309,7 @@ quint8 *D1CelTilesetFrame::WriteLeftTriangle(const D1GfxFrame &frame, quint8 *pD
             D1GfxPixel pixel = frame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid transparent pixel in the bottom part of the Left Triangle frame.");
-                return pDst;
+                // return pDst;
             }
             *pDst = pixel.getPaletteIndex();
             ++pDst;
@@ -322,7 +322,7 @@ quint8 *D1CelTilesetFrame::WriteLeftTriangle(const D1GfxFrame &frame, quint8 *pD
             D1GfxPixel pixel = frame.getPixel(x, y);
             if (!pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid non-transparent pixel in the top part of the Left Triangle frame.");
-                return pDst;
+                // return pDst;
             }
         }
         pDst += i & 2;
@@ -331,7 +331,7 @@ quint8 *D1CelTilesetFrame::WriteLeftTriangle(const D1GfxFrame &frame, quint8 *pD
             D1GfxPixel pixel = frame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid transparent pixel in the top part of the Left Triangle frame.");
-                return pDst;
+                // return pDst;
             }
             *pDst = pixel.getPaletteIndex();
             ++pDst;
@@ -353,7 +353,7 @@ quint8 *D1CelTilesetFrame::WriteRightTriangle(const D1GfxFrame &frame, quint8 *p
             D1GfxPixel pixel = frame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid transparent pixel in the bottom part of the Right Triangle frame.");
-                return pDst;
+                // return pDst;
             }
             *pDst = pixel.getPaletteIndex();
             ++pDst;
@@ -364,7 +364,7 @@ quint8 *D1CelTilesetFrame::WriteRightTriangle(const D1GfxFrame &frame, quint8 *p
             D1GfxPixel pixel = frame.getPixel(x, y);
             if (!pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid non-transparent pixel in the bottom part of the Right Triangle frame.");
-                return pDst;
+                // return pDst;
             }
         }
     }
@@ -375,7 +375,7 @@ quint8 *D1CelTilesetFrame::WriteRightTriangle(const D1GfxFrame &frame, quint8 *p
             D1GfxPixel pixel = frame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid transparent pixel in the top part of the Right Triangle frame.");
-                return pDst;
+                // return pDst;
             }
             *pDst = pixel.getPaletteIndex();
             ++pDst;
@@ -386,7 +386,7 @@ quint8 *D1CelTilesetFrame::WriteRightTriangle(const D1GfxFrame &frame, quint8 *p
             D1GfxPixel pixel = frame.getPixel(x, y);
             if (!pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid non-transparent pixel in the top part of the Right Triangle frame.");
-                return pDst;
+                // return pDst;
             }
         }
     }
@@ -406,7 +406,7 @@ quint8 *D1CelTilesetFrame::WriteLeftTrapezoid(const D1GfxFrame &frame, quint8 *p
             D1GfxPixel pixel = frame.getPixel(x, y);
             if (!pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid non-transparent pixel in the bottom part of the Left Trapezoid frame.");
-                return pDst;
+                // return pDst;
             }
         }
         pDst += i & 2;
@@ -415,7 +415,7 @@ quint8 *D1CelTilesetFrame::WriteLeftTrapezoid(const D1GfxFrame &frame, quint8 *p
             D1GfxPixel pixel = frame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid transparent pixel in the bottom part of the Left Trapezoid frame.");
-                return pDst;
+                // return pDst;
             }
             *pDst = pixel.getPaletteIndex();
             ++pDst;
@@ -427,7 +427,7 @@ quint8 *D1CelTilesetFrame::WriteLeftTrapezoid(const D1GfxFrame &frame, quint8 *p
             D1GfxPixel pixel = frame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid transparent pixel in the top part of the Left Trapezoid frame.");
-                return pDst;
+                // return pDst;
             }
             *pDst = pixel.getPaletteIndex();
             ++pDst;
@@ -449,7 +449,7 @@ quint8 *D1CelTilesetFrame::WriteRightTrapezoid(const D1GfxFrame &frame, quint8 *
             D1GfxPixel pixel = frame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid transparent pixel in the bottom part of the Right Trapezoid frame.");
-                return pDst;
+                // return pDst;
             }
             *pDst = pixel.getPaletteIndex();
             ++pDst;
@@ -460,7 +460,7 @@ quint8 *D1CelTilesetFrame::WriteRightTrapezoid(const D1GfxFrame &frame, quint8 *
             D1GfxPixel pixel = frame.getPixel(x, y);
             if (!pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid non-transparent pixel in the bottom part of the Right Trapezoid frame.");
-                return pDst;
+                // return pDst;
             }
         }
     }
@@ -470,7 +470,7 @@ quint8 *D1CelTilesetFrame::WriteRightTrapezoid(const D1GfxFrame &frame, quint8 *
             D1GfxPixel pixel = frame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 dProgressErr() << QApplication::tr("Invalid transparent pixel in the top part of the Right Trapezoid frame.");
-                return pDst;
+                // return pDst;
             }
             *pDst = pixel.getPaletteIndex();
             ++pDst;

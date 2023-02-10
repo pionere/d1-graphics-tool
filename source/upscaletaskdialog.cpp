@@ -1,6 +1,7 @@
 #include "upscaletaskdialog.h"
 
 #include <set>
+#include <vector>
 
 #include <QDateTime>
 #include <QDir>
@@ -229,9 +230,9 @@ void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const Upscal
 static void RemoveMicro(D1Min *min, int subtileRef, int microIndex, std::set<unsigned> &deletedFrames)
 {
     int subtileIndex = subtileRef - 1;
-    QList<quint16> &frameReferences = min->getFrameReferences(subtileIndex);
+    std::vector<unsigned> &frameReferences = min->getFrameReferences(subtileIndex);
     // assert(min->getSubtileWidth() == 2);
-    int index = frameReferences.count() - (2 + (microIndex & ~1)) + (microIndex & 1);
+    int index = frameReferences.size() - (2 + (microIndex & ~1)) + (microIndex & 1);
     unsigned frameReference = frameReferences[index];
     if (frameReference != 0) {
         deletedFrames.insert(frameReference);
@@ -448,8 +449,8 @@ static void PatchMinData(int dunType, D1Min *min, D1Gfx *gfx)
         // shift references
         // - shift frame indices of the subtiles
         for (int i = 0; i < min->getSubtileCount(); i++) {
-            QList<quint16> &frameReferences = min->getFrameReferences(i);
-            for (int n = 0; n < frameReferences.count(); n++) {
+            std::vector<unsigned> &frameReferences = min->getFrameReferences(i);
+            for (unsigned n = 0; n < frameReferences.size(); n++) {
                 if (frameReferences[n] >= refIndex) {
                     if (frameReferences[n] == refIndex) {
                         frameReferences[n] = 0;

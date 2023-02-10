@@ -231,7 +231,7 @@
         <number>40</number>
        </property>
        <property name="toolTip">
-        <string>Previous SubTile</string>
+        <string>Previous Subtile</string>
        </property>
        <property name="text">
         <string notr="true">&lt;</string>
@@ -260,7 +260,7 @@
         <number>40</number>
        </property>
        <property name="toolTip">
-        <string>Next SubTile</string>
+        <string>Next Subtile</string>
        </property>
        <property name="text">
         <string notr="true">&gt;</string>

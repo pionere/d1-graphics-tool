@@ -5,7 +5,7 @@
 #include <QWidget>
 
 namespace Ui {
-class LevelTabSubTileWidget;
+class LevelTabSubtileWidget;
 } // namespace Ui
 
 class LevelCelView;
@@ -14,12 +14,12 @@ class D1Min;
 class D1Sol;
 class D1Tmi;
 
-class LevelTabSubTileWidget : public QWidget {
+class LevelTabSubtileWidget : public QWidget {
     Q_OBJECT
 
 public:
-    explicit LevelTabSubTileWidget();
-    ~LevelTabSubTileWidget();
+    explicit LevelTabSubtileWidget();
+    ~LevelTabSubtileWidget();
 
     void initialize(LevelCelView *v, D1Gfx *gfx, D1Min *min, D1Sol *sol, D1Tmi *tmi);
     void update();
@@ -52,14 +52,14 @@ private slots:
     void on_framesNextButton_clicked();
 
 private:
-    QPushButton *addButton(QStyle::StandardPixmap type, QString tooltip, void (LevelTabSubTileWidget::*callback)(void));
+    QPushButton *addButton(QStyle::StandardPixmap type, QString tooltip, void (LevelTabSubtileWidget::*callback)(void));
     void updateFramesSelection(int index);
     void setSolProperty(quint8 flags);
     void updateSolProperty();
     void setTmiProperty(quint8 flags);
     void updateTmiProperty();
 
-    Ui::LevelTabSubTileWidget *ui;
+    Ui::LevelTabSubtileWidget *ui;
     QPushButton *clearButton;
     QPushButton *deleteButton;
     LevelCelView *levelCelView;

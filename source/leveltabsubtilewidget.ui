@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LevelTabSubTileWidget</class>
- <widget class="QWidget" name="LevelTabSubTileWidget">
+ <class>LevelTabSubtileWidget</class>
+ <widget class="QWidget" name="LevelTabSubtileWidget">
   <layout class="QVBoxLayout" name="verticalLayout_0">
    <property name="spacing">
     <number>4</number>

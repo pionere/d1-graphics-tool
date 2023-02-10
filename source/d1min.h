@@ -1,9 +1,9 @@
 #pragma once
 
 #include <map>
+#include <vector>
 
 #include <QImage>
-#include <QList>
 #include <QMap>
 
 #include "d1celtilesetframe.h"
@@ -26,7 +26,7 @@ public:
     QImage getSubtileImage(int subtileIndex) const;
 
     void removeFrame(int frameIndex);
-    void insertSubtile(int subtileIndex, const QList<quint16> &frameReferencesList);
+    void insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList);
     void createSubtile();
     void removeSubtile(int subtileIndex);
     void remapSubtiles(const QMap<unsigned, unsigned> &remap);
@@ -39,14 +39,14 @@ public:
     void setSubtileWidth(int width);
     quint16 getSubtileHeight() const;
     void setSubtileHeight(int height);
-    QList<quint16> &getFrameReferences(int subtileIndex) const;
-    bool setFrameReference(int subtileIndex, int index, int frameRef);
+    std::vector<unsigned> &getFrameReferences(int subtileIndex) const;
+    bool setFrameReference(int subtileIndex, int index, unsigned frameRef);
 
 private:
     QString minFilePath;
     bool modified;
     quint8 subtileWidth;
     quint8 subtileHeight;
-    QList<QList<quint16>> frameReferences;
+    std::vector<std::vector<unsigned>> frameReferences;
     D1Gfx *gfx = nullptr;
 };

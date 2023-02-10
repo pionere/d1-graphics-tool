@@ -113,10 +113,10 @@ void LevelTabTileWidget::update()
     }
     if (this->lastTileIndex != tileIdx || this->ui->subtilesComboBox->currentIndex() == -1) {
         this->lastTileIndex = tileIdx;
-        this->lastSubTileEntryIndex = 0;
+        this->lastSubtileEntryIndex = 0;
         this->ui->subtilesComboBox->setCurrentIndex(0);
     }
-    this->updateSubtilesSelection(this->lastSubTileEntryIndex);
+    this->updateSubtilesSelection(this->lastSubtileEntryIndex);
 
     this->onUpdate = false;
 }
@@ -129,7 +129,7 @@ void LevelTabTileWidget::selectSubtile(int index)
 
 void LevelTabTileWidget::updateSubtilesSelection(int index)
 {
-    this->lastSubTileEntryIndex = index;
+    this->lastSubtileEntryIndex = index;
     int subtileIdx = this->ui->subtilesComboBox->currentText().toInt() - 1;
 
     this->ui->subtilesPrevButton->setEnabled(subtileIdx > 0);
@@ -262,7 +262,7 @@ void LevelTabTileWidget::on_subtilesComboBox_activated(int index)
 
 void LevelTabTileWidget::on_subtilesComboBox_currentTextChanged(const QString &arg1)
 {
-    int index = this->lastSubTileEntryIndex;
+    int index = this->lastSubtileEntryIndex;
 
     if (this->onUpdate || this->ui->subtilesComboBox->currentIndex() != index)
         return; // on update or side effect of combobox activated -> ignore
