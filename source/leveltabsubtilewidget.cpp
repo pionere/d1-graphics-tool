@@ -1,5 +1,7 @@
 #include "leveltabsubtilewidget.h"
 
+#include <vector>
+
 #include "levelcelview.h"
 #include "mainwindow.h"
 #include "ui_leveltabsubtilewidget.h"
@@ -98,7 +100,7 @@ void LevelTabSubtileWidget::update()
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
     quint8 solFlags = this->sol->getSubtileProperties(subtileIdx);
     quint8 tmiFlags = this->tmi->getSubtileProperties(subtileIdx);
-    QList<quint16> &frames = this->min->getFrameReferences(subtileIdx);
+    std::vector<unsigned> &frames = this->min->getFrameReferences(subtileIdx);
 
     this->ui->sol0->setChecked((solFlags & 1 << 0) != 0);
     this->ui->sol1->setChecked((solFlags & 1 << 1) != 0);
@@ -117,12 +119,12 @@ void LevelTabSubtileWidget::update()
     this->ui->tmi6->setChecked((tmiFlags & 1 << 6) != 0);
 
     // update combo box of the frames
-    while (this->ui->framesComboBox->count() > frames.count())
+    while ((unsigned)this->ui->framesComboBox->count() > frames.size())
         this->ui->framesComboBox->removeItem(0);
-    int i = 0;
-    while (this->ui->framesComboBox->count() < frames.count())
+    unsigned i = 0;
+    while ((unsigned)this->ui->framesComboBox->count() < frames.size())
         this->ui->framesComboBox->insertItem(0, QString::number(++i));
-    for (i = 0; i < frames.count(); i++) {
+    for (i = 0; i < frames.size(); i++) {
         this->ui->framesComboBox->setItemText(i, QString::number(frames[i]));
     }
     if (this->lastSubtileIndex != subtileIdx || this->ui->framesComboBox->currentIndex() == -1) {
@@ -297,7 +299,7 @@ void LevelTabSubtileWidget::on_framesPrevButton_clicked()
 {
     int index = this->ui->framesComboBox->currentIndex();
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
-    QList<quint16> &frameReferences = this->min->getFrameReferences(subtileIdx);
+    std::vector<unsigned> &frameReferences = this->min->getFrameReferences(subtileIdx);
     int frameRef = frameReferences[index] - 1;
 
     if (frameRef < 0) {
@@ -345,7 +347,7 @@ void LevelTabSubtileWidget::on_framesNextButton_clicked()
 {
     int index = this->ui->framesComboBox->currentIndex();
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
-    QList<quint16> &frameReferences = this->min->getFrameReferences(subtileIdx);
+    std::vector<unsigned> &frameReferences = this->min->getFrameReferences(subtileIdx);
     int frameRef = frameReferences[index] + 1;
 
     if (frameRef > this->gfx->getFrameCount()) {

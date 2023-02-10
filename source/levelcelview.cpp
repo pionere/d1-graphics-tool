@@ -207,10 +207,10 @@ void LevelCelView::framePixelClicked(const QPoint &pos, unsigned counter)
         stx /= MICRO_WIDTH;
         sty /= MICRO_HEIGHT;
 
-        int stFrame = sty * subtileWidth / MICRO_WIDTH + stx;
-        QList<quint16> &minFrames = this->min->getFrameReferences(this->currentSubtileIndex);
-        quint16 frameRef = 0;
-        if (minFrames.count() > stFrame) {
+        unsigned stFrame = sty * subtileWidth / MICRO_WIDTH + stx;
+        std::vector<unsigned> &minFrames = this->min->getFrameReferences(this->currentSubtileIndex);
+        unsigned frameRef = 0;
+        if (minFrames.size() > stFrame) {
             frameRef = minFrames.at(stFrame);
             this->tabSubtileWidget.selectFrame(stFrame);
         }
@@ -320,7 +320,7 @@ void LevelCelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &ima
 
 void LevelCelView::assignFrames(const QImage &image, int subtileIndex, int frameIndex)
 {
-    QList<quint16> frameReferencesList;
+    std::vector<unsigned> frameReferencesList;
 
     // TODO: merge with LevelCelView::insertSubtile ?
     QImage subImage = QImage(MICRO_WIDTH, MICRO_HEIGHT, QImage::Format_ARGB32);
@@ -338,7 +338,7 @@ void LevelCelView::assignFrames(const QImage &image, int subtileIndex, int frame
                     subImage.setPixelColor(i, j, color);
                 }
             }
-            frameReferencesList.append(hasColor ? frameIndex + 1 : 0);
+            frameReferencesList.push_back(hasColor ? frameIndex + 1 : 0);
             if (!hasColor) {
                 continue;
             }
@@ -360,7 +360,7 @@ void LevelCelView::assignFrames(const QImage &image, int subtileIndex, int frame
 
 void LevelCelView::assignFrames(const D1GfxFrame &frame, int subtileIndex, int frameIndex)
 {
-    QList<quint16> frameReferencesList;
+    std::vector<unsigned> frameReferencesList;
 
     // TODO: merge with LevelCelView::insertSubtile ?
     for (int y = 0; y < frame.getHeight(); y += MICRO_HEIGHT) {
@@ -373,7 +373,7 @@ void LevelCelView::assignFrames(const D1GfxFrame &frame, int subtileIndex, int f
                     }
                 }
             }
-            frameReferencesList.append(hasColor ? frameIndex + 1 : 0);
+            frameReferencesList.push_back(hasColor ? frameIndex + 1 : 0);
             if (!hasColor) {
                 continue;
             }
@@ -524,8 +524,8 @@ void LevelCelView::insertFrames(IMAGE_FILE_MODE mode, const QStringList &imagefi
         unsigned frameRef = this->currentFrameIndex + 1;
         // shift frame indices of the subtiles
         for (int i = 0; i < this->min->getSubtileCount(); i++) {
-            QList<quint16> &frameReferences = this->min->getFrameReferences(i);
-            for (int n = 0; n < frameReferences.count(); n++) {
+            std::vector<unsigned> &frameReferences = this->min->getFrameReferences(i);
+            for (unsigned n = 0; n < frameReferences.size(); n++) {
                 if (frameReferences[n] >= frameRef) {
                     frameReferences[n] += deltaFrameCount;
                 }
@@ -757,7 +757,7 @@ void LevelCelView::insertSubtiles(IMAGE_FILE_MODE mode, const QStringList &image
 
 void LevelCelView::insertSubtile(int subtileIndex, const QImage &image)
 {
-    QList<quint16> frameReferencesList;
+    std::vector<unsigned> frameReferencesList;
 
     int frameIndex = this->gfx->getFrameCount();
     QImage subImage = QImage(MICRO_WIDTH, MICRO_HEIGHT, QImage::Format_ARGB32);
@@ -776,7 +776,7 @@ void LevelCelView::insertSubtile(int subtileIndex, const QImage &image)
                 }
             }
 
-            frameReferencesList.append(hasColor ? frameIndex + 1 : 0);
+            frameReferencesList.push_back(hasColor ? frameIndex + 1 : 0);
 
             if (!hasColor) {
                 continue;
@@ -794,7 +794,7 @@ void LevelCelView::insertSubtile(int subtileIndex, const QImage &image)
 
 void LevelCelView::insertSubtile(int subtileIndex, const D1GfxFrame &frame)
 {
-    QList<quint16> frameReferencesList;
+    std::vector<unsigned> frameReferencesList;
 
     int frameIndex = this->gfx->getFrameCount();
     for (int y = 0; y < frame.getHeight(); y += MICRO_HEIGHT) {
@@ -808,7 +808,7 @@ void LevelCelView::insertSubtile(int subtileIndex, const D1GfxFrame &frame)
                 }
             }
 
-            frameReferencesList.append(hasColor ? frameIndex + 1 : 0);
+            frameReferencesList.push_back(hasColor ? frameIndex + 1 : 0);
 
             if (!hasColor) {
                 continue;
@@ -1402,8 +1402,8 @@ void LevelCelView::collectFrameUsers(int frameIndex, QList<int> &users) const
     unsigned frameRef = frameIndex + 1;
 
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        const QList<quint16> &frameReferences = this->min->getFrameReferences(i);
-        for (quint16 reference : frameReferences) {
+        const std::vector<unsigned> &frameReferences = this->min->getFrameReferences(i);
+        for (unsigned reference : frameReferences) {
             if (reference == frameRef) {
                 users.append(i);
                 break;
@@ -1823,8 +1823,8 @@ bool LevelCelView::removeUnusedFrames()
         frameUsed.append(false);
     }
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        const QList<quint16> &frameReferences = this->min->getFrameReferences(i);
-        for (quint16 frameRef : frameReferences) {
+        const std::vector<unsigned> &frameReferences = this->min->getFrameReferences(i);
+        for (unsigned frameRef : frameReferences) {
             if (frameRef != 0) {
                 frameUsed[frameRef - 1] = true;
             }
@@ -2015,7 +2015,7 @@ bool LevelCelView::sortFrames_impl()
     unsigned idx = 1;
 
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        QList<quint16> &frameReferences = this->min->getFrameReferences(i);
+        std::vector<unsigned> &frameReferences = this->min->getFrameReferences(i);
         for (auto sit = frameReferences.begin(); sit != frameReferences.end(); ++sit) {
             if (*sit == 0) {
                 continue;

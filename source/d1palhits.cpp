@@ -67,10 +67,10 @@ void D1PalHits::buildSubtilePalHits()
         QMap<quint8, int> subtileHits;
 
         // Retrieve the CEL frame references of the current sub-tile
-        QList<quint16> &frameReferences = this->tileset->min->getFrameReferences(i);
+        std::vector<unsigned> &frameReferences = this->tileset->min->getFrameReferences(i);
 
         // Go through the CEL frames
-        for (quint16 frameRef : frameReferences) {
+        for (unsigned frameRef : frameReferences) {
             if (frameRef == 0)
                 continue;
             // Go through the hits of the CEL frame and add them to the subtile hits

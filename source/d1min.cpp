@@ -74,11 +74,7 @@ bool D1Min::load(QString filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CE
     // prepare an empty list with zeros
     this->frameReferences.clear();
     for (int i = 0; i < subtileCount; i++) {
-        QList<quint16> frameReferencesList;
-        for (int j = 0; j < subtileNumberOfCelFrames; j++) {
-            frameReferencesList.append(0);
-        }
-        this->frameReferences.append(frameReferencesList);
+        this->frameReferences.push_back(std::vector<unsigned>(subtileNumberOfCelFrames));
     }
 
     // Read MIN binary data
@@ -86,7 +82,7 @@ bool D1Min::load(QString filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CE
     in.setByteOrder(QDataStream::LittleEndian);
 
     for (int i = 0; i < minSubtileCount; i++) {
-        QList<quint16> &frameReferencesList = this->frameReferences[i];
+        std::vector<unsigned> &frameReferencesList = this->frameReferences[i];
         for (int j = 0; j < subtileNumberOfCelFrames; j++) {
             quint16 readWord;
             in >> readWord;
@@ -137,9 +133,9 @@ bool D1Min::save(const SaveAsParam &params)
     // write to file
     QDataStream out(&outFile);
     out.setByteOrder(QDataStream::LittleEndian);
-    for (int i = 0; i < this->frameReferences.size(); i++) {
-        QList<quint16> &frameReferencesList = this->frameReferences[i];
-        int subtileNumberOfCelFrames = frameReferencesList.count();
+    for (unsigned i = 0; i < this->frameReferences.size(); i++) {
+        std::vector<unsigned> &frameReferencesList = this->frameReferences[i];
+        int subtileNumberOfCelFrames = frameReferencesList.size();
         for (int j = 0; j < subtileNumberOfCelFrames; j++) {
             quint16 writeWord;
             if (!upscaled) {
@@ -164,7 +160,7 @@ bool D1Min::save(const SaveAsParam &params)
 
 QImage D1Min::getSubtileImage(int subtileIndex) const
 {
-    if (subtileIndex < 0 || subtileIndex >= this->frameReferences.size())
+    if (subtileIndex < 0 || (unsigned)subtileIndex >= this->frameReferences.size())
         return QImage();
 
     unsigned subtileWidthPx = this->subtileWidth * MICRO_WIDTH;
@@ -176,7 +172,7 @@ QImage D1Min::getSubtileImage(int subtileIndex) const
     unsigned dx = 0, dy = 0;
     int n = this->subtileWidth * this->subtileHeight;
     for (int i = 0; i < n; i++) {
-        quint16 frameRef = this->frameReferences.at(subtileIndex).at(i);
+        unsigned frameRef = this->frameReferences[subtileIndex][i];
 
         if (frameRef > 0)
             subtilePainter.drawImage(dx, dy,
@@ -210,7 +206,7 @@ void D1Min::setModified()
 
 int D1Min::getSubtileCount() const
 {
-    return this->frameReferences.count();
+    return this->frameReferences.size();
 }
 
 quint16 D1Min::getSubtileWidth() const
@@ -230,20 +226,19 @@ void D1Min::setSubtileWidth(int width)
     }
     if (diff > 0) {
         // extend the subtile-width
-        for (int i = 0; i < this->frameReferences.size(); i++) {
-            QList<quint16> &frameReferencesList = this->frameReferences[i];
+        for (unsigned i = 0; i < this->frameReferences.size(); i++) {
+            std::vector<unsigned> &frameReferencesList = this->frameReferences[i];
             for (int y = 0; y < this->subtileHeight; y++) {
-                for (int dx = 0; dx < diff; dx++) {
-                    frameReferencesList.insert(y * width + prevWidth, 0);
-                }
+                auto sit = frameReferencesList.begin() + y * width + prevWidth;
+                frameReferencesList.insert(sit, diff, 0);
             }
         }
     } else if (diff < 0) {
         diff = -diff;
         // check if there is a non-zero frame in the subtiles
         bool hasFrame = false;
-        for (int i = 0; i < this->frameReferences.size() && !hasFrame; i++) {
-            QList<quint16> &frameReferencesList = this->frameReferences[i];
+        for (unsigned i = 0; i < this->frameReferences.size() && !hasFrame; i++) {
+            std::vector<unsigned> &frameReferencesList = this->frameReferences[i];
             for (int y = 0; y < this->subtileHeight; y++) {
                 for (int x = width; x < prevWidth; x++) {
                     if (frameReferencesList[y * prevWidth + x] != 0) {
@@ -261,12 +256,11 @@ void D1Min::setSubtileWidth(int width)
             }
         }
         // reduce the subtile-width
-        for (int i = 0; i < this->frameReferences.size(); i++) {
-            QList<quint16> &frameReferencesList = this->frameReferences[i];
+        for (unsigned i = 0; i < this->frameReferences.size(); i++) {
+            std::vector<unsigned> &frameReferencesList = this->frameReferences[i];
             for (int y = 0; y < this->subtileHeight; y++) {
-                for (int dx = 0; dx < diff; dx++) {
-                    frameReferencesList.takeAt((y + 1) * width);
-                }
+                auto sit = frameReferencesList.begin() + (y + 1) * width;
+                frameReferencesList.erase(sit, sit + diff);
             }
         }
     }
@@ -292,19 +286,17 @@ void D1Min::setSubtileHeight(int height)
     if (diff > 0) {
         // extend the subtile-height
         int n = diff * width;
-        for (int i = 0; i < this->frameReferences.size(); i++) {
-            QList<quint16> &frameReferencesList = this->frameReferences[i];
-            for (int j = 0; j < n; j++) {
-                frameReferencesList.push_front(0);
-            }
+        for (unsigned i = 0; i < this->frameReferences.size(); i++) {
+            std::vector<unsigned> &frameReferencesList = this->frameReferences[i];
+            frameReferencesList.insert(frameReferencesList.begin(), n, 0);
         }
     } else if (diff < 0) {
         diff = -diff;
         // check if there is a non-zero frame in the subtiles
         bool hasFrame = false;
         int n = diff * width;
-        for (int i = 0; i < this->frameReferences.size() && !hasFrame; i++) {
-            QList<quint16> &frameReferencesList = this->frameReferences[i];
+        for (unsigned i = 0; i < this->frameReferences.size() && !hasFrame; i++) {
+            std::vector<unsigned> &frameReferencesList = this->frameReferences[i];
             for (int j = 0; j < n; j++) {
                 if (frameReferencesList[j] != 0) {
                     hasFrame = true;
@@ -320,8 +312,8 @@ void D1Min::setSubtileHeight(int height)
             }
         }
         // reduce the subtile-height
-        for (int i = 0; i < this->frameReferences.size(); i++) {
-            QList<quint16> &frameReferencesList = this->frameReferences[i];
+        for (unsigned i = 0; i < this->frameReferences.size(); i++) {
+            std::vector<unsigned> &frameReferencesList = this->frameReferences[i];
             frameReferencesList.erase(frameReferencesList.begin(), frameReferencesList.begin() + n);
         }
     }
@@ -329,12 +321,12 @@ void D1Min::setSubtileHeight(int height)
     this->modified = true;
 }
 
-QList<quint16> &D1Min::getFrameReferences(int subtileIndex) const
+std::vector<unsigned> &D1Min::getFrameReferences(int subtileIndex) const
 {
-    return const_cast<QList<quint16> &>(this->frameReferences.at(subtileIndex));
+    return const_cast<std::vector<unsigned> &>(this->frameReferences.at(subtileIndex));
 }
 
-bool D1Min::setFrameReference(int subtileIndex, int index, int frameRef)
+bool D1Min::setFrameReference(int subtileIndex, int index, unsigned frameRef)
 {
     if (this->frameReferences[subtileIndex][index] == frameRef) {
         return false;
@@ -350,8 +342,8 @@ void D1Min::removeFrame(int frameIndex)
     // shift references
     // - shift frame indices of the subtiles
     unsigned refIndex = frameIndex + 1;
-    for (QList<quint16> &frameRefs : this->frameReferences) {
-        for (int n = 0; n < frameRefs.count(); n++) {
+    for (std::vector<unsigned> &frameRefs : this->frameReferences) {
+        for (unsigned n = 0; n < frameRefs.size(); n++) {
             if (frameRefs[n] >= refIndex) {
                 if (frameRefs[n] == refIndex) {
                     frameRefs[n] = 0;
@@ -364,36 +356,32 @@ void D1Min::removeFrame(int frameIndex)
     }
 }
 
-void D1Min::insertSubtile(int subtileIndex, const QList<quint16> &frameReferencesList)
+void D1Min::insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList)
 {
-    this->frameReferences.insert(subtileIndex, frameReferencesList);
+    this->frameReferences.insert(this->frameReferences.begin() + subtileIndex, frameReferencesList);
     this->modified = true;
 }
 
 void D1Min::createSubtile()
 {
-    QList<quint16> frameReferencesList;
     int n = this->subtileWidth * this->subtileHeight;
 
-    for (int i = 0; i < n; i++) {
-        frameReferencesList.append(0);
-    }
-    this->frameReferences.append(frameReferencesList);
+    this->frameReferences.push_back(std::vector<unsigned>(n));
     this->modified = true;
 }
 
 void D1Min::removeSubtile(int subtileIndex)
 {
-    this->frameReferences.removeAt(subtileIndex);
+    this->frameReferences.erase(this->frameReferences.begin() + subtileIndex);
     this->modified = true;
 }
 
 void D1Min::remapSubtiles(const QMap<unsigned, unsigned> &remap)
 {
-    QList<QList<quint16>> newFrameReferences;
+    std::vector<std::vector<unsigned>> newFrameReferences;
 
     for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
-        newFrameReferences.append(this->frameReferences.at(iter.value()));
+        newFrameReferences.push_back(this->frameReferences.at(iter.value()));
     }
     this->frameReferences.swap(newFrameReferences);
     this->modified = true;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include <QList>
 
 class D1Gfx;
@@ -17,5 +19,5 @@ public:
 private:
     static void upscaleFrame(D1GfxFrame *frame, const UpscalingParam &params);
     static D1GfxFrame *createSubtileFrame(const D1Gfx *gfx, const D1Min *min, int subtileIndex);
-    static void storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<quint16>> &newFrameReferences, QList<D1GfxFrame *> &newframes);
+    static void storeSubtileFrame(const D1GfxFrame *subtileFrame, std::vector<std::vector<unsigned>> &newFrameReferences, QList<D1GfxFrame *> &newframes);
 };

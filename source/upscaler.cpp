@@ -3152,8 +3152,8 @@ D1GfxFrame *Upscaler::createSubtileFrame(const D1Gfx *gfx, const D1Min *min, int
     }
     int x = 0;
     int y = 0;
-    const QList<quint16> &frameReferences = min->getFrameReferences(subtileIndex);
-    for (quint16 frameRef : frameReferences) {
+    const std::vector<unsigned> &frameReferences = min->getFrameReferences(subtileIndex);
+    for (unsigned frameRef : frameReferences) {
         if (frameRef == 0) {
             for (int yy = 0; yy < MICRO_HEIGHT; yy++) {
                 for (int xx = 0; xx < MICRO_WIDTH; xx++) {
@@ -3177,9 +3177,9 @@ D1GfxFrame *Upscaler::createSubtileFrame(const D1Gfx *gfx, const D1Min *min, int
     return subtileFrame;
 }
 
-void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<quint16>> &newFrameReferences, QList<D1GfxFrame *> &newFrames)
+void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, std::vector<std::vector<unsigned>> &newFrameReferences, QList<D1GfxFrame *> &newFrames)
 {
-    QList<quint16> subtileFramesRefs;
+    std::vector<unsigned> subtileFramesRefs;
     int x = 0;
     for (int y = 0; y < subtileFrame->height;) {
         bool hasColor = false;
@@ -3193,7 +3193,7 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<qui
         }
         if (hasColor) {
             newFrames.append(new D1GfxFrame());
-            subtileFramesRefs.append(newFrames.size());
+            subtileFramesRefs.push_back(newFrames.size());
             D1GfxFrame *newFrame = newFrames.last();
             newFrame->width = MICRO_WIDTH;
             newFrame->height = MICRO_HEIGHT;
@@ -3207,7 +3207,7 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<qui
             }
             LevelTabFrameWidget::selectFrameType(newFrame);
         } else {
-            subtileFramesRefs.append(0);
+            subtileFramesRefs.push_back(0);
         }
 
         x += MICRO_WIDTH;
@@ -3216,7 +3216,7 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<qui
             y += MICRO_HEIGHT;
         }
     }
-    newFrameReferences.append(subtileFramesRefs);
+    newFrameReferences.push_back(subtileFramesRefs);
 }
 
 bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params)
@@ -3232,7 +3232,7 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     upParams.pal = nullptr;
 
     QList<D1GfxFrame *> newFrames;
-    QList<QList<quint16>> newFrameReferences;
+    std::vector<std::vector<unsigned>> newFrameReferences;
 
     QPair<int, QString> progress;
     progress.first = -1;
