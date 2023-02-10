@@ -89,7 +89,7 @@ void LevelTabTileWidget::update()
     int tileIdx = this->levelCelView->getCurrentTileIndex();
     quint8 ampType = this->amp->getTileType(tileIdx);
     quint8 ampProperty = this->amp->getTileProperties(tileIdx);
-    QList<quint16> &subtiles = this->til->getSubtileIndices(tileIdx);
+    std::vector<int> &subtiles = this->til->getSubtileIndices(tileIdx);
 
     // update the combo box of the amp-type
     this->ui->ampTypeComboBox->setCurrentIndex(ampType);
@@ -103,12 +103,11 @@ void LevelTabTileWidget::update()
     this->ui->amp6->setChecked((ampProperty & 1 << 6) != 0);
     this->ui->amp7->setChecked((ampProperty & 1 << 7) != 0);
     // update combo box of the subtiles
-    while (this->ui->subtilesComboBox->count() > subtiles.count())
+    for (int i = this->ui->subtilesComboBox->count() - subtiles.size(); i > 0; i--)
         this->ui->subtilesComboBox->removeItem(0);
-    int i = 0;
-    while (this->ui->subtilesComboBox->count() < subtiles.count())
-        this->ui->subtilesComboBox->insertItem(0, QString::number(++i));
-    for (i = 0; i < subtiles.count(); i++) {
+    for (int i = subtiles.size() - this->ui->subtilesComboBox->count(); i > 0; i--)
+        this->ui->subtilesComboBox->addItem("");
+    for (unsigned i = 0; i < subtiles.size(); i++) {
         this->ui->subtilesComboBox->setItemText(i, QString::number(subtiles[i] + 1));
     }
     if (this->lastTileIndex != tileIdx || this->ui->subtilesComboBox->currentIndex() == -1) {
@@ -237,7 +236,7 @@ void LevelTabTileWidget::on_subtilesPrevButton_clicked()
 {
     int index = this->ui->subtilesComboBox->currentIndex();
     int tileIdx = this->levelCelView->getCurrentTileIndex();
-    QList<quint16> &subtileIndices = this->til->getSubtileIndices(tileIdx);
+    std::vector<int> &subtileIndices = this->til->getSubtileIndices(tileIdx);
     int subtileIdx = subtileIndices[index] - 1;
 
     if (subtileIdx < 0) {
@@ -285,7 +284,7 @@ void LevelTabTileWidget::on_subtilesNextButton_clicked()
 {
     int index = this->ui->subtilesComboBox->currentIndex();
     int tileIdx = this->levelCelView->getCurrentTileIndex();
-    QList<quint16> &subtileIndices = this->til->getSubtileIndices(tileIdx);
+    std::vector<int> &subtileIndices = this->til->getSubtileIndices(tileIdx);
     int subtileIdx = subtileIndices[index] + 1;
 
     if (subtileIdx > this->min->getSubtileCount() - 1) {

@@ -1,7 +1,8 @@
 #pragma once
 
+#include <vector>
+
 #include <QImage>
-#include <QList>
 
 #include "d1min.h"
 #include "saveasdialog.h"
@@ -21,7 +22,7 @@ public:
 
     QImage getTileImage(int tileIndex) const;
     QImage getFlatTileImage(int tileIndex) const;
-    void insertTile(int tileIndex, const QList<quint16> &subtileIndices);
+    void insertTile(int tileIndex, const std::vector<int> &subtileIndices);
     void createTile();
     void removeTile(int tileIndex);
 
@@ -30,12 +31,12 @@ public:
     bool isModified() const;
     void setModified();
     int getTileCount() const;
-    QList<quint16> &getSubtileIndices(int tileIndex) const;
+    std::vector<int> &getSubtileIndices(int tileIndex) const;
     bool setSubtileIndex(int tileIndex, int index, int subtileIndex);
 
 private:
     QString tilFilePath;
     bool modified;
-    QList<QList<quint16>> subtileIndices;
+    std::vector<std::vector<int>> subtileIndices;
     D1Min *min = nullptr;
 };

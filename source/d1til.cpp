@@ -46,13 +46,13 @@ bool D1Til::load(QString filePath, D1Min *m)
 
     this->subtileIndices.clear();
     for (int i = 0; i < tileCount; i++) {
-        QList<quint16> subtileIndicesList;
+        std::vector<int> subtileIndicesList;
         for (int j = 0; j < TILE_SIZE; j++) {
             quint16 readWord;
             in >> readWord;
-            subtileIndicesList.append(readWord);
+            subtileIndicesList.push_back(readWord);
         }
-        this->subtileIndices.append(subtileIndicesList);
+        this->subtileIndices.push_back(subtileIndicesList);
     }
     this->tilFilePath = filePath;
     this->modified = !file.isOpen();
@@ -83,8 +83,7 @@ bool D1Til::save(const SaveAsParam &params)
     // write to file
     QDataStream out(&outFile);
     out.setByteOrder(QDataStream::LittleEndian);
-    for (int i = 0; i < this->subtileIndices.count(); i++) {
-        QList<quint16> &subtileIndicesList = this->subtileIndices[i];
+    for (const std::vector<int> &subtileIndicesList : this->subtileIndices) {
         for (int j = 0; j < TILE_SIZE; j++) {
             quint16 writeWord = subtileIndicesList[j];
             out << writeWord;
@@ -99,7 +98,7 @@ bool D1Til::save(const SaveAsParam &params)
 
 QImage D1Til::getTileImage(int tileIndex) const
 {
-    if (tileIndex < 0 || tileIndex >= this->subtileIndices.size())
+    if (tileIndex < 0 || (unsigned)tileIndex >= this->subtileIndices.size())
         return QImage();
 
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
@@ -135,7 +134,7 @@ QImage D1Til::getTileImage(int tileIndex) const
 
 QImage D1Til::getFlatTileImage(int tileIndex) const
 {
-    if (tileIndex < 0 || tileIndex >= this->subtileIndices.size())
+    if (tileIndex < 0 || (unsigned)tileIndex >= this->subtileIndices.size())
         return QImage();
 
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
@@ -176,12 +175,12 @@ void D1Til::setModified()
 
 int D1Til::getTileCount() const
 {
-    return this->subtileIndices.count();
+    return this->subtileIndices.size();
 }
 
-QList<quint16> &D1Til::getSubtileIndices(int tileIndex) const
+std::vector<int> &D1Til::getSubtileIndices(int tileIndex) const
 {
-    return const_cast<QList<quint16> &>(this->subtileIndices.at(tileIndex));
+    return const_cast<std::vector<int> &>(this->subtileIndices.at(tileIndex));
 }
 
 bool D1Til::setSubtileIndex(int tileIndex, int index, int subtileIndex)
@@ -194,25 +193,20 @@ bool D1Til::setSubtileIndex(int tileIndex, int index, int subtileIndex)
     return true;
 }
 
-void D1Til::insertTile(int tileIndex, const QList<quint16> &subtileIndices)
+void D1Til::insertTile(int tileIndex, const std::vector<int> &subtileIndices)
 {
-    this->subtileIndices.insert(tileIndex, subtileIndices);
+    this->subtileIndices.insert(this->subtileIndices.begin() + tileIndex, subtileIndices);
     this->modified = true;
 }
 
 void D1Til::createTile()
 {
-    QList<quint16> subtileIndices;
-
-    for (int i = 0; i < TILE_SIZE; i++) {
-        subtileIndices.append(0);
-    }
-    this->subtileIndices.append(subtileIndices);
+    this->subtileIndices.push_back(std::vector<int>(TILE_SIZE));
     this->modified = true;
 }
 
 void D1Til::removeTile(int tileIndex)
 {
-    this->subtileIndices.removeAt(tileIndex);
+    this->subtileIndices.erase(this->subtileIndices.begin() + tileIndex);
     this->modified = true;
 }

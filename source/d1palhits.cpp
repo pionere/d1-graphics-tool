@@ -95,12 +95,12 @@ void D1PalHits::buildTilePalHits()
     for (int i = 0; i < this->tileset->til->getTileCount(); i++) {
         QMap<quint8, int> tileHits;
 
-        // Retrieve the sub-tile indices of the current tile
-        QList<quint16> &subtileIndices = this->tileset->til->getSubtileIndices(i);
+        // Retrieve the subtile indices of the current tile
+        std::vector<int> &subtileIndices = this->tileset->til->getSubtileIndices(i);
 
-        // Go through the sub-tiles
-        for (quint16 subtileIndex : subtileIndices) {
-            // Go through the hits of the sub-tile and add them to the tile hits
+        // Go through the subtiles
+        for (int subtileIndex : subtileIndices) {
+            // Go through the hits of the subtile and add them to the tile hits
             QMapIterator<quint8, int> it2(this->subtilePalHits.value(subtileIndex));
             while (it2.hasNext()) {
                 it2.next();
