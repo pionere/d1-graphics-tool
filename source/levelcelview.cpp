@@ -2107,16 +2107,10 @@ void LevelCelView::sortTileset()
 
 void LevelCelView::upscale(const UpscaleParam &params)
 {
-    int amount = this->min->getSubtileCount();
-
-    ProgressDialog::incBar(tr("Upscaling tileset..."), amount + 1);
-
     if (Upscaler::upscaleTileset(this->gfx, this->min, params)) {
         // update the view - done by the caller
         // this->displayFrame();
     }
-
-    ProgressDialog::decBar();
 }
 
 void LevelCelView::displayFrame()

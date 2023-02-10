@@ -3094,6 +3094,7 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, const UpscalingParam &upParams)
 bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
 {
     int amount = gfx->getFrameCount();
+    ProgressDialog::incBar(QApplication::tr("Upscaling graphics..."), amount + 1);
 
     UpscalingParam upParams;
     upParams.multiplier = params.multiplier;
@@ -3134,6 +3135,8 @@ bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
     qDeleteAll(newFrames);
     progress.second = QString(QApplication::tr("Upscaled %n frame(s).", "", amount)).arg(amount);
     dProgress() << progress;
+
+    ProgressDialog::decBar();
     return true;
 }
 
@@ -3219,6 +3222,7 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, QList<QList<qui
 bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params)
 {
     int amount = min->getSubtileCount();
+    ProgressDialog::incBar(QApplication::tr("Upscaling tileset..."), amount + 1);
 
     UpscalingParam upParams;
     upParams.multiplier = params.multiplier;
@@ -3272,5 +3276,7 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     qDeleteAll(newFrames);
     progress.second = QString(QApplication::tr("Upscaled %n subtile(s).", "", amount)).arg(amount);
     dProgress() << progress;
+
+    ProgressDialog::decBar();
     return true;
 }
