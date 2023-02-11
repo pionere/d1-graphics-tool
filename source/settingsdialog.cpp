@@ -5,6 +5,7 @@
 #include <QMessageBox>
 
 #include "config.h"
+#include "mainwindow.h"
 #include "ui_settingsdialog.h"
 
 SettingsDialog::SettingsDialog(QWidget *parent)

@@ -8,6 +8,7 @@
 #include <QStyle>
 #include <QTextBlock>
 
+#include "mainwindow.h"
 #include "ui_progressdialog.h"
 #include "ui_progresswidget.h"
 
