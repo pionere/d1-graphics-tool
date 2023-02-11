@@ -184,7 +184,8 @@ ProgressDialog::ProgressDialog(QWidget *parent)
     theDialog = this;
 
     // disable context menu (of the scroll bars)
-    this->setContextMenuPolicy(Qt::NoContextMenu);
+    this->ui->outputTextEdit->horizontalScrollBar()->setContextMenuPolicy(Qt::NoContextMenu);
+    this->ui->outputTextEdit->verticalScrollBar()->setContextMenuPolicy(Qt::NoContextMenu);
 }
 
 ProgressDialog::~ProgressDialog()

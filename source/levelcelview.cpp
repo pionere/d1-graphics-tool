@@ -1823,13 +1823,13 @@ void LevelCelView::checkSubtileFlags()
             if (tmiFlags & (1 << 0)) {
                 // transp.wall
                 // - trapezoid floor on the left without transparency
-                if ((/*(leftType == D1CEL_FRAME_TYPE::LeftTrapezoid || */ (leftAbove && leftPixels > 20)) && !(tmiFlags & (1 << 3))) {
-                    dProgressErr() << tr("Subtile %1 has wall transparency on the wall, but the left floor is trapezoid and it does not have transparency. %2").arg(i + 1).arg(leftPixels);
+                if ((/*(leftType == D1CEL_FRAME_TYPE::LeftTrapezoid || */ (leftAbove && leftPixels > 30)) && !(tmiFlags & (1 << 3))) {
+                    dProgressErr() << tr("Subtile %1 has transparency on the wall while the frames above the left floor are not empty, but the left floor with many (%2) foliage pixels does not have transparency.").arg(i + 1).arg(leftPixels);
                     result = true;
                 }
                 // - trapezoid floor on the right without transparency
-                if ((/*(rightType == D1CEL_FRAME_TYPE::RightTrapezoid || */ (rightAbove && rightPixels > 20)) && !(tmiFlags & (1 << 6))) {
-                    dProgressErr() << tr("Subtile %1 has wall transparency on the wall, but the right floor is trapezoid and it does not have transparency. %2").arg(i + 1).arg(rightPixels);
+                if ((/*(rightType == D1CEL_FRAME_TYPE::RightTrapezoid || */ (rightAbove && rightPixels > 30)) && !(tmiFlags & (1 << 6))) {
+                    dProgressErr() << tr("Subtile %1 has transparency on the wall while the frames above the right floor are not empty, but the right floor with many (%2) foliage pixels does not have transparency.").arg(i + 1).arg(leftPixels);
                     result = true;
                 }
             }
