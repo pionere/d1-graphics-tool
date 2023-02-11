@@ -1569,7 +1569,7 @@ void LevelCelView::checkSubtileFlags()
 {
     ProgressDialog::incBar(tr("Checking SOL flags..."), this->min->getSubtileCount());
     bool result = false;
-    unsigned floorMicros = this->min->setSubtileWidth() * this->min->setSubtileWidth() / 2;
+    unsigned floorMicros = this->min->getSubtileWidth() * this->min->getSubtileWidth() / 2;
     // SOL:
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         // if (ProgressDialog::wasCanceled())
