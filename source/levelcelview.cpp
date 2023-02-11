@@ -1609,7 +1609,7 @@ void LevelCelView::checkSubtileFlags()
     // SOL:
     QPair<int, QString> progress;
     progress.first = -1;
-    progress.second = QApplication::tr("SOL inconsistencies:");
+    progress.second = tr("SOL inconsistencies:");
     dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         const std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
@@ -1695,7 +1695,7 @@ void LevelCelView::checkSubtileFlags()
         }
     }
     if (!result) {
-        progress.second = QApplication::tr("No inconsistency detected in the SOL flags.");
+        progress.second = tr("No inconsistency detected in the SOL flags.");
         dProgress() << progress;
     }
 
@@ -1705,7 +1705,7 @@ void LevelCelView::checkSubtileFlags()
     // TMI:
     result = false;
     progress.first = -1;
-    progress.second = QApplication::tr("TMI inconsistencies:");
+    progress.second = tr("TMI inconsistencies:");
     dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         const std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
@@ -1874,7 +1874,7 @@ void LevelCelView::checkSubtileFlags()
         }
     }
     if (!result) {
-        progress.second = QApplication::tr("No inconsistency detected in the TMI flags.");
+        progress.second = tr("No inconsistency detected in the TMI flags.");
         dProgress() << progress;
     }
 
@@ -1884,8 +1884,13 @@ void LevelCelView::checkSubtileFlags()
 void LevelCelView::checkTileFlags()
 {
     ProgressDialog::incBar(tr("Checking AMP flags..."), 1);
-    // AMP:
     bool result = false;
+
+    // AMP:
+    QPair<int, QString> progress;
+    progress.first = -1;
+    progress.second = tr("AMP inconsistencies:");
+    dProgress() << progress;
     for (int i = 0; i < this->til->getTileCount(); i++) {
         quint8 ampType = this->amp->getTileType(i);
         quint8 ampFlags = this->amp->getTileProperties(i);
@@ -2023,10 +2028,17 @@ void LevelCelView::checkTileFlags()
         }
     }
     if (!result) {
-        dProgress() << tr("No inconsistency detected.");
+        progress.second = tr("No inconsistency detected in the AMP flags.");
+        dProgress() << progress;
     }
 
     ProgressDialog::decBar();
+}
+
+void LevelCelView::checkTilesetFlags()
+{
+    this->checkTileFlags();
+    this->checkSubtileFlags();
 }
 
 bool LevelCelView::removeUnusedFrames()

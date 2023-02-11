@@ -137,6 +137,7 @@
     <addaction name="separator"/>
     <addaction name="actionCheckSubtileFlags_Tileset"/>
     <addaction name="actionCheckTileFlags_Tileset"/>
+    <addaction name="actionCheckTilesetFlags_Tileset"/>
     <addaction name="separator"/>
     <addaction name="actionCleanupFrames_Tileset"/>
     <addaction name="actionCleanupSubtiles_Tileset"/>
@@ -342,6 +343,14 @@
    </property>
    <property name="toolTip">
     <string>List inconsistent tile-flags (AMP)</string>
+   </property>
+  </action>
+  <action name="actionCheckTilesetFlags_Tileset">
+   <property name="text">
+    <string>Check Tileset Flags</string>
+   </property>
+   <property name="toolTip">
+    <string>List inconsistent tile-flags (AMP) and subtile-flags (SOL + TMI)</string>
    </property>
   </action>
   <action name="actionCleanupFrames_Tileset">

@@ -1447,6 +1447,16 @@ void MainWindow::on_actionCheckTileFlags_Tileset_triggered()
     ProgressDialog::done();
 }
 
+void MainWindow::on_actionCheckTilesetFlags_Tileset_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->checkTilesetFlags();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
 void MainWindow::on_actionCleanupFrames_Tileset_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
