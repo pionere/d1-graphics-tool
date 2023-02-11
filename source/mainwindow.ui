@@ -132,8 +132,10 @@
      <bool>true</bool>
     </property>
     <addaction name="actionReportUse_Tileset"/>
-    <addaction name="actionResetFrameTypes_Tileset"/>
     <addaction name="actionInefficientFrames_Tileset"/>
+    <addaction name="separator"/>
+    <addaction name="actionResetFrameTypes_Tileset"/>
+    <addaction name="actionPatchTileset_Tileset"/>
     <addaction name="separator"/>
     <addaction name="actionCheckSubtileFlags_Tileset"/>
     <addaction name="actionCheckTileFlags_Tileset"/>
@@ -313,6 +315,14 @@
     <string>List the uses of the current frame/subtile/tile</string>
    </property>
   </action>
+  <action name="actionInefficientFrames_Tileset">
+   <property name="text">
+    <string>Inefficient Frames</string>
+   </property>
+   <property name="toolTip">
+    <string>List frames which are almost standard</string>
+   </property>
+  </action>
   <action name="actionResetFrameTypes_Tileset">
    <property name="text">
     <string>Reset Frame Types</string>
@@ -321,12 +331,12 @@
     <string>Reinitialize the frame types of every frame</string>
    </property>
   </action>
-  <action name="actionInefficientFrames_Tileset">
+  <action name="actionPatchTileset_Tileset">
    <property name="text">
-    <string>Inefficient Frames</string>
+    <string>Patch Tileset</string>
    </property>
    <property name="toolTip">
-    <string>List frames which are almost standard</string>
+    <string>Patch subtiles of the vanilla game</string>
    </property>
   </action>
   <action name="actionCheckSubtileFlags_Tileset">

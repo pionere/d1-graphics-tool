@@ -169,6 +169,7 @@ MainWindow::~MainWindow()
     delete this->saveAsDialog;
     delete this->settingsDialog;
     delete this->exportDialog;
+    delete this->patchTilesetDialog;
     delete this->upscaleDialog;
     delete this->upscaleTaskDialog;
 }
@@ -1407,6 +1408,16 @@ void MainWindow::on_actionReportUse_Tileset_triggered()
     ProgressDialog::done();
 }
 
+void MainWindow::on_actionInefficientFrames_Tileset_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->inefficientFrames();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
 void MainWindow::on_actionResetFrameTypes_Tileset_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
@@ -1417,14 +1428,13 @@ void MainWindow::on_actionResetFrameTypes_Tileset_triggered()
     ProgressDialog::done();
 }
 
-void MainWindow::on_actionInefficientFrames_Tileset_triggered()
+void MainWindow::on_actionPatchTileset_Tileset_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
-
-    this->levelCelView->inefficientFrames();
-
-    // Clear loading message from status bar
-    ProgressDialog::done();
+    if (this->patchTilesetDialog == nullptr) {
+        this->patchTilesetDialog = new PatchTilesetDialog(this);
+    }
+    this->patchTilesetDialog->initialize(this->tileset);
+    this->patchTilesetDialog->show();
 }
 
 void MainWindow::on_actionCheckSubtileFlags_Tileset_triggered()

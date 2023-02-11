@@ -22,6 +22,8 @@ public:
     bool reuseFrames(std::set<int> &removedIndices, bool silent);
     bool reuseSubtiles(std::set<int> &removedIndices);
 
+    void patch(int dunType);
+
     D1Gfx *gfx;
     D1Min *min;
     D1Til *til;
