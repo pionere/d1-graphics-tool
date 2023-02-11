@@ -1799,7 +1799,7 @@ void LevelCelView::checkSubtileFlags()
             D1CEL_FRAME_TYPE leftType = D1CEL_FRAME_TYPE::Empty;
             D1CEL_FRAME_TYPE rightType = D1CEL_FRAME_TYPE::Empty;
             int leftPixels = 0;
-            int leftPixels = 0;
+            int rightPixels = 0;
             if (frameRefLeft != 0) {
                 leftPixels = leftFoliagePixels(this->gfx->getFrame(frameRefLeft - 1));
                 leftType = this->gfx->getFrame(frameRefLeft - 1)->getFrameType();
