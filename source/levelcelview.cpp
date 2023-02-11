@@ -1567,10 +1567,11 @@ void LevelCelView::inefficientFrames()
 
 static bool hasLeftFoliage(const D1GfxFrame *frame)
 {
+    int limit = 10;
     for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
         for (int x = 0; x < MICRO_WIDTH; x++) {
             if (!frame->getPixel(x, y).isTransparent()) {
-                if (x < (MICRO_WIDTH - y * 2)) {
+                if (x < (MICRO_WIDTH - y * 2) && --limit < 0) {
                     return true;
                 }
             }
@@ -1579,7 +1580,7 @@ static bool hasLeftFoliage(const D1GfxFrame *frame)
     for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
         for (int x = 0; x < MICRO_WIDTH; x++) {
             if (!frame->getPixel(x, y).isTransparent()) {
-                if (x < (y * 2 - MICRO_WIDTH)) {
+                if (x < (y * 2 - MICRO_WIDTH) && --limit < 0) {
                     return true;
                 }
             }
@@ -1590,10 +1591,11 @@ static bool hasLeftFoliage(const D1GfxFrame *frame)
 
 static bool hasRightFoliage(const D1GfxFrame *frame)
 {
+    int limit = 10;
     for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
         for (int x = 0; x < MICRO_WIDTH; x++) {
             if (!frame->getPixel(x, y).isTransparent()) {
-                if (x >= y * 2) {
+                if (x >= y * 2 && --limit < 0) {
                     return true;
                 }
             }
@@ -1602,7 +1604,7 @@ static bool hasRightFoliage(const D1GfxFrame *frame)
     for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
         for (int x = 0; x < MICRO_WIDTH; x++) {
             if (!frame->getPixel(x, y).isTransparent()) {
-                if (x >= (2 * MICRO_WIDTH - y * 2)) {
+                if (x >= (2 * MICRO_WIDTH - y * 2) && --limit < 0) {
                     return true;
                 }
             }
