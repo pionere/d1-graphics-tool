@@ -160,9 +160,17 @@ MainWindow::~MainWindow()
     Config::setLastFilePath(this->lastFilePath);
     // cleanup memory
     delete ui;
-    delete this->undoStack;
+
     delete this->undoAction;
     delete this->redoAction;
+    delete this->undoStack;
+
+    delete this->openAsDialog;
+    delete this->saveAsDialog;
+    delete this->settingsDialog;
+    delete this->exportDialog;
+    delete this->upscaleDialog;
+    delete this->upscaleTaskDialog;
 }
 
 MainWindow &dMainWindow()
@@ -1143,8 +1151,11 @@ void MainWindow::addTiles(bool append)
 
 void MainWindow::on_actionOpenAs_triggered()
 {
-    this->openAsDialog.initialize();
-    this->openAsDialog.show();
+    if (this->openAsDialog == nullptr) {
+        this->openAsDialog = new OpenAsDialog(this);
+    }
+    this->openAsDialog->initialize();
+    this->openAsDialog->show();
 }
 
 void MainWindow::on_actionSave_triggered()
@@ -1159,8 +1170,11 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_actionSaveAs_triggered()
 {
-    this->saveAsDialog.initialize(this->gfx, this->tileset);
-    this->saveAsDialog.show();
+    if (this->saveAsDialog == nullptr) {
+        this->saveAsDialog = new SaveAsDialog(this);
+    }
+    this->saveAsDialog->initialize(this->gfx, this->tileset);
+    this->saveAsDialog->show();
 }
 
 void MainWindow::on_actionClose_triggered()
@@ -1200,14 +1214,20 @@ void MainWindow::on_actionClose_triggered()
 
 void MainWindow::on_actionSettings_triggered()
 {
-    this->settingsDialog.initialize();
-    this->settingsDialog.show();
+    if (this->settingsDialog == nullptr) {
+        this->settingsDialog = new SettingsDialog(this);
+    }
+    this->settingsDialog->initialize();
+    this->settingsDialog->show();
 }
 
 void MainWindow::on_actionExport_triggered()
 {
-    this->exportDialog.initialize(this->gfx, this->tileset);
-    this->exportDialog.show();
+    if (this->exportDialog == nullptr) {
+        this->exportDialog = new ExportDialog(this);
+    }
+    this->exportDialog->initialize(this->gfx, this->tileset);
+    this->exportDialog->show();
 }
 
 void MainWindow::on_actionQuit_triggered()
@@ -1370,8 +1390,11 @@ void MainWindow::on_actionStop_Draw_triggered()
 
 void MainWindow::on_actionUpscale_triggered()
 {
-    this->upscaleDialog.initialize(this->gfx);
-    this->upscaleDialog.show();
+    if (this->upscaleDialog == nullptr) {
+        this->upscaleDialog = new UpscaleDialog(this);
+    }
+    this->upscaleDialog->initialize(this->gfx);
+    this->upscaleDialog->show();
 }
 
 void MainWindow::on_actionReportUse_Tileset_triggered()
@@ -1823,7 +1846,10 @@ void MainWindow::on_actionClose_Translation_Base_triggered()
 
 void MainWindow::on_actionUpscaleTask_triggered()
 {
-    this->upscaleTaskDialog.show();
+    if (this->upscaleTaskDialog == nullptr) {
+        this->upscaleTaskDialog = new UpscaleTaskDialog(this);
+    }
+    this->upscaleTaskDialog->show();
 }
 
 #if defined(Q_OS_WIN)

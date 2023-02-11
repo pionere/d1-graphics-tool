@@ -239,12 +239,12 @@ private:
 
     ProgressDialog progressDialog = ProgressDialog(this);
     ProgressWidget progressWidget = ProgressWidget(this);
-    OpenAsDialog openAsDialog = OpenAsDialog(this);
-    SaveAsDialog saveAsDialog = SaveAsDialog(this);
-    SettingsDialog settingsDialog = SettingsDialog(this);
-    ExportDialog exportDialog = ExportDialog(this);
-    UpscaleDialog upscaleDialog = UpscaleDialog(this);
-    UpscaleTaskDialog upscaleTaskDialog = UpscaleTaskDialog(this);
+    OpenAsDialog *openAsDialog = nullptr;
+    SaveAsDialog *saveAsDialog = nullptr;
+    SettingsDialog *settingsDialog = nullptr;
+    ExportDialog *exportDialog = nullptr;
+    UpscaleDialog *upscaleDialog = nullptr;
+    UpscaleTaskDialog *upscaleTaskDialog = nullptr;
 
     D1Pal *pal = nullptr;
     D1Trn *trnUnique = nullptr;
