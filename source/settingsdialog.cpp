@@ -165,7 +165,7 @@ void SettingsDialog::on_settingsOkButton_clicked()
         return;
     }
 
-    emit this->configurationSaved();
+    dMainWindow().reloadConfig();
 
     this->close();
 }

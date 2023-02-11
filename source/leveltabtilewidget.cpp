@@ -175,8 +175,7 @@ void LevelTabTileWidget::on_clearPushButtonClicked()
 
 void LevelTabTileWidget::on_deletePushButtonClicked()
 {
-    MainWindow *mw = (MainWindow *)this->window();
-    mw->on_actionDel_Tile_triggered();
+    dMainWindow().on_actionDel_Tile_triggered();
 }
 
 void LevelTabTileWidget::on_ampTypeComboBox_activated(int index)

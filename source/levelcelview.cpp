@@ -2210,16 +2210,14 @@ void LevelCelView::displayFrame()
 
 void LevelCelView::playGroup()
 {
-    MainWindow *mw = (MainWindow *)this->window();
-
-    mw->nextPaletteCycle((D1PAL_CYCLE_TYPE)this->ui->playComboBox->currentIndex());
+    dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)this->ui->playComboBox->currentIndex());
 
     // this->displayFrame();
 }
 
 void LevelCelView::ShowContextMenu(const QPoint &pos)
 {
-    MainWindow *mw = (MainWindow *)this->window();
+    MainWindow *mw = &dMainWindow();
     QAction actions[15];
     QMenu contextMenu(this);
 
@@ -2571,7 +2569,7 @@ void LevelCelView::on_playButton_clicked()
     // enable the stop button
     this->ui->stopButton->setEnabled(true);
     // preserve the palette
-    ((MainWindow *)this->window())->initPaletteCycle();
+    dMainWindow().initPaletteCycle();
 
     this->playTimer.start(this->currentPlayDelay);
 }
@@ -2581,7 +2579,7 @@ void LevelCelView::on_stopButton_clicked()
     this->playTimer.stop();
 
     // restore palette
-    ((MainWindow *)this->window())->resetPaletteCycle();
+    dMainWindow().resetPaletteCycle();
     // disable the stop button
     this->ui->stopButton->setEnabled(false);
     // enable the related fields
@@ -2611,5 +2609,5 @@ void LevelCelView::dropEvent(QDropEvent *event)
         filePaths.append(url.toLocalFile());
     }
     // try to insert as frames
-    ((MainWindow *)this->window())->openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
+    dMainWindow().openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
 }

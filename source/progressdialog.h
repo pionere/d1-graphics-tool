@@ -129,9 +129,6 @@ private:
 
     static void consumeMessages();
 
-signals:
-    void updateWindow();
-
 private:
     Ui::ProgressDialog *ui;
 

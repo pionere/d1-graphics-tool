@@ -246,7 +246,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
 void ProgressDialog::done()
 {
     if (theDialog->afterFlags & PAF_UPDATE_WINDOW) {
-        emit theDialog->updateWindow();
+        dMainWindow().updateWindow();
     }
 
     theDialog->setWindowTitle(" ");

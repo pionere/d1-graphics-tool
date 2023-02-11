@@ -61,8 +61,7 @@ UpscaleTaskDialog::~UpscaleTaskDialog()
 
 void UpscaleTaskDialog::on_listfilesFileBrowseButton_clicked()
 {
-    MainWindow *qw = (MainWindow *)this->parentWidget();
-    QString filePath = qw->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select listfiles.txt"), tr("TXT Files (*.txt *.TXT)"));
+    QString filePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select listfiles.txt"), tr("TXT Files (*.txt *.TXT)"));
 
     if (filePath.isEmpty())
         return;

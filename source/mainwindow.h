@@ -81,6 +81,11 @@ public:
     explicit MainWindow();
     ~MainWindow();
 
+    friend MainWindow &dMainWindow();
+
+    void reloadConfig();
+    void updateWindow();
+
     void openFile(const OpenAsParam &params);
     void openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append);
     void openPalFiles(QStringList filePaths, PaletteWidget *widget);
@@ -100,7 +105,6 @@ public:
     static bool hasImageUrl(const QMimeData *mimeData);
 
 private:
-    void updateWindow();
     void failWithError(const QString &error);
 
     void changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel, bool all);
@@ -116,7 +120,6 @@ private:
     void frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter);
     void frameModified();
     void colorModified();
-    void reloadConfig();
 
     void addFrames(bool append);
     void addSubtiles(bool append);
@@ -258,3 +261,5 @@ private:
     // buffer to store the original colors in case of color cycling
     QColor origCyclePalette[32];
 };
+
+MainWindow &dMainWindow();
