@@ -272,7 +272,7 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, c
     }
     // Patch MIN if requested
     if (params.patchTilesets) {
-        tileset.patch(dunType);
+        tileset.patch(dunType, true);
     }
     // upscale
     if (Upscaler::upscaleTileset(tileset.gfx, tileset.min, upParams, true)) {

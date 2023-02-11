@@ -218,8 +218,8 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
     return result != 0;
 }
 
-#define Blk2Mcr(n, x) RemoveMicro(min, n, x, deletedFrames);
-static void RemoveMicro(D1Min *min, int subtileRef, int microIndex, std::set<unsigned> &deletedFrames)
+#define Blk2Mcr(n, x) RemoveMicro(min, n, x, deletedFrames, silent);
+static void RemoveMicro(D1Min *min, int subtileRef, int microIndex, std::set<unsigned> &deletedFrames, bool silent)
 {
     int subtileIndex = subtileRef - 1;
     std::vector<unsigned> &frameReferences = min->getFrameReferences(subtileIndex);
@@ -229,12 +229,15 @@ static void RemoveMicro(D1Min *min, int subtileRef, int microIndex, std::set<uns
     if (frameReference != 0) {
         deletedFrames.insert(frameReference);
         min->setFrameReference(subtileIndex, index, 0);
+        if (!silent) {
+            dProgress() << QApplication::tr("Replaced Frame %1 in Subtile %2.").arg(frameReference).arg(subtileIndex + 1);
+        }
     } else {
         dProgressWarn() << QApplication::tr("Frame %1 of Subtile %2 is already empty.").arg(index + 1).arg(subtileIndex + 1);
     }
 }
 
-void D1Tileset::patch(int dunType)
+void D1Tileset::patch(int dunType, bool silent)
 {
     std::set<unsigned> deletedFrames;
     switch (dunType) {

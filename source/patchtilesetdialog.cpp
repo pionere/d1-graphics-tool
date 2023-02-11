@@ -25,7 +25,7 @@ void PatchTilesetDialog::on_runButton_clicked()
 
     this->close();
 
-    this->tileset->patch(dungeonType);
+    this->tileset->patch(dungeonType, false);
 }
 
 void PatchTilesetDialog::on_cancelButton_clicked()
