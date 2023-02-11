@@ -3091,10 +3091,10 @@ void Upscaler::upscaleFrame(D1GfxFrame *frame, const UpscalingParam &upParams)
     frame->height *= multiplier;
 }
 
-bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params)
+bool Upscaler::upscaleGfx(D1Gfx *gfx, const UpscaleParam &params, bool silent)
 {
     int amount = gfx->getFrameCount();
-    ProgressDialog::incBar(QApplication::tr("Upscaling graphics..."), amount + 1);
+    ProgressDialog::incBar(silent ? QStringLiteral("") : QApplication::tr("Upscaling graphics..."), amount + 1);
 
     UpscalingParam upParams;
     upParams.multiplier = params.multiplier;
@@ -3177,9 +3177,13 @@ D1GfxFrame *Upscaler::createSubtileFrame(const D1Gfx *gfx, const D1Min *min, int
     return subtileFrame;
 }
 
-void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, std::vector<std::vector<unsigned>> &newFrameReferences, QList<D1GfxFrame *> &newFrames)
+int Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, std::vector<std::vector<unsigned>> &newFrameReferences, QList<D1GfxFrame *> &newFrames)
 {
     std::vector<unsigned> subtileFramesRefs;
+
+    int padding = (8 * (subtileFrame->width / MICRO_WIDTH) / 2 - (subtileFrame->height / MICRO_HEIGHT)) * (subtileFrame->width / MICRO_WIDTH);
+    subtileFramesRefs.resize(padding);
+
     int x = 0;
     for (int y = 0; y < subtileFrame->height;) {
         bool hasColor = false;
@@ -3217,12 +3221,13 @@ void Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, std::vector<std
         }
     }
     newFrameReferences.push_back(subtileFramesRefs);
+    return padding;
 }
 
-bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params)
+bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params, bool silent)
 {
     int amount = min->getSubtileCount();
-    ProgressDialog::incBar(QApplication::tr("Upscaling tileset..."), amount + 1);
+    ProgressDialog::incBar(silent ? QStringLiteral("") : QApplication::tr("Upscaling tileset..."), amount + 1);
 
     UpscalingParam upParams;
     upParams.multiplier = params.multiplier;
@@ -3233,6 +3238,7 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
 
     QList<D1GfxFrame *> newFrames;
     std::vector<std::vector<unsigned>> newFrameReferences;
+    int padding = 0;
 
     QPair<int, QString> progress;
     progress.first = -1;
@@ -3251,7 +3257,7 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
             pal->getValidColors(upParams.dynColors);
         }
         Upscaler::upscaleFrame(subtileFrame, upParams);
-        Upscaler::storeSubtileFrame(subtileFrame, newFrameReferences, newFrames);
+        padding = Upscaler::storeSubtileFrame(subtileFrame, newFrameReferences, newFrames);
         delete subtileFrame;
 
         if (!ProgressDialog::incValue()) {
@@ -3270,12 +3276,27 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     // update min
     min->subtileWidth *= upParams.multiplier;
     min->subtileHeight *= upParams.multiplier;
+    QString paddingMsg;
+    if (padding != 0) {
+        if (padding < 0) {
+            paddingMsg = QApplication::tr("Subtile height is not supported by the game (Diablo 1/DevilutionX).");
+        } else {
+            min->subtileHeight += padding / min->subtileWidth;
+            // if (min->subtileHeight != 8 * min->subtileWidth / 2) {
+            //    dProgressErr() << QApplication::tr("Bad height %1 vs %2 after %3.").arg(min->subtileHeight).arg(min->subtileWidth).arg(padding);
+            // }
+            paddingMsg = QApplication::tr("Empty subtiles were added to match the required height of the game (DevilutionX).");
+        }
+    }
     min->frameReferences.swap(newFrameReferences);
     min->modified = true;
 
     qDeleteAll(newFrames);
     progress.second = QString(QApplication::tr("Upscaled %n subtile(s).", "", amount)).arg(amount);
     dProgress() << progress;
+    if (padding != 0) {
+        dProgressWarn() << paddingMsg;
+    }
 
     ProgressDialog::decBar();
     return true;

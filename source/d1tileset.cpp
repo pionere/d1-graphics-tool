@@ -59,9 +59,15 @@ void D1Tileset::removeSubtile(int subtileIndex)
     }
 }
 
-bool D1Tileset::reuseFrames(std::set<int> &removedIndices)
+bool D1Tileset::reuseFrames(std::set<int> &removedIndices, bool silent)
 {
-    ProgressDialog::incBar(QApplication::tr("Reusing frames..."), this->gfx->getFrameCount());
+    QString label = QApplication::tr("Reusing frames...");
+    ProgressDialog::incBar(silent ? QStringLiteral("") : label, this->gfx->getFrameCount());
+
+    QPair<int, QString> progress = { -1, label };
+    if (silent) {
+        dProgress() << progress;
+    }
     int result = 0;
     for (int i = 0; i < this->gfx->getFrameCount(); i++) {
         if (ProgressDialog::wasCanceled()) {
@@ -120,7 +126,9 @@ bool D1Tileset::reuseFrames(std::set<int> &removedIndices)
                 break;
             }
             removedIndices.insert(originalIndexJ);
-            dProgress() << QApplication::tr("Using frame %1 instead of %2.").arg(originalIndexI + 1).arg(originalIndexJ + 1);
+            if (!silent) {
+                dProgress() << QApplication::tr("Using frame %1 instead of %2.").arg(originalIndexI + 1).arg(originalIndexJ + 1);
+            }
             result = 1;
             j--;
         }
@@ -129,6 +137,10 @@ bool D1Tileset::reuseFrames(std::set<int> &removedIndices)
             break;
         }
     }
+    auto amount = removedIndices.size();
+    progress.second = QString(QApplication::tr("Reused %n frame(s).", "", amount)).arg(amount);
+    dProgress() << progress;
+
     ProgressDialog::decBar();
     return result != 0;
 }
@@ -199,6 +211,9 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
             break;
         }
     }
+    auto amount = removedIndices.size();
+    dProgress() << QString(QApplication::tr("Reused %n subtile(s).", "", amount)).arg(amount);
+
     ProgressDialog::decBar();
     return result != 0;
 }

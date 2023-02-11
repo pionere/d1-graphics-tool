@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>UpscaleTaskDialog</class>
+ <widget class="QDialog" name="UpscaleTaskDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>0</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Upscale Task</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="upscaleSettingsGroupBox">
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="multiplierLabel">
+        <property name="text">
+         <string>Multiplier:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="LineEditWidget" name="multiplierLineEdit">
+        <property name="charWidth">
+         <number>3</number>
+        </property>
+        <property name="text">
+         <string>2</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="listfilesFileLabel">
+        <property name="text">
+         <string>Listfiles File:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="LineEditWidget" name="listfilesFileLineEdit">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="listfilesFileBrowseButton">
+        <property name="text">
+         <string>Browse</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="skipStepLabel">
+        <property name="text">
+         <string>Skip step:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QListWidget" name="skipStepListWidget">
+        <property name="selectionMode">
+         <set>QAbstractItemView::MultiSelection</set>
+        </property>
+        <property name="uniformItemSizes">
+         <bool>true</bool>
+        </property>
+        <item>
+         <property name="text">
+          <string>Regular CEL Files</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Object CEL Files</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Special CEL Files</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Cutscenes</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Art CEL Files</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>CL2 Files of Missiles</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>CL2 Files of Monsters</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>CL2 Files of PlrGFX</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Fixed CL2 Files</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Tilesets</string>
+         </property>
+        </item>
+        <!--item>
+         <property name="text">
+          <string>Fixed Tilesets</string>
+         </property>
+        </item-->
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="patchTilesetsLabel">
+        <property name="text">
+         <string>Patch Tilesets:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="patchTilesetsCheckBox">
+        <property name="toolTip">
+         <string>Eliminate useless frames of the original tilesets</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="assetsFolderLabel">
+        <property name="text">
+         <string>Assets Folder:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="LineEditWidget" name="assetsFolderLineEdit">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QPushButton" name="assetsFolderBrowseButton">
+        <property name="text">
+         <string>Browse</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="outputFolderLabel">
+        <property name="text">
+         <string>Output Folder:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="LineEditWidget" name="outputFolderLineEdit">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2">
+       <widget class="QPushButton" name="outputFolderBrowseButton">
+        <property name="text">
+         <string>Browse</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="upscaleButtonsWidget" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>4</number>
+      </property>
+      <property name="leftMargin">
+       <number>4</number>
+      </property>
+      <property name="topMargin">
+       <number>4</number>
+      </property>
+      <property name="rightMargin">
+       <number>4</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item>
+       <spacer name="groupLeftHorizontalSpacer_0">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="upscaleButton">
+        <property name="text">
+         <string>Upscale</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="upscaleCancelButton">
+        <property name="text">
+         <string>Cancel</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

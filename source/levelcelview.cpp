@@ -1928,7 +1928,7 @@ bool LevelCelView::reuseFrames()
 {
     std::set<int> removedIndices;
 
-    bool result = this->tileset->reuseFrames(removedIndices);
+    bool result = this->tileset->reuseFrames(removedIndices, false);
 
     // update frame index if necessary
     auto it = removedIndices.lower_bound(this->currentFrameIndex);
@@ -1963,8 +1963,6 @@ void LevelCelView::compressSubtiles()
     if (this->reuseFrames()) {
         // update the view - done by the caller
         // this->displayFrame();
-    } else {
-        dProgress() << tr("All frames are unique.");
     }
 }
 
@@ -1973,8 +1971,6 @@ void LevelCelView::compressTiles()
     if (this->reuseSubtiles()) {
         // update the view - done by the caller
         // this->displayFrame();
-    } else {
-        dProgress() << tr("All subtiles are unique.");
     }
 }
 
@@ -1995,8 +1991,6 @@ void LevelCelView::compressTileset()
     if (reusedFrame || reusedSubtile) {
         // update the view - done by the caller
         // this->displayFrame();
-    } else {
-        dProgress() << tr("Every subtile and frame are unique.");
     }
 
     ProgressDialog::decBar();
@@ -2101,7 +2095,9 @@ void LevelCelView::sortTileset()
 
 void LevelCelView::upscale(const UpscaleParam &params)
 {
-    if (Upscaler::upscaleTileset(this->gfx, this->min, params)) {
+    if (Upscaler::upscaleTileset(this->gfx, this->min, params, false)) {
+        // std::set<int> removedIndices;
+        // this->tileset->reuseFrames(removedIndices, true);
         // update the view - done by the caller
         // this->displayFrame();
     }

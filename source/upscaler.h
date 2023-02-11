@@ -13,11 +13,11 @@ struct UpscalingParam;
 
 class Upscaler {
 public:
-    static bool upscaleGfx(D1Gfx *gfx, const UpscaleParam &params);
-    static bool upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params);
+    static bool upscaleGfx(D1Gfx *gfx, const UpscaleParam &params, bool silent);
+    static bool upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params, bool silent);
 
 private:
     static void upscaleFrame(D1GfxFrame *frame, const UpscalingParam &params);
     static D1GfxFrame *createSubtileFrame(const D1Gfx *gfx, const D1Min *min, int subtileIndex);
-    static void storeSubtileFrame(const D1GfxFrame *subtileFrame, std::vector<std::vector<unsigned>> &newFrameReferences, QList<D1GfxFrame *> &newframes);
+    static int storeSubtileFrame(const D1GfxFrame *subtileFrame, std::vector<std::vector<unsigned>> &newFrameReferences, QList<D1GfxFrame *> &newframes);
 };

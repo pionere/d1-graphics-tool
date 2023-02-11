@@ -1818,6 +1818,11 @@ void MainWindow::on_actionClose_Translation_Base_triggered()
     this->setBaseTrn(D1Trn::IDENTITY_PATH);
 }
 
+void MainWindow::on_actionUpscaleTask_triggered()
+{
+    this->upscaleTaskDialog.show();
+}
+
 #if defined(Q_OS_WIN)
 #define OS_TYPE "Windows"
 #elif defined(Q_OS_QNX)

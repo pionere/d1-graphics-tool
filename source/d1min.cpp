@@ -139,6 +139,19 @@ bool D1Min::save(const SaveAsParam &params)
             }
         }
     }
+    int padding = 0;
+    if (!upscaled) {
+        if (this->subtileHeight != 5 && this->subtileHeight != 8) {
+            dProgressWarn() << tr("Subtile height is not supported by the game (Diablo 1/DevilutionX).");
+        }
+    } else {
+        padding = (8 * this->subtileWidth / 2 - this->subtileHeight) * this->subtileWidth;
+        if (padding < 0) {
+            dProgressWarn() << tr("Subtile height is not supported by the game (Diablo 1/DevilutionX).");
+        } else if (padding > 0) {
+            dProgressWarn() << tr("Empty subtiles are added to the saved document to match the required height of the game (DevilutionX).");
+        }
+    }
 
     // write to file
     QDataStream out(&outFile);
@@ -158,6 +171,11 @@ bool D1Min::save(const SaveAsParam &params)
                 int idx = subtileNumberOfCelFrames - width - (j / width) * width + j % width;
                 writeWord = frameReferencesList[idx];
             }
+            out << writeWord;
+        }
+        // pad with empty micros till this->subtileWidth * 8 * this->subtileWidth / 2
+        quint16 writeWord = 0;
+        for (int j = 0; j < padding; j++) {
             out << writeWord;
         }
     }

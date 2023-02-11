@@ -462,7 +462,7 @@ void CelView::pasteCurrent(const QImage &image)
 
 void CelView::upscale(const UpscaleParam &params)
 {
-    if (Upscaler::upscaleGfx(this->gfx, params)) {
+    if (Upscaler::upscaleGfx(this->gfx, params, false)) {
         // update the view - done by the caller
         // this->update();
         // this->displayFrame();

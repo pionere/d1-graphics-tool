@@ -124,6 +124,9 @@ set(PROJECT_SOURCES
         source/upscaledialog.ui
         source/upscaler.cpp
         source/upscaler.h
+        source/upscaletaskdialog.cpp
+        source/upscaletaskdialog.h
+        source/upscaletaskdialog.ui
 )
 
 qt_add_resources(RESOURCES
