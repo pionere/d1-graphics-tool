@@ -68,6 +68,7 @@ public:
     void inefficientFrames();
     void checkSubtileFlags();
     void checkTileFlags();
+    void checkTilesetFlags();
     void cleanupFrames();
     void cleanupSubtiles();
     void cleanupTileset();
