@@ -1552,12 +1552,67 @@ void LevelCelView::inefficientFrames()
     ProgressDialog::decBar();
 }
 
+static int leftFoliagePixels(const D1GfxFrame *frame)
+{
+    int result = 0;
+    for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            if (!frame->getPixel(x, y).isTransparent()) {
+                if (x < (MICRO_WIDTH - y * 2)) {
+                    result++;
+                }
+            }
+        }
+    }
+    for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            if (!frame->getPixel(x, y).isTransparent()) {
+                if (x < (y * 2 - MICRO_WIDTH)) {
+                    result++;
+                }
+            }
+        }
+    }
+    return result;
+}
+
+static int rightFoliagePixels(const D1GfxFrame *frame)
+{
+    int result = 0;
+    for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            if (!frame->getPixel(x, y).isTransparent()) {
+                if (x >= y * 2) {
+                    result++;
+                }
+            }
+        }
+    }
+    for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            if (!frame->getPixel(x, y).isTransparent()) {
+                if (x >= (2 * MICRO_WIDTH - y * 2)) {
+                    result++;
+                }
+            }
+        }
+    }
+    return result;
+}
+
 void LevelCelView::checkSubtileFlags()
 {
     ProgressDialog::incBar(tr("Checking SOL flags..."), 2);
     bool result = false;
+    unsigned floorMicros = this->min->getSubtileWidth() * this->min->getSubtileWidth() / 2;
+
     // SOL:
+    QPair<int, QString> progress;
+    progress.first = -1;
+    progress.second = QApplication::tr("SOL inconsistencies:");
+    dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
+        const std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
         quint8 solFlags = this->sol->getSubtileProperties(i);
         if (solFlags & (1 << 1)) {
             // block light
@@ -1569,7 +1624,6 @@ void LevelCelView::checkSubtileFlags()
                 dProgressWarn() << tr("Subtile %1 blocks the light, but it does not block missiles.").arg(i + 1);
                 result = true;
             }
-            // TODO: at least one not transparent frame above the floor
         }
         if (solFlags & (1 << 2)) {
             // block missile
@@ -1577,7 +1631,6 @@ void LevelCelView::checkSubtileFlags()
                 dProgressWarn() << tr("Subtile %1 blocks missiles, but still passable (not solid).").arg(i + 1);
                 result = true;
             }
-            // TODO: at least one not transparent frame above the floor
         }
         if (solFlags & (1 << 4)) {
             // left transparency
@@ -1607,20 +1660,72 @@ void LevelCelView::checkSubtileFlags()
                 dProgressWarn() << tr("Subtile %1 is for traps, but it does not block missiles.").arg(i + 1);
                 result = true;
             }
-            // TODO: one above the floor is square (left or right)
         }
+        // checks for non-upscaled tilesets
+        if (!this->gfx->isUpscaled()) {
+            if (solFlags & ((1 << 1) | (1 << 2))) {
+                // block light or missile
+                // - at least one not transparent frame above the floor
+                bool hasColor = false;
+                for (unsigned n = 0; n < frameRefs.size() - floorMicros; n++) {
+                    unsigned frameRef = frameRefs[n];
+                    if (frameRef == 0) {
+                        continue;
+                    }
+                    hasColor = true;
+                    break;
+                }
+                if (!hasColor) {
+                    dProgressWarn() << tr("Subtile %1 blocks the light or missiles, but it is completely transparent above the floor.").arg(i + 1);
+                    result = true;
+                }
+            }
+            if (solFlags & (1 << 7) && this->min->getSubtileHeight() > 1) {
+                // trap
+                // - one above the floor is square (left or right)
+                unsigned frameRefLeft = frameRefs[frameRefs.size() - 2 * floorMicros];
+                unsigned frameRefRight = frameRefs[frameRefs.size() - (floorMicros + 1)];
+                bool trapLeft = frameRefLeft != 0 && this->gfx->getFrame(frameRefLeft - 1)->getFrameType() == D1CEL_FRAME_TYPE::Square;
+                bool trapRight = frameRefRight != 0 && this->gfx->getFrame(frameRefRight - 1)->getFrameType() == D1CEL_FRAME_TYPE::Square;
+                if (!trapLeft && !trapRight) {
+                    dProgressWarn() << tr("Subtile %1 is for traps, but the frames above the floor is not square on either side.").arg(i + 1);
+                    result = true;
+                }
+            }
+        }
+    }
+    if (!result) {
+        progress.second = QApplication::tr("No inconsistency detected in the SOL flags.");
+        dProgress() << progress;
     }
 
     if (!ProgressDialog::incValue())
         return;
 
     // TMI:
+    result = false;
+    progress.first = -1;
+    progress.second = QApplication::tr("TMI inconsistencies:");
+    dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
+        const std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
         quint8 tmiFlags = this->tmi->getSubtileProperties(i);
         if (tmiFlags & (1 << 0)) {
             // transp.wall
-            // TODO: at least one not transparent frame above the floor
-            // TODO: no left/right triangle/trapezoid frame above the floor
+            // - at least one not transparent frame above the floor
+            bool hasColor = false;
+            for (unsigned n = 0; n < frameRefs.size() - floorMicros; n++) {
+                unsigned frameRef = frameRefs[n];
+                if (frameRef == 0) {
+                    continue;
+                }
+                hasColor = true;
+                break;
+            }
+            if (!hasColor) {
+                dProgressWarn() << tr("Subtile %1 has wall transparency set, but it is completely transparent above the floor.").arg(i + 1);
+                result = true;
+            }
         }
         /*if (tmiFlags & (1 << 1)) {
             // left second pass
@@ -1629,16 +1734,20 @@ void LevelCelView::checkSubtileFlags()
                 result = true;
             }
         }*/
-        if (tmiFlags & (1 << 2)) {
+        /*if (tmiFlags & (1 << 2)) {
             // left foliage
             if (tmiFlags & (1 << 3)) {
                 dProgressWarn() << tr("Subtile %1 has both foliage and floor transparency enabled on the left side.").arg(i + 1);
                 result = true;
             }
-        }
-        if (tmiFlags & (1 << 2)) {
-            // left floor transparency
-            // TODO: must be left trapezoid
+        }*/
+        if (tmiFlags & (1 << 3)) {
+            // left transparency
+            // - wall transparency must be set
+            if (!(tmiFlags & (1 << 0))) {
+                dProgressWarn() << tr("Subtile %1 has floor transparency on the left side, but no wall transparency.").arg(i + 1);
+                result = true;
+            }
         }
         /*if (tmiFlags & (1 << 4)) {
             // right second pass
@@ -1647,20 +1756,126 @@ void LevelCelView::checkSubtileFlags()
                 result = true;
             }
         }*/
-        if (tmiFlags & (1 << 5)) {
+        /*if (tmiFlags & (1 << 5)) {
             // right foliage
             if (tmiFlags & (1 << 6)) {
                 dProgressWarn() << tr("Subtile %1 has both foliage and floor transparency enabled on the right side.").arg(i + 1);
                 result = true;
             }
-        }
+        }*/
         if (tmiFlags & (1 << 6)) {
-            // right floor transparency
-            // TODO: must be right trapezoid
+            // right transparency
+            // - wall transparency must be set
+            if (!(tmiFlags & (1 << 0))) {
+                dProgressWarn() << tr("Subtile %1 has floor transparency on the right side, but no wall transparency.").arg(i + 1);
+                result = true;
+            }
+        }
+        // checks for non-upscaled tilesets
+        if (!this->gfx->isUpscaled() && floorMicros == 2) {
+            unsigned frameRefLeft = frameRefs[frameRefs.size() - 2];
+            unsigned frameRefRight = frameRefs[frameRefs.size() - 1];
+            D1CEL_FRAME_TYPE leftType = D1CEL_FRAME_TYPE::Empty;
+            D1CEL_FRAME_TYPE rightType = D1CEL_FRAME_TYPE::Empty;
+            int leftPixels = 0;
+            int rightPixels = 0;
+            if (frameRefLeft != 0) {
+                leftPixels = leftFoliagePixels(this->gfx->getFrame(frameRefLeft - 1));
+                leftType = this->gfx->getFrame(frameRefLeft - 1)->getFrameType();
+            }
+            if (frameRefRight != 0) {
+                rightPixels = rightFoliagePixels(this->gfx->getFrame(frameRefRight - 1));
+                rightType = this->gfx->getFrame(frameRefRight - 1)->getFrameType();
+            }
+            bool leftAbove = false;
+            bool rightAbove = false;
+            for (unsigned n = 0; n < frameRefs.size() - floorMicros; n++) {
+                unsigned frameRef = frameRefs[n];
+                if (frameRef == 0) {
+                    continue;
+                }
+                if (n & 1)
+                    rightAbove = true;
+                else
+                    leftAbove = true;
+            }
+            if (tmiFlags & (1 << 0)) {
+                // transp.wall
+                // - trapezoid floor on the left without transparency
+                if ((/*(leftType == D1CEL_FRAME_TYPE::LeftTrapezoid || */ (leftAbove && leftPixels > 30)) && !(tmiFlags & (1 << 3))) {
+                    dProgressWarn() << tr("Subtile %1 has transparency on the wall while the frames above the left floor are not empty, but the left floor with many (%2) foliage pixels does not have transparency.").arg(i + 1).arg(leftPixels);
+                    result = true;
+                }
+                // - trapezoid floor on the right without transparency
+                if ((/*(rightType == D1CEL_FRAME_TYPE::RightTrapezoid || */ (rightAbove && rightPixels > 30)) && !(tmiFlags & (1 << 6))) {
+                    dProgressWarn() << tr("Subtile %1 has transparency on the wall while the frames above the right floor are not empty, but the right floor with many (%2) foliage pixels does not have transparency.").arg(i + 1).arg(rightPixels);
+                    result = true;
+                }
+            }
+            if ((tmiFlags & (1 << 1)) && (tmiFlags & (1 << 4))) {
+                // left&right second pass
+                // - at least one not transparent frame above the floor or left floor with foliage or right floor with foliage
+                bool hasColor = leftPixels != 0 || rightPixels != 0 || leftAbove || rightAbove;
+                if (!hasColor) {
+                    dProgressWarn() << tr("Subtile %1 has second pass set on both sides, but it is completely transparent or just a left/right triangle on the floor.").arg(i + 1);
+                    result = true;
+                }
+            }
+            if ((tmiFlags & (1 << 1)) && !(tmiFlags & (1 << 4))) {
+                // left second pass without right
+                // - at least one not transparent frame above the floor or left floor is not triangle
+                bool hasColor = leftPixels != 0 || leftAbove;
+                if (!hasColor) {
+                    dProgressWarn() << tr("Subtile %1 has second pass set only on the left, but it is completely transparent or just a left triangle on the left-side.").arg(i + 1);
+                    result = true;
+                }
+            }
+            if (tmiFlags & (1 << 2)) {
+                // left foliage
+                // - left floor has a foliage pixel
+                if (leftPixels == 0) {
+                    dProgressWarn() << tr("Subtile %1 has foliage set on the left, but no foliage pixel on the (left-)floor.").arg(i + 1);
+                    result = true;
+                }
+            }
+            if (tmiFlags & (1 << 3)) {
+                // left floor transparency
+                // - must be left trapezoid or with transparent bits above the floor
+                if (/*leftType != D1CEL_FRAME_TYPE::LeftTrapezoid && */ (!leftAbove || !(tmiFlags & (1 << 0)))) {
+                    dProgressWarn() << tr("Subtile %1 has left floor transparency set, but it is not a left trapezoid on the (left-)floor and without transparent parts above the floor.").arg(i + 1);
+                    result = true;
+                }
+            }
+            if (tmiFlags & (1 << 4) && !(tmiFlags & (1 << 1))) {
+                // right second pass without left
+                // - at least one not transparent frame above the floor or right floor is not triangle
+                bool hasColor = rightPixels != 0 || rightAbove;
+                if (!hasColor) {
+                    dProgressWarn() << tr("Subtile %1 has second pass set only on the right, but it is completely transparent or just a right triangle on the right-side.").arg(i + 1);
+                    result = true;
+                }
+            }
+            if (tmiFlags & (1 << 5)) {
+                // right foliage
+                // - right floor has a foliage pixel
+                if (rightPixels == 0) {
+                    dProgressWarn() << tr("Subtile %1 has foliage set on the right, but no foliage pixel on the (right-)floor.").arg(i + 1);
+                    result = true;
+                }
+            }
+            if (tmiFlags & (1 << 6)) {
+                // right floor transparency
+                // - must be right trapezoid or with transparent bits above the floor
+                if (/*rightType != D1CEL_FRAME_TYPE::RightTrapezoid && */ (!rightAbove || !(tmiFlags & (1 << 0)))) {
+                    dProgressWarn() << tr("Subtile %1 has right floor transparency set, but it is not a right trapezoid on the (right-)floor and without transparent parts above the floor.").arg(i + 1);
+                    result = true;
+                }
+            }
         }
     }
     if (!result) {
-        dProgress() << tr("No inconsistency detected.");
+        progress.second = QApplication::tr("No inconsistency detected in the TMI flags.");
+        dProgress() << progress;
     }
 
     ProgressDialog::decBar();
