@@ -1565,14 +1565,14 @@ void LevelCelView::inefficientFrames()
     ProgressDialog::decBar();
 }
 
-static bool hasLeftFoliage(const D1GfxFrame *frame)
+static int leftFoliagePixels(const D1GfxFrame *frame)
 {
-    int limit = 10;
+    int result = 0;
     for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
         for (int x = 0; x < MICRO_WIDTH; x++) {
             if (!frame->getPixel(x, y).isTransparent()) {
-                if (x < (MICRO_WIDTH - y * 2) && --limit < 0) {
-                    return true;
+                if (x < (MICRO_WIDTH - y * 2)) {
+                    result++;
                 }
             }
         }
@@ -1580,23 +1580,23 @@ static bool hasLeftFoliage(const D1GfxFrame *frame)
     for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
         for (int x = 0; x < MICRO_WIDTH; x++) {
             if (!frame->getPixel(x, y).isTransparent()) {
-                if (x < (y * 2 - MICRO_WIDTH) && --limit < 0) {
-                    return true;
+                if (x < (y * 2 - MICRO_WIDTH)) {
+                    result++;
                 }
             }
         }
     }
-    return false;
+    return result;
 }
 
-static bool hasRightFoliage(const D1GfxFrame *frame)
+static int rightFoliagePixels(const D1GfxFrame *frame)
 {
-    int limit = 10;
+    int result = 0;
     for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
         for (int x = 0; x < MICRO_WIDTH; x++) {
             if (!frame->getPixel(x, y).isTransparent()) {
-                if (x >= y * 2 && --limit < 0) {
-                    return true;
+                if (x >= y * 2) {
+                    result++;
                 }
             }
         }
@@ -1604,13 +1604,13 @@ static bool hasRightFoliage(const D1GfxFrame *frame)
     for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
         for (int x = 0; x < MICRO_WIDTH; x++) {
             if (!frame->getPixel(x, y).isTransparent()) {
-                if (x >= (2 * MICRO_WIDTH - y * 2) && --limit < 0) {
-                    return true;
+                if (x >= (2 * MICRO_WIDTH - y * 2)) {
+                    result++;
                 }
             }
         }
     }
-    return false;
+    return result;
 }
 
 void LevelCelView::checkSubtileFlags()
@@ -1798,14 +1798,14 @@ void LevelCelView::checkSubtileFlags()
             unsigned frameRefRight = frameRefs[frameRefs.size() - 1];
             D1CEL_FRAME_TYPE leftType = D1CEL_FRAME_TYPE::Empty;
             D1CEL_FRAME_TYPE rightType = D1CEL_FRAME_TYPE::Empty;
-            bool leftFoliage = false;
-            bool rightFoliage = false;
+            int leftPixels = 0;
+            int leftPixels = 0;
             if (frameRefLeft != 0) {
-                leftFoliage = hasLeftFoliage(this->gfx->getFrame(frameRefLeft - 1));
+                leftPixels = leftFoliagePixels(this->gfx->getFrame(frameRefLeft - 1));
                 leftType = this->gfx->getFrame(frameRefLeft - 1)->getFrameType();
             }
             if (frameRefRight != 0) {
-                rightFoliage = hasRightFoliage(this->gfx->getFrame(frameRefRight - 1));
+                rightPixels = rightFoliagePixels(this->gfx->getFrame(frameRefRight - 1));
                 rightType = this->gfx->getFrame(frameRefRight - 1)->getFrameType();
             }
             bool leftAbove = false;
@@ -1823,20 +1823,20 @@ void LevelCelView::checkSubtileFlags()
             if (tmiFlags & (1 << 0)) {
                 // transp.wall
                 // - trapezoid floor on the left without transparency
-                if ((/*(leftType == D1CEL_FRAME_TYPE::LeftTrapezoid || */ (leftAbove && leftFoliage)) && !(tmiFlags & (1 << 3))) {
-                    dProgressErr() << tr("Subtile %1 has wall transparency on the wall, but the left floor is trapezoid and it does not have transparency.").arg(i + 1);
+                if ((/*(leftType == D1CEL_FRAME_TYPE::LeftTrapezoid || */ (leftAbove && leftPixels > 20)) && !(tmiFlags & (1 << 3))) {
+                    dProgressErr() << tr("Subtile %1 has wall transparency on the wall, but the left floor is trapezoid and it does not have transparency. %2").arg(i + 1).arg(leftPixels);
                     result = true;
                 }
                 // - trapezoid floor on the right without transparency
-                if ((/*(rightType == D1CEL_FRAME_TYPE::RightTrapezoid || */ (rightAbove && rightFoliage)) && !(tmiFlags & (1 << 6))) {
-                    dProgressErr() << tr("Subtile %1 has wall transparency on the wall, but the right floor is trapezoid and it does not have transparency.").arg(i + 1);
+                if ((/*(rightType == D1CEL_FRAME_TYPE::RightTrapezoid || */ (rightAbove && rightPixels > 20)) && !(tmiFlags & (1 << 6))) {
+                    dProgressErr() << tr("Subtile %1 has wall transparency on the wall, but the right floor is trapezoid and it does not have transparency. %2").arg(i + 1).arg(rightPixels);
                     result = true;
                 }
             }
             if ((tmiFlags & (1 << 1)) && (tmiFlags & (1 << 4))) {
                 // left&right second pass
                 // - at least one not transparent frame above the floor or left floor with foliage or right floor with foliage
-                bool hasColor = leftFoliage || rightFoliage || leftAbove || rightAbove;
+                bool hasColor = leftPixels != 0 || rightPixels != 0 || leftAbove || rightAbove;
                 if (!hasColor) {
                     dProgressErr() << tr("Subtile %1 has second pass set on both sides, but it is completely transparent or just a left/right triangle on the floor.").arg(i + 1);
                     result = true;
@@ -1845,7 +1845,7 @@ void LevelCelView::checkSubtileFlags()
             if ((tmiFlags & (1 << 1)) && !(tmiFlags & (1 << 4))) {
                 // left second pass without right
                 // - at least one not transparent frame above the floor or left floor is not triangle
-                bool hasColor = leftFoliage || leftAbove;
+                bool hasColor = leftPixels != 0 || leftAbove;
                 if (!hasColor) {
                     dProgressErr() << tr("Subtile %1 has second pass set only on the left, but it is completely transparent or just a left triangle on the left-side.").arg(i + 1);
                     result = true;
@@ -1854,7 +1854,7 @@ void LevelCelView::checkSubtileFlags()
             if (tmiFlags & (1 << 2)) {
                 // left foliage
                 // - left floor has a foliage pixel
-                if (!leftFoliage) {
+                if (leftPixels == 0) {
                     dProgressErr() << tr("Subtile %1 has foliage set on the left, but no foliage pixel on the (left-)floor.").arg(i + 1);
                     result = true;
                 }
@@ -1870,7 +1870,7 @@ void LevelCelView::checkSubtileFlags()
             if (tmiFlags & (1 << 4) && !(tmiFlags & (1 << 1))) {
                 // right second pass without left
                 // - at least one not transparent frame above the floor or right floor is not triangle
-                bool hasColor = rightFoliage || rightAbove;
+                bool hasColor = rightPixels != 0 || rightAbove;
                 if (!hasColor) {
                     dProgressErr() << tr("Subtile %1 has second pass set only on the right, but it is completely transparent or just a right triangle on the right-side.").arg(i + 1);
                     result = true;
@@ -1879,7 +1879,7 @@ void LevelCelView::checkSubtileFlags()
             if (tmiFlags & (1 << 5)) {
                 // right foliage
                 // - right floor has a foliage pixel
-                if (!rightFoliage) {
+                if (rightPixels == 0) {
                     dProgressErr() << tr("Subtile %1 has foliage set on the right, but no foliage pixel on the (right-)floor.").arg(i + 1);
                     result = true;
                 }
