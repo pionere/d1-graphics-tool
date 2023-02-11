@@ -1616,7 +1616,12 @@ void LevelCelView::checkSubtileFlags()
     ProgressDialog::incBar(tr("Checking SOL flags..."), this->min->getSubtileCount());
     bool result = false;
     unsigned floorMicros = this->min->getSubtileWidth() * this->min->getSubtileWidth() / 2;
+
     // SOL:
+    QPair<int, QString> progress;
+    progress.first = -1;
+    progress.second = QApplication::tr("SOL inconsistencies:");
+    dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         // if (ProgressDialog::wasCanceled())
         //    return;
@@ -1704,11 +1709,19 @@ void LevelCelView::checkSubtileFlags()
         if (!ProgressDialog::incValue())
             return;
     }
+    if (!result) {
+        progress.second = QApplication::tr("No inconsistency detected in the SOL flags.");
+        dProgress() << progress;
+    }
 
     ProgressDialog::decBar();
     ProgressDialog::incBar(tr("Checking TMI flags..."), this->min->getSubtileCount());
 
     // TMI:
+    result = false;
+    progress.first = -1;
+    progress.second = QApplication::tr("TMI inconsistencies:");
+    dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         // if (ProgressDialog::wasCanceled())
         //    return;
@@ -1795,12 +1808,16 @@ void LevelCelView::checkSubtileFlags()
                 else
                     leftAbove = true;
             }
-            if ((tmiFlags & (1 << 0)) && !(tmiFlags & ((1 << 3) | (1 << 6)))) {
-                // transp.wall without left or right transparency
-                // - non-foliage floor
-                bool hasColor = leftFoliage || rightFoliage;
-                if (hasColor) {
-                    dProgressErr() << tr("Subtile %1 has wall transparency only on the wall, but the floor is not just a left/right triangle.").arg(i + 1);
+            if (tmiFlags & (1 << 0)) {
+                // transp.wall
+                // - non-foliage floor on the left without transparency
+                if (leftFoliage && !(tmiFlags & (1 << 3))) {
+                    dProgressErr() << tr("Subtile %1 has wall transparency on the wall, but the left floor is not just a left triangle and it does not have transparency.").arg(i + 1);
+                    result = true;
+                }
+                // - non-foliage floor on the right without transparency
+                if (rightFoliage && !(tmiFlags & (1 << 6))) {
+                    dProgressErr() << tr("Subtile %1 has wall transparency on the wall, but the right floor is not just a right triangle and it does not have transparency.").arg(i + 1);
                     result = true;
                 }
             }
@@ -1868,7 +1885,8 @@ void LevelCelView::checkSubtileFlags()
             return;
     }
     if (!result) {
-        dProgress() << tr("No inconsistency detected.");
+        progress.second = QApplication::tr("No inconsistency detected in the TMI flags.");
+        dProgress() << progress;
     }
 
     ProgressDialog::decBar();
