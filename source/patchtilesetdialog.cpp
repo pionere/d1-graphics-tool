@@ -25,7 +25,12 @@ void PatchTilesetDialog::on_runButton_clicked()
 
     this->close();
 
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
+
     this->tileset->patch(dungeonType, false);
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
 }
 
 void PatchTilesetDialog::on_cancelButton_clicked()
