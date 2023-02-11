@@ -10,18 +10,6 @@ enum class ANTI_ALIASING_MODE {
     NONE,
 };
 
-typedef enum dungeon_type {
-    DTYPE_TOWN,
-    DTYPE_CATHEDRAL,
-    DTYPE_CATACOMBS,
-    DTYPE_CAVES,
-    DTYPE_HELL,
-    DTYPE_CRYPT,
-    DTYPE_NEST,
-    DTYPE_NONE,
-    NUM_DUNGEON_TYPES,
-} dungeon_type;
-
 class UpscaleParam {
 public:
     int multiplier;
