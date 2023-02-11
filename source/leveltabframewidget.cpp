@@ -65,8 +65,7 @@ void LevelTabFrameWidget::update()
 
 void LevelTabFrameWidget::on_deletePushButtonClicked()
 {
-    MainWindow *mw = (MainWindow *)this->window();
-    mw->on_actionDel_Frame_triggered();
+    dMainWindow().on_actionDel_Frame_triggered();
 }
 
 static bool prepareMsgTransparent(QString &msg, int x, int y)

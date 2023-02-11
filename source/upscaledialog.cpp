@@ -70,10 +70,9 @@ void UpscaleDialog::on_upscaleButton_clicked()
         }
     }
 
-    MainWindow *qw = (MainWindow *)this->parentWidget();
     this->close();
 
-    qw->upscale(params);
+    dMainWindow().upscale(params);
 }
 
 void UpscaleDialog::on_upscaleCancelButton_clicked()

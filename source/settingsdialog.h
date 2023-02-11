@@ -15,9 +15,6 @@ public:
 
     void initialize();
 
-signals:
-    void configurationSaved();
-
 private slots:
     void on_graphicsBackgroundColorPushButton_clicked();
     void on_graphicsBackgroundColorLineEdit_returnPressed();

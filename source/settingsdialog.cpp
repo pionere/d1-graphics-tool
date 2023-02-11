@@ -5,6 +5,7 @@
 #include <QMessageBox>
 
 #include "config.h"
+#include "mainwindow.h"
 #include "ui_settingsdialog.h"
 
 SettingsDialog::SettingsDialog(QWidget *parent)
@@ -165,7 +166,7 @@ void SettingsDialog::on_settingsOkButton_clicked()
         return;
     }
 
-    emit this->configurationSaved();
+    dMainWindow().reloadConfig();
 
     this->close();
 }

@@ -220,8 +220,7 @@ void LevelTabSubtileWidget::on_clearPushButtonClicked()
 
 void LevelTabSubtileWidget::on_deletePushButtonClicked()
 {
-    MainWindow *mw = (MainWindow *)this->window();
-    mw->on_actionDel_Subtile_triggered();
+    dMainWindow().on_actionDel_Subtile_triggered();
 }
 
 void LevelTabSubtileWidget::on_sol0_clicked()

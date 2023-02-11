@@ -53,8 +53,7 @@ void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
     QString filePath = this->gfx->getFilePath();
     const QString filter = this->isTileset ? tr("CEL Files (*.cel *.CEL)") : tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)");
 
-    MainWindow *qw = (MainWindow *)this->parentWidget();
-    QString saveFilePath = qw->fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save Graphics as..."), filter);
+    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save Graphics as..."), filter);
 
     if (saveFilePath.isEmpty()) {
         return;
@@ -78,8 +77,7 @@ void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
 
 void SaveAsDialog::on_outputMinFileBrowseButton_clicked()
 {
-    MainWindow *qw = (MainWindow *)this->parentWidget();
-    QString saveFilePath = qw->fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save MIN as..."), tr("MIN Files (*.min *.MIN)"));
+    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save MIN as..."), tr("MIN Files (*.min *.MIN)"));
 
     if (saveFilePath.isEmpty())
         return;
@@ -89,8 +87,7 @@ void SaveAsDialog::on_outputMinFileBrowseButton_clicked()
 
 void SaveAsDialog::on_outputTilFileBrowseButton_clicked()
 {
-    MainWindow *qw = (MainWindow *)this->parentWidget();
-    QString saveFilePath = qw->fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save TIL as..."), tr("TIL Files (*.til *.TIL)"));
+    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save TIL as..."), tr("TIL Files (*.til *.TIL)"));
 
     if (saveFilePath.isEmpty())
         return;
@@ -100,8 +97,7 @@ void SaveAsDialog::on_outputTilFileBrowseButton_clicked()
 
 void SaveAsDialog::on_outputSolFileBrowseButton_clicked()
 {
-    MainWindow *qw = (MainWindow *)this->parentWidget();
-    QString saveFilePath = qw->fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save SOL as..."), tr("SOL Files (*.sol *.SOL)"));
+    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save SOL as..."), tr("SOL Files (*.sol *.SOL)"));
 
     if (saveFilePath.isEmpty())
         return;
@@ -111,8 +107,7 @@ void SaveAsDialog::on_outputSolFileBrowseButton_clicked()
 
 void SaveAsDialog::on_outputAmpFileBrowseButton_clicked()
 {
-    MainWindow *qw = (MainWindow *)this->parentWidget();
-    QString saveFilePath = qw->fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save AMP as..."), tr("AMP Files (*.amp *.AMP)"));
+    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save AMP as..."), tr("AMP Files (*.amp *.AMP)"));
 
     if (saveFilePath.isEmpty())
         return;
@@ -122,8 +117,7 @@ void SaveAsDialog::on_outputAmpFileBrowseButton_clicked()
 
 void SaveAsDialog::on_outputTmiFileBrowseButton_clicked()
 {
-    MainWindow *qw = (MainWindow *)this->parentWidget();
-    QString saveFilePath = qw->fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save TMI as..."), tr("TMI Files (*.tmi *.TMI)"));
+    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save TMI as..."), tr("TMI Files (*.tmi *.TMI)"));
 
     if (saveFilePath.isEmpty())
         return;
@@ -164,10 +158,9 @@ void SaveAsDialog::on_saveButton_clicked()
     params.tmiFilePath = this->ui->outputTmiFileEdit->text();
     params.autoOverwrite = this->ui->autoOverwriteCheckBox->isChecked();
 
-    MainWindow *qw = (MainWindow *)this->parentWidget();
     this->close();
 
-    qw->saveFile(params);
+    dMainWindow().saveFile(params);
 }
 
 void SaveAsDialog::on_saveCancelButton_clicked()

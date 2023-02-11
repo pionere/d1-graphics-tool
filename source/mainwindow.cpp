@@ -29,6 +29,8 @@
 #include "d1cl2.h"
 #include "ui_mainwindow.h"
 
+static MainWindow *theMainWindow;
+
 FramePixel::FramePixel(const QPoint &p, D1GfxPixel px)
     : pos(p)
     , pixel(px)
@@ -81,6 +83,8 @@ MainWindow::MainWindow()
     this->lastFilePath = Config::getLastFilePath();
 
     ui->setupUi(this);
+
+    theMainWindow = this;
 
     this->setWindowTitle(D1_GRAPHICS_TOOL_TITLE);
 
@@ -142,12 +146,6 @@ MainWindow::MainWindow()
 
     this->on_actionClose_triggered();
 
-    // Configuration update triggers refresh of the translator and the palette widgets
-    QObject::connect(&this->settingsDialog, &SettingsDialog::configurationSaved, this, &MainWindow::reloadConfig);
-
-    // Configuration update triggers refresh of the translator and the palette widgets
-    QObject::connect(&this->progressDialog, &ProgressDialog::updateWindow, this, &MainWindow::updateWindow);
-
     setAcceptDrops(true);
 
     // initialize the translators
@@ -165,6 +163,11 @@ MainWindow::~MainWindow()
     delete this->undoStack;
     delete this->undoAction;
     delete this->redoAction;
+}
+
+MainWindow &dMainWindow()
+{
+    return *theMainWindow;
 }
 
 void MainWindow::changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel, bool all)

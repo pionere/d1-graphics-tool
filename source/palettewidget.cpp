@@ -206,7 +206,7 @@ void PaletteScene::dropEvent(QGraphicsSceneDragDropEvent *event)
         }
     }
     // try to insert pal/trn files
-    ((MainWindow *)this->view->window())->openPalFiles(filePaths, (PaletteWidget *)this->view);
+    dMainWindow().openPalFiles(filePaths, (PaletteWidget *)this->view);
 }
 
 void PaletteScene::contextMenuEvent(QContextMenuEvent *event)
@@ -811,35 +811,35 @@ void PaletteWidget::on_newPushButtonClicked()
 {
     this->initStopColorPicking();
 
-    ((MainWindow *)this->window())->paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_NEW);
+    dMainWindow().paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_NEW);
 }
 
 void PaletteWidget::on_openPushButtonClicked()
 {
     this->initStopColorPicking();
 
-    ((MainWindow *)this->window())->paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_OPEN);
+    dMainWindow().paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_OPEN);
 }
 
 void PaletteWidget::on_savePushButtonClicked()
 {
     this->initStopColorPicking();
 
-    ((MainWindow *)this->window())->paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_SAVE);
+    dMainWindow().paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_SAVE);
 }
 
 void PaletteWidget::on_saveAsPushButtonClicked()
 {
     this->initStopColorPicking();
 
-    ((MainWindow *)this->window())->paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_SAVEAS);
+    dMainWindow().paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_SAVEAS);
 }
 
 void PaletteWidget::on_closePushButtonClicked()
 {
     this->initStopColorPicking();
 
-    ((MainWindow *)this->window())->paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_CLOSE);
+    dMainWindow().paletteWidget_callback(this, PWIDGET_CALLBACK_TYPE::PWIDGET_CALLBACK_CLOSE);
 }
 
 void PaletteWidget::on_actionUndo_triggered()
