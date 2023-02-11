@@ -230,10 +230,10 @@ static void RemoveMicro(D1Min *min, int subtileRef, int microIndex, std::set<uns
         deletedFrames.insert(frameReference);
         min->setFrameReference(subtileIndex, index, 0);
         if (!silent) {
-            dProgress() << QApplication::tr("Replaced Frame %1 in Subtile %2.").arg(frameReference).arg(subtileIndex + 1);
+            dProgress() << QApplication::tr("Removed frame (%1) @%2 in Subtile %3.").arg(frameReference).arg(index + 1).arg(subtileIndex + 1);
         }
     } else {
-        dProgressWarn() << QApplication::tr("Frame %1 of Subtile %2 is already empty.").arg(index + 1).arg(subtileIndex + 1);
+        dProgressWarn() << QApplication::tr("The frame @%1 in Subtile %2 is already empty.").arg(index + 1).arg(subtileIndex + 1);
     }
 }
 
