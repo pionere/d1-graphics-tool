@@ -1905,8 +1905,13 @@ void LevelCelView::checkSubtileFlags()
 void LevelCelView::checkTileFlags()
 {
     ProgressDialog::incBar(tr("Checking AMP flags..."), this->til->getTileCount());
-    // AMP:
     bool result = false;
+
+    // AMP:
+    QPair<int, QString> progress;
+    progress.first = -1;
+    progress.second = tr("AMP inconsistencies:");
+    dProgress() << progress;
     for (int i = 0; i < this->til->getTileCount(); i++) {
         // if (ProgressDialog::wasCanceled())
         //    return;
@@ -2048,7 +2053,8 @@ void LevelCelView::checkTileFlags()
             return;
     }
     if (!result) {
-        dProgress() << tr("No inconsistency detected.");
+        progress.second = tr("No inconsistency detected in the AMP flags.");
+        dProgress() << progress;
     }
 
     ProgressDialog::decBar();
