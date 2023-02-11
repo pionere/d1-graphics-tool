@@ -1642,11 +1642,11 @@ void LevelCelView::checkSubtileFlags()
                     result = true;
                 }
             }
-            if (solFlags & (1 << 7)) {
+            if (solFlags & (1 << 7) && this->min->getSubtileHeight() > 1) {
                 // trap
                 // - one above the floor is square (left or right)
-                unsigned frameRefLeft = frameRefs[frameRefs.size() - 2];
-                unsigned frameRefRight = frameRefs[frameRefs.size() - 1];
+                unsigned frameRefLeft = frameRefs[frameRefs.size() - 2 * floorMicros];
+                unsigned frameRefRight = frameRefs[frameRefs.size() - (floorMicros + 1)];
                 bool trapLeft = frameRefLeft != 0 && this->gfx->getFrame(frameRefLeft - 1)->getFrameType() == D1CEL_FRAME_TYPE::Square;
                 bool trapRight = frameRefRight != 0 && this->gfx->getFrame(frameRefRight - 1)->getFrameType() == D1CEL_FRAME_TYPE::Square;
                 if (!trapLeft && !trapRight) {
@@ -1716,7 +1716,7 @@ void LevelCelView::checkSubtileFlags()
             }
         }
         // checks for non-upscaled tilesets
-        if (!this->gfx->isUpscaled()) {
+        if (!this->gfx->isUpscaled() && floorMicros == 2) {
             if (tmiFlags & ((1 << 1) | (1 << 2))) {
                 // left second pass or left foliage
                 // - at least one not transparent frame above the floor or left floor is not triangle
