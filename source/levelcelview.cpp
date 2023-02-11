@@ -1821,12 +1821,12 @@ void LevelCelView::checkSubtileFlags()
             if (tmiFlags & (1 << 0)) {
                 // transp.wall
                 // - trapezoid floor on the left without transparency
-                if (/*(leftType == D1CEL_FRAME_TYPE::LeftTrapezoid || */(leftAbove && leftFoliage)) && !(tmiFlags & (1 << 3))) {
+                if ((/*(leftType == D1CEL_FRAME_TYPE::LeftTrapezoid || */ (leftAbove && leftFoliage)) && !(tmiFlags & (1 << 3))) {
                     dProgressErr() << tr("Subtile %1 has wall transparency on the wall, but the left floor is trapezoid and it does not have transparency.").arg(i + 1);
                     result = true;
                 }
                 // - trapezoid floor on the right without transparency
-                if (/*(rightType == D1CEL_FRAME_TYPE::RightTrapezoid || */(rightAbove && rightFoliage) && !(tmiFlags & (1 << 6))) {
+                if ((/*(rightType == D1CEL_FRAME_TYPE::RightTrapezoid || */ (rightAbove && rightFoliage)) && !(tmiFlags & (1 << 6))) {
                     dProgressErr() << tr("Subtile %1 has wall transparency on the wall, but the right floor is trapezoid and it does not have transparency.").arg(i + 1);
                     result = true;
                 }
@@ -1860,7 +1860,7 @@ void LevelCelView::checkSubtileFlags()
             if (tmiFlags & (1 << 3)) {
                 // left floor transparency
                 // - must be left trapezoid or with transparent bits above the floor
-                if (/*leftType != D1CEL_FRAME_TYPE::LeftTrapezoid && */(!leftAbove || !(tmiFlags & (1 << 0)))) {
+                if (/*leftType != D1CEL_FRAME_TYPE::LeftTrapezoid && */ (!leftAbove || !(tmiFlags & (1 << 0)))) {
                     dProgressErr() << tr("Subtile %1 has left floor transparency set, but it is not a left trapezoid on the (left-)floor and without transparent parts above the floor.").arg(i + 1);
                     result = true;
                 }
@@ -1885,7 +1885,7 @@ void LevelCelView::checkSubtileFlags()
             if (tmiFlags & (1 << 6)) {
                 // right floor transparency
                 // - must be right trapezoid or with transparent bits above the floor
-                if (/*rightType != D1CEL_FRAME_TYPE::RightTrapezoid && */(!rightAbove || !(tmiFlags & (1 << 0)))) {
+                if (/*rightType != D1CEL_FRAME_TYPE::RightTrapezoid && */ (!rightAbove || !(tmiFlags & (1 << 0)))) {
                     dProgressErr() << tr("Subtile %1 has right floor transparency set, but it is not a right trapezoid on the (right-)floor and without transparent parts above the floor.").arg(i + 1);
                     result = true;
                 }
