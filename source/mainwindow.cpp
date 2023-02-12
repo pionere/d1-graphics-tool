@@ -1830,7 +1830,7 @@ void MainWindow::on_actionOpen_Translation_Base_triggered()
 void MainWindow::on_actionSave_Translation_Base_triggered()
 {
     QString filePath = this->trnBaseWidget->getSelectedPath();
-    if (trnFileInfo.isResourcePath()) {
+    if (MainWindow::isResourcePath(filePath)) {
         this->on_actionSave_Translation_Base_as_triggered();
     } else {
         this->trnBase->save(filePath);
