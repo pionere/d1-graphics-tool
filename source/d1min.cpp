@@ -149,7 +149,7 @@ bool D1Min::save(const SaveAsParam &params)
         if (padding < 0) {
             dProgressWarn() << tr("Subtile height is not supported by the game (Diablo 1/DevilutionX).");
         } else if (padding > 0) {
-            dProgressWarn() << tr("Empty subtiles are added to the saved document to match the required height of the game (DevilutionX).");
+            dProgressWarn() << tr("Empty frames are added to the saved document to match the required height of the game (DevilutionX).");
         }
     }
 
