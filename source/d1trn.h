@@ -22,6 +22,7 @@ public:
     QColor getResultingColor(quint8 index) const;
 
     QString getFilePath() const;
+    void setFilePath(const QString &path);
     quint8 getTranslation(quint8 index) const;
     void setTranslation(quint8 index, quint8 color);
     void setPalette(D1Pal *pal);

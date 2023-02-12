@@ -104,19 +104,20 @@ public:
     QStringList filesDialog(const QString &title, const QString &filter);
 
     static bool hasImageUrl(const QMimeData *mimeData);
+    static bool isResourcePath(const QString &path);
 
 private:
     void failWithError(const QString &error);
 
     void changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel, bool all);
 
-    void setPal(QString palFilePath);
-    void setUniqueTrn(QString trnfilePath);
-    void setBaseTrn(QString trnfilePath);
+    void setPal(const QString &palFilePath);
+    void setUniqueTrn(const QString &trnfilePath);
+    void setBaseTrn(const QString &trnfilePath);
 
-    bool loadPal(QString palFilePath);
-    bool loadUniqueTrn(QString trnfilePath);
-    bool loadBaseTrn(QString trnfilePath);
+    bool loadPal(const QString &palFilePath);
+    bool loadUniqueTrn(const QString &trnfilePath);
+    bool loadBaseTrn(const QString &trnfilePath);
 
     void frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter);
     void frameModified();

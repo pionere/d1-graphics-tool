@@ -118,7 +118,7 @@ public:
     void checkTranslationsSelection(QList<quint8> indices);
 
     void addPath(const QString &path, const QString &name);
-    void removePath(QString path);
+    void removePath(const QString &path);
     QString getSelectedPath() const;
 
     // color selection handlers
