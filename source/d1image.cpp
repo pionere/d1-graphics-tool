@@ -26,7 +26,7 @@ static quint8 getPalColor(const std::vector<PaletteColor> &colors, QColor color)
     return res;
 }
 
-bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, D1Pal *pal)
+bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, const D1Pal *pal)
 {
     frame.clipped = clipped;
     frame.width = image.width();

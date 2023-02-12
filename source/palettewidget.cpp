@@ -409,7 +409,7 @@ void PaletteWidget::addPath(const QString &path, const QString &name)
     this->paths[path] = name;
 }
 
-void PaletteWidget::removePath(QString path)
+void PaletteWidget::removePath(const QString &path)
 {
     if (this->paths.contains(path))
         this->paths.remove(path);
