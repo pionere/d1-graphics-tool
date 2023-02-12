@@ -1,5 +1,6 @@
 #include "patchtilesetdialog.h"
 
+#include "progressdialog.h"
 #include "ui_patchtilesetdialog.h"
 
 PatchTilesetDialog::PatchTilesetDialog(QWidget *parent)
