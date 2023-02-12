@@ -5,7 +5,7 @@
 #include <QFile>
 #include <QMessageBox>
 
-bool D1Trn::load(QString filePath, D1Pal *pal)
+bool D1Trn::load(const QString &filePath, D1Pal *pal)
 {
     QFile file = QFile(filePath);
 
@@ -27,7 +27,7 @@ bool D1Trn::load(QString filePath, D1Pal *pal)
     return true;
 }
 
-bool D1Trn::save(QString filePath)
+bool D1Trn::save(const QString &filePath)
 {
     QDir().mkpath(QFileInfo(filePath).absolutePath());
     QFile outFile = QFile(filePath);

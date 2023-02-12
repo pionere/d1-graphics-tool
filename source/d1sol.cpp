@@ -9,7 +9,7 @@
 
 #include "progressdialog.h"
 
-bool D1Sol::load(QString filePath)
+bool D1Sol::load(const QString &filePath)
 {
     // prepare file data source
     QFile file;

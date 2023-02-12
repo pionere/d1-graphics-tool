@@ -19,7 +19,7 @@ public:
     D1Min() = default;
     ~D1Min() = default;
 
-    bool load(QString minFilePath, D1Gfx *gfx, D1Sol *sol, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const OpenAsParam &params);
+    bool load(const QString &minFilePath, D1Gfx *gfx, D1Sol *sol, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const OpenAsParam &params);
     bool save(const SaveAsParam &params);
 
     QImage getSubtileImage(int subtileIndex) const;

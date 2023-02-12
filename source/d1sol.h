@@ -13,7 +13,7 @@ public:
     D1Sol() = default;
     ~D1Sol() = default;
 
-    bool load(QString filePath);
+    bool load(const QString &solFilePath);
     bool save(const SaveAsParam &params);
 
     void insertSubtile(int subtileIndex, quint8 value);

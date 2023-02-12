@@ -12,7 +12,7 @@ public:
     D1Amp() = default;
     ~D1Amp() = default;
 
-    bool load(QString filePath, int tileCount, const OpenAsParam &params);
+    bool load(const QString &ampFilePath, int tileCount, const OpenAsParam &params);
     bool save(const SaveAsParam &params);
 
     QString getFilePath() const;

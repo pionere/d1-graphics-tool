@@ -16,7 +16,7 @@ public:
     D1Tmi() = default;
     ~D1Tmi() = default;
 
-    bool load(QString filePath, D1Sol *sol, const OpenAsParam &params);
+    bool load(const QString &tmiFilePath, const D1Sol *sol, const OpenAsParam &params);
     bool save(const SaveAsParam &params);
 
     void insertSubtile(int subtileIndex, quint8 value);

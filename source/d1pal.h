@@ -57,8 +57,8 @@ public:
     D1Pal(const D1Pal &opal);
     ~D1Pal() = default;
 
-    bool load(QString path);
-    bool save(QString path);
+    bool load(const QString &palFilePath);
+    bool save(const QString &palFilePath);
 
     bool reloadConfig();
 

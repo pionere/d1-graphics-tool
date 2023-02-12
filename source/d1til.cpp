@@ -12,7 +12,7 @@
 
 #define TILE_SIZE (TILE_WIDTH * TILE_HEIGHT)
 
-bool D1Til::load(QString filePath, D1Min *m)
+bool D1Til::load(const QString &filePath, D1Min *m)
 {
     // prepare file data source
     QFile file;

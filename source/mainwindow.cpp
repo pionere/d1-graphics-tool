@@ -1653,22 +1653,6 @@ void MainWindow::on_actionSave_PAL_as_triggered()
     if (!this->loadPal(palFilePath)) {
         return;
     }
-    /*QFileInfo palFileInfo(palFilePath);
-    QString path = palFileInfo.absoluteFilePath();
-    QString name = palFileInfo.fileName();
-
-    D1Pal *newPal = new D1Pal();
-    if (!newPal->load(path)) {
-        delete newPal;
-        QMessageBox::critical(this, tr("Error"), tr("Failed loading PAL file."));
-        return;
-    }
-    // replace entry in the pals map
-    if (this->pals.contains(path))
-        delete this->pals[path];
-    this->pals[path] = newPal;
-    // add path in palWidget
-    this->palWidget->addPath(path, name);*/
     // select the 'new' palette
     this->setPal(palFilePath); // path
 }
@@ -1752,22 +1736,6 @@ void MainWindow::on_actionSave_Translation_Unique_as_triggered()
     if (!this->loadUniqueTrn(trnFilePath)) {
         return;
     }
-    /*QFileInfo trnFileInfo(trnFilePath);
-    const QString &path = trnFilePath; // trnFileInfo.absoluteFilePath();
-    const QString name = trnFileInfo.fileName();
-
-    D1Trn *newTrn = new D1Trn();
-    if (!newTrn->load(path, this->pal)) {
-        delete newTrn;
-        QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
-        return;
-    }
-    // replace entry in the uniqueTrns map
-    if (this->uniqueTrns.contains(path))
-        delete this->uniqueTrns[path];
-    this->uniqueTrns[path] = newTrn;
-    // add path in trnUniqueWidget
-    this->trnUniqueWidget->addPath(path, name);*/
     // select the 'new' trn file
     this->setUniqueTrn(trnFilePath); // path
 }
@@ -1851,22 +1819,6 @@ void MainWindow::on_actionSave_Translation_Base_as_triggered()
     if (!this->loadBaseTrn(trnFilePath)) {
         return;
     }
-    /*QFileInfo trnFileInfo(trnFilePath);
-    const QString &path = trnFilePath; // trnFileInfo.absoluteFilePath();
-    const QString name = trnFileInfo.fileName();
-
-    D1Trn *newTrn = new D1Trn();
-    if (!newTrn->load(path, this->trnUnique->getResultingPalette())) {
-        delete newTrn;
-        QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
-        return;
-    }
-    // replace entry in the baseTrns map
-    if (this->baseTrns.contains(path))
-        delete this->baseTrns[path];
-    this->baseTrns[path] = newTrn;
-    // add path in trnBaseWidget
-    this->trnBaseWidget->addPath(path, name);*/
     // select the 'new' trn file
     this->setBaseTrn(trnFilePath); // path
 }

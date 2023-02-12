@@ -11,7 +11,7 @@
 #include "d1image.h"
 #include "progressdialog.h"
 
-bool D1Min::load(QString filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const OpenAsParam &params)
+bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const OpenAsParam &params)
 {
     // prepare file data source
     QFile file;
