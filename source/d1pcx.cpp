@@ -37,7 +37,42 @@ typedef struct _PcxPalette {
     quint8 data[D1PCX_COLORS][3];
 } PCXPALETTE;
 
-bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *basePal, D1Pal *resPal, bool *palMod)
+bool D1Pcx::load(D1Gfx &gfx, D1Pal *pal, const QString &pcxFilePath, const OpenAsParam &params)
+{
+    QString filePath = pcxFilePath;
+
+    // assert(filePath.toLower().endsWith(".pcx"));
+    filePath.chop(4);
+    filePath += ".cel";
+
+    if (params.celWidth != 0) {
+        dProgressWarn() << QApplication::tr("Width setting is ignored when a PCX file is loaded.");
+    }
+    bool clipped = params.clipped == OPEN_CLIPPED_TYPE::TRUE;
+
+
+    QColor undefColor = pal->getUndefinedColor();
+    for (int i = 0; i < D1PAL_COLORS; i++) {
+        pal->setColor(i, undefColor);
+    }
+
+    gfx.groupFrameIndices.clear();
+    gfx.groupFrameIndices.append(qMakePair(0, 0));
+
+    gfx.type = D1CEL_TYPE::V1_REGULAR;
+
+    // gfx.frames.clear();
+    D1GfxFrame *frame = new D1GfxFrame();
+    gfx.frames.append(frame);
+
+    gfx.gfxFilePath = filePath;
+    gfx.modified = true;
+
+    bool dummy;
+    return D1Pcx::load(*frame, pcxFilePath, clipped, pal, nullptr, &dummy);
+}
+
+bool D1Pcx::load(D1GfxFrame &frame, const QString &pcxFilePath, bool clipped, D1Pal *basePal, D1Pal *resPal, bool *palMod)
 {
     // Opening PCX file
     QFile file = QFile(pcxFilePath);
@@ -105,6 +140,14 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *ba
         file.seek(sizeof(pcxhdr));
     }
 
+    if (resPal == nullptr) {
+        // loading a complete file
+        pcxPalState = 1;
+        if (pcxPal == nullptr) {
+            pcxPal = basePal;
+        }
+    }
+
     // prepare D1GfxFrame
     frame.width = SwapLE16(pcxhdr.Xmax) - SwapLE16(pcxhdr.Xmin) + 1;
     frame.height = SwapLE16(pcxhdr.Ymax) - SwapLE16(pcxhdr.Ymin) + 1;
@@ -160,8 +203,8 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *ba
             // if (col != undefColor) {
             //     continue; // skip colors if already defined
             // }
-            if (usedColors.find(i) == usedColors.end()) {
-                continue; // ignore unused colors
+            if (resPal != nullptr && usedColors.find(i) == usedColors.end()) {
+                continue; // ignore unused colors if not loading a complete file
             }
             QColor pcxCol = pcxPal->getColor(i);
             if (pcxCol == col) {
@@ -206,7 +249,7 @@ bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *ba
         D1ImageFrame::load(frame, image, frame.clipped, resPal);
     }
 
-    if (pcxPal != resPal) {
+    if (pcxPal != resPal && pcxPal != basePal) {
         delete pcxPal;
     }
     return true;

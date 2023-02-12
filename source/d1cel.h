@@ -9,7 +9,7 @@
 
 class D1Cel {
 public:
-    static bool load(D1Gfx &gfx, QString celFilePath, const OpenAsParam &params);
+    static bool load(D1Gfx &gfx, const QString &celFilePath, const OpenAsParam &params);
     static bool save(D1Gfx &gfx, const SaveAsParam &params);
 
 private:

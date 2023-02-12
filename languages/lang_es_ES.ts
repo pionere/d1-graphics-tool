@@ -809,17 +809,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1514"/>
+        <location filename="../source/levelcelview.cpp" line="1510"/>
         <source>Changed Frame %1 from &apos;%2&apos; to &apos;%3&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1539"/>
+        <location filename="../source/levelcelview.cpp" line="1531"/>
         <source>Scanning frames...</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="1555"/>
+        <location filename="../source/levelcelview.cpp" line="1544"/>
         <source>Frame %1 could be &apos;%2&apos; by changing %n pixel(s).</source>
         <translation type="unfinished">
             <numerusform></numerusform>
@@ -827,486 +827,486 @@
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1523"/>
+        <location filename="../source/levelcelview.cpp" line="1515"/>
         <source>No change was necessary.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1562"/>
+        <location filename="../source/levelcelview.cpp" line="1549"/>
         <source>The frames are optimal.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1618"/>
+        <location filename="../source/levelcelview.cpp" line="1605"/>
         <source>Checking SOL flags...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1625"/>
+        <location filename="../source/levelcelview.cpp" line="1612"/>
         <source>SOL inconsistencies:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1635"/>
+        <location filename="../source/levelcelview.cpp" line="1620"/>
         <source>Subtile %1 blocks the light, but still passable (not solid).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1639"/>
+        <location filename="../source/levelcelview.cpp" line="1624"/>
         <source>Subtile %1 blocks the light, but it does not block missiles.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1646"/>
+        <location filename="../source/levelcelview.cpp" line="1631"/>
         <source>Subtile %1 blocks missiles, but still passable (not solid).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1653"/>
+        <location filename="../source/levelcelview.cpp" line="1638"/>
         <source>Subtile %1 has left transparency enabled, but transparency is not enabled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1660"/>
+        <location filename="../source/levelcelview.cpp" line="1645"/>
         <source>Subtile %1 has right transparency enabled, but transparency is not enabled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1667"/>
+        <location filename="../source/levelcelview.cpp" line="1652"/>
         <source>Subtile %1 is for traps, but still passable (not solid).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1671"/>
+        <location filename="../source/levelcelview.cpp" line="1656"/>
         <source>Subtile %1 is for traps, but it does not block light.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1675"/>
+        <location filename="../source/levelcelview.cpp" line="1660"/>
         <source>Subtile %1 is for traps, but it does not block missiles.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1694"/>
+        <location filename="../source/levelcelview.cpp" line="1679"/>
         <source>Subtile %1 blocks the light or missiles, but it is completely transparent above the floor.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1706"/>
+        <location filename="../source/levelcelview.cpp" line="1691"/>
         <source>Subtile %1 is for traps, but the frames above the floor is not square on either side.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1715"/>
+        <location filename="../source/levelcelview.cpp" line="1698"/>
         <source>No inconsistency detected in the SOL flags.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1720"/>
+        <location filename="../source/levelcelview.cpp" line="1703"/>
         <source>Checking TMI flags...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1725"/>
+        <location filename="../source/levelcelview.cpp" line="1708"/>
         <source>TMI inconsistencies:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1745"/>
+        <location filename="../source/levelcelview.cpp" line="1726"/>
         <source>Subtile %1 has wall transparency set, but it is completely transparent above the floor.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1767"/>
+        <location filename="../source/levelcelview.cpp" line="1748"/>
         <source>Subtile %1 has floor transparency on the left side, but no wall transparency.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1789"/>
+        <location filename="../source/levelcelview.cpp" line="1770"/>
         <source>Subtile %1 has floor transparency on the right side, but no wall transparency.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1825"/>
+        <location filename="../source/levelcelview.cpp" line="1806"/>
         <source>Subtile %1 has transparency on the wall while the frames above the left floor are not empty, but the left floor with many (%2) foliage pixels does not have transparency.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1830"/>
+        <location filename="../source/levelcelview.cpp" line="1811"/>
         <source>Subtile %1 has transparency on the wall while the frames above the right floor are not empty, but the right floor with many (%2) foliage pixels does not have transparency.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1839"/>
+        <location filename="../source/levelcelview.cpp" line="1820"/>
         <source>Subtile %1 has second pass set on both sides, but it is completely transparent or just a left/right triangle on the floor.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1848"/>
+        <location filename="../source/levelcelview.cpp" line="1829"/>
         <source>Subtile %1 has second pass set only on the left, but it is completely transparent or just a left triangle on the left-side.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1856"/>
+        <location filename="../source/levelcelview.cpp" line="1837"/>
         <source>Subtile %1 has foliage set on the left, but no foliage pixel on the (left-)floor.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1878"/>
+        <location filename="../source/levelcelview.cpp" line="1859"/>
         <source>Subtile %1 has second pass set only on the right, but it is completely transparent or just a right triangle on the right-side.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1886"/>
+        <location filename="../source/levelcelview.cpp" line="1867"/>
         <source>Subtile %1 has foliage set on the right, but no foliage pixel on the (right-)floor.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1908"/>
+        <location filename="../source/levelcelview.cpp" line="1887"/>
         <source>No inconsistency detected in the TMI flags.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1917"/>
+        <location filename="../source/levelcelview.cpp" line="1896"/>
         <source>Checking AMP flags...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1923"/>
+        <location filename="../source/levelcelview.cpp" line="1902"/>
         <source>AMP inconsistencies:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1941"/>
+        <location filename="../source/levelcelview.cpp" line="1918"/>
         <source>Tile %1 has both west-door and external flags set.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1945"/>
+        <location filename="../source/levelcelview.cpp" line="1922"/>
         <source>Tile %1 has both west-door and stairs flags set.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1949"/>
+        <location filename="../source/levelcelview.cpp" line="1926"/>
         <source>Tile %1 has a west-door but neither a wall (north-west), a wall intersection (north), a wall ending (north-west) nor a wall (south-west).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1956"/>
+        <location filename="../source/levelcelview.cpp" line="1933"/>
         <source>Tile %1 has both east-door and east-arch flags set.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1960"/>
+        <location filename="../source/levelcelview.cpp" line="1937"/>
         <source>Tile %1 has both east-door and east-grate flags set.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1964"/>
+        <location filename="../source/levelcelview.cpp" line="1941"/>
         <source>Tile %1 has both east-door and external flags set.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1968"/>
+        <location filename="../source/levelcelview.cpp" line="1945"/>
         <source>Tile %1 has both east-door and stairs flags set.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1972"/>
+        <location filename="../source/levelcelview.cpp" line="1949"/>
         <source>Tile %1 has an east-door but neither a wall (north-east), a wall intersection (north), a wall ending (north-east) nor a wall (south-east).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1979"/>
+        <location filename="../source/levelcelview.cpp" line="1956"/>
         <source>Tile %1 has both west-arch and west-grate flags set.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1983"/>
+        <location filename="../source/levelcelview.cpp" line="1960"/>
         <source>Tile %1 has both west-arch and external flags set.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1987"/>
+        <location filename="../source/levelcelview.cpp" line="1964"/>
         <source>Tile %1 has both west-arch and stairs flags set.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1991"/>
+        <location filename="../source/levelcelview.cpp" line="1968"/>
         <source>Tile %1 has a west-arch but neither a wall (north-west), a wall intersection (north) nor a wall ending (north-west).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1998"/>
+        <location filename="../source/levelcelview.cpp" line="1975"/>
         <source>Tile %1 has both east-arch and east-grate flags set.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2002"/>
+        <location filename="../source/levelcelview.cpp" line="1979"/>
         <source>Tile %1 has both east-arch and external flags set.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2006"/>
+        <location filename="../source/levelcelview.cpp" line="1983"/>
         <source>Tile %1 has both east-arch and stairs flags set.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2010"/>
+        <location filename="../source/levelcelview.cpp" line="1987"/>
         <source>Tile %1 has an east-arch but neither a wall (north-east), a wall intersection (north) nor a wall ending (north-east).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2017"/>
+        <location filename="../source/levelcelview.cpp" line="1994"/>
         <source>Tile %1 has both west-grate and external flags set.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2021"/>
+        <location filename="../source/levelcelview.cpp" line="1998"/>
         <source>Tile %1 has both west-grate and stairs flags set.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2025"/>
+        <location filename="../source/levelcelview.cpp" line="2002"/>
         <source>Tile %1 has a west-grate but neither a wall (north-west), a wall intersection (north) nor a wall ending (north-west).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2032"/>
+        <location filename="../source/levelcelview.cpp" line="2009"/>
         <source>Tile %1 has both east-grate and external flags set.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2036"/>
+        <location filename="../source/levelcelview.cpp" line="2013"/>
         <source>Tile %1 has both east-grate and stairs flags set.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2040"/>
+        <location filename="../source/levelcelview.cpp" line="2017"/>
         <source>Tile %1 has an east-grate but neither a wall (north-east), a wall intersection (north) nor a wall ending (north-east).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2047"/>
+        <location filename="../source/levelcelview.cpp" line="2024"/>
         <source>Tile %1 has both external and stairs flags set.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2051"/>
+        <location filename="../source/levelcelview.cpp" line="2028"/>
         <source>Tile %1 is external but also a pillar.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2058"/>
+        <location filename="../source/levelcelview.cpp" line="2035"/>
         <source>Tile %1 is stairs but its type is also set (not None).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2066"/>
+        <location filename="../source/levelcelview.cpp" line="2041"/>
         <source>No inconsistency detected in the AMP flags.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2081"/>
+        <location filename="../source/levelcelview.cpp" line="2056"/>
         <source>Removing unused frames...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2101"/>
+        <location filename="../source/levelcelview.cpp" line="2076"/>
         <source>Removed frame %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2115"/>
+        <location filename="../source/levelcelview.cpp" line="2090"/>
         <source>Removing unused subtiles...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2133"/>
+        <location filename="../source/levelcelview.cpp" line="2108"/>
         <source>Removed subtile %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2151"/>
+        <location filename="../source/levelcelview.cpp" line="2126"/>
         <source>Every frame is used.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2161"/>
+        <location filename="../source/levelcelview.cpp" line="2136"/>
         <source>Every subtile is used.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2167"/>
+        <location filename="../source/levelcelview.cpp" line="2142"/>
         <source>Scanning tileset...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2183"/>
+        <location filename="../source/levelcelview.cpp" line="2158"/>
         <source>Every subtile and frame are used.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2241"/>
+        <location filename="../source/levelcelview.cpp" line="2216"/>
         <source>Compressing tileset...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="2452"/>
+        <location filename="../source/levelcelview.cpp" line="2489"/>
+        <location filename="../source/levelcelview.cpp" line="2527"/>
+        <source>Append</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="2453"/>
+        <source>Append new frames at the end</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="2490"/>
+        <source>Append new subtiles at the end</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="2528"/>
+        <source>Append new tiles at the end</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="2436"/>
+        <source>Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="1845"/>
+        <source>Subtile %1 has left floor transparency set, but the left side is completely transparent above the floor.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="1850"/>
+        <source>Subtile %1 has left floor transparency set, but the parts above the floor are not going to be transparent (wall transparency not set).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="1875"/>
+        <source>Subtile %1 has right floor transparency set, but the right side is completely transparent above the floor.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="1880"/>
+        <source>Subtile %1 has right floor transparency set, but the parts above the floor are not going to be transparent (wall transparency not set).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="1910"/>
+        <source>Tile %1 has both west-door and west-arch flags set.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="1914"/>
+        <source>Tile %1 has both west-door and west-grate flags set.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="2440"/>
+        <source>Add Layer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="2441"/>
+        <source>Add the content of an image to the current frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="2446"/>
+        <location filename="../source/levelcelview.cpp" line="2483"/>
+        <location filename="../source/levelcelview.cpp" line="2521"/>
+        <source>Insert</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="2447"/>
+        <source>Add new frames before the current one</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="2458"/>
+        <location filename="../source/levelcelview.cpp" line="2495"/>
+        <location filename="../source/levelcelview.cpp" line="2533"/>
+        <source>Replace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="2459"/>
+        <source>Replace the current frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="2465"/>
+        <location filename="../source/levelcelview.cpp" line="2502"/>
+        <location filename="../source/levelcelview.cpp" line="2540"/>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="2466"/>
+        <source>Delete the current frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="2473"/>
+        <source>Subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../source/levelcelview.cpp" line="2477"/>
         <location filename="../source/levelcelview.cpp" line="2514"/>
-        <location filename="../source/levelcelview.cpp" line="2552"/>
-        <source>Append</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2478"/>
-        <source>Append new frames at the end</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2515"/>
-        <source>Append new subtiles at the end</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2553"/>
-        <source>Append new tiles at the end</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2461"/>
-        <source>Frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="1864"/>
-        <source>Subtile %1 has left floor transparency set, but the left side is completely transparent above the floor.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="1869"/>
-        <source>Subtile %1 has left floor transparency set, but the parts above the floor are not going to be transparent (wall transparency not set).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="1894"/>
-        <source>Subtile %1 has right floor transparency set, but the right side is completely transparent above the floor.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="1899"/>
-        <source>Subtile %1 has right floor transparency set, but the parts above the floor are not going to be transparent (wall transparency not set).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="1933"/>
-        <source>Tile %1 has both west-door and west-arch flags set.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="1937"/>
-        <source>Tile %1 has both west-door and west-grate flags set.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2465"/>
-        <source>Add Layer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2466"/>
-        <source>Add the content of an image to the current frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2471"/>
-        <location filename="../source/levelcelview.cpp" line="2508"/>
-        <location filename="../source/levelcelview.cpp" line="2546"/>
-        <source>Insert</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2472"/>
-        <source>Add new frames before the current one</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2483"/>
-        <location filename="../source/levelcelview.cpp" line="2520"/>
-        <location filename="../source/levelcelview.cpp" line="2558"/>
-        <source>Replace</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2484"/>
-        <source>Replace the current frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2490"/>
-        <location filename="../source/levelcelview.cpp" line="2527"/>
-        <location filename="../source/levelcelview.cpp" line="2565"/>
-        <source>Delete</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2491"/>
-        <source>Delete the current frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2498"/>
-        <source>Subtile</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../source/levelcelview.cpp" line="2502"/>
-        <location filename="../source/levelcelview.cpp" line="2539"/>
         <source>Create</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2503"/>
+        <location filename="../source/levelcelview.cpp" line="2478"/>
         <source>Create a new subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2509"/>
+        <location filename="../source/levelcelview.cpp" line="2484"/>
         <source>Add new subtiles before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2521"/>
+        <location filename="../source/levelcelview.cpp" line="2496"/>
         <source>Replace the current subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2528"/>
+        <location filename="../source/levelcelview.cpp" line="2503"/>
         <source>Delete the current subtile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2535"/>
+        <location filename="../source/levelcelview.cpp" line="2510"/>
         <source>Tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2540"/>
+        <location filename="../source/levelcelview.cpp" line="2515"/>
         <source>Create a new tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2547"/>
+        <location filename="../source/levelcelview.cpp" line="2522"/>
         <source>Add new tiles before the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2559"/>
+        <location filename="../source/levelcelview.cpp" line="2534"/>
         <source>Replace the current tile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2566"/>
+        <location filename="../source/levelcelview.cpp" line="2541"/>
         <source>Delete the current tile</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2628,6 +2628,16 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../source/palettewidget.cpp" line="337"/>
+        <source>_default.pal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="339"/>
+        <source>_null.trn</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../source/palettewidget.cpp" line="347"/>
         <source>Show all colors</source>
         <translation type="unfinished"></translation>
@@ -2812,14 +2822,14 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.cpp" line="224"/>
-        <location filename="../source/progressdialog.cpp" line="573"/>
+        <location filename="../source/progressdialog.cpp" line="220"/>
+        <location filename="../source/progressdialog.cpp" line="566"/>
         <source>Show details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.cpp" line="224"/>
-        <location filename="../source/progressdialog.cpp" line="573"/>
+        <location filename="../source/progressdialog.cpp" line="220"/>
+        <location filename="../source/progressdialog.cpp" line="566"/>
         <source>Hide details</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3167,17 +3177,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.cpp" line="272"/>
+        <location filename="../source/progressdialog.cpp" line="265"/>
         <source>Process cancelled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.cpp" line="343"/>
+        <location filename="../source/progressdialog.cpp" line="336"/>
         <source>Too many progression bars.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.cpp" line="376"/>
+        <location filename="../source/progressdialog.cpp" line="369"/>
         <source>Mismatching progression bars.</source>
         <translation type="unfinished"></translation>
     </message>

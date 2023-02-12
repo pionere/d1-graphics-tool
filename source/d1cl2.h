@@ -9,7 +9,7 @@
 
 class D1Cl2 {
 public:
-    static bool load(D1Gfx &gfx, QString cl2FilePath, const OpenAsParam &params);
+    static bool load(D1Gfx &gfx, const QString &cl2FilePath, const OpenAsParam &params);
     static bool save(D1Gfx &gfx, const SaveAsParam &params);
 
 protected:

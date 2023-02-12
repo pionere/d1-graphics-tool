@@ -51,7 +51,7 @@ void OpenAsDialog::update()
 
 void OpenAsDialog::on_inputFileBrowseButton_clicked()
 {
-    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)")); // "CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;TIL Files (*.til *.TIL)");
+    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX)"));
 
     if (openFilePath.isEmpty())
         return;
@@ -181,7 +181,7 @@ void OpenAsDialog::on_openButton_clicked()
     } else {
         params.isTileset = OPEN_TILESET_TYPE::AUTODETECT;
     }
-    // cel/cl2: clipped, width
+    // cel/cl2/pcx: clipped, width
     params.celWidth = this->ui->celWidthEdit->text().toUShort();
     if (ui->celClippedYesRadioButton->isChecked()) {
         params.clipped = OPEN_CLIPPED_TYPE::TRUE;

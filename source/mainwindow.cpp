@@ -594,7 +594,7 @@ void MainWindow::on_actionNew_Tileset_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)"));
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX)"));
 
     if (!openFilePath.isEmpty()) {
         OpenAsParam params = OpenAsParam();
@@ -610,9 +610,11 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 
 void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 {
+    bool unloaded = this->celView == nullptr && this->levelCelView == nullptr;
+
     for (const QUrl &url : event->mimeData()->urls()) {
         QString path = url.toLocalFile().toLower();
-        if (path.endsWith(".cel") || path.endsWith(".cl2")) {
+        if (path.endsWith(".cel") || path.endsWith(".cl2") || (unloaded && path.endsWith(".pcx"))) {
             event->acceptProposedAction();
             return;
         }
@@ -760,10 +762,16 @@ void MainWindow::openFile(const OpenAsParam &params)
     QString openFilePath = params.celFilePath;
 
     // Check file extension
-    if (!openFilePath.isEmpty()
-        && !openFilePath.toLower().endsWith(".cel")
-        && !openFilePath.toLower().endsWith(".cl2")) {
-        return;
+    int fileType = 0;
+    if (!openFilePath.isEmpty()) {
+        if (openFilePath.toLower().endsWith(".cel"))
+            fileType = 1;
+        else if (openFilePath.toLower().endsWith(".cl2"))
+            fileType = 2;
+        else if (openFilePath.toLower().endsWith(".pcx"))
+            fileType = 3;
+        else
+            return;
     }
 
     this->on_actionClose_triggered();
@@ -805,7 +813,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     bool isTileset = params.isTileset == OPEN_TILESET_TYPE::TRUE;
     if (params.isTileset == OPEN_TILESET_TYPE::AUTODETECT) {
-        isTileset = openFilePath.toLower().endsWith(".cel") && QFileInfo::exists(tilFilePath) && QFileInfo::exists(minFilePath) && QFileInfo::exists(solFilePath);
+        isTileset = fileType == 1 && QFileInfo::exists(tilFilePath) && QFileInfo::exists(minFilePath) && QFileInfo::exists(solFilePath);
     }
 
     this->gfx = new D1Gfx();
@@ -856,14 +864,19 @@ void MainWindow::openFile(const OpenAsParam &params)
             this->failWithError(tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(openFilePath)));
             return;
         }
-    } else if (openFilePath.toLower().endsWith(".cel")) {
+    } else if (fileType == 1) { // CEL
         if (!D1Cel::load(*this->gfx, openFilePath, params)) {
             this->failWithError(tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(openFilePath)));
             return;
         }
-    } else if (openFilePath.toLower().endsWith(".cl2")) {
+    } else if (fileType == 2) { // CL2
         if (!D1Cl2::load(*this->gfx, openFilePath, params)) {
             this->failWithError(tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(openFilePath)));
+            return;
+        }
+    } else if (fileType == 3) { // PCX
+        if (!D1Pcx::load(*this->gfx, this->pal, openFilePath, params)) {
+            this->failWithError(tr("Failed loading PCX file: %1.").arg(QDir::toNativeSeparators(openFilePath)));
             return;
         }
     } else {
@@ -944,7 +957,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // Look for all palettes in the same folder as the CEL/CL2 file
     QDirIterator it(celFileInfo.absolutePath(), QStringList("*.pal"), QDir::Files);
-    QString firstPaletteFound = QString();
+    QString firstPaletteFound = fileType == 3 ? D1Pal::DEFAULT_PATH : "";
     while (it.hasNext()) {
         QString sPath = it.next();
 

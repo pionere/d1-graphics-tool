@@ -50,7 +50,7 @@ D1CEL_FRAME_TYPE guessFrameType(QByteArray &rawFrameData)
     return D1CEL_FRAME_TYPE::TransparentSquare;
 }
 
-bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, QString filePath, const OpenAsParam &params)
+bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const QString &filePath, const OpenAsParam &params)
 {
     // Opening Tileset-CEL file and load it in RAM
     QFile file;
@@ -119,7 +119,7 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
     }
 
     // BUILDING {CEL FRAMES}
-    gfx.frames.clear();
+    // gfx.frames.clear();
     // std::stack<quint16> invalidFrames;
     for (int i = 0; i < frameOffsets.count(); i++) {
         const auto &offset = frameOffsets[i];
