@@ -27,6 +27,7 @@
 #include "d1cel.h"
 #include "d1celtileset.h"
 #include "d1cl2.h"
+#include "d1pcx.h"
 #include "ui_mainwindow.h"
 
 static MainWindow *theMainWindow;

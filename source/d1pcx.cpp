@@ -50,7 +50,6 @@ bool D1Pcx::load(D1Gfx &gfx, D1Pal *pal, const QString &pcxFilePath, const OpenA
     }
     bool clipped = params.clipped == OPEN_CLIPPED_TYPE::TRUE;
 
-
     QColor undefColor = pal->getUndefinedColor();
     for (int i = 0; i < D1PAL_COLORS; i++) {
         pal->setColor(i, undefColor);
