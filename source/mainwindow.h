@@ -17,6 +17,7 @@
 #include "levelcelview.h"
 #include "openasdialog.h"
 #include "palettewidget.h"
+#include "patchtilesetdialog.h"
 #include "progressdialog.h"
 #include "saveasdialog.h"
 #include "settingsdialog.h"
@@ -164,8 +165,9 @@ private slots:
     void on_actionUpscale_triggered();
 
     void on_actionReportUse_Tileset_triggered();
-    void on_actionResetFrameTypes_Tileset_triggered();
     void on_actionInefficientFrames_Tileset_triggered();
+    void on_actionResetFrameTypes_Tileset_triggered();
+    void on_actionPatchTileset_Tileset_triggered();
     void on_actionCheckSubtileFlags_Tileset_triggered();
     void on_actionCheckTileFlags_Tileset_triggered();
     void on_actionCheckTilesetFlags_Tileset_triggered();
@@ -245,6 +247,7 @@ private:
     SettingsDialog *settingsDialog = nullptr;
     ExportDialog *exportDialog = nullptr;
     UpscaleDialog *upscaleDialog = nullptr;
+    PatchTilesetDialog *patchTilesetDialog = nullptr;
     UpscaleTaskDialog *upscaleTaskDialog = nullptr;
 
     D1Pal *pal = nullptr;
