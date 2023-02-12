@@ -276,7 +276,7 @@ bool MainWindow::loadPal(const QString &palFilePath)
     QFileInfo palFileInfo(palFilePath);
     // QString path = palFileInfo.absoluteFilePath();
     const QString &path = palFilePath;
-    QString name = palFileInfo.fileName();
+    const QString name = palFileInfo.fileName();
 
     D1Pal *newPal = new D1Pal();
     if (!newPal->load(path)) {
@@ -298,7 +298,7 @@ bool MainWindow::loadUniqueTrn(const QString &trnFilePath)
     QFileInfo trnFileInfo(trnFilePath);
     // QString path = trnFileInfo.absoluteFilePath();
     const QString &path = trnFilePath;
-    QString name = trnFileInfo.fileName();
+    const QString name = trnFileInfo.fileName();
 
     D1Trn *newTrn = new D1Trn();
     if (!newTrn->load(path, this->pal)) {
@@ -1600,8 +1600,8 @@ void MainWindow::on_actionNew_PAL_triggered()
     }
 
     QFileInfo palFileInfo(palFilePath);
-    QString &path = palFilePath; // palFileInfo.absoluteFilePath();
-    QString name = palFileInfo.fileName();
+    const QString &path = palFilePath; // palFileInfo.absoluteFilePath();
+    const QString name = palFileInfo.fileName();
 
     D1Pal *newPal = new D1Pal();
     if (!newPal->load(D1Pal::DEFAULT_PATH)) {
@@ -1632,8 +1632,7 @@ void MainWindow::on_actionOpen_PAL_triggered()
 void MainWindow::on_actionSave_PAL_triggered()
 {
     QString filePath = this->palWidget->getSelectedPath();
-    QFileInfo palFileInfo(filePath);
-    if (!palFileInfo.isWritable()) { // isResourcePath?
+    if (MainWindow::isResourcePath(filePath)) {
         this->on_actionSave_PAL_as_triggered();
     } else {
         this->pal->save(filePath);
@@ -1732,8 +1731,7 @@ void MainWindow::on_actionOpen_Translation_Unique_triggered()
 void MainWindow::on_actionSave_Translation_Unique_triggered()
 {
     QString filePath = this->trnUniqueWidget->getSelectedPath();
-    QFileInfo trnFileInfo(filePath);
-    if (!trnFileInfo.isWritable()) { // isResourcePath?
+    if (MainWindow::isResourcePath(filePath)) {
         this->on_actionSave_Translation_Unique_as_triggered();
     } else {
         this->trnUnique->save(filePath);
@@ -1800,8 +1798,8 @@ void MainWindow::on_actionNew_Translation_Base_triggered()
     }
 
     QFileInfo trnFileInfo(trnFilePath);
-    QString path = trnFileInfo.absoluteFilePath();
-    QString name = trnFileInfo.fileName();
+    const QString &path = trnFilePath; // trnFileInfo.absoluteFilePath();
+    const QString name = trnFileInfo.fileName();
 
     D1Trn *newTrn = new D1Trn();
     if (!newTrn->load(D1Trn::IDENTITY_PATH, this->trnUnique->getResultingPalette())) {
@@ -1832,8 +1830,7 @@ void MainWindow::on_actionOpen_Translation_Base_triggered()
 void MainWindow::on_actionSave_Translation_Base_triggered()
 {
     QString filePath = this->trnBaseWidget->getSelectedPath();
-    QFileInfo trnFileInfo(filePath);
-    if (!trnFileInfo.isWritable()) { // isResourcePath?
+    if (trnFileInfo.isResourcePath()) {
         this->on_actionSave_Translation_Base_as_triggered();
     } else {
         this->trnBase->save(filePath);
