@@ -37,13 +37,13 @@ typedef struct _PcxPalette {
     quint8 data[D1PCX_COLORS][3];
 } PCXPALETTE;
 
-bool D1Pcx::load(D1GfxFrame &frame, QString pcxFilePath, bool clipped, D1Pal *basePal, D1Pal *resPal, bool *palMod)
+bool D1Pcx::load(D1GfxFrame &frame, const QString &filePath, bool clipped, D1Pal *basePal, D1Pal *resPal, bool *palMod)
 {
     // Opening PCX file
-    QFile file = QFile(pcxFilePath);
+    QFile file = QFile(filePath);
 
     if (!file.open(QIODevice::ReadOnly)) {
-        dProgressErr() << QApplication::tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(pcxFilePath));
+        dProgressErr() << QApplication::tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(filePath));
         return false;
     }
 

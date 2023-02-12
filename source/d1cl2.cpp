@@ -11,7 +11,7 @@
 #include "d1cl2frame.h"
 #include "progressdialog.h"
 
-bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
+bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 {
     // Opening CL2 file and load it in RAM
     QFile file = QFile(filePath);
@@ -131,7 +131,7 @@ bool D1Cl2::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
 
     // BUILDING {CL2 FRAMES}
 
-    gfx.frames.clear();
+    // gfx.frames.clear();
     // std::stack<quint16> invalidFrames;
     for (const auto &offset : frameOffsets) {
         device->seek(offset.first);

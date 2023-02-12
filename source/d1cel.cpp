@@ -11,7 +11,7 @@
 #include "d1celframe.h"
 #include "progressdialog.h"
 
-bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
+bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 {
     // Opening CEL file and load it in RAM
     QFile file = QFile(filePath);
@@ -137,7 +137,7 @@ bool D1Cel::load(D1Gfx &gfx, QString filePath, const OpenAsParam &params)
 
     // BUILDING {CEL FRAMES}
 
-    gfx.frames.clear();
+    // gfx.frames.clear();
     // std::stack<quint16> invalidFrames;
     for (const auto &offset : frameOffsets) {
         device->seek(offset.first);

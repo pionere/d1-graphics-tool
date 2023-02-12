@@ -13,8 +13,8 @@ public:
     D1Trn() = default;
     ~D1Trn() = default;
 
-    bool load(QString filePath, D1Pal *pal);
-    bool save(QString filePath);
+    bool load(const QString &trnFilePath, D1Pal *pal);
+    bool save(const QString &trnFilePath);
 
     bool isModified() const;
 

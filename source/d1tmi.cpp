@@ -11,7 +11,7 @@
 #include "d1sol.h"
 #include "progressdialog.h"
 
-bool D1Tmi::load(QString filePath, D1Sol *sol, const OpenAsParam &params)
+bool D1Tmi::load(const QString &filePath, const D1Sol *sol, const OpenAsParam &params)
 {
     // prepare file data source
     QFile file;

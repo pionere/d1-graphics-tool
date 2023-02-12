@@ -12,7 +12,7 @@
 
 class D1CelTileset {
 public:
-    static bool load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, QString celFilePath, const OpenAsParam &params);
+    static bool load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const QString &celFilePath, const OpenAsParam &params);
     static bool save(D1Gfx &gfx, const SaveAsParam &params);
 
 private:

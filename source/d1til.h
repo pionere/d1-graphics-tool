@@ -17,7 +17,7 @@ public:
     D1Til() = default;
     ~D1Til() = default;
 
-    bool load(QString filePath, D1Min *min);
+    bool load(const QString &tilFilePath, D1Min *min);
     bool save(const SaveAsParam &params);
 
     QImage getTileImage(int tileIndex) const;

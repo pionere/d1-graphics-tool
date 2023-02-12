@@ -26,7 +26,7 @@ D1Pal::D1Pal(const D1Pal &opal)
     this->updateColors(opal);
 }
 
-bool D1Pal::load(QString filePath)
+bool D1Pal::load(const QString &filePath)
 {
     QFile file = QFile(filePath);
 
@@ -106,7 +106,7 @@ bool D1Pal::loadJascPalette(QFile &file)
     return lineNumber >= D1PAL_COLORS + 3;
 }
 
-bool D1Pal::save(QString filePath)
+bool D1Pal::save(const QString &filePath)
 {
     QDir().mkpath(QFileInfo(filePath).absolutePath());
     QFile outFile = QFile(filePath);

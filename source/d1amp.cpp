@@ -10,7 +10,7 @@
 
 #include "progressdialog.h"
 
-bool D1Amp::load(QString filePath, int tileCount, const OpenAsParam &params)
+bool D1Amp::load(const QString &filePath, int tileCount, const OpenAsParam &params)
 {
     // prepare file data source
     QFile file;
