@@ -575,7 +575,7 @@ bool MainWindow::hasImageUrl(const QMimeData *mimeData)
 
 bool MainWindow::isResourcePath(const QString &path)
 {
-    return path.startWith(':');
+    return path.startsWith(':');
 }
 
 void MainWindow::on_actionNew_CEL_triggered()
@@ -1632,7 +1632,7 @@ void MainWindow::on_actionSave_PAL_triggered()
 {
     QString filePath = this->palWidget->getSelectedPath();
     QFileInfo palFileInfo(filePath);
-    if (!palFileInfo.isWritable()) { // isResourcePath ?
+    if (!palFileInfo.isWritable()) { // isResourcePath?
         this->on_actionSave_PAL_as_triggered();
     } else {
         this->pal->save(filePath);
@@ -1734,7 +1734,7 @@ void MainWindow::on_actionSave_Translation_Unique_triggered()
     if (!trnFileInfo.isWritable()) { // isResourcePath?
         this->on_actionSave_Translation_Unique_as_triggered();
     } else {
-        this->trnUnique->save(filePath)) {
+        this->trnUnique->save(filePath);
     }
 }
 
@@ -1837,7 +1837,7 @@ void MainWindow::on_actionSave_Translation_Base_triggered()
     if (!trnFileInfo.isWritable()) { // isResourcePath?
         this->on_actionSave_Translation_Base_as_triggered();
     } else {
-        this->trnBase->save(filePath)) {
+        this->trnBase->save(filePath);
     }
 }
 
