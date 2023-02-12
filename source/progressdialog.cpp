@@ -195,9 +195,6 @@ ProgressDialog::~ProgressDialog()
 
 void ProgressDialog::openDialog()
 {
-    // theWidget->updateWidget(theDialog->status, false, "");
-    // theWidget->setModality(false);
-
     theDialog->showNormal();
     theDialog->adjustSize();
 }
@@ -214,8 +211,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
 
     theDialog->afterFlags = flags;
     theDialog->setWindowTitle(label);
-    // theDialog->ui->outputTextEdit->document()->clear();
-    theDialog->ui->outputTextEdit->clear();
+    theDialog->ui->outputTextEdit->clear(); // theDialog->ui->outputTextEdit->document()->clear();
     theDialog->activeBars = 0;
     theDialog->status = PROGRESS_STATE::RUNNING;
     theDialog->ui->progressLabel->setVisible(!background);
@@ -233,13 +229,10 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
         theDialog->progressBars.append(progressBar);
     }
     theDialog->adjustSize();
-    // theDialog->setWindowModality(background ? Qt::NonModal : Qt::ApplicationModal);
 
     theWidget->updateWidget(theDialog->status, background, label);
     if (background) {
         // theWidget->updateWidget(theDialog->status, true, label);
-        // theWidget->setModality(true);
-        // theWidget->setFocus();
         theDialog->showMinimized();
         return;
     }
@@ -604,8 +597,6 @@ void ProgressDialog::changeEvent(QEvent *event)
 {
     /*if (event->type() == QEvent::WindowStateChange && this->isMinimized()) {
         theWidget->updateWidget(theDialog->status, true, this->windowTitle());
-        theWidget->setModality(true);
-        theWidget->setFocus();
 
         this->hide();
     }*/
@@ -635,13 +626,6 @@ ProgressWidget::~ProgressWidget()
 {
     delete ui;
 }
-
-/*void ProgressWidget::setModality(bool modal)
-{
-    this->hide();
-    this->setWindowModality(modal ? Qt::ApplicationModal : Qt::NonModal);
-    this->show();
-}*/
 
 void ProgressWidget::updateWidget(PROGRESS_STATE status, bool active, const QString &label)
 {

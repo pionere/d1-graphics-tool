@@ -1498,30 +1498,22 @@ static QString getFrameTypeName(D1CEL_FRAME_TYPE type)
 
 void LevelCelView::resetFrameTypes()
 {
-    ProgressDialog::incBar(tr("Checking frames..."), this->gfx->getFrameCount());
+    ProgressDialog::incBar(tr("Checking frames..."), 1);
 
-    int result = 0;
+    bool result = false;
     for (int i = 0; i < this->gfx->getFrameCount(); i++) {
-        /*if (ProgressDialog::wasCanceled()) {
-            result |= 2;
-            break;
-        }*/
         D1GfxFrame *frame = this->gfx->getFrame(i);
         D1CEL_FRAME_TYPE prevType = frame->getFrameType();
         LevelTabFrameWidget::selectFrameType(frame);
         D1CEL_FRAME_TYPE newType = frame->getFrameType();
         if (prevType != newType) {
             dProgress() << tr("Changed Frame %1 from '%2' to '%3'.").arg(i + 1).arg(getFrameTypeName(prevType)).arg(getFrameTypeName(newType));
-            result = 1;
-        }
-        if (!ProgressDialog::incValue()) {
-            result |= 2;
-            break;
+            result = true;
         }
     }
-    if (result == 0) {
+    if (!result) {
         dProgress() << tr("No change was necessary.");
-    } else if (result & 1) {
+    } else {
         if (this->gfx->isUpscaled()) {
             this->gfx->setModified();
         } else {
@@ -1536,14 +1528,11 @@ void LevelCelView::resetFrameTypes()
 
 void LevelCelView::inefficientFrames()
 {
-    ProgressDialog::incBar(tr("Scanning frames..."), this->gfx->getFrameCount());
+    ProgressDialog::incBar(tr("Scanning frames..."), 1);
 
     int limit = 10;
     bool result = false;
     for (int i = 0; i < this->gfx->getFrameCount(); i++) {
-        /*if (ProgressDialog::wasCanceled()) {
-            return;
-        }*/
         D1GfxFrame *frame = this->gfx->getFrame(i);
         if (frame->getFrameType() != D1CEL_FRAME_TYPE::TransparentSquare) {
             continue;
@@ -1555,8 +1544,6 @@ void LevelCelView::inefficientFrames()
             dProgress() << tr("Frame %1 could be '%2' by changing %n pixel(s).", "", diff).arg(i + 1).arg(getFrameTypeName(effType));
             result = true;
         }
-        if (!ProgressDialog::incValue())
-            return;
     }
     if (!result) {
         dProgress() << tr("The frames are optimal.");
@@ -1615,7 +1602,7 @@ static int rightFoliagePixels(const D1GfxFrame *frame)
 
 void LevelCelView::checkSubtileFlags()
 {
-    ProgressDialog::incBar(tr("Checking SOL flags..."), this->min->getSubtileCount());
+    ProgressDialog::incBar(tr("Checking SOL flags..."), 1);
     bool result = false;
     unsigned floorMicros = this->min->getSubtileWidth() * this->min->getSubtileWidth() / 2;
 
@@ -1625,8 +1612,6 @@ void LevelCelView::checkSubtileFlags()
     progress.second = tr("SOL inconsistencies:");
     dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        // if (ProgressDialog::wasCanceled())
-        //    return;
         const std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
         quint8 solFlags = this->sol->getSubtileProperties(i);
         if (solFlags & (1 << 1)) {
@@ -1708,8 +1693,6 @@ void LevelCelView::checkSubtileFlags()
                 }
             }
         }
-        if (!ProgressDialog::incValue())
-            return;
     }
     if (!result) {
         progress.second = tr("No inconsistency detected in the SOL flags.");
@@ -1717,7 +1700,7 @@ void LevelCelView::checkSubtileFlags()
     }
 
     ProgressDialog::decBar();
-    ProgressDialog::incBar(tr("Checking TMI flags..."), this->min->getSubtileCount());
+    ProgressDialog::incBar(tr("Checking TMI flags..."), 1);
 
     // TMI:
     result = false;
@@ -1725,8 +1708,6 @@ void LevelCelView::checkSubtileFlags()
     progress.second = tr("TMI inconsistencies:");
     dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        // if (ProgressDialog::wasCanceled())
-        //    return;
         const std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
         quint8 tmiFlags = this->tmi->getSubtileProperties(i);
         if (tmiFlags & (1 << 0)) {
@@ -1901,8 +1882,6 @@ void LevelCelView::checkSubtileFlags()
                 }
             }
         }
-        if (!ProgressDialog::incValue())
-            return;
     }
     if (!result) {
         progress.second = tr("No inconsistency detected in the TMI flags.");
@@ -1914,7 +1893,7 @@ void LevelCelView::checkSubtileFlags()
 
 void LevelCelView::checkTileFlags()
 {
-    ProgressDialog::incBar(tr("Checking AMP flags..."), this->til->getTileCount());
+    ProgressDialog::incBar(tr("Checking AMP flags..."), 1);
     bool result = false;
 
     // AMP:
@@ -1923,8 +1902,6 @@ void LevelCelView::checkTileFlags()
     progress.second = tr("AMP inconsistencies:");
     dProgress() << progress;
     for (int i = 0; i < this->til->getTileCount(); i++) {
-        // if (ProgressDialog::wasCanceled())
-        //    return;
         quint8 ampType = this->amp->getTileType(i);
         quint8 ampFlags = this->amp->getTileProperties(i);
         if (ampFlags & (1 << 0)) {
@@ -2059,8 +2036,6 @@ void LevelCelView::checkTileFlags()
                 result = true;
             }
         }
-        if (!ProgressDialog::incValue())
-            return;
     }
     if (!result) {
         progress.second = tr("No inconsistency detected in the AMP flags.");
