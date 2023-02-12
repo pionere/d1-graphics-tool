@@ -2537,7 +2537,7 @@
     <message>
         <location filename="../source/openasdialog.cpp" line="141"/>
         <source>Select SOL file</source>
-        <translation>SOL fájl/translation>
+        <translation>SOL fájl</translation>
     </message>
     <message>
         <location filename="../source/openasdialog.cpp" line="151"/>
