@@ -65,6 +65,7 @@ public:
     bool isModified() const;
 
     QString getFilePath() const;
+    void setFilePath(const QString &path);
     QColor getUndefinedColor() const;
     void setUndefinedColor(QColor color);
     QColor getColor(quint8 index) const;

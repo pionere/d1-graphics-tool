@@ -1609,6 +1609,7 @@ void MainWindow::on_actionNew_PAL_triggered()
         QMessageBox::critical(this, tr("Error"), tr("Failed loading PAL file."));
         return;
     }
+    newPal->setFilePath(path);
     // replace entry in the pals map
     if (this->pals.contains(path))
         delete this->pals[path];
@@ -1708,6 +1709,7 @@ void MainWindow::on_actionNew_Translation_Unique_triggered()
         QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return;
     }
+    newTrn->setFilePath(path);
     // replace entry in the uniqueTrns map
     if (this->uniqueTrns.contains(path))
         delete this->uniqueTrns[path];
@@ -1807,10 +1809,7 @@ void MainWindow::on_actionNew_Translation_Base_triggered()
         QMessageBox::critical(this, tr("Error"), tr("Failed loading TRN file."));
         return;
     }
-    if (!newTrn->save(path)) {
-        delete newTrn;
-        return;
-    }
+    newTrn->setFilePath(path);
     // replace entry in the baseTrns map
     if (this->baseTrns.contains(path))
         delete this->baseTrns[path];

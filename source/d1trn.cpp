@@ -73,6 +73,11 @@ QString D1Trn::getFilePath() const
     return this->trnFilePath;
 }
 
+void D1Trn::setFilePath(const QString &path)
+{
+    this->trnFilePath = path;
+}
+
 quint8 D1Trn::getTranslation(quint8 index) const
 {
     return this->translations[index];

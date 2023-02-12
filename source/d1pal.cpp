@@ -168,6 +168,11 @@ QString D1Pal::getFilePath() const
     return this->palFilePath;
 }
 
+void D1Pal::setFilePath(const QString &path)
+{
+    this->palFilePath = path;
+}
+
 QColor D1Pal::getUndefinedColor() const
 {
     return this->undefinedColor;
