@@ -596,6 +596,8 @@ void ProgressDialog::closeEvent(QCloseEvent *event)
 void ProgressDialog::changeEvent(QEvent *event)
 {
     /*if (event->type() == QEvent::WindowStateChange && this->isMinimized()) {
+        theWidget->updateWidget(theDialog->status, true, this->windowTitle());
+
         this->hide();
     }*/
     if (event->type() == QEvent::LanguageChange) {

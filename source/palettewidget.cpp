@@ -334,9 +334,9 @@ void PaletteWidget::initializeUi()
 void PaletteWidget::initializePathComboBox()
 {
     if (!this->isTrn) {
-        this->paths[D1Pal::DEFAULT_PATH] = D1Pal::DEFAULT_NAME;
+        this->paths[D1Pal::DEFAULT_PATH] = tr("_default.pal");
     } else {
-        this->paths[D1Trn::IDENTITY_PATH] = D1Trn::IDENTITY_NAME;
+        this->paths[D1Trn::IDENTITY_PATH] = tr("_null.trn");
     }
 
     this->refreshPathComboBox();

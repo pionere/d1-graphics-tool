@@ -3285,7 +3285,7 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
             // if (min->subtileHeight != 8 * min->subtileWidth / 2) {
             //    dProgressErr() << QApplication::tr("Bad height %1 vs %2 after %3.").arg(min->subtileHeight).arg(min->subtileWidth).arg(padding);
             // }
-            paddingMsg = QApplication::tr("Empty subtiles were added to match the required height of the game (DevilutionX).");
+            paddingMsg = QApplication::tr("Empty frames were added to match the required height of the game (DevilutionX).");
         }
     }
     min->frameReferences.swap(newFrameReferences);

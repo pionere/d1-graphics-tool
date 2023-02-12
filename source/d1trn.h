@@ -9,7 +9,6 @@ class D1Trn : public QObject {
 
 public:
     static constexpr const char *IDENTITY_PATH = ":/null.trn";
-    static constexpr const char *IDENTITY_NAME = "_null.trn";
 
     D1Trn() = default;
     ~D1Trn() = default;

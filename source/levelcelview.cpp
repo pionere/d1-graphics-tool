@@ -1602,7 +1602,7 @@ static int rightFoliagePixels(const D1GfxFrame *frame)
 
 void LevelCelView::checkSubtileFlags()
 {
-    ProgressDialog::incBar(tr("Checking SOL flags..."), 2);
+    ProgressDialog::incBar(tr("Checking SOL flags..."), 1);
     bool result = false;
     unsigned floorMicros = this->min->getSubtileWidth() * this->min->getSubtileWidth() / 2;
 
@@ -1699,8 +1699,8 @@ void LevelCelView::checkSubtileFlags()
         dProgress() << progress;
     }
 
-    if (!ProgressDialog::incValue())
-        return;
+    ProgressDialog::decBar();
+    ProgressDialog::incBar(tr("Checking TMI flags..."), 1);
 
     // TMI:
     result = false;
@@ -1840,9 +1840,14 @@ void LevelCelView::checkSubtileFlags()
             }
             if (tmiFlags & (1 << 3)) {
                 // left floor transparency
-                // - must be left trapezoid or with transparent bits above the floor
-                if (/*leftType != D1CEL_FRAME_TYPE::LeftTrapezoid && */ (!leftAbove || !(tmiFlags & (1 << 0)))) {
-                    dProgressWarn() << tr("Subtile %1 has left floor transparency set, but it is not a left trapezoid on the (left-)floor and without transparent parts above the floor.").arg(i + 1);
+                // - must have non-transparent bits above the (left-)floor
+                if (!leftAbove) {
+                    dProgressWarn() << tr("Subtile %1 has left floor transparency set, but the left side is completely transparent above the floor.").arg(i + 1);
+                    result = true;
+                }
+                // - must have wall transparency set if there are non-transparent bits above the floor
+                if (leftAbove && !(tmiFlags & (1 << 0))) {
+                    dProgressWarn() << tr("Subtile %1 has left floor transparency set, but the parts above the floor are not going to be transparent (wall transparency not set).").arg(i + 1);
                     result = true;
                 }
             }
@@ -1865,9 +1870,14 @@ void LevelCelView::checkSubtileFlags()
             }
             if (tmiFlags & (1 << 6)) {
                 // right floor transparency
-                // - must be right trapezoid or with transparent bits above the floor
-                if (/*rightType != D1CEL_FRAME_TYPE::RightTrapezoid && */ (!rightAbove || !(tmiFlags & (1 << 0)))) {
-                    dProgressWarn() << tr("Subtile %1 has right floor transparency set, but it is not a right trapezoid on the (right-)floor and without transparent parts above the floor.").arg(i + 1);
+                // - must have non-transparent bits above the (right-)floor
+                if (!rightAbove) {
+                    dProgressWarn() << tr("Subtile %1 has right floor transparency set, but the right side is completely transparent above the floor.").arg(i + 1);
+                    result = true;
+                }
+                // - must have wall transparency set if there are non-transparent bits above the floor
+                if (rightAbove && !(tmiFlags & (1 << 0))) {
+                    dProgressWarn() << tr("Subtile %1 has right floor transparency set, but the parts above the floor are not going to be transparent (wall transparency not set).").arg(i + 1);
                     result = true;
                 }
             }
@@ -1897,11 +1907,11 @@ void LevelCelView::checkTileFlags()
         if (ampFlags & (1 << 0)) {
             // western door
             if (ampFlags & (1 << 2)) {
-                dProgressWarn() << tr("Tile %1 has both west-door and west arch flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both west-door and west-arch flags set.").arg(i + 1);
                 result = true;
             }
             if (ampFlags & (1 << 4)) {
-                dProgressWarn() << tr("Tile %1 has both west-door and west grate flags set.").arg(i + 1);
+                dProgressWarn() << tr("Tile %1 has both west-door and west-grate flags set.").arg(i + 1);
                 result = true;
             }
             if (ampFlags & (1 << 6)) {
