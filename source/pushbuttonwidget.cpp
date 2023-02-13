@@ -7,15 +7,17 @@
 #include "config.h"
 
 #define ICON_SIZE 16
-#define SELECTION_WIDTH 2
+#define SELECTION_WIDTH 1
 
 PushButtonWidget::PushButtonWidget(QLayout *parent, QStyle::StandardPixmap type, const QString &tooltip)
     : QPushButton(QApplication::style()->standardIcon(type), "", nullptr)
 {
     this->setToolTip(tooltip);
     this->setIconSize(QSize(ICON_SIZE, ICON_SIZE));
-    this->setMinimumSize(ICON_SIZE + SELECTION_WIDTH * 2, ICON_SIZE + SELECTION_WIDTH * 2);
-    this->setMaximumSize(ICON_SIZE + SELECTION_WIDTH * 2, ICON_SIZE + SELECTION_WIDTH * 2);
+    // this->setMinimumSize(ICON_SIZE + SELECTION_WIDTH * 2, ICON_SIZE + SELECTION_WIDTH * 2);
+    // this->setMaximumSize(ICON_SIZE + SELECTION_WIDTH * 2, ICON_SIZE + SELECTION_WIDTH * 2);
+    this->setMinimumSize(ICON_SIZE, ICON_SIZE);
+    this->setMaximumSize(ICON_SIZE, ICON_SIZE);
     parent->addWidget(this);
 }
 
@@ -32,7 +34,7 @@ void PushButtonWidget::paintEvent(QPaintEvent *event)
 
         QSize size = this->size();
         QRect rect = QRect(0, 0, size.width(), size.height());
-        rect.adjust(0, 0, -SELECTION_WIDTH, -SELECTION_WIDTH);
+        // rect.adjust(0, 0, -SELECTION_WIDTH, -SELECTION_WIDTH);
         // - top line
         painter.drawLine(rect.left(), rect.top(), rect.right(), rect.top());
         // - bottom line

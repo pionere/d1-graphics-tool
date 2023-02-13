@@ -951,6 +951,11 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->trnUniqueWidget->initialize(this->trnUnique, this->celView, this->levelCelView, this->palHits);
     this->trnBaseWidget->initialize(this->trnBase, this->celView, this->levelCelView, this->palHits);
 
+    // setup default options in the palette widgets
+    // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), this->pal->getFilePath());
+    this->trnUniqueWidget->updatePathComboBoxOptions(this->uniqueTrns.keys(), this->trnUnique->getFilePath());
+    this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), this->trnBase->getFilePath());
+
     // Refresh the view if a PAL or TRN is modified
     QObject::connect(this->palWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);
     QObject::connect(this->trnUniqueWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);

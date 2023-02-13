@@ -708,8 +708,8 @@ void PaletteWidget::refreshColorLineEdit()
     if (colorIndex != this->selectedLastColorIndex) {
         text = "*";
     } else if (colorIndex != COLORIDX_TRANSPARENT) {
-        QColor selectedColor = this->pal->getColor(colorIndex);
-        text = selectedColor.name();
+        QColor color = this->isTrn ? this->trn->getResultingPalette()->getColor(colorIndex) : this->pal->getColor(colorIndex);
+        text = color.name();
     } else {
         active = false;
     }
