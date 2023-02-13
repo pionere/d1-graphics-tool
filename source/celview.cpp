@@ -85,10 +85,10 @@ void CelScene::dropEvent(QGraphicsSceneDragDropEvent *event)
     dMainWindow().openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
 }
 
-void CelScene::contextMenuEvent(QContextMenuEvent *event)
+/*void CelScene::contextMenuEvent(QContextMenuEvent *event)
 {
     emit this->showContextMenu(event->globalPos());
-}
+}*/
 
 void CelScene::zoomOut()
 {

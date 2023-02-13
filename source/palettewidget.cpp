@@ -210,10 +210,10 @@ void PaletteScene::dropEvent(QGraphicsSceneDragDropEvent *event)
     dMainWindow().openPalFiles(filePaths, (PaletteWidget *)this->view);
 }
 
-void PaletteScene::contextMenuEvent(QContextMenuEvent *event)
+/*void PaletteScene::contextMenuEvent(QContextMenuEvent *event)
 {
     ((PaletteWidget *)this->view)->ShowContextMenu(event->globalPos());
-}
+}*/
 
 PaletteWidget::PaletteWidget(QUndoStack *us, QString title)
     : QWidget(nullptr)
