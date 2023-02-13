@@ -285,8 +285,12 @@ bool MainWindow::loadPal(const QString &palFilePath)
         return false;
     }
     // replace entry in the pals map
-    if (this->pals.contains(path))
+    if (this->pals.contains(path)) {
+        if (this->pal == this->pals[path]) {
+            this->setPal(D1Pal::DEFAULT_PATH);
+        }
         delete this->pals[path];
+    }
     this->pals[path] = newPal;
     // add path in palWidget
     this->palWidget->addPath(path, name);
@@ -307,8 +311,12 @@ bool MainWindow::loadUniqueTrn(const QString &trnFilePath)
         return false;
     }
     // replace entry in the uniqueTrns map
-    if (this->uniqueTrns.contains(path))
+    if (this->uniqueTrns.contains(path)) {
+        if (this->trnUnique == this->uniqueTrns[path]) {
+            this->setUniqueTrn(D1Trn::IDENTITY_PATH);
+        }
         delete this->uniqueTrns[path];
+    }
     this->uniqueTrns[path] = newTrn;
     // add path in trnUniqueWidget
     this->trnUniqueWidget->addPath(path, name);
@@ -329,8 +337,12 @@ bool MainWindow::loadBaseTrn(const QString &trnFilePath)
         return false;
     }
     // replace entry in the baseTrns map
-    if (this->baseTrns.contains(path))
+    if (this->baseTrns.contains(path)) {
+        if (this->trnBase == this->baseTrns[path]) {
+            this->setBaseTrn(D1Trn::IDENTITY_PATH);
+        }
         delete this->baseTrns[path];
+    }
     this->baseTrns[path] = newTrn;
     // add path in trnBaseWidget
     this->trnBaseWidget->addPath(path, name);
