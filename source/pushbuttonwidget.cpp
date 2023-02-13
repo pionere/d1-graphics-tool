@@ -31,7 +31,7 @@ void PushButtonWidget::paintEvent(QPaintEvent *event)
         painter.setPen(pen);
 
         QSize size = this->size();
-        QRect rect = (0, 0, size.width(), size.height());
+        QRect rect = QRect(0, 0, size.width(), size.height());
         rect.adjust(0, 0, -SELECTION_WIDTH, -SELECTION_WIDTH);
         // - top line
         painter.drawLine(rect.left(), rect.top(), rect.right(), rect.top());
@@ -51,7 +51,11 @@ void PushButtonWidget::focusInEvent(QFocusEvent *event)
     QPushButton::focusInEvent(event);
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 void PushButtonWidget::enterEvent(QEnterEvent *event)
+#else
+void PushButtonWidget::enterEvent(QEvent *event)
+#endif
 {
     this->inFocus = true;
 

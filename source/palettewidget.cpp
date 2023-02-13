@@ -326,7 +326,7 @@ void PaletteWidget::initializePathComboBox()
         path = D1Trn::IDENTITY_PATH;
         name = "_null.trn";
     } else {
-        path = D1Trn::DEFAULT_PATH;
+        path = D1Pal::DEFAULT_PATH;
         name = "_default.pal";
     }
     this->addPath(path, name);
