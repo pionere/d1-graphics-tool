@@ -119,7 +119,7 @@ private slots:
 
 protected:
     void closeEvent(QCloseEvent *e) override;
-    void changeEvent(QEvent *e);
+    void changeEvent(QEvent *e) override;
 
 private:
     static void incBar_impl(const QString &label, int maxValue);
