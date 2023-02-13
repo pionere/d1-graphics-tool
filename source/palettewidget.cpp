@@ -249,10 +249,11 @@ void PaletteWidget::setPal(D1Pal *p)
 {
     this->pal = p;
 
-    QString path = p->getFilePath();
+    this->refreshPathComboBox();
+    /*QString path = p->getFilePath();
     int index = this->ui->pathComboBox->findData(path);
     this->ui->pathComboBox->setCurrentIndex(index);
-    this->ui->pathComboBox->setToolTip(path);
+    this->ui->pathComboBox->setToolTip(path);*/
 
     emit this->modified();
 }
@@ -260,6 +261,8 @@ void PaletteWidget::setPal(D1Pal *p)
 void PaletteWidget::setTrn(D1Trn *t)
 {
     this->trn = t;
+
+    this->refreshPathComboBox();
 
     emit this->modified();
 }
