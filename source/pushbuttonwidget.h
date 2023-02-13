@@ -11,7 +11,8 @@
 class PushButtonWidget : public QPushButton {
     Q_OBJECT
 
-    explicit PushButtonWidget(QLayout *parent, QStyle::StandardPixmap type, const QString &tooltip, const QObject *receiver, PointerToMemberFunction method);
+    explicit PushButtonWidget(QLayout *parent, QStyle::StandardPixmap type, const QString &tooltip);
+
 public:
     ~PushButtonWidget() = default;
 

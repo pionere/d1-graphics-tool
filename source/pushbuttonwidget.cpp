@@ -1,6 +1,6 @@
 #include "pushbuttonwidget.h"
 
-#include <QApplicaton>
+#include <QApplication>
 #include <QColor>
 #include <QPainter>
 
@@ -10,7 +10,7 @@
 #define SELECTION_WIDTH 2
 
 PushButtonWidget::PushButtonWidget(QLayout *parent, QStyle::StandardPixmap type, const QString &tooltip)
-    : QPushButton(QApplicaton::style()->standardIcon(type), "", nullptr)
+    : QPushButton(QApplication::style()->standardIcon(type), "", nullptr)
 {
     this->setToolTip(tooltip);
     this->setIconSize(QSize(ICON_SIZE, ICON_SIZE));
@@ -32,7 +32,7 @@ void PushButtonWidget::paintEvent(QPaintEvent *event)
 
         QSize size = this->size();
         QRect rect = (0, 0, size.width(), size.height());
-        rect.adjust(0, 0, -SELECTION_WIDTH, -SELECTION_WIDTH)
+        rect.adjust(0, 0, -SELECTION_WIDTH, -SELECTION_WIDTH);
         // - top line
         painter.drawLine(rect.left(), rect.top(), rect.right(), rect.top());
         // - bottom line
