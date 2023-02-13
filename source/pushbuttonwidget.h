@@ -3,6 +3,7 @@
 #include <QEvent>
 #include <QFocusEvent>
 #include <QLayout>
+#include <QObject>
 #include <QPaintEvent>
 #include <QPushButton>
 #include <QStyle>
@@ -14,16 +15,20 @@ class PushButtonWidget : public QPushButton {
 public:
     ~PushButtonWidget() = default;
 
-    static PushButtonWidget *addButton(QLayout *parent, QStyle::StandardPixmap type, const QString &tooltip, const QObject *receiver, PointerToMemberFunction method);
-signals:
-    void cancel_signal();
+    template <typename Object, typename PointerToMemberFunction>
+    static PushButtonWidget *addButton(QLayout *parent, QStyle::StandardPixmap type, const QString &tooltip, const Object receiver, PointerToMemberFunction method)
+    {
+        PushButtonWidget *widget = new PushButtonWidget(parent, type, tooltip);
+        QObject::connect(widget, &QPushButton::clicked, receiver, method);
+        return widget;
+    }
 
 protected:
-    void paintEvent(QPaintEvent *event);
-    void enterEvent(QEvent *event);
-    void focusInEvent(QFocusEvent *event);
-    void leaveEvent(QEvent *event);
-    void focusOutEvent(QFocusEvent *event);
+    void paintEvent(QPaintEvent *event) override;
+    void enterEvent(QEnterEvent *event) override;
+    void focusInEvent(QFocusEvent *event) override;
+    void leaveEvent(QEvent *event) override;
+    void focusOutEvent(QFocusEvent *event) override;
 
 private:
     bool inFocus = false;

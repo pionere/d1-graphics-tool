@@ -1,70 +1,73 @@
 #include "pushbuttonwidget.h"
 
+#include <QApplicaton>
 #include <QColor>
 #include <QPainter>
 
 #include "config.h"
 
 #define ICON_SIZE 16
-#define SELECTION_WIDTH 1
+#define SELECTION_WIDTH 2
 
-PushButtonWidget::PushButtonWidget(QLayout *parent, QStyle::StandardPixmap type, const QString &tooltip, const QObject *receiver, PointerToMemberFunction callback)
-    : QPushButton("", nullptr)
+PushButtonWidget::PushButtonWidget(QLayout *parent, QStyle::StandardPixmap type, const QString &tooltip)
+    : QPushButton(QApplicaton::style()->standardIcon(type), "", nullptr)
 {
-    this->setIcon(this->style()->standardIcon(type));
     this->setToolTip(tooltip);
     this->setIconSize(QSize(ICON_SIZE, ICON_SIZE));
     this->setMinimumSize(ICON_SIZE + SELECTION_WIDTH * 2, ICON_SIZE + SELECTION_WIDTH * 2);
     this->setMaximumSize(ICON_SIZE + SELECTION_WIDTH * 2, ICON_SIZE + SELECTION_WIDTH * 2);
     parent->addWidget(this);
-
-    QObject::connect(this, &QPushButton::clicked, receiver, callback);
-}
-
-void PushButtonWidget::addButton(QLayout *parent, QStyle::StandardPixmap type, const QString &tooltip, const QObject *receiver, PointerToMemberFunction callback)
-{
-    return new PushButtonWidget(parent, type, tooltip, receiver, callback);
 }
 
 void PushButtonWidget::paintEvent(QPaintEvent *event)
 {
+    QPushButton::paintEvent(event);
+
     if (this->inFocus) {
         QPainter painter(this);
         QColor borderColor = QColor(Config::getPaletteSelectionBorderColor());
+        QPen pen(borderColor);
+        pen.setWidth(SELECTION_WIDTH);
+        painter.setPen(pen);
 
-        int width = this->size().width();
-        int height = this->size().height();
-
-        painter.fillRect(0, 0, width, height, borderColor);
+        QSize size = this->size();
+        QRect rect = (0, 0, size.width(), size.height());
+        rect.adjust(0, 0, -SELECTION_WIDTH, -SELECTION_WIDTH)
+        // - top line
+        painter.drawLine(rect.left(), rect.top(), rect.right(), rect.top());
+        // - bottom line
+        painter.drawLine(rect.left(), rect.bottom(), rect.right(), rect.bottom());
+        // - left side
+        painter.drawLine(rect.left(), rect.top(), rect.left(), rect.bottom());
+        // - right side
+        painter.drawLine(rect.right(), rect.top(), rect.right(), rect.bottom());
     }
-
-    PushButtonWidget::paintEvent(event);
 }
 
 void PushButtonWidget::focusInEvent(QFocusEvent *event)
 {
     this->inFocus = true;
 
-    PushButtonWidget::focusInEvent(event);
+    QPushButton::focusInEvent(event);
 }
 
-void PushButtonWidget::enterEvent(QEvent *event)
+void PushButtonWidget::enterEvent(QEnterEvent *event)
 {
     this->inFocus = true;
 
-    PushButtonWidget::enterEvent(event);
+    QPushButton::enterEvent(event);
+}
+
+void PushButtonWidget::focusOutEvent(QFocusEvent *event)
+{
+    this->inFocus = false;
+
+    QPushButton::focusOutEvent(event);
 }
 
 void PushButtonWidget::leaveEvent(QEvent *event)
 {
     this->inFocus = false;
 
-    PushButtonWidget::leaveEvent(event);
-}
-
-void PushButtonWidget::focusOutEvent(QEvent *event)
-{
-    this->inFocus = false;
-
-    PushButtonWidget::focusOutEvent(event);
+    QPushButton::leaveEvent(event);
 }

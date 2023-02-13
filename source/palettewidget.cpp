@@ -10,6 +10,7 @@
 
 #include "config.h"
 #include "mainwindow.h"
+#include "pushbuttonwidget.h"
 #include "ui_palettewidget.h"
 
 #define COLORIDX_TRANSPARENT -1
@@ -320,13 +321,15 @@ void PaletteWidget::initializeUi()
 
 void PaletteWidget::initializePathComboBox()
 {
-    if (!this->isTrn) {
-        this->paths[D1Pal::DEFAULT_PATH] = tr("_default.pal");
+    const char *path, *name;
+    if (this->isTrn) {
+        path = D1Trn::IDENTITY_PATH;
+        name = "_null.trn";
     } else {
-        this->paths[D1Trn::IDENTITY_PATH] = tr("_null.trn");
+        path = D1Trn::DEFAULT_PATH;
+        name = "_default.pal";
     }
-
-    this->refreshPathComboBox();
+    this->addPath(path, name);
 }
 
 void PaletteWidget::initializeDisplayComboBox()
@@ -394,12 +397,17 @@ void PaletteWidget::checkTranslationsSelection(QList<quint8> indexes)
 void PaletteWidget::addPath(const QString &path, const QString &name)
 {
     this->paths[path] = name;
+
+    this->refreshPathComboBox();
 }
 
 void PaletteWidget::removePath(const QString &path)
 {
-    if (this->paths.contains(path))
+    if (this->paths.contains(path)) {
         this->paths.remove(path);
+
+        this->refreshPathComboBox();
+    }
 }
 
 QString PaletteWidget::getSelectedPath() const
@@ -785,7 +793,7 @@ void PaletteWidget::refresh()
         this->trn->refreshResultingPalette();
 
     this->displayColors();
-    this->refreshPathComboBox();
+    // this->refreshPathComboBox();
     this->refreshColorLineEdit();
     this->refreshIndexLineEdit();
     if (this->isTrn)
