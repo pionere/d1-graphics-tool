@@ -249,11 +249,7 @@ void PaletteWidget::setPal(D1Pal *p)
 {
     this->pal = p;
 
-    this->refreshPathComboBox();
-    /*QString path = p->getFilePath();
-    int index = this->ui->pathComboBox->findData(path);
-    this->ui->pathComboBox->setCurrentIndex(index);
-    this->ui->pathComboBox->setToolTip(path);*/
+    // this->refreshPathComboBox();
 
     emit this->modified();
 }
@@ -262,7 +258,7 @@ void PaletteWidget::setTrn(D1Trn *t)
 {
     this->trn = t;
 
-    this->refreshPathComboBox();
+    // this->refreshPathComboBox();
 
     emit this->modified();
 }
@@ -284,10 +280,10 @@ void PaletteWidget::initialize(D1Pal *p, CelView *c, LevelCelView *lc, D1PalHits
     this->initializeUi();
 }
 
-void PaletteWidget::initialize(D1Pal *p, D1Trn *t, CelView *c, LevelCelView *lc, D1PalHits *ph)
+void PaletteWidget::initialize(D1Trn *t, CelView *c, LevelCelView *lc, D1PalHits *ph)
 {
     this->isTrn = true;
-    this->pal = p;
+    this->pal = nullptr;
     this->trn = t;
     this->celView = c;
     this->levelCelView = lc;
@@ -306,7 +302,7 @@ void PaletteWidget::initializeUi()
     this->ui->colorPickPushButton->setVisible(!trnMode);
     this->ui->colorClearPushButton->setVisible(!trnMode);
 
-    this->initializePathComboBox();
+    // this->initializePathComboBox();
     this->initializeDisplayComboBox();
 
     this->refreshColorLineEdit();
@@ -315,19 +311,6 @@ void PaletteWidget::initializeUi()
         this->refreshTranslationIndexLineEdit();
 
     this->displayColors();
-}
-
-void PaletteWidget::initializePathComboBox()
-{
-    const char *path, *name;
-    if (this->isTrn) {
-        path = D1Trn::IDENTITY_PATH;
-        name = "_null.trn";
-    } else {
-        path = D1Pal::DEFAULT_PATH;
-        name = "_default.pal";
-    }
-    this->addPath(path, name);
 }
 
 void PaletteWidget::initializeDisplayComboBox()
@@ -390,27 +373,6 @@ void PaletteWidget::checkTranslationsSelection(QList<quint8> indexes)
     this->undoStack->push(command);
 
     emit this->colorPicking_stopped(); // finish color picking
-}
-
-void PaletteWidget::addPath(const QString &path, const QString &name)
-{
-    this->paths[path] = name;
-
-    this->refreshPathComboBox();
-}
-
-void PaletteWidget::removePath(const QString &path)
-{
-    if (this->paths.contains(path)) {
-        this->paths.remove(path);
-
-        this->refreshPathComboBox();
-    }
-}
-
-QString PaletteWidget::getSelectedPath() const
-{
-    return this->paths.key(this->ui->pathComboBox->currentText());
 }
 
 static QRectF getColorCoordinates(quint8 index)
@@ -703,15 +665,30 @@ void PaletteWidget::stopTrnColorPicking()
     this->displayColors();
 }
 
-void PaletteWidget::refreshPathComboBox()
+void PaletteWidget::updatePathComboBoxOptions(const QList<QString> &options, const String &selectedOption)
 {
-    this->ui->pathComboBox->clear();
+    QComboBox *pcb = this->ui->pathComboBox;
 
-    // Go through the hits of the CEL frame and add them to the subtile hits
-    for (auto iter = this->paths.cbegin(); iter != this->paths.cend(); iter++) {
-        this->ui->pathComboBox->addItem(iter.value(), iter.key());
+    pcb->clear();
+    for (int i = 0; i < options.count(); i++) {
+        const QString &option = options[i];
+        QString name;
+        if (MainWindow::isResourcePath(option)) {
+            name = option == D1Pal::DEFAULT_PATH ? "_default.pal" : "_null.trn"; // TODO: check if D1Trn::IDENTITY_PATH?
+        } else {
+            QFileInfo fileInfo(option);
+            name = fileInfo.fileName();
+        }
+        pcb->addItem(name, option);
+        if (selectedOption == option) {
+            pcb->setCurrentIndex(i);
+            pcb->setToolTip(opion);
+        }
     }
+}
 
+/*void PaletteWidget::refreshPathComboBox()
+{
     QString selectedPath;
     if (!this->isTrn) {
         selectedPath = this->pal->getFilePath();
@@ -720,7 +697,7 @@ void PaletteWidget::refreshPathComboBox()
     }
     this->ui->pathComboBox->setCurrentIndex(this->ui->pathComboBox->findData(selectedPath));
     this->ui->pathComboBox->setToolTip(selectedPath);
-}
+}*/
 
 void PaletteWidget::refreshColorLineEdit()
 {
@@ -857,6 +834,7 @@ void PaletteWidget::on_actionCopy_triggered()
 
 void PaletteWidget::on_actionPaste_triggered()
 {
+    // assert(!this->isTrn);
     // collect the colors
     QList<QPair<int, QColor>> colors = clipboardToColors();
     if (colors.isEmpty()) {
@@ -945,6 +923,7 @@ void PaletteWidget::on_displayComboBox_activated(int index)
 
 void PaletteWidget::on_colorLineEdit_returnPressed()
 {
+    // assert(!this->isTrn);
     QColor color = QColor(ui->colorLineEdit->text());
 
     if (color.isValid()) {
@@ -970,6 +949,7 @@ void PaletteWidget::on_colorLineEdit_escPressed()
 
 void PaletteWidget::on_colorPickPushButton_clicked()
 {
+    // assert(!this->isTrn);
     this->initStopColorPicking();
 
     QColor color = QColorDialog::getColor();
@@ -993,6 +973,7 @@ void PaletteWidget::on_colorPickPushButton_clicked()
 
 void PaletteWidget::on_colorClearPushButton_clicked()
 {
+    // assert(!this->isTrn);
     this->initStopColorPicking();
 
     QColor undefinedColor = QColor(Config::getPaletteUndefinedColor());

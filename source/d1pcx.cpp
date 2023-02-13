@@ -37,13 +37,13 @@ typedef struct _PcxPalette {
     quint8 data[D1PCX_COLORS][3];
 } PCXPALETTE;
 
-bool D1Pcx::load(D1Gfx &gfx, D1Pal *pal, const QString &pcxFilePath, const OpenAsParam &params)
+bool D1Pcx::load(D1Gfx &gfx, D1Pal *pal, const QString &filePath, const OpenAsParam &params)
 {
-    QString filePath = pcxFilePath;
+    QString celPath = filePath;
 
     // assert(filePath.toLower().endsWith(".pcx"));
-    filePath.chop(4);
-    filePath += ".cel";
+    celPath.chop(4);
+    celPath += ".cel";
 
     if (params.celWidth != 0) {
         dProgressWarn() << QApplication::tr("Width setting is ignored when a PCX file is loaded.");
@@ -64,20 +64,20 @@ bool D1Pcx::load(D1Gfx &gfx, D1Pal *pal, const QString &pcxFilePath, const OpenA
     D1GfxFrame *frame = new D1GfxFrame();
     gfx.frames.append(frame);
 
-    gfx.gfxFilePath = filePath;
+    gfx.gfxFilePath = celPath;
     gfx.modified = true;
 
     bool dummy;
-    return D1Pcx::load(*frame, pcxFilePath, clipped, pal, nullptr, &dummy);
+    return D1Pcx::load(*frame, filePath, clipped, pal, nullptr, &dummy);
 }
 
-bool D1Pcx::load(D1GfxFrame &frame, const QString &pcxFilePath, bool clipped, D1Pal *basePal, D1Pal *resPal, bool *palMod)
+bool D1Pcx::load(D1GfxFrame &frame, const QString &filePath, bool clipped, D1Pal *basePal, D1Pal *resPal, bool *palMod)
 {
     // Opening PCX file
-    QFile file = QFile(pcxFilePath);
+    QFile file = QFile(filePath);
 
     if (!file.open(QIODevice::ReadOnly)) {
-        dProgressErr() << QApplication::tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(pcxFilePath));
+        dProgressErr() << QApplication::tr("Failed to read file: %1.").arg(QDir::toNativeSeparators(filePath));
         return false;
     }
 

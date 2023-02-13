@@ -201,14 +201,17 @@ void MainWindow::setPal(const QString &path)
     this->trnUnique->setPalette(this->pal);
     this->trnUnique->refreshResultingPalette();
     this->trnBase->refreshResultingPalette();
-
-    this->palWidget->setPal(this->pal);
+    // update the widgets
+    // - views
     if (this->celView != nullptr) {
         this->celView->setPal(this->pal);
     }
     if (this->levelCelView != nullptr) {
         this->levelCelView->setPal(this->pal);
     }
+    // - palWidget
+    this->palWidget->updatePathComboBoxOptions(this->pals.keys(), path);
+    this->palWidget->setPal(this->pal);
 }
 
 void MainWindow::setUniqueTrn(const QString &path)
@@ -219,6 +222,8 @@ void MainWindow::setUniqueTrn(const QString &path)
     this->trnBase->setPalette(this->trnUnique->getResultingPalette());
     this->trnBase->refreshResultingPalette();
 
+    // update trnUniqueWidget
+    this->trnUniqueWidget->updatePathComboBoxOptions(this->uniqueTrns.keys(), path);
     this->trnUniqueWidget->setTrn(this->trnUnique);
 }
 
@@ -230,6 +235,8 @@ void MainWindow::setBaseTrn(const QString &path)
 
     this->gfx->setPalette(this->trnBase->getResultingPalette());
 
+    // update trnBaseWidget
+    this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), path);
     this->trnBaseWidget->setTrn(this->trnBase);
 }
 
@@ -271,13 +278,8 @@ void MainWindow::updateWindow()
     }
 }
 
-bool MainWindow::loadPal(const QString &palFilePath)
+bool MainWindow::loadPal(const QString &path)
 {
-    QFileInfo palFileInfo(palFilePath);
-    // QString path = palFileInfo.absoluteFilePath();
-    const QString &path = palFilePath;
-    const QString name = palFileInfo.fileName();
-
     D1Pal *newPal = new D1Pal();
     if (!newPal->load(path)) {
         delete newPal;
@@ -285,25 +287,16 @@ bool MainWindow::loadPal(const QString &palFilePath)
         return false;
     }
     // replace entry in the pals map
-    if (this->pals.contains(path)) {
-        if (this->pal == this->pals[path]) {
-            this->setPal(D1Pal::DEFAULT_PATH);
-        }
-        delete this->pals[path];
-    }
+    if (this->pals.contains(path))
+        delete this->pals[path]; // -> setPal must be called!
     this->pals[path] = newPal;
     // add path in palWidget
-    this->palWidget->addPath(path, name);
+    this->palWidget->updatePathComboBoxOptions(this->pals.keys(), this->pal->getFilePath());
     return true;
 }
 
-bool MainWindow::loadUniqueTrn(const QString &trnFilePath)
+bool MainWindow::loadUniqueTrn(const QString &path)
 {
-    QFileInfo trnFileInfo(trnFilePath);
-    // QString path = trnFileInfo.absoluteFilePath();
-    const QString &path = trnFilePath;
-    const QString name = trnFileInfo.fileName();
-
     D1Trn *newTrn = new D1Trn();
     if (!newTrn->load(path, this->pal)) {
         delete newTrn;
@@ -311,25 +304,16 @@ bool MainWindow::loadUniqueTrn(const QString &trnFilePath)
         return false;
     }
     // replace entry in the uniqueTrns map
-    if (this->uniqueTrns.contains(path)) {
-        if (this->trnUnique == this->uniqueTrns[path]) {
-            this->setUniqueTrn(D1Trn::IDENTITY_PATH);
-        }
-        delete this->uniqueTrns[path];
-    }
+    if (this->uniqueTrns.contains(path))
+        delete this->uniqueTrns[path]; // -> setUniqueTrn must be called!
     this->uniqueTrns[path] = newTrn;
     // add path in trnUniqueWidget
-    this->trnUniqueWidget->addPath(path, name);
+    this->trnUniqueWidget->updatePathComboBoxOptions(this->uniqueTrns.keys(), this->trnUnique->getFilePath());
     return true;
 }
 
-bool MainWindow::loadBaseTrn(const QString &trnFilePath)
+bool MainWindow::loadBaseTrn(const QString &path)
 {
-    QFileInfo trnFileInfo(trnFilePath);
-    // QString path = trnFileInfo.absoluteFilePath();
-    const QString &path = trnFilePath;
-    const QString name = trnFileInfo.fileName();
-
     D1Trn *newTrn = new D1Trn();
     if (!newTrn->load(path, this->trnUnique->getResultingPalette())) {
         delete newTrn;
@@ -337,15 +321,11 @@ bool MainWindow::loadBaseTrn(const QString &trnFilePath)
         return false;
     }
     // replace entry in the baseTrns map
-    if (this->baseTrns.contains(path)) {
-        if (this->trnBase == this->baseTrns[path]) {
-            this->setBaseTrn(D1Trn::IDENTITY_PATH);
-        }
-        delete this->baseTrns[path];
-    }
+    if (this->baseTrns.contains(path))
+        delete this->baseTrns[path]; // -> setBaseTrn must be called!
     this->baseTrns[path] = newTrn;
     // add path in trnBaseWidget
-    this->trnBaseWidget->addPath(path, name);
+    this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), this->trnBase->getFilePath());
     return true;
 }
 
@@ -968,8 +948,8 @@ void MainWindow::openFile(const OpenAsParam &params)
     // Initialize palette widgets
     this->palHits = new D1PalHits(this->gfx, this->tileset);
     this->palWidget->initialize(this->pal, this->celView, this->levelCelView, this->palHits);
-    this->trnUniqueWidget->initialize(this->pal, this->trnUnique, this->celView, this->levelCelView, this->palHits);
-    this->trnBaseWidget->initialize(this->trnUnique->getResultingPalette(), this->trnBase, this->celView, this->levelCelView, this->palHits);
+    this->trnUniqueWidget->initialize(this->trnUnique, this->celView, this->levelCelView, this->palHits);
+    this->trnBaseWidget->initialize(this->trnBase, this->celView, this->levelCelView, this->palHits);
 
     // Refresh the view if a PAL or TRN is modified
     QObject::connect(this->palWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);
@@ -1030,14 +1010,14 @@ void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, boo
     ProgressDialog::done();
 }
 
-void MainWindow::openPalFiles(QStringList filePaths, PaletteWidget *widget)
+void MainWindow::openPalFiles(const QStringList &filePaths, PaletteWidget *widget)
 {
     QString firstFound;
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, PAF_NONE);
 
     if (widget == this->palWidget) {
-        for (QString path : filePaths) {
+        for (const QString &path : filePaths) {
             if (this->loadPal(path) && firstFound.isEmpty()) {
                 firstFound = path;
             }
@@ -1046,7 +1026,7 @@ void MainWindow::openPalFiles(QStringList filePaths, PaletteWidget *widget)
             this->setPal(firstFound);
         }
     } else if (widget == this->trnUniqueWidget) {
-        for (QString path : filePaths) {
+        for (const QString &path : filePaths) {
             if (this->loadUniqueTrn(path) && firstFound.isEmpty()) {
                 firstFound = path;
             }
@@ -1055,7 +1035,7 @@ void MainWindow::openPalFiles(QStringList filePaths, PaletteWidget *widget)
             this->setUniqueTrn(firstFound);
         }
     } else if (widget == this->trnBaseWidget) {
-        for (QString path : filePaths) {
+        for (const QString &path : filePaths) {
             if (this->loadBaseTrn(path) && firstFound.isEmpty()) {
                 firstFound = path;
             }
@@ -1627,7 +1607,7 @@ void MainWindow::on_actionNew_PAL_triggered()
         delete this->pals[path];
     this->pals[path] = newPal;
     // add path in palWidget
-    this->palWidget->addPath(path, name);
+    // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), path);
     // select the new palette
     this->setPal(path);
 }
@@ -1636,18 +1616,12 @@ void MainWindow::on_actionOpen_PAL_triggered()
 {
     QStringList palFilePaths = this->filesDialog(tr("Select Palette Files"), tr("PAL Files (*.pal *.PAL)"));
 
-    bool first = true;
-    for (int i = 0; i < palFilePaths.count(); i++) {
-        if (this->loadPal(palFilePaths[i]) && first) {
-            first = false;
-            this->setPal(palFilePaths[i]);
-        }
-    }
+    this->openPalFiles(palFilePaths, this->palWidget);
 }
 
 void MainWindow::on_actionSave_PAL_triggered()
 {
-    QString filePath = this->palWidget->getSelectedPath();
+    QString filePath = this->pal->getFilePath();
     if (MainWindow::isResourcePath(filePath)) {
         this->on_actionSave_PAL_as_triggered();
     } else {
@@ -1675,19 +1649,19 @@ void MainWindow::on_actionSave_PAL_as_triggered()
 
 void MainWindow::on_actionClose_PAL_triggered()
 {
-    QString filePath = this->palWidget->getSelectedPath();
+    QString filePath = this->pal->getFilePath();
     if (MainWindow::isResourcePath(filePath)) {
         this->pal->load(filePath);
         this->setPal(filePath);
         return;
     }
-    // select the default palette
-    this->setPal(D1Pal::DEFAULT_PATH);
     // remove entry from the pals map
     D1Pal *pal = this->pals.take(filePath);
     MemFree(pal);
     // remove path in palWidget
-    this->palWidget->removePath(filePath);
+    // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), D1Pal::DEFAULT_PATH);
+    // select the default palette
+    this->setPal(D1Pal::DEFAULT_PATH);
 }
 
 void MainWindow::on_actionNew_Translation_Unique_triggered()
@@ -1714,7 +1688,7 @@ void MainWindow::on_actionNew_Translation_Unique_triggered()
         delete this->uniqueTrns[path];
     this->uniqueTrns[path] = newTrn;
     // add path in trnUniqueWidget
-    this->trnUniqueWidget->addPath(path, name);
+    // this->trnUniqueWidget->updatePathComboBoxOptions(this->pals.keys(), path);
     // select the new trn file
     this->setUniqueTrn(path);
 }
@@ -1723,18 +1697,12 @@ void MainWindow::on_actionOpen_Translation_Unique_triggered()
 {
     QStringList trnFilePaths = this->filesDialog(tr("Select Unique Translation Files"), tr("TRN Files (*.trn *.TRN)"));
 
-    bool first = true;
-    for (int i = 0; i < trnFilePaths.count(); i++) {
-        if (this->loadUniqueTrn(trnFilePaths[i]) && first) {
-            first = false;
-            this->setUniqueTrn(trnFilePaths[i]);
-        }
-    }
+    this->openPalFiles(trnFilePaths, this->trnUniqueWidget);
 }
 
 void MainWindow::on_actionSave_Translation_Unique_triggered()
 {
-    QString filePath = this->trnUniqueWidget->getSelectedPath();
+    QString filePath = this->trnUnique->getFilePath();
     if (MainWindow::isResourcePath(filePath)) {
         this->on_actionSave_Translation_Unique_as_triggered();
     } else {
@@ -1762,19 +1730,19 @@ void MainWindow::on_actionSave_Translation_Unique_as_triggered()
 
 void MainWindow::on_actionClose_Translation_Unique_triggered()
 {
-    QString filePath = this->trnUniqueWidget->getSelectedPath();
+    QString filePath = this->trnUnique->getFilePath();
     if (MainWindow::isResourcePath(filePath)) {
         this->trnUnique->load(filePath, this->pal);
         this->setUniqueTrn(filePath);
         return;
     }
-    // select the default trn
-    this->setUniqueTrn(D1Trn::IDENTITY_PATH);
     // remove entry from the uniqueTrns map
     D1Trn *trn = this->uniqueTrns.take(filePath);
     MemFree(trn);
     // remove path in trnUniqueWidget
-    this->trnUniqueWidget->removePath(filePath);
+    // this->trnUniqueWidget->updatePathComboBoxOptions(this->uniqueTrns.keys(), D1Trn::IDENTITY_PATH);
+    // select the default trn
+    this->setUniqueTrn(D1Trn::IDENTITY_PATH);
 }
 
 void MainWindow::on_actionNew_Translation_Base_triggered()
@@ -1801,7 +1769,7 @@ void MainWindow::on_actionNew_Translation_Base_triggered()
         delete this->baseTrns[path];
     this->baseTrns[path] = newTrn;
     // add path in trnBaseWidget
-    this->trnBaseWidget->addPath(path, name);
+    // this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), path);
     // select the 'new' trn file
     this->setBaseTrn(path);
 }
@@ -1810,18 +1778,12 @@ void MainWindow::on_actionOpen_Translation_Base_triggered()
 {
     QStringList trnFilePaths = this->filesDialog(tr("Select Base Translation Files"), tr("TRN Files (*.trn *.TRN)"));
 
-    bool first = true;
-    for (int i = 0; i < trnFilePaths.count(); i++) {
-        if (this->loadBaseTrn(trnFilePaths[i]) && first) {
-            first = false;
-            this->setBaseTrn(trnFilePaths[i]);
-        }
-    }
+    this->openPalFiles(trnFilePaths, this->trnBaseWidget);
 }
 
 void MainWindow::on_actionSave_Translation_Base_triggered()
 {
-    QString filePath = this->trnBaseWidget->getSelectedPath();
+    QString filePath = this->trnBase->getFilePath();
     if (MainWindow::isResourcePath(filePath)) {
         this->on_actionSave_Translation_Base_as_triggered();
     } else {
@@ -1849,19 +1811,19 @@ void MainWindow::on_actionSave_Translation_Base_as_triggered()
 
 void MainWindow::on_actionClose_Translation_Base_triggered()
 {
-    QString filePath = this->trnBaseWidget->getSelectedPath();
+    QString filePath = this->trnBase->getFilePath();
     if (MainWindow::isResourcePath(filePath)) {
         this->trnBase->load(filePath, this->trnUnique->getResultingPalette());
         this->setBaseTrn(filePath);
         return;
     }
-    // select the default trn
-    this->setBaseTrn(D1Trn::IDENTITY_PATH);
     // remove entry from the baseTrns map
     D1Trn *trn = this->baseTrns.take(filePath);
     MemFree(trn);
     // remove path in trnBaseWidget
-    this->trnBaseWidget->removePath(filePath);
+    // this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), D1Trn::IDENTITY_PATH);
+    // select the default trn
+    this->setBaseTrn(D1Trn::IDENTITY_PATH);
 }
 
 void MainWindow::on_actionUpscaleTask_triggered()
