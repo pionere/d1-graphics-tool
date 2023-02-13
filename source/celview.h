@@ -44,11 +44,9 @@ private slots:
     void dragEnterEvent(QGraphicsSceneDragDropEvent *event) override;
     void dragMoveEvent(QGraphicsSceneDragDropEvent *event) override;
     void dropEvent(QGraphicsSceneDragDropEvent *event) override;
-    // void contextMenuEvent(QContextMenuEvent *event);
 
 signals:
     void framePixelClicked(const QPoint &pos, unsigned counter);
-    void showContextMenu(const QPoint &pos);
 
 private:
     QWidget *view;

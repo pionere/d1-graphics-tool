@@ -250,6 +250,7 @@ quint8 *D1CelTilesetFrame::WriteTransparentSquare(const D1GfxFrame &frame, quint
     int x, y;
     // int length = MICRO_WIDTH * MICRO_HEIGHT;
     bool hasColor = false;
+    quint8 *pStart = pDst;
     quint8 *pHead = pDst;
     pDst++;
     for (y = MICRO_HEIGHT - 1; y >= 0; y--) {
@@ -284,6 +285,8 @@ quint8 *D1CelTilesetFrame::WriteTransparentSquare(const D1GfxFrame &frame, quint
     //     qDebug() << "Empty transparent frame"; -- TODO: log empty frame?
     // }
     // pHead = (quint8 *)(((qsizetype)pHead + 3) & (~(qsizetype)3));
+    // preserve 4-byte alignment
+    pHead += (4 - (((qsizetype)pHead - (qsizetype)pStart) & 3)) & 3;
     return pHead;
 }
 

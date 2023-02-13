@@ -1669,13 +1669,13 @@ void MainWindow::on_actionClose_PAL_triggered()
         this->setPal(filePath);
         return;
     }
+    // select the default palette
+    this->setPal(D1Pal::DEFAULT_PATH);
     // remove entry from the pals map
     D1Pal *pal = this->pals.take(filePath);
     MemFree(pal);
     // remove path in palWidget
     this->palWidget->removePath(filePath);
-    // select the default palette
-    this->setPal(D1Pal::DEFAULT_PATH);
 }
 
 void MainWindow::on_actionNew_Translation_Unique_triggered()
@@ -1756,13 +1756,13 @@ void MainWindow::on_actionClose_Translation_Unique_triggered()
         this->setUniqueTrn(filePath);
         return;
     }
+    // select the default trn
+    this->setUniqueTrn(D1Trn::IDENTITY_PATH);
     // remove entry from the uniqueTrns map
     D1Trn *trn = this->uniqueTrns.take(filePath);
     MemFree(trn);
     // remove path in trnUniqueWidget
     this->trnUniqueWidget->removePath(filePath);
-    // select the default trn
-    this->setUniqueTrn(D1Trn::IDENTITY_PATH);
 }
 
 void MainWindow::on_actionNew_Translation_Base_triggered()
@@ -1843,13 +1843,13 @@ void MainWindow::on_actionClose_Translation_Base_triggered()
         this->setBaseTrn(filePath);
         return;
     }
+    // select the default trn
+    this->setBaseTrn(D1Trn::IDENTITY_PATH);
     // remove entry from the baseTrns map
     D1Trn *trn = this->baseTrns.take(filePath);
     MemFree(trn);
     // remove path in trnBaseWidget
     this->trnBaseWidget->removePath(filePath);
-    // select the default trn
-    this->setBaseTrn(D1Trn::IDENTITY_PATH);
 }
 
 void MainWindow::on_actionUpscaleTask_triggered()

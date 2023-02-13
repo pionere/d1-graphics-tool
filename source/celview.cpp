@@ -43,7 +43,7 @@ void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
 
-    if (this->view->cursor().shape() != Qt::CrossCursor) {
+    if (dMainWindow().cursor().shape() != Qt::CrossCursor) {
         return; // ignore if not drawing
     }
 
@@ -84,11 +84,6 @@ void CelScene::dropEvent(QGraphicsSceneDragDropEvent *event)
     // try to insert as frames
     dMainWindow().openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
 }
-
-/*void CelScene::contextMenuEvent(QContextMenuEvent *event)
-{
-    emit this->showContextMenu(event->globalPos());
-}*/
 
 void CelScene::zoomOut()
 {
