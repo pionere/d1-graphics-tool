@@ -52,7 +52,6 @@ private slots:
     void on_framesNextButton_clicked();
 
 private:
-    QPushButton *addButton(QStyle::StandardPixmap type, QString tooltip, void (LevelTabSubtileWidget::*callback)(void));
     void updateFramesSelection(int index);
     void setSolProperty(quint8 flags);
     void updateSolProperty();

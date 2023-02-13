@@ -46,7 +46,6 @@ private slots:
     void on_subtilesNextButton_clicked();
 
 private:
-    QPushButton *addButton(QStyle::StandardPixmap type, QString tooltip, void (LevelTabTileWidget::*callback)(void));
     void updateSubtilesSelection(int index);
     void setAmpProperty(quint8 flags);
     void updateAmpProperty();

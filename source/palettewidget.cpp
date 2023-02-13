@@ -214,20 +214,6 @@ void PaletteScene::contextMenuEvent(QContextMenuEvent *event)
     ((PaletteWidget *)this->view)->ShowContextMenu(event->globalPos());
 }
 
-QPushButton *PaletteWidget::addButton(QStyle::StandardPixmap type, QString tooltip, void (PaletteWidget::*callback)(void))
-{
-    QPushButton *button = new QPushButton(this->style()->standardIcon(type), "", nullptr);
-    constexpr int iconSize = 16;
-    button->setToolTip(tooltip);
-    button->setIconSize(QSize(iconSize, iconSize));
-    button->setMinimumSize(iconSize, iconSize);
-    button->setMaximumSize(iconSize, iconSize);
-    this->ui->horizontalLayout->addWidget(button); //, Qt::AlignLeft);
-
-    QObject::connect(button, &QPushButton::clicked, this, callback);
-    return button;
-}
-
 PaletteWidget::PaletteWidget(QUndoStack *us, QString title)
     : QWidget(nullptr)
     , undoStack(us)
@@ -238,11 +224,12 @@ PaletteWidget::PaletteWidget(QUndoStack *us, QString title)
     ui->graphicsView->setScene(this->scene);
     ui->groupLabel->setText(title);
 
-    this->addButton(QStyle::SP_FileDialogNewFolder, tr("New"), &PaletteWidget::on_newPushButtonClicked); // use SP_FileIcon ?
-    this->addButton(QStyle::SP_DialogOpenButton, tr("Open"), &PaletteWidget::on_openPushButtonClicked);
-    this->addButton(QStyle::SP_DialogSaveButton, tr("Save"), &PaletteWidget::on_savePushButtonClicked);
-    this->addButton(QStyle::SP_DialogSaveButton, tr("Save As"), &PaletteWidget::on_saveAsPushButtonClicked);
-    this->addButton(QStyle::SP_DialogCloseButton, tr("Close"), &PaletteWidget::on_closePushButtonClicked); // use SP_DialogDiscardButton ?
+    QLayout *layout = this->ui->horizontalLayout;
+    PushButtonWidget::addButton(layout, QStyle::SP_FileDialogNewFolder, tr("New"), this, &PaletteWidget::on_newPushButtonClicked); // use SP_FileIcon ?
+    PushButtonWidget::addButton(layout, QStyle::SP_DialogOpenButton, tr("Open"), this, &PaletteWidget::on_openPushButtonClicked);
+    PushButtonWidget::addButton(layout, QStyle::SP_DialogSaveButton, tr("Save"), this, &PaletteWidget::on_savePushButtonClicked);
+    PushButtonWidget::addButton(layout, QStyle::SP_DialogSaveButton, tr("Save As"), this, &PaletteWidget::on_saveAsPushButtonClicked);
+    PushButtonWidget::addButton(layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &PaletteWidget::on_closePushButtonClicked); // use SP_DialogDiscardButton ?
 
     // When there is a modification to the PAL or TRNs then UI must be refreshed
     QObject::connect(this, &PaletteWidget::modified, this, &PaletteWidget::refresh);

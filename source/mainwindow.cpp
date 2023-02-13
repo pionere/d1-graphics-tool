@@ -1622,10 +1622,14 @@ void MainWindow::on_actionNew_PAL_triggered()
 
 void MainWindow::on_actionOpen_PAL_triggered()
 {
-    QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Palette File"), tr("PAL Files (*.pal *.PAL)"));
+    QStringList palFilePaths = this->filesDialog(tr("Select Palette Files"), tr("PAL Files (*.pal *.PAL)"));
 
-    if (!palFilePath.isEmpty() && this->loadPal(palFilePath)) {
-        this->setPal(palFilePath);
+    bool first = true;
+    for (int i = 0; i < palFilePaths.count(); i++) {
+        if (this->loadPal(palFilePaths[i]) && first) {
+            first = false;
+            this->setPal(palFilePaths[i]);
+        }
     }
 }
 
@@ -1705,10 +1709,14 @@ void MainWindow::on_actionNew_Translation_Unique_triggered()
 
 void MainWindow::on_actionOpen_Translation_Unique_triggered()
 {
-    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Translation File"), tr("TRN Files (*.trn *.TRN)"));
+    QStringList trnFilePaths = this->filesDialog(tr("Select Unique Translation Files"), tr("TRN Files (*.trn *.TRN)"));
 
-    if (!trnFilePath.isEmpty() && this->loadUniqueTrn(trnFilePath)) {
-        this->setUniqueTrn(trnFilePath);
+    bool first = true;
+    for (int i = 0; i < trnFilePaths.count(); i++) {
+        if (this->loadUniqueTrn(trnFilePaths[i]) && first) {
+            first = false;
+            this->setUniqueTrn(trnFilePaths[i]);
+        }
     }
 }
 
@@ -1788,10 +1796,14 @@ void MainWindow::on_actionNew_Translation_Base_triggered()
 
 void MainWindow::on_actionOpen_Translation_Base_triggered()
 {
-    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Translation File"), tr("TRN Files (*.trn *.TRN)"));
+    QStringList trnFilePaths = this->filesDialog(tr("Select Base Translation Files"), tr("TRN Files (*.trn *.TRN)"));
 
-    if (!trnFilePath.isEmpty() && this->loadBaseTrn(trnFilePath)) {
-        this->setBaseTrn(trnFilePath);
+    bool first = true;
+    for (int i = 0; i < trnFilePaths.count(); i++) {
+        if (this->loadBaseTrn(trnFilePaths[i]) && first) {
+            first = false;
+            this->setBaseTrn(trnFilePaths[i]);
+        }
     }
 }
 

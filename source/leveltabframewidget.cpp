@@ -5,21 +5,8 @@
 #include "d1gfx.h"
 #include "levelcelview.h"
 #include "mainwindow.h"
+#include "pushbuttonwidget.h"
 #include "ui_leveltabframewidget.h"
-
-QPushButton *LevelTabFrameWidget::addButton(QStyle::StandardPixmap type, QString tooltip, void (LevelTabFrameWidget::*callback)(void))
-{
-    QPushButton *button = new QPushButton(this->style()->standardIcon(type), "", nullptr);
-    constexpr int iconSize = 16;
-    button->setToolTip(tooltip);
-    button->setIconSize(QSize(iconSize, iconSize));
-    button->setMinimumSize(iconSize, iconSize);
-    button->setMaximumSize(iconSize, iconSize);
-    this->ui->buttonsHorizontalLayout->addWidget(button);
-
-    QObject::connect(button, &QPushButton::clicked, this, callback);
-    return button;
-}
 
 LevelTabFrameWidget::LevelTabFrameWidget()
     : QWidget(nullptr)
@@ -27,7 +14,8 @@ LevelTabFrameWidget::LevelTabFrameWidget()
 {
     ui->setupUi(this);
 
-    this->deleteButton = this->addButton(QStyle::SP_TrashIcon, tr("Delete the current frame"), &LevelTabFrameWidget::on_deletePushButtonClicked);
+    QLayout *layout = this->ui->buttonsHorizontalLayout;
+    this->deleteButton = PushButtonWidget::addButton(layout, QStyle::SP_TrashIcon, tr("Delete the current frame"), this, &LevelTabFrameWidget::on_deletePushButtonClicked);
 }
 
 LevelTabFrameWidget::~LevelTabFrameWidget()
