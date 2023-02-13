@@ -112,7 +112,7 @@ void EditTranslationCommand::redo()
 }
 
 PaletteScene::PaletteScene(QWidget *v)
-    : QGraphicsScene(0, 0, PALETTE_WIDTH, PALETTE_WIDTH)
+    : QGraphicsScene(0, 0, PALETTE_WIDTH, PALETTE_WIDTH, v)
     , view(v)
 {
 }
