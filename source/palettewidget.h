@@ -124,7 +124,7 @@ public:
     void startTrnColorPicking(bool single);
     void stopTrnColorPicking();
 
-    void updatePathComboBoxOptions(const QList<QString> &options);
+    void updatePathComboBoxOptions(const QList<QString> &options, const QString &selectedOption);
     // void refreshPathComboBox();
     void refreshColorLineEdit();
     void refreshIndexLineEdit();

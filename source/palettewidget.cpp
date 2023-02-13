@@ -665,7 +665,7 @@ void PaletteWidget::stopTrnColorPicking()
     this->displayColors();
 }
 
-void PaletteWidget::updatePathComboBoxOptions(const QList<QString> &options, const String &selectedOption)
+void PaletteWidget::updatePathComboBoxOptions(const QList<QString> &options, const QString &selectedOption)
 {
     QComboBox *pcb = this->ui->pathComboBox;
 
@@ -682,7 +682,7 @@ void PaletteWidget::updatePathComboBoxOptions(const QList<QString> &options, con
         pcb->addItem(name, option);
         if (selectedOption == option) {
             pcb->setCurrentIndex(i);
-            pcb->setToolTip(opion);
+            pcb->setToolTip(option);
         }
     }
 }
