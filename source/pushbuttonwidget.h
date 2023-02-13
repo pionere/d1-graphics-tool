@@ -36,5 +36,5 @@ protected:
     void focusOutEvent(QFocusEvent *event) override;
 
 private:
-    bool inFocus = false;
+    int focusFlags = 0;
 };

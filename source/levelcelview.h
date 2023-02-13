@@ -160,9 +160,9 @@ private slots:
     void on_stopButton_clicked();
     void playGroup();
 
-    void dragEnterEvent(QDragEnterEvent *event);
-    void dragMoveEvent(QDragMoveEvent *event);
-    void dropEvent(QDropEvent *event);
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dragMoveEvent(QDragMoveEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
 
     void ShowContextMenu(const QPoint &pos);
 

@@ -23,7 +23,7 @@ void PushButtonWidget::paintEvent(QPaintEvent *event)
 {
     QPushButton::paintEvent(event);
 
-    if (this->inFocus) {
+    if (this->focusFlags != 0) {
         QPainter painter(this);
         QColor borderColor = QColor(Config::getPaletteSelectionBorderColor());
         QPen pen(borderColor);
@@ -46,7 +46,7 @@ void PushButtonWidget::paintEvent(QPaintEvent *event)
 
 void PushButtonWidget::focusInEvent(QFocusEvent *event)
 {
-    this->inFocus = true;
+    this->focusFlags |= 2;
 
     QPushButton::focusInEvent(event);
 }
@@ -57,21 +57,21 @@ void PushButtonWidget::enterEvent(QEnterEvent *event)
 void PushButtonWidget::enterEvent(QEvent *event)
 #endif
 {
-    this->inFocus = true;
+    this->focusFlags |= 1;
 
     QPushButton::enterEvent(event);
 }
 
 void PushButtonWidget::focusOutEvent(QFocusEvent *event)
 {
-    this->inFocus = false;
+    this->focusFlags &= ~2;
 
     QPushButton::focusOutEvent(event);
 }
 
 void PushButtonWidget::leaveEvent(QEvent *event)
 {
-    this->inFocus = false;
+    this->focusFlags &= ~1;
 
     QPushButton::leaveEvent(event);
 }

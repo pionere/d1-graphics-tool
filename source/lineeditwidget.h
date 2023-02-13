@@ -17,6 +17,6 @@ signals:
     void cancel_signal();
 
 protected:
-    void keyPressEvent(QKeyEvent *event);
-    void focusOutEvent(QFocusEvent *event);
+    void keyPressEvent(QKeyEvent *event) override;
+    void focusOutEvent(QFocusEvent *event) override;
 };

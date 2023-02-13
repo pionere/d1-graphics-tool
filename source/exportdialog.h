@@ -39,7 +39,7 @@ private slots:
     void on_exportCancelButton_clicked();
 
     // this event is called, when a new translator is loaded or the system language is changed
-    void changeEvent(QEvent *event);
+    void changeEvent(QEvent *event) override;
 
 private:
     static void exportLevelTiles25D(const D1Til *til, const ExportParam &params);
