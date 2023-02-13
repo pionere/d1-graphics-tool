@@ -43,7 +43,7 @@ void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
 
-    if (this->view->cursor().shape() != Qt::CrossCursor) {
+    if (dMainWindow().cursor().shape() != Qt::CrossCursor) {
         return; // ignore if not drawing
     }
 
@@ -83,11 +83,6 @@ void CelScene::dropEvent(QGraphicsSceneDragDropEvent *event)
     }
     // try to insert as frames
     dMainWindow().openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
-}
-
-void CelScene::contextMenuEvent(QContextMenuEvent *event)
-{
-    emit this->showContextMenu(event->globalPos());
 }
 
 void CelScene::zoomOut()
@@ -194,7 +189,6 @@ CelView::CelView(QWidget *parent)
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ShowContextMenu(const QPoint &)));
-    QObject::connect(this->celScene, &CelScene::showContextMenu, this, &CelView::ShowContextMenu);
 
     setAcceptDrops(true);
 }

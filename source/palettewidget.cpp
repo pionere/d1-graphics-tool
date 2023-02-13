@@ -209,11 +209,6 @@ void PaletteScene::dropEvent(QGraphicsSceneDragDropEvent *event)
     dMainWindow().openPalFiles(filePaths, (PaletteWidget *)this->view);
 }
 
-void PaletteScene::contextMenuEvent(QContextMenuEvent *event)
-{
-    ((PaletteWidget *)this->view)->ShowContextMenu(event->globalPos());
-}
-
 QPushButton *PaletteWidget::addButton(QStyle::StandardPixmap type, QString tooltip, void (PaletteWidget::*callback)(void))
 {
     QPushButton *button = new QPushButton(this->style()->standardIcon(type), "", nullptr);
