@@ -189,7 +189,6 @@ CelView::CelView(QWidget *parent)
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ShowContextMenu(const QPoint &)));
-    QObject::connect(this->celScene, &CelScene::showContextMenu, this, &CelView::ShowContextMenu);
 
     setAcceptDrops(true);
 }
