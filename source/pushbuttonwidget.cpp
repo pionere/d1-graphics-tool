@@ -44,6 +44,13 @@ void PushButtonWidget::paintEvent(QPaintEvent *event)
     }
 }
 
+void PushButtonWidget::mouseReleaseEvent(QMouseEvent *event)
+{
+    QPushButton::mouseReleaseEvent(event);
+
+    this->clearFocus();
+}
+
 void PushButtonWidget::focusInEvent(QFocusEvent *event)
 {
     this->focusFlags |= 2;
