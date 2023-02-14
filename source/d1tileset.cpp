@@ -164,17 +164,6 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
                 continue;
             }
             // use subtile 'i' instead of subtile 'j'
-            const int refIndex = j;
-            for (int n = 0; n < this->til->getTileCount(); n++) {
-                std::vector<int> &subtileIndices = this->til->getSubtileIndices(n);
-                for (auto iter = subtileIndices.begin(); iter != subtileIndices.end(); iter++) {
-                    if (*iter == refIndex) {
-                        *iter = i;
-                        this->til->setModified();
-                    }
-                }
-            }
-            // use subtile 'i' instead of subtile 'j'
             this->removeSubtile(j, i);
             // calculate the original indices
             int originalIndexI = i;

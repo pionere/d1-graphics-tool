@@ -21,6 +21,7 @@ CelScene::CelScene(QWidget *v)
     : QGraphicsScene(v)
     , view(v)
 {
+    this->setStickyFocus(true);
 }
 
 void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)

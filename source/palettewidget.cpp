@@ -115,6 +115,7 @@ PaletteScene::PaletteScene(PaletteWidget *v)
     : QGraphicsScene(0, 0, PALETTE_WIDTH, PALETTE_WIDTH, v)
     , view(v)
 {
+    this->setStickyFocus(true);
 }
 
 static int getColorIndexFromCoordinates(QPointF coordinates)
@@ -543,6 +544,7 @@ void PaletteWidget::displayColors()
     this->scene->setBackgroundBrush(Qt::white);
 
     // Displaying palette colors
+    D1Pal *colorPal = this->isTrn ? this->trn->getResultingPalette() : this->pal;
     for (int i = 0; i < D1PAL_COLORS; i++) {
         // Go to next line
         if (i % PALETTE_COLORS_PER_LINE == 0 && i != 0) {
@@ -550,7 +552,7 @@ void PaletteWidget::displayColors()
             y += dy;
         }
 
-        QColor color = this->isTrn ? this->trn->getResultingPalette()->getColor(i) : this->pal->getColor(i);
+        QColor color = colorPal->getColor(i);
         QBrush brush = QBrush(color);
         QPen pen(Qt::NoPen);
 
@@ -719,8 +721,8 @@ void PaletteWidget::refreshColorLineEdit()
     if (colorIndex != this->selectedLastColorIndex) {
         text = "*";
     } else if (colorIndex != COLORIDX_TRANSPARENT) {
-        QColor color = this->isTrn ? this->trn->getResultingPalette()->getColor(colorIndex) : this->pal->getColor(colorIndex);
-        text = color.name();
+        D1Pal *colorPal = this->isTrn ? this->trn->getResultingPalette() : this->pal;
+        text = colorPal->getColor(colorIndex).name();
     } else {
         active = false;
     }
