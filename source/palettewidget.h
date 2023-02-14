@@ -77,7 +77,7 @@ class PaletteScene : public QGraphicsScene {
     Q_OBJECT
 
 public:
-    PaletteScene(QWidget *view);
+    PaletteScene(PaletteWidget *view);
 
 private slots:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
@@ -91,7 +91,7 @@ signals:
     void framePixelClicked(quint16, quint16);
 
 private:
-    QWidget *view;
+    PaletteWidget *view;
 };
 
 class PaletteWidget : public QWidget {
