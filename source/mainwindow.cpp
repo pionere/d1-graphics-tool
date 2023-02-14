@@ -643,6 +643,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_Escape) {
         // TODO: ignore if (this->cursor().shape() != Qt::CrossCursor)?
         this->unsetCursor();
+        return;
     }
     if (event->matches(QKeySequence::Copy)) {
         QImage image;
@@ -656,6 +657,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             QClipboard *clipboard = QGuiApplication::clipboard();
             clipboard->setImage(image);
         }
+        return;
     }
     if (event->matches(QKeySequence::Paste)) {
         QClipboard *clipboard = QGuiApplication::clipboard();
@@ -682,6 +684,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             };
             ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW, std::move(func));
         }
+        return;
     }
 
     QMainWindow::keyPressEvent(event);
