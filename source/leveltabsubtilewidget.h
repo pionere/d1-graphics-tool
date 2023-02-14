@@ -18,7 +18,7 @@ class LevelTabSubtileWidget : public QWidget {
     Q_OBJECT
 
 public:
-    explicit LevelTabSubtileWidget();
+    explicit LevelTabSubtileWidget(QWidget *parent);
     ~LevelTabSubtileWidget();
 
     void initialize(LevelCelView *v, D1Gfx *gfx, D1Min *min, D1Sol *sol, D1Tmi *tmi);

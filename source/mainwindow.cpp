@@ -883,9 +883,9 @@ void MainWindow::openFile(const OpenAsParam &params)
     }
 
     // Add palette widgets for PAL and TRNs
-    this->palWidget = new PaletteWidget(this->undoStack, tr("Palette"));
-    this->trnUniqueWidget = new PaletteWidget(this->undoStack, tr("Unique translation"));
-    this->trnBaseWidget = new PaletteWidget(this->undoStack, tr("Base Translation"));
+    this->palWidget = new PaletteWidget(this, this->undoStack, tr("Palette"));
+    this->trnUniqueWidget = new PaletteWidget(this, this->undoStack, tr("Unique translation"));
+    this->trnBaseWidget = new PaletteWidget(this, this->undoStack, tr("Base Translation"));
     this->ui->palFrame->layout()->addWidget(this->palWidget);
     this->ui->palFrame->layout()->addWidget(this->trnUniqueWidget);
     this->ui->palFrame->layout()->addWidget(this->trnBaseWidget);
@@ -916,7 +916,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     if (isTileset) {
         // build a LevelCelView
-        this->levelCelView = new LevelCelView();
+        this->levelCelView = new LevelCelView(this);
         this->levelCelView->initialize(this->pal, this->tileset);
 
         // Select color when level CEL view clicked
@@ -929,7 +929,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         QObject::connect(this->levelCelView, &LevelCelView::palModified, this->palWidget, &PaletteWidget::refresh);
     } else {
         // build a CelView
-        this->celView = new CelView();
+        this->celView = new CelView(this);
         this->celView->initialize(this->pal, this->gfx);
 
         // Select color when CEL view clicked

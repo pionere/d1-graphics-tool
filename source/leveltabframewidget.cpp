@@ -8,8 +8,8 @@
 #include "pushbuttonwidget.h"
 #include "ui_leveltabframewidget.h"
 
-LevelTabFrameWidget::LevelTabFrameWidget()
-    : QWidget(nullptr)
+LevelTabFrameWidget::LevelTabFrameWidget(QWidget *parent)
+    : QWidget(parent)
     , ui(new Ui::LevelTabFrameWidget())
 {
     ui->setupUi(this);

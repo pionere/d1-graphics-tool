@@ -82,7 +82,7 @@ class ProgressDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit ProgressDialog(QWidget *parent = nullptr);
+    explicit ProgressDialog(QWidget *parent);
     ~ProgressDialog();
 
     static void openDialog();
@@ -149,7 +149,7 @@ class ProgressWidget : public QFrame {
     friend class ProgressDialog;
 
 public:
-    explicit ProgressWidget(QWidget *parent = nullptr);
+    explicit ProgressWidget(QWidget *parent);
     ~ProgressWidget();
 
 private:

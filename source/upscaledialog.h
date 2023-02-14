@@ -26,7 +26,7 @@ class UpscaleDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit UpscaleDialog(QWidget *parent = nullptr);
+    explicit UpscaleDialog(QWidget *parent);
     ~UpscaleDialog();
 
     void initialize(D1Gfx *gfx);

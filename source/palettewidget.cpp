@@ -112,7 +112,7 @@ void EditTranslationCommand::redo()
 }
 
 PaletteScene::PaletteScene(PaletteWidget *v)
-    : QGraphicsScene(0, 0, PALETTE_WIDTH, PALETTE_WIDTH)
+    : QGraphicsScene(0, 0, PALETTE_WIDTH, PALETTE_WIDTH, v)
     , view(v)
 {
 }
@@ -210,8 +210,8 @@ void PaletteScene::dropEvent(QGraphicsSceneDragDropEvent *event)
     dMainWindow().openPalFiles(filePaths, (PaletteWidget *)this->view);
 }
 
-PaletteWidget::PaletteWidget(QUndoStack *us, QString title)
-    : QWidget(nullptr)
+PaletteWidget::PaletteWidget(QWidget *parent, QUndoStack *us, QString title)
+    : QWidget(parent)
     , undoStack(us)
     , ui(new Ui::PaletteWidget())
     , scene(new PaletteScene(this))

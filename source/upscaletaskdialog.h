@@ -43,7 +43,7 @@ class UpscaleTaskDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit UpscaleTaskDialog(QWidget *parent = nullptr);
+    explicit UpscaleTaskDialog(QWidget *parent);
     ~UpscaleTaskDialog();
 
 private:

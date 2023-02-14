@@ -8,8 +8,8 @@
 #include "pushbuttonwidget.h"
 #include "ui_leveltabtilewidget.h"
 
-LevelTabTileWidget::LevelTabTileWidget()
-    : QWidget(nullptr)
+LevelTabTileWidget::LevelTabTileWidget(QWidget *parent)
+    : QWidget(parent)
     , ui(new Ui::LevelTabTileWidget())
 {
     ui->setupUi(this);

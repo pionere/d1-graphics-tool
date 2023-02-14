@@ -7,8 +7,8 @@
 #include "pushbuttonwidget.h"
 #include "ui_leveltabsubtilewidget.h"
 
-LevelTabSubtileWidget::LevelTabSubtileWidget()
-    : QWidget(nullptr)
+LevelTabSubtileWidget::LevelTabSubtileWidget(QWidget *parent)
+    : QWidget(parent)
     , ui(new Ui::LevelTabSubtileWidget())
 {
     ui->setupUi(this);

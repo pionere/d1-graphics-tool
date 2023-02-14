@@ -100,7 +100,7 @@ class PaletteWidget : public QWidget {
     Q_OBJECT
 
 public:
-    explicit PaletteWidget(QUndoStack *undoStack, QString title);
+    explicit PaletteWidget(QWidget *parent, QUndoStack *undoStack, QString title);
     ~PaletteWidget();
 
     void setPal(D1Pal *p);
