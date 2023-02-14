@@ -116,6 +116,8 @@ set(PROJECT_SOURCES
         source/progressdialog.h
         source/progressdialog.ui
         source/progresswidget.ui
+        source/pushbuttonwidget.cpp
+        source/pushbuttonwidget.h
         source/saveasdialog.cpp
         source/saveasdialog.h
         source/saveasdialog.ui

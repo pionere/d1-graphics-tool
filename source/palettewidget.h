@@ -150,7 +150,6 @@ signals:
     void refreshed();
 
 private:
-    QPushButton *addButton(QStyle::StandardPixmap type, QString tooltip, void (PaletteWidget::*callback)(void));
     // Display functions
     void displayColors();
     void displaySelection();

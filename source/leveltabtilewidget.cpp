@@ -5,21 +5,8 @@
 #include "d1til.h"
 #include "levelcelview.h"
 #include "mainwindow.h"
+#include "pushbuttonwidget.h"
 #include "ui_leveltabtilewidget.h"
-
-QPushButton *LevelTabTileWidget::addButton(QStyle::StandardPixmap type, QString tooltip, void (LevelTabTileWidget::*callback)(void))
-{
-    QPushButton *button = new QPushButton(this->style()->standardIcon(type), "", nullptr);
-    constexpr int iconSize = 16;
-    button->setToolTip(tooltip);
-    button->setIconSize(QSize(iconSize, iconSize));
-    button->setMinimumSize(iconSize, iconSize);
-    button->setMaximumSize(iconSize, iconSize);
-    this->ui->buttonsHorizontalLayout->addWidget(button);
-
-    QObject::connect(button, &QPushButton::clicked, this, callback);
-    return button;
-}
 
 LevelTabTileWidget::LevelTabTileWidget()
     : QWidget(nullptr)
@@ -27,8 +14,9 @@ LevelTabTileWidget::LevelTabTileWidget()
 {
     ui->setupUi(this);
 
-    this->clearButton = this->addButton(QStyle::SP_DialogResetButton, tr("Reset flags"), &LevelTabTileWidget::on_clearPushButtonClicked);
-    this->deleteButton = this->addButton(QStyle::SP_TrashIcon, tr("Delete the current tile"), &LevelTabTileWidget::on_deletePushButtonClicked);
+    QLayout *layout = this->ui->buttonsHorizontalLayout;
+    this->clearButton = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Reset flags"), this, &LevelTabTileWidget::on_clearPushButtonClicked);
+    this->deleteButton = PushButtonWidget::addButton(this, layout, QStyle::SP_TrashIcon, tr("Delete the current tile"), this, &LevelTabTileWidget::on_deletePushButtonClicked);
 }
 
 LevelTabTileWidget::~LevelTabTileWidget()
