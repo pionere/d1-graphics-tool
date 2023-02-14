@@ -107,7 +107,7 @@ bool D1Tileset::reuseFrames(std::set<int> &removedIndices, bool silent)
                 }
             }
             // eliminate frame1
-            this->gfx->removeFrame(j);
+            this->min->removeFrame(j);
             // calculate the original indices
             int originalIndexI = i;
             for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
