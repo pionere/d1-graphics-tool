@@ -112,8 +112,8 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                 return false;
 
             gfx.groupFrameIndices.append(
-                qMakePair(frameOffsets.size(),
-                    frameOffsets.size() + celFrameCount - 1));
+                qMakePair((quint16)frameOffsets.size(),
+                    (quint16)(frameOffsets.size() + celFrameCount - 1)));
 
             // Going through all frames of the CEL
             for (unsigned int j = 1; j <= celFrameCount; j++) {

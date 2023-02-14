@@ -111,8 +111,8 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
                 continue;
             }
             gfx.groupFrameIndices.append(
-                qMakePair(frameOffsets.size(),
-                    frameOffsets.size() + cl2GroupFrameCount - 1));
+                qMakePair((quint16)frameOffsets.size(),
+                    (quint16)(frameOffsets.size() + cl2GroupFrameCount - 1)));
 
             // Going through all frames of the group
             for (unsigned j = 1; j <= cl2GroupFrameCount; j++) {
