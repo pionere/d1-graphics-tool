@@ -1004,14 +1004,14 @@ void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, boo
     ProgressDialog::done();
 }
 
-void MainWindow::openPalFiles(QStringList filePaths, PaletteWidget *widget)
+void MainWindow::openPalFiles(const QStringList &filePaths, PaletteWidget *widget)
 {
     QString firstFound;
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Reading..."), 0, PAF_NONE);
 
     if (widget == this->palWidget) {
-        for (QString path : filePaths) {
+        for (const QString &path : filePaths) {
             if (this->loadPal(path) && firstFound.isEmpty()) {
                 firstFound = path;
             }
@@ -1020,7 +1020,7 @@ void MainWindow::openPalFiles(QStringList filePaths, PaletteWidget *widget)
             this->setPal(firstFound);
         }
     } else if (widget == this->trnUniqueWidget) {
-        for (QString path : filePaths) {
+        for (const QString &path : filePaths) {
             if (this->loadUniqueTrn(path) && firstFound.isEmpty()) {
                 firstFound = path;
             }
@@ -1029,7 +1029,7 @@ void MainWindow::openPalFiles(QStringList filePaths, PaletteWidget *widget)
             this->setUniqueTrn(firstFound);
         }
     } else if (widget == this->trnBaseWidget) {
-        for (QString path : filePaths) {
+        for (const QString &path : filePaths) {
             if (this->loadBaseTrn(path) && firstFound.isEmpty()) {
                 firstFound = path;
             }
@@ -1608,11 +1608,9 @@ void MainWindow::on_actionNew_PAL_triggered()
 
 void MainWindow::on_actionOpen_PAL_triggered()
 {
-    QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Palette File"), tr("PAL Files (*.pal *.PAL)"));
+    QStringList palFilePaths = this->filesDialog(tr("Select Palette Files"), tr("PAL Files (*.pal *.PAL)"));
 
-    if (!palFilePath.isEmpty() && this->loadPal(palFilePath)) {
-        this->setPal(palFilePath);
-    }
+    this->openPalFiles(palFilePaths, this->palWidget);
 }
 
 void MainWindow::on_actionSave_PAL_triggered()
@@ -1691,11 +1689,9 @@ void MainWindow::on_actionNew_Translation_Unique_triggered()
 
 void MainWindow::on_actionOpen_Translation_Unique_triggered()
 {
-    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Translation File"), tr("TRN Files (*.trn *.TRN)"));
+    QStringList trnFilePaths = this->filesDialog(tr("Select Unique Translation Files"), tr("TRN Files (*.trn *.TRN)"));
 
-    if (!trnFilePath.isEmpty() && this->loadUniqueTrn(trnFilePath)) {
-        this->setUniqueTrn(trnFilePath);
-    }
+    this->openPalFiles(trnFilePaths, this->trnUniqueWidget);
 }
 
 void MainWindow::on_actionSave_Translation_Unique_triggered()
@@ -1774,11 +1770,9 @@ void MainWindow::on_actionNew_Translation_Base_triggered()
 
 void MainWindow::on_actionOpen_Translation_Base_triggered()
 {
-    QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Translation File"), tr("TRN Files (*.trn *.TRN)"));
+    QStringList trnFilePaths = this->filesDialog(tr("Select Base Translation Files"), tr("TRN Files (*.trn *.TRN)"));
 
-    if (!trnFilePath.isEmpty() && this->loadBaseTrn(trnFilePath)) {
-        this->setBaseTrn(trnFilePath);
-    }
+    this->openPalFiles(trnFilePaths, this->trnBaseWidget);
 }
 
 void MainWindow::on_actionSave_Translation_Base_triggered()

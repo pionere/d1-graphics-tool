@@ -89,7 +89,7 @@ public:
 
     void openFile(const OpenAsParam &params);
     void openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append);
-    void openPalFiles(QStringList filePaths, PaletteWidget *widget);
+    void openPalFiles(const QStringList &filePaths, PaletteWidget *widget);
     void saveFile(const SaveAsParam &params);
     void upscale(const UpscaleParam &params);
 
