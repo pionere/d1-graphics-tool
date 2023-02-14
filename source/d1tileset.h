@@ -30,7 +30,7 @@ public:
     void save(const SaveAsParam &params);
 
     void createSubtile();
-    void removeSubtile(int subtileIndex);
+    void removeSubtile(int subtileIndex, int replacement);
     bool reuseFrames(std::set<int> &removedIndices, bool silent);
     bool reuseSubtiles(std::set<int> &removedIndices);
 
