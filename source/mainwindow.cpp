@@ -1615,7 +1615,7 @@ void MainWindow::on_actionOpen_PAL_triggered()
 
 void MainWindow::on_actionSave_PAL_triggered()
 {
-    QString filePath = this->palWidget->getSelectedPath();
+    QString filePath = this->pal->getFilePath();
     if (MainWindow::isResourcePath(filePath)) {
         this->on_actionSave_PAL_as_triggered();
     } else {
@@ -1643,7 +1643,7 @@ void MainWindow::on_actionSave_PAL_as_triggered()
 
 void MainWindow::on_actionClose_PAL_triggered()
 {
-    QString filePath = this->palWidget->getSelectedPath();
+    QString filePath = this->pal->getFilePath();
     if (MainWindow::isResourcePath(filePath)) {
         this->pal->load(filePath);
         this->setPal(filePath);
@@ -1696,7 +1696,7 @@ void MainWindow::on_actionOpen_Translation_Unique_triggered()
 
 void MainWindow::on_actionSave_Translation_Unique_triggered()
 {
-    QString filePath = this->trnUniqueWidget->getSelectedPath();
+    QString filePath = this->trnUnique->getFilePath();
     if (MainWindow::isResourcePath(filePath)) {
         this->on_actionSave_Translation_Unique_as_triggered();
     } else {
@@ -1724,7 +1724,7 @@ void MainWindow::on_actionSave_Translation_Unique_as_triggered()
 
 void MainWindow::on_actionClose_Translation_Unique_triggered()
 {
-    QString filePath = this->trnUniqueWidget->getSelectedPath();
+    QString filePath = this->trnUnique->getFilePath();
     if (MainWindow::isResourcePath(filePath)) {
         this->trnUnique->load(filePath, this->pal);
         this->setUniqueTrn(filePath);
@@ -1777,7 +1777,7 @@ void MainWindow::on_actionOpen_Translation_Base_triggered()
 
 void MainWindow::on_actionSave_Translation_Base_triggered()
 {
-    QString filePath = this->trnBaseWidget->getSelectedPath();
+    QString filePath = this->trnBase->getFilePath();
     if (MainWindow::isResourcePath(filePath)) {
         this->on_actionSave_Translation_Base_as_triggered();
     } else {
@@ -1805,7 +1805,7 @@ void MainWindow::on_actionSave_Translation_Base_as_triggered()
 
 void MainWindow::on_actionClose_Translation_Base_triggered()
 {
-    QString filePath = this->trnBaseWidget->getSelectedPath();
+    QString filePath = this->trnBase->getFilePath();
     if (MainWindow::isResourcePath(filePath)) {
         this->trnBase->load(filePath, this->trnUnique->getResultingPalette());
         this->setBaseTrn(filePath);

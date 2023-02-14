@@ -398,11 +398,6 @@ void PaletteWidget::removePath(const QString &path)
         this->paths.remove(path);
 }
 
-QString PaletteWidget::getSelectedPath() const
-{
-    return this->paths.key(this->ui->pathComboBox->currentText());
-}
-
 static QRectF getColorCoordinates(quint8 index)
 {
     int ix = index % PALETTE_COLORS_PER_LINE;

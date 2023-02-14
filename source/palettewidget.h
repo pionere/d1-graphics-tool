@@ -120,7 +120,6 @@ public:
 
     void addPath(const QString &path, const QString &name);
     void removePath(const QString &path);
-    QString getSelectedPath() const;
 
     // color selection handlers
     void startColorSelection(int colorIndex);
