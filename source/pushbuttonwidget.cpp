@@ -9,8 +9,8 @@
 #define ICON_SIZE 16
 #define SELECTION_WIDTH 1
 
-PushButtonWidget::PushButtonWidget(QLayout *parent, QStyle::StandardPixmap type, const QString &tooltip)
-    : QPushButton(QApplication::style()->standardIcon(type), "", nullptr)
+PushButtonWidget::PushButtonWidget(QWidget *parent, QStyle::StandardPixmap type, const QString &tooltip)
+    : QPushButton(QApplication::style()->standardIcon(type), "", parent)
 {
     this->setToolTip(tooltip);
     this->setIconSize(QSize(ICON_SIZE, ICON_SIZE));
@@ -18,7 +18,6 @@ PushButtonWidget::PushButtonWidget(QLayout *parent, QStyle::StandardPixmap type,
     // this->setMaximumSize(ICON_SIZE + SELECTION_WIDTH * 2, ICON_SIZE + SELECTION_WIDTH * 2);
     this->setMinimumSize(ICON_SIZE, ICON_SIZE);
     this->setMaximumSize(ICON_SIZE, ICON_SIZE);
-    parent->addWidget(this);
 }
 
 void PushButtonWidget::paintEvent(QPaintEvent *event)

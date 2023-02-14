@@ -210,8 +210,8 @@ void PaletteScene::dropEvent(QGraphicsSceneDragDropEvent *event)
     dMainWindow().openPalFiles(filePaths, (PaletteWidget *)this->view);
 }
 
-PaletteWidget::PaletteWidget(QUndoStack *us, QString title)
-    : QWidget(nullptr)
+PaletteWidget::PaletteWidget(QWidget *parent, QUndoStack *us, QString title)
+    : QWidget(parent)
     , undoStack(us)
     , ui(new Ui::PaletteWidget())
     , scene(new PaletteScene(this))
@@ -221,11 +221,11 @@ PaletteWidget::PaletteWidget(QUndoStack *us, QString title)
     ui->groupLabel->setText(title);
 
     QLayout *layout = this->ui->horizontalLayout;
-    PushButtonWidget::addButton(layout, QStyle::SP_FileDialogNewFolder, tr("New"), this, &PaletteWidget::on_newPushButtonClicked); // use SP_FileIcon ?
-    PushButtonWidget::addButton(layout, QStyle::SP_DialogOpenButton, tr("Open"), this, &PaletteWidget::on_openPushButtonClicked);
-    PushButtonWidget::addButton(layout, QStyle::SP_DialogSaveButton, tr("Save"), this, &PaletteWidget::on_savePushButtonClicked);
-    PushButtonWidget::addButton(layout, QStyle::SP_DialogSaveButton, tr("Save As"), this, &PaletteWidget::on_saveAsPushButtonClicked);
-    PushButtonWidget::addButton(layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &PaletteWidget::on_closePushButtonClicked); // use SP_DialogDiscardButton ?
+    PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogNewFolder, tr("New"), this, &PaletteWidget::on_newPushButtonClicked); // use SP_FileIcon ?
+    PushButtonWidget::addButton(this, layout, QStyle::SP_DialogOpenButton, tr("Open"), this, &PaletteWidget::on_openPushButtonClicked);
+    PushButtonWidget::addButton(this, layout, QStyle::SP_DialogSaveButton, tr("Save"), this, &PaletteWidget::on_savePushButtonClicked);
+    PushButtonWidget::addButton(this, layout, QStyle::SP_DialogSaveButton, tr("Save As"), this, &PaletteWidget::on_saveAsPushButtonClicked);
+    PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &PaletteWidget::on_closePushButtonClicked); // use SP_DialogDiscardButton ?
 
     // When there is a modification to the PAL or TRNs then UI must be refreshed
     QObject::connect(this, &PaletteWidget::modified, this, &PaletteWidget::refresh);

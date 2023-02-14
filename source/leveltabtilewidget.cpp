@@ -8,15 +8,15 @@
 #include "pushbuttonwidget.h"
 #include "ui_leveltabtilewidget.h"
 
-LevelTabTileWidget::LevelTabTileWidget()
-    : QWidget(nullptr)
+LevelTabTileWidget::LevelTabTileWidget(QWidget *parent)
+    : QWidget(parent)
     , ui(new Ui::LevelTabTileWidget())
 {
     ui->setupUi(this);
 
     QLayout *layout = this->ui->buttonsHorizontalLayout;
-    this->clearButton = PushButtonWidget::addButton(layout, QStyle::SP_DialogResetButton, tr("Reset flags"), this, &LevelTabTileWidget::on_clearPushButtonClicked);
-    this->deleteButton = PushButtonWidget::addButton(layout, QStyle::SP_TrashIcon, tr("Delete the current tile"), this, &LevelTabTileWidget::on_deletePushButtonClicked);
+    this->clearButton = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Reset flags"), this, &LevelTabTileWidget::on_clearPushButtonClicked);
+    this->deleteButton = PushButtonWidget::addButton(this, layout, QStyle::SP_TrashIcon, tr("Delete the current tile"), this, &LevelTabTileWidget::on_deletePushButtonClicked);
 }
 
 LevelTabTileWidget::~LevelTabTileWidget()

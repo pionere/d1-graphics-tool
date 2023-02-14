@@ -17,7 +17,7 @@ class LevelTabFrameWidget : public QWidget {
     Q_OBJECT
 
 public:
-    explicit LevelTabFrameWidget();
+    explicit LevelTabFrameWidget(QWidget *parent);
     ~LevelTabFrameWidget();
 
     void initialize(LevelCelView *v, D1Gfx *g);

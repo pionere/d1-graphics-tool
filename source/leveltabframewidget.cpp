@@ -8,14 +8,14 @@
 #include "pushbuttonwidget.h"
 #include "ui_leveltabframewidget.h"
 
-LevelTabFrameWidget::LevelTabFrameWidget()
-    : QWidget(nullptr)
+LevelTabFrameWidget::LevelTabFrameWidget(QWidget *parent)
+    : QWidget(parent)
     , ui(new Ui::LevelTabFrameWidget())
 {
     ui->setupUi(this);
 
     QLayout *layout = this->ui->buttonsHorizontalLayout;
-    this->deleteButton = PushButtonWidget::addButton(layout, QStyle::SP_TrashIcon, tr("Delete the current frame"), this, &LevelTabFrameWidget::on_deletePushButtonClicked);
+    this->deleteButton = PushButtonWidget::addButton(this, layout, QStyle::SP_TrashIcon, tr("Delete the current frame"), this, &LevelTabFrameWidget::on_deletePushButtonClicked);
 }
 
 LevelTabFrameWidget::~LevelTabFrameWidget()

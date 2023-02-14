@@ -18,7 +18,7 @@
 #include "upscaler.h"
 
 CelScene::CelScene(QWidget *v)
-    : QGraphicsScene()
+    : QGraphicsScene(v)
     , view(v)
 {
 }

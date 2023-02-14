@@ -7,15 +7,15 @@
 #include "pushbuttonwidget.h"
 #include "ui_leveltabsubtilewidget.h"
 
-LevelTabSubtileWidget::LevelTabSubtileWidget()
-    : QWidget(nullptr)
+LevelTabSubtileWidget::LevelTabSubtileWidget(QWidget *parent)
+    : QWidget(parent)
     , ui(new Ui::LevelTabSubtileWidget())
 {
     ui->setupUi(this);
 
     QLayout *layout = this->ui->buttonsHorizontalLayout;
-    this->clearButton = PushButtonWidget::addButton(layout, QStyle::SP_DialogResetButton, tr("Reset flags"), this, &LevelTabSubtileWidget::on_clearPushButtonClicked);
-    this->deleteButton = PushButtonWidget::addButton(layout, QStyle::SP_TrashIcon, tr("Delete the current subtile"), this, &LevelTabSubtileWidget::on_deletePushButtonClicked);
+    this->clearButton = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Reset flags"), this, &LevelTabSubtileWidget::on_clearPushButtonClicked);
+    this->deleteButton = PushButtonWidget::addButton(this, layout, QStyle::SP_TrashIcon, tr("Delete the current subtile"), this, &LevelTabSubtileWidget::on_deletePushButtonClicked);
 }
 
 LevelTabSubtileWidget::~LevelTabSubtileWidget()
