@@ -110,7 +110,7 @@ void EditTranslationCommand::redo()
     this->undo();
 }
 
-PaletteScene::PaletteScene(QWidget *v)
+PaletteScene::PaletteScene(PaletteWidget *v)
     : QGraphicsScene(0, 0, PALETTE_WIDTH, PALETTE_WIDTH)
     , view(v)
 {
@@ -148,7 +148,7 @@ void PaletteScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     int colorIndex = getColorIndexFromCoordinates(pos);
 
     // if (colorIndex >= 0)
-    ((PaletteWidget *)this->view)->startColorSelection(colorIndex);
+    this->view->startColorSelection(colorIndex);
 }
 
 void PaletteScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -163,7 +163,7 @@ void PaletteScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     int colorIndex = getColorIndexFromCoordinates(pos);
 
     // if (colorIndex >= 0)
-    ((PaletteWidget *)this->view)->changeColorSelection(colorIndex);
+    this->view->changeColorSelection(colorIndex);
 }
 
 void PaletteScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
@@ -172,7 +172,7 @@ void PaletteScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
 
-    ((PaletteWidget *)this->view)->finishColorSelection();
+    this->view->finishColorSelection();
 }
 
 void PaletteScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)

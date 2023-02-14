@@ -28,10 +28,6 @@ enum class PWIDGET_CALLBACK_TYPE {
     PWIDGET_CALLBACK_CLOSE,
 };
 
-namespace Ui {
-class PaletteWidget;
-} // namespace Ui
-
 class EditPaletteCommand : public QObject, public QUndoCommand {
     Q_OBJECT
 
@@ -73,11 +69,17 @@ private:
     QList<quint8> modTranslations;
 };
 
+namespace Ui {
+class PaletteWidget;
+} // namespace Ui
+
+class PaletteWidget;
+
 class PaletteScene : public QGraphicsScene {
     Q_OBJECT
 
 public:
-    PaletteScene(QWidget *view);
+    PaletteScene(PaletteWidget *view);
 
 private slots:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
@@ -91,7 +93,7 @@ signals:
     void framePixelClicked(quint16, quint16);
 
 private:
-    QWidget *view;
+    PaletteWidget *view;
 };
 
 class PaletteWidget : public QWidget {
