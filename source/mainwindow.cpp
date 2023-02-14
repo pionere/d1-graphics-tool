@@ -488,49 +488,51 @@ void MainWindow::nextPaletteCycle(D1PAL_CYCLE_TYPE type)
     this->palWidget->modify();
 }
 
-static QString prepareFilePath(QString filePath, const QString &filter)
+static QString prepareFilePath(QString filePath, const QString &filter, QString &selectedFilter)
 {
     if (!filePath.isEmpty()) {
         // filter file-name unless it matches the filter
-        QString pattern = QString(filter);
-        pattern = pattern.mid(pattern.lastIndexOf('(', pattern.length() - 1) + 1, -1);
-        pattern.chop(1);
-        QStringList patterns = pattern.split(QRegularExpression(" "), Qt::SkipEmptyParts);
-        bool match = false;
-        for (int i = 0; i < patterns.size(); i++) {
-            pattern = patterns.at(i);
-            // convert filter to regular expression
-            for (int n = 0; n < pattern.size(); n++) {
-                if (pattern[n] == '*') {
-                    // convert * to .*
-                    pattern.insert(n, '.');
-                    n++;
-                } else if (pattern[n] == '.') {
-                    // convert . to \.
-                    pattern.insert(n, '\\');
-                    n++;
+        QStringList filterList = filter.split(";;");
+        for (const QString &filterBase : filterList) {
+            QString extPatterns = filterBase.mid(filterBase.lastIndexOf('(') + 1, filterBase.lastIndexOf(')') - 1);
+            QStringList extPatternList = extPatterns.split(QRegularExpression(" "), Qt::SkipEmptyParts);
+            for (QString &extPattern : extPatternList) {
+                // convert filter to regular expression
+                for (int n = 0; n < extPattern.size(); n++) {
+                    if (extPattern[n] == '*') {
+                        // convert * to .*
+                        extPattern.insert(n, '.');
+                        n++;
+                    } else if (extPattern[n] == '.') {
+                        // convert . to \.
+                        extPattern.insert(n, '\\');
+                        n++;
+                    }
+                }
+                QRegularExpression re(extPattern);
+                QRegularExpressionMatch qmatch = re.match(filePath);
+                if (qmatch.hasMatch()) {
+                    selectedFilter = filterBase;
+                    return filePath;
                 }
             }
-            QRegularExpression re(pattern);
-            QRegularExpressionMatch qmatch = re.match(filePath);
-            match |= qmatch.hasMatch();
         }
-        if (!match) {
-            QFileInfo fi(filePath);
-            filePath = fi.absolutePath();
-        }
+        // !match -> cut the file-name
+        QFileInfo fi(filePath);
+        filePath = fi.absolutePath();
     }
     return filePath;
 }
 
 QString MainWindow::fileDialog(FILE_DIALOG_MODE mode, const QString &title, const QString &filter)
 {
-    QString filePath = prepareFilePath(this->lastFilePath, filter);
+    QString selectedFilter;
+    QString filePath = prepareFilePath(this->lastFilePath, filter, selectedFilter);
 
     if (mode == FILE_DIALOG_MODE::OPEN) {
-        filePath = QFileDialog::getOpenFileName(this, title, filePath, filter);
+        filePath = QFileDialog::getOpenFileName(this, title, filePath, filter, &selectedFilter);
     } else {
-        filePath = QFileDialog::getSaveFileName(this, title, filePath, filter, nullptr, mode == FILE_DIALOG_MODE::SAVE_NO_CONF ? QFileDialog::DontConfirmOverwrite : QFileDialog::Options());
+        filePath = QFileDialog::getSaveFileName(this, title, filePath, filter, &selectedFilter, mode == FILE_DIALOG_MODE::SAVE_NO_CONF ? QFileDialog::DontConfirmOverwrite : QFileDialog::Options());
     }
 
     if (!filePath.isEmpty()) {
@@ -541,9 +543,10 @@ QString MainWindow::fileDialog(FILE_DIALOG_MODE mode, const QString &title, cons
 
 QStringList MainWindow::filesDialog(const QString &title, const QString &filter)
 {
-    QString filePath = prepareFilePath(this->lastFilePath, filter);
+    QString selectedFilter;
+    QString filePath = prepareFilePath(this->lastFilePath, filter, selectedFilter);
 
-    QStringList filePaths = QFileDialog::getOpenFileNames(this, title, filePath, filter);
+    QStringList filePaths = QFileDialog::getOpenFileNames(this, title, filePath, filter, &selectedFilter);
 
     if (!filePaths.isEmpty()) {
         this->lastFilePath = filePaths[0];
