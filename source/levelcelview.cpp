@@ -1150,7 +1150,7 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
 void LevelCelView::removeFrame(int frameIndex)
 {
     // remove the frame
-    this->min->removeFrame(frameIndex);
+    this->min->removeFrame(frameIndex, 0);
     // update frame index if necessary
     if (frameIndex < this->currentFrameIndex || this->currentFrameIndex == this->gfx->getFrameCount()) {
         this->currentFrameIndex = std::max(0, this->currentFrameIndex - 1);
@@ -1244,7 +1244,7 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
 
 void LevelCelView::removeSubtile(int subtileIndex)
 {
-    this->tileset->removeSubtile(subtileIndex);
+    this->tileset->removeSubtile(subtileIndex, 0);
 
     // update subtile index if necessary
     if (subtileIndex < this->currentSubtileIndex || this->currentSubtileIndex == this->min->getSubtileCount()) {

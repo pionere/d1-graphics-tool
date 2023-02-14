@@ -363,7 +363,7 @@ bool D1Min::setFrameReference(int subtileIndex, int index, unsigned frameRef)
     return true;
 }
 
-void D1Min::removeFrame(int frameIndex)
+void D1Min::removeFrame(int frameIndex, int replacement)
 {
     // remove the frame
     this->gfx->removeFrame(frameIndex);
@@ -374,7 +374,7 @@ void D1Min::removeFrame(int frameIndex)
         for (unsigned n = 0; n < frameRefs.size(); n++) {
             if (frameRefs[n] >= refIndex) {
                 if (frameRefs[n] == refIndex) {
-                    frameRefs[n] = 0;
+                    frameRefs[n] = replacement;
                 } else {
                     frameRefs[n] -= 1;
                 }

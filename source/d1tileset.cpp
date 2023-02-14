@@ -39,7 +39,7 @@ void D1Tileset::createSubtile()
     this->tmi->createSubtile();
 }
 
-void D1Tileset::removeSubtile(int subtileIndex)
+void D1Tileset::removeSubtile(int subtileIndex, int replacement)
 {
     this->min->removeSubtile(subtileIndex);
     this->sol->removeSubtile(subtileIndex);
@@ -51,8 +51,11 @@ void D1Tileset::removeSubtile(int subtileIndex)
         std::vector<int> &subtileIndices = this->til->getSubtileIndices(i);
         for (unsigned n = 0; n < subtileIndices.size(); n++) {
             if (subtileIndices[n] >= refIndex) {
-                // assert(subtileIndices[n] != refIndex);
-                subtileIndices[n] -= 1;
+                if (subtileIndices[n] == refIndex) {
+                    subtileIndices[n] = replacement;
+                } else {
+                    subtileIndices[n] -= 1;
+                }
                 this->til->setModified();
             }
         }
@@ -95,19 +98,8 @@ bool D1Tileset::reuseFrames(std::set<int> &removedIndices, bool silent)
             if (!match) {
                 continue;
             }
-            // reuse frame0 instead of frame1
-            const unsigned frameRef = j + 1;
-            for (int n = 0; n < this->min->getSubtileCount(); n++) {
-                std::vector<unsigned> &frameReferences = this->min->getFrameReferences(n);
-                for (auto iter = frameReferences.begin(); iter != frameReferences.end(); iter++) {
-                    if (*iter == frameRef) {
-                        *iter = i + 1;
-                        this->min->setModified();
-                    }
-                }
-            }
-            // eliminate frame1
-            this->min->removeFrame(j);
+            // use frame0 instead of frame1
+            this->min->removeFrame(j, i + 1);
             // calculate the original indices
             int originalIndexI = i;
             for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
@@ -172,18 +164,7 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
                 continue;
             }
             // use subtile 'i' instead of subtile 'j'
-            const int refIndex = j;
-            for (int n = 0; n < this->til->getTileCount(); n++) {
-                std::vector<int> &subtileIndices = this->til->getSubtileIndices(n);
-                for (auto iter = subtileIndices.begin(); iter != subtileIndices.end(); iter++) {
-                    if (*iter == refIndex) {
-                        *iter = i;
-                        this->til->setModified();
-                    }
-                }
-            }
-            // eliminate subtile 'j'
-            this->removeSubtile(j);
+            this->removeSubtile(j, i);
             // calculate the original indices
             int originalIndexI = i;
             for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
