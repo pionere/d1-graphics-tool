@@ -293,10 +293,10 @@ void PaletteWidget::initialize(D1Pal *p, CelView *c, LevelCelView *lc, D1PalHits
     this->initializeUi();
 }
 
-void PaletteWidget::initialize(D1Pal *p, D1Trn *t, CelView *c, LevelCelView *lc, D1PalHits *ph)
+void PaletteWidget::initialize(D1Trn *t, CelView *c, LevelCelView *lc, D1PalHits *ph)
 {
     this->isTrn = true;
-    this->pal = p;
+    this->pal = nullptr;
     this->trn = t;
     this->celView = c;
     this->levelCelView = lc;
@@ -583,6 +583,7 @@ void PaletteWidget::displayColors()
     this->scene->setBackgroundBrush(Qt::white);
 
     // Displaying palette colors
+    D1Pal *colorPal = this->isTrn ? this->trn->getResultingPalette() : this->pal;
     for (int i = 0; i < D1PAL_COLORS; i++) {
         // Go to next line
         if (i % PALETTE_COLORS_PER_LINE == 0 && i != 0) {
@@ -590,7 +591,7 @@ void PaletteWidget::displayColors()
             y += dy;
         }
 
-        QColor color = this->isTrn ? this->trn->getResultingPalette()->getColor(i) : this->pal->getColor(i);
+        QColor color = colorPal->getColor(i);
         QBrush brush = QBrush(color);
         QPen pen(Qt::NoPen);
 
@@ -733,8 +734,8 @@ void PaletteWidget::refreshColorLineEdit()
     if (colorIndex != this->selectedLastColorIndex) {
         text = "*";
     } else if (colorIndex != COLORIDX_TRANSPARENT) {
-        QColor color = this->isTrn ? this->trn->getResultingPalette()->getColor(colorIndex) : this->pal->getColor(colorIndex);
-        text = color.name();
+        D1Pal *colorPal = this->isTrn ? this->trn->getResultingPalette() : this->pal;
+        text = colorPal->getColor(colorIndex).name();
     } else {
         active = false;
     }

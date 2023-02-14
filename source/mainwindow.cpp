@@ -942,8 +942,8 @@ void MainWindow::openFile(const OpenAsParam &params)
     // Initialize palette widgets
     this->palHits = new D1PalHits(this->gfx, this->tileset);
     this->palWidget->initialize(this->pal, this->celView, this->levelCelView, this->palHits);
-    this->trnUniqueWidget->initialize(this->pal, this->trnUnique, this->celView, this->levelCelView, this->palHits);
-    this->trnBaseWidget->initialize(this->trnUnique->getResultingPalette(), this->trnBase, this->celView, this->levelCelView, this->palHits);
+    this->trnUniqueWidget->initialize(this->trnUnique, this->celView, this->levelCelView, this->palHits);
+    this->trnBaseWidget->initialize(this->trnBase, this->celView, this->levelCelView, this->palHits);
 
     // Refresh the view if a PAL or TRN is modified
     QObject::connect(this->palWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);

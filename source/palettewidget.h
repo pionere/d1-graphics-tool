@@ -108,7 +108,7 @@ public:
     bool isTrnWidget();
 
     void initialize(D1Pal *p, CelView *c, LevelCelView *lc, D1PalHits *ph);
-    void initialize(D1Pal *p, D1Trn *t, CelView *c, LevelCelView *lc, D1PalHits *ph);
+    void initialize(D1Trn *t, CelView *c, LevelCelView *lc, D1PalHits *ph);
 
     void initializeUi();
     void initializePathComboBox();
