@@ -284,9 +284,7 @@ quint8 *D1CelTilesetFrame::WriteTransparentSquare(const D1GfxFrame &frame, quint
     // if (!hasColor) {
     //     qDebug() << "Empty transparent frame"; -- TODO: log empty frame?
     // }
-    // pHead = (quint8 *)(((size_t)pHead + 3) & (~(size_t)3));
     // preserve 4-byte alignment
-    // pHead += (4 - (((size_t)pHead - (size_t)pStart) & 3)) & 3;
     pHead = pStart + (((size_t)pHead - (size_t)pStart + 3) & ~3);
     return pHead;
 }

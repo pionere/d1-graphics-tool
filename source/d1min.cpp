@@ -140,7 +140,7 @@ bool D1Min::save(const SaveAsParam &params)
     //    this->gfx->setUpscaled(upscaled);
     // }
     // validate the limit of frame-references
-    const unsigned limit = upscaled ? (UINT16_MAX - 1) : ((1 << 12) - 1);
+    const unsigned limit = upscaled ? UINT16_MAX : ((1 << 12) - 1);
     for (const std::vector<unsigned> &frameReferencesList : this->frameReferences) {
         for (const unsigned frameRef : frameReferencesList) {
             if (frameRef > limit) {

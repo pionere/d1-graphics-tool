@@ -691,7 +691,7 @@ void PaletteWidget::updatePathComboBoxOptions(const QList<QString> &options, con
         QString name = fileInfo.fileName();
         pcb->addItem(name, option);
         if (selectedOption == option) {
-            pcb->setCurrentIndex(i);
+            pcb->setCurrentIndex(idx);
             pcb->setToolTip(option);
         }
         idx++;

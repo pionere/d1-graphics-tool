@@ -81,7 +81,7 @@ bool D1Til::save(const SaveAsParam &params)
     }
 
     // validate the limit of subtile-indices
-    const unsigned limit = UINT16_MAX - 1;
+    const unsigned limit = UINT16_MAX;
     for (const std::vector<int> &subtileIndicesList : this->subtileIndices) {
         for (const int subtileIndex : subtileIndicesList) {
             if (subtileIndex > limit) {
