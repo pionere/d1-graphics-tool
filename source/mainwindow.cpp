@@ -485,28 +485,29 @@ static QString prepareFilePath(QString filePath, const QString &filter)
 {
     if (!filePath.isEmpty()) {
         // filter file-name unless it matches the filter
-        QString pattern = QString(filter);
-        pattern = pattern.mid(pattern.lastIndexOf('(', pattern.length() - 1) + 1, -1);
-        pattern.chop(1);
-        QStringList patterns = pattern.split(QRegularExpression(" "), Qt::SkipEmptyParts);
+        QStringList basePatterns = filter.split(";;");
         bool match = false;
-        for (int i = 0; i < patterns.size(); i++) {
-            pattern = patterns.at(i);
-            // convert filter to regular expression
-            for (int n = 0; n < pattern.size(); n++) {
-                if (pattern[n] == '*') {
-                    // convert * to .*
-                    pattern.insert(n, '.');
-                    n++;
-                } else if (pattern[n] == '.') {
-                    // convert . to \.
-                    pattern.insert(n, '\\');
-                    n++;
+        for (QString pattern : basePatterns) {
+            pattern = pattern.mid(pattern.lastIndexOf('(') + 1, pattern.lastIndexOf(')') - 1);
+            QStringList patterns = pattern.split(QRegularExpression(" "), Qt::SkipEmptyParts);
+            for (int i = 0; i < patterns.size(); i++) {
+                pattern = patterns.at(i);
+                // convert filter to regular expression
+                for (int n = 0; n < pattern.size(); n++) {
+                    if (pattern[n] == '*') {
+                        // convert * to .*
+                        pattern.insert(n, '.');
+                        n++;
+                    } else if (pattern[n] == '.') {
+                        // convert . to \.
+                        pattern.insert(n, '\\');
+                        n++;
+                    }
                 }
+                QRegularExpression re(pattern);
+                QRegularExpressionMatch qmatch = re.match(filePath);
+                match |= qmatch.hasMatch();
             }
-            QRegularExpression re(pattern);
-            QRegularExpressionMatch qmatch = re.match(filePath);
-            match |= qmatch.hasMatch();
         }
         if (!match) {
             QFileInfo fi(filePath);

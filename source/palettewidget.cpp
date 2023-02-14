@@ -115,7 +115,7 @@ PaletteScene::PaletteScene(PaletteWidget *v)
     : QGraphicsScene(0, 0, PALETTE_WIDTH, PALETTE_WIDTH, v)
     , view(v)
 {
-    this->setStickyFocus(true);
+    // this->setStickyFocus(true);
 }
 
 static int getColorIndexFromCoordinates(QPointF coordinates)
