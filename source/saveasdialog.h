@@ -40,7 +40,7 @@ class SaveAsDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit SaveAsDialog(QWidget *parent = nullptr);
+    explicit SaveAsDialog(QWidget *parent);
     ~SaveAsDialog();
 
     void initialize(D1Gfx *gfx, D1Tileset *tileset);

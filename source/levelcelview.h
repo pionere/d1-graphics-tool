@@ -32,7 +32,7 @@ class LevelCelView : public QWidget {
     Q_OBJECT
 
 public:
-    explicit LevelCelView(QWidget *parent = nullptr);
+    explicit LevelCelView(QWidget *parent);
     ~LevelCelView();
 
     void initialize(D1Pal *pal, D1Tileset *tileset);

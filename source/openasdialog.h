@@ -46,7 +46,7 @@ class OpenAsDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit OpenAsDialog(QWidget *parent = nullptr);
+    explicit OpenAsDialog(QWidget *parent);
     ~OpenAsDialog();
 
     void initialize();

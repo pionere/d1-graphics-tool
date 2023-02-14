@@ -61,7 +61,7 @@ class CelView : public QWidget {
     Q_OBJECT
 
 public:
-    explicit CelView(QWidget *parent = nullptr);
+    explicit CelView(QWidget *parent);
     ~CelView();
 
     void initialize(D1Pal *pal, D1Gfx *gfx);

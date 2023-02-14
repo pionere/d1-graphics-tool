@@ -26,8 +26,8 @@ enum class COLORFILTER_TYPE {
 
 Q_DECLARE_METATYPE(COLORFILTER_TYPE)
 
-EditPaletteCommand::EditPaletteCommand(D1Pal *p, quint8 sci, quint8 eci, QColor nc, QColor ec, QUndoCommand *parent)
-    : QUndoCommand(parent)
+EditPaletteCommand::EditPaletteCommand(D1Pal *p, quint8 sci, quint8 eci, QColor nc, QColor ec)
+    : QUndoCommand(nullptr)
     , pal(p)
     , startColorIndex(sci)
     , endColorIndex(eci)
@@ -46,8 +46,8 @@ EditPaletteCommand::EditPaletteCommand(D1Pal *p, quint8 sci, quint8 eci, QColor 
     }
 }
 
-EditPaletteCommand::EditPaletteCommand(D1Pal *p, quint8 sci, quint8 eci, QList<QColor> mc, QUndoCommand *parent)
-    : QUndoCommand(parent)
+EditPaletteCommand::EditPaletteCommand(D1Pal *p, quint8 sci, quint8 eci, QList<QColor> mc)
+    : QUndoCommand(nullptr)
     , pal(p)
     , startColorIndex(sci)
     , endColorIndex(eci)
@@ -76,8 +76,8 @@ void EditPaletteCommand::redo()
     this->undo();
 }
 
-EditTranslationCommand::EditTranslationCommand(D1Trn *t, quint8 sci, quint8 eci, QList<quint8> *nt, QUndoCommand *parent)
-    : QUndoCommand(parent)
+EditTranslationCommand::EditTranslationCommand(D1Trn *t, quint8 sci, quint8 eci, QList<quint8> *nt)
+    : QUndoCommand(nullptr)
     , trn(t)
     , startColorIndex(sci)
     , endColorIndex(eci)

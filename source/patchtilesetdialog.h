@@ -12,7 +12,7 @@ class PatchTilesetDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit PatchTilesetDialog(QWidget *parent = nullptr);
+    explicit PatchTilesetDialog(QWidget *parent);
     ~PatchTilesetDialog();
 
     void initialize(D1Tileset *tileset);

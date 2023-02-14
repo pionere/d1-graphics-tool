@@ -36,8 +36,8 @@ class EditPaletteCommand : public QObject, public QUndoCommand {
     Q_OBJECT
 
 public:
-    explicit EditPaletteCommand(D1Pal *pal, quint8 startColorIndex, quint8 endColorIndex, QColor newColorStart, QColor newColorEnd, QUndoCommand *parent = nullptr);
-    explicit EditPaletteCommand(D1Pal *pal, quint8 startColorIndex, quint8 endColorIndex, QList<QColor> modColors, QUndoCommand *parent = nullptr);
+    explicit EditPaletteCommand(D1Pal *pal, quint8 startColorIndex, quint8 endColorIndex, QColor newColorStart, QColor newColorEnd);
+    explicit EditPaletteCommand(D1Pal *pal, quint8 startColorIndex, quint8 endColorIndex, QList<QColor> modColors);
     ~EditPaletteCommand() = default;
 
     void undo() override;
@@ -57,7 +57,7 @@ class EditTranslationCommand : public QObject, public QUndoCommand {
     Q_OBJECT
 
 public:
-    explicit EditTranslationCommand(D1Trn *trn, quint8 startColorIndex, quint8 endColorIndex, QList<quint8> *newTranslations, QUndoCommand *parent = nullptr);
+    explicit EditTranslationCommand(D1Trn *trn, quint8 startColorIndex, quint8 endColorIndex, QList<quint8> *newTranslations);
     ~EditTranslationCommand() = default;
 
     void undo() override;
@@ -98,7 +98,7 @@ class PaletteWidget : public QWidget {
     Q_OBJECT
 
 public:
-    explicit PaletteWidget(QUndoStack *undoStack, QString title);
+    explicit PaletteWidget(QWidget *parent, QUndoStack *undoStack, QString title);
     ~PaletteWidget();
 
     void setPal(D1Pal *p);
