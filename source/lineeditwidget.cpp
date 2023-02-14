@@ -25,6 +25,7 @@ void LineEditWidget::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Escape) {
         emit cancel_signal();
+        return;
     }
 
     QLineEdit::keyPressEvent(event);

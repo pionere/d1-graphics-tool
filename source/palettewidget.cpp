@@ -1091,9 +1091,11 @@ void PaletteWidget::keyPressEvent(QKeyEvent *event)
         if (this->selectedFirstColorIndex != COLORIDX_TRANSPARENT) {
             this->on_actionCopy_triggered();
         }
+        return;
     }
     if (event->matches(QKeySequence::Paste)) {
         this->on_actionPaste_triggered();
+        return;
     }
 
     QWidget::keyPressEvent(event);
