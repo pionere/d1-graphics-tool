@@ -670,20 +670,31 @@ void PaletteWidget::updatePathComboBoxOptions(const QList<QString> &options, con
     QComboBox *pcb = this->ui->pathComboBox;
 
     pcb->clear();
-    for (int i = 0; i < options.count(); i++) {
-        const QString &option = options[i];
-        QString name;
-        if (MainWindow::isResourcePath(option)) {
-            name = option == D1Pal::DEFAULT_PATH ? "_default.pal" : "_null.trn"; // TODO: check if D1Trn::IDENTITY_PATH?
-        } else {
-            QFileInfo fileInfo(option);
-            name = fileInfo.fileName();
+    int idx = 0;
+    // add built-in options
+    for (const QString &option : options) {
+        if (!MainWindow::isResourcePath(option)) {
+            continue;
+        QString name = option == D1Pal::DEFAULT_PATH ? tr("_default.pal") : tr("_null.trn"); // TODO: check if D1Trn::IDENTITY_PATH?
+        pcb->addItem(name, option);
+        if (selectedOption == option) {
+            pcb->setCurrentIndex(idx);
+            pcb->setToolTip(option);
         }
+        idx++;
+    }
+    // add user-specific options
+    for (const QString &option : options) {
+        if (MainWindow::isResourcePath(option)) {
+            continue;
+        QFileInfo fileInfo(option);
+        QString name = fileInfo.fileName();
         pcb->addItem(name, option);
         if (selectedOption == option) {
             pcb->setCurrentIndex(i);
             pcb->setToolTip(option);
         }
+        idx++;
     }
 }
 
