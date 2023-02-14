@@ -673,7 +673,7 @@ void PaletteWidget::updatePathComboBoxOptions(const QList<QString> &options, con
     int idx = 0;
     // add built-in options
     for (const QString &option : options) {
-        if (!MainWindow::isResourcePath(option)) {
+        if (!MainWindow::isResourcePath(option))
             continue;
         QString name = option == D1Pal::DEFAULT_PATH ? tr("_default.pal") : tr("_null.trn"); // TODO: check if D1Trn::IDENTITY_PATH?
         pcb->addItem(name, option);
@@ -685,7 +685,7 @@ void PaletteWidget::updatePathComboBoxOptions(const QList<QString> &options, con
     }
     // add user-specific options
     for (const QString &option : options) {
-        if (MainWindow::isResourcePath(option)) {
+        if (MainWindow::isResourcePath(option))
             continue;
         QFileInfo fileInfo(option);
         QString name = fileInfo.fileName();

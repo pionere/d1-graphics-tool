@@ -144,7 +144,7 @@ bool D1Min::save(const SaveAsParam &params)
     for (const std::vector<unsigned> &frameReferencesList : this->frameReferences) {
         for (const unsigned frameRef : frameReferencesList) {
             if (frameRef > limit) {
-                dProgressFail() << tr("The frame references can not be stored in this format. The limit is %1.").arg(limit);
+                dProgressFail() << tr("The frame references can not be stored in this format (MIN). The limit is %1.").arg(limit);
                 return false;
             }
         }
