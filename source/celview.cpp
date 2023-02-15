@@ -469,7 +469,7 @@ void CelView::displayFrame()
     this->celScene->clear();
 
     // Getting the current frame to display
-    QImage celFrame = this->gfx->getFrameImage(this->currentFrameIndex);
+    QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
 
     this->celScene->setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
