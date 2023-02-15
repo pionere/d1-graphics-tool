@@ -51,7 +51,7 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
         // Going through all frames of the CEL
         gfx.groupFrameIndices.clear();
         if (firstDword > 0) {
-            gfx.groupFrameIndices.append(qMakePair(0, firstDword - 1));
+            gfx.groupFrameIndices.push_back(std::pair<int, int>(0, firstDword - 1));
         }
         for (unsigned int i = 1; i <= firstDword; i++) {
             device->seek(i * 4);
@@ -111,9 +111,7 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             if (fileSize < (celOffset + celFrameCount * 4 + 4 + 4))
                 return false;
 
-            gfx.groupFrameIndices.append(
-                qMakePair(frameOffsets.size(),
-                    frameOffsets.size() + celFrameCount - 1));
+            gfx.groupFrameIndices.push_back(std::pair<int, int>(frameOffsets.size(), frameOffsets.size() + celFrameCount - 1));
 
             // Going through all frames of the CEL
             for (unsigned int j = 1; j <= celFrameCount; j++) {
@@ -287,7 +285,7 @@ bool D1Cel::writeCompFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &par
         gfx.groupFrameIndices.clear();
         for (int i = 0; i < numGroups; i++) {
             int ni = numFrames / numGroups;
-            gfx.groupFrameIndices.append(qMakePair(i * ni, i * ni + ni - 1));
+            gfx.groupFrameIndices.push_back(std::pair<int, int>(i * ni, i * ni + ni - 1));
             headerSize += 4 + 4 * (ni + 1);
         }
     }

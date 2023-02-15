@@ -101,13 +101,13 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
 
     gfx.groupFrameIndices.clear();
     if (numFrames > 0) {
-        gfx.groupFrameIndices.append(qMakePair(0, numFrames - 1));
+        gfx.groupFrameIndices.push_back(std::pair<int, int>(0, numFrames - 1));
     }
 
     gfx.type = D1CEL_TYPE::V1_LEVEL;
 
     // CEL FRAMES OFFSETS CALCULATION
-    QList<QPair<quint32, quint32>> frameOffsets;
+    std::vector<std::pair<quint32, quint32>> frameOffsets;
     for (int i = 1; i <= numFrames; i++) {
         device->seek(i * 4);
         quint32 celFrameStartOffset;
@@ -115,7 +115,7 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
         quint32 celFrameEndOffset;
         in >> celFrameEndOffset;
 
-        frameOffsets.append(qMakePair(celFrameStartOffset, celFrameEndOffset));
+        frameOffsets.push_back(std::pair<quint32, quint32>(celFrameStartOffset, celFrameEndOffset));
     }
 
     // BUILDING {CEL FRAMES}

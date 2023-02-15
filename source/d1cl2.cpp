@@ -84,7 +84,7 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     if (gfx.type == D1CEL_TYPE::V2_MONO_GROUP) {
         // Going through all frames of the only group
         if (firstDword > 0) {
-            gfx.groupFrameIndices.append(qMakePair(0, firstDword - 1));
+            gfx.groupFrameIndices.push_back(std::pair<int, int>(0, firstDword - 1));
         }
         for (unsigned i = 1; i <= firstDword; i++) {
             device->seek(i * 4);
@@ -110,9 +110,7 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             if (cl2GroupFrameCount == 0) {
                 continue;
             }
-            gfx.groupFrameIndices.append(
-                qMakePair(frameOffsets.size(),
-                    frameOffsets.size() + cl2GroupFrameCount - 1));
+            gfx.groupFrameIndices.push_back(std::pair<int, int>(frameOffsets.size(), frameOffsets.size() + cl2GroupFrameCount - 1));
 
             // Going through all frames of the group
             for (unsigned j = 1; j <= cl2GroupFrameCount; j++) {
@@ -264,7 +262,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
         gfx.groupFrameIndices.clear();
         for (int i = 0; i < numGroups; i++) {
             int ni = numFrames / numGroups;
-            gfx.groupFrameIndices.append(qMakePair(i * ni, i * ni + ni - 1));
+            gfx.groupFrameIndices.push_back(std::pair<int, int>(i * ni, i * ni + ni - 1));
             headerSize += 4 + 4 * (ni + 1);
         }
     }

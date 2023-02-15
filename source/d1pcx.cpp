@@ -56,7 +56,7 @@ bool D1Pcx::load(D1Gfx &gfx, D1Pal *pal, const QString &filePath, const OpenAsPa
     }
 
     gfx.groupFrameIndices.clear();
-    gfx.groupFrameIndices.append(qMakePair(0, 0));
+    gfx.groupFrameIndices.push_back(std::pair<int, int>(0, 0));
 
     gfx.type = D1CEL_TYPE::V1_REGULAR;
 
