@@ -31,10 +31,7 @@ void LevelTabFrameWidget::initialize(LevelCelView *v, D1Gfx *g)
 
 void LevelTabFrameWidget::update()
 {
-    int frameIdx = this->levelCelView->getCurrentFrameIndex();
-    D1GfxFrame *frame = this->gfx->getFrame(frameIdx);
-
-    bool hasFrame = frame != nullptr;
+    bool hasFrame = this->gfx->getFrameCount() != 0;
 
     this->deleteButton->setEnabled(hasFrame);
 
@@ -45,6 +42,8 @@ void LevelTabFrameWidget::update()
         return;
     }
 
+    int frameIdx = this->levelCelView->getCurrentFrameIndex();
+    D1GfxFrame *frame = this->gfx->getFrame(frameIdx);
     D1CEL_FRAME_TYPE frameType = frame->getFrameType();
     this->ui->frameTypeComboBox->setCurrentIndex((int)frameType);
 
