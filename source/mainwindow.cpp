@@ -240,11 +240,6 @@ void MainWindow::setBaseTrn(const QString &path)
     this->trnBaseWidget->setTrn(this->trnBase);
 }
 
-QString MainWindow::getLastFilePath()
-{
-    return this->lastFilePath;
-}
-
 void MainWindow::updateWindow()
 {
     // rebuild palette hits
@@ -484,6 +479,10 @@ void MainWindow::nextPaletteCycle(D1PAL_CYCLE_TYPE type)
 static QString prepareFilePath(QString filePath, const QString &filter, QString &selectedFilter)
 {
     // filter file-name unless it matches the filter
+    QFileInfo fi(filePath);
+    if (fi.isDir()) {
+        return filePath;
+    }
     QStringList filterList = filter.split(";;", Qt::SkipEmptyParts);
     for (const QString &filterBase : filterList) {
         QString extPatterns = filterBase.mid(filterBase.lastIndexOf('(') + 1, filterBase.lastIndexOf(')') - 1);
@@ -510,7 +509,6 @@ static QString prepareFilePath(QString filePath, const QString &filter, QString 
         }
     }
     // !match -> cut the file-name
-    QFileInfo fi(filePath);
     filePath = fi.absolutePath();
     return filePath;
 }
@@ -552,6 +550,9 @@ QString MainWindow::folderDialog(const QString &title)
 
     dirPath = QFileDialog::getExistingDirectory(this, title, dirPath);
 
+    if (!dirPath.isEmpty()) {
+        this->lastFilePath = dirPath;
+    }
     return dirPath;
 }
 
