@@ -41,25 +41,9 @@ void D1Tileset::createSubtile()
 
 void D1Tileset::removeSubtile(int subtileIndex, int replacement)
 {
-    this->min->removeSubtile(subtileIndex);
+    this->til->removeSubtile(subtileIndex, replacement);
     this->sol->removeSubtile(subtileIndex);
     this->tmi->removeSubtile(subtileIndex);
-    // shift references
-    // - shift subtile indices of the tiles
-    int refIndex = subtileIndex;
-    for (int i = 0; i < this->til->getTileCount(); i++) {
-        std::vector<int> &subtileIndices = this->til->getSubtileIndices(i);
-        for (unsigned n = 0; n < subtileIndices.size(); n++) {
-            if (subtileIndices[n] >= refIndex) {
-                if (subtileIndices[n] == refIndex) {
-                    subtileIndices[n] = replacement;
-                } else {
-                    subtileIndices[n] -= 1;
-                }
-                this->til->setModified();
-            }
-        }
-    }
 }
 
 bool D1Tileset::reuseFrames(std::set<int> &removedIndices, bool silent)

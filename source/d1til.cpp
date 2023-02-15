@@ -204,6 +204,27 @@ bool D1Til::setSubtileIndex(int tileIndex, int index, int subtileIndex)
     return true;
 }
 
+void D1Til::removeSubtile(int subtileIndex, int replacement)
+{
+    // remove the subtile
+    this->min->removeSubtile(subtileIndex);
+    // shift references
+    // - shift subtile indices of the tiles
+    int refIndex = subtileIndex;
+    for (std::vector<int> &subtileIndices : this->subtileIndices) {
+        for (unsigned n = 0; n < subtileIndices.size(); n++) {
+            if (subtileIndices[n] >= refIndex) {
+                if (subtileIndices[n] == refIndex) {
+                    subtileIndices[n] = replacement;
+                } else {
+                    subtileIndices[n] -= 1;
+                }
+                this->modified = true;
+            }
+        }
+    }
+}
+
 void D1Til::insertTile(int tileIndex, const std::vector<int> &subtileIndices)
 {
     this->subtileIndices.insert(this->subtileIndices.begin() + tileIndex, subtileIndices);
