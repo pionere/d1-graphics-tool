@@ -445,9 +445,9 @@ void CelView::removeCurrentFrame()
 
 QImage CelView::copyCurrent()
 {
-    /*if (this->gfx->getFrameCount() == 0) {
+    if (this->gfx->getFrameCount() == 0) {
         return QImage();
-    }*/
+    }
     return this->gfx->getFrameImage(this->currentFrameIndex);
 }
 
