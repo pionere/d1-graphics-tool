@@ -2065,15 +2065,8 @@ bool LevelCelView::removeUnusedFrames()
 {
     ProgressDialog::incBar(tr("Removing unused frames..."), this->gfx->getFrameCount());
     // collect every frame uses
-    std::vector<bool> frameUsed = std::vector<bool>(this->gfx->getFrameCount());
-    for (int i = 0; i < this->min->getSubtileCount(); i++) {
-        const std::vector<unsigned> &frameReferences = this->min->getFrameReferences(i);
-        for (unsigned frameRef : frameReferences) {
-            if (frameRef != 0) {
-                frameUsed[frameRef - 1] = true;
-            }
-        }
-    }
+    std::vector<bool> frameUsed;
+    this->min->getFrameUses(frameUsed);
     // remove the unused frames
     int result = 0;
     for (int i = this->gfx->getFrameCount() - 1; i >= 0; i--) {

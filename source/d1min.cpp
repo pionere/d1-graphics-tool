@@ -227,6 +227,18 @@ QImage D1Min::getSubtileImage(int subtileIndex) const
     return subtile;
 }
 
+void D1Min::getFrameUses(std::vector<bool> &frameUses) const
+{
+    frameUses.resize(this->gfx->getFrameCount());
+    for (const std::vector<unsigned> &frameRefs : this->frameReferences) {
+        for (unsigned frameRef : frameRefs) {
+            if (frameRef != 0) {
+                frameUses[frameRef - 1] = true;
+            }
+        }
+    }
+}
+
 QString D1Min::getFilePath() const
 {
     return this->minFilePath;

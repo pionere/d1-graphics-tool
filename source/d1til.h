@@ -22,6 +22,8 @@ public:
 
     QImage getTileImage(int tileIndex) const;
     QImage getFlatTileImage(int tileIndex) const;
+
+    void removeSubtile(int subtileIndex, int replacement);
     void insertTile(int tileIndex, const std::vector<int> &subtileIndices);
     void createTile();
     void removeTile(int tileIndex);
