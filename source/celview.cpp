@@ -524,8 +524,9 @@ void CelView::setFrameIndex(int frameIndex)
 {
     const int frameCount = this->gfx->getFrameCount();
     if (frameCount == 0) {
-        this->currentFrameIndex = 0;
-        this->currentGroupIndex = 0;
+        // this->currentFrameIndex = 0;
+        // this->currentGroupIndex = 0;
+        // this->displayFrame();
         return;
     }
     if (frameIndex >= frameCount) {
@@ -543,8 +544,9 @@ void CelView::setGroupIndex(int groupIndex)
 {
     const int groupCount = this->gfx->getGroupCount();
     if (groupCount == 0) {
-        this->currentFrameIndex = 0;
-        this->currentGroupIndex = 0;
+        // this->currentFrameIndex = 0;
+        // this->currentGroupIndex = 0;
+        // this->displayFrame();
         return;
     }
     if (groupIndex >= groupCount) {
