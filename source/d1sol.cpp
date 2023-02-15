@@ -95,8 +95,12 @@ int D1Sol::getSubtileCount() const
 
 quint8 D1Sol::getSubtileProperties(int subtileIndex) const
 {
-    // if (subtileIndex >= this->subProperties.count())
-    //    return 0;
+    if (subtileIndex >= this->subProperties.count()) {
+#if QT_DEBUG
+        QMessageBox::critical(nullptr, "Error", QStringLiteral("SOL-Properties of an invalid subtile %1 requested. Properties count: %2").arg(subtileIndex).arg(this->subProperties.count()));
+#endif
+        return 0;
+    }
 
     return this->subProperties.at(subtileIndex);
 }

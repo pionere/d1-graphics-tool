@@ -1,6 +1,7 @@
 #include "d1gfx.h"
 
 #include <QApplication>
+#include <QMessageBox>
 
 #include "d1image.h"
 #include "progressdialog.h"
@@ -170,8 +171,12 @@ bool D1Gfx::isFrameSizeConstant() const
 // builds QImage from a D1CelFrame of given index
 QImage D1Gfx::getFrameImage(int frameIndex) const
 {
-    // if (this->palette == nullptr || frameIndex >= this->frames.count())
-    //    return QImage();
+    if (this->palette == nullptr || frameIndex < 0 || frameIndex >= this->frames.count()) {
+#if QT_DEBUG
+        QMessageBox::critical(nullptr, "Error", QStringLiteral("Image of an invalid frame %1 requested. Frame count: %2, palette: %3").arg(frameIndex).arg(this->frames.count()).arg(this->palette != nullptr));
+#endif
+        return QImage();
+    }
 
     D1GfxFrame *frame = this->frames[frameIndex];
 
@@ -356,8 +361,12 @@ int D1Gfx::getGroupCount() const
 
 std::pair<int, int> D1Gfx::getGroupFrameIndices(int groupIndex) const
 {
-    // if (groupIndex < 0 || (unsigned)groupIndex >= this->groupFrameIndices.size())
-    //    return std::pair<int, int>(0, 0);
+    if (groupIndex < 0 || (unsigned)groupIndex >= this->groupFrameIndices.size()) {
+#if QT_DEBUG
+        QMessageBox::critical(nullptr, "Error", QStringLiteral("Invalid group %1 requested. Group size: %2").arg(groupIndex).arg(this->groupFrameIndices.size()));
+#endif
+        return std::pair<int, int>(0, 0);
+    }
 
     return this->groupFrameIndices[groupIndex];
 }
@@ -369,8 +378,12 @@ int D1Gfx::getFrameCount() const
 
 D1GfxFrame *D1Gfx::getFrame(int frameIndex) const
 {
-    // if (frameIndex < 0 || frameIndex >= this->frames.count())
-    //    return nullptr;
+    if (frameIndex < 0 || frameIndex >= this->frames.count()) {
+#if QT_DEBUG
+        QMessageBox::critical(nullptr, "Error", QStringLiteral("Invalid frame %1 requested. Frame count: %2").arg(frameIndex).arg(this->frames.count()));
+#endif
+        return nullptr;
+    }
 
     return const_cast<D1GfxFrame *>(this->frames[frameIndex]);
 }
@@ -384,16 +397,24 @@ void D1Gfx::setFrame(int frameIndex, D1GfxFrame *frame)
 
 int D1Gfx::getFrameWidth(int frameIndex) const
 {
-    // if (frameIndex < 0 || frameIndex >= this->frames.count())
-    //    return 0;
+    if (frameIndex < 0 || frameIndex >= this->frames.count()) {
+#if QT_DEBUG
+        QMessageBox::critical(nullptr, "Error", QStringLiteral("Width of an invalid frame %1 requested. Frame count: %2").arg(frameIndex).arg(this->frames.count()));
+#endif
+        return 0;
+    }
 
     return this->frames[frameIndex]->getWidth();
 }
 
 int D1Gfx::getFrameHeight(int frameIndex) const
 {
-    // if (frameIndex < 0 || frameIndex >= this->frames.count())
-    //    return 0;
+    if (frameIndex < 0 || frameIndex >= this->frames.count()) {
+#if QT_DEBUG
+        QMessageBox::critical(nullptr, "Error", QStringLiteral("Height of an invalid frame %1 requested. Frame count: %2").arg(frameIndex).arg(this->frames.count()));
+#endif
+        return 0;
+    }
 
     return this->frames[frameIndex]->getHeight();
 }
