@@ -97,6 +97,7 @@ private:
     void setGroupIndex(int groupIndex);
 
 private slots:
+    void on_framesGroupCheckBox_stateChanged(int state);
     void on_firstFrameButton_clicked();
     void on_previousFrameButton_clicked();
     void on_nextFrameButton_clicked();

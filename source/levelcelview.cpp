@@ -132,16 +132,27 @@ void LevelCelView::updateLabel()
 
 void LevelCelView::update()
 {
+    int count;
+
     this->updateLabel();
 
-    ui->frameNumberEdit->setText(
-        QString::number(this->gfx->getFrameCount()));
+    // Set current and maximum frame text
+    count = this->gfx->getFrameCount();
+    this->ui->frameIndexEdit->setText(
+        QString::number(count != 0 ? this->currentFrameIndex + 1 : 0));
+    this->ui->frameNumberEdit->setText(QString::number(count));
 
-    ui->subtileNumberEdit->setText(
-        QString::number(this->min->getSubtileCount()));
+    // Set current and maximum subtile text
+    count = this->min->getSubtileCount();
+    this->ui->subtileIndexEdit->setText(
+        QString::number(count != 0 ? this->currentSubtileIndex + 1 : 0));
+    this->ui->subtileNumberEdit->setText(QString::number(count));
 
-    ui->tileNumberEdit->setText(
-        QString::number(this->til->getTileCount()));
+    // Set current and maximum tile text
+    count = this->til->getTileCount();
+    this->ui->tileIndexEdit->setText(
+        QString::number(count != 0 ? this->currentTileIndex + 1 : 0));
+    this->ui->tileNumberEdit->setText(QString::number(count));
 
     this->tabTileWidget.update();
     this->tabSubtileWidget.update();
@@ -2370,10 +2381,6 @@ void LevelCelView::displayFrame()
     this->ui->celFrameWidthEdit->setText(QString::number(celFrame.width()) + " px");
     this->ui->celFrameHeightEdit->setText(QString::number(celFrame.height()) + " px");
 
-    // Set current frame text
-    this->ui->frameIndexEdit->setText(
-        QString::number(this->gfx->getFrameCount() != 0 ? this->currentFrameIndex + 1 : 0));
-
     // MIN
     int minPosX = celFrame.width() + CEL_SCENE_SPACING * 2;
     this->celScene.addPixmap(QPixmap::fromImage(subtileBackground))
@@ -2387,10 +2394,6 @@ void LevelCelView::displayFrame()
     this->ui->minFrameHeightEdit->setText(QString::number(this->min->getSubtileHeight()));
     this->ui->minFrameHeightEdit->setToolTip(QString::number(subtile.height()) + " px");
 
-    // Set current subtile text
-    this->ui->subtileIndexEdit->setText(
-        QString::number(this->min->getSubtileCount() != 0 ? this->currentSubtileIndex + 1 : 0));
-
     // TIL
     int tilPosX = minPosX + subtile.width() + CEL_SCENE_SPACING;
     this->celScene.addPixmap(QPixmap::fromImage(tileBackground))
@@ -2403,10 +2406,6 @@ void LevelCelView::displayFrame()
     this->ui->tilFrameWidthEdit->setToolTip(QString::number(tile.width()) + " px");
     this->ui->tilFrameHeightEdit->setText(QString::number(TILE_HEIGHT));
     this->ui->tilFrameHeightEdit->setToolTip(QString::number(tile.height()) + " px");
-
-    // Set current tile text
-    this->ui->tileIndexEdit->setText(
-        QString::number(this->til->getTileCount() != 0 ? this->currentTileIndex + 1 : 0));
 
     // Notify PalView that the frame changed (used to refresh palette hits)
     emit frameRefreshed();
