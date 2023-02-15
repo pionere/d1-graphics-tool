@@ -533,6 +533,9 @@ void CelView::setGroupIndex()
 
 void CelView::playGroup()
 {
+    if (this->gfx->getGroupCount() == 0) {
+        return;
+    }
     std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
 
     if (this->currentFrameIndex < groupFrameIndices.second)
@@ -663,7 +666,9 @@ void CelView::on_frameIndexEdit_escPressed()
 
 void CelView::on_firstGroupButton_clicked()
 {
-    this->on_firstFrameButton_clicked();
+    this->currentGroupIndex = 0;
+
+    this->displayFrame();
 }
 
 void CelView::on_previousGroupButton_clicked()
@@ -673,7 +678,6 @@ void CelView::on_previousGroupButton_clicked()
     else
         this->currentGroupIndex = std::max(0, this->gfx->getGroupCount() - 1);
 
-    this->currentFrameIndex = this->gfx->getGroupFrameIndices(this->currentGroupIndex).first;
     this->displayFrame();
 }
 
@@ -702,14 +706,13 @@ void CelView::on_nextGroupButton_clicked()
     else
         this->currentGroupIndex = 0;
 
-    this->currentFrameIndex = this->gfx->getGroupFrameIndices(this->currentGroupIndex).first;
     this->displayFrame();
 }
 
 void CelView::on_lastGroupButton_clicked()
 {
     this->currentGroupIndex = std::max(0, this->gfx->getGroupCount() - 1);
-    this->currentFrameIndex = this->gfx->getGroupFrameIndices(this->currentGroupIndex).first;
+
     this->displayFrame();
 }
 
