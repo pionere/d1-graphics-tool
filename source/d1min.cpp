@@ -198,8 +198,12 @@ bool D1Min::save(const SaveAsParam &params)
 
 QImage D1Min::getSubtileImage(int subtileIndex) const
 {
-    if (subtileIndex < 0 || (unsigned)subtileIndex >= this->frameReferences.size())
+    if (subtileIndex < 0 || (unsigned)subtileIndex >= this->frameReferences.size()) {
+#ifdef QT_DEBUG
+        QMessageBox::critical(nullptr, "Error", QStringLiteral("Invalid subtile %1 requested. Frame-references count: %2").arg(subtileIndex).arg(this->frameReferences.size()));
+#endif
         return QImage();
+    }
 
     unsigned subtileWidthPx = this->subtileWidth * MICRO_WIDTH;
     QImage subtile = QImage(subtileWidthPx,
