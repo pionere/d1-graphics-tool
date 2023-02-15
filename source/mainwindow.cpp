@@ -485,7 +485,7 @@ static QString prepareFilePath(QString filePath, const QString &filter, QString 
 {
     if (!filePath.isEmpty()) {
         // filter file-name unless it matches the filter
-        QStringList filterList = filter.split(";;");
+        QStringList filterList = filter.split(";;", Qt::SkipEmptyParts);
         for (const QString &filterBase : filterList) {
             QString extPatterns = filterBase.mid(filterBase.lastIndexOf('(') + 1, filterBase.lastIndexOf(')') - 1);
             QStringList extPatternList = extPatterns.split(QRegularExpression(" "), Qt::SkipEmptyParts);
@@ -545,6 +545,16 @@ QStringList MainWindow::filesDialog(const QString &title, const QString &filter)
         this->lastFilePath = filePaths[0];
     }
     return filePaths;
+}
+
+QString MainWindow::folderDialog(const QString &title)
+{
+    QString selectedFilter;
+    QString dirPath = prepareFilePath(this->lastFilePath, "", selectedFilter);
+
+    dirPath = QFileDialog::getExistingDirectory(this, title, dirPath);
+
+    return dirPath;
 }
 
 bool MainWindow::hasImageUrl(const QMimeData *mimeData)

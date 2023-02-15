@@ -9,6 +9,7 @@
 #include <QPainter>
 #include <QtConcurrent>
 
+#include "mainwindow.h"
 #include "progressdialog.h"
 #include "ui_exportdialog.h"
 
@@ -68,8 +69,7 @@ void ExportDialog::initialize(D1Gfx *g, D1Tileset *ts)
 
 void ExportDialog::on_outputFolderBrowseButton_clicked()
 {
-    QString selectedDirectory = QFileDialog::getExistingDirectory(
-        this, tr("Select Output Folder"), QString(), QFileDialog::ShowDirsOnly);
+    QString dirPath = dMainWindow().folderDialog(tr("Select Output Folder"));
 
     if (selectedDirectory.isEmpty())
         return;

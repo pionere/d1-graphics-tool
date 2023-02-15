@@ -71,8 +71,7 @@ void UpscaleTaskDialog::on_listfilesFileBrowseButton_clicked()
 
 void UpscaleTaskDialog::on_assetsFolderBrowseButton_clicked()
 {
-    QString dirPath = QFileDialog::getExistingDirectory(
-        this, tr("Select Assets Folder"), QString(), QFileDialog::ShowDirsOnly);
+    QString dirPath = dMainWindow().folderDialog(tr("Select Assets Folder"));
 
     if (dirPath.isEmpty())
         return;
@@ -82,8 +81,7 @@ void UpscaleTaskDialog::on_assetsFolderBrowseButton_clicked()
 
 void UpscaleTaskDialog::on_outputFolderBrowseButton_clicked()
 {
-    QString dirPath = QFileDialog::getExistingDirectory(
-        this, tr("Select Output Folder"), QString(), QFileDialog::ShowDirsOnly);
+    QString dirPath = dMainWindow().folderDialog(tr("Select Output Folder"));
 
     if (dirPath.isEmpty())
         return;
