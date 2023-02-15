@@ -92,8 +92,9 @@ signals:
 private:
     void updateLabel();
     void insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);
+    void setFrameIndex(int frameIndex);
     void updateGroupIndex();
-    void setGroupIndex();
+    void setGroupIndex(int groupIndex);
 
 private slots:
     void on_firstFrameButton_clicked();

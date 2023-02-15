@@ -508,20 +508,10 @@ void CelView::displayFrame()
 
 void CelView::updateGroupIndex()
 {
-    std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
-
-    if (this->currentFrameIndex < groupFrameIndices.first || this->currentFrameIndex > groupFrameIndices.second) {
-        this->setGroupIndex();
-    }
-}
-
-void CelView::setGroupIndex()
-{
-    std::pair<int, int> groupFrameIndices;
     int i = 0;
 
     for (; i < this->gfx->getGroupCount(); i++) {
-        groupFrameIndices = this->gfx->getGroupFrameIndices(i);
+        std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(i);
 
         if (this->currentFrameIndex >= groupFrameIndices.first
             && this->currentFrameIndex <= groupFrameIndices.second) {
@@ -529,6 +519,47 @@ void CelView::setGroupIndex()
         }
     }
     this->currentGroupIndex = i;
+}
+
+void CelView::setFrameIndex(int frameIndex)
+{
+    const int frameCount = this->gfx->getFrameCount();
+    if (frameCount == 0) {
+        this->currentFrameIndex = 0;
+        this->currentGroupIndex = 0;
+        return;
+    }
+    if (frameIndex >= frameCount) {
+        frameIndex = frameCount - 1;
+    } else if (frameIndex < 0) {
+        frameIndex = 0;
+    }
+    this->currentFrameIndex = frameIndex;
+    this->updateGroupIndex();
+
+    this->displayFrame();
+}
+
+void CelView::setGroupIndex(int groupIndex)
+{
+    const int groupCount = this->gfx->getGroupCount();
+    if (groupCount == 0) {
+        this->currentFrameIndex = 0;
+        this->currentGroupIndex = 0;
+        return;
+    }
+    if (groupIndex >= groupCount) {
+        groupIndex = groupCount - 1;
+    } else if (groupIndex < 0) {
+        groupIndex = 0;
+    }
+    std::pair<int, int> prevGroupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
+    int frameIndex = this->currentFrameIndex - groupFrameIndices.first;
+    std::pair<int, int> newGroupFrameIndices = this->gfx->getGroupFrameIndices(groupIndex);
+    this->currentGroupIndex = groupIndex;
+    this->currentFrameIndex = std::min(newGroupFrameIndices.first + frameIndex, newGroupFrameIndices.second);
+
+    this->displayFrame();
 }
 
 void CelView::playGroup()
@@ -612,49 +643,51 @@ void CelView::ShowContextMenu(const QPoint &pos)
 
 void CelView::on_firstFrameButton_clicked()
 {
-    this->currentGroupIndex = 0;
-    this->currentFrameIndex = 0;
-    this->displayFrame();
+    int nextFrameIndex = 0;
+    if (this->framesGroupCheckBox->isChecked() && this->gfx->getGroupCount() != 0) {
+        nextFrameIndex = this->gfx->getGroupFrameIndices(this->currentGroupIndex).first;
+    }
+    this->setFrameIndex(nextFrameIndex);
 }
 
 void CelView::on_previousFrameButton_clicked()
 {
-    if (this->currentFrameIndex >= 1)
-        this->currentFrameIndex--;
-    else
-        this->currentFrameIndex = std::max(0, this->gfx->getFrameCount() - 1);
-
-    this->updateGroupIndex();
-    this->displayFrame();
+    int nextFrameIndex = this->currentFrameIndex - 1;
+    if (this->framesGroupCheckBox->isChecked() && this->gfx->getGroupCount() != 0) {
+        nextFrameIndex = std::max(nextFrameIndex, this->gfx->getGroupFrameIndices(this->currentGroupIndex).first);
+    }
+    this->setFrameIndex(nextFrameIndex);
 }
 
 void CelView::on_nextFrameButton_clicked()
 {
-    if (this->currentFrameIndex < (this->gfx->getFrameCount() - 1))
-        this->currentFrameIndex++;
-    else
-        this->currentFrameIndex = 0;
-
-    this->updateGroupIndex();
-    this->displayFrame();
+    int nextFrameIndex = this->currentFrameIndex + 1;
+    if (this->framesGroupCheckBox->isChecked() && this->gfx->getGroupCount() != 0) {
+        nextFrameIndex = std::min(nextFrameIndex, this->gfx->getGroupFrameIndices(this->currentGroupIndex).second);
+    }
+    this->setFrameIndex(nextFrameIndex);
 }
 
 void CelView::on_lastFrameButton_clicked()
 {
-    this->currentGroupIndex = std::max(0, this->gfx->getGroupCount() - 1);
-    this->currentFrameIndex = std::max(0, this->gfx->getFrameCount() - 1);
-    this->displayFrame();
+    int nextFrameIndex = this->gfx->getFrameCount() - 1;
+    if (this->framesGroupCheckBox->isChecked() && this->gfx->getGroupCount() != 0) {
+        nextFrameIndex = this->gfx->getGroupFrameIndices(this->currentGroupIndex).second;
+    }
+    this->setFrameIndex(nextFrameIndex);
 }
 
 void CelView::on_frameIndexEdit_returnPressed()
 {
     int frameIndex = this->ui->frameIndexEdit->text().toInt() - 1;
 
-    if (frameIndex >= 0 && frameIndex < this->gfx->getFrameCount()) {
-        this->currentFrameIndex = frameIndex;
-        this->updateGroupIndex();
-        this->displayFrame();
+    if (this->framesGroupCheckBox->isChecked() && this->gfx->getGroupCount() != 0) {
+        std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
+        nextFrameIndex = std::max(nextFrameIndex, groupFrameIndices.first);
+        nextFrameIndex = std::min(nextFrameIndex, groupFrameIndices.second);
     }
+    this->setFrameIndex(frameIndex);
+
     this->on_frameIndexEdit_escPressed();
 }
 
@@ -666,30 +699,20 @@ void CelView::on_frameIndexEdit_escPressed()
 
 void CelView::on_firstGroupButton_clicked()
 {
-    this->currentGroupIndex = 0;
-
-    this->displayFrame();
+    this->setGroupIndex(0);
 }
 
 void CelView::on_previousGroupButton_clicked()
 {
-    if (this->currentGroupIndex >= 1)
-        this->currentGroupIndex--;
-    else
-        this->currentGroupIndex = std::max(0, this->gfx->getGroupCount() - 1);
-
-    this->displayFrame();
+    this->setGroupIndex(this->currentGroupIndex - 1);
 }
 
 void CelView::on_groupIndexEdit_returnPressed()
 {
     int groupIndex = this->ui->groupIndexEdit->text().toInt() - 1;
 
-    if (groupIndex >= 0 && groupIndex < this->gfx->getGroupCount()) {
-        this->currentGroupIndex = groupIndex;
-        this->currentFrameIndex = this->gfx->getGroupFrameIndices(this->currentGroupIndex).first;
-        this->displayFrame();
-    }
+    this->setGroupIndex(groupIndex);
+
     this->on_groupIndexEdit_escPressed();
 }
 
@@ -701,19 +724,12 @@ void CelView::on_groupIndexEdit_escPressed()
 
 void CelView::on_nextGroupButton_clicked()
 {
-    if (this->currentGroupIndex < (this->gfx->getGroupCount() - 1))
-        this->currentGroupIndex++;
-    else
-        this->currentGroupIndex = 0;
-
-    this->displayFrame();
+    this->setGroupIndex(this->currentGroupIndex + 1);
 }
 
 void CelView::on_lastGroupButton_clicked()
 {
-    this->currentGroupIndex = std::max(0, this->gfx->getGroupCount() - 1);
-
-    this->displayFrame();
+    this->setGroupIndex(this->gfx->getGroupCount() - 1);
 }
 
 void CelView::on_zoomOutButton_clicked()
