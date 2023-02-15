@@ -84,18 +84,20 @@ public:
     void update();
     void displayFrame();
 
+private:
+    void updateLabel();
+    void insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);
+    void setFrameIndex(int frameIndex);
+    void updateGroupIndex();
+    void setGroupIndex(int groupIndex);
+
 signals:
     void frameRefreshed();
     void frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter);
     void palModified();
 
-private:
-    void updateLabel();
-    void insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);
-    void updateGroupIndex();
-    void setGroupIndex();
-
 private slots:
+    void on_framesGroupCheckBox_stateChanged(int state);
     void on_firstFrameButton_clicked();
     void on_previousFrameButton_clicked();
     void on_nextFrameButton_clicked();

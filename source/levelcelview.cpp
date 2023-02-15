@@ -132,16 +132,27 @@ void LevelCelView::updateLabel()
 
 void LevelCelView::update()
 {
+    int count;
+
     this->updateLabel();
 
-    ui->frameNumberEdit->setText(
-        QString::number(this->gfx->getFrameCount()));
+    // Set current and maximum frame text
+    count = this->gfx->getFrameCount();
+    this->ui->frameIndexEdit->setText(
+        QString::number(count != 0 ? this->currentFrameIndex + 1 : 0));
+    this->ui->frameNumberEdit->setText(QString::number(count));
 
-    ui->subtileNumberEdit->setText(
-        QString::number(this->min->getSubtileCount()));
+    // Set current and maximum subtile text
+    count = this->min->getSubtileCount();
+    this->ui->subtileIndexEdit->setText(
+        QString::number(count != 0 ? this->currentSubtileIndex + 1 : 0));
+    this->ui->subtileNumberEdit->setText(QString::number(count));
 
-    ui->tileNumberEdit->setText(
-        QString::number(this->til->getTileCount()));
+    // Set current and maximum tile text
+    count = this->til->getTileCount();
+    this->ui->tileIndexEdit->setText(
+        QString::number(count != 0 ? this->currentTileIndex + 1 : 0));
+    this->ui->tileNumberEdit->setText(QString::number(count));
 
     this->tabTileWidget.update();
     this->tabSubtileWidget.update();
@@ -2377,10 +2388,6 @@ void LevelCelView::displayFrame()
     this->ui->celFrameWidthEdit->setText(QString::number(celFrame.width()) + " px");
     this->ui->celFrameHeightEdit->setText(QString::number(celFrame.height()) + " px");
 
-    // Set current frame text
-    this->ui->frameIndexEdit->setText(
-        QString::number(this->gfx->getFrameCount() != 0 ? this->currentFrameIndex + 1 : 0));
-
     // MIN
     int minPosX = celFrame.width() + CEL_SCENE_SPACING * 2;
     this->celScene.addPixmap(QPixmap::fromImage(subtileBackground))
@@ -2393,10 +2400,6 @@ void LevelCelView::displayFrame()
     this->ui->minFrameWidthEdit->setToolTip(QString::number(subtile.width()) + " px");
     this->ui->minFrameHeightEdit->setText(QString::number(this->min->getSubtileHeight()));
     this->ui->minFrameHeightEdit->setToolTip(QString::number(subtile.height()) + " px");
-
-    // Set current subtile text
-    this->ui->subtileIndexEdit->setText(
-        QString::number(this->min->getSubtileCount() != 0 ? this->currentSubtileIndex + 1 : 0));
 
     // TIL
     int tilPosX = minPosX + subtile.width() + CEL_SCENE_SPACING;
@@ -2411,12 +2414,47 @@ void LevelCelView::displayFrame()
     this->ui->tilFrameHeightEdit->setText(QString::number(TILE_HEIGHT));
     this->ui->tilFrameHeightEdit->setToolTip(QString::number(tile.height()) + " px");
 
-    // Set current tile text
-    this->ui->tileIndexEdit->setText(
-        QString::number(this->til->getTileCount() != 0 ? this->currentTileIndex + 1 : 0));
-
     // Notify PalView that the frame changed (used to refresh palette hits)
     emit frameRefreshed();
+}
+
+void LevelCelView::setFrameIndex(int frameIndex)
+{
+    const int frameCount = this->gfx->getFrameCount();
+    if (frameIndex >= frameCount) {
+        frameIndex = frameCount - 1;
+    }
+    if (frameIndex < 0) {
+        frameIndex = 0;
+    }
+    this->currentFrameIndex = frameIndex;
+    this->displayFrame();
+}
+
+void LevelCelView::setSubtileIndex(int subtileIndex)
+{
+    const int subtileCount = this->min->getSubtileCount();
+    if (subtileIndex >= subtileCount) {
+        subtileIndex = subtileCount - 1;
+    }
+    if (subtileIndex < 0) {
+        subtileIndex = 0;
+    }
+    this->currentSubtileIndex = subtileIndex;
+    this->displayFrame();
+}
+
+void LevelCelView::setTileIndex(int tileIndex)
+{
+    const int tileCount = this->til->getTileCount();
+    if (tileIndex >= tileCount) {
+        tileIndex = tileCount - 1;
+    }
+    if (tileIndex < 0) {
+        tileIndex = 0;
+    }
+    this->currentTileIndex = tileIndex;
+    this->displayFrame();
 }
 
 void LevelCelView::playGroup()
@@ -2549,44 +2587,30 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
 
 void LevelCelView::on_firstFrameButton_clicked()
 {
-    this->currentFrameIndex = 0;
-    this->displayFrame();
+    this->setFrameIndex(0);
 }
 
 void LevelCelView::on_previousFrameButton_clicked()
 {
-    if (this->currentFrameIndex >= 1)
-        this->currentFrameIndex--;
-    else
-        this->currentFrameIndex = std::max(0, this->gfx->getFrameCount() - 1);
-
-    this->displayFrame();
+    this->setFrameIndex(this->currentFrameIndex - 1);
 }
 
 void LevelCelView::on_nextFrameButton_clicked()
 {
-    if (this->currentFrameIndex < (this->gfx->getFrameCount() - 1))
-        this->currentFrameIndex++;
-    else
-        this->currentFrameIndex = 0;
-
-    this->displayFrame();
+    this->setFrameIndex(this->currentFrameIndex + 1);
 }
 
 void LevelCelView::on_lastFrameButton_clicked()
 {
-    this->currentFrameIndex = std::max(0, this->gfx->getFrameCount() - 1);
-    this->displayFrame();
+    this->setFrameIndex(this->gfx->getFrameCount() - 1);
 }
 
 void LevelCelView::on_frameIndexEdit_returnPressed()
 {
     int frameIndex = this->ui->frameIndexEdit->text().toInt() - 1;
 
-    if (frameIndex >= 0 && frameIndex < this->gfx->getFrameCount()) {
-        this->currentFrameIndex = frameIndex;
-        this->displayFrame();
-    }
+    this->setFrameIndex(frameIndex);
+
     this->on_frameIndexEdit_escPressed();
 }
 
@@ -2598,44 +2622,30 @@ void LevelCelView::on_frameIndexEdit_escPressed()
 
 void LevelCelView::on_firstSubtileButton_clicked()
 {
-    this->currentSubtileIndex = 0;
-    this->displayFrame();
+    this->setSubtileIndex(0);
 }
 
 void LevelCelView::on_previousSubtileButton_clicked()
 {
-    if (this->currentSubtileIndex >= 1)
-        this->currentSubtileIndex--;
-    else
-        this->currentSubtileIndex = std::max(0, this->min->getSubtileCount() - 1);
-
-    this->displayFrame();
+    this->setSubtileIndex(this->currentSubtileIndex - 1);
 }
 
 void LevelCelView::on_nextSubtileButton_clicked()
 {
-    if (this->currentSubtileIndex < this->min->getSubtileCount() - 1)
-        this->currentSubtileIndex++;
-    else
-        this->currentSubtileIndex = 0;
-
-    this->displayFrame();
+    this->setSubtileIndex(this->currentSubtileIndex + 1);
 }
 
 void LevelCelView::on_lastSubtileButton_clicked()
 {
-    this->currentSubtileIndex = std::max(0, this->min->getSubtileCount() - 1);
-    this->displayFrame();
+    this->setSubtileIndex(this->min->getSubtileCount() - 1);
 }
 
 void LevelCelView::on_subtileIndexEdit_returnPressed()
 {
     int subtileIndex = this->ui->subtileIndexEdit->text().toInt() - 1;
 
-    if (subtileIndex >= 0 && subtileIndex < this->min->getSubtileCount()) {
-        this->currentSubtileIndex = subtileIndex;
-        this->displayFrame();
-    }
+    this->setSubtileIndex(subtileIndex);
+
     this->on_subtileIndexEdit_escPressed();
 }
 
@@ -2647,44 +2657,30 @@ void LevelCelView::on_subtileIndexEdit_escPressed()
 
 void LevelCelView::on_firstTileButton_clicked()
 {
-    this->currentTileIndex = 0;
-    this->displayFrame();
+    this->setTileIndex(0);
 }
 
 void LevelCelView::on_previousTileButton_clicked()
 {
-    if (this->currentTileIndex >= 1)
-        this->currentTileIndex--;
-    else
-        this->currentTileIndex = std::max(0, this->til->getTileCount() - 1);
-
-    this->displayFrame();
+    this->setTileIndex(this->currentTileIndex - 1);
 }
 
 void LevelCelView::on_nextTileButton_clicked()
 {
-    if (this->currentTileIndex < this->til->getTileCount() - 1)
-        this->currentTileIndex++;
-    else
-        this->currentTileIndex = 0;
-
-    this->displayFrame();
+    this->setTileIndex(this->currentTileIndex + 1);
 }
 
 void LevelCelView::on_lastTileButton_clicked()
 {
-    this->currentTileIndex = std::max(0, this->til->getTileCount() - 1);
-    this->displayFrame();
+    this->setTileIndex(this->til->getTileCount() - 1);
 }
 
 void LevelCelView::on_tileIndexEdit_returnPressed()
 {
     int tileIndex = this->ui->tileIndexEdit->text().toInt() - 1;
 
-    if (tileIndex >= 0 && tileIndex < this->til->getTileCount()) {
-        this->currentTileIndex = tileIndex;
-        this->displayFrame();
-    }
+    this->setTileIndex(tileIndex);
+
     this->on_tileIndexEdit_escPressed();
 }
 

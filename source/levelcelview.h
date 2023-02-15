@@ -116,6 +116,9 @@ private:
     bool reuseSubtiles();
     bool sortFrames_impl();
     bool sortSubtiles_impl();
+    void setFrameIndex(int frameIndex);
+    void setSubtileIndex(int subtileIndex);
+    void setTileIndex(int tileIndex);
 
 signals:
     void frameRefreshed();

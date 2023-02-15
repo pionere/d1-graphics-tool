@@ -256,7 +256,7 @@ void MainWindow::updateWindow()
     }
     // update the view
     if (this->celView != nullptr) {
-        this->celView->update();
+        // this->celView->update();
         this->celView->displayFrame();
     }
     if (this->levelCelView != nullptr) {
