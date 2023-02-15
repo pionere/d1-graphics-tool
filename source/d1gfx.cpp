@@ -170,7 +170,7 @@ bool D1Gfx::isFrameSizeConstant() const
 // builds QImage from a D1CelFrame of given index
 QImage D1Gfx::getFrameImage(int frameIndex) const
 {
-    //if (this->palette == nullptr || frameIndex >= this->frames.count())
+    // if (this->palette == nullptr || frameIndex >= this->frames.count())
     //    return QImage();
 
     D1GfxFrame *frame = this->frames[frameIndex];
@@ -270,7 +270,7 @@ D1GfxFrame *D1Gfx::replaceFrame(int idx, const QImage &image)
     return this->frames[idx];
 }
 
-void D1Gfx::removeFrame(quint16 idx)
+void D1Gfx::removeFrame(int idx)
 {
     delete this->frames[idx];
     this->frames.removeAt(idx);
@@ -351,7 +351,7 @@ void D1Gfx::setPalette(D1Pal *pal)
 
 int D1Gfx::getGroupCount() const
 {
-    return this->groupFrameIndices.count();
+    return this->groupFrameIndices.size();
 }
 
 std::pair<int, int> D1Gfx::getGroupFrameIndices(int groupIndex) const

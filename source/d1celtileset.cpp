@@ -121,7 +121,7 @@ bool D1CelTileset::load(D1Gfx &gfx, std::map<unsigned, D1CEL_FRAME_TYPE> &celFra
     // BUILDING {CEL FRAMES}
     // gfx.frames.clear();
     // std::stack<quint16> invalidFrames;
-    for (int i = 0; i < frameOffsets.count(); i++) {
+    for (unsigned i = 0; i < frameOffsets.size(); i++) {
         const auto &offset = frameOffsets[i];
         device->seek(offset.first);
         QByteArray celFrameRawData = device->read(offset.second - offset.first);
