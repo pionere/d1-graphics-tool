@@ -71,10 +71,10 @@ void ExportDialog::on_outputFolderBrowseButton_clicked()
 {
     QString dirPath = dMainWindow().folderDialog(tr("Select Output Folder"));
 
-    if (selectedDirectory.isEmpty())
+    if (dirPath.isEmpty())
         return;
 
-    this->ui->outputFolderEdit->setText(selectedDirectory);
+    this->ui->outputFolderEdit->setText(dirPath);
 }
 
 static void saveImage(const QImage &image, const QString &path)
