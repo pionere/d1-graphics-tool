@@ -553,7 +553,7 @@ void CelView::setGroupIndex(int groupIndex)
         groupIndex = 0;
     }
     std::pair<int, int> prevGroupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
-    int frameIndex = this->currentFrameIndex - groupFrameIndices.first;
+    int frameIndex = this->currentFrameIndex - prevGroupFrameIndices.first;
     std::pair<int, int> newGroupFrameIndices = this->gfx->getGroupFrameIndices(groupIndex);
     this->currentGroupIndex = groupIndex;
     this->currentFrameIndex = std::min(newGroupFrameIndices.first + frameIndex, newGroupFrameIndices.second);
@@ -640,7 +640,7 @@ void CelView::ShowContextMenu(const QPoint &pos)
     contextMenu.exec(mapToGlobal(pos));
 }
 
-void on_framesGroupCheckBox_stateChanged(int state)
+void CelView::on_framesGroupCheckBox_stateChanged(int state)
 {
     // update frameIndexEdit and frameNumberEdit
     this->update();
@@ -684,14 +684,14 @@ void CelView::on_lastFrameButton_clicked()
 
 void CelView::on_frameIndexEdit_returnPressed()
 {
-    int frameIndex = this->ui->frameIndexEdit->text().toInt() - 1;
+    int nextFrameIndex = this->ui->frameIndexEdit->text().toInt() - 1;
 
     if (this->ui->framesGroupCheckBox->isChecked() && this->gfx->getGroupCount() != 0) {
         std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
         nextFrameIndex = std::max(nextFrameIndex, groupFrameIndices.first);
         nextFrameIndex = std::min(nextFrameIndex, groupFrameIndices.second);
     }
-    this->setFrameIndex(frameIndex);
+    this->setFrameIndex(nextFrameIndex);
 
     this->on_frameIndexEdit_escPressed();
 }
