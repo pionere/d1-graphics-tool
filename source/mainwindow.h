@@ -99,9 +99,9 @@ public:
     void nextPaletteCycle(D1PAL_CYCLE_TYPE type);
     void resetPaletteCycle();
 
-    QString getLastFilePath();
     QString fileDialog(FILE_DIALOG_MODE mode, const QString &title, const QString &filter);
     QStringList filesDialog(const QString &title, const QString &filter);
+    QString folderDialog(const QString &title);
 
     static bool hasImageUrl(const QMimeData *mimeData);
     static bool isResourcePath(const QString &path);

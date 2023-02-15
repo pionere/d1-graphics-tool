@@ -232,11 +232,6 @@ void MainWindow::setBaseTrn(const QString &path)
     this->trnBaseWidget->setTrn(this->trnBase);
 }
 
-QString MainWindow::getLastFilePath()
-{
-    return this->lastFilePath;
-}
-
 void MainWindow::updateWindow()
 {
     // rebuild palette hits
@@ -490,37 +485,38 @@ void MainWindow::nextPaletteCycle(D1PAL_CYCLE_TYPE type)
 
 static QString prepareFilePath(QString filePath, const QString &filter, QString &selectedFilter)
 {
-    if (!filePath.isEmpty()) {
-        // filter file-name unless it matches the filter
-        QStringList filterList = filter.split(";;");
-        for (const QString &filterBase : filterList) {
-            QString extPatterns = filterBase.mid(filterBase.lastIndexOf('(') + 1, filterBase.lastIndexOf(')') - 1);
-            QStringList extPatternList = extPatterns.split(QRegularExpression(" "), Qt::SkipEmptyParts);
-            for (QString &extPattern : extPatternList) {
-                // convert filter to regular expression
-                for (int n = 0; n < extPattern.size(); n++) {
-                    if (extPattern[n] == '*') {
-                        // convert * to .*
-                        extPattern.insert(n, '.');
-                        n++;
-                    } else if (extPattern[n] == '.') {
-                        // convert . to \.
-                        extPattern.insert(n, '\\');
-                        n++;
-                    }
-                }
-                QRegularExpression re(extPattern);
-                QRegularExpressionMatch qmatch = re.match(filePath);
-                if (qmatch.hasMatch()) {
-                    selectedFilter = filterBase;
-                    return filePath;
+    // filter file-name unless it matches the filter
+    QFileInfo fi(filePath);
+    if (fi.isDir()) {
+        return filePath;
+    }
+    QStringList filterList = filter.split(";;", Qt::SkipEmptyParts);
+    for (const QString &filterBase : filterList) {
+        QString extPatterns = filterBase.mid(filterBase.lastIndexOf('(') + 1, filterBase.lastIndexOf(')') - 1);
+        QStringList extPatternList = extPatterns.split(QRegularExpression(" "), Qt::SkipEmptyParts);
+        for (QString &extPattern : extPatternList) {
+            // convert filter to regular expression
+            for (int n = 0; n < extPattern.size(); n++) {
+                if (extPattern[n] == '*') {
+                    // convert * to .*
+                    extPattern.insert(n, '.');
+                    n++;
+                } else if (extPattern[n] == '.') {
+                    // convert . to \.
+                    extPattern.insert(n, '\\');
+                    n++;
                 }
             }
+            QRegularExpression re(extPattern);
+            QRegularExpressionMatch qmatch = re.match(filePath);
+            if (qmatch.hasMatch()) {
+                selectedFilter = filterBase;
+                return filePath;
+            }
         }
-        // !match -> cut the file-name
-        QFileInfo fi(filePath);
-        filePath = fi.absolutePath();
     }
+    // !match -> cut the file-name
+    filePath = fi.absolutePath();
     return filePath;
 }
 
@@ -552,6 +548,19 @@ QStringList MainWindow::filesDialog(const QString &title, const QString &filter)
         this->lastFilePath = filePaths[0];
     }
     return filePaths;
+}
+
+QString MainWindow::folderDialog(const QString &title)
+{
+    QFileInfo fi(this->lastFilePath);
+    QString dirPath = fi.absolutePath();
+
+    dirPath = QFileDialog::getExistingDirectory(this, title, dirPath);
+
+    if (!dirPath.isEmpty()) {
+        this->lastFilePath = dirPath;
+    }
+    return dirPath;
 }
 
 bool MainWindow::hasImageUrl(const QMimeData *mimeData)
