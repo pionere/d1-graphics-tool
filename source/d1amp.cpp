@@ -116,7 +116,7 @@ bool D1Amp::isModified() const
 quint8 D1Amp::getTileType(int tileIndex) const
 {
     if (tileIndex < 0 || tileIndex >= this->types.count()) {
-#if QT_DEBUG
+#ifdef QT_DEBUG
         QMessageBox::critical(nullptr, "Error", QStringLiteral("Type of an invalid tile %1 requested. Types count: %2").arg(tileIndex).arg(this->types.count()));
 #endif
         return 0;
@@ -128,7 +128,7 @@ quint8 D1Amp::getTileType(int tileIndex) const
 quint8 D1Amp::getTileProperties(int tileIndex) const
 {
     if (tileIndex < 0 || tileIndex >= this->properties.count()) {
-#if QT_DEBUG
+#ifdef QT_DEBUG
         QMessageBox::critical(nullptr, "Error", QStringLiteral("Property of an invalid tile %1 requested. Properties count: %2").arg(tileIndex).arg(this->properties.count()));
 #endif
         return 0;

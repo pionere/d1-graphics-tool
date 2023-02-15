@@ -111,7 +111,7 @@ bool D1Tmi::isModified() const
 quint8 D1Tmi::getSubtileProperties(int subtileIndex) const
 {
     if (subtileIndex >= this->subProperties.count()) {
-#if QT_DEBUG
+#ifdef QT_DEBUG
         QMessageBox::critical(nullptr, "Error", QStringLiteral("TMI-Properties of an invalid subtile %1 requested. Properties count: %2").arg(subtileIndex).arg(this->subProperties.count()));
 #endif
         return 0;
