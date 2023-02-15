@@ -168,7 +168,7 @@ bool D1Gfx::isFrameSizeConstant() const
 }
 
 // builds QImage from a D1CelFrame of given index
-QImage D1Gfx::getFrameImage(quint16 frameIndex) const
+QImage D1Gfx::getFrameImage(int frameIndex) const
 {
     if (this->palette == nullptr || frameIndex >= this->frames.count())
         return QImage();
@@ -207,15 +207,15 @@ D1GfxFrame *D1Gfx::insertFrame(int idx, bool *clipped)
 
     this->frames.insert(idx, new D1GfxFrame());
 
-    if (this->groupFrameIndices.isEmpty()) {
+    if (this->groupFrameIndices.empty()) {
         // create new group if this is the first frame
-        this->groupFrameIndices.append(qMakePair(0, 0));
+        this->groupFrameIndices.push_back(std::pair<int, int>(0, 0));
     } else if (this->frames.count() == idx + 1) {
         // extend the last group if appending a frame
-        this->groupFrameIndices.last().second = idx;
+        this->groupFrameIndices.back().second = idx;
     } else {
         // extend the current group and adjust every group after it
-        for (int i = 0; i < this->groupFrameIndices.count(); i++) {
+        for (unsigned i = 0; i < this->groupFrameIndices.size(); i++) {
             if (this->groupFrameIndices[i].second < idx)
                 continue;
             if (this->groupFrameIndices[i].first > idx) {
@@ -270,17 +270,17 @@ D1GfxFrame *D1Gfx::replaceFrame(int idx, const QImage &image)
     return this->frames[idx];
 }
 
-void D1Gfx::removeFrame(quint16 idx)
+void D1Gfx::removeFrame(int idx)
 {
     delete this->frames[idx];
     this->frames.removeAt(idx);
     this->modified = true;
 
-    for (int i = 0; i < this->groupFrameIndices.count(); i++) {
+    for (unsigned i = 0; i < this->groupFrameIndices.size(); i++) {
         if (this->groupFrameIndices[i].second < idx)
             continue;
         if (this->groupFrameIndices[i].second == idx && this->groupFrameIndices[i].first == idx) {
-            this->groupFrameIndices.removeAt(i);
+            this->groupFrameIndices.erase(this->groupFrameIndices.begin() + i);
             i--;
             continue;
         }
@@ -294,7 +294,7 @@ void D1Gfx::removeFrame(quint16 idx)
 void D1Gfx::remapFrames(const std::map<unsigned, unsigned> &remap)
 {
     QList<D1GfxFrame *> newFrames;
-    // assert(this->groupFrameIndices.count() == 1);
+    // assert(this->groupFrameIndices.size() == 1);
     for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
         newFrames.append(this->frames.at(iter->second - 1));
     }
@@ -351,13 +351,13 @@ void D1Gfx::setPalette(D1Pal *pal)
 
 int D1Gfx::getGroupCount() const
 {
-    return this->groupFrameIndices.count();
+    return this->groupFrameIndices.size();
 }
 
-QPair<quint16, quint16> D1Gfx::getGroupFrameIndices(int groupIndex) const
+std::pair<int, int> D1Gfx::getGroupFrameIndices(int groupIndex) const
 {
-    if (groupIndex < 0 || groupIndex >= this->groupFrameIndices.count())
-        return qMakePair(0, 0);
+    if (groupIndex < 0 || (unsigned)groupIndex >= this->groupFrameIndices.size())
+        return std::pair<int, int>(0, 0);
 
     return this->groupFrameIndices[groupIndex];
 }

@@ -3268,7 +3268,7 @@ bool Upscaler::upscaleTileset(D1Gfx *gfx, D1Min *min, const UpscaleParam &params
     // update gfx
     gfx->groupFrameIndices.clear();
     if (amount > 0)
-        gfx->groupFrameIndices.append(qMakePair(0, amount - 1));
+        gfx->groupFrameIndices.push_back(std::pair<int, int>(0, amount - 1));
     gfx->frames.swap(newFrames);
     gfx->upscaled = true;
     gfx->modified = true;

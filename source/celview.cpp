@@ -507,7 +507,7 @@ void CelView::displayFrame()
 
 void CelView::updateGroupIndex()
 {
-    QPair<quint16, quint16> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
+    std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
 
     if (this->currentFrameIndex < groupFrameIndices.first || this->currentFrameIndex > groupFrameIndices.second) {
         this->setGroupIndex();
@@ -516,7 +516,7 @@ void CelView::updateGroupIndex()
 
 void CelView::setGroupIndex()
 {
-    QPair<quint16, quint16> groupFrameIndices;
+    std::pair<int, int> groupFrameIndices;
     int i = 0;
 
     for (; i < this->gfx->getGroupCount(); i++) {
@@ -532,7 +532,7 @@ void CelView::setGroupIndex()
 
 void CelView::playGroup()
 {
-    QPair<quint16, quint16> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
+    std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
 
     if (this->currentFrameIndex < groupFrameIndices.second)
         this->currentFrameIndex++;

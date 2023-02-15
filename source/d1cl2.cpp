@@ -84,7 +84,7 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     if (gfx.type == D1CEL_TYPE::V2_MONO_GROUP) {
         // Going through all frames of the only group
         if (firstDword > 0) {
-            gfx.groupFrameIndices.append(qMakePair(0, firstDword - 1));
+            gfx.groupFrameIndices.push_back(std::pair<int, int>(0, firstDword - 1));
         }
         for (unsigned i = 1; i <= firstDword; i++) {
             device->seek(i * 4);
@@ -110,9 +110,7 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
             if (cl2GroupFrameCount == 0) {
                 continue;
             }
-            gfx.groupFrameIndices.append(
-                qMakePair((quint16)frameOffsets.size(),
-                    (quint16)(frameOffsets.size() + cl2GroupFrameCount - 1)));
+            gfx.groupFrameIndices.push_back(std::pair<int, int>(frameOffsets.size(), frameOffsets.size() + cl2GroupFrameCount - 1));
 
             // Going through all frames of the group
             for (unsigned j = 1; j <= cl2GroupFrameCount; j++) {
@@ -250,7 +248,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
         numGroups = gfx.getGroupCount();
         groupped = numGroups > 1;
         for (int i = 0; i < numGroups; i++) {
-            QPair<quint16, quint16> gfi = gfx.getGroupFrameIndices(i);
+            std::pair<int, int> gfi = gfx.getGroupFrameIndices(i);
             int ni = gfi.second - gfi.first + 1;
             headerSize += 4 + 4 * (ni + 1);
         }
@@ -264,7 +262,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
         gfx.groupFrameIndices.clear();
         for (int i = 0; i < numGroups; i++) {
             int ni = numFrames / numGroups;
-            gfx.groupFrameIndices.append(qMakePair(i * ni, i * ni + ni - 1));
+            gfx.groupFrameIndices.push_back(std::pair<int, int>(i * ni, i * ni + ni - 1));
             headerSize += 4 + 4 * (ni + 1);
         }
     }
@@ -309,7 +307,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
         int offset = numGroups * 4;
         for (int i = 0; i < numGroups; i++, hdr += 4) {
             *(quint32 *)&hdr[0] = offset;
-            QPair<quint16, quint16> gfi = gfx.getGroupFrameIndices(i);
+            std::pair<int, int> gfi = gfx.getGroupFrameIndices(i);
             int ni = gfi.second - gfi.first + 1;
             offset += 4 + 4 * (ni + 1);
         }
@@ -318,7 +316,7 @@ bool D1Cl2::writeFileData(D1Gfx &gfx, QFile &outFile, const SaveAsParam &params)
     quint8 *pBuf = &buf[headerSize];
     int idx = 0;
     for (int ii = 0; ii < numGroups; ii++) {
-        QPair<quint16, quint16> gfi = gfx.getGroupFrameIndices(ii);
+        std::pair<int, int> gfi = gfx.getGroupFrameIndices(ii);
         int ni = gfi.second - gfi.first + 1;
         *(quint32 *)&hdr[0] = SwapLE32(ni);
         *(quint32 *)&hdr[4] = SwapLE32(pBuf - hdr);

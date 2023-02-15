@@ -97,13 +97,13 @@ public:
     ~D1Gfx();
 
     bool isFrameSizeConstant() const;
-    QImage getFrameImage(quint16 frameIndex) const;
+    QImage getFrameImage(int frameIndex) const;
     D1GfxFrame *insertFrame(int frameIndex, bool *clipped);
     D1GfxFrame *insertFrame(int frameIndex, const QImage &image);
     D1GfxFrame *addToFrame(int frameIndex, const QImage &image);
     D1GfxFrame *addToFrame(int frameIndex, const D1GfxFrame &frame);
     D1GfxFrame *replaceFrame(int frameIndex, const QImage &image);
-    void removeFrame(quint16 frameIndex);
+    void removeFrame(int frameIndex);
     void remapFrames(const std::map<unsigned, unsigned> &remap);
 
     D1CEL_TYPE getType() const;
@@ -116,7 +116,7 @@ public:
     D1Pal *getPalette();
     void setPalette(D1Pal *pal);
     int getGroupCount() const;
-    QPair<quint16, quint16> getGroupFrameIndices(int groupIndex) const;
+    std::pair<int, int> getGroupFrameIndices(int groupIndex) const;
     int getFrameCount() const;
     D1GfxFrame *getFrame(int frameIndex) const;
     void setFrame(int frameIndex, D1GfxFrame *frame);
@@ -129,7 +129,7 @@ protected:
     QString gfxFilePath;
     bool modified;
     D1Pal *palette = nullptr;
-    QList<QPair<quint16, quint16>> groupFrameIndices;
+    std::vector<std::pair<int, int>> groupFrameIndices;
     QList<D1GfxFrame *> frames;
     // fields of tilesets
     bool upscaled = false;

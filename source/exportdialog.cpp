@@ -537,9 +537,9 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
             for (int i = 0; i < gfx->getGroupCount(); i++) {
                 int groupImageWidth = 0;
                 int groupImageHeight = 0;
-                for (unsigned int j = gfx->getGroupFrameIndices(i).first;
+                for (int j = gfx->getGroupFrameIndices(i).first;
                      j <= gfx->getGroupFrameIndices(i).second; j++) {
-                    if (j < (unsigned)frameFrom || j > (unsigned)frameTo) {
+                    if (j < frameFrom || j > frameTo) {
                         continue;
                     }
                     groupImageWidth += gfx->getFrameWidth(j);
@@ -600,9 +600,9 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
             for (int i = 0; i < gfx->getGroupCount(); i++) {
                 int cursorX = 0;
                 int groupImageHeight = 0;
-                for (unsigned int j = gfx->getGroupFrameIndices(i).first;
+                for (int j = gfx->getGroupFrameIndices(i).first;
                      j <= gfx->getGroupFrameIndices(i).second; j++) {
-                    if (j < (unsigned)frameFrom || j > (unsigned)frameTo) {
+                    if (j < frameFrom || j > frameTo) {
                         continue;
                     }
                     if (ProgressDialog::wasCanceled()) {
