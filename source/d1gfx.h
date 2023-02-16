@@ -116,7 +116,7 @@ public:
     QString getFilePath() const;
     bool isModified() const;
     void setModified(bool modified = true);
-    D1Pal *getPalette();
+    D1Pal *getPalette() const;
     void setPalette(D1Pal *pal);
     int getGroupCount() const;
     std::pair<int, int> getGroupFrameIndices(int groupIndex) const;

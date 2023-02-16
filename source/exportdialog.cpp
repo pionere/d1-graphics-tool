@@ -87,7 +87,7 @@ static void saveImage(const QImage &image, const QString &path)
         dProgressFail() << QApplication::tr("Failed to create %1.").arg(QDir::toNativeSeparators(path));
 }
 
-static void saveImage(const std::vector<std::vector<D1GfxPixel>> &pixels, D1Pal *pal, const QString &path)
+static void saveImage(const std::vector<std::vector<D1GfxPixel>> &pixels, const D1Pal *pal, const QString &path)
 {
     QSize imageSize = D1PixelImage::getImageSize(pixels);
     QImage image = QImage(imageSize, QImage::Format_ARGB32);

@@ -21,5 +21,4 @@ public:
     static QSize getImageSize(const std::vector<std::vector<D1GfxPixel>> &pixels);
     static void createImage(std::vector<std::vector<D1GfxPixel>> &pixels, int width, int height);
     static void drawImage(std::vector<std::vector<D1GfxPixel>> &outPixels, int dx, int dy, const std::vector<std::vector<D1GfxPixel>> &srcPixels);
-    static void saveImage(const std::vector<std::vector<D1GfxPixel>> &pixels, D1Pal *pal, const QString &path);
 };

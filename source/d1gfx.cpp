@@ -73,7 +73,7 @@ D1GfxPixel D1GfxFrame::getPixel(int x, int y) const
     return this->pixels[y][x];
 }
 
-std::vector<std::vector<D1GfxPixel>> &D1GfxFrame::getPixels() const
+std::vector<std::vector<D1GfxPixel>> D1GfxFrame::getPixels() const
 {
     std::vector<std::vector<D1GfxPixel>> image = this->pixels;
     return image;
@@ -363,9 +363,9 @@ QString D1Gfx::getFilePath() const
     return this->gfxFilePath;
 }
 
-D1Pal *D1Gfx::getPalette()
+D1Pal *D1Gfx::getPalette() const
 {
-    return this->palette;
+    return const_cast<D1Pal *>(this->palette);
 }
 
 void D1Gfx::setPalette(D1Pal *pal)

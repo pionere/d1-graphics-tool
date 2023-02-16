@@ -46,12 +46,15 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
             }
         } else {
             // guess subtileHeight based on the data
-            if (upscaled && params.minWidth == 0) {
+            height = fileSize / (subtileCount * width * 2);
+            if ((upscaled || height > 8) && params.minWidth == 0) {
                 int multiplier = sqrt(fileSize / (8 * 2 * 2 * subtileCount)); // assume padding to (8 * multiplier)
-                height = 8 * multiplier;
-                width = 2 * multiplier;
-            } else {
-                height = fileSize / (subtileCount * width * 2);
+                int upHeight = 8 * multiplier;
+                int upWidth = 2 * multiplier;
+                if (upscaled || (upWidth * upHeight * 2 subtileCount == fileSize)) {
+                    width = upWidth;
+                    upHeight = upHeight;
+                }
             }
         }
     }
