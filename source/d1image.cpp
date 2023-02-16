@@ -54,7 +54,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, co
     return true;
 }
 
-QSize D1PixelImage::getImageSize(const std::vector<std::vector<D1GfxPixel>>& pixels)
+QSize D1PixelImage::getImageSize(const std::vector<std::vector<D1GfxPixel>> &pixels)
 {
     int width = 0;
     int height = pixels.size();
@@ -64,7 +64,7 @@ QSize D1PixelImage::getImageSize(const std::vector<std::vector<D1GfxPixel>>& pix
     return QSize(width, height);
 }
 
-void D1PixelImage::createImage(std::vector<std::vector<D1GfxPixel>>& pixels, int width, int height)
+void D1PixelImage::createImage(std::vector<std::vector<D1GfxPixel>> &pixels, int width, int height)
 {
     for (int y = 0; y < height; y++) {
         std::vector<D1GfxPixel> pixelLine;
@@ -75,7 +75,7 @@ void D1PixelImage::createImage(std::vector<std::vector<D1GfxPixel>>& pixels, int
     }
 }
 
-void D1PixelImage::drawImage(std::vector<std::vector<D1GfxPixel>>& outPixels, int dx, int dy, const std::vector<std::vector<D1GfxPixel>>& srcPixels)
+void D1PixelImage::drawImage(std::vector<std::vector<D1GfxPixel>> &outPixels, int dx, int dy, const std::vector<std::vector<D1GfxPixel>> &srcPixels)
 {
     const QSize size = D1PixelImage::getImageSize(srcPixels);
 

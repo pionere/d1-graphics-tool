@@ -231,7 +231,7 @@ QImage D1Min::getSubtileImage(int subtileIndex) const
     return subtile;
 }
 
-std::vector<std::vector<D1GfxPixel>> D1Min::getSubtileImage(int subtileIndex) const
+std::vector<std::vector<D1GfxPixel>> D1Min::getSubtilePixelImage(int subtileIndex) const
 {
     unsigned subtileWidthPx = this->subtileWidth * MICRO_WIDTH;
     unsigned subtileHeightPx = this->subtileHeight * MICRO_HEIGHT;

@@ -87,16 +87,16 @@ static void saveImage(const QImage &image, const QString &path)
         dProgressFail() << QApplication::tr("Failed to create %1.").arg(QDir::toNativeSeparators(path));
 }
 
-static void saveImage(const std::vector<std::vector<D1GfxPixel>>& pixels, D1Pal *pal, const QString &path)
+static void saveImage(const std::vector<std::vector<D1GfxPixel>> &pixels, D1Pal *pal, const QString &path)
 {
     QSize imageSize = D1PixelImage::getImageSize(pixels);
     QImage image = QImage(imageSize, QImage::Format_ARGB32);
-    if (tempOutputImage.isNull()) {
-        dProgressFail() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(width).arg(height);
+    if (image.isNull()) {
+        dProgressFail() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(imageSize.width()).arg(imageSize.height());
         return;
     }
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
+    for (int y = 0; y < imageSize.height(); y++) {
+        for (int x = 0; x < imageSize.width(); x++) {
             const D1GfxPixel &d1pix = pixels[y][x];
 
             QColor color;
@@ -111,7 +111,7 @@ static void saveImage(const std::vector<std::vector<D1GfxPixel>>& pixels, D1Pal 
     saveImage(image, path);
 }
 
-void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &params)
+void ExportDialog::exportLevelTiles25D(const D1Til *til, const D1Gfx *gfx, const ExportParam &params)
 {
     QString fileName = QFileInfo(til->getFilePath()).fileName();
 
@@ -201,7 +201,7 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &para
                 return;
             }
 
-            //const QImage image = til->getTileImage(i);
+            // const QImage image = til->getTileImage(i);
             const std::vector<std::vector<D1GfxPixel>> pixels = til->getTilePixelImage(i);
 
             // painter.drawImage(dx, dy, image);
@@ -251,7 +251,7 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &para
     saveImage(tempOutputPixels, gfx->getPalette(), outputFilePath);
 }
 
-void ExportDialog::exportLevelTiles(const D1Til *til, const ExportParam &params)
+void ExportDialog::exportLevelTiles(const D1Til *til, const D1Gfx *gfx, const ExportParam &params)
 {
     QString fileName = QFileInfo(til->getFilePath()).fileName();
 
@@ -391,7 +391,7 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const ExportParam &params)
     saveImage(tempOutputPixels, gfx->getPalette(), outputFilePath);
 }
 
-void ExportDialog::exportLevelSubtiles(const D1Min *min, const ExportParam &params)
+void ExportDialog::exportLevelSubtiles(const D1Min *min, const D1Gfx *gfx, const ExportParam &params)
 {
     QString fileName = QFileInfo(min->getFilePath()).fileName();
 
@@ -664,7 +664,7 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
 
                 // const QImage image = gfx->getFrameImage(i);
                 const std::vector<std::vector<D1GfxPixel>> pixels = gfx->getFramePixelImage(i);
-                //painter.drawImage(cursorX, cursorY, image);
+                // painter.drawImage(cursorX, cursorY, image);
                 D1PixelImage::drawImage(tempOutputPixels, cursorX, cursorY, pixels);
 
                 const QSize imageSize = D1PixelImage::getImageSize(pixels);

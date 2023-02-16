@@ -75,7 +75,8 @@ D1GfxPixel D1GfxFrame::getPixel(int x, int y) const
 
 std::vector<std::vector<D1GfxPixel>> &D1GfxFrame::getPixels() const
 {
-    return this->pixels;
+    std::vector<std::vector<D1GfxPixel>> image = this->pixels;
+    return image;
 }
 
 bool D1GfxFrame::setPixel(int x, int y, D1GfxPixel pixel)
