@@ -51,7 +51,7 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
                 int multiplier = sqrt(fileSize / (8 * 2 * 2 * subtileCount)); // assume padding to (8 * multiplier)
                 int upHeight = 8 * multiplier;
                 int upWidth = 2 * multiplier;
-                if (upscaled || (upWidth * upHeight * 2 subtileCount == fileSize)) {
+                if (upscaled || (upWidth * upHeight * 2 * subtileCount == fileSize)) {
                     width = upWidth;
                     upHeight = upHeight;
                 }
