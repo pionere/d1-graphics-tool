@@ -90,6 +90,7 @@ class D1Gfx : public QObject {
     friend class D1Cl2;
     friend class D1CelTileset;
     friend class D1Min;
+    friend class D1Pcx;
     friend class Upscaler;
 
 public:

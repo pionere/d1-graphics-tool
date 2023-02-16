@@ -112,7 +112,7 @@
    <item>
     <widget class="QGroupBox" name="celSettingsGroupBox">
      <property name="title">
-      <string>CEL/CL2 File Settings</string>
+      <string>CEL/CL2/PCX File Settings</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_1">
       <item row="0" column="0">
