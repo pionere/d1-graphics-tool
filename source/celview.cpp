@@ -444,9 +444,9 @@ void CelView::removeCurrentFrame()
 
 QImage CelView::copyCurrent()
 {
-    /*if (this->gfx->getFrameCount() == 0) {
+    if (this->gfx->getFrameCount() == 0) {
         return QImage();
-    }*/
+    }
     return this->gfx->getFrameImage(this->currentFrameIndex);
 }
 
@@ -475,7 +475,7 @@ void CelView::displayFrame()
     this->celScene->clear();
 
     // Getting the current frame to display
-    QImage celFrame = this->gfx->getFrameImage(this->currentFrameIndex);
+    QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
 
     this->celScene->setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
@@ -564,6 +564,9 @@ void CelView::setGroupIndex(int groupIndex)
 
 void CelView::playGroup()
 {
+    if (this->gfx->getGroupCount() == 0) {
+        return;
+    }
     std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
 
     if (this->currentFrameIndex < groupFrameIndices.second)

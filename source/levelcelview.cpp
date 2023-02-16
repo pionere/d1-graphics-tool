@@ -2349,9 +2349,9 @@ void LevelCelView::displayFrame()
     this->celScene.clear();
 
     // Getting the current frame/sub-tile/tile to display
-    QImage celFrame = this->gfx->getFrameImage(this->currentFrameIndex);
-    QImage subtile = this->min->getSubtileImage(this->currentSubtileIndex);
-    QImage tile = this->til->getTileImage(this->currentTileIndex);
+    QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
+    QImage subtile = this->min->getSubtileCount() != 0 ? this->min->getSubtileImage(this->currentSubtileIndex) : QImage();
+    QImage tile = this->til->getTileCount() != 0 ? this->til->getTileImage(this->currentTileIndex) : QImage();
 
     this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
     QColor backColor = QColor(Config::getGraphicsTransparentColor());
