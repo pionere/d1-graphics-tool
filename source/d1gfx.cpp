@@ -63,15 +63,22 @@ int D1GfxFrame::getHeight() const
 
 D1GfxPixel D1GfxFrame::getPixel(int x, int y) const
 {
-    if (x >= 0 && x < this->width && y >= 0 && y < this->height)
-        return this->pixels[y][x];
+    if (x < 0 || x >= this->width || y < 0 || y >= this->height) {
+#ifdef QT_DEBUG
+        QMessageBox::critical(nullptr, "Error", QStringLiteral("Invalid pixel %1:%2 requested. dimensions: %3:%4").arg(x).arg(y).arg(this->width).arg(this->height));
+#endif
+        return D1GfxPixel::transparentPixel();
+    }
 
-    return D1GfxPixel::transparentPixel();
+    return this->pixels[y][x];
 }
 
 bool D1GfxFrame::setPixel(int x, int y, D1GfxPixel pixel)
 {
     if (x < 0 || x >= this->width || y < 0 || y >= this->height) {
+#ifdef QT_DEBUG
+        QMessageBox::critical(nullptr, "Error", QStringLiteral("Invalid pixel %1:%2 set. dimensions: %3:%4").arg(x).arg(y).arg(this->width).arg(this->height));
+#endif
         return false;
     }
     if (this->pixels[y][x] == pixel) {
