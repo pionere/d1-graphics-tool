@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <QPainter>
 
+#include "d1image.h"
 #include "progressdialog.h"
 
 #define TILE_SIZE (TILE_WIDTH * TILE_HEIGHT)
@@ -120,6 +121,7 @@ QImage D1Til::getTileImage(int tileIndex) const
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
     // assert(TILE_WIDTH == 2 &&  TILE_HEIGHT == 2);
     unsigned subtileShiftY = subtileWidth / 4;
+    const std::vector<int> &subtiles = this->subtileIndices[tileIndex];
     QImage tile = QImage(subtileWidth * 2,
         subtileHeight + 2 * subtileShiftY, QImage::Format_ARGB32);
     tile.fill(Qt::transparent);
@@ -127,21 +129,13 @@ QImage D1Til::getTileImage(int tileIndex) const
     //      0
     //    2   1
     //      3
-    tilePainter.drawImage(subtileWidth / 2, 0,
-        this->min->getSubtileImage(
-            this->subtileIndices.at(tileIndex).at(0)));
+    tilePainter.drawImage(subtileWidth / 2, 0, this->min->getSubtileImage(subtiles[0]));
 
-    tilePainter.drawImage(subtileWidth, subtileShiftY,
-        this->min->getSubtileImage(
-            this->subtileIndices.at(tileIndex).at(1)));
+    tilePainter.drawImage(subtileWidth, subtileShiftY, this->min->getSubtileImage(subtiles[1]));
 
-    tilePainter.drawImage(0, subtileShiftY,
-        this->min->getSubtileImage(
-            this->subtileIndices.at(tileIndex).at(2)));
+    tilePainter.drawImage(0, subtileShiftY, this->min->getSubtileImage(subtiles[2]));
 
-    tilePainter.drawImage(subtileWidth / 2, 2 * subtileShiftY,
-        this->min->getSubtileImage(
-            this->subtileIndices.at(tileIndex).at(3)));
+    tilePainter.drawImage(subtileWidth / 2, 2 * subtileShiftY, this->min->getSubtileImage(subtiles[3]));
 
     tilePainter.end();
     return tile;
@@ -158,17 +152,56 @@ QImage D1Til::getFlatTileImage(int tileIndex) const
 
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+    const std::vector<int> &subtiles = this->subtileIndices[tileIndex];
     QImage tile = QImage(subtileWidth * TILE_SIZE, subtileHeight, QImage::Format_ARGB32);
     tile.fill(Qt::transparent);
     QPainter tilePainter(&tile);
 
     for (int i = 0; i < TILE_SIZE; i++) {
-        tilePainter.drawImage(subtileWidth * i, 0,
-            this->min->getSubtileImage(
-                this->subtileIndices.at(tileIndex).at(i)));
+        tilePainter.drawImage(subtileWidth * i, 0, this->min->getSubtileImage(subtiles[i]));
     }
 
     tilePainter.end();
+    return tile;
+}
+
+std::vector<std::vector<D1GfxPixel>> D1Til::getTilePixelImage(int tileIndex) const
+{
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+    // assert(TILE_WIDTH == 2 &&  TILE_HEIGHT == 2);
+    unsigned subtileShiftY = subtileWidth / 4;
+    const std::vector<int> &subtiles = this->subtileIndices[tileIndex];
+
+    std::vector<std::vector<D1GfxPixel>> tile;
+    D1PixelImage::createImage(tile, subtileWidth * 2, subtileHeight + 2 * subtileShiftY);
+    //      0
+    //    2   1
+    //      3
+    D1PixelImage::drawImage(tile, subtileWidth / 2, 0, this->min->getSubtilePixelImage(subtiles[0]));
+
+    D1PixelImage::drawImage(tile, subtileWidth, subtileShiftY, this->min->getSubtilePixelImage(subtiles[1]));
+
+    D1PixelImage::drawImage(tile, 0, subtileShiftY, this->min->getSubtilePixelImage(subtiles[2]));
+
+    D1PixelImage::drawImage(tile, subtileWidth / 2, 2 * subtileShiftY, this->min->getSubtilePixelImage(subtiles[3]));
+
+    return tile;
+}
+
+std::vector<std::vector<D1GfxPixel>> D1Til::getFlatTilePixelImage(int tileIndex) const
+{
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+    const std::vector<int> &subtiles = this->subtileIndices[tileIndex];
+
+    std::vector<std::vector<D1GfxPixel>> tile;
+    D1PixelImage::createImage(tile, subtileWidth, subtileHeight);
+
+    for (int i = 0; i < TILE_SIZE; i++) {
+        D1PixelImage::drawImage(tile, subtileWidth * i, 0, this->min->getSubtilePixelImage(subtiles[i]));
+    }
+
     return tile;
 }
 

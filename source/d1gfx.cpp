@@ -73,6 +73,11 @@ D1GfxPixel D1GfxFrame::getPixel(int x, int y) const
     return this->pixels[y][x];
 }
 
+std::vector<std::vector<D1GfxPixel>> &D1GfxFrame::getPixels() const
+{
+    return this->pixels;
+}
+
 bool D1GfxFrame::setPixel(int x, int y, D1GfxPixel pixel)
 {
     if (x < 0 || x >= this->width || y < 0 || y >= this->height) {
@@ -207,6 +212,12 @@ QImage D1Gfx::getFrameImage(int frameIndex) const
     }
 
     return image;
+}
+
+std::vector<std::vector<D1GfxPixel>> D1Gfx::getFramePixelImage(int frameIndex) const
+{
+    D1GfxFrame *frame = this->frames[frameIndex];
+    return frame->getPixels();
 }
 
 D1GfxFrame *D1Gfx::insertFrame(int idx, bool *clipped)

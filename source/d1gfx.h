@@ -57,6 +57,7 @@ public:
     int getWidth() const;
     int getHeight() const;
     D1GfxPixel getPixel(int x, int y) const;
+    std::vector<std::vector<D1GfxPixel>> &getPixels() const;
     bool setPixel(int x, int y, D1GfxPixel pixel);
     bool isClipped() const;
     D1CEL_FRAME_TYPE getFrameType() const;
@@ -99,6 +100,7 @@ public:
 
     bool isFrameSizeConstant() const;
     QImage getFrameImage(int frameIndex) const;
+    std::vector<std::vector<D1GfxPixel>> getFramePixelImage(int frameIndex) const;
     D1GfxFrame *insertFrame(int frameIndex, bool *clipped);
     D1GfxFrame *insertFrame(int frameIndex, const QImage &image);
     D1GfxFrame *addToFrame(int frameIndex, const QImage &image);

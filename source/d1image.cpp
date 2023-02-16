@@ -53,3 +53,35 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, co
 
     return true;
 }
+
+QSize D1PixelImage::getImageSize(const std::vector<std::vector<D1GfxPixel>>& pixels)
+{
+    int width = 0;
+    int height = pixels.size();
+    if (height != 0) {
+        width = pixels[0].size();
+    }
+    return QSize(width, height);
+}
+
+void D1PixelImage::createImage(std::vector<std::vector<D1GfxPixel>>& pixels, int width, int height)
+{
+    for (int y = 0; y < height; y++) {
+        std::vector<D1GfxPixel> pixelLine;
+        for (int x = 0; x < width; x++) {
+            pixelLine.push_back(D1GfxPixel::transparentPixel());
+        }
+        pixels.push_back(pixelLine);
+    }
+}
+
+void D1PixelImage::drawImage(std::vector<std::vector<D1GfxPixel>>& outPixels, int dx, int dy, const std::vector<std::vector<D1GfxPixel>>& srcPixels)
+{
+    const QSize size = D1PixelImage::getImageSize(srcPixels);
+
+    for (int y = 0; y < size.height(); y++) {
+        for (int x = 0; x < size.width(); x++) {
+            outPixels[dy + y][dx + x] = srcPixels[y][x];
+        }
+    }
+}

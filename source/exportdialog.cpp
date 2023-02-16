@@ -1,6 +1,7 @@
 #include "exportdialog.h"
 
 #include <algorithm>
+#include <vector>
 
 #include <QApplication>
 #include <QFileDialog>
@@ -9,6 +10,7 @@
 #include <QPainter>
 #include <QtConcurrent>
 
+#include "d1image.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
 #include "ui_exportdialog.h"
@@ -85,6 +87,30 @@ static void saveImage(const QImage &image, const QString &path)
         dProgressFail() << QApplication::tr("Failed to create %1.").arg(QDir::toNativeSeparators(path));
 }
 
+static void saveImage(const std::vector<std::vector<D1GfxPixel>>& pixels, D1Pal *pal, const QString &path)
+{
+    QSize imageSize = D1PixelImage::getImageSize(pixels);
+    QImage image = QImage(imageSize, QImage::Format_ARGB32);
+    if (tempOutputImage.isNull()) {
+        dProgressFail() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(width).arg(height);
+        return;
+    }
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            const D1GfxPixel &d1pix = pixels[y][x];
+
+            QColor color;
+            if (d1pix.isTransparent())
+                color = QColor(Qt::transparent);
+            else
+                color = pal->getColor(d1pix.getPaletteIndex());
+
+            image.setPixel(x, y, color.rgba());
+        }
+    }
+    saveImage(image, path);
+}
+
 void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &params)
 {
     QString fileName = QFileInfo(til->getFilePath()).fileName();
@@ -108,13 +134,13 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &para
     }
     ProgressDialog::incBar(tr("Exporting 2.5d tiles..."), amount);
     // single tile
-    if (amount == 1 && tileFrom == 0) {
+    /*if (amount == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
         QString outputFilePath = outputFilePathBase + params.outFileExtension;
-        saveImage(til->getTileImage(0), outputFilePath);
+        saveImage(til->getTilePixelImage(0), gfx->getPalette(), outputFilePath);
+        // saveImage(til->getTileImage(0), outputFilePath);
         return;
-    }
-
+    }*/
     // multiple tiles
     if (amount == 1 || params.multi) {
         // one file for each tile (indexed)
@@ -126,7 +152,8 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &para
             QString outputFilePath = outputFilePathBase
                 + QString("%1").arg(i, 4, 10, QChar('0')) + params.outFileExtension;
 
-            saveImage(til->getTileImage(i), outputFilePath);
+            saveImage(til->getTilePixelImage(0), gfx->getPalette(), outputFilePath);
+            // saveImage(til->getTileImage(i), outputFilePath);
             if (!ProgressDialog::incValue()) {
                 return;
             }
@@ -139,11 +166,10 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &para
     }
     QString outputFilePath = outputFilePathBase + params.outFileExtension;
 
-    unsigned tileWidth = til->getMin()->getSubtileWidth() * 2 * MICRO_WIDTH;
-    unsigned tileHeight = til->getMin()->getSubtileHeight() * MICRO_HEIGHT + 32;
-
+    const unsigned tileWidth = til->getMin()->getSubtileWidth() * 2 * MICRO_WIDTH;
+    const unsigned tileHeight = til->getMin()->getSubtileHeight() * MICRO_HEIGHT + 32;
     constexpr unsigned TILES_PER_LINE = 8;
-    QImage tempOutputImage;
+    // QImage tempOutputImage;
     unsigned tempOutputImageWidth = 0;
     unsigned tempOutputImageHeight = 0;
     if (params.placement == 0) { // grouped
@@ -157,14 +183,16 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &para
         tempOutputImageHeight = tileHeight;
     }
 
-    tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
+    /*tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
     if (tempOutputImage.isNull()) {
         dProgressFail() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
         return;
     }
     tempOutputImage.fill(Qt::transparent);
 
-    QPainter painter(&tempOutputImage);
+    QPainter painter(&tempOutputImage);*/
+    std::vector<std::vector<D1GfxPixel>> tempOutputPixels;
+    D1PixelImage::createImage(tempOutputPixels, tempOutputImageWidth, tempOutputImageHeight);
 
     if (params.placement == 0) { // grouped
         unsigned dx = 0, dy = 0;
@@ -173,14 +201,19 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &para
                 return;
             }
 
-            const QImage image = til->getTileImage(i);
+            //const QImage image = til->getTileImage(i);
+            const std::vector<std::vector<D1GfxPixel>> pixels = til->getTilePixelImage(i);
 
-            painter.drawImage(dx, dy, image);
+            // painter.drawImage(dx, dy, image);
+            D1PixelImage::drawImage(tempOutputPixels, dx, dy, pixels);
 
-            dx += image.width();
+            const QSize imageSize = D1PixelImage::getImageSize(pixels);
+            // dx += image.width();
+            dx += imageSize.width();
             if (dx >= tempOutputImageWidth) {
                 dx = 0;
-                dy += image.height();
+                // dy += image.height();
+                dy += imageSize.height();
             }
             if (!ProgressDialog::incValue()) {
                 return;
@@ -192,13 +225,19 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &para
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-            const QImage image = til->getTileImage(i);
+            // const QImage image = til->getTileImage(i);
+            const std::vector<std::vector<D1GfxPixel>> pixels = til->getTilePixelImage(i);
+            const QSize imageSize = D1PixelImage::getImageSize(pixels);
             if (params.placement == 2) { // tiles on one column
-                painter.drawImage(0, cursor, image);
-                cursor += image.height();
+                // painter.drawImage(0, cursor, image);
+                D1PixelImage::drawImage(tempOutputPixels, 0, cursor, pixels);
+                // cursor += image.height();
+                cursor += imageSize.height();
             } else { // params.placement == 1 -- tiles on one line
-                painter.drawImage(cursor, 0, image);
-                cursor += image.width();
+                // painter.drawImage(cursor, 0, image);
+                D1PixelImage::drawImage(tempOutputPixels, cursor, 0, pixels);
+                // cursor += image.width();
+                cursor += imageSize.width();
             }
             if (!ProgressDialog::incValue()) {
                 return;
@@ -206,9 +245,10 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const ExportParam &para
         }
     }
 
-    painter.end();
+    // painter.end();
 
-    saveImage(tempOutputImage, outputFilePath);
+    // saveImage(tempOutputImage, outputFilePath);
+    saveImage(tempOutputPixels, gfx->getPalette(), outputFilePath);
 }
 
 void ExportDialog::exportLevelTiles(const D1Til *til, const ExportParam &params)
@@ -234,12 +274,13 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const ExportParam &params)
     }
     ProgressDialog::incBar(tr("Exporting flat tiles...").arg(fileName), amount);
     // single tile
-    if (amount == 1 && tileFrom == 0) {
+    /*if (amount == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
         QString outputFilePath = outputFilePathBase + params.outFileExtension;
-        saveImage(til->getFlatTileImage(0), outputFilePath);
+        // saveImage(til->getFlatTileImage(0), outputFilePath);
+        saveImage(til->getFlatTilePixelImage(0), gfx->getPalette(), outputFilePath);
         return;
-    }
+    }*/
     // multiple tiles
     if (amount == 1 || params.multi) {
         // one file for each tile (indexed)
@@ -250,7 +291,8 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const ExportParam &params)
             QString outputFilePath = outputFilePathBase
                 + QString("%1").arg(i, 4, 10, QChar('0')) + params.outFileExtension;
 
-            saveImage(til->getFlatTileImage(i), outputFilePath);
+            // saveImage(til->getFlatTileImage(i), outputFilePath);
+            saveImage(til->getFlatTilePixelImage(0), gfx->getPalette(), outputFilePath);
             if (!ProgressDialog::incValue()) {
                 return;
             }
@@ -267,7 +309,7 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const ExportParam &params)
     unsigned tileHeight = til->getMin()->getSubtileHeight() * MICRO_HEIGHT;
 
     constexpr unsigned TILES_PER_LINE = 4;
-    QImage tempOutputImage;
+    // QImage tempOutputImage;
     unsigned tempOutputImageWidth = 0;
     unsigned tempOutputImageHeight = 0;
     if (params.placement == 0) { // grouped
@@ -281,14 +323,16 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const ExportParam &params)
         tempOutputImageHeight = tileHeight;
     }
 
-    tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
+    /*tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
     if (tempOutputImage.isNull()) {
         dProgressFail() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
         return;
     }
     tempOutputImage.fill(Qt::transparent);
 
-    QPainter painter(&tempOutputImage);
+    QPainter painter(&tempOutputImage);*/
+    std::vector<std::vector<D1GfxPixel>> tempOutputPixels;
+    D1PixelImage::createImage(tempOutputPixels, tempOutputImageWidth, tempOutputImageHeight);
 
     if (params.placement == 0) { // grouped
         unsigned dx = 0, dy = 0;
@@ -297,14 +341,19 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const ExportParam &params)
                 return;
             }
 
-            const QImage image = til->getFlatTileImage(i);
+            // const QImage image = til->getFlatTileImage(i);
+            const std::vector<std::vector<D1GfxPixel>> pixels = til->getFlatTilePixelImage(i);
 
-            painter.drawImage(dx, dy, image);
+            // painter.drawImage(dx, dy, image);
+            D1PixelImage::drawImage(tempOutputPixels, dx, dy, pixels);
 
-            dx += image.width();
+            const QSize imageSize = D1PixelImage::getImageSize(pixels);
+            // dx += image.width();
+            dx += imageSize.width();
             if (dx >= tempOutputImageWidth) {
                 dx = 0;
-                dy += image.height();
+                // dy += image.height();
+                dy += imageSize.height();
             }
             if (!ProgressDialog::incValue()) {
                 return;
@@ -316,13 +365,19 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const ExportParam &params)
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-            const QImage image = til->getFlatTileImage(i);
+            // const QImage image = til->getFlatTileImage(i);
+            const std::vector<std::vector<D1GfxPixel>> pixels = til->getFlatTilePixelImage(i);
+            const QSize imageSize = D1PixelImage::getImageSize(pixels);
             if (params.placement == 2) { // tiles on one column
-                painter.drawImage(0, cursor, image);
-                cursor += image.height();
+                // painter.drawImage(0, cursor, image);
+                D1PixelImage::drawImage(tempOutputPixels, 0, cursor, pixels);
+                // cursor += image.height();
+                cursor += imageSize.height();
             } else { // params.placement == 1 -- tiles on one line
-                painter.drawImage(cursor, 0, image);
-                cursor += image.width();
+                // painter.drawImage(cursor, 0, image);
+                D1PixelImage::drawImage(tempOutputPixels, cursor, 0, pixels);
+                // cursor += image.width();
+                cursor += imageSize.width();
             }
             if (!ProgressDialog::incValue()) {
                 return;
@@ -330,9 +385,10 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const ExportParam &params)
         }
     }
 
-    painter.end();
+    // painter.end();
 
-    saveImage(tempOutputImage, outputFilePath);
+    // saveImage(tempOutputImage, outputFilePath);
+    saveImage(tempOutputPixels, gfx->getPalette(), outputFilePath);
 }
 
 void ExportDialog::exportLevelSubtiles(const D1Min *min, const ExportParam &params)
@@ -358,12 +414,13 @@ void ExportDialog::exportLevelSubtiles(const D1Min *min, const ExportParam &para
     }
     ProgressDialog::incBar(tr("Exporting subtiles..."), amount);
     // single subtile
-    if (amount == 1 && subtileFrom == 0) {
+    /*if (amount == 1 && subtileFrom == 0) {
         // one file for the only subtile (not indexed)
         QString outputFilePath = outputFilePathBase + params.outFileExtension;
-        saveImage(min->getSubtileImage(0), outputFilePath);
+        // saveImage(min->getSubtileImage(0), outputFilePath);
+        saveImage(min->getSubtilePixelImage(0), gfx->getPalette(), outputFilePath);
         return;
-    }
+    }*/
     // multiple subtiles
     if (amount == 1 || params.multi) {
         // one file for each subtile (indexed)
@@ -374,7 +431,8 @@ void ExportDialog::exportLevelSubtiles(const D1Min *min, const ExportParam &para
             QString outputFilePath = outputFilePathBase + "_subtile"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + params.outFileExtension;
 
-            saveImage(min->getSubtileImage(i), outputFilePath);
+            // saveImage(min->getSubtileImage(i), outputFilePath);
+            saveImage(min->getSubtilePixelImage(i), gfx->getPalette(), outputFilePath);
             if (!ProgressDialog::incValue()) {
                 return;
             }
@@ -390,7 +448,7 @@ void ExportDialog::exportLevelSubtiles(const D1Min *min, const ExportParam &para
     unsigned subtileWidth = min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = min->getSubtileHeight() * MICRO_HEIGHT;
 
-    QImage tempOutputImage;
+    // QImage tempOutputImage;
     unsigned tempOutputImageWidth = 0;
     unsigned tempOutputImageHeight = 0;
     if (params.placement == 0) { // grouped
@@ -407,14 +465,16 @@ void ExportDialog::exportLevelSubtiles(const D1Min *min, const ExportParam &para
         }
     }
 
-    tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
+    /*tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
     if (tempOutputImage.isNull()) {
         dProgressFail() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
         return;
     }
     tempOutputImage.fill(Qt::transparent);
 
-    QPainter painter(&tempOutputImage);
+    QPainter painter(&tempOutputImage);*/
+    std::vector<std::vector<D1GfxPixel>> tempOutputPixels;
+    D1PixelImage::createImage(tempOutputPixels, tempOutputImageWidth, tempOutputImageHeight);
 
     if (params.placement == 0) { // grouped
         unsigned dx = 0, dy = 0;
@@ -422,14 +482,19 @@ void ExportDialog::exportLevelSubtiles(const D1Min *min, const ExportParam &para
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-            const QImage image = min->getSubtileImage(i);
+            // const QImage image = min->getSubtileImage(i);
+            const std::vector<std::vector<D1GfxPixel>> pixels = min->getSubtilePixelImage(i);
 
-            painter.drawImage(dx, dy, image);
+            // painter.drawImage(dx, dy, image);
+            D1PixelImage::drawImage(tempOutputPixels, dx, dy, pixels);
 
-            dx += image.width();
+            const QSize imageSize = D1PixelImage::getImageSize(pixels);
+            // dx += image.width();
+            dx += imageSize.width();
             if (dx >= tempOutputImageWidth) {
                 dx = 0;
-                dy += image.height();
+                // dy += image.height();
+                dy += imageSize.height();
             }
             if (!ProgressDialog::incValue()) {
                 return;
@@ -441,13 +506,19 @@ void ExportDialog::exportLevelSubtiles(const D1Min *min, const ExportParam &para
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-            const QImage image = min->getSubtileImage(i);
+            // const QImage image = min->getSubtileImage(i);
+            const std::vector<std::vector<D1GfxPixel>> pixels = min->getSubtilePixelImage(i);
+            const QSize imageSize = D1PixelImage::getImageSize(pixels);
             if (params.placement == 2) { // subtiles on one column
-                painter.drawImage(0, cursor, image);
-                cursor += image.height();
+                // painter.drawImage(0, cursor, image);
+                D1PixelImage::drawImage(tempOutputPixels, 0, cursor, pixels);
+                // cursor += image.height();
+                cursor += imageSize.height();
             } else { // params.placement == 1 -- subtiles on one line
-                painter.drawImage(cursor, 0, image);
-                cursor += image.width();
+                // painter.drawImage(cursor, 0, image);
+                D1PixelImage::drawImage(tempOutputPixels, cursor, 0, pixels);
+                // cursor += image.width();
+                cursor += imageSize.width();
             }
             if (!ProgressDialog::incValue()) {
                 return;
@@ -455,9 +526,10 @@ void ExportDialog::exportLevelSubtiles(const D1Min *min, const ExportParam &para
         }
     }
 
-    painter.end();
+    // painter.end();
 
-    saveImage(tempOutputImage, outputFilePath);
+    // saveImage(tempOutputImage, outputFilePath);
+    saveImage(tempOutputPixels, gfx->getPalette(), outputFilePath);
 }
 
 void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
@@ -486,7 +558,8 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
     if (amount == 1 && frameFrom == 0) {
         // one file for the only frame (not indexed)
         QString outputFilePath = outputFilePathBase + params.outFileExtension;
-        saveImage(gfx->getFrameImage(0), outputFilePath);
+        // saveImage(gfx->getFrameImage(0), outputFilePath);
+        saveImage(gfx->getFramePixelImage(0), gfx->getPalette(), outputFilePath);
         return;
     }
     // multiple frames
@@ -499,7 +572,8 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
             QString outputFilePath = outputFilePathBase + "_frame"
                 + QString("%1").arg(i, 4, 10, QChar('0')) + params.outFileExtension;
 
-            saveImage(gfx->getFrameImage(i), outputFilePath);
+            // saveImage(gfx->getFrameImage(i), outputFilePath);
+            saveImage(gfx->getFramePixelImage(i), gfx->getPalette(), outputFilePath);
             if (!ProgressDialog::incValue()) {
                 return;
             }
@@ -512,7 +586,7 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
     }
     QString outputFilePath = outputFilePathBase + params.outFileExtension;
 
-    QImage tempOutputImage;
+    // QImage tempOutputImage;
     int tempOutputImageWidth = 0;
     int tempOutputImageHeight = 0;
 
@@ -560,14 +634,16 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
             tempOutputImageHeight = std::max(gfx->getFrameHeight(i), tempOutputImageHeight);
         }
     }
-    tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
+    /*tempOutputImage = QImage(tempOutputImageWidth, tempOutputImageHeight, QImage::Format_ARGB32);
     if (tempOutputImage.isNull()) {
         dProgressFail() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(tempOutputImageWidth).arg(tempOutputImageHeight);
         return;
     }
     tempOutputImage.fill(Qt::transparent);
 
-    QPainter painter(&tempOutputImage);
+    QPainter painter(&tempOutputImage);*/
+    std::vector<std::vector<D1GfxPixel>> tempOutputPixels;
+    D1PixelImage::createImage(tempOutputPixels, tempOutputImageWidth, tempOutputImageHeight);
 
     if (params.placement == 0) { // grouped
         if (gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
@@ -586,11 +662,16 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
                     groupImageHeight = 0;
                 }
 
-                const QImage image = gfx->getFrameImage(i);
-                painter.drawImage(cursorX, cursorY, image);
+                // const QImage image = gfx->getFrameImage(i);
+                const std::vector<std::vector<D1GfxPixel>> pixels = gfx->getFramePixelImage(i);
+                //painter.drawImage(cursorX, cursorY, image);
+                D1PixelImage::drawImage(tempOutputPixels, cursorX, cursorY, pixels);
 
-                cursorX += image.width();
-                groupImageHeight = std::max(image.height(), groupImageHeight);
+                const QSize imageSize = D1PixelImage::getImageSize(pixels);
+                // cursorX += image.width();
+                cursorX += imageSize.width();
+                // groupImageHeight = std::max(image.height(), groupImageHeight);
+                groupImageHeight = std::max(imageSize.height(), groupImageHeight);
                 if (!ProgressDialog::incValue()) {
                     return;
                 }
@@ -608,10 +689,15 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
                     if (ProgressDialog::wasCanceled()) {
                         return;
                     }
-                    const QImage image = gfx->getFrameImage(j);
-                    painter.drawImage(cursorX, cursorY, image);
-                    cursorX += image.width();
-                    groupImageHeight = std::max(image.height(), groupImageHeight);
+                    // const QImage image = gfx->getFrameImage(j);
+                    const std::vector<std::vector<D1GfxPixel>> pixels = gfx->getFramePixelImage(j);
+                    // painter.drawImage(cursorX, cursorY, image);
+                    D1PixelImage::drawImage(tempOutputPixels, cursorX, cursorY, pixels);
+                    const QSize imageSize = D1PixelImage::getImageSize(pixels);
+                    // cursorX += image.width();
+                    cursorX += imageSize.width();
+                    // groupImageHeight = std::max(image.height(), groupImageHeight);
+                    groupImageHeight = std::max(imageSize.height(), groupImageHeight);
                     if (!ProgressDialog::incValue()) {
                         return;
                     }
@@ -625,13 +711,19 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-            const QImage image = gfx->getFrameImage(i);
+            // const QImage image = gfx->getFrameImage(i);
+            const std::vector<std::vector<D1GfxPixel>> pixels = gfx->getFramePixelImage(i);
+            const QSize imageSize = D1PixelImage::getImageSize(pixels);
             if (params.placement == 2) { // frames on one column
-                painter.drawImage(0, cursor, image);
-                cursor += image.height();
+                // painter.drawImage(0, cursor, image);
+                D1PixelImage::drawImage(tempOutputPixels, 0, cursor, pixels);
+                // cursor += image.height();
+                cursor += imageSize.height();
             } else { // params.placement == 1 -- frames on one line
-                painter.drawImage(cursor, 0, image);
-                cursor += image.width();
+                // painter.drawImage(cursor, 0, image);
+                D1PixelImage::drawImage(tempOutputPixels, cursor, 0, pixels);
+                // cursor += image.width();
+                cursor += imageSize.width();
             }
             if (!ProgressDialog::incValue()) {
                 return;
@@ -639,9 +731,10 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
         }
     }
 
-    painter.end();
+    // painter.end();
 
-    saveImage(tempOutputImage, outputFilePath);
+    // saveImage(tempOutputImage, outputFilePath);
+    saveImage(tempOutputPixels, gfx->getPalette(), outputFilePath);
 }
 
 void ExportDialog::on_exportButton_clicked()
@@ -667,13 +760,13 @@ void ExportDialog::on_exportButton_clicked()
             ExportDialog::exportFrames(this->gfx, params);
             break;
         case 1:
-            ExportDialog::exportLevelSubtiles(this->tileset->min, params);
+            ExportDialog::exportLevelSubtiles(this->tileset->min, this->gfx, params);
             break;
         case 2:
-            ExportDialog::exportLevelTiles(this->tileset->til, params);
+            ExportDialog::exportLevelTiles(this->tileset->til, this->gfx, params);
             break;
         default: // case 3:
-            ExportDialog::exportLevelTiles25D(this->tileset->til, params);
+            ExportDialog::exportLevelTiles25D(this->tileset->til, this->gfx, params);
             break;
         }
     };
