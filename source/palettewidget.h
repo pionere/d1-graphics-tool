@@ -111,15 +111,12 @@ public:
     void initialize(D1Trn *t, CelView *c, LevelCelView *lc, D1PalHits *ph);
 
     void initializeUi();
-    void initializePathComboBox();
+    // void initializePathComboBox();
     void initializeDisplayComboBox();
 
     void selectColor(const D1GfxPixel &pixel);
     D1GfxPixel getCurrentColor(unsigned counter) const;
     void checkTranslationsSelection(QList<quint8> indices);
-
-    void addPath(const QString &path, const QString &name);
-    void removePath(const QString &path);
 
     // color selection handlers
     void startColorSelection(int colorIndex);
@@ -129,7 +126,8 @@ public:
     void startTrnColorPicking(bool single);
     void stopTrnColorPicking();
 
-    void refreshPathComboBox();
+    void updatePathComboBoxOptions(const QList<QString> &options, const QString &selectedOption);
+    // void refreshPathComboBox();
     void refreshColorLineEdit();
     void refreshIndexLineEdit();
     void refreshTranslationIndexLineEdit();
@@ -206,6 +204,4 @@ private:
     D1Trn *trn;
 
     D1PalHits *palHits;
-
-    QMap<QString, QString> paths;
 };
