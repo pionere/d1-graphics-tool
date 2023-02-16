@@ -282,8 +282,12 @@ bool MainWindow::loadPal(const QString &path)
         return false;
     }
     // replace entry in the pals map
-    if (this->pals.contains(path))
-        delete this->pals[path]; // -> setPal must be called!
+    if (this->pals.contains(path)) {
+        if (this->pal == this->pals[path]) {
+            this->pal = newPal; // -> setPal must be called!
+        }
+        delete this->pals[path];
+    }
     this->pals[path] = newPal;
     // add path in palWidget
     this->palWidget->updatePathComboBoxOptions(this->pals.keys(), this->pal->getFilePath());
@@ -299,8 +303,12 @@ bool MainWindow::loadUniqueTrn(const QString &path)
         return false;
     }
     // replace entry in the uniqueTrns map
-    if (this->uniqueTrns.contains(path))
-        delete this->uniqueTrns[path]; // -> setUniqueTrn must be called!
+    if (this->uniqueTrns.contains(path)) {
+        if (this->trnUnique == this->uniqueTrns[path]) {
+            this->trnUnique = newTrn; // -> setUniqueTrn must be called!
+        }
+        delete this->uniqueTrns[path];
+    }
     this->uniqueTrns[path] = newTrn;
     // add path in trnUniqueWidget
     this->trnUniqueWidget->updatePathComboBoxOptions(this->uniqueTrns.keys(), this->trnUnique->getFilePath());
@@ -316,8 +324,12 @@ bool MainWindow::loadBaseTrn(const QString &path)
         return false;
     }
     // replace entry in the baseTrns map
-    if (this->baseTrns.contains(path))
-        delete this->baseTrns[path]; // -> setBaseTrn must be called!
+    if (this->baseTrns.contains(path)) {
+        if (this->trnBase == this->baseTrns[path]) {
+            this->trnBase = newTrn; // -> setBaseTrn must be called!
+        }
+        delete this->baseTrns[path];
+    }
     this->baseTrns[path] = newTrn;
     // add path in trnBaseWidget
     this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), this->trnBase->getFilePath());
