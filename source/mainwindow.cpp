@@ -513,7 +513,7 @@ static QString prepareFilePath(QString filePath, const QString &filter, QString 
                     n++;
                 }
             }
-            QRegularExpression re(extPattern);
+            QRegularExpression re(QRegularExpression::anchoredPattern(extPattern));
             QRegularExpressionMatch qmatch = re.match(filePath);
             if (qmatch.hasMatch()) {
                 selectedFilter = filterBase;
