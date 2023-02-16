@@ -823,10 +823,11 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->baseTrns[D1Trn::IDENTITY_PATH] = newTrn;
     this->trnBase = newTrn;
 
-    QFileInfo celFileInfo = QFileInfo(openFilePath);
+    const QFileInfo celFileInfo = QFileInfo(openFilePath);
 
     // If a SOL, MIN and TIL files exists then build a LevelCelView
-    QString basePath = celFileInfo.absolutePath() + "/" + celFileInfo.completeBaseName();
+    const QString celDir = celFileInfo.absolutePath();
+    const QString basePath = celDir + "/" + celFileInfo.completeBaseName();
     QString tilFilePath = params.tilFilePath;
     QString minFilePath = params.minFilePath;
     QString solFilePath = params.solFilePath;
@@ -990,13 +991,15 @@ void MainWindow::openFile(const OpenAsParam &params)
     QObject::connect(this->trnBaseWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);
 
     // Look for all palettes in the same folder as the CEL/CL2 file
-    QDirIterator it(celFileInfo.absolutePath(), QStringList("*.pal"), QDir::Files);
     QString firstPaletteFound = fileType == 3 ? D1Pal::DEFAULT_PATH : "";
-    while (it.hasNext()) {
-        QString sPath = it.next();
+    if (!celDir.isEmpty()) {
+        QDirIterator it(celDir, QStringList("*.pal"), QDir::Files | QDir::Readable);
+        while (it.hasNext()) {
+            QString sPath = it.next();
 
-        if (this->loadPal(sPath) && firstPaletteFound.isEmpty()) {
-            firstPaletteFound = sPath;
+            if (this->loadPal(sPath) && firstPaletteFound.isEmpty()) {
+                firstPaletteFound = sPath;
+            }
         }
     }
     if (firstPaletteFound.isEmpty()) {
