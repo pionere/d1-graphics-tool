@@ -326,7 +326,7 @@ bool MainWindow::loadBaseTrn(const QString &path)
 
 void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter)
 {
-    if (frame == nullptr || pox.x() < 0 || pos.x() >= frame->getWidth() || pos.y() < 0 || pos.y() >= frame->getHeight()) {
+    if (frame == nullptr || pos.x() < 0 || pos.x() >= frame->getWidth() || pos.y() < 0 || pos.y() >= frame->getHeight()) {
         // no target hit -> ignore
         return;
     }
