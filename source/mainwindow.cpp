@@ -575,12 +575,12 @@ bool MainWindow::hasImageUrl(const QMimeData *mimeData)
     QMimeDatabase mimeDB;
 
     for (const QUrl &url : mimeData->urls()) {
-        QString fileName = url.toLocalFile();
+        QString filePath = url.toLocalFile();
         // add PCX support
-        if (fileName.toLower().endsWith(".pcx")) {
+        if (filePath.toLower().endsWith(".pcx")) {
             return true;
         }
-        QMimeType mimeType = mimeDB.mimeTypeForFile(fileName);
+        QMimeType mimeType = mimeDB.mimeTypeForFile(filePath);
         for (const QByteArray &mimeTypeName : supportedMimeTypes) {
             if (mimeType.inherits(mimeTypeName)) {
                 return true;
@@ -639,8 +639,8 @@ void MainWindow::dragMoveEvent(QDragMoveEvent *event)
     bool unloaded = this->celView == nullptr && this->levelCelView == nullptr;
 
     for (const QUrl &url : event->mimeData()->urls()) {
-        QString path = url.toLocalFile().toLower();
-        if (path.endsWith(".cel") || path.endsWith(".cl2") || (unloaded && path.endsWith(".pcx"))) {
+        QString fileLower = url.toLocalFile().toLower();
+        if (fileLower.endsWith(".cel") || fileLower.endsWith(".cl2") || (unloaded && fileLower.endsWith(".pcx"))) {
             event->acceptProposedAction();
             return;
         }
@@ -793,11 +793,12 @@ void MainWindow::openFile(const OpenAsParam &params)
     // Check file extension
     int fileType = 0;
     if (!openFilePath.isEmpty()) {
-        if (openFilePath.toLower().endsWith(".cel"))
+        QString fileLower = openFilePath.toLower();
+        if (fileLower.endsWith(".cel"))
             fileType = 1;
-        else if (openFilePath.toLower().endsWith(".cl2"))
+        else if (fileLower.endsWith(".cl2"))
             fileType = 2;
-        else if (openFilePath.toLower().endsWith(".pcx"))
+        else if (fileLower.endsWith(".pcx"))
             fileType = 3;
         else
             return;
@@ -1090,8 +1091,9 @@ void MainWindow::saveFile(const SaveAsParam &params)
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Saving..."), 0, PAF_UPDATE_WINDOW);
 
     QString filePath = params.celFilePath.isEmpty() ? this->gfx->getFilePath() : params.celFilePath;
+    QString fileLower = filePath.toLower();
     if (this->gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
-        if (!filePath.toLower().endsWith("cel")) {
+        if (!fileLower.endsWith(".cel")) {
             QMessageBox::StandardButton reply;
             reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to save as %1? Data conversion is not supported.").arg(QDir::toNativeSeparators(filePath)), QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) {
@@ -1102,9 +1104,9 @@ void MainWindow::saveFile(const SaveAsParam &params)
         }
         D1CelTileset::save(*this->gfx, params);
     } else {
-        if (filePath.toLower().endsWith("cel")) {
+        if (fileLower.endsWith(".cel")) {
             D1Cel::save(*this->gfx, params);
-        } else if (filePath.toLower().endsWith("cl2")) {
+        } else if (fileLower.endsWith(".cl2")) {
             D1Cl2::save(*this->gfx, params);
         } else {
             QMessageBox::critical(this, tr("Error"), tr("Not supported."));

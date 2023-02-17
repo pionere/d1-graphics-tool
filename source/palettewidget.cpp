@@ -303,6 +303,8 @@ void PaletteWidget::initializeUi()
     this->ui->colorPickPushButton->setVisible(!trnMode);
     this->ui->colorClearPushButton->setVisible(!trnMode);
 
+    this->ui->translationIndexLineEdit->setToolTip(trnMode ? tr("Enter the color index to which the selected color(s) should map to.") : tr("Enter the color index or 256 to replace the selected color(s) of the frame(s) with the given color or transparent pixel."));
+
     // this->initializePathComboBox();
     this->initializeDisplayComboBox();
 
