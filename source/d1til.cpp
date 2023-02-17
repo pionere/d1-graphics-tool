@@ -196,7 +196,7 @@ std::vector<std::vector<D1GfxPixel>> D1Til::getFlatTilePixelImage(int tileIndex)
     const std::vector<int> &subtiles = this->subtileIndices[tileIndex];
 
     std::vector<std::vector<D1GfxPixel>> tile;
-    D1PixelImage::createImage(tile, subtileWidth, subtileHeight);
+    D1PixelImage::createImage(tile, subtileWidth * TILE_SIZE, subtileHeight);
 
     for (int i = 0; i < TILE_SIZE; i++) {
         D1PixelImage::drawImage(tile, subtileWidth * i, 0, this->min->getSubtilePixelImage(subtiles[i]));
