@@ -134,12 +134,12 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const D1Gfx *gfx, const
     }
     ProgressDialog::incBar(tr("Exporting 2.5d tiles..."), amount);
     // single tile
-    if (amount == 1 && tileFrom == 0) {
+    /*if (amount == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
         QString outputFilePath = outputFilePathBase + params.outFileExtension;
         saveImage(til->getTilePixelImage(0), gfx->getPalette(), outputFilePath);
         return;
-    }
+    }*/
     // multiple tiles
     if (amount == 1 || params.multi) {
         // one file for each tile (indexed)
@@ -251,12 +251,12 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const D1Gfx *gfx, const Ex
     }
     ProgressDialog::incBar(tr("Exporting flat tiles...").arg(fileName), amount);
     // single tile
-    if (amount == 1 && tileFrom == 0) {
+    /*if (amount == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
         QString outputFilePath = outputFilePathBase + params.outFileExtension;
         saveImage(til->getFlatTilePixelImage(0), gfx->getPalette(), outputFilePath);
         return;
-    }
+    }*/
     // multiple tiles
     if (amount == 1 || params.multi) {
         // one file for each tile (indexed)
@@ -368,12 +368,12 @@ void ExportDialog::exportLevelSubtiles(const D1Min *min, const D1Gfx *gfx, const
     }
     ProgressDialog::incBar(tr("Exporting subtiles..."), amount);
     // single subtile
-    if (amount == 1 && subtileFrom == 0) {
+    /*if (amount == 1 && subtileFrom == 0) {
         // one file for the only subtile (not indexed)
         QString outputFilePath = outputFilePathBase + params.outFileExtension;
         saveImage(min->getSubtilePixelImage(0), gfx->getPalette(), outputFilePath);
         return;
-    }
+    }*/
     // multiple subtiles
     if (amount == 1 || params.multi) {
         // one file for each subtile (indexed)
