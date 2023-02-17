@@ -62,10 +62,16 @@ int D1GfxFrame::getHeight() const
 
 D1GfxPixel D1GfxFrame::getPixel(int x, int y) const
 {
-    if (x >= 0 && x < this->width && y >= 0 && y < this->height)
-        return this->pixels[y][x];
+    if (x < 0 || x >= this->width || y < 0 || y >= this->height) {
+        return D1GfxPixel::transparentPixel();
+    }
 
-    return D1GfxPixel::transparentPixel();
+    return this->pixels[y][x];
+}
+
+std::vector<std::vector<D1GfxPixel>> &D1GfxFrame::getPixels() const
+{
+    return const_cast<std::vector<std::vector<D1GfxPixel>> &>(this->pixels);
 }
 
 bool D1GfxFrame::setPixel(int x, int y, D1GfxPixel pixel)
@@ -195,6 +201,12 @@ QImage D1Gfx::getFrameImage(int frameIndex) const
     }
 
     return image;
+}
+
+std::vector<std::vector<D1GfxPixel>> D1Gfx::getFramePixelImage(int frameIndex) const
+{
+    D1GfxFrame *frame = this->frames[frameIndex];
+    return frame->getPixels();
 }
 
 D1GfxFrame *D1Gfx::insertFrame(int idx, bool *clipped)
@@ -339,9 +351,9 @@ QString D1Gfx::getFilePath() const
     return this->gfxFilePath;
 }
 
-D1Pal *D1Gfx::getPalette()
+D1Pal *D1Gfx::getPalette() const
 {
-    return this->palette;
+    return const_cast<D1Pal *>(this->palette);
 }
 
 void D1Gfx::setPalette(D1Pal *pal)

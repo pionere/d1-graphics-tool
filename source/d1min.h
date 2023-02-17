@@ -23,6 +23,7 @@ public:
     bool save(const SaveAsParam &params);
 
     QImage getSubtileImage(int subtileIndex) const;
+    std::vector<std::vector<D1GfxPixel>> getSubtilePixelImage(int subtileIndex) const;
     void getFrameUses(std::vector<bool> &frameUses) const;
 
     void removeFrame(int frameIndex, int replacement);

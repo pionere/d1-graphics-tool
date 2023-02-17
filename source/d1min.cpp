@@ -227,6 +227,33 @@ QImage D1Min::getSubtileImage(int subtileIndex) const
     return subtile;
 }
 
+std::vector<std::vector<D1GfxPixel>> D1Min::getSubtilePixelImage(int subtileIndex) const
+{
+    unsigned subtileWidthPx = this->subtileWidth * MICRO_WIDTH;
+    unsigned subtileHeightPx = this->subtileHeight * MICRO_HEIGHT;
+    int n = this->subtileWidth * this->subtileHeight;
+
+    std::vector<std::vector<D1GfxPixel>> subtile;
+    D1PixelImage::createImage(subtile, subtileWidthPx, subtileHeightPx);
+
+    unsigned dx = 0, dy = 0;
+    for (int i = 0; i < n; i++) {
+        unsigned frameRef = this->frameReferences[subtileIndex][i];
+
+        if (frameRef > 0) {
+            D1PixelImage::drawImage(subtile, dx, dy, this->gfx->getFramePixelImage(frameRef - 1));
+        }
+
+        dx += MICRO_WIDTH;
+        if (dx == subtileWidthPx) {
+            dx = 0;
+            dy += MICRO_HEIGHT;
+        }
+    }
+
+    return subtile;
+}
+
 void D1Min::getFrameUses(std::vector<bool> &frameUses) const
 {
     frameUses.resize(this->gfx->getFrameCount());

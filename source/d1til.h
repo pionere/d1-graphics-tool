@@ -22,6 +22,8 @@ public:
 
     QImage getTileImage(int tileIndex) const;
     QImage getFlatTileImage(int tileIndex) const;
+    std::vector<std::vector<D1GfxPixel>> getTilePixelImage(int tileIndex) const;
+    std::vector<std::vector<D1GfxPixel>> getFlatTilePixelImage(int tileIndex) const;
 
     void removeSubtile(int subtileIndex, int replacement);
     void insertTile(int tileIndex, const std::vector<int> &subtileIndices);
