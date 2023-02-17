@@ -48,7 +48,7 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
                 int upWidth = 2 * multiplier;
                 if (upWidth * upHeight * 2 * subtileCount == fileSize) {
                     width = upWidth;
-                    upHeight = upHeight;
+                    height = upHeight;
                 }
             }
         }
