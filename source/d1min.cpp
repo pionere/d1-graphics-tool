@@ -33,25 +33,20 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
     int subtileCount = sol->getSubtileCount();
     int width = params.minWidth;
     int height = params.minHeight;
-    bool upscaled = params.upscaled == OPEN_UPSCALED_TYPE::TRUE;
     if (width == 0) {
         width = 2;
     }
     if (height == 0) {
         if (fileSize == 0 || subtileCount == 0) {
-            if (upscaled) {
-                height = 8 * width / 2;
-            } else {
-                height = 5;
-            }
+            height = 5;
         } else {
             // guess subtileHeight based on the data
             height = fileSize / (subtileCount * width * 2);
-            if ((upscaled || height > 8) && params.minWidth == 0) {
+            if (height > 8 && params.minWidth == 0) {
                 int multiplier = sqrt(fileSize / (8 * 2 * 2 * subtileCount)); // assume padding to (8 * multiplier)
                 int upHeight = 8 * multiplier;
                 int upWidth = 2 * multiplier;
-                if (upscaled || (upWidth * upHeight * 2 * subtileCount == fileSize)) {
+                if (upWidth * upHeight * 2 * subtileCount == fileSize) {
                     width = upWidth;
                     upHeight = upHeight;
                 }
@@ -66,6 +61,7 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
         return false;
     }
 
+    bool upscaled = params.upscaled == OPEN_UPSCALED_TYPE::TRUE;
     if (params.upscaled == OPEN_UPSCALED_TYPE::AUTODETECT) {
         upscaled = width != 2;
     }

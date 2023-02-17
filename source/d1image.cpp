@@ -81,7 +81,8 @@ void D1PixelImage::drawImage(std::vector<std::vector<D1GfxPixel>> &outPixels, in
 
     for (int y = 0; y < size.height(); y++) {
         for (int x = 0; x < size.width(); x++) {
-            outPixels[dy + y][dx + x] = srcPixels[y][x];
+            if (!srcPixels[y][x].isTransparent())
+                outPixels[dy + y][dx + x] = srcPixels[y][x];
         }
     }
 }
