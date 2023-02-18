@@ -108,7 +108,7 @@ static void saveImage(const std::vector<std::vector<D1GfxPixel>> &pixels, const 
             image.setPixel(x, y, color.rgba());
         }
     }
-	Qstring path = params.outFolder + "/" + fileName + params.outFileExtension;
+    QString path = params.outFolder + "/" + fileName + params.outFileExtension;
     saveImage(image, path);
 }
 
@@ -249,7 +249,7 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const D1Gfx *gfx, const Ex
     if (amount <= 0) {
         return;
     }
-    ProgressDialog::incBar(tr("Exporting flat tiles...").arg(fileName), amount);
+    ProgressDialog::incBar(tr("Exporting flat tiles..."), amount);
     // single tile
     /*if (amount == 1 && tileFrom == 0) {
         // one file for the only tile (not indexed)
