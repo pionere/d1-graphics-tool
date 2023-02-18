@@ -1021,7 +1021,7 @@ void PaletteWidget::on_translationIndexLineEdit_returnPressed()
                 reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Pixels with color %1 are going to be replaced with %2. This change is not reversible. Are you sure you want to proceed?").arg(range).arg(replacement), QMessageBox::YesToAll | QMessageBox::Yes | QMessageBox::No);
                 if (reply != QMessageBox::No) {
                     D1GfxPixel replacement = index == D1PAL_COLORS ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(index);
-                    emit this->changeColor(this->selectedFirstColorIndex, this->selectedLastColorIndex, replacement, reply == QMessageBox::YesToAll);
+                    dMainWindow().changeColor(this->selectedFirstColorIndex, this->selectedLastColorIndex, replacement, reply == QMessageBox::YesToAll);
                 }
             }
         }

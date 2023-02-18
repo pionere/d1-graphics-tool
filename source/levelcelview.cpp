@@ -174,22 +174,6 @@ int LevelCelView::getCurrentTileIndex()
     return this->currentTileIndex;
 }
 
-void LevelCelView::changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel, bool all)
-{
-    if (all || this->gfx->getFrameCount() == 0) {
-        for (int i = 0; i < this->gfx->getFrameCount(); i++) {
-            D1GfxFrame *frame = this->gfx->getFrame(i);
-            frame->replacePixels(startColorIndex, endColorIndex, pixel);
-        }
-    } else {
-        D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
-        frame->replacePixels(startColorIndex, endColorIndex, pixel);
-    }
-    this->gfx->setModified();
-    // update the view - done by the caller
-    // this->displayFrame();
-}
-
 void LevelCelView::framePixelClicked(const QPoint &pos, unsigned counter)
 {
     unsigned celFrameWidth = MICRO_WIDTH; // this->gfx->getFrameWidth(this->currentFrameIndex);

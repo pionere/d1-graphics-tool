@@ -94,6 +94,7 @@ public:
     void upscale(const UpscaleParam &params);
 
     void paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type);
+    void changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel, bool all);
 
     void initPaletteCycle();
     void nextPaletteCycle(D1PAL_CYCLE_TYPE type);
@@ -108,8 +109,6 @@ public:
 
 private:
     void failWithError(const QString &error);
-
-    void changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel, bool all);
 
     void setPal(const QString &palFilePath);
     void setUniqueTrn(const QString &trnfilePath);

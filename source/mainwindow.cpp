@@ -184,12 +184,17 @@ void MainWindow::changeColor(quint8 startColorIndex, quint8 endColorIndex, D1Gfx
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
-    if (this->celView != nullptr) {
-        this->celView->changeColor(startColorIndex, endColorIndex, pixel, all);
+    if (all || this->gfx->getFrameCount() == 0) {
+        for (int i = 0; i < this->gfx->getFrameCount(); i++) {
+            D1GfxFrame *frame = this->gfx->getFrame(i);
+            frame->replacePixels(startColorIndex, endColorIndex, pixel);
+        }
+    } else {
+        int currentFrameIndex = this->celView != nullptr ? this->celView->getCurrentFrameIndex() : this->levelCelView->getCurrentFrameIndex();
+        D1GfxFrame *frame = this->gfx->getFrame(currentFrameIndex);
+        frame->replacePixels(startColorIndex, endColorIndex, pixel);
     }
-    if (this->levelCelView != nullptr) {
-        this->levelCelView->changeColor(startColorIndex, endColorIndex, pixel, all);
-    }
+    this->gfx->setModified();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -943,9 +948,6 @@ void MainWindow::openFile(const OpenAsParam &params)
     QObject::connect(this->palWidget, &PaletteWidget::colorPicking_stopped, this->trnUniqueWidget, &PaletteWidget::stopTrnColorPicking);      // cancel color picking
     QObject::connect(this->palWidget, &PaletteWidget::colorPicking_stopped, this->trnBaseWidget, &PaletteWidget::stopTrnColorPicking);        // cancel color picking
     QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorPicking_stopped, this->trnBaseWidget, &PaletteWidget::stopTrnColorPicking);  // cancel color picking
-
-    // Color changing
-    QObject::connect(this->palWidget, &PaletteWidget::changeColor, this, &MainWindow::changeColor);
 
     if (isTileset) {
         // build a LevelCelView
