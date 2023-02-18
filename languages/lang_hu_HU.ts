@@ -384,12 +384,12 @@
     <message>
         <location filename="../source/exportdialog.ui" line="52"/>
         <source>Format:</source>
-        <translation>Formátum</translation>
+        <translation>Formátum:</translation>
     </message>
     <message>
         <location filename="../source/exportdialog.ui" line="69"/>
         <source>File(s):</source>
-        <translation>Fájlok</translation>
+        <translation>Fájlok:</translation>
     </message>
     <message>
         <location filename="../source/exportdialog.ui" line="77"/>
@@ -409,7 +409,7 @@
     <message>
         <location filename="../source/exportdialog.ui" line="106"/>
         <source>Type:</source>
-        <translation>Típus</translation>
+        <translation>Típus:</translation>
     </message>
     <message>
         <location filename="../source/exportdialog.ui" line="120"/>
@@ -434,7 +434,7 @@
     <message>
         <location filename="../source/exportdialog.ui" line="150"/>
         <source>Placement:</source>
-        <translation>Elhelyezés</translation>
+        <translation>Elhelyezés:</translation>
     </message>
     <message>
         <location filename="../source/exportdialog.ui" line="164"/>
@@ -2427,7 +2427,7 @@
         <location filename="../source/openasdialog.ui" line="186"/>
         <location filename="../source/openasdialog.ui" line="277"/>
         <source>Width:</source>
-        <translation>Szélesség</translation>
+        <translation>Szélesség:</translation>
     </message>
     <message>
         <location filename="../source/openasdialog.ui" line="196"/>
@@ -2752,7 +2752,7 @@
     <message>
         <location filename="../source/patchtilesetdialog.ui" line="30"/>
         <source>Dungeon type:</source>
-        <translation>Mezőkészlet típusa</translation>
+        <translation>Mezőkészlet típusa:</translation>
     </message>
     <message>
         <location filename="../source/patchtilesetdialog.ui" line="38"/>
@@ -3422,7 +3422,7 @@
     <message>
         <location filename="../source/settingsdialog.ui" line="49"/>
         <source>Graphics background color:</source>
-        <translation>Grafika háttérszíne</translation>
+        <translation>Grafika háttérszíne:</translation>
     </message>
     <message>
         <location filename="../source/settingsdialog.ui" line="59"/>
@@ -3432,7 +3432,7 @@
     <message>
         <location filename="../source/settingsdialog.ui" line="76"/>
         <source>Graphics transparent color:</source>
-        <translation>Grafika átlátszó színe</translation>
+        <translation>Grafika átlátszó színe:</translation>
     </message>
     <message>
         <location filename="../source/settingsdialog.ui" line="86"/>
@@ -3555,7 +3555,7 @@
     <message>
         <location filename="../source/upscaledialog.ui" line="119"/>
         <source>Anti aliasing:</source>
-        <translation>Élsimítás</translation>
+        <translation>Élsimítás:</translation>
     </message>
     <message>
         <location filename="../source/upscaledialog.ui" line="127"/>

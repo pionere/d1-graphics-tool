@@ -53,10 +53,10 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1" colspan="3">
+      <item row="0" column="1">
        <widget class="QComboBox" name="formatComboBox"/>
       </item>
-      <item row="0" column="2" colspan="2">
+      <item row="0" column="2">
        <spacer name="horizontalSpacer_1_0">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -70,7 +70,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1" colspan="3">
+      <item row="1" column="1">
        <widget class="QComboBox" name="filesCountComboBox">
         <item>
          <property name="text">
@@ -84,7 +84,7 @@
         </item>
        </widget>
       </item>
-      <item row="1" column="2" colspan="2">
+      <item row="1" column="2">
        <spacer name="horizontalSpacer_1_1">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -99,59 +99,80 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="LineEditWidget" name="filesTransparentIndexLineEdit">
-        <property name="charWidth">
-         <number>3</number>
-        </property>
-        <property name="maxLength">
-         <number>3</number>
-        </property>
-        <property name="toolTip">
-         <string>Palette index of the transparent pixels in the output image</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
+       <widget class="QWidget" name="rangeFieldsWidget" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <property name="spacing">
+          <number>4</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="LineEditWidget" name="filesTransparentIndexLineEdit">
+           <property name="charWidth">
+            <number>3</number>
+           </property>
+           <property name="maxLength">
+            <number>3</number>
+           </property>
+           <property name="toolTip">
+            <string>Palette index of the transparent pixels in the output image</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="filesTransparentSlashLabel">
+           <property name="minimumWidth">
+            <number>8</number>
+           </property>
+           <property name="maximumWidth">
+            <number>8</number>
+           </property>
+           <property name="text">
+            <string notr="true">/</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="LineEditWidget" name="filesTransparentColorLineEdit">
+           <property name="charWidth">
+            <number>8</number>
+           </property>
+           <property name="toolTip">
+            <string>Color of the transparent pixels in the output image</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="filesTransparentColorPushButton">
+           <property name="text">
+            <string>Pick</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="QLabel" name="filesTransparentSlashLabel">
-        <property name="minimumWidth">
-         <number>8</number>
-        </property>
-        <property name="maximumWidth">
-         <number>8</number>
-        </property>
-        <property name="text">
-         <string notr="true">/</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="3">
-       <widget class="LineEditWidget" name="filesTransparentColorLineEdit">
-        <property name="charWidth">
-         <number>8</number>
-        </property>
-        <property name="toolTip">
-         <string>Color of the transparent pixels in the output image</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="4">
-       <widget class="QPushButton" name="filesTransparentColorPushButton">
-        <property name="text">
-         <string>Pick</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="5">
-       <spacer name="horizontalSpacer_1_1">
+       <spacer name="horizontalSpacer_1_2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -258,12 +279,6 @@
       </item>
       <item row="2" column="1">
        <widget class="QWidget" name="rangeFieldsWidget" native="true">
-        <property name="minimumWidth">
-         <number>120</number>
-        </property>
-        <property name="maximumWidth">
-         <number>120</number>
-        </property>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <property name="spacing">
           <number>4</number>
