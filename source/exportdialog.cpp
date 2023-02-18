@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <QApplication>
+#include <QColorDialog>
 #include <QFileDialog>
 #include <QImageWriter>
 #include <QMessageBox>
@@ -655,7 +656,7 @@ void ExportDialog::on_exportButton_clicked()
     QString tpIndexStr = this->ui->filesTransparentIndexLineEdit->text();
     int tpIndex = D1PAL_COLORS;
     if (!tpIndexStr.isEmpty()) {
-        tpIndex = tpIndexStr.nonNegInt();
+        tpIndex = tpIndexStr.toUShort();
     }
     params.transparentIndex = tpIndex;
     params.transparentColor = QColor(this->ui->filesTransparentColorLineEdit->text());
