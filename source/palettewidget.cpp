@@ -1030,12 +1030,13 @@ void PaletteWidget::on_translationIndexLineEdit_returnPressed()
         // New translations
         static_assert(D1PAL_COLORS <= std::numeric_limits<quint8>::max() + 1, "on_translationIndexLineEdit_returnPressed stores color indices in quint8.");
         QList<quint8> newTranslations;
+        int index = targetRange.first;
         const int dc = targetRange.first == targetRange.second ? 0 : (targetRange.first < targetRange.second ? 1 : -1);
-        for (int i = firstColorIndex; i <= lastColorIndex; i++) {
-            if (targetRange.first + dc == D1PAL_COLORS) {
+        for (int i = firstColorIndex; i <= lastColorIndex; i++, index += dc) {
+            if (index == D1PAL_COLORS) {
                 newTranslations.append(i);
             } else {
-                newTranslations.append(targetRange.first + dc);
+                newTranslations.append(index);
             }
         }
         // Build translation editing command and connect it to the current palette widget
@@ -1052,9 +1053,10 @@ void PaletteWidget::on_translationIndexLineEdit_returnPressed()
         reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Pixels with color %1 are going to be replaced with %2. This change is not reversible. Are you sure you want to proceed?").arg(range).arg(replacement), QMessageBox::YesToAll | QMessageBox::Yes | QMessageBox::No);
         if (reply != QMessageBox::No) {
             std::vector<std::pair<D1GfxPixel, D1GfxPixel>> replacements;
+            int index = targetRange.first;
             const int dc = targetRange.first == targetRange.second ? 0 : (targetRange.first < targetRange.second ? 1 : -1);
-            for (int i = firstColorIndex; i <= lastColorIndex; i++) {
-                D1GfxPixel replacement = (targetRange.first + dc == D1PAL_COLORS) ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(targetRange.first + dc);
+            for (int i = firstColorIndex; i <= lastColorIndex; i++, index += dc) {
+                D1GfxPixel replacement = (index == D1PAL_COLORS) ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(index);
                 replacements.push_back(std::pair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(i), replacement));
             }
             dMainWindow().changeColor(replacements, reply == QMessageBox::YesToAll);
