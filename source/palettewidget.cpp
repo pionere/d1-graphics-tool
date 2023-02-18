@@ -713,16 +713,16 @@ void PaletteWidget::updatePathComboBoxOptions(const QList<QString> &options, con
 
 void PaletteWidget::refreshColorLineEdit()
 {
-    int colorIndex = this->selectedFirstColorIndex;
     QString text;
-    bool active = colorIndex != COLORIDX_TRANSPARENT;
-
+    int firstColorIndex = this->selectedFirstColorIndex;
+    int lastColorIndex = this->selectedLastColorIndex;
+    bool active = firstColorIndex != COLORIDX_TRANSPARENT;
     if (active) {
-        if (colorIndex != this->selectedLastColorIndex) {
+        if (firstColorIndex != lastColorIndex) {
             text = "*";
         } else {
             D1Pal *colorPal = this->isTrn ? this->trn->getResultingPalette() : this->pal;
-            text = colorPal->getColor(colorIndex).name();
+            text = colorPal->getColor(firstColorIndex).name();
         }
     }
     this->ui->colorLineEdit->setText(text);
@@ -734,33 +734,55 @@ void PaletteWidget::refreshColorLineEdit()
 void PaletteWidget::refreshIndexLineEdit()
 {
     QString text;
-
     int firstColorIndex = this->selectedFirstColorIndex;
     int lastColorIndex = this->selectedLastColorIndex;
-    if (firstColorIndex != lastColorIndex) {
-        // If second selected color has an index less than the first one swap them
-        if (firstColorIndex > lastColorIndex) {
-            std::swap(firstColorIndex, lastColorIndex);
+    bool active = firstColorIndex != COLORIDX_TRANSPARENT;
+    if (active) {
+        if (firstColorIndex != lastColorIndex) {
+            // If second selected color has an index less than the first one swap them
+            if (firstColorIndex > lastColorIndex) {
+                std::swap(firstColorIndex, lastColorIndex);
+            }
+            const char *sep = (firstColorIndex < 100 && lastColorIndex < 100) ? " - " : "-";
+            text = QString::number(firstColorIndex) + sep + QString::number(lastColorIndex);
+        } else {
+            text = QString::number(firstColorIndex);
         }
-        const char *sep = (firstColorIndex < 100 && lastColorIndex < 100) ? " - " : "-";
-        text = QString::number(firstColorIndex) + sep + QString::number(lastColorIndex);
-    } else if (firstColorIndex != COLORIDX_TRANSPARENT) {
-        text = QString::number(firstColorIndex);
     }
     this->ui->indexLineEdit->setText(text);
 }
 
 void PaletteWidget::refreshTranslationIndexLineEdit()
 {
-    int colorIndex = this->selectedFirstColorIndex;
     QString text;
-    bool active = colorIndex != COLORIDX_TRANSPARENT;
-
+    int firstColorIndex = this->selectedFirstColorIndex;
+    int lastColorIndex = this->selectedLastColorIndex;
+    bool active = firstColorIndex != COLORIDX_TRANSPARENT;
     if (active && this->isTrn) {
-        if (colorIndex != this->selectedLastColorIndex) {
-            text = "*";
+        // If second selected color has an index less than the first one swap them
+        if (firstColorIndex > lastColorIndex) {
+            std::swap(firstColorIndex, lastColorIndex);
+        }
+        bool match = true;
+        quint8 firstTrn = this->trn->getTranslation(firstColorIndex);
+        quint8 lastTrn = this->trn->getTranslation(lastColorIndex);
+        int dc = firstTrn == lastTrn ? 0 : (firstTrn < lastTrn ? 1 : -1);
+        quint8 currTrn = firstTrn;
+        for (int i = firstColorIndex; i <= lastColorIndex; i++, currTrn += dc) {
+            if (currTrn != this->trn->getTranslation(i)) {
+                match = false;
+                break;
+            }
+        }
+        if (match) {
+            if (firstTrn == lastTrn) {
+                text = QString::number(firstTrn);
+            } else {
+                const char *sep = (firstTrn < 100 && lastTrn < 100) ? " - " : "-";
+                text = QString::number(firstTrn) + sep + QString::number(lastTrn);
+            }
         } else {
-            text = QString::number(this->trn->getTranslation(colorIndex));
+            text = "*";
         }
     }
     this->ui->translationIndexLineEdit->setText(text);
