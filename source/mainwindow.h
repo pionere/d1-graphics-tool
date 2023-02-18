@@ -94,6 +94,7 @@ public:
     void upscale(const UpscaleParam &params);
 
     void paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type);
+    void changeColor(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, bool all);
 
     void initPaletteCycle();
     void nextPaletteCycle(D1PAL_CYCLE_TYPE type);
@@ -108,8 +109,6 @@ public:
 
 private:
     void failWithError(const QString &error);
-
-    void changeColor(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, bool all);
 
     void setPal(const QString &palFilePath);
     void setUniqueTrn(const QString &trnfilePath);

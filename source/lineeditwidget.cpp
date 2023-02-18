@@ -35,11 +35,11 @@ std::pair<int, int> LineEditWidget::nonNegRange() const
     QStringList parts = this->text().split('-', Qt::SkipEmptyParts);
     std::pair<int, int> result = { 0, 0 };
     if (parts.size() == 1) {
-        result.first = parts[0].asInt();
+        result.first = parts[0].toInt();
         result.second = result.first;
     } else if (parts.size() == 2) {
-        result.first = parts[0].asInt();
-        result.second = parts[1].asInt();
+        result.first = parts[0].toInt();
+        result.second = parts[1].toInt();
     }
     if (result.first < 0) {
         result.first = 0;

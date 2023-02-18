@@ -1021,7 +1021,7 @@ void PaletteWidget::on_indexLineEdit_returnPressed()
     if (firstColorIndex > lastColorIndex) {
         std::swap(firstColorIndex, lastColorIndex);
     }
-    if (targetRange.first != targetRange.second && abs(targetRange.second - targetRange.first) != lastColorIndex - firstColorIndex)) {
+    if (targetRange.first != targetRange.second && abs(targetRange.second - targetRange.first) != lastColorIndex - firstColorIndex) {
         QMessageBox::warning(this, tr("Warning"), tr("Source and target selection length do not match."));
         return;
     }
