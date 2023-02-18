@@ -200,7 +200,7 @@
              </widget>
             </item>
             <item row="1" column="3" colspan="2">
-             <widget class="LineEditWidget" name="indexLineEdit">
+             <widget class="LineEditWidget" name="translationIndexLineEdit">
               <property name="charWidth">
                <number>7</number>
               </property>

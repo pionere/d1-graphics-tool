@@ -234,7 +234,7 @@ PaletteWidget::PaletteWidget(QWidget *parent, QUndoStack *us, QString title)
 
     // connect esc events of LineEditWidget
     QObject::connect(this->ui->colorLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_colorLineEdit_escPressed()));
-    QObject::connect(this->ui->indexLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_indexLineEdit_escPressed()));
+    QObject::connect(this->ui->translationIndexLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_translationIndexLineEdit_escPressed()));
 
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -300,7 +300,7 @@ void PaletteWidget::initializeUi()
 
     this->ui->monsterTrnPushButton->setVisible(trnMode);
 
-    this->ui->indexLineEdit->setToolTip(trnMode ? tr("Enter the color index to which the selected color(s) should map to.") : tr("Enter the color index or 256 to replace the selected color(s) of the frame(s) with the given color or transparent pixel."));
+    this->ui->translationIndexLineEdit->setToolTip(trnMode ? tr("Enter the color index to which the selected color(s) should map to.") : tr("Enter the color index or 256 to replace the selected color(s) of the frame(s) with the given color or transparent pixel."));
 
     // this->initializePathComboBox();
     this->initializeDisplayComboBox();
@@ -763,8 +763,8 @@ void PaletteWidget::refreshTranslationIndexLineEdit()
             text = QString::number(this->trn->getTranslation(colorIndex));
         }
     }
-    this->ui->indexLineEdit->setText(text);
-    this->ui->indexLineEdit->setReadOnly(!active);
+    this->ui->translationIndexLineEdit->setText(text);
+    this->ui->translationIndexLineEdit->setReadOnly(!active);
 }
 
 void PaletteWidget::modify()
@@ -1008,9 +1008,9 @@ void PaletteWidget::on_colorClearPushButton_clicked()
     }
 }
 
-void PaletteWidget::on_indexLineEdit_returnPressed()
+void PaletteWidget::on_translationIndexLineEdit_returnPressed()
 {
-    std::pair<int, int> targetRange = ui->indexLineEdit->nonNegRange();
+    std::pair<int, int> targetRange = ui->translationIndexLineEdit->nonNegRange();
     if (targetRange.first > D1PAL_COLORS || targetRange.second > D1PAL_COLORS) {
         QMessageBox::warning(this, tr("Warning"), tr("Invalid palette index-range."));
         return;
@@ -1025,10 +1025,10 @@ void PaletteWidget::on_indexLineEdit_returnPressed()
         QMessageBox::warning(this, tr("Warning"), tr("Source and target selection length do not match."));
         return;
     }
-    
+
     if (this->isTrn) {
         // New translations
-        static_assert(D1PAL_COLORS <= std::numeric_limits<quint8>::max() + 1, "on_indexLineEdit_returnPressed stores color indices in quint8.");
+        static_assert(D1PAL_COLORS <= std::numeric_limits<quint8>::max() + 1, "on_translationIndexLineEdit_returnPressed stores color indices in quint8.");
         QList<quint8> newTranslations;
         const int dc = targetRange.first == targetRange.second ? 0 : (targetRange.first < targetRange.second ? 1 : -1);
         for (int i = firstColorIndex; i <= lastColorIndex; i++) {
@@ -1062,15 +1062,15 @@ void PaletteWidget::on_indexLineEdit_returnPressed()
     }
 
     // Release focus to allow keyboard shortcuts to work as expected
-    this->on_indexLineEdit_escPressed();
+    this->on_translationIndexLineEdit_escPressed();
 }
 
-void PaletteWidget::on_indexLineEdit_escPressed()
+void PaletteWidget::on_translationIndexLineEdit_escPressed()
 {
     this->initStopColorPicking();
 
     this->refreshTranslationIndexLineEdit();
-    this->ui->indexLineEdit->clearFocus();
+    this->ui->translationIndexLineEdit->clearFocus();
 }
 
 void PaletteWidget::on_monsterTrnPushButton_clicked()

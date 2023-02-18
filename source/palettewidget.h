@@ -175,8 +175,8 @@ private slots:
     void on_colorLineEdit_escPressed();
     void on_colorPickPushButton_clicked();
     void on_colorClearPushButton_clicked();
-    void on_indexLineEdit_returnPressed();
-    void on_indexLineEdit_escPressed();
+    void on_translationIndexLineEdit_returnPressed();
+    void on_translationIndexLineEdit_escPressed();
     void on_monsterTrnPushButton_clicked();
 
     void keyPressEvent(QKeyEvent *event) override;

@@ -297,7 +297,7 @@ int D1Min::getSubtileWidth() const
 
 void D1Min::setSubtileWidth(int width)
 {
-    if (width == 0) {  // TODO: check overflow
+    if (width == 0) { // TODO: check overflow
         return;
     }
     int prevWidth = this->subtileWidth;
@@ -356,7 +356,7 @@ int D1Min::getSubtileHeight() const
 
 void D1Min::setSubtileHeight(int height)
 {
-    if (height == 0) {  // TODO: check overflow
+    if (height == 0) { // TODO: check overflow
         return;
     }
     int width = this->subtileWidth;
