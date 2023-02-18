@@ -36,9 +36,9 @@ public:
     bool isModified() const;
     void setModified();
     int getSubtileCount() const;
-    quint16 getSubtileWidth() const;
+    int getSubtileWidth() const;
     void setSubtileWidth(int width);
-    quint16 getSubtileHeight() const;
+    int getSubtileHeight() const;
     void setSubtileHeight(int height);
     std::vector<unsigned> &getFrameReferences(int subtileIndex) const;
     bool setFrameReference(int subtileIndex, int index, unsigned frameRef);
@@ -46,8 +46,8 @@ public:
 private:
     QString minFilePath;
     bool modified;
-    quint8 subtileWidth;
-    quint8 subtileHeight;
+    int subtileWidth;
+    int subtileHeight;
     std::vector<std::vector<unsigned>> frameReferences;
     D1Gfx *gfx = nullptr;
 };

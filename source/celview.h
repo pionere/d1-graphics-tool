@@ -67,8 +67,6 @@ public:
     void initialize(D1Pal *pal, D1Gfx *gfx);
     void setPal(D1Pal *pal);
 
-    void changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel, bool all);
-
     int getCurrentFrameIndex();
     void framePixelClicked(const QPoint &pos, unsigned counter);
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);

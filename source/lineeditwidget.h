@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #include <QFocusEvent>
 #include <QKeyEvent>
 #include <QLineEdit>
@@ -12,6 +14,9 @@ public:
     ~LineEditWidget() = default;
 
     void setCharWidth(int width);
+
+    int nonNegInt() const;
+    std::pair<int, int> nonNegRange() const;
 
 signals:
     void cancel_signal();

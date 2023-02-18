@@ -58,8 +58,8 @@ void UpscaleDialog::on_upscaleButton_clicked()
         return;
     }
     bool firstOk, lastOk;
-    params.firstfixcolor = this->ui->firstFixColorLineEdit->text().toUInt(&firstOk);
-    params.lastfixcolor = this->ui->lastFixColorLineEdit->text().toUInt(&lastOk);
+    params.firstfixcolor = this->ui->firstFixColorLineEdit->text().toUShort(&firstOk);
+    params.lastfixcolor = this->ui->lastFixColorLineEdit->text().toUShort(&lastOk);
     params.antiAliasingMode = (ANTI_ALIASING_MODE)this->ui->antiAliasingModeComboBox->currentIndex();
 
     if (!lastOk) {

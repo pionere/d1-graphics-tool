@@ -32,10 +32,10 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
     unsigned fileSize = fileData.size();
     int subtileCount = sol->getSubtileCount();
     int width = params.minWidth;
-    int height = params.minHeight;
     if (width == 0) {
         width = 2;
     }
+    int height = params.minHeight;
     if (height == 0) {
         if (fileSize == 0 || subtileCount == 0) {
             height = 5;
@@ -43,6 +43,7 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
             // guess subtileHeight based on the data
             height = fileSize / (subtileCount * width * 2);
             if (height > 8 && params.minWidth == 0) {
+                // height is too much -> check if it is a standard upscaled tileset with padding
                 int multiplier = sqrt(fileSize / (8 * 2 * 2 * subtileCount)); // assume padding to (8 * multiplier)
                 int upHeight = 8 * multiplier;
                 int upWidth = 2 * multiplier;
@@ -55,8 +56,8 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
     }
 
     // File size check
-    int subtileNumberOfCelFrames = width * height;
-    if ((fileSize % (subtileNumberOfCelFrames * 2)) != 0) {
+    int subtileNumberOfCelFrames = width * height; // TODO: check overflow
+    if (subtileNumberOfCelFrames == 0 || (fileSize % (subtileNumberOfCelFrames * 2)) != 0) {
         dProgressErr() << tr("Subtile width/height does not align with MIN file.");
         return false;
     }
@@ -289,14 +290,14 @@ int D1Min::getSubtileCount() const
     return this->frameReferences.size();
 }
 
-quint16 D1Min::getSubtileWidth() const
+int D1Min::getSubtileWidth() const
 {
     return this->subtileWidth;
 }
 
 void D1Min::setSubtileWidth(int width)
 {
-    if (width == 0) {
+    if (width == 0) {  // TODO: check overflow
         return;
     }
     int prevWidth = this->subtileWidth;
@@ -348,14 +349,14 @@ void D1Min::setSubtileWidth(int width)
     this->modified = true;
 }
 
-quint16 D1Min::getSubtileHeight() const
+int D1Min::getSubtileHeight() const
 {
     return this->subtileHeight;
 }
 
 void D1Min::setSubtileHeight(int height)
 {
-    if (height == 0) {
+    if (height == 0) {  // TODO: check overflow
         return;
     }
     int width = this->subtileWidth;

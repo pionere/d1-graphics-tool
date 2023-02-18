@@ -21,6 +21,35 @@ void LineEditWidget::setCharWidth(int value)
     this->setMaximumWidth(maxWidth);
 }
 
+int LineEditWidget::nonNegInt() const
+{
+    int result = this->text().toInt();
+    if (result < 0) {
+        result = 0;
+    }
+    return result;
+}
+
+std::pair<int, int> LineEditWidget::nonNegRange() const
+{
+    QStringList parts = this->text().split('-', Qt::SkipEmptyParts);
+    std::pair<int, int> result = { 0, 0 };
+    if (parts.size() == 1) {
+        result.first = parts[0].asInt();
+        result.second = result.first;
+    } else if (parts.size() == 2) {
+        result.first = parts[0].asInt();
+        result.second = parts[1].asInt();
+    }
+    if (result.first < 0) {
+        result.first = 0;
+    }
+    if (result.second < 0) {
+        result.second = 0;
+    }
+    return result;
+}
+
 void LineEditWidget::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Escape) {

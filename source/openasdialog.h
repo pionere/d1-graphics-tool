@@ -25,7 +25,7 @@ public:
     QString celFilePath;
     OPEN_TILESET_TYPE isTileset = OPEN_TILESET_TYPE::AUTODETECT;
 
-    quint16 celWidth = 0;
+    int celWidth = 0;
     OPEN_CLIPPED_TYPE clipped = OPEN_CLIPPED_TYPE::AUTODETECT;
 
     OPEN_UPSCALED_TYPE upscaled = OPEN_UPSCALED_TYPE::AUTODETECT;
@@ -34,8 +34,8 @@ public:
     QString solFilePath;
     QString ampFilePath;
     QString tmiFilePath;
-    quint16 minWidth = 0;
-    quint16 minHeight = 0;
+    int minWidth = 0;
+    int minHeight = 0;
 };
 
 namespace Ui {

@@ -174,22 +174,6 @@ int LevelCelView::getCurrentTileIndex()
     return this->currentTileIndex;
 }
 
-void LevelCelView::changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel, bool all)
-{
-    if (all || this->gfx->getFrameCount() == 0) {
-        for (int i = 0; i < this->gfx->getFrameCount(); i++) {
-            D1GfxFrame *frame = this->gfx->getFrame(i);
-            frame->replacePixels(startColorIndex, endColorIndex, pixel);
-        }
-    } else {
-        D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
-        frame->replacePixels(startColorIndex, endColorIndex, pixel);
-    }
-    this->gfx->setModified();
-    // update the view - done by the caller
-    // this->displayFrame();
-}
-
 void LevelCelView::framePixelClicked(const QPoint &pos, unsigned counter)
 {
     unsigned celFrameWidth = MICRO_WIDTH; // this->gfx->getFrameWidth(this->currentFrameIndex);
@@ -2685,7 +2669,7 @@ void LevelCelView::on_tileIndexEdit_escPressed()
 
 void LevelCelView::on_minFrameWidthEdit_returnPressed()
 {
-    unsigned width = this->ui->minFrameWidthEdit->text().toUInt();
+    int width = this->ui->minFrameWidthEdit->nonNegInt();
 
     this->min->setSubtileWidth(width);
     // update view
@@ -2702,7 +2686,7 @@ void LevelCelView::on_minFrameWidthEdit_escPressed()
 
 void LevelCelView::on_minFrameHeightEdit_returnPressed()
 {
-    unsigned height = this->ui->minFrameHeightEdit->text().toUInt();
+    int height = this->ui->minFrameHeightEdit->nonNegInt();
 
     this->min->setSubtileHeight(height);
     // update view

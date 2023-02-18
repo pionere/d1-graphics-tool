@@ -123,8 +123,38 @@
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
            <layout class="QGridLayout" name="gridLayout">
-            <item row="1" column="5">
-             <widget class="QPushButton" name="translationClearPushButton">
+            <item row="0" column="0">
+             <widget class="QLabel" name="colorLabel">
+              <property name="text">
+               <string>Color:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1" colspan="2">
+             <widget class="LineEditWidget" name="colorLineEdit">
+              <property name="charWidth">
+               <number>8</number>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QPushButton" name="colorPickPushButton">
+              <property name="minimumWidth">
+               <number>45</number>
+              </property>
+              <property name="maximumWidth">
+               <number>45</number>
+              </property>
+              <property name="text">
+               <string>Pick</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="4">
+             <widget class="QPushButton" name="colorClearPushButton">
               <property name="minimumWidth">
                <number>45</number>
               </property>
@@ -143,39 +173,6 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="colorLabel">
-              <property name="text">
-               <string>Color:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="4">
-             <widget class="QPushButton" name="colorPickPushButton">
-              <property name="minimumWidth">
-               <number>45</number>
-              </property>
-              <property name="maximumWidth">
-               <number>45</number>
-              </property>
-              <property name="text">
-               <string>Pick</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="4">
-             <widget class="QPushButton" name="translationPickPushButton">
-              <property name="minimumWidth">
-               <number>45</number>
-              </property>
-              <property name="maximumWidth">
-               <number>45</number>
-              </property>
-              <property name="text">
-               <string>Pick</string>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="1">
              <widget class="LineEditWidget" name="indexLineEdit">
               <property name="readOnly">
@@ -186,42 +183,6 @@
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1" colspan="3">
-             <widget class="LineEditWidget" name="colorLineEdit">
-              <property name="charWidth">
-               <number>8</number>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="3">
-             <widget class="LineEditWidget" name="translationIndexLineEdit">
-              <property name="charWidth">
-               <number>3</number>
-              </property>
-              <property name="maxLength">
-               <number>3</number>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="5">
-             <widget class="QPushButton" name="colorClearPushButton">
-              <property name="minimumWidth">
-               <number>45</number>
-              </property>
-              <property name="maximumWidth">
-               <number>45</number>
-              </property>
-              <property name="text">
-               <string>Clear</string>
               </property>
              </widget>
             </item>
@@ -238,7 +199,20 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="4" colspan="2">
+            <item row="1" column="3" colspan="2">
+             <widget class="LineEditWidget" name="indexLineEdit">
+              <property name="charWidth">
+               <number>7</number>
+              </property>
+              <property name="maxLength">
+               <number>7</number>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="3" colspan="2">
              <widget class="QPushButton" name="monsterTrnPushButton">
               <property name="minimumWidth">
                <number>100</number>

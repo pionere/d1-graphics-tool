@@ -109,7 +109,7 @@ public:
 private:
     void failWithError(const QString &error);
 
-    void changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel, bool all);
+    void changeColor(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, bool all);
 
     void setPal(const QString &palFilePath);
     void setUniqueTrn(const QString &trnfilePath);

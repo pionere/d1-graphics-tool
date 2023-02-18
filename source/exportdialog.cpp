@@ -746,8 +746,8 @@ void ExportDialog::on_exportButton_clicked()
         return;
     }
     params.outFileExtension = "." + this->ui->formatComboBox->currentText().toLower();
-    params.rangeFrom = this->ui->contentRangeFromEdit->text().toUInt();
-    params.rangeTo = this->ui->contentRangeToEdit->text().toUInt();
+    params.rangeFrom = this->ui->contentRangeFromEdit->nonNegInt();
+    params.rangeTo = this->ui->contentRangeToEdit->nonNegInt();
     params.placement = this->ui->contentPlacementComboBox->currentIndex();
     params.multi = this->ui->filesCountComboBox->currentIndex() != 0;
     int type = this->ui->contentTypeComboBox->currentIndex();

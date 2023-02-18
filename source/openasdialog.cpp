@@ -182,7 +182,7 @@ void OpenAsDialog::on_openButton_clicked()
         params.isTileset = OPEN_TILESET_TYPE::AUTODETECT;
     }
     // cel/cl2/pcx: clipped, width
-    params.celWidth = this->ui->celWidthEdit->text().toUShort();
+    params.celWidth = this->ui->celWidthEdit->nonNegInt();
     if (ui->celClippedYesRadioButton->isChecked()) {
         params.clipped = OPEN_CLIPPED_TYPE::TRUE;
     } else if (ui->celClippedNoRadioButton->isChecked()) {
@@ -203,8 +203,8 @@ void OpenAsDialog::on_openButton_clicked()
     params.solFilePath = ui->solFileEdit->text();
     params.ampFilePath = ui->ampFileEdit->text();
     params.tmiFilePath = ui->tmiFileEdit->text();
-    params.minWidth = ui->minWidthEdit->text().toUShort();
-    params.minHeight = ui->minHeightEdit->text().toUShort();
+    params.minWidth = ui->minWidthEdit->nonNegInt();
+    params.minHeight = ui->minHeightEdit->nonNegInt();
 
     this->close();
 

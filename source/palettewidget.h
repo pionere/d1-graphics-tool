@@ -138,7 +138,6 @@ public:
 signals:
     void pathSelected(QString path);
     void colorsSelected(QList<quint8> indices);
-    void changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel, bool all);
 
     void colorPicking_started(bool single);
     void colorPicking_stopped();
@@ -176,10 +175,8 @@ private slots:
     void on_colorLineEdit_escPressed();
     void on_colorPickPushButton_clicked();
     void on_colorClearPushButton_clicked();
-    void on_translationIndexLineEdit_returnPressed();
-    void on_translationIndexLineEdit_escPressed();
-    void on_translationPickPushButton_clicked();
-    void on_translationClearPushButton_clicked();
+    void on_indexLineEdit_returnPressed();
+    void on_indexLineEdit_escPressed();
     void on_monsterTrnPushButton_clicked();
 
     void keyPressEvent(QKeyEvent *event) override;
