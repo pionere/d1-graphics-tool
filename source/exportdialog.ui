@@ -56,7 +56,7 @@
       <item row="0" column="1">
        <widget class="QComboBox" name="formatComboBox"/>
       </item>
-      <item row="0" column="2">
+      <item row="0" column="2" colspan="3">
        <spacer name="horizontalSpacer_1_0">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -84,12 +84,71 @@
         </item>
        </widget>
       </item>
-      <item row="1" column="2">
+      <item row="1" column="2" colspan="3">
        <spacer name="horizontalSpacer_1_1">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </spacer>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="filesTransparentLabel">
+        <property name="text">
+         <string>Transparent color:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="LineEditWidget" name="filesTransparentIndexLineEdit">
+        <property name="charWidth">
+         <number>3</number>
+        </property>
+        <property name="maxLength">
+         <number>3</number>
+        </property>
+        <property name="toolTip">
+         <string>Palette index of the transparent pixels in the output image</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QLabel" name="filesTransparentSlashLabel">
+        <property name="minimumWidth">
+         <number>8</number>
+        </property>
+        <property name="maximumWidth">
+         <number>8</number>
+        </property>
+        <property name="text">
+         <string notr="true">/</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="LineEditWidget" name="filesTransparentColorLineEdit">
+        <property name="charWidth">
+         <number>8</number>
+        </property>
+        <property name="toolTip">
+         <string>Color of the transparent pixels in the output image</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="4">
+       <widget class="QPushButton" name="filesTransparentColorPushButton">
+        <property name="text">
+         <string>Pick</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

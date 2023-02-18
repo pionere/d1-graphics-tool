@@ -699,18 +699,6 @@ void PaletteWidget::updatePathComboBoxOptions(const QList<QString> &options, con
     }
 }
 
-/*void PaletteWidget::refreshPathComboBox()
-{
-    QString selectedPath;
-    if (!this->isTrn) {
-        selectedPath = this->pal->getFilePath();
-    } else {
-        selectedPath = this->trn->getFilePath();
-    }
-    this->ui->pathComboBox->setCurrentIndex(this->ui->pathComboBox->findData(selectedPath));
-    this->ui->pathComboBox->setToolTip(selectedPath);
-}*/
-
 void PaletteWidget::refreshColorLineEdit()
 {
     QString text;

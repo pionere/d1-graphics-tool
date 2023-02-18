@@ -69,6 +69,14 @@ void ExportDialog::initialize(D1Gfx *g, D1Tileset *ts)
     }*/
 }
 
+void ExportDialog::on_filesTransparentColorPushButton_clicked()
+{
+    QColor color = QColorDialog::getColor();
+    if (color.isValid()) {
+        this->ui->filesTransparentColorLineEdit->setText(color.name());
+    }
+}
+
 void ExportDialog::on_outputFolderBrowseButton_clicked()
 {
     QString dirPath = dMainWindow().folderDialog(tr("Select Output Folder"));
@@ -100,10 +108,15 @@ static void saveImage(const std::vector<std::vector<D1GfxPixel>> &pixels, const 
             const D1GfxPixel &d1pix = pixels[y][x];
 
             QColor color;
-            if (d1pix.isTransparent())
-                color = QColor(Qt::transparent);
-            else
+            if (d1pix.isTransparent()) {
+                if (params.transparentIndex < D1PAL_COLORS) {
+                    color = pal->getColor(params.transparentIndex);
+                } else {
+                    color = params.transparentColor;
+                }
+            } else {
                 color = pal->getColor(d1pix.getPaletteIndex());
+            }
 
             image.setPixel(x, y, color.rgba());
         }
@@ -166,7 +179,6 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const D1Gfx *gfx, const
     const unsigned tileWidth = til->getMin()->getSubtileWidth() * 2 * MICRO_WIDTH;
     const unsigned tileHeight = til->getMin()->getSubtileHeight() * MICRO_HEIGHT + 32;
     constexpr unsigned TILES_PER_LINE = 8;
-    // QImage tempOutputImage;
     unsigned tempOutputImageWidth = 0;
     unsigned tempOutputImageHeight = 0;
     if (params.placement == 0) { // grouped
@@ -189,9 +201,7 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const D1Gfx *gfx, const
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-
             const std::vector<std::vector<D1GfxPixel>> pixels = til->getTilePixelImage(i);
-
             D1PixelImage::drawImage(tempOutputPixels, dx, dy, pixels);
 
             const QSize imageSize = D1PixelImage::getImageSize(pixels);
@@ -280,9 +290,7 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const D1Gfx *gfx, const Ex
 
     unsigned tileWidth = til->getMin()->getSubtileWidth() * MICRO_WIDTH * TILE_WIDTH * TILE_HEIGHT;
     unsigned tileHeight = til->getMin()->getSubtileHeight() * MICRO_HEIGHT;
-
     constexpr unsigned TILES_PER_LINE = 4;
-    // QImage tempOutputImage;
     unsigned tempOutputImageWidth = 0;
     unsigned tempOutputImageHeight = 0;
     if (params.placement == 0) { // grouped
@@ -305,19 +313,13 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const D1Gfx *gfx, const Ex
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-
-            // const QImage image = til->getFlatTileImage(i);
             const std::vector<std::vector<D1GfxPixel>> pixels = til->getFlatTilePixelImage(i);
-
-            // painter.drawImage(dx, dy, image);
             D1PixelImage::drawImage(tempOutputPixels, dx, dy, pixels);
 
             const QSize imageSize = D1PixelImage::getImageSize(pixels);
-            // dx += image.width();
             dx += imageSize.width();
             if (dx >= tempOutputImageWidth) {
                 dx = 0;
-                // dy += image.height();
                 dy += imageSize.height();
             }
             if (!ProgressDialog::incValue()) {
@@ -330,18 +332,13 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const D1Gfx *gfx, const Ex
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-            // const QImage image = til->getFlatTileImage(i);
             const std::vector<std::vector<D1GfxPixel>> pixels = til->getFlatTilePixelImage(i);
             const QSize imageSize = D1PixelImage::getImageSize(pixels);
             if (params.placement == 2) { // tiles on one column
-                // painter.drawImage(0, cursor, image);
                 D1PixelImage::drawImage(tempOutputPixels, 0, cursor, pixels);
-                // cursor += image.height();
                 cursor += imageSize.height();
             } else { // params.placement == 1 -- tiles on one line
-                // painter.drawImage(cursor, 0, image);
                 D1PixelImage::drawImage(tempOutputPixels, cursor, 0, pixels);
-                // cursor += image.width();
                 cursor += imageSize.width();
             }
             if (!ProgressDialog::incValue()) {
@@ -406,7 +403,6 @@ void ExportDialog::exportLevelSubtiles(const D1Min *min, const D1Gfx *gfx, const
     unsigned subtileWidth = min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = min->getSubtileHeight() * MICRO_HEIGHT;
 
-    // QImage tempOutputImage;
     unsigned tempOutputImageWidth = 0;
     unsigned tempOutputImageHeight = 0;
     if (params.placement == 0) { // grouped
@@ -432,9 +428,7 @@ void ExportDialog::exportLevelSubtiles(const D1Min *min, const D1Gfx *gfx, const
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-
             const std::vector<std::vector<D1GfxPixel>> pixels = min->getSubtilePixelImage(i);
-
             D1PixelImage::drawImage(tempOutputPixels, dx, dy, pixels);
 
             const QSize imageSize = D1PixelImage::getImageSize(pixels);
@@ -521,7 +515,6 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
     }
     QString &outputFileName = fileNameBase;
 
-    // QImage tempOutputImage;
     int tempOutputImageWidth = 0;
     int tempOutputImageHeight = 0;
 
@@ -615,6 +608,7 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
                     }
                     const std::vector<std::vector<D1GfxPixel>> pixels = gfx->getFramePixelImage(j);
                     D1PixelImage::drawImage(tempOutputPixels, cursorX, cursorY, pixels);
+
                     const QSize imageSize = D1PixelImage::getImageSize(pixels);
                     cursorX += imageSize.width();
                     groupImageHeight = std::max(imageSize.height(), groupImageHeight);
@@ -658,6 +652,16 @@ void ExportDialog::on_exportButton_clicked()
         return;
     }
     params.outFileExtension = "." + this->ui->formatComboBox->currentText().toLower();
+    QString tpIndexStr = this->ui->filesTransparentIndexLineEdit->text();
+    int tpIndex = D1PAL_COLORS;
+    if (!tpIndexStr.isEmpty()) {
+        tpIndex = tpIndexStr.nonNegInt();
+    }
+    params.transparentIndex = tpIndex;
+    params.transparentColor = QColor(this->ui->filesTransparentColorLineEdit->text());
+    if (!params.transparentColor.isValid()) {
+        params.transparentColor = QColor(Qt::transparent);
+    }
     params.rangeFrom = this->ui->contentRangeFromEdit->nonNegInt();
     params.rangeTo = this->ui->contentRangeToEdit->nonNegInt();
     params.placement = this->ui->contentPlacementComboBox->currentIndex();
