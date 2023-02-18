@@ -56,8 +56,8 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
     }
 
     // File size check
-    int subtileNumberOfCelFrames = width * height;
-    if ((fileSize % (subtileNumberOfCelFrames * 2)) != 0) {
+    int subtileNumberOfCelFrames = width * height; // TODO: check overflow
+    if (subtileNumberOfCelFrames == 0 || (fileSize % (subtileNumberOfCelFrames * 2)) != 0) {
         dProgressErr() << tr("Subtile width/height does not align with MIN file.");
         return false;
     }
@@ -286,14 +286,14 @@ int D1Min::getSubtileCount() const
     return this->frameReferences.size();
 }
 
-quint16 D1Min::getSubtileWidth() const
+int D1Min::getSubtileWidth() const
 {
     return this->subtileWidth;
 }
 
 void D1Min::setSubtileWidth(int width)
 {
-    if (width == 0) {
+    if (width == 0) { // TODO: check overflow
         return;
     }
     int prevWidth = this->subtileWidth;
@@ -345,14 +345,14 @@ void D1Min::setSubtileWidth(int width)
     this->modified = true;
 }
 
-quint16 D1Min::getSubtileHeight() const
+int D1Min::getSubtileHeight() const
 {
     return this->subtileHeight;
 }
 
 void D1Min::setSubtileHeight(int height)
 {
-    if (height == 0) {
+    if (height == 0) { // TODO: check overflow
         return;
     }
     int width = this->subtileWidth;

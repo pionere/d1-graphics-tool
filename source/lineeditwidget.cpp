@@ -21,6 +21,15 @@ void LineEditWidget::setCharWidth(int value)
     this->setMaximumWidth(maxWidth);
 }
 
+int LineEditWidget::nonNegInt() const
+{
+    int result = this->text().toInt();
+    if (result < 0) {
+        result = 0;
+    }
+    return result;
+}
+
 void LineEditWidget::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Escape) {

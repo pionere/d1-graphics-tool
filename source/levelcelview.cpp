@@ -2669,7 +2669,7 @@ void LevelCelView::on_tileIndexEdit_escPressed()
 
 void LevelCelView::on_minFrameWidthEdit_returnPressed()
 {
-    unsigned width = this->ui->minFrameWidthEdit->text().toUInt();
+    int width = this->ui->minFrameWidthEdit->nonNegInt();
 
     this->min->setSubtileWidth(width);
     // update view
@@ -2686,7 +2686,7 @@ void LevelCelView::on_minFrameWidthEdit_escPressed()
 
 void LevelCelView::on_minFrameHeightEdit_returnPressed()
 {
-    unsigned height = this->ui->minFrameHeightEdit->text().toUInt();
+    int height = this->ui->minFrameHeightEdit->nonNegInt();
 
     this->min->setSubtileHeight(height);
     // update view

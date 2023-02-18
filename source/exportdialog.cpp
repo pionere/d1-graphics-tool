@@ -188,9 +188,7 @@ void ExportDialog::exportLevelTiles25D(const D1Til *til, const D1Gfx *gfx, const
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-
             const std::vector<std::vector<D1GfxPixel>> pixels = til->getTilePixelImage(i);
-
             D1PixelImage::drawImage(tempOutputPixels, dx, dy, pixels);
 
             const QSize imageSize = D1PixelImage::getImageSize(pixels);
@@ -279,7 +277,6 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const D1Gfx *gfx, const Ex
 
     unsigned tileWidth = til->getMin()->getSubtileWidth() * MICRO_WIDTH * TILE_WIDTH * TILE_HEIGHT;
     unsigned tileHeight = til->getMin()->getSubtileHeight() * MICRO_HEIGHT;
-
     constexpr unsigned TILES_PER_LINE = 4;
     unsigned tempOutputImageWidth = 0;
     unsigned tempOutputImageHeight = 0;
@@ -303,9 +300,7 @@ void ExportDialog::exportLevelTiles(const D1Til *til, const D1Gfx *gfx, const Ex
             if (ProgressDialog::wasCanceled()) {
                 return;
             }
-
             const std::vector<std::vector<D1GfxPixel>> pixels = til->getFlatTilePixelImage(i);
-
             D1PixelImage::drawImage(tempOutputPixels, dx, dy, pixels);
 
             const QSize imageSize = D1PixelImage::getImageSize(pixels);
@@ -421,7 +416,6 @@ void ExportDialog::exportLevelSubtiles(const D1Min *min, const D1Gfx *gfx, const
                 return;
             }
             const std::vector<std::vector<D1GfxPixel>> pixels = min->getSubtilePixelImage(i);
-
             D1PixelImage::drawImage(tempOutputPixels, dx, dy, pixels);
 
             const QSize imageSize = D1PixelImage::getImageSize(pixels);
@@ -601,6 +595,7 @@ void ExportDialog::exportFrames(const D1Gfx *gfx, const ExportParam &params)
                     }
                     const std::vector<std::vector<D1GfxPixel>> pixels = gfx->getFramePixelImage(j);
                     D1PixelImage::drawImage(tempOutputPixels, cursorX, cursorY, pixels);
+
                     const QSize imageSize = D1PixelImage::getImageSize(pixels);
                     cursorX += imageSize.width();
                     groupImageHeight = std::max(imageSize.height(), groupImageHeight);
@@ -644,8 +639,8 @@ void ExportDialog::on_exportButton_clicked()
         return;
     }
     params.outFileExtension = "." + this->ui->formatComboBox->currentText().toLower();
-    params.rangeFrom = this->ui->contentRangeFromEdit->text().toUInt();
-    params.rangeTo = this->ui->contentRangeToEdit->text().toUInt();
+    params.rangeFrom = this->ui->contentRangeFromEdit->nonNegInt();
+    params.rangeTo = this->ui->contentRangeToEdit->nonNegInt();
     params.placement = this->ui->contentPlacementComboBox->currentIndex();
     params.multi = this->ui->filesCountComboBox->currentIndex() != 0;
     int type = this->ui->contentTypeComboBox->currentIndex();

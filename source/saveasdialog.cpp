@@ -135,7 +135,7 @@ void SaveAsDialog::on_saveButton_clicked()
         return;
     }
     // celSettingsGroupBox: groupNum, clipped
-    params.groupNum = this->ui->celGroupEdit->text().toUShort();
+    params.groupNum = this->ui->celGroupEdit->nonNegInt();
     if (this->ui->celClippedYesRadioButton->isChecked()) {
         params.clipped = SAVE_CLIPPED_TYPE::TRUE;
     } else if (this->ui->celClippedNoRadioButton->isChecked()) {

@@ -13,6 +13,8 @@ public:
 
     void setCharWidth(int width);
 
+    int nonNegInt() const;
+
 signals:
     void cancel_signal();
 

@@ -26,7 +26,7 @@ public:
     QString solFilePath;
     QString ampFilePath;
     QString tmiFilePath;
-    quint16 groupNum = 0;
+    int groupNum = 0;
     SAVE_CLIPPED_TYPE clipped = SAVE_CLIPPED_TYPE::AUTODETECT;
     SAVE_UPSCALED_TYPE upscaled = SAVE_UPSCALED_TYPE::AUTODETECT;
     bool autoOverwrite = false;
