@@ -30,6 +30,26 @@ int LineEditWidget::nonNegInt() const
     return result;
 }
 
+std::pair<int, int> LineEditWidget::nonNegRange() const
+{
+    QStringList parts = this->text().split('-', Qt::SkipEmptyParts);
+    std::pair<int, int> result = { 0, 0 };
+    if (parts.size() == 1) {
+        result.first = parts[0].toInt();
+        result.second = result.first;
+    } else if (parts.size() == 2) {
+        result.first = parts[0].toInt();
+        result.second = parts[1].toInt();
+    }
+    if (result.first < 0) {
+        result.first = 0;
+    }
+    if (result.second < 0) {
+        result.second = 0;
+    }
+    return result;
+}
+
 void LineEditWidget::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Escape) {

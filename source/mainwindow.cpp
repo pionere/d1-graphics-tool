@@ -180,19 +180,19 @@ MainWindow &dMainWindow()
     return *theMainWindow;
 }
 
-void MainWindow::changeColor(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel, bool all)
+void MainWindow::changeColor(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, bool all)
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
     if (all || this->gfx->getFrameCount() == 0) {
         for (int i = 0; i < this->gfx->getFrameCount(); i++) {
             D1GfxFrame *frame = this->gfx->getFrame(i);
-            frame->replacePixels(startColorIndex, endColorIndex, pixel);
+            frame->replacePixels(replacements);
         }
     } else {
         int currentFrameIndex = this->celView != nullptr ? this->celView->getCurrentFrameIndex() : this->levelCelView->getCurrentFrameIndex();
         D1GfxFrame *frame = this->gfx->getFrame(currentFrameIndex);
-        frame->replacePixels(startColorIndex, endColorIndex, pixel);
+        frame->replacePixels(replacements);
     }
     this->gfx->setModified();
 

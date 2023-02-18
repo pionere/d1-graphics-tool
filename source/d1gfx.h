@@ -64,7 +64,7 @@ public:
     void setFrameType(D1CEL_FRAME_TYPE type);
     bool addTo(const D1GfxFrame &frame);
     void addPixelLine(std::vector<D1GfxPixel> &&pixelLine);
-    void replacePixels(quint8 startColorIndex, quint8 endColorIndex, D1GfxPixel pixel);
+    void replacePixels(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements);
 
 protected:
     int width = 0;
