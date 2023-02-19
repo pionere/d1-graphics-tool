@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>ExportDialog</class>
- <widget class="QDialog" name="ExportDialog">
+ <widget class="QDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -16,13 +16,13 @@
   <property name="modal">
    <bool>true</bool>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout">
    <item>
-    <widget class="QGroupBox" name="outputFolderGroupBox">
+    <widget class="QGroupBox">
      <property name="title">
       <string>Output Folder</string>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_0">
+     <layout class="QHBoxLayout">
       <item>
        <widget class="LineEditWidget" name="outputFolderEdit">
         <property name="readOnly">
@@ -41,13 +41,13 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="outputFilesGroupBox">
+    <widget class="QGroupBox">
      <property name="title">
       <string>Output File(s) Settings</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
+     <layout class="QGridLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="outputFilesFormatLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Format:</string>
         </property>
@@ -57,14 +57,14 @@
        <widget class="QComboBox" name="formatComboBox"/>
       </item>
       <item row="0" column="2">
-       <spacer name="horizontalSpacer_1_0">
+       <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </spacer>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="outputFilesCountLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>File(s):</string>
         </property>
@@ -72,6 +72,9 @@
       </item>
       <item row="1" column="1">
        <widget class="QComboBox" name="filesCountComboBox">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
         <item>
          <property name="text">
           <string>One</string>
@@ -85,7 +88,7 @@
        </widget>
       </item>
       <item row="1" column="2">
-       <spacer name="horizontalSpacer_1_1">
+       <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -95,110 +98,148 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="outputContentGroupBox">
+    <widget class="QGroupBox">
      <property name="title">
       <string>Content Settings</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
+     <layout class="QGridLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="outputContentTypeLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Type:</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="contentTypeComboBox">
-        <property name="minimumWidth">
-         <number>90</number>
-        </property>
-        <property name="maximumWidth">
-         <number>90</number>
-        </property>
-        <item>
-         <property name="text">
-          <string>Frame</string>
+       <widget class="QWidget" native="true">
+        <layout class="QHBoxLayout">
+         <property name="leftMargin">
+          <number>0</number>
          </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Subtile</string>
+         <property name="topMargin">
+          <number>0</number>
          </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Flat Tile</string>
+         <property name="rightMargin">
+          <number>0</number>
          </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>2.5D Tile</string>
+         <property name="bottomMargin">
+          <number>0</number>
          </property>
-        </item>
+         <item>
+          <widget class="QComboBox" name="contentTypeComboBox">
+           <property name="sizeAdjustPolicy">
+            <enum>QComboBox::AdjustToContents</enum>
+           </property>
+           <item>
+            <property name="text">
+             <string>Frame</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Subtile</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Flat Tile</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>2.5D Tile</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <spacer>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+        </layout>
        </widget>
       </item>
       <item row="0" column="2">
-       <spacer name="horizontalSpacer_2_0">
+       <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </spacer>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="outputContentPlacementLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Placement:</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QComboBox" name="contentPlacementComboBox">
-        <property name="minimumWidth">
-         <number>90</number>
-        </property>
-        <property name="maximumWidth">
-         <number>90</number>
-        </property>
-        <item>
-         <property name="text">
-          <string>Grouped</string>
+       <widget class="QWidget" native="true">
+        <layout class="QHBoxLayout">
+         <property name="leftMargin">
+          <number>0</number>
          </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>One line</string>
+         <property name="topMargin">
+          <number>0</number>
          </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>One column</string>
+         <property name="rightMargin">
+          <number>0</number>
          </property>
-        </item>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QComboBox" name="contentPlacementComboBox">
+           <property name="sizeAdjustPolicy">
+            <enum>QComboBox::AdjustToContents</enum>
+           </property>
+           <item>
+            <property name="text">
+             <string>Grouped</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>One line</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>One column</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <spacer>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+        </layout>
        </widget>
       </item>
       <item row="1" column="2">
-       <spacer name="horizontalSpacer_2_1">
+       <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </spacer>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="outputContentRangeLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Range:</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QWidget" name="rangeFieldsWidget" native="true">
-        <property name="minimumWidth">
-         <number>120</number>
-        </property>
-        <property name="maximumWidth">
-         <number>120</number>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <widget class="QWidget" native="true">
+        <layout class="QHBoxLayout">
          <property name="spacing">
           <number>4</number>
          </property>
@@ -231,7 +272,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="contentRangeSepLabel">
+          <widget class="QLabel">
            <property name="minimumWidth">
             <number>8</number>
            </property>
@@ -262,11 +303,112 @@
            </property>
           </widget>
          </item>
+         <item>
+          <spacer>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
         </layout>
        </widget>
       </item>
       <item row="2" column="2">
-       <spacer name="horizontalSpacer_2_2">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Canvas:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QWidget" native="true">
+        <layout class="QHBoxLayout">
+         <property name="spacing">
+          <number>4</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="LineEditWidget" name="contentCanvasIndexLineEdit">
+           <property name="charWidth">
+            <number>3</number>
+           </property>
+           <property name="maxLength">
+            <number>3</number>
+           </property>
+           <property name="toolTip">
+            <string>Palette index of the transparent pixels in the output image</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel">
+           <property name="minimumWidth">
+            <number>8</number>
+           </property>
+           <property name="maximumWidth">
+            <number>8</number>
+           </property>
+           <property name="text">
+            <string notr="true">/</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="LineEditWidget" name="contentCanvasColorLineEdit">
+           <property name="charWidth">
+            <number>8</number>
+           </property>
+           <property name="toolTip">
+            <string>Color of the transparent pixels in the output image</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="contentCanvasColorPushButton">
+           <property name="text">
+            <string>Pick</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -276,8 +418,8 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="exportButtonsWidget" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <widget class="QWidget" native="true">
+     <layout class="QHBoxLayout">
       <property name="spacing">
        <number>4</number>
       </property>
@@ -291,10 +433,10 @@
        <number>4</number>
       </property>
       <property name="bottomMargin">
-       <number>4</number>
+       <number>0</number>
       </property>
       <item>
-       <spacer name="horizontalSpacer_3_0">
+       <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>

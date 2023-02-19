@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <QApplication>
+#include <QColorDialog>
 #include <QFileDialog>
 #include <QImageWriter>
 #include <QMessageBox>
@@ -69,6 +70,14 @@ void ExportDialog::initialize(D1Gfx *g, D1Tileset *ts)
     }*/
 }
 
+void ExportDialog::on_contentCanvasColorPushButton_clicked()
+{
+    QColor color = QColorDialog::getColor();
+    if (color.isValid()) {
+        this->ui->contentCanvasColorLineEdit->setText(color.name());
+    }
+}
+
 void ExportDialog::on_outputFolderBrowseButton_clicked()
 {
     QString dirPath = dMainWindow().folderDialog(tr("Select Output Folder"));
@@ -100,10 +109,15 @@ static void saveImage(const std::vector<std::vector<D1GfxPixel>> &pixels, const 
             const D1GfxPixel &d1pix = pixels[y][x];
 
             QColor color;
-            if (d1pix.isTransparent())
-                color = QColor(Qt::transparent);
-            else
+            if (d1pix.isTransparent()) {
+                if (params.transparentIndex < D1PAL_COLORS) {
+                    color = pal->getColor(params.transparentIndex);
+                } else {
+                    color = params.transparentColor;
+                }
+            } else {
                 color = pal->getColor(d1pix.getPaletteIndex());
+            }
 
             image.setPixel(x, y, color.rgba());
         }
@@ -639,6 +653,16 @@ void ExportDialog::on_exportButton_clicked()
         return;
     }
     params.outFileExtension = "." + this->ui->formatComboBox->currentText().toLower();
+    QString tpIndexStr = this->ui->contentCanvasIndexLineEdit->text();
+    int tpIndex = D1PAL_COLORS;
+    if (!tpIndexStr.isEmpty()) {
+        tpIndex = tpIndexStr.toUShort();
+    }
+    params.transparentIndex = tpIndex;
+    params.transparentColor = QColor(this->ui->contentCanvasColorLineEdit->text());
+    if (!params.transparentColor.isValid()) {
+        params.transparentColor = QColor(Qt::transparent);
+    }
     params.rangeFrom = this->ui->contentRangeFromEdit->nonNegInt();
     params.rangeTo = this->ui->contentRangeToEdit->nonNegInt();
     params.placement = this->ui->contentPlacementComboBox->currentIndex();

@@ -9,6 +9,8 @@ typedef struct ExportParam {
     QString outFolder;
     QString outFileExtension;
     bool multi;
+    int transparentIndex;
+    QColor transparentColor;
     int rangeFrom;
     int rangeTo;
     int placement;
@@ -35,6 +37,8 @@ public:
 
 private slots:
     void on_outputFolderBrowseButton_clicked();
+    void on_contentCanvasColorPushButton_clicked();
+
     void on_exportButton_clicked();
     void on_exportCancelButton_clicked();
 
