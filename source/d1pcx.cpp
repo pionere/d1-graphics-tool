@@ -12,8 +12,8 @@
 
 #define D1PCX_COLORS 256
 
-constexpr quint8 PCX_MAX_SINGLE_PIXEL = 0xBF;
-constexpr quint8 PCX_RUNLENGTH_MASK = 0x3F;
+static constexpr quint8 PCX_MAX_SINGLE_PIXEL = 0xBF;
+static constexpr quint8 PCX_RUNLENGTH_MASK = 0x3F;
 
 typedef struct _PcxHeader {
     quint8 Manufacturer;
@@ -96,7 +96,7 @@ bool D1Pcx::load(D1GfxFrame &frame, const QString &filePath, bool clipped, D1Pal
 
     // process the header
     file.read((char *)&pcxhdr, sizeof(pcxhdr));
-    if (pcxhdr.Manufacturer != 10) {
+    if (pcxhdr.Manufacturer != 0x0A) {
         dProgressErr() << QApplication::tr("Invalid PCX header.");
         return false;
     }
@@ -321,7 +321,7 @@ bool D1Pcx::save(const std::vector<std::vector<D1GfxPixel>> &pixels, const D1Pal
     header.NPlanes = 1;
     header.BytesPerLine = SwapLE16(imageSize.width());
 
-    out.writeBytes((char *)&header, sizeof(header));
+    out.writeRawData((char *)&header, sizeof(header));
 
     // - image
     // width of PCX data is always even -> need to skip a bit if the width is odd
