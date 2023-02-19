@@ -12,6 +12,7 @@
 #include <QtConcurrent>
 
 #include "d1image.h"
+#include "d1pcx.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
 #include "ui_exportdialog.h"

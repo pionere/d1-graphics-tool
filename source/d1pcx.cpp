@@ -261,7 +261,7 @@ bool D1Pcx::save(const std::vector<std::vector<D1GfxPixel>> &pixels, const D1Pal
     const QSize imageSize = D1PixelImage::getImageSize(pixels);
 
     if (imageSize.width() > UINT16_MAX || imageSize.height() > UINT16_MAX) {
-        dProgressFail() << tr("PCX format can not store the image due to its dimensions: %1x%2.").arg(imageSize.width()).arg(imageSize.height());
+        dProgressFail() << QApplication::tr("PCX format can not store the image due to its dimensions: %1x%2.").arg(imageSize.width()).arg(imageSize.height());
         return false;
     }
 
@@ -292,7 +292,7 @@ bool D1Pcx::save(const std::vector<std::vector<D1GfxPixel>> &pixels, const D1Pal
             }
         }
         if (transparentIndex >= D1PAL_COLORS) {
-            dProgressFail() << tr("Could not find a palette entry to use for the transparent colors.");
+            dProgressFail() << QApplication::tr("Could not find a palette entry to use for the transparent colors.");
             return false;
         }
     }
@@ -300,7 +300,7 @@ bool D1Pcx::save(const std::vector<std::vector<D1GfxPixel>> &pixels, const D1Pal
     QDir().mkpath(QFileInfo(filePath).absolutePath());
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly)) {
-        dProgressFail() << tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(filePath));
+        dProgressFail() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(filePath));
         return false;
     }
 
