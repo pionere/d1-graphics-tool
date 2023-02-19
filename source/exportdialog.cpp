@@ -70,11 +70,11 @@ void ExportDialog::initialize(D1Gfx *g, D1Tileset *ts)
     }*/
 }
 
-void ExportDialog::on_filesTransparentColorPushButton_clicked()
+void ExportDialog::on_contentCanvasColorPushButton_clicked()
 {
     QColor color = QColorDialog::getColor();
     if (color.isValid()) {
-        this->ui->filesTransparentColorLineEdit->setText(color.name());
+        this->ui->contentCanvasColorLineEdit->setText(color.name());
     }
 }
 
@@ -653,13 +653,13 @@ void ExportDialog::on_exportButton_clicked()
         return;
     }
     params.outFileExtension = "." + this->ui->formatComboBox->currentText().toLower();
-    QString tpIndexStr = this->ui->filesTransparentIndexLineEdit->text();
+    QString tpIndexStr = this->ui->contentCanvasIndexLineEdit->text();
     int tpIndex = D1PAL_COLORS;
     if (!tpIndexStr.isEmpty()) {
         tpIndex = tpIndexStr.toUShort();
     }
     params.transparentIndex = tpIndex;
-    params.transparentColor = QColor(this->ui->filesTransparentColorLineEdit->text());
+    params.transparentColor = QColor(this->ui->contentCanvasColorLineEdit->text());
     if (!params.transparentColor.isValid()) {
         params.transparentColor = QColor(Qt::transparent);
     }

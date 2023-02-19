@@ -37,7 +37,7 @@ public:
 
 private slots:
     void on_outputFolderBrowseButton_clicked();
-    void on_filesTransparentColorPushButton_clicked();
+    void on_contentCanvasColorPushButton_clicked();
 
     void on_exportButton_clicked();
     void on_exportCancelButton_clicked();
