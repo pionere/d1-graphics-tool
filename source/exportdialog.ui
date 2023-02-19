@@ -54,7 +54,14 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="formatComboBox"/>
+       <widget class="QComboBox" name="formatComboBox">
+        <property name="minimumWidth">
+         <number>50</number>
+        </property>
+        <property name="maximumWidth">
+         <number>50</number>
+        </property>
+       </widget>
       </item>
       <item row="0" column="2">
        <spacer name="horizontalSpacer_1_0">
@@ -72,6 +79,12 @@
       </item>
       <item row="1" column="1">
        <widget class="QComboBox" name="filesCountComboBox">
+        <property name="minimumWidth">
+         <number>50</number>
+        </property>
+        <property name="maximumWidth">
+         <number>50</number>
+        </property>
         <item>
          <property name="text">
           <string>One</string>
@@ -99,7 +112,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QWidget" name="rangeFieldsWidget" native="true">
+       <widget class="QWidget" name="filesTransparentFieldsWidget" native="true">
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <property name="spacing">
           <number>4</number>
@@ -343,11 +356,18 @@
            </property>
           </widget>
          </item>
+         <item>
+          <spacer name="horizontalSpacer_2_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
         </layout>
        </widget>
       </item>
       <item row="2" column="2">
-       <spacer name="horizontalSpacer_2_2">
+       <spacer name="horizontalSpacer_2_3">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -372,7 +392,7 @@
        <number>4</number>
       </property>
       <property name="bottomMargin">
-       <number>4</number>
+       <number>0</number>
       </property>
       <item>
        <spacer name="horizontalSpacer_3_0">
