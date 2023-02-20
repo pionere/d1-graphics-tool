@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>PaletteWidget</class>
- <widget class="QWidget" name="PaletteWidget">
-  <layout class="QVBoxLayout" name="verticalLayout">
+ <widget class="QWidget">
+  <layout class="QVBoxLayout">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -19,14 +19,14 @@
     <number>2</number>
    </property>
    <item>
-    <widget class="QFrame" name="groupHeader">
+    <widget class="QFrame">
      <property name="minimumWidth">
       <number>256</number>
      </property>
      <property name="maximumWidth">
       <number>256</number>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QHBoxLayout" name="groupHeaderHorizontalLayout">
       <property name="spacing">
        <number>4</number>
       </property>
@@ -59,8 +59,8 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox">
-     <layout class="QVBoxLayout" name="verticalLayout_3">
+    <widget class="QGroupBox">
+     <layout class="QVBoxLayout">
       <property name="spacing">
        <number>4</number>
       </property>
@@ -77,7 +77,7 @@
        <number>1</number>
       </property>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <layout class="QHBoxLayout">
         <item>
          <widget class="QComboBox" name="pathComboBox"/>
         </item>
@@ -87,7 +87,7 @@
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <layout class="QHBoxLayout">
         <item>
          <widget class="QGraphicsView" name="graphicsView">
           <property name="sizePolicy">
@@ -120,11 +120,11 @@
          </widget>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
+         <layout class="QVBoxLayout">
           <item>
-           <layout class="QGridLayout" name="gridLayout">
+           <layout class="QGridLayout">
             <item row="0" column="0">
-             <widget class="QLabel" name="colorLabel">
+             <widget class="QLabel">
               <property name="text">
                <string>Color:</string>
               </property>
@@ -167,7 +167,7 @@
              </widget>
             </item>
             <item row="1" column="0">
-             <widget class="QLabel" name="indexLabel">
+             <widget class="QLabel">
               <property name="text">
                <string>Index:</string>
               </property>
@@ -187,7 +187,7 @@
              </widget>
             </item>
             <item row="1" column="2">
-             <widget class="QLabel" name="translationLabel">
+             <widget class="QLabel">
               <property name="minimumWidth">
                <number>8</number>
               </property>
@@ -231,7 +231,7 @@
            </layout>
           </item>
           <item>
-           <spacer name="verticalSpacer">
+           <spacer>
             <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>

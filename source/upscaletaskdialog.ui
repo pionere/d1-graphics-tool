@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>UpscaleTaskDialog</class>
- <widget class="QDialog" name="UpscaleTaskDialog">
+ <widget class="QDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,12 +13,12 @@
   <property name="windowTitle">
    <string>Upscale Task</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout">
    <item>
-    <widget class="QGroupBox" name="upscaleSettingsGroupBox">
-     <layout class="QGridLayout" name="gridLayout">
+    <widget class="QGroupBox">
+     <layout class="QGridLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="multiplierLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Multiplier:</string>
         </property>
@@ -38,7 +38,7 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="listfilesFileLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Listfiles File:</string>
         </property>
@@ -59,7 +59,7 @@
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="skipStepLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Skip step:</string>
         </property>
@@ -131,7 +131,7 @@
        </widget>
       </item>
       <item row="3" column="0">
-       <widget class="QLabel" name="patchTilesetsLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Patch Tilesets:</string>
         </property>
@@ -145,7 +145,7 @@
        </widget>
       </item>
       <item row="4" column="0">
-       <widget class="QLabel" name="assetsFolderLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Assets Folder:</string>
         </property>
@@ -166,7 +166,7 @@
        </widget>
       </item>
       <item row="5" column="0">
-       <widget class="QLabel" name="outputFolderLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Output Folder:</string>
         </property>
@@ -190,8 +190,8 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="upscaleButtonsWidget" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout">
+    <widget class="QWidget" native="true">
+     <layout class="QHBoxLayout">
       <property name="spacing">
        <number>4</number>
       </property>
@@ -208,7 +208,7 @@
        <number>4</number>
       </property>
       <item>
-       <spacer name="groupLeftHorizontalSpacer_0">
+       <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>

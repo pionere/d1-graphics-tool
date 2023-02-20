@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>UpscaleDialog</class>
- <widget class="QDialog" name="UpscaleDialog">
+ <widget class="QDialog">
   <property name="windowTitle">
    <string>Upscale</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout">
    <item>
-    <widget class="QGroupBox" name="upscaleSettingsGroupBox">
-     <layout class="QGridLayout" name="gridLayout">
+    <widget class="QGroupBox">
+     <layout class="QGridLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="multiplierLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Multiplier:</string>
         </property>
@@ -27,7 +27,7 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="fixColorsLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Fix colors:</string>
         </property>
@@ -44,7 +44,7 @@
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QLabel" name="fixColorsSlashLabel">
+       <widget class="QLabel">
         <property name="minimumWidth">
          <number>8</number>
         </property>
@@ -114,7 +114,7 @@
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="antiAliasingLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Anti aliasing:</string>
         </property>
@@ -171,8 +171,8 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="upscaleButtonsWidget" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout">
+    <widget class="QWidget" native="true">
+     <layout class="QHBoxLayout">
       <property name="spacing">
        <number>4</number>
       </property>
@@ -189,7 +189,7 @@
        <number>0</number>
       </property>
       <item>
-       <spacer name="groupLeftHorizontalSpacer_0">
+       <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>

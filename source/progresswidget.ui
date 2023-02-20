@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>ProgressWidget</class>
- <widget class="QFrame" name="ProgressWidget">
+ <widget class="QFrame">
   <property name="minimumHeight">
    <number>16</number>
   </property>
@@ -11,7 +11,7 @@
   <property name="frameStyle">
    <set>QFrame::NoFrame</set>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_0">
+  <layout class="QHBoxLayout">
    <property name="spacing">
     <number>4</number>
    </property>

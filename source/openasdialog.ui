@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>OpenAsDialog</class>
- <widget class="QDialog" name="OpenAsDialog">
+ <widget class="QDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -16,12 +16,12 @@
   <property name="modal">
    <bool>true</bool>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout">
    <item>
-    <widget class="QGroupBox" name="inputFileGroupBox">
-     <layout class="QGridLayout" name="gridLayout_0">
+    <widget class="QGroupBox">
+     <layout class="QGridLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="inputFileLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Input File:</string>
         </property>
@@ -42,15 +42,15 @@
        </widget>
       </item>
       <item row="1" column="0">
-        <widget class="QLabel" name="tilesetLabel">
+        <widget class="QLabel">
           <property name="text">
             <string>Tileset:</string>
           </property>
         </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QWidget" name="isTilesetWidget" native="true">
-        <layout class="QHBoxLayout" name="horizontalLayout_1">
+       <widget class="QWidget" native="true">
+        <layout class="QHBoxLayout">
          <property name="spacing">
           <number>4</number>
          </property>
@@ -97,7 +97,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_1_1">
+          <spacer>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -114,17 +114,17 @@
      <property name="title">
       <string>CEL/CL2/PCX File Settings</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_1">
+     <layout class="QGridLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="celClippedLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Clipped:</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QWidget" name="celClippedWidget" native="true">
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <widget class="QWidget" native="true">
+        <layout class="QHBoxLayout">
          <property name="spacing">
           <number>4</number>
          </property>
@@ -171,7 +171,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_2_0">
+          <spacer>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -181,7 +181,7 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="celWidthLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Width:</string>
         </property>
@@ -205,17 +205,17 @@
      <property name="title">
       <string>Tileset Settings</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
+     <layout class="QGridLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="minUpscaledLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Upscaled:</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QWidget" name="minUpscaledWidget" native="true">
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <widget class="QWidget" native="true">
+        <layout class="QHBoxLayout">
          <property name="spacing">
           <number>4</number>
          </property>
@@ -262,7 +262,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_3_0">
+          <spacer>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -272,7 +272,7 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="minWidthLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Width:</string>
         </property>
@@ -289,7 +289,7 @@
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="minHeightLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Height:</string>
         </property>
@@ -306,7 +306,7 @@
        </widget>
       </item>
       <item row="3" column="0">
-       <widget class="QLabel" name="tilFileLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Til File:</string>
         </property>
@@ -327,7 +327,7 @@
        </widget>
       </item>
       <item row="4" column="0">
-       <widget class="QLabel" name="minFileLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Min File:</string>
         </property>
@@ -348,7 +348,7 @@
        </widget>
       </item>
       <item row="5" column="0">
-       <widget class="QLabel" name="solFileLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Sol File:</string>
         </property>
@@ -369,7 +369,7 @@
        </widget>
       </item>
       <item row="6" column="0">
-       <widget class="QLabel" name="ampFileLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Amp File:</string>
         </property>
@@ -390,7 +390,7 @@
        </widget>
       </item>
       <item row="7" column="0">
-       <widget class="QLabel" name="tmiFileLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Tmi File:</string>
         </property>
@@ -414,8 +414,8 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="openButtonsWidget" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout_10">
+    <widget class="QWidget" native="true">
+     <layout class="QHBoxLayout">
       <property name="spacing">
        <number>4</number>
       </property>
@@ -432,7 +432,7 @@
        <number>4</number>
       </property>
       <item>
-       <spacer name="horizontalSpacer">
+       <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>

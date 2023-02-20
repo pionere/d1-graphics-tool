@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>LevelCelView</class>
- <widget class="QWidget" name="LevelCelView">
+ <widget class="QWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -16,7 +16,7 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -33,8 +33,8 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QWidget" name="celFrameWidget" native="true">
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+    <widget class="QWidget" native="true">
+     <layout class="QVBoxLayout">
       <property name="spacing">
        <number>4</number>
       </property>
@@ -70,9 +70,9 @@
        </widget>
       </item>
       <item>
-       <layout class="QGridLayout" name="levelCelControlsGridLayout">
+       <layout class="QGridLayout">
         <item row="0" column="0">
-         <widget class="QLabel" name="zoomLabel">
+         <widget class="QLabel">
           <property name="minimumWidth">
            <number>48</number>
           </property>
@@ -118,7 +118,7 @@
          </widget>
         </item>
         <item row="0" column="4" colspan="2">
-         <spacer name="horizontalSpacer">
+         <spacer>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -132,7 +132,7 @@
          </widget>
         </item>
         <item row="0" column="8">
-         <widget class="QLabel" name="slashLabel_3">
+         <widget class="QLabel">
           <property name="minimumWidth">
            <number>8</number>
           </property>
@@ -168,7 +168,7 @@
          </widget>
         </item>
         <item row="0" column="12">
-         <widget class="QLabel" name="playDelayLabel">
+         <widget class="QLabel">
           <property name="minimumWidth">
            <number>20</number>
           </property>
@@ -205,14 +205,14 @@
          </widget>
         </item>
         <item row="0" column="15" colspan="2">
-         <spacer name="horizontalSpacer_2">
+         <spacer>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
          </spacer>
         </item>
         <item row="1" column="0">
-         <widget class="QLabel" name="tilLabel">
+         <widget class="QLabel">
           <property name="minimumWidth">
            <number>48</number>
           </property>
@@ -222,7 +222,7 @@
          </widget>
         </item>
         <item row="1" column="1" colspan="4">
-         <spacer name="tilLeftHorizontalSpacer">
+         <spacer>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -277,7 +277,7 @@
          </widget>
         </item>
         <item row="1" column="8">
-         <widget class="QLabel" name="tilSlashLabel">
+         <widget class="QLabel">
           <property name="minimumWidth">
            <number>8</number>
           </property>
@@ -344,7 +344,7 @@
          </widget>
         </item>
         <item row="1" column="12" colspan="2">
-         <spacer name="tilRightHorizontalSpacer">
+         <spacer>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -364,7 +364,7 @@
          </widget>
         </item>
         <item row="1" column="15">
-         <widget class="QLabel" name="tilFrameWidthLabel">
+         <widget class="QLabel">
           <property name="minimumWidth">
            <number>8</number>
           </property>
@@ -390,7 +390,7 @@
          </widget>
         </item>
         <item row="2" column="0">
-         <widget class="QLabel" name="minLabel">
+         <widget class="QLabel">
           <property name="minimumWidth">
            <number>48</number>
           </property>
@@ -400,7 +400,7 @@
          </widget>
         </item>
         <item row="2" column="1" colspan="4">
-         <spacer name="minLeftHorizontalSpacer">
+         <spacer>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -452,7 +452,7 @@
          </widget>
         </item>
         <item row="2" column="8">
-         <widget class="QLabel" name="minSlashLabel">
+         <widget class="QLabel">
           <property name="minimumWidth">
            <number>8</number>
           </property>
@@ -516,7 +516,7 @@
          </widget>
         </item>
         <item row="2" column="12" colspan="2">
-         <spacer name="minRightHorizontalSpacer">
+         <spacer>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -533,7 +533,7 @@
          </widget>
         </item>
         <item row="2" column="15">
-         <widget class="QLabel" name="minFrameWidthLabel">
+         <widget class="QLabel">
           <property name="minimumWidth">
            <number>8</number>
           </property>
@@ -556,7 +556,7 @@
          </widget>
         </item>
         <item row="3" column="0">
-         <widget class="QLabel" name="framesLabel">
+         <widget class="QLabel">
           <property name="minimumWidth">
            <number>48</number>
           </property>
@@ -566,7 +566,7 @@
          </widget>
         </item>
         <item row="3" column="1" colspan="4">
-         <spacer name="framesLeftHorizontalSpacer">
+         <spacer>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -618,7 +618,7 @@
          </widget>
         </item>
         <item row="3" column="8">
-         <widget class="QLabel" name="slashLabel">
+         <widget class="QLabel">
           <property name="minimumWidth">
            <number>8</number>
           </property>
@@ -682,7 +682,7 @@
          </widget>
         </item>
         <item row="3" column="12" colspan="2">
-         <spacer name="framesRightHorizontalSpacer">
+         <spacer>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -705,7 +705,7 @@
          </widget>
         </item>
         <item row="3" column="15">
-         <widget class="QLabel" name="celFrameWidthLabel">
+         <widget class="QLabel">
           <property name="minimumWidth">
            <number>8</number>
           </property>
