@@ -233,20 +233,30 @@ PaletteWidget::PaletteWidget(QWidget *parent, QUndoStack *us, QString title)
 
     // adjust the size of the buttons
     QFontMetrics fm = this->fontMetrics();
-    constexpr int border = 4;
+    QPushButton *pickBtn = this->ui->colorPickPushButton;
+    QPushButton *clearBtn = this->ui->colorClearPushButton;
+    QPushButton *monTrnBtn = this->ui->monsterTrnPushButton;
+    // - calculate the border
+    QSize pickSize = fm.size(Qt::TextShowMnemonic, pickBtn->text());
+    QStyleOptionButton opt;
+    opt.initFrom(pickBtn);
+    int pickWidth = pickBtn->style()->sizeFromContents(QStyle::CT_PushButton, &opt, pickSize, pickBtn).width();
+    int border = pickWidth - pickSize.width();
+    // - calculate the width of the other buttons
     constexpr int spacing = 4;
-    int pickWidth = fm.size(0, this->ui->colorPickPushButton->text()).width();
-    int clearWidth = fm.size(0, this->ui->colorClearPushButton->text()).width();
-    int monTrnWidth = fm.size(0, this->ui->monsterTrnPushButton->text()).width();
-    int colorWidth = std::max(pickWidth, clearWidth) + border;
-    int btnsWidth = std::max(2 * colorWidth + spacing, monTrnWidth + border);
-    this->ui->monsterTrnPushButton->setMinimumWidth(btnsWidth);
-    this->ui->monsterTrnPushButton->setMaximumWidth(btnsWidth);
+    int clearWidth = fm.size(Qt::TextShowMnemonic, clearBtn->text()).width() + border;
+    int monTrnWidth = fm.size(Qt::TextShowMnemonic, monTrnBtn->text()).width() + border;
+    // - select appropriate width
+    int colorWidth = std::max(pickWidth, clearWidth);
+    int btnsWidth = std::max(2 * colorWidth + spacing, monTrnWidth);
     colorWidth = (btnsWidth - spacing) / 2;
-    this->ui->colorPickPushButton->setMinimumWidth(colorWidth);
-    this->ui->colorPickPushButton->setMaximumWidth(colorWidth);
-    this->ui->colorClearPushButton->setMinimumWidth(colorWidth);
-    this->ui->colorClearPushButton->setMaximumWidth(colorWidth);
+    // - set the calculated widths
+    monTrnBtn->setMinimumWidth(btnsWidth);
+    monTrnBtn->setMaximumWidth(btnsWidth);
+    pickBtn->setMinimumWidth(colorWidth);
+    pickBtn->setMaximumWidth(colorWidth);
+    clearBtn->setMinimumWidth(colorWidth);
+    clearBtn->setMaximumWidth(colorWidth);
 
     // When there is a modification to the PAL or TRNs then UI must be refreshed
     QObject::connect(this, &PaletteWidget::modified, this, &PaletteWidget::refresh);
