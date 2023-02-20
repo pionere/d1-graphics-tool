@@ -160,8 +160,7 @@ bool D1Pcx::load(D1GfxFrame &frame, const QString &filePath, bool clipped, D1Pal
     // read data
     QByteArray fileData = file.read(fileSize - sizeof(PCXHEADER));
 
-    // width of PCX data is always even -> need to skip a bit if the width is odd
-    const quint8 srcSkip = frame.width % 2;
+    const quint16 srcSkip = SwapLE16(pcxhdr.BytesPerLine) - frame.width;
     auto dataPtr = fileData.cbegin();
     quint8 byte;
     if (pcxPalState == 1) {
@@ -316,16 +315,14 @@ bool D1Pcx::save(const std::vector<std::vector<D1GfxPixel>> &pixels, const D1Pal
     header.BitsPerPixel = 8;
     header.Xmax = SwapLE16(imageSize.width() - 1);
     header.Ymax = SwapLE16(imageSize.height() - 1);
-    header.HDpi = SwapLE16(imageSize.width());
-    header.VDpi = SwapLE16(imageSize.height());
+    // header.HDpi = SwapLE16(imageSize.width());
+    // header.VDpi = SwapLE16(imageSize.height());
     header.NPlanes = 1;
     header.BytesPerLine = SwapLE16(imageSize.width());
 
     out.writeRawData((char *)&header, sizeof(header));
 
     // - image
-    // width of PCX data is always even -> need to skip a bit if the width is odd
-    const quint8 dstSkip = imageSize.width() % 2;
 
     for (int y = 0; y < imageSize.height(); y++) {
         int width = imageSize.width();
@@ -357,10 +354,6 @@ bool D1Pcx::save(const std::vector<std::vector<D1GfxPixel>> &pixels, const D1Pal
 
             out << rlePixel;
         }
-        // add alignment
-        for (int i = dstSkip; i > 0; i--) {
-            out << (quint8)0;
-        }
     }
 
     // - palette
@@ -374,7 +367,7 @@ bool D1Pcx::save(const std::vector<std::vector<D1GfxPixel>> &pixels, const D1Pal
         if (transparentIndex == i) {
             if (params.transparentColor != QColor(Qt::transparent))
                 color = params.transparentColor;
-            else
+            else if (params.transparentIndex != transparentIndex)
                 color = pal->getUndefinedColor();
         }
         out << (uint8_t)color.red();
