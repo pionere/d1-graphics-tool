@@ -12,6 +12,7 @@
 #include <QtConcurrent>
 
 #include "d1image.h"
+#include "d1pcx.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
 #include "ui_exportdialog.h"
@@ -21,6 +22,23 @@ ExportDialog::ExportDialog(QWidget *parent)
     , ui(new Ui::ExportDialog())
 {
     ui->setupUi(this);
+
+    // initialize the format combobox
+    QList<QByteArray> formats = QImageWriter::supportedImageFormats();
+    QStringList formatTxts;
+    // add PCX support
+    formatTxts.append("PCX");
+    for (QByteArray &format : formats) {
+        QString fmt = format.toUpper();
+        if (fmt != "PCX")
+            formatTxts.append(fmt);
+    }
+    // preselect PNG
+    int defaultIndex = formatTxts.indexOf("PNG");
+    if (defaultIndex < 0)
+        defaultIndex = 0;
+    this->ui->formatComboBox->addItems(formatTxts);
+    this->ui->formatComboBox->setCurrentIndex(defaultIndex);
 }
 
 ExportDialog::~ExportDialog()
@@ -32,23 +50,6 @@ void ExportDialog::initialize(D1Gfx *g, D1Tileset *ts)
 {
     this->gfx = g;
     this->tileset = ts;
-
-    // initialize the format combobox
-    QList<QByteArray> formats = QImageWriter::supportedImageFormats();
-    QStringList formatTxts;
-    for (QByteArray &format : formats) {
-        QString fmt = format;
-        formatTxts.append(fmt.toUpper());
-    }
-    // - remember the last selected format
-    QComboBox *fmtBox = this->ui->formatComboBox;
-    QString lastFmt = fmtBox->currentText();
-    if (lastFmt.isEmpty()) {
-        lastFmt = "PNG";
-    }
-    fmtBox->clear();
-    fmtBox->addItems(formatTxts);
-    fmtBox->setCurrentIndex(fmtBox->findText(lastFmt));
 
     // initialize files count
     /*this->ui->filesCountComboBox->setEnabled(multiFrame);
@@ -88,16 +89,14 @@ void ExportDialog::on_outputFolderBrowseButton_clicked()
     this->ui->outputFolderEdit->setText(dirPath);
 }
 
-static void saveImage(const QImage &image, const QString &path)
-{
-    if (image.save(path))
-        dProgress() << QApplication::tr("%1 created.").arg(QDir::toNativeSeparators(path));
-    else
-        dProgressFail() << QApplication::tr("Failed to create %1.").arg(QDir::toNativeSeparators(path));
-}
-
 static void saveImage(const std::vector<std::vector<D1GfxPixel>> &pixels, const D1Pal *pal, const QString &fileName, const ExportParam &params)
 {
+    QString path = params.outFolder + "/" + fileName + params.outFileExtension;
+    if (path.endsWith(".pcx")) {
+        D1Pcx::save(pixels, pal, path, params);
+        return;
+    }
+
     QSize imageSize = D1PixelImage::getImageSize(pixels);
     QImage image = QImage(imageSize, QImage::Format_ARGB32);
     if (image.isNull()) {
@@ -122,8 +121,11 @@ static void saveImage(const std::vector<std::vector<D1GfxPixel>> &pixels, const 
             image.setPixel(x, y, color.rgba());
         }
     }
-    QString path = params.outFolder + "/" + fileName + params.outFileExtension;
-    saveImage(image, path);
+
+    if (image.save(path))
+        dProgress() << QApplication::tr("%1 created.").arg(QDir::toNativeSeparators(path));
+    else
+        dProgressFail() << QApplication::tr("Failed to create %1.").arg(QDir::toNativeSeparators(path));
 }
 
 void ExportDialog::exportLevelTiles25D(const D1Til *til, const D1Gfx *gfx, const ExportParam &params)

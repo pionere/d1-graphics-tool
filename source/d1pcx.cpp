@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QByteArray>
 #include <QDir>
+#include <QFile>
 #include <QList>
 
 #include "config.h"
@@ -10,6 +11,9 @@
 #include "progressdialog.h"
 
 #define D1PCX_COLORS 256
+
+static constexpr quint8 PCX_MAX_SINGLE_PIXEL = 0xBF;
+static constexpr quint8 PCX_RUNLENGTH_MASK = 0x3F;
 
 typedef struct _PcxHeader {
     quint8 Manufacturer;
@@ -92,7 +96,7 @@ bool D1Pcx::load(D1GfxFrame &frame, const QString &filePath, bool clipped, D1Pal
 
     // process the header
     file.read((char *)&pcxhdr, sizeof(pcxhdr));
-    if (pcxhdr.Manufacturer != 10) {
+    if (pcxhdr.Manufacturer != 0x0A) {
         dProgressErr() << QApplication::tr("Invalid PCX header.");
         return false;
     }
@@ -156,10 +160,7 @@ bool D1Pcx::load(D1GfxFrame &frame, const QString &filePath, bool clipped, D1Pal
     // read data
     QByteArray fileData = file.read(fileSize - sizeof(PCXHEADER));
 
-    // width of PCX data is always even -> need to skip a bit if the width is odd
-    const quint8 srcSkip = frame.width % 2;
-    const quint8 PCX_MAX_SINGLE_PIXEL = 0xBF;
-    const quint8 PCX_RUNLENGTH_MASK = 0x3F;
+    const quint16 srcSkip = SwapLE16(pcxhdr.BytesPerLine) - frame.width;
     auto dataPtr = fileData.cbegin();
     quint8 byte;
     if (pcxPalState == 1) {
@@ -250,6 +251,128 @@ bool D1Pcx::load(D1GfxFrame &frame, const QString &filePath, bool clipped, D1Pal
 
     if (pcxPal != resPal && pcxPal != basePal) {
         delete pcxPal;
+    }
+    return true;
+}
+
+bool D1Pcx::save(const std::vector<std::vector<D1GfxPixel>> &pixels, const D1Pal *pal, const QString &filePath, const ExportParam &params)
+{
+    const QSize imageSize = D1PixelImage::getImageSize(pixels);
+
+    if (imageSize.width() > UINT16_MAX || imageSize.height() > UINT16_MAX) {
+        dProgressFail() << QApplication::tr("PCX format can not store the image due to its dimensions: %1x%2.").arg(imageSize.width()).arg(imageSize.height());
+        return false;
+    }
+
+    // select color for the transparent pixels
+    bool usedColors[D1PAL_COLORS] = { false };
+    bool hasTransparent = false;
+    for (int y = 0; y < imageSize.height(); y++) {
+        for (int x = 0; x < imageSize.width(); x++) {
+            if (pixels[y][x].isTransparent())
+                hasTransparent = true;
+            else
+                usedColors[pixels[y][x].getPaletteIndex()] = true;
+        }
+    }
+
+    int transparentIndex = params.transparentIndex;
+    if (hasTransparent) {
+        // select the first unused, undefined color
+        for (int i = 0; i < D1PAL_COLORS && transparentIndex >= D1PAL_COLORS; i++) {
+            if (!usedColors[i] && pal->getColor(i) == pal->getUndefinedColor()) {
+                transparentIndex = i;
+            }
+        }
+        // select the first unused color
+        for (int i = 0; i < D1PAL_COLORS && transparentIndex >= D1PAL_COLORS; i++) {
+            if (!usedColors[i]) {
+                transparentIndex = i;
+            }
+        }
+        if (transparentIndex >= D1PAL_COLORS) {
+            dProgressFail() << QApplication::tr("Could not find a palette entry to use for the transparent colors.");
+            return false;
+        }
+    }
+
+    QDir().mkpath(QFileInfo(filePath).absolutePath());
+    QFile outFile = QFile(filePath);
+    if (!outFile.open(QIODevice::WriteOnly)) {
+        dProgressFail() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(filePath));
+        return false;
+    }
+
+    // write to file
+    QDataStream out(&outFile);
+    // out.setByteOrder(QDataStream::LittleEndian);
+
+    // - header
+    PCXHEADER header = { 0 };
+    header.Manufacturer = 0x0A;
+    header.Version = 5;
+    header.Encoding = 1;
+    header.BitsPerPixel = 8;
+    header.Xmax = SwapLE16(imageSize.width() - 1);
+    header.Ymax = SwapLE16(imageSize.height() - 1);
+    // header.HDpi = SwapLE16(imageSize.width());
+    // header.VDpi = SwapLE16(imageSize.height());
+    header.NPlanes = 1;
+    header.BytesPerLine = SwapLE16(imageSize.width());
+
+    out.writeRawData((char *)&header, sizeof(header));
+
+    // - image
+
+    for (int y = 0; y < imageSize.height(); y++) {
+        int width = imageSize.width();
+        int x = 0;
+        // write one line
+        quint8 rleLength;
+        quint8 rlePixel;
+
+        while (width != 0) {
+            rlePixel = pixels[y][x].isTransparent() ? transparentIndex : pixels[y][x].getPaletteIndex();
+            rleLength = 1;
+
+            x++;
+            width--;
+
+            while (width != 0 && rlePixel == (pixels[y][x].isTransparent() ? transparentIndex : pixels[y][x].getPaletteIndex())) {
+                if (rleLength >= PCX_RUNLENGTH_MASK)
+                    break;
+                rleLength++;
+
+                x++;
+                width--;
+            }
+
+            if (rleLength > 1 || rlePixel > PCX_MAX_SINGLE_PIXEL) {
+                rleLength |= 0xC0;
+                out << rleLength;
+            }
+
+            out << rlePixel;
+        }
+    }
+
+    // - palette
+    if (!hasTransparent) {
+        transparentIndex = D1PCX_COLORS;
+    }
+    out << 0x0C;
+    for (int i = 0; i < D1PCX_COLORS; i++) {
+        static_assert(D1PAL_COLORS == D1PCX_COLORS, "D1Pcx::save uses PCX colors to store the content of a D1Pal.");
+        QColor color = pal->getColor(i);
+        if (transparentIndex == i) {
+            if (params.transparentColor != QColor(Qt::transparent))
+                color = params.transparentColor;
+            else if (params.transparentIndex != transparentIndex)
+                color = pal->getUndefinedColor();
+        }
+        out << (uint8_t)color.red();
+        out << (uint8_t)color.green();
+        out << (uint8_t)color.blue();
     }
     return true;
 }
