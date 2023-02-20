@@ -5,6 +5,7 @@
 
 #include <QClipboard>
 #include <QColorDialog>
+#include <QFontMetrics>
 #include <QGuiApplication>
 #include <QMessageBox>
 #include <QMimeData>
@@ -222,12 +223,30 @@ PaletteWidget::PaletteWidget(QWidget *parent, QUndoStack *us, QString title)
     ui->graphicsView->setScene(this->scene);
     ui->groupLabel->setText(title);
 
+    // add buttons
     QLayout *layout = this->ui->groupHeaderHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogNewFolder, tr("New"), this, &PaletteWidget::on_newPushButtonClicked); // use SP_FileIcon ?
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogOpenButton, tr("Open"), this, &PaletteWidget::on_openPushButtonClicked);
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogSaveButton, tr("Save"), this, &PaletteWidget::on_savePushButtonClicked);
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogSaveButton, tr("Save As"), this, &PaletteWidget::on_saveAsPushButtonClicked);
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &PaletteWidget::on_closePushButtonClicked); // use SP_DialogDiscardButton ?
+
+    // adjust the size of the buttons
+    QFontMetrics fm = this->fontMetrics();
+    constexpr int border = 4;
+    constexpr int spacing = 4;
+    int pickWidth = fm.size(0, this->ui->colorPickPushButton->text()).width();
+    int clearWidth = fm.size(0, this->ui->colorClearPushButton->text()).width();
+    int monTrnWidth = fm.size(0, this->ui->monsterTrnPushButton->text()).width();
+    int colorWidth = std::max(pickWidth, clearWidth) + border;
+    int btnsWidth = std::max(2 * colorWidth + spacing, monTrnWidth + border);
+    this->ui->monsterTrnPushButton->setMinimumWidth(btnsWidth);
+    this->ui->monsterTrnPushButton->setMaximumWidth(btnsWidth);
+    colorWidth = (btnsWidth - spacing) / 2;
+    this->ui->colorPickPushButton->setMinimumWidth(colorWidth);
+    this->ui->colorPickPushButton->setMaximumWidth(colorWidth);
+    this->ui->colorClearPushButton->setMinimumWidth(colorWidth);
+    this->ui->colorClearPushButton->setMaximumWidth(colorWidth);
 
     // When there is a modification to the PAL or TRNs then UI must be refreshed
     QObject::connect(this, &PaletteWidget::modified, this, &PaletteWidget::refresh);
