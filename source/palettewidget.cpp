@@ -221,7 +221,7 @@ PaletteWidget::PaletteWidget(QWidget *parent, QUndoStack *us, QString title)
     ui->graphicsView->setScene(this->scene);
     ui->groupLabel->setText(title);
 
-    QLayout *layout = this->ui->horizontalLayout;
+    QLayout *layout = this->ui->groupHeaderHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogNewFolder, tr("New"), this, &PaletteWidget::on_newPushButtonClicked); // use SP_FileIcon ?
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogOpenButton, tr("Open"), this, &PaletteWidget::on_openPushButtonClicked);
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogSaveButton, tr("Save"), this, &PaletteWidget::on_savePushButtonClicked);

@@ -472,7 +472,6 @@ void CelView::displayFrame()
         celFrame.width() + CEL_SCENE_SPACING * 2,
         celFrame.height() + CEL_SCENE_SPACING * 2);
     // ui->celGraphicsView->adjustSize();
-    // ui->celFrameWidget->adjustSize();
 
     // Add the backgrond and CEL frame while aligning it in the center
     this->celScene->addPixmap(QPixmap::fromImage(celFrameBackground))

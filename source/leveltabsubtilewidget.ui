@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>LevelTabSubtileWidget</class>
- <widget class="QWidget" name="LevelTabSubtileWidget">
-  <layout class="QVBoxLayout" name="verticalLayout_0">
+ <widget class="QWidget">
+  <layout class="QVBoxLayout">
    <property name="spacing">
     <number>4</number>
    </property>
@@ -24,7 +24,7 @@
       <number>10</number>
      </property>
      <item>
-      <spacer name="buttonsHorizontalSpacer">
+      <spacer>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -33,14 +33,14 @@
     </layout>
    </item>
    <item>
-    <widget class="QGroupBox" name="solFlagsGroupBox">
+    <widget class="QGroupBox">
      <property name="maximumHeight">
       <number>80</number>
      </property>
      <property name="title">
       <string>SOL flags</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_1">
+     <layout class="QGridLayout">
       <item row="0" column="0">
        <widget class="QCheckBox" name="sol0">
         <property name="text">
@@ -70,7 +70,7 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="solTransparencyLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Transparency:</string>
         </property>
@@ -101,14 +101,14 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="tmiFlagsGroupBox">
+    <widget class="QGroupBox">
      <property name="maximumHeight">
       <number>80</number>
      </property>
      <property name="title">
       <string>TMI flags</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
+     <layout class="QGridLayout">
       <item row="0" column="0">
        <widget class="QCheckBox" name="tmi0">
         <property name="text">
@@ -117,7 +117,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QLabel" name="tmiLeftLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Left floor:</string>
         </property>
@@ -145,7 +145,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLabel" name="tmiRightLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Right floor:</string>
         </property>
@@ -176,7 +176,7 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <layout class="QHBoxLayout">
      <property name="leftMargin">
       <number>10</number>
      </property>
@@ -184,7 +184,7 @@
       <number>10</number>
      </property>
      <item>
-      <widget class="QLabel" name="subtilesLabel">
+      <widget class="QLabel">
        <property name="text">
         <string>Frames:</string>
        </property>
@@ -236,7 +236,7 @@
       </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer_3">
+      <spacer>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>

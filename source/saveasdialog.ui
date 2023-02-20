@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>SaveAsDialog</class>
- <widget class="QDialog" name="SaveAsDialog">
+ <widget class="QDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -16,12 +16,12 @@
   <property name="modal">
    <bool>true</bool>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout">
    <item>
-    <widget class="QGroupBox" name="outputFileGroupBox">
-     <layout class="QGridLayout" name="gridLayout_1">
+    <widget class="QGroupBox">
+     <layout class="QGridLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="outputCelFileLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>CEL/CL2 File:</string>
         </property>
@@ -42,7 +42,7 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="autoOverwriteLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Overwrite all:</string>
         </property>
@@ -63,24 +63,24 @@
      <property name="title">
       <string>CEL/CL2 File Settings</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
+     <layout class="QGridLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="celClippedLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Clipped:</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="celGroupLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Groups:</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QWidget" name="celClippedWidget" native="true">
-        <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <widget class="QWidget" native="true">
+        <layout class="QHBoxLayout">
          <property name="spacing">
           <number>4</number>
          </property>
@@ -127,7 +127,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_2_0">
+          <spacer>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -154,17 +154,17 @@
      <property name="title">
       <string>Tileset Settings</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
+     <layout class="QGridLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="minUpscaledLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Upscaled:</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QWidget" name="minUpscaledWidget" native="true">
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <widget class="QWidget" native="true">
+        <layout class="QHBoxLayout">
          <property name="spacing">
           <number>4</number>
          </property>
@@ -211,7 +211,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_3_0">
+          <spacer>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -221,7 +221,7 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="tilTilFileLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Til File:</string>
         </property>
@@ -242,7 +242,7 @@
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="tilMinFileLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Min File:</string>
         </property>
@@ -263,7 +263,7 @@
        </widget>
       </item>
       <item row="3" column="0">
-       <widget class="QLabel" name="tilSolFileLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Sol File:</string>
         </property>
@@ -284,7 +284,7 @@
        </widget>
       </item>
       <item row="4" column="0">
-       <widget class="QLabel" name="tilAmpFileLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Amp File:</string>
         </property>
@@ -305,7 +305,7 @@
        </widget>
       </item>
       <item row="5" column="0">
-       <widget class="QLabel" name="tilTmiFileLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Tmi File:</string>
         </property>
@@ -329,8 +329,8 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="saveButtonsWidget" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout">
+    <widget class="QWidget" native="true">
+     <layout class="QHBoxLayout">
       <property name="spacing">
        <number>4</number>
       </property>
@@ -347,7 +347,7 @@
        <number>4</number>
       </property>
       <item>
-       <spacer name="horizontalSpacer">
+       <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>LevelTabTileWidget</class>
- <widget class="QWidget" name="LevelTabTileWidget">
-  <layout class="QVBoxLayout" name="verticalLayout_0">
+ <widget class="QWidget">
+  <layout class="QVBoxLayout">
    <property name="spacing">
     <number>4</number>
    </property>
@@ -24,7 +24,7 @@
       <number>10</number>
      </property>
      <item>
-      <spacer name="buttonsHorizontalSpacer">
+      <spacer>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -33,7 +33,7 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_1">
+    <layout class="QHBoxLayout">
      <property name="leftMargin">
       <number>10</number>
      </property>
@@ -41,7 +41,7 @@
       <number>10</number>
      </property>
      <item>
-      <widget class="QLabel" name="ampTypeLabel">
+      <widget class="QLabel">
        <property name="text">
         <string>Automap type:</string>
        </property>
@@ -117,7 +117,7 @@
       </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer_0">
+      <spacer>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -126,16 +126,16 @@
     </layout>
    </item>
    <item>
-    <widget class="QGroupBox" name="flagsGroupBox">
+    <widget class="QGroupBox">
      <property name="maximumHeight">
       <number>120</number>
      </property>
      <property name="title">
       <string>Automap flags</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
+     <layout class="QGridLayout">
       <item row="1" column="0">
-       <widget class="QLabel" name="label_4">
+       <widget class="QLabel">
         <property name="text">
          <string>Western:</string>
         </property>
@@ -163,7 +163,7 @@
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="label_5">
+       <widget class="QLabel">
         <property name="text">
          <string>Eastern:</string>
         </property>
@@ -208,7 +208,7 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <layout class="QHBoxLayout">
      <property name="leftMargin">
       <number>10</number>
      </property>
@@ -216,7 +216,7 @@
       <number>10</number>
      </property>
      <item>
-      <widget class="QLabel" name="subtilesLabel">
+      <widget class="QLabel">
        <property name="text">
         <string>Subtiles:</string>
        </property>
@@ -268,7 +268,7 @@
       </widget>
      </item>
      <item>
-      <spacer name="horizontalSpacer_3">
+      <spacer>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>

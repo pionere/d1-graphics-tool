@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>SettingsDialog</class>
- <widget class="QDialog" name="SettingsDialog">
+ <widget class="QDialog">
   <property name="windowTitle">
    <string>Settings</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout">
    <item>
-    <widget class="QWidget" name="settingslangWidget" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout_0">
+    <widget class="QWidget" native="true">
+     <layout class="QHBoxLayout">
       <property name="spacing">
        <number>4</number>
       </property>
@@ -25,7 +25,7 @@
        <number>4</number>
       </property>
       <item>
-       <widget class="QLabel" name="languageLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Language:</string>
         </property>
@@ -38,13 +38,13 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="graphicsGroupBox">
+    <widget class="QGroupBox">
      <property name="title">
       <string>Graphics</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_1">
+     <layout class="QGridLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="graphicsBackgroundColorLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Graphics background color:</string>
         </property>
@@ -71,7 +71,7 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="graphicsTransparentColorLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Graphics transparent color:</string>
         </property>
@@ -101,13 +101,13 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="paletteTranslationGroupBox">
+    <widget class="QGroupBox">
      <property name="title">
       <string>Palettes and translations</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
+     <layout class="QGridLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="undefinedPaletteColorLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Undefined palette color:</string>
         </property>
@@ -134,7 +134,7 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="paletteSelectionBorderColorLabel">
+       <widget class="QLabel">
         <property name="text">
          <string>Selection border color:</string>
         </property>
@@ -164,8 +164,8 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="settingsButtonsWidget" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout">
+    <widget class="QWidget" native="true">
+     <layout class="QHBoxLayout">
       <property name="spacing">
        <number>4</number>
       </property>
@@ -182,7 +182,7 @@
        <number>4</number>
       </property>
       <item>
-       <spacer name="groupLeftHorizontalSpacer_0">
+       <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
