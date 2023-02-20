@@ -49,12 +49,6 @@
      </item>
      <item>
       <widget class="QComboBox" name="frameTypeComboBox">
-       <property name="minimumWidth">
-        <number>160</number>
-       </property>
-       <property name="maximumWidth">
-        <number>160</number>
-       </property>
        <item>
         <property name="text">
          <string>Square</string>

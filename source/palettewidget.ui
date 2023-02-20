@@ -142,12 +142,6 @@
             </item>
             <item row="0" column="3">
              <widget class="QPushButton" name="colorPickPushButton">
-              <property name="minimumWidth">
-               <number>45</number>
-              </property>
-              <property name="maximumWidth">
-               <number>45</number>
-              </property>
               <property name="text">
                <string>Pick</string>
               </property>
@@ -155,12 +149,6 @@
             </item>
             <item row="0" column="4">
              <widget class="QPushButton" name="colorClearPushButton">
-              <property name="minimumWidth">
-               <number>45</number>
-              </property>
-              <property name="maximumWidth">
-               <number>45</number>
-              </property>
               <property name="text">
                <string>Clear</string>
               </property>
@@ -214,12 +202,6 @@
             </item>
             <item row="2" column="3" colspan="2">
              <widget class="QPushButton" name="monsterTrnPushButton">
-              <property name="minimumWidth">
-               <number>100</number>
-              </property>
-              <property name="maximumWidth">
-               <number>100</number>
-              </property>
               <property name="text">
                <string>Monster TRN</string>
               </property>
