@@ -169,12 +169,6 @@
         </item>
         <item row="0" column="12">
          <widget class="QLabel">
-          <property name="minimumWidth">
-           <number>20</number>
-          </property>
-          <property name="maximumWidth">
-           <number>20</number>
-          </property>
           <property name="text">
            <string>ms</string>
           </property>
