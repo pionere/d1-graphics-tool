@@ -16,694 +16,694 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-     <layout class="QVBoxLayout">
-      <item>
-       <widget class="QLabel" name="celLabel"/>
-      </item>
-      <item>
-       <widget class="QGraphicsView" name="celGraphicsView">
-        <property name="minimumSize">
-         <size>
-          <width>500</width>
-          <height>360</height>
-         </size>
+  <layout class="QVBoxLayout">
+   <item>
+    <widget class="QLabel" name="celLabel"/>
+   </item>
+   <item>
+    <widget class="QGraphicsView" name="celGraphicsView">
+     <property name="minimumSize">
+      <size>
+       <width>500</width>
+       <height>360</height>
+      </size>
+     </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAsNeeded</enum>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QAbstractScrollArea::AdjustToContents</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QGridLayout">
+     <item row="0" column="0">
+      <widget class="QLabel">
+       <property name="minimumWidth">
+        <number>48</number>
+       </property>
+       <property name="text">
+        <string>Zoom:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="zoomOutButton">
+       <property name="minimumWidth">
+        <number>24</number>
+       </property>
+       <property name="maximumWidth">
+        <number>24</number>
+       </property>
+       <property name="text">
+        <string notr="true">-</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="LineEditWidget" name="zoomEdit">
+       <property name="charWidth">
+        <number>4</number>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QPushButton" name="zoomInButton">
+       <property name="minimumWidth">
+        <number>24</number>
+       </property>
+       <property name="maximumWidth">
+        <number>24</number>
+       </property>
+       <property name="text">
+        <string notr="true">+</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4" colspan="2">
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item row="0" column="6" colspan="2">
+      <widget class="QPushButton" name="stopButton">
+       <property name="text">
+        <string>Stop</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="8">
+      <widget class="QLabel">
+       <property name="minimumWidth">
+        <number>8</number>
+       </property>
+       <property name="maximumWidth">
+        <number>8</number>
+       </property>
+       <property name="text">
+        <string notr="true">-</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="9" colspan="2">
+      <widget class="QPushButton" name="playButton">
+       <property name="text">
+        <string>Play</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="11">
+      <widget class="LineEditWidget" name="playDelayEdit">
+       <property name="charWidth">
+        <number>5</number>
+       </property>
+       <property name="toolTip">
+        <string>Current playback delay</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="12">
+      <widget class="QLabel">
+       <property name="text">
+        <string>ms</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="13" colspan="2">
+      <widget class="QComboBox" name="playComboBox">
+       <item>
+        <property name="text">
+         <string>(L3) Caves</string>
         </property>
-        <property name="verticalScrollBarPolicy">
-         <enum>Qt::ScrollBarAsNeeded</enum>
+       </item>
+       <item>
+        <property name="text">
+         <string>(L4) Hell</string>
         </property>
-        <property name="sizeAdjustPolicy">
-         <enum>QAbstractScrollArea::AdjustToContents</enum>
+       </item>
+       <item>
+        <property name="text">
+         <string>(L5) Crypt</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QGridLayout">
-        <item row="0" column="0">
-         <widget class="QLabel">
-          <property name="minimumWidth">
-           <number>48</number>
-          </property>
-          <property name="text">
-           <string>Zoom:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QPushButton" name="zoomOutButton">
-          <property name="minimumWidth">
-           <number>24</number>
-          </property>
-          <property name="maximumWidth">
-           <number>24</number>
-          </property>
-          <property name="text">
-           <string notr="true">-</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="LineEditWidget" name="zoomEdit">
-          <property name="charWidth">
-           <number>4</number>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QPushButton" name="zoomInButton">
-          <property name="minimumWidth">
-           <number>24</number>
-          </property>
-          <property name="maximumWidth">
-           <number>24</number>
-          </property>
-          <property name="text">
-           <string notr="true">+</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="4" colspan="2">
-         <spacer>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </spacer>
-        </item>
-        <item row="0" column="6" colspan="2">
-         <widget class="QPushButton" name="stopButton">
-          <property name="text">
-           <string>Stop</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="8">
-         <widget class="QLabel">
-          <property name="minimumWidth">
-           <number>8</number>
-          </property>
-          <property name="maximumWidth">
-           <number>8</number>
-          </property>
-          <property name="text">
-           <string notr="true">-</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="9" colspan="2">
-         <widget class="QPushButton" name="playButton">
-          <property name="text">
-           <string>Play</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="11">
-         <widget class="LineEditWidget" name="playDelayEdit">
-          <property name="charWidth">
-           <number>5</number>
-          </property>
-          <property name="toolTip">
-           <string>Current playback delay</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="12">
-         <widget class="QLabel">
-          <property name="text">
-           <string>ms</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="13" colspan="2">
-         <widget class="QComboBox" name="playComboBox">
-          <item>
-           <property name="text">
-            <string>(L3) Caves</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>(L4) Hell</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>(L5) Crypt</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>(L6) Nest</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="0" column="15" colspan="2">
-         <spacer>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </spacer>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel">
-          <property name="minimumWidth">
-           <number>48</number>
-          </property>
-          <property name="text">
-           <string>Tiles:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1" colspan="4">
-         <spacer>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </spacer>
-        </item>
-        <item row="1" column="5">
-         <widget class="QPushButton" name="firstTileButton">
-          <property name="minimumWidth">
-           <number>40</number>
-          </property>
-          <property name="maximumWidth">
-           <number>40</number>
-          </property>
-          <property name="toolTip">
-           <string>First tile</string>
-          </property>
-          <property name="text">
-           <string notr="true">|&lt;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="6">
-         <widget class="QPushButton" name="previousTileButton">
-          <property name="minimumWidth">
-           <number>40</number>
-          </property>
-          <property name="maximumWidth">
-           <number>40</number>
-          </property>
-          <property name="toolTip">
-           <string>Previous tile</string>
-          </property>
-          <property name="text">
-           <string notr="true">&lt;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="7">
-         <widget class="LineEditWidget" name="tileIndexEdit">
-          <property name="charWidth">
-           <number>5</number>
-          </property>
-          <property name="toolTip">
-           <string>Current tile</string>
-          </property>
-          <property name="text">
-           <string notr="true">0</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="8">
-         <widget class="QLabel">
-          <property name="minimumWidth">
-           <number>8</number>
-          </property>
-          <property name="maximumWidth">
-           <number>8</number>
-          </property>
-          <property name="text">
-           <string notr="true">/</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="9">
-         <widget class="LineEditWidget" name="tileNumberEdit">
-          <property name="charWidth">
-           <number>5</number>
-          </property>
-          <property name="toolTip">
-           <string>Number of tiles</string>
-          </property>
-          <property name="text">
-           <string notr="true">0</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="10">
-         <widget class="QPushButton" name="nextTileButton">
-          <property name="minimumWidth">
-           <number>40</number>
-          </property>
-          <property name="maximumWidth">
-           <number>40</number>
-          </property>
-          <property name="toolTip">
-           <string>Next tile</string>
-          </property>
-          <property name="text">
-           <string notr="true">&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="11">
-         <widget class="QPushButton" name="lastTileButton">
-          <property name="minimumWidth">
-           <number>40</number>
-          </property>
-          <property name="maximumWidth">
-           <number>40</number>
-          </property>
-          <property name="toolTip">
-           <string>Last tile</string>
-          </property>
-          <property name="text">
-           <string notr="true">&gt;|</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="12" colspan="2">
-         <spacer>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </spacer>
-        </item>
-        <item row="1" column="14">
-         <widget class="LineEditWidget" name="tilFrameWidthEdit">
-          <property name="charWidth">
-           <number>5</number>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="15">
-         <widget class="QLabel">
-          <property name="minimumWidth">
-           <number>8</number>
-          </property>
-          <property name="maximumWidth">
-           <number>8</number>
-          </property>
-          <property name="text">
-           <string notr="true">*</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="16">
-         <widget class="LineEditWidget" name="tilFrameHeightEdit">
-          <property name="charWidth">
-           <number>5</number>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel">
-          <property name="minimumWidth">
-           <number>48</number>
-          </property>
-          <property name="text">
-           <string>Subtiles:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1" colspan="4">
-         <spacer>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </spacer>
-        </item>
-        <item row="2" column="5">
-         <widget class="QPushButton" name="firstSubtileButton">
-          <property name="minimumWidth">
-           <number>40</number>
-          </property>
-          <property name="maximumWidth">
-           <number>40</number>
-          </property>
-          <property name="toolTip">
-           <string>First subtile</string>
-          </property>
-          <property name="text">
-           <string notr="true">|&lt;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="6">
-         <widget class="QPushButton" name="previousSubtileButton">
-          <property name="minimumWidth">
-           <number>40</number>
-          </property>
-          <property name="maximumWidth">
-           <number>40</number>
-          </property>
-          <property name="toolTip">
-           <string>Previous subtile</string>
-          </property>
-          <property name="text">
-           <string notr="true">&lt;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="7">
-         <widget class="LineEditWidget" name="subtileIndexEdit">
-          <property name="charWidth">
-           <number>5</number>
-          </property>
-          <property name="toolTip">
-           <string>Current subtile</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="8">
-         <widget class="QLabel">
-          <property name="minimumWidth">
-           <number>8</number>
-          </property>
-          <property name="maximumWidth">
-           <number>8</number>
-          </property>
-          <property name="text">
-           <string notr="true">/</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="9">
-         <widget class="LineEditWidget" name="subtileNumberEdit">
-          <property name="charWidth">
-           <number>5</number>
-          </property>
-          <property name="toolTip">
-           <string>Number of subtiles</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="10">
-         <widget class="QPushButton" name="nextSubtileButton">
-          <property name="minimumWidth">
-           <number>40</number>
-          </property>
-          <property name="maximumWidth">
-           <number>40</number>
-          </property>
-          <property name="toolTip">
-           <string>Next subtile</string>
-          </property>
-          <property name="text">
-           <string notr="true">&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="11">
-         <widget class="QPushButton" name="lastSubtileButton">
-          <property name="minimumWidth">
-           <number>40</number>
-          </property>
-          <property name="maximumWidth">
-           <number>40</number>
-          </property>
-          <property name="toolTip">
-           <string>Last subtile</string>
-          </property>
-          <property name="text">
-           <string notr="true">&gt;|</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="12" colspan="2">
-         <spacer>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </spacer>
-        </item>
-        <item row="2" column="14">
-         <widget class="LineEditWidget" name="minFrameWidthEdit">
-          <property name="charWidth">
-           <number>5</number>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="15">
-         <widget class="QLabel">
-          <property name="minimumWidth">
-           <number>8</number>
-          </property>
-          <property name="maximumWidth">
-           <number>8</number>
-          </property>
-          <property name="text">
-           <string notr="true">*</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="16">
-         <widget class="LineEditWidget" name="minFrameHeightEdit">
-          <property name="charWidth">
-           <number>5</number>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel">
-          <property name="minimumWidth">
-           <number>48</number>
-          </property>
-          <property name="text">
-           <string>Frames:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1" colspan="4">
-         <spacer>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </spacer>
-        </item>
-        <item row="3" column="5">
-         <widget class="QPushButton" name="firstFrameButton">
-          <property name="minimumWidth">
-           <number>40</number>
-          </property>
-          <property name="maximumWidth">
-           <number>40</number>
-          </property>
-          <property name="toolTip">
-           <string>First frame</string>
-          </property>
-          <property name="text">
-           <string notr="true">|&lt;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="6">
-         <widget class="QPushButton" name="previousFrameButton">
-          <property name="minimumWidth">
-           <number>40</number>
-          </property>
-          <property name="maximumWidth">
-           <number>40</number>
-          </property>
-          <property name="toolTip">
-           <string>Previous frame</string>
-          </property>
-          <property name="text">
-           <string notr="true">&lt;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="7">
-         <widget class="LineEditWidget" name="frameIndexEdit">
-          <property name="charWidth">
-           <number>5</number>
-          </property>
-          <property name="toolTip">
-           <string>Current frame</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="8">
-         <widget class="QLabel">
-          <property name="minimumWidth">
-           <number>8</number>
-          </property>
-          <property name="maximumWidth">
-           <number>8</number>
-          </property>
-          <property name="text">
-           <string notr="true">/</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="9">
-         <widget class="LineEditWidget" name="frameNumberEdit">
-          <property name="charWidth">
-           <number>5</number>
-          </property>
-          <property name="toolTip">
-           <string>Number of frames</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="10">
-         <widget class="QPushButton" name="nextFrameButton">
-          <property name="minimumWidth">
-           <number>40</number>
-          </property>
-          <property name="maximumWidth">
-           <number>40</number>
-          </property>
-          <property name="toolTip">
-           <string>Next frame</string>
-          </property>
-          <property name="text">
-           <string notr="true">&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="11">
-         <widget class="QPushButton" name="lastFrameButton">
-          <property name="minimumWidth">
-           <number>40</number>
-          </property>
-          <property name="maximumWidth">
-           <number>40</number>
-          </property>
-          <property name="toolTip">
-           <string>Last frame</string>
-          </property>
-          <property name="text">
-           <string notr="true">&gt;|</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="12" colspan="2">
-         <spacer>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </spacer>
-        </item>
-        <item row="3" column="14">
-         <widget class="LineEditWidget" name="celFrameWidthEdit">
-          <property name="charWidth">
-           <number>5</number>
-          </property>
-          <property name="toolTip">
-           <string>Current frame width</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="15">
-         <widget class="QLabel">
-          <property name="minimumWidth">
-           <number>8</number>
-          </property>
-          <property name="maximumWidth">
-           <number>8</number>
-          </property>
-          <property name="text">
-           <string notr="true">*</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="16">
-         <widget class="LineEditWidget" name="celFrameHeightEdit">
-          <property name="charWidth">
-           <number>5</number>
-          </property>
-          <property name="toolTip">
-           <string>Current frame height</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="QTabWidget" name="tilesTabs">
-        <property name="maximumHeight">
-         <number>250</number>
+       </item>
+       <item>
+        <property name="text">
+         <string>(L6) Nest</string>
         </property>
-       </widget>
-      </item>
-     </layout>
+       </item>
+      </widget>
+     </item>
+     <item row="0" column="15" colspan="2">
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel">
+       <property name="minimumWidth">
+        <number>48</number>
+       </property>
+       <property name="text">
+        <string>Tiles:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1" colspan="4">
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="5">
+      <widget class="QPushButton" name="firstTileButton">
+       <property name="minimumWidth">
+        <number>40</number>
+       </property>
+       <property name="maximumWidth">
+        <number>40</number>
+       </property>
+       <property name="toolTip">
+        <string>First tile</string>
+       </property>
+       <property name="text">
+        <string notr="true">|&lt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="6">
+      <widget class="QPushButton" name="previousTileButton">
+       <property name="minimumWidth">
+        <number>40</number>
+       </property>
+       <property name="maximumWidth">
+        <number>40</number>
+       </property>
+       <property name="toolTip">
+        <string>Previous tile</string>
+       </property>
+       <property name="text">
+        <string notr="true">&lt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="7">
+      <widget class="LineEditWidget" name="tileIndexEdit">
+       <property name="charWidth">
+        <number>5</number>
+       </property>
+       <property name="toolTip">
+        <string>Current tile</string>
+       </property>
+       <property name="text">
+        <string notr="true">0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="8">
+      <widget class="QLabel">
+       <property name="minimumWidth">
+        <number>8</number>
+       </property>
+       <property name="maximumWidth">
+        <number>8</number>
+       </property>
+       <property name="text">
+        <string notr="true">/</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="9">
+      <widget class="LineEditWidget" name="tileNumberEdit">
+       <property name="charWidth">
+        <number>5</number>
+       </property>
+       <property name="toolTip">
+        <string>Number of tiles</string>
+       </property>
+       <property name="text">
+        <string notr="true">0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="10">
+      <widget class="QPushButton" name="nextTileButton">
+       <property name="minimumWidth">
+        <number>40</number>
+       </property>
+       <property name="maximumWidth">
+        <number>40</number>
+       </property>
+       <property name="toolTip">
+        <string>Next tile</string>
+       </property>
+       <property name="text">
+        <string notr="true">&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="11">
+      <widget class="QPushButton" name="lastTileButton">
+       <property name="minimumWidth">
+        <number>40</number>
+       </property>
+       <property name="maximumWidth">
+        <number>40</number>
+       </property>
+       <property name="toolTip">
+        <string>Last tile</string>
+       </property>
+       <property name="text">
+        <string notr="true">&gt;|</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="12" colspan="2">
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="14">
+      <widget class="LineEditWidget" name="tilFrameWidthEdit">
+       <property name="charWidth">
+        <number>5</number>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="15">
+      <widget class="QLabel">
+       <property name="minimumWidth">
+        <number>8</number>
+       </property>
+       <property name="maximumWidth">
+        <number>8</number>
+       </property>
+       <property name="text">
+        <string notr="true">*</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="16">
+      <widget class="LineEditWidget" name="tilFrameHeightEdit">
+       <property name="charWidth">
+        <number>5</number>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel">
+       <property name="minimumWidth">
+        <number>48</number>
+       </property>
+       <property name="text">
+        <string>Subtiles:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1" colspan="4">
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item row="2" column="5">
+      <widget class="QPushButton" name="firstSubtileButton">
+       <property name="minimumWidth">
+        <number>40</number>
+       </property>
+       <property name="maximumWidth">
+        <number>40</number>
+       </property>
+       <property name="toolTip">
+        <string>First subtile</string>
+       </property>
+       <property name="text">
+        <string notr="true">|&lt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="6">
+      <widget class="QPushButton" name="previousSubtileButton">
+       <property name="minimumWidth">
+        <number>40</number>
+       </property>
+       <property name="maximumWidth">
+        <number>40</number>
+       </property>
+       <property name="toolTip">
+        <string>Previous subtile</string>
+       </property>
+       <property name="text">
+        <string notr="true">&lt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="7">
+      <widget class="LineEditWidget" name="subtileIndexEdit">
+       <property name="charWidth">
+        <number>5</number>
+       </property>
+       <property name="toolTip">
+        <string>Current subtile</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="8">
+      <widget class="QLabel">
+       <property name="minimumWidth">
+        <number>8</number>
+       </property>
+       <property name="maximumWidth">
+        <number>8</number>
+       </property>
+       <property name="text">
+        <string notr="true">/</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="9">
+      <widget class="LineEditWidget" name="subtileNumberEdit">
+       <property name="charWidth">
+        <number>5</number>
+       </property>
+       <property name="toolTip">
+        <string>Number of subtiles</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="10">
+      <widget class="QPushButton" name="nextSubtileButton">
+       <property name="minimumWidth">
+        <number>40</number>
+       </property>
+       <property name="maximumWidth">
+        <number>40</number>
+       </property>
+       <property name="toolTip">
+        <string>Next subtile</string>
+       </property>
+       <property name="text">
+        <string notr="true">&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="11">
+      <widget class="QPushButton" name="lastSubtileButton">
+       <property name="minimumWidth">
+        <number>40</number>
+       </property>
+       <property name="maximumWidth">
+        <number>40</number>
+       </property>
+       <property name="toolTip">
+        <string>Last subtile</string>
+       </property>
+       <property name="text">
+        <string notr="true">&gt;|</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="12" colspan="2">
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item row="2" column="14">
+      <widget class="LineEditWidget" name="minFrameWidthEdit">
+       <property name="charWidth">
+        <number>5</number>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="15">
+      <widget class="QLabel">
+       <property name="minimumWidth">
+        <number>8</number>
+       </property>
+       <property name="maximumWidth">
+        <number>8</number>
+       </property>
+       <property name="text">
+        <string notr="true">*</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="16">
+      <widget class="LineEditWidget" name="minFrameHeightEdit">
+       <property name="charWidth">
+        <number>5</number>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel">
+       <property name="minimumWidth">
+        <number>48</number>
+       </property>
+       <property name="text">
+        <string>Frames:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1" colspan="4">
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item row="3" column="5">
+      <widget class="QPushButton" name="firstFrameButton">
+       <property name="minimumWidth">
+        <number>40</number>
+       </property>
+       <property name="maximumWidth">
+        <number>40</number>
+       </property>
+       <property name="toolTip">
+        <string>First frame</string>
+       </property>
+       <property name="text">
+        <string notr="true">|&lt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="6">
+      <widget class="QPushButton" name="previousFrameButton">
+       <property name="minimumWidth">
+        <number>40</number>
+       </property>
+       <property name="maximumWidth">
+        <number>40</number>
+       </property>
+       <property name="toolTip">
+        <string>Previous frame</string>
+       </property>
+       <property name="text">
+        <string notr="true">&lt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="7">
+      <widget class="LineEditWidget" name="frameIndexEdit">
+       <property name="charWidth">
+        <number>5</number>
+       </property>
+       <property name="toolTip">
+        <string>Current frame</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="8">
+      <widget class="QLabel">
+       <property name="minimumWidth">
+        <number>8</number>
+       </property>
+       <property name="maximumWidth">
+        <number>8</number>
+       </property>
+       <property name="text">
+        <string notr="true">/</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="9">
+      <widget class="LineEditWidget" name="frameNumberEdit">
+       <property name="charWidth">
+        <number>5</number>
+       </property>
+       <property name="toolTip">
+        <string>Number of frames</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="10">
+      <widget class="QPushButton" name="nextFrameButton">
+       <property name="minimumWidth">
+        <number>40</number>
+       </property>
+       <property name="maximumWidth">
+        <number>40</number>
+       </property>
+       <property name="toolTip">
+        <string>Next frame</string>
+       </property>
+       <property name="text">
+        <string notr="true">&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="11">
+      <widget class="QPushButton" name="lastFrameButton">
+       <property name="minimumWidth">
+        <number>40</number>
+       </property>
+       <property name="maximumWidth">
+        <number>40</number>
+       </property>
+       <property name="toolTip">
+        <string>Last frame</string>
+       </property>
+       <property name="text">
+        <string notr="true">&gt;|</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="12" colspan="2">
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item row="3" column="14">
+      <widget class="LineEditWidget" name="celFrameWidthEdit">
+       <property name="charWidth">
+        <number>5</number>
+       </property>
+       <property name="toolTip">
+        <string>Current frame width</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="15">
+      <widget class="QLabel">
+       <property name="minimumWidth">
+        <number>8</number>
+       </property>
+       <property name="maximumWidth">
+        <number>8</number>
+       </property>
+       <property name="text">
+        <string notr="true">*</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="16">
+      <widget class="LineEditWidget" name="celFrameHeightEdit">
+       <property name="charWidth">
+        <number>5</number>
+       </property>
+       <property name="toolTip">
+        <string>Current frame height</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="tilesTabs">
+     <property name="maximumHeight">
+      <number>250</number>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <layoutdefault spacing="4" margin="4"/>
  <resources/>
