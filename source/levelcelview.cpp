@@ -23,6 +23,7 @@
 #include "d1pcx.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
+#include "pushbuttonwidget.h"
 #include "ui_levelcelview.h"
 #include "upscaler.h"
 

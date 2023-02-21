@@ -385,7 +385,7 @@ D1GfxPixel PaletteWidget::getCurrentColor(unsigned counter) const
     return D1GfxPixel::colorPixel(this->selectedFirstColorIndex + (counter % numColors));
 }
 
-void PaletteWidget::checkTranslationsSelection(QList<quint8> indexes)
+void PaletteWidget::checkTranslationsSelection(const QList<quint8> &indexes)
 {
     int selectionLength = this->selectedLastColorIndex - this->selectedFirstColorIndex + 1;
     if (selectionLength != indexes.length()) {

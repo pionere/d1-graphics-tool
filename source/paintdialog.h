@@ -1,9 +1,9 @@
 #pragma once
 
-#include <QPoint>
-#include <QList>
 #include <QDialog>
+#include <QList>
 #include <QMouseEvent>
+#include <QPoint>
 
 namespace Ui {
 class PaintDialog;
@@ -22,8 +22,8 @@ public:
     void initialize(D1Tileset *tileset);
     void setPalette(D1Pal *pal);
 
-    void show() override;
-    void hide() override;
+    void show(); // override;
+    void hide(); // override;
 
 public slots:
     void palColorsSelected(const QList<quint8> &indices);
