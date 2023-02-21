@@ -5,6 +5,9 @@
   <property name="windowTitle">
    <string>Upscale</string>
   </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
   <layout class="QVBoxLayout">
    <item>
     <widget class="QGroupBox">
@@ -199,6 +202,8 @@
    </item>
   </layout>
  </widget>
+ <layoutdefault spacing="4" margin="4"/>
  <resources/>
  <connections/>
+ <buttongroups/>
 </ui>

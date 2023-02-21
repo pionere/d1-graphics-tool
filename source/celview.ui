@@ -499,6 +499,8 @@
       </item>
      </layout>
  </widget>
+ <layoutdefault spacing="4" margin="4"/>
  <resources/>
  <connections/>
+ <buttongroups/>
 </ui>

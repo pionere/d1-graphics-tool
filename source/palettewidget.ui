@@ -48,8 +48,22 @@
       </item>
       <item>
        <widget class="QWidget" native="true">
-        <layout class="QHBoxLayout" name="headerButtonsHorizontalLayout"/>
+        <layout class="QHBoxLayout" name="headerButtonsHorizontalLayout">
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+        </layout>
        </widget>
+      </item>
+      <item>
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>
@@ -268,6 +282,8 @@
    </item>
   </layout>
  </widget>
+ <layoutdefault spacing="4" margin="4"/>
  <resources/>
  <connections/>
+ <buttongroups/>
 </ui>
