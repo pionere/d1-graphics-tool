@@ -220,10 +220,10 @@ PaletteWidget::PaletteWidget(QWidget *parent, QUndoStack *us, QString title)
 {
     ui->setupUi(this);
     ui->graphicsView->setScene(this->scene);
-    ui->groupLabel->setText(title);
+    ui->headerLabel->setText(title);
 
     // add icon-buttons
-    QLayout *layout = this->ui->groupHeaderHorizontalLayout;
+    QLayout *layout = this->ui->headerButtonsHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogNewFolder, tr("New"), this, &PaletteWidget::on_newPushButtonClicked); // use SP_FileIcon ?
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogOpenButton, tr("Open"), this, &PaletteWidget::on_openPushButtonClicked);
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogSaveButton, tr("Save"), this, &PaletteWidget::on_savePushButtonClicked);

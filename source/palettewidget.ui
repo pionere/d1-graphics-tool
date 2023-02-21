@@ -19,14 +19,8 @@
     <number>2</number>
    </property>
    <item>
-    <widget class="QFrame">
-     <property name="minimumWidth">
-      <number>256</number>
-     </property>
-     <property name="maximumWidth">
-      <number>256</number>
-     </property>
-     <layout class="QHBoxLayout" name="groupHeaderHorizontalLayout">
+    <widget class="QWidget" native="true">
+     <layout class="QHBoxLayout">
       <property name="spacing">
        <number>4</number>
       </property>
@@ -43,17 +37,33 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QLabel" name="groupLabel">
+       <widget class="QLabel" name="headerLabel">
         <property name="minimumWidth">
          <number>128</number>
         </property>
         <property name="maximumWidth">
          <number>128</number>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignLeft|Qt::AlignVCenter</set>
-        </property>
        </widget>
+      </item>
+      <item>
+       <widget class="QWidget" native="true">
+        <layout class="QHBoxLayout" name="headerButtonsHorizontalLayout">
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>
@@ -272,6 +282,8 @@
    </item>
   </layout>
  </widget>
+ <layoutdefault spacing="4" margin="4"/>
  <resources/>
  <connections/>
+ <buttongroups/>
 </ui>
