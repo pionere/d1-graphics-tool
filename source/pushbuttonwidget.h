@@ -26,7 +26,7 @@ public:
     }
 
     template <typename Object, typename PointerToMemberFunction>
-    static PushButtonWidget *addButton(QWidget *parent, QLayout *layout, QStyle::StandardPixmap type, const QString &tooltip, const Object receiver, PointerToMemberFunction methodPress, , PointerToMemberFunction methodRelease)
+    static PushButtonWidget *addButton(QWidget *parent, QLayout *layout, QStyle::StandardPixmap type, const QString &tooltip, const Object receiver, PointerToMemberFunction methodPress, PointerToMemberFunction methodRelease)
     {
         PushButtonWidget *widget = new PushButtonWidget(parent, type, tooltip);
         layout->addWidget(widget);

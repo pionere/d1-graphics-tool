@@ -13,8 +13,8 @@
 #include "config.h"
 #include "d1pcx.h"
 #include "mainwindow.h"
-#include "pushbuttonwidget.h"
 #include "progressdialog.h"
+#include "pushbuttonwidget.h"
 #include "ui_celview.h"
 #include "upscaler.h"
 
