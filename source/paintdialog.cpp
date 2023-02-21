@@ -3,6 +3,7 @@
 #include <QCursor>
 #include <QImage>
 
+#include "config.h"
 #include "d1pal.h"
 #include "mainwindow.h"
 #include "pushbuttonwidget.h"
@@ -102,7 +103,7 @@ void PaintDialog::on_movePushButtonReleased()
     this->setCursor(Qt::CrossCursor);
 }
 
-void PaintDialog::mouseMoveEvent(QMouseEvent *event) override
+void PaintDialog::mouseMoveEvent(QMouseEvent *event)
 {
     if (this->moving) {
         QPoint currPos = QCursor::pos();
