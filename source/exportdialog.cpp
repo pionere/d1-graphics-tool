@@ -118,7 +118,7 @@ static void saveImage(const std::vector<std::vector<D1GfxPixel>> &pixels, const 
                 color = pal->getColor(d1pix.getPaletteIndex());
             }
 
-            image.setPixel(x, y, color.rgba());
+            image.setPixelColor(x, y, color);
         }
     }
 

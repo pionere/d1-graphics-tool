@@ -207,7 +207,7 @@ QImage D1Gfx::getFrameImage(int frameIndex) const
             else
                 color = this->palette->getColor(d1pix.getPaletteIndex());
 
-            image.setPixel(x, y, color.rgba());
+            image.setPixelColor(x, y, color);
         }
     }
 

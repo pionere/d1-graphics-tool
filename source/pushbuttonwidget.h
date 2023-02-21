@@ -24,6 +24,14 @@ public:
         QObject::connect(widget, &QPushButton::clicked, receiver, method);
         return widget;
     }
+    static PushButtonWidget *addButton(QWidget *parent, QLayout *layout, QStyle::StandardPixmap type, const QString &tooltip, const Object receiver, PointerToMemberFunction methodPress, , PointerToMemberFunction methodRelease)
+    {
+        PushButtonWidget *widget = new PushButtonWidget(parent, type, tooltip);
+        layout->addWidget(widget);
+        QObject::connect(widget, &QPushButton::pressed, receiver, methodPress);
+        QObject::connect(widget, &QPushButton::released, receiver, methodRelease);
+        return widget;
+    }
 
 protected:
     void mouseReleaseEvent(QMouseEvent *event) override;

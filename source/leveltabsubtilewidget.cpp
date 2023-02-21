@@ -14,7 +14,7 @@ LevelTabSubtileWidget::LevelTabSubtileWidget(QWidget *parent)
     ui->setupUi(this);
 
     QLayout *layout = this->ui->buttonsHorizontalLayout;
-    this->clearButton = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Reset flags"), this, &LevelTabSubtileWidget::on_clearPushButtonClicked);
+    this->clearButton = PushButtonWidget::addButton(this, layout, QStyle::SP_TitleBarMaxButton, tr("Reset flags"), this, &LevelTabSubtileWidget::on_clearPushButtonClicked);
     this->deleteButton = PushButtonWidget::addButton(this, layout, QStyle::SP_TrashIcon, tr("Delete the current subtile"), this, &LevelTabSubtileWidget::on_deletePushButtonClicked);
 }
 

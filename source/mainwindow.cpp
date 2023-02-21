@@ -136,11 +136,6 @@ MainWindow::MainWindow()
     this->tileMenu.addAction("Delete", this, SLOT(on_actionDel_Tile_triggered()));
     this->ui->menuEdit->addMenu(&this->tileMenu);
 
-    // Initialize drawing options of 'Edit'
-    this->ui->menuEdit->addSeparator();
-    this->startDrawAction = this->ui->menuEdit->addAction("Start drawing", this, SLOT(on_actionStart_Draw_triggered()));
-    this->stopDrawAction = this->ui->menuEdit->addAction("Stop drawing", this, SLOT(on_actionStop_Draw_triggered()));
-
     // Initialize upscale option of 'Edit'
     this->ui->menuEdit->addSeparator();
     this->upscaleAction = this->ui->menuEdit->addAction("Upscale", this, SLOT(on_actionUpscale_triggered()));
@@ -239,6 +234,7 @@ void MainWindow::setBaseTrn(const QString &path)
     this->trnBase->refreshResultingPalette();
 
     this->gfx->setPalette(this->trnBase->getResultingPalette());
+    this->paintDialog->setPalette(this->trnBase->getResultingPalette());
 
     // update trnBaseWidget
     this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), path);
@@ -381,6 +377,7 @@ void MainWindow::colorModified()
     if (this->levelCelView != nullptr) {
         this->levelCelView->displayFrame();
     }
+    this->paintDialog->colorModified();
 }
 
 void MainWindow::reloadConfig()
@@ -666,8 +663,9 @@ void MainWindow::dropEvent(QDropEvent *event)
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Escape) {
-        // TODO: ignore if (this->cursor().shape() != Qt::CrossCursor)?
-        this->unsetCursor();
+        if (this->paintDialog != nullptr && this->paintDialog->isVisible()) {
+            this->paintDialog->hide();
+        }
         return;
     }
     if (event->matches(QKeySequence::Copy)) {
@@ -771,9 +769,6 @@ void MainWindow::changeEvent(QEvent *event)
             menuActions[4]->setText(tr("Delete"));
             menuActions[4]->setToolTip(tr("Delete the current tile"));
         }
-        // (re)translate the drawing options of 'Edit'
-        this->startDrawAction->setText(tr("Start drawing"));
-        this->stopDrawAction->setText(tr("Stop drawing"));
         // (re)translate the upscale option of 'Edit'
         this->upscaleAction->setText(tr("Upscale"));
         this->upscaleAction->setToolTip(tr("Upscale the current graphics"));
@@ -954,9 +949,6 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->levelCelView = new LevelCelView(this);
         this->levelCelView->initialize(this->pal, this->tileset);
 
-        // Select color when level CEL view clicked
-        QObject::connect(this->levelCelView, &LevelCelView::frameClicked, this, &MainWindow::frameClicked);
-
         // Refresh palette widgets when frame, subtile of tile is changed
         QObject::connect(this->levelCelView, &LevelCelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
 
@@ -967,10 +959,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->celView = new CelView(this);
         this->celView->initialize(this->pal, this->gfx);
 
-        // Select color when CEL view clicked
-        QObject::connect(this->celView, &CelView::frameClicked, this, &MainWindow::frameClicked);
-
-        // Refresh palette widgets when frame
+        // Refresh palette widgets when frame is changed
         QObject::connect(this->celView, &CelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
 
         // Refresh palette widgets when the palette is changed (loading a PCX file)
@@ -1012,6 +1001,13 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // Adding the CelView to the main frame
     this->ui->mainFrame->layout()->addWidget(isTileset ? (QWidget *)this->levelCelView : this->celView);
+
+    // prepare the paint dialog
+    this->paintDialog = new PaintDialog(this);
+    this->paintDialog->setPalette(this->trnBase->getResultingPalette());
+
+    // Refresh paint dialog when the selected color is changed
+    QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->paintDialog, &PaintDialog::palColorsSelected);
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(true);
@@ -1234,10 +1230,11 @@ void MainWindow::on_actionSaveAs_triggered()
 
 void MainWindow::on_actionClose_triggered()
 {
-    this->on_actionStop_Draw_triggered();
+    // this->on_actionStop_Draw_triggered();
 
     this->undoStack->clear();
 
+    MemFree(this->paintDialog);
     MemFree(this->celView);
     MemFree(this->levelCelView);
     MemFree(this->palWidget);
@@ -1435,13 +1432,14 @@ void MainWindow::on_actionDel_Tile_triggered()
 
 void MainWindow::on_actionStart_Draw_triggered()
 {
-    this->setCursor(Qt::CrossCursor);
+    this->paintDialog->initialize(this->tileset);
+    this->paintDialog->show();
 }
 
-void MainWindow::on_actionStop_Draw_triggered()
+/*void MainWindow::on_actionStop_Draw_triggered()
 {
     this->unsetCursor();
-}
+}*/
 
 void MainWindow::on_actionUpscale_triggered()
 {

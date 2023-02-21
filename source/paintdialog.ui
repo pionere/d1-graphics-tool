@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PaintDialog</class>
+ <widget class="QDialog">
+  <layout class="QVBoxLayout">
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <widget class="QLabel" name="imageLabel">
+       <property name="minimumSize">
+        <size>
+         <width>10</width>
+         <height>10</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>10</width>
+         <height>10</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="centerButtonsHorizontalLayout"/>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="rightButtonsHorizontalLayout"/>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="4" margin="4"/>
+ <resources/>
+ <connections/>
+ <buttongroups/>
+</ui>

@@ -48,7 +48,7 @@ EditPaletteCommand::EditPaletteCommand(D1Pal *p, quint8 sci, quint8 eci, QColor 
     }
 }
 
-EditPaletteCommand::EditPaletteCommand(D1Pal *p, quint8 sci, quint8 eci, QList<QColor> mc)
+EditPaletteCommand::EditPaletteCommand(D1Pal *p, quint8 sci, quint8 eci, const QList<QColor> &mc)
     : QUndoCommand(nullptr)
     , pal(p)
     , startColorIndex(sci)
@@ -78,7 +78,7 @@ void EditPaletteCommand::redo()
     this->undo();
 }
 
-EditTranslationCommand::EditTranslationCommand(D1Trn *t, quint8 sci, quint8 eci, QList<quint8> *nt)
+EditTranslationCommand::EditTranslationCommand(D1Trn *t, quint8 sci, quint8 eci, const QList<quint8> *nt)
     : QUndoCommand(nullptr)
     , trn(t)
     , startColorIndex(sci)
