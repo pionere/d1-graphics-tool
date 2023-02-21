@@ -221,17 +221,17 @@ PaletteWidget::PaletteWidget(QWidget *parent, QUndoStack *us, QString title)
 {
     ui->setupUi(this);
     ui->graphicsView->setScene(this->scene);
-    ui->groupLabel->setText(title);
+    ui->headerLabel->setText(title);
 
-    // add buttons
-    QLayout *layout = this->ui->groupHeaderHorizontalLayout;
+    // add icon-buttons
+    QLayout *layout = this->ui->headerButtonsHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogNewFolder, tr("New"), this, &PaletteWidget::on_newPushButtonClicked); // use SP_FileIcon ?
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogOpenButton, tr("Open"), this, &PaletteWidget::on_openPushButtonClicked);
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogSaveButton, tr("Save"), this, &PaletteWidget::on_savePushButtonClicked);
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogSaveButton, tr("Save As"), this, &PaletteWidget::on_saveAsPushButtonClicked);
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &PaletteWidget::on_closePushButtonClicked); // use SP_DialogDiscardButton ?
 
-    // adjust the size of the buttons
+    // adjust the size of the push-buttons
     QFontMetrics fm = this->fontMetrics();
     QPushButton *pickBtn = this->ui->colorPickPushButton;
     QPushButton *clearBtn = this->ui->colorClearPushButton;
