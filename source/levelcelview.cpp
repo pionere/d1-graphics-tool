@@ -164,7 +164,7 @@ void LevelCelView::update()
 
 CelScene *LevelCelView::getCelScene() const
 {
-    return const_cast<CelScene *>(this->celScene);
+    return const_cast<CelScene *>(&this->celScene);
 }
 
 int LevelCelView::getCurrentFrameIndex() const

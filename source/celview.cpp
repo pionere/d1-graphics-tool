@@ -253,7 +253,7 @@ void CelView::update()
 
 CelScene *CelView::getCelScene() const
 {
-    return const_cast<CelScene *>(this->celScene);
+    return const_cast<CelScene *>(&this->celScene);
 }
 
 int CelView::getCurrentFrameIndex() const

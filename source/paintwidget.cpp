@@ -1,6 +1,7 @@
 #include "paintwidget.h"
 
 #include <QCursor>
+#include <QGraphicsView>
 #include <QImage>
 
 #include "config.h"
