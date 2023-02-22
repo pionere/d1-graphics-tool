@@ -32,49 +32,6 @@
 
 static MainWindow *theMainWindow;
 
-FramePixel::FramePixel(const QPoint &p, D1GfxPixel px)
-    : pos(p)
-    , pixel(px)
-{
-}
-
-EditFrameCommand::EditFrameCommand(D1GfxFrame *f, const QPoint &pos, D1GfxPixel newPixel)
-    : QUndoCommand(nullptr)
-    , frame(f)
-{
-    FramePixel fp(pos, newPixel);
-
-    this->modPixels.append(fp);
-}
-
-void EditFrameCommand::undo()
-{
-    if (this->frame.isNull()) {
-        this->setObsolete(true);
-        return;
-    }
-
-    bool change = false;
-    for (int i = 0; i < this->modPixels.count(); i++) {
-        FramePixel &fp = this->modPixels[i];
-        D1GfxPixel pixel = this->frame->getPixel(fp.pos.x(), fp.pos.y());
-        if (pixel != fp.pixel) {
-            this->frame->setPixel(fp.pos.x(), fp.pos.y(), fp.pixel);
-            fp.pixel = pixel;
-            change = true;
-        }
-    }
-
-    if (change) {
-        emit this->modified();
-    }
-}
-
-void EditFrameCommand::redo()
-{
-    this->undo();
-}
-
 MainWindow::MainWindow()
     : QMainWindow(nullptr)
     , ui(new Ui::MainWindow())
@@ -343,19 +300,13 @@ void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned cou
         // no target hit -> ignore
         return;
     }
-    if (this->cursor().shape() == Qt::CrossCursor) {
+    if (!this->paintDialog->isHidden()) {
         // drawing
-        D1GfxPixel pixel = this->palWidget->getCurrentColor(counter);
-
-        // Build frame editing command and connect it to the current main window widget
-        // to update the palHits and CEL views when undo/redo is performed
-        EditFrameCommand *command = new EditFrameCommand(frame, pos, pixel);
-        QObject::connect(command, &EditFrameCommand::modified, this, &MainWindow::frameModified);
-
-        this->undoStack->push(command);
+        this->paintDialog->frameClicked(frame, pos, counter);
     } else {
         // picking
         const D1GfxPixel pixel = frame->getPixel(pos.x(), pos.y());
+        this->paintDialog->selectColor(pixel);
         this->palWidget->selectColor(pixel);
         this->trnUniqueWidget->selectColor(pixel);
         this->trnBaseWidget->selectColor(pixel);
@@ -663,7 +614,7 @@ void MainWindow::dropEvent(QDropEvent *event)
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Escape) {
-        if (this->paintDialog != nullptr && this->paintDialog->isVisible()) {
+        if (this->paintDialog != nullptr && !this->paintDialog->isHidden()) {
             this->paintDialog->hide();
         }
         return;
@@ -824,10 +775,6 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->baseTrns[D1Trn::IDENTITY_PATH] = newTrn;
     this->trnBase = newTrn;
 
-    // prepare the paint dialog
-    this->paintDialog = new PaintDialog(this);
-    this->paintDialog->setPalette(this->trnBase->getResultingPalette());
-
     const QFileInfo celFileInfo = QFileInfo(openFilePath);
 
     // If a SOL, MIN and TIL files exists then build a LevelCelView
@@ -927,27 +874,6 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->palFrame->layout()->addWidget(this->trnUniqueWidget);
     this->ui->palFrame->layout()->addWidget(this->trnBaseWidget);
 
-    // Palette and translation file selection
-    // When a .pal or .trn file is selected in the PaletteWidget update the pal or trn
-    QObject::connect(this->palWidget, &PaletteWidget::pathSelected, this, &MainWindow::setPal);
-    QObject::connect(this->trnUniqueWidget, &PaletteWidget::pathSelected, this, &MainWindow::setUniqueTrn);
-    QObject::connect(this->trnBaseWidget, &PaletteWidget::pathSelected, this, &MainWindow::setBaseTrn);
-
-    // Refresh PAL/TRN view chain
-    QObject::connect(this->palWidget, &PaletteWidget::refreshed, this->trnUniqueWidget, &PaletteWidget::refresh);
-    QObject::connect(this->trnUniqueWidget, &PaletteWidget::refreshed, this->trnBaseWidget, &PaletteWidget::refresh);
-
-    // Translation color selection
-    QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->trnUniqueWidget, &PaletteWidget::checkTranslationsSelection);
-    QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorsSelected, this->trnBaseWidget, &PaletteWidget::checkTranslationsSelection);
-    QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorPicking_started, this->palWidget, &PaletteWidget::startTrnColorPicking);     // start color picking
-    QObject::connect(this->trnBaseWidget, &PaletteWidget::colorPicking_started, this->trnUniqueWidget, &PaletteWidget::startTrnColorPicking); // start color picking
-    QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorPicking_stopped, this->palWidget, &PaletteWidget::stopTrnColorPicking);      // finish or cancel color picking
-    QObject::connect(this->trnBaseWidget, &PaletteWidget::colorPicking_stopped, this->trnUniqueWidget, &PaletteWidget::stopTrnColorPicking);  // finish or cancel color picking
-    QObject::connect(this->palWidget, &PaletteWidget::colorPicking_stopped, this->trnUniqueWidget, &PaletteWidget::stopTrnColorPicking);      // cancel color picking
-    QObject::connect(this->palWidget, &PaletteWidget::colorPicking_stopped, this->trnBaseWidget, &PaletteWidget::stopTrnColorPicking);        // cancel color picking
-    QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorPicking_stopped, this->trnBaseWidget, &PaletteWidget::stopTrnColorPicking);  // cancel color picking
-
     if (isTileset) {
         // build a LevelCelView
         this->levelCelView = new LevelCelView(this);
@@ -969,6 +895,12 @@ void MainWindow::openFile(const OpenAsParam &params)
         // Refresh palette widgets when the palette is changed (loading a PCX file)
         QObject::connect(this->celView, &CelView::palModified, this->palWidget, &PaletteWidget::refresh);
     }
+    // Add the (level)CelView to the main frame
+    this->ui->mainFrame->layout()->addWidget(isTileset ? (QWidget *)this->levelCelView : this->celView);
+
+    // prepare the paint dialog
+    this->paintDialog = new PaintDialog(this, this->undoStack, this->celView, this->levelCelView);
+    this->paintDialog->setPalette(this->trnBase->getResultingPalette());
 
     // Initialize palette widgets
     this->palHits = new D1PalHits(this->gfx, this->tileset);
@@ -980,6 +912,27 @@ void MainWindow::openFile(const OpenAsParam &params)
     // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), this->pal->getFilePath());
     this->trnUniqueWidget->updatePathComboBoxOptions(this->uniqueTrns.keys(), this->trnUnique->getFilePath());
     this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), this->trnBase->getFilePath());
+
+    // Palette and translation file selection
+    // When a .pal or .trn file is selected in the PaletteWidget update the pal or trn
+    QObject::connect(this->palWidget, &PaletteWidget::pathSelected, this, &MainWindow::setPal);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::pathSelected, this, &MainWindow::setUniqueTrn);
+    QObject::connect(this->trnBaseWidget, &PaletteWidget::pathSelected, this, &MainWindow::setBaseTrn);
+
+    // Refresh PAL/TRN view chain
+    QObject::connect(this->palWidget, &PaletteWidget::refreshed, this->trnUniqueWidget, &PaletteWidget::refresh);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::refreshed, this->trnBaseWidget, &PaletteWidget::refresh);
+
+    // Translation color selection
+    QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->trnUniqueWidget, &PaletteWidget::checkTranslationsSelection);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorsSelected, this->trnBaseWidget, &PaletteWidget::checkTranslationsSelection);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorPicking_started, this->palWidget, &PaletteWidget::startTrnColorPicking);     // start color picking
+    QObject::connect(this->trnBaseWidget, &PaletteWidget::colorPicking_started, this->trnUniqueWidget, &PaletteWidget::startTrnColorPicking); // start color picking
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorPicking_stopped, this->palWidget, &PaletteWidget::stopTrnColorPicking);      // finish or cancel color picking
+    QObject::connect(this->trnBaseWidget, &PaletteWidget::colorPicking_stopped, this->trnUniqueWidget, &PaletteWidget::stopTrnColorPicking);  // finish or cancel color picking
+    QObject::connect(this->palWidget, &PaletteWidget::colorPicking_stopped, this->trnUniqueWidget, &PaletteWidget::stopTrnColorPicking);      // cancel color picking
+    QObject::connect(this->palWidget, &PaletteWidget::colorPicking_stopped, this->trnBaseWidget, &PaletteWidget::stopTrnColorPicking);        // cancel color picking
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorPicking_stopped, this->trnBaseWidget, &PaletteWidget::stopTrnColorPicking);  // cancel color picking
 
     // Refresh the view if a PAL or TRN is modified
     QObject::connect(this->palWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);
@@ -1005,9 +958,6 @@ void MainWindow::openFile(const OpenAsParam &params)
         firstPaletteFound = D1Pal::DEFAULT_PATH;
     }
     this->setPal(firstPaletteFound); // should trigger view->displayFrame()
-
-    // Adding the CelView to the main frame
-    this->ui->mainFrame->layout()->addWidget(isTileset ? (QWidget *)this->levelCelView : this->celView);
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(true);
