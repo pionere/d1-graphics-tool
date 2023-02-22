@@ -186,7 +186,7 @@ void PaintWidget::on_movePushButtonClicked()
     // this->setCursor(Qt::ClosedHandCursor);
 }
 
-void PaintWidget::eventFilter(QObject *object, QEvent *event)
+bool PaintWidget::eventFilter(QObject *object, QEvent *event)
 {
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
