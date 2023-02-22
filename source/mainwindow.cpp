@@ -1382,7 +1382,6 @@ void MainWindow::on_actionDel_Tile_triggered()
 
 void MainWindow::on_actionStart_Draw_triggered()
 {
-    this->paintDialog->initialize(this->tileset);
     this->paintDialog->show();
 }
 

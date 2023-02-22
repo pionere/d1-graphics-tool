@@ -82,18 +82,18 @@ void PaintDialog::setPalette(D1Pal *p)
 
 void PaintDialog::show()
 {
-    QDialog::show();
-
     this->setCursor(Qt::CrossCursor);
     // update the view
     this->colorModified();
+
+    QDialog::show();
 }
 
 void PaintDialog::hide()
 {
-    QDialog::hide();
-
     this->unsetCursor();
+
+    QDialog::hide();
 }
 
 D1GfxPixel PaintDialog::getCurrentColor(unsigned counter) const
@@ -136,7 +136,7 @@ void PaintDialog::palColorsSelected(const QList<quint8> &indices)
 
 void PaintDialog::colorModified()
 {
-    if (!this->isVisible())
+    if (this->isHidden())
         return;
     // redraw...
     QSize imageSize = this->ui->imageLabel->size();
@@ -184,5 +184,5 @@ void PaintDialog::mouseMoveEvent(QMouseEvent *event)
         this->move(wndPos);
     }
 
-    PaintDialog::mouseMoveEvent(event);
+    QDialog::mouseMoveEvent(event);
 }
