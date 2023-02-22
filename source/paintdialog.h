@@ -4,6 +4,7 @@
 #include <QList>
 #include <QMouseEvent>
 #include <QPoint>
+#include <QPointer>
 #include <QUndoCommand>
 
 #include "d1gfx.h"
