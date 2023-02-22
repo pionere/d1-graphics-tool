@@ -824,6 +824,10 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->baseTrns[D1Trn::IDENTITY_PATH] = newTrn;
     this->trnBase = newTrn;
 
+    // prepare the paint dialog
+    this->paintDialog = new PaintDialog(this);
+    this->paintDialog->setPalette(this->trnBase->getResultingPalette());
+
     const QFileInfo celFileInfo = QFileInfo(openFilePath);
 
     // If a SOL, MIN and TIL files exists then build a LevelCelView
@@ -982,6 +986,9 @@ void MainWindow::openFile(const OpenAsParam &params)
     QObject::connect(this->trnUniqueWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);
     QObject::connect(this->trnBaseWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);
 
+    // Refresh paint dialog when the selected color is changed
+    QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->paintDialog, &PaintDialog::palColorsSelected);
+
     // Look for all palettes in the same folder as the CEL/CL2 file
     QString firstPaletteFound = fileType == 3 ? D1Pal::DEFAULT_PATH : "";
     if (!celDir.isEmpty()) {
@@ -1001,13 +1008,6 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // Adding the CelView to the main frame
     this->ui->mainFrame->layout()->addWidget(isTileset ? (QWidget *)this->levelCelView : this->celView);
-
-    // prepare the paint dialog
-    this->paintDialog = new PaintDialog(this);
-    this->paintDialog->setPalette(this->trnBase->getResultingPalette());
-
-    // Refresh paint dialog when the selected color is changed
-    QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->paintDialog, &PaintDialog::palColorsSelected);
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(true);
