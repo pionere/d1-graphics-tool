@@ -46,7 +46,7 @@ class PaintDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit PaintDialog(QWidget *parent, CelView *celView, LevelCelView *levelCelView);
+    explicit PaintDialog(QWidget *parent, QUndoStack *undoStack, CelView *celView, LevelCelView *levelCelView);
     ~PaintDialog();
 
     void setPalette(D1Pal *pal);

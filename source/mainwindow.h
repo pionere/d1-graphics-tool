@@ -72,6 +72,7 @@ public:
     void paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type);
     void changeColor(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, bool all);
     void frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter);
+    void frameModified();
 
     void initPaletteCycle();
     void nextPaletteCycle(D1PAL_CYCLE_TYPE type);
@@ -95,7 +96,6 @@ private:
     bool loadUniqueTrn(const QString &trnfilePath);
     bool loadBaseTrn(const QString &trnfilePath);
 
-    void frameModified();
     void colorModified();
 
     void addFrames(bool append);

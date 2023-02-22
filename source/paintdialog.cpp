@@ -51,10 +51,11 @@ void EditFrameCommand::redo()
     this->undo();
 }
 
-PaintDialog::PaintDialog(QWidget *parent, CelView *cv, LevelCelView *lcv)
+PaintDialog::PaintDialog(QWidget *parent, QUndoStack *us, CelView *cv, LevelCelView *lcv)
     : QDialog(parent, Qt::Tool | Qt::FramelessWindowHint)
     , ui(new Ui::PaintDialog())
     , moving(false)
+    , undoStack(us)
     , celView(cv)
     , levelCelView(lcv)
 {
@@ -111,7 +112,7 @@ void PaintDialog::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
     // Build frame editing command and connect it to the current main window widget
     // to update the palHits and CEL views when undo/redo is performed
     EditFrameCommand *command = new EditFrameCommand(frame, pos, pixel);
-    QObject::connect(command, &EditFrameCommand::modified, this, &MainWindow::frameModified);
+    QObject::connect(command, &EditFrameCommand::modified, &dMainWindow(), &MainWindow::frameModified);
 
     this->undoStack->push(command);
 }
