@@ -27,8 +27,8 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>10</width>
-         <height>10</height>
+         <width>16</width>
+         <height>16</height>
         </size>
        </property>
       </widget>

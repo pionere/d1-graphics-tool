@@ -67,14 +67,15 @@ public slots:
 private slots:
     void on_closePushButtonClicked();
     void on_movePushButtonClicked();
-    void keyPressEvent(QKeyEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
+    void eventFilter(QObject *object, QEvent *event) override;
 
 private:
     Ui::PaintWidget *ui;
     QUndoStack *undoStack;
     CelView *celView;
     LevelCelView *levelCelView;
+    bool moving;
     QPoint lastPos;
     D1Pal *pal;
     QList<quint8> selectedColors;

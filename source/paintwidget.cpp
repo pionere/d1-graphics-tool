@@ -57,6 +57,7 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, CelView *cv, LevelCelV
     , undoStack(us)
     , celView(cv)
     , levelCelView(lcv)
+    , moving(false)
 {
     this->ui->setupUi(this);
 
@@ -67,6 +68,9 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, CelView *cv, LevelCelV
 
     // assume the first color is selected on the palette-widget
     this->selectedColors.append(0);
+
+    // listen to keyboard events
+    dMainWindow().installEventFilter(this);
 }
 
 PaintWidget::~PaintWidget()
@@ -90,6 +94,7 @@ void PaintWidget::show()
 
 void PaintWidget::hide()
 {
+    this->stopMove();
     this->unsetCursor();
 
     QFrame::hide();
@@ -162,37 +167,48 @@ void PaintWidget::on_closePushButtonClicked()
 
 void PaintWidget::stopMove()
 {
-    this->setMouseTracking(false);
-    this->setCursor(Qt::CrossCursor);
+    // this->setMouseTracking(false);
+    this->moving = false;
+    this->releaseMouse();
+    // this->setCursor(Qt::CrossCursor);
 }
 
 void PaintWidget::on_movePushButtonClicked()
 {
-    if (this->hasMouseTracking()) {
+    if (this->moving) { // this->hasMouseTracking()
         this->stopMove();
-    }
-    this->setMouseTracking(true);
-    this->lastPos = QCursor::pos();
-    this->setCursor(Qt::ClosedHandCursor);
-}
-
-void PaintWidget::keyPressEvent(QKeyEvent *event)
-{
-    if (event->key() == Qt::Key_Escape) {
-        if (this->hasMouseTracking()) {
-            this->stopMove();
-        } else {
-            this->hide();
-        }
         return;
     }
+    this->grabMouse(QCursor(Qt::ClosedHandCursor));
+    this->moving = true;
+    // this->setMouseTracking(true);
+    this->lastPos = QCursor::pos();
+    // this->setCursor(Qt::ClosedHandCursor);
+}
 
-    QFrame::keyPressEvent(event);
+void PaintWidget::eventFilter(QObject *object, QEvent *event)
+{
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        if (keyEvent->key() == Qt::Key_Escape) {
+            if (this->moving) {
+                this->stopMove();
+            } else {
+                this->hide();
+            }
+            return true;
+        }
+    }
+    if (event->type() == QEvent::MouseButtonPress && this->moving) {
+        this->stopMove();
+        return true;
+    }
+    return QFrame::eventFilter(object, event);
 }
 
 void PaintWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    if (this->hasMouseTracking()) {
+    if (this->moving) {
         QPoint currPos = QCursor::pos();
         QPoint wndPos = this->pos();
         wndPos += currPos - this->lastPos;
