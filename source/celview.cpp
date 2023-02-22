@@ -172,7 +172,7 @@ CelView::CelView(QWidget *parent)
     , ui(new Ui::CelView())
 {
     this->ui->setupUi(this);
-    this->ui->celGraphicsView->setScene(this->celScene);
+    this->ui->celGraphicsView->setScene(&this->celScene);
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
     this->ui->stopButton->setEnabled(false);
