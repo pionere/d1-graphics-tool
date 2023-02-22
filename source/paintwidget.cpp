@@ -1,4 +1,4 @@
-#include "paintdialog.h"
+#include "paintwidget.h"
 
 #include <QCursor>
 #include <QImage>
@@ -6,7 +6,7 @@
 #include "config.h"
 #include "mainwindow.h"
 #include "pushbuttonwidget.h"
-#include "ui_paintdialog.h"
+#include "ui_paintwidget.h"
 
 FramePixel::FramePixel(const QPoint &p, D1GfxPixel px)
     : pos(p)
@@ -59,7 +59,6 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, CelView *cv, LevelCelV
     , levelCelView(lcv)
 {
     this->ui->setupUi(this);
-
 
     QLayout *layout = this->ui->centerButtonsHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogListView, tr("Move"), this, &PaintWidget::on_movePushButtonClicked);

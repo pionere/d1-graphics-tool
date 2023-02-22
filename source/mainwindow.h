@@ -16,7 +16,7 @@
 #include "exportdialog.h"
 #include "levelcelview.h"
 #include "openasdialog.h"
-#include "paintdialog.h"
+#include "paintwidget.h"
 #include "palettewidget.h"
 #include "patchtilesetdialog.h"
 #include "progressdialog.h"
