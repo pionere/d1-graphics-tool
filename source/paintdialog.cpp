@@ -82,11 +82,11 @@ void PaintDialog::setPalette(D1Pal *p)
 
 void PaintDialog::show()
 {
+    QDialog::show();
+
     this->setCursor(Qt::CrossCursor);
     // update the view
     this->colorModified();
-
-    QDialog::show();
 }
 
 void PaintDialog::hide()
