@@ -76,6 +76,7 @@ private:
     CelView *celView;
     LevelCelView *levelCelView;
     bool moving;
+    bool moved;
     QPoint lastPos;
     D1Pal *pal;
     QList<quint8> selectedColors;

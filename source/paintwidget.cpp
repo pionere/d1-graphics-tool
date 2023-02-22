@@ -58,6 +58,7 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, CelView *cv, LevelCelV
     , celView(cv)
     , levelCelView(lcv)
     , moving(false)
+    , moved(false)
 {
     this->ui->setupUi(this);
 
@@ -85,6 +86,22 @@ void PaintWidget::setPalette(D1Pal *p)
 
 void PaintWidget::show()
 {
+    if (!this->moved) {
+        QGraphicsView *view;
+        QList<QGraphicsView *> views;
+        if (this->celView != nullptr) {
+            views = this->celView->getCelScene()->views();
+        }
+        if (this->levelCelView != nullptr) {
+            views = this->levelCelView->getCelScene()->views();
+        }
+        view = views[0];
+        QSize viewSize = view->frameSize();
+        QPoint viewBottomRight = view->mapToGlobal(QPoint(viewSize.width(), viewSize.height()));
+        QSize mySize = this->frameSize();
+        QPoint targetPos = viewBottomRight - QPoint(mySize.width(), mySize.height());
+        this->move(this->mapFromGlobal(targetPos));
+    }
     QFrame::show();
 
     this->setCursor(Qt::CrossCursor);
@@ -167,8 +184,9 @@ void PaintWidget::on_closePushButtonClicked()
 
 void PaintWidget::stopMove()
 {
-    // this->setMouseTracking(false);
+    this->setMouseTracking(false);
     this->moving = false;
+    this->moved = true;
     this->releaseMouse();
     // this->setCursor(Qt::CrossCursor);
 }
@@ -181,7 +199,7 @@ void PaintWidget::on_movePushButtonClicked()
     }
     this->grabMouse(QCursor(Qt::ClosedHandCursor));
     this->moving = true;
-    // this->setMouseTracking(true);
+    this->setMouseTracking(true);
     this->lastPos = QCursor::pos();
     // this->setCursor(Qt::ClosedHandCursor);
 }

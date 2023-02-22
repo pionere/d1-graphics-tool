@@ -162,17 +162,22 @@ void LevelCelView::update()
     this->tabFrameWidget.update();
 }
 
-int LevelCelView::getCurrentFrameIndex()
+CelScene *LevelCelView::getCelScene() const
+{
+    return const_cast<CelScene *>(this->celScene);
+}
+
+int LevelCelView::getCurrentFrameIndex() const
 {
     return this->currentFrameIndex;
 }
 
-int LevelCelView::getCurrentSubtileIndex()
+int LevelCelView::getCurrentSubtileIndex() const
 {
     return this->currentSubtileIndex;
 }
 
-int LevelCelView::getCurrentTileIndex()
+int LevelCelView::getCurrentTileIndex() const
 {
     return this->currentTileIndex;
 }
@@ -1345,7 +1350,7 @@ void LevelCelView::removeCurrentTile()
     // this->displayFrame();
 }
 
-QImage LevelCelView::copyCurrent()
+QImage LevelCelView::copyCurrent() const
 {
     /*if (this->ui->tilesTabs->currentIndex() == 1)
         return this->min->getSubtileImage(this->currentSubtileIndex);

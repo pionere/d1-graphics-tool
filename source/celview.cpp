@@ -170,7 +170,6 @@ void CelScene::parseZoomValue(QString &zoom, quint8 &zoomNumerator, quint8 &zoom
 CelView::CelView(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::CelView())
-    , celScene(new CelScene(this))
 {
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(this->celScene);
@@ -182,7 +181,7 @@ CelView::CelView(QWidget *parent)
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionStart_Draw_triggered);
 
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
-    QObject::connect(this->celScene, &CelScene::framePixelClicked, this, &CelView::framePixelClicked);
+    QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &CelView::framePixelClicked);
 
     // connect esc events of LineEditWidgets
     QObject::connect(this->ui->frameIndexEdit, SIGNAL(cancel_signal()), this, SLOT(on_frameIndexEdit_escPressed()));
@@ -200,7 +199,6 @@ CelView::CelView(QWidget *parent)
 CelView::~CelView()
 {
     delete ui;
-    delete celScene;
 }
 
 void CelView::initialize(D1Pal *p, D1Gfx *g)
@@ -253,7 +251,12 @@ void CelView::update()
     this->ui->frameNumberEdit->setText(QString::number(count));
 }
 
-int CelView::getCurrentFrameIndex()
+CelScene *CelView::getCelScene() const
+{
+    return const_cast<CelScene *>(this->celScene);
+}
+
+int CelView::getCurrentFrameIndex() const
 {
     return this->currentFrameIndex;
 }
@@ -430,7 +433,7 @@ void CelView::removeCurrentFrame()
     // this->displayFrame();
 }
 
-QImage CelView::copyCurrent()
+QImage CelView::copyCurrent() const
 {
     if (this->gfx->getFrameCount() == 0) {
         return QImage();
@@ -460,27 +463,27 @@ void CelView::upscale(const UpscaleParam &params)
 void CelView::displayFrame()
 {
     this->update();
-    this->celScene->clear();
+    this->celScene.clear();
 
     // Getting the current frame to display
     QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
 
-    this->celScene->setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
+    this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
     // Building background of the width/height of the CEL frame
     QImage celFrameBackground = QImage(celFrame.width(), celFrame.height(), QImage::Format_ARGB32);
     celFrameBackground.fill(QColor(Config::getGraphicsTransparentColor()));
 
     // Resize the scene rectangle to include some padding around the CEL frame
-    this->celScene->setSceneRect(0, 0,
+    this->celScene.setSceneRect(0, 0,
         celFrame.width() + CEL_SCENE_SPACING * 2,
         celFrame.height() + CEL_SCENE_SPACING * 2);
     // ui->celGraphicsView->adjustSize();
 
     // Add the backgrond and CEL frame while aligning it in the center
-    this->celScene->addPixmap(QPixmap::fromImage(celFrameBackground))
+    this->celScene.addPixmap(QPixmap::fromImage(celFrameBackground))
         ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
-    this->celScene->addPixmap(QPixmap::fromImage(celFrame))
+    this->celScene.addPixmap(QPixmap::fromImage(celFrame))
         ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
 
     // Set current frame width and height
@@ -714,13 +717,13 @@ void CelView::on_lastGroupButton_clicked()
 
 void CelView::on_zoomOutButton_clicked()
 {
-    this->celScene->zoomOut();
+    this->celScene.zoomOut();
     this->on_zoomEdit_escPressed();
 }
 
 void CelView::on_zoomInButton_clicked()
 {
-    this->celScene->zoomIn();
+    this->celScene.zoomIn();
     this->on_zoomEdit_escPressed();
 }
 
@@ -728,14 +731,14 @@ void CelView::on_zoomEdit_returnPressed()
 {
     QString zoom = this->ui->zoomEdit->text();
 
-    this->celScene->setZoom(zoom);
+    this->celScene.setZoom(zoom);
 
     this->on_zoomEdit_escPressed();
 }
 
 void CelView::on_zoomEdit_escPressed()
 {
-    this->ui->zoomEdit->setText(this->celScene->zoomText());
+    this->ui->zoomEdit->setText(this->celScene.zoomText());
     this->ui->zoomEdit->clearFocus();
 }
 
