@@ -191,7 +191,7 @@ void MainWindow::setBaseTrn(const QString &path)
     this->trnBase->refreshResultingPalette();
 
     this->gfx->setPalette(this->trnBase->getResultingPalette());
-    this->paintDialog->setPalette(this->trnBase->getResultingPalette());
+    this->paintWidget->setPalette(this->trnBase->getResultingPalette());
 
     // update trnBaseWidget
     this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), path);
@@ -300,13 +300,13 @@ void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned cou
         // no target hit -> ignore
         return;
     }
-    if (!this->paintDialog->isHidden()) {
+    if (!this->paintWidget->isHidden()) {
         // drawing
-        this->paintDialog->frameClicked(frame, pos, counter);
+        this->paintWidget->frameClicked(frame, pos, counter);
     } else {
         // picking
         const D1GfxPixel pixel = frame->getPixel(pos.x(), pos.y());
-        this->paintDialog->selectColor(pixel);
+        this->paintWidget->selectColor(pixel);
         this->palWidget->selectColor(pixel);
         this->trnUniqueWidget->selectColor(pixel);
         this->trnBaseWidget->selectColor(pixel);
@@ -328,7 +328,7 @@ void MainWindow::colorModified()
     if (this->levelCelView != nullptr) {
         this->levelCelView->displayFrame();
     }
-    this->paintDialog->colorModified();
+    this->paintWidget->colorModified();
 }
 
 void MainWindow::reloadConfig()
@@ -614,8 +614,8 @@ void MainWindow::dropEvent(QDropEvent *event)
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     /*if (event->key() == Qt::Key_Escape) {
-        if (this->paintDialog != nullptr && !this->paintDialog->isHidden()) {
-            this->paintDialog->hide();
+        if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
+            this->paintWidget->hide();
         }
         return;
     }*/
@@ -899,8 +899,8 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->mainFrame->layout()->addWidget(isTileset ? (QWidget *)this->levelCelView : this->celView);
 
     // prepare the paint dialog
-    this->paintDialog = new PaintDialog(this, this->undoStack, this->celView, this->levelCelView);
-    this->paintDialog->setPalette(this->trnBase->getResultingPalette());
+    this->paintWidget = new PaintWidget(this, this->undoStack, this->celView, this->levelCelView);
+    this->paintWidget->setPalette(this->trnBase->getResultingPalette());
 
     // Initialize palette widgets
     this->palHits = new D1PalHits(this->gfx, this->tileset);
@@ -940,7 +940,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     QObject::connect(this->trnBaseWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);
 
     // Refresh paint dialog when the selected color is changed
-    QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->paintDialog, &PaintDialog::palColorsSelected);
+    QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->paintWidget, &PaintWidget::palColorsSelected);
 
     // Look for all palettes in the same folder as the CEL/CL2 file
     QString firstPaletteFound = fileType == 3 ? D1Pal::DEFAULT_PATH : "";
@@ -1184,7 +1184,7 @@ void MainWindow::on_actionClose_triggered()
 
     this->undoStack->clear();
 
-    MemFree(this->paintDialog);
+    MemFree(this->paintWidget);
     MemFree(this->celView);
     MemFree(this->levelCelView);
     MemFree(this->palWidget);
@@ -1382,7 +1382,7 @@ void MainWindow::on_actionDel_Tile_triggered()
 
 void MainWindow::on_actionStart_Draw_triggered()
 {
-    this->paintDialog->show();
+    this->paintWidget->show();
 }
 
 /*void MainWindow::on_actionStop_Draw_triggered()

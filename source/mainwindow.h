@@ -209,7 +209,7 @@ private:
 
     CelView *celView = nullptr;
     LevelCelView *levelCelView = nullptr;
-    PaintDialog *paintDialog = nullptr;
+    PaintWidget *paintWidget = nullptr;
 
     PaletteWidget *palWidget = nullptr;
     PaletteWidget *trnUniqueWidget = nullptr;
