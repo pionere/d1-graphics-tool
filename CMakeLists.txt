@@ -106,9 +106,9 @@ set(PROJECT_SOURCES
         source/openasdialog.cpp
         source/openasdialog.h
         source/openasdialog.ui
-        source/paintdialog.cpp
-        source/paintdialog.h
-        source/paintdialog.ui
+        source/paintwidget.cpp
+        source/paintwidget.h
+        source/paintwidget.ui
         source/palettewidget.cpp
         source/palettewidget.h
         source/palettewidget.ui

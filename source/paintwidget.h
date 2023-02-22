@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QDialog>
+#include <QFrame>
 #include <QList>
 #include <QMouseEvent>
 #include <QPoint>
@@ -35,19 +35,19 @@ private:
 };
 
 namespace Ui {
-class PaintDialog;
+class PaintWidget;
 } // namespace Ui
 
 class CelView;
 class D1Tileset;
 class LevelCelView;
 
-class PaintDialog : public QDialog {
+class PaintWidget : public QFrame {
     Q_OBJECT
 
 public:
-    explicit PaintDialog(QWidget *parent, QUndoStack *undoStack, CelView *celView, LevelCelView *levelCelView);
-    ~PaintDialog();
+    explicit PaintWidget(QWidget *parent, QUndoStack *undoStack, CelView *celView, LevelCelView *levelCelView);
+    ~PaintWidget();
 
     void setPalette(D1Pal *pal);
 
@@ -56,6 +56,7 @@ public:
 
 private:
     D1GfxPixel getCurrentColor(unsigned counter) const;
+    void stopMove();
 
 public slots:
     void frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter);
@@ -65,16 +66,15 @@ public slots:
 
 private slots:
     void on_closePushButtonClicked();
-    void on_movePushButtonPressed();
-    void on_movePushButtonReleased();
+    void on_movePushButtonClicked();
+    void keyPressEvent(QKeyEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
 
 private:
-    Ui::PaintDialog *ui;
+    Ui::PaintWidget *ui;
     QUndoStack *undoStack;
     CelView *celView;
     LevelCelView *levelCelView;
-    bool moving;
     QPoint lastPos;
     D1Pal *pal;
     QList<quint8> selectedColors;

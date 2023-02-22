@@ -51,52 +51,52 @@ void EditFrameCommand::redo()
     this->undo();
 }
 
-PaintDialog::PaintDialog(QWidget *parent, QUndoStack *us, CelView *cv, LevelCelView *lcv)
-    : QDialog(parent, Qt::Tool | Qt::FramelessWindowHint)
-    , ui(new Ui::PaintDialog())
-    , moving(false)
+PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, CelView *cv, LevelCelView *lcv)
+    : QFrame(parent)
+    , ui(new Ui::PaintWidget())
     , undoStack(us)
     , celView(cv)
     , levelCelView(lcv)
 {
     this->ui->setupUi(this);
 
+
     QLayout *layout = this->ui->centerButtonsHorizontalLayout;
-    PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogListView, tr("Move"), this, &PaintDialog::on_movePushButtonPressed, &PaintDialog::on_movePushButtonReleased);
+    PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogListView, tr("Move"), this, &PaintWidget::on_movePushButtonClicked);
     layout = this->ui->rightButtonsHorizontalLayout;
-    PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &PaintDialog::on_closePushButtonClicked);
+    PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &PaintWidget::on_closePushButtonClicked);
 
     // assume the first color is selected on the palette-widget
     this->selectedColors.append(0);
 }
 
-PaintDialog::~PaintDialog()
+PaintWidget::~PaintWidget()
 {
     delete ui;
 }
 
-void PaintDialog::setPalette(D1Pal *p)
+void PaintWidget::setPalette(D1Pal *p)
 {
     this->pal = p;
 }
 
-void PaintDialog::show()
+void PaintWidget::show()
 {
-    QDialog::show();
+    QFrame::show();
 
     this->setCursor(Qt::CrossCursor);
     // update the view
     this->colorModified();
 }
 
-void PaintDialog::hide()
+void PaintWidget::hide()
 {
     this->unsetCursor();
 
-    QDialog::hide();
+    QFrame::hide();
 }
 
-D1GfxPixel PaintDialog::getCurrentColor(unsigned counter) const
+D1GfxPixel PaintWidget::getCurrentColor(unsigned counter) const
 {
     unsigned numColors = this->selectedColors.count();
     if (numColors == 0) {
@@ -105,7 +105,7 @@ D1GfxPixel PaintDialog::getCurrentColor(unsigned counter) const
     return D1GfxPixel::colorPixel(this->selectedColors[counter % numColors]);
 }
 
-void PaintDialog::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter)
+void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter)
 {
     D1GfxPixel pixel = this->getCurrentColor(counter);
 
@@ -117,7 +117,7 @@ void PaintDialog::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
     this->undoStack->push(command);
 }
 
-void PaintDialog::selectColor(const D1GfxPixel &pixel)
+void PaintWidget::selectColor(const D1GfxPixel &pixel)
 {
     this->selectedColors.clear();
     if (!pixel.isTransparent()) {
@@ -127,14 +127,14 @@ void PaintDialog::selectColor(const D1GfxPixel &pixel)
     this->colorModified();
 }
 
-void PaintDialog::palColorsSelected(const QList<quint8> &indices)
+void PaintWidget::palColorsSelected(const QList<quint8> &indices)
 {
     this->selectedColors = indices;
     // update the view
     this->colorModified();
 }
 
-void PaintDialog::colorModified()
+void PaintWidget::colorModified()
 {
     if (this->isHidden())
         return;
@@ -156,27 +156,44 @@ void PaintDialog::colorModified()
     this->ui->imageLabel->setPixmap(pixmap);
 }
 
-void PaintDialog::on_closePushButtonClicked()
+void PaintWidget::on_closePushButtonClicked()
 {
     this->hide();
 }
 
-void PaintDialog::on_movePushButtonPressed()
+void PaintWidget::stopMove()
 {
-    this->moving = true;
+    this->setMouseTracking(false);
+    this->setCursor(Qt::CrossCursor);
+}
+
+void PaintWidget::on_movePushButtonClicked()
+{
+    if (this->hasMouseTracking()) {
+        this->stopMove();
+    }
+    this->setMouseTracking(true);
     this->lastPos = QCursor::pos();
     this->setCursor(Qt::ClosedHandCursor);
 }
 
-void PaintDialog::on_movePushButtonReleased()
+void PaintWidget::keyPressEvent(QKeyEvent *event)
 {
-    this->moving = false;
-    this->setCursor(Qt::CrossCursor);
+    if (event->key() == Qt::Key_Escape) {
+        if (this->hasMouseTracking()) {
+            this->stopMove();
+        } else {
+            this->hide();
+        }
+        return;
+    }
+
+    QFrame::keyPressEvent(event);
 }
 
-void PaintDialog::mouseMoveEvent(QMouseEvent *event)
+void PaintWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    if (this->moving) {
+    if (this->hasMouseTracking()) {
         QPoint currPos = QCursor::pos();
         QPoint wndPos = this->pos();
         wndPos += currPos - this->lastPos;
@@ -184,5 +201,5 @@ void PaintDialog::mouseMoveEvent(QMouseEvent *event)
         this->move(wndPos);
     }
 
-    QDialog::mouseMoveEvent(event);
+    QFrame::mouseMoveEvent(event);
 }

@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PaintDialog</class>
- <widget class="QDialog">
+ <class>PaintWidget</class>
+ <widget class="QFrame">
+  <property name="frameShape">
+   <enum>QFrame::StyledPanel</enum>
+  </property>
+  <property name="frameShadow">
+   <enum>QFrame::Raised</enum>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QFrame { background-color: palette(window); }</string>
+  </property>
+  <property name="windowOpacity">
+   <number>0.5</number>
+  </property>
   <layout class="QVBoxLayout">
    <item>
     <layout class="QHBoxLayout">

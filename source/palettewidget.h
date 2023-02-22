@@ -137,6 +137,7 @@ public:
 signals:
     void pathSelected(QString path);
     void colorsSelected(const QList<quint8> &indices);
+    void colorsPicked(const QList<quint8> &indices);
 
     void colorPicking_started(bool single);
     void colorPicking_stopped();
