@@ -358,8 +358,7 @@ void MainWindow::reloadConfig()
     }
     // refresh the palette widgets and the view
     if (currPalChanged) {
-        this->palWidget->refresh();
-        this->colorModified();
+        this->palWidget->modify();
     }
 }
 

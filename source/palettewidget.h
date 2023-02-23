@@ -145,8 +145,6 @@ signals:
     void refreshed();
 
 private:
-    void modified();
-
     // Display functions
     void displayColors();
     void displaySelection();

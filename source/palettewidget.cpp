@@ -279,7 +279,7 @@ void PaletteWidget::setPal(D1Pal *p)
 
     // this->refreshPathComboBox();
 
-    this->modified();
+    this->modify();
 }
 
 void PaletteWidget::setTrn(D1Trn *t)
@@ -288,7 +288,7 @@ void PaletteWidget::setTrn(D1Trn *t)
 
     // this->refreshPathComboBox();
 
-    this->modified();
+    this->modify();
 }
 
 bool PaletteWidget::isTrnWidget()
@@ -385,7 +385,7 @@ void PaletteWidget::checkTranslationsSelection(const QList<quint8> &indexes)
     // to update the PAL/TRN and CEL views when undo/redo is performed
     EditTranslationCommand *command = new EditTranslationCommand(
         this->trn, this->selectedFirstColorIndex, this->selectedLastColorIndex, &indexes);
-    QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modified);
+    QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modify);
 
     this->undoStack->push(command);
 
@@ -793,7 +793,7 @@ void PaletteWidget::refreshTranslationIndexLineEdit()
     this->ui->translationIndexLineEdit->setReadOnly(!active);
 }
 
-void PaletteWidget::modified()
+void PaletteWidget::modify()
 {
     this->refresh();
     dMainWindow().colorModified();
@@ -914,7 +914,7 @@ void PaletteWidget::on_actionPaste_triggered()
     // to update the PAL/TRN and CEL views when undo/redo is performed
     EditPaletteCommand *command = new EditPaletteCommand(
         this->pal, startColorIndex, lastColorIndex, modColors);
-    QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modified);
+    QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modify);
 
     this->undoStack->push(command);
 }
@@ -926,7 +926,7 @@ void PaletteWidget::on_pathComboBox_activated(int index)
     QString path = this->ui->pathComboBox->itemData(index).value<QString>();
 
     emit this->pathSelected(path);
-    // this->modified();
+    // this->modify();
 }
 
 void PaletteWidget::on_displayComboBox_activated(int index)
@@ -968,7 +968,7 @@ void PaletteWidget::on_colorLineEdit_returnPressed()
         // to update the PAL/TRN and CEL views when undo/redo is performed
         EditPaletteCommand *command = new EditPaletteCommand(
             this->pal, this->selectedFirstColorIndex, this->selectedLastColorIndex, color, color);
-        QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modified);
+        QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modify);
 
         this->undoStack->push(command);
     }
@@ -1005,7 +1005,7 @@ void PaletteWidget::on_colorPickPushButton_clicked()
         // to update the PAL/TRN and CEL views when undo/redo is performed
         EditPaletteCommand *command = new EditPaletteCommand(
             this->pal, this->selectedFirstColorIndex, this->selectedLastColorIndex, color, colorEnd);
-        QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modified);
+        QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modify);
 
         this->undoStack->push(command);
     }
@@ -1019,7 +1019,7 @@ void PaletteWidget::on_colorClearPushButton_clicked()
         // to update the PAL/TRN and CEL views when undo/redo is performed
         EditTranslationCommand *command = new EditTranslationCommand(
             this->trn, this->selectedFirstColorIndex, this->selectedLastColorIndex, nullptr);
-        QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modified);
+        QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modify);
 
         this->undoStack->push(command);
     } else {
@@ -1029,7 +1029,7 @@ void PaletteWidget::on_colorClearPushButton_clicked()
         // to update the PAL/TRN and CEL views when undo/redo is performed
         EditPaletteCommand *command = new EditPaletteCommand(
             this->pal, this->selectedFirstColorIndex, this->selectedLastColorIndex, undefinedColor, undefinedColor);
-        QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modified);
+        QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modify);
 
         this->undoStack->push(command);
     }
@@ -1070,7 +1070,7 @@ void PaletteWidget::on_translationIndexLineEdit_returnPressed()
         // to update the PAL/TRN and CEL views when undo/redo is performed
         EditTranslationCommand *command = new EditTranslationCommand(
             this->trn, firstColorIndex, lastColorIndex, &newTranslations);
-        QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modified);
+        QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modify);
         this->undoStack->push(command);
     } else {
         // Color replacement
@@ -1116,7 +1116,7 @@ void PaletteWidget::on_monsterTrnPushButton_clicked()
     }
 
     if (trnModified) {
-        this->modified();
+        this->modify();
     }
 }
 
