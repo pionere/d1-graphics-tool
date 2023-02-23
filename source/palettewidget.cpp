@@ -333,8 +333,7 @@ void PaletteWidget::initializeUi()
 
     /*this->refreshColorLineEdit();
     this->refreshIndexLineEdit();
-    if (trnMode)
-        this->refreshTranslationIndexLineEdit();
+    this->refreshTranslationIndexLineEdit();
 
     this->displayColors();*/
 }
@@ -808,8 +807,7 @@ void PaletteWidget::refresh()
     // this->refreshPathComboBox();
     this->refreshColorLineEdit();
     this->refreshIndexLineEdit();
-    if (this->isTrn)
-        this->refreshTranslationIndexLineEdit();
+    this->refreshTranslationIndexLineEdit();
 
     emit refreshed();
 }
@@ -955,7 +953,8 @@ void PaletteWidget::on_displayComboBox_activated(int index)
         this->palHits->setMode(mode);
     }
 
-    this->refresh();
+    // this->refresh();
+    this->displayColors();
 }
 
 void PaletteWidget::on_colorLineEdit_returnPressed()
