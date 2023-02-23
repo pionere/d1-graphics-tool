@@ -115,11 +115,8 @@ static bool validBottomRightTriangle(const D1GfxFrame *frame, QString &msg, int 
     return true;
 }
 
-static bool validLeftTriangle(const D1GfxFrame *frame, QString &msg, int *limit)
+static bool validTopLeftTriangle(const D1GfxFrame *frame, QString &msg, int *limit)
 {
-    if (!validBottomLeftTriangle(frame, msg, limit)) {
-        return false;
-    }
     for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
         for (int x = 0; x < MICRO_WIDTH; x++) {
             if (frame->getPixel(x, y).isTransparent()) {
@@ -136,11 +133,8 @@ static bool validLeftTriangle(const D1GfxFrame *frame, QString &msg, int *limit)
     return true;
 }
 
-static bool validRightTriangle(const D1GfxFrame *frame, QString &msg, int *limit)
+static bool validTopRightTriangle(const D1GfxFrame *frame, QString &msg, int *limit)
 {
-    if (!validBottomRightTriangle(frame, msg, limit)) {
-        return false;
-    }
     for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
         for (int x = 0; x < MICRO_WIDTH; x++) {
             if (frame->getPixel(x, y).isTransparent()) {
@@ -155,6 +149,16 @@ static bool validRightTriangle(const D1GfxFrame *frame, QString &msg, int *limit
         }
     }
     return true;
+}
+
+static bool validLeftTriangle(const D1GfxFrame *frame, QString &msg, int *limit)
+{
+    return validBottomLeftTriangle(frame, msg, limit) && validTopLeftTriangle(frame, msg, limit);
+}
+
+static bool validRightTriangle(const D1GfxFrame *frame, QString &msg, int *limit)
+{
+    return validBottomRightTriangle(frame, msg, limit) && validTopRightTriangle(frame, msg, limit);
 }
 
 static bool validTopHalfSquare(const D1GfxFrame *frame, QString &msg, int *limit)

@@ -94,12 +94,12 @@ bool D1CelTilesetFrame::LoadTransparentSquare(D1GfxFrame &frame, const QByteArra
     return true;
 }
 
-bool D1CelTilesetFrame::LoadBottomLeftTriangle(D1GfxFrame &frame, const QByteArray &rawData)
+static bool LoadBottomLeftTriangle(D1GfxFrame &frame, const QByteArray &rawData)
 {
     int offset = 0;
     for (int i = 1; i <= MICRO_HEIGHT /* frame.height */ / 2; i++) {
         offset += 2 * (i % 2);
-        std::vector<D1GfxPixel> &pixelLine = frame.pixels[MICRO_HEIGHT /* frame.height */ - i];
+        std::vector<D1GfxPixel> &pixelLine = frame.getPixels(MICRO_HEIGHT /* frame.height */ - i);
         for (int j = 0; j < MICRO_WIDTH /* frame.width */ - 2 * i; j++) {
             pixelLine.push_back(D1GfxPixel::transparentPixel());
         }
@@ -112,17 +112,53 @@ bool D1CelTilesetFrame::LoadBottomLeftTriangle(D1GfxFrame &frame, const QByteArr
     return true;
 }
 
-bool D1CelTilesetFrame::LoadBottomRightTriangle(D1GfxFrame &frame, const QByteArray &rawData)
+static bool LoadBottomRightTriangle(D1GfxFrame &frame, const QByteArray &rawData)
 {
     int offset = 0;
     for (int i = 1; i <= MICRO_HEIGHT /* frame.height */ / 2; i++) {
-        std::vector<D1GfxPixel> &pixelLine = frame.pixels[MICRO_HEIGHT /* frame.height */ - i];
+        std::vector<D1GfxPixel> &pixelLine = frame.getPixels(MICRO_HEIGHT /* frame.height */ - i);
         if (rawData.size() < offset + 2 * i)
             return false;
         for (int j = 0; j < 2 * i; j++) {
             pixelLine.push_back(D1GfxPixel::colorPixel(rawData[offset++]));
         }
         for (int j = 0; j < MICRO_WIDTH /* frame.width */ - 2 * i; j++) {
+            pixelLine.push_back(D1GfxPixel::transparentPixel());
+        }
+        offset += 2 * (i % 2);
+    }
+    return true;
+}
+
+static bool LoadTopLeftTriangle(D1GfxFrame &frame, const QByteArray &rawData)
+{
+    int offset = 288;
+    for (int i = 1; i <= MICRO_HEIGHT /* frame.height */ / 2; i++) {
+        offset += 2 * (i % 2);
+        std::vector<D1GfxPixel> &pixelLine = frame.getPixels(MICRO_HEIGHT /* frame.height */ / 2 - i);
+        for (int j = 0; j < 2 * i; j++) {
+            pixelLine.push_back(D1GfxPixel::transparentPixel());
+        }
+        if (rawData.size() < offset + MICRO_WIDTH /* frame.width */ - 2 * i)
+            return false;
+        for (int j = 0; j < MICRO_WIDTH /* frame.width */ - 2 * i; j++) {
+            pixelLine.push_back(D1GfxPixel::colorPixel(rawData[offset++]));
+        }
+    }
+    return true;
+}
+
+static bool LoadTopRightTriangle(D1GfxFrame &frame, const QByteArray &rawData)
+{
+    int offset = 288;
+    for (int i = 1; i <= MICRO_HEIGHT /* frame.height */ / 2; i++) {
+        std::vector<D1GfxPixel> &pixelLine = frame.getPixels(MICRO_HEIGHT /* frame.height */ / 2 - i);
+        if (rawData.size() < offset + MICRO_WIDTH /* frame.width */ - 2 * i)
+            return false;
+        for (int j = 0; j < MICRO_WIDTH /* frame.width */ - 2 * i; j++) {
+            pixelLine.push_back(D1GfxPixel::colorPixel(rawData[offset++]));
+        }
+        for (int j = 0; j < 2 * i; j++) {
             pixelLine.push_back(D1GfxPixel::transparentPixel());
         }
         offset += 2 * (i % 2);
@@ -132,51 +168,19 @@ bool D1CelTilesetFrame::LoadBottomRightTriangle(D1GfxFrame &frame, const QByteAr
 
 bool D1CelTilesetFrame::LoadLeftTriangle(D1GfxFrame &frame, const QByteArray &rawData)
 {
-    if (!D1CelTilesetFrame::LoadBottomLeftTriangle(frame, rawData))
-        return false;
-
-    int offset = 288;
-    for (int i = 1; i <= MICRO_HEIGHT /* frame.height */ / 2; i++) {
-        offset += 2 * (i % 2);
-        std::vector<D1GfxPixel> &pixelLine = frame.pixels[MICRO_HEIGHT /* frame.height */ / 2 - i];
-        for (int j = 0; j < 2 * i; j++) {
-            pixelLine.push_back(D1GfxPixel::transparentPixel());
-        }
-        if (rawData.size() < offset + MICRO_WIDTH /* frame.width */ - 2 * i)
-            return false;
-        for (int j = 0; j < MICRO_WIDTH /* frame.width */ - 2 * i; j++) {
-            pixelLine.push_back(D1GfxPixel::colorPixel(rawData[offset++]));
-        }
-    }
-    return true;
+    return LoadBottomLeftTriangle(frame, rawData) && LoadTopLeftTriangle(frame, rawData);
 }
 
 bool D1CelTilesetFrame::LoadRightTriangle(D1GfxFrame &frame, const QByteArray &rawData)
 {
-    if (!D1CelTilesetFrame::LoadBottomRightTriangle(frame, rawData))
-        return false;
-
-    int offset = 288;
-    for (int i = 1; i <= MICRO_HEIGHT /* frame.height */ / 2; i++) {
-        std::vector<D1GfxPixel> &pixelLine = frame.pixels[MICRO_HEIGHT /* frame.height */ / 2 - i];
-        if (rawData.size() < offset + MICRO_WIDTH /* frame.width */ - 2 * i)
-            return false;
-        for (int j = 0; j < MICRO_WIDTH /* frame.width */ - 2 * i; j++) {
-            pixelLine.push_back(D1GfxPixel::colorPixel(rawData[offset++]));
-        }
-        for (int j = 0; j < 2 * i; j++) {
-            pixelLine.push_back(D1GfxPixel::transparentPixel());
-        }
-        offset += 2 * (i % 2);
-    }
-    return true;
+    return LoadBottomRightTriangle(frame, rawData) && LoadTopRightTriangle(frame, rawData);
 }
 
-bool D1CelTilesetFrame::LoadTopHalfSquare(D1GfxFrame &frame, const QByteArray &rawData)
+static bool LoadTopHalfSquare(D1GfxFrame &frame, const QByteArray &rawData)
 {
     int offset = 288;
     for (int i = 1; i <= MICRO_HEIGHT /* frame.height */ / 2; i++) {
-        std::vector<D1GfxPixel> &pixelLine = frame.pixels[MICRO_HEIGHT /* frame.height */ / 2 - i];
+        std::vector<D1GfxPixel> &pixelLine = frame.getPixels(MICRO_HEIGHT /* frame.height */ / 2 - i);
         if (rawData.size() < offset + MICRO_WIDTH /* frame.width */)
             return false;
         for (int j = 0; j < MICRO_WIDTH /* frame.width */; j++) {
@@ -188,12 +192,12 @@ bool D1CelTilesetFrame::LoadTopHalfSquare(D1GfxFrame &frame, const QByteArray &r
 
 bool D1CelTilesetFrame::LoadLeftTrapezoid(D1GfxFrame &frame, const QByteArray &rawData)
 {
-    return D1CelTilesetFrame::LoadBottomLeftTriangle(frame, rawData) && D1CelTilesetFrame::LoadTopHalfSquare(frame, rawData);
+    return LoadBottomLeftTriangle(frame, rawData) && LoadTopHalfSquare(frame, rawData);
 }
 
 bool D1CelTilesetFrame::LoadRightTrapezoid(D1GfxFrame &frame, const QByteArray &rawData)
 {
-    return D1CelTilesetFrame::LoadBottomRightTriangle(frame, rawData) && D1CelTilesetFrame::LoadTopHalfSquare(frame, rawData);
+    return LoadBottomRightTriangle(frame, rawData) && LoadTopHalfSquare(frame, rawData);
 }
 
 quint8 *D1CelTilesetFrame::writeFrameData(D1GfxFrame &frame, quint8 *pDst)
