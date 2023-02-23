@@ -28,11 +28,8 @@ public:
 private:
     static bool LoadSquare(D1GfxFrame &frame, const QByteArray &rawData);
     static bool LoadTransparentSquare(D1GfxFrame &frame, const QByteArray &rawData);
-    static bool LoadBottomLeftTriangle(D1GfxFrame &frame, const QByteArray &rawData);
-    static bool LoadBottomRightTriangle(D1GfxFrame &frame, const QByteArray &rawData);
     static bool LoadLeftTriangle(D1GfxFrame &frame, const QByteArray &rawData);
     static bool LoadRightTriangle(D1GfxFrame &frame, const QByteArray &rawData);
-    static bool LoadTopHalfSquare(D1GfxFrame &frame, const QByteArray &rawData);
     static bool LoadLeftTrapezoid(D1GfxFrame &frame, const QByteArray &rawData);
     static bool LoadRightTrapezoid(D1GfxFrame &frame, const QByteArray &rawData);
 
