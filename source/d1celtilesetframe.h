@@ -4,6 +4,7 @@
 
 #include <QByteArray>
 
+#include "d1gfx.h"
 #include "openasdialog.h"
 
 #define MICRO_WIDTH 32
