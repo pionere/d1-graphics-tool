@@ -258,9 +258,6 @@ PaletteWidget::PaletteWidget(QWidget *parent, QUndoStack *us, QString title)
     clearBtn->setMinimumWidth(colorWidth);
     clearBtn->setMaximumWidth(colorWidth);
 
-    // When there is a modification to the PAL or TRNs then UI must be refreshed
-    QObject::connect(this, &PaletteWidget::modified, this, &PaletteWidget::refresh);
-
     // connect esc events of LineEditWidget
     QObject::connect(this->ui->colorLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_colorLineEdit_escPressed()));
     QObject::connect(this->ui->translationIndexLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_translationIndexLineEdit_escPressed()));
@@ -282,7 +279,7 @@ void PaletteWidget::setPal(D1Pal *p)
 
     // this->refreshPathComboBox();
 
-    emit this->modified();
+    this->modified();
 }
 
 void PaletteWidget::setTrn(D1Trn *t)
@@ -291,7 +288,7 @@ void PaletteWidget::setTrn(D1Trn *t)
 
     // this->refreshPathComboBox();
 
-    emit this->modified();
+    this->modified();
 }
 
 bool PaletteWidget::isTrnWidget()
@@ -334,12 +331,12 @@ void PaletteWidget::initializeUi()
     // this->initializePathComboBox();
     this->initializeDisplayComboBox();
 
-    this->refreshColorLineEdit();
+    /*this->refreshColorLineEdit();
     this->refreshIndexLineEdit();
     if (trnMode)
         this->refreshTranslationIndexLineEdit();
 
-    this->displayColors();
+    this->displayColors();*/
 }
 
 void PaletteWidget::initializeDisplayComboBox()
@@ -388,7 +385,7 @@ void PaletteWidget::checkTranslationsSelection(const QList<quint8> &indexes)
     // to update the PAL/TRN and CEL views when undo/redo is performed
     EditTranslationCommand *command = new EditTranslationCommand(
         this->trn, this->selectedFirstColorIndex, this->selectedLastColorIndex, &indexes);
-    QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modify);
+    QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modified);
 
     this->undoStack->push(command);
 
@@ -796,9 +793,10 @@ void PaletteWidget::refreshTranslationIndexLineEdit()
     this->ui->translationIndexLineEdit->setReadOnly(!active);
 }
 
-void PaletteWidget::modify()
+void PaletteWidget::modified()
 {
-    emit this->modified();
+    this->refresh();
+    dMainWindow().colorModified();
 }
 
 void PaletteWidget::refresh()
@@ -916,7 +914,7 @@ void PaletteWidget::on_actionPaste_triggered()
     // to update the PAL/TRN and CEL views when undo/redo is performed
     EditPaletteCommand *command = new EditPaletteCommand(
         this->pal, startColorIndex, lastColorIndex, modColors);
-    QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modify);
+    QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modified);
 
     this->undoStack->push(command);
 }
@@ -928,7 +926,7 @@ void PaletteWidget::on_pathComboBox_activated(int index)
     QString path = this->ui->pathComboBox->itemData(index).value<QString>();
 
     emit this->pathSelected(path);
-    // emit this->modified();
+    // this->modified();
 }
 
 void PaletteWidget::on_displayComboBox_activated(int index)
@@ -970,7 +968,7 @@ void PaletteWidget::on_colorLineEdit_returnPressed()
         // to update the PAL/TRN and CEL views when undo/redo is performed
         EditPaletteCommand *command = new EditPaletteCommand(
             this->pal, this->selectedFirstColorIndex, this->selectedLastColorIndex, color, color);
-        QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modify);
+        QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modified);
 
         this->undoStack->push(command);
     }
@@ -1007,7 +1005,7 @@ void PaletteWidget::on_colorPickPushButton_clicked()
         // to update the PAL/TRN and CEL views when undo/redo is performed
         EditPaletteCommand *command = new EditPaletteCommand(
             this->pal, this->selectedFirstColorIndex, this->selectedLastColorIndex, color, colorEnd);
-        QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modify);
+        QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modified);
 
         this->undoStack->push(command);
     }
@@ -1021,7 +1019,7 @@ void PaletteWidget::on_colorClearPushButton_clicked()
         // to update the PAL/TRN and CEL views when undo/redo is performed
         EditTranslationCommand *command = new EditTranslationCommand(
             this->trn, this->selectedFirstColorIndex, this->selectedLastColorIndex, nullptr);
-        QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modify);
+        QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modified);
 
         this->undoStack->push(command);
     } else {
@@ -1031,7 +1029,7 @@ void PaletteWidget::on_colorClearPushButton_clicked()
         // to update the PAL/TRN and CEL views when undo/redo is performed
         EditPaletteCommand *command = new EditPaletteCommand(
             this->pal, this->selectedFirstColorIndex, this->selectedLastColorIndex, undefinedColor, undefinedColor);
-        QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modify);
+        QObject::connect(command, &EditPaletteCommand::modified, this, &PaletteWidget::modified);
 
         this->undoStack->push(command);
     }
@@ -1072,7 +1070,7 @@ void PaletteWidget::on_translationIndexLineEdit_returnPressed()
         // to update the PAL/TRN and CEL views when undo/redo is performed
         EditTranslationCommand *command = new EditTranslationCommand(
             this->trn, firstColorIndex, lastColorIndex, &newTranslations);
-        QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modify);
+        QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modified);
         this->undoStack->push(command);
     } else {
         // Color replacement
@@ -1118,7 +1116,7 @@ void PaletteWidget::on_monsterTrnPushButton_clicked()
     }
 
     if (trnModified) {
-        emit this->modified();
+        this->modified();
     }
 }
 
