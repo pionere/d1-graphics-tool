@@ -257,9 +257,6 @@ PaletteWidget::PaletteWidget(QWidget *parent, QUndoStack *us, QString title)
     clearBtn->setMinimumWidth(colorWidth);
     clearBtn->setMaximumWidth(colorWidth);
 
-    // When there is a modification to the PAL or TRNs then UI must be refreshed
-    QObject::connect(this, &PaletteWidget::modified, this, &PaletteWidget::refresh);
-
     // connect esc events of LineEditWidget
     QObject::connect(this->ui->colorLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_colorLineEdit_escPressed()));
     QObject::connect(this->ui->translationIndexLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_translationIndexLineEdit_escPressed()));
@@ -281,7 +278,7 @@ void PaletteWidget::setPal(D1Pal *p)
 
     // this->refreshPathComboBox();
 
-    emit this->modified();
+    this->modify();
 }
 
 void PaletteWidget::setTrn(D1Trn *t)
@@ -290,7 +287,7 @@ void PaletteWidget::setTrn(D1Trn *t)
 
     // this->refreshPathComboBox();
 
-    emit this->modified();
+    this->modify();
 }
 
 bool PaletteWidget::isTrnWidget()
@@ -332,12 +329,6 @@ void PaletteWidget::initializeUi()
 
     // this->initializePathComboBox();
     this->initializeDisplayComboBox();
-
-    this->refreshColorLineEdit();
-    this->refreshIndexLineEdit();
-    this->refreshTranslationIndexLineEdit();
-
-    this->displayColors();
 }
 
 void PaletteWidget::initializeDisplayComboBox()
@@ -796,7 +787,8 @@ void PaletteWidget::refreshTranslationIndexLineEdit()
 
 void PaletteWidget::modify()
 {
-    emit this->modified();
+    this->refresh();
+    dMainWindow().colorModified();
 }
 
 void PaletteWidget::refresh()
@@ -925,7 +917,7 @@ void PaletteWidget::on_pathComboBox_activated(int index)
     QString path = this->ui->pathComboBox->itemData(index).value<QString>();
 
     emit this->pathSelected(path);
-    // emit this->modified();
+    // this->modify();
 }
 
 void PaletteWidget::on_displayComboBox_activated(int index)
@@ -954,7 +946,7 @@ void PaletteWidget::on_displayComboBox_activated(int index)
         this->palHits->setMode(mode);
     }
 
-    this->refresh();
+    this->displayColors();
 }
 
 void PaletteWidget::on_colorLineEdit_returnPressed()
@@ -1115,7 +1107,7 @@ void PaletteWidget::on_monsterTrnPushButton_clicked()
     }
 
     if (trnModified) {
-        emit this->modified();
+        this->modify();
     }
 }
 

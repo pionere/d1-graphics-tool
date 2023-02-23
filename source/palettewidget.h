@@ -142,7 +142,6 @@ signals:
     void colorPicking_started(bool single);
     void colorPicking_stopped();
 
-    void modified();
     void refreshed();
 
 private:

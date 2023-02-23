@@ -358,8 +358,7 @@ void MainWindow::reloadConfig()
     }
     // refresh the palette widgets and the view
     if (currPalChanged) {
-        this->palWidget->refresh();
-        this->colorModified();
+        this->palWidget->modify();
     }
 }
 
@@ -933,11 +932,6 @@ void MainWindow::openFile(const OpenAsParam &params)
     QObject::connect(this->palWidget, &PaletteWidget::colorPicking_stopped, this->trnUniqueWidget, &PaletteWidget::stopTrnColorPicking);      // cancel color picking
     QObject::connect(this->palWidget, &PaletteWidget::colorPicking_stopped, this->trnBaseWidget, &PaletteWidget::stopTrnColorPicking);        // cancel color picking
     QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorPicking_stopped, this->trnBaseWidget, &PaletteWidget::stopTrnColorPicking);  // cancel color picking
-
-    // Refresh the view if a PAL or TRN is modified
-    QObject::connect(this->palWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);
-    QObject::connect(this->trnUniqueWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);
-    QObject::connect(this->trnBaseWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);
 
     // Refresh paint dialog when the selected color is changed
     QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->paintWidget, &PaintWidget::palColorsSelected);
