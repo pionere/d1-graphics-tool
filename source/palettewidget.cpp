@@ -48,7 +48,7 @@ EditPaletteCommand::EditPaletteCommand(D1Pal *p, quint8 sci, quint8 eci, QColor 
     }
 }
 
-EditPaletteCommand::EditPaletteCommand(D1Pal *p, quint8 sci, quint8 eci, QList<QColor> mc)
+EditPaletteCommand::EditPaletteCommand(D1Pal *p, quint8 sci, quint8 eci, const QList<QColor> &mc)
     : QUndoCommand(nullptr)
     , pal(p)
     , startColorIndex(sci)
@@ -78,7 +78,7 @@ void EditPaletteCommand::redo()
     this->undo();
 }
 
-EditTranslationCommand::EditTranslationCommand(D1Trn *t, quint8 sci, quint8 eci, QList<quint8> *nt)
+EditTranslationCommand::EditTranslationCommand(D1Trn *t, quint8 sci, quint8 eci, const QList<quint8> *nt)
     : QUndoCommand(nullptr)
     , trn(t)
     , startColorIndex(sci)
@@ -384,7 +384,7 @@ D1GfxPixel PaletteWidget::getCurrentColor(unsigned counter) const
     return D1GfxPixel::colorPixel(this->selectedFirstColorIndex + (counter % numColors));
 }
 
-void PaletteWidget::checkTranslationsSelection(QList<quint8> indexes)
+void PaletteWidget::checkTranslationsSelection(const QList<quint8> &indexes)
 {
     int selectionLength = this->selectedLastColorIndex - this->selectedFirstColorIndex + 1;
     if (selectionLength != indexes.length()) {

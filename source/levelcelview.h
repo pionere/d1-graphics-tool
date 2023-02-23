@@ -38,9 +38,9 @@ public:
     void initialize(D1Pal *pal, D1Tileset *tileset);
     void setPal(D1Pal *pal);
 
-    int getCurrentFrameIndex();
-    int getCurrentSubtileIndex();
-    int getCurrentTileIndex();
+    int getCurrentFrameIndex() const;
+    int getCurrentSubtileIndex() const;
+    int getCurrentTileIndex() const;
 
     void framePixelClicked(const QPoint &pos, unsigned counter);
 
@@ -58,7 +58,7 @@ public:
     void replaceCurrentTile(const QString &imagefilePath);
     void removeCurrentTile();
 
-    QImage copyCurrent();
+    QImage copyCurrent() const;
     void pasteCurrent(const QImage &image);
 
     void reportUsage();

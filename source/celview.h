@@ -67,14 +67,15 @@ public:
     void initialize(D1Pal *pal, D1Gfx *gfx);
     void setPal(D1Pal *pal);
 
-    int getCurrentFrameIndex();
+    int getCurrentFrameIndex() const;
+
     void framePixelClicked(const QPoint &pos, unsigned counter);
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
     void addToCurrentFrame(const QString &imagefilePath);
     void replaceCurrentFrame(const QString &imagefilePath);
     void removeCurrentFrame();
 
-    QImage copyCurrent();
+    QImage copyCurrent() const;
     void pasteCurrent(const QImage &image);
 
     void upscale(const UpscaleParam &params);

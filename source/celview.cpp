@@ -247,7 +247,7 @@ void CelView::update()
     this->ui->frameNumberEdit->setText(QString::number(count));
 }
 
-int CelView::getCurrentFrameIndex()
+int CelView::getCurrentFrameIndex() const
 {
     return this->currentFrameIndex;
 }
@@ -424,7 +424,7 @@ void CelView::removeCurrentFrame()
     // this->displayFrame();
 }
 
-QImage CelView::copyCurrent()
+QImage CelView::copyCurrent() const
 {
     if (this->gfx->getFrameCount() == 0) {
         return QImage();

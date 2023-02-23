@@ -33,7 +33,7 @@ class EditPaletteCommand : public QObject, public QUndoCommand {
 
 public:
     explicit EditPaletteCommand(D1Pal *pal, quint8 startColorIndex, quint8 endColorIndex, QColor newColorStart, QColor newColorEnd);
-    explicit EditPaletteCommand(D1Pal *pal, quint8 startColorIndex, quint8 endColorIndex, QList<QColor> modColors);
+    explicit EditPaletteCommand(D1Pal *pal, quint8 startColorIndex, quint8 endColorIndex, const QList<QColor> &modColors);
     ~EditPaletteCommand() = default;
 
     void undo() override;
@@ -53,7 +53,7 @@ class EditTranslationCommand : public QObject, public QUndoCommand {
     Q_OBJECT
 
 public:
-    explicit EditTranslationCommand(D1Trn *trn, quint8 startColorIndex, quint8 endColorIndex, QList<quint8> *newTranslations);
+    explicit EditTranslationCommand(D1Trn *trn, quint8 startColorIndex, quint8 endColorIndex, const QList<quint8> *newTranslations);
     ~EditTranslationCommand() = default;
 
     void undo() override;
@@ -116,7 +116,7 @@ public:
 
     void selectColor(const D1GfxPixel &pixel);
     D1GfxPixel getCurrentColor(unsigned counter) const;
-    void checkTranslationsSelection(QList<quint8> indices);
+    void checkTranslationsSelection(const QList<quint8> &indices);
 
     // color selection handlers
     void startColorSelection(int colorIndex);
@@ -137,7 +137,7 @@ public:
 
 signals:
     void pathSelected(QString path);
-    void colorsSelected(QList<quint8> indices);
+    void colorsSelected(const QList<quint8> &indices);
 
     void colorPicking_started(bool single);
     void colorPicking_stopped();
