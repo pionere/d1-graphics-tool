@@ -121,7 +121,6 @@ public slots:
     void on_actionDel_Tile_triggered();
 
     void on_actionStart_Draw_triggered();
-    // void on_actionStop_Draw_triggered();
 
 private slots:
     void on_actionNew_CEL_triggered();

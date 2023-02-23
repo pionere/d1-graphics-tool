@@ -211,7 +211,7 @@ void ProgressDialog::start(PROGRESS_DIALOG_STATE mode, const QString &label, int
 
     theDialog->afterFlags = flags;
     theDialog->setWindowTitle(label);
-    theDialog->ui->outputTextEdit->clear(); // theDialog->ui->outputTextEdit->document()->clear();
+    theDialog->ui->outputTextEdit->clear();
     theDialog->activeBars = 0;
     theDialog->status = PROGRESS_STATE::RUNNING;
     theDialog->ui->progressLabel->setVisible(!background);

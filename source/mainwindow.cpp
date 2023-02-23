@@ -1174,8 +1174,6 @@ void MainWindow::on_actionSaveAs_triggered()
 
 void MainWindow::on_actionClose_triggered()
 {
-    // this->on_actionStop_Draw_triggered();
-
     this->undoStack->clear();
 
     MemFree(this->paintWidget);
@@ -1378,11 +1376,6 @@ void MainWindow::on_actionStart_Draw_triggered()
 {
     this->paintWidget->show();
 }
-
-/*void MainWindow::on_actionStop_Draw_triggered()
-{
-    this->unsetCursor();
-}*/
 
 void MainWindow::on_actionUpscale_triggered()
 {

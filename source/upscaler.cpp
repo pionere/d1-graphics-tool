@@ -3209,7 +3209,7 @@ int Upscaler::storeSubtileFrame(const D1GfxFrame *subtileFrame, std::vector<std:
                     newFrame->pixels[yy].push_back(subtileFrame->getPixel(x + xx, y + yy));
                 }
             }
-            LevelTabFrameWidget::selectFrameType(newFrame);
+            D1CelTilesetFrame::selectFrameType(newFrame);
         } else {
             subtileFramesRefs.push_back(0);
         }
