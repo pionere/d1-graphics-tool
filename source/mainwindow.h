@@ -16,6 +16,7 @@
 #include "exportdialog.h"
 #include "levelcelview.h"
 #include "openasdialog.h"
+#include "paintwidget.h"
 #include "palettewidget.h"
 #include "patchtilesetdialog.h"
 #include "progressdialog.h"
@@ -50,31 +51,6 @@ namespace Ui {
 class MainWindow;
 }
 
-typedef struct FramePixel {
-    FramePixel(const QPoint &p, D1GfxPixel px);
-
-    QPoint pos;
-    D1GfxPixel pixel;
-} FramePixel;
-
-class EditFrameCommand : public QObject, public QUndoCommand {
-    Q_OBJECT
-
-public:
-    explicit EditFrameCommand(D1GfxFrame *frame, const QPoint &pos, D1GfxPixel newPixel);
-    ~EditFrameCommand() = default;
-
-    void undo() override;
-    void redo() override;
-
-signals:
-    void modified();
-
-private:
-    QPointer<D1GfxFrame> frame;
-    QList<FramePixel> modPixels;
-};
-
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -96,6 +72,7 @@ public:
     void paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type);
     void changeColor(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, bool all);
     void frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter);
+    void frameModified();
 
     void initPaletteCycle();
     void nextPaletteCycle(D1PAL_CYCLE_TYPE type);
@@ -119,7 +96,6 @@ private:
     bool loadUniqueTrn(const QString &trnfilePath);
     bool loadBaseTrn(const QString &trnfilePath);
 
-    void frameModified();
     void colorModified();
 
     void addFrames(bool append);
@@ -146,7 +122,6 @@ public slots:
     void on_actionDel_Tile_triggered();
 
     void on_actionStart_Draw_triggered();
-    void on_actionStop_Draw_triggered();
 
 private slots:
     void on_actionNew_CEL_triggered();
@@ -225,8 +200,6 @@ private:
     QMenu subtileMenu = QMenu("Subtile");
     QMenu tileMenu = QMenu("Tile");
 
-    QAction *startDrawAction;
-    QAction *stopDrawAction;
     QAction *upscaleAction;
 
     QUndoStack *undoStack;
@@ -235,6 +208,7 @@ private:
 
     CelView *celView = nullptr;
     LevelCelView *levelCelView = nullptr;
+    PaintWidget *paintWidget = nullptr;
 
     PaletteWidget *palWidget = nullptr;
     PaletteWidget *trnUniqueWidget = nullptr;

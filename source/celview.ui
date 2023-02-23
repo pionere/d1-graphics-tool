@@ -170,12 +170,22 @@
        </item>
       </widget>
      </item>
-     <item row="0" column="15" colspan="2">
-      <spacer>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+     <item row="0" column="16">
+      <layout class="QHBoxLayout" name="paintbuttonHorizontalLayout">
+       <property name="topMargin">
+        <number>0</number>
        </property>
-      </spacer>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </spacer>
+       </item>
+      </layout>
      </item>
      <item row="1" column="0">
       <widget class="QLabel">

@@ -23,6 +23,7 @@
 #include "d1pcx.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
+#include "pushbuttonwidget.h"
 #include "ui_levelcelview.h"
 #include "upscaler.h"
 
@@ -39,6 +40,8 @@ LevelCelView::LevelCelView(QWidget *parent)
     this->ui->tilesTabs->addTab(&this->tabTileWidget, tr("Tile properties"));
     this->ui->tilesTabs->addTab(&this->tabSubtileWidget, tr("Subtile properties"));
     this->ui->tilesTabs->addTab(&this->tabFrameWidget, tr("Frame properties"));
+    QLayout *layout = this->ui->paintbuttonHorizontalLayout;
+    PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionStart_Draw_triggered);
 
     // If a pixel of the frame, subtile or tile was clicked get pixel color index and notify the palette widgets
     QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &LevelCelView::framePixelClicked);
@@ -157,6 +160,11 @@ void LevelCelView::update()
     this->tabTileWidget.update();
     this->tabSubtileWidget.update();
     this->tabFrameWidget.update();
+}
+
+CelScene *LevelCelView::getCelScene() const
+{
+    return const_cast<CelScene *>(&this->celScene);
 }
 
 int LevelCelView::getCurrentFrameIndex() const

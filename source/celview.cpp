@@ -14,6 +14,7 @@
 #include "d1pcx.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
+#include "pushbuttonwidget.h"
 #include "ui_celview.h"
 #include "upscaler.h"
 
@@ -43,9 +44,9 @@ void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
 
-    if (dMainWindow().cursor().shape() != Qt::CrossCursor) {
+    /*if (dMainWindow().cursor().shape() != Qt::CrossCursor) {
         return; // ignore if not drawing
-    }
+    }*/
 
     QPoint currPos = event->scenePos().toPoint();
 
@@ -175,6 +176,8 @@ CelView::CelView(QWidget *parent)
     this->on_playDelayEdit_escPressed();
     this->ui->stopButton->setEnabled(false);
     this->playTimer.connect(&this->playTimer, SIGNAL(timeout()), this, SLOT(playGroup()));
+    QLayout *layout = this->ui->paintbuttonHorizontalLayout;
+    PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionStart_Draw_triggered);
 
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
     QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &CelView::framePixelClicked);
@@ -245,6 +248,11 @@ void CelView::update()
     this->ui->frameIndexEdit->setText(
         QString::number(count != 0 ? frameIndex + 1 : 0));
     this->ui->frameNumberEdit->setText(QString::number(count));
+}
+
+CelScene *CelView::getCelScene() const
+{
+    return const_cast<CelScene *>(&this->celScene);
 }
 
 int CelView::getCurrentFrameIndex() const
@@ -604,19 +612,6 @@ void CelView::ShowContextMenu(const QPoint &pos)
     actions[cursor].setToolTip(tr("Delete the current frame"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDel_Frame_triggered()));
     actions[cursor].setEnabled(this->gfx->getFrameCount() != 0);
-    contextMenu.addAction(&actions[cursor]);
-
-    contextMenu.addSeparator();
-
-    // drawing options of 'Edit'
-    cursor++;
-    actions[cursor].setText(tr("Start drawing"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionStart_Draw_triggered()));
-    contextMenu.addAction(&actions[cursor]);
-
-    cursor++;
-    actions[cursor].setText(tr("Stop drawing"));
-    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionStop_Draw_triggered()));
     contextMenu.addAction(&actions[cursor]);
 
     contextMenu.exec(mapToGlobal(pos));

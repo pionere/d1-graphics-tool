@@ -67,6 +67,7 @@ public:
     void initialize(D1Pal *pal, D1Gfx *gfx);
     void setPal(D1Pal *pal);
 
+    CelScene *getCelScene() const;
     int getCurrentFrameIndex() const;
 
     void framePixelClicked(const QPoint &pos, unsigned counter);

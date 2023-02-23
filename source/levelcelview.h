@@ -38,6 +38,7 @@ public:
     void initialize(D1Pal *pal, D1Tileset *tileset);
     void setPal(D1Pal *pal);
 
+    CelScene *getCelScene() const;
     int getCurrentFrameIndex() const;
     int getCurrentSubtileIndex() const;
     int getCurrentTileIndex() const;

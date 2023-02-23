@@ -374,18 +374,9 @@ void PaletteWidget::selectColor(const D1GfxPixel &pixel)
     this->refresh();
 }
 
-D1GfxPixel PaletteWidget::getCurrentColor(unsigned counter) const
-{
-    if (this->selectedFirstColorIndex == COLORIDX_TRANSPARENT) {
-        return D1GfxPixel::transparentPixel();
-    }
-
-    unsigned numColors = this->selectedLastColorIndex - this->selectedFirstColorIndex + 1;
-    return D1GfxPixel::colorPixel(this->selectedFirstColorIndex + (counter % numColors));
-}
-
 void PaletteWidget::checkTranslationsSelection(const QList<quint8> &indexes)
 {
+    // assert(this->selectedLastColorIndex != COLORIDX_TRANSPARENT);
     int selectionLength = this->selectedLastColorIndex - this->selectedFirstColorIndex + 1;
     if (selectionLength != indexes.length()) {
         QMessageBox::warning(this, tr("Warning"), tr("Source and target selection length do not match."));
@@ -527,16 +518,15 @@ void PaletteWidget::finishColorSelection()
 
     this->refresh();
 
-    if (this->pickingTranslationColor) {
-        if (this->selectedFirstColorIndex == COLORIDX_TRANSPARENT) {
-            return; // empty selection -> skip
-        }
-        // emit selected colors
-        QList<quint8> indexes;
-        for (int i = this->selectedFirstColorIndex; i <= this->selectedLastColorIndex; i++)
-            indexes.append(i);
+    // emit selected colors
+    QList<quint8> indexes;
+    for (int i = this->selectedFirstColorIndex; i <= this->selectedLastColorIndex && i != COLORIDX_TRANSPARENT; i++)
+        indexes.append(i);
 
-        emit this->colorsSelected(indexes);
+    emit this->colorsSelected(indexes);
+
+    if (this->pickingTranslationColor) {
+        emit this->colorsPicked(indexes);
     } else {
         this->initStopColorPicking();
     }

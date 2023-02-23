@@ -115,7 +115,6 @@ public:
     void initializeDisplayComboBox();
 
     void selectColor(const D1GfxPixel &pixel);
-    D1GfxPixel getCurrentColor(unsigned counter) const;
     void checkTranslationsSelection(const QList<quint8> &indices);
 
     // color selection handlers
@@ -138,6 +137,7 @@ public:
 signals:
     void pathSelected(QString path);
     void colorsSelected(const QList<quint8> &indices);
+    void colorsPicked(const QList<quint8> &indices);
 
     void colorPicking_started(bool single);
     void colorPicking_stopped();

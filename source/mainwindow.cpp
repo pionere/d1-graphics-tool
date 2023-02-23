@@ -32,49 +32,6 @@
 
 static MainWindow *theMainWindow;
 
-FramePixel::FramePixel(const QPoint &p, D1GfxPixel px)
-    : pos(p)
-    , pixel(px)
-{
-}
-
-EditFrameCommand::EditFrameCommand(D1GfxFrame *f, const QPoint &pos, D1GfxPixel newPixel)
-    : QUndoCommand(nullptr)
-    , frame(f)
-{
-    FramePixel fp(pos, newPixel);
-
-    this->modPixels.append(fp);
-}
-
-void EditFrameCommand::undo()
-{
-    if (this->frame.isNull()) {
-        this->setObsolete(true);
-        return;
-    }
-
-    bool change = false;
-    for (int i = 0; i < this->modPixels.count(); i++) {
-        FramePixel &fp = this->modPixels[i];
-        D1GfxPixel pixel = this->frame->getPixel(fp.pos.x(), fp.pos.y());
-        if (pixel != fp.pixel) {
-            this->frame->setPixel(fp.pos.x(), fp.pos.y(), fp.pixel);
-            fp.pixel = pixel;
-            change = true;
-        }
-    }
-
-    if (change) {
-        emit this->modified();
-    }
-}
-
-void EditFrameCommand::redo()
-{
-    this->undo();
-}
-
 MainWindow::MainWindow()
     : QMainWindow(nullptr)
     , ui(new Ui::MainWindow())
@@ -135,11 +92,6 @@ MainWindow::MainWindow()
     this->tileMenu.addAction("Replace", this, SLOT(on_actionReplace_Tile_triggered()));
     this->tileMenu.addAction("Delete", this, SLOT(on_actionDel_Tile_triggered()));
     this->ui->menuEdit->addMenu(&this->tileMenu);
-
-    // Initialize drawing options of 'Edit'
-    this->ui->menuEdit->addSeparator();
-    this->startDrawAction = this->ui->menuEdit->addAction("Start drawing", this, SLOT(on_actionStart_Draw_triggered()));
-    this->stopDrawAction = this->ui->menuEdit->addAction("Stop drawing", this, SLOT(on_actionStop_Draw_triggered()));
 
     // Initialize upscale option of 'Edit'
     this->ui->menuEdit->addSeparator();
@@ -239,6 +191,7 @@ void MainWindow::setBaseTrn(const QString &path)
     this->trnBase->refreshResultingPalette();
 
     this->gfx->setPalette(this->trnBase->getResultingPalette());
+    this->paintWidget->setPalette(this->trnBase->getResultingPalette());
 
     // update trnBaseWidget
     this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), path);
@@ -347,19 +300,13 @@ void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned cou
         // no target hit -> ignore
         return;
     }
-    if (this->cursor().shape() == Qt::CrossCursor) {
+    if (!this->paintWidget->isHidden()) {
         // drawing
-        D1GfxPixel pixel = this->palWidget->getCurrentColor(counter);
-
-        // Build frame editing command and connect it to the current main window widget
-        // to update the palHits and CEL views when undo/redo is performed
-        EditFrameCommand *command = new EditFrameCommand(frame, pos, pixel);
-        QObject::connect(command, &EditFrameCommand::modified, this, &MainWindow::frameModified);
-
-        this->undoStack->push(command);
+        this->paintWidget->frameClicked(frame, pos, counter);
     } else {
         // picking
         const D1GfxPixel pixel = frame->getPixel(pos.x(), pos.y());
+        this->paintWidget->selectColor(pixel);
         this->palWidget->selectColor(pixel);
         this->trnUniqueWidget->selectColor(pixel);
         this->trnBaseWidget->selectColor(pixel);
@@ -381,6 +328,7 @@ void MainWindow::colorModified()
     if (this->levelCelView != nullptr) {
         this->levelCelView->displayFrame();
     }
+    this->paintWidget->colorModified();
 }
 
 void MainWindow::reloadConfig()
@@ -666,8 +614,9 @@ void MainWindow::dropEvent(QDropEvent *event)
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Escape) {
-        // TODO: ignore if (this->cursor().shape() != Qt::CrossCursor)?
-        this->unsetCursor();
+        if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
+            this->paintWidget->hide();
+        }
         return;
     }
     if (event->matches(QKeySequence::Copy)) {
@@ -771,9 +720,6 @@ void MainWindow::changeEvent(QEvent *event)
             menuActions[4]->setText(tr("Delete"));
             menuActions[4]->setToolTip(tr("Delete the current tile"));
         }
-        // (re)translate the drawing options of 'Edit'
-        this->startDrawAction->setText(tr("Start drawing"));
-        this->stopDrawAction->setText(tr("Stop drawing"));
         // (re)translate the upscale option of 'Edit'
         this->upscaleAction->setText(tr("Upscale"));
         this->upscaleAction->setToolTip(tr("Upscale the current graphics"));
@@ -949,8 +895,12 @@ void MainWindow::openFile(const OpenAsParam &params)
         // Refresh palette widgets when the palette is changed (loading a PCX file)
         QObject::connect(this->celView, &CelView::palModified, this->palWidget, &PaletteWidget::refresh);
     }
-    // Adding the CelView to the main frame
+    // Add the (level)CelView to the main frame
     this->ui->mainFrameLayout->addWidget(isTileset ? (QWidget *)this->levelCelView : this->celView);
+
+    // prepare the paint dialog
+    this->paintWidget = new PaintWidget(this, this->undoStack, this->celView, this->levelCelView);
+    this->paintWidget->setPalette(this->trnBase->getResultingPalette());
 
     // Initialize palette widgets
     this->palHits = new D1PalHits(this->gfx, this->tileset);
@@ -974,8 +924,8 @@ void MainWindow::openFile(const OpenAsParam &params)
     QObject::connect(this->trnUniqueWidget, &PaletteWidget::refreshed, this->trnBaseWidget, &PaletteWidget::refresh);
 
     // Translation color selection
-    QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->trnUniqueWidget, &PaletteWidget::checkTranslationsSelection);
-    QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorsSelected, this->trnBaseWidget, &PaletteWidget::checkTranslationsSelection);
+    QObject::connect(this->palWidget, &PaletteWidget::colorsPicked, this->trnUniqueWidget, &PaletteWidget::checkTranslationsSelection);
+    QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorsPicked, this->trnBaseWidget, &PaletteWidget::checkTranslationsSelection);
     QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorPicking_started, this->palWidget, &PaletteWidget::startTrnColorPicking);     // start color picking
     QObject::connect(this->trnBaseWidget, &PaletteWidget::colorPicking_started, this->trnUniqueWidget, &PaletteWidget::startTrnColorPicking); // start color picking
     QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorPicking_stopped, this->palWidget, &PaletteWidget::stopTrnColorPicking);      // finish or cancel color picking
@@ -988,6 +938,9 @@ void MainWindow::openFile(const OpenAsParam &params)
     QObject::connect(this->palWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);
     QObject::connect(this->trnUniqueWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);
     QObject::connect(this->trnBaseWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);
+
+    // Refresh paint dialog when the selected color is changed
+    QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->paintWidget, &PaintWidget::palColorsSelected);
 
     // Look for all palettes in the same folder as the CEL/CL2 file
     QString firstPaletteFound = fileType == 3 ? D1Pal::DEFAULT_PATH : "";
@@ -1227,10 +1180,9 @@ void MainWindow::on_actionSaveAs_triggered()
 
 void MainWindow::on_actionClose_triggered()
 {
-    this->on_actionStop_Draw_triggered();
-
     this->undoStack->clear();
 
+    MemFree(this->paintWidget);
     MemFree(this->celView);
     MemFree(this->levelCelView);
     MemFree(this->palWidget);
@@ -1428,12 +1380,7 @@ void MainWindow::on_actionDel_Tile_triggered()
 
 void MainWindow::on_actionStart_Draw_triggered()
 {
-    this->setCursor(Qt::CrossCursor);
-}
-
-void MainWindow::on_actionStop_Draw_triggered()
-{
-    this->unsetCursor();
+    this->paintWidget->show();
 }
 
 void MainWindow::on_actionUpscale_triggered()
