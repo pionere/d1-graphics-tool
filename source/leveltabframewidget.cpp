@@ -55,7 +55,6 @@ void LevelTabFrameWidget::on_deletePushButtonClicked()
     dMainWindow().on_actionDel_Frame_triggered();
 }
 
-
 void LevelTabFrameWidget::validate()
 {
     int frameIdx = this->levelCelView->getCurrentFrameIndex();

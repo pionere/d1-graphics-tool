@@ -44,10 +44,10 @@ private:
     static quint8 *WriteLeftTrapezoid(const D1GfxFrame &frame, quint8 *pBuf);
     static quint8 *WriteRightTrapezoid(const D1GfxFrame &frame, quint8 *pBuf);
 
-    static bool validSquare(const D1GfxFrame *frame, QString &msg, int *limit)
-    static bool validLeftTriangle(const D1GfxFrame *frame, QString &msg, int *limit)
-    static bool validRightTriangle(const D1GfxFrame *frame, QString &msg, int *limit)
-    static bool validLeftTrapezoid(const D1GfxFrame *frame, QString &msg, int *limit)
-    static bool validRightTrapezoid(const D1GfxFrame *frame, QString &msg, int *limit)
+    static bool validSquare(const D1GfxFrame *frame, QString &msg, int *limit);
+    static bool validLeftTriangle(const D1GfxFrame *frame, QString &msg, int *limit);
+    static bool validRightTriangle(const D1GfxFrame *frame, QString &msg, int *limit);
+    static bool validLeftTrapezoid(const D1GfxFrame *frame, QString &msg, int *limit);
+    static bool validRightTrapezoid(const D1GfxFrame *frame, QString &msg, int *limit);
     static bool validEmpty(const D1GfxFrame *frame, QString &msg, int *limit);
 };

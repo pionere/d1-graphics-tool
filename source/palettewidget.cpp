@@ -329,12 +329,6 @@ void PaletteWidget::initializeUi()
 
     // this->initializePathComboBox();
     this->initializeDisplayComboBox();
-
-    /*this->refreshColorLineEdit();
-    this->refreshIndexLineEdit();
-    this->refreshTranslationIndexLineEdit();
-
-    this->displayColors();*/
 }
 
 void PaletteWidget::initializeDisplayComboBox()
@@ -952,7 +946,6 @@ void PaletteWidget::on_displayComboBox_activated(int index)
         this->palHits->setMode(mode);
     }
 
-    // this->refresh();
     this->displayColors();
 }
 
