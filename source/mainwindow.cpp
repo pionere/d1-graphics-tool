@@ -898,7 +898,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->mainFrameLayout->addWidget(isTileset ? (QWidget *)this->levelCelView : this->celView);
 
     // prepare the paint dialog
-    this->paintWidget = new PaintWidget(this, this->undoStack, this->celView, this->levelCelView);
+    this->paintWidget = new PaintWidget(this, this->undoStack, this->gfx, this->celView, this->levelCelView);
     this->paintWidget->setPalette(this->trnBase->getResultingPalette());
 
     // Initialize palette widgets

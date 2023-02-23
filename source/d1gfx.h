@@ -36,6 +36,13 @@ private:
     quint8 paletteIndex = 0;
 };
 
+typedef struct FramePixel {
+    FramePixel(const QPoint &p, D1GfxPixel px);
+
+    QPoint pos;
+    D1GfxPixel pixel;
+} FramePixel;
+
 class D1GfxFrame : public QObject {
     Q_OBJECT
 

@@ -24,6 +24,15 @@ EditFrameCommand::EditFrameCommand(D1GfxFrame *f, const QPoint &pos, D1GfxPixel 
     this->modPixels.append(fp);
 }
 
+EditFrameCommand::EditFrameCommand(D1GfxFrame *f, const std::vector<FramePixel> &pixels)
+    : QUndoCommand(nullptr)
+    , frame(f)
+{
+    for (unsigned i = 0; i < pixels.size(); i++) {
+        this->modPixels.append(pixels[i]);
+    }
+}
+
 void EditFrameCommand::undo()
 {
     if (this->frame.isNull()) {
@@ -52,10 +61,11 @@ void EditFrameCommand::redo()
     this->undo();
 }
 
-PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, CelView *cv, LevelCelView *lcv)
+PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, D1Gfx *g, CelView *cv, LevelCelView *lcv)
     : QFrame(parent)
     , ui(new Ui::PaintWidget())
     , undoStack(us)
+    , gfx(g)
     , celView(cv)
     , levelCelView(lcv)
     , moving(false)
@@ -67,6 +77,14 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, CelView *cv, LevelCelV
     PushButtonWidget::addButton(this, layout, QStyle::SP_FileDialogListView, tr("Move"), this, &PaintWidget::on_movePushButtonClicked);
     layout = this->ui->rightButtonsHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &PaintWidget::on_closePushButtonClicked);
+
+    // prepare combobox of the masks
+    this->ui->tilesetMaskHorizontalLayout->setVisible(lcv != nullptr);
+    this->ui->tilesetMaskComboBox->addItem(tr("Square"), QVariant((int)D1CEL_FRAME_TYPE::Square));
+    this->ui->tilesetMaskComboBox->addItem(tr("Left Triangle"), QVariant((int)D1CEL_FRAME_TYPE::LeftTriangle));
+    this->ui->tilesetMaskComboBox->addItem(tr("Right Triangle"), QVariant((int)D1CEL_FRAME_TYPE::RightTriangle));
+    this->ui->tilesetMaskComboBox->addItem(tr("Left Trapezoid"), QVariant((int)D1CEL_FRAME_TYPE::LeftTrapezoid));
+    this->ui->tilesetMaskComboBox->addItem(tr("Right Trapezoid"), QVariant((int)D1CEL_FRAME_TYPE::RightTrapezoid));
 
     // assume the first color is selected on the palette-widget
     this->selectedColors.append(0);
@@ -240,4 +258,59 @@ void PaintWidget::mouseMoveEvent(QMouseEvent *event)
     }
 
     QFrame::mouseMoveEvent(event);
+}
+
+void PaintWidget::on_tilesetMaskPushButton_clicked()
+{
+    D1CEL_FRAME_TYPE maskType = this->ui->tilesetMaskComboBox->currentData().value<D1CEL_FRAME_TYPE>();
+    int frameIndex = this->levelCelView->getCurrentFrameIndex();
+    if (this->gfx->getFrameCount() == 0) {
+        return;
+    }
+    D1GfxFrame *frame = this->gfx->getFrame(frameIndex);
+    // collect the pixels which need to be replaced
+    std::vector<FramePixel> pixels;
+    D1CelTilesetFrame::collectPixels(frame, maskType, pixels);
+
+    if (pixels.empty()) {
+        return;
+    }
+
+    // select replacement color if necessary
+    bool needsColor = false;
+    for (const FramePixel framePixel : pixels) {
+        if (framePixel.pixel.isTransparent()) {
+            needsColor = true;
+            break;
+        }
+
+        break;
+    }
+    quint8 paletteIndex = 0;
+    if (needsColor) {
+        if (this->selectedColors.count() != 1) {
+            QMessageBox::warning(this, tr("Warning"), tr("Select a single color-index from the palette to use."));
+            return;
+        }
+        paletteIndex = this->selectedColors[0];
+    }
+
+    // replace the pixels
+    for (FramePixel &framePixel : pixels) {
+        if (framePixel.pixel.isTransparent()) {
+            framePixel.pixel = D1GfxPixel::colorPixel(paletteIndex);
+        } else {
+            framePixel.pixel = D1GfxPixel::transparentPixel();
+        }
+    }
+
+    // Build frame editing command and connect it to the current main window widget
+    // to update the palHits and CEL views when undo/redo is performed
+    EditFrameCommand *command = new EditFrameCommand(frame, pixels);
+    QObject::connect(command, &EditFrameCommand::modified, &dMainWindow(), &MainWindow::frameModified);
+
+    this->undoStack->push(command);
+
+    // change the frame-type
+    frame->setFrameType(maskType);
 }
