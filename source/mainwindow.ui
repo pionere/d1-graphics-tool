@@ -34,14 +34,14 @@
      <number>4</number>
     </property>
     <item>
-     <widget class="QFrame" name="mainFrame">
+     <widget class="QFrame">
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
       </property>
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QVBoxLayout">
+      <layout class="QVBoxLayout" name="mainFrameLayout">
        <property name="spacing">
         <number>0</number>
        </property>
@@ -61,7 +61,7 @@
      </widget>
     </item>
     <item alignment="Qt::AlignTop">
-     <widget class="QFrame" name="palFrame">
+     <widget class="QFrame">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
         <horstretch>0</horstretch>
@@ -74,7 +74,7 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QVBoxLayout">
+      <layout class="QVBoxLayout" name="palFrameLayout">
        <property name="spacing">
         <number>0</number>
        </property>

@@ -924,9 +924,9 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->palWidget = new PaletteWidget(this, this->undoStack, tr("Palette"));
     this->trnUniqueWidget = new PaletteWidget(this, this->undoStack, tr("Unique translation"));
     this->trnBaseWidget = new PaletteWidget(this, this->undoStack, tr("Base Translation"));
-    this->ui->palFrame->layout()->addWidget(this->palWidget);
-    this->ui->palFrame->layout()->addWidget(this->trnUniqueWidget);
-    this->ui->palFrame->layout()->addWidget(this->trnBaseWidget);
+    this->ui->palFrameLayout->addWidget(this->palWidget);
+    this->ui->palFrameLayout->addWidget(this->trnUniqueWidget);
+    this->ui->palFrameLayout->addWidget(this->trnBaseWidget);
 
     // Palette and translation file selection
     // When a .pal or .trn file is selected in the PaletteWidget update the pal or trn
@@ -1011,7 +1011,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->setPal(firstPaletteFound); // should trigger view->displayFrame()
 
     // Adding the CelView to the main frame
-    this->ui->mainFrame->layout()->addWidget(isTileset ? (QWidget *)this->levelCelView : this->celView);
+    this->ui->mainFrameLayout->addWidget(isTileset ? (QWidget *)this->levelCelView : this->celView);
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(true);
