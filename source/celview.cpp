@@ -262,7 +262,7 @@ void CelView::framePixelClicked(const QPoint &pos, unsigned counter)
 
     QPoint p = pos;
     p -= QPoint(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
-    emit this->frameClicked(frame, p, counter);
+    dMainWindow().frameClicked(frame, p, counter);
 }
 
 void CelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)

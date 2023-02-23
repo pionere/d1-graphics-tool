@@ -954,9 +954,6 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->levelCelView = new LevelCelView(this);
         this->levelCelView->initialize(this->pal, this->tileset);
 
-        // Select color when level CEL view clicked
-        QObject::connect(this->levelCelView, &LevelCelView::frameClicked, this, &MainWindow::frameClicked);
-
         // Refresh palette widgets when frame, subtile of tile is changed
         QObject::connect(this->levelCelView, &LevelCelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
 
@@ -966,9 +963,6 @@ void MainWindow::openFile(const OpenAsParam &params)
         // build a CelView
         this->celView = new CelView(this);
         this->celView->initialize(this->pal, this->gfx);
-
-        // Select color when CEL view clicked
-        QObject::connect(this->celView, &CelView::frameClicked, this, &MainWindow::frameClicked);
 
         // Refresh palette widgets when frame
         QObject::connect(this->celView, &CelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);

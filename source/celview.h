@@ -92,7 +92,6 @@ private:
 
 signals:
     void frameRefreshed();
-    void frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter);
     void palModified();
 
 private slots:
