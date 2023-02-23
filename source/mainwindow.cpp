@@ -928,6 +928,41 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->palFrameLayout->addWidget(this->trnUniqueWidget);
     this->ui->palFrameLayout->addWidget(this->trnBaseWidget);
 
+    if (isTileset) {
+        // build a LevelCelView
+        this->levelCelView = new LevelCelView(this);
+        this->levelCelView->initialize(this->pal, this->tileset);
+
+        // Refresh palette widgets when frame, subtile of tile is changed
+        QObject::connect(this->levelCelView, &LevelCelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
+
+        // Refresh palette widgets when the palette is changed (loading a PCX file)
+        QObject::connect(this->levelCelView, &LevelCelView::palModified, this->palWidget, &PaletteWidget::refresh);
+    } else {
+        // build a CelView
+        this->celView = new CelView(this);
+        this->celView->initialize(this->pal, this->gfx);
+
+        // Refresh palette widgets when frame is changed
+        QObject::connect(this->celView, &CelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
+
+        // Refresh palette widgets when the palette is changed (loading a PCX file)
+        QObject::connect(this->celView, &CelView::palModified, this->palWidget, &PaletteWidget::refresh);
+    }
+    // Adding the CelView to the main frame
+    this->ui->mainFrameLayout->addWidget(isTileset ? (QWidget *)this->levelCelView : this->celView);
+
+    // Initialize palette widgets
+    this->palHits = new D1PalHits(this->gfx, this->tileset);
+    this->palWidget->initialize(this->pal, this->celView, this->levelCelView, this->palHits);
+    this->trnUniqueWidget->initialize(this->trnUnique, this->celView, this->levelCelView, this->palHits);
+    this->trnBaseWidget->initialize(this->trnBase, this->celView, this->levelCelView, this->palHits);
+
+    // setup default options in the palette widgets
+    // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), this->pal->getFilePath());
+    this->trnUniqueWidget->updatePathComboBoxOptions(this->uniqueTrns.keys(), this->trnUnique->getFilePath());
+    this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), this->trnBase->getFilePath());
+
     // Palette and translation file selection
     // When a .pal or .trn file is selected in the PaletteWidget update the pal or trn
     QObject::connect(this->palWidget, &PaletteWidget::pathSelected, this, &MainWindow::setPal);
@@ -948,39 +983,6 @@ void MainWindow::openFile(const OpenAsParam &params)
     QObject::connect(this->palWidget, &PaletteWidget::colorPicking_stopped, this->trnUniqueWidget, &PaletteWidget::stopTrnColorPicking);      // cancel color picking
     QObject::connect(this->palWidget, &PaletteWidget::colorPicking_stopped, this->trnBaseWidget, &PaletteWidget::stopTrnColorPicking);        // cancel color picking
     QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorPicking_stopped, this->trnBaseWidget, &PaletteWidget::stopTrnColorPicking);  // cancel color picking
-
-    if (isTileset) {
-        // build a LevelCelView
-        this->levelCelView = new LevelCelView(this);
-        this->levelCelView->initialize(this->pal, this->tileset);
-
-        // Refresh palette widgets when frame, subtile of tile is changed
-        QObject::connect(this->levelCelView, &LevelCelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
-
-        // Refresh palette widgets when the palette is changed (loading a PCX file)
-        QObject::connect(this->levelCelView, &LevelCelView::palModified, this->palWidget, &PaletteWidget::refresh);
-    } else {
-        // build a CelView
-        this->celView = new CelView(this);
-        this->celView->initialize(this->pal, this->gfx);
-
-        // Refresh palette widgets when frame
-        QObject::connect(this->celView, &CelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
-
-        // Refresh palette widgets when the palette is changed (loading a PCX file)
-        QObject::connect(this->celView, &CelView::palModified, this->palWidget, &PaletteWidget::refresh);
-    }
-
-    // Initialize palette widgets
-    this->palHits = new D1PalHits(this->gfx, this->tileset);
-    this->palWidget->initialize(this->pal, this->celView, this->levelCelView, this->palHits);
-    this->trnUniqueWidget->initialize(this->trnUnique, this->celView, this->levelCelView, this->palHits);
-    this->trnBaseWidget->initialize(this->trnBase, this->celView, this->levelCelView, this->palHits);
-
-    // setup default options in the palette widgets
-    // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), this->pal->getFilePath());
-    this->trnUniqueWidget->updatePathComboBoxOptions(this->uniqueTrns.keys(), this->trnUnique->getFilePath());
-    this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), this->trnBase->getFilePath());
 
     // Refresh the view if a PAL or TRN is modified
     QObject::connect(this->palWidget, &PaletteWidget::modified, this, &MainWindow::colorModified);
@@ -1003,9 +1005,6 @@ void MainWindow::openFile(const OpenAsParam &params)
         firstPaletteFound = D1Pal::DEFAULT_PATH;
     }
     this->setPal(firstPaletteFound); // should trigger view->displayFrame()
-
-    // Adding the CelView to the main frame
-    this->ui->mainFrameLayout->addWidget(isTileset ? (QWidget *)this->levelCelView : this->celView);
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(true);
