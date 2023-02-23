@@ -99,7 +99,7 @@ static bool LoadBottomLeftTriangle(D1GfxFrame &frame, const QByteArray &rawData)
     int offset = 0;
     for (int i = 1; i <= MICRO_HEIGHT /* frame.height */ / 2; i++) {
         offset += 2 * (i % 2);
-        std::vector<D1GfxPixel> &pixelLine = frame.getPixels(MICRO_HEIGHT /* frame.height */ - i);
+        std::vector<D1GfxPixel> &pixelLine = frame.getPixels()[MICRO_HEIGHT /* frame.height */ - i];
         for (int j = 0; j < MICRO_WIDTH /* frame.width */ - 2 * i; j++) {
             pixelLine.push_back(D1GfxPixel::transparentPixel());
         }
@@ -116,7 +116,7 @@ static bool LoadBottomRightTriangle(D1GfxFrame &frame, const QByteArray &rawData
 {
     int offset = 0;
     for (int i = 1; i <= MICRO_HEIGHT /* frame.height */ / 2; i++) {
-        std::vector<D1GfxPixel> &pixelLine = frame.getPixels(MICRO_HEIGHT /* frame.height */ - i);
+        std::vector<D1GfxPixel> &pixelLine = frame.getPixels()[MICRO_HEIGHT /* frame.height */ - i];
         if (rawData.size() < offset + 2 * i)
             return false;
         for (int j = 0; j < 2 * i; j++) {
@@ -135,7 +135,7 @@ static bool LoadTopLeftTriangle(D1GfxFrame &frame, const QByteArray &rawData)
     int offset = 288;
     for (int i = 1; i <= MICRO_HEIGHT /* frame.height */ / 2; i++) {
         offset += 2 * (i % 2);
-        std::vector<D1GfxPixel> &pixelLine = frame.getPixels(MICRO_HEIGHT /* frame.height */ / 2 - i);
+        std::vector<D1GfxPixel> &pixelLine = frame.getPixels()[MICRO_HEIGHT /* frame.height */ / 2 - i];
         for (int j = 0; j < 2 * i; j++) {
             pixelLine.push_back(D1GfxPixel::transparentPixel());
         }
@@ -152,7 +152,7 @@ static bool LoadTopRightTriangle(D1GfxFrame &frame, const QByteArray &rawData)
 {
     int offset = 288;
     for (int i = 1; i <= MICRO_HEIGHT /* frame.height */ / 2; i++) {
-        std::vector<D1GfxPixel> &pixelLine = frame.getPixels(MICRO_HEIGHT /* frame.height */ / 2 - i);
+        std::vector<D1GfxPixel> &pixelLine = frame.getPixels()[MICRO_HEIGHT /* frame.height */ / 2 - i];
         if (rawData.size() < offset + MICRO_WIDTH /* frame.width */ - 2 * i)
             return false;
         for (int j = 0; j < MICRO_WIDTH /* frame.width */ - 2 * i; j++) {
@@ -180,7 +180,7 @@ static bool LoadTopHalfSquare(D1GfxFrame &frame, const QByteArray &rawData)
 {
     int offset = 288;
     for (int i = 1; i <= MICRO_HEIGHT /* frame.height */ / 2; i++) {
-        std::vector<D1GfxPixel> &pixelLine = frame.getPixels(MICRO_HEIGHT /* frame.height */ / 2 - i);
+        std::vector<D1GfxPixel> &pixelLine = frame.getPixels()[MICRO_HEIGHT /* frame.height */ / 2 - i];
         if (rawData.size() < offset + MICRO_WIDTH /* frame.width */)
             return false;
         for (int j = 0; j < MICRO_WIDTH /* frame.width */; j++) {
