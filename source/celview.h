@@ -129,7 +129,7 @@ private slots:
 
 private:
     Ui::CelView *ui;
-    CelScene *celScene;
+    CelScene celScene = CelScene(this);
 
     D1Pal *pal;
     D1Gfx *gfx;
