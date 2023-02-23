@@ -204,7 +204,7 @@ void PaintWidget::on_movePushButtonClicked()
     // this->setCursor(Qt::ClosedHandCursor);
 }
 
-void MainWindow::keyPressEvent(QKeyEvent *event)
+void PaintWidget::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Escape) {
         if (this->moving) {
