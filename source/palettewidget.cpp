@@ -335,8 +335,7 @@ void PaletteWidget::initializeUi()
 
     this->refreshColorLineEdit();
     this->refreshIndexLineEdit();
-    if (trnMode)
-        this->refreshTranslationIndexLineEdit();
+    this->refreshTranslationIndexLineEdit();
 
     this->displayColors();
 }
@@ -809,8 +808,7 @@ void PaletteWidget::refresh()
     // this->refreshPathComboBox();
     this->refreshColorLineEdit();
     this->refreshIndexLineEdit();
-    if (this->isTrn)
-        this->refreshTranslationIndexLineEdit();
+    this->refreshTranslationIndexLineEdit();
 
     emit refreshed();
 }
