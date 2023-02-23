@@ -25,6 +25,10 @@ public:
 
     static quint8 *writeFrameData(D1GfxFrame &frame, quint8 *pBuf);
 
+    static D1CEL_FRAME_TYPE altFrameType(const D1GfxFrame *frame, int *limit);
+    static void selectFrameType(D1GfxFrame *frame);
+    static void validate(const D1GfxFrame *frame, QString &error, QString &warning);
+
 private:
     static bool LoadSquare(D1GfxFrame &frame, const QByteArray &rawData);
     static bool LoadTransparentSquare(D1GfxFrame &frame, const QByteArray &rawData);
@@ -39,4 +43,11 @@ private:
     static quint8 *WriteRightTriangle(const D1GfxFrame &frame, quint8 *pBuf);
     static quint8 *WriteLeftTrapezoid(const D1GfxFrame &frame, quint8 *pBuf);
     static quint8 *WriteRightTrapezoid(const D1GfxFrame &frame, quint8 *pBuf);
+
+    static bool validSquare(const D1GfxFrame *frame, QString &msg, int *limit);
+    static bool validLeftTriangle(const D1GfxFrame *frame, QString &msg, int *limit);
+    static bool validRightTriangle(const D1GfxFrame *frame, QString &msg, int *limit);
+    static bool validLeftTrapezoid(const D1GfxFrame *frame, QString &msg, int *limit);
+    static bool validRightTrapezoid(const D1GfxFrame *frame, QString &msg, int *limit);
+    static bool validEmpty(const D1GfxFrame *frame, QString &msg, int *limit);
 };

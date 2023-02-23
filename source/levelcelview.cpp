@@ -346,7 +346,7 @@ void LevelCelView::assignFrames(const QImage &image, int subtileIndex, int frame
             }
 
             D1GfxFrame *frame = this->gfx->insertFrame(frameIndex, subImage);
-            LevelTabFrameWidget::selectFrameType(frame);
+            D1CelTilesetFrame::selectFrameType(frame);
             frameIndex++;
         }
     }
@@ -389,7 +389,7 @@ void LevelCelView::assignFrames(const D1GfxFrame &frame, int subtileIndex, int f
                 }
                 subFrame->addPixelLine(std::move(pixelLine));
             }
-            LevelTabFrameWidget::selectFrameType(subFrame);
+            D1CelTilesetFrame::selectFrameType(subFrame);
             frameIndex++;
         }
     }
@@ -785,7 +785,7 @@ void LevelCelView::insertSubtile(int subtileIndex, const QImage &image)
             }
 
             D1GfxFrame *frame = this->gfx->insertFrame(frameIndex, subImage);
-            LevelTabFrameWidget::selectFrameType(frame);
+            D1CelTilesetFrame::selectFrameType(frame);
             frameIndex++;
         }
     }
@@ -825,7 +825,7 @@ void LevelCelView::insertSubtile(int subtileIndex, const D1GfxFrame &frame)
                 }
                 subFrame->addPixelLine(std::move(pixelLine));
             }
-            LevelTabFrameWidget::selectFrameType(subFrame);
+            D1CelTilesetFrame::selectFrameType(subFrame);
             frameIndex++;
         }
     }
@@ -1075,7 +1075,7 @@ void LevelCelView::addToCurrentFrame(const QString &imagefilePath)
         if (resFrame == nullptr) {
             return; // error set by gfx->addToFrame
         }
-        LevelTabFrameWidget::selectFrameType(resFrame);
+        D1CelTilesetFrame::selectFrameType(resFrame);
         if (palMod) {
             // update the palette
             this->pal->updateColors(basePal);
@@ -1098,7 +1098,7 @@ void LevelCelView::addToCurrentFrame(const QString &imagefilePath)
         return; // error set by gfx->addToFrame
     }
 
-    LevelTabFrameWidget::selectFrameType(frame);
+    D1CelTilesetFrame::selectFrameType(frame);
     // update the view - done by the caller
     // this->displayFrame();
 }
@@ -1120,7 +1120,7 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
             dProgressFail() << tr("The image must be 32px * 32px to be used as a frame.");
             return;
         }
-        LevelTabFrameWidget::selectFrameType(frame);
+        D1CelTilesetFrame::selectFrameType(frame);
         this->gfx->setFrame(this->currentFrameIndex, frame);
         if (palMod) {
             // update the palette
@@ -1145,7 +1145,7 @@ void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
     }
 
     D1GfxFrame *frame = this->gfx->replaceFrame(this->currentFrameIndex, image);
-    LevelTabFrameWidget::selectFrameType(frame);
+    D1CelTilesetFrame::selectFrameType(frame);
     // update the view - done by the caller
     // this->displayFrame();
 }
@@ -1372,7 +1372,7 @@ void LevelCelView::pasteCurrent(const QImage &image)
         } else {
             frame = this->gfx->insertFrame(this->currentFrameIndex, image);
         }
-        LevelTabFrameWidget::selectFrameType(frame);
+        D1CelTilesetFrame::selectFrameType(frame);
         // update the view - done by the caller
         // this->displayFrame();
         return;
@@ -1506,7 +1506,7 @@ void LevelCelView::resetFrameTypes()
     for (int i = 0; i < this->gfx->getFrameCount(); i++) {
         D1GfxFrame *frame = this->gfx->getFrame(i);
         D1CEL_FRAME_TYPE prevType = frame->getFrameType();
-        LevelTabFrameWidget::selectFrameType(frame);
+        D1CelTilesetFrame::selectFrameType(frame);
         D1CEL_FRAME_TYPE newType = frame->getFrameType();
         if (prevType != newType) {
             dProgress() << tr("Changed Frame %1 from '%2' to '%3'.").arg(i + 1).arg(getFrameTypeName(prevType)).arg(getFrameTypeName(newType));
@@ -1540,7 +1540,7 @@ void LevelCelView::inefficientFrames()
             continue;
         }
         int diff = limit;
-        D1CEL_FRAME_TYPE effType = LevelTabFrameWidget::altFrameType(frame, &diff);
+        D1CEL_FRAME_TYPE effType = D1CelTilesetFrame::altFrameType(frame, &diff);
         if (effType != D1CEL_FRAME_TYPE::TransparentSquare) {
             diff = limit - diff;
             dProgress() << tr("Frame %1 could be '%2' by changing %n pixel(s).", "", diff).arg(i + 1).arg(getFrameTypeName(effType));
