@@ -70,9 +70,6 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, CelView *cv, LevelCelV
 
     // assume the first color is selected on the palette-widget
     this->selectedColors.append(0);
-
-    // listen to keyboard events
-    dMainWindow().installEventFilter(this);
 }
 
 PaintWidget::~PaintWidget()
@@ -105,6 +102,7 @@ void PaintWidget::show()
     }
     QFrame::show();
 
+    this->setFocus(); // otherwise the widget does not receive keypress events...
     this->setCursor(Qt::CrossCursor);
     // update the view
     this->colorModified();
@@ -160,7 +158,7 @@ void PaintWidget::colorModified()
 {
     if (this->isHidden())
         return;
-    // redraw...
+    // update the color-icon
     QSize imageSize = this->ui->imageLabel->size();
     QImage image = QImage(imageSize, QImage::Format_ARGB32);
     image.fill(QColor(Config::getGraphicsTransparentColor()));
@@ -202,27 +200,32 @@ void PaintWidget::on_movePushButtonClicked()
     this->moving = true;
     this->setMouseTracking(true);
     this->lastPos = QCursor::pos();
+    this->setFocus();
     // this->setCursor(Qt::ClosedHandCursor);
 }
 
-bool PaintWidget::eventFilter(QObject *object, QEvent *event)
+void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    if (event->type() == QEvent::KeyPress) {
-        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        if (keyEvent->key() == Qt::Key_Escape) {
-            if (this->moving) {
-                this->stopMove();
-            } else {
-                this->hide();
-            }
-            return true;
+    if (event->key() == Qt::Key_Escape) {
+        if (this->moving) {
+            this->stopMove();
+        } else {
+            this->hide();
         }
+        return;
     }
-    if (event->type() == QEvent::MouseButtonPress && this->moving) {
+
+    QFrame::keyPressEvent(event);
+}
+
+void PaintWidget::mousePressEvent(QMouseEvent *event)
+{
+    if (this->moving) {
         this->stopMove();
-        return true;
+        return;
     }
-    return QFrame::eventFilter(object, event);
+
+    QFrame::mouseMoveEvent(event);
 }
 
 void PaintWidget::mouseMoveEvent(QMouseEvent *event)
@@ -233,6 +236,7 @@ void PaintWidget::mouseMoveEvent(QMouseEvent *event)
         wndPos += currPos - this->lastPos;
         this->lastPos = currPos;
         this->move(wndPos);
+        // return;
     }
 
     QFrame::mouseMoveEvent(event);

@@ -67,8 +67,9 @@ public slots:
 private slots:
     void on_closePushButtonClicked();
     void on_movePushButtonClicked();
+    void keyPressEvent(QKeyEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
-    bool eventFilter(QObject *object, QEvent *event) override;
 
 private:
     Ui::PaintWidget *ui;

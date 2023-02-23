@@ -11,9 +11,9 @@
   <property name="styleSheet">
    <string notr="true">QFrame { background-color: palette(window); }</string>
   </property>
-  <property name="windowOpacity">
+  <!--property name="windowOpacity">
    <number>0.5</number>
-  </property>
+  </property-->
   <layout class="QVBoxLayout">
    <item>
     <layout class="QHBoxLayout">
@@ -21,8 +21,8 @@
       <widget class="QLabel" name="imageLabel">
        <property name="minimumSize">
         <size>
-         <width>10</width>
-         <height>10</height>
+         <width>16</width>
+         <height>16</height>
         </size>
        </property>
        <property name="maximumSize">

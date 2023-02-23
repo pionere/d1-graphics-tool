@@ -613,12 +613,12 @@ void MainWindow::dropEvent(QDropEvent *event)
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    /*if (event->key() == Qt::Key_Escape) {
+    if (event->key() == Qt::Key_Escape) {
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
             this->paintWidget->hide();
         }
         return;
-    }*/
+    }
     if (event->matches(QKeySequence::Copy)) {
         QImage image;
         if (this->celView != nullptr) {
