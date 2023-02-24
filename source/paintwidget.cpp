@@ -4,6 +4,7 @@
 #include <QGraphicsView>
 #include <QImage>
 #include <QList>
+#include <QMessageBox>
 
 #include "config.h"
 #include "mainwindow.h"
@@ -77,7 +78,7 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, D1Gfx *g, CelView *cv,
     this->ui->tilesetMaskComboBox->addItem(tr("Right Trapezoid"), QVariant((int)D1CEL_FRAME_TYPE::RightTrapezoid));
 
     // assume the first color is selected on the palette-widget
-    this->selectedColors.append(0);
+    this->selectedColors.push_back(0);
 }
 
 PaintWidget::~PaintWidget()
@@ -126,7 +127,7 @@ void PaintWidget::hide()
 
 D1GfxPixel PaintWidget::getCurrentColor(unsigned counter) const
 {
-    unsigned numColors = this->selectedColors.count();
+    unsigned numColors = this->selectedColors.size();
     if (numColors == 0) {
         return D1GfxPixel::transparentPixel();
     }
@@ -153,7 +154,7 @@ void PaintWidget::selectColor(const D1GfxPixel &pixel)
 {
     this->selectedColors.clear();
     if (!pixel.isTransparent()) {
-        this->selectedColors.append(pixel.getPaletteIndex());
+        this->selectedColors.push_back(pixel.getPaletteIndex());
     }
     // update the view
     this->colorModified();
@@ -175,7 +176,7 @@ void PaintWidget::colorModified()
     QImage image = QImage(imageSize, QImage::Format_ARGB32);
     image.fill(QColor(Config::getGraphicsTransparentColor()));
 
-    int numColors = this->selectedColors.count();
+    unsigned numColors = this->selectedColors.size();
     if (numColors != 0) {
         for (int x = 0; x < imageSize.width(); x++) {
             QColor color = this->pal->getColor(this->selectedColors[x * numColors / imageSize.width()]);
@@ -292,7 +293,7 @@ void PaintWidget::on_tilesetMaskPushButton_clicked()
     }
     quint8 paletteIndex = 0;
     if (needsColor) {
-        if (this->selectedColors.count() != 1) {
+        if (this->selectedColors.size() != 1) {
             QMessageBox::warning(this, tr("Warning"), tr("Select a single color-index from the palette to use."));
             return;
         }
