@@ -527,52 +527,54 @@ void D1CelTilesetFrame::validate(const D1GfxFrame *frame, QString &error, QStrin
     QString tmp;
 
     if (frame->getWidth() != MICRO_WIDTH) {
-        error = QApplication::tr("Invalid width. Must be 32px wide.");
+        static_assert(MICRO_WIDTH == 32, "D1CelTilesetFrame::validate uses hardcoded width.");
+        error = QApplication::tr("Frame width is not 32px.");
     } else if (frame->getHeight() != MICRO_HEIGHT) {
-        error = QApplication::tr("Invalid height. Must be 32px wide.");
+        static_assert(MICRO_HEIGHT == 32, "D1CelTilesetFrame::validate uses hardcoded height.");
+        error = QApplication::tr("Frame height is not 32px.");
     } else {
         int limit = 0;
         switch (frame->getFrameType()) {
         case D1CEL_FRAME_TYPE::Square:
-            validSquare(frame, error, &limit);
+            D1CelTilesetFrame::validSquare(frame, error, &limit);
             break;
         case D1CEL_FRAME_TYPE::TransparentSquare:
-            if (validSquare(frame, tmp, &limit)) {
+            if (D1CelTilesetFrame::validSquare(frame, tmp, &limit)) {
                 warning = QApplication::tr("Suggested type: 'Square'");
                 break;
             }
             limit = 0;
-            if (validLeftTriangle(frame, tmp, &limit)) {
+            if (D1CelTilesetFrame::validLeftTriangle(frame, tmp, &limit)) {
                 warning = QApplication::tr("Suggested type: 'Left Triangle'");
                 break;
             }
             limit = 0;
-            if (validRightTriangle(frame, tmp, &limit)) {
+            if (D1CelTilesetFrame::validRightTriangle(frame, tmp, &limit)) {
                 warning = QApplication::tr("Suggested type: 'Right Triangle'");
                 break;
             }
             limit = 0;
-            if (validLeftTrapezoid(frame, tmp, &limit)) {
+            if (D1CelTilesetFrame::validLeftTrapezoid(frame, tmp, &limit)) {
                 warning = QApplication::tr("Suggested type: 'Left Trapezoid'");
                 break;
             }
             limit = 0;
-            if (validRightTrapezoid(frame, tmp, &limit)) {
+            if (D1CelTilesetFrame::validRightTrapezoid(frame, tmp, &limit)) {
                 warning = QApplication::tr("Suggested type: 'Right Trapezoid'");
                 break;
             }
             break;
         case D1CEL_FRAME_TYPE::LeftTriangle:
-            validLeftTriangle(frame, error, &limit);
+            D1CelTilesetFrame::validLeftTriangle(frame, error, &limit);
             break;
         case D1CEL_FRAME_TYPE::RightTriangle:
-            validRightTriangle(frame, error, &limit);
+            D1CelTilesetFrame::validRightTriangle(frame, error, &limit);
             break;
         case D1CEL_FRAME_TYPE::LeftTrapezoid:
-            validLeftTrapezoid(frame, error, &limit);
+            D1CelTilesetFrame::validLeftTrapezoid(frame, error, &limit);
             break;
         case D1CEL_FRAME_TYPE::RightTrapezoid:
-            validRightTrapezoid(frame, error, &limit);
+            D1CelTilesetFrame::validRightTrapezoid(frame, error, &limit);
             break;
         }
     }
