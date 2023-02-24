@@ -123,7 +123,7 @@ void PaintWidget::show()
     QFrame::show();
 
     this->setFocus(); // otherwise the widget does not receive keypress events...
-    dMainWindow().setCursor(Qt::CrossCursor);
+    QApplication::setOverrideCursor(Qt::CrossCursor);
     // update the view
     this->colorModified();
 }
@@ -131,7 +131,7 @@ void PaintWidget::show()
 void PaintWidget::hide()
 {
     this->stopMove();
-    dMainWindow().unsetCursor();
+    QApplication::restoreOverrideCursor();
 
     QFrame::hide();
 }
