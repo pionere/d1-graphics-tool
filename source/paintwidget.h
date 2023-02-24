@@ -26,7 +26,7 @@ signals:
 
 private:
     QPointer<D1GfxFrame> frame;
-    std:vector::<FramePixel> modPixels;
+    std::vector<FramePixel> modPixels;
 };
 
 namespace Ui {
