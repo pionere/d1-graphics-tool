@@ -527,9 +527,11 @@ void D1CelTilesetFrame::validate(const D1GfxFrame *frame, QString &error, QStrin
     QString tmp;
 
     if (frame->getWidth() != MICRO_WIDTH) {
-        error = QApplication::tr("Invalid width. Must be 32px wide.");
+        static_assert(MICRO_WIDTH == 32, "D1CelTilesetFrame::validate uses hardcoded width.");
+        error = QApplication::tr("Frame width is not 32px.");
     } else if (frame->getHeight() != MICRO_HEIGHT) {
-        error = QApplication::tr("Invalid height. Must be 32px wide.");
+        static_assert(MICRO_HEIGHT == 32, "D1CelTilesetFrame::validate uses hardcoded height.");
+        error = QApplication::tr("Frame height is not 32px.");
     } else {
         int limit = 0;
         switch (frame->getFrameType()) {

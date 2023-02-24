@@ -262,6 +262,16 @@ void PaintWidget::on_tilesetMaskPushButton_clicked()
         return;
     }
     D1GfxFrame *frame = this->gfx->getFrame(frameIndex);
+    if (frame->getWidth() != MICRO_WIDTH) {
+        static_assert(MICRO_WIDTH == 32, "PaintWidget::on_tilesetMaskPushButton_clicked uses hardcoded width.");
+        QMessageBox::critical(this, tr("Error"), tr("Frame width is not 32px."));
+        return;
+    }
+    if (frame->getHeight() != MICRO_HEIGHT) {
+        static_assert(MICRO_HEIGHT == 32, "PaintWidget::on_tilesetMaskPushButton_clicked uses hardcoded height.");
+        QMessageBox::critical(this, tr("Error"), tr("Frame height is not 32px."));
+        return;
+    }
     // collect the pixels which need to be replaced
     std::vector<FramePixel> pixels;
     D1CelTilesetFrame::collectPixels(frame, maskType, pixels);
