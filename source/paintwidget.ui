@@ -57,6 +57,9 @@
    </item>
    <item>
     <widget class="QWidget" name="tilesetMaskWidget">
+     <property name="visible">
+      <bool>false</bool>
+     </property>
      <layout class="QHBoxLayout">
       <item>
        <widget class="QComboBox" name="tilesetMaskComboBox"/>

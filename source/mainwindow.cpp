@@ -1372,9 +1372,13 @@ void MainWindow::on_actionDel_Tile_triggered()
     this->updateWindow();
 }
 
-void MainWindow::on_actionStart_Draw_triggered()
+void MainWindow::on_actionToggle_Draw_triggered()
 {
-    this->paintWidget->show();
+    if (this->paintWidget->isHidden()) {
+        this->paintWidget->show();
+    } else {
+        this->paintWidget->hide();
+    }
 }
 
 void MainWindow::on_actionUpscale_triggered()
