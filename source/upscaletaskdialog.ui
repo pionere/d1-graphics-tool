@@ -193,7 +193,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" native="true">
+    <widget class="QWidget">
      <layout class="QHBoxLayout">
       <item>
        <spacer>

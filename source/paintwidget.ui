@@ -56,7 +56,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QWidget" name="tilesetMaskWidget" native="true">
+    <widget class="QWidget" name="tilesetMaskWidget">
      <layout class="QHBoxLayout">
       <item>
        <widget class="QComboBox" name="tilesetMaskComboBox"/>

@@ -73,11 +73,11 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, D1Gfx *g, CelView *cv,
 
     // prepare combobox of the masks
     this->ui->tilesetMaskWidget->setVisible(lcv != nullptr);
-    this->ui->tilesetMaskComboBox->addItem(tr("Square"), QVariant(D1CEL_FRAME_TYPE::Square));
-    this->ui->tilesetMaskComboBox->addItem(tr("Left Triangle"), QVariant(D1CEL_FRAME_TYPE::LeftTriangle));
-    this->ui->tilesetMaskComboBox->addItem(tr("Right Triangle"), QVariant(D1CEL_FRAME_TYPE::RightTriangle));
-    this->ui->tilesetMaskComboBox->addItem(tr("Left Trapezoid"), QVariant(D1CEL_FRAME_TYPE::LeftTrapezoid));
-    this->ui->tilesetMaskComboBox->addItem(tr("Right Trapezoid"), QVariant(D1CEL_FRAME_TYPE::RightTrapezoid));
+    this->ui->tilesetMaskComboBox->addItem(tr("Square"), QVariant<D1CEL_FRAME_TYPE>(D1CEL_FRAME_TYPE::Square));
+    this->ui->tilesetMaskComboBox->addItem(tr("Left Triangle"), QVariant<D1CEL_FRAME_TYPE>(D1CEL_FRAME_TYPE::LeftTriangle));
+    this->ui->tilesetMaskComboBox->addItem(tr("Right Triangle"), QVariant<D1CEL_FRAME_TYPE>(D1CEL_FRAME_TYPE::RightTriangle));
+    this->ui->tilesetMaskComboBox->addItem(tr("Left Trapezoid"), QVariant<D1CEL_FRAME_TYPE>(D1CEL_FRAME_TYPE::LeftTrapezoid));
+    this->ui->tilesetMaskComboBox->addItem(tr("Right Trapezoid"), QVariant<D1CEL_FRAME_TYPE>(D1CEL_FRAME_TYPE::RightTrapezoid));
 
     // assume the first color is selected on the palette-widget
     this->selectedColors.push_back(0);
