@@ -90,6 +90,16 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, D1Gfx *g, CelView *cv,
 
     // assume the first color is selected on the palette-widget
     this->selectedColors.push_back(0);
+
+    // cache the active graphics view
+    QList<QGraphicsView *> views;
+    if (cv != nullptr) {
+        views = cv->getCelScene()->views();
+    }
+    if (lcv != nullptr) {
+        views = lcv->getCelScene()->views();
+    }
+    this->graphView = views[0];
 }
 
 PaintWidget::~PaintWidget()
@@ -105,17 +115,8 @@ void PaintWidget::setPalette(D1Pal *p)
 void PaintWidget::show()
 {
     if (!this->moved) {
-        QGraphicsView *view;
-        QList<QGraphicsView *> views;
-        if (this->celView != nullptr) {
-            views = this->celView->getCelScene()->views();
-        }
-        if (this->levelCelView != nullptr) {
-            views = this->levelCelView->getCelScene()->views();
-        }
-        view = views[0];
-        QSize viewSize = view->frameSize();
-        QPoint viewBottomRight = view->mapToGlobal(QPoint(viewSize.width(), viewSize.height()));
+        QSize viewSize = this->graphView->frameSize();
+        QPoint viewBottomRight = this->graphView->mapToGlobal(QPoint(viewSize.width(), viewSize.height()));
         QSize mySize = this->frameSize();
         QPoint targetPos = viewBottomRight - QPoint(mySize.width(), mySize.height());
         this->move(this->mapFromGlobal(targetPos));
@@ -123,7 +124,7 @@ void PaintWidget::show()
     QFrame::show();
 
     this->setFocus(); // otherwise the widget does not receive keypress events...
-    QApplication::setOverrideCursor(Qt::CrossCursor);
+    this->graphView->setCursor(Qt::CrossCursor);
     // update the view
     this->colorModified();
 }
@@ -131,7 +132,7 @@ void PaintWidget::show()
 void PaintWidget::hide()
 {
     this->stopMove();
-    QApplication::restoreOverrideCursor();
+    this->graphView->unsetCursor();
 
     QFrame::hide();
 }
