@@ -2505,7 +2505,7 @@
     <message>
         <location filename="../source/openasdialog.cpp" line="54"/>
         <source>CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX)</source>
-        <translation>CEL/CL2 Fájlok (*.cel *.CEL *.cl2 *.CL2);;PCX Fájlok (*.pcx *.PCX)<</translation>
+        <translation>CEL/CL2 Fájlok (*.cel *.CEL *.cl2 *.CL2);;PCX Fájlok (*.pcx *.PCX)</translation>
     </message>
     <message>
         <location filename="../source/openasdialog.cpp" line="121"/>
