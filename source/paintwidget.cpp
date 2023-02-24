@@ -286,29 +286,26 @@ void PaintWidget::on_tilesetMaskPushButton_clicked()
         return;
     }
 
-    // select replacement color if necessary
+    // check if replacement color is necessary
     bool needsColor = false;
     for (const FramePixel framePixel : pixels) {
         if (framePixel.pixel.isTransparent()) {
             needsColor = true;
             break;
         }
-
-        break;
     }
-    quint8 paletteIndex = 0;
-    if (needsColor) {
-        if (this->selectedColors.size() != 1) {
-            QMessageBox::warning(this, tr("Warning"), tr("Select a single color-index from the palette to use."));
-            return;
-        }
-        paletteIndex = this->selectedColors[0];
+    unsigned numColors = this->selectedColors.size();
+    if (needsColor && numColors == 0) {
+        QMessageBox::warning(this, tr("Warning"), tr("Select a color-index from the palette to use."));
+        return;
     }
 
     // replace the pixels
+    unsigned cursor = 0;
     for (FramePixel &framePixel : pixels) {
         if (framePixel.pixel.isTransparent()) {
-            framePixel.pixel = D1GfxPixel::colorPixel(paletteIndex);
+            framePixel.pixel = D1GfxPixel::colorPixel(this->selectedColors[cursor]);
+            cursor = (cursor + 1) % numColors;
         } else {
             framePixel.pixel = D1GfxPixel::transparentPixel();
         }
