@@ -719,3 +719,146 @@ bool D1CelTilesetFrame::validEmpty(const D1GfxFrame *frame, QString &msg, int *l
     }
     return true;
 }
+
+void D1CelTilesetFrame::collectPixels(const D1GfxFrame *frame, D1CEL_FRAME_TYPE mask, std::vector<FramePixel> &pixels)
+{
+    switch (mask) {
+    case D1CEL_FRAME_TYPE::Square:
+        D1CelTilesetFrame::collectSquare(frame, pixels);
+        break;
+    case D1CEL_FRAME_TYPE::TransparentSquare:
+        break;
+    case D1CEL_FRAME_TYPE::LeftTriangle:
+        D1CelTilesetFrame::collectLeftTriangle(frame, pixels);
+        break;
+    case D1CEL_FRAME_TYPE::RightTriangle:
+        D1CelTilesetFrame::collectRightTriangle(frame, pixels);
+        break;
+    case D1CEL_FRAME_TYPE::LeftTrapezoid:
+        D1CelTilesetFrame::collectLeftTrapezoid(frame, pixels);
+        break;
+    case D1CEL_FRAME_TYPE::RightTrapezoid:
+        D1CelTilesetFrame::collectRightTrapezoid(frame, pixels);
+        break;
+    }
+}
+
+void D1CelTilesetFrame::collectSquare(const D1GfxFrame *frame, std::vector<FramePixel> &pixels)
+{
+    for (int y = 0; y < MICRO_HEIGHT; y++) {
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            D1GfxPixel px = frame->getPixel(x, y);
+            if (px.isTransparent()) {
+                pixels.push_back(FramePixel(QPoint(x, y), px));
+            }
+        }
+    }
+}
+
+static void collectBottomLeftTriangle(const D1GfxFrame *frame, std::vector<FramePixel> &pixels)
+{
+    for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            D1GfxPixel px = frame->getPixel(x, y);
+            if (px.isTransparent()) {
+                if (x >= (y * 2 - MICRO_WIDTH)) {
+                    pixels.push_back(FramePixel(QPoint(x, y), px));
+                }
+            } else {
+                if (x < (y * 2 - MICRO_WIDTH)) {
+                    pixels.push_back(FramePixel(QPoint(x, y), px));
+                }
+            }
+        }
+    }
+}
+
+static void collectBottomRightTriangle(const D1GfxFrame *frame, std::vector<FramePixel> &pixels)
+{
+    for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            D1GfxPixel px = frame->getPixel(x, y);
+            if (px.isTransparent()) {
+                if (x < (2 * MICRO_WIDTH - y * 2)) {
+                    pixels.push_back(FramePixel(QPoint(x, y), px));
+                }
+            } else {
+                if (x >= (2 * MICRO_WIDTH - y * 2)) {
+                    pixels.push_back(FramePixel(QPoint(x, y), px));
+                }
+            }
+        }
+    }
+}
+
+static void collectTopLeftTriangle(const D1GfxFrame *frame, std::vector<FramePixel> &pixels)
+{
+    for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            D1GfxPixel px = frame->getPixel(x, y);
+            if (px.isTransparent()) {
+                if (x >= (MICRO_WIDTH - y * 2)) {
+                    pixels.push_back(FramePixel(QPoint(x, y), px));
+                }
+            } else {
+                if (x < (MICRO_WIDTH - y * 2)) {
+                    pixels.push_back(FramePixel(QPoint(x, y), px));
+                }
+            }
+        }
+    }
+}
+
+static void collectTopRightTriangle(const D1GfxFrame *frame, std::vector<FramePixel> &pixels)
+{
+    for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            D1GfxPixel px = frame->getPixel(x, y);
+            if (px.isTransparent()) {
+                if (x < y * 2) {
+                    pixels.push_back(FramePixel(QPoint(x, y), px));
+                }
+            } else {
+                if (x >= y * 2) {
+                    pixels.push_back(FramePixel(QPoint(x, y), px));
+                }
+            }
+        }
+    }
+}
+
+void D1CelTilesetFrame::collectLeftTriangle(const D1GfxFrame *frame, std::vector<FramePixel> &pixels)
+{
+    collectBottomLeftTriangle(frame, pixels);
+    collectTopLeftTriangle(frame, pixels);
+}
+
+void D1CelTilesetFrame::collectRightTriangle(const D1GfxFrame *frame, std::vector<FramePixel> &pixels)
+{
+    collectBottomRightTriangle(frame, pixels);
+    collectTopRightTriangle(frame, pixels);
+}
+
+static void collectTopHalfSquare(const D1GfxFrame *frame, std::vector<FramePixel> &pixels)
+{
+    for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+        for (int x = 0; x < MICRO_WIDTH; x++) {
+            D1GfxPixel px = frame->getPixel(x, y);
+            if (px.isTransparent()) {
+                pixels.push_back(FramePixel(QPoint(x, y), px));
+            }
+        }
+    }
+}
+
+void D1CelTilesetFrame::collectLeftTrapezoid(const D1GfxFrame *frame, std::vector<FramePixel> &pixels)
+{
+    collectBottomLeftTriangle(frame, pixels);
+    collectTopHalfSquare(frame, pixels);
+}
+
+void D1CelTilesetFrame::collectRightTrapezoid(const D1GfxFrame *frame, std::vector<FramePixel> &pixels)
+{
+    collectBottomRightTriangle(frame, pixels);
+    collectTopHalfSquare(frame, pixels);
+}

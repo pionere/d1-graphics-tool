@@ -10,18 +10,12 @@
 
 #include "d1gfx.h"
 
-typedef struct FramePixel {
-    FramePixel(const QPoint &p, D1GfxPixel px);
-
-    QPoint pos;
-    D1GfxPixel pixel;
-} FramePixel;
-
 class EditFrameCommand : public QObject, public QUndoCommand {
     Q_OBJECT
 
 public:
     explicit EditFrameCommand(D1GfxFrame *frame, const QPoint &pos, D1GfxPixel newPixel);
+    explicit EditFrameCommand(D1GfxFrame *frame, const std::vector<FramePixel> &modPixels);
     ~EditFrameCommand() = default;
 
     void undo() override;
@@ -47,7 +41,7 @@ class PaintWidget : public QFrame {
     Q_OBJECT
 
 public:
-    explicit PaintWidget(QWidget *parent, QUndoStack *undoStack, CelView *celView, LevelCelView *levelCelView);
+    explicit PaintWidget(QWidget *parent, QUndoStack *undoStack, D1Gfx *gfx, CelView *celView, LevelCelView *levelCelView);
     ~PaintWidget();
 
     void setPalette(D1Pal *pal);
@@ -72,9 +66,12 @@ private slots:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
 
+    void on_tilesetMaskPushButton_clicked();
+
 private:
     Ui::PaintWidget *ui;
     QUndoStack *undoStack;
+    D1Gfx *gfx;
     CelView *celView;
     LevelCelView *levelCelView;
     bool moving;

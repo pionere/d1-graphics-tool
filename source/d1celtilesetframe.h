@@ -1,23 +1,14 @@
 #pragma once
 
+#include <vector>
+
 #include <QByteArray>
 
+#include "d1gfx.h"
 #include "openasdialog.h"
 
 #define MICRO_WIDTH 32
 #define MICRO_HEIGHT 32
-
-class D1GfxFrame;
-
-enum class D1CEL_FRAME_TYPE {
-    Square,            // opaque square (bitmap)
-    TransparentSquare, // bitmap with transparent pixels
-    LeftTriangle,      // opaque triangle on its left edge
-    RightTriangle,     // opaque triangle on its right edge
-    LeftTrapezoid,     // bottom half is a left triangle, upper half is a square
-    RightTrapezoid,    // bottom half is a right triangle, upper half is a square
-    Empty = -1,        // transparent frame (only for efficiency tests)
-};
 
 class D1CelTilesetFrame {
 public:
@@ -25,6 +16,7 @@ public:
 
     static quint8 *writeFrameData(D1GfxFrame &frame, quint8 *pBuf);
 
+    static void collectPixels(const D1GfxFrame *frame, D1CEL_FRAME_TYPE mask, std::vector<FramePixel> &pixels);
     static D1CEL_FRAME_TYPE altFrameType(const D1GfxFrame *frame, int *limit);
     static void selectFrameType(D1GfxFrame *frame);
     static void validate(const D1GfxFrame *frame, QString &error, QString &warning);
@@ -50,4 +42,10 @@ private:
     static bool validLeftTrapezoid(const D1GfxFrame *frame, QString &msg, int *limit);
     static bool validRightTrapezoid(const D1GfxFrame *frame, QString &msg, int *limit);
     static bool validEmpty(const D1GfxFrame *frame, QString &msg, int *limit);
+
+    static void collectSquare(const D1GfxFrame *frame, std::vector<FramePixel> &pixels);
+    static void collectLeftTriangle(const D1GfxFrame *frame, std::vector<FramePixel> &pixels);
+    static void collectRightTriangle(const D1GfxFrame *frame, std::vector<FramePixel> &pixels);
+    static void collectLeftTrapezoid(const D1GfxFrame *frame, std::vector<FramePixel> &pixels);
+    static void collectRightTrapezoid(const D1GfxFrame *frame, std::vector<FramePixel> &pixels);
 };
