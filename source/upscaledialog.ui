@@ -124,7 +124,7 @@
        </widget>
       </item>
       <item row="2" column="1" colspan="4">
-       <widget class="QWidget" native="true">
+       <widget class="QWidget">
         <layout class="QHBoxLayout">
          <property name="leftMargin">
           <number>0</number>
@@ -174,7 +174,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" native="true">
+    <widget class="QWidget">
      <layout class="QHBoxLayout">
       <item>
        <spacer>

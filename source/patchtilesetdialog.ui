@@ -10,7 +10,7 @@
   </property>
   <layout class="QVBoxLayout">
    <item>
-    <widget class="QWidget" native="true">
+    <widget class="QWidget">
      <layout class="QHBoxLayout">
       <property name="spacing">
        <number>4</number>
@@ -77,7 +77,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" native="true">
+    <widget class="QWidget">
      <layout class="QHBoxLayout">
       <item>
        <spacer>
