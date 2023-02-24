@@ -4,208 +4,208 @@
 <context>
     <name>CelView</name>
     <message>
-        <location filename="../source/celview.ui" line="80"/>
+        <location filename="../source/celview.ui" line="47"/>
         <source>Zoom:</source>
         <translation>Nagyítás:</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="130"/>
+        <location filename="../source/celview.ui" line="97"/>
         <source>Stop</source>
         <translation>Megállítás</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="153"/>
+        <location filename="../source/celview.ui" line="120"/>
         <source>Play</source>
         <translation>Lejátszás</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="163"/>
+        <location filename="../source/celview.ui" line="130"/>
         <source>Current playback delay</source>
         <translation>Aktuális lejátszás késleltetése</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="179"/>
+        <location filename="../source/celview.ui" line="140"/>
         <source>ms</source>
         <translation>ms</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="187"/>
+        <location filename="../source/celview.ui" line="148"/>
         <source>Normal</source>
         <translation>Normál</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="192"/>
+        <location filename="../source/celview.ui" line="153"/>
         <source>(L3) Caves</source>
         <translation>(L3) Barlangok</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="197"/>
+        <location filename="../source/celview.ui" line="158"/>
         <source>(L4) Hell</source>
         <translation>(L4) Pokol</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="202"/>
+        <location filename="../source/celview.ui" line="163"/>
         <source>(L5) Crypt</source>
         <translation>(L5) Kripta</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="207"/>
+        <location filename="../source/celview.ui" line="168"/>
         <source>(L6) Nest</source>
         <translation>(L6) Fészek</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="225"/>
+        <location filename="../source/celview.ui" line="196"/>
         <source>Groups:</source>
         <translation>Csoportok:</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="245"/>
+        <location filename="../source/celview.ui" line="216"/>
         <source>First group</source>
         <translation>Első csoport</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="261"/>
+        <location filename="../source/celview.ui" line="232"/>
         <source>Previous group</source>
         <translation>Előző csoport</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="274"/>
+        <location filename="../source/celview.ui" line="245"/>
         <source>Current group</source>
         <translation>Aktuális csoport</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="303"/>
+        <location filename="../source/celview.ui" line="274"/>
         <source>Number of groups</source>
         <translation>Csoportok száma</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="322"/>
+        <location filename="../source/celview.ui" line="293"/>
         <source>Next group</source>
         <translation>Következő csoport</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="338"/>
+        <location filename="../source/celview.ui" line="309"/>
         <source>Last group</source>
         <translation>Utolsó csoport</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="358"/>
+        <location filename="../source/celview.ui" line="329"/>
         <source>Frames:</source>
         <translation>Képkockák:</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="378"/>
+        <location filename="../source/celview.ui" line="336"/>
+        <source>Handle frames in groups</source>
+        <translation>Képkockák kezelése csoportokban</translation>
+    </message>
+    <message>
+        <location filename="../source/celview.ui" line="356"/>
         <source>First frame</source>
         <translation>Első képkocka</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="394"/>
+        <location filename="../source/celview.ui" line="372"/>
         <source>Previous frame</source>
         <translation>Előző képkocka</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="407"/>
+        <location filename="../source/celview.ui" line="385"/>
         <source>Current frame</source>
         <translation>Aktuális képkocka</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="436"/>
+        <location filename="../source/celview.ui" line="414"/>
         <source>Number of frames</source>
         <translation>Képkockák száma</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="455"/>
+        <location filename="../source/celview.ui" line="433"/>
         <source>Next frame</source>
         <translation>Következő képkocka</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="471"/>
+        <location filename="../source/celview.ui" line="449"/>
         <source>Last frame</source>
         <translation>Utolsó képkocka</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="491"/>
+        <location filename="../source/celview.ui" line="469"/>
         <source>Current frame width</source>
         <translation>Aktuális képkocka szélessége</translation>
     </message>
     <message>
-        <location filename="../source/celview.ui" line="520"/>
+        <location filename="../source/celview.ui" line="498"/>
         <source>Current frame height</source>
         <translation>Aktuális képkocka magassága</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="318"/>
-        <location filename="../source/celview.cpp" line="358"/>
-        <location filename="../source/celview.cpp" line="401"/>
+        <location filename="../source/celview.cpp" line="315"/>
+        <location filename="../source/celview.cpp" line="355"/>
+        <location filename="../source/celview.cpp" line="396"/>
         <source>Failed to load file: %1.</source>
         <translation>A %1 fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="332"/>
-        <location filename="../source/celview.cpp" line="379"/>
-        <location filename="../source/celview.cpp" line="419"/>
+        <location filename="../source/celview.cpp" line="329"/>
+        <location filename="../source/celview.cpp" line="375"/>
+        <location filename="../source/celview.cpp" line="413"/>
         <source>Failed to read file: %1.</source>
         <translation>A %1 fájl olvasása sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="574"/>
+        <location filename="../source/celview.cpp" line="592"/>
         <source>Insert Frame</source>
         <translation>Képkocka beillesztése</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="575"/>
+        <location filename="../source/celview.cpp" line="593"/>
         <source>Add new frames before the current one</source>
         <translation>Képkocka beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="568"/>
+        <location filename="../source/celview.cpp" line="586"/>
         <source>Add Layer</source>
         <translation>Réteg hozzáadása</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="569"/>
+        <location filename="../source/celview.cpp" line="587"/>
         <source>Add the content of an image to the current frame</source>
         <translation>Kép hozzáadása az aktuális képkockához</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="580"/>
+        <location filename="../source/celview.cpp" line="598"/>
         <source>Append Frame</source>
         <translation>Képkocka hozzáadása</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="581"/>
+        <location filename="../source/celview.cpp" line="599"/>
         <source>Append new frames at the end</source>
         <translation>Képkockák hozzáadása az meglévők után</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="586"/>
+        <location filename="../source/celview.cpp" line="604"/>
         <source>Replace Frame</source>
         <translation>Képkocka kicserélése</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="587"/>
+        <location filename="../source/celview.cpp" line="605"/>
         <source>Replace the current frame</source>
         <translation>Az aktuális képkocka kicserélése</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="593"/>
+        <location filename="../source/celview.cpp" line="611"/>
         <source>Del Frame</source>
         <translation>Képkocka törlése</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="594"/>
+        <location filename="../source/celview.cpp" line="612"/>
         <source>Delete the current frame</source>
         <translation>Az aktuális képkocka törlése</translation>
     </message>
     <message>
-        <location filename="../source/celview.cpp" line="603"/>
+        <location filename="../source/celview.cpp" line="180"/>
         <source>Start drawing</source>
         <translation>Rajzolás kezdése</translation>
-    </message>
-    <message>
-        <location filename="../source/celview.cpp" line="608"/>
-        <source>Stop drawing</source>
-        <translation>Rajzolás befejezése</translation>
     </message>
 </context>
 <context>
@@ -239,51 +239,51 @@
 <context>
     <name>D1Min</name>
     <message>
-        <location filename="../source/d1min.cpp" line="51"/>
+        <location filename="../source/d1min.cpp" line="61"/>
         <source>Subtile width/height does not align with MIN file.</source>
         <translation>A mező méretei nem illeszkednek a MIN fájlhoz.</translation>
     </message>
     <message>
-        <location filename="../source/d1min.cpp" line="66"/>
+        <location filename="../source/d1min.cpp" line="76"/>
         <source>The size of SOL file does not align with MIN file.</source>
         <translation>A SOL fájl mérete nem illeszkedik a MIN fájlhoz.</translation>
     </message>
     <message>
-        <location filename="../source/d1min.cpp" line="112"/>
-        <location filename="../source/d1min.cpp" line="281"/>
-        <location filename="../source/d1min.cpp" line="337"/>
+        <location filename="../source/d1min.cpp" line="122"/>
+        <location filename="../source/d1min.cpp" line="334"/>
+        <location filename="../source/d1min.cpp" line="390"/>
         <source>Confirmation</source>
         <translation>Jóváhagyás</translation>
     </message>
     <message>
-        <location filename="../source/d1min.cpp" line="112"/>
+        <location filename="../source/d1min.cpp" line="122"/>
         <source>Are you sure you want to overwrite %1?</source>
         <translation>Biztosan felül akarod írni a %1 fájlt?</translation>
     </message>
     <message>
-        <location filename="../source/d1min.cpp" line="122"/>
+        <location filename="../source/d1min.cpp" line="132"/>
         <source>Failed to open file: %1.</source>
         <translation>Nem sikerült megnyitni a %1 fájlt.</translation>
     </message>
     <message>
-        <location filename="../source/d1min.cpp" line="137"/>
-        <source>The frame references can not be stored in this format. The limit is %1.</source>
-        <translation>A képkocka-hivatkozások nem tárolhatóak ebben a formátumban. A határ %1.</translation>
+        <location filename="../source/d1min.cpp" line="147"/>
+        <source>The frame references can not be stored in this format (MIN). The limit is %1.</source>
+        <translation>A képkocka-hivatkozások nem tárolhatóak ebben a formátumban (MIN). A határ %1.</translation>
     </message>
     <message>
-        <location filename="../source/d1min.cpp" line="145"/>
-        <location filename="../source/d1min.cpp" line="150"/>
+        <location filename="../source/d1min.cpp" line="155"/>
+        <location filename="../source/d1min.cpp" line="160"/>
         <source>Subtile height is not supported by the game (Diablo 1/DevilutionX).</source>
         <translation>Mező magassága nem támogatott a játékban (Diablo 1/DevilutionX).</translation>
     </message>
     <message>
-        <location filename="../source/d1min.cpp" line="152"/>
+        <location filename="../source/d1min.cpp" line="162"/>
         <source>Empty frames are added to the saved document to match the required height of the game (DevilutionX).</source>
         <translation>Üres képkockák kerültek hozzáadásra, hogy megfeleljen a játék követelményeinek (DevilutionX).</translation>
     </message>
     <message>
-        <location filename="../source/d1min.cpp" line="281"/>
-        <location filename="../source/d1min.cpp" line="337"/>
+        <location filename="../source/d1min.cpp" line="334"/>
+        <location filename="../source/d1min.cpp" line="390"/>
         <source>Non-transparent frames are going to be eliminited. Are you sure you want to proceed?</source>
         <translation>Nem átlátszó képkockák kerülnek törlésre. Biztosan folytatod?</translation>
     </message>
@@ -309,29 +309,29 @@
 <context>
     <name>D1Til</name>
     <message>
-        <location filename="../source/d1til.cpp" line="35"/>
+        <location filename="../source/d1til.cpp" line="36"/>
         <source>Invalid TIL file.</source>
         <translation>Hibás TIL fájl.</translation>
     </message>
     <message>
-        <location filename="../source/d1til.cpp" line="69"/>
+        <location filename="../source/d1til.cpp" line="70"/>
         <source>Confirmation</source>
         <translation>Jóváhagyás</translation>
     </message>
     <message>
-        <location filename="../source/d1til.cpp" line="69"/>
+        <location filename="../source/d1til.cpp" line="70"/>
         <source>Are you sure you want to overwrite %1?</source>
         <translation>Biztosan felül akarod írni a %1 fájlt?</translation>
     </message>
     <message>
-        <location filename="../source/d1til.cpp" line="79"/>
+        <location filename="../source/d1til.cpp" line="80"/>
         <source>Failed to open file: %1.</source>
         <translation>Nem sikerült megnyitni a %1 fájlt.</translation>
     </message>
     <message>
-        <location filename="../source/d1til.cpp" line="88"/>
-        <source>The subtile indices can not be stored in this format. The limit is %1.</source>
-        <translation>A mező-hivatkozások nem tárolhatóak ebben a formátumban. A határ %1.</translation>
+        <location filename="../source/d1til.cpp" line="89"/>
+        <source>The subtile indices can not be stored in this format (TIL). The limit is %1.</source>
+        <translation>A mező-hivatkozások nem tárolhatóak ebben a formátumban (TIL). A határ %1.</translation>
     </message>
 </context>
 <context>
@@ -361,8 +361,8 @@
     <name>ExportDialog</name>
     <message>
         <location filename="../source/exportdialog.ui" line="14"/>
-        <location filename="../source/exportdialog.ui" line="306"/>
-        <location filename="../source/exportdialog.cpp" line="680"/>
+        <location filename="../source/exportdialog.ui" line="433"/>
+        <location filename="../source/exportdialog.cpp" line="692"/>
         <source>Export</source>
         <translation>Exportálás</translation>
     </message>
@@ -384,125 +384,145 @@
     <message>
         <location filename="../source/exportdialog.ui" line="52"/>
         <source>Format:</source>
-        <translation>Formátum</translation>
+        <translation>Formátum:</translation>
     </message>
     <message>
         <location filename="../source/exportdialog.ui" line="69"/>
         <source>File(s):</source>
-        <translation>Fájlok</translation>
+        <translation>Fájlok:</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.ui" line="77"/>
+        <location filename="../source/exportdialog.ui" line="80"/>
         <source>One</source>
         <translation>Egy</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.ui" line="82"/>
+        <location filename="../source/exportdialog.ui" line="85"/>
         <source>Multi</source>
         <translation>Több</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.ui" line="100"/>
+        <location filename="../source/exportdialog.ui" line="103"/>
         <source>Content Settings</source>
         <translation>Tartalmi beállítások</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.ui" line="106"/>
+        <location filename="../source/exportdialog.ui" line="109"/>
         <source>Type:</source>
-        <translation>Típus</translation>
+        <translation>Típus:</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.ui" line="120"/>
+        <location filename="../source/exportdialog.ui" line="135"/>
         <source>Frame</source>
         <translation>Képkocka</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.ui" line="125"/>
+        <location filename="../source/exportdialog.ui" line="140"/>
         <source>Subtile</source>
         <translation>Mező</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.ui" line="130"/>
+        <location filename="../source/exportdialog.ui" line="145"/>
         <source>Flat Tile</source>
         <translation>Feszített lap</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.ui" line="135"/>
+        <location filename="../source/exportdialog.ui" line="150"/>
         <source>2.5D Tile</source>
         <translation>2.5D-s lap</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.ui" line="150"/>
+        <location filename="../source/exportdialog.ui" line="175"/>
         <source>Placement:</source>
-        <translation>Elhelyezés</translation>
+        <translation>Elhelyezés:</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.ui" line="164"/>
+        <location filename="../source/exportdialog.ui" line="201"/>
         <source>Grouped</source>
         <translation>Csoportosítva</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.ui" line="169"/>
+        <location filename="../source/exportdialog.ui" line="206"/>
         <source>One line</source>
         <translation>Egy sorba</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.ui" line="174"/>
+        <location filename="../source/exportdialog.ui" line="211"/>
         <source>One column</source>
         <translation>Egy oszlopba</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.ui" line="189"/>
+        <location filename="../source/exportdialog.ui" line="236"/>
         <source>Range:</source>
         <translation>Korlátok:</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.ui" line="223"/>
+        <location filename="../source/exportdialog.ui" line="264"/>
         <source>From</source>
         <translation>Kezdet</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.ui" line="255"/>
+        <location filename="../source/exportdialog.ui" line="296"/>
         <source>To</source>
         <translation>Végső</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.ui" line="313"/>
+        <location filename="../source/exportdialog.ui" line="326"/>
+        <source>Canvas:</source>
+        <translation>Háttér:</translation>
+    </message>
+    <message>
+        <location filename="../source/exportdialog.ui" line="357"/>
+        <source>Palette index of the transparent pixels in the output image</source>
+        <translation>Paletta érték az átlátszó képpontok helyettesítésére</translation>
+    </message>
+    <message>
+        <location filename="../source/exportdialog.ui" line="386"/>
+        <source>Color of the transparent pixels in the output image</source>
+        <translation>Az átlátszó képpontok színe a kimeneti képfájlban</translation>
+    </message>
+    <message>
+        <location filename="../source/exportdialog.ui" line="396"/>
+        <source>Pick</source>
+        <translation>Választ</translation>
+    </message>
+    <message>
+        <location filename="../source/exportdialog.ui" line="440"/>
         <source>Cancel</source>
         <translation>Mégse</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="72"/>
+        <location filename="../source/exportdialog.cpp" line="84"/>
         <source>Select Output Folder</source>
         <translation>Kimeneti könyvtár</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="109"/>
+        <location filename="../source/exportdialog.cpp" line="152"/>
         <source>Exporting 2.5d tiles...</source>
         <translation>2.5D-s lapok exportálása...</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="235"/>
+        <location filename="../source/exportdialog.cpp" line="265"/>
         <source>Exporting flat tiles...</source>
         <translation>Feszített lapok exportálása...</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="359"/>
+        <location filename="../source/exportdialog.cpp" line="377"/>
         <source>Exporting subtiles...</source>
         <translation>Mezők exportálása...</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="484"/>
+        <location filename="../source/exportdialog.cpp" line="492"/>
         <source>Exporting frames...</source>
         <translation>Képkockák exportálása...</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="652"/>
+        <location filename="../source/exportdialog.cpp" line="654"/>
         <source>Warning</source>
         <translation>Figyelmeztetés</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="652"/>
+        <location filename="../source/exportdialog.cpp" line="654"/>
         <source>Output folder is missing, please choose an output folder.</source>
         <translation>Kimeneti könyvtár nincs beállítva. Kérlek adjál meg egyet.</translation>
     </message>
@@ -510,800 +530,805 @@
 <context>
     <name>LevelCelView</name>
     <message>
-        <location filename="../source/levelcelview.ui" line="80"/>
+        <location filename="../source/levelcelview.ui" line="47"/>
         <source>Zoom:</source>
         <translation>Nagyítás:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="130"/>
+        <location filename="../source/levelcelview.ui" line="97"/>
         <source>Stop</source>
         <translation>Megállítás</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="153"/>
+        <location filename="../source/levelcelview.ui" line="120"/>
         <source>Play</source>
         <translation>Lejátszás</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="163"/>
+        <location filename="../source/levelcelview.ui" line="130"/>
         <source>Current playback delay</source>
         <translation>Aktuális lejátszás késleltetése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="179"/>
+        <location filename="../source/levelcelview.ui" line="140"/>
         <source>ms</source>
         <translation>ms</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="187"/>
+        <location filename="../source/levelcelview.ui" line="148"/>
         <source>(L3) Caves</source>
         <translation>(L3) Barlangok</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="192"/>
+        <location filename="../source/levelcelview.ui" line="153"/>
         <source>(L4) Hell</source>
         <translation>(L4) Pokol</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="197"/>
+        <location filename="../source/levelcelview.ui" line="158"/>
         <source>(L5) Crypt</source>
         <translation>(L5) Kripta</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="202"/>
+        <location filename="../source/levelcelview.ui" line="163"/>
         <source>(L6) Nest</source>
         <translation>(L6) Fészek</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="220"/>
+        <location filename="../source/levelcelview.ui" line="191"/>
         <source>Tiles:</source>
         <translation>Lapok:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="240"/>
+        <location filename="../source/levelcelview.ui" line="211"/>
         <source>First tile</source>
         <translation>Első lap</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="418"/>
+        <location filename="../source/levelcelview.ui" line="389"/>
         <source>First subtile</source>
         <translation>Első mező</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="256"/>
+        <location filename="../source/levelcelview.ui" line="227"/>
         <source>Previous tile</source>
         <translation>Előző lap</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="434"/>
+        <location filename="../source/levelcelview.ui" line="405"/>
         <source>Previous subtile</source>
         <translation>Előző mező</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="269"/>
+        <location filename="../source/levelcelview.ui" line="240"/>
         <source>Current tile</source>
         <translation>Aktuális lap</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="447"/>
+        <location filename="../source/levelcelview.ui" line="418"/>
         <source>Current subtile</source>
         <translation>Aktuális mező</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="301"/>
+        <location filename="../source/levelcelview.ui" line="272"/>
         <source>Number of tiles</source>
         <translation>Lapok száma</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="476"/>
+        <location filename="../source/levelcelview.ui" line="447"/>
         <source>Number of subtiles</source>
         <translation>Mezők száma</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="323"/>
+        <location filename="../source/levelcelview.ui" line="294"/>
         <source>Next tile</source>
         <translation>Következő lap</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="495"/>
+        <location filename="../source/levelcelview.ui" line="466"/>
         <source>Next subtile</source>
         <translation>Következő mező</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="339"/>
+        <location filename="../source/levelcelview.ui" line="310"/>
         <source>Last tile</source>
         <translation>Utolsó lap</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="511"/>
+        <location filename="../source/levelcelview.ui" line="482"/>
         <source>Last subtile</source>
         <translation>Utolsó mező</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="398"/>
+        <location filename="../source/levelcelview.ui" line="369"/>
         <source>Subtiles:</source>
         <translation>Mezők:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="564"/>
+        <location filename="../source/levelcelview.ui" line="535"/>
         <source>Frames:</source>
         <translation>Képkockák:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="584"/>
+        <location filename="../source/levelcelview.ui" line="555"/>
         <source>First frame</source>
         <translation>Első képkocka</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="600"/>
+        <location filename="../source/levelcelview.ui" line="571"/>
         <source>Previous frame</source>
         <translation>Előző képkocka</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="613"/>
+        <location filename="../source/levelcelview.ui" line="584"/>
         <source>Current frame</source>
         <translation>Aktuális képkocka</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="642"/>
+        <location filename="../source/levelcelview.ui" line="613"/>
         <source>Number of frames</source>
         <translation>Képkockák száma</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="661"/>
+        <location filename="../source/levelcelview.ui" line="632"/>
         <source>Next frame</source>
         <translation>Következő képkocka</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="677"/>
+        <location filename="../source/levelcelview.ui" line="648"/>
         <source>Last frame</source>
         <translation>Utolsó képkocka</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="697"/>
+        <location filename="../source/levelcelview.ui" line="668"/>
         <source>Current frame width</source>
         <translation>Aktuális képkocka szélessége</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.ui" line="726"/>
+        <location filename="../source/levelcelview.ui" line="697"/>
         <source>Current frame height</source>
         <translation>Aktuális képkocka magassága</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="39"/>
+        <location filename="../source/levelcelview.cpp" line="40"/>
         <source>Tile properties</source>
         <translation>Lap beállításai</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="40"/>
+        <location filename="../source/levelcelview.cpp" line="41"/>
         <source>Subtile properties</source>
         <translation>Mező beállításai</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="41"/>
+        <location filename="../source/levelcelview.cpp" line="42"/>
         <source>Frame properties</source>
         <translation>Képkocka beállításai</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1264"/>
+        <location filename="../source/levelcelview.cpp" line="1266"/>
         <source>Error</source>
         <translation>Hiba</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="477"/>
-        <location filename="../source/levelcelview.cpp" line="695"/>
-        <location filename="../source/levelcelview.cpp" line="1010"/>
-        <location filename="../source/levelcelview.cpp" line="1090"/>
-        <location filename="../source/levelcelview.cpp" line="1136"/>
-        <location filename="../source/levelcelview.cpp" line="1226"/>
-        <location filename="../source/levelcelview.cpp" line="1318"/>
+        <location filename="../source/levelcelview.cpp" line="479"/>
+        <location filename="../source/levelcelview.cpp" line="697"/>
+        <location filename="../source/levelcelview.cpp" line="1012"/>
+        <location filename="../source/levelcelview.cpp" line="1092"/>
+        <location filename="../source/levelcelview.cpp" line="1138"/>
+        <location filename="../source/levelcelview.cpp" line="1228"/>
+        <location filename="../source/levelcelview.cpp" line="1320"/>
         <source>Failed to read file: %1.</source>
         <translation>A %1 fájl olvasása sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="407"/>
-        <location filename="../source/levelcelview.cpp" line="432"/>
+        <location filename="../source/levelcelview.cpp" line="44"/>
+        <source>Start drawing</source>
+        <translation>Rajzolás kezdése</translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="409"/>
+        <location filename="../source/levelcelview.cpp" line="434"/>
         <source>The image must contain 32px * 32px blocks to be used as a frame.</source>
         <translation>A képnek 32px * 32px blokkokból kell állnia ahhoz, hogy képkockaként legyen használható.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="465"/>
-        <location filename="../source/levelcelview.cpp" line="683"/>
-        <location filename="../source/levelcelview.cpp" line="998"/>
-        <location filename="../source/levelcelview.cpp" line="1069"/>
-        <location filename="../source/levelcelview.cpp" line="1113"/>
-        <location filename="../source/levelcelview.cpp" line="1201"/>
-        <location filename="../source/levelcelview.cpp" line="1294"/>
+        <location filename="../source/levelcelview.cpp" line="467"/>
+        <location filename="../source/levelcelview.cpp" line="685"/>
+        <location filename="../source/levelcelview.cpp" line="1000"/>
+        <location filename="../source/levelcelview.cpp" line="1071"/>
+        <location filename="../source/levelcelview.cpp" line="1115"/>
+        <location filename="../source/levelcelview.cpp" line="1203"/>
+        <location filename="../source/levelcelview.cpp" line="1296"/>
         <source>Failed to load file: %1.</source>
         <translation>A %1 fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="629"/>
-        <location filename="../source/levelcelview.cpp" line="654"/>
+        <location filename="../source/levelcelview.cpp" line="631"/>
+        <location filename="../source/levelcelview.cpp" line="656"/>
         <source>The image must contain %1px * %2px blocks to be used as a subtile.</source>
         <translation>A képnek %1px * %2px blokkokból kell állnia ahhoz, hogy mezőként legyen használható.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="903"/>
-        <location filename="../source/levelcelview.cpp" line="949"/>
+        <location filename="../source/levelcelview.cpp" line="905"/>
+        <location filename="../source/levelcelview.cpp" line="951"/>
         <source>The image must contain %1px * %2px blocks to be used as a tile.</source>
         <translation>A képnek %1px * %2px blokkokból kell állnia ahhoz, hogy lapként legyen használható.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1118"/>
-        <location filename="../source/levelcelview.cpp" line="1141"/>
+        <location filename="../source/levelcelview.cpp" line="1120"/>
+        <location filename="../source/levelcelview.cpp" line="1143"/>
         <source>The image must be 32px * 32px to be used as a frame.</source>
         <translation>Csak 32px * 32px méretű képek használhatóak képkockának.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1170"/>
+        <location filename="../source/levelcelview.cpp" line="1172"/>
         <source>Confirmation</source>
         <translation>Jóváhagyás</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1170"/>
+        <location filename="../source/levelcelview.cpp" line="1172"/>
         <source>The frame is used by subtile %1 (and maybe others). Are you sure you want to proceed?</source>
         <translation>A képkocka használatban van a(z) %1 mező (és esetleg továbbiak) által. Biztosan folytatod?</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1205"/>
-        <location filename="../source/levelcelview.cpp" line="1231"/>
+        <location filename="../source/levelcelview.cpp" line="1207"/>
+        <location filename="../source/levelcelview.cpp" line="1233"/>
         <source>The image must be %1px * %2px to be used as a subtile.</source>
         <translation>Csak %1px * %2px méretű képek használhatóak mezőnek.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1264"/>
+        <location filename="../source/levelcelview.cpp" line="1266"/>
         <source>The subtile is used by tile %1 (and maybe others).</source>
         <translation>A mező használatban van a(z) %1 lap (és esetleg továbbiak) által.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1298"/>
-        <location filename="../source/levelcelview.cpp" line="1323"/>
+        <location filename="../source/levelcelview.cpp" line="1300"/>
+        <location filename="../source/levelcelview.cpp" line="1325"/>
         <source>The image must be %1px * %2px to be used as a tile.</source>
         <translation>Csak %1px * %2px méretű képek használhatóak lapnak.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1397"/>
+        <location filename="../source/levelcelview.cpp" line="1399"/>
         <source>The image can not be used as a frame or as a subtile.</source>
         <translation>A kép nem használható mezőként vagy képkockaként.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1430"/>
+        <location filename="../source/levelcelview.cpp" line="1432"/>
         <source>Scanning...</source>
         <translation>Vizsgálat folyamatban...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1438"/>
+        <location filename="../source/levelcelview.cpp" line="1440"/>
         <source>Frame %1 is not used by any subtile.</source>
         <translation>Képkocka %1 nincs használva egyetlen mező által sem.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="1445"/>
+        <location filename="../source/levelcelview.cpp" line="1447"/>
         <source>Frame %1 is used by subtile %2.</source>
         <translation>
             <numerusform>Képkocka %1 használatban van a(z) %2 mező által.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1459"/>
+        <location filename="../source/levelcelview.cpp" line="1461"/>
         <source>Subtile %1 is not used by any tile.</source>
         <translation>Mező %1 nincs használva egyetlen lap által sem.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="1466"/>
+        <location filename="../source/levelcelview.cpp" line="1468"/>
         <source>Subtile %1 is used by tile %2.</source>
         <translation>
             <numerusform>Mező %1 használatban van a(z) %2 lap által.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1471"/>
+        <location filename="../source/levelcelview.cpp" line="1473"/>
         <source>The tileset is empty.</source>
         <translation>Mezőkészlet üres.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1515"/>
+        <location filename="../source/levelcelview.cpp" line="1517"/>
         <source>No change was necessary.</source>
         <translation>Nincs szükség módosításra.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1549"/>
+        <location filename="../source/levelcelview.cpp" line="1551"/>
         <source>The frames are optimal.</source>
         <translation>A képkockák optimálisak.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1605"/>
+        <location filename="../source/levelcelview.cpp" line="1607"/>
         <source>Checking SOL flags...</source>
         <translation>SOL tulajdonságok ellenőrzése...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1612"/>
+        <location filename="../source/levelcelview.cpp" line="1614"/>
         <source>SOL inconsistencies:</source>
         <translation>SOL ellentmondások:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1620"/>
+        <location filename="../source/levelcelview.cpp" line="1622"/>
         <source>Subtile %1 blocks the light, but still passable (not solid).</source>
         <translation>A(z) %1. mező blokkolja a fényt, de átjárható.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1624"/>
+        <location filename="../source/levelcelview.cpp" line="1626"/>
         <source>Subtile %1 blocks the light, but it does not block missiles.</source>
         <translation>A(z) %1. mező blokkolja a fényt, de a lövedékeket nem.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1631"/>
+        <location filename="../source/levelcelview.cpp" line="1633"/>
         <source>Subtile %1 blocks missiles, but still passable (not solid).</source>
         <translation>A(z) %1. mező blokkolja a lövedékeket, de átjárható.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1638"/>
+        <location filename="../source/levelcelview.cpp" line="1640"/>
         <source>Subtile %1 has left transparency enabled, but transparency is not enabled.</source>
         <translation>A(z) %1. mező bal oldalán az áttetszőség engedélyezett, de az áttetszőség a teljes mezőre nem.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1645"/>
+        <location filename="../source/levelcelview.cpp" line="1647"/>
         <source>Subtile %1 has right transparency enabled, but transparency is not enabled.</source>
         <translation>A(z) %1. mező jobb oldalán az áttetszőség engedélyezett, de az áttetszőség a teljes mezőre nem.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1652"/>
+        <location filename="../source/levelcelview.cpp" line="1654"/>
         <source>Subtile %1 is for traps, but still passable (not solid).</source>
         <translation>A(z) %1. mezőre csapda helyezhető, de átjárható.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1656"/>
+        <location filename="../source/levelcelview.cpp" line="1658"/>
         <source>Subtile %1 is for traps, but it does not block light.</source>
         <translation>A(z) %1. mezőre csapda helyezhető, de nem blokkolja a fényt.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1660"/>
+        <location filename="../source/levelcelview.cpp" line="1662"/>
         <source>Subtile %1 is for traps, but it does not block missiles.</source>
         <translation>A(z) %1. mezőre csapda helyezhető, de nem blokkolja a lövedékeket.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1679"/>
+        <location filename="../source/levelcelview.cpp" line="1681"/>
         <source>Subtile %1 blocks the light or missiles, but it is completely transparent above the floor.</source>
         <translation>A(z) %1. mező blokkolja a fényt vagy a lövedékeket, de teljesen átlátszó a talajszint felett.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1691"/>
+        <location filename="../source/levelcelview.cpp" line="1693"/>
         <source>Subtile %1 is for traps, but the frames above the floor is not square on either side.</source>
         <translation>A(z) %1. mezőre csapda helyezhető, de a talajszint felett egyik oldalon sem négyzet típusú a képkocka.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1698"/>
+        <location filename="../source/levelcelview.cpp" line="1700"/>
         <source>No inconsistency detected in the SOL flags.</source>
         <translation>Nem talált ellentmondást a SOL beállításokban.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1703"/>
+        <location filename="../source/levelcelview.cpp" line="1705"/>
         <source>Checking TMI flags...</source>
         <translation>TMI tulajdonságok ellenőrzése...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1708"/>
+        <location filename="../source/levelcelview.cpp" line="1710"/>
         <source>TMI inconsistencies:</source>
         <translation>TMI ellentmondások:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1726"/>
+        <location filename="../source/levelcelview.cpp" line="1728"/>
         <source>Subtile %1 has wall transparency set, but it is completely transparent above the floor.</source>
         <translation>A(z) %1. mezőn a fal áttetsző, de a mező teljesen átlátszó a talajszint felett.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1748"/>
+        <location filename="../source/levelcelview.cpp" line="1750"/>
         <source>Subtile %1 has floor transparency on the left side, but no wall transparency.</source>
         <translation>A(z) %1. mező bal talajszintje áttetsző, de a mező fala nem áttetsző.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1770"/>
+        <location filename="../source/levelcelview.cpp" line="1772"/>
         <source>Subtile %1 has floor transparency on the right side, but no wall transparency.</source>
         <translation>A(z) %1. mező jobb talajszintje áttetsző, de a mező fala nem áttetsző.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1806"/>
+        <location filename="../source/levelcelview.cpp" line="1808"/>
         <source>Subtile %1 has transparency on the wall while the frames above the left floor are not empty, but the left floor with many (%2) foliage pixels does not have transparency.</source>
         <translation>A(z) %1. mezőn a fal áttetsző és a képkockák nem üresek a bal talajszint felett, de a bal talajszint nem áttetsző miközben sok (%2) talajból kiálló képpont található rajta.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1811"/>
+        <location filename="../source/levelcelview.cpp" line="1813"/>
         <source>Subtile %1 has transparency on the wall while the frames above the right floor are not empty, but the right floor with many (%2) foliage pixels does not have transparency.</source>
         <translation>A(z) %1. mezőn a fal áttetsző és a képkockák nem üresek a jobb talajszint felett, de a jobb talajszint nem áttetsző miközben sok (%2) talajból kiálló képpont található rajta.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1820"/>
+        <location filename="../source/levelcelview.cpp" line="1822"/>
         <source>Subtile %1 has second pass set on both sides, but it is completely transparent or just a left/right triangle on the floor.</source>
         <translation>A(z) %1. mező mindkét oldala második a körös, de teljesen átlátszó, vagy csak talajból nem kiálló pontokkal rendelkezik.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1829"/>
+        <location filename="../source/levelcelview.cpp" line="1831"/>
         <source>Subtile %1 has second pass set only on the left, but it is completely transparent or just a left triangle on the left-side.</source>
         <translation>A(z) %1. mezőnek csak a bal oldala második a körös, de teljesen átlátszó, vagy csak talajból nem kiálló pontokkal rendelkezik a bal oldalon.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1837"/>
+        <location filename="../source/levelcelview.cpp" line="1839"/>
         <source>Subtile %1 has foliage set on the left, but no foliage pixel on the (left-)floor.</source>
         <translation>A(z) %1. mező bal oldalán kiálló elemek vannak jelezve, de a talaj ott nem rendelkezik kiálló képpontokkal.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1845"/>
+        <location filename="../source/levelcelview.cpp" line="1847"/>
         <source>Subtile %1 has left floor transparency set, but the left side is completely transparent above the floor.</source>
         <translation>A(z) %1. mező bal oldalán áttetszőség van beállítva, de a bal talaj felett teljesen átlátszó.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1850"/>
+        <location filename="../source/levelcelview.cpp" line="1852"/>
         <source>Subtile %1 has left floor transparency set, but the parts above the floor are not going to be transparent (wall transparency not set).</source>
         <translation>A(z) %1. mező bal oldalán áttetszőség van beállítva, de a bal talaj felett nem lesz áttetsző (fal áttetszőség nincs beállítva).</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1859"/>
+        <location filename="../source/levelcelview.cpp" line="1861"/>
         <source>Subtile %1 has second pass set only on the right, but it is completely transparent or just a right triangle on the right-side.</source>
         <translation>A(z) %1. mezőnek csak a jobb oldala második a körös, de teljesen átlátszó, vagy csak talajból nem kiálló pontokkal rendelkezik a jobb oldalon.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1867"/>
+        <location filename="../source/levelcelview.cpp" line="1869"/>
         <source>Subtile %1 has foliage set on the right, but no foliage pixel on the (right-)floor.</source>
         <translation>A(z) %1. mező jobb oldalán kiálló elemek vannak jelezve, de a talaj ott nem rendelkezik kiálló képpontokkal.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1875"/>
+        <location filename="../source/levelcelview.cpp" line="1877"/>
         <source>Subtile %1 has right floor transparency set, but the right side is completely transparent above the floor.</source>
         <translation>A(z) %1. mező bal oldalán áttetszőség van beállítva, de a bal talaj felett teljesen átlátszó.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1880"/>
+        <location filename="../source/levelcelview.cpp" line="1882"/>
         <source>Subtile %1 has right floor transparency set, but the parts above the floor are not going to be transparent (wall transparency not set).</source>
         <translation>A(z) %1. mező jobb oldalán áttetszőség van beállítva, de a jobb talaj felett nem lesz áttetsző (fal áttetszőség nincs beállítva).</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1887"/>
+        <location filename="../source/levelcelview.cpp" line="1889"/>
         <source>No inconsistency detected in the TMI flags.</source>
         <translation>Nem talált ellentmondást a TMI beállításokban.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1896"/>
+        <location filename="../source/levelcelview.cpp" line="1898"/>
         <source>Checking AMP flags...</source>
         <translation>AMP tulajdonságok ellenőrzése...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1902"/>
+        <location filename="../source/levelcelview.cpp" line="1904"/>
         <source>AMP inconsistencies:</source>
         <translation>AMP ellentmondások:</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1910"/>
+        <location filename="../source/levelcelview.cpp" line="1912"/>
         <source>Tile %1 has both west-door and west-arch flags set.</source>
         <translation>A(z) %1. lapon nyugati ajtó és nyugati boltív is be van állítva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1914"/>
+        <location filename="../source/levelcelview.cpp" line="1916"/>
         <source>Tile %1 has both west-door and west-grate flags set.</source>
         <translation>A(z) %1. lapon nyugati ajtó és nyugati rács is be van állítva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1918"/>
+        <location filename="../source/levelcelview.cpp" line="1920"/>
         <source>Tile %1 has both west-door and external flags set.</source>
         <translation>A(z) %1. lap külső és nyugati ajtó is be van állítva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1922"/>
+        <location filename="../source/levelcelview.cpp" line="1924"/>
         <source>Tile %1 has both west-door and stairs flags set.</source>
         <translation>A(z) %1. lap lépcső és nyugati ajtó is be van állítva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1926"/>
+        <location filename="../source/levelcelview.cpp" line="1928"/>
         <source>Tile %1 has a west-door but neither a wall (north-west), a wall intersection (north), a wall ending (north-west) nor a wall (south-west).</source>
         <translation>A(z) %1. lapon nyugati ajtó van beállítva, de típusa se nem észak-nyugati fal, se nem falak kereszteződése (északi), se nem fal vége (észak-nyugati), se pedig dél-nyugati fal.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1933"/>
+        <location filename="../source/levelcelview.cpp" line="1935"/>
         <source>Tile %1 has both east-door and east-arch flags set.</source>
         <translation>A(z) %1. lapon keleti ajtó és keleti boltív is be van állítva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1937"/>
+        <location filename="../source/levelcelview.cpp" line="1939"/>
         <source>Tile %1 has both east-door and east-grate flags set.</source>
         <translation>A(z) %1. lapon keleti ajtó és keleti rács is be van állítva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1941"/>
+        <location filename="../source/levelcelview.cpp" line="1943"/>
         <source>Tile %1 has both east-door and external flags set.</source>
         <translation>A(z) %1. lap külső és keleti ajtó is be van állítva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1945"/>
+        <location filename="../source/levelcelview.cpp" line="1947"/>
         <source>Tile %1 has both east-door and stairs flags set.</source>
         <translation>A(z) %1. lap lépcső és keleti ajtó is be van állítva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1949"/>
+        <location filename="../source/levelcelview.cpp" line="1951"/>
         <source>Tile %1 has an east-door but neither a wall (north-east), a wall intersection (north), a wall ending (north-east) nor a wall (south-east).</source>
         <translation>A(z) %1. lapon keleti ajtó van beállítva, de típusa se nem észak-keleti fal, se nem falak kereszteződése (északi), se nem fal vége (észak-keleti), se pedig dél-keleti fal.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1956"/>
+        <location filename="../source/levelcelview.cpp" line="1958"/>
         <source>Tile %1 has both west-arch and west-grate flags set.</source>
         <translation>A(z) %1. lapon nyugati boltív és nyugati rács is be van állítva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1960"/>
+        <location filename="../source/levelcelview.cpp" line="1962"/>
         <source>Tile %1 has both west-arch and external flags set.</source>
         <translation>A(z) %1. lap külső és nyugati boltív is be van állítva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1964"/>
+        <location filename="../source/levelcelview.cpp" line="1966"/>
         <source>Tile %1 has both west-arch and stairs flags set.</source>
         <translation>A(z) %1. lap lépcső és nyugati boltív is be van állítva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1968"/>
+        <location filename="../source/levelcelview.cpp" line="1970"/>
         <source>Tile %1 has a west-arch but neither a wall (north-west), a wall intersection (north) nor a wall ending (north-west).</source>
         <translation>A(z) %1. lapon nyugati boltív van beállítva, de típusa se nem észak-nyugati fal, se nem falak kereszteződése (északi), se pedig fal vége (észak-nyugati).</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1975"/>
+        <location filename="../source/levelcelview.cpp" line="1977"/>
         <source>Tile %1 has both east-arch and east-grate flags set.</source>
         <translation>A(z) %1. lapon keleti boltív és keleti rács is be van állítva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1979"/>
+        <location filename="../source/levelcelview.cpp" line="1981"/>
         <source>Tile %1 has both east-arch and external flags set.</source>
         <translation>A(z) %1. lap külső és keleti boltív is be van állítva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1983"/>
+        <location filename="../source/levelcelview.cpp" line="1985"/>
         <source>Tile %1 has both east-arch and stairs flags set.</source>
         <translation>A(z) %1. lap lépcső és keleti boltív is be van állítva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1987"/>
+        <location filename="../source/levelcelview.cpp" line="1989"/>
         <source>Tile %1 has an east-arch but neither a wall (north-east), a wall intersection (north) nor a wall ending (north-east).</source>
         <translation>A(z) %1. lapon keleti boltív van beállítva, de típusa se nem észak-keleti fal, se nem falak kereszteződése (északi), se pedig fal vége (észak-keleti).</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1994"/>
+        <location filename="../source/levelcelview.cpp" line="1996"/>
         <source>Tile %1 has both west-grate and external flags set.</source>
         <translation>A(z) %1. lap külső és nyugati rács is be van állítva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1998"/>
+        <location filename="../source/levelcelview.cpp" line="2000"/>
         <source>Tile %1 has both west-grate and stairs flags set.</source>
         <translation>A(z) %1. lap lépcső és nyugati rács is be van állítva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2002"/>
+        <location filename="../source/levelcelview.cpp" line="2004"/>
         <source>Tile %1 has a west-grate but neither a wall (north-west), a wall intersection (north) nor a wall ending (north-west).</source>
         <translation>A(z) %1. lapon nyugati rács van beállítva, de típusa se nem észak-nyugati fal, se nem falak kereszteződése (északi), se pedig fal vége (észak-nyugati).</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2009"/>
+        <location filename="../source/levelcelview.cpp" line="2011"/>
         <source>Tile %1 has both east-grate and external flags set.</source>
         <translation>A(z) %1. lap külső és keleti rács is be van állítva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2013"/>
+        <location filename="../source/levelcelview.cpp" line="2015"/>
         <source>Tile %1 has both east-grate and stairs flags set.</source>
         <translation>A(z) %1. lap lépcső és keleti rács is be van állítva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2017"/>
+        <location filename="../source/levelcelview.cpp" line="2019"/>
         <source>Tile %1 has an east-grate but neither a wall (north-east), a wall intersection (north) nor a wall ending (north-east).</source>
         <translation>A(z) %1. lapon keleti rács van beállítva, de típusa se nem észak-keleti fal, se nem falak kereszteződése (északi), se pedig fal vége (észak-keleti).</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2024"/>
+        <location filename="../source/levelcelview.cpp" line="2026"/>
         <source>Tile %1 has both external and stairs flags set.</source>
         <translation>A(z) %1. lap külső és lépcső is.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2028"/>
+        <location filename="../source/levelcelview.cpp" line="2030"/>
         <source>Tile %1 is external but also a pillar.</source>
         <translation>A(z) %1. lap külső és oszlop is.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2035"/>
+        <location filename="../source/levelcelview.cpp" line="2037"/>
         <source>Tile %1 is stairs but its type is also set (not None).</source>
         <translation>A(z) %1. lap lépcső és típusa is meg van adva.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2041"/>
+        <location filename="../source/levelcelview.cpp" line="2043"/>
         <source>No inconsistency detected in the AMP flags.</source>
         <translation>Nem talált ellentmondást a AMP beállításokban.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2056"/>
+        <location filename="../source/levelcelview.cpp" line="2058"/>
         <source>Removing unused frames...</source>
         <translation>Nem használt képkockák törlése...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2076"/>
+        <location filename="../source/levelcelview.cpp" line="2071"/>
         <source>Removed frame %1.</source>
         <translation>A(z) %1 képkocka törlésre került.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2090"/>
+        <location filename="../source/levelcelview.cpp" line="2085"/>
         <source>Removing unused subtiles...</source>
         <translation>Nem használt mezők törlése...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2108"/>
+        <location filename="../source/levelcelview.cpp" line="2103"/>
         <source>Removed subtile %1.</source>
         <translation>A(z) %1 mező törlésre került.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2126"/>
+        <location filename="../source/levelcelview.cpp" line="2121"/>
         <source>Every frame is used.</source>
         <translation>Mindegyik képkocka használatban van.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2136"/>
+        <location filename="../source/levelcelview.cpp" line="2131"/>
         <source>Every subtile is used.</source>
         <translation>Mindegyik mező használatban van.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2158"/>
+        <location filename="../source/levelcelview.cpp" line="2153"/>
         <source>Every subtile and frame are used.</source>
         <translation>Mindegyik mező és képkocka használatban van.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2452"/>
-        <location filename="../source/levelcelview.cpp" line="2489"/>
-        <location filename="../source/levelcelview.cpp" line="2527"/>
+        <location filename="../source/levelcelview.cpp" line="2474"/>
+        <location filename="../source/levelcelview.cpp" line="2511"/>
+        <location filename="../source/levelcelview.cpp" line="2549"/>
         <source>Append</source>
         <translation>Hozzáadása</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2453"/>
+        <location filename="../source/levelcelview.cpp" line="2475"/>
         <source>Append new frames at the end</source>
         <translation>Képkockák hozzáadása az meglévők után</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2490"/>
+        <location filename="../source/levelcelview.cpp" line="2512"/>
         <source>Append new subtiles at the end</source>
         <translation>Mezők hozzáadása az meglévők után</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2528"/>
+        <location filename="../source/levelcelview.cpp" line="2550"/>
         <source>Append new tiles at the end</source>
         <translation>Lapok hozzáadása az meglévők után</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1501"/>
+        <location filename="../source/levelcelview.cpp" line="1503"/>
         <source>Checking frames...</source>
         <translation>Képkockák vizsgálata...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1510"/>
+        <location filename="../source/levelcelview.cpp" line="1512"/>
         <source>Changed Frame %1 from &apos;%2&apos; to &apos;%3&apos;.</source>
         <translation>A(z) %1. képkocka  módosítva &apos;%2&apos;-ről &apos;%3&apos;-re.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1531"/>
+        <location filename="../source/levelcelview.cpp" line="1533"/>
         <source>Scanning frames...</source>
         <translation>Képkockák vizsgálata...</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/levelcelview.cpp" line="1544"/>
+        <location filename="../source/levelcelview.cpp" line="1546"/>
         <source>Frame %1 could be &apos;%2&apos; by changing %n pixel(s).</source>
         <translation>
             <numerusform>A(z) %1. képkocka lehetne &apos;%2&apos; %n pixel megváltoztatásával.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2142"/>
+        <location filename="../source/levelcelview.cpp" line="2137"/>
         <source>Scanning tileset...</source>
         <translation>Mezőkészlet vizsgálata...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2216"/>
+        <location filename="../source/levelcelview.cpp" line="2211"/>
         <source>Compressing tileset...</source>
         <translation>Mezőkészlet tömörítése...</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2436"/>
+        <location filename="../source/levelcelview.cpp" line="2458"/>
         <source>Frame</source>
         <translation>Képkocka</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2440"/>
+        <location filename="../source/levelcelview.cpp" line="2462"/>
         <source>Add Layer</source>
         <translation>Réteg hozzáadása</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2441"/>
+        <location filename="../source/levelcelview.cpp" line="2463"/>
         <source>Add the content of an image to the current frame</source>
         <translation>Kép hozzáadása az aktuális képkockához</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2446"/>
-        <location filename="../source/levelcelview.cpp" line="2483"/>
-        <location filename="../source/levelcelview.cpp" line="2521"/>
+        <location filename="../source/levelcelview.cpp" line="2468"/>
+        <location filename="../source/levelcelview.cpp" line="2505"/>
+        <location filename="../source/levelcelview.cpp" line="2543"/>
         <source>Insert</source>
         <translation>Beillesztése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2447"/>
+        <location filename="../source/levelcelview.cpp" line="2469"/>
         <source>Add new frames before the current one</source>
         <translation>Képkocka beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2458"/>
-        <location filename="../source/levelcelview.cpp" line="2495"/>
-        <location filename="../source/levelcelview.cpp" line="2533"/>
+        <location filename="../source/levelcelview.cpp" line="2480"/>
+        <location filename="../source/levelcelview.cpp" line="2517"/>
+        <location filename="../source/levelcelview.cpp" line="2555"/>
         <source>Replace</source>
         <translation>Cseréje</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2459"/>
+        <location filename="../source/levelcelview.cpp" line="2481"/>
         <source>Replace the current frame</source>
         <translation>Az aktuális képkocka kicserélése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2465"/>
-        <location filename="../source/levelcelview.cpp" line="2502"/>
-        <location filename="../source/levelcelview.cpp" line="2540"/>
+        <location filename="../source/levelcelview.cpp" line="2487"/>
+        <location filename="../source/levelcelview.cpp" line="2524"/>
+        <location filename="../source/levelcelview.cpp" line="2562"/>
         <source>Delete</source>
         <translation>Törlése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2466"/>
+        <location filename="../source/levelcelview.cpp" line="2488"/>
         <source>Delete the current frame</source>
         <translation>Az aktuális képkocka törlése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2473"/>
+        <location filename="../source/levelcelview.cpp" line="2495"/>
         <source>Subtile</source>
         <translation>Mező</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2477"/>
-        <location filename="../source/levelcelview.cpp" line="2514"/>
+        <location filename="../source/levelcelview.cpp" line="2499"/>
+        <location filename="../source/levelcelview.cpp" line="2536"/>
         <source>Create</source>
         <translation>Létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2478"/>
+        <location filename="../source/levelcelview.cpp" line="2500"/>
         <source>Create a new subtile</source>
         <translation>Új mező létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2484"/>
+        <location filename="../source/levelcelview.cpp" line="2506"/>
         <source>Add new subtiles before the current one</source>
         <translation>Új mező beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2496"/>
+        <location filename="../source/levelcelview.cpp" line="2518"/>
         <source>Replace the current subtile</source>
         <translation>Cserélje az aktuális mezőt</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2503"/>
+        <location filename="../source/levelcelview.cpp" line="2525"/>
         <source>Delete the current subtile</source>
         <translation>Az aktuális mező törlése</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2510"/>
+        <location filename="../source/levelcelview.cpp" line="2532"/>
         <source>Tile</source>
         <translation>Lap</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2515"/>
+        <location filename="../source/levelcelview.cpp" line="2537"/>
         <source>Create a new tile</source>
         <translation>Új lap létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2522"/>
+        <location filename="../source/levelcelview.cpp" line="2544"/>
         <source>Add new tiles before the current one</source>
         <translation>Új lap beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2534"/>
+        <location filename="../source/levelcelview.cpp" line="2556"/>
         <source>Replace the current tile</source>
         <translation>Cserélje az aktuális lapot</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="2541"/>
+        <location filename="../source/levelcelview.cpp" line="2563"/>
         <source>Delete the current tile</source>
         <translation>Az aktuális lap törlése</translation>
     </message>
@@ -1316,74 +1341,39 @@
         <translation>Kódolás:</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.ui" line="60"/>
+        <location filename="../source/leveltabframewidget.ui" line="54"/>
         <source>Square</source>
         <translation>Négyzet</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.ui" line="65"/>
+        <location filename="../source/leveltabframewidget.ui" line="59"/>
         <source>Transparent square</source>
         <translation>Átlátszó négyzet</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.ui" line="70"/>
+        <location filename="../source/leveltabframewidget.ui" line="64"/>
         <source>Left Triangle</source>
         <translation>Bal Háromszög</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.ui" line="75"/>
+        <location filename="../source/leveltabframewidget.ui" line="69"/>
         <source>Right Triangle</source>
         <translation>Jobb Háromszög</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.ui" line="80"/>
+        <location filename="../source/leveltabframewidget.ui" line="74"/>
         <source>Left Trapezoid</source>
         <translation>Bal Trapézoid</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.ui" line="85"/>
+        <location filename="../source/leveltabframewidget.ui" line="79"/>
         <source>Right Trapezoid</source>
         <translation>Jobb Trapézoid</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="30"/>
+        <location filename="../source/leveltabframewidget.cpp" line="18"/>
         <source>Delete the current frame</source>
         <translation>Az aktuális képkocka törlése</translation>
-    </message>
-    <message>
-        <location filename="../source/leveltabframewidget.cpp" line="252"/>
-        <source>Invalid width. Must be 32px wide.</source>
-        <translation>Hibás szélesség. Nem 32 képpont szélességű.</translation>
-    </message>
-    <message>
-        <location filename="../source/leveltabframewidget.cpp" line="254"/>
-        <source>Invalid height. Must be 32px wide.</source>
-        <translation>Hibás magasság. Nem 32 képpont magasságú.</translation>
-    </message>
-    <message>
-        <location filename="../source/leveltabframewidget.cpp" line="263"/>
-        <source>Suggested type: &apos;Square&apos;</source>
-        <translation>Javasolt típus: &apos;Négyzet&apos;</translation>
-    </message>
-    <message>
-        <location filename="../source/leveltabframewidget.cpp" line="268"/>
-        <source>Suggested type: &apos;Left Triangle&apos;</source>
-        <translation>Javasolt típus: &apos;Bal Háromszög&apos;</translation>
-    </message>
-    <message>
-        <location filename="../source/leveltabframewidget.cpp" line="273"/>
-        <source>Suggested type: &apos;Right Triangle&apos;</source>
-        <translation>Javasolt típus: &apos;Jobb Háromszög&apos;</translation>
-    </message>
-    <message>
-        <location filename="../source/leveltabframewidget.cpp" line="278"/>
-        <source>Suggested type: &apos;Left Trapezoid&apos;</source>
-        <translation>Javasolt típus: &apos;Bal Trapézoid&apos;</translation>
-    </message>
-    <message>
-        <location filename="../source/leveltabframewidget.cpp" line="283"/>
-        <source>Suggested type: &apos;Right Trapezoid&apos;</source>
-        <translation>Javasolt típus: &apos;Jobb Trapézoid&apos;</translation>
     </message>
 </context>
 <context>
@@ -1487,12 +1477,12 @@
         <translation>Következő képkocka</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.cpp" line="29"/>
+        <location filename="../source/leveltabsubtilewidget.cpp" line="17"/>
         <source>Reset flags</source>
         <translation>SOL és TMI tulajdonságok alaphelyzetbe állítása</translation>
     </message>
     <message>
-        <location filename="../source/leveltabsubtilewidget.cpp" line="30"/>
+        <location filename="../source/leveltabsubtilewidget.cpp" line="18"/>
         <source>Delete the current subtile</source>
         <translation>Az aktuális mező törlése</translation>
     </message>
@@ -1628,12 +1618,12 @@
         <translation>Következő mező</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.cpp" line="30"/>
+        <location filename="../source/leveltabtilewidget.cpp" line="18"/>
         <source>Reset flags</source>
         <translation>Térkép tulajdonságok alaphelyzetbe állítása</translation>
     </message>
     <message>
-        <location filename="../source/leveltabtilewidget.cpp" line="31"/>
+        <location filename="../source/leveltabtilewidget.cpp" line="19"/>
         <source>Delete the current tile</source>
         <translation>Az aktuális lap törlése</translation>
     </message>
@@ -1641,726 +1631,719 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../source/mainwindow.ui" line="107"/>
+        <location filename="../source/mainwindow.ui" line="101"/>
         <source>File</source>
         <translation>Fájl</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="122"/>
+        <location filename="../source/mainwindow.ui" line="116"/>
         <source>Help</source>
         <translation>Segítség</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="129"/>
-        <location filename="../source/mainwindow.cpp" line="691"/>
+        <location filename="../source/mainwindow.ui" line="123"/>
+        <location filename="../source/mainwindow.cpp" line="675"/>
         <source>Tileset</source>
         <translation>Mezőkészlet</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="158"/>
-        <location filename="../source/mainwindow.cpp" line="875"/>
+        <location filename="../source/mainwindow.ui" line="152"/>
+        <location filename="../source/mainwindow.cpp" line="869"/>
         <source>Palette</source>
         <translation>Paletta</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="183"/>
+        <location filename="../source/mainwindow.ui" line="177"/>
         <source>Tasks</source>
         <translation>Feladatok</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="189"/>
+        <location filename="../source/mainwindow.ui" line="183"/>
         <source>Edit</source>
         <translation>Szerkesztés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="209"/>
-        <location filename="../source/mainwindow.cpp" line="1901"/>
+        <location filename="../source/mainwindow.ui" line="203"/>
+        <location filename="../source/mainwindow.cpp" line="1841"/>
         <source>About</source>
         <translation>Névjegy</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="214"/>
-        <location filename="../source/mainwindow.cpp" line="1906"/>
+        <location filename="../source/mainwindow.ui" line="208"/>
+        <location filename="../source/mainwindow.cpp" line="1846"/>
         <source>About Qt</source>
         <translation>Qt névjegye</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="219"/>
+        <location filename="../source/mainwindow.ui" line="213"/>
         <source>Quit</source>
         <translation>Kilépés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="227"/>
+        <location filename="../source/mainwindow.ui" line="221"/>
         <source>Close</source>
         <translation>Bezárás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="235"/>
+        <location filename="../source/mainwindow.ui" line="229"/>
         <source>Open...</source>
         <translation>Megnyitás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="243"/>
+        <location filename="../source/mainwindow.ui" line="237"/>
         <source>Open As</source>
         <translation>Megnyitás mint...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="251"/>
+        <location filename="../source/mainwindow.ui" line="245"/>
         <source>Save</source>
         <translation>Mentés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="259"/>
+        <location filename="../source/mainwindow.ui" line="253"/>
         <source>Save As</source>
         <translation>Mentés másként</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="267"/>
+        <location filename="../source/mainwindow.ui" line="261"/>
         <source>Open palette...</source>
         <translation>Paletta megnyitása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="275"/>
+        <location filename="../source/mainwindow.ui" line="269"/>
         <source>Open unique translation...</source>
         <translation>Egyedi átrendelő megnyitása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="283"/>
+        <location filename="../source/mainwindow.ui" line="277"/>
         <source>Open base translation...</source>
         <translation>Alap átrendelő megnyitása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="291"/>
+        <location filename="../source/mainwindow.ui" line="285"/>
         <source>Export</source>
         <translation>Exportálás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="299"/>
+        <location filename="../source/mainwindow.ui" line="293"/>
         <source>Upscale Assets</source>
         <translation>Állományok felméretezése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="302"/>
+        <location filename="../source/mainwindow.ui" line="296"/>
         <source>Upscale the assets of Diablo 1 / Hellfire</source>
         <translation>Diablo 1 / Hellfire állományok felméretezése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="307"/>
+        <location filename="../source/mainwindow.ui" line="301"/>
         <source>Settings</source>
         <translation>Beállítások</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="312"/>
+        <location filename="../source/mainwindow.ui" line="306"/>
         <source>Usage Report</source>
         <translation>Használati jelentés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="315"/>
+        <location filename="../source/mainwindow.ui" line="309"/>
         <source>List the uses of the current frame/subtile/tile</source>
         <translation>Listázza a felhasználóit az aktuális képkockának, mezőnek és lapnak</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="328"/>
+        <location filename="../source/mainwindow.ui" line="322"/>
         <source>Reset Frame Types</source>
         <translation>Képkockatípusok visszaállítása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="331"/>
+        <location filename="../source/mainwindow.ui" line="325"/>
         <source>Reinitialize the frame types of every frame</source>
         <translation>A képkockák típusainak alaphelyzetbe állítása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="320"/>
+        <location filename="../source/mainwindow.ui" line="314"/>
         <source>Inefficient Frames</source>
         <translation>Pazarló képkockák</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="323"/>
+        <location filename="../source/mainwindow.ui" line="317"/>
         <source>List frames which are almost standard</source>
         <translation>Majdnem standard képkockák listázása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="336"/>
+        <location filename="../source/mainwindow.ui" line="330"/>
         <source>Patch Tileset</source>
         <translation>Mezőkészlet javítása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="339"/>
+        <location filename="../source/mainwindow.ui" line="333"/>
         <source>Patch subtiles of the vanilla game</source>
         <translation>Az eredeti játékbeli mezők javítása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="344"/>
+        <location filename="../source/mainwindow.ui" line="338"/>
         <source>Check Subtile Flags</source>
         <translation>Mezőtulajdonságok ellenőrzése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="347"/>
+        <location filename="../source/mainwindow.ui" line="341"/>
         <source>List inconsistent subtile-flags (SOL + TMI)</source>
         <translation>Ellentmondások keresése a mezők tulajdonságaiban (SOL + TMI)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="352"/>
+        <location filename="../source/mainwindow.ui" line="346"/>
         <source>Check Tile Flags</source>
         <translation>Laptulajdonságok ellenőrzése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="355"/>
+        <location filename="../source/mainwindow.ui" line="349"/>
         <source>List inconsistent tile-flags (AMP)</source>
         <translation>Ellentmondások keresése a lapok tulajdonságaiban (AMP)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="360"/>
+        <location filename="../source/mainwindow.ui" line="354"/>
         <source>Check Tileset Flags</source>
         <translation>Mezőkészlet-tulajdonságok ellenőrzése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="363"/>
+        <location filename="../source/mainwindow.ui" line="357"/>
         <source>List inconsistent tile-flags (AMP) and subtile-flags (SOL + TMI)</source>
         <translation>Ellentmondások keresése a mezőkészlet tulajdonságaiban (AMP + SOL + TMI)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="368"/>
+        <location filename="../source/mainwindow.ui" line="362"/>
         <source>Cleanup Frames</source>
         <translation>Képkockák kiszelektálása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="371"/>
+        <location filename="../source/mainwindow.ui" line="365"/>
         <source>Eliminate unused frames</source>
         <translation>Nem használt képkockák törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="376"/>
+        <location filename="../source/mainwindow.ui" line="370"/>
         <source>Cleanup Subtiles</source>
         <translation>Mezők kiszelektálása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="379"/>
+        <location filename="../source/mainwindow.ui" line="373"/>
         <source>Eliminate unused subtiles</source>
         <translation>Nem használt mezők törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="384"/>
+        <location filename="../source/mainwindow.ui" line="378"/>
         <source>Cleanup Tileset</source>
         <translation>Mezőkészlet kiszelektálása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="387"/>
+        <location filename="../source/mainwindow.ui" line="381"/>
         <source>Eliminate unused subtiles and frames</source>
         <translation>Nem használt mezők és képkockák törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="392"/>
+        <location filename="../source/mainwindow.ui" line="386"/>
         <source>Compress Subtiles</source>
         <translation>Mezők tömörítése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="395"/>
+        <location filename="../source/mainwindow.ui" line="389"/>
         <source>Reuse frames in subtiles</source>
         <translation>Mezők tömörítése képkockák újrafelhasználásával</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="400"/>
+        <location filename="../source/mainwindow.ui" line="394"/>
         <source>Compress Tiles</source>
         <translation>Lapok tömörítése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="403"/>
+        <location filename="../source/mainwindow.ui" line="397"/>
         <source>Reuse subtiles in tiles</source>
         <translation>Lapok tömörítése mezők újrafelhasználásával</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="408"/>
+        <location filename="../source/mainwindow.ui" line="402"/>
         <source>Compress Tileset</source>
         <translation>Mezőkészlet tömörítése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="411"/>
+        <location filename="../source/mainwindow.ui" line="405"/>
         <source>Reuse subtiles in tiles and frames in subtiles</source>
         <translation>Mezőkészlet tömörítése mezők és képkockák újrafelhasználásával</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="416"/>
+        <location filename="../source/mainwindow.ui" line="410"/>
         <source>Sort Frames</source>
         <translation>Képkockák rendezése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="419"/>
+        <location filename="../source/mainwindow.ui" line="413"/>
         <source>Sort the frames based on the subtiles</source>
         <translation>Képkockák rendezése a mezők sorrendjében</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="424"/>
+        <location filename="../source/mainwindow.ui" line="418"/>
         <source>Sort Subtiles</source>
         <translation>Mezők rendezése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="427"/>
+        <location filename="../source/mainwindow.ui" line="421"/>
         <source>Sort the subtiles based on the tiles</source>
         <translation>Mezők rendezése a lapok sorrendjében</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="432"/>
+        <location filename="../source/mainwindow.ui" line="426"/>
         <source>Sort Tileset</source>
         <translation>Mezőkészlet rendezése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="435"/>
+        <location filename="../source/mainwindow.ui" line="429"/>
         <source>Sort the subtiles and frames based on the tiles</source>
         <translation>Mezők és a képkockák rendezése a lapok sorrendjében</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="440"/>
+        <location filename="../source/mainwindow.ui" line="434"/>
         <source>New palette</source>
         <translation>Új paletta</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="445"/>
+        <location filename="../source/mainwindow.ui" line="439"/>
         <source>Save palette</source>
         <translation>Paletta mentése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="450"/>
+        <location filename="../source/mainwindow.ui" line="444"/>
         <source>Save palette as...</source>
         <translation>Paletta mentése másként</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="455"/>
+        <location filename="../source/mainwindow.ui" line="449"/>
         <source>Close palette</source>
         <translation>Palette bezárása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="460"/>
+        <location filename="../source/mainwindow.ui" line="454"/>
         <source>New unique translation</source>
         <translation>Új egyedi átrendelő</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="465"/>
+        <location filename="../source/mainwindow.ui" line="459"/>
         <source>Save unique translation</source>
         <translation>Egyedi átrendelő mentése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="470"/>
+        <location filename="../source/mainwindow.ui" line="464"/>
         <source>Save unique translation as...</source>
         <translation>Egyedi átrendelő mentése másként</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="475"/>
+        <location filename="../source/mainwindow.ui" line="469"/>
         <source>Close unique translation</source>
         <translation>Egyedi átrendelő bezárása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="480"/>
+        <location filename="../source/mainwindow.ui" line="474"/>
         <source>New base translation</source>
         <translation>Új alap átrendelő</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="485"/>
+        <location filename="../source/mainwindow.ui" line="479"/>
         <source>Save base translation</source>
         <translation>Alap átrendelő mentése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="490"/>
+        <location filename="../source/mainwindow.ui" line="484"/>
         <source>Save base translation as...</source>
         <translation>Alap átrendelő mentése másként</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.ui" line="495"/>
+        <location filename="../source/mainwindow.ui" line="489"/>
         <source>Close base translation</source>
         <translation>Alap átrendelő bezárása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="689"/>
+        <location filename="../source/mainwindow.cpp" line="673"/>
         <source>CEL graphics</source>
         <translation>CEL grafika</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="690"/>
+        <location filename="../source/mainwindow.cpp" line="674"/>
         <source>CL2 graphics</source>
         <translation>CL2 grafika</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="694"/>
+        <location filename="../source/mainwindow.cpp" line="678"/>
         <source>Undo</source>
         <translation>Visszavonás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="695"/>
+        <location filename="../source/mainwindow.cpp" line="679"/>
         <source>Redo</source>
         <translation>Ismétlés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="701"/>
-        <location filename="../source/mainwindow.cpp" line="715"/>
-        <location filename="../source/mainwindow.cpp" line="729"/>
+        <location filename="../source/mainwindow.cpp" line="685"/>
+        <location filename="../source/mainwindow.cpp" line="699"/>
+        <location filename="../source/mainwindow.cpp" line="713"/>
         <source>Insert</source>
         <translation>Beillesztése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="702"/>
+        <location filename="../source/mainwindow.cpp" line="686"/>
         <source>Add new frames before the current one</source>
         <translation>Képkocka beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="705"/>
-        <location filename="../source/mainwindow.cpp" line="719"/>
-        <location filename="../source/mainwindow.cpp" line="733"/>
+        <location filename="../source/mainwindow.cpp" line="689"/>
+        <location filename="../source/mainwindow.cpp" line="703"/>
+        <location filename="../source/mainwindow.cpp" line="717"/>
         <source>Replace</source>
         <translation>Cseréje</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="706"/>
+        <location filename="../source/mainwindow.cpp" line="690"/>
         <source>Replace the current frame</source>
         <translation>Az aktuális képkocka kicserélése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="707"/>
-        <location filename="../source/mainwindow.cpp" line="721"/>
-        <location filename="../source/mainwindow.cpp" line="735"/>
+        <location filename="../source/mainwindow.cpp" line="691"/>
+        <location filename="../source/mainwindow.cpp" line="705"/>
+        <location filename="../source/mainwindow.cpp" line="719"/>
         <source>Delete</source>
         <translation>Törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="708"/>
+        <location filename="../source/mainwindow.cpp" line="692"/>
         <source>Delete the current frame</source>
         <translation>Az aktuális képkocka törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="713"/>
-        <location filename="../source/mainwindow.cpp" line="727"/>
+        <location filename="../source/mainwindow.cpp" line="697"/>
+        <location filename="../source/mainwindow.cpp" line="711"/>
         <source>Create</source>
         <translation>Létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="714"/>
+        <location filename="../source/mainwindow.cpp" line="698"/>
         <source>Create a new subtile</source>
         <translation>Új mező létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="716"/>
+        <location filename="../source/mainwindow.cpp" line="700"/>
         <source>Add new subtiles before the current one</source>
         <translation>Új mező beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="720"/>
+        <location filename="../source/mainwindow.cpp" line="704"/>
         <source>Replace the current subtile</source>
         <translation>Cserélje az aktuális mezőt</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="722"/>
+        <location filename="../source/mainwindow.cpp" line="706"/>
         <source>Delete the current subtile</source>
         <translation>Az aktuális mező törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="728"/>
+        <location filename="../source/mainwindow.cpp" line="712"/>
         <source>Create a new tile</source>
         <translation>Új lap létrehozása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="730"/>
+        <location filename="../source/mainwindow.cpp" line="714"/>
         <source>Add new tiles before the current one</source>
         <translation>Új lap beillesztése az aktuális elé</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="734"/>
+        <location filename="../source/mainwindow.cpp" line="718"/>
         <source>Replace the current tile</source>
         <translation>Cserélje az aktuális lapot</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="736"/>
+        <location filename="../source/mainwindow.cpp" line="720"/>
         <source>Delete the current tile</source>
         <translation>Az aktuális lap törlése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="742"/>
+        <location filename="../source/mainwindow.cpp" line="723"/>
         <source>Upscale</source>
         <translation>Felméretezés</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="743"/>
+        <location filename="../source/mainwindow.cpp" line="724"/>
         <source>Upscale the current graphics</source>
         <translation>Az aktuális grafika felméretezése</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="283"/>
-        <location filename="../source/mainwindow.cpp" line="304"/>
-        <location filename="../source/mainwindow.cpp" line="325"/>
-        <location filename="../source/mainwindow.cpp" line="1060"/>
-        <location filename="../source/mainwindow.cpp" line="1587"/>
-        <location filename="../source/mainwindow.cpp" line="1640"/>
-        <location filename="../source/mainwindow.cpp" line="1684"/>
-        <location filename="../source/mainwindow.cpp" line="1739"/>
-        <location filename="../source/mainwindow.cpp" line="1783"/>
-        <location filename="../source/mainwindow.cpp" line="1838"/>
+        <location filename="../source/mainwindow.cpp" line="1595"/>
+        <source>Select Palette Files</source>
+        <translation>Paletta fájl</translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="1676"/>
+        <source>Select Unique Translation Files</source>
+        <translation>Egyedi átrendelő fájl</translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="1757"/>
+        <source>Select Base Translation Files</source>
+        <translation>Alap átrendelő fájl</translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="239"/>
+        <location filename="../source/mainwindow.cpp" line="260"/>
+        <location filename="../source/mainwindow.cpp" line="281"/>
+        <location filename="../source/mainwindow.cpp" line="1054"/>
+        <location filename="../source/mainwindow.cpp" line="1579"/>
+        <location filename="../source/mainwindow.cpp" line="1660"/>
+        <location filename="../source/mainwindow.cpp" line="1741"/>
         <source>Error</source>
         <translation>Hiba</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="283"/>
-        <location filename="../source/mainwindow.cpp" line="1587"/>
-        <location filename="../source/mainwindow.cpp" line="1640"/>
+        <location filename="../source/mainwindow.cpp" line="239"/>
+        <location filename="../source/mainwindow.cpp" line="1579"/>
         <source>Failed loading PAL file.</source>
         <translation>A PAL fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="304"/>
-        <location filename="../source/mainwindow.cpp" line="325"/>
-        <location filename="../source/mainwindow.cpp" line="1684"/>
-        <location filename="../source/mainwindow.cpp" line="1739"/>
-        <location filename="../source/mainwindow.cpp" line="1783"/>
-        <location filename="../source/mainwindow.cpp" line="1838"/>
+        <location filename="../source/mainwindow.cpp" line="260"/>
+        <location filename="../source/mainwindow.cpp" line="281"/>
+        <location filename="../source/mainwindow.cpp" line="1660"/>
+        <location filename="../source/mainwindow.cpp" line="1741"/>
         <source>Failed loading TRN file.</source>
         <translation>A TRN fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="597"/>
+        <location filename="../source/mainwindow.cpp" line="575"/>
         <source>Open Graphics</source>
         <translation>Grafika megnyitása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="597"/>
-        <source>CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)</source>
-        <translation>CEL/CL2 Fájlok (*.cel *.CEL *.cl2 *.CL2)</translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.cpp" line="675"/>
-        <location filename="../source/mainwindow.cpp" line="771"/>
+        <location filename="../source/mainwindow.cpp" line="658"/>
+        <location filename="../source/mainwindow.cpp" line="759"/>
         <source>Loading...</source>
         <translation>Betöltés folyamatban...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="699"/>
+        <location filename="../source/mainwindow.cpp" line="683"/>
         <source>Add Layer</source>
         <translation>Réteg hozzáadása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="700"/>
+        <location filename="../source/mainwindow.cpp" line="684"/>
         <source>Add the content of an image to the current frame</source>
         <translation>Kép hozzáadása az aktuális képkockához</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="703"/>
-        <location filename="../source/mainwindow.cpp" line="717"/>
-        <location filename="../source/mainwindow.cpp" line="731"/>
+        <location filename="../source/mainwindow.cpp" line="687"/>
+        <location filename="../source/mainwindow.cpp" line="701"/>
+        <location filename="../source/mainwindow.cpp" line="715"/>
         <source>Append</source>
         <translation>Hozzáadása</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="704"/>
+        <location filename="../source/mainwindow.cpp" line="688"/>
         <source>Append new frames at the end</source>
         <translation>Képkockák hozzáadása az meglévők után</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="718"/>
+        <location filename="../source/mainwindow.cpp" line="702"/>
         <source>Append new subtiles at the end</source>
         <translation>Mezők hozzáadása az meglévők után</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="732"/>
+        <location filename="../source/mainwindow.cpp" line="716"/>
         <source>Append new tiles at the end</source>
         <translation>Lapok hozzáadása az meglévők után</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="739"/>
-        <source>Start drawing</source>
-        <translation>Rajzolás kezdése</translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.cpp" line="740"/>
-        <source>Stop drawing</source>
-        <translation>Rajzolás befejezése</translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.cpp" line="817"/>
+        <location filename="../source/mainwindow.cpp" line="806"/>
         <source>Failed loading SOL file: %1.</source>
         <translation>A %1 SOL file betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="824"/>
+        <location filename="../source/mainwindow.cpp" line="813"/>
         <source>Failed loading MIN file: %1.</source>
         <translation>A %1 MIN file betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="830"/>
+        <location filename="../source/mainwindow.cpp" line="819"/>
         <source>Failed loading TIL file: %1.</source>
         <translation>A %1 TIL file betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="840"/>
+        <location filename="../source/mainwindow.cpp" line="829"/>
         <source>Failed loading AMP file: %1.</source>
         <translation>A %1 AMP file betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="850"/>
+        <location filename="../source/mainwindow.cpp" line="839"/>
         <source>Failed loading TMI file: %1.</source>
         <translation>A %1 TMI file betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="856"/>
+        <location filename="../source/mainwindow.cpp" line="845"/>
         <source>Failed loading Tileset-CEL file: %1.</source>
         <translation>A %1 Mezőkészlet-CEL file betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="861"/>
+        <location filename="../source/mainwindow.cpp" line="850"/>
         <source>Failed loading CEL file: %1.</source>
         <translation>A %1 CEL file betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="866"/>
+        <location filename="../source/mainwindow.cpp" line="855"/>
         <source>Failed loading CL2 file: %1.</source>
         <translation>A %1 CL2 file betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="876"/>
+        <location filename="../source/mainwindow.cpp" line="860"/>
+        <source>Failed loading PCX file: %1.</source>
+        <translation>A %1 PCX file betöltése sikertelen.</translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="870"/>
         <source>Unique translation</source>
         <translation>Egyedi átrendelő</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="877"/>
+        <location filename="../source/mainwindow.cpp" line="871"/>
         <source>Base Translation</source>
         <translation>Alap átrendelő</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="986"/>
-        <location filename="../source/mainwindow.cpp" line="1003"/>
-        <location filename="../source/mainwindow.cpp" line="1248"/>
-        <location filename="../source/mainwindow.cpp" line="1280"/>
-        <location filename="../source/mainwindow.cpp" line="1329"/>
-        <location filename="../source/mainwindow.cpp" line="1368"/>
+        <location filename="../source/mainwindow.cpp" line="979"/>
+        <location filename="../source/mainwindow.cpp" line="996"/>
+        <location filename="../source/mainwindow.cpp" line="1241"/>
+        <location filename="../source/mainwindow.cpp" line="1273"/>
+        <location filename="../source/mainwindow.cpp" line="1322"/>
+        <location filename="../source/mainwindow.cpp" line="1361"/>
         <source>Reading...</source>
         <translation>Betöltés folyamatban...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1040"/>
+        <location filename="../source/mainwindow.cpp" line="1033"/>
         <source>Saving...</source>
         <translation>Mentés folyamatban...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1046"/>
+        <location filename="../source/mainwindow.cpp" line="1040"/>
         <source>Confirmation</source>
         <translation>Jóváhagyás</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1046"/>
+        <location filename="../source/mainwindow.cpp" line="1040"/>
         <source>Are you sure you want to save as %1? Data conversion is not supported.</source>
         <translation>Biztosan %1-ként akarod menteni? Adatok konvertálása nem támogatott.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1060"/>
+        <location filename="../source/mainwindow.cpp" line="1054"/>
         <source>Not supported.</source>
         <translation>Nem támogatott.</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1096"/>
+        <location filename="../source/mainwindow.cpp" line="1090"/>
         <source>Upscaling...</source>
         <translation>Felméretezés...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1132"/>
-        <location filename="../source/mainwindow.cpp" line="1140"/>
-        <location filename="../source/mainwindow.cpp" line="1148"/>
+        <location filename="../source/mainwindow.cpp" line="1126"/>
+        <location filename="../source/mainwindow.cpp" line="1134"/>
+        <location filename="../source/mainwindow.cpp" line="1142"/>
         <source>Select Image Files</source>
         <translation>Kép fájlok</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1242"/>
+        <location filename="../source/mainwindow.cpp" line="1235"/>
         <source>Composite Image File</source>
         <translation>Összetevő kép fájl</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1274"/>
-        <location filename="../source/mainwindow.cpp" line="1323"/>
-        <location filename="../source/mainwindow.cpp" line="1362"/>
+        <location filename="../source/mainwindow.cpp" line="1267"/>
+        <location filename="../source/mainwindow.cpp" line="1316"/>
+        <location filename="../source/mainwindow.cpp" line="1355"/>
         <source>Replacement Image File</source>
         <translation>Helyettesítő kép fájl</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="184"/>
-        <location filename="../source/mainwindow.cpp" line="1403"/>
-        <location filename="../source/mainwindow.cpp" line="1413"/>
-        <location filename="../source/mainwindow.cpp" line="1423"/>
-        <location filename="../source/mainwindow.cpp" line="1442"/>
-        <location filename="../source/mainwindow.cpp" line="1452"/>
-        <location filename="../source/mainwindow.cpp" line="1462"/>
-        <location filename="../source/mainwindow.cpp" line="1472"/>
-        <location filename="../source/mainwindow.cpp" line="1482"/>
-        <location filename="../source/mainwindow.cpp" line="1492"/>
-        <location filename="../source/mainwindow.cpp" line="1511"/>
-        <location filename="../source/mainwindow.cpp" line="1525"/>
-        <location filename="../source/mainwindow.cpp" line="1539"/>
-        <location filename="../source/mainwindow.cpp" line="1544"/>
-        <location filename="../source/mainwindow.cpp" line="1554"/>
-        <location filename="../source/mainwindow.cpp" line="1564"/>
+        <location filename="../source/mainwindow.cpp" line="137"/>
+        <location filename="../source/mainwindow.cpp" line="1395"/>
+        <location filename="../source/mainwindow.cpp" line="1405"/>
+        <location filename="../source/mainwindow.cpp" line="1415"/>
+        <location filename="../source/mainwindow.cpp" line="1434"/>
+        <location filename="../source/mainwindow.cpp" line="1444"/>
+        <location filename="../source/mainwindow.cpp" line="1454"/>
+        <location filename="../source/mainwindow.cpp" line="1464"/>
+        <location filename="../source/mainwindow.cpp" line="1474"/>
+        <location filename="../source/mainwindow.cpp" line="1484"/>
+        <location filename="../source/mainwindow.cpp" line="1503"/>
+        <location filename="../source/mainwindow.cpp" line="1517"/>
+        <location filename="../source/mainwindow.cpp" line="1531"/>
+        <location filename="../source/mainwindow.cpp" line="1536"/>
+        <location filename="../source/mainwindow.cpp" line="1546"/>
+        <location filename="../source/mainwindow.cpp" line="1556"/>
         <source>Processing...</source>
         <translation>Feldolgozás folyamatban...</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1574"/>
+        <location filename="../source/mainwindow.cpp" line="1566"/>
         <source>New Palette File</source>
         <translation>Új paletta fájl</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1574"/>
-        <location filename="../source/mainwindow.cpp" line="1604"/>
-        <location filename="../source/mainwindow.cpp" line="1623"/>
+        <location filename="../source/mainwindow.cpp" line="1566"/>
+        <location filename="../source/mainwindow.cpp" line="1595"/>
+        <location filename="../source/mainwindow.cpp" line="1612"/>
         <source>PAL Files (*.pal *.PAL)</source>
         <translation>PAL Fájlok (*.pal *.PAL)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1604"/>
-        <source>Load Palette File</source>
-        <translation>Paletta betöltése</translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.cpp" line="1623"/>
+        <location filename="../source/mainwindow.cpp" line="1612"/>
         <source>Save Palette File as...</source>
         <translation>Paletta mentése másként</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1671"/>
-        <location filename="../source/mainwindow.cpp" line="1770"/>
+        <location filename="../source/mainwindow.cpp" line="1647"/>
+        <location filename="../source/mainwindow.cpp" line="1728"/>
         <source>New Translation File</source>
         <translation>Új átrendelő fájl</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1671"/>
-        <location filename="../source/mainwindow.cpp" line="1701"/>
-        <location filename="../source/mainwindow.cpp" line="1722"/>
-        <location filename="../source/mainwindow.cpp" line="1770"/>
-        <location filename="../source/mainwindow.cpp" line="1800"/>
-        <location filename="../source/mainwindow.cpp" line="1821"/>
+        <location filename="../source/mainwindow.cpp" line="1647"/>
+        <location filename="../source/mainwindow.cpp" line="1676"/>
+        <location filename="../source/mainwindow.cpp" line="1693"/>
+        <location filename="../source/mainwindow.cpp" line="1728"/>
+        <location filename="../source/mainwindow.cpp" line="1757"/>
+        <location filename="../source/mainwindow.cpp" line="1774"/>
         <source>TRN Files (*.trn *.TRN)</source>
         <translation>TRN Fájlok (*.trn *.TRN)</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1701"/>
-        <location filename="../source/mainwindow.cpp" line="1800"/>
-        <source>Load Translation File</source>
-        <translation>Átrendelő fájl betöltése</translation>
-    </message>
-    <message>
-        <location filename="../source/mainwindow.cpp" line="1722"/>
-        <location filename="../source/mainwindow.cpp" line="1821"/>
+        <location filename="../source/mainwindow.cpp" line="1693"/>
+        <location filename="../source/mainwindow.cpp" line="1774"/>
         <source>Save Translation File as...</source>
         <translation>Átrendelő fájl mentése másként</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="687"/>
+        <location filename="../source/mainwindow.cpp" line="671"/>
         <source>New</source>
         <translation>Új</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="697"/>
+        <location filename="../source/mainwindow.cpp" line="575"/>
+        <source>CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX)</source>
+        <translation>CEL/CL2 Fájlok (*.cel *.CEL *.cl2 *.CL2);;PCX Fájlok (*.pcx *.PCX)</translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="681"/>
         <source>Frame</source>
         <translation>Képkocka</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="711"/>
+        <location filename="../source/mainwindow.cpp" line="695"/>
         <source>Subtile</source>
         <translation>Mező</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="725"/>
+        <location filename="../source/mainwindow.cpp" line="709"/>
         <source>Tile</source>
         <translation>Lap</translation>
     </message>
@@ -2415,8 +2398,8 @@
     </message>
     <message>
         <location filename="../source/openasdialog.ui" line="115"/>
-        <source>CEL/CL2 File Settings</source>
-        <translation>CEL/CL2 Fájl Beállításai</translation>
+        <source>CEL/CL2/PCX File Settings</source>
+        <translation>CEL/CL2/PCX Fájl Beállításai</translation>
     </message>
     <message>
         <location filename="../source/openasdialog.ui" line="121"/>
@@ -2427,7 +2410,7 @@
         <location filename="../source/openasdialog.ui" line="186"/>
         <location filename="../source/openasdialog.ui" line="277"/>
         <source>Width:</source>
-        <translation>Szélesség</translation>
+        <translation>Szélesség:</translation>
     </message>
     <message>
         <location filename="../source/openasdialog.ui" line="196"/>
@@ -2485,19 +2468,14 @@
         <translation>Tmi Fájl:</translation>
     </message>
     <message>
-        <location filename="../source/openasdialog.ui" line="444"/>
+        <location filename="../source/openasdialog.ui" line="429"/>
         <source>Open</source>
         <translation>Megnyitás</translation>
     </message>
     <message>
-        <location filename="../source/openasdialog.ui" line="451"/>
+        <location filename="../source/openasdialog.ui" line="436"/>
         <source>Cancel</source>
         <translation>Mégse</translation>
-    </message>
-    <message>
-        <location filename="../source/openasdialog.cpp" line="54"/>
-        <source>CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)</source>
-        <translation>CEL/CL2 Fájlok (*.cel *.CEL *.cl2 *.CL2)</translation>
     </message>
     <message>
         <location filename="../source/openasdialog.cpp" line="121"/>
@@ -2523,6 +2501,11 @@
         <location filename="../source/openasdialog.cpp" line="54"/>
         <source>Select Graphics</source>
         <translation>Grafika</translation>
+    </message>
+    <message>
+        <location filename="../source/openasdialog.cpp" line="54"/>
+        <source>CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX)</source>
+        <translation>CEL/CL2 Fájlok (*.cel *.CEL *.cl2 *.CL2);;PCX Fájlok (*.pcx *.PCX)</translation>
     </message>
     <message>
         <location filename="../source/openasdialog.cpp" line="121"/>
@@ -2566,178 +2549,273 @@
     </message>
 </context>
 <context>
-    <name>PaletteWidget</name>
+    <name>PaintWidget</name>
     <message>
-        <location filename="../source/palettewidget.ui" line="135"/>
-        <location filename="../source/palettewidget.ui" line="224"/>
-        <source>Clear</source>
-        <translation>Törlés</translation>
+        <location filename="../source/paintwidget.ui" line="74"/>
+        <source>Apply</source>
+        <translation>Ráhelyez</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.ui" line="142"/>
-        <source>Index:</source>
-        <translation>Index:</translation>
+        <location filename="../source/paintwidget.ui" line="77"/>
+        <source>Apply the selected mask to the frame using the current color(s)</source>
+        <translation>A képkocka maszkolása az aktuális színnel</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.ui" line="149"/>
-        <source>Color:</source>
-        <translation>Szín:</translation>
+        <location filename="../source/paintwidget.cpp" line="76"/>
+        <source>Move</source>
+        <translation>Mozgatás</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.ui" line="162"/>
-        <location filename="../source/palettewidget.ui" line="175"/>
-        <source>Pick</source>
-        <translation>Választ</translation>
-    </message>
-    <message>
-        <location filename="../source/palettewidget.ui" line="250"/>
-        <source>Monster TRN</source>
-        <translation>Szörny TRN</translation>
-    </message>
-    <message>
-        <location filename="../source/palettewidget.ui" line="253"/>
-        <source>Apply in-game TRN adjustment</source>
-        <translation>A játékbeli TRN-módosítás elvégzése</translation>
-    </message>
-    <message>
-        <location filename="../source/palettewidget.cpp" line="241"/>
-        <source>New</source>
-        <translation>Új</translation>
-    </message>
-    <message>
-        <location filename="../source/palettewidget.cpp" line="242"/>
-        <source>Open</source>
-        <translation>Megnyitás</translation>
-    </message>
-    <message>
-        <location filename="../source/palettewidget.cpp" line="243"/>
-        <source>Save</source>
-        <translation>Mentés</translation>
-    </message>
-    <message>
-        <location filename="../source/palettewidget.cpp" line="244"/>
-        <source>Save As</source>
-        <translation>Mentés másként</translation>
-    </message>
-    <message>
-        <location filename="../source/palettewidget.cpp" line="245"/>
+        <location filename="../source/paintwidget.cpp" line="78"/>
         <source>Close</source>
         <translation>Bezárás</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="337"/>
-        <source>_default.pal</source>
-        <translation type="unfinished"></translation>
+        <location filename="../source/paintwidget.cpp" line="83"/>
+        <source>Square</source>
+        <translation>Négyzet</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="339"/>
-        <source>_null.trn</source>
-        <translation type="unfinished"></translation>
+        <location filename="../source/paintwidget.cpp" line="84"/>
+        <source>Left Triangle</source>
+        <translation>Bal Háromszög</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="347"/>
-        <source>Show all colors</source>
-        <translation>Mindegyik szín</translation>
+        <location filename="../source/paintwidget.cpp" line="85"/>
+        <source>Right Triangle</source>
+        <translation>Jobb Háromszög</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="350"/>
-        <source>Show all frames hits</source>
-        <translation>Képkockákbeli színek</translation>
+        <location filename="../source/paintwidget.cpp" line="86"/>
+        <source>Left Trapezoid</source>
+        <translation>Bal Trapézoid</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="352"/>
-        <source>Show current tile hits</source>
-        <translation>Aktuális lap színei</translation>
+        <location filename="../source/paintwidget.cpp" line="87"/>
+        <source>Right Trapezoid</source>
+        <translation>Jobb Trapézoid</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="353"/>
-        <source>Show current subtile hits</source>
-        <translation>Aktuális mező színei</translation>
+        <location filename="../source/paintwidget.cpp" line="351"/>
+        <location filename="../source/paintwidget.cpp" line="356"/>
+        <source>Error</source>
+        <translation>Hiba</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="355"/>
-        <source>Show current frame hits</source>
-        <translation>Aktuális képkocka színei</translation>
+        <location filename="../source/paintwidget.cpp" line="351"/>
+        <source>Frame width is not 32px.</source>
+        <translation>A képkocka nem 32 képpont szélességű.</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="357"/>
-        <source>Show the altered colors</source>
-        <translation>Módosított színek</translation>
+        <location filename="../source/paintwidget.cpp" line="356"/>
+        <source>Frame height is not 32px.</source>
+        <translation>A képkocka nem 32 képpont magasságú.</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="392"/>
+        <location filename="../source/paintwidget.cpp" line="377"/>
         <source>Warning</source>
         <translation>Figyelmeztetés</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="392"/>
+        <location filename="../source/paintwidget.cpp" line="377"/>
+        <source>Select a color-index from the palette to use.</source>
+        <translation>Válassz színt a palettából.</translation>
+    </message>
+</context>
+<context>
+    <name>PaletteWidget</name>
+    <message>
+        <location filename="../source/palettewidget.ui" line="163"/>
+        <source>Clear</source>
+        <translation>Törlés</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.ui" line="170"/>
+        <source>Index:</source>
+        <translation>Index:</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.ui" line="139"/>
+        <source>Color:</source>
+        <translation>Szín:</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.ui" line="156"/>
+        <source>Pick</source>
+        <translation>Választ</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.ui" line="216"/>
+        <source>Monster TRN</source>
+        <translation>Szörny TRN</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.ui" line="219"/>
+        <source>Apply in-game TRN adjustment</source>
+        <translation>A játékbeli TRN-módosítás elvégzése</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="227"/>
+        <source>New</source>
+        <translation>Új</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="228"/>
+        <source>Open</source>
+        <translation>Megnyitás</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="229"/>
+        <source>Save</source>
+        <translation>Mentés</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="230"/>
+        <source>Save As</source>
+        <translation>Mentés másként</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="231"/>
+        <source>Close</source>
+        <translation>Bezárás</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="687"/>
+        <source>_default.pal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="687"/>
+        <source>_null.trn</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="336"/>
+        <source>Show all colors</source>
+        <translation>Mindegyik szín</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="328"/>
+        <source>Enter the color index to which the selected color(s) should map to.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="328"/>
+        <source>Enter the color index or 256 to replace the selected color(s) of the frame(s) with the given color or transparent pixel.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="339"/>
+        <source>Show all frames hits</source>
+        <translation>Képkockákbeli színek</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="341"/>
+        <source>Show current tile hits</source>
+        <translation>Aktuális lap színei</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="342"/>
+        <source>Show current subtile hits</source>
+        <translation>Aktuális mező színei</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="344"/>
+        <source>Show current frame hits</source>
+        <translation>Aktuális képkocka színei</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="346"/>
+        <source>Show the altered colors</source>
+        <translation>Módosított színek</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="372"/>
+        <location filename="../source/palettewidget.cpp" line="1033"/>
+        <location filename="../source/palettewidget.cpp" line="1043"/>
+        <source>Warning</source>
+        <translation>Figyelmeztetés</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="372"/>
+        <location filename="../source/palettewidget.cpp" line="1043"/>
         <source>Source and target selection length do not match.</source>
         <translation>A forrás és a cél tartomány hossza nem egyezik.</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="482"/>
+        <location filename="../source/palettewidget.cpp" line="446"/>
         <source>Undo</source>
         <translation>Visszavonás</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="483"/>
+        <location filename="../source/palettewidget.cpp" line="447"/>
         <source>Undo previous color change</source>
         <translation>Előző színmódosítás visszavonása</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="490"/>
+        <location filename="../source/palettewidget.cpp" line="454"/>
         <source>Redo</source>
         <translation>Ismétlés</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="491"/>
+        <location filename="../source/palettewidget.cpp" line="455"/>
         <source>Redo previous color change</source>
         <translation>Előző színmódosítás  ismétlése</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="498"/>
+        <location filename="../source/palettewidget.cpp" line="462"/>
         <source>Copy</source>
         <translation>Másolás</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="499"/>
+        <location filename="../source/palettewidget.cpp" line="463"/>
         <source>Copy the selected colors to the clipboard</source>
         <translation>A kiválasztott szín vágólapra másolása</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="506"/>
+        <location filename="../source/palettewidget.cpp" line="470"/>
         <source>Paste</source>
         <translation>Beillesztés</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="507"/>
+        <location filename="../source/palettewidget.cpp" line="471"/>
         <source>Paste the colors from the clipboard to the palette</source>
         <translation>Színek beillesztése a vágólapról</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/palettewidget.cpp" line="700"/>
+        <location filename="../source/palettewidget.cpp" line="664"/>
         <source>&lt;- Select color(s)</source>
         <translation>
             <numerusform>&lt;- Válassz színt</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="1042"/>
+        <location filename="../source/palettewidget.cpp" line="1033"/>
+        <source>Invalid palette index-range.</source>
+        <translation>Érvénytelen paletta érték.</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="1068"/>
         <source>transparent pixels</source>
         <translation>átlátszó képpontokkal</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="1042"/>
+        <location filename="../source/palettewidget.cpp" line="1068"/>
         <source>color %1</source>
         <translation>%1 színnel</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="1045"/>
+        <location filename="../source/palettewidget.cpp" line="1068"/>
+        <source>color %1-%2</source>
+        <translation>%1-%2 színnel</translation>
+    </message>
+    <message>
+        <location filename="../source/palettewidget.cpp" line="1071"/>
         <source>Confirmation</source>
         <translation>Jóváhagyás</translation>
     </message>
     <message>
-        <location filename="../source/palettewidget.cpp" line="1045"/>
+        <location filename="../source/palettewidget.cpp" line="1071"/>
         <source>Pixels with color %1 are going to be replaced with %2. This change is not reversible. Are you sure you want to proceed?</source>
         <translation>A(z) %1 színű képpontok %2 kerülnek helyettesítésre. Ez a változtatás nem visszafordítható. Biztosan folytatod?</translation>
     </message>
@@ -2750,52 +2828,52 @@
         <translation>Mezőkészlet javítása</translation>
     </message>
     <message>
-        <location filename="../source/patchtilesetdialog.ui" line="30"/>
+        <location filename="../source/patchtilesetdialog.ui" line="33"/>
         <source>Dungeon type:</source>
-        <translation>Mezőkészlet típusa</translation>
+        <translation>Mezőkészlet típusa:</translation>
     </message>
     <message>
-        <location filename="../source/patchtilesetdialog.ui" line="38"/>
+        <location filename="../source/patchtilesetdialog.ui" line="41"/>
         <source>Town</source>
         <translation>Falu</translation>
     </message>
     <message>
-        <location filename="../source/patchtilesetdialog.ui" line="43"/>
+        <location filename="../source/patchtilesetdialog.ui" line="46"/>
         <source>(L1) Cathedral</source>
         <translation>(L2) Katedrális</translation>
     </message>
     <message>
-        <location filename="../source/patchtilesetdialog.ui" line="48"/>
+        <location filename="../source/patchtilesetdialog.ui" line="51"/>
         <source>(L2) Catacombs</source>
         <translation>(L2) Katakombák</translation>
     </message>
     <message>
-        <location filename="../source/patchtilesetdialog.ui" line="53"/>
+        <location filename="../source/patchtilesetdialog.ui" line="56"/>
         <source>(L3) Caves</source>
         <translation>(L3) Barlangok</translation>
     </message>
     <message>
-        <location filename="../source/patchtilesetdialog.ui" line="58"/>
+        <location filename="../source/patchtilesetdialog.ui" line="61"/>
         <source>(L4) Hell</source>
         <translation>(L4) Pokol</translation>
     </message>
     <message>
-        <location filename="../source/patchtilesetdialog.ui" line="63"/>
+        <location filename="../source/patchtilesetdialog.ui" line="66"/>
         <source>(L5) Crypt</source>
         <translation>(L5) Kripta</translation>
     </message>
     <message>
-        <location filename="../source/patchtilesetdialog.ui" line="68"/>
+        <location filename="../source/patchtilesetdialog.ui" line="71"/>
         <source>(L6) Nest</source>
         <translation>(L6) Fészek</translation>
     </message>
     <message>
-        <location filename="../source/patchtilesetdialog.ui" line="104"/>
+        <location filename="../source/patchtilesetdialog.ui" line="92"/>
         <source>Run</source>
         <translation>Futtatás</translation>
     </message>
     <message>
-        <location filename="../source/patchtilesetdialog.ui" line="111"/>
+        <location filename="../source/patchtilesetdialog.ui" line="99"/>
         <source>Cancel</source>
         <translation>Mégse</translation>
     </message>
@@ -2808,12 +2886,12 @@
 <context>
     <name>ProgressDialog</name>
     <message>
-        <location filename="../source/progressdialog.ui" line="47"/>
+        <location filename="../source/progressdialog.ui" line="32"/>
         <source>Cancel</source>
         <translation>Mégse</translation>
     </message>
     <message>
-        <location filename="../source/progressdialog.ui" line="98"/>
+        <location filename="../source/progressdialog.ui" line="68"/>
         <source>Close</source>
         <translation>Bezárás</translation>
     </message>
@@ -2839,39 +2917,40 @@
         <translation>Hiba</translation>
     </message>
     <message>
-        <location filename="../source/d1cel.cpp" line="149"/>
+        <location filename="../source/d1cel.cpp" line="147"/>
         <location filename="../source/d1celtileset.cpp" line="144"/>
-        <location filename="../source/d1cl2.cpp" line="143"/>
+        <location filename="../source/d1cl2.cpp" line="141"/>
         <source>Frame %1 is invalid.</source>
         <translation>A(z) %1 képkocka hibás.</translation>
     </message>
     <message>
-        <location filename="../source/d1cel.cpp" line="283"/>
-        <location filename="../source/d1cl2.cpp" line="259"/>
+        <location filename="../source/d1cel.cpp" line="281"/>
+        <location filename="../source/d1cl2.cpp" line="257"/>
         <source>Frames can not be split to equal groups.</source>
         <translation>A képkockák nem oszthatóak egyforma csoportokba.</translation>
     </message>
     <message>
-        <location filename="../source/d1cel.cpp" line="363"/>
+        <location filename="../source/d1cel.cpp" line="361"/>
         <location filename="../source/d1celtileset.cpp" line="211"/>
-        <location filename="../source/d1cl2.cpp" line="348"/>
+        <location filename="../source/d1cl2.cpp" line="346"/>
         <source>Confirmation</source>
         <translation>Jóváhagyás</translation>
     </message>
     <message>
-        <location filename="../source/d1cel.cpp" line="363"/>
+        <location filename="../source/d1cel.cpp" line="361"/>
         <location filename="../source/d1celtileset.cpp" line="211"/>
-        <location filename="../source/d1cl2.cpp" line="348"/>
+        <location filename="../source/d1cl2.cpp" line="346"/>
         <source>Are you sure you want to overwrite %1?</source>
         <translation>Biztosan felül akarod írni a %1 fájlt?</translation>
     </message>
     <message>
-        <location filename="../source/d1cel.cpp" line="373"/>
+        <location filename="../source/d1cel.cpp" line="371"/>
         <location filename="../source/d1celtileset.cpp" line="221"/>
-        <location filename="../source/d1cl2.cpp" line="358"/>
+        <location filename="../source/d1cl2.cpp" line="356"/>
         <location filename="../source/d1pal.cpp" line="114"/>
+        <location filename="../source/d1pcx.cpp" line="302"/>
         <location filename="../source/d1trn.cpp" line="35"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="415"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="413"/>
         <source>Failed to open file: %1.</source>
         <translation>Nem sikerült megnyitni a %1 fájlt.</translation>
     </message>
@@ -2881,182 +2960,229 @@
         <translation>A %1. képkocka típusa ismeretlen.</translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="222"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="226"/>
         <source>Unknown frame type.</source>
         <translation>Ismeretlent képkocka típus.</translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="238"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="242"/>
         <source>Invalid transparent pixel in a Square frame.</source>
         <translation>Hibás átlátszó képpont a Négyzet-típusú képkockában.</translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="302"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="308"/>
         <source>Invalid non-transparent pixel in the bottom part of the Left Triangle frame.</source>
         <translation>Hibás nem-átlátszó képpont a Bal Háromszög-típusú képkocka alján.</translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="311"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="317"/>
         <source>Invalid transparent pixel in the bottom part of the Left Triangle frame.</source>
         <translation>Hibás átlátszó képpont a Bal Háromszög-típusú képkocka alján.</translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="324"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="330"/>
         <source>Invalid non-transparent pixel in the top part of the Left Triangle frame.</source>
         <translation>Hibás nem-átlátszó képpont a Bal Háromszög-típusú képkocka felső felén.</translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="333"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="339"/>
         <source>Invalid transparent pixel in the top part of the Left Triangle frame.</source>
         <translation>Hibás átlátszó képpont a Bal Háromszög-típusú képkocka felső felén.</translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="355"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="361"/>
         <source>Invalid transparent pixel in the bottom part of the Right Triangle frame.</source>
         <translation>Hibás átlátszó képpont a Jobb Háromszög-típusú képkocka alján.</translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="366"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="372"/>
         <source>Invalid non-transparent pixel in the bottom part of the Right Triangle frame.</source>
         <translation>Hibás nem-átlátszó képpont a Jobb Háromszög-típusú képkocka alján.</translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="377"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="383"/>
         <source>Invalid transparent pixel in the top part of the Right Triangle frame.</source>
         <translation>Hibás átlátszó képpont a Jobb Háromszög-típusú képkocka felső felén.</translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="388"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="394"/>
         <source>Invalid non-transparent pixel in the top part of the Right Triangle frame.</source>
         <translation>Hibás nem-átlátszó képpont a Jobb Háromszög-típusú képkocka felső felén.</translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="408"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="414"/>
         <source>Invalid non-transparent pixel in the bottom part of the Left Trapezoid frame.</source>
         <translation>Hibás nem-átlátszó képpont a Bal Trapézoid-típusú képkocka alján.</translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="417"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="423"/>
         <source>Invalid transparent pixel in the bottom part of the Left Trapezoid frame.</source>
         <translation>Hibás átlátszó képpont a Bal Trapézoid-típusú képkocka alján.</translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="429"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="435"/>
         <source>Invalid transparent pixel in the top part of the Left Trapezoid frame.</source>
         <translation>Hibás átlátszó képpont a Bal Trapézoid-típusú képkocka felső felén.</translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="451"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="457"/>
         <source>Invalid transparent pixel in the bottom part of the Right Trapezoid frame.</source>
         <translation>Hibás átlátszó képpont a Jobb Trapézoid-típusú képkocka alján.</translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="462"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="468"/>
         <source>Invalid non-transparent pixel in the bottom part of the Right Trapezoid frame.</source>
         <translation>Hibás nem-átlátszó képpont a Jobb Trapézoid-típusú képkocka alján.</translation>
     </message>
     <message>
-        <location filename="../source/d1celtilesetframe.cpp" line="472"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="478"/>
         <source>Invalid transparent pixel in the top part of the Right Trapezoid frame.</source>
         <translation>Hibás átlátszó képpont a Jobb Trapézoid-típusú képkocka felső felén.</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1481"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="531"/>
+        <source>Frame width is not 32px.</source>
+        <translation>A képkocka nem 32 képpont szélességű.</translation>
+    </message>
+    <message>
+        <location filename="../source/d1celtilesetframe.cpp" line="534"/>
+        <source>Frame height is not 32px.</source>
+        <translation>A képkocka nem 32 képpont magasságú.</translation>
+    </message>
+    <message>
+        <location filename="../source/d1celtilesetframe.cpp" line="543"/>
+        <source>Suggested type: &apos;Square&apos;</source>
+        <translation>Javasolt típus: &apos;Négyzet&apos;</translation>
+    </message>
+    <message>
+        <location filename="../source/d1celtilesetframe.cpp" line="548"/>
+        <source>Suggested type: &apos;Left Triangle&apos;</source>
+        <translation>Javasolt típus: &apos;Bal Háromszög&apos;</translation>
+    </message>
+    <message>
+        <location filename="../source/d1celtilesetframe.cpp" line="553"/>
+        <source>Suggested type: &apos;Right Triangle&apos;</source>
+        <translation>Javasolt típus: &apos;Jobb Háromszög&apos;</translation>
+    </message>
+    <message>
+        <location filename="../source/d1celtilesetframe.cpp" line="558"/>
+        <source>Suggested type: &apos;Left Trapezoid&apos;</source>
+        <translation>Javasolt típus: &apos;Bal Trapézoid&apos;</translation>
+    </message>
+    <message>
+        <location filename="../source/d1celtilesetframe.cpp" line="563"/>
+        <source>Suggested type: &apos;Right Trapezoid&apos;</source>
+        <translation>Javasolt típus: &apos;Jobb Trapézoid&apos;</translation>
+    </message>
+    <message>
+        <location filename="../source/levelcelview.cpp" line="1483"/>
         <source>Square</source>
         <translation>Négyzet</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1483"/>
+        <location filename="../source/levelcelview.cpp" line="1485"/>
         <source>Transparent square</source>
         <translation>Átlátszó négyzet</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1485"/>
+        <location filename="../source/levelcelview.cpp" line="1487"/>
         <source>Left Triangle</source>
         <translation>Bal Háromszög</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1487"/>
+        <location filename="../source/levelcelview.cpp" line="1489"/>
         <source>Right Triangle</source>
         <translation>Jobb Háromszög</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1489"/>
+        <location filename="../source/levelcelview.cpp" line="1491"/>
         <source>Left Trapezoid</source>
         <translation>Bal Trapézoid</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1491"/>
+        <location filename="../source/levelcelview.cpp" line="1493"/>
         <source>Right Trapezoid</source>
         <translation>Jobb Trapézoid</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1493"/>
+        <location filename="../source/levelcelview.cpp" line="1495"/>
         <source>Empty</source>
         <translation>Üres</translation>
     </message>
     <message>
-        <location filename="../source/levelcelview.cpp" line="1495"/>
-        <location filename="../source/mainwindow.cpp" line="1896"/>
+        <location filename="../source/levelcelview.cpp" line="1497"/>
+        <location filename="../source/mainwindow.cpp" line="1836"/>
         <source>Unknown</source>
         <translation>Ismeretlen</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="73"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="585"/>
         <source>Invalid (transparent) pixel at (%1:%2)</source>
         <translation>Hibás (átlátszó) képpont a (%1:%2) pozícióban.</translation>
     </message>
     <message>
-        <location filename="../source/leveltabframewidget.cpp" line="79"/>
+        <location filename="../source/d1celtilesetframe.cpp" line="591"/>
         <source>Invalid (non-transparent) pixel at (%1:%2)</source>
         <translation>Hibás (nem átlátszó) képpont a (%1:%2) pozícióban.</translation>
     </message>
     <message>
-        <location filename="../source/d1pcx.cpp" line="46"/>
+        <location filename="../source/d1pcx.cpp" line="53"/>
+        <source>Width setting is ignored when a PCX file is loaded.</source>
+        <translation>A PCX fájl betöltésekor a szélesség beállítás figyelmen kívül van hagyva.</translation>
+    </message>
+    <message>
+        <location filename="../source/d1pcx.cpp" line="84"/>
         <location filename="../source/main.cpp" line="19"/>
         <source>Failed to read file: %1.</source>
         <translation>A %1 fájl olvasása sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/d1pcx.cpp" line="55"/>
+        <location filename="../source/d1pcx.cpp" line="93"/>
         <source>Invalid PCX file.</source>
         <translation>Hibás PCX fájl.</translation>
     </message>
     <message>
-        <location filename="../source/d1pcx.cpp" line="62"/>
+        <location filename="../source/d1pcx.cpp" line="100"/>
         <source>Invalid PCX header.</source>
         <translation>Hibás PCX fejléc.</translation>
     </message>
     <message>
-        <location filename="../source/d1pcx.cpp" line="66"/>
+        <location filename="../source/d1pcx.cpp" line="104"/>
         <source>Unsupported PCX format (number of bits per pixel).</source>
         <translation>Nem támogatott formátum (bitek száma képpontonként).</translation>
     </message>
     <message>
-        <location filename="../source/d1pcx.cpp" line="70"/>
+        <location filename="../source/d1pcx.cpp" line="108"/>
         <source>Unsupported PCX format (number of planes).</source>
         <translation>Nem támogatott formátum (rétegszám).</translation>
     </message>
     <message>
-        <location filename="../source/mainwindow.cpp" line="1125"/>
+        <location filename="../source/d1pcx.cpp" line="263"/>
+        <source>PCX format can not store the image due to its dimensions: %1x%2.</source>
+        <translation>A méretei miatt a kép nem tárolható PCX formátumban.</translation>
+    </message>
+    <message>
+        <location filename="../source/d1pcx.cpp" line="294"/>
+        <source>Could not find a palette entry to use for the transparent colors.</source>
+        <translation>Nem sikerült paletta bejegyzést találni az átlátszó képpontok helyettesítésére</translation>
+    </message>
+    <message>
+        <location filename="../source/mainwindow.cpp" line="1119"/>
         <source>Image files (%1)</source>
         <translation>Kép fájlok (%1)</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="83"/>
+        <location filename="../source/exportdialog.cpp" line="126"/>
         <source>%1 created.</source>
         <translation>%1 létrehozva.</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="85"/>
+        <location filename="../source/exportdialog.cpp" line="128"/>
         <source>Failed to create %1.</source>
         <translation>A(z) %1 létrehozása sikertelen</translation>
     </message>
     <message>
-        <location filename="../source/exportdialog.cpp" line="162"/>
-        <location filename="../source/exportdialog.cpp" line="286"/>
-        <location filename="../source/exportdialog.cpp" line="412"/>
-        <location filename="../source/exportdialog.cpp" line="565"/>
+        <location filename="../source/exportdialog.cpp" line="103"/>
         <source>Failed to create image with (%1:%2) dimensions.</source>
         <translation>(%1:%2) méretű kép létrehozása sikertelen</translation>
     </message>
@@ -3115,56 +3241,56 @@
         <translation>Hibás CEL állomány (0x00 érték)</translation>
     </message>
     <message>
-        <location filename="../source/d1gfx.cpp" line="102"/>
+        <location filename="../source/d1gfx.cpp" line="115"/>
         <source>Mismatching frame-sizes.</source>
         <translation>Eltérő képkocka-méret.</translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="64"/>
+        <location filename="../source/d1tileset.cpp" line="51"/>
         <source>Reusing frames...</source>
         <translation>Képkockák újrafelhasználása...</translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="130"/>
+        <location filename="../source/d1tileset.cpp" line="106"/>
         <source>Using frame %1 instead of %2.</source>
         <translation>A(z) %2. képkocka helyett a(z) %1. képkocka kerül felhasználásra.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/d1tileset.cpp" line="141"/>
+        <location filename="../source/d1tileset.cpp" line="117"/>
         <source>Reused %n frame(s).</source>
         <translation>
             <numerusform>% képkocka került újrafelhasználásra.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="150"/>
+        <location filename="../source/d1tileset.cpp" line="126"/>
         <source>Reusing subtiles...</source>
         <translation>Mezők újrafelhasználása...</translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="205"/>
+        <location filename="../source/d1tileset.cpp" line="170"/>
         <source>Using subtile %1 instead of %2.</source>
         <translation>A(z) %2. mező helyett a(z) %1. mező kerül felhasználásra.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../source/d1tileset.cpp" line="215"/>
+        <location filename="../source/d1tileset.cpp" line="180"/>
         <source>Reused %n subtile(s).</source>
         <translation>
             <numerusform>% mező került újrafelhasználásra.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="233"/>
+        <location filename="../source/d1tileset.cpp" line="198"/>
         <source>Removed frame (%1) @%2 in Subtile %3.</source>
         <translation>A %1. képkocka a %2. mezőben törlésre került.</translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="236"/>
+        <location filename="../source/d1tileset.cpp" line="201"/>
         <source>The frame @%1 in Subtile %2 is already empty.</source>
         <translation>A %1. képkocka a %2. mezőben már üres.</translation>
     </message>
     <message>
-        <location filename="../source/d1tileset.cpp" line="452"/>
+        <location filename="../source/d1tileset.cpp" line="417"/>
         <source>Frame %1 was removed, but it was still used in Subtile %2 @ %3</source>
         <translation>A(z) %1. képkocka törlésre került, de a %2. mező még használta.</translation>
     </message>
@@ -3184,29 +3310,29 @@
         <translation>Nem szimmetrikus haladás-visszajelző igény.</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.cpp" line="170"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="197"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="217"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="645"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="689"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="168"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="195"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="215"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="643"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="687"/>
         <source>Failed to load file: %1.</source>
         <translation>A %1 fájl betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.cpp" line="499"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="534"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="581"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="635"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="678"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="721"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="756"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="795"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="832"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="497"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="532"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="579"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="633"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="676"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="719"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="754"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="793"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="830"/>
         <source>Upscaling asset %1.</source>
         <translation>Állomány felméretezése: %1</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.cpp" line="884"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="882"/>
         <source>Upscaling tileset %1.</source>
         <translation>Mezőkészlet felméretezése: %1</translation>
     </message>
@@ -3317,12 +3443,12 @@
         <translation>Tmi Fájl:</translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.ui" line="359"/>
+        <location filename="../source/saveasdialog.ui" line="344"/>
         <source>Save</source>
         <translation>Mentés</translation>
     </message>
     <message>
-        <location filename="../source/saveasdialog.ui" line="366"/>
+        <location filename="../source/saveasdialog.ui" line="351"/>
         <source>Cancel</source>
         <translation>Mégse</translation>
     </message>
@@ -3410,75 +3536,75 @@
         <translation>Beállítások</translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="30"/>
+        <location filename="../source/settingsdialog.ui" line="33"/>
         <source>Language:</source>
         <translation>Nyelv:</translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="43"/>
+        <location filename="../source/settingsdialog.ui" line="46"/>
         <source>Graphics</source>
         <translation>Grafika</translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="49"/>
+        <location filename="../source/settingsdialog.ui" line="52"/>
         <source>Graphics background color:</source>
-        <translation>Grafika háttérszíne</translation>
+        <translation>Grafika háttérszíne:</translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="59"/>
+        <location filename="../source/settingsdialog.ui" line="62"/>
         <source>Background color of the graphics&apos;s window</source>
         <translation>A grafika ablakának háttérszíne</translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="76"/>
+        <location filename="../source/settingsdialog.ui" line="79"/>
         <source>Graphics transparent color:</source>
-        <translation>Grafika átlátszó színe</translation>
+        <translation>Grafika átlátszó színe:</translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="86"/>
+        <location filename="../source/settingsdialog.ui" line="89"/>
         <source>Color of the transparent pixels in the graphics&apos;s window</source>
         <translation>Az átlátszó képpontok színe a grafikán</translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="106"/>
+        <location filename="../source/settingsdialog.ui" line="109"/>
         <source>Palettes and translations</source>
         <translation>Paletták és átrendelők</translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="112"/>
+        <location filename="../source/settingsdialog.ui" line="115"/>
         <source>Undefined palette color:</source>
         <translation>Paletta nem definiált színe:</translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="69"/>
-        <location filename="../source/settingsdialog.ui" line="96"/>
-        <location filename="../source/settingsdialog.ui" line="132"/>
-        <location filename="../source/settingsdialog.ui" line="159"/>
+        <location filename="../source/settingsdialog.ui" line="72"/>
+        <location filename="../source/settingsdialog.ui" line="99"/>
+        <location filename="../source/settingsdialog.ui" line="135"/>
+        <location filename="../source/settingsdialog.ui" line="162"/>
         <source>Pick</source>
         <translation>Választ</translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="122"/>
+        <location filename="../source/settingsdialog.ui" line="125"/>
         <source>Color of the undefined (cleared) entries in the palette</source>
         <translation>A palettában nem meghatározott (törölt) bejegyzések színei</translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="139"/>
+        <location filename="../source/settingsdialog.ui" line="142"/>
         <source>Selection border color:</source>
         <translation>Kijelölés peremének a színe:</translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="149"/>
+        <location filename="../source/settingsdialog.ui" line="152"/>
         <source>Border color of the selected palette entries and subtiles</source>
         <translation>A kiválasztott paletta bejegyzések és a mezők peremének a színe</translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="194"/>
+        <location filename="../source/settingsdialog.ui" line="182"/>
         <source>Ok</source>
         <translation>Mentés</translation>
     </message>
     <message>
-        <location filename="../source/settingsdialog.ui" line="201"/>
+        <location filename="../source/settingsdialog.ui" line="189"/>
         <source>Cancel</source>
         <translation>Mégse</translation>
     </message>
@@ -3497,78 +3623,78 @@
     <name>UpscaleDialog</name>
     <message>
         <location filename="../source/upscaledialog.ui" line="6"/>
-        <location filename="../source/upscaledialog.ui" line="173"/>
+        <location filename="../source/upscaledialog.ui" line="189"/>
         <source>Upscale</source>
         <translation>Felméretezés</translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="15"/>
+        <location filename="../source/upscaledialog.ui" line="18"/>
         <source>Multiplier:</source>
         <translation>Szorzótényező:</translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="32"/>
+        <location filename="../source/upscaledialog.ui" line="35"/>
         <source>Fix colors:</source>
         <translation>Rögzített színek:</translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="76"/>
+        <location filename="../source/upscaledialog.ui" line="79"/>
         <source>Town</source>
         <translation>Falu</translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="81"/>
+        <location filename="../source/upscaledialog.ui" line="84"/>
         <source>(L1) Cathedral</source>
         <translation>(L2) Katedrális</translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="86"/>
+        <location filename="../source/upscaledialog.ui" line="89"/>
         <source>(L2) Catacombs</source>
         <translation>(L2) Katakombák</translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="91"/>
+        <location filename="../source/upscaledialog.ui" line="94"/>
         <source>(L3) Caves</source>
         <translation>(L3) Barlangok</translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="96"/>
+        <location filename="../source/upscaledialog.ui" line="99"/>
         <source>(L4) Hell</source>
         <translation>(L4) Pokol</translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="101"/>
+        <location filename="../source/upscaledialog.ui" line="104"/>
         <source>(L5) Crypt</source>
         <translation>(L5) Kripta</translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="106"/>
+        <location filename="../source/upscaledialog.ui" line="109"/>
         <source>(L6) Nest</source>
         <translation>(L6) Fészek</translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="111"/>
-        <location filename="../source/upscaledialog.ui" line="137"/>
+        <location filename="../source/upscaledialog.ui" line="114"/>
+        <location filename="../source/upscaledialog.ui" line="158"/>
         <source>None</source>
         <translation>Nincs</translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="119"/>
+        <location filename="../source/upscaledialog.ui" line="122"/>
         <source>Anti aliasing:</source>
-        <translation>Élsimítás</translation>
+        <translation>Élsimítás:</translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="127"/>
+        <location filename="../source/upscaledialog.ui" line="148"/>
         <source>Basic</source>
         <translation>Alap</translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="132"/>
+        <location filename="../source/upscaledialog.ui" line="153"/>
         <source>Tileset</source>
         <translation>Mezőkészlet</translation>
     </message>
     <message>
-        <location filename="../source/upscaledialog.ui" line="180"/>
+        <location filename="../source/upscaledialog.ui" line="196"/>
         <source>Cancel</source>
         <translation>Mégse</translation>
     </message>
@@ -3581,104 +3707,104 @@
         <translation>Felméretezési feladata</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="23"/>
+        <location filename="../source/upscaletaskdialog.ui" line="26"/>
         <source>Multiplier:</source>
         <translation>Szorzótényező:</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="43"/>
+        <location filename="../source/upscaletaskdialog.ui" line="46"/>
         <source>Listfiles File:</source>
         <translation>Listfiles fájl:</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="57"/>
-        <location filename="../source/upscaletaskdialog.ui" line="164"/>
-        <location filename="../source/upscaletaskdialog.ui" line="185"/>
+        <location filename="../source/upscaletaskdialog.ui" line="60"/>
+        <location filename="../source/upscaletaskdialog.ui" line="167"/>
+        <location filename="../source/upscaletaskdialog.ui" line="188"/>
         <source>Browse</source>
         <translation>Tallózás</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="64"/>
+        <location filename="../source/upscaletaskdialog.ui" line="67"/>
         <source>Skip step:</source>
         <translation>Lépés kihagyása:</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="78"/>
+        <location filename="../source/upscaletaskdialog.ui" line="81"/>
         <source>Regular CEL Files</source>
         <translation>Általános CEL fájlok</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="83"/>
+        <location filename="../source/upscaletaskdialog.ui" line="86"/>
         <source>Object CEL Files</source>
         <translation>Objektumok CEL fájljai</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="88"/>
+        <location filename="../source/upscaletaskdialog.ui" line="91"/>
         <source>Special CEL Files</source>
         <translation>Speciális CEL fájlok</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="93"/>
+        <location filename="../source/upscaletaskdialog.ui" line="96"/>
         <source>Cutscenes</source>
         <translation>Snittek</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="98"/>
+        <location filename="../source/upscaletaskdialog.ui" line="101"/>
         <source>Art CEL Files</source>
         <translation>Art CEL fájlok</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="103"/>
+        <location filename="../source/upscaletaskdialog.ui" line="106"/>
         <source>CL2 Files of Missiles</source>
         <translation>Lövedékek CL2 fájljai</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="108"/>
+        <location filename="../source/upscaletaskdialog.ui" line="111"/>
         <source>CL2 Files of Monsters</source>
         <translation>Szörnyek CL2 fájljai</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="113"/>
+        <location filename="../source/upscaletaskdialog.ui" line="116"/>
         <source>CL2 Files of PlrGFX</source>
         <translation>Játékosok CL2 fájljai</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="118"/>
+        <location filename="../source/upscaletaskdialog.ui" line="121"/>
         <source>Fixed CL2 Files</source>
         <translation>Javított CL2 fájlok</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="123"/>
+        <location filename="../source/upscaletaskdialog.ui" line="126"/>
         <source>Tilesets</source>
         <translation>Mezőkészletek</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="136"/>
+        <location filename="../source/upscaletaskdialog.ui" line="139"/>
         <source>Patch Tilesets:</source>
         <translation>Mezőkészletek javítása:</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="143"/>
+        <location filename="../source/upscaletaskdialog.ui" line="146"/>
         <source>Eliminate useless frames of the original tilesets</source>
         <translation>Fölösleges képkockák eltávolítása az eredeti mezőkészletekből</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="150"/>
+        <location filename="../source/upscaletaskdialog.ui" line="153"/>
         <source>Assets Folder:</source>
         <translation>Állományok könyvtára:</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="171"/>
+        <location filename="../source/upscaletaskdialog.ui" line="174"/>
         <source>Output Folder:</source>
         <translation>Kimeneti könyvtár:</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="220"/>
+        <location filename="../source/upscaletaskdialog.ui" line="208"/>
         <source>Upscale</source>
         <translation>Felméretezés</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.ui" line="227"/>
+        <location filename="../source/upscaletaskdialog.ui" line="215"/>
         <source>Cancel</source>
         <translation>Mégse</translation>
     </message>
@@ -3693,60 +3819,60 @@
         <translation>TXT Fájlok (*.txt *.TXT)</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.cpp" line="75"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="74"/>
         <source>Select Assets Folder</source>
         <translation>Állományok könyvta</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.cpp" line="86"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="84"/>
         <source>Select Output Folder</source>
         <translation>Kimeneti könyvtár</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.cpp" line="114"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="119"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="124"/>
-        <location filename="../source/upscaletaskdialog.cpp" line="128"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="112"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="117"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="122"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="126"/>
         <source>Warning</source>
         <translation>Figyelmeztetés</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.cpp" line="114"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="112"/>
         <source>Path of listfiles.txt is missing, please choose an output file.</source>
         <translation>Listfiles.txt nincs beállítva. Kérlek adjál meg egyet.</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.cpp" line="119"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="117"/>
         <source>Assets folder is missing, please set the assets folder.</source>
         <translation>Állományok könyvtára nincs beállítva. Kérlek adjál meg egyet.</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.cpp" line="124"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="122"/>
         <source>Output folder is missing, please choose an output folder.</source>
         <translation>Kimeneti könyvtár nincs beállítva. Kérlek adjál meg egyet.</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.cpp" line="128"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="126"/>
         <source>The assets folder must differ from output folder.</source>
         <translation>Az állományok könyvtára és a kimeneti könyvtár nem egyezhet.</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.cpp" line="149"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="147"/>
         <source>Upscaling assets...</source>
         <translation>Állományok felméretezése...</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.cpp" line="259"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="257"/>
         <source>Failed loading SOL file: %1.</source>
         <translation>A %1 SOL file betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.cpp" line="265"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="263"/>
         <source>Failed loading MIN file: %1.</source>
         <translation>A %1 MIN file betöltése sikertelen.</translation>
     </message>
     <message>
-        <location filename="../source/upscaletaskdialog.cpp" line="270"/>
+        <location filename="../source/upscaletaskdialog.cpp" line="268"/>
         <source>Failed loading Tileset-CEL file: %1.</source>
         <translation>A %1 Mezőkészlet-CEL file betöltése sikertelen.</translation>
     </message>
