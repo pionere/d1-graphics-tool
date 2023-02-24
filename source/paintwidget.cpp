@@ -3,6 +3,7 @@
 #include <QCursor>
 #include <QGraphicsView>
 #include <QImage>
+#include <QList>
 
 #include "config.h"
 #include "mainwindow.h"
@@ -19,9 +20,7 @@ EditFrameCommand::EditFrameCommand(D1GfxFrame *f, const QPoint &pos, D1GfxPixel 
     : QUndoCommand(nullptr)
     , frame(f)
 {
-    FramePixel fp(pos, newPixel);
-
-    this->modPixels.append(fp);
+    this->modPixels.push_back(FramePixel(pos, newPixel));
 }
 
 void EditFrameCommand::undo()
@@ -32,7 +31,7 @@ void EditFrameCommand::undo()
     }
 
     bool change = false;
-    for (int i = 0; i < this->modPixels.count(); i++) {
+    for (unsigned i = 0; i < this->modPixels.size(); i++) {
         FramePixel &fp = this->modPixels[i];
         D1GfxPixel pixel = this->frame->getPixel(fp.pos.x(), fp.pos.y());
         if (pixel != fp.pixel) {
@@ -69,7 +68,7 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, CelView *cv, LevelCelV
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &PaintWidget::on_closePushButtonClicked);
 
     // assume the first color is selected on the palette-widget
-    this->selectedColors.append(0);
+    this->selectedColors.push_back(0);
 }
 
 PaintWidget::~PaintWidget()
@@ -118,7 +117,7 @@ void PaintWidget::hide()
 
 D1GfxPixel PaintWidget::getCurrentColor(unsigned counter) const
 {
-    unsigned numColors = this->selectedColors.count();
+    unsigned numColors = this->selectedColors.size();
     if (numColors == 0) {
         return D1GfxPixel::transparentPixel();
     }
@@ -141,13 +140,13 @@ void PaintWidget::selectColor(const D1GfxPixel &pixel)
 {
     this->selectedColors.clear();
     if (!pixel.isTransparent()) {
-        this->selectedColors.append(pixel.getPaletteIndex());
+        this->selectedColors.push_back(pixel.getPaletteIndex());
     }
     // update the view
     this->colorModified();
 }
 
-void PaintWidget::palColorsSelected(const QList<quint8> &indices)
+void PaintWidget::palColorsSelected(const std::vector<quint8> &indices)
 {
     this->selectedColors = indices;
     // update the view
@@ -163,7 +162,7 @@ void PaintWidget::colorModified()
     QImage image = QImage(imageSize, QImage::Format_ARGB32);
     image.fill(QColor(Config::getGraphicsTransparentColor()));
 
-    int numColors = this->selectedColors.count();
+    unsigned numColors = this->selectedColors.size();
     if (numColors != 0) {
         for (int x = 0; x < imageSize.width(); x++) {
             QColor color = this->pal->getColor(this->selectedColors[x * numColors / imageSize.width()]);

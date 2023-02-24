@@ -44,7 +44,7 @@ EditPaletteCommand::EditPaletteCommand(D1Pal *p, quint8 sci, quint8 eci, QColor 
             nc.green() * (1 - factor) + ec.green() * factor,
             nc.blue() * (1 - factor) + ec.blue() * factor);
 
-        this->modColors.append(color);
+        this->modColors.push_back(color);
     }
 }
 
@@ -66,8 +66,8 @@ void EditPaletteCommand::undo()
 
     for (int i = startColorIndex; i <= endColorIndex; i++) {
         QColor palColor = this->pal->getColor(i);
-        this->pal->setColor(i, this->modColors.at(i - startColorIndex));
-        this->modColors.replace(i - startColorIndex, palColor);
+        this->pal->setColor(i, this->modColors[i - startColorIndex]);
+        this->modColors[i - startColorIndex] = palColor;
     }
 
     emit this->modified();
@@ -78,7 +78,7 @@ void EditPaletteCommand::redo()
     this->undo();
 }
 
-EditTranslationCommand::EditTranslationCommand(D1Trn *t, quint8 sci, quint8 eci, const QList<quint8> *nt)
+EditTranslationCommand::EditTranslationCommand(D1Trn *t, quint8 sci, quint8 eci, const std::vector<quint8> *nt)
     : QUndoCommand(nullptr)
     , trn(t)
     , startColorIndex(sci)
@@ -86,7 +86,7 @@ EditTranslationCommand::EditTranslationCommand(D1Trn *t, quint8 sci, quint8 eci,
 {
     if (nt == nullptr) {
         for (int i = startColorIndex; i <= endColorIndex; i++)
-            modTranslations.append(i);
+            modTranslations.push_back(i);
     } else {
         this->modTranslations = *nt;
     }
@@ -101,8 +101,8 @@ void EditTranslationCommand::undo()
 
     for (int i = startColorIndex; i <= endColorIndex; i++) {
         quint8 trnValue = this->trn->getTranslation(i);
-        this->trn->setTranslation(i, this->modTranslations.at(i - startColorIndex));
-        this->modTranslations.replace(i - startColorIndex, trnValue);
+        this->trn->setTranslation(i, this->modTranslations[i - startColorIndex]);
+        this->modTranslations[i - startColorIndex] = trnValue;
     }
 
     emit this->modified();
@@ -364,11 +364,11 @@ void PaletteWidget::selectColor(const D1GfxPixel &pixel)
     this->refresh();
 }
 
-void PaletteWidget::checkTranslationsSelection(const QList<quint8> &indexes)
+void PaletteWidget::checkTranslationsSelection(const std::vector<quint8> &indexes)
 {
     // assert(this->selectedLastColorIndex != COLORIDX_TRANSPARENT);
-    int selectionLength = this->selectedLastColorIndex - this->selectedFirstColorIndex + 1;
-    if (selectionLength != indexes.length()) {
+    unsigned selectionLength = this->selectedLastColorIndex - this->selectedFirstColorIndex + 1;
+    if (selectionLength != indexes.size()) {
         QMessageBox::warning(this, tr("Warning"), tr("Source and target selection length do not match."));
         return;
     }
@@ -509,9 +509,9 @@ void PaletteWidget::finishColorSelection()
     this->refresh();
 
     // emit selected colors
-    QList<quint8> indexes;
+    std::vector<quint8> indexes;
     for (int i = this->selectedFirstColorIndex; i <= this->selectedLastColorIndex && i != COLORIDX_TRANSPARENT; i++)
-        indexes.append(i);
+        indexes.push_back(i);
 
     emit this->colorsSelected(indexes);
 
@@ -1047,14 +1047,14 @@ void PaletteWidget::on_translationIndexLineEdit_returnPressed()
     if (this->isTrn) {
         // New translations
         static_assert(D1PAL_COLORS <= std::numeric_limits<quint8>::max() + 1, "on_translationIndexLineEdit_returnPressed stores color indices in quint8.");
-        QList<quint8> newTranslations;
+        std::vector<quint8> newTranslations;
         int index = targetRange.first;
         const int dc = targetRange.first == targetRange.second ? 0 : (targetRange.first < targetRange.second ? 1 : -1);
         for (int i = firstColorIndex; i <= lastColorIndex; i++, index += dc) {
             if (index == D1PAL_COLORS) {
-                newTranslations.append(i);
+                newTranslations.push_back(i);
             } else {
-                newTranslations.append(index);
+                newTranslations.push_back(index);
             }
         }
         // Build translation editing command and connect it to the current palette widget
