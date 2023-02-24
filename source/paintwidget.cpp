@@ -69,7 +69,7 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, D1Gfx *g, CelView *cv,
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &PaintWidget::on_closePushButtonClicked);
 
     // prepare combobox of the masks
-    this->ui->tilesetMaskHorizontalLayout->setVisible(lcv != nullptr);
+    this->ui->tilesetMaskWidget->setVisible(lcv != nullptr);
     this->ui->tilesetMaskComboBox->addItem(tr("Square"), QVariant((int)D1CEL_FRAME_TYPE::Square));
     this->ui->tilesetMaskComboBox->addItem(tr("Left Triangle"), QVariant((int)D1CEL_FRAME_TYPE::LeftTriangle));
     this->ui->tilesetMaskComboBox->addItem(tr("Right Triangle"), QVariant((int)D1CEL_FRAME_TYPE::RightTriangle));
