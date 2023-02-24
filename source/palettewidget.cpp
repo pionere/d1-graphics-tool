@@ -333,17 +333,17 @@ void PaletteWidget::initializeUi()
 
 void PaletteWidget::initializeDisplayComboBox()
 {
-    ui->displayComboBox->addItem(tr("Show all colors"), QVariant((int)COLORFILTER_TYPE::NONE));
+    ui->displayComboBox->addItem(tr("Show all colors"), QVariant::fromValue(COLORFILTER_TYPE::NONE));
 
     if (!this->isTrn) {
-        ui->displayComboBox->addItem(tr("Show all frames hits"), QVariant((int)COLORFILTER_TYPE::USED));
+        ui->displayComboBox->addItem(tr("Show all frames hits"), QVariant::fromValue(COLORFILTER_TYPE::USED));
         if (this->levelCelView != nullptr) {
-            ui->displayComboBox->addItem(tr("Show current tile hits"), QVariant((int)COLORFILTER_TYPE::TILE));
-            ui->displayComboBox->addItem(tr("Show current subtile hits"), QVariant((int)COLORFILTER_TYPE::SUBTILE));
+            ui->displayComboBox->addItem(tr("Show current tile hits"), QVariant::fromValue(COLORFILTER_TYPE::TILE));
+            ui->displayComboBox->addItem(tr("Show current subtile hits"), QVariant::fromValue(COLORFILTER_TYPE::SUBTILE));
         }
-        ui->displayComboBox->addItem(tr("Show current frame hits"), QVariant((int)COLORFILTER_TYPE::FRAME));
+        ui->displayComboBox->addItem(tr("Show current frame hits"), QVariant::fromValue(COLORFILTER_TYPE::FRAME));
     } else {
-        ui->displayComboBox->addItem(tr("Show the altered colors"), QVariant((int)COLORFILTER_TYPE::TRANSLATED));
+        ui->displayComboBox->addItem(tr("Show the altered colors"), QVariant::fromValue(COLORFILTER_TYPE::TRANSLATED));
     }
 }
 
