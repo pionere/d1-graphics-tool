@@ -3,6 +3,7 @@
 #include <vector>
 
 #include <QFrame>
+#include <QGraphicsView>
 #include <QMouseEvent>
 #include <QPoint>
 #include <QPointer>
@@ -74,6 +75,7 @@ private:
     D1Gfx *gfx;
     CelView *celView;
     LevelCelView *levelCelView;
+    QGraphicsView *graphView;
     bool moving;
     bool moved;
     QPoint lastPos;
