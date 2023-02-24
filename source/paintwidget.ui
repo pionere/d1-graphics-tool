@@ -74,7 +74,7 @@
          <string>Apply</string>
         </property>
         <property name="toolTip">
-         <string>Apply the selected mask to the frame using the current color</string>
+         <string>Apply the selected mask to the frame using the current color(s)</string>
         </property>
        </widget>
       </item>

@@ -40,13 +40,19 @@ void EditFrameCommand::undo()
         return;
     }
 
+    bool change = false;
     for (FramePixel &fp : this->modPixels) {
         D1GfxPixel pixel = this->frame->getPixel(fp.pos.x(), fp.pos.y());
-        this->frame->setPixel(fp.pos.x(), fp.pos.y(), fp.pixel);
-        fp.pixel = pixel;
+        if (pixel != fp.pixel) {
+            this->frame->setPixel(fp.pos.x(), fp.pos.y(), fp.pixel);
+            fp.pixel = pixel;
+            change = true;
+        }
     }
 
-    emit this->modified();
+    if (change) {
+        emit this->modified();
+    }
 }
 
 void EditFrameCommand::redo()
@@ -139,17 +145,88 @@ D1GfxPixel PaintWidget::getCurrentColor(unsigned counter) const
     return D1GfxPixel::colorPixel(this->selectedColors[counter % numColors]);
 }
 
+static void traceClick(const D1GfxFrame *frame, QPoint startPos, const QPoint &destPos, std::vector<FramePixel> &pixels)
+{
+    int x1 = startPos.x();
+    int y1 = startPos.y();
+    int x2 = destPos.x();
+    int y2 = destPos.y();
+    int dx = x2 - x1;
+    int dy = y2 - y1;
+    int xinc, yinc, d;
+    // find out step size and direction on the y coordinate
+    xinc = dx < 0 ? -1 : 1;
+    yinc = dy < 0 ? -1 : 1;
+
+    dx = abs(dx);
+    dy = abs(dy);
+    if (dx >= dy) {
+        if (dx == 0) {
+            return; // should not happen
+        }
+
+        // multiply by 2 so we round up
+        dy *= 2;
+        d = 0;
+        while (true) {
+            d += dy;
+            if (d >= dx) {
+                d -= 2 * dx; // multiply by 2 to support rounding
+                y1 += yinc;
+                if (y1 < 0 || y1 >= frame->getHeight()) {
+                    break;
+                }
+            }
+            x1 += xinc;
+            if (x1 < 0 || x1 >= frame->getWidth()) {
+                break;
+            }
+            pixels.push_back(FramePixel(QPoint(x1, y1), D1GfxPixel::transparentPixel()));
+            if (x1 == x2)
+                break;
+        }
+    } else {
+        // multiply by 2 so we round up
+        dx *= 2;
+        d = 0;
+        while (true) {
+            d += dx;
+            if (d >= dy) {
+                d -= 2 * dy; // multiply by 2 to support rounding
+                x1 += xinc;
+                if (x1 < 0 || x1 >= frame->getWidth()) {
+                    break;
+                }
+            }
+            y1 += yinc;
+            if (y1 < 0 || y1 >= frame->getHeight()) {
+                break;
+            }
+            pixels.push_back(FramePixel(QPoint(x1, y1), D1GfxPixel::transparentPixel()));
+            if (y1 == y2)
+                break;
+        }
+    }
+}
+
 void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter)
 {
-    D1GfxPixel pixel = this->getCurrentColor(counter);
-
-    if (counter == 0 && pixel == frame->getPixel(pos.x(), pos.y())) {
-        return;
+    std::vector<FramePixel> pixels;
+    if (counter == 0) {
+        dist = 0;
+        pixels.push_back(FramePixel(pos, D1GfxPixel::transparentPixel()));
+    } else {
+        traceClick(frame, this->lastPos, pos, pixels);
+    }
+    this->lastPos = pos;
+    for (FramePixel &framePixel : pixels) {
+        framePixel.pixel = this->getCurrentColor(dist);
+        dist++;
     }
 
     // Build frame editing command and connect it to the current main window widget
     // to update the palHits and CEL views when undo/redo is performed
-    EditFrameCommand *command = new EditFrameCommand(frame, pos, pixel);
+    EditFrameCommand *command = new EditFrameCommand(frame, pixels);
     QObject::connect(command, &EditFrameCommand::modified, &dMainWindow(), &MainWindow::frameModified);
 
     this->undoStack->push(command);
