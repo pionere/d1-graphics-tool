@@ -6,7 +6,6 @@
 #include <QImage>
 #include <QtEndian>
 
-#include "d1celtilesetframe.h"
 #include "d1pal.h"
 
 // TODO: move these to some persistency class?
@@ -42,6 +41,16 @@ typedef struct FramePixel {
     QPoint pos;
     D1GfxPixel pixel;
 } FramePixel;
+
+enum class D1CEL_FRAME_TYPE {
+    Square,            // opaque square (bitmap)
+    TransparentSquare, // bitmap with transparent pixels
+    LeftTriangle,      // opaque triangle on its left edge
+    RightTriangle,     // opaque triangle on its right edge
+    LeftTrapezoid,     // bottom half is a left triangle, upper half is a square
+    RightTrapezoid,    // bottom half is a right triangle, upper half is a square
+    Empty = -1,        // transparent frame (only for efficiency tests)
+};
 
 class D1GfxFrame : public QObject {
     Q_OBJECT

@@ -3,7 +3,6 @@
 #include <vector>
 
 #include <QFrame>
-#include <QList>
 #include <QMouseEvent>
 #include <QPoint>
 #include <QPointer>
@@ -27,7 +26,7 @@ signals:
 
 private:
     QPointer<D1GfxFrame> frame;
-    QList<FramePixel> modPixels;
+    std:vector:<FramePixel> modPixels;
 };
 
 namespace Ui {
@@ -57,7 +56,7 @@ private:
 public slots:
     void frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter);
     void selectColor(const D1GfxPixel &pixel);
-    void palColorsSelected(const QList<quint8> &indices);
+    void palColorsSelected(const std::vector<quint8> &indices);
     void colorModified();
 
 private slots:
@@ -79,5 +78,5 @@ private:
     bool moved;
     QPoint lastPos;
     D1Pal *pal;
-    QList<quint8> selectedColors;
+    std::vector<quint8> selectedColors;
 };

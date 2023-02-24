@@ -53,7 +53,7 @@ class EditTranslationCommand : public QObject, public QUndoCommand {
     Q_OBJECT
 
 public:
-    explicit EditTranslationCommand(D1Trn *trn, quint8 startColorIndex, quint8 endColorIndex, const QList<quint8> *newTranslations);
+    explicit EditTranslationCommand(D1Trn *trn, quint8 startColorIndex, quint8 endColorIndex, const std::vector<quint8> *newTranslations);
     ~EditTranslationCommand() = default;
 
     void undo() override;
@@ -66,7 +66,7 @@ private:
     QPointer<D1Trn> trn;
     quint8 startColorIndex;
     quint8 endColorIndex;
-    QList<quint8> modTranslations;
+    std::vector<quint8> modTranslations;
 };
 
 namespace Ui {
@@ -115,7 +115,7 @@ public:
     void initializeDisplayComboBox();
 
     void selectColor(const D1GfxPixel &pixel);
-    void checkTranslationsSelection(const QList<quint8> &indices);
+    void checkTranslationsSelection(const std::vector<quint8> &indices);
 
     // color selection handlers
     void startColorSelection(int colorIndex);
@@ -136,8 +136,8 @@ public:
 
 signals:
     void pathSelected(QString path);
-    void colorsSelected(const QList<quint8> &indices);
-    void colorsPicked(const QList<quint8> &indices);
+    void colorsSelected(const std::vector<quint8> &indices);
+    void colorsPicked(const std::vector<quint8> &indices);
 
     void colorPicking_started(bool single);
     void colorPicking_stopped();

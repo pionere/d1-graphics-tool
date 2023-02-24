@@ -3,6 +3,7 @@
 #include <QCursor>
 #include <QGraphicsView>
 #include <QImage>
+#include <QList>
 
 #include "config.h"
 #include "mainwindow.h"
@@ -19,18 +20,14 @@ EditFrameCommand::EditFrameCommand(D1GfxFrame *f, const QPoint &pos, D1GfxPixel 
     : QUndoCommand(nullptr)
     , frame(f)
 {
-    FramePixel fp(pos, newPixel);
-
-    this->modPixels.append(fp);
+    this->modPixels.push_back(FramePixel(pos, newPixel));
 }
 
 EditFrameCommand::EditFrameCommand(D1GfxFrame *f, const std::vector<FramePixel> &pixels)
     : QUndoCommand(nullptr)
     , frame(f)
+    , modPixels(pixels)
 {
-    for (unsigned i = 0; i < pixels.size(); i++) {
-        this->modPixels.append(pixels[i]);
-    }
 }
 
 void EditFrameCommand::undo()
@@ -40,20 +37,13 @@ void EditFrameCommand::undo()
         return;
     }
 
-    bool change = false;
-    for (int i = 0; i < this->modPixels.count(); i++) {
-        FramePixel &fp = this->modPixels[i];
+    for (FramePixel &fp : this->modPixels) {
         D1GfxPixel pixel = this->frame->getPixel(fp.pos.x(), fp.pos.y());
-        if (pixel != fp.pixel) {
-            this->frame->setPixel(fp.pos.x(), fp.pos.y(), fp.pixel);
-            fp.pixel = pixel;
-            change = true;
-        }
+        this->frame->setPixel(fp.pos.x(), fp.pos.y(), fp.pixel);
+        fp.pixel = pixel;
     }
 
-    if (change) {
-        emit this->modified();
-    }
+    emit this->modified();
 }
 
 void EditFrameCommand::redo()
@@ -147,6 +137,10 @@ void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
 {
     D1GfxPixel pixel = this->getCurrentColor(counter);
 
+    if (counter == 0 && pixel == frame->getPixel(pos.x(), pos.y())) {
+        return;
+    }
+
     // Build frame editing command and connect it to the current main window widget
     // to update the palHits and CEL views when undo/redo is performed
     EditFrameCommand *command = new EditFrameCommand(frame, pos, pixel);
@@ -165,7 +159,7 @@ void PaintWidget::selectColor(const D1GfxPixel &pixel)
     this->colorModified();
 }
 
-void PaintWidget::palColorsSelected(const QList<quint8> &indices)
+void PaintWidget::palColorsSelected(const std::vector<quint8> &indices)
 {
     this->selectedColors = indices;
     // update the view
