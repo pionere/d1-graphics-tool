@@ -56,6 +56,64 @@
     </layout>
    </item>
    <item>
+    <widget class="QWidget">
+     <layout class="QHBoxLayout">
+      <item>
+       <widget class="LineEditWidget" name="gradientXLineEdit">
+        <property name="charWidth">
+         <number>2</number>
+        </property>
+        <property name="toolTip">
+         <string>A line's gradient in the x direction</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>8</number>
+        </property>
+        <property name="maximumWidth">
+         <number>8</number>
+        </property>
+        <property name="text">
+         <string notr="true">:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="LineEditWidget" name="gradientYLineEdit">
+        <property name="charWidth">
+         <number>2</number>
+        </property>
+        <property name="toolTip">
+         <string>A line's gradient in the y direction</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="gradientClearPushButton">
+        <property name="text">
+         <string>Clear</string>
+        </property>
+        <property name="toolTip">
+         <string>Clear the gradient-settings</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QWidget" name="tilesetMaskWidget">
      <property name="visible">
       <bool>false</bool>

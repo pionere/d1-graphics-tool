@@ -212,14 +212,68 @@ static void traceClick(const D1GfxFrame *frame, QPoint startPos, const QPoint &d
 
 void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter)
 {
+    QPoint destPos = pos;
+
     std::vector<FramePixel> pixels;
     if (counter == 0) {
         dist = 0;
-        pixels.push_back(FramePixel(pos, D1GfxPixel::transparentPixel()));
+        pixels.push_back(FramePixel(destPos, D1GfxPixel::transparentPixel()));
     } else {
-        traceClick(frame, this->lastPos, pos, pixels);
+        // adjust destination if gradient is set
+        QString xGradient = this->ui->gradientXLineEdit->text();
+        QString yGradient = this->ui->gradientYLineEdit->text();
+        if (!xGradient.isEmpty() || !yGradient.isEmpty()) {
+            int gx = xGradient->toInt();
+            int gy = yGradient->toInt();
+            QPoint dPos = pos - this->lastPos;
+            bool sx = (gx < 0) == (dPos.x() < 0);
+            bool sy = (gy < 0) == (dPos.y() < 0);
+            if (gx == 0) {
+                if (gy == 0) {
+                    return; // lock if gradient is set to 0:0
+                }
+                // check for exact match if gradient is completely set
+                if (!xGradient.isEmpty() && !sy) {
+                    return;
+                }
+                dPos.setX(0);
+                int dy = (dPos.y() / gy) * gy;
+                dPos.setY(dy);
+            } else if (gy == 0) {
+                // check for exact match if gradient is completely set
+                if (!yGradient.isEmpty() && !sx) {
+                    return;
+                }
+                dPos.setY(0);
+                int dx = (dPos.x() / gx) * gx;
+                dPos.setX(dx);
+            } else {
+                // if (sx != sy) {
+                if (!sx || !sy) {
+                    return;
+                }
+                int nx = dPos.x() / gx;
+                int ny = dPos.y() / gy;
+                if (gx < 0) {
+                    nx = std::max(nx, ny);
+                } else {
+                    nx = std::min(nx, ny);
+                }
+                int dx = nx * gx;
+                int dy = nx * gy;
+                dPos.setX(dx);
+                dPos.setY(dy);
+            }
+
+            if (dPos.x() == 0 && dPos.y() == 0) {
+                return;
+            }
+            destPos = this->lastPos + dPos;
+        }
+
+        traceClick(frame, this->lastPos, destPos, pixels);
     }
-    this->lastPos = pos;
+    this->lastPos = destPos;
     for (FramePixel &framePixel : pixels) {
         framePixel.pixel = this->getCurrentColor(dist);
         dist++;
@@ -336,6 +390,12 @@ void PaintWidget::mouseMoveEvent(QMouseEvent *event)
     }
 
     QFrame::mouseMoveEvent(event);
+}
+
+void PaintWidget::on_gradientClearPushButton_clicked()
+{
+    this->ui->gradientXLineEdit->clear();
+    this->ui->gradientYLineEdit->clear();
 }
 
 void PaintWidget::on_tilesetMaskPushButton_clicked()

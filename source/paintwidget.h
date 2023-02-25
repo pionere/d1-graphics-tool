@@ -67,6 +67,7 @@ private slots:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
 
+    void on_gradientClearPushButton_clicked();
     void on_tilesetMaskPushButton_clicked();
 
 private:
