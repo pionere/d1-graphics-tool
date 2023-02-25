@@ -297,7 +297,7 @@ void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
         pixels.push_back(framePixel);
     }
 
-    if (pixels.empty() {
+    if (pixels.empty()) {
         return;
     }
 
