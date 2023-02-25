@@ -211,10 +211,13 @@ void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std:
     }
 }
 
-void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter)
+bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter)
 {
-    QPoint destPos = pos;
+    if (this->isHidden() || this->ui->pickModeRadioButton->isChecked()) {
+        return false;
+    }
 
+    QPoint destPos = pos;
     std::vector<FramePixel> allPixels;
     if (counter == 0) {
         this->distance = 0;
@@ -231,11 +234,11 @@ void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
             bool sy = (gy < 0) == (dPos.y() < 0);
             if (gx == 0) {
                 if (gy == 0) {
-                    return; // lock if gradient is set to 0:0
+                    return true; // lock if gradient is set to 0:0
                 }
                 // check for exact match if gradient is completely set
                 if (!xGradient.isEmpty() && !sy) {
-                    return;
+                    return true;
                 }
                 dPos.setX(0);
                 int dy = (dPos.y() / gy) * gy;
@@ -248,7 +251,7 @@ void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
             } else if (gy == 0) {
                 // check for exact match if gradient is completely set
                 if (!yGradient.isEmpty() && !sx) {
-                    return;
+                    return true;
                 }
                 dPos.setY(0);
                 int dx = (dPos.x() / gx) * gx;
@@ -261,7 +264,7 @@ void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
             } else {
                 // if (sx != sy) {
                 if (!sx || !sy) {
-                    return;
+                    return true;
                 }
                 int nx = dPos.x() / gx;
                 int ny = dPos.y() / gy;
@@ -298,7 +301,7 @@ void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
     }
 
     if (pixels.empty()) {
-        return;
+        return true;
     }
 
     // Build frame editing command and connect it to the current main window widget
@@ -307,6 +310,7 @@ void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
     QObject::connect(command, &EditFrameCommand::modified, &dMainWindow(), &MainWindow::frameModified);
 
     this->undoStack->push(command);
+    return true;
 }
 
 void PaintWidget::selectColor(const D1GfxPixel &pixel)
