@@ -255,10 +255,10 @@ void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
                 }
                 int nx = dPos.x() / gx;
                 int ny = dPos.y() / gy;
-                if (gx < 0) {
-                    nx = std::max(nx, ny);
-                } else {
+                if (sx) {
                     nx = std::min(nx, ny);
+                } else {
+                    nx = std::max(nx, ny);
                 }
                 int dx = nx * gx;
                 int dy = nx * gy;
