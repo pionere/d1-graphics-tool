@@ -64,7 +64,7 @@
       <item>
        <widget class="LineEditWidget" name="gradientXLineEdit">
         <property name="charWidth">
-         <number>2</number>
+         <number>3</number>
         </property>
         <property name="toolTip">
          <string>A line's gradient in the x direction</string>
@@ -93,7 +93,7 @@
       <item>
        <widget class="LineEditWidget" name="gradientYLineEdit">
         <property name="charWidth">
-         <number>2</number>
+         <number>3</number>
         </property>
         <property name="toolTip">
          <string>A line's gradient in the y direction</string>

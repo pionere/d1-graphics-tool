@@ -148,14 +148,13 @@ D1GfxPixel PaintWidget::getCurrentColor(unsigned counter) const
 }
 
 /**
- * Collect pixel-locations on the frame in the (startPos:destPos] range.
+ * Collect pixel-locations in the (startPos:destPos] range.
  *
- * @param frame: the frame to limit the area
  * @param startPos: the starting position
  * @param destPos: the destination
  * @param pixels: the container for the collected locations.
  */
-static void traceClick(const D1GfxFrame *frame, const QPoint &startPos, const QPoint &destPos, std::vector<FramePixel> &pixels)
+void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std::vector<FramePixel> &pixels)
 {
     int x1 = startPos.x();
     int y1 = startPos.y();
@@ -164,6 +163,7 @@ static void traceClick(const D1GfxFrame *frame, const QPoint &startPos, const QP
     int dx = x2 - x1;
     int dy = y2 - y1;
     int xinc, yinc, d;
+    int dist = this->distance;
     // find out step size and direction on the y coordinate
     xinc = dx < 0 ? -1 : 1;
     yinc = dy < 0 ? -1 : 1;
@@ -176,43 +176,35 @@ static void traceClick(const D1GfxFrame *frame, const QPoint &startPos, const QP
         }
 
         // multiply by 2 so we round up
-        dy *= 2;
+        // dy *= 2;
         d = 0;
         while (true) {
             d += dy;
             if (d >= dx) {
-                d -= 2 * dx; // multiply by 2 to support rounding
+                // d -= 2 * dx; // multiply by 2 to support rounding
+                d -= dx;
                 y1 += yinc;
-                if (y1 < 0 || y1 >= frame->getHeight()) {
-                    break;
-                }
             }
             x1 += xinc;
-            if (x1 < 0 || x1 >= frame->getWidth()) {
-                break;
-            }
-            pixels.push_back(FramePixel(QPoint(x1, y1), D1GfxPixel::transparentPixel()));
+            dist++;
+            pixels.push_back(FramePixel(QPoint(x1, y1), this->getCurrentColor(dist)));
             if (x1 == x2)
                 break;
         }
     } else {
         // multiply by 2 so we round up
-        dx *= 2;
+        // dx *= 2;
         d = 0;
         while (true) {
             d += dx;
             if (d >= dy) {
-                d -= 2 * dy; // multiply by 2 to support rounding
+                // d -= 2 * dy; // multiply by 2 to support rounding
+                d -= dy;
                 x1 += xinc;
-                if (x1 < 0 || x1 >= frame->getWidth()) {
-                    break;
-                }
             }
             y1 += yinc;
-            if (y1 < 0 || y1 >= frame->getHeight()) {
-                break;
-            }
-            pixels.push_back(FramePixel(QPoint(x1, y1), D1GfxPixel::transparentPixel()));
+            dist++;
+            pixels.push_back(FramePixel(QPoint(x1, y1), this->getCurrentColor(dist)));
             if (y1 == y2)
                 break;
         }
@@ -223,10 +215,10 @@ void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
 {
     QPoint destPos = pos;
 
-    std::vector<FramePixel> pixels;
+    std::vector<FramePixel> allPixels;
     if (counter == 0) {
-        dist = 0;
-        pixels.push_back(FramePixel(destPos, D1GfxPixel::transparentPixel()));
+        this->distance = 0;
+        allPixels.push_back(FramePixel(destPos, this->getCurrentColor(this->distance)));
     } else {
         // adjust destination if gradient is set
         QString xGradient = this->ui->gradientXLineEdit->text();
@@ -277,12 +269,21 @@ void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
             destPos = this->lastPos + dPos;
         }
 
-        traceClick(frame, this->lastPos, destPos, pixels);
+        traceClick(this->lastPos, destPos, allPixels);
+        QPoint dPos = destPos - this->lastPos;
+        this->distance += std::max(abs(dPos.x()), abs(dPos.y()));
     }
     this->lastPos = destPos;
-    for (FramePixel &framePixel : pixels) {
-        framePixel.pixel = this->getCurrentColor(dist);
-        dist++;
+    // filter pixels
+    std::vector<FramePixel> pixels;
+    for (const FramePixel &framePixel : allPixels) {
+        if (framePixel.pos.x() < 0 || framePixel.pos.x() >= frame->getWidth()) {
+            continue;
+        }
+        if (framePixel.pos.y() < 0 || framePixel.pos.y() >= frame->getHeight()) {
+            continue;
+        }
+        pixels.push_back(framePixel);
     }
 
     // Build frame editing command and connect it to the current main window widget
