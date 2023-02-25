@@ -53,6 +53,7 @@ public:
 private:
     D1GfxPixel getCurrentColor(unsigned counter) const;
     void stopMove();
+    void traceClick(const QPoint &startPos, const QPoint &destPos, std::vector<FramePixel> &pixels);
 
 public slots:
     void frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter);
@@ -67,6 +68,7 @@ private slots:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
 
+    void on_gradientClearPushButton_clicked();
     void on_tilesetMaskPushButton_clicked();
 
 private:
@@ -79,7 +81,7 @@ private:
     bool moving;
     bool moved;
     QPoint lastPos;
-    unsigned dist;
+    int distance;
     D1Pal *pal;
     std::vector<quint8> selectedColors;
 };

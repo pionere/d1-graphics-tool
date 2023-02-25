@@ -5,6 +5,7 @@
 #include <QImage>
 #include <QList>
 #include <QMessageBox>
+#include <QString>
 
 #include "config.h"
 #include "mainwindow.h"
@@ -85,8 +86,8 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, D1Gfx *g, CelView *cv,
         this->ui->tilesetMaskComboBox->addItem(tr("Right Triangle"), QVariant::fromValue(D1CEL_FRAME_TYPE::RightTriangle));
         this->ui->tilesetMaskComboBox->addItem(tr("Left Trapezoid"), QVariant::fromValue(D1CEL_FRAME_TYPE::LeftTrapezoid));
         this->ui->tilesetMaskComboBox->addItem(tr("Right Trapezoid"), QVariant::fromValue(D1CEL_FRAME_TYPE::RightTrapezoid));
-        this->adjustSize();
     }
+    this->adjustSize(); // not sure why this is necessary if lcv is nullptr...
 
     // assume the first color is selected on the palette-widget
     this->selectedColors.push_back(0);
@@ -146,7 +147,14 @@ D1GfxPixel PaintWidget::getCurrentColor(unsigned counter) const
     return D1GfxPixel::colorPixel(this->selectedColors[counter % numColors]);
 }
 
-static void traceClick(const D1GfxFrame *frame, QPoint startPos, const QPoint &destPos, std::vector<FramePixel> &pixels)
+/**
+ * Collect pixel-locations in the (startPos:destPos] range.
+ *
+ * @param startPos: the starting position
+ * @param destPos: the destination
+ * @param pixels: the container for the collected locations.
+ */
+void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std::vector<FramePixel> &pixels)
 {
     int x1 = startPos.x();
     int y1 = startPos.y();
@@ -155,6 +163,7 @@ static void traceClick(const D1GfxFrame *frame, QPoint startPos, const QPoint &d
     int dx = x2 - x1;
     int dy = y2 - y1;
     int xinc, yinc, d;
+    int dist = this->distance;
     // find out step size and direction on the y coordinate
     xinc = dx < 0 ? -1 : 1;
     yinc = dy < 0 ? -1 : 1;
@@ -163,47 +172,39 @@ static void traceClick(const D1GfxFrame *frame, QPoint startPos, const QPoint &d
     dy = abs(dy);
     if (dx >= dy) {
         if (dx == 0) {
-            return; // should not happen
+            return;
         }
 
         // multiply by 2 so we round up
-        dy *= 2;
+        // dy *= 2;
         d = 0;
         while (true) {
             d += dy;
             if (d >= dx) {
-                d -= 2 * dx; // multiply by 2 to support rounding
+                // d -= 2 * dx; // multiply by 2 to support rounding
+                d -= dx;
                 y1 += yinc;
-                if (y1 < 0 || y1 >= frame->getHeight()) {
-                    break;
-                }
             }
             x1 += xinc;
-            if (x1 < 0 || x1 >= frame->getWidth()) {
-                break;
-            }
-            pixels.push_back(FramePixel(QPoint(x1, y1), D1GfxPixel::transparentPixel()));
+            dist++;
+            pixels.push_back(FramePixel(QPoint(x1, y1), this->getCurrentColor(dist)));
             if (x1 == x2)
                 break;
         }
     } else {
         // multiply by 2 so we round up
-        dx *= 2;
+        // dx *= 2;
         d = 0;
         while (true) {
             d += dx;
             if (d >= dy) {
-                d -= 2 * dy; // multiply by 2 to support rounding
+                // d -= 2 * dy; // multiply by 2 to support rounding
+                d -= dy;
                 x1 += xinc;
-                if (x1 < 0 || x1 >= frame->getWidth()) {
-                    break;
-                }
             }
             y1 += yinc;
-            if (y1 < 0 || y1 >= frame->getHeight()) {
-                break;
-            }
-            pixels.push_back(FramePixel(QPoint(x1, y1), D1GfxPixel::transparentPixel()));
+            dist++;
+            pixels.push_back(FramePixel(QPoint(x1, y1), this->getCurrentColor(dist)));
             if (y1 == y2)
                 break;
         }
@@ -212,17 +213,92 @@ static void traceClick(const D1GfxFrame *frame, QPoint startPos, const QPoint &d
 
 void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter)
 {
-    std::vector<FramePixel> pixels;
+    QPoint destPos = pos;
+
+    std::vector<FramePixel> allPixels;
     if (counter == 0) {
-        dist = 0;
-        pixels.push_back(FramePixel(pos, D1GfxPixel::transparentPixel()));
+        this->distance = 0;
+        allPixels.push_back(FramePixel(destPos, this->getCurrentColor(this->distance)));
     } else {
-        traceClick(frame, this->lastPos, pos, pixels);
+        // adjust destination if gradient is set
+        QString xGradient = this->ui->gradientXLineEdit->text();
+        QString yGradient = this->ui->gradientYLineEdit->text();
+        if (!xGradient.isEmpty() || !yGradient.isEmpty()) {
+            int gx = xGradient.toInt();
+            int gy = yGradient.toInt();
+            QPoint dPos = pos - this->lastPos;
+            bool sx = (gx < 0) == (dPos.x() < 0);
+            bool sy = (gy < 0) == (dPos.y() < 0);
+            if (gx == 0) {
+                if (gy == 0) {
+                    return; // lock if gradient is set to 0:0
+                }
+                // check for exact match if gradient is completely set
+                if (!xGradient.isEmpty() && !sy) {
+                    return;
+                }
+                dPos.setX(0);
+                int dy = (dPos.y() / gy) * gy;
+                dPos.setY(dy);
+                // 'step back' to let the user do equal advances
+                if (this->distance == 0 && dy != 0 && abs(gy) > 1) {
+                    this->lastPos.ry() += dy < 0 ? 1 : -1;
+                    this->distance = -1;
+                }
+            } else if (gy == 0) {
+                // check for exact match if gradient is completely set
+                if (!yGradient.isEmpty() && !sx) {
+                    return;
+                }
+                dPos.setY(0);
+                int dx = (dPos.x() / gx) * gx;
+                dPos.setX(dx);
+                // 'step back' to let the user do equal advances
+                if (this->distance == 0 && dx != 0 && abs(gx) > 1) {
+                    this->lastPos.rx() += dx < 0 ? 1 : -1;
+                    this->distance = -1;
+                }
+            } else {
+                // if (sx != sy) {
+                if (!sx || !sy) {
+                    return;
+                }
+                int nx = dPos.x() / gx;
+                int ny = dPos.y() / gy;
+                if (sx) {
+                    nx = std::min(nx, ny);
+                } else {
+                    nx = std::max(nx, ny);
+                }
+                int dx = nx * gx;
+                int dy = nx * gy;
+                dPos.setX(dx);
+                dPos.setY(dy);
+                // TODO: 'step back' to let the user do equal advances?
+            }
+
+            destPos = this->lastPos + dPos;
+        }
+
+        traceClick(this->lastPos, destPos, allPixels);
+        QPoint dPos = destPos - this->lastPos;
+        this->distance += std::max(abs(dPos.x()), abs(dPos.y()));
     }
-    this->lastPos = pos;
-    for (FramePixel &framePixel : pixels) {
-        framePixel.pixel = this->getCurrentColor(dist);
-        dist++;
+    this->lastPos = destPos;
+    // filter pixels
+    std::vector<FramePixel> pixels;
+    for (const FramePixel &framePixel : allPixels) {
+        if (framePixel.pos.x() < 0 || framePixel.pos.x() >= frame->getWidth()) {
+            continue;
+        }
+        if (framePixel.pos.y() < 0 || framePixel.pos.y() >= frame->getHeight()) {
+            continue;
+        }
+        pixels.push_back(framePixel);
+    }
+
+    if (pixels.empty()) {
+        return;
     }
 
     // Build frame editing command and connect it to the current main window widget
@@ -336,6 +412,12 @@ void PaintWidget::mouseMoveEvent(QMouseEvent *event)
     }
 
     QFrame::mouseMoveEvent(event);
+}
+
+void PaintWidget::on_gradientClearPushButton_clicked()
+{
+    this->ui->gradientXLineEdit->clear();
+    this->ui->gradientYLineEdit->clear();
 }
 
 void PaintWidget::on_tilesetMaskPushButton_clicked()
