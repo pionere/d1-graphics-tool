@@ -5,6 +5,7 @@
 #include <QImage>
 #include <QList>
 #include <QMessageBox>
+#include <QString>
 
 #include "config.h"
 #include "mainwindow.h"
@@ -146,7 +147,15 @@ D1GfxPixel PaintWidget::getCurrentColor(unsigned counter) const
     return D1GfxPixel::colorPixel(this->selectedColors[counter % numColors]);
 }
 
-static void traceClick(const D1GfxFrame *frame, QPoint startPos, const QPoint &destPos, std::vector<FramePixel> &pixels)
+/**
+ * Collect pixel-locations on the frame in the (startPos:destPos] range.
+ *
+ * @param frame: the frame to limit the area
+ * @param startPos: the starting position
+ * @param destPos: the destination
+ * @param pixels: the container for the collected locations.
+ */
+static void traceClick(const D1GfxFrame *frame, const QPoint &startPos, const QPoint &destPos, std::vector<FramePixel> &pixels)
 {
     int x1 = startPos.x();
     int y1 = startPos.y();
@@ -163,7 +172,7 @@ static void traceClick(const D1GfxFrame *frame, QPoint startPos, const QPoint &d
     dy = abs(dy);
     if (dx >= dy) {
         if (dx == 0) {
-            return; // should not happen
+            return;
         }
 
         // multiply by 2 so we round up
@@ -265,9 +274,6 @@ void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
                 dPos.setY(dy);
             }
 
-            if (dPos.x() == 0 && dPos.y() == 0) {
-                return;
-            }
             destPos = this->lastPos + dPos;
         }
 
