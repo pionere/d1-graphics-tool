@@ -81,7 +81,7 @@ private:
     bool moving;
     bool moved;
     QPoint lastPos;
-    unsigned distance;
+    int distance;
     D1Pal *pal;
     std::vector<quint8> selectedColors;
 };

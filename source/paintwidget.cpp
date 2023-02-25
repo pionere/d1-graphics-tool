@@ -240,6 +240,11 @@ void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
                 dPos.setX(0);
                 int dy = (dPos.y() / gy) * gy;
                 dPos.setY(dy);
+                // 'step back' to let the user do equal advances
+                if (this->distance == 0 && dy != 0 && abs(gy) > 1) {
+                    this->lastPos.ry() += dy < 0 ? 1 : -1;
+                    this->distance = -1;
+                }
             } else if (gy == 0) {
                 // check for exact match if gradient is completely set
                 if (!yGradient.isEmpty() && !sx) {
@@ -248,6 +253,11 @@ void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
                 dPos.setY(0);
                 int dx = (dPos.x() / gx) * gx;
                 dPos.setX(dx);
+                // 'step back' to let the user do equal advances
+                if (this->distance == 0 && dx != 0 && abs(gx) > 1) {
+                    this->lastPos.rx() += dx < 0 ? 1 : -1;
+                    this->distance = -1;
+                }
             } else {
                 // if (sx != sy) {
                 if (!sx || !sy) {
@@ -264,6 +274,7 @@ void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
                 int dy = nx * gy;
                 dPos.setX(dx);
                 dPos.setY(dy);
+                // TODO: 'step back' to let the user do equal advances?
             }
 
             destPos = this->lastPos + dPos;
@@ -284,6 +295,10 @@ void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
             continue;
         }
         pixels.push_back(framePixel);
+    }
+
+    if (pixels.empty() {
+        return;
     }
 
     // Build frame editing command and connect it to the current main window widget
