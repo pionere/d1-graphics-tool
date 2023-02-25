@@ -232,8 +232,8 @@ void PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
         QString xGradient = this->ui->gradientXLineEdit->text();
         QString yGradient = this->ui->gradientYLineEdit->text();
         if (!xGradient.isEmpty() || !yGradient.isEmpty()) {
-            int gx = xGradient->toInt();
-            int gy = yGradient->toInt();
+            int gx = xGradient.toInt();
+            int gy = yGradient.toInt();
             QPoint dPos = pos - this->lastPos;
             bool sx = (gx < 0) == (dPos.x() < 0);
             bool sy = (gy < 0) == (dPos.y() < 0);
