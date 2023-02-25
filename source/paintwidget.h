@@ -56,7 +56,7 @@ private:
     void traceClick(const QPoint &startPos, const QPoint &destPos, std::vector<FramePixel> &pixels);
 
 public slots:
-    void frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter);
+    bool frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter);
     void selectColor(const D1GfxPixel &pixel);
     void palColorsSelected(const std::vector<quint8> &indices);
     void colorModified();

@@ -62,6 +62,35 @@
     <widget class="QWidget">
      <layout class="QHBoxLayout">
       <item>
+       <widget class="QRadioButton" name="drawModeRadioButton">
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string>Draw</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">brushModeButtonGroup</string>
+        </attribute>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="pickModeRadioButton">
+        <property name="text">
+         <string>Pick</string>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">brushModeButtonGroup</string>
+        </attribute>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget">
+     <layout class="QHBoxLayout">
+      <item>
        <widget class="LineEditWidget" name="gradientXLineEdit">
         <property name="charWidth">
          <number>3</number>
@@ -147,5 +176,7 @@
  <layoutdefault spacing="4" margin="4"/>
  <resources/>
  <connections/>
- <buttongroups/>
+ <buttongroups>
+  <buttongroup name="brushModeButtonGroup"/>
+ </buttongroups>
 </ui>

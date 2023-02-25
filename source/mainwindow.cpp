@@ -300,10 +300,7 @@ void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned cou
         // no target hit -> ignore
         return;
     }
-    if (!this->paintWidget->isHidden()) {
-        // drawing
-        this->paintWidget->frameClicked(frame, pos, counter);
-    } else {
+    if (!this->paintWidget->frameClicked(frame, pos, counter)) {
         // picking
         const D1GfxPixel pixel = frame->getPixel(pos.x(), pos.y());
         this->paintWidget->selectColor(pixel);
