@@ -30,7 +30,9 @@ void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
 
-    this->lastPos = event->scenePos().toPoint();
+    QPointF scenePos = event->scenePos();
+
+    this->lastPos = QPoint(scenePos.x(), scenePos.y());
     this->lastCounter = 0;
 
     qDebug() << QStringLiteral("Clicked: %1:%2").arg(this->lastPos.x()).arg(this->lastPos.y());
@@ -48,7 +50,8 @@ void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         return; // ignore if not drawing
     }*/
 
-    QPoint currPos = event->scenePos().toPoint();
+    QPointF scenePos = event->scenePos();
+    QPoint currPos = QPoint(scenePos.x(), scenePos.y());
 
     if (this->lastPos == currPos) {
         return;
