@@ -228,8 +228,8 @@ void PaintWidget::collectPixelsSquare(int baseX, int baseY, int baseDist, std::v
 void PaintWidget::collectPixelsRound(int baseX, int baseY, int baseDist, std::vector<FramePixel> &pixels)
 {
     const int width = this->brushWidth;
-    int r = (width + 1) / 2;
-
+    const int r = (width + 1) / 2;
+    const double rd = width / 2.0;
     for (int dy = -r; dy <= r; dy++) {
         for (int dx = -r; dx <= r; dx++) {
             QPoint pos = QPoint(baseX + dx, baseY + dy);
@@ -242,13 +242,11 @@ void PaintWidget::collectPixelsRound(int baseX, int baseY, int baseDist, std::ve
             if (n < pixels.size()) {
                 continue;
             }
-
-            int dist = sqrt(dx * dx + dy * dy) + 0.5;
-            if (dist > r) {
+            double dd = sqrt(dx * dx + dy * dy);
+            if (rd > dd) {
                 continue;
             }
-
-            dist += baseDist;
+            int dist = baseDist + (int)(dd + 0.5);
             pixels.push_back(FramePixel(pos, this->getCurrentColor(dist)));
         }
     }
