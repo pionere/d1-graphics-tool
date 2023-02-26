@@ -56,7 +56,7 @@ private:
     void collectPixels(const D1GfxFrame *frame, const QPoint &startPos, std::vector<FramePixel> &pixels);
     void collectPixelsSquare(int baseX, int baseY, int baseDist, std::vector<FramePixel> &pixels);
     void collectPixelsRound(int baseX, int baseY, int baseDist, std::vector<FramePixel> &pixels);
-    void traceClick(const QPoint &startPos, const QPoint &destPos, std::vector<FramePixel> &pixels, , void (PaintWidget::*collectorFunc)(int, int, int, std::vector<FramePixel> &));
+    void traceClick(const QPoint &startPos, const QPoint &destPos, std::vector<FramePixel> &pixels, void (PaintWidget::*collectorFunc)(int, int, int, std::vector<FramePixel> &));
 
 public slots:
     bool frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter);
