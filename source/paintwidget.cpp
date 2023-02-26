@@ -155,6 +155,7 @@ void PaintWidget::collectPixels(const D1GfxFrame *frame, const QPoint &startPos,
     posQueue.push(std::pair<QPoint, int>(startPos, 0));
 
     const D1GfxPixel pixel = frame->getPixel(startPos.x(), startPos.y());
+    const bool squareShape = this->ui->squareShapeRadioButton->isChecked();
 
     while (!posQueue.empty()) {
         QPoint currPos = posQueue.front().first;
@@ -173,9 +174,19 @@ void PaintWidget::collectPixels(const D1GfxFrame *frame, const QPoint &startPos,
         pixels.push_back(FramePixel(currPos, this->getCurrentColor(dist)));
         dist++;
 
-        const std::pair<int, int> offsets[8] = { { -1, -1 }, { 0, -1 }, { 1, -1 }, { -1, 1 }, { 0, 1 }, { 1, 1 }, { -1, 0 }, { 1, 0 } };
+        unsigned numOffsets;
+        const std::pair<int, int> *offsets;
+        if (squareShape) {
+            const std::pair<int, int> squareOffsets[8] = { { -1, -1 }, { 0, -1 }, { 1, -1 }, { -1, 1 }, { 0, 1 }, { 1, 1 }, { -1, 0 }, { 1, 0 } };
+            numOffsets = 8;
+            offsets = squareOffsets;
+        } else {
+            const std::pair<int, int> roundOffsets[4] = { { 0, -1 }, { 0, 1 }, { -1, 0 }, { 1, 0 } };
+            numOffsets = 4;
+            offsets = roundOffsets;
+        }
 
-        for (int i = 0; i < 8; i++) {
+        for (unsigned i = 0; i < numOffsets; i++) {
             QPoint pos = QPoint(currPos.x() + offsets[i].first, currPos.y() + offsets[i].second);
             if (pos.x() < 0 || pos.x() >= frame->getWidth()) {
                 continue;
@@ -191,9 +202,9 @@ void PaintWidget::collectPixels(const D1GfxFrame *frame, const QPoint &startPos,
     }
 }
 
-void PaintWidget::collectPixels(int baseX, int baseY, int baseDist, std::vector<FramePixel> &pixels)
+void PaintWidget::collectPixelsSquare(int baseX, int baseY, int baseDist, std::vector<FramePixel> &pixels)
 {
-    int width = this->brushWidth;
+    const int width = this->brushWidth;
     int x0 = baseX - (width - 1) / 2;
     int y0 = baseY - (width - 1) / 2;
     for (int y = y0; y < y0 + width; y++) {
@@ -214,6 +225,35 @@ void PaintWidget::collectPixels(int baseX, int baseY, int baseDist, std::vector<
     }
 }
 
+void PaintWidget::collectPixelsRound(int baseX, int baseY, int baseDist, std::vector<FramePixel> &pixels)
+{
+    const int width = this->brushWidth;
+    int r = (width + 1) / 2;
+
+    for (int dy = -r; dy <= r; dy++) {
+        for (int dx = -r; dx <= r; dx++) {
+            QPoint pos = QPoint(baseX + dx, baseX + dy);
+            unsigned n = 0;
+            for (; n < pixels.size(); n++) {
+                if (pixels[n].pos == pos) {
+                    break;
+                }
+            }
+            if (n < pixels.size()) {
+                continue;
+            }
+
+            int dist = sqrt(dx * dx + dy * dy);
+            if (dist > r) {
+                continue;
+            }
+
+            dist += baseDist;
+            pixels.push_back(FramePixel(pos, this->getCurrentColor(dist)));
+        }
+    }
+}
+
 /**
  * Collect pixel-locations in the (startPos:destPos] range.
  *
@@ -221,7 +261,7 @@ void PaintWidget::collectPixels(int baseX, int baseY, int baseDist, std::vector<
  * @param destPos: the destination
  * @param pixels: the container for the collected locations.
  */
-void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std::vector<FramePixel> &pixels)
+void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std::vector<FramePixel> &pixels, void (PaintWidget::*collectorFunc)(int, int, int, std::vector<FramePixel> &))
 {
     int x1 = startPos.x();
     int y1 = startPos.y();
@@ -254,7 +294,7 @@ void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std:
             }
             x1 += xinc;
             dist++;
-            this->collectPixels(x1, y1, dist, pixels);
+            (this->*collectorFunc)(x1, y1, dist, pixels);
             if (x1 == x2)
                 break;
         }
@@ -271,7 +311,7 @@ void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std:
             }
             y1 += yinc;
             dist++;
-            this->collectPixels(x1, y1, dist, pixels);
+            (this->*collectorFunc)(x1, y1, dist, pixels);
             if (y1 == y2)
                 break;
         }
@@ -287,80 +327,88 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
     QPoint destPos = pos;
     std::vector<FramePixel> allPixels;
     if (this->ui->fillModeRadioButton->isChecked()) {
+        // fill mode
         this->collectPixels(frame, destPos, allPixels);
-    } else if (counter == 0) {
-        this->distance = 0;
-        this->collectPixels(destPos.x(), destPos.y(), this->distance, allPixels);
     } else {
-        // adjust destination if gradient is set
-        QString xGradient = this->ui->gradientXLineEdit->text();
-        QString yGradient = this->ui->gradientYLineEdit->text();
-        if (!xGradient.isEmpty() || !yGradient.isEmpty()) {
-            int gx = xGradient.toInt();
-            int gy = yGradient.toInt();
-            QPoint dPos = pos - this->lastPos;
-            bool sx = (gx < 0) == (dPos.x() < 0);
-            bool sy = (gy < 0) == (dPos.y() < 0);
-            if (gx == 0) {
-                if (gy == 0) {
-                    return true; // lock if gradient is set to 0:0
-                }
-                // check for exact match if gradient is completely set
-                if (!xGradient.isEmpty() && !sy) {
-                    return true;
-                }
-                dPos.setX(0);
-                int dy = (dPos.y() / gy) * gy;
-                dPos.setY(dy);
-                // 'step back' to let the user do equal advances
-                if (this->distance == 0 && dy != 0 && abs(gy) > 1) {
-                    this->lastPos.ry() += dy < 0 ? 1 : -1;
-                    this->distance = -1;
-                }
-            } else if (gy == 0) {
-                // check for exact match if gradient is completely set
-                if (!yGradient.isEmpty() && !sx) {
-                    return true;
-                }
-                dPos.setY(0);
-                int dx = (dPos.x() / gx) * gx;
-                dPos.setX(dx);
-                // 'step back' to let the user do equal advances
-                if (this->distance == 0 && dx != 0 && abs(gx) > 1) {
-                    this->lastPos.rx() += dx < 0 ? 1 : -1;
-                    this->distance = -1;
-                }
-            } else {
-                // if (sx != sy) {
-                if (!sx || !sy) {
-                    return true;
-                }
-                int nx = dPos.x() / gx;
-                int ny = dPos.y() / gy;
-                if (sx) {
-                    nx = std::min(nx, ny);
+        // draw mode
+        void (PaintWidget::*squareCollectorFunc)(int, int, int, std::vector<FramePixel> &) = &PaintWidget::collectPixelsSquare;
+        void (PaintWidget::*roundCollectorFunc)(int, int, int, std::vector<FramePixel> &) = &PaintWidget::collectPixelsRound;
+        auto collectorFunc = this->ui->squareShapeRadioButton->isChecked() ? squareCollectorFunc : roundCollectorFunc;
+
+        if (counter == 0) {
+            this->distance = 0;
+            (this->*collectorFunc)(destPos.x(), destPos.y(), this->distance, allPixels);
+        } else {
+            // adjust destination if gradient is set
+            QString xGradient = this->ui->gradientXLineEdit->text();
+            QString yGradient = this->ui->gradientYLineEdit->text();
+            if (!xGradient.isEmpty() || !yGradient.isEmpty()) {
+                int gx = xGradient.toInt();
+                int gy = yGradient.toInt();
+                QPoint dPos = pos - this->lastPos;
+                bool sx = (gx < 0) == (dPos.x() < 0);
+                bool sy = (gy < 0) == (dPos.y() < 0);
+                if (gx == 0) {
+                    if (gy == 0) {
+                        return true; // lock if gradient is set to 0:0
+                    }
+                    // check for exact match if gradient is completely set
+                    if (!xGradient.isEmpty() && !sy) {
+                        return true;
+                    }
+                    dPos.setX(0);
+                    int dy = (dPos.y() / gy) * gy;
+                    dPos.setY(dy);
+                    // 'step back' to let the user do equal advances
+                    if (this->distance == 0 && dy != 0 && abs(gy) > 1) {
+                        this->lastPos.ry() += dy < 0 ? 1 : -1;
+                        this->distance = -1;
+                    }
+                } else if (gy == 0) {
+                    // check for exact match if gradient is completely set
+                    if (!yGradient.isEmpty() && !sx) {
+                        return true;
+                    }
+                    dPos.setY(0);
+                    int dx = (dPos.x() / gx) * gx;
+                    dPos.setX(dx);
+                    // 'step back' to let the user do equal advances
+                    if (this->distance == 0 && dx != 0 && abs(gx) > 1) {
+                        this->lastPos.rx() += dx < 0 ? 1 : -1;
+                        this->distance = -1;
+                    }
                 } else {
-                    nx = std::max(nx, ny);
+                    // if (sx != sy) {
+                    if (!sx || !sy) {
+                        return true;
+                    }
+                    int nx = dPos.x() / gx;
+                    int ny = dPos.y() / gy;
+                    if (sx) {
+                        nx = std::min(nx, ny);
+                    } else {
+                        nx = std::max(nx, ny);
+                    }
+                    int dx = nx * gx;
+                    int dy = nx * gy;
+                    dPos.setX(dx);
+                    dPos.setY(dy);
+                    // TODO: 'step back' to let the user do equal advances?
                 }
-                int dx = nx * gx;
-                int dy = nx * gy;
-                dPos.setX(dx);
-                dPos.setY(dy);
-                // TODO: 'step back' to let the user do equal advances?
+
+                destPos = this->lastPos + dPos;
             }
 
-            destPos = this->lastPos + dPos;
+            (this->*collectorFunc)(this->lastPos.x(), this->lastPos.y(), 0, allPixels);
+            unsigned n = allPixels.size();
+
+            traceClick(this->lastPos, destPos, allPixels, collectorFunc);
+
+            allPixels.erase(allPixels.begin(), allPixels.begin() + n);
+
+            QPoint dPos = destPos - this->lastPos;
+            this->distance += std::max(abs(dPos.x()), abs(dPos.y()));
         }
-
-        this->collectPixels(this->lastPos.x(), this->lastPos.y(), 0, allPixels);
-        unsigned n = allPixels.size();
-
-        traceClick(this->lastPos, destPos, allPixels);
-
-        allPixels.erase(allPixels.begin(), allPixels.begin() + n);
-
-        QPoint dPos = destPos - this->lastPos;
-        this->distance += std::max(abs(dPos.x()), abs(dPos.y()));
     }
     this->lastPos = destPos;
     // filter pixels
