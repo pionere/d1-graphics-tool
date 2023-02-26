@@ -296,18 +296,19 @@ bool MainWindow::loadBaseTrn(const QString &path)
 
 void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter)
 {
-    if (frame == nullptr || pos.x() < 0 || pos.x() >= frame->getWidth() || pos.y() < 0 || pos.y() >= frame->getHeight()) {
+    if (this->paintWidget->frameClicked(frame, pos, counter)) {
+        return;
+    }
+    // picking
+    if (pos.x() < 0 || pos.x() >= frame->getWidth() || pos.y() < 0 || pos.y() >= frame->getHeight()) {
         // no target hit -> ignore
         return;
     }
-    if (!this->paintWidget->frameClicked(frame, pos, counter)) {
-        // picking
-        const D1GfxPixel pixel = frame->getPixel(pos.x(), pos.y());
-        this->paintWidget->selectColor(pixel);
-        this->palWidget->selectColor(pixel);
-        this->trnUniqueWidget->selectColor(pixel);
-        this->trnBaseWidget->selectColor(pixel);
-    }
+    const D1GfxPixel pixel = frame->getPixel(pos.x(), pos.y());
+    this->paintWidget->selectColor(pixel);
+    this->palWidget->selectColor(pixel);
+    this->trnUniqueWidget->selectColor(pixel);
+    this->trnBaseWidget->selectColor(pixel);
 }
 
 void MainWindow::frameModified()

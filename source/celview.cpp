@@ -265,12 +265,10 @@ int CelView::getCurrentFrameIndex() const
 
 void CelView::framePixelClicked(const QPoint &pos, unsigned counter)
 {
-    D1GfxFrame *frame = nullptr;
-
-    if (this->gfx->getFrameCount() != 0) {
-        frame = this->gfx->getFrame(this->currentFrameIndex);
+    if (this->gfx->getFrameCount() == 0) {
+        return;
     }
-
+    D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
     QPoint p = pos;
     p -= QPoint(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
     dMainWindow().frameClicked(frame, p, counter);

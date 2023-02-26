@@ -41,19 +41,15 @@ void EditFrameCommand::undo()
         return;
     }
 
-    bool change = false;
     for (FramePixel &fp : this->modPixels) {
         D1GfxPixel pixel = this->frame->getPixel(fp.pos.x(), fp.pos.y());
         if (pixel != fp.pixel) {
             this->frame->setPixel(fp.pos.x(), fp.pos.y(), fp.pixel);
             fp.pixel = pixel;
-            change = true;
         }
     }
 
-    if (change) {
-        emit this->modified();
-    }
+    emit this->modified();
 }
 
 void EditFrameCommand::redo()
@@ -295,6 +291,9 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
             continue;
         }
         if (framePixel.pos.y() < 0 || framePixel.pos.y() >= frame->getHeight()) {
+            continue;
+        }
+        if (framePixel.pixel == frame->getPixel(framePixel.pos.x(), framePixel.pos.y())) {
             continue;
         }
         pixels.push_back(framePixel);
