@@ -232,7 +232,7 @@ void PaintWidget::collectPixelsRound(int baseX, int baseY, int baseDist, std::ve
 
     for (int dy = -r; dy <= r; dy++) {
         for (int dx = -r; dx <= r; dx++) {
-            QPoint pos = QPoint(baseX + dx, baseX + dy);
+            QPoint pos = QPoint(baseX + dx, baseY + dy);
             unsigned n = 0;
             for (; n < pixels.size(); n++) {
                 if (pixels[n].pos == pos) {
@@ -243,7 +243,7 @@ void PaintWidget::collectPixelsRound(int baseX, int baseY, int baseDist, std::ve
                 continue;
             }
 
-            int dist = sqrt(dx * dx + dy * dy);
+            int dist = sqrt(dx * dx + dy * dy) + 0.5;
             if (dist > r) {
                 continue;
             }
