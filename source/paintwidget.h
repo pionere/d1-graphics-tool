@@ -53,6 +53,7 @@ public:
 private:
     D1GfxPixel getCurrentColor(unsigned counter) const;
     void stopMove();
+    void collectPixels(int baseX, int baseY, int baseDist, std::vector<FramePixel> &pixels);
     void traceClick(const QPoint &startPos, const QPoint &destPos, std::vector<FramePixel> &pixels);
 
 public slots:
@@ -68,6 +69,10 @@ private slots:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
 
+    void on_brushWidthDecButton_clicked();
+    void on_brushWidthIncButton_clicked();
+    void on_brushWidthLineEdit_returnPressed();
+    void on_brushWidthLineEdit_escPressed();
     void on_gradientClearPushButton_clicked();
     void on_tilesetMaskPushButton_clicked();
 
@@ -84,4 +89,5 @@ private:
     int distance;
     D1Pal *pal;
     std::vector<quint8> selectedColors;
+    unsigned brushWidth;
 };
