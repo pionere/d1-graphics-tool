@@ -61,6 +61,13 @@
    <item>
     <layout class="QHBoxLayout">
      <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
       <widget class="QRadioButton" name="pickModeRadioButton">
        <property name="text">
         <string>Pick</string>
@@ -93,10 +100,24 @@
        </attribute>
       </widget>
      </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
     </layout>
    </item>
    <item>
     <layout class="QHBoxLayout">
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
      <item>
       <widget class="QRadioButton" name="squareShapeRadioButton">
        <property name="checked">
@@ -125,6 +146,13 @@
         <string notr="true">shapeButtonGroup</string>
        </attribute>
       </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>
@@ -257,6 +285,13 @@
    <item>
     <layout class="QHBoxLayout">
      <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
       <widget class="LineEditWidget" name="gradientXLineEdit">
        <property name="charWidth">
         <number>3</number>
@@ -307,6 +342,13 @@
         <string>Clear the gradient-settings</string>
        </property>
       </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>
