@@ -147,6 +147,48 @@ D1GfxPixel PaintWidget::getCurrentColor(unsigned counter) const
     return D1GfxPixel::colorPixel(this->selectedColors[(counter / this->brushLength) % numColors]);
 }
 
+void PaintWidget::collectPixels(const D1GfxFrame *frame, const QPoint &startPos, std::vector<FramePixel> &pixels)
+{
+    std::queue<std::pair<QPoint, int>> posQueue;
+    posQueue.push_back(std::pair<QPoint, int>(startPos, 0));
+
+    const D1GfxPixel pixel = frame->getPixel(startPos.x(), startPos.y());
+
+    while (!posQueue.empty()) {
+        QPoint currPos = posQueue.front().first;
+        int dist = posQueue.front().second;
+        posQueue.pop();
+
+        pixels.push_back(FramePixel(currPos, this->getCurrentColor(dist)));
+        dist++;
+
+        for (int dy = -1; dy <= 1; dy++) {
+            for (int dx = -1; dx <= 1; dx++) {
+                QPoint pos = QPoint(currPos.x() + dx, currPos.y() + dy);
+                if (pos.x() < 0 || pos.x() >= frame->getWidth()) {
+                    continue;
+                }
+                if (pos.y() < 0 || pos.y() >= frame->getHeight()) {
+                    continue;
+                }
+                if (pixel != frame->getPixel(pos.x(), pos.y())) {
+                    continue;
+                }
+                unsigned n = 0;
+                for (; n < pixels.size(); n++) {
+                    if (pixels.pos == pos) {
+                        break;
+                    }
+                }
+                if (n < pixels.size()) {
+                    continue;
+                }
+                posQueue.push_back(std::pair<QPoint, int>(pos, dist));
+            }
+        }
+    }
+}
+
 void PaintWidget::collectPixels(int baseX, int baseY, int baseDist, std::vector<FramePixel> &pixels)
 {
     int width = this->brushWidth;
@@ -211,7 +253,6 @@ void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std:
             x1 += xinc;
             dist++;
             this->collectPixels(x1, y1, dist, pixels);
-            // pixels.push_back(FramePixel(QPoint(x1, y1), this->getCurrentColor(dist)));
             if (x1 == x2)
                 break;
         }
@@ -229,7 +270,6 @@ void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std:
             y1 += yinc;
             dist++;
             this->collectPixels(x1, y1, dist, pixels);
-            // pixels.push_back(FramePixel(QPoint(x1, y1), this->getCurrentColor(dist)));
             if (y1 == y2)
                 break;
         }
@@ -244,10 +284,11 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
 
     QPoint destPos = pos;
     std::vector<FramePixel> allPixels;
-    if (counter == 0) {
+    if (this->ui->fillModeRadioButton->isChecked()) {
+        this->collectPixels(frame, destPos, allPixels);
+    } else if (counter == 0) {
         this->distance = 0;
         this->collectPixels(destPos.x(), destPos.y(), this->distance, allPixels);
-        // allPixels.push_back(FramePixel(destPos, this->getCurrentColor(this->distance)));
     } else {
         // adjust destination if gradient is set
         QString xGradient = this->ui->gradientXLineEdit->text();
