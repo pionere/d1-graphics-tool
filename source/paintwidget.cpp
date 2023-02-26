@@ -163,7 +163,7 @@ void PaintWidget::collectPixels(const D1GfxFrame *frame, const QPoint &startPos,
 
         unsigned n = 0;
         for (; n < pixels.size(); n++) {
-            if (pixels[n].pos == pos) {
+            if (pixels[n].pos == currPos) {
                 break;
             }
         }
