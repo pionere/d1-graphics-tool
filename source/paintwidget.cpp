@@ -1,5 +1,7 @@
 #include "paintwidget.h"
 
+#include <queue>
+
 #include <QCursor>
 #include <QGraphicsView>
 #include <QImage>
@@ -147,6 +149,48 @@ D1GfxPixel PaintWidget::getCurrentColor(unsigned counter) const
     return D1GfxPixel::colorPixel(this->selectedColors[(counter / this->brushLength) % numColors]);
 }
 
+void PaintWidget::collectPixels(const D1GfxFrame *frame, const QPoint &startPos, std::vector<FramePixel> &pixels)
+{
+    std::queue<std::pair<QPoint, int>> posQueue;
+    posQueue.push(std::pair<QPoint, int>(startPos, 0));
+
+    const D1GfxPixel pixel = frame->getPixel(startPos.x(), startPos.y());
+
+    while (!posQueue.empty()) {
+        QPoint currPos = posQueue.front().first;
+        int dist = posQueue.front().second;
+        posQueue.pop();
+
+        unsigned n = 0;
+        for (; n < pixels.size(); n++) {
+            if (pixels[n].pos == currPos) {
+                break;
+            }
+        }
+        if (n < pixels.size()) {
+            continue;
+        }
+        pixels.push_back(FramePixel(currPos, this->getCurrentColor(dist)));
+        dist++;
+
+        const std::pair<int, int> offsets[8] = { { -1, -1 }, { 0, -1 }, { 1, -1 }, { -1, 1 }, { 0, 1 }, { 1, 1 }, { -1, 0 }, { 1, 0 } };
+
+        for (int i = 0; i < 8; i++) {
+            QPoint pos = QPoint(currPos.x() + offsets[i].first, currPos.y() + offsets[i].second);
+            if (pos.x() < 0 || pos.x() >= frame->getWidth()) {
+                continue;
+            }
+            if (pos.y() < 0 || pos.y() >= frame->getHeight()) {
+                continue;
+            }
+            if (pixel != frame->getPixel(pos.x(), pos.y())) {
+                continue;
+            }
+            posQueue.push(std::pair<QPoint, int>(pos, dist));
+        }
+    }
+}
+
 void PaintWidget::collectPixels(int baseX, int baseY, int baseDist, std::vector<FramePixel> &pixels)
 {
     int width = this->brushWidth;
@@ -242,7 +286,9 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
 
     QPoint destPos = pos;
     std::vector<FramePixel> allPixels;
-    if (counter == 0) {
+    if (this->ui->fillModeRadioButton->isChecked()) {
+        this->collectPixels(frame, destPos, allPixels);
+    } else if (counter == 0) {
         this->distance = 0;
         this->collectPixels(destPos.x(), destPos.y(), this->distance, allPixels);
     } else {

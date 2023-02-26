@@ -53,6 +53,7 @@ public:
 private:
     D1GfxPixel getCurrentColor(unsigned counter) const;
     void stopMove();
+    void collectPixels(const D1GfxFrame *frame, const QPoint &startPos, std::vector<FramePixel> &pixels);
     void collectPixels(int baseX, int baseY, int baseDist, std::vector<FramePixel> &pixels);
     void traceClick(const QPoint &startPos, const QPoint &destPos, std::vector<FramePixel> &pixels);
 
