@@ -160,7 +160,7 @@ void PaintWidget::collectPixels(int baseX, int baseY, int baseDist, std::vector<
             if (n < pixels.size()) {
                 continue;
             }
-            int dist = baseDist + std::max(abs(x - baseX), abs(abs(y - baseY));
+            int dist = baseDist + std::max(abs(x - baseX), abs(abs(y - baseY)));
             pixels.push_back(FramePixel(pos, this->getCurrentColor(dist)));
         }
     }
@@ -307,9 +307,9 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
 
         this->collectPixels(this->lastPos.x(), this->lastPos.y(), 0, allPixels);
         unsigned n = allPixels.size();
-        
+
         traceClick(this->lastPos, destPos, allPixels);
-        
+
         allPixels.erase(allPixels.begin(), allPixels.begin() + n);
 
         QPoint dPos = destPos - this->lastPos;
