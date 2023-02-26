@@ -74,6 +74,9 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, D1Gfx *g, CelView *cv,
     layout = this->ui->rightButtonsHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &PaintWidget::on_closePushButtonClicked);
 
+    // initialize the edit fields
+    this->on_brushWidthLineEdit_escPressed();
+
     // prepare combobox of the masks
     if (lcv != nullptr) {
         this->ui->tilesetMaskWidget->setVisible(true);
@@ -143,6 +146,29 @@ D1GfxPixel PaintWidget::getCurrentColor(unsigned counter) const
     return D1GfxPixel::colorPixel(this->selectedColors[counter % numColors]);
 }
 
+void PaintWidget::collectPixels(int baseX, int baseY, int baseDist, std::vector<FramePixel> &pixels)
+{
+    int width = this->brushWidth;
+    int x0 = baseX - (width - 1) / 2;
+    int y0 = baseY - (width - 1) / 2;
+    for (int y = y0; y < y0 + width; y++) {
+        for (int x = x0; x < x0 + width; x++) {
+            QPoint pos = QPoint(x, y);
+            unsigned n = 0;
+            for (; n < pixels.size(); n++) {
+                if (pixels[n].pos == pos) {
+                    break;
+                }
+            }
+            if (n < pixels.size()) {
+                continue;
+            }
+            int dist = baseDist + std::max(abs(x - baseX), abs(abs(y - baseY)));
+            pixels.push_back(FramePixel(pos, this->getCurrentColor(dist)));
+        }
+    }
+}
+
 /**
  * Collect pixel-locations in the (startPos:destPos] range.
  *
@@ -183,7 +209,7 @@ void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std:
             }
             x1 += xinc;
             dist++;
-            pixels.push_back(FramePixel(QPoint(x1, y1), this->getCurrentColor(dist)));
+            this->collectPixels(x1, y1, dist, pixels);
             if (x1 == x2)
                 break;
         }
@@ -200,7 +226,7 @@ void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std:
             }
             y1 += yinc;
             dist++;
-            pixels.push_back(FramePixel(QPoint(x1, y1), this->getCurrentColor(dist)));
+            this->collectPixels(x1, y1, dist, pixels);
             if (y1 == y2)
                 break;
         }
@@ -217,7 +243,7 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
     std::vector<FramePixel> allPixels;
     if (counter == 0) {
         this->distance = 0;
-        allPixels.push_back(FramePixel(destPos, this->getCurrentColor(this->distance)));
+        this->collectPixels(destPos.x(), destPos.y(), this->distance, allPixels);
     } else {
         // adjust destination if gradient is set
         QString xGradient = this->ui->gradientXLineEdit->text();
@@ -279,7 +305,13 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
             destPos = this->lastPos + dPos;
         }
 
+        this->collectPixels(this->lastPos.x(), this->lastPos.y(), 0, allPixels);
+        unsigned n = allPixels.size();
+
         traceClick(this->lastPos, destPos, allPixels);
+
+        allPixels.erase(allPixels.begin(), allPixels.begin() + n);
+
         QPoint dPos = destPos - this->lastPos;
         this->distance += std::max(abs(dPos.x()), abs(dPos.y()));
     }
@@ -415,6 +447,35 @@ void PaintWidget::mouseMoveEvent(QMouseEvent *event)
     }
 
     QFrame::mouseMoveEvent(event);
+}
+
+void PaintWidget::on_brushWidthDecButton_clicked()
+{
+    if (this->brushWidth > 1) {
+        this->brushWidth = (this->brushWidth - 2) | 1;
+        this->on_brushWidthLineEdit_escPressed();
+    }
+}
+
+void PaintWidget::on_brushWidthIncButton_clicked()
+{
+    this->brushWidth = (this->brushWidth + 1) | 1;
+    this->on_brushWidthLineEdit_escPressed();
+}
+
+void PaintWidget::on_brushWidthLineEdit_returnPressed()
+{
+    this->brushWidth = this->ui->brushWidthLineEdit->text().toUInt();
+    if (this->brushWidth == 0) {
+        this->brushWidth = 1;
+    }
+    this->on_brushWidthLineEdit_escPressed();
+}
+
+void PaintWidget::on_brushWidthLineEdit_escPressed()
+{
+    this->ui->brushWidthLineEdit->setText(QString::number(this->brushWidth));
+    this->ui->brushWidthLineEdit->clearFocus();
 }
 
 void PaintWidget::on_gradientClearPushButton_clicked()

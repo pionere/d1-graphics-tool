@@ -88,6 +88,69 @@
    <item>
     <layout class="QHBoxLayout">
      <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="brushWidthDecButton">
+       <property name="minimumWidth">
+        <number>24</number>
+       </property>
+       <property name="maximumWidth">
+        <number>24</number>
+       </property>
+       <property name="text">
+        <string notr="true">-</string>
+       </property>
+       <property name="toolTip">
+        <string>Decrease the size of the brush</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="LineEditWidget" name="brushWidthLineEdit">
+       <property name="charWidth">
+        <number>3</number>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="toolTip">
+        <string>Brush size</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="brushWidthIncButton">
+       <property name="minimumWidth">
+        <number>24</number>
+       </property>
+       <property name="maximumWidth">
+        <number>24</number>
+       </property>
+       <property name="text">
+        <string notr="true">+</string>
+       </property>
+       <property name="toolTip">
+        <string>Increase the size of the brush</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
       <widget class="LineEditWidget" name="gradientXLineEdit">
        <property name="charWidth">
         <number>3</number>
