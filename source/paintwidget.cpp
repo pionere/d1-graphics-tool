@@ -74,6 +74,10 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, D1Gfx *g, CelView *cv,
     layout = this->ui->rightButtonsHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &PaintWidget::on_closePushButtonClicked);
 
+    // initialize the edit fields
+    this->on_brushWidthLineEdit_escPressed();
+    this->on_brushLengthLineEdit_escPressed();
+
     // prepare combobox of the masks
     if (lcv != nullptr) {
         this->ui->tilesetMaskWidget->setVisible(true);
@@ -140,7 +144,7 @@ D1GfxPixel PaintWidget::getCurrentColor(unsigned counter) const
     if (numColors == 0) {
         return D1GfxPixel::transparentPixel();
     }
-    return D1GfxPixel::colorPixel(this->selectedColors[counter % numColors]);
+    return D1GfxPixel::colorPixel(this->selectedColors[(counter / this->brushLength) % numColors]);
 }
 
 void PaintWidget::collectPixels(int baseX, int baseY, int baseDist, std::vector<FramePixel> &pixels)
@@ -453,12 +457,14 @@ void PaintWidget::on_brushWidthDecButton_clicked()
 {
     if (this->brushWidth > 1) {
         this->brushWidth = (this->brushWidth - 2) | 1;
+        this->on_brushWidthLineEdit_escPressed();
     }
 }
 
 void PaintWidget::on_brushWidthIncButton_clicked()
 {
     this->brushWidth = (this->brushWidth + 1) | 1;
+    this->on_brushWidthLineEdit_escPressed();
 }
 
 void PaintWidget::on_brushWidthLineEdit_returnPressed()
@@ -474,6 +480,35 @@ void PaintWidget::on_brushWidthLineEdit_escPressed()
 {
     this->ui->brushWidthLineEdit->setText(QString::number(this->brushWidth));
     this->ui->brushWidthLineEdit->clearFocus();
+}
+
+void PaintWidget::on_brushLengthDecButton_clicked()
+{
+    if (this->brushLength > 1) {
+        this->brushLength--;
+        this->on_brushLengthLineEdit_escPressed();
+    }
+}
+
+void PaintWidget::on_brushLengthIncButton_clicked()
+{
+    this->brushLength++;
+    this->on_brushLengthLineEdit_escPressed();
+}
+
+void PaintWidget::on_brushLengthLineEdit_returnPressed()
+{
+    this->brushLength = this->ui->brushLengthLineEdit->text().toUInt();
+    if (this->brushLength == 0) {
+        this->brushLength = 1;
+    }
+    this->on_brushLengthLineEdit_escPressed();
+}
+
+void PaintWidget::on_brushLengthLineEdit_escPressed()
+{
+    this->ui->brushLengthLineEdit->setText(QString::number(this->brushLength));
+    this->ui->brushLengthLineEdit->clearFocus();
 }
 
 void PaintWidget::on_gradientClearPushButton_clicked()
