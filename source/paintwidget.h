@@ -73,6 +73,10 @@ private slots:
     void on_brushWidthIncButton_clicked();
     void on_brushWidthLineEdit_returnPressed();
     void on_brushWidthLineEdit_escPressed();
+    void on_brushLengthDecButton_clicked();
+    void on_brushLengthIncButton_clicked();
+    void on_brushLengthLineEdit_returnPressed();
+    void on_brushLengthLineEdit_escPressed();
     void on_gradientClearPushButton_clicked();
     void on_tilesetMaskPushButton_clicked();
 
@@ -90,4 +94,5 @@ private:
     D1Pal *pal;
     std::vector<quint8> selectedColors;
     unsigned brushWidth = 1;
+    unsigned brushLength = 1;
 };
