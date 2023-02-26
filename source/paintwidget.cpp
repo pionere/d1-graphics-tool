@@ -161,10 +161,20 @@ void PaintWidget::collectPixels(const D1GfxFrame *frame, const QPoint &startPos,
         int dist = posQueue.front().second;
         posQueue.pop();
 
+        unsigned n = 0;
+        for (; n < pixels.size(); n++) {
+            if (pixels[n].pos == pos) {
+                break;
+            }
+        }
+        if (n < pixels.size()) {
+            continue;
+        }
         pixels.push_back(FramePixel(currPos, this->getCurrentColor(dist)));
         dist++;
 
-        const std::pair<int, int> offsets[8] = { { -1, -1 }, { 0, -1 }, { 1, -1 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 }, { 1, 0 } };
+        const std::pair<int, int> offsets[8] = { { -1, -1 }, { 0, -1 }, { 1, -1 }, { -1, 1 }, { 0, 1 }, { 1, 1 }, { -1, 0 }, { 1, 0 } };
+
         for (int i = 0; i < 8; i++) {
             QPoint pos = QPoint(currPos.x() + offsets[i].first, currPos.y() + offsets[i].second);
             if (pos.x() < 0 || pos.x() >= frame->getWidth()) {
@@ -174,15 +184,6 @@ void PaintWidget::collectPixels(const D1GfxFrame *frame, const QPoint &startPos,
                 continue;
             }
             if (pixel != frame->getPixel(pos.x(), pos.y())) {
-                continue;
-            }
-            unsigned n = 0;
-            for (; n < pixels.size(); n++) {
-                if (pixels[n].pos == pos) {
-                    break;
-                }
-            }
-            if (n < pixels.size()) {
                 continue;
             }
             posQueue.push(std::pair<QPoint, int>(pos, dist));
