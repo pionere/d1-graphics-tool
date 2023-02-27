@@ -178,13 +178,13 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item>
+       <!--item>
         <spacer>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
         </spacer>
-       </item>
+       </item-->
       </layout>
      </item>
      <item row="1" column="0">
