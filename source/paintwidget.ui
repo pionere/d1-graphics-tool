@@ -61,6 +61,13 @@
    <item>
     <layout class="QHBoxLayout">
      <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
       <widget class="QRadioButton" name="pickModeRadioButton">
        <property name="text">
         <string>Pick</string>
@@ -92,6 +99,60 @@
         <string notr="true">brushModeButtonGroup</string>
        </attribute>
       </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="squareShapeRadioButton">
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string notr="true">[]</string>
+       </property>
+       <property name="toolTip">
+        <string>Square shape</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">shapeButtonGroup</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="roundShapeRadioButton">
+       <property name="text">
+        <string notr="true">O</string>
+       </property>
+       <property name="toolTip">
+        <string>Round shape</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">shapeButtonGroup</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>
@@ -224,6 +285,13 @@
    <item>
     <layout class="QHBoxLayout">
      <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
       <widget class="LineEditWidget" name="gradientXLineEdit">
        <property name="charWidth">
         <number>3</number>
@@ -275,6 +343,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
     </layout>
    </item>
    <item>
@@ -310,5 +385,6 @@
  <connections/>
  <buttongroups>
   <buttongroup name="brushModeButtonGroup"/>
+  <buttongroup name="shapeButtonGroup"/>
  </buttongroups>
 </ui>
