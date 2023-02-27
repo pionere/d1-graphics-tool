@@ -183,7 +183,7 @@ int LevelCelView::getCurrentTileIndex() const
     return this->currentTileIndex;
 }
 
-void LevelCelView::framePixelClicked(QGraphicsItem *item, const QPoint &pos, unsigned counter)
+void LevelCelView::framePixelClicked(QGraphicsItem *item, const QPoint &pos, bool first)
 {
     unsigned celFrameWidth = MICRO_WIDTH; // this->gfx->getFrameWidth(this->currentFrameIndex);
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
@@ -305,7 +305,7 @@ void LevelCelView::framePixelClicked(QGraphicsItem *item, const QPoint &pos, uns
     D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
     QPoint p = pos;
     p -= QPoint(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
-    dMainWindow().frameClicked(frame, p, counter);
+    dMainWindow().frameClicked(frame, p, first);
 }
 
 void LevelCelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)

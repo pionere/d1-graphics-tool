@@ -33,19 +33,14 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, bool first)
     QPointF scenePos = event->scenePos();
     QPoint currPos = QPoint(scenePos.x(), scenePos.y());
     // qDebug() << QStringLiteral("Mouse event at: %1:%2").arg(currPos.x()).arg(currPos.y());
-    if (first) {
-        this->lastCounter = 0;
-    } else {
-        if (this->lastPos == currPos) {
-            return;
-        }
-        this->lastCounter++;
+    if (!first && this->lastPos == currPos) {
+        return;
     }
     this->lastPos = currPos;
     QTransform trans;
     QGraphicsItem *item = this->itemAt(scenePos, trans);
 
-    emit this->framePixelClicked(item, this->lastPos, this->lastCounter);
+    emit this->framePixelClicked(item, this->lastPos, first);
 }
 
 void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -259,7 +254,7 @@ int CelView::getCurrentFrameIndex() const
     return this->currentFrameIndex;
 }
 
-void CelView::framePixelClicked(QGraphicsItem *item, const QPoint &pos, unsigned counter)
+void CelView::framePixelClicked(QGraphicsItem *item, const QPoint &pos, bool first)
 {
     if (this->gfx->getFrameCount() == 0) {
         return;
@@ -267,7 +262,7 @@ void CelView::framePixelClicked(QGraphicsItem *item, const QPoint &pos, unsigned
     D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
     QPoint p = pos;
     p -= QPoint(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
-    dMainWindow().frameClicked(frame, p, counter);
+    dMainWindow().frameClicked(frame, p, first);
 }
 
 void CelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)

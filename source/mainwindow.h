@@ -72,7 +72,7 @@ public:
     void paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type);
     void changeColor(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, bool all);
     void colorModified();
-    void frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter);
+    void frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first);
     void frameModified();
 
     void initPaletteCycle();

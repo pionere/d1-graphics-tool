@@ -294,9 +294,9 @@ bool MainWindow::loadBaseTrn(const QString &path)
     return true;
 }
 
-void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter)
+void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
 {
-    if (this->paintWidget->frameClicked(frame, pos, counter)) {
+    if (this->paintWidget->frameClicked(frame, pos, first)) {
         return;
     }
     // picking

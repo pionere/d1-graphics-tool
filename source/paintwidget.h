@@ -59,7 +59,7 @@ private:
     void traceClick(const QPoint &startPos, const QPoint &destPos, std::vector<FramePixel> &pixels, void (PaintWidget::*collectorFunc)(int, int, int, std::vector<FramePixel> &));
 
 public slots:
-    bool frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter);
+    bool frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first);
     void selectColor(const D1GfxPixel &pixel);
     void palColorsSelected(const std::vector<quint8> &indices);
     void colorModified();
