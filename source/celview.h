@@ -136,6 +136,7 @@ private:
     D1Gfx *gfx;
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;
+    int origFrameIndex = 0;
     quint16 currentPlayDelay = 50;
 
     QTimer playTimer;
