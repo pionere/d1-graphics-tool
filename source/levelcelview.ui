@@ -141,7 +141,7 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="13" colspan="2">
+     <item row="0" column="13">
       <widget class="QComboBox" name="playComboBox">
        <item>
         <property name="text">
@@ -173,13 +173,6 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <!--item>
-        <spacer>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </spacer>
-       </item-->
       </layout>
      </item>
      <item row="1" column="0">

@@ -560,11 +560,22 @@ void CelView::playGroup()
     }
     std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
 
-    if (this->currentFrameIndex < groupFrameIndices.second)
-        this->currentFrameIndex++;
-    else
-        this->currentFrameIndex = groupFrameIndices.first;
-
+    int nextFrameIndex = this->currentFrameIndex + 1;
+    Qt::CheckState playType = this->ui->playFrameCheckBox->checkState();
+    if (playType == Qt::Unchecked) {
+        // normal playback
+        if (nextFrameIndex > groupFrameIndices.second)
+            nextFrameIndex = groupFrameIndices.first;
+    } else if (playType == Qt::PartiallyChecked) {
+        // playback till the original frame
+        if (nextFrameIndex > this->origFrameIndex)
+            nextFrameIndex = groupFrameIndices.first;
+    } else {
+        // playback from the original frame
+        if (nextFrameIndex > groupFrameIndices.second)
+            nextFrameIndex = this->origFrameIndex;
+    }
+    this->currentFrameIndex = nextFrameIndex;
     int cycleType = this->ui->playComboBox->currentIndex();
     if (cycleType == 0) {
         // normal playback
@@ -770,6 +781,8 @@ void CelView::on_playButton_clicked()
     this->ui->playComboBox->setEnabled(false);
     // enable the stop button
     this->ui->stopButton->setEnabled(true);
+    // preserve the currentFrameIndex
+    this->origFrameIndex = this->currentFrameIndex;
     // preserve the palette
     dMainWindow().initPaletteCycle();
 
@@ -780,6 +793,8 @@ void CelView::on_stopButton_clicked()
 {
     this->playTimer.stop();
 
+    // restore the currentFrameIndex
+    this->currentFrameIndex = this->origFrameIndex;
     // restore palette
     dMainWindow().resetPaletteCycle();
     // disable the stop button
