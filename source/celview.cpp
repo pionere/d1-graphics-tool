@@ -45,7 +45,7 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, bool first)
     QTransform trans;
     QGraphicsItem *item = this->itemAt(scenePos, trans);
 
-    emit this->framePixelClicked(this->lastPos, this->lastCounter);
+    emit this->framePixelClicked(item, this->lastPos, this->lastCounter);
 }
 
 void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
