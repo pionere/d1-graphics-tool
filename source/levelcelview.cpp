@@ -82,7 +82,7 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts)
     this->tabSubtileWidget.initialize(this, this->gfx, this->min, this->sol, this->tmi);
     this->tabFrameWidget.initialize(this, this->gfx);
 
-    this->update();
+    // this->update();
 }
 
 void LevelCelView::setPal(D1Pal *p)
@@ -1522,6 +1522,8 @@ void LevelCelView::resetFrameTypes()
             this->min->setModified();
         }
         // update the view
+        // this->updateLabel();
+        // this->tabFrameWidget.update();
         this->update();
     }
 

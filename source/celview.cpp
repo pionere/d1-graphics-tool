@@ -208,7 +208,7 @@ void CelView::initialize(D1Pal *p, D1Gfx *g)
     this->pal = p;
     this->gfx = g;
 
-    this->update();
+    // this->update();
 }
 
 void CelView::setPal(D1Pal *p)
@@ -666,6 +666,7 @@ void CelView::on_frameIndexEdit_returnPressed()
 
     if (this->ui->framesGroupCheckBox->isChecked() && this->gfx->getGroupCount() != 0) {
         std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
+        nextFrameIndex += groupFrameIndices.first;
         nextFrameIndex = std::max(nextFrameIndex, groupFrameIndices.first);
         nextFrameIndex = std::min(nextFrameIndex, groupFrameIndices.second);
     }
@@ -676,7 +677,8 @@ void CelView::on_frameIndexEdit_returnPressed()
 
 void CelView::on_frameIndexEdit_escPressed()
 {
-    this->ui->frameIndexEdit->setText(QString::number(this->gfx->getFrameCount() != 0 ? this->currentFrameIndex + 1 : 0));
+    // update frameIndexEdit
+    this->update();
     this->ui->frameIndexEdit->clearFocus();
 }
 
@@ -701,7 +703,8 @@ void CelView::on_groupIndexEdit_returnPressed()
 
 void CelView::on_groupIndexEdit_escPressed()
 {
-    this->ui->groupIndexEdit->setText(QString::number(this->gfx->getGroupCount() != 0 ? this->currentGroupIndex + 1 : 0));
+    // update groupIndexEdit
+    this->update();
     this->ui->groupIndexEdit->clearFocus();
 }
 

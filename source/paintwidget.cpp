@@ -243,7 +243,7 @@ void PaintWidget::collectPixelsRound(int baseX, int baseY, int baseDist, std::ve
                 continue;
             }
             double dd = sqrt(dx * dx + dy * dy);
-            if (rd > dd) {
+            if (rd < dd) {
                 continue;
             }
             int dist = baseDist + (int)(dd + 0.5);
