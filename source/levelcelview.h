@@ -170,6 +170,9 @@ private slots:
 private:
     Ui::LevelCelView *ui;
     CelScene celScene = CelScene(this);
+    QGraphicsPixmapItem *frameBackItem;
+    QGraphicsPixmapItem *subtileBackItem;
+    QGraphicsPixmapItem *tileBackItem;
     LevelTabTileWidget tabTileWidget = LevelTabTileWidget(this);
     LevelTabSubtileWidget tabSubtileWidget = LevelTabSubtileWidget(this);
     LevelTabFrameWidget tabFrameWidget = LevelTabFrameWidget(this);

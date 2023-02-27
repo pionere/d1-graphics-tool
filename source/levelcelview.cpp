@@ -194,11 +194,12 @@ void LevelCelView::framePixelClicked(QGraphicsItem *item, const QPoint &pos, boo
     unsigned subtileShiftY = subtileWidth / 4;
     unsigned tileHeight = subtileHeight + 2 * subtileShiftY;
 
-    if (pos.x() >= (int)(celFrameWidth + CEL_SCENE_SPACING * 2)
+    /*if (pos.x() >= (int)(celFrameWidth + CEL_SCENE_SPACING * 2)
         && pos.x() < (int)(celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 2)
         && pos.y() >= CEL_SCENE_SPACING
         && pos.y() < (int)(subtileHeight + CEL_SCENE_SPACING)
-        && this->min->getSubtileCount() != 0) {
+        && this->min->getSubtileCount() != 0) {*/
+    if (item != nullptr && (item == this->subtileBackItem || (item->parentItem() != nullptr && item->parentItem() == this->subtileBackItem))) {
         // When a CEL frame is clicked in the subtile, display the corresponding CEL frame
 
         // Adjust coordinates
@@ -245,11 +246,12 @@ void LevelCelView::framePixelClicked(QGraphicsItem *item, const QPoint &pos, boo
         });
         timer->start(500);
         return;
-    } else if (pos.x() >= (int)(celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
+    /*} else if (pos.x() >= (int)(celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
         && pos.x() < (int)(celFrameWidth + subtileWidth + tileWidth + CEL_SCENE_SPACING * 3)
         && pos.y() >= CEL_SCENE_SPACING
         && pos.y() < (int)(tileHeight + CEL_SCENE_SPACING)
-        && this->til->getTileCount() != 0) {
+        && this->til->getTileCount() != 0) {*/
+    } else if (item != nullptr && (item == this->tileBackItem || (item->parentItem() != nullptr && item->parentItem() == this->tileBackItem))) {
         // When a subtile is clicked in the tile, display the corresponding subtile
 
         // Adjust coordinates
@@ -2367,14 +2369,10 @@ void LevelCelView::displayFrame()
         tile.height() + CEL_SCENE_SPACING * 2);
 
     // Add the backgrond and CEL frame while aligning it in the center
-    QGraphicsPixmapItem *backItem = this->celScene.addPixmap(QPixmap::fromImage(celFrameBackground));
-    backItem->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
-    QGraphicsPixmapItem *imageItem = new QGraphicsPixmapItem(QPixmap::fromImage(celFrame), backItem);
+    this->frameBackItem = this->celScene.addPixmap(QPixmap::fromImage(celFrameBackground));
+    this->frameBackItem->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
+    QGraphicsPixmapItem *imageItem = new QGraphicsPixmapItem(QPixmap::fromImage(celFrame), this->frameBackItem);
     this->celScene.addItem(imageItem);
-    /*this->celScene.addPixmap(QPixmap::fromImage(celFrameBackground))
-        ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
-    this->celScene.addPixmap(QPixmap::fromImage(celFrame))
-        ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);*/
 
     // Set current frame width and height
     this->ui->celFrameWidthEdit->setText(QString::number(celFrame.width()) + " px");
@@ -2382,14 +2380,10 @@ void LevelCelView::displayFrame()
 
     // MIN
     int minPosX = celFrame.width() + CEL_SCENE_SPACING * 2;
-    QGraphicsPixmapItem *subBackItem = this->celScene.addPixmap(QPixmap::fromImage(subtileBackground));
-    subBackItem->setPos(minPosX, CEL_SCENE_SPACING);
-    QGraphicsPixmapItem *subImageItem = new QGraphicsPixmapItem(QPixmap::fromImage(subtile), subBackItem);
+    this->subtileBackItem = this->celScene.addPixmap(QPixmap::fromImage(subtileBackground));
+    this->subtileBackItem->setPos(minPosX, CEL_SCENE_SPACING);
+    QGraphicsPixmapItem *subImageItem = new QGraphicsPixmapItem(QPixmap::fromImage(subtile), this->subtileBackItem);
     this->celScene.addItem(subImageItem);
-    /*this->celScene.addPixmap(QPixmap::fromImage(subtileBackground))
-        ->setPos(minPosX, CEL_SCENE_SPACING);
-    this->celScene.addPixmap(QPixmap::fromImage(subtile))
-        ->setPos(minPosX, CEL_SCENE_SPACING);*/
 
     // Set current frame width and height
     this->ui->minFrameWidthEdit->setText(QString::number(this->min->getSubtileWidth()));
@@ -2399,14 +2393,10 @@ void LevelCelView::displayFrame()
 
     // TIL
     int tilPosX = minPosX + subtile.width() + CEL_SCENE_SPACING;
-    QGraphicsPixmapItem *tilBackItem = this->celScene.addPixmap(QPixmap::fromImage(tileBackground));
-    tilBackItem->setPos(tilPosX, CEL_SCENE_SPACING);
-    QGraphicsPixmapItem *tilImageItem = new QGraphicsPixmapItem(QPixmap::fromImage(tile), tilBackItem);
+    this->tileBackItem = this->celScene.addPixmap(QPixmap::fromImage(tileBackground));
+    this->tileBackItem->setPos(tilPosX, CEL_SCENE_SPACING);
+    QGraphicsPixmapItem *tilImageItem = new QGraphicsPixmapItem(QPixmap::fromImage(tile), this->tileBackItem);
     this->celScene.addItem(tilImageItem);
-    /*this->celScene.addPixmap(QPixmap::fromImage(tileBackground))
-        ->setPos(tilPosX, CEL_SCENE_SPACING);
-    this->celScene.addPixmap(QPixmap::fromImage(tile))
-        ->setPos(tilPosX, CEL_SCENE_SPACING);*/
 
     // Set current frame width and height
     this->ui->tilFrameWidthEdit->setText(QString::number(TILE_WIDTH));
