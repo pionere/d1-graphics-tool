@@ -189,7 +189,7 @@ void LevelCelView::framePixelClicked(QGraphicsItem *item, const QPoint &pos, boo
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned tileWidth = subtileWidth * TILE_WIDTH;
 
-    // unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
     unsigned subtileShiftY = subtileWidth / 4;
     unsigned tileHeight = subtileHeight + 2 * subtileShiftY;
 
