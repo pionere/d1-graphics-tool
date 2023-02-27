@@ -183,7 +183,7 @@ int LevelCelView::getCurrentTileIndex() const
     return this->currentTileIndex;
 }
 
-void LevelCelView::framePixelClicked(QGraphicsPixmapItem *item, const QPoint &pos, unsigned counter)
+void LevelCelView::framePixelClicked(QGraphicsItem *item, const QPoint &pos, unsigned counter)
 {
     unsigned celFrameWidth = MICRO_WIDTH; // this->gfx->getFrameWidth(this->currentFrameIndex);
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
