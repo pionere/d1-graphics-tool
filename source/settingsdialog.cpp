@@ -13,6 +13,12 @@ SettingsDialog::SettingsDialog(QWidget *parent)
     , ui(new Ui::SettingsDialog())
 {
     ui->setupUi(this);
+
+    // connect esc events of LineEditWidgets
+    QObject::connect(this->ui->graphicsBackgroundColorLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_graphicsBackgroundColorLineEdit_escPressed()));
+    QObject::connect(this->ui->graphicsTransparentColorLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_graphicsTransparentColorLineEdit_escPressed()));
+    QObject::connect(this->ui->undefinedPaletteColorLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_undefinedPaletteColorLineEdit_escPressed()));
+    QObject::connect(this->ui->paletteSelectionBorderColorLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_paletteSelectionBorderColorLineEdit_escPressed()));
 }
 
 SettingsDialog::~SettingsDialog()
