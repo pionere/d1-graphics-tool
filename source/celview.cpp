@@ -266,7 +266,7 @@ int CelView::getCurrentFrameIndex() const
     return this->currentFrameIndex;
 }
 
-void CelView::framePixelClicked(const QPoint &pos, unsigned counter)
+void CelView::framePixelClicked(QGraphicsPixmapItem *item, const QPoint &pos, unsigned counter)
 {
     if (this->gfx->getFrameCount() == 0) {
         return;
