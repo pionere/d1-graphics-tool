@@ -79,6 +79,9 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, D1Gfx *g, CelView *cv,
     // initialize the edit fields
     this->on_brushWidthLineEdit_escPressed();
     this->on_brushLengthLineEdit_escPressed();
+    // connect esc events of LineEditWidgets
+    QObject::connect(this->ui->brushWidthLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_brushWidthLineEdit_escPressed()));
+    QObject::connect(this->ui->brushLengthLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_brushLengthLineEdit_escPressed()));
 
     // prepare combobox of the masks
     if (lcv != nullptr) {
