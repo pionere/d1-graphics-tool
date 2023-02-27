@@ -180,7 +180,14 @@
        </item>
       </widget>
      </item>
-     <item row="0" column="17">
+     <item row="1" column="15">
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item row="0" column="18">
       <layout class="QHBoxLayout" name="paintbuttonHorizontalLayout">
        <property name="topMargin">
         <number>0</number>
@@ -316,7 +323,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="12" colspan="6">
+     <item row="1" column="12" colspan="7">
       <spacer>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -456,14 +463,14 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="12" colspan="3">
+     <item row="2" column="12" colspan="4">
       <spacer>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
       </spacer>
      </item>
-     <item row="2" column="15">
+     <item row="2" column="16">
       <widget class="LineEditWidget" name="celFrameWidthEdit">
        <property name="charWidth">
         <number>7</number>
@@ -479,7 +486,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="16">
+     <item row="2" column="17">
       <widget class="QLabel">
        <property name="minimumWidth">
         <number>8</number>
@@ -492,7 +499,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="17">
+     <item row="2" column="18">
       <widget class="LineEditWidget" name="celFrameHeightEdit">
        <property name="charWidth">
         <number>7</number>
