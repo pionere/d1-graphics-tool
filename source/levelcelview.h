@@ -43,7 +43,7 @@ public:
     int getCurrentSubtileIndex() const;
     int getCurrentTileIndex() const;
 
-    void framePixelClicked(const QPoint &pos, unsigned counter);
+    void framePixelClicked(QGraphicsItem *item, const QPoint &pos, unsigned counter);
 
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
 

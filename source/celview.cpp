@@ -59,8 +59,10 @@ void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
     this->lastPos = currPos;
     this->lastCounter++;
+    QTransform trans;
+    QGraphicsItem *item = this->itemAt(scenePos, trans);
 
-    emit this->framePixelClicked(this->lastPos, this->lastCounter);
+    emit this->framePixelClicked(item, this->lastPos, this->lastCounter);
 }
 
 void CelScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
@@ -482,10 +484,14 @@ void CelView::displayFrame()
     // ui->celGraphicsView->adjustSize();
 
     // Add the backgrond and CEL frame while aligning it in the center
-    this->celScene.addPixmap(QPixmap::fromImage(celFrameBackground))
+    QGraphicsPixmapItem *backItem = this->celScene.addPixmap(QPixmap::fromImage(celFrameBackground));
+    backItem->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
+    QGraphicsPixmapItem *imageItem = new QGraphicsPixmapItem(QPixmap::fromImage(celFrame), backItem);
+    this->celScene.addItem(imageItem);
+    /*this->celScene.addPixmap(QPixmap::fromImage(celFrameBackground))
         ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
     this->celScene.addPixmap(QPixmap::fromImage(celFrame))
-        ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
+        ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);*/
 
     // Set current frame width and height
     this->ui->celFrameWidthEdit->setText(QString::number(celFrame.width()) + " px");
