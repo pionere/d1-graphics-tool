@@ -37,6 +37,7 @@ public:
 private:
     static void parseZoomValue(QString &zoom, quint8 &zoomNumerator, quint8 &zoomDenominator);
     void updateQGraphicsView();
+    void mouseEvent(QGraphicsSceneMouseEvent *event, bool first);
 
 private slots:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
@@ -46,7 +47,7 @@ private slots:
     void dropEvent(QGraphicsSceneDragDropEvent *event) override;
 
 signals:
-    void framePixelClicked(const QPoint &pos, unsigned counter);
+    void framePixelClicked(const QPoint &pos, bool first);
 
 private:
     QWidget *view;
@@ -54,7 +55,6 @@ private:
     quint8 currentZoomNumerator = 1;
     quint8 currentZoomDenominator = 1;
     QPoint lastPos;
-    unsigned lastCounter;
 };
 
 class CelView : public QWidget {
@@ -70,7 +70,7 @@ public:
     CelScene *getCelScene() const;
     int getCurrentFrameIndex() const;
 
-    void framePixelClicked(const QPoint &pos, unsigned counter);
+    void framePixelClicked(const QPoint &pos, bool first);
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
     void addToCurrentFrame(const QString &imagefilePath);
     void replaceCurrentFrame(const QString &imagefilePath);

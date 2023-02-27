@@ -24,43 +24,31 @@ CelScene::CelScene(QWidget *v)
 {
 }
 
-void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (event->button() != Qt::LeftButton) {
-        return;
-    }
-
-    QPointF scenePos = event->scenePos();
-
-    this->lastPos = QPoint(scenePos.x(), scenePos.y());
-    this->lastCounter = 0;
-
-    qDebug() << QStringLiteral("Clicked: %1:%2").arg(this->lastPos.x()).arg(this->lastPos.y());
-
-    emit this->framePixelClicked(this->lastPos, this->lastCounter);
-}
-
-void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, bool first)
 {
     if (!(event->buttons() & Qt::LeftButton)) {
         return;
     }
 
-    /*if (dMainWindow().cursor().shape() != Qt::CrossCursor) {
-        return; // ignore if not drawing
-    }*/
-
     QPointF scenePos = event->scenePos();
     QPoint currPos = QPoint(scenePos.x(), scenePos.y());
-
-    if (this->lastPos == currPos) {
+    // qDebug() << QStringLiteral("Mouse event at: %1:%2").arg(currPos.x()).arg(currPos.y());
+    if (!first && this->lastPos == currPos) {
         return;
     }
-
     this->lastPos = currPos;
-    this->lastCounter++;
 
-    emit this->framePixelClicked(this->lastPos, this->lastCounter);
+    emit this->framePixelClicked(this->lastPos, first);
+}
+
+void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    this->mouseEvent(event, true);
+}
+
+void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    this->mouseEvent(event, false);
 }
 
 void CelScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
@@ -264,7 +252,7 @@ int CelView::getCurrentFrameIndex() const
     return this->currentFrameIndex;
 }
 
-void CelView::framePixelClicked(const QPoint &pos, unsigned counter)
+void CelView::framePixelClicked(const QPoint &pos, bool first)
 {
     if (this->gfx->getFrameCount() == 0) {
         return;
@@ -272,7 +260,7 @@ void CelView::framePixelClicked(const QPoint &pos, unsigned counter)
     D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
     QPoint p = pos;
     p -= QPoint(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
-    dMainWindow().frameClicked(frame, p, counter);
+    dMainWindow().frameClicked(frame, p, first);
 }
 
 void CelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)

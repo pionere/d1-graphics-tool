@@ -319,7 +319,7 @@ void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std:
     }
 }
 
-bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned counter)
+bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
 {
     if (this->isHidden() || this->ui->pickModeRadioButton->isChecked()) {
         return false;
@@ -336,7 +336,7 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, unsigned co
         void (PaintWidget::*roundCollectorFunc)(int, int, int, std::vector<FramePixel> &) = &PaintWidget::collectPixelsRound;
         auto collectorFunc = this->ui->squareShapeRadioButton->isChecked() ? squareCollectorFunc : roundCollectorFunc;
 
-        if (counter == 0) {
+        if (first) {
             this->distance = 0;
             (this->*collectorFunc)(destPos.x(), destPos.y(), this->distance, allPixels);
         } else {
