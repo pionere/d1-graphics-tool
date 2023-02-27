@@ -24,45 +24,38 @@ CelScene::CelScene(QWidget *v)
 {
 }
 
-void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (event->button() != Qt::LeftButton) {
-        return;
-    }
-
-    QPointF scenePos = event->scenePos();
-
-    this->lastPos = QPoint(scenePos.x(), scenePos.y());
-    this->lastCounter = 0;
-
-    qDebug() << QStringLiteral("Clicked: %1:%2").arg(this->lastPos.x()).arg(this->lastPos.y());
-
-    emit this->framePixelClicked(this->lastPos, this->lastCounter);
-}
-
-void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, bool first)
 {
     if (!(event->buttons() & Qt::LeftButton)) {
         return;
     }
 
-    /*if (dMainWindow().cursor().shape() != Qt::CrossCursor) {
-        return; // ignore if not drawing
-    }*/
-
     QPointF scenePos = event->scenePos();
     QPoint currPos = QPoint(scenePos.x(), scenePos.y());
-
-    if (this->lastPos == currPos) {
-        return;
+    // qDebug() << QStringLiteral("Mouse event at: %1:%2").arg(currPos.x()).arg(currPos.y());
+    if (first) {
+        this->lastCounter = 0;
+    } else {
+        if (this->lastPos == currPos) {
+            return;
+        }
+        this->lastCounter++;
     }
-
     this->lastPos = currPos;
-    this->lastCounter++;
     QTransform trans;
     QGraphicsItem *item = this->itemAt(scenePos, trans);
 
-    emit this->framePixelClicked(item, this->lastPos, this->lastCounter);
+    emit this->framePixelClicked(this->lastPos, this->lastCounter);
+}
+
+void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    this->mouseEvent(event, true);
+}
+
+void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    this->mouseEvent(event, false);
 }
 
 void CelScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
