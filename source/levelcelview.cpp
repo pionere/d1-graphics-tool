@@ -189,8 +189,7 @@ void LevelCelView::framePixelClicked(QGraphicsItem *item, const QPoint &pos, boo
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned tileWidth = subtileWidth * TILE_WIDTH;
 
-    unsigned celFrameHeight = MICRO_HEIGHT; // this->gfx->getFrameHeight(this->currentFrameIndex);
-    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+    // unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
     unsigned subtileShiftY = subtileWidth / 4;
     unsigned tileHeight = subtileHeight + 2 * subtileShiftY;
 
@@ -203,8 +202,10 @@ void LevelCelView::framePixelClicked(QGraphicsItem *item, const QPoint &pos, boo
         // When a CEL frame is clicked in the subtile, display the corresponding CEL frame
 
         // Adjust coordinates
-        unsigned stx = pos.x() - (celFrameWidth + CEL_SCENE_SPACING * 2);
-        unsigned sty = pos.y() - CEL_SCENE_SPACING;
+        // unsigned stx = pos.x() - (celFrameWidth + CEL_SCENE_SPACING * 2);
+        // unsigned sty = pos.y() - CEL_SCENE_SPACING;
+        unsigned stx = pos.x() - item->pos().x(); // (celFrameWidth + CEL_SCENE_SPACING * 2)
+        unsigned sty = pos.y() - item->pos().y(); // CEL_SCENE_SPACING
 
         // qDebug() << "Subtile clicked: " << stx << "," << sty;
 
@@ -246,7 +247,7 @@ void LevelCelView::framePixelClicked(QGraphicsItem *item, const QPoint &pos, boo
         });
         timer->start(500);
         return;
-    /*} else if (pos.x() >= (int)(celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
+        /*} else if (pos.x() >= (int)(celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
         && pos.x() < (int)(celFrameWidth + subtileWidth + tileWidth + CEL_SCENE_SPACING * 3)
         && pos.y() >= CEL_SCENE_SPACING
         && pos.y() < (int)(tileHeight + CEL_SCENE_SPACING)
@@ -255,8 +256,10 @@ void LevelCelView::framePixelClicked(QGraphicsItem *item, const QPoint &pos, boo
         // When a subtile is clicked in the tile, display the corresponding subtile
 
         // Adjust coordinates
-        unsigned tx = pos.x() - (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3);
-        unsigned ty = pos.y() - CEL_SCENE_SPACING;
+        // unsigned tx = pos.x() - (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3);
+        // unsigned ty = pos.y() - CEL_SCENE_SPACING;
+        unsigned tx = pos.x() - item->pos().x(); // (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
+        unsigned ty = pos.y() - item->pos().y(); // CEL_SCENE_SPACING
 
         // qDebug() << "Tile clicked" << tx << "," << ty;
 
