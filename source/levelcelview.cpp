@@ -2866,7 +2866,7 @@ void LevelCelView::on_actionToggle_View_triggered()
     } else {
         zoomField = this->ui->zoomEdit;
     }
-    this->celScene.setZoom(zoom->text());
+    this->celScene.setZoom(zoomField->text());
     // update the view
     this->displayFrame();
 }
