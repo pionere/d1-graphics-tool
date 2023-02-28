@@ -241,7 +241,6 @@ void D1Dun::setWidth(int newWidth)
     if (diff == 0) {
         return;
     }
-
     if (diff < 0) {
         // check if there are non-zero values
         bool hasContent = false;
@@ -292,7 +291,6 @@ int D1Dun::getHeight() const
 
 void D1Dun::setHeight(int newHeight)
 {
-
     if (newHeight == 0) { // TODO: check overflow
         return;
     }
