@@ -2921,7 +2921,7 @@ void LevelCelView::on_dungeonPosXLineEdit_escPressed()
 {
     int posx = this->currentDunPosX;
     this->ui->dungeonPosXLineEdit->setText(QString::number(posx));
-    this->ui->dungeonPosXLineEdit->setToolTip(QString::number(posx / 2);
+    this->ui->dungeonPosXLineEdit->setToolTip(QString::number(posx / 2));
     this->ui->dungeonPosXLineEdit->clearFocus();
 }
 
