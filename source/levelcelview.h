@@ -165,6 +165,16 @@ private slots:
 
     void on_actionToggle_View_triggered();
 
+    void on_dunZoomOutButton_clicked();
+    void on_dunZoomInButton_clicked();
+    void on_dunZoomEdit_returnPressed();
+    void on_dunZoomEdit_escPressed();
+
+    void on_dunPlayDelayEdit_returnPressed();
+    void on_dunPlayDelayEdit_escPressed();
+    void on_dunPlayButton_clicked();
+    void on_dunStopButton_clicked();
+
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dragMoveEvent(QDragMoveEvent *event) override;
     void dropEvent(QDropEvent *event) override;
@@ -192,7 +202,10 @@ private:
     int currentFrameIndex = 0;
     int currentSubtileIndex = 0;
     int currentTileIndex = 0;
-    quint16 currentPlayDelay = 50;
+    quint16 tilesetPlayDelay = 50;
+    quint16 dunviewPlayDelay = 50;
+    int currentDunPosX = 0;
+    int currentDunPosY = 0;
 
     QTimer playTimer;
 };

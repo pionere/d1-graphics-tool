@@ -40,10 +40,13 @@ LevelCelView::LevelCelView(QWidget *parent)
     this->ui->tilesTabs->addTab(&this->tabTileWidget, tr("Tile properties"));
     this->ui->tilesTabs->addTab(&this->tabSubtileWidget, tr("Subtile properties"));
     this->ui->tilesTabs->addTab(&this->tabFrameWidget, tr("Frame properties"));
-    QLayout *layout = this->ui->paintbuttonHorizontalLayout;
+    QLayout *layout = this->ui->tilesetButtonsHorizontalLayout;
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Draw_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
-    this->viewBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowRight, "", this, &LevelCelView::on_actionToggle_View_triggered);
+    this->viewBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowRight, tr("Switch to dungeon view"), this, &LevelCelView::on_actionToggle_View_triggered);
+    layout = this->ui->dunButtonsHorizontalLayout;
+    btn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowLeft, tr("Switch to tileset view"), this, &LevelCelView::on_actionToggle_View_triggered);
+    layout->setAlignment(btn, Qt::AlignRight);
 
     // If a pixel of the frame, subtile or tile was clicked get pixel color index and notify the palette widgets
     QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &LevelCelView::framePixelClicked);
@@ -85,10 +88,13 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d)
     this->tabSubtileWidget.initialize(this, this->gfx, this->min, this->sol, this->tmi);
     this->tabFrameWidget.initialize(this, this->gfx);
 
-    this->viewBtn->setVisible(d != nullptr);
-    if (d != nullptr) {
-        this->on_actionToggle_View_triggered();
-    }
+    bool dunMode = d != nullptr;
+    this->dunView = dunMode;
+    this->viewBtn->setVisible(dunMode);
+    // select gridlayout
+    this->ui->tilesetGridLayout->setVisible(!dunMode);
+    this->ui->dunViewGridLayout->setVisible(dunMode);
+
     // this->update();
 }
 
@@ -155,27 +161,29 @@ void LevelCelView::update()
 
     this->updateLabel();
 
-    // Set current and maximum frame text
-    count = this->gfx->getFrameCount();
-    this->ui->frameIndexEdit->setText(
-        QString::number(count != 0 ? this->currentFrameIndex + 1 : 0));
-    this->ui->frameNumberEdit->setText(QString::number(count));
+    if (!this->dunView) {
+        // Set current and maximum frame text
+        count = this->gfx->getFrameCount();
+        this->ui->frameIndexEdit->setText(
+            QString::number(count != 0 ? this->currentFrameIndex + 1 : 0));
+        this->ui->frameNumberEdit->setText(QString::number(count));
 
-    // Set current and maximum subtile text
-    count = this->min->getSubtileCount();
-    this->ui->subtileIndexEdit->setText(
-        QString::number(count != 0 ? this->currentSubtileIndex + 1 : 0));
-    this->ui->subtileNumberEdit->setText(QString::number(count));
+        // Set current and maximum subtile text
+        count = this->min->getSubtileCount();
+        this->ui->subtileIndexEdit->setText(
+            QString::number(count != 0 ? this->currentSubtileIndex + 1 : 0));
+        this->ui->subtileNumberEdit->setText(QString::number(count));
 
-    // Set current and maximum tile text
-    count = this->til->getTileCount();
-    this->ui->tileIndexEdit->setText(
-        QString::number(count != 0 ? this->currentTileIndex + 1 : 0));
-    this->ui->tileNumberEdit->setText(QString::number(count));
+        // Set current and maximum tile text
+        count = this->til->getTileCount();
+        this->ui->tileIndexEdit->setText(
+            QString::number(count != 0 ? this->currentTileIndex + 1 : 0));
+        this->ui->tileNumberEdit->setText(QString::number(count));
 
-    this->tabTileWidget.update();
-    this->tabSubtileWidget.update();
-    this->tabFrameWidget.update();
+        this->tabTileWidget.update();
+        this->tabSubtileWidget.update();
+        this->tabFrameWidget.update();
+    }
 }
 
 CelScene *LevelCelView::getCelScene() const
@@ -2357,66 +2365,74 @@ void LevelCelView::displayFrame()
 {
     this->update();
     this->celScene.clear();
-
-    // Getting the current frame/sub-tile/tile to display
-    QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
-    QImage subtile = this->min->getSubtileCount() != 0 ? this->min->getSubtileImage(this->currentSubtileIndex) : QImage();
-    QImage tile = this->til->getTileCount() != 0 ? this->til->getTileImage(this->currentTileIndex) : QImage();
-
     this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
-    QColor backColor = QColor(Config::getGraphicsTransparentColor());
-    // Building a gray background of the width/height of the CEL frame
-    QImage celFrameBackground = QImage(celFrame.width(), celFrame.height(), QImage::Format_ARGB32);
-    celFrameBackground.fill(backColor);
-    // Building a gray background of the width/height of the MIN subtile
-    QImage subtileBackground = QImage(subtile.width(), subtile.height(), QImage::Format_ARGB32);
-    subtileBackground.fill(backColor);
-    // Building a gray background of the width/height of the MIN subtile
-    QImage tileBackground = QImage(tile.width(), tile.height(), QImage::Format_ARGB32);
-    tileBackground.fill(backColor);
 
-    // Resize the scene rectangle to include some padding around the CEL frame
-    // the MIN subtile and the TIL tile
-    this->celScene.setSceneRect(0, 0,
-        celFrame.width() + subtile.width() + tile.width() + CEL_SCENE_SPACING * 4,
-        tile.height() + CEL_SCENE_SPACING * 2);
+    if (this->dunView) {
+        // Set dungeon width and height
+        this->ui->dunWidthEdit->setText(QString::number(this->dun->getWidth()));
+        this->ui->dunHeightEdit->setText(QString::number(this->dun->getHeight()));
+        // Set dungeon location
+        this->ui->dungeonPosXLineEdit->setText(QString::number(currentDunPosX));
+        this->ui->dungeonPosYLineEdit->setText(QString::number(currentDunPosY));
+    } else {
+        // Getting the current frame/sub-tile/tile to display
+        QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
+        QImage subtile = this->min->getSubtileCount() != 0 ? this->min->getSubtileImage(this->currentSubtileIndex) : QImage();
+        QImage tile = this->til->getTileCount() != 0 ? this->til->getTileImage(this->currentTileIndex) : QImage();
 
-    // Add the backgrond and CEL frame while aligning it in the center
-    this->celScene.addPixmap(QPixmap::fromImage(celFrameBackground))
-        ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
-    this->celScene.addPixmap(QPixmap::fromImage(celFrame))
-        ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
+        QColor backColor = QColor(Config::getGraphicsTransparentColor());
+        // Building a gray background of the width/height of the CEL frame
+        QImage celFrameBackground = QImage(celFrame.width(), celFrame.height(), QImage::Format_ARGB32);
+        celFrameBackground.fill(backColor);
+        // Building a gray background of the width/height of the MIN subtile
+        QImage subtileBackground = QImage(subtile.width(), subtile.height(), QImage::Format_ARGB32);
+        subtileBackground.fill(backColor);
+        // Building a gray background of the width/height of the MIN subtile
+        QImage tileBackground = QImage(tile.width(), tile.height(), QImage::Format_ARGB32);
+        tileBackground.fill(backColor);
 
-    // Set current frame width and height
-    this->ui->celFrameWidthEdit->setText(QString::number(celFrame.width()) + " px");
-    this->ui->celFrameHeightEdit->setText(QString::number(celFrame.height()) + " px");
+        // Resize the scene rectangle to include some padding around the CEL frame
+        // the MIN subtile and the TIL tile
+        this->celScene.setSceneRect(0, 0,
+            celFrame.width() + subtile.width() + tile.width() + CEL_SCENE_SPACING * 4,
+            tile.height() + CEL_SCENE_SPACING * 2);
 
-    // MIN
-    int minPosX = celFrame.width() + CEL_SCENE_SPACING * 2;
-    this->celScene.addPixmap(QPixmap::fromImage(subtileBackground))
-        ->setPos(minPosX, CEL_SCENE_SPACING);
-    this->celScene.addPixmap(QPixmap::fromImage(subtile))
-        ->setPos(minPosX, CEL_SCENE_SPACING);
+        // Add the backgrond and CEL frame while aligning it in the center
+        this->celScene.addPixmap(QPixmap::fromImage(celFrameBackground))
+            ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
+        this->celScene.addPixmap(QPixmap::fromImage(celFrame))
+            ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
 
-    // Set current frame width and height
-    this->ui->minFrameWidthEdit->setText(QString::number(this->min->getSubtileWidth()));
-    this->ui->minFrameWidthEdit->setToolTip(QString::number(subtile.width()) + " px");
-    this->ui->minFrameHeightEdit->setText(QString::number(this->min->getSubtileHeight()));
-    this->ui->minFrameHeightEdit->setToolTip(QString::number(subtile.height()) + " px");
+        // Set current frame width and height
+        this->ui->celFrameWidthEdit->setText(QString::number(celFrame.width()) + " px");
+        this->ui->celFrameHeightEdit->setText(QString::number(celFrame.height()) + " px");
 
-    // TIL
-    int tilPosX = minPosX + subtile.width() + CEL_SCENE_SPACING;
-    this->celScene.addPixmap(QPixmap::fromImage(tileBackground))
-        ->setPos(tilPosX, CEL_SCENE_SPACING);
-    this->celScene.addPixmap(QPixmap::fromImage(tile))
-        ->setPos(tilPosX, CEL_SCENE_SPACING);
+        // MIN
+        int minPosX = celFrame.width() + CEL_SCENE_SPACING * 2;
+        this->celScene.addPixmap(QPixmap::fromImage(subtileBackground))
+            ->setPos(minPosX, CEL_SCENE_SPACING);
+        this->celScene.addPixmap(QPixmap::fromImage(subtile))
+            ->setPos(minPosX, CEL_SCENE_SPACING);
 
-    // Set current frame width and height
-    this->ui->tilFrameWidthEdit->setText(QString::number(TILE_WIDTH));
-    this->ui->tilFrameWidthEdit->setToolTip(QString::number(tile.width()) + " px");
-    this->ui->tilFrameHeightEdit->setText(QString::number(TILE_HEIGHT));
-    this->ui->tilFrameHeightEdit->setToolTip(QString::number(tile.height()) + " px");
+        // Set current frame width and height
+        this->ui->minFrameWidthEdit->setText(QString::number(this->min->getSubtileWidth()));
+        this->ui->minFrameWidthEdit->setToolTip(QString::number(subtile.width()) + " px");
+        this->ui->minFrameHeightEdit->setText(QString::number(this->min->getSubtileHeight()));
+        this->ui->minFrameHeightEdit->setToolTip(QString::number(subtile.height()) + " px");
 
+        // TIL
+        int tilPosX = minPosX + subtile.width() + CEL_SCENE_SPACING;
+        this->celScene.addPixmap(QPixmap::fromImage(tileBackground))
+            ->setPos(tilPosX, CEL_SCENE_SPACING);
+        this->celScene.addPixmap(QPixmap::fromImage(tile))
+            ->setPos(tilPosX, CEL_SCENE_SPACING);
+
+        // Set current frame width and height
+        this->ui->tilFrameWidthEdit->setText(QString::number(TILE_WIDTH));
+        this->ui->tilFrameWidthEdit->setToolTip(QString::number(tile.width()) + " px");
+        this->ui->tilFrameHeightEdit->setText(QString::number(TILE_HEIGHT));
+        this->ui->tilFrameHeightEdit->setToolTip(QString::number(tile.height()) + " px");
+    }
     // Notify PalView that the frame changed (used to refresh palette hits)
     emit frameRefreshed();
 }
@@ -2462,7 +2478,8 @@ void LevelCelView::setTileIndex(int tileIndex)
 
 void LevelCelView::playGroup()
 {
-    dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)this->ui->playComboBox->currentIndex());
+    QComboBox *cycleBox = this->dunView ? this->ui->dunPlayComboBox : this->ui->playComboBox;
+    dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)cycleType->currentIndex());
 
     // this->displayFrame();
 }
@@ -2759,14 +2776,14 @@ void LevelCelView::on_playDelayEdit_returnPressed()
     quint16 playDelay = this->ui->playDelayEdit->text().toUInt();
 
     if (playDelay != 0)
-        this->currentPlayDelay = playDelay;
+        this->tilesetPlayDelay = playDelay;
 
     this->on_playDelayEdit_escPressed();
 }
 
 void LevelCelView::on_playDelayEdit_escPressed()
 {
-    this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
+    this->ui->playDelayEdit->setText(QString::number(this->tilesetPlayDelay));
     this->ui->playDelayEdit->clearFocus();
 }
 
@@ -2776,12 +2793,16 @@ void LevelCelView::on_playButton_clicked()
     this->ui->playButton->setEnabled(false);
     this->ui->playDelayEdit->setReadOnly(false);
     this->ui->playComboBox->setEnabled(false);
+    this->ui->dunPlayButton->setEnabled(false);
+    this->ui->dunPlayDelayEdit->setReadOnly(false);
+    this->ui->dunPlayComboBox->setEnabled(false);
     // enable the stop button
     this->ui->stopButton->setEnabled(true);
+    this->ui->dunStopButton->setEnabled(true);
     // preserve the palette
     dMainWindow().initPaletteCycle();
 
-    this->playTimer.start(this->currentPlayDelay);
+    this->playTimer.start(this->dunView ? this->dunviewPlayDelay : this->tilesetPlayDelay);
 }
 
 void LevelCelView::on_stopButton_clicked()
@@ -2792,18 +2813,14 @@ void LevelCelView::on_stopButton_clicked()
     dMainWindow().resetPaletteCycle();
     // disable the stop button
     this->ui->stopButton->setEnabled(false);
+    this->ui->dunStopButton->setEnabled(false);
     // enable the related fields
     this->ui->playButton->setEnabled(true);
     this->ui->playDelayEdit->setReadOnly(true);
     this->ui->playComboBox->setEnabled(true);
-}
-
-void LevelCelView::on_actionToggle_View_triggered()
-{
-    bool dunMode = !this->dunView;
-    this->dunView = dunMode;
-    this->viewBtn->setToolTip(dunMode ? tr("Switch to tileset view") : tr("Switch to dungeon view"));
-    this->viewBtn->setIcon(QApplication::style()->standardIcon(dunMode ? QStyle::SP_ArrowLeft : QStyle::SP_ArrowRight));
+    this->ui->dunPlayButton->setEnabled(true);
+    this->ui->dunPlayDelayEdit->setReadOnly(true);
+    this->ui->dunPlayComboBox->setEnabled(true);
 }
 
 void LevelCelView::dragEnterEvent(QDragEnterEvent *event)
@@ -2828,4 +2845,81 @@ void LevelCelView::dropEvent(QDropEvent *event)
     }
     // try to insert as frames
     dMainWindow().openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
+}
+
+void LevelCelView::on_actionToggle_View_triggered()
+{
+    // stop playback
+    if (this->playTimer.isActive()) {
+        this->on_stopButton_clicked();
+    }
+
+    bool dunMode = !this->dunView;
+    this->dunView = dunMode;
+    // select gridlayout
+    this->ui->tilesetGridLayout->setVisible(!dunMode);
+    this->ui->dunViewGridLayout->setVisible(dunMode);
+    // update zoom
+    QLineEdit *zoomField;
+    if (dunMode) {
+        zoomField = this->ui->dunZoomEdit;
+    } else {
+        zoomField = this->ui->zoomEdit;
+    }
+    this->celScene.setZoom(zoom->text());
+    // update the view
+    this->displayFrame();
+}
+
+void LevelCelView::on_dunZoomOutButton_clicked()
+{
+    this->celScene.zoomOut();
+    this->on_dunZoomEdit_escPressed();
+}
+
+void LevelCelView::on_dunZoomInButton_clicked()
+{
+    this->celScene.zoomIn();
+    this->on_dunZoomEdit_escPressed();
+}
+
+void LevelCelView::on_dunZoomEdit_returnPressed()
+{
+    QString zoom = this->ui->dunZoomEdit->text();
+
+    this->celScene.setZoom(zoom);
+
+    this->on_dunZoomEdit_escPressed();
+}
+
+void LevelCelView::on_dunZoomEdit_escPressed()
+{
+    this->ui->dunZoomEdit->setText(this->celScene.zoomText());
+    this->ui->dunZoomEdit->clearFocus();
+}
+
+void LevelCelView::on_dunPlayDelayEdit_returnPressed()
+{
+    quint16 playDelay = this->ui->dunPlayDelayEdit->text().toUInt();
+
+    if (playDelay != 0)
+        this->dunviewPlayDelay = playDelay;
+
+    this->on_dunPlayDelayEdit_escPressed();
+}
+
+void LevelCelView::on_dunPlayDelayEdit_escPressed()
+{
+    this->ui->dunPlayDelayEdit->setText(QString::number(this->dunviewPlayDelay));
+    this->ui->dunPlayDelayEdit->clearFocus();
+}
+
+void LevelCelView::on_dunPlayButton_clicked()
+{
+    this->on_playButton_clicked();
+}
+
+void LevelCelView::on_dunStopButton_clicked()
+{
+    this->on_stopButton_clicked();
 }

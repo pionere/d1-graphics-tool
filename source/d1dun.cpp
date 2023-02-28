@@ -224,3 +224,13 @@ bool D1Dun::isModified() const
 {
     return this->modified;
 }
+
+int D1Dun::getWidth() const
+{
+    return this->width;
+}
+
+int D1Dun::getHeight() const
+{
+    return this->height;
+}

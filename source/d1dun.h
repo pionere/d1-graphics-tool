@@ -22,6 +22,8 @@ public:
 
     QString getFilePath() const;
     bool isModified() const;
+    int getWidth() const;
+    int getHeight() const;
 
 private:
     QString dunFilePath;
