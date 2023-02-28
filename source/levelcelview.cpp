@@ -2915,10 +2915,13 @@ void LevelCelView::on_dungeonPosXLineEdit_returnPressed()
     if (posx >= this->dun->getWidth() * 2) {
         posx = this->dun->getWidth() * 2 - 1;
     }
+    bool change = this->currentDunPosX != posx;
     this->currentDunPosX = posx;
     this->on_dungeonPosXLineEdit_escPressed();
-    // update the view
-    this->update();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
 }
 
 void LevelCelView::on_dungeonPosXLineEdit_escPressed()
@@ -2938,10 +2941,13 @@ void LevelCelView::on_dungeonPosYLineEdit_returnPressed()
     if (posy >= this->dun->getHeight() * 2) {
         posy = this->dun->getHeight() * 2 - 1;
     }
+    bool change = this->currentDunPosY != posy;
     this->currentDunPosY = posy;
     this->on_dungeonPosYLineEdit_escPressed();
-    // update the view
-    this->update();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
 }
 
 void LevelCelView::on_dungeonPosYLineEdit_escPressed()
@@ -2956,10 +2962,12 @@ void LevelCelView::on_dunWidthEdit_returnPressed()
 {
     int newWidth = this->ui->dunWidthEdit->text().toUShort();
 
-    this->dun->setWidth(newWidth / 2);
+    bool change = this->dun->setWidth(newWidth / 2);
     this->on_dunWidthEdit_escPressed();
-    // update the view
-    this->displayFrame();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
 }
 
 void LevelCelView::on_dunWidthEdit_escPressed()
@@ -2975,10 +2983,12 @@ void LevelCelView::on_dunHeightEdit_returnPressed()
 {
     int newHeight = this->ui->dunHeightEdit->text().toUShort();
 
-    this->dun->setHeight(newHeight / 2);
+    bool change = this->dun->setHeight(newHeight / 2);
     this->on_dunHeightEdit_escPressed();
-    // update the view
-    this->displayFrame();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
 }
 
 void LevelCelView::on_dunHeightEdit_escPressed()
@@ -2996,10 +3006,12 @@ void LevelCelView::on_dungeonTileLineEdit_returnPressed()
     int posx = this->currentDunPosX;
     int posy = this->currentDunPosY;
 
-    this->dun->setTileAt(posx, posy, tileRef);
+    bool change = this->dun->setTileAt(posx, posy, tileRef);
     this->on_dungeonTileLineEdit_escPressed();
-    // update the view
-    this->displayFrame();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
 }
 
 void LevelCelView::on_dungeonTileLineEdit_escPressed()
@@ -3017,10 +3029,12 @@ void LevelCelView::on_dungeonItemLineEdit_returnPressed()
     int posx = this->currentDunPosX;
     int posy = this->currentDunPosY;
 
-    this->dun->setItemAt(posx, posy, itemIndex);
+    bool change = this->dun->setItemAt(posx, posy, itemIndex);
     this->on_dungeonItemLineEdit_escPressed();
-    // update the view
-    this->displayFrame();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
 }
 
 void LevelCelView::on_dungeonItemLineEdit_escPressed()
@@ -3038,10 +3052,12 @@ void LevelCelView::on_dungeonMonsterLineEdit_returnPressed()
     int posx = this->currentDunPosX;
     int posy = this->currentDunPosY;
 
-    this->dun->setMonsterAt(posx, posy, monsterIndex);
+    bool change = this->dun->setMonsterAt(posx, posy, monsterIndex);
     this->on_dungeonMonsterLineEdit_escPressed();
-    // update the view
-    this->displayFrame();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
 }
 
 void LevelCelView::on_dungeonMonsterLineEdit_escPressed()
@@ -3058,10 +3074,12 @@ void LevelCelView::on_dungeonObjectLineEdit_returnPressed()
     int posx = this->currentDunPosX;
     int posy = this->currentDunPosY;
 
-    this->dun->setItemAt(posx, posy, objectIndex);
+    bool change = this->dun->setItemAt(posx, posy, objectIndex);
     this->on_dungeonObjectLineEdit_escPressed();
-    // update the view
-    this->displayFrame();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
 }
 
 void LevelCelView::on_dungeonObjectLineEdit_escPressed()
@@ -3079,10 +3097,12 @@ void LevelCelView::on_dungeonTransvalLineEdit_returnPressed()
     int posx = this->currentDunPosX;
     int posy = this->currentDunPosY;
 
-    this->dun->setTransvalAt(posx, posy, transVal);
+    bool change = this->dun->setTransvalAt(posx, posy, transVal);
     this->on_dungeonTransvalLineEdit_escPressed();
-    // update the view
-    this->displayFrame();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
 }
 
 void LevelCelView::on_dungeonTransvalLineEdit_escPressed()

@@ -230,16 +230,16 @@ int D1Dun::getWidth() const
     return this->width;
 }
 
-void D1Dun::setWidth(int newWidth)
+bool D1Dun::setWidth(int newWidth)
 {
     if (newWidth == 0) { // TODO: check overflow
-        return;
+        return false;
     }
     int height = this->height;
     int prevWidth = this->width;
     int diff = newWidth - prevWidth;
     if (diff == 0) {
-        return;
+        return false;
     }
     if (diff < 0) {
         // check if there are non-zero values
@@ -258,7 +258,7 @@ void D1Dun::setWidth(int newWidth)
             QMessageBox::StandardButton reply;
             reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Some content are going to be eliminited. Are you sure you want to proceed?"), QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) {
-                return;
+                return false;
             }
         }
     }
@@ -282,6 +282,7 @@ void D1Dun::setWidth(int newWidth)
 
     this->width = newWidth;
     this->modified = true;
+    return true;
 }
 
 int D1Dun::getHeight() const
@@ -289,16 +290,16 @@ int D1Dun::getHeight() const
     return this->height;
 }
 
-void D1Dun::setHeight(int newHeight)
+bool D1Dun::setHeight(int newHeight)
 {
     if (newHeight == 0) { // TODO: check overflow
-        return;
+        return false;
     }
     int width = this->width;
     int prevHeight = this->height;
     int diff = newHeight - prevHeight;
     if (diff == 0) {
-        return;
+        return false;
     }
     if (diff < 0) {
         // check if there are non-zero values
@@ -317,7 +318,7 @@ void D1Dun::setHeight(int newHeight)
             QMessageBox::StandardButton reply;
             reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Some content are going to be eliminited. Are you sure you want to proceed?"), QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) {
-                return;
+                return false;
             }
         }
     }
@@ -338,6 +339,7 @@ void D1Dun::setHeight(int newHeight)
 
     this->height = newHeight;
     this->modified = true;
+    return true;
 }
 
 int D1Dun::getTileAt(int posx, int posy) const
@@ -345,10 +347,14 @@ int D1Dun::getTileAt(int posx, int posy) const
     return this->tiles[posx / 2][posy / 2];
 }
 
-void D1Dun::setTileAt(int posx, int posy, int tileRef)
+bool D1Dun::setTileAt(int posx, int posy, int tileRef)
 {
+    if (this->tiles[posx / 2][posy / 2] == tileRef) {
+        return false;
+    }
     this->tiles[posx / 2][posy / 2] = tileRef;
     this->modified = true;
+    return true;
 }
 
 int D1Dun::getItemAt(int posx, int posy) const
@@ -356,10 +362,14 @@ int D1Dun::getItemAt(int posx, int posy) const
     return this->items[posx][posy];
 }
 
-void D1Dun::setItemAt(int posx, int posy, int itemIndex)
+bool D1Dun::setItemAt(int posx, int posy, int itemIndex)
 {
+    if (this->items[posx][posy] == itemIndex) {
+        return false;
+    }
     this->items[posx][posy] = itemIndex;
     this->modified = true;
+    return true;
 }
 
 int D1Dun::getMonsterAt(int posx, int posy) const
@@ -367,10 +377,14 @@ int D1Dun::getMonsterAt(int posx, int posy) const
     return this->monsters[posx][posy];
 }
 
-void D1Dun::setMonsterAt(int posx, int posy, int monsterIndex)
+bool D1Dun::setMonsterAt(int posx, int posy, int monsterIndex)
 {
+    if (this->monsters[posx][posy] == monsterIndex) {
+        return false;
+    }
     this->monsters[posx][posy] = monsterIndex;
     this->modified = true;
+    return true;
 }
 
 int D1Dun::getObjectAt(int posx, int posy) const
@@ -378,10 +392,14 @@ int D1Dun::getObjectAt(int posx, int posy) const
     return this->objects[posx][posy];
 }
 
-void D1Dun::setObjectAt(int posx, int posy, int objectIndex)
+bool D1Dun::setObjectAt(int posx, int posy, int objectIndex)
 {
+    if (this->objects[posx][posy] == objectIndex) {
+        return false;
+    }
     this->objects[posx][posy] = objectIndex;
     this->modified = true;
+    return true;
 }
 
 int D1Dun::getTransvalAt(int posx, int posy) const
@@ -389,8 +407,12 @@ int D1Dun::getTransvalAt(int posx, int posy) const
     return this->transvals[posx][posy];
 }
 
-void D1Dun::setTransvalAt(int posx, int posy, int transval)
+bool D1Dun::setTransvalAt(int posx, int posy, int transval)
 {
+    if (this->transvals[posx][posy] == transval) {
+        return false;
+    }
     this->transvals[posx][posy] = transval;
     this->modified = true;
+    return true;
 }

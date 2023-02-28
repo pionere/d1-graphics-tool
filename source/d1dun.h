@@ -23,20 +23,20 @@ public:
     QString getFilePath() const;
     bool isModified() const;
     int getWidth() const;
-    void setWidth(int width);
+    bool setWidth(int width);
     int getHeight() const;
-    void setHeight(int height);
+    bool setHeight(int height);
 
     int getTileAt(int posx, int posy) const;
-    void setTileAt(int posx, int posy, int tileRef);
+    bool setTileAt(int posx, int posy, int tileRef);
     int getItemAt(int posx, int posy) const;
-    void setItemAt(int posx, int posy, int itemIndex);
+    bool setItemAt(int posx, int posy, int itemIndex);
     int getMonsterAt(int posx, int posy) const;
-    void setMonsterAt(int posx, int posy, int monsterIndex);
+    bool setMonsterAt(int posx, int posy, int monsterIndex);
     int getObjectAt(int posx, int posy) const;
-    void setObjectAt(int posx, int posy, int objectIndex);
+    bool setObjectAt(int posx, int posy, int objectIndex);
     int getTransvalAt(int posx, int posy) const;
-    void setTransvalAt(int posx, int posy, int transval);
+    bool setTransvalAt(int posx, int posy, int transval);
 
 private:
     QString dunFilePath;
