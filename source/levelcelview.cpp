@@ -36,6 +36,9 @@ LevelCelView::LevelCelView(QWidget *parent)
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
     this->ui->stopButton->setEnabled(false);
+    this->on_dunZoomEdit_escPressed();
+    this->on_dunPlayDelayEdit_escPressed();
+    this->ui->dunStopButton->setEnabled(false);
     this->playTimer.connect(&this->playTimer, SIGNAL(timeout()), this, SLOT(playGroup()));
     this->ui->tilesTabs->addTab(&this->tabTileWidget, tr("Tile properties"));
     this->ui->tilesTabs->addTab(&this->tabSubtileWidget, tr("Subtile properties"));
@@ -59,6 +62,17 @@ LevelCelView::LevelCelView(QWidget *parent)
     QObject::connect(this->ui->minFrameHeightEdit, SIGNAL(cancel_signal()), this, SLOT(on_minFrameHeightEdit_escPressed()));
     QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
     QObject::connect(this->ui->playDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_playDelayEdit_escPressed()));
+    QObject::connect(this->ui->dunZoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_dunZoomEdit_escPressed()));
+    QObject::connect(this->ui->dunPlayDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_dunPlayDelayEdit_escPressed()));
+    QObject::connect(this->ui->dungeonPosXLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonPosXLineEdit_escPressed()));
+    QObject::connect(this->ui->dungeonPosYLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonPosYLineEdit_escPressed()));
+    QObject::connect(this->ui->dunWidthEdit, SIGNAL(cancel_signal()), this, SLOT(on_dunWidthEdit_escPressed()));
+    QObject::connect(this->ui->dunHeightEdit, SIGNAL(cancel_signal()), this, SLOT(on_dunHeightEdit_escPressed()));
+    QObject::connect(this->ui->dungeonTileLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonTileLineEdit_escPressed()));
+    QObject::connect(this->ui->dungeonItemLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonItemLineEdit_escPressed()));
+    QObject::connect(this->ui->dungeonMonsterLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonMonsterLineEdit_escPressed()));
+    QObject::connect(this->ui->dungeonObjectLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonObjectLineEdit_escPressed()));
+    QObject::connect(this->ui->dungeonTransvalLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonTransvalLineEdit_escPressed()));
 
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -161,7 +175,15 @@ void LevelCelView::update()
 
     this->updateLabel();
 
-    if (!this->dunView) {
+    if (this->dunView) {
+        int posx = this->currentDunPosX;
+        int posy = this->currentDunPosY;
+        this->ui->dungeonTileLineEdit->setText(QString::number(this->dun->getTileAt(posx, posy)));
+        this->ui->dungeonItemLineEdit->setText(QString::number(this->dun->getItemAt(posx, posy)));
+        this->ui->dungeonMonsterLineEdit->setText(QString::number(this->dun->getMonsterAt(posx, posy)));
+        this->ui->dungeonObjectLineEdit->setText(QString::number(this->dun->getObjectAt(posx, posy)));
+        this->ui->dungeonTransvalLineEdit->setText(QString::number(this->dun->getTransvalAt(posx, posy)));
+    } else {
         // Set current and maximum frame text
         count = this->gfx->getFrameCount();
         this->ui->frameIndexEdit->setText(
@@ -2364,16 +2386,24 @@ void LevelCelView::upscale(const UpscaleParam &params)
 void LevelCelView::displayFrame()
 {
     this->update();
+
     this->celScene.clear();
     this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
     if (this->dunView) {
         // Set dungeon width and height
-        this->ui->dunWidthEdit->setText(QString::number(this->dun->getWidth()));
-        this->ui->dunHeightEdit->setText(QString::number(this->dun->getHeight()));
+        this->ui->dunWidthEdit->setText(QString::number(this->dun->getWidth() * 2));
+        this->ui->dunWidthEdit->setToolTip(QString::number(this->dun->getWidth());
+        this->ui->dunHeightEdit->setText(QString::number(this->dun->getHeight() * 2));
+        this->ui->dunHeightEdit->setToolTip(QString::number(this->dun->getHeight());
         // Set dungeon location
         this->ui->dungeonPosXLineEdit->setText(QString::number(currentDunPosX));
+        this->ui->dungeonPosXLineEdit->setToolTip(QString::number(currentDunPosX / 2);
         this->ui->dungeonPosYLineEdit->setText(QString::number(currentDunPosY));
+        this->ui->dungeonPosYLineEdit->setToolTip(QString::number(currentDunPosY / 2);
+
+        // QImage dunFrame = this->dun->getImage();
+
     } else {
         // Getting the current frame/sub-tile/tile to display
         QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
@@ -2486,6 +2516,9 @@ void LevelCelView::playGroup()
 
 void LevelCelView::ShowContextMenu(const QPoint &pos)
 {
+    if (this->dunView) {
+        return;
+    }
     MainWindow *mw = &dMainWindow();
     QAction actions[15];
     QMenu contextMenu(this);
@@ -2869,6 +2902,172 @@ void LevelCelView::on_actionToggle_View_triggered()
     this->celScene.setZoom(zoomField->text());
     // update the view
     this->displayFrame();
+}
+
+void LevelCelView::on_dungeonPosXLineEdit_returnPressed()
+{
+    int posx = this->ui->dungeonPosXLineEdit->text()->toInt();
+    if (posx < 0) {
+        posx = 0;
+    }
+    if (posx >= this->dun->getWidth()) {
+        posx = this->dun->getWidth() - 1;
+    }
+    this->currentDunPosX = posx;
+    this->on_dungeonPosXLineEdit_escPressed();
+}
+
+void LevelCelView::on_dungeonPosXLineEdit_escPressed()
+{
+    int posx = this->currentDunPosX;
+    this->ui->dungeonPosXLineEdit->setText(QString::number(posx));
+    this->ui->dungeonPosXLineEdit->setToolTip(QString::number(posx / 2);
+    this->ui->dungeonPosXLineEdit->clearFocus();
+}
+
+void LevelCelView::on_dungeonPosYLineEdit_returnPressed()
+{
+    int posy = this->ui->dungeonPosYLineEdit->text()->toInt();
+    if (posy < 0) {
+        posy = 0;
+    }
+    if (posy >= this->dun->getHeight()) {
+        posy = this->dun->getHeight() - 1;
+    }
+    this->currentDunPosY = posy;
+    this->on_dungeonPosYLineEdit_escPressed();
+}
+
+void LevelCelView::on_dungeonPosYLineEdit_escPressed()
+{
+    int posy = this->currentDunPosY;
+    this->ui->dungeonPosYLineEdit->setText(QString::number(posy));
+    this->ui->dungeonPosYLineEdit->setToolTip(QString::number(posy / 2);
+    this->ui->dungeonPosYLineEdit->clearFocus();
+}
+
+void LevelCelView::on_dunWidthEdit_returnPressed()
+{
+    int newWidth = this->ui->dunWidthEdit->text()->toUShort();
+
+    this->dun->setWidth(newWidth);
+
+    this->on_dunWidthEdit_escPressed();
+}
+
+void LevelCelView::on_dunWidthEdit_escPressed()
+{
+    int width = this->dun->getWidth();
+    this->ui->dunWidthEdit->setText(QString::number(width * 2));
+    this->ui->dunWidthEdit->setToolTip(QString::number(width);
+    this->ui->dunWidthEdit->clearFocus();
+}
+
+void LevelCelView::on_dunHeightEdit_returnPressed()
+{
+    int newHeight = this->ui->dunHeightEdit->text()->toUShort();
+
+    this->dun->setHeight(newHeight);
+
+    this->on_dunHeightEdit_escPressed();
+}
+
+void LevelCelView::on_dunHeightEdit_escPressed()
+{
+    int height = this->dun->getHeight();
+    this->ui->dunHeightEdit->setText(QString::number(height * 2));
+    this->ui->dunHeightEdit->setToolTip(QString::number(height);
+    this->ui->dunHeightEdit->clearFocus();
+}
+
+void LevelCelView::on_dungeonTileLineEdit_returnPressed()
+{
+    int tileRef = this->ui->dungeonTileLineEdit->text()->toUShort();
+    int posx = this->currentDunPosX;
+    int posy = this->currentDunPosY;
+    this->dun->setTileAt(posx, posy, tileRef);
+
+    this->on_dungeonTileLineEdit_escPressed();
+}
+
+void LevelCelView::on_dungeonTileLineEdit_escPressed()
+{
+    int posx = this->currentDunPosX;
+    int posy = this->currentDunPosY;
+    this->ui->dungeonTileLineEdit->setText(QString::number(this->dun->getTileAt(posx, posy)));
+    this->ui->dungeonTileLineEdit->clearFocus();
+}
+
+void LevelCelView::on_dungeonItemLineEdit_returnPressed()
+{
+    int itemIndex = this->ui->dungeonItemLineEdit->text()->toUShort();
+    int posx = this->currentDunPosX;
+    int posy = this->currentDunPosY;
+    this->dun->setItemAt(posx, posy, itemIndex);
+
+    this->on_dungeonItemLineEdit_escPressed();
+}
+
+void LevelCelView::on_dungeonItemLineEdit_escPressed()
+{
+    int posx = this->currentDunPosX;
+    int posy = this->currentDunPosY;
+    this->ui->dungeonItemLineEdit->setText(QString::number(this->dun->getItemAt(posx, posy)));
+    this->ui->dungeonItemLineEdit->clearFocus();
+}
+
+void LevelCelView::on_dungeonMonsterLineEdit_returnPressed()
+{
+    int monsterIndex = this->ui->dungeonMonsterLineEdit->text()->toUShort();
+    int posx = this->currentDunPosX;
+    int posy = this->currentDunPosY;
+    this->dun->setMonsterAt(posx, posy, monsterIndex);
+
+    this->on_dungeonMonsterLineEdit_escPressed();
+}
+
+void LevelCelView::on_dungeonMonsterLineEdit_escPressed()
+{
+    int posx = this->currentDunPosX;
+    int posy = this->currentDunPosY;
+    this->ui->dungeonMonsterLineEdit->setText(QString::number(this->dun->getMonsterAt(posx, posy)));
+    this->ui->dungeonMonsterLineEdit->clearFocus();
+}
+
+void LevelCelView::on_dungeonObjectLineEdit_returnPressed()
+{
+    int objectIndex = this->ui->dungeonObjectLineEdit->text()->toUShort();
+    int posx = this->currentDunPosX;
+    int posy = this->currentDunPosY;
+    this->dun->setItemAt(posx, posy, objectIndex);
+
+    this->on_dungeonObjectLineEdit_escPressed();
+}
+
+void LevelCelView::on_dungeonObjectLineEdit_escPressed()
+{
+    int posx = this->currentDunPosX;
+    int posy = this->currentDunPosY;
+    this->ui->dungeonObjectLineEdit->setText(QString::number(this->dun->getObjectAt(posx, posy)));
+    this->ui->dungeonObjectLineEdit->clearFocus();
+}
+
+void LevelCelView::on_dungeonTransvalLineEdit_returnPressed()
+{
+    int transVal = this->ui->dungeonTransvalLineEdit->text()->toUShort();
+    int posx = this->currentDunPosX;
+    int posy = this->currentDunPosY;
+    this->dun->setTransvalAt(posx, posy, transVal);
+
+    this->on_dungeonTransvalLineEdit_escPressed();
+}
+
+void LevelCelView::on_dungeonTransvalLineEdit_escPressed()
+{
+    int posx = this->currentDunPosX;
+    int posy = this->currentDunPosY;
+    this->ui->dungeonTransvalLineEdit->setText(QString::number(this->dun->getTransvalAt(posx, posy)));
+    this->ui->dungeonTransvalLineEdit->clearFocus();
 }
 
 void LevelCelView::on_dunZoomOutButton_clicked()

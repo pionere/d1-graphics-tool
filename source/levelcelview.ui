@@ -872,7 +872,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1" colspan="4">
+      <item row="1" column="1" colspan="6">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -883,9 +883,6 @@
        <widget class="LineEditWidget" name="dungeonPosXLineEdit">
         <property name="charWidth">
          <number>5</number>
-        </property>
-        <property name="toolTip">
-         <string>Current x-coordinate</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -912,9 +909,6 @@
        <widget class="LineEditWidget" name="dungeonPosYLineEdit">
         <property name="charWidth">
          <number>5</number>
-        </property>
-        <property name="toolTip">
-         <string>Current y-coordinate</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -955,6 +949,149 @@
        <widget class="LineEditWidget" name="dunHeightEdit">
         <property name="charWidth">
          <number>5</number>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Tiles:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="showTilesCheckBox">
+        <property name="toolTip">
+         <string>Show tiles</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="7">
+       <widget class="LineEditWidget" name="dungeonTileLineEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>Current tile at the selected position</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Items:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="showItemsCheckBox">
+        <property name="toolTip">
+         <string>Show items</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="7">
+       <widget class="LineEditWidget" name="dungeonItemLineEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>Current item at the selected position</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Monsters:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QCheckBox" name="showMonstersCheckBox">
+        <property name="toolTip">
+         <string>Show monsters</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="7">
+       <widget class="LineEditWidget" name="dungeonMonsterLineEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>Current monster at the selected position</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Objects:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QCheckBox" name="showObjectsCheckBox">
+        <property name="toolTip">
+         <string>Show objects</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="7">
+       <widget class="LineEditWidget" name="dungeonObjectLineEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>Current object at the selected position</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Transval:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="7">
+       <widget class="LineEditWidget" name="dungeonTransvalLineEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>Current transval of the selected position</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>

@@ -165,6 +165,27 @@ private slots:
 
     void on_actionToggle_View_triggered();
 
+    void on_dungeonPosXLineEdit_returnPressed();
+    void on_dungeonPosXLineEdit_escPressed();
+    void on_dungeonPosYLineEdit_returnPressed();
+    void on_dungeonPosYLineEdit_escPressed();
+
+    void on_dunWidthEdit_returnPressed();
+    void on_dunWidthEdit_escPressed();
+    void on_dunHeightEdit_returnPressed();
+    void on_dunHeightEdit_escPressed();
+
+    void on_dungeonTileLineEdit_returnPressed();
+    void on_dungeonTileLineEdit_escPressed();
+    void on_dungeonItemLineEdit_returnPressed();
+    void on_dungeonItemLineEdit_escPressed();
+    void on_dungeonMonsterLineEdit_returnPressed();
+    void on_dungeonMonsterLineEdit_escPressed();
+    void on_dungeonObjectLineEdit_returnPressed();
+    void on_dungeonObjectLineEdit_escPressed();
+    void on_dungeonTransvalLineEdit_returnPressed();
+    void on_dungeonTransvalLineEdit_escPressed();
+
     void on_dunZoomOutButton_clicked();
     void on_dunZoomInButton_clicked();
     void on_dunZoomEdit_returnPressed();

@@ -230,7 +230,169 @@ int D1Dun::getWidth() const
     return this->width;
 }
 
+void D1Dun::setWidth(int newWidth)
+{
+    if (newWidth == 0) { // TODO: check overflow
+        return;
+    }
+    int height = this->height;
+    int prevWidth = this->width;
+    int diff = newWidth - prevWidth;
+    if (diff == 0) {
+        return;
+    }
+
+    if (diff < 0) {
+        // check if there are non-zero values
+        bool hasContent = false;
+        for (int y = 0; y < height; y++) {
+            for (int x = newWidth; x < prevWidth; x++) {
+                hasContent |= this->tiles[y][x] != 0;
+                hasContent |= this->items[y][x] != 0;
+                hasContent |= this->monsters[y][x] != 0;
+                hasContent |= this->objects[y][x] != 0;
+                hasContent |= this->transvals[y][x] != 0;
+            }
+        }
+
+        if (hasContent) {
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Some content are going to be eliminited. Are you sure you want to proceed?"), QMessageBox::Yes | QMessageBox::No);
+            if (reply != QMessageBox::Yes) {
+                return;
+            }
+        }
+    }
+
+    // resize the dungeon
+    for (std::vector<int> &tilesRow : this->tiles) {
+        tilesRow.resize(newWidth);
+    }
+    for (std::vector<int> &itemsRow : this->items) {
+        itemsRow.resize(newWidth);
+    }
+    for (std::vector<int> &monsRow : this->monsters) {
+        monsRow.resize(newWidth);
+    }
+    for (std::vector<int> &objsRow : this->objects) {
+        objsRow.resize(newWidth);
+    }
+    for (std::vector<int> &transRow : this->transvals) {
+        transRow.resize(newWidth);
+    }
+
+    this->width = newWidth;
+    this->modified = true;
+}
+
 int D1Dun::getHeight() const
 {
     return this->height;
+}
+
+void D1Dun::setHeight(int newHeight)
+{
+
+    if (newHeight == 0) { // TODO: check overflow
+        return;
+    }
+    int width = this->width;
+    int prevHeight = this->height;
+    int diff = newHeight - prevHeight;
+    if (diff == 0) {
+        return;
+    }
+    if (diff < 0) {
+        // check if there are non-zero values
+        bool hasContent = false;
+        for (int y = newHeight; y < prevHeight; y++) {
+            for (int x = 0; x < width; x++) {
+                hasContent |= this->tiles[y][x] != 0;
+                hasContent |= this->items[y][x] != 0;
+                hasContent |= this->monsters[y][x] != 0;
+                hasContent |= this->objects[y][x] != 0;
+                hasContent |= this->transvals[y][x] != 0;
+            }
+        }
+
+        if (hasContent) {
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Some content are going to be eliminited. Are you sure you want to proceed?"), QMessageBox::Yes | QMessageBox::No);
+            if (reply != QMessageBox::Yes) {
+                return;
+            }
+        }
+    }
+
+    // resize the dungeon
+    this->tiles.resize(newHeight);
+    this->items.resize(newHeight);
+    this->monsters.resize(newHeight);
+    this->objects.resize(newHeight);
+    this->transvals.resize(newHeight);
+    for (int y = prevHeight; y < newHeight; y++) {
+        this->tiles[y].resize(width);
+        this->items[y].resize(width);
+        this->monsters[y].resize(width);
+        this->objects[y].resize(width);
+        this->transvals[y].resize(width);
+    }
+
+    this->height = newHeight;
+    this->modified = true;
+}
+
+int D1Dun::getTileAt(int posx, int posy) const
+{
+    return this->tiles[posx / 2][posy / 2];
+}
+
+void D1Dun::setTileAt(int posx, int posy, int tileRef)
+{
+    this->tiles[posx / 2][posy / 2] = tileRef;
+    this->modified = true;
+}
+
+int D1Dun::getItemAt(int posx, int posy) const
+{
+    return this->items[posx][posy];
+}
+
+void D1Dun::setItemAt(int posx, int posy, int itemIndex)
+{
+    this->items[posx][posy] = itemIndex;
+    this->modified = true;
+}
+
+int D1Dun::getMonsterAt(int posx, int posy) const
+{
+    return this->monsters[posx][posy];
+}
+
+void D1Dun::setMonsterAt(int posx, int posy, int monsterIndex)
+{
+    this->monsters[posx][posy] = monsterIndex;
+    this->modified = true;
+}
+
+int D1Dun::getObjectAt(int posx, int posy) const
+{
+    return this->objects[posx][posy];
+}
+
+void D1Dun::setObjectAt(int posx, int posy, int objectIndex)
+{
+    this->objects[posx][posy] = objectIndex;
+    this->modified = true;
+}
+
+int D1Dun::getTransvalAt(int posx, int posy) const
+{
+    return this->transvals[posx][posy];
+}
+
+void D1Dun::setTransvalAt(int posx, int posy, int transval)
+{
+    this->transvals[posx][posy] = transval;
+    this->modified = true;
 }
