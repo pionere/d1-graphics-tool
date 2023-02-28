@@ -448,7 +448,9 @@ static QString prepareFilePath(QString filePath, const QString &filter, QString 
     }
     QStringList filterList = filter.split(";;", Qt::SkipEmptyParts);
     for (const QString &filterBase : filterList) {
-        QString extPatterns = filterBase.mid(filterBase.lastIndexOf('(') + 1, filterBase.lastIndexOf(')') - 1);
+        int firstIndex = filterBase.lastIndexOf('(') + 1;
+        int lastIndex = filterBase.lastIndexOf(')') - 1;
+        QString extPatterns = filterBase.mid(firstIndex, lastIndex - firstIndex + 1);
         QStringList extPatternList = extPatterns.split(QRegularExpression(" "), Qt::SkipEmptyParts);
         for (QString &extPattern : extPatternList) {
             // convert filter to regular expression
