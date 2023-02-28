@@ -14,6 +14,7 @@
 #include <QWidget>
 
 #include "celview.h"
+#include "d1dun.h"
 #include "d1gfx.h"
 #include "d1pal.h"
 #include "d1tileset.h"
@@ -35,7 +36,7 @@ public:
     explicit LevelCelView(QWidget *parent);
     ~LevelCelView();
 
-    void initialize(D1Pal *pal, D1Tileset *tileset);
+    void initialize(D1Pal *pal, D1Tileset *tileset, D1Dun *dun);
     void setPal(D1Pal *pal);
 
     CelScene *getCelScene() const;
@@ -161,6 +162,8 @@ private slots:
     void on_stopButton_clicked();
     void playGroup();
 
+    void on_actionToggle_View_triggered();
+
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dragMoveEvent(QDragMoveEvent *event) override;
     void dropEvent(QDropEvent *event) override;
@@ -170,21 +173,21 @@ private slots:
 private:
     Ui::LevelCelView *ui;
     CelScene celScene = CelScene(this);
-    QGraphicsPixmapItem *frameBackItem;
-    QGraphicsPixmapItem *subtileBackItem;
-    QGraphicsPixmapItem *tileBackItem;
     LevelTabTileWidget tabTileWidget = LevelTabTileWidget(this);
     LevelTabSubtileWidget tabSubtileWidget = LevelTabSubtileWidget(this);
     LevelTabFrameWidget tabFrameWidget = LevelTabFrameWidget(this);
+    PushButtonWidget *viewBtn;
 
     D1Pal *pal;
-    D1Tileset *tileset;
     D1Gfx *gfx;
+    D1Tileset *tileset;
     D1Min *min;
     D1Til *til;
     D1Sol *sol;
     D1Amp *amp;
     D1Tmi *tmi;
+    D1Dun *dun;
+    bool dunView = false;
     int currentFrameIndex = 0;
     int currentSubtileIndex = 0;
     int currentTileIndex = 0;

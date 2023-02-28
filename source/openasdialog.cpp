@@ -34,6 +34,7 @@ void OpenAsDialog::initialize()
     ui->solFileEdit->setText("");
     ui->ampFileEdit->setText("");
     ui->tmiFileEdit->setText("");
+    ui->dunFileEdit->setText("");
     ui->minWidthEdit->setText("0");
     ui->minHeightEdit->setText("0");
 
@@ -166,6 +167,16 @@ void OpenAsDialog::on_tmiFileBrowseButton_clicked()
     ui->tmiFileEdit->setText(openFilePath);
 }
 
+void OpenAsDialog::on_dunFileBrowseButton_clicked()
+{
+    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select DUN file"), tr("DUN Files (*.dun *.DUN)"));
+
+    if (openFilePath.isEmpty())
+        return;
+
+    ui->dunFileEdit->setText(openFilePath);
+}
+
 void OpenAsDialog::on_openButton_clicked()
 {
     OpenAsParam params;
@@ -203,6 +214,7 @@ void OpenAsDialog::on_openButton_clicked()
     params.solFilePath = ui->solFileEdit->text();
     params.ampFilePath = ui->ampFileEdit->text();
     params.tmiFilePath = ui->tmiFileEdit->text();
+    params.dunFilePath = ui->dunFileEdit->text();
     params.minWidth = ui->minWidthEdit->nonNegInt();
     params.minHeight = ui->minHeightEdit->nonNegInt();
 

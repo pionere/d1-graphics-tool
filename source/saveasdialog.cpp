@@ -23,10 +23,12 @@ SaveAsDialog::~SaveAsDialog()
     delete ui;
 }
 
-void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset)
+void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Dun *dun)
 {
+    bool isTilesetGfx = tileset != nullptr;
+
     this->gfx = g;
-    this->isTileset = tileset != nullptr;
+    this->isTileset = isTilesetGfx;
 
     // reset fields
     this->ui->outputCelFileEdit->setText(this->gfx->getFilePath());
@@ -36,13 +38,18 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset)
 
     this->ui->minUpscaledAutoRadioButton->setChecked(true);
 
-    this->ui->outputMinFileEdit->setText(tileset == nullptr ? "" : tileset->min->getFilePath());
-    this->ui->outputTilFileEdit->setText(tileset == nullptr ? "" : tileset->til->getFilePath());
-    this->ui->outputSolFileEdit->setText(tileset == nullptr ? "" : tileset->sol->getFilePath());
-    this->ui->outputAmpFileEdit->setText(tileset == nullptr ? "" : tileset->amp->getFilePath());
-    this->ui->outputTmiFileEdit->setText(tileset == nullptr ? "" : tileset->tmi->getFilePath());
+    this->ui->outputMinFileEdit->setText(isTilesetGfx ? tileset->min->getFilePath() : "");
+    this->ui->outputTilFileEdit->setText(isTilesetGfx ? tileset->til->getFilePath() : "");
+    this->ui->outputSolFileEdit->setText(isTilesetGfx ? tileset->sol->getFilePath() : "");
+    this->ui->outputAmpFileEdit->setText(isTilesetGfx ? tileset->amp->getFilePath() : "");
+    this->ui->outputTmiFileEdit->setText(isTilesetGfx ? tileset->tmi->getFilePath() : "");
 
-    bool isTilesetGfx = this->isTileset;
+    if (dun == nullptr) {
+        this->ui->outputDunFileEdit->setVisible(false);
+        this->ui->outputDunFileEdit->setText("");
+    } else {
+        this->ui->outputDunFileEdit->setText(dun->getFilePath());
+    }
 
     this->ui->celSettingsGroupBox->setEnabled(!isTilesetGfx);
     this->ui->tilSettingsGroupBox->setEnabled(isTilesetGfx);
@@ -125,6 +132,16 @@ void SaveAsDialog::on_outputTmiFileBrowseButton_clicked()
     this->ui->outputTmiFileEdit->setText(saveFilePath);
 }
 
+void SaveAsDialog::on_outputDunFileBrowseButton_clicked()
+{
+    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save DUN as..."), tr("DUN Files (*.dun *.DUN)"));
+
+    if (saveFilePath.isEmpty())
+        return;
+
+    this->ui->outputDunFileEdit->setText(saveFilePath);
+}
+
 void SaveAsDialog::on_saveButton_clicked()
 {
     SaveAsParam params;
@@ -156,6 +173,7 @@ void SaveAsDialog::on_saveButton_clicked()
     params.solFilePath = this->ui->outputSolFileEdit->text();
     params.ampFilePath = this->ui->outputAmpFileEdit->text();
     params.tmiFilePath = this->ui->outputTmiFileEdit->text();
+    params.dunFilePath = this->ui->outputDunFileEdit->text();
     params.autoOverwrite = this->ui->autoOverwriteCheckBox->isChecked();
 
     this->close();

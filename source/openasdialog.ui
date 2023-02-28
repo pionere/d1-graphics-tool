@@ -404,6 +404,27 @@
         </property>
        </widget>
       </item>
+      <item row="8" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Dun File:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="LineEditWidget" name="dunFileEdit">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="2">
+       <widget class="QPushButton" name="dunFileBrowseButton">
+        <property name="text">
+         <string>Browse</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>

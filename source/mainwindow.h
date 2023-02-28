@@ -8,6 +8,7 @@
 #include <QUndoCommand>
 
 #include "celview.h"
+#include "d1dun.h"
 #include "d1gfx.h"
 #include "d1pal.h"
 #include "d1palhits.h"
@@ -63,7 +64,9 @@ public:
     void reloadConfig();
     void updateWindow();
 
-    void openFile(const OpenAsParam &params);
+    void openNew(OPEN_TILESET_TYPE tileset, OPEN_CLIPPED_TYPE clipped);
+    void openFile(OpenAsParam &params);
+    void openFiles(const QStringList &filePaths);
     void openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append);
     void openPalFiles(const QStringList &filePaths, PaletteWidget *widget);
     void saveFile(const SaveAsParam &params);
@@ -228,6 +231,7 @@ private:
     D1Trn *trnBase = nullptr;
     D1Gfx *gfx = nullptr;
     D1Tileset *tileset = nullptr;
+    D1Dun *dun = nullptr;
 
     QMap<QString, D1Pal *> pals;       // key: path, value: pointer to palette
     QMap<QString, D1Trn *> uniqueTrns; // key: path, value: pointer to translation

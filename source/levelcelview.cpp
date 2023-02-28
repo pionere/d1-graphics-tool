@@ -43,6 +43,7 @@ LevelCelView::LevelCelView(QWidget *parent)
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Draw_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
+    this->viewBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowRight, "", this, &LevelCelView::on_actionToggle_View_triggered);
 
     // If a pixel of the frame, subtile or tile was clicked get pixel color index and notify the palette widgets
     QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &LevelCelView::framePixelClicked);
@@ -68,7 +69,7 @@ LevelCelView::~LevelCelView()
     delete ui;
 }
 
-void LevelCelView::initialize(D1Pal *p, D1Tileset *ts)
+void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d)
 {
     this->pal = p;
     this->tileset = ts;
@@ -78,11 +79,16 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts)
     this->sol = ts->sol;
     this->amp = ts->amp;
     this->tmi = ts->tmi;
+    this->dun = d;
 
     this->tabTileWidget.initialize(this, this->til, this->min, this->amp);
     this->tabSubtileWidget.initialize(this, this->gfx, this->min, this->sol, this->tmi);
     this->tabFrameWidget.initialize(this, this->gfx);
 
+    this->viewBtn->setVisible(d != nullptr);
+    if (d != nullptr) {
+        this->on_actionToggle_View_triggered();
+    }
     // this->update();
 }
 
@@ -129,6 +135,15 @@ void LevelCelView::updateLabel()
     label += tmiFileInfo.fileName();
     if (this->tmi->isModified()) {
         label += "*";
+    }
+
+    if (this->dun != nullptr) {
+        QFileInfo dunFileInfo(this->dun->getFilePath());
+        label += ", ";
+        label += dunFileInfo.fileName();
+        if (this->dun->isModified()) {
+            label += "*";
+        }
     }
 
     this->ui->celLabel->setText(label);
@@ -183,29 +198,27 @@ int LevelCelView::getCurrentTileIndex() const
     return this->currentTileIndex;
 }
 
-void LevelCelView::framePixelClicked(QGraphicsItem *item, const QPoint &pos, bool first)
+void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
 {
     unsigned celFrameWidth = MICRO_WIDTH; // this->gfx->getFrameWidth(this->currentFrameIndex);
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned tileWidth = subtileWidth * TILE_WIDTH;
 
+    unsigned celFrameHeight = MICRO_HEIGHT; // this->gfx->getFrameHeight(this->currentFrameIndex);
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
     unsigned subtileShiftY = subtileWidth / 4;
     unsigned tileHeight = subtileHeight + 2 * subtileShiftY;
 
-    /*if (pos.x() >= (int)(celFrameWidth + CEL_SCENE_SPACING * 2)
+    if (pos.x() >= (int)(celFrameWidth + CEL_SCENE_SPACING * 2)
         && pos.x() < (int)(celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 2)
         && pos.y() >= CEL_SCENE_SPACING
         && pos.y() < (int)(subtileHeight + CEL_SCENE_SPACING)
-        && this->min->getSubtileCount() != 0) {*/
-    if (item != nullptr && (item == this->subtileBackItem || (item->parentItem() != nullptr && item->parentItem() == this->subtileBackItem))) {
+        && this->min->getSubtileCount() != 0) {
         // When a CEL frame is clicked in the subtile, display the corresponding CEL frame
 
         // Adjust coordinates
-        // unsigned stx = pos.x() - (celFrameWidth + CEL_SCENE_SPACING * 2);
-        // unsigned sty = pos.y() - CEL_SCENE_SPACING;
-        unsigned stx = pos.x() - item->pos().x(); // (celFrameWidth + CEL_SCENE_SPACING * 2)
-        unsigned sty = pos.y() - item->pos().y(); // CEL_SCENE_SPACING
+        unsigned stx = pos.x() - (celFrameWidth + CEL_SCENE_SPACING * 2);
+        unsigned sty = pos.y() - CEL_SCENE_SPACING;
 
         // qDebug() << "Subtile clicked: " << stx << "," << sty;
 
@@ -247,19 +260,16 @@ void LevelCelView::framePixelClicked(QGraphicsItem *item, const QPoint &pos, boo
         });
         timer->start(500);
         return;
-        /*} else if (pos.x() >= (int)(celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
+    } else if (pos.x() >= (int)(celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
         && pos.x() < (int)(celFrameWidth + subtileWidth + tileWidth + CEL_SCENE_SPACING * 3)
         && pos.y() >= CEL_SCENE_SPACING
         && pos.y() < (int)(tileHeight + CEL_SCENE_SPACING)
-        && this->til->getTileCount() != 0) {*/
-    } else if (item != nullptr && (item == this->tileBackItem || (item->parentItem() != nullptr && item->parentItem() == this->tileBackItem))) {
+        && this->til->getTileCount() != 0) {
         // When a subtile is clicked in the tile, display the corresponding subtile
 
         // Adjust coordinates
-        // unsigned tx = pos.x() - (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3);
-        // unsigned ty = pos.y() - CEL_SCENE_SPACING;
-        unsigned tx = pos.x() - item->pos().x(); // (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
-        unsigned ty = pos.y() - item->pos().y(); // CEL_SCENE_SPACING
+        unsigned tx = pos.x() - (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3);
+        unsigned ty = pos.y() - CEL_SCENE_SPACING;
 
         // qDebug() << "Tile clicked" << tx << "," << ty;
 
@@ -1359,10 +1369,10 @@ void LevelCelView::removeCurrentTile()
 QImage LevelCelView::copyCurrent() const
 {
     /*if (this->ui->tilesTabs->currentIndex() == 1)
-        return this->min->getSubtileImage(this->currentSubtileIndex);
+        return this->min->getSubtileImage(this->currentSubtileIndex);*/
     if (this->gfx->getFrameCount() == 0) {
         return QImage();
-    }*/
+    }
     return this->gfx->getFrameImage(this->currentFrameIndex);
 }
 
@@ -2372,10 +2382,10 @@ void LevelCelView::displayFrame()
         tile.height() + CEL_SCENE_SPACING * 2);
 
     // Add the backgrond and CEL frame while aligning it in the center
-    this->frameBackItem = this->celScene.addPixmap(QPixmap::fromImage(celFrameBackground));
-    this->frameBackItem->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
-    QGraphicsPixmapItem *imageItem = new QGraphicsPixmapItem(QPixmap::fromImage(celFrame), this->frameBackItem);
-    this->celScene.addItem(imageItem);
+    this->celScene.addPixmap(QPixmap::fromImage(celFrameBackground))
+        ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
+    this->celScene.addPixmap(QPixmap::fromImage(celFrame))
+        ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
 
     // Set current frame width and height
     this->ui->celFrameWidthEdit->setText(QString::number(celFrame.width()) + " px");
@@ -2383,10 +2393,10 @@ void LevelCelView::displayFrame()
 
     // MIN
     int minPosX = celFrame.width() + CEL_SCENE_SPACING * 2;
-    this->subtileBackItem = this->celScene.addPixmap(QPixmap::fromImage(subtileBackground));
-    this->subtileBackItem->setPos(minPosX, CEL_SCENE_SPACING);
-    QGraphicsPixmapItem *subImageItem = new QGraphicsPixmapItem(QPixmap::fromImage(subtile), this->subtileBackItem);
-    this->celScene.addItem(subImageItem);
+    this->celScene.addPixmap(QPixmap::fromImage(subtileBackground))
+        ->setPos(minPosX, CEL_SCENE_SPACING);
+    this->celScene.addPixmap(QPixmap::fromImage(subtile))
+        ->setPos(minPosX, CEL_SCENE_SPACING);
 
     // Set current frame width and height
     this->ui->minFrameWidthEdit->setText(QString::number(this->min->getSubtileWidth()));
@@ -2396,10 +2406,10 @@ void LevelCelView::displayFrame()
 
     // TIL
     int tilPosX = minPosX + subtile.width() + CEL_SCENE_SPACING;
-    this->tileBackItem = this->celScene.addPixmap(QPixmap::fromImage(tileBackground));
-    this->tileBackItem->setPos(tilPosX, CEL_SCENE_SPACING);
-    QGraphicsPixmapItem *tilImageItem = new QGraphicsPixmapItem(QPixmap::fromImage(tile), this->tileBackItem);
-    this->celScene.addItem(tilImageItem);
+    this->celScene.addPixmap(QPixmap::fromImage(tileBackground))
+        ->setPos(tilPosX, CEL_SCENE_SPACING);
+    this->celScene.addPixmap(QPixmap::fromImage(tile))
+        ->setPos(tilPosX, CEL_SCENE_SPACING);
 
     // Set current frame width and height
     this->ui->tilFrameWidthEdit->setText(QString::number(TILE_WIDTH));
@@ -2786,6 +2796,14 @@ void LevelCelView::on_stopButton_clicked()
     this->ui->playButton->setEnabled(true);
     this->ui->playDelayEdit->setReadOnly(true);
     this->ui->playComboBox->setEnabled(true);
+}
+
+void LevelCelView::on_actionToggle_View_triggered()
+{
+    bool dunMode = !this->dunView;
+    this->dunView = dunMode;
+    this->viewBtn->setToolTip(dunMode ? tr("Switch to tileset view") : tr("Switch to dungeon view"));
+    this->viewBtn->setIcon(QApplication::style()->standardIcon(dunMode ? QStyle::SP_ArrowLeft : QStyle::SP_ArrowRight));
 }
 
 void LevelCelView::dragEnterEvent(QDragEnterEvent *event)

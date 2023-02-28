@@ -547,35 +547,35 @@ bool MainWindow::isResourcePath(const QString &path)
 
 void MainWindow::on_actionNew_CEL_triggered()
 {
-    OpenAsParam params = OpenAsParam();
-    params.isTileset = OPEN_TILESET_TYPE::FALSE;
-    params.clipped = OPEN_CLIPPED_TYPE::FALSE;
-    this->openFile(params);
+    this->openNew(OPEN_TILESET_TYPE::FALSE, OPEN_CLIPPED_TYPE::FALSE);
 }
 
 void MainWindow::on_actionNew_CL2_triggered()
 {
-    OpenAsParam params = OpenAsParam();
-    params.isTileset = OPEN_TILESET_TYPE::FALSE;
-    params.clipped = OPEN_CLIPPED_TYPE::TRUE;
-    this->openFile(params);
+    this->openNew(OPEN_TILESET_TYPE::FALSE, OPEN_CLIPPED_TYPE::TRUE);
 }
 
 void MainWindow::on_actionNew_Tileset_triggered()
 {
+    this->openNew(OPEN_TILESET_TYPE::TRUE, OPEN_CLIPPED_TYPE::FALSE);
+}
+
+void MainWindow::openNew(OPEN_TILESET_TYPE tileset, OPEN_CLIPPED_TYPE clipped)
+{
     OpenAsParam params = OpenAsParam();
-    params.isTileset = OPEN_TILESET_TYPE::TRUE;
+    params.isTileset = tileset;
+    params.clipped = clipped;
     this->openFile(params);
 }
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX)"));
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;DUN Files (*.dun *.DUN)"));
 
     if (!openFilePath.isEmpty()) {
-        OpenAsParam params = OpenAsParam();
-        params.celFilePath = openFilePath;
-        this->openFile(params);
+        QStringList filePaths;
+        filePaths.append(openFilePath);
+        this->openFiles(filePaths);
     }
 }
 
@@ -590,7 +590,7 @@ void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 
     for (const QUrl &url : event->mimeData()->urls()) {
         QString fileLower = url.toLocalFile().toLower();
-        if (fileLower.endsWith(".cel") || fileLower.endsWith(".cl2") || (unloaded && fileLower.endsWith(".pcx"))) {
+        if (fileLower.endsWith(".cel") || fileLower.endsWith(".cl2") || fileLower.endsWith(".dun") || (unloaded && fileLower.endsWith(".pcx"))) {
             event->acceptProposedAction();
             return;
         }
@@ -601,9 +601,24 @@ void MainWindow::dropEvent(QDropEvent *event)
 {
     event->acceptProposedAction();
 
-    OpenAsParam params = OpenAsParam();
+    QStringList filePaths;
     for (const QUrl &url : event->mimeData()->urls()) {
-        params.celFilePath = url.toLocalFile();
+        filePaths.append(url.toLocalFile());
+    }
+    this->openFiles(filePaths);
+}
+
+void MainWindow::openFiles(const QStringList &filePaths)
+{
+    for (const QString &filePath : filePaths) {
+        OpenAsParam params = OpenAsParam();
+        if (filePath.toLower().endsWith("dun")) {
+            params.celFilePath = "";
+            params.dunFilePath = filePath;
+        } else {
+            params.celFilePath = filePath;
+            params.dunFilePath = "";
+        }
         this->openFile(params);
     }
 }
@@ -734,9 +749,19 @@ void MainWindow::failWithError(const QString &error)
     ProgressDialog::done();
 }
 
-void MainWindow::openFile(const OpenAsParam &params)
+static void findFirstFile(const QString &dir, const QString &filter, QString &filePath)
 {
-    QString openFilePath = params.celFilePath;
+    if (filePath.isEmpty()) {
+        QDirIterator it(dir, QStringList(filter), QDir::Files | QDir::Readable);
+        if (it.hasNext()) {
+            filePath = it.next();
+        }
+    }
+}
+
+void MainWindow::openFile(OpenAsParam &params)
+{
+    QString &openFilePath = params.celFilePath;
 
     // Check file extension
     int fileType = 0;
@@ -772,27 +797,52 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->baseTrns[D1Trn::IDENTITY_PATH] = newTrn;
     this->trnBase = newTrn;
 
-    const QFileInfo celFileInfo = QFileInfo(openFilePath);
+    QString &tilFilePath = params.tilFilePath;
+    QString &minFilePath = params.minFilePath;
+    QString &solFilePath = params.solFilePath;
+    QString &ampFilePath = params.ampFilePath;
+    QString &tmiFilePath = params.tmiFilePath;
+    QString &dunFilePath = params.dunFilePath;
 
-    // If a SOL, MIN and TIL files exists then build a LevelCelView
-    const QString celDir = celFileInfo.absolutePath();
-    const QString basePath = celDir + "/" + celFileInfo.completeBaseName();
-    QString tilFilePath = params.tilFilePath;
-    QString minFilePath = params.minFilePath;
-    QString solFilePath = params.solFilePath;
-    if (!openFilePath.isEmpty() && tilFilePath.isEmpty()) {
-        tilFilePath = basePath + ".til";
-    }
-    if (!openFilePath.isEmpty() && minFilePath.isEmpty()) {
-        minFilePath = basePath + ".min";
-    }
-    if (!openFilePath.isEmpty() && solFilePath.isEmpty()) {
-        solFilePath = basePath + ".sol";
+    QString baseDir;
+    if (!openFilePath.isEmpty()) {
+        QFileInfo celFileInfo = QFileInfo(openFilePath);
+
+        baseDir = celFileInfo.absolutePath();
+        QString basePath = baseDir + "/" + celFileInfo.completeBaseName();
+
+        if (tilFilePath.isEmpty()) {
+            tilFilePath = basePath + ".til";
+        }
+        if (minFilePath.isEmpty()) {
+            minFilePath = basePath + ".min";
+        }
+        if (solFilePath.isEmpty()) {
+            solFilePath = basePath + ".sol";
+        }
+        if (ampFilePath.isEmpty()) {
+            ampFilePath = basePath + ".amp";
+        }
+        if (tmiFilePath.isEmpty()) {
+            tmiFilePath = basePath + ".tmi";
+        }
+    } else if (!dunFilePath.isEmpty()) {
+        QFileInfo dunFileInfo = QFileInfo(dunFilePath);
+
+        baseDir = dunFileInfo.absolutePath();
+
+        findFirstFile(baseDir, QStringLiteral("*.til"), tilFilePath);
+        findFirstFile(baseDir, QStringLiteral("*.min"), minFilePath);
+        findFirstFile(baseDir, QStringLiteral("*.sol"), solFilePath);
+        findFirstFile(baseDir, QStringLiteral("*.amp"), ampFilePath);
+        findFirstFile(baseDir, QStringLiteral("*.tmi"), tmiFilePath);
     }
 
+    // If SOL, MIN and TIL files exist then build a LevelCelView
     bool isTileset = params.isTileset == OPEN_TILESET_TYPE::TRUE;
     if (params.isTileset == OPEN_TILESET_TYPE::AUTODETECT) {
-        isTileset = fileType == 1 && QFileInfo::exists(tilFilePath) && QFileInfo::exists(minFilePath) && QFileInfo::exists(solFilePath);
+        isTileset = ((fileType == 1 || fileType == 0) && QFileInfo::exists(dunFilePath))
+            || (fileType == 1 && QFileInfo::exists(tilFilePath) && QFileInfo::exists(minFilePath) && QFileInfo::exists(solFilePath));
     }
 
     this->gfx = new D1Gfx();
@@ -819,20 +869,12 @@ void MainWindow::openFile(const OpenAsParam &params)
         }
 
         // Loading AMP
-        QString ampFilePath = params.ampFilePath;
-        if (!openFilePath.isEmpty() && ampFilePath.isEmpty()) {
-            ampFilePath = basePath + ".amp";
-        }
         if (!this->tileset->amp->load(ampFilePath, this->tileset->til->getTileCount(), params)) {
             this->failWithError(tr("Failed loading AMP file: %1.").arg(QDir::toNativeSeparators(ampFilePath)));
             return;
         }
 
         // Loading TMI
-        QString tmiFilePath = params.tmiFilePath;
-        if (!openFilePath.isEmpty() && tmiFilePath.isEmpty()) {
-            tmiFilePath = basePath + ".tmi";
-        }
         if (!this->tileset->tmi->load(tmiFilePath, this->tileset->sol, params)) {
             this->failWithError(tr("Failed loading TMI file: %1.").arg(QDir::toNativeSeparators(tmiFilePath)));
             return;
@@ -842,6 +884,15 @@ void MainWindow::openFile(const OpenAsParam &params)
         if (!D1CelTileset::load(*this->gfx, celFrameTypes, openFilePath, params)) {
             this->failWithError(tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(openFilePath)));
             return;
+        }
+
+        // Loading DUN
+        if (!dunFilePath.isEmpty()) {
+            this->dun = new D1Dun();
+            if (!this->dun->load(dunFilePath, this->tileset->til, this->tileset->tmi, params)) {
+                this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
+                return;
+            }
         }
     } else if (fileType == 1) { // CEL
         if (!D1Cel::load(*this->gfx, openFilePath, params)) {
@@ -874,7 +925,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     if (isTileset) {
         // build a LevelCelView
         this->levelCelView = new LevelCelView(this);
-        this->levelCelView->initialize(this->pal, this->tileset);
+        this->levelCelView->initialize(this->pal, this->tileset, this->dun);
 
         // Refresh palette widgets when frame, subtile of tile is changed
         QObject::connect(this->levelCelView, &LevelCelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
@@ -936,8 +987,8 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // Look for all palettes in the same folder as the CEL/CL2 file
     QString firstPaletteFound = fileType == 3 ? D1Pal::DEFAULT_PATH : "";
-    if (!celDir.isEmpty()) {
-        QDirIterator it(celDir, QStringList("*.pal"), QDir::Files | QDir::Readable);
+    if (!baseDir.isEmpty()) {
+        QDirIterator it(baseDir, QStringList("*.pal"), QDir::Files | QDir::Readable);
         while (it.hasNext()) {
             QString sPath = it.next();
 
@@ -1060,6 +1111,10 @@ void MainWindow::saveFile(const SaveAsParam &params)
         this->tileset->save(params);
     }
 
+    if (this->dun != nullptr) {
+        this->dun->save(params);
+    }
+
     // Clear loading message from status bar
     ProgressDialog::done();
 }
@@ -1166,7 +1221,7 @@ void MainWindow::on_actionSaveAs_triggered()
     if (this->saveAsDialog == nullptr) {
         this->saveAsDialog = new SaveAsDialog(this);
     }
-    this->saveAsDialog->initialize(this->gfx, this->tileset);
+    this->saveAsDialog->initialize(this->gfx, this->tileset, this->dun);
     this->saveAsDialog->show();
 }
 
@@ -1182,6 +1237,7 @@ void MainWindow::on_actionClose_triggered()
     MemFree(this->trnBaseWidget);
     MemFree(this->gfx);
     MemFree(this->tileset);
+    MemFree(this->dun);
 
     qDeleteAll(this->pals);
     this->pals.clear();
