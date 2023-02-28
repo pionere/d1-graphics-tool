@@ -75,7 +75,7 @@ bool D1Dun::load(const QString &filePath, D1Til *t, D1Tmi *m, const OpenAsParam 
             transvals[i].resize(dunWidth * TILE_WIDTH);
         }
 
-        int tileCount = dunWidth * dunHeight;
+        unsigned tileCount = dunWidth * dunHeight;
         if (fileSize < 2 * 2 + tileCount * 2) {
             dProgressErr() << tr("Invalid DUN header.");
             return false;
@@ -89,7 +89,7 @@ bool D1Dun::load(const QString &filePath, D1Til *t, D1Tmi *m, const OpenAsParam 
         }
 
         if (fileSize > 2 * 2 + tileCount * 2) {
-            int subtileCount = tileCount * TILE_WIDTH * TILE_HEIGHT;
+            unsigned subtileCount = tileCount * TILE_WIDTH * TILE_HEIGHT;
             if (fileSize != 2 * 2 + tileCount * 2 + subtileCount * 2 * 4) {
                 dProgressWarn() << tr("Invalid DUN content.");
                 changed = true;

@@ -21,6 +21,7 @@
 #include "leveltabframewidget.h"
 #include "leveltabsubtilewidget.h"
 #include "leveltabtilewidget.h"
+#include "pushbuttonwidget.h"
 #include "upscaledialog.h"
 
 namespace Ui {
@@ -44,7 +45,7 @@ public:
     int getCurrentSubtileIndex() const;
     int getCurrentTileIndex() const;
 
-    void framePixelClicked(QGraphicsItem *item, const QPoint &pos, bool first);
+    void framePixelClicked(const QPoint &pos, bool first);
 
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
 

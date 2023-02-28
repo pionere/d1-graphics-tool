@@ -47,7 +47,7 @@ private slots:
     void dropEvent(QGraphicsSceneDragDropEvent *event) override;
 
 signals:
-    void framePixelClicked(QGraphicsItem *item, const QPoint &pos, bool first);
+    void framePixelClicked(const QPoint &pos, bool first);
 
 private:
     QWidget *view;
@@ -70,7 +70,7 @@ public:
     CelScene *getCelScene() const;
     int getCurrentFrameIndex() const;
 
-    void framePixelClicked(QGraphicsItem *item, const QPoint &pos, bool first);
+    void framePixelClicked(const QPoint &pos, bool first);
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
     void addToCurrentFrame(const QString &imagefilePath);
     void replaceCurrentFrame(const QString &imagefilePath);
