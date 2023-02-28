@@ -59,19 +59,19 @@ bool D1Dun::load(const QString &filePath, D1Til *t, D1Tmi *m, const OpenAsParam 
             tiles[i].resize(dunWidth);
         }
         items.resize(dunHeight * TILE_HEIGHT);
-        for (int i = 0; i < dunHeight; i++) {
+        for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
             items[i].resize(dunWidth * TILE_WIDTH);
         }
         objects.resize(dunHeight * TILE_HEIGHT);
-        for (int i = 0; i < dunHeight; i++) {
+        for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
             objects[i].resize(dunWidth * TILE_WIDTH);
         }
         monsters.resize(dunHeight * TILE_HEIGHT);
-        for (int i = 0; i < dunHeight; i++) {
+        for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
             monsters[i].resize(dunWidth * TILE_WIDTH);
         }
         transvals.resize(dunHeight * TILE_HEIGHT);
-        for (int i = 0; i < dunHeight; i++) {
+        for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
             transvals[i].resize(dunWidth * TILE_WIDTH);
         }
 
