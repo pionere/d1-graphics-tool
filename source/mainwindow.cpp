@@ -749,12 +749,23 @@ void MainWindow::failWithError(const QString &error)
     ProgressDialog::done();
 }
 
-static void findFirstFile(const QString &dir, const QString &filter, QString &filePath)
+static void findFirstFile(const QString &dir, const QString &filter, QString &filePath, QString &basePath)
 {
     if (filePath.isEmpty()) {
+        if (!basePath.isEmpty()) {
+            QDirIterator it(dir, QStringList(filter + basePath), QDir::Files | QDir::Readable);
+            if (it.hasNext()) {
+                filePath = it.next();
+                return;
+            }
+        }
         QDirIterator it(dir, QStringList(filter), QDir::Files | QDir::Readable);
         if (it.hasNext()) {
             filePath = it.next();
+            if (basePath.isEmpty()) {
+                QFileInfo fileInfo = QFileInfo(filePath);
+                basePath = dir + "/" + fileInfo.completeBaseName();
+            }
         }
     }
 }
@@ -830,12 +841,14 @@ void MainWindow::openFile(OpenAsParam &params)
         QFileInfo dunFileInfo = QFileInfo(dunFilePath);
 
         baseDir = dunFileInfo.absolutePath();
+        QString basePath;
 
-        findFirstFile(baseDir, QStringLiteral("*.til"), tilFilePath);
-        findFirstFile(baseDir, QStringLiteral("*.min"), minFilePath);
-        findFirstFile(baseDir, QStringLiteral("*.sol"), solFilePath);
-        findFirstFile(baseDir, QStringLiteral("*.amp"), ampFilePath);
-        findFirstFile(baseDir, QStringLiteral("*.tmi"), tmiFilePath);
+        findFirstFile(baseDir, QStringLiteral("*.til"), tilFilePath, basePath);
+        findFirstFile(baseDir, QStringLiteral("*.min"), minFilePath, basePath);
+        findFirstFile(baseDir, QStringLiteral("*.sol"), solFilePath, basePath);
+        findFirstFile(baseDir, QStringLiteral("*.amp"), ampFilePath, basePath);
+        findFirstFile(baseDir, QStringLiteral("*.tmi"), tmiFilePath, basePath);
+        findFirstFile(baseDir, QStringLiteral("*.cel"), openFilePath, basePath);
     }
 
     // If SOL, MIN and TIL files exist then build a LevelCelView
