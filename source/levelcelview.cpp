@@ -2479,7 +2479,7 @@ void LevelCelView::setTileIndex(int tileIndex)
 void LevelCelView::playGroup()
 {
     QComboBox *cycleBox = this->dunView ? this->ui->dunPlayComboBox : this->ui->playComboBox;
-    dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)cycleType->currentIndex());
+    dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)cycleBox->currentIndex());
 
     // this->displayFrame();
 }
