@@ -36,7 +36,7 @@ bool D1Dun::load(const QString &filePath, D1Til *t, D1Tmi *m, const OpenAsParam 
     unsigned fileSize = fileData.size();
     int dunWidth = 0;
     int dunHeight = 0;
-    bool changed = fileSize != 0; // !file.isOpen();
+    bool changed = fileSize == 0; // !file.isOpen();
     if (fileSize != 0) {
         if (fileSize < 2 * 2) {
             dProgressErr() << tr("Invalid DUN file.");

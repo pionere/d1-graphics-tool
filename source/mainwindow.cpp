@@ -749,11 +749,11 @@ void MainWindow::failWithError(const QString &error)
     ProgressDialog::done();
 }
 
-static void findFirstFile(const QString &dir, const QString &filter, QString &filePath, QString &basePath)
+static void findFirstFile(const QString &dir, const QString &filter, QString &filePath, QString &baseName)
 {
     if (filePath.isEmpty()) {
-        if (!basePath.isEmpty()) {
-            QDirIterator it(dir, QStringList(filter + basePath), QDir::Files | QDir::Readable);
+        if (!baseName.isEmpty()) {
+            QDirIterator it(dir, QStringList(baseName + filter), QDir::Files | QDir::Readable);
             if (it.hasNext()) {
                 filePath = it.next();
                 return;
@@ -762,9 +762,9 @@ static void findFirstFile(const QString &dir, const QString &filter, QString &fi
         QDirIterator it(dir, QStringList(filter), QDir::Files | QDir::Readable);
         if (it.hasNext()) {
             filePath = it.next();
-            if (basePath.isEmpty()) {
+            if (baseName.isEmpty()) {
                 QFileInfo fileInfo = QFileInfo(filePath);
-                basePath = dir + "/" + fileInfo.completeBaseName();
+                baseName = fileInfo.completeBaseName();
             }
         }
     }
@@ -841,14 +841,14 @@ void MainWindow::openFile(OpenAsParam &params)
         QFileInfo dunFileInfo = QFileInfo(dunFilePath);
 
         baseDir = dunFileInfo.absolutePath();
-        QString basePath;
+        QString baseName;
 
-        findFirstFile(baseDir, QStringLiteral("*.til"), tilFilePath, basePath);
-        findFirstFile(baseDir, QStringLiteral("*.min"), minFilePath, basePath);
-        findFirstFile(baseDir, QStringLiteral("*.sol"), solFilePath, basePath);
-        findFirstFile(baseDir, QStringLiteral("*.amp"), ampFilePath, basePath);
-        findFirstFile(baseDir, QStringLiteral("*.tmi"), tmiFilePath, basePath);
-        findFirstFile(baseDir, QStringLiteral("*.cel"), openFilePath, basePath);
+        findFirstFile(baseDir, QStringLiteral("*.til"), tilFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*.min"), minFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*.sol"), solFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*.amp"), ampFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*.tmi"), tmiFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*.cel"), openFilePath, baseName);
     }
 
     // If SOL, MIN and TIL files exist then build a LevelCelView
