@@ -2402,8 +2402,10 @@ void LevelCelView::displayFrame()
         this->ui->dungeonPosYLineEdit->setText(QString::number(currentDunPosY));
         this->ui->dungeonPosYLineEdit->setToolTip(QString::number(currentDunPosY / 2));
 
-        // QImage dunFrame = this->dun->getImage();
-
+        QImage dunFrame; // = this->dun->getImage();
+        this->celScene.setSceneRect(0, 0,
+            dunFrame.width() + CEL_SCENE_SPACING * 2,
+            dunFrame.height() + CEL_SCENE_SPACING * 2);
     } else {
         // Getting the current frame/sub-tile/tile to display
         QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
@@ -2910,10 +2912,11 @@ void LevelCelView::on_dungeonPosXLineEdit_returnPressed()
     if (posx < 0) {
         posx = 0;
     }
-    if (posx >= this->dun->getWidth()) {
-        posx = this->dun->getWidth() - 1;
+    if (posx >= this->dun->getWidth() * 2) {
+        posx = this->dun->getWidth() * 2 - 1;
     }
     this->currentDunPosX = posx;
+    this->update();
     this->on_dungeonPosXLineEdit_escPressed();
 }
 
@@ -2931,10 +2934,11 @@ void LevelCelView::on_dungeonPosYLineEdit_returnPressed()
     if (posy < 0) {
         posy = 0;
     }
-    if (posy >= this->dun->getHeight()) {
-        posy = this->dun->getHeight() - 1;
+    if (posy >= this->dun->getHeight() * 2) {
+        posy = this->dun->getHeight() * 2 - 1;
     }
     this->currentDunPosY = posy;
+    this->update();
     this->on_dungeonPosYLineEdit_escPressed();
 }
 

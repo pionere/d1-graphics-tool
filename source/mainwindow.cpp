@@ -613,11 +613,9 @@ void MainWindow::openFiles(const QStringList &filePaths)
     for (const QString &filePath : filePaths) {
         OpenAsParam params = OpenAsParam();
         if (filePath.toLower().endsWith("dun")) {
-            params.celFilePath = "";
             params.dunFilePath = filePath;
         } else {
             params.celFilePath = filePath;
-            params.dunFilePath = "";
         }
         this->openFile(params);
     }
@@ -772,12 +770,12 @@ static void findFirstFile(const QString &dir, const QString &filter, QString &fi
 
 void MainWindow::openFile(OpenAsParam &params)
 {
-    QString &openFilePath = params.celFilePath;
+    QString &gfxFilePath = params.celFilePath;
 
     // Check file extension
     int fileType = 0;
-    if (!openFilePath.isEmpty()) {
-        QString fileLower = openFilePath.toLower();
+    if (!gfxFilePath.isEmpty()) {
+        QString fileLower = gfxFilePath.toLower();
         if (fileLower.endsWith(".cel"))
             fileType = 1;
         else if (fileLower.endsWith(".cl2"))
@@ -816,8 +814,8 @@ void MainWindow::openFile(OpenAsParam &params)
     QString &dunFilePath = params.dunFilePath;
 
     QString baseDir;
-    if (!openFilePath.isEmpty()) {
-        QFileInfo celFileInfo = QFileInfo(openFilePath);
+    if (!gfxFilePath.isEmpty()) {
+        QFileInfo celFileInfo = QFileInfo(gfxFilePath);
 
         baseDir = celFileInfo.absolutePath();
         QString basePath = baseDir + "/" + celFileInfo.completeBaseName();
@@ -848,7 +846,7 @@ void MainWindow::openFile(OpenAsParam &params)
         findFirstFile(baseDir, QStringLiteral("*.sol"), solFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.amp"), ampFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.tmi"), tmiFilePath, baseName);
-        findFirstFile(baseDir, QStringLiteral("*.cel"), openFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*.cel"), gfxFilePath, baseName);
     }
 
     // If SOL, MIN and TIL files exist then build a LevelCelView
@@ -894,8 +892,8 @@ void MainWindow::openFile(OpenAsParam &params)
         }
 
         // Loading CEL
-        if (!D1CelTileset::load(*this->gfx, celFrameTypes, openFilePath, params)) {
-            this->failWithError(tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(openFilePath)));
+        if (!D1CelTileset::load(*this->gfx, celFrameTypes, gfxFilePath, params)) {
+            this->failWithError(tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
 
@@ -908,22 +906,22 @@ void MainWindow::openFile(OpenAsParam &params)
             }
         }
     } else if (fileType == 1) { // CEL
-        if (!D1Cel::load(*this->gfx, openFilePath, params)) {
-            this->failWithError(tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(openFilePath)));
+        if (!D1Cel::load(*this->gfx, gfxFilePath, params)) {
+            this->failWithError(tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
     } else if (fileType == 2) { // CL2
-        if (!D1Cl2::load(*this->gfx, openFilePath, params)) {
-            this->failWithError(tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(openFilePath)));
+        if (!D1Cl2::load(*this->gfx, gfxFilePath, params)) {
+            this->failWithError(tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
     } else if (fileType == 3) { // PCX
-        if (!D1Pcx::load(*this->gfx, this->pal, openFilePath, params)) {
-            this->failWithError(tr("Failed loading PCX file: %1.").arg(QDir::toNativeSeparators(openFilePath)));
+        if (!D1Pcx::load(*this->gfx, this->pal, gfxFilePath, params)) {
+            this->failWithError(tr("Failed loading PCX file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
     } else {
-        // openFilePath.isEmpty()
+        // gfxFilePath.isEmpty()
         this->gfx->setType(params.clipped == OPEN_CLIPPED_TYPE::TRUE ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V1_REGULAR);
     }
 
