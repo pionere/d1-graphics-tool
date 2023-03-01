@@ -29,6 +29,8 @@ public:
 
     int getTileAt(int posx, int posy) const;
     bool setTileAt(int posx, int posy, int tileRef);
+    int getSubtileAt(int posx, int posy) const;
+    bool setSubtileAt(int posx, int posy, int subtileRef);
     int getItemAt(int posx, int posy) const;
     bool setItemAt(int posx, int posy, int itemIndex);
     int getMonsterAt(int posx, int posy) const;
@@ -39,6 +41,9 @@ public:
     bool setTransvalAt(int posx, int posy, int transval);
 
 private:
+    void updateSubtiles(int posx, int posy, int tileRef);
+
+private:
     QString dunFilePath;
     D1Til *til;
     D1Tmi *tmi;
@@ -46,6 +51,7 @@ private:
     int width;
     int height;
     std::vector<std::vector<int>> tiles;
+    std::vector<std::vector<int>> subtiles;
     std::vector<std::vector<int>> items;
     std::vector<std::vector<int>> monsters;
     std::vector<std::vector<int>> objects;

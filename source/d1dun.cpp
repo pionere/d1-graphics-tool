@@ -12,6 +12,9 @@
 #include "d1tmi.h"
 #include "progressdialog.h"
 
+#define UNDEF_SUBTILE -1
+#define UNDEF_TILE -1
+
 bool D1Dun::load(const QString &filePath, D1Til *t, D1Tmi *m, const OpenAsParam &params)
 {
     // prepare file data source
@@ -57,6 +60,10 @@ bool D1Dun::load(const QString &filePath, D1Til *t, D1Tmi *m, const OpenAsParam 
         tiles.resize(dunHeight);
         for (int i = 0; i < dunHeight; i++) {
             tiles[i].resize(dunWidth);
+        }
+        subtiles.resize(dunHeight * TILE_HEIGHT);
+        for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
+            subtiles[i].resize(dunWidth * TILE_WIDTH);
         }
         items.resize(dunHeight * TILE_HEIGHT);
         for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
@@ -128,10 +135,17 @@ bool D1Dun::load(const QString &filePath, D1Til *t, D1Tmi *m, const OpenAsParam 
                 }
             }
         }
+
+        // prepare subtiles
+        for (int y = 0; y < dunHeight; y++) {
+            for (int x = 0; x < dunWidth; x++) {
+                this->updateSubtiles(posx, posy, this->tiles[y][x]);
+            }
+        }
     }
 
-    this->width = dunWidth;
-    this->height = dunHeight;
+    this->width = dunWidth * TILE_WIDTH;
+    this->height = dunHeight * TILE_HEIGHT;
     this->dunFilePath = filePath;
     this->modified = changed;
     return true;
@@ -151,6 +165,18 @@ bool D1Dun::save(const SaveAsParam &params)
         }
     }
 
+    // validate tiles
+    int dunWidth = this->width / TILE_WIDTH;
+    int dunHeight = this->height / TILE_HEIGHT;
+    for (int y = 0; y < dunHeight; y++) {
+        for (int x = 0; x < dunWidth; x++) {
+            if (this->tiles[y][x] == UNDEF_TILE) {
+                dProgressFail() << tr("Undefined tiles (one at %1:%2) can not be saved in this format (DUN).").arg(x).arg(y);
+                return false;
+            }
+        }
+    }
+
     QDir().mkpath(QFileInfo(filePath).absolutePath());
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly)) {
@@ -162,14 +188,13 @@ bool D1Dun::save(const SaveAsParam &params)
     QDataStream out(&outFile);
     out.setByteOrder(QDataStream::LittleEndian);
 
-    quint16 dunWidth = this->width;
-    quint16 dunHeight = this->height;
-
-    out << dunWidth;
-    out << dunHeight;
+    quint16 writeWord;
+    writeWord = dunWidth;
+    out << writeWord;
+    writeWord = dunHeight;
+    out << writeWord;
 
     // write tiles
-    quint16 writeWord;
     for (int y = 0; y < dunHeight; y++) {
         for (int x = 0; x < dunWidth; x++) {
             writeWord = this->tiles[y][x];
@@ -232,7 +257,10 @@ int D1Dun::getWidth() const
 
 bool D1Dun::setWidth(int newWidth)
 {
-    if (newWidth == 0) { // TODO: check overflow
+    if (newWidth % TILE_WIDTH != 0) {
+        return false;
+    }
+    if (newWidth <= 0) { // TODO: check overflow
         return false;
     }
     int height = this->height;
@@ -246,7 +274,8 @@ bool D1Dun::setWidth(int newWidth)
         bool hasContent = false;
         for (int y = 0; y < height; y++) {
             for (int x = newWidth; x < prevWidth; x++) {
-                hasContent |= this->tiles[y][x] != 0;
+                hasContent |= this->tiles[y / TILE_HEIGHT][x / TILE_WIDTH] > 0; // !0 && !UNDEF_TILE
+                hasContent |= this->subtiles[y][x] > 0;                         // !0 && !UNDEF_SUBTILE
                 hasContent |= this->items[y][x] != 0;
                 hasContent |= this->monsters[y][x] != 0;
                 hasContent |= this->objects[y][x] != 0;
@@ -265,7 +294,7 @@ bool D1Dun::setWidth(int newWidth)
 
     // resize the dungeon
     for (std::vector<int> &tilesRow : this->tiles) {
-        tilesRow.resize(newWidth);
+        tilesRow.resize(newWidth / TILE_WIDTH);
     }
     for (std::vector<int> &itemsRow : this->items) {
         itemsRow.resize(newWidth);
@@ -292,7 +321,10 @@ int D1Dun::getHeight() const
 
 bool D1Dun::setHeight(int newHeight)
 {
-    if (newHeight == 0) { // TODO: check overflow
+    if (newHeight % TILE_HEIGHT != 0) {
+        return false;
+    }
+    if (newHeight <= 0) { // TODO: check overflow
         return false;
     }
     int width = this->width;
@@ -306,7 +338,8 @@ bool D1Dun::setHeight(int newHeight)
         bool hasContent = false;
         for (int y = newHeight; y < prevHeight; y++) {
             for (int x = 0; x < width; x++) {
-                hasContent |= this->tiles[y][x] != 0;
+                hasContent |= this->tiles[y / TILE_HEIGHT][x / TILE_WIDTH] > 0; // !0 && !UNDEF_TILE
+                hasContent |= this->subtiles[y][x] > 0;                         // !0 && !UNDEF_SUBTILE
                 hasContent |= this->items[y][x] != 0;
                 hasContent |= this->monsters[y][x] != 0;
                 hasContent |= this->objects[y][x] != 0;
@@ -324,13 +357,15 @@ bool D1Dun::setHeight(int newHeight)
     }
 
     // resize the dungeon
-    this->tiles.resize(newHeight);
+    this->tiles.resize(newHeight / TILE_HEIGHT);
+    this->subtiles.resize(newHeight);
     this->items.resize(newHeight);
     this->monsters.resize(newHeight);
     this->objects.resize(newHeight);
     this->transvals.resize(newHeight);
     for (int y = prevHeight; y < newHeight; y++) {
-        this->tiles[y].resize(width);
+        this->tiles[y].resize(width / TILE_WIDTH);
+        this->subtiles[y].resize(width);
         this->items[y].resize(width);
         this->monsters[y].resize(width);
         this->objects[y].resize(width);
@@ -344,75 +379,127 @@ bool D1Dun::setHeight(int newHeight)
 
 int D1Dun::getTileAt(int posx, int posy) const
 {
-    return this->tiles[posx / 2][posy / 2];
+    return this->tiles[posy / TILE_HEIGHT][posx / TILE_WIDTH];
 }
 
 bool D1Dun::setTileAt(int posx, int posy, int tileRef)
 {
-    if (this->tiles[posx / 2][posy / 2] == tileRef) {
+    if (tileRef < 0) {
+        tileRef = UNDEF_TILE;
+    }
+    if (this->tiles[posy / TILE_HEIGHT][posx / TILE_WIDTH] == tileRef) {
         return false;
     }
-    this->tiles[posx / 2][posy / 2] = tileRef;
+    this->tiles[posy / TILE_HEIGHT][posx / TILE_WIDTH] = tileRef;
+    // update subtile values
+    this->updateSubtiles(posx, posy, tileRef);
+    this->modified = true;
+    return true;
+}
+
+int D1Dun::getSubtileAt(int posx, int posy) const
+{
+    return this->subtiles[posy][posx];
+}
+
+bool D1Dun::setSubtileAt(int posx, int posy, int subtileRef)
+{
+    if (subtileRef < 0) {
+        subtileRef = UNDEF_SUBTILE;
+    }
+    if (this->subtiles[posy][posx] == subtileRef) {
+        return false;
+    }
+    this->subtiles[posy][posx] = subtileRef;
+    // update tile value
+    int tileRef = 0;
+    for (int y = 0; y < TILE_HEIGHT; y++) {
+        for (int x = 0; x < TILE_WIDTH; x++) {
+            if (this->subtiles[posy + y][posx + x] != 0) {
+                tileRef = UNDEF_TILE;
+            }
+        }
+    }
+
+    this->tiles[posy / TILE_HEIGHT][posx / TILE_WIDTH] = tileRef;
     this->modified = true;
     return true;
 }
 
 int D1Dun::getItemAt(int posx, int posy) const
 {
-    return this->items[posx][posy];
+    return this->items[posy][posx];
 }
 
 bool D1Dun::setItemAt(int posx, int posy, int itemIndex)
 {
-    if (this->items[posx][posy] == itemIndex) {
+    if (this->items[posy][posx] == itemIndex) {
         return false;
     }
-    this->items[posx][posy] = itemIndex;
+    this->items[posy][posx] = itemIndex;
     this->modified = true;
     return true;
 }
 
 int D1Dun::getMonsterAt(int posx, int posy) const
 {
-    return this->monsters[posx][posy];
+    return this->monsters[posy][posx];
 }
 
 bool D1Dun::setMonsterAt(int posx, int posy, int monsterIndex)
 {
-    if (this->monsters[posx][posy] == monsterIndex) {
+    if (this->monsters[posy][posx] == monsterIndex) {
         return false;
     }
-    this->monsters[posx][posy] = monsterIndex;
+    this->monsters[posy][posx] = monsterIndex;
     this->modified = true;
     return true;
 }
 
 int D1Dun::getObjectAt(int posx, int posy) const
 {
-    return this->objects[posx][posy];
+    return this->objects[posy][posx];
 }
 
 bool D1Dun::setObjectAt(int posx, int posy, int objectIndex)
 {
-    if (this->objects[posx][posy] == objectIndex) {
+    if (this->objects[posy][posx] == objectIndex) {
         return false;
     }
-    this->objects[posx][posy] = objectIndex;
+    this->objects[posy][posx] = objectIndex;
     this->modified = true;
     return true;
 }
 
 int D1Dun::getTransvalAt(int posx, int posy) const
 {
-    return this->transvals[posx][posy];
+    return this->transvals[posy][posx];
 }
 
 bool D1Dun::setTransvalAt(int posx, int posy, int transval)
 {
-    if (this->transvals[posx][posy] == transval) {
+    if (this->transvals[posy][posx] == transval) {
         return false;
     }
-    this->transvals[posx][posy] = transval;
+    this->transvals[posy][posx] = transval;
     this->modified = true;
     return true;
+}
+
+void D1Dun::updateSubtiles(int posx, int posy, int tileRef) {
+    std::vector<int> subs = std::vector<int>(TILE_WIDTH * TILE_HEIGHT);
+    if (tileRef != 0) {
+        if (tileRef != UNDEF_TILE && this->til->getTileCount() >= tileRef) {
+            subs = this->til->getSubtileIndices(tileRef - 1);
+        } else {
+            for (int &sub : subs) {
+                sub = UNDEF_SUBTILE;
+            }
+        }
+    }
+    for (int y = 0; y < TILE_HEIGHT; y++) {
+        for (int x = 0; x < TILE_WIDTH; x++) {
+            this->subtiles[posy + y][posx + x] = subs[y * TILE_WIDTH + x];
+        }
+    }
 }

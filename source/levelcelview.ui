@@ -884,6 +884,9 @@
         <property name="charWidth">
          <number>5</number>
         </property>
+        <property name="toolTip">
+         <string>X-coordinate of the selected position</string>
+        </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
         </property>
@@ -910,6 +913,9 @@
         <property name="charWidth">
          <number>5</number>
         </property>
+        <property name="toolTip">
+         <string>Y-coordinate of the selected position</string>
+        </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
         </property>
@@ -926,6 +932,9 @@
        <widget class="LineEditWidget" name="dunWidthEdit">
         <property name="charWidth">
          <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>Width of the dungeon</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -950,6 +959,9 @@
         <property name="charWidth">
          <number>5</number>
         </property>
+        <property name="toolTip">
+         <string>Height of the dungeon</string>
+        </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
         </property>
@@ -967,6 +979,9 @@
       </item>
       <item row="2" column="1">
        <widget class="QCheckBox" name="showTilesCheckBox">
+        <property name="tristate">
+         <bool>true</bool>
+        </property>
         <property name="toolTip">
          <string>Show tiles</string>
         </property>
@@ -979,6 +994,19 @@
         </property>
         <property name="toolTip">
          <string>Current tile at the selected position</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="9">
+       <widget class="LineEditWidget" name="dungeonSubtileLineEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>Current subtile at the selected position</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>

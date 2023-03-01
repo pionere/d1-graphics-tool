@@ -177,6 +177,8 @@ private slots:
 
     void on_dungeonTileLineEdit_returnPressed();
     void on_dungeonTileLineEdit_escPressed();
+    void on_dungeonSubtileLineEdit_returnPressed();
+    void on_dungeonSubtileLineEdit_escPressed();
     void on_dungeonItemLineEdit_returnPressed();
     void on_dungeonItemLineEdit_escPressed();
     void on_dungeonMonsterLineEdit_returnPressed();
