@@ -67,7 +67,7 @@ bool D1Dun::load(const QString &filePath, D1Til *t, D1Tmi *m, const OpenAsParam 
     int dunHeight = 0;
     bool changed = fileSize == 0; // !file.isOpen();
     if (fileSize != 0) {
-        if (filePath.endsWith(".dun")) {
+        if (filePath.toLower().endsWith(".dun")) {
             // File size check
             if (fileSize < 2 * 2) {
                 dProgressErr() << tr("Invalid DUN file.");
@@ -202,7 +202,7 @@ bool D1Dun::save(const SaveAsParam &params)
         }
     }
 
-    bool baseDun = filePath.endsWith(".dun");
+    bool baseDun = filePath.toLower().endsWith(".dun");
     // validate data
     if (baseDun) {
         // dun - tiles must be defined
