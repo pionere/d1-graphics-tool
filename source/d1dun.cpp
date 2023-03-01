@@ -6,6 +6,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QFontMetrics>
 #include <QMessageBox>
 
 #include "config.h"
@@ -352,6 +353,8 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 }
                 // dungeon.setFont(font);
                 // dungeon.setPen(font);
+                QFontMetrics fm(dungeon.font());
+                QRect rect = fm.boundingRect(text);
                 dungeon.drawText(drawCursorX + backImage.width() / 2 - rect.width() / 2, drawCursorY - backImage.height() / 2 - rect.height() / 2, text);
             } else {
                 QImage subtileImage = this->til->getMin()->getSubtileImage(subtileRef - 1);
@@ -386,6 +389,8 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 }
                 // dungeon.setFont(font);
                 // dungeon.setPen(font);
+                QFontMetrics fm(dungeon.font());
+                QRect rect = fm.boundingRect(text);
                 dungeon.drawText(drawCursorX + backImage.width() / 2 - rect.width() / 2, drawCursorY - backImage.height() - rect.height() / 2, text);
             }
         }
