@@ -242,15 +242,15 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     if (tileState != Qt::Unchecked) {
         // draw the background
         dungeon.drawImage(drawCursorX, drawCursorY, backImage);
-        // draw the content
+        // draw the subtile
         int subtileRef = this->subtiles[dunCursorY][dunCursorX];
         if (subtileRef != 0) {
             if (subtileRef == UNDEF_SUBTILE || subtileRef > this->til->getMin()->getSubtileCount()) {
-                QString text;
+                QString text = QApplication::tr("Subtile%1");
                 if (subtileRef == UNDEF_SUBTILE) {
-                    text = "???";
+                    text = text.arg("???");
                 } else {
-                    text = QApplication::tr("Subtile%1").arg(subtileRef - 1);
+                    text = text.arg(subtileRef - 1);
                 }
                 QGraphicsSimpleTextItem textItem = QGraphicsSimpleTextItem(text);
                 // textItem.setFont(font);
@@ -266,6 +266,33 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                     subtileImage = subtileImage.copy(rect);
                 }
                 dungeon.drawImage(drawCursorX, drawCursorY, subtileImage);
+            }
+        }
+        // draw tile text
+        static_assert(TILE_WIDTH == 2 && TILE_HEIGHT == 2, "D1Dun::drawImage skips boundary checks.");
+        int tileRef = this->tiles[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
+        if (tileRef != 0 && (drawCursorX & 1) && (drawCursorY & 1)) {
+            bool skipTile = true;
+            for (int dy = TILE_HEIGHT - 1; dy >= 0; dy--) {
+                for (int dx = TILE_WIDTH - 1; dx >= 0; dx--) {
+                    int subtileRef = this->subtiles[dunCursorY - dy][dunCursorX - dx];
+                    if (subtileRef == UNDEF_SUBTILE || subtileRef > this->til->getMin()->getSubtileCount()) {
+                        skipTile = false;
+                    }
+                }
+            }
+            if (!skipTile) {
+                QString text = QApplication::tr("Tile%1");
+                if (tileRef == UNDEF_TILE) {
+                    text = text.arg("???");
+                } else {
+                    text = text.arg(tileRef - 1);
+                }
+                QGraphicsSimpleTextItem textItem = QGraphicsSimpleTextItem(text);
+                // textItem.setFont(font);
+                QRect rect = textItem.boundingRect();
+                textItem.setPos(drawCursorX + backImage.width() / 2 - rect.width() / 2, drawCursorY - backImage.height() - rect.height() / 2);
+                textItem.paint(dungeon);
             }
         }
     }

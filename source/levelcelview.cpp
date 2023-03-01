@@ -180,7 +180,7 @@ void LevelCelView::update()
         int posx = this->currentDunPosX;
         int posy = this->currentDunPosY;
         int tileRef = this->dun->getTileAt(posx, posy);
-        this->ui->dungeonTileLineEdit->setText(tileRef == UNDEF_TILE ? QStringLiteral("?") : QString::number(subtileRef));
+        this->ui->dungeonTileLineEdit->setText(tileRef == UNDEF_TILE ? QStringLiteral("?") : QString::number(tileRef));
         int subtileRef = this->dun->getSubtileAt(posx, posy);
         this->ui->dungeonSubtileLineEdit->setText(subtileRef == UNDEF_SUBTILE ? QStringLiteral("?") : QString::number(subtileRef));
         this->ui->dungeonItemLineEdit->setText(QString::number(this->dun->getItemAt(posx, posy)));
