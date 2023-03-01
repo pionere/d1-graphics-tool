@@ -134,7 +134,7 @@ void SaveAsDialog::on_outputTmiFileBrowseButton_clicked()
 
 void SaveAsDialog::on_outputDunFileBrowseButton_clicked()
 {
-    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save DUN as..."), tr("DUN Files (*.dun *.DUN)"));
+    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save DUN as..."), tr("DUN Files (*.dun *.DUN *.rdun *.RDUN)"));
 
     if (saveFilePath.isEmpty())
         return;

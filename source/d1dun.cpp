@@ -6,9 +6,9 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QGraphicsSimpleTextItem>
 #include <QMessageBox>
 
+#include "config.h"
 #include "d1til.h"
 #include "d1tmi.h"
 #include "progressdialog.h"
@@ -73,7 +73,7 @@ bool D1Dun::load(const QString &filePath, D1Til *t, D1Tmi *m, const OpenAsParam 
                 return false;
             }
 
-            // Read AMP binary data
+            // Read DUN binary data
             QDataStream in(fileData);
             in.setByteOrder(QDataStream::LittleEndian);
 
@@ -149,7 +149,7 @@ bool D1Dun::load(const QString &filePath, D1Til *t, D1Tmi *m, const OpenAsParam 
             }
         } else {
             // rdun
-            dunWidth = dunHeight = sqrt(fileSize) / (TILE_WIDTH * TILE_HEIGHT * 4);
+            dunWidth = dunHeight = sqrt(fileSize / (TILE_WIDTH * TILE_HEIGHT * 4));
             if (fileSize != dunWidth * dunHeight * (TILE_WIDTH * TILE_HEIGHT * 4)) {
                 dProgressErr() << tr("Invalid RDUN file.");
                 return false;
@@ -157,6 +157,10 @@ bool D1Dun::load(const QString &filePath, D1Til *t, D1Tmi *m, const OpenAsParam 
 
             // prepare the vectors
             this->initVectors(dunWidth, dunHeight);
+
+            // Read RDUN binary data
+            QDataStream in(fileData);
+            in.setByteOrder(QDataStream::LittleEndian);
 
             quint32 readDword;
             // read subtiles
@@ -346,11 +350,9 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 } else {
                     text = text.arg(subtileRef - 1);
                 }
-                QGraphicsSimpleTextItem textItem = QGraphicsSimpleTextItem(text);
-                // textItem.setFont(font);
-                QRect rect = textItem.boundingRect();
-                textItem.setPos(drawCursorX + backImage.width() / 2 - rect.width() / 2, drawCursorY - backImage.height() / 2 - rect.height() / 2);
-                textItem.paint(dungeon);
+                // dungeon.setFont(font);
+                // dungeon.setPen(font);
+                dungeon.drawText(drawCursorX + backImage.width() / 2 - rect.width() / 2, drawCursorY - backImage.height() / 2 - rect.height() / 2, text);
             } else {
                 QImage subtileImage = this->til->getMin()->getSubtileImage(subtileRef - 1);
                 if (tileState != Qt::Checked) {
@@ -382,11 +384,9 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 } else {
                     text = text.arg(tileRef - 1);
                 }
-                QGraphicsSimpleTextItem textItem = QGraphicsSimpleTextItem(text);
-                // textItem.setFont(font);
-                QRect rect = textItem.boundingRect();
-                textItem.setPos(drawCursorX + backImage.width() / 2 - rect.width() / 2, drawCursorY - backImage.height() - rect.height() / 2);
-                textItem.paint(dungeon);
+                // dungeon.setFont(font);
+                // dungeon.setPen(font);
+                dungeon.drawText(drawCursorX + backImage.width() / 2 - rect.width() / 2, drawCursorY - backImage.height() - rect.height() / 2, text);
             }
         }
     }

@@ -48,6 +48,7 @@ public:
 
 private:
     void drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, Qt::CheckState tileState, bool showItems, bool showMonsters, bool showObjects) const;
+    void initVectors(int width, int height);
     void updateSubtiles(int posx, int posy, int tileRef);
 
 private:
