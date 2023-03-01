@@ -6,11 +6,40 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QGraphicsSimpleTextItem>
 #include <QMessageBox>
 
 #include "d1til.h"
 #include "d1tmi.h"
 #include "progressdialog.h"
+
+void D1Dun::initVectors(int dunWidth, int dunHeight)
+{
+    tiles.resize(dunHeight);
+    for (int i = 0; i < dunHeight; i++) {
+        tiles[i].resize(dunWidth);
+    }
+    subtiles.resize(dunHeight * TILE_HEIGHT);
+    for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
+        subtiles[i].resize(dunWidth * TILE_WIDTH);
+    }
+    items.resize(dunHeight * TILE_HEIGHT);
+    for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
+        items[i].resize(dunWidth * TILE_WIDTH);
+    }
+    objects.resize(dunHeight * TILE_HEIGHT);
+    for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
+        objects[i].resize(dunWidth * TILE_WIDTH);
+    }
+    monsters.resize(dunHeight * TILE_HEIGHT);
+    for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
+        monsters[i].resize(dunWidth * TILE_WIDTH);
+    }
+    transvals.resize(dunHeight * TILE_HEIGHT);
+    for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
+        transvals[i].resize(dunWidth * TILE_WIDTH);
+    }
+}
 
 bool D1Dun::load(const QString &filePath, D1Til *t, D1Tmi *m, const OpenAsParam &params)
 {
@@ -32,111 +61,117 @@ bool D1Dun::load(const QString &filePath, D1Til *t, D1Tmi *m, const OpenAsParam 
 
     const QByteArray fileData = file.readAll();
 
-    // File size check
     unsigned fileSize = fileData.size();
     int dunWidth = 0;
     int dunHeight = 0;
     bool changed = fileSize == 0; // !file.isOpen();
     if (fileSize != 0) {
-        if (fileSize < 2 * 2) {
-            dProgressErr() << tr("Invalid DUN file.");
-            return false;
-        }
-
-        // Read AMP binary data
-        QDataStream in(fileData);
-        in.setByteOrder(QDataStream::LittleEndian);
-
-        quint16 readWord;
-        in >> readWord;
-        dunWidth = readWord;
-        in >> readWord;
-        dunHeight = readWord;
-
-        // prepare the vectors
-        tiles.resize(dunHeight);
-        for (int i = 0; i < dunHeight; i++) {
-            tiles[i].resize(dunWidth);
-        }
-        subtiles.resize(dunHeight * TILE_HEIGHT);
-        for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
-            subtiles[i].resize(dunWidth * TILE_WIDTH);
-        }
-        items.resize(dunHeight * TILE_HEIGHT);
-        for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
-            items[i].resize(dunWidth * TILE_WIDTH);
-        }
-        objects.resize(dunHeight * TILE_HEIGHT);
-        for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
-            objects[i].resize(dunWidth * TILE_WIDTH);
-        }
-        monsters.resize(dunHeight * TILE_HEIGHT);
-        for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
-            monsters[i].resize(dunWidth * TILE_WIDTH);
-        }
-        transvals.resize(dunHeight * TILE_HEIGHT);
-        for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
-            transvals[i].resize(dunWidth * TILE_WIDTH);
-        }
-
-        unsigned tileCount = dunWidth * dunHeight;
-        if (fileSize < 2 * 2 + tileCount * 2) {
-            dProgressErr() << tr("Invalid DUN header.");
-            return false;
-        }
-        // read tiles
-        for (int y = 0; y < dunHeight; y++) {
-            for (int x = 0; x < dunWidth; x++) {
-                in >> readWord;
-                this->tiles[y][x] = readWord;
+        if (filePath.endsWith(".dun")) {
+            // File size check
+            if (fileSize < 2 * 2) {
+                dProgressErr() << tr("Invalid DUN file.");
+                return false;
             }
-        }
 
-        if (fileSize > 2 * 2 + tileCount * 2) {
-            unsigned subtileCount = tileCount * TILE_WIDTH * TILE_HEIGHT;
-            if (fileSize != 2 * 2 + tileCount * 2 + subtileCount * 2 * 4) {
-                dProgressWarn() << tr("Invalid DUN content.");
-                changed = true;
+            // Read AMP binary data
+            QDataStream in(fileData);
+            in.setByteOrder(QDataStream::LittleEndian);
+
+            quint16 readWord;
+            in >> readWord;
+            dunWidth = readWord;
+            in >> readWord;
+            dunHeight = readWord;
+
+            unsigned tileCount = dunWidth * dunHeight;
+            if (fileSize < 2 * 2 + tileCount * 2) {
+                dProgressErr() << tr("Invalid DUN header.");
+                return false;
             }
-            if (fileSize >= 2 * 2 + tileCount * 2 + subtileCount * 2 * 4) {
-                // read items
-                for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
-                    for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                        in >> readWord;
-                        this->items[y][x] = readWord;
-                    }
-                }
 
-                // read monsters
-                for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
-                    for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                        in >> readWord;
-                        this->monsters[y][x] = readWord;
-                    }
-                }
+            // prepare the vectors
+            this->initVectors(dunWidth, dunHeight);
 
-                // read objects
-                for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
-                    for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                        in >> readWord;
-                        this->objects[y][x] = readWord;
-                    }
+            // read tiles
+            for (int y = 0; y < dunHeight; y++) {
+                for (int x = 0; x < dunWidth; x++) {
+                    in >> readWord;
+                    this->tiles[y][x] = readWord;
                 }
+            }
 
-                // read transval
-                for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
-                    for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                        in >> readWord;
-                        this->transvals[y][x] = readWord;
+            if (fileSize > 2 * 2 + tileCount * 2) {
+                unsigned subtileCount = tileCount * TILE_WIDTH * TILE_HEIGHT;
+                if (fileSize != 2 * 2 + tileCount * 2 + subtileCount * 2 * 4) {
+                    dProgressWarn() << tr("Invalid DUN content.");
+                    changed = true;
+                }
+                if (fileSize >= 2 * 2 + tileCount * 2 + subtileCount * 2 * 4) {
+                    // read items
+                    for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+                        for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                            in >> readWord;
+                            this->items[y][x] = readWord;
+                        }
+                    }
+
+                    // read monsters
+                    for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+                        for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                            in >> readWord;
+                            this->monsters[y][x] = readWord;
+                        }
+                    }
+
+                    // read objects
+                    for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+                        for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                            in >> readWord;
+                            this->objects[y][x] = readWord;
+                        }
+                    }
+
+                    // read transval
+                    for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+                        for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                            in >> readWord;
+                            this->transvals[y][x] = readWord;
+                        }
                     }
                 }
             }
-        }
 
-        // prepare subtiles
-        for (int y = 0; y < dunHeight; y++) {
-            for (int x = 0; x < dunWidth; x++) {
-                this->updateSubtiles(x, y, this->tiles[y][x]);
+            // prepare subtiles
+            for (int y = 0; y < dunHeight; y++) {
+                for (int x = 0; x < dunWidth; x++) {
+                    this->updateSubtiles(x, y, this->tiles[y][x]);
+                }
+            }
+        } else {
+            // rdun
+            dunWidth = dunHeight = sqrt(fileSize) / (TILE_WIDTH * TILE_HEIGHT * 4);
+            if (fileSize != dunWidth * dunHeight * (TILE_WIDTH * TILE_HEIGHT * 4)) {
+                dProgressErr() << tr("Invalid RDUN file.");
+                return false;
+            }
+
+            // prepare the vectors
+            this->initVectors(dunWidth, dunHeight);
+
+            quint32 readDword;
+            // read subtiles
+            for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+                for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                    in >> readDword;
+                    this->subtiles[y][x] = readDword + 1;
+                }
+            }
+
+            // prepare tiles
+            for (int y = 0; y < dunHeight; y++) {
+                for (int x = 0; x < dunWidth; x++) {
+                    this->tiles[y][x] = UNDEF_TILE;
+                }
             }
         }
     }
@@ -162,14 +197,54 @@ bool D1Dun::save(const SaveAsParam &params)
         }
     }
 
-    // validate tiles
-    int dunWidth = this->width / TILE_WIDTH;
-    int dunHeight = this->height / TILE_HEIGHT;
-    for (int y = 0; y < dunHeight; y++) {
-        for (int x = 0; x < dunWidth; x++) {
-            if (this->tiles[y][x] == UNDEF_TILE) {
-                dProgressFail() << tr("Undefined tiles (one at %1:%2) can not be saved in this format (DUN).").arg(x).arg(y);
-                return false;
+    bool baseDun = filePath.endsWith(".dun");
+    // validate data
+    if (baseDun) {
+        // dun - tiles must be defined
+        int dunWidth = this->width / TILE_WIDTH;
+        int dunHeight = this->height / TILE_HEIGHT;
+        for (int y = 0; y < dunHeight; y++) {
+            for (int x = 0; x < dunWidth; x++) {
+                if (this->tiles[y][x] == UNDEF_TILE) {
+                    dProgressFail() << tr("Undefined tiles (one at %1:%2) can not be saved in this format (DUN).").arg(x).arg(y);
+                    return false;
+                }
+            }
+        }
+    } else {
+        // rdun - subtiles must be defined
+        int dunWidth = this->width;
+        int dunHeight = this->height;
+        for (int y = 0; y < dunHeight; y++) {
+            for (int x = 0; x < dunWidth; x++) {
+                if (this->subtiles[y][x] == UNDEF_SUBTILE || this->subtiles[y][x] == 0) {
+                    dProgressFail() << tr("Undefined or zero subtiles (one at %1:%2) can not be saved in this format (RDUN).").arg(x).arg(y);
+                    return false;
+                }
+            }
+        }
+        // report warning of unsaved information
+        for (int y = 0; y < dunHeight / TILE_HEIGHT; y++) {
+            for (int x = 0; x < dunWidth / TILE_WIDTH; x++) {
+                if (this->tiles[y][x] != UNDEF_TILE && this->tiles[y][x] != 0) {
+                    dProgressWarn() << tr("Defined tile at %1:%2 is not saved in this format (RDUN).").arg(x).arg(y);
+                }
+            }
+        }
+        for (int y = 0; y < dunHeight; y++) {
+            for (int x = 0; x < dunWidth; x++) {
+                if (this->items[y][x] != 0) {
+                    dProgressWarn() << tr("Defined item at %1:%2 is not saved in this format (RDUN).").arg(x).arg(y);
+                }
+                if (this->monsters[y][x] != 0) {
+                    dProgressWarn() << tr("Defined monster at %1:%2 is not saved in this format (RDUN).").arg(x).arg(y);
+                }
+                if (this->objects[y][x] != 0) {
+                    dProgressWarn() << tr("Defined object at %1:%2 is not saved in this format (RDUN).").arg(x).arg(y);
+                }
+                if (this->transvals[y][x] != 0) {
+                    dProgressWarn() << tr("Defined transval at %1:%2 is not saved in this format (RDUN).").arg(x).arg(y);
+                }
             }
         }
     }
@@ -185,49 +260,68 @@ bool D1Dun::save(const SaveAsParam &params)
     QDataStream out(&outFile);
     out.setByteOrder(QDataStream::LittleEndian);
 
-    quint16 writeWord;
-    writeWord = dunWidth;
-    out << writeWord;
-    writeWord = dunHeight;
-    out << writeWord;
+    if (baseDun) {
+        // dun
+        int dunWidth = this->width / TILE_WIDTH;
+        int dunHeight = this->height / TILE_HEIGHT;
 
-    // write tiles
-    for (int y = 0; y < dunHeight; y++) {
-        for (int x = 0; x < dunWidth; x++) {
-            writeWord = this->tiles[y][x];
-            out << writeWord;
+        quint16 writeWord;
+        writeWord = dunWidth;
+        out << writeWord;
+        writeWord = dunHeight;
+        out << writeWord;
+
+        // write tiles
+        for (int y = 0; y < dunHeight; y++) {
+            for (int x = 0; x < dunWidth; x++) {
+                writeWord = this->tiles[y][x];
+                out << writeWord;
+            }
         }
-    }
 
-    // write items
-    for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
-        for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-            writeWord = this->items[y][x];
-            out << writeWord;
+        // write items
+        for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+            for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                writeWord = this->items[y][x];
+                out << writeWord;
+            }
         }
-    }
 
-    // write monsters
-    for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
-        for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-            writeWord = this->monsters[y][x];
-            out << writeWord;
+        // write monsters
+        for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+            for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                writeWord = this->monsters[y][x];
+                out << writeWord;
+            }
         }
-    }
 
-    // write objects
-    for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
-        for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-            writeWord = this->objects[y][x];
-            out << writeWord;
+        // write objects
+        for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+            for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                writeWord = this->objects[y][x];
+                out << writeWord;
+            }
         }
-    }
 
-    // write transval
-    for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
-        for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-            writeWord = this->transvals[y][x];
-            out << writeWord;
+        // write transval
+        for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+            for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                writeWord = this->transvals[y][x];
+                out << writeWord;
+            }
+        }
+    } else {
+        // rdun
+        int dunWidth = this->width;
+        int dunHeight = this->height;
+
+        quint32 writeDword;
+        // write subtiles
+        for (int y = 0; y < dunHeight; y++) {
+            for (int x = 0; x < dunWidth; x++) {
+                writeDword = this->subtiles[y][x] - 1;
+                out << writeDword;
+            }
         }
     }
 
@@ -237,7 +331,7 @@ bool D1Dun::save(const SaveAsParam &params)
     return true;
 }
 
-void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, Qt::CheckState tileState, bool showItems, bool showMonsters, bool showObjects)
+void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, Qt::CheckState tileState, bool showItems, bool showMonsters, bool showObjects) const
 {
     if (tileState != Qt::Unchecked) {
         // draw the background
@@ -246,7 +340,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
         int subtileRef = this->subtiles[dunCursorY][dunCursorX];
         if (subtileRef != 0) {
             if (subtileRef == UNDEF_SUBTILE || subtileRef > this->til->getMin()->getSubtileCount()) {
-                QString text = QApplication::tr("Subtile%1");
+                QString text = tr("Subtile%1");
                 if (subtileRef == UNDEF_SUBTILE) {
                     text = text.arg("???");
                 } else {
@@ -282,7 +376,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 }
             }
             if (!skipTile) {
-                QString text = QApplication::tr("Tile%1");
+                QString text = tr("Tile%1");
                 if (tileRef == UNDEF_TILE) {
                     text = text.arg("???");
                 } else {

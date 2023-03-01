@@ -572,7 +572,7 @@ void MainWindow::openNew(OPEN_TILESET_TYPE tileset, OPEN_CLIPPED_TYPE clipped)
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;DUN Files (*.dun *.DUN)"));
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;DUN Files (*.dun *.DUN *.rdun *.RDUN)"));
 
     if (!openFilePath.isEmpty()) {
         QStringList filePaths;
@@ -592,7 +592,7 @@ void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 
     for (const QUrl &url : event->mimeData()->urls()) {
         QString fileLower = url.toLocalFile().toLower();
-        if (fileLower.endsWith(".cel") || fileLower.endsWith(".cl2") || fileLower.endsWith(".dun") || (unloaded && fileLower.endsWith(".pcx"))) {
+        if (fileLower.endsWith(".cel") || fileLower.endsWith(".cl2") || fileLower.endsWith(".dun") || fileLower.endsWith(".rdun") || (unloaded && fileLower.endsWith(".pcx"))) {
             event->acceptProposedAction();
             return;
         }
@@ -614,7 +614,7 @@ void MainWindow::openFiles(const QStringList &filePaths)
 {
     for (const QString &filePath : filePaths) {
         OpenAsParam params = OpenAsParam();
-        if (filePath.toLower().endsWith("dun")) {
+        if (filePath.toLower().endsWith("dun")) { // .dun or .rdun
             params.dunFilePath = filePath;
         } else {
             params.celFilePath = filePath;

@@ -169,7 +169,7 @@ void OpenAsDialog::on_tmiFileBrowseButton_clicked()
 
 void OpenAsDialog::on_dunFileBrowseButton_clicked()
 {
-    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select DUN file"), tr("DUN Files (*.dun *.DUN)"));
+    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select DUN file"), tr("DUN Files (*.dun *.DUN *.rdun *.RDUN)"));
 
     if (openFilePath.isEmpty())
         return;
