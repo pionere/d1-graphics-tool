@@ -175,14 +175,18 @@ private slots:
     void on_dunHeightEdit_returnPressed();
     void on_dunHeightEdit_escPressed();
 
+    void on_showTilesCheckBox_clicked();
     void on_dungeonTileLineEdit_returnPressed();
     void on_dungeonTileLineEdit_escPressed();
     void on_dungeonSubtileLineEdit_returnPressed();
     void on_dungeonSubtileLineEdit_escPressed();
+    void on_showItemsCheckBox_clicked();
     void on_dungeonItemLineEdit_returnPressed();
     void on_dungeonItemLineEdit_escPressed();
+    void on_showMonstersCheckBox_clicked();
     void on_dungeonMonsterLineEdit_returnPressed();
     void on_dungeonMonsterLineEdit_escPressed();
+    void on_showObjectsCheckBox_clicked();
     void on_dungeonObjectLineEdit_returnPressed();
     void on_dungeonObjectLineEdit_escPressed();
     void on_dungeonTransvalLineEdit_returnPressed();

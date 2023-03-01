@@ -452,7 +452,7 @@ QImage D1Dun::getImage(Qt::CheckState tileState, bool showItems, bool showMonste
             drawCursorX += cellWidth;
         }
         // move back to start
-        drawCursorX -= cellWidth * i;
+        drawCursorX -= cellWidth * (i + 1);
         // move down one row (+ half left)
         drawCursorX -= cellWidth / 2;
         drawCursorY += cellHeight / 2;

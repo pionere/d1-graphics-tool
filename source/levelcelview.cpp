@@ -3006,6 +3006,12 @@ void LevelCelView::on_dunHeightEdit_escPressed()
     this->ui->dunHeightEdit->clearFocus();
 }
 
+void LevelCelView::on_showTilesCheckBox_clicked()
+{
+    // update the view
+    this->displayFrame();
+}
+
 void LevelCelView::on_dungeonTileLineEdit_returnPressed()
 {
     bool ok;
@@ -3058,6 +3064,12 @@ void LevelCelView::on_dungeonSubtileLineEdit_escPressed()
     this->ui->dungeonSubtileLineEdit->clearFocus();
 }
 
+void LevelCelView::on_showItemsCheckBox_clicked()
+{
+    // update the view
+    this->displayFrame();
+}
+
 void LevelCelView::on_dungeonItemLineEdit_returnPressed()
 {
     int itemIndex = this->ui->dungeonItemLineEdit->text().toUShort();
@@ -3081,6 +3093,12 @@ void LevelCelView::on_dungeonItemLineEdit_escPressed()
     this->ui->dungeonItemLineEdit->clearFocus();
 }
 
+void LevelCelView::on_showMonstersCheckBox_clicked()
+{
+    // update the view
+    this->displayFrame();
+}
+
 void LevelCelView::on_dungeonMonsterLineEdit_returnPressed()
 {
     int monsterIndex = this->ui->dungeonMonsterLineEdit->text().toUShort();
@@ -3101,6 +3119,12 @@ void LevelCelView::on_dungeonMonsterLineEdit_escPressed()
     int posy = this->currentDunPosY;
     this->ui->dungeonMonsterLineEdit->setText(QString::number(this->dun->getMonsterAt(posx, posy)));
     this->ui->dungeonMonsterLineEdit->clearFocus();
+}
+
+void LevelCelView::on_showObjectsCheckBox_clicked()
+{
+    // update the view
+    this->displayFrame();
 }
 
 void LevelCelView::on_dungeonObjectLineEdit_returnPressed()
