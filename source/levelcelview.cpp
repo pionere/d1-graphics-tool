@@ -179,8 +179,10 @@ void LevelCelView::update()
     if (this->dunView) {
         int posx = this->currentDunPosX;
         int posy = this->currentDunPosY;
-        this->ui->dungeonTileLineEdit->setText(QString::number(this->dun->getTileAt(posx, posy)));
-        this->ui->dungeonSubtileLineEdit->setText(QString::number(this->dun->getSubtileAt(posx, posy)));
+        int tileRef = this->dun->getTileAt(posx, posy);
+        this->ui->dungeonTileLineEdit->setText(tileRef == UNDEF_TILE ? QStringLiteral("?") : QString::number(subtileRef));
+        int subtileRef = this->dun->getSubtileAt(posx, posy);
+        this->ui->dungeonSubtileLineEdit->setText(subtileRef == UNDEF_SUBTILE ? QStringLiteral("?") : QString::number(subtileRef));
         this->ui->dungeonItemLineEdit->setText(QString::number(this->dun->getItemAt(posx, posy)));
         this->ui->dungeonMonsterLineEdit->setText(QString::number(this->dun->getMonsterAt(posx, posy)));
         this->ui->dungeonObjectLineEdit->setText(QString::number(this->dun->getObjectAt(posx, posy)));
@@ -2394,16 +2396,24 @@ void LevelCelView::displayFrame()
 
     if (this->dunView) {
         // Set dungeon width and height
-        this->ui->dunWidthEdit->setText(QString::number(this->dun->getWidth() * 2));
-        this->ui->dunHeightEdit->setText(QString::number(this->dun->getHeight() * 2));
+        this->ui->dunWidthEdit->setText(QString::number(this->dun->getWidth()));
+        this->ui->dunHeightEdit->setText(QString::number(this->dun->getHeight()));
         // Set dungeon location
         this->ui->dungeonPosXLineEdit->setText(QString::number(currentDunPosX));
         this->ui->dungeonPosYLineEdit->setText(QString::number(currentDunPosY));
 
-        QImage dunFrame; // = this->dun->getImage();
+        QImage dunFrame = this->dun->getImage(
+            this->ui->showTilesCheckBox->checkState(),
+            this->ui->showItemsCheckBox->isChecked(),
+            this->ui->showMonstersCheckBox->isChecked(),
+            this->ui->showObjectsCheckBox->isChecked());
+
         this->celScene.setSceneRect(0, 0,
             dunFrame.width() + CEL_SCENE_SPACING * 2,
             dunFrame.height() + CEL_SCENE_SPACING * 2);
+
+        this->celScene.addPixmap(QPixmap::fromImage(dunFrame))
+            ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
     } else {
         // Getting the current frame/sub-tile/tile to display
         QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
@@ -2998,7 +3008,11 @@ void LevelCelView::on_dunHeightEdit_escPressed()
 
 void LevelCelView::on_dungeonTileLineEdit_returnPressed()
 {
-    int tileRef = this->ui->dungeonTileLineEdit->text().toInt();
+    bool ok;
+    int tileRef = this->ui->dungeonTileLineEdit->text().toInt(&ok);
+    if (tileRef < 0 || !ok) {
+        tileRef = UNDEF_TILE;
+    }
     int posx = this->currentDunPosX;
     int posy = this->currentDunPosY;
 
@@ -3012,16 +3026,19 @@ void LevelCelView::on_dungeonTileLineEdit_returnPressed()
 
 void LevelCelView::on_dungeonTileLineEdit_escPressed()
 {
-    int posx = this->currentDunPosX;
-    int posy = this->currentDunPosY;
+    int tileRef = this->dun->getTileAt(this->currentDunPosX, this->currentDunPosY);
 
-    this->ui->dungeonTileLineEdit->setText(QString::number(this->dun->getTileAt(posx, posy)));
+    this->ui->dungeonTileLineEdit->setText(tileRef == UNDEF_TILE ? QStringLiteral("?") : QString::number(tileRef));
     this->ui->dungeonTileLineEdit->clearFocus();
 }
 
 void LevelCelView::on_dungeonSubtileLineEdit_returnPressed()
 {
-    int subtileRef = this->ui->dungeonSubtileLineEdit->text().toInt();
+    bool ok;
+    int subtileRef = this->ui->dungeonSubtileLineEdit->text().toInt(&ok);
+    if (subtileRef < 0 || !ok) {
+        subtileRef = UNDEF_SUBTILE;
+    }
     int posx = this->currentDunPosX;
     int posy = this->currentDunPosY;
 
@@ -3035,10 +3052,9 @@ void LevelCelView::on_dungeonSubtileLineEdit_returnPressed()
 
 void LevelCelView::on_dungeonSubtileLineEdit_escPressed()
 {
-    int posx = this->currentDunPosX;
-    int posy = this->currentDunPosY;
+    int subtileRef = this->dun->getSubtileAt(this->currentDunPosX, this->currentDunPosY);
 
-    this->ui->dungeonSubtileLineEdit->setText(QString::number(this->dun->getSubtileAt(posx, posy)));
+    this->ui->dungeonSubtileLineEdit->setText(subtileRef == UNDEF_SUBTILE ? QStringLiteral("?") : QString::number(subtileRef));
     this->ui->dungeonSubtileLineEdit->clearFocus();
 }
 

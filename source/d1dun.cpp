@@ -12,9 +12,6 @@
 #include "d1tmi.h"
 #include "progressdialog.h"
 
-#define UNDEF_SUBTILE -1
-#define UNDEF_TILE -1
-
 bool D1Dun::load(const QString &filePath, D1Til *t, D1Tmi *m, const OpenAsParam &params)
 {
     // prepare file data source
@@ -139,7 +136,7 @@ bool D1Dun::load(const QString &filePath, D1Til *t, D1Tmi *m, const OpenAsParam 
         // prepare subtiles
         for (int y = 0; y < dunHeight; y++) {
             for (int x = 0; x < dunWidth; x++) {
-                this->updateSubtiles(posx, posy, this->tiles[y][x]);
+                this->updateSubtiles(x, y, this->tiles[y][x]);
             }
         }
     }
@@ -238,6 +235,162 @@ bool D1Dun::save(const SaveAsParam &params)
     this->modified = false;
 
     return true;
+}
+
+void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, Qt::CheckState tileState, bool showItems, bool showMonsters, bool showObjects)
+{
+    if (tileState != Qt::Unchecked) {
+        // draw the background
+        dungeon.drawImage(drawCursorX, drawCursorY, backImage);
+        // draw the content
+        int subtileRef = this->subtiles[dunCursorY][dunCursorX];
+        if (subtileRef != 0) {
+            if (subtileRef == UNDEF_SUBTILE || subtileRef > this->til->getMin()->getSubtileCount()) {
+                QString text;
+                if (subtileRef == UNDEF_SUBTILE) {
+                    text = "???";
+                } else {
+                    text = QApplication::tr("Subtile%1").arg(subtileRef - 1);
+                }
+                QGraphicsSimpleTextItem textItem = QGraphicsSimpleTextItem(text);
+                // textItem.setFont(font);
+                QRect rect = textItem.boundingRect();
+                textItem.setPos(drawCursorX + backImage.width() / 2 - rect.width() / 2, drawCursorY - backImage.height() / 2 - rect.height() / 2);
+                textItem.paint(dungeon);
+            } else {
+                QImage subtileImage = this->til->getMin()->getSubtileImage(subtileRef - 1);
+                if (tileState != Qt::Checked) {
+                    // crop image in case of partial-draw
+                    QRect rect = backImage.rect();
+                    rect.setY(subtileImage.height() - rect.height());
+                    subtileImage = subtileImage.copy(rect);
+                }
+                dungeon.drawImage(drawCursorX, drawCursorY, subtileImage);
+            }
+        }
+    }
+}
+
+QImage D1Dun::getImage(Qt::CheckState tileState, bool showItems, bool showMonsters, bool showObjects) const
+{
+    int maxDunSize = std::max(this->width, this->height);
+    int minDunSize = std::min(this->width, this->height);
+    int maxTilSize = std::max(TILE_WIDTH, TILE_HEIGHT);
+
+    unsigned subtileWidth = this->til->getMin()->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->til->getMin()->getSubtileHeight() * MICRO_HEIGHT;
+
+    unsigned cellWidth = subtileWidth;
+    unsigned cellHeight = cellWidth / 2;
+
+    QImage dungeon = QImage(maxDunSize * cellWidth,
+        (maxDunSize - 1) * cellHeight + subtileHeight, QImage::Format_ARGB32);
+    dungeon.fill(Qt::transparent);
+
+    // create template of the background image
+    QImage backImage = QImage(cellWidth, cellHeight, QImage::Format_ARGB32);
+    if (tileState != Qt::Unchecked) {
+        backImage.fill(Qt::transparent);
+        QColor backColor = QColor(Config::getGraphicsTransparentColor());
+        unsigned len = 0;
+        for (unsigned y = 1; y < cellHeight / 2; y++) {
+            len += 2;
+            for (unsigned x = cellWidth / 2 - len; x < cellWidth / 2 + len; x++) {
+                backImage.setPixelColor(x, y, backColor);
+            }
+        }
+        for (unsigned y = cellHeight / 2; y < cellHeight; y++) {
+            len -= 2;
+            for (unsigned x = cellWidth / 2 - len; x < cellWidth / 2 + len; x++) {
+                backImage.setPixelColor(x, y, backColor);
+            }
+        }
+    }
+
+    QPainter dunPainter(&dungeon);
+
+    int drawCursorX = (maxDunSize * cellWidth - 1) / 2 - (this->width - this->height) * cellWidth;
+    int drawCursorY = subtileHeight;
+    int dunCursorX;
+    int dunCursorY = 0;
+
+    // draw top triangle
+    for (int i = 0; i < minDunSize; i++) {
+        dunCursorX = 0;
+        dunCursorY = i;
+        while (dunCursorY >= 0) {
+            this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, tileState, showItems, showMonsters, showObjects);
+            dunCursorY--;
+            dunCursorX++;
+
+            drawCursorX += cellWidth;
+        }
+        // move back to start
+        drawCursorX -= cellWidth * i;
+        // move down one row (+ half left)
+        drawCursorX -= cellWidth / 2;
+        drawCursorY += cellHeight / 2;
+    }
+    // draw middle 'square'
+    if (this->width > this->height) {
+        drawCursorX += cellWidth;
+        for (int i = 0; i < this->width - this->height; i++) {
+            dunCursorX = i;
+            dunCursorY = this->height - 1;
+            while (dunCursorY >= 0) {
+                this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, tileState, showItems, showMonsters, showObjects);
+                dunCursorY--;
+                dunCursorX++;
+
+                drawCursorX += cellWidth;
+            }
+            // move back to start
+            drawCursorX -= cellWidth * this->height;
+            // move down one row (+ half right)
+            drawCursorX += cellWidth / 2;
+            drawCursorY += cellHeight / 2;
+        }
+        // sync drawCursorX with the other branches
+        drawCursorX -= cellWidth;
+    } else if (this->width < this->height) {
+        for (int i = 0; i < this->height - this->width; i++) {
+            dunCursorX = 0;
+            dunCursorY = this->height + i;
+            while (dunCursorX < this->width) {
+                this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, tileState, showItems, showMonsters, showObjects);
+                dunCursorY--;
+                dunCursorX++;
+
+                drawCursorX += cellWidth;
+            }
+            // move back to start
+            drawCursorX -= cellWidth * this->width;
+            // move down one row (+ half left)
+            drawCursorX -= cellWidth / 2;
+            drawCursorY += cellHeight / 2;
+        }
+    }
+    // draw bottom triangle
+    drawCursorX += cellWidth;
+    for (int i = minDunSize - 1; i > 0; i--) {
+        dunCursorX = this->width - i;
+        dunCursorY = this->height - 1;
+        while (dunCursorX < this->width) {
+            this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, tileState, showItems, showMonsters, showObjects);
+            dunCursorY--;
+            dunCursorX++;
+
+            drawCursorX += cellWidth;
+        }
+        // move back to start
+        drawCursorX -= cellWidth * i;
+        // move down one row (+ half right)
+        drawCursorX += cellWidth / 2;
+        drawCursorY += cellHeight / 2;
+    }
+
+    // dunPainter.end();
+    return dungeon;
 }
 
 QString D1Dun::getFilePath() const
@@ -486,7 +639,8 @@ bool D1Dun::setTransvalAt(int posx, int posy, int transval)
     return true;
 }
 
-void D1Dun::updateSubtiles(int posx, int posy, int tileRef) {
+void D1Dun::updateSubtiles(int posx, int posy, int tileRef)
+{
     std::vector<int> subs = std::vector<int>(TILE_WIDTH * TILE_HEIGHT);
     if (tileRef != 0) {
         if (tileRef != UNDEF_TILE && this->til->getTileCount() >= tileRef) {
