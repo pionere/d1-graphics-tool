@@ -175,6 +175,9 @@ private slots:
     void on_dunHeightEdit_returnPressed();
     void on_dunHeightEdit_escPressed();
 
+    void on_levelTypeComboBox_activated(int index);
+    void on_dungeonDefaultTileLineEdit_returnPressed();
+    void on_dungeonDefaultTileLineEdit_escPressed();
     void on_showTilesCheckBox_clicked();
     void on_dungeonTileLineEdit_returnPressed();
     void on_dungeonTileLineEdit_escPressed();

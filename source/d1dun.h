@@ -14,6 +14,14 @@ class D1Tmi;
 #define UNDEF_SUBTILE -1
 #define UNDEF_TILE -1
 
+class DunDrawParam {
+public:
+    Qt::CheckState tileState;
+    bool showItems;
+    bool showMonsters;
+    bool showObjects;
+};
+
 class D1Dun : public QObject {
     Q_OBJECT
 
@@ -24,7 +32,7 @@ public:
     bool load(const QString &dunFilePath, D1Til *til, D1Tmi *tmi, const OpenAsParam &params);
     bool save(const SaveAsParam &params);
 
-    QImage getImage(Qt::CheckState tileState, bool showItems, bool showMonsters, bool showObjects) const;
+    QImage getImage(const DunDrawParam &params) const;
 
     QString getFilePath() const;
     bool isModified() const;
@@ -46,10 +54,13 @@ public:
     int getTransvalAt(int posx, int posy) const;
     bool setTransvalAt(int posx, int posy, int transval);
 
+    int getDefaultTile() const;
+    bool setDefaultTile(int defaultTile);
+
 private:
     void drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, Qt::CheckState tileState, bool showItems, bool showMonsters, bool showObjects) const;
     void initVectors(int width, int height);
-    void updateSubtiles(int posx, int posy, int tileRef);
+    void updateSubtiles(int tilePosX, int tilePosY, int tileRef);
 
 private:
     QString dunFilePath;
@@ -64,4 +75,6 @@ private:
     std::vector<std::vector<int>> monsters;
     std::vector<std::vector<int>> objects;
     std::vector<std::vector<int>> transvals;
+
+    int defaultTile;
 };

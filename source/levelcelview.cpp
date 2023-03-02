@@ -27,6 +27,19 @@
 #include "ui_levelcelview.h"
 #include "upscaler.h"
 
+static const int defaultTiles[NUM_DUNGEON_TYPES] = {
+    // clang-format off
+/* DTYPE_TOWN      */ UNDEF_TILE,
+/* DTYPE_CATHEDRAL */ 22,
+/* DTYPE_CATACOMBS */ 12,
+/* DTYPE_CAVES     */ 8,
+/* DTYPE_HELL      */ 30,
+/* DTYPE_CRYPT     */ 22,
+/* DTYPE_NEST      */ 8,
+/* DTYPE_NONE      */ UNDEF_TILE,
+    // clang-format on
+};
+
 LevelCelView::LevelCelView(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::LevelCelView())
@@ -2453,11 +2466,12 @@ void LevelCelView::displayFrame()
         this->ui->dungeonPosXLineEdit->setText(QString::number(this->currentDunPosX));
         this->ui->dungeonPosYLineEdit->setText(QString::number(this->currentDunPosY));
 
-        QImage dunFrame = this->dun->getImage(
-            this->ui->showTilesCheckBox->checkState(),
-            this->ui->showItemsCheckBox->isChecked(),
-            this->ui->showMonstersCheckBox->isChecked(),
-            this->ui->showObjectsCheckBox->isChecked());
+        DunDrawParam params;
+        params.tileState = this->ui->showTilesCheckBox->checkState();
+        params.showItems = this->ui->showItemsCheckBox->isChecked();
+        params.showMonsters = this->ui->showMonstersCheckBox->isChecked();
+        params.showObjects = this->ui->showObjectsCheckBox->isChecked();
+        QImage dunFrame = this->dun->getImage(params);
 
         this->celScene.setSceneRect(0, 0,
             dunFrame.width() + CEL_SCENE_SPACING * 2,
@@ -3062,6 +3076,41 @@ void LevelCelView::on_dunHeightEdit_escPressed()
 
     this->ui->dunHeightEdit->setText(QString::number(height));
     this->ui->dunHeightEdit->clearFocus();
+}
+
+void LevelCelView::on_levelTypeComboBox_activated(int index)
+{
+    int defaultTile = defaultTiles[index];
+
+    bool change = this->dun->setDefaultTile(defaultTile);
+    this->on_dungeonDefaultTileLineEdit_escPressed();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void on_dungeonDefaultTileLineEdit_returnPressed()
+{
+    int defaultTile = dungeonDefaultTileLineEdit->text().toInt();
+
+    bool change = this->dun->setDefaultTile(defaultTile);
+    this->on_dungeonDefaultTileLineEdit_escPressed();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void on_dungeonDefaultTileLineEdit_escPressed()
+{
+    Qstring defaultText;
+    int defaultTile = this->dun->getDefaultTile();
+    if (defaultTile != UNDEF_TILE) {
+        defaultText = QString::number(defaultTile);
+    }
+    this->ui->dungeonDefaultTileLineEdit->setText(defaultText);
+    this->ui->dungeonDefaultTileLineEdit->clearFocus();
 }
 
 void LevelCelView::on_showTilesCheckBox_clicked()

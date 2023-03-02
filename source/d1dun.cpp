@@ -145,7 +145,7 @@ bool D1Dun::load(const QString &filePath, D1Til *t, D1Tmi *m, const OpenAsParam 
             // prepare subtiles
             for (int y = 0; y < dunHeight; y++) {
                 for (int x = 0; x < dunWidth; x++) {
-                    this->updateSubtiles(x * TILE_WIDTH, y * TILE_HEIGHT, this->tiles[y][x]);
+                    this->updateSubtiles(x, y, this->tiles[y][x]);
                 }
             }
         } else {
@@ -185,6 +185,7 @@ bool D1Dun::load(const QString &filePath, D1Til *t, D1Tmi *m, const OpenAsParam 
     this->height = dunHeight * TILE_HEIGHT;
     this->dunFilePath = filePath;
     this->modified = changed;
+    this->defaultTile = UNDEF_TILE;
     return true;
 }
 
@@ -216,6 +217,37 @@ bool D1Dun::save(const SaveAsParam &params)
                 }
             }
         }
+        // report inconsistent data (subtile vs tile)
+        for (int y = 0; y < dunHeight; y++) {
+            for (int x = 0; x < dunWidth; x++) {
+                std::vector<int> subs = std::vector<int>(TILE_WIDTH * TILE_HEIGHT);
+                if (tileRef == 0 && this->defaultTile != UNDEF_TILE) {
+                    tileRef = this->defaultTile;
+                }
+                if (tileRef != 0) {
+                    if (this->til->getTileCount() >= tileRef) {
+                        subs = this->til->getSubtileIndices(tileRef - 1);
+                        for (int &sub : subs) {
+                            sub += 1;
+                        }
+                    }
+                    else {
+                        continue; // skip check if there is no info
+                    }
+                }
+                int posx = x * TILE_WIDTH;
+                int posy = y * TILE_HEIGHT;
+                for (int dy = 0; dy < TILE_HEIGHT; dy++) {
+                    for (int dx = 0; dx < TILE_WIDTH; dx++) {
+                        int dunx = posx + dx;
+                        int duny = posy + dy;
+                        if (this->subtiles[duny][dunx] != subs[dy * TILE_WIDTH + dx]) {
+                            dProgressWarn() << tr("Subtile value at %1:%2 inconsistent with tile.").arg(dunx).arg(duny);
+                        }
+                    }
+                }
+            }
+        }
     } else {
         // rdun - subtiles must be defined
         int dunWidth = this->width;
@@ -228,7 +260,7 @@ bool D1Dun::save(const SaveAsParam &params)
                 }
             }
         }
-        // report warning of unsaved information
+        // report unsaved information
         for (int y = 0; y < dunHeight / TILE_HEIGHT; y++) {
             for (int x = 0; x < dunWidth / TILE_WIDTH; x++) {
                 if (this->tiles[y][x] != UNDEF_TILE && this->tiles[y][x] != 0) {
@@ -338,14 +370,14 @@ bool D1Dun::save(const SaveAsParam &params)
 
 #define CELL_BORDER 0
 
-void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, Qt::CheckState tileState, bool showItems, bool showMonsters, bool showObjects) const
+void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params) const
 {
     // draw the background
     dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backImage.height() - CELL_BORDER, backImage);
     int cellCenterX = drawCursorX + (backImage.width() - 2 * CELL_BORDER);
     int cellCenterY = drawCursorY - (backImage.height() - 2 * CELL_BORDER) / 2;
     bool subtileText = false;
-    if (tileState != Qt::Unchecked) {
+    if (params.tileState != Qt::Unchecked) {
         // draw the subtile
         int subtileRef = this->subtiles[dunCursorY][dunCursorX];
         if (subtileRef != 0) {
@@ -362,7 +394,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 subtileText = true;
             } else {
                 QImage subtileImage = this->til->getMin()->getSubtileImage(subtileRef - 1);
-                if (tileState != Qt::Checked) {
+                if (params.tileState != Qt::Checked) {
                     // crop image in case of partial-draw
                     QRect rect = backImage.rect();
                     if (CELL_BORDER != 0) {
@@ -400,7 +432,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             }
         }
     }
-    if (showItems) {
+    if (params.showItems) {
         // draw the item
         int itemIndex = this->items[dunCursorY][dunCursorX];
         if (itemIndex != 0) {
@@ -412,7 +444,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY + fm.height() * (subtileText ? 2 : 1), text);
         }
     }
-    if (showObjects) {
+    if (params.showObjects) {
         // draw the object
         int objectIndex = this->objects[dunCursorY][dunCursorX];
         if (objectIndex != 0) {
@@ -422,7 +454,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY + fm.height() * (subtileText ? 1 : 0), text);
         }
     }
-    if (showMonsters) {
+    if (params.showMonsters) {
         // draw the monster
         int monsterIndex = this->monsters[dunCursorY][dunCursorX];
         if (monsterIndex != 0) {
@@ -434,7 +466,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     }
 }
 
-QImage D1Dun::getImage(Qt::CheckState tileState, bool showItems, bool showMonsters, bool showObjects) const
+QImage D1Dun::getImage(const DunDrawParam &params) const
 {
     int maxDunSize = std::max(this->width, this->height);
     int minDunSize = std::min(this->width, this->height);
@@ -505,7 +537,7 @@ QImage D1Dun::getImage(Qt::CheckState tileState, bool showItems, bool showMonste
         dunCursorX = 0;
         dunCursorY = i;
         while (dunCursorY >= 0) {
-            this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, tileState, showItems, showMonsters, showObjects);
+            this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
             dunCursorY--;
             dunCursorX++;
 
@@ -524,7 +556,7 @@ QImage D1Dun::getImage(Qt::CheckState tileState, bool showItems, bool showMonste
             dunCursorX = i + 1;
             dunCursorY = this->height - 1;
             while (dunCursorY >= 0) {
-                this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, tileState, showItems, showMonsters, showObjects);
+                this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
                 dunCursorY--;
                 dunCursorX++;
 
@@ -543,7 +575,7 @@ QImage D1Dun::getImage(Qt::CheckState tileState, bool showItems, bool showMonste
             dunCursorX = 0;
             dunCursorY = this->width + i;
             while (dunCursorX < this->width) {
-                this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, tileState, showItems, showMonsters, showObjects);
+                this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
                 dunCursorY--;
                 dunCursorX++;
 
@@ -562,7 +594,7 @@ QImage D1Dun::getImage(Qt::CheckState tileState, bool showItems, bool showMonste
         dunCursorX = this->width - i;
         dunCursorY = this->height - 1;
         while (dunCursorX < this->width) {
-            this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, tileState, showItems, showMonsters, showObjects);
+            this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
             dunCursorY--;
             dunCursorX++;
 
@@ -729,12 +761,14 @@ bool D1Dun::setTileAt(int posx, int posy, int tileRef)
     if (tileRef < 0) {
         tileRef = UNDEF_TILE;
     }
-    if (this->tiles[posy / TILE_HEIGHT][posx / TILE_WIDTH] == tileRef) {
+    int tilePosX = posx / TILE_WIDTH;
+    int tilePosY = posy / TILE_HEIGHT;
+    if (this->tiles[tilePosY][tilePosX] == tileRef) {
         return false;
     }
-    this->tiles[posy / TILE_HEIGHT][posx / TILE_WIDTH] = tileRef;
+    this->tiles[tilePosY][tilePosX] = tileRef;
     // update subtile values
-    this->updateSubtiles(posx, posy, tileRef);
+    this->updateSubtiles(tilePosX, tilePosY, tileRef);
     this->modified = true;
     return true;
 }
@@ -828,9 +862,35 @@ bool D1Dun::setTransvalAt(int posx, int posy, int transval)
     return true;
 }
 
-void D1Dun::updateSubtiles(int posx, int posy, int tileRef)
+int D1Dun::getDefaultTile() const
+{
+    return this->defaultTile;
+}
+
+bool D1Dun::setDefaultTile(int defaultTile)
+{
+    if (this->defaultTile == defaultTile) {
+        return false;
+    }
+    this->defaultTile = defaultTile;
+    // update subtiles
+    for (unsigned y = 0; y < this->tiles.size(); y++) {
+        std::vector<int> &tilesRow = this->tiles[y];
+        for (unsigned x = 0; x < tilesRow.size(); y++) {
+            if (tilesRow[x] == 0) {
+                this->updateSubtiles(x, y, 0);
+            }
+        }
+    }
+    return true;
+}
+
+void D1Dun::updateSubtiles(int tilePosX, int tilePosY, int tileRef)
 {
     std::vector<int> subs = std::vector<int>(TILE_WIDTH * TILE_HEIGHT);
+    if (tileRef == 0 && this->defaultTile != UNDEF_TILE) {
+        tileRef = this->defaultTile;
+    }
     if (tileRef != 0) {
         if (tileRef != UNDEF_TILE && this->til->getTileCount() >= tileRef) {
             subs = this->til->getSubtileIndices(tileRef - 1);
@@ -843,9 +903,14 @@ void D1Dun::updateSubtiles(int posx, int posy, int tileRef)
             }
         }
     }
+    int posx = tilePosX * TILE_WIDTH;
+    int posy = tilePosY * TILE_HEIGHT;
     for (int y = 0; y < TILE_HEIGHT; y++) {
         for (int x = 0; x < TILE_WIDTH; x++) {
-            this->subtiles[posy + y][posx + x] = subs[y * TILE_WIDTH + x];
+            int dunx = posx + dx;
+            int duny = posy + dy;
+            this->subtiles[duny][dunx] = subs[y * TILE_WIDTH + x];
+            // FIXME: set modified if type == RDUN
         }
     }
 }
