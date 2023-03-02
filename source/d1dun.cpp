@@ -145,7 +145,7 @@ bool D1Dun::load(const QString &filePath, D1Til *t, D1Tmi *m, const OpenAsParam 
             // prepare subtiles
             for (int y = 0; y < dunHeight; y++) {
                 for (int x = 0; x < dunWidth; x++) {
-                    this->updateSubtiles(x, y, this->tiles[y][x]);
+                    this->updateSubtiles(x * TILE_WIDTH, y * TILE_HEIGHT, this->tiles[y][x]);
                 }
             }
         } else {
@@ -336,13 +336,16 @@ bool D1Dun::save(const SaveAsParam &params)
     return true;
 }
 
-#define CELL_BORDER 1
+#define CELL_BORDER 0
 
 void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, Qt::CheckState tileState, bool showItems, bool showMonsters, bool showObjects) const
 {
+    // draw the background
+    dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backImage.height() - CELL_BORDER, backImage);
+    int cellCenterX = drawCursorX + (backImage.width() - 2 * CELL_BORDER);
+    int cellCenterY = drawCursorY - (backImage.height() - 2 * CELL_BORDER) / 2;
+    bool subtileText = false;
     if (tileState != Qt::Unchecked) {
-        // draw the background
-        dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backImage.height() - CELL_BORDER, backImage);
         // draw the subtile
         int subtileRef = this->subtiles[dunCursorY][dunCursorX];
         if (subtileRef != 0) {
@@ -353,16 +356,18 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 } else {
                     text = text.arg(subtileRef - 1);
                 }
-                // dungeon.setFont(font);
-                // dungeon.setPen(font);
                 QFontMetrics fm(dungeon.font());
-                QRect rect = fm.boundingRect(text);
-                dungeon.drawText(drawCursorX + (backImage.width() - 2 * CELL_BORDER) / 2 - rect.width() / 2, drawCursorY - (backImage.height() - 2 * CELL_BORDER) / 2 - rect.height() / 2, text);
+                int textWidth = fm.horizontalAdvance(text);
+                dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY - fm.height() / 2, text);
+                subtileText = true;
             } else {
                 QImage subtileImage = this->til->getMin()->getSubtileImage(subtileRef - 1);
                 if (tileState != Qt::Checked) {
                     // crop image in case of partial-draw
-                    QRect rect = backImage.rect() - QMargins(CEL_BORDER, CEL_BORDER, CEL_BORDER, CEL_BORDER);
+                    QRect rect = backImage.rect();
+                    if (CELL_BORDER != 0) {
+                        rect -= QMargins(CELL_BORDER, CELL_BORDER, CELL_BORDER, CELL_BORDER);
+                    }
                     rect.setY(subtileImage.height() - rect.height());
                     subtileImage = subtileImage.copy(rect);
                 }
@@ -372,7 +377,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
         // draw tile text
         static_assert(TILE_WIDTH == 2 && TILE_HEIGHT == 2, "D1Dun::drawImage skips boundary checks.");
         int tileRef = this->tiles[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
-        if (tileRef != 0 && (drawCursorX & 1) && (drawCursorY & 1)) {
+        if (tileRef != 0 && (dunCursorX & 1) && (dunCursorY & 1)) {
             bool skipTile = true;
             for (int dy = TILE_HEIGHT - 1; dy >= 0; dy--) {
                 for (int dx = TILE_WIDTH - 1; dx >= 0; dx--) {
@@ -389,12 +394,42 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 } else {
                     text = text.arg(tileRef - 1);
                 }
-                // dungeon.setFont(font);
-                // dungeon.setPen(font);
                 QFontMetrics fm(dungeon.font());
-                QRect rect = fm.boundingRect(text);
-                dungeon.drawText(drawCursorX + (backImage.width() - 2 * CEL_BORDER) / 2 - rect.width() / 2, drawCursorY - (backImage.height() - 2 * CEL_BORDER) - rect.height() / 2, text);
+                int textWidth = fm.horizontalAdvance(text);
+                dungeon.drawText(cellCenterX - textWidth / 2, drawCursorY - (backImage.height() - 2 * CELL_BORDER) - fm.height() / 2, text);
             }
+        }
+    }
+    if (showItems) {
+        // draw the item
+        int itemIndex = this->items[dunCursorY][dunCursorX];
+        if (itemIndex != 0) {
+            QString text = tr("Item%1").arg(itemIndex);
+            // dungeon.setFont(font);
+            // dungeon.setPen(font);
+            QFontMetrics fm(dungeon.font());
+            int textWidth = fm.horizontalAdvance(text);;
+            dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY + fm.height() * (subtileText ? 2 : 1), text);
+        }
+    }
+    if (showObjects) {
+        // draw the object
+        int objectIndex = this->objects[dunCursorY][dunCursorX];
+        if (objectIndex != 0) {
+            QString text = tr("Object%1").arg(objectIndex);
+            QFontMetrics fm(dungeon.font());
+            int textWidth = fm.horizontalAdvance(text);
+            dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY + fm.height() * (subtileText ? 1 : 0), text);
+        }
+    }
+    if (showMonsters) {
+        // draw the monster
+        int monsterIndex = this->monsters[dunCursorY][dunCursorX];
+        if (monsterIndex != 0) {
+            QString text = tr("Monster%1").arg(monsterIndex);
+            QFontMetrics fm(dungeon.font());
+            int textWidth = fm.horizontalAdvance(text);
+            dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY - (3 * fm.height() / 2), text);
         }
     }
 }
@@ -416,7 +451,7 @@ QImage D1Dun::getImage(Qt::CheckState tileState, bool showItems, bool showMonste
     dungeon.fill(Qt::transparent);
 
     // create template of the background image
-    QImage backImage = QImage(cellWidth + 2 * CEL_BORDER, cellHeight + 2 * CEL_BORDER, QImage::Format_ARGB32);
+    QImage backImage = QImage(cellWidth + 2 * CELL_BORDER, cellHeight + 2 * CELL_BORDER, QImage::Format_ARGB32);
     backImage.fill(Qt::transparent);
     QColor backColor = QColor(Config::getGraphicsTransparentColor());
     if (tileState != Qt::Unchecked) {
@@ -424,14 +459,14 @@ QImage D1Dun::getImage(Qt::CheckState tileState, bool showItems, bool showMonste
         unsigned y = 1;
         for (; y <= cellHeight / 2; y++) {
             len += 2;
-            for (unsigned x = cellWidth / 2 - len - CEL_BORDER; x <= cellWidth / 2 + len + CEL_BORDER; x++) {
-                backImage.setPixelColor(x, y + CEL_BORDER, backColor);
+            for (unsigned x = cellWidth / 2 - len - CELL_BORDER; x < cellWidth / 2 + len + CELL_BORDER; x++) {
+                backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
             }
         }
         for (; y < cellHeight; y++) {
             len -= 2;
-            for (unsigned x = cellWidth / 2 - len - CEL_BORDER; x <= cellWidth / 2 + len + CEL_BORDER; x++) {
-                backImage.setPixelColor(x, y + CEL_BORDER, backColor);
+            for (unsigned x = cellWidth / 2 - len - CELL_BORDER; x < cellWidth / 2 + len + CELL_BORDER; x++) {
+                backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
             }
         }
     } else {
@@ -439,27 +474,28 @@ QImage D1Dun::getImage(Qt::CheckState tileState, bool showItems, bool showMonste
         unsigned y = 1;
         for (; y <= cellHeight / 2; y++) {
             len += 2;
-            for (unsigned x = cellWidth / 2 - len - CEL_BORDER; x <= cellWidth / 2 - len; x++) {
-                backImage.setPixelColor(x, y + CEL_BORDER, backColor);
+            for (unsigned x = cellWidth / 2 - len - CELL_BORDER; x <= cellWidth / 2 - len; x++) {
+                backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
             }
-            for (unsigned x = cellWidth / 2 + len; x <= cellWidth / 2 + len + CEL_BORDER; x++) {
-                backImage.setPixelColor(x, y + CEL_BORDER, backColor);
+            for (unsigned x = cellWidth / 2 + len - 1; x <= cellWidth / 2 + len + CELL_BORDER; x++) {
+                backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
             }
         }
         for (; y < cellHeight; y++) {
             len -= 2;
-            for (unsigned x = cellWidth / 2 - len - CEL_BORDER; x <= cellWidth / 2 - len; x++) {
-                backImage.setPixelColor(x, y + CEL_BORDER, backColor);
+            for (unsigned x = cellWidth / 2 - len - CELL_BORDER; x <= cellWidth / 2 - len; x++) {
+                backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
             }
-            for (unsigned x = cellWidth / 2 + len; x <= cellWidth / 2 + len + CEL_BORDER; x++) {
-                backImage.setPixelColor(x, y + CEL_BORDER, backColor);
+            for (unsigned x = cellWidth / 2 + len - 1; x <= cellWidth / 2 + len + CELL_BORDER; x++) {
+                backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
             }
         }
     }
 
     QPainter dunPainter(&dungeon);
+    dunPainter.setPen(QColor(Config::getPaletteUndefinedColor()));
 
-    int drawCursorX = ((maxDunSize - 1) * cellWidth) / 2 - (this->width - this->height) * cellWidth / 2;
+    int drawCursorX = ((maxDunSize - 1) * cellWidth) / 2 - (this->width - this->height) * (cellWidth / 2);
     int drawCursorY = subtileHeight;
     int dunCursorX;
     int dunCursorY = 0;
@@ -485,7 +521,7 @@ QImage D1Dun::getImage(Qt::CheckState tileState, bool showItems, bool showMonste
     if (this->width > this->height) {
         drawCursorX += cellWidth;
         for (int i = 0; i < this->width - this->height; i++) {
-            dunCursorX = i;
+            dunCursorX = i + 1;
             dunCursorY = this->height - 1;
             while (dunCursorY >= 0) {
                 this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, tileState, showItems, showMonsters, showObjects);
@@ -505,7 +541,7 @@ QImage D1Dun::getImage(Qt::CheckState tileState, bool showItems, bool showMonste
     } else if (this->width < this->height) {
         for (int i = 0; i < this->height - this->width; i++) {
             dunCursorX = 0;
-            dunCursorY = this->height + i;
+            dunCursorY = this->width + i;
             while (dunCursorX < this->width) {
                 this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, tileState, showItems, showMonsters, showObjects);
                 dunCursorY--;
@@ -798,6 +834,9 @@ void D1Dun::updateSubtiles(int posx, int posy, int tileRef)
     if (tileRef != 0) {
         if (tileRef != UNDEF_TILE && this->til->getTileCount() >= tileRef) {
             subs = this->til->getSubtileIndices(tileRef - 1);
+            for (int &sub : subs) {
+                sub += 1;
+            }
         } else {
             for (int &sub : subs) {
                 sub = UNDEF_SUBTILE;
