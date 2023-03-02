@@ -30,12 +30,12 @@
 static const int defaultTiles[NUM_DUNGEON_TYPES] = {
     // clang-format off
 /* DTYPE_TOWN      */ UNDEF_TILE,
-/* DTYPE_CATHEDRAL */ 22,
-/* DTYPE_CATACOMBS */ 12,
-/* DTYPE_CAVES     */ 8,
-/* DTYPE_HELL      */ 30,
-/* DTYPE_CRYPT     */ 22,
-/* DTYPE_NEST      */ 8,
+/* DTYPE_CATHEDRAL */ 13,
+/* DTYPE_CATACOMBS */ 3,
+/* DTYPE_CAVES     */ 7,
+/* DTYPE_HELL      */ 6,
+/* DTYPE_CRYPT     */ 13,
+/* DTYPE_NEST      */ 7,
 /* DTYPE_NONE      */ UNDEF_TILE,
     // clang-format on
 };

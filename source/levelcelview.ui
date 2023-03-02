@@ -916,7 +916,7 @@
         </item>
        </widget>
       </item>
-      <item row="1" column="5">
+      <item row="1" column="5" colspan="2">
        <widget class="LineEditWidget" name="dungeonDefaultTileLineEdit">
         <property name="charWidth">
          <number>5</number>
@@ -928,13 +928,6 @@
          <set>Qt::AlignCenter</set>
         </property>
        </widget>
-      </item>
-      <item row="1" column="6">
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
       </item>
       <item row="1" column="7">
        <widget class="LineEditWidget" name="dungeonPosXLineEdit">
