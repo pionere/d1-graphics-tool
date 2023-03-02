@@ -231,8 +231,7 @@ bool D1Dun::save(const SaveAsParam &params)
                         for (int &sub : subs) {
                             sub += 1;
                         }
-                    }
-                    else {
+                    } else {
                         continue; // skip check if there is no info
                     }
                 }
@@ -395,16 +394,33 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 subtileText = true;
             } else {
                 QImage subtileImage = this->til->getMin()->getSubtileImage(subtileRef - 1);
-                if (params.tileState != Qt::Checked) {
-                    // crop image in case of partial-draw
-                    QRect rect = backImage.rect();
-                    if (CELL_BORDER != 0) {
-                        rect -= QMargins(CELL_BORDER, CELL_BORDER, CELL_BORDER, CELL_BORDER);
+                QImage *destImage = (QImage *)dungeon.device();
+                if (params.tileState == Qt::Checked) {
+                    // dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage);
+                    for (int y = 0; y < subtileImage.height(); y++) {
+                        for (int x = 0; x < subtileImage.width(); x++) {
+                            QColor color = subtileImage.pixelColor(x, y);
+                            if (color.alpha() == 0) {
+                                continue;
+                            }
+                            destImage->setPixelColor(drawCursorX + x, drawCursorY - subtileImage.height() + y, color);
+                        }
                     }
-                    rect.setY(subtileImage.height() - rect.height());
-                    subtileImage = subtileImage.copy(rect);
+                } else {
+                    // mask the image with backImage
+                    for (int y = CELLBORDER; y < backImage.height() - CELLBORDER; y++) {
+                        for (int x = CELLBORDER; x < backImage.width() - CELLBORDER; x++) {
+                            if (backImage.pixelColor(x, y).alpha() == 0) {
+                                continue;
+                            }
+                            QColor color = subtileImage.pixelColor(x - CELLBORDER, subtileImage.height() - (backImage.height() - 2 * CELL_BORDER) + y);
+                            if (/*color.isNull() || */color.alpha() == 0) {
+                                continue;
+                            }
+                            destImage->setPixelColor(drawCursorX + x - CELL_BORDER, drawCursorY - (backImage.height() - 2 * CELL_BORDER) + y, color);
+                        }
+                    }
                 }
-                dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage);
             }
         }
         // draw tile text
