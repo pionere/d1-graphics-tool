@@ -336,11 +336,13 @@ bool D1Dun::save(const SaveAsParam &params)
     return true;
 }
 
+#define CELL_BORDER 1
+
 void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, Qt::CheckState tileState, bool showItems, bool showMonsters, bool showObjects) const
 {
     if (tileState != Qt::Unchecked) {
         // draw the background
-        dungeon.drawImage(drawCursorX, drawCursorY, backImage);
+        dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backImage.height() - CELL_BORDER, backImage);
         // draw the subtile
         int subtileRef = this->subtiles[dunCursorY][dunCursorX];
         if (subtileRef != 0) {
@@ -355,16 +357,16 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 // dungeon.setPen(font);
                 QFontMetrics fm(dungeon.font());
                 QRect rect = fm.boundingRect(text);
-                dungeon.drawText(drawCursorX + backImage.width() / 2 - rect.width() / 2, drawCursorY - backImage.height() / 2 - rect.height() / 2, text);
+                dungeon.drawText(drawCursorX + (backImage.width() - 2 * CELL_BORDER) / 2 - rect.width() / 2, drawCursorY - (backImage.height() - 2 * CELL_BORDER) / 2 - rect.height() / 2, text);
             } else {
                 QImage subtileImage = this->til->getMin()->getSubtileImage(subtileRef - 1);
                 if (tileState != Qt::Checked) {
                     // crop image in case of partial-draw
-                    QRect rect = backImage.rect();
+                    QRect rect = backImage.rect() - QMargins(CEL_BORDER, CEL_BORDER, CEL_BORDER, CEL_BORDER);
                     rect.setY(subtileImage.height() - rect.height());
                     subtileImage = subtileImage.copy(rect);
                 }
-                dungeon.drawImage(drawCursorX, drawCursorY, subtileImage);
+                dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage);
             }
         }
         // draw tile text
@@ -391,7 +393,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 // dungeon.setPen(font);
                 QFontMetrics fm(dungeon.font());
                 QRect rect = fm.boundingRect(text);
-                dungeon.drawText(drawCursorX + backImage.width() / 2 - rect.width() / 2, drawCursorY - backImage.height() - rect.height() / 2, text);
+                dungeon.drawText(drawCursorX + (backImage.width() - 2 * CEL_BORDER) / 2 - rect.width() / 2, drawCursorY - (backImage.height() - 2 * CEL_BORDER) - rect.height() / 2, text);
             }
         }
     }
@@ -414,28 +416,50 @@ QImage D1Dun::getImage(Qt::CheckState tileState, bool showItems, bool showMonste
     dungeon.fill(Qt::transparent);
 
     // create template of the background image
-    QImage backImage = QImage(cellWidth, cellHeight, QImage::Format_ARGB32);
+    QImage backImage = QImage(cellWidth + 2 * CEL_BORDER, cellHeight + 2 * CEL_BORDER, QImage::Format_ARGB32);
+    backImage.fill(Qt::transparent);
+    QColor backColor = QColor(Config::getGraphicsTransparentColor());
     if (tileState != Qt::Unchecked) {
-        backImage.fill(Qt::transparent);
-        QColor backColor = QColor(Config::getGraphicsTransparentColor());
         unsigned len = 0;
-        for (unsigned y = 1; y < cellHeight / 2; y++) {
+        unsigned y = 1;
+        for (; y <= cellHeight / 2; y++) {
             len += 2;
-            for (unsigned x = cellWidth / 2 - len; x < cellWidth / 2 + len; x++) {
-                backImage.setPixelColor(x, y, backColor);
+            for (unsigned x = cellWidth / 2 - len - CEL_BORDER; x <= cellWidth / 2 + len + CEL_BORDER; x++) {
+                backImage.setPixelColor(x, y + CEL_BORDER, backColor);
             }
         }
-        for (unsigned y = cellHeight / 2; y < cellHeight; y++) {
+        for (; y < cellHeight; y++) {
             len -= 2;
-            for (unsigned x = cellWidth / 2 - len; x < cellWidth / 2 + len; x++) {
-                backImage.setPixelColor(x, y, backColor);
+            for (unsigned x = cellWidth / 2 - len - CEL_BORDER; x <= cellWidth / 2 + len + CEL_BORDER; x++) {
+                backImage.setPixelColor(x, y + CEL_BORDER, backColor);
+            }
+        }
+    } else {
+        unsigned len = 0;
+        unsigned y = 1;
+        for (; y <= cellHeight / 2; y++) {
+            len += 2;
+            for (unsigned x = cellWidth / 2 - len - CEL_BORDER; x <= cellWidth / 2 - len; x++) {
+                backImage.setPixelColor(x, y + CEL_BORDER, backColor);
+            }
+            for (unsigned x = cellWidth / 2 + len; x <= cellWidth / 2 + len + CEL_BORDER; x++) {
+                backImage.setPixelColor(x, y + CEL_BORDER, backColor);
+            }
+        }
+        for (; y < cellHeight; y++) {
+            len -= 2;
+            for (unsigned x = cellWidth / 2 - len - CEL_BORDER; x <= cellWidth / 2 - len; x++) {
+                backImage.setPixelColor(x, y + CEL_BORDER, backColor);
+            }
+            for (unsigned x = cellWidth / 2 + len; x <= cellWidth / 2 + len + CEL_BORDER; x++) {
+                backImage.setPixelColor(x, y + CEL_BORDER, backColor);
             }
         }
     }
 
     QPainter dunPainter(&dungeon);
 
-    int drawCursorX = (maxDunSize * cellWidth - 1) / 2 - (this->width - this->height) * cellWidth;
+    int drawCursorX = ((maxDunSize - 1) * cellWidth) / 2 - (this->width - this->height) * cellWidth / 2;
     int drawCursorY = subtileHeight;
     int dunCursorX;
     int dunCursorY = 0;
@@ -575,6 +599,9 @@ bool D1Dun::setWidth(int newWidth)
     for (std::vector<int> &tilesRow : this->tiles) {
         tilesRow.resize(newWidth / TILE_WIDTH);
     }
+    for (std::vector<int> &subtilesRow : this->subtiles) {
+        subtilesRow.resize(newWidth);
+    }
     for (std::vector<int> &itemsRow : this->items) {
         itemsRow.resize(newWidth);
     }
@@ -643,7 +670,7 @@ bool D1Dun::setHeight(int newHeight)
     this->objects.resize(newHeight);
     this->transvals.resize(newHeight);
     for (int y = prevHeight; y < newHeight; y++) {
-        this->tiles[y].resize(width / TILE_WIDTH);
+        this->tiles[y / TILE_HEIGHT].resize(width / TILE_WIDTH);
         this->subtiles[y].resize(width);
         this->items[y].resize(width);
         this->monsters[y].resize(width);
