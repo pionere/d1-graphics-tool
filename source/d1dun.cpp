@@ -372,10 +372,12 @@ bool D1Dun::save(const SaveAsParam &params)
 
 void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params) const
 {
+    const unsigned backWidth = backImage.width() - 2 * CELL_BORDER;
+    const unsigned backHeight = backImage.height() - 2 * CELL_BORDER;
     // draw the background
-    dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backImage.height() - CELL_BORDER, backImage);
-    int cellCenterX = drawCursorX + (backImage.width() - 2 * CELL_BORDER);
-    int cellCenterY = drawCursorY - (backImage.height() - 2 * CELL_BORDER) / 2;
+    dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backHeight - CELL_BORDER, backImage);
+    unsigned cellCenterX = drawCursorX + backWidth / 2;
+    unsigned cellCenterY = drawCursorY - backHeight / 2;
     bool subtileText = false;
     if (params.tileState != Qt::Unchecked) {
         // draw the subtile
@@ -389,7 +391,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                     text = text.arg(subtileRef - 1);
                 }
                 QFontMetrics fm(dungeon.font());
-                int textWidth = fm.horizontalAdvance(text);
+                unsigned textWidth = fm.horizontalAdvance(text);
                 dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY - fm.height() / 2, text);
                 subtileText = true;
             } else {
@@ -408,16 +410,16 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                     }
                 } else {
                     // mask the image with backImage
-                    for (int y = CELLBORDER; y < backImage.height() - CELLBORDER; y++) {
-                        for (int x = CELLBORDER; x < backImage.width() - CELLBORDER; x++) {
+                    for (unsigned y = CELL_BORDER; y < backHeight - CELL_BORDER; y++) {
+                        for (unsigned x = CELL_BORDER; x < backWidth - CELL_BORDER; x++) {
                             if (backImage.pixelColor(x, y).alpha() == 0) {
                                 continue;
                             }
-                            QColor color = subtileImage.pixelColor(x - CELLBORDER, subtileImage.height() - (backImage.height() - 2 * CELL_BORDER) + y);
-                            if (/*color.isNull() || */color.alpha() == 0) {
+                            QColor color = subtileImage.pixelColor(x - CELL_BORDER, subtileImage.height() - backHeight + y);
+                            if (/*color.isNull() ||*/color.alpha() == 0) {
                                 continue;
                             }
-                            destImage->setPixelColor(drawCursorX + x - CELL_BORDER, drawCursorY - (backImage.height() - 2 * CELL_BORDER) + y, color);
+                            destImage->setPixelColor(drawCursorX + x - CELL_BORDER, drawCursorY - backHeight + y, color);
                         }
                     }
                 }
@@ -444,8 +446,8 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                     text = text.arg(tileRef - 1);
                 }
                 QFontMetrics fm(dungeon.font());
-                int textWidth = fm.horizontalAdvance(text);
-                dungeon.drawText(cellCenterX - textWidth / 2, drawCursorY - (backImage.height() - 2 * CELL_BORDER) - fm.height() / 2, text);
+                unsigned textWidth = fm.horizontalAdvance(text);
+                dungeon.drawText(cellCenterX - textWidth / 2, drawCursorY - backHeight - fm.height() / 2, text);
             }
         }
     }
@@ -457,7 +459,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             // dungeon.setFont(font);
             // dungeon.setPen(font);
             QFontMetrics fm(dungeon.font());
-            int textWidth = fm.horizontalAdvance(text);
+            unsigned textWidth = fm.horizontalAdvance(text);
             dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY + fm.height() * (subtileText ? 2 : 1), text);
         }
     }
@@ -467,7 +469,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
         if (objectIndex != 0) {
             QString text = tr("Object%1").arg(objectIndex);
             QFontMetrics fm(dungeon.font());
-            int textWidth = fm.horizontalAdvance(text);
+            unsigned textWidth = fm.horizontalAdvance(text);
             dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY + fm.height() * (subtileText ? 1 : 0), text);
         }
     }
@@ -477,7 +479,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
         if (monsterIndex != 0) {
             QString text = tr("Monster%1").arg(monsterIndex);
             QFontMetrics fm(dungeon.font());
-            int textWidth = fm.horizontalAdvance(text);
+            unsigned textWidth = fm.horizontalAdvance(text);
             dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY - (3 * fm.height() / 2), text);
         }
     }
