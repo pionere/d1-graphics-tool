@@ -872,7 +872,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1" colspan="5">
+      <item row="1" column="1" colspan="4">
        <layout class="QHBoxLayout">
         <item>
          <widget class="QComboBox" name="levelTypeComboBox">
@@ -931,27 +931,27 @@
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="LineEditWidget" name="dungeonPosXLineEdit">
-          <property name="charWidth">
-           <number>5</number>
-          </property>
-          <property name="toolTip">
-           <string>X-coordinate of the selected position</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
        </layout>
       </item>
-      <item row="1" column="6" colspan="2">
+      <item row="1" column="5" colspan="2">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </spacer>
+      </item>
+      <item row="1" column="7">
+       <widget class="LineEditWidget" name="dungeonPosXLineEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>X-coordinate of the selected position</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
       </item>
       <item row="1" column="8">
        <widget class="QLabel">
