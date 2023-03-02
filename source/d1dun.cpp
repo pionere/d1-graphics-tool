@@ -398,8 +398,8 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 QImage subtileImage = this->til->getMin()->getSubtileImage(subtileRef - 1);
                 QImage *destImage = (QImage *)dungeon.device();
                 if (params.tileState == Qt::Checked) {
-                    // dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage);
-                    for (int y = 0; y < subtileImage.height(); y++) {
+                    dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage);
+                    /*for (int y = 0; y < subtileImage.height(); y++) {
                         for (int x = 0; x < subtileImage.width(); x++) {
                             QColor color = subtileImage.pixelColor(x, y);
                             if (color.alpha() == 0) {
@@ -407,7 +407,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                             }
                             destImage->setPixelColor(drawCursorX + x, drawCursorY - subtileImage.height() + y, color);
                         }
-                    }
+                    }*/
                 } else {
                     // mask the image with backImage
                     for (unsigned y = CELL_BORDER; y < backHeight - CELL_BORDER; y++) {
@@ -416,7 +416,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                                 continue;
                             }
                             QColor color = subtileImage.pixelColor(x - CELL_BORDER, subtileImage.height() - backHeight + y);
-                            if (/*color.isNull() ||*/color.alpha() == 0) {
+                            if (/*color.isNull() ||*/ color.alpha() == 0) {
                                 continue;
                             }
                             destImage->setPixelColor(drawCursorX + x - CELL_BORDER, drawCursorY - backHeight + y, color);
