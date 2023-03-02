@@ -262,16 +262,16 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
         int cellY = dunY - dunX;
 
         // Shift position to match diamond grid aligment
-        bool bottomLeft = py >= cellHeight + (px / 2);
-        bool bottomRight = py >= cellHeight - (px / 2);
+        bool bottomLeft = remY >= cellHeight + (remX / 2);
+        bool bottomRight = remY >= cellHeight - (remX / 2);
         if (bottomLeft) {
             cellY++;
         }
         if (bottomRight) {
             cellX++;
         }
-        bool topRight = py < (px / 2);
-        bool topLeft = py < -(px / 2);
+        bool topRight = remY < (remX / 2);
+        bool topLeft = remY < -(remX / 2);
         if (topRight) {
             cellY--;
         }

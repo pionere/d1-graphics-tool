@@ -408,7 +408,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             // dungeon.setFont(font);
             // dungeon.setPen(font);
             QFontMetrics fm(dungeon.font());
-            int textWidth = fm.horizontalAdvance(text);;
+            int textWidth = fm.horizontalAdvance(text);
             dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY + fm.height() * (subtileText ? 2 : 1), text);
         }
     }
