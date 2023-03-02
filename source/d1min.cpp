@@ -207,7 +207,7 @@ QImage D1Min::getSubtileImage(int subtileIndex) const
 
     unsigned subtileWidthPx = this->subtileWidth * MICRO_WIDTH;
     QImage subtile = QImage(subtileWidthPx,
-        this->subtileHeight * MICRO_HEIGHT, QImage::Format_ARGB32);
+        this->subtileHeight * MICRO_HEIGHT, QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
     subtile.fill(Qt::transparent);
     QPainter subtilePainter(&subtile);
 

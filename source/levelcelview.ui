@@ -872,75 +872,86 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1" colspan="4">
-       <widget class="QComboBox" name="levelTypeComboBox">
+      <item row="1" column="1" colspan="5">
+       <layout class="QHBoxLayout">
         <item>
-         <property name="text">
-          <string>Town</string>
-         </property>
+         <widget class="QComboBox" name="levelTypeComboBox">
+          <item>
+           <property name="text">
+            <string>Town</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>(L1) Cathedral</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>(L2) Catacombs</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>(L3) Caves</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>(L4) Hell</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>(L5) Crypt</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>(L6) Nest</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>None</string>
+           </property>
+          </item>
+         </widget>
         </item>
         <item>
-         <property name="text">
-          <string>(L1) Cathedral</string>
-         </property>
+         <widget class="LineEditWidget" name="dungeonDefaultTileLineEdit">
+          <property name="charWidth">
+           <number>5</number>
+          </property>
+          <property name="toolTip">
+           <string>Default tile if the dungeon tile is set to zero</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
         </item>
         <item>
-         <property name="text">
-          <string>(L2) Catacombs</string>
-         </property>
+         <widget class="LineEditWidget" name="dungeonPosXLineEdit">
+          <property name="charWidth">
+           <number>5</number>
+          </property>
+          <property name="toolTip">
+           <string>X-coordinate of the selected position</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
         </item>
-        <item>
-         <property name="text">
-          <string>(L3) Caves</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>(L4) Hell</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>(L5) Crypt</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>(L6) Nest</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>None</string>
-         </property>
-        </item>
-       </widget>
+       </layout>
       </item>
-      <item row="1" column="5" colspan="2">
-       <widget class="LineEditWidget" name="dungeonDefaultTileLineEdit">
-        <property name="charWidth">
-         <number>5</number>
+      <item row="1" column="6" colspan="2">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
-        <property name="toolTip">
-         <string>Default tile if the dungeon tile is set to zero</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="7">
-       <widget class="LineEditWidget" name="dungeonPosXLineEdit">
-        <property name="charWidth">
-         <number>5</number>
-        </property>
-        <property name="toolTip">
-         <string>X-coordinate of the selected position</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
+       </spacer>
       </item>
       <item row="1" column="8">
        <widget class="QLabel">

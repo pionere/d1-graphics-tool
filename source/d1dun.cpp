@@ -498,11 +498,11 @@ QImage D1Dun::getImage(const DunDrawParam &params) const
     unsigned cellHeight = cellWidth / 2;
 
     QImage dungeon = QImage(maxDunSize * cellWidth,
-        (maxDunSize - 1) * cellHeight + subtileHeight, QImage::Format_ARGB32);
+        (maxDunSize - 1) * cellHeight + subtileHeight, QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
     dungeon.fill(Qt::transparent);
 
     // create template of the background image
-    QImage backImage = QImage(cellWidth + 2 * CELL_BORDER, cellHeight + 2 * CELL_BORDER, QImage::Format_ARGB32);
+    QImage backImage = QImage(cellWidth + 2 * CELL_BORDER, cellHeight + 2 * CELL_BORDER, QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
     backImage.fill(Qt::transparent);
     QColor backColor = QColor(Config::getGraphicsTransparentColor());
     if (params.tileState != Qt::Unchecked) {
