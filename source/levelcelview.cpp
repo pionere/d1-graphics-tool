@@ -3090,9 +3090,9 @@ void LevelCelView::on_levelTypeComboBox_activated(int index)
     }
 }
 
-void on_dungeonDefaultTileLineEdit_returnPressed()
+void LevelCelView::on_dungeonDefaultTileLineEdit_returnPressed()
 {
-    int defaultTile = dungeonDefaultTileLineEdit->text().toInt();
+    int defaultTile = this->ui->dungeonDefaultTileLineEdit->text().toInt();
 
     bool change = this->dun->setDefaultTile(defaultTile);
     this->on_dungeonDefaultTileLineEdit_escPressed();
@@ -3102,9 +3102,9 @@ void on_dungeonDefaultTileLineEdit_returnPressed()
     }
 }
 
-void on_dungeonDefaultTileLineEdit_escPressed()
+void LevelCelView::on_dungeonDefaultTileLineEdit_escPressed()
 {
-    Qstring defaultText;
+    QString defaultText;
     int defaultTile = this->dun->getDefaultTile();
     if (defaultTile != UNDEF_TILE) {
         defaultText = QString::number(defaultTile);

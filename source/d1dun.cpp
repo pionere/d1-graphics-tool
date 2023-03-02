@@ -221,6 +221,7 @@ bool D1Dun::save(const SaveAsParam &params)
         for (int y = 0; y < dunHeight; y++) {
             for (int x = 0; x < dunWidth; x++) {
                 std::vector<int> subs = std::vector<int>(TILE_WIDTH * TILE_HEIGHT);
+                int tileRef = this->tiles[y][x];
                 if (tileRef == 0 && this->defaultTile != UNDEF_TILE) {
                     tileRef = this->defaultTile;
                 }
@@ -486,7 +487,7 @@ QImage D1Dun::getImage(const DunDrawParam &params) const
     QImage backImage = QImage(cellWidth + 2 * CELL_BORDER, cellHeight + 2 * CELL_BORDER, QImage::Format_ARGB32);
     backImage.fill(Qt::transparent);
     QColor backColor = QColor(Config::getGraphicsTransparentColor());
-    if (tileState != Qt::Unchecked) {
+    if (params.tileState != Qt::Unchecked) {
         unsigned len = 0;
         unsigned y = 1;
         for (; y <= cellHeight / 2; y++) {
@@ -907,8 +908,8 @@ void D1Dun::updateSubtiles(int tilePosX, int tilePosY, int tileRef)
     int posy = tilePosY * TILE_HEIGHT;
     for (int y = 0; y < TILE_HEIGHT; y++) {
         for (int x = 0; x < TILE_WIDTH; x++) {
-            int dunx = posx + dx;
-            int duny = posy + dy;
+            int dunx = posx + x;
+            int duny = posy + y;
             this->subtiles[duny][dunx] = subs[y * TILE_WIDTH + x];
             // FIXME: set modified if type == RDUN
         }

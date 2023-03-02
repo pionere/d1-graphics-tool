@@ -58,7 +58,7 @@ public:
     bool setDefaultTile(int defaultTile);
 
 private:
-    void drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, Qt::CheckState tileState, bool showItems, bool showMonsters, bool showObjects) const;
+    void drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params) const;
     void initVectors(int width, int height);
     void updateSubtiles(int tilePosX, int tilePosY, int tileRef);
 
