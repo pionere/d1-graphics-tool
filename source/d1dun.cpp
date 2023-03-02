@@ -895,7 +895,7 @@ bool D1Dun::setDefaultTile(int defaultTile)
     // update subtiles
     for (unsigned y = 0; y < this->tiles.size(); y++) {
         std::vector<int> &tilesRow = this->tiles[y];
-        for (unsigned x = 0; x < tilesRow.size(); y++) {
+        for (unsigned x = 0; x < tilesRow.size(); x++) {
             if (tilesRow[x] == 0) {
                 this->updateSubtiles(x, y, 0);
             }
