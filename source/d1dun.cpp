@@ -497,8 +497,8 @@ bool D1Dun::load(D1Pal *p, const QString &filePath, D1Til *t, D1Tmi *m, const Op
 
             quint32 readDword;
             // read subtiles
-            for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
-                for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+            for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
                     in >> readDword;
                     this->subtiles[y][x] = readDword + 1;
                 }
