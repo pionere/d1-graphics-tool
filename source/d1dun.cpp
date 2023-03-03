@@ -500,7 +500,7 @@ bool D1Dun::load(D1Pal *p, const QString &filePath, D1Til *t, D1Tmi *m, const Op
             for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
                 for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
                     in >> readDword;
-                    this->subtiles[y][x] = readDword + 1;
+                    this->subtiles[y][x] = readDword;
                 }
             }
 
@@ -654,8 +654,8 @@ bool D1Dun::save(const SaveAsParam &params)
         int dunHeight = this->height;
         for (int y = 0; y < dunHeight; y++) {
             for (int x = 0; x < dunWidth; x++) {
-                if (this->subtiles[y][x] == UNDEF_SUBTILE || this->subtiles[y][x] == 0) {
-                    dProgressFail() << tr("Undefined or zero subtiles (one at %1:%2) can not be saved in this format (RDUN).").arg(x).arg(y);
+                if (this->subtiles[y][x] == UNDEF_SUBTILE) {
+                    dProgressFail() << tr("Undefined subtiles (one at %1:%2) can not be saved in this format (RDUN).").arg(x).arg(y);
                     return false;
                 }
             }
@@ -754,9 +754,9 @@ bool D1Dun::save(const SaveAsParam &params)
 
         quint32 writeDword;
         // write subtiles
-        for (int y = 0; y < dunHeight; y++) {
-            for (int x = 0; x < dunWidth; x++) {
-                writeDword = this->subtiles[y][x] - 1;
+        for (int x = 0; x < dunWidth; x++) {
+            for (int y = 0; y < dunHeight; y++) {
+                writeDword = this->subtiles[y][x];
                 out << writeDword;
             }
         }
