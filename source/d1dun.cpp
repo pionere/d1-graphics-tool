@@ -24,37 +24,46 @@ constexpr int lengthof(T (&arr)[N])
     return N;
 }
 
+typedef struct SpecCell {
+    int subtileRef;
+    int dx;
+    int dy;
+    int specIndex;
+} SpecCell;
+
 typedef struct DungeonStruct {
     int defaultTile;
     const char *specPath;
-    const std::pair<int, int> *specialCels;
+    const SpecCell *specialCels;
     int numSpecCels;
 } DungeonStruct;
 
-static const std::pair<int, int> townSpecialCels[] = {
+static const SpecCell townSpecialCels[] = {
     // clang-format off
-    { 360,  1 }, { 358,  2 }, { 129,  6 }, { 130,  7 }, { 128,  8 }, { 117,  9 }, { 157, 10 }, { 158, 11 }, { 156, 12 }, { 162, 13 },
-    { 160, 14 }, { 214, 15 }, { 212, 16 }, { 217, 17 }, { 216, 18 },
+    { 360,  0,  0,  1 - 1 }, { 358,  0,  0,  2 - 1 }, { 129,  0,  0,  6 - 1 }, { 130,  0,  0,  7 - 1 }, { 128,  0,  0,  8 - 1 },
+    { 117,  0,  0,  9 - 1 }, { 157,  0,  0, 10 - 1 }, { 158,  0,  0, 11 - 1 }, { 156,  0,  0, 12 - 1 }, { 162,  0,  0, 13 - 1 },
+    { 160,  0,  0, 14 - 1 }, { 214,  0,  0, 15 - 1 }, { 212,  0,  0, 16 - 1 }, { 217,  0,  0, 17 - 1 }, { 216,  0,  0, 18 - 1 },
     // clang-format on
 };
 
-static const std::pair<int, int> l1SpecialCels[] = {
+static const SpecCell l1SpecialCels[] = {
     // clang-format off
-    { 12, 1 }, { 71, 1 }, { 211, 1 }, { 321, 1 }, { 341, 1 }, { 418, 1 },
-    { 11, 2 }, { 249, 2 }, { 325, 2 }, { 331, 2 }, { 344, 2 }, { 421, 2 },
-    { 253, 3 }, { 255, 4 }, { 259, 5 }, { 267, 6 } /*, { 417, '7' } */
+    {  12,  0,  0, 1 - 1 }, {  71,  0,  0, 1 - 1 }, { 211,  0,  0, 1 - 1 }, { 321,  0,  0, 1 - 1 }, { 341,  0,  0, 1 - 1 }, { 418,  0,  0, 1 - 1 },
+    {  11,  0,  0, 2 - 1 }, { 249,  0,  0, 2 - 1 }, { 325,  0,  0, 2 - 1 }, { 331,  0,  0, 2 - 1 }, { 344,  0,  0, 2 - 1 }, { 421,  0,  0, 2 - 1 },
+    { 253,  0,  0, 3 - 1 }, { 255,  0,  0, 4 - 1 }, { 259,  0,  0, 5 - 1 }, { 267,  0,  0, 6 - 1 }, { 417,  0, -1, 7 - 1 }, { 420, -1,  0, 8 - 1 },
     // clang-format on
 };
 
-static const std::pair<int, int> l2SpecialCels[] = {
+static const SpecCell l2SpecialCels[] = {
     // clang-format off
-    { 13, 5 }, { 178, 5 }, { 551, 5 }, { 17, 6 }, { 553, 6 } /*, { 132, '2'/'1' }, { 135, '3'/'4' }, { 139, '3'/'4' }*/
+    {  13,  0,  0, 5 - 1 }, { 178,  0,  0, 5 - 1 }, { 551,  0,  0, 5 - 1 }, {  17,  0,  0, 6 - 1 }, { 553,  0,  0, 6 - 1 },
+    { 132,  0, -1, 2 - 1 }, { 132,  0, -2, 1 - 1 }, { 135, -1,  0, 3 - 1 }, { 135, -2,  0, 4 - 1 }, { 139, -1,  0, 3 - 1 }, { 139, -2,  0, 4 - 1 }
     // clang-format on
 };
 
-static const std::pair<int, int> l5SpecialCels[] = {
+static const SpecCell l5SpecialCels[] = {
     // clang-format off
-    { 77, 1 }, { 80, 2 }
+    { 77, 0, 0, 1 - 1 }, { 80, 0, 0, 2 - 1 }
     // clang-format on
 };
 
@@ -926,18 +935,27 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     }
     if (params.tileState == Qt::Checked && specGfx != nullptr) {
         // draw special cel
-        int subtileRef = this->subtiles[dunCursorY][dunCursorX];
-        if (subtileRef != 0) {
-            int specRef = 0;
-            const DungeonStruct &ds = dungeonTbl[this->levelType];
-            for (int i = 0; i < ds.numSpecCels; i++) {
-                if (ds.specialCels[i].first == subtileRef) {
-                    specRef = ds.specialCels[i].second;
-                }
+        const DungeonStruct &ds = dungeonTbl[this->levelType];
+        for (int dy = -2; dy <= 2; dy++) {
+            int y = dunCursorY + dy;
+            if (y < 0 || y >= this->height) {
+                continue;
             }
-            if (specRef != 0) {
-                QImage subtileImage = specGfx->getFrameImage(specRef - 1);
-                dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+            for (int dx = -2; dx <= 2; dx++) {
+                int x = dunCursorX + dx;
+                if (x < 0 || x >= this->width) {
+                    continue;
+                }
+                int subtileRef = this->subtiles[y][x];
+                if (subtileRef != 0) {
+                    for (int i = 0; i < ds.numSpecCels; i++) {
+                        const SpecCell &specCel = ds.specialCels[i];
+                        if (specCel.subtileRef == subtileRef && x + specCel.dx == dunCursorX && y + specCel.dy == dunCursorY) {
+                            QImage subtileImage = specGfx->getFrameImage(specCel.specIndex);
+                            dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+                        }
+                    }
+                }
             }
         }
     }
