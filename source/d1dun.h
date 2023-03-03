@@ -104,7 +104,7 @@ private:
 
     int defaultTile;
     QString assetPath;
-    int levelType = DTYPE_NONE; // dungeon_type
+    int levelType; // dungeon_type
     D1Gfx *specGfx;
     std::vector<std::pair<const ObjectStruct *, D1Gfx *>> objectCache;
     std::vector<std::pair<const MonsterStruct *, D1Gfx *>> monsterCache;

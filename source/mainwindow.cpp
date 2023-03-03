@@ -154,25 +154,26 @@ void MainWindow::changeColor(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>
 
 void MainWindow::setPal(const QString &path)
 {
-    this->pal = this->pals[path];
+    D1Pal *pal = this->pals[path];
+    this->pal = pal;
     this->trnUnique->setPalette(this->pal);
     this->trnUnique->refreshResultingPalette();
     this->trnBase->refreshResultingPalette();
     // update entities
     if (this->dun != nullptr) {
-        this->dun->setPal(p);
+        this->dun->setPal(pal);
     }
     // update the widgets
     // - views
     if (this->celView != nullptr) {
-        this->celView->setPal(this->pal);
+        this->celView->setPal(pal);
     }
     if (this->levelCelView != nullptr) {
-        this->levelCelView->setPal(this->pal);
+        this->levelCelView->setPal(pal);
     }
     // - palWidget
     this->palWidget->updatePathComboBoxOptions(this->pals.keys(), path);
-    this->palWidget->setPal(this->pal);
+    this->palWidget->setPal(pal);
 }
 
 void MainWindow::setUniqueTrn(const QString &path)
