@@ -27,7 +27,7 @@ constexpr int lengthof(T (&arr)[N])
 typedef struct DungeonStruct {
     int defaultTile;
     const char *specPath;
-    std::pair<int, int> *specialCels;
+    const std::pair<int, int> *specialCels;
     int numSpecCels;
 } DungeonStruct;
 
@@ -540,7 +540,7 @@ bool D1Dun::load(D1Pal *p, const QString &filePath, D1Til *t, D1Tmi *m, const Op
     QString baseName = fileInfo.completeBaseName().toLower();
     int dungeonType = DTYPE_TOWN;
     if (baseName.length() >= 2 && baseName[0] == "l") {
-        switch (baseName[1] - '0') {
+        switch (baseName[1] - QChar('0')) {
         case 1:
             dungeonType = DTYPE_CATHEDRAL;
             break;
