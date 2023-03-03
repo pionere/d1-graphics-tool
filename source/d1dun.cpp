@@ -60,12 +60,12 @@ static const std::pair<int, int> l5SpecialCels[] = {
 
 const DungeonStruct dungeonTbl[NUM_DUNGEON_TYPES] = {
     // clang-format off
-/* DTYPE_TOWN      */ { UNDEF_TILE, "Levels/TownData/Towns.cel", townSpecialCels, lengthof(townSpecialCels) },
-/* DTYPE_CATHEDRAL */ { 13,         "Levels/L1Data/L1s.cel",     l1SpecialCels,   lengthof(l1SpecialCels) },
-/* DTYPE_CATACOMBS */ { 3,          "Levels/L2Data/L2s.cel",     l2SpecialCels,   lengthof(l2SpecialCels) },
+/* DTYPE_TOWN      */ { UNDEF_TILE, "Levels/TownData/Town", townSpecialCels, lengthof(townSpecialCels) },
+/* DTYPE_CATHEDRAL */ { 13,         "Levels/L1Data/L1",     l1SpecialCels,   lengthof(l1SpecialCels) },
+/* DTYPE_CATACOMBS */ { 3,          "Levels/L2Data/L2",     l2SpecialCels,   lengthof(l2SpecialCels) },
 /* DTYPE_CAVES     */ { 7,          nullptr,                     nullptr,         0 },
 /* DTYPE_HELL      */ { 6,          nullptr,                     nullptr,         0 },
-/* DTYPE_CRYPT     */ { 13,         "NLevels/L5Data/L5s.cel",    l5SpecialCels,   lengthof(l5SpecialCels) },
+/* DTYPE_CRYPT     */ { 13,         "NLevels/L5Data/L5",    l5SpecialCels,   lengthof(l5SpecialCels) },
 /* DTYPE_NEST      */ { 7,          nullptr,                     nullptr,         0 },
 /* DTYPE_NONE      */ { UNDEF_TILE, nullptr,                     nullptr,         0 },
     // clang-format on
@@ -212,34 +212,34 @@ const MonsterStruct MonstConvTbl[128] = {
     { 0 }, //MT_GZOMBIE,
     { 0 }, //MT_YZOMBIE,
     { 0 }, //MT_RFALLSP,
-    {   6, 128, "FalSpear\\PhallN.CL2", "FalSpear\\Dark.TRN",  "Carver" }, // Q_PWATER
+    {   6, 128, "FalSpear\\Phall", "FalSpear\\Dark.TRN",  "Carver" }, // Q_PWATER
     { 0 }, //MT_YFALLSP,
     { 0 }, //MT_BFALLSP,
     { 0 }, //MT_WSKELAX,
     { 0 }, //MT_TSKELAX,
-    {  11, 128, "SkelAxe\\SklAxN.CL2",  nullptr,               "Burning Dead" }, // Q_SKELKING
+    {  11, 128, "SkelAxe\\SklAx",  nullptr,               "Burning Dead" }, // Q_SKELKING
     { 0 }, //MT_XSKELAX,
     { 0 }, //MT_RFALLSD,
     { 0 }, //MT_DFALLSD,
-    {  15, 128, "FalSword\\FallN.CL2",  nullptr,               "Devil Kin" }, // Q_PWATER
-    {  16, 128, "FalSword\\FallN.CL2",  "FalSpear\\Blue.TRN",  "Dark One" }, // Q_BANNER
+    {  15, 128, "FalSword\\Fall",  nullptr,               "Devil Kin" }, // Q_PWATER
+    {  16, 128, "FalSword\\Fall",  "FalSpear\\Blue.TRN",  "Dark One" }, // Q_BANNER
     { 0 }, //MT_NSCAV,
     { 0 }, //MT_BSCAV,
     { 0 }, //MT_WSCAV,
     { 0 }, //MT_YSCAV,
     { 0 }, //MT_WSKELBW,
-    {  22, 128, "SkelBow\\SklBwN.CL2",  "SkelSd\\Skelt.TRN",   "Corpse Bow" }, // Q_SKELKING
-    {  23, 128, "SkelBow\\SklBwN.CL2",  nullptr,               "Burning Dead" }, // Q_SKELKING
-    {  24, 128, "SkelBow\\SklBwN.CL2",  "SkelSd\\Black.TRN",   "Horror" }, // Q_SKELKING
+    {  22, 128, "SkelBow\\SklBw",  "SkelSd\\Skelt.TRN",   "Corpse Bow" }, // Q_SKELKING
+    {  23, 128, "SkelBow\\SklBw",  nullptr,               "Burning Dead" }, // Q_SKELKING
+    {  24, 128, "SkelBow\\SklBw",  "SkelSd\\Black.TRN",   "Horror" }, // Q_SKELKING
     { 0 }, //MT_WSKELSD,
     { 0 }, //MT_TSKELSD,
-    {  27, 128, "SkelSd\\SklSrN.CL2",   nullptr,               "Burning Dead Captain" }, // Q_SKELKING
-    {  28, 128, "SkelSd\\SklSrN.CL2",   "SkelSd\\Black.TRN",   "Horror Captain" }, // Q_BCHAMB
+    {  27, 128, "SkelSd\\SklSr",   nullptr,               "Burning Dead Captain" }, // Q_SKELKING
+    {  28, 128, "SkelSd\\SklSr",   "SkelSd\\Black.TRN",   "Horror Captain" }, // Q_BCHAMB
     { 0 }, //MT_NSNEAK,
     { 0 }, //MT_RSNEAK,
-    {  31, 128, "Sneak\\SneakN.CL2",    "Sneak\\Sneakv3.TRN",  "Unseen" }, // Q_BCHAMB
-    {  32, 128, "Sneak\\SneakN.CL2",    "Sneak\\Sneakv1.TRN",  "Illusion Weaver" }, // Q_BLIND
-    {  33, 128, "GoatMace\\GoatN.CL2",  nullptr,               "Flesh Clan" }, // Q_PWATER
+    {  31, 128, "Sneak\\Sneak",    "Sneak\\Sneakv3.TRN",  "Unseen" }, // Q_BCHAMB
+    {  32, 128, "Sneak\\Sneak",    "Sneak\\Sneakv1.TRN",  "Illusion Weaver" }, // Q_BLIND
+    {  33, 128, "GoatMace\\Goat",  nullptr,               "Flesh Clan" }, // Q_PWATER
     { 0 }, //MT_BGOATMC,
     { 0 }, //MT_RGOATMC,
     { 0 }, //MT_GGOATMC,
@@ -247,16 +247,16 @@ const MonsterStruct MonstConvTbl[128] = {
     { 0 }, //MT_GBAT,
     { 0 }, //MT_NBAT,
     { 0 }, //MT_XBAT,
-    {  41, 128, "GoatBow\\GoatBN.CL2",  nullptr,               "Flesh Clan" }, // Q_PWATER
+    {  41, 128, "GoatBow\\GoatB",  nullptr,               "Flesh Clan" }, // Q_PWATER
     { 0 }, //MT_BGOATBW,
     { 0 }, //MT_RGOATBW,
-    {  44, 128, "GoatBow\\GoatBN.CL2",  "GoatMace\\Gray.TRN",  "Night Clan" }, // Q_ANVIL
+    {  44, 128, "GoatBow\\GoatB",  "GoatMace\\Gray.TRN",  "Night Clan" }, // Q_ANVIL
     { 0 }, //MT_NACID,
     { 0 }, //MT_RACID,
     { 0 }, //MT_BACID,
     { 0 }, //MT_XACID,
     { 0 }, //MT_SKING,
-    {  50, 128, "Fat\\FatN.CL2",        nullptr,               "Overlord" }, // Q_BANNER
+    {  50, 128, "Fat\\Fat",        nullptr,               "Overlord" }, // Q_BANNER
     { 0 }, //MT_BFAT,
     { 0 }, //MT_XFAT,
     { 0 }, //MT_RFAT,
@@ -268,10 +268,10 @@ const MonsterStruct MonstConvTbl[128] = {
     { 0 }, //MT_YMAGMA,
     { 0 }, //MT_BMAGMA,
     { 0 }, //MT_WMAGMA,
-    {  62, 160, "Rhino\\RhinoN.CL2",    nullptr,               "Horned Demon" }, // Q_BLOOD, Q_BCHAMB
+    {  62, 160, "Rhino\\Rhino",    nullptr,               "Horned Demon" }, // Q_BLOOD, Q_BCHAMB
     { 0 }, // MT_XRHINO, // Q_MAZE
     { 0 }, //MT_BRHINO,
-    {  65, 160, "Rhino\\RhinoN.CL2",    "Rhino\\RhinoB.TRN",   "Obsidian Lord" }, // Q_ANVIL
+    {  65, 160, "Rhino\\Rhino",    "Rhino\\RhinoB.TRN",   "Obsidian Lord" }, // Q_ANVIL
     { 0 }, ///MT_BONEDMN,
     { 0 }, ///MT_REDDTH,
     { 0 }, ///MT_LTCHDMN,
@@ -304,24 +304,24 @@ const MonsterStruct MonstConvTbl[128] = {
     { 0 }, //MT_RSNAKE,
     { 0 }, //MT_GSNAKE,
     { 0 }, //MT_BSNAKE,
-    {  98, 160, "Black\\BlackN.CL2",    nullptr,               "Black Knight" }, // Q_DIABLO
+    {  98, 160, "Black\\Black",    nullptr,               "Black Knight" }, // Q_DIABLO
     { 0 }, //MT_RBLACK,
-    { 100, 160, "Black\\BlackN.CL2",    "Black\\BlkKntBT.TRN", "Steel Lord" }, // Q_WARLORD
-    { 101, 160, "Black\\BlackN.CL2",    "Black\\BlkKntBe.TRN", "Blood Knight" }, // Q_DIABLO
+    { 100, 160, "Black\\Black",    "Black\\BlkKntBT.TRN", "Steel Lord" }, // Q_WARLORD
+    { 101, 160, "Black\\Black",    "Black\\BlkKntBe.TRN", "Blood Knight" }, // Q_DIABLO
     { 0 }, ///MT_UNRAV,
     { 0 }, ///MT_HOLOWONE,
     { 0 }, ///MT_PAINMSTR,
     { 0 }, ///MT_REALWEAV,
     { 0 }, //MT_NSUCC,
     { 0 }, //MT_GSUCC,
-    { 108, 128, "Succ\\ScbsN.CL2",      "Succ\\Succrw.TRN",    "Hell Spawn" }, // Q_BETRAYER
+    { 108, 128, "Succ\\Scbs",      "Succ\\Succrw.TRN",    "Hell Spawn" }, // Q_BETRAYER
     { 0 }, //MT_BSUCC,
     { 0 }, //MT_NMAGE,
     { 0 }, //MT_GMAGE,
     { 0 }, //MT_XMAGE,
-    { 113, 128, "Mage\\MageN.CL2",      "Mage\\Cnselbk.TRN",   "Advocate" }, // Q_BETRAYER, Q_DIABLO
+    { 113, 128, "Mage\\Mage",      "Mage\\Cnselbk.TRN",   "Advocate" }, // Q_BETRAYER, Q_DIABLO
     { 0 },
-    { 115, 160, "Diablo\\DiabloN.CL2",  nullptr,               "The Dark Lord" }, // Q_DIABLO
+    { 115, 160, "Diablo\\Diablo",  nullptr,               "The Dark Lord" }, // Q_DIABLO
     { 0 },
     { 0 }, //MT_GOLEM,
     { 0 },
@@ -566,7 +566,7 @@ bool D1Dun::load(D1Pal *p, const QString &filePath, D1Til *t, D1Tmi *m, const Op
     // find special cells
     QString specFilePath;
     if (!this->assetPath.isEmpty() && dungeonTbl[dungeonType].specPath != nullptr) {
-        specFilePath = this->assetPath + "/" + dungeonTbl[dungeonType].specPath;
+        specFilePath = this->assetPath + "/" + dungeonTbl[dungeonType].specPath + "s.cel";
     } else {
         specFilePath = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName() + "s.cel";
     }
@@ -577,12 +577,12 @@ bool D1Dun::load(D1Pal *p, const QString &filePath, D1Til *t, D1Tmi *m, const Op
         OpenAsParam params = OpenAsParam();
         params.celWidth = this->til->getMin()->getSubtileWidth() * MICRO_WIDTH;
         if (!D1Cel::load(*specGfx, specFilePath, params)) {
-            dProgressErr() << tr("Failed to load special CEL file %1.").arg(QDir::toNativeSeparators(filePath));
+            dProgressErr() << tr("Failed to load special CEL file %1.").arg(QDir::toNativeSeparators(specFilePath));
             // TODO: MemFree?
             delete specGfx;
             specGfx = nullptr;
         } else {
-            dProgress() << tr("Loaded special CEL file %1.").arg(QDir::toNativeSeparators(filePath));
+            dProgress() << tr("Loaded special CEL file %1.").arg(QDir::toNativeSeparators(specFilePath));
         }
     }
     this->specGfx = specGfx;
@@ -1354,6 +1354,11 @@ bool D1Dun::setTransvalAt(int posx, int posy, int transval)
     return true;
 }
 
+int D1Dun::getLevelType() const
+{
+    return this->levelType;
+}
+
 bool D1Dun::setLevelType(int levelType)
 {
     if (this->levelType == levelType) {
@@ -1408,7 +1413,7 @@ D1Gfx *D1Dun::loadObject(int objectIndex)
     if (!this->assetPath.isEmpty() && objectIndex < lengthof(ObjConvTbl)) {
         D1Gfx *gfx = new D1Gfx();
         gfx->setPalette(this->pal);
-        QString celFilePath = this->assetPath + "/Objects/" + result.first->path;
+        QString celFilePath = this->assetPath + "/Objects/" + result.first->path + ".CEL";
         OpenAsParam params = OpenAsParam();
         params.celWidth = result.first->width;
         if (!D1Cel::load(*gfx, celFilePath, params)) {
@@ -1428,7 +1433,7 @@ D1Gfx *D1Dun::loadMonster(int monsterIndex)
     if (!this->assetPath.isEmpty() && monsterIndex < lengthof(MonstConvTbl)) {
         D1Gfx *gfx = new D1Gfx();
         gfx->setPalette(this->pal);
-        QString cl2FilePath = this->assetPath + "/Monsters/" + result.first->path;
+        QString cl2FilePath = this->assetPath + "/Monsters/" + result.first->path + "N.CL2";
         OpenAsParam params = OpenAsParam();
         params.celWidth = result.first->width;
         if (!D1Cl2::load(*gfx, cl2FilePath, params)) {

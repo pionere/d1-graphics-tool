@@ -74,6 +74,7 @@ public:
     int getTransvalAt(int posx, int posy) const;
     bool setTransvalAt(int posx, int posy, int transval);
 
+    int getLevelType() const;
     bool setLevelType(int levelType);
     int getDefaultTile() const;
     bool setDefaultTile(int defaultTile);

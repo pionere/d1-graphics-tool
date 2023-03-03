@@ -112,6 +112,8 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d)
     this->ui->dunViewGridLayout->setVisible(dunMode);
 
     if (dunMode) {
+        this->on_dungeonDefaultTileLineEdit_escPressed();
+        this->ui->levelTypeComboBox->setCurrentIndex(d->getLevelType());
         this->updateIcon();
     }
     // this->update();
@@ -125,7 +127,9 @@ void LevelCelView::setPal(D1Pal *p)
 void LevelCelView::updateIcon()
 {
     // update icon of assets
-    if (!this->dun->getAssetPath().isEmpty()) {
+    QString assetPath = this->dun->getAssetPath();
+    this->ui->assetLoadPushButton->setToolTip(assetPath);
+    if (!assetPath.isEmpty()) {
         QIcon icon = QApplication::style()->standardIcon(QStyle::SP_DriveCDIcon);
         this->ui->assetLoadPushButton->setIcon(icon);
         this->ui->assetLoadPushButton->setText("");
