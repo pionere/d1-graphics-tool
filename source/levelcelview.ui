@@ -1099,9 +1099,6 @@
         <property name="text">
          <string>Items:</string>
         </property>
-        <property name="disabled">
-         <bool>true</bool>
-        </property>
        </widget>
       </item>
       <item row="3" column="1">
