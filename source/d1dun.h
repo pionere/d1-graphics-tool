@@ -8,6 +8,7 @@
 #include "openasdialog.h"
 #include "saveasdialog.h"
 
+class D1Gfx;
 class D1Pal;
 class D1Til;
 class D1Tmi;
@@ -49,7 +50,7 @@ public:
     bool load(D1Pal *pal, const QString &dunFilePath, D1Til *til, D1Tmi *tmi, const OpenAsParam &params);
     bool save(const SaveAsParam &params);
 
-    QImage getImage(const DunDrawParam &params) const;
+    QImage getImage(const DunDrawParam &params);
 
     void setPal(D1Pal *pal);
 
@@ -80,7 +81,7 @@ public:
     QString getAssetPath() const;
 
 private:
-    void drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params) const;
+    void drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
     void initVectors(int width, int height);
     D1Gfx *loadObject(int objectIndex);
     D1Gfx *loadMonster(int monsterIndex);
