@@ -22,9 +22,8 @@ typedef struct ObjectStruct {
     int frameNum;
 } ObjectStruct;
 
-typedef struct MonsterStruct
-{
-    int type,
+typedef struct MonsterStruct {
+    int type;
     int width;
     const char *path;
     const char *trnPath;

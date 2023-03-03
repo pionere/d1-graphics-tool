@@ -25,7 +25,7 @@ constexpr int lengthof(T (&arr)[N])
 typedef struct DungeonStruct {
     int defaultTile;
     const char *specPath;
-    std::pair<int, int>* specialCels;
+    std::pair<int, int> *specialCels;
     int numSpecCels;
 } DungeonStruct;
 
@@ -46,13 +46,13 @@ static const std::pair<int, int> l1SpecialCels[] = {
 
 static const std::pair<int, int> l2SpecialCels[] = {
     // clang-format off
-    { 13, 5 }, { 178, 5 }, { 551, 5 }, { 17, 6 }, { 553, 6 } /*, { 132, '2'/'1' }, { 135, '3'/'4' }, { 139, '3'/'4' }*/ }
+    { 13, 5 }, { 178, 5 }, { 551, 5 }, { 17, 6 }, { 553, 6 } /*, { 132, '2'/'1' }, { 135, '3'/'4' }, { 139, '3'/'4' }*/
     // clang-format on
 };
 
 static const std::pair<int, int> l5SpecialCels[] = {
     // clang-format off
-    { 77, 1 } , { 80, 2 }
+    { 77, 1 }, { 80, 2 }
     // clang-format on
 };
 
@@ -565,7 +565,7 @@ bool D1Dun::load(D1Pal *p, const QString &filePath, D1Til *t, D1Tmi *m, const Op
     if (!this->assetPath.isEmpty() && dungeonTbl[dungeonType].specPath != nullptr) {
         specFilePath = this->assetPath + "/" + dungeonTbl[dungeonType].specPath;
     } else {
-        specFilePath = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName() +"s.cel";
+        specFilePath = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName() + "s.cel";
     }
     D1Gfx *specGfx = nullptr;
     if (QFileInfo::exists(specFilePath)) {
@@ -772,7 +772,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     const unsigned backWidth = backImage.width() - 2 * CELL_BORDER;
     const unsigned backHeight = backImage.height() - 2 * CELL_BORDER;
     // draw the background
-    dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backHeight - CELL_BORDER, backImage); // TODO: Qt::NoFormatConversion?
+    dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backHeight - CELL_BORDER, backImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
     unsigned cellCenterX = drawCursorX + backWidth / 2;
     unsigned cellCenterY = drawCursorY - backHeight / 2;
     bool subtileText = false;
@@ -795,7 +795,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 QImage subtileImage = this->til->getMin()->getSubtileImage(subtileRef - 1);
                 QImage *destImage = (QImage *)dungeon.device();
                 if (params.tileState == Qt::Checked) {
-                    dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage);
+                    dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
                     /*for (int y = 0; y < subtileImage.height(); y++) {
                         for (int x = 0; x < subtileImage.width(); x++) {
                             QColor color = subtileImage.pixelColor(x, y);
@@ -883,7 +883,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                     frameNum = 1;
                 }
                 QImage objectImage = objGfx->getFrameImage(frameNum - 1);
-                dungeon.drawImage(drawCursorX + ((int)backWidth - objStr->width) / 2, drawCursorY - objectImage.height(), objectImage);
+                dungeon.drawImage(drawCursorX + ((int)backWidth - objStr->width) / 2, drawCursorY - objectImage.height(), objectImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             } else {
                 QString text = tr("Object%1").arg(objectIndex);
                 QFontMetrics fm(dungeon.font());
@@ -912,7 +912,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             if (monGfx != nullptr) {
                 int frameNum = 1;
                 QImage monImage = monGfx->getFrameImage(frameNum - 1);
-                dungeon.drawImage(drawCursorX + ((int)backWidth - monStr->width) / 2, drawCursorY - monImage.height(), monImage);
+                dungeon.drawImage(drawCursorX + ((int)backWidth - monStr->width) / 2, drawCursorY - monImage.height(), monImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             } else {
                 QString text = tr("Monster%1").arg(monsterIndex);
                 QFontMetrics fm(dungeon.font());
@@ -934,7 +934,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             }
             if (specRef != 0) {
                 QImage subtileImage = specGfx->getFrameImage(specRef - 1);
-                dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage);
+                dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             }
         }
     }
