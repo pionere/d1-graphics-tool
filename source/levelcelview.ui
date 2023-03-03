@@ -1077,6 +1077,20 @@
         </property>
        </widget>
       </item>
+      <item row="2" column="15">
+       <widget class="QPushButton" name="assetLoadPushButton">
+        <property name="text">
+         <string notr="true">...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="16" colspan="2">
+       <widget class="QPushButton" name="assetClearPushButton">
+        <property name="text">
+         <string>Clear</string>
+        </property>
+       </widget>
+      </item>
       <item row="3" column="0">
        <widget class="QLabel">
         <property name="minimumWidth">

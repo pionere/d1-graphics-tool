@@ -27,19 +27,6 @@
 #include "ui_levelcelview.h"
 #include "upscaler.h"
 
-static const int defaultTiles[NUM_DUNGEON_TYPES] = {
-    // clang-format off
-/* DTYPE_TOWN      */ UNDEF_TILE,
-/* DTYPE_CATHEDRAL */ 13,
-/* DTYPE_CATACOMBS */ 3,
-/* DTYPE_CAVES     */ 7,
-/* DTYPE_HELL      */ 6,
-/* DTYPE_CRYPT     */ 13,
-/* DTYPE_NEST      */ 7,
-/* DTYPE_NONE      */ UNDEF_TILE,
-    // clang-format on
-};
-
 LevelCelView::LevelCelView(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::LevelCelView())
@@ -77,6 +64,7 @@ LevelCelView::LevelCelView(QWidget *parent)
     QObject::connect(this->ui->playDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_playDelayEdit_escPressed()));
     QObject::connect(this->ui->dunZoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_dunZoomEdit_escPressed()));
     QObject::connect(this->ui->dunPlayDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_dunPlayDelayEdit_escPressed()));
+    QObject::connect(this->ui->dungeonDefaultTileLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonDefaultTileLineEdit_escPressed()));
     QObject::connect(this->ui->dungeonPosXLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonPosXLineEdit_escPressed()));
     QObject::connect(this->ui->dungeonPosYLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonPosYLineEdit_escPressed()));
     QObject::connect(this->ui->dunWidthEdit, SIGNAL(cancel_signal()), this, SLOT(on_dunWidthEdit_escPressed()));
@@ -123,12 +111,29 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d)
     this->ui->tilesetGridLayout->setVisible(!dunMode);
     this->ui->dunViewGridLayout->setVisible(dunMode);
 
+    if (dunMode) {
+        this->updateIcon();
+    }
     // this->update();
 }
 
 void LevelCelView::setPal(D1Pal *p)
 {
     this->pal = p;
+}
+
+void LevelCelView::updateIcon()
+{
+    // update icon of assets
+    if (!this->dun->getAssetPath().isEmpty()) {
+        QIcon icon = QApplication::style()->standardIcon(QStyle::SP_DriveCDIcon);
+        this->ui->assetLoadPushButton->setIcon(icon);
+        this->ui->assetLoadPushButton->setText("");
+    } else {
+        QIcon icon;
+        this->ui->assetLoadPushButton->setIcon(icon);
+        this->ui->assetLoadPushButton->setText("...");
+    }
 }
 
 // Displaying CEL file path information
@@ -2487,13 +2492,13 @@ void LevelCelView::displayFrame()
 
         QColor backColor = QColor(Config::getGraphicsTransparentColor());
         // Building a gray background of the width/height of the CEL frame
-        QImage celFrameBackground = QImage(celFrame.width(), celFrame.height(), QImage::Format_ARGB32);
+        QImage celFrameBackground = QImage(celFrame.width(), celFrame.height(), QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
         celFrameBackground.fill(backColor);
         // Building a gray background of the width/height of the MIN subtile
-        QImage subtileBackground = QImage(subtile.width(), subtile.height(), QImage::Format_ARGB32);
+        QImage subtileBackground = QImage(subtile.width(), subtile.height(), QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
         subtileBackground.fill(backColor);
         // Building a gray background of the width/height of the MIN subtile
-        QImage tileBackground = QImage(tile.width(), tile.height(), QImage::Format_ARGB32);
+        QImage tileBackground = QImage(tile.width(), tile.height(), QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
         tileBackground.fill(backColor);
 
         // Resize the scene rectangle to include some padding around the CEL frame
@@ -3080,9 +3085,7 @@ void LevelCelView::on_dunHeightEdit_escPressed()
 
 void LevelCelView::on_levelTypeComboBox_activated(int index)
 {
-    int defaultTile = defaultTiles[index];
-
-    bool change = this->dun->setDefaultTile(defaultTile);
+    bool change = this->dun->setLevelType(index);
     this->on_dungeonDefaultTileLineEdit_escPressed();
     if (change) {
         // update the view
@@ -3143,6 +3146,29 @@ void LevelCelView::on_dungeonTileLineEdit_escPressed()
 
     this->ui->dungeonTileLineEdit->setText(tileRef == UNDEF_TILE ? QStringLiteral("?") : QString::number(tileRef));
     this->ui->dungeonTileLineEdit->clearFocus();
+}
+
+void LevelCelView::on_assetLoadPushButton_clicked()
+{
+    QString dirPath = dMainWindow().folderDialog(tr("Select Assets Folder"));
+
+    if (dirPath.isEmpty())
+        return;
+
+    if (this->dun->setAssetPath(dirPath)) {
+        this->updateIcon();
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::on_assetClearPushButton_clicked()
+{
+    if (this->dun->setAssetPath("")) {
+        this->updateIcon();
+        // update the view
+        this->displayFrame();
+    }
 }
 
 void LevelCelView::on_dungeonSubtileLineEdit_returnPressed()

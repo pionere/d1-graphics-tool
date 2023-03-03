@@ -158,6 +158,10 @@ void MainWindow::setPal(const QString &path)
     this->trnUnique->setPalette(this->pal);
     this->trnUnique->refreshResultingPalette();
     this->trnBase->refreshResultingPalette();
+    // update entities
+    if (this->dun != nullptr) {
+        this->dun->setPal(p);
+    }
     // update the widgets
     // - views
     if (this->celView != nullptr) {
@@ -190,7 +194,10 @@ void MainWindow::setBaseTrn(const QString &path)
     this->trnBase->setPalette(this->trnUnique->getResultingPalette());
     this->trnBase->refreshResultingPalette();
 
+    // update entities
     this->gfx->setPalette(this->trnBase->getResultingPalette());
+    // update the widgets
+    // - paint widget
     this->paintWidget->setPalette(this->trnBase->getResultingPalette());
 
     // update trnBaseWidget
@@ -902,7 +909,7 @@ void MainWindow::openFile(OpenAsParam &params)
         // Loading DUN
         if (!dunFilePath.isEmpty()) {
             this->dun = new D1Dun();
-            if (!this->dun->load(dunFilePath, this->tileset->til, this->tileset->tmi, params)) {
+            if (!this->dun->load(this->pal, dunFilePath, this->tileset->til, this->tileset->tmi, params)) {
                 this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
                 return;
             }

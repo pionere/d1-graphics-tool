@@ -84,6 +84,7 @@ public:
 
     void update();
     void updateLabel();
+    void updateIcon();
     void displayFrame();
 
 private:
@@ -181,6 +182,8 @@ private slots:
     void on_showTilesCheckBox_clicked();
     void on_dungeonTileLineEdit_returnPressed();
     void on_dungeonTileLineEdit_escPressed();
+    void on_assetLoadPushButton_clicked();
+    void on_assetClearPushButton_clicked();
     void on_dungeonSubtileLineEdit_returnPressed();
     void on_dungeonSubtileLineEdit_escPressed();
     void on_showItemsCheckBox_clicked();
