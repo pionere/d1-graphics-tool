@@ -50,14 +50,14 @@ static const SpecCell l1SpecialCels[] = {
     // clang-format off
     {  12,  0,  0, 1 - 1 }, {  71,  0,  0, 1 - 1 }, { 211,  0,  0, 1 - 1 }, { 321,  0,  0, 1 - 1 }, { 341,  0,  0, 1 - 1 }, { 418,  0,  0, 1 - 1 },
     {  11,  0,  0, 2 - 1 }, { 249,  0,  0, 2 - 1 }, { 325,  0,  0, 2 - 1 }, { 331,  0,  0, 2 - 1 }, { 344,  0,  0, 2 - 1 }, { 421,  0,  0, 2 - 1 },
-    { 253,  0,  0, 3 - 1 }, { 255,  0,  0, 4 - 1 }, { 259,  0,  0, 5 - 1 }, { 267,  0,  0, 6 - 1 }, { 417,  0, -1, 7 - 1 }, { 420, -1,  0, 8 - 1 },
+    { 253,  0,  0, 3 - 1 }, { 255,  0,  0, 4 - 1 }, { 259,  0,  0, 5 - 1 }, { 267,  0,  0, 6 - 1 }, { 417,  0,  1, 7 - 1 }, { 420,  1,  0, 8 - 1 },
     // clang-format on
 };
 
 static const SpecCell l2SpecialCels[] = {
     // clang-format off
     {  13,  0,  0, 5 - 1 }, { 178,  0,  0, 5 - 1 }, { 551,  0,  0, 5 - 1 }, {  17,  0,  0, 6 - 1 }, { 553,  0,  0, 6 - 1 },
-    { 132,  0, -1, 2 - 1 }, { 132,  0, -2, 1 - 1 }, { 135, -1,  0, 3 - 1 }, { 135, -2,  0, 4 - 1 }, { 139, -1,  0, 3 - 1 }, { 139, -2,  0, 4 - 1 }
+    { 132,  0,  1, 2 - 1 }, { 132,  0,  2, 1 - 1 }, { 135,  1,  0, 3 - 1 }, { 135,  2,  0, 4 - 1 }, { 139,  1,  0, 3 - 1 }, { 139,  2,  0, 4 - 1 }
     // clang-format on
 };
 
@@ -72,11 +72,11 @@ const DungeonStruct dungeonTbl[NUM_DUNGEON_TYPES] = {
 /* DTYPE_TOWN      */ { UNDEF_TILE, "Levels/TownData/Town", townSpecialCels, lengthof(townSpecialCels) },
 /* DTYPE_CATHEDRAL */ { 13,         "Levels/L1Data/L1",     l1SpecialCels,   lengthof(l1SpecialCels) },
 /* DTYPE_CATACOMBS */ { 3,          "Levels/L2Data/L2",     l2SpecialCels,   lengthof(l2SpecialCels) },
-/* DTYPE_CAVES     */ { 7,          nullptr,                     nullptr,         0 },
-/* DTYPE_HELL      */ { 6,          nullptr,                     nullptr,         0 },
+/* DTYPE_CAVES     */ { 7,          nullptr,                nullptr,         0 },
+/* DTYPE_HELL      */ { 6,          nullptr,                nullptr,         0 },
 /* DTYPE_CRYPT     */ { 13,         "NLevels/L5Data/L5",    l5SpecialCels,   lengthof(l5SpecialCels) },
-/* DTYPE_NEST      */ { 7,          nullptr,                     nullptr,         0 },
-/* DTYPE_NONE      */ { UNDEF_TILE, nullptr,                     nullptr,         0 },
+/* DTYPE_NEST      */ { 7,          nullptr,                nullptr,         0 },
+/* DTYPE_NONE      */ { UNDEF_TILE, nullptr,                nullptr,         0 },
     // clang-format on
 };
 
@@ -936,12 +936,12 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     if (params.tileState == Qt::Checked && specGfx != nullptr) {
         // draw special cel
         const DungeonStruct &ds = dungeonTbl[this->levelType];
-        for (int dy = -2; dy <= 2; dy++) {
+        for (int dy = -2; dy <= 0; dy++) {
             int y = dunCursorY + dy;
             if (y < 0 || y >= this->height) {
                 continue;
             }
-            for (int dx = -2; dx <= 2; dx++) {
+            for (int dx = -2; dx <= 0; dx++) {
                 int x = dunCursorX + dx;
                 if (x < 0 || x >= this->width) {
                     continue;
