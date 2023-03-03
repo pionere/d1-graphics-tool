@@ -8,6 +8,7 @@
 #include "openasdialog.h"
 #include "saveasdialog.h"
 
+class D1Pal;
 class D1Til;
 class D1Tmi;
 
