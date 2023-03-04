@@ -112,6 +112,16 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d)
     this->ui->dunViewGridLayout->setVisible(dunMode);
 
     if (dunMode) {
+        for (const ObjectStruct &obj : ObjConvTbl) {
+            if (obj.type != 0) {
+                this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
+            }
+        }
+        for (const MonsterStruct &mon : MonstConvTbl) {
+            if (mon.type != 0) {
+                this->ui->dungeonMonsterComboBox->addItem(mon.name, mon.type);
+            }
+        }
         this->on_dungeonDefaultTileLineEdit_escPressed();
         this->ui->levelTypeComboBox->setCurrentIndex(d->getLevelType());
         this->updateIcon();
@@ -3089,6 +3099,9 @@ void LevelCelView::on_dunHeightEdit_escPressed()
 
 void LevelCelView::on_levelTypeComboBox_activated(int index)
 {
+    if (index < 0) {
+        return;
+    }
     bool change = this->dun->setLevelType(index);
     this->on_dungeonDefaultTileLineEdit_escPressed();
     if (change) {
@@ -3104,6 +3117,7 @@ void LevelCelView::on_dungeonDefaultTileLineEdit_returnPressed()
     bool change = this->dun->setDefaultTile(defaultTile);
     this->on_dungeonDefaultTileLineEdit_escPressed();
     if (change) {
+        this->ui->levelTypeComboBox->setCurrentIndex(-1);
         // update the view
         this->displayFrame();
     }
@@ -3235,15 +3249,29 @@ void LevelCelView::on_showMonstersCheckBox_clicked()
     this->displayFrame();
 }
 
+void LevelCelView::on_dungeonMonsterComboBox_activated(int index)
+{
+    if (index < 0) {
+        return;
+    }
+    int monsterIndex = this->ui->dungeonMonsterComboBox->itemData(index).value<int>();
+
+    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monsterIndex);
+    this->on_dungeonMonsterLineEdit_escPressed();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
+}
+
 void LevelCelView::on_dungeonMonsterLineEdit_returnPressed()
 {
     int monsterIndex = this->ui->dungeonMonsterLineEdit->text().toUShort();
-    int posx = this->currentDunPosX;
-    int posy = this->currentDunPosY;
 
-    bool change = this->dun->setMonsterAt(posx, posy, monsterIndex);
+    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monsterIndex);
     this->on_dungeonMonsterLineEdit_escPressed();
     if (change) {
+        this->ui->dungeonMonsterComboBox->setCurrentIndex(this->ui->dungeonMonsterComboBox->findData(monsterIndex));
         // update the view
         this->displayFrame();
     }
@@ -3263,15 +3291,29 @@ void LevelCelView::on_showObjectsCheckBox_clicked()
     this->displayFrame();
 }
 
+void LevelCelView::on_dungeonObjectComboBox_activated(int index)
+{
+    if (index < 0) {
+        return;
+    }
+    int objectIndex = this->ui->dungeonObjectComboBox->itemData(index).value<int>();
+
+    bool change = this->dun->setObjectAt(this->currentDunPosX, this->currentDunPosY, objectIndex);
+    this->on_dungeonObjectLineEdit_escPressed();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
+}
+
 void LevelCelView::on_dungeonObjectLineEdit_returnPressed()
 {
     int objectIndex = this->ui->dungeonObjectLineEdit->text().toUShort();
-    int posx = this->currentDunPosX;
-    int posy = this->currentDunPosY;
 
-    bool change = this->dun->setItemAt(posx, posy, objectIndex);
+    bool change = this->dun->setObjectAt(this->currentDunPosX, this->currentDunPosY, objectIndex);
     this->on_dungeonObjectLineEdit_escPressed();
     if (change) {
+        this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
         // update the view
         this->displayFrame();
     }

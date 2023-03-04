@@ -9,6 +9,7 @@
 #include "saveasdialog.h"
 
 class D1Gfx;
+class D1Min;
 class D1Pal;
 class D1Til;
 class D1Tmi;
@@ -47,7 +48,8 @@ public:
     D1Dun() = default;
     ~D1Dun();
 
-    bool load(D1Pal *pal, const QString &dunFilePath, D1Til *til, D1Tmi *tmi, const OpenAsParam &params);
+    bool load(const QString &dunFilePath, D1Til *til, const OpenAsParam &params);
+    void initialize(D1Pal *pal, D1Tmi *tmi);
     bool save(const SaveAsParam &params);
 
     QImage getImage(const DunDrawParam &params);
@@ -92,6 +94,7 @@ private:
 private:
     QString dunFilePath;
     D1Pal *pal;
+    D1Min *min;
     D1Til *til;
     D1Tmi *tmi;
     bool modified;

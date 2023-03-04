@@ -56,7 +56,7 @@ static const SpecCell l1SpecialCels[] = {
 
 static const SpecCell l2SpecialCels[] = {
     // clang-format off
-    {  13,  0,  0, 5 - 1 }, { 178,  0,  0, 5 - 1 }, { 551,  0,  0, 5 - 1 }, {  17,  0,  0, 6 - 1 }, { 553,  0,  0, 6 - 1 },
+    {  13,  0,  0, 5 - 1 }, { 178,  0,  0, 5 - 1 },/* { 541,  0,  0, 5 - 1 },*/ { 551,  0,  0, 5 - 1 }, {  17,  0,  0, 6 - 1 },/* { 542,  0,  0, 6 - 1 },*/ { 553,  0,  0, 6 - 1 },
     { 132,  0,  1, 2 - 1 }, { 132,  0,  2, 1 - 1 }, { 135,  1,  0, 3 - 1 }, { 135,  2,  0, 4 - 1 }, { 139,  1,  0, 3 - 1 }, { 139,  2,  0, 4 - 1 }
     // clang-format on
 };
@@ -223,7 +223,7 @@ const MonsterStruct MonstConvTbl[128] = {
     { 0 }, //MT_RFALLSP,
     {   6, 128, "FalSpear\\Phall", "FalSpear\\Dark.TRN",  "Carver" }, // Q_PWATER
     { 0 }, //MT_YFALLSP,
-    { 0 }, //MT_BFALLSP,
+    { 0 }, // {   8, 128, "FalSpear\\Phall", "FalSpear\\Blue.TRN",  "Dark One" }, // Monster from banner2.dun,
     { 0 }, //MT_WSKELAX,
     { 0 }, //MT_TSKELAX,
     {  11, 128, "SkelAxe\\SklAx",  nullptr,               "Burning Dead" }, // Q_SKELKING
@@ -339,7 +339,7 @@ const MonsterStruct MonstConvTbl[128] = {
     { 0 },
     { 0 },
     { 0 },
-    { 0 }, // Snotspill from banner2.dun
+    { 0 }, // { 124, 128, "FalSpear\\Phall", "FalSpear\\Blue.TRN",    "Dark One" }, // Snotspill from banner2.dun
     { 0 },
     { 0 },
     { 0 }, ///MT_BIGFALL,
@@ -382,7 +382,7 @@ void D1Dun::initVectors(int dunWidth, int dunHeight)
     }
 }
 
-bool D1Dun::load(D1Pal *p, const QString &filePath, D1Til *t, D1Tmi *m, const OpenAsParam &params)
+bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
 {
     // prepare file data source
     QFile file;
@@ -397,9 +397,8 @@ bool D1Dun::load(D1Pal *p, const QString &filePath, D1Til *t, D1Tmi *m, const Op
         }
     }
 
-    this->pal = p;
     this->til = t;
-    this->tmi = m;
+    this->min = t->getMin();
 
     const QByteArray fileData = file.readAll();
 
@@ -526,8 +525,16 @@ bool D1Dun::load(D1Pal *p, const QString &filePath, D1Til *t, D1Tmi *m, const Op
     this->height = dunHeight * TILE_HEIGHT;
     this->dunFilePath = filePath;
     this->modified = changed;
-    // calculate meta info
     this->defaultTile = UNDEF_TILE;
+    this->specGfx = nullptr;
+    return true;
+}
+
+void D1Dun::initialize(D1Pal *p, D1Tmi *m)
+{
+    this->pal = p;
+    this->tmi = m;
+    // calculate meta info
     QString tilPath = this->til->getFilePath();
     QFileInfo fileInfo = QFileInfo(tilPath);
     // select asset path
@@ -579,23 +586,19 @@ bool D1Dun::load(D1Pal *p, const QString &filePath, D1Til *t, D1Tmi *m, const Op
     } else {
         specFilePath = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName() + "s.cel";
     }
-    D1Gfx *specGfx = nullptr;
     if (QFileInfo::exists(specFilePath)) {
-        specGfx = new D1Gfx();
+        D1Gfx *specGfx = new D1Gfx();
         specGfx->setPalette(this->pal);
         OpenAsParam params = OpenAsParam();
-        params.celWidth = this->til->getMin()->getSubtileWidth() * MICRO_WIDTH;
+        params.celWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
         if (!D1Cel::load(*specGfx, specFilePath, params)) {
-            dProgressErr() << tr("Failed to load special CEL file %1.").arg(QDir::toNativeSeparators(specFilePath));
-            // TODO: MemFree?
+            dProgressErr() << tr("Failed loading special-CEL file: %1.").arg(QDir::toNativeSeparators(specFilePath));
             delete specGfx;
-            specGfx = nullptr;
         } else {
+            this->specGfx = specGfx;
             dProgress() << tr("Loaded special CEL file %1.").arg(QDir::toNativeSeparators(specFilePath));
         }
     }
-    this->specGfx = specGfx;
-    return true;
 }
 
 bool D1Dun::save(const SaveAsParam &params)
@@ -792,7 +795,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
         // draw the subtile
         int subtileRef = this->subtiles[dunCursorY][dunCursorX];
         if (subtileRef != 0) {
-            if (subtileRef == UNDEF_SUBTILE || subtileRef > this->til->getMin()->getSubtileCount()) {
+            if (subtileRef == UNDEF_SUBTILE || subtileRef > this->min->getSubtileCount()) {
                 QString text = tr("Subtile%1");
                 if (subtileRef == UNDEF_SUBTILE) {
                     text = text.arg("???");
@@ -804,9 +807,8 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY - fm.height() / 2, text);
                 subtileText = true;
             } else {
-                QImage subtileImage = this->til->getMin()->getSubtileImage(subtileRef - 1);
-                QImage *destImage = (QImage *)dungeon.device();
                 if (params.tileState == Qt::Checked) {
+                    QImage subtileImage = this->min->getSubtileImage(subtileRef - 1);
                     dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
                     /*for (int y = 0; y < subtileImage.height(); y++) {
                         for (int x = 0; x < subtileImage.width(); x++) {
@@ -819,6 +821,8 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                     }*/
                 } else {
                     // mask the image with backImage
+                    QImage subtileImage = this->min->getFloorImage(subtileRef - 1);
+                    QImage *destImage = (QImage *)dungeon.device();
                     for (unsigned y = CELL_BORDER; y < backHeight - CELL_BORDER; y++) {
                         for (unsigned x = CELL_BORDER; x < backWidth - CELL_BORDER; x++) {
                             if (backImage.pixelColor(x, y).alpha() == 0) {
@@ -842,7 +846,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             for (int dy = TILE_HEIGHT - 1; dy >= 0; dy--) {
                 for (int dx = TILE_WIDTH - 1; dx >= 0; dx--) {
                     int subtileRef = this->subtiles[dunCursorY - dy][dunCursorX - dx];
-                    if (subtileRef == UNDEF_SUBTILE || subtileRef > this->til->getMin()->getSubtileCount()) {
+                    if (subtileRef == UNDEF_SUBTILE || subtileRef > this->min->getSubtileCount()) {
                         skipTile = false;
                     }
                 }
@@ -936,7 +940,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     if (params.tileState == Qt::Checked && specGfx != nullptr) {
         // draw special cel
         const DungeonStruct &ds = dungeonTbl[this->levelType];
-        for (int dy = -2; dy <= 0; dy++) {
+        /*for (int dy = -2; dy <= 0; dy++) {
             int y = dunCursorY + dy;
             if (y < 0 || y >= this->height) {
                 continue;
@@ -957,6 +961,22 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                     }
                 }
             }
+        }*/
+        for (int i = 0; i < ds.numSpecCels; i++) {
+            const SpecCell &specCel = ds.specialCels[i];
+            int x = dunCursorX - specCel.dx;
+            if (x < 0 /*|| x >= this->width*/) {
+                continue;
+            }
+            int y = dunCursorY - specCel.dy;
+            if (y < 0 /*|| y >= this->height*/) {
+                continue;
+            }
+            int subtileRef = this->subtiles[y][x];
+            if (specCel.subtileRef == subtileRef) {
+                QImage subtileImage = specGfx->getFrameImage(specCel.specIndex);
+                dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+            }
         }
     }
 }
@@ -967,8 +987,8 @@ QImage D1Dun::getImage(const DunDrawParam &params)
     int minDunSize = std::min(this->width, this->height);
     int maxTilSize = std::max(TILE_WIDTH, TILE_HEIGHT);
 
-    unsigned subtileWidth = this->til->getMin()->getSubtileWidth() * MICRO_WIDTH;
-    unsigned subtileHeight = this->til->getMin()->getSubtileHeight() * MICRO_HEIGHT;
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
     unsigned cellWidth = subtileWidth;
     unsigned cellHeight = cellWidth / 2;

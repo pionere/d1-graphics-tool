@@ -206,19 +206,17 @@ QImage D1Min::getSubtileImage(int subtileIndex) const
     }
 
     unsigned subtileWidthPx = this->subtileWidth * MICRO_WIDTH;
-    QImage subtile = QImage(subtileWidthPx,
-        this->subtileHeight * MICRO_HEIGHT, QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
+    unsigned subtileHeightPx = this->subtileHeight * MICRO_HEIGHT;
+    QImage subtile = QImage(subtileWidthPx,subtileHeightPx, QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
     subtile.fill(Qt::transparent);
     QPainter subtilePainter(&subtile);
 
     unsigned dx = 0, dy = 0;
-    int n = this->subtileWidth * this->subtileHeight;
-    for (int i = 0; i < n; i++) {
-        unsigned frameRef = this->frameReferences[subtileIndex][i];
-
-        if (frameRef > 0)
-            subtilePainter.drawImage(dx, dy,
-                this->gfx->getFrameImage(frameRef - 1));
+    const std::vector<unsigned> &frameRefs = this->frameReferences[subtileIndex];
+    for (unsigned frameRef : frameRefs) {
+        if (frameRef > 0) {
+            subtilePainter.drawImage(dx, dy, this->gfx->getFrameImage(frameRef - 1));
+        }
 
         dx += MICRO_WIDTH;
         if (dx == subtileWidthPx) {
@@ -227,7 +225,47 @@ QImage D1Min::getSubtileImage(int subtileIndex) const
         }
     }
 
-    subtilePainter.end();
+    return subtile;
+}
+
+QImage D1Min::getFloorImage(int subtileIndex) const
+{
+    if (subtileIndex < 0 || (unsigned)subtileIndex >= this->frameReferences.size()) {
+#ifdef QT_DEBUG
+        QMessageBox::critical(nullptr, "Error", QStringLiteral("Invalid subtile %1 requested. Frame-references count: %2").arg(subtileIndex).arg(this->frameReferences.size()));
+#endif
+        return QImage();
+    }
+
+    unsigned width = this->subtileWidth;
+    unsigned n = width * width / 2;
+    const std::vector<unsigned> &frameRefs = this->frameReferences[subtileIndex];
+    unsigned numFrame = frameRefs.size();
+    if ((width & 1) || numFrame < n) {
+        return QImage();
+    }
+    unsigned firstFrame = numFrame - n;
+    unsigned subtileWidthPx = width * MICRO_WIDTH;
+    unsigned subtileHeightPx = (width / 2) * MICRO_HEIGHT;
+    QImage subtile = QImage(subtileWidthPx, subtileHeightPx, QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
+    subtile.fill(Qt::transparent);
+    QPainter subtilePainter(&subtile);
+
+    unsigned dx = 0, dy = 0;
+    for (unsigned i = firstFrame; i < numFrame; i++) {
+        unsigned frameRef = frameRefs[i];
+
+        if (frameRef > 0) {
+            subtilePainter.drawImage(dx, dy, this->gfx->getFrameImage(frameRef - 1));
+        }
+
+        dx += MICRO_WIDTH;
+        if (dx == subtileWidthPx) {
+            dx = 0;
+            dy += MICRO_HEIGHT;
+        }
+    }
+
     return subtile;
 }
 
@@ -235,15 +273,13 @@ std::vector<std::vector<D1GfxPixel>> D1Min::getSubtilePixelImage(int subtileInde
 {
     unsigned subtileWidthPx = this->subtileWidth * MICRO_WIDTH;
     unsigned subtileHeightPx = this->subtileHeight * MICRO_HEIGHT;
-    int n = this->subtileWidth * this->subtileHeight;
 
     std::vector<std::vector<D1GfxPixel>> subtile;
     D1PixelImage::createImage(subtile, subtileWidthPx, subtileHeightPx);
 
     unsigned dx = 0, dy = 0;
-    for (int i = 0; i < n; i++) {
-        unsigned frameRef = this->frameReferences[subtileIndex][i];
-
+    const std::vector<unsigned> &frameRefs = this->frameReferences[subtileIndex];
+    for (unsigned frameRef : frameRefs) {
         if (frameRef > 0) {
             D1PixelImage::drawImage(subtile, dx, dy, this->gfx->getFramePixelImage(frameRef - 1));
         }

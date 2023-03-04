@@ -190,9 +190,11 @@ private slots:
     void on_dungeonItemLineEdit_returnPressed();
     void on_dungeonItemLineEdit_escPressed();
     void on_showMonstersCheckBox_clicked();
+    void on_dungeonMonsterComboBox_activated(int index);
     void on_dungeonMonsterLineEdit_returnPressed();
     void on_dungeonMonsterLineEdit_escPressed();
     void on_showObjectsCheckBox_clicked();
+    void on_dungeonObjectComboBox_activated(int index);
     void on_dungeonObjectLineEdit_returnPressed();
     void on_dungeonObjectLineEdit_escPressed();
     void on_dungeonTransvalLineEdit_returnPressed();

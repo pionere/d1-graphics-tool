@@ -910,10 +910,11 @@ void MainWindow::openFile(OpenAsParam &params)
         // Loading DUN
         if (!dunFilePath.isEmpty()) {
             this->dun = new D1Dun();
-            if (!this->dun->load(this->pal, dunFilePath, this->tileset->til, this->tileset->tmi, params)) {
+            if (!this->dun->load(dunFilePath, this->tileset->til, params)) {
                 this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
                 return;
             }
+            this->dun->initialize(this->pal, this->tileset->tmi);
         }
     } else if (fileType == 1) { // CEL
         if (!D1Cel::load(*this->gfx, gfxFilePath, params)) {
