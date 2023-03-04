@@ -2581,7 +2581,7 @@ static bool dimensionMatch(D1Dun *dun1, D1Dun *dun2)
     if (dun1->getWidth() == dun2->getWidth() && dun1->getHeight() == dun2->getHeight()) {
         return true;
     }
-    QMessageBox::critical(nullptr, tr("Error"), tr("Mismatching dungeons (Dimensions are %1:%2 vs %3:%4).").arg(dun1->getWidth()).arg(dun1->getHeight()).arg(dun2->getHeight()).arg(dun2->getWidth()));
+    QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Mismatching dungeons (Dimensions are %1:%2 vs %3:%4).").arg(dun1->getWidth()).arg(dun1->getHeight()).arg(dun2->getHeight()).arg(dun2->getWidth()));
     return false;
 }
 
