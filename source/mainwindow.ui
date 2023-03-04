@@ -147,6 +147,31 @@
     <addaction name="actionSortSubtiles_Tileset"/>
     <addaction name="actionSortTileset_Tileset"/>
    </widget>
+   <widget class="QMenu" name="menuDungeon">
+    <property name="title">
+     <string>Dungeon</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionReportUse_Dungeon"/>
+    <addaction name="actionPatchDungeon_Dungeon"/>
+    <addaction name="separator"/>
+    <addaction name="actionResetTiles_Dungeon"/>
+    <addaction name="actionResetSubtiles_Dungeon"/>
+    <addaction name="separator"/>
+    <addaction name="actionCheckItems_Dungeon"/>
+    <addaction name="actionCheckMonsters_Dungeon"/>
+    <addaction name="actionCheckObjects_Dungeon"/>
+    <addaction name="actionCheckEntities_Dungeon"/>
+    <addaction name="separator"/>
+    <addaction name="actionRemoveItems_Dungeon"/>
+    <addaction name="actionLoadItems_Dungeon"/>
+    <addaction name="actionRemoveMonsters_Dungeon"/>
+    <addaction name="actionLoadMonsters_Dungeon"/>
+    <addaction name="actionRemoveObjects_Dungeon"/>
+    <addaction name="actionLoadObjects_Dungeon"/>
+   </widget>
    <widget class="QMenu" name="menuPalette">
     <property name="title">
      <string>Palette</string>
@@ -189,6 +214,7 @@
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuTileset"/>
+   <addaction name="menuDungeon"/>
    <addaction name="menuPalette"/>
    <addaction name="menuTasks"/>
    <addaction name="menuHelp"/>
@@ -427,6 +453,118 @@
    </property>
    <property name="toolTip">
     <string>Sort the subtiles and frames based on the tiles</string>
+   </property>
+  </action>
+  <action name="actionReportUse_Dungeon">
+   <property name="text">
+    <string>Usage Report</string>
+   </property>
+   <property name="toolTip">
+    <string>List the type of monsters/items/objects in the dungeon</string>
+   </property>
+  </action>
+  <action name="actionPatchDungeon_Dungeon">
+   <property name="text">
+    <string>Patch Dungeon</string>
+   </property>
+   <property name="toolTip">
+    <string>Patch subtiles in the dungeon of the vanilla game</string>
+   </property>
+  </action>
+  <action name="actionResetTiles_Dungeon">
+   <property name="text">
+    <string>Reset Tiles</string>
+   </property>
+   <property name="toolTip">
+    <string>Reinitialize the tiles based on the subtiles</string>
+   </property>
+  </action>
+  <action name="actionResetSubtiles_Dungeon">
+   <property name="text">
+    <string>Reset Subtiles</string>
+   </property>
+   <property name="toolTip">
+    <string>Reinitialize the subtiles based on the tiles</string>
+   </property>
+  </action>
+  <action name="actionCheckItems_Dungeon">
+   <property name="text">
+    <string>Check Items</string>
+   </property>
+   <property name="toolTip">
+    <string>List inconsistent items</string>
+   </property>
+  </action>
+  <action name="actionCheckMonsters_Dungeon">
+   <property name="text">
+    <string>Check Monsters</string>
+   </property>
+   <property name="toolTip">
+    <string>List inconsistent monsters</string>
+   </property>
+  </action>
+  <action name="actionCheckObjects_Dungeon">
+   <property name="text">
+    <string>Check Objects</string>
+   </property>
+   <property name="toolTip">
+    <string>List inconsistent objects</string>
+   </property>
+  </action>
+  <action name="actionCheckEntities_Dungeon">
+   <property name="text">
+    <string>Check Entities</string>
+   </property>
+   <property name="toolTip">
+    <string>List inconsistent items/monsters/objects</string>
+   </property>
+  </action>
+  <action name="actionRemoveItems_Dungeon">
+   <property name="text">
+    <string>Remove Items</string>
+   </property>
+   <property name="toolTip">
+    <string>Remove every item from the dungeon</string>
+   </property>
+  </action>
+  <action name="actionLoadItems_Dungeon">
+   <property name="text">
+    <string>Load Items</string>
+   </property>
+   <property name="toolTip">
+    <string>Load items from another dungeon</string>
+   </property>
+  </action>
+  <action name="actionRemoveMonsters_Dungeon">
+   <property name="text">
+    <string>Remove Monsters</string>
+   </property>
+   <property name="toolTip">
+    <string>Remove every monster from the dungeon</string>
+   </property>
+  </action>
+  <action name="actionLoadMonsters_Dungeon">
+   <property name="text">
+    <string>Load Monsters</string>
+   </property>
+   <property name="toolTip">
+    <string>Load monsters from another dungeon</string>
+   </property>
+  </action>
+  <action name="actionRemoveObjects_Dungeon">
+   <property name="text">
+    <string>Remove Objects</string>
+   </property>
+   <property name="toolTip">
+    <string>Remove every object from the dungeon</string>
+   </property>
+  </action>
+  <action name="actionLoadObjects_Dungeon">
+   <property name="text">
+    <string>Load Objects</string>
+   </property>
+   <property name="toolTip">
+    <string>Load objects from another dungeon</string>
    </property>
   </action>
   <action name="actionNew_PAL">

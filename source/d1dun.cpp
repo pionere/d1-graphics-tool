@@ -793,20 +793,10 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     bool subtileText = false;
     if (params.tileState != Qt::Unchecked) {
         // draw the subtile
+        int tileRef = this->tiles[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
         int subtileRef = this->subtiles[dunCursorY][dunCursorX];
         if (subtileRef != 0) {
-            if (subtileRef == UNDEF_SUBTILE || subtileRef > this->min->getSubtileCount()) {
-                QString text = tr("Subtile%1");
-                if (subtileRef == UNDEF_SUBTILE) {
-                    text = text.arg("???");
-                } else {
-                    text = text.arg(subtileRef - 1);
-                }
-                QFontMetrics fm(dungeon.font());
-                unsigned textWidth = fm.horizontalAdvance(text);
-                dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY - fm.height() / 2, text);
-                subtileText = true;
-            } else {
+            if (subtileRef >= 0 && subtileRef <= this->min->getSubtileCount()) {
                 if (params.tileState == Qt::Checked) {
                     QImage subtileImage = this->min->getSubtileImage(subtileRef - 1);
                     dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
@@ -836,28 +826,35 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                         }
                     }
                 }
+            } else {
+                subtileText = subtileRef != UNDEF_SUBTILE || tileRef == UNDEF_TILE;
+                if (subtileText) {
+                    QString text = tr("Subtile%1");
+                    if (subtileRef == UNDEF_SUBTILE) {
+                        text = text.arg("???");
+                    } else {
+                        text = text.arg(subtileRef - 1);
+                    }
+                    QFontMetrics fm(dungeon.font());
+                    unsigned textWidth = fm.horizontalAdvance(text);
+                    dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY - fm.height() / 2, text);
+                }
             }
         }
         // draw tile text
         static_assert(TILE_WIDTH == 2 && TILE_HEIGHT == 2, "D1Dun::drawImage skips boundary checks.");
-        int tileRef = this->tiles[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
-        if (tileRef != 0 && (dunCursorX & 1) && (dunCursorY & 1)) {
-            bool skipTile = true;
+        if (tileRef > 0 && (dunCursorX & 1) && (dunCursorY & 1)) { // !0 || !UNDEF_TILE
+            int undefSubtiles = 0;
             for (int dy = TILE_HEIGHT - 1; dy >= 0; dy--) {
                 for (int dx = TILE_WIDTH - 1; dx >= 0; dx--) {
                     int subtileRef = this->subtiles[dunCursorY - dy][dunCursorX - dx];
-                    if (subtileRef == UNDEF_SUBTILE || subtileRef > this->min->getSubtileCount()) {
-                        skipTile = false;
+                    if (subtileRef == UNDEF_SUBTILE) {
+                        undefSubtiles++;
                     }
                 }
             }
-            if (!skipTile) {
-                QString text = tr("Tile%1");
-                if (tileRef == UNDEF_TILE) {
-                    text = text.arg("???");
-                } else {
-                    text = text.arg(tileRef - 1);
-                }
+            if (undefSubtiles != 0) {
+                QString text = tr("Tile%1").arg(tileRef - 1);
                 QFontMetrics fm(dungeon.font());
                 unsigned textWidth = fm.horizontalAdvance(text);
                 dungeon.drawText(cellCenterX - textWidth / 2, drawCursorY - backHeight - fm.height() / 2, text);
@@ -1414,6 +1411,9 @@ int D1Dun::getDefaultTile() const
 
 bool D1Dun::setDefaultTile(int defaultTile)
 {
+    if (defaultTile < 0) {
+        defaultTile = UNDEF_TILE;
+    }
     if (this->defaultTile == defaultTile) {
         return false;
     }
@@ -1527,4 +1527,204 @@ void D1Dun::updateSubtiles(int tilePosX, int tilePosY, int tileRef)
             // FIXME: set modified if type == RDUN and not in init phase
         }
     }
+}
+
+void D1Dun::collectItems(std::vector<std::pair<int, int>>& foundItems)
+{
+    for (const std::vector<int> &itemsRow : this->items) {
+        for (int itemIndex : itemsRow) {
+            if (itemIndex == 0) {
+                continue;
+            }
+            for (std::pair<int, int> &itemEntry : foundItems) {
+                if (itemEntry.first == itemIndex) {
+                    itemEntry.second++;
+                    itemIndex = 0;
+                }
+            }
+            if (itemIndex != 0) {
+                foundItems.push_back(std::pair<int, int>(itemIndex, 1));
+            }
+        }
+    }
+}
+
+void D1Dun::collectMonsters(std::vector<std::pair<int, int>>& foundMonsters)
+{
+    for (const std::vector<int> &monstersRow : this->monsters) {
+        for (int monsterIndex : monstersRow) {
+            if (monsterIndex == 0) {
+                continue;
+            }
+            for (std::pair<int, int> &monsterEntry : foundMonsters) {
+                if (monsterEntry.first == monsterIndex) {
+                    monsterEntry.second++;
+                    monsterIndex = 0;
+                }
+            }
+            if (monsterIndex != 0) {
+                foundMonsters.push_back(std::pair<int, int>(monsterIndex, 1));
+            }
+        }
+    }
+}
+
+void D1Dun::collectObjects(std::vector<std::pair<int, int>>& foundObjects)
+{
+    for (const std::vector<int> &objectsRow : this->objects) {
+        for (int objectIndex : objectsRow) {
+            if (objectIndex == 0) {
+                continue;
+            }
+            for (std::pair<int, int> &objectEntry : foundObjects) {
+                if (objectEntry.first == objectIndex) {
+                    objectEntry.second++;
+                    objectIndex = 0;
+                }
+            }
+            if (objectIndex != 0) {
+                foundObjects.push_back(std::pair<int, int>(objectIndex, 1));
+            }
+        }
+    }
+}
+
+bool D1Dun::removeItems()
+{
+    bool result = false;
+    for (std::vector<int> &itemsRow : this->items) {
+        for (int &itemIndex : itemsRow) {
+            if (itemIndex != 0) {
+                itemIndex = 0;
+                result = true;
+            }
+        }
+    }
+    return result;
+}
+
+bool D1Dun::removeMonsters()
+{
+    bool result = false;
+    for (std::vector<int> &monstersRow : this->monsters) {
+        for (int &monsterIndex : monstersRow) {
+            if (monsterIndex != 0) {
+                monsterIndex = 0;
+                result = true;
+            }
+        }
+    }
+    return result;
+}
+
+bool D1Dun::removeObjects()
+{
+    bool result = false;
+    for (std::vector<int> &objectsRow : this->objects) {
+        for (int &objectIndex : objectsRow) {
+            if (objectIndex != 0) {
+                objectIndex = 0;
+                result = true;
+            }
+        }
+    }
+    return result;
+}
+
+bool D1Dun::resetTiles()
+{
+    bool result = false;
+    for (int tilePosY = 0; tilePosY < this->height / TILE_HEIGHT; tilePosY++) {
+        for (int tilePosX = 0; x < this->width / TILE_WIDTH; tilePosX++) {
+            int newTileRef = UNDEF_TILE;
+            for (int i = 0; i < this->til->getTileCount(); i++){
+                std::vector<int> &subs = this->til->getSubtileIndices(i);
+                int posx = tilePosX * TILE_WIDTH;
+                int posy = tilePosY * TILE_HEIGHT;
+                int y;
+                for (y = 0; y < TILE_HEIGHT; y++) {
+                    int x;
+                    for (x = 0; x < TILE_WIDTH; x++) {
+                        int dunx = posx + x;
+                        int duny = posy + y;
+                        if (this->subtiles[duny][dunx] != subs[y * TILE_WIDTH + x]) {
+                            break;
+                        }
+                    }
+                    if (x != TILE_WIDTH) {
+                        break;
+                    }
+                }
+                if (y < TILE_HEIGHT) {
+                    continue;
+                }
+                newTileRef = i + 1;
+                break;
+            }
+            if (newTileRef == this->defaultTile) {
+                newTileRef = 0;
+            }
+            int currTileRef = this->tiles[tilePosY][tilePosX];
+            if (currTileRef != newTileRef) {
+                if (newTileRef == UNDEF_TILE) {
+                    dProgressWarn() << tr("Tile at %1:%2 is set to undefined, because no matching entry was found.").arg(tilePosX).arg(tilePosY);
+                } else {
+                    dProgress() << tr("Tile%1 at %2:%3 was replaced with %3.").arg(currTileRef).arg(tilePosX).arg(tilePosY).arg(newTileRef);
+                }
+                this->tiles[tilePosY][tilePosX] = newTileRef;
+                // FIXME: set modified if type == DUN
+                result = true;
+            }
+        }
+    }
+    return result;
+}
+
+bool D1Dun::resetSubtiles()
+{
+    bool result = false;
+    for (int tilePosY = 0; tilePosY < this->height / TILE_HEIGHT; tilePosY++) {
+        for (int tilePosX = 0; x < this->width / TILE_WIDTH; tilePosX++) {
+            int tileRef = this->tiles[tilePosY][tilePosX];
+            // this->updateSubtiles(tilePosX, tilePosY, tileRef);
+            std::vector<int> subs = std::vector<int>(TILE_WIDTH * TILE_HEIGHT);
+            if (tileRef != 0) {
+                if (tileRef != UNDEF_TILE && this->til->getTileCount() >= tileRef) {
+                    subs = this->til->getSubtileIndices(tileRef - 1);
+                    for (int &sub : subs) {
+                        sub += 1;
+                    }
+                } else {
+                    for (int &sub : subs) {
+                        sub = UNDEF_SUBTILE;
+                    }
+                }
+            }
+            int posx = tilePosX * TILE_WIDTH;
+            int posy = tilePosY * TILE_HEIGHT;
+            for (int y = 0; y < TILE_HEIGHT; y++) {
+                for (int x = 0; x < TILE_WIDTH; x++) {
+                    int dunx = posx + x;
+                    int duny = posy + y;
+                    int currSubtileRef = this->subtiles[duny][dunx];
+                    int newSubtileRef = subs[y * TILE_WIDTH + x];
+                    if (currSubtileRef != newSubtileRef) {
+                        if (newSubtileRef == UNDEF_TILE) {
+                            if (tileRef == UNDEF_TILE) {
+                                dProgressWarn() << tr("Subtile at %1:%2 is set to undefined, because the corresponding tile is undefined.").arg(dunx).arg(duny);
+                            } else {
+                                dProgressWarn() << tr("Subtile at %1:%2 is set to undefined, because there was no tile-info for the corresponding tile (%3).").arg(dunx).arg(duny).arg(tileRef);
+                            }
+                        } else {
+                            dProgress() << tr("Subtile%1 at %2:%3 was replaced with %3.").arg(currSubtileRef).arg(dunx).arg(duny).arg(newSubtileRef);
+                        }
+                        this->subtiles[duny][dunx] = newSubtileRef;
+                        result = true;
+                        // FIXME: set modified if type == RDUN
+                    }
+                }
+            }
+        }
+    }
+    return result;
 }

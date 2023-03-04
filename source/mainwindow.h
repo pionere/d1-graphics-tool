@@ -158,6 +158,21 @@ private slots:
     void on_actionSortSubtiles_Tileset_triggered();
     void on_actionSortTileset_Tileset_triggered();
 
+    void on_actionReportUse_Dungeon_triggered();
+    void on_actionPatchDungeon_Dungeon_triggered();
+    void on_actionResetTiles_Dungeon_triggered();
+    void on_actionResetSubtiles_Dungeon_triggered();
+    void on_actionCheckItems_Dungeon_triggered();
+    void on_actionCheckMonsters_Dungeon_triggered();
+    void on_actionCheckObjects_Dungeon_triggered();
+    void on_actionCheckEntities_Dungeon_triggered();
+    void on_actionRemoveItems_Dungeon_triggered();
+    void on_actionLoadItems_Dungeon_triggered();
+    void on_actionRemoveMonsters_Dungeon_triggered();
+    void on_actionLoadMonsters_Dungeon_triggered();
+    void on_actionRemoveObjects_Dungeon_triggered();
+    void on_actionLoadObjects_Dungeon_triggered();
+
     void on_actionNew_PAL_triggered();
     void on_actionOpen_PAL_triggered();
     void on_actionSave_PAL_triggered();

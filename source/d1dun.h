@@ -83,6 +83,16 @@ public:
     bool setAssetPath(QString path);
     QString getAssetPath() const;
 
+    void collectItems(std::vector<std::pair<int, int>>& items);
+    void collectMonsters(std::vector<std::pair<int, int>>& monsters);
+    void collectObjects(std::vector<std::pair<int, int>>& objects);
+    bool removeItems();
+    bool removeMonsters();
+    bool removeObjects();
+
+    bool resetTiles();
+    bool resetSubtiles();
+
 private:
     void drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
     void initVectors(int width, int height);

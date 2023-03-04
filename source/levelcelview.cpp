@@ -112,11 +112,13 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d)
     this->ui->dunViewGridLayout->setVisible(dunMode);
 
     if (dunMode) {
+        this->ui->dungeonObjectComboBox->addItem("", 0);
         for (const ObjectStruct &obj : ObjConvTbl) {
             if (obj.type != 0) {
                 this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
             }
         }
+        this->ui->dungeonMonsterComboBox->addItem("", 0);
         for (const MonsterStruct &mon : MonstConvTbl) {
             if (mon.type != 0) {
                 this->ui->dungeonMonsterComboBox->addItem(mon.name, mon.type);
@@ -216,8 +218,12 @@ void LevelCelView::update()
         int subtileRef = this->dun->getSubtileAt(posx, posy);
         this->ui->dungeonSubtileLineEdit->setText(subtileRef == UNDEF_SUBTILE ? QStringLiteral("?") : QString::number(subtileRef));
         this->ui->dungeonItemLineEdit->setText(QString::number(this->dun->getItemAt(posx, posy)));
-        this->ui->dungeonMonsterLineEdit->setText(QString::number(this->dun->getMonsterAt(posx, posy)));
-        this->ui->dungeonObjectLineEdit->setText(QString::number(this->dun->getObjectAt(posx, posy)));
+        int monsterIndex = this->dun->getMonsterAt(posx, posy);
+        this->ui->dungeonMonsterLineEdit->setText(QString::number(monsterIndex));
+        this->ui->dungeonMonsterComboBox->setCurrentIndex(this->ui->dungeonMonsterComboBox->findData(monsterIndex));
+        int objectIndex = this->dun->getObjectAt(posx, posy);
+        this->ui->dungeonObjectLineEdit->setText(QString::number(objectIndex));
+        this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
         this->ui->dungeonTransvalLineEdit->setText(QString::number(this->dun->getTransvalAt(posx, posy)));
     } else {
         // Set current and maximum frame text
@@ -1560,7 +1566,7 @@ void LevelCelView::collectSubtileUsers(int subtileIndex, std::vector<int> &users
     }
 }
 
-void LevelCelView::reportUsage()
+void LevelCelView::reportTilesetUsage()
 {
     ProgressDialog::incBar(tr("Scanning..."), 2);
 
@@ -2460,6 +2466,116 @@ void LevelCelView::sortTileset()
     }
 }
 
+LevelCelView::reportDungeonUsage()
+{
+    ProgressDialog::incBar(tr("Scanning..."), 3);
+
+    std::vector<std::pair<int, int>> items;
+    this->dun->collectItems(items);
+
+    if (items.empty() == 0) {
+        dProgress() << tr("There are no items in the dungeon.");
+    } else {
+        QString itemUses;
+        int totalCount = 0;
+        for (std::pair<int, int> &item : items) {
+            totalCount += item.second;
+            itemUses += tr("%1 Item%2").arg(item.second).arg(item.first) + ", ";
+        }
+        itemUses.chop(2);
+        dProgress() << tr("There are %1 in the dungeon.", "", totalCount).arg(itemUses);
+    }
+
+    dProgress() << "\n";
+
+    ProgressDialog::incValue();
+
+    std::vector<std::pair<int, int>> monsters;
+    this->dun->collectMonsters(monsters);
+
+    if (monsters.empty() == 0) {
+        dProgress() << tr("There are no monsters in the dungeon.");
+    } else {
+        QString monsterUses;
+        int totalCount = 0;
+        for (std::pair<int, int> &monster : monsters) {
+            totalCount += monster.second;
+            monsterUses += tr("%1 %2").arg(monster.second).arg(MonstConvTbl[monster.first].name) + ", ";
+        }
+        monsterUses.chop(2);
+        dProgress() << tr("There are %1 in the dungeon.", "", totalCount).arg(monsterUses);
+    }
+
+    dProgress() << "\n";
+
+    ProgressDialog::incValue();
+
+    std::vector<std::pair<int, int>> objects;
+    this->dun->collectItems(objects);
+
+    if (objects.empty() == 0) {
+        dProgress() << tr("There are no objects in the dungeon.");
+    } else {
+        QString objectUses;
+        int totalCount = 0;
+        for (std::pair<int, int> &object : objects) {
+            totalCount += object.second;
+            objectUses += tr("%1 Item%2").arg(object.second).arg(ObjConvTbl[object.first].name) + ", ";
+        }
+        objectUses.chop(2);
+        dProgress() << tr("There are %1 in the dungeon.", "", totalCount).arg(objectUses);
+    }
+
+    dProgress() << "\n";
+
+    ProgressDialog::decBar();
+}
+
+LevelCelView::resetDungeonTiles()
+{
+    bool change = this->dun->resetTiles();
+    if (change) {
+        // update the view - done by the caller
+        // this->displayFrame();
+    }
+}
+
+LevelCelView::resetDungeonSubtiles()
+{
+    bool change = this->dun->resetSubtiles();
+    if (change) {
+        // update the view - done by the caller
+        // this->displayFrame();
+    }
+}
+
+LevelCelView::removeItems()
+{
+    bool change = this->dun->removeItems();
+    if (change) {
+        // update the view - done by the caller
+        // this->displayFrame();
+    }
+}
+
+LevelCelView::removeMonsters()
+{
+    bool change = this->dun->removeMonsters();
+    if (change) {
+        // update the view - done by the caller
+        // this->displayFrame();
+    }
+}
+
+LevelCelView::removeObjects()
+{
+    bool change = this->dun->removeObjects();
+    if (change) {
+        // update the view - done by the caller
+        // this->displayFrame();
+    }
+}
+
 void LevelCelView::upscale(const UpscaleParam &params)
 {
     if (Upscaler::upscaleTileset(this->gfx, this->min, params, false)) {
@@ -3104,7 +3220,7 @@ void LevelCelView::on_levelTypeComboBox_activated(int index)
     }
     bool change = this->dun->setLevelType(index);
     this->on_dungeonDefaultTileLineEdit_escPressed();
-    if (change) {
+    if (change /*&& this->ui->showTilesCheckBox->checkState() != Qt::Unchecked*/) {
         // update the view
         this->displayFrame();
     }
@@ -3118,7 +3234,7 @@ void LevelCelView::on_dungeonDefaultTileLineEdit_returnPressed()
     this->on_dungeonDefaultTileLineEdit_escPressed();
     if (change) {
         this->ui->levelTypeComboBox->setCurrentIndex(-1);
-        // update the view
+        // update the view TODO: if this->ui->showTilesCheckBox->checkState() != Qt::Unchecked ?
         this->displayFrame();
     }
 }
@@ -3147,12 +3263,10 @@ void LevelCelView::on_dungeonTileLineEdit_returnPressed()
     if (tileRef < 0 || !ok) {
         tileRef = UNDEF_TILE;
     }
-    int posx = this->currentDunPosX;
-    int posy = this->currentDunPosY;
 
-    bool change = this->dun->setTileAt(posx, posy, tileRef);
+    bool change = this->dun->setTileAt(this->currentDunPosX, this->currentDunPosY, tileRef);
     this->on_dungeonTileLineEdit_escPressed();
-    if (change) {
+    if (change /*&& this->ui->showTilesCheckBox->checkState() != Qt::Unchecked*/) {
         // update the view
         this->displayFrame();
     }
@@ -3196,12 +3310,10 @@ void LevelCelView::on_dungeonSubtileLineEdit_returnPressed()
     if (subtileRef < 0 || !ok) {
         subtileRef = UNDEF_SUBTILE;
     }
-    int posx = this->currentDunPosX;
-    int posy = this->currentDunPosY;
 
-    bool change = this->dun->setSubtileAt(posx, posy, subtileRef);
+    bool change = this->dun->setSubtileAt(this->currentDunPosX, this->currentDunPosY, subtileRef);
     this->on_dungeonSubtileLineEdit_escPressed();
-    if (change) {
+    if (change /*&& this->ui->showTilesCheckBox->checkState() != Qt::Unchecked*/) {
         // update the view
         this->displayFrame();
     }
@@ -3229,7 +3341,7 @@ void LevelCelView::on_dungeonItemLineEdit_returnPressed()
 
     bool change = this->dun->setItemAt(posx, posy, itemIndex);
     this->on_dungeonItemLineEdit_escPressed();
-    if (change) {
+    if (change && this->ui->showItemsCheckBox->isChecked()) {
         // update the view
         this->displayFrame();
     }
@@ -3258,7 +3370,7 @@ void LevelCelView::on_dungeonMonsterComboBox_activated(int index)
 
     bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monsterIndex);
     this->on_dungeonMonsterLineEdit_escPressed();
-    if (change) {
+    if (change && this->ui->showMonstersCheckBox->isChecked()) {
         // update the view
         this->displayFrame();
     }
@@ -3272,8 +3384,10 @@ void LevelCelView::on_dungeonMonsterLineEdit_returnPressed()
     this->on_dungeonMonsterLineEdit_escPressed();
     if (change) {
         this->ui->dungeonMonsterComboBox->setCurrentIndex(this->ui->dungeonMonsterComboBox->findData(monsterIndex));
-        // update the view
-        this->displayFrame();
+        if (this->ui->showMonstersCheckBox->isChecked()) {
+            // update the view
+            this->displayFrame();
+        }
     }
 }
 
@@ -3300,7 +3414,7 @@ void LevelCelView::on_dungeonObjectComboBox_activated(int index)
 
     bool change = this->dun->setObjectAt(this->currentDunPosX, this->currentDunPosY, objectIndex);
     this->on_dungeonObjectLineEdit_escPressed();
-    if (change) {
+    if (change && this->ui->showObjectsCheckBox->isChecked()) {
         // update the view
         this->displayFrame();
     }
@@ -3314,8 +3428,10 @@ void LevelCelView::on_dungeonObjectLineEdit_returnPressed()
     this->on_dungeonObjectLineEdit_escPressed();
     if (change) {
         this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
-        // update the view
-        this->displayFrame();
+        if (this->ui->showObjectsCheckBox->isChecked()) {
+            // update the view
+            this->displayFrame();
+        }
     }
 }
 
@@ -3330,15 +3446,13 @@ void LevelCelView::on_dungeonObjectLineEdit_escPressed()
 void LevelCelView::on_dungeonTransvalLineEdit_returnPressed()
 {
     int transVal = this->ui->dungeonTransvalLineEdit->text().toUShort();
-    int posx = this->currentDunPosX;
-    int posy = this->currentDunPosY;
 
-    bool change = this->dun->setTransvalAt(posx, posy, transVal);
+    bool change = this->dun->setTransvalAt(this->currentDunPosX, this->currentDunPosY, transVal);
     this->on_dungeonTransvalLineEdit_escPressed();
-    if (change) {
+    /*if (change) {
         // update the view
         this->displayFrame();
-    }
+    }*/
 }
 
 void LevelCelView::on_dungeonTransvalLineEdit_escPressed()

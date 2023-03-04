@@ -64,7 +64,7 @@ public:
     QImage copyCurrent() const;
     void pasteCurrent(const QImage &image);
 
-    void reportUsage();
+    void reportTilesetUsage();
     void resetFrameTypes();
     void inefficientFrames();
     void checkSubtileFlags();
@@ -79,6 +79,13 @@ public:
     void sortFrames();
     void sortSubtiles();
     void sortTileset();
+
+    void reportDungeonUsage();
+    void resetDungeonTiles();
+    void resetDungeonSubtiles();
+    void removeItems();
+    void removeMonsters();
+    void removeObjects();
 
     void upscale(const UpscaleParam &params);
 

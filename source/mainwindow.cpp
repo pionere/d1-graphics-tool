@@ -1036,6 +1036,7 @@ void MainWindow::openFile(OpenAsParam &params)
     this->tileMenu.setEnabled(isTileset);
 
     this->ui->menuTileset->setEnabled(isTileset);
+    this->ui->menuDungeon->setEnabled(this->dun != nullptr);
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1275,6 +1276,7 @@ void MainWindow::on_actionClose_triggered()
     // update available menu entries
     this->ui->menuEdit->setEnabled(false);
     this->ui->menuTileset->setEnabled(false);
+    this->ui->menuDungeon->setEnabled(false);
     this->ui->menuPalette->setEnabled(false);
     this->ui->actionExport->setEnabled(false);
     this->ui->actionSave->setEnabled(false);
@@ -1470,7 +1472,7 @@ void MainWindow::on_actionReportUse_Tileset_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
-    this->levelCelView->reportUsage();
+    this->levelCelView->reportTilesetUsage();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1635,6 +1637,106 @@ void MainWindow::on_actionSortTileset_Tileset_triggered()
 
     // Clear loading message from status bar
     ProgressDialog::done();
+}
+
+void MainWindow::on_actionReportUse_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->reportDungeonUsage();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionPatchDungeon_Dungeon_triggered()
+{
+
+}
+
+void MainWindow::on_actionResetTiles_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->resetDungeonTiles();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionResetSubtiles_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->resetDungeonSubtiles();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionCheckItems_Dungeon_triggered()
+{
+
+}
+
+void MainWindow::on_actionCheckMonsters_Dungeon_triggered()
+{
+
+}
+
+void MainWindow::on_actionCheckObjects_Dungeon_triggered()
+{
+
+}
+
+void MainWindow::on_actionCheckEntities_Dungeon_triggered()
+{
+
+}
+
+void MainWindow::on_actionRemoveItems_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->removeItems();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionLoadItems_Dungeon_triggered()
+{
+
+}
+
+void MainWindow::on_actionRemoveMonsters_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->removeMonsters();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionLoadMonsters_Dungeon_triggered()
+{
+
+}
+
+void MainWindow::on_actionRemoveObjects_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->removeObjects();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionLoadObjects_Dungeon_triggered()
+{
+
 }
 
 void MainWindow::on_actionNew_PAL_triggered()
