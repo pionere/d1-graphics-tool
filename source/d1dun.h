@@ -94,7 +94,7 @@ private:
 private:
     QString dunFilePath;
     D1Pal *pal;
-    D1Min *min;
+    const D1Min *min;
     D1Til *til;
     D1Tmi *tmi;
     bool modified;
