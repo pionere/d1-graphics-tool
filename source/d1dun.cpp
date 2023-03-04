@@ -392,7 +392,7 @@ bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
     // }
     if (!filePath.isEmpty()) {
         file.setFileName(filePath);
-        if (!file.open(QIODevice::ReadOnly) && !params.ampFilePath.isEmpty()) {
+        if (!file.open(QIODevice::ReadOnly) && !params.dunFilePath.isEmpty()) {
             return false; // report read-error only if the file was explicitly requested
         }
     }
@@ -1529,7 +1529,7 @@ void D1Dun::updateSubtiles(int tilePosX, int tilePosY, int tileRef)
     }
 }
 
-void D1Dun::collectItems(std::vector<std::pair<int, int>>& foundItems)
+void D1Dun::collectItems(std::vector<std::pair<int, int>> &foundItems)
 {
     for (const std::vector<int> &itemsRow : this->items) {
         for (int itemIndex : itemsRow) {
@@ -1549,7 +1549,7 @@ void D1Dun::collectItems(std::vector<std::pair<int, int>>& foundItems)
     }
 }
 
-void D1Dun::collectMonsters(std::vector<std::pair<int, int>>& foundMonsters)
+void D1Dun::collectMonsters(std::vector<std::pair<int, int>> &foundMonsters)
 {
     for (const std::vector<int> &monstersRow : this->monsters) {
         for (int monsterIndex : monstersRow) {
@@ -1569,7 +1569,7 @@ void D1Dun::collectMonsters(std::vector<std::pair<int, int>>& foundMonsters)
     }
 }
 
-void D1Dun::collectObjects(std::vector<std::pair<int, int>>& foundObjects)
+void D1Dun::collectObjects(std::vector<std::pair<int, int>> &foundObjects)
 {
     for (const std::vector<int> &objectsRow : this->objects) {
         for (int objectIndex : objectsRow) {
@@ -1631,13 +1631,61 @@ bool D1Dun::removeObjects()
     return result;
 }
 
+void D1Dun::loadItems(D1Dun *srcDun)
+{
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            int newItemIndex = srcDun->items[y][x];
+            int currItemIndex = this->items[y][x];
+            if (newItemIndex != 0 && currItemIndex != newItemIndex) {
+                if (currItemIndex != 0) {
+                    dProgressWarn() << tr("Item%1 at %2:%3 was replaced by %4.").arg(currItemIndex).arg(x).arg(y).arg(newItemIndex);
+                }
+                this->items[y][x] = newItemIndex;
+            }
+        }
+    }
+}
+
+void D1Dun::loadMonsters(D1Dun *srcDun)
+{
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            int newMonsterIndex = srcDun->monsters[y][x];
+            int currMonsterIndex = this->monsters[y][x];
+            if (newMonsterIndex != 0 && currMonsterIndex != newMonsterIndex) {
+                if (currMonsterIndex != 0) {
+                    dProgressWarn() << tr("'%1' monster at %2:%3 was replaced by '%4'.").arg(MonstConvTbl[currMonsterIndex].name).arg(x).arg(y).arg(MonstConvTbl[newMonsterIndex].name);
+                }
+                this->monsters[y][x] = newMonsterIndex;
+            }
+        }
+    }
+}
+
+void D1Dun::loadObjects(D1Dun *srcDun)
+{
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            int newObjectIndex = srcDun->objects[y][x];
+            int currObjectIndex = this->objects[y][x];
+            if (newObjectIndex != 0 && currObjectIndex != newObjectIndex) {
+                if (currObjectIndex != 0) {
+                    dProgressWarn() << tr("'%1' object at %2:%3 was replaced by '%4'.").arg(ObjConvTbl[currObjectIndex].name).arg(x).arg(y).arg(ObjConvTbl[newObjectIndex].name);
+                }
+                this->objects[y][x] = newObjectIndex;
+            }
+        }
+    }
+}
+
 bool D1Dun::resetTiles()
 {
     bool result = false;
     for (int tilePosY = 0; tilePosY < this->height / TILE_HEIGHT; tilePosY++) {
-        for (int tilePosX = 0; x < this->width / TILE_WIDTH; tilePosX++) {
+        for (int tilePosX = 0; tilePosX < this->width / TILE_WIDTH; tilePosX++) {
             int newTileRef = UNDEF_TILE;
-            for (int i = 0; i < this->til->getTileCount(); i++){
+            for (int i = 0; i < this->til->getTileCount(); i++) {
                 std::vector<int> &subs = this->til->getSubtileIndices(i);
                 int posx = tilePosX * TILE_WIDTH;
                 int posy = tilePosY * TILE_HEIGHT;
@@ -1651,7 +1699,7 @@ bool D1Dun::resetTiles()
                             break;
                         }
                     }
-                    if (x != TILE_WIDTH) {
+                    if (x < TILE_WIDTH) {
                         break;
                     }
                 }
@@ -1684,7 +1732,7 @@ bool D1Dun::resetSubtiles()
 {
     bool result = false;
     for (int tilePosY = 0; tilePosY < this->height / TILE_HEIGHT; tilePosY++) {
-        for (int tilePosX = 0; x < this->width / TILE_WIDTH; tilePosX++) {
+        for (int tilePosX = 0; tilePosX < this->width / TILE_WIDTH; tilePosX++) {
             int tileRef = this->tiles[tilePosY][tilePosX];
             // this->updateSubtiles(tilePosX, tilePosY, tileRef);
             std::vector<int> subs = std::vector<int>(TILE_WIDTH * TILE_HEIGHT);

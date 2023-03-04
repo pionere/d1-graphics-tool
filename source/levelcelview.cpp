@@ -2466,7 +2466,7 @@ void LevelCelView::sortTileset()
     }
 }
 
-LevelCelView::reportDungeonUsage()
+void LevelCelView::reportDungeonUsage()
 {
     ProgressDialog::incBar(tr("Scanning..."), 3);
 
@@ -2531,7 +2531,7 @@ LevelCelView::reportDungeonUsage()
     ProgressDialog::decBar();
 }
 
-LevelCelView::resetDungeonTiles()
+void LevelCelView::resetDungeonTiles()
 {
     bool change = this->dun->resetTiles();
     if (change) {
@@ -2540,7 +2540,7 @@ LevelCelView::resetDungeonTiles()
     }
 }
 
-LevelCelView::resetDungeonSubtiles()
+void LevelCelView::resetDungeonSubtiles()
 {
     bool change = this->dun->resetSubtiles();
     if (change) {
@@ -2549,7 +2549,7 @@ LevelCelView::resetDungeonSubtiles()
     }
 }
 
-LevelCelView::removeItems()
+void LevelCelView::removeItems()
 {
     bool change = this->dun->removeItems();
     if (change) {
@@ -2558,7 +2558,7 @@ LevelCelView::removeItems()
     }
 }
 
-LevelCelView::removeMonsters()
+void LevelCelView::removeMonsters()
 {
     bool change = this->dun->removeMonsters();
     if (change) {
@@ -2567,13 +2567,52 @@ LevelCelView::removeMonsters()
     }
 }
 
-LevelCelView::removeObjects()
+void LevelCelView::removeObjects()
 {
     bool change = this->dun->removeObjects();
     if (change) {
         // update the view - done by the caller
         // this->displayFrame();
     }
+}
+
+static bool dimensionMatch(D1Dun *dun1, D1Dun *dun2)
+{
+    if (dun1->getWidth() == dun2->getWidth() && dun1->getHeight() == dun2->getHeight()) {
+        return true;
+    }
+    QMessageBox::critical(nullptr, tr("Error"), tr("Mismatching dungeons (Dimensions are %1:%2 vs %3:%4).").arg(dun1->getWidth()).arg(dun1->getHeight()).arg(dun2->getHeight()).arg(dun2->getWidth()));
+    return false;
+}
+
+void LevelCelView::loadItems(D1Dun *srcDun)
+{
+    if (!dimensionMatch(this->dun, srcDun)) {
+        return;
+    }
+    this->dun->loadItems(srcDun);
+    // update the view - done by the caller
+    // this->displayFrame();
+}
+
+void LevelCelView::loadMonsters(D1Dun *srcDun)
+{
+    if (!dimensionMatch(this->dun, srcDun)) {
+        return;
+    }
+    this->dun->loadMonsters(srcDun);
+    // update the view - done by the caller
+    // this->displayFrame();
+}
+
+void LevelCelView::loadObjects(D1Dun *srcDun)
+{
+    if (!dimensionMatch(this->dun, srcDun)) {
+        return;
+    }
+    this->dun->loadObjects(srcDun);
+    // update the view - done by the caller
+    // this->displayFrame();
 }
 
 void LevelCelView::upscale(const UpscaleParam &params)

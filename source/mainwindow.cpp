@@ -1651,7 +1651,7 @@ void MainWindow::on_actionReportUse_Dungeon_triggered()
 
 void MainWindow::on_actionPatchDungeon_Dungeon_triggered()
 {
-
+    // FIXME
 }
 
 void MainWindow::on_actionResetTiles_Dungeon_triggered()
@@ -1676,22 +1676,22 @@ void MainWindow::on_actionResetSubtiles_Dungeon_triggered()
 
 void MainWindow::on_actionCheckItems_Dungeon_triggered()
 {
-
+    // FIXME
 }
 
 void MainWindow::on_actionCheckMonsters_Dungeon_triggered()
 {
-
+    // FIXME
 }
 
 void MainWindow::on_actionCheckObjects_Dungeon_triggered()
 {
-
+    // FIXME
 }
 
 void MainWindow::on_actionCheckEntities_Dungeon_triggered()
 {
-
+    // FIXME
 }
 
 void MainWindow::on_actionRemoveItems_Dungeon_triggered()
@@ -1706,7 +1706,25 @@ void MainWindow::on_actionRemoveItems_Dungeon_triggered()
 
 void MainWindow::on_actionLoadItems_Dungeon_triggered()
 {
+    QString dunFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Source of the items"), "DUN Files (*.dun *.DUN)");
 
+    if (dunFilePath.isEmpty()) {
+        return;
+    }
+    D1Dun srcDun;
+    OpenAsParam params = OpenAsParam();
+    params.dunFilePath = dunFilePath;
+    if (!srcDun.load(dunFilePath, this->tileset->til, params)) {
+        this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
+        return;
+    }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->loadItems(&srcDun);
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
 }
 
 void MainWindow::on_actionRemoveMonsters_Dungeon_triggered()
@@ -1721,7 +1739,25 @@ void MainWindow::on_actionRemoveMonsters_Dungeon_triggered()
 
 void MainWindow::on_actionLoadMonsters_Dungeon_triggered()
 {
+    QString dunFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Source of the monsters"), "DUN Files (*.dun *.DUN)");
 
+    if (dunFilePath.isEmpty()) {
+        return;
+    }
+    D1Dun srcDun;
+    OpenAsParam params = OpenAsParam();
+    params.dunFilePath = dunFilePath;
+    if (!srcDun.load(dunFilePath, this->tileset->til, params)) {
+        this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
+        return;
+    }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->loadMonsters(&srcDun);
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
 }
 
 void MainWindow::on_actionRemoveObjects_Dungeon_triggered()
@@ -1736,7 +1772,25 @@ void MainWindow::on_actionRemoveObjects_Dungeon_triggered()
 
 void MainWindow::on_actionLoadObjects_Dungeon_triggered()
 {
+    QString dunFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Source of the objects"), "DUN Files (*.dun *.DUN)");
 
+    if (dunFilePath.isEmpty()) {
+        return;
+    }
+    D1Dun srcDun;
+    OpenAsParam params = OpenAsParam();
+    params.dunFilePath = dunFilePath;
+    if (!srcDun.load(dunFilePath, this->tileset->til, params)) {
+        this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
+        return;
+    }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->loadObjects(&srcDun);
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
 }
 
 void MainWindow::on_actionNew_PAL_triggered()

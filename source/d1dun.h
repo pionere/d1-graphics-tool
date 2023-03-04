@@ -83,12 +83,15 @@ public:
     bool setAssetPath(QString path);
     QString getAssetPath() const;
 
-    void collectItems(std::vector<std::pair<int, int>>& items);
-    void collectMonsters(std::vector<std::pair<int, int>>& monsters);
-    void collectObjects(std::vector<std::pair<int, int>>& objects);
+    void collectItems(std::vector<std::pair<int, int>> &items);
+    void collectMonsters(std::vector<std::pair<int, int>> &monsters);
+    void collectObjects(std::vector<std::pair<int, int>> &objects);
     bool removeItems();
     bool removeMonsters();
     bool removeObjects();
+    void loadItems(D1Dun *srcDun);
+    void loadMonsters(D1Dun *srcDun);
+    void loadObjects(D1Dun *srcDun);
 
     bool resetTiles();
     bool resetSubtiles();

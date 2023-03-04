@@ -86,6 +86,9 @@ public:
     void removeItems();
     void removeMonsters();
     void removeObjects();
+    void loadItems(D1Dun *srcDun);
+    void loadMonsters(D1Dun *srcDun);
+    void loadObjects(D1Dun *srcDun);
 
     void upscale(const UpscaleParam &params);
 
