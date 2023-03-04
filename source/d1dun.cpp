@@ -1530,7 +1530,7 @@ void D1Dun::updateSubtiles(int tilePosX, int tilePosY, int tileRef)
     }
 }
 
-void D1Dun::collectItems(std::vector<std::pair<int, int>> &foundItems) const;
+void D1Dun::collectItems(std::vector<std::pair<int, int>> &foundItems) const
 {
     for (const std::vector<int> &itemsRow : this->items) {
         for (int itemIndex : itemsRow) {
@@ -1550,7 +1550,7 @@ void D1Dun::collectItems(std::vector<std::pair<int, int>> &foundItems) const;
     }
 }
 
-void D1Dun::collectMonsters(std::vector<std::pair<int, int>> &foundMonsters) const;
+void D1Dun::collectMonsters(std::vector<std::pair<int, int>> &foundMonsters) const
 {
     for (const std::vector<int> &monstersRow : this->monsters) {
         for (int monsterIndex : monstersRow) {
@@ -1570,7 +1570,7 @@ void D1Dun::collectMonsters(std::vector<std::pair<int, int>> &foundMonsters) con
     }
 }
 
-void D1Dun::collectObjects(std::vector<std::pair<int, int>> &foundObjects) const;
+void D1Dun::collectObjects(std::vector<std::pair<int, int>> &foundObjects) const
 {
     for (const std::vector<int> &objectsRow : this->objects) {
         for (int objectIndex : objectsRow) {
