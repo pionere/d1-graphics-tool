@@ -13,6 +13,7 @@
 #include "d1cel.h"
 #include "d1cl2.h"
 #include "d1pal.h"
+#include "d1sol.h"
 #include "d1til.h"
 #include "d1tileset.h"
 #include "d1tmi.h"
@@ -1529,7 +1530,7 @@ void D1Dun::updateSubtiles(int tilePosX, int tilePosY, int tileRef)
     }
 }
 
-void D1Dun::collectItems(std::vector<std::pair<int, int>> &foundItems)
+void D1Dun::collectItems(std::vector<std::pair<int, int>> &foundItems) const;
 {
     for (const std::vector<int> &itemsRow : this->items) {
         for (int itemIndex : itemsRow) {
@@ -1549,7 +1550,7 @@ void D1Dun::collectItems(std::vector<std::pair<int, int>> &foundItems)
     }
 }
 
-void D1Dun::collectMonsters(std::vector<std::pair<int, int>> &foundMonsters)
+void D1Dun::collectMonsters(std::vector<std::pair<int, int>> &foundMonsters) const;
 {
     for (const std::vector<int> &monstersRow : this->monsters) {
         for (int monsterIndex : monstersRow) {
@@ -1569,7 +1570,7 @@ void D1Dun::collectMonsters(std::vector<std::pair<int, int>> &foundMonsters)
     }
 }
 
-void D1Dun::collectObjects(std::vector<std::pair<int, int>> &foundObjects)
+void D1Dun::collectObjects(std::vector<std::pair<int, int>> &foundObjects) const;
 {
     for (const std::vector<int> &objectsRow : this->objects) {
         for (int objectIndex : objectsRow) {
@@ -1584,6 +1585,76 @@ void D1Dun::collectObjects(std::vector<std::pair<int, int>> &foundObjects)
             }
             if (objectIndex != 0) {
                 foundObjects.push_back(std::pair<int, int>(objectIndex, 1));
+            }
+        }
+    }
+}
+
+void D1Dun::checkItems(D1Sol *sol) const
+{
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            int itemIndex = this->items[y][x];
+            if (itemIndex == 0) {
+                continue;
+            }
+            int subtileRef = this->subtiles[y][x];
+            if (subtileRef == UNDEF_SUBTILE) {
+                dProgressWarn() << tr("Item%1 at %2:%3 is on an undefined subtile.").arg(itemIndex).arg(x).arg(y);
+            } else if (subtileRef == 0) {
+                dProgressWarn() << tr("Item%1 at %2:%3 is on an empty subtile.").arg(itemIndex).arg(x).arg(y);
+            } else {
+                quint8 solFlags = sol->getSubtileProperties(subtileRef - 1);
+                if (solFlags & ((1 << 0) | (1 << 2))) {
+                    dProgressErr() << tr("Item%1 at %2:%3 is on a subtile which is not accessible (solid or missile blocker).").arg(itemIndex).arg(x).arg(y);
+                }
+            }
+        }
+    }
+}
+
+void D1Dun::checkMonsters(D1Sol *sol) const
+{
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            int monsterIndex = this->monsters[y][x];
+            if (monsterIndex == 0) {
+                continue;
+            }
+            int subtileRef = this->subtiles[y][x];
+            if (subtileRef == UNDEF_SUBTILE) {
+                dProgressWarn() << tr("'%1' monster at %2:%3 is on an undefined subtile.").arg(MonstConvTbl[monsterIndex].name).arg(x).arg(y);
+            } else if (subtileRef == 0) {
+                dProgressWarn() << tr("'%1' monster at %2:%3 is on an empty subtile.").arg(MonstConvTbl[monsterIndex].name).arg(x).arg(y);
+            } else {
+                quint8 solFlags = sol->getSubtileProperties(subtileRef - 1);
+                if (solFlags & ((1 << 0) | (1 << 2))) {
+                    dProgressErr() << tr("'%1' monster at %2:%3 is on a subtile which is not accessible (solid or missile blocker).").arg(MonstConvTbl[monsterIndex].name).arg(x).arg(y);
+                }
+            }
+        }
+    }
+}
+
+void D1Dun::checkObjects() const
+{
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            int objectIndex = this->objects[y][x];
+            if (objectIndex == 0) {
+                continue;
+            }
+            int subtileRef = this->subtiles[y][x];
+            if (subtileRef == UNDEF_SUBTILE) {
+                dProgressWarn() << tr("'%1' object at %2:%3 is on an undefined subtile.").arg(ObjConvTbl[objectIndex].name).arg(x).arg(y);
+            } else if (subtileRef == 0) {
+                dProgressWarn() << tr("'%1' object at %2:%3 is on an empty subtile.").arg(ObjConvTbl[objectIndex].name).arg(x).arg(y);
+            }
+            if (this->monsters[y][x] != 0) {
+                dProgressErr() << tr("'%1' object at %2:%3 is sharing a subtile with a monster.").arg(ObjConvTbl[objectIndex].name).arg(x).arg(y);
+            }
+            if (this->items[y][x] != 0) {
+                dProgressErr() << tr("'%1' object at %2:%3 is sharing a subtile with an item.").arg(ObjConvTbl[objectIndex].name).arg(x).arg(y);
             }
         }
     }

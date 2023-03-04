@@ -1566,7 +1566,7 @@ void LevelCelView::collectSubtileUsers(int subtileIndex, std::vector<int> &users
     }
 }
 
-void LevelCelView::reportTilesetUsage()
+void LevelCelView::reportTilesetUsage() const
 {
     ProgressDialog::incBar(tr("Scanning..."), 2);
 
@@ -1743,7 +1743,7 @@ static int rightFoliagePixels(const D1GfxFrame *frame)
     return result;
 }
 
-void LevelCelView::checkSubtileFlags()
+void LevelCelView::checkSubtileFlags() const
 {
     ProgressDialog::incBar(tr("Checking SOL flags..."), 1);
     bool result = false;
@@ -2034,7 +2034,7 @@ void LevelCelView::checkSubtileFlags()
     ProgressDialog::decBar();
 }
 
-void LevelCelView::checkTileFlags()
+void LevelCelView::checkTileFlags() const
 {
     ProgressDialog::incBar(tr("Checking AMP flags..."), 1);
     bool result = false;
@@ -2188,7 +2188,7 @@ void LevelCelView::checkTileFlags()
     ProgressDialog::decBar();
 }
 
-void LevelCelView::checkTilesetFlags()
+void LevelCelView::checkTilesetFlags() const
 {
     this->checkTileFlags();
     this->checkSubtileFlags();
@@ -2466,7 +2466,7 @@ void LevelCelView::sortTileset()
     }
 }
 
-void LevelCelView::reportDungeonUsage()
+void LevelCelView::reportDungeonUsage() const
 {
     ProgressDialog::incBar(tr("Scanning..."), 3);
 
@@ -2547,6 +2547,28 @@ void LevelCelView::resetDungeonSubtiles()
         // update the view - done by the caller
         // this->displayFrame();
     }
+}
+
+void LevelCelView::checkItems() const
+{
+    this->dun->checkItems(this->sol);
+}
+
+void LevelCelView::checkMonsters() const
+{
+    this->dun->checkMonsters(this->sol);
+}
+
+void LevelCelView::checkObjects() const
+{
+    this->dun->checkObjects();
+}
+
+void LevelCelView::checkEntities() const
+{
+    this->checkItems();
+    this->checkMonsters();
+    this->checkObjects();
 }
 
 void LevelCelView::removeItems()

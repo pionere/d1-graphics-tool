@@ -64,12 +64,12 @@ public:
     QImage copyCurrent() const;
     void pasteCurrent(const QImage &image);
 
-    void reportTilesetUsage();
+    void reportTilesetUsage() const;
     void resetFrameTypes();
     void inefficientFrames();
-    void checkSubtileFlags();
-    void checkTileFlags();
-    void checkTilesetFlags();
+    void checkSubtileFlags() const;
+    void checkTileFlags() const;
+    void checkTilesetFlags() const;
     void cleanupFrames();
     void cleanupSubtiles();
     void cleanupTileset();
@@ -80,9 +80,13 @@ public:
     void sortSubtiles();
     void sortTileset();
 
-    void reportDungeonUsage();
+    void reportDungeonUsage() const;
     void resetDungeonTiles();
     void resetDungeonSubtiles();
+    void checkItems() const;
+    void checkMonsters() const;
+    void checkObjects() const;
+    void checkEntities() const;
     void removeItems();
     void removeMonsters();
     void removeObjects();

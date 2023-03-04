@@ -11,6 +11,7 @@
 class D1Gfx;
 class D1Min;
 class D1Pal;
+class D1Sol;
 class D1Til;
 class D1Tmi;
 
@@ -83,9 +84,12 @@ public:
     bool setAssetPath(QString path);
     QString getAssetPath() const;
 
-    void collectItems(std::vector<std::pair<int, int>> &items);
-    void collectMonsters(std::vector<std::pair<int, int>> &monsters);
-    void collectObjects(std::vector<std::pair<int, int>> &objects);
+    void collectItems(std::vector<std::pair<int, int>> &items) const;
+    void collectMonsters(std::vector<std::pair<int, int>> &monsters) const;
+    void collectObjects(std::vector<std::pair<int, int>> &objects) const;
+    void checkItems(D1Sol *sol) const;
+    void checkMonsters(D1Sol *sol) const;
+    void checkObjects() const;
     bool removeItems();
     bool removeMonsters();
     bool removeObjects();

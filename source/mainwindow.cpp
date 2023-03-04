@@ -1676,22 +1676,42 @@ void MainWindow::on_actionResetSubtiles_Dungeon_triggered()
 
 void MainWindow::on_actionCheckItems_Dungeon_triggered()
 {
-    // FIXME
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->checkItems();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
 }
 
 void MainWindow::on_actionCheckMonsters_Dungeon_triggered()
 {
-    // FIXME
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->checkMonsters();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
 }
 
 void MainWindow::on_actionCheckObjects_Dungeon_triggered()
 {
-    // FIXME
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->checkObjects();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
 }
 
 void MainWindow::on_actionCheckEntities_Dungeon_triggered()
 {
-    // FIXME
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->checkEntities();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
 }
 
 void MainWindow::on_actionRemoveItems_Dungeon_triggered()
