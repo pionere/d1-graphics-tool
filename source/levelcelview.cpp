@@ -2473,7 +2473,7 @@ void LevelCelView::reportDungeonUsage() const
     std::vector<std::pair<int, int>> items;
     this->dun->collectItems(items);
 
-    if (items.empty() == 0) {
+    if (items.empty()) {
         dProgress() << tr("There are no items in the dungeon.");
     } else {
         QString itemUses;
@@ -2493,7 +2493,7 @@ void LevelCelView::reportDungeonUsage() const
     std::vector<std::pair<int, int>> monsters;
     this->dun->collectMonsters(monsters);
 
-    if (monsters.empty() == 0) {
+    if (monsters.empty()) {
         dProgress() << tr("There are no monsters in the dungeon.");
     } else {
         QString monsterUses;
@@ -2513,7 +2513,7 @@ void LevelCelView::reportDungeonUsage() const
     std::vector<std::pair<int, int>> objects;
     this->dun->collectItems(objects);
 
-    if (objects.empty() == 0) {
+    if (objects.empty()) {
         dProgress() << tr("There are no objects in the dungeon.");
     } else {
         QString objectUses;
