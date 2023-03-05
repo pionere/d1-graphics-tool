@@ -18,6 +18,16 @@ class D1Tmi;
 #define UNDEF_SUBTILE -1
 #define UNDEF_TILE -1
 
+typedef enum dun_file_index {
+    DUN_BONECHAMB_ENTRY_PRE, // entry of the "Chamber of Bone" setmap before reading the book (Bonestr1.DUN)
+    DUN_BONECHAMB_ENTRY_AFT, // entry of the "Chamber of Bone" setmap after reading the book (Bonestr2.DUN)
+    DUN_BLIND_PRE,           // map tile for the "Halls of the Blind" quest before reading the book (Blind2.DUN)
+    DUN_BLIND_AFT,           // map tile for the "Halls of the Blind" quest after reading the book (Blind1.DUN)
+    DUN_BLOOD_PRE,           // map tile for the "Valor" quest before placing the stones (Blood2.DUN)
+    DUN_SKELKING_ENTRY,      // entry of the "Skeleton King's Lair" setmap (SKngDO.DUN)
+    DUN_VILE_PRE,            // setmap for the "Archbishop Lazarus" quest before reading the books (Vile2.DUN)
+} dun_file_index;
+
 typedef struct ObjectStruct {
     int type;
     int width;
@@ -99,6 +109,8 @@ public:
 
     bool resetTiles();
     bool resetSubtiles();
+
+    void patch(int dunFileIndex); // dun_file_index
 
 private:
     void drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);

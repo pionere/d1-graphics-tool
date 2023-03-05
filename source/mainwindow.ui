@@ -18,21 +18,6 @@
   </property>
   <widget class="QWidget">
    <layout class="QHBoxLayout">
-    <property name="spacing">
-     <number>4</number>
-    </property>
-    <property name="leftMargin">
-     <number>4</number>
-    </property>
-    <property name="topMargin">
-     <number>4</number>
-    </property>
-    <property name="rightMargin">
-     <number>4</number>
-    </property>
-    <property name="bottomMargin">
-     <number>4</number>
-    </property>
     <item>
      <widget class="QFrame">
       <property name="frameShape">
@@ -42,28 +27,13 @@
        <enum>QFrame::Raised</enum>
       </property>
       <layout class="QVBoxLayout" name="mainFrameLayout">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="leftMargin">
-        <number>4</number>
-       </property>
-       <property name="topMargin">
-        <number>4</number>
-       </property>
-       <property name="rightMargin">
-        <number>4</number>
-       </property>
-       <property name="bottomMargin">
-        <number>4</number>
-       </property>
       </layout>
      </widget>
     </item>
     <item alignment="Qt::AlignTop">
      <widget class="QFrame">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
+       <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -75,7 +45,7 @@
        <enum>QFrame::Raised</enum>
       </property>
       <layout class="QVBoxLayout" name="palFrameLayout">
-       <property name="spacing">
+       <!--property name="spacing">
         <number>0</number>
        </property>
        <property name="leftMargin">
@@ -89,7 +59,7 @@
        </property>
        <property name="bottomMargin">
         <number>4</number>
-       </property>
+       </property-->
       </layout>
      </widget>
     </item>
@@ -117,6 +87,13 @@
     </property>
     <addaction name="actionAbout"/>
     <addaction name="actionAbout_Qt"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionTogglePalTrn"/>
+    <addaction name="actionToggleBottomPanel"/>
    </widget>
    <widget class="QMenu" name="menuTileset">
     <property name="title">
@@ -213,6 +190,7 @@
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuView"/>
    <addaction name="menuTileset"/>
    <addaction name="menuDungeon"/>
    <addaction name="menuPalette"/>
@@ -325,6 +303,28 @@
   <action name="actionSettings">
    <property name="text">
     <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionTogglePalTrn">
+   <property name="text">
+    <string>Show PAL &amp; TRNs</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionToggleBottomPanel">
+   <property name="text">
+    <string>Show Bottom Panel</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionReportUse_Tileset">

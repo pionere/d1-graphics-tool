@@ -19,6 +19,7 @@
 #include "openasdialog.h"
 #include "paintwidget.h"
 #include "palettewidget.h"
+#include "patchdungeondialog.h"
 #include "patchtilesetdialog.h"
 #include "progressdialog.h"
 #include "saveasdialog.h"
@@ -139,6 +140,9 @@ private slots:
     void on_actionSettings_triggered();
     void on_actionQuit_triggered();
 
+    void on_actionTogglePalTrn_triggered();
+    void on_actionToggleBottomPanel_triggered();
+
     void on_actionUpscale_triggered();
 
     void on_actionReportUse_Tileset_triggered();
@@ -239,6 +243,7 @@ private:
     ExportDialog *exportDialog = nullptr;
     UpscaleDialog *upscaleDialog = nullptr;
     PatchTilesetDialog *patchTilesetDialog = nullptr;
+    PatchDugneonDialog *patchDungeonDialog = nullptr;
     UpscaleTaskDialog *upscaleTaskDialog = nullptr;
 
     D1Pal *pal = nullptr;

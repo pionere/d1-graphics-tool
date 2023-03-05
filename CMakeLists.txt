@@ -114,6 +114,9 @@ set(PROJECT_SOURCES
         source/palettewidget.cpp
         source/palettewidget.h
         source/palettewidget.ui
+        source/patchdungeondialog.cpp
+        source/patchdungeondialog.h
+        source/patchdungeondialog.ui
         source/patchtilesetdialog.cpp
         source/patchtilesetdialog.h
         source/patchtilesetdialog.ui

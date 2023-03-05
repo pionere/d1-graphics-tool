@@ -37,6 +37,8 @@
     </widget>
    </item>
    <item>
+    <widget class="QTabWidget" name="bottomPanel">
+     
     <widget class="QWidget" name="tilesetGridLayout">
      <layout class="QGridLayout">
       <item row="0" column="0">
@@ -714,8 +716,8 @@
       </item>
      </layout>
     </widget>
-   </item>
-   <item>
+     <!--/item>
+   <item-->
     <widget class="QWidget" name="dunViewGridLayout">
      <layout class="QGridLayout">
       <item row="0" column="0">
@@ -1215,6 +1217,8 @@
        </widget>
       </item>
      </layout>
+    </widget>
+     
     </widget>
    </item>
   </layout>

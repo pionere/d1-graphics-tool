@@ -123,6 +123,7 @@ MainWindow::~MainWindow()
     delete this->settingsDialog;
     delete this->exportDialog;
     delete this->patchTilesetDialog;
+    delete this->patchDungeonDialog;
     delete this->upscaleDialog;
     delete this->upscaleTaskDialog;
 }
@@ -1026,6 +1027,7 @@ void MainWindow::openFile(OpenAsParam &params)
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(true);
+    this->ui->menuView->setEnabled(true);
     this->ui->menuPalette->setEnabled(true);
     this->ui->actionExport->setEnabled(true);
     this->ui->actionSave->setEnabled(true);
@@ -1275,6 +1277,7 @@ void MainWindow::on_actionClose_triggered()
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(false);
+    this->ui->menuView->setEnabled(false);
     this->ui->menuTileset->setEnabled(false);
     this->ui->menuDungeon->setEnabled(false);
     this->ui->menuPalette->setEnabled(false);
@@ -1456,6 +1459,24 @@ void MainWindow::on_actionToggle_Draw_triggered()
         this->paintWidget->show();
     } else {
         this->paintWidget->hide();
+    }
+}
+
+void MainWindow::on_actionTogglePalTrn_triggered()
+{
+    bool hidden = this->palWidget->isHidden();
+    this->palWidget->setVisible(hidden);
+    this->trnBaseWidget->setVisible(hidden);
+    this->trnUniqueWidget->setVisible(hidden);
+}
+
+void MainWindow::on_actionToggleBottomPanel_triggered()
+{
+    if (this->levelCelView != nullptr) {
+        this->levelCelView->toggleBottomPanel();
+    }
+    if (this->celView != nullptr) {
+        this->celView->toggleBottomPanel();
     }
 }
 
@@ -1651,7 +1672,11 @@ void MainWindow::on_actionReportUse_Dungeon_triggered()
 
 void MainWindow::on_actionPatchDungeon_Dungeon_triggered()
 {
-    // FIXME
+    if (this->patchDungeonDialog == nullptr) {
+        this->patchDungeonDialog = new PatchDungeonDialog(this);
+    }
+    this->patchDungeonDialog->initialize(this->tileset);
+    this->patchDungeonDialog->show();
 }
 
 void MainWindow::on_actionResetTiles_Dungeon_triggered()
@@ -1731,7 +1756,7 @@ void MainWindow::on_actionLoadItems_Dungeon_triggered()
     if (dunFilePath.isEmpty()) {
         return;
     }
-    D1Dun srcDun;
+    D1Dun srcDun = D1Dun();
     OpenAsParam params = OpenAsParam();
     params.dunFilePath = dunFilePath;
     if (!srcDun.load(dunFilePath, this->tileset->til, params)) {
@@ -1764,7 +1789,7 @@ void MainWindow::on_actionLoadMonsters_Dungeon_triggered()
     if (dunFilePath.isEmpty()) {
         return;
     }
-    D1Dun srcDun;
+    D1Dun srcDun = D1Dun();
     OpenAsParam params = OpenAsParam();
     params.dunFilePath = dunFilePath;
     if (!srcDun.load(dunFilePath, this->tileset->til, params)) {
@@ -1797,7 +1822,7 @@ void MainWindow::on_actionLoadObjects_Dungeon_triggered()
     if (dunFilePath.isEmpty()) {
         return;
     }
-    D1Dun srcDun;
+    D1Dun srcDun = D1Dun();
     OpenAsParam params = OpenAsParam();
     params.dunFilePath = dunFilePath;
     if (!srcDun.load(dunFilePath, this->tileset->til, params)) {

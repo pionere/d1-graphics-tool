@@ -83,6 +83,7 @@ public:
 
     void update();
     void displayFrame();
+    void toggleBottomPanel();
 
 private:
     void updateLabel();

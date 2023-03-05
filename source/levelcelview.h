@@ -100,6 +100,7 @@ public:
     void updateLabel();
     void updateIcon();
     void displayFrame();
+    void toggleBottomPanel();
 
 private:
     void collectFrameUsers(int frameIndex, std::vector<int> &users) const;

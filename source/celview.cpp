@@ -483,6 +483,11 @@ void CelView::displayFrame()
     emit this->frameRefreshed();
 }
 
+void CelView::toggleBottomPanel()
+{
+    this->ui->bottomPanel->setVisible(this->ui->bottomPanel->isHidden());
+}
+
 void CelView::updateGroupIndex()
 {
     int i = 0;
