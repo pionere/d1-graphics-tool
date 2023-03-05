@@ -37,7 +37,8 @@
     </widget>
    </item>
    <item>
-    <layout class="QGridLayout" name="bottomPanel">
+    <widget name="bottomPanel">
+    <layout class="QGridLayout">
      <item row="0" column="0">
       <widget class="QLabel">
        <property name="minimumWidth">
@@ -516,6 +517,7 @@
       </widget>
      </item>
     </layout>
+     </widget>
    </item>
   </layout>
  </widget>

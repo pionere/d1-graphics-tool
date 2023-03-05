@@ -243,7 +243,7 @@ private:
     ExportDialog *exportDialog = nullptr;
     UpscaleDialog *upscaleDialog = nullptr;
     PatchTilesetDialog *patchTilesetDialog = nullptr;
-    PatchDugneonDialog *patchDungeonDialog = nullptr;
+    PatchDungeonDialog *patchDungeonDialog = nullptr;
     UpscaleTaskDialog *upscaleTaskDialog = nullptr;
 
     D1Pal *pal = nullptr;

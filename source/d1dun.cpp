@@ -1873,86 +1873,104 @@ bool D1Dun::resetSubtiles()
 
 void D1Dun::patch(int dunFileIndex)
 {
-    /*bool tileChange = false;
-    bool subtileChange = false;
+    bool change = false;
     switch (dunIndex) {
     case DUN_BONECHAMB_ENTRY_PRE: // Bonestr1.DUN
-	// patch the map - Bonestr1.DUN
-	// shadow of the external-left column
-	this->subtiles[4][0] = 48;
-	this->subtiles[5][0] = 50;
+        // shadow of the external-left column
+        change |= this->setTileAt(0 * TILE_WIDTH, 4 * TILE_HEIGHT, 48);
+        change |= this->setTileAt(0 * TILE_WIDTH, 5 * TILE_HEIGHT, 50);
         break;
     case DUN_BONECHAMB_ENTRY_AFT: // Bonestr2.DUN
-		// patch the map - Bonestr2.DUN
-		// place shadows
-		// NE-wall
-		this->tiles[(2 + 1 + 0 * 7) * 2] = 49;
-		this->tiles[(2 + 2 + 0 * 7) * 2] = 46;
-		this->tiles[(2 + 3 + 0 * 7) * 2] = 49;
-		this->tiles[(2 + 4 + 0 * 7) * 2] = 46;
-		// SW-wall
-		this->tiles[(2 + 1 + 4 * 7) * 2] = 49;
-		this->tiles[(2 + 2 + 4 * 7) * 2] = 46;
-		this->tiles[(2 + 3 + 4 * 7) * 2] = 49;
-		this->tiles[(2 + 4 + 4 * 7) * 2] = 46;
-		// NW-wall
-		this->tiles[(2 + 0 + 0 * 7) * 2] = 48;
-		this->tiles[(2 + 0 + 1 * 7) * 2] = 51;
-		this->tiles[(2 + 0 + 2 * 7) * 2] = 47;
-		this->tiles[(2 + 0 + 3 * 7) * 2] = 51;
-		this->tiles[(2 + 0 + 4 * 7) * 2] = 47;
-		this->tiles[(2 + 0 + 5 * 7) * 2] = 50;
-		// SE-wall
-		this->tiles[(2 + 4 + 1 * 7) * 2] = 51;
-		this->tiles[(2 + 4 + 2 * 7) * 2] = 47;
-		this->tiles[(2 + 4 + 3 * 7) * 2] = 50; // 51;
+        // place shadows
+        // NE-wall
+        // this->tiles[(2 + 1 + 0 * 7) * 2] = 49;
+        change |= this->setTileAt(0 * TILE_WIDTH, 1 * TILE_HEIGHT, 49);
+        // this->tiles[(2 + 2 + 0 * 7) * 2] = 46;
+        change |= this->setTileAt(0 * TILE_WIDTH, 2 * TILE_HEIGHT, 46);
+        // this->tiles[(2 + 3 + 0 * 7) * 2] = 49;
+        change |= this->setTileAt(0 * TILE_WIDTH, 3 * TILE_HEIGHT, 49);
+        // this->tiles[(2 + 4 + 0 * 7) * 2] = 46;
+        change |= this->setTileAt(0 * TILE_WIDTH, 4 * TILE_HEIGHT, 46);
+        // SW-wall
+        // this->tiles[(2 + 1 + 4 * 7) * 2] = 49;
+        change |= this->setTileAt(4 * TILE_WIDTH, 1 * TILE_HEIGHT, 49);
+        // this->tiles[(2 + 2 + 4 * 7) * 2] = 46;
+        change |= this->setTileAt(4 * TILE_WIDTH, 2 * TILE_HEIGHT, 46);
+        // this->tiles[(2 + 3 + 4 * 7) * 2] = 49;
+        change |= this->setTileAt(4 * TILE_WIDTH, 3 * TILE_HEIGHT, 49);
+        // this->tiles[(2 + 4 + 4 * 7) * 2] = 46;
+        change |= this->setTileAt(4 * TILE_WIDTH, 4 * TILE_HEIGHT, 46);
+        // NW-wall
+        // this->tiles[(2 + 0 + 0 * 7) * 2] = 48;
+        change |= this->setTileAt(0 * TILE_WIDTH, 0 * TILE_HEIGHT, 48);
+        // this->tiles[(2 + 0 + 1 * 7) * 2] = 51;
+        change |= this->setTileAt(1 * TILE_WIDTH, 0 * TILE_HEIGHT, 51);
+        // this->tiles[(2 + 0 + 2 * 7) * 2] = 47;
+        change |= this->setTileAt(2 * TILE_WIDTH, 0 * TILE_HEIGHT, 47);
+        // this->tiles[(2 + 0 + 3 * 7) * 2] = 51;
+        change |= this->setTileAt(3 * TILE_WIDTH, 0 * TILE_HEIGHT, 51);
+        // this->tiles[(2 + 0 + 4 * 7) * 2] = 47;
+        change |= this->setTileAt(4 * TILE_WIDTH, 0 * TILE_HEIGHT, 47);
+        // this->tiles[(2 + 0 + 5 * 7) * 2] = 50;
+        change |= this->setTileAt(5 * TILE_WIDTH, 0 * TILE_HEIGHT, 50);
+        // SE-wall
+        // this->tiles[(2 + 4 + 1 * 7) * 2] = 51;
+        change |= this->setTileAt(1 * TILE_WIDTH, 4 * TILE_HEIGHT, 51);
+        // this->tiles[(2 + 4 + 2 * 7) * 2] = 47;
+        change |= this->setTileAt(2 * TILE_WIDTH, 4 * TILE_HEIGHT, 47);
+        // this->tiles[(2 + 4 + 3 * 7) * 2] = 50; // 51;
+        change |= this->setTileAt(3 * TILE_WIDTH, 4 * TILE_HEIGHT, 50); // 51
         break;
     case DUN_BLIND_PRE: // Blind2.DUN
-	// replace the door with wall
-	this->subtiles[3][4] = 25;
+        // replace the door with wall
+        change |= this->setTileAt(4 * TILE_WIDTH, 3 * TILE_HEIGHT, 25);
         break;
     case DUN_BLIND_AFT: // Blind1.DUN
-		// place pieces with closed doors
-		this->tiles[(2 + 4 + 3 * 11) * 2] = 150;
-		this->tiles[(2 + 6 + 7 * 11) * 2] = 150;
+        // place pieces with closed doors
+        // this->tiles[(2 + 4 + 3 * 11) * 2] = 150;
+        change |= this->setTileAt(3 * TILE_WIDTH, 4 * TILE_HEIGHT, 150);
+        // this->tiles[(2 + 6 + 7 * 11) * 2]
+        change |= this->setTileAt(7 * TILE_WIDTH, 6 * TILE_HEIGHT, 150);
         break;
     case DUN_BLOOD_PRE: // Blood2.DUN
-	// patch the map - Blood2.DUN
-	// place pieces with closed doors
-	this->subtiles[10][4] = 151;
-	this->subtiles[15][4] = 151;
-	this->subtiles[15][5] = 151;
-	// shadow of the external-left column -- do not place to prevent overwriting large decorations
-	//this->subtiles[setpc_x - 1][setpc_y + 7] = 48;
-	//this->subtiles[setpc_x - 1][setpc_y + 8] = 50;
-	// shadow of the bottom-left column(s) -- one is missing
-	this->subtiles[13][1] = 48;
-	this->subtiles[14][1] = 50;
-	// shadow of the internal column next to the pedistal
-	this->subtiles[7][5] = 142;
-	this->subtiles[8][5] = 50;
+    // place pieces with closed doors
+        change |= this->setTileAt(4 * TILE_WIDTH, 10 * TILE_HEIGHT, 151);
+        change |= this->setTileAt(4 * TILE_WIDTH, 15 * TILE_HEIGHT, 151);
+        change |= this->setTileAt(5 * TILE_WIDTH, 15 * TILE_HEIGHT, 151);
+        // shadow of the external-left column -- do not place to prevent overwriting large decorations
+        //this->tiles[7][-1] = 48;
+        //this->tiles[8][-1] = 50;
+        // shadow of the bottom-left column(s) -- one is missing
+        change |= this->setTileAt(1 * TILE_WIDTH, 13 * TILE_HEIGHT, 48);
+        change |= this->setTileAt(1 * TILE_WIDTH, 14 * TILE_HEIGHT, 50);
+        // shadow of the internal column next to the pedistal
+        change |= this->setTileAt(5 * TILE_WIDTH, 7 * TILE_HEIGHT, 142);
+        change |= this->setTileAt(5 * TILE_WIDTH, 8 * TILE_HEIGHT, 50);
         break;
     case DUN_SKELKING_ENTRY: // SKngDO.DUN
-		// patch set-piece to use common tiles - SKngDO.DUN
-		this->tiles[(2 + 5 + 3 * 7) * 2] = 203;
-		this->tiles[(2 + 5 + 4 * 7) * 2] = 22;
-		// patch set-piece to use common tiles and make the inner tile at the entrance non-walkable - SKngDO.DUN
-		this->tiles[(2 + 5 + 2 * 7) * 2] = 203;
+        // patch set-piece to use common tiles
+        // this->tiles[(2 + 5 + 3 * 7) * 2] = 203;
+        change |= this->setTileAt(3 * TILE_WIDTH, 5 * TILE_HEIGHT, 203);
+        // this->tiles[(2 + 5 + 4 * 7) * 2] = 22;
+        change |= this->setTileAt(4 * TILE_WIDTH, 5 * TILE_HEIGHT, 22);
+        // patch set-piece to use common tiles and make the inner tile at the entrance non-walkable
+        // this->tiles[(2 + 5 + 2 * 7) * 2] = 203;
+        change |= this->setTileAt(2 * TILE_WIDTH, 5 * TILE_HEIGHT, 203);
         break;
     case DUN_VILE_PRE: // Vile2.DUN
-		// assert(pMap[(2 + 8 + 16 * 21) * 2] == 0);
-		// assert(dungeon[8][16] == 13);
-		this->subtiles[8][16] = 203;
-		// assert(pMap[(2 + 12 + 22 * 21) * 2] == 0);
-		// assert(dungeon[12][22] == 13);
-		this->subtiles[12][22] = 203;
-		// assert(pMap[(2 + 13 + 22 * 21) * 2] == 0);
-		// assert(dungeon[13][22] == 13);
-		this->subtiles[13][22] = 203;
-		// assert(pMap[(2 + 14 + 22 * 21) * 2] == 0);
-		// assert(dungeon[14][22] == 13);
-		this->subtiles[14][22] = 203;
+        // assert(pMap[(2 + 8 + 16 * 21) * 2] == 0);
+        // assert(dungeon[8][16] == 13);
+        change |= this->setTileAt(16 * TILE_WIDTH, 8 * TILE_HEIGHT, 203);
+        // assert(pMap[(2 + 12 + 22 * 21) * 2] == 0);
+        // assert(dungeon[12][22] == 13);
+        change |= this->setTileAt(22 * TILE_WIDTH, 12 * TILE_HEIGHT, 203);
+        // assert(pMap[(2 + 13 + 22 * 21) * 2] == 0);
+        // assert(dungeon[13][22] == 13);
+        change |= this->setTileAt(22 * TILE_WIDTH, 13 * TILE_HEIGHT, 203);
+        // assert(pMap[(2 + 14 + 22 * 21) * 2] == 0);
+        // assert(dungeon[14][22] == 13);
+        change |= this->setTileAt(22 * TILE_WIDTH, 14 * TILE_HEIGHT, 203);
         break;
-    }*/
+    }
 }
 
