@@ -119,6 +119,7 @@ private:
     D1Gfx *loadMonster(int monsterIndex);
     void clearAssets();
     void updateSubtiles(int tilePosX, int tilePosY, int tileRef);
+    bool changeTileAt(int tilePosX, int tilePosY, int tileRef);
 
 private:
     QString dunFilePath;

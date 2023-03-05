@@ -33,7 +33,6 @@ LevelCelView::LevelCelView(QWidget *parent)
 {
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(&this->celScene);
-    this->ui->bottomPanel->tabBar()->setVisible(false);
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
     this->ui->stopButton->setEnabled(false);
@@ -109,8 +108,8 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d)
     this->dunView = dunMode;
     this->viewBtn->setVisible(dunMode);
     // select gridlayout
-    // this->ui->tilesetGridLayout->setVisible(!dunMode);
-    // this->ui->dunViewGridLayout->setVisible(dunMode);
+    this->ui->tilesetGridLayout->setVisible(!dunMode);
+    this->ui->dunViewGridLayout->setVisible(dunMode);
     this->ui->bottomPanel->setCurrentIndex(1);
 
     if (dunMode) {
@@ -3168,9 +3167,15 @@ void LevelCelView::on_actionToggle_View_triggered()
     bool dunMode = !this->dunView;
     this->dunView = dunMode;
     // select gridlayout
-    // this->ui->tilesetGridLayout->setVisible(!dunMode);
-    // this->ui->dunViewGridLayout->setVisible(dunMode);
-    this->ui->bottomPanel->setCurrentIndex(dunMode ? 1 : 0);
+    if (dunMode) {
+        bool hidden = this->ui->tilesetGridLayout->isHidden(); 
+        this->ui->tilesetGridLayout->setVisible(false);
+        this->ui->dunViewGridLayout->setVisible(!hidden);
+    } else {
+        bool hidden = this->ui->dunViewGridLayout->isHidden(); 
+        this->ui->dunViewGridLayout->setVisible(false);
+        this->ui->tilesetGridLayout->setVisible(!hidden);
+    }
     // update zoom
     QLineEdit *zoomField;
     if (dunMode) {

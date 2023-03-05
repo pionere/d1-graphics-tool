@@ -307,7 +307,7 @@
   </action>
   <action name="actionTogglePalTrn">
    <property name="text">
-    <string>Show PAL &amp; TRNs</string>
+    <string>Show PAL &amp;&amp; TRNs</string>
    </property>
    <property name="checkable">
     <bool>true</bool>
