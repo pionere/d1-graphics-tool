@@ -1812,9 +1812,9 @@ bool D1Dun::resetTiles()
             int currTileRef = this->tiles[tilePosY][tilePosX];
             if (currTileRef != newTileRef) {
                 if (newTileRef == UNDEF_TILE) {
-                    dProgressWarn() << tr("Tile at %1:%2 is set to undefined, because no matching entry was found.").arg(tilePosX).arg(tilePosY);
+                    dProgressWarn() << tr("Tile at %1:%2 is set to undefined, because no matching entry was found.").arg(tilePosX * TILE_WIDTH).arg(tilePosY * TILE_HEIGHT);
                 } else {
-                    dProgress() << tr("Tile%1 at %2:%3 was replaced with %3.").arg(currTileRef).arg(tilePosX).arg(tilePosY).arg(newTileRef);
+                    dProgress() << tr("Tile%1 at %2:%3 was replaced with %4.").arg(currTileRef).arg(tilePosX * TILE_WIDTH).arg(tilePosY * TILE_HEIGHT).arg(newTileRef);
                 }
                 this->tiles[tilePosY][tilePosX] = newTileRef;
                 // FIXME: set modified if type == DUN
@@ -1930,7 +1930,6 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(0, 0, 48);
         change |= this->changeTileAt(0, 1, 51);
         change |= this->changeTileAt(0, 2, 47);
-        // this->tiles[(2 + 0 + 3 * 7) * 2] = 51;
         change |= this->changeTileAt(0, 3, 51);
         change |= this->changeTileAt(0, 4, 47);
         change |= this->changeTileAt(0, 5, 50);
