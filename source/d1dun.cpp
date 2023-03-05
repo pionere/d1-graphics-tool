@@ -1864,7 +1864,7 @@ bool D1Dun::resetSubtiles()
                                 dProgressWarn() << tr("Subtile at %1:%2 is set to undefined, because there was no tile-info for the corresponding tile (%3).").arg(dunx).arg(duny).arg(tileRef);
                             }
                         } else {
-                            dProgress() << tr("Subtile%1 at %2:%3 was replaced with %3.").arg(currSubtileRef).arg(dunx).arg(duny).arg(newSubtileRef);
+                            dProgress() << tr("Subtile%1 at %2:%3 was replaced with %4.").arg(currSubtileRef).arg(dunx).arg(duny).arg(newSubtileRef);
                         }
                         this->subtiles[duny][dunx] = newSubtileRef;
                         result = true;
