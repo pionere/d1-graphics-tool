@@ -286,7 +286,7 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
         int cellHeight = subtileWidth / 2;
         // move to 0;0
         int cX = pos.x() - this->celScene.sceneRect().width() / 2;
-        int cY = pos.y() - (CEL_SCENE_SPACING + subtileHeight - cellHeight);
+        int cY = pos.y() - (CEL_SCENE_MARGIN + subtileHeight - cellHeight);
         int offX = (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
         cX += offX;
 
@@ -332,16 +332,16 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
         this->update();
         return;
     }
-    if (pos.x() >= (int)(celFrameWidth + CEL_SCENE_SPACING * 2)
-        && pos.x() < (int)(celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 2)
-        && pos.y() >= CEL_SCENE_SPACING
-        && pos.y() < (int)(subtileHeight + CEL_SCENE_SPACING)
+    if (pos.x() >= (int)(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING)
+        && pos.x() < (int)(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING + subtileWidth)
+        && pos.y() >= CEL_SCENE_MARGIN
+        && pos.y() < (int)(subtileHeight + CEL_SCENE_MARGIN)
         && this->min->getSubtileCount() != 0) {
         // When a CEL frame is clicked in the subtile, display the corresponding CEL frame
 
         // Adjust coordinates
-        unsigned stx = pos.x() - (celFrameWidth + CEL_SCENE_SPACING * 2);
-        unsigned sty = pos.y() - CEL_SCENE_SPACING;
+        unsigned stx = pos.x() - (CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING);
+        unsigned sty = pos.y() - CEL_SCENE_MARGIN;
 
         // qDebug() << "Subtile clicked: " << stx << "," << sty;
 
@@ -364,7 +364,7 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
         QColor borderColor = QColor(Config::getPaletteSelectionBorderColor());
         QPen pen(borderColor);
         pen.setWidth(PALETTE_SELECTION_WIDTH);
-        QRectF coordinates = QRectF(CEL_SCENE_SPACING + celFrameWidth + CEL_SCENE_SPACING + stx * MICRO_WIDTH, CEL_SCENE_SPACING + sty * MICRO_HEIGHT, MICRO_WIDTH, MICRO_HEIGHT);
+        QRectF coordinates = QRectF(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING + stx * MICRO_WIDTH, CEL_SCENE_MARGIN + sty * MICRO_HEIGHT, MICRO_WIDTH, MICRO_HEIGHT);
         int a = PALETTE_SELECTION_WIDTH / 2;
         coordinates.adjust(-a, -a, 0, 0);
         // - top line
@@ -383,16 +383,16 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
         });
         timer->start(500);
         return;
-    } else if (pos.x() >= (int)(celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3)
-        && pos.x() < (int)(celFrameWidth + subtileWidth + tileWidth + CEL_SCENE_SPACING * 3)
-        && pos.y() >= CEL_SCENE_SPACING
-        && pos.y() < (int)(tileHeight + CEL_SCENE_SPACING)
+    } else if (pos.x() >= (int)(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING + subtileWidth + CEL_SCENE_SPACING)
+        && pos.x() < (int)(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING + subtileWidth + CEL_SCENE_SPACING + tileWidth)
+        && pos.y() >= CEL_SCENE_MARGIN
+        && pos.y() < (int)(CEL_SCENE_MARGIN + tileHeight)
         && this->til->getTileCount() != 0) {
         // When a subtile is clicked in the tile, display the corresponding subtile
 
         // Adjust coordinates
-        unsigned tx = pos.x() - (celFrameWidth + subtileWidth + CEL_SCENE_SPACING * 3);
-        unsigned ty = pos.y() - CEL_SCENE_SPACING;
+        unsigned tx = pos.x() - (CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING + subtileWidth + CEL_SCENE_SPACING);
+        unsigned ty = pos.y() - CEL_SCENE_MARGIN;
 
         // qDebug() << "Tile clicked" << tx << "," << ty;
 
@@ -442,7 +442,7 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
     }
     D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
     QPoint p = pos;
-    p -= QPoint(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
+    p -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
     dMainWindow().frameClicked(frame, p, first);
 }
 
@@ -2670,11 +2670,11 @@ void LevelCelView::displayFrame()
         QImage dunFrame = this->dun->getImage(params);
 
         this->celScene.setSceneRect(0, 0,
-            dunFrame.width() + CEL_SCENE_SPACING * 2,
-            dunFrame.height() + CEL_SCENE_SPACING * 2);
+            CEL_SCENE_MARGIN + dunFrame.width() + CEL_SCENE_MARGIN,
+            CEL_SCENE_MARGIN + dunFrame.height() + CEL_SCENE_MARGIN);
 
         this->celScene.addPixmap(QPixmap::fromImage(dunFrame))
-            ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
+            ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
     } else {
         // Getting the current frame/sub-tile/tile to display
         QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
@@ -2695,25 +2695,25 @@ void LevelCelView::displayFrame()
         // Resize the scene rectangle to include some padding around the CEL frame
         // the MIN subtile and the TIL tile
         this->celScene.setSceneRect(0, 0,
-            celFrame.width() + subtile.width() + tile.width() + CEL_SCENE_SPACING * 4,
-            tile.height() + CEL_SCENE_SPACING * 2);
+            CEL_SCENE_MARGIN + celFrame.width() + CEL_SCENE_SPACING + subtile.width() + CEL_SCENE_SPACING + tile.width() + CEL_SCENE_MARGIN,
+            CEL_SCENE_MARGIN + tile.height() + CEL_SCENE_MARGIN);
 
         // Add the backgrond and CEL frame while aligning it in the center
         this->celScene.addPixmap(QPixmap::fromImage(celFrameBackground))
-            ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
+            ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
         this->celScene.addPixmap(QPixmap::fromImage(celFrame))
-            ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
+            ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
 
         // Set current frame width and height
         this->ui->celFrameWidthEdit->setText(QString::number(celFrame.width()) + " px");
         this->ui->celFrameHeightEdit->setText(QString::number(celFrame.height()) + " px");
 
         // MIN
-        int minPosX = celFrame.width() + CEL_SCENE_SPACING * 2;
+        int minPosX = CEL_SCENE_MARGIN + celFrame.width() + CEL_SCENE_SPACING;
         this->celScene.addPixmap(QPixmap::fromImage(subtileBackground))
-            ->setPos(minPosX, CEL_SCENE_SPACING);
+            ->setPos(minPosX, CEL_SCENE_MARGIN);
         this->celScene.addPixmap(QPixmap::fromImage(subtile))
-            ->setPos(minPosX, CEL_SCENE_SPACING);
+            ->setPos(minPosX, CEL_SCENE_MARGIN);
 
         // Set current frame width and height
         this->ui->minFrameWidthEdit->setText(QString::number(this->min->getSubtileWidth()));
@@ -2724,9 +2724,9 @@ void LevelCelView::displayFrame()
         // TIL
         int tilPosX = minPosX + subtile.width() + CEL_SCENE_SPACING;
         this->celScene.addPixmap(QPixmap::fromImage(tileBackground))
-            ->setPos(tilPosX, CEL_SCENE_SPACING);
+            ->setPos(tilPosX, CEL_SCENE_MARGIN);
         this->celScene.addPixmap(QPixmap::fromImage(tile))
-            ->setPos(tilPosX, CEL_SCENE_SPACING);
+            ->setPos(tilPosX, CEL_SCENE_MARGIN);
 
         // Set current frame width and height
         this->ui->tilFrameWidthEdit->setText(QString::number(TILE_WIDTH));

@@ -1917,42 +1917,26 @@ void D1Dun::patch(int dunFileIndex)
     case DUN_BONECHAMB_ENTRY_AFT: // Bonestr2.DUN
         // place shadows
         // NE-wall
-        // this->tiles[(2 + 1 + 0 * 7) * 2] = 49;
         change |= this->changeTileAt(1, 0, 49);
-        // this->tiles[(2 + 2 + 0 * 7) * 2] = 46;
         change |= this->changeTileAt(2, 0, 46);
-        // this->tiles[(2 + 3 + 0 * 7) * 2] = 49;
         change |= this->changeTileAt(3, 0, 49);
-        // this->tiles[(2 + 4 + 0 * 7) * 2] = 46;
         change |= this->changeTileAt(4, 0, 46);
         // SW-wall
-        // this->tiles[(2 + 1 + 4 * 7) * 2] = 49;
         change |= this->changeTileAt(1, 4, 49);
-        // this->tiles[(2 + 2 + 4 * 7) * 2] = 46;
         change |= this->changeTileAt(2, 4, 46);
-        // this->tiles[(2 + 3 + 4 * 7) * 2] = 49;
         change |= this->changeTileAt(3, 4, 49);
-        // this->tiles[(2 + 4 + 4 * 7) * 2] = 46;
         change |= this->changeTileAt(4, 4, 46);
         // NW-wall
-        // this->tiles[(2 + 0 + 0 * 7) * 2] = 48;
         change |= this->changeTileAt(0, 0, 48);
-        // this->tiles[(2 + 0 + 1 * 7) * 2] = 51;
         change |= this->changeTileAt(0, 1, 51);
-        // this->tiles[(2 + 0 + 2 * 7) * 2] = 47;
         change |= this->changeTileAt(0, 2, 47);
         // this->tiles[(2 + 0 + 3 * 7) * 2] = 51;
-        change |= this->changeTileAt(3, 0, 51);
-        // this->tiles[(2 + 0 + 4 * 7) * 2] = 47;
+        change |= this->changeTileAt(0, 3, 51);
         change |= this->changeTileAt(0, 4, 47);
-        // this->tiles[(2 + 0 + 5 * 7) * 2] = 50;
         change |= this->changeTileAt(0, 5, 50);
         // SE-wall
-        // this->tiles[(2 + 4 + 1 * 7) * 2] = 51;
         change |= this->changeTileAt(4, 1, 51);
-        // this->tiles[(2 + 4 + 2 * 7) * 2] = 47;
         change |= this->changeTileAt(4, 2, 47);
-        // this->tiles[(2 + 4 + 3 * 7) * 2] = 50; // 51;
         change |= this->changeTileAt(4, 3, 50); // 51
         break;
     case DUN_BLIND_PRE: // Blind2.DUN
@@ -1961,9 +1945,7 @@ void D1Dun::patch(int dunFileIndex)
         break;
     case DUN_BLIND_AFT: // Blind1.DUN
         // place pieces with closed doors
-        // this->tiles[(2 + 4 + 3 * 11) * 2] = 150;
         change |= this->changeTileAt(4, 3, 150);
-        // this->tiles[(2 + 6 + 7 * 11) * 2]
         change |= this->changeTileAt(6, 7, 150);
         break;
     case DUN_BLOOD_PRE: // Blood2.DUN
