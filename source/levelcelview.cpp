@@ -110,7 +110,6 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d)
     // select gridlayout
     this->ui->tilesetGridLayout->setVisible(!dunMode);
     this->ui->dunViewGridLayout->setVisible(dunMode);
-    this->ui->bottomPanel->setCurrentIndex(1);
 
     if (dunMode) {
         this->ui->dungeonObjectComboBox->addItem("", 0);
@@ -2741,7 +2740,8 @@ void LevelCelView::displayFrame()
 
 void LevelCelView::toggleBottomPanel()
 {
-    this->ui->bottomPanel->setVisible(this->ui->bottomPanel->isHidden());
+    QGridLayout *layout = this->dunView ? this->ui->dunViewGridLayout : this->ui->tilesetGridLayout;
+    layout->setVisible(layout->isHidden());
 }
 
 void LevelCelView::setFrameIndex(int frameIndex)
@@ -3168,11 +3168,11 @@ void LevelCelView::on_actionToggle_View_triggered()
     this->dunView = dunMode;
     // select gridlayout
     if (dunMode) {
-        bool hidden = this->ui->tilesetGridLayout->isHidden(); 
+        bool hidden = this->ui->tilesetGridLayout->isHidden();
         this->ui->tilesetGridLayout->setVisible(false);
         this->ui->dunViewGridLayout->setVisible(!hidden);
     } else {
-        bool hidden = this->ui->dunViewGridLayout->isHidden(); 
+        bool hidden = this->ui->dunViewGridLayout->isHidden();
         this->ui->dunViewGridLayout->setVisible(false);
         this->ui->tilesetGridLayout->setVisible(!hidden);
     }
