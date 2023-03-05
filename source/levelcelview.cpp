@@ -108,8 +108,8 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d)
     this->dunView = dunMode;
     this->viewBtn->setVisible(dunMode);
     // select gridlayout
-    this->ui->tilesetGridLayout->setVisible(!dunMode);
-    this->ui->dunViewGridLayout->setVisible(dunMode);
+    this->ui->tilesetWidget->setVisible(!dunMode);
+    this->ui->dungeonWidget->setVisible(dunMode);
 
     if (dunMode) {
         this->ui->dungeonObjectComboBox->addItem("", 0);
@@ -2740,7 +2740,7 @@ void LevelCelView::displayFrame()
 
 void LevelCelView::toggleBottomPanel()
 {
-    QGridLayout *layout = this->dunView ? this->ui->dunViewGridLayout : this->ui->tilesetGridLayout;
+    QWidget *layout = this->dunView ? this->ui->dungeonWidget : this->ui->tilesetWidget;
     layout->setVisible(layout->isHidden());
 }
 
@@ -3025,7 +3025,7 @@ void LevelCelView::on_minFrameWidthEdit_returnPressed()
     int width = this->ui->minFrameWidthEdit->nonNegInt();
 
     this->min->setSubtileWidth(width);
-    // update view
+    // update the view
     this->displayFrame();
 
     this->on_minFrameWidthEdit_escPressed();
@@ -3042,7 +3042,7 @@ void LevelCelView::on_minFrameHeightEdit_returnPressed()
     int height = this->ui->minFrameHeightEdit->nonNegInt();
 
     this->min->setSubtileHeight(height);
-    // update view
+    // update the view
     this->displayFrame();
 
     this->on_minFrameHeightEdit_escPressed();
@@ -3168,13 +3168,13 @@ void LevelCelView::on_actionToggle_View_triggered()
     this->dunView = dunMode;
     // select gridlayout
     if (dunMode) {
-        bool hidden = this->ui->tilesetGridLayout->isHidden();
-        this->ui->tilesetGridLayout->setVisible(false);
-        this->ui->dunViewGridLayout->setVisible(!hidden);
+        bool hidden = this->ui->tilesetWidget->isHidden();
+        this->ui->tilesetWidget->setVisible(false);
+        this->ui->dungeonWidget->setVisible(!hidden);
     } else {
-        bool hidden = this->ui->dunViewGridLayout->isHidden();
-        this->ui->dunViewGridLayout->setVisible(false);
-        this->ui->tilesetGridLayout->setVisible(!hidden);
+        bool hidden = this->ui->dungeonWidget->isHidden();
+        this->ui->dungeonWidget->setVisible(false);
+        this->ui->tilesetWidget->setVisible(!hidden);
     }
     // update zoom
     QLineEdit *zoomField;
@@ -3248,7 +3248,7 @@ void LevelCelView::on_dunWidthEdit_returnPressed()
     if (change) {
         if (this->currentDunPosX >= newWidth) {
             this->currentDunPosX = newWidth - 1;
-            this->ui->dungeonPosXLineEdit->setText(QString::number(this->currentDunPosX));
+            this->on_dungeonPosXLineEdit_escPressed();
         }
         // update the view
         this->displayFrame();
@@ -3272,7 +3272,7 @@ void LevelCelView::on_dunHeightEdit_returnPressed()
     if (change) {
         if (this->currentDunPosY >= newHeight) {
             this->currentDunPosY = newHeight - 1;
-            this->ui->dungeonPosXLineEdit->setText(QString::number(this->currentDunPosY));
+            this->on_dungeonPosYLineEdit_escPressed();
         }
         // update the view
         this->displayFrame();
@@ -3294,7 +3294,7 @@ void LevelCelView::on_levelTypeComboBox_activated(int index)
     }
     bool change = this->dun->setLevelType(index);
     this->on_dungeonDefaultTileLineEdit_escPressed();
-    if (change /*&& this->ui->showTilesCheckBox->checkState() != Qt::Unchecked*/) {
+    if (change) {
         // update the view
         this->displayFrame();
     }
@@ -3308,7 +3308,7 @@ void LevelCelView::on_dungeonDefaultTileLineEdit_returnPressed()
     this->on_dungeonDefaultTileLineEdit_escPressed();
     if (change) {
         this->ui->levelTypeComboBox->setCurrentIndex(-1);
-        // update the view TODO: if this->ui->showTilesCheckBox->checkState() != Qt::Unchecked ?
+        // update the view
         this->displayFrame();
     }
 }
@@ -3340,7 +3340,7 @@ void LevelCelView::on_dungeonTileLineEdit_returnPressed()
 
     bool change = this->dun->setTileAt(this->currentDunPosX, this->currentDunPosY, tileRef);
     this->on_dungeonTileLineEdit_escPressed();
-    if (change /*&& this->ui->showTilesCheckBox->checkState() != Qt::Unchecked*/) {
+    if (change) {
         // update the view
         this->displayFrame();
     }
@@ -3387,7 +3387,7 @@ void LevelCelView::on_dungeonSubtileLineEdit_returnPressed()
 
     bool change = this->dun->setSubtileAt(this->currentDunPosX, this->currentDunPosY, subtileRef);
     this->on_dungeonSubtileLineEdit_escPressed();
-    if (change /*&& this->ui->showTilesCheckBox->checkState() != Qt::Unchecked*/) {
+    if (change) {
         // update the view
         this->displayFrame();
     }
@@ -3415,7 +3415,7 @@ void LevelCelView::on_dungeonItemLineEdit_returnPressed()
 
     bool change = this->dun->setItemAt(posx, posy, itemIndex);
     this->on_dungeonItemLineEdit_escPressed();
-    if (change && this->ui->showItemsCheckBox->isChecked()) {
+    if (change) {
         // update the view
         this->displayFrame();
     }
@@ -3444,7 +3444,7 @@ void LevelCelView::on_dungeonMonsterComboBox_activated(int index)
 
     bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monsterIndex);
     this->on_dungeonMonsterLineEdit_escPressed();
-    if (change && this->ui->showMonstersCheckBox->isChecked()) {
+    if (change) {
         // update the view
         this->displayFrame();
     }
@@ -3458,10 +3458,8 @@ void LevelCelView::on_dungeonMonsterLineEdit_returnPressed()
     this->on_dungeonMonsterLineEdit_escPressed();
     if (change) {
         this->ui->dungeonMonsterComboBox->setCurrentIndex(this->ui->dungeonMonsterComboBox->findData(monsterIndex));
-        if (this->ui->showMonstersCheckBox->isChecked()) {
-            // update the view
-            this->displayFrame();
-        }
+        // update the view
+        this->displayFrame();
     }
 }
 
@@ -3488,7 +3486,7 @@ void LevelCelView::on_dungeonObjectComboBox_activated(int index)
 
     bool change = this->dun->setObjectAt(this->currentDunPosX, this->currentDunPosY, objectIndex);
     this->on_dungeonObjectLineEdit_escPressed();
-    if (change && this->ui->showObjectsCheckBox->isChecked()) {
+    if (change) {
         // update the view
         this->displayFrame();
     }
@@ -3502,10 +3500,8 @@ void LevelCelView::on_dungeonObjectLineEdit_returnPressed()
     this->on_dungeonObjectLineEdit_escPressed();
     if (change) {
         this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
-        if (this->ui->showObjectsCheckBox->isChecked()) {
-            // update the view
-            this->displayFrame();
-        }
+        // update the view
+        this->displayFrame();
     }
 }
 
@@ -3523,10 +3519,11 @@ void LevelCelView::on_dungeonTransvalLineEdit_returnPressed()
 
     bool change = this->dun->setTransvalAt(this->currentDunPosX, this->currentDunPosY, transVal);
     this->on_dungeonTransvalLineEdit_escPressed();
-    /*if (change) {
+    if (change) {
         // update the view
-        this->displayFrame();
-    }*/
+        // this->displayFrame();
+        this->updateLabel();
+    }
 }
 
 void LevelCelView::on_dungeonTransvalLineEdit_escPressed()

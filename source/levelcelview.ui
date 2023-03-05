@@ -37,7 +37,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="tilesetGridLayout">
+    <widget class="QWidget" name="tilesetWidget">
      <layout class="QGridLayout">
       <item row="0" column="0">
        <widget class="QLabel">
@@ -716,7 +716,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="dunViewGridLayout">
+    <widget class="QWidget" name="dungeonWidget">
      <layout class="QGridLayout">
       <item row="0" column="0">
        <widget class="QLabel">
