@@ -1675,7 +1675,7 @@ void MainWindow::on_actionPatchDungeon_Dungeon_triggered()
     if (this->patchDungeonDialog == nullptr) {
         this->patchDungeonDialog = new PatchDungeonDialog(this);
     }
-    this->patchDungeonDialog->initialize(this->tileset);
+    this->patchDungeonDialog->initialize(this->dun);
     this->patchDungeonDialog->show();
 }
 

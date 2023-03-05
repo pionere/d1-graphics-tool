@@ -33,7 +33,7 @@ LevelCelView::LevelCelView(QWidget *parent)
 {
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(&this->celScene);
-    this->ui->bottomPanel->tabBar->setVisible(false);
+    this->ui->bottomPanel->tabBar()->setVisible(false);
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
     this->ui->stopButton->setEnabled(false);

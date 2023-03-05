@@ -37,7 +37,7 @@
     </widget>
    </item>
    <item>
-    <widget name="bottomPanel">
+    <widget class="QWidget" name="bottomPanel">
     <layout class="QGridLayout">
      <item row="0" column="0">
       <widget class="QLabel">

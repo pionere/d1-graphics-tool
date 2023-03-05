@@ -97,7 +97,7 @@ const ObjectStruct ObjConvTbl[128] = {
     { 0 },
     { 0 },
     { 0 },
-    {  14,  96, "Book2",    "Bookshelf", 1 }, // Q_BCHAMB, Q_BETRAYER
+    {  14,  96, "Book2",    "Bookstand", 1 }, // Q_BCHAMB, Q_BETRAYER
     { 0 }, //OBJ_BOOK2R,
     {  16, 160, "Burncros", "Burning cross", 0 }, // Q_BCHAMB
     { 0 },
@@ -1874,7 +1874,7 @@ bool D1Dun::resetSubtiles()
 void D1Dun::patch(int dunFileIndex)
 {
     bool change = false;
-    switch (dunIndex) {
+    switch (dunFileIndex) {
     case DUN_BONECHAMB_ENTRY_PRE: // Bonestr1.DUN
         // shadow of the external-left column
         change |= this->setTileAt(0 * TILE_WIDTH, 4 * TILE_HEIGHT, 48);
@@ -1933,13 +1933,13 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->setTileAt(7 * TILE_WIDTH, 6 * TILE_HEIGHT, 150);
         break;
     case DUN_BLOOD_PRE: // Blood2.DUN
-    // place pieces with closed doors
+        // place pieces with closed doors
         change |= this->setTileAt(4 * TILE_WIDTH, 10 * TILE_HEIGHT, 151);
         change |= this->setTileAt(4 * TILE_WIDTH, 15 * TILE_HEIGHT, 151);
         change |= this->setTileAt(5 * TILE_WIDTH, 15 * TILE_HEIGHT, 151);
         // shadow of the external-left column -- do not place to prevent overwriting large decorations
-        //this->tiles[7][-1] = 48;
-        //this->tiles[8][-1] = 50;
+        // this->tiles[7][-1] = 48;
+        // this->tiles[8][-1] = 50;
         // shadow of the bottom-left column(s) -- one is missing
         change |= this->setTileAt(1 * TILE_WIDTH, 13 * TILE_HEIGHT, 48);
         change |= this->setTileAt(1 * TILE_WIDTH, 14 * TILE_HEIGHT, 50);
@@ -1973,4 +1973,3 @@ void D1Dun::patch(int dunFileIndex)
         break;
     }
 }
-
