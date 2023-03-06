@@ -66,10 +66,20 @@
    </layout>
   </widget>
   <widget class="QMenuBar">
+   <widget class="QMenu" name="menuNew">
+    <property name="title">
+     <string>New</string>
+    </property>
+    <addaction name="actionNew_CEL"/>
+    <addaction name="actionNew_CL2"/>
+    <addaction name="actionNew_Tileset"/>
+    <addaction name="actionNew_Dungeon"/>
+   </widget>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="menuNew"/>
     <addaction name="actionOpen"/>
     <addaction name="actionOpenAs"/>
     <addaction name="actionSave"/>
@@ -85,8 +95,8 @@
     <property name="title">
      <string>Help</string>
     </property>
-    <!--addaction name="actionAbout"/>
-    <addaction name="actionAbout_Qt"/-->
+    <addaction name="actionAbout"/>
+    <addaction name="actionAbout_Qt"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -198,18 +208,38 @@
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar">
-   <property name="sizeGripEnabled">
+   <!--property name="sizeGripEnabled">
     <bool>false</bool>
-   </property>
+   </property-->
   </widget>
-  <action name="actionAbout" menu="menuHelp">
+  <action name="actionAbout">
    <property name="text">
     <string>About</string>
    </property>
   </action>
-  <action name="actionAbout_Qt" menu="menuHelp">
+  <action name="actionAbout_Qt">
    <property name="text">
     <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionNew_CEL">
+   <property name="text">
+    <string>CEL graphics</string>
+   </property>
+  </action>
+  <action name="actionNew_CL2">
+   <property name="text">
+    <string>CL2 graphics</string>
+   </property>
+  </action>
+  <action name="actionNew_Tileset">
+   <property name="text">
+    <string>Tileset</string>
+   </property>
+  </action>
+  <action name="actionNew_Dungeon">
+   <property name="text">
+    <string>Dungeon</string>
    </property>
   </action>
   <action name="actionQuit">

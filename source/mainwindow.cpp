@@ -50,12 +50,12 @@ MainWindow::MainWindow()
     this->ui->statusBar->insertWidget(0, &this->progressWidget);
 
     // initialize 'new' submenu of 'File'
-    this->newMenu.addAction("CEL graphics", this, SLOT(on_actionNew_CEL_triggered()));
+    /*this->newMenu.addAction("CEL graphics", this, SLOT(on_actionNew_CEL_triggered()));
     this->newMenu.addAction("CL2 graphics", this, SLOT(on_actionNew_CL2_triggered()));
     this->newMenu.addAction("Tileset", this, SLOT(on_actionNew_Tileset_triggered()));
     this->newMenu.addAction("Dungeon", this, SLOT(on_actionNew_Dungeon_triggered()));
     QAction *firstFileAction = (QAction *)this->ui->menuFile->actions()[0];
-    this->ui->menuFile->insertMenu(firstFileAction, &this->newMenu);
+    this->ui->menuFile->insertMenu(firstFileAction, &this->newMenu);*/
 
     // Initialize 'Undo/Redo' of 'Edit
     this->undoStack = new QUndoStack(this);
@@ -696,14 +696,14 @@ void MainWindow::changeEvent(QEvent *event)
 {
     if (event->type() == QEvent::LanguageChange) {
         this->ui->retranslateUi(this);
-        { // (re)translate the 'new' menu
+        /*{ // (re)translate the 'new' menu
             this->newMenu.setTitle(tr("New"));
             QList<QAction *> menuActions = this->newMenu.actions();
             menuActions[0]->setText(tr("CEL graphics"));
             menuActions[1]->setText(tr("CL2 graphics"));
             menuActions[2]->setText(tr("Tileset"));
             menuActions[3]->setText(tr("Dungeon"));
-        }
+        }*/
         // (re)translate undoAction, redoAction
         this->undoAction->setText(tr("Undo"));
         this->redoAction->setText(tr("Redo"));
