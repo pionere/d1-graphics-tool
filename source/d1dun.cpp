@@ -249,7 +249,7 @@ const MonsterStruct MonstConvTbl[128] = {
     { 0 }, //MT_RSNEAK,
     {  31, 128, "Sneak\\Sneak",    "Sneak\\Sneakv3.TRN",  "Unseen" }, // Q_BCHAMB
     {  32, 128, "Sneak\\Sneak",    "Sneak\\Sneakv1.TRN",  "Illusion Weaver" }, // Q_BLIND
-    {  33, 128, "GoatMace\\Goat",  nullptr,               "Flesh Clan" }, // Q_PWATER
+    {  33, 128, "GoatMace\\Goat",  nullptr,               "Flesh Clan (Mace)" }, // Q_PWATER
     { 0 }, //MT_BGOATMC,
     { 0 }, //MT_RGOATMC,
     { 0 }, //MT_GGOATMC,
@@ -257,7 +257,7 @@ const MonsterStruct MonstConvTbl[128] = {
     { 0 }, //MT_GBAT,
     { 0 }, //MT_NBAT,
     { 0 }, //MT_XBAT,
-    {  41, 128, "GoatBow\\GoatB",  nullptr,               "Flesh Clan" }, // Q_PWATER
+    {  41, 128, "GoatBow\\GoatB",  nullptr,               "Flesh Clan (Bow)" }, // Q_PWATER
     { 0 }, //MT_BGOATBW,
     { 0 }, //MT_RGOATBW,
     {  44, 128, "GoatBow\\GoatB",  "GoatMace\\Gray.TRN",  "Night Clan" }, // Q_ANVIL
@@ -877,7 +877,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                     if (subtileRef == UNDEF_SUBTILE) {
                         text = text.arg("???");
                     } else {
-                        text = text.arg(subtileRef - 1);
+                        text = text.arg(subtileRef);
                     }
                     QFontMetrics fm(dungeon.font());
                     unsigned textWidth = fm.horizontalAdvance(text);
@@ -898,7 +898,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 }
             }
             if (undefSubtiles != 0) {
-                QString text = tr("Tile%1").arg(tileRef - 1);
+                QString text = tr("Tile%1").arg(tileRef);
                 QFontMetrics fm(dungeon.font());
                 unsigned textWidth = fm.horizontalAdvance(text);
                 dungeon.drawText(cellCenterX - textWidth / 2, drawCursorY - backHeight - fm.height() / 2, text);
@@ -1950,15 +1950,17 @@ void D1Dun::patch(int dunFileIndex)
 {
     const quint8 dunSizes[][2] {
         // clang-format off
+/* DUN_SKELKING_ENTRY*/      { 14, 14 }, // SKngDO.DUN
 /* DUN_BONECHAMB_ENTRY_PRE*/ { 14, 14 }, // Bonestr1.DUN
 /* DUN_BONECHAMB_ENTRY_AFT*/ { 14, 14 }, // Bonestr2.DUN
+/* DUN_BONECHAMB_PRE*/       { 64, 36 }, // Bonecha1.DUN
+/* DUN_BONECHAMB_AFT*/       { 64, 36 }, // Bonecha2.DUN
 /* DUN_BLIND_PRE*/           { 22, 22 }, // Blind2.DUN
 /* DUN_BLIND_AFT*/           { 22, 22 }, // Blind1.DUN
 /* DUN_BLOOD_PRE*/           { 20, 32 }, // Blood2.DUN
 /* DUN_BLOOD_AFT*/           { 20, 32 }, // Blood1.DUN
 /* DUN_VILE_PRE*/            { 42, 46 }, // Vile2.DUN
 /* DUN_VILE_AFT*/            { 42, 46 }, // Vile1.DUN
-/* DUN_SKELKING_ENTRY*/      { 14, 14 }, // SKngDO.DUN
         // clang-format on
     };
     if (this->width != dunSizes[dunFileIndex][0] || this->height != dunSizes[dunFileIndex][1]) {
@@ -1967,6 +1969,13 @@ void D1Dun::patch(int dunFileIndex)
     }
     bool change = false;
     switch (dunFileIndex) {
+    case DUN_SKELKING_ENTRY: // SKngDO.DUN
+        // patch set-piece to use common tiles
+        change |= this->changeTileAt(5, 3, 203);
+        change |= this->changeTileAt(5, 4, 22);
+        // patch set-piece to use common tiles and make the inner tile at the entrance non-walkable
+        change |= this->changeTileAt(5, 2, 203);
+        break;
     case DUN_BONECHAMB_ENTRY_PRE: // Bonestr1.DUN
         // shadow of the external-left column
         change |= this->changeTileAt(0, 4, 48);
@@ -1995,6 +2004,31 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(4, 1, 51);
         change |= this->changeTileAt(4, 2, 47);
         change |= this->changeTileAt(4, 3, 50); // 51
+        break;
+    case DUN_BONECHAMB_PRE: // Bonecha1.DUN
+    case DUN_BONECHAMB_AFT: // Bonecha2.DUN
+        // place pieces with closed doors
+        change |= this->changeTileAt(17, 10, 150);
+        // place shadows
+        // - right corridor
+        change |= this->changeTileAt(12, 6, 47);
+        change |= this->changeTileAt(12, 7, 51);
+        change |= this->changeTileAt(16, 6, 47);
+        change |= this->changeTileAt(16, 7, 51);
+        change |= this->changeTileAt(16, 8, 47);
+        // - central room (top)
+        change |= this->changeTileAt(17, 8, 49);
+        change |= this->changeTileAt(18, 8, 46);
+        change |= this->changeTileAt(19, 8, 49);
+        change |= this->changeTileAt(20, 8, 46);
+        // - central room (bottom)
+        change |= this->changeTileAt(18, 12, 46);
+        change |= this->changeTileAt(19, 12, 49);
+        // - left corridor
+        change |= this->changeTileAt(12, 24, 47);
+        change |= this->changeTileAt(12, 25, 51);
+        change |= this->changeTileAt(16, 24, 47);
+        change |= this->changeTileAt(16, 25, 51);
         break;
     case DUN_BLIND_PRE: // Blind2.DUN
         // replace the door with wall
@@ -2065,15 +2099,8 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(14, 22, 203);
         // - SE
         for (int i = 1; i < 23; i++) {
-            change |= this->changeTileAt(20, i, 203);
+            change |= this->changeTileAt(20, i, 22);
         }
-        break;
-    case DUN_SKELKING_ENTRY: // SKngDO.DUN
-        // patch set-piece to use common tiles
-        change |= this->changeTileAt(5, 3, 203);
-        change |= this->changeTileAt(5, 4, 22);
-        // patch set-piece to use common tiles and make the inner tile at the entrance non-walkable
-        change |= this->changeTileAt(5, 2, 203);
         break;
     }
     if (!change) {

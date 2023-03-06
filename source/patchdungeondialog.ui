@@ -37,12 +37,17 @@
       <widget class="QComboBox" name="dungeonTypeComboBox">
        <item>
         <property name="text">
-         <string>Chamber of Bone - Before (Bonestr1.DUN)</string>
+         <string>Entrance to Skeleton King's Lair (SKngDO.DUN)</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Chamber of Bone - After (Bonestr2.DUN)</string>
+         <string>Entrance to Chamber of Bone - Before (Bonestr1.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Entrance to Chamber of Bone - After (Bonestr2.DUN)</string>
         </property>
        </item>
        <item>
@@ -73,11 +78,6 @@
        <item>
         <property name="text">
          <string>Archbishop Lazarus - After (Vile1.DUN)</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Skeleton King's Lair - Entry (SKngDO.DUN)</string>
         </property>
        </item>
       </widget>
