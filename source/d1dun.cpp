@@ -2058,7 +2058,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(13, 22, 203);
         change |= this->changeTileAt(14, 22, 203);
         // - SE
-        for (int i = 1; i < 23, i++) {
+        for (int i = 1; i < 23; i++) {
             change |= this->changeTileAt(20, i, 203);
         }
         break;
