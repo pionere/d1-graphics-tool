@@ -2008,7 +2008,7 @@ void D1Dun::patch(int dunFileIndex)
     case DUN_BONECHAMB_PRE: // Bonecha1.DUN
     case DUN_BONECHAMB_AFT: // Bonecha2.DUN
         // place pieces with closed doors
-        change |= this->changeTileAt(17, 10, 150);
+        change |= this->changeTileAt(17, 11, 150);
         // place shadows
         // - right corridor
         change |= this->changeTileAt(12, 6, 47);
