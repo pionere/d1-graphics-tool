@@ -85,16 +85,8 @@
     <property name="title">
      <string>Help</string>
     </property>
-    <action>
-     <property name="text">
-      <string>About</string>
-     </property>
-    </action>
-    <action>
-     <property name="text">
-      <string>About Qt</string>
-     </property>
-    </action>
+    <!--addaction name="actionAbout"/>
+    <addaction name="actionAbout_Qt"/-->
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -210,6 +202,16 @@
     <bool>false</bool>
    </property>
   </widget>
+  <action name="actionAbout" menu="menuHelp">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt" menu="menuHelp">
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+  </action>
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>
