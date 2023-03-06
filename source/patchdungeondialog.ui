@@ -52,6 +52,16 @@
        </item>
        <item>
         <property name="text">
+         <string>Chamber of Bone - Before (Bonecha1.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Chamber of Bone - After (Bonecha2.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Halls of the Blind - Before (Blind2.DUN)</string>
         </property>
        </item>

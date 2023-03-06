@@ -647,6 +647,11 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         }
         return;
     }
+    if (event->matches(QKeySequence::New)) {
+        this->ui->menuNew->setVisible(true);
+        this->ui->menuNew->setFocus();
+        return;
+    }
     if (event->matches(QKeySequence::Copy)) {
         QImage image;
         if (this->celView != nullptr) {

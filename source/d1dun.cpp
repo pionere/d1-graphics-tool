@@ -2025,10 +2025,10 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(18, 12, 46);
         change |= this->changeTileAt(19, 12, 49);
         // - left corridor
-        change |= this->changeTileAt(12, 24, 47);
-        change |= this->changeTileAt(12, 25, 51);
-        change |= this->changeTileAt(16, 24, 47);
-        change |= this->changeTileAt(16, 25, 51);
+        change |= this->changeTileAt(12, 14, 47);
+        change |= this->changeTileAt(12, 15, 51);
+        change |= this->changeTileAt(16, 14, 47);
+        change |= this->changeTileAt(16, 15, 51);
         break;
     case DUN_BLIND_PRE: // Blind2.DUN
         // replace the door with wall
