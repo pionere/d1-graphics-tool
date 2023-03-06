@@ -2026,8 +2026,14 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeObjectAt(11, 10, 110);
         change |= this->changeObjectAt(11, 12, 110);
         change |= this->changeObjectAt(6, 8, 111);
+        change |= this->changeObjectAt(7, 8, 0);
         change |= this->changeObjectAt(6, 10, 111);
+        change |= this->changeObjectAt(7, 10, 0);
         change |= this->changeObjectAt(6, 12, 111);
+        change |= this->changeObjectAt(7, 12, 0);
+        // remove book and the pedistal
+        change |= this->changeObjectAt(8, 24, 0);
+        change |= this->changeObjectAt(9, 16, 0);
         // replace monsters
         // - corridor
         change |= this->changeMonsterAt(8, 3, 62);
