@@ -407,8 +407,9 @@ bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
     int dunWidth = 0;
     int dunHeight = 0;
     bool changed = fileSize == 0; // !file.isOpen();
+    D1DUN_TYPE type = filePath.toLower().endsWith(".dun") ? D1DUN_TYPE::NORMAL : D1DUN_TYPE::RAW;
     if (fileSize != 0) {
-        if (filePath.toLower().endsWith(".dun")) {
+        if (type == D1DUN_TYPE::NORMAL) {
             // File size check
             if (fileSize < 2 * 2) {
                 dProgressErr() << tr("Invalid DUN file.");
@@ -426,7 +427,7 @@ bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
             dunHeight = readWord;
 
             unsigned tileCount = dunWidth * dunHeight;
-            if (fileSize < 2 * 2 + tileCount * 2) {
+            if (fileSize < 2 * 2 + tileCount * 2 || ((dunWidth != 0) != (dunHeight != 0))) {
                 dProgressErr() << tr("Invalid DUN header.");
                 return false;
             }
@@ -501,6 +502,11 @@ bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
                 changed = true;
             }
 
+            if (dataSize > 0) {
+                dProgressWarn() << tr("Unrecognizable data is ignored at the end of the DUN file.");
+                changed = true;
+            }
+
             // prepare subtiles
             for (int y = 0; y < dunHeight; y++) {
                 for (int x = 0; x < dunWidth; x++) {
@@ -540,6 +546,7 @@ bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
         }
     }
 
+    this->type = type;
     this->width = dunWidth * TILE_WIDTH;
     this->height = dunHeight * TILE_HEIGHT;
     this->dunFilePath = filePath;
@@ -553,6 +560,23 @@ void D1Dun::initialize(D1Pal *p, D1Tmi *m)
 {
     this->pal = p;
     this->tmi = m;
+    // ensure there is at least one valid tile
+    // assert((this->height == 0) == (this->width == 0));
+    if (this->width == 0) {
+        this->width = TILE_WIDTH;
+        this->height = TILE_HEIGHT;
+
+        this->modified = true;
+
+        // prepare the vectors
+        this->initVectors(1, 1);
+
+        // prepare tiles
+        this->tiles[0][0] = UNDEF_TILE;
+        
+        // prepare subtiles
+        this->updateSubtiles(0, 0, UNDEF_TILE);
+    }
     // calculate meta info
     QString tilPath = this->til->getFilePath();
     QFileInfo fileInfo = QFileInfo(tilPath);
@@ -634,9 +658,9 @@ bool D1Dun::save(const SaveAsParam &params)
         }
     }
 
-    bool baseDun = filePath.toLower().endsWith(".dun");
+    D1DUN_TYPE type = filePath.toLower().endsWith(".dun") ? D1DUN_TYPE::NORMAL : D1DUN_TYPE::RAW;
     // validate data
-    if (baseDun) {
+    if (type == D1DUN_TYPE::NORMAL) {
         // dun - tiles must be defined
         int dunWidth = this->width / TILE_WIDTH;
         int dunHeight = this->height / TILE_HEIGHT;
@@ -728,7 +752,7 @@ bool D1Dun::save(const SaveAsParam &params)
     QDataStream out(&outFile);
     out.setByteOrder(QDataStream::LittleEndian);
 
-    if (baseDun) {
+    if (type == D1DUN_TYPE::NORMAL) {
         // dun
         int dunWidth = this->width / TILE_WIDTH;
         int dunHeight = this->height / TILE_HEIGHT;
@@ -793,9 +817,9 @@ bool D1Dun::save(const SaveAsParam &params)
         }
     }
 
+    this->type = type;
     this->dunFilePath = filePath; // this->load(filePath, allocate);
     this->modified = false;
-
     return true;
 }
 
@@ -1545,7 +1569,9 @@ void D1Dun::updateSubtiles(int tilePosX, int tilePosY, int tileRef)
             int dunx = posx + x;
             int duny = posy + y;
             this->subtiles[duny][dunx] = subs[y * TILE_WIDTH + x];
-            // FIXME: set modified if type == RDUN and not in init phase
+            if (this->type == D1DUN_TYPE::RAW) {
+                this->modified = true;
+            }
         }
     }
 }
@@ -1817,7 +1843,9 @@ bool D1Dun::resetTiles()
                     dProgress() << tr("Tile%1 at %2:%3 was replaced with %4.").arg(currTileRef).arg(tilePosX * TILE_WIDTH).arg(tilePosY * TILE_HEIGHT).arg(newTileRef);
                 }
                 this->tiles[tilePosY][tilePosX] = newTileRef;
-                // FIXME: set modified if type == DUN
+                if (this->type == D1DUN_TYPE::NORMAL) {
+                    this->modified = true;
+                }
                 result = true;
             }
         }
@@ -1867,8 +1895,10 @@ bool D1Dun::resetSubtiles()
                             dProgress() << tr("Subtile%1 at %2:%3 was replaced with %4.").arg(currSubtileRef).arg(dunx).arg(duny).arg(newSubtileRef);
                         }
                         this->subtiles[duny][dunx] = newSubtileRef;
+                        if (this->type == D1DUN_TYPE::RAW) {
+                            this->modified = true;
+                        }
                         result = true;
-                        // FIXME: set modified if type == RDUN
                     }
                 }
             }

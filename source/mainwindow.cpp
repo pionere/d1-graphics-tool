@@ -53,6 +53,7 @@ MainWindow::MainWindow()
     this->newMenu.addAction("CEL graphics", this, SLOT(on_actionNew_CEL_triggered()));
     this->newMenu.addAction("CL2 graphics", this, SLOT(on_actionNew_CL2_triggered()));
     this->newMenu.addAction("Tileset", this, SLOT(on_actionNew_Tileset_triggered()));
+    this->newMenu.addAction("Dungeon", this, SLOT(on_actionNew_Dungeon_triggered()));
     QAction *firstFileAction = (QAction *)this->ui->menuFile->actions()[0];
     this->ui->menuFile->insertMenu(firstFileAction, &this->newMenu);
 
@@ -558,24 +559,30 @@ bool MainWindow::isResourcePath(const QString &path)
 
 void MainWindow::on_actionNew_CEL_triggered()
 {
-    this->openNew(OPEN_TILESET_TYPE::FALSE, OPEN_CLIPPED_TYPE::FALSE);
+    this->openNew(OPEN_TILESET_TYPE::FALSE, OPEN_CLIPPED_TYPE::FALSE, false);
 }
 
 void MainWindow::on_actionNew_CL2_triggered()
 {
-    this->openNew(OPEN_TILESET_TYPE::FALSE, OPEN_CLIPPED_TYPE::TRUE);
+    this->openNew(OPEN_TILESET_TYPE::FALSE, OPEN_CLIPPED_TYPE::TRUE, false);
 }
 
 void MainWindow::on_actionNew_Tileset_triggered()
 {
-    this->openNew(OPEN_TILESET_TYPE::TRUE, OPEN_CLIPPED_TYPE::FALSE);
+    this->openNew(OPEN_TILESET_TYPE::TRUE, OPEN_CLIPPED_TYPE::FALSE, false);
 }
 
-void MainWindow::openNew(OPEN_TILESET_TYPE tileset, OPEN_CLIPPED_TYPE clipped)
+void MainWindow::on_actionNew_Dungeon_triggered()
+{
+    this->openNew(OPEN_TILESET_TYPE::TRUE, OPEN_CLIPPED_TYPE::FALSE, true);
+}
+
+void MainWindow::openNew(OPEN_TILESET_TYPE tileset, OPEN_CLIPPED_TYPE clipped, bool createDun)
 {
     OpenAsParam params = OpenAsParam();
     params.isTileset = tileset;
     params.clipped = clipped;
+    params.createDun = tileset;
     this->openFile(params);
 }
 
@@ -695,6 +702,7 @@ void MainWindow::changeEvent(QEvent *event)
             menuActions[0]->setText(tr("CEL graphics"));
             menuActions[1]->setText(tr("CL2 graphics"));
             menuActions[2]->setText(tr("Tileset"));
+            menuActions[3]->setText(tr("Dungeon"));
         }
         // (re)translate undoAction, redoAction
         this->undoAction->setText(tr("Undo"));
@@ -909,7 +917,7 @@ void MainWindow::openFile(OpenAsParam &params)
         }
 
         // Loading DUN
-        if (!dunFilePath.isEmpty()) {
+        if (!dunFilePath.isEmpty() || params.createDun) {
             this->dun = new D1Dun();
             if (!this->dun->load(dunFilePath, this->tileset->til, params)) {
                 this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
@@ -941,9 +949,10 @@ void MainWindow::openFile(OpenAsParam &params)
     this->palWidget = new PaletteWidget(this, this->undoStack, tr("Palette"));
     this->trnUniqueWidget = new PaletteWidget(this, this->undoStack, tr("Unique translation"));
     this->trnBaseWidget = new PaletteWidget(this, this->undoStack, tr("Base Translation"));
-    this->ui->palFrameLayout->addWidget(this->palWidget);
-    this->ui->palFrameLayout->addWidget(this->trnUniqueWidget);
-    this->ui->palFrameLayout->addWidget(this->trnBaseWidget);
+    QLayout *palLayout = this->ui->palFrameWidget->layout();
+    palLayout->addWidget(this->palWidget);
+    palLayout->addWidget(this->trnUniqueWidget);
+    palLayout->addWidget(this->trnBaseWidget);
 
     if (isTileset) {
         // build a LevelCelView
@@ -1464,10 +1473,7 @@ void MainWindow::on_actionToggle_Draw_triggered()
 
 void MainWindow::on_actionTogglePalTrn_triggered()
 {
-    bool hidden = this->palWidget->isHidden();
-    this->palWidget->setVisible(hidden);
-    this->trnBaseWidget->setVisible(hidden);
-    this->trnUniqueWidget->setVisible(hidden);
+    this->ui->palFrameWidget->setVisible(this->ui->palFrameWidget->isHidden());
 }
 
 void MainWindow::on_actionToggleBottomPanel_triggered()

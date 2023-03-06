@@ -31,7 +31,7 @@
      </widget>
     </item>
     <item alignment="Qt::AlignTop">
-     <widget class="QFrame">
+     <widget class="QFrame" name="palFrameWidget">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
         <horstretch>0</horstretch>
@@ -44,7 +44,7 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QVBoxLayout" name="palFrameLayout">
+      <layout class="QVBoxLayout">
        <!--property name="spacing">
         <number>0</number>
        </property>
@@ -85,8 +85,16 @@
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionAbout"/>
-    <addaction name="actionAbout_Qt"/>
+    <action>
+     <property name="text">
+      <string>About</string>
+     </property>
+    </action>
+    <action>
+     <property name="text">
+      <string>About Qt</string>
+     </property>
+    </action>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -202,16 +210,6 @@
     <bool>false</bool>
    </property>
   </widget>
-  <action name="actionAbout">
-   <property name="text">
-    <string>About</string>
-   </property>
-  </action>
-  <action name="actionAbout_Qt">
-   <property name="text">
-    <string>About Qt</string>
-   </property>
-  </action>
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>

@@ -37,6 +37,7 @@ public:
     QString dunFilePath;
     int minWidth = 0;
     int minHeight = 0;
+    bool createDun = false;
 };
 
 namespace Ui {

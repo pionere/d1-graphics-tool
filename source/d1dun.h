@@ -28,6 +28,11 @@ typedef enum dun_file_index {
     DUN_VILE_PRE,            // setmap for the "Archbishop Lazarus" quest before reading the books (Vile2.DUN)
 } dun_file_index;
 
+enum class D1DUN_TYPE {
+    NORMAL,
+    RAW,
+};
+
 typedef struct ObjectStruct {
     int type;
     int width;
@@ -122,6 +127,7 @@ private:
     bool changeTileAt(int tilePosX, int tilePosY, int tileRef);
 
 private:
+    D1DUN_TYPE type = D1DUN_TYPE::NORMAL;
     QString dunFilePath;
     D1Pal *pal;
     const D1Min *min;

@@ -65,7 +65,7 @@ public:
     void reloadConfig();
     void updateWindow();
 
-    void openNew(OPEN_TILESET_TYPE tileset, OPEN_CLIPPED_TYPE clipped);
+    void openNew(OPEN_TILESET_TYPE tileset, OPEN_CLIPPED_TYPE clipped, bool createDun);
     void openFile(OpenAsParam &params);
     void openFiles(const QStringList &filePaths);
     void openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append);
@@ -130,6 +130,7 @@ private slots:
     void on_actionNew_CEL_triggered();
     void on_actionNew_CL2_triggered();
     void on_actionNew_Tileset_triggered();
+    void on_actionNew_Dungeon_triggered();
 
     void on_actionOpen_triggered();
     void on_actionOpenAs_triggered();
