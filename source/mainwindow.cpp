@@ -582,7 +582,7 @@ void MainWindow::openNew(OPEN_TILESET_TYPE tileset, OPEN_CLIPPED_TYPE clipped, b
     OpenAsParam params = OpenAsParam();
     params.isTileset = tileset;
     params.clipped = clipped;
-    params.createDun = tileset;
+    params.createDun = createDun;
     this->openFile(params);
 }
 

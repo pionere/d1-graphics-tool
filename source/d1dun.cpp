@@ -573,7 +573,7 @@ void D1Dun::initialize(D1Pal *p, D1Tmi *m)
 
         // prepare tiles
         this->tiles[0][0] = UNDEF_TILE;
-        
+
         // prepare subtiles
         this->updateSubtiles(0, 0, UNDEF_TILE);
     }
