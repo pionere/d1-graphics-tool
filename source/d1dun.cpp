@@ -598,7 +598,7 @@ void D1Dun::initialize(D1Pal *p, D1Tmi *m)
     // initialize levelType based on the fileName of D1Til
     QString baseName = fileInfo.completeBaseName().toLower();
     int dungeonType = DTYPE_TOWN;
-    if (baseName.length() >= 2 && baseName[0] == "l") {
+    if (baseName.length() >= 2 && baseName[0] == 'l') {
         switch (baseName[1].digitValue()) {
         case 1:
             dungeonType = DTYPE_CATHEDRAL;
