@@ -957,7 +957,7 @@ void MainWindow::openFile(OpenAsParam &params)
     if (isTileset) {
         // build a LevelCelView
         this->levelCelView = new LevelCelView(this);
-        this->levelCelView->initialize(this->pal, this->tileset, this->dun);
+        this->levelCelView->initialize(this->pal, this->tileset, this->dun, this->bottomPanelHidden);
 
         // Refresh palette widgets when frame, subtile of tile is changed
         QObject::connect(this->levelCelView, &LevelCelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
@@ -967,7 +967,7 @@ void MainWindow::openFile(OpenAsParam &params)
     } else {
         // build a CelView
         this->celView = new CelView(this);
-        this->celView->initialize(this->pal, this->gfx);
+        this->celView->initialize(this->pal, this->gfx, this->bottomPanelHidden);
 
         // Refresh palette widgets when frame is changed
         QObject::connect(this->celView, &CelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
@@ -1478,6 +1478,7 @@ void MainWindow::on_actionTogglePalTrn_triggered()
 
 void MainWindow::on_actionToggleBottomPanel_triggered()
 {
+    this->bottomPanelHidden = !this->bottomPanelHidden;
     if (this->levelCelView != nullptr) {
         this->levelCelView->toggleBottomPanel();
     }

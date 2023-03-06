@@ -62,12 +62,22 @@
        </item>
        <item>
         <property name="text">
-         <string>Skeleton King's Lair - Entry (SKngDO.DUN)</string>
+         <string>Valor - After (Blood1.DUN)</string>
         </property>
        </item>
        <item>
         <property name="text">
          <string>Archbishop Lazarus - Before (Vile2.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Archbishop Lazarus - After (Vile1.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Skeleton King's Lair - Entry (SKngDO.DUN)</string>
         </property>
        </item>
       </widget>

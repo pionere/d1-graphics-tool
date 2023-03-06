@@ -192,10 +192,12 @@ CelView::~CelView()
     delete ui;
 }
 
-void CelView::initialize(D1Pal *p, D1Gfx *g)
+void CelView::initialize(D1Pal *p, D1Gfx *g, bool bottomPanelHidden)
 {
     this->pal = p;
     this->gfx = g;
+
+    this->ui->bottomPanel->setVisible(!bottomPanelHidden);
 
     // this->update();
 }

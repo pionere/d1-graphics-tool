@@ -23,9 +23,11 @@ typedef enum dun_file_index {
     DUN_BONECHAMB_ENTRY_AFT, // entry of the "Chamber of Bone" setmap after reading the book (Bonestr2.DUN)
     DUN_BLIND_PRE,           // map tile for the "Halls of the Blind" quest before reading the book (Blind2.DUN)
     DUN_BLIND_AFT,           // map tile for the "Halls of the Blind" quest after reading the book (Blind1.DUN)
-    DUN_BLOOD_PRE,           // map tile for the "Valor" quest before placing the stones (Blood2.DUN)
-    DUN_SKELKING_ENTRY,      // entry of the "Skeleton King's Lair" setmap (SKngDO.DUN)
+    DUN_BLOOD_PRE,           // map tile for the "Valor" quest before and after placing the stones (Blood2.DUN)
+    DUN_BLOOD_AFT,           // map tile for the "Valor" quest 'after' placing the stones (Blood1.DUN)
     DUN_VILE_PRE,            // setmap for the "Archbishop Lazarus" quest before reading the books (Vile2.DUN)
+    DUN_VILE_AFT,            // setmap for the "Archbishop Lazarus" quest after reading the books (Vile1.DUN)
+    DUN_SKELKING_ENTRY,      // entry of the "Skeleton King's Lair" setmap (SKngDO.DUN)
 } dun_file_index;
 
 enum class D1DUN_TYPE {
@@ -125,6 +127,8 @@ private:
     void clearAssets();
     void updateSubtiles(int tilePosX, int tilePosY, int tileRef);
     bool changeTileAt(int tilePosX, int tilePosY, int tileRef);
+    bool changeObjectAt(int posx, int posy, int objectIndex);
+    bool changeMonsterAt(int posx, int posy, int monsterIndex);
 
 private:
     D1DUN_TYPE type = D1DUN_TYPE::NORMAL;

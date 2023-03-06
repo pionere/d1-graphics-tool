@@ -431,7 +431,7 @@ bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
                 dProgressErr() << tr("Invalid DUN header.");
                 return false;
             }
-            unsigned dataSize = fileSize - 2 * 2 + tileCount * 2;
+            unsigned dataSize = fileSize - (2 * 2 + tileCount * 2);
 
             // prepare the vectors
             this->initVectors(dunWidth, dunHeight);
@@ -833,7 +833,8 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backHeight - CELL_BORDER, backImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
     unsigned cellCenterX = drawCursorX + backWidth / 2;
     unsigned cellCenterY = drawCursorY - backHeight / 2;
-    bool subtileText = false;
+    bool middleText = false;
+    bool bottomText = false;
     if (params.tileState != Qt::Unchecked) {
         // draw the subtile
         int tileRef = this->tiles[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
@@ -870,8 +871,8 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                     }
                 }
             } else {
-                subtileText = subtileRef != UNDEF_SUBTILE || tileRef == UNDEF_TILE;
-                if (subtileText) {
+                middleText = subtileRef != UNDEF_SUBTILE || tileRef == UNDEF_TILE;
+                if (middleText) {
                     QString text = tr("Subtile%1");
                     if (subtileRef == UNDEF_SUBTILE) {
                         text = text.arg("???");
@@ -904,18 +905,6 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             }
         }
     }
-    if (params.showItems) {
-        // draw the item
-        int itemIndex = this->items[dunCursorY][dunCursorX];
-        if (itemIndex != 0) {
-            QString text = tr("Item%1").arg(itemIndex);
-            // dungeon.setFont(font);
-            // dungeon.setPen(font);
-            QFontMetrics fm(dungeon.font());
-            unsigned textWidth = fm.horizontalAdvance(text);
-            dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY + fm.height() * (subtileText ? 2 : 1), text);
-        }
-    }
     if (params.showObjects) {
         // draw the object
         int objectIndex = this->objects[dunCursorY][dunCursorX];
@@ -944,8 +933,21 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 QString text = tr("Object%1").arg(objectIndex);
                 QFontMetrics fm(dungeon.font());
                 unsigned textWidth = fm.horizontalAdvance(text);
-                dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY + fm.height() * (subtileText ? 1 : 0), text);
+                dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY + (middleText ? 1 : -1) * fm.height() / 2, text);
+                bottomText = middleText;
             }
+        }
+    }
+    if (params.showItems) {
+        // draw the item
+        int itemIndex = this->items[dunCursorY][dunCursorX];
+        if (itemIndex != 0) {
+            QString text = tr("Item%1").arg(itemIndex);
+            // dungeon.setFont(font);
+            // dungeon.setPen(font);
+            QFontMetrics fm(dungeon.font());
+            unsigned textWidth = fm.horizontalAdvance(text);
+            dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY + (bottomText ? 3 : 1) * fm.height() / 2, text);
         }
     }
     if (params.showMonsters) {
@@ -1920,6 +1922,30 @@ bool D1Dun::changeTileAt(int tilePosX, int tilePosY, int tileRef)
     return false;
 }
 
+bool D1Dun::changeObjectAt(int posx, int posy, int objectIndex)
+{
+    int prevObject = this->objects[posy][posx];
+    if (prevObject == objectIndex) {
+        return false;
+    }
+    this->objects[posy][posx] = objectIndex;
+    dProgress() << tr("Changed Object at %1:%2 from '%3' to '%4'.").arg(posx).arg(posy).arg(prevObject).arg(objectIndex);
+    this->modified = true;
+    return true;
+}
+
+bool D1Dun::changeMonsterAt(int posx, int posy, int monsterIndex)
+{
+    int prevMonster = this->monsters[posy][posx];
+    if (prevMonster == monsterIndex) {
+        return false;
+    }
+    this->monsters[posy][posx] = monsterIndex;
+    dProgress() << tr("Changed Monster at %1:%2 from '%3' to '%4'.").arg(posx).arg(posy).arg(prevMonster).arg(monsterIndex);
+    this->modified = true;
+    return true;
+}
+
 void D1Dun::patch(int dunFileIndex)
 {
     const quint8 dunSizes[][2] {
@@ -1929,8 +1955,10 @@ void D1Dun::patch(int dunFileIndex)
 /* DUN_BLIND_PRE*/           { 22, 22 }, // Blind2.DUN
 /* DUN_BLIND_AFT*/           { 22, 22 }, // Blind1.DUN
 /* DUN_BLOOD_PRE*/           { 20, 32 }, // Blood2.DUN
-/* DUN_SKELKING_ENTRY*/      { 14, 14 }, // SKngDO.DUN
+/* DUN_BLOOD_AFT*/           { 20, 32 }, // Blood1.DUN
 /* DUN_VILE_PRE*/            { 42, 46 }, // Vile2.DUN
+/* DUN_VILE_AFT*/            { 42, 46 }, // Vile1.DUN
+/* DUN_SKELKING_ENTRY*/      { 14, 14 }, // SKngDO.DUN
         // clang-format on
     };
     if (this->width != dunSizes[dunFileIndex][0] || this->height != dunSizes[dunFileIndex][1]) {
@@ -1992,26 +2020,54 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(5, 7, 142);
         change |= this->changeTileAt(5, 8, 50);
         break;
+    case DUN_BLOOD_AFT: // Blood1.DUN
+        // replace torches
+        change |= this->changeObjectAt(11, 8, 110);
+        change |= this->changeObjectAt(11, 10, 110);
+        change |= this->changeObjectAt(11, 12, 110);
+        change |= this->changeObjectAt(6, 8, 111);
+        change |= this->changeObjectAt(6, 10, 111);
+        change |= this->changeObjectAt(6, 12, 111);
+        // replace monsters
+        // - corridor
+        change |= this->changeMonsterAt(8, 3, 62);
+        change |= this->changeMonsterAt(9, 3, 62);
+        change |= this->changeMonsterAt(10, 3, 62);
+        change |= this->changeMonsterAt(5, 4, 62);
+        change |= this->changeMonsterAt(12, 4, 62);
+        // - left room
+        change |= this->changeMonsterAt(3, 8, 62);
+        change |= this->changeMonsterAt(3, 12, 62);
+        // - right room
+        change |= this->changeMonsterAt(14, 8, 62);
+        change |= this->changeMonsterAt(14, 12, 62);
+        // - front room
+        change |= this->changeMonsterAt(9, 22, 62);
+        change |= this->changeMonsterAt(6, 25, 62);
+        change |= this->changeMonsterAt(12, 25, 62);
+        break;
+    case DUN_VILE_PRE: // Vile2.DUN
+        // replace default tiles with external piece I.
+        // - central room
+        change |= this->changeTileAt(8, 16, 203);
+        /* fall-through */
+    case DUN_VILE_AFT: // Vile1.DUN
+        // replace default tiles with external piece
+        // - SW in the middle
+        change |= this->changeTileAt(12, 22, 203);
+        change |= this->changeTileAt(13, 22, 203);
+        change |= this->changeTileAt(14, 22, 203);
+        // - SE
+        for (int i = 1; i < 23, i++) {
+            change |= this->changeTileAt(20, i, 203);
+        }
+        break;
     case DUN_SKELKING_ENTRY: // SKngDO.DUN
         // patch set-piece to use common tiles
         change |= this->changeTileAt(5, 3, 203);
         change |= this->changeTileAt(5, 4, 22);
         // patch set-piece to use common tiles and make the inner tile at the entrance non-walkable
         change |= this->changeTileAt(5, 2, 203);
-        break;
-    case DUN_VILE_PRE: // Vile2.DUN
-        // assert(pMap[(2 + 8 + 16 * 21) * 2] == 0);
-        // assert(dungeon[8][16] == 13);
-        change |= this->changeTileAt(8, 16, 203);
-        // assert(pMap[(2 + 12 + 22 * 21) * 2] == 0);
-        // assert(dungeon[12][22] == 13);
-        change |= this->changeTileAt(12, 22, 203);
-        // assert(pMap[(2 + 13 + 22 * 21) * 2] == 0);
-        // assert(dungeon[13][22] == 13);
-        change |= this->changeTileAt(13, 22, 203);
-        // assert(pMap[(2 + 14 + 22 * 21) * 2] == 0);
-        // assert(dungeon[14][22] == 13);
-        change |= this->changeTileAt(14, 22, 203);
         break;
     }
     if (!change) {

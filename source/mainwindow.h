@@ -262,6 +262,8 @@ private:
     D1PalHits *palHits = nullptr;
     // buffer to store the original colors in case of color cycling
     QColor origCyclePalette[32];
+    // state of the panels visibility
+    bool bottomPanelHidden = false;
 };
 
 MainWindow &dMainWindow();

@@ -27,6 +27,12 @@
 #include "ui_levelcelview.h"
 #include "upscaler.h"
 
+template <class T, int N>
+constexpr int lengthof(T (&arr)[N])
+{
+    return N;
+}
+
 LevelCelView::LevelCelView(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::LevelCelView())
@@ -88,7 +94,7 @@ LevelCelView::~LevelCelView()
     delete ui;
 }
 
-void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d)
+void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPanelHidden)
 {
     this->pal = p;
     this->tileset = ts;
@@ -108,8 +114,8 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d)
     this->dunView = dunMode;
     this->viewBtn->setVisible(dunMode);
     // select gridlayout
-    this->ui->tilesetWidget->setVisible(!dunMode);
-    this->ui->dungeonWidget->setVisible(dunMode);
+    this->ui->tilesetWidget->setVisible(!dunMode && !bottomPanelHidden);
+    this->ui->dungeonWidget->setVisible(dunMode && !bottomPanelHidden);
 
     if (dunMode) {
         this->ui->dungeonObjectComboBox->addItem("", 0);
@@ -2500,7 +2506,13 @@ void LevelCelView::reportDungeonUsage() const
         int totalCount = 0;
         for (std::pair<int, int> &monster : monsters) {
             totalCount += monster.second;
-            monsterUses += tr("%1 %2").arg(monster.second).arg(MonstConvTbl[monster.first].name) + ", ";
+            QString monsterName;
+            if (monster.first < lengthof(MonstConvTbl)) {
+                monsterName = MonstConvTbl[monster.first].name;
+            } else {
+                monsterName = tr("Monster%1").arg(monster.first);
+            }
+            monsterUses += tr("%1 %2").arg(monster.second).arg(monsterName) + ", ";
         }
         monsterUses.chop(2);
         dProgress() << tr("There are %1 in the dungeon.", "", totalCount).arg(monsterUses);
@@ -2511,7 +2523,7 @@ void LevelCelView::reportDungeonUsage() const
     ProgressDialog::incValue();
 
     std::vector<std::pair<int, int>> objects;
-    this->dun->collectItems(objects);
+    this->dun->collectObjects(objects);
 
     if (objects.empty()) {
         dProgress() << tr("There are no objects in the dungeon.");
@@ -2520,7 +2532,13 @@ void LevelCelView::reportDungeonUsage() const
         int totalCount = 0;
         for (std::pair<int, int> &object : objects) {
             totalCount += object.second;
-            objectUses += tr("%1 Item%2").arg(object.second).arg(ObjConvTbl[object.first].name) + ", ";
+            QString objectName;
+            if (object.first < lengthof(ObjConvTbl)) {
+                objectName = ObjConvTbl[object.first].name;
+            } else {
+                objectName = tr("Object%1").arg(object.first);
+            }
+            objectUses += tr("%1 %2").arg(object.second).arg(objectName) + ", ";
         }
         objectUses.chop(2);
         dProgress() << tr("There are %1 in the dungeon.", "", totalCount).arg(objectUses);
