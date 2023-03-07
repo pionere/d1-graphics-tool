@@ -147,21 +147,22 @@ void MainWindow::changeColor(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>
 
 void MainWindow::setPal(const QString &path)
 {
-    this->pal = this->pals[path];
+    D1Pal *pal = this->pals[path];
+    this->pal = pal;
     this->trnUnique->setPalette(this->pal);
     this->trnUnique->refreshResultingPalette();
     this->trnBase->refreshResultingPalette();
     // update the widgets
     // - views
     if (this->celView != nullptr) {
-        this->celView->setPal(this->pal);
+        this->celView->setPal(pal);
     }
     if (this->levelCelView != nullptr) {
-        this->levelCelView->setPal(this->pal);
+        this->levelCelView->setPal(pal);
     }
     // - palWidget
     this->palWidget->updatePathComboBoxOptions(this->pals.keys(), path);
-    this->palWidget->setPal(this->pal);
+    this->palWidget->setPal(pal);
 }
 
 void MainWindow::setUniqueTrn(const QString &path)
@@ -183,7 +184,10 @@ void MainWindow::setBaseTrn(const QString &path)
     this->trnBase->setPalette(this->trnUnique->getResultingPalette());
     this->trnBase->refreshResultingPalette();
 
+    // update entities
     this->gfx->setPalette(this->trnBase->getResultingPalette());
+    // update the widgets
+    // - paint widget
     this->paintWidget->setPalette(this->trnBase->getResultingPalette());
 
     // update trnBaseWidget
@@ -775,24 +779,37 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->baseTrns[D1Trn::IDENTITY_PATH] = newTrn;
     this->trnBase = newTrn;
 
-    const QFileInfo celFileInfo = QFileInfo(gfxFilePath);
-
-    // If a SOL, MIN and TIL files exists then build a LevelCelView
-    const QString baseDir = celFileInfo.absolutePath();
-    const QString basePath = baseDir + "/" + celFileInfo.completeBaseName();
     QString tilFilePath = params.tilFilePath;
     QString minFilePath = params.minFilePath;
     QString solFilePath = params.solFilePath;
-    if (!gfxFilePath.isEmpty() && tilFilePath.isEmpty()) {
-        tilFilePath = basePath + ".til";
-    }
-    if (!gfxFilePath.isEmpty() && minFilePath.isEmpty()) {
-        minFilePath = basePath + ".min";
-    }
-    if (!gfxFilePath.isEmpty() && solFilePath.isEmpty()) {
-        solFilePath = basePath + ".sol";
+    QString ampFilePath = params.ampFilePath;
+    QString tmiFilePath = params.tmiFilePath;
+
+    QString baseDir;
+    if (!gfxFilePath.isEmpty()) {
+        QFileInfo celFileInfo = QFileInfo(gfxFilePath);
+
+        baseDir = celFileInfo.absolutePath();
+        QString basePath = baseDir + "/" + celFileInfo.completeBaseName();
+
+        if (tilFilePath.isEmpty()) {
+            tilFilePath = basePath + ".til";
+        }
+        if (minFilePath.isEmpty()) {
+            minFilePath = basePath + ".min";
+        }
+        if (solFilePath.isEmpty()) {
+            solFilePath = basePath + ".sol";
+        }
+        if (ampFilePath.isEmpty()) {
+            ampFilePath = basePath + ".amp";
+        }
+        if (tmiFilePath.isEmpty()) {
+            tmiFilePath = basePath + ".tmi";
+        }
     }
 
+    // If SOL, MIN and TIL files exist then build a LevelCelView
     bool isTileset = params.isTileset == OPEN_TILESET_TYPE::TRUE;
     if (params.isTileset == OPEN_TILESET_TYPE::AUTODETECT) {
         isTileset = fileType == 1 && QFileInfo::exists(tilFilePath) && QFileInfo::exists(minFilePath) && QFileInfo::exists(solFilePath);
@@ -822,20 +839,12 @@ void MainWindow::openFile(const OpenAsParam &params)
         }
 
         // Loading AMP
-        QString ampFilePath = params.ampFilePath;
-        if (!gfxFilePath.isEmpty() && ampFilePath.isEmpty()) {
-            ampFilePath = basePath + ".amp";
-        }
         if (!this->tileset->amp->load(ampFilePath, this->tileset->til->getTileCount(), params)) {
             this->failWithError(tr("Failed loading AMP file: %1.").arg(QDir::toNativeSeparators(ampFilePath)));
             return;
         }
 
         // Loading TMI
-        QString tmiFilePath = params.tmiFilePath;
-        if (!gfxFilePath.isEmpty() && tmiFilePath.isEmpty()) {
-            tmiFilePath = basePath + ".tmi";
-        }
         if (!this->tileset->tmi->load(tmiFilePath, this->tileset->sol, params)) {
             this->failWithError(tr("Failed loading TMI file: %1.").arg(QDir::toNativeSeparators(tmiFilePath)));
             return;
