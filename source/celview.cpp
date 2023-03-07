@@ -465,15 +465,15 @@ void CelView::displayFrame()
 
     // Resize the scene rectangle to include some padding around the CEL frame
     this->celScene.setSceneRect(0, 0,
-        celFrame.width() + CEL_SCENE_SPACING * 2,
-        celFrame.height() + CEL_SCENE_SPACING * 2);
+        CEL_SCENE_MARGIN + celFrame.width() + CEL_SCENE_MARGIN,
+        CEL_SCENE_MARGIN + celFrame.height() + CEL_SCENE_MARGIN);
     // ui->celGraphicsView->adjustSize();
 
     // Add the backgrond and CEL frame while aligning it in the center
     this->celScene.addPixmap(QPixmap::fromImage(celFrameBackground))
-        ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
+        ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
     this->celScene.addPixmap(QPixmap::fromImage(celFrame))
-        ->setPos(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
+        ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
 
     // Set current frame width and height
     this->ui->celFrameWidthEdit->setText(QString::number(celFrame.width()) + " px");
