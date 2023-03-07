@@ -3207,9 +3207,8 @@ void LevelCelView::on_actionToggle_View_triggered()
     this->displayFrame();
 }
 
-void LevelCelView::on_dungeonPosXLineEdit_returnPressed()
+void LevelCelView::setPositionX(int posx)
 {
-    int posx = this->ui->dungeonPosXLineEdit->text().toInt();
     if (posx < 0) {
         posx = 0;
     }
@@ -3225,16 +3224,8 @@ void LevelCelView::on_dungeonPosXLineEdit_returnPressed()
     }
 }
 
-void LevelCelView::on_dungeonPosXLineEdit_escPressed()
+void LevelCelView::setPositionY(int posy)
 {
-    int posx = this->currentDunPosX;
-    this->ui->dungeonPosXLineEdit->setText(QString::number(posx));
-    this->ui->dungeonPosXLineEdit->clearFocus();
-}
-
-void LevelCelView::on_dungeonPosYLineEdit_returnPressed()
-{
-    int posy = this->ui->dungeonPosYLineEdit->text().toInt();
     if (posy < 0) {
         posy = 0;
     }
@@ -3248,6 +3239,45 @@ void LevelCelView::on_dungeonPosYLineEdit_returnPressed()
         // update the view
         this->update();
     }
+}
+
+void LevelCelView::on_moveLeftButton_clicked()
+{
+    this->setPositionX(this->currentDunPosX - 1);
+}
+
+void LevelCelView::on_moveRightButton_clicked()
+{
+    this->setPositionX(this->currentDunPosX + 1);
+}
+
+void LevelCelView::on_moveUpButton_clicked()
+{
+    this->setPositionY(this->currentDunPosY - 1);
+}
+
+void LevelCelView::on_moveDownButton_clicked()
+{
+    this->setPositionY(this->currentDunPosY + 1);
+}
+
+void LevelCelView::on_dungeonPosXLineEdit_returnPressed()
+{
+    int posx = this->ui->dungeonPosXLineEdit->text().toInt();
+    this->setPositionX(posx);
+}
+
+void LevelCelView::on_dungeonPosXLineEdit_escPressed()
+{
+    int posx = this->currentDunPosX;
+    this->ui->dungeonPosXLineEdit->setText(QString::number(posx));
+    this->ui->dungeonPosXLineEdit->clearFocus();
+}
+
+void LevelCelView::on_dungeonPosYLineEdit_returnPressed()
+{
+    int posy = this->ui->dungeonPosYLineEdit->text().toInt();
+    this->setPositionY(posy);
 }
 
 void LevelCelView::on_dungeonPosYLineEdit_escPressed()

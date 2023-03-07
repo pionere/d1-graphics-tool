@@ -137,6 +137,9 @@ private:
     void setSubtileIndex(int subtileIndex);
     void setTileIndex(int tileIndex);
 
+    void setPositionX(int posx);
+    void setPositionY(int posy);
+
 signals:
     void frameRefreshed();
     void palModified();
@@ -181,6 +184,10 @@ private slots:
 
     void on_actionToggle_View_triggered();
 
+    void on_moveLeftButton_clicked();
+    void on_moveRightButton_clicked();
+    void on_moveUpButton_clicked();
+    void on_moveDownButton_clicked();
     void on_dungeonPosXLineEdit_returnPressed();
     void on_dungeonPosXLineEdit_escPressed();
     void on_dungeonPosYLineEdit_returnPressed();

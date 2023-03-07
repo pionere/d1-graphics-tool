@@ -933,12 +933,28 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="5" colspan="2">
+      <item row="1" column="5">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </spacer>
+      </item>
+      <item row="1" column="6">
+       <widget class="QPushButton" name="moveLeftButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Move left</string>
+        </property>
+        <property name="text">
+         <string notr="true">&lt;</string>
+        </property>
+       </widget>
       </item>
       <item row="1" column="7">
        <widget class="LineEditWidget" name="dungeonPosXLineEdit">
@@ -979,6 +995,22 @@
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="10">
+       <widget class="QPushButton" name="moveRightButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Move right</string>
+        </property>
+        <property name="text">
+         <string notr="true">&gt;</string>
         </property>
        </widget>
       </item>
@@ -1082,7 +1114,26 @@
         </item>
        </layout>
       </item>
-      
+      <item row="2" column="7" colspan="3">
+       <layout class="QHBoxLayout">
+        <item alignment="center">
+         <widget class="QPushButton" name="moveDownButton">
+          <property name="minimumWidth">
+           <number>40</number>
+          </property>
+          <property name="maximumWidth">
+           <number>40</number>
+          </property>
+          <property name="toolTip">
+           <string>Move down</string>
+          </property>
+          <property name="text">
+           <string notr="true">V</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
       <item row="3" column="0" colspan="18">
        <widget class="QTabWidget" name="dungeonTabs">
         <property name="tabBarAutoHide">
@@ -1142,7 +1193,7 @@
                <number>8</number>
               </property>
               <property name="text">
-               <string>/</string>
+               <string notr="true">/</string>
               </property>
              </widget>
             </item>
