@@ -18,6 +18,36 @@ PatchTilesetDialog::~PatchTilesetDialog()
 void PatchTilesetDialog::initialize(D1Tileset *ts)
 {
     this->tileset = ts;
+
+    // initialize the dropdown based on the filename
+    int dungeonType = -1;
+    QString baseName = QFileInfo(ts->til->getFilePath()).completeBaseName().toLower();
+    if (baseName == "town") {
+        dungeonType = DTYPE_TOWN;
+    }
+    if (baseName.length() == 2 && baseName[0] == 'l') { // TODO: merge with D1Dun::initialize?
+        switch (baseName[1].digitValue()) {
+        case 1:
+            dungeonType = DTYPE_CATHEDRAL;
+            break;
+        case 2:
+            dungeonType = DTYPE_CATACOMBS;
+            break;
+        case 3:
+            dungeonType = DTYPE_CAVES;
+            break;
+        case 4:
+            dungeonType = DTYPE_HELL;
+            break;
+        case 5:
+            dungeonType = DTYPE_CRYPT;
+            break;
+        case 6:
+            dungeonType = DTYPE_NEST;
+            break;
+        }
+    }
+    this->ui->dungeonTypeComboBox->setCurrentIndex(dungeonType);
 }
 
 void PatchTilesetDialog::on_runButton_clicked()
@@ -25,6 +55,10 @@ void PatchTilesetDialog::on_runButton_clicked()
     int dungeonType = this->ui->dungeonTypeComboBox->currentIndex();
 
     this->close();
+
+    if (dungeonType == -1) {
+        return;
+    }
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
 

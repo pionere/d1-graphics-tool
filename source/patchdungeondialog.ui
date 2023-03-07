@@ -34,7 +34,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="dungeonTypeComboBox">
+      <widget class="QComboBox" name="dunFileComboBox">
        <item>
         <property name="text">
          <string>Entrance to Skeleton King's Lair (SKngDO.DUN)</string>

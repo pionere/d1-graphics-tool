@@ -21,60 +21,56 @@ void PatchDungeonDialog::initialize(D1Dun *d)
 
     // initialize the dropdown based on the filename
     int fileIndex = -1;
-    QString filePath = d->getFilePath().toLower();
-    if (filePath.endsWith(".dun")) {
-        filePath.chop(4);
-    }
-    if (filePath.endsWith("skngdo")) {
+    QString baseName = QFileInfo(d->getFilePath()).completeBaseName().toLower();
+    if (baseName == "skngdo") {
         fileIndex = DUN_SKELKING_ENTRY;
     }
-    if (filePath.endsWith("bonestr1")) {
+    if (baseName == "bonestr1") {
         fileIndex = DUN_BONECHAMB_ENTRY_PRE;
     }
-    if (filePath.endsWith("bonestr2")) {
+    if (baseName == "bonestr2") {
         fileIndex = DUN_BONECHAMB_ENTRY_AFT;
     }
-    if (filePath.endsWith("bonecha1")) {
+    if (baseName == "bonecha1") {
         fileIndex = DUN_BONECHAMB_PRE;
     }
-    if (filePath.endsWith("bonecha2")) {
+    if (baseName == "bonecha2") {
         fileIndex = DUN_BONECHAMB_AFT;
     }
-    if (filePath.endsWith("blind2")) {
+    if (baseName == "blind2") {
         fileIndex = DUN_BLIND_PRE;
     }
-    if (filePath.endsWith("blind1")) {
+    if (baseName == "blind1") {
         fileIndex = DUN_BLIND_AFT;
     }
-    if (filePath.endsWith("blood2")) {
+    if (baseName == "blood2") {
         fileIndex = DUN_BLOOD_PRE;
     }
-    if (filePath.endsWith("blood1")) {
+    if (baseName == "blood1") {
         fileIndex = DUN_BLOOD_AFT;
     }
-    if (filePath.endsWith("vile2")) {
+    if (baseName == "vile2") {
         fileIndex = DUN_VILE_PRE;
     }
-    if (filePath.endsWith("vile1")) {
+    if (baseName == "vile1") {
         fileIndex = DUN_VILE_AFT;
     }
-    this->ui->dungeonTypeComboBox->setCurrentIndex(fileIndex);
+    this->ui->dunFileComboBox->setCurrentIndex(fileIndex);
 }
 
 void PatchDungeonDialog::on_runButton_clicked()
 {
-    int dunFileIndex = this->ui->dungeonTypeComboBox->currentIndex();
-
-    if (dunFileIndex == -1) {
-        this->close();
-        return;
-    }
+    int fileIndex = this->ui->dunFileComboBox->currentIndex();
 
     this->close();
 
+    if (fileIndex == -1) {
+        return;
+    }
+
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
 
-    this->dun->patch(dunFileIndex);
+    this->dun->patch(fileIndex);
 
     // Clear loading message from status bar
     ProgressDialog::done();
