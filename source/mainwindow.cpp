@@ -747,12 +747,12 @@ void MainWindow::failWithError(const QString &error)
 
 void MainWindow::openFile(const OpenAsParam &params)
 {
-    QString openFilePath = params.celFilePath;
+    const QString &gfxFilePath = params.celFilePath;
 
     // Check file extension
     int fileType = 0;
-    if (!openFilePath.isEmpty()) {
-        QString fileLower = openFilePath.toLower();
+    if (!gfxFilePath.isEmpty()) {
+        QString fileLower = gfxFilePath.toLower();
         if (fileLower.endsWith(".cel"))
             fileType = 1;
         else if (fileLower.endsWith(".cl2"))
@@ -783,21 +783,21 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->baseTrns[D1Trn::IDENTITY_PATH] = newTrn;
     this->trnBase = newTrn;
 
-    const QFileInfo celFileInfo = QFileInfo(openFilePath);
+    const QFileInfo celFileInfo = QFileInfo(gfxFilePath);
 
     // If a SOL, MIN and TIL files exists then build a LevelCelView
-    const QString celDir = celFileInfo.absolutePath();
-    const QString basePath = celDir + "/" + celFileInfo.completeBaseName();
+    const QString baseDir = celFileInfo.absolutePath();
+    const QString basePath = baseDir + "/" + celFileInfo.completeBaseName();
     QString tilFilePath = params.tilFilePath;
     QString minFilePath = params.minFilePath;
     QString solFilePath = params.solFilePath;
-    if (!openFilePath.isEmpty() && tilFilePath.isEmpty()) {
+    if (!gfxFilePath.isEmpty() && tilFilePath.isEmpty()) {
         tilFilePath = basePath + ".til";
     }
-    if (!openFilePath.isEmpty() && minFilePath.isEmpty()) {
+    if (!gfxFilePath.isEmpty() && minFilePath.isEmpty()) {
         minFilePath = basePath + ".min";
     }
-    if (!openFilePath.isEmpty() && solFilePath.isEmpty()) {
+    if (!gfxFilePath.isEmpty() && solFilePath.isEmpty()) {
         solFilePath = basePath + ".sol";
     }
 
@@ -831,7 +831,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
         // Loading AMP
         QString ampFilePath = params.ampFilePath;
-        if (!openFilePath.isEmpty() && ampFilePath.isEmpty()) {
+        if (!gfxFilePath.isEmpty() && ampFilePath.isEmpty()) {
             ampFilePath = basePath + ".amp";
         }
         if (!this->tileset->amp->load(ampFilePath, this->tileset->til->getTileCount(), params)) {
@@ -841,7 +841,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
         // Loading TMI
         QString tmiFilePath = params.tmiFilePath;
-        if (!openFilePath.isEmpty() && tmiFilePath.isEmpty()) {
+        if (!gfxFilePath.isEmpty() && tmiFilePath.isEmpty()) {
             tmiFilePath = basePath + ".tmi";
         }
         if (!this->tileset->tmi->load(tmiFilePath, this->tileset->sol, params)) {
@@ -850,27 +850,27 @@ void MainWindow::openFile(const OpenAsParam &params)
         }
 
         // Loading CEL
-        if (!D1CelTileset::load(*this->gfx, celFrameTypes, openFilePath, params)) {
-            this->failWithError(tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(openFilePath)));
+        if (!D1CelTileset::load(*this->gfx, celFrameTypes, gfxFilePath, params)) {
+            this->failWithError(tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
     } else if (fileType == 1) { // CEL
-        if (!D1Cel::load(*this->gfx, openFilePath, params)) {
-            this->failWithError(tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(openFilePath)));
+        if (!D1Cel::load(*this->gfx, gfxFilePath, params)) {
+            this->failWithError(tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
     } else if (fileType == 2) { // CL2
-        if (!D1Cl2::load(*this->gfx, openFilePath, params)) {
-            this->failWithError(tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(openFilePath)));
+        if (!D1Cl2::load(*this->gfx, gfxFilePath, params)) {
+            this->failWithError(tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
     } else if (fileType == 3) { // PCX
-        if (!D1Pcx::load(*this->gfx, this->pal, openFilePath, params)) {
-            this->failWithError(tr("Failed loading PCX file: %1.").arg(QDir::toNativeSeparators(openFilePath)));
+        if (!D1Pcx::load(*this->gfx, this->pal, gfxFilePath, params)) {
+            this->failWithError(tr("Failed loading PCX file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
     } else {
-        // openFilePath.isEmpty()
+        // gfxFilePath.isEmpty()
         this->gfx->setType(params.clipped == OPEN_CLIPPED_TYPE::TRUE ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V1_REGULAR);
     }
 
@@ -947,8 +947,8 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // Look for all palettes in the same folder as the CEL/CL2 file
     QString firstPaletteFound = fileType == 3 ? D1Pal::DEFAULT_PATH : "";
-    if (!celDir.isEmpty()) {
-        QDirIterator it(celDir, QStringList("*.pal"), QDir::Files | QDir::Readable);
+    if (!baseDir.isEmpty()) {
+        QDirIterator it(baseDir, QStringList("*.pal"), QDir::Files | QDir::Readable);
         while (it.hasNext()) {
             QString sPath = it.next();
 
@@ -1403,7 +1403,7 @@ void MainWindow::on_actionReportUse_Tileset_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
-    this->levelCelView->reportUsage();
+    this->levelCelView->reportTilesetUsage();
 
     // Clear loading message from status bar
     ProgressDialog::done();

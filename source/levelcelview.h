@@ -62,12 +62,12 @@ public:
     QImage copyCurrent() const;
     void pasteCurrent(const QImage &image);
 
-    void reportUsage();
+    void reportTilesetUsage() const;
     void resetFrameTypes();
     void inefficientFrames();
-    void checkSubtileFlags();
-    void checkTileFlags();
-    void checkTilesetFlags();
+    void checkSubtileFlags() const;
+    void checkTileFlags() const;
+    void checkTilesetFlags() const;
     void cleanupFrames();
     void cleanupSubtiles();
     void cleanupTileset();
@@ -175,8 +175,8 @@ private:
     LevelTabFrameWidget tabFrameWidget = LevelTabFrameWidget(this);
 
     D1Pal *pal;
-    D1Tileset *tileset;
     D1Gfx *gfx;
+    D1Tileset *tileset;
     D1Min *min;
     D1Til *til;
     D1Sol *sol;
@@ -185,7 +185,7 @@ private:
     int currentFrameIndex = 0;
     int currentSubtileIndex = 0;
     int currentTileIndex = 0;
-    quint16 currentPlayDelay = 50;
+    quint16 tilesetPlayDelay = 50;
 
     QTimer playTimer;
 };

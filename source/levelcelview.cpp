@@ -1428,7 +1428,7 @@ void LevelCelView::collectSubtileUsers(int subtileIndex, std::vector<int> &users
     }
 }
 
-void LevelCelView::reportUsage()
+void LevelCelView::reportTilesetUsage() const
 {
     ProgressDialog::incBar(tr("Scanning..."), 2);
 
@@ -1605,7 +1605,7 @@ static int rightFoliagePixels(const D1GfxFrame *frame)
     return result;
 }
 
-void LevelCelView::checkSubtileFlags()
+void LevelCelView::checkSubtileFlags() const
 {
     ProgressDialog::incBar(tr("Checking SOL flags..."), 1);
     bool result = false;
@@ -1896,7 +1896,7 @@ void LevelCelView::checkSubtileFlags()
     ProgressDialog::decBar();
 }
 
-void LevelCelView::checkTileFlags()
+void LevelCelView::checkTileFlags() const
 {
     ProgressDialog::incBar(tr("Checking AMP flags..."), 1);
     bool result = false;
@@ -2050,7 +2050,7 @@ void LevelCelView::checkTileFlags()
     ProgressDialog::decBar();
 }
 
-void LevelCelView::checkTilesetFlags()
+void LevelCelView::checkTilesetFlags() const
 {
     this->checkTileFlags();
     this->checkSubtileFlags();
@@ -2684,7 +2684,7 @@ void LevelCelView::on_minFrameWidthEdit_returnPressed()
     int width = this->ui->minFrameWidthEdit->nonNegInt();
 
     this->min->setSubtileWidth(width);
-    // update view
+    // update the view
     this->displayFrame();
 
     this->on_minFrameWidthEdit_escPressed();
@@ -2701,7 +2701,7 @@ void LevelCelView::on_minFrameHeightEdit_returnPressed()
     int height = this->ui->minFrameHeightEdit->nonNegInt();
 
     this->min->setSubtileHeight(height);
-    // update view
+    // update the view
     this->displayFrame();
 
     this->on_minFrameHeightEdit_escPressed();
@@ -2745,14 +2745,14 @@ void LevelCelView::on_playDelayEdit_returnPressed()
     quint16 playDelay = this->ui->playDelayEdit->text().toUInt();
 
     if (playDelay != 0)
-        this->currentPlayDelay = playDelay;
+        this->tilesetPlayDelay = playDelay;
 
     this->on_playDelayEdit_escPressed();
 }
 
 void LevelCelView::on_playDelayEdit_escPressed()
 {
-    this->ui->playDelayEdit->setText(QString::number(this->currentPlayDelay));
+    this->ui->playDelayEdit->setText(QString::number(this->tilesetPlayDelay));
     this->ui->playDelayEdit->clearFocus();
 }
 
@@ -2767,7 +2767,7 @@ void LevelCelView::on_playButton_clicked()
     // preserve the palette
     dMainWindow().initPaletteCycle();
 
-    this->playTimer.start(this->currentPlayDelay);
+    this->playTimer.start(this->tilesetPlayDelay);
 }
 
 void LevelCelView::on_stopButton_clicked()
