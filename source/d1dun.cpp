@@ -1015,7 +1015,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 continue;
             }
             int subtileRef = this->subtiles[y][x];
-            if (specCel.subtileRef == subtileRef) {
+            if (specCel.subtileRef == subtileRef && specGfx->getFrameCount() > specCel.specIndex) {
                 QImage subtileImage = specGfx->getFrameImage(specCel.specIndex);
                 dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             }
@@ -1640,6 +1640,13 @@ void D1Dun::collectObjects(std::vector<std::pair<int, int>> &foundObjects) const
 
 void D1Dun::checkItems(D1Sol *sol) const
 {
+    ProgressDialog::incBar(tr("Checking Items..."), 1);
+    bool result = false;
+
+    QPair<int, QString> progress;
+    progress.first = -1;
+    progress.second = tr("Item inconsistencies:");
+    dProgress() << progress;
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
             int itemIndex = this->items[y][x];
@@ -1649,20 +1656,36 @@ void D1Dun::checkItems(D1Sol *sol) const
             int subtileRef = this->subtiles[y][x];
             if (subtileRef == UNDEF_SUBTILE) {
                 dProgressWarn() << tr("Item%1 at %2:%3 is on an undefined subtile.").arg(itemIndex).arg(x).arg(y);
+                result = true;
             } else if (subtileRef == 0) {
                 dProgressWarn() << tr("Item%1 at %2:%3 is on an empty subtile.").arg(itemIndex).arg(x).arg(y);
+                result = true;
             } else {
                 quint8 solFlags = sol->getSubtileProperties(subtileRef - 1);
                 if (solFlags & ((1 << 0) | (1 << 2))) {
                     dProgressErr() << tr("Item%1 at %2:%3 is on a subtile which is not accessible (solid or missile blocker).").arg(itemIndex).arg(x).arg(y);
+                    result = true;
                 }
             }
         }
     }
+    if (!result) {
+        progress.second = tr("No inconsistency detected with the Monsters.");
+        dProgress() << progress;
+    }
+
+    ProgressDialog::decBar();
 }
 
 void D1Dun::checkMonsters(D1Sol *sol) const
 {
+    ProgressDialog::incBar(tr("Checking Monsters..."), 1);
+    bool result = false;
+
+    QPair<int, QString> progress;
+    progress.first = -1;
+    progress.second = tr("Monster inconsistencies:");
+    dProgress() << progress;
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
             int monsterIndex = this->monsters[y][x];
@@ -1672,20 +1695,36 @@ void D1Dun::checkMonsters(D1Sol *sol) const
             int subtileRef = this->subtiles[y][x];
             if (subtileRef == UNDEF_SUBTILE) {
                 dProgressWarn() << tr("'%1' monster at %2:%3 is on an undefined subtile.").arg(MonstConvTbl[monsterIndex].name).arg(x).arg(y);
+                result = true;
             } else if (subtileRef == 0) {
                 dProgressWarn() << tr("'%1' monster at %2:%3 is on an empty subtile.").arg(MonstConvTbl[monsterIndex].name).arg(x).arg(y);
+                result = true;
             } else {
                 quint8 solFlags = sol->getSubtileProperties(subtileRef - 1);
                 if (solFlags & ((1 << 0) | (1 << 2))) {
                     dProgressErr() << tr("'%1' monster at %2:%3 is on a subtile which is not accessible (solid or missile blocker).").arg(MonstConvTbl[monsterIndex].name).arg(x).arg(y);
+                    result = true;
                 }
             }
         }
     }
+    if (!result) {
+        progress.second = tr("No inconsistency detected with the Monsters.");
+        dProgress() << progress;
+    }
+
+    ProgressDialog::decBar();
 }
 
 void D1Dun::checkObjects() const
 {
+    ProgressDialog::incBar(tr("Checking Objects..."), 1);
+    bool result = false;
+
+    QPair<int, QString> progress;
+    progress.first = -1;
+    progress.second = tr("Object inconsistencies:");
+    dProgress() << progress;
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
             int objectIndex = this->objects[y][x];
@@ -1695,17 +1734,27 @@ void D1Dun::checkObjects() const
             int subtileRef = this->subtiles[y][x];
             if (subtileRef == UNDEF_SUBTILE) {
                 dProgressWarn() << tr("'%1' object at %2:%3 is on an undefined subtile.").arg(ObjConvTbl[objectIndex].name).arg(x).arg(y);
+                result = true;
             } else if (subtileRef == 0) {
                 dProgressWarn() << tr("'%1' object at %2:%3 is on an empty subtile.").arg(ObjConvTbl[objectIndex].name).arg(x).arg(y);
+                result = true;
             }
             if (this->monsters[y][x] != 0) {
                 dProgressErr() << tr("'%1' object at %2:%3 is sharing a subtile with a monster.").arg(ObjConvTbl[objectIndex].name).arg(x).arg(y);
+                result = true;
             }
             if (this->items[y][x] != 0) {
                 dProgressErr() << tr("'%1' object at %2:%3 is sharing a subtile with an item.").arg(ObjConvTbl[objectIndex].name).arg(x).arg(y);
+                result = true;
             }
         }
     }
+    if (!result) {
+        progress.second = tr("No inconsistency detected with the Objects.");
+        dProgress() << progress;
+    }
+
+    ProgressDialog::decBar();
 }
 
 bool D1Dun::removeItems()
@@ -1806,6 +1855,7 @@ void D1Dun::loadObjects(D1Dun *srcDun)
 
 bool D1Dun::resetTiles()
 {
+    ProgressDialog::incBar(tr("Checking tiles..."), 1);
     bool result = false;
     for (int tilePosY = 0; tilePosY < this->height / TILE_HEIGHT; tilePosY++) {
         for (int tilePosX = 0; tilePosX < this->width / TILE_WIDTH; tilePosX++) {
@@ -1845,18 +1895,25 @@ bool D1Dun::resetTiles()
                     dProgress() << tr("Tile%1 at %2:%3 was replaced with %4.").arg(currTileRef).arg(tilePosX * TILE_WIDTH).arg(tilePosY * TILE_HEIGHT).arg(newTileRef);
                 }
                 this->tiles[tilePosY][tilePosX] = newTileRef;
-                if (this->type == D1DUN_TYPE::NORMAL) {
-                    this->modified = true;
-                }
                 result = true;
             }
         }
     }
+    if (!result) {
+        dProgress() << tr("No change was necessary.");
+    } else {
+        if (this->type == D1DUN_TYPE::NORMAL) {
+            this->modified = true;
+        }
+    }
+
+    ProgressDialog::decBar();
     return result;
 }
 
 bool D1Dun::resetSubtiles()
 {
+    ProgressDialog::incBar(tr("Checking subtiles..."), 1);
     bool result = false;
     for (int tilePosY = 0; tilePosY < this->height / TILE_HEIGHT; tilePosY++) {
         for (int tilePosX = 0; tilePosX < this->width / TILE_WIDTH; tilePosX++) {
@@ -1897,15 +1954,21 @@ bool D1Dun::resetSubtiles()
                             dProgress() << tr("Subtile%1 at %2:%3 was replaced with %4.").arg(currSubtileRef).arg(dunx).arg(duny).arg(newSubtileRef);
                         }
                         this->subtiles[duny][dunx] = newSubtileRef;
-                        if (this->type == D1DUN_TYPE::RAW) {
-                            this->modified = true;
-                        }
                         result = true;
                     }
                 }
             }
         }
     }
+    if (!result) {
+        dProgress() << tr("No change was necessary.");
+    } else {
+        if (this->type == D1DUN_TYPE::RAW) {
+            this->modified = true;
+        }
+    }
+
+    ProgressDialog::decBar();
     return result;
 }
 
