@@ -25,8 +25,10 @@ SaveAsDialog::~SaveAsDialog()
 
 void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset)
 {
+    bool isTilesetGfx = tileset != nullptr;
+
     this->gfx = g;
-    this->isTileset = tileset != nullptr;
+    this->isTileset = isTilesetGfx;
 
     // reset fields
     this->ui->outputCelFileEdit->setText(this->gfx->getFilePath());
@@ -36,13 +38,11 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset)
 
     this->ui->minUpscaledAutoRadioButton->setChecked(true);
 
-    this->ui->outputMinFileEdit->setText(tileset == nullptr ? "" : tileset->min->getFilePath());
-    this->ui->outputTilFileEdit->setText(tileset == nullptr ? "" : tileset->til->getFilePath());
-    this->ui->outputSolFileEdit->setText(tileset == nullptr ? "" : tileset->sol->getFilePath());
-    this->ui->outputAmpFileEdit->setText(tileset == nullptr ? "" : tileset->amp->getFilePath());
-    this->ui->outputTmiFileEdit->setText(tileset == nullptr ? "" : tileset->tmi->getFilePath());
-
-    bool isTilesetGfx = this->isTileset;
+    this->ui->outputMinFileEdit->setText(isTilesetGfx ? tileset->min->getFilePath() : "");
+    this->ui->outputTilFileEdit->setText(isTilesetGfx ? tileset->til->getFilePath() : "");
+    this->ui->outputSolFileEdit->setText(isTilesetGfx ? tileset->sol->getFilePath() : "");
+    this->ui->outputAmpFileEdit->setText(isTilesetGfx ? tileset->amp->getFilePath() : "");
+    this->ui->outputTmiFileEdit->setText(isTilesetGfx ? tileset->tmi->getFilePath() : "");
 
     this->ui->celSettingsGroupBox->setEnabled(!isTilesetGfx);
     this->ui->tilSettingsGroupBox->setEnabled(isTilesetGfx);

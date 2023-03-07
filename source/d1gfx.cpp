@@ -181,10 +181,7 @@ QImage D1Gfx::getFrameImage(int frameIndex) const
 
     D1GfxFrame *frame = this->frames[frameIndex];
 
-    QImage image = QImage(
-        frame->getWidth(),
-        frame->getHeight(),
-        QImage::Format_ARGB32);
+    QImage image = QImage(frame->getWidth(), frame->getHeight(), QImage::Format_ARGB32);
 
     for (int y = 0; y < frame->getHeight(); y++) {
         for (int x = 0; x < frame->getWidth(); x++) {
