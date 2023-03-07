@@ -862,7 +862,27 @@
         </property>
        </layout>
       </item>
-      <item row="1" column="0">
+      <item row="1" column="7" colspan="3">
+       <layout class="QHBoxLayout">
+        <item alignment="Qt::AlignCenter">
+         <widget class="QPushButton" name="moveUpButton">
+          <property name="minimumWidth">
+           <number>40</number>
+          </property>
+          <property name="maximumWidth">
+           <number>40</number>
+          </property>
+          <property name="toolTip">
+           <string>Move up</string>
+          </property>
+          <property name="text">
+           <string notr="true">A</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="0">
        <widget class="QLabel">
         <property name="minimumWidth">
          <number>48</number>
@@ -872,7 +892,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1" colspan="4">
+      <item row="2" column="1" colspan="4">
        <layout class="QHBoxLayout">
         <item>
          <widget class="QComboBox" name="levelTypeComboBox">
@@ -933,14 +953,14 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="5">
+      <!--item row="2" column="5">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </spacer>
-      </item>
-      <item row="1" column="6">
+      </item-->
+      <item row="2" column="6">
        <widget class="QPushButton" name="moveLeftButton">
         <property name="minimumWidth">
          <number>40</number>
@@ -956,7 +976,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="7">
+      <item row="2" column="7">
        <widget class="LineEditWidget" name="dungeonPosXLineEdit">
         <property name="charWidth">
          <number>5</number>
@@ -969,7 +989,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="8">
+      <item row="2" column="8">
        <widget class="QLabel">
         <property name="minimumWidth">
          <number>8</number>
@@ -985,7 +1005,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="9">
+      <item row="2" column="9">
        <widget class="LineEditWidget" name="dungeonPosYLineEdit">
         <property name="charWidth">
          <number>5</number>
@@ -998,7 +1018,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="10">
+      <item row="2" column="10">
        <widget class="QPushButton" name="moveRightButton">
         <property name="minimumWidth">
          <number>40</number>
@@ -1014,14 +1034,14 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="12" colspan="3">
+      <item row="2" column="12" colspan="3">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </spacer>
       </item>
-      <item row="1" column="15">
+      <item row="2" column="15">
        <widget class="LineEditWidget" name="dunWidthEdit">
         <property name="charWidth">
          <number>5</number>
@@ -1034,7 +1054,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="16">
+      <item row="2" column="16">
        <widget class="QLabel">
         <property name="minimumWidth">
          <number>8</number>
@@ -1047,7 +1067,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="17">
+      <item row="2" column="17">
        <widget class="LineEditWidget" name="dunHeightEdit">
         <property name="charWidth">
          <number>5</number>
@@ -1060,7 +1080,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1" colspan="3">
+      <item row="3" column="1" colspan="3">
        <layout class="QHBoxLayout">
         <!--property name="spacing">
          <number>4</number>
@@ -1113,7 +1133,7 @@
         </item>
        </layout>
       </item>
-      <item row="2" column="7" colspan="3">
+      <item row="3" column="7" colspan="3">
        <layout class="QHBoxLayout">
         <item alignment="Qt::AlignCenter">
          <widget class="QPushButton" name="moveDownButton">
@@ -1133,7 +1153,7 @@
         </item>
        </layout>
       </item>
-      <item row="3" column="0" colspan="18">
+      <item row="4" column="0" colspan="18">
        <widget class="QTabWidget" name="dungeonTabs">
         <property name="tabBarAutoHide">
          <bool>true</bool>
