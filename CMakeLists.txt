@@ -60,6 +60,8 @@ set(PROJECT_SOURCES
         source/d1cl2.h
         source/d1cl2frame.cpp
         source/d1cl2frame.h
+        source/d1dun.cpp
+        source/d1dun.h
         source/d1gfx.cpp
         source/d1gfx.h
         source/d1image.cpp
@@ -112,6 +114,9 @@ set(PROJECT_SOURCES
         source/palettewidget.cpp
         source/palettewidget.h
         source/palettewidget.ui
+        source/patchdungeondialog.cpp
+        source/patchdungeondialog.h
+        source/patchdungeondialog.ui
         source/patchtilesetdialog.cpp
         source/patchtilesetdialog.h
         source/patchtilesetdialog.ui

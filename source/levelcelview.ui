@@ -701,6 +701,641 @@
     </widget> <!-- tilesetWidget -->
    </item>
    <item>
+    <widget class="QWidget" name="dungeonWidget">
+     <layout class="QGridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Zoom:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="dunZoomOutButton">
+        <property name="minimumWidth">
+         <number>24</number>
+        </property>
+        <property name="maximumWidth">
+         <number>24</number>
+        </property>
+        <property name="text">
+         <string notr="true">-</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="LineEditWidget" name="dunZoomEdit">
+        <property name="charWidth">
+         <number>4</number>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="dunZoomInButton">
+        <property name="minimumWidth">
+         <number>24</number>
+        </property>
+        <property name="maximumWidth">
+         <number>24</number>
+        </property>
+        <property name="text">
+         <string notr="true">+</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4" colspan="2">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="6" colspan="2">
+       <widget class="QPushButton" name="dunStopButton">
+        <property name="text">
+         <string>Stop</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="8">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>8</number>
+        </property>
+        <property name="maximumWidth">
+         <number>8</number>
+        </property>
+        <property name="text">
+         <string notr="true">-</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="9" colspan="2">
+       <widget class="QPushButton" name="dunPlayButton">
+        <property name="text">
+         <string>Play</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="11">
+       <widget class="LineEditWidget" name="dunPlayDelayEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>Current playback delay</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="12">
+       <widget class="QLabel">
+        <property name="text">
+         <string>ms</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="13">
+       <widget class="QComboBox" name="dunPlayComboBox">
+        <item>
+         <property name="text">
+          <string>(L3) Caves</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>(L4) Hell</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>(L5) Crypt</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>(L6) Nest</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="0" column="14" colspan="3">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="17">
+       <layout class="QHBoxLayout" name="dunButtonsHorizontalLayout">
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+       </layout>
+      </item>
+      <item row="1" column="7" colspan="3">
+       <layout class="QHBoxLayout">
+        <item alignment="Qt::AlignCenter">
+         <widget class="QPushButton" name="moveUpButton">
+          <property name="minimumWidth">
+           <number>40</number>
+          </property>
+          <property name="maximumWidth">
+           <number>40</number>
+          </property>
+          <property name="toolTip">
+           <string>Move up</string>
+          </property>
+          <property name="text">
+           <string notr="true">A</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Dungeon:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="4">
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QComboBox" name="levelTypeComboBox">
+          <item>
+           <property name="text">
+            <string>Town</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>(L1) Cathedral</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>(L2) Catacombs</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>(L3) Caves</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>(L4) Hell</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>(L5) Crypt</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>(L6) Nest</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>None</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="LineEditWidget" name="dungeonDefaultTileLineEdit">
+          <property name="charWidth">
+           <number>5</number>
+          </property>
+          <property name="toolTip">
+           <string>Default tile if the dungeon tile is set to zero</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <!--item row="2" column="5">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item-->
+      <item row="2" column="6">
+       <widget class="QPushButton" name="moveLeftButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Move left</string>
+        </property>
+        <property name="text">
+         <string notr="true">&lt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="7">
+       <widget class="LineEditWidget" name="dungeonPosXLineEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>X-coordinate of the selected position</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="8">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>8</number>
+        </property>
+        <property name="maximumWidth">
+         <number>8</number>
+        </property>
+        <property name="text">
+         <string notr="true">:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="9">
+       <widget class="LineEditWidget" name="dungeonPosYLineEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>Y-coordinate of the selected position</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="10">
+       <widget class="QPushButton" name="moveRightButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Move right</string>
+        </property>
+        <property name="text">
+         <string notr="true">&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="12" colspan="3">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="15">
+       <widget class="LineEditWidget" name="dunWidthEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>Width of the dungeon</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="16">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>8</number>
+        </property>
+        <property name="maximumWidth">
+         <number>8</number>
+        </property>
+        <property name="text">
+         <string notr="true">*</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="17">
+       <widget class="LineEditWidget" name="dunHeightEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>Height of the dungeon</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" colspan="3">
+       <layout class="QHBoxLayout">
+        <!--property name="spacing">
+         <number>4</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property-->
+        <item>
+         <widget class="QCheckBox" name="showTilesCheckBox">
+          <property name="tristate">
+           <bool>true</bool>
+          </property>
+          <property name="checkState">
+           <enum>Qt::Checked</enum>
+          </property>
+          <property name="toolTip">
+           <string>Show tiles</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="showObjectsCheckBox">
+          <property name="toolTip">
+           <string>Show objects</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="showMonstersCheckBox">
+          <property name="toolTip">
+           <string>Show monsters</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="showItemsCheckBox">
+          <property name="toolTip">
+           <string>Show items</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="3" column="7" colspan="3">
+       <layout class="QHBoxLayout">
+        <item alignment="Qt::AlignCenter">
+         <widget class="QPushButton" name="moveDownButton">
+          <property name="minimumWidth">
+           <number>40</number>
+          </property>
+          <property name="maximumWidth">
+           <number>40</number>
+          </property>
+          <property name="toolTip">
+           <string>Move down</string>
+          </property>
+          <property name="text">
+           <string notr="true">V</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="4" column="0" colspan="18">
+       <widget class="QTabWidget" name="dungeonTabs">
+        <property name="tabBarAutoHide">
+         <bool>true</bool>
+        </property>
+        <!--property name="maximumHeight">
+         <number>250</number>
+        </property-->
+        <widget class="QWidget">
+         <layout class="QGridLayout">
+          <item row="0" column="0">
+           <widget class="QLabel">
+            <property name="text">
+             <string>Tile / Subtile:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <layout class="QHBoxLayout">
+            <!--property name="spacing">
+             <number>4</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property-->
+            <item>
+             <widget class="LineEditWidget" name="dungeonTileLineEdit">
+              <property name="charWidth">
+               <number>5</number>
+              </property>
+              <property name="toolTip">
+               <string>Current tile at the selected position</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel">
+              <property name="minimumWidth">
+               <number>8</number>
+              </property>
+              <property name="maximumWidth">
+               <number>8</number>
+              </property>
+              <property name="text">
+               <string notr="true">/</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="LineEditWidget" name="dungeonSubtileLineEdit">
+              <property name="charWidth">
+               <number>5</number>
+              </property>
+              <property name="toolTip">
+               <string>Current subtile at the selected position</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <!--item>
+             <spacer>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </spacer>
+            </item-->
+           </layout>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLabel">
+            <property name="text">
+             <string>Transval:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="LineEditWidget" name="dungeonTransvalLineEdit">
+            <property name="charWidth">
+             <number>5</number>
+            </property>
+            <property name="toolTip">
+             <string>Current transval of the selected position</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5"  colspan="6">
+           <spacer>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </spacer>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel">
+            <property name="text">
+             <string>Object:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="dungeonObjectComboBox"/>
+          </item>
+          <item row="1" column="2">
+           <widget class="LineEditWidget" name="dungeonObjectLineEdit">
+            <property name="charWidth">
+             <number>5</number>
+            </property>
+            <property name="toolTip">
+             <string>Current object at the selected position</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QLabel">
+            <property name="text">
+             <string>Monster:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <widget class="QComboBox" name="dungeonMonsterComboBox"/>
+          </item>
+          <item row="1" column="5">
+           <widget class="LineEditWidget" name="dungeonMonsterLineEdit">
+            <property name="charWidth">
+             <number>5</number>
+            </property>
+            <property name="toolTip">
+             <string>Current monster at the selected position</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="6">
+           <widget class="QLabel">
+            <property name="text">
+             <string>Item:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="7">
+           <widget class="LineEditWidget" name="dungeonItemLineEdit">
+            <property name="charWidth">
+             <number>5</number>
+            </property>
+            <property name="toolTip">
+             <string>Current item at the selected position</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="8">
+           <spacer>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </spacer>
+          </item>
+          <item row="1" column="9">
+           <widget class="QPushButton" name="assetLoadPushButton">
+            <property name="text">
+             <string notr="true">...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="10">
+           <widget class="QPushButton" name="assetClearPushButton">
+            <property name="text">
+             <string>Clear</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </widget> <!-- dungeonWidget -->
+   </item>
+   <item>
     <spacer>
      <property name="orientation">
       <enum>Qt::Vertical</enum>

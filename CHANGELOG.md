@@ -9,7 +9,7 @@
 - open as menu option to open files with parameters
   1. use width 96 to open wlbat.cl2, whbat.cl2 and wmbat.cl2 graphics of the warrior
   2. use height of 8 to open the hellfire town tileset
-- new menu option to open a clean cel, cl2 or tileset graphics
+- new menu option to open a clean cel, cl2, tileset graphics or to create a new dungeon
 - open file from command line arguments
 - drag and drop support for image files to insert frames, tiles or subtiles
 - edit fields to modify subtiles of tiles, frames of subtiles, frame-types
@@ -24,12 +24,17 @@
 - file dialogs start from the last used folder/file (even after restart)
 - export to any kind of image format which are supported by Qt (JPEG, WEBP, etc...)
 - option to limit the range of the exported items
+- support DUN and RDUN files
 - support TMI metadata
 - support upscaling of assets
 - added basic drawing feature
 - added usage report for frames and subtiles of tilesets
+- added usage report for entities of dungeons
+- added option to patch tilesets and dungeons of the original game (Diablo 1)
 - added consistency checks for AMP, SOL and TMI flags
-- added jobs to cleanup tilesets
+- added consistency checks for DUN entities
+- support 'merging' of DUN contents
+- added jobs to cleanup tilesets and dungeons
 - language is selectable in the options menu
 - background (+ transparent color) of the main view is configurable
 

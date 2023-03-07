@@ -5,6 +5,7 @@
 
 class D1Gfx;
 class D1Tileset;
+class D1Dun;
 
 enum class SAVE_CLIPPED_TYPE {
     AUTODETECT,
@@ -26,6 +27,7 @@ public:
     QString solFilePath;
     QString ampFilePath;
     QString tmiFilePath;
+    QString dunFilePath;
     int groupNum = 0;
     SAVE_CLIPPED_TYPE clipped = SAVE_CLIPPED_TYPE::AUTODETECT;
     SAVE_UPSCALED_TYPE upscaled = SAVE_UPSCALED_TYPE::AUTODETECT;
@@ -43,7 +45,7 @@ public:
     explicit SaveAsDialog(QWidget *parent);
     ~SaveAsDialog();
 
-    void initialize(D1Gfx *gfx, D1Tileset *tileset);
+    void initialize(D1Gfx *gfx, D1Tileset *tileset, D1Dun *dun);
 
 private slots:
     void on_outputCelFileBrowseButton_clicked();
@@ -52,6 +54,7 @@ private slots:
     void on_outputSolFileBrowseButton_clicked();
     void on_outputAmpFileBrowseButton_clicked();
     void on_outputTmiFileBrowseButton_clicked();
+    void on_outputDunFileBrowseButton_clicked();
     void on_saveButton_clicked();
     void on_saveCancelButton_clicked();
 

@@ -27,6 +27,12 @@
 #include "ui_levelcelview.h"
 #include "upscaler.h"
 
+template <class T, int N>
+constexpr int lengthof(T (&arr)[N])
+{
+    return N;
+}
+
 LevelCelView::LevelCelView(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::LevelCelView())
@@ -36,12 +42,19 @@ LevelCelView::LevelCelView(QWidget *parent)
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
     this->ui->stopButton->setEnabled(false);
+    this->on_dunZoomEdit_escPressed();
+    this->on_dunPlayDelayEdit_escPressed();
+    this->ui->dunStopButton->setEnabled(false);
     this->playTimer.connect(&this->playTimer, SIGNAL(timeout()), this, SLOT(playGroup()));
     this->ui->tilesTabs->addTab(&this->tabTileWidget, tr("Tile properties"));
     this->ui->tilesTabs->addTab(&this->tabSubtileWidget, tr("Subtile properties"));
     this->ui->tilesTabs->addTab(&this->tabFrameWidget, tr("Frame properties"));
     QLayout *layout = this->ui->tilesetButtonsHorizontalLayout;
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Draw_triggered);
+    layout->setAlignment(btn, Qt::AlignRight);
+    this->viewBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowRight, tr("Switch to dungeon view"), this, &LevelCelView::on_actionToggle_View_triggered);
+    layout = this->ui->dunButtonsHorizontalLayout;
+    btn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowLeft, tr("Switch to tileset view"), this, &LevelCelView::on_actionToggle_View_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
 
     // If a pixel of the frame, subtile or tile was clicked get pixel color index and notify the palette widgets
@@ -55,6 +68,19 @@ LevelCelView::LevelCelView(QWidget *parent)
     QObject::connect(this->ui->minFrameHeightEdit, SIGNAL(cancel_signal()), this, SLOT(on_minFrameHeightEdit_escPressed()));
     QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
     QObject::connect(this->ui->playDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_playDelayEdit_escPressed()));
+    QObject::connect(this->ui->dunZoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_dunZoomEdit_escPressed()));
+    QObject::connect(this->ui->dunPlayDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_dunPlayDelayEdit_escPressed()));
+    QObject::connect(this->ui->dungeonDefaultTileLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonDefaultTileLineEdit_escPressed()));
+    QObject::connect(this->ui->dungeonPosXLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonPosXLineEdit_escPressed()));
+    QObject::connect(this->ui->dungeonPosYLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonPosYLineEdit_escPressed()));
+    QObject::connect(this->ui->dunWidthEdit, SIGNAL(cancel_signal()), this, SLOT(on_dunWidthEdit_escPressed()));
+    QObject::connect(this->ui->dunHeightEdit, SIGNAL(cancel_signal()), this, SLOT(on_dunHeightEdit_escPressed()));
+    QObject::connect(this->ui->dungeonTileLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonTileLineEdit_escPressed()));
+    QObject::connect(this->ui->dungeonSubtileLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonSubtileLineEdit_escPressed()));
+    QObject::connect(this->ui->dungeonItemLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonItemLineEdit_escPressed()));
+    QObject::connect(this->ui->dungeonMonsterLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonMonsterLineEdit_escPressed()));
+    QObject::connect(this->ui->dungeonObjectLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonObjectLineEdit_escPressed()));
+    QObject::connect(this->ui->dungeonTransvalLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonTransvalLineEdit_escPressed()));
 
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -68,7 +94,7 @@ LevelCelView::~LevelCelView()
     delete ui;
 }
 
-void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, bool bottomPanelHidden)
+void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPanelHidden)
 {
     this->pal = p;
     this->tileset = ts;
@@ -78,19 +104,58 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, bool bottomPanelHidden)
     this->sol = ts->sol;
     this->amp = ts->amp;
     this->tmi = ts->tmi;
+    this->dun = d;
 
     this->tabTileWidget.initialize(this, this->til, this->min, this->amp);
     this->tabSubtileWidget.initialize(this, this->gfx, this->min, this->sol, this->tmi);
     this->tabFrameWidget.initialize(this, this->gfx);
 
-    this->ui->tilesetWidget->setVisible(!bottomPanelHidden);
+    bool dunMode = d != nullptr;
+    this->dunView = dunMode;
+    this->viewBtn->setVisible(dunMode);
+    // select gridlayout
+    this->ui->tilesetWidget->setVisible(!dunMode && !bottomPanelHidden);
+    this->ui->dungeonWidget->setVisible(dunMode && !bottomPanelHidden);
 
+    if (dunMode) {
+        this->ui->dungeonObjectComboBox->addItem("", 0);
+        for (const ObjectStruct &obj : ObjConvTbl) {
+            if (obj.type != 0) {
+                this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
+            }
+        }
+        this->ui->dungeonMonsterComboBox->addItem("", 0);
+        for (const MonsterStruct &mon : MonstConvTbl) {
+            if (mon.type != 0) {
+                this->ui->dungeonMonsterComboBox->addItem(mon.name, mon.type);
+            }
+        }
+        this->on_dungeonDefaultTileLineEdit_escPressed();
+        this->ui->levelTypeComboBox->setCurrentIndex(d->getLevelType());
+        this->updateIcon();
+    }
     // this->update();
 }
 
 void LevelCelView::setPal(D1Pal *p)
 {
     this->pal = p;
+}
+
+void LevelCelView::updateIcon()
+{
+    // update icon of assets
+    QString assetPath = this->dun->getAssetPath();
+    this->ui->assetLoadPushButton->setToolTip(assetPath);
+    if (!assetPath.isEmpty()) {
+        QIcon icon = QApplication::style()->standardIcon(QStyle::SP_DriveCDIcon);
+        this->ui->assetLoadPushButton->setIcon(icon);
+        this->ui->assetLoadPushButton->setText("");
+    } else {
+        QIcon icon;
+        this->ui->assetLoadPushButton->setIcon(icon);
+        this->ui->assetLoadPushButton->setText("...");
+    }
 }
 
 // Displaying CEL file path information
@@ -133,6 +198,15 @@ void LevelCelView::updateLabel()
         label += "*";
     }
 
+    if (this->dun != nullptr) {
+        QFileInfo dunFileInfo(this->dun->getFilePath());
+        label += ", ";
+        label += dunFileInfo.fileName();
+        if (this->dun->isModified()) {
+            label += "*";
+        }
+    }
+
     this->ui->celLabel->setText(label);
 }
 
@@ -142,27 +216,44 @@ void LevelCelView::update()
 
     this->updateLabel();
 
-    // Set current and maximum frame text
-    count = this->gfx->getFrameCount();
-    this->ui->frameIndexEdit->setText(
-        QString::number(count != 0 ? this->currentFrameIndex + 1 : 0));
-    this->ui->frameNumberEdit->setText(QString::number(count));
+    if (this->dunView) {
+        int posx = this->currentDunPosX;
+        int posy = this->currentDunPosY;
+        int tileRef = this->dun->getTileAt(posx, posy);
+        this->ui->dungeonTileLineEdit->setText(tileRef == UNDEF_TILE ? QStringLiteral("?") : QString::number(tileRef));
+        int subtileRef = this->dun->getSubtileAt(posx, posy);
+        this->ui->dungeonSubtileLineEdit->setText(subtileRef == UNDEF_SUBTILE ? QStringLiteral("?") : QString::number(subtileRef));
+        this->ui->dungeonItemLineEdit->setText(QString::number(this->dun->getItemAt(posx, posy)));
+        int monsterIndex = this->dun->getMonsterAt(posx, posy);
+        this->ui->dungeonMonsterLineEdit->setText(QString::number(monsterIndex));
+        this->ui->dungeonMonsterComboBox->setCurrentIndex(this->ui->dungeonMonsterComboBox->findData(monsterIndex));
+        int objectIndex = this->dun->getObjectAt(posx, posy);
+        this->ui->dungeonObjectLineEdit->setText(QString::number(objectIndex));
+        this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
+        this->ui->dungeonTransvalLineEdit->setText(QString::number(this->dun->getTransvalAt(posx, posy)));
+    } else {
+        // Set current and maximum frame text
+        count = this->gfx->getFrameCount();
+        this->ui->frameIndexEdit->setText(
+            QString::number(count != 0 ? this->currentFrameIndex + 1 : 0));
+        this->ui->frameNumberEdit->setText(QString::number(count));
 
-    // Set current and maximum subtile text
-    count = this->min->getSubtileCount();
-    this->ui->subtileIndexEdit->setText(
-        QString::number(count != 0 ? this->currentSubtileIndex + 1 : 0));
-    this->ui->subtileNumberEdit->setText(QString::number(count));
+        // Set current and maximum subtile text
+        count = this->min->getSubtileCount();
+        this->ui->subtileIndexEdit->setText(
+            QString::number(count != 0 ? this->currentSubtileIndex + 1 : 0));
+        this->ui->subtileNumberEdit->setText(QString::number(count));
 
-    // Set current and maximum tile text
-    count = this->til->getTileCount();
-    this->ui->tileIndexEdit->setText(
-        QString::number(count != 0 ? this->currentTileIndex + 1 : 0));
-    this->ui->tileNumberEdit->setText(QString::number(count));
+        // Set current and maximum tile text
+        count = this->til->getTileCount();
+        this->ui->tileIndexEdit->setText(
+            QString::number(count != 0 ? this->currentTileIndex + 1 : 0));
+        this->ui->tileNumberEdit->setText(QString::number(count));
 
-    this->tabTileWidget.update();
-    this->tabSubtileWidget.update();
-    this->tabFrameWidget.update();
+        this->tabTileWidget.update();
+        this->tabSubtileWidget.update();
+        this->tabFrameWidget.update();
+    }
 }
 
 CelScene *LevelCelView::getCelScene() const
@@ -196,6 +287,57 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
     unsigned subtileShiftY = subtileWidth / 4;
     unsigned tileHeight = subtileHeight + 2 * subtileShiftY;
 
+    if (this->dunView) {
+        int cellWidth = subtileWidth;
+        int cellHeight = subtileWidth / 2;
+        // move to 0;0
+        int cX = pos.x() - this->celScene.sceneRect().width() / 2;
+        int cY = pos.y() - (CEL_SCENE_MARGIN + subtileHeight - cellHeight);
+        int offX = (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
+        cX += offX;
+
+        // switch unit
+        int dunX = cX / cellWidth;
+        int dunY = cY / cellHeight;
+        int remX = cX % cellWidth;
+        int remY = cY % cellHeight;
+        // SHIFT_GRID
+        int cellX = dunX + dunY;
+        int cellY = dunY - dunX;
+
+        // Shift position to match diamond grid aligment
+        bool bottomLeft = remY >= cellHeight + (remX / 2);
+        bool bottomRight = remY >= cellHeight - (remX / 2);
+        if (bottomLeft) {
+            cellY++;
+        }
+        if (bottomRight) {
+            cellX++;
+        }
+        bool topRight = remY < (remX / 2);
+        bool topLeft = remY < -(remX / 2);
+        if (topRight) {
+            cellY--;
+        }
+        if (topLeft) {
+            cellX--;
+        }
+        // check if it is a valid position
+        if (cellX < 0 || cellX >= this->dun->getWidth()) {
+            return;
+        }
+        if (cellY < 0 || cellY >= this->dun->getHeight()) {
+            return;
+        }
+        // Set dungeon location
+        this->currentDunPosX = cellX;
+        this->currentDunPosY = cellY;
+        this->ui->dungeonPosXLineEdit->setText(QString::number(this->currentDunPosX));
+        this->ui->dungeonPosYLineEdit->setText(QString::number(this->currentDunPosY));
+        // update the view
+        this->update();
+        return;
+    }
     if (pos.x() >= (int)(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING)
         && pos.x() < (int)(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING + subtileWidth)
         && pos.y() >= CEL_SCENE_MARGIN
@@ -2330,6 +2472,189 @@ void LevelCelView::sortTileset()
     }
 }
 
+void LevelCelView::reportDungeonUsage() const
+{
+    ProgressDialog::incBar(tr("Scanning..."), 3);
+
+    std::vector<std::pair<int, int>> items;
+    this->dun->collectItems(items);
+
+    if (items.empty()) {
+        dProgress() << tr("There are no items in the dungeon.");
+    } else {
+        QString itemUses;
+        int totalCount = 0;
+        for (std::pair<int, int> &item : items) {
+            totalCount += item.second;
+            itemUses += tr("%1 Item%2").arg(item.second).arg(item.first) + ", ";
+        }
+        itemUses.chop(2);
+        dProgress() << tr("There are %1 in the dungeon.", "", totalCount).arg(itemUses);
+    }
+
+    dProgress() << "\n";
+
+    ProgressDialog::incValue();
+
+    std::vector<std::pair<int, int>> monsters;
+    this->dun->collectMonsters(monsters);
+
+    if (monsters.empty()) {
+        dProgress() << tr("There are no monsters in the dungeon.");
+    } else {
+        QString monsterUses;
+        int totalCount = 0;
+        for (std::pair<int, int> &monster : monsters) {
+            totalCount += monster.second;
+            QString monsterName;
+            if (monster.first < lengthof(MonstConvTbl)) {
+                monsterName = MonstConvTbl[monster.first].name;
+            } else {
+                monsterName = tr("Monster%1").arg(monster.first);
+            }
+            monsterUses += tr("%1 %2").arg(monster.second).arg(monsterName) + ", ";
+        }
+        monsterUses.chop(2);
+        dProgress() << tr("There are %1 in the dungeon.", "", totalCount).arg(monsterUses);
+    }
+
+    dProgress() << "\n";
+
+    ProgressDialog::incValue();
+
+    std::vector<std::pair<int, int>> objects;
+    this->dun->collectObjects(objects);
+
+    if (objects.empty()) {
+        dProgress() << tr("There are no objects in the dungeon.");
+    } else {
+        QString objectUses;
+        int totalCount = 0;
+        for (std::pair<int, int> &object : objects) {
+            totalCount += object.second;
+            QString objectName;
+            if (object.first < lengthof(ObjConvTbl)) {
+                objectName = ObjConvTbl[object.first].name;
+            } else {
+                objectName = tr("Object%1").arg(object.first);
+            }
+            objectUses += tr("%1 %2").arg(object.second).arg(objectName) + ", ";
+        }
+        objectUses.chop(2);
+        dProgress() << tr("There are %1 in the dungeon.", "", totalCount).arg(objectUses);
+    }
+
+    dProgress() << "\n";
+
+    ProgressDialog::decBar();
+}
+
+void LevelCelView::resetDungeonTiles()
+{
+    bool change = this->dun->resetTiles();
+    if (change) {
+        // update the view - done by the caller
+        // this->displayFrame();
+    }
+}
+
+void LevelCelView::resetDungeonSubtiles()
+{
+    bool change = this->dun->resetSubtiles();
+    if (change) {
+        // update the view - done by the caller
+        // this->displayFrame();
+    }
+}
+
+void LevelCelView::checkItems() const
+{
+    this->dun->checkItems(this->sol);
+}
+
+void LevelCelView::checkMonsters() const
+{
+    this->dun->checkMonsters(this->sol);
+}
+
+void LevelCelView::checkObjects() const
+{
+    this->dun->checkObjects();
+}
+
+void LevelCelView::checkEntities() const
+{
+    this->checkItems();
+    this->checkMonsters();
+    this->checkObjects();
+}
+
+void LevelCelView::removeItems()
+{
+    bool change = this->dun->removeItems();
+    if (change) {
+        // update the view - done by the caller
+        // this->displayFrame();
+    }
+}
+
+void LevelCelView::removeMonsters()
+{
+    bool change = this->dun->removeMonsters();
+    if (change) {
+        // update the view - done by the caller
+        // this->displayFrame();
+    }
+}
+
+void LevelCelView::removeObjects()
+{
+    bool change = this->dun->removeObjects();
+    if (change) {
+        // update the view - done by the caller
+        // this->displayFrame();
+    }
+}
+
+static bool dimensionMatch(D1Dun *dun1, D1Dun *dun2)
+{
+    if (dun1->getWidth() == dun2->getWidth() && dun1->getHeight() == dun2->getHeight()) {
+        return true;
+    }
+    QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Mismatching dungeons (Dimensions are %1:%2 vs %3:%4).").arg(dun1->getWidth()).arg(dun1->getHeight()).arg(dun2->getHeight()).arg(dun2->getWidth()));
+    return false;
+}
+
+void LevelCelView::loadItems(D1Dun *srcDun)
+{
+    if (!dimensionMatch(this->dun, srcDun)) {
+        return;
+    }
+    this->dun->loadItems(srcDun);
+    // update the view - done by the caller
+    // this->displayFrame();
+}
+
+void LevelCelView::loadMonsters(D1Dun *srcDun)
+{
+    if (!dimensionMatch(this->dun, srcDun)) {
+        return;
+    }
+    this->dun->loadMonsters(srcDun);
+    // update the view - done by the caller
+    // this->displayFrame();
+}
+
+void LevelCelView::loadObjects(D1Dun *srcDun)
+{
+    if (!dimensionMatch(this->dun, srcDun)) {
+        return;
+    }
+    this->dun->loadObjects(srcDun);
+    // update the view - done by the caller
+    // this->displayFrame();
+}
+
 void LevelCelView::upscale(const UpscaleParam &params)
 {
     if (Upscaler::upscaleTileset(this->gfx, this->min, params, false)) {
@@ -2346,6 +2671,30 @@ void LevelCelView::displayFrame()
 
     this->celScene.clear();
     this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
+
+    if (this->dunView) {
+        // Set dungeon width and height
+        this->ui->dunWidthEdit->setText(QString::number(this->dun->getWidth()));
+        this->ui->dunHeightEdit->setText(QString::number(this->dun->getHeight()));
+        // Set dungeon location
+        this->ui->dungeonPosXLineEdit->setText(QString::number(this->currentDunPosX));
+        this->ui->dungeonPosYLineEdit->setText(QString::number(this->currentDunPosY));
+
+        DunDrawParam params;
+        params.tileState = this->ui->showTilesCheckBox->checkState();
+        params.showItems = this->ui->showItemsCheckBox->isChecked();
+        params.showMonsters = this->ui->showMonstersCheckBox->isChecked();
+        params.showObjects = this->ui->showObjectsCheckBox->isChecked();
+        QImage dunFrame = this->dun->getImage(params);
+
+        this->celScene.setSceneRect(0, 0,
+            CEL_SCENE_MARGIN + dunFrame.width() + CEL_SCENE_MARGIN,
+            CEL_SCENE_MARGIN + dunFrame.height() + CEL_SCENE_MARGIN);
+
+        this->celScene.addPixmap(QPixmap::fromImage(dunFrame))
+            ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+        return;
+    }
 
     // Getting the current frame/sub-tile/tile to display
     QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
@@ -2411,7 +2760,7 @@ void LevelCelView::displayFrame()
 
 void LevelCelView::toggleBottomPanel()
 {
-    QWidget *layout = this->ui->tilesetWidget;
+    QWidget *layout = this->dunView ? this->ui->dungeonWidget : this->ui->tilesetWidget;
     layout->setVisible(layout->isHidden());
 }
 
@@ -2456,13 +2805,17 @@ void LevelCelView::setTileIndex(int tileIndex)
 
 void LevelCelView::playGroup()
 {
-    dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)this->ui->playComboBox->currentIndex());
+    QComboBox *cycleBox = this->dunView ? this->ui->dunPlayComboBox : this->ui->playComboBox;
+    dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)cycleBox->currentIndex());
 
     // this->displayFrame();
 }
 
 void LevelCelView::ShowContextMenu(const QPoint &pos)
 {
+    if (this->dunView) {
+        return;
+    }
     MainWindow *mw = &dMainWindow();
     QAction actions[15];
     QMenu contextMenu(this);
@@ -2770,12 +3123,16 @@ void LevelCelView::on_playButton_clicked()
     this->ui->playButton->setEnabled(false);
     this->ui->playDelayEdit->setReadOnly(false);
     this->ui->playComboBox->setEnabled(false);
+    this->ui->dunPlayButton->setEnabled(false);
+    this->ui->dunPlayDelayEdit->setReadOnly(false);
+    this->ui->dunPlayComboBox->setEnabled(false);
     // enable the stop button
     this->ui->stopButton->setEnabled(true);
+    this->ui->dunStopButton->setEnabled(true);
     // preserve the palette
     dMainWindow().initPaletteCycle();
 
-    this->playTimer.start(this->tilesetPlayDelay);
+    this->playTimer.start(this->dunView ? this->dunviewPlayDelay : this->tilesetPlayDelay);
 }
 
 void LevelCelView::on_stopButton_clicked()
@@ -2786,10 +3143,14 @@ void LevelCelView::on_stopButton_clicked()
     dMainWindow().resetPaletteCycle();
     // disable the stop button
     this->ui->stopButton->setEnabled(false);
+    this->ui->dunStopButton->setEnabled(false);
     // enable the related fields
     this->ui->playButton->setEnabled(true);
     this->ui->playDelayEdit->setReadOnly(true);
     this->ui->playComboBox->setEnabled(true);
+    this->ui->dunPlayButton->setEnabled(true);
+    this->ui->dunPlayDelayEdit->setReadOnly(true);
+    this->ui->dunPlayComboBox->setEnabled(true);
 }
 
 void LevelCelView::dragEnterEvent(QDragEnterEvent *event)
@@ -2814,4 +3175,464 @@ void LevelCelView::dropEvent(QDropEvent *event)
     }
     // try to insert as frames
     dMainWindow().openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
+}
+
+void LevelCelView::on_actionToggle_View_triggered()
+{
+    // stop playback
+    if (this->playTimer.isActive()) {
+        this->on_stopButton_clicked();
+    }
+
+    bool dunMode = !this->dunView;
+    this->dunView = dunMode;
+    // select gridlayout
+    if (dunMode) {
+        bool hidden = this->ui->tilesetWidget->isHidden();
+        this->ui->tilesetWidget->setVisible(false);
+        this->ui->dungeonWidget->setVisible(!hidden);
+    } else {
+        bool hidden = this->ui->dungeonWidget->isHidden();
+        this->ui->dungeonWidget->setVisible(false);
+        this->ui->tilesetWidget->setVisible(!hidden);
+    }
+    // update zoom
+    QLineEdit *zoomField;
+    if (dunMode) {
+        zoomField = this->ui->dunZoomEdit;
+    } else {
+        zoomField = this->ui->zoomEdit;
+    }
+    QString zoomText = zoomField->text();
+    this->celScene.setZoom(zoomText);
+    // update the view
+    this->displayFrame();
+}
+
+void LevelCelView::setPositionX(int posx)
+{
+    if (posx < 0) {
+        posx = 0;
+    }
+    if (posx >= this->dun->getWidth()) {
+        posx = this->dun->getWidth() - 1;
+    }
+    bool change = this->currentDunPosX != posx;
+    this->currentDunPosX = posx;
+    this->on_dungeonPosXLineEdit_escPressed();
+    if (change) {
+        // update the view
+        this->update();
+    }
+}
+
+void LevelCelView::setPositionY(int posy)
+{
+    if (posy < 0) {
+        posy = 0;
+    }
+    if (posy >= this->dun->getHeight()) {
+        posy = this->dun->getHeight() - 1;
+    }
+    bool change = this->currentDunPosY != posy;
+    this->currentDunPosY = posy;
+    this->on_dungeonPosYLineEdit_escPressed();
+    if (change) {
+        // update the view
+        this->update();
+    }
+}
+
+void LevelCelView::on_moveLeftButton_clicked()
+{
+    this->setPositionX(this->currentDunPosX - 1);
+}
+
+void LevelCelView::on_moveRightButton_clicked()
+{
+    this->setPositionX(this->currentDunPosX + 1);
+}
+
+void LevelCelView::on_moveUpButton_clicked()
+{
+    this->setPositionY(this->currentDunPosY - 1);
+}
+
+void LevelCelView::on_moveDownButton_clicked()
+{
+    this->setPositionY(this->currentDunPosY + 1);
+}
+
+void LevelCelView::on_dungeonPosXLineEdit_returnPressed()
+{
+    int posx = this->ui->dungeonPosXLineEdit->text().toInt();
+    this->setPositionX(posx);
+}
+
+void LevelCelView::on_dungeonPosXLineEdit_escPressed()
+{
+    int posx = this->currentDunPosX;
+    this->ui->dungeonPosXLineEdit->setText(QString::number(posx));
+    this->ui->dungeonPosXLineEdit->clearFocus();
+}
+
+void LevelCelView::on_dungeonPosYLineEdit_returnPressed()
+{
+    int posy = this->ui->dungeonPosYLineEdit->text().toInt();
+    this->setPositionY(posy);
+}
+
+void LevelCelView::on_dungeonPosYLineEdit_escPressed()
+{
+    int posy = this->currentDunPosY;
+    this->ui->dungeonPosYLineEdit->setText(QString::number(posy));
+    this->ui->dungeonPosYLineEdit->clearFocus();
+}
+
+void LevelCelView::on_dunWidthEdit_returnPressed()
+{
+    int newWidth = this->ui->dunWidthEdit->text().toUShort();
+
+    bool change = this->dun->setWidth(newWidth);
+    this->on_dunWidthEdit_escPressed();
+    if (change) {
+        if (this->currentDunPosX >= newWidth) {
+            this->currentDunPosX = newWidth - 1;
+            this->on_dungeonPosXLineEdit_escPressed();
+        }
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::on_dunWidthEdit_escPressed()
+{
+    int width = this->dun->getWidth();
+
+    this->ui->dunWidthEdit->setText(QString::number(width));
+    this->ui->dunWidthEdit->clearFocus();
+}
+
+void LevelCelView::on_dunHeightEdit_returnPressed()
+{
+    int newHeight = this->ui->dunHeightEdit->text().toUShort();
+
+    bool change = this->dun->setHeight(newHeight);
+    this->on_dunHeightEdit_escPressed();
+    if (change) {
+        if (this->currentDunPosY >= newHeight) {
+            this->currentDunPosY = newHeight - 1;
+            this->on_dungeonPosYLineEdit_escPressed();
+        }
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::on_dunHeightEdit_escPressed()
+{
+    int height = this->dun->getHeight();
+
+    this->ui->dunHeightEdit->setText(QString::number(height));
+    this->ui->dunHeightEdit->clearFocus();
+}
+
+void LevelCelView::on_levelTypeComboBox_activated(int index)
+{
+    if (index < 0) {
+        return;
+    }
+    bool change = this->dun->setLevelType(index);
+    this->on_dungeonDefaultTileLineEdit_escPressed();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::on_dungeonDefaultTileLineEdit_returnPressed()
+{
+    int defaultTile = this->ui->dungeonDefaultTileLineEdit->text().toInt();
+
+    bool change = this->dun->setDefaultTile(defaultTile);
+    this->on_dungeonDefaultTileLineEdit_escPressed();
+    if (change) {
+        this->ui->levelTypeComboBox->setCurrentIndex(-1);
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::on_dungeonDefaultTileLineEdit_escPressed()
+{
+    QString defaultText;
+    int defaultTile = this->dun->getDefaultTile();
+    if (defaultTile != UNDEF_TILE) {
+        defaultText = QString::number(defaultTile);
+    }
+    this->ui->dungeonDefaultTileLineEdit->setText(defaultText);
+    this->ui->dungeonDefaultTileLineEdit->clearFocus();
+}
+
+void LevelCelView::on_showTilesCheckBox_clicked()
+{
+    // update the view
+    this->displayFrame();
+}
+
+void LevelCelView::on_dungeonTileLineEdit_returnPressed()
+{
+    bool ok;
+    int tileRef = this->ui->dungeonTileLineEdit->text().toInt(&ok);
+    if (tileRef < 0 || !ok) {
+        tileRef = UNDEF_TILE;
+    }
+
+    bool change = this->dun->setTileAt(this->currentDunPosX, this->currentDunPosY, tileRef);
+    this->on_dungeonTileLineEdit_escPressed();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::on_dungeonTileLineEdit_escPressed()
+{
+    int tileRef = this->dun->getTileAt(this->currentDunPosX, this->currentDunPosY);
+
+    this->ui->dungeonTileLineEdit->setText(tileRef == UNDEF_TILE ? QStringLiteral("?") : QString::number(tileRef));
+    this->ui->dungeonTileLineEdit->clearFocus();
+}
+
+void LevelCelView::on_assetLoadPushButton_clicked()
+{
+    QString dirPath = dMainWindow().folderDialog(tr("Select Assets Folder"));
+
+    if (dirPath.isEmpty())
+        return;
+
+    if (this->dun->setAssetPath(dirPath)) {
+        this->updateIcon();
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::on_assetClearPushButton_clicked()
+{
+    if (this->dun->setAssetPath("")) {
+        this->updateIcon();
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::on_dungeonSubtileLineEdit_returnPressed()
+{
+    bool ok;
+    int subtileRef = this->ui->dungeonSubtileLineEdit->text().toInt(&ok);
+    if (subtileRef < 0 || !ok) {
+        subtileRef = UNDEF_SUBTILE;
+    }
+
+    bool change = this->dun->setSubtileAt(this->currentDunPosX, this->currentDunPosY, subtileRef);
+    this->on_dungeonSubtileLineEdit_escPressed();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::on_dungeonSubtileLineEdit_escPressed()
+{
+    int subtileRef = this->dun->getSubtileAt(this->currentDunPosX, this->currentDunPosY);
+
+    this->ui->dungeonSubtileLineEdit->setText(subtileRef == UNDEF_SUBTILE ? QStringLiteral("?") : QString::number(subtileRef));
+    this->ui->dungeonSubtileLineEdit->clearFocus();
+}
+
+void LevelCelView::on_showItemsCheckBox_clicked()
+{
+    // update the view
+    this->displayFrame();
+}
+
+void LevelCelView::on_dungeonItemLineEdit_returnPressed()
+{
+    int itemIndex = this->ui->dungeonItemLineEdit->text().toUShort();
+    int posx = this->currentDunPosX;
+    int posy = this->currentDunPosY;
+
+    bool change = this->dun->setItemAt(posx, posy, itemIndex);
+    this->on_dungeonItemLineEdit_escPressed();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::on_dungeonItemLineEdit_escPressed()
+{
+    int itemIndex = this->dun->getItemAt(this->currentDunPosX, this->currentDunPosY);
+
+    this->ui->dungeonItemLineEdit->setText(QString::number(itemIndex));
+    this->ui->dungeonItemLineEdit->clearFocus();
+}
+
+void LevelCelView::on_showMonstersCheckBox_clicked()
+{
+    // update the view
+    this->displayFrame();
+}
+
+void LevelCelView::on_dungeonMonsterComboBox_activated(int index)
+{
+    if (index < 0) {
+        return;
+    }
+    int monsterIndex = this->ui->dungeonMonsterComboBox->itemData(index).value<int>();
+
+    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monsterIndex);
+    this->on_dungeonMonsterLineEdit_escPressed();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::on_dungeonMonsterLineEdit_returnPressed()
+{
+    int monsterIndex = this->ui->dungeonMonsterLineEdit->text().toUShort();
+
+    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monsterIndex);
+    this->on_dungeonMonsterLineEdit_escPressed();
+    if (change) {
+        this->ui->dungeonMonsterComboBox->setCurrentIndex(this->ui->dungeonMonsterComboBox->findData(monsterIndex));
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::on_dungeonMonsterLineEdit_escPressed()
+{
+    int monsterIndex = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
+
+    this->ui->dungeonMonsterLineEdit->setText(QString::number(monsterIndex));
+    this->ui->dungeonMonsterLineEdit->clearFocus();
+}
+
+void LevelCelView::on_showObjectsCheckBox_clicked()
+{
+    // update the view
+    this->displayFrame();
+}
+
+void LevelCelView::on_dungeonObjectComboBox_activated(int index)
+{
+    if (index < 0) {
+        return;
+    }
+    int objectIndex = this->ui->dungeonObjectComboBox->itemData(index).value<int>();
+
+    bool change = this->dun->setObjectAt(this->currentDunPosX, this->currentDunPosY, objectIndex);
+    this->on_dungeonObjectLineEdit_escPressed();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::on_dungeonObjectLineEdit_returnPressed()
+{
+    int objectIndex = this->ui->dungeonObjectLineEdit->text().toUShort();
+
+    bool change = this->dun->setObjectAt(this->currentDunPosX, this->currentDunPosY, objectIndex);
+    this->on_dungeonObjectLineEdit_escPressed();
+    if (change) {
+        this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::on_dungeonObjectLineEdit_escPressed()
+{
+    int objectIndex = this->dun->getObjectAt(this->currentDunPosX, this->currentDunPosY);
+
+    this->ui->dungeonObjectLineEdit->setText(QString::number(objectIndex));
+    this->ui->dungeonObjectLineEdit->clearFocus();
+}
+
+void LevelCelView::on_dungeonTransvalLineEdit_returnPressed()
+{
+    int transVal = this->ui->dungeonTransvalLineEdit->text().toUShort();
+
+    bool change = this->dun->setTransvalAt(this->currentDunPosX, this->currentDunPosY, transVal);
+    this->on_dungeonTransvalLineEdit_escPressed();
+    if (change) {
+        // update the view
+        // this->displayFrame();
+        this->updateLabel();
+    }
+}
+
+void LevelCelView::on_dungeonTransvalLineEdit_escPressed()
+{
+    int transVal = this->dun->getTransvalAt(this->currentDunPosX, this->currentDunPosY);
+
+    this->ui->dungeonTransvalLineEdit->setText(QString::number(transVal));
+    this->ui->dungeonTransvalLineEdit->clearFocus();
+}
+
+void LevelCelView::on_dunZoomOutButton_clicked()
+{
+    this->celScene.zoomOut();
+    this->on_dunZoomEdit_escPressed();
+}
+
+void LevelCelView::on_dunZoomInButton_clicked()
+{
+    this->celScene.zoomIn();
+    this->on_dunZoomEdit_escPressed();
+}
+
+void LevelCelView::on_dunZoomEdit_returnPressed()
+{
+    QString zoom = this->ui->dunZoomEdit->text();
+
+    this->celScene.setZoom(zoom);
+
+    this->on_dunZoomEdit_escPressed();
+}
+
+void LevelCelView::on_dunZoomEdit_escPressed()
+{
+    this->ui->dunZoomEdit->setText(this->celScene.zoomText());
+    this->ui->dunZoomEdit->clearFocus();
+}
+
+void LevelCelView::on_dunPlayDelayEdit_returnPressed()
+{
+    quint16 playDelay = this->ui->dunPlayDelayEdit->text().toUInt();
+
+    if (playDelay != 0)
+        this->dunviewPlayDelay = playDelay;
+
+    this->on_dunPlayDelayEdit_escPressed();
+}
+
+void LevelCelView::on_dunPlayDelayEdit_escPressed()
+{
+    this->ui->dunPlayDelayEdit->setText(QString::number(this->dunviewPlayDelay));
+    this->ui->dunPlayDelayEdit->clearFocus();
+}
+
+void LevelCelView::on_dunPlayButton_clicked()
+{
+    this->on_playButton_clicked();
+}
+
+void LevelCelView::on_dunStopButton_clicked()
+{
+    this->on_stopButton_clicked();
 }

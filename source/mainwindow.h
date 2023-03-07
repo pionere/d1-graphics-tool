@@ -8,6 +8,7 @@
 #include <QUndoCommand>
 
 #include "celview.h"
+#include "d1dun.h"
 #include "d1gfx.h"
 #include "d1pal.h"
 #include "d1palhits.h"
@@ -18,6 +19,7 @@
 #include "openasdialog.h"
 #include "paintwidget.h"
 #include "palettewidget.h"
+#include "patchdungeondialog.h"
 #include "patchtilesetdialog.h"
 #include "progressdialog.h"
 #include "saveasdialog.h"
@@ -63,7 +65,7 @@ public:
     void reloadConfig();
     void updateWindow();
 
-    void openNew(OPEN_TILESET_TYPE tileset, OPEN_CLIPPED_TYPE clipped);
+    void openNew(OPEN_TILESET_TYPE tileset, OPEN_CLIPPED_TYPE clipped, bool createDun);
     void openFile(const OpenAsParam &params);
     void openFiles(const QStringList &filePaths);
     void openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append);
@@ -128,6 +130,7 @@ private slots:
     void on_actionNew_CEL_triggered();
     void on_actionNew_CL2_triggered();
     void on_actionNew_Tileset_triggered();
+    void on_actionNew_Dungeon_triggered();
 
     void on_actionOpen_triggered();
     void on_actionOpenAs_triggered();
@@ -159,6 +162,21 @@ private slots:
     void on_actionSortFrames_Tileset_triggered();
     void on_actionSortSubtiles_Tileset_triggered();
     void on_actionSortTileset_Tileset_triggered();
+
+    void on_actionReportUse_Dungeon_triggered();
+    void on_actionPatchDungeon_Dungeon_triggered();
+    void on_actionResetTiles_Dungeon_triggered();
+    void on_actionResetSubtiles_Dungeon_triggered();
+    void on_actionCheckItems_Dungeon_triggered();
+    void on_actionCheckMonsters_Dungeon_triggered();
+    void on_actionCheckObjects_Dungeon_triggered();
+    void on_actionCheckEntities_Dungeon_triggered();
+    void on_actionRemoveItems_Dungeon_triggered();
+    void on_actionLoadItems_Dungeon_triggered();
+    void on_actionRemoveMonsters_Dungeon_triggered();
+    void on_actionLoadMonsters_Dungeon_triggered();
+    void on_actionRemoveObjects_Dungeon_triggered();
+    void on_actionLoadObjects_Dungeon_triggered();
 
     void on_actionNew_PAL_triggered();
     void on_actionOpen_PAL_triggered();
@@ -225,6 +243,7 @@ private:
     ExportDialog *exportDialog = nullptr;
     UpscaleDialog *upscaleDialog = nullptr;
     PatchTilesetDialog *patchTilesetDialog = nullptr;
+    PatchDungeonDialog *patchDungeonDialog = nullptr;
     UpscaleTaskDialog *upscaleTaskDialog = nullptr;
 
     D1Pal *pal = nullptr;
@@ -232,6 +251,7 @@ private:
     D1Trn *trnBase = nullptr;
     D1Gfx *gfx = nullptr;
     D1Tileset *tileset = nullptr;
+    D1Dun *dun = nullptr;
 
     QMap<QString, D1Pal *> pals;       // key: path, value: pointer to palette
     QMap<QString, D1Trn *> uniqueTrns; // key: path, value: pointer to translation

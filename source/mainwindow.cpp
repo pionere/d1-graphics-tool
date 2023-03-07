@@ -116,6 +116,7 @@ MainWindow::~MainWindow()
     delete this->settingsDialog;
     delete this->exportDialog;
     delete this->patchTilesetDialog;
+    delete this->patchDungeonDialog;
     delete this->upscaleDialog;
     delete this->upscaleTaskDialog;
 }
@@ -152,6 +153,10 @@ void MainWindow::setPal(const QString &path)
     this->trnUnique->setPalette(this->pal);
     this->trnUnique->refreshResultingPalette();
     this->trnBase->refreshResultingPalette();
+    // update entities
+    if (this->dun != nullptr) {
+        this->dun->setPal(pal);
+    }
     // update the widgets
     // - views
     if (this->celView != nullptr) {
@@ -546,30 +551,36 @@ bool MainWindow::isResourcePath(const QString &path)
 
 void MainWindow::on_actionNew_CEL_triggered()
 {
-    this->openNew(OPEN_TILESET_TYPE::FALSE, OPEN_CLIPPED_TYPE::FALSE);
+    this->openNew(OPEN_TILESET_TYPE::FALSE, OPEN_CLIPPED_TYPE::FALSE, false);
 }
 
 void MainWindow::on_actionNew_CL2_triggered()
 {
-    this->openNew(OPEN_TILESET_TYPE::FALSE, OPEN_CLIPPED_TYPE::TRUE);
+    this->openNew(OPEN_TILESET_TYPE::FALSE, OPEN_CLIPPED_TYPE::TRUE, false);
 }
 
 void MainWindow::on_actionNew_Tileset_triggered()
 {
-    this->openNew(OPEN_TILESET_TYPE::TRUE, OPEN_CLIPPED_TYPE::FALSE);
+    this->openNew(OPEN_TILESET_TYPE::TRUE, OPEN_CLIPPED_TYPE::FALSE, false);
 }
 
-void MainWindow::openNew(OPEN_TILESET_TYPE tileset, OPEN_CLIPPED_TYPE clipped)
+void MainWindow::on_actionNew_Dungeon_triggered()
+{
+    this->openNew(OPEN_TILESET_TYPE::TRUE, OPEN_CLIPPED_TYPE::FALSE, true);
+}
+
+void MainWindow::openNew(OPEN_TILESET_TYPE tileset, OPEN_CLIPPED_TYPE clipped, bool createDun)
 {
     OpenAsParam params = OpenAsParam();
     params.isTileset = tileset;
     params.clipped = clipped;
+    params.createDun = createDun;
     this->openFile(params);
 }
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX)"));
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;DUN Files (*.dun *.DUN *.rdun *.RDUN)"));
 
     if (!openFilePath.isEmpty()) {
         QStringList filePaths;
@@ -589,7 +600,7 @@ void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 
     for (const QUrl &url : event->mimeData()->urls()) {
         QString fileLower = url.toLocalFile().toLower();
-        if (fileLower.endsWith(".cel") || fileLower.endsWith(".cl2") || (unloaded && fileLower.endsWith(".pcx"))) {
+        if (fileLower.endsWith(".cel") || fileLower.endsWith(".cl2") || fileLower.endsWith(".dun") || fileLower.endsWith(".rdun") || (unloaded && fileLower.endsWith(".pcx"))) {
             event->acceptProposedAction();
             return;
         }
@@ -611,7 +622,11 @@ void MainWindow::openFiles(const QStringList &filePaths)
 {
     for (const QString &filePath : filePaths) {
         OpenAsParam params = OpenAsParam();
-        params.celFilePath = filePath;
+        if (filePath.toLower().endsWith("dun")) { // .dun or .rdun
+            params.dunFilePath = filePath;
+        } else {
+            params.celFilePath = filePath;
+        }
         this->openFile(params);
     }
 }
@@ -741,9 +756,30 @@ void MainWindow::failWithError(const QString &error)
     ProgressDialog::done();
 }
 
+static void findFirstFile(const QString &dir, const QString &filter, QString &filePath, QString &baseName)
+{
+    if (filePath.isEmpty()) {
+        if (!baseName.isEmpty()) {
+            QDirIterator it(dir, QStringList(baseName + filter), QDir::Files | QDir::Readable);
+            if (it.hasNext()) {
+                filePath = it.next();
+                return;
+            }
+        }
+        QDirIterator it(dir, QStringList(filter), QDir::Files | QDir::Readable);
+        if (it.hasNext()) {
+            filePath = it.next();
+            if (baseName.isEmpty()) {
+                QFileInfo fileInfo = QFileInfo(filePath);
+                baseName = fileInfo.completeBaseName();
+            }
+        }
+    }
+}
+
 void MainWindow::openFile(const OpenAsParam &params)
 {
-    const QString &gfxFilePath = params.celFilePath;
+    QString gfxFilePath = params.celFilePath;
 
     // Check file extension
     int fileType = 0;
@@ -784,6 +820,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     QString solFilePath = params.solFilePath;
     QString ampFilePath = params.ampFilePath;
     QString tmiFilePath = params.tmiFilePath;
+    QString dunFilePath = params.dunFilePath;
 
     QString baseDir;
     if (!gfxFilePath.isEmpty()) {
@@ -807,12 +844,25 @@ void MainWindow::openFile(const OpenAsParam &params)
         if (tmiFilePath.isEmpty()) {
             tmiFilePath = basePath + ".tmi";
         }
+    } else if (!dunFilePath.isEmpty()) {
+        QFileInfo dunFileInfo = QFileInfo(dunFilePath);
+
+        baseDir = dunFileInfo.absolutePath();
+        QString baseName;
+
+        findFirstFile(baseDir, QStringLiteral("*.til"), tilFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*.min"), minFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*.sol"), solFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*.amp"), ampFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*.tmi"), tmiFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*.cel"), gfxFilePath, baseName);
     }
 
     // If SOL, MIN and TIL files exist then build a LevelCelView
     bool isTileset = params.isTileset == OPEN_TILESET_TYPE::TRUE;
     if (params.isTileset == OPEN_TILESET_TYPE::AUTODETECT) {
-        isTileset = fileType == 1 && QFileInfo::exists(tilFilePath) && QFileInfo::exists(minFilePath) && QFileInfo::exists(solFilePath);
+        isTileset = ((fileType == 1 || fileType == 0) && QFileInfo::exists(dunFilePath))
+            || (fileType == 1 && QFileInfo::exists(tilFilePath) && QFileInfo::exists(minFilePath) && QFileInfo::exists(solFilePath));
     }
 
     this->gfx = new D1Gfx();
@@ -855,6 +905,16 @@ void MainWindow::openFile(const OpenAsParam &params)
             this->failWithError(tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
+
+        // Loading DUN
+        if (!dunFilePath.isEmpty() || params.createDun) {
+            this->dun = new D1Dun();
+            if (!this->dun->load(dunFilePath, this->tileset->til, params)) {
+                this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
+                return;
+            }
+            this->dun->initialize(this->pal, this->tileset->tmi);
+        }
     } else if (fileType == 1) { // CEL
         if (!D1Cel::load(*this->gfx, gfxFilePath, params)) {
             this->failWithError(tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
@@ -887,7 +947,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     if (isTileset) {
         // build a LevelCelView
         this->levelCelView = new LevelCelView(this);
-        this->levelCelView->initialize(this->pal, this->tileset, this->bottomPanelHidden);
+        this->levelCelView->initialize(this->pal, this->tileset, this->dun, this->bottomPanelHidden);
 
         // Refresh palette widgets when frame, subtile of tile is changed
         QObject::connect(this->levelCelView, &LevelCelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
@@ -977,6 +1037,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->tileMenu.setEnabled(isTileset);
 
     this->ui->menuTileset->setEnabled(isTileset);
+    this->ui->menuDungeon->setEnabled(this->dun != nullptr);
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1072,6 +1133,10 @@ void MainWindow::saveFile(const SaveAsParam &params)
 
     if (this->tileset != nullptr) {
         this->tileset->save(params);
+    }
+
+    if (this->dun != nullptr) {
+        this->dun->save(params);
     }
 
     // Clear loading message from status bar
@@ -1180,7 +1245,7 @@ void MainWindow::on_actionSaveAs_triggered()
     if (this->saveAsDialog == nullptr) {
         this->saveAsDialog = new SaveAsDialog(this);
     }
-    this->saveAsDialog->initialize(this->gfx, this->tileset);
+    this->saveAsDialog->initialize(this->gfx, this->tileset, this->dun);
     this->saveAsDialog->show();
 }
 
@@ -1196,6 +1261,7 @@ void MainWindow::on_actionClose_triggered()
     MemFree(this->trnBaseWidget);
     MemFree(this->gfx);
     MemFree(this->tileset);
+    MemFree(this->dun);
 
     qDeleteAll(this->pals);
     this->pals.clear();
@@ -1212,6 +1278,7 @@ void MainWindow::on_actionClose_triggered()
     this->ui->menuEdit->setEnabled(false);
     this->ui->menuView->setEnabled(false);
     this->ui->menuTileset->setEnabled(false);
+    this->ui->menuDungeon->setEnabled(false);
     this->ui->menuPalette->setEnabled(false);
     this->ui->actionExport->setEnabled(false);
     this->ui->actionSave->setEnabled(false);
@@ -1585,6 +1652,184 @@ void MainWindow::on_actionSortTileset_Tileset_triggered()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
     this->levelCelView->sortTileset();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionReportUse_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->reportDungeonUsage();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionPatchDungeon_Dungeon_triggered()
+{
+    if (this->patchDungeonDialog == nullptr) {
+        this->patchDungeonDialog = new PatchDungeonDialog(this);
+    }
+    this->patchDungeonDialog->initialize(this->dun);
+    this->patchDungeonDialog->show();
+}
+
+void MainWindow::on_actionResetTiles_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->resetDungeonTiles();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionResetSubtiles_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->resetDungeonSubtiles();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionCheckItems_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->checkItems();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionCheckMonsters_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->checkMonsters();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionCheckObjects_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->checkObjects();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionCheckEntities_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->checkEntities();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionRemoveItems_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->removeItems();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionLoadItems_Dungeon_triggered()
+{
+    QString dunFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Source of the items"), "DUN Files (*.dun *.DUN)");
+
+    if (dunFilePath.isEmpty()) {
+        return;
+    }
+    D1Dun srcDun = D1Dun();
+    OpenAsParam params = OpenAsParam();
+    params.dunFilePath = dunFilePath;
+    if (!srcDun.load(dunFilePath, this->tileset->til, params)) {
+        this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
+        return;
+    }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->loadItems(&srcDun);
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionRemoveMonsters_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->removeMonsters();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionLoadMonsters_Dungeon_triggered()
+{
+    QString dunFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Source of the monsters"), "DUN Files (*.dun *.DUN)");
+
+    if (dunFilePath.isEmpty()) {
+        return;
+    }
+    D1Dun srcDun = D1Dun();
+    OpenAsParam params = OpenAsParam();
+    params.dunFilePath = dunFilePath;
+    if (!srcDun.load(dunFilePath, this->tileset->til, params)) {
+        this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
+        return;
+    }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->loadMonsters(&srcDun);
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionRemoveObjects_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->removeObjects();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionLoadObjects_Dungeon_triggered()
+{
+    QString dunFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Source of the objects"), "DUN Files (*.dun *.DUN)");
+
+    if (dunFilePath.isEmpty()) {
+        return;
+    }
+    D1Dun srcDun = D1Dun();
+    OpenAsParam params = OpenAsParam();
+    params.dunFilePath = dunFilePath;
+    if (!srcDun.load(dunFilePath, this->tileset->til, params)) {
+        this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
+        return;
+    }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->loadObjects(&srcDun);
 
     // Clear loading message from status bar
     ProgressDialog::done();

@@ -34,8 +34,10 @@ void OpenAsDialog::initialize()
     this->ui->solFileEdit->setText("");
     this->ui->ampFileEdit->setText("");
     this->ui->tmiFileEdit->setText("");
+    this->ui->dunFileEdit->setText("");
     this->ui->minWidthEdit->setText("0");
     this->ui->minHeightEdit->setText("0");
+    this->ui->createDunCheckBox->setChecked(false);
 
     this->update();
 }
@@ -166,6 +168,16 @@ void OpenAsDialog::on_tmiFileBrowseButton_clicked()
     this->ui->tmiFileEdit->setText(openFilePath);
 }
 
+void OpenAsDialog::on_dunFileBrowseButton_clicked()
+{
+    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select DUN file"), tr("DUN Files (*.dun *.DUN *.rdun *.RDUN)"));
+
+    if (openFilePath.isEmpty())
+        return;
+
+    this->ui->dunFileEdit->setText(openFilePath);
+}
+
 void OpenAsDialog::on_openButton_clicked()
 {
     OpenAsParam params;
@@ -203,6 +215,8 @@ void OpenAsDialog::on_openButton_clicked()
     params.solFilePath = this->ui->solFileEdit->text();
     params.ampFilePath = this->ui->ampFileEdit->text();
     params.tmiFilePath = this->ui->tmiFileEdit->text();
+    params.dunFilePath = this->ui->dunFileEdit->text();
+    params.createDun = this->ui->createDunCheckBox->isChecked();
     params.minWidth = this->ui->minWidthEdit->nonNegInt();
     params.minHeight = this->ui->minHeightEdit->nonNegInt();
 

@@ -14,12 +14,14 @@
 #include <QWidget>
 
 #include "celview.h"
+#include "d1dun.h"
 #include "d1gfx.h"
 #include "d1pal.h"
 #include "d1tileset.h"
 #include "leveltabframewidget.h"
 #include "leveltabsubtilewidget.h"
 #include "leveltabtilewidget.h"
+#include "pushbuttonwidget.h"
 #include "upscaledialog.h"
 
 namespace Ui {
@@ -35,7 +37,7 @@ public:
     explicit LevelCelView(QWidget *parent);
     ~LevelCelView();
 
-    void initialize(D1Pal *pal, D1Tileset *tileset, bool bottomPanelHidden);
+    void initialize(D1Pal *pal, D1Tileset *tileset, D1Dun *dun, bool bottomPanelHidden);
     void setPal(D1Pal *pal);
 
     CelScene *getCelScene() const;
@@ -78,10 +80,25 @@ public:
     void sortSubtiles();
     void sortTileset();
 
+    void reportDungeonUsage() const;
+    void resetDungeonTiles();
+    void resetDungeonSubtiles();
+    void checkItems() const;
+    void checkMonsters() const;
+    void checkObjects() const;
+    void checkEntities() const;
+    void removeItems();
+    void removeMonsters();
+    void removeObjects();
+    void loadItems(D1Dun *srcDun);
+    void loadMonsters(D1Dun *srcDun);
+    void loadObjects(D1Dun *srcDun);
+
     void upscale(const UpscaleParam &params);
 
     void update();
     void updateLabel();
+    void updateIcon();
     void displayFrame();
     void toggleBottomPanel();
 
@@ -119,6 +136,9 @@ private:
     void setFrameIndex(int frameIndex);
     void setSubtileIndex(int subtileIndex);
     void setTileIndex(int tileIndex);
+
+    void setPositionX(int posx);
+    void setPositionY(int posy);
 
 signals:
     void frameRefreshed();
@@ -162,6 +182,56 @@ private slots:
     void on_stopButton_clicked();
     void playGroup();
 
+    void on_actionToggle_View_triggered();
+
+    void on_moveLeftButton_clicked();
+    void on_moveRightButton_clicked();
+    void on_moveUpButton_clicked();
+    void on_moveDownButton_clicked();
+    void on_dungeonPosXLineEdit_returnPressed();
+    void on_dungeonPosXLineEdit_escPressed();
+    void on_dungeonPosYLineEdit_returnPressed();
+    void on_dungeonPosYLineEdit_escPressed();
+
+    void on_dunWidthEdit_returnPressed();
+    void on_dunWidthEdit_escPressed();
+    void on_dunHeightEdit_returnPressed();
+    void on_dunHeightEdit_escPressed();
+
+    void on_levelTypeComboBox_activated(int index);
+    void on_dungeonDefaultTileLineEdit_returnPressed();
+    void on_dungeonDefaultTileLineEdit_escPressed();
+    void on_showTilesCheckBox_clicked();
+    void on_dungeonTileLineEdit_returnPressed();
+    void on_dungeonTileLineEdit_escPressed();
+    void on_assetLoadPushButton_clicked();
+    void on_assetClearPushButton_clicked();
+    void on_dungeonSubtileLineEdit_returnPressed();
+    void on_dungeonSubtileLineEdit_escPressed();
+    void on_showItemsCheckBox_clicked();
+    void on_dungeonItemLineEdit_returnPressed();
+    void on_dungeonItemLineEdit_escPressed();
+    void on_showMonstersCheckBox_clicked();
+    void on_dungeonMonsterComboBox_activated(int index);
+    void on_dungeonMonsterLineEdit_returnPressed();
+    void on_dungeonMonsterLineEdit_escPressed();
+    void on_showObjectsCheckBox_clicked();
+    void on_dungeonObjectComboBox_activated(int index);
+    void on_dungeonObjectLineEdit_returnPressed();
+    void on_dungeonObjectLineEdit_escPressed();
+    void on_dungeonTransvalLineEdit_returnPressed();
+    void on_dungeonTransvalLineEdit_escPressed();
+
+    void on_dunZoomOutButton_clicked();
+    void on_dunZoomInButton_clicked();
+    void on_dunZoomEdit_returnPressed();
+    void on_dunZoomEdit_escPressed();
+
+    void on_dunPlayDelayEdit_returnPressed();
+    void on_dunPlayDelayEdit_escPressed();
+    void on_dunPlayButton_clicked();
+    void on_dunStopButton_clicked();
+
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dragMoveEvent(QDragMoveEvent *event) override;
     void dropEvent(QDropEvent *event) override;
@@ -174,6 +244,7 @@ private:
     LevelTabTileWidget tabTileWidget = LevelTabTileWidget(this);
     LevelTabSubtileWidget tabSubtileWidget = LevelTabSubtileWidget(this);
     LevelTabFrameWidget tabFrameWidget = LevelTabFrameWidget(this);
+    PushButtonWidget *viewBtn;
 
     D1Pal *pal;
     D1Gfx *gfx;
@@ -183,10 +254,15 @@ private:
     D1Sol *sol;
     D1Amp *amp;
     D1Tmi *tmi;
+    D1Dun *dun;
+    bool dunView = false;
     int currentFrameIndex = 0;
     int currentSubtileIndex = 0;
     int currentTileIndex = 0;
     quint16 tilesetPlayDelay = 50;
+    quint16 dunviewPlayDelay = 50;
+    int currentDunPosX = 0;
+    int currentDunPosY = 0;
 
     QTimer playTimer;
 };
