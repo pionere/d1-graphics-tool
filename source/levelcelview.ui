@@ -705,15 +705,15 @@
         </property>
        </widget>
       </item>
+      <item row="4" column="0" colspan="18">
+       <widget class="QTabWidget" name="tilesTabs">
+        <property name="maximumHeight">
+         <number>250</number>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget> <!-- tilesetWidget -->
-   </item>
-   <item>
-    <widget class="QTabWidget" name="tilesTabs">
-     <property name="maximumHeight">
-      <number>250</number>
-     </property>
-    </widget>
    </item>
   </layout>
  </widget>
