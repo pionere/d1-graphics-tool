@@ -196,7 +196,6 @@ private:
     QString currLang;         // currently loaded language e.g. "de_DE"
     QString lastFilePath;
 
-    QMenu newMenu = QMenu("New");
     QMenu frameMenu = QMenu("Frame");
     QMenu subtileMenu = QMenu("Subtile");
     QMenu tileMenu = QMenu("Tile");
