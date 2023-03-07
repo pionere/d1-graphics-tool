@@ -620,6 +620,12 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         }
         return;
     }
+    if (event->matches(QKeySequence::New)) {
+        this->ui->mainMenu->setActiveAction(this->ui->mainMenu->actions()[0]);
+        this->ui->menuFile->setActiveAction(this->ui->menuFile->actions()[0]);
+        this->ui->menuNew->setActiveAction(this->ui->menuNew->actions()[0]);
+        return;
+    }
     if (event->matches(QKeySequence::Copy)) {
         QImage image;
         if (this->celView != nullptr) {

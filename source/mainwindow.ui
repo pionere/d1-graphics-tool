@@ -65,7 +65,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar">
+  <widget class="QMenuBar" name="mainMenu">
    <widget class="QMenu" name="menuNew">
     <property name="title">
      <string>New</string>
