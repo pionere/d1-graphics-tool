@@ -40,7 +40,7 @@ LevelCelView::LevelCelView(QWidget *parent)
     this->ui->tilesTabs->addTab(&this->tabTileWidget, tr("Tile properties"));
     this->ui->tilesTabs->addTab(&this->tabSubtileWidget, tr("Subtile properties"));
     this->ui->tilesTabs->addTab(&this->tabFrameWidget, tr("Frame properties"));
-    QLayout *layout = this->ui->paintbuttonHorizontalLayout;
+    QLayout *layout = this->ui->tilesetButtonsHorizontalLayout;
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Draw_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
 
@@ -1356,10 +1356,10 @@ void LevelCelView::removeCurrentTile()
 QImage LevelCelView::copyCurrent() const
 {
     /*if (this->ui->tilesTabs->currentIndex() == 1)
-        return this->min->getSubtileImage(this->currentSubtileIndex);
+        return this->min->getSubtileImage(this->currentSubtileIndex);*/
     if (this->gfx->getFrameCount() == 0) {
         return QImage();
-    }*/
+    }
     return this->gfx->getFrameImage(this->currentFrameIndex);
 }
 
