@@ -1670,7 +1670,7 @@ void D1Dun::checkItems(D1Sol *sol) const
         }
     }
     if (!result) {
-        progress.second = tr("No inconsistency detected with the Monsters.");
+        progress.second = tr("No inconsistency detected with the Items.");
         dProgress() << progress;
     }
 
