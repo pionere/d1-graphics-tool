@@ -65,7 +65,7 @@ public:
     explicit CelView(QWidget *parent);
     ~CelView();
 
-    void initialize(D1Pal *pal, D1Gfx *gfx);
+    void initialize(D1Pal *pal, D1Gfx *gfx, bool bottomPanelHidden);
     void setPal(D1Pal *pal);
 
     CelScene *getCelScene() const;
@@ -84,6 +84,7 @@ public:
 
     void update();
     void displayFrame();
+    void toggleBottomPanel();
 
 private:
     void updateLabel();

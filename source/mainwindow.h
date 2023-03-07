@@ -138,6 +138,9 @@ private slots:
     void on_actionSettings_triggered();
     void on_actionQuit_triggered();
 
+    void on_actionTogglePalTrn_triggered();
+    void on_actionToggleBottomPanel_triggered();
+
     void on_actionUpscale_triggered();
 
     void on_actionReportUse_Tileset_triggered();
@@ -238,6 +241,8 @@ private:
     D1PalHits *palHits = nullptr;
     // buffer to store the original colors in case of color cycling
     QColor origCyclePalette[32];
+    // state of the panels visibility
+    bool bottomPanelHidden = false;
 };
 
 MainWindow &dMainWindow();

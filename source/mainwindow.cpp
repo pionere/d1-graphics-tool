@@ -870,14 +870,15 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->palWidget = new PaletteWidget(this, this->undoStack, tr("Palette"));
     this->trnUniqueWidget = new PaletteWidget(this, this->undoStack, tr("Unique translation"));
     this->trnBaseWidget = new PaletteWidget(this, this->undoStack, tr("Base Translation"));
-    this->ui->palFrameLayout->addWidget(this->palWidget);
-    this->ui->palFrameLayout->addWidget(this->trnUniqueWidget);
-    this->ui->palFrameLayout->addWidget(this->trnBaseWidget);
+    QLayout *palLayout = this->ui->palFrameWidget->layout();
+    palLayout->addWidget(this->palWidget);
+    palLayout->addWidget(this->trnUniqueWidget);
+    palLayout->addWidget(this->trnBaseWidget);
 
     if (isTileset) {
         // build a LevelCelView
         this->levelCelView = new LevelCelView(this);
-        this->levelCelView->initialize(this->pal, this->tileset);
+        this->levelCelView->initialize(this->pal, this->tileset, this->bottomPanelHidden);
 
         // Refresh palette widgets when frame, subtile of tile is changed
         QObject::connect(this->levelCelView, &LevelCelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
@@ -887,7 +888,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     } else {
         // build a CelView
         this->celView = new CelView(this);
-        this->celView->initialize(this->pal, this->gfx);
+        this->celView->initialize(this->pal, this->gfx, this->bottomPanelHidden);
 
         // Refresh palette widgets when frame is changed
         QObject::connect(this->celView, &CelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
@@ -956,6 +957,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(true);
+    this->ui->menuView->setEnabled(true);
     this->ui->menuPalette->setEnabled(true);
     this->ui->actionExport->setEnabled(true);
     this->ui->actionSave->setEnabled(true);
@@ -1199,6 +1201,7 @@ void MainWindow::on_actionClose_triggered()
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(false);
+    this->ui->menuView->setEnabled(false);
     this->ui->menuTileset->setEnabled(false);
     this->ui->menuPalette->setEnabled(false);
     this->ui->actionExport->setEnabled(false);
@@ -1379,6 +1382,22 @@ void MainWindow::on_actionToggle_Draw_triggered()
         this->paintWidget->show();
     } else {
         this->paintWidget->hide();
+    }
+}
+
+void MainWindow::on_actionTogglePalTrn_triggered()
+{
+    this->ui->palFrameWidget->setVisible(this->ui->palFrameWidget->isHidden());
+}
+
+void MainWindow::on_actionToggleBottomPanel_triggered()
+{
+    this->bottomPanelHidden = !this->bottomPanelHidden;
+    if (this->levelCelView != nullptr) {
+        this->levelCelView->toggleBottomPanel();
+    }
+    if (this->celView != nullptr) {
+        this->celView->toggleBottomPanel();
     }
 }
 

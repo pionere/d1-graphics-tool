@@ -35,7 +35,7 @@ public:
     explicit LevelCelView(QWidget *parent);
     ~LevelCelView();
 
-    void initialize(D1Pal *pal, D1Tileset *tileset);
+    void initialize(D1Pal *pal, D1Tileset *tileset, bool bottomPanelHidden);
     void setPal(D1Pal *pal);
 
     CelScene *getCelScene() const;
@@ -83,6 +83,7 @@ public:
     void update();
     void updateLabel();
     void displayFrame();
+    void toggleBottomPanel();
 
 private:
     void collectFrameUsers(int frameIndex, std::vector<int> &users) const;

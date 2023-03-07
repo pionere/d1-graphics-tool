@@ -31,7 +31,7 @@
      </widget>
     </item>
     <item alignment="Qt::AlignTop">
-     <widget class="QFrame">
+     <widget class="QFrame" name="palFrameWidget">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
         <horstretch>0</horstretch>
@@ -96,6 +96,13 @@
     </property>
     <addaction name="actionAbout"/>
     <addaction name="actionAbout_Qt"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionTogglePalTrn"/>
+    <addaction name="actionToggleBottomPanel"/>
    </widget>
    <widget class="QMenu" name="menuTileset">
     <property name="title">
@@ -167,6 +174,7 @@
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuView"/>
    <addaction name="menuTileset"/>
    <addaction name="menuPalette"/>
    <addaction name="menuTasks"/>
@@ -293,6 +301,28 @@
   <action name="actionSettings">
    <property name="text">
     <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionTogglePalTrn">
+   <property name="text">
+    <string>Show PAL &amp;&amp; TRNs</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionToggleBottomPanel">
+   <property name="text">
+    <string>Show Bottom Panel</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionReportUse_Tileset">

@@ -192,10 +192,12 @@ CelView::~CelView()
     delete ui;
 }
 
-void CelView::initialize(D1Pal *p, D1Gfx *g)
+void CelView::initialize(D1Pal *p, D1Gfx *g, bool bottomPanelHidden)
 {
     this->pal = p;
     this->gfx = g;
+
+    this->ui->bottomPanel->setVisible(!bottomPanelHidden);
 
     // this->update();
 }
@@ -481,6 +483,11 @@ void CelView::displayFrame()
 
     // Notify PalView that the frame changed (used to refresh palette hits)
     emit this->frameRefreshed();
+}
+
+void CelView::toggleBottomPanel()
+{
+    this->ui->bottomPanel->setVisible(this->ui->bottomPanel->isHidden());
 }
 
 void CelView::updateGroupIndex()

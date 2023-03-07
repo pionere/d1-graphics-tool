@@ -68,7 +68,7 @@ LevelCelView::~LevelCelView()
     delete ui;
 }
 
-void LevelCelView::initialize(D1Pal *p, D1Tileset *ts)
+void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, bool bottomPanelHidden)
 {
     this->pal = p;
     this->tileset = ts;
@@ -82,6 +82,8 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts)
     this->tabTileWidget.initialize(this, this->til, this->min, this->amp);
     this->tabSubtileWidget.initialize(this, this->gfx, this->min, this->sol, this->tmi);
     this->tabFrameWidget.initialize(this, this->gfx);
+
+    this->ui->tilesetWidget->setVisible(!bottomPanelHidden);
 
     // this->update();
 }
@@ -2405,6 +2407,12 @@ void LevelCelView::displayFrame()
 
     // Notify PalView that the frame changed (used to refresh palette hits)
     emit frameRefreshed();
+}
+
+void LevelCelView::toggleBottomPanel()
+{
+    QWidget *layout = this->ui->tilesetWidget;
+    layout->setVisible(layout->isHidden());
 }
 
 void LevelCelView::setFrameIndex(int frameIndex)

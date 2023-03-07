@@ -37,6 +37,7 @@
     </widget>
    </item>
    <item>
+    <widget class="QWidget" name="tilesetWidget">
     <layout class="QGridLayout">
      <item row="0" column="0">
       <widget class="QLabel">
@@ -705,6 +706,7 @@
       </widget>
      </item>
     </layout>
+    </widget> <!-- tilesetWidget -->
    </item>
    <item>
     <widget class="QTabWidget" name="tilesTabs">
