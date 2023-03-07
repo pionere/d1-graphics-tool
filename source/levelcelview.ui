@@ -1085,6 +1085,9 @@
       
       <item row="3" column="0" colspan="18">
        <widget class="QTabWidget" name="dungeonTabs">
+        <property name="tabBarAutoHide">
+         <bool>true</bool>
+        </property>
         <!--property name="maximumHeight">
          <number>250</number>
         </property-->
