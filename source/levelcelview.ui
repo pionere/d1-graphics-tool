@@ -41,9 +41,9 @@
      <layout class="QGridLayout">
       <item row="0" column="0">
        <widget class="QLabel">
-        <property name="minimumWidth">
+        <!--property name="minimumWidth">
          <number>48</number>
-        </property>
+        </property-->
         <property name="text">
          <string>Zoom:</string>
         </property>
@@ -185,9 +185,9 @@
       </item>
       <item row="1" column="0">
        <widget class="QLabel">
-        <property name="minimumWidth">
+        <!--property name="minimumWidth">
          <number>48</number>
-        </property>
+        </property-->
         <property name="text">
          <string>Tiles:</string>
         </property>
@@ -363,9 +363,9 @@
       </item>
       <item row="2" column="0">
        <widget class="QLabel">
-        <property name="minimumWidth">
+        <!--property name="minimumWidth">
          <number>48</number>
-        </property>
+        </property-->
         <property name="text">
          <string>Subtiles:</string>
         </property>
@@ -529,9 +529,9 @@
       </item>
       <item row="3" column="0">
        <widget class="QLabel">
-        <property name="minimumWidth">
+        <!--property name="minimumWidth">
          <number>48</number>
-        </property>
+        </property-->
         <property name="text">
          <string>Frames:</string>
         </property>
@@ -720,9 +720,9 @@
      <layout class="QGridLayout">
       <item row="0" column="0">
        <widget class="QLabel">
-        <property name="minimumWidth">
+        <!--property name="minimumWidth">
          <number>48</number>
-        </property>
+        </property-->
         <property name="text">
          <string>Zoom:</string>
         </property>
@@ -884,9 +884,9 @@
       </item>
       <item row="2" column="0">
        <widget class="QLabel">
-        <property name="minimumWidth">
+        <!--property name="minimumWidth">
          <number>48</number>
-        </property>
+        </property-->
         <property name="text">
          <string>Dungeon:</string>
         </property>
@@ -1165,9 +1165,9 @@
          <layout class="QGridLayout">
           <item row="0" column="0">
            <widget class="QLabel">
-            <property name="minimumWidth">
+            <!--property name="minimumWidth">
              <number>48</number>
-            </property>
+            </property-->
             <property name="text">
              <string>Tile / Subtile:</string>
             </property>
@@ -1229,20 +1229,20 @@
               </property>
              </widget>
             </item>
-            <item>
+            <!--item>
              <spacer>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
              </spacer>
-            </item>
+            </item-->
            </layout>
           </item>
           <item row="0" column="3">
            <widget class="QLabel">
-            <property name="minimumWidth">
+            <!--property name="minimumWidth">
              <number>48</number>
-            </property>
+            </property-->
             <property name="text">
              <string>Transval:</string>
             </property>
@@ -1270,9 +1270,9 @@
           </item>
           <item row="1" column="0">
            <widget class="QLabel">
-            <property name="minimumWidth">
+            <!--property name="minimumWidth">
              <number>48</number>
-            </property>
+            </property-->
             <property name="text">
              <string>Object:</string>
             </property>
@@ -1296,9 +1296,9 @@
           </item>
           <item row="1" column="3">
            <widget class="QLabel">
-            <property name="minimumWidth">
+            <!--property name="minimumWidth">
              <number>48</number>
-            </property>
+            </property-->
             <property name="text">
              <string>Monster:</string>
             </property>
@@ -1322,9 +1322,9 @@
           </item>
           <item row="1" column="6">
            <widget class="QLabel">
-            <property name="minimumWidth">
+            <!--property name="minimumWidth">
              <number>48</number>
-            </property>
+            </property-->
             <property name="text">
              <string>Item:</string>
             </property>
