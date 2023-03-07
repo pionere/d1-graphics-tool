@@ -202,19 +202,17 @@ QImage D1Min::getSubtileImage(int subtileIndex) const
         return QImage();
 
     unsigned subtileWidthPx = this->subtileWidth * MICRO_WIDTH;
-    QImage subtile = QImage(subtileWidthPx,
-        this->subtileHeight * MICRO_HEIGHT, QImage::Format_ARGB32);
+    unsigned subtileHeightPx = this->subtileHeight * MICRO_HEIGHT;
+    QImage subtile = QImage(subtileWidthPx, subtileHeightPx, QImage::Format_ARGB32);
     subtile.fill(Qt::transparent);
     QPainter subtilePainter(&subtile);
 
     unsigned dx = 0, dy = 0;
-    int n = this->subtileWidth * this->subtileHeight;
-    for (int i = 0; i < n; i++) {
-        unsigned frameRef = this->frameReferences[subtileIndex][i];
-
-        if (frameRef > 0)
-            subtilePainter.drawImage(dx, dy,
-                this->gfx->getFrameImage(frameRef - 1));
+    const std::vector<unsigned> &frameRefs = this->frameReferences[subtileIndex];
+    for (unsigned frameRef : frameRefs) {
+        if (frameRef > 0) {
+            subtilePainter.drawImage(dx, dy, this->gfx->getFrameImage(frameRef - 1));
+        }
 
         dx += MICRO_WIDTH;
         if (dx == subtileWidthPx) {
@@ -223,7 +221,6 @@ QImage D1Min::getSubtileImage(int subtileIndex) const
         }
     }
 
-    subtilePainter.end();
     return subtile;
 }
 
@@ -231,15 +228,13 @@ std::vector<std::vector<D1GfxPixel>> D1Min::getSubtilePixelImage(int subtileInde
 {
     unsigned subtileWidthPx = this->subtileWidth * MICRO_WIDTH;
     unsigned subtileHeightPx = this->subtileHeight * MICRO_HEIGHT;
-    int n = this->subtileWidth * this->subtileHeight;
 
     std::vector<std::vector<D1GfxPixel>> subtile;
     D1PixelImage::createImage(subtile, subtileWidthPx, subtileHeightPx);
 
     unsigned dx = 0, dy = 0;
-    for (int i = 0; i < n; i++) {
-        unsigned frameRef = this->frameReferences[subtileIndex][i];
-
+    const std::vector<unsigned> &frameRefs = this->frameReferences[subtileIndex];
+    for (unsigned frameRef : frameRefs) {
         if (frameRef > 0) {
             D1PixelImage::drawImage(subtile, dx, dy, this->gfx->getFramePixelImage(frameRef - 1));
         }
