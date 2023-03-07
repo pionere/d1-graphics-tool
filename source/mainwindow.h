@@ -63,7 +63,9 @@ public:
     void reloadConfig();
     void updateWindow();
 
+    void openNew(OPEN_TILESET_TYPE tileset, OPEN_CLIPPED_TYPE clipped);
     void openFile(const OpenAsParam &params);
+    void openFiles(const QStringList &filePaths);
     void openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append);
     void openPalFiles(const QStringList &filePaths, PaletteWidget *widget);
     void saveFile(const SaveAsParam &params);

@@ -549,24 +549,24 @@ bool MainWindow::isResourcePath(const QString &path)
 
 void MainWindow::on_actionNew_CEL_triggered()
 {
-    OpenAsParam params = OpenAsParam();
-    params.isTileset = OPEN_TILESET_TYPE::FALSE;
-    params.clipped = OPEN_CLIPPED_TYPE::FALSE;
-    this->openFile(params);
+    this->openNew(OPEN_TILESET_TYPE::FALSE, OPEN_CLIPPED_TYPE::FALSE);
 }
 
 void MainWindow::on_actionNew_CL2_triggered()
 {
-    OpenAsParam params = OpenAsParam();
-    params.isTileset = OPEN_TILESET_TYPE::FALSE;
-    params.clipped = OPEN_CLIPPED_TYPE::TRUE;
-    this->openFile(params);
+    this->openNew(OPEN_TILESET_TYPE::FALSE, OPEN_CLIPPED_TYPE::TRUE);
 }
 
 void MainWindow::on_actionNew_Tileset_triggered()
 {
+    this->openNew(OPEN_TILESET_TYPE::TRUE, OPEN_CLIPPED_TYPE::FALSE);
+}
+
+void MainWindow::openNew(OPEN_TILESET_TYPE tileset, OPEN_CLIPPED_TYPE clipped)
+{
     OpenAsParam params = OpenAsParam();
-    params.isTileset = OPEN_TILESET_TYPE::TRUE;
+    params.isTileset = tileset;
+    params.clipped = clipped;
     this->openFile(params);
 }
 
@@ -575,9 +575,9 @@ void MainWindow::on_actionOpen_triggered()
     QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX)"));
 
     if (!openFilePath.isEmpty()) {
-        OpenAsParam params = OpenAsParam();
-        params.celFilePath = openFilePath;
-        this->openFile(params);
+        QStringList filePaths;
+        filePaths.append(openFilePath);
+        this->openFiles(filePaths);
     }
 }
 
@@ -603,9 +603,18 @@ void MainWindow::dropEvent(QDropEvent *event)
 {
     event->acceptProposedAction();
 
-    OpenAsParam params = OpenAsParam();
+    QStringList filePaths;
     for (const QUrl &url : event->mimeData()->urls()) {
-        params.celFilePath = url.toLocalFile();
+        filePaths.append(url.toLocalFile());
+    }
+    this->openFiles(filePaths);
+}
+
+void MainWindow::openFiles(const QStringList &filePaths)
+{
+    for (const QString &filePath : filePaths) {
+        OpenAsParam params = OpenAsParam();
+        params.celFilePath = filePath;
         this->openFile(params);
     }
 }

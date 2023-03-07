@@ -29,9 +29,9 @@ int main(int argc, char *argv[])
         w.show();
 
         if (argc > 1) {
-            OpenAsParam params = OpenAsParam();
-            params.celFilePath = argv[argc - 1];
-            w.openFile(params);
+            QStringList filePaths;
+            filePaths.append(argv[argc - 1]);
+            w.openFiles(filePaths);
         }
         result = a.exec();
     }
