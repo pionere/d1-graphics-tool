@@ -33,7 +33,7 @@
     <item alignment="Qt::AlignTop">
      <widget class="QFrame">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
+       <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -173,9 +173,9 @@
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar">
-   <property name="sizeGripEnabled">
+   <!--property name="sizeGripEnabled">
     <bool>false</bool>
-   </property>
+   </property-->
   </widget>
   <action name="actionAbout">
    <property name="text">
