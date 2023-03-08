@@ -227,29 +227,29 @@ const MonsterStruct MonstConvTbl[128] = {
     { 0 }, // {   8, 128, "FalSpear\\Phall", "FalSpear\\Blue",  "Dark One" }, // Monster from banner2.dun,
     { 0 }, //MT_WSKELAX,
     { 0 }, //MT_TSKELAX,
-    {  11, 128, "SkelAxe\\SklAx",  nullptr,               "Burning Dead" }, // Q_SKELKING
+    {  11, 128, "SkelAxe\\SklAx",  nullptr,           "Burning Dead" }, // Q_SKELKING
     { 0 }, //MT_XSKELAX,
     { 0 }, //MT_RFALLSD,
     { 0 }, //MT_DFALLSD,
-    {  15, 128, "FalSword\\Fall",  nullptr,               "Devil Kin" }, // Q_PWATER
-    {  16, 128, "FalSword\\Fall",  "FalSpear\\Blue",  "Dark One" }, // Q_BANNER
+    {  15, 128, "FalSword\\Fall",  nullptr,           "Devil Kin" }, // Q_PWATER
+    {  16, 128, "FalSword\\Fall",  "FalSpear\\Blue",  "Dark One" },  // Q_BANNER
     { 0 }, //MT_NSCAV,
     { 0 }, //MT_BSCAV,
     { 0 }, //MT_WSCAV,
     { 0 }, //MT_YSCAV,
     { 0 }, //MT_WSKELBW,
-    {  22, 128, "SkelBow\\SklBw",  "SkelSd\\Skelt",   "Corpse Bow" }, // Q_SKELKING
-    {  23, 128, "SkelBow\\SklBw",  nullptr,               "Burning Dead" }, // Q_SKELKING
-    {  24, 128, "SkelBow\\SklBw",  "SkelSd\\Black",   "Horror" }, // Q_SKELKING
+    {  22, 128, "SkelBow\\SklBw",  "SkelSd\\Skelt",   "Corpse Bow" },   // Q_SKELKING
+    {  23, 128, "SkelBow\\SklBw",  nullptr,           "Burning Dead" }, // Q_SKELKING
+    {  24, 128, "SkelBow\\SklBw",  "SkelSd\\Black",   "Horror" },       // Q_SKELKING
     { 0 }, //MT_WSKELSD,
     { 0 }, //MT_TSKELSD,
-    {  27, 128, "SkelSd\\SklSr",   nullptr,               "Burning Dead Captain" }, // Q_SKELKING
-    {  28, 128, "SkelSd\\SklSr",   "SkelSd\\Black",   "Horror Captain" }, // Q_BCHAMB
+    {  27, 128, "SkelSd\\SklSr",   nullptr,           "Burning Dead Captain" }, // Q_SKELKING
+    {  28, 128, "SkelSd\\SklSr",   "SkelSd\\Black",   "Horror Captain" },       // Q_BCHAMB
     { 0 }, //MT_NSNEAK,
     { 0 }, //MT_RSNEAK,
-    {  31, 128, "Sneak\\Sneak",    "Sneak\\Sneakv3",  "Unseen" }, // Q_BCHAMB
-    {  32, 128, "Sneak\\Sneak",    "Sneak\\Sneakv1",  "Illusion Weaver" }, // Q_BLIND
-    {  33, 128, "GoatMace\\Goat",  nullptr,               "Flesh Clan (Mace)" }, // Q_PWATER
+    {  31, 128, "Sneak\\Sneak",    "Sneak\\Sneakv3",  "Unseen" },            // Q_BCHAMB
+    {  32, 128, "Sneak\\Sneak",    "Sneak\\Sneakv1",  "Illusion Weaver" },   // Q_BLIND
+    {  33, 128, "GoatMace\\Goat",  nullptr,           "Flesh Clan (Mace)" }, // Q_PWATER
     { 0 }, //MT_BGOATMC,
     { 0 }, //MT_RGOATMC,
     { 0 }, //MT_GGOATMC,
@@ -257,7 +257,7 @@ const MonsterStruct MonstConvTbl[128] = {
     { 0 }, //MT_GBAT,
     { 0 }, //MT_NBAT,
     { 0 }, //MT_XBAT,
-    {  41, 128, "GoatBow\\GoatB",  nullptr,               "Flesh Clan (Bow)" }, // Q_PWATER
+    {  41, 128, "GoatBow\\GoatB",  nullptr,           "Flesh Clan (Bow)" }, // Q_PWATER
     { 0 }, //MT_BGOATBW,
     { 0 }, //MT_RGOATBW,
     {  44, 128, "GoatBow\\GoatB",  "GoatMace\\Gray",  "Night Clan" }, // Q_ANVIL
@@ -266,7 +266,7 @@ const MonsterStruct MonstConvTbl[128] = {
     { 0 }, //MT_BACID,
     { 0 }, //MT_XACID,
     { 0 }, //MT_SKING,
-    {  50, 128, "Fat\\Fat",        nullptr,               "Overlord" }, // Q_BANNER
+    {  50, 128, "Fat\\Fat",        nullptr,           "Overlord" }, // Q_BANNER
     { 0 }, //MT_BFAT,
     { 0 }, //MT_XFAT,
     { 0 }, //MT_RFAT,
@@ -278,7 +278,7 @@ const MonsterStruct MonstConvTbl[128] = {
     { 0 }, //MT_YMAGMA,
     { 0 }, //MT_BMAGMA,
     { 0 }, //MT_WMAGMA,
-    {  62, 160, "Rhino\\Rhino",    nullptr,               "Horned Demon" }, // Q_BLOOD, Q_BCHAMB
+    {  62, 160, "Rhino\\Rhino",    nullptr,           "Horned Demon" }, // Q_BLOOD, Q_BCHAMB
     { 0 }, // MT_XRHINO, // Q_MAZE
     { 0 }, //MT_BRHINO,
     {  65, 160, "Rhino\\Rhino",    "Rhino\\RhinoB",   "Obsidian Lord" }, // Q_ANVIL
@@ -314,9 +314,9 @@ const MonsterStruct MonstConvTbl[128] = {
     { 0 }, //MT_RSNAKE,
     { 0 }, //MT_GSNAKE,
     { 0 }, //MT_BSNAKE,
-    {  98, 160, "Black\\Black",    nullptr,               "Black Knight" }, // Q_DIABLO
+    {  98, 160, "Black\\Black",    nullptr,           "Black Knight" }, // Q_DIABLO
     { 0 }, //MT_RBLACK,
-    { 100, 160, "Black\\Black",    "Black\\BlkKntBT", "Steel Lord" }, // Q_WARLORD
+    { 100, 160, "Black\\Black",    "Black\\BlkKntBT", "Steel Lord" },   // Q_WARLORD
     { 101, 160, "Black\\Black",    "Black\\BlkKntBe", "Blood Knight" }, // Q_DIABLO
     { 0 }, ///MT_UNRAV,
     { 0 }, ///MT_HOLOWONE,
@@ -331,7 +331,7 @@ const MonsterStruct MonstConvTbl[128] = {
     { 0 }, //MT_XMAGE,
     { 113, 128, "Mage\\Mage",      "Mage\\Cnselbk",   "Advocate" }, // Q_BETRAYER, Q_DIABLO
     { 0 },
-    { 115, 160, "Diablo\\Diablo",  nullptr,               "The Dark Lord" }, // Q_DIABLO
+    { 115, 160, "Diablo\\Diablo",  nullptr,           "The Dark Lord" }, // Q_DIABLO
     { 0 },
     { 0 }, //MT_GOLEM,
     { 0 },
@@ -1180,7 +1180,7 @@ void D1Dun::setPal(D1Pal *pal)
     for (auto &entry : this->monsterCache) {
         D1Trn *monTrn = entry.second.second;
         if (monTrn == nullptr) {
-            entry.second->setPalette(pal);
+            entry.second.first->setPalette(pal);
         } else {
             monTrn->setPalette(pal);
             monTrn->refreshResultingPalette();
