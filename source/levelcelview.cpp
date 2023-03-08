@@ -2507,7 +2507,7 @@ void LevelCelView::reportDungeonUsage() const
         for (std::pair<int, int> &monster : monsters) {
             totalCount += monster.second;
             QString monsterName;
-            if (monster.first < lengthof(MonstConvTbl)) {
+            if (monster.first < lengthof(MonstConvTbl) && MonstConvTbl[monster.first].type != 0) {
                 monsterName = MonstConvTbl[monster.first].name;
             } else {
                 monsterName = tr("Monster%1").arg(monster.first);
@@ -2533,7 +2533,7 @@ void LevelCelView::reportDungeonUsage() const
         for (std::pair<int, int> &object : objects) {
             totalCount += object.second;
             QString objectName;
-            if (object.first < lengthof(ObjConvTbl)) {
+            if (object.first < lengthof(ObjConvTbl) && ObjConvTbl[object.first].type != 0) {
                 objectName = ObjConvTbl[object.first].name;
             } else {
                 objectName = tr("Object%1").arg(object.first);
@@ -2685,6 +2685,7 @@ void LevelCelView::displayFrame()
         params.showItems = this->ui->showItemsCheckBox->isChecked();
         params.showMonsters = this->ui->showMonstersCheckBox->isChecked();
         params.showObjects = this->ui->showObjectsCheckBox->isChecked();
+        params.time = this->playCounter;
         QImage dunFrame = this->dun->getImage(params);
 
         this->celScene.setSceneRect(0, 0,
@@ -3138,6 +3139,7 @@ void LevelCelView::on_stopButton_clicked()
 {
     this->killTimer(this->playTimer);
     this->playTimer = 0;
+    this->playCounter = 0;
 
     // restore palette
     dMainWindow().resetPaletteCycle();
@@ -3155,6 +3157,7 @@ void LevelCelView::on_stopButton_clicked()
 
 void LevelCelView::timerEvent(QTimerEvent *event)
 {
+    this->playCounter++;
     QComboBox *cycleBox = this->dunView ? this->ui->dunPlayComboBox : this->ui->playComboBox;
     dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)cycleBox->currentIndex());
 

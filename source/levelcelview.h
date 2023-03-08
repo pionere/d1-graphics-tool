@@ -265,4 +265,5 @@ private:
     int currentDunPosX = 0;
     int currentDunPosY = 0;
     int playTimer = 0;
+    unsigned playCounter = 0;
 };
