@@ -128,6 +128,8 @@ private slots:
     void dragMoveEvent(QDragMoveEvent *event) override;
     void dropEvent(QDropEvent *event) override;
 
+    void timerEvent(QTimerEvent *event) override;
+
     void ShowContextMenu(const QPoint &pos);
 
 private:
@@ -141,6 +143,7 @@ private:
     int origFrameIndex = 0;
     quint16 currentPlayDelay = 50;
 
-    QTimer playTimer;
-    qint64 playNextFrame;
+    // QTimer playTimer;
+    // qint64 playNextFrame;
+    int playTimer = 0;
 };
