@@ -41,9 +41,6 @@
      <layout class="QGridLayout">
       <item row="0" column="0">
        <widget class="QLabel">
-        <!--property name="minimumWidth">
-         <number>48</number>
-        </property-->
         <property name="text">
          <string>Zoom:</string>
         </property>

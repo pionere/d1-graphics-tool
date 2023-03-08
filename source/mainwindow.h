@@ -66,7 +66,7 @@ public:
     void updateWindow();
 
     void openNew(OPEN_TILESET_TYPE tileset, OPEN_CLIPPED_TYPE clipped, bool createDun);
-    void openFile(OpenAsParam &params);
+    void openFile(const OpenAsParam &params);
     void openFiles(const QStringList &filePaths);
     void openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append);
     void openPalFiles(const QStringList &filePaths, PaletteWidget *widget);
@@ -217,7 +217,6 @@ private:
     QString currLang;         // currently loaded language e.g. "de_DE"
     QString lastFilePath;
 
-    // QMenu newMenu = QMenu("New");
     QMenu frameMenu = QMenu("Frame");
     QMenu subtileMenu = QMenu("Subtile");
     QMenu tileMenu = QMenu("Tile");

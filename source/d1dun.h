@@ -13,6 +13,7 @@ class D1Min;
 class D1Pal;
 class D1Sol;
 class D1Til;
+class D1Trn;
 class D1Tmi;
 
 #define UNDEF_SUBTILE -1
@@ -154,7 +155,7 @@ private:
     int levelType; // dungeon_type
     D1Gfx *specGfx;
     std::vector<std::pair<const ObjectStruct *, D1Gfx *>> objectCache;
-    std::vector<std::pair<const MonsterStruct *, D1Gfx *>> monsterCache;
+    std::vector<std::pair<const MonsterStruct *, std::pair<D1Gfx *, D1Trn *>>> monsterCache;
 };
 
 extern const ObjectStruct ObjConvTbl[128];
