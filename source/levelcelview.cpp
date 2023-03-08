@@ -2754,7 +2754,9 @@ void LevelCelView::displayFrame()
     this->ui->tilFrameHeightEdit->setToolTip(QString::number(tile.height()) + " px");
 
     // Notify PalView that the frame changed (used to refresh palette hits)
-    emit frameRefreshed();
+    if (this->playTimer == 0) {
+        emit frameRefreshed();
+    }
 }
 
 void LevelCelView::toggleBottomPanel()
@@ -3187,7 +3189,8 @@ void LevelCelView::dropEvent(QDropEvent *event)
 void LevelCelView::on_actionToggle_View_triggered()
 {
     // stop playback
-    if (this->playTimer.isActive()) {
+    // if (this->playTimer.isActive()) {
+    if (this->playTimer != 0) {
         this->on_stopButton_clicked();
     }
 

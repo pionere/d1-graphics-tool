@@ -483,7 +483,9 @@ void CelView::displayFrame()
     this->ui->celFrameHeightEdit->setText(QString::number(celFrame.height()) + " px");
 
     // Notify PalView that the frame changed (used to refresh palette hits)
-    emit this->frameRefreshed();
+    if (this->playTimer == 0) {
+        emit this->frameRefreshed();
+    }
 }
 
 void CelView::toggleBottomPanel()
