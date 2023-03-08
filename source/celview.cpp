@@ -775,7 +775,7 @@ void CelView::on_stopButton_clicked()
     this->ui->playComboBox->setEnabled(true);
 }
 
-//void CelView::playGroup()
+// void CelView::playGroup()
 void CelView::timerEvent(QTimerEvent *event)
 {
     if (this->gfx->getGroupCount() == 0) {

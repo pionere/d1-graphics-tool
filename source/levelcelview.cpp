@@ -45,7 +45,7 @@ LevelCelView::LevelCelView(QWidget *parent)
     this->on_dunZoomEdit_escPressed();
     this->on_dunPlayDelayEdit_escPressed();
     this->ui->dunStopButton->setEnabled(false);
-    this->playTimer.connect(&this->playTimer, SIGNAL(timeout()), this, SLOT(playGroup()));
+    // this->playTimer.connect(&this->playTimer, SIGNAL(timeout()), this, SLOT(playGroup()));
     this->ui->tilesTabs->addTab(&this->tabTileWidget, tr("Tile properties"));
     this->ui->tilesTabs->addTab(&this->tabSubtileWidget, tr("Subtile properties"));
     this->ui->tilesTabs->addTab(&this->tabFrameWidget, tr("Frame properties"));
@@ -2802,14 +2802,6 @@ void LevelCelView::setTileIndex(int tileIndex)
     this->displayFrame();
 }
 
-void LevelCelView::playGroup()
-{
-    QComboBox *cycleBox = this->dunView ? this->ui->dunPlayComboBox : this->ui->playComboBox;
-    dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)cycleBox->currentIndex());
-
-    // this->displayFrame();
-}
-
 void LevelCelView::ShowContextMenu(const QPoint &pos)
 {
     if (this->dunView) {
@@ -3118,6 +3110,10 @@ void LevelCelView::on_playDelayEdit_escPressed()
 
 void LevelCelView::on_playButton_clicked()
 {
+    if (this->playTimer != 0) {
+        return;
+    }
+
     // disable the related fields
     this->ui->playButton->setEnabled(false);
     this->ui->playDelayEdit->setReadOnly(true);
@@ -3131,12 +3127,15 @@ void LevelCelView::on_playButton_clicked()
     // preserve the palette
     dMainWindow().initPaletteCycle();
 
-    this->playTimer.start(this->dunView ? this->dunviewPlayDelay : this->tilesetPlayDelay);
+    // this->playTimer.start(this->dunView ? this->dunviewPlayDelay : this->tilesetPlayDelay);
+    this->playTimer = this->startTimer(this->dunView ? this->dunviewPlayDelay : this->tilesetPlayDelay);
 }
 
 void LevelCelView::on_stopButton_clicked()
 {
-    this->playTimer.stop();
+    // this->playTimer.stop();
+    this->killTimer(this->playTimer);
+    this->playTimer = 0;
 
     // restore palette
     dMainWindow().resetPaletteCycle();
@@ -3150,6 +3149,15 @@ void LevelCelView::on_stopButton_clicked()
     this->ui->dunPlayButton->setEnabled(true);
     this->ui->dunPlayDelayEdit->setReadOnly(false);
     this->ui->dunPlayComboBox->setEnabled(true);
+}
+
+// void LevelCelView::playGroup()
+void LevelCelView::timerEvent(QTimerEvent *event)
+{
+    QComboBox *cycleBox = this->dunView ? this->ui->dunPlayComboBox : this->ui->playComboBox;
+    dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)cycleBox->currentIndex());
+
+    // this->displayFrame();
 }
 
 void LevelCelView::dragEnterEvent(QDragEnterEvent *event)
