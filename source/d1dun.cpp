@@ -1531,7 +1531,7 @@ D1Gfx *D1Dun::loadMonster(int monsterIndex)
             // TODO: suppress errors? MemFree?
             delete gfx;
             gfx = nullptr;
-        } else if (result.first->trnPath != nullptr ){
+        } else if (result.first->trnPath != nullptr) {
             trn = new D1Trn();
             QString trnFilePath = this->assetPath + "/Monsters/" + result.first->trnPath + ".TRN";
             if (!load(trnFilePath, this->pal)) {
@@ -1543,7 +1543,7 @@ D1Gfx *D1Dun::loadMonster(int monsterIndex)
         result.second.second = trn;
     }
     this->monsterCache.push_back(result);
-    return result.second;
+    return result.second.first;
 }
 
 void D1Dun::clearAssets()
