@@ -2693,65 +2693,66 @@ void LevelCelView::displayFrame()
 
         this->celScene.addPixmap(QPixmap::fromImage(dunFrame))
             ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-    } else {
-        // Getting the current frame/sub-tile/tile to display
-        QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
-        QImage subtile = this->min->getSubtileCount() != 0 ? this->min->getSubtileImage(this->currentSubtileIndex) : QImage();
-        QImage tile = this->til->getTileCount() != 0 ? this->til->getTileImage(this->currentTileIndex) : QImage();
-
-        QColor backColor = QColor(Config::getGraphicsTransparentColor());
-        // Building a gray background of the width/height of the CEL frame
-        QImage celFrameBackground = QImage(celFrame.width(), celFrame.height(), QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
-        celFrameBackground.fill(backColor);
-        // Building a gray background of the width/height of the MIN subtile
-        QImage subtileBackground = QImage(subtile.width(), subtile.height(), QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
-        subtileBackground.fill(backColor);
-        // Building a gray background of the width/height of the MIN subtile
-        QImage tileBackground = QImage(tile.width(), tile.height(), QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
-        tileBackground.fill(backColor);
-
-        // Resize the scene rectangle to include some padding around the CEL frame
-        // the MIN subtile and the TIL tile
-        this->celScene.setSceneRect(0, 0,
-            CEL_SCENE_MARGIN + celFrame.width() + CEL_SCENE_SPACING + subtile.width() + CEL_SCENE_SPACING + tile.width() + CEL_SCENE_MARGIN,
-            CEL_SCENE_MARGIN + tile.height() + CEL_SCENE_MARGIN);
-
-        // Add the backgrond and CEL frame while aligning it in the center
-        this->celScene.addPixmap(QPixmap::fromImage(celFrameBackground))
-            ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-        this->celScene.addPixmap(QPixmap::fromImage(celFrame))
-            ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-
-        // Set current frame width and height
-        this->ui->celFrameWidthEdit->setText(QString::number(celFrame.width()) + " px");
-        this->ui->celFrameHeightEdit->setText(QString::number(celFrame.height()) + " px");
-
-        // MIN
-        int minPosX = CEL_SCENE_MARGIN + celFrame.width() + CEL_SCENE_SPACING;
-        this->celScene.addPixmap(QPixmap::fromImage(subtileBackground))
-            ->setPos(minPosX, CEL_SCENE_MARGIN);
-        this->celScene.addPixmap(QPixmap::fromImage(subtile))
-            ->setPos(minPosX, CEL_SCENE_MARGIN);
-
-        // Set current frame width and height
-        this->ui->minFrameWidthEdit->setText(QString::number(this->min->getSubtileWidth()));
-        this->ui->minFrameWidthEdit->setToolTip(QString::number(subtile.width()) + " px");
-        this->ui->minFrameHeightEdit->setText(QString::number(this->min->getSubtileHeight()));
-        this->ui->minFrameHeightEdit->setToolTip(QString::number(subtile.height()) + " px");
-
-        // TIL
-        int tilPosX = minPosX + subtile.width() + CEL_SCENE_SPACING;
-        this->celScene.addPixmap(QPixmap::fromImage(tileBackground))
-            ->setPos(tilPosX, CEL_SCENE_MARGIN);
-        this->celScene.addPixmap(QPixmap::fromImage(tile))
-            ->setPos(tilPosX, CEL_SCENE_MARGIN);
-
-        // Set current frame width and height
-        this->ui->tilFrameWidthEdit->setText(QString::number(TILE_WIDTH));
-        this->ui->tilFrameWidthEdit->setToolTip(QString::number(tile.width()) + " px");
-        this->ui->tilFrameHeightEdit->setText(QString::number(TILE_HEIGHT));
-        this->ui->tilFrameHeightEdit->setToolTip(QString::number(tile.height()) + " px");
+        return;
     }
+    // Getting the current frame/sub-tile/tile to display
+    QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
+    QImage subtile = this->min->getSubtileCount() != 0 ? this->min->getSubtileImage(this->currentSubtileIndex) : QImage();
+    QImage tile = this->til->getTileCount() != 0 ? this->til->getTileImage(this->currentTileIndex) : QImage();
+
+    QColor backColor = QColor(Config::getGraphicsTransparentColor());
+    // Building a gray background of the width/height of the CEL frame
+    QImage celFrameBackground = QImage(celFrame.width(), celFrame.height(), QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
+    celFrameBackground.fill(backColor);
+    // Building a gray background of the width/height of the MIN subtile
+    QImage subtileBackground = QImage(subtile.width(), subtile.height(), QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
+    subtileBackground.fill(backColor);
+    // Building a gray background of the width/height of the MIN subtile
+    QImage tileBackground = QImage(tile.width(), tile.height(), QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
+    tileBackground.fill(backColor);
+
+    // Resize the scene rectangle to include some padding around the CEL frame
+    // the MIN subtile and the TIL tile
+    this->celScene.setSceneRect(0, 0,
+        CEL_SCENE_MARGIN + celFrame.width() + CEL_SCENE_SPACING + subtile.width() + CEL_SCENE_SPACING + tile.width() + CEL_SCENE_MARGIN,
+        CEL_SCENE_MARGIN + tile.height() + CEL_SCENE_MARGIN);
+
+    // Add the backgrond and CEL frame while aligning it in the center
+    this->celScene.addPixmap(QPixmap::fromImage(celFrameBackground))
+        ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+    this->celScene.addPixmap(QPixmap::fromImage(celFrame))
+        ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+
+    // Set current frame width and height
+    this->ui->celFrameWidthEdit->setText(QString::number(celFrame.width()) + " px");
+    this->ui->celFrameHeightEdit->setText(QString::number(celFrame.height()) + " px");
+
+    // MIN
+    int minPosX = CEL_SCENE_MARGIN + celFrame.width() + CEL_SCENE_SPACING;
+    this->celScene.addPixmap(QPixmap::fromImage(subtileBackground))
+        ->setPos(minPosX, CEL_SCENE_MARGIN);
+    this->celScene.addPixmap(QPixmap::fromImage(subtile))
+        ->setPos(minPosX, CEL_SCENE_MARGIN);
+
+    // Set current frame width and height
+    this->ui->minFrameWidthEdit->setText(QString::number(this->min->getSubtileWidth()));
+    this->ui->minFrameWidthEdit->setToolTip(QString::number(subtile.width()) + " px");
+    this->ui->minFrameHeightEdit->setText(QString::number(this->min->getSubtileHeight()));
+    this->ui->minFrameHeightEdit->setToolTip(QString::number(subtile.height()) + " px");
+
+    // TIL
+    int tilPosX = minPosX + subtile.width() + CEL_SCENE_SPACING;
+    this->celScene.addPixmap(QPixmap::fromImage(tileBackground))
+        ->setPos(tilPosX, CEL_SCENE_MARGIN);
+    this->celScene.addPixmap(QPixmap::fromImage(tile))
+        ->setPos(tilPosX, CEL_SCENE_MARGIN);
+
+    // Set current frame width and height
+    this->ui->tilFrameWidthEdit->setText(QString::number(TILE_WIDTH));
+    this->ui->tilFrameWidthEdit->setToolTip(QString::number(tile.width()) + " px");
+    this->ui->tilFrameHeightEdit->setText(QString::number(TILE_HEIGHT));
+    this->ui->tilFrameHeightEdit->setToolTip(QString::number(tile.height()) + " px");
+
     // Notify PalView that the frame changed (used to refresh palette hits)
     emit frameRefreshed();
 }

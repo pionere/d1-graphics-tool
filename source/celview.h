@@ -142,4 +142,5 @@ private:
     quint16 currentPlayDelay = 50;
 
     QTimer playTimer;
+    qint64 playNextFrame;
 };

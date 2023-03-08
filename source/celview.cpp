@@ -166,7 +166,8 @@ CelView::CelView(QWidget *parent)
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
     this->ui->stopButton->setEnabled(false);
-    this->playTimer.connect(&this->playTimer, SIGNAL(timeout()), this, SLOT(playGroup()));
+    this->playTimer->setSingleShot(true);
+    QObject::connect(&this->playTimer, SIGNAL(timeout()), this, SLOT(playGroup()));
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Draw_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
@@ -548,39 +549,6 @@ void CelView::setGroupIndex(int groupIndex)
     this->displayFrame();
 }
 
-void CelView::playGroup()
-{
-    if (this->gfx->getGroupCount() == 0) {
-        return;
-    }
-    std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
-
-    int nextFrameIndex = this->currentFrameIndex + 1;
-    Qt::CheckState playType = this->ui->playFrameCheckBox->checkState();
-    if (playType == Qt::Unchecked) {
-        // normal playback
-        if (nextFrameIndex > groupFrameIndices.second)
-            nextFrameIndex = groupFrameIndices.first;
-    } else if (playType == Qt::PartiallyChecked) {
-        // playback till the original frame
-        if (nextFrameIndex > this->origFrameIndex)
-            nextFrameIndex = groupFrameIndices.first;
-    } else {
-        // playback from the original frame
-        if (nextFrameIndex > groupFrameIndices.second)
-            nextFrameIndex = this->origFrameIndex;
-    }
-    this->currentFrameIndex = nextFrameIndex;
-    int cycleType = this->ui->playComboBox->currentIndex();
-    if (cycleType == 0) {
-        // normal playback
-        this->displayFrame();
-    } else {
-        dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)(cycleType - 1));
-        // this->displayFrame();
-    }
-}
-
 void CelView::ShowContextMenu(const QPoint &pos)
 {
     MainWindow *mw = &dMainWindow();
@@ -781,6 +749,7 @@ void CelView::on_playButton_clicked()
     // preserve the palette
     dMainWindow().initPaletteCycle();
 
+    this->playNextFrame = QDateTime::currentMSecsSinceEpoch() + this->currentPlayDelay;
     this->playTimer.start(this->currentPlayDelay);
 }
 
@@ -798,6 +767,41 @@ void CelView::on_stopButton_clicked()
     this->ui->playButton->setEnabled(true);
     this->ui->playDelayEdit->setReadOnly(false);
     this->ui->playComboBox->setEnabled(true);
+}
+
+void CelView::playGroup()
+{
+    if (this->gfx->getGroupCount() == 0) {
+        return;
+    }
+    std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
+
+    int nextFrameIndex = this->currentFrameIndex + 1;
+    Qt::CheckState playType = this->ui->playFrameCheckBox->checkState();
+    if (playType == Qt::Unchecked) {
+        // normal playback
+        if (nextFrameIndex > groupFrameIndices.second)
+            nextFrameIndex = groupFrameIndices.first;
+    } else if (playType == Qt::PartiallyChecked) {
+        // playback till the original frame
+        if (nextFrameIndex > this->origFrameIndex)
+            nextFrameIndex = groupFrameIndices.first;
+    } else {
+        // playback from the original frame
+        if (nextFrameIndex > groupFrameIndices.second)
+            nextFrameIndex = this->origFrameIndex;
+    }
+    this->currentFrameIndex = nextFrameIndex;
+    int cycleType = this->ui->playComboBox->currentIndex();
+    if (cycleType == 0) {
+        // normal playback
+        this->displayFrame();
+    } else {
+        dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)(cycleType - 1));
+        // this->displayFrame();
+    }
+    this->playNextFrame += this->currentPlayDelay;
+    this->playTimer.start(this->playNextFrame - QDateTime::currentMSecsSinceEpoch());
 }
 
 void CelView::dragEnterEvent(QDragEnterEvent *event)
