@@ -1134,61 +1134,51 @@
           <item row="0" column="0">
            <widget class="QLabel">
             <property name="text">
-             <string>Tile / Subtile:</string>
+             <string>Tile:</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <layout class="QHBoxLayout">
-            <item>
-             <widget class="LineEditWidget" name="dungeonTileLineEdit">
-              <property name="charWidth">
-               <number>5</number>
-              </property>
-              <property name="toolTip">
-               <string>Current tile at the selected position</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel">
-              <property name="minimumWidth">
-               <number>8</number>
-              </property>
-              <property name="maximumWidth">
-               <number>8</number>
-              </property>
-              <property name="text">
-               <string notr="true">/</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="LineEditWidget" name="dungeonSubtileLineEdit">
-              <property name="charWidth">
-               <number>5</number>
-              </property>
-              <property name="toolTip">
-               <string>Current subtile at the selected position</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-           </layout>
+           <widget class="LineEditWidget" name="dungeonTileLineEdit">
+            <property name="charWidth">
+             <number>5</number>
+            </property>
+            <property name="toolTip">
+             <string>Current tile at the selected position</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
           </item>
           <item row="0" column="3">
            <widget class="QLabel">
             <property name="text">
-             <string>Transval:</string>
+             <string>Subtile:</string>
             </property>
            </widget>
           </item>
           <item row="0" column="4">
+           <widget class="LineEditWidget" name="dungeonSubtileLineEdit">
+            <property name="charWidth">
+             <number>5</number>
+            </property>
+            <property name="toolTip">
+             <string>Current subtile at the selected position</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="6">
+           <widget class="QLabel">
+            <property name="text">
+             <string>Room:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="7">
            <widget class="LineEditWidget" name="dungeonTransvalLineEdit">
             <property name="charWidth">
              <number>5</number>
@@ -1201,7 +1191,7 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="5"  colspan="6">
+          <item row="0" column="8"  colspan="3">
            <spacer>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
