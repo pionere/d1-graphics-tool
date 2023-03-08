@@ -1535,7 +1535,7 @@ D1Gfx *D1Dun::loadMonster(int monsterIndex)
         } else if (result.first->trnPath != nullptr) {
             trn = new D1Trn();
             QString trnFilePath = this->assetPath + "/Monsters/" + result.first->trnPath + ".TRN";
-            if (!D1Trn::load(trnFilePath, this->pal)) {
+            if (!trn->load(trnFilePath, this->pal)) {
                 delete trn;
                 trn = nullptr;
             }
