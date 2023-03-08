@@ -166,7 +166,7 @@ CelView::CelView(QWidget *parent)
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
     this->ui->stopButton->setEnabled(false);
-    // this->playTimer->setSingleShot(true);
+    // this->playTimer.setSingleShot(true);
     // QObject::connect(&this->playTimer, SIGNAL(timeout()), this, SLOT(playGroup()));
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Draw_triggered);

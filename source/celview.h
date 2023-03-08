@@ -122,7 +122,7 @@ private slots:
     void on_playDelayEdit_escPressed();
     void on_playButton_clicked();
     void on_stopButton_clicked();
-    void playGroup();
+    // void playGroup();
 
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dragMoveEvent(QDragMoveEvent *event) override;
