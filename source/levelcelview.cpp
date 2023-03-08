@@ -2754,7 +2754,7 @@ void LevelCelView::displayFrame()
     this->ui->tilFrameHeightEdit->setText(QString::number(TILE_HEIGHT));
     this->ui->tilFrameHeightEdit->setToolTip(QString::number(tile.height()) + " px");
 
-    // Notify PalView that the frame changed (used to refresh palette hits)
+    // Notify PalView that the frame changed (used to refresh palette widget)
     emit frameRefreshed();
 }
 
@@ -2801,14 +2801,6 @@ void LevelCelView::setTileIndex(int tileIndex)
     }
     this->currentTileIndex = tileIndex;
     this->displayFrame();
-}
-
-void LevelCelView::playGroup()
-{
-    QComboBox *cycleBox = this->dunView ? this->ui->dunPlayComboBox : this->ui->playComboBox;
-    dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)cycleBox->currentIndex());
-
-    // this->displayFrame();
 }
 
 void LevelCelView::ShowContextMenu(const QPoint &pos)
@@ -3151,6 +3143,14 @@ void LevelCelView::on_stopButton_clicked()
     this->ui->dunPlayButton->setEnabled(true);
     this->ui->dunPlayDelayEdit->setReadOnly(false);
     this->ui->dunPlayComboBox->setEnabled(true);
+}
+
+void LevelCelView::playGroup()
+{
+    QComboBox *cycleBox = this->dunView ? this->ui->dunPlayComboBox : this->ui->playComboBox;
+    dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)cycleBox->currentIndex());
+
+    // this->displayFrame();
 }
 
 void LevelCelView::dragEnterEvent(QDragEnterEvent *event)

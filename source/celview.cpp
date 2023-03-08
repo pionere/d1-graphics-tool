@@ -481,7 +481,7 @@ void CelView::displayFrame()
     this->ui->celFrameWidthEdit->setText(QString::number(celFrame.width()) + " px");
     this->ui->celFrameHeightEdit->setText(QString::number(celFrame.height()) + " px");
 
-    // Notify PalView that the frame changed (used to refresh palette hits)
+    // Notify PalView that the frame changed (used to refresh palette widget)
     emit this->frameRefreshed();
 }
 
@@ -546,39 +546,6 @@ void CelView::setGroupIndex(int groupIndex)
     this->currentFrameIndex = std::min(newGroupFrameIndices.first + frameIndex, newGroupFrameIndices.second);
 
     this->displayFrame();
-}
-
-void CelView::playGroup()
-{
-    if (this->gfx->getGroupCount() == 0) {
-        return;
-    }
-    std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
-
-    int nextFrameIndex = this->currentFrameIndex + 1;
-    Qt::CheckState playType = this->ui->playFrameCheckBox->checkState();
-    if (playType == Qt::Unchecked) {
-        // normal playback
-        if (nextFrameIndex > groupFrameIndices.second)
-            nextFrameIndex = groupFrameIndices.first;
-    } else if (playType == Qt::PartiallyChecked) {
-        // playback till the original frame
-        if (nextFrameIndex > this->origFrameIndex)
-            nextFrameIndex = groupFrameIndices.first;
-    } else {
-        // playback from the original frame
-        if (nextFrameIndex > groupFrameIndices.second)
-            nextFrameIndex = this->origFrameIndex;
-    }
-    this->currentFrameIndex = nextFrameIndex;
-    int cycleType = this->ui->playComboBox->currentIndex();
-    if (cycleType == 0) {
-        // normal playback
-        this->displayFrame();
-    } else {
-        dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)(cycleType - 1));
-        // this->displayFrame();
-    }
 }
 
 void CelView::ShowContextMenu(const QPoint &pos)
@@ -798,6 +765,39 @@ void CelView::on_stopButton_clicked()
     this->ui->playButton->setEnabled(true);
     this->ui->playDelayEdit->setReadOnly(false);
     this->ui->playComboBox->setEnabled(true);
+}
+
+void CelView::playGroup()
+{
+    if (this->gfx->getGroupCount() == 0) {
+        return;
+    }
+    std::pair<int, int> groupFrameIndices = this->gfx->getGroupFrameIndices(this->currentGroupIndex);
+
+    int nextFrameIndex = this->currentFrameIndex + 1;
+    Qt::CheckState playType = this->ui->playFrameCheckBox->checkState();
+    if (playType == Qt::Unchecked) {
+        // normal playback
+        if (nextFrameIndex > groupFrameIndices.second)
+            nextFrameIndex = groupFrameIndices.first;
+    } else if (playType == Qt::PartiallyChecked) {
+        // playback till the original frame
+        if (nextFrameIndex > this->origFrameIndex)
+            nextFrameIndex = groupFrameIndices.first;
+    } else {
+        // playback from the original frame
+        if (nextFrameIndex > groupFrameIndices.second)
+            nextFrameIndex = this->origFrameIndex;
+    }
+    this->currentFrameIndex = nextFrameIndex;
+    int cycleType = this->ui->playComboBox->currentIndex();
+    if (cycleType == 0) {
+        // normal playback
+        this->displayFrame();
+    } else {
+        dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)(cycleType - 1));
+        // this->displayFrame();
+    }
 }
 
 void CelView::dragEnterEvent(QDragEnterEvent *event)
