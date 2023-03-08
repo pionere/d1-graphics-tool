@@ -166,8 +166,6 @@ CelView::CelView(QWidget *parent)
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
     this->ui->stopButton->setEnabled(false);
-    // this->playTimer.setSingleShot(true);
-    // QObject::connect(&this->playTimer, SIGNAL(timeout()), this, SLOT(playGroup()));
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Draw_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
@@ -753,13 +751,10 @@ void CelView::on_playButton_clicked()
     dMainWindow().initPaletteCycle();
 
     this->playTimer = this->startTimer(this->currentPlayDelay);
-    // this->playNextFrame = QDateTime::currentMSecsSinceEpoch() + this->currentPlayDelay;
-    // this->playTimer.start(this->currentPlayDelay);
 }
 
 void CelView::on_stopButton_clicked()
 {
-    // this->playTimer.stop();
     this->killTimer(this->playTimer);
     this->playTimer = 0;
 
@@ -775,7 +770,6 @@ void CelView::on_stopButton_clicked()
     this->ui->playComboBox->setEnabled(true);
 }
 
-// void CelView::playGroup()
 void CelView::timerEvent(QTimerEvent *event)
 {
     if (this->gfx->getGroupCount() == 0) {
@@ -807,8 +801,6 @@ void CelView::timerEvent(QTimerEvent *event)
         dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)(cycleType - 1));
         // this->displayFrame();
     }
-    // this->playNextFrame += this->currentPlayDelay;
-    // this->playTimer.start(this->playNextFrame - QDateTime::currentMSecsSinceEpoch());
 }
 
 void CelView::dragEnterEvent(QDragEnterEvent *event)

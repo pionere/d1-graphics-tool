@@ -45,7 +45,6 @@ LevelCelView::LevelCelView(QWidget *parent)
     this->on_dunZoomEdit_escPressed();
     this->on_dunPlayDelayEdit_escPressed();
     this->ui->dunStopButton->setEnabled(false);
-    // this->playTimer.connect(&this->playTimer, SIGNAL(timeout()), this, SLOT(playGroup()));
     this->ui->tilesTabs->addTab(&this->tabTileWidget, tr("Tile properties"));
     this->ui->tilesTabs->addTab(&this->tabSubtileWidget, tr("Subtile properties"));
     this->ui->tilesTabs->addTab(&this->tabFrameWidget, tr("Frame properties"));
@@ -146,12 +145,13 @@ void LevelCelView::updateIcon()
 {
     // update icon of assets
     QString assetPath = this->dun->getAssetPath();
-    this->ui->assetLoadPushButton->setToolTip(assetPath);
     if (!assetPath.isEmpty()) {
+        this->ui->assetLoadPushButton->setToolTip(assetPath);
         QIcon icon = QApplication::style()->standardIcon(QStyle::SP_DriveCDIcon);
         this->ui->assetLoadPushButton->setIcon(icon);
         this->ui->assetLoadPushButton->setText("");
     } else {
+        this->ui->assetLoadPushButton->setToolTip(tr("Select asset folder of the entites"));
         QIcon icon;
         this->ui->assetLoadPushButton->setIcon(icon);
         this->ui->assetLoadPushButton->setText("...");
@@ -2698,6 +2698,7 @@ void LevelCelView::displayFrame()
         emit frameRefreshed();
         return;
     }
+
     // Getting the current frame/sub-tile/tile to display
     QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
     QImage subtile = this->min->getSubtileCount() != 0 ? this->min->getSubtileImage(this->currentSubtileIndex) : QImage();
@@ -3130,13 +3131,11 @@ void LevelCelView::on_playButton_clicked()
     // preserve the palette
     dMainWindow().initPaletteCycle();
 
-    // this->playTimer.start(this->dunView ? this->dunviewPlayDelay : this->tilesetPlayDelay);
     this->playTimer = this->startTimer(this->dunView ? this->dunviewPlayDelay : this->tilesetPlayDelay);
 }
 
 void LevelCelView::on_stopButton_clicked()
 {
-    // this->playTimer.stop();
     this->killTimer(this->playTimer);
     this->playTimer = 0;
 
@@ -3154,7 +3153,6 @@ void LevelCelView::on_stopButton_clicked()
     this->ui->dunPlayComboBox->setEnabled(true);
 }
 
-// void LevelCelView::playGroup()
 void LevelCelView::timerEvent(QTimerEvent *event)
 {
     QComboBox *cycleBox = this->dunView ? this->ui->dunPlayComboBox : this->ui->playComboBox;
@@ -3190,7 +3188,6 @@ void LevelCelView::dropEvent(QDropEvent *event)
 void LevelCelView::on_actionToggle_View_triggered()
 {
     // stop playback
-    // if (this->playTimer.isActive()) {
     if (this->playTimer != 0) {
         this->on_stopButton_clicked();
     }

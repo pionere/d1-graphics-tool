@@ -185,9 +185,6 @@
       </item>
       <item row="1" column="0">
        <widget class="QLabel">
-        <!--property name="minimumWidth">
-         <number>48</number>
-        </property-->
         <property name="text">
          <string>Tiles:</string>
         </property>
@@ -363,9 +360,6 @@
       </item>
       <item row="2" column="0">
        <widget class="QLabel">
-        <!--property name="minimumWidth">
-         <number>48</number>
-        </property-->
         <property name="text">
          <string>Subtiles:</string>
         </property>
@@ -529,9 +523,6 @@
       </item>
       <item row="3" column="0">
        <widget class="QLabel">
-        <!--property name="minimumWidth">
-         <number>48</number>
-        </property-->
         <property name="text">
          <string>Frames:</string>
         </property>
@@ -707,9 +698,6 @@
       </item>
       <item row="4" column="0" colspan="18">
        <widget class="QTabWidget" name="tilesTabs">
-        <!--property name="maximumHeight">
-         <number>250</number>
-        </property-->
        </widget>
       </item>
      </layout>
@@ -720,9 +708,6 @@
      <layout class="QGridLayout">
       <item row="0" column="0">
        <widget class="QLabel">
-        <!--property name="minimumWidth">
-         <number>48</number>
-        </property-->
         <property name="text">
          <string>Zoom:</string>
         </property>
@@ -884,9 +869,6 @@
       </item>
       <item row="2" column="0">
        <widget class="QLabel">
-        <!--property name="minimumWidth">
-         <number>48</number>
-        </property-->
         <property name="text">
          <string>Dungeon:</string>
         </property>
@@ -1080,23 +1062,15 @@
         </property>
        </widget>
       </item>
+      <item row="3" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Entities:</string>
+        </property>
+       </widget>
+      </item>
       <item row="3" column="1" colspan="3">
        <layout class="QHBoxLayout">
-        <!--property name="spacing">
-         <number>4</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property-->
         <item>
          <widget class="QCheckBox" name="showTilesCheckBox">
           <property name="tristate">
@@ -1158,16 +1132,10 @@
         <property name="tabBarAutoHide">
          <bool>true</bool>
         </property>
-        <!--property name="maximumHeight">
-         <number>250</number>
-        </property-->
         <widget class="QWidget">
          <layout class="QGridLayout">
           <item row="0" column="0">
            <widget class="QLabel">
-            <!--property name="minimumWidth">
-             <number>48</number>
-            </property-->
             <property name="text">
              <string>Tile / Subtile:</string>
             </property>
@@ -1175,21 +1143,6 @@
           </item>
           <item row="0" column="1">
            <layout class="QHBoxLayout">
-            <!--property name="spacing">
-             <number>4</number>
-            </property>
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property-->
             <item>
              <widget class="LineEditWidget" name="dungeonTileLineEdit">
               <property name="charWidth">
@@ -1229,20 +1182,10 @@
               </property>
              </widget>
             </item>
-            <!--item>
-             <spacer>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </spacer>
-            </item-->
            </layout>
           </item>
           <item row="0" column="3">
            <widget class="QLabel">
-            <!--property name="minimumWidth">
-             <number>48</number>
-            </property-->
             <property name="text">
              <string>Transval:</string>
             </property>
@@ -1270,9 +1213,6 @@
           </item>
           <item row="1" column="0">
            <widget class="QLabel">
-            <!--property name="minimumWidth">
-             <number>48</number>
-            </property-->
             <property name="text">
              <string>Object:</string>
             </property>
@@ -1296,9 +1236,6 @@
           </item>
           <item row="1" column="3">
            <widget class="QLabel">
-            <!--property name="minimumWidth">
-             <number>48</number>
-            </property-->
             <property name="text">
              <string>Monster:</string>
             </property>
@@ -1322,9 +1259,6 @@
           </item>
           <item row="1" column="6">
            <widget class="QLabel">
-            <!--property name="minimumWidth">
-             <number>48</number>
-            </property-->
             <property name="text">
              <string>Item:</string>
             </property>
@@ -1354,9 +1288,6 @@
            <widget class="QPushButton" name="assetLoadPushButton">
             <property name="text">
              <string notr="true">...</string>
-            </property>
-            <property name="toolTip">
-             <string>Select asset folder of the entites</string>
             </property>
            </widget>
           </item>

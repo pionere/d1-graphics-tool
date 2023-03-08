@@ -25,7 +25,7 @@ void PatchTilesetDialog::initialize(D1Tileset *ts)
     if (baseName == "town") {
         dungeonType = DTYPE_TOWN;
     }
-    if (baseName.length() == 2 && baseName[0] == 'l') { // TODO: merge with D1Dun::initialize?
+    if (baseName.length() == 2 && baseName[0] == 'l') {
         switch (baseName[1].digitValue()) {
         case 1:
             dungeonType = DTYPE_CATHEDRAL;
