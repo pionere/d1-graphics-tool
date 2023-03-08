@@ -214,9 +214,10 @@ void MainWindow::updateWindow()
     if (this->palHits != nullptr) {
         this->palHits->update();
     }
-    if (this->palWidget != nullptr) {
-        this->palWidget->refresh();
-    }
+    // refresh the palette-colors - triggered by displayFrame
+    // if (this->palWidget != nullptr) {
+    //     this->palWidget->refresh();
+    // }
     // update menu options
     bool hasFrame = this->gfx != nullptr && this->gfx->getFrameCount() != 0;
     this->frameMenu.actions()[2]->setEnabled(hasFrame); // replace frame

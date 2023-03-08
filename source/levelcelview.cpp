@@ -2693,6 +2693,9 @@ void LevelCelView::displayFrame()
 
         this->celScene.addPixmap(QPixmap::fromImage(dunFrame))
             ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+
+        // Notify PalView that the frame changed (used to refresh palette widget)
+        emit frameRefreshed();
         return;
     }
     // Getting the current frame/sub-tile/tile to display
@@ -2753,10 +2756,8 @@ void LevelCelView::displayFrame()
     this->ui->tilFrameHeightEdit->setText(QString::number(TILE_HEIGHT));
     this->ui->tilFrameHeightEdit->setToolTip(QString::number(tile.height()) + " px");
 
-    // Notify PalView that the frame changed (used to refresh palette hits)
-    if (this->playTimer == 0) {
-        emit frameRefreshed();
-    }
+    // Notify PalView that the frame changed (used to refresh palette widget)
+    emit frameRefreshed();
 }
 
 void LevelCelView::toggleBottomPanel()
