@@ -3159,9 +3159,14 @@ void LevelCelView::timerEvent(QTimerEvent *event)
 {
     this->playCounter++;
     QComboBox *cycleBox = this->dunView ? this->ui->dunPlayComboBox : this->ui->playComboBox;
-    dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)cycleBox->currentIndex());
-
-    // this->displayFrame();
+    int cycleType = cycleBox->currentIndex();
+    if (cycleType == 0) {
+        // normal playback
+        this->displayFrame();
+    } else {
+        dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)(cycleType - 1));
+        // this->displayFrame();
+    }
 }
 
 void LevelCelView::dragEnterEvent(QDragEnterEvent *event)

@@ -970,7 +970,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             }
             if (monGfx != nullptr) {
                 std::pair<int, int> frameIndices = monGfx->getGroupFrameIndices(0);
-                int frameNum = 1 + (params.time % (frameIndices.second - frameIndices.first + 1));
+                int frameNum = 1 + (params.time % (frameIndices.second /*- frameIndices.first*/ + 1));
                 QImage monImage = monGfx->getFrameImage(frameNum - 1);
                 dungeon.drawImage(drawCursorX + ((int)backWidth - monStr->width) / 2, drawCursorY - monImage.height(), monImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             } else {
