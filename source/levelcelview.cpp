@@ -145,12 +145,13 @@ void LevelCelView::updateIcon()
 {
     // update icon of assets
     QString assetPath = this->dun->getAssetPath();
-    this->ui->assetLoadPushButton->setToolTip(assetPath);
     if (!assetPath.isEmpty()) {
+        this->ui->assetLoadPushButton->setToolTip(assetPath);
         QIcon icon = QApplication::style()->standardIcon(QStyle::SP_DriveCDIcon);
         this->ui->assetLoadPushButton->setIcon(icon);
         this->ui->assetLoadPushButton->setText("");
     } else {
+        this->ui->assetLoadPushButton->setToolTip(tr("Select asset folder of the entites"));
         QIcon icon;
         this->ui->assetLoadPushButton->setIcon(icon);
         this->ui->assetLoadPushButton->setText("...");
@@ -2692,6 +2693,9 @@ void LevelCelView::displayFrame()
 
         this->celScene.addPixmap(QPixmap::fromImage(dunFrame))
             ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+
+        // Notify PalView that the frame changed (used to refresh palette widget)
+        emit frameRefreshed();
         return;
     }
 
