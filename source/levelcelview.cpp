@@ -2507,7 +2507,7 @@ void LevelCelView::reportDungeonUsage() const
         for (std::pair<int, int> &monster : monsters) {
             totalCount += monster.second;
             QString monsterName;
-            if (monster.first < lengthof(MonstConvTbl)) {
+            if (monster.first < lengthof(MonstConvTbl) && MonstConvTbl[monster.first].type != 0) {
                 monsterName = MonstConvTbl[monster.first].name;
             } else {
                 monsterName = tr("Monster%1").arg(monster.first);
@@ -2533,7 +2533,7 @@ void LevelCelView::reportDungeonUsage() const
         for (std::pair<int, int> &object : objects) {
             totalCount += object.second;
             QString objectName;
-            if (object.first < lengthof(ObjConvTbl)) {
+            if (object.first < lengthof(ObjConvTbl) && ObjConvTbl[object.first].type != 0) {
                 objectName = ObjConvTbl[object.first].name;
             } else {
                 objectName = tr("Object%1").arg(object.first);
