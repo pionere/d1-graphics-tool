@@ -17,6 +17,7 @@
 #include "d1til.h"
 #include "d1tileset.h"
 #include "d1tmi.h"
+#include "d1trn.h"
 #include "progressdialog.h"
 
 template <class T, int N>

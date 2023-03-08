@@ -13,8 +13,8 @@ class D1Min;
 class D1Pal;
 class D1Sol;
 class D1Til;
-class D1Trn;
 class D1Tmi;
+class D1Trn;
 
 #define UNDEF_SUBTILE -1
 #define UNDEF_TILE -1
