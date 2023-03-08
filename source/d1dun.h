@@ -60,6 +60,7 @@ public:
     bool showItems;
     bool showMonsters;
     bool showObjects;
+    unsigned time;
 };
 
 class D1Dun : public QObject {

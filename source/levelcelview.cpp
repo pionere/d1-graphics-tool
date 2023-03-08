@@ -2685,6 +2685,7 @@ void LevelCelView::displayFrame()
         params.showItems = this->ui->showItemsCheckBox->isChecked();
         params.showMonsters = this->ui->showMonstersCheckBox->isChecked();
         params.showObjects = this->ui->showObjectsCheckBox->isChecked();
+        params.time = this->playCounter;
         QImage dunFrame = this->dun->getImage(params);
 
         this->celScene.setSceneRect(0, 0,
@@ -3138,6 +3139,7 @@ void LevelCelView::on_stopButton_clicked()
 {
     this->killTimer(this->playTimer);
     this->playTimer = 0;
+    this->playCounter = 0;
 
     // restore palette
     dMainWindow().resetPaletteCycle();
@@ -3155,10 +3157,16 @@ void LevelCelView::on_stopButton_clicked()
 
 void LevelCelView::timerEvent(QTimerEvent *event)
 {
+    this->playCounter++;
     QComboBox *cycleBox = this->dunView ? this->ui->dunPlayComboBox : this->ui->playComboBox;
-    dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)cycleBox->currentIndex());
-
-    // this->displayFrame();
+    int cycleType = cycleBox->currentIndex();
+    if (cycleType == 0) {
+        // normal playback
+        this->displayFrame();
+    } else {
+        dMainWindow().nextPaletteCycle((D1PAL_CYCLE_TYPE)(cycleType - 1));
+        // this->displayFrame();
+    }
 }
 
 void LevelCelView::dragEnterEvent(QDragEnterEvent *event)

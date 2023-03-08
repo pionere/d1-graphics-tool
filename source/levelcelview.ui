@@ -143,6 +143,11 @@
        <widget class="QComboBox" name="playComboBox">
         <item>
          <property name="text">
+          <string>Normal</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>(L3) Caves</string>
          </property>
         </item>
@@ -805,6 +810,11 @@
       </item>
       <item row="0" column="13">
        <widget class="QComboBox" name="dunPlayComboBox">
+        <item>
+         <property name="text">
+          <string>Normal</string>
+         </property>
+        </item>
         <item>
          <property name="text">
           <string>(L3) Caves</string>
