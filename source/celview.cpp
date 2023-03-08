@@ -166,7 +166,6 @@ CelView::CelView(QWidget *parent)
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
     this->ui->stopButton->setEnabled(false);
-    this->playTimer.connect(&this->playTimer, SIGNAL(timeout()), this, SLOT(playGroup()));
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Draw_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
@@ -737,6 +736,9 @@ void CelView::on_playDelayEdit_escPressed()
 
 void CelView::on_playButton_clicked()
 {
+    if (this->playTimer != 0) {
+        return;
+    }
     // disable the related fields
     this->ui->playButton->setEnabled(false);
     this->ui->playDelayEdit->setReadOnly(true);
@@ -748,12 +750,13 @@ void CelView::on_playButton_clicked()
     // preserve the palette
     dMainWindow().initPaletteCycle();
 
-    this->playTimer.start(this->currentPlayDelay);
+    this->playTimer = this->startTimer(this->currentPlayDelay);
 }
 
 void CelView::on_stopButton_clicked()
 {
-    this->playTimer.stop();
+    this->killTimer(this->playTimer);
+    this->playTimer = 0;
 
     // restore the currentFrameIndex
     this->currentFrameIndex = this->origFrameIndex;
@@ -767,7 +770,7 @@ void CelView::on_stopButton_clicked()
     this->ui->playComboBox->setEnabled(true);
 }
 
-void CelView::playGroup()
+void CelView::timerEvent(QTimerEvent *event)
 {
     if (this->gfx->getGroupCount() == 0) {
         return;

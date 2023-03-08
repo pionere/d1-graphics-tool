@@ -122,7 +122,8 @@ private slots:
     void on_playDelayEdit_escPressed();
     void on_playButton_clicked();
     void on_stopButton_clicked();
-    void playGroup();
+
+    void timerEvent(QTimerEvent *event) override;
 
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dragMoveEvent(QDragMoveEvent *event) override;
@@ -140,6 +141,5 @@ private:
     int currentFrameIndex = 0;
     int origFrameIndex = 0;
     quint16 currentPlayDelay = 50;
-
-    QTimer playTimer;
+    int playTimer = 0;
 };
