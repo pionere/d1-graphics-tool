@@ -433,9 +433,9 @@ void D1Dun::initVectors(int dunWidth, int dunHeight)
     for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
         monsters[i].resize(dunWidth * TILE_WIDTH);
     }
-    transvals.resize(dunHeight * TILE_HEIGHT);
+    rooms.resize(dunHeight * TILE_HEIGHT);
     for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
-        transvals[i].resize(dunWidth * TILE_WIDTH);
+        rooms[i].resize(dunWidth * TILE_WIDTH);
     }
 }
 
@@ -546,11 +546,11 @@ bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
 
             if (dataSize >= dataUnitSize) {
                 dataSize -= dataUnitSize;
-                // read transval
+                // read rooms
                 for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
                     for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
                         in >> readWord;
-                        this->transvals[y][x] = readWord;
+                        this->rooms[y][x] = readWord;
                     }
                 }
             } else {
@@ -790,7 +790,7 @@ bool D1Dun::save(const SaveAsParam &params)
                 if (this->objects[y][x] != 0) {
                     dProgressWarn() << tr("Defined object at %1:%2 is not saved in this format (RDUN).").arg(x).arg(y);
                 }
-                if (this->transvals[y][x] != 0) {
+                if (this->rooms[y][x] != 0) {
                     dProgressWarn() << tr("Defined room at %1:%2 is not saved in this format (RDUN).").arg(x).arg(y);
                 }
             }
@@ -851,10 +851,10 @@ bool D1Dun::save(const SaveAsParam &params)
             }
         }
 
-        // write transval
+        // write rooms
         for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
             for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                writeWord = this->transvals[y][x];
+                writeWord = this->rooms[y][x];
                 out << writeWord;
             }
         }
@@ -893,7 +893,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     if (!params.showRooms) {
         dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backHeight - CELL_BORDER, backImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
     } else {
-        QColor color = this->pal->getColor(((unsigned)this->transvals[dunCursorY][dunCursorX]) % D1PAL_COLORS);
+        QColor color = this->pal->getColor(((unsigned)this->rooms[dunCursorY][dunCursorX]) % D1PAL_COLORS);
         QImage *destImage = (QImage *)dungeon.device();
         for (int y = backHeight - CELL_BORDER - 1; y >= 0; y--) {
             for (unsigned x = CELL_BORDER; x < backWidth - CELL_BORDER; x++) {
@@ -926,16 +926,16 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                     // mask the image with backImage
                     QImage subtileImage = this->min->getFloorImage(subtileRef - 1);
                     QImage *destImage = (QImage *)dungeon.device();
-                    for (unsigned y = CELL_BORDER; y < backHeight - CELL_BORDER; y++) {
+                    for (int y = backHeight - CELL_BORDER - 1; y >= 0; y--) {
                         for (unsigned x = CELL_BORDER; x < backWidth - CELL_BORDER; x++) {
                             if (backImage.pixelColor(x, y).alpha() == 0) {
                                 continue;
                             }
-                            QColor color = subtileImage.pixelColor(x - CELL_BORDER, subtileImage.height() - backHeight + y);
+                            QColor color = subtileImage.pixelColor(x - CELL_BORDER, subtileImage.height() - y);
                             if (/*color.isNull() ||*/ color.alpha() == 0) {
                                 continue;
                             }
-                            destImage->setPixelColor(drawCursorX + x - CELL_BORDER, drawCursorY - backHeight + y, color);
+                            destImage->setPixelColor(drawCursorX + x - CELL_BORDER, drawCursorY - (y + 1), color);
                         }
                     }
                 }
@@ -1296,7 +1296,7 @@ bool D1Dun::setWidth(int newWidth)
                 hasContent |= this->items[y][x] != 0;
                 hasContent |= this->monsters[y][x] != 0;
                 hasContent |= this->objects[y][x] != 0;
-                hasContent |= this->transvals[y][x] != 0;
+                hasContent |= this->rooms[y][x] != 0;
             }
         }
 
@@ -1325,8 +1325,8 @@ bool D1Dun::setWidth(int newWidth)
     for (std::vector<int> &objsRow : this->objects) {
         objsRow.resize(newWidth);
     }
-    for (std::vector<int> &transRow : this->transvals) {
-        transRow.resize(newWidth);
+    for (std::vector<int> &roomsRow : this->rooms) {
+        roomsRow.resize(newWidth);
     }
 
     this->width = newWidth;
@@ -1363,7 +1363,7 @@ bool D1Dun::setHeight(int newHeight)
                 hasContent |= this->items[y][x] != 0;
                 hasContent |= this->monsters[y][x] != 0;
                 hasContent |= this->objects[y][x] != 0;
-                hasContent |= this->transvals[y][x] != 0;
+                hasContent |= this->rooms[y][x] != 0;
             }
         }
 
@@ -1382,14 +1382,14 @@ bool D1Dun::setHeight(int newHeight)
     this->items.resize(newHeight);
     this->monsters.resize(newHeight);
     this->objects.resize(newHeight);
-    this->transvals.resize(newHeight);
+    this->rooms.resize(newHeight);
     for (int y = prevHeight; y < newHeight; y++) {
         this->tiles[y / TILE_HEIGHT].resize(width / TILE_WIDTH);
         this->subtiles[y].resize(width);
         this->items[y].resize(width);
         this->monsters[y].resize(width);
         this->objects[y].resize(width);
-        this->transvals[y].resize(width);
+        this->rooms[y].resize(width);
     }
 
     this->height = newHeight;
@@ -1495,17 +1495,17 @@ bool D1Dun::setObjectAt(int posx, int posy, int objectIndex)
     return true;
 }
 
-int D1Dun::getTransvalAt(int posx, int posy) const
+int D1Dun::getRoomAt(int posx, int posy) const
 {
-    return this->transvals[posy][posx];
+    return this->rooms[posy][posx];
 }
 
-bool D1Dun::setTransvalAt(int posx, int posy, int transval)
+bool D1Dun::setRoomAt(int posx, int posy, int roomIndex)
 {
-    if (this->transvals[posy][posx] == transval) {
+    if (this->rooms[posy][posx] == roomIndex) {
         return false;
     }
-    this->transvals[posy][posx] = transval;
+    this->rooms[posy][posx] = roomIndex;
     this->modified = true;
     return true;
 }
@@ -1905,7 +1905,7 @@ bool D1Dun::removeObjects()
 bool D1Dun::removeRooms()
 {
     bool result = false;
-    for (std::vector<int> &roomRow : this->transvals) {
+    for (std::vector<int> &roomRow : this->rooms) {
         for (int &roomIndex : roomRow) {
             if (roomIndex != 0) {
                 roomIndex = 0;
@@ -1972,8 +1972,8 @@ void D1Dun::loadRooms(D1Dun *srcDun)
 {
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
-            if (this->transvals[y][x] != srcDun->transvals[y][x]) {
-                this->transvals[y][x] = srcDun->transvals[y][x];
+            if (this->rooms[y][x] != srcDun->rooms[y][x]) {
+                this->rooms[y][x] = srcDun->rooms[y][x];
                 this->modified = true;
             }
         }

@@ -148,8 +148,8 @@ public:
     bool setMonsterAt(int posx, int posy, int monsterIndex);
     int getObjectAt(int posx, int posy) const;
     bool setObjectAt(int posx, int posy, int objectIndex);
-    int getTransvalAt(int posx, int posy) const;
-    bool setTransvalAt(int posx, int posy, int transval);
+    int getRoomAt(int posx, int posy) const;
+    bool setRoomAt(int posx, int posy, int roomIndex);
 
     int getLevelType() const;
     bool setLevelType(int levelType);
@@ -204,7 +204,7 @@ private:
     std::vector<std::vector<int>> items;
     std::vector<std::vector<int>> monsters;
     std::vector<std::vector<int>> objects;
-    std::vector<std::vector<int>> transvals;
+    std::vector<std::vector<int>> rooms;
 
     int defaultTile;
     QString assetPath;

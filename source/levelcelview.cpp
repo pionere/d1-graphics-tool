@@ -79,7 +79,7 @@ LevelCelView::LevelCelView(QWidget *parent)
     QObject::connect(this->ui->dungeonItemLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonItemLineEdit_escPressed()));
     QObject::connect(this->ui->dungeonMonsterLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonMonsterLineEdit_escPressed()));
     QObject::connect(this->ui->dungeonObjectLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonObjectLineEdit_escPressed()));
-    QObject::connect(this->ui->dungeonTransvalLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonTransvalLineEdit_escPressed()));
+    QObject::connect(this->ui->dungeonRoomLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonRoomLineEdit_escPressed()));
 
     // setup context menu
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -230,7 +230,7 @@ void LevelCelView::update()
         int objectIndex = this->dun->getObjectAt(posx, posy);
         this->ui->dungeonObjectLineEdit->setText(QString::number(objectIndex));
         this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
-        this->ui->dungeonTransvalLineEdit->setText(QString::number(this->dun->getTransvalAt(posx, posy)));
+        this->ui->dungeonRoomLineEdit->setText(QString::number(this->dun->getRoomAt(posx, posy)));
     } else {
         // Set current and maximum frame text
         count = this->gfx->getFrameCount();
@@ -3605,12 +3605,12 @@ void LevelCelView::on_dungeonObjectLineEdit_escPressed()
     this->ui->dungeonObjectLineEdit->clearFocus();
 }
 
-void LevelCelView::on_dungeonTransvalLineEdit_returnPressed()
+void LevelCelView::on_dungeonRoomLineEdit_returnPressed()
 {
-    int transVal = this->ui->dungeonTransvalLineEdit->text().toUShort();
+    int roomIndex = this->ui->dungeonRoomLineEdit->text().toUShort();
 
-    bool change = this->dun->setTransvalAt(this->currentDunPosX, this->currentDunPosY, transVal);
-    this->on_dungeonTransvalLineEdit_escPressed();
+    bool change = this->dun->setRoomAt(this->currentDunPosX, this->currentDunPosY, roomIndex);
+    this->on_dungeonRoomLineEdit_escPressed();
     if (change) {
         // update the view
         // this->displayFrame();
@@ -3618,12 +3618,12 @@ void LevelCelView::on_dungeonTransvalLineEdit_returnPressed()
     }
 }
 
-void LevelCelView::on_dungeonTransvalLineEdit_escPressed()
+void LevelCelView::on_dungeonRoomLineEdit_escPressed()
 {
-    int transVal = this->dun->getTransvalAt(this->currentDunPosX, this->currentDunPosY);
+    int roomIndex = this->dun->getRoomAt(this->currentDunPosX, this->currentDunPosY);
 
-    this->ui->dungeonTransvalLineEdit->setText(QString::number(transVal));
-    this->ui->dungeonTransvalLineEdit->clearFocus();
+    this->ui->dungeonRoomLineEdit->setText(QString::number(roomIndex));
+    this->ui->dungeonRoomLineEdit->clearFocus();
 }
 
 void LevelCelView::on_dunZoomOutButton_clicked()

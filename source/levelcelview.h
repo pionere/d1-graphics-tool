@@ -222,8 +222,8 @@ private slots:
     void on_dungeonObjectComboBox_activated(int index);
     void on_dungeonObjectLineEdit_returnPressed();
     void on_dungeonObjectLineEdit_escPressed();
-    void on_dungeonTransvalLineEdit_returnPressed();
-    void on_dungeonTransvalLineEdit_escPressed();
+    void on_dungeonRoomLineEdit_returnPressed();
+    void on_dungeonRoomLineEdit_escPressed();
 
     void on_dunZoomOutButton_clicked();
     void on_dunZoomInButton_clicked();
