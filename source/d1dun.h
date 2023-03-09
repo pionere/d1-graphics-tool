@@ -33,6 +33,48 @@ typedef enum dun_file_index {
     DUN_VILE_AFT,            // setmap for the "Archbishop Lazarus" quest after reading the books (Vile1.DUN)
 } dun_file_index;
 
+typedef enum _monster_gfx_id {
+    MOFILE_FALLSP,
+    MOFILE_SKELAX,
+    MOFILE_FALLSD,
+    MOFILE_SKELBW,
+    MOFILE_SKELSD,
+    MOFILE_SNEAK,
+    MOFILE_GOATMC,
+    MOFILE_GOATBW,
+    MOFILE_FAT,
+    MOFILE_RHINO,
+    MOFILE_BLACK,
+    MOFILE_SUCC,
+    MOFILE_MAGE,
+    MOFILE_DIABLO,
+    NUM_MOFILE_TYPES
+} _monster_gfx_id;
+
+typedef enum object_graphic_id {
+    OFILE_LEVER,
+    OFILE_CRUXSK1,
+    OFILE_CRUXSK2,
+    OFILE_CRUXSK3,
+    OFILE_BOOK2,
+    OFILE_BURNCROS,
+    OFILE_CANDLE2,
+    OFILE_MCIRL,
+    OFILE_SWITCH4,
+    OFILE_TSOUL,
+    OFILE_TNUDEM,
+    OFILE_TNUDEW,
+    OFILE_CHEST1,
+    OFILE_CHEST2,
+    OFILE_CHEST3,
+    OFILE_ALTBOY,
+    OFILE_ARMSTAND,
+    OFILE_WEAPSTND,
+    OFILE_WTORCH2,
+    OFILE_WTORCH1,
+    NUM_OFILE_TYPES
+} object_graphic_id;
+
 enum class D1DUN_TYPE {
     NORMAL,
     RAW,
@@ -40,19 +82,29 @@ enum class D1DUN_TYPE {
 
 typedef struct ObjectStruct {
     int type;
-    int width;
-    const char *path;
+    int animType;
     const char *name;
     int frameNum;
 } ObjectStruct;
 
 typedef struct MonsterStruct {
     int type;
-    int width;
-    const char *path;
+    int animType;
     const char *trnPath;
     const char *name;
 } MonsterStruct;
+
+typedef struct ObjectCacheEntry {
+    const ObjectStruct *objStr;
+    D1Gfx *objGfx;
+} ObjectCacheEntry;
+
+typedef struct MonsterCacheEntry {
+    const MonsterStruct *monStr;
+    D1Gfx *monGfx;
+    D1Pal *monPal;
+    D1Trn *monTrn;
+} MonsterCacheEntry;
 
 class DunDrawParam {
 public:
@@ -126,8 +178,8 @@ public:
 private:
     void drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
     void initVectors(int width, int height);
-    D1Gfx *loadObject(int objectIndex);
-    D1Gfx *loadMonster(int monsterIndex);
+    void loadObject(int objectIndex);
+    void loadMonster(int monsterIndex);
     void clearAssets();
     void updateSubtiles(int tilePosX, int tilePosY, int tileRef);
     bool changeTileAt(int tilePosX, int tilePosY, int tileRef);
@@ -155,8 +207,10 @@ private:
     QString assetPath;
     int levelType; // dungeon_type
     D1Gfx *specGfx;
-    std::vector<std::pair<const ObjectStruct *, D1Gfx *>> objectCache;
-    std::vector<std::pair<const MonsterStruct *, std::pair<D1Gfx *, D1Trn *>>> monsterCache;
+    std::vector<ObjectCacheEntry> objectCache;
+    std::vector<MonsterCacheEntry> monsterCache;
+    D1Gfx *objDataCache[NUM_OFILE_TYPES] = { nullptr };
+    D1Gfx *monDataCache[NUM_MOFILE_TYPES] = { nullptr };
 };
 
 extern const ObjectStruct ObjConvTbl[128];

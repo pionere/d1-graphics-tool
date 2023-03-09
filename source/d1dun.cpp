@@ -33,6 +33,17 @@ typedef struct SpecCell {
     int specIndex;
 } SpecCell;
 
+typedef struct ObjFileData {
+    const char *path;
+    int width;
+    int numFrames;
+} ObjFileData;
+
+typedef struct MonFileData {
+    const char *path;
+    int width;
+} MonFileData;
+
 typedef struct DungeonStruct {
     int defaultTile;
     const char *specPath;
@@ -85,10 +96,10 @@ const DungeonStruct dungeonTbl[NUM_DUNGEON_TYPES] = {
 const ObjectStruct ObjConvTbl[128] = {
     // clang-format off
     { 0 },
-    {   1,  96, "Lever",    "Lever", 1 }, // Q_SKELKING
-    {   2,  96, "CruxSk1",  "Crucifix1", 1 }, // Q_SKELKING
-    {   3,  96, "CruxSk2",  "Crucifix2", 1 }, // Q_SKELKING
-    {   4,  96, "CruxSk3",  "Crucifix2", 1 }, // Q_SKELKING
+    {   1, OFILE_LEVER,    "Lever", 1 }, // Q_SKELKING
+    {   2, OFILE_CRUXSK1,  "Crucifix1", 1 }, // Q_SKELKING
+    {   3, OFILE_CRUXSK2,  "Crucifix2", 1 }, // Q_SKELKING
+    {   4, OFILE_CRUXSK3,  "Crucifix2", 1 }, // Q_SKELKING
     { 0 }, //OBJ_ANGEL,
     { 0 }, //OBJ_BANNERL,
     { 0 }, //OBJ_BANNERM,
@@ -98,12 +109,12 @@ const ObjectStruct ObjConvTbl[128] = {
     { 0 },
     { 0 },
     { 0 },
-    {  14,  96, "Book2",    "Bookstand", 1 }, // Q_BCHAMB, Q_BETRAYER
+    {  14, OFILE_BOOK2,    "Bookstand", 1 }, // Q_BCHAMB, Q_BETRAYER
     { 0 }, //OBJ_BOOK2R,
-    {  16, 160, "Burncros", "Burning cross", 0 }, // Q_BCHAMB
+    {  16, OFILE_BURNCROS, "Burning cross", 0 }, // Q_BCHAMB
     { 0 },
     { 0 }, //OBJ_CANDLE1,
-    {  19,  96, "Candle2",  "Candle", 0 }, // Q_BCHAMB
+    {  19, OFILE_CANDLE2,  "Candle", 0 }, // Q_BCHAMB
     { 0 }, //OBJ_CANDLEO,
     { 0 }, //OBJ_CAULDRON,
     { 0 },
@@ -120,8 +131,8 @@ const ObjectStruct ObjConvTbl[128] = {
     { 0 },
     { 0 },
     { 0 },
-    {  36,  96, "Mcirl",    "Magic Circle 1", 1 }, // Q_BETRAYER
-    {  37,  96, "Mcirl",    "Magic Circle 2", 3 }, // Q_BETRAYER
+    {  36, OFILE_MCIRL,    "Magic Circle 1", 1 }, // Q_BETRAYER
+    {  37, OFILE_MCIRL,    "Magic Circle 2", 3 }, // Q_BETRAYER
     { 0 }, //OBJ_SKFIRE,
     { 0 }, //OBJ_SKPILE,
     { 0 }, //OBJ_SKSTICK1,
@@ -135,15 +146,15 @@ const ObjectStruct ObjConvTbl[128] = {
     { 0 },
     { 0 },
     { 0 },
-    {  51,  96, "Switch4",  "Switch", 1 }, // Q_BCHAMB, Q_DIABLO
+    {  51, OFILE_SWITCH4,  "Switch", 1 }, // Q_BCHAMB, Q_DIABLO
     { 0 },
     { 0 }, //OBJ_TRAPL,
     { 0 }, //OBJ_TRAPR,
-    {  55, 128, "TSoul",    "Tortured body 1", 1 }, // Q_BUTCHER
-    {  56, 128, "TSoul",    "Tortured body 2", 2 }, // Q_BUTCHER
-    {  57, 128, "TSoul",    "Tortured body 3", 3 }, // Q_BUTCHER
-    {  58, 128, "TSoul",    "Tortured body 4", 4 }, // Q_BUTCHER
-    {  59, 128, "TSoul",    "Tortured body 5", 5 }, // Q_BUTCHER
+    {  55, OFILE_TSOUL,    "Tortured body 1", 1 }, // Q_BUTCHER
+    {  56, OFILE_TSOUL,    "Tortured body 2", 2 }, // Q_BUTCHER
+    {  57, OFILE_TSOUL,    "Tortured body 3", 3 }, // Q_BUTCHER
+    {  58, OFILE_TSOUL,    "Tortured body 4", 4 }, // Q_BUTCHER
+    {  59, OFILE_TSOUL,    "Tortured body 5", 5 }, // Q_BUTCHER
     { 0 },
     { 0 },
     { 0 },
@@ -154,21 +165,21 @@ const ObjectStruct ObjConvTbl[128] = {
     { 0 },
     { 0 },
     { 0 },
-    {  70, 128, "TNudeM",   "Tortured male 1", 1 }, //1, Q_BUTCHER
-    {  71, 128, "TNudeM",   "Tortured male 2", 2 }, //2, Q_BUTCHER
-    {  72, 128, "TNudeM",   "Tortured male 3", 3 }, //3, Q_BUTCHER
-    {  73, 128, "TNudeM",   "Tortured male 4", 4 }, //4, Q_BUTCHER
-    {  74, 128, "TNudeW",   "Tortured female 1", 1 }, //1, Q_BUTCHER
-    {  75, 128, "TNudeW",   "Tortured female 1", 2 }, //2, Q_BUTCHER
-    {  76, 128, "TNudeW",   "Tortured female 1", 3 }, //3, Q_BUTCHER
+    {  70, OFILE_TNUDEM,   "Tortured male 1", 1 }, //1, Q_BUTCHER
+    {  71, OFILE_TNUDEM,   "Tortured male 2", 2 }, //2, Q_BUTCHER
+    {  72, OFILE_TNUDEM,   "Tortured male 3", 3 }, //3, Q_BUTCHER
+    {  73, OFILE_TNUDEM,   "Tortured male 4", 4 }, //4, Q_BUTCHER
+    {  74, OFILE_TNUDEW,   "Tortured female 1", 1 }, //1, Q_BUTCHER
+    {  75, OFILE_TNUDEW,   "Tortured female 1", 2 }, //2, Q_BUTCHER
+    {  76, OFILE_TNUDEW,   "Tortured female 1", 3 }, //3, Q_BUTCHER
     { 0 }, //OBJ_CHEST1,
-    {  78,  96, "Chest1",   "Chest 1", 1 }, // Q_SKELKING
+    {  78, OFILE_CHEST1,   "Chest 1", 1 }, // Q_SKELKING
     { 0 }, //OBJ_CHEST1,
     { 0 }, //OBJ_CHEST2,
-    {  81,  96, "Chest2",   "Chest 2", 1 }, // Q_SKELKING
+    {  81, OFILE_CHEST2,   "Chest 2", 1 }, // Q_SKELKING
     { 0 }, //OBJ_CHEST2,
     { 0 }, //OBJ_CHEST3,
-    {  84,  96, "Chest3",   "Chest 3", 1 }, // Q_BCHAMB
+    {  84, OFILE_CHEST3,   "Chest 3", 1 }, // Q_BCHAMB
     { 0 }, //OBJ_CHEST3,
     { 0 },
     { 0 },
@@ -189,13 +200,13 @@ const ObjectStruct ObjConvTbl[128] = {
     { 0 },
     { 0 },
     { 0 },
-    { 105, 128, "Altboy",   "Altarboy", 1 }, // Q_BETRAYER
+    { 105, OFILE_ALTBOY,   "Altarboy", 1 }, // Q_BETRAYER
     { 0 },
     { 0 },
-    { 108,  96, "Armstand", "Armor stand", 2 }, //OBJ_ARMORSTAND, // Q_WARLORD - changed to inactive versions to eliminate farming potential
-    { 109,  96, "WeapStnd", "Weapon stand", 2 }, //OBJ_WEAPONRACKL, // Q_WARLORD
-    { 110,  96, "WTorch2",  "Torch 1", 0 }, // Q_BLOOD
-    { 111,  96, "WTorch1",  "Torch 2", 0 }, // Q_BLOOD
+    { 108, OFILE_ARMSTAND, "Armor stand", 2 }, //OBJ_ARMORSTAND, // Q_WARLORD - changed to inactive versions to eliminate farming potential
+    { 109, OFILE_WEAPSTND, "Weapon stand", 2 }, //OBJ_WEAPONRACKL, // Q_WARLORD
+    { 110, OFILE_WTORCH2,  "Torch 2", 0 }, // Q_BLOOD
+    { 111, OFILE_WTORCH1,  "Torch 1", 0 }, // Q_BLOOD
     { 0 }, //OBJ_MUSHPATCH,
     { 0 }, //OBJ_STAND,
     { 0 }, //OBJ_TORCHL2,
@@ -215,6 +226,31 @@ const ObjectStruct ObjConvTbl[128] = {
     // clang-format on
 };
 
+const ObjFileData objfiledata[NUM_OFILE_TYPES] = {
+    // clang-format off
+/*OFILE_LEVER*/    { "Lever",     96, 1 }, // 2
+/*OFILE_CRUXSK1*/  { "CruxSk1",   96, 1 }, // 15
+/*OFILE_CRUXSK2*/  { "CruxSk2",   96, 1 }, // 15
+/*OFILE_CRUXSK3*/  { "CruxSk3",   96, 1 }, // 15
+/*OFILE_BOOK2*/    { "Book2",     96, 1 }, // 6
+/*OFILE_BURNCROS*/ { "Burncros", 160, 1 }, // 10
+/*OFILE_CANDLE2*/  { "Candle2",   96, 1 }, // 4
+/*OFILE_MCIRL*/    { "Mcirl",     96, 3 }, // 4
+/*OFILE_SWITCH4*/  { "Switch4",   96, 1 }, // 2
+/*OFILE_TSOUL*/    { "TSoul",    128, 5 }, // 6
+/*OFILE_TNUDEM*/   { "TNudeM",   128, 4 }, // 4
+/*OFILE_TNUDEW*/   { "TNudeW",   128, 3 }, // 3
+/*OFILE_CHEST1*/   { "Chest1",    96, 1 }, // 6
+/*OFILE_CHEST2*/   { "Chest2",    96, 1 }, // 6
+/*OFILE_CHEST3*/   { "Chest3",    96, 1 }, // 6
+/*OFILE_ALTBOY*/   { "Altboy",   128, 1 }, // 1
+/*OFILE_ARMSTAND*/ { "Armstand",  96, 2 }, // 2
+/*OFILE_WEAPSTND*/ { "WeapStnd",  96, 2 }, // 4
+/*OFILE_WTORCH2*/  { "WTorch2",   96, 1 }, // 9
+/*OFILE_WTORCH1*/  { "WTorch1",   96, 1 }, // 9
+    // clang-format on
+};
+
 const MonsterStruct MonstConvTbl[128] = {
     // clang-format off
     { 0 },
@@ -223,34 +259,34 @@ const MonsterStruct MonstConvTbl[128] = {
     { 0 }, //MT_GZOMBIE,
     { 0 }, //MT_YZOMBIE,
     { 0 }, //MT_RFALLSP,
-    {   6, 128, "FalSpear\\Phall", "FalSpear\\Dark",  "Carver" }, // Q_PWATER
+    {   6, MOFILE_FALLSP, "FalSpear\\Dark",  "Carver" }, // Q_PWATER
     { 0 }, //MT_YFALLSP,
-    { 0 }, // {   8, 128, "FalSpear\\Phall", "FalSpear\\Blue",  "Dark One" }, // Monster from banner2.dun,
+    { 0 }, // {   8, MOFILE_FALLSP, "FalSpear\\Blue",  "Dark One" }, // Monster from banner2.dun,
     { 0 }, //MT_WSKELAX,
     { 0 }, //MT_TSKELAX,
-    {  11, 128, "SkelAxe\\SklAx",  nullptr,           "Burning Dead" }, // Q_SKELKING
+    {  11, MOFILE_SKELAX, nullptr,           "Burning Dead" }, // Q_SKELKING
     { 0 }, //MT_XSKELAX,
     { 0 }, //MT_RFALLSD,
     { 0 }, //MT_DFALLSD,
-    {  15, 128, "FalSword\\Fall",  nullptr,           "Devil Kin" }, // Q_PWATER
-    {  16, 128, "FalSword\\Fall",  "FalSpear\\Blue",  "Dark One" },  // Q_BANNER
+    {  15, MOFILE_FALLSD, nullptr,           "Devil Kin" }, // Q_PWATER
+    {  16, MOFILE_FALLSD, "FalSpear\\Blue",  "Dark One" },  // Q_BANNER
     { 0 }, //MT_NSCAV,
     { 0 }, //MT_BSCAV,
     { 0 }, //MT_WSCAV,
     { 0 }, //MT_YSCAV,
     { 0 }, //MT_WSKELBW,
-    {  22, 128, "SkelBow\\SklBw",  "SkelSd\\Skelt",   "Corpse Bow" },   // Q_SKELKING
-    {  23, 128, "SkelBow\\SklBw",  nullptr,           "Burning Dead" }, // Q_SKELKING
-    {  24, 128, "SkelBow\\SklBw",  "SkelSd\\Black",   "Horror" },       // Q_SKELKING
+    {  22, MOFILE_SKELBW, "SkelSd\\Skelt",   "Corpse Bow" },   // Q_SKELKING
+    {  23, MOFILE_SKELBW, nullptr,           "Burning Dead" }, // Q_SKELKING
+    {  24, MOFILE_SKELBW, "SkelSd\\Black",   "Horror" },       // Q_SKELKING
     { 0 }, //MT_WSKELSD,
     { 0 }, //MT_TSKELSD,
-    {  27, 128, "SkelSd\\SklSr",   nullptr,           "Burning Dead Captain" }, // Q_SKELKING
-    {  28, 128, "SkelSd\\SklSr",   "SkelSd\\Black",   "Horror Captain" },       // Q_BCHAMB
+    {  27, MOFILE_SKELSD, nullptr,           "Burning Dead Captain" }, // Q_SKELKING
+    {  28, MOFILE_SKELSD, "SkelSd\\Black",   "Horror Captain" },       // Q_BCHAMB
     { 0 }, //MT_NSNEAK,
     { 0 }, //MT_RSNEAK,
-    {  31, 128, "Sneak\\Sneak",    "Sneak\\Sneakv3",  "Unseen" },            // Q_BCHAMB
-    {  32, 128, "Sneak\\Sneak",    "Sneak\\Sneakv1",  "Illusion Weaver" },   // Q_BLIND
-    {  33, 128, "GoatMace\\Goat",  nullptr,           "Flesh Clan (Mace)" }, // Q_PWATER
+    {  31, MOFILE_SNEAK,  "Sneak\\Sneakv3",  "Unseen" },            // Q_BCHAMB
+    {  32, MOFILE_SNEAK,  "Sneak\\Sneakv1",  "Illusion Weaver" },   // Q_BLIND
+    {  33, MOFILE_GOATMC, nullptr,           "Flesh Clan (Mace)" }, // Q_PWATER
     { 0 }, //MT_BGOATMC,
     { 0 }, //MT_RGOATMC,
     { 0 }, //MT_GGOATMC,
@@ -258,16 +294,16 @@ const MonsterStruct MonstConvTbl[128] = {
     { 0 }, //MT_GBAT,
     { 0 }, //MT_NBAT,
     { 0 }, //MT_XBAT,
-    {  41, 128, "GoatBow\\GoatB",  nullptr,           "Flesh Clan (Bow)" }, // Q_PWATER
+    {  41, MOFILE_GOATBW, nullptr,           "Flesh Clan (Bow)" }, // Q_PWATER
     { 0 }, //MT_BGOATBW,
     { 0 }, //MT_RGOATBW,
-    {  44, 128, "GoatBow\\GoatB",  "GoatMace\\Gray",  "Night Clan" }, // Q_ANVIL
+    {  44, MOFILE_GOATBW, "GoatMace\\Gray",  "Night Clan" }, // Q_ANVIL
     { 0 }, //MT_NACID,
     { 0 }, //MT_RACID,
     { 0 }, //MT_BACID,
     { 0 }, //MT_XACID,
     { 0 }, //MT_SKING,
-    {  50, 128, "Fat\\Fat",        nullptr,           "Overlord" }, // Q_BANNER
+    {  50, MOFILE_FAT,    nullptr,           "Overlord" }, // Q_BANNER
     { 0 }, //MT_BFAT,
     { 0 }, //MT_XFAT,
     { 0 }, //MT_RFAT,
@@ -279,10 +315,10 @@ const MonsterStruct MonstConvTbl[128] = {
     { 0 }, //MT_YMAGMA,
     { 0 }, //MT_BMAGMA,
     { 0 }, //MT_WMAGMA,
-    {  62, 160, "Rhino\\Rhino",    nullptr,           "Horned Demon" }, // Q_BLOOD, Q_BCHAMB
+    {  62, MOFILE_RHINO,  nullptr,           "Horned Demon" }, // Q_BLOOD, Q_BCHAMB
     { 0 }, // MT_XRHINO, // Q_MAZE
     { 0 }, //MT_BRHINO,
-    {  65, 160, "Rhino\\Rhino",    "Rhino\\RhinoB",   "Obsidian Lord" }, // Q_ANVIL
+    {  65, MOFILE_RHINO,  "Rhino\\RhinoB",   "Obsidian Lord" }, // Q_ANVIL
     { 0 }, ///MT_BONEDMN,
     { 0 }, ///MT_REDDTH,
     { 0 }, ///MT_LTCHDMN,
@@ -315,24 +351,24 @@ const MonsterStruct MonstConvTbl[128] = {
     { 0 }, //MT_RSNAKE,
     { 0 }, //MT_GSNAKE,
     { 0 }, //MT_BSNAKE,
-    {  98, 160, "Black\\Black",    nullptr,           "Black Knight" }, // Q_DIABLO
+    {  98, MOFILE_BLACK,  nullptr,           "Black Knight" }, // Q_DIABLO
     { 0 }, //MT_RBLACK,
-    { 100, 160, "Black\\Black",    "Black\\BlkKntBT", "Steel Lord" },   // Q_WARLORD
-    { 101, 160, "Black\\Black",    "Black\\BlkKntBe", "Blood Knight" }, // Q_DIABLO
+    { 100, MOFILE_BLACK,  "Black\\BlkKntBT", "Steel Lord" },   // Q_WARLORD
+    { 101, MOFILE_BLACK,  "Black\\BlkKntBe", "Blood Knight" }, // Q_DIABLO
     { 0 }, ///MT_UNRAV,
     { 0 }, ///MT_HOLOWONE,
     { 0 }, ///MT_PAINMSTR,
     { 0 }, ///MT_REALWEAV,
     { 0 }, //MT_NSUCC,
     { 0 }, //MT_GSUCC,
-    { 108, 128, "Succ\\Scbs",      "Succ\\Succrw",    "Hell Spawn" }, // Q_BETRAYER
+    { 108, MOFILE_SUCC,   "Succ\\Succrw",    "Hell Spawn" }, // Q_BETRAYER
     { 0 }, //MT_BSUCC,
     { 0 }, //MT_NMAGE,
     { 0 }, //MT_GMAGE,
     { 0 }, //MT_XMAGE,
-    { 113, 128, "Mage\\Mage",      "Mage\\Cnselbk",   "Advocate" }, // Q_BETRAYER, Q_DIABLO
+    { 113, MOFILE_MAGE,   "Mage\\Cnselbk",   "Advocate" }, // Q_BETRAYER, Q_DIABLO
     { 0 },
-    { 115, 160, "Diablo\\Diablo",  nullptr,           "The Dark Lord" }, // Q_DIABLO
+    { 115, MOFILE_DIABLO, nullptr,           "The Dark Lord" }, // Q_DIABLO
     { 0 },
     { 0 }, //MT_GOLEM,
     { 0 },
@@ -345,6 +381,25 @@ const MonsterStruct MonstConvTbl[128] = {
     { 0 },
     { 0 },
     { 0 }, ///MT_BIGFALL,
+    // clang-format on
+};
+
+const MonFileData monfiledata[NUM_MOFILE_TYPES] = {
+    // clang-format off
+/*MOFILE_FALLSP*/  { "FalSpear\\Phall", 128 },
+/*MOFILE_SKELAX*/  { "SkelAxe\\SklAx",  128 },
+/*MOFILE_FALLSD*/  { "FalSword\\Fall",  128 },
+/*MOFILE_SKELBW*/  { "SkelBow\\SklBw",  128 },
+/*MOFILE_SKELSD*/  { "SkelSd\\SklSr",   128 },
+/*MOFILE_SNEAK*/   { "Sneak\\Sneak",    128 },
+/*MOFILE_GOATMC*/  { "GoatMace\\Goat",  128 },
+/*MOFILE_GOATBW*/  { "GoatBow\\GoatB",  128 },
+/*MOFILE_FAT*/     { "Fat\\Fat",        128 },
+/*MOFILE_RHINO*/   { "Rhino\\Rhino",    160 },
+/*MOFILE_BLACK*/   { "Black\\Black",    160 },
+/*MOFILE_SUCC*/    { "Succ\\Scbs",      128 },
+/*MOFILE_MAGE*/    { "Mage\\Mage",      128 },
+/*MOFILE_DIABLO*/  { "Diablo\\Diablo",  160 },
     // clang-format on
 };
 
@@ -911,25 +966,24 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
         int objectIndex = this->objects[dunCursorY][dunCursorX];
         if (objectIndex != 0) {
             const ObjectStruct *objStr = &ObjConvTbl[objectIndex];
-            D1Gfx *objGfx = nullptr;
-            bool found = false;
-            for (const std::pair<const ObjectStruct *, D1Gfx *> &obj : this->objectCache) {
-                if (obj.first == objStr) {
-                    objGfx = obj.second;
-                    found = true;
+            const ObjectCacheEntry *objEntry = nullptr;
+            for (const auto &obj : this->objectCache) {
+                if (obj.objStr == objStr) {
+                    objEntry = &obj;
                     break;
                 }
             }
-            if (!found) {
-                objGfx = this->loadObject(objectIndex);
+            if (objEntry == nullptr) {
+                this->loadObject(objectIndex);
+                objEntry = &this->objectCache.back();
             }
-            if (objGfx != nullptr) {
-                int frameNum = objStr->frameNum;
+            if (objEntry->objGfx != nullptr) {
+                int frameNum = objEntry->objStr->frameNum;
                 if (frameNum == 0) {
-                    frameNum = 1 + (params.time % objGfx->getFrameCount());
+                    frameNum = 1 + (params.time % objEntry->objGfx->getFrameCount());
                 }
-                QImage objectImage = objGfx->getFrameImage(frameNum - 1);
-                dungeon.drawImage(drawCursorX + ((int)backWidth - objStr->width) / 2, drawCursorY - objectImage.height(), objectImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+                QImage objectImage = objEntry->objGfx->getFrameImage(frameNum - 1);
+                dungeon.drawImage(drawCursorX + ((int)backWidth - objectImage.width()) / 2, drawCursorY - objectImage.height(), objectImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             } else {
                 QString text = tr("Object%1").arg(objectIndex);
                 QFontMetrics fm(dungeon.font());
@@ -956,23 +1010,23 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
         int monsterIndex = this->monsters[dunCursorY][dunCursorX];
         if (monsterIndex != 0) {
             const MonsterStruct *monStr = &MonstConvTbl[monsterIndex];
-            D1Gfx *monGfx = nullptr;
-            bool found = false;
+            const MonsterCacheEntry *monEntry = nullptr;
             for (const auto &mon : this->monsterCache) {
-                if (mon.first == monStr) {
-                    monGfx = mon.second.first;
-                    found = true;
+                if (mon.monStr == monStr) {
+                    monEntry = &mon;
                     break;
                 }
             }
-            if (!found) {
-                monGfx = this->loadMonster(monsterIndex);
+            if (monEntry == nullptr) {
+                this->loadMonster(monsterIndex);
+                monEntry = &this->monsterCache.back();
             }
-            if (monGfx != nullptr) {
-                std::pair<int, int> frameIndices = monGfx->getGroupFrameIndices(0);
+            if (monEntry->monGfx != nullptr) {
+                std::pair<int, int> frameIndices = monEntry->monGfx->getGroupFrameIndices(0);
                 int frameNum = 1 + (params.time % (frameIndices.second /*- frameIndices.first*/ + 1));
-                QImage monImage = monGfx->getFrameImage(frameNum - 1);
-                dungeon.drawImage(drawCursorX + ((int)backWidth - monStr->width) / 2, drawCursorY - monImage.height(), monImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+                monEntry->monGfx->setPalette(monEntry->monPal);
+                QImage monImage = monEntry->monGfx->getFrameImage(frameNum - 1);
+                dungeon.drawImage(drawCursorX + ((int)backWidth - monImage.width()) / 2, drawCursorY - monImage.height(), monImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             } else {
                 QString text = tr("Monster%1").arg(monsterIndex);
                 QFontMetrics fm(dungeon.font());
@@ -1177,12 +1231,12 @@ void D1Dun::setPal(D1Pal *pal)
         this->specGfx->setPalette(pal);
     }
     for (auto &entry : this->objectCache) {
-        entry.second->setPalette(pal);
+        entry.objGfx->setPalette(pal);
     }
     for (auto &entry : this->monsterCache) {
-        D1Trn *monTrn = entry.second.second;
+        D1Trn *monTrn = entry.monTrn;
         if (monTrn == nullptr) {
-            entry.second.first->setPalette(pal);
+            entry.monPal = pal;
         } else {
             monTrn->setPalette(pal);
             monTrn->refreshResultingPalette();
@@ -1499,68 +1553,84 @@ bool D1Dun::setAssetPath(QString path)
     return true;
 }
 
-D1Gfx *D1Dun::loadObject(int objectIndex)
+void D1Dun::loadObject(int objectIndex)
 {
-    std::pair<const ObjectStruct *, D1Gfx *> result = { &ObjConvTbl[objectIndex], nullptr };
-    if (!this->assetPath.isEmpty() && objectIndex < lengthof(ObjConvTbl)) {
-        D1Gfx *gfx = new D1Gfx();
-        gfx->setPalette(this->pal);
-        QString celFilePath = this->assetPath + "/Objects/" + result.first->path + ".CEL";
-        OpenAsParam params = OpenAsParam();
-        params.celWidth = result.first->width;
-        if (!D1Cel::load(*gfx, celFilePath, params)) {
-            // TODO: suppress errors? MemFree?
-            delete gfx;
-            gfx = nullptr;
-        }
-        result.second = gfx;
-    }
-    this->objectCache.push_back(result);
-    return result.second;
-}
-
-D1Gfx *D1Dun::loadMonster(int monsterIndex)
-{
-    std::pair<const MonsterStruct *, std::pair<D1Gfx *, D1Trn *>> result = { &MonstConvTbl[monsterIndex], std::pair<D1Gfx *, D1Trn *>(nullptr, nullptr) };
-    if (!this->assetPath.isEmpty() && monsterIndex < lengthof(MonstConvTbl)) {
-        D1Gfx *gfx = new D1Gfx();
-        gfx->setPalette(this->pal);
-        QString cl2FilePath = this->assetPath + "/Monsters/" + result.first->path + "N.CL2";
-        OpenAsParam params = OpenAsParam();
-        params.celWidth = result.first->width;
-        D1Trn *trn = nullptr;
-        if (!D1Cl2::load(*gfx, cl2FilePath, params)) {
-            // TODO: suppress errors? MemFree?
-            delete gfx;
-            gfx = nullptr;
-        } else if (result.first->trnPath != nullptr) {
-            trn = new D1Trn();
-            QString trnFilePath = this->assetPath + "/Monsters/" + result.first->trnPath + ".TRN";
-            if (!trn->load(trnFilePath, this->pal)) {
-                delete trn;
-                trn = nullptr;
+    ObjectCacheEntry result = { &ObjConvTbl[objectIndex], nullptr };
+    if (objectIndex < lengthof(ObjConvTbl) && result.objStr->type != 0) {
+        int objDataIndex = result.objStr->animType;
+        result.objGfx = this->objDataCache[objDataIndex];
+        if (result.objGfx == nullptr && !this->assetPath.isEmpty()) {
+            result.objGfx = new D1Gfx();
+            result.objGfx->setPalette(this->pal);
+            QString celFilePath = this->assetPath + "/Objects/" + objfiledata[objDataIndex].path + ".CEL";
+            OpenAsParam params = OpenAsParam();
+            params.celWidth = objfiledata[objDataIndex].width;
+            D1Cel::load(*result.objGfx, celFilePath, params);
+            if (result.objGfx->getFrameCount() < objfiledata[objDataIndex].numFrames) {
+                // TODO: suppress errors? MemFree?
+                delete result.objGfx;
+                result.objGfx = nullptr;
             } else {
-                gfx->setPalette(trn->getResultingPalette());
+                this->objDataCache[objDataIndex] = result.objGfx;
             }
         }
-        result.second.first = gfx;
-        result.second.second = trn;
+    }
+    this->objectCache.push_back(result);
+}
+
+void D1Dun::loadMonster(int monsterIndex)
+{
+    MonsterCacheEntry result = { &MonstConvTbl[monsterIndex], nullptr, this->pal, nullptr };
+    if (monsterIndex < lengthof(MonstConvTbl) && result.monStr->type != 0) {
+        int monDataIndex = result.monStr->animType;
+        result.monGfx = this->monDataCache[monDataIndex];
+        if (result.monGfx == nullptr && !this->assetPath.isEmpty()) {
+            result.monGfx = new D1Gfx();
+            // result.monGfx->setPalette(result.monPal);
+            QString cl2FilePath = this->assetPath + "/Monsters/" + monfiledata[monDataIndex].path + "N.CL2";
+            OpenAsParam params = OpenAsParam();
+            params.celWidth = monfiledata[monDataIndex].width;
+            D1Cl2::load(*result.monGfx, cl2FilePath, params);
+            if (result.monGfx->getFrameCount() == 0) {
+                // TODO: suppress errors? MemFree?
+                delete result.monGfx;
+                result.monGfx = nullptr;
+            } else {
+                this->monDataCache[monDataIndex] = result.monGfx;
+            }
+        }
+        if (result.monGfx != nullptr && result.monStr->trnPath != nullptr && !this->assetPath.isEmpty()) {
+            result.monTrn = new D1Trn();
+            QString trnFilePath = this->assetPath + "/Monsters/" + result.monStr->trnPath + ".TRN";
+            if (!result.monTrn->load(trnFilePath, result.monPal)) {
+                // TODO: suppress errors? MemFree?
+                delete result.monTrn;
+                result.monTrn = nullptr;
+            } else {
+                result.monPal = result.monTrn->getResultingPalette();
+            }
+        }
     }
     this->monsterCache.push_back(result);
-    return result.second.first;
 }
 
 void D1Dun::clearAssets()
 {
-    for (auto &entry : this->objectCache) {
-        delete entry.second;
-    }
     this->objectCache.clear();
     for (auto &entry : this->monsterCache) {
-        delete entry.second.first;
-        delete entry.second.second;
+        delete entry.monTrn;
     }
     this->monsterCache.clear();
+    for (int i = 0; i < lengthof(objDataCache); i++) {
+        // TODO: MemFree?
+        delete objDataCache[i];
+        objDataCache[i] = nullptr;
+    }
+    for (int i = 0; i < lengthof(monDataCache); i++) {
+        // TODO: MemFree?
+        delete monDataCache[i];
+        monDataCache[i] = nullptr;
+    }
 }
 
 void D1Dun::updateSubtiles(int tilePosX, int tilePosY, int tileRef)
