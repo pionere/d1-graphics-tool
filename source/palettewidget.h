@@ -133,7 +133,7 @@ public:
 
     void modify();
     void refresh();
-    void show(); // override;
+    // void show(); // override;
 
 signals:
     void pathSelected(QString path);

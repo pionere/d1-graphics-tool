@@ -809,12 +809,12 @@ void PaletteWidget::refresh()
     emit refreshed();
 }
 
-void PaletteWidget::show()
+/*void PaletteWidget::show()
 {
     this->refresh();
 
     QWidget::show();
-}
+}*/
 
 void PaletteWidget::on_newPushButtonClicked()
 {

@@ -890,7 +890,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     bool middleText = false;
     bool bottomText = false;
     // draw the background
-    if (!params.showRooms || this->transvals[dunCursorY][dunCursorX] == 0) {
+    if (!params.showRooms) {
         dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backHeight - CELL_BORDER, backImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
     } else {
         QColor color = this->pal->getColor(((unsigned)this->transvals[dunCursorY][dunCursorX]) % D1PAL_COLORS);
