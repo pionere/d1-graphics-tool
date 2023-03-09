@@ -2616,6 +2616,15 @@ void LevelCelView::removeObjects()
     }
 }
 
+void LevelCelView::removeRooms()
+{
+    bool change = this->dun->removeRooms();
+    if (change) {
+        // update the view - done by the caller
+        // this->displayFrame();
+    }
+}
+
 static bool dimensionMatch(D1Dun *dun1, D1Dun *dun2)
 {
     if (dun1->getWidth() == dun2->getWidth() && dun1->getHeight() == dun2->getHeight()) {
@@ -2651,6 +2660,16 @@ void LevelCelView::loadObjects(D1Dun *srcDun)
         return;
     }
     this->dun->loadObjects(srcDun);
+    // update the view - done by the caller
+    // this->displayFrame();
+}
+
+void LevelCelView::loadRooms(D1Dun *srcDun)
+{
+    if (!dimensionMatch(this->dun, srcDun)) {
+        return;
+    }
+    this->dun->loadRooms(srcDun);
     // update the view - done by the caller
     // this->displayFrame();
 }

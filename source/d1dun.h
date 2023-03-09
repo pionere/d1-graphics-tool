@@ -167,9 +167,11 @@ public:
     bool removeItems();
     bool removeMonsters();
     bool removeObjects();
+    bool removeRooms();
     void loadItems(D1Dun *srcDun);
     void loadMonsters(D1Dun *srcDun);
     void loadObjects(D1Dun *srcDun);
+    void loadRooms(D1Dun *srcDun);
 
     bool resetTiles();
     bool resetSubtiles();
@@ -179,8 +181,8 @@ public:
 private:
     void drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
     void initVectors(int width, int height);
-    D1Gfx *loadObject(int objectIndex);
-    MonsterCacheEntry *loadMonster(int monsterIndex);
+    void loadObject(int objectIndex);
+    void loadMonster(int monsterIndex);
     void clearAssets();
     void updateSubtiles(int tilePosX, int tilePosY, int tileRef);
     bool changeTileAt(int tilePosX, int tilePosY, int tileRef);

@@ -894,6 +894,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
         dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backHeight - CELL_BORDER, backImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
     } else {
         QColor color = this->pal->getColor(((unsigned)this->transvals[dunCursorY][dunCursorX]) % D1PAL_COLORS);
+        QImage *destImage = (QImage *)dungeon.device();
         for (int y = backHeight - CELL_BORDER - 1; y >= 0; y--) {
             for (unsigned x = CELL_BORDER; x < backWidth - CELL_BORDER; x++) {
                 if (backImage.pixelColor(x, y).alpha() == 0) {
@@ -980,7 +981,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             const ObjectStruct *objStr = &ObjConvTbl[objectIndex];
             const ObjectCacheEntry *objEntry = nullptr;
             for (const auto &obj : this->objectCache) {
-                if (obj.first == objStr) {
+                if (obj.objStr == objStr) {
                     objEntry = &obj;
                     break;
                 }
@@ -994,8 +995,8 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 if (frameNum == 0) {
                     frameNum = 1 + (params.time % objEntry->objGfx->getFrameCount());
                 }
-                QImage objectImage = objGfx->getFrameImage(frameNum - 1);
-                dungeon.drawImage(drawCursorX + ((int)backWidth - objEntry->objStr->width) / 2, drawCursorY - objectImage.height(), objectImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+                QImage objectImage = objEntry->objGfx->getFrameImage(frameNum - 1);
+                dungeon.drawImage(drawCursorX + ((int)backWidth - objectImage.width()) / 2, drawCursorY - objectImage.height(), objectImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             } else {
                 QString text = tr("Object%1").arg(objectIndex);
                 QFontMetrics fm(dungeon.font());
@@ -1038,7 +1039,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 int frameNum = 1 + (params.time % (frameIndices.second /*- frameIndices.first*/ + 1));
                 monEntry->monGfx->setPalette(monEntry->monPal);
                 QImage monImage = monEntry->monGfx->getFrameImage(frameNum - 1);
-                dungeon.drawImage(drawCursorX + ((int)backWidth - monEntry->monStr->width) / 2, drawCursorY - monImage.height(), monImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+                dungeon.drawImage(drawCursorX + ((int)backWidth - monImage.width()) / 2, drawCursorY - monImage.height(), monImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             } else {
                 QString text = tr("Monster%1").arg(monsterIndex);
                 QFontMetrics fm(dungeon.font());
@@ -1243,12 +1244,12 @@ void D1Dun::setPal(D1Pal *pal)
         this->specGfx->setPalette(pal);
     }
     for (auto &entry : this->objectCache) {
-        entry.second->setPalette(pal);
+        entry.objGfx->setPalette(pal);
     }
     for (auto &entry : this->monsterCache) {
-        D1Trn *monTrn = entry.second.second;
+        D1Trn *monTrn = entry.monTrn;
         if (monTrn == nullptr) {
-            entry.second.first->setPalette(pal);
+            entry.monPal = pal;
         } else {
             monTrn->setPalette(pal);
             monTrn->refreshResultingPalette();
@@ -1565,7 +1566,7 @@ bool D1Dun::setAssetPath(QString path)
     return true;
 }
 
-D1Gfx *D1Dun::loadObject(int objectIndex)
+void D1Dun::loadObject(int objectIndex)
 {
     ObjectCacheEntry result = { &ObjConvTbl[objectIndex], nullptr };
     if (objectIndex < lengthof(ObjConvTbl)) {
@@ -1588,7 +1589,6 @@ D1Gfx *D1Dun::loadObject(int objectIndex)
         }
     }
     this->objectCache.push_back(result);
-    return result.objGfx;
 }
 
 void D1Dun::loadMonster(int monsterIndex)
@@ -1902,6 +1902,21 @@ bool D1Dun::removeObjects()
     return result;
 }
 
+bool D1Dun::removeRooms()
+{
+    bool result = false;
+    for (std::vector<int> &roomRow : this->transvals) {
+        for (int &roomIndex : roomRow) {
+            if (roomIndex != 0) {
+                roomIndex = 0;
+                result = true;
+                this->modified = true;
+            }
+        }
+    }
+    return result;
+}
+
 void D1Dun::loadItems(D1Dun *srcDun)
 {
     for (int y = 0; y < this->height; y++) {
@@ -1947,6 +1962,18 @@ void D1Dun::loadObjects(D1Dun *srcDun)
                     dProgressWarn() << tr("'%1' object at %2:%3 was replaced by '%4'.").arg(ObjConvTbl[currObjectIndex].name).arg(x).arg(y).arg(ObjConvTbl[newObjectIndex].name);
                 }
                 this->objects[y][x] = newObjectIndex;
+                this->modified = true;
+            }
+        }
+    }
+}
+
+void D1Dun::loadRooms(D1Dun *srcDun)
+{
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            if (this->transvals[y][x] != srcDun->transvals[y][x]) {
+                this->transvals[y][x] = srcDun->transvals[y][x];
                 this->modified = true;
             }
         }
