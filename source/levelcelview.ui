@@ -1203,12 +1203,12 @@
            </widget>
           </item>
           <item row="0" column="7">
-           <widget class="LineEditWidget" name="dungeonTransvalLineEdit">
+           <widget class="LineEditWidget" name="dungeonRoomLineEdit">
             <property name="charWidth">
              <number>5</number>
             </property>
             <property name="toolTip">
-             <string>Current transval of the selected position</string>
+             <string>Room-ID of the selected position</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
