@@ -130,6 +130,7 @@ public:
     void refreshIndexLineEdit();
     void refreshTranslationIndexLineEdit();
 
+    void update();
     void modify();
     void refresh();
 
