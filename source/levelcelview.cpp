@@ -2682,6 +2682,7 @@ void LevelCelView::displayFrame()
 
         DunDrawParam params;
         params.tileState = this->ui->showTilesCheckBox->checkState();
+        params.showRooms = this->ui->showRoomsCheckBox->isChecked();
         params.showItems = this->ui->showItemsCheckBox->isChecked();
         params.showMonsters = this->ui->showMonstersCheckBox->isChecked();
         params.showObjects = this->ui->showObjectsCheckBox->isChecked();

@@ -793,6 +793,10 @@ void PaletteWidget::modify()
 
 void PaletteWidget::refresh()
 {
+    if (!this->isVisible()) {
+        return;
+    }
+
     if (this->isTrn)
         this->trn->refreshResultingPalette();
 
@@ -803,6 +807,13 @@ void PaletteWidget::refresh()
     this->refreshTranslationIndexLineEdit();
 
     emit refreshed();
+}
+
+void PaletteWidget::show()
+{
+    this->refresh();
+
+    QWidget::show();
 }
 
 void PaletteWidget::on_newPushButtonClicked()
