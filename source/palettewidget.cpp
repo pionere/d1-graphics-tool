@@ -490,9 +490,6 @@ void PaletteWidget::changeColorSelection(int colorIndex)
 {
     this->selectedLastColorIndex = colorIndex;
 
-    /*this->refreshIndexLineEdit();
-
-    this->displayColors();*/
     this->update();
 }
 
@@ -796,7 +793,7 @@ void PaletteWidget::modify()
 
 void PaletteWidget::update()
 {
-    /*if (!this->isVisible()) {
+    /*if (!this->isVisible() && !refreshing) {
         return;
     }*/
     this->displayColors();
