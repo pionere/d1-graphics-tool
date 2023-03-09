@@ -109,6 +109,7 @@ typedef struct MonsterCacheEntry {
 class DunDrawParam {
 public:
     Qt::CheckState tileState;
+    bool showRooms;
     bool showItems;
     bool showMonsters;
     bool showObjects;
@@ -166,9 +167,11 @@ public:
     bool removeItems();
     bool removeMonsters();
     bool removeObjects();
+    bool removeRooms();
     void loadItems(D1Dun *srcDun);
     void loadMonsters(D1Dun *srcDun);
     void loadObjects(D1Dun *srcDun);
+    void loadRooms(D1Dun *srcDun);
 
     bool resetTiles();
     bool resetSubtiles();

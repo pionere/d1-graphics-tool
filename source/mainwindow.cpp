@@ -1835,6 +1835,39 @@ void MainWindow::on_actionLoadObjects_Dungeon_triggered()
     ProgressDialog::done();
 }
 
+void MainWindow::on_actionRemoveRooms_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->removeRooms();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionLoadRooms_Dungeon_triggered()
+{
+    QString dunFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Source of the rooms"), "DUN Files (*.dun *.DUN)");
+
+    if (dunFilePath.isEmpty()) {
+        return;
+    }
+    D1Dun srcDun = D1Dun();
+    OpenAsParam params = OpenAsParam();
+    params.dunFilePath = dunFilePath;
+    if (!srcDun.load(dunFilePath, this->tileset->til, params)) {
+        this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
+        return;
+    }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->loadRooms(&srcDun);
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
 void MainWindow::on_actionNew_PAL_triggered()
 {
     QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, tr("New Palette File"), tr("PAL Files (*.pal *.PAL)"));

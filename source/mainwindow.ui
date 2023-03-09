@@ -143,6 +143,8 @@
     <addaction name="actionLoadMonsters_Dungeon"/>
     <addaction name="actionRemoveObjects_Dungeon"/>
     <addaction name="actionLoadObjects_Dungeon"/>
+    <addaction name="actionRemoveRooms_Dungeon"/>
+    <addaction name="actionLoadRooms_Dungeon"/>
    </widget>
    <widget class="QMenu" name="menuPalette">
     <property name="title">
@@ -580,6 +582,22 @@
    </property>
    <property name="toolTip">
     <string>Load objects from another dungeon</string>
+   </property>
+  </action>
+  <action name="actionRemoveRooms_Dungeon">
+   <property name="text">
+    <string>Remove Rooms</string>
+   </property>
+   <property name="toolTip">
+    <string>Remove every room from the dungeon</string>
+   </property>
+  </action>
+  <action name="actionLoadRooms_Dungeon">
+   <property name="text">
+    <string>Load Rooms</string>
+   </property>
+   <property name="toolTip">
+    <string>Load rooms from another dungeon</string>
    </property>
   </action>
   <action name="actionNew_PAL">

@@ -90,9 +90,11 @@ public:
     void removeItems();
     void removeMonsters();
     void removeObjects();
+    void removeRooms();
     void loadItems(D1Dun *srcDun);
     void loadMonsters(D1Dun *srcDun);
     void loadObjects(D1Dun *srcDun);
+    void loadRooms(D1Dun *srcDun);
 
     void upscale(const UpscaleParam &params);
 
@@ -197,24 +199,26 @@ private slots:
     void on_dunHeightEdit_returnPressed();
     void on_dunHeightEdit_escPressed();
 
+    void on_showTilesCheckBox_clicked();
+    void on_showRoomsCheckBox_clicked();
+    void on_showItemsCheckBox_clicked();
+    void on_showMonstersCheckBox_clicked();
+    void on_showObjectsCheckBox_clicked();
+
     void on_levelTypeComboBox_activated(int index);
     void on_dungeonDefaultTileLineEdit_returnPressed();
     void on_dungeonDefaultTileLineEdit_escPressed();
-    void on_showTilesCheckBox_clicked();
     void on_dungeonTileLineEdit_returnPressed();
     void on_dungeonTileLineEdit_escPressed();
     void on_assetLoadPushButton_clicked();
     void on_assetClearPushButton_clicked();
     void on_dungeonSubtileLineEdit_returnPressed();
     void on_dungeonSubtileLineEdit_escPressed();
-    void on_showItemsCheckBox_clicked();
     void on_dungeonItemLineEdit_returnPressed();
     void on_dungeonItemLineEdit_escPressed();
-    void on_showMonstersCheckBox_clicked();
     void on_dungeonMonsterComboBox_activated(int index);
     void on_dungeonMonsterLineEdit_returnPressed();
     void on_dungeonMonsterLineEdit_escPressed();
-    void on_showObjectsCheckBox_clicked();
     void on_dungeonObjectComboBox_activated(int index);
     void on_dungeonObjectLineEdit_returnPressed();
     void on_dungeonObjectLineEdit_escPressed();

@@ -1092,6 +1092,20 @@
          </widget>
         </item>
         <item>
+         <widget class="QCheckBox" name="showRoomsCheckBox">
+          <property name="toolTip">
+           <string>Show rooms</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel">
+          <property name="text">
+           <string notr="true">  </string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QCheckBox" name="showObjectsCheckBox">
           <property name="toolTip">
            <string>Show objects</string>
@@ -1194,7 +1208,7 @@
              <number>5</number>
             </property>
             <property name="toolTip">
-             <string>Current transval of the selected position</string>
+             <string>Room-ID of the selected position</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>

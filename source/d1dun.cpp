@@ -554,7 +554,7 @@ bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
                     }
                 }
             } else {
-                dProgressWarn() << tr("TransVals are not defined in the DUN file.");
+                dProgressWarn() << tr("Rooms are not defined in the DUN file.");
                 changed = true;
             }
 
@@ -791,7 +791,7 @@ bool D1Dun::save(const SaveAsParam &params)
                     dProgressWarn() << tr("Defined object at %1:%2 is not saved in this format (RDUN).").arg(x).arg(y);
                 }
                 if (this->transvals[y][x] != 0) {
-                    dProgressWarn() << tr("Defined transval at %1:%2 is not saved in this format (RDUN).").arg(x).arg(y);
+                    dProgressWarn() << tr("Defined room at %1:%2 is not saved in this format (RDUN).").arg(x).arg(y);
                 }
             }
         }
@@ -885,12 +885,25 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
 {
     const unsigned backWidth = backImage.width() - 2 * CELL_BORDER;
     const unsigned backHeight = backImage.height() - 2 * CELL_BORDER;
-    // draw the background
-    dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backHeight - CELL_BORDER, backImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
     unsigned cellCenterX = drawCursorX + backWidth / 2;
     unsigned cellCenterY = drawCursorY - backHeight / 2;
     bool middleText = false;
     bool bottomText = false;
+    // draw the background
+    if (!params.showRooms) {
+        dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backHeight - CELL_BORDER, backImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+    } else {
+        QColor color = this->pal->getColor(((unsigned)this->transvals[dunCursorY][dunCursorX]) % D1PAL_COLORS);
+        QImage *destImage = (QImage *)dungeon.device();
+        for (int y = backHeight - CELL_BORDER - 1; y >= 0; y--) {
+            for (unsigned x = CELL_BORDER; x < backWidth - CELL_BORDER; x++) {
+                if (backImage.pixelColor(x, y).alpha() == 0) {
+                    continue;
+                }
+                destImage->setPixelColor(drawCursorX + x - CELL_BORDER, drawCursorY - (y + 1), color);
+            }
+        }
+    }
     if (params.tileState != Qt::Unchecked) {
         // draw the subtile
         int tileRef = this->tiles[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
@@ -1889,6 +1902,21 @@ bool D1Dun::removeObjects()
     return result;
 }
 
+bool D1Dun::removeRooms()
+{
+    bool result = false;
+    for (std::vector<int> &roomRow : this->transvals) {
+        for (int &roomIndex : roomRow) {
+            if (roomIndex != 0) {
+                roomIndex = 0;
+                result = true;
+                this->modified = true;
+            }
+        }
+    }
+    return result;
+}
+
 void D1Dun::loadItems(D1Dun *srcDun)
 {
     for (int y = 0; y < this->height; y++) {
@@ -1934,6 +1962,18 @@ void D1Dun::loadObjects(D1Dun *srcDun)
                     dProgressWarn() << tr("'%1' object at %2:%3 was replaced by '%4'.").arg(ObjConvTbl[currObjectIndex].name).arg(x).arg(y).arg(ObjConvTbl[newObjectIndex].name);
                 }
                 this->objects[y][x] = newObjectIndex;
+                this->modified = true;
+            }
+        }
+    }
+}
+
+void D1Dun::loadRooms(D1Dun *srcDun)
+{
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            if (this->transvals[y][x] != srcDun->transvals[y][x]) {
+                this->transvals[y][x] = srcDun->transvals[y][x];
                 this->modified = true;
             }
         }
