@@ -1569,7 +1569,7 @@ bool D1Dun::setAssetPath(QString path)
 void D1Dun::loadObject(int objectIndex)
 {
     ObjectCacheEntry result = { &ObjConvTbl[objectIndex], nullptr };
-    if (objectIndex < lengthof(ObjConvTbl)) {
+    if (objectIndex < lengthof(ObjConvTbl) && result.objStr->type != 0) {
         int objDataIndex = result.objStr->animType;
         result.objGfx = this->objDataCache[objDataIndex];
         if (result.objGfx == nullptr && !this->assetPath.isEmpty()) {
@@ -1594,7 +1594,7 @@ void D1Dun::loadObject(int objectIndex)
 void D1Dun::loadMonster(int monsterIndex)
 {
     MonsterCacheEntry result = { &MonstConvTbl[monsterIndex], nullptr, this->pal, nullptr };
-    if (monsterIndex < lengthof(MonstConvTbl)) {
+    if (monsterIndex < lengthof(MonstConvTbl) && result.monStr->type != 0) {
         int monDataIndex = result.monStr->animType;
         result.monGfx = this->monDataCache[monDataIndex];
         if (result.monGfx == nullptr && !this->assetPath.isEmpty()) {
