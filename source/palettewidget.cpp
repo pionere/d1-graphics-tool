@@ -82,8 +82,8 @@ EditTranslationCommand::EditTranslationCommand(D1Trn *t, quint8 startColorIndex,
     : QUndoCommand(nullptr)
     , trn(t)
 {
-    for (int i = startColorIndex; i <= endColorIndex; i++) {
-        modTranslations.push_back(std::pair<quint8, quint8>(i, nt == nullptr ? i : nt[i - startColorIndex]));
+    for (quint8 i = startColorIndex; i <= endColorIndex; i++) {
+        this->modTranslations.push_back(std::pair<quint8, quint8>(i, nt == nullptr ? i : nt[i - startColorIndex]));
     }
 }
 
@@ -101,9 +101,9 @@ void EditTranslationCommand::undo()
         return;
     }
 
-    for (std::pair<quint8, quint8> & mod : modTranslations) {
+    for (std::pair<quint8, quint8> &mod : this->modTranslations) {
         quint8 trnValue = this->trn->getTranslation(mod.first);
-        this->trn->setTranslation(i, mod.second);
+        this->trn->setTranslation(mod.first, mod.second);
         mod.second = trnValue;
     }
 
@@ -796,9 +796,9 @@ void PaletteWidget::modify()
 
 void PaletteWidget::update()
 {
-    if (!this->isVisible()) {
+    /*if (!this->isVisible()) {
         return;
-    }
+    }*/
     this->displayColors();
     // this->refreshPathComboBox();
     this->refreshColorLineEdit();
@@ -814,13 +814,6 @@ void PaletteWidget::refresh()
     this->update();
 
     emit refreshed();
-}
-
-void PaletteWidget::show()
-{
-    this->update();
-
-    QWidget::show();
 }
 
 void PaletteWidget::on_newPushButtonClicked()
@@ -1122,7 +1115,7 @@ void PaletteWidget::on_monsterTrnPushButton_clicked()
         }
     }
     if (!modTranslations.empty()) {
-        EditTranslationCommand *command = new EditTranslationCommand(this->trn, &modTranslations);
+        EditTranslationCommand *command = new EditTranslationCommand(this->trn, modTranslations);
         QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modify);
 
         this->undoStack->push(command);
