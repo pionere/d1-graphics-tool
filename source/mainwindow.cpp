@@ -951,7 +951,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->levelCelView->initialize(this->pal, this->tileset, this->dun, this->bottomPanelHidden);
 
         // Refresh palette widgets when frame, subtile of tile is changed
-        QObject::connect(this->levelCelView, &LevelCelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
+        QObject::connect(this->levelCelView, &LevelCelView::frameRefreshed, this->palWidget, &PaletteWidget::update);
 
         // Refresh palette widgets when the palette is changed (loading a PCX file)
         QObject::connect(this->levelCelView, &LevelCelView::palModified, this->palWidget, &PaletteWidget::refresh);
@@ -961,7 +961,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->celView->initialize(this->pal, this->gfx, this->bottomPanelHidden);
 
         // Refresh palette widgets when frame is changed
-        QObject::connect(this->celView, &CelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
+        QObject::connect(this->celView, &CelView::frameRefreshed, this->palWidget, &PaletteWidget::update);
 
         // Refresh palette widgets when the palette is changed (loading a PCX file)
         QObject::connect(this->celView, &CelView::palModified, this->palWidget, &PaletteWidget::refresh);

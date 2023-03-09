@@ -361,7 +361,7 @@ void PaletteWidget::selectColor(const D1GfxPixel &pixel)
     this->selectedFirstColorIndex = index;
     this->selectedLastColorIndex = index;
 
-    this->refresh();
+    this->update();
 }
 
 void PaletteWidget::checkTranslationsSelection(const std::vector<quint8> &indexes)
@@ -488,9 +488,10 @@ void PaletteWidget::changeColorSelection(int colorIndex)
 {
     this->selectedLastColorIndex = colorIndex;
 
-    this->refreshIndexLineEdit();
+    /*this->refreshIndexLineEdit();
 
-    this->displayColors();
+    this->displayColors();*/
+    this->update();
 }
 
 void PaletteWidget::finishColorSelection()
@@ -506,7 +507,7 @@ void PaletteWidget::finishColorSelection()
         std::swap(this->selectedFirstColorIndex, this->selectedLastColorIndex);
     }
 
-    this->refresh();
+    this->update();
 
     // emit selected colors
     std::vector<quint8> indexes;
@@ -663,7 +664,7 @@ void PaletteWidget::startTrnColorPicking(bool single)
     this->ui->graphicsView->setStyleSheet("color: rgb(255, 0, 0);");
     this->ui->informationLabel->setText(tr("<- Select color(s)", "", single ? 1 : 2));
     this->pickingTranslationColor = true;
-    this->displayColors();
+    // this->displayColors();
 }
 
 void PaletteWidget::stopTrnColorPicking()
@@ -671,7 +672,7 @@ void PaletteWidget::stopTrnColorPicking()
     this->ui->graphicsView->setStyleSheet("color: rgb(255, 255, 255);");
     this->ui->informationLabel->clear();
     this->pickingTranslationColor = false;
-    this->displayColors();
+    // this->displayColors();
 }
 
 void PaletteWidget::updatePathComboBoxOptions(const QList<QString> &options, const QString &selectedOption)
@@ -791,30 +792,34 @@ void PaletteWidget::modify()
     dMainWindow().colorModified();
 }
 
-void PaletteWidget::refresh()
+void PaletteWidget::update()
 {
     if (!this->isVisible()) {
         return;
     }
-
-    if (this->isTrn)
-        this->trn->refreshResultingPalette();
-
     this->displayColors();
     // this->refreshPathComboBox();
     this->refreshColorLineEdit();
     this->refreshIndexLineEdit();
     this->refreshTranslationIndexLineEdit();
+}
+
+void PaletteWidget::refresh()
+{
+    if (this->isTrn)
+        this->trn->refreshResultingPalette();
+
+    this->update();
 
     emit refreshed();
 }
 
-/*void PaletteWidget::show()
+void PaletteWidget::show()
 {
-    this->refresh();
+    this->update();
 
     QWidget::show();
-}*/
+}
 
 void PaletteWidget::on_newPushButtonClicked()
 {

@@ -131,9 +131,10 @@ public:
     void refreshIndexLineEdit();
     void refreshTranslationIndexLineEdit();
 
+    void update();
     void modify();
     void refresh();
-    // void show(); // override;
+    void show(); // override;
 
 signals:
     void pathSelected(QString path);
