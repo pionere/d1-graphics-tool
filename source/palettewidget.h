@@ -54,6 +54,7 @@ class EditTranslationCommand : public QObject, public QUndoCommand {
 
 public:
     explicit EditTranslationCommand(D1Trn *trn, quint8 startColorIndex, quint8 endColorIndex, const std::vector<quint8> *newTranslations);
+    explicit EditTranslationCommand(D1Trn *trn, const std::vector<std::pair<quint8, quint8>> &modTranslations);
     ~EditTranslationCommand() = default;
 
     void undo() override;
@@ -64,9 +65,7 @@ signals:
 
 private:
     QPointer<D1Trn> trn;
-    quint8 startColorIndex;
-    quint8 endColorIndex;
-    std::vector<quint8> modTranslations;
+    std::vector<std::pair<quint8, quint8>> modTranslations;
 };
 
 namespace Ui {

@@ -78,18 +78,20 @@ void EditPaletteCommand::redo()
     this->undo();
 }
 
-EditTranslationCommand::EditTranslationCommand(D1Trn *t, quint8 sci, quint8 eci, const std::vector<quint8> *nt)
+EditTranslationCommand::EditTranslationCommand(D1Trn *t, quint8 startColorIndex, quint8 endColorIndex, const std::vector<quint8> *nt)
     : QUndoCommand(nullptr)
     , trn(t)
-    , startColorIndex(sci)
-    , endColorIndex(eci)
 {
-    if (nt == nullptr) {
-        for (int i = startColorIndex; i <= endColorIndex; i++)
-            modTranslations.push_back(i);
-    } else {
-        this->modTranslations = *nt;
+    for (quint8 i = startColorIndex; i <= endColorIndex; i++) {
+        this->modTranslations.push_back(std::pair<quint8, quint8>(i, nt == nullptr ? i : (*nt)[i - startColorIndex]));
     }
+}
+
+EditTranslationCommand::EditTranslationCommand(D1Trn *t, const std::vector<std::pair<quint8, quint8>> &mt)
+    : QUndoCommand(nullptr)
+    , trn(t)
+    , modTranslations(mt)
+{
 }
 
 void EditTranslationCommand::undo()
@@ -99,10 +101,10 @@ void EditTranslationCommand::undo()
         return;
     }
 
-    for (int i = startColorIndex; i <= endColorIndex; i++) {
-        quint8 trnValue = this->trn->getTranslation(i);
-        this->trn->setTranslation(i, this->modTranslations[i - startColorIndex]);
-        this->modTranslations[i - startColorIndex] = trnValue;
+    for (std::pair<quint8, quint8> &mod : this->modTranslations) {
+        quint8 trnValue = this->trn->getTranslation(mod.first);
+        this->trn->setTranslation(mod.first, mod.second);
+        mod.second = trnValue;
     }
 
     emit this->modified();
@@ -1097,17 +1099,17 @@ void PaletteWidget::on_monsterTrnPushButton_clicked()
 {
     this->initStopColorPicking();
 
-    bool trnModified = false;
-
+    std::vector<std::pair<quint8, quint8>> modTranslations;
     for (int i = 0; i < D1PAL_COLORS; i++) {
         if (this->trn->getTranslation(i) == 0xFF) {
-            this->trn->setTranslation(i, 0);
-            trnModified = true;
+            modTranslations.push_back(std::pair<quint8, quint8>(i, 0));
         }
     }
+    if (!modTranslations.empty()) {
+        EditTranslationCommand *command = new EditTranslationCommand(this->trn, modTranslations);
+        QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modify);
 
-    if (trnModified) {
-        this->modify();
+        this->undoStack->push(command);
     }
 }
 
