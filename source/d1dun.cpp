@@ -1624,6 +1624,14 @@ void D1Dun::loadMonster(int monsterIndex)
                 delete result.monTrn;
                 result.monTrn = nullptr;
             } else {
+                // apply Monster TRN
+                for (int i = 0; i < D1PAL_COLORS; i++) {
+                    if (result.monTrn->getTranslation(i) == 0xFF) {
+                        result.monTrn->setTranslation(i, 0);
+                    }
+                }
+                result.monTrn->refreshResultingPalette();
+                // set palette
                 result.monPal = result.monTrn->getResultingPalette();
             }
         }
