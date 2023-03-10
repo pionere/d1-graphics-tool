@@ -714,6 +714,10 @@ bool D1Dun::save(const SaveAsParam &params)
         }
     }
 
+    if (filePath.isEmpty()) {
+        return false;
+    }
+
     D1DUN_TYPE type = filePath.toLower().endsWith(".dun") ? D1DUN_TYPE::NORMAL : D1DUN_TYPE::RAW;
     // validate data
     if (type == D1DUN_TYPE::NORMAL) {
