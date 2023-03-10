@@ -885,6 +885,24 @@ bool D1Dun::save(const SaveAsParam &params)
 
 #define CELL_BORDER 0
 
+void D1Dun::drawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, unsigned height, const QColor &color)
+{
+    unsigned len = 0;
+    unsigned y = 1;
+    for (; y <= height / 2; y++) {
+        len += 2;
+        for (unsigned x = width / 2 - len - CELL_BORDER; x < width / 2 + len + CELL_BORDER; x++) {
+            image.setPixelColor(sx + x, sy + y, color);
+        }
+    }
+    for (; y < height; y++) {
+        len -= 2;
+        for (unsigned x = width / 2 - len - CELL_BORDER; x < width / 2 + len + CELL_BORDER; x++) {
+            image.setPixelColor(sx + x, sy + y, color);
+        }
+    }
+}
+
 void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
 {
     const unsigned backWidth = backImage.width() - 2 * CELL_BORDER;
@@ -894,18 +912,13 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     bool middleText = false;
     bool bottomText = false;
     // draw the background
-    if (!params.showRooms) {
-        dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backHeight - CELL_BORDER, backImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
-    } else {
-        QColor color = this->pal->getColor(((unsigned)this->rooms[dunCursorY][dunCursorX]) % D1PAL_COLORS);
-        QImage *destImage = (QImage *)dungeon.device();
-        for (int y = backHeight - CELL_BORDER - 1; y >= 0; y--) {
-            for (unsigned x = CELL_BORDER; x < backWidth - CELL_BORDER; x++) {
-                if (backImage.pixelColor(x, y).alpha() == 0) {
-                    continue;
-                }
-                destImage->setPixelColor(drawCursorX + x - CELL_BORDER, drawCursorY - (y + 1), color);
-            }
+    dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backHeight - CELL_BORDER, backImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+    if (params.showRooms) {
+        unsigned roomIndex = this->rooms[dunCursorY][dunCursorX];
+        if (roomIndex != 0) {
+            QColor color = this->pal->getColor(roomIndex % D1PAL_COLORS);
+            QImage *destImage = (QImage *)dungeon.device();
+            D1Dun::drawDiamond(*destImage, drawCursorX, drawCursorY - backHeight, backWidth, backHeight, color);
         }
     }
     if (params.tileState != Qt::Unchecked) {
@@ -1117,26 +1130,13 @@ QImage D1Dun::getImage(const DunDrawParam &params)
     backImage.fill(Qt::transparent);
     QColor backColor = QColor(Config::getGraphicsTransparentColor());
     if (params.tileState != Qt::Unchecked) {
-        unsigned len = 0;
-        unsigned y = 1;
-        for (; y <= cellHeight / 2; y++) {
-            len += 2;
-            for (unsigned x = cellWidth / 2 - len - CELL_BORDER; x < cellWidth / 2 + len + CELL_BORDER; x++) {
-                backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
-            }
-        }
-        for (; y < cellHeight; y++) {
-            len -= 2;
-            for (unsigned x = cellWidth / 2 - len - CELL_BORDER; x < cellWidth / 2 + len + CELL_BORDER; x++) {
-                backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
-            }
-        }
+        D1Dun::drawDiamond(backImage, 0 + CELL_BORDER, 0 + CELL_BORDER, cellWidth, cellHeight, backColor);
     } else {
         unsigned len = 0;
         unsigned y = 1;
         for (; y <= cellHeight / 2; y++) {
             len += 2;
-            for (unsigned x = cellWidth / 2 - len - CELL_BORDER; x <= cellWidth / 2 - len; x++) {
+            for (unsigned x = cellWidth / 2 - len - CELL_BORDER - 1; x <= cellWidth / 2 - len; x++) {
                 backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
             }
             for (unsigned x = cellWidth / 2 + len - 1; x <= cellWidth / 2 + len + CELL_BORDER; x++) {
@@ -1145,7 +1145,7 @@ QImage D1Dun::getImage(const DunDrawParam &params)
         }
         for (; y < cellHeight; y++) {
             len -= 2;
-            for (unsigned x = cellWidth / 2 - len - CELL_BORDER; x <= cellWidth / 2 - len; x++) {
+            for (unsigned x = cellWidth / 2 - len - CELL_BORDER - 1; x <= cellWidth / 2 - len; x++) {
                 backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
             }
             for (unsigned x = cellWidth / 2 + len - 1; x <= cellWidth / 2 + len + CELL_BORDER; x++) {
