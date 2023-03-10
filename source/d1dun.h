@@ -179,6 +179,7 @@ public:
     void patch(int dunFileIndex); // dun_file_index
 
 private:
+    static void drawDiamond(QImage &image, int sx, int sy, int width, int height, const QColor &color);
     void drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
     void initVectors(int width, int height);
     void loadObject(int objectIndex);
