@@ -83,6 +83,10 @@ bool D1Amp::save(const SaveAsParam &params)
         }
     }
 
+    if (filePath.isEmpty()) {
+        return false;
+    }
+
     QDir().mkpath(QFileInfo(filePath).absolutePath());
     QFile outFile = QFile(filePath);
     if (!outFile.open(QIODevice::WriteOnly)) {

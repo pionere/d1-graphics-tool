@@ -1107,28 +1107,30 @@ void MainWindow::saveFile(const SaveAsParam &params)
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Saving..."), 0, PAF_UPDATE_WINDOW);
 
     QString filePath = params.celFilePath.isEmpty() ? this->gfx->getFilePath() : params.celFilePath;
-    QString fileLower = filePath.toLower();
-    if (this->gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
-        if (!fileLower.endsWith(".cel")) {
-            QMessageBox::StandardButton reply;
-            reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to save as %1? Data conversion is not supported.").arg(QDir::toNativeSeparators(filePath)), QMessageBox::Yes | QMessageBox::No);
-            if (reply != QMessageBox::Yes) {
+    if (!filePath.isEmpty()) {
+        QString fileLower = filePath.toLower();
+        if (this->gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
+            if (!fileLower.endsWith(".cel")) {
+                QMessageBox::StandardButton reply;
+                reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to save as %1? Data conversion is not supported.").arg(QDir::toNativeSeparators(filePath)), QMessageBox::Yes | QMessageBox::No);
+                if (reply != QMessageBox::Yes) {
+                    // Clear loading message from status bar
+                    ProgressDialog::done();
+                    return;
+                }
+            }
+            D1CelTileset::save(*this->gfx, params);
+        } else {
+            if (fileLower.endsWith(".cel")) {
+                D1Cel::save(*this->gfx, params);
+            } else if (fileLower.endsWith(".cl2")) {
+                D1Cl2::save(*this->gfx, params);
+            } else {
+                QMessageBox::critical(this, tr("Error"), tr("Not supported."));
                 // Clear loading message from status bar
                 ProgressDialog::done();
                 return;
             }
-        }
-        D1CelTileset::save(*this->gfx, params);
-    } else {
-        if (fileLower.endsWith(".cel")) {
-            D1Cel::save(*this->gfx, params);
-        } else if (fileLower.endsWith(".cl2")) {
-            D1Cl2::save(*this->gfx, params);
-        } else {
-            QMessageBox::critical(this, tr("Error"), tr("Not supported."));
-            // Clear loading message from status bar
-            ProgressDialog::done();
-            return;
         }
     }
 

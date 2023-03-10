@@ -147,10 +147,6 @@ void SaveAsDialog::on_saveButton_clicked()
     SaveAsParam params;
     // main cel file
     params.celFilePath = this->ui->outputCelFileEdit->text();
-    if (params.celFilePath.isEmpty()) {
-        QMessageBox::warning(this, tr("Warning"), tr("Output file is missing, please choose an output file."));
-        return;
-    }
     // celSettingsGroupBox: groupNum, clipped
     params.groupNum = this->ui->celGroupEdit->nonNegInt();
     if (this->ui->celClippedYesRadioButton->isChecked()) {
