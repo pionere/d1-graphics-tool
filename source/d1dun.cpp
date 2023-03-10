@@ -1638,6 +1638,7 @@ void D1Dun::loadMonster(int monsterIndex)
                         result.monTrn->setTranslation(i, 0);
                     }
                 }
+                result.monTrn->refreshResultingPalette();
                 // set palette
                 result.monPal = result.monTrn->getResultingPalette();
             }
