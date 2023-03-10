@@ -881,20 +881,20 @@ bool D1Dun::save(const SaveAsParam &params)
 
 #define CELL_BORDER 0
 
-void D1Dun::drawDiamond(QImage &image, int sx, int sy, int width, int height, const QColor &color)
+void D1Dun::drawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, unsigned height, const QColor &color)
 {
     unsigned len = 0;
     unsigned y = 1;
     for (; y <= height / 2; y++) {
         len += 2;
         for (unsigned x = width / 2 - len - CELL_BORDER; x < width / 2 + len + CELL_BORDER; x++) {
-            backImage.setPixelColor(sx + x, sy + y, color);
+            image.setPixelColor(sx + x, sy + y, color);
         }
     }
     for (; y < height; y++) {
         len -= 2;
         for (unsigned x = width / 2 - len - CELL_BORDER; x < width / 2 + len + CELL_BORDER; x++) {
-            backImage.setPixelColor(sx + x, sy + y, color);
+            image.setPixelColor(sx + x, sy + y, color);
         }
     }
 }
@@ -1628,6 +1628,13 @@ void D1Dun::loadMonster(int monsterIndex)
                 delete result.monTrn;
                 result.monTrn = nullptr;
             } else {
+                // apply Monster TRN
+                for (int i = 0; i < D1PAL_COLORS; i++) {
+                    if (result.monTrn->getTranslation(i) == 0xFF) {
+                        result.monTrn->setTranslation(i, 0);
+                    }
+                }
+                // set palette
                 result.monPal = result.monTrn->getResultingPalette();
             }
         }
