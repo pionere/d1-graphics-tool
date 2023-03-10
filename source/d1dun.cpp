@@ -1140,7 +1140,7 @@ QImage D1Dun::getImage(const DunDrawParam &params)
         unsigned y = 1;
         for (; y <= cellHeight / 2; y++) {
             len += 2;
-            for (unsigned x = cellWidth / 2 - len - CELL_BORDER; x <= cellWidth / 2 - len; x++) {
+            for (unsigned x = cellWidth / 2 - len - CELL_BORDER - 1; x <= cellWidth / 2 - len; x++) {
                 backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
             }
             for (unsigned x = cellWidth / 2 + len - 1; x <= cellWidth / 2 + len + CELL_BORDER; x++) {
@@ -1149,7 +1149,7 @@ QImage D1Dun::getImage(const DunDrawParam &params)
         }
         for (; y < cellHeight; y++) {
             len -= 2;
-            for (unsigned x = cellWidth / 2 - len - CELL_BORDER; x <= cellWidth / 2 - len; x++) {
+            for (unsigned x = cellWidth / 2 - len - CELL_BORDER - 1; x <= cellWidth / 2 - len; x++) {
                 backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
             }
             for (unsigned x = cellWidth / 2 + len - 1; x <= cellWidth / 2 + len + CELL_BORDER; x++) {
