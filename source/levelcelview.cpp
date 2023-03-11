@@ -3613,8 +3613,7 @@ void LevelCelView::on_dungeonRoomLineEdit_returnPressed()
     this->on_dungeonRoomLineEdit_escPressed();
     if (change) {
         // update the view
-        // this->displayFrame();
-        this->updateLabel();
+        this->displayFrame();
     }
 }
 

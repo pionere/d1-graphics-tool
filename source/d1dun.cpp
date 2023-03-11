@@ -2334,7 +2334,7 @@ void D1Dun::patch(int dunFileIndex)
         break;
     case DUN_WARLORD_PRE: // Warlord.DUN
         // ensure the changing tiles are reserved
-        change |= this->changeTileAt(7, 22, 6);
+        change |= this->changeTileAt(7, 2, 6);
         change |= this->changeTileAt(7, 3, 6);
         change |= this->changeTileAt(7, 4, 6);
         break;
