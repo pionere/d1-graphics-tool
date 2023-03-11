@@ -26,6 +26,8 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
         }
     }
 
+    bool changed = !file.isOpen();
+
     const QByteArray fileData = file.readAll();
 
     // calculate subtileWidth/Height
@@ -73,11 +75,17 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
     this->subtileHeight = height;
     int minSubtileCount = fileSize / (subtileNumberOfCelFrames * 2);
     if (minSubtileCount != subtileCount) {
-        dProgressWarn() << tr("The size of SOL file does not align with MIN file.");
+        // warn about misalignment if the files are not empty
+        if (minSubtileCount != 0 && subtileCount != 0) {
+            dProgressWarn() << tr("The size of SOL file does not align with MIN file.");
+        }
         // add subtiles to sol if necessary
         while (minSubtileCount > subtileCount) {
             subtileCount++;
             sol->createSubtile();
+        }
+        if (minSubtileCount < subtileCount) {
+            changed = true;
         }
     }
 
@@ -108,7 +116,7 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
         }
     }
     this->minFilePath = filePath;
-    this->modified = !file.isOpen();
+    this->modified = changed;
     return true;
 }
 
