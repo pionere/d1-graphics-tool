@@ -2163,6 +2163,7 @@ void D1Dun::patch(int dunFileIndex)
 /* DUN_BLOOD_AFT*/           { 20, 32 }, // Blood1.DUN
 /* DUN_VILE_PRE*/            { 42, 46 }, // Vile2.DUN
 /* DUN_VILE_AFT*/            { 42, 46 }, // Vile1.DUN
+/* DUN_WARLORD_PRE*/         { 16, 14 }, // Warlord.DUN
         // clang-format on
     };
     if (this->width != dunSizes[dunFileIndex][0] || this->height != dunSizes[dunFileIndex][1]) {
@@ -2206,6 +2207,14 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(4, 1, 51);
         change |= this->changeTileAt(4, 2, 47);
         change |= this->changeTileAt(4, 3, 50); // 51
+        // ensure the changing tiles are reserved
+        for (int y = 0; y < 7; y++) {
+            for (int x = 0; x < 7; x++) {
+                if (this->tiles[y][x] == 0) {
+                    this->changeTileAt(x, y, 3);
+                }
+            }
+        }
         break;
     case DUN_BONECHAMB_PRE: // Bonecha1.DUN
     case DUN_BONECHAMB_AFT: // Bonecha2.DUN
@@ -2240,6 +2249,14 @@ void D1Dun::patch(int dunFileIndex)
         // place pieces with closed doors
         change |= this->changeTileAt(4, 3, 150);
         change |= this->changeTileAt(6, 7, 150);
+        // ensure the changing tiles are reserved
+        for (int y = 0; y < 11; y++) {
+            for (int x = 0; x < 11; x++) {
+                if (this->tiles[y][x] == 0) {
+                    this->changeTileAt(x, y, 3);
+                }
+            }
+        }
         break;
     case DUN_BLOOD_PRE: // Blood2.DUN
         // place pieces with closed doors
@@ -2257,6 +2274,8 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(5, 8, 50);
         break;
     case DUN_BLOOD_AFT: // Blood1.DUN
+        // ensure the inner tiles are reserved
+        change |= this->changeTileAt(5, 12, 3);
         // replace torches
         change |= this->changeObjectAt(11, 8, 110);
         change |= this->changeObjectAt(11, 10, 110);
@@ -2303,6 +2322,12 @@ void D1Dun::patch(int dunFileIndex)
         for (int i = 1; i < 23; i++) {
             change |= this->changeTileAt(20, i, 22);
         }
+        break;
+    case DUN_WARLORD_PRE: // Warlord.DUN
+        // ensure the changing tiles are reserved
+        change |= this->changeTileAt(7, 2, 6);
+        change |= this->changeTileAt(7, 3, 6);
+        change |= this->changeTileAt(7, 4, 6);
         break;
     }
     if (!change) {

@@ -55,6 +55,9 @@ void PatchDungeonDialog::initialize(D1Dun *d)
     if (baseName == "vile1") {
         fileIndex = DUN_VILE_AFT;
     }
+    if (baseName == "warlord") {
+        fileIndex = DUN_WARLORD_PRE;
+    }
     this->ui->dunFileComboBox->setCurrentIndex(fileIndex);
 }
 
