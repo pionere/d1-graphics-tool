@@ -2219,7 +2219,7 @@ void D1Dun::patch(int dunFileIndex)
         for (int y = 0; y < 7; y++) {
             for (int x = 0; x < 7; x++) {
                 if (this->tiles[y][x] == 0) {
-                    this->changeTileAt(x, y, 3)
+                    this->changeTileAt(x, y, 3);
                 }
             }
         }
@@ -2261,7 +2261,7 @@ void D1Dun::patch(int dunFileIndex)
         for (int y = 0; y < 11; y++) {
             for (int x = 0; x < 11; x++) {
                 if (this->tiles[y][x] == 0) {
-                    this->changeTileAt(x, y, 3)
+                    this->changeTileAt(x, y, 3);
                 }
             }
         }
