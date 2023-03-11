@@ -25,6 +25,8 @@ bool D1Amp::load(const QString &filePath, int tileCount, const OpenAsParam &para
         }
     }
 
+    bool changed = !file.isOpen();
+
     const QByteArray fileData = file.readAll();
 
     // File size check
@@ -36,12 +38,14 @@ bool D1Amp::load(const QString &filePath, int tileCount, const OpenAsParam &para
 
     int ampTileCount = fileSize / 2;
     if (ampTileCount != tileCount) {
-        if (ampTileCount != 0) {
+        // warn about misalignment if the files are not empty
+        if (ampTileCount != 0 && tileCount != 0) {
             dProgressWarn() << tr("The size of AMP file does not align with TIL file.");
         }
         if (ampTileCount > tileCount) {
             ampTileCount = tileCount; // skip unusable data
         }
+        changed = true;
     }
 
     // prepare empty lists with zeros
@@ -65,7 +69,7 @@ bool D1Amp::load(const QString &filePath, int tileCount, const OpenAsParam &para
     }
 
     this->ampFilePath = filePath;
-    this->modified = !file.isOpen();
+    this->modified = changed;
     return true;
 }
 

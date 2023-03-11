@@ -26,6 +26,8 @@ bool D1Tmi::load(const QString &filePath, const D1Sol *sol, const OpenAsParam &p
         }
     }
 
+    bool changed = !file.isOpen();
+
     const QByteArray fileData = file.readAll();
 
     // File size check
@@ -33,12 +35,14 @@ bool D1Tmi::load(const QString &filePath, const D1Sol *sol, const OpenAsParam &p
     int subtileCount = sol->getSubtileCount();
     int tmiSubtileCount = fileSize;
     if (tmiSubtileCount != subtileCount + 1) {
-        if (tmiSubtileCount != 0) {
+        // warn about misalignment if the files are not empty
+        if (tmiSubtileCount != 0 && subtileCount != 0) {
             dProgressWarn() << tr("The size of TMI file does not align with SOL file.");
         }
         if (tmiSubtileCount > subtileCount + 1) {
             tmiSubtileCount = subtileCount + 1; // skip unusable data
         }
+        changed = true;
     }
 
     this->subProperties.clear();
@@ -60,7 +64,7 @@ bool D1Tmi::load(const QString &filePath, const D1Sol *sol, const OpenAsParam &p
     }
 
     this->tmiFilePath = filePath;
-    this->modified = !file.isOpen();
+    this->modified = changed;
     return true;
 }
 
