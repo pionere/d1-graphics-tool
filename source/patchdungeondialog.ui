@@ -90,6 +90,11 @@
          <string>Archbishop Lazarus - After (Vile1.DUN)</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Warlord - Before (Warlord.DUN)</string>
+        </property>
+       </item>
       </widget>
      </item>
     </layout>

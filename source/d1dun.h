@@ -31,6 +31,7 @@ typedef enum dun_file_index {
     DUN_BLOOD_AFT,           // map tile for the "Valor" quest 'after' placing the stones (Blood1.DUN)
     DUN_VILE_PRE,            // setmap for the "Archbishop Lazarus" quest before reading the books (Vile2.DUN)
     DUN_VILE_AFT,            // setmap for the "Archbishop Lazarus" quest after reading the books (Vile1.DUN)
+    DUN_WARLORD_PRE,         // map tile for the "Warlord" quest before reading the book (Warlord.DUN)
 } dun_file_index;
 
 typedef enum _monster_gfx_id {
