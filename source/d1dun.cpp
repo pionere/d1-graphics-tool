@@ -1570,7 +1570,7 @@ bool D1Dun::setAssetPath(QString path)
 
 void D1Dun::loadObject(int objectIndex)
 {
-    ObjectCacheEntry result = { objectIndex, 0, nullptr };
+    ObjectCacheEntry result = { objectIndex, 0, nullptr, 0 };
     for (const CustomObjectStruct &customObject : this->customObjectTypes) {
         if (customObject.type == objectIndex) {
             result.frameNum = customObject.frameNum;
@@ -1617,7 +1617,7 @@ void D1Dun::loadObject(int objectIndex)
 
 void D1Dun::loadMonster(int monsterIndex)
 {
-    MonsterCacheEntry result = { monsterIndex, nullptr, this->pal, nullptr };
+    MonsterCacheEntry result = { monsterIndex, 0, nullptr, this->pal, nullptr };
     for (const CustomMonsterStruct &customMonster : this->customMonsterTypes) {
         if (customMonster.type == monsterIndex) {
             result.monGfx = new D1Gfx();
@@ -1703,7 +1703,7 @@ void D1Dun::loadMonster(int monsterIndex)
 
 void D1Dun::loadItem(int itemIndex)
 {
-    ItemCacheEntry result = { itemIndex, nullptr };
+    ItemCacheEntry result = { itemIndex, 0, nullptr };
     for (const CustomItemStruct &customItem : this->customItemTypes) {
         if (customItem.type == itemIndex) {
             result.itemGfx = new D1Gfx();
