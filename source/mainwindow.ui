@@ -90,6 +90,50 @@
     <addaction name="actionTogglePalTrn"/>
     <addaction name="actionToggleBottomPanel"/>
    </widget>
+   <widget class="QMenu" name="menuTilesetCheck">
+    <property name="title">
+     <string>Check</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionCheckSubtileFlags_Tileset"/>
+    <addaction name="actionCheckTileFlags_Tileset"/>
+    <addaction name="actionCheckTilesetFlags_Tileset"/>
+   </widget>
+   <widget class="QMenu" name="menuTilesetCleanup">
+    <property name="title">
+     <string>Cleanup</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionCleanupFrames_Tileset"/>
+    <addaction name="actionCleanupSubtiles_Tileset"/>
+    <addaction name="actionCleanupTileset_Tileset"/>
+   </widget>
+   <widget class="QMenu" name="menuTilesetCompress">
+    <property name="title">
+     <string>Compress</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionCompressSubtiles_Tileset"/>
+    <addaction name="actionCompressTiles_Tileset"/>
+    <addaction name="actionCompressTileset_Tileset"/>
+   </widget>
+   <widget class="QMenu" name="menuTilesetSort">
+    <property name="title">
+     <string>Sort</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionSortFrames_Tileset"/>
+    <addaction name="actionSortSubtiles_Tileset"/>
+    <addaction name="actionSortTileset_Tileset"/>
+   </widget>
    <widget class="QMenu" name="menuTileset">
     <property name="title">
      <string>Tileset</string>
@@ -103,21 +147,46 @@
     <addaction name="actionResetFrameTypes_Tileset"/>
     <addaction name="actionPatchTileset_Tileset"/>
     <addaction name="separator"/>
-    <addaction name="actionCheckSubtileFlags_Tileset"/>
-    <addaction name="actionCheckTileFlags_Tileset"/>
-    <addaction name="actionCheckTilesetFlags_Tileset"/>
-    <addaction name="separator"/>
-    <addaction name="actionCleanupFrames_Tileset"/>
-    <addaction name="actionCleanupSubtiles_Tileset"/>
-    <addaction name="actionCleanupTileset_Tileset"/>
-    <addaction name="separator"/>
-    <addaction name="actionCompressSubtiles_Tileset"/>
-    <addaction name="actionCompressTiles_Tileset"/>
-    <addaction name="actionCompressTileset_Tileset"/>
-    <addaction name="separator"/>
-    <addaction name="actionSortFrames_Tileset"/>
-    <addaction name="actionSortSubtiles_Tileset"/>
-    <addaction name="actionSortTileset_Tileset"/>
+    <addaction name="menuTilesetCheck"/>
+    <addaction name="menuTilesetCleanup"/>
+    <addaction name="menuTilesetCompress"/>
+    <addaction name="menuTilesetSort"/>
+   </widget>
+   <widget class="QMenu" name="menuDungeonCheck">
+    <property name="title">
+     <string>Check</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionCheckItems_Dungeon"/>
+    <addaction name="actionCheckMonsters_Dungeon"/>
+    <addaction name="actionCheckObjects_Dungeon"/>
+    <addaction name="actionCheckEntities_Dungeon"/>
+   </widget>
+   <widget class="QMenu" name="menuDungeonRemove">
+    <property name="title">
+     <string>Remove</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionRemoveItems_Dungeon"/>
+    <addaction name="actionRemoveMonsters_Dungeon"/>
+    <addaction name="actionRemoveObjects_Dungeon"/>
+    <addaction name="actionRemoveRooms_Dungeon"/>
+   </widget>
+   <widget class="QMenu" name="menuDungeonLoad">
+    <property name="title">
+     <string>Load</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionLoadItems_Dungeon"/>
+    <addaction name="actionLoadMonsters_Dungeon"/>
+    <addaction name="actionLoadObjects_Dungeon"/>
+    <addaction name="actionLoadRooms_Dungeon"/>
    </widget>
    <widget class="QMenu" name="menuDungeon">
     <property name="title">
@@ -132,19 +201,9 @@
     <addaction name="actionResetTiles_Dungeon"/>
     <addaction name="actionResetSubtiles_Dungeon"/>
     <addaction name="separator"/>
-    <addaction name="actionCheckItems_Dungeon"/>
-    <addaction name="actionCheckMonsters_Dungeon"/>
-    <addaction name="actionCheckObjects_Dungeon"/>
-    <addaction name="actionCheckEntities_Dungeon"/>
-    <addaction name="separator"/>
-    <addaction name="actionRemoveItems_Dungeon"/>
-    <addaction name="actionLoadItems_Dungeon"/>
-    <addaction name="actionRemoveMonsters_Dungeon"/>
-    <addaction name="actionLoadMonsters_Dungeon"/>
-    <addaction name="actionRemoveObjects_Dungeon"/>
-    <addaction name="actionLoadObjects_Dungeon"/>
-    <addaction name="actionRemoveRooms_Dungeon"/>
-    <addaction name="actionLoadRooms_Dungeon"/>
+    <addaction name="menuDungeonCheck"/>
+    <addaction name="menuDungeonRemove"/>
+    <addaction name="menuDungeonLoad"/>
    </widget>
    <widget class="QMenu" name="menuPalette">
     <property name="title">

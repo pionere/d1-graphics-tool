@@ -2265,7 +2265,6 @@ void D1Dun::patch(int dunFileIndex)
                 }
             }
         }
-        change |= this->changeTileAt(6, 7, 150);
         break;
     case DUN_BLOOD_PRE: // Blood2.DUN
         // place pieces with closed doors
