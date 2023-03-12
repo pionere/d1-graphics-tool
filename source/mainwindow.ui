@@ -159,6 +159,7 @@
     <property name="toolTipsVisible">
      <bool>true</bool>
     </property>
+    <addaction name="actionCheckTiles_Dungeon"/>
     <addaction name="actionCheckItems_Dungeon"/>
     <addaction name="actionCheckMonsters_Dungeon"/>
     <addaction name="actionCheckObjects_Dungeon"/>
@@ -561,6 +562,14 @@
    </property>
    <property name="toolTip">
     <string>Reinitialize the subtiles based on the tiles</string>
+   </property>
+  </action>
+  <action name="actionCheckTiles_Dungeon">
+   <property name="text">
+    <string>Tiles</string>
+   </property>
+   <property name="toolTip">
+    <string>List inconsistent tiles/subtiles</string>
    </property>
   </action>
   <action name="actionCheckItems_Dungeon">
