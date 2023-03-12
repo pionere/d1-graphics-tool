@@ -995,10 +995,9 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
         // draw the object
         int objectIndex = this->objects[dunCursorY][dunCursorX];
         if (objectIndex != 0) {
-            const ObjectStruct *objStr = &ObjConvTbl[objectIndex];
             const ObjectCacheEntry *objEntry = nullptr;
             for (const auto &obj : this->objectCache) {
-                if (obj.objStr == objStr) {
+                if (obj.objectIndex == objectIndex) {
                     objEntry = &obj;
                     break;
                 }
@@ -1008,7 +1007,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 objEntry = &this->objectCache.back();
             }
             if (objEntry->objGfx != nullptr) {
-                int frameNum = objEntry->objStr->frameNum;
+                int frameNum = objEntry->frameNum;
                 if (frameNum == 0) {
                     frameNum = 1 + (params.time % objEntry->objGfx->getFrameCount());
                 }
@@ -1039,10 +1038,9 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
         // draw the monster
         int monsterIndex = this->monsters[dunCursorY][dunCursorX];
         if (monsterIndex != 0) {
-            const MonsterStruct *monStr = &MonstConvTbl[monsterIndex];
             const MonsterCacheEntry *monEntry = nullptr;
             for (const auto &mon : this->monsterCache) {
-                if (mon.monStr == monStr) {
+                if (mon.monsterIndex == monsterIndex) {
                     monEntry = &mon;
                     break;
                 }
@@ -1572,9 +1570,11 @@ bool D1Dun::setAssetPath(QString path)
 
 void D1Dun::loadObject(int objectIndex)
 {
-    ObjectCacheEntry result = { &ObjConvTbl[objectIndex], nullptr };
-    if (objectIndex < lengthof(ObjConvTbl) && result.objStr->type != 0) {
-        int objDataIndex = result.objStr->animType;
+    ObjectCacheEntry result = { objectIndex, 0, nullptr };
+	const ObjectStruct *objStr = &ObjConvTbl[objectIndex];
+    if (objectIndex < lengthof(ObjConvTbl) && objStr->type != 0) {
+        int objDataIndex = objStr->animType;
+		result.frameNum = objStr->frameNum;
         result.objGfx = this->objDataCache[objDataIndex];
         if (result.objGfx == nullptr && !this->assetPath.isEmpty()) {
             result.objGfx = new D1Gfx();
@@ -1597,9 +1597,10 @@ void D1Dun::loadObject(int objectIndex)
 
 void D1Dun::loadMonster(int monsterIndex)
 {
-    MonsterCacheEntry result = { &MonstConvTbl[monsterIndex], nullptr, this->pal, nullptr };
-    if (monsterIndex < lengthof(MonstConvTbl) && result.monStr->type != 0) {
-        int monDataIndex = result.monStr->animType;
+    MonsterCacheEntry result = { monsterIndex, nullptr, this->pal, nullptr };
+	const MonsterStruct *monStr = &MonstConvTbl[monsterIndex];
+    if (monsterIndex < lengthof(MonstConvTbl) && monStr->type != 0) {
+        int monDataIndex = monStr->animType;
         result.monGfx = this->monDataCache[monDataIndex];
         if (result.monGfx == nullptr && !this->assetPath.isEmpty()) {
             result.monGfx = new D1Gfx();
@@ -1616,9 +1617,9 @@ void D1Dun::loadMonster(int monsterIndex)
                 this->monDataCache[monDataIndex] = result.monGfx;
             }
         }
-        if (result.monGfx != nullptr && result.monStr->trnPath != nullptr && !this->assetPath.isEmpty()) {
+        if (result.monGfx != nullptr && monStr->trnPath != nullptr && !this->assetPath.isEmpty()) {
             result.monTrn = new D1Trn();
-            QString trnFilePath = this->assetPath + "/Monsters/" + result.monStr->trnPath + ".TRN";
+            QString trnFilePath = this->assetPath + "/Monsters/" + monStr->trnPath + ".TRN";
             if (!result.monTrn->load(trnFilePath, result.monPal)) {
                 // TODO: suppress errors? MemFree?
                 delete result.monTrn;
@@ -1759,7 +1760,6 @@ void D1Dun::checkTiles() const
     progress.first = -1;
     progress.second = tr("Tile inconsistencies:");
     dProgress() << progress;
-
     for (int y = 0; y < this->height / TILE_HEIGHT; y++) {
         for (int x = 0; x < this->width / TILE_WIDTH; x++) {
             int tileRef = this->tiles[y][x];
@@ -1769,10 +1769,12 @@ void D1Dun::checkTiles() const
             if (tileRef == UNDEF_TILE) {
                 if (this->type == D1DUN_TYPE::NORMAL) {
                     dProgressWarn() << tr("Tile at %1:%2 is undefined.").arg(x).arg(y);
+                    result = true;
                 }
             } else {
                 if ((unsigned)tileRef > UCHAR_MAX) {
                     dProgressWarn() << tr("Tile-value at %1:%2 is not supported by the game.").arg(x).arg(y);
+                    result = true;
                 }
             }
         }
@@ -1786,6 +1788,7 @@ void D1Dun::checkTiles() const
             if (subtileRef == UNDEF_SUBTILE) {
                 if (this->type == D1DUN_TYPE::RAW) {
                     dProgressWarn() << tr("Subtile at %1:%2 is undefined.").arg(x).arg(y);
+                    result = true;
                 }
             }
         }
