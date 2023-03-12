@@ -90,6 +90,50 @@
     <addaction name="actionTogglePalTrn"/>
     <addaction name="actionToggleBottomPanel"/>
    </widget>
+   <widget class="QMenu" name="menuTilesetCheckFlags">
+    <property name="title">
+     <string>Check Flags</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionCheckSubtileFlags_Tileset"/>
+    <addaction name="actionCheckTileFlags_Tileset"/>
+    <addaction name="actionCheckTilesetFlags_Tileset"/>
+   </widget>
+   <widget class="QMenu" name="menuTilesetCleanup">
+    <property name="title">
+     <string>Cleanup</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionCleanupFrames_Tileset"/>
+    <addaction name="actionCleanupSubtiles_Tileset"/>
+    <addaction name="actionCleanupTileset_Tileset"/>
+   </widget>
+   <widget class="QMenu" name="menuTilesetCompress">
+    <property name="title">
+     <string>Compress</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionCompressSubtiles_Tileset"/>
+    <addaction name="actionCompressTiles_Tileset"/>
+    <addaction name="actionCompressTileset_Tileset"/>
+   </widget>
+   <widget class="QMenu" name="menuTilesetSort">
+    <property name="title">
+     <string>Sort</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionSortFrames_Tileset"/>
+    <addaction name="actionSortSubtiles_Tileset"/>
+    <addaction name="actionSortTileset_Tileset"/>
+   </widget>
    <widget class="QMenu" name="menuTileset">
     <property name="title">
      <string>Tileset</string>
@@ -103,21 +147,46 @@
     <addaction name="actionResetFrameTypes_Tileset"/>
     <addaction name="actionPatchTileset_Tileset"/>
     <addaction name="separator"/>
-    <addaction name="actionCheckSubtileFlags_Tileset"/>
-    <addaction name="actionCheckTileFlags_Tileset"/>
-    <addaction name="actionCheckTilesetFlags_Tileset"/>
-    <addaction name="separator"/>
-    <addaction name="actionCleanupFrames_Tileset"/>
-    <addaction name="actionCleanupSubtiles_Tileset"/>
-    <addaction name="actionCleanupTileset_Tileset"/>
-    <addaction name="separator"/>
-    <addaction name="actionCompressSubtiles_Tileset"/>
-    <addaction name="actionCompressTiles_Tileset"/>
-    <addaction name="actionCompressTileset_Tileset"/>
-    <addaction name="separator"/>
-    <addaction name="actionSortFrames_Tileset"/>
-    <addaction name="actionSortSubtiles_Tileset"/>
-    <addaction name="actionSortTileset_Tileset"/>
+    <addaction name="menuTilesetCheckFlags"/>
+    <addaction name="menuTilesetCleanup"/>
+    <addaction name="menuTilesetCompress"/>
+    <addaction name="menuTilesetSort"/>
+   </widget>
+   <widget class="QMenu" name="menuDungeonCheck">
+    <property name="title">
+     <string>Check</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionCheckItems_Dungeon"/>
+    <addaction name="actionCheckMonsters_Dungeon"/>
+    <addaction name="actionCheckObjects_Dungeon"/>
+    <addaction name="actionCheckEntities_Dungeon"/>
+   </widget>
+   <widget class="QMenu" name="menuDungeonRemove">
+    <property name="title">
+     <string>Remove</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionRemoveItems_Dungeon"/>
+    <addaction name="actionRemoveMonsters_Dungeon"/>
+    <addaction name="actionRemoveObjects_Dungeon"/>
+    <addaction name="actionRemoveRooms_Dungeon"/>
+   </widget>
+   <widget class="QMenu" name="menuDungeonLoad">
+    <property name="title">
+     <string>Load</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionLoadItems_Dungeon"/>
+    <addaction name="actionLoadMonsters_Dungeon"/>
+    <addaction name="actionLoadObjects_Dungeon"/>
+    <addaction name="actionLoadRooms_Dungeon"/>
    </widget>
    <widget class="QMenu" name="menuDungeon">
     <property name="title">
@@ -132,19 +201,9 @@
     <addaction name="actionResetTiles_Dungeon"/>
     <addaction name="actionResetSubtiles_Dungeon"/>
     <addaction name="separator"/>
-    <addaction name="actionCheckItems_Dungeon"/>
-    <addaction name="actionCheckMonsters_Dungeon"/>
-    <addaction name="actionCheckObjects_Dungeon"/>
-    <addaction name="actionCheckEntities_Dungeon"/>
-    <addaction name="separator"/>
-    <addaction name="actionRemoveItems_Dungeon"/>
-    <addaction name="actionLoadItems_Dungeon"/>
-    <addaction name="actionRemoveMonsters_Dungeon"/>
-    <addaction name="actionLoadMonsters_Dungeon"/>
-    <addaction name="actionRemoveObjects_Dungeon"/>
-    <addaction name="actionLoadObjects_Dungeon"/>
-    <addaction name="actionRemoveRooms_Dungeon"/>
-    <addaction name="actionLoadRooms_Dungeon"/>
+    <addaction name="menuDungeonCheck"/>
+    <addaction name="menuDungeonRemove"/>
+    <addaction name="menuDungeonLoad"/>
    </widget>
    <widget class="QMenu" name="menuPalette">
     <property name="title">
@@ -378,7 +437,7 @@
   </action>
   <action name="actionCheckSubtileFlags_Tileset">
    <property name="text">
-    <string>Check Subtile Flags</string>
+    <string>Subtile</string>
    </property>
    <property name="toolTip">
     <string>List inconsistent subtile-flags (SOL + TMI)</string>
@@ -386,7 +445,7 @@
   </action>
   <action name="actionCheckTileFlags_Tileset">
    <property name="text">
-    <string>Check Tile Flags</string>
+    <string>Tile</string>
    </property>
    <property name="toolTip">
     <string>List inconsistent tile-flags (AMP)</string>
@@ -394,7 +453,7 @@
   </action>
   <action name="actionCheckTilesetFlags_Tileset">
    <property name="text">
-    <string>Check Tileset Flags</string>
+    <string>Tileset</string>
    </property>
    <property name="toolTip">
     <string>List inconsistent tile-flags (AMP) and subtile-flags (SOL + TMI)</string>
@@ -402,7 +461,7 @@
   </action>
   <action name="actionCleanupFrames_Tileset">
    <property name="text">
-    <string>Cleanup Frames</string>
+    <string>Frames</string>
    </property>
    <property name="toolTip">
     <string>Eliminate unused frames</string>
@@ -410,7 +469,7 @@
   </action>
   <action name="actionCleanupSubtiles_Tileset">
    <property name="text">
-    <string>Cleanup Subtiles</string>
+    <string>Subtiles</string>
    </property>
    <property name="toolTip">
     <string>Eliminate unused subtiles</string>
@@ -418,7 +477,7 @@
   </action>
   <action name="actionCleanupTileset_Tileset">
    <property name="text">
-    <string>Cleanup Tileset</string>
+    <string>Tileset</string>
    </property>
    <property name="toolTip">
     <string>Eliminate unused subtiles and frames</string>
@@ -426,7 +485,7 @@
   </action>
   <action name="actionCompressSubtiles_Tileset">
    <property name="text">
-    <string>Compress Subtiles</string>
+    <string>Subtiles</string>
    </property>
    <property name="toolTip">
     <string>Reuse frames in subtiles</string>
@@ -434,7 +493,7 @@
   </action>
   <action name="actionCompressTiles_Tileset">
    <property name="text">
-    <string>Compress Tiles</string>
+    <string>Tiles</string>
    </property>
    <property name="toolTip">
     <string>Reuse subtiles in tiles</string>
@@ -442,7 +501,7 @@
   </action>
   <action name="actionCompressTileset_Tileset">
    <property name="text">
-    <string>Compress Tileset</string>
+    <string>Tileset</string>
    </property>
    <property name="toolTip">
     <string>Reuse subtiles in tiles and frames in subtiles</string>
@@ -450,7 +509,7 @@
   </action>
   <action name="actionSortFrames_Tileset">
    <property name="text">
-    <string>Sort Frames</string>
+    <string>Frames</string>
    </property>
    <property name="toolTip">
     <string>Sort the frames based on the subtiles</string>
@@ -458,7 +517,7 @@
   </action>
   <action name="actionSortSubtiles_Tileset">
    <property name="text">
-    <string>Sort Subtiles</string>
+    <string>Subtiles</string>
    </property>
    <property name="toolTip">
     <string>Sort the subtiles based on the tiles</string>
@@ -466,7 +525,7 @@
   </action>
   <action name="actionSortTileset_Tileset">
    <property name="text">
-    <string>Sort Tileset</string>
+    <string>Tileset</string>
    </property>
    <property name="toolTip">
     <string>Sort the subtiles and frames based on the tiles</string>
@@ -506,7 +565,7 @@
   </action>
   <action name="actionCheckItems_Dungeon">
    <property name="text">
-    <string>Check Items</string>
+    <string>Items</string>
    </property>
    <property name="toolTip">
     <string>List inconsistent items</string>
@@ -514,7 +573,7 @@
   </action>
   <action name="actionCheckMonsters_Dungeon">
    <property name="text">
-    <string>Check Monsters</string>
+    <string>Monsters</string>
    </property>
    <property name="toolTip">
     <string>List inconsistent monsters</string>
@@ -522,7 +581,7 @@
   </action>
   <action name="actionCheckObjects_Dungeon">
    <property name="text">
-    <string>Check Objects</string>
+    <string>Objects</string>
    </property>
    <property name="toolTip">
     <string>List inconsistent objects</string>
@@ -530,7 +589,7 @@
   </action>
   <action name="actionCheckEntities_Dungeon">
    <property name="text">
-    <string>Check Entities</string>
+    <string>Entities</string>
    </property>
    <property name="toolTip">
     <string>List inconsistent items/monsters/objects</string>
@@ -538,7 +597,7 @@
   </action>
   <action name="actionRemoveItems_Dungeon">
    <property name="text">
-    <string>Remove Items</string>
+    <string>Items</string>
    </property>
    <property name="toolTip">
     <string>Remove every item from the dungeon</string>
@@ -546,7 +605,7 @@
   </action>
   <action name="actionLoadItems_Dungeon">
    <property name="text">
-    <string>Load Items</string>
+    <string>Items</string>
    </property>
    <property name="toolTip">
     <string>Load items from another dungeon</string>
@@ -554,7 +613,7 @@
   </action>
   <action name="actionRemoveMonsters_Dungeon">
    <property name="text">
-    <string>Remove Monsters</string>
+    <string>Monsters</string>
    </property>
    <property name="toolTip">
     <string>Remove every monster from the dungeon</string>
@@ -562,7 +621,7 @@
   </action>
   <action name="actionLoadMonsters_Dungeon">
    <property name="text">
-    <string>Load Monsters</string>
+    <string>Monsters</string>
    </property>
    <property name="toolTip">
     <string>Load monsters from another dungeon</string>
@@ -570,7 +629,7 @@
   </action>
   <action name="actionRemoveObjects_Dungeon">
    <property name="text">
-    <string>Remove Objects</string>
+    <string>Objects</string>
    </property>
    <property name="toolTip">
     <string>Remove every object from the dungeon</string>
@@ -578,7 +637,7 @@
   </action>
   <action name="actionLoadObjects_Dungeon">
    <property name="text">
-    <string>Load Objects</string>
+    <string>Objects</string>
    </property>
    <property name="toolTip">
     <string>Load objects from another dungeon</string>
@@ -586,7 +645,7 @@
   </action>
   <action name="actionRemoveRooms_Dungeon">
    <property name="text">
-    <string>Remove Rooms</string>
+    <string>Rooms</string>
    </property>
    <property name="toolTip">
     <string>Remove every room from the dungeon</string>
@@ -594,7 +653,7 @@
   </action>
   <action name="actionLoadRooms_Dungeon">
    <property name="text">
-    <string>Load Rooms</string>
+    <string>Rooms</string>
    </property>
    <property name="toolTip">
     <string>Load rooms from another dungeon</string>
