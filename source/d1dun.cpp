@@ -919,14 +919,6 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             QColor color = this->pal->getColor(roomIndex % D1PAL_COLORS);
             QImage *destImage = (QImage *)dungeon.device();
             D1Dun::drawDiamond(*destImage, drawCursorX, drawCursorY - backHeight, backWidth, backHeight, color);
-            /*for (int y = backHeight - CELL_BORDER - 1; y >= 0; y--) {
-                for (unsigned x = CELL_BORDER; x < backWidth - CELL_BORDER; x++) {
-                    if (backImage.pixelColor(x, y).alpha() == 0) {
-                        continue;
-                    }
-                    destImage->setPixelColor(drawCursorX + x - CELL_BORDER, drawCursorY - (y + 1), color);
-                }
-            }*/
         }
     }
     if (params.tileState != Qt::Unchecked) {
@@ -1756,6 +1748,54 @@ void D1Dun::collectObjects(std::vector<std::pair<int, int>> &foundObjects) const
             }
         }
     }
+}
+
+void D1Dun::checkTiles() const
+{
+    ProgressDialog::incBar(tr("Checking Tiles..."), 1);
+    bool result = false;
+
+    QPair<int, QString> progress;
+    progress.first = -1;
+    progress.second = tr("Tile inconsistencies:");
+    dProgress() << progress;
+
+    for (int y = 0; y < this->height / TILE_HEIGHT; y++) {
+        for (int x = 0; x < this->width / TILE_WIDTH; x++) {
+            int tileRef = this->tiles[y][x];
+            if (tileRef == 0) {
+                continue;
+            }
+            if (tileRef == UNDEF_TILE) {
+                if (this->type == D1DUN_TYPE::NORMAL) {
+                    dProgressWarn() << tr("Tile at %1:%2 is undefined.").arg(x).arg(y);
+                }
+            } else {
+                if ((unsigned)tileRef > UCHAR_MAX) {
+                    dProgressWarn() << tr("Tile-value at %1:%2 is not supported by the game.").arg(x).arg(y);
+                }
+            }
+        }
+    }
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            int subtileRef = this->subtiles[y][x];
+            if (subtileRef == 0) {
+                continue;
+            }
+            if (subtileRef == UNDEF_SUBTILE) {
+                if (this->type == D1DUN_TYPE::RAW) {
+                    dProgressWarn() << tr("Subtile at %1:%2 is undefined.").arg(x).arg(y);
+                }
+            }
+        }
+    }
+    if (!result) {
+        progress.second = tr("No inconsistency detected with the Tiles.");
+        dProgress() << progress;
+    }
+
+    ProgressDialog::decBar();
 }
 
 void D1Dun::checkItems(D1Sol *sol) const

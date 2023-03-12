@@ -83,6 +83,7 @@ public:
     void reportDungeonUsage() const;
     void resetDungeonTiles();
     void resetDungeonSubtiles();
+    void checkTiles() const;
     void checkItems() const;
     void checkMonsters() const;
     void checkObjects() const;

@@ -2567,6 +2567,11 @@ void LevelCelView::resetDungeonSubtiles()
     }
 }
 
+void LevelCelView::checkTiles() const
+{
+    this->dun->checkTiles();
+}
+
 void LevelCelView::checkItems() const
 {
     this->dun->checkItems(this->sol);

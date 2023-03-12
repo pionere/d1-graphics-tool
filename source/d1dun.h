@@ -162,6 +162,7 @@ public:
     void collectItems(std::vector<std::pair<int, int>> &items) const;
     void collectMonsters(std::vector<std::pair<int, int>> &monsters) const;
     void collectObjects(std::vector<std::pair<int, int>> &objects) const;
+    void checkTiles() const;
     void checkItems(D1Sol *sol) const;
     void checkMonsters(D1Sol *sol) const;
     void checkObjects() const;
