@@ -120,8 +120,8 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
         // add buttons for the custom entities
         QGridLayout *layout = this->ui->dungeonGridLayout;
         PushButtonWidget::addButton(this, layout, 1, 3, QStyle::SP_FileDialogNewFolder, tr("Add Custom Object"), this, &LevelCelView::on_dungeonObjectAddButton_clicked);
-        PushButtonWidget::addButton(this, layout, 1, 7, QStyle::SP_FileDialogNewFolder, tr("Add Custom Monster"), this, &LevelCelView::on_dungeonMonsterAddButton_clicked);
-        PushButtonWidget::addButton(this, layout, 1, 11, QStyle::SP_FileDialogNewFolder, tr("Add Custom Item"), this, &LevelCelView::on_dungeonItemAddButton_clicked);
+        PushButtonWidget::addButton(this, layout, 1, 8, QStyle::SP_FileDialogNewFolder, tr("Add Custom Monster"), this, &LevelCelView::on_dungeonMonsterAddButton_clicked);
+        PushButtonWidget::addButton(this, layout, 1, 13, QStyle::SP_FileDialogNewFolder, tr("Add Custom Item"), this, &LevelCelView::on_dungeonItemAddButton_clicked);
         // initialize the fields which are not updated
         this->on_dungeonDefaultTileLineEdit_escPressed();
         this->ui->levelTypeComboBox->setCurrentIndex(d->getLevelType());

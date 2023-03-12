@@ -1026,12 +1026,29 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
         // draw the item
         int itemIndex = this->items[dunCursorY][dunCursorX];
         if (itemIndex != 0) {
-            QString text = tr("Item%1").arg(itemIndex);
-            // dungeon.setFont(font);
-            // dungeon.setPen(font);
-            QFontMetrics fm(dungeon.font());
-            unsigned textWidth = fm.horizontalAdvance(text);
-            dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY + (bottomText ? 3 : 1) * fm.height() / 2, text);
+            const ItemCacheEntry *itemEntry = nullptr;
+            for (const auto &item : this->itemCache) {
+                if (item.itemIndex == itemIndex) {
+                    itemEntry = &item;
+                    break;
+                }
+            }
+            if (itemEntry == nullptr) {
+                this->loadItem(itemIndex);
+                itemEntry = &this->itemCache.back();
+            }
+            if (itemEntry->itemGfx != nullptr) {
+                int frameNum = objEntry->itemGfx->getFrameCount();
+                QImage itemImage = itemEntry->itemGfx->getFrameImage(frameNum - 1);
+                dungeon.drawImage(drawCursorX + ((int)backWidth - itemImage.width()) / 2, drawCursorY - itemImage.height(), itemImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+            } else {
+                QString text = tr("Item%1").arg(itemIndex);
+                // dungeon.setFont(font);
+                // dungeon.setPen(font);
+                QFontMetrics fm(dungeon.font());
+                unsigned textWidth = fm.horizontalAdvance(text);
+                dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY + (bottomText ? 3 : 1) * fm.height() / 2, text);
+            }
         }
     }
     if (params.showMonsters) {
