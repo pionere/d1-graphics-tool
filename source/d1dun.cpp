@@ -1038,7 +1038,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 itemEntry = &this->itemCache.back();
             }
             if (itemEntry->itemGfx != nullptr) {
-                int frameNum = objEntry->itemGfx->getFrameCount();
+                int frameNum = itemEntry->itemGfx->getFrameCount();
                 QImage itemImage = itemEntry->itemGfx->getFrameImage(frameNum - 1);
                 dungeon.drawImage(drawCursorX + ((int)backWidth - itemImage.width()) / 2, drawCursorY - itemImage.height(), itemImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             } else {
