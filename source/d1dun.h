@@ -96,12 +96,13 @@ typedef struct MonsterStruct {
 } MonsterStruct;
 
 typedef struct ObjectCacheEntry {
-    const ObjectStruct *objStr;
+    int objectIndex;
+    int frameNum;
     D1Gfx *objGfx;
 } ObjectCacheEntry;
 
 typedef struct MonsterCacheEntry {
-    const MonsterStruct *monStr;
+    int monsterIndex;
     D1Gfx *monGfx;
     D1Pal *monPal;
     D1Trn *monTrn;
