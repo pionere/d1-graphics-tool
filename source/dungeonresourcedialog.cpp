@@ -112,7 +112,7 @@ void DungeonResourceDialog::on_addButton_clicked()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
 
     if (this->dun->addResource(params)) {
-        int currentItem = this->comboBox->currentData(i).value<int>();
+        int currentItem = this->comboBox->currentData().value<int>();
         for (int i = this->comboBox->count() - 1; i >= 0; i--) {
             if (this->comboBox->itemData(i).value<int>() == params.index) {
                 this->comboBox->removeItem(i);
