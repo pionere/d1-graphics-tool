@@ -22,7 +22,6 @@ public:
     QString trnPath;
 };
 
-
 namespace Ui {
 class DungeonResourceDialog;
 }

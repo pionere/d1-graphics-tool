@@ -102,7 +102,7 @@ public:
 
     void update();
     void updateLabel();
-    void updateIcon();
+    void updateEntityOptions();
     void displayFrame();
     void toggleBottomPanel();
 

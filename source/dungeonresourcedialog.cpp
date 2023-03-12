@@ -87,9 +87,9 @@ void DungeonResourceDialog::on_trnFileClearPushButton_clicked()
 void DungeonResourceDialog::on_addButton_clicked()
 {
     AddResourceParam params;
-	params.type = this->type;
+    params.type = this->type;
     params.index = this->ui->indexLineEdit->text().toInt();
-    if (index <= 0) {
+    if (params.index <= 0) {
         return;
     }
     params.name = this->ui->nameLineEdit->text();
@@ -103,8 +103,8 @@ void DungeonResourceDialog::on_addButton_clicked()
     params.width = this->ui->widthLineEdit->text().toInt();
     params.frame = this->ui->frameLineEdit->text().toInt();
     params.trnPath = this->ui->trnFileLineEdit->text();
-	if (params.frame <= 0 && params.type == DUN_ENTITY_TYPE::OBJECT) {
-		return;
+    if (params.frame < 0 && params.type == DUN_ENTITY_TYPE::OBJECT) {
+        return;
     }
 
     this->close();

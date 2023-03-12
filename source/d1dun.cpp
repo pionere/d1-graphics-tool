@@ -1580,10 +1580,13 @@ void D1Dun::loadObject(int objectIndex)
             OpenAsParam params = OpenAsParam();
             params.celWidth = customObject.width;
             D1Cel::load(*result.objGfx, celFilePath, params);
-            if (result.objGfx->getFrameCount() < frameNum) {
+            if (result.objGfx->getFrameCount() < result.frameNum) {
                 // TODO: suppress errors? MemFree?
                 delete result.objGfx;
                 result.objGfx = nullptr;
+            } else {
+                result.objDataIndex = this->objDataCache.size();
+                this->objDataCache.push_back(result.objGfx);
             }
         }
     }
@@ -1604,6 +1607,7 @@ void D1Dun::loadObject(int objectIndex)
                 delete result.objGfx;
                 result.objGfx = nullptr;
             } else {
+                result.objDataIndex = objDataIndex;
                 this->objDataCache[objDataIndex] = result.objGfx;
             }
         }
@@ -1627,7 +1631,12 @@ void D1Dun::loadMonster(int monsterIndex)
                 // TODO: suppress errors? MemFree?
                 delete result.monGfx;
                 result.monGfx = nullptr;
-            } else if (customMonster.trnPath != nullptr) {
+            } else {
+                result.monDataIndex = this->monDataCache.size();
+                this->monDataCache.push_back(result.monGfx);
+            }
+            result.monTrn = nullptr;
+            if (result.monGfx = != nullptr && customMonster.trnPath != nullptr) {
                 result.monTrn = new D1Trn();
                 QString trnFilePath = customMonster.trnPath;
                 if (!result.monTrn->load(trnFilePath, result.monPal)) {
@@ -1664,9 +1673,11 @@ void D1Dun::loadMonster(int monsterIndex)
                 delete result.monGfx;
                 result.monGfx = nullptr;
             } else {
+                result.monDataIndex = monDataIndex;
                 this->monDataCache[monDataIndex] = result.monGfx;
             }
         }
+        result.monTrn = nullptr;
         if (result.monGfx != nullptr && monStr->trnPath != nullptr && !this->assetPath.isEmpty()) {
             result.monTrn = new D1Trn();
             QString trnFilePath = this->assetPath + "/Monsters/" + monStr->trnPath + ".TRN";
@@ -1705,6 +1716,9 @@ void D1Dun::loadItem(int itemIndex)
                 // TODO: suppress errors? MemFree?
                 delete result.itemGfx;
                 result.itemGfx = nullptr;
+            } else {
+                result.itemDataIndex = this->itemDataCache.size();
+                this->itemDataCache.push_back(result.monGfx);
             }
         }
     }
@@ -1713,21 +1727,33 @@ void D1Dun::loadItem(int itemIndex)
 
 void D1Dun::clearAssets()
 {
+    this->customObjectTypes.clear();
+    this->customMonsterTypes.clear();
+    this->customItemTypes.clear();
     this->objectCache.clear();
     for (auto &entry : this->monsterCache) {
         delete entry.monTrn;
     }
     this->monsterCache.clear();
-    for (int i = 0; i < lengthof(objDataCache); i++) {
+    this->itemCache.clear();
+    for (unsigned i = 0; i < objDataCache.size(); i++) {
         // TODO: MemFree?
         delete objDataCache[i];
         objDataCache[i] = nullptr;
     }
-    for (int i = 0; i < lengthof(monDataCache); i++) {
+    objDataCache.resize(NUM_OFILE_TYPES);
+    for (unsigned i = 0; i < monDataCache.size(); i++) {
         // TODO: MemFree?
         delete monDataCache[i];
         monDataCache[i] = nullptr;
     }
+    monDataCache.resize(NUM_MOFILE_TYPES);
+    for (unsigned i = 0; i < itemDataCache.size(); i++) {
+        // TODO: MemFree?
+        delete itemDataCache[i];
+        itemDataCache[i] = nullptr;
+    }
+    itemDataCache.resize(NUM_ITFILE_TYPES);
 }
 
 void D1Dun::updateSubtiles(int tilePosX, int tilePosY, int tileRef)
@@ -2478,30 +2504,33 @@ bool D1Dun::addResource(const AddResourceParam &params)
         OpenAsParam openParams = OpenAsParam();
         openParams.celWidth = params.width;
         D1Cel::load(*objGfx, celFilePath, openParams);
-        bool result = objGfx->getFrameCount() >= params.frame;
+        bool result = objGfx->getFrameCount() >= (params.frame == 0 ? 1 : params.frame);
         delete objGfx;
         if (!result) {
             dProgressFail() << tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(celFilePath));
             return false;
         }
         // remove cache entry
-        for (i = 0; i < this->objectCache.size(); i++) {
+        for (unsigned i = 0; i < this->objectCache.size(); i++) {
             if (this->objectCache[i].objectIndex == params.index) {
                 D1Gfx *gfx = this->objectCache[i].objGfx;
+                int objDataIndex = this->objectCache[i].objDataIndex;
                 this->objectCache.erase(this->objectCache.begin() + i);
                 if (gfx == nullptr) {
-                    break;
+                    break; // previous entry without gfx -> done
                 }
-                for (i = 0; i < lengthof(this->objDataCache); i++) {
-                    if (this->objDataCache[i] == gfx) {
-                        // TODO: MemFree?
-                        delete this->objDataCache[i];
-                        this->objDataCache[i] = nullptr;
+                for (i = 0; i < this->objectCache.size(); i++) {
+                    if (this->objectCache[i].objGfx == gfx) {
                         break;
                     }
                 }
-                if (i < lengthof(this->objDataCache)) {
-                    break;
+                if (i < this->objectCache.size()) {
+                    break; // the gfx is still in use -> preserve
+                }
+                if (objDataIndex >= NUM_OFILE_TYPES) {
+                    this->objDataCache.erase(this->objDataCache.begin() + objDataIndex);
+                } else {
+                    this->objDataCache[objDataIndex] = nullptr;
                 }
                 delete gfx;
                 break;
@@ -2562,23 +2591,26 @@ bool D1Dun::addResource(const AddResourceParam &params)
             }
         }
         // remove cache entry
-        for (i = 0; i < this->monsterCache.size(); i++) {
+        for (unsigned i = 0; i < this->monsterCache.size(); i++) {
             if (this->monsterCache[i].monsterIndex == params.index) {
                 D1Gfx *gfx = this->monsterCache[i].monGfx;
+                int monDataIndex = this->monsterCache[i].monDataIndex;
                 this->monsterCache.erase(this->monsterCache.begin() + i);
                 if (gfx == nullptr) {
-                    break;
+                    break; // previous entry without gfx -> done
                 }
-                for (i = 0; i < lengthof(this->monDataCache); i++) {
-                    if (this->monDataCache[i] == gfx) {
-                        // TODO: MemFree?
-                        delete this->monDataCache[i];
-                        this->monDataCache[i] = nullptr;
+                for (i = 0; i < this->monsterCache.size(); i++) {
+                    if (this->monsterCache[i].monGfx == gfx) {
                         break;
                     }
                 }
-                if (i < lengthof(this->monDataCache)) {
-                    break;
+                if (i < this->monsterCache.size()) {
+                    break; // the gfx is still in use -> preserve
+                }
+                if (monDataIndex >= NUM_MOFILE_TYPES) {
+                    this->monDataCache.erase(this->monDataCache.begin() + monDataIndex);
+                } else {
+                    this->monDataCache[monDataIndex] = nullptr;
                 }
                 delete gfx;
                 break;
@@ -2629,24 +2661,27 @@ bool D1Dun::addResource(const AddResourceParam &params)
             return false;
         }
         // remove cache entry
-        for (i = 0; i < this->itemCache.size(); i++) {
+        for (unsigned i = 0; i < this->itemCache.size(); i++) {
             if (this->itemCache[i].itemIndex == params.index) {
                 D1Gfx *gfx = this->itemCache[i].itemGfx;
+                int itemDataIndex = this->itemCache[i].itemDataIndex;
                 this->itemCache.erase(this->itemCache.begin() + i);
                 if (gfx == nullptr) {
-                    break;
+                    break; // previous entry without gfx -> done
                 }
-                /*for (i = 0; i < lengthof(this->itemDataCache); i++) {
-                    if (this->itemDataCache[i] == gfx) {
-                        // TODO: MemFree?
-                        delete this->itemDataCache[i];
-                        this->itemDataCache[i] = nullptr;
+                for (i = 0; i < this->itemCache.size(); i++) {
+                    if (this->itemCache[i].itemGfx == gfx) {
                         break;
                     }
                 }
-                if (i < lengthof(this->itemDataCache)) {
-                    break;
-                }*/
+                if (i < this->itemCache.size()) {
+                    break; // the gfx is still in use -> preserve
+                }
+                if (itemDataIndex >= NUM_ITFILE_TYPES) {
+                    this->itemDataCache.erase(this->itemDataCache.begin() + itemDataIndex);
+                } else {
+                    this->itemDataCache[itemDataIndex] = nullptr;
+                }
                 delete gfx;
                 break;
             }

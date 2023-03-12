@@ -122,23 +122,11 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
         PushButtonWidget::addButton(this, layout, 1, 3, QStyle::SP_FileDialogNewFolder, tr("Add Custom Object"), this, &LevelCelView::on_dungeonObjectAddButton_clicked);
         PushButtonWidget::addButton(this, layout, 1, 7, QStyle::SP_FileDialogNewFolder, tr("Add Custom Monster"), this, &LevelCelView::on_dungeonMonsterAddButton_clicked);
         PushButtonWidget::addButton(this, layout, 1, 11, QStyle::SP_FileDialogNewFolder, tr("Add Custom Item"), this, &LevelCelView::on_dungeonItemAddButton_clicked);
-        // prepare the comboboxes
-        this->ui->dungeonObjectComboBox->addItem("", 0);
-        for (const ObjectStruct &obj : ObjConvTbl) {
-            if (obj.type != 0) {
-                this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
-            }
-        }
-        this->ui->dungeonMonsterComboBox->addItem("", 0);
-        for (const MonsterStruct &mon : MonstConvTbl) {
-            if (mon.type != 0) {
-                this->ui->dungeonMonsterComboBox->addItem(mon.name, mon.type);
-            }
-        }
         // initialize the fields which are not updated
         this->on_dungeonDefaultTileLineEdit_escPressed();
         this->ui->levelTypeComboBox->setCurrentIndex(d->getLevelType());
-        this->updateIcon();
+        // prepare the entities
+        this->updateEntityOptions();
     }
     // this->update();
 }
@@ -148,8 +136,24 @@ void LevelCelView::setPal(D1Pal *p)
     this->pal = p;
 }
 
-void LevelCelView::updateIcon()
+void LevelCelView::updateEntityOptions()
 {
+    // prepare the comboboxes
+    this->ui->dungeonObjectComboBox->clear();
+    this->ui->dungeonObjectComboBox->addItem("", 0);
+    for (const ObjectStruct &obj : ObjConvTbl) {
+        if (obj.type != 0) {
+            this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
+        }
+    }
+    this->ui->dungeonMonsterComboBox->clear();
+    this->ui->dungeonMonsterComboBox->addItem("", 0);
+    for (const MonsterStruct &mon : MonstConvTbl) {
+        if (mon.type != 0) {
+            this->ui->dungeonMonsterComboBox->addItem(mon.name, mon.type);
+        }
+    }
+    this->ui->dungeonItemComboBox->clear();
     // update icon of assets
     QString assetPath = this->dun->getAssetPath();
     if (!assetPath.isEmpty()) {
@@ -3484,7 +3488,7 @@ void LevelCelView::on_assetLoadPushButton_clicked()
         return;
 
     if (this->dun->setAssetPath(dirPath)) {
-        this->updateIcon();
+        this->updateEntityOptions();
         // update the view
         this->displayFrame();
     }
@@ -3493,7 +3497,7 @@ void LevelCelView::on_assetLoadPushButton_clicked()
 void LevelCelView::on_assetClearPushButton_clicked()
 {
     if (this->dun->setAssetPath("")) {
-        this->updateIcon();
+        this->updateEntityOptions();
         // update the view
         this->displayFrame();
     }
