@@ -2460,8 +2460,7 @@ void D1Dun::patch(int dunFileIndex)
 bool D1Dun::addResource(const AddResourceParam &params)
 {
     switch (params.type) {
-        case DUN_ENTITY_TYPE::OBJECT:
-        {
+        case DUN_ENTITY_TYPE::OBJECT: {
             /* test if it overwrites an existing entry?
             for (const CustomObjectStruct customObject : this->customObjectTypes) {
                 if (customObject.type == params.index) {
@@ -2528,8 +2527,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
             customObject.width = params.width;
             this->customObjectTypes.push_back(customObject);
         } break;
-        case DUN_ENTITY_TYPE::MONSTER:
-        {
+        case DUN_ENTITY_TYPE::MONSTER: {
             /* test if it overwrites an existing entry?
             for (const CustomMonsterStruct customMonster : this->customMonsterTypes) {
                 if (customMonster.type == params.index) {
@@ -2606,8 +2604,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
             customMonster.width = params.width;
             this->customMonsterTypes.push_back(customMonster);
         } break;
-        case DUN_ENTITY_TYPE::ITEM:
-        {
+        case DUN_ENTITY_TYPE::ITEM: {
             /* test if it overwrites an existing entry?
             for (const CustomItemStruct customItem : this->customItemTypes) {
                 if (customItem.type == params.index) {
