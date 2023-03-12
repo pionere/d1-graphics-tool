@@ -33,7 +33,7 @@ public:
     explicit DungeonResourceDialog(QWidget *parent);
     ~DungeonResourceDialog();
 
-    void initialize(DUN_ENTITY_TYPE type, D1Dun *dun, QComboBox *comboBox);
+    void initialize(DUN_ENTITY_TYPE type, D1Dun *dun, QComboBox *comboBox, int currentValue);
 
 private slots:
     void on_celFileBrowsePushButton_clicked();
@@ -49,4 +49,5 @@ private:
     DUN_ENTITY_TYPE type;
     D1Dun *dun;
     QComboBox *comboBox;
+    int currentValue;
 };

@@ -17,10 +17,11 @@ DungeonResourceDialog::~DungeonResourceDialog()
     delete ui;
 }
 
-void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, D1Dun *d, QComboBox *cb)
+void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, D1Dun *d, QComboBox *cb, int cv)
 {
     this->dun = d;
     this->comboBox = cb;
+    this->currentValue = cv;
 
     if (this->type != t) {
         this->type = t;
@@ -49,6 +50,7 @@ void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, D1Dun *d, QComboBox *c
         this->ui->trnFileLabel->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
         this->ui->trnFileLineEdit->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
         this->ui->trnFileBrowsePushButton->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
+        this->ui->trnFileClearPushButton->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
 
         this->ui->frameLabel->setVisible(t == DUN_ENTITY_TYPE::OBJECT);
         this->ui->frameLineEdit->setVisible(t == DUN_ENTITY_TYPE::OBJECT);
@@ -112,14 +114,13 @@ void DungeonResourceDialog::on_addButton_clicked()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
 
     if (this->dun->addResource(params)) {
-        int currentItem = this->comboBox->currentData().value<int>();
         for (int i = this->comboBox->count() - 1; i >= 0; i--) {
             if (this->comboBox->itemData(i).value<int>() == params.index) {
                 this->comboBox->removeItem(i);
             }
         }
         this->comboBox->addItem(params.name, params.index);
-        this->comboBox->setCurrentIndex(this->comboBox->findData(currentItem));
+        this->comboBox->setCurrentIndex(this->comboBox->findData(this->currentValue));
     }
 
     // Clear loading message from status bar
