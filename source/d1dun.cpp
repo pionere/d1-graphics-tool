@@ -99,7 +99,7 @@ const ObjectStruct ObjConvTbl[128] = {
     {   1, OFILE_LEVER,    "Lever", 1 }, // Q_SKELKING
     {   2, OFILE_CRUXSK1,  "Crucifix1", 1 }, // Q_SKELKING
     {   3, OFILE_CRUXSK2,  "Crucifix2", 1 }, // Q_SKELKING
-    {   4, OFILE_CRUXSK3,  "Crucifix2", 1 }, // Q_SKELKING
+    {   4, OFILE_CRUXSK3,  "Crucifix3", 1 }, // Q_SKELKING
     { 0 }, //OBJ_ANGEL,
     { 0 }, //OBJ_BANNERL,
     { 0 }, //OBJ_BANNERM,
@@ -170,8 +170,8 @@ const ObjectStruct ObjConvTbl[128] = {
     {  72, OFILE_TNUDEM,   "Tortured male 3", 3 }, //3, Q_BUTCHER
     {  73, OFILE_TNUDEM,   "Tortured male 4", 4 }, //4, Q_BUTCHER
     {  74, OFILE_TNUDEW,   "Tortured female 1", 1 }, //1, Q_BUTCHER
-    {  75, OFILE_TNUDEW,   "Tortured female 1", 2 }, //2, Q_BUTCHER
-    {  76, OFILE_TNUDEW,   "Tortured female 1", 3 }, //3, Q_BUTCHER
+    {  75, OFILE_TNUDEW,   "Tortured female 2", 2 }, //2, Q_BUTCHER
+    {  76, OFILE_TNUDEW,   "Tortured female 3", 3 }, //3, Q_BUTCHER
     { 0 }, //OBJ_CHEST1,
     {  78, OFILE_CHEST1,   "Chest 1", 1 }, // Q_SKELKING
     { 0 }, //OBJ_CHEST1,
@@ -1571,10 +1571,10 @@ bool D1Dun::setAssetPath(QString path)
 void D1Dun::loadObject(int objectIndex)
 {
     ObjectCacheEntry result = { objectIndex, 0, nullptr };
-	const ObjectStruct *objStr = &ObjConvTbl[objectIndex];
+    const ObjectStruct *objStr = &ObjConvTbl[objectIndex];
     if (objectIndex < lengthof(ObjConvTbl) && objStr->type != 0) {
         int objDataIndex = objStr->animType;
-		result.frameNum = objStr->frameNum;
+        result.frameNum = objStr->frameNum;
         result.objGfx = this->objDataCache[objDataIndex];
         if (result.objGfx == nullptr && !this->assetPath.isEmpty()) {
             result.objGfx = new D1Gfx();
@@ -1598,7 +1598,7 @@ void D1Dun::loadObject(int objectIndex)
 void D1Dun::loadMonster(int monsterIndex)
 {
     MonsterCacheEntry result = { monsterIndex, nullptr, this->pal, nullptr };
-	const MonsterStruct *monStr = &MonstConvTbl[monsterIndex];
+    const MonsterStruct *monStr = &MonstConvTbl[monsterIndex];
     if (monsterIndex < lengthof(MonstConvTbl) && monStr->type != 0) {
         int monDataIndex = monStr->animType;
         result.monGfx = this->monDataCache[monDataIndex];
