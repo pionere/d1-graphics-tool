@@ -3,7 +3,7 @@
 #include <QComboBox>
 #include <QDialog>
 
-#include "d1dun.h"
+class D1Dun;
 
 enum class DUN_ENTITY_TYPE {
     OBJECT,

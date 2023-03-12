@@ -1,5 +1,7 @@
 #include "dungeonresourcedialog.h"
 
+#include "d1dun.h"
+#include "mainwindow.h"
 #include "progressdialog.h"
 #include "ui_dungeonresourcedialog.h"
 
@@ -44,15 +46,13 @@ void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, D1Dun *d, QComboBox *c
         }
         this->setWindowTitle(title);
 
-        if (t != DUN_ENTITY_TYPE::MONSTER) {
-            this->ui->trnFileLabel->setVisible(false);
-            this->ui->trnFileLineEdit->setVisible(false);
-            this->ui->trnFileBrowsePushButton->setVisible(false);
-        }
-        if (t != DUN_ENTITY_TYPE::OBJECT) {
-            this->ui->frameLabel->setVisible(false);
-            this->ui->frameLineEdit->setVisible(false);
-        }
+        this->ui->trnFileLabel->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
+        this->ui->trnFileLineEdit->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
+        this->ui->trnFileBrowsePushButton->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
+
+        this->ui->frameLabel->setVisible(t == DUN_ENTITY_TYPE::OBJECT);
+        this->ui->frameLineEdit->setVisible(t == DUN_ENTITY_TYPE::OBJECT);
+
         this->adjustSize();
     }
 }
@@ -117,7 +117,7 @@ void DungeonResourceDialog::on_addButton_clicked()
                 this->comboBox->removeItem(i);
             }
         }
-        this->comboBox->addItem(params.name, params.index)
+        this->comboBox->addItem(params.name, params.index);
     }
 
     // Clear loading message from status bar
