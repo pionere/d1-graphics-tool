@@ -1636,7 +1636,7 @@ void D1Dun::loadMonster(int monsterIndex)
                 this->monDataCache.push_back(result.monGfx);
             }
             result.monTrn = nullptr;
-            if (result.monGfx = != nullptr && customMonster.trnPath != nullptr) {
+            if (result.monGfx != nullptr && customMonster.trnPath != nullptr) {
                 result.monTrn = new D1Trn();
                 QString trnFilePath = customMonster.trnPath;
                 if (!result.monTrn->load(trnFilePath, result.monPal)) {
@@ -1718,7 +1718,7 @@ void D1Dun::loadItem(int itemIndex)
                 result.itemGfx = nullptr;
             } else {
                 result.itemDataIndex = this->itemDataCache.size();
-                this->itemDataCache.push_back(result.monGfx);
+                this->itemDataCache.push_back(result.itemGfx);
             }
         }
     }
