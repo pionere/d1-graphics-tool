@@ -18,6 +18,7 @@
 #include "d1gfx.h"
 #include "d1pal.h"
 #include "d1tileset.h"
+#include "dungeonresourcedialog.h"
 #include "leveltabframewidget.h"
 #include "leveltabsubtilewidget.h"
 #include "leveltabtilewidget.h"
@@ -215,14 +216,18 @@ private slots:
     void on_assetClearPushButton_clicked();
     void on_dungeonSubtileLineEdit_returnPressed();
     void on_dungeonSubtileLineEdit_escPressed();
-    void on_dungeonItemLineEdit_returnPressed();
-    void on_dungeonItemLineEdit_escPressed();
-    void on_dungeonMonsterComboBox_activated(int index);
-    void on_dungeonMonsterLineEdit_returnPressed();
-    void on_dungeonMonsterLineEdit_escPressed();
-    void on_dungeonObjectComboBox_activated(int index);
     void on_dungeonObjectLineEdit_returnPressed();
     void on_dungeonObjectLineEdit_escPressed();
+    void on_dungeonObjectComboBox_activated(int index);
+    void on_dungeonObjectAddButton_clicked();
+    void on_dungeonMonsterLineEdit_returnPressed();
+    void on_dungeonMonsterLineEdit_escPressed();
+    void on_dungeonMonsterComboBox_activated(int index);
+    void on_dungeonMonsterAddButton_clicked();
+    void on_dungeonItemLineEdit_returnPressed();
+    void on_dungeonItemLineEdit_escPressed();
+    void on_dungeonItemComboBox_activated(int index);
+    void on_dungeonItemAddButton_clicked();
     void on_dungeonRoomLineEdit_returnPressed();
     void on_dungeonRoomLineEdit_escPressed();
 
@@ -251,6 +256,8 @@ private:
     LevelTabSubtileWidget tabSubtileWidget = LevelTabSubtileWidget(this);
     LevelTabFrameWidget tabFrameWidget = LevelTabFrameWidget(this);
     PushButtonWidget *viewBtn;
+
+    DungeonResourceDialog dungeonResourceDialog = DungeonResourceDialog(this);
 
     D1Pal *pal;
     D1Gfx *gfx;

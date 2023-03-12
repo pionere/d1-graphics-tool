@@ -2,6 +2,7 @@
 
 #include <QEvent>
 #include <QFocusEvent>
+#include <QGridLayout>
 #include <QLayout>
 #include <QObject>
 #include <QPaintEvent>
@@ -21,6 +22,14 @@ public:
     {
         PushButtonWidget *widget = new PushButtonWidget(parent, type, tooltip);
         layout->addWidget(widget);
+        QObject::connect(widget, &QPushButton::clicked, receiver, method);
+        return widget;
+    }
+    template <typename Object, typename PointerToMemberFunction>
+    static PushButtonWidget *addButton(QWidget *parent, QGridLayout *layout, int row, int column, QStyle::StandardPixmap type, const QString &tooltip, const Object receiver, PointerToMemberFunction method)
+    {
+        PushButtonWidget *widget = new PushButtonWidget(parent, type, tooltip);
+        layout->addWidget(widget, row, column);
         QObject::connect(widget, &QPushButton::clicked, receiver, method);
         return widget;
     }

@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QString>
 
+#include "dungeonresourcedialog.h"
 #include "openasdialog.h"
 #include "saveasdialog.h"
 
@@ -88,12 +89,35 @@ typedef struct ObjectStruct {
     int frameNum;
 } ObjectStruct;
 
+typedef struct CustomObjectStruct {
+    int type;
+    int width;
+    QString path;
+    QString name;
+    int frameNum;
+} CustomObjectStruct;
+
 typedef struct MonsterStruct {
     int type;
     int animType;
     const char *trnPath;
     const char *name;
 } MonsterStruct;
+
+typedef struct CustomMonsterStruct {
+    int type;
+    int width;
+    QString path;
+    QString trnPath;
+    QString name;
+} CustomMonsterStruct;
+
+typedef struct CustomItemStruct {
+    int type;
+    int width;
+    QString path;
+    QString name;
+} CustomItemStruct;
 
 typedef struct ObjectCacheEntry {
     int objectIndex;
@@ -107,6 +131,11 @@ typedef struct MonsterCacheEntry {
     D1Pal *monPal;
     D1Trn *monTrn;
 } MonsterCacheEntry;
+
+typedef struct ItemCacheEntry {
+    int itemIndex;
+    D1Gfx *itemGfx;
+} ItemCacheEntry;
 
 class DunDrawParam {
 public:
@@ -180,6 +209,7 @@ public:
     bool resetSubtiles();
 
     void patch(int dunFileIndex); // dun_file_index
+    bool addResource(const AddResourceParam &params);
 
 private:
     static void drawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, unsigned height, const QColor &color);
@@ -187,6 +217,7 @@ private:
     void initVectors(int width, int height);
     void loadObject(int objectIndex);
     void loadMonster(int monsterIndex);
+    void loadItem(int itemIndex);
     void clearAssets();
     void updateSubtiles(int tilePosX, int tilePosY, int tileRef);
     bool changeTileAt(int tilePosX, int tilePosY, int tileRef);
@@ -214,8 +245,12 @@ private:
     QString assetPath;
     int levelType; // dungeon_type
     D1Gfx *specGfx;
+    std::vector<CustomObjectStruct> customObjectTypes;
+    std::vector<CustomMonsterStruct> customMonsterTypes;
+    std::vector<CustomItemStruct> customItemTypes;
     std::vector<ObjectCacheEntry> objectCache;
     std::vector<MonsterCacheEntry> monsterCache;
+    std::vector<ItemCacheEntry> itemCache;
     D1Gfx *objDataCache[NUM_OFILE_TYPES] = { nullptr };
     D1Gfx *monDataCache[NUM_MOFILE_TYPES] = { nullptr };
 };

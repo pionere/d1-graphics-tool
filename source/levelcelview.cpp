@@ -117,6 +117,12 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
     this->ui->dungeonWidget->setVisible(dunMode && !bottomPanelHidden);
 
     if (dunMode) {
+        // add buttons for the custom entities
+        QGridLayout *layout = this->ui->dungeonGridLayout;
+        PushButtonWidget::addButton(this, layout, 1, 3, QStyle::SP_FileDialogNewFolder, tr("Add Custom Object"), this, &LevelCelView::on_dungeonObjectAddButton_clicked);
+        PushButtonWidget::addButton(this, layout, 1, 7, QStyle::SP_FileDialogNewFolder, tr("Add Custom Monster"), this, &LevelCelView::on_dungeonMonsterAddButton_clicked);
+        PushButtonWidget::addButton(this, layout, 1, 11, QStyle::SP_FileDialogNewFolder, tr("Add Custom Item"), this, &LevelCelView::on_dungeonItemAddButton_clicked);
+        // prepare the comboboxes
         this->ui->dungeonObjectComboBox->addItem("", 0);
         for (const ObjectStruct &obj : ObjConvTbl) {
             if (obj.type != 0) {
@@ -129,6 +135,7 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
                 this->ui->dungeonMonsterComboBox->addItem(mon.name, mon.type);
             }
         }
+        // initialize the fields which are not updated
         this->on_dungeonDefaultTileLineEdit_escPressed();
         this->ui->levelTypeComboBox->setCurrentIndex(d->getLevelType());
         this->updateIcon();
@@ -3516,41 +3523,46 @@ void LevelCelView::on_dungeonSubtileLineEdit_escPressed()
     this->ui->dungeonSubtileLineEdit->clearFocus();
 }
 
-void LevelCelView::on_dungeonItemLineEdit_returnPressed()
+void LevelCelView::on_dungeonObjectLineEdit_returnPressed()
 {
-    int itemIndex = this->ui->dungeonItemLineEdit->text().toUShort();
-    int posx = this->currentDunPosX;
-    int posy = this->currentDunPosY;
+    int objectIndex = this->ui->dungeonObjectLineEdit->text().toUShort();
 
-    bool change = this->dun->setItemAt(posx, posy, itemIndex);
-    this->on_dungeonItemLineEdit_escPressed();
+    bool change = this->dun->setObjectAt(this->currentDunPosX, this->currentDunPosY, objectIndex);
+    this->on_dungeonObjectLineEdit_escPressed();
     if (change) {
+        this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
         // update the view
         this->displayFrame();
     }
 }
 
-void LevelCelView::on_dungeonItemLineEdit_escPressed()
+void LevelCelView::on_dungeonObjectLineEdit_escPressed()
 {
-    int itemIndex = this->dun->getItemAt(this->currentDunPosX, this->currentDunPosY);
+    int objectIndex = this->dun->getObjectAt(this->currentDunPosX, this->currentDunPosY);
 
-    this->ui->dungeonItemLineEdit->setText(QString::number(itemIndex));
-    this->ui->dungeonItemLineEdit->clearFocus();
+    this->ui->dungeonObjectLineEdit->setText(QString::number(objectIndex));
+    this->ui->dungeonObjectLineEdit->clearFocus();
 }
 
-void LevelCelView::on_dungeonMonsterComboBox_activated(int index)
+void LevelCelView::on_dungeonObjectComboBox_activated(int index)
 {
     if (index < 0) {
         return;
     }
-    int monsterIndex = this->ui->dungeonMonsterComboBox->itemData(index).value<int>();
+    int objectIndex = this->ui->dungeonObjectComboBox->itemData(index).value<int>();
 
-    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monsterIndex);
-    this->on_dungeonMonsterLineEdit_escPressed();
+    bool change = this->dun->setObjectAt(this->currentDunPosX, this->currentDunPosY, objectIndex);
+    this->on_dungeonObjectLineEdit_escPressed();
     if (change) {
         // update the view
         this->displayFrame();
     }
+}
+
+void LevelCelView::on_dungeonObjectAddButton_clicked()
+{
+    this->dungeonResourceDialog.initialize(DUN_ENTITY_TYPE::OBJECT, this->dun, this->ui->dungeonObjectComboBox);
+    this->dungeonResourceDialog.show();
 }
 
 void LevelCelView::on_dungeonMonsterLineEdit_returnPressed()
@@ -3574,40 +3586,68 @@ void LevelCelView::on_dungeonMonsterLineEdit_escPressed()
     this->ui->dungeonMonsterLineEdit->clearFocus();
 }
 
-void LevelCelView::on_dungeonObjectComboBox_activated(int index)
+void LevelCelView::on_dungeonMonsterComboBox_activated(int index)
 {
     if (index < 0) {
         return;
     }
-    int objectIndex = this->ui->dungeonObjectComboBox->itemData(index).value<int>();
+    int monsterIndex = this->ui->dungeonMonsterComboBox->itemData(index).value<int>();
 
-    bool change = this->dun->setObjectAt(this->currentDunPosX, this->currentDunPosY, objectIndex);
-    this->on_dungeonObjectLineEdit_escPressed();
+    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monsterIndex);
+    this->on_dungeonMonsterLineEdit_escPressed();
     if (change) {
         // update the view
         this->displayFrame();
     }
 }
 
-void LevelCelView::on_dungeonObjectLineEdit_returnPressed()
+void LevelCelView::on_dungeonMonsterAddButton_clicked()
 {
-    int objectIndex = this->ui->dungeonObjectLineEdit->text().toUShort();
+    this->dungeonResourceDialog.initialize(DUN_ENTITY_TYPE::MONSTER, this->dun, this->ui->dungeonMonsterComboBox);
+    this->dungeonResourceDialog.show();
+}
 
-    bool change = this->dun->setObjectAt(this->currentDunPosX, this->currentDunPosY, objectIndex);
-    this->on_dungeonObjectLineEdit_escPressed();
+void LevelCelView::on_dungeonItemLineEdit_returnPressed()
+{
+    int itemIndex = this->ui->dungeonItemLineEdit->text().toUShort();
+    int posx = this->currentDunPosX;
+    int posy = this->currentDunPosY;
+
+    bool change = this->dun->setItemAt(posx, posy, itemIndex);
+    this->on_dungeonItemLineEdit_escPressed();
     if (change) {
-        this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
         // update the view
         this->displayFrame();
     }
 }
 
-void LevelCelView::on_dungeonObjectLineEdit_escPressed()
+void LevelCelView::on_dungeonItemLineEdit_escPressed()
 {
-    int objectIndex = this->dun->getObjectAt(this->currentDunPosX, this->currentDunPosY);
+    int itemIndex = this->dun->getItemAt(this->currentDunPosX, this->currentDunPosY);
 
-    this->ui->dungeonObjectLineEdit->setText(QString::number(objectIndex));
-    this->ui->dungeonObjectLineEdit->clearFocus();
+    this->ui->dungeonItemLineEdit->setText(QString::number(itemIndex));
+    this->ui->dungeonItemLineEdit->clearFocus();
+}
+
+void LevelCelView::on_dungeonItemComboBox_activated(int index)
+{
+    if (index < 0) {
+        return;
+    }
+    int itemIndex = this->ui->dungeonItemComboBox->itemData(index).value<int>();
+
+    bool change = this->dun->setItemAt(this->currentDunPosX, this->currentDunPosY, itemIndex);
+    this->on_dungeonItemLineEdit_escPressed();
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::on_dungeonItemAddButton_clicked()
+{
+    this->dungeonResourceDialog.initialize(DUN_ENTITY_TYPE::ITEM, this->dun, this->ui->dungeonItemComboBox);
+    this->dungeonResourceDialog.show();
 }
 
 void LevelCelView::on_dungeonRoomLineEdit_returnPressed()

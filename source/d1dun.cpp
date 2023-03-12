@@ -1571,8 +1571,24 @@ bool D1Dun::setAssetPath(QString path)
 void D1Dun::loadObject(int objectIndex)
 {
     ObjectCacheEntry result = { objectIndex, 0, nullptr };
+    for (const CustomObjectStruct &customObject : this->customObjectTypes) {
+        if (customObject.type == objectIndex) {
+            result.frameNum = customObject.frameNum;
+            result.objGfx = new D1Gfx();
+            result.objGfx->setPalette(this->pal);
+            QString celFilePath = customObject.path;
+            OpenAsParam params = OpenAsParam();
+            params.celWidth = customObject.width;
+            D1Cel::load(*result.objGfx, celFilePath, params);
+            if (result.objGfx->getFrameCount() < frameNum) {
+                // TODO: suppress errors? MemFree?
+                delete result.objGfx;
+                result.objGfx = nullptr;
+            }
+        }
+    }
     const ObjectStruct *objStr = &ObjConvTbl[objectIndex];
-    if (objectIndex < lengthof(ObjConvTbl) && objStr->type != 0) {
+    if (result.objGfx == nullptr && objectIndex < lengthof(ObjConvTbl) && objStr->type != 0) {
         int objDataIndex = objStr->animType;
         result.frameNum = objStr->frameNum;
         result.objGfx = this->objDataCache[objDataIndex];
@@ -1598,8 +1614,42 @@ void D1Dun::loadObject(int objectIndex)
 void D1Dun::loadMonster(int monsterIndex)
 {
     MonsterCacheEntry result = { monsterIndex, nullptr, this->pal, nullptr };
+    for (const CustomMonsterStruct &customMonster : this->customMonsterTypes) {
+        if (customMonster.type == monsterIndex) {
+            result.monGfx = new D1Gfx();
+            result.monGfx->setPalette(this->pal);
+            // result.monGfx->setPalette(result.monPal);
+            QString cl2FilePath = customMonster.path;
+            OpenAsParam params = OpenAsParam();
+            params.celWidth = customMonster.width;
+            D1Cl2::load(*result.monGfx, cl2FilePath, params);
+            if (result.monGfx->getFrameCount() == 0) {
+                // TODO: suppress errors? MemFree?
+                delete result.monGfx;
+                result.monGfx = nullptr;
+            } else if (customMonster.trnPath != nullptr) {
+                result.monTrn = new D1Trn();
+                QString trnFilePath = customMonster.trnPath;
+                if (!result.monTrn->load(trnFilePath, result.monPal)) {
+                    // TODO: suppress errors? MemFree?
+                    delete result.monTrn;
+                    result.monTrn = nullptr;
+                } else {
+                    // apply Monster TRN
+                    for (int i = 0; i < D1PAL_COLORS; i++) {
+                        if (result.monTrn->getTranslation(i) == 0xFF) {
+                            result.monTrn->setTranslation(i, 0);
+                        }
+                    }
+                    result.monTrn->refreshResultingPalette();
+                    // set palette
+                    result.monPal = result.monTrn->getResultingPalette();
+                }
+            }
+        }
+    }
     const MonsterStruct *monStr = &MonstConvTbl[monsterIndex];
-    if (monsterIndex < lengthof(MonstConvTbl) && monStr->type != 0) {
+    if (result.monGfx == nullptr && monsterIndex < lengthof(MonstConvTbl) && monStr->type != 0) {
         int monDataIndex = monStr->animType;
         result.monGfx = this->monDataCache[monDataIndex];
         if (result.monGfx == nullptr && !this->assetPath.isEmpty()) {
@@ -1638,6 +1688,27 @@ void D1Dun::loadMonster(int monsterIndex)
         }
     }
     this->monsterCache.push_back(result);
+}
+
+void D1Dun::loadItem(int itemIndex)
+{
+    ItemCacheEntry result = { itemIndex, nullptr };
+    for (const CustomItemStruct &customItem : this->customItemTypes) {
+        if (customItem.type == itemIndex) {
+            result.itemGfx = new D1Gfx();
+            result.itemGfx->setPalette(this->pal);
+            QString celFilePath = customItem.path;
+            OpenAsParam params = OpenAsParam();
+            params.celWidth = customItem.width;
+            D1Cel::load(*result.itemGfx, celFilePath, params);
+            if (result.itemGfx->getFrameCount() == 0) {
+                // TODO: suppress errors? MemFree?
+                delete result.itemGfx;
+                result.itemGfx = nullptr;
+            }
+        }
+    }
+    this->itemCache.push_back(result);
 }
 
 void D1Dun::clearAssets()
@@ -2384,4 +2455,224 @@ void D1Dun::patch(int dunFileIndex)
     if (!change) {
         dProgress() << tr("No change was necessary.");
     }
+}
+
+bool D1Dun::addResource(const AddResourceParam &params)
+{
+    switch (params.type) {
+        case DUN_ENTITY_TYPE::OBJECT:
+        {
+            /* test if it overwrites an existing entry?
+            for (const CustomObjectStruct customObject : this->customObjectTypes) {
+                if (customObject.type == params.index) {
+                    QMessageBox::StandardButton reply;
+                    reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to replace %1?").arg(QDir::toNativeSeparators(filePath)), QMessageBox::Yes | QMessageBox::No);
+                    if (reply != QMessageBox::Yes) {
+                        return false;
+                    }
+                }
+            }*/
+            // check if the gfx can be loaded - TODO: merge with loadObject?
+            D1Gfx *objGfx = new D1Gfx();
+            // objGfx->setPalette(this->pal);
+            QString celFilePath = params.path;
+            OpenAsParam openParams = OpenAsParam();
+            openParams.celWidth = params.width;
+            D1Cel::load(*objGfx, celFilePath, openParams);
+            bool result = objGfx->getFrameCount() >= params.frame;
+            delete objGfx;
+            if (!result) {
+                dProgressFail() << tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(celFilePath));
+                return false;
+            }
+            // remove cache entry
+            for (i = 0; i < this->objectCache.size(); i++) {
+                if (this->objectCache[i].objectIndex == params.index) {
+                    D1Gfx *gfx = this->objectCache[i].objGfx;
+                    this->objectCache.erase(this->objectCache.begin() + i);
+                    if (gfx == nullptr) {
+                        break;
+                    }
+                    for (i = 0; i < lengthof(this->objDataCache); i++) {
+                        if (this->objDataCache[i] == gfx) {
+                            // TODO: MemFree?
+                            delete this->objDataCache[i];
+                            this->objDataCache[i] = nullptr;
+                            break;
+                        }
+                    }
+                    if (i < lengthof(this->objDataCache)) {
+                        break;
+                    }
+                    delete gfx;
+                    break;
+                }
+            }
+            // replace previous entry
+            for (unsigned i = 0; i < this->customObjectTypes.size(); i++) {
+                CustomObjectStruct &customObject = this->customObjectTypes[i];
+                if (customObject.type == params.index) {
+                    customObject.name = params.name;
+                    customObject.path = params.path;
+                    customObject.frameNum = params.frame;
+                    customObject.width = params.width;
+                    return true;
+                }
+            }
+            // add new entry
+            CustomObjectStruct customObject;
+            customObject.type = params.index;
+            customObject.name = params.name;
+            customObject.path = params.path;
+            customObject.frameNum = params.frame;
+            customObject.width = params.width;
+            this->customObjectTypes.push_back(customObject);
+        } break;
+        case DUN_ENTITY_TYPE::MONSTER:
+        {
+            /* test if it overwrites an existing entry?
+            for (const CustomMonsterStruct customMonster : this->customMonsterTypes) {
+                if (customMonster.type == params.index) {
+                    QMessageBox::StandardButton reply;
+                    reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to replace %1?").arg(QDir::toNativeSeparators(filePath)), QMessageBox::Yes | QMessageBox::No);
+                    if (reply != QMessageBox::Yes) {
+                        return false;
+                    }
+                }
+            }*/
+            // check if the gfx can be loaded - TODO: merge with loadMonster?
+            D1Gfx *monGfx = new D1Gfx();
+            // monGfx->setPalette(this->pal);
+            QString cl2FilePath = params.path;
+            OpenAsParam openParams = OpenAsParam();
+            openParams.celWidth = params.width;
+            D1Cl2::load(*monGfx, cl2FilePath, openParams);
+            bool result = monGfx->getFrameCount() != 0;
+            delete monGfx;
+            if (!result) {
+                dProgressFail() << tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(cl2FilePath));
+                return false;
+            }
+            // check if the trn can be loaded
+            if (!params.trnPath.isEmpty()) {
+                D1Trn *monTrn = new D1Trn();
+                result = monTrn->load(params.trnPath, this->pal);
+                delete monTrn;
+                if (!result) {
+                    dProgressFail() << tr("Failed loading TRN file: %1.").arg(QDir::toNativeSeparators(params.trnPath));
+                    return false;
+                }
+            }
+            // remove cache entry
+            for (i = 0; i < this->monsterCache.size(); i++) {
+                if (this->monsterCache[i].monsterIndex == params.index) {
+                    D1Gfx *gfx = this->monsterCache[i].monGfx;
+                    this->monsterCache.erase(this->monsterCache.begin() + i);
+                    if (gfx == nullptr) {
+                        break;
+                    }
+                    for (i = 0; i < lengthof(this->monDataCache); i++) {
+                        if (this->monDataCache[i] == gfx) {
+                            // TODO: MemFree?
+                            delete this->monDataCache[i];
+                            this->monDataCache[i] = nullptr;
+                            break;
+                        }
+                    }
+                    if (i < lengthof(this->monDataCache)) {
+                        break;
+                    }
+                    delete gfx;
+                    break;
+                }
+            }
+            // replace previous entry
+            for (unsigned i = 0; i < this->customMonsterTypes.size(); i++) {
+                CustomMonsterStruct &customMonster = this->customMonsterTypes[i];
+                if (customMonster.type == params.index) {
+                    customMonster.name = params.name;
+                    customMonster.path = params.path;
+                    customMonster.trnPath = params.trnPath;
+                    customMonster.width = params.width;
+                    return true;
+                }
+            }
+            // add new entry
+            CustomMonsterStruct customMonster;
+            customMonster.type = params.index;
+            customMonster.name = params.name;
+            customMonster.path = params.path;
+            customMonster.trnPath = params.trnPath;
+            customMonster.width = params.width;
+            this->customMonsterTypes.push_back(customMonster);
+        } break;
+        case DUN_ENTITY_TYPE::ITEM:
+        {
+            /* test if it overwrites an existing entry?
+            for (const CustomItemStruct customItem : this->customItemTypes) {
+                if (customItem.type == params.index) {
+                    QMessageBox::StandardButton reply;
+                    reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to replace %1?").arg(QDir::toNativeSeparators(filePath)), QMessageBox::Yes | QMessageBox::No);
+                    if (reply != QMessageBox::Yes) {
+                        return false;
+                    }
+                }
+            }*/
+            // check if the gfx can be loaded - TODO: merge with loadItem?
+            D1Gfx *itemGfx = new D1Gfx();
+            // itemGfx->setPalette(this->pal);
+            QString celFilePath = params.path;
+            OpenAsParam openParams = OpenAsParam();
+            openParams.celWidth = params.width;
+            D1Cel::load(*itemGfx, celFilePath, openParams);
+            bool result = itemGfx->getFrameCount() != 0;
+            delete itemGfx;
+            if (!result) {
+                dProgressFail() << tr("Failed loading CEL file: %1.").arg(QDir::toNativeSeparators(celFilePath));
+                return false;
+            }
+            // remove cache entry
+            for (i = 0; i < this->itemCache.size(); i++) {
+                if (this->itemCache[i].itemIndex == params.index) {
+                    D1Gfx *gfx = this->itemCache[i].itemGfx;
+                    this->itemCache.erase(this->itemCache.begin() + i);
+                    if (gfx == nullptr) {
+                        break;
+                    }
+                    /*for (i = 0; i < lengthof(this->itemDataCache); i++) {
+                        if (this->itemDataCache[i] == gfx) {
+                            // TODO: MemFree?
+                            delete this->itemDataCache[i];
+                            this->itemDataCache[i] = nullptr;
+                            break;
+                        }
+                    }
+                    if (i < lengthof(this->itemDataCache)) {
+                        break;
+                    }*/
+                    delete gfx;
+                    break;
+                }
+            }
+            // replace previous entry
+            for (unsigned i = 0; i < this->customItemTypes.size(); i++) {
+                CustomItemStruct &customItem = this->customItemTypes[i];
+                if (customItem.type == params.index) {
+                    customItem.name = params.name;
+                    customItem.path = params.path;
+                    customItem.width = params.width;
+                    return true;
+                }
+            }
+            // add new entry
+            CustomItemStruct customItem;
+            customItem.type = params.index;
+            customItem.name = params.name;
+            customItem.path = params.path;
+            customItem.width = params.width;
+            this->customItemTypes.push_back(customItem);
+        } break;
+    }
+
+    return true;
 }
