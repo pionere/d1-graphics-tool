@@ -1499,7 +1499,27 @@ void MainWindow::on_actionReportUse_Tileset_triggered()
     ProgressDialog::done();
 }
 
-void MainWindow::on_actionInefficientFrames_Tileset_triggered()
+void MainWindow::on_actionReportActiveSubtiles_Tileset_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->activeSubtiles();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionReportActiveTiles_Tileset_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->activeTiles();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionReportInefficientFrames_Tileset_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 

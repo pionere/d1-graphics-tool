@@ -90,6 +90,18 @@
     <addaction name="actionTogglePalTrn"/>
     <addaction name="actionToggleBottomPanel"/>
    </widget>
+   <widget class="QMenu" name="menuTilesetReports">
+    <property name="title">
+     <string>Report</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionReportUse_Tileset"/>
+    <addaction name="actionReportActiveSubtiles_Tileset"/>
+    <addaction name="actionReportActiveTiles_Tileset"/>
+    <addaction name="actionReportInefficientFrames_Tileset"/>
+   </widget>
    <widget class="QMenu" name="menuTilesetCheckFlags">
     <property name="title">
      <string>Check Flags</string>
@@ -141,8 +153,7 @@
     <property name="toolTipsVisible">
      <bool>true</bool>
     </property>
-    <addaction name="actionReportUse_Tileset"/>
-    <addaction name="actionInefficientFrames_Tileset"/>
+    <addaction name="menuTilesetReport"/>
     <addaction name="separator"/>
     <addaction name="actionResetFrameTypes_Tileset"/>
     <addaction name="actionPatchTileset_Tileset"/>
@@ -409,10 +420,26 @@
     <string>Usage Report</string>
    </property>
    <property name="toolTip">
-    <string>List the uses of the current frame/subtile/tile</string>
+    <string>List the uses of the current frame/subtile</string>
    </property>
   </action>
-  <action name="actionInefficientFrames_Tileset">
+  <action name="actionReportActiveSubtiles_Tileset">
+   <property name="text">
+    <string>Active Subtiles</string>
+   </property>
+   <property name="toolTip">
+    <string>List subtiles which are affected by the current playback mode</string>
+   </property>
+  </action>
+  <action name="actionReportActiveTiles_Tileset">
+   <property name="text">
+    <string>Active Tiles</string>
+   </property>
+   <property name="toolTip">
+    <string>List tiles which are affected by the current playback mode</string>
+   </property>
+  </action>
+  <action name="actionReportInefficientFrames_Tileset">
    <property name="text">
     <string>Inefficient Frames</string>
    </property>
