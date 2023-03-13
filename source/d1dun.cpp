@@ -1612,8 +1612,9 @@ void D1Dun::loadObjectGfx(const QString &filePath, int width, int minFrameNum, O
 
 void D1Dun::loadObject(int objectIndex)
 {
-    ObjectCacheEntry result = { objectIndex, 0, nullptr, 0 };
-    for (unsigned i = 0; i < this->customObjectTypes.size(); i++) {
+    ObjectCacheEntry result = { objectIndex, nullptr, 0 };
+	unsigned i = 0;
+    for (; i < this->customObjectTypes.size(); i++) {
         const CustomObjectStruct &customObject = this->customObjectTypes[i];
         if (customObject.type == objectIndex) {
             result.frameNum = customObject.frameNum;
@@ -1635,7 +1636,8 @@ void D1Dun::loadObject(int objectIndex)
 void D1Dun::loadMonsterGfx(const QString &filePath, int width, const QString &trnFilePath, MonsterCacheEntry &result)
 {
     // check for existing entry
-    for (unsigned i = 0; i < this->monDataCache.size(); i++) {
+	unsigned i = 0;
+    for (; i < this->monDataCache.size(); i++) {
         const &dataEntry = this->monDataCache[i];
         if (dataEntry.first->getFilePath() == filePath) {
             result.monGfx = dataEntry.first;
@@ -1681,8 +1683,9 @@ void D1Dun::loadMonsterGfx(const QString &filePath, int width, const QString &tr
 
 void D1Dun::loadMonster(int monsterIndex)
 {
-    MonsterCacheEntry result = { monsterIndex, 0, nullptr, this->pal, nullptr };
-    for (unsigned i = 0; i < this->customMonsterTypes.size(); i++) {
+    MonsterCacheEntry result = { monsterIndex, nullptr, this->pal, nullptr };
+	unsigned i = 0;
+    for (; i < this->customMonsterTypes.size(); i++) {
         const CustomMonsterStruct &customMonster = this->customMonsterTypes[i];
         if (customMonster.type == monsterIndex) {
             QString cl2FilePath = customMonster.path;
@@ -1730,7 +1733,7 @@ void D1Dun::loadItemGfx(const QString &filePath, int width, ItemCacheEntry &resu
 
 void D1Dun::loadItem(int itemIndex)
 {
-    ItemCacheEntry result = { itemIndex, 0, nullptr };
+    ItemCacheEntry result = { itemIndex, nullptr };
     for (const CustomItemStruct &customItem : this->customItemTypes) {
         if (customItem.type == itemIndex) {
             QString celFilePath = customItem.path;
