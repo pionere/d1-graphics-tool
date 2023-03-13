@@ -84,6 +84,9 @@ set(PROJECT_SOURCES
         source/d1tmi.h
         source/d1trn.cpp
         source/d1trn.h
+        source/dungeonresourcedialog.cpp
+        source/dungeonresourcedialog.h
+        source/dungeonresourcedialog.ui
         source/exportdialog.cpp
         source/exportdialog.h
         source/exportdialog.ui

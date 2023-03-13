@@ -1154,7 +1154,7 @@
          <bool>true</bool>
         </property>
         <widget class="QWidget">
-         <layout class="QGridLayout">
+         <layout class="QGridLayout" name="dungeonGridLayout">
           <item row="0" column="0">
            <widget class="QLabel">
             <property name="text">
@@ -1175,14 +1175,21 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
+          <item row="0" column="4">
+           <spacer>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="5">
            <widget class="QLabel">
             <property name="text">
              <string>Subtile:</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="4">
+          <item row="0" column="6">
            <widget class="LineEditWidget" name="dungeonSubtileLineEdit">
             <property name="charWidth">
              <number>5</number>
@@ -1195,14 +1202,21 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="6">
+          <item row="0" column="9">
+           <spacer>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="10">
            <widget class="QLabel">
             <property name="text">
              <string>Room:</string>
             </property>
            </widget>
           </item>
-          <item row="0" column="7">
+          <item row="0" column="11">
            <widget class="LineEditWidget" name="dungeonRoomLineEdit">
             <property name="charWidth">
              <number>5</number>
@@ -1215,7 +1229,7 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="8"  colspan="3">
+          <item row="0" column="12" colspan="5">
            <spacer>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -1230,9 +1244,6 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QComboBox" name="dungeonObjectComboBox"/>
-          </item>
-          <item row="1" column="2">
            <widget class="LineEditWidget" name="dungeonObjectLineEdit">
             <property name="charWidth">
              <number>5</number>
@@ -1245,17 +1256,27 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="3">
+          <item row="1" column="2">
+           <widget class="QComboBox" name="dungeonObjectComboBox"/>
+          </item>
+          <!--item row="1" column="3">
+           <widget class="QCheckBox" name="dungeonObjectAddButton"/>
+          </item-->
+          <item row="1" column="4">
+           <spacer>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </spacer>
+          </item>
+          <item row="1" column="5">
            <widget class="QLabel">
             <property name="text">
              <string>Monster:</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="4">
-           <widget class="QComboBox" name="dungeonMonsterComboBox"/>
-          </item>
-          <item row="1" column="5">
+          <item row="1" column="6">
            <widget class="LineEditWidget" name="dungeonMonsterLineEdit">
             <property name="charWidth">
              <number>5</number>
@@ -1268,14 +1289,27 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="6">
+          <item row="1" column="7">
+           <widget class="QComboBox" name="dungeonMonsterComboBox"/>
+          </item>
+          <!--item row="1" column="8">
+           <widget class="QCheckBox" name="dungeonMonsterAddButton"/>
+          </item-->
+          <item row="1" column="9">
+           <spacer>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </spacer>
+          </item>
+          <item row="1" column="10">
            <widget class="QLabel">
             <property name="text">
              <string>Item:</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="7">
+          <item row="1" column="11">
            <widget class="LineEditWidget" name="dungeonItemLineEdit">
             <property name="charWidth">
              <number>5</number>
@@ -1288,21 +1322,27 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="8">
+          <item row="1" column="12">
+           <widget class="QComboBox" name="dungeonItemComboBox"/>
+          </item>
+          <!--item row="1" column="13">
+           <widget class="QCheckBox" name="dungeonItemAddButton"/>
+          </item-->
+          <item row="1" column="14">
            <spacer>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
            </spacer>
           </item>
-          <item row="1" column="9">
+          <item row="1" column="15">
            <widget class="QPushButton" name="assetLoadPushButton">
             <property name="text">
              <string notr="true">...</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="10">
+          <item row="1" column="16">
            <widget class="QPushButton" name="assetClearPushButton">
             <property name="text">
              <string>Clear</string>
