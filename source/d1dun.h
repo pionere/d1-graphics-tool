@@ -77,8 +77,6 @@ typedef enum object_graphic_id {
     NUM_OFILE_TYPES
 } object_graphic_id;
 
-#define NUM_ITFILE_TYPES 0
-
 enum class D1DUN_TYPE {
     NORMAL,
     RAW,
@@ -123,14 +121,12 @@ typedef struct CustomItemStruct {
 
 typedef struct ObjectCacheEntry {
     int objectIndex;
-    unsigned objDataIndex;
     D1Gfx *objGfx;
     int frameNum;
 } ObjectCacheEntry;
 
 typedef struct MonsterCacheEntry {
     int monsterIndex;
-    unsigned monDataIndex;
     D1Gfx *monGfx;
     D1Pal *monPal;
     D1Trn *monTrn;
@@ -138,7 +134,6 @@ typedef struct MonsterCacheEntry {
 
 typedef struct ItemCacheEntry {
     int itemIndex;
-    unsigned itemDataIndex;
     D1Gfx *itemGfx;
 } ItemCacheEntry;
 
@@ -220,6 +215,9 @@ private:
     static void drawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, unsigned height, const QColor &color);
     void drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
     void initVectors(int width, int height);
+    void loadObjectGfx(const QString &filePath, int width, int minFrameNum, ObjectCacheEntry &result);
+    void loadMonsterGfx(const QString &filePath, int width, const QString &trnFilePath, MonsterCacheEntry &result);
+    void loadItemGfx(const QString &filePath, int width, ItemCacheEntry &result);
     void loadObject(int objectIndex);
     void loadMonster(int monsterIndex);
     void loadItem(int itemIndex);
@@ -256,9 +254,9 @@ private:
     std::vector<ObjectCacheEntry> objectCache;
     std::vector<MonsterCacheEntry> monsterCache;
     std::vector<ItemCacheEntry> itemCache;
-    std::vector<D1Gfx *> objDataCache = std::vector<D1Gfx *>(NUM_OFILE_TYPES);
-    std::vector<D1Gfx *> monDataCache = std::vector<D1Gfx *>(NUM_MOFILE_TYPES);
-    std::vector<D1Gfx *> itemDataCache = std::vector<D1Gfx *>(NUM_ITFILE_TYPES);
+    std::vector<std::pair<D1Gfx *, unsigned>> objDataCache;
+    std::vector<std::pair<D1Gfx *, unsigned>> monDataCache;
+    std::vector<std::pair<D1Gfx *, unsigned>> itemDataCache;
 };
 
 extern const ObjectStruct ObjConvTbl[128];

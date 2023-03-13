@@ -1585,137 +1585,147 @@ bool D1Dun::setAssetPath(QString path)
     return true;
 }
 
+void D1Dun::loadObjectGfx(const QString &filePath, int width, int minFrameNum, ObjectCacheEntry &result)
+{
+    // check for existing entry
+    for (auto &dataEntry : this->objDataCache) {
+        if (dataEntry.first->getFilePath() == filePath) {
+            result.objGfx = dataEntry.first;
+            dataEntry.second++;
+            return;
+        }
+    }
+    // create new entry
+    result.objGfx = new D1Gfx();
+    result.objGfx->setPalette(this->pal);
+    OpenAsParam params = OpenAsParam();
+    params.celWidth = width;
+    D1Cel::load(*result.objGfx, filePath, params);
+    if (result.objGfx->getFrameCount() >= minFrameNum) {
+        this->objDataCache.push_back(std::pair<D1Gfx *, unsigned>(result.objGfx, 1));
+    } else {
+        // TODO: suppress errors? MemFree?
+        delete result.objGfx;
+        result.objGfx = nullptr;
+    }
+}
+
 void D1Dun::loadObject(int objectIndex)
 {
     ObjectCacheEntry result = { objectIndex, 0, nullptr, 0 };
-    for (const CustomObjectStruct &customObject : this->customObjectTypes) {
+    for (unsigned i = 0; i < this->customObjectTypes.size(); i++) {
+        const CustomObjectStruct &customObject = this->customObjectTypes[i];
         if (customObject.type == objectIndex) {
             result.frameNum = customObject.frameNum;
-            result.objGfx = new D1Gfx();
-            result.objGfx->setPalette(this->pal);
             QString celFilePath = customObject.path;
-            OpenAsParam params = OpenAsParam();
-            params.celWidth = customObject.width;
-            D1Cel::load(*result.objGfx, celFilePath, params);
-            if (result.objGfx->getFrameCount() < result.frameNum) {
-                // TODO: suppress errors? MemFree?
-                delete result.objGfx;
-                result.objGfx = nullptr;
-            } else {
-                result.objDataIndex = this->objDataCache.size();
-                this->objDataCache.push_back(result.objGfx);
-            }
+            this->loadObjectGfx(celFilePath, customObject.width, customObject.frameNum, result);
+            break;
         }
     }
     const ObjectStruct *objStr = &ObjConvTbl[objectIndex];
-    if (result.objGfx == nullptr && objectIndex < lengthof(ObjConvTbl) && objStr->type != 0) {
-        int objDataIndex = objStr->animType;
+    if (i >= this->customObjectTypes.size() && objectIndex < lengthof(ObjConvTbl) && objStr->type != 0 && !this->assetPath.isEmpty()) {
+        int objFileIndex = objStr->animType;
         result.frameNum = objStr->frameNum;
-        result.objGfx = this->objDataCache[objDataIndex];
-        if (result.objGfx == nullptr && !this->assetPath.isEmpty()) {
-            result.objGfx = new D1Gfx();
-            result.objGfx->setPalette(this->pal);
-            QString celFilePath = this->assetPath + "/Objects/" + objfiledata[objDataIndex].path + ".CEL";
-            OpenAsParam params = OpenAsParam();
-            params.celWidth = objfiledata[objDataIndex].width;
-            D1Cel::load(*result.objGfx, celFilePath, params);
-            if (result.objGfx->getFrameCount() < objfiledata[objDataIndex].numFrames) {
-                // TODO: suppress errors? MemFree?
-                delete result.objGfx;
-                result.objGfx = nullptr;
-            } else {
-                result.objDataIndex = objDataIndex;
-                this->objDataCache[objDataIndex] = result.objGfx;
-            }
-        }
+        QString celFilePath = this->assetPath + "/Objects/" + objfiledata[objFileIndex].path + ".CEL";
+        this->loadObjectGfx(celFilePath, objfiledata[objFileIndex].width, objfiledata[objFileIndex].numFrames, result);
     }
     this->objectCache.push_back(result);
+}
+
+void D1Dun::loadMonsterGfx(const QString &filePath, int width, const QString &trnFilePath, MonsterCacheEntry &result)
+{
+    // check for existing entry
+    for (unsigned i = 0; i < this->monDataCache.size(); i++) {
+        const &dataEntry = this->monDataCache[i];
+        if (dataEntry.first->getFilePath() == filePath) {
+            result.monGfx = dataEntry.first;
+            dataEntry.second++;
+            break;
+        }
+    }
+    if (i >= this->monDataCache.size()) {
+        // create new entry
+        result.monGfx = new D1Gfx();
+        // result.monGfx->setPalette(this->pal);
+        OpenAsParam params = OpenAsParam();
+        params.celWidth = width;
+        D1Cl2::load(*result.monGfx, filePath, params);
+        if (result.monGfx->getFrameCount() != 0) {
+            this->monDataCache.push_back(std::pair<D1Gfx *, unsigned>(result.monGfx, 1));
+        } else {
+            // TODO: suppress errors? MemFree?
+            delete result.monGfx;
+            result.monGfx = nullptr;
+            return;
+        }
+    }
+    if (!trnFilePath.isEmpty()) {
+        result.monTrn = new D1Trn();
+        if (result.monTrn->load(trnFilePath, result.monPal)) {
+            // apply Monster TRN
+            for (int i = 0; i < D1PAL_COLORS; i++) {
+                if (result.monTrn->getTranslation(i) == 0xFF) {
+                    result.monTrn->setTranslation(i, 0);
+                }
+            }
+            result.monTrn->refreshResultingPalette();
+            // set palette
+            result.monPal = result.monTrn->getResultingPalette();
+        } else {
+            // TODO: suppress errors? MemFree?
+            delete result.monTrn;
+            result.monTrn = nullptr;
+        }
+    }
 }
 
 void D1Dun::loadMonster(int monsterIndex)
 {
     MonsterCacheEntry result = { monsterIndex, 0, nullptr, this->pal, nullptr };
-    for (const CustomMonsterStruct &customMonster : this->customMonsterTypes) {
+    for (unsigned i = 0; i < this->customMonsterTypes.size(); i++) {
+        const CustomMonsterStruct &customMonster = this->customMonsterTypes[i];
         if (customMonster.type == monsterIndex) {
-            result.monGfx = new D1Gfx();
-            result.monGfx->setPalette(this->pal);
-            // result.monGfx->setPalette(result.monPal);
             QString cl2FilePath = customMonster.path;
-            OpenAsParam params = OpenAsParam();
-            params.celWidth = customMonster.width;
-            D1Cl2::load(*result.monGfx, cl2FilePath, params);
-            if (result.monGfx->getFrameCount() == 0) {
-                // TODO: suppress errors? MemFree?
-                delete result.monGfx;
-                result.monGfx = nullptr;
-            } else {
-                result.monDataIndex = this->monDataCache.size();
-                this->monDataCache.push_back(result.monGfx);
-            }
-            result.monTrn = nullptr;
-            if (result.monGfx != nullptr && customMonster.trnPath != nullptr) {
-                result.monTrn = new D1Trn();
-                QString trnFilePath = customMonster.trnPath;
-                if (!result.monTrn->load(trnFilePath, result.monPal)) {
-                    // TODO: suppress errors? MemFree?
-                    delete result.monTrn;
-                    result.monTrn = nullptr;
-                } else {
-                    // apply Monster TRN
-                    for (int i = 0; i < D1PAL_COLORS; i++) {
-                        if (result.monTrn->getTranslation(i) == 0xFF) {
-                            result.monTrn->setTranslation(i, 0);
-                        }
-                    }
-                    result.monTrn->refreshResultingPalette();
-                    // set palette
-                    result.monPal = result.monTrn->getResultingPalette();
-                }
-            }
+            this->loadMonsterGfx(cl2FilePath, customMonster.width, customMonster.trnPath, result);
+            break;
         }
     }
     const MonsterStruct *monStr = &MonstConvTbl[monsterIndex];
-    if (result.monGfx == nullptr && monsterIndex < lengthof(MonstConvTbl) && monStr->type != 0) {
-        int monDataIndex = monStr->animType;
-        result.monGfx = this->monDataCache[monDataIndex];
-        if (result.monGfx == nullptr && !this->assetPath.isEmpty()) {
-            result.monGfx = new D1Gfx();
-            // result.monGfx->setPalette(result.monPal);
-            QString cl2FilePath = this->assetPath + "/Monsters/" + monfiledata[monDataIndex].path + "N.CL2";
-            OpenAsParam params = OpenAsParam();
-            params.celWidth = monfiledata[monDataIndex].width;
-            D1Cl2::load(*result.monGfx, cl2FilePath, params);
-            if (result.monGfx->getFrameCount() == 0) {
-                // TODO: suppress errors? MemFree?
-                delete result.monGfx;
-                result.monGfx = nullptr;
-            } else {
-                result.monDataIndex = monDataIndex;
-                this->monDataCache[monDataIndex] = result.monGfx;
-            }
+    if (i >= this->customObjectTypes.size() && monsterIndex < lengthof(MonstConvTbl) && monStr->type != 0 && !this->assetPath.isEmpty()) {
+        int moFileIndex = monStr->animType;
+        QString cl2FilePath = this->assetPath + "/Monsters/" + monfiledata[moFileIndex].path + "N.CL2";
+        QString trnFilePath;
+        if (monStr->trnPath != nullptr) {
+            trnFilePath = this->assetPath + "/Monsters/" + monStr->trnPath + ".TRN";
         }
-        result.monTrn = nullptr;
-        if (result.monGfx != nullptr && monStr->trnPath != nullptr && !this->assetPath.isEmpty()) {
-            result.monTrn = new D1Trn();
-            QString trnFilePath = this->assetPath + "/Monsters/" + monStr->trnPath + ".TRN";
-            if (!result.monTrn->load(trnFilePath, result.monPal)) {
-                // TODO: suppress errors? MemFree?
-                delete result.monTrn;
-                result.monTrn = nullptr;
-            } else {
-                // apply Monster TRN
-                for (int i = 0; i < D1PAL_COLORS; i++) {
-                    if (result.monTrn->getTranslation(i) == 0xFF) {
-                        result.monTrn->setTranslation(i, 0);
-                    }
-                }
-                result.monTrn->refreshResultingPalette();
-                // set palette
-                result.monPal = result.monTrn->getResultingPalette();
-            }
-        }
+        this->loadMonsterGfx(cl2FilePath, monfiledata[moFileIndex].width, trnFilePath, result);
     }
     this->monsterCache.push_back(result);
+}
+
+void D1Dun::loadItemGfx(const QString &filePath, int width, ItemCacheEntry &result)
+{
+    // check for existing entry
+    for (auto &dataEntry : this->itemDataCache) {
+        if (dataEntry.first->getFilePath() == filePath) {
+            result.itemGfx = dataEntry.first;
+            dataEntry.second++;
+            return;
+        }
+    }
+    // create new entry
+    result.itemGfx = new D1Gfx();
+    result.itemGfx->setPalette(this->pal);
+    OpenAsParam params = OpenAsParam();
+    params.celWidth = width;
+    D1Cel::load(*result.itemGfx, filePath, params);
+    if (result.itemGfx->getFrameCount() != 0) {
+        this->itemDataCache.push_back(std::pair<D1Gfx *, unsigned>(result.itemGfx, 1));
+    } else {
+        // TODO: suppress errors? MemFree?
+        delete result.itemGfx;
+        result.itemGfx = nullptr;
+    }
 }
 
 void D1Dun::loadItem(int itemIndex)
@@ -1723,20 +1733,9 @@ void D1Dun::loadItem(int itemIndex)
     ItemCacheEntry result = { itemIndex, 0, nullptr };
     for (const CustomItemStruct &customItem : this->customItemTypes) {
         if (customItem.type == itemIndex) {
-            result.itemGfx = new D1Gfx();
-            result.itemGfx->setPalette(this->pal);
             QString celFilePath = customItem.path;
-            OpenAsParam params = OpenAsParam();
-            params.celWidth = customItem.width;
-            D1Cel::load(*result.itemGfx, celFilePath, params);
-            if (result.itemGfx->getFrameCount() == 0) {
-                // TODO: suppress errors? MemFree?
-                delete result.itemGfx;
-                result.itemGfx = nullptr;
-            } else {
-                result.itemDataIndex = this->itemDataCache.size();
-                this->itemDataCache.push_back(result.itemGfx);
-            }
+            this->loadItemGfx(celFilePath, customItem.width, result);
+            break;
         }
     }
     this->itemCache.push_back(result);
@@ -1753,24 +1752,18 @@ void D1Dun::clearAssets()
     }
     this->monsterCache.clear();
     this->itemCache.clear();
-    for (unsigned i = 0; i < objDataCache.size(); i++) {
-        // TODO: MemFree?
-        delete objDataCache[i];
-        objDataCache[i] = nullptr;
+    for (auto &dataEntry : this->objDataCache) {
+        delete dataEntry.first;
     }
-    objDataCache.resize(NUM_OFILE_TYPES);
-    for (unsigned i = 0; i < monDataCache.size(); i++) {
-        // TODO: MemFree?
-        delete monDataCache[i];
-        monDataCache[i] = nullptr;
+    this->objDataCache.clear();
+    for (auto &dataEntry : this->monDataCache) {
+        delete dataEntry.first;
     }
-    monDataCache.resize(NUM_MOFILE_TYPES);
-    for (unsigned i = 0; i < itemDataCache.size(); i++) {
-        // TODO: MemFree?
-        delete itemDataCache[i];
-        itemDataCache[i] = nullptr;
+    this->monDataCache.clear();
+    for (auto &dataEntry : this->itemDataCache) {
+        delete dataEntry.first;
     }
-    itemDataCache.resize(NUM_ITFILE_TYPES);
+    this->itemDataCache.clear();
 }
 
 void D1Dun::updateSubtiles(int tilePosX, int tilePosY, int tileRef)
@@ -2531,25 +2524,21 @@ bool D1Dun::addResource(const AddResourceParam &params)
         for (unsigned i = 0; i < this->objectCache.size(); i++) {
             if (this->objectCache[i].objectIndex == params.index) {
                 D1Gfx *gfx = this->objectCache[i].objGfx;
-                int objDataIndex = this->objectCache[i].objDataIndex;
                 this->objectCache.erase(this->objectCache.begin() + i);
                 if (gfx == nullptr) {
                     break; // previous entry without gfx -> done
                 }
-                for (i = 0; i < this->objectCache.size(); i++) {
-                    if (this->objectCache[i].objGfx == gfx) {
+                for (i = 0; i < this->objDataCache.size(); i++) {
+                    auto &dataEntry = this->objDataCache[i];
+                    if (dataEntry.first == gfx) {
+                        dataEntry.second--;
+                        if (dataEntry.second == 0) {
+                            this->objDataCache.erase(this->objDataCache.begin() + i);
+                            delete gfx;
+                        }
                         break;
                     }
                 }
-                if (i < this->objectCache.size()) {
-                    break; // the gfx is still in use -> preserve
-                }
-                if (objDataIndex >= NUM_OFILE_TYPES) {
-                    this->objDataCache.erase(this->objDataCache.begin() + objDataIndex);
-                } else {
-                    this->objDataCache[objDataIndex] = nullptr;
-                }
-                delete gfx;
                 break;
             }
         }
@@ -2611,25 +2600,21 @@ bool D1Dun::addResource(const AddResourceParam &params)
         for (unsigned i = 0; i < this->monsterCache.size(); i++) {
             if (this->monsterCache[i].monsterIndex == params.index) {
                 D1Gfx *gfx = this->monsterCache[i].monGfx;
-                int monDataIndex = this->monsterCache[i].monDataIndex;
                 this->monsterCache.erase(this->monsterCache.begin() + i);
                 if (gfx == nullptr) {
                     break; // previous entry without gfx -> done
                 }
-                for (i = 0; i < this->monsterCache.size(); i++) {
-                    if (this->monsterCache[i].monGfx == gfx) {
+                for (i = 0; i < this->monDataCache.size(); i++) {
+                    auto &dataEntry = this->monDataCache[i];
+                    if (dataEntry.first == gfx) {
+                        dataEntry.second--;
+                        if (dataEntry.second == 0) {
+                            this->monDataCache.erase(this->monDataCache.begin() + i);
+                            delete gfx;
+                        }
                         break;
                     }
                 }
-                if (i < this->monsterCache.size()) {
-                    break; // the gfx is still in use -> preserve
-                }
-                if (monDataIndex >= NUM_MOFILE_TYPES) {
-                    this->monDataCache.erase(this->monDataCache.begin() + monDataIndex);
-                } else {
-                    this->monDataCache[monDataIndex] = nullptr;
-                }
-                delete gfx;
                 break;
             }
         }
@@ -2681,25 +2666,21 @@ bool D1Dun::addResource(const AddResourceParam &params)
         for (unsigned i = 0; i < this->itemCache.size(); i++) {
             if (this->itemCache[i].itemIndex == params.index) {
                 D1Gfx *gfx = this->itemCache[i].itemGfx;
-                int itemDataIndex = this->itemCache[i].itemDataIndex;
                 this->itemCache.erase(this->itemCache.begin() + i);
                 if (gfx == nullptr) {
                     break; // previous entry without gfx -> done
                 }
-                for (i = 0; i < this->itemCache.size(); i++) {
-                    if (this->itemCache[i].itemGfx == gfx) {
+                for (i = 0; i < this->itemDataCache.size(); i++) {
+                    auto &dataEntry = this->itemDataCache[i];
+                    if (dataEntry.first == gfx) {
+                        dataEntry.second--;
+                        if (dataEntry.second == 0) {
+                            this->itemDataCache.erase(this->itemDataCache.begin() + i);
+                            delete gfx;
+                        }
                         break;
                     }
                 }
-                if (i < this->itemCache.size()) {
-                    break; // the gfx is still in use -> preserve
-                }
-                if (itemDataIndex >= NUM_ITFILE_TYPES) {
-                    this->itemDataCache.erase(this->itemDataCache.begin() + itemDataIndex);
-                } else {
-                    this->itemDataCache[itemDataIndex] = nullptr;
-                }
-                delete gfx;
                 break;
             }
         }
