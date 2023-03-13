@@ -74,7 +74,7 @@ public:
     void getValidColors(std::vector<PaletteColor> &colors) const;
     void updateColors(const D1Pal &opal);
     void cycleColors(D1PAL_CYCLE_TYPE type);
-    static int getCycleColors(D1PAL_CYCLE_TYPE type) const;
+    static int getCycleColors(D1PAL_CYCLE_TYPE type);
 
 private:
     void loadRegularPalette(QFile &file);
