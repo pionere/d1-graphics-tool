@@ -1636,7 +1636,7 @@ void LevelCelView::reportUsage() const
 
 static int countCycledPixels(const std::vector<std::vector<D1GfxPixel>> &pixelImage, int cycleColors)
 {
-    int result;
+    int result = 0;
     for (auto &pixelLine : pixelImage) {
         for (auto &pixel : pixelLine) {
             if (!pixel.isTransparent() && pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < cycleColors) {
