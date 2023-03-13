@@ -1613,7 +1613,7 @@ void D1Dun::loadObjectGfx(const QString &filePath, int width, int minFrameNum, O
 void D1Dun::loadObject(int objectIndex)
 {
     ObjectCacheEntry result = { objectIndex, nullptr, 0 };
-	unsigned i = 0;
+    unsigned i = 0;
     for (; i < this->customObjectTypes.size(); i++) {
         const CustomObjectStruct &customObject = this->customObjectTypes[i];
         if (customObject.type == objectIndex) {
@@ -1636,9 +1636,9 @@ void D1Dun::loadObject(int objectIndex)
 void D1Dun::loadMonsterGfx(const QString &filePath, int width, const QString &trnFilePath, MonsterCacheEntry &result)
 {
     // check for existing entry
-	unsigned i = 0;
+    unsigned i = 0;
     for (; i < this->monDataCache.size(); i++) {
-        const &dataEntry = this->monDataCache[i];
+        auto &dataEntry = this->monDataCache[i];
         if (dataEntry.first->getFilePath() == filePath) {
             result.monGfx = dataEntry.first;
             dataEntry.second++;
@@ -1684,7 +1684,7 @@ void D1Dun::loadMonsterGfx(const QString &filePath, int width, const QString &tr
 void D1Dun::loadMonster(int monsterIndex)
 {
     MonsterCacheEntry result = { monsterIndex, nullptr, this->pal, nullptr };
-	unsigned i = 0;
+    unsigned i = 0;
     for (; i < this->customMonsterTypes.size(); i++) {
         const CustomMonsterStruct &customMonster = this->customMonsterTypes[i];
         if (customMonster.type == monsterIndex) {
