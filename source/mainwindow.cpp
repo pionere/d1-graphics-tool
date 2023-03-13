@@ -1493,7 +1493,7 @@ void MainWindow::on_actionReportUse_Tileset_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
-    this->levelCelView->reportTilesetUsage();
+    this->levelCelView->reportUsage();
 
     // Clear loading message from status bar
     ProgressDialog::done();

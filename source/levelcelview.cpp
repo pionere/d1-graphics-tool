@@ -1664,7 +1664,7 @@ void LevelCelView::activeSubtiles() const
         dProgress() << progress;
         for (int i = 0; i < this->min->getSubtileCount(); i++) {
             const std::vector<std::vector<D1GfxPixel>> pixelImage = this->min->getSubtilePixelImage(i);
-            int numPixels = countCycledPixels(pixelmage, cycleColors);
+            int numPixels = countCycledPixels(pixelImage, cycleColors);
             if (numPixels != 0) {
                 dProgress() << tr("Subtile %1 has %2 affected pixels.", "", numPixels).arg(i + 1).arg(numPixels);
                 result = true;
@@ -1699,7 +1699,7 @@ void LevelCelView::activeTiles() const
         dProgress() << progress;
         for (int i = 0; i < this->til->getTileCount(); i++) {
             const std::vector<std::vector<D1GfxPixel>> pixelImage = this->til->getTilePixelImage(i);
-            int numPixels = countCycledPixels(pixelmage, cycleColors);
+            int numPixels = countCycledPixels(pixelImage, cycleColors);
             if (numPixels != 0) {
                 dProgress() << tr("Tile %1 has %2 affected pixels.", "", numPixels).arg(i + 1).arg(numPixels);
                 result = true;
