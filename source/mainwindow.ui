@@ -153,7 +153,7 @@
     <property name="toolTipsVisible">
      <bool>true</bool>
     </property>
-    <addaction name="menuTilesetReport"/>
+    <addaction name="menuTilesetReports"/>
     <addaction name="separator"/>
     <addaction name="actionResetFrameTypes_Tileset"/>
     <addaction name="actionPatchTileset_Tileset"/>
