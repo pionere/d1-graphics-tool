@@ -234,7 +234,9 @@ void LevelCelView::update()
         this->ui->dungeonTileLineEdit->setText(tileRef == UNDEF_TILE ? QStringLiteral("?") : QString::number(tileRef));
         int subtileRef = this->dun->getSubtileAt(posx, posy);
         this->ui->dungeonSubtileLineEdit->setText(subtileRef == UNDEF_SUBTILE ? QStringLiteral("?") : QString::number(subtileRef));
-        this->ui->dungeonItemLineEdit->setText(QString::number(this->dun->getItemAt(posx, posy)));
+        int itemIndex = this->dun->getItemAt(posx, posy);
+        this->ui->dungeonItemLineEdit->setText(QString::number(itemIndex));
+        this->ui->dungeonItemComboBox->setCurrentIndex(this->ui->dungeonItemComboBox->findData(itemIndex));
         int monsterIndex = this->dun->getMonsterAt(posx, posy);
         this->ui->dungeonMonsterLineEdit->setText(QString::number(monsterIndex));
         this->ui->dungeonMonsterComboBox->setCurrentIndex(this->ui->dungeonMonsterComboBox->findData(monsterIndex));
@@ -3622,6 +3624,7 @@ void LevelCelView::on_dungeonItemLineEdit_returnPressed()
     bool change = this->dun->setItemAt(posx, posy, itemIndex);
     this->on_dungeonItemLineEdit_escPressed();
     if (change) {
+		this->ui->dungeonItemComboBox->setCurrentIndex(this->ui->dungeonItemComboBox->findData(itemIndex));
         // update the view
         this->displayFrame();
     }
