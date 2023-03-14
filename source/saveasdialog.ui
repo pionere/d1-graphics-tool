@@ -103,6 +103,13 @@
           </attribute>
          </widget>
         </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
        </layout>
       </item>
       <item row="1" column="0">
@@ -169,6 +176,13 @@
            <string notr="true">minUpscaledButtonGroup</string>
           </attribute>
          </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
         </item>
        </layout>
       </item>
