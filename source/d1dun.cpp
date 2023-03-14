@@ -846,6 +846,7 @@ bool D1Dun::save(const SaveAsParam &params)
         if (layers & (1 << 3)) {
             dProgressWarn() << tr("Defined room is not saved in this format (RDUN).");
         }
+        numLayers = 0;
     }
 
     QDir().mkpath(QFileInfo(filePath).absolutePath());
@@ -932,6 +933,7 @@ bool D1Dun::save(const SaveAsParam &params)
         }
     }
 
+    this->numLayers = numLayers;
     this->type = type;
     this->dunFilePath = filePath; // this->load(filePath, allocate);
     this->modified = false;
