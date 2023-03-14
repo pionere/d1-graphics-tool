@@ -274,3 +274,8 @@ void D1Pal::cycleColors(D1PAL_CYCLE_TYPE type)
         break;
     }
 }
+
+int D1Pal::getCycleColors(D1PAL_CYCLE_TYPE type)
+{
+    return type == D1PAL_CYCLE_TYPE::NEST ? 16 : 32;
+}

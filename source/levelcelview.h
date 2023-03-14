@@ -65,9 +65,11 @@ public:
     QImage copyCurrent() const;
     void pasteCurrent(const QImage &image);
 
-    void reportTilesetUsage() const;
+    void reportUsage() const;
+    void activeSubtiles() const;
+    void activeTiles() const;
+    void inefficientFrames() const;
     void resetFrameTypes();
-    void inefficientFrames();
     void checkSubtileFlags() const;
     void checkTileFlags() const;
     void checkTilesetFlags() const;

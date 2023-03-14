@@ -1585,7 +1585,7 @@ void LevelCelView::collectSubtileUsers(int subtileIndex, std::vector<int> &users
     }
 }
 
-void LevelCelView::reportTilesetUsage() const
+void LevelCelView::reportUsage() const
 {
     ProgressDialog::incBar(tr("Scanning..."), 2);
 
@@ -1634,6 +1634,89 @@ void LevelCelView::reportTilesetUsage() const
     ProgressDialog::decBar();
 }
 
+static int countCycledPixels(const std::vector<std::vector<D1GfxPixel>> &pixelImage, int cycleColors)
+{
+    int result = 0;
+    for (auto &pixelLine : pixelImage) {
+        for (auto &pixel : pixelLine) {
+            if (!pixel.isTransparent() && pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < cycleColors) {
+                result++;
+            }
+        }
+    }
+    return result;
+}
+
+void LevelCelView::activeSubtiles() const
+{
+    ProgressDialog::incBar(tr("Checking subtiles..."), 1);
+    QComboBox *cycleBox = this->dunView ? this->ui->dunPlayComboBox : this->ui->playComboBox;
+    QString cycleTypeTxt = cycleBox->currentText();
+    int cycleType = cycleBox->currentIndex();
+    if (cycleType != 0) {
+        int cycleColors = D1Pal::getCycleColors((D1PAL_CYCLE_TYPE)(cycleType - 1));
+        bool result = false;
+
+        QPair<int, QString> progress;
+        progress.first = -1;
+        progress.second = tr("Active subtiles (using '%1' playback mode):").arg(cycleTypeTxt);
+
+        dProgress() << progress;
+        for (int i = 0; i < this->min->getSubtileCount(); i++) {
+            const std::vector<std::vector<D1GfxPixel>> pixelImage = this->min->getSubtilePixelImage(i);
+            int numPixels = countCycledPixels(pixelImage, cycleColors);
+            if (numPixels != 0) {
+                dProgress() << tr("Subtile %1 has %2 affected pixels.", "", numPixels).arg(i + 1).arg(numPixels);
+                result = true;
+            }
+        }
+
+        if (!result) {
+            progress.second = tr("None of the subtiles are active in '%1' playback mode.").arg(cycleTypeTxt);
+            dProgress() << progress;
+        }
+    } else {
+        dProgress() << tr("Colors are not affected if the playback mode is '%1'.").arg(cycleTypeTxt);
+    }
+
+    ProgressDialog::decBar();
+}
+
+void LevelCelView::activeTiles() const
+{
+    ProgressDialog::incBar(tr("Checking tiles..."), 1);
+    QComboBox *cycleBox = this->dunView ? this->ui->dunPlayComboBox : this->ui->playComboBox;
+    QString cycleTypeTxt = cycleBox->currentText();
+    int cycleType = cycleBox->currentIndex();
+    if (cycleType != 0) {
+        int cycleColors = D1Pal::getCycleColors((D1PAL_CYCLE_TYPE)(cycleType - 1));
+        bool result = false;
+
+        QPair<int, QString> progress;
+        progress.first = -1;
+        progress.second = tr("Active tiles (using '%1' playback mode):").arg(cycleTypeTxt);
+
+        dProgress() << progress;
+        for (int i = 0; i < this->til->getTileCount(); i++) {
+            const std::vector<std::vector<D1GfxPixel>> pixelImage = this->til->getTilePixelImage(i);
+            int numPixels = countCycledPixels(pixelImage, cycleColors);
+            if (numPixels != 0) {
+                dProgress() << tr("Tile %1 has %2 affected pixels.", "", numPixels).arg(i + 1).arg(numPixels);
+                result = true;
+            }
+        }
+
+        if (!result) {
+            progress.second = tr("None of the tiles are active in '%1' playback mode.").arg(cycleTypeTxt);
+            dProgress() << progress;
+        }
+    } else {
+        dProgress() << tr("Colors are not affected if the playback mode is '%1'.").arg(cycleTypeTxt);
+    }
+
+    ProgressDialog::decBar();
+}
+
 static QString getFrameTypeName(D1CEL_FRAME_TYPE type)
 {
     switch (type) {
@@ -1654,6 +1737,32 @@ static QString getFrameTypeName(D1CEL_FRAME_TYPE type)
     default:
         return QApplication::tr("Unknown");
     }
+}
+
+void LevelCelView::inefficientFrames() const
+{
+    ProgressDialog::incBar(tr("Scanning frames..."), 1);
+
+    int limit = 10;
+    bool result = false;
+    for (int i = 0; i < this->gfx->getFrameCount(); i++) {
+        const D1GfxFrame *frame = this->gfx->getFrame(i);
+        if (frame->getFrameType() != D1CEL_FRAME_TYPE::TransparentSquare) {
+            continue;
+        }
+        int diff = limit;
+        D1CEL_FRAME_TYPE effType = D1CelTilesetFrame::altFrameType(frame, &diff);
+        if (effType != D1CEL_FRAME_TYPE::TransparentSquare) {
+            diff = limit - diff;
+            dProgress() << tr("Frame %1 could be '%2' by changing %n pixel(s).", "", diff).arg(i + 1).arg(getFrameTypeName(effType));
+            result = true;
+        }
+    }
+    if (!result) {
+        dProgress() << tr("The frames are optimal.");
+    }
+
+    ProgressDialog::decBar();
 }
 
 void LevelCelView::resetFrameTypes()
@@ -1683,32 +1792,6 @@ void LevelCelView::resetFrameTypes()
         // this->updateLabel();
         // this->tabFrameWidget.update();
         this->update();
-    }
-
-    ProgressDialog::decBar();
-}
-
-void LevelCelView::inefficientFrames()
-{
-    ProgressDialog::incBar(tr("Scanning frames..."), 1);
-
-    int limit = 10;
-    bool result = false;
-    for (int i = 0; i < this->gfx->getFrameCount(); i++) {
-        D1GfxFrame *frame = this->gfx->getFrame(i);
-        if (frame->getFrameType() != D1CEL_FRAME_TYPE::TransparentSquare) {
-            continue;
-        }
-        int diff = limit;
-        D1CEL_FRAME_TYPE effType = D1CelTilesetFrame::altFrameType(frame, &diff);
-        if (effType != D1CEL_FRAME_TYPE::TransparentSquare) {
-            diff = limit - diff;
-            dProgress() << tr("Frame %1 could be '%2' by changing %n pixel(s).", "", diff).arg(i + 1).arg(getFrameTypeName(effType));
-            result = true;
-        }
-    }
-    if (!result) {
-        dProgress() << tr("The frames are optimal.");
     }
 
     ProgressDialog::decBar();
