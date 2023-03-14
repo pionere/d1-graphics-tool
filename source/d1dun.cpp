@@ -463,7 +463,7 @@ bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
     int dunWidth = 0;
     int dunHeight = 0;
     bool changed = fileSize == 0; // !file.isOpen();
-    quint numLayers = 0;
+    uint8_t numLayers = 0;
     D1DUN_TYPE type = filePath.toLower().endsWith(".dun") ? D1DUN_TYPE::NORMAL : D1DUN_TYPE::RAW;
     if (fileSize != 0) {
         if (type == D1DUN_TYPE::NORMAL) {
@@ -723,7 +723,7 @@ bool D1Dun::save(const SaveAsParam &params)
     D1DUN_TYPE type = filePath.toLower().endsWith(".dun") ? D1DUN_TYPE::NORMAL : D1DUN_TYPE::RAW;
     // validate data
     // - check the active layers
-    quint8 layers = 0;
+    uint8_t layers = 0;
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
             if (this->items[y][x] != 0) {
@@ -740,7 +740,7 @@ bool D1Dun::save(const SaveAsParam &params)
             }
         }
     }
-    quint8 numLayers = this->numLayers;
+    uint8_t numLayers = this->numLayers;
     if (type == D1DUN_TYPE::NORMAL) {
         // dun - tiles must be defined
         int dunWidth = this->width / TILE_WIDTH;
@@ -785,7 +785,7 @@ bool D1Dun::save(const SaveAsParam &params)
             }
         }
         // calculate the number of layers
-        quint8 layersNeeded = layers >= (1 << 3) ? 4 : (layers >= (1 << 2) ? 3 : (layers >= (1 << 1) ? 2 : (layers >= (1 << 0) ? 1 : 0)));
+        uint8_t layersNeeded = layers >= (1 << 3) ? 4 : (layers >= (1 << 2) ? 3 : (layers >= (1 << 1) ? 2 : (layers >= (1 << 0) ? 1 : 0)));
         if (params.dunLayerNum != UINT8_MAX) {
             // user defined the number of layers -> report unsaved information
             if (params.dunLayerNum < layersNeeded) {
