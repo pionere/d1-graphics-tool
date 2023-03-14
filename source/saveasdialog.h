@@ -28,6 +28,7 @@ public:
     QString ampFilePath;
     QString tmiFilePath;
     QString dunFilePath;
+    int8_t dunLayerNum = UINT8_MAX;
     int groupNum = 0;
     SAVE_CLIPPED_TYPE clipped = SAVE_CLIPPED_TYPE::AUTODETECT;
     SAVE_UPSCALED_TYPE upscaled = SAVE_UPSCALED_TYPE::AUTODETECT;

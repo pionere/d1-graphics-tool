@@ -463,6 +463,7 @@ bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
     int dunWidth = 0;
     int dunHeight = 0;
     bool changed = fileSize == 0; // !file.isOpen();
+    quint numLayers = 0;
     D1DUN_TYPE type = filePath.toLower().endsWith(".dun") ? D1DUN_TYPE::NORMAL : D1DUN_TYPE::RAW;
     if (fileSize != 0) {
         if (type == D1DUN_TYPE::NORMAL) {
@@ -511,9 +512,9 @@ bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
                         this->items[y][x] = readWord;
                     }
                 }
+                numLayers++;
             } else {
                 dProgressWarn() << tr("Items are not defined in the DUN file.");
-                changed = true;
             }
 
             if (dataSize >= dataUnitSize) {
@@ -525,9 +526,9 @@ bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
                         this->monsters[y][x] = readWord;
                     }
                 }
+                numLayers++;
             } else {
                 dProgressWarn() << tr("Monsters are not defined in the DUN file.");
-                changed = true;
             }
 
             if (dataSize >= dataUnitSize) {
@@ -539,9 +540,9 @@ bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
                         this->objects[y][x] = readWord;
                     }
                 }
+                numLayers++;
             } else {
                 dProgressWarn() << tr("Objects are not defined in the DUN file.");
-                changed = true;
             }
 
             if (dataSize >= dataUnitSize) {
@@ -553,9 +554,9 @@ bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
                         this->rooms[y][x] = readWord;
                     }
                 }
+                numLayers++;
             } else {
                 dProgressWarn() << tr("Rooms are not defined in the DUN file.");
-                changed = true;
             }
 
             if (dataSize > 0) {
@@ -607,6 +608,7 @@ bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
     this->height = dunHeight * TILE_HEIGHT;
     this->dunFilePath = filePath;
     this->modified = changed;
+    this->numLayers = numLayers;
     this->defaultTile = UNDEF_TILE;
     this->specGfx = nullptr;
     return true;
@@ -720,6 +722,25 @@ bool D1Dun::save(const SaveAsParam &params)
 
     D1DUN_TYPE type = filePath.toLower().endsWith(".dun") ? D1DUN_TYPE::NORMAL : D1DUN_TYPE::RAW;
     // validate data
+    // - check the active layers
+    quint8 layers = 0;
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            if (this->items[y][x] != 0) {
+                layers |= 1 << 0;
+            }
+            if (this->monsters[y][x] != 0) {
+                layers |= 1 << 1;
+            }
+            if (this->objects[y][x] != 0) {
+                layers |= 1 << 2;
+            }
+            if (this->rooms[y][x] != 0) {
+                layers |= 1 << 3;
+            }
+        }
+    }
+    quint8 numLayers = this->numLayers;
     if (type == D1DUN_TYPE::NORMAL) {
         // dun - tiles must be defined
         int dunWidth = this->width / TILE_WIDTH;
@@ -763,6 +784,31 @@ bool D1Dun::save(const SaveAsParam &params)
                 }
             }
         }
+        // calculate the number of layers
+        quint8 layersNeeded = layers >= (1 << 3) ? 4 : (layers >= (1 << 2) ? 3 : (layers >= (1 << 1) ? 2 : (layers >= (1 << 0) ? 1 : 0)));
+        if (params.dunLayerNum != UINT8_MAX) {
+            // user defined the number of layers -> report unsaved information
+            if (params.dunLayerNum < layersNeeded) {
+                if (params.dunLayerNum <= 0 && (layers & (1 << 0)) {
+                    dProgressWarn() << tr("Defined item is not saved.");
+                }
+                if (params.dunLayerNum <= 1 && (layers & (1 << 1))) {
+                    dProgressWarn() << tr("Defined monster is not saved.");
+                }
+                if (params.dunLayerNum <= 2 && (layers & (1 << 2))) {
+                    dProgressWarn() << tr("Defined object is not saved.");
+                }
+                if (params.dunLayerNum <= 3 && (layers & (1 << 3))) {
+                    dProgressWarn() << tr("Defined room is not saved.");
+                }
+            }
+            numLayers = params.dunLayerNum;
+        } else {
+            // user did not define the number of layers -> extend if necessary, otherwise preserve
+            if (layersNeeded > numLayers) {
+                numLayers = layersNeeded;
+            }
+        }
     } else {
         // rdun - subtiles must be defined
         int dunWidth = this->width;
@@ -775,6 +821,11 @@ bool D1Dun::save(const SaveAsParam &params)
                 }
             }
         }
+        // check if the user defined the number of layers
+        if (params.dunLayerNum != UINT8_MAX && params.dunLayerNum != 0) {
+            dProgressFail() << tr("Only the subtiles are saved in this format (RDUN).");
+            return false;
+        }
         // report unsaved information
         for (int y = 0; y < dunHeight / TILE_HEIGHT; y++) {
             for (int x = 0; x < dunWidth / TILE_WIDTH; x++) {
@@ -783,21 +834,17 @@ bool D1Dun::save(const SaveAsParam &params)
                 }
             }
         }
-        for (int y = 0; y < dunHeight; y++) {
-            for (int x = 0; x < dunWidth; x++) {
-                if (this->items[y][x] != 0) {
-                    dProgressWarn() << tr("Defined item at %1:%2 is not saved in this format (RDUN).").arg(x).arg(y);
-                }
-                if (this->monsters[y][x] != 0) {
-                    dProgressWarn() << tr("Defined monster at %1:%2 is not saved in this format (RDUN).").arg(x).arg(y);
-                }
-                if (this->objects[y][x] != 0) {
-                    dProgressWarn() << tr("Defined object at %1:%2 is not saved in this format (RDUN).").arg(x).arg(y);
-                }
-                if (this->rooms[y][x] != 0) {
-                    dProgressWarn() << tr("Defined room at %1:%2 is not saved in this format (RDUN).").arg(x).arg(y);
-                }
-            }
+        if (layers & (1 << 0)) {
+            dProgressWarn() << tr("Defined item is not saved in this format (RDUN).");
+        }
+        if (layers & (1 << 1)) {
+            dProgressWarn() << tr("Defined monster is not saved in this format (RDUN).");
+        }
+        if (layers & (1 << 2)) {
+            dProgressWarn() << tr("Defined object is not saved in this format (RDUN).");
+        }
+        if (layers & (1 << 3)) {
+            dProgressWarn() << tr("Defined room is not saved in this format (RDUN).");
         }
     }
 
@@ -832,34 +879,42 @@ bool D1Dun::save(const SaveAsParam &params)
         }
 
         // write items
-        for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
-            for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                writeWord = this->items[y][x];
-                out << writeWord;
+        if (numLayers >= 1) {
+            for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+                for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                    writeWord = this->items[y][x];
+                    out << writeWord;
+                }
             }
         }
 
         // write monsters
-        for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
-            for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                writeWord = this->monsters[y][x];
-                out << writeWord;
+        if (numLayers >= 2) {
+            for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+                for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                    writeWord = this->monsters[y][x];
+                    out << writeWord;
+                }
             }
         }
 
         // write objects
-        for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
-            for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                writeWord = this->objects[y][x];
-                out << writeWord;
+        if (numLayers >= 3) {
+            for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+                for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                    writeWord = this->objects[y][x];
+                    out << writeWord;
+                }
             }
         }
 
         // write rooms
-        for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
-            for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                writeWord = this->rooms[y][x];
-                out << writeWord;
+        if (numLayers >= 4) {
+            for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+                for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                    writeWord = this->rooms[y][x];
+                    out << writeWord;
+                }
             }
         }
     } else {
@@ -1284,6 +1339,11 @@ QString D1Dun::getFilePath() const
 bool D1Dun::isModified() const
 {
     return this->modified;
+}
+
+quint8 D1Dun::getNumLayers() const
+{
+    return this->numLayers;
 }
 
 int D1Dun::getWidth() const
