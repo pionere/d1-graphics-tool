@@ -789,7 +789,7 @@ bool D1Dun::save(const SaveAsParam &params)
         if (params.dunLayerNum != UINT8_MAX) {
             // user defined the number of layers -> report unsaved information
             if (params.dunLayerNum < layersNeeded) {
-                if (params.dunLayerNum <= 0 && (layers & (1 << 0)) {
+                if (params.dunLayerNum <= 0 && (layers & (1 << 0))) {
                     dProgressWarn() << tr("Defined item is not saved.");
                 }
                 if (params.dunLayerNum <= 1 && (layers & (1 << 1))) {
