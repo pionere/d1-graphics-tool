@@ -164,6 +164,7 @@ public:
 
     QString getFilePath() const;
     bool isModified() const;
+    quint8 getNumLayers() const;
     int getWidth() const;
     bool setWidth(int width);
     int getHeight() const;
@@ -235,6 +236,7 @@ private:
     D1Til *til;
     D1Tmi *tmi;
     bool modified;
+    quint8 numLayers;
     int width;
     int height;
     std::vector<std::vector<int>> tiles;

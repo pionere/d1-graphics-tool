@@ -71,30 +71,8 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel">
-        <property name="text">
-         <string>Groups:</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1">
        <layout class="QHBoxLayout">
-        <property name="spacing">
-         <number>4</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
         <item>
          <widget class="QRadioButton" name="celClippedYesRadioButton">
           <property name="text">
@@ -134,6 +112,13 @@
         </item>
        </layout>
       </item>
+      <item row="1" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Groups:</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="1">
        <widget class="LineEditWidget" name="celGroupEdit">
         <property name="charWidth">
@@ -162,21 +147,6 @@
       </item>
       <item row="0" column="1">
        <layout class="QHBoxLayout">
-        <property name="spacing">
-         <number>4</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
         <item>
          <widget class="QRadioButton" name="minUpscaledYesRadioButton">
           <property name="text">
@@ -342,6 +312,77 @@
         </property>
        </widget>
       </item>
+      <item row="7" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Last Layer:</string>
+        </property>
+        <property name="toolTip">
+         <string>The last layer stored in the dun file.</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QRadioButton" name="dunLayerTilesRadioButton">
+          <property name="text">
+           <string>Tiles</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">dunLayerButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="dunLayerItemsRadioButton">
+          <property name="text">
+           <string>Items</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">dunLayerButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="dunLayerMonstersRadioButton">
+          <property name="text">
+           <string>Monsters</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">dunLayerButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="dunLayerObjectsRadioButton">
+          <property name="text">
+           <string>Objects</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">dunLayerButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="dunLayerRoomsRadioButton">
+          <property name="text">
+           <string>Rooms</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">dunLayerButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
      </layout>
     </widget>
    </item>
@@ -378,5 +419,6 @@
  <buttongroups>
   <buttongroup name="celClippedButtonGroup"/>
   <buttongroup name="minUpscaledButtonGroup"/>
+  <buttongroup name="dunLayerButtonGroup"/>
  </buttongroups>
 </ui>

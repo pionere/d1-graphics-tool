@@ -49,6 +49,23 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Dun *dun)
         this->ui->outputDunFileEdit->setText("");
     } else {
         this->ui->outputDunFileEdit->setText(dun->getFilePath());
+        switch (dun->getNumLayers()) {
+        case 0:
+            this->ui->dunLayerTilesRadioButton->setChecked(true);
+            break;
+        case 1:
+            this->ui->dunLayerItemsRadioButton->setChecked(true);
+            break;
+        case 2:
+            this->ui->dunLayerMonstersRadioButton->setChecked(true);
+            break;
+        case 3:
+            this->ui->dunLayerObjectsRadioButton->setChecked(true);
+            break;
+        case 4:
+            this->ui->dunLayerRoomsRadioButton->setChecked(true);
+            break;
+        }
     }
 
     this->ui->celSettingsGroupBox->setEnabled(!isTilesetGfx);
@@ -170,6 +187,17 @@ void SaveAsDialog::on_saveButton_clicked()
     params.ampFilePath = this->ui->outputAmpFileEdit->text();
     params.tmiFilePath = this->ui->outputTmiFileEdit->text();
     params.dunFilePath = this->ui->outputDunFileEdit->text();
+    if (this->ui->dunLayerTilesRadioButton->isChecked()) {
+        params.dunLayerNum = 0;
+    } else if (this->ui->dunLayerItemsRadioButton->isChecked()) {
+        params.dunLayerNum = 1;
+    } else if (this->ui->dunLayerMonstersRadioButton->isChecked()) {
+        params.dunLayerNum = 2;
+    } else if (this->ui->dunLayerObjectsRadioButton->isChecked()) {
+        params.dunLayerNum = 3;
+    } else if (this->ui->dunLayerRoomsRadioButton->isChecked()) {
+        params.dunLayerNum = 4;
+    }
     params.autoOverwrite = this->ui->autoOverwriteCheckBox->isChecked();
 
     this->close();
