@@ -205,9 +205,21 @@ bool EnterGameLevel(D1Dun *dun, const GenerateDunParam &params)
 			if (hasSubtiles) {
 				dun->setSubtileAt(x, y, dPiece[x][y]);
             }
-			dun->setItemAt(x, y, dItem[x][y]);
-			dun->setMonsterAt(x, y, dMonster[x][y]);
-			dun->setObjectAt(x, y, dObject[x][y]);
+			int item = dItem[x][y];
+			if (item != 0) {
+				item = items[item - 1]._itype;
+            }
+			dun->setItemAt(x, y, item);
+			int mon = dMonster[x][y];
+			if (mon != 0) {
+				monsters[mon - 1]._mType;
+            }
+			dun->setMonsterAt(x, y, mon);
+			int obj = dObject[x][y];
+			if (obj != 0) {
+				objects[obj - 1]._otype;
+            }
+			dun->setObjectAt(x, y, obj);
 			dun->setRoomAt(x, y, dTransVal[x][y]);
 		}
     }
