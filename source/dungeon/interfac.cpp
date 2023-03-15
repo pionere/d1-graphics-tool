@@ -188,18 +188,16 @@ bool EnterGameLevel(D1Dun *dun, const GenerateDunParam &params)
     dun->setHeight(MAXDUNY);
     dun->setLevelType(currLvl._dType);
 
-	if (!hasSubtiles) {
-		for (int y = 0; y < MAXDUNY; y += 2) {
-			for (int x = 0; x < MAXDUNY; x += 2) {
-				dun->setTileAt(x, y, 0);
-			}
+	for (int y = 0; y < MAXDUNY; y += 2) {
+		for (int x = 0; x < MAXDUNY; x += 2) {
+			dun->setTileAt(x, y, 0);
 		}
-		for (int y = 0; y < DMAXY; y++) {
-			for (int x = 0; x < DMAXX; x++) {
-				dun->setTileAt(DBORDERX + x * 2, DBORDERY + y * 2, dungeon[x][y]);
-			}
+	}
+	for (int y = 0; y < DMAXY; y++) {
+		for (int x = 0; x < DMAXX; x++) {
+			dun->setTileAt(DBORDERX + x * 2, DBORDERY + y * 2, dungeon[x][y]);
 		}
-    }
+	}
 	for (int y = 0; y < MAXDUNY; y++) {
 		for (int x = 0; x < MAXDUNY; x++) {
 			if (hasSubtiles) {
@@ -207,17 +205,17 @@ bool EnterGameLevel(D1Dun *dun, const GenerateDunParam &params)
             }
 			int item = dItem[x][y];
 			if (item != 0) {
-				item = items[item - 1]._itype;
+				item = items[item - 1]._itype + 1;
             }
 			dun->setItemAt(x, y, item);
 			int mon = dMonster[x][y];
 			if (mon != 0) {
-				monsters[mon - 1]._mType;
+				monsters[mon - 1]._mType + 1;
             }
 			dun->setMonsterAt(x, y, mon);
 			int obj = dObject[x][y];
-			if (obj != 0) {
-				objects[obj - 1]._otype;
+			if (obj > 0) {
+				objects[obj - 1]._otype + 1;
             }
 			dun->setObjectAt(x, y, obj);
 			dun->setRoomAt(x, y, dTransVal[x][y]);
