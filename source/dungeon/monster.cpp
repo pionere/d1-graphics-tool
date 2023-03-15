@@ -683,9 +683,6 @@ static void PlaceUniqueMonst(int uniqindex)
 //		mon->_mMaxDamage2 = 4 * mon->_mMaxDamage2 + 6;
 //		mon->_mMagicRes = uniqm->mMagicRes2;
 	}
-
-	if (uniqm->mUnqFlags & UMF_NODROP)
-		mon->_mTreasure = NO_DROP;
 }
 
 static void PlaceUniques()

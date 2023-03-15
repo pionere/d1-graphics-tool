@@ -525,6 +525,7 @@ void InitLighting()
 
 unsigned AddLight(int x, int y, int r)
 {
+	return 0;
 }
 
 void InitVision()

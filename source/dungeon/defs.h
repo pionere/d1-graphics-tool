@@ -128,8 +128,6 @@
 	&& y >= 0                 \
 	&& y < MAXDUNY)
 
-#undef assert
-
 #ifdef _MSC_VER
 #define ASSUME_UNREACHABLE __assume(0);
 #elif defined(__clang__)

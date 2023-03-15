@@ -11,7 +11,7 @@ bool PosOkActor(int x, int y)
 {
 	int oi;
 
-	if ((nSolidTable[dPiece[x][y]] | dPlayer[x][y] | dMonster[x][y]) != 0)
+	if ((nSolidTable[dPiece[x][y]] | /*dPlayer[x][y] |*/ dMonster[x][y]) != 0)
 		return false;
 
 	oi = dObject[x][y];

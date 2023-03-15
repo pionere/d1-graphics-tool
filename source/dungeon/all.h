@@ -9,6 +9,8 @@
 #include <algorithm>
 #include <cmath>
 
+#include <QtEndian>
+
 #include "defs.h"
 #include "enums.h"
 #include "structs.h"
