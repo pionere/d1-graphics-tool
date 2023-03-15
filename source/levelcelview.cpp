@@ -2775,6 +2775,12 @@ void LevelCelView::loadRooms(D1Dun *srcDun)
     // this->displayFrame();
 }
 
+void LevelCelView::generateDungeon()
+{
+	this->dungeonGenerateDialog.initialize(this->dun);
+	this->dungeonGenerateDialog.show();
+}
+
 void LevelCelView::upscale(const UpscaleParam &params)
 {
     if (Upscaler::upscaleTileset(this->gfx, this->min, params, false)) {

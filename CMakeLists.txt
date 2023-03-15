@@ -84,6 +84,29 @@ set(PROJECT_SOURCES
         source/d1tmi.h
         source/d1trn.cpp
         source/d1trn.h
+        source/dungeon/drlg_l1.cpp
+        source/dungeon/drlg_l2.cpp
+        source/dungeon/drlg_l3.cpp
+        source/dungeon/drlg_l4.cpp
+        source/dungeon/engine.cpp
+        source/dungeon/gendung.cpp
+        source/dungeon/interfac.cpp
+        source/dungeon/itemdat.cpp
+        source/dungeon/items.cpp
+        source/dungeon/lighting.cpp
+        source/dungeon/monstdat.cpp
+        source/dungeon/monster.cpp
+        source/dungeon/objdat.cpp
+        source/dungeon/objects.cpp
+        source/dungeon/questdat.cpp
+        source/dungeon/quests.cpp
+        source/dungeon/setmaps.cpp
+        source/dungeon/spelldat.cpp
+        source/dungeon/themes.cpp
+        source/dungeon/trigs.cpp
+        source/dungeongeneratedialog.cpp
+        source/dungeongeneratedialog.h
+        source/dungeongeneratedialog.ui
         source/dungeonresourcedialog.cpp
         source/dungeonresourcedialog.h
         source/dungeonresourcedialog.ui

@@ -98,7 +98,7 @@ signals:
     void palModified();
 
 private slots:
-    void on_framesGroupCheckBox_stateChanged(int state);
+    void on_framesGroupCheckBox_clicked();
     void on_firstFrameButton_clicked();
     void on_previousFrameButton_clicked();
     void on_nextFrameButton_clicked();
