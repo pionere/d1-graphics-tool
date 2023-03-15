@@ -12,7 +12,6 @@
 
 #include "all.h"
 
-int gnDifficulty;
 int ViewX;
 int ViewY;
 bool IsMultiGame;

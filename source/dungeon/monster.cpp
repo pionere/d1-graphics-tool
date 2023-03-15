@@ -710,7 +710,7 @@ static void PlaceUniques()
 
 static void PlaceSetMapMonsters()
 {
-	int i;
+//	int i;
 	BYTE* setp;
 
 	if (!currLvl._dSetLvl) {

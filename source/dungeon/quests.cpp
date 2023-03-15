@@ -268,13 +268,13 @@ void DRLG_CheckQuests()
 
 static void ResyncBanner()
 {
-	if (quests[Q_BANNER]._qvar1 == QV_BANNER_ATTACK) {
-		ObjChangeMap(setpc_x, setpc_y, setpc_x + setpc_w, setpc_y + setpc_h/*, false*/);
-		//for (i = 0; i < numobjects; i++)
-		//	SyncObjectAnim(objectactive[i]);
-		BYTE tv = dTransVal[2 * setpc_x + 1 + DBORDERX][2 * (setpc_y + 6) + 1 + DBORDERY];
-		DRLG_MRectTrans(setpc_x, setpc_y + 3, setpc_x + setpc_w - 1, setpc_y + setpc_h - 1, tv);
-	}
+//	if (quests[Q_BANNER]._qvar1 == QV_BANNER_ATTACK) {
+//		ObjChangeMap(setpc_x, setpc_y, setpc_x + setpc_w, setpc_y + setpc_h/*, false*/);
+//		//for (i = 0; i < numobjects; i++)
+//		//	SyncObjectAnim(objectactive[i]);
+//		BYTE tv = dTransVal[2 * setpc_x + 1 + DBORDERX][2 * (setpc_y + 6) + 1 + DBORDERY];
+//		DRLG_MRectTrans(setpc_x, setpc_y + 3, setpc_x + setpc_w - 1, setpc_y + setpc_h - 1, tv);
+//	}
 }
 
 void ResyncQuests()

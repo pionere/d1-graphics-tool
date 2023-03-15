@@ -985,7 +985,7 @@ void InitObjects()
 void SetMapObjects(BYTE* pMap)
 {
 	int i, j;
-	uint16_t rw, rh, *lm, *h;
+	uint16_t rw, rh, *lm; // , *h;
 //	bool fileload[NUM_OFILE_TYPES];
 //	char filestr[DATA_ARCHIVE_MAX_PATH];
 
