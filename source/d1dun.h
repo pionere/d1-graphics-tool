@@ -219,5 +219,5 @@ private:
     std::vector<std::pair<D1Gfx *, unsigned>> itemDataCache;
 };
 
-extern const DunObjectStruct ObjConvTbl[128];
-extern const DunMonsterStruct MonstConvTbl[128];
+extern const DunObjectStruct DunObjConvTbl[128];
+extern const DunMonsterStruct DunMonstConvTbl[128];

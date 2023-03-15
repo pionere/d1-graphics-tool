@@ -28,6 +28,7 @@
 #include "monster.h"
 #include "objdat.h"
 #include "objects.h"
+#include "player.h"
 #include "questdat.h"
 #include "quests.h"
 #include "setmaps.h"

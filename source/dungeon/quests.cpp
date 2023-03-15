@@ -192,7 +192,7 @@ static void DrawPostMap(const char* name)
 
 static void DrawLTBanner()
 {
-	DrawMap("Levels\\L1Data\\Banner2.DUN");
+	DrawMap("Levels\\L1Data\\Banner2.DUN", 13);
 	// patch the map - Banner2.DUN
 	// replace the wall with door
 	dungeon[setpc_x + 7][setpc_y + 6] = 193;
@@ -227,7 +227,7 @@ static void DrawBlood()
 
 static void DrawNakrul()
 {
-	DrawMap("NLevels\\L5Data\\Nakrul1.DUN");
+	DrawMap("NLevels\\L5Data\\Nakrul1.DUN", 13);
 }
 
 void DRLG_CheckQuests()

@@ -135,7 +135,7 @@ const DungeonStruct dungeonTbl[NUM_DUNGEON_TYPES] = {
     // clang-format on
 };
 
-const DunObjectStruct ObjConvTbl[128] = {
+const DunObjectStruct DunObjConvTbl[128] = {
     // clang-format off
     { 0 },
     {   1, OFILE_LEVER,    "Lever", 1 }, // Q_SKELKING
@@ -293,7 +293,7 @@ const ObjFileData objfiledata[NUM_OFILE_TYPES] = {
     // clang-format on
 };
 
-const DunMonsterStruct MonstConvTbl[128] = {
+const DunMonsterStruct DunMonstConvTbl[128] = {
     // clang-format off
     { 0 },
     { 0 }, //MT_NZOMBIE,
@@ -1727,8 +1727,8 @@ void D1Dun::loadObject(int objectIndex)
             break;
         }
     }
-    const DunObjectStruct *objStr = &ObjConvTbl[objectIndex];
-    if (i >= this->customObjectTypes.size() && objectIndex < lengthof(ObjConvTbl) && objStr->type != 0 && !this->assetPath.isEmpty()) {
+    const DunObjectStruct *objStr = &DunObjConvTbl[objectIndex];
+    if (i >= this->customObjectTypes.size() && objectIndex < lengthof(DunObjConvTbl) && objStr->type != 0 && !this->assetPath.isEmpty()) {
         int objFileIndex = objStr->animType;
         result.frameNum = objStr->frameNum;
         QString celFilePath = this->assetPath + "/Objects/" + objfiledata[objFileIndex].path + ".CEL";
@@ -1797,8 +1797,8 @@ void D1Dun::loadMonster(int monsterIndex)
             break;
         }
     }
-    const DunMonsterStruct *monStr = &MonstConvTbl[monsterIndex];
-    if (i >= this->customObjectTypes.size() && monsterIndex < lengthof(MonstConvTbl) && monStr->type != 0 && !this->assetPath.isEmpty()) {
+    const DunMonsterStruct *monStr = &DunMonstConvTbl[monsterIndex];
+    if (i >= this->customObjectTypes.size() && monsterIndex < lengthof(DunMonstConvTbl) && monStr->type != 0 && !this->assetPath.isEmpty()) {
         int moFileIndex = monStr->animType;
         QString cl2FilePath = this->assetPath + "/Monsters/" + monfiledata[moFileIndex].path + "N.CL2";
         QString trnFilePath;
@@ -2071,15 +2071,15 @@ void D1Dun::checkMonsters(D1Sol *sol) const
             }
             int subtileRef = this->subtiles[y][x];
             if (subtileRef == UNDEF_SUBTILE) {
-                dProgressWarn() << tr("'%1' monster at %2:%3 is on an undefined subtile.").arg(MonstConvTbl[monsterIndex].name).arg(x).arg(y);
+                dProgressWarn() << tr("'%1' monster at %2:%3 is on an undefined subtile.").arg(DunMonstConvTbl[monsterIndex].name).arg(x).arg(y);
                 result = true;
             } else if (subtileRef == 0) {
-                dProgressWarn() << tr("'%1' monster at %2:%3 is on an empty subtile.").arg(MonstConvTbl[monsterIndex].name).arg(x).arg(y);
+                dProgressWarn() << tr("'%1' monster at %2:%3 is on an empty subtile.").arg(DunMonstConvTbl[monsterIndex].name).arg(x).arg(y);
                 result = true;
             } else {
                 quint8 solFlags = sol->getSubtileProperties(subtileRef - 1);
                 if (solFlags & ((1 << 0) | (1 << 2))) {
-                    dProgressErr() << tr("'%1' monster at %2:%3 is on a subtile which is not accessible (solid or missile blocker).").arg(MonstConvTbl[monsterIndex].name).arg(x).arg(y);
+                    dProgressErr() << tr("'%1' monster at %2:%3 is on a subtile which is not accessible (solid or missile blocker).").arg(DunMonstConvTbl[monsterIndex].name).arg(x).arg(y);
                     result = true;
                 }
             }
@@ -2110,18 +2110,18 @@ void D1Dun::checkObjects() const
             }
             int subtileRef = this->subtiles[y][x];
             if (subtileRef == UNDEF_SUBTILE) {
-                dProgressWarn() << tr("'%1' object at %2:%3 is on an undefined subtile.").arg(ObjConvTbl[objectIndex].name).arg(x).arg(y);
+                dProgressWarn() << tr("'%1' object at %2:%3 is on an undefined subtile.").arg(DunObjConvTbl[objectIndex].name).arg(x).arg(y);
                 result = true;
             } else if (subtileRef == 0) {
-                dProgressWarn() << tr("'%1' object at %2:%3 is on an empty subtile.").arg(ObjConvTbl[objectIndex].name).arg(x).arg(y);
+                dProgressWarn() << tr("'%1' object at %2:%3 is on an empty subtile.").arg(DunObjConvTbl[objectIndex].name).arg(x).arg(y);
                 result = true;
             }
             if (this->monsters[y][x] != 0) {
-                dProgressErr() << tr("'%1' object at %2:%3 is sharing a subtile with a monster.").arg(ObjConvTbl[objectIndex].name).arg(x).arg(y);
+                dProgressErr() << tr("'%1' object at %2:%3 is sharing a subtile with a monster.").arg(DunObjConvTbl[objectIndex].name).arg(x).arg(y);
                 result = true;
             }
             if (this->items[y][x] != 0) {
-                dProgressErr() << tr("'%1' object at %2:%3 is sharing a subtile with an item.").arg(ObjConvTbl[objectIndex].name).arg(x).arg(y);
+                dProgressErr() << tr("'%1' object at %2:%3 is sharing a subtile with an item.").arg(DunObjConvTbl[objectIndex].name).arg(x).arg(y);
                 result = true;
             }
         }
@@ -2219,7 +2219,7 @@ void D1Dun::loadMonsters(D1Dun *srcDun)
             int currMonsterIndex = this->monsters[y][x];
             if (newMonsterIndex != 0 && currMonsterIndex != newMonsterIndex) {
                 if (currMonsterIndex != 0) {
-                    dProgressWarn() << tr("'%1' monster at %2:%3 was replaced by '%4'.").arg(MonstConvTbl[currMonsterIndex].name).arg(x).arg(y).arg(MonstConvTbl[newMonsterIndex].name);
+                    dProgressWarn() << tr("'%1' monster at %2:%3 was replaced by '%4'.").arg(DunMonstConvTbl[currMonsterIndex].name).arg(x).arg(y).arg(DunMonstConvTbl[newMonsterIndex].name);
                 }
                 this->monsters[y][x] = newMonsterIndex;
                 this->modified = true;
@@ -2236,7 +2236,7 @@ void D1Dun::loadObjects(D1Dun *srcDun)
             int currObjectIndex = this->objects[y][x];
             if (newObjectIndex != 0 && currObjectIndex != newObjectIndex) {
                 if (currObjectIndex != 0) {
-                    dProgressWarn() << tr("'%1' object at %2:%3 was replaced by '%4'.").arg(ObjConvTbl[currObjectIndex].name).arg(x).arg(y).arg(ObjConvTbl[newObjectIndex].name);
+                    dProgressWarn() << tr("'%1' object at %2:%3 was replaced by '%4'.").arg(DunObjConvTbl[currObjectIndex].name).arg(x).arg(y).arg(DunObjConvTbl[newObjectIndex].name);
                 }
                 this->objects[y][x] = newObjectIndex;
                 this->modified = true;

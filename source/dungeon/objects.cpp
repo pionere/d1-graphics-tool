@@ -680,7 +680,7 @@ static void SetupObject(int oi, int x, int y, int type)
 	ods = &objectdata[type];
 	os->_oSelFlag = ods->oSelFlag;
 	os->_oDoorFlag = ods->oDoorFlag;
-	os->_oProc = ods->oProc;
+//	os->_oProc = ods->oProc;
 	os->_oAnimFrame = ods->oAnimBaseFrame;
 //	os->_oAnimData = objanimdata[ods->ofindex];
 	ofd = &objfiledata[ods->ofindex];

@@ -49,11 +49,7 @@ static int ObjIndex(int x, int y)
 		oi = oi >= 0 ? oi - 1 : -(oi + 1);
 		return oi;
 	}
-#if DEBUG_MODE
-	app_fatal("ObjIndex: Active object not found at (%d,%d)", x, y);
-#else
-	app_error(ERR_APP_SETMAP);
-#endif
+	// FIXME log error
 	return -1;
 }
 
@@ -140,6 +136,6 @@ void LoadSetMap()
 		ASSUME_UNREACHABLE
 		break;
 	}
-	LoadPalette(lds->dPalName);
+//	LoadPalette(lds->dPalName);
 	InitTriggers();
 }

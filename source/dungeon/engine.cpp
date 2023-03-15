@@ -117,7 +117,7 @@ void mem_free_dbg(void* p)
  * @param pdwFileLen Will be set to file size if non-NULL
  * @return Buffer with content of file
  */
-BYTE* LoadFileInMem(const char* pszName, size_t* pdwFileLen = NULL)
+BYTE* LoadFileInMem(const char* pszName, size_t* pdwFileLen)
 {
 	QString path = assetPath + "/" + pszName;
 	QFile file = QFile(path);

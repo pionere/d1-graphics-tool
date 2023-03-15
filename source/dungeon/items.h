@@ -25,18 +25,16 @@ extern int numitems;
 
 void InitItemGFX();
 void InitItems();
-void CreateBaseItem(ItemStruct* is, int idata);
 void GetItemSeed(ItemStruct* is);
 void SetGoldItemValue(ItemStruct* is, int value);
 bool ItemSpaceOk(int x, int y);
 void SetItemData(int ii, int idata);
 void CreateRndItem(int x, int y, unsigned quality);
 void CreateTypeItem(int x, int y, unsigned quality, int itype, int imisc);
-void RecreateItem(int iseed, uint16_t wIndex, uint16_t wCI);
 void PlaceQuestItemInArea(int idx, int areasize);
-void CreateQuestItemAt(int idx, int x, int y, int mode);
+void CreateQuestItemAt(int idx, int x, int y);
 void PlaceRock();
-void RespawnItem(int ii, bool FlipFlag);
+void RespawnItem(int ii);
 void DeleteItems(int ii);
 void FreeItemGFX();
 

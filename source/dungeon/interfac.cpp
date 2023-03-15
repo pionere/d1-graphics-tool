@@ -3,12 +3,14 @@
  *
  * Implementation of load screens.
  */
-#include "all.h"
+//#include "all.h"
 
 #include <QString>
 
 #include "../d1dun.h"
 #include "../dungeongeneratedialog.h"
+
+#include "all.h"
 
 int gnDifficulty;
 int ViewX;

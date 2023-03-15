@@ -258,9 +258,6 @@ void InitLevelMonsters()
 		monsters[i]._mmode = MM_UNUSED;
 		// reset _mMTidx value to simplify SyncMonsterAnim (loadsave.cpp)
 		monsters[i]._mMTidx = 0;
-		monsters[i]._mpathcount = 0;
-		monsters[i]._mWhoHit = 0;
-		monsters[i]._mgoal = MGOAL_NORMAL;
 		// reset _muniqtype value to simplify SyncMonsterAnim (loadsave.cpp)
 		// reset _mlid value to simplify SyncMonsterLight, DeltaLoadLevel, SummonMonster and InitTownerInfo
 		monsters[i]._muniqtype = 0;
@@ -866,23 +863,6 @@ void InitMonsters()
 	// if (currLvl._dLevelIdx == DLV_HELL3) {
 	//	DoUnVision(quests[Q_BETRAYER]._qtx + 2, quests[Q_BETRAYER]._qty + 2, 4, false);
 	// }
-}
-
-bool PosOkActor(int x, int y)
-{
-	int oi;
-
-	if ((nSolidTable[dPiece[x][y]] | /*dPlayer[x][y] |*/ dMonster[x][y]) != 0)
-		return false;
-
-	oi = dObject[x][y];
-	if (oi != 0) {
-		oi = oi >= 0 ? oi - 1 : -(oi + 1);
-		if (objects[oi]._oSolidFlag)
-			return false;
-	}
-
-	return true;
 }
 
 void SetMapMonsters(BYTE* pMap, int startx, int starty)
