@@ -3438,7 +3438,7 @@ static BYTE* LoadL2DungeonData(const char* sFileName)
 	memset(dungeon, BASE_MEGATILE_L2 + 1, sizeof(dungeon));
 
 	if (pMap == NULL) {
-		return;
+		return pMap;
     }
 	rw = pMap[0];
 	rh = pMap[2];

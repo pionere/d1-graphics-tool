@@ -2440,7 +2440,7 @@ static BYTE* LoadL3DungeonData(const char* sFileName)
 	memset(dungeon, BASE_MEGATILE_L3 + 1, sizeof(dungeon));
 
 	if (pMap == NULL) {
-		return;
+		return pMap;
     }
 	rw = pMap[0];
 	rh = pMap[2];
