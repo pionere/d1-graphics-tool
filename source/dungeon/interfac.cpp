@@ -7,6 +7,9 @@
 
 #include <QString>
 
+#include "../d1dun.h"
+#include "../dungeongeneratedialog.h"
+
 int gnDifficulty;
 bool IsMultiGame;
 QString assetPath;
@@ -171,6 +174,8 @@ bool EnterGameLevel(D1Dun *dun, const GenerateDunParam &params)
 	EnterLevel(params.level);
 	IncProgress();
 	LoadGameLevel(ENTRY_MAIN, params.seed);
+
+	FreeLvlDungeon();
 
 	dun->setWidth(MAXDUNX);
     dun->setHeight(MAXDUNY);

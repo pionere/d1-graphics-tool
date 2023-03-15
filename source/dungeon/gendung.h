@@ -17,8 +17,6 @@ extern int setpc_w;
 extern int setpc_h;
 extern BYTE* pSetPiece;
 extern uint16_t* pMegaTiles;
-extern uint16_t pMicroPieces[MAXTILES + 1][16 * ASSET_MPL * ASSET_MPL];
-extern BYTE* pMicroCels;
 extern BYTE microFlags[MAXTILES + 1];
 extern bool nBlockTable[MAXTILES + 1];
 extern bool nSolidTable[MAXTILES + 1];

@@ -26,6 +26,48 @@ constexpr int lengthof(T (&arr)[N])
     return N;
 }
 
+typedef enum _monster_gfx_id {
+    MOFILE_FALLSP,
+    MOFILE_SKELAX,
+    MOFILE_FALLSD,
+    MOFILE_SKELBW,
+    MOFILE_SKELSD,
+    MOFILE_SNEAK,
+    MOFILE_GOATMC,
+    MOFILE_GOATBW,
+    MOFILE_FAT,
+    MOFILE_RHINO,
+    MOFILE_BLACK,
+    MOFILE_SUCC,
+    MOFILE_MAGE,
+    MOFILE_DIABLO,
+    NUM_MOFILE_TYPES
+} _monster_gfx_id;
+
+typedef enum object_graphic_id {
+    OFILE_LEVER,
+    OFILE_CRUXSK1,
+    OFILE_CRUXSK2,
+    OFILE_CRUXSK3,
+    OFILE_BOOK2,
+    OFILE_BURNCROS,
+    OFILE_CANDLE2,
+    OFILE_MCIRL,
+    OFILE_SWITCH4,
+    OFILE_TSOUL,
+    OFILE_TNUDEM,
+    OFILE_TNUDEW,
+    OFILE_CHEST1,
+    OFILE_CHEST2,
+    OFILE_CHEST3,
+    OFILE_ALTBOY,
+    OFILE_ARMSTAND,
+    OFILE_WEAPSTND,
+    OFILE_WTORCH2,
+    OFILE_WTORCH1,
+    NUM_OFILE_TYPES
+} object_graphic_id;
+
 typedef struct SpecCell {
     int subtileRef;
     int dx;
@@ -93,7 +135,7 @@ const DungeonStruct dungeonTbl[NUM_DUNGEON_TYPES] = {
     // clang-format on
 };
 
-const ObjectStruct ObjConvTbl[128] = {
+const DunObjectStruct ObjConvTbl[128] = {
     // clang-format off
     { 0 },
     {   1, OFILE_LEVER,    "Lever", 1 }, // Q_SKELKING
@@ -251,7 +293,7 @@ const ObjFileData objfiledata[NUM_OFILE_TYPES] = {
     // clang-format on
 };
 
-const MonsterStruct MonstConvTbl[128] = {
+const DunMonsterStruct MonstConvTbl[128] = {
     // clang-format off
     { 0 },
     { 0 }, //MT_NZOMBIE,
@@ -1685,7 +1727,7 @@ void D1Dun::loadObject(int objectIndex)
             break;
         }
     }
-    const ObjectStruct *objStr = &ObjConvTbl[objectIndex];
+    const DunObjectStruct *objStr = &ObjConvTbl[objectIndex];
     if (i >= this->customObjectTypes.size() && objectIndex < lengthof(ObjConvTbl) && objStr->type != 0 && !this->assetPath.isEmpty()) {
         int objFileIndex = objStr->animType;
         result.frameNum = objStr->frameNum;
@@ -1755,7 +1797,7 @@ void D1Dun::loadMonster(int monsterIndex)
             break;
         }
     }
-    const MonsterStruct *monStr = &MonstConvTbl[monsterIndex];
+    const DunMonsterStruct *monStr = &MonstConvTbl[monsterIndex];
     if (i >= this->customObjectTypes.size() && monsterIndex < lengthof(MonstConvTbl) && monStr->type != 0 && !this->assetPath.isEmpty()) {
         int moFileIndex = monStr->animType;
         QString cl2FilePath = this->assetPath + "/Monsters/" + monfiledata[moFileIndex].path + "N.CL2";

@@ -68,6 +68,22 @@
 #define GOLD_MEDIUM_LIMIT		2500
 #define GOLD_MAX_LIMIT			5000
 
+// standard palette for all levels
+// 8 or 16 shades per color
+// example (dark blue): PAL16_BLUE+14, PAL8_BLUE+7
+// example (light red): PAL16_RED+2, PAL8_RED
+// example (orange): PAL16_ORANGE+8, PAL8_ORANGE+4
+#define PAL8_BLUE		128
+#define PAL8_RED		136
+#define PAL8_YELLOW		144
+#define PAL8_ORANGE		152
+#define PAL16_BEIGE		160
+#define PAL16_BLUE		176
+#define PAL16_YELLOW	192
+#define PAL16_ORANGE	208
+#define PAL16_RED		224
+#define PAL16_GRAY		240
+
 #define DIFFICULTY_EXP_BONUS   800
 
 #define NIGHTMARE_LEVEL_BONUS   16

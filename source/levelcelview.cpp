@@ -141,14 +141,14 @@ void LevelCelView::updateEntityOptions()
     // prepare the comboboxes
     this->ui->dungeonObjectComboBox->clear();
     this->ui->dungeonObjectComboBox->addItem("", 0);
-    for (const ObjectStruct &obj : ObjConvTbl) {
+    for (const DunObjectStruct &obj : ObjConvTbl) {
         if (obj.type != 0) {
             this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
         }
     }
     this->ui->dungeonMonsterComboBox->clear();
     this->ui->dungeonMonsterComboBox->addItem("", 0);
-    for (const MonsterStruct &mon : MonstConvTbl) {
+    for (const DunMonsterStruct &mon : MonstConvTbl) {
         if (mon.type != 0) {
             this->ui->dungeonMonsterComboBox->addItem(mon.name, mon.type);
         }

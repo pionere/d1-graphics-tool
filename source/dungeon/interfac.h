@@ -6,8 +6,10 @@
 #ifndef __INTERFAC_H__
 #define __INTERFAC_H__
 
-#include "../d1dun.h"
-#include "../dungeongeneratedialog.h"
+#include <QString>
+
+class GenerateDunParam;
+class D1Dun;
 
 extern int gnDifficulty;
 extern bool IsMultiGame;

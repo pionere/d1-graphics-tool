@@ -35,59 +35,17 @@ typedef enum dun_file_index {
     DUN_WARLORD_PRE,         // map tile for the "Warlord" quest before reading the book (Warlord.DUN)
 } dun_file_index;
 
-typedef enum _monster_gfx_id {
-    MOFILE_FALLSP,
-    MOFILE_SKELAX,
-    MOFILE_FALLSD,
-    MOFILE_SKELBW,
-    MOFILE_SKELSD,
-    MOFILE_SNEAK,
-    MOFILE_GOATMC,
-    MOFILE_GOATBW,
-    MOFILE_FAT,
-    MOFILE_RHINO,
-    MOFILE_BLACK,
-    MOFILE_SUCC,
-    MOFILE_MAGE,
-    MOFILE_DIABLO,
-    NUM_MOFILE_TYPES
-} _monster_gfx_id;
-
-typedef enum object_graphic_id {
-    OFILE_LEVER,
-    OFILE_CRUXSK1,
-    OFILE_CRUXSK2,
-    OFILE_CRUXSK3,
-    OFILE_BOOK2,
-    OFILE_BURNCROS,
-    OFILE_CANDLE2,
-    OFILE_MCIRL,
-    OFILE_SWITCH4,
-    OFILE_TSOUL,
-    OFILE_TNUDEM,
-    OFILE_TNUDEW,
-    OFILE_CHEST1,
-    OFILE_CHEST2,
-    OFILE_CHEST3,
-    OFILE_ALTBOY,
-    OFILE_ARMSTAND,
-    OFILE_WEAPSTND,
-    OFILE_WTORCH2,
-    OFILE_WTORCH1,
-    NUM_OFILE_TYPES
-} object_graphic_id;
-
 enum class D1DUN_TYPE {
     NORMAL,
     RAW,
 };
 
-typedef struct ObjectStruct {
+typedef struct DunObjectStruct {
     int type;
     int animType;
     const char *name;
     int frameNum;
-} ObjectStruct;
+} DunObjectStruct;
 
 typedef struct CustomObjectStruct {
     int type;
@@ -97,12 +55,12 @@ typedef struct CustomObjectStruct {
     int frameNum;
 } CustomObjectStruct;
 
-typedef struct MonsterStruct {
+typedef struct DunMonsterStruct {
     int type;
     int animType;
     const char *trnPath;
     const char *name;
-} MonsterStruct;
+} DunMonsterStruct;
 
 typedef struct CustomMonsterStruct {
     int type;
@@ -261,5 +219,5 @@ private:
     std::vector<std::pair<D1Gfx *, unsigned>> itemDataCache;
 };
 
-extern const ObjectStruct ObjConvTbl[128];
-extern const MonsterStruct MonstConvTbl[128];
+extern const DunObjectStruct ObjConvTbl[128];
+extern const DunMonsterStruct MonstConvTbl[128];

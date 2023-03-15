@@ -929,7 +929,6 @@ void DRLG_InitL1Specials(int x1, int y1, int x2, int y2)
 	}
 }
 
-#ifdef HELLFIRE
 static void DRLG_InitL5Specials()
 {
 	int i, *dp;
@@ -949,7 +948,6 @@ static void DRLG_InitL5Specials()
 		*dsp = pc;
 	}
 }
-#endif
 
 static void DRLG_L1SetMapFix()
 {
@@ -2644,11 +2642,9 @@ void CreateL1Dungeon(int entry)
 	DRLG_FreeL1SP();
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L1);
 
-#ifdef HELLFIRE
 	if (currLvl._dType == DTYPE_CRYPT)
 		DRLG_InitL5Specials();
 	else
-#endif
 		// assert(currLvl._dType == DTYPE_CATHEDRAL);
 		DRLG_InitL1Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
 
