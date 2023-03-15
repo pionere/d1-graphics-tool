@@ -107,15 +107,15 @@ void InitLvlDungeon()
 	assert(pMegaTiles == NULL);
 	pMegaTiles = (uint16_t*)LoadFileInMem(lds->dMegaTiles);
 
-#if DEBUG_MODE
 	static_assert(false == 0, "InitLvlDungeon fills tables with 0 instead of false values.");
-	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nSolidTable, 0, sizeof(nSolidTable));
+	memset(nBlockTable, 0, sizeof(nBlockTable));
+	memset(nMissileTable, 0, sizeof(nBlockTable));
 	memset(nTrapTable, 0, sizeof(nTrapTable));
-	memset(nMissileTable, 0, sizeof(nMissileTable));
-#endif
 	pSBFile = LoadFileInMem(lds->dSolidTable, &dwTiles);
-
+	if (pSBFile == NULL) {
+		return;
+    }
 	assert(dwTiles <= MAXTILES);
 	pTmp = pSBFile;
 
@@ -411,6 +411,9 @@ void DRLG_PlaceMegaTiles(int mt)
 	}
 	app_fatal(tmpstr);*/
 
+	if (pMegaTiles == NULL) {
+		return;
+    }
 	Tiles = &pMegaTiles[mt * 4];
 	v1 = SwapLE16(Tiles[0]) + 1;
 	v2 = SwapLE16(Tiles[1]) + 1;
@@ -604,6 +607,9 @@ void DRLG_SetMapTrans(BYTE* pMap)
 	BYTE tv;
 	uint16_t rw, rh, *lm;
 
+	if (pMap == NULL) {
+		return;
+    }
 	lm = (uint16_t*)pMap;
 	rw = SwapLE16(*lm);
 	lm++;

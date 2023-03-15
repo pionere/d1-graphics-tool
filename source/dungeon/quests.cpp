@@ -123,6 +123,9 @@ static void DrawMap(const char* name, BYTE bv)
 	BYTE* sp;
 
 	pMap = LoadFileInMem(name);
+	if (pMap == NULL) {
+		return;
+    }
 	rw = pMap[0];
 	rh = pMap[2];
 
@@ -169,6 +172,9 @@ static void DrawPostMap(const char* name)
 	BYTE* sp;
 
 	pMap = LoadFileInMem(name);
+	if (pMap == NULL) {
+		return;
+    }
 	rw = pMap[0];
 	rh = pMap[2];
 

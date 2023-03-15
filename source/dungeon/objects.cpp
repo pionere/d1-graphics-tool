@@ -630,6 +630,9 @@ static void LoadMapSetObjects(const char* map, int startx, int starty, const Lev
 	int i, j, oi;
 	uint16_t rw, rh, *lm;
 
+	if (pMap == NULL) {
+		return;
+    }
 	//gbInitObjFlag = true;
 	lm = (uint16_t*)pMap;
 	rw = SwapLE16(*lm);
@@ -997,6 +1000,9 @@ void SetMapObjects(BYTE* pMap)
 //		if (currLvl._dDunType == objectdata[i].oSetLvlType)
 //			fileload[objectdata[i].ofindex] = true;
 //	}
+	if (pMap == NULL) {
+		return;
+    }
 
 	lm = (uint16_t*)pMap;
 	rw = SwapLE16(*lm);

@@ -7,6 +7,7 @@
 #define __ALL_H__
 
 #include <algorithm>
+#include <climits>
 #include <cmath>
 
 #include <QtEndian>

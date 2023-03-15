@@ -178,15 +178,30 @@ bool EnterGameLevel(D1Dun *dun, const GenerateDunParam &params)
 	IncProgress();
 	LoadGameLevel(ENTRY_MAIN, params.seed);
 
+	bool hasSubtiles = pMegaTiles != NULL;
 	FreeLvlDungeon();
 
 	dun->setWidth(MAXDUNX);
     dun->setHeight(MAXDUNY);
     dun->setLevelType(currLvl._dType);
 
+	if (!hasSubtiles) {
+		for (int y = 0; y < MAXDUNY; y += 2) {
+			for (int x = 0; x < MAXDUNY; x += 2) {
+				dun->setTileAt(x, y, 0);
+			}
+		}
+		for (int y = 0; y < DMAXY; y++) {
+			for (int x = 0; x < DMAXX; x++) {
+				dun->setTileAt(DBORDERX + x * 2, DBORDERY + y * 2, dungeon[x][y]);
+			}
+		}
+    }
 	for (int y = 0; y < MAXDUNY; y++) {
 		for (int x = 0; x < MAXDUNY; x++) {
-			dun->setSubtileAt(x, y, dPiece[x][y]);
+			if (hasSubtiles) {
+				dun->setSubtileAt(x, y, dPiece[x][y]);
+            }
 			dun->setItemAt(x, y, dItem[x][y]);
 			dun->setMonsterAt(x, y, dMonster[x][y]);
 			dun->setObjectAt(x, y, dObject[x][y]);

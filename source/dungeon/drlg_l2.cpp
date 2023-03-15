@@ -1767,6 +1767,9 @@ static void DRLG_LoadL2SP()
 	assert(pSetPiece == NULL);
 	if (QuestStatus(Q_BLIND)) {
 		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blind1.DUN");
+		if (pSetPiece == NULL) {
+			return;
+        }
 		// patch the map - Blind1.DUN
 		// place pieces with closed doors
 		pSetPiece[(2 + 4 + 3 * 11) * 2] = 150;
@@ -1784,6 +1787,9 @@ static void DRLG_LoadL2SP()
 		// pSetPiece[(2 + 5 + 12 * 10) * 2] = 3;
 	} else if (QuestStatus(Q_BCHAMB)) {
 		pSetPiece = LoadFileInMem("Levels\\L2Data\\Bonestr2.DUN");
+		if (pSetPiece == NULL) {
+			return;
+        }
 		// patch the map - Bonestr2.DUN
 		// place shadows
 		// NE-wall
@@ -3431,6 +3437,9 @@ static BYTE* LoadL2DungeonData(const char* sFileName)
 	static_assert(sizeof(dungeon[0][0]) == 1, "memset on dungeon does not work in LoadL2DungeonData.");
 	memset(dungeon, BASE_MEGATILE_L2 + 1, sizeof(dungeon));
 
+	if (pMap == NULL) {
+		return;
+    }
 	rw = pMap[0];
 	rh = pMap[2];
 

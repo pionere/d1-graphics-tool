@@ -8,7 +8,7 @@
 int itemactive[MAXITEMS];
 /** Contains the items on ground in the current game. */
 ItemStruct items[MAXITEMS + 1];
-BYTE* itemanims[NUM_IFILE];
+//BYTE* itemanims[NUM_IFILE];
 int numitems;
 
 /** Maps from direction to delta X-offset in an 3x3 area. */
@@ -1345,7 +1345,7 @@ void RespawnItem(int ii)
 
 	is = &items[ii];
 	it = ItemCAnimTbl[is->_iCurs];
-	is->_iAnimData = itemanims[it];
+//	is->_iAnimData = itemanims[it];
 	is->_iAnimLen = itemfiledata[it].iAnimLen;
 	is->_iAnimFrameLen = 1;
 	//is->_iAnimWidth = ITEM_ANIM_WIDTH;

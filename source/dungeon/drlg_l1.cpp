@@ -871,6 +871,9 @@ static void DRLG_LoadL1SP()
 		pSetPiece = LoadFileInMem("Levels\\L1Data\\Banner1.DUN");
 	} else if (QuestStatus(Q_SKELKING)) {
 		pSetPiece = LoadFileInMem("Levels\\L1Data\\SKngDO.DUN");
+		if (pSetPiece == NULL) {
+			return;
+		}
 		// patch set-piece to use common tiles - SKngDO.DUN
 		pSetPiece[(2 + 5 + 3 * 7) * 2] = 203;
 		pSetPiece[(2 + 5 + 4 * 7) * 2] = 22;
@@ -979,6 +982,9 @@ static BYTE* LoadL1DungeonData(const char* sFileName)
 	static_assert(sizeof(dungeon) == DMAXX * DMAXY, "Linear traverse of dungeon does not work in LoadL1DungeonData.");
 	memset(dungeon, BASE_MEGATILE_L1 + 1, sizeof(dungeon));
 
+	if (pMap == NULL) {
+		return pMap;
+    }
 	rw = pMap[0];
 	rh = pMap[2];
 

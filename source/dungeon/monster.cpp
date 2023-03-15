@@ -868,6 +868,9 @@ void SetMapMonsters(BYTE* pMap, int startx, int starty)
 	int i, j;
 	int mtidx, mnum;
 
+	if (pMap == NULL) {
+		return;
+    }
 	lm = (uint16_t*)pMap;
 	rw = SwapLE16(*lm);
 	lm++;

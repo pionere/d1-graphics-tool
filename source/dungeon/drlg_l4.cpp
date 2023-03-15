@@ -224,6 +224,9 @@ static void DRLG_LoadL4SP()
 		pSetPiece = LoadFileInMem("Levels\\L4Data\\Vile1.DUN");
 	} else if (QuestStatus(Q_WARLORD)) {
 		pSetPiece = LoadFileInMem("Levels\\L4Data\\Warlord.DUN");
+		if (pSetPiece == NULL) {
+			return;
+        }
 		for (int y = 0; y < 7; y++) {
 			for (int x = 0; x < 8; x++) {
 				if (pSetPiece[(2 + x + y * 8) * 2] == 0)
@@ -1251,6 +1254,9 @@ static void DRLG_L4SetRoom(int rx1, int ry1)
 	int rx2, ry2, i, j;
 	BYTE* sp;
 
+	if (pSetPiece == NULL) {
+		return;
+    }
 	rx2 = pSetPiece[0] + rx1;
 	ry2 = pSetPiece[2] + ry1;
 	sp = &pSetPiece[4];
