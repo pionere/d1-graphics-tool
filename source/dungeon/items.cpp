@@ -254,7 +254,7 @@ bool ItemSpaceOk(int x, int y)
 	if (x < DBORDERX || x >= DBORDERX + DSIZEX || y < DBORDERY || y >= DBORDERY + DSIZEY)
 		return false;
 
-	if ((dItem[x][y] | dMonster[x][y] | dPlayer[x][y] | nSolidTable[dPiece[x][y]]) != 0)
+	if ((dItem[x][y] | dMonster[x][y] | /*dPlayer[x][y] |*/ nSolidTable[dPiece[x][y]]) != 0)
 		return false;
 
 	oi = dObject[x][y];

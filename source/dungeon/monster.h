@@ -30,8 +30,8 @@ int PreSpawnSkeleton();
 
 inline void SetMonsterLoc(MonsterStruct* mon, int x, int y)
 {
-	mon->_mx = mon->_mfutx = mon->_moldx = x;
-	mon->_my = mon->_mfuty = mon->_moldy = y;
+	mon->_mx = x;
+	mon->_my = y;
 }
 
 /* data */

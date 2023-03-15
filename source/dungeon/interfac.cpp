@@ -11,6 +11,8 @@
 #include "../dungeongeneratedialog.h"
 
 int gnDifficulty;
+int ViewX;
+int ViewY;
 bool IsMultiGame;
 QString assetPath;
 

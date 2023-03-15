@@ -684,8 +684,8 @@ static void SetupObject(int oi, int x, int y, int type)
 	os->_oAnimFrame = ods->oAnimBaseFrame;
 //	os->_oAnimData = objanimdata[ods->ofindex];
 	ofd = &objfiledata[ods->ofindex];
-	os->_oSFX = ofd->oSFX;
-	os->_oSFXCnt = ofd->oSFXCnt;
+//	os->_oSFX = ofd->oSFX;
+//	os->_oSFXCnt = ofd->oSFXCnt;
 	os->_oAnimFlag = ofd->oAnimFlag;
 	os->_oAnimFrameLen = ofd->oAnimFrameLen;
 	os->_oAnimLen = ofd->oAnimLen;
@@ -694,8 +694,8 @@ static void SetupObject(int oi, int x, int y, int type)
 		os->_oAnimCnt = random_low(146, os->_oAnimFrameLen);
 		os->_oAnimFrame = RandRangeLow(1, os->_oAnimLen);
 	}
-	os->_oAnimWidth = ofd->oAnimWidth * ASSET_MPL;
-	os->_oAnimXOffset = (os->_oAnimWidth - TILE_WIDTH) >> 1;
+//	os->_oAnimWidth = ofd->oAnimWidth * ASSET_MPL;
+//	os->_oAnimXOffset = (os->_oAnimWidth - TILE_WIDTH) >> 1;
 	os->_oSolidFlag = ofd->oSolidFlag;
 	os->_oMissFlag = ofd->oMissFlag;
 	os->_oLightFlag = ofd->oLightFlag;

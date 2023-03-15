@@ -12,6 +12,8 @@
  */
 #include "all.h"
 
+#include <QFile>
+
 DEVILUTION_BEGIN_NAMESPACE
 
 /** Current game seed */
@@ -115,7 +117,7 @@ void mem_free_dbg(void* p)
  * @param pdwFileLen Will be set to file size if non-NULL
  * @return Buffer with content of file
  */
-BYTE* LoadFileInMem(const char* pszName)
+BYTE* LoadFileInMem(const char* pszName, size_t* pdwFileLen = NULL)
 {
 	QString path = assetPath + "/" + pszName;
 	QFile file = QFile(path);
@@ -129,6 +131,9 @@ BYTE* LoadFileInMem(const char* pszName)
 	const QByteArray fileData = file.readAll();
 
 	unsigned fileLen = fileData.size();
+	if (pdwFileLen != NULL) {
+		*pdwFileLen = fileLen;
+    }
 
 	if (fileLen != 0) {
 		buf = (BYTE*)DiabloAllocPtr(fileLen);

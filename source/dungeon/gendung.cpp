@@ -45,7 +45,6 @@ bool nMissileTable[MAXTILES + 1];
 int gnDifficulty;
 /** Contains the data of the active dungeon level. */
 LevelStruct currLvl;
-int MicroTileLen;
 /** Specifies the number of transparency blocks on the map. */
 BYTE numtrans;
 /** Specifies the active transparency indices. */
@@ -54,8 +53,6 @@ bool TransList[256];
 int dPiece[MAXDUNX][MAXDUNY];
 /** Specifies the transparency index at each coordinate of the map. */
 BYTE dTransVal[MAXDUNX][MAXDUNY];
-/** Specifies the base darkness levels of each tile on the map. */
-BYTE dPreLight[MAXDUNX][MAXDUNY];
 /** Specifies the (runtime) flags of each tile on the map (dflag) */
 BYTE dFlags[MAXDUNX][MAXDUNY];
 /**
@@ -66,14 +63,6 @@ BYTE dFlags[MAXDUNX][MAXDUNY];
  * -(mnum + 1): reserved for a moving NPC
  */
 int dMonster[MAXDUNX][MAXDUNY];
-/**
- * Contains the dead NPC numbers of the map (only monsters at the moment).
- *   mnum + 1 : the NPC corpse is on the given location.
- *  DEAD_MULTI: more than one corpse on the given location.
- */
-BYTE dDead[MAXDUNX][MAXDUNY];
-static_assert(MAXMONSTERS <= UCHAR_MAX, "Index of a monster might not fit to dDead.");
-static_assert((BYTE)(MAXMONSTERS + 1) < (BYTE)DEAD_MULTI, "Multi-dead in dDead reserves one entry.");
 /**
  * Contains the object numbers (objects array indices) of the map.
  *   oi + 1 : the object is on the given location.
@@ -87,14 +76,6 @@ static_assert(MAXOBJECTS <= CHAR_MAX, "Index of an object might not fit to dObje
  */
 BYTE dItem[MAXDUNX][MAXDUNY];
 static_assert(MAXITEMS <= UCHAR_MAX, "Index of an item might not fit to dItem.");
-/**
- * Contains the missile numbers (missiles array indices) of the map.
- *   mi + 1 : the missile is on the given location.
- * MIS_MULTI: more than one missile on the given location.
- */
-BYTE dMissile[MAXDUNX][MAXDUNY];
-static_assert(MAXMISSILES <= UCHAR_MAX, "Index of a missile might not fit to dMissile.");
-static_assert((BYTE)(MAXMISSILES + 1) < (BYTE)MIS_MULTI, "Multi-missile in dMissile reserves one entry.");
 /**
  * Contains the arch frame numbers of the map from the special tileset
  * (e.g. "levels/l1data/l1s.cel"). Note, the special tileset of Tristram (i.e.
@@ -120,15 +101,11 @@ void InitLvlDungeon()
 	uint16_t bv;
 	size_t i, dwTiles;
 	BYTE *pSBFile, *pTmp;
-#if ASSET_MPL == 1
-	uint16_t blocks, *pLPFile, *pPiece, *pPTmp;
-#endif
 	const LevelData* lds;
 	lds = &AllLevels[currLvl._dLevelIdx];
 
 	assert(pMegaTiles == NULL);
 	pMegaTiles = (uint16_t*)LoadFileInMem(lds->dMegaTiles);
-	MicroTileLen = lds->dMicroTileLen * ASSET_MPL * ASSET_MPL;
 
 #if DEBUG_MODE
 	static_assert(false == 0, "InitLvlDungeon fills tables with 0 instead of false values.");

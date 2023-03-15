@@ -359,6 +359,7 @@ typedef struct ObjectStruct {
 	int _oAnimFrameLen; // Tick length of each frame in the current animation
 	int _oAnimCnt;   // Increases by one each game tick, counting how close we are to _oAnimFrameLen
 	int _oAnimLen;   // Number of frames in current animation
+	int _oAnimFrame; // Current frame of animation.
 	BOOLEAN _oSolidFlag;
 	BOOLEAN _oMissFlag;
 	BOOLEAN _oLightFlag;
@@ -368,6 +369,14 @@ typedef struct ObjectStruct {
 	BYTE _oTrapChance;
 	BOOLEAN _oPreFlag;
 	int _oRndSeed;
+	int _oVar1;
+	int _oVar2;
+	int _oVar3;
+	int _oVar4;
+	int _oVar5;
+	int _oVar6;
+	int _oVar7;
+	int _oVar8;
 } ObjectStruct;
 
 //////////////////////////////////////////////////
@@ -430,6 +439,33 @@ typedef struct QuestData {
 	int _qdmsg;
 	const char* _qlstr;
 } QuestData;
+
+//////////////////////////////////////////////////
+// spells
+//////////////////////////////////////////////////
+
+typedef struct SpellData {
+	BYTE sManaCost;
+	BYTE sType;
+	BYTE sIcon;
+	const char* sNameText;
+	BYTE sBookLvl;   // minimum level for books
+	BYTE sStaffLvl;  // minimum level for staves
+	BYTE sScrollLvl; // minimum level for scrolls/runes
+	BYTE sSkillFlags; // flags (SDFLAG*) of the skill
+	BYTE scCurs; // cursor for scrolls/runes
+	BYTE spCurs; // cursor for spells
+	BYTE sUseFlags; // the required flags(SFLAG*) to use the skill
+	BYTE sMinInt;
+	BYTE sSFX;
+	BYTE sMissile;
+	BYTE sManaAdj;
+	BYTE sMinMana;
+	uint16_t sStaffMin;
+	uint16_t sStaffMax;
+	int sBookCost;
+	int sStaffCost; // == sScrollCost == sRuneCost
+} SpellData;
 
 //////////////////////////////////////////////////
 // gendung

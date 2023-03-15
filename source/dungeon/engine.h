@@ -34,7 +34,16 @@ inline int RandRangeLow(int minVal, int maxVal)
 	return minVal + random_low(0, maxVal - minVal + 1);
 }
 
-BYTE* LoadFileInMem(const char* pszName);
+BYTE* LoadFileInMem(const char* pszName, size_t* pdwFileLen = NULL);
+
+void mem_free_dbg(void* p);
+#define MemFreeDbg(p)       \
+	{                       \
+		void* p__p;         \
+		p__p = p;           \
+		p = NULL;           \
+		mem_free_dbg(p__p); \
+	}
 
 /*
  * Helper function to simplify 'sizeof(list) / sizeof(list[0])' expressions.

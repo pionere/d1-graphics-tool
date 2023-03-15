@@ -12,6 +12,8 @@ class GenerateDunParam;
 class D1Dun;
 
 extern int gnDifficulty;
+extern int ViewX;
+extern int ViewY;
 extern bool IsMultiGame;
 extern QString assetPath;
 

@@ -30,7 +30,7 @@ void DungeonGenerateDialog::on_generateButton_clicked()
     params.difficulty = this->ui->difficultyLineEdit->text().toInt();
     params.isMulti = this->ui->multiCheckBox->isChecked();
     params.seed = this->ui->seedLineEdit->text().toInt();
-    params.seedQuest = this->ui->seedQuestLineEdit->text().toInt();
+    params.seedQuest = this->ui->questSeedLineEdit->text().toInt();
 
     this->close();
 

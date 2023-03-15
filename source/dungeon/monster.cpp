@@ -396,7 +396,7 @@ void InitMonster(int mnum, int dir, int mtidx, int x, int y)
 	mon->_my = y;
 	mon->_mdir = dir;
 	mon->_mType = cmon->cmType;
-	mon->_mhitpoints = mon->_mmaxhp = RandRangeLow(cmon->cmMinHP, cmon->cmMaxHP) << 6;
+	mon->_mmaxhp = RandRangeLow(cmon->cmMinHP, cmon->cmMaxHP);
 	mon->_mAnimCnt = random_low(88, mon->_mAnimFrameLen);
 	mon->_mAnimLen = cmon->cmAnims[MA_STAND].maFrames;
 	mon->_mAnimFrame = mon->_mAnimLen == 0 ? 1 : RandRangeLow(1, mon->_mAnimLen);
@@ -501,7 +501,6 @@ static void PlaceGroup(int mtidx, int num, int leaderf, int leader)
 			if (leaderf & UMF_GROUP) {
 				monsters[mnum]._mNameColor = COL_BLUE;
 				monsters[mnum]._mmaxhp *= 2;
-				monsters[mnum]._mhitpoints = monsters[mnum]._mmaxhp;
 				monsters[mnum]._mAI.aiInt = monsters[leader]._mAI.aiInt;
 
 				if (leaderf & UMF_LEADER) {
@@ -529,7 +528,7 @@ static void PlaceUniqueMonst(int uniqindex)
 	int xp, yp, x, y;
 	int uniqtype;
 	int count2;
-	char filestr[DATA_ARCHIVE_MAX_PATH];
+//	char filestr[DATA_ARCHIVE_MAX_PATH];
 	const UniqMonData* uniqm;
 	MonsterStruct* mon;
 	int mnum, count;
@@ -644,10 +643,10 @@ static void PlaceUniqueMonst(int uniqindex)
 	mon->_mmaxhp = uniqm->mmaxhp;
 
 	mon->_mAI = uniqm->mAI;
-	mon->_mMinDamage = uniqm->mMinDamage;
+	/*mon->_mMinDamage = uniqm->mMinDamage;
 	mon->_mMaxDamage = uniqm->mMaxDamage;
 	mon->_mMinDamage2 = uniqm->mMinDamage2;
-	mon->_mMaxDamage2 = uniqm->mMaxDamage2;
+	mon->_mMaxDamage2 = uniqm->mMaxDamage2;*/
 
 	/*snprintf(filestr, sizeof(filestr), "Monsters\\Monsters\\%s.TRN", uniqm->mTrnName);
 	LoadFileWithMem(filestr, ColorTrns[uniquetrans]);
@@ -664,31 +663,29 @@ static void PlaceUniqueMonst(int uniqindex)
 
 	mon->_muniqtrans = uniquetrans++;
 
-	mon->_mHit += uniqm->mUnqHit;
-	mon->_mHit2 += uniqm->mUnqHit2;
-	mon->_mMagic += uniqm->mUnqMag;
-	mon->_mEvasion += uniqm->mUnqEva;
-	mon->_mArmorClass += uniqm->mUnqAC;
+//	mon->_mHit += uniqm->mUnqHit;
+//	mon->_mHit2 += uniqm->mUnqHit2;
+//	mon->_mMagic += uniqm->mUnqMag;
+//	mon->_mEvasion += uniqm->mUnqEva;
+//	mon->_mArmorClass += uniqm->mUnqAC;
 	mon->_mAI.aiInt += gnDifficulty;
 
 	if (gnDifficulty == DIFF_NIGHTMARE) {
 		mon->_mmaxhp = 2 * mon->_mmaxhp + 100;
 		mon->_mLevel += NIGHTMARE_LEVEL_BONUS;
-		mon->_mMinDamage = 2 * (mon->_mMinDamage + 2);
-		mon->_mMaxDamage = 2 * (mon->_mMaxDamage + 2);
-		mon->_mMinDamage2 = 2 * (mon->_mMinDamage2 + 2);
-		mon->_mMaxDamage2 = 2 * (mon->_mMaxDamage2 + 2);
+//		mon->_mMinDamage = 2 * (mon->_mMinDamage + 2);
+//		mon->_mMaxDamage = 2 * (mon->_mMaxDamage + 2);
+//		mon->_mMinDamage2 = 2 * (mon->_mMinDamage2 + 2);
+//		mon->_mMaxDamage2 = 2 * (mon->_mMaxDamage2 + 2);
 	} else if (gnDifficulty == DIFF_HELL) {
 		mon->_mmaxhp = 4 * mon->_mmaxhp + 200;
 		mon->_mLevel += HELL_LEVEL_BONUS;
-		mon->_mMinDamage = 4 * mon->_mMinDamage + 6;
-		mon->_mMaxDamage = 4 * mon->_mMaxDamage + 6;
-		mon->_mMinDamage2 = 4 * mon->_mMinDamage2 + 6;
-		mon->_mMaxDamage2 = 4 * mon->_mMaxDamage2 + 6;
-		mon->_mMagicRes = uniqm->mMagicRes2;
+//		mon->_mMinDamage = 4 * mon->_mMinDamage + 6;
+//		mon->_mMaxDamage = 4 * mon->_mMaxDamage + 6;
+//		mon->_mMinDamage2 = 4 * mon->_mMinDamage2 + 6;
+//		mon->_mMaxDamage2 = 4 * mon->_mMaxDamage2 + 6;
+//		mon->_mMagicRes = uniqm->mMagicRes2;
 	}
-	mon->_mmaxhp <<= 6;
-	mon->_mhitpoints = mon->_mmaxhp;
 
 	if (uniqm->mUnqFlags & UMF_NODROP)
 		mon->_mTreasure = NO_DROP;
@@ -869,6 +866,23 @@ void InitMonsters()
 	// if (currLvl._dLevelIdx == DLV_HELL3) {
 	//	DoUnVision(quests[Q_BETRAYER]._qtx + 2, quests[Q_BETRAYER]._qty + 2, 4, false);
 	// }
+}
+
+bool PosOkActor(int x, int y)
+{
+	int oi;
+
+	if ((nSolidTable[dPiece[x][y]] | /*dPlayer[x][y] |*/ dMonster[x][y]) != 0)
+		return false;
+
+	oi = dObject[x][y];
+	if (oi != 0) {
+		oi = oi >= 0 ? oi - 1 : -(oi + 1);
+		if (objects[oi]._oSolidFlag)
+			return false;
+	}
+
+	return true;
 }
 
 void SetMapMonsters(BYTE* pMap, int startx, int starty)

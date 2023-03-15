@@ -6,6 +6,17 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+typedef enum window_messages {
+	DVL_DWM_NEXTLVL, //  = 0x402, // dungeon -> next level  WM_USER+2
+	DVL_DWM_PREVLVL, //  = 0x403, // dungeon -> previous level
+	DVL_DWM_RTNLVL,  //   = 0x404, // setlevel -> dungeon
+	DVL_DWM_SETLVL,  //   = 0x405, // dungeon -> setlevel
+	DVL_DWM_TWARPDN, //  = 0x407, // town -> dungeon
+	DVL_DWM_TWARPUP, //  = 0x408, // dungeon -> town
+	DVL_DWM_WARPLVL, //  = 0x406, // portal
+	DVL_DWM_RETOWN,  //   = 0x409, // restart in town
+} window_messages;
+
 typedef enum item_indexes {
 	IDI_GOLD,
 	IDI_WARRSWORD,
@@ -3797,6 +3808,26 @@ typedef enum talk_id {
 	STORE_PRIEST,
 	STORE_WAIT,
 } talk_id;
+
+typedef enum magic_type {
+	STYPE_FIRE,
+	STYPE_LIGHTNING,
+	STYPE_MAGIC,
+	STYPE_NONE
+} magic_type;
+
+typedef enum skill_data_flags {
+	SDFLAG_TARGETED = 1 << 7,
+} skill_data_flags;
+
+typedef enum player_skill_flags {
+	SFLAG_ANY     = 0,
+	SFLAG_DUNGEON = 1 << 0,
+	SFLAG_MELEE   = 1 << 1,
+	SFLAG_RANGED  = 1 << 2,
+	SFLAG_BLOCK   = 1 << 3,
+	SFLAG_RAGE    = 1 << 4,
+} player_skill_flags;
 
 typedef enum anim_weapon_id {
 	ANIM_ID_UNARMED,

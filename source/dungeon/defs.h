@@ -15,9 +15,21 @@
 #define ALIGN32
 #define ALIGN64
 #define ALIGNMENT
+#define ALIGN
 
 #define FALSE 0
 #define TRUE 1
+
+#define SwapLE16(X) qToLittleEndian((quint16)(X))
+#define SwapLE32(X) qToLittleEndian((quint32)(X))
+
+#define TMUSIC_TOWN 0
+#define TMUSIC_L1 0
+#define TMUSIC_L2 0
+#define TMUSIC_L3 0
+#define TMUSIC_L4 0
+#define TMUSIC_L5 0
+#define TMUSIC_L6 0
 
 // MAXDUN = DSIZE + 2 * DBORDER
 // DSIZE = 2 * DMAX
@@ -29,6 +41,9 @@
 #define DSIZEY					80
 #define MAXDUNX					112
 #define MAXDUNY					112
+
+#define MAX_PLRS				4
+#define MAX_MINIONS				MAX_PLRS
 
 #define MAX_LVLMTYPES			12
 #define MAX_LVLMIMAGE			4000
