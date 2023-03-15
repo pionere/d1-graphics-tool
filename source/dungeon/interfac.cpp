@@ -74,6 +74,9 @@ static void LoadGameLevel(int lvldir, int seed)
 
 	if (!currLvl._dSetLvl) {
 		CreateLevel(lvldir);
+		if (pMegaTiles == NULL || pSolidTbl == NULL) {
+			return;
+        }
 		IncProgress();
 		if (currLvl._dType != DTYPE_TOWN) {
 			GetLevelMTypes();

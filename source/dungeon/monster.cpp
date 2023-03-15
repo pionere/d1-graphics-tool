@@ -88,16 +88,16 @@ static inline void InitMonsterTRN(MonAnimStruct (&anims)[NUM_MON_ANIM], const ch
 
 static void InitMonsterGFX(int midx)
 {
-	/*MapMonData* cmon;
+	MapMonData* cmon;
 	const MonFileData* mfdata;
 	int mtype, anim, i;
-	char strBuff[DATA_ARCHIVE_MAX_PATH];
-	BYTE* celBuf;
+//	char strBuff[DATA_ARCHIVE_MAX_PATH];
+//	BYTE* celBuf;
 
 	cmon = &mapMonTypes[midx];
 	mfdata = &monfiledata[cmon->cmFileNum];
-	cmon->cmWidth = mfdata->moWidth * ASSET_MPL;
-	cmon->cmXOffset = (cmon->cmWidth - TILE_WIDTH) >> 1;
+//	cmon->cmWidth = mfdata->moWidth * ASSET_MPL;
+//	cmon->cmXOffset = (cmon->cmWidth - TILE_WIDTH) >> 1;
 	cmon->cmAFNum = mfdata->moAFNum;
 	cmon->cmAFNum2 = mfdata->moAFNum2;
 
@@ -107,7 +107,7 @@ static void InitMonsterGFX(int midx)
 	for (anim = 0; anim < NUM_MON_ANIM; anim++) {
 		monAnims[anim].maFrames = mfdata->moAnimFrames[anim];
 		monAnims[anim].maFrameLen = mfdata->moAnimFrameLen[anim];
-		if (mfdata->moAnimFrames[anim] > 0) {
+		/*if (mfdata->moAnimFrames[anim] > 0) {
 			snprintf(strBuff, sizeof(strBuff), mfdata->moGfxFile, animletter[anim]);
 
 			celBuf = LoadFileInMem(strBuff);
@@ -123,12 +123,12 @@ static void InitMonsterGFX(int midx)
 					monAnims[anim].maAnimData[i] = celBuf;
 				}
 			}
-		}
+		}*/
 	}
 
-	if (monsterdata[mtype].mTransFile != NULL) {
-		InitMonsterTRN(monAnims, monsterdata[mtype].mTransFile);
-	}*/
+//	if (monsterdata[mtype].mTransFile != NULL) {
+//		InitMonsterTRN(monAnims, monsterdata[mtype].mTransFile);
+//	}
 }
 
 static void InitMonsterStats(int midx)
@@ -394,6 +394,7 @@ void InitMonster(int mnum, int dir, int mtidx, int x, int y)
 	mon->_mdir = dir;
 	mon->_mType = cmon->cmType;
 	mon->_mmaxhp = RandRangeLow(cmon->cmMinHP, cmon->cmMaxHP);
+	mon->_mAnimFrameLen = cmon->cmAnims[MA_STAND].maFrameLen;
 	mon->_mAnimCnt = random_low(88, mon->_mAnimFrameLen);
 	mon->_mAnimLen = cmon->cmAnims[MA_STAND].maFrames;
 	mon->_mAnimFrame = mon->_mAnimLen == 0 ? 1 : RandRangeLow(1, mon->_mAnimLen);

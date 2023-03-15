@@ -25,6 +25,7 @@ int setpc_h;
 BYTE* pSetPiece = NULL;
 /** Specifies the mega tiles (groups of four tiles). */
 uint16_t* pMegaTiles;
+BYTE* pSolidTbl;
 /**
  * List of light blocking dPieces
  */
@@ -100,7 +101,7 @@ void InitLvlDungeon()
 {
 	uint16_t bv;
 	size_t i, dwTiles;
-	BYTE *pSBFile, *pTmp;
+	BYTE *pTmp;
 	const LevelData* lds;
 	lds = &AllLevels[currLvl._dLevelIdx];
 
@@ -112,12 +113,13 @@ void InitLvlDungeon()
 	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nMissileTable, 0, sizeof(nBlockTable));
 	memset(nTrapTable, 0, sizeof(nTrapTable));
-	pSBFile = LoadFileInMem(lds->dSolidTable, &dwTiles);
-	if (pSBFile == NULL) {
+	assert(pSolidTbl == NULL);
+	pSolidTbl = LoadFileInMem(lds->dSolidTable, &dwTiles);
+	if (pSolidTbl == NULL) {
 		return;
     }
 	assert(dwTiles <= MAXTILES);
-	pTmp = pSBFile;
+	pTmp = pSolidTbl;
 
 	// dpiece 0 is always black/void -> make it non-passable to reduce the necessary checks
 	// no longer necessary, because dPiece is never zero
@@ -130,8 +132,6 @@ void InitLvlDungeon()
 		nMissileTable[i] = (bv & PFLAG_BLOCK_MISSILE) != 0;
 		nTrapTable[i] = (bv & PFLAG_TRAP_SOURCE) != 0 ? PTT_ANY : PTT_NONE;
 	}
-
-	mem_free_dbg(pSBFile);
 
 	switch (currLvl._dType) {
 	case DTYPE_TOWN:
@@ -322,6 +322,7 @@ void InitLvlDungeon()
 void FreeLvlDungeon()
 {
 	MemFreeDbg(pMegaTiles);
+	MemFreeDbg(pSolidTbl);
 }
 
 void DRLG_PlaceRndTile(BYTE search, BYTE replace, BYTE rndper)
