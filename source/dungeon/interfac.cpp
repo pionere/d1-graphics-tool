@@ -3,17 +3,14 @@
  *
  * Implementation of load screens.
  */
-//#include "all.h"
-
-#include <QString>
-
-//#include "../d1dun.h"
-//#include "../dungeongeneratedialog.h"
 #include "all.h"
 
-#include "../levelcelview.h"
-
 #include <QApplication>
+#include <QString>
+
+// #include "../d1dun.h"
+// #include "../dungeongeneratedialog.h"
+#include "../levelcelview.h"
 #include "../progressdialog.h"
 
 int ViewX;
@@ -53,6 +50,7 @@ static void CreateLevel(int lvldir)
 	}
 	InitTriggers();
 	// LoadRndLvlPal();
+	int rv = RandRange(1, 4);
 }
 
 static void LoadGameLevel(int lvldir, int seed)
