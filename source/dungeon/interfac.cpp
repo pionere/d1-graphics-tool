@@ -13,6 +13,9 @@
 
 #include "../levelcelview.h"
 
+#include <QApplication>
+#include "../progressdialog.h"
+
 int ViewX;
 int ViewY;
 bool IsMultiGame;
@@ -74,20 +77,20 @@ static void LoadGameLevel(int lvldir, int seed)
 
 	SetRndSeed(seed);
 extern int32_t sglGameSeed;
-qProgress() << QApplication::tr("LoadGameLevel 0: %1").arg(sglGameSeed);
+dProgress() << QApplication::tr("LoadGameLevel 0: %1").arg(sglGameSeed);
 
 	if (!currLvl._dSetLvl) {
 		CreateLevel(lvldir);
-qProgress() << QApplication::tr("LoadGameLevel 1: %1").arg(sglGameSeed);
+dProgress() << QApplication::tr("LoadGameLevel 1: %1").arg(sglGameSeed);
 		if (pMegaTiles == NULL || pSolidTbl == NULL) {
 			return;
         }
 		IncProgress();
 		if (currLvl._dType != DTYPE_TOWN) {
 			GetLevelMTypes();
-qProgress() << QApplication::tr("LoadGameLevel 2: %1").arg(sglGameSeed);
+dProgress() << QApplication::tr("LoadGameLevel 2: %1").arg(sglGameSeed);
 			InitThemes();
-qProgress() << QApplication::tr("LoadGameLevel 3: %1").arg(sglGameSeed);
+dProgress() << QApplication::tr("LoadGameLevel 3: %1").arg(sglGameSeed);
 			IncProgress();
 			InitObjectGFX();
 		} else {
@@ -106,15 +109,15 @@ qProgress() << QApplication::tr("LoadGameLevel 3: %1").arg(sglGameSeed);
 
 		if (currLvl._dType != DTYPE_TOWN) {
 			HoldThemeRooms();
-qProgress() << QApplication::tr("LoadGameLevel 4: %1").arg(sglGameSeed);
+dProgress() << QApplication::tr("LoadGameLevel 4: %1").arg(sglGameSeed);
 			InitMonsters();
-qProgress() << QApplication::tr("LoadGameLevel 5: %1").arg(sglGameSeed);
+dProgress() << QApplication::tr("LoadGameLevel 5: %1").arg(sglGameSeed);
 			IncProgress();
 //			if (IsMultiGame || lvldir == ENTRY_LOAD || !IsLvlVisited(currLvl._dLevelIdx)) {
 				InitObjects();
-qProgress() << QApplication::tr("LoadGameLevel 6: %1").arg(sglGameSeed);
+dProgress() << QApplication::tr("LoadGameLevel 6: %1").arg(sglGameSeed);
 				InitItems();
-qProgress() << QApplication::tr("LoadGameLevel 7: %1").arg(sglGameSeed);
+dProgress() << QApplication::tr("LoadGameLevel 7: %1").arg(sglGameSeed);
 				CreateThemeRooms();
 //			}
 		} else {
@@ -137,7 +140,7 @@ qProgress() << QApplication::tr("LoadGameLevel 7: %1").arg(sglGameSeed);
 
 		InitItems();
 	}
-qProgress() << QApplication::tr("LoadGameLevel 8: %1").arg(sglGameSeed);
+dProgress() << QApplication::tr("LoadGameLevel 8: %1").arg(sglGameSeed);
 	IncProgress();
 //	InitMissiles();
 //	SavePreLighting();
@@ -151,7 +154,7 @@ qProgress() << QApplication::tr("LoadGameLevel 8: %1").arg(sglGameSeed);
 //		}
 		//SyncPortals();
 //	}
-qProgress() << QApplication::tr("LoadGameLevel final: %1").arg(sglGameSeed);
+dProgress() << QApplication::tr("LoadGameLevel final: %1").arg(sglGameSeed);
 	IncProgress();
 //	InitSync();
 //	PlayDungMsgs();
