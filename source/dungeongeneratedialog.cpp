@@ -45,8 +45,8 @@ void DungeonGenerateDialog::on_generateButton_clicked()
 
     // Clear loading message from status bar
     ProgressDialog::done();*/
-    std::function<void()> func = [dun, view, params]() {
-        EnterGameLevel(dun, view, params);
+    std::function<void()> func = [this, view, params]() {
+        EnterGameLevel(this->dun, view, params);
     };
     ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Processing..."), 1, PAF_UPDATE_WINDOW, std::move(func));
 }
