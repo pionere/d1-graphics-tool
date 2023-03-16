@@ -21,7 +21,7 @@ DungeonGenerateDialog::~DungeonGenerateDialog()
 void DungeonGenerateDialog::initialize(D1Dun *d)
 {
     this->dun = d;
-	this->ui->seedLineEdit->setText(QString::number(812323448));
+    this->ui->seedLineEdit->setText(QString::number(812323448));
 }
 
 void DungeonGenerateDialog::on_generateButton_clicked()
@@ -35,13 +35,13 @@ void DungeonGenerateDialog::on_generateButton_clicked()
     params.seedQuest = this->ui->questSeedLineEdit->text().toInt();
     params.entryMode = this->ui->entryComboBox->currentIndex();
 
-	LevelCelView * view = qobject_cast<LevelCelView*>(this->parentWidget());
+    LevelCelView * view = qobject_cast<LevelCelView*>(this->parentWidget());
 
     this->close();
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
 
-	EnterGameLevel(this->dun, view, params);
+    EnterGameLevel(this->dun, view, params);
 
     // Clear loading message from status bar
     ProgressDialog::done();
