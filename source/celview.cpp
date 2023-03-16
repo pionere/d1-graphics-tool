@@ -38,7 +38,8 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, bool first)
     }
     this->lastPos = currPos;
 
-    emit this->framePixelClicked(this->lastPos, first);
+//    emit this->framePixelClicked(this->lastPos, first);
+	qobject_cast<LevelCelView*>(this->view)->framePixelClicked(this->lastPos, first);
 }
 
 void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
