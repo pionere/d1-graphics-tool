@@ -26,11 +26,13 @@ void DungeonGenerateDialog::initialize(D1Dun *d)
 void DungeonGenerateDialog::on_generateButton_clicked()
 {
     GenerateDunParam params;
-    params.level = this->ui->levelLineEdit->text().toInt();
-    params.difficulty = this->ui->difficultyLineEdit->text().toInt();
+    params.level = this->ui->levelComboBox->currentIndex() + 1;
+    params.difficulty = this->ui->difficultyComboBox->currentIndex();
     params.isMulti = this->ui->multiCheckBox->isChecked();
+    params.isHellfire = this->ui->multiCheckBox->isChecked();
     params.seed = this->ui->seedLineEdit->text().toInt();
     params.seedQuest = this->ui->questSeedLineEdit->text().toInt();
+    params.entryMode = this->ui->entryComboBox->currentIndex();
 
     this->close();
 

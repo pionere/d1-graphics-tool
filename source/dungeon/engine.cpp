@@ -12,7 +12,11 @@
  */
 #include "all.h"
 
+#include <QApplication>
+#include <QDir>
 #include <QFile>
+
+#include "../progressdialog.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -124,7 +128,7 @@ BYTE* LoadFileInMem(const char* pszName, size_t* pdwFileLen)
 	BYTE* buf = NULL;
 
 	if (!file.open(QIODevice::ReadOnly)) {
-		// FIXME: handle error
+		dProgressErr() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(path));
 		return buf;
     }
 
@@ -141,15 +145,6 @@ BYTE* LoadFileInMem(const char* pszName, size_t* pdwFileLen)
 	}
 
 	return buf;
-}
-
-/**
- * @brief Load a file in to the given buffer
- * @param pszName Path of file
- * @param p Target buffer
- */
-void LoadFileWithMem(const char* pszName, BYTE* p)
-{
 }
 
 DEVILUTION_END_NAMESPACE

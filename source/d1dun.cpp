@@ -2813,3 +2813,18 @@ bool D1Dun::addResource(const AddResourceParam &params)
 
     return true;
 }
+
+const std::vector<CustomObjectStruct>& D1Dun::getCustomObjectTypes() const
+{
+	return this->customObjectTypes;
+}
+
+const std::vector<CustomMonsterStruct>& D1Dun::getCustomMonsterTypes() const
+{
+	return this->customMonsterTypes;
+}
+
+const std::vector<CustomItemStruct>& D1Dun::getCustomItemTypes() const
+{
+	return this->customItemTypes;
+}

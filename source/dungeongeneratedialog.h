@@ -10,8 +10,10 @@ public:
 	int level; // dungeon_level / _setlevels
     int difficulty; // _difficulty
     bool isMulti;
+	bool isHellfire;
     int32_t seed;
     int32_t seedQuest;
+	int entryMode;
 };
 
 namespace Ui {

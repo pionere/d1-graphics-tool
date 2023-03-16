@@ -7,8 +7,9 @@
 
 #include <QString>
 
-#include "../d1dun.h"
-#include "../dungeongeneratedialog.h"
+//#include "../d1dun.h"
+//#include "../dungeongeneratedialog.h"
+#include "../levelcelview.h"
 
 #include "all.h"
 
@@ -161,15 +162,15 @@ static void EnterLevel(int lvl)
 		currLvl._dLevel += HELL_LEVEL_BONUS;
 }
 
-bool EnterGameLevel(D1Dun *dun, const GenerateDunParam &params)
+bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &params)
 {
-	if (params.level == DLV_TOWN || params.level >= NUM_LEVELS) {
-		return false;
-    }
 	IsMultiGame = params.isMulti;
+	IsHellfireGame = params.isHellfire;
 	gnDifficulty = params.difficulty;
 	assetPath = dun->getAssetPath();
 	InitQuests(params.seedQuest);
+	ViewX = 0;
+	ViewY = 0;
 //	if (IsMultiGame) {
 //		DeltaSaveLevel();
 //	} else {
@@ -179,7 +180,7 @@ bool EnterGameLevel(D1Dun *dun, const GenerateDunParam &params)
 //	FreeLevelMem();
 	EnterLevel(params.level);
 	IncProgress();
-	LoadGameLevel(ENTRY_MAIN, params.seed);
+	LoadGameLevel(params.entryMode, params.seed);
 
 	bool hasSubtiles = pMegaTiles != NULL;
 	FreeLvlDungeon();
@@ -198,6 +199,8 @@ bool EnterGameLevel(D1Dun *dun, const GenerateDunParam &params)
 			dun->setTileAt(DBORDERX + x * 2, DBORDERY + y * 2, dungeon[x][y]);
 		}
 	}
+	std::set<int> objectTypes;
+	std::set<int> itemTypes;
 	for (int y = 0; y < MAXDUNY; y++) {
 		for (int x = 0; x < MAXDUNY; x++) {
 			if (hasSubtiles) {
@@ -206,23 +209,62 @@ bool EnterGameLevel(D1Dun *dun, const GenerateDunParam &params)
 			int item = dItem[x][y];
 			if (item != 0) {
 				item = items[item - 1]._itype + 1;
+				itemTypes.insert(item - 1);
             }
 			dun->setItemAt(x, y, item);
 			int mon = dMonster[x][y];
 			if (mon != 0) {
-				monsters[mon - 1]._mType + 1;
+				mon = monsters[mon - 1]._mMTidx + lengthof(DunMonstConvTbl);
             }
 			dun->setMonsterAt(x, y, mon);
 			int obj = dObject[x][y];
 			if (obj > 0) {
-				objects[obj - 1]._otype + 1;
+				obj = objects[obj - 1]._otype + lengthof(DunObjConvTbl);
+				objectTypes.insert(obj - lengthof(DunObjConvTbl));
             }
 			dun->setObjectAt(x, y, obj);
 			dun->setRoomAt(x, y, dTransVal[x][y]);
 		}
     }
 
-	// bool addResource(const AddResourceParam &params);
+	dun->clearAssets();
+	// add items
+	for (int itype : itemTypes) {
+		AddResourceParam itemRes = AddResourceParam();
+		itemRes.type = DUN_ENTITY_TYPE::ITEM;
+		itemRes.index = 1 + itype;
+		itemRes.name = AllItemsList[itype].iName; // TODO: more specific names?
+		itemRes.path = assetPath + "/Items/" + itemfiledata[ItemCAnimTbl[AllItemsList[itype].iCurs]].ifName;
+		// itemRes.width = ITEM_ANIM_WIDTH;
+		dun->addResource(itemRes);
+    }
+	// add monsters
+	for (int i = 0; i < nummtypes; i++) {
+		AddResourceParam monRes = AddResourceParam();
+		monRes.type = DUN_ENTITY_TYPE::MONSTER;
+		monRes.index = lengthof(DunMonstConvTbl) + i;
+		monRes.name = mapMonTypes[i].cmName;
+		monRes.path = assetPath + "/Monsters/" + monfiledata[mapMonTypes[i].cmFileNum].moGfxFile;
+		monRes.path.replace("%c", "N");
+		monRes.width = monfiledata[mapMonTypes[i].cmFileNum].moWidth;
+		monRes.trnPath = assetPath + "/" + monsterdata[mapMonTypes[i].cmType].mTransFile;
+		dun->addResource(monRes);
+    }
+	// add objects
+	for (int otype : objectTypes) {
+		AddResourceParam objRes = AddResourceParam();
+		objRes.type = DUN_ENTITY_TYPE::OBJECT;
+		objRes.index = lengthof(DunObjConvTbl) + otype;
+		objRes.name = objfiledata[objectdata[otype].ofindex].ofName; // FIXME: object labels?
+		objRes.path = assetPath + "/Objects/" + objfiledata[objectdata[otype].ofindex].ofName + ".CEL";
+		objRes.width = objfiledata[objectdata[otype].ofindex].oAnimWidth;
+		objRes.frame = objectdata[otype].oAnimBaseFrame; // TODO: books / chests?
+		dun->addResource(objRes);
+    }
+	view->updateEntityOptions();
+
+	view->setPositionX(ViewX);
+	view->setPositionY(ViewY);
 
 	return true;
 }

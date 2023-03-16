@@ -17,10 +17,147 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="LineEditWidget" name="levelLineEdit">
-        <property name="charWidth">
-         <number>3</number>
-        </property>
+       <widget class="QComboBox" name="levelComboBox">
+        <item>
+         <property name="text">
+          <string>Cathedral 1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Cathedral 2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Cathedral 3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Cathedral 4</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Catacombs 1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Catacombs 2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Catacombs 3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Catacombs 4</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Caves 1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Caves 2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Caves 3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Caves 4</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Hell 1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Hell 2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Hell 3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Hell 4</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Nest 1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Nest 2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Nest 3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Nest 4</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Crypt 1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Crypt 2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Crypt 3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Crypt 4</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Skeleton King</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Chamber of Bone</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Poisoned Water</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Vile Betrayer</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item row="1" column="0">
@@ -31,10 +168,22 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="LineEditWidget" name="difficultyLineEdit">
-        <property name="charWidth">
-         <number>3</number>
-        </property>
+       <widget class="QComboBox" name="difficultyComboBox">
+        <item>
+         <property name="text">
+          <string>Normal</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Nightmare</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Hell</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item row="2" column="0">
@@ -57,29 +206,72 @@
       <item row="3" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Seed:</string>
+         <string>Hellfire:</string>
         </property>
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="LineEditWidget" name="seedLineEdit">
-        <property name="charWidth">
-         <number>16</number>
+       <widget class="QCheckBox" name="hellfireCheckBox">
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <property name="toolTip">
+         <string>Check if it is for a hellfire game</string>
         </property>
        </widget>
       </item>
       <item row="4" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Quest:</string>
+         <string>Seed:</string>
         </property>
        </widget>
       </item>
       <item row="4" column="1">
+       <widget class="LineEditWidget" name="seedLineEdit">
+        <property name="charWidth">
+         <number>16</number>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Quest:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
        <widget class="LineEditWidget" name="questSeedLineEdit">
         <property name="charWidth">
          <number>16</number>
         </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Arrival:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QComboBox" name="entryComboBox">
+        <item>
+         <property name="text">
+          <string>Entrance</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Exit</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Return</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>

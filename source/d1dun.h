@@ -169,6 +169,9 @@ public:
 
     void patch(int dunFileIndex); // dun_file_index
     bool addResource(const AddResourceParam &params);
+	const std::vector<CustomObjectStruct>& getCustomObjectTypes() const;
+	const std::vector<CustomMonsterStruct>& getCustomMonsterTypes() const;
+	const std::vector<CustomItemStruct>& getCustomItemTypes() const;
 
 private:
     static void drawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, unsigned height, const QColor &color);

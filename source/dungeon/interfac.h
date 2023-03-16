@@ -8,14 +8,15 @@
 
 #include <QString>
 
-class GenerateDunParam;
 class D1Dun;
+class GenerateDunParam;
+class LevelCelView;
 
 extern int ViewX;
 extern int ViewY;
 extern bool IsMultiGame;
 extern QString assetPath;
 
-bool EnterGameLevel(D1Dun *dun, const GenerateDunParam &params);
+bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &params);
 
 #endif /* __INTERFAC_H__ */
