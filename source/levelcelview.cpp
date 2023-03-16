@@ -147,7 +147,7 @@ void LevelCelView::updateEntityOptions()
             this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
         }
     }
-    const std::vector<CustomObjectStruct>& customObjectTypes = this->dun->getCustomObjectTypes();
+    const std::vector<CustomObjectStruct> &customObjectTypes = this->dun->getCustomObjectTypes();
     for (const CustomObjectStruct &obj : customObjectTypes) {
         this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
     }
@@ -159,14 +159,14 @@ void LevelCelView::updateEntityOptions()
             this->ui->dungeonMonsterComboBox->addItem(mon.name, mon.type);
         }
     }
-    const std::vector<CustomMonsterStruct>& customMonsterTypes = this->dun->getCustomMonsterTypes();
+    const std::vector<CustomMonsterStruct> &customMonsterTypes = this->dun->getCustomMonsterTypes();
     for (const CustomMonsterStruct &mon : customMonsterTypes) {
         this->ui->dungeonMonsterComboBox->addItem(mon.name, mon.type);
     }
     // - items
     this->ui->dungeonItemComboBox->clear();
     this->ui->dungeonItemComboBox->addItem("", 0);
-    const std::vector<CustomItemStruct>& customItemTypes = this->dun->getCustomItemTypes();
+    const std::vector<CustomItemStruct> &customItemTypes = this->dun->getCustomItemTypes();
     for (const CustomItemStruct &item : customItemTypes) {
         this->ui->dungeonItemComboBox->addItem(item.name, item.type);
     }

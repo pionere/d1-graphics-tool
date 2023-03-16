@@ -169,9 +169,9 @@ public:
 
     void patch(int dunFileIndex); // dun_file_index
     bool addResource(const AddResourceParam &params);
-	const std::vector<CustomObjectStruct>& getCustomObjectTypes() const;
-	const std::vector<CustomMonsterStruct>& getCustomMonsterTypes() const;
-	const std::vector<CustomItemStruct>& getCustomItemTypes() const;
+    const std::vector<CustomObjectStruct> &getCustomObjectTypes() const;
+    const std::vector<CustomMonsterStruct> &getCustomMonsterTypes() const;
+    const std::vector<CustomItemStruct> &getCustomItemTypes() const;
     void clearAssets();
 
 private:

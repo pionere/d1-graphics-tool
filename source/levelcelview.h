@@ -100,7 +100,7 @@ public:
     void loadMonsters(D1Dun *srcDun);
     void loadObjects(D1Dun *srcDun);
     void loadRooms(D1Dun *srcDun);
-	void generateDungeon();
+    void generateDungeon();
 
     void upscale(const UpscaleParam &params);
 
