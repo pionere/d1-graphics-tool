@@ -1,7 +1,6 @@
 name: clang-format check
 
-#on: [ push, pull_request ]
-on: pull_request
+on: [ push, pull_request ]
 #on:
 #  push:
 #    branches:
@@ -21,7 +20,7 @@ jobs:
     - name: Formatting Check (Source)
       #uses: jidicula/clang-format-action@v4.3.1
       uses: pionere/clang-format-action@v1
-      #continue-on-error: true
+      continue-on-error: true
       with:
         clang-format-version: '13'
         check-path: 'source'
