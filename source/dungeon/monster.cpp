@@ -90,7 +90,7 @@ static void InitMonsterGFX(int midx)
 {
 	MapMonData* cmon;
 	const MonFileData* mfdata;
-	int mtype, anim, i;
+	int mtype, anim; // , i;
 //	char strBuff[DATA_ARCHIVE_MAX_PATH];
 //	BYTE* celBuf;
 

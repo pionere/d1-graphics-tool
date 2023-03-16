@@ -15,6 +15,7 @@ class LevelCelView;
 extern int ViewX;
 extern int ViewY;
 extern bool IsMultiGame;
+extern bool IsHellfireGame;
 extern QString assetPath;
 
 bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &params);

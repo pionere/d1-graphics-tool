@@ -10,7 +10,7 @@ public:
 	int level; // dungeon_level / _setlevels
     int difficulty; // _difficulty
     bool isMulti;
-	bool isHellfire;
+	bool IsHellfire;
     int32_t seed;
     int32_t seedQuest;
 	int entryMode;

@@ -16,6 +16,7 @@
 int ViewX;
 int ViewY;
 bool IsMultiGame;
+bool IsHellfireGame;
 QString assetPath;
 
 static void IncProgress()

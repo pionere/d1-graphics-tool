@@ -10,6 +10,7 @@
 #include "d1tmi.h"
 #include "saveasdialog.h"
 
+#ifndef __ALL_H__
 typedef enum dungeon_type {
     DTYPE_TOWN,
     DTYPE_CATHEDRAL,
@@ -21,6 +22,7 @@ typedef enum dungeon_type {
     DTYPE_NONE,
     NUM_DUNGEON_TYPES,
 } dungeon_type;
+#endif
 
 class D1Tileset {
 public:

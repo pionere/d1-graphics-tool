@@ -29,7 +29,7 @@ void DungeonGenerateDialog::on_generateButton_clicked()
     params.level = this->ui->levelComboBox->currentIndex() + 1;
     params.difficulty = this->ui->difficultyComboBox->currentIndex();
     params.isMulti = this->ui->multiCheckBox->isChecked();
-    params.isHellfire = this->ui->multiCheckBox->isChecked();
+    params.isHellfire = this->ui->hellfireCheckBox->isChecked();
     params.seed = this->ui->seedLineEdit->text().toInt();
     params.seedQuest = this->ui->questSeedLineEdit->text().toInt();
     params.entryMode = this->ui->entryComboBox->currentIndex();
@@ -38,9 +38,8 @@ void DungeonGenerateDialog::on_generateButton_clicked()
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
 
-	if (EnterGameLevel(this->dun, params)) {
-		// FIXME: update LevelCelView
-    }
+	LevelCelView * view = qobject_cast<LevelCelView*>(this->parentWidget());
+	EnterGameLevel(this->dun, view, params);
 
     // Clear loading message from status bar
     ProgressDialog::done();
