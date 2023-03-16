@@ -17,9 +17,6 @@
 #define ALIGNMENT
 #define ALIGN
 
-#define FALSE 0
-#define TRUE 1
-
 #define SwapLE16(X) qToLittleEndian((quint16)(X))
 #define SwapLE32(X) qToLittleEndian((quint32)(X))
 

@@ -6,6 +6,11 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+typedef enum _bool_value {
+	FALSE,
+	TRUE
+};
+
 typedef enum window_messages {
 	DVL_DWM_NEXTLVL, //  = 0x402, // dungeon -> next level  WM_USER+2
 	DVL_DWM_PREVLVL, //  = 0x403, // dungeon -> previous level
