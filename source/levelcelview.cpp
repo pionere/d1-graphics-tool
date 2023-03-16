@@ -364,7 +364,7 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
         this->ui->dungeonPosXLineEdit->setText(QString::number(this->currentDunPosX));
         this->ui->dungeonPosYLineEdit->setText(QString::number(this->currentDunPosY));
         // update the view
-        this->update();
+//        this->update();
         return;
     }
     if (pos.x() >= (int)(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING)

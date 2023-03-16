@@ -35,15 +35,20 @@ void DungeonGenerateDialog::on_generateButton_clicked()
     params.seedQuest = this->ui->questSeedLineEdit->text().toInt();
     params.entryMode = this->ui->entryComboBox->currentIndex();
 
+	LevelCelView * view = qobject_cast<LevelCelView*>(this->parentWidget());
+
     this->close();
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+    /*ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
 
-	LevelCelView * view = qobject_cast<LevelCelView*>(this->parentWidget());
 	EnterGameLevel(this->dun, view, params);
 
     // Clear loading message from status bar
-    ProgressDialog::done();
+    ProgressDialog::done();*/
+    std::function<void()> func = [dun, view, params]() {
+        EnterGameLevel(dun, view, params);
+    };
+    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Processing..."), 1, PAF_UPDATE_WINDOW, std::move(func));
 }
 
 void DungeonGenerateDialog::on_cancelButton_clicked()
