@@ -73,16 +73,21 @@ static void LoadGameLevel(int lvldir, int seed)
 	IncProgress();
 
 	SetRndSeed(seed);
+extern int32_t sglGameSeed;
+qProgress() << QApplication::tr("LoadGameLevel 0: %1").arg(sglGameSeed);
 
 	if (!currLvl._dSetLvl) {
 		CreateLevel(lvldir);
+qProgress() << QApplication::tr("LoadGameLevel 1: %1").arg(sglGameSeed);
 		if (pMegaTiles == NULL || pSolidTbl == NULL) {
 			return;
         }
 		IncProgress();
 		if (currLvl._dType != DTYPE_TOWN) {
 			GetLevelMTypes();
+qProgress() << QApplication::tr("LoadGameLevel 2: %1").arg(sglGameSeed);
 			InitThemes();
+qProgress() << QApplication::tr("LoadGameLevel 3: %1").arg(sglGameSeed);
 			IncProgress();
 			InitObjectGFX();
 		} else {
@@ -101,11 +106,15 @@ static void LoadGameLevel(int lvldir, int seed)
 
 		if (currLvl._dType != DTYPE_TOWN) {
 			HoldThemeRooms();
+qProgress() << QApplication::tr("LoadGameLevel 4: %1").arg(sglGameSeed);
 			InitMonsters();
+qProgress() << QApplication::tr("LoadGameLevel 5: %1").arg(sglGameSeed);
 			IncProgress();
 //			if (IsMultiGame || lvldir == ENTRY_LOAD || !IsLvlVisited(currLvl._dLevelIdx)) {
 				InitObjects();
+qProgress() << QApplication::tr("LoadGameLevel 6: %1").arg(sglGameSeed);
 				InitItems();
+qProgress() << QApplication::tr("LoadGameLevel 7: %1").arg(sglGameSeed);
 				CreateThemeRooms();
 //			}
 		} else {
@@ -128,6 +137,7 @@ static void LoadGameLevel(int lvldir, int seed)
 
 		InitItems();
 	}
+qProgress() << QApplication::tr("LoadGameLevel 8: %1").arg(sglGameSeed);
 	IncProgress();
 //	InitMissiles();
 //	SavePreLighting();
@@ -141,6 +151,7 @@ static void LoadGameLevel(int lvldir, int seed)
 //		}
 		//SyncPortals();
 //	}
+qProgress() << QApplication::tr("LoadGameLevel final: %1").arg(sglGameSeed);
 	IncProgress();
 //	InitSync();
 //	PlayDungMsgs();
@@ -235,12 +246,12 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
 		itemRes.type = DUN_ENTITY_TYPE::ITEM;
 		itemRes.index = 1 + itype;
 		itemRes.name = AllItemsList[itype].iName; // TODO: more specific names?
-		itemRes.path = assetPath + "/Items/" + itemfiledata[ItemCAnimTbl[AllItemsList[itype].iCurs]].ifName;
+		itemRes.path = assetPath + "/Items/" + itemfiledata[ItemCAnimTbl[AllItemsList[itype].iCurs]].ifName + ".CEL";
 		// itemRes.width = ITEM_ANIM_WIDTH;
 		dun->addResource(itemRes);
     }
 	// add monsters
-	for (int i = 0; i < nummtypes; i++) {
+	for (int i = 1; i < nummtypes; i++) {
 		AddResourceParam monRes = AddResourceParam();
 		monRes.type = DUN_ENTITY_TYPE::MONSTER;
 		monRes.index = lengthof(DunMonstConvTbl) + i;
@@ -248,7 +259,9 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
 		monRes.path = assetPath + "/" + monfiledata[mapMonTypes[i].cmFileNum].moGfxFile;
 		monRes.path.replace("%c", "N");
 		monRes.width = monfiledata[mapMonTypes[i].cmFileNum].moWidth;
-		monRes.trnPath = assetPath + "/" + monsterdata[mapMonTypes[i].cmType].mTransFile;
+		if (monsterdata[mapMonTypes[i].cmType].mTransFile != NULL) {
+			monRes.trnPath = assetPath + "/" + monsterdata[mapMonTypes[i].cmType].mTransFile;
+        }
 		dun->addResource(monRes);
     }
 	// add objects

@@ -21,6 +21,7 @@ DungeonGenerateDialog::~DungeonGenerateDialog()
 void DungeonGenerateDialog::initialize(D1Dun *d)
 {
     this->dun = d;
+	this->ui->seedLineEdit->setText(QString::number(812323448));
 }
 
 void DungeonGenerateDialog::on_generateButton_clicked()
