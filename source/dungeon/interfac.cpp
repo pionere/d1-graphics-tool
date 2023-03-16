@@ -9,9 +9,9 @@
 
 //#include "../d1dun.h"
 //#include "../dungeongeneratedialog.h"
-#include "../levelcelview.h"
-
 #include "all.h"
+
+#include "../levelcelview.h"
 
 int ViewX;
 int ViewY;
