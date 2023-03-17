@@ -2655,7 +2655,7 @@ static void DRLG_L1(int entry)
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
 	if (setpc_type == SPT_BANNER) {
-		DrawMap("Levels\\L1Data\\Banner2.DUN", 13);
+		DRLG_DrawMap("Levels\\L1Data\\Banner2.DUN");
 		// patch the map - Banner2.DUN
 		// replace the wall with door
 		dungeon[setpc_x + 7][setpc_y + 6] = 193;
@@ -2688,7 +2688,7 @@ static void DRLG_L1(int entry)
 		// set transVal in the room
 		DRLG_RectTrans(x + 3, y + 3, x + 10, y + 10);
 	} else if (setpc_type == SPT_NAKRUL) {
-		DrawMap("NLevels\\L5Data\\Nakrul1.DUN", 13);
+		DRLG_DrawMap("NLevels\\L5Data\\Nakrul1.DUN");
 	}
 }
 

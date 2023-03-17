@@ -35,7 +35,7 @@ void DungeonGenerateDialog::on_generateButton_clicked()
     params.seedQuest = this->ui->questSeedLineEdit->text().toInt();
     params.entryMode = this->ui->entryComboBox->currentIndex();
 
-    LevelCelView * view = qobject_cast<LevelCelView*>(this->parentWidget());
+    LevelCelView *view = qobject_cast<LevelCelView *>(this->parentWidget());
 
     this->close();
 

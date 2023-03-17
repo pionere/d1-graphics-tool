@@ -1913,9 +1913,8 @@ static void DRLG_L4(int entry)
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
-	DRLG_CheckQuests();
 	if (setpc_type == SPT_WARLORD) {
-		DrawMap("Levels\\L4Data\\Warlord2.DUN", DEFAULT_MEGATILE_L4);
+		DRLG_DrawMap("Levels\\L4Data\\Warlord2.DUN");
 	}
 	if (currLvl._dLevelIdx == DLV_HELL3) {
 		for (j = 0; j < DMAXY; j++) {

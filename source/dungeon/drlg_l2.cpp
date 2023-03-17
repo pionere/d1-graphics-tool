@@ -3367,12 +3367,12 @@ static void DRLG_L2(int entry)
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
 	if (setpc_type == SPT_BLIND) {
-		DrawMap("Levels\\L2Data\\Blind2.DUN", 3);
+		DRLG_DrawMap("Levels\\L2Data\\Blind2.DUN");
 		// patch the map - Blind2.DUN
 		// replace the door with wall
 		dungeon[setpc_x + 4][setpc_y + 3] = 25;
 	} else if (setpc_type == SPT_BLOOD) {
-		DrawMap("Levels\\L2Data\\Blood2.DUN", 3);
+		DRLG_DrawMap("Levels\\L2Data\\Blood2.DUN");
 		// patch the map - Blood2.DUN
 		// place pieces with closed doors
 		dungeon[setpc_x + 4][setpc_y + 10] = 151;
@@ -3391,7 +3391,7 @@ static void DRLG_L2(int entry)
 		quests[Q_BCHAMB]._qtx = 2 * setpc_x + DBORDERX + 6;
 		quests[Q_BCHAMB]._qty = 2 * setpc_y + DBORDERY + 7;
 
-		DrawMap("Levels\\L2Data\\Bonestr1.DUN", 3);
+		DRLG_DrawMap("Levels\\L2Data\\Bonestr1.DUN");
 		// patch the map - Bonestr1.DUN
 		// shadow of the external-left column
 		dungeon[setpc_x][setpc_y + 4] = 48;
