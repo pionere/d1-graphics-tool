@@ -2544,8 +2544,6 @@ static void DRLG_L1(int entry)
 		DRLG_InitTrans();
 		DRLG_FloodTVal(13);
 
-		doneflag = true;
-
 		if (setpc_type == SPT_BANNER) {
 			if (entry == ENTRY_PREV) {
 				ViewX = 2 * setpc_x + DBORDERX + 3;
@@ -2571,7 +2569,7 @@ static void DRLG_L1(int entry)
 				{ L1USTAIRS, entry == ENTRY_MAIN || entry == ENTRY_TWARPDN }, // was STAIRSUP in hellfire
 				{ L1DSTAIRS, entry == ENTRY_PREV },
 			};
-			doneflag &= DRLG_L1PlaceMiniSets(stairs, 2);
+			doneflag = DRLG_L1PlaceMiniSets(stairs, 2);
 			if (entry == ENTRY_PREV) {
 				ViewY++;
 			}
@@ -2679,6 +2677,12 @@ static void DRLG_L1(int entry)
 		// - uncommented since the set-map is 'populated' -> monsters are not spawn there
 		//DRLG_MRectTrans(setpc_x, setpc_y + 3, setpc_x, setpc_y + 5,
 		//	dTransVal[2 * setpc_x + DBORDERX + 1][2 * setpc_y + DBORDERY + 11]);
+		int x, y;
+
+		x = 2 * setpc_x + DBORDERX;
+		y = 2 * setpc_y + DBORDERY;
+		// overwrite transVal in the room
+		DRLG_RectTrans(x, y + 6, x + 13, y + 13);
 	} else if (setpc_type == SPT_SKELKING) {
 		int x, y;
 
