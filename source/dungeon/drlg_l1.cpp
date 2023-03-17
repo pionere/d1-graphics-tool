@@ -2540,6 +2540,7 @@ static void DRLG_L1(int entry)
 					ViewY = quests[Q_PWATER]._qty + 1;
 				}
 			} else {
+				doneflag = false;
 				continue;
 			}
 		}
@@ -2549,10 +2550,6 @@ static void DRLG_L1(int entry)
 		doneflag = true;
 
 		if (setpc_type == SPT_BANNER) {
-			// fix transVal behind the stairs
-			// - uncommented since the set-map is 'populated' -> monsters are not spawn there
-			//DRLG_MRectTrans(setpc_x, setpc_y + 3, setpc_x, setpc_y + 5,
-			//	dTransVal[2 * setpc_x + DBORDERX + 1][2 * setpc_y + DBORDERY + 11]);
 			if (entry == ENTRY_PREV) {
 				ViewX = 2 * setpc_x + DBORDERX + 3;
 				ViewY = 2 * setpc_y + DBORDERY + 11;
@@ -2670,6 +2667,10 @@ static void DRLG_L1(int entry)
 		// patch the map - Banner2.DUN
 		// replace the wall with door
 		dungeon[setpc_x + 7][setpc_y + 6] = 193;
+		// fix transVal behind the stairs
+		// - uncommented since the set-map is 'populated' -> monsters are not spawn there
+		//DRLG_MRectTrans(setpc_x, setpc_y + 3, setpc_x, setpc_y + 5,
+		//	dTransVal[2 * setpc_x + DBORDERX + 1][2 * setpc_y + DBORDERY + 11]);
 	} else if (setpc_type == SPT_SKELKING) {
 		int x, y;
 
