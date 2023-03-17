@@ -2592,10 +2592,10 @@ static void DRLG_L1(int entry)
 		x = quests[Q_PWATER]._qtx - 1;
 		y = quests[Q_PWATER]._qty + 2;
 		// fix transVal of the set-map (entrance)
-		DRLG_CopyTrans(x, y + 11, x, y);
-		DRLG_CopyTrans(x, y + 12, x + 1, y);
-		DRLG_CopyTrans(x, y + 11, x, y + 1);
-		DRLG_CopyTrans(x, y + 12, x + 1, y + 1);
+		DRLG_CopyTrans(x, y + 2, x, y);
+		DRLG_CopyTrans(x, y + 2, x + 1, y);
+		DRLG_CopyTrans(x, y + 2, x, y + 1);
+		DRLG_CopyTrans(x, y + 2, x + 1, y + 1);
 	}
 	DRLG_L1TransFix();
 	DRLG_L1Corners();
