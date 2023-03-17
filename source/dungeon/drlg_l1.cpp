@@ -2500,6 +2500,7 @@ static void DRLG_L1(int entry)
 	int i;
 	int minarea;
 	bool doneflag;
+	bool placeWater = QuestStatus(Q_PWATER);
 
 	switch (currLvl._dLevelIdx) {
 	case DLV_CATHEDRAL1:
@@ -2526,13 +2527,9 @@ static void DRLG_L1(int entry)
 		L1FillChambers();
 		L1AddWall();
 		L1ClearChamberFlags();
-		if (QuestStatus(Q_PWATER)) {
+		if (placeWater) {
 			POS32 mpos = DRLG_PlaceMiniSet(PWATERIN);
 			if (mpos.x != DMAXX) {
-				// fix transVal of the set-map
-				// - uncommented since the pieces are blocked anyway
-				//DRLG_MRectTrans(mpos.x + 1, mpos.y + 1, mpos.x + 4, mpos.y + 2, 0);
-
 				quests[Q_PWATER]._qtx = 2 * mpos.x + DBORDERX + 5;
 				quests[Q_PWATER]._qty = 2 * mpos.y + DBORDERY + 6;
 				if (entry == ENTRY_RTNLVL) {
@@ -2589,6 +2586,17 @@ static void DRLG_L1(int entry)
 		}
 	} while (!doneflag);
 
+	if (placeWater) {
+		int x, y;
+
+		x = quests[Q_PWATER]._qtx - 1;
+		y = quests[Q_PWATER]._qty + 2;
+		// fix transVal of the set-map (entrance)
+		DRLG_CopyTrans(x, y + 11, x, y);
+		DRLG_CopyTrans(x, y + 12, x + 1, y);
+		DRLG_CopyTrans(x, y + 11, x, y + 1);
+		DRLG_CopyTrans(x, y + 12, x + 1, y + 1);
+	}
 	DRLG_L1TransFix();
 	DRLG_L1Corners();
 	DRLG_L1CornerFix();
