@@ -7,7 +7,7 @@ class D1Dun;
 
 class GenerateDunParam {
 public:
-    int level; // dungeon_level / _setlevels
+    int level;      // dungeon_level / _setlevels
     int difficulty; // _difficulty
     bool isMulti;
     bool isHellfire;

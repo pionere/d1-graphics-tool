@@ -1207,7 +1207,7 @@ static void L4FirstRoom()
 	if (currLvl._dLevelIdx != DLV_HELL4) {
 		if (setpc_type != SPT_NONE) {
 			w = setpc_w + 4; // TODO: add border to the setmaps
-			h = setpc_h + 2;
+			h = setpc_h + 4;
 			if (setpc_type == SPT_WARLORD)
 				w--;
 		} else {
