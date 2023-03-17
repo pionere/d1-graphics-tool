@@ -219,20 +219,30 @@ static void DRLG_L4Shadows()
 
 static void DRLG_LoadL4SP()
 {
+	DRLG_InitSetPC();
 	assert(pSetPiece == NULL);
 	if (IsMultiGame && QuestStatus(Q_BETRAYER)) {
 		pSetPiece = LoadFileInMem("Levels\\L4Data\\Vile1.DUN");
+		if (pSetPiece == NULL) {
+			return;
+		}
+		setpc_type = SPT_BETRAYER;
 	} else if (QuestStatus(Q_WARLORD)) {
 		pSetPiece = LoadFileInMem("Levels\\L4Data\\Warlord.DUN");
 		if (pSetPiece == NULL) {
 			return;
-        }
+		}
 		for (int y = 0; y < 7; y++) {
 			for (int x = 0; x < 8; x++) {
 				if (pSetPiece[(2 + x + y * 8) * 2] == 0)
 					pSetPiece[(2 + x + y * 8) * 2] = DEFAULT_MEGATILE_L4;
 			}
 		}
+		setpc_type = SPT_WARLORD;
+	}
+	if (setpc_type != SPT_NONE) {
+		setpc_w = SwapLE16(*(uint16_t*)&pSetPiece[0]);
+		setpc_h = SwapLE16(*(uint16_t*)&pSetPiece[2]);
 	}
 }
 
@@ -246,14 +256,13 @@ static void DRLG_L4SetSPRoom(int rx1, int ry1)
 	int rw, rh, i, j;
 	BYTE* sp;
 
-	rw = pSetPiece[0];
-	rh = pSetPiece[2];
-
 	// assert(setpc_x == rx1);
 	// assert(setpc_y == ry1);
-	setpc_w = rw;
-	setpc_h = rh;
 
+	// assert(setpc_w == SwapLE16(*(uint16_t*)&pSetPiece[0]));
+	// assert(setpc_h == SwapLE16(*(uint16_t*)&pSetPiece[2]));
+	rw = setpc_w;
+	rh = setpc_h;
 	sp = &pSetPiece[4];
 
 	rw += rx1;
@@ -1196,10 +1205,10 @@ static void L4FirstRoom()
 	int x, y, w, h, xmin, xmax, ymin, ymax;
 
 	if (currLvl._dLevelIdx != DLV_HELL4) {
-		if (pSetPiece != NULL) {
-			w = pSetPiece[0] + 4; // TODO: add border to the setmaps
-			h = pSetPiece[0] + 2;
-			if (QuestStatus(Q_WARLORD))
+		if (setpc_type != SPT_NONE) {
+			w = setpc_w + 4; // TODO: add border to the setmaps
+			h = setpc_h + 2;
+			if (setpc_type == SPT_WARLORD)
 				w--;
 		} else {
 			w = RandRange(2, 6) & ~1;
@@ -1218,11 +1227,12 @@ static void L4FirstRoom()
 	ymin = (ymax + 1) >> 1;
 	y = RandRange(ymin, ymax);
 
-	if (currLvl._dLevelIdx == DLV_HELL4) {
-		setpc_x = x + 1;
-		setpc_y = y + 1;
-	}
-	if (pSetPiece != NULL) {
+	if (currLvl._dLevelIdx != DLV_HELL4) {
+		if (setpc_type != SPT_NONE) {
+			setpc_x = x + 1;
+			setpc_y = y + 1;
+		}
+	} else {
 		setpc_x = x + 1;
 		setpc_y = y + 1;
 	}
@@ -1256,9 +1266,9 @@ static void DRLG_L4SetRoom(int rx1, int ry1)
 
 	if (pSetPiece == NULL) {
 		return;
-    }
-	rx2 = pSetPiece[0] + rx1;
-	ry2 = pSetPiece[2] + ry1;
+	}
+	rx2 = rx1 + SwapLE16(*(uint16_t*)&pSetPiece[0]);
+	ry2 = ry1 + SwapLE16(*(uint16_t*)&pSetPiece[2]);
 	sp = &pSetPiece[4];
 
 	for (j = ry1; j < ry2; j++) {
@@ -1270,7 +1280,7 @@ static void DRLG_L4SetRoom(int rx1, int ry1)
 	}
 }
 
-static void DRLG_LoadDiabQuads(bool preflag)
+static void DRLG_LoadDiabQuads(bool postflag)
 {
 	assert(pSetPiece == NULL);
 
@@ -1278,15 +1288,15 @@ static void DRLG_LoadDiabQuads(bool preflag)
 	DRLG_L4SetRoom(DIAB_QUAD_1X, DIAB_QUAD_1Y);
 	MemFreeDbg(pSetPiece);
 
-	pSetPiece = LoadFileInMem(preflag ? "Levels\\L4Data\\diab2b.DUN" : "Levels\\L4Data\\diab2a.DUN");
+	pSetPiece = LoadFileInMem(postflag ? "Levels\\L4Data\\diab2b.DUN" : "Levels\\L4Data\\diab2a.DUN");
 	DRLG_L4SetRoom(DIAB_QUAD_2X, DIAB_QUAD_2Y);
 	MemFreeDbg(pSetPiece);
 
-	pSetPiece = LoadFileInMem(preflag ? "Levels\\L4Data\\diab3b.DUN" : "Levels\\L4Data\\diab3a.DUN");
+	pSetPiece = LoadFileInMem(postflag ? "Levels\\L4Data\\diab3b.DUN" : "Levels\\L4Data\\diab3a.DUN");
 	DRLG_L4SetRoom(DIAB_QUAD_3X, DIAB_QUAD_3Y);
 	MemFreeDbg(pSetPiece);
 
-	pSetPiece = LoadFileInMem(preflag ? "Levels\\L4Data\\diab4b.DUN" : "Levels\\L4Data\\diab4a.DUN");
+	pSetPiece = LoadFileInMem(postflag ? "Levels\\L4Data\\diab4b.DUN" : "Levels\\L4Data\\diab4a.DUN");
 	DRLG_L4SetRoom(DIAB_QUAD_4X, DIAB_QUAD_4Y);
 	MemFreeDbg(pSetPiece);
 }
@@ -1847,7 +1857,7 @@ static void DRLG_L4(int entry)
 		DRLG_L4MakeMegas();
 		L4TileFix();
 		memset(drlgFlags, 0, sizeof(drlgFlags));
-		if (pSetPiece != NULL) {
+		if (pSetPiece != NULL) { // setpc_type != SPT_NONE
 			DRLG_L4SetSPRoom(setpc_x, setpc_y);
 		}
 		if (currLvl._dLevelIdx == DLV_HELL4) {
@@ -1857,7 +1867,7 @@ static void DRLG_L4(int entry)
 		L4AddWall();
 		DRLG_InitTrans();
 		DRLG_FloodTVal(6);
-		if (QuestStatus(Q_WARLORD)) {
+		if (setpc_type == SPT_WARLORD) {
 			mini_set stairs[2] = {
 				{ L4USTAIRS, entry == ENTRY_MAIN },
 				{ currLvl._dLevelIdx != DLV_HELL1 ? NULL : L4TWARP, entry != ENTRY_MAIN  && entry != ENTRY_PREV }
@@ -1904,7 +1914,9 @@ static void DRLG_L4(int entry)
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
 	DRLG_CheckQuests();
-
+	if (setpc_type == SPT_WARLORD) {
+		DrawMap("Levels\\L4Data\\Warlord2.DUN", DEFAULT_MEGATILE_L4);
+	}
 	if (currLvl._dLevelIdx == DLV_HELL3) {
 		for (j = 0; j < DMAXY; j++) {
 			for (i = 0; i < DMAXX; i++) {
@@ -1923,7 +1935,6 @@ static void DRLG_L4(int entry)
 
 void CreateL4Dungeon(int entry)
 {
-	DRLG_InitSetPC();
 	DRLG_LoadL4SP();
 	DRLG_L4(entry);
 	DRLG_FreeL4SP();
@@ -1943,8 +1954,8 @@ void CreateL4Dungeon(int entry)
 	static_assert(sizeof(dungeon[0][0]) == 1, "memset on dungeon does not work in LoadL4DungeonData.");
 	memset(dungeon, BASE_MEGATILE_L4 + 1, sizeof(dungeon));
 
-	rw = pMap[0];
-	rh = pMap[2];
+	rw = SwapLE16(*(uint16_t*)&pMap[0]);
+	rh = SwapLE16(*(uint16_t*)&pMap[2]);
 
 	sp = &pMap[4];
 

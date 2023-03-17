@@ -715,33 +715,32 @@ static void PlaceSetMapMonsters()
 	BYTE* setp;
 
 	if (!currLvl._dSetLvl) {
-		if (QuestStatus(Q_BANNER)) {
-			setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN");
+		if (setpc_type == SPT_BANNER) { // QuestStatus(Q_BANNER)
+			setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN"); // pre -3 8 -> 16
 			SetMapMonsters(setp, setpc_x, setpc_y);
 			mem_free_dbg(setp);
 		}
-		if (QuestStatus(Q_BLOOD)) {
-			setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN");
+		if (setpc_type == SPT_BLOOD) { // QuestStatus(Q_BLOOD)
+			setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN"); // post +3 62 -> 120
 			SetMapMonsters(setp, setpc_x, setpc_y);
 			mem_free_dbg(setp);
 		}
-		if (QuestStatus(Q_BLIND)) {
-			setp = LoadFileInMem("Levels\\L2Data\\Blind2.DUN");
+		if (setpc_type == SPT_BLIND) { // QuestStatus(Q_BLIND)
+			setp = LoadFileInMem("Levels\\L2Data\\Blind2.DUN"); // post +11
 			SetMapMonsters(setp, setpc_x, setpc_y);
 			mem_free_dbg(setp);
 		}
-		if (QuestStatus(Q_ANVIL)) {
+		if (setpc_type == SPT_ANVIL) { // QuestStatus(Q_ANVIL)
 			setp = LoadFileInMem("Levels\\L3Data\\Anvil.DUN");
 			SetMapMonsters(setp, setpc_x, setpc_y);
 			mem_free_dbg(setp);
 		}
-		if (QuestStatus(Q_WARLORD)) {
-			setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN");
+		if (setpc_type == SPT_WARLORD) { // QuestStatus(Q_WARLORD)
+			setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN"); // pre +4 100 -> 101
 			SetMapMonsters(setp, setpc_x, setpc_y);
 			mem_free_dbg(setp);
 		}
-
-		if (currLvl._dLevelIdx == questlist[Q_BETRAYER]._qdlvl && IsMultiGame) {
+		if (setpc_type == SPT_BETRAYER) { //  QuestStatus(Q_BETRAYER) && IsMultiGame
 			// assert(quests[Q_BETRAYER]._qactive != QUEST_NOTAVAIL);
 			setp = LoadFileInMem("Levels\\L4Data\\Vile1.DUN");
 			SetMapMonsters(setp, setpc_x, setpc_y);
@@ -758,13 +757,13 @@ static void PlaceSetMapMonsters()
 			setp = LoadFileInMem("Levels\\L4Data\\diab1.DUN");
 			SetMapMonsters(setp, DIAB_QUAD_1X, DIAB_QUAD_1Y);
 			mem_free_dbg(setp);
-			setp = LoadFileInMem("Levels\\L4Data\\diab2a.DUN");
+			setp = LoadFileInMem("Levels\\L4Data\\diab2a.DUN"); // pre 101 -> 109
 			SetMapMonsters(setp, DIAB_QUAD_2X, DIAB_QUAD_2Y);
 			mem_free_dbg(setp);
-			setp = LoadFileInMem("Levels\\L4Data\\diab3a.DUN");
+			setp = LoadFileInMem("Levels\\L4Data\\diab3a.DUN"); // pre 101 -> 109
 			SetMapMonsters(setp, DIAB_QUAD_3X, DIAB_QUAD_3Y);
 			mem_free_dbg(setp);
-			setp = LoadFileInMem("Levels\\L4Data\\diab4a.DUN");
+			setp = LoadFileInMem("Levels\\L4Data\\diab4a.DUN"); // pre +4
 			SetMapMonsters(setp, DIAB_QUAD_4X, DIAB_QUAD_4Y);
 			mem_free_dbg(setp);
 		}

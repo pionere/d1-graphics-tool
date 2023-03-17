@@ -25,4 +25,4 @@ jobs:
         clang-format-version: '13'
         check-path: 'source'
         fallback-style: 'webkit'
-        exclude-regex: 'source.dungeon.'
+        exclude-regex: '^dungeon$'

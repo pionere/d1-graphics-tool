@@ -866,9 +866,14 @@ static void DRLG_L1Floor()
 
 static void DRLG_LoadL1SP()
 {
+	DRLG_InitSetPC();
 	assert(pSetPiece == NULL);
 	if (QuestStatus(Q_BANNER)) {
 		pSetPiece = LoadFileInMem("Levels\\L1Data\\Banner1.DUN");
+		if (pSetPiece == NULL) {
+			return;
+		}
+		setpc_type = SPT_BANNER;
 	} else if (QuestStatus(Q_SKELKING)) {
 		pSetPiece = LoadFileInMem("Levels\\L1Data\\SKngDO.DUN");
 		if (pSetPiece == NULL) {
@@ -879,12 +884,25 @@ static void DRLG_LoadL1SP()
 		pSetPiece[(2 + 5 + 4 * 7) * 2] = 22;
 		// patch set-piece to use common tiles and make the inner tile at the entrance non-walkable - SKngDO.DUN
 		pSetPiece[(2 + 5 + 2 * 7) * 2] = 203;
+		setpc_type = SPT_SKELKING;
 	} else if (QuestStatus(Q_BUTCHER)) {
 		pSetPiece = LoadFileInMem("Levels\\L1Data\\Butcher.DUN");
+		if (pSetPiece == NULL) {
+			return;
+		}
+		setpc_type = SPT_BUTCHER;
 #ifdef HELLFIRE
 	} else if (QuestStatus(Q_NAKRUL)) {
 		pSetPiece = LoadFileInMem("NLevels\\L5Data\\Nakrul2.DUN");
+		if (pSetPiece == NULL) {
+			return;
+		}
+		setpc_type = SPT_NAKRUL;
 #endif
+	}
+	if (setpc_type != SPT_NONE) {
+		setpc_w = SwapLE16(*(uint16_t*)&pSetPiece[0]);
+		setpc_h = SwapLE16(*(uint16_t*)&pSetPiece[2]);
 	}
 }
 
@@ -984,9 +1002,9 @@ static BYTE* LoadL1DungeonData(const char* sFileName)
 
 	if (pMap == NULL) {
 		return pMap;
-    }
-	rw = pMap[0];
-	rh = pMap[2];
+	}
+	rw = SwapLE16(*(uint16_t*)&pMap[0]);
+	rh = SwapLE16(*(uint16_t*)&pMap[2]);
 
 	sp = &pMap[4];
 
@@ -1610,14 +1628,13 @@ static void DRLG_L1SetRoom(int rx1, int ry1)
 	int rw, rh, i, j;
 	BYTE* sp;
 
-	rw = pSetPiece[0];
-	rh = pSetPiece[2];
-
 	setpc_x = rx1;
 	setpc_y = ry1;
-	setpc_w = rw;
-	setpc_h = rh;
 
+	// assert(setpc_w == SwapLE16(*(uint16_t*)&pSetPiece[0]));
+	// assert(setpc_h == SwapLE16(*(uint16_t*)&pSetPiece[2]));
+	rw = setpc_w;
+	rh = setpc_h;
 	sp = &pSetPiece[4];
 
 	rw += rx1;
@@ -1677,7 +1694,7 @@ static void L1FillChambers()
 		}
 	}
 
-	if (pSetPiece != NULL) {
+	if (pSetPiece != NULL) { // setpc_type != SPT_NONE
 		c = ChambersFirst + ChambersMiddle + ChambersLast;
 		c = random_low(0, c);
 		if (ChambersFirst) {
@@ -2510,11 +2527,6 @@ static void DRLG_L1(int entry)
 		L1FillChambers();
 		L1AddWall();
 		L1ClearChamberFlags();
-		DRLG_InitTrans();
-		DRLG_FloodTVal(13);
-
-		doneflag = true;
-
 		if (QuestStatus(Q_PWATER)) {
 			POS32 mpos = DRLG_PlaceMiniSet(PWATERIN);
 			if (mpos.x != DMAXX) {
@@ -2525,10 +2537,15 @@ static void DRLG_L1(int entry)
 				quests[Q_PWATER]._qtx = 2 * mpos.x + DBORDERX + 5;
 				quests[Q_PWATER]._qty = 2 * mpos.y + DBORDERY + 6;
 			} else {
-				doneflag = false;
+				continue;
 			}
 		}
-		if (QuestStatus(Q_BANNER)) {
+		DRLG_InitTrans();
+		DRLG_FloodTVal(13);
+
+		doneflag = true;
+
+		if (setpc_type == SPT_BANNER) {
 			// fix transVal behind the stairs
 			// - uncommented since the set-map is 'populated' -> monsters are not spawn there
 			//DRLG_MRectTrans(setpc_x, setpc_y + 3, setpc_x, setpc_y + 5,
@@ -2637,12 +2654,46 @@ static void DRLG_L1(int entry)
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
-	DRLG_CheckQuests();
+	if (setpc_type == SPT_BANNER) {
+		DrawMap("Levels\\L1Data\\Banner2.DUN", 13);
+		// patch the map - Banner2.DUN
+		// replace the wall with door
+		dungeon[setpc_x + 7][setpc_y + 6] = 193;
+	} else if (setpc_type == SPT_SKELKING) {
+		int x, y;
+
+		x = 2 * setpc_x + DBORDERX;
+		y = 2 * setpc_y + DBORDERY;
+		// fix transVal on the bottom left corner of the box
+		DRLG_CopyTrans(x, y + 11, x + 1, y + 11);
+		DRLG_CopyTrans(x, y + 12, x + 1, y + 12);
+		// fix transVal at the entrance - commented out because it makes the wall transparent
+		//DRLG_CopyTrans(x + 13, y + 7, x + 12, y + 7);
+		//DRLG_CopyTrans(x + 13, y + 8, x + 12, y + 8);
+		// patch dSolidTable - L1.SOL - commented out because 299 is used elsewhere
+		//nSolidTable[299] = true;
+
+		quests[Q_SKELKING]._qtx = x + 12;
+		quests[Q_SKELKING]._qty = y + 7;
+	} else if (setpc_type == SPT_BUTCHER) {
+		int x, y;
+
+		assert(setpc_w == 6);
+		assert(setpc_h == 6);
+		x = 2 * setpc_x + DBORDERX;
+		y = 2 * setpc_y + DBORDERY;
+		// fix transVal on the bottom left corner of the room
+		DRLG_CopyTrans(x, y + 9, x + 1, y + 9);
+		DRLG_CopyTrans(x, y + 10, x + 1, y + 10);
+		// set transVal in the room
+		DRLG_RectTrans(x + 3, y + 3, x + 10, y + 10);
+	} else if (setpc_type == SPT_NAKRUL) {
+		DrawMap("NLevels\\L5Data\\Nakrul1.DUN", 13);
+	}
 }
 
 void CreateL1Dungeon(int entry)
 {
-	DRLG_InitSetPC();
 	DRLG_LoadL1SP();
 	DRLG_L1(entry);
 	DRLG_FreeL1SP();

@@ -21,6 +21,8 @@ int setpc_y;
 int setpc_w;
 /** Specifies the height of the set level/piece of the (mega-)map. */
 int setpc_h;
+/** Specifies the type of the set level/piece of the (mega-)map (_setpiece_type). */
+int setpc_type;
 /** Contains the contents of the set piece (DUN file). */
 BYTE* pSetPiece = NULL;
 /** Specifies the mega tiles (groups of four tiles). */
@@ -451,6 +453,38 @@ void DRLG_PlaceMegaTiles(int mt)
 	}
 }
 
+void DRLG_DrawMap(const char* name)
+{
+	int x, y, rw, rh, i, j;
+	BYTE* pMap;
+	BYTE* sp;
+
+	pMap = LoadFileInMem(name);
+	if (pMap == NULL) {
+		return;
+    }
+	rw = SwapLE16(*(uint16_t*)&pMap[0]);
+	rh = SwapLE16(*(uint16_t*)&pMap[2]);
+
+	sp = &pMap[4];
+	assert(setpc_w == rw);
+	assert(setpc_h == rh);
+	x = setpc_x;
+	y = setpc_y;
+	rw += x;
+	rh += y;
+	for (j = y; j < rh; j++) {
+		for (i = x; i < rw; i++) {
+			// dungeon[i][j] = *sp != 0 ? *sp : bv;
+			if (*sp != 0) {
+				dungeon[i][j] = *sp;
+			}
+			sp += 2;
+		}
+	}
+	mem_free_dbg(pMap);
+}
+
 void DRLG_InitTrans()
 {
 	memset(dTransVal, 0, sizeof(dTransVal));
@@ -640,6 +674,7 @@ void DRLG_InitSetPC()
 	setpc_y = 0;
 	setpc_w = 0;
 	setpc_h = 0;
+	setpc_type = SPT_NONE;
 }
 
 static void Make_SetPC(int x, int y, int w, int h)

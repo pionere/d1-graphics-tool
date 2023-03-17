@@ -12,7 +12,6 @@ extern QuestStruct quests[NUM_QUESTS];
 
 void InitQuests(int seed);
 bool QuestStatus(int qn);
-void DRLG_CheckQuests();
 void ResyncQuests();
 
 #endif /* __QUESTS_H__ */

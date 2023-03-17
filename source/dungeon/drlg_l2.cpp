@@ -1764,12 +1764,13 @@ static void DRLG_L2Shadows()
 
 static void DRLG_LoadL2SP()
 {
+	DRLG_InitSetPC();
 	assert(pSetPiece == NULL);
 	if (QuestStatus(Q_BLIND)) {
 		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blind1.DUN");
 		if (pSetPiece == NULL) {
 			return;
-        }
+		}
 		// patch the map - Blind1.DUN
 		// place pieces with closed doors
 		pSetPiece[(2 + 4 + 3 * 11) * 2] = 150;
@@ -1781,15 +1782,20 @@ static void DRLG_LoadL2SP()
 					pSetPiece[(2 + x + y * 11) * 2] = DEFAULT_MEGATILE_L2;
 			}
 		}*/
+		setpc_type = SPT_BLIND;
 	} else if (QuestStatus(Q_BLOOD)) {
 		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blood1.DUN");
+		if (pSetPiece == NULL) {
+			return;
+		}
 		// ensure the inner tiles are reserved
 		// pSetPiece[(2 + 5 + 12 * 10) * 2] = 3;
+		setpc_type = SPT_BLOOD;
 	} else if (QuestStatus(Q_BCHAMB)) {
 		pSetPiece = LoadFileInMem("Levels\\L2Data\\Bonestr2.DUN");
 		if (pSetPiece == NULL) {
 			return;
-        }
+		}
 		// patch the map - Bonestr2.DUN
 		// place shadows
 		// NE-wall
@@ -1822,6 +1828,11 @@ static void DRLG_LoadL2SP()
 					pSetPiece[(2 + x + y * 7) * 2] = DEFAULT_MEGATILE_L2;
 			}
 		}*/
+		setpc_type = SPT_BCHAMB;
+	}
+	if (setpc_type != SPT_NONE) {
+		setpc_w = SwapLE16(*(uint16_t*)&pSetPiece[0]);
+		setpc_h = SwapLE16(*(uint16_t*)&pSetPiece[2]);
 	}
 }
 
@@ -1838,14 +1849,13 @@ static void DRLG_L2SetRoom(int rx1, int ry1)
 	int rw, rh, i, j;
 	BYTE* sp;
 
-	rw = pSetPiece[0];
-	rh = pSetPiece[2];
-
 	// assert(setpc_x == rx1);
 	// assert(setpc_y == ry1);
-	assert(setpc_w == rw);
-	assert(setpc_h == rh);
 
+	// assert(setpc_w == SwapLE16(*(uint16_t*)&pSetPiece[0]));
+	// assert(setpc_h == SwapLE16(*(uint16_t*)&pSetPiece[2]));
+	rw = setpc_w;
+	rh = setpc_h;
 	sp = &pSetPiece[4];
 
 	rw += rx1;
@@ -2822,17 +2832,15 @@ static void DRLG_L2CreateDungeon()
 	ForceW = 0;
 	ForceH = 0;
 
-	if (pSetPiece != NULL) {
-		ForceW = pSetPiece[0] + 3; // TODO: add border to the setmaps?
-		ForceH = pSetPiece[2] + 3;
+	if (pSetPiece != NULL) { // setpc_type != SPT_NONE
+		ForceW = setpc_w + 3; // TODO: add border to the setmaps?
+		ForceH = setpc_h + 3;
 	}
 
 	nRoomCnt = 0;
 	CreateRoom(1, 1, DMAXX - 2, DMAXY - 2, -1, HDIR_NONE, ForceW, ForceH);
 
-	if (pSetPiece != NULL) {
-		setpc_w = ForceW - 3;
-		setpc_h = ForceH - 3;
+	if (pSetPiece != NULL) { // setpc_type != SPT_NONE
 		setpc_x = RoomList[0].nRoomx1 + 2;
 		setpc_y = RoomList[0].nRoomy1 + 2;
 	}
@@ -3223,7 +3231,7 @@ static void DRLG_L2(int entry)
 
 		L2TileFix();
 		memset(drlgFlags, 0, sizeof(drlgFlags));
-		if (pSetPiece != NULL) {
+		if (pSetPiece != NULL) { // setpc_type != SPT_NONE
 			DRLG_L2SetRoom(setpc_x, setpc_y);
 		}
 
@@ -3358,7 +3366,37 @@ static void DRLG_L2(int entry)
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
-	DRLG_CheckQuests();
+	if (setpc_type == SPT_BLIND) {
+		DrawMap("Levels\\L2Data\\Blind2.DUN", 3);
+		// patch the map - Blind2.DUN
+		// replace the door with wall
+		dungeon[setpc_x + 4][setpc_y + 3] = 25;
+	} else if (setpc_type == SPT_BLOOD) {
+		DrawMap("Levels\\L2Data\\Blood2.DUN", 3);
+		// patch the map - Blood2.DUN
+		// place pieces with closed doors
+		dungeon[setpc_x + 4][setpc_y + 10] = 151;
+		dungeon[setpc_x + 4][setpc_y + 15] = 151;
+		dungeon[setpc_x + 5][setpc_y + 15] = 151;
+		// shadow of the external-left column -- do not place to prevent overwriting large decorations
+		//dungeon[setpc_x - 1][setpc_y + 7] = 48;
+		//dungeon[setpc_x - 1][setpc_y + 8] = 50;
+		// shadow of the bottom-left column(s) -- one is missing
+		dungeon[setpc_x + 1][setpc_y + 13] = 48;
+		dungeon[setpc_x + 1][setpc_y + 14] = 50;
+		// shadow of the internal column next to the pedistal
+		dungeon[setpc_x + 5][setpc_y + 7] = 142;
+		dungeon[setpc_x + 5][setpc_y + 8] = 50;
+	} else if (setpc_type == SPT_BCHAMB) {
+		quests[Q_BCHAMB]._qtx = 2 * setpc_x + DBORDERX + 6;
+		quests[Q_BCHAMB]._qty = 2 * setpc_y + DBORDERY + 7;
+
+		DrawMap("Levels\\L2Data\\Bonestr1.DUN", 3);
+		// patch the map - Bonestr1.DUN
+		// shadow of the external-left column
+		dungeon[setpc_x][setpc_y + 4] = 48;
+		dungeon[setpc_x][setpc_y + 5] = 50;
+	}
 }
 
 void DRLG_InitL2Specials(int x1, int y1, int x2, int y2)
@@ -3439,9 +3477,9 @@ static BYTE* LoadL2DungeonData(const char* sFileName)
 
 	if (pMap == NULL) {
 		return pMap;
-    }
-	rw = pMap[0];
-	rh = pMap[2];
+	}
+	rw = SwapLE16(*(uint16_t*)&pMap[0]);
+	rh = SwapLE16(*(uint16_t*)&pMap[2]);
 
 	sp = &pMap[4];
 
@@ -3498,7 +3536,6 @@ void CreateL2Dungeon(int entry)
 	// could have been to share the same layout between levels, but that does not make too
 	// much sense due to the stairs placement are 'wrong' anyway. Just to have a reasonable
 	// sized main room, changing DRLG_L2CreateDungeon would have been much cheaper solution.
-	DRLG_InitSetPC();
 	DRLG_LoadL2SP();
 	DRLG_L2(entry);
 	DRLG_FreeL2SP();
