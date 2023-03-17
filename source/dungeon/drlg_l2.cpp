@@ -3238,13 +3238,22 @@ static void DRLG_L2(int entry)
 		mini_set stairs[3] = {
 				{ L2USTAIRS, entry == ENTRY_MAIN },
 				{ L2DSTAIRS, entry == ENTRY_PREV },
-				{ currLvl._dLevelIdx != DLV_CATACOMBS1 ? NULL : L2TWARP, entry != ENTRY_MAIN  && entry != ENTRY_PREV }
+				{ currLvl._dLevelIdx != DLV_CATACOMBS1 ? NULL : L2TWARP, entry == ENTRY_TWARPDN }
 		};
 		doneflag = DRLG_L2PlaceMiniSets(stairs, 3);
 		if (entry == ENTRY_PREV) {
 			ViewX -= 2;
 		} else {
 			ViewY -= 2;
+		}
+		if (setpc_type == SPT_BCHAMB) {
+			quests[Q_BCHAMB]._qtx = 2 * setpc_x + DBORDERX + 6;
+			quests[Q_BCHAMB]._qty = 2 * setpc_y + DBORDERY + 7;
+
+			if (entry == ENTRY_RTNLVL) {
+				ViewX = quests[Q_BCHAMB]._qtx + 1;
+				ViewY = quests[Q_BCHAMB]._qty;
+			}
 		}
 	} while (!doneflag);
 
@@ -3388,9 +3397,6 @@ static void DRLG_L2(int entry)
 		dungeon[setpc_x + 5][setpc_y + 7] = 142;
 		dungeon[setpc_x + 5][setpc_y + 8] = 50;
 	} else if (setpc_type == SPT_BCHAMB) {
-		quests[Q_BCHAMB]._qtx = 2 * setpc_x + DBORDERX + 6;
-		quests[Q_BCHAMB]._qty = 2 * setpc_y + DBORDERY + 7;
-
 		DRLG_DrawMap("Levels\\L2Data\\Bonestr1.DUN");
 		// patch the map - Bonestr1.DUN
 		// shadow of the external-left column
@@ -3519,9 +3525,8 @@ void LoadL2Dungeon(const LevelData* lds)
 	DRLG_L2SetMapFix();
 
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L2);
-	DRLG_InitL2Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
-
 	DRLG_Init_Globals();
+	DRLG_InitL2Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
 
 	SetMapMonsters(pMap, 0, 0);
 	SetMapObjects(pMap);
@@ -3540,8 +3545,8 @@ void CreateL2Dungeon(int entry)
 	DRLG_L2(entry);
 	DRLG_FreeL2SP();
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L2);
-	DRLG_InitL2Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
 	DRLG_Init_Globals();
+	DRLG_InitL2Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
 	DRLG_SetPC();
 }
 

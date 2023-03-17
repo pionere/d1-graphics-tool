@@ -261,6 +261,33 @@ static void InitQuestTriggers()
 	}
 }
 
+static void InitSKingTriggers()
+{
+	numtrigs = 1;
+	trigs[0]._tx = AllLevels[SL_SKELKING].dSetLvlDunX - 1; // DBORDERX + 66
+	trigs[0]._ty = AllLevels[SL_SKELKING].dSetLvlDunY - 2; // DBORDERY + 26
+	trigs[0]._tmsg = DVL_DWM_RTNLVL;
+	trigs[0]._tlvl = questlist[Q_SKELKING]._qdlvl;
+}
+
+static void InitSChambTriggers()
+{
+	numtrigs = 1;
+	trigs[0]._tx = AllLevels[SL_BONECHAMB].dSetLvlDunY + 1; // DBORDERX + 54
+	trigs[0]._ty = AllLevels[SL_BONECHAMB].dSetLvlDunY - 0; // DBORDERY + 23
+	trigs[0]._tmsg = DVL_DWM_RTNLVL;
+	trigs[0]._tlvl = questlist[Q_BCHAMB]._qdlvl;
+}
+
+static void InitPWaterTriggers()
+{
+	numtrigs = 1;
+	trigs[0]._tx = AllLevels[SL_POISONWATER].dSetLvlDunY - 1; // DBORDERX + 14
+	trigs[0]._ty = AllLevels[SL_POISONWATER].dSetLvlDunY - 0; // DBORDERY + 67
+	trigs[0]._tmsg = DVL_DWM_RTNLVL;
+	trigs[0]._tlvl = questlist[Q_PWATER]._qdlvl;
+}
+
 static void Freeupstairs()
 {
 	int i, tx, ty, xx, yy;
@@ -309,5 +336,25 @@ void InitTriggers()
 		}
 		InitQuestTriggers();
 		Freeupstairs();
+	} else {
+		switch (currLvl._dLevelIdx) {
+		case SL_SKELKING:
+			InitSKingTriggers();
+			break;
+		case SL_BONECHAMB:
+			InitSChambTriggers();
+			break;
+		//case SL_MAZE:
+		//	break;
+		case SL_POISONWATER:
+			InitPWaterTriggers();
+			break;
+		case SL_VILEBETRAYER:
+			InitNoTriggers();
+			break;
+		default:
+			ASSUME_UNREACHABLE
+			break;
+		}
 	}
 }
