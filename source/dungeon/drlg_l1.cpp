@@ -2589,13 +2589,13 @@ static void DRLG_L1(int entry)
 	if (placeWater) {
 		int x, y;
 
-		x = quests[Q_PWATER]._qtx - 1;
-		y = quests[Q_PWATER]._qty + 2;
+		x = quests[Q_PWATER]._qtx;
+		y = quests[Q_PWATER]._qty + 1;
 		// fix transVal of the set-map (entrance)
-		DRLG_CopyTrans(x, y + 2, x, y);
-		DRLG_CopyTrans(x, y + 2, x + 1, y);
-		DRLG_CopyTrans(x, y + 2, x, y + 1);
-		DRLG_CopyTrans(x, y + 2, x + 1, y + 1);
+		DRLG_CopyTrans(x + 0, y + 2, x + 0, y + 0);
+		DRLG_CopyTrans(x + 1, y + 2, x + 1, y + 0);
+		DRLG_CopyTrans(x + 0, y + 2, x + 0, y + 1);
+		DRLG_CopyTrans(x + 1, y + 2, x + 1, y + 1);
 	}
 	DRLG_L1TransFix();
 	DRLG_L1Corners();
