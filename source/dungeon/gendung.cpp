@@ -25,6 +25,8 @@ int setpc_h;
 int setpc_type;
 /** Contains the contents of the set piece (DUN file). */
 BYTE* pSetPiece = NULL;
+/** List of the warp-points on the current level */
+WarpStruct pWarps[NUM_DWARP];
 /** Specifies the mega tiles (groups of four tiles). */
 uint16_t* pMegaTiles;
 BYTE* pSolidTbl;
@@ -512,8 +514,8 @@ void DRLG_RectTrans(int x1, int y1, int x2, int y2)
 {
 	int i, j;
 
-	for (j = y1; j <= y2; j++) {
-		for (i = x1; i <= x2; i++) {
+	for (i = x1; i <= x2; i++) {
+		for (j = y1; j <= y2; j++) {
 			dTransVal[i][j] = numtrans;
 		}
 	}

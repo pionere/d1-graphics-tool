@@ -2495,6 +2495,19 @@ static bool DRLG_L1PlaceMiniSets(mini_set* minisets, int n)
 	return true;
 }
 
+static bool DRLG_L1PlaceWarp(const BYTE* miniset, int type)
+{
+	POS32 result;
+
+	result = DRLG_PlaceMiniSet(miniset);
+	if (result.x == DMAXX)
+		return false;
+
+	pWarps[type]._wx = result.x;
+	pWarps[type]._wy = result.y;
+	return true;
+}
+
 static void DRLG_L1(int entry)
 {
 	int i;
@@ -2527,15 +2540,18 @@ static void DRLG_L1(int entry)
 		L1FillChambers();
 		L1AddWall();
 		L1ClearChamberFlags();
+		memset(pWarps, 0, sizeof(pWarps));
 		if (placeWater) {
 			POS32 mpos = DRLG_PlaceMiniSet(PWATERIN);
 			if (mpos.x != DMAXX) {
-				quests[Q_PWATER]._qtx = 2 * mpos.x + DBORDERX + 5;
+				/*quests[Q_PWATER]._qtx = 2 * mpos.x + DBORDERX + 5;
 				quests[Q_PWATER]._qty = 2 * mpos.y + DBORDERY + 6;
 				if (entry == ENTRY_RTNLVL) {
 					ViewX = quests[Q_PWATER]._qtx;
 					ViewY = quests[Q_PWATER]._qty + 1;
-				}
+				}*/
+				pWarps[DWARP_SIDE]._wx = mpos.x + 2;
+				pWarps[DWARP_SIDE]._wy = mpos.y + 3;
 			} else {
 				doneflag = false;
 				continue;
@@ -2544,16 +2560,16 @@ static void DRLG_L1(int entry)
 		DRLG_InitTrans();
 		DRLG_FloodTVal(13);
 
-		if (setpc_type == SPT_BANNER) {
+		/*if (setpc_type == SPT_BANNER) {
 			if (entry == ENTRY_PREV) {
 				ViewX = 2 * setpc_x + DBORDERX + 3;
 				ViewY = 2 * setpc_y + DBORDERY + 11;
 			}
-			doneflag = DRLG_L1PlaceMiniSet(L1USTAIRS, entry != ENTRY_PREV /* entry == ENTRY_MAIN */); // was STAIRSUP, entry == ENTRY_MAIN
+			doneflag = DRLG_L1PlaceMiniSet(L1USTAIRS, entry != ENTRY_PREV /* entry == ENTRY_MAIN * /); // was STAIRSUP, entry == ENTRY_MAIN
 #ifdef HELLFIRE
 		} else if (currLvl._dType == DTYPE_CRYPT) {
 			mini_set stairs[2] = {
-				{ /*currLvl._dLevelIdx != DLV_CRYPT1 ?*/ L5USTAIRS /*: L5TWARP*/, entry != ENTRY_PREV /* entry == ENTRY_MAIN || entry == ENTRY_TWARPDN */ },
+				{ /*currLvl._dLevelIdx != DLV_CRYPT1 ?* / L5USTAIRS /*: L5TWARP* /, entry != ENTRY_PREV /* entry == ENTRY_MAIN || entry == ENTRY_TWARPDN * / },
 				{ currLvl._dLevelIdx != DLV_CRYPT4 ? L5DSTAIRS : NULL, entry == ENTRY_PREV },
 			};
 			doneflag = DRLG_L1PlaceMiniSets(stairs, 2);
@@ -2581,14 +2597,66 @@ static void DRLG_L1(int entry)
 					ViewY = quests[Q_SKELKING]._qty;
 				}
 			}
+		}*/
+		if (setpc_type == SPT_BANNER) {
+			pWarps[DWARP_EXIT]._wx = setpc_x + 1; // L1DSTAIRS (3, 5)
+			pWarps[DWARP_EXIT]._wy = setpc_y + 5;
+
+			doneflag = DRLG_L1PlaceWarp(L1USTAIRS, DWARP_ENTRY); // L1USTAIRS (3, 4), was STAIRSUP, entry == ENTRY_MAIN
+			pWarps[DWARP_ENTRY]._wx += 1;
+			pWarps[DWARP_ENTRY]._wy += 1;
+#ifdef HELLFIRE
+		} else if (currLvl._dType == DTYPE_CRYPT) {
+			doneflag = DRLG_L1PlaceWarp(L5USTAIRS, DWARP_ENTRY); // L5USTAIRS (3, 6), was STAIRSUP, entry == ENTRY_MAIN
+			pWarps[DWARP_ENTRY]._wx += 1;
+			pWarps[DWARP_ENTRY]._wy += 2;
+			if (currLvl._dLevelIdx != DLV_CRYPT4) {
+				doneflag &= DRLG_L1PlaceWarp(L5DSTAIRS, DWARP_EXIT); // L5DSTAIRS (3, 7)
+				pWarps[DWARP_EXIT]._wx += 1;
+				pWarps[DWARP_EXIT]._wy += 3;
+			}
+#endif
+		} else {
+			// assert(currLvl._dType == DTYPE_CATHEDRAL);
+			doneflag = DRLG_L1PlaceWarp(L1USTAIRS, DWARP_ENTRY); // L1USTAIRS (3, 4), was STAIRSUP in hellfire
+			pWarps[DWARP_ENTRY]._wx += 1;
+			pWarps[DWARP_ENTRY]._wy += 1;
+			doneflag &= DRLG_L1PlaceWarp(L1DSTAIRS, DWARP_EXIT); // L1DSTAIRS (3, 5)
+			pWarps[DWARP_EXIT]._wx += 1;
+			pWarps[DWARP_EXIT]._wy += 2;
+
+			if (setpc_type == SPT_SKELKING) {
+				pWarps[DWARP_SIDE]._wx = setpc_x + 6; // L1DSTAIRS (3, 5)
+				pWarps[DWARP_SIDE]._wy = setpc_y + 3;
+			}
+		}
+		if (entry == ENTRY_MAIN || entry == ENTRY_TWARPDN) {
+			ViewX = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+			ViewY = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+			ViewX += 1;
+			ViewY += 2;
+		}
+		if (entry == ENTRY_PREV) {
+			ViewX = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+			ViewY = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
+			ViewX += 1;
+			ViewY += 1;
+		}
+		if (entry == ENTRY_RTNLVL) {
+			ViewX = 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
+			ViewY = 2 * pWarps[DWARP_SIDE]._wy + DBORDERY;
+			ViewX += 1;
+			ViewY += 1;
 		}
 	} while (!doneflag);
 
 	if (placeWater) {
 		int x, y;
 
-		x = quests[Q_PWATER]._qtx;
-		y = quests[Q_PWATER]._qty + 1;
+		// x = quests[Q_PWATER]._qtx;
+		// y = quests[Q_PWATER]._qty + 1;
+		x = pWarps[DWARP_SIDE]._wx * 2 + DBORDERX + 1;
+		y = pWarps[DWARP_SIDE]._wy * 2 + DBORDERY + 1;
 		// fix transVal of the set-map (entrance)
 		DRLG_CopyTrans(x + 0, y + 2, x + 0, y + 0);
 		DRLG_CopyTrans(x + 1, y + 2, x + 1, y + 0);
@@ -2677,12 +2745,6 @@ static void DRLG_L1(int entry)
 		// - uncommented since the set-map is 'populated' -> monsters are not spawn there
 		//DRLG_MRectTrans(setpc_x, setpc_y + 3, setpc_x, setpc_y + 5,
 		//	dTransVal[2 * setpc_x + DBORDERX + 1][2 * setpc_y + DBORDERY + 11]);
-		int x, y;
-
-		x = 2 * setpc_x + DBORDERX;
-		y = 2 * setpc_y + DBORDERY;
-		// overwrite transVal in the room
-		DRLG_RectTrans(x, y + 6, x + 13, y + 13);
 	} else if (setpc_type == SPT_SKELKING) {
 		int x, y;
 

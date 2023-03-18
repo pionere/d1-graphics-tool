@@ -425,6 +425,11 @@ typedef struct LevelData {
 	BYTE dMonTypes[32];
 } LevelData;
 
+typedef struct WarpStruct {
+	int _wx;
+	int _wy;
+} WarpStruct;
+
 //////////////////////////////////////////////////
 // quests
 //////////////////////////////////////////////////
@@ -435,8 +440,6 @@ typedef struct QuestStruct {
 	BYTE _qvar2; // quest parameter which is NOT synchronized with the other players
 	BOOLEAN _qlog;
 	unsigned _qmsg;
-	int _qtx;
-	int _qty;
 } QuestStruct;
 
 typedef struct QuestData {

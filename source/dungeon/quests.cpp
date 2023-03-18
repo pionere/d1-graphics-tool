@@ -46,8 +46,6 @@ void InitQuests(int seed)
 		qs->_qvar1 = QV_INIT;
 		qs->_qvar2 = 0;
 		qs->_qlog = FALSE;
-		qs->_qtx = 0;
-		qs->_qty = 0;
 		qs->_qmsg = qdata->_qdmsg;
 	}
 
@@ -88,8 +86,9 @@ static void ResyncBanner()
 //		ObjChangeMap(setpc_x, setpc_y, setpc_x + setpc_w, setpc_y + setpc_h/*, false*/);
 //		//for (i = 0; i < numobjects; i++)
 //		//	SyncObjectAnim(objectactive[i]);
-//		BYTE tv = dTransVal[2 * setpc_x + 1 + DBORDERX][2 * (setpc_y + 6) + 1 + DBORDERY];
-//		DRLG_MRectTrans(setpc_x, setpc_y + 3, setpc_x + setpc_w - 1, setpc_y + setpc_h - 1, tv);
+//		// BYTE tv = dTransVal[2 * setpc_x + 1 + DBORDERX][2 * (setpc_y + 6) + 1 + DBORDERY];
+//		// DRLG_MRectTrans(setpc_x, setpc_y + 3, setpc_x + setpc_w - 1, setpc_y + setpc_h - 1, tv);
+//		DRLG_RectTrans(setpc_x, setpc_y + 3, setpc_x + setpc_w - 1, setpc_y + setpc_h - 1);
 //	}
 }
 

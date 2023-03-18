@@ -3216,6 +3216,19 @@ static bool DRLG_L2PlaceMiniSets(mini_set* minisets, int n)
 	return true;
 }
 
+static bool DRLG_L2PlaceWarp(const BYTE* miniset, int type)
+{
+	POS32 result;
+
+	result = DRLG_PlaceMiniSet(miniset);
+	if (result.x == DMAXX)
+		return false;
+
+	pWarps[type]._wx = result.x;
+	pWarps[type]._wy = result.y;
+	return true;
+}
+
 static void DRLG_L2(int entry)
 {
 	bool doneflag;
@@ -3235,7 +3248,7 @@ static void DRLG_L2(int entry)
 			DRLG_L2SetRoom(setpc_x, setpc_y);
 		}
 
-		mini_set stairs[3] = {
+		/*mini_set stairs[3] = {
 				{ L2USTAIRS, entry == ENTRY_MAIN },
 				{ L2DSTAIRS, entry == ENTRY_PREV },
 				{ currLvl._dLevelIdx != DLV_CATACOMBS1 ? NULL : L2TWARP, entry == ENTRY_TWARPDN }
@@ -3254,6 +3267,48 @@ static void DRLG_L2(int entry)
 				ViewX = quests[Q_BCHAMB]._qtx + 1;
 				ViewY = quests[Q_BCHAMB]._qty;
 			}
+		}*/
+		memset(pWarps, 0, sizeof(pWarps));
+		doneflag = DRLG_L2PlaceWarp(L2USTAIRS, DWARP_ENTRY); // L2USTAIRS (5, 3)
+		pWarps[DWARP_ENTRY]._wx += 2;
+		pWarps[DWARP_ENTRY]._wy += 1;
+		doneflag &= DRLG_L2PlaceWarp(L2DSTAIRS, DWARP_EXIT); // L2DSTAIRS (3, 5)
+		pWarps[DWARP_EXIT]._wx += 2;
+		pWarps[DWARP_EXIT]._wy += 2;
+		if (currLvl._dLevelIdx == DLV_CATACOMBS1) {
+			doneflag &= DRLG_L2PlaceWarp(L2TWARP, DWARP_TOWN); // L2TWARP (5, 3)
+			pWarps[DWARP_TOWN]._wx += 2;
+			pWarps[DWARP_TOWN]._wy += 1;
+		}
+
+		if (setpc_type == SPT_BCHAMB) {
+			pWarps[DWARP_SIDE]._wx = setpc_x + 3; // L2USTAIRS (5, 3)
+			pWarps[DWARP_SIDE]._wy = setpc_y + 3;
+		}
+
+		if (entry == ENTRY_MAIN) {
+			ViewX = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+			ViewY = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+			ViewX += 1;
+			ViewY += 1;
+		}
+		if (entry == ENTRY_PREV) {
+			ViewX = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+			ViewY = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
+			ViewX += -1;
+			ViewY += 1;
+		}
+		if (entry == ENTRY_TWARPDN) {
+			ViewX = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
+			ViewY = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
+			ViewX += 1;
+			ViewY += 1;
+		}
+		if (entry == ENTRY_RTNLVL) {
+			ViewX = 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
+			ViewY = 2 * pWarps[DWARP_SIDE]._wy + DBORDERY;
+			ViewX += 1;
+			ViewY += 1;
 		}
 	} while (!doneflag);
 

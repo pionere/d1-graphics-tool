@@ -40,8 +40,8 @@ TriggerStruct trigs[MAXTRIGGERS];
 #define L3_DOWN_WARPx(x) (x == 168)
 /** Specifies the dungeon piece IDs which constitute stairways leading up to town from the caves. */
 //#define L3_TOWN_WARP     (PIECE == 548 || PIECE == 549 || PIECE == 559 || PIECE == 560)
-#define L3_TOWN_WARP     (PIECE >= 548 && PIECE <= 560 && (PIECE <= 549 || PIECE >= 559))
-#define L3_TOWN_WARPx(x) (x >= 548 && x <= 560 && (x <= 549 || x >= 559))
+#define L3_TOWN_WARP     (PIECE == 548 || PIECE == 549)
+#define L3_TOWN_WARPx(x) (x == 548 || x == 549)
 /** Specifies the dungeon piece IDs which constitute stairways leading up from hell. */
 #define L4_UP_WARP       (PIECE == 82 || (PIECE >= 90 && PIECE <= 97 && PIECE != 91 && PIECE != 93))
 /** Specifies the dungeon piece IDs which constitute stairways leading down from hell. */
@@ -78,7 +78,7 @@ static void InitL1Triggers()
 	int i, j;
 
 	numtrigs = 0;
-	for (j = 0; j < MAXDUNY; j++) {
+	/*for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 129) {
 				trigs[numtrigs]._tx = i;
@@ -92,6 +92,31 @@ static void InitL1Triggers()
 				numtrigs++;
 			}
 		}
+	}*/
+	// if (pWarps[DWARP_ENTRY]._wx != 0) {
+		trigs[numtrigs]._tx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+		trigs[numtrigs]._ty = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+		trigs[numtrigs]._tmsg = currLvl._dLevelIdx == DLV_CATHEDRAL1 ? DVL_DWM_TWARPUP : DVL_DWM_PREVLVL;
+		numtrigs++;
+	// }
+	// if (pWarps[DWARP_EXIT]._wx != 0) {
+		trigs[numtrigs]._tx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX + 1;
+		trigs[numtrigs]._ty = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
+		trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
+		numtrigs++;
+	// }
+	if (pWarps[DWARP_SIDE]._wx != 0) {
+		trigs[numtrigs]._tx = 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
+		trigs[numtrigs]._ty = 2 * pWarps[DWARP_SIDE]._wy + DBORDERY;
+		if (currLvl._dLevelIdx == questlist[Q_SKELKING]._qdlvl) { // TODO: add qn to pWarps?
+			trigs[numtrigs]._tlvl = questlist[Q_SKELKING]._qslvl;
+			trigs[numtrigs]._tx += 1;
+		} else {
+			trigs[numtrigs]._tlvl = questlist[Q_PWATER]._qslvl;
+			trigs[numtrigs]._ty += 1;
+		}
+		trigs[numtrigs]._tmsg = DVL_DWM_SETLVL;
+		numtrigs++;
 	}
 }
 
@@ -100,7 +125,7 @@ static void InitL2Triggers()
 	int i, j;
 
 	numtrigs = 0;
-	for (j = 0; j < MAXDUNY; j++) {
+	/*for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 267 && (quests[Q_BCHAMB]._qactive == QUEST_NOTAVAIL || abs(quests[Q_BCHAMB]._qtx - i) > 1 || abs(quests[Q_BCHAMB]._qty - j) > 1)) {
 				trigs[numtrigs]._tx = i;
@@ -119,6 +144,31 @@ static void InitL2Triggers()
 				numtrigs++;
 			}
 		}
+	}*/
+	// if (pWarps[DWARP_ENTRY]._wx != 0) {
+		trigs[numtrigs]._tx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+		trigs[numtrigs]._ty = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY + 1;
+		trigs[numtrigs]._tmsg = DVL_DWM_PREVLVL;
+		numtrigs++;
+	// }
+	// if (pWarps[DWARP_EXIT]._wx != 0) {
+		trigs[numtrigs]._tx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+		trigs[numtrigs]._ty = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY + 1;
+		trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
+		numtrigs++;
+	// }
+	if (pWarps[DWARP_TOWN]._wx != 0) {
+		trigs[numtrigs]._tx = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
+		trigs[numtrigs]._ty = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY + 1;
+		trigs[numtrigs]._tmsg = DVL_DWM_TWARPUP;
+		numtrigs++;
+	}
+	if (pWarps[DWARP_SIDE]._wx != 0) {
+		trigs[numtrigs]._tx = 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
+		trigs[numtrigs]._ty = 2 * pWarps[DWARP_SIDE]._wy + DBORDERY + 1;
+		trigs[numtrigs]._tlvl = questlist[Q_BCHAMB]._qslvl;
+		trigs[numtrigs]._tmsg = DVL_DWM_SETLVL;
+		numtrigs++;
 	}
 }
 
@@ -127,7 +177,7 @@ static void InitL3Triggers()
 	int i, j;
 
 	numtrigs = 0;
-	for (j = 0; j < MAXDUNY; j++) {
+	/*for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 171) {
 				trigs[numtrigs]._tx = i;
@@ -146,6 +196,24 @@ static void InitL3Triggers()
 				numtrigs++;
 			}
 		}
+	}*/
+	// if (pWarps[DWARP_ENTRY]._wx != 0) {
+		trigs[numtrigs]._tx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX + 1;
+		trigs[numtrigs]._ty = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+		trigs[numtrigs]._tmsg = DVL_DWM_PREVLVL;
+		numtrigs++;
+	// }
+	// if (pWarps[DWARP_EXIT]._wx != 0) {
+		trigs[numtrigs]._tx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+		trigs[numtrigs]._ty = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY + 1;
+		trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
+		numtrigs++;
+	// }
+	if (pWarps[DWARP_TOWN]._wx != 0) {
+		trigs[numtrigs]._tx = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX + 1;
+		trigs[numtrigs]._ty = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
+		trigs[numtrigs]._tmsg = DVL_DWM_TWARPUP;
+		numtrigs++;
 	}
 }
 
@@ -154,7 +222,7 @@ static void InitL4Triggers()
 	int i, j;
 
 	numtrigs = 0;
-	for (j = 0; j < MAXDUNY; j++) {
+	/*for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 82) {
 				trigs[numtrigs]._tx = i;
@@ -184,6 +252,31 @@ static void InitL4Triggers()
 				numtrigs++;
 			}
 		}
+	}*/
+	// if (pWarps[DWARP_ENTRY]._wx != 0) {
+		trigs[numtrigs]._tx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+		trigs[numtrigs]._ty = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+		trigs[numtrigs]._tmsg = DVL_DWM_PREVLVL;
+		numtrigs++;
+	// }
+	// if (pWarps[DWARP_EXIT]._wx != 0) {
+		if (currLvl._dLevelIdx != DLV_HELL3) {
+			trigs[numtrigs]._tx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+			trigs[numtrigs]._ty = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
+			trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
+			numtrigs++;
+		} else if (quests[Q_BETRAYER]._qactive == QUEST_DONE) {
+			trigs[numtrigs]._tx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX; // + 1;
+			trigs[numtrigs]._ty = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY; // + 1;
+			trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
+			numtrigs++;
+		}
+	// }
+	if (pWarps[DWARP_TOWN]._wx != 0) {
+		trigs[numtrigs]._tx = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
+		trigs[numtrigs]._ty = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
+		trigs[numtrigs]._tmsg = DVL_DWM_TWARPUP;
+		numtrigs++;
 	}
 }
 
@@ -193,14 +286,15 @@ static void InitL5Triggers()
 	int i, j;
 
 	numtrigs = 0;
-	for (j = 0; j < MAXDUNY; j++) {
+	/*for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++) {
-			/*if (dPiece[i][j] == 184) {
-				trigs[numtrigs]._tx = i;
-				trigs[numtrigs]._ty = j;
-				trigs[numtrigs]._tmsg = DVL_DWM_TWARPUP;
-				numtrigs++;
-			} else*/ if (dPiece[i][j] == 158) {
+			//if (dPiece[i][j] == 184) {
+			//	trigs[numtrigs]._tx = i;
+			//	trigs[numtrigs]._ty = j;
+			//	trigs[numtrigs]._tmsg = DVL_DWM_TWARPUP;
+			//	numtrigs++;
+			//} else
+            if (dPiece[i][j] == 158) {
 				trigs[numtrigs]._tx = i;
 				trigs[numtrigs]._ty = j;
 				trigs[numtrigs]._tmsg = currLvl._dLevelIdx == DLV_CRYPT1 ? DVL_DWM_TWARPUP : DVL_DWM_PREVLVL;
@@ -212,6 +306,18 @@ static void InitL5Triggers()
 				numtrigs++;
 			}
 		}
+	}*/
+	// if (pWarps[DWARP_ENTRY]._wx != 0) {
+		trigs[numtrigs]._tx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+		trigs[numtrigs]._ty = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+		trigs[numtrigs]._tmsg = currLvl._dLevelIdx == DLV_CRYPT1 ? DVL_DWM_TWARPUP : DVL_DWM_PREVLVL;
+		numtrigs++;
+	// }
+	if (pWarps[DWARP_EXIT]._wx != 0) {
+		trigs[numtrigs]._tx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX + 1;
+		trigs[numtrigs]._ty = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
+		trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
+		numtrigs++;
 	}
 }
 
@@ -220,7 +326,7 @@ static void InitL6Triggers()
 	int i, j;
 
 	numtrigs = 0;
-	for (j = 0; j < MAXDUNY; j++) {
+	/*for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 66) {
 				trigs[numtrigs]._tx = i;
@@ -232,20 +338,32 @@ static void InitL6Triggers()
 				trigs[numtrigs]._ty = j;
 				trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
 				numtrigs++;
-			} /*else if (dPiece[i][j] == 80) {
-				trigs[numtrigs]._tx = i;
-				trigs[numtrigs]._ty = j;
-				trigs[numtrigs]._tmsg = DVL_DWM_TWARPUP;
-				numtrigs++;
-			}*/
+			} //else if (dPiece[i][j] == 80) {
+			//	trigs[numtrigs]._tx = i;
+			//	trigs[numtrigs]._ty = j;
+			//	trigs[numtrigs]._tmsg = DVL_DWM_TWARPUP;
+			//	numtrigs++;
+			//}
 		}
+	}*/
+	// if (pWarps[DWARP_ENTRY]._wx != 0) {
+		trigs[numtrigs]._tx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX + 1;
+		trigs[numtrigs]._ty = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+		trigs[numtrigs]._tmsg = currLvl._dLevelIdx == DLV_NEST1 ? DVL_DWM_TWARPUP : DVL_DWM_PREVLVL;
+		numtrigs++;
+	// }
+	if (pWarps[DWARP_EXIT]._wx != 0) {
+		trigs[numtrigs]._tx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+		trigs[numtrigs]._ty = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY + 1;
+		trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
+		numtrigs++;
 	}
 }
 #endif
 
 static void InitQuestTriggers()
 {
-	int i;
+	/*int i;
 	QuestStruct* qs;
 
 	for (i = 0; i < NUM_QUESTS; i++) {
@@ -258,7 +376,7 @@ static void InitQuestTriggers()
 			trigs[numtrigs]._tlvl = questlist[i]._qslvl;
 			numtrigs++;
 		}
-	}
+	}*/
 }
 
 static void InitSKingTriggers()

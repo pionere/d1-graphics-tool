@@ -1838,6 +1838,19 @@ static bool DRLG_L4PlaceMiniSets(mini_set* minisets, int n)
 	return true;
 }
 
+static bool DRLG_L4PlaceWarp(const BYTE* miniset, int type)
+{
+	POS32 result;
+
+	result = DRLG_PlaceMiniSet(miniset);
+	if (result.x == DMAXX)
+		return false;
+
+	pWarps[type]._wx = result.x;
+	pWarps[type]._wy = result.y;
+	return true;
+}
+
 static void DRLG_L4(int entry)
 {
 	int i, j;
@@ -1867,10 +1880,10 @@ static void DRLG_L4(int entry)
 		L4AddWall();
 		DRLG_InitTrans();
 		DRLG_FloodTVal(6);
-		if (setpc_type == SPT_WARLORD) {
+		/*if (setpc_type == SPT_WARLORD) {
 			mini_set stairs[2] = {
 				{ L4USTAIRS, entry == ENTRY_MAIN },
-				{ currLvl._dLevelIdx != DLV_HELL1 ? NULL : L4TWARP, entry != ENTRY_MAIN /* entry == ENTRY_TWARPDN */ }
+				{ currLvl._dLevelIdx != DLV_HELL1 ? NULL : L4TWARP, entry != ENTRY_MAIN /* entry == ENTRY_TWARPDN * / }
 			};
 			doneflag = DRLG_L4PlaceMiniSets(stairs, 2);
 			if (entry == ENTRY_PREV) {
@@ -1892,7 +1905,7 @@ static void DRLG_L4(int entry)
 			mini_set stairs[2] = {
 				{ L4USTAIRS, entry == ENTRY_MAIN },
 				{ (!IsMultiGame && quests[Q_DIABLO]._qactive != QUEST_ACTIVE) ?
-					L4PENTA : L4PENTA2, entry != ENTRY_MAIN /* entry == ENTRY_PREV */ }
+					L4PENTA : L4PENTA2, entry != ENTRY_MAIN /* entry == ENTRY_PREV * / }
 			};
 			doneflag = DRLG_L4PlaceMiniSets(stairs, 2);
 			if (entry == ENTRY_MAIN)
@@ -1910,6 +1923,66 @@ static void DRLG_L4(int entry)
 					}
 				}
 			}
+		}*/
+		memset(pWarps, 0, sizeof(pWarps));
+		if (setpc_type == SPT_WARLORD) {
+			pWarps[DWARP_EXIT]._wx = setpc_x + 3; // L4DSTAIRS (6, 4)
+			pWarps[DWARP_EXIT]._wy = setpc_y + 3;
+
+			doneflag = DRLG_L4PlaceWarp(L4USTAIRS, DWARP_ENTRY); // L4USTAIRS (5, 6)
+			pWarps[DWARP_ENTRY]._wx += 2;
+			pWarps[DWARP_ENTRY]._wy += 3;
+		} else if (currLvl._dLevelIdx != DLV_HELL3) {
+			doneflag = DRLG_L4PlaceWarp(L4USTAIRS, DWARP_ENTRY); // L4USTAIRS (5, 6)
+			pWarps[DWARP_ENTRY]._wx += 2;
+			pWarps[DWARP_ENTRY]._wy += 3;
+			if (currLvl._dLevelIdx != DLV_HELL4) {
+				doneflag &= DRLG_L4PlaceWarp(L4DSTAIRS, DWARP_EXIT); // L4DSTAIRS (6, 4)
+				pWarps[DWARP_EXIT]._wx += 3;
+				pWarps[DWARP_EXIT]._wy += 2;
+			}
+			if (currLvl._dLevelIdx == DLV_HELL1) {
+				doneflag &= DRLG_L4PlaceWarp(L4TWARP, DWARP_TOWN); // L4TWARP (5, 6)
+				pWarps[DWARP_TOWN]._wx += 2;
+				pWarps[DWARP_TOWN]._wy += 3;
+			}
+		} else {
+			doneflag = DRLG_L4PlaceWarp(L4USTAIRS, DWARP_ENTRY); // L4USTAIRS (5, 7)
+			pWarps[DWARP_ENTRY]._wx += 2;
+			pWarps[DWARP_ENTRY]._wy += 3;
+			doneflag &= DRLG_L4PlaceWarp((!IsMultiGame && quests[Q_DIABLO]._qactive != QUEST_ACTIVE) ?
+					L4PENTA : L4PENTA2, DWARP_EXIT); // L4PENTA (5, 6)
+			pWarps[DWARP_EXIT]._wx += 2;
+			pWarps[DWARP_EXIT]._wy += 2;
+		}
+		if (entry == ENTRY_MAIN) {
+			ViewX = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+			ViewY = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+			ViewX += 0;
+			ViewY += 0;
+		}
+		if (entry == ENTRY_TWARPDN) {
+			ViewX = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
+			ViewY = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
+			ViewX += 1;
+			ViewY += 0;
+		}
+		if (entry == ENTRY_PREV) {
+			ViewX = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+			ViewY = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
+			if (currLvl._dLevelIdx != DLV_HELL3) {
+				ViewX += 1;
+				ViewY += 1;
+			} else {
+				ViewX += 1;
+				ViewY += 2;
+			}
+		}
+		if (entry == ENTRY_RTNLVL) {
+			ViewX = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+			ViewY = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
+			ViewX += -2;
+			ViewY += -2;
 		}
 	} while (!doneflag);
 

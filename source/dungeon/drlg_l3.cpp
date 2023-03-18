@@ -2165,6 +2165,19 @@ static bool DRLG_L3PlaceMiniSets(mini_set* minisets, int n)
 	return true;
 }
 
+static bool DRLG_L3PlaceWarp(const BYTE* miniset, int type)
+{
+	POS32 result;
+
+	result = DRLG_PlaceMiniSet(miniset);
+	if (result.x == DMAXX)
+		return false;
+
+	pWarps[type]._wx = result.x;
+	pWarps[type]._wy = result.y;
+	return true;
+}
+
 static void DRLG_L3(int entry)
 {
 	bool doneflag;
@@ -2194,11 +2207,11 @@ static void DRLG_L3(int entry)
 			if (pSetPiece != NULL) { // setpc_type != SPT_NONE
 				DRLG_L3SetRoom(setpc_x, setpc_y);
 			}
-
+			/*
 #ifdef HELLFIRE
 			if (currLvl._dType == DTYPE_NEST) {
 				mini_set stairs[2] = {
-					{ /*currLvl._dLevelIdx != DLV_NEST1 ?*/ L6USTAIRS /*: L6TWARP*/, entry != ENTRY_PREV /* entry == ENTRY_TWARPDN || entry == ENTRY_MAIN */ },
+					{ /*currLvl._dLevelIdx != DLV_NEST1 ?* / L6USTAIRS /*: L6TWARP* /, entry != ENTRY_PREV /* entry == ENTRY_TWARPDN || entry == ENTRY_MAIN * / },
 					{ currLvl._dLevelIdx != DLV_NEST4 ? L6DSTAIRS : NULL, entry == ENTRY_PREV }
 				};
 				doneflag = DRLG_L3PlaceMiniSets(stairs, 2);
@@ -2220,6 +2233,52 @@ static void DRLG_L3(int entry)
 					ViewX += 2;
 					ViewY -= 2;
 				}
+			}*/
+			memset(pWarps, 0, sizeof(pWarps));
+#ifdef HELLFIRE
+			 if (currLvl._dType == DTYPE_NEST) {
+				doneflag = DRLG_L3PlaceWarp(L6USTAIRS, DWARP_ENTRY); // L6USTAIRS(1, 3)
+				pWarps[DWARP_ENTRY]._wx += 0;
+				pWarps[DWARP_ENTRY]._wy += 1;
+				if (currLvl._dLevelIdx != DLV_NEST4) {
+					doneflag &= DRLG_L3PlaceWarp(L6DSTAIRS, DWARP_EXIT); // L6DSTAIRS(3, 1)
+					pWarps[DWARP_EXIT]._wx += 1;
+					pWarps[DWARP_EXIT]._wy += 0;
+				}
+			} else
+#endif
+			{
+				// assert(currLvl._dType == DTYPE_CAVES);
+				doneflag = DRLG_L3PlaceWarp(L3USTAIRS, DWARP_ENTRY); // L3USTAIRS(1, 3)
+				pWarps[DWARP_ENTRY]._wx += 0;
+				pWarps[DWARP_ENTRY]._wy += 1;
+				doneflag &= DRLG_L3PlaceWarp(L3DSTAIRS, DWARP_EXIT); // L3DSTAIRS(3, 1)
+				pWarps[DWARP_EXIT]._wx += 1;
+				pWarps[DWARP_EXIT]._wy += 0;
+				if (currLvl._dLevelIdx == DLV_CAVES1) {
+					doneflag &= DRLG_L3PlaceWarp(L3TWARP, DWARP_TOWN); // L3TWARP(1, 3)
+					pWarps[DWARP_TOWN]._wx += 0;
+					pWarps[DWARP_TOWN]._wy += 1;
+				}
+			}
+
+			if (entry == ENTRY_MAIN) {
+				ViewX = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+				ViewY = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+				ViewX += 1;
+				ViewY += 1;
+			}
+			if (entry == ENTRY_PREV) {
+				ViewX = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+				ViewY = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
+				ViewX += 1;
+				ViewY += 1;
+			}
+			if (entry == ENTRY_TWARPDN) {
+				ViewX = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
+				ViewY = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
+				ViewX += 1;
+				ViewY += 1;
 			}
 		} while (!doneflag);
 		// generate lava pools
