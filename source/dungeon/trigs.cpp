@@ -410,10 +410,25 @@ static void Freeupstairs()
 {
 	int i, tx, ty, xx, yy;
 
-	for (i = 0; i < numtrigs; i++) {
+	/*for (i = 0; i < numtrigs; i++) {
 		tx = trigs[i]._tx;
 		ty = trigs[i]._ty;
 
+		for (yy = -2; yy <= 2; yy++) {
+			for (xx = -2; xx <= 2; xx++) {
+				dFlags[tx + xx][ty + yy] |= BFLAG_POPULATED;
+			}
+		}
+	}*/
+	for (i = 0; i < NUM_DWARP; i++) {
+		tx = pWarps[i]._wx;
+		ty = pWarps[i]._wy;
+
+		if (tx == 0) {
+			continue;
+		}
+		tx = 2 * tx + DBORDERX;
+		ty = 2 * ty + DBORDERY;
 		for (yy = -2; yy <= 2; yy++) {
 			for (xx = -2; xx <= 2; xx++) {
 				dFlags[tx + xx][ty + yy] |= BFLAG_POPULATED;
