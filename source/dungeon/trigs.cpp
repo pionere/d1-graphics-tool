@@ -259,7 +259,7 @@ static void InitL4Triggers()
 		trigs[numtrigs]._tmsg = DVL_DWM_PREVLVL;
 		numtrigs++;
 	// }
-	// if (pWarps[DWARP_EXIT]._wx != 0) {
+	if (pWarps[DWARP_EXIT]._wx != 0) {
 		if (currLvl._dLevelIdx != DLV_HELL3) {
 			trigs[numtrigs]._tx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
 			trigs[numtrigs]._ty = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
@@ -271,7 +271,7 @@ static void InitL4Triggers()
 			trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
 			numtrigs++;
 		}
-	// }
+	}
 	if (pWarps[DWARP_TOWN]._wx != 0) {
 		trigs[numtrigs]._tx = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
 		trigs[numtrigs]._ty = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
