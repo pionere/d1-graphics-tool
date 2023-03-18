@@ -429,8 +429,17 @@ static void Freeupstairs()
 		}
 		tx = 2 * tx + DBORDERX;
 		ty = 2 * ty + DBORDERY;
-		for (yy = -2; yy <= 2; yy++) {
-			for (xx = -2; xx <= 2; xx++) {
+		/*for (xx = -2; xx <= 2; xx++) {
+			for (yy = -2; yy <= 2; yy++) {
+				dFlags[tx + xx][ty + yy] |= BFLAG_POPULATED;
+			}
+		}*/
+		int r = (currLvl._dLevelIdx == DLV_HELL3 && i == DWARP_EXIT) ? 4 : 2;
+		tx -= r;
+		ty -= r;
+		r = 2 * r + 1;
+		for (xx = 0; xx < r; xx++) {
+			for (yy = 0; yy < r; yy++) {
 				dFlags[tx + xx][ty + yy] |= BFLAG_POPULATED;
 			}
 		}
