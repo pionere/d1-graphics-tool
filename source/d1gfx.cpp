@@ -161,7 +161,7 @@ D1Gfx::~D1Gfx()
     this->clear();
 }
 
-void D1Min::clear()
+void D1Gfx::clear()
 {
     qDeleteAll(this->frames);
     this->frames.clear();
@@ -172,7 +172,6 @@ void D1Min::clear()
     // this->upscaled ?
     this->modified = true;
 }
-
 
 bool D1Gfx::isFrameSizeConstant() const
 {

@@ -14,6 +14,7 @@ public:
 
     bool load(const QString &ampFilePath, int tileCount, const OpenAsParam &params);
     bool save(const SaveAsParam &params);
+    void clear();
 
     QString getFilePath() const;
     bool isModified() const;

@@ -111,6 +111,14 @@ bool D1Amp::save(const SaveAsParam &params)
     return true;
 }
 
+void D1Amp::clear()
+{
+    this->ampFilePath.clear();
+    this->types.clear()
+    this->properties.clear();
+    this->modified = true;
+}
+
 QString D1Amp::getFilePath() const
 {
     return this->ampFilePath;

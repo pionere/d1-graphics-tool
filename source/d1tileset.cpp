@@ -46,8 +46,7 @@ bool D1Tileset::load(const OpenAsParam &params)
     if (!gfxFilePath.isEmpty()) {
         QFileInfo celFileInfo = QFileInfo(gfxFilePath);
 
-        baseDir = celFileInfo.absolutePath();
-        QString basePath = baseDir + "/" + celFileInfo.completeBaseName();
+        QString basePath = celFileInfo.absolutePath() + "/" + celFileInfo.completeBaseName();
 
         if (tilFilePath.isEmpty()) {
             tilFilePath = basePath + ".til";
