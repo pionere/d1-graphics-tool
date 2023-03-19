@@ -2,6 +2,7 @@
 
 #include <QApplication>
 
+#include "d1celtileset.h"
 #include "progressdialog.h"
 
 D1Tileset::D1Tileset(D1Gfx *g)
@@ -67,38 +68,38 @@ bool D1Tileset::load(const OpenAsParam &params)
 
     // Loading SOL
     if (!this->sol->load(solFilePath)) {
-        dProgressErr() << tr("Failed loading SOL file: %1.").arg(QDir::toNativeSeparators(solFilePath));
+        dProgressErr() << QApplication::tr("Failed loading SOL file: %1.").arg(QDir::toNativeSeparators(solFilePath));
         // return;
     }
 
     // Loading MIN
     std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
     if (!this->min->load(minFilePath, this->gfx, this->sol, celFrameTypes, params)) {
-        dProgressErr() << tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath));
+        dProgressErr() << QApplication::tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath));
         // return;
     }
 
     // Loading TIL
     if (!this->til->load(tilFilePath, this->min)) {
-        dProgressErr() << tr("Failed loading TIL file: %1.").arg(QDir::toNativeSeparators(tilFilePath));
+        dProgressErr() << QApplication::tr("Failed loading TIL file: %1.").arg(QDir::toNativeSeparators(tilFilePath));
         // return;
     }
 
     // Loading AMP
     if (!this->amp->load(ampFilePath, this->til->getTileCount(), params)) {
-        dProgressErr() << tr("Failed loading AMP file: %1.").arg(QDir::toNativeSeparators(ampFilePath));
+        dProgressErr() << QApplication::tr("Failed loading AMP file: %1.").arg(QDir::toNativeSeparators(ampFilePath));
         // return;
     }
 
     // Loading TMI
     if (!this->tmi->load(tmiFilePath, this->sol, params)) {
-        dProgressErr() << tr("Failed loading TMI file: %1.").arg(QDir::toNativeSeparators(tmiFilePath));
+        dProgressErr() << QApplication::tr("Failed loading TMI file: %1.").arg(QDir::toNativeSeparators(tmiFilePath));
         // return;
     }
 
     // Loading CEL
     if (!D1CelTileset::load(*this->gfx, celFrameTypes, gfxFilePath, params)) {
-        dProgressErr() << tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
+        dProgressErr() << QApplication::tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
         // return;
     }
 

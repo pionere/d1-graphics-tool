@@ -125,6 +125,7 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
         // initialize the fields which are not updated
         this->on_dungeonDefaultTileLineEdit_escPressed();
         this->ui->levelTypeComboBox->setCurrentIndex(d->getLevelType());
+        this->updateTilesetIcon();
         // prepare the entities
         this->updateEntityOptions();
     }
@@ -134,6 +135,25 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
 void LevelCelView::setPal(D1Pal *p)
 {
     this->pal = p;
+}
+
+void LevelCelView::updateTilesetIcon()
+{
+    // update icon of tileset
+    QString tilesetPath = this->til->getFilePath();
+    if (!tilesetPath.isEmpty()) {
+        QFileInfo fileInfo = QFileInfo(tilPath);
+        tilesetPath = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName();
+        this->ui->tilesetLoadPushButton->setToolTip(tilesetPath);
+        QIcon icon = QApplication::style()->standardIcon(QStyle::SP_DriveCDIcon);
+        this->ui->tilesetLoadPushButton->setIcon(icon);
+        this->ui->tilesetLoadPushButton->setText("");
+    } else {
+        this->ui->tilesetLoadPushButton->setToolTip(tr("Select tileset"));
+        QIcon icon;
+        this->ui->tilesetLoadPushButton->setIcon(icon);
+        this->ui->tilesetLoadPushButton->setText("...");
+    }
 }
 
 void LevelCelView::updateEntityOptions()
@@ -3626,6 +3646,7 @@ void LevelCelView::selectTilesetPath(QString path)
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 1, PAF_UPDATE_WINDOW);
 
     if (this->dun->reloadTileset(path)) {
+        this->updateTilesetIcon();
         // update the view
         // this->displayFrame();
     }

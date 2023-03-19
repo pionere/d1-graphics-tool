@@ -1045,7 +1045,8 @@
           </property>
          </spacer>
         </item-->
-        <item alignment="right">
+        <!--item alignment="right"-->
+        <item>
          <widget class="QPushButton" name="tilesetLoadPushButton">
           <property name="text">
            <string notr="true">...</string>

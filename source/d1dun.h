@@ -169,7 +169,8 @@ public:
 
     void patch(int dunFileIndex); // dun_file_index
 
-    void reloadTileset(const QString &celFilePath);
+    void loadSpecCels();
+    bool reloadTileset(const QString &celFilePath);
 
     bool addResource(const AddResourceParam &params);
     const std::vector<CustomObjectStruct> &getCustomObjectTypes() const;
