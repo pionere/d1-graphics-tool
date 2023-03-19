@@ -483,8 +483,8 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
 
 void LevelCelView::scrollTo(int posx, int posy)
 {
-    this->setPositionX();
-    this->setPositionY();
+    this->setPositionX(posx);
+    this->setPositionY(posy);
     this->isScrolling = true;
 }
 
