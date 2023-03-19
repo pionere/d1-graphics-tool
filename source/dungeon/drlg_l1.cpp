@@ -2540,6 +2540,8 @@ static void DRLG_L1(int entry)
 			}*/
 			pWarps[DWARP_SIDE]._wx = warpPos.x + 2;
 			pWarps[DWARP_SIDE]._wy = warpPos.y + 3;
+			pWarps[DWARP_SIDE]._wx = 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
+			pWarps[DWARP_SIDE]._wy = 2 * pWarps[DWARP_SIDE]._wy + DBORDERY;
 		}
 		DRLG_InitTrans();
 		DRLG_FloodTVal(13);
@@ -2590,6 +2592,8 @@ static void DRLG_L1(int entry)
 			}
 			pWarps[DWARP_ENTRY]._wx = warpPos.x + 1;
 			pWarps[DWARP_ENTRY]._wy = warpPos.y + 2;
+			pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+			pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
 			if (currLvl._dLevelIdx != DLV_CRYPT4) {
 				warpPos = DRLG_PlaceMiniSet(L5DSTAIRS); // L5DSTAIRS (3, 7)
 				if (warpPos.x < 0) {
@@ -2597,6 +2601,8 @@ static void DRLG_L1(int entry)
 				}
 				pWarps[DWARP_EXIT]._wx = warpPos.x + 1;
 				pWarps[DWARP_EXIT]._wy = warpPos.y + 3;
+				pWarps[DWARP_EXIT]._wx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+				pWarps[DWARP_EXIT]._wy = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
 			}
 		} else
 #endif
@@ -2608,6 +2614,14 @@ static void DRLG_L1(int entry)
 			}
 			pWarps[DWARP_ENTRY]._wx = warpPos.x + 1;
 			pWarps[DWARP_ENTRY]._wy = warpPos.y + 1;
+			pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+			pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+			if (setpc_type == SPT_SKELKING) {
+				pWarps[DWARP_SIDE]._wx = setpc_x + 6; // L1DSTAIRS (3, 5)
+				pWarps[DWARP_SIDE]._wy = setpc_y + 3;
+				pWarps[DWARP_SIDE]._wx = 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
+				pWarps[DWARP_SIDE]._wy = 2 * pWarps[DWARP_SIDE]._wy + DBORDERY;
+			}
 			if (setpc_type == SPT_BANNER) {
 				pWarps[DWARP_EXIT]._wx = setpc_x + 1; // L1DSTAIRS (3, 5)
 				pWarps[DWARP_EXIT]._wy = setpc_y + 5;
@@ -2618,28 +2632,25 @@ static void DRLG_L1(int entry)
 				}
 				pWarps[DWARP_EXIT]._wx = warpPos.x + 1;
 				pWarps[DWARP_EXIT]._wy = warpPos.y + 2;
-
-				if (setpc_type == SPT_SKELKING) {
-					pWarps[DWARP_SIDE]._wx = setpc_x + 6; // L1DSTAIRS (3, 5)
-					pWarps[DWARP_SIDE]._wy = setpc_y + 3;
-				}
 			}
+			pWarps[DWARP_EXIT]._wx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+			pWarps[DWARP_EXIT]._wy = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
 		}
 		if (entry == ENTRY_MAIN || entry == ENTRY_TWARPDN) {
-			ViewX = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
-			ViewY = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+			ViewX = pWarps[DWARP_ENTRY]._wx; // 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+			ViewY = pWarps[DWARP_ENTRY]._wy; // 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
 			ViewX += 1;
 			ViewY += 2;
 		}
 		if (entry == ENTRY_PREV) {
-			ViewX = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
-			ViewY = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
+			ViewX = pWarps[DWARP_EXIT]._wx; // 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+			ViewY = pWarps[DWARP_EXIT]._wy; // 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
 			ViewX += 1;
 			ViewY += 1;
 		}
 		if (entry == ENTRY_RTNLVL) {
-			ViewX = 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
-			ViewY = 2 * pWarps[DWARP_SIDE]._wy + DBORDERY;
+			ViewX = pWarps[DWARP_SIDE]._wx; // 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
+			ViewY = pWarps[DWARP_SIDE]._wy; // 2 * pWarps[DWARP_SIDE]._wy + DBORDERY;
 			ViewX += 1;
 			ViewY += 1;
 		}
