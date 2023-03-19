@@ -1687,7 +1687,7 @@ void D1Dun::loadObject(int objectIndex)
         }
     }
     const ObjectStruct *objStr = &ObjConvTbl[objectIndex];
-    if (i >= this->customObjectTypes.size() && objectIndex < lengthof(ObjConvTbl) && objStr->type != 0 && !this->assetPath.isEmpty()) {
+    if (i >= this->customObjectTypes.size() && (unsigned)objectIndex < (unsigned)lengthof(ObjConvTbl) && objStr->type != 0 && !this->assetPath.isEmpty()) {
         int objFileIndex = objStr->animType;
         result.frameNum = objStr->frameNum;
         QString celFilePath = this->assetPath + "/Objects/" + objfiledata[objFileIndex].path + ".CEL";
@@ -1757,7 +1757,7 @@ void D1Dun::loadMonster(int monsterIndex)
         }
     }
     const MonsterStruct *monStr = &MonstConvTbl[monsterIndex];
-    if (i >= this->customObjectTypes.size() && monsterIndex < lengthof(MonstConvTbl) && monStr->type != 0 && !this->assetPath.isEmpty()) {
+    if (i >= this->customObjectTypes.size() && (unsigned)monsterIndex < (unsigned)lengthof(MonstConvTbl) && monStr->type != 0 && !this->assetPath.isEmpty()) {
         int moFileIndex = monStr->animType;
         QString cl2FilePath = this->assetPath + "/Monsters/" + monfiledata[moFileIndex].path + "N.CL2";
         QString trnFilePath;
