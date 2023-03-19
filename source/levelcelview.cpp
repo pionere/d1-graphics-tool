@@ -2855,6 +2855,7 @@ void LevelCelView::displayFrame()
             // move to 0;0
             int cX = this->celScene.sceneRect().width() / 2;
             int cY = CEL_SCENE_MARGIN + subtileHeight - cellHeight / 2;
+            int bX = cX, bY = cY;
             int offX = (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
             cX += offX;
 
@@ -2867,6 +2868,7 @@ void LevelCelView::displayFrame()
             cX += cellX;
             cY += cellY;
             this->ui->celGraphicsView->centerOn(cX, cY);
+            QMessageBox::warning(nullptr, "moviing", QString("s(%1:%2) c(%3:%4) zero(%5:%6) off(%7) dun(%8:%9) cell(%10:%11) to(%12:%13)").arg(subtileWidth).arg(subtileHeight).arg(cellWidth).arg(cellHeight).arg(bX).arg(bY).arg(offX).arg(dunX).arg(dunY).arg(cX).arg(cY))
         }
         // Notify PalView that the frame changed (used to refresh palette widget)
         emit frameRefreshed();

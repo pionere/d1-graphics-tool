@@ -2662,8 +2662,8 @@ static void DRLG_L1(int entry)
 
 		// x = quests[Q_PWATER]._qtx;
 		// y = quests[Q_PWATER]._qty + 1;
-		x = pWarps[DWARP_SIDE]._wx * 2 + DBORDERX + 1;
-		y = pWarps[DWARP_SIDE]._wy * 2 + DBORDERY + 1;
+		x = pWarps[DWARP_SIDE]._wx + 1; // pWarps[DWARP_SIDE]._wx * 2 + DBORDERX + 1;
+		y = pWarps[DWARP_SIDE]._wy + 1; // pWarps[DWARP_SIDE]._wy * 2 + DBORDERY + 1;
 		// fix transVal of the set-map (entrance)
 		DRLG_CopyTrans(x + 0, y + 2, x + 0, y + 0);
 		DRLG_CopyTrans(x + 1, y + 2, x + 1, y + 0);
