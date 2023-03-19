@@ -147,6 +147,7 @@ private:
     void setSubtileIndex(int subtileIndex);
     void setTileIndex(int tileIndex);
 
+    void selectAssetPath(QString path);
     void setPositionX(int posx);
     void setPositionY(int posy);
 

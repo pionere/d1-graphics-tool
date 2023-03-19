@@ -2859,16 +2859,21 @@ void LevelCelView::displayFrame()
             int offX = (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
             cX += offX;
 
+            int dunX = 0;
+            int dunY = 0;
+            int cellX = this->currentDunPosX * cellWidth / 2 - this->currentDunPosY * cellHeight / 2;
+            int cellY = this->currentDunPosX * cellHeight / 2 + this->currentDunPosY * cellHeight / 2;
+
             // switch unit
-            int dunX = this->currentDunPosX * cellWidth;
+            /*int dunX = this->currentDunPosX * cellWidth;
             int dunY = this->currentDunPosY * cellHeight;
             // SHIFT_GRID
             int cellX = dunX - dunY;
-            int cellY = dunY + dunX;
+            int cellY = dunY + dunX;*/
             cX += cellX;
             cY += cellY;
             this->ui->celGraphicsView->centerOn(cX, cY);
-            QMessageBox::warning(nullptr, "moviing", QString("s(%1:%2) c(%3:%4) zero(%5:%6) off(%7) dun(%8:%9) cell(%10:%11) to(%12:%13)").arg(subtileWidth).arg(subtileHeight).arg(cellWidth).arg(cellHeight).arg(bX).arg(bY).arg(offX).arg(dunX).arg(dunY).arg(cX).arg(cY));
+            QMessageBox::warning(nullptr, "moviing", QString("s(%1:%2) c(%3:%4) zero(%5:%6) off(%7) dun(%8:%9) cell(%10:%11) to(%12:%13)").arg(subtileWidth).arg(subtileHeight).arg(cellWidth).arg(cellHeight).arg(bX).arg(bY).arg(offX).arg(dunX).arg(dunY).arg(cellX).arg(cellY).arg(cX).arg(cY));
         }
         // Notify PalView that the frame changed (used to refresh palette widget)
         emit frameRefreshed();
@@ -3619,27 +3624,32 @@ void LevelCelView::on_dungeonTileLineEdit_escPressed()
     this->ui->dungeonTileLineEdit->clearFocus();
 }
 
+void LevelCelView::selectAssetPath(QString path)
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 1, PAF_UPDATE_WINDOW);
+
+    if (this->dun->setAssetPath(path)) {
+        this->updateEntityOptions();
+        // update the view
+        // this->displayFrame();
+    }
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
 void LevelCelView::on_assetLoadPushButton_clicked()
 {
     QString dirPath = dMainWindow().folderDialog(tr("Select Assets Folder"));
 
-    if (dirPath.isEmpty())
-        return;
-
-    if (this->dun->setAssetPath(dirPath)) {
-        this->updateEntityOptions();
-        // update the view
-        this->displayFrame();
+    if (!dirPath.isEmpty()) {
+        this->selectAssetPath(dirPath);
     }
 }
 
 void LevelCelView::on_assetClearPushButton_clicked()
 {
-    if (this->dun->setAssetPath("")) {
-        this->updateEntityOptions();
-        // update the view
-        this->displayFrame();
-    }
+    this->selectAssetPath("");
 }
 
 void LevelCelView::on_dungeonSubtileLineEdit_returnPressed()
