@@ -723,13 +723,16 @@ void D1Dun::initialize(D1Pal *p, D1Tmi *m)
     this->levelType = DTYPE_NONE; // ensure change is triggered
     this->setLevelType(dungeonType);
     // find special cells
-    QString specFilePath;
-    if (!this->assetPath.isEmpty() && dungeonTbl[dungeonType].specPath != nullptr) {
-        specFilePath = this->assetPath + "/" + dungeonTbl[dungeonType].specPath + "s.cel";
-    } else {
-        specFilePath = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName() + "s.cel";
-    }
-    if (QFileInfo::exists(specFilePath)) {
+    if (dungeonTbl[dungeonType].specPath != nullptr) {
+        QString specFilePath = this->assetPath + "/" + dungeonTbl[dungeonType].specPath + "s.cel";;
+        if (!QFileInfo::exists(specFilePath)) {
+            QString specFilePath2 = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName() + "s.cel";
+            if (!QFileInfo::exists(specFilePath2)) {
+                dProgressErr() << tr("Missing special-CEL. (Tried %1 and %2).").arg(QDir::toNativeSeparators(specFilePath).arg(QDir::toNativeSeparators(specFilePath2));
+                return;
+            }
+            specFilePath = specFilePath2;
+        }
         D1Gfx *specGfx = new D1Gfx();
         specGfx->setPalette(this->pal);
         OpenAsParam params = OpenAsParam();
@@ -741,8 +744,6 @@ void D1Dun::initialize(D1Pal *p, D1Tmi *m)
             this->specGfx = specGfx;
             dProgress() << tr("Loaded special CEL file %1.").arg(QDir::toNativeSeparators(specFilePath));
         }
-    } else if (dungeonTbl[dungeonType].specPath != nullptr) {
-        dProgressErr() << tr("Missing special-CEL file: %1.").arg(QDir::toNativeSeparators(specFilePath));
     }
 }
 
