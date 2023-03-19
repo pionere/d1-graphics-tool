@@ -1840,8 +1840,6 @@ static bool DRLG_L4PlaceMiniSets(mini_set* minisets, int n)
 
 static void DRLG_L4(int entry)
 {
-	int i, j;
-
 	while (true) {
 		do {
 			memset(dungBlock, 0, sizeof(dungBlock));

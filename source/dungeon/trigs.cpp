@@ -75,7 +75,7 @@ static void InitNoTriggers()
 
 static void InitL1Triggers()
 {
-	int i, j;
+	// int i, j;
 
 	numtrigs = 0;
 	/*for (j = 0; j < MAXDUNY; j++) {
@@ -122,7 +122,7 @@ static void InitL1Triggers()
 
 static void InitL2Triggers()
 {
-	int i, j;
+	// int i, j;
 
 	numtrigs = 0;
 	/*for (j = 0; j < MAXDUNY; j++) {
@@ -174,7 +174,7 @@ static void InitL2Triggers()
 
 static void InitL3Triggers()
 {
-	int i, j;
+	// int i, j;
 
 	numtrigs = 0;
 	/*for (j = 0; j < MAXDUNY; j++) {
@@ -219,7 +219,7 @@ static void InitL3Triggers()
 
 static void InitL4Triggers()
 {
-	int i, j;
+	// int i, j;
 
 	numtrigs = 0;
 	/*for (j = 0; j < MAXDUNY; j++) {
@@ -283,7 +283,7 @@ static void InitL4Triggers()
 #ifdef HELLFIRE
 static void InitL5Triggers()
 {
-	int i, j;
+	// int i, j;
 
 	numtrigs = 0;
 	/*for (j = 0; j < MAXDUNY; j++) {
@@ -323,7 +323,7 @@ static void InitL5Triggers()
 
 static void InitL6Triggers()
 {
-	int i, j;
+	// int i, j;
 
 	numtrigs = 0;
 	/*for (j = 0; j < MAXDUNY; j++) {

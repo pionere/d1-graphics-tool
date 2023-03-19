@@ -267,8 +267,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
     }
     view->updateEntityOptions();
 
-    view->setPositionX(ViewX);
-    view->setPositionY(ViewY);
+    view->scrollTo(ViewX, ViewY);
 
     return true;
 }

@@ -2499,7 +2499,6 @@ static void DRLG_L1(int entry)
 {
 	int i;
 	int minarea;
-	bool doneflag;
 	bool placeWater = QuestStatus(Q_PWATER);
 
 	switch (currLvl._dLevelIdx) {
