@@ -910,11 +910,11 @@ void MainWindow::openFile(const OpenAsParam &params)
         // Loading DUN
         if (!dunFilePath.isEmpty() || params.createDun) {
             this->dun = new D1Dun();
-            if (!this->dun->load(dunFilePath, this->tileset->til, params)) {
+            if (!this->dun->load(dunFilePath, params)) {
                 this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
                 return;
             }
-            this->dun->initialize(this->pal, this->tileset->tmi);
+            this->dun->initialize(this->pal, this->tileset);
         }
     } else if (fileType == 1) { // CEL
         if (!D1Cel::load(*this->gfx, gfxFilePath, params)) {
@@ -1789,7 +1789,7 @@ void MainWindow::on_actionLoadItems_Dungeon_triggered()
     D1Dun srcDun = D1Dun();
     OpenAsParam params = OpenAsParam();
     params.dunFilePath = dunFilePath;
-    if (!srcDun.load(dunFilePath, this->tileset->til, params)) {
+    if (!srcDun.load(dunFilePath, params)) {
         this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
         return;
     }
@@ -1822,7 +1822,7 @@ void MainWindow::on_actionLoadMonsters_Dungeon_triggered()
     D1Dun srcDun = D1Dun();
     OpenAsParam params = OpenAsParam();
     params.dunFilePath = dunFilePath;
-    if (!srcDun.load(dunFilePath, this->tileset->til, params)) {
+    if (!srcDun.load(dunFilePath, params)) {
         this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
         return;
     }
@@ -1855,7 +1855,7 @@ void MainWindow::on_actionLoadObjects_Dungeon_triggered()
     D1Dun srcDun = D1Dun();
     OpenAsParam params = OpenAsParam();
     params.dunFilePath = dunFilePath;
-    if (!srcDun.load(dunFilePath, this->tileset->til, params)) {
+    if (!srcDun.load(dunFilePath, params)) {
         this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
         return;
     }
@@ -1888,7 +1888,7 @@ void MainWindow::on_actionLoadRooms_Dungeon_triggered()
     D1Dun srcDun = D1Dun();
     OpenAsParam params = OpenAsParam();
     params.dunFilePath = dunFilePath;
-    if (!srcDun.load(dunFilePath, this->tileset->til, params)) {
+    if (!srcDun.load(dunFilePath, params)) {
         this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
         return;
     }

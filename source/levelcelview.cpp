@@ -3621,6 +3621,33 @@ void LevelCelView::on_dungeonTileLineEdit_escPressed()
     this->ui->dungeonTileLineEdit->clearFocus();
 }
 
+void LevelCelView::selectTilesetPath(QString path)
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 1, PAF_UPDATE_WINDOW);
+
+    if (this->dun->reloadTileset(path)) {
+        // update the view
+        // this->displayFrame();
+    }
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void LevelCelView::on_tilesetLoadPushButton_clicked()
+{
+    QString celFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select tileset"), tr("CEL Files (*.cel *.CEL)"));
+
+    if (!celFilePath.isEmpty()) {
+        this->selectTilesetPath(celFilePath);
+    }
+}
+
+void LevelCelView::on_tilesetClearPushButton_clicked()
+{
+    this->selectTilesetPath("");
+}
+
 void LevelCelView::selectAssetPath(QString path)
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 1, PAF_UPDATE_WINDOW);

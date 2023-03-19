@@ -112,8 +112,8 @@ public:
     D1Dun() = default;
     ~D1Dun();
 
-    bool load(const QString &dunFilePath, D1Til *til, const OpenAsParam &params);
-    void initialize(D1Pal *pal, D1Tmi *tmi);
+    bool load(const QString &dunFilePath, const OpenAsParam &params);
+    void initialize(D1Pal *pal, D1Tileset *tileset);
     bool save(const SaveAsParam &params);
 
     QImage getImage(const DunDrawParam &params);
@@ -168,6 +168,9 @@ public:
     bool resetSubtiles();
 
     void patch(int dunFileIndex); // dun_file_index
+
+    void reloadTileset(const QString &celFilePath);
+
     bool addResource(const AddResourceParam &params);
     const std::vector<CustomObjectStruct> &getCustomObjectTypes() const;
     const std::vector<CustomMonsterStruct> &getCustomMonsterTypes() const;
@@ -193,9 +196,9 @@ private:
     D1DUN_TYPE type = D1DUN_TYPE::NORMAL;
     QString dunFilePath;
     D1Pal *pal;
-    const D1Min *min;
+    D1Tileset *tileset;
+    D1Min *min;
     D1Til *til;
-    D1Tmi *tmi;
     bool modified;
     quint8 numLayers;
     int width;
@@ -210,7 +213,7 @@ private:
     int defaultTile;
     QString assetPath;
     int levelType; // dungeon_type
-    D1Gfx *specGfx;
+    D1Gfx *specGfx = nullptr;
     std::vector<CustomObjectStruct> customObjectTypes;
     std::vector<CustomMonsterStruct> customMonsterTypes;
     std::vector<CustomItemStruct> customItemTypes;
