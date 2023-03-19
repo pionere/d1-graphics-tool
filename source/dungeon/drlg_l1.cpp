@@ -843,12 +843,12 @@ static void DRLG_L1Shadows()
 	}
 }
 
-static bool DRLG_L1PlaceMiniSet(const BYTE* miniset, bool setview)
+/*static bool DRLG_L1PlaceMiniSet(const BYTE* miniset, bool setview)
 {
 	POS32 result;
 
 	result = DRLG_PlaceMiniSet(miniset);
-	if (result.x == DMAXX)
+	if (result.x < 0)
 		return false;
 
 	if (setview) {
@@ -856,7 +856,7 @@ static bool DRLG_L1PlaceMiniSet(const BYTE* miniset, bool setview)
 		ViewY = 2 * result.y + DBORDERY + 4;
 	}
 	return true;
-}
+}*/
 
 static void DRLG_L1Floor()
 {
@@ -2479,7 +2479,7 @@ static void DRLG_L1CornerFix()
 	}*/
 }
 
-struct mini_set {
+/*struct mini_set {
 	const BYTE* data;
 	bool setview;
 };
@@ -2493,20 +2493,7 @@ static bool DRLG_L1PlaceMiniSets(mini_set* minisets, int n)
 		}
 	}
 	return true;
-}
-
-static bool DRLG_L1PlaceWarp(const BYTE* miniset, int type)
-{
-	POS32 result;
-
-	result = DRLG_PlaceMiniSet(miniset);
-	if (result.x == DMAXX)
-		return false;
-
-	pWarps[type]._wx = result.x;
-	pWarps[type]._wy = result.y;
-	return true;
-}
+}*/
 
 static void DRLG_L1(int entry)
 {
@@ -2527,7 +2514,7 @@ static void DRLG_L1(int entry)
 		break;
 	}
 
-	do {
+	while (true) {
 		do {
 			static_assert(sizeof(dungeon) == DMAXX * DMAXY, "Linear traverse of pdungeon does not work in DRLG_L1.");
 			memset(dungeon, 0, sizeof(dungeon));
@@ -2542,20 +2529,18 @@ static void DRLG_L1(int entry)
 		L1ClearChamberFlags();
 		memset(pWarps, 0, sizeof(pWarps));
 		if (placeWater) {
-			POS32 mpos = DRLG_PlaceMiniSet(PWATERIN);
-			if (mpos.x != DMAXX) {
-				/*quests[Q_PWATER]._qtx = 2 * mpos.x + DBORDERX + 5;
-				quests[Q_PWATER]._qty = 2 * mpos.y + DBORDERY + 6;
-				if (entry == ENTRY_RTNLVL) {
-					ViewX = quests[Q_PWATER]._qtx;
-					ViewY = quests[Q_PWATER]._qty + 1;
-				}*/
-				pWarps[DWARP_SIDE]._wx = mpos.x + 2;
-				pWarps[DWARP_SIDE]._wy = mpos.y + 3;
-			} else {
-				doneflag = false;
+			POS32 warpPos = DRLG_PlaceMiniSet(PWATERIN);
+			if (warpPos.x < 0) {
 				continue;
 			}
+			/*quests[Q_PWATER]._qtx = 2 * mpos.x + DBORDERX + 5;
+			quests[Q_PWATER]._qty = 2 * mpos.y + DBORDERY + 6;
+			if (entry == ENTRY_RTNLVL) {
+				ViewX = quests[Q_PWATER]._qtx;
+				ViewY = quests[Q_PWATER]._qty + 1;
+			}*/
+			pWarps[DWARP_SIDE]._wx = warpPos.x + 2;
+			pWarps[DWARP_SIDE]._wy = warpPos.y + 3;
 		}
 		DRLG_InitTrans();
 		DRLG_FloodTVal(13);
@@ -2598,36 +2583,47 @@ static void DRLG_L1(int entry)
 				}
 			}
 		}*/
-		if (setpc_type == SPT_BANNER) {
-			pWarps[DWARP_EXIT]._wx = setpc_x + 1; // L1DSTAIRS (3, 5)
-			pWarps[DWARP_EXIT]._wy = setpc_y + 5;
-
-			doneflag = DRLG_L1PlaceWarp(L1USTAIRS, DWARP_ENTRY); // L1USTAIRS (3, 4), was STAIRSUP, entry == ENTRY_MAIN
-			pWarps[DWARP_ENTRY]._wx += 1;
-			pWarps[DWARP_ENTRY]._wy += 1;
 #ifdef HELLFIRE
-		} else if (currLvl._dType == DTYPE_CRYPT) {
-			doneflag = DRLG_L1PlaceWarp(L5USTAIRS, DWARP_ENTRY); // L5USTAIRS (3, 6), was STAIRSUP, entry == ENTRY_MAIN
-			pWarps[DWARP_ENTRY]._wx += 1;
-			pWarps[DWARP_ENTRY]._wy += 2;
-			if (currLvl._dLevelIdx != DLV_CRYPT4) {
-				doneflag &= DRLG_L1PlaceWarp(L5DSTAIRS, DWARP_EXIT); // L5DSTAIRS (3, 7)
-				pWarps[DWARP_EXIT]._wx += 1;
-				pWarps[DWARP_EXIT]._wy += 3;
+		if (currLvl._dType == DTYPE_CRYPT) {
+			POS32 warpPos = DRLG_PlaceMiniSet(L5USTAIRS); // L5USTAIRS (3, 6), was STAIRSUP, entry == ENTRY_MAIN
+			if (warpPos.x < 0) {
+				continue;
 			}
+			pWarps[DWARP_ENTRY]._wx = warpPos.x + 1;
+			pWarps[DWARP_ENTRY]._wy = warpPos.y + 2;
+			if (currLvl._dLevelIdx != DLV_CRYPT4) {
+				warpPos = DRLG_PlaceMiniSet(L5DSTAIRS); // L5DSTAIRS (3, 7)
+				if (warpPos.x < 0) {
+					continue;
+				}
+				pWarps[DWARP_EXIT]._wx = warpPos.x + 1;
+				pWarps[DWARP_EXIT]._wy = warpPos.y + 3;
+			}
+		} else
 #endif
-		} else {
+		{
 			// assert(currLvl._dType == DTYPE_CATHEDRAL);
-			doneflag = DRLG_L1PlaceWarp(L1USTAIRS, DWARP_ENTRY); // L1USTAIRS (3, 4), was STAIRSUP in hellfire
-			pWarps[DWARP_ENTRY]._wx += 1;
-			pWarps[DWARP_ENTRY]._wy += 1;
-			doneflag &= DRLG_L1PlaceWarp(L1DSTAIRS, DWARP_EXIT); // L1DSTAIRS (3, 5)
-			pWarps[DWARP_EXIT]._wx += 1;
-			pWarps[DWARP_EXIT]._wy += 2;
+			POS32 warpPos = DRLG_PlaceMiniSet(L1USTAIRS); // L1USTAIRS (3, 4)
+			if (warpPos.x < 0) {
+				continue;
+			}
+			pWarps[DWARP_ENTRY]._wx = warpPos.x + 1;
+			pWarps[DWARP_ENTRY]._wy = warpPos.y + 1;
+			if (setpc_type == SPT_BANNER) {
+				pWarps[DWARP_EXIT]._wx = setpc_x + 1; // L1DSTAIRS (3, 5)
+				pWarps[DWARP_EXIT]._wy = setpc_y + 5;
+			} else {
+				warpPos = DRLG_PlaceMiniSet(L1DSTAIRS); // L1DSTAIRS (3, 5)
+				if (warpPos.x < 0) {
+					continue;
+				}
+				pWarps[DWARP_EXIT]._wx = warpPos.x + 1;
+				pWarps[DWARP_EXIT]._wy = warpPos.y + 2;
 
-			if (setpc_type == SPT_SKELKING) {
-				pWarps[DWARP_SIDE]._wx = setpc_x + 6; // L1DSTAIRS (3, 5)
-				pWarps[DWARP_SIDE]._wy = setpc_y + 3;
+				if (setpc_type == SPT_SKELKING) {
+					pWarps[DWARP_SIDE]._wx = setpc_x + 6; // L1DSTAIRS (3, 5)
+					pWarps[DWARP_SIDE]._wy = setpc_y + 3;
+				}
 			}
 		}
 		if (entry == ENTRY_MAIN || entry == ENTRY_TWARPDN) {
@@ -2648,7 +2644,8 @@ static void DRLG_L1(int entry)
 			ViewX += 1;
 			ViewY += 1;
 		}
-	} while (!doneflag);
+		break;
+	}
 
 	if (placeWater) {
 		int x, y;

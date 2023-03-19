@@ -2142,7 +2142,7 @@ static bool DRLG_L3Lockout()
 	return true;
 }
 
-struct mini_set {
+/*struct mini_set {
 	const BYTE* data;
 	bool setview;
 };
@@ -2155,7 +2155,7 @@ static bool DRLG_L3PlaceMiniSets(mini_set* minisets, int n)
 		if (minisets[i].data == NULL)
 			continue;
 		mpos = DRLG_PlaceMiniSet(minisets[i].data);
-		if (mpos.x == DMAXX)
+		if (mpos.x < 0)
 			return false;
 		if (minisets[i].setview) {
 			ViewX = 2 * mpos.x + DBORDERX + 1;
@@ -2163,27 +2163,14 @@ static bool DRLG_L3PlaceMiniSets(mini_set* minisets, int n)
 		}
 	}
 	return true;
-}
-
-static bool DRLG_L3PlaceWarp(const BYTE* miniset, int type)
-{
-	POS32 result;
-
-	result = DRLG_PlaceMiniSet(miniset);
-	if (result.x == DMAXX)
-		return false;
-
-	pWarps[type]._wx = result.x;
-	pWarps[type]._wy = result.y;
-	return true;
-}
+}*/
 
 static void DRLG_L3(int entry)
 {
 	bool doneflag;
 
 	do {
-		do {
+		while (true) {
 			do {
 				static_assert(sizeof(dungeon) == DMAXX * DMAXY, "Linear traverse of dungeon does not work in DRLG_L3.");
 				memset(dungeon, 0, sizeof(dungeon));
@@ -2236,29 +2223,44 @@ static void DRLG_L3(int entry)
 			}*/
 			memset(pWarps, 0, sizeof(pWarps));
 #ifdef HELLFIRE
-			 if (currLvl._dType == DTYPE_NEST) {
-				doneflag = DRLG_L3PlaceWarp(L6USTAIRS, DWARP_ENTRY); // L6USTAIRS(1, 3)
-				pWarps[DWARP_ENTRY]._wx += 0;
-				pWarps[DWARP_ENTRY]._wy += 1;
+			if (currLvl._dType == DTYPE_NEST) {
+				POS32 warpPos = DRLG_PlaceMiniSet(L6USTAIRS); // L6USTAIRS(1, 3)
+				if (warpPos.x < 0) {
+					continue;
+				}
+				pWarps[DWARP_ENTRY]._wx = warpPos.x + 0;
+				pWarps[DWARP_ENTRY]._wy = warpPos.y + 1;
 				if (currLvl._dLevelIdx != DLV_NEST4) {
-					doneflag &= DRLG_L3PlaceWarp(L6DSTAIRS, DWARP_EXIT); // L6DSTAIRS(3, 1)
-					pWarps[DWARP_EXIT]._wx += 1;
-					pWarps[DWARP_EXIT]._wy += 0;
+					warpPos = DRLG_PlaceMiniSet(L6DSTAIRS); // L6DSTAIRS(3, 1)
+					if (warpPos.x < 0) {
+						continue;
+					}
+					pWarps[DWARP_EXIT]._wx = warpPos.x + 1;
+					pWarps[DWARP_EXIT]._wy = warpPos.y + 0;
 				}
 			} else
 #endif
 			{
 				// assert(currLvl._dType == DTYPE_CAVES);
-				doneflag = DRLG_L3PlaceWarp(L3USTAIRS, DWARP_ENTRY); // L3USTAIRS(1, 3)
-				pWarps[DWARP_ENTRY]._wx += 0;
-				pWarps[DWARP_ENTRY]._wy += 1;
-				doneflag &= DRLG_L3PlaceWarp(L3DSTAIRS, DWARP_EXIT); // L3DSTAIRS(3, 1)
-				pWarps[DWARP_EXIT]._wx += 1;
-				pWarps[DWARP_EXIT]._wy += 0;
+				POS32 warpPos = DRLG_PlaceMiniSet(L3USTAIRS); // L3USTAIRS(1, 3)
+				if (warpPos.x < 0) {
+					continue;
+				}
+				pWarps[DWARP_ENTRY]._wx = warpPos.x + 0;
+				pWarps[DWARP_ENTRY]._wy = warpPos.y + 1;
+				warpPos = DRLG_PlaceMiniSet(L3DSTAIRS); // L3DSTAIRS(3, 1)
+				if (warpPos.x < 0) {
+					continue;
+				}
+				pWarps[DWARP_EXIT]._wx = warpPos.x + 1;
+				pWarps[DWARP_EXIT]._wy = warpPos.y + 0;
 				if (currLvl._dLevelIdx == DLV_CAVES1) {
-					doneflag &= DRLG_L3PlaceWarp(L3TWARP, DWARP_TOWN); // L3TWARP(1, 3)
-					pWarps[DWARP_TOWN]._wx += 0;
-					pWarps[DWARP_TOWN]._wy += 1;
+					warpPos = DRLG_PlaceMiniSet(L3TWARP); // L3TWARP(1, 3)
+					if (warpPos.x < 0) {
+						continue;
+					}
+					pWarps[DWARP_TOWN]._wx = warpPos.x + 0;
+					pWarps[DWARP_TOWN]._wy = warpPos.y + 1;
 				}
 			}
 
@@ -2280,7 +2282,8 @@ static void DRLG_L3(int entry)
 				ViewX += 1;
 				ViewY += 1;
 			}
-		} while (!doneflag);
+			break;
+		}
 		// generate lava pools
 		_guLavapools = 0;
 #ifdef HELLFIRE

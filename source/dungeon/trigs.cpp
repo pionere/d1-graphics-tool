@@ -94,20 +94,20 @@ static void InitL1Triggers()
 		}
 	}*/
 	// if (pWarps[DWARP_ENTRY]._wx != 0) {
-		trigs[numtrigs]._tx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
-		trigs[numtrigs]._ty = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+		trigs[numtrigs]._tx = pWarps[DWARP_ENTRY]._wx; // 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+		trigs[numtrigs]._ty = pWarps[DWARP_ENTRY]._wy; // 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
 		trigs[numtrigs]._tmsg = currLvl._dLevelIdx == DLV_CATHEDRAL1 ? DVL_DWM_TWARPUP : DVL_DWM_PREVLVL;
 		numtrigs++;
 	// }
 	// if (pWarps[DWARP_EXIT]._wx != 0) {
-		trigs[numtrigs]._tx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX + 1;
-		trigs[numtrigs]._ty = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
+		trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx + 1; // 2 * pWarps[DWARP_EXIT]._wx + DBORDERX + 1;
+		trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy;     // 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
 		trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
 		numtrigs++;
 	// }
 	if (pWarps[DWARP_SIDE]._wx != 0) {
-		trigs[numtrigs]._tx = 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
-		trigs[numtrigs]._ty = 2 * pWarps[DWARP_SIDE]._wy + DBORDERY;
+		trigs[numtrigs]._tx = pWarps[DWARP_SIDE]._wx; // 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
+		trigs[numtrigs]._ty = pWarps[DWARP_SIDE]._wy; // 2 * pWarps[DWARP_SIDE]._wy + DBORDERY;
 		if (currLvl._dLevelIdx == questlist[Q_SKELKING]._qdlvl) { // TODO: add qn to pWarps?
 			trigs[numtrigs]._tlvl = questlist[Q_SKELKING]._qslvl;
 			trigs[numtrigs]._tx += 1;
@@ -146,26 +146,26 @@ static void InitL2Triggers()
 		}
 	}*/
 	// if (pWarps[DWARP_ENTRY]._wx != 0) {
-		trigs[numtrigs]._tx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
-		trigs[numtrigs]._ty = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY + 1;
+		trigs[numtrigs]._tx = pWarps[DWARP_ENTRY]._wx;     // 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+		trigs[numtrigs]._ty = pWarps[DWARP_ENTRY]._wy + 1; // 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY + 1;
 		trigs[numtrigs]._tmsg = DVL_DWM_PREVLVL;
 		numtrigs++;
 	// }
 	// if (pWarps[DWARP_EXIT]._wx != 0) {
-		trigs[numtrigs]._tx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
-		trigs[numtrigs]._ty = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY + 1;
+		trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx;     // 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+		trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy + 1; // 2 * pWarps[DWARP_EXIT]._wy + DBORDERY + 1;
 		trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
 		numtrigs++;
 	// }
 	if (pWarps[DWARP_TOWN]._wx != 0) {
-		trigs[numtrigs]._tx = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
-		trigs[numtrigs]._ty = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY + 1;
+		trigs[numtrigs]._tx = pWarps[DWARP_TOWN]._wx;     // 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
+		trigs[numtrigs]._ty = pWarps[DWARP_TOWN]._wy + 1; // 2 * pWarps[DWARP_TOWN]._wy + DBORDERY + 1;
 		trigs[numtrigs]._tmsg = DVL_DWM_TWARPUP;
 		numtrigs++;
 	}
 	if (pWarps[DWARP_SIDE]._wx != 0) {
-		trigs[numtrigs]._tx = 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
-		trigs[numtrigs]._ty = 2 * pWarps[DWARP_SIDE]._wy + DBORDERY + 1;
+		trigs[numtrigs]._tx = pWarps[DWARP_SIDE]._wx;     // 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
+		trigs[numtrigs]._ty = pWarps[DWARP_SIDE]._wy + 1; // 2 * pWarps[DWARP_SIDE]._wy + DBORDERY + 1;
 		trigs[numtrigs]._tlvl = questlist[Q_BCHAMB]._qslvl;
 		trigs[numtrigs]._tmsg = DVL_DWM_SETLVL;
 		numtrigs++;
@@ -198,20 +198,20 @@ static void InitL3Triggers()
 		}
 	}*/
 	// if (pWarps[DWARP_ENTRY]._wx != 0) {
-		trigs[numtrigs]._tx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX + 1;
-		trigs[numtrigs]._ty = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+		trigs[numtrigs]._tx = pWarps[DWARP_ENTRY]._wx + 1; // 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX + 1;
+		trigs[numtrigs]._ty = pWarps[DWARP_ENTRY]._wy;     // 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
 		trigs[numtrigs]._tmsg = DVL_DWM_PREVLVL;
 		numtrigs++;
 	// }
 	// if (pWarps[DWARP_EXIT]._wx != 0) {
-		trigs[numtrigs]._tx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
-		trigs[numtrigs]._ty = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY + 1;
+		trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx;     // 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+		trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy + 1; // 2 * pWarps[DWARP_EXIT]._wy + DBORDERY + 1;
 		trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
 		numtrigs++;
 	// }
 	if (pWarps[DWARP_TOWN]._wx != 0) {
-		trigs[numtrigs]._tx = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX + 1;
-		trigs[numtrigs]._ty = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
+		trigs[numtrigs]._tx = pWarps[DWARP_TOWN]._wx + 1; // 2 * pWarps[DWARP_TOWN]._wx + DBORDERX + 1;
+		trigs[numtrigs]._ty = pWarps[DWARP_TOWN]._wy;     // 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
 		trigs[numtrigs]._tmsg = DVL_DWM_TWARPUP;
 		numtrigs++;
 	}
@@ -254,27 +254,27 @@ static void InitL4Triggers()
 		}
 	}*/
 	// if (pWarps[DWARP_ENTRY]._wx != 0) {
-		trigs[numtrigs]._tx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
-		trigs[numtrigs]._ty = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+		trigs[numtrigs]._tx = pWarps[DWARP_ENTRY]._wx; // 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+		trigs[numtrigs]._ty = pWarps[DWARP_ENTRY]._wy; // 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
 		trigs[numtrigs]._tmsg = DVL_DWM_PREVLVL;
 		numtrigs++;
 	// }
 	if (pWarps[DWARP_EXIT]._wx != 0) {
 		if (currLvl._dLevelIdx != DLV_HELL3) {
-			trigs[numtrigs]._tx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
-			trigs[numtrigs]._ty = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
+			trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx; // 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+			trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy; // 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
 			trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
 			numtrigs++;
 		} else if (quests[Q_BETRAYER]._qactive == QUEST_DONE) {
-			trigs[numtrigs]._tx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX; // + 1;
-			trigs[numtrigs]._ty = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY; // + 1;
+			trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx; // 2 * pWarps[DWARP_EXIT]._wx + DBORDERX; // + 1;
+			trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy; // 2 * pWarps[DWARP_EXIT]._wy + DBORDERY; // + 1;
 			trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
 			numtrigs++;
 		}
 	}
 	if (pWarps[DWARP_TOWN]._wx != 0) {
-		trigs[numtrigs]._tx = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
-		trigs[numtrigs]._ty = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
+		trigs[numtrigs]._tx = pWarps[DWARP_TOWN]._wx; // 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
+		trigs[numtrigs]._ty = pWarps[DWARP_TOWN]._wy; // 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
 		trigs[numtrigs]._tmsg = DVL_DWM_TWARPUP;
 		numtrigs++;
 	}
@@ -308,14 +308,14 @@ static void InitL5Triggers()
 		}
 	}*/
 	// if (pWarps[DWARP_ENTRY]._wx != 0) {
-		trigs[numtrigs]._tx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
-		trigs[numtrigs]._ty = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+		trigs[numtrigs]._tx = pWarps[DWARP_ENTRY]._wx; // 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+		trigs[numtrigs]._ty = pWarps[DWARP_ENTRY]._wy; // 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
 		trigs[numtrigs]._tmsg = currLvl._dLevelIdx == DLV_CRYPT1 ? DVL_DWM_TWARPUP : DVL_DWM_PREVLVL;
 		numtrigs++;
 	// }
 	if (pWarps[DWARP_EXIT]._wx != 0) {
-		trigs[numtrigs]._tx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX + 1;
-		trigs[numtrigs]._ty = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
+		trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx + 1; // 2 * pWarps[DWARP_EXIT]._wx + DBORDERX + 1;
+		trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy;     // 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
 		trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
 		numtrigs++;
 	}
@@ -347,14 +347,14 @@ static void InitL6Triggers()
 		}
 	}*/
 	// if (pWarps[DWARP_ENTRY]._wx != 0) {
-		trigs[numtrigs]._tx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX + 1;
-		trigs[numtrigs]._ty = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+		trigs[numtrigs]._tx = pWarps[DWARP_ENTRY]._wx + 1; // 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX + 1;
+		trigs[numtrigs]._ty = pWarps[DWARP_ENTRY]._wy;     // 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
 		trigs[numtrigs]._tmsg = currLvl._dLevelIdx == DLV_NEST1 ? DVL_DWM_TWARPUP : DVL_DWM_PREVLVL;
 		numtrigs++;
 	// }
 	if (pWarps[DWARP_EXIT]._wx != 0) {
-		trigs[numtrigs]._tx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
-		trigs[numtrigs]._ty = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY + 1;
+		trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx;     // 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+		trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy + 1; // 2 * pWarps[DWARP_EXIT]._wy + DBORDERY + 1;
 		trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
 		numtrigs++;
 	}
@@ -427,8 +427,8 @@ static void Freeupstairs()
 		if (tx == 0) {
 			continue;
 		}
-		tx = 2 * tx + DBORDERX;
-		ty = 2 * ty + DBORDERY;
+		// tx = 2 * tx + DBORDERX;
+		// ty = 2 * ty + DBORDERY;
 		/*for (xx = -2; xx <= 2; xx++) {
 			for (yy = -2; yy <= 2; yy++) {
 				dFlags[tx + xx][ty + yy] |= BFLAG_POPULATED;

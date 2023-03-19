@@ -3193,7 +3193,7 @@ static void L2DoorFix2()
 	}
 }
 
-struct mini_set {
+/*struct mini_set {
 	const BYTE* data;
 	bool setview;
 };
@@ -3206,7 +3206,7 @@ static bool DRLG_L2PlaceMiniSets(mini_set* minisets, int n)
 		if (minisets[i].data == NULL)
 			continue;
 		mpos = DRLG_PlaceMiniSet(minisets[i].data);
-		if (mpos.x == DMAXX)
+		if (mpos.x < 0)
 			return false;
 		if (minisets[i].setview) {
 			ViewX = 2 * mpos.x + DBORDERX + 5;
@@ -3214,26 +3214,11 @@ static bool DRLG_L2PlaceMiniSets(mini_set* minisets, int n)
 		}
 	}
 	return true;
-}
-
-static bool DRLG_L2PlaceWarp(const BYTE* miniset, int type)
-{
-	POS32 result;
-
-	result = DRLG_PlaceMiniSet(miniset);
-	if (result.x == DMAXX)
-		return false;
-
-	pWarps[type]._wx = result.x;
-	pWarps[type]._wy = result.y;
-	return true;
-}
+}*/
 
 static void DRLG_L2(int entry)
 {
-	bool doneflag;
-
-	do {
+	while (true) {
 		do {
 			static_assert(sizeof(pdungeon) == DMAXX * DMAXY, "Linear traverse of pdungeon does not work in DRLG_L2.");
 			memset(pdungeon, 32, sizeof(pdungeon));
@@ -3269,16 +3254,25 @@ static void DRLG_L2(int entry)
 			}
 		}*/
 		memset(pWarps, 0, sizeof(pWarps));
-		doneflag = DRLG_L2PlaceWarp(L2USTAIRS, DWARP_ENTRY); // L2USTAIRS (5, 3)
-		pWarps[DWARP_ENTRY]._wx += 2;
-		pWarps[DWARP_ENTRY]._wy += 1;
-		doneflag &= DRLG_L2PlaceWarp(L2DSTAIRS, DWARP_EXIT); // L2DSTAIRS (3, 5)
-		pWarps[DWARP_EXIT]._wx += 2;
-		pWarps[DWARP_EXIT]._wy += 2;
+		POS32 warpPos = DRLG_PlaceMiniSet(L2USTAIRS); // L2USTAIRS (5, 3)
+		if (warpPos.x < 0) {
+			continue;
+		}
+		pWarps[DWARP_ENTRY]._wx = warpPos.x + 2;
+		pWarps[DWARP_ENTRY]._wy = warpPos.y + 1;
+		warpPos = DRLG_PlaceMiniSet(L2DSTAIRS); // L2DSTAIRS (3, 5)
+		if (warpPos.x < 0) {
+			continue;
+		}
+		pWarps[DWARP_EXIT]._wx = warpPos.x + 2;
+		pWarps[DWARP_EXIT]._wy = warpPos.y + 2;
 		if (currLvl._dLevelIdx == DLV_CATACOMBS1) {
-			doneflag &= DRLG_L2PlaceWarp(L2TWARP, DWARP_TOWN); // L2TWARP (5, 3)
-			pWarps[DWARP_TOWN]._wx += 2;
-			pWarps[DWARP_TOWN]._wy += 1;
+			warpPos = DRLG_PlaceMiniSet(L2TWARP); // L2TWARP (5, 3)
+			if (warpPos.x < 0) {
+				continue;
+			}
+			pWarps[DWARP_TOWN]._wx = warpPos.x + 2;
+			pWarps[DWARP_TOWN]._wy = warpPos.y + 1;
 		}
 
 		if (setpc_type == SPT_BCHAMB) {
@@ -3310,7 +3304,8 @@ static void DRLG_L2(int entry)
 			ViewX += 1;
 			ViewY += 1;
 		}
-	} while (!doneflag);
+		break;
+	}
 
 	DRLG_InitTrans();
 	DRLG_FloodTVal(3);
