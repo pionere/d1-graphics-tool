@@ -3260,12 +3260,16 @@ static void DRLG_L2(int entry)
 		}
 		pWarps[DWARP_ENTRY]._wx = warpPos.x + 2;
 		pWarps[DWARP_ENTRY]._wy = warpPos.y + 1;
+		pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+		pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
 		warpPos = DRLG_PlaceMiniSet(L2DSTAIRS); // L2DSTAIRS (3, 5)
 		if (warpPos.x < 0) {
 			continue;
 		}
 		pWarps[DWARP_EXIT]._wx = warpPos.x + 2;
 		pWarps[DWARP_EXIT]._wy = warpPos.y + 2;
+		pWarps[DWARP_EXIT]._wx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+		pWarps[DWARP_EXIT]._wy = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
 		if (currLvl._dLevelIdx == DLV_CATACOMBS1) {
 			warpPos = DRLG_PlaceMiniSet(L2TWARP); // L2TWARP (5, 3)
 			if (warpPos.x < 0) {
@@ -3273,34 +3277,38 @@ static void DRLG_L2(int entry)
 			}
 			pWarps[DWARP_TOWN]._wx = warpPos.x + 2;
 			pWarps[DWARP_TOWN]._wy = warpPos.y + 1;
+			pWarps[DWARP_TOWN]._wx = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
+			pWarps[DWARP_TOWN]._wy = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
 		}
 
 		if (setpc_type == SPT_BCHAMB) {
 			pWarps[DWARP_SIDE]._wx = setpc_x + 3; // L2USTAIRS (5, 3)
 			pWarps[DWARP_SIDE]._wy = setpc_y + 3;
+			pWarps[DWARP_SIDE]._wx = 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
+			pWarps[DWARP_SIDE]._wy = 2 * pWarps[DWARP_SIDE]._wy + DBORDERY;
 		}
 
 		if (entry == ENTRY_MAIN) {
-			ViewX = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
-			ViewY = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+			ViewX = pWarps[DWARP_ENTRY]._wx; // 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+			ViewY = pWarps[DWARP_ENTRY]._wy; // 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
 			ViewX += 1;
 			ViewY += 1;
 		}
 		if (entry == ENTRY_PREV) {
-			ViewX = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
-			ViewY = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
+			ViewX = pWarps[DWARP_EXIT]._wx; // 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+			ViewY = pWarps[DWARP_EXIT]._wy; // 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
 			ViewX += -1;
 			ViewY += 1;
 		}
 		if (entry == ENTRY_TWARPDN) {
-			ViewX = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
-			ViewY = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
+			ViewX = pWarps[DWARP_TOWN]._wx; // 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
+			ViewY = pWarps[DWARP_TOWN]._wy; // 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
 			ViewX += 1;
 			ViewY += 1;
 		}
 		if (entry == ENTRY_RTNLVL) {
-			ViewX = 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
-			ViewY = 2 * pWarps[DWARP_SIDE]._wy + DBORDERY;
+			ViewX = pWarps[DWARP_SIDE]._wx; // 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
+			ViewY = pWarps[DWARP_SIDE]._wy; // 2 * pWarps[DWARP_SIDE]._wy + DBORDERY;
 			ViewX += 1;
 			ViewY += 1;
 		}
