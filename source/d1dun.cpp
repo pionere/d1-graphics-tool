@@ -1664,14 +1664,14 @@ bool D1Dun::setAssetPath(QString path)
     this->assetPath = path;
     this->clearAssets();
     // (re-)load special cels
-    if (dungeonTbl[this->dungeonType].specPath != nullptr && !path.isEmpty()) {
-        QString specFilePath = path + "/" + dungeonTbl[this->dungeonType].specPath + "s.cel";
+    if (dungeonTbl[this->levelType].specPath != nullptr && !path.isEmpty()) {
+        QString specFilePath = path + "/" + dungeonTbl[this->levelType].specPath + "s.cel";
         if (!QFileInfo::exists(specFilePath)) {
             QFileInfo fileInfo = QFileInfo(specFilePath);
             QString specFilePath2 = path + "/" + fileInfo.fileName();
             if (!QFileInfo::exists(specFilePath2)) {
                 dProgressErr() << tr("Missing special-CEL. (Tried %1 and %2).").arg(QDir::toNativeSeparators(specFilePath)).arg(QDir::toNativeSeparators(specFilePath2));
-                return;
+                return true;
             }
             specFilePath = specFilePath2;
         }

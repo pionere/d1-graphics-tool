@@ -2859,10 +2859,14 @@ void LevelCelView::displayFrame()
             int offX = (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
             cX += offX;
 
-            int dunX = 0;
-            int dunY = 0;
-            int cellX = this->currentDunPosX * cellWidth / 2 - this->currentDunPosY * cellHeight / 2;
-            int cellY = this->currentDunPosX * cellHeight / 2 + this->currentDunPosY * cellHeight / 2;
+            int dunX = this->currentDunPosX;
+            int dunY = this->currentDunPosY;
+            // SHIFT_GRID
+            int cellX = dunX - dunY;
+            int cellY = dunY + dunX;
+            // switch unit
+            cellX *= cellWidth / 2;
+            cellY *= cellHeight / 2;
 
             // switch unit
             /*int dunX = this->currentDunPosX * cellWidth;
