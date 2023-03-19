@@ -114,7 +114,7 @@ bool D1Amp::save(const SaveAsParam &params)
 void D1Amp::clear()
 {
     this->ampFilePath.clear();
-    this->types.clear()
+    this->types.clear();
     this->properties.clear();
     this->modified = true;
 }
