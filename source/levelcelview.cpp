@@ -3565,27 +3565,32 @@ void LevelCelView::on_dungeonTileLineEdit_escPressed()
     this->ui->dungeonTileLineEdit->clearFocus();
 }
 
+void LevelCelView::selectAssetPath(QString path)
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 1, PAF_UPDATE_WINDOW);
+
+    if (this->dun->setAssetPath(path)) {
+        this->updateEntityOptions();
+        // update the view
+        // this->displayFrame();
+    }
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
 void LevelCelView::on_assetLoadPushButton_clicked()
 {
     QString dirPath = dMainWindow().folderDialog(tr("Select Assets Folder"));
 
-    if (dirPath.isEmpty())
-        return;
-
-    if (this->dun->setAssetPath(dirPath)) {
-        this->updateEntityOptions();
-        // update the view
-        this->displayFrame();
+    if (!dirPath.isEmpty()) {
+        this->selectAssetPath(dirPath);
     }
 }
 
 void LevelCelView::on_assetClearPushButton_clicked()
 {
-    if (this->dun->setAssetPath("")) {
-        this->updateEntityOptions();
-        // update the view
-        this->displayFrame();
-    }
+    this->selectAssetPath("");
 }
 
 void LevelCelView::on_dungeonSubtileLineEdit_returnPressed()
