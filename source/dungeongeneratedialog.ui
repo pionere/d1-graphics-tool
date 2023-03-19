@@ -256,40 +256,7 @@
        </widget>
       </item>
       <item row="6" column="1">
-       <widget class="QComboBox" name="entryComboBox">
-        <item>
-         <property name="text">
-          <string>Entrance</string>
-         </property>
-         <property name="data">
-          <enum>ENTRY_MAIN</enum>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Exit</string>
-         </property>
-         <property name="data">
-          <enum>ENTRY_PREV</enum>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Town</string>
-         </property>
-         <property name="data">
-          <enum>ENTRY_TWARPDN</enum>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Return</string>
-         </property>
-         <property name="data">
-          <enum>ENTRY_RTNLVL</enum>
-         </property>
-        </item>
-       </widget>
+       <widget class="QComboBox" name="entryComboBox"/>
       </item>
      </layout>
     </widget>

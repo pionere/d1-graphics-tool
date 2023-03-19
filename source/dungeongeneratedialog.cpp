@@ -11,6 +11,11 @@ DungeonGenerateDialog::DungeonGenerateDialog(QWidget *parent)
     , ui(new Ui::DungeonGenerateDialog())
 {
     this->ui->setupUi(this);
+
+    this->ui->entryComboBox->entryComboBox->addItem(tr("Entrance"), QVariant(ENTRY_MAIN));
+    this->ui->entryComboBox->entryComboBox->addItem(tr("Exit"), QVariant(ENTRY_PREV));
+    this->ui->entryComboBox->entryComboBox->addItem(tr("Town"), QVariant(ENTRY_TWARPDN));
+    this->ui->entryComboBox->entryComboBox->addItem(tr("Return"), QVariant(ENTRY_RTNLVL));
 }
 
 DungeonGenerateDialog::~DungeonGenerateDialog()
