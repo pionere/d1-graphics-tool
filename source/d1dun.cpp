@@ -741,6 +741,8 @@ void D1Dun::initialize(D1Pal *p, D1Tmi *m)
             this->specGfx = specGfx;
             dProgress() << tr("Loaded special CEL file %1.").arg(QDir::toNativeSeparators(specFilePath));
         }
+    } else if (dungeonTbl[dungeonType].specPath != nullptr) {
+        dProgressErr() << tr("Missing special-CEL file: %1.").arg(QDir::toNativeSeparators(specFilePath));
     }
 }
 
