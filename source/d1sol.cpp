@@ -82,6 +82,13 @@ bool D1Sol::save(const SaveAsParam &params)
     return true;
 }
 
+void D1Sol::clear()
+{
+    this->solFilePath.clear();
+    this->subProperties.clear();
+    this->modified = true;
+}
+
 QString D1Sol::getFilePath() const
 {
     return this->solFilePath;

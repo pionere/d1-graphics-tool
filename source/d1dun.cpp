@@ -2598,7 +2598,7 @@ void D1Dun::loadSpecCels()
             QString specFilePath2 = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName() + "s.cel";
             if (!QFileInfo::exists(specFilePath2)) {
                 dProgressErr() << tr("Missing special-CEL. (Tried %1 and %2).").arg(QDir::toNativeSeparators(specFilePath)).arg(QDir::toNativeSeparators(specFilePath2));
-                return true;
+                return;
             }
             specFilePath = specFilePath2;
         }

@@ -140,11 +140,11 @@ void LevelCelView::setPal(D1Pal *p)
 void LevelCelView::updateTilesetIcon()
 {
     // update icon of tileset
-    QString tilesetPath = this->til->getFilePath();
-    if (!tilesetPath.isEmpty()) {
+    QString tilPath = this->til->getFilePath();
+    if (!tilPath.isEmpty()) {
         QFileInfo fileInfo = QFileInfo(tilPath);
-        tilesetPath = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName();
-        this->ui->tilesetLoadPushButton->setToolTip(tilesetPath);
+        tilPath = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName();
+        this->ui->tilesetLoadPushButton->setToolTip(tilPath);
         QIcon icon = QApplication::style()->standardIcon(QStyle::SP_DriveCDIcon);
         this->ui->tilesetLoadPushButton->setIcon(icon);
         this->ui->tilesetLoadPushButton->setText("");

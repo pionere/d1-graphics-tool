@@ -106,6 +106,13 @@ bool D1Tmi::save(const SaveAsParam &params)
     return true;
 }
 
+void D1Tmi::clear()
+{
+    this->tmiFilePath.clear();
+    this->subProperties.clear();
+    this->modified = true;
+}
+
 QString D1Tmi::getFilePath() const
 {
     return this->tmiFilePath;

@@ -114,6 +114,8 @@ public:
     D1Gfx() = default;
     ~D1Gfx();
 
+    void clear();
+
     bool isFrameSizeConstant() const;
     QImage getFrameImage(int frameIndex) const;
     std::vector<std::vector<D1GfxPixel>> getFramePixelImage(int frameIndex) const;

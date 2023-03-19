@@ -208,6 +208,16 @@ bool D1Min::save(const SaveAsParam &params)
     return true;
 }
 
+void D1Min::clear()
+{
+    this->minFilePath.clear();
+    this->frameReferences.clear();
+    // this->subtileWidth ?
+    // this->subtileHeight ?
+    // this->gfx = nullptr;
+    this->modified = true;
+}
+
 QImage D1Min::getSubtileImage(int subtileIndex) const
 {
     if (subtileIndex < 0 || (unsigned)subtileIndex >= this->frameReferences.size()) {

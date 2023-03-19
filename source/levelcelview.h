@@ -106,6 +106,7 @@ public:
 
     void update();
     void updateLabel();
+    void updateTilesetIcon();
     void updateEntityOptions();
     void displayFrame();
     void toggleBottomPanel();

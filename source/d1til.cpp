@@ -112,6 +112,14 @@ bool D1Til::save(const SaveAsParam &params)
     return true;
 }
 
+void D1Til::clear()
+{
+    this->tilFilePath.clear();
+    this->subtileIndices.clear();
+    this->min = nullptr;
+    this->modified = true;
+}
+
 QImage D1Til::getTileImage(int tileIndex) const
 {
     if (tileIndex < 0 || (unsigned)tileIndex >= this->subtileIndices.size()) {

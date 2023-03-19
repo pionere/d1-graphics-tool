@@ -21,6 +21,7 @@ public:
 
     bool load(const QString &minFilePath, D1Gfx *gfx, D1Sol *sol, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const OpenAsParam &params);
     bool save(const SaveAsParam &params);
+    void clear();
 
     QImage getSubtileImage(int subtileIndex) const;
     std::vector<std::vector<D1GfxPixel>> getSubtilePixelImage(int subtileIndex) const;

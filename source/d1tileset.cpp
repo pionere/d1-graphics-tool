@@ -29,11 +29,11 @@ bool D1Tileset::load(const OpenAsParam &params)
     QString prevFilePath = this->gfx->getFilePath();
 
     // reset previous content
-    *this->min = D1Min();
-    *this->til = D1Til();
-    *this->sol = D1Sol();
-    *this->amp = D1Amp();
-    *this->tmi = D1Tmi();
+    this->min->clear();
+    this->til->clear();
+    this->sol->clear();
+    this->amp->clear();
+    this->tmi->clear();
 
     // TODO: use in MainWindow::openFile?
     QString gfxFilePath = params.celFilePath;

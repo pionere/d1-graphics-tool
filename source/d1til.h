@@ -19,6 +19,7 @@ public:
 
     bool load(const QString &tilFilePath, D1Min *min);
     bool save(const SaveAsParam &params);
+    void clear();
 
     QImage getTileImage(int tileIndex) const;
     QImage getFlatTileImage(int tileIndex) const;
