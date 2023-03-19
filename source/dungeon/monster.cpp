@@ -535,13 +535,6 @@ static void PlaceUniqueMonst(int uniqindex)
 		return;
 	}
 
-	for (uniqtype = 0; uniqtype < nummtypes; uniqtype++) {
-		if (mapMonTypes[uniqtype].cmType == uniqMonData[uniqindex].mtype) {
-			break;
-		}
-	}
-
-	xp = -1;
 	switch (uniqindex) {
 	case UMT_SKELKING:
 		xp = DBORDERX + 19;
@@ -559,7 +552,7 @@ static void PlaceUniqueMonst(int uniqindex)
 		yp = 2 * setpc_y + DBORDERY + 12;
 		break;
 	case UMT_LAZARUS:
-		if (IsMultiGame) {
+		if (!currLvl._dSetLvl) {
 			xp = 2 * setpc_x + DBORDERX + 3;
 			yp = 2 * setpc_y + DBORDERY + 6;
 		} else {
@@ -568,7 +561,7 @@ static void PlaceUniqueMonst(int uniqindex)
 		}
 		break;
 	case UMT_RED_VEX:
-		if (IsMultiGame) {
+		if (!currLvl._dSetLvl) {
 			xp = 2 * setpc_x + DBORDERX + 5;
 			yp = 2 * setpc_y + DBORDERY + 3;
 		} else {
@@ -577,7 +570,7 @@ static void PlaceUniqueMonst(int uniqindex)
 		}
 		break;
 	case UMT_BLACKJADE:
-		if (IsMultiGame) {
+		if (!currLvl._dSetLvl) {
 			xp = 2 * setpc_x + DBORDERX + 5;
 			yp = 2 * setpc_y + DBORDERY + 9;
 		} else {
@@ -600,9 +593,7 @@ static void PlaceUniqueMonst(int uniqindex)
 		yp = 2 * setpc_y + DBORDERY + 6;
 		break;
 #endif
-	}
-
-	if (xp == -1) {
+	default:
 		count = 0;
 		while (TRUE) {
 			xp = random_(91, DSIZEX) + DBORDERX;
@@ -629,6 +620,11 @@ static void PlaceUniqueMonst(int uniqindex)
 		}
 	}
 	// assert(nummonsters < MAXMONSTERS);
+	for (uniqtype = 0; uniqtype < nummtypes; uniqtype++) {
+		if (mapMonTypes[uniqtype].cmType == uniqMonData[uniqindex].mtype) {
+			break;
+		}
+	}
 	mnum = PlaceMonster(uniqtype, xp, yp);
 	mon = &monsters[mnum];
 	mon->_mNameColor = COL_GOLD;

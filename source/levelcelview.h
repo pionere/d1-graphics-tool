@@ -110,8 +110,7 @@ public:
     void displayFrame();
     void toggleBottomPanel();
 
-    void setPositionX(int posx);
-    void setPositionY(int posy);
+    void scrollTo(int posx, int posy);
 
 private:
     void collectFrameUsers(int frameIndex, std::vector<int> &users) const;
@@ -147,6 +146,9 @@ private:
     void setFrameIndex(int frameIndex);
     void setSubtileIndex(int subtileIndex);
     void setTileIndex(int tileIndex);
+
+    void setPositionX(int posx);
+    void setPositionY(int posy);
 
 signals:
     void frameRefreshed();
@@ -274,6 +276,7 @@ private:
     D1Tmi *tmi;
     D1Dun *dun;
     bool dunView = false;
+    bool isScrolling = false;
     int currentFrameIndex = 0;
     int currentSubtileIndex = 0;
     int currentTileIndex = 0;

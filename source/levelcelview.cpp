@@ -481,6 +481,13 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
     dMainWindow().frameClicked(frame, p, first);
 }
 
+void LevelCelView::scrollTo(int posx, int posy)
+{
+    this->setPositionX();
+    this->setPositionY();
+    this->isScrolling = true;
+}
+
 void LevelCelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)
 {
     if (mode == IMAGE_FILE_MODE::FRAME || mode == IMAGE_FILE_MODE::AUTO) {
@@ -2837,7 +2844,30 @@ void LevelCelView::displayFrame()
 
         this->celScene.addPixmap(QPixmap::fromImage(dunFrame))
             ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+        // scroll to the current position
+        if (this->isScrolling) {
+            this->isScrolling = false;
+            unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+            unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
+            int cellWidth = subtileWidth;
+            int cellHeight = subtileWidth / 2;
+            // move to 0;0
+            int cX = this->celScene.sceneRect().width() / 2;
+            int cY = CEL_SCENE_MARGIN + subtileHeight - cellHeight / 2;
+            int offX = (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
+            cX += offX;
+
+            // switch unit
+            int dunX = this->currentDunPosX * cellWidth;
+            int dunY = this->currentDunPosY * cellHeight;
+            // SHIFT_GRID
+            int cellX = dunX - dunY;
+            int cellY = dunY + dunX;
+            cX += cellX;
+            cY += cellY;
+            this->ui->celGraphicsView->centerOn(cX, cY);
+        }
         // Notify PalView that the frame changed (used to refresh palette widget)
         emit frameRefreshed();
         return;
