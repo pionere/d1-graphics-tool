@@ -724,11 +724,11 @@ void D1Dun::initialize(D1Pal *p, D1Tmi *m)
     this->setLevelType(dungeonType);
     // find special cells
     if (dungeonTbl[dungeonType].specPath != nullptr) {
-        QString specFilePath = this->assetPath + "/" + dungeonTbl[dungeonType].specPath + "s.cel";;
+        QString specFilePath = this->assetPath + "/" + dungeonTbl[dungeonType].specPath + "s.cel";
         if (!QFileInfo::exists(specFilePath)) {
             QString specFilePath2 = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName() + "s.cel";
             if (!QFileInfo::exists(specFilePath2)) {
-                dProgressErr() << tr("Missing special-CEL. (Tried %1 and %2).").arg(QDir::toNativeSeparators(specFilePath).arg(QDir::toNativeSeparators(specFilePath2));
+                dProgressErr() << tr("Missing special-CEL. (Tried %1 and %2).").arg(QDir::toNativeSeparators(specFilePath)).arg(QDir::toNativeSeparators(specFilePath2));
                 return;
             }
             specFilePath = specFilePath2;
