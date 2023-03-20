@@ -1055,7 +1055,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 QImage objectImage = objEntry->objGfx->getFrameImage(frameNum - 1);
                 dungeon.drawImage(drawCursorX + ((int)backWidth - objectImage.width()) / 2, drawCursorY - objectImage.height(), objectImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             } else {
-                QString text = tr("Object%1").arg(objectIndex);
+                QString text = this->getObjectName(objectIndex);
                 QFontMetrics fm(dungeon.font());
                 unsigned textWidth = fm.horizontalAdvance(text);
                 dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY + (middleText ? 1 : -1) * fm.height() / 2, text);
@@ -1083,7 +1083,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 QImage itemImage = itemEntry->itemGfx->getFrameImage(frameNum - 1);
                 dungeon.drawImage(drawCursorX + ((int)backWidth - itemImage.width()) / 2, drawCursorY - itemImage.height(), itemImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             } else {
-                QString text = tr("Item%1").arg(itemIndex);
+                QString text = this->getItemName(itemIndex);
                 // dungeon.setFont(font);
                 // dungeon.setPen(font);
                 QFontMetrics fm(dungeon.font());
@@ -1114,7 +1114,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 QImage monImage = monEntry->monGfx->getFrameImage(frameNum - 1);
                 dungeon.drawImage(drawCursorX + ((int)backWidth - monImage.width()) / 2, drawCursorY - monImage.height(), monImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             } else {
-                QString text = tr("Monster%1").arg(monsterIndex);
+                QString text = this->getMonsterName(monsterIndex);
                 QFontMetrics fm(dungeon.font());
                 unsigned textWidth = fm.horizontalAdvance(text);
                 dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY - (3 * fm.height() / 2), text);
@@ -1636,6 +1636,50 @@ const D1Gfx *D1Dun::getSpecGfx() const
     return this->specGfx;
 }
 
+QString D1Dun::getItemName(int itemIndex) const
+{
+    // check if it is a custom item
+    for (const CustomItemStruct &customItem : customItemTypes) {
+        if (customItem.type == itemIndex) {
+            return customItem.name;
+        }
+    }
+    // out of options -> generic name
+    return tr("Item%1").arg(itemIndex);
+}
+
+QString D1Dun::getMonsterName(int monsterIndex) const
+{
+    // check if it is built-in monster
+    if ((unsigned)monsterIndex < (unsigned)lengthof(MonstConvTbl) && MonstConvTbl[monsterIndex].type != 0) {
+        return MonstConvTbl[monsterIndex].name;
+    }
+    // check if it is a custom monster
+    for (const CustomMonsterStruct &customMonster : customMonsterTypes) {
+        if (customMonster.type == monsterIndex) {
+            return customMonster.name;
+        }
+    }
+    // out of options -> generic name
+    return tr("Monster%1").arg(monsterIndex);
+}
+
+QString D1Dun::getObjectName(int objectIndex) const
+{
+    // check if it is built-in object
+    if ((unsigned)objectIndex < (unsigned)lengthof(ObjConvTbl) && ObjConvTbl[objectIndex].type != 0) {
+        return ObjConvTbl[objectIndex].name;
+    }
+    // check if it is a custom object
+    for (const CustomObjectStruct &customObject : customObjectTypes) {
+        if (customObject.type == objectIndex) {
+            return customObject.name;
+        }
+    }
+    // out of options -> generic name
+    return tr("Object%1").arg(objectIndex);
+}
+
 void D1Dun::loadObjectGfx(const QString &filePath, int width, int minFrameNum, ObjectCacheEntry &result)
 {
     // check for existing entry
@@ -1978,16 +2022,17 @@ void D1Dun::checkItems(D1Sol *sol) const
                 continue;
             }
             int subtileRef = this->subtiles[y][x];
+            QString itemName = this->getItemName(itemIndex);
             if (subtileRef == UNDEF_SUBTILE) {
-                dProgressWarn() << tr("Item%1 at %2:%3 is on an undefined subtile.").arg(itemIndex).arg(x).arg(y);
+                dProgressWarn() << tr("'%1' at %2:%3 is on an undefined subtile.").arg(itemName).arg(x).arg(y);
                 result = true;
             } else if (subtileRef == 0) {
-                dProgressWarn() << tr("Item%1 at %2:%3 is on an empty subtile.").arg(itemIndex).arg(x).arg(y);
+                dProgressWarn() << tr("'%1' at %2:%3 is on an empty subtile.").arg(itemName).arg(x).arg(y);
                 result = true;
             } else {
                 quint8 solFlags = sol->getSubtileProperties(subtileRef - 1);
                 if (solFlags & ((1 << 0) | (1 << 2))) {
-                    dProgressErr() << tr("Item%1 at %2:%3 is on a subtile which is not accessible (solid or missile blocker).").arg(itemIndex).arg(x).arg(y);
+                    dProgressErr() << tr("'%1' at %2:%3 is on a subtile which is not accessible (solid or missile blocker).").arg(itemName).arg(x).arg(y);
                     result = true;
                 }
             }
@@ -2017,16 +2062,17 @@ void D1Dun::checkMonsters(D1Sol *sol) const
                 continue;
             }
             int subtileRef = this->subtiles[y][x];
+            QString monsterName = this->getMonsterName(monsterIndex);
             if (subtileRef == UNDEF_SUBTILE) {
-                dProgressWarn() << tr("'%1' monster at %2:%3 is on an undefined subtile.").arg(MonstConvTbl[monsterIndex].name).arg(x).arg(y);
+                dProgressWarn() << tr("'%1' at %2:%3 is on an undefined subtile.").arg(monsterName).arg(x).arg(y);
                 result = true;
             } else if (subtileRef == 0) {
-                dProgressWarn() << tr("'%1' monster at %2:%3 is on an empty subtile.").arg(MonstConvTbl[monsterIndex].name).arg(x).arg(y);
+                dProgressWarn() << tr("'%1' at %2:%3 is on an empty subtile.").arg(monsterName).arg(x).arg(y);
                 result = true;
             } else {
                 quint8 solFlags = sol->getSubtileProperties(subtileRef - 1);
                 if (solFlags & ((1 << 0) | (1 << 2))) {
-                    dProgressErr() << tr("'%1' monster at %2:%3 is on a subtile which is not accessible (solid or missile blocker).").arg(MonstConvTbl[monsterIndex].name).arg(x).arg(y);
+                    dProgressErr() << tr("'%1' at %2:%3 is on a subtile which is not accessible (solid or missile blocker).").arg(monsterName).arg(x).arg(y);
                     result = true;
                 }
             }
@@ -2056,19 +2102,20 @@ void D1Dun::checkObjects() const
                 continue;
             }
             int subtileRef = this->subtiles[y][x];
+            QString objectName = this->getObjectName(objectIndex);
             if (subtileRef == UNDEF_SUBTILE) {
-                dProgressWarn() << tr("'%1' object at %2:%3 is on an undefined subtile.").arg(ObjConvTbl[objectIndex].name).arg(x).arg(y);
+                dProgressWarn() << tr("'%1' at %2:%3 is on an undefined subtile.").arg(objectName).arg(x).arg(y);
                 result = true;
             } else if (subtileRef == 0) {
-                dProgressWarn() << tr("'%1' object at %2:%3 is on an empty subtile.").arg(ObjConvTbl[objectIndex].name).arg(x).arg(y);
+                dProgressWarn() << tr("'%1' at %2:%3 is on an empty subtile.").arg(objectName).arg(x).arg(y);
                 result = true;
             }
             if (this->monsters[y][x] != 0) {
-                dProgressErr() << tr("'%1' object at %2:%3 is sharing a subtile with a monster.").arg(ObjConvTbl[objectIndex].name).arg(x).arg(y);
+                dProgressErr() << tr("'%1' at %2:%3 is sharing a subtile with a monster.").arg(objectName).arg(x).arg(y);
                 result = true;
             }
             if (this->items[y][x] != 0) {
-                dProgressErr() << tr("'%1' object at %2:%3 is sharing a subtile with an item.").arg(ObjConvTbl[objectIndex].name).arg(x).arg(y);
+                dProgressErr() << tr("'%1' at %2:%3 is sharing a subtile with an item.").arg(objectName).arg(x).arg(y);
                 result = true;
             }
         }
@@ -2149,7 +2196,9 @@ void D1Dun::loadItems(D1Dun *srcDun)
             int currItemIndex = this->items[y][x];
             if (newItemIndex != 0 && currItemIndex != newItemIndex) {
                 if (currItemIndex != 0) {
-                    dProgressWarn() << tr("Item%1 at %2:%3 was replaced by %4.").arg(currItemIndex).arg(x).arg(y).arg(newItemIndex);
+                    QString currItemName = this->getItemName(currItemIndex);
+                    QString newItemName = this->getItemName(newItemIndex);
+                    dProgressWarn() << tr("'%1'(%2) item at %3:%4 was replaced by '%5'(%6).").arg(currItemName).arg(currItemIndex).arg(x).arg(y).arg(newItemName).arg(newItemIndex);
                 }
                 this->items[y][x] = newItemIndex;
                 this->modified = true;
@@ -2166,7 +2215,9 @@ void D1Dun::loadMonsters(D1Dun *srcDun)
             int currMonsterIndex = this->monsters[y][x];
             if (newMonsterIndex != 0 && currMonsterIndex != newMonsterIndex) {
                 if (currMonsterIndex != 0) {
-                    dProgressWarn() << tr("'%1' monster at %2:%3 was replaced by '%4'.").arg(MonstConvTbl[currMonsterIndex].name).arg(x).arg(y).arg(MonstConvTbl[newMonsterIndex].name);
+                    QString currMonsterName = this->getMonsterName(currMonsterIndex);
+                    QString newMonsterName = this->getMonsterName(newMonsterIndex);
+                    dProgressWarn() << tr("'%1'(%2) monster at %3:%4 was replaced by '%5'(%6).").arg(currMonsterName).arg(currMonsterIndex).arg(x).arg(y).arg(newMonsterName).arg(newMonsterIndex);
                 }
                 this->monsters[y][x] = newMonsterIndex;
                 this->modified = true;
@@ -2183,7 +2234,9 @@ void D1Dun::loadObjects(D1Dun *srcDun)
             int currObjectIndex = this->objects[y][x];
             if (newObjectIndex != 0 && currObjectIndex != newObjectIndex) {
                 if (currObjectIndex != 0) {
-                    dProgressWarn() << tr("'%1' object at %2:%3 was replaced by '%4'.").arg(ObjConvTbl[currObjectIndex].name).arg(x).arg(y).arg(ObjConvTbl[newObjectIndex].name);
+                    QString currObjectName = this->getObjectName(currObjectIndex);
+                    QString newObjectName = this->getObjectName(newObjectIndex);
+                    dProgressWarn() << tr("'%1'(%2) object at %3:%4 was replaced by '%5'(%6).").arg(currObjectName).arg(currObjectIndex).arg(x).arg(y).arg(newObjectName).arg(newObjectIndex);
                 }
                 this->objects[y][x] = newObjectIndex;
                 this->modified = true;

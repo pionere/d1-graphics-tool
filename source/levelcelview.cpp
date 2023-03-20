@@ -2611,7 +2611,8 @@ void LevelCelView::reportDungeonUsage() const
         int totalCount = 0;
         for (std::pair<int, int> &item : items) {
             totalCount += item.second;
-            itemUses += tr("%1 Item%2").arg(item.second).arg(item.first) + ", ";
+            QString itemName = this->dun->getItemName(item.first);
+            itemUses += tr("%1 %2").arg(item.second).arg(itemName) + ", ";
         }
         itemUses.chop(2);
         dProgress() << tr("There are %1 in the dungeon.", "", totalCount).arg(itemUses);
@@ -2631,12 +2632,7 @@ void LevelCelView::reportDungeonUsage() const
         int totalCount = 0;
         for (std::pair<int, int> &monster : monsters) {
             totalCount += monster.second;
-            QString monsterName;
-            if (monster.first < lengthof(MonstConvTbl) && MonstConvTbl[monster.first].type != 0) {
-                monsterName = MonstConvTbl[monster.first].name;
-            } else {
-                monsterName = tr("Monster%1").arg(monster.first);
-            }
+            QString monsterName = this->dun->getMonsterName(monster.first);
             monsterUses += tr("%1 %2").arg(monster.second).arg(monsterName) + ", ";
         }
         monsterUses.chop(2);
@@ -2657,12 +2653,7 @@ void LevelCelView::reportDungeonUsage() const
         int totalCount = 0;
         for (std::pair<int, int> &object : objects) {
             totalCount += object.second;
-            QString objectName;
-            if (object.first < lengthof(ObjConvTbl) && ObjConvTbl[object.first].type != 0) {
-                objectName = ObjConvTbl[object.first].name;
-            } else {
-                objectName = tr("Object%1").arg(object.first);
-            }
+            QString objectName = this->dun->getObjectName(object.first);
             objectUses += tr("%1 %2").arg(object.second).arg(objectName) + ", ";
         }
         objectUses.chop(2);
