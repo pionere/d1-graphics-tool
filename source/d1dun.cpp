@@ -1681,7 +1681,7 @@ const D1Gfx *D1Dun::getSpecGfx() const
 QString D1Dun::getItemName(int itemIndex) const
 {
     // check if it is a custom item
-    for (const CustomObjectStruct &customItem : customItemTypes) {
+    for (const CustomItemStruct &customItem : customItemTypes) {
         if (customItem.type == itemIndex) {
             return customItem.name;
         }
@@ -1697,7 +1697,7 @@ QString D1Dun::getMonsterName(int monsterIndex) const
         return DunMonstConvTbl[monsterIndex].name;
     }
     // check if it is a custom monster
-    for (const CustomObjectStruct &customMonster : customMonsterTypes) {
+    for (const CustomMonsterStruct &customMonster : customMonsterTypes) {
         if (customMonster.type == monsterIndex) {
             return customMonster.name;
         }
