@@ -189,6 +189,7 @@ public:
     bool setDefaultTile(int defaultTile);
     bool setAssetPath(QString path);
     QString getAssetPath() const;
+    const D1Gfx *getSpecGfx() const;
 
     void collectItems(std::vector<std::pair<int, int>> &items) const;
     void collectMonsters(std::vector<std::pair<int, int>> &monsters) const;
