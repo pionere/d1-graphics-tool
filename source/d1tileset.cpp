@@ -26,7 +26,7 @@ D1Tileset::~D1Tileset()
 
 bool D1Tileset::load(const OpenAsParam &params)
 {
-    QString prevFilePath = this->gfx->getFilePath();
+    // QString prevFilePath = this->gfx->getFilePath();
 
     // TODO: use in MainWindow::openFile?
     QString gfxFilePath = params.celFilePath;
@@ -72,7 +72,7 @@ bool D1Tileset::load(const OpenAsParam &params)
     } else if (!D1CelTileset::load(*this->gfx, celFrameTypes, gfxFilePath, params)) {
         dProgressErr() << QApplication::tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
     } else {
-        return !gfxFilePath.isEmpty() || !prevFilePath.isEmpty();
+        return true; // !gfxFilePath.isEmpty() || !prevFilePath.isEmpty();
     }
     // clear possible inconsistent data
     // this->gfx->clear();
@@ -81,7 +81,7 @@ bool D1Tileset::load(const OpenAsParam &params)
     this->sol->clear();
     this->amp->clear();
     this->tmi->clear();
-    return false;
+    return true;
 }
 
 void D1Tileset::save(const SaveAsParam &params)

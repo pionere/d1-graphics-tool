@@ -148,6 +148,9 @@ public:
     bool setAssetPath(QString path);
     QString getAssetPath() const;
     const D1Gfx *getSpecGfx() const;
+    QString getItemName(int itemIndex) const;
+    QString getMonsterName(int monsterIndex) const;
+    QString getObjectName(int objectIndex) const;
 
     void collectItems(std::vector<std::pair<int, int>> &items) const;
     void collectMonsters(std::vector<std::pair<int, int>> &monsters) const;
