@@ -34,7 +34,7 @@ static void LogErrorF(const char* type, const char* msg, ...)
 
 	va_end(va);
 
-	qProgress() << QString(tmp);
+	dProgress() << QString(tmp);
 }
 
 /**
