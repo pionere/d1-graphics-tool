@@ -210,7 +210,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
             }
             int item = dItem[x][y];
             if (item != 0) {
-                item = items[item - 1]._itype + 1;
+                item = items[item - 1]._iIdx + 1;
                 itemTypes.insert(item - 1);
             }
             dun->setItemAt(x, y, item);

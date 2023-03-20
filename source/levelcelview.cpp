@@ -203,6 +203,7 @@ void LevelCelView::updateEntityOptions()
         this->ui->assetLoadPushButton->setIcon(icon);
         this->ui->assetLoadPushButton->setText("...");
     }
+    this->ui->dungeonTabs->adjustSize();
 }
 
 // Displaying CEL file path information
