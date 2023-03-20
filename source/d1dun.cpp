@@ -2144,7 +2144,7 @@ void D1Dun::checkObjects() const
                 continue;
             }
             int subtileRef = this->subtiles[y][x];
-            QString objectName = this->getMonsterName(objectIndex);
+            QString objectName = this->getObjectName(objectIndex);
             if (subtileRef == UNDEF_SUBTILE) {
                 dProgressWarn() << tr("'%1' at %2:%3 is on an undefined subtile.").arg(objectName).arg(x).arg(y);
                 result = true;

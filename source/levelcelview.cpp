@@ -171,6 +171,7 @@ void LevelCelView::updateEntityOptions()
     for (const CustomObjectStruct &obj : customObjectTypes) {
         this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
     }
+    this->ui->dungeonObjectComboBox->adjustSize();
     // - monsters
     this->ui->dungeonMonsterComboBox->clear();
     this->ui->dungeonMonsterComboBox->addItem("", 0);
@@ -183,6 +184,7 @@ void LevelCelView::updateEntityOptions()
     for (const CustomMonsterStruct &mon : customMonsterTypes) {
         this->ui->dungeonMonsterComboBox->addItem(mon.name, mon.type);
     }
+    this->ui->dungeonMonsterComboBox->adjustSize();
     // - items
     this->ui->dungeonItemComboBox->clear();
     this->ui->dungeonItemComboBox->addItem("", 0);
@@ -190,6 +192,7 @@ void LevelCelView::updateEntityOptions()
     for (const CustomItemStruct &item : customItemTypes) {
         this->ui->dungeonItemComboBox->addItem(item.name, item.type);
     }
+    this->ui->dungeonItemComboBox->adjustSize();
     // update icon of assets
     QString assetPath = this->dun->getAssetPath();
     if (!assetPath.isEmpty()) {
@@ -203,7 +206,6 @@ void LevelCelView::updateEntityOptions()
         this->ui->assetLoadPushButton->setIcon(icon);
         this->ui->assetLoadPushButton->setText("...");
     }
-    this->ui->dungeonTabs->adjustSize();
 }
 
 // Displaying CEL file path information
