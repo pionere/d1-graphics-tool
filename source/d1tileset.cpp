@@ -2,6 +2,7 @@
 
 #include <QApplication>
 
+#include "d1celtileset.h"
 #include "progressdialog.h"
 
 D1Tileset::D1Tileset(D1Gfx *g)
@@ -21,6 +22,66 @@ D1Tileset::~D1Tileset()
     delete sol;
     delete amp;
     delete tmi;
+}
+
+bool D1Tileset::load(const OpenAsParam &params)
+{
+    // QString prevFilePath = this->gfx->getFilePath();
+
+    // TODO: use in MainWindow::openFile?
+    QString gfxFilePath = params.celFilePath;
+    QString tilFilePath = params.tilFilePath;
+    QString minFilePath = params.minFilePath;
+    QString solFilePath = params.solFilePath;
+    QString ampFilePath = params.ampFilePath;
+    QString tmiFilePath = params.tmiFilePath;
+
+    if (!gfxFilePath.isEmpty()) {
+        QFileInfo celFileInfo = QFileInfo(gfxFilePath);
+
+        QString basePath = celFileInfo.absolutePath() + "/" + celFileInfo.completeBaseName();
+
+        if (tilFilePath.isEmpty()) {
+            tilFilePath = basePath + ".til";
+        }
+        if (minFilePath.isEmpty()) {
+            minFilePath = basePath + ".min";
+        }
+        if (solFilePath.isEmpty()) {
+            solFilePath = basePath + ".sol";
+        }
+        if (ampFilePath.isEmpty()) {
+            ampFilePath = basePath + ".amp";
+        }
+        if (tmiFilePath.isEmpty()) {
+            tmiFilePath = basePath + ".tmi";
+        }
+    }
+
+    std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
+    if (!this->sol->load(solFilePath)) {
+        dProgressErr() << QApplication::tr("Failed loading SOL file: %1.").arg(QDir::toNativeSeparators(solFilePath));
+    } else if (!this->min->load(minFilePath, this->gfx, this->sol, celFrameTypes, params)) {
+        dProgressErr() << QApplication::tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath));
+    } else if (!this->til->load(tilFilePath, this->min)) {
+        dProgressErr() << QApplication::tr("Failed loading TIL file: %1.").arg(QDir::toNativeSeparators(tilFilePath));
+    } else if (!this->amp->load(ampFilePath, this->til->getTileCount(), params)) {
+        dProgressErr() << QApplication::tr("Failed loading AMP file: %1.").arg(QDir::toNativeSeparators(ampFilePath));
+    } else if (!this->tmi->load(tmiFilePath, this->sol, params)) {
+        dProgressErr() << QApplication::tr("Failed loading TMI file: %1.").arg(QDir::toNativeSeparators(tmiFilePath));
+    } else if (!D1CelTileset::load(*this->gfx, celFrameTypes, gfxFilePath, params)) {
+        dProgressErr() << QApplication::tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
+    } else {
+        return true; // !gfxFilePath.isEmpty() || !prevFilePath.isEmpty();
+    }
+    // clear possible inconsistent data
+    // this->gfx->clear();
+    this->min->clear();
+    this->til->clear();
+    this->sol->clear();
+    this->amp->clear();
+    this->tmi->clear();
+    return true;
 }
 
 void D1Tileset::save(const SaveAsParam &params)

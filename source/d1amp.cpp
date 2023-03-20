@@ -25,6 +25,9 @@ bool D1Amp::load(const QString &filePath, int tileCount, const OpenAsParam &para
         }
     }
 
+    this->clear();
+    this->ampFilePath = filePath;
+
     bool changed = !file.isOpen();
 
     const QByteArray fileData = file.readAll();
@@ -49,8 +52,6 @@ bool D1Amp::load(const QString &filePath, int tileCount, const OpenAsParam &para
     }
 
     // prepare empty lists with zeros
-    this->properties.clear();
-    this->types.clear();
     for (int i = 0; i < tileCount; i++) {
         this->types.append(0);
         this->properties.append(0);
@@ -68,7 +69,6 @@ bool D1Amp::load(const QString &filePath, int tileCount, const OpenAsParam &para
         this->properties[i] = readByte;
     }
 
-    this->ampFilePath = filePath;
     this->modified = changed;
     return true;
 }
@@ -109,6 +109,13 @@ bool D1Amp::save(const SaveAsParam &params)
     this->modified = false;
 
     return true;
+}
+
+void D1Amp::clear()
+{
+    this->types.clear();
+    this->properties.clear();
+    this->modified = true;
 }
 
 QString D1Amp::getFilePath() const

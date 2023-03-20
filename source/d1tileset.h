@@ -8,6 +8,7 @@
 #include "d1sol.h"
 #include "d1til.h"
 #include "d1tmi.h"
+#include "openasdialog.h"
 #include "saveasdialog.h"
 
 typedef enum dungeon_type {
@@ -27,6 +28,7 @@ public:
     D1Tileset(D1Gfx *gfx);
     ~D1Tileset();
 
+    bool load(const OpenAsParam &params);
     void save(const SaveAsParam &params);
 
     void createSubtile();

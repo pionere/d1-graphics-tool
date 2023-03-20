@@ -405,6 +405,10 @@ const MonFileData monfiledata[NUM_MOFILE_TYPES] = {
 
 D1Dun::~D1Dun()
 {
+    // TODO: MemFree?
+    delete this->specGfx;
+    this->specGfx = nullptr;
+
     this->clearAssets();
 }
 
@@ -436,7 +440,7 @@ void D1Dun::initVectors(int dunWidth, int dunHeight)
     }
 }
 
-bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
+bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
 {
     // prepare file data source
     QFile file;
@@ -450,9 +454,6 @@ bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
             return false; // report read-error only if the file was explicitly requested
         }
     }
-
-    this->til = t;
-    this->min = t->getMin();
 
     const QByteArray fileData = file.readAll();
 
@@ -560,13 +561,6 @@ bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
                 dProgressWarn() << tr("Unrecognizable data is ignored at the end of the DUN file.");
                 changed = true;
             }
-
-            // prepare subtiles
-            for (int y = 0; y < dunHeight; y++) {
-                for (int x = 0; x < dunWidth; x++) {
-                    this->updateSubtiles(x, y, this->tiles[y][x]);
-                }
-            }
         } else {
             // rdun
             dunWidth = dunHeight = sqrt(fileSize / (TILE_WIDTH * TILE_HEIGHT * 4));
@@ -590,13 +584,6 @@ bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
                     this->subtiles[y][x] = readDword;
                 }
             }
-
-            // prepare tiles
-            for (int y = 0; y < dunHeight; y++) {
-                for (int x = 0; x < dunWidth; x++) {
-                    this->tiles[y][x] = UNDEF_TILE;
-                }
-            }
         }
     }
 
@@ -611,10 +598,29 @@ bool D1Dun::load(const QString &filePath, D1Til *t, const OpenAsParam &params)
     return true;
 }
 
-void D1Dun::initialize(D1Pal *p, D1Tmi *m)
+void D1Dun::initialize(D1Pal *p, D1Tileset *ts)
 {
     this->pal = p;
-    this->tmi = m;
+    this->tileset = ts;
+    this->til = ts->til;
+    this->min = ts->min;
+
+    if (this->type == D1DUN_TYPE::NORMAL) {
+        // prepare subtiles
+        for (int y = 0; y < this->height / TILE_HEIGHT; y++) {
+            for (int x = 0; x < this->width / TILE_WIDTH; x++) {
+                this->updateSubtiles(x, y, this->tiles[y][x]);
+            }
+        }
+    } else {
+        // prepare tiles
+        for (int y = 0; y < this->height / TILE_HEIGHT; y++) {
+            for (int x = 0; x < this->width / TILE_WIDTH; x++) {
+                this->tiles[y][x] = UNDEF_TILE;
+            }
+        }
+    }
+
     // ensure there is at least one valid tile
     // assert((this->height == 0) == (this->width == 0));
     if (this->width == 0) {
@@ -677,6 +683,7 @@ void D1Dun::initialize(D1Pal *p, D1Tmi *m)
         }
     }
     this->setAssetPath(assetDir);
+    this->loadSpecCels();
 }
 
 bool D1Dun::save(const SaveAsParam &params)
@@ -1621,30 +1628,6 @@ bool D1Dun::setAssetPath(QString path)
     }
     this->assetPath = path;
     this->clearAssets();
-    // (re-)load special cels
-    if (dungeonTbl[this->levelType].specPath != nullptr && !path.isEmpty()) {
-        QString specFilePath = path + "/" + dungeonTbl[this->levelType].specPath + "s.cel";
-        if (!QFileInfo::exists(specFilePath)) {
-            QFileInfo fileInfo = QFileInfo(specFilePath);
-            QString specFilePath2 = path + "/" + fileInfo.fileName();
-            if (!QFileInfo::exists(specFilePath2)) {
-                dProgressErr() << tr("Missing special-CEL. (Tried %1 and %2).").arg(QDir::toNativeSeparators(specFilePath)).arg(QDir::toNativeSeparators(specFilePath2));
-                return true;
-            }
-            specFilePath = specFilePath2;
-        }
-        D1Gfx *specGfx = new D1Gfx();
-        specGfx->setPalette(this->pal);
-        OpenAsParam params = OpenAsParam();
-        params.celWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
-        if (!D1Cel::load(*specGfx, specFilePath, params)) {
-            dProgressErr() << tr("Failed loading special-CEL file: %1.").arg(QDir::toNativeSeparators(specFilePath));
-            delete specGfx;
-        } else {
-            this->specGfx = specGfx;
-            dProgress() << tr("Loaded special CEL file %1.").arg(QDir::toNativeSeparators(specFilePath));
-        }
-    }
     return true;
 }
 
@@ -1809,10 +1792,6 @@ void D1Dun::loadItem(int itemIndex)
 
 void D1Dun::clearAssets()
 {
-    // TODO: MemFree?
-    delete this->specGfx;
-    this->specGfx = nullptr;
-
     this->customObjectTypes.clear();
     this->customMonsterTypes.clear();
     this->customItemTypes.clear();
@@ -2561,6 +2540,49 @@ void D1Dun::patch(int dunFileIndex)
     if (!change) {
         dProgress() << tr("No change was necessary.");
     }
+}
+
+void D1Dun::loadSpecCels()
+{
+    // TODO: MemFree?
+    delete this->specGfx;
+    this->specGfx = nullptr;
+
+    if (dungeonTbl[this->levelType].specPath != nullptr) {
+        QString specFilePath = this->assetPath + "/" + dungeonTbl[this->levelType].specPath + "s.cel";
+        if (!QFileInfo::exists(specFilePath)) {
+            QString tilPath = this->til->getFilePath();
+            QFileInfo fileInfo = QFileInfo(tilPath);
+            QString specFilePath2 = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName() + "s.cel";
+            if (!QFileInfo::exists(specFilePath2)) {
+                dProgressErr() << tr("Missing special-CEL. (Tried %1 and %2).").arg(QDir::toNativeSeparators(specFilePath)).arg(QDir::toNativeSeparators(specFilePath2));
+                return;
+            }
+            specFilePath = specFilePath2;
+        }
+        D1Gfx *specGfx = new D1Gfx();
+        specGfx->setPalette(this->pal);
+        OpenAsParam params = OpenAsParam();
+        params.celWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+        if (!D1Cel::load(*specGfx, specFilePath, params)) {
+            dProgressErr() << tr("Failed loading special-CEL file: %1.").arg(QDir::toNativeSeparators(specFilePath));
+            delete specGfx;
+        } else {
+            this->specGfx = specGfx;
+            dProgress() << tr("Loaded special CEL file %1.").arg(QDir::toNativeSeparators(specFilePath));
+        }
+    }
+}
+
+bool D1Dun::reloadTileset(const QString &celFilePath)
+{
+    OpenAsParam params = OpenAsParam();
+    params.celFilePath = celFilePath;
+    if (!this->tileset->load(params)) {
+        return false;
+    }
+    this->loadSpecCels();
+    return true;
 }
 
 bool D1Dun::addResource(const AddResourceParam &params)

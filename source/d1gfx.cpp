@@ -151,8 +151,18 @@ void D1GfxFrame::replacePixels(const std::vector<std::pair<D1GfxPixel, D1GfxPixe
 
 D1Gfx::~D1Gfx()
 {
+    this->clear();
+}
+
+void D1Gfx::clear()
+{
     qDeleteAll(this->frames);
     this->frames.clear();
+    this->groupFrameIndices.clear();
+    // this->type ?
+    // this->palette = nullptr;
+    // this->upscaled ?
+    this->modified = true;
 }
 
 bool D1Gfx::isFrameSizeConstant() const

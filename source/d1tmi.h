@@ -18,6 +18,7 @@ public:
 
     bool load(const QString &tmiFilePath, const D1Sol *sol, const OpenAsParam &params);
     bool save(const SaveAsParam &params);
+    void clear();
 
     void insertSubtile(int subtileIndex, quint8 value);
     void createSubtile();

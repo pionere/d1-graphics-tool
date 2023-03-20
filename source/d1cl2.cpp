@@ -13,6 +13,8 @@
 
 bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 {
+    gfx.clear();
+
     // Opening CL2 file and load it in RAM
     QFile file = QFile(filePath);
 
@@ -79,7 +81,6 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     gfx.type = type;
 
     // CL2 FRAMES OFFSETS CALCULATION
-    gfx.groupFrameIndices.clear();
     std::vector<std::pair<quint32, quint32>> frameOffsets;
     if (gfx.type == D1CEL_TYPE::V2_MONO_GROUP) {
         // Going through all frames of the only group
@@ -128,8 +129,6 @@ bool D1Cl2::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     }
 
     // BUILDING {CL2 FRAMES}
-
-    // gfx.frames.clear();
     // std::stack<quint16> invalidFrames;
     for (const auto &offset : frameOffsets) {
         device->seek(offset.first);

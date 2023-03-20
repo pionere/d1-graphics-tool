@@ -125,6 +125,7 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
         // initialize the fields which are not updated
         this->on_dungeonDefaultTileLineEdit_escPressed();
         this->ui->levelTypeComboBox->setCurrentIndex(d->getLevelType());
+        this->updateTilesetIcon();
         // prepare the entities
         this->updateEntityOptions();
     }
@@ -134,6 +135,25 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
 void LevelCelView::setPal(D1Pal *p)
 {
     this->pal = p;
+}
+
+void LevelCelView::updateTilesetIcon()
+{
+    // update icon of tileset
+    QString tilPath = this->til->getFilePath();
+    if (!tilPath.isEmpty()) {
+        QFileInfo fileInfo = QFileInfo(tilPath);
+        tilPath = fileInfo.absolutePath() + "/" + fileInfo.completeBaseName();
+        this->ui->tilesetLoadPushButton->setToolTip(tilPath);
+        QIcon icon = QApplication::style()->standardIcon(QStyle::SP_DriveCDIcon);
+        this->ui->tilesetLoadPushButton->setIcon(icon);
+        this->ui->tilesetLoadPushButton->setText("");
+    } else {
+        this->ui->tilesetLoadPushButton->setToolTip(tr("Select tileset"));
+        QIcon icon;
+        this->ui->tilesetLoadPushButton->setIcon(icon);
+        this->ui->tilesetLoadPushButton->setText("...");
+    }
 }
 
 void LevelCelView::updateEntityOptions()
@@ -3563,6 +3583,34 @@ void LevelCelView::on_dungeonTileLineEdit_escPressed()
 
     this->ui->dungeonTileLineEdit->setText(tileRef == UNDEF_TILE ? QStringLiteral("?") : QString::number(tileRef));
     this->ui->dungeonTileLineEdit->clearFocus();
+}
+
+void LevelCelView::selectTilesetPath(QString path)
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 1, PAF_UPDATE_WINDOW);
+
+    if (this->dun->reloadTileset(path)) {
+        this->updateTilesetIcon();
+        // update the view
+        // this->displayFrame();
+    }
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void LevelCelView::on_tilesetLoadPushButton_clicked()
+{
+    QString celFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select tileset"), tr("CEL Files (*.cel *.CEL)"));
+
+    if (!celFilePath.isEmpty()) {
+        this->selectTilesetPath(celFilePath);
+    }
+}
+
+void LevelCelView::on_tilesetClearPushButton_clicked()
+{
+    this->selectTilesetPath("");
 }
 
 void LevelCelView::selectAssetPath(QString path)

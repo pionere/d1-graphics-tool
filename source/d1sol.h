@@ -15,6 +15,7 @@ public:
 
     bool load(const QString &solFilePath);
     bool save(const SaveAsParam &params);
+    void clear();
 
     void insertSubtile(int subtileIndex, quint8 value);
     void createSubtile();

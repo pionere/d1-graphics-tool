@@ -104,6 +104,7 @@ public:
 
     void update();
     void updateLabel();
+    void updateTilesetIcon();
     void updateEntityOptions();
     void displayFrame();
     void toggleBottomPanel();
@@ -143,6 +144,7 @@ private:
     void setSubtileIndex(int subtileIndex);
     void setTileIndex(int tileIndex);
 
+    void selectTilesetPath(QString path);
     void selectAssetPath(QString path);
     void setPositionX(int posx);
     void setPositionY(int posy);
@@ -215,6 +217,8 @@ private slots:
     void on_dungeonDefaultTileLineEdit_escPressed();
     void on_dungeonTileLineEdit_returnPressed();
     void on_dungeonTileLineEdit_escPressed();
+    void on_tilesetLoadPushButton_clicked();
+    void on_tilesetClearPushButton_clicked();
     void on_assetLoadPushButton_clicked();
     void on_assetClearPushButton_clicked();
     void on_dungeonSubtileLineEdit_returnPressed();

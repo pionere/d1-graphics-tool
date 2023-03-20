@@ -13,6 +13,8 @@
 
 bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
 {
+    gfx.clear();
+
     // Opening CEL file and load it in RAM
     QFile file = QFile(filePath);
 
@@ -49,7 +51,6 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     std::vector<std::pair<quint32, quint32>> frameOffsets;
     if (type == D1CEL_TYPE::V1_REGULAR) {
         // Going through all frames of the CEL
-        gfx.groupFrameIndices.clear();
         if (firstDword > 0) {
             gfx.groupFrameIndices.push_back(std::pair<int, int>(0, firstDword - 1));
         }
@@ -92,7 +93,6 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
         }
 
         // Going through all CELs
-        gfx.groupFrameIndices.clear();
         for (unsigned int i = 0; i * 4 < firstDword; i++) {
             device->seek(i * 4);
             quint32 celOffset;

@@ -28,6 +28,10 @@ bool D1Til::load(const QString &filePath, D1Min *m)
         }
     }
 
+    this->clear();
+    this->tilFilePath = filePath;
+    this->min = m;
+
     const QByteArray fileData = file.readAll();
 
     // File size check
@@ -37,15 +41,12 @@ bool D1Til::load(const QString &filePath, D1Min *m)
         return false;
     }
 
-    this->min = m;
-
     int tileCount = fileSize / (2 * TILE_SIZE);
 
     // Read TIL binary data
     QDataStream in(fileData);
     in.setByteOrder(QDataStream::LittleEndian);
 
-    this->subtileIndices.clear();
     for (int i = 0; i < tileCount; i++) {
         std::vector<int> subtileIndicesList;
         for (int j = 0; j < TILE_SIZE; j++) {
@@ -55,7 +56,6 @@ bool D1Til::load(const QString &filePath, D1Min *m)
         }
         this->subtileIndices.push_back(subtileIndicesList);
     }
-    this->tilFilePath = filePath;
     this->modified = !file.isOpen();
     return true;
 }
@@ -110,6 +110,13 @@ bool D1Til::save(const SaveAsParam &params)
     this->modified = false;
 
     return true;
+}
+
+void D1Til::clear()
+{
+    this->subtileIndices.clear();
+    // this->min = nullptr;
+    this->modified = true;
 }
 
 QImage D1Til::getTileImage(int tileIndex) const
