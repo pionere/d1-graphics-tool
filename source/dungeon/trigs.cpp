@@ -8,66 +8,6 @@
 int numtrigs;
 TriggerStruct trigs[MAXTRIGGERS];
 
-#define PIECE dPiece[pcurspos.x][pcurspos.y]
-/** Specifies the dungeon piece IDs which constitute stairways leading down to the cathedral from town. */
-#define TOWN_L1_WARP     (PIECE == 716 || (PIECE >= 723 && PIECE <= 728))
-/** Specifies the dungeon piece IDs which constitute stairways leading down to the catacombs from town. */
-#define TOWN_L2_WARP     (PIECE >= 1175 && PIECE <= 1178)
-/** Specifies the dungeon piece IDs which constitute stairways leading down to the caves from town. */
-#define TOWN_L3_WARP     (PIECE >= 1199 && PIECE <= 1220)
-/** Specifies the dungeon piece IDs which constitute stairways leading down to hell from town. */
-#define TOWN_L4_WARP     (PIECE >= 1240 && PIECE <= 1255)
-/** Specifies the dungeon piece IDs which constitute stairways leading down to the hive from town. */
-#define TOWN_L5_WARP     (PIECE >= 1307 && PIECE <= 1310)
-/** Specifies the dungeon piece IDs which constitute stairways leading down to the crypt from town. */
-#define TOWN_L6_WARP     (PIECE >= 1331 && PIECE <= 1338)
-/** Specifies the dungeon piece IDs which constitute stairways leading up from the cathedral. */
-#define L1_UP_WARP       (PIECE >= 129 && PIECE <= 140 && PIECE != 134 && PIECE != 136)
-/** Specifies the dungeon piece IDs which constitute stairways leading down from the cathedral. */
-//							{ 106, 107, 108, 109, 110, /*111,*/ 112, /*113,*/ 114, 115, /*116, 117,*/ 118, }
-#define L1_DOWN_WARP     ((PIECE >= 106 && PIECE <= 115 && PIECE != 111 && PIECE != 113) || PIECE == 118)
-/** Specifies the dungeon piece IDs which constitute stairways leading up from the catacombs. */
-#define L2_UP_WARP       (PIECE == 266 || PIECE == 267)
-/** Specifies the dungeon piece IDs which constitute stairways leading down from the catacombs. */
-#define L2_DOWN_WARP     (PIECE >= 269 && PIECE <= 272)
-/** Specifies the dungeon piece IDs which constitute stairways leading up to town from the catacombs. */
-#define L2_TOWN_WARP     (PIECE == 558 || PIECE == 559)
-/** Specifies the dungeon piece IDs which constitute stairways leading up from the caves. */
-#define L3_UP_WARP       (PIECE == 170 || PIECE == 171)
-#define L3_UP_WARPx(x)   (x == 170 || x == 171)
-/** Specifies the dungeon piece IDs which constitute stairways leading down from the caves. */
-#define L3_DOWN_WARP     (PIECE == 168)
-#define L3_DOWN_WARPx(x) (x == 168)
-/** Specifies the dungeon piece IDs which constitute stairways leading up to town from the caves. */
-//#define L3_TOWN_WARP     (PIECE == 548 || PIECE == 549 || PIECE == 559 || PIECE == 560)
-#define L3_TOWN_WARP     (PIECE == 548 || PIECE == 549)
-#define L3_TOWN_WARPx(x) (x == 548 || x == 549)
-/** Specifies the dungeon piece IDs which constitute stairways leading up from hell. */
-#define L4_UP_WARP       (PIECE == 82 || (PIECE >= 90 && PIECE <= 97 && PIECE != 91 && PIECE != 93))
-/** Specifies the dungeon piece IDs which constitute stairways leading down from hell. */
-#define L4_DOWN_WARP     ((PIECE >= 130 && PIECE <= 133) || PIECE == 120)
-/** Specifies the dungeon piece IDs which constitute stairways leading up to town from hell. */
-#define L4_TOWN_WARP     (PIECE == 421 || (PIECE >= 429 && PIECE <= 436 && PIECE != 430 && PIECE != 432))
-/** Specifies the dungeon piece IDs which constitute stairways leading down to Diablo from hell. */
-#define L4_PENTA_WARP    (PIECE >= 353 && PIECE <= 384)
-#ifdef HELLFIRE
-/** Specifies the dungeon piece IDs which constitute stairways leading up to town from crypt. */
-//#define L5_TOWN_WARP		(PIECE >= 172 && PIECE <= 185 && (PIECE <= 179 || PIECE >= 184))
-/** Specifies the dungeon piece IDs which constitute stairways leading up from crypt. */
-#define L5_UP_WARP       (PIECE >= 149 && PIECE <= 159 && (PIECE <= 153 || PIECE >= 158))
-/** Specifies the dungeon piece IDs which constitute stairways leading down from crypt. */
-#define L5_DOWN_WARP     (PIECE >= 125 && PIECE <= 126)
-#define L5_DOWN_WARPx(x) (x >= 125 && x <= 126)
-/** Specifies the dungeon piece IDs which constitute stairways leading up to town from nest. */
-//#define L6_TOWN_WARP     (PIECE >= 79 && PIECE <= 80)
-//#define L6_TOWN_WARPx(x) (x >= 79 && x <= 80)
-/** Specifies the dungeon piece IDs which constitute stairways leading up from nest. */
-#define L6_UP_WARP       (PIECE >= 65 && PIECE <= 66)
-#define L6_UP_WARPx(x)   (x >= 65 && x <= 66)
-/** Specifies the dungeon piece IDs which constitute stairways leading down from nest. */
-#define L6_DOWN_WARPx(x) (x == 61 || x == 63)
-#endif
-
 static void InitNoTriggers()
 {
 	numtrigs = 0;
@@ -113,7 +53,7 @@ static void InitL1Triggers()
 			trigs[numtrigs]._tx += 1;
 		} else {
 			trigs[numtrigs]._tlvl = questlist[Q_PWATER]._qslvl;
-			trigs[numtrigs]._ty += 1;
+			trigs[numtrigs]._tx += 1;
 		}
 		trigs[numtrigs]._tmsg = DVL_DWM_SETLVL;
 		numtrigs++;
@@ -254,8 +194,8 @@ static void InitL4Triggers()
 		}
 	}*/
 	// if (pWarps[DWARP_ENTRY]._wx != 0) {
-		trigs[numtrigs]._tx = pWarps[DWARP_ENTRY]._wx; // 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
-		trigs[numtrigs]._ty = pWarps[DWARP_ENTRY]._wy; // 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+		trigs[numtrigs]._tx = pWarps[DWARP_ENTRY]._wx + 1; // 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+		trigs[numtrigs]._ty = pWarps[DWARP_ENTRY]._wy + 1; // 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
 		trigs[numtrigs]._tmsg = DVL_DWM_PREVLVL;
 		numtrigs++;
 	// }
@@ -273,8 +213,8 @@ static void InitL4Triggers()
 		}
 	}
 	if (pWarps[DWARP_TOWN]._wx != 0) {
-		trigs[numtrigs]._tx = pWarps[DWARP_TOWN]._wx; // 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
-		trigs[numtrigs]._ty = pWarps[DWARP_TOWN]._wy; // 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
+		trigs[numtrigs]._tx = pWarps[DWARP_TOWN]._wx + 1; // 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
+		trigs[numtrigs]._ty = pWarps[DWARP_TOWN]._wy + 1; // 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
 		trigs[numtrigs]._tmsg = DVL_DWM_TWARPUP;
 		numtrigs++;
 	}
@@ -391,7 +331,7 @@ static void InitSKingTriggers()
 static void InitSChambTriggers()
 {
 	numtrigs = 1;
-	trigs[0]._tx = AllLevels[SL_BONECHAMB].dSetLvlDunY + 1; // DBORDERX + 54
+	trigs[0]._tx = AllLevels[SL_BONECHAMB].dSetLvlDunX + 1; // DBORDERX + 54
 	trigs[0]._ty = AllLevels[SL_BONECHAMB].dSetLvlDunY - 0; // DBORDERY + 23
 	trigs[0]._tmsg = DVL_DWM_RTNLVL;
 	trigs[0]._tlvl = questlist[Q_BCHAMB]._qdlvl;
@@ -400,7 +340,7 @@ static void InitSChambTriggers()
 static void InitPWaterTriggers()
 {
 	numtrigs = 1;
-	trigs[0]._tx = AllLevels[SL_POISONWATER].dSetLvlDunY - 1; // DBORDERX + 14
+	trigs[0]._tx = AllLevels[SL_POISONWATER].dSetLvlDunX - 1; // DBORDERX + 14
 	trigs[0]._ty = AllLevels[SL_POISONWATER].dSetLvlDunY - 0; // DBORDERY + 67
 	trigs[0]._tmsg = DVL_DWM_RTNLVL;
 	trigs[0]._tlvl = questlist[Q_PWATER]._qdlvl;

@@ -1913,8 +1913,8 @@ static void DRLG_L4(int entry)
 		if (warpPos.x < 0) {
 			continue;
 		}
-		pWarps[DWARP_ENTRY]._wx = warpPos.x + 2;
-		pWarps[DWARP_ENTRY]._wy = warpPos.y + 3;
+		pWarps[DWARP_ENTRY]._wx = warpPos.x + 1;
+		pWarps[DWARP_ENTRY]._wy = warpPos.y + 2;
 		pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
 		pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
 		if (currLvl._dLevelIdx != DLV_HELL4) {
@@ -1923,8 +1923,8 @@ static void DRLG_L4(int entry)
 				if (warpPos.x < 0) {
 					continue;
 				}
-				pWarps[DWARP_TOWN]._wx = warpPos.x + 2;
-				pWarps[DWARP_TOWN]._wy = warpPos.y + 3;
+				pWarps[DWARP_TOWN]._wx = warpPos.x + 1;
+				pWarps[DWARP_TOWN]._wy = warpPos.y + 2;
 				pWarps[DWARP_TOWN]._wx = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
 				pWarps[DWARP_TOWN]._wy = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
 			}
@@ -1952,14 +1952,14 @@ static void DRLG_L4(int entry)
 		if (entry == ENTRY_MAIN) {
 			ViewX = pWarps[DWARP_ENTRY]._wx; // 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
 			ViewY = pWarps[DWARP_ENTRY]._wy; // 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
-			ViewX += 0;
-			ViewY += 0;
+			ViewX += 1;
+			ViewY += 2;
 		}
 		if (entry == ENTRY_TWARPDN) {
 			ViewX = pWarps[DWARP_TOWN]._wx; // 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
 			ViewY = pWarps[DWARP_TOWN]._wy; // 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
 			ViewX += 1;
-			ViewY += 0;
+			ViewY += 2;
 		}
 		if (entry == ENTRY_PREV) {
 			ViewX = pWarps[DWARP_EXIT]._wx; // 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
