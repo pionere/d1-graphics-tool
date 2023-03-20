@@ -88,29 +88,16 @@ static void LoadGameLevel(int lvldir, int seed)
     IncProgress();
 
     SetRndSeed(seed);
-extern int32_t sglGameSeed;
-if (currLvl._dLevelIdx == DLV_HELL3) {
-	LogErrorF("LVL", "LoadGameLevel 0:%d", sglGameSeed);
-}
 
     if (!currLvl._dSetLvl) {
         CreateLevel(lvldir);
-if (currLvl._dLevelIdx == DLV_HELL3) {
-	LogErrorF("LVL", "LoadGameLevel 1:%d", sglGameSeed);
-}
         if (pMegaTiles == NULL || pSolidTbl == NULL) {
             return;
         }
         IncProgress();
         if (currLvl._dType != DTYPE_TOWN) {
             GetLevelMTypes();
-if (currLvl._dLevelIdx == DLV_HELL3) {
-	LogErrorF("LVL", "LoadGameLevel 2:%d", sglGameSeed);
-}
             InitThemes();
-if (currLvl._dLevelIdx == DLV_HELL3) {
-	LogErrorF("LVL", "LoadGameLevel 3:%d", sglGameSeed);
-}
             IncProgress();
             InitObjectGFX();
         } else {
@@ -128,34 +115,13 @@ if (currLvl._dLevelIdx == DLV_HELL3) {
 //            GetPortalLvlPos();
 
         if (currLvl._dType != DTYPE_TOWN) {
-if (currLvl._dLevelIdx == DLV_HELL3) {
-	LogErrorF("LVL", "LoadGameLevel 4:%d", sglGameSeed);
-}
             HoldThemeRooms();
-if (currLvl._dLevelIdx == DLV_HELL3) {
-	LogErrorF("LVL", "LoadGameLevel 5:%d", sglGameSeed);
-}
             InitMonsters();
-if (currLvl._dLevelIdx == DLV_HELL3) {
-	LogErrorF("LVL", "LoadGameLevel 6:%d", sglGameSeed);
-}
             IncProgress();
 //            if (IsMultiGame || lvldir == ENTRY_LOAD || !IsLvlVisited(currLvl._dLevelIdx)) {
-if (currLvl._dLevelIdx == DLV_HELL3) {
-	LogErrorF("LVL", "LoadGameLevel 7:%d", sglGameSeed);
-}
                 InitObjects();
-if (currLvl._dLevelIdx == DLV_HELL3) {
-	LogErrorF("LVL", "LoadGameLevel 8:%d", sglGameSeed);
-}
                 InitItems();
-if (currLvl._dLevelIdx == DLV_HELL3) {
-	LogErrorF("LVL", "LoadGameLevel 9:%d", sglGameSeed);
-}
                 CreateThemeRooms();
-if (currLvl._dLevelIdx == DLV_HELL3) {
-	LogErrorF("LVL", "LoadGameLevel 10:%d", sglGameSeed);
-}
 //            }
         } else {
 //            InitTowners();
@@ -178,14 +144,8 @@ if (currLvl._dLevelIdx == DLV_HELL3) {
         InitItems();
     }
     IncProgress();
-if (currLvl._dLevelIdx == DLV_HELL3) {
-	LogErrorF("LVL", "LoadGameLevel 11:%d", sglGameSeed);
-}
 //    InitMissiles();
 //    SavePreLighting();
-if (currLvl._dLevelIdx == DLV_HELL3) {
-	LogErrorF("LVL", "LoadGameLevel 12:%d", sglGameSeed);
-}
 
     IncProgress();
 
@@ -197,9 +157,6 @@ if (currLvl._dLevelIdx == DLV_HELL3) {
         //SyncPortals();
 //    }
     IncProgress();
-if (currLvl._dLevelIdx == DLV_HELL3) {
-	LogErrorF("LVL", "LoadGameLevel final:%d", sglGameSeed);
-}
 //    InitSync();
 //    PlayDungMsgs();
 
