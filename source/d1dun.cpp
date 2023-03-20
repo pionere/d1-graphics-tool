@@ -1673,6 +1673,11 @@ bool D1Dun::setAssetPath(QString path)
     return true;
 }
 
+const D1Gfx *D1Dun::getSpecGfx() const
+{
+    return this->specGfx;
+}
+
 void D1Dun::loadObjectGfx(const QString &filePath, int width, int minFrameNum, ObjectCacheEntry &result)
 {
     // check for existing entry

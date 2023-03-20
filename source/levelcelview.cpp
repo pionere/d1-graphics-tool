@@ -246,6 +246,15 @@ void LevelCelView::updateLabel()
     }
 
     if (this->dun != nullptr) {
+        D1Gfx *specGfx = this->dun->getSpecGfx();
+        if (specGfx != nullptr) {
+            QFileInfo specFileInfo(specGfx->getFilePath());
+            label += ", ";
+            label += specFileInfo.fileName();
+            if (specGfx->isModified()) {
+                label += "*";
+            }
+        }
         QFileInfo dunFileInfo(this->dun->getFilePath());
         label += ", ";
         label += dunFileInfo.fileName();

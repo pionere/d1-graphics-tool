@@ -24,8 +24,8 @@ bool D1Sol::load(const QString &filePath)
         }
     }
 
-    this->solFilePath = filePath;
     this->clear();
+    this->solFilePath = filePath;
 
     const QByteArray fileData = file.readAll();
 
