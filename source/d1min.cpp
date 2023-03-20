@@ -26,6 +26,10 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
         }
     }
 
+    this->clear();
+    this->minFilePath = filePath;
+    this->gfx = g;
+
     bool changed = !file.isOpen();
 
     const QByteArray fileData = file.readAll();
@@ -70,7 +74,6 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
     }
     g->upscaled = upscaled; // setUpscaled
 
-    this->gfx = g;
     this->subtileWidth = width;
     this->subtileHeight = height;
     int minSubtileCount = fileSize / (subtileNumberOfCelFrames * 2);
@@ -90,7 +93,6 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
     }
 
     // prepare an empty list with zeros
-    this->frameReferences.clear();
     for (int i = 0; i < subtileCount; i++) {
         this->frameReferences.push_back(std::vector<unsigned>(subtileNumberOfCelFrames));
     }
@@ -115,7 +117,6 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
             }
         }
     }
-    this->minFilePath = filePath;
     this->modified = changed;
     return true;
 }
@@ -210,10 +211,9 @@ bool D1Min::save(const SaveAsParam &params)
 
 void D1Min::clear()
 {
-    this->minFilePath.clear();
     this->frameReferences.clear();
-    // this->subtileWidth ?
-    // this->subtileHeight ?
+    this->subtileWidth = 2;
+    this->subtileHeight = 5;
     // this->gfx = nullptr;
     this->modified = true;
 }

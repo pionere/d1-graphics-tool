@@ -166,7 +166,6 @@ void D1Gfx::clear()
     qDeleteAll(this->frames);
     this->frames.clear();
     this->groupFrameIndices.clear();
-    this->gfxFilePath.clear();
     // this->type ?
     // this->palette = nullptr;
     // this->upscaled ?

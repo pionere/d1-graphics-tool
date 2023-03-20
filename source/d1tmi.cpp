@@ -26,6 +26,9 @@ bool D1Tmi::load(const QString &filePath, const D1Sol *sol, const OpenAsParam &p
         }
     }
 
+    this->clear();
+    this->tmiFilePath = filePath;
+
     bool changed = !file.isOpen();
 
     const QByteArray fileData = file.readAll();
@@ -45,7 +48,6 @@ bool D1Tmi::load(const QString &filePath, const D1Sol *sol, const OpenAsParam &p
         changed = true;
     }
 
-    this->subProperties.clear();
     // prepare empty list with zeros
     for (int i = 0; i < subtileCount; i++) {
         this->subProperties.append(0);
@@ -63,7 +65,6 @@ bool D1Tmi::load(const QString &filePath, const D1Sol *sol, const OpenAsParam &p
         this->subProperties[i] = readByte;
     }
 
-    this->tmiFilePath = filePath;
     this->modified = changed;
     return true;
 }
@@ -108,7 +109,6 @@ bool D1Tmi::save(const SaveAsParam &params)
 
 void D1Tmi::clear()
 {
-    this->tmiFilePath.clear();
     this->subProperties.clear();
     this->modified = true;
 }

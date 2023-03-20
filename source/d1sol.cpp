@@ -24,11 +24,12 @@ bool D1Sol::load(const QString &filePath)
         }
     }
 
+    this->solFilePath = filePath;
+    this->clear();
+
     const QByteArray fileData = file.readAll();
 
     int subtileCount = fileData.size();
-
-    this->subProperties.clear();
 
     // Read SOL binary data
     QDataStream in(fileData);
@@ -40,7 +41,6 @@ bool D1Sol::load(const QString &filePath)
         this->subProperties.append(readBytr);
     }
 
-    this->solFilePath = filePath;
     this->modified = !file.isOpen();
     return true;
 }
@@ -84,7 +84,6 @@ bool D1Sol::save(const SaveAsParam &params)
 
 void D1Sol::clear()
 {
-    this->solFilePath.clear();
     this->subProperties.clear();
     this->modified = true;
 }
