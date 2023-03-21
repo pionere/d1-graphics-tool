@@ -1097,7 +1097,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     if (params.showObjects) {
         // draw the object
         int objectIndex = this->objects[dunCursorY][dunCursorX];
-        if (objectIndex != 0) {
+        if (objectIndex > 0) {
             const ObjectCacheEntry *objEntry = nullptr;
             for (const auto &obj : this->objectCache) {
                 if (obj.objectIndex == objectIndex) {
@@ -2011,7 +2011,7 @@ void D1Dun::collectObjects(std::vector<std::pair<int, int>> &foundObjects) const
 {
     for (const std::vector<int> &objectsRow : this->objects) {
         for (int objectIndex : objectsRow) {
-            if (objectIndex == 0) {
+            if (objectIndex <= 0) {
                 continue;
             }
             for (std::pair<int, int> &objectEntry : foundObjects) {
