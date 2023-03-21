@@ -37,7 +37,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, co
     std::vector<PaletteColor> colors;
     pal->getValidColors(colors);
 
-    QRgb *srcBits = reinterpret_cast<QRgb *>(image.bits());
+    const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
     for (int y = 0; y < frame.height; y++) {
         std::vector<D1GfxPixel> pixelLine;
         for (int x = 0; x < frame.width; x++, srcBits++) {

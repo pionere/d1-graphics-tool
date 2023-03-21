@@ -540,18 +540,18 @@ void LevelCelView::assignFrames(const QImage &image, int subtileIndex, int frame
     // TODO: merge with LevelCelView::insertSubtile ?
     QImage subImage = QImage(MICRO_WIDTH, MICRO_HEIGHT, QImage::Format_ARGB32);
     for (int y = 0; y < image.height(); y += MICRO_HEIGHT) {
-        QRgb *imageBits = reinterpret_cast<QRgb *>(image.scanLine(y));
+        const QRgb *imageBits = reinterpret_cast<const QRgb *>(image.scanLine(y));
         for (int x = 0; x < image.width(); x += MICRO_WIDTH, imageBits += MICRO_WIDTH) {
             // subImage.fill(Qt::transparent);
 
             bool hasColor = false;
             QRgb *destBits = reinterpret_cast<QRgb *>(subImage.bits());
-            QRgb *srcBits = imageBits;
+            const QRgb *srcBits = imageBits;
             for (int j = 0; j < MICRO_HEIGHT; j++) {
                 for (int i = 0; i < MICRO_WIDTH; i++, srcBits++, destBits++) {
                     // const QColor color = image.pixelColor(x + i, y + j);
-                    if (qAlpha(*srcBits) >= COLOR_ALPHA_LIMIT) {
                     // if (color.alpha() >= COLOR_ALPHA_LIMIT) {
+                    if (qAlpha(*srcBits) >= COLOR_ALPHA_LIMIT) {
                         hasColor = true;
                     }
                     // subImage.setPixelColor(i, j, color);
@@ -771,13 +771,13 @@ void LevelCelView::assignSubtiles(const QImage &image, int tileIndex, int subtil
 
     QImage subImage = QImage(subtileWidth, subtileHeight, QImage::Format_ARGB32);
     for (int y = 0; y < image.height(); y += subtileHeight) {
-        QRgb *imageBits = reinterpret_cast<QRgb *>(image.scanLine(y));
+        const QRgb *imageBits = reinterpret_cast<const QRgb *>(image.scanLine(y));
         for (int x = 0; x < image.width(); x += subtileWidth, imageBits += subtileWidth) {
             // subImage.fill(Qt::transparent);
 
             bool hasColor = false;
             QRgb *destBits = reinterpret_cast<QRgb *>(subImage.bits());
-            QRgb *srcBits = imageBits;
+            const QRgb *srcBits = imageBits;
             for (unsigned j = 0; j < subtileHeight; j++) {
                 for (unsigned i = 0; i < subtileWidth; i++, srcBits++, destBits++) {
                     // const QColor color = image.pixelColor(x + i, y + j);
@@ -989,13 +989,13 @@ void LevelCelView::insertSubtile(int subtileIndex, const QImage &image)
     int frameIndex = this->gfx->getFrameCount();
     QImage subImage = QImage(MICRO_WIDTH, MICRO_HEIGHT, QImage::Format_ARGB32);
     for (int y = 0; y < image.height(); y += MICRO_HEIGHT) {
-        QRgb *imageBits = reinterpret_cast<QRgb *>(image.scanLine(y));
+        const QRgb *imageBits = reinterpret_cast<const QRgb *>(image.scanLine(y));
         for (int x = 0; x < image.width(); x += MICRO_WIDTH, imageBits += MICRO_WIDTH) {
             // subImage.fill(Qt::transparent);
 
             bool hasColor = false;
             QRgb *destBits = reinterpret_cast<QRgb *>(subImage.bits());
-            QRgb *srcBits = imageBits;
+            const QRgb *srcBits = imageBits;
             for (int j = 0; j < MICRO_HEIGHT; j++) {
                 for (int i = 0; i < MICRO_WIDTH; i++, srcBits++, destBits++) {
                     // const QColor color = image.pixelColor(x + i, y + j);
@@ -1074,13 +1074,13 @@ void LevelCelView::insertTile(int tileIndex, const QImage &image)
 
     QImage subImage = QImage(subtileWidth, subtileHeight, QImage::Format_ARGB32);
     for (int y = 0; y < image.height(); y += subtileHeight) {
-        QRgb *imageBits = reinterpret_cast<QRgb *>(image.scanLine(y));
+        const QRgb *imageBits = reinterpret_cast<const QRgb *>(image.scanLine(y));
         for (int x = 0; x < image.width(); x += subtileWidth, imageBits += subtileWidth) {
             // subImage.fill(Qt::transparent);
 
             // bool hasColor = false;
             QRgb *destBits = reinterpret_cast<QRgb *>(subImage.bits());
-            QRgb *srcBits = imageBits;
+            const QRgb *srcBits = imageBits;
             for (unsigned j = 0; j < subtileHeight; j++) {
                 for (unsigned i = 0; i < subtileWidth; i++, srcBits++, destBits++) {
                     // const QColor color = image.pixelColor(x + i, y + j);
@@ -1154,13 +1154,13 @@ void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QImage &im
 
     QImage subImage = QImage(tileWidth, tileHeight, QImage::Format_ARGB32);
     for (int y = 0; y < image.height(); y += tileHeight) {
-        QRgb *imageBits = reinterpret_cast<QRgb *>(image.scanLine(y));
+        const QRgb *imageBits = reinterpret_cast<const QRgb *>(image.scanLine(y));
         for (int x = 0; x < image.width(); x += tileWidth, imageBits += tileWidth) {
             // subImage.fill(Qt::transparent);
 
             bool hasColor = false;
             QRgb *destBits = reinterpret_cast<QRgb *>(subImage.bits());
-            QRgb *srcBits = imageBits;
+            const QRgb *srcBits = imageBits;
             for (unsigned j = 0; j < tileHeight; j++) {
                 for (unsigned i = 0; i < tileWidth; i++, srcBits++, destBits++) {
                     // const QColor color = image.pixelColor(x + i, y + j);
