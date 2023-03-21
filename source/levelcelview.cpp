@@ -85,6 +85,10 @@ LevelCelView::LevelCelView(QWidget *parent)
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ShowContextMenu(const QPoint &)));
 
+    this->ui->dungeonObjectComboBox->view()->setTextElideMode(Qt::ElideNone);
+    this->ui->dungeonMonsterComboBox->view()->setTextElideMode(Qt::ElideNone);
+    this->ui->dungeonItemComboBox->view()->setTextElideMode(Qt::ElideNone);
+
     setAcceptDrops(true);
 }
 
