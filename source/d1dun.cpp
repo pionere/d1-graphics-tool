@@ -1692,15 +1692,15 @@ QString D1Dun::getItemName(int itemIndex) const
 
 QString D1Dun::getMonsterName(int monsterIndex) const
 {
-    // check if it is built-in monster
-    if ((unsigned)monsterIndex < (unsigned)lengthof(DunMonstConvTbl) && DunMonstConvTbl[monsterIndex].type != 0) {
-        return DunMonstConvTbl[monsterIndex].name;
-    }
     // check if it is a custom monster
     for (const CustomMonsterStruct &customMonster : customMonsterTypes) {
         if (customMonster.type == monsterIndex) {
             return customMonster.name;
         }
+    }
+    // check if it is built-in monster
+    if ((unsigned)monsterIndex < (unsigned)lengthof(DunMonstConvTbl) && DunMonstConvTbl[monsterIndex].type != 0) {
+        return DunMonstConvTbl[monsterIndex].name;
     }
     // out of options -> generic name
     return tr("Monster%1").arg(monsterIndex);
@@ -1708,15 +1708,15 @@ QString D1Dun::getMonsterName(int monsterIndex) const
 
 QString D1Dun::getObjectName(int objectIndex) const
 {
-    // check if it is built-in object
-    if ((unsigned)objectIndex < (unsigned)lengthof(DunObjConvTbl) && DunObjConvTbl[objectIndex].type != 0) {
-        return DunObjConvTbl[objectIndex].name;
-    }
     // check if it is a custom object
     for (const CustomObjectStruct &customObject : customObjectTypes) {
         if (customObject.type == objectIndex) {
             return customObject.name;
         }
+    }
+    // check if it is built-in object
+    if ((unsigned)objectIndex < (unsigned)lengthof(DunObjConvTbl) && DunObjConvTbl[objectIndex].type != 0) {
+        return DunObjConvTbl[objectIndex].name;
     }
     // out of options -> generic name
     return tr("Object%1").arg(objectIndex);
