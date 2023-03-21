@@ -219,6 +219,7 @@ bool D1Pcx::load(D1GfxFrame &frame, const QString &filePath, bool clipped, D1Pal
             pcxPal = resPal;
         }
         QImage image = QImage(frame.width, frame.height, QImage::Format_ARGB32);
+        QRgb *destBits = reinterpret_cast<QRgb *>(image.bits());
         for (int y = 0; y < frame.height; y++) {
             for (int x = 0; x < frame.width; dataPtr++) {
                 byte = *dataPtr;
@@ -227,8 +228,10 @@ bool D1Pcx::load(D1GfxFrame &frame, const QString &filePath, bool clipped, D1Pal
                     if (color == resPal->getUndefinedColor()) {
                         color = Qt::transparent;
                     }
-                    image.setPixelColor(x, y, color);
+                    // image.setPixelColor(x, y, color);
+                    *destBits = color.rgba();
                     x++;
+                    destBits++;
                     continue;
                 }
                 byte &= PCX_RUNLENGTH_MASK;
@@ -238,8 +241,9 @@ bool D1Pcx::load(D1GfxFrame &frame, const QString &filePath, bool clipped, D1Pal
                 if (color == resPal->getUndefinedColor()) {
                     color = Qt::transparent;
                 }
-                for (int i = 0; i < byte; i++) {
-                    image.setPixelColor(x + i, y, color);
+                for (int i = 0; i < byte; i++, destBits++) {
+                    // image.setPixelColor(x + i, y, color);
+                    *destBits = color.rgba();
                 }
                 x += byte;
             }

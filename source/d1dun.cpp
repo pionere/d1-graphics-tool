@@ -972,17 +972,24 @@ void D1Dun::drawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width,
 {
     unsigned len = 0;
     unsigned y = 1;
+    QRgb *destBits = reinterpret_cast<QRgb *>(image.scanLine(sy + y));
+    destBits += sx;
+    QRgb srcBit = color.rgba();
     for (; y <= height / 2; y++) {
         len += 2;
         for (unsigned x = width / 2 - len - CELL_BORDER; x < width / 2 + len + CELL_BORDER; x++) {
-            image.setPixelColor(sx + x, sy + y, color);
+            // image.setPixelColor(sx + x, sy + y, color);
+            destBits[x] = srcBit;
         }
+        destBits += image.width();
     }
     for (; y < height; y++) {
         len -= 2;
         for (unsigned x = width / 2 - len - CELL_BORDER; x < width / 2 + len + CELL_BORDER; x++) {
-            image.setPixelColor(sx + x, sy + y, color);
+            // image.setPixelColor(sx + x, sy + y, color);
+            destBits[x] = srcBit;
         }
+        destBits += image.width();
     }
 }
 
@@ -1026,17 +1033,30 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                     // mask the image with backImage
                     QImage subtileImage = this->min->getFloorImage(subtileRef - 1);
                     QImage *destImage = (QImage *)dungeon.device();
-                    for (int y = backHeight - CELL_BORDER - 1; y >= 0; y--) {
-                        for (unsigned x = CELL_BORDER; x < backWidth - CELL_BORDER; x++) {
-                            if (backImage.pixelColor(x, y).alpha() == 0) {
+                    QRgb *backBits = reinterpret_cast<QRgb *>(backImage.bits());
+                    backBits += CELL_BORDER * backWidth;
+                    // assert(subtileImage.height() >= backHeight);
+                    QRgb *srcBits = reinterpret_cast<QRgb *>(subtileImage.scanLine(subtileImage.height() - backHeight));
+                    // assert(drawCursorY >= backHeight);
+                    QRgb *destBits = reinterpret_cast<QRgb *>(destImage->scanLine(drawCursorY - backHeight));
+                    destBits += drawCursorX;
+                    // assert(subtileImage.width() == backWidth);
+                    for (unsigned y = CELL_BORDER; y < backHeight - CELL_BORDER; y++) {
+                        for (unsigned x = CELL_BORDER; x < backWidth - CELL_BORDER; x++, backBits++, srcBits++, destBits++) {
+                            // if (backImage.pixelColor(x, y).alpha() == 0) {
+                            if (qAlpha(*backBits) == 0) {
                                 continue;
                             }
-                            QColor color = subtileImage.pixelColor(x - CELL_BORDER, subtileImage.height() - y);
-                            if (/*color.isNull() ||*/ color.alpha() == 0) {
+                            // QColor color = subtileImage.pixelColor(x - CELL_BORDER, subtileImage.height() - y);
+                            // if (/*color.isNull() ||*/ color.alpha() == 0) {
+                            if (qAlpha(*srcBits) == 0) {
                                 continue;
                             }
-                            destImage->setPixelColor(drawCursorX + x - CELL_BORDER, drawCursorY - (y + 1), color);
+                            // destImage->setPixelColor(drawCursorX + x - CELL_BORDER, drawCursorY - (y + 1), color);
+                            *destBits = *srcBits;
                         }
+                        backBits += 2 * CELL_BORDER;
+                        destBits += destImage->width() - backWidth;
                     }
                 }
             } else {
@@ -1232,23 +1252,32 @@ QImage D1Dun::getImage(const DunDrawParam &params)
     } else {
         unsigned len = 0;
         unsigned y = 1;
+        QRgb *destBits = reinterpret_cast<QRgb *>(backImage.scanLine(0 + CELL_BORDER + y));
+        destBits += 0;
+        QRgb srcBit = backColor.rgba();
         for (; y <= cellHeight / 2; y++) {
             len += 2;
             for (unsigned x = cellWidth / 2 - len - CELL_BORDER - 1; x <= cellWidth / 2 - len; x++) {
-                backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
+                // backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
+                destBits[x + CELL_BORDER] = srcBit;
             }
             for (unsigned x = cellWidth / 2 + len - 1; x <= cellWidth / 2 + len + CELL_BORDER; x++) {
-                backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
+                // backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
+                destBits[x + CELL_BORDER] = srcBit;
             }
+            destBits += cellWidth + 2 * CELL_BORDER; // backImage.width();
         }
         for (; y < cellHeight; y++) {
             len -= 2;
             for (unsigned x = cellWidth / 2 - len - CELL_BORDER - 1; x <= cellWidth / 2 - len; x++) {
-                backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
+                // backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
+                destBits[x + CELL_BORDER] = srcBit;
             }
             for (unsigned x = cellWidth / 2 + len - 1; x <= cellWidth / 2 + len + CELL_BORDER; x++) {
-                backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
+                // backImage.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, backColor);
+                destBits[x + CELL_BORDER] = srcBit;
             }
+            destBits += cellWidth + 2 * CELL_BORDER; // backImage.width();
         }
     }
 
