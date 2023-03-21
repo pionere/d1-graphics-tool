@@ -177,6 +177,10 @@ public:
     bool reloadTileset(const QString &celFilePath);
 
     bool addResource(const AddResourceParam &params);
+    const std::vector<CustomObjectStruct> &getCustomObjectTypes() const;
+    const std::vector<CustomMonsterStruct> &getCustomMonsterTypes() const;
+    const std::vector<CustomItemStruct> &getCustomItemTypes() const;
+    void clearAssets();
 
 private:
     static void drawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, unsigned height, const QColor &color);
@@ -188,7 +192,6 @@ private:
     void loadObject(int objectIndex);
     void loadMonster(int monsterIndex);
     void loadItem(int itemIndex);
-    void clearAssets();
     void updateSubtiles(int tilePosX, int tilePosY, int tileRef);
     bool changeTileAt(int tilePosX, int tilePosY, int tileRef);
     bool changeObjectAt(int posx, int posy, int objectIndex);

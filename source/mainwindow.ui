@@ -216,6 +216,8 @@
     <addaction name="menuDungeonCheck"/>
     <addaction name="menuDungeonRemove"/>
     <addaction name="menuDungeonLoad"/>
+    <addaction name="separator"/>
+    <addaction name="actionGenerate_Dungeon"/>
    </widget>
    <widget class="QMenu" name="menuPalette">
     <property name="title">
@@ -693,6 +695,14 @@
    </property>
    <property name="toolTip">
     <string>Load rooms from another dungeon</string>
+   </property>
+  </action>
+  <action name="actionGenerate_Dungeon">
+   <property name="text">
+    <string>Generate</string>
+   </property>
+   <property name="toolTip">
+    <string>Create a dungeon</string>
    </property>
   </action>
   <action name="actionNew_PAL">

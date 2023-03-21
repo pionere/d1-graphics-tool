@@ -167,6 +167,10 @@ void LevelCelView::updateEntityOptions()
             this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
         }
     }
+    const std::vector<CustomObjectStruct> &customObjectTypes = this->dun->getCustomObjectTypes();
+    for (const CustomObjectStruct &obj : customObjectTypes) {
+        this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
+    }
     // - monsters
     this->ui->dungeonMonsterComboBox->clear();
     this->ui->dungeonMonsterComboBox->addItem("", 0);
@@ -175,9 +179,17 @@ void LevelCelView::updateEntityOptions()
             this->ui->dungeonMonsterComboBox->addItem(mon.name, mon.type);
         }
     }
+    const std::vector<CustomMonsterStruct> &customMonsterTypes = this->dun->getCustomMonsterTypes();
+    for (const CustomMonsterStruct &mon : customMonsterTypes) {
+        this->ui->dungeonMonsterComboBox->addItem(mon.name, mon.type);
+    }
     // - items
     this->ui->dungeonItemComboBox->clear();
     this->ui->dungeonItemComboBox->addItem("", 0);
+    const std::vector<CustomItemStruct> &customItemTypes = this->dun->getCustomItemTypes();
+    for (const CustomItemStruct &item : customItemTypes) {
+        this->ui->dungeonItemComboBox->addItem(item.name, item.type);
+    }
     // update icon of assets
     QString assetPath = this->dun->getAssetPath();
     if (!assetPath.isEmpty()) {
@@ -496,6 +508,13 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
     QPoint p = pos;
     p -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
     dMainWindow().frameClicked(frame, p, first);
+}
+
+void LevelCelView::scrollTo(int posx, int posy)
+{
+    this->setPositionX(posx);
+    this->setPositionY(posy);
+    this->isScrolling = true;
 }
 
 void LevelCelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)
@@ -2799,6 +2818,12 @@ void LevelCelView::loadRooms(D1Dun *srcDun)
     // this->displayFrame();
 }
 
+void LevelCelView::generateDungeon()
+{
+    this->dungeonGenerateDialog.initialize(this->dun);
+    this->dungeonGenerateDialog.show();
+}
+
 void LevelCelView::upscale(const UpscaleParam &params)
 {
     if (Upscaler::upscaleTileset(this->gfx, this->min, params, false)) {
@@ -2839,7 +2864,34 @@ void LevelCelView::displayFrame()
 
         this->celScene.addPixmap(QPixmap::fromImage(dunFrame))
             ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+        // scroll to the current position
+        if (this->isScrolling) {
+            this->isScrolling = false;
+            unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+            unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
+            int cellWidth = subtileWidth;
+            int cellHeight = subtileWidth / 2;
+            // move to 0;0
+            int cX = this->celScene.sceneRect().width() / 2;
+            int cY = CEL_SCENE_MARGIN + subtileHeight - cellHeight / 2;
+            int bX = cX, bY = cY;
+            int offX = (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
+            cX += offX;
+
+            int dunX = this->currentDunPosX;
+            int dunY = this->currentDunPosY;
+            // SHIFT_GRID
+            int cellX = dunX - dunY;
+            int cellY = dunY + dunX;
+            // switch unit
+            cellX *= cellWidth / 2;
+            cellY *= cellHeight / 2;
+
+            cX += cellX;
+            cY += cellY;
+            this->ui->celGraphicsView->centerOn(cX, cY);
+        }
         // Notify PalView that the frame changed (used to refresh palette widget)
         emit frameRefreshed();
         return;

@@ -18,6 +18,7 @@
 #include "d1gfx.h"
 #include "d1pal.h"
 #include "d1tileset.h"
+#include "dungeongeneratedialog.h"
 #include "dungeonresourcedialog.h"
 #include "leveltabframewidget.h"
 #include "leveltabsubtilewidget.h"
@@ -99,6 +100,7 @@ public:
     void loadMonsters(D1Dun *srcDun);
     void loadObjects(D1Dun *srcDun);
     void loadRooms(D1Dun *srcDun);
+    void generateDungeon();
 
     void upscale(const UpscaleParam &params);
 
@@ -108,6 +110,8 @@ public:
     void updateEntityOptions();
     void displayFrame();
     void toggleBottomPanel();
+
+    void scrollTo(int posx, int posy);
 
 private:
     void collectFrameUsers(int frameIndex, std::vector<int> &users) const;
@@ -264,6 +268,7 @@ private:
     LevelTabFrameWidget tabFrameWidget = LevelTabFrameWidget(this);
     PushButtonWidget *viewBtn;
 
+    DungeonGenerateDialog dungeonGenerateDialog = DungeonGenerateDialog(this);
     DungeonResourceDialog dungeonResourceDialog = DungeonResourceDialog(this);
 
     D1Pal *pal;
@@ -276,6 +281,7 @@ private:
     D1Tmi *tmi;
     D1Dun *dun;
     bool dunView = false;
+    bool isScrolling = false;
     int currentFrameIndex = 0;
     int currentSubtileIndex = 0;
     int currentTileIndex = 0;

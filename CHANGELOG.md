@@ -31,6 +31,7 @@
 - added usage report for frames and subtiles of tilesets
 - added usage report for entities of dungeons
 - added option to patch tilesets and dungeons of the original game (Diablo 1)
+- added option to generate dungeons
 - added consistency checks for AMP, SOL and TMI flags
 - added consistency checks for DUN entities
 - support 'merging' of DUN contents
