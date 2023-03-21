@@ -103,8 +103,9 @@ static void saveImage(const std::vector<std::vector<D1GfxPixel>> &pixels, const 
         dProgressFail() << QApplication::tr("Failed to create image with (%1:%2) dimensions.").arg(imageSize.width()).arg(imageSize.height());
         return;
     }
+    QRgb *destBits = reinterpret_cast<QRgb *>(image.bits());
     for (int y = 0; y < imageSize.height(); y++) {
-        for (int x = 0; x < imageSize.width(); x++) {
+        for (int x = 0; x < imageSize.width(); x++, destBits++) {
             const D1GfxPixel &d1pix = pixels[y][x];
 
             QColor color;
@@ -118,7 +119,8 @@ static void saveImage(const std::vector<std::vector<D1GfxPixel>> &pixels, const 
                 color = pal->getColor(d1pix.getPaletteIndex());
             }
 
-            image.setPixelColor(x, y, color);
+            // image.setPixelColor(x, y, color);
+            *destBits = color.rgb();
         }
     }
 

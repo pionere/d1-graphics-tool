@@ -203,9 +203,9 @@ QImage D1Gfx::getFrameImage(int frameIndex) const
     D1GfxFrame *frame = this->frames[frameIndex];
 
     QImage image = QImage(frame->getWidth(), frame->getHeight(), QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32
-
+    QRgb *destBits = reinterpret_cast<QRgb *>(image.bits());
     for (int y = 0; y < frame->getHeight(); y++) {
-        for (int x = 0; x < frame->getWidth(); x++) {
+        for (int x = 0; x < frame->getWidth(); x++, destBits++) {
             D1GfxPixel d1pix = frame->getPixel(x, y);
 
             QColor color;
@@ -214,7 +214,8 @@ QImage D1Gfx::getFrameImage(int frameIndex) const
             else
                 color = this->palette->getColor(d1pix.getPaletteIndex());
 
-            image.setPixelColor(x, y, color);
+            // image.setPixelColor(x, y, color);
+            *destBits = color.rgb();
         }
     }
 
