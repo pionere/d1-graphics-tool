@@ -4,8 +4,6 @@
  * Various global enumerators.
  */
 
-DEVILUTION_BEGIN_NAMESPACE
-
 typedef enum _bool_value {
 	FALSE,
 	TRUE
@@ -3410,12 +3408,12 @@ typedef enum text_color {
 	COL_BLACK,
 } text_color;
 
-typedef enum item_color {
+/*typedef enum item_color {
 	ICOL_YELLOW = PAL16_YELLOW + 5,
 	ICOL_WHITE = PAL16_GRAY + 5,
 	ICOL_BLUE  = PAL16_BLUE + 5,
 	ICOL_RED   = PAL16_RED + 5,
-} item_color;
+} item_color;*/
 
 typedef enum _difficulty {
 	DIFF_NORMAL,
@@ -3927,5 +3925,3 @@ typedef enum dlrg_flag {
 	DLRG_CHAMBER   = 0x40,
 	DLRG_PROTECTED = 0x80,
 } dlrg_flag;
-
-DEVILUTION_END_NAMESPACE
