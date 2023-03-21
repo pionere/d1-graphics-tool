@@ -229,7 +229,7 @@ bool D1Pcx::load(D1GfxFrame &frame, const QString &filePath, bool clipped, D1Pal
                         color = Qt::transparent;
                     }
                     // image.setPixelColor(x, y, color);
-                    *destBits = color.rgb();
+                    *destBits = color.rgba();
                     x++;
                     destBits++;
                     continue;
@@ -243,7 +243,7 @@ bool D1Pcx::load(D1GfxFrame &frame, const QString &filePath, bool clipped, D1Pal
                 }
                 for (int i = 0; i < byte; i++, destBits++) {
                     // image.setPixelColor(x + i, y, color);
-                    *destBits = color.rgb();
+                    *destBits = color.rgba();
                 }
                 x += byte;
             }

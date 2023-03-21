@@ -974,7 +974,7 @@ void D1Dun::drawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width,
     unsigned y = 1;
     QRgb *destBits = reinterpret_cast<QRgb *>(image.scanLine(sy + y));
     destBits += sx;
-    QRgb srcBit = color.rgb();
+    QRgb srcBit = color.rgba();
     for (; y <= height / 2; y++) {
         len += 2;
         for (unsigned x = width / 2 - len - CELL_BORDER; x < width / 2 + len + CELL_BORDER; x++) {
@@ -1254,7 +1254,7 @@ QImage D1Dun::getImage(const DunDrawParam &params)
         unsigned y = 1;
         QRgb *destBits = reinterpret_cast<QRgb *>(backImage.scanLine(0 + CELL_BORDER + y));
         destBits += 0;
-        QRgb srcBit = backColor.rgb();
+        QRgb srcBit = backColor.rgba();
         for (; y <= cellHeight / 2; y++) {
             len += 2;
             for (unsigned x = cellWidth / 2 - len - CELL_BORDER - 1; x <= cellWidth / 2 - len; x++) {

@@ -120,7 +120,7 @@ static void saveImage(const std::vector<std::vector<D1GfxPixel>> &pixels, const 
             }
 
             // image.setPixelColor(x, y, color);
-            *destBits = color.rgb();
+            *destBits = color.rgba();
         }
     }
 

@@ -473,7 +473,7 @@ void PaintWidget::colorModified()
             for (int y = 0; y < imageSize.height(); y++) {
                 // image.setPixelColor(x, y, color);
                 QRgb *destBits = reinterpret_cast<QRgb *>(image.scanLine(y));
-                destBits[x] = color.rgb();
+                destBits[x] = color.rgba();
             }
         }
     }
