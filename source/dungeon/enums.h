@@ -3130,7 +3130,8 @@ typedef enum dungeon_type {
 	DTYPE_HELL,
 	DTYPE_CRYPT,
 	DTYPE_NEST,
-	DTYPE_NONE = 0xFF,
+	DTYPE_NONE,
+	NUM_DUNGEON_TYPES,
 } dungeon_type;
 
 typedef enum dungeon_type_mask {
