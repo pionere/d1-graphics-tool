@@ -159,21 +159,25 @@ void LevelCelView::updateTilesetIcon()
 void LevelCelView::updateEntityOptions()
 {
     // prepare the comboboxes
+    // - objects
     this->ui->dungeonObjectComboBox->clear();
     this->ui->dungeonObjectComboBox->addItem("", 0);
-    for (const ObjectStruct &obj : ObjConvTbl) {
+    for (const DunObjectStruct &obj : DunObjConvTbl) {
         if (obj.type != 0) {
             this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
         }
     }
+    // - monsters
     this->ui->dungeonMonsterComboBox->clear();
     this->ui->dungeonMonsterComboBox->addItem("", 0);
-    for (const MonsterStruct &mon : MonstConvTbl) {
+    for (const DunMonsterStruct &mon : DunMonstConvTbl) {
         if (mon.type != 0) {
             this->ui->dungeonMonsterComboBox->addItem(mon.name, mon.type);
         }
     }
+    // - items
     this->ui->dungeonItemComboBox->clear();
+    this->ui->dungeonItemComboBox->addItem("", 0);
     // update icon of assets
     QString assetPath = this->dun->getAssetPath();
     if (!assetPath.isEmpty()) {
