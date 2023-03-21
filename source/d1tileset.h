@@ -11,19 +11,7 @@
 #include "openasdialog.h"
 #include "saveasdialog.h"
 
-#ifndef __ALL_H__
-typedef enum dungeon_type {
-    DTYPE_TOWN,
-    DTYPE_CATHEDRAL,
-    DTYPE_CATACOMBS,
-    DTYPE_CAVES,
-    DTYPE_HELL,
-    DTYPE_CRYPT,
-    DTYPE_NEST,
-    DTYPE_NONE,
-    NUM_DUNGEON_TYPES,
-} dungeon_type;
-#endif
+#include "dungeon/enums.h"
 
 class D1Tileset {
 public:
