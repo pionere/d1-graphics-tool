@@ -85,9 +85,9 @@ LevelCelView::LevelCelView(QWidget *parent)
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ShowContextMenu(const QPoint &)));
 
-    this->ui->dungeonObjectComboBox->view()->setTextElideMode(Qt::ElideNone);
-    this->ui->dungeonMonsterComboBox->view()->setTextElideMode(Qt::ElideNone);
-    this->ui->dungeonItemComboBox->view()->setTextElideMode(Qt::ElideNone);
+    // this->ui->dungeonObjectComboBox->view()->setTextElideMode(Qt::ElideNone);
+    // this->ui->dungeonMonsterComboBox->view()->setTextElideMode(Qt::ElideNone);
+    // this->ui->dungeonItemComboBox->view()->setTextElideMode(Qt::ElideNone);
 
     setAcceptDrops(true);
 }
@@ -164,6 +164,7 @@ void LevelCelView::updateEntityOptions()
 {
     // prepare the comboboxes
     // - objects
+    this->ui->dungeonObjectComboBox->hide();
     this->ui->dungeonObjectComboBox->clear();
     this->ui->dungeonObjectComboBox->addItem("", 0);
     for (const DunObjectStruct &obj : DunObjConvTbl) {
@@ -175,8 +176,9 @@ void LevelCelView::updateEntityOptions()
     for (const CustomObjectStruct &obj : customObjectTypes) {
         this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
     }
-    this->ui->dungeonObjectComboBox->adjustSize();
+    this->ui->dungeonObjectComboBox->show();
     // - monsters
+    this->ui->dungeonMonsterComboBox->hide();
     this->ui->dungeonMonsterComboBox->clear();
     this->ui->dungeonMonsterComboBox->addItem("", 0);
     for (const DunMonsterStruct &mon : DunMonstConvTbl) {
@@ -188,15 +190,17 @@ void LevelCelView::updateEntityOptions()
     for (const CustomMonsterStruct &mon : customMonsterTypes) {
         this->ui->dungeonMonsterComboBox->addItem(mon.name, mon.type);
     }
-    this->ui->dungeonMonsterComboBox->adjustSize();
+    this->ui->dungeonMonsterComboBox->show();
+    // this->ui->dungeonMonsterComboBox->adjustSize();
     // - items
+    this->ui->dungeonItemComboBox->hide();
     this->ui->dungeonItemComboBox->clear();
     this->ui->dungeonItemComboBox->addItem("", 0);
     const std::vector<CustomItemStruct> &customItemTypes = this->dun->getCustomItemTypes();
     for (const CustomItemStruct &item : customItemTypes) {
         this->ui->dungeonItemComboBox->addItem(item.name, item.type);
     }
-    this->ui->dungeonItemComboBox->adjustSize();
+    this->ui->dungeonItemComboBox->show();
     // update icon of assets
     QString assetPath = this->dun->getAssetPath();
     if (!assetPath.isEmpty()) {
