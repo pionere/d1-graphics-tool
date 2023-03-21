@@ -758,7 +758,7 @@ bool D1Dun::save(const SaveAsParam &params)
             if (this->monsters[y][x] != 0) {
                 layers |= 1 << 1;
             }
-            if (this->objects[y][x] != 0) {
+            if (this->objects[y][x] > 0) {
                 layers |= 1 << 2;
             }
             if (this->rooms[y][x] != 0) {
@@ -929,7 +929,7 @@ bool D1Dun::save(const SaveAsParam &params)
         if (numLayers >= 3) {
             for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
                 for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                    writeWord = this->objects[y][x];
+                    writeWord = this->objects[y][x] > 0 ? this->objects[y][x] : 0;
                     out << writeWord;
                 }
             }
@@ -2172,6 +2172,7 @@ void D1Dun::checkObjects() const
             if (objectIndex == 0) {
                 continue;
             }
+            objectIndex = abs(objectIndex);
             int subtileRef = this->subtiles[y][x];
             QString objectName = this->getObjectName(objectIndex);
             if (subtileRef == UNDEF_SUBTILE) {
@@ -2305,8 +2306,8 @@ void D1Dun::loadObjects(D1Dun *srcDun)
             int currObjectIndex = this->objects[y][x];
             if (newObjectIndex != 0 && currObjectIndex != newObjectIndex) {
                 if (currObjectIndex != 0) {
-                    QString currObjectName = this->getObjectName(currObjectIndex);
-                    QString newObjectName = this->getObjectName(newObjectIndex);
+                    QString currObjectName = this->getObjectName(abs(currObjectIndex));
+                    QString newObjectName = this->getObjectName(abs(newObjectIndex));
                     dProgressWarn() << tr("'%1'(%2) object at %3:%4 was replaced by '%5'(%6).").arg(currObjectName).arg(currObjectIndex).arg(x).arg(y).arg(newObjectName).arg(newObjectIndex);
                 }
                 this->objects[y][x] = newObjectIndex;
