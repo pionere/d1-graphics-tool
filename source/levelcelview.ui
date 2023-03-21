@@ -1264,12 +1264,26 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="12" colspan="5">
-           <spacer>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </spacer>
+          <item row="0" column="12" colspan="3">
+           <layout class="QHBoxLayout">
+            <item alignment="Qt::AlignRight">
+             <widget class="QPushButton" name="assetLoadPushButton">
+              <property name="text">
+               <string notr="true">...</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="assetClearPushButton">
+              <property name="text">
+               <string>Clear</string>
+              </property>
+              <property name="toolTip">
+               <string>Clear asset folder of the entites</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item row="1" column="0">
            <widget class="QLabel">
@@ -1369,23 +1383,6 @@
              <enum>Qt::Horizontal</enum>
             </property>
            </spacer>
-          </item>
-          <item row="1" column="15">
-           <widget class="QPushButton" name="assetLoadPushButton">
-            <property name="text">
-             <string notr="true">...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="16">
-           <widget class="QPushButton" name="assetClearPushButton">
-            <property name="text">
-             <string>Clear</string>
-            </property>
-            <property name="toolTip">
-             <string>Clear asset folder of the entites</string>
-            </property>
-           </widget>
           </item>
          </layout>
         </widget>
