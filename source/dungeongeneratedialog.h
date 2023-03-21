@@ -5,20 +5,6 @@
 
 class D1Dun;
 
-#ifndef __ALL_H__
-typedef enum lvl_entry {
-    ENTRY_MAIN,
-    ENTRY_PREV,
-    ENTRY_SETLVL,
-    ENTRY_RTNLVL,
-    ENTRY_LOAD,
-    ENTRY_WARPLVL,
-    ENTRY_TWARPDN,
-    ENTRY_TWARPUP,
-    ENTRY_RETOWN,
-} lvl_entry;
-#endif
-
 class GenerateDunParam {
 public:
     int level;      // dungeon_level / _setlevels
