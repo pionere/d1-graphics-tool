@@ -30,12 +30,6 @@
 #include "dungeon/all.h"
 // #include "dungeon/monstdat.h"
 
-template <class T, int N>
-constexpr int lengthof(T (&arr)[N])
-{
-    return N;
-}
-
 LevelCelView::LevelCelView(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::LevelCelView())
@@ -172,6 +166,7 @@ void LevelCelView::updateEntityOptions()
     this->ui->dungeonObjectComboBox->addItem("", 0);
     for (const DunObjectStruct &obj : DunObjConvTbl) {
         if (obj.type != 0) {
+            // TODO: filter custom entries?
             this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
         }
     }
@@ -187,6 +182,7 @@ void LevelCelView::updateEntityOptions()
     for (unsigned i = 0; i < lengthof(MonstConvTbl); i++) {
         BYTE monType = MonstConvTbl[i];
         if (monType != 0) {
+            // TODO: filter custom entries?
             this->ui->dungeonMonsterComboBox->addItem(monsterdata[monType].mName, i);
         }
     }

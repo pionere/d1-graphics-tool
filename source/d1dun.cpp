@@ -28,12 +28,6 @@
 // #include "dungeon/objdat.h"
 // #include "dungeon/structs.h"
 
-template <class T, int N>
-constexpr int lengthof(T (&arr)[N])
-{
-    return N;
-}
-
 typedef enum dun_object_graphic_id {
     DOFILE_LEVER,
     DOFILE_CRUXSK1,
@@ -415,25 +409,6 @@ const DunObjFileData dunobjfiledata[NUM_DOFILE_TYPES] = {
     { 0 }, ///MT_BIGFALL,
     // clang-format on
 };*/
-
-const DunMonFileData dunmonfiledata[NUM_DMOFILE_TYPES] = {
-    // clang-format off
-/*DMOFILE_FALLSP*/  { "FalSpear\\Phall", 128 },
-/*DMOFILE_SKELAX*/  { "SkelAxe\\SklAx",  128 },
-/*DMOFILE_FALLSD*/  { "FalSword\\Fall",  128 },
-/*DMOFILE_SKELBW*/  { "SkelBow\\SklBw",  128 },
-/*DMOFILE_SKELSD*/  { "SkelSd\\SklSr",   128 },
-/*DMOFILE_SNEAK*/   { "Sneak\\Sneak",    128 },
-/*DMOFILE_GOATMC*/  { "GoatMace\\Goat",  128 },
-/*DMOFILE_GOATBW*/  { "GoatBow\\GoatB",  128 },
-/*DMOFILE_FAT*/     { "Fat\\Fat",        128 },
-/*DMOFILE_RHINO*/   { "Rhino\\Rhino",    160 },
-/*DMOFILE_BLACK*/   { "Black\\Black",    160 },
-/*DMOFILE_SUCC*/    { "Succ\\Scbs",      128 },
-/*DMOFILE_MAGE*/    { "Mage\\Mage",      128 },
-/*DMOFILE_DIABLO*/  { "Diablo\\Diablo",  160 },
-    // clang-format on
-};
 
 D1Dun::~D1Dun()
 {
