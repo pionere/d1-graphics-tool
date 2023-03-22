@@ -843,21 +843,6 @@ static void DRLG_L1Shadows()
 	}
 }
 
-/*static bool DRLG_L1PlaceMiniSet(const BYTE* miniset, bool setview)
-{
-	POS32 result;
-
-	result = DRLG_PlaceMiniSet(miniset);
-	if (result.x < 0)
-		return false;
-
-	if (setview) {
-		ViewX = 2 * result.x + DBORDERX + 3;
-		ViewY = 2 * result.y + DBORDERY + 4;
-	}
-	return true;
-}*/
-
 static void DRLG_L1Floor()
 {
 	DRLG_PlaceRndTile(13, 162, 33);
@@ -2479,22 +2464,6 @@ static void DRLG_L1CornerFix()
 	}*/
 }
 
-/*struct mini_set {
-	const BYTE* data;
-	bool setview;
-};
-static bool DRLG_L1PlaceMiniSets(mini_set* minisets, int n)
-{
-	int i;
-
-	for (i = 0; i < n; i++) {
-		if (minisets[i].data != NULL && !DRLG_L1PlaceMiniSet(minisets[i].data, minisets[i].setview)) {
-			return false;
-		}
-	}
-	return true;
-}*/
-
 static void DRLG_L1(int entry)
 {
 	int i;
@@ -2532,12 +2501,6 @@ static void DRLG_L1(int entry)
 			if (warpPos.x < 0) {
 				continue;
 			}
-			/*quests[Q_PWATER]._qtx = 2 * mpos.x + DBORDERX + 5;
-			quests[Q_PWATER]._qty = 2 * mpos.y + DBORDERY + 6;
-			if (entry == ENTRY_RTNLVL) {
-				ViewX = quests[Q_PWATER]._qtx;
-				ViewY = quests[Q_PWATER]._qty + 1;
-			}*/
 			pWarps[DWARP_SIDE]._wx = warpPos.x + 2;
 			pWarps[DWARP_SIDE]._wy = warpPos.y + 3;
 			pWarps[DWARP_SIDE]._wx = 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
@@ -2546,44 +2509,6 @@ static void DRLG_L1(int entry)
 		DRLG_InitTrans();
 		DRLG_FloodTVal(13);
 
-		/*if (setpc_type == SPT_BANNER) {
-			if (entry == ENTRY_PREV) {
-				ViewX = 2 * setpc_x + DBORDERX + 3;
-				ViewY = 2 * setpc_y + DBORDERY + 11;
-			}
-			doneflag = DRLG_L1PlaceMiniSet(L1USTAIRS, entry != ENTRY_PREV /* entry == ENTRY_MAIN * /); // was STAIRSUP, entry == ENTRY_MAIN
-#ifdef HELLFIRE
-		} else if (currLvl._dType == DTYPE_CRYPT) {
-			mini_set stairs[2] = {
-				{ /*currLvl._dLevelIdx != DLV_CRYPT1 ?* / L5USTAIRS /*: L5TWARP* /, entry != ENTRY_PREV /* entry == ENTRY_MAIN || entry == ENTRY_TWARPDN * / },
-				{ currLvl._dLevelIdx != DLV_CRYPT4 ? L5DSTAIRS : NULL, entry == ENTRY_PREV },
-			};
-			doneflag = DRLG_L1PlaceMiniSets(stairs, 2);
-			if (entry == ENTRY_PREV) {
-				ViewY += 3;
-			} else {
-				ViewY += 2;
-			}
-#endif
-		} else {
-			// assert(currLvl._dType == DTYPE_CATHEDRAL);
-			mini_set stairs[2] = {
-				{ L1USTAIRS, entry == ENTRY_MAIN || entry == ENTRY_TWARPDN }, // was STAIRSUP in hellfire
-				{ L1DSTAIRS, entry == ENTRY_PREV },
-			};
-			doneflag = DRLG_L1PlaceMiniSets(stairs, 2);
-			if (entry == ENTRY_PREV) {
-				ViewY++;
-			}
-			if (setpc_type == SPT_SKELKING) {
-				quests[Q_SKELKING]._qtx = 2 * setpc_x + DBORDERX + 12;
-				quests[Q_SKELKING]._qty = 2 * setpc_y + DBORDERX + 7;
-				if (entry == ENTRY_RTNLVL) {
-					ViewX = quests[Q_SKELKING]._qtx + 1;
-					ViewY = quests[Q_SKELKING]._qty;
-				}
-			}
-		}*/
 #ifdef HELLFIRE
 		if (currLvl._dType == DTYPE_CRYPT) {
 			POS32 warpPos = DRLG_PlaceMiniSet(L5USTAIRS); // L5USTAIRS (3, 6), was STAIRSUP, entry == ENTRY_MAIN
@@ -2637,20 +2562,20 @@ static void DRLG_L1(int entry)
 			pWarps[DWARP_EXIT]._wy = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
 		}
 		if (entry == ENTRY_MAIN || entry == ENTRY_TWARPDN) {
-			ViewX = pWarps[DWARP_ENTRY]._wx; // 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
-			ViewY = pWarps[DWARP_ENTRY]._wy; // 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+			ViewX = pWarps[DWARP_ENTRY]._wx;
+			ViewY = pWarps[DWARP_ENTRY]._wy;
 			ViewX += 1;
 			ViewY += 2;
 		}
 		if (entry == ENTRY_PREV) {
-			ViewX = pWarps[DWARP_EXIT]._wx; // 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
-			ViewY = pWarps[DWARP_EXIT]._wy; // 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
+			ViewX = pWarps[DWARP_EXIT]._wx;
+			ViewY = pWarps[DWARP_EXIT]._wy;
 			ViewX += 1;
 			ViewY += 1;
 		}
 		if (entry == ENTRY_RTNLVL) {
-			ViewX = pWarps[DWARP_SIDE]._wx; // 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
-			ViewY = pWarps[DWARP_SIDE]._wy; // 2 * pWarps[DWARP_SIDE]._wy + DBORDERY;
+			ViewX = pWarps[DWARP_SIDE]._wx;
+			ViewY = pWarps[DWARP_SIDE]._wy;
 			ViewX += 1;
 			ViewY += 1;
 		}
@@ -2660,10 +2585,8 @@ static void DRLG_L1(int entry)
 	if (placeWater) {
 		int x, y;
 
-		// x = quests[Q_PWATER]._qtx;
-		// y = quests[Q_PWATER]._qty + 1;
-		x = pWarps[DWARP_SIDE]._wx + 1; // pWarps[DWARP_SIDE]._wx * 2 + DBORDERX + 1;
-		y = pWarps[DWARP_SIDE]._wy + 1; // pWarps[DWARP_SIDE]._wy * 2 + DBORDERY + 1;
+		x = pWarps[DWARP_SIDE]._wx + 1;
+		y = pWarps[DWARP_SIDE]._wy + 1;
 		// fix transVal of the set-map (entrance)
 		DRLG_CopyTrans(x + 0, y + 2, x + 0, y + 0);
 		DRLG_CopyTrans(x + 1, y + 2, x + 1, y + 0);

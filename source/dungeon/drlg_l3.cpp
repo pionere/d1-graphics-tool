@@ -2142,29 +2142,6 @@ static bool DRLG_L3Lockout()
 	return true;
 }
 
-/*struct mini_set {
-	const BYTE* data;
-	bool setview;
-};
-static bool DRLG_L3PlaceMiniSets(mini_set* minisets, int n)
-{
-	int i;
-	POS32 mpos;
-
-	for (i = 0; i < n; i++) {
-		if (minisets[i].data == NULL)
-			continue;
-		mpos = DRLG_PlaceMiniSet(minisets[i].data);
-		if (mpos.x < 0)
-			return false;
-		if (minisets[i].setview) {
-			ViewX = 2 * mpos.x + DBORDERX + 1;
-			ViewY = 2 * mpos.y + DBORDERY + 3;
-		}
-	}
-	return true;
-}*/
-
 static void DRLG_L3(int entry)
 {
 	bool doneflag;
@@ -2194,33 +2171,6 @@ static void DRLG_L3(int entry)
 			if (pSetPiece != NULL) { // setpc_type != SPT_NONE
 				DRLG_L3SetRoom(setpc_x, setpc_y);
 			}
-			/*
-#ifdef HELLFIRE
-			if (currLvl._dType == DTYPE_NEST) {
-				mini_set stairs[2] = {
-					{ /*currLvl._dLevelIdx != DLV_NEST1 ?* / L6USTAIRS /*: L6TWARP* /, entry != ENTRY_PREV /* entry == ENTRY_TWARPDN || entry == ENTRY_MAIN * / },
-					{ currLvl._dLevelIdx != DLV_NEST4 ? L6DSTAIRS : NULL, entry == ENTRY_PREV }
-				};
-				doneflag = DRLG_L3PlaceMiniSets(stairs, 2);
-				if (entry == ENTRY_PREV) {
-					ViewX += 2;
-					ViewY -= 2;
-				}
-			} else
-#endif
-			{
-				// assert(currLvl._dType == DTYPE_CAVES);
-				mini_set stairs[3] = {
-					{ L3USTAIRS, entry == ENTRY_MAIN },
-					{ L3DSTAIRS, entry == ENTRY_PREV },
-					{ currLvl._dLevelIdx != DLV_CAVES1 ? NULL : L3TWARP, entry == ENTRY_TWARPDN },
-				};
-				doneflag = DRLG_L3PlaceMiniSets(stairs, 3);
-				if (entry == ENTRY_PREV) {
-					ViewX += 2;
-					ViewY -= 2;
-				}
-			}*/
 			memset(pWarps, 0, sizeof(pWarps));
 #ifdef HELLFIRE
 			if (currLvl._dType == DTYPE_NEST) {
@@ -2241,6 +2191,18 @@ static void DRLG_L3(int entry)
 					pWarps[DWARP_EXIT]._wy = warpPos.y + 0;
 					pWarps[DWARP_EXIT]._wx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
 					pWarps[DWARP_EXIT]._wy = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
+				}
+				if (entry == ENTRY_MAIN || entry == ENTRY_TWARPDN) {
+					ViewX = pWarps[DWARP_ENTRY]._wx;
+					ViewY = pWarps[DWARP_ENTRY]._wy;
+					ViewX += 1;
+					ViewY += 1;
+				}
+				if (entry == ENTRY_PREV) {
+					ViewX = pWarps[DWARP_EXIT]._wx;
+					ViewY = pWarps[DWARP_EXIT]._wy;
+					ViewX += 1;
+					ViewY += 1;
 				}
 			} else
 #endif
@@ -2272,25 +2234,24 @@ static void DRLG_L3(int entry)
 					pWarps[DWARP_TOWN]._wx = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
 					pWarps[DWARP_TOWN]._wy = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
 				}
-			}
-
-			if (entry == ENTRY_MAIN) {
-				ViewX = pWarps[DWARP_ENTRY]._wx; // 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
-				ViewY = pWarps[DWARP_ENTRY]._wy; // 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
-				ViewX += 1;
-				ViewY += 1;
-			}
-			if (entry == ENTRY_PREV) {
-				ViewX = pWarps[DWARP_EXIT]._wx; // 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
-				ViewY = pWarps[DWARP_EXIT]._wy; // 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
-				ViewX += 1;
-				ViewY += 1;
-			}
-			if (entry == ENTRY_TWARPDN) {
-				ViewX = pWarps[DWARP_TOWN]._wx; // 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
-				ViewY = pWarps[DWARP_TOWN]._wy; // 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
-				ViewX += 1;
-				ViewY += 1;
+				if (entry == ENTRY_MAIN) {
+					ViewX = pWarps[DWARP_ENTRY]._wx;
+					ViewY = pWarps[DWARP_ENTRY]._wy;
+					ViewX += 1;
+					ViewY += 1;
+				}
+				if (entry == ENTRY_PREV) {
+					ViewX = pWarps[DWARP_EXIT]._wx;
+					ViewY = pWarps[DWARP_EXIT]._wy;
+					ViewX += 1;
+					ViewY += 1;
+				}
+				if (entry == ENTRY_TWARPDN) {
+					ViewX = pWarps[DWARP_TOWN]._wx;
+					ViewY = pWarps[DWARP_TOWN]._wy;
+					ViewX += 1;
+					ViewY += 1;
+				}
 			}
 			break;
 		}
