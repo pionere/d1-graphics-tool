@@ -25,16 +25,16 @@ static void IncProgress()
 
 static void LogErrorF(const char* type, const char* msg, ...)
 {
-	char tmp[256];
-	va_list va;
+    char tmp[256];
+    va_list va;
 
-	va_start(va, msg);
+    va_start(va, msg);
 
-	vsnprintf(tmp, sizeof(tmp), msg, va);
+    vsnprintf(tmp, sizeof(tmp), msg, va);
 
-	va_end(va);
+    va_end(va);
 
-	dProgress() << QString(tmp);
+    dProgress() << QString(tmp);
 }
 
 /**
@@ -215,7 +215,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
             dun->setTileAt(DBORDERX + x * 2, DBORDERY + y * 2, dungeon[x][y]);
         }
     }
-    std::set<int> objectTypes;
+    std::vector<std::pair<int, int>> objectTypes;
     std::set<int> itemTypes;
     for (int y = 0; y < MAXDUNY; y++) {
         for (int x = 0; x < MAXDUNY; x++) {
@@ -235,8 +235,22 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
             dun->setMonsterAt(x, y, mon);
             int obj = dObject[x][y];
             if (obj > 0) {
-                obj = objects[obj - 1]._otype + lengthof(DunObjConvTbl);
-                objectTypes.insert(obj - lengthof(DunObjConvTbl));
+                ObjectStruct *os = &objects[obj - 1];
+                int otype = os->_otype;
+                int animFrame = os->_oAnimFlag == OAM_LOOP ? 0 : os->_oAnimFrame;
+                auto iter = objectTypes.begin();
+                for (; iter != objectTypes.end(); iter++) {
+                    if (iter->first == otype && iter->second == animFrame) {
+                        break;
+                    }
+                }
+                if (iter == objectTypes.end()) {
+                    obj = objectTypes.size();
+                    objectTypes.push_back(std::pair<int, int>(otype, animFrame));
+                } else {
+                    obj = std::distance(objectTypes.begin(), iter);
+                }
+                obj += lengthof(DunObjConvTbl);
             } else {
                 obj = 0;
             }
@@ -271,14 +285,16 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
         dun->addResource(monRes);
     }
     // add objects
-    for (int otype : objectTypes) {
+    for (unsigned i = 0; i < objectTypes.size(); i++) {
+        const std::pair<int, int> &objType = objectTypes[i];
+        int otype = objType.first;
         AddResourceParam objRes = AddResourceParam();
         objRes.type = DUN_ENTITY_TYPE::OBJECT;
-        objRes.index = lengthof(DunObjConvTbl) + otype;
-        objRes.name = objfiledata[objectdata[otype].ofindex].ofName; // FIXME: object labels?
+        objRes.index = lengthof(DunObjConvTbl) + i;
+        objRes.name = objfiledata[objectdata[otype].ofindex].ofName; // TODO: object labels?
         objRes.path = assetPath + "/Objects/" + objfiledata[objectdata[otype].ofindex].ofName + ".CEL";
         objRes.width = objfiledata[objectdata[otype].ofindex].oAnimWidth;
-        objRes.frame = objectdata[otype].oAnimBaseFrame; // TODO: books / chests?
+        objRes.frame = objType.second;
         dun->addResource(objRes);
     }
     view->updateEntityOptions();
