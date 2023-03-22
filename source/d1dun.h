@@ -236,4 +236,4 @@ private:
 };
 
 extern const DunObjectStruct DunObjConvTbl[128];
-extern const DunMonsterStruct DunMonstConvTbl[128];
+// extern const DunMonsterStruct DunMonstConvTbl[128];
