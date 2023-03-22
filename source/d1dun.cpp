@@ -28,7 +28,7 @@
 // #include "dungeon/objdat.h"
 // #include "dungeon/structs.h"
 
-typedef enum dun_object_graphic_id {
+/*typedef enum dun_object_graphic_id {
     DOFILE_LEVER,
     DOFILE_CRUXSK1,
     DOFILE_CRUXSK2,
@@ -50,7 +50,7 @@ typedef enum dun_object_graphic_id {
     DOFILE_WTORCH2,
     DOFILE_WTORCH1,
     NUM_DOFILE_TYPES
-} dun_object_graphic_id;
+} dun_object_graphic_id;*/
 
 typedef struct SpecCell {
     int subtileRef;
@@ -121,159 +121,134 @@ const DungeonStruct dungeonTbl[NUM_DUNGEON_TYPES] = {
 
 const DunObjectStruct DunObjConvTbl[128] = {
     // clang-format off
-    { 0 },
-    {   1, DOFILE_LEVER,    "Lever", 1 }, // Q_SKELKING
-    {   2, DOFILE_CRUXSK1,  "Crucifix1", 1 }, // Q_SKELKING
-    {   3, DOFILE_CRUXSK2,  "Crucifix2", 1 }, // Q_SKELKING
-    {   4, DOFILE_CRUXSK3,  "Crucifix3", 1 }, // Q_SKELKING
-    { 0 }, //OBJ_ANGEL,
-    { 0 }, //OBJ_BANNERL,
-    { 0 }, //OBJ_BANNERM,
-    { 0 }, //OBJ_BANNERR,
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    {  14, DOFILE_BOOK2,    "Bookstand", 1 }, // Q_BCHAMB, Q_BETRAYER
-    { 0 }, //OBJ_BOOK2R,
-    {  16, DOFILE_BURNCROS, "Burning cross", 0 }, // Q_BCHAMB
-    { 0 },
-    { 0 }, //OBJ_CANDLE1,
-    {  19, DOFILE_CANDLE2,  "Candle", 0 }, // Q_BCHAMB
-    { 0 }, //OBJ_CANDLEO,
-    { 0 }, //OBJ_CAULDRON,
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 }, //OBJ_FLAMEHOLE,
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    {  36, DOFILE_MCIRL,    "Magic Circle 1", 1 }, // Q_BETRAYER
-    {  37, DOFILE_MCIRL,    "Magic Circle 2", 3 }, // Q_BETRAYER
-    { 0 }, //OBJ_SKFIRE,
-    { 0 }, //OBJ_SKPILE,
-    { 0 }, //OBJ_SKSTICK1,
-    { 0 }, //OBJ_SKSTICK2,
-    { 0 }, //OBJ_SKSTICK3,
-    { 0 }, //OBJ_SKSTICK4,
-    { 0 }, //OBJ_SKSTICK5,
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    {  51, DOFILE_SWITCH4,  "Switch", 1 }, // Q_BCHAMB, Q_DIABLO
-    { 0 },
-    { 0 }, //OBJ_TRAPL,
-    { 0 }, //OBJ_TRAPR,
-    {  55, DOFILE_TSOUL,    "Tortured body 1", 1 }, // Q_BUTCHER
-    {  56, DOFILE_TSOUL,    "Tortured body 2", 2 }, // Q_BUTCHER
-    {  57, DOFILE_TSOUL,    "Tortured body 3", 3 }, // Q_BUTCHER
-    {  58, DOFILE_TSOUL,    "Tortured body 4", 4 }, // Q_BUTCHER
-    {  59, DOFILE_TSOUL,    "Tortured body 5", 5 }, // Q_BUTCHER
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 }, //OBJ_NUDEW2R,
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    {  70, DOFILE_TNUDEM,   "Tortured male 1", 1 }, //1, Q_BUTCHER
-    {  71, DOFILE_TNUDEM,   "Tortured male 2", 2 }, //2, Q_BUTCHER
-    {  72, DOFILE_TNUDEM,   "Tortured male 3", 3 }, //3, Q_BUTCHER
-    {  73, DOFILE_TNUDEM,   "Tortured male 4", 4 }, //4, Q_BUTCHER
-    {  74, DOFILE_TNUDEW,   "Tortured female 1", 1 }, //1, Q_BUTCHER
-    {  75, DOFILE_TNUDEW,   "Tortured female 2", 2 }, //2, Q_BUTCHER
-    {  76, DOFILE_TNUDEW,   "Tortured female 3", 3 }, //3, Q_BUTCHER
-    { 0 }, //OBJ_CHEST1,
-    {  78, DOFILE_CHEST1,   "Chest 1", 1 }, // Q_SKELKING
-    { 0 }, //OBJ_CHEST1,
-    { 0 }, //OBJ_CHEST2,
-    {  81, DOFILE_CHEST2,   "Chest 2", 1 }, // Q_SKELKING
-    { 0 }, //OBJ_CHEST2,
-    { 0 }, //OBJ_CHEST3,
-    {  84, DOFILE_CHEST3,   "Chest 3", 1 }, // Q_BCHAMB
-    { 0 }, //OBJ_CHEST3,
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 }, //OBJ_PEDISTAL,
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 105, DOFILE_ALTBOY,   "Altarboy", 1 }, // Q_BETRAYER
-    { 0 },
-    { 0 },
-    { 108, DOFILE_ARMSTAND, "Armor stand", 2 }, //OBJ_ARMORSTAND, // Q_WARLORD - changed to inactive versions to eliminate farming potential
-    { 109, DOFILE_WEAPSTND, "Weapon stand", 2 }, //OBJ_WEAPONRACKL, // Q_WARLORD
-    { 110, DOFILE_WTORCH2,  "Torch 2", 0 }, // Q_BLOOD
-    { 111, DOFILE_WTORCH1,  "Torch 1", 0 }, // Q_BLOOD
-    { 0 }, //OBJ_MUSHPATCH,
-    { 0 }, //OBJ_STAND,
-    { 0 }, //OBJ_TORCHL2,
-    { 0 }, //OBJ_TORCHR2,
-    { 0 }, //OBJ_FLAMELVR,
-    { 0 }, //OBJ_SARC,
-    { 0 }, //OBJ_BARREL,
-    { 0 }, //OBJ_BARRELEX,
-    { 0 }, //OBJ_BOOKSHELF,
-    { 0 }, //OBJ_BOOKCASEL,
-    { 0 }, //OBJ_BOOKCASER,
-    { 0 }, //OBJ_ARMORSTANDN,
-    { 0 }, //OBJ_WEAPONRACKLN,
-    { 0 }, //OBJ_BLOODFTN,
-    { 0 }, //OBJ_PURIFYINGFTN,
-    { 0 }, //OBJ_SHRINEL,
-    // clang-format on
-};
-
-const DunObjFileData dunobjfiledata[NUM_DOFILE_TYPES] = {
-    // clang-format off
-/*DOFILE_LEVER*/    { "Lever",     96, 1 }, // 2
-/*DOFILE_CRUXSK1*/  { "CruxSk1",   96, 1 }, // 15
-/*DOFILE_CRUXSK2*/  { "CruxSk2",   96, 1 }, // 15
-/*DOFILE_CRUXSK3*/  { "CruxSk3",   96, 1 }, // 15
-/*DOFILE_BOOK2*/    { "Book2",     96, 1 }, // 6
-/*DOFILE_BURNCROS*/ { "Burncros", 160, 1 }, // 10
-/*DOFILE_CANDLE2*/  { "Candle2",   96, 1 }, // 4
-/*DOFILE_MCIRL*/    { "Mcirl",     96, 3 }, // 4
-/*DOFILE_SWITCH4*/  { "Switch4",   96, 1 }, // 2
-/*DOFILE_TSOUL*/    { "TSoul",    128, 5 }, // 6
-/*DOFILE_TNUDEM*/   { "TNudeM",   128, 4 }, // 4
-/*DOFILE_TNUDEW*/   { "TNudeW",   128, 3 }, // 3
-/*DOFILE_CHEST1*/   { "Chest1",    96, 1 }, // 6
-/*DOFILE_CHEST2*/   { "Chest2",    96, 1 }, // 6
-/*DOFILE_CHEST3*/   { "Chest3",    96, 1 }, // 6
-/*DOFILE_ALTBOY*/   { "Altboy",   128, 1 }, // 1
-/*DOFILE_ARMSTAND*/ { "Armstand",  96, 2 }, // 2
-/*DOFILE_WEAPSTND*/ { "WeapStnd",  96, 2 }, // 4
-/*DOFILE_WTORCH2*/  { "WTorch2",   96, 1 }, // 9
-/*DOFILE_WTORCH1*/  { "WTorch1",   96, 1 }, // 9
+                     { nullptr },
+/*OBJ_LEVER*/        { "Lever" }, // Q_SKELKING
+/*OBJ_CRUXM*/        { "Crucifix1" }, // Q_SKELKING
+/*OBJ_CRUXR*/        { "Crucifix2" }, // Q_SKELKING
+/*OBJ_CRUXL*/        { "Crucifix3" }, // Q_SKELKING
+                     { nullptr }, //OBJ_ANGEL,
+                     { nullptr }, //OBJ_BANNERL,
+                     { nullptr }, //OBJ_BANNERM,
+                     { nullptr }, //OBJ_BANNERR,
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+/*OBJ_BOOK2L*/       { "Bookstand" }, // Q_BCHAMB, Q_BETRAYER
+                     { nullptr }, //OBJ_BOOK2R,
+/*OBJ_TBCROSS*/      { "Burning cross" }, // Q_BCHAMB
+                     { nullptr },
+                     { nullptr }, //OBJ_CANDLE1,
+/*OBJ_CANDLE2*/      { "Candle" }, // Q_BCHAMB
+                     { nullptr }, //OBJ_CANDLEO,
+                     { nullptr }, //OBJ_CAULDRON,
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr }, //OBJ_FLAMEHOLE,
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+/*OBJ_MCIRCLE1*/     { "Magic Circle 1" }, // Q_BETRAYER
+/*OBJ_MCIRCLE2*/     { "Magic Circle 2" }, // Q_BETRAYER
+                     { nullptr }, //OBJ_SKFIRE,
+                     { nullptr }, //OBJ_SKPILE,
+                     { nullptr }, //OBJ_SKSTICK1,
+                     { nullptr }, //OBJ_SKSTICK2,
+                     { nullptr }, //OBJ_SKSTICK3,
+                     { nullptr }, //OBJ_SKSTICK4,
+                     { nullptr }, //OBJ_SKSTICK5,
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+/*OBJ_SWITCHSKL*/    { "Switch" }, // Q_BCHAMB, Q_DIABLO
+                     { nullptr },
+                     { nullptr }, //OBJ_TRAPL,
+                     { nullptr }, //OBJ_TRAPR,
+/*OBJ_TORTUREL1*/    { "Tortured body 1" }, // Q_BUTCHER
+/*OBJ_TORTUREL2*/    { "Tortured body 2" }, // Q_BUTCHER
+/*OBJ_TORTUREL3*/    { "Tortured body 3" }, // Q_BUTCHER
+/*OBJ_TORTUREL4*/    { "Tortured body 4" }, // Q_BUTCHER
+/*OBJ_TORTUREL5*/    { "Tortured body 5" }, // Q_BUTCHER
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr }, //OBJ_NUDEW2R,
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+/*OBJ_TNUDEM*/       { "Tortured male 1" }, //1, Q_BUTCHER
+/*OBJ_TNUDEM*/       { "Tortured male 2" }, //2, Q_BUTCHER
+/*OBJ_TNUDEM*/       { "Tortured male 3" }, //3, Q_BUTCHER
+/*OBJ_TNUDEM*/       { "Tortured male 4" }, //4, Q_BUTCHER
+/*OBJ_TNUDEW*/       { "Tortured female 1" }, //1, Q_BUTCHER
+/*OBJ_TNUDEW*/       { "Tortured female 2" }, //2, Q_BUTCHER
+/*OBJ_TNUDEW*/       { "Tortured female 3" }, //3, Q_BUTCHER
+                     { nullptr }, //OBJ_CHEST1,
+/*OBJ_CHEST1*/       { "Chest 1" }, // Q_SKELKING
+                     { nullptr }, //OBJ_CHEST1,
+                     { nullptr }, //OBJ_CHEST2,
+/*OBJ_CHEST2*/       { "Chest 2" }, // Q_SKELKING
+                     { nullptr }, //OBJ_CHEST2,
+                     { nullptr }, //OBJ_CHEST3,
+/*OBJ_CHEST3*/       { "Chest 3" }, // Q_BCHAMB
+                     { nullptr }, //OBJ_CHEST3,
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr }, //OBJ_PEDISTAL,
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+/*OBJ_ALTBOY*/       { "Altarboy" }, // Q_BETRAYER
+                     { nullptr },
+                     { nullptr },
+/*OBJ_ARMORSTANDN*/  { "Armor stand" }, //OBJ_ARMORSTAND, // Q_WARLORD - changed to inactive versions to eliminate farming potential
+/*OBJ_WEAPONRACKLN*/ { "Weapon stand" }, //OBJ_WEAPONRACKL, // Q_WARLORD
+/*OBJ_TORCHR1*/      { "Torch 2" }, // Q_BLOOD
+/*OBJ_TORCHL1*/      { "Torch 1" }, // Q_BLOOD
+                     { nullptr }, //OBJ_MUSHPATCH,
+                     { nullptr }, //OBJ_STAND,
+                     { nullptr }, //OBJ_TORCHL2,
+                     { nullptr }, //OBJ_TORCHR2,
+                     { nullptr }, //OBJ_FLAMELVR,
+                     { nullptr }, //OBJ_SARC,
+                     { nullptr }, //OBJ_BARREL,
+                     { nullptr }, //OBJ_BARRELEX,
+                     { nullptr }, //OBJ_BOOKSHELF,
+                     { nullptr }, //OBJ_BOOKCASEL,
+                     { nullptr }, //OBJ_BOOKCASER,
+                     { nullptr }, //OBJ_ARMORSTANDN,
+                     { nullptr }, //OBJ_WEAPONRACKLN,
+                     { nullptr }, //OBJ_BLOODFTN,
+                     { nullptr }, //OBJ_PURIFYINGFTN,
+                     { nullptr }, //OBJ_SHRINEL,
     // clang-format on
 };
 
@@ -1078,6 +1053,8 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 int frameNum = objEntry->frameNum;
                 if (frameNum == 0) {
                     frameNum = 1 + (params.time % objEntry->objGfx->getFrameCount());
+                } else if (objEntry->objGfx->getFrameCount() < frameNum) {
+                    frameNum = 1;
                 }
                 QImage objectImage = objEntry->objGfx->getFrameImage(frameNum - 1);
                 dungeon.drawImage(drawCursorX + ((int)backWidth - objectImage.width()) / 2, drawCursorY - objectImage.height(), objectImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
@@ -1709,14 +1686,14 @@ QString D1Dun::getObjectName(int objectIndex) const
         }
     }
     // check if it is built-in object
-    if ((unsigned)objectIndex < (unsigned)lengthof(DunObjConvTbl) && DunObjConvTbl[objectIndex].type != 0) {
+    if ((unsigned)objectIndex < (unsigned)lengthof(DunObjConvTbl) && DunObjConvTbl[objectIndex].name != nullptr) {
         return DunObjConvTbl[objectIndex].name;
     }
     // out of options -> generic name
     return tr("Object%1").arg(objectIndex);
 }
 
-void D1Dun::loadObjectGfx(const QString &filePath, int width, int minFrameNum, ObjectCacheEntry &result)
+void D1Dun::loadObjectGfx(const QString &filePath, int width, ObjectCacheEntry &result)
 {
     // check for existing entry
     for (auto &dataEntry : this->objDataCache) {
@@ -1732,7 +1709,7 @@ void D1Dun::loadObjectGfx(const QString &filePath, int width, int minFrameNum, O
     OpenAsParam params = OpenAsParam();
     params.celWidth = width;
     D1Cel::load(*result.objGfx, filePath, params);
-    if (result.objGfx->getFrameCount() >= minFrameNum) {
+    if (result.objGfx->getFrameCount() != 0) {
         this->objDataCache.push_back(std::pair<D1Gfx *, unsigned>(result.objGfx, 1));
     } else {
         // TODO: suppress errors? MemFree?
@@ -1750,16 +1727,17 @@ void D1Dun::loadObject(int objectIndex)
         if (customObject.type == objectIndex) {
             result.frameNum = customObject.frameNum;
             QString celFilePath = customObject.path;
-            this->loadObjectGfx(celFilePath, customObject.width, customObject.frameNum, result);
+            this->loadObjectGfx(celFilePath, customObject.width, result);
             break;
         }
     }
-    const DunObjectStruct *objStr = &DunObjConvTbl[objectIndex];
-    if (i >= this->customObjectTypes.size() && (unsigned)objectIndex < (unsigned)lengthof(DunObjConvTbl) && objStr->type != 0 && !this->assetPath.isEmpty()) {
-        int objFileIndex = objStr->animType;
-        result.frameNum = objStr->frameNum;
-        QString celFilePath = this->assetPath + "/Objects/" + dunobjfiledata[objFileIndex].path + ".CEL";
-        this->loadObjectGfx(celFilePath, dunobjfiledata[objFileIndex].width, dunobjfiledata[objFileIndex].numFrames, result);
+    const BYTE *objType = &ObjConvTbl[objectIndex];
+    if (i >= this->customObjectTypes.size() && (unsigned)objectIndex < (unsigned)lengthof(ObjConvTbl) && *objType != 0 && !this->assetPath.isEmpty()) {
+        const ObjectData &od = objectdata[*objType];
+        int objFileIndex = od.ofindex;
+        result.frameNum = od.oAnimBaseFrame;
+        QString celFilePath = this->assetPath + "/Objects/" + objfiledata[objFileIndex].ofName + ".CEL";
+        this->loadObjectGfx(celFilePath, objfiledata[objFileIndex].oAnimWidth, result);
     }
     this->objectCache.push_back(result);
 }

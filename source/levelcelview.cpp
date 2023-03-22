@@ -164,10 +164,11 @@ void LevelCelView::updateEntityOptions()
     this->ui->dungeonObjectComboBox->hide();
     this->ui->dungeonObjectComboBox->clear();
     this->ui->dungeonObjectComboBox->addItem("", 0);
-    for (const DunObjectStruct &obj : DunObjConvTbl) {
-        if (obj.type != 0) {
+	for (int i = 0; i < lengthof(DunObjConvTbl); i++) {
+        const DunObjectStruct &obj = DunObjConvTbl[i];
+		if (obj.name != nullptr) {
             // TODO: filter custom entries?
-            this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
+            this->ui->dungeonObjectComboBox->addItem(obj.name, i);
         }
     }
     const std::vector<CustomObjectStruct> &customObjectTypes = this->dun->getCustomObjectTypes();
