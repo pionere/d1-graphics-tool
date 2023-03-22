@@ -60,12 +60,11 @@ typedef struct CustomObjectStruct {
     int frameNum;
 } CustomObjectStruct;
 
-typedef struct DunMonsterStruct {
+/*typedef struct DunMonsterStruct {
     int type;
-    int animType;
-    const char *trnPath;
+    int monType;
     const char *name;
-} DunMonsterStruct;
+} DunMonsterStruct;*/
 
 typedef struct CustomMonsterStruct {
     int type;

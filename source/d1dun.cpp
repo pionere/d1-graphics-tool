@@ -20,29 +20,19 @@
 #include "d1trn.h"
 #include "progressdialog.h"
 
+#include "dungeon/all.h"
+// #include "dungeon/monstdat.h"
+
+// #include "dungeon/enums.h"
+// #include "dungeon/mondat.h"
+// #include "dungeon/objdat.h"
+// #include "dungeon/structs.h"
+
 template <class T, int N>
 constexpr int lengthof(T (&arr)[N])
 {
     return N;
 }
-
-typedef enum dun_monster_gfx_id {
-    DMOFILE_FALLSP,
-    DMOFILE_SKELAX,
-    DMOFILE_FALLSD,
-    DMOFILE_SKELBW,
-    DMOFILE_SKELSD,
-    DMOFILE_SNEAK,
-    DMOFILE_GOATMC,
-    DMOFILE_GOATBW,
-    DMOFILE_FAT,
-    DMOFILE_RHINO,
-    DMOFILE_BLACK,
-    DMOFILE_SUCC,
-    DMOFILE_MAGE,
-    DMOFILE_DIABLO,
-    NUM_DMOFILE_TYPES
-} dun_monster_gfx_id;
 
 typedef enum dun_object_graphic_id {
     DOFILE_LEVER,
@@ -75,16 +65,16 @@ typedef struct SpecCell {
     int specIndex;
 } SpecCell;
 
-typedef struct ObjFileData {
+typedef struct DunObjFileData {
     const char *path;
     int width;
     int numFrames;
-} ObjFileData;
+} DunObjFileData;
 
-typedef struct MonFileData {
+typedef struct DunMonFileData {
     const char *path;
     int width;
-} MonFileData;
+} DunMonFileData;
 
 typedef struct DungeonStruct {
     int defaultTile;
@@ -268,7 +258,7 @@ const DunObjectStruct DunObjConvTbl[128] = {
     // clang-format on
 };
 
-const ObjFileData objfiledata[NUM_DOFILE_TYPES] = {
+const DunObjFileData dunobjfiledata[NUM_DOFILE_TYPES] = {
     // clang-format off
 /*DOFILE_LEVER*/    { "Lever",     96, 1 }, // 2
 /*DOFILE_CRUXSK1*/  { "CruxSk1",   96, 1 }, // 15
@@ -293,7 +283,7 @@ const ObjFileData objfiledata[NUM_DOFILE_TYPES] = {
     // clang-format on
 };
 
-const DunMonsterStruct DunMonstConvTbl[128] = {
+/*const DunMonsterStruct DunMonstConvTbl[128] = {
     // clang-format off
     { 0 },
     { 0 }, //MT_NZOMBIE,
@@ -301,25 +291,25 @@ const DunMonsterStruct DunMonstConvTbl[128] = {
     { 0 }, //MT_GZOMBIE,
     { 0 }, //MT_YZOMBIE,
     { 0 }, //MT_RFALLSP,
-    {   6, DMOFILE_FALLSP, "FalSpear\\Dark",  "Carver" }, // Q_PWATER
+    {   6, MT_DFALLSP, "Carver" }, // Q_PWATER
     { 0 }, //MT_YFALLSP,
     { 0 }, // {   8, DMOFILE_FALLSP, "FalSpear\\Blue",  "Dark One" }, // Monster from banner2.dun,
     { 0 }, //MT_WSKELAX,
     { 0 }, //MT_TSKELAX,
-    {  11, DMOFILE_SKELAX, nullptr,           "Burning Dead" }, // Q_SKELKING
+    {  11, MT_RSKELAX, "Burning Dead" }, // Q_SKELKING
     { 0 }, //MT_XSKELAX,
     { 0 }, //MT_RFALLSD,
     { 0 }, //MT_DFALLSD,
-    {  15, DMOFILE_FALLSD, nullptr,           "Devil Kin" }, // Q_PWATER
-    {  16, DMOFILE_FALLSD, "FalSpear\\Blue",  "Dark One" },  // Q_BANNER
+    {  15, MT_YFALLSD, "Devil Kin" }, // Q_PWATER
+    {  16, MT_BFALLSD, "Dark One" },  // Q_BANNER
     { 0 }, //MT_NSCAV,
     { 0 }, //MT_BSCAV,
     { 0 }, //MT_WSCAV,
     { 0 }, //MT_YSCAV,
     { 0 }, //MT_WSKELBW,
-    {  22, DMOFILE_SKELBW, "SkelSd\\Skelt",   "Corpse Bow" },   // Q_SKELKING
-    {  23, DMOFILE_SKELBW, nullptr,           "Burning Dead" }, // Q_SKELKING
-    {  24, DMOFILE_SKELBW, "SkelSd\\Black",   "Horror" },       // Q_SKELKING
+    {  22, MT_TSKELBW, "Corpse Bow" },   // Q_SKELKING
+    {  23, MT_RSKELBW, "Burning Dead" }, // Q_SKELKING
+    {  24, MT_XSKELBW, "Horror" },       // Q_SKELKING
     { 0 }, //MT_WSKELSD,
     { 0 }, //MT_TSKELSD,
     {  27, DMOFILE_SKELSD, nullptr,           "Burning Dead Captain" }, // Q_SKELKING
@@ -424,9 +414,9 @@ const DunMonsterStruct DunMonstConvTbl[128] = {
     { 0 },
     { 0 }, ///MT_BIGFALL,
     // clang-format on
-};
+};*/
 
-const MonFileData monfiledata[NUM_DMOFILE_TYPES] = {
+const DunMonFileData dunmonfiledata[NUM_DMOFILE_TYPES] = {
     // clang-format off
 /*DMOFILE_FALLSP*/  { "FalSpear\\Phall", 128 },
 /*DMOFILE_SKELAX*/  { "SkelAxe\\SklAx",  128 },
@@ -1728,8 +1718,8 @@ QString D1Dun::getMonsterName(int monsterIndex) const
         }
     }
     // check if it is built-in monster
-    if ((unsigned)monsterIndex < (unsigned)lengthof(DunMonstConvTbl) && DunMonstConvTbl[monsterIndex].type != 0) {
-        return DunMonstConvTbl[monsterIndex].name;
+    if ((unsigned)monsterIndex < (unsigned)lengthof(MonstConvTbl) && MonstConvTbl[monsterIndex] != 0) {
+        return monsterdata[MonstConvTbl[monsterIndex]].mName;
     }
     // out of options -> generic name
     return tr("Monster%1").arg(monsterIndex);
@@ -1793,8 +1783,8 @@ void D1Dun::loadObject(int objectIndex)
     if (i >= this->customObjectTypes.size() && (unsigned)objectIndex < (unsigned)lengthof(DunObjConvTbl) && objStr->type != 0 && !this->assetPath.isEmpty()) {
         int objFileIndex = objStr->animType;
         result.frameNum = objStr->frameNum;
-        QString celFilePath = this->assetPath + "/Objects/" + objfiledata[objFileIndex].path + ".CEL";
-        this->loadObjectGfx(celFilePath, objfiledata[objFileIndex].width, objfiledata[objFileIndex].numFrames, result);
+        QString celFilePath = this->assetPath + "/Objects/" + dunobjfiledata[objFileIndex].path + ".CEL";
+        this->loadObjectGfx(celFilePath, dunobjfiledata[objFileIndex].width, dunobjfiledata[objFileIndex].numFrames, result);
     }
     this->objectCache.push_back(result);
 }
@@ -1859,15 +1849,17 @@ void D1Dun::loadMonster(int monsterIndex)
             break;
         }
     }
-    const DunMonsterStruct *monStr = &DunMonstConvTbl[monsterIndex];
-    if (i >= this->customObjectTypes.size() && (unsigned)monsterIndex < (unsigned)lengthof(DunMonstConvTbl) && monStr->type != 0 && !this->assetPath.isEmpty()) {
-        int moFileIndex = monStr->animType;
-        QString cl2FilePath = this->assetPath + "/Monsters/" + monfiledata[moFileIndex].path + "N.CL2";
+    const BYTE *monType = &MonstConvTbl[monsterIndex];
+    if (i >= this->customObjectTypes.size() && (unsigned)monsterIndex < (unsigned)lengthof(MonstConvTbl) && *monType != 0 && !this->assetPath.isEmpty()) {
+		const MonsterData &md = monfiledata[*monType];
+		QString cl2FilePath = md.moGfxFile;
+		cl2FilePath = cl2FilePath.replace("%c", "N");
+        cl2FilePath = this->assetPath + "/" + cl2FilePath;
         QString trnFilePath;
-        if (monStr->trnPath != nullptr) {
-            trnFilePath = this->assetPath + "/Monsters/" + monStr->trnPath + ".TRN";
+        if (md.mTransFile != nullptr) {
+            trnFilePath = this->assetPath + "/" + md.mTransFile;
         }
-        this->loadMonsterGfx(cl2FilePath, monfiledata[moFileIndex].width, trnFilePath, result);
+        this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, trnFilePath, result);
     }
     this->monsterCache.push_back(result);
 }
@@ -2659,6 +2651,8 @@ void D1Dun::patch(int dunFileIndex)
         // shadow of the internal column next to the pedistal
         change |= this->changeTileAt(5, 7, 142);
         change |= this->changeTileAt(5, 8, 50);
+        // remove items
+        change |= this->changeItemAt(9, 2, 0);
         break;
     case DUN_BLOOD_AFT: // Blood1.DUN
         // ensure the inner tiles are reserved
@@ -2693,6 +2687,8 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(9, 22, 62);
         change |= this->changeMonsterAt(6, 25, 62);
         change |= this->changeMonsterAt(12, 25, 62);
+        // remove items
+        change |= this->changeItemAt(9, 2, 0);
         break;
     case DUN_VILE_PRE: // Vile2.DUN
         // replace default tiles with external piece I.

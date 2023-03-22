@@ -27,6 +27,9 @@
 #include "ui_levelcelview.h"
 #include "upscaler.h"
 
+#include "dungeon/all.h"
+// #include "dungeon/monstdat.h"
+
 template <class T, int N>
 constexpr int lengthof(T (&arr)[N])
 {
@@ -181,9 +184,10 @@ void LevelCelView::updateEntityOptions()
     this->ui->dungeonMonsterComboBox->hide();
     this->ui->dungeonMonsterComboBox->clear();
     this->ui->dungeonMonsterComboBox->addItem("", 0);
-    for (const DunMonsterStruct &mon : DunMonstConvTbl) {
-        if (mon.type != 0) {
-            this->ui->dungeonMonsterComboBox->addItem(mon.name, mon.type);
+    for (unsigned i = 0; i < lengthof(MonstConvTbl); i++) {
+        BYTE monType = MonstConvTbl[i];
+        if (monType != 0) {
+            this->ui->dungeonMonsterComboBox->addItem(monsterdata[monType].mName, i);
         }
     }
     const std::vector<CustomMonsterStruct> &customMonsterTypes = this->dun->getCustomMonsterTypes();
