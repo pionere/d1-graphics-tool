@@ -28,7 +28,6 @@
 #include "upscaler.h"
 
 #include "dungeon/all.h"
-// #include "dungeon/monstdat.h"
 
 LevelCelView::LevelCelView(QWidget *parent)
     : QWidget(parent)

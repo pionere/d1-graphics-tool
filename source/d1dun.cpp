@@ -21,36 +21,6 @@
 #include "progressdialog.h"
 
 #include "dungeon/all.h"
-// #include "dungeon/monstdat.h"
-
-// #include "dungeon/enums.h"
-// #include "dungeon/mondat.h"
-// #include "dungeon/objdat.h"
-// #include "dungeon/structs.h"
-
-/*typedef enum dun_object_graphic_id {
-    DOFILE_LEVER,
-    DOFILE_CRUXSK1,
-    DOFILE_CRUXSK2,
-    DOFILE_CRUXSK3,
-    DOFILE_BOOK2,
-    DOFILE_BURNCROS,
-    DOFILE_CANDLE2,
-    DOFILE_MCIRL,
-    DOFILE_SWITCH4,
-    DOFILE_TSOUL,
-    DOFILE_TNUDEM,
-    DOFILE_TNUDEW,
-    DOFILE_CHEST1,
-    DOFILE_CHEST2,
-    DOFILE_CHEST3,
-    DOFILE_ALTBOY,
-    DOFILE_ARMSTAND,
-    DOFILE_WEAPSTND,
-    DOFILE_WTORCH2,
-    DOFILE_WTORCH1,
-    NUM_DOFILE_TYPES
-} dun_object_graphic_id;*/
 
 typedef struct SpecCell {
     int subtileRef;
@@ -1670,7 +1640,7 @@ QString D1Dun::getMonsterName(int monsterIndex) const
         }
     }
     // check if it is built-in monster
-    if ((unsigned)monsterIndex < (unsigned)lengthof(DunMonstConvTbl) && DunMonstConvTbl[monsterIndex] != 0) {
+    if ((unsigned)monsterIndex < (unsigned)lengthof(DunMonstConvTbl) && DunMonstConvTbl[monsterIndex].name != nullptr) {
         return DunMonstConvTbl[monsterIndex].name;
     }
     // out of options -> generic name
@@ -1734,7 +1704,7 @@ void D1Dun::loadObject(int objectIndex)
     const BYTE *objType = &ObjConvTbl[objectIndex];
     if (i >= this->customObjectTypes.size() && (unsigned)objectIndex < (unsigned)lengthof(ObjConvTbl) && *objType != 0 && !this->assetPath.isEmpty()) {
         const ObjectData &od = objectdata[*objType];
-		const ObjFileData &ofd = objfiledata[od.ofindex];
+        const ObjFileData &ofd = objfiledata[od.ofindex];
         result.frameNum = od.oAnimBaseFrame;
         if (result.frameNum == 0 && ofd.oAnimFlag != OAM_LOOP) {
             result.frameNum = 1;
