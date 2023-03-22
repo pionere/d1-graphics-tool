@@ -42,6 +42,26 @@
        </item>
        <item>
         <property name="text">
+         <string>Skeleton King's Lair - Before (SklKng2.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Skeleton King's Lair - After (SklKng1.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Ogden's Sign - Before (Banner2.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Ogden's Sign - After (Banner1.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Entrance to Chamber of Bone - Before (Bonestr1.DUN)</string>
         </property>
        </item>
@@ -93,6 +113,11 @@
        <item>
         <property name="text">
          <string>Warlord - Before (Warlord.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Warlord - After (Warlord2.DUN)</string>
         </property>
        </item>
       </widget>

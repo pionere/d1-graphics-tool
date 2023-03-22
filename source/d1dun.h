@@ -22,6 +22,10 @@ class D1Trn;
 
 typedef enum dun_file_index {
     DUN_SKELKING_ENTRY,      // entry of the "Skeleton King's Lair" setmap (SKngDO.DUN)
+    DUN_SKELKING_PRE,        // setmap "Skeleton King's Lair" before pulling the levers or destroying the cruxs (SklKng2.DUN)
+    DUN_SKELKING_AFT,        // setmap "Skeleton King's Lair" after pulling the levers or destroying the cruxs (SklKng1.DUN)
+    DUN_BANNER_PRE,          // map tile for the "Ogden's Sign" quest before delivering the 'Tavern Sign' (Banner2.DUN)
+    DUN_BANNER_AFT,          // map tile for the "Ogden's Sign" quest after delivering the 'Tavern Sign' (Banner1.DUN)
     DUN_BONECHAMB_ENTRY_PRE, // entry of the "Chamber of Bone" setmap before reading the book (Bonestr1.DUN)
     DUN_BONECHAMB_ENTRY_AFT, // entry of the "Chamber of Bone" setmap after reading the book (Bonestr2.DUN)
     DUN_BONECHAMB_PRE,       // setmap "Chamber of Bone" before pulling the levers (Bonecha1.DUN)
@@ -33,6 +37,7 @@ typedef enum dun_file_index {
     DUN_VILE_PRE,            // setmap for the "Archbishop Lazarus" quest before reading the books (Vile2.DUN)
     DUN_VILE_AFT,            // setmap for the "Archbishop Lazarus" quest after reading the books (Vile1.DUN)
     DUN_WARLORD_PRE,         // map tile for the "Warlord" quest before reading the book (Warlord.DUN)
+    DUN_WARLORD_AFT,         // map tile for the "Warlord" quest after reading the book (Warlord2.DUN)
 } dun_file_index;
 
 enum class D1DUN_TYPE {
@@ -196,6 +201,7 @@ private:
     bool changeTileAt(int tilePosX, int tilePosY, int tileRef);
     bool changeObjectAt(int posx, int posy, int objectIndex);
     bool changeMonsterAt(int posx, int posy, int monsterIndex);
+    bool changeItemAt(int posx, int posy, int itemIndex);
 
 private:
     D1DUN_TYPE type = D1DUN_TYPE::NORMAL;

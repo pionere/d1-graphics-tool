@@ -25,6 +25,18 @@ void PatchDungeonDialog::initialize(D1Dun *d)
     if (baseName == "skngdo") {
         fileIndex = DUN_SKELKING_ENTRY;
     }
+    if (baseName == "sklkng2") {
+        fileIndex = DUN_SKELKING_PRE;
+    }
+    if (baseName == "sklkng1") {
+        fileIndex = DUN_SKELKING_AFT;
+    }
+    if (baseName == "banner2") {
+        fileIndex = DUN_BANNER_PRE;
+    }
+    if (baseName == "banner1") {
+        fileIndex = DUN_BANNER_AFT;
+    }
     if (baseName == "bonestr1") {
         fileIndex = DUN_BONECHAMB_ENTRY_PRE;
     }
@@ -57,6 +69,9 @@ void PatchDungeonDialog::initialize(D1Dun *d)
     }
     if (baseName == "warlord") {
         fileIndex = DUN_WARLORD_PRE;
+    }
+    if (baseName == "warlord2") {
+        fileIndex = DUN_WARLORD_AFT;
     }
     this->ui->dunFileComboBox->setCurrentIndex(fileIndex);
 }
