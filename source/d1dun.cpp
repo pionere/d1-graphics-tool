@@ -2615,6 +2615,8 @@ void D1Dun::patch(int dunFileIndex)
     case DUN_BLIND_PRE: // Blind2.DUN
         // replace the door with wall
         change |= this->changeTileAt(4, 3, 25);
+        // remove items
+        change |= this->changeItemAt(5, 5, 0);
         break;
     case DUN_BLIND_AFT: // Blind1.DUN
         // place pieces with closed doors
@@ -2640,6 +2642,8 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(14, 17, 32);
         change |= this->changeMonsterAt(14, 11, 32);
         change |= this->changeMonsterAt(15, 13, 32);
+        // remove items
+        change |= this->changeItemAt(5, 5, 0);
         break;
     case DUN_BLOOD_PRE: // Blood2.DUN
         // place pieces with closed doors
@@ -2729,10 +2733,7 @@ void D1Dun::patch(int dunFileIndex)
     case DUN_BANNER_PRE: // Banner2.DUN
         // replace entry tile
         change |= this->changeTileAt(7, 6, 193);
-        break;
-    case DUN_BANNER_AFT: // Banner1.DUN
-        // replace monsters from Banner2.DUN
-        change |= this->changeMonsterAt(2, 2, 16);
+        // replace monsters from Banner1.DUN
         for (int y = 7; y <= 9; y++) {
             for (int x = 7; x <= 13; x++) {
                 change |= this->changeMonsterAt(x, y, 16);
@@ -2742,6 +2743,8 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(1, 4, 0);
         change |= this->changeMonsterAt(13, 5, 0);
         change |= this->changeMonsterAt(7, 12, 0);
+        break;
+    case DUN_BANNER_AFT: // Banner1.DUN
         break;
     case DUN_SKELKING_PRE: // SklKng2.DUN
         break;
