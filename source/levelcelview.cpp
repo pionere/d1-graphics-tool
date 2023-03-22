@@ -164,9 +164,9 @@ void LevelCelView::updateEntityOptions()
     this->ui->dungeonObjectComboBox->hide();
     this->ui->dungeonObjectComboBox->clear();
     this->ui->dungeonObjectComboBox->addItem("", 0);
-	for (int i = 0; i < lengthof(DunObjConvTbl); i++) {
+    for (int i = 0; i < lengthof(DunObjConvTbl); i++) {
         const DunObjectStruct &obj = DunObjConvTbl[i];
-		if (obj.name != nullptr) {
+        if (obj.name != nullptr) {
             // TODO: filter custom entries?
             this->ui->dungeonObjectComboBox->addItem(obj.name, i);
         }
@@ -180,11 +180,11 @@ void LevelCelView::updateEntityOptions()
     this->ui->dungeonMonsterComboBox->hide();
     this->ui->dungeonMonsterComboBox->clear();
     this->ui->dungeonMonsterComboBox->addItem("", 0);
-    for (int i = 0; i < lengthof(MonstConvTbl); i++) {
-        BYTE monType = MonstConvTbl[i];
-        if (monType != 0) {
+    for (int i = 0; i < lengthof(DunMonstConvTbl); i++) {
+        const DunMonsterStruct &mon = DunMonstConvTbl[i];
+        if (mon.name != nullptr) {
             // TODO: filter custom entries?
-            this->ui->dungeonMonsterComboBox->addItem(monsterdata[monType].mName, i);
+            this->ui->dungeonMonsterComboBox->addItem(mon.name, i);
         }
     }
     const std::vector<CustomMonsterStruct> &customMonsterTypes = this->dun->getCustomMonsterTypes();

@@ -252,138 +252,138 @@ const DunObjectStruct DunObjConvTbl[128] = {
     // clang-format on
 };
 
-/*const DunMonsterStruct DunMonstConvTbl[128] = {
+const DunMonsterStruct DunMonstConvTbl[128] = {
     // clang-format off
-    { 0 },
-    { 0 }, //MT_NZOMBIE,
-    { 0 }, //MT_BZOMBIE,
-    { 0 }, //MT_GZOMBIE,
-    { 0 }, //MT_YZOMBIE,
-    { 0 }, //MT_RFALLSP,
-    {   6, MT_DFALLSP, "Carver" }, // Q_PWATER
-    { 0 }, //MT_YFALLSP,
-    { 0 }, // {   8, DMOFILE_FALLSP, "FalSpear\\Blue",  "Dark One" }, // Monster from banner2.dun,
-    { 0 }, //MT_WSKELAX,
-    { 0 }, //MT_TSKELAX,
-    {  11, MT_RSKELAX, "Burning Dead" }, // Q_SKELKING
-    { 0 }, //MT_XSKELAX,
-    { 0 }, //MT_RFALLSD,
-    { 0 }, //MT_DFALLSD,
-    {  15, MT_YFALLSD, "Devil Kin" }, // Q_PWATER
-    {  16, MT_BFALLSD, "Dark One" },  // Q_BANNER
-    { 0 }, //MT_NSCAV,
-    { 0 }, //MT_BSCAV,
-    { 0 }, //MT_WSCAV,
-    { 0 }, //MT_YSCAV,
-    { 0 }, //MT_WSKELBW,
-    {  22, MT_TSKELBW, "Corpse Bow" },   // Q_SKELKING
-    {  23, MT_RSKELBW, "Burning Dead" }, // Q_SKELKING
-    {  24, MT_XSKELBW, "Horror" },       // Q_SKELKING
-    { 0 }, //MT_WSKELSD,
-    { 0 }, //MT_TSKELSD,
-    {  27, DMOFILE_SKELSD, nullptr,           "Burning Dead Captain" }, // Q_SKELKING
-    {  28, DMOFILE_SKELSD, "SkelSd\\Black",   "Horror Captain" },       // Q_BCHAMB
-    { 0 }, //MT_NSNEAK,
-    { 0 }, //MT_RSNEAK,
-    {  31, DMOFILE_SNEAK,  "Sneak\\Sneakv3",  "Unseen" },            // Q_BCHAMB
-    {  32, DMOFILE_SNEAK,  "Sneak\\Sneakv1",  "Illusion Weaver" },   // Q_BLIND
-    {  33, DMOFILE_GOATMC, nullptr,           "Flesh Clan (Mace)" }, // Q_PWATER
-    { 0 }, //MT_BGOATMC,
-    { 0 }, //MT_RGOATMC,
-    { 0 }, //MT_GGOATMC,
-    { 0 }, //MT_RBAT,
-    { 0 }, //MT_GBAT,
-    { 0 }, //MT_NBAT,
-    { 0 }, //MT_XBAT,
-    {  41, DMOFILE_GOATBW, nullptr,           "Flesh Clan (Bow)" }, // Q_PWATER
-    { 0 }, //MT_BGOATBW,
-    { 0 }, //MT_RGOATBW,
-    {  44, DMOFILE_GOATBW, "GoatMace\\Gray",  "Night Clan" }, // Q_ANVIL
-    { 0 }, //MT_NACID,
-    { 0 }, //MT_RACID,
-    { 0 }, //MT_BACID,
-    { 0 }, //MT_XACID,
-    { 0 }, //MT_SKING,
-    {  50, DMOFILE_FAT,    nullptr,           "Overlord" }, // Q_BANNER
-    { 0 }, //MT_BFAT,
-    { 0 }, //MT_XFAT,
-    { 0 }, //MT_RFAT,
-    { 0 }, //MT_WYRM,
-    { 0 }, //MT_CAVSLUG,
-    { 0 }, //MT_DEVOUR,
-    { 0 }, //MT_DVLWYRM,
-    { 0 }, //MT_NMAGMA,
-    { 0 }, //MT_YMAGMA,
-    { 0 }, //MT_BMAGMA,
-    { 0 }, //MT_WMAGMA,
-    {  62, DMOFILE_RHINO,  nullptr,           "Horned Demon" }, // Q_BLOOD, Q_BCHAMB
-    { 0 }, // MT_XRHINO, // Q_MAZE
-    { 0 }, //MT_BRHINO,
-    {  65, DMOFILE_RHINO,  "Rhino\\RhinoB",   "Obsidian Lord" }, // Q_ANVIL
-    { 0 }, ///MT_BONEDMN,
-    { 0 }, ///MT_REDDTH,
-    { 0 }, ///MT_LTCHDMN,
-    { 0 }, ///MT_UDEDBLRG,
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 }, ///MT_INCIN,
-    { 0 }, ///MT_FLAMLRD,
-    { 0 }, ///MT_DOOMFIRE,
-    { 0 }, ///MT_HELLBURN,
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 }, //MT_NTHIN,
-    { 0 }, //MT_RTHIN,
-    { 0 }, //MT_XTHIN,
-    { 0 }, //MT_GTHIN,
-    { 0 }, //MT_NGARG,
-    { 0 }, //MT_XGARG,
-    { 0 }, //MT_DGARG,
-    { 0 }, //MT_BGARG,
-    { 0 }, //MT_NMEGA,
-    { 0 }, //MT_DMEGA,
-    { 0 }, //MT_BMEGA,
-    { 0 }, //MT_RMEGA,
-    { 0 }, //MT_NSNAKE,
-    { 0 }, //MT_RSNAKE,
-    { 0 }, //MT_GSNAKE,
-    { 0 }, //MT_BSNAKE,
-    {  98, DMOFILE_BLACK,  nullptr,           "Black Knight" }, // Q_DIABLO
-    { 0 }, //MT_RBLACK,
-    { 100, DMOFILE_BLACK,  "Black\\BlkKntBT", "Steel Lord" },   // Q_WARLORD
-    { 101, DMOFILE_BLACK,  "Black\\BlkKntBe", "Blood Knight" }, // Q_DIABLO
-    { 0 }, ///MT_UNRAV,
-    { 0 }, ///MT_HOLOWONE,
-    { 0 }, ///MT_PAINMSTR,
-    { 0 }, ///MT_REALWEAV,
-    { 0 }, //MT_NSUCC,
-    { 0 }, //MT_GSUCC,
-    { 108, DMOFILE_SUCC,   "Succ\\Succrw",    "Hell Spawn" }, // Q_BETRAYER
-    { 0 }, //MT_BSUCC,
-    { 0 }, //MT_NMAGE,
-    { 0 }, //MT_GMAGE,
-    { 0 }, //MT_XMAGE,
-    { 113, DMOFILE_MAGE,   "Mage\\Cnselbk",   "Advocate" }, // Q_BETRAYER, Q_DIABLO
-    { 0 },
-    { 115, DMOFILE_DIABLO, nullptr,           "The Dark Lord" }, // Q_DIABLO
-    { 0 },
-    { 0 }, //MT_GOLEM,
-    { 0 },
-    { 0 },
-    { 0 }, // Monster from blood1.dun and blood2.dun
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 }, // { 124, 128, "FalSpear\\Phall", "FalSpear\\Blue",    "Dark One" }, // Snotspill from banner2.dun
-    { 0 },
-    { 0 },
-    { 0 }, ///MT_BIGFALL,
+               { nullptr },
+               { nullptr }, //MT_NZOMBIE,
+               { nullptr }, //MT_BZOMBIE,
+               { nullptr }, //MT_GZOMBIE,
+               { nullptr }, //MT_YZOMBIE,
+               { nullptr }, //MT_RFALLSP,
+/*MT_DFALLSP*/ { "Carver" }, // Q_PWATER
+               { nullptr }, //MT_YFALLSP,
+               { nullptr }, // {   8, DMOFILE_FALLSP, "FalSpear\\Blue",  "Dark One" }, // Monster from banner2.dun,
+               { nullptr }, //MT_WSKELAX,
+               { nullptr }, //MT_TSKELAX,
+/*MT_RSKELAX*/ { "Burning Dead" }, // Q_SKELKING
+               { nullptr }, //MT_XSKELAX,
+               { nullptr }, //MT_RFALLSD,
+               { nullptr }, //MT_DFALLSD,
+/*MT_YFALLSD*/ { "Devil Kin" }, // Q_PWATER
+/*MT_BFALLSD*/ { "Dark One" },  // Q_BANNER
+               { nullptr }, //MT_NSCAV,
+               { nullptr }, //MT_BSCAV,
+               { nullptr }, //MT_WSCAV,
+               { nullptr }, //MT_YSCAV,
+               { nullptr }, //MT_WSKELBW,
+/*MT_TSKELBW*/ { "Corpse Bow" },   // Q_SKELKING
+/*MT_RSKELBW*/ { "Burning Dead" }, // Q_SKELKING
+/*MT_XSKELBW*/ { "Horror" },       // Q_SKELKING
+               { nullptr }, //MT_WSKELSD,
+               { nullptr }, //MT_TSKELSD,
+/*MT_RSKELSD*/ { "Burning Dead Captain" }, // Q_SKELKING
+/*MT_XSKELSD*/ { "Horror Captain" },       // Q_BCHAMB
+               { nullptr }, //MT_NSNEAK,
+               { nullptr }, //MT_RSNEAK,
+/*MT_BSNEAK*/  { "Unseen" },            // Q_BCHAMB
+/*MT_YSNEAK*/  { "Illusion Weaver" },   // Q_BLIND
+/*MT_NGOATMC*/ { "Flesh Clan (Mace)" }, // Q_PWATER
+               { nullptr }, //MT_BGOATMC,
+               { nullptr }, //MT_RGOATMC,
+               { nullptr }, //MT_GGOATMC,
+               { nullptr }, //MT_RBAT,
+               { nullptr }, //MT_GBAT,
+               { nullptr }, //MT_NBAT,
+               { nullptr }, //MT_XBAT,
+/*MT_NGOATBW*/ { "Flesh Clan (Bow)" }, // Q_PWATER
+               { nullptr }, //MT_BGOATBW,
+               { nullptr }, //MT_RGOATBW,
+/*MT_GGOATBW*/ { "Night Clan" }, // Q_ANVIL
+               { nullptr }, //MT_NACID,
+               { nullptr }, //MT_RACID,
+               { nullptr }, //MT_BACID,
+               { nullptr }, //MT_XACID,
+               { nullptr }, //MT_SKING,
+/*MT_NFAT*/    { "Overlord" }, // Q_BANNER
+               { nullptr }, //MT_BFAT,
+               { nullptr }, //MT_XFAT,
+               { nullptr }, //MT_RFAT,
+               { nullptr }, //MT_WYRM,
+               { nullptr }, //MT_CAVSLUG,
+               { nullptr }, //MT_DEVOUR,
+               { nullptr }, //MT_DVLWYRM,
+               { nullptr }, //MT_NMAGMA,
+               { nullptr }, //MT_YMAGMA,
+               { nullptr }, //MT_BMAGMA,
+               { nullptr }, //MT_WMAGMA,
+/*MT_NRHINO*/  { "Horned Demon" }, // Q_BLOOD, Q_BCHAMB
+               { nullptr }, // MT_XRHINO, // Q_MAZE
+               { nullptr }, //MT_BRHINO,
+/*MT_DRHINO*/  { "Obsidian Lord" }, // Q_ANVIL
+               { nullptr }, ///MT_BONEDMN,
+               { nullptr }, ///MT_REDDTH,
+               { nullptr }, ///MT_LTCHDMN,
+               { nullptr }, ///MT_UDEDBLRG,
+               { nullptr },
+               { nullptr },
+               { nullptr },
+               { nullptr },
+               { nullptr }, ///MT_INCIN,
+               { nullptr }, ///MT_FLAMLRD,
+               { nullptr }, ///MT_DOOMFIRE,
+               { nullptr }, ///MT_HELLBURN,
+               { nullptr },
+               { nullptr },
+               { nullptr },
+               { nullptr },
+               { nullptr }, //MT_NTHIN,
+               { nullptr }, //MT_RTHIN,
+               { nullptr }, //MT_XTHIN,
+               { nullptr }, //MT_GTHIN,
+               { nullptr }, //MT_NGARG,
+               { nullptr }, //MT_XGARG,
+               { nullptr }, //MT_DGARG,
+               { nullptr }, //MT_BGARG,
+               { nullptr }, //MT_NMEGA,
+               { nullptr }, //MT_DMEGA,
+               { nullptr }, //MT_BMEGA,
+               { nullptr }, //MT_RMEGA,
+               { nullptr }, //MT_NSNAKE,
+               { nullptr }, //MT_RSNAKE,
+               { nullptr }, //MT_GSNAKE,
+               { nullptr }, //MT_BSNAKE,
+/*MT_NBLACK*/  { "Black Knight" }, // Q_DIABLO
+               { nullptr }, //MT_RBLACK,
+/*MT_BBLACK*/  { "Steel Lord" },   // Q_WARLORD
+/*MT_GBLACK*/  { "Blood Knight" }, // Q_DIABLO
+               { nullptr }, ///MT_UNRAV,
+               { nullptr }, ///MT_HOLOWONE,
+               { nullptr }, ///MT_PAINMSTR,
+               { nullptr }, ///MT_REALWEAV,
+               { nullptr }, //MT_NSUCC,
+               { nullptr }, //MT_GSUCC,
+/*MT_RSUCC*/   { "Hell Spawn" }, // Q_BETRAYER
+               { nullptr }, //MT_BSUCC,
+               { nullptr }, //MT_NMAGE,
+               { nullptr }, //MT_GMAGE,
+               { nullptr }, //MT_XMAGE,
+/*MT_BMAGE*/   { "Advocate" }, // Q_BETRAYER, Q_DIABLO
+               { nullptr },
+/*MT_DIABLO*/  { "The Dark Lord" }, // Q_DIABLO
+               { nullptr },
+               { nullptr }, //MT_GOLEM,
+               { nullptr },
+               { nullptr },
+               { nullptr }, // Monster from blood1.dun and blood2.dun
+               { nullptr },
+               { nullptr },
+               { nullptr },
+               { nullptr }, // { 124, 128, "FalSpear\\Phall", "FalSpear\\Blue",    "Dark One" }, // Snotspill from banner2.dun
+               { nullptr },
+               { nullptr },
+               { nullptr }, ///MT_BIGFALL,
     // clang-format on
-};*/
+};
 
 D1Dun::~D1Dun()
 {
@@ -1670,8 +1670,8 @@ QString D1Dun::getMonsterName(int monsterIndex) const
         }
     }
     // check if it is built-in monster
-    if ((unsigned)monsterIndex < (unsigned)lengthof(MonstConvTbl) && MonstConvTbl[monsterIndex] != 0) {
-        return monsterdata[MonstConvTbl[monsterIndex]].mName;
+    if ((unsigned)monsterIndex < (unsigned)lengthof(DunMonstConvTbl) && DunMonstConvTbl[monsterIndex] != 0) {
+        return DunMonstConvTbl[monsterIndex].name;
     }
     // out of options -> generic name
     return tr("Monster%1").arg(monsterIndex);
@@ -1734,10 +1734,13 @@ void D1Dun::loadObject(int objectIndex)
     const BYTE *objType = &ObjConvTbl[objectIndex];
     if (i >= this->customObjectTypes.size() && (unsigned)objectIndex < (unsigned)lengthof(ObjConvTbl) && *objType != 0 && !this->assetPath.isEmpty()) {
         const ObjectData &od = objectdata[*objType];
-        int objFileIndex = od.ofindex;
+		const ObjFileData &ofd = objfiledata[od.ofindex];
         result.frameNum = od.oAnimBaseFrame;
-        QString celFilePath = this->assetPath + "/Objects/" + objfiledata[objFileIndex].ofName + ".CEL";
-        this->loadObjectGfx(celFilePath, objfiledata[objFileIndex].oAnimWidth, result);
+        if (result.frameNum == 0 && ofd.oAnimFlag != OAM_LOOP) {
+            result.frameNum = 1;
+        }
+        QString celFilePath = this->assetPath + "/Objects/" + ofd.ofName + ".CEL";
+        this->loadObjectGfx(celFilePath, ofd.oAnimWidth, result);
     }
     this->objectCache.push_back(result);
 }
@@ -1806,7 +1809,7 @@ void D1Dun::loadMonster(int monsterIndex)
     if (i >= this->customObjectTypes.size() && (unsigned)monsterIndex < (unsigned)lengthof(MonstConvTbl) && *monType != 0 && !this->assetPath.isEmpty()) {
         const MonsterData &md = monsterdata[*monType];
         QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
-        cl2FilePath = cl2FilePath.replace("%c", "N");
+        cl2FilePath.replace("%c", "N");
         cl2FilePath = this->assetPath + "/" + cl2FilePath;
         QString trnFilePath;
         if (md.mTransFile != nullptr) {

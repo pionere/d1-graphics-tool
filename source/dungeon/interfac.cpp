@@ -230,7 +230,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
             dun->setItemAt(x, y, item);
             int mon = dMonster[x][y];
             if (mon != 0) {
-                mon = monsters[mon - 1]._mMTidx + lengthof(MonstConvTbl);
+                mon = monsters[mon - 1]._mMTidx + lengthof(DunMonstConvTbl);
             }
             dun->setMonsterAt(x, y, mon);
             int obj = dObject[x][y];
@@ -274,10 +274,11 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
     for (int i = 1; i < nummtypes; i++) {
         AddResourceParam monRes = AddResourceParam();
         monRes.type = DUN_ENTITY_TYPE::MONSTER;
-        monRes.index = lengthof(MonstConvTbl) + i;
+        monRes.index = lengthof(DunMonstConvTbl) + i;
         monRes.name = mapMonTypes[i].cmName;
-        monRes.path = assetPath + "/" + monfiledata[mapMonTypes[i].cmFileNum].moGfxFile;
+        monRes.path = monfiledata[mapMonTypes[i].cmFileNum].moGfxFile;
         monRes.path.replace("%c", "N");
+        monRes.path = assetPath + "/" + monRes.path;
         monRes.width = monfiledata[mapMonTypes[i].cmFileNum].moWidth;
         if (monsterdata[mapMonTypes[i].cmType].mTransFile != NULL) {
             monRes.trnPath = assetPath + "/" + monsterdata[mapMonTypes[i].cmType].mTransFile;
