@@ -11,7 +11,3 @@ QPlainTextEdit[readOnly="true"] {
 QMessageBox {
   messagebox-text-interaction-flags: 5;
 }
-
-QMessageBox::down-arrow {
-  image: none;
-}

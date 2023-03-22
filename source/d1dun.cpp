@@ -758,7 +758,7 @@ bool D1Dun::save(const SaveAsParam &params)
             if (this->monsters[y][x] != 0) {
                 layers |= 1 << 1;
             }
-            if (this->objects[y][x] > 0) {
+            if (this->objects[y][x] != 0) {
                 layers |= 1 << 2;
             }
             if (this->rooms[y][x] != 0) {
@@ -929,7 +929,7 @@ bool D1Dun::save(const SaveAsParam &params)
         if (numLayers >= 3) {
             for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
                 for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                    writeWord = this->objects[y][x] > 0 ? this->objects[y][x] : 0;
+                    writeWord = this->objects[y][x];
                     out << writeWord;
                 }
             }
@@ -1097,7 +1097,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     if (params.showObjects) {
         // draw the object
         int objectIndex = this->objects[dunCursorY][dunCursorX];
-        if (objectIndex > 0) {
+        if (objectIndex != 0) {
             const ObjectCacheEntry *objEntry = nullptr;
             for (const auto &obj : this->objectCache) {
                 if (obj.objectIndex == objectIndex) {
@@ -1408,7 +1408,7 @@ int D1Dun::getWidth() const
     return this->width;
 }
 
-bool D1Dun::setWidth(int newWidth)
+bool D1Dun::setWidth(int newWidth, bool force)
 {
     if (newWidth % TILE_WIDTH != 0) {
         return false;
@@ -1422,7 +1422,7 @@ bool D1Dun::setWidth(int newWidth)
     if (diff == 0) {
         return false;
     }
-    if (diff < 0) {
+    if (diff < 0 && !force) {
         // check if there are non-zero values
         bool hasContent = false;
         for (int y = 0; y < height; y++) {
@@ -1475,7 +1475,7 @@ int D1Dun::getHeight() const
     return this->height;
 }
 
-bool D1Dun::setHeight(int newHeight)
+bool D1Dun::setHeight(int newHeight, bool force)
 {
     if (newHeight % TILE_HEIGHT != 0) {
         return false;
@@ -1489,7 +1489,7 @@ bool D1Dun::setHeight(int newHeight)
     if (diff == 0) {
         return false;
     }
-    if (diff < 0) {
+    if (diff < 0 && !force) {
         // check if there are non-zero values
         bool hasContent = false;
         for (int y = newHeight; y < prevHeight; y++) {
@@ -2011,7 +2011,7 @@ void D1Dun::collectObjects(std::vector<std::pair<int, int>> &foundObjects) const
 {
     for (const std::vector<int> &objectsRow : this->objects) {
         for (int objectIndex : objectsRow) {
-            if (objectIndex <= 0) {
+            if (objectIndex == 0) {
                 continue;
             }
             for (std::pair<int, int> &objectEntry : foundObjects) {
@@ -2172,7 +2172,6 @@ void D1Dun::checkObjects() const
             if (objectIndex == 0) {
                 continue;
             }
-            objectIndex = abs(objectIndex);
             int subtileRef = this->subtiles[y][x];
             QString objectName = this->getObjectName(objectIndex);
             if (subtileRef == UNDEF_SUBTILE) {
@@ -2306,8 +2305,8 @@ void D1Dun::loadObjects(D1Dun *srcDun)
             int currObjectIndex = this->objects[y][x];
             if (newObjectIndex != 0 && currObjectIndex != newObjectIndex) {
                 if (currObjectIndex != 0) {
-                    QString currObjectName = this->getObjectName(abs(currObjectIndex));
-                    QString newObjectName = this->getObjectName(abs(newObjectIndex));
+                    QString currObjectName = this->getObjectName(currObjectIndex);
+                    QString newObjectName = this->getObjectName(newObjectIndex);
                     dProgressWarn() << tr("'%1'(%2) object at %3:%4 was replaced by '%5'(%6).").arg(currObjectName).arg(currObjectIndex).arg(x).arg(y).arg(newObjectName).arg(newObjectIndex);
                 }
                 this->objects[y][x] = newObjectIndex;
@@ -2468,7 +2467,13 @@ bool D1Dun::changeObjectAt(int posx, int posy, int objectIndex)
         return false;
     }
     this->objects[posy][posx] = objectIndex;
-    dProgress() << tr("Changed Object at %1:%2 from '%3' to '%4'.").arg(posx).arg(posy).arg(prevObject).arg(objectIndex);
+    if (objectIndex == 0) {
+        dProgress() << tr("Removed Object '%1' from %2:%3.").arg(prevObject).arg(posx).arg(posy);
+    } else if (prevObject == 0) {
+        dProgress() << tr("Added Object '%1' to %2:%3.").arg(objectIndex).arg(posx).arg(posy);
+    } else {
+        dProgress() << tr("Changed Object at %1:%2 from '%3' to '%4'.").arg(posx).arg(posy).arg(prevObject).arg(objectIndex);
+    }
     this->modified = true;
     return true;
 }
@@ -2480,7 +2485,31 @@ bool D1Dun::changeMonsterAt(int posx, int posy, int monsterIndex)
         return false;
     }
     this->monsters[posy][posx] = monsterIndex;
-    dProgress() << tr("Changed Monster at %1:%2 from '%3' to '%4'.").arg(posx).arg(posy).arg(prevMonster).arg(monsterIndex);
+    if (monsterIndex == 0) {
+        dProgress() << tr("Removed Monster '%1' from %2:%3.").arg(prevMonster).arg(posx).arg(posy);
+    } else if (prevMonster == 0) {
+        dProgress() << tr("Added Monster '%1' to %2:%3.").arg(monsterIndex).arg(posx).arg(posy);
+    } else {
+        dProgress() << tr("Changed Monster at %1:%2 from '%3' to '%4'.").arg(posx).arg(posy).arg(prevMonster).arg(monsterIndex);
+    }
+    this->modified = true;
+    return true;
+}
+
+bool D1Dun::changeItemAt(int posx, int posy, int itemIndex)
+{
+    int prevItem = this->items[posy][posx];
+    if (prevItem == itemIndex) {
+        return false;
+    }
+    this->items[posy][posx] = itemIndex;
+    if (itemIndex == 0) {
+        dProgress() << tr("Removed Item '%1' from %2:%3.").arg(prevItem).arg(posx).arg(posy);
+    } else if (prevItem == 0) {
+        dProgress() << tr("Added Item '%1' to %2:%3.").arg(itemIndex).arg(posx).arg(posy);
+    } else {
+        dProgress() << tr("Changed Item at %1:%2 from '%3' to '%4'.").arg(posx).arg(posy).arg(prevItem).arg(itemIndex);
+    }
     this->modified = true;
     return true;
 }
@@ -2490,6 +2519,10 @@ void D1Dun::patch(int dunFileIndex)
     const quint8 dunSizes[][2] {
         // clang-format off
 /* DUN_SKELKING_ENTRY*/      { 14, 14 }, // SKngDO.DUN
+/* DUN_SKELKING_PRE*/        { 74, 50 }, // SklKng2.DUN
+/* DUN_SKELKING_AFT*/        { 74, 50 }, // SklKng1.DUN
+/* DUN_BANNER_PRE*/          { 16, 16 }, // Banner2.DUN
+/* DUN_BANNER_AFT*/          { 16, 16 }, // Banner1.DUN
 /* DUN_BONECHAMB_ENTRY_PRE*/ { 14, 14 }, // Bonestr1.DUN
 /* DUN_BONECHAMB_ENTRY_AFT*/ { 14, 14 }, // Bonestr2.DUN
 /* DUN_BONECHAMB_PRE*/       { 64, 36 }, // Bonecha1.DUN
@@ -2501,6 +2534,7 @@ void D1Dun::patch(int dunFileIndex)
 /* DUN_VILE_PRE*/            { 42, 46 }, // Vile2.DUN
 /* DUN_VILE_AFT*/            { 42, 46 }, // Vile1.DUN
 /* DUN_WARLORD_PRE*/         { 16, 14 }, // Warlord.DUN
+/* DUN_WARLORD_AFT*/         { 16, 14 }, // Warlord2.DUN
         // clang-format on
     };
     if (this->width != dunSizes[dunFileIndex][0] || this->height != dunSizes[dunFileIndex][1]) {
@@ -2594,6 +2628,18 @@ void D1Dun::patch(int dunFileIndex)
                 }
             }
         }
+        // add monsters from Blind2.DUN
+        change |= this->changeMonsterAt(1, 6, 32);
+        change |= this->changeMonsterAt(4, 1, 32);
+        change |= this->changeMonsterAt(6, 3, 32);
+        change |= this->changeMonsterAt(6, 9, 32);
+        change |= this->changeMonsterAt(5, 6, 32);
+        change |= this->changeMonsterAt(7, 5, 32);
+        change |= this->changeMonsterAt(7, 7, 32);
+        change |= this->changeMonsterAt(13, 14, 32);
+        change |= this->changeMonsterAt(14, 17, 32);
+        change |= this->changeMonsterAt(14, 11, 32);
+        change |= this->changeMonsterAt(15, 13, 32);
         break;
     case DUN_BLOOD_PRE: // Blood2.DUN
         // place pieces with closed doors
@@ -2665,6 +2711,85 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(7, 2, 6);
         change |= this->changeTileAt(7, 3, 6);
         change |= this->changeTileAt(7, 4, 6);
+        break;
+    case DUN_WARLORD_AFT: // Warlord2.DUN
+        // replace monsters from Warlord.DUN
+        change |= this->changeMonsterAt(2, 2, 100);
+        change |= this->changeMonsterAt(2, 10, 100);
+        change |= this->changeMonsterAt(13, 4, 100);
+        change |= this->changeMonsterAt(13, 9, 100);
+        change |= this->changeMonsterAt(10, 2, 100);
+        change |= this->changeMonsterAt(10, 10, 100);
+        // add monsters from Warlord.DUN
+        change |= this->changeMonsterAt(6, 2, 100);
+        change |= this->changeMonsterAt(6, 10, 100);
+        change |= this->changeMonsterAt(11, 2, 100);
+        change |= this->changeMonsterAt(11, 10, 100);
+        break;
+    case DUN_BANNER_PRE: // Banner2.DUN
+        // replace entry tile
+        change |= this->changeTileAt(7, 6, 193);
+        break;
+    case DUN_BANNER_AFT: // Banner1.DUN
+        // replace monsters from Banner2.DUN
+        change |= this->changeMonsterAt(2, 2, 16);
+        for (int y = 7; y <= 9; y++) {
+            for (int x = 7; x <= 13; x++) {
+                change |= this->changeMonsterAt(x, y, 16);
+            }
+        }
+        // remove monsters
+        change |= this->changeMonsterAt(1, 4, 0);
+        change |= this->changeMonsterAt(13, 5, 0);
+        change |= this->changeMonsterAt(7, 12, 0);
+        break;
+    case DUN_SKELKING_PRE: // SklKng2.DUN
+        break;
+    case DUN_SKELKING_AFT: // SklKng1.DUN
+        // remove items
+        // - room via crux
+        change |= this->changeItemAt(17, 5, 0);
+        change |= this->changeItemAt(17, 7, 0);
+        change |= this->changeItemAt(17, 9, 0);
+        change |= this->changeItemAt(29, 5, 0);
+        change |= this->changeItemAt(29, 7, 0);
+        change |= this->changeItemAt(29, 9, 0);
+        // - room via lever
+        change |= this->changeItemAt(41, 15, 0);
+        change |= this->changeItemAt(41, 19, 0);
+        // add chests
+        // - room via crux
+        change |= this->changeObjectAt(17, 10, 78);
+        change |= this->changeObjectAt(29, 10, 78);
+        // - back room
+        change |= this->changeObjectAt(3, 31, 78);
+        change |= this->changeObjectAt(3, 36, 78);
+        change |= this->changeObjectAt(3, 34, 81);
+        // - room via lever
+        change |= this->changeObjectAt(41, 17, 81);
+        // replace monsters from SklKng2.DUN
+        // - back room
+        change |= this->changeMonsterAt(6, 32, 27);
+        change |= this->changeMonsterAt(6, 33, 22);
+        change |= this->changeMonsterAt(6, 34, 22);
+        change |= this->changeMonsterAt(6, 35, 27);
+        change |= this->changeMonsterAt(8, 32, 27);
+        change |= this->changeMonsterAt(8, 33, 27);
+        change |= this->changeMonsterAt(8, 34, 27);
+        change |= this->changeMonsterAt(8, 35, 27);
+        change |= this->changeMonsterAt(10, 33, 11);
+        change |= this->changeMonsterAt(10, 34, 11);
+        change |= this->changeMonsterAt(12, 33, 11);
+        change |= this->changeMonsterAt(12, 34, 11);
+        // - room via crux
+        change |= this->changeMonsterAt(19, 9, 24);
+        // - central room
+        change |= this->changeMonsterAt(12, 20, 24);
+        change |= this->changeMonsterAt(18, 25, 23);
+        change |= this->changeMonsterAt(18, 30, 27);
+        change |= this->changeMonsterAt(18, 32, 27);
+        change |= this->changeMonsterAt(33, 41, 23);
+        change |= this->changeMonsterAt(39, 31, 11);
         break;
     }
     if (!change) {
