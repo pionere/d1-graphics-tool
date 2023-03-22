@@ -179,7 +179,7 @@ void LevelCelView::updateEntityOptions()
     this->ui->dungeonMonsterComboBox->hide();
     this->ui->dungeonMonsterComboBox->clear();
     this->ui->dungeonMonsterComboBox->addItem("", 0);
-    for (unsigned i = 0; i < lengthof(MonstConvTbl); i++) {
+    for (int i = 0; i < lengthof(MonstConvTbl); i++) {
         BYTE monType = MonstConvTbl[i];
         if (monType != 0) {
             // TODO: filter custom entries?
