@@ -57,11 +57,9 @@ typedef struct CustomObjectStruct {
     int frameNum;
 } CustomObjectStruct;
 
-/*typedef struct DunMonsterStruct {
-    int type;
-    int monType;
+typedef struct DunMonsterStruct {
     const char *name;
-} DunMonsterStruct;*/
+} DunMonsterStruct;
 
 typedef struct CustomMonsterStruct {
     int type;
@@ -233,4 +231,4 @@ private:
 };
 
 extern const DunObjectStruct DunObjConvTbl[128];
-// extern const DunMonsterStruct DunMonstConvTbl[128];
+extern const DunMonsterStruct DunMonstConvTbl[128];
