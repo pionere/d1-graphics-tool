@@ -129,9 +129,9 @@ public:
     bool isModified() const;
     quint8 getNumLayers() const;
     int getWidth() const;
-    bool setWidth(int width);
+    bool setWidth(int width, bool force);
     int getHeight() const;
-    bool setHeight(int height);
+    bool setHeight(int height, bool force);
 
     int getTileAt(int posx, int posy) const;
     bool setTileAt(int posx, int posy, int tileRef);

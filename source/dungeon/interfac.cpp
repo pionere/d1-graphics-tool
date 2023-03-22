@@ -201,8 +201,8 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
     bool hasSubtiles = pMegaTiles != NULL;
     FreeLvlDungeon();
 
-    dun->setWidth(MAXDUNX);
-    dun->setHeight(MAXDUNY);
+    dun->setWidth(MAXDUNX, true);
+    dun->setHeight(MAXDUNY, true);
     dun->setLevelType(currLvl._dType);
 
     for (int y = 0; y < MAXDUNY; y += 2) {
@@ -237,6 +237,8 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
             if (obj > 0) {
                 obj = objects[obj - 1]._otype + lengthof(DunObjConvTbl);
                 objectTypes.insert(obj - lengthof(DunObjConvTbl));
+            } else {
+                obj = 0;
             }
             dun->setObjectAt(x, y, obj);
             dun->setRoomAt(x, y, dTransVal[x][y]);

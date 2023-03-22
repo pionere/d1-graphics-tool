@@ -3536,7 +3536,7 @@ void LevelCelView::on_dunWidthEdit_returnPressed()
 {
     int newWidth = this->ui->dunWidthEdit->text().toUShort();
 
-    bool change = this->dun->setWidth(newWidth);
+    bool change = this->dun->setWidth(newWidth, false);
     this->on_dunWidthEdit_escPressed();
     if (change) {
         if (this->currentDunPosX >= newWidth) {
@@ -3560,7 +3560,7 @@ void LevelCelView::on_dunHeightEdit_returnPressed()
 {
     int newHeight = this->ui->dunHeightEdit->text().toUShort();
 
-    bool change = this->dun->setHeight(newHeight);
+    bool change = this->dun->setHeight(newHeight, false);
     this->on_dunHeightEdit_escPressed();
     if (change) {
         if (this->currentDunPosY >= newHeight) {

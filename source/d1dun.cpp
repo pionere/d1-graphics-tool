@@ -1408,7 +1408,7 @@ int D1Dun::getWidth() const
     return this->width;
 }
 
-bool D1Dun::setWidth(int newWidth)
+bool D1Dun::setWidth(int newWidth, bool force)
 {
     if (newWidth % TILE_WIDTH != 0) {
         return false;
@@ -1422,7 +1422,7 @@ bool D1Dun::setWidth(int newWidth)
     if (diff == 0) {
         return false;
     }
-    if (diff < 0) {
+    if (diff < 0 && !force) {
         // check if there are non-zero values
         bool hasContent = false;
         for (int y = 0; y < height; y++) {
@@ -1475,7 +1475,7 @@ int D1Dun::getHeight() const
     return this->height;
 }
 
-bool D1Dun::setHeight(int newHeight)
+bool D1Dun::setHeight(int newHeight, bool force)
 {
     if (newHeight % TILE_HEIGHT != 0) {
         return false;
@@ -1489,7 +1489,7 @@ bool D1Dun::setHeight(int newHeight)
     if (diff == 0) {
         return false;
     }
-    if (diff < 0) {
+    if (diff < 0 && !force) {
         // check if there are non-zero values
         bool hasContent = false;
         for (int y = newHeight; y < prevHeight; y++) {
