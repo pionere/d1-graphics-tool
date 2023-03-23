@@ -191,7 +191,6 @@ void LevelCelView::updateEntityOptions()
         this->ui->dungeonMonsterComboBox->addItem(mon.name, mon.type);
     }
     this->ui->dungeonMonsterComboBox->show();
-    // this->ui->dungeonMonsterComboBox->adjustSize();
     // - items
     this->ui->dungeonItemComboBox->hide();
     this->ui->dungeonItemComboBox->clear();

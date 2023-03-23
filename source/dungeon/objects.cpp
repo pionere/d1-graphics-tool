@@ -670,20 +670,19 @@ static void LoadMapSetObjs(const char* map)
 	LoadMapSetObjects(map, 2 * setpc_x, 2 * setpc_y, NULL);
 }
 
-static void SetupObject(int oi, int x, int y, int type)
+static void SetupObject(int oi, int type)
 {
 	ObjectStruct* os;
 	const ObjectData* ods;
 	const ObjFileData* ofd;
 
 	os = &objects[oi];
-	os->_ox = x;
-	os->_oy = y;
 	os->_otype = type;
 	ods = &objectdata[type];
 	os->_oSelFlag = ods->oSelFlag;
 	os->_oDoorFlag = ods->oDoorFlag;
-//	os->_oProc = ods->oProc;
+	os->_oProc = ods->oProc;
+	os->_oModeFlags = ods->oModeFlags;
 	os->_oAnimFrame = ods->oAnimBaseFrame;
 //	os->_oAnimData = objanimdata[ods->ofindex];
 	ofd = &objfiledata[ods->ofindex];
@@ -1310,9 +1309,20 @@ int AddObject(int type, int ox, int oy)
 	objectactive[numobjects] = oi;
 	numobjects++;
 //	objectavail[0] = objectavail[MAXOBJECTS - numobjects];
+	SetupObject(oi, type);
+	// place object
+	ObjectStruct* os = &objects[oi];
+	os->_ox = ox;
+	os->_oy = oy;
 	assert(dObject[ox][oy] == 0);
 	dObject[ox][oy] = oi + 1;
-	SetupObject(oi, ox, oy, type);
+	dFlags[ox][oy] |= BFLAG_POPULATED;
+	if (nSolidTable[dPiece[ox][oy]] && (os->_oModeFlags & OMF_FLOOR)) {
+		dObject[ox][oy] = 0;
+		os->_oModeFlags |= OMF_RESERVED;
+		os->_oSelFlag = 0;
+	}
+	// init object
 	switch (type) {
 	case OBJ_L1LIGHT:
 		AddObjLight(oi, 10, 0, 0);

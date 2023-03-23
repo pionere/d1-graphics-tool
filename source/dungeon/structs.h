@@ -361,7 +361,10 @@ typedef struct ObjectStruct {
 	int _otype; // _object_id
 	int _ox;    // Tile X-position of the object
 	int _oy;    // Tile Y-position of the object
-	BYTE _oAnimFlag; // object_anim_mode
+	BYTE _oSFXCnt;
+	BYTE _oAnimFlag;  // object_anim_mode
+	BYTE _oProc;      // object_proc_func
+	BYTE _oModeFlags; // object_mode_flags
 	int _oAnimFrameLen; // Tick length of each frame in the current animation
 	int _oAnimCnt;   // Increases by one each game tick, counting how close we are to _oAnimFrameLen
 	int _oAnimLen;   // Number of frames in current animation
