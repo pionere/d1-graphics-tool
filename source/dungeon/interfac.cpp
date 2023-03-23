@@ -217,6 +217,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
     }
     std::vector<std::pair<int, int>> objectTypes;
     std::set<int> itemTypes;
+    std::vector<int> monUniques;
     for (int y = 0; y < MAXDUNY; y++) {
         for (int x = 0; x < MAXDUNY; x++) {
             if (hasSubtiles) {
@@ -230,7 +231,14 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
             dun->setItemAt(x, y, item);
             int mon = dMonster[x][y];
             if (mon != 0) {
-                mon = monsters[mon - 1]._mMTidx + lengthof(DunMonstConvTbl);
+                MonsterStruct *ms = &monsters[mon - 1];
+                if (ms->_muniqtype == 0) {
+                    mon = ms->_mMTidx;
+                } else {
+                    monUniques.push_back(mon - 1);
+                    mon = nummtypes + monUniques.size() - 1;
+                }
+                mon += lengthof(DunMonstConvTbl);
             }
             dun->setMonsterAt(x, y, mon);
             int obj = dObject[x][y];
@@ -271,6 +279,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
         dun->addResource(itemRes);
     }
     // add monsters
+    // - normal
     for (int i = 1; i < nummtypes; i++) {
         AddResourceParam monRes = AddResourceParam();
         monRes.type = DUN_ENTITY_TYPE::MONSTER;
@@ -282,6 +291,27 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
         monRes.width = monfiledata[mapMonTypes[i].cmFileNum].moWidth;
         if (monsterdata[mapMonTypes[i].cmType].mTransFile != NULL) {
             monRes.baseTrnPath = assetPath + "/" + monsterdata[mapMonTypes[i].cmType].mTransFile;
+        }
+        dun->addResource(monRes);
+    }
+    // - unique
+    for (unsigned i = 0; i < monUniques.size(); i++) {
+        int mon = monUniques[i];
+        MonsterStruct *ms = &monsters[mon];
+        const MapMonData &md = mapMonTypes[ms->_mMTidx];
+        AddResourceParam monRes = AddResourceParam();
+        monRes.type = DUN_ENTITY_TYPE::MONSTER;
+        monRes.index = lengthof(DunMonstConvTbl) + nummtypes + i;
+        monRes.name = ms->_mName;
+        monRes.path = monfiledata[md.cmFileNum].moGfxFile;
+        monRes.path.replace("%c", "N");
+        monRes.path = assetPath + "/" + monRes.path;
+        monRes.width = monfiledata[md.cmFileNum].moWidth;
+        if (monsterdata[md.cmType].mTransFile != NULL) {
+            monRes.baseTrnPath = assetPath + "/" + monsterdata[md.cmType].mTransFile;
+        }
+        if (uniqMonData[ms->_muniqtype - 1].mTrnName != NULL) {
+            monRes.uniqueTrnPath = assetPath + "/Monsters/Monsters/" + uniqMonData[ms->_muniqtype - 1].mTrnName + ".TRN";
         }
         dun->addResource(monRes);
     }
