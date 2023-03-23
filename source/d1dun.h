@@ -65,7 +65,8 @@ typedef struct CustomMonsterStruct {
     int type;
     int width;
     QString path;
-    QString trnPath;
+    QString baseTrnPath;
+    QString uniqueTrnPath;
     QString name;
 } CustomMonsterStruct;
 

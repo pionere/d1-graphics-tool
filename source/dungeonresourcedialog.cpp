@@ -31,7 +31,8 @@ void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, D1Dun *d, QComboBox *c
         this->ui->celFileLineEdit->setText("");
         this->ui->widthLineEdit->setText("");
         this->ui->frameLineEdit->setText("");
-        this->ui->trnFileLineEdit->setText("");
+        this->ui->baseTrnFileLineEdit->setText("");
+        this->ui->uniqueTrnFileLineEdit->setText("");
         // select window title
         QString title;
         switch (t) {
