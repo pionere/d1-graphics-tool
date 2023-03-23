@@ -37,7 +37,7 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, bool first)
         return;
     }
     this->lastPos = currPos;
-
+    dProgress() << QStringLiteral("Mouse event at: %1:%2").arg(currPos.x()).arg(currPos.y());
     // emit this->framePixelClicked(this->lastPos, first);
     CelView *celView = qobject_cast<CelView *>(this->view);
     if (celView != nullptr) {
