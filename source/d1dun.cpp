@@ -20,53 +20,7 @@
 #include "d1trn.h"
 #include "progressdialog.h"
 
-template <class T, int N>
-constexpr int lengthof(T (&arr)[N])
-{
-    return N;
-}
-
-typedef enum dun_monster_gfx_id {
-    DMOFILE_FALLSP,
-    DMOFILE_SKELAX,
-    DMOFILE_FALLSD,
-    DMOFILE_SKELBW,
-    DMOFILE_SKELSD,
-    DMOFILE_SNEAK,
-    DMOFILE_GOATMC,
-    DMOFILE_GOATBW,
-    DMOFILE_FAT,
-    DMOFILE_RHINO,
-    DMOFILE_BLACK,
-    DMOFILE_SUCC,
-    DMOFILE_MAGE,
-    DMOFILE_DIABLO,
-    NUM_DMOFILE_TYPES
-} dun_monster_gfx_id;
-
-typedef enum dun_object_graphic_id {
-    DOFILE_LEVER,
-    DOFILE_CRUXSK1,
-    DOFILE_CRUXSK2,
-    DOFILE_CRUXSK3,
-    DOFILE_BOOK2,
-    DOFILE_BURNCROS,
-    DOFILE_CANDLE2,
-    DOFILE_MCIRL,
-    DOFILE_SWITCH4,
-    DOFILE_TSOUL,
-    DOFILE_TNUDEM,
-    DOFILE_TNUDEW,
-    DOFILE_CHEST1,
-    DOFILE_CHEST2,
-    DOFILE_CHEST3,
-    DOFILE_ALTBOY,
-    DOFILE_ARMSTAND,
-    DOFILE_WEAPSTND,
-    DOFILE_WTORCH2,
-    DOFILE_WTORCH1,
-    NUM_DOFILE_TYPES
-} dun_object_graphic_id;
+#include "dungeon/all.h"
 
 typedef struct SpecCell {
     int subtileRef;
@@ -75,16 +29,16 @@ typedef struct SpecCell {
     int specIndex;
 } SpecCell;
 
-typedef struct ObjFileData {
+typedef struct DunObjFileData {
     const char *path;
     int width;
     int numFrames;
-} ObjFileData;
+} DunObjFileData;
 
-typedef struct MonFileData {
+typedef struct DunMonFileData {
     const char *path;
     int width;
-} MonFileData;
+} DunMonFileData;
 
 typedef struct DungeonStruct {
     int defaultTile;
@@ -137,311 +91,267 @@ const DungeonStruct dungeonTbl[NUM_DUNGEON_TYPES] = {
 
 const DunObjectStruct DunObjConvTbl[128] = {
     // clang-format off
-    { 0 },
-    {   1, DOFILE_LEVER,    "Lever", 1 }, // Q_SKELKING
-    {   2, DOFILE_CRUXSK1,  "Crucifix1", 1 }, // Q_SKELKING
-    {   3, DOFILE_CRUXSK2,  "Crucifix2", 1 }, // Q_SKELKING
-    {   4, DOFILE_CRUXSK3,  "Crucifix3", 1 }, // Q_SKELKING
-    { 0 }, //OBJ_ANGEL,
-    { 0 }, //OBJ_BANNERL,
-    { 0 }, //OBJ_BANNERM,
-    { 0 }, //OBJ_BANNERR,
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    {  14, DOFILE_BOOK2,    "Bookstand", 1 }, // Q_BCHAMB, Q_BETRAYER
-    { 0 }, //OBJ_BOOK2R,
-    {  16, DOFILE_BURNCROS, "Burning cross", 0 }, // Q_BCHAMB
-    { 0 },
-    { 0 }, //OBJ_CANDLE1,
-    {  19, DOFILE_CANDLE2,  "Candle", 0 }, // Q_BCHAMB
-    { 0 }, //OBJ_CANDLEO,
-    { 0 }, //OBJ_CAULDRON,
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 }, //OBJ_FLAMEHOLE,
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    {  36, DOFILE_MCIRL,    "Magic Circle 1", 1 }, // Q_BETRAYER
-    {  37, DOFILE_MCIRL,    "Magic Circle 2", 3 }, // Q_BETRAYER
-    { 0 }, //OBJ_SKFIRE,
-    { 0 }, //OBJ_SKPILE,
-    { 0 }, //OBJ_SKSTICK1,
-    { 0 }, //OBJ_SKSTICK2,
-    { 0 }, //OBJ_SKSTICK3,
-    { 0 }, //OBJ_SKSTICK4,
-    { 0 }, //OBJ_SKSTICK5,
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    {  51, DOFILE_SWITCH4,  "Switch", 1 }, // Q_BCHAMB, Q_DIABLO
-    { 0 },
-    { 0 }, //OBJ_TRAPL,
-    { 0 }, //OBJ_TRAPR,
-    {  55, DOFILE_TSOUL,    "Tortured body 1", 1 }, // Q_BUTCHER
-    {  56, DOFILE_TSOUL,    "Tortured body 2", 2 }, // Q_BUTCHER
-    {  57, DOFILE_TSOUL,    "Tortured body 3", 3 }, // Q_BUTCHER
-    {  58, DOFILE_TSOUL,    "Tortured body 4", 4 }, // Q_BUTCHER
-    {  59, DOFILE_TSOUL,    "Tortured body 5", 5 }, // Q_BUTCHER
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 }, //OBJ_NUDEW2R,
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    {  70, DOFILE_TNUDEM,   "Tortured male 1", 1 }, //1, Q_BUTCHER
-    {  71, DOFILE_TNUDEM,   "Tortured male 2", 2 }, //2, Q_BUTCHER
-    {  72, DOFILE_TNUDEM,   "Tortured male 3", 3 }, //3, Q_BUTCHER
-    {  73, DOFILE_TNUDEM,   "Tortured male 4", 4 }, //4, Q_BUTCHER
-    {  74, DOFILE_TNUDEW,   "Tortured female 1", 1 }, //1, Q_BUTCHER
-    {  75, DOFILE_TNUDEW,   "Tortured female 2", 2 }, //2, Q_BUTCHER
-    {  76, DOFILE_TNUDEW,   "Tortured female 3", 3 }, //3, Q_BUTCHER
-    { 0 }, //OBJ_CHEST1,
-    {  78, DOFILE_CHEST1,   "Chest 1", 1 }, // Q_SKELKING
-    { 0 }, //OBJ_CHEST1,
-    { 0 }, //OBJ_CHEST2,
-    {  81, DOFILE_CHEST2,   "Chest 2", 1 }, // Q_SKELKING
-    { 0 }, //OBJ_CHEST2,
-    { 0 }, //OBJ_CHEST3,
-    {  84, DOFILE_CHEST3,   "Chest 3", 1 }, // Q_BCHAMB
-    { 0 }, //OBJ_CHEST3,
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 }, //OBJ_PEDISTAL,
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 105, DOFILE_ALTBOY,   "Altarboy", 1 }, // Q_BETRAYER
-    { 0 },
-    { 0 },
-    { 108, DOFILE_ARMSTAND, "Armor stand", 2 }, //OBJ_ARMORSTAND, // Q_WARLORD - changed to inactive versions to eliminate farming potential
-    { 109, DOFILE_WEAPSTND, "Weapon stand", 2 }, //OBJ_WEAPONRACKL, // Q_WARLORD
-    { 110, DOFILE_WTORCH2,  "Torch 2", 0 }, // Q_BLOOD
-    { 111, DOFILE_WTORCH1,  "Torch 1", 0 }, // Q_BLOOD
-    { 0 }, //OBJ_MUSHPATCH,
-    { 0 }, //OBJ_STAND,
-    { 0 }, //OBJ_TORCHL2,
-    { 0 }, //OBJ_TORCHR2,
-    { 0 }, //OBJ_FLAMELVR,
-    { 0 }, //OBJ_SARC,
-    { 0 }, //OBJ_BARREL,
-    { 0 }, //OBJ_BARRELEX,
-    { 0 }, //OBJ_BOOKSHELF,
-    { 0 }, //OBJ_BOOKCASEL,
-    { 0 }, //OBJ_BOOKCASER,
-    { 0 }, //OBJ_ARMORSTANDN,
-    { 0 }, //OBJ_WEAPONRACKLN,
-    { 0 }, //OBJ_BLOODFTN,
-    { 0 }, //OBJ_PURIFYINGFTN,
-    { 0 }, //OBJ_SHRINEL,
-    // clang-format on
-};
-
-const ObjFileData objfiledata[NUM_DOFILE_TYPES] = {
-    // clang-format off
-/*DOFILE_LEVER*/    { "Lever",     96, 1 }, // 2
-/*DOFILE_CRUXSK1*/  { "CruxSk1",   96, 1 }, // 15
-/*DOFILE_CRUXSK2*/  { "CruxSk2",   96, 1 }, // 15
-/*DOFILE_CRUXSK3*/  { "CruxSk3",   96, 1 }, // 15
-/*DOFILE_BOOK2*/    { "Book2",     96, 1 }, // 6
-/*DOFILE_BURNCROS*/ { "Burncros", 160, 1 }, // 10
-/*DOFILE_CANDLE2*/  { "Candle2",   96, 1 }, // 4
-/*DOFILE_MCIRL*/    { "Mcirl",     96, 3 }, // 4
-/*DOFILE_SWITCH4*/  { "Switch4",   96, 1 }, // 2
-/*DOFILE_TSOUL*/    { "TSoul",    128, 5 }, // 6
-/*DOFILE_TNUDEM*/   { "TNudeM",   128, 4 }, // 4
-/*DOFILE_TNUDEW*/   { "TNudeW",   128, 3 }, // 3
-/*DOFILE_CHEST1*/   { "Chest1",    96, 1 }, // 6
-/*DOFILE_CHEST2*/   { "Chest2",    96, 1 }, // 6
-/*DOFILE_CHEST3*/   { "Chest3",    96, 1 }, // 6
-/*DOFILE_ALTBOY*/   { "Altboy",   128, 1 }, // 1
-/*DOFILE_ARMSTAND*/ { "Armstand",  96, 2 }, // 2
-/*DOFILE_WEAPSTND*/ { "WeapStnd",  96, 2 }, // 4
-/*DOFILE_WTORCH2*/  { "WTorch2",   96, 1 }, // 9
-/*DOFILE_WTORCH1*/  { "WTorch1",   96, 1 }, // 9
+                     { nullptr },
+/*OBJ_LEVER*/        { "Lever" }, // Q_SKELKING
+/*OBJ_CRUXM*/        { "Crucifix1" }, // Q_SKELKING
+/*OBJ_CRUXR*/        { "Crucifix2" }, // Q_SKELKING
+/*OBJ_CRUXL*/        { "Crucifix3" }, // Q_SKELKING
+                     { nullptr }, //OBJ_ANGEL,
+                     { nullptr }, //OBJ_BANNERL,
+                     { nullptr }, //OBJ_BANNERM,
+                     { nullptr }, //OBJ_BANNERR,
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+/*OBJ_BOOK2L*/       { "Bookstand" }, // Q_BCHAMB, Q_BETRAYER
+                     { nullptr }, //OBJ_BOOK2R,
+/*OBJ_TBCROSS*/      { "Burning cross" }, // Q_BCHAMB
+                     { nullptr },
+                     { nullptr }, //OBJ_CANDLE1,
+/*OBJ_CANDLE2*/      { "Candle" }, // Q_BCHAMB
+                     { nullptr }, //OBJ_CANDLEO,
+                     { nullptr }, //OBJ_CAULDRON,
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr }, //OBJ_FLAMEHOLE,
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+/*OBJ_MCIRCLE1*/     { "Magic Circle 1" }, // Q_BETRAYER
+/*OBJ_MCIRCLE2*/     { "Magic Circle 2" }, // Q_BETRAYER
+                     { nullptr }, //OBJ_SKFIRE,
+                     { nullptr }, //OBJ_SKPILE,
+                     { nullptr }, //OBJ_SKSTICK1,
+                     { nullptr }, //OBJ_SKSTICK2,
+                     { nullptr }, //OBJ_SKSTICK3,
+                     { nullptr }, //OBJ_SKSTICK4,
+                     { nullptr }, //OBJ_SKSTICK5,
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+/*OBJ_SWITCHSKL*/    { "Switch" }, // Q_BCHAMB, Q_DIABLO
+                     { nullptr },
+                     { nullptr }, //OBJ_TRAPL,
+                     { nullptr }, //OBJ_TRAPR,
+/*OBJ_TORTUREL1*/    { "Tortured body 1" }, // Q_BUTCHER
+/*OBJ_TORTUREL2*/    { "Tortured body 2" }, // Q_BUTCHER
+/*OBJ_TORTUREL3*/    { "Tortured body 3" }, // Q_BUTCHER
+/*OBJ_TORTUREL4*/    { "Tortured body 4" }, // Q_BUTCHER
+/*OBJ_TORTUREL5*/    { "Tortured body 5" }, // Q_BUTCHER
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr }, //OBJ_NUDEW2R,
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+/*OBJ_TNUDEM*/       { "Tortured male 1" }, //1, Q_BUTCHER
+/*OBJ_TNUDEM*/       { "Tortured male 2" }, //2, Q_BUTCHER
+/*OBJ_TNUDEM*/       { "Tortured male 3" }, //3, Q_BUTCHER
+/*OBJ_TNUDEM*/       { "Tortured male 4" }, //4, Q_BUTCHER
+/*OBJ_TNUDEW*/       { "Tortured female 1" }, //1, Q_BUTCHER
+/*OBJ_TNUDEW*/       { "Tortured female 2" }, //2, Q_BUTCHER
+/*OBJ_TNUDEW*/       { "Tortured female 3" }, //3, Q_BUTCHER
+                     { nullptr }, //OBJ_CHEST1,
+/*OBJ_CHEST1*/       { "Chest 1" }, // Q_SKELKING
+                     { nullptr }, //OBJ_CHEST1,
+                     { nullptr }, //OBJ_CHEST2,
+/*OBJ_CHEST2*/       { "Chest 2" }, // Q_SKELKING
+                     { nullptr }, //OBJ_CHEST2,
+                     { nullptr }, //OBJ_CHEST3,
+/*OBJ_CHEST3*/       { "Chest 3" }, // Q_BCHAMB
+                     { nullptr }, //OBJ_CHEST3,
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr }, //OBJ_PEDISTAL,
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+/*OBJ_ALTBOY*/       { "Altarboy" }, // Q_BETRAYER
+                     { nullptr },
+                     { nullptr },
+/*OBJ_ARMORSTANDN*/  { "Armor stand" }, //OBJ_ARMORSTAND, // Q_WARLORD - changed to inactive versions to eliminate farming potential
+/*OBJ_WEAPONRACKLN*/ { "Weapon stand" }, //OBJ_WEAPONRACKL, // Q_WARLORD
+/*OBJ_TORCHR1*/      { "Torch 2" }, // Q_BLOOD
+/*OBJ_TORCHL1*/      { "Torch 1" }, // Q_BLOOD
+                     { nullptr }, //OBJ_MUSHPATCH,
+                     { nullptr }, //OBJ_STAND,
+                     { nullptr }, //OBJ_TORCHL2,
+                     { nullptr }, //OBJ_TORCHR2,
+                     { nullptr }, //OBJ_FLAMELVR,
+                     { nullptr }, //OBJ_SARC,
+                     { nullptr }, //OBJ_BARREL,
+                     { nullptr }, //OBJ_BARRELEX,
+                     { nullptr }, //OBJ_BOOKSHELF,
+                     { nullptr }, //OBJ_BOOKCASEL,
+                     { nullptr }, //OBJ_BOOKCASER,
+                     { nullptr }, //OBJ_ARMORSTANDN,
+                     { nullptr }, //OBJ_WEAPONRACKLN,
+                     { nullptr }, //OBJ_BLOODFTN,
+                     { nullptr }, //OBJ_PURIFYINGFTN,
+                     { nullptr }, //OBJ_SHRINEL,
     // clang-format on
 };
 
 const DunMonsterStruct DunMonstConvTbl[128] = {
     // clang-format off
-    { 0 },
-    { 0 }, //MT_NZOMBIE,
-    { 0 }, //MT_BZOMBIE,
-    { 0 }, //MT_GZOMBIE,
-    { 0 }, //MT_YZOMBIE,
-    { 0 }, //MT_RFALLSP,
-    {   6, DMOFILE_FALLSP, "FalSpear\\Dark",  "Carver" }, // Q_PWATER
-    { 0 }, //MT_YFALLSP,
-    { 0 }, // {   8, DMOFILE_FALLSP, "FalSpear\\Blue",  "Dark One" }, // Monster from banner2.dun,
-    { 0 }, //MT_WSKELAX,
-    { 0 }, //MT_TSKELAX,
-    {  11, DMOFILE_SKELAX, nullptr,           "Burning Dead" }, // Q_SKELKING
-    { 0 }, //MT_XSKELAX,
-    { 0 }, //MT_RFALLSD,
-    { 0 }, //MT_DFALLSD,
-    {  15, DMOFILE_FALLSD, nullptr,           "Devil Kin" }, // Q_PWATER
-    {  16, DMOFILE_FALLSD, "FalSpear\\Blue",  "Dark One" },  // Q_BANNER
-    { 0 }, //MT_NSCAV,
-    { 0 }, //MT_BSCAV,
-    { 0 }, //MT_WSCAV,
-    { 0 }, //MT_YSCAV,
-    { 0 }, //MT_WSKELBW,
-    {  22, DMOFILE_SKELBW, "SkelSd\\Skelt",   "Corpse Bow" },   // Q_SKELKING
-    {  23, DMOFILE_SKELBW, nullptr,           "Burning Dead" }, // Q_SKELKING
-    {  24, DMOFILE_SKELBW, "SkelSd\\Black",   "Horror" },       // Q_SKELKING
-    { 0 }, //MT_WSKELSD,
-    { 0 }, //MT_TSKELSD,
-    {  27, DMOFILE_SKELSD, nullptr,           "Burning Dead Captain" }, // Q_SKELKING
-    {  28, DMOFILE_SKELSD, "SkelSd\\Black",   "Horror Captain" },       // Q_BCHAMB
-    { 0 }, //MT_NSNEAK,
-    { 0 }, //MT_RSNEAK,
-    {  31, DMOFILE_SNEAK,  "Sneak\\Sneakv3",  "Unseen" },            // Q_BCHAMB
-    {  32, DMOFILE_SNEAK,  "Sneak\\Sneakv1",  "Illusion Weaver" },   // Q_BLIND
-    {  33, DMOFILE_GOATMC, nullptr,           "Flesh Clan (Mace)" }, // Q_PWATER
-    { 0 }, //MT_BGOATMC,
-    { 0 }, //MT_RGOATMC,
-    { 0 }, //MT_GGOATMC,
-    { 0 }, //MT_RBAT,
-    { 0 }, //MT_GBAT,
-    { 0 }, //MT_NBAT,
-    { 0 }, //MT_XBAT,
-    {  41, DMOFILE_GOATBW, nullptr,           "Flesh Clan (Bow)" }, // Q_PWATER
-    { 0 }, //MT_BGOATBW,
-    { 0 }, //MT_RGOATBW,
-    {  44, DMOFILE_GOATBW, "GoatMace\\Gray",  "Night Clan" }, // Q_ANVIL
-    { 0 }, //MT_NACID,
-    { 0 }, //MT_RACID,
-    { 0 }, //MT_BACID,
-    { 0 }, //MT_XACID,
-    { 0 }, //MT_SKING,
-    {  50, DMOFILE_FAT,    nullptr,           "Overlord" }, // Q_BANNER
-    { 0 }, //MT_BFAT,
-    { 0 }, //MT_XFAT,
-    { 0 }, //MT_RFAT,
-    { 0 }, //MT_WYRM,
-    { 0 }, //MT_CAVSLUG,
-    { 0 }, //MT_DEVOUR,
-    { 0 }, //MT_DVLWYRM,
-    { 0 }, //MT_NMAGMA,
-    { 0 }, //MT_YMAGMA,
-    { 0 }, //MT_BMAGMA,
-    { 0 }, //MT_WMAGMA,
-    {  62, DMOFILE_RHINO,  nullptr,           "Horned Demon" }, // Q_BLOOD, Q_BCHAMB
-    { 0 }, // MT_XRHINO, // Q_MAZE
-    { 0 }, //MT_BRHINO,
-    {  65, DMOFILE_RHINO,  "Rhino\\RhinoB",   "Obsidian Lord" }, // Q_ANVIL
-    { 0 }, ///MT_BONEDMN,
-    { 0 }, ///MT_REDDTH,
-    { 0 }, ///MT_LTCHDMN,
-    { 0 }, ///MT_UDEDBLRG,
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 }, ///MT_INCIN,
-    { 0 }, ///MT_FLAMLRD,
-    { 0 }, ///MT_DOOMFIRE,
-    { 0 }, ///MT_HELLBURN,
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 }, //MT_NTHIN,
-    { 0 }, //MT_RTHIN,
-    { 0 }, //MT_XTHIN,
-    { 0 }, //MT_GTHIN,
-    { 0 }, //MT_NGARG,
-    { 0 }, //MT_XGARG,
-    { 0 }, //MT_DGARG,
-    { 0 }, //MT_BGARG,
-    { 0 }, //MT_NMEGA,
-    { 0 }, //MT_DMEGA,
-    { 0 }, //MT_BMEGA,
-    { 0 }, //MT_RMEGA,
-    { 0 }, //MT_NSNAKE,
-    { 0 }, //MT_RSNAKE,
-    { 0 }, //MT_GSNAKE,
-    { 0 }, //MT_BSNAKE,
-    {  98, DMOFILE_BLACK,  nullptr,           "Black Knight" }, // Q_DIABLO
-    { 0 }, //MT_RBLACK,
-    { 100, DMOFILE_BLACK,  "Black\\BlkKntBT", "Steel Lord" },   // Q_WARLORD
-    { 101, DMOFILE_BLACK,  "Black\\BlkKntBe", "Blood Knight" }, // Q_DIABLO
-    { 0 }, ///MT_UNRAV,
-    { 0 }, ///MT_HOLOWONE,
-    { 0 }, ///MT_PAINMSTR,
-    { 0 }, ///MT_REALWEAV,
-    { 0 }, //MT_NSUCC,
-    { 0 }, //MT_GSUCC,
-    { 108, DMOFILE_SUCC,   "Succ\\Succrw",    "Hell Spawn" }, // Q_BETRAYER
-    { 0 }, //MT_BSUCC,
-    { 0 }, //MT_NMAGE,
-    { 0 }, //MT_GMAGE,
-    { 0 }, //MT_XMAGE,
-    { 113, DMOFILE_MAGE,   "Mage\\Cnselbk",   "Advocate" }, // Q_BETRAYER, Q_DIABLO
-    { 0 },
-    { 115, DMOFILE_DIABLO, nullptr,           "The Dark Lord" }, // Q_DIABLO
-    { 0 },
-    { 0 }, //MT_GOLEM,
-    { 0 },
-    { 0 },
-    { 0 }, // Monster from blood1.dun and blood2.dun
-    { 0 },
-    { 0 },
-    { 0 },
-    { 0 }, // { 124, 128, "FalSpear\\Phall", "FalSpear\\Blue",    "Dark One" }, // Snotspill from banner2.dun
-    { 0 },
-    { 0 },
-    { 0 }, ///MT_BIGFALL,
-    // clang-format on
-};
-
-const MonFileData monfiledata[NUM_DMOFILE_TYPES] = {
-    // clang-format off
-/*DMOFILE_FALLSP*/  { "FalSpear\\Phall", 128 },
-/*DMOFILE_SKELAX*/  { "SkelAxe\\SklAx",  128 },
-/*DMOFILE_FALLSD*/  { "FalSword\\Fall",  128 },
-/*DMOFILE_SKELBW*/  { "SkelBow\\SklBw",  128 },
-/*DMOFILE_SKELSD*/  { "SkelSd\\SklSr",   128 },
-/*DMOFILE_SNEAK*/   { "Sneak\\Sneak",    128 },
-/*DMOFILE_GOATMC*/  { "GoatMace\\Goat",  128 },
-/*DMOFILE_GOATBW*/  { "GoatBow\\GoatB",  128 },
-/*DMOFILE_FAT*/     { "Fat\\Fat",        128 },
-/*DMOFILE_RHINO*/   { "Rhino\\Rhino",    160 },
-/*DMOFILE_BLACK*/   { "Black\\Black",    160 },
-/*DMOFILE_SUCC*/    { "Succ\\Scbs",      128 },
-/*DMOFILE_MAGE*/    { "Mage\\Mage",      128 },
-/*DMOFILE_DIABLO*/  { "Diablo\\Diablo",  160 },
+               { nullptr },
+               { nullptr }, //MT_NZOMBIE,
+               { nullptr }, //MT_BZOMBIE,
+               { nullptr }, //MT_GZOMBIE,
+               { nullptr }, //MT_YZOMBIE,
+               { nullptr }, //MT_RFALLSP,
+/*MT_DFALLSP*/ { "Carver" }, // Q_PWATER
+               { nullptr }, //MT_YFALLSP,
+               { nullptr }, // {   8, DMOFILE_FALLSP, "FalSpear\\Blue",  "Dark One" }, // Monster from banner2.dun,
+               { nullptr }, //MT_WSKELAX,
+               { nullptr }, //MT_TSKELAX,
+/*MT_RSKELAX*/ { "Burning Dead" }, // Q_SKELKING
+               { nullptr }, //MT_XSKELAX,
+               { nullptr }, //MT_RFALLSD,
+               { nullptr }, //MT_DFALLSD,
+/*MT_YFALLSD*/ { "Devil Kin" }, // Q_PWATER
+/*MT_BFALLSD*/ { "Dark One" },  // Q_BANNER
+               { nullptr }, //MT_NSCAV,
+               { nullptr }, //MT_BSCAV,
+               { nullptr }, //MT_WSCAV,
+               { nullptr }, //MT_YSCAV,
+               { nullptr }, //MT_WSKELBW,
+/*MT_TSKELBW*/ { "Corpse Bow" },   // Q_SKELKING
+/*MT_RSKELBW*/ { "Burning Dead" }, // Q_SKELKING
+/*MT_XSKELBW*/ { "Horror" },       // Q_SKELKING
+               { nullptr }, //MT_WSKELSD,
+               { nullptr }, //MT_TSKELSD,
+/*MT_RSKELSD*/ { "Burning Dead Captain" }, // Q_SKELKING
+/*MT_XSKELSD*/ { "Horror Captain" },       // Q_BCHAMB
+               { nullptr }, //MT_NSNEAK,
+               { nullptr }, //MT_RSNEAK,
+/*MT_BSNEAK*/  { "Unseen" },            // Q_BCHAMB
+/*MT_YSNEAK*/  { "Illusion Weaver" },   // Q_BLIND
+/*MT_NGOATMC*/ { "Flesh Clan (Mace)" }, // Q_PWATER
+               { nullptr }, //MT_BGOATMC,
+               { nullptr }, //MT_RGOATMC,
+               { nullptr }, //MT_GGOATMC,
+               { nullptr }, //MT_RBAT,
+               { nullptr }, //MT_GBAT,
+               { nullptr }, //MT_NBAT,
+               { nullptr }, //MT_XBAT,
+/*MT_NGOATBW*/ { "Flesh Clan (Bow)" }, // Q_PWATER
+               { nullptr }, //MT_BGOATBW,
+               { nullptr }, //MT_RGOATBW,
+/*MT_GGOATBW*/ { "Night Clan" }, // Q_ANVIL
+               { nullptr }, //MT_NACID,
+               { nullptr }, //MT_RACID,
+               { nullptr }, //MT_BACID,
+               { nullptr }, //MT_XACID,
+               { nullptr }, //MT_SKING,
+/*MT_NFAT*/    { "Overlord" }, // Q_BANNER
+               { nullptr }, //MT_BFAT,
+               { nullptr }, //MT_XFAT,
+               { nullptr }, //MT_RFAT,
+               { nullptr }, //MT_WYRM,
+               { nullptr }, //MT_CAVSLUG,
+               { nullptr }, //MT_DEVOUR,
+               { nullptr }, //MT_DVLWYRM,
+               { nullptr }, //MT_NMAGMA,
+               { nullptr }, //MT_YMAGMA,
+               { nullptr }, //MT_BMAGMA,
+               { nullptr }, //MT_WMAGMA,
+/*MT_NRHINO*/  { "Horned Demon" }, // Q_BLOOD, Q_BCHAMB
+               { nullptr }, // MT_XRHINO, // Q_MAZE
+               { nullptr }, //MT_BRHINO,
+/*MT_DRHINO*/  { "Obsidian Lord" }, // Q_ANVIL
+               { nullptr }, ///MT_BONEDMN,
+               { nullptr }, ///MT_REDDTH,
+               { nullptr }, ///MT_LTCHDMN,
+               { nullptr }, ///MT_UDEDBLRG,
+               { nullptr },
+               { nullptr },
+               { nullptr },
+               { nullptr },
+               { nullptr }, ///MT_INCIN,
+               { nullptr }, ///MT_FLAMLRD,
+               { nullptr }, ///MT_DOOMFIRE,
+               { nullptr }, ///MT_HELLBURN,
+               { nullptr },
+               { nullptr },
+               { nullptr },
+               { nullptr },
+               { nullptr }, //MT_NTHIN,
+               { nullptr }, //MT_RTHIN,
+               { nullptr }, //MT_XTHIN,
+               { nullptr }, //MT_GTHIN,
+               { nullptr }, //MT_NGARG,
+               { nullptr }, //MT_XGARG,
+               { nullptr }, //MT_DGARG,
+               { nullptr }, //MT_BGARG,
+               { nullptr }, //MT_NMEGA,
+               { nullptr }, //MT_DMEGA,
+               { nullptr }, //MT_BMEGA,
+               { nullptr }, //MT_RMEGA,
+               { nullptr }, //MT_NSNAKE,
+               { nullptr }, //MT_RSNAKE,
+               { nullptr }, //MT_GSNAKE,
+               { nullptr }, //MT_BSNAKE,
+/*MT_NBLACK*/  { "Black Knight" }, // Q_DIABLO
+               { nullptr }, //MT_RBLACK,
+/*MT_BBLACK*/  { "Steel Lord" },   // Q_WARLORD
+/*MT_GBLACK*/  { "Blood Knight" }, // Q_DIABLO
+               { nullptr }, ///MT_UNRAV,
+               { nullptr }, ///MT_HOLOWONE,
+               { nullptr }, ///MT_PAINMSTR,
+               { nullptr }, ///MT_REALWEAV,
+               { nullptr }, //MT_NSUCC,
+               { nullptr }, //MT_GSUCC,
+/*MT_RSUCC*/   { "Hell Spawn" }, // Q_BETRAYER
+               { nullptr }, //MT_BSUCC,
+               { nullptr }, //MT_NMAGE,
+               { nullptr }, //MT_GMAGE,
+               { nullptr }, //MT_XMAGE,
+/*MT_BMAGE*/   { "Advocate" }, // Q_BETRAYER, Q_DIABLO
+               { nullptr },
+/*MT_DIABLO*/  { "The Dark Lord" }, // Q_DIABLO
+               { nullptr },
+               { nullptr }, //MT_GOLEM,
+               { nullptr },
+               { nullptr },
+               { nullptr }, // Monster from blood1.dun and blood2.dun
+               { nullptr },
+               { nullptr },
+               { nullptr },
+               { nullptr }, // { 124, 128, "FalSpear\\Phall", "FalSpear\\Blue",    "Dark One" }, // Snotspill from banner2.dun
+               { nullptr },
+               { nullptr },
+               { nullptr }, ///MT_BIGFALL,
     // clang-format on
 };
 
@@ -1113,6 +1023,8 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 int frameNum = objEntry->frameNum;
                 if (frameNum == 0) {
                     frameNum = 1 + (params.time % objEntry->objGfx->getFrameCount());
+                } else if (objEntry->objGfx->getFrameCount() < frameNum) {
+                    frameNum = 1;
                 }
                 QImage objectImage = objEntry->objGfx->getFrameImage(frameNum - 1);
                 dungeon.drawImage(drawCursorX + ((int)backWidth - objectImage.width()) / 2, drawCursorY - objectImage.height(), objectImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
@@ -1728,7 +1640,7 @@ QString D1Dun::getMonsterName(int monsterIndex) const
         }
     }
     // check if it is built-in monster
-    if ((unsigned)monsterIndex < (unsigned)lengthof(DunMonstConvTbl) && DunMonstConvTbl[monsterIndex].type != 0) {
+    if ((unsigned)monsterIndex < (unsigned)lengthof(DunMonstConvTbl) && DunMonstConvTbl[monsterIndex].name != nullptr) {
         return DunMonstConvTbl[monsterIndex].name;
     }
     // out of options -> generic name
@@ -1744,14 +1656,14 @@ QString D1Dun::getObjectName(int objectIndex) const
         }
     }
     // check if it is built-in object
-    if ((unsigned)objectIndex < (unsigned)lengthof(DunObjConvTbl) && DunObjConvTbl[objectIndex].type != 0) {
+    if ((unsigned)objectIndex < (unsigned)lengthof(DunObjConvTbl) && DunObjConvTbl[objectIndex].name != nullptr) {
         return DunObjConvTbl[objectIndex].name;
     }
     // out of options -> generic name
     return tr("Object%1").arg(objectIndex);
 }
 
-void D1Dun::loadObjectGfx(const QString &filePath, int width, int minFrameNum, ObjectCacheEntry &result)
+void D1Dun::loadObjectGfx(const QString &filePath, int width, ObjectCacheEntry &result)
 {
     // check for existing entry
     for (auto &dataEntry : this->objDataCache) {
@@ -1767,7 +1679,7 @@ void D1Dun::loadObjectGfx(const QString &filePath, int width, int minFrameNum, O
     OpenAsParam params = OpenAsParam();
     params.celWidth = width;
     D1Cel::load(*result.objGfx, filePath, params);
-    if (result.objGfx->getFrameCount() >= minFrameNum) {
+    if (result.objGfx->getFrameCount() != 0) {
         this->objDataCache.push_back(std::pair<D1Gfx *, unsigned>(result.objGfx, 1));
     } else {
         // TODO: suppress errors? MemFree?
@@ -1785,16 +1697,20 @@ void D1Dun::loadObject(int objectIndex)
         if (customObject.type == objectIndex) {
             result.frameNum = customObject.frameNum;
             QString celFilePath = customObject.path;
-            this->loadObjectGfx(celFilePath, customObject.width, customObject.frameNum, result);
+            this->loadObjectGfx(celFilePath, customObject.width, result);
             break;
         }
     }
-    const DunObjectStruct *objStr = &DunObjConvTbl[objectIndex];
-    if (i >= this->customObjectTypes.size() && (unsigned)objectIndex < (unsigned)lengthof(DunObjConvTbl) && objStr->type != 0 && !this->assetPath.isEmpty()) {
-        int objFileIndex = objStr->animType;
-        result.frameNum = objStr->frameNum;
-        QString celFilePath = this->assetPath + "/Objects/" + objfiledata[objFileIndex].path + ".CEL";
-        this->loadObjectGfx(celFilePath, objfiledata[objFileIndex].width, objfiledata[objFileIndex].numFrames, result);
+    const BYTE *objType = &ObjConvTbl[objectIndex];
+    if (i >= this->customObjectTypes.size() && (unsigned)objectIndex < (unsigned)lengthof(ObjConvTbl) && *objType != 0 && !this->assetPath.isEmpty()) {
+        const ObjectData &od = objectdata[*objType];
+        const ObjFileData &ofd = objfiledata[od.ofindex];
+        result.frameNum = od.oAnimBaseFrame;
+        if (result.frameNum == 0 && ofd.oAnimFlag != OAM_LOOP) {
+            result.frameNum = 1;
+        }
+        QString celFilePath = this->assetPath + "/Objects/" + ofd.ofName + ".CEL";
+        this->loadObjectGfx(celFilePath, ofd.oAnimWidth, result);
     }
     this->objectCache.push_back(result);
 }
@@ -1859,15 +1775,17 @@ void D1Dun::loadMonster(int monsterIndex)
             break;
         }
     }
-    const DunMonsterStruct *monStr = &DunMonstConvTbl[monsterIndex];
-    if (i >= this->customObjectTypes.size() && (unsigned)monsterIndex < (unsigned)lengthof(DunMonstConvTbl) && monStr->type != 0 && !this->assetPath.isEmpty()) {
-        int moFileIndex = monStr->animType;
-        QString cl2FilePath = this->assetPath + "/Monsters/" + monfiledata[moFileIndex].path + "N.CL2";
+    const BYTE *monType = &MonstConvTbl[monsterIndex];
+    if (i >= this->customObjectTypes.size() && (unsigned)monsterIndex < (unsigned)lengthof(MonstConvTbl) && *monType != 0 && !this->assetPath.isEmpty()) {
+        const MonsterData &md = monsterdata[*monType];
+        QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
+        cl2FilePath.replace("%c", "N");
+        cl2FilePath = this->assetPath + "/" + cl2FilePath;
         QString trnFilePath;
-        if (monStr->trnPath != nullptr) {
-            trnFilePath = this->assetPath + "/Monsters/" + monStr->trnPath + ".TRN";
+        if (md.mTransFile != nullptr) {
+            trnFilePath = this->assetPath + "/" + md.mTransFile;
         }
-        this->loadMonsterGfx(cl2FilePath, monfiledata[moFileIndex].width, trnFilePath, result);
+        this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, trnFilePath, result);
     }
     this->monsterCache.push_back(result);
 }

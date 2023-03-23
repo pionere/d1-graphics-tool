@@ -276,8 +276,9 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
         monRes.type = DUN_ENTITY_TYPE::MONSTER;
         monRes.index = lengthof(DunMonstConvTbl) + i;
         monRes.name = mapMonTypes[i].cmName;
-        monRes.path = assetPath + "/" + monfiledata[mapMonTypes[i].cmFileNum].moGfxFile;
+        monRes.path = monfiledata[mapMonTypes[i].cmFileNum].moGfxFile;
         monRes.path.replace("%c", "N");
+        monRes.path = assetPath + "/" + monRes.path;
         monRes.width = monfiledata[mapMonTypes[i].cmFileNum].moWidth;
         if (monsterdata[mapMonTypes[i].cmType].mTransFile != NULL) {
             monRes.trnPath = assetPath + "/" + monsterdata[mapMonTypes[i].cmType].mTransFile;

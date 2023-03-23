@@ -46,10 +46,7 @@ enum class D1DUN_TYPE {
 };
 
 typedef struct DunObjectStruct {
-    int type;
-    int animType;
     const char *name;
-    int frameNum;
 } DunObjectStruct;
 
 typedef struct CustomObjectStruct {
@@ -61,9 +58,6 @@ typedef struct CustomObjectStruct {
 } CustomObjectStruct;
 
 typedef struct DunMonsterStruct {
-    int type;
-    int animType;
-    const char *trnPath;
     const char *name;
 } DunMonsterStruct;
 
@@ -191,7 +185,7 @@ private:
     static void drawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, unsigned height, const QColor &color);
     void drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
     void initVectors(int width, int height);
-    void loadObjectGfx(const QString &filePath, int width, int minFrameNum, ObjectCacheEntry &result);
+    void loadObjectGfx(const QString &filePath, int width, ObjectCacheEntry &result);
     void loadMonsterGfx(const QString &filePath, int width, const QString &trnFilePath, MonsterCacheEntry &result);
     void loadItemGfx(const QString &filePath, int width, ItemCacheEntry &result);
     void loadObject(int objectIndex);

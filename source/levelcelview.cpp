@@ -27,11 +27,7 @@
 #include "ui_levelcelview.h"
 #include "upscaler.h"
 
-template <class T, int N>
-constexpr int lengthof(T (&arr)[N])
-{
-    return N;
-}
+#include "dungeon/all.h"
 
 LevelCelView::LevelCelView(QWidget *parent)
     : QWidget(parent)
@@ -163,9 +159,11 @@ void LevelCelView::updateEntityOptions()
     this->ui->dungeonObjectComboBox->hide();
     this->ui->dungeonObjectComboBox->clear();
     this->ui->dungeonObjectComboBox->addItem("", 0);
-    for (const DunObjectStruct &obj : DunObjConvTbl) {
-        if (obj.type != 0) {
-            this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
+    for (int i = 0; i < lengthof(DunObjConvTbl); i++) {
+        const DunObjectStruct &obj = DunObjConvTbl[i];
+        if (obj.name != nullptr) {
+            // TODO: filter custom entries?
+            this->ui->dungeonObjectComboBox->addItem(obj.name, i);
         }
     }
     const std::vector<CustomObjectStruct> &customObjectTypes = this->dun->getCustomObjectTypes();
@@ -177,9 +175,11 @@ void LevelCelView::updateEntityOptions()
     this->ui->dungeonMonsterComboBox->hide();
     this->ui->dungeonMonsterComboBox->clear();
     this->ui->dungeonMonsterComboBox->addItem("", 0);
-    for (const DunMonsterStruct &mon : DunMonstConvTbl) {
-        if (mon.type != 0) {
-            this->ui->dungeonMonsterComboBox->addItem(mon.name, mon.type);
+    for (int i = 0; i < lengthof(DunMonstConvTbl); i++) {
+        const DunMonsterStruct &mon = DunMonstConvTbl[i];
+        if (mon.name != nullptr) {
+            // TODO: filter custom entries?
+            this->ui->dungeonMonsterComboBox->addItem(mon.name, i);
         }
     }
     const std::vector<CustomMonsterStruct> &customMonsterTypes = this->dun->getCustomMonsterTypes();
