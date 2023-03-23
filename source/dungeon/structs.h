@@ -326,7 +326,6 @@ typedef struct ObjectData {
 	BYTE oSetLvlType; // dungeon_type
 	BYTE otheme;      // theme_id
 	BYTE oquest;      // quest_id
-	BYTE oProc;       // object_proc_func
 	//BYTE oAnimFlag;
 	BYTE oAnimBaseFrame; // The starting/base frame of (initially) non-animated objects
 	//int oAnimFrameLen; // Tick length of each frame in the current animation
@@ -334,6 +333,8 @@ typedef struct ObjectData {
 	//int oAnimWidth;
 	//int oSFX;
 	//BYTE oSFXCnt;
+	BYTE oProc;       // object_proc_func
+	BYTE oModeFlags;  // object_mode_flags
 	//BOOL oSolidFlag;
 	//BOOL oMissFlag;
 	//BOOL oLightFlag;
