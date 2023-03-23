@@ -952,6 +952,7 @@ void PaletteWidget::on_displayComboBox_activated(int index)
             break;
         }
         this->palHits->setMode(mode);
+        // update the TRN widgets
         emit refreshed();
     }
 

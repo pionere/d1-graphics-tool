@@ -37,7 +37,7 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, bool first)
         return;
     }
     this->lastPos = currPos;
-    dProgress() << QStringLiteral("Mouse event at: %1:%2").arg(currPos.x()).arg(currPos.y());
+
     // emit this->framePixelClicked(this->lastPos, first);
     CelView *celView = qobject_cast<CelView *>(this->view);
     if (celView != nullptr) {
@@ -266,7 +266,7 @@ void CelView::framePixelClicked(const QPoint &pos, bool first)
     }
     D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
     QPoint p = pos;
-    p -= QPoint(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
+    p -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
     dMainWindow().frameClicked(frame, p, first);
 }
 
