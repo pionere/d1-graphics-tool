@@ -31,7 +31,8 @@ void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, D1Dun *d, QComboBox *c
         this->ui->celFileLineEdit->setText("");
         this->ui->widthLineEdit->setText("");
         this->ui->frameLineEdit->setText("");
-        this->ui->trnFileLineEdit->setText("");
+        this->ui->baseTrnFileLineEdit->setText("");
+        this->ui->uniqueTrnFileLineEdit->setText("");
         // select window title
         QString title;
         switch (t) {
@@ -47,10 +48,15 @@ void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, D1Dun *d, QComboBox *c
         }
         this->setWindowTitle(title);
 
-        this->ui->trnFileLabel->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
-        this->ui->trnFileLineEdit->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
-        this->ui->trnFileBrowsePushButton->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
-        this->ui->trnFileClearPushButton->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
+        this->ui->baseTrnFileLabel->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
+        this->ui->baseTrnFileLineEdit->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
+        this->ui->baseTrnFileBrowsePushButton->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
+        this->ui->baseTrnFileClearPushButton->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
+
+        this->ui->uniqueTrnFileLabel->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
+        this->ui->uniqueTrnFileLineEdit->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
+        this->ui->uniqueTrnFileBrowsePushButton->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
+        this->ui->uniqueTrnFileClearPushButton->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
 
         this->ui->frameLabel->setVisible(t == DUN_ENTITY_TYPE::OBJECT);
         this->ui->frameLineEdit->setVisible(t == DUN_ENTITY_TYPE::OBJECT);
@@ -71,19 +77,34 @@ void DungeonResourceDialog::on_celFileBrowsePushButton_clicked()
     this->ui->celFileLineEdit->setText(filePath);
 }
 
-void DungeonResourceDialog::on_trnFileBrowsePushButton_clicked()
+void DungeonResourceDialog::on_baseTrnFileBrowsePushButton_clicked()
 {
-    QString filePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select TRN file"), tr("TRN Files (*.trn *.TRN)"));
+    QString filePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Base Translation File"), tr("TRN Files (*.trn *.TRN)"));
 
     if (filePath.isEmpty())
         return;
 
-    this->ui->trnFileLineEdit->setText(filePath);
+    this->ui->baseTrnFileLineEdit->setText(filePath);
 }
 
-void DungeonResourceDialog::on_trnFileClearPushButton_clicked()
+void DungeonResourceDialog::on_baseTrnFileClearPushButton_clicked()
 {
-    this->ui->trnFileLineEdit->setText("");
+    this->ui->baseTrnFileLineEdit->setText("");
+}
+
+void DungeonResourceDialog::on_uniqueTrnFileBrowsePushButton_clicked()
+{
+    QString filePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Unique Translation File"), tr("TRN Files (*.trn *.TRN)"));
+
+    if (filePath.isEmpty())
+        return;
+
+    this->ui->uniqueTrnFileLineEdit->setText(filePath);
+}
+
+void DungeonResourceDialog::on_uniqueTrnFileClearPushButton_clicked()
+{
+    this->ui->uniqueTrnFileLineEdit->setText("");
 }
 
 void DungeonResourceDialog::on_addButton_clicked()
@@ -104,7 +125,8 @@ void DungeonResourceDialog::on_addButton_clicked()
     }
     params.width = this->ui->widthLineEdit->text().toInt();
     params.frame = this->ui->frameLineEdit->text().toInt();
-    params.trnPath = this->ui->trnFileLineEdit->text();
+    params.baseTrnPath = this->ui->baseTrnFileLineEdit->text();
+    params.uniqueTrnPath = this->ui->uniqueTrnFileLineEdit->text();
     if (params.frame < 0 && params.type == DUN_ENTITY_TYPE::OBJECT) {
         return;
     }

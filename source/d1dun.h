@@ -65,7 +65,8 @@ typedef struct CustomMonsterStruct {
     int type;
     int width;
     QString path;
-    QString trnPath;
+    QString baseTrnPath;
+    QString uniqueTrnPath;
     QString name;
 } CustomMonsterStruct;
 
@@ -86,7 +87,8 @@ typedef struct MonsterCacheEntry {
     int monsterIndex;
     D1Gfx *monGfx;
     D1Pal *monPal;
-    D1Trn *monTrn;
+    D1Trn *monBaseTrn;
+    D1Trn *monUniqueTrn;
 } MonsterCacheEntry;
 
 typedef struct ItemCacheEntry {
@@ -186,7 +188,7 @@ private:
     void drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
     void initVectors(int width, int height);
     void loadObjectGfx(const QString &filePath, int width, ObjectCacheEntry &result);
-    void loadMonsterGfx(const QString &filePath, int width, const QString &trnFilePath, MonsterCacheEntry &result);
+    void loadMonsterGfx(const QString &filePath, int width, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result);
     void loadItemGfx(const QString &filePath, int width, ItemCacheEntry &result);
     void loadObject(int objectIndex);
     void loadMonster(int monsterIndex);

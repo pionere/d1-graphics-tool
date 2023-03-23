@@ -19,7 +19,8 @@ public:
     QString path;
     int width;
     int frame;
-    QString trnPath;
+    QString baseTrnPath;
+    QString uniqueTrnPath;
 };
 
 namespace Ui {
@@ -37,8 +38,10 @@ public:
 
 private slots:
     void on_celFileBrowsePushButton_clicked();
-    void on_trnFileBrowsePushButton_clicked();
-    void on_trnFileClearPushButton_clicked();
+    void on_baseTrnFileBrowsePushButton_clicked();
+    void on_baseTrnFileClearPushButton_clicked();
+    void on_uniqueTrnFileBrowsePushButton_clicked();
+    void on_uniqueTrnFileClearPushButton_clicked();
 
     void on_addButton_clicked();
     void on_cancelButton_clicked();
