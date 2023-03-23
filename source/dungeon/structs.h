@@ -326,7 +326,6 @@ typedef struct ObjectData {
 	BYTE oSetLvlType; // dungeon_type
 	BYTE otheme;      // theme_id
 	BYTE oquest;      // quest_id
-	BYTE oProc;       // object_proc_func
 	//BYTE oAnimFlag;
 	BYTE oAnimBaseFrame; // The starting/base frame of (initially) non-animated objects
 	//int oAnimFrameLen; // Tick length of each frame in the current animation
@@ -334,6 +333,8 @@ typedef struct ObjectData {
 	//int oAnimWidth;
 	//int oSFX;
 	//BYTE oSFXCnt;
+	BYTE oProc;       // object_proc_func
+	BYTE oModeFlags;  // object_mode_flags
 	//BOOL oSolidFlag;
 	//BOOL oMissFlag;
 	//BOOL oLightFlag;
@@ -361,7 +362,10 @@ typedef struct ObjectStruct {
 	int _otype; // _object_id
 	int _ox;    // Tile X-position of the object
 	int _oy;    // Tile Y-position of the object
-	BYTE _oAnimFlag; // object_anim_mode
+	BYTE _oSFXCnt;
+	BYTE _oAnimFlag;  // object_anim_mode
+	BYTE _oProc;      // object_proc_func
+	BYTE _oModeFlags; // object_mode_flags
 	int _oAnimFrameLen; // Tick length of each frame in the current animation
 	int _oAnimCnt;   // Increases by one each game tick, counting how close we are to _oAnimFrameLen
 	int _oAnimLen;   // Number of frames in current animation
