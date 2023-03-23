@@ -260,7 +260,7 @@ void CelView::framePixelClicked(const QPoint &pos, bool first)
     }
     D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
     QPoint p = pos;
-    p -= QPoint(CEL_SCENE_SPACING, CEL_SCENE_SPACING);
+    p -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
     dMainWindow().frameClicked(frame, p, first);
 }
 
