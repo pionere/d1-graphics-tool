@@ -281,7 +281,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
         monRes.path = assetPath + "/" + monRes.path;
         monRes.width = monfiledata[mapMonTypes[i].cmFileNum].moWidth;
         if (monsterdata[mapMonTypes[i].cmType].mTransFile != NULL) {
-            monRes.trnPath = assetPath + "/" + monsterdata[mapMonTypes[i].cmType].mTransFile;
+            monRes.baseTrnPath = assetPath + "/" + monsterdata[mapMonTypes[i].cmType].mTransFile;
         }
         dun->addResource(monRes);
     }

@@ -1290,12 +1290,19 @@ void D1Dun::setPal(D1Pal *pal)
         entry.objGfx->setPalette(pal);
     }
     for (auto &entry : this->monsterCache) {
-        D1Trn *monTrn = entry.monTrn;
-        if (monTrn == nullptr) {
-            entry.monPal = pal;
+        D1Trn *monBaseTrn = entry.monBaseTrn;
+        D1Trn *monUniqueTrn = entry.monUniqueTrn;
+        if (monUniqueTrn != nullptr) {
+            monUniqueTrn->setPalette(pal);
+            monUniqueTrn->refreshResultingPalette();
+            if (monBaseTrn != nullptr) {
+                monBaseTrn->refreshResultingPalette();
+            }
+        } else if (monBaseTrn != nullptr) {
+            monBaseTrn->setPalette(pal);
+            monBaseTrn->refreshResultingPalette();
         } else {
-            monTrn->setPalette(pal);
-            monTrn->refreshResultingPalette();
+            entry.monPal = pal;
         }
     }
 }
@@ -1715,7 +1722,7 @@ void D1Dun::loadObject(int objectIndex)
     this->objectCache.push_back(result);
 }
 
-void D1Dun::loadMonsterGfx(const QString &filePath, int width, const QString &trnFilePath, MonsterCacheEntry &result)
+void D1Dun::loadMonsterGfx(const QString &filePath, int width, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result)
 {
     // check for existing entry
     unsigned i = 0;
@@ -1743,35 +1750,55 @@ void D1Dun::loadMonsterGfx(const QString &filePath, int width, const QString &tr
             return;
         }
     }
-    if (!trnFilePath.isEmpty()) {
-        result.monTrn = new D1Trn();
-        if (result.monTrn->load(trnFilePath, result.monPal)) {
+    if (!uniqueTrnFilePath.isEmpty()) {
+        D1Trn *trn = new D1Trn();
+        if (trn->load(uniqueTrnFilePath, result.monPal)) {
             // apply Monster TRN
-            for (int i = 0; i < D1PAL_COLORS; i++) {
-                if (result.monTrn->getTranslation(i) == 0xFF) {
-                    result.monTrn->setTranslation(i, 0);
+            /*for (int i = 0; i < D1PAL_COLORS; i++) {
+                if (trn->getTranslation(i) == 0xFF) {
+                    trn->setTranslation(i, 0);
                 }
-            }
-            result.monTrn->refreshResultingPalette();
+            }*/
+            trn->refreshResultingPalette();
             // set palette
-            result.monPal = result.monTrn->getResultingPalette();
+            result.monPal = trn->getResultingPalette();
         } else {
             // TODO: suppress errors? MemFree?
-            delete result.monTrn;
-            result.monTrn = nullptr;
+            delete trn;
+            trn = nullptr;
         }
+        result.monUniqueTrn = trn;
+    }
+    if (!baseTrnFilePath.isEmpty()) {
+        D1Trn *trn = new D1Trn();
+        if (trn->load(baseTrnFilePath, result.monPal)) {
+            // apply Monster TRN
+            for (int i = 0; i < D1PAL_COLORS; i++) {
+                if (trn->getTranslation(i) == 0xFF) {
+                    trn->setTranslation(i, 0);
+                }
+            }
+            trn->refreshResultingPalette();
+            // set palette
+            result.monPal = trn->getResultingPalette();
+        } else {
+            // TODO: suppress errors? MemFree?
+            delete trn;
+            trn = nullptr;
+        }
+        result.monBaseTrn = trn;
     }
 }
 
 void D1Dun::loadMonster(int monsterIndex)
 {
-    MonsterCacheEntry result = { monsterIndex, nullptr, this->pal, nullptr };
+    MonsterCacheEntry result = { monsterIndex, nullptr, this->pal, nullptr, nullptr };
     unsigned i = 0;
     for (; i < this->customMonsterTypes.size(); i++) {
         const CustomMonsterStruct &customMonster = this->customMonsterTypes[i];
         if (customMonster.type == monsterIndex) {
             QString cl2FilePath = customMonster.path;
-            this->loadMonsterGfx(cl2FilePath, customMonster.width, customMonster.trnPath, result);
+            this->loadMonsterGfx(cl2FilePath, customMonster.width, customMonster.baseTrnPath, customMonster.uniqueTrnPath, result);
             break;
         }
     }
@@ -1781,11 +1808,12 @@ void D1Dun::loadMonster(int monsterIndex)
         QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
         cl2FilePath.replace("%c", "N");
         cl2FilePath = this->assetPath + "/" + cl2FilePath;
-        QString trnFilePath;
+        QString baseTrnFilePath;
         if (md.mTransFile != nullptr) {
-            trnFilePath = this->assetPath + "/" + md.mTransFile;
+            baseTrnFilePath = this->assetPath + "/" + md.mTransFile;
         }
-        this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, trnFilePath, result);
+        QString uniqueTrnFilePath;
+        this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, baseTrnFilePath, uniqueTrnFilePath, result);
     }
     this->monsterCache.push_back(result);
 }
@@ -1835,7 +1863,8 @@ void D1Dun::clearAssets()
     this->customItemTypes.clear();
     this->objectCache.clear();
     for (auto &entry : this->monsterCache) {
-        delete entry.monTrn;
+        delete entry.monBaseTrn;
+        delete entry.monUniqueTrn;
     }
     this->monsterCache.clear();
     this->itemCache.clear();
@@ -2858,13 +2887,22 @@ bool D1Dun::addResource(const AddResourceParam &params)
             dProgressFail() << tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(cl2FilePath));
             return false;
         }
-        // check if the trn can be loaded
-        if (!params.trnPath.isEmpty()) {
+        // check if the TRNs can be loaded
+        if (!params.baseTrnPath.isEmpty()) {
             D1Trn *monTrn = new D1Trn();
-            result = monTrn->load(params.trnPath, this->pal);
+            result = monTrn->load(params.baseTrnPath, this->pal);
             delete monTrn;
             if (!result) {
-                dProgressFail() << tr("Failed loading TRN file: %1.").arg(QDir::toNativeSeparators(params.trnPath));
+                dProgressFail() << tr("Failed loading TRN file: %1.").arg(QDir::toNativeSeparators(params.baseTrnPath));
+                return false;
+            }
+        }
+        if (!params.uniqueTrnPath.isEmpty()) {
+            D1Trn *monTrn = new D1Trn();
+            result = monTrn->load(params.uniqueTrnPath, this->pal);
+            delete monTrn;
+            if (!result) {
+                dProgressFail() << tr("Failed loading TRN file: %1.").arg(QDir::toNativeSeparators(params.uniqueTrnPath));
                 return false;
             }
         }
@@ -2896,7 +2934,8 @@ bool D1Dun::addResource(const AddResourceParam &params)
             if (customMonster.type == params.index) {
                 customMonster.name = params.name;
                 customMonster.path = params.path;
-                customMonster.trnPath = params.trnPath;
+                customMonster.baseTrnPath = params.baseTrnPath;
+                customMonster.uniqueTrnPath = params.uniqueTrnPath;
                 customMonster.width = params.width;
                 return true;
             }
@@ -2906,7 +2945,8 @@ bool D1Dun::addResource(const AddResourceParam &params)
         customMonster.type = params.index;
         customMonster.name = params.name;
         customMonster.path = params.path;
-        customMonster.trnPath = params.trnPath;
+        customMonster.baseTrnPath = params.baseTrnPath;
+        customMonster.uniqueTrnPath = params.uniqueTrnPath;
         customMonster.width = params.width;
         this->customMonsterTypes.push_back(customMonster);
     } break;

@@ -87,28 +87,56 @@
        </widget>
       </item>
       <item row="5" column="0">
-       <widget class="QLabel" name="trnFileLabel">
+       <widget class="QLabel" name="baseTrnFileLabel">
         <property name="text">
-         <string>TRN-File:</string>
+         <string>Base TRN:</string>
         </property>
        </widget>
       </item>
       <item row="5" column="1">
-       <widget class="LineEditWidget" name="trnFileLineEdit">
+       <widget class="LineEditWidget" name="baseTrnFileLineEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="5" column="2">
-       <widget class="QPushButton" name="trnFileBrowsePushButton">
+       <widget class="QPushButton" name="baseTrnFileBrowsePushButton">
         <property name="text">
          <string>Browse</string>
         </property>
        </widget>
       </item>
       <item row="5" column="3">
-       <widget class="QPushButton" name="trnFileClearPushButton">
+       <widget class="QPushButton" name="baseTrnFileClearPushButton">
+        <property name="text">
+         <string>Clear</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="uniqueTrnFileLabel">
+        <property name="text">
+         <string>Unique TRN:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="LineEditWidget" name="uniqueTrnFileLineEdit">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="2">
+       <widget class="QPushButton" name="uniqueTrnFileBrowsePushButton">
+        <property name="text">
+         <string>Browse</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="3">
+       <widget class="QPushButton" name="uniqueTrnFileClearPushButton">
         <property name="text">
          <string>Clear</string>
         </property>
