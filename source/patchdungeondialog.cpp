@@ -94,12 +94,15 @@ void PatchDungeonDialog::initialize(D1Dun *d)
     if (baseName == "diab4b") {
         fileIndex = DUN_DIAB_4_AFT;
     }
-    if (baseName == "butcher") {
-        fileIndex = DUN_BUTCHER;
-    }
     // if (baseName == "vile1") {
     //     fileIndex = DUN_BETRAYER;
     // }
+    if (baseName == "butcher") {
+        fileIndex = DUN_BUTCHER;
+    }
+    if (baseName == "nakrul") {
+        fileIndex = DUN_NAKRUL;
+    }
     this->ui->dunFileComboBox->setCurrentIndex(fileIndex);
 }
 

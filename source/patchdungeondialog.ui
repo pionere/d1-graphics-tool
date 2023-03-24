@@ -157,12 +157,17 @@
        </item>
        <item>
         <property name="text">
+         <string>Betrayer (Vile1.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>The Butcher (Butcher.DUN)</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Betrayer (Vile1.DUN)</string>
+         <string>Na-Krul (Nakrul.DUN)</string>
         </property>
        </item>
       </widget>

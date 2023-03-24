@@ -2525,8 +2525,9 @@ void D1Dun::patch(int dunFileIndex)
 /* DUN_DIAB_3_AFT*/          { 22, 22 }, // Diab3b.DUN
 /* DUN_DIAB_4_PRE*/          { 18, 18 }, // Diab4a.DUN
 /* DUN_DIAB_4_AFT*/          { 18, 18 }, // Diab4b.DUN
-/* DUN_BUTCHER*/             { 12, 12 }, // Butcher.DUN
 /* DUN_BETRAYER*/            { 14, 14 }, // Vile1.DUN
+/* DUN_BUTCHER*/             { 12, 12 }, // Butcher.DUN
+/* DUN_NAKRUL*/              { 8, 12 },  // Nakrul.DUN
         // clang-format on
     };
     if (this->width != dunSizes[dunFileIndex][0] || this->height != dunSizes[dunFileIndex][1]) {
@@ -2715,6 +2716,8 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(7, 2, 6);
         change |= this->changeTileAt(7, 3, 6);
         change |= this->changeTileAt(7, 4, 6);
+        // - add the Warlord
+        change |= this->changeMonsterAt(6, 7, UMT_WARLORD + 1, true);
         break;
     case DUN_WARLORD_AFT: // Warlord2.DUN
         // replace monsters from Warlord.DUN
@@ -2729,6 +2732,8 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(6, 10, 100, false);
         change |= this->changeMonsterAt(11, 2, 100, false);
         change |= this->changeMonsterAt(11, 10, 100, false);
+        // - add the Warlord
+        change |= this->changeMonsterAt(6, 7, UMT_WARLORD + 1, true);
         break;
     case DUN_BANNER_PRE: // Banner2.DUN
         // replace entry tile
@@ -2797,6 +2802,20 @@ void D1Dun::patch(int dunFileIndex)
     case DUN_SKELKING_PRE: // SklKng2.DUN
         // - add the skeleton king
         change |= this->changeMonsterAt(19, 31, UMT_SKELKING + 1, true);
+        break;
+    case DUN_BETRAYER:
+        // - add the unique monsters
+        change |= this->changeMonsterAt(3, 6, UMT_LAZARUS + 1, true);
+        change |= this->changeMonsterAt(5, 3, UMT_RED_VEX + 1, true);
+        change |= this->changeMonsterAt(5, 9, UMT_BLACKJADE + 1, true);
+        break;
+    case DUN_BUTCHER:
+        // - add the butcher
+        change |= this->changeMonsterAt(3, 3, UMT_BUTCHER + 1, true);
+        break;
+    case DUN_NAKRUL:
+        // - add nakrul
+        change |= this->changeMonsterAt(2, 6, UMT_NAKRUL + 1, true);
         break;
     }
     if (!change) {

@@ -297,7 +297,7 @@ void GetLevelMTypes()
 			AddMonsterType(MT_BMAGE, TRUE);
 			AddMonsterType(MT_GBLACK, TRUE);
 			// AddMonsterType(MT_NBLACK, FALSE);
-			AddMonsterType(MT_DIABLO, FALSE);
+			// AddMonsterType(MT_DIABLO, FALSE);
 			return;
 		}
 
@@ -306,25 +306,25 @@ void GetLevelMTypes()
 			AddMonsterType(MT_HORKSPWN, TRUE);
 		if (lvl == DLV_NEST3) {
 			AddMonsterType(MT_HORKSPWN, TRUE);
-			AddMonsterType(MT_HORKDMN, FALSE);
+			AddMonsterType(uniqMonData[UMT_HORKDMN].mtype, FALSE);
 		}
 		if (lvl == DLV_NEST4)
-			AddMonsterType(MT_DEFILER, FALSE);
+			AddMonsterType(uniqMonData[UMT_DEFILER].mtype, FALSE);
 		if (lvl == DLV_CRYPT4) {
 			AddMonsterType(MT_ARCHLICH, TRUE);
-			AddMonsterType(MT_NAKRUL, FALSE);
+			AddMonsterType(uniqMonData[UMT_NAKRUL].mtype, FALSE);
 		}
 #endif
-		if (QuestStatus(Q_BUTCHER))
-			AddMonsterType(MT_CLEAVER, FALSE);
+		//if (QuestStatus(Q_BUTCHER))
+		//	AddMonsterType(uniqMonData[UMT_BUTCHER].mtype, FALSE);
 		if (QuestStatus(Q_GARBUD))
-			AddMonsterType(MT_NGOATMC, FALSE);
+			AddMonsterType(uniqMonData[UMT_GARBUD].mtype, FALSE);
 		if (QuestStatus(Q_ZHAR))
-			AddMonsterType(MT_NMAGE, FALSE);
-		if (QuestStatus(Q_BANNER)) {
-			AddMonsterType(MT_BFALLSP, FALSE);
-			// AddMonsterType(MT_NFAT, FALSE);
-		}
+			AddMonsterType(uniqMonData[UMT_ZHAR].mtype, FALSE);
+		//if (QuestStatus(Q_BANNER)) {
+		//	AddMonsterType(uniqMonData[UMT_SNOTSPIL].mtype, FALSE);
+		//	// AddMonsterType(MT_NFAT, FALSE);
+		//}
 		//if (QuestStatus(Q_ANVIL)) {
 		//	AddMonsterType(MT_GGOATBW, FALSE);
 		//	AddMonsterType(MT_DRHINO, FALSE);
@@ -336,13 +336,13 @@ void GetLevelMTypes()
 		//	AddMonsterType(MT_NRHINO, FALSE);
 		//}
 		if (QuestStatus(Q_VEIL))
-			AddMonsterType(MT_GBLACK, TRUE);
-		if (QuestStatus(Q_WARLORD))
-			AddMonsterType(MT_BBLACK, TRUE);
+			AddMonsterType(uniqMonData[UMT_LACHDAN].mtype, TRUE);
+		//if (QuestStatus(Q_WARLORD))
+		//	AddMonsterType(uniqMonData[UMT_WARLORD].mtype, TRUE);
 		//if (QuestStatus(Q_BETRAYER) && IsMultiGame) {
 		//if (currLvl._dLevelIdx == questlist[Q_BETRAYER]._qdlvl && IsMultiGame) {
-		//	AddMonsterType(MT_BMAGE, FALSE);
-		//	AddMonsterType(MT_RSUCC, FALSE);
+		//	AddMonsterType(uniqMonData[UMT_LAZARUS].mtype, FALSE);
+		//	AddMonsterType(uniqMonData[UMT_RED_VEX].mtype, FALSE);
 		//}
 		lds = &AllLevels[lvl];
 		for (nt = 0; nt < lengthof(lds->dMonTypes); nt++) {
@@ -378,7 +378,7 @@ void GetLevelMTypes()
 		}
 	//} else {
 	//	if (lvl == SL_SKELKING) {
-	//		AddMonsterType(MT_SKING, FALSE);
+	//		AddMonsterType(uniqMonData[UMT_SKELKING].mtype, FALSE);
 	//	}
 	//}
 }
@@ -717,6 +717,8 @@ static void PlaceSetMapMonsters()
 	if (!currLvl._dSetLvl) {
 		if (setpc_type == SPT_BANNER) { // QuestStatus(Q_BANNER)
 			setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN"); // pre -3 8 -> 16
+			// patch set-piece to add monsters - Banner1.DUN
+			setp[(2 + 16 * 16 + 16 * 16 * 2 * 2 + 8 + 12 * 16 * 2) * 2] = UMT_SNOTSPIL + 1;
 			SetMapMonsters(setp, setpc_x, setpc_y);
 			mem_free_dbg(setp);
 		}
@@ -737,21 +739,38 @@ static void PlaceSetMapMonsters()
 		}
 		if (setpc_type == SPT_WARLORD) { // QuestStatus(Q_WARLORD)
 			setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN"); // pre +4 100 -> 101
+			// patch set-piece to add monsters - Warlord.DUN
+			setp[(2 + 16 * 14 + 16 * 14 * 2 * 2 + 6 + 7 * 16 * 2) * 2] = UMT_WARLORD + 1;
 			SetMapMonsters(setp, setpc_x, setpc_y);
 			mem_free_dbg(setp);
 		}
 		if (setpc_type == SPT_BETRAYER) { //  QuestStatus(Q_BETRAYER) && IsMultiGame
 			// assert(quests[Q_BETRAYER]._qactive != QUEST_NOTAVAIL);
 			setp = LoadFileInMem("Levels\\L4Data\\Vile1.DUN");
+			// patch set-piece to add monsters - Vile1.DUN
+			setp[(2 + 14 * 14 + 14 * 14 * 2 * 2 + 3 + 6 * 14 * 2) * 2] = UMT_LAZARUS + 1;
+			setp[(2 + 14 * 14 + 14 * 14 * 2 * 2 + 5 + 3 * 14 * 2) * 2] = UMT_RED_VEX + 1;
+			setp[(2 + 14 * 14 + 14 * 14 * 2 * 2 + 5 + 9 * 14 * 2) * 2] = UMT_BLACKJADE + 1;
 			SetMapMonsters(setp, setpc_x, setpc_y);
 			mem_free_dbg(setp);
 
-			/*AddMonsterType(MT_BMAGE, FALSE);
-			AddMonsterType(MT_RSUCC, FALSE);
+			/*AddMonsterType(uniqMonData[UMT_LAZARUS].mtype, FALSE);
+			AddMonsterType(uniqMonData[UMT_RED_VEX].mtype, FALSE);
+			// assert(uniqMonData[UMT_RED_VEX].mtype == uniqMonData[UMT_BLACKJADE].mtype);
 			PlaceUniqueMonst(UMT_LAZARUS);
 			PlaceUniqueMonst(UMT_RED_VEX);
 			PlaceUniqueMonst(UMT_BLACKJADE);*/
 		}
+#ifdef HELLFIRE
+		if (setpc_type == SPT_NAKRUL) {
+			// assert(quests[Q_BETRAYER]._qactive != QUEST_NOTAVAIL);
+			setp = LoadFileInMem("NLevels\\L5Data\\Nakrul2.DUN"); // pre
+			// patch set-piece to add monsters - Vile1.DUN
+			setp[(2 + 8 * 12 + 8 * 12 * 2 * 2 + 2 + 6 * 8 * 2) * 2] = UMT_NAKRUL + 1;
+			SetMapMonsters(setp, setpc_x, setpc_y);
+			mem_free_dbg(setp);
+        }
+#endif
 		if (currLvl._dLevelIdx == DLV_HELL4) {
 			// assert(quests[Q_DIABLO]._qactive != QUEST_NOTAVAIL);
 			setp = LoadFileInMem("Levels\\L4Data\\diab1.DUN");
@@ -768,11 +787,12 @@ static void PlaceSetMapMonsters()
 			mem_free_dbg(setp);
 		}
 //	} else if (currLvl._dLevelIdx == SL_SKELKING) {
-//		AddMonsterType(MT_SKING, FALSE);
+//		AddMonsterType(uniqMonData[UMT_SKELKING].mtype, FALSE);
 //		PlaceUniqueMonst(UMT_SKELKING);
 	/*} else if (currLvl._dLevelIdx == SL_VILEBETRAYER) {
-		AddMonsterType(MT_BMAGE, FALSE);
-		AddMonsterType(MT_RSUCC, FALSE);
+		AddMonsterType(uniqMonData[UMT_LAZARUS].mtype, FALSE);
+		AddMonsterType(uniqMonData[UMT_RED_VEX].mtype, FALSE);
+		// assert(uniqMonData[UMT_RED_VEX].mtype == uniqMonData[UMT_BLACKJADE].mtype);
 		PlaceUniqueMonst(UMT_LAZARUS);
 		PlaceUniqueMonst(UMT_RED_VEX);
 		PlaceUniqueMonst(UMT_BLACKJADE);
