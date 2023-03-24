@@ -3,8 +3,8 @@
  *
  * Global definitions and Macros.
  */
-//#ifndef _DEFS_H
-//#define _DEFS_H
+#ifndef _DEFS_H
+#define _DEFS_H
 
 //#undef DEV_MODE
 #define DEV_MODE 1
@@ -142,4 +142,4 @@
 #define ASSUME_UNREACHABLE assert(0);
 #endif
 
-//#endif /* _DEFS_H */
+#endif /* _DEFS_H */
