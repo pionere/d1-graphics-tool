@@ -715,6 +715,11 @@ static void PlaceSetMapMonsters()
 	BYTE* setp;
 
 	if (!currLvl._dSetLvl) {
+		if (setpc_type == SPT_BUTCHER) {
+			setp = LoadFileInMem("Levels\\L1Data\\Butcher.DUN");
+			SetMapMonsters(setp, setpc_x, setpc_y);
+			mem_free_dbg(setp);
+		}
 		if (setpc_type == SPT_BANNER) { // QuestStatus(Q_BANNER)
 			setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN"); // pre -3 8 -> 16
 			// patch set-piece to add monsters - Banner1.DUN
@@ -763,13 +768,10 @@ static void PlaceSetMapMonsters()
 		}
 #ifdef HELLFIRE
 		if (setpc_type == SPT_NAKRUL) {
-			// assert(quests[Q_BETRAYER]._qactive != QUEST_NOTAVAIL);
-			setp = LoadFileInMem("NLevels\\L5Data\\Nakrul2.DUN"); // pre
-			// patch set-piece to add monsters - Vile1.DUN
-			setp[(2 + 8 * 12 + 8 * 12 * 2 * 2 + 2 + 6 * 8 * 2) * 2] = UMT_NAKRUL + 1;
+			setp = LoadFileInMem("NLevels\\L5Data\\Nakrul1.DUN"); // pre
 			SetMapMonsters(setp, setpc_x, setpc_y);
 			mem_free_dbg(setp);
-        }
+		}
 #endif
 		if (currLvl._dLevelIdx == DLV_HELL4) {
 			// assert(quests[Q_DIABLO]._qactive != QUEST_NOTAVAIL);

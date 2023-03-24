@@ -11,6 +11,7 @@
 #include "openasdialog.h"
 #include "saveasdialog.h"
 
+#include "dungeon/defs.h"
 #include "dungeon/enums.h"
 
 class D1Tileset {
