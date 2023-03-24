@@ -723,7 +723,7 @@ static void PlaceSetMapMonsters()
 		if (setpc_type == SPT_BANNER) { // QuestStatus(Q_BANNER)
 			setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN"); // pre -3 8 -> 16
 			// patch set-piece to add monsters - Banner1.DUN
-			setp[(2 + 16 * 16 + 16 * 16 * 2 * 2 + 8 + 12 * 16 * 2) * 2] = UMT_SNOTSPIL + 1;
+			setp[(2 + 16 * 16 + 16 * 16 * 2 * 2 + 8 + 12 * 16 * 2) * 2] = SwapLE16((UMT_SNOTSPIL + 1) | (1 << 15));
 			SetMapMonsters(setp, setpc_x, setpc_y);
 			mem_free_dbg(setp);
 		}
@@ -745,7 +745,7 @@ static void PlaceSetMapMonsters()
 		if (setpc_type == SPT_WARLORD) { // QuestStatus(Q_WARLORD)
 			setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN"); // pre +4 100 -> 101
 			// patch set-piece to add monsters - Warlord.DUN
-			setp[(2 + 16 * 14 + 16 * 14 * 2 * 2 + 6 + 7 * 16 * 2) * 2] = UMT_WARLORD + 1;
+			setp[(2 + 16 * 14 + 16 * 14 * 2 * 2 + 6 + 7 * 16 * 2) * 2] = SwapLE16((UMT_WARLORD + 1) | (1 << 15));
 			SetMapMonsters(setp, setpc_x, setpc_y);
 			mem_free_dbg(setp);
 		}
@@ -753,9 +753,9 @@ static void PlaceSetMapMonsters()
 			// assert(quests[Q_BETRAYER]._qactive != QUEST_NOTAVAIL);
 			setp = LoadFileInMem("Levels\\L4Data\\Vile1.DUN");
 			// patch set-piece to add monsters - Vile1.DUN
-			setp[(2 + 14 * 14 + 14 * 14 * 2 * 2 + 3 + 6 * 14 * 2) * 2] = UMT_LAZARUS + 1;
-			setp[(2 + 14 * 14 + 14 * 14 * 2 * 2 + 5 + 3 * 14 * 2) * 2] = UMT_RED_VEX + 1;
-			setp[(2 + 14 * 14 + 14 * 14 * 2 * 2 + 5 + 9 * 14 * 2) * 2] = UMT_BLACKJADE + 1;
+			setp[(2 + 14 * 14 + 14 * 14 * 2 * 2 + 3 + 6 * 14 * 2) * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
+			setp[(2 + 14 * 14 + 14 * 14 * 2 * 2 + 5 + 3 * 14 * 2) * 2] = SwapLE16((UMT_RED_VEX + 1) | (1 << 15));
+			setp[(2 + 14 * 14 + 14 * 14 * 2 * 2 + 5 + 9 * 14 * 2) * 2] = SwapLE16((UMT_BLACKJADE + 1) | (1 << 15));
 			SetMapMonsters(setp, setpc_x, setpc_y);
 			mem_free_dbg(setp);
 

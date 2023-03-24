@@ -1317,7 +1317,7 @@ bool D1Dun::isModified() const
     return this->modified;
 }
 
-quint8 D1Dun::getNumLayers() const
+uint8_t D1Dun::getNumLayers() const
 {
     return this->numLayers;
 }

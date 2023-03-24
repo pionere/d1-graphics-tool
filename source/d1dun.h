@@ -135,7 +135,7 @@ public:
 
     QString getFilePath() const;
     bool isModified() const;
-    quint8 getNumLayers() const;
+    uint8_t getNumLayers() const;
     int getWidth() const;
     bool setWidth(int width, bool force);
     int getHeight() const;
@@ -219,7 +219,7 @@ private:
     D1Min *min;
     D1Til *til;
     bool modified;
-    quint8 numLayers;
+    uint8_t numLayers;
     int width;
     int height;
     std::vector<std::vector<int>> tiles;
