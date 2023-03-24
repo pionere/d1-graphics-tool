@@ -1803,7 +1803,7 @@ void D1Dun::loadMonster(int monsterIndex)
         }
     }
     const BYTE *monType = &MonstConvTbl[monsterIndex];
-    if (i >= this->customObjectTypes.size() && (unsigned)monsterIndex < (unsigned)lengthof(MonstConvTbl) && *monType != 0 && !this->assetPath.isEmpty()) {
+    if (i >= this->customMonsterTypes.size() && (unsigned)monsterIndex < (unsigned)lengthof(MonstConvTbl) && *monType != 0 && !this->assetPath.isEmpty()) {
         const MonsterData &md = monsterdata[*monType];
         QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
         cl2FilePath.replace("%c", "N");
