@@ -1374,7 +1374,7 @@ bool D1Dun::setWidth(int newWidth, bool force)
     for (std::vector<int> &itemsRow : this->items) {
         itemsRow.resize(newWidth);
     }
-    for (std::vector<int> &monsRow : this->monsters) {
+    for (std::vector<DunMonsterType> &monsRow : this->monsters) {
         monsRow.resize(newWidth);
     }
     for (std::vector<int> &objsRow : this->objects) {
@@ -2196,7 +2196,7 @@ bool D1Dun::removeItems()
 bool D1Dun::removeMonsters()
 {
     bool result = false;
-    for (std::vector<int> &monstersRow : this->monsters) {
+    for (std::vector<DunMonsterType> &monstersRow : this->monsters) {
         for (DunMonsterType &mon : monstersRow) {
             if (mon.first != 0 || mon.second) {
                 mon.first = 0;
@@ -2467,7 +2467,7 @@ bool D1Dun::changeMonsterAt(int posx, int posy, int monsterIndex, bool isUnique)
     this->monsters[posy][posx] = { monsterIndex, isUnique };
     if (monsterIndex == 0) {
         dProgress() << tr("Removed %1Monster '%2' from %3:%4.").arg(prevMon.second ? "unique " : "").arg(prevMon.first).arg(posx).arg(posy);
-    } else if (prevMonster == 0) {
+    } else if (prevMon.first == 0) {
         dProgress() << tr("Added %1Monster '%2' to %3:%4.").arg(isUnique ? "unique " : "").arg(monsterIndex).arg(posx).arg(posy);
     } else {
         dProgress() << tr("Changed Monster at %1:%2 from '%3'%4 to '%5'%6.").arg(posx).arg(posy).arg(prevMon.first).arg(prevMon.second ? " unique monster" : "").arg(monsterIndex).arg(isUnique ? " unique monster" : "");
@@ -2964,7 +2964,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
         // replace previous entry
         for (unsigned i = 0; i < this->customMonsterTypes.size(); i++) {
             CustomMonsterStruct &customMonster = this->customMonsterTypes[i];
-            if (customMonster.type == params.index) {
+            if (customMonster.type.first == params.index && customMonster.type.second == params.uniqueMon) {
                 customMonster.name = params.name;
                 customMonster.path = params.path;
                 customMonster.baseTrnPath = params.baseTrnPath;
