@@ -73,17 +73,8 @@ void PatchDungeonDialog::initialize(D1Dun *d)
     if (baseName == "warlord2") {
         fileIndex = DUN_WARLORD_AFT;
     }
-    if (baseName == "diab1") {
-        fileIndex = DUN_DIAB_1;
-    }
-    if (baseName == "diab2a") {
-        fileIndex = DUN_DIAB_2_PRE;
-    }
     if (baseName == "diab2b") {
         fileIndex = DUN_DIAB_2_AFT;
-    }
-    if (baseName == "diab3a") {
-        fileIndex = DUN_DIAB_3_PRE;
     }
     if (baseName == "diab3b") {
         fileIndex = DUN_DIAB_3_AFT;
@@ -97,12 +88,6 @@ void PatchDungeonDialog::initialize(D1Dun *d)
     // if (baseName == "vile1") {
     //     fileIndex = DUN_BETRAYER;
     // }
-    if (baseName == "butcher") {
-        fileIndex = DUN_BUTCHER;
-    }
-    if (baseName == "nakrul") {
-        fileIndex = DUN_NAKRUL;
-    }
     this->ui->dunFileComboBox->setCurrentIndex(fileIndex);
 }
 

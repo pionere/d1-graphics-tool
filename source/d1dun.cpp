@@ -2518,16 +2518,12 @@ void D1Dun::patch(int dunFileIndex)
 /* DUN_VILE_AFT*/            { 42, 46 }, // Vile1.DUN
 /* DUN_WARLORD_PRE*/         { 16, 14 }, // Warlord.DUN
 /* DUN_WARLORD_AFT*/         { 16, 14 }, // Warlord2.DUN
-/* DUN_DIAB_1*/              { 12, 12 }, // Diab1.DUN
-/* DUN_DIAB_2_PRE*/          { 22, 24 }, // Diab2a.DUN
 /* DUN_DIAB_2_AFT*/          { 22, 24 }, // Diab2b.DUN
 /* DUN_DIAB_3_PRE*/          { 22, 22 }, // Diab3a.DUN
 /* DUN_DIAB_3_AFT*/          { 22, 22 }, // Diab3b.DUN
 /* DUN_DIAB_4_PRE*/          { 18, 18 }, // Diab4a.DUN
 /* DUN_DIAB_4_AFT*/          { 18, 18 }, // Diab4b.DUN
 /* DUN_BETRAYER*/            { 14, 14 }, // Vile1.DUN
-/* DUN_BUTCHER*/             { 12, 12 }, // Butcher.DUN
-/* DUN_NAKRUL*/              { 8, 12 },  // Nakrul.DUN
         // clang-format on
     };
     if (this->width != dunSizes[dunFileIndex][0] || this->height != dunSizes[dunFileIndex][1]) {
@@ -2809,13 +2805,49 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(5, 3, UMT_RED_VEX + 1, true);
         change |= this->changeMonsterAt(5, 9, UMT_BLACKJADE + 1, true);
         break;
-    case DUN_BUTCHER:
-        // - add the butcher
-        change |= this->changeMonsterAt(3, 3, UMT_BUTCHER + 1, true);
+    case DUN_DIAB_2_AFT:
+        // replace monsters from Diab2a.DUN
+        change |= this->changeMonsterAt(11, 9, 101, false);
+        change |= this->changeMonsterAt(11, 13, 101, false);
+        change |= this->changeMonsterAt(16, 3, 101, false);
+        change |= this->changeMonsterAt(16, 5, 101, false);
+        change |= this->changeMonsterAt(17, 9, 101, false);
+        change |= this->changeMonsterAt(17, 13, 101, false);
+        change |= this->changeMonsterAt(14, 10, 101, false);
+        change |= this->changeMonsterAt(13, 12, 101, false);
         break;
-    case DUN_NAKRUL:
-        // - add nakrul
-        change |= this->changeMonsterAt(2, 6, UMT_NAKRUL + 1, true);
+    case DUN_DIAB_3_AFT:
+        // replace monsters from Diab3a.DUN
+        change |= this->changeMonsterAt(1, 5, 101, false);
+        change |= this->changeMonsterAt(1, 15, 101, false);
+        change |= this->changeMonsterAt(5, 1, 101, false);
+        change |= this->changeMonsterAt(5, 19, 101, false);
+        change |= this->changeMonsterAt(7, 7, 101, false);
+        change |= this->changeMonsterAt(7, 13, 101, false);
+        change |= this->changeMonsterAt(13, 7, 101, false);
+        change |= this->changeMonsterAt(13, 13, 101, false);
+        change |= this->changeMonsterAt(15, 1, 101, false);
+        change |= this->changeMonsterAt(15, 19, 101, false);
+        change |= this->changeMonsterAt(19, 5, 101, false);
+        change |= this->changeMonsterAt(19, 15, 101, false);
+        // replace objects from Diab3a.DUN
+        change |= this->changeObjectAt(8, 2, 51);
+        break;
+    case DUN_DIAB_4_AFT:
+        // replace monsters from Diab4a.DUN
+        change |= this->changeMonsterAt(4, 4, 101, false);
+        change |= this->changeMonsterAt(4, 8, 101, false);
+        change |= this->changeMonsterAt(4, 12, 101, false);
+        change |= this->changeMonsterAt(8, 4, 101, false);
+        change |= this->changeMonsterAt(8, 12, 101, false);
+        change |= this->changeMonsterAt(12, 4, 101, false);
+        change |= this->changeMonsterAt(12, 8, 101, false);
+        change |= this->changeMonsterAt(12, 12, 101, false);
+        // add monsters from Diab4a.DUN
+        change |= this->changeMonsterAt(6, 12, 101, false);
+        change |= this->changeMonsterAt(12, 10, 101, false);
+        change |= this->changeMonsterAt(10, 4, 101, false);
+        change |= this->changeMonsterAt(4, 6, 98, false);
         break;
     }
     if (!change) {

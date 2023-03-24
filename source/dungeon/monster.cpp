@@ -517,7 +517,7 @@ static void PlaceGroup(int mtidx, int num, int leaderf, int leader)
 }
 
 void InitUniqueMonster(int mnum, int uniqindex);
-static void PlaceUniqueMonst(int uniqindex)
+static void PlaceUniqueMonst(int uniqindex, int mtidx)
 {
 	int xp, yp, x, y;
 	int uniqtype;
@@ -613,12 +613,12 @@ static void PlaceUniqueMonst(int uniqindex)
 		}
 	}
 	// assert(nummonsters < MAXMONSTERS);
-	for (uniqtype = 0; uniqtype < nummtypes; uniqtype++) {
+	/*for (uniqtype = 0; uniqtype < nummtypes; uniqtype++) {
 		if (mapMonTypes[uniqtype].cmType == uniqMonData[uniqindex].mtype) {
 			break;
 		}
-	}
-	mnum = PlaceMonster(uniqtype, xp, yp);
+	}*/
+	mnum = PlaceMonster(mtidx, xp, yp);
 	InitUniqueMonster(mnum, uniqindex);
 }
 
@@ -698,7 +698,7 @@ static void PlaceUniques()
 			continue;
 		for (mt = 0; mt < nummtypes; mt++) {
 			if (mapMonTypes[mt].cmType == uniqMonData[u].mtype) {
-				PlaceUniqueMonst(u);
+				PlaceUniqueMonst(u, mt);
 				if (uniqMonData[u].mUnqFlags & UMF_GROUP) {
 					// assert(mnum == nummonsters - 1);
 					PlaceGroup(mt, MON_PACK_SIZE - 1, uniqMonData[u].mUnqFlags, nummonsters - 1);
