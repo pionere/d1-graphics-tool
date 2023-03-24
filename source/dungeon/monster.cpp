@@ -529,10 +529,10 @@ static void PlaceUniqueMonst(int uniqindex)
 	}
 
 	switch (uniqindex) {
-	case UMT_SKELKING:
-		xp = DBORDERX + 19;
-		yp = DBORDERY + 31;
-		break;
+	//case UMT_SKELKING:
+	//	xp = DBORDERX + 19;
+	//	yp = DBORDERY + 31;
+	//	break;
 	case UMT_ZHAR:
 		assert(nummonsters == MAX_MINIONS);
 		if (zharlib == -1)
@@ -540,51 +540,51 @@ static void PlaceUniqueMonst(int uniqindex)
 		xp = 2 * themeLoc[zharlib].x + DBORDERX + 4;
 		yp = 2 * themeLoc[zharlib].y + DBORDERY + 4;
 		break;
-	case UMT_SNOTSPIL:
-		xp = 2 * setpc_x + DBORDERX + 8;
-		yp = 2 * setpc_y + DBORDERY + 12;
-		break;
-	case UMT_LAZARUS:
-		if (!currLvl._dSetLvl) {
-			xp = 2 * setpc_x + DBORDERX + 3;
-			yp = 2 * setpc_y + DBORDERY + 6;
-		} else {
-			xp = DBORDERX + 16;
-			yp = DBORDERY + 30;
-		}
-		break;
-	case UMT_RED_VEX:
-		if (!currLvl._dSetLvl) {
-			xp = 2 * setpc_x + DBORDERX + 5;
-			yp = 2 * setpc_y + DBORDERY + 3;
-		} else {
-			xp = DBORDERX + 24;
-			yp = DBORDERY + 29;
-		}
-		break;
-	case UMT_BLACKJADE:
-		if (!currLvl._dSetLvl) {
-			xp = 2 * setpc_x + DBORDERX + 5;
-			yp = 2 * setpc_y + DBORDERY + 9;
-		} else {
-			xp = DBORDERX + 22;
-			yp = DBORDERY + 33;
-		}
-		break;
-	case UMT_WARLORD:
-		xp = 2 * setpc_x + DBORDERX + 6;
-		yp = 2 * setpc_y + DBORDERY + 7;
-		break;
-	case UMT_BUTCHER:
-		xp = 2 * setpc_x + DBORDERX + 3;
-		yp = 2 * setpc_y + DBORDERY + 3;
-		break;
+	//case UMT_SNOTSPIL:
+	//	xp = 2 * setpc_x + DBORDERX + 8;
+	//	yp = 2 * setpc_y + DBORDERY + 12;
+	//	break;
+	//case UMT_LAZARUS:
+	//	if (!currLvl._dSetLvl) {
+	//		xp = 2 * setpc_x + DBORDERX + 3;
+	//		yp = 2 * setpc_y + DBORDERY + 6;
+	//	} else {
+	//		xp = DBORDERX + 16;
+	//		yp = DBORDERY + 30;
+	//	}
+	//	break;
+	//case UMT_RED_VEX:
+	//	if (!currLvl._dSetLvl) {
+	//		xp = 2 * setpc_x + DBORDERX + 5;
+	//		yp = 2 * setpc_y + DBORDERY + 3;
+	//	} else {
+	//		xp = DBORDERX + 24;
+	//		yp = DBORDERY + 29;
+	//	}
+	//	break;
+	//case UMT_BLACKJADE:
+	//	if (!currLvl._dSetLvl) {
+	//		xp = 2 * setpc_x + DBORDERX + 5;
+	//		yp = 2 * setpc_y + DBORDERY + 9;
+	//	} else {
+	//		xp = DBORDERX + 22;
+	//		yp = DBORDERY + 33;
+	//	}
+	//	break;
+	//case UMT_WARLORD:
+	//	xp = 2 * setpc_x + DBORDERX + 6;
+	//	yp = 2 * setpc_y + DBORDERY + 7;
+	//	break;
+	//case UMT_BUTCHER:
+	//	xp = 2 * setpc_x + DBORDERX + 3;
+	//	yp = 2 * setpc_y + DBORDERY + 3;
+	//	break;
 #ifdef HELLFIRE
-	case UMT_NAKRUL:
-		assert(nummonsters == MAX_MINIONS);
-		xp = 2 * setpc_x + DBORDERX + 2;
-		yp = 2 * setpc_y + DBORDERY + 6;
-		break;
+	//case UMT_NAKRUL:
+	//	assert(nummonsters == MAX_MINIONS);
+	//	xp = 2 * setpc_x + DBORDERX + 2;
+	//	yp = 2 * setpc_y + DBORDERY + 6;
+	//	break;
 #endif
 	default:
 		count = 0;
