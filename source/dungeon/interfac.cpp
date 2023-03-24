@@ -292,6 +292,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
         if (monsterdata[mapMonTypes[i].cmType].mTransFile != NULL) {
             monRes.baseTrnPath = assetPath + "/" + monsterdata[mapMonTypes[i].cmType].mTransFile;
         }
+        monRes.uniqueMon = false;
         dun->addResource(monRes);
     }
     // - unique
@@ -313,6 +314,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
         if (uniqMonData[ms->_muniqtype - 1].mTrnName != NULL) {
             monRes.uniqueTrnPath = assetPath + "/Monsters/Monsters/" + uniqMonData[ms->_muniqtype - 1].mTrnName + ".TRN";
         }
+        monRes.uniqueMon = true;
         dun->addResource(monRes);
     }
     // add objects

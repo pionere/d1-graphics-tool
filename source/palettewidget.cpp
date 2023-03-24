@@ -934,7 +934,7 @@ void PaletteWidget::on_displayComboBox_activated(int index)
 
     if (!this->isTrn) {
         D1PALHITS_MODE mode = D1PALHITS_MODE::ALL_COLORS;
-        switch (this->ui->displayComboBox->currentData().value<COLORFILTER_TYPE>()) {
+        switch (this->ui->displayComboBox->itemData(index).value<COLORFILTER_TYPE>()) {
         case COLORFILTER_TYPE::NONE:
             mode = D1PALHITS_MODE::ALL_COLORS;
             break;

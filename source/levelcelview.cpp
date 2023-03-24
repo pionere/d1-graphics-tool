@@ -29,6 +29,8 @@
 
 #include "dungeon/all.h"
 
+Q_DECLARE_METATYPE(DunMonsterType);
+
 LevelCelView::LevelCelView(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::LevelCelView())
@@ -81,10 +83,6 @@ LevelCelView::LevelCelView(QWidget *parent)
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     QObject::connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(ShowContextMenu(const QPoint &)));
 
-    // this->ui->dungeonObjectComboBox->view()->setTextElideMode(Qt::ElideNone);
-    // this->ui->dungeonMonsterComboBox->view()->setTextElideMode(Qt::ElideNone);
-    // this->ui->dungeonItemComboBox->view()->setTextElideMode(Qt::ElideNone);
-
     setAcceptDrops(true);
 }
 
@@ -120,8 +118,8 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
         // add buttons for the custom entities
         QGridLayout *layout = this->ui->dungeonGridLayout;
         PushButtonWidget::addButton(this, layout, 1, 3, QStyle::SP_FileDialogNewFolder, tr("Add Custom Object"), this, &LevelCelView::on_dungeonObjectAddButton_clicked);
-        PushButtonWidget::addButton(this, layout, 1, 8, QStyle::SP_FileDialogNewFolder, tr("Add Custom Monster"), this, &LevelCelView::on_dungeonMonsterAddButton_clicked);
-        PushButtonWidget::addButton(this, layout, 1, 13, QStyle::SP_FileDialogNewFolder, tr("Add Custom Item"), this, &LevelCelView::on_dungeonItemAddButton_clicked);
+        PushButtonWidget::addButton(this, layout, 1, 9, QStyle::SP_FileDialogNewFolder, tr("Add Custom Monster"), this, &LevelCelView::on_dungeonMonsterAddButton_clicked);
+        PushButtonWidget::addButton(this, layout, 1, 14, QStyle::SP_FileDialogNewFolder, tr("Add Custom Item"), this, &LevelCelView::on_dungeonItemAddButton_clicked);
         // initialize the fields which are not updated
         this->on_dungeonDefaultTileLineEdit_escPressed();
         this->ui->levelTypeComboBox->setCurrentIndex(d->getLevelType());
@@ -170,6 +168,7 @@ void LevelCelView::updateEntityOptions()
             this->ui->dungeonObjectComboBox->addItem(obj.name, i);
         }
     }
+    this->ui->dungeonObjectComboBox->insertSeparator(0);
     const std::vector<CustomObjectStruct> &customObjectTypes = this->dun->getCustomObjectTypes();
     for (const CustomObjectStruct &obj : customObjectTypes) {
         this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
@@ -178,17 +177,32 @@ void LevelCelView::updateEntityOptions()
     // - monsters
     this->ui->dungeonMonsterComboBox->hide();
     this->ui->dungeonMonsterComboBox->clear();
-    this->ui->dungeonMonsterComboBox->addItem("", 0);
+    DunMonsterType monType = qMakePair<int, bool>(0, false);
+    this->ui->dungeonMonsterComboBox->addItem("", QVariant::fromValue(monType));
+    //   - normal monsters
     for (int i = 0; i < lengthof(DunMonstConvTbl); i++) {
         const DunMonsterStruct &mon = DunMonstConvTbl[i];
         if (mon.name != nullptr) {
             // TODO: filter custom entries?
-            this->ui->dungeonMonsterComboBox->addItem(mon.name, i);
+            DunMonsterType monType = qMakePair<int, bool>(i, false);
+            this->ui->dungeonMonsterComboBox->addItem(mon.name, QVariant::fromValue(monType));
         }
     }
+    this->ui->dungeonMonsterComboBox->insertSeparator(0);
+    //   - unique monsters
+    for (int i = 0; i < lengthof(uniqMonData); i++) {
+        const UniqMonData &mon = uniqMonData[i];
+        if (mon.mName != nullptr) {
+            // TODO: filter custom entries?
+            DunMonsterType monType = qMakePair<int, bool>(i, true);
+            this->ui->dungeonMonsterComboBox->addItem(mon.mName, QVariant::fromValue(monType));
+        }
+    }
+    this->ui->dungeonMonsterComboBox->insertSeparator(0);
+    //   - custom monsters
     const std::vector<CustomMonsterStruct> &customMonsterTypes = this->dun->getCustomMonsterTypes();
     for (const CustomMonsterStruct &mon : customMonsterTypes) {
-        this->ui->dungeonMonsterComboBox->addItem(mon.name, mon.type);
+        this->ui->dungeonMonsterComboBox->addItem(mon.name, QVariant::fromValue(mon.type));
     }
     this->ui->dungeonMonsterComboBox->show();
     // - items
@@ -292,9 +306,10 @@ void LevelCelView::update()
         int itemIndex = this->dun->getItemAt(posx, posy);
         this->ui->dungeonItemLineEdit->setText(QString::number(itemIndex));
         this->ui->dungeonItemComboBox->setCurrentIndex(this->ui->dungeonItemComboBox->findData(itemIndex));
-        int monsterIndex = this->dun->getMonsterAt(posx, posy);
-        this->ui->dungeonMonsterLineEdit->setText(QString::number(monsterIndex));
-        this->ui->dungeonMonsterComboBox->setCurrentIndex(this->ui->dungeonMonsterComboBox->findData(monsterIndex));
+        DunMonsterType monType = this->dun->getMonsterAt(posx, posy);
+        this->ui->dungeonMonsterLineEdit->setText(QString::number(monType.first));
+        this->ui->dungeonMonsterCheckBox->setChecked(monType.second);
+        this->ui->dungeonMonsterComboBox->setCurrentIndex(this->ui->dungeonMonsterComboBox->findData(QVariant::fromValue(monType)));
         int objectIndex = this->dun->getObjectAt(posx, posy);
         this->ui->dungeonObjectLineEdit->setText(QString::number(objectIndex));
         this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
@@ -2685,7 +2700,7 @@ void LevelCelView::reportDungeonUsage() const
 
     ProgressDialog::incValue();
 
-    std::vector<std::pair<int, int>> monsters;
+    std::vector<std::pair<DunMonsterType, int>> monsters;
     this->dun->collectMonsters(monsters);
 
     if (monsters.empty()) {
@@ -2693,7 +2708,7 @@ void LevelCelView::reportDungeonUsage() const
     } else {
         QString monsterUses;
         int totalCount = 0;
-        for (std::pair<int, int> &monster : monsters) {
+        for (std::pair<DunMonsterType, int> &monster : monsters) {
             totalCount += monster.second;
             QString monsterName = this->dun->getMonsterName(monster.first);
             monsterUses += tr("%1 %2").arg(monster.second).arg(monsterName) + ", ";
@@ -3768,7 +3783,6 @@ void LevelCelView::on_dungeonObjectLineEdit_returnPressed()
     bool change = this->dun->setObjectAt(this->currentDunPosX, this->currentDunPosY, objectIndex);
     this->on_dungeonObjectLineEdit_escPressed();
     if (change) {
-        this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
         // update the view
         this->displayFrame();
     }
@@ -3790,7 +3804,6 @@ void LevelCelView::on_dungeonObjectComboBox_activated(int index)
     int objectIndex = this->ui->dungeonObjectComboBox->itemData(index).value<int>();
 
     bool change = this->dun->setObjectAt(this->currentDunPosX, this->currentDunPosY, objectIndex);
-    this->on_dungeonObjectLineEdit_escPressed();
     if (change) {
         // update the view
         this->displayFrame();
@@ -3799,19 +3812,19 @@ void LevelCelView::on_dungeonObjectComboBox_activated(int index)
 
 void LevelCelView::on_dungeonObjectAddButton_clicked()
 {
-    int objectIndex = this->ui->dungeonObjectLineEdit->text().toUShort();
-    this->dungeonResourceDialog.initialize(DUN_ENTITY_TYPE::OBJECT, this->dun, this->ui->dungeonObjectComboBox, objectIndex);
+    this->dungeonResourceDialog.initialize(DUN_ENTITY_TYPE::OBJECT, this->dun);
     this->dungeonResourceDialog.show();
 }
 
 void LevelCelView::on_dungeonMonsterLineEdit_returnPressed()
 {
     int monsterIndex = this->ui->dungeonMonsterLineEdit->text().toUShort();
+    bool monsterUnique = this->ui->dungeonMonsterCheckBox->isChecked();
+    DunMonsterType monType = { monsterIndex, monsterUnique };
 
-    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monsterIndex);
+    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monType);
     this->on_dungeonMonsterLineEdit_escPressed();
     if (change) {
-        this->ui->dungeonMonsterComboBox->setCurrentIndex(this->ui->dungeonMonsterComboBox->findData(monsterIndex));
         // update the view
         this->displayFrame();
     }
@@ -3819,10 +3832,23 @@ void LevelCelView::on_dungeonMonsterLineEdit_returnPressed()
 
 void LevelCelView::on_dungeonMonsterLineEdit_escPressed()
 {
-    int monsterIndex = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
+    DunMonsterType monType = this->dun->getMonsterAt(this->currentDunPosX, this->currentDunPosY);
 
-    this->ui->dungeonMonsterLineEdit->setText(QString::number(monsterIndex));
+    this->ui->dungeonMonsterLineEdit->setText(QString::number(monType.first));
     this->ui->dungeonMonsterLineEdit->clearFocus();
+}
+
+void LevelCelView::on_dungeonMonsterCheckBox_clicked()
+{
+    int monsterIndex = this->ui->dungeonMonsterLineEdit->text().toUShort();
+    bool monsterUnique = this->ui->dungeonMonsterCheckBox->isChecked();
+    DunMonsterType monType = { monsterIndex, monsterUnique };
+
+    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monType);
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
 }
 
 void LevelCelView::on_dungeonMonsterComboBox_activated(int index)
@@ -3830,10 +3856,9 @@ void LevelCelView::on_dungeonMonsterComboBox_activated(int index)
     if (index < 0) {
         return;
     }
-    int monsterIndex = this->ui->dungeonMonsterComboBox->itemData(index).value<int>();
+    DunMonsterType monType = this->ui->dungeonMonsterComboBox->itemData(index).value<DunMonsterType>();
 
-    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monsterIndex);
-    this->on_dungeonMonsterLineEdit_escPressed();
+    bool change = this->dun->setMonsterAt(this->currentDunPosX, this->currentDunPosY, monType);
     if (change) {
         // update the view
         this->displayFrame();
@@ -3842,8 +3867,7 @@ void LevelCelView::on_dungeonMonsterComboBox_activated(int index)
 
 void LevelCelView::on_dungeonMonsterAddButton_clicked()
 {
-    int monsterIndex = this->ui->dungeonMonsterLineEdit->text().toUShort();
-    this->dungeonResourceDialog.initialize(DUN_ENTITY_TYPE::MONSTER, this->dun, this->ui->dungeonMonsterComboBox, monsterIndex);
+    this->dungeonResourceDialog.initialize(DUN_ENTITY_TYPE::MONSTER, this->dun);
     this->dungeonResourceDialog.show();
 }
 
@@ -3856,7 +3880,6 @@ void LevelCelView::on_dungeonItemLineEdit_returnPressed()
     bool change = this->dun->setItemAt(posx, posy, itemIndex);
     this->on_dungeonItemLineEdit_escPressed();
     if (change) {
-        this->ui->dungeonItemComboBox->setCurrentIndex(this->ui->dungeonItemComboBox->findData(itemIndex));
         // update the view
         this->displayFrame();
     }
@@ -3878,7 +3901,6 @@ void LevelCelView::on_dungeonItemComboBox_activated(int index)
     int itemIndex = this->ui->dungeonItemComboBox->itemData(index).value<int>();
 
     bool change = this->dun->setItemAt(this->currentDunPosX, this->currentDunPosY, itemIndex);
-    this->on_dungeonItemLineEdit_escPressed();
     if (change) {
         // update the view
         this->displayFrame();
@@ -3887,8 +3909,7 @@ void LevelCelView::on_dungeonItemComboBox_activated(int index)
 
 void LevelCelView::on_dungeonItemAddButton_clicked()
 {
-    int itemIndex = this->ui->dungeonItemLineEdit->text().toUShort();
-    this->dungeonResourceDialog.initialize(DUN_ENTITY_TYPE::ITEM, this->dun, this->ui->dungeonItemComboBox, itemIndex);
+    this->dungeonResourceDialog.initialize(DUN_ENTITY_TYPE::ITEM, this->dun);
     this->dungeonResourceDialog.show();
 }
 

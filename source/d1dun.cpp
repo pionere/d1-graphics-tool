@@ -473,7 +473,7 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
                 for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
                     for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
                         in >> readWord;
-                        this->monsters[y][x] = readWord;
+                        this->monsters[y][x] = qMakePair<int, bool>(readWord & INT16_MAX, (readWord & ~INT16_MAX) != 0);
                     }
                 }
                 numLayers++;
@@ -665,7 +665,7 @@ bool D1Dun::save(const SaveAsParam &params)
             if (this->items[y][x] != 0) {
                 layers |= 1 << 0;
             }
-            if (this->monsters[y][x] != 0) {
+            if (this->monsters[y][x].first != 0) {
                 layers |= 1 << 1;
             }
             if (this->objects[y][x] != 0) {
@@ -829,7 +829,7 @@ bool D1Dun::save(const SaveAsParam &params)
         if (numLayers >= 2) {
             for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
                 for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                    writeWord = this->monsters[y][x];
+                    writeWord = this->monsters[y][x].first | (this->monsters[y][x].second ? 1 << 15 : 0);
                     out << writeWord;
                 }
             }
@@ -1068,17 +1068,17 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     }
     if (params.showMonsters) {
         // draw the monster
-        int monsterIndex = this->monsters[dunCursorY][dunCursorX];
-        if (monsterIndex != 0) {
+        DunMonsterType monType = this->monsters[dunCursorY][dunCursorX];
+        if (monType.first != 0) {
             const MonsterCacheEntry *monEntry = nullptr;
             for (const auto &mon : this->monsterCache) {
-                if (mon.monsterIndex == monsterIndex) {
+                if (mon.monType == monType) {
                     monEntry = &mon;
                     break;
                 }
             }
             if (monEntry == nullptr) {
-                this->loadMonster(monsterIndex);
+                this->loadMonster(monType.first, monType.second);
                 monEntry = &this->monsterCache.back();
             }
             if (monEntry->monGfx != nullptr) {
@@ -1088,7 +1088,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 QImage monImage = monEntry->monGfx->getFrameImage(frameNum - 1);
                 dungeon.drawImage(drawCursorX + ((int)backWidth - monImage.width()) / 2, drawCursorY - monImage.height(), monImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             } else {
-                QString text = this->getMonsterName(monsterIndex);
+                QString text = this->getMonsterName(monType);
                 QFontMetrics fm(dungeon.font());
                 unsigned textWidth = fm.horizontalAdvance(text);
                 dungeon.drawText(cellCenterX - textWidth / 2, cellCenterY - (3 * fm.height() / 2), text);
@@ -1349,7 +1349,7 @@ bool D1Dun::setWidth(int newWidth, bool force)
                 hasContent |= this->tiles[y / TILE_HEIGHT][x / TILE_WIDTH] > 0; // !0 && !UNDEF_TILE
                 hasContent |= this->subtiles[y][x] > 0;                         // !0 && !UNDEF_SUBTILE
                 hasContent |= this->items[y][x] != 0;
-                hasContent |= this->monsters[y][x] != 0;
+                hasContent |= this->monsters[y][x].first != 0;
                 hasContent |= this->objects[y][x] != 0;
                 hasContent |= this->rooms[y][x] != 0;
             }
@@ -1416,7 +1416,7 @@ bool D1Dun::setHeight(int newHeight, bool force)
                 hasContent |= this->tiles[y / TILE_HEIGHT][x / TILE_WIDTH] > 0; // !0 && !UNDEF_TILE
                 hasContent |= this->subtiles[y][x] > 0;                         // !0 && !UNDEF_SUBTILE
                 hasContent |= this->items[y][x] != 0;
-                hasContent |= this->monsters[y][x] != 0;
+                hasContent |= this->monsters[y][x].first != 0;
                 hasContent |= this->objects[y][x] != 0;
                 hasContent |= this->rooms[y][x] != 0;
             }
@@ -1520,17 +1520,17 @@ bool D1Dun::setItemAt(int posx, int posy, int itemIndex)
     return true;
 }
 
-int D1Dun::getMonsterAt(int posx, int posy) const
+DunMonsterType D1Dun::getMonsterAt(int posx, int posy) const
 {
     return this->monsters[posy][posx];
 }
 
-bool D1Dun::setMonsterAt(int posx, int posy, int monsterIndex)
+bool D1Dun::setMonsterAt(int posx, int posy, DunMonsterType monType)
 {
-    if (this->monsters[posy][posx] == monsterIndex) {
+    if (this->monsters[posy][posx] == monType) {
         return false;
     }
-    this->monsters[posy][posx] = monsterIndex;
+    this->monsters[posy][posx] = monType;
     this->modified = true;
     return true;
 }
@@ -1638,20 +1638,26 @@ QString D1Dun::getItemName(int itemIndex) const
     return tr("Item%1").arg(itemIndex);
 }
 
-QString D1Dun::getMonsterName(int monsterIndex) const
+QString D1Dun::getMonsterName(const DunMonsterType &monType) const
 {
     // check if it is a custom monster
     for (const CustomMonsterStruct &customMonster : customMonsterTypes) {
-        if (customMonster.type == monsterIndex) {
+        if (customMonster.type == monType) {
             return customMonster.name;
         }
     }
     // check if it is built-in monster
-    if ((unsigned)monsterIndex < (unsigned)lengthof(DunMonstConvTbl) && DunMonstConvTbl[monsterIndex].name != nullptr) {
+    // - normal monster
+    if (!monType.second && (unsigned)monsterIndex < (unsigned)lengthof(DunMonstConvTbl) && DunMonstConvTbl[monsterIndex].name != nullptr) {
         return DunMonstConvTbl[monsterIndex].name;
     }
+    // - unique monster
+    if (monType.second && (unsigned)monsterIndex < (unsigned)lengthof(uniqMonData) && uniqMonData[monsterIndex].mName != nullptr) {
+        return uniqMonData[monsterIndex].mName;
+    }
     // out of options -> generic name
-    return tr("Monster%1").arg(monsterIndex);
+    QString result = monType.second ? tr("Monster%1") : tr("UniqMonster%1");
+    return result.arg(monType.first);
 }
 
 QString D1Dun::getObjectName(int objectIndex) const
@@ -1790,30 +1796,50 @@ void D1Dun::loadMonsterGfx(const QString &filePath, int width, const QString &ba
     }
 }
 
-void D1Dun::loadMonster(int monsterIndex)
+void D1Dun::loadMonster(int monsterIndex, bool isUnique)
 {
-    MonsterCacheEntry result = { monsterIndex, nullptr, this->pal, nullptr, nullptr };
+    MonsterCacheEntry result = { qMakePair<int, bool>(monsterIndex, isUnique), nullptr, this->pal, nullptr, nullptr };
+    // load a custom monster
     unsigned i = 0;
     for (; i < this->customMonsterTypes.size(); i++) {
         const CustomMonsterStruct &customMonster = this->customMonsterTypes[i];
-        if (customMonster.type == monsterIndex) {
+        if (customMonster.type == monsterIndex && customMonster.isUnique == isUnique) {
             QString cl2FilePath = customMonster.path;
             this->loadMonsterGfx(cl2FilePath, customMonster.width, customMonster.baseTrnPath, customMonster.uniqueTrnPath, result);
             break;
         }
     }
-    const BYTE *monType = &MonstConvTbl[monsterIndex];
-    if (i >= this->customObjectTypes.size() && (unsigned)monsterIndex < (unsigned)lengthof(MonstConvTbl) && *monType != 0 && !this->assetPath.isEmpty()) {
-        const MonsterData &md = monsterdata[*monType];
-        QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
-        cl2FilePath.replace("%c", "N");
-        cl2FilePath = this->assetPath + "/" + cl2FilePath;
-        QString baseTrnFilePath;
-        if (md.mTransFile != nullptr) {
-            baseTrnFilePath = this->assetPath + "/" + md.mTransFile;
+    if (i >= this->customObjectTypes.size() && !this->assetPath.isEmpty())  {
+        // load normal monster
+        const BYTE *monType = &MonstConvTbl[monsterIndex];
+        if (!isUnique && (unsigned)monsterIndex < (unsigned)lengthof(MonstConvTbl) && *monType != 0) {
+            const MonsterData &md = monsterdata[*monType];
+            QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
+            cl2FilePath.replace("%c", "N");
+            cl2FilePath = this->assetPath + "/" + cl2FilePath;
+            QString baseTrnFilePath;
+            if (md.mTransFile != nullptr) {
+                baseTrnFilePath = this->assetPath + "/" + md.mTransFile;
+            }
+            QString uniqueTrnFilePath;
+            this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, baseTrnFilePath, uniqueTrnFilePath, result);
         }
-        QString uniqueTrnFilePath;
-        this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, baseTrnFilePath, uniqueTrnFilePath, result);
+        // load unique monster
+        if (isUnique && (unsigned)monsterIndex < (unsigned)lengthof(uniqMonData) && uniqMonData[monsterIndex].mtype != MT_INVALID) {
+            const MonsterData &md = monsterdata[uniqMonData[monsterIndex].mtype];
+            QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
+            cl2FilePath.replace("%c", "N");
+            cl2FilePath = this->assetPath + "/" + cl2FilePath;
+            QString baseTrnFilePath;
+            if (md.mTransFile != nullptr) {
+                baseTrnFilePath = this->assetPath + "/" + md.mTransFile;
+            }
+            QString uniqueTrnFilePath;
+            if (uniqMonData[monsterIndex].mTrnName != nullptr) {
+                uniqueTrnFilePath = this->assetPath + "/Monsters/Monsters/" + uniqMonData[monsterIndex].mTrnName + ".TRN";
+            }
+            this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, baseTrnFilePath, uniqueTrnFilePath, result);
+        }
     }
     this->monsterCache.push_back(result);
 }
@@ -1934,21 +1960,23 @@ void D1Dun::collectItems(std::vector<std::pair<int, int>> &foundItems) const
     }
 }
 
-void D1Dun::collectMonsters(std::vector<std::pair<int, int>> &foundMonsters) const
+void D1Dun::collectMonsters(std::vector<std::pair<DunMonsterType, int>> &foundMonsters) const
 {
-    for (const std::vector<int> &monstersRow : this->monsters) {
-        for (int monsterIndex : monstersRow) {
+    for (const std::vector<DunMonsterType> &monstersRow : this->monsters) {
+        for (const DunMonsterType &mon : monstersRow) {
+            int monsterIndex = mon.first;
             if (monsterIndex == 0) {
                 continue;
             }
-            for (std::pair<int, int> &monsterEntry : foundMonsters) {
-                if (monsterEntry.first == monsterIndex) {
+            for (std::pair<DunMonsterType, int> &monsterEntry : foundMonsters) {
+                if (monsterEntry.first == mon) {
                     monsterEntry.second++;
                     monsterIndex = 0;
+                    break;
                 }
             }
             if (monsterIndex != 0) {
-                foundMonsters.push_back(std::pair<int, int>(monsterIndex, 1));
+                foundMonsters.push_back(std::pair<DunMonsterType, int>(mon, 1));
             }
         }
     }
@@ -2075,12 +2103,16 @@ void D1Dun::checkMonsters(D1Sol *sol) const
     dProgress() << progress;
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
-            int monsterIndex = this->monsters[y][x];
-            if (monsterIndex == 0) {
+            const DunMonsterType &monType = this->monsters[y][x];
+            if (monType.first == 0) {
+                if (monType.second) {
+                    dProgressWarn() << tr("An unique monster is indicated at %1:%2, but its index is not set.").arg(x).arg(y);
+                    result = true;
+                }
                 continue;
             }
             int subtileRef = this->subtiles[y][x];
-            QString monsterName = this->getMonsterName(monsterIndex);
+            QString monsterName = this->getMonsterName(monType);
             if (subtileRef == UNDEF_SUBTILE) {
                 dProgressWarn() << tr("'%1' at %2:%3 is on an undefined subtile.").arg(monsterName).arg(x).arg(y);
                 result = true;
@@ -2128,7 +2160,7 @@ void D1Dun::checkObjects() const
                 dProgressWarn() << tr("'%1' at %2:%3 is on an empty subtile.").arg(objectName).arg(x).arg(y);
                 result = true;
             }
-            if (this->monsters[y][x] != 0) {
+            if (this->monsters[y][x].first != 0) {
                 dProgressErr() << tr("'%1' at %2:%3 is sharing a subtile with a monster.").arg(objectName).arg(x).arg(y);
                 result = true;
             }
@@ -2165,9 +2197,10 @@ bool D1Dun::removeMonsters()
 {
     bool result = false;
     for (std::vector<int> &monstersRow : this->monsters) {
-        for (int &monsterIndex : monstersRow) {
-            if (monsterIndex != 0) {
-                monsterIndex = 0;
+        for (DunMonsterType &mon : monstersRow) {
+            if (mon.first != 0 || mon.second) {
+                mon.first = 0;
+                mon.second = false;
                 result = true;
                 this->modified = true;
             }
@@ -2229,15 +2262,15 @@ void D1Dun::loadMonsters(D1Dun *srcDun)
 {
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
-            int newMonsterIndex = srcDun->monsters[y][x];
-            int currMonsterIndex = this->monsters[y][x];
-            if (newMonsterIndex != 0 && currMonsterIndex != newMonsterIndex) {
-                if (currMonsterIndex != 0) {
-                    QString currMonsterName = this->getMonsterName(currMonsterIndex);
-                    QString newMonsterName = this->getMonsterName(newMonsterIndex);
-                    dProgressWarn() << tr("'%1'(%2) monster at %3:%4 was replaced by '%5'(%6).").arg(currMonsterName).arg(currMonsterIndex).arg(x).arg(y).arg(newMonsterName).arg(newMonsterIndex);
+            const DunMonsterType &newMonster = srcDun->monsters[y][x];
+            const DunMonsterType &currMonster = this->monsters[y][x];
+            if (newMonster.first != 0 && currMonster != newMonster) {
+                if (currMonster.first != 0) {
+                    QString currMonsterName = this->getMonsterName(currMonster);
+                    QString newMonsterName = this->getMonsterName(newMonster);
+                    dProgressWarn() << tr("'%1'(%2) %3monster at %4:%5 was replaced by '%6'(%7)%8.").arg(currMonsterName).arg(currMonster.first).arg(currMonster.second ? "unique " : "").arg(x).arg(y).arg(newMonsterName).arg(newMonster.first).arg(newMonster.second ? " unique monster" : "");
                 }
-                this->monsters[y][x] = newMonsterIndex;
+                this->monsters[y][x] = newMonster;
                 this->modified = true;
             }
         }
@@ -2425,19 +2458,19 @@ bool D1Dun::changeObjectAt(int posx, int posy, int objectIndex)
     return true;
 }
 
-bool D1Dun::changeMonsterAt(int posx, int posy, int monsterIndex)
+bool D1Dun::changeMonsterAt(int posx, int posy, int monsterIndex, bool isUnique)
 {
-    int prevMonster = this->monsters[posy][posx];
-    if (prevMonster == monsterIndex) {
+    DunMonsterType prevMon = this->monsters[posy][posx];
+    if (prevMon.first == monsterIndex && prevMon.second == isUnique) {
         return false;
     }
-    this->monsters[posy][posx] = monsterIndex;
+    this->monsters[posy][posx] = qMakePair<int, bool>(monsterIndex, isUnique);
     if (monsterIndex == 0) {
-        dProgress() << tr("Removed Monster '%1' from %2:%3.").arg(prevMonster).arg(posx).arg(posy);
+        dProgress() << tr("Removed %1Monster '%2' from %3:%4.").arg(prevMon.second ? "unique " : "").arg(prevMon.first).arg(posx).arg(posy);
     } else if (prevMonster == 0) {
-        dProgress() << tr("Added Monster '%1' to %2:%3.").arg(monsterIndex).arg(posx).arg(posy);
+        dProgress() << tr("Added %1Monster '%2' to %3:%4.").arg(isUnique ? "unique " : "").arg(monsterIndex).arg(posx).arg(posy);
     } else {
-        dProgress() << tr("Changed Monster at %1:%2 from '%3' to '%4'.").arg(posx).arg(posy).arg(prevMonster).arg(monsterIndex);
+        dProgress() << tr("Changed Monster at %1:%2 from '%3'%4 to '%5'%6.").arg(posx).arg(posy).arg(prevMon.first).arg(prevMon.second ? " unique monster" : "").arg(monsterIndex).arg(isUnique ? " unique monster" : "");
     }
     this->modified = true;
     return true;
@@ -2578,17 +2611,17 @@ void D1Dun::patch(int dunFileIndex)
             }
         }
         // add monsters from Blind2.DUN
-        change |= this->changeMonsterAt(1, 6, 32);
-        change |= this->changeMonsterAt(4, 1, 32);
-        change |= this->changeMonsterAt(6, 3, 32);
-        change |= this->changeMonsterAt(6, 9, 32);
-        change |= this->changeMonsterAt(5, 6, 32);
-        change |= this->changeMonsterAt(7, 5, 32);
-        change |= this->changeMonsterAt(7, 7, 32);
-        change |= this->changeMonsterAt(13, 14, 32);
-        change |= this->changeMonsterAt(14, 17, 32);
-        change |= this->changeMonsterAt(14, 11, 32);
-        change |= this->changeMonsterAt(15, 13, 32);
+        change |= this->changeMonsterAt(1, 6, 32, false);
+        change |= this->changeMonsterAt(4, 1, 32, false);
+        change |= this->changeMonsterAt(6, 3, 32, false);
+        change |= this->changeMonsterAt(6, 9, 32, false);
+        change |= this->changeMonsterAt(5, 6, 32, false);
+        change |= this->changeMonsterAt(7, 5, 32, false);
+        change |= this->changeMonsterAt(7, 7, 32, false);
+        change |= this->changeMonsterAt(13, 14, 32, false);
+        change |= this->changeMonsterAt(14, 17, 32, false);
+        change |= this->changeMonsterAt(14, 11, 32, false);
+        change |= this->changeMonsterAt(15, 13, 32, false);
         // remove items
         change |= this->changeItemAt(5, 5, 0);
         break;
@@ -2627,21 +2660,21 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeObjectAt(9, 16, 0);
         // replace monsters
         // - corridor
-        change |= this->changeMonsterAt(8, 3, 62);
-        change |= this->changeMonsterAt(9, 3, 62);
-        change |= this->changeMonsterAt(10, 3, 62);
-        change |= this->changeMonsterAt(5, 4, 62);
-        change |= this->changeMonsterAt(12, 4, 62);
+        change |= this->changeMonsterAt(8, 3, 62, false);
+        change |= this->changeMonsterAt(9, 3, 62, false);
+        change |= this->changeMonsterAt(10, 3, 62, false);
+        change |= this->changeMonsterAt(5, 4, 62, false);
+        change |= this->changeMonsterAt(12, 4, 62, false);
         // - left room
-        change |= this->changeMonsterAt(3, 8, 62);
-        change |= this->changeMonsterAt(3, 12, 62);
+        change |= this->changeMonsterAt(3, 8, 62, false);
+        change |= this->changeMonsterAt(3, 12, 62, false);
         // - right room
-        change |= this->changeMonsterAt(14, 8, 62);
-        change |= this->changeMonsterAt(14, 12, 62);
+        change |= this->changeMonsterAt(14, 8, 62, false);
+        change |= this->changeMonsterAt(14, 12, 62, false);
         // - front room
-        change |= this->changeMonsterAt(9, 22, 62);
-        change |= this->changeMonsterAt(6, 25, 62);
-        change |= this->changeMonsterAt(12, 25, 62);
+        change |= this->changeMonsterAt(9, 22, 62, false);
+        change |= this->changeMonsterAt(6, 25, 62, false);
+        change |= this->changeMonsterAt(12, 25, 62, false);
         // remove items
         change |= this->changeItemAt(9, 2, 0);
         break;
@@ -2669,17 +2702,17 @@ void D1Dun::patch(int dunFileIndex)
         break;
     case DUN_WARLORD_AFT: // Warlord2.DUN
         // replace monsters from Warlord.DUN
-        change |= this->changeMonsterAt(2, 2, 100);
-        change |= this->changeMonsterAt(2, 10, 100);
-        change |= this->changeMonsterAt(13, 4, 100);
-        change |= this->changeMonsterAt(13, 9, 100);
-        change |= this->changeMonsterAt(10, 2, 100);
-        change |= this->changeMonsterAt(10, 10, 100);
+        change |= this->changeMonsterAt(2, 2, 100, false);
+        change |= this->changeMonsterAt(2, 10, 100, false);
+        change |= this->changeMonsterAt(13, 4, 100, false);
+        change |= this->changeMonsterAt(13, 9, 100, false);
+        change |= this->changeMonsterAt(10, 2, 100, false);
+        change |= this->changeMonsterAt(10, 10, 100, false);
         // add monsters from Warlord.DUN
-        change |= this->changeMonsterAt(6, 2, 100);
-        change |= this->changeMonsterAt(6, 10, 100);
-        change |= this->changeMonsterAt(11, 2, 100);
-        change |= this->changeMonsterAt(11, 10, 100);
+        change |= this->changeMonsterAt(6, 2, 100, false);
+        change |= this->changeMonsterAt(6, 10, 100, false);
+        change |= this->changeMonsterAt(11, 2, 100, false);
+        change |= this->changeMonsterAt(11, 10, 100, false);
         break;
     case DUN_BANNER_PRE: // Banner2.DUN
         // replace entry tile
@@ -2687,13 +2720,13 @@ void D1Dun::patch(int dunFileIndex)
         // replace monsters from Banner1.DUN
         for (int y = 7; y <= 9; y++) {
             for (int x = 7; x <= 13; x++) {
-                change |= this->changeMonsterAt(x, y, 16);
+                change |= this->changeMonsterAt(x, y, 16, false);
             }
         }
         // remove monsters
-        change |= this->changeMonsterAt(1, 4, 0);
-        change |= this->changeMonsterAt(13, 5, 0);
-        change |= this->changeMonsterAt(7, 12, 0);
+        change |= this->changeMonsterAt(1, 4, 0, false);
+        change |= this->changeMonsterAt(13, 5, 0, false);
+        change |= this->changeMonsterAt(7, 12, 0, false);
         break;
     case DUN_BANNER_AFT: // Banner1.DUN
         break;
@@ -2723,27 +2756,27 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeObjectAt(41, 17, 81);
         // replace monsters from SklKng2.DUN
         // - back room
-        change |= this->changeMonsterAt(6, 32, 27);
-        change |= this->changeMonsterAt(6, 33, 22);
-        change |= this->changeMonsterAt(6, 34, 22);
-        change |= this->changeMonsterAt(6, 35, 27);
-        change |= this->changeMonsterAt(8, 32, 27);
-        change |= this->changeMonsterAt(8, 33, 27);
-        change |= this->changeMonsterAt(8, 34, 27);
-        change |= this->changeMonsterAt(8, 35, 27);
-        change |= this->changeMonsterAt(10, 33, 11);
-        change |= this->changeMonsterAt(10, 34, 11);
-        change |= this->changeMonsterAt(12, 33, 11);
-        change |= this->changeMonsterAt(12, 34, 11);
+        change |= this->changeMonsterAt(6, 32, 27, false);
+        change |= this->changeMonsterAt(6, 33, 22, false);
+        change |= this->changeMonsterAt(6, 34, 22, false);
+        change |= this->changeMonsterAt(6, 35, 27, false);
+        change |= this->changeMonsterAt(8, 32, 27, false);
+        change |= this->changeMonsterAt(8, 33, 27, false);
+        change |= this->changeMonsterAt(8, 34, 27, false);
+        change |= this->changeMonsterAt(8, 35, 27, false);
+        change |= this->changeMonsterAt(10, 33, 11, false);
+        change |= this->changeMonsterAt(10, 34, 11, false);
+        change |= this->changeMonsterAt(12, 33, 11, false);
+        change |= this->changeMonsterAt(12, 34, 11, false);
         // - room via crux
-        change |= this->changeMonsterAt(19, 9, 24);
+        change |= this->changeMonsterAt(19, 9, 24, false);
         // - central room
-        change |= this->changeMonsterAt(12, 20, 24);
-        change |= this->changeMonsterAt(18, 25, 23);
-        change |= this->changeMonsterAt(18, 30, 27);
-        change |= this->changeMonsterAt(18, 32, 27);
-        change |= this->changeMonsterAt(33, 41, 23);
-        change |= this->changeMonsterAt(39, 31, 11);
+        change |= this->changeMonsterAt(12, 20, 24, false);
+        change |= this->changeMonsterAt(18, 25, 23, false);
+        change |= this->changeMonsterAt(18, 30, 27, false);
+        change |= this->changeMonsterAt(18, 32, 27, false);
+        change |= this->changeMonsterAt(33, 41, 23, false);
+        change |= this->changeMonsterAt(39, 31, 11, false);
         break;
     }
     if (!change) {
@@ -2908,7 +2941,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
         }
         // remove cache entry
         for (unsigned i = 0; i < this->monsterCache.size(); i++) {
-            if (this->monsterCache[i].monsterIndex == params.index) {
+            if (this->monsterCache[i].monsterIndex == params.index && this->monsterCache[i].monUnique == params.uniqueMon) {
                 D1Gfx *gfx = this->monsterCache[i].monGfx;
                 this->monsterCache.erase(this->monsterCache.begin() + i);
                 if (gfx == nullptr) {
@@ -2937,6 +2970,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
                 customMonster.baseTrnPath = params.baseTrnPath;
                 customMonster.uniqueTrnPath = params.uniqueTrnPath;
                 customMonster.width = params.width;
+                customMonster.isUnique = params.uniqueMon;
                 return true;
             }
         }
@@ -2948,6 +2982,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
         customMonster.baseTrnPath = params.baseTrnPath;
         customMonster.uniqueTrnPath = params.uniqueTrnPath;
         customMonster.width = params.width;
+        customMonster.isUnique = params.uniqueMon;
         this->customMonsterTypes.push_back(customMonster);
     } break;
     case DUN_ENTITY_TYPE::ITEM: {

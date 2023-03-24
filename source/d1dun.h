@@ -45,6 +45,8 @@ enum class D1DUN_TYPE {
     RAW,
 };
 
+typedef QPair<int, bool> DunMonsterType;
+
 typedef struct DunObjectStruct {
     const char *name;
 } DunObjectStruct;
@@ -62,7 +64,7 @@ typedef struct DunMonsterStruct {
 } DunMonsterStruct;
 
 typedef struct CustomMonsterStruct {
-    int type;
+    DunMonsterType type;
     int width;
     QString path;
     QString baseTrnPath;
@@ -84,7 +86,7 @@ typedef struct ObjectCacheEntry {
 } ObjectCacheEntry;
 
 typedef struct MonsterCacheEntry {
-    int monsterIndex;
+    DunMonsterType monType;
     D1Gfx *monGfx;
     D1Pal *monPal;
     D1Trn *monBaseTrn;
@@ -135,8 +137,8 @@ public:
     bool setSubtileAt(int posx, int posy, int subtileRef);
     int getItemAt(int posx, int posy) const;
     bool setItemAt(int posx, int posy, int itemIndex);
-    int getMonsterAt(int posx, int posy) const;
-    bool setMonsterAt(int posx, int posy, int monsterIndex);
+    DunMonsterType getMonsterAt(int posx, int posy) const;
+    bool setMonsterAt(int posx, int posy, DunMonsterType);
     int getObjectAt(int posx, int posy) const;
     bool setObjectAt(int posx, int posy, int objectIndex);
     int getRoomAt(int posx, int posy) const;
@@ -150,11 +152,11 @@ public:
     QString getAssetPath() const;
     const D1Gfx *getSpecGfx() const;
     QString getItemName(int itemIndex) const;
-    QString getMonsterName(int monsterIndex) const;
+    QString getMonsterName(const DunMonsterType &monType) const;
     QString getObjectName(int objectIndex) const;
 
     void collectItems(std::vector<std::pair<int, int>> &items) const;
-    void collectMonsters(std::vector<std::pair<int, int>> &monsters) const;
+    void collectMonsters(std::vector<std::pair<DunMonsterType, int>> &monsters) const;
     void collectObjects(std::vector<std::pair<int, int>> &objects) const;
     void checkTiles() const;
     void checkItems(D1Sol *sol) const;
@@ -196,7 +198,7 @@ private:
     void updateSubtiles(int tilePosX, int tilePosY, int tileRef);
     bool changeTileAt(int tilePosX, int tilePosY, int tileRef);
     bool changeObjectAt(int posx, int posy, int objectIndex);
-    bool changeMonsterAt(int posx, int posy, int monsterIndex);
+    bool changeMonsterAt(int posx, int posy, int monsterIndex, bool isUnique);
     bool changeItemAt(int posx, int posy, int itemIndex);
 
 private:
@@ -213,7 +215,7 @@ private:
     std::vector<std::vector<int>> tiles;
     std::vector<std::vector<int>> subtiles;
     std::vector<std::vector<int>> items;
-    std::vector<std::vector<int>> monsters;
+    std::vector<std::vector<DunMonsterType>> monsters;
     std::vector<std::vector<int>> objects;
     std::vector<std::vector<int>> rooms;
 

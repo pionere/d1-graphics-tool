@@ -21,6 +21,7 @@ public:
     int frame;
     QString baseTrnPath;
     QString uniqueTrnPath;
+    bool uniqueMon;
 };
 
 namespace Ui {
@@ -31,10 +32,10 @@ class DungeonResourceDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit DungeonResourceDialog(QWidget *parent);
+    explicit DungeonResourceDialog(QWidget *view);
     ~DungeonResourceDialog();
 
-    void initialize(DUN_ENTITY_TYPE type, D1Dun *dun, QComboBox *comboBox, int currentValue);
+    void initialize(DUN_ENTITY_TYPE type, D1Dun *dun);
 
 private slots:
     void on_celFileBrowsePushButton_clicked();
@@ -51,6 +52,4 @@ private:
 
     DUN_ENTITY_TYPE type;
     D1Dun *dun;
-    QComboBox *comboBox;
-    int currentValue;
 };
