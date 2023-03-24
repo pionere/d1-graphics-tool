@@ -1811,7 +1811,7 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
             break;
         }
     }
-    if (i >= this->customObjectTypes.size() && !this->assetPath.isEmpty()) {
+    if (i >= this->customMonsterTypes.size() && !this->assetPath.isEmpty()) {
         // load normal monster
         unsigned monBaseType = monType.first;
         if (!monType.second && monBaseType < (unsigned)lengthof(MonstConvTbl) && MonstConvTbl[monBaseType] != 0) {

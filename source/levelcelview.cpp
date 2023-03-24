@@ -177,14 +177,14 @@ void LevelCelView::updateEntityOptions()
     // - monsters
     this->ui->dungeonMonsterComboBox->hide();
     this->ui->dungeonMonsterComboBox->clear();
-    DunMonsterType monType = qMakePair<int, bool>(0, false);
+    DunMonsterType monType = { 0, false };
     this->ui->dungeonMonsterComboBox->addItem("", QVariant::fromValue(monType));
     //   - normal monsters
     for (int i = 0; i < lengthof(DunMonstConvTbl); i++) {
         const DunMonsterStruct &mon = DunMonstConvTbl[i];
         if (mon.name != nullptr) {
             // TODO: filter custom entries?
-            DunMonsterType monType = qMakePair<int, bool>(i, false);
+            DunMonsterType monType = { i, false };
             this->ui->dungeonMonsterComboBox->addItem(mon.name, QVariant::fromValue(monType));
         }
     }
@@ -194,7 +194,7 @@ void LevelCelView::updateEntityOptions()
         const UniqMonData &mon = uniqMonData[i];
         if (mon.mtype != MT_INVALID) {
             // TODO: filter custom entries?
-            DunMonsterType monType = qMakePair<int, bool>(i + 1, true);
+            DunMonsterType monType = { i + 1, true };
             this->ui->dungeonMonsterComboBox->addItem(mon.mName, QVariant::fromValue(monType));
             continue;
         }
