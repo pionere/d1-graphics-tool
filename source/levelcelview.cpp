@@ -190,13 +190,15 @@ void LevelCelView::updateEntityOptions()
     }
     this->ui->dungeonMonsterComboBox->insertSeparator(0);
     //   - unique monsters
-    for (int i = 0; i < lengthof(uniqMonData); i++) {
+    for (int i = 0;; i++) {
         const UniqMonData &mon = uniqMonData[i];
-        if (mon.mName != nullptr) {
+        if (mon.mtype != MT_INVALID) {
             // TODO: filter custom entries?
             DunMonsterType monType = qMakePair<int, bool>(i, true);
             this->ui->dungeonMonsterComboBox->addItem(mon.mName, QVariant::fromValue(monType));
+            continue;
         }
+        break;
     }
     this->ui->dungeonMonsterComboBox->insertSeparator(0);
     //   - custom monsters

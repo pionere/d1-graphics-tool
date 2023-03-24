@@ -38,7 +38,7 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, bool first)
     this->lastPos = currPos;
 
     // emit this->framePixelClicked(this->lastPos, first);
-    QWidget *view = this->parentWidget();
+    QObject *view = this->parent();
     CelView *celView = qobject_cast<CelView *>(view);
     if (celView != nullptr) {
         celView->framePixelClicked(this->lastPos, first);

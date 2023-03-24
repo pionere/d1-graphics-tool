@@ -473,7 +473,7 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
                 for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
                     for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
                         in >> readWord;
-                        this->monsters[y][x] = qMakePair<int, bool>(readWord & INT16_MAX, (readWord & ~INT16_MAX) != 0);
+                        this->monsters[y][x] = { readWord & INT16_MAX, (readWord & ~INT16_MAX) != 0 };
                     }
                 }
                 numLayers++;
@@ -1068,7 +1068,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     }
     if (params.showMonsters) {
         // draw the monster
-        DunMonsterType monType = this->monsters[dunCursorY][dunCursorX];
+        const DunMonsterType &monType = this->monsters[dunCursorY][dunCursorX];
         if (monType.first != 0) {
             const MonsterCacheEntry *monEntry = nullptr;
             for (const auto &mon : this->monsterCache) {
@@ -1078,7 +1078,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                 }
             }
             if (monEntry == nullptr) {
-                this->loadMonster(monType.first, monType.second);
+                this->loadMonster(monType);
                 monEntry = &this->monsterCache.back();
             }
             if (monEntry->monGfx != nullptr) {
@@ -1648,12 +1648,12 @@ QString D1Dun::getMonsterName(const DunMonsterType &monType) const
     }
     // check if it is built-in monster
     // - normal monster
-    if (!monType.second && (unsigned)monsterIndex < (unsigned)lengthof(DunMonstConvTbl) && DunMonstConvTbl[monsterIndex].name != nullptr) {
-        return DunMonstConvTbl[monsterIndex].name;
+    if (!monType.second && (unsigned)monType.first < (unsigned)lengthof(DunMonstConvTbl) && DunMonstConvTbl[monType.first].name != nullptr) {
+        return DunMonstConvTbl[monType.first].name;
     }
     // - unique monster
-    if (monType.second && (unsigned)monsterIndex < (unsigned)lengthof(uniqMonData) && uniqMonData[monsterIndex].mName != nullptr) {
-        return uniqMonData[monsterIndex].mName;
+    if (monType.second && (unsigned)monType.first < (unsigned)lengthof(uniqMonData) && uniqMonData[monType.first].mName != nullptr) {
+        return uniqMonData[monType.first].mName;
     }
     // out of options -> generic name
     QString result = monType.second ? tr("Monster%1") : tr("UniqMonster%1");
@@ -1796,23 +1796,23 @@ void D1Dun::loadMonsterGfx(const QString &filePath, int width, const QString &ba
     }
 }
 
-void D1Dun::loadMonster(int monsterIndex, bool isUnique)
+void D1Dun::loadMonster(const DunMonsterType &monType)
 {
-    MonsterCacheEntry result = { qMakePair<int, bool>(monsterIndex, isUnique), nullptr, this->pal, nullptr, nullptr };
+    MonsterCacheEntry result = { monType, nullptr, this->pal, nullptr, nullptr };
     // load a custom monster
     unsigned i = 0;
     for (; i < this->customMonsterTypes.size(); i++) {
         const CustomMonsterStruct &customMonster = this->customMonsterTypes[i];
-        if (customMonster.type == monsterIndex && customMonster.isUnique == isUnique) {
+        if (customMonster.type == monType) {
             QString cl2FilePath = customMonster.path;
             this->loadMonsterGfx(cl2FilePath, customMonster.width, customMonster.baseTrnPath, customMonster.uniqueTrnPath, result);
             break;
         }
     }
-    if (i >= this->customObjectTypes.size() && !this->assetPath.isEmpty())  {
+    if (i >= this->customObjectTypes.size() && !this->assetPath.isEmpty()) {
         // load normal monster
-        const BYTE *monType = &MonstConvTbl[monsterIndex];
-        if (!isUnique && (unsigned)monsterIndex < (unsigned)lengthof(MonstConvTbl) && *monType != 0) {
+        const BYTE *monType = &MonstConvTbl[monType.first];
+        if (!monType.second && (unsigned)monType.first < (unsigned)lengthof(MonstConvTbl) && *monType != 0) {
             const MonsterData &md = monsterdata[*monType];
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
             cl2FilePath.replace("%c", "N");
@@ -1825,8 +1825,8 @@ void D1Dun::loadMonster(int monsterIndex, bool isUnique)
             this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, baseTrnFilePath, uniqueTrnFilePath, result);
         }
         // load unique monster
-        if (isUnique && (unsigned)monsterIndex < (unsigned)lengthof(uniqMonData) && uniqMonData[monsterIndex].mtype != MT_INVALID) {
-            const MonsterData &md = monsterdata[uniqMonData[monsterIndex].mtype];
+        if (monType.second && (unsigned)monType.first < (unsigned)lengthof(uniqMonData) && uniqMonData[monType.first].mtype != MT_INVALID) {
+            const MonsterData &md = monsterdata[uniqMonData[monType.first].mtype];
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
             cl2FilePath.replace("%c", "N");
             cl2FilePath = this->assetPath + "/" + cl2FilePath;
@@ -1835,8 +1835,8 @@ void D1Dun::loadMonster(int monsterIndex, bool isUnique)
                 baseTrnFilePath = this->assetPath + "/" + md.mTransFile;
             }
             QString uniqueTrnFilePath;
-            if (uniqMonData[monsterIndex].mTrnName != nullptr) {
-                uniqueTrnFilePath = this->assetPath + "/Monsters/Monsters/" + uniqMonData[monsterIndex].mTrnName + ".TRN";
+            if (uniqMonData[monType.first].mTrnName != nullptr) {
+                uniqueTrnFilePath = this->assetPath + "/Monsters/Monsters/" + uniqMonData[monType.first].mTrnName + ".TRN";
             }
             this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, baseTrnFilePath, uniqueTrnFilePath, result);
         }
@@ -2464,7 +2464,7 @@ bool D1Dun::changeMonsterAt(int posx, int posy, int monsterIndex, bool isUnique)
     if (prevMon.first == monsterIndex && prevMon.second == isUnique) {
         return false;
     }
-    this->monsters[posy][posx] = qMakePair<int, bool>(monsterIndex, isUnique);
+    this->monsters[posy][posx] = { monsterIndex, isUnique };
     if (monsterIndex == 0) {
         dProgress() << tr("Removed %1Monster '%2' from %3:%4.").arg(prevMon.second ? "unique " : "").arg(prevMon.first).arg(posx).arg(posy);
     } else if (prevMonster == 0) {
@@ -2941,7 +2941,7 @@ bool D1Dun::addResource(const AddResourceParam &params)
         }
         // remove cache entry
         for (unsigned i = 0; i < this->monsterCache.size(); i++) {
-            if (this->monsterCache[i].monsterIndex == params.index && this->monsterCache[i].monUnique == params.uniqueMon) {
+            if (this->monsterCache[i].monType.first == params.index && this->monsterCache[i].monType.second == params.uniqueMon) {
                 D1Gfx *gfx = this->monsterCache[i].monGfx;
                 this->monsterCache.erase(this->monsterCache.begin() + i);
                 if (gfx == nullptr) {

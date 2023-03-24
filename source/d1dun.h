@@ -193,7 +193,7 @@ private:
     void loadMonsterGfx(const QString &filePath, int width, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result);
     void loadItemGfx(const QString &filePath, int width, ItemCacheEntry &result);
     void loadObject(int objectIndex);
-    void loadMonster(int monsterIndex);
+    void loadMonster(const DunMonsterType &monType);
     void loadItem(int itemIndex);
     void updateSubtiles(int tilePosX, int tilePosY, int tileRef);
     bool changeTileAt(int tilePosX, int tilePosY, int tileRef);
