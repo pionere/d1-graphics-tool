@@ -162,7 +162,7 @@ void LevelCelView::updateEntityOptions()
     this->ui->dungeonObjectComboBox->clear();
     this->ui->dungeonObjectComboBox->addItem("", 0);
     const std::vector<CustomObjectStruct> &customObjectTypes = this->dun->getCustomObjectTypes();
-    if (!customObjectTypes.isEmpty()) {
+    if (!customObjectTypes.empty()) {
         for (const CustomObjectStruct &obj : customObjectTypes) {
             this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
         }
@@ -191,7 +191,7 @@ void LevelCelView::updateEntityOptions()
     this->ui->dungeonMonsterComboBox->addItem("", QVariant::fromValue(monType));
     //   - custom monsters
     const std::vector<CustomMonsterStruct> &customMonsterTypes = this->dun->getCustomMonsterTypes();
-    if (!customMonsterTypes.isEmpty()) {
+    if (!customMonsterTypes.empty()) {
         for (const CustomMonsterStruct &mon : customMonsterTypes) {
             this->ui->dungeonMonsterComboBox->addItem(mon.name, QVariant::fromValue(mon.type));
         }

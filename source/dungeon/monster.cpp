@@ -424,16 +424,14 @@ static bool MonstPlace(int xp, int yp)
 		 | (dFlags[xp][yp] & (BFLAG_ALERT | BFLAG_POPULATED))) == 0;
 }
 
-void AddMonster(int x, int y, int dir, int mtidx)
+void AddMonster(int mtidx, int x, int y)
 {
-	int mnum;
+	int mnum = -1;
 
 	if (nummonsters < MAXMONSTERS) {
-		mnum = nummonsters;
-		nummonsters++;
-		dMonster[x][y] = mnum + 1;
-		InitMonster(mnum, dir, mtidx, x, y);
+		mnum = PlaceMonster(mtidx, x, y);
 	}
+	return mnum;
 }
 
 static int PlaceMonster(int mtidx, int x, int y)
