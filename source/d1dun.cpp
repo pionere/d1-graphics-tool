@@ -1811,9 +1811,9 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
     }
     if (i >= this->customObjectTypes.size() && !this->assetPath.isEmpty()) {
         // load normal monster
-        const BYTE *monType = &MonstConvTbl[monType.first];
-        if (!monType.second && (unsigned)monType.first < (unsigned)lengthof(MonstConvTbl) && *monType != 0) {
-            const MonsterData &md = monsterdata[*monType];
+        const BYTE *monBaseType = &MonstConvTbl[monType.first];
+        if (!monType.second && (unsigned)monType.first < (unsigned)lengthof(MonstConvTbl) && *monBaseType != 0) {
+            const MonsterData &md = monsterdata[*monBaseType];
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
             cl2FilePath.replace("%c", "N");
             cl2FilePath = this->assetPath + "/" + cl2FilePath;
@@ -2970,19 +2970,17 @@ bool D1Dun::addResource(const AddResourceParam &params)
                 customMonster.baseTrnPath = params.baseTrnPath;
                 customMonster.uniqueTrnPath = params.uniqueTrnPath;
                 customMonster.width = params.width;
-                customMonster.isUnique = params.uniqueMon;
                 return true;
             }
         }
         // add new entry
         CustomMonsterStruct customMonster;
-        customMonster.type = params.index;
+        customMonster.type = { params.index, params.uniqueMon };
         customMonster.name = params.name;
         customMonster.path = params.path;
         customMonster.baseTrnPath = params.baseTrnPath;
         customMonster.uniqueTrnPath = params.uniqueTrnPath;
         customMonster.width = params.width;
-        customMonster.isUnique = params.uniqueMon;
         this->customMonsterTypes.push_back(customMonster);
     } break;
     case DUN_ENTITY_TYPE::ITEM: {
