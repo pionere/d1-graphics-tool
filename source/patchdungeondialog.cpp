@@ -73,6 +73,15 @@ void PatchDungeonDialog::initialize(D1Dun *d)
     if (baseName == "warlord2") {
         fileIndex = DUN_WARLORD_AFT;
     }
+    if (baseName == "diab2b") {
+        fileIndex = DUN_DIAB_2_AFT;
+    }
+    if (baseName == "diab3b") {
+        fileIndex = DUN_DIAB_3_AFT;
+    }
+    if (baseName == "diab4b") {
+        fileIndex = DUN_DIAB_4_AFT;
+    }
     this->ui->dunFileComboBox->setCurrentIndex(fileIndex);
 }
 

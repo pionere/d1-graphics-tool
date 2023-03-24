@@ -120,6 +120,21 @@
          <string>Warlord - After (Warlord2.DUN)</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Diablo Quad 2 - After (Diab2b.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Diablo Quad 3 - After (Diab3b.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Diablo Quad 4 - After (Diab4b.DUN)</string>
+        </property>
+       </item>
       </widget>
      </item>
     </layout>
