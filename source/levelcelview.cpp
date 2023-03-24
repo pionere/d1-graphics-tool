@@ -174,7 +174,7 @@ void LevelCelView::updateEntityOptions()
             // filter custom entries
             unsigned n = 0;
             for (; n < customObjectTypes.size(); n++) {
-                if (customObjectTypes.type == i) {
+                if (customObjectTypes[n].type == i) {
                     break;
                 }
             }
@@ -205,7 +205,7 @@ void LevelCelView::updateEntityOptions()
             // filter custom entries
             unsigned n = 0;
             for (; n < customMonsterTypes.size(); n++) {
-                if (customMonsterTypes.type == monType) {
+                if (customMonsterTypes[n].type == monType) {
                     break;
                 }
             }
