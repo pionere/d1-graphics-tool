@@ -527,7 +527,6 @@ static void PlaceUniqueMonst(int uniqindex)
 	int xp, yp, x, y;
 	int uniqtype;
 	int count2;
-	MonsterStruct* mon;
 	int mnum, count;
 	static_assert(NUM_COLOR_TRNS <= UCHAR_MAX, "Color transform index stored in BYTE field.");
 	if (uniquetrans >= NUM_COLOR_TRNS) {
@@ -630,7 +629,6 @@ static void PlaceUniqueMonst(int uniqindex)
 
 static void InitUniqueMonster(int mnum, int uniqindex)
 {
-	int uniqtype;
 //	char filestr[DATA_ARCHIVE_MAX_PATH];
 	const UniqMonData* uniqm;
 	MonsterStruct* mon;
