@@ -161,17 +161,27 @@ void LevelCelView::updateEntityOptions()
     this->ui->dungeonObjectComboBox->hide();
     this->ui->dungeonObjectComboBox->clear();
     this->ui->dungeonObjectComboBox->addItem("", 0);
+    if (!customObjectTypes.isEmpty()) {
+        const std::vector<CustomObjectStruct> &customObjectTypes = this->dun->getCustomObjectTypes();
+        for (const CustomObjectStruct &obj : customObjectTypes) {
+            this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
+        }
+        this->ui->dungeonObjectComboBox->insertSeparator(INT_MAX);
+    }
     for (int i = 0; i < lengthof(DunObjConvTbl); i++) {
         const DunObjectStruct &obj = DunObjConvTbl[i];
         if (obj.name != nullptr) {
-            // TODO: filter custom entries?
-            this->ui->dungeonObjectComboBox->addItem(obj.name, i);
+            // filter custom entries
+            unsigned n = 0;
+            for (; n < customObjectTypes.size(); n++) {
+                if (customObjectTypes.type == i) {
+                    break;
+                }
+            }
+            if (n >= customObjectTypes.size()) {
+                this->ui->dungeonObjectComboBox->addItem(obj.name, i);
+            }
         }
-    }
-    this->ui->dungeonObjectComboBox->insertSeparator(0);
-    const std::vector<CustomObjectStruct> &customObjectTypes = this->dun->getCustomObjectTypes();
-    for (const CustomObjectStruct &obj : customObjectTypes) {
-        this->ui->dungeonObjectComboBox->addItem(obj.name, obj.type);
     }
     this->ui->dungeonObjectComboBox->show();
     // - monsters
@@ -179,32 +189,50 @@ void LevelCelView::updateEntityOptions()
     this->ui->dungeonMonsterComboBox->clear();
     DunMonsterType monType = { 0, false };
     this->ui->dungeonMonsterComboBox->addItem("", QVariant::fromValue(monType));
+    //   - custom monsters
+    if (!customMonsterTypes.isEmpty()) {
+        const std::vector<CustomMonsterStruct> &customMonsterTypes = this->dun->getCustomMonsterTypes();
+        for (const CustomMonsterStruct &mon : customMonsterTypes) {
+            this->ui->dungeonMonsterComboBox->addItem(mon.name, QVariant::fromValue(mon.type));
+        }
+        this->ui->dungeonMonsterComboBox->insertSeparator(INT_MAX);
+    }
     //   - normal monsters
     for (int i = 0; i < lengthof(DunMonstConvTbl); i++) {
         const DunMonsterStruct &mon = DunMonstConvTbl[i];
         if (mon.name != nullptr) {
-            // TODO: filter custom entries?
             DunMonsterType monType = { i, false };
-            this->ui->dungeonMonsterComboBox->addItem(mon.name, QVariant::fromValue(monType));
+            // filter custom entries
+            unsigned n = 0;
+            for (; n < customMonsterTypes.size(); n++) {
+                if (customMonsterTypes.type == monType) {
+                    break;
+                }
+            }
+            if (n >= customMonsterTypes.size()) {
+                this->ui->dungeonMonsterComboBox->addItem(mon.name, QVariant::fromValue(monType));
+            }
         }
     }
-    this->ui->dungeonMonsterComboBox->insertSeparator(0);
+    this->ui->dungeonMonsterComboBox->insertSeparator(INT_MAX);
     //   - unique monsters
     for (int i = 0;; i++) {
         const UniqMonData &mon = uniqMonData[i];
         if (mon.mtype != MT_INVALID) {
-            // TODO: filter custom entries?
             DunMonsterType monType = { i + 1, true };
-            this->ui->dungeonMonsterComboBox->addItem(mon.mName, QVariant::fromValue(monType));
+            // filter custom entries
+            unsigned n = 0;
+            for (; n < customMonsterTypes.size(); n++) {
+                if (customMonsterTypes.type == monType) {
+                    break;
+                }
+            }
+            if (n >= customMonsterTypes.size()) {
+                this->ui->dungeonMonsterComboBox->addItem(mon.mName, QVariant::fromValue(monType));
+            }
             continue;
         }
         break;
-    }
-    this->ui->dungeonMonsterComboBox->insertSeparator(0);
-    //   - custom monsters
-    const std::vector<CustomMonsterStruct> &customMonsterTypes = this->dun->getCustomMonsterTypes();
-    for (const CustomMonsterStruct &mon : customMonsterTypes) {
-        this->ui->dungeonMonsterComboBox->addItem(mon.name, QVariant::fromValue(mon.type));
     }
     this->ui->dungeonMonsterComboBox->show();
     // - items

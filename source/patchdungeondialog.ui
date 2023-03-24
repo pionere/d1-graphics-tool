@@ -120,6 +120,51 @@
          <string>Warlord - After (Warlord2.DUN)</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Diablo Quad 1 (Diab1.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Diablo Quad 2 - Before (Diab2a.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Diablo Quad 2 - After (Diab2b.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Diablo Quad 3 - Before (Diab3a.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Diablo Quad 3 - After (Diab3b.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Diablo Quad 4 - Before (Diab4a.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Diablo Quad 4 - After (Diab4b.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>The Butcher (Butcher.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Betrayer (Vile1.DUN)</string>
+        </property>
+       </item>
       </widget>
      </item>
     </layout>

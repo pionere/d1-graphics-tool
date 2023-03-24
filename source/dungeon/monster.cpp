@@ -521,6 +521,7 @@ static void PlaceGroup(int mtidx, int num, int leaderf, int leader)
 	}
 }
 
+void InitUniqueMonster(int mnum, int uniqindex);
 static void PlaceUniqueMonst(int uniqindex)
 {
 	int xp, yp, x, y;
@@ -626,6 +627,17 @@ static void PlaceUniqueMonst(int uniqindex)
 		}
 	}
 	mnum = PlaceMonster(uniqtype, xp, yp);
+	InitUniqueMonster(mnum, uniqindex);
+}
+
+static void InitUniqueMonster(int mnum, int uniqindex)
+{
+	int uniqtype;
+//	char filestr[DATA_ARCHIVE_MAX_PATH];
+	const UniqMonData* uniqm;
+	MonsterStruct* mon;
+	int mnum;
+
 	mon = &monsters[mnum];
 	mon->_mNameColor = COL_GOLD;
 	mon->_muniqtype = uniqindex + 1;
@@ -642,20 +654,22 @@ static void PlaceUniqueMonst(int uniqindex)
 	mon->_mMinDamage2 = uniqm->mMinDamage2;
 	mon->_mMaxDamage2 = uniqm->mMaxDamage2;*/
 
-	/*snprintf(filestr, sizeof(filestr), "Monsters\\Monsters\\%s.TRN", uniqm->mTrnName);
-	LoadFileWithMem(filestr, ColorTrns[uniquetrans]);
-	// patch TRN for 'Blighthorn Steelmace' - BHSM.TRN
-	if (uniqindex == UMT_STEELMACE) {
-		// assert(ColorTrns[uniquetrans][188] == 255);
-		ColorTrns[uniquetrans][188] = 0;
-	}
-	// patch TRN for 'Baron Sludge' - BSM.TRN
-	if (uniqindex == UMT_BARON) {
-		// assert(ColorTrns[uniquetrans][241] == 255);
-		ColorTrns[uniquetrans][241] = 0;
-	}*/
+	if (uniqm->mTrnName != NULL) {
+		/*snprintf(filestr, sizeof(filestr), "Monsters\\Monsters\\%s.TRN", uniqm->mTrnName);
+		LoadFileWithMem(filestr, ColorTrns[uniquetrans]);
+		// patch TRN for 'Blighthorn Steelmace' - BHSM.TRN
+		if (uniqindex == UMT_STEELMACE) {
+			// assert(ColorTrns[uniquetrans][188] == 255);
+			ColorTrns[uniquetrans][188] = 0;
+		}
+		// patch TRN for 'Baron Sludge' - BSM.TRN
+		if (uniqindex == UMT_BARON) {
+			// assert(ColorTrns[uniquetrans][241] == 255);
+			ColorTrns[uniquetrans][241] = 0;
+		}*/
 
-	mon->_muniqtrans = uniquetrans++;
+		mon->_muniqtrans = uniquetrans++;
+	}
 
 //	mon->_mHit += uniqm->mUnqHit;
 //	mon->_mHit2 += uniqm->mUnqHit2;
@@ -763,9 +777,9 @@ static void PlaceSetMapMonsters()
 			SetMapMonsters(setp, DIAB_QUAD_4X, DIAB_QUAD_4Y);
 			mem_free_dbg(setp);
 		}
-	} else if (currLvl._dLevelIdx == SL_SKELKING) {
-		AddMonsterType(MT_SKING, FALSE);
-		PlaceUniqueMonst(UMT_SKELKING);
+//	} else if (currLvl._dLevelIdx == SL_SKELKING) {
+//		AddMonsterType(MT_SKING, FALSE);
+//		PlaceUniqueMonst(UMT_SKELKING);
 	} else if (currLvl._dLevelIdx == SL_VILEBETRAYER) {
 		AddMonsterType(MT_BMAGE, FALSE);
 		AddMonsterType(MT_RSUCC, FALSE);
@@ -860,13 +874,14 @@ void InitMonsters()
 
 void SetMapMonsters(BYTE* pMap, int startx, int starty)
 {
-	uint16_t rw, rh, *lm;
+	uint16_t rw, rh, *lm, mtype;
 	int i, j;
 	int mtidx, mnum;
+	bool posOk;
 
 	if (pMap == NULL) {
 		return;
-    }
+	}
 	lm = (uint16_t*)pMap;
 	rw = SwapLE16(*lm);
 	lm++;
@@ -886,17 +901,23 @@ void SetMapMonsters(BYTE* pMap, int startx, int starty)
 	for (j = starty; j < rh; j++) {
 		for (i = startx; i < rw; i++) {
 			if (*lm != 0) {
-				assert(SwapLE16(*lm) < lengthof(MonstConvTbl) && MonstConvTbl[SwapLE16(*lm)] != 0);
-				mtidx = AddMonsterType(MonstConvTbl[SwapLE16(*lm)], FALSE);
+				mtype = SwapLE16(*lm);
 				// assert(nummonsters < MAXMONSTERS);
-				mnum = nummonsters;
-				nummonsters++;
-				InitMonster(mnum, random_(90, NUM_DIRS), mtidx, i, j);
-				if (PosOkActor(i, j)) {
-					dMonster[i][j] = mnum + 1;
+				posOk = PosOkActor(i, j);
+				if ((mtype & (1 << 15)) == 0) {
+					mtidx = AddMonsterType(MonstConvTbl[mtype], FALSE);
+					mnum = PlaceMonster(mtidx, i, j);
 				} else {
+					mtype = (mtype & INT16_MAX) - 1;
+					mtidx = AddMonsterType(uniqMonData[mtype].mtype, FALSE);
+					// assert(uniquetrans < NUM_COLOR_TRNS);
+					mnum = PlaceMonster(mtidx, i, j);
+					InitUniqueMonster(mnum, mtype);
+				}
+				if (!posOk) {
+					dMonster[i][j] = 0;
 					monsters[mnum]._mmode = MM_RESERVED;
-					// assert(monsters[mnum]._mlid == NO_LIGHT);
+					ChangeLightRadius(monsters[mnum]._mlid, 0);
 				}
 			}
 			lm++;

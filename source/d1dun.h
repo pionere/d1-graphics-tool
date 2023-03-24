@@ -38,6 +38,15 @@ typedef enum dun_file_index {
     DUN_VILE_AFT,            // setmap for the "Archbishop Lazarus" quest after reading the books (Vile1.DUN)
     DUN_WARLORD_PRE,         // map tile for the "Warlord" quest before reading the book (Warlord.DUN)
     DUN_WARLORD_AFT,         // map tile for the "Warlord" quest after reading the book (Warlord2.DUN)
+    DUN_DIAB_1,              // map tile for the "Diablo" quest (Diab1.DUN)
+    DUN_DIAB_2_PRE,          // map tile for the "Diablo" quest before pulling the levers (Diab2a.DUN)
+    DUN_DIAB_2_AFT,          // map tile for the "Diablo" quest after pulling the levers (Diab2b.DUN)
+    DUN_DIAB_3_PRE,          // map tile for the "Diablo" quest before pulling the levers (Diab3a.DUN)
+    DUN_DIAB_3_AFT,          // map tile for the "Diablo" quest after pulling the levers (Diab3b.DUN)
+    DUN_DIAB_4_PRE,          // map tile for the "Diablo" quest before pulling the levers (Diab4a.DUN)
+    DUN_DIAB_4_AFT,          // map tile for the "Diablo" quest after pulling the levers (Diab4b.DUN)
+    DUN_BUTCHER,             // map tile for the "The Butcher" quest (Butcher.DUN)
+    DUN_BETRAYER,            // map tile for the "Archbishop Lazarus" quest (Vile1.DUN)
 } dun_file_index;
 
 enum class D1DUN_TYPE {

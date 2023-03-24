@@ -2518,6 +2518,15 @@ void D1Dun::patch(int dunFileIndex)
 /* DUN_VILE_AFT*/            { 42, 46 }, // Vile1.DUN
 /* DUN_WARLORD_PRE*/         { 16, 14 }, // Warlord.DUN
 /* DUN_WARLORD_AFT*/         { 16, 14 }, // Warlord2.DUN
+/* DUN_DIAB_1*/              { 12, 12 }, // Diab1.DUN
+/* DUN_DIAB_2_PRE*/          { 22, 24 }, // Diab2a.DUN
+/* DUN_DIAB_2_AFT*/          { 22, 24 }, // Diab2b.DUN
+/* DUN_DIAB_3_PRE*/          { 22, 22 }, // Diab3a.DUN
+/* DUN_DIAB_3_AFT*/          { 22, 22 }, // Diab3b.DUN
+/* DUN_DIAB_4_PRE*/          { 18, 18 }, // Diab4a.DUN
+/* DUN_DIAB_4_AFT*/          { 18, 18 }, // Diab4b.DUN
+/* DUN_BUTCHER*/             { 12, 12 }, // Butcher.DUN
+/* DUN_BETRAYER*/            { 14, 14 }, // Vile1.DUN
         // clang-format on
     };
     if (this->width != dunSizes[dunFileIndex][0] || this->height != dunSizes[dunFileIndex][1]) {
@@ -2696,6 +2705,10 @@ void D1Dun::patch(int dunFileIndex)
         for (int i = 1; i < 23; i++) {
             change |= this->changeTileAt(20, i, 22);
         }
+        // - add the unique monsters
+        change |= this->changeMonsterAt(16, 30, UMT_LAZARUS + 1, true);
+        change |= this->changeMonsterAt(24, 29, UMT_RED_VEX + 1, true);
+        change |= this->changeMonsterAt(22, 33, UMT_BLACKJADE + 1, true);
         break;
     case DUN_WARLORD_PRE: // Warlord.DUN
         // ensure the changing tiles are reserved
@@ -2730,10 +2743,14 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(1, 4, 0, false);
         change |= this->changeMonsterAt(13, 5, 0, false);
         change |= this->changeMonsterAt(7, 12, 0, false);
-        break;
+        /* fall-through */
     case DUN_BANNER_AFT: // Banner1.DUN
+        // - add snotspil
+        change |= this->changeMonsterAt(8, 12, UMT_SNOTSPIL + 1, true);
         break;
     case DUN_SKELKING_PRE: // SklKng2.DUN
+        // - add the skeleton king
+        change |= this->changeMonsterAt(35, 47, UMT_SKELKING + 1, true);
         break;
     case DUN_SKELKING_AFT: // SklKng1.DUN
         // remove items
@@ -2780,6 +2797,8 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(18, 32, 27, false);
         change |= this->changeMonsterAt(33, 41, 23, false);
         change |= this->changeMonsterAt(39, 31, 11, false);
+        // - add the skeleton king
+        change |= this->changeMonsterAt(35, 47, UMT_SKELKING + 1, true);
         break;
     }
     if (!change) {
