@@ -423,7 +423,7 @@ static bool MonstPlace(int xp, int yp)
 	return (dMonster[xp][yp] | /*dPlayer[xp][yp] |*/ nSolidTable[dPiece[xp][yp]]
 		 | (dFlags[xp][yp] & (BFLAG_ALERT | BFLAG_POPULATED))) == 0;
 }
-
+int PlaceMonster(int mtidx, int x, int y);
 void AddMonster(int mtidx, int x, int y)
 {
 	if (nummonsters < MAXMONSTERS) {
