@@ -527,8 +527,6 @@ static void PlaceUniqueMonst(int uniqindex)
 	int xp, yp, x, y;
 	int uniqtype;
 	int count2;
-//	char filestr[DATA_ARCHIVE_MAX_PATH];
-	const UniqMonData* uniqm;
 	MonsterStruct* mon;
 	int mnum, count;
 	static_assert(NUM_COLOR_TRNS <= UCHAR_MAX, "Color transform index stored in BYTE field.");
@@ -636,7 +634,6 @@ static void InitUniqueMonster(int mnum, int uniqindex)
 //	char filestr[DATA_ARCHIVE_MAX_PATH];
 	const UniqMonData* uniqm;
 	MonsterStruct* mon;
-	int mnum;
 
 	mon = &monsters[mnum];
 	mon->_mNameColor = COL_GOLD;
@@ -917,7 +914,7 @@ void SetMapMonsters(BYTE* pMap, int startx, int starty)
 				if (!posOk) {
 					dMonster[i][j] = 0;
 					monsters[mnum]._mmode = MM_RESERVED;
-					ChangeLightRadius(monsters[mnum]._mlid, 0);
+					// ChangeLightRadius(monsters[mnum]._mlid, 0);
 				}
 			}
 			lm++;
