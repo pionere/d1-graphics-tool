@@ -51,8 +51,6 @@ signals:
     void framePixelClicked(const QPoint &pos, bool first);
 
 private:
-    QWidget *view;
-
     quint8 currentZoomNumerator = 1;
     quint8 currentZoomDenominator = 1;
     QPoint lastPos;

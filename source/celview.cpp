@@ -20,7 +20,6 @@
 
 CelScene::CelScene(QWidget *v)
     : QGraphicsScene(v)
-    , view(v)
 {
 }
 
