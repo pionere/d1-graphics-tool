@@ -2748,10 +2748,6 @@ void D1Dun::patch(int dunFileIndex)
         // - add snotspil
         change |= this->changeMonsterAt(8, 12, UMT_SNOTSPIL + 1, true);
         break;
-    case DUN_SKELKING_PRE: // SklKng2.DUN
-        // - add the skeleton king
-        change |= this->changeMonsterAt(35, 47, UMT_SKELKING + 1, true);
-        break;
     case DUN_SKELKING_AFT: // SklKng1.DUN
         // remove items
         // - room via crux
@@ -2797,8 +2793,10 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(18, 32, 27, false);
         change |= this->changeMonsterAt(33, 41, 23, false);
         change |= this->changeMonsterAt(39, 31, 11, false);
+        /* fall-through */
+    case DUN_SKELKING_PRE: // SklKng2.DUN
         // - add the skeleton king
-        change |= this->changeMonsterAt(35, 47, UMT_SKELKING + 1, true);
+        change |= this->changeMonsterAt(19, 31, UMT_SKELKING + 1, true);
         break;
     }
     if (!change) {

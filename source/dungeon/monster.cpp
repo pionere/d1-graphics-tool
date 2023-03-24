@@ -424,15 +424,10 @@ static bool MonstPlace(int xp, int yp)
 		 | (dFlags[xp][yp] & (BFLAG_ALERT | BFLAG_POPULATED))) == 0;
 }
 
-void AddMonster(int x, int y, int dir, int mtidx)
+void AddMonster(int mtidx, int x, int y)
 {
-	int mnum;
-
 	if (nummonsters < MAXMONSTERS) {
-		mnum = nummonsters;
-		nummonsters++;
-		dMonster[x][y] = mnum + 1;
-		InitMonster(mnum, dir, mtidx, x, y);
+		PlaceMonster(mtidx, x, y);
 	}
 }
 
@@ -751,11 +746,11 @@ static void PlaceSetMapMonsters()
 			SetMapMonsters(setp, setpc_x, setpc_y);
 			mem_free_dbg(setp);
 
-			AddMonsterType(MT_BMAGE, FALSE);
+			/*AddMonsterType(MT_BMAGE, FALSE);
 			AddMonsterType(MT_RSUCC, FALSE);
 			PlaceUniqueMonst(UMT_LAZARUS);
 			PlaceUniqueMonst(UMT_RED_VEX);
-			PlaceUniqueMonst(UMT_BLACKJADE);
+			PlaceUniqueMonst(UMT_BLACKJADE);*/
 		}
 		if (currLvl._dLevelIdx == DLV_HELL4) {
 			// assert(quests[Q_DIABLO]._qactive != QUEST_NOTAVAIL);
@@ -775,7 +770,7 @@ static void PlaceSetMapMonsters()
 //	} else if (currLvl._dLevelIdx == SL_SKELKING) {
 //		AddMonsterType(MT_SKING, FALSE);
 //		PlaceUniqueMonst(UMT_SKELKING);
-	} else if (currLvl._dLevelIdx == SL_VILEBETRAYER) {
+	/*} else if (currLvl._dLevelIdx == SL_VILEBETRAYER) {
 		AddMonsterType(MT_BMAGE, FALSE);
 		AddMonsterType(MT_RSUCC, FALSE);
 		PlaceUniqueMonst(UMT_LAZARUS);
@@ -785,7 +780,7 @@ static void PlaceSetMapMonsters()
 //			monsters[nummonsters - i]._mmode = MM_RESERVED;
 //			dMonster[monsters[nummonsters - i]._mx][monsters[nummonsters - i]._my] = 0;
 //			ChangeLightRadius(monsters[nummonsters - i]._mlid, 0);
-//		}
+//		}*/
 	}
 }
 
