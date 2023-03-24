@@ -194,7 +194,7 @@ void LevelCelView::updateEntityOptions()
         const UniqMonData &mon = uniqMonData[i];
         if (mon.mtype != MT_INVALID) {
             // TODO: filter custom entries?
-            DunMonsterType monType = qMakePair<int, bool>(i, true);
+            DunMonsterType monType = qMakePair<int, bool>(i + 1, true);
             this->ui->dungeonMonsterComboBox->addItem(mon.mName, QVariant::fromValue(monType));
             continue;
         }
