@@ -1656,7 +1656,7 @@ QString D1Dun::getMonsterName(const DunMonsterType &monType) const
         return uniqMonData[monType.first].mName;
     }
     // out of options -> generic name
-    QString result = monType.second ? tr("Monster%1") : tr("UniqMonster%1");
+    QString result = monType.second ? tr("UniqMonster%1") : tr("Monster%1");
     return result.arg(monType.first);
 }
 
@@ -1825,8 +1825,9 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
             this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, baseTrnFilePath, uniqueTrnFilePath, result);
         }
         // load unique monster
-        if (monType.second && (unsigned)monType.first < (unsigned)lengthof(uniqMonData) && uniqMonData[monType.first].mtype != MT_INVALID) {
-            const MonsterData &md = monsterdata[uniqMonData[monType.first].mtype];
+		int monUniqueType = monType.first - 1;
+        if (monType.second && (unsigned)monUniqueType < (unsigned)lengthof(uniqMonData) && uniqMonData[monUniqueType].mtype != MT_INVALID) {
+            const MonsterData &md = monsterdata[uniqMonData[monUniqueType].mtype];
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
             cl2FilePath.replace("%c", "N");
             cl2FilePath = this->assetPath + "/" + cl2FilePath;
@@ -1835,8 +1836,8 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
                 baseTrnFilePath = this->assetPath + "/" + md.mTransFile;
             }
             QString uniqueTrnFilePath;
-            if (uniqMonData[monType.first].mTrnName != nullptr) {
-                uniqueTrnFilePath = this->assetPath + "/Monsters/Monsters/" + uniqMonData[monType.first].mTrnName + ".TRN";
+            if (uniqMonData[monUniqueType].mTrnName != nullptr) {
+                uniqueTrnFilePath = this->assetPath + "/Monsters/Monsters/" + uniqMonData[monUniqueType].mTrnName + ".TRN";
             }
             this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, baseTrnFilePath, uniqueTrnFilePath, result);
         }
