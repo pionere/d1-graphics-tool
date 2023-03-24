@@ -1648,12 +1648,14 @@ QString D1Dun::getMonsterName(const DunMonsterType &monType) const
     }
     // check if it is built-in monster
     // - normal monster
-    if (!monType.second && (unsigned)monType.first < (unsigned)lengthof(DunMonstConvTbl) && DunMonstConvTbl[monType.first].name != nullptr) {
-        return DunMonstConvTbl[monType.first].name;
+    unsigned monBaseType = monType.first;
+    if (!monType.second && monBaseType < (unsigned)lengthof(DunMonstConvTbl) && DunMonstConvTbl[monBaseType].name != nullptr) {
+        return DunMonstConvTbl[monBaseType].name;
     }
     // - unique monster
-    if (monType.second && (unsigned)monType.first < (unsigned)lengthof(uniqMonData) && uniqMonData[monType.first].mName != nullptr) {
-        return uniqMonData[monType.first].mName;
+    unsigned monUniqType = monType.first - 1;
+    if (monType.second && monUniqType < (unsigned)lengthof(uniqMonData) && uniqMonData[monUniqType].mName != nullptr) {
+        return uniqMonData[monUniqType].mName;
     }
     // out of options -> generic name
     QString result = monType.second ? tr("UniqMonster%1") : tr("Monster%1");
@@ -1811,9 +1813,9 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
     }
     if (i >= this->customObjectTypes.size() && !this->assetPath.isEmpty()) {
         // load normal monster
-        const BYTE *monBaseType = &MonstConvTbl[monType.first];
-        if (!monType.second && (unsigned)monType.first < (unsigned)lengthof(MonstConvTbl) && *monBaseType != 0) {
-            const MonsterData &md = monsterdata[*monBaseType];
+        unsigned monBaseType = monType.first;
+        if (!monType.second && monBaseType < (unsigned)lengthof(MonstConvTbl) && MonstConvTbl[monBaseType] != 0) {
+            const MonsterData &md = monsterdata[MonstConvTbl[monBaseType]];
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
             cl2FilePath.replace("%c", "N");
             cl2FilePath = this->assetPath + "/" + cl2FilePath;
@@ -1825,8 +1827,8 @@ void D1Dun::loadMonster(const DunMonsterType &monType)
             this->loadMonsterGfx(cl2FilePath, monfiledata[md.moFileNum].moWidth, baseTrnFilePath, uniqueTrnFilePath, result);
         }
         // load unique monster
-		int monUniqueType = monType.first - 1;
-        if (monType.second && (unsigned)monUniqueType < (unsigned)lengthof(uniqMonData) && uniqMonData[monUniqueType].mtype != MT_INVALID) {
+        unsigned monUniqueType = monType.first - 1;
+        if (monType.second && monUniqueType < (unsigned)lengthof(uniqMonData) && uniqMonData[monUniqueType].mtype != MT_INVALID) {
             const MonsterData &md = monsterdata[uniqMonData[monUniqueType].mtype];
             QString cl2FilePath = monfiledata[md.moFileNum].moGfxFile;
             cl2FilePath.replace("%c", "N");
