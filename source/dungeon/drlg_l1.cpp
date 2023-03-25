@@ -2681,8 +2681,6 @@ static void DRLG_L1()
 	} else if (pSetPieces[0]._sptype == SPT_BUTCHER) {
 		int x, y;
 
-		assert(setpc_w == 6);
-		assert(setpc_h == 6);
 		x = 2 * pSetPieces[0]._spx + DBORDERX;
 		y = 2 * pSetPieces[0]._spy + DBORDERY;
 		// fix transVal on the bottom left corner of the room

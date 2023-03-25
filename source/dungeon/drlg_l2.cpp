@@ -3200,7 +3200,7 @@ static void DRLG_L2()
 
 		L2TileFix();
 		memset(drlgFlags, 0, sizeof(drlgFlags));
-		if (pSetPiece != NULL) { // pSetPieces[0]._sptype != SPT_NONE
+		if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
 			DRLG_L2SetRoom(pSetPieces[0]._spx, pSetPieces[0]._spy);
 		}
 

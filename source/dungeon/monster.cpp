@@ -525,7 +525,6 @@ void InitUniqueMonster(int mnum, int uniqindex);
 static void PlaceUniqueMonst(int uniqindex, int mtidx)
 {
 	int xp, yp, x, y;
-	int uniqtype;
 	int count2;
 	int mnum, count;
 	static_assert(NUM_COLOR_TRNS <= UCHAR_MAX, "Color transform index stored in BYTE field.");
