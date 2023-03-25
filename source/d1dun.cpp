@@ -339,7 +339,7 @@ const DunMonsterStruct DunMonstConvTbl[128] = {
                { nullptr }, //MT_XMAGE,
 /*MT_BMAGE*/   { "Advocate" }, // Q_BETRAYER, Q_DIABLO
                { nullptr },
-/*MT_DIABLO*/  { "The Dark Lord" }, // Q_DIABLO
+               { nullptr }, // { "The Dark Lord" }, // Diab4*.dun
                { nullptr },
                { nullptr }, //MT_GOLEM,
                { nullptr },
@@ -348,7 +348,7 @@ const DunMonsterStruct DunMonstConvTbl[128] = {
                { nullptr },
                { nullptr },
                { nullptr },
-               { nullptr }, // { 124, 128, "FalSpear\\Phall", "FalSpear\\Blue",    "Dark One" }, // Snotspill from banner2.dun
+               { nullptr }, // { "Snotspill" }, // Banner2.dun
                { nullptr },
                { nullptr },
                { nullptr }, ///MT_BIGFALL,
