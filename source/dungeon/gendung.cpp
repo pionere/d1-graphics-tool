@@ -109,6 +109,9 @@ void InitLvlDungeon()
 	const LevelData* lds;
 	lds = &AllLevels[currLvl._dLevelIdx];
 
+	static_assert((int)WRPT_NONE == 0, "InitLvlDungeon fills pWarps with 0 instead of WRPT_NONE values.");
+	memset(pWarps, 0, sizeof(pWarps));
+
 	assert(pMegaTiles == NULL);
 	pMegaTiles = (uint16_t*)LoadFileInMem(lds->dMegaTiles);
 
@@ -418,7 +421,7 @@ void DRLG_PlaceMegaTiles(int mt)
 
 	if (pMegaTiles == NULL) {
 		return;
-    }
+	}
 	Tiles = &pMegaTiles[mt * 4];
 	v1 = SwapLE16(Tiles[0]) + 1;
 	v2 = SwapLE16(Tiles[1]) + 1;
@@ -464,7 +467,7 @@ void DRLG_DrawMap(const char* name)
 	pMap = LoadFileInMem(name);
 	if (pMap == NULL) {
 		return;
-    }
+	}
 	rw = SwapLE16(*(uint16_t*)&pMap[0]);
 	rh = SwapLE16(*(uint16_t*)&pMap[2]);
 
@@ -646,7 +649,7 @@ void DRLG_SetMapTrans(BYTE* pMap)
 
 	if (pMap == NULL) {
 		return;
-    }
+	}
 	lm = (uint16_t*)pMap;
 	rw = SwapLE16(*lm);
 	lm++;
