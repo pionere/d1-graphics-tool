@@ -627,7 +627,7 @@ typedef struct LeverRect {
 //static void LoadMapSetObjects(const char* map, int startx, int starty, const LeverRect* lvrRect)
 static void LoadMapSetObjects(const BYTE* map, int startx, int starty, const LeverRect* lvrRect)
 {
-	BYTE* pMap = map; // LoadFileInMem(map);
+	const BYTE* pMap = map; // LoadFileInMem(map);
 	int i, j, oi;
 	uint16_t rw, rh, *lm;
 

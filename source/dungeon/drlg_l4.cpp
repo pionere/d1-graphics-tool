@@ -1203,8 +1203,8 @@ static void L4FirstRoom()
 
 	if (currLvl._dLevelIdx != DLV_HELL4) {
 		if (pSetPieces[0]._sptype != SPT_NONE) {
-			w = setpc_w + 4; // TODO: add border to the setmaps
-			h = setpc_h + 4;
+			w = pSetPieces[0]._spData[0] + 4; // TODO: add border to the setmaps
+			h = pSetPieces[0]._spData[2] + 4;
 			if (pSetPieces[0]._sptype == SPT_WARLORD)
 				w--;
 		} else {
@@ -1259,7 +1259,7 @@ static void L4FirstRoom()
 //static void DRLG_L4SetRoom(int rx1, int ry1)
 static void DRLG_L4SetRoom(int n)
 {
-	int rx2, ry2, i, j;
+	int rx1, ry1, rx2, ry2, i, j;
 	BYTE* sp;
 
 	SetPieceStruct* pSetPiece = &pSetPieces[n];

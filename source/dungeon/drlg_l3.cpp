@@ -2153,7 +2153,7 @@ static void DRLG_L3()
 					assert(yb > 10);
 					pSetPieces[0]._spx = RandRangeLow(10, xr);
 					pSetPieces[0]._spy = RandRangeLow(10, yb);
-					DRLG_L3FloorArea(pSetPieces[0]._spx, pSetPieces[0]._spy, pSetPieces[0]._spx + setpc_w, pSetPieces[0]._spy + setpc_h);
+					DRLG_L3FloorArea(pSetPieces[0]._spx, pSetPieces[0]._spy, pSetPieces[0]._spx + pSetPieces[0]._spData[0], pSetPieces[0]._spy + pSetPieces[0]._spData[2]);
 				}
 				do {
 					doneflag = !DRLG_L3FillDiags();
