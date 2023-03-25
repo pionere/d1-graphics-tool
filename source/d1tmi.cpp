@@ -81,6 +81,8 @@ bool D1Tmi::save(const SaveAsParam &params)
                 return false;
             }
         }
+    } else if (!this->isModified()) {
+        return false;
     }
 
     if (filePath.isEmpty()) {
