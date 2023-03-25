@@ -217,7 +217,7 @@ void InitView(int entry)
 	int type;
 
 	if (entry == ENTRY_WARPLVL) {
-		GetPortalLvlPos();
+		// GetPortalLvlPos();
 		return;
 	}
 
