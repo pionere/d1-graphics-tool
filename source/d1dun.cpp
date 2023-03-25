@@ -2518,8 +2518,8 @@ void D1Dun::patch(int dunFileIndex)
 /* DUN_BLOOD_AFT*/           { 20, 32 }, // Blood1.DUN
 /* DUN_VILE_PRE*/            { 42, 46 }, // Vile2.DUN
 /* DUN_VILE_AFT*/            { 42, 46 }, // Vile1.DUN
-/* DUN_WARLORD_PRE*/         { 16, 14 }, // Warlord.DUN
-/* DUN_WARLORD_AFT*/         { 16, 14 }, // Warlord2.DUN
+/* DUN_WARLORD_PRE*/         { 16, 14 }, // Warlord2.DUN
+/* DUN_WARLORD_AFT*/         { 16, 14 }, // Warlord.DUN
 /* DUN_DIAB_2_AFT*/          { 22, 24 }, // Diab2b.DUN
 /* DUN_DIAB_3_AFT*/          { 22, 22 }, // Diab3b.DUN
 /* DUN_DIAB_4_PRE*/          { 18, 18 }, // Diab4a.DUN
@@ -2708,7 +2708,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(24, 29, UMT_RED_VEX + 1, true);
         change |= this->changeMonsterAt(22, 33, UMT_BLACKJADE + 1, true);
         break;
-    case DUN_WARLORD_PRE: // Warlord.DUN
+    case DUN_WARLORD_AFT: // Warlord.DUN
         // ensure the changing tiles are reserved
         change |= this->changeTileAt(7, 2, 6);
         change |= this->changeTileAt(7, 3, 6);
@@ -2716,7 +2716,7 @@ void D1Dun::patch(int dunFileIndex)
         // - add the Warlord
         change |= this->changeMonsterAt(6, 7, UMT_WARLORD + 1, true);
         break;
-    case DUN_WARLORD_AFT: // Warlord2.DUN
+    case DUN_WARLORD_PRE: // Warlord2.DUN
         // replace monsters from Warlord.DUN
         change |= this->changeMonsterAt(2, 2, 100, false);
         change |= this->changeMonsterAt(2, 10, 100, false);
@@ -2731,6 +2731,13 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(11, 10, 100, false);
         // - add the Warlord
         change |= this->changeMonsterAt(6, 7, UMT_WARLORD + 1, true);
+        // add objects from Warlord.DUN
+        change |= this->changeObjectAt(2, 3, 108);
+        change |= this->changeObjectAt(2, 9, 108);
+        change |= this->changeObjectAt(5, 2, 109);
+        change |= this->changeObjectAt(8, 2, 109);
+        change |= this->changeObjectAt(5, 10, 109);
+        change |= this->changeObjectAt(8, 10, 109);
         break;
     case DUN_BANNER_PRE: // Banner2.DUN
         // replace entry tile

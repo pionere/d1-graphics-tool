@@ -67,10 +67,10 @@ void PatchDungeonDialog::initialize(D1Dun *d)
     if (baseName == "vile1") {
         fileIndex = DUN_VILE_AFT;
     }
-    if (baseName == "warlord") {
+    if (baseName == "warlord2") {
         fileIndex = DUN_WARLORD_PRE;
     }
-    if (baseName == "warlord2") {
+    if (baseName == "warlord") {
         fileIndex = DUN_WARLORD_AFT;
     }
     if (baseName == "diab2b") {
