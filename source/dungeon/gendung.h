@@ -11,12 +11,7 @@ DEVILUTION_BEGIN_NAMESPACE
 extern BYTE dungeon[DMAXX][DMAXY];
 extern BYTE pdungeon[DMAXX][DMAXY];
 extern BYTE drlgFlags[DMAXX][DMAXY];
-extern int setpc_x;
-extern int setpc_y;
-extern int setpc_w;
-extern int setpc_h;
-extern int setpc_type;
-extern BYTE* pSetPiece;
+extern SetPieceStruct pSetPieces[4];
 extern WarpStruct pWarps[NUM_DWARP];
 extern uint16_t* pMegaTiles;
 extern BYTE* pSolidTbl;
@@ -41,12 +36,13 @@ extern int themeCount;
 extern THEME_LOC themeLoc[MAXTHEMES];
 
 void InitLvlDungeon();
+void FreeSetPieces();
 void FreeLvlDungeon();
 void DRLG_Init_Globals();
 void DRLG_PlaceRndTile(BYTE search, BYTE replace, BYTE rndper);
 POS32 DRLG_PlaceMiniSet(const BYTE* miniset);
 void DRLG_PlaceMegaTiles(int idx);
-void DRLG_DrawMap(const char* name);
+void DRLG_DrawMap();
 void DRLG_InitTrans();
 void DRLG_MRectTrans(int x1, int y1, int x2, int y2, int tv);
 void DRLG_RectTrans(int x1, int y1, int x2, int y2);

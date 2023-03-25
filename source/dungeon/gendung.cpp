@@ -13,18 +13,8 @@ BYTE dungeon[DMAXX][DMAXY];
 BYTE pdungeon[DMAXX][DMAXY];
 /** Flags of mega tiles during dungeon generation. */
 BYTE drlgFlags[DMAXX][DMAXY];
-/** Specifies the set level/piece X-coordinate of the (mega-)map. */
-int setpc_x;
-/** Specifies the set level/piece Y-coordinate of the (mega-)map. */
-int setpc_y;
-/** Specifies the width of the set level/piece of the (mega-)map. */
-int setpc_w;
-/** Specifies the height of the set level/piece of the (mega-)map. */
-int setpc_h;
-/** Specifies the type of the set level/piece of the (mega-)map (_setpiece_type). */
-int setpc_type;
-/** Contains the contents of the set piece (DUN file). */
-BYTE* pSetPiece = NULL;
+/** Specifies the set level/pieces of the map. */
+SetPieceStruct pSetPieces[4];
 /** List of the warp-points on the current level */
 WarpStruct pWarps[NUM_DWARP];
 /** Specifies the mega tiles (groups of four tiles). */
@@ -111,6 +101,8 @@ void InitLvlDungeon()
 
 	static_assert((int)WRPT_NONE == 0, "InitLvlDungeon fills pWarps with 0 instead of WRPT_NONE values.");
 	memset(pWarps, 0, sizeof(pWarps));
+	static_assert((int)SPT_NONE == 0, "InitLvlDungeon fills pSetPieces with 0 instead of SPT_NONE values.");
+	memset(pSetPieces, 0, sizeof(pSetPieces));
 
 	assert(pMegaTiles == NULL);
 	pMegaTiles = (uint16_t*)LoadFileInMem(lds->dMegaTiles);
@@ -326,6 +318,13 @@ void InitLvlDungeon()
 	}
 }
 
+void FreeSetPieces()
+{
+	for (int i = 0; i < lengthof(pSetPieces); i++) {
+		MemFreeDbg(pSetPieces[i]._spData);
+	}
+}
+
 void FreeLvlDungeon()
 {
 	MemFreeDbg(pMegaTiles);
@@ -355,13 +354,13 @@ POS32 DRLG_PlaceMiniSet(const BYTE* miniset)
 	sw = miniset[0];
 	sh = miniset[1];
 	// assert(sw < DMAXX && sh < DMAXY);
-	tries = 0;
+	tries = (DMAXX * DMAXY) & ~0xFF;
 	while (TRUE) {
 		if ((tries & 0xFF) == 0) {
 			sx = random_low(0, DMAXX - sw);
 			sy = random_low(0, DMAXY - sh);
 		}
-		if (++tries == DMAXX * DMAXY)
+		if (--tries == 0)
 			return { -1, 0 };
 		ii = 2;
 		done = true;
@@ -458,13 +457,14 @@ void DRLG_PlaceMegaTiles(int mt)
 	}
 }
 
-void DRLG_DrawMap(const char* name)
+void DRLG_DrawMap()
 {
 	int x, y, rw, rh, i, j;
 	BYTE* pMap;
 	BYTE* sp;
 
-	pMap = LoadFileInMem(name);
+	// pMap = LoadFileInMem(name);
+	pMap = pSetPieces[0]._spData;
 	if (pMap == NULL) {
 		return;
 	}
@@ -472,10 +472,8 @@ void DRLG_DrawMap(const char* name)
 	rh = SwapLE16(*(uint16_t*)&pMap[2]);
 
 	sp = &pMap[4];
-	assert(setpc_w == rw);
-	assert(setpc_h == rh);
-	x = setpc_x;
-	y = setpc_y;
+	x = pSetPieces[0]._spx;
+	y = pSetPieces[0]._spy;
 	rw += x;
 	rh += y;
 	for (j = y; j < rh; j++) {
@@ -487,7 +485,7 @@ void DRLG_DrawMap(const char* name)
 			sp += 2;
 		}
 	}
-	mem_free_dbg(pMap);
+	// mem_free_dbg(pMap);
 }
 
 void DRLG_InitTrans()
@@ -675,11 +673,11 @@ void DRLG_SetMapTrans(BYTE* pMap)
 
 void DRLG_InitSetPC()
 {
-	setpc_x = 0;
+	/*setpc_x = 0;
 	setpc_y = 0;
 	setpc_w = 0;
 	setpc_h = 0;
-	setpc_type = SPT_NONE;
+	setpc_type = SPT_NONE;*/
 }
 
 static void Make_SetPC(int x, int y, int w, int h)
@@ -700,7 +698,7 @@ static void Make_SetPC(int x, int y, int w, int h)
 
 void DRLG_SetPC()
 {
-	Make_SetPC(setpc_x, setpc_y, setpc_w, setpc_h);
+	Make_SetPC(pSetPieces[0]._spx, pSetPieces[0]._spy, pSetPieces[0]._spData[0], pSetPieces[0]._spData[2]);
 }
 
 /**

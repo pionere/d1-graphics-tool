@@ -665,80 +665,124 @@ static void PlaceSetMapMonsters()
 	BYTE* setp;
 	uint16_t* lm;
 
-	if (!currLvl._dSetLvl) {
-		if (setpc_type == SPT_BUTCHER) {
-			setp = LoadFileInMem("Levels\\L1Data\\Butcher.DUN");
-			SetMapMonsters(setp, setpc_x, setpc_y);
-			mem_free_dbg(setp);
+	// if (!currLvl._dSetLvl) {
+		if (pSetPieces[0]._sptype == SPT_BUTCHER) {
+			// setp = LoadFileInMem("Levels\\L1Data\\Butcher.DUN");
+			setp = pSetPieces[0]._spData;
+			SetMapMonsters(setp, pSetPieces[0]._spx, pSetPieces[0]._spy);
+			// mem_free_dbg(setp);
 		}
-		if (setpc_type == SPT_BANNER) { // QuestStatus(Q_BANNER)
-			setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN"); // pre -3 8 -> 16
-			// patch set-piece to add monsters - Banner1.DUN
+		if (pSetPieces[0]._sptype == SPT_BANNER) { // QuestStatus(Q_BANNER)
+			// setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN"); // post -3 8 -> 16 (10x)
+			setp = pSetPieces[0]._spData;
+			if (setp != NULL) {
 			lm = (uint16_t*)setp;
+			// patch set-piece to add monsters - Banner2.DUN
+			// - replace monsters from Banner1.DUN
+			for (int y = 7; y <= 9; y++) {
+				for (int x = 7; x <= 13; x++) {
+					lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + x + y * 8 * 2] = 16;
+				}
+			}
+			// - remove monsters
+			lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + 1 + 4 * 8 * 2] = 0;
+			lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + 13 + 5 * 8 * 2] = 0;
+			lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + 7 + 12 * 8 * 2] = 0;
+			// - add unique
 			lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + 8 + 12 * 8 * 2] = SwapLE16((UMT_SNOTSPIL + 1) | (1 << 15));
-			SetMapMonsters(setp, setpc_x, setpc_y);
-			mem_free_dbg(setp);
+			}
+			SetMapMonsters(setp, pSetPieces[0]._spx, pSetPieces[0]._spy);
+			// mem_free_dbg(setp);
 		}
-		if (setpc_type == SPT_BLOOD) { // QuestStatus(Q_BLOOD)
-			setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN"); // post +3 62 -> 120
-			SetMapMonsters(setp, setpc_x, setpc_y);
-			mem_free_dbg(setp);
+		if (pSetPieces[0]._sptype == SPT_BLOOD) { // QuestStatus(Q_BLOOD)
+			// setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN"); // pre +3 62 -> 120
+			setp = pSetPieces[0]._spData;
+			SetMapMonsters(setp, pSetPieces[0]._spx, pSetPieces[0]._spy);
+			// mem_free_dbg(setp);
 		}
-		if (setpc_type == SPT_BLIND) { // QuestStatus(Q_BLIND)
-			setp = LoadFileInMem("Levels\\L2Data\\Blind2.DUN"); // post +11
-			SetMapMonsters(setp, setpc_x, setpc_y);
-			mem_free_dbg(setp);
+		if (pSetPieces[0]._sptype == SPT_BLIND) { // QuestStatus(Q_BLIND)
+			// setp = LoadFileInMem("Levels\\L2Data\\Blind2.DUN"); // post +11
+			setp = pSetPieces[0]._spData;
+			SetMapMonsters(setp, pSetPieces[0]._spx, pSetPieces[0]._spy);
+			// mem_free_dbg(setp);
 		}
-		if (setpc_type == SPT_ANVIL) { // QuestStatus(Q_ANVIL)
-			setp = LoadFileInMem("Levels\\L3Data\\Anvil.DUN");
-			SetMapMonsters(setp, setpc_x, setpc_y);
-			mem_free_dbg(setp);
+		if (pSetPieces[0]._sptype == SPT_ANVIL) { // QuestStatus(Q_ANVIL)
+			// setp = LoadFileInMem("Levels\\L3Data\\Anvil.DUN");
+			setp = pSetPieces[0]._spData;
+			SetMapMonsters(setp, pSetPieces[0]._spx, pSetPieces[0]._spy);
+			// mem_free_dbg(setp);
 		}
-		if (setpc_type == SPT_WARLORD) { // QuestStatus(Q_WARLORD)
-			setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN"); // pre +4 100 -> 101
-			// patch set-piece to add monsters - Warlord.DUN
+		if (pSetPieces[0]._sptype == SPT_WARLORD) { // QuestStatus(Q_WARLORD)
+			// setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN"); // pre +4 100 -> 101
+			setp = pSetPieces[0]._spData;
+			if (setp != NULL) {
 			lm = (uint16_t*)setp;
+			// patch set-piece to add monsters - Warlord2.DUN
+			// replace monsters
+			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 2 + 2 * 8 * 2] = 100;
+			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 2 + 10 * 8 * 2] = 100;
+			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 13 + 4 * 8 * 2] = 100;
+			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 13 + 9 * 8 * 2] = 100;
+			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 10 + 2 * 8 * 2] = 100;
+			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 10 + 10 * 8 * 2] = 100;
+			// add monsters
+			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 6 + 2 * 8 * 2] = 100;
+			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 6 + 10 * 8 * 2] = 100;
+			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 11 + 2 * 8 * 2] = 100;
+			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 11 + 10 * 8 * 2] = 100;
+			// - add unique
 			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 6 + 7 * 8 * 2] = SwapLE16((UMT_WARLORD + 1) | (1 << 15));
-			SetMapMonsters(setp, setpc_x, setpc_y);
-			mem_free_dbg(setp);
+			}
+			SetMapMonsters(setp, pSetPieces[0]._spx, pSetPieces[0]._spy);
+			// mem_free_dbg(setp);
 		}
-		if (setpc_type == SPT_BETRAYER) { //  QuestStatus(Q_BETRAYER) && IsMultiGame
+		if (pSetPieces[0]._sptype == SPT_BETRAYER) { //  QuestStatus(Q_BETRAYER) && IsMultiGame
 			// assert(quests[Q_BETRAYER]._qactive != QUEST_NOTAVAIL);
-			setp = LoadFileInMem("Levels\\L4Data\\Vile1.DUN");
+			// setp = LoadFileInMem("Levels\\L4Data\\Vile1.DUN");
+			setp = pSetPieces[0]._spData;
+			if (setp != NULL) {
 			// patch set-piece to add monsters - Vile1.DUN
 			lm = (uint16_t*)setp;
 			lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 3 + 6 * 7 * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
 			lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 3 * 7 * 2] = SwapLE16((UMT_RED_VEX + 1) | (1 << 15));
 			lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 9 * 7 * 2] = SwapLE16((UMT_BLACKJADE + 1) | (1 << 15));
-			SetMapMonsters(setp, setpc_x, setpc_y);
-			mem_free_dbg(setp);
+			}
+			SetMapMonsters(setp, pSetPieces[0]._spx, pSetPieces[0]._spy);
+			// mem_free_dbg(setp);
 		}
 #ifdef HELLFIRE
-		if (setpc_type == SPT_NAKRUL) {
-			setp = LoadFileInMem("NLevels\\L5Data\\Nakrul1.DUN"); // pre
-			SetMapMonsters(setp, setpc_x, setpc_y);
-			mem_free_dbg(setp);
+		if (pSetPieces[0]._sptype == SPT_NAKRUL) {
+			// setp = LoadFileInMem("NLevels\\L5Data\\Nakrul1.DUN"); // pre
+			setp = pSetPieces[0]._spData;
+			SetMapMonsters(setp, pSetPieces[0]._spx, pSetPieces[0]._spy);
+			// mem_free_dbg(setp);
 		}
 #endif
 		if (currLvl._dLevelIdx == DLV_HELL4) {
 			// assert(quests[Q_DIABLO]._qactive != QUEST_NOTAVAIL);
-			setp = LoadFileInMem("Levels\\L4Data\\diab1.DUN");
-			SetMapMonsters(setp, DIAB_QUAD_1X, DIAB_QUAD_1Y);
-			mem_free_dbg(setp);
-			setp = LoadFileInMem("Levels\\L4Data\\diab2a.DUN"); // pre 101 -> 109
-			SetMapMonsters(setp, DIAB_QUAD_2X, DIAB_QUAD_2Y);
-			mem_free_dbg(setp);
-			setp = LoadFileInMem("Levels\\L4Data\\diab3a.DUN"); // pre 101 -> 109
-			SetMapMonsters(setp, DIAB_QUAD_3X, DIAB_QUAD_3Y);
-			mem_free_dbg(setp);
-			setp = LoadFileInMem("Levels\\L4Data\\diab4a.DUN"); // pre +4
+			// setp = LoadFileInMem("Levels\\L4Data\\diab1.DUN");
+			setp = pSetPieces[0]._spData;
+			SetMapMonsters(setp, pSetPieces[0]._spx, pSetPieces[0]._spy); // DIAB_QUAD_1X, DIAB_QUAD_1Y);
+			// mem_free_dbg(setp);
+			// setp = LoadFileInMem("Levels\\L4Data\\diab2a.DUN"); // pre 101 -> 109
+			setp = pSetPieces[1]._spData;
+			SetMapMonsters(setp, pSetPieces[1]._spx, pSetPieces[1]._spy); // DIAB_QUAD_2X, DIAB_QUAD_2Y);
+			// mem_free_dbg(setp);
+			// setp = LoadFileInMem("Levels\\L4Data\\diab3a.DUN"); // pre 101 -> 109
+			setp = pSetPieces[2]._spData;
+			SetMapMonsters(setp, pSetPieces[2]._spx, pSetPieces[2]._spy); // DIAB_QUAD_3X, DIAB_QUAD_3Y);
+			// mem_free_dbg(setp);
+			// setp = LoadFileInMem("Levels\\L4Data\\diab4a.DUN"); // pre +4
+			setp = pSetPieces[3]._spData;
+			if (setp != NULL) {
 			// patch set-piece to replace diablo - Diab4a.DUN
 			lm = (uint16_t*)setp;
 			lm[2 + 9 * 9 + 9 * 9 * 2 * 2 + 8 + 8 * 9 * 2] = SwapLE16((UMT_DIABLO + 1) | (1 << 15));
-			SetMapMonsters(setp, DIAB_QUAD_4X, DIAB_QUAD_4Y);
-			mem_free_dbg(setp);
+			}
+			SetMapMonsters(setp, pSetPieces[3]._spx, pSetPieces[3]._spy); // DIAB_QUAD_4X, DIAB_QUAD_4Y);
+			// mem_free_dbg(setp);
 		}
-	}
+	// }
 }
 
 void InitMonsters()
@@ -766,7 +810,7 @@ void InitMonsters()
 	// }
 	// place the setmap/setpiece monsters
 	PlaceSetMapMonsters();
-	if (!currLvl._dSetLvl) {
+	// if (!currLvl._dSetLvl) {
 		// calculate the available space for monsters
 		na = 0;
 		for (xx = DBORDERX; xx < DSIZEX + DBORDERX; xx++)
@@ -804,7 +848,7 @@ void InitMonsters()
 				na = RandRange(3, 5);
 			PlaceGroup(mtidx, na, 0, 0);
 		}
-	}
+	// }
 	// revert entry/exit area reservation
 	for (i = 0; i < numtrigs; i++) {
 		ts = &trigs[i];

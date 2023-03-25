@@ -104,7 +104,6 @@ static void LoadGameLevel(int lvldir, int seed)
             IncProgress();
         }
         IncProgress();
-        IncProgress();
 
         if (currLvl._dType != DTYPE_TOWN) {
             HoldThemeRooms();
@@ -120,14 +119,14 @@ static void LoadGameLevel(int lvldir, int seed)
             IncProgress();
 //            InitItems();
         }
+		FreeSetPieces();
     } else {
         LoadSetMap();
         IncProgress();
         // GetLevelMTypes();
         IncProgress();
-        InitMonsters();
         IncProgress();
-        IncProgress();
+        // InitMonsters();
         IncProgress();
 
         InitItems();

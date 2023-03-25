@@ -1005,23 +1005,19 @@ const BYTE L6WALLLPOOL2[] = {
 static void DRLG_LoadL3SP()
 {
 	DRLG_InitSetPC();
-	assert(pSetPiece == NULL);
+	assert(pSetPieces[0]._spData == NULL);
 	if (QuestStatus(Q_ANVIL)) {
-		pSetPiece = LoadFileInMem("Levels\\L3Data\\Anvil.DUN");
-		if (pSetPiece == NULL) {
+		pSetPieces[0]._spData = LoadFileInMem("Levels\\L3Data\\Anvil.DUN");
+		if (pSetPieces[0]._spData == NULL) {
 			return;
 		}
-		setpc_type = SPT_ANVIL;
-	}
-	if (setpc_type != SPT_NONE) {
-		setpc_w = SwapLE16(*(uint16_t*)&pSetPiece[0]);
-		setpc_h = SwapLE16(*(uint16_t*)&pSetPiece[2]);
+		pSetPieces[0]._sptype = SPT_ANVIL;
 	}
 }
 
 static void DRLG_FreeL3SP()
 {
-	MemFreeDbg(pSetPiece);
+	// MemFreeDbg(pSetPiece);
 }
 
 static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2)
@@ -2029,14 +2025,12 @@ static void DRLG_L3SetRoom(int rx1, int ry1)
 	int rw, rh, i, j;
 	BYTE* sp;
 
-	// assert(setpc_x == rx1);
-	// assert(setpc_y == ry1);
+	// assert(pSetPieces[0]._spx == rx1);
+	// assert(pSetPieces[0]._spy == ry1);
 
-	// assert(setpc_w == SwapLE16(*(uint16_t*)&pSetPiece[0]));
-	// assert(setpc_h == SwapLE16(*(uint16_t*)&pSetPiece[2]));
-	rw = setpc_w;
-	rh = setpc_h;
-	sp = &pSetPiece[4];
+	rw = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[0]);
+	rh = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[2]);
+	sp = &pSetPieces[0]._spData[4];
 
 	rw += rx1;
 	rh += ry1;
@@ -2152,12 +2146,14 @@ static void DRLG_L3()
 				static_assert(sizeof(dungeon) == DMAXX * DMAXY, "Linear traverse of dungeon does not work in DRLG_L3.");
 				memset(dungeon, 0, sizeof(dungeon));
 				DRLG_L3CreateBlock(RandRange(10, 29), RandRange(10, 29), 0, 4);
-				if (pSetPiece != NULL) { // setpc_type != SPT_NONE
-					assert(DMAXX - setpc_w - 10 > 10);
-					assert(DMAXY - setpc_h - 10 > 10);
-					setpc_x = RandRangeLow(10, DMAXX - setpc_w - 10);
-					setpc_y = RandRangeLow(10, DMAXY - setpc_h - 10);
-					DRLG_L3FloorArea(setpc_x, setpc_y, setpc_x + setpc_w, setpc_y + setpc_h);
+				if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
+					int xr = DMAXX - pSetPieces[0]._spData[0] - 10;
+					int yb = DMAXY - pSetPieces[0]._spData[2] - 10;
+					assert(xr > 10);
+					assert(yb > 10);
+					pSetPieces[0]._spx = RandRangeLow(10, xr);
+					pSetPieces[0]._spy = RandRangeLow(10, yb);
+					DRLG_L3FloorArea(pSetPieces[0]._spx, pSetPieces[0]._spy, pSetPieces[0]._spx + setpc_w, pSetPieces[0]._spy + setpc_h);
 				}
 				do {
 					doneflag = !DRLG_L3FillDiags();
@@ -2168,8 +2164,8 @@ static void DRLG_L3()
 			} while (DRLG_L3GetFloorArea() < 600 || !DRLG_L3Lockout());
 			DRLG_L3MakeMegas();
 			memset(drlgFlags, 0, sizeof(drlgFlags));
-			if (pSetPiece != NULL) { // setpc_type != SPT_NONE
-				DRLG_L3SetRoom(setpc_x, setpc_y);
+			if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
+				DRLG_L3SetRoom(pSetPieces[0]._spx, pSetPieces[0]._spy);
 			}
 #ifdef HELLFIRE
 			if (currLvl._dType == DTYPE_NEST) {

@@ -624,15 +624,16 @@ typedef struct LeverRect {
 	int y2;
 	int leveridx;
 } LeverRect;
-static void LoadMapSetObjects(const char* map, int startx, int starty, const LeverRect* lvrRect)
+//static void LoadMapSetObjects(const char* map, int startx, int starty, const LeverRect* lvrRect)
+static void LoadMapSetObjects(const BYTE* map, int startx, int starty, const LeverRect* lvrRect)
 {
-	BYTE* pMap = LoadFileInMem(map);
+	BYTE* pMap = map; // LoadFileInMem(map);
 	int i, j, oi;
 	uint16_t rw, rh, *lm;
 
 	if (pMap == NULL) {
 		return;
-    }
+	}
 	//gbInitObjFlag = true;
 	lm = (uint16_t*)pMap;
 	rw = SwapLE16(*lm);
@@ -662,12 +663,13 @@ static void LoadMapSetObjects(const char* map, int startx, int starty, const Lev
 	}
 	//gbInitObjFlag = false;
 
-	mem_free_dbg(pMap);
+	// mem_free_dbg(pMap);
 }
 
-static void LoadMapSetObjs(const char* map)
+//static void LoadMapSetObjs(const char* map)
+static void LoadMapSetObjs(const BYTE* map)
 {
-	LoadMapSetObjects(map, 2 * setpc_x, 2 * setpc_y, NULL);
+	LoadMapSetObjects(map, 2 * pSetPieces[0]._spx, 2 * pSetPieces[0]._spy, NULL);
 }
 
 static void SetupObject(int oi, int type)
@@ -710,12 +712,18 @@ static void SetupObject(int oi, int type)
 static void AddDiabObjs()
 {
 	LeverRect lr;
-	lr = { DIAB_QUAD_2X, DIAB_QUAD_2Y, DIAB_QUAD_2X + 11, DIAB_QUAD_2Y + 12, 1 };
-	LoadMapSetObjects("Levels\\L4Data\\diab1.DUN", 2 * DIAB_QUAD_1X, 2 * DIAB_QUAD_1Y, &lr);
-	lr = { DIAB_QUAD_3X, DIAB_QUAD_3Y, DIAB_QUAD_3X + 11, DIAB_QUAD_3Y + 11, 2 };
-	LoadMapSetObjects("Levels\\L4Data\\diab2a.DUN", 2 * DIAB_QUAD_2X, 2 * DIAB_QUAD_2Y, &lr);
-	lr = { DIAB_QUAD_4X, DIAB_QUAD_4Y, DIAB_QUAD_4X + 9, DIAB_QUAD_4Y + 9, 3 };
-	LoadMapSetObjects("Levels\\L4Data\\diab3a.DUN", 2 * DIAB_QUAD_3X, 2 * DIAB_QUAD_3Y, &lr);
+	// lr = { DIAB_QUAD_2X, DIAB_QUAD_2Y, DIAB_QUAD_2X + 11, DIAB_QUAD_2Y + 12, 1 };
+	lr = { pSetPieces[1]._spx, pSetPieces[1]._spy, pSetPieces[1]._spx + 11, pSetPieces[1]._spy + 12, 1 };
+	// LoadMapSetObjects("Levels\\L4Data\\diab1.DUN", 2 * DIAB_QUAD_1X, 2 * DIAB_QUAD_1Y, &lr);
+	LoadMapSetObjects(pSetPieces[0]._spData, 2 * pSetPieces[0]._spx, 2 * pSetPieces[0]._spy, &lr);
+	// lr = { DIAB_QUAD_3X, DIAB_QUAD_3Y, DIAB_QUAD_3X + 11, DIAB_QUAD_3Y + 11, 2 };
+	lr = { pSetPieces[2]._spx, pSetPieces[2]._spy, pSetPieces[2]._spx + 11, pSetPieces[2]._spy + 11, 2 };
+	// LoadMapSetObjects("Levels\\L4Data\\diab2a.DUN", 2 * DIAB_QUAD_2X, 2 * DIAB_QUAD_2Y, &lr);
+	LoadMapSetObjects(pSetPieces[1]._spData, 2 * pSetPieces[1]._spx, 2 * pSetPieces[1]._spy, &lr);
+	// lr = { DIAB_QUAD_4X, DIAB_QUAD_4Y, DIAB_QUAD_4X + 9, DIAB_QUAD_4Y + 9, 3 };
+	lr = { pSetPieces[3]._spx, pSetPieces[3]._spy, pSetPieces[3]._spx + 9, pSetPieces[3]._spy + 9, 3 };
+	// LoadMapSetObjects("Levels\\L4Data\\diab3a.DUN", 2 * DIAB_QUAD_3X, 2 * DIAB_QUAD_3Y, &lr);
+	LoadMapSetObjects(pSetPieces[2]._spData, 2 * pSetPieces[2]._spx, 2 * pSetPieces[2]._spy, &lr);
 }
 
 static void AddHBooks(int bookidx, int ox, int oy)
@@ -762,8 +770,8 @@ static void AddUberLever()
 {
 	int oi;
 
-	oi = AddObject(OBJ_L5LEVER, 2 * setpc_x + DBORDERX + 7, 2 * setpc_y + DBORDERY + 5);
-	SetObjMapRange(oi, setpc_x + 2, setpc_y + 2, setpc_x + 2, setpc_y + 3, 1);
+	oi = AddObject(OBJ_L5LEVER, 2 * pSetPieces[0]._spx + DBORDERX + 7, 2 * pSetPieces[0]._spy + DBORDERY + 5);
+	SetObjMapRange(oi, pSetPieces[0]._spx + 2, pSetPieces[0]._spy + 2, pSetPieces[0]._spx + 2, pSetPieces[0]._spy + 3, 1);
 }
 
 static void AddLvl24Books()
@@ -794,9 +802,9 @@ static void AddLvl24Books()
 		ASSUME_UNREACHABLE
 		break;
 	}
-	AddHBooks(books[0], 2 * setpc_x + DBORDERX + 7, 2 * setpc_y + DBORDERY + 6);
-	AddHBooks(books[1], 2 * setpc_x + DBORDERX + 6, 2 * setpc_y + DBORDERY + 3);
-	AddHBooks(books[2], 2 * setpc_x + DBORDERX + 6, 2 * setpc_y + DBORDERY + 8);
+	AddHBooks(books[0], 2 * pSetPieces[0]._spx + DBORDERX + 7, 2 * pSetPieces[0]._spy + DBORDERY + 6);
+	AddHBooks(books[1], 2 * pSetPieces[0]._spx + DBORDERX + 6, 2 * pSetPieces[0]._spy + DBORDERY + 3);
+	AddHBooks(books[2], 2 * pSetPieces[0]._spx + DBORDERX + 6, 2 * pSetPieces[0]._spy + DBORDERY + 8);
 }
 
 static void Alloc2x2Obj(int oi)
@@ -866,7 +874,7 @@ static void AddLazStand()
 	POS32 pos;
 
 	if (IsMultiGame) {
-		AddObject(OBJ_ALTBOY, 2 * setpc_x + DBORDERX + 4, 2 * setpc_y + DBORDERY + 6);
+		AddObject(OBJ_ALTBOY, 2 * pSetPieces[0]._spx + DBORDERX + 4, 2 * pSetPieces[0]._spy + DBORDERY + 6);
 		return;
 	}
 	pos = RndLoc6x7();
@@ -895,10 +903,10 @@ void InitObjects()
 			AddStoryBook();
 		if (QuestStatus(Q_PWATER))
 			AddCandles();
-		if (setpc_type == SPT_BUTCHER) // QuestStatus(Q_BUTCHER)
-			LoadMapSetObjs("Levels\\L1Data\\Butcher.DUN");
-		if (setpc_type == SPT_BANNER) // QuestStatus(Q_BANNER)
-			AddObject(OBJ_SIGNCHEST, 2 * setpc_x + DBORDERX + 10, 2 * setpc_y + DBORDERY + 3);
+		if (pSetPieces[0]._sptype == SPT_BUTCHER) // QuestStatus(Q_BUTCHER)
+			LoadMapSetObjs(pSetPieces[0]._spData); // "Levels\\L1Data\\Butcher.DUN");
+		if (pSetPieces[0]._sptype == SPT_BANNER) // QuestStatus(Q_BANNER)
+			AddObject(OBJ_SIGNCHEST, 2 * pSetPieces[0]._spx + DBORDERX + 10, 2 * pSetPieces[0]._spy + DBORDERY + 3);
 		InitRndSarcs(OBJ_SARC);
 		AddL1Objs(DBORDERX, DBORDERY, DBORDERX + DSIZEX, DBORDERY + DSIZEY);
 		break;
@@ -907,16 +915,16 @@ void InitObjects()
 			AddStoryBook();
 		if (QuestStatus(Q_ROCK))
 			InitRndLocObj5x5(OBJ_STAND);
-		if (setpc_type == SPT_BCHAMB) { // QuestStatus(Q_BCHAMB)
-			AddBookLever(OBJ_BOOK2R, -1, 0, setpc_x, setpc_y, setpc_w + setpc_x, setpc_h + setpc_y, Q_BCHAMB);
+		if (pSetPieces[0]._sptype == SPT_BCHAMB) { // QuestStatus(Q_BCHAMB)
+			AddBookLever(OBJ_BOOK2R, -1, 0, pSetPieces[0]._spx, pSetPieces[0]._spy, pSetPieces[0]._spData[0] + pSetPieces[0]._spx, pSetPieces[0]._spData[2] + pSetPieces[0]._spy, Q_BCHAMB);
 		}
-		if (setpc_type == SPT_BLIND) { // QuestStatus(Q_BLIND)
-			AddBookLever(OBJ_BLINDBOOK, -1, 0, setpc_x, setpc_y, setpc_w + setpc_x, setpc_h + setpc_y, Q_BLIND);
+		if (pSetPieces[0]._sptype == SPT_BLIND) { // QuestStatus(Q_BLIND)
+			AddBookLever(OBJ_BLINDBOOK, -1, 0, pSetPieces[0]._spx, pSetPieces[0]._spy, pSetPieces[0]._spData[0] + pSetPieces[0]._spx, pSetPieces[0]._spData[2] + pSetPieces[0]._spy, Q_BLIND);
 			// LoadMapSetObjs("Levels\\L2Data\\Blind2.DUN");
 		}
-		if (setpc_type == SPT_BLOOD) { // QuestStatus(Q_BLOOD)
-			AddBookLever(OBJ_BLOODBOOK, 2 * setpc_x + DBORDERX + 9, 2 * setpc_y + DBORDERY + 24, 0, 0, 0, 0, Q_BLOOD); // NULL_LVR_EFFECT
-			AddObject(OBJ_PEDISTAL, 2 * setpc_x + DBORDERX + 9, 2 * setpc_y + DBORDERY + 16);
+		if (pSetPieces[0]._sptype == SPT_BLOOD) { // QuestStatus(Q_BLOOD)
+			AddBookLever(OBJ_BLOODBOOK, 2 * pSetPieces[0]._spx + DBORDERX + 9, 2 * pSetPieces[0]._spy + DBORDERY + 24, 0, 0, 0, 0, Q_BLOOD); // NULL_LVR_EFFECT
+			AddObject(OBJ_PEDISTAL, 2 * pSetPieces[0]._spx + DBORDERX + 9, 2 * pSetPieces[0]._spy + DBORDERY + 16);
 		}
 		AddL2Objs(DBORDERX, DBORDERY, DBORDERX + DSIZEX, DBORDERY + DSIZEY);
 		AddL2Torches();
@@ -935,11 +943,21 @@ void InitObjects()
 			AddDiabObjs();
 			return;
 		}
-		if (setpc_type == SPT_WARLORD) { // QuestStatus(Q_WARLORD)
-			AddBookLever(OBJ_STEELTOME, -1, 0, setpc_x + 7, setpc_y + 1, setpc_x + 7, setpc_y + 5, Q_WARLORD);
-			LoadMapSetObjs("Levels\\L4Data\\Warlord.DUN");
+		if (pSetPieces[0]._sptype == SPT_WARLORD) { // QuestStatus(Q_WARLORD)
+			AddBookLever(OBJ_STEELTOME, -1, 0, pSetPieces[0]._spx + 7, pSetPieces[0]._spy + 1, pSetPieces[0]._spx + 7, pSetPieces[0]._spy + 5, Q_WARLORD);
+			if (pSetPieces[0]._spData != NULL) {
+			// patch set-piece to add objects - Warlord2.DUN
+			uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
+			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 2 + 3 * 8 * 2] = 108;
+			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 5 + 9 * 8 * 2] = 108;
+			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 5 + 2 * 8 * 2] = 109;
+			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 8 + 2 * 8 * 2] = 109;
+			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 5 + 10 * 8 * 2] = 109;
+			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 8 + 10 * 8 * 2] = 109;
+			}
+			LoadMapSetObjs(pSetPieces[0]._spData); // "Levels\\L4Data\\Warlord.DUN");
 		}
-		if (currLvl._dLevelIdx == DLV_HELL3) // QuestStatus(Q_BETRAYER) / setpc_type == SPT_BETRAYER (single?)
+		if (currLvl._dLevelIdx == DLV_HELL3) // QuestStatus(Q_BETRAYER) / pSetPieces[0]._sptype == SPT_BETRAYER (single?)
 			AddLazStand();
 		AddL4Goodies();
 	break;
