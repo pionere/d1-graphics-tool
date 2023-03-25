@@ -363,6 +363,12 @@ bool D1Cel::save(D1Gfx &gfx, const SaveAsParam &params)
                 return false;
             }
         }
+    } else if (!gfx.isModified()) {
+        return false;
+    }
+
+    if (filePath.isEmpty()) {
+        return false;
     }
 
     QDir().mkpath(QFileInfo(filePath).absolutePath());

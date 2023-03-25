@@ -339,7 +339,7 @@ const DunMonsterStruct DunMonstConvTbl[128] = {
                { nullptr }, //MT_XMAGE,
 /*MT_BMAGE*/   { "Advocate" }, // Q_BETRAYER, Q_DIABLO
                { nullptr },
-/*MT_DIABLO*/  { "The Dark Lord" }, // Q_DIABLO
+               { nullptr }, // { "The Dark Lord" }, // Diab4*.dun
                { nullptr },
                { nullptr }, //MT_GOLEM,
                { nullptr },
@@ -348,7 +348,7 @@ const DunMonsterStruct DunMonstConvTbl[128] = {
                { nullptr },
                { nullptr },
                { nullptr },
-               { nullptr }, // { 124, 128, "FalSpear\\Phall", "FalSpear\\Blue",    "Dark One" }, // Snotspill from banner2.dun
+               { nullptr }, // { "Snotspill" }, //  Banner2.dun
                { nullptr },
                { nullptr },
                { nullptr }, ///MT_BIGFALL,
@@ -650,6 +650,8 @@ bool D1Dun::save(const SaveAsParam &params)
                 return false;
             }
         }
+    } else if (!this->isModified()) {
+        return false;
     }
 
     if (filePath.isEmpty()) {
@@ -2519,7 +2521,6 @@ void D1Dun::patch(int dunFileIndex)
 /* DUN_WARLORD_PRE*/         { 16, 14 }, // Warlord.DUN
 /* DUN_WARLORD_AFT*/         { 16, 14 }, // Warlord2.DUN
 /* DUN_DIAB_2_AFT*/          { 22, 24 }, // Diab2b.DUN
-/* DUN_DIAB_3_PRE*/          { 22, 22 }, // Diab3a.DUN
 /* DUN_DIAB_3_AFT*/          { 22, 22 }, // Diab3b.DUN
 /* DUN_DIAB_4_PRE*/          { 18, 18 }, // Diab4a.DUN
 /* DUN_DIAB_4_AFT*/          { 18, 18 }, // Diab4b.DUN
@@ -2799,13 +2800,13 @@ void D1Dun::patch(int dunFileIndex)
         // - add the skeleton king
         change |= this->changeMonsterAt(19, 31, UMT_SKELKING + 1, true);
         break;
-    case DUN_BETRAYER:
+    case DUN_BETRAYER: // Vile1.DUN
         // - add the unique monsters
         change |= this->changeMonsterAt(3, 6, UMT_LAZARUS + 1, true);
         change |= this->changeMonsterAt(5, 3, UMT_RED_VEX + 1, true);
         change |= this->changeMonsterAt(5, 9, UMT_BLACKJADE + 1, true);
         break;
-    case DUN_DIAB_2_AFT:
+    case DUN_DIAB_2_AFT: // Diab2b.DUN
         // replace monsters from Diab2a.DUN
         change |= this->changeMonsterAt(11, 9, 101, false);
         change |= this->changeMonsterAt(11, 13, 101, false);
@@ -2816,7 +2817,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(14, 10, 101, false);
         change |= this->changeMonsterAt(13, 12, 101, false);
         break;
-    case DUN_DIAB_3_AFT:
+    case DUN_DIAB_3_AFT: // Diab3b.DUN
         // replace monsters from Diab3a.DUN
         change |= this->changeMonsterAt(1, 5, 101, false);
         change |= this->changeMonsterAt(1, 15, 101, false);
@@ -2833,7 +2834,7 @@ void D1Dun::patch(int dunFileIndex)
         // replace objects from Diab3a.DUN
         change |= this->changeObjectAt(8, 2, 51);
         break;
-    case DUN_DIAB_4_AFT:
+    case DUN_DIAB_4_AFT: // Diab4b.DUN
         // replace monsters from Diab4a.DUN
         change |= this->changeMonsterAt(4, 4, 101, false);
         change |= this->changeMonsterAt(4, 8, 101, false);
@@ -2848,6 +2849,10 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(12, 10, 101, false);
         change |= this->changeMonsterAt(10, 4, 101, false);
         change |= this->changeMonsterAt(4, 6, 98, false);
+        /* fall-through */
+    case DUN_DIAB_4_PRE: // Diab4a.DUN
+        // make diablo unique
+        change |= this->changeMonsterAt(8, 8, UMT_DIABLO + 1, true);
         break;
     }
     if (!change) {

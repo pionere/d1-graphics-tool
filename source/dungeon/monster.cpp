@@ -297,7 +297,7 @@ void GetLevelMTypes()
 			AddMonsterType(MT_BMAGE, TRUE);
 			AddMonsterType(MT_GBLACK, TRUE);
 			// AddMonsterType(MT_NBLACK, FALSE);
-			// AddMonsterType(MT_DIABLO, FALSE);
+			// AddMonsterType(uniqMonData[UMT_DIABLO].mtype, FALSE);
 			return;
 		}
 
@@ -343,6 +343,7 @@ void GetLevelMTypes()
 		//if (currLvl._dLevelIdx == questlist[Q_BETRAYER]._qdlvl && IsMultiGame) {
 		//	AddMonsterType(uniqMonData[UMT_LAZARUS].mtype, FALSE);
 		//	AddMonsterType(uniqMonData[UMT_RED_VEX].mtype, FALSE);
+		//  assert(uniqMonData[UMT_RED_VEX].mtype == uniqMonData[UMT_BLACKJADE].mtype);
 		//}
 		lds = &AllLevels[lvl];
 		for (nt = 0; nt < lengthof(lds->dMonTypes); nt++) {
@@ -379,6 +380,10 @@ void GetLevelMTypes()
 	//} else {
 	//	if (lvl == SL_SKELKING) {
 	//		AddMonsterType(uniqMonData[UMT_SKELKING].mtype, FALSE);
+	//	} else if (lvl == SL_VILEBETRAYER) {
+	//		AddMonsterType(uniqMonData[UMT_LAZARUS].mtype, FALSE);
+	//		AddMonsterType(uniqMonData[UMT_RED_VEX].mtype, FALSE);
+	//		assert(uniqMonData[UMT_RED_VEX].mtype == uniqMonData[UMT_BLACKJADE].mtype);
 	//	}
 	//}
 }
@@ -423,13 +428,6 @@ static bool MonstPlace(int xp, int yp)
 	return (dMonster[xp][yp] | /*dPlayer[xp][yp] |*/ nSolidTable[dPiece[xp][yp]]
 		 | (dFlags[xp][yp] & (BFLAG_ALERT | BFLAG_POPULATED))) == 0;
 }
-int PlaceMonster(int mtidx, int x, int y);
-void AddMonster(int mtidx, int x, int y)
-{
-	if (nummonsters < MAXMONSTERS) {
-		PlaceMonster(mtidx, x, y);
-	}
-}
 
 static int PlaceMonster(int mtidx, int x, int y)
 {
@@ -442,6 +440,13 @@ static int PlaceMonster(int mtidx, int x, int y)
 	dir = random_(90, NUM_DIRS);
 	InitMonster(mnum, dir, mtidx, x, y);
 	return mnum;
+}
+
+void AddMonster(int mtidx, int x, int y)
+{
+	if (nummonsters < MAXMONSTERS) {
+		PlaceMonster(mtidx, x, y);
+	}
 }
 
 static void PlaceGroup(int mtidx, int num, int leaderf, int leader)
@@ -529,10 +534,6 @@ static void PlaceUniqueMonst(int uniqindex, int mtidx)
 	}
 
 	switch (uniqindex) {
-	//case UMT_SKELKING:
-	//	xp = DBORDERX + 19;
-	//	yp = DBORDERY + 31;
-	//	break;
 	case UMT_ZHAR:
 		assert(nummonsters == MAX_MINIONS);
 		if (zharlib == -1)
@@ -540,52 +541,6 @@ static void PlaceUniqueMonst(int uniqindex, int mtidx)
 		xp = 2 * themeLoc[zharlib].x + DBORDERX + 4;
 		yp = 2 * themeLoc[zharlib].y + DBORDERY + 4;
 		break;
-	//case UMT_SNOTSPIL:
-	//	xp = 2 * setpc_x + DBORDERX + 8;
-	//	yp = 2 * setpc_y + DBORDERY + 12;
-	//	break;
-	//case UMT_LAZARUS:
-	//	if (!currLvl._dSetLvl) {
-	//		xp = 2 * setpc_x + DBORDERX + 3;
-	//		yp = 2 * setpc_y + DBORDERY + 6;
-	//	} else {
-	//		xp = DBORDERX + 16;
-	//		yp = DBORDERY + 30;
-	//	}
-	//	break;
-	//case UMT_RED_VEX:
-	//	if (!currLvl._dSetLvl) {
-	//		xp = 2 * setpc_x + DBORDERX + 5;
-	//		yp = 2 * setpc_y + DBORDERY + 3;
-	//	} else {
-	//		xp = DBORDERX + 24;
-	//		yp = DBORDERY + 29;
-	//	}
-	//	break;
-	//case UMT_BLACKJADE:
-	//	if (!currLvl._dSetLvl) {
-	//		xp = 2 * setpc_x + DBORDERX + 5;
-	//		yp = 2 * setpc_y + DBORDERY + 9;
-	//	} else {
-	//		xp = DBORDERX + 22;
-	//		yp = DBORDERY + 33;
-	//	}
-	//	break;
-	//case UMT_WARLORD:
-	//	xp = 2 * setpc_x + DBORDERX + 6;
-	//	yp = 2 * setpc_y + DBORDERY + 7;
-	//	break;
-	//case UMT_BUTCHER:
-	//	xp = 2 * setpc_x + DBORDERX + 3;
-	//	yp = 2 * setpc_y + DBORDERY + 3;
-	//	break;
-#ifdef HELLFIRE
-	//case UMT_NAKRUL:
-	//	assert(nummonsters == MAX_MINIONS);
-	//	xp = 2 * setpc_x + DBORDERX + 2;
-	//	yp = 2 * setpc_y + DBORDERY + 6;
-	//	break;
-#endif
 	default:
 		count = 0;
 		while (TRUE) {
@@ -613,11 +568,6 @@ static void PlaceUniqueMonst(int uniqindex, int mtidx)
 		}
 	}
 	// assert(nummonsters < MAXMONSTERS);
-	/*for (uniqtype = 0; uniqtype < nummtypes; uniqtype++) {
-		if (mapMonTypes[uniqtype].cmType == uniqMonData[uniqindex].mtype) {
-			break;
-		}
-	}*/
 	mnum = PlaceMonster(mtidx, xp, yp);
 	InitUniqueMonster(mnum, uniqindex);
 }
@@ -762,13 +712,6 @@ static void PlaceSetMapMonsters()
 			lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 9 * 7 * 2] = SwapLE16((UMT_BLACKJADE + 1) | (1 << 15));
 			SetMapMonsters(setp, setpc_x, setpc_y);
 			mem_free_dbg(setp);
-
-			/*AddMonsterType(uniqMonData[UMT_LAZARUS].mtype, FALSE);
-			AddMonsterType(uniqMonData[UMT_RED_VEX].mtype, FALSE);
-			// assert(uniqMonData[UMT_RED_VEX].mtype == uniqMonData[UMT_BLACKJADE].mtype);
-			PlaceUniqueMonst(UMT_LAZARUS);
-			PlaceUniqueMonst(UMT_RED_VEX);
-			PlaceUniqueMonst(UMT_BLACKJADE);*/
 		}
 #ifdef HELLFIRE
 		if (setpc_type == SPT_NAKRUL) {
@@ -789,24 +732,12 @@ static void PlaceSetMapMonsters()
 			SetMapMonsters(setp, DIAB_QUAD_3X, DIAB_QUAD_3Y);
 			mem_free_dbg(setp);
 			setp = LoadFileInMem("Levels\\L4Data\\diab4a.DUN"); // pre +4
+			// patch set-piece to replace diablo - Diab4a.DUN
+			lm = (uint16_t*)setp;
+			lm[2 + 9 * 9 + 9 * 9 * 2 * 2 + 8 + 8 * 9 * 2] = SwapLE16((UMT_DIABLO + 1) | (1 << 15));
 			SetMapMonsters(setp, DIAB_QUAD_4X, DIAB_QUAD_4Y);
 			mem_free_dbg(setp);
 		}
-//	} else if (currLvl._dLevelIdx == SL_SKELKING) {
-//		AddMonsterType(uniqMonData[UMT_SKELKING].mtype, FALSE);
-//		PlaceUniqueMonst(UMT_SKELKING);
-	/*} else if (currLvl._dLevelIdx == SL_VILEBETRAYER) {
-		AddMonsterType(uniqMonData[UMT_LAZARUS].mtype, FALSE);
-		AddMonsterType(uniqMonData[UMT_RED_VEX].mtype, FALSE);
-		// assert(uniqMonData[UMT_RED_VEX].mtype == uniqMonData[UMT_BLACKJADE].mtype);
-		PlaceUniqueMonst(UMT_LAZARUS);
-		PlaceUniqueMonst(UMT_RED_VEX);
-		PlaceUniqueMonst(UMT_BLACKJADE);
-//		for (i = 1; i <= 3; i++) {
-//			monsters[nummonsters - i]._mmode = MM_RESERVED;
-//			dMonster[monsters[nummonsters - i]._mx][monsters[nummonsters - i]._my] = 0;
-//			ChangeLightRadius(monsters[nummonsters - i]._mlid, 0);
-//		}*/
 	}
 }
 
