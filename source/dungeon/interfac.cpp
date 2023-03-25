@@ -217,7 +217,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
     }
     std::vector<std::pair<int, int>> objectTypes;
     std::set<int> itemTypes;
-    std::vector<int> monUniques;
+    // std::vector<int> monUniques;
     for (int y = 0; y < MAXDUNY; y++) {
         for (int x = 0; x < MAXDUNY; x++) {
             if (hasSubtiles) {
@@ -230,17 +230,22 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
             }
             dun->setItemAt(x, y, item);
             int mon = dMonster[x][y];
+            DunMonsterType monType = { 0, false };
             if (mon != 0) {
                 MonsterStruct *ms = &monsters[mon - 1];
-                if (ms->_muniqtype == 0) {
+                monType.second = ms->_muniqtype != 0;
+                if (!monType.second) {
                     mon = ms->_mMTidx;
+                    mon += lengthof(DunMonstConvTbl);
                 } else {
-                    monUniques.push_back(mon - 1);
-                    mon = nummtypes + monUniques.size() - 1;
+                    // monUniques.push_back(mon - 1);
+                    // mon = nummtypes + monUniques.size() - 1;
+                    mon = ms->_muniqtype;
                 }
-                mon += lengthof(DunMonstConvTbl);
+                // mon += lengthof(DunMonstConvTbl);
+                monType.first = mon;
             }
-            dun->setMonsterAt(x, y, mon);
+            dun->setMonsterAt(x, y, monType);
             int obj = dObject[x][y];
             if (obj > 0) {
                 ObjectStruct *os = &objects[obj - 1];
@@ -292,10 +297,11 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
         if (monsterdata[mapMonTypes[i].cmType].mTransFile != NULL) {
             monRes.baseTrnPath = assetPath + "/" + monsterdata[mapMonTypes[i].cmType].mTransFile;
         }
+        monRes.uniqueMon = false;
         dun->addResource(monRes);
     }
     // - unique
-    for (unsigned i = 0; i < monUniques.size(); i++) {
+    /*for (unsigned i = 0; i < monUniques.size(); i++) {
         int mon = monUniques[i];
         MonsterStruct *ms = &monsters[mon];
         const MapMonData &md = mapMonTypes[ms->_mMTidx];
@@ -313,8 +319,9 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
         if (uniqMonData[ms->_muniqtype - 1].mTrnName != NULL) {
             monRes.uniqueTrnPath = assetPath + "/Monsters/Monsters/" + uniqMonData[ms->_muniqtype - 1].mTrnName + ".TRN";
         }
+        monRes.uniqueMon = true;
         dun->addResource(monRes);
-    }
+    }*/
     // add objects
     for (unsigned i = 0; i < objectTypes.size(); i++) {
         const std::pair<int, int> &objType = objectTypes[i];

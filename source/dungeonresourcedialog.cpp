@@ -17,11 +17,9 @@ DungeonResourceDialog::~DungeonResourceDialog()
     delete ui;
 }
 
-void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, D1Dun *d, QComboBox *cb, int cv)
+void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, D1Dun *d)
 {
     this->dun = d;
-    this->comboBox = cb;
-    this->currentValue = cv;
 
     if (this->type != t) {
         this->type = t;
@@ -33,6 +31,7 @@ void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, D1Dun *d, QComboBox *c
         this->ui->frameLineEdit->setText("");
         this->ui->baseTrnFileLineEdit->setText("");
         this->ui->uniqueTrnFileLineEdit->setText("");
+        this->ui->uniqueMonCheckBox->setChecked(false);
         // select window title
         QString title;
         switch (t) {
@@ -57,6 +56,9 @@ void DungeonResourceDialog::initialize(DUN_ENTITY_TYPE t, D1Dun *d, QComboBox *c
         this->ui->uniqueTrnFileLineEdit->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
         this->ui->uniqueTrnFileBrowsePushButton->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
         this->ui->uniqueTrnFileClearPushButton->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
+
+        this->ui->uniqueMonLabel->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
+        this->ui->uniqueMonCheckBox->setVisible(t == DUN_ENTITY_TYPE::MONSTER);
 
         this->ui->frameLabel->setVisible(t == DUN_ENTITY_TYPE::OBJECT);
         this->ui->frameLineEdit->setVisible(t == DUN_ENTITY_TYPE::OBJECT);
@@ -127,6 +129,7 @@ void DungeonResourceDialog::on_addButton_clicked()
     params.frame = this->ui->frameLineEdit->text().toInt();
     params.baseTrnPath = this->ui->baseTrnFileLineEdit->text();
     params.uniqueTrnPath = this->ui->uniqueTrnFileLineEdit->text();
+    params.uniqueMon = this->ui->uniqueMonCheckBox->isChecked();
     if (params.frame < 0 && params.type == DUN_ENTITY_TYPE::OBJECT) {
         return;
     }
@@ -136,13 +139,8 @@ void DungeonResourceDialog::on_addButton_clicked()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
 
     if (this->dun->addResource(params)) {
-        for (int i = this->comboBox->count() - 1; i >= 0; i--) {
-            if (this->comboBox->itemData(i).value<int>() == params.index) {
-                this->comboBox->removeItem(i);
-            }
-        }
-        this->comboBox->addItem(params.name, params.index);
-        this->comboBox->setCurrentIndex(this->comboBox->findData(this->currentValue));
+        LevelCelView *view = qobject_cast<LevelCelView *>(this->parentWidget());
+        view->updateEntityOptions();
     }
 
     // Clear loading message from status bar

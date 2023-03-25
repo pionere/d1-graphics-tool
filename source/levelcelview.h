@@ -233,6 +233,7 @@ private slots:
     void on_dungeonObjectAddButton_clicked();
     void on_dungeonMonsterLineEdit_returnPressed();
     void on_dungeonMonsterLineEdit_escPressed();
+    void on_dungeonMonsterCheckBox_clicked();
     void on_dungeonMonsterComboBox_activated(int index);
     void on_dungeonMonsterAddButton_clicked();
     void on_dungeonItemLineEdit_returnPressed();

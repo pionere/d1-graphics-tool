@@ -132,7 +132,17 @@
        </item>
        <item>
         <property name="text">
+         <string>Diablo Quad 4 - Before (Diab4a.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Diablo Quad 4 - After (Diab4b.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Betrayer (Vile1.DUN)</string>
         </property>
        </item>
       </widget>

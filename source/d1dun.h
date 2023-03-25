@@ -40,13 +40,17 @@ typedef enum dun_file_index {
     DUN_WARLORD_AFT,         // map tile for the "Warlord" quest after reading the book (Warlord2.DUN)
     DUN_DIAB_2_AFT,          // map tile for the "Diablo" quest after pulling the levers (Diab2b.DUN)
     DUN_DIAB_3_AFT,          // map tile for the "Diablo" quest after pulling the levers (Diab3b.DUN)
+    DUN_DIAB_4_PRE,          // map tile for the "Diablo" quest before pulling the levers (Diab4a.DUN)
     DUN_DIAB_4_AFT,          // map tile for the "Diablo" quest after pulling the levers (Diab4b.DUN)
+    DUN_BETRAYER,            // map tile for the "Archbishop Lazarus" quest (Vile1.DUN)
 } dun_file_index;
 
 enum class D1DUN_TYPE {
     NORMAL,
     RAW,
 };
+
+typedef QPair<int, bool> DunMonsterType;
 
 typedef struct DunObjectStruct {
     const char *name;
@@ -65,7 +69,7 @@ typedef struct DunMonsterStruct {
 } DunMonsterStruct;
 
 typedef struct CustomMonsterStruct {
-    int type;
+    DunMonsterType type;
     int width;
     QString path;
     QString baseTrnPath;
@@ -87,7 +91,7 @@ typedef struct ObjectCacheEntry {
 } ObjectCacheEntry;
 
 typedef struct MonsterCacheEntry {
-    int monsterIndex;
+    DunMonsterType monType;
     D1Gfx *monGfx;
     D1Pal *monPal;
     D1Trn *monBaseTrn;
@@ -138,8 +142,8 @@ public:
     bool setSubtileAt(int posx, int posy, int subtileRef);
     int getItemAt(int posx, int posy) const;
     bool setItemAt(int posx, int posy, int itemIndex);
-    int getMonsterAt(int posx, int posy) const;
-    bool setMonsterAt(int posx, int posy, int monsterIndex);
+    DunMonsterType getMonsterAt(int posx, int posy) const;
+    bool setMonsterAt(int posx, int posy, DunMonsterType);
     int getObjectAt(int posx, int posy) const;
     bool setObjectAt(int posx, int posy, int objectIndex);
     int getRoomAt(int posx, int posy) const;
@@ -153,11 +157,11 @@ public:
     QString getAssetPath() const;
     const D1Gfx *getSpecGfx() const;
     QString getItemName(int itemIndex) const;
-    QString getMonsterName(int monsterIndex) const;
+    QString getMonsterName(const DunMonsterType &monType) const;
     QString getObjectName(int objectIndex) const;
 
     void collectItems(std::vector<std::pair<int, int>> &items) const;
-    void collectMonsters(std::vector<std::pair<int, int>> &monsters) const;
+    void collectMonsters(std::vector<std::pair<DunMonsterType, int>> &monsters) const;
     void collectObjects(std::vector<std::pair<int, int>> &objects) const;
     void checkTiles() const;
     void checkItems(D1Sol *sol) const;
@@ -194,12 +198,12 @@ private:
     void loadMonsterGfx(const QString &filePath, int width, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result);
     void loadItemGfx(const QString &filePath, int width, ItemCacheEntry &result);
     void loadObject(int objectIndex);
-    void loadMonster(int monsterIndex);
+    void loadMonster(const DunMonsterType &monType);
     void loadItem(int itemIndex);
     void updateSubtiles(int tilePosX, int tilePosY, int tileRef);
     bool changeTileAt(int tilePosX, int tilePosY, int tileRef);
     bool changeObjectAt(int posx, int posy, int objectIndex);
-    bool changeMonsterAt(int posx, int posy, int monsterIndex);
+    bool changeMonsterAt(int posx, int posy, int monsterIndex, bool isUnique);
     bool changeItemAt(int posx, int posy, int itemIndex);
 
 private:
@@ -216,7 +220,7 @@ private:
     std::vector<std::vector<int>> tiles;
     std::vector<std::vector<int>> subtiles;
     std::vector<std::vector<int>> items;
-    std::vector<std::vector<int>> monsters;
+    std::vector<std::vector<DunMonsterType>> monsters;
     std::vector<std::vector<int>> objects;
     std::vector<std::vector<int>> rooms;
 
