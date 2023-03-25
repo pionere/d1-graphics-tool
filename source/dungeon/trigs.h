@@ -9,6 +9,7 @@
 extern int numtrigs;
 extern TriggerStruct trigs[MAXTRIGGERS];
 
+void InitView(int entry);
 void InitTriggers();
 
 #endif /* __TRIGS_H__ */

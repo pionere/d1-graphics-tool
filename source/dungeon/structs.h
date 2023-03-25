@@ -426,12 +426,14 @@ typedef struct LevelData {
 	const char* dSetLvlDun;
 	BYTE dSetLvlDunX;
 	BYTE dSetLvlDunY;
+	BYTE dSetLvlWarp; // dungeon_warp_type
 	BYTE dMonTypes[32];
 } LevelData;
 
 typedef struct WarpStruct {
 	int _wx;
 	int _wy;
+	int _wtype; // dungeon_warp_type
 } WarpStruct;
 
 //////////////////////////////////////////////////
