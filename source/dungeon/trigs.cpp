@@ -222,13 +222,13 @@ void InitView(int entry)
 	}
 
 	if (currLvl._dLevelIdx == DLV_TOWN) {
-		if (entry == ENTRY_MAIN) {
+		/*if (entry == ENTRY_MAIN) {
 			// New game
 			ViewX = 65 + DBORDERX;
 			ViewY = 58 + DBORDERY;
-		/*} else if (entry == ENTRY_PREV) { // Cathedral
-			ViewX = 15 + DBORDERX;
-			ViewY = 21 + DBORDERY;*/
+		//} else if (entry == ENTRY_PREV) { // Cathedral
+		//	ViewX = 15 + DBORDERX;
+		//	ViewY = 21 + DBORDERY;
 		} else if (entry == ENTRY_TWARPUP) {
 			switch (gbTWarpFrom) {
 			case TWARP_CATHEDRAL:
@@ -265,7 +265,7 @@ void InitView(int entry)
 			// Restart in Town
 			ViewX = 63 + DBORDERX;
 			ViewY = 70 + DBORDERY;
-		}
+		}*/
 		return;
 	}
 
