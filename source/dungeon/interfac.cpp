@@ -70,7 +70,7 @@ static void LoadGameLevel(int lvldir, int seed)
     //SetRndSeed(seed);
 
     IncProgress();
-    InitLvlDungeon(); // load tiles + meta data
+    InitLvlDungeon(); // load tiles + meta data, reset pWarps, pSetPieces
 //    MakeLightTable();
     IncProgress();
 
@@ -88,7 +88,11 @@ static void LoadGameLevel(int lvldir, int seed)
     SetRndSeed(seed);
 
     if (!currLvl._dSetLvl) {
-        CreateLevel(); // fill dungeon, pdungeon, dPiece, dSpecial, dTransVal, dPreLight, dLight, pWarps, pSetPieces, themeLoc, dFlags, reset dMonster, dObject, dPlayer, dItem, dMissile, uses drlgFlags
+		// fill in loop: dungeon, pdungeon, dTransVal, pWarps, pSetPieces, uses drlgFlags, dungBlock
+		// fill post: dPiece, dSpecial, dPreLight, dLight, themeLoc, dFlags
+		// reset: dMonster, dObject, dPlayer, dItem, dMissile
+QMessageBox::critical(nullptr, "Error", "CreateLevel start");
+        CreateLevel();
 QMessageBox::critical(nullptr, "Error", "CreateLevel done");
         if (pMegaTiles == NULL || pSolidTbl == NULL) {
             return;

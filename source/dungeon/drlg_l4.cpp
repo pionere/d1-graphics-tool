@@ -1926,13 +1926,21 @@ QMessageBox::critical(nullptr, "Error", "Still alive before pre-map");
 
 void CreateL4Dungeon()
 {
+QMessageBox::critical(nullptr, "Error", "CreateL4Dungeon 0");
 	DRLG_LoadL4SP();
+QMessageBox::critical(nullptr, "Error", "CreateL4Dungeon 1");
 	DRLG_L4();
+QMessageBox::critical(nullptr, "Error", "CreateL4Dungeon 2");
 	DRLG_FreeL4SP();
+QMessageBox::critical(nullptr, "Error", "CreateL4Dungeon 3");
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
+QMessageBox::critical(nullptr, "Error", "CreateL4Dungeon 4");
 	DRLG_Init_Globals();
-	if (currLvl._dLevelIdx != DLV_HELL4)
+QMessageBox::critical(nullptr, "Error", "CreateL4Dungeon 5");
+	if (currLvl._dLevelIdx != DLV_HELL4) {
 		DRLG_SetPC();
+QMessageBox::critical(nullptr, "Error", "CreateL4Dungeon 6");
+    }
 }
 
 /*static BYTE* LoadL4DungeonData(const char* sFileName)
