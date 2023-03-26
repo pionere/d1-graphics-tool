@@ -348,7 +348,7 @@ const DunMonsterStruct DunMonstConvTbl[128] = {
                { nullptr },
                { nullptr },
                { nullptr },
-               { nullptr }, // { "Snotspill" }, //  Banner2.dun
+               { nullptr }, // { "Snotspill" }, // Banner2.dun
                { nullptr },
                { nullptr },
                { nullptr }, ///MT_BIGFALL,

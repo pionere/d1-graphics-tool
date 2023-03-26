@@ -649,10 +649,10 @@ static void LoadMapSetObjects(const BYTE* map, int startx, int starty)
 		for (i = startx; i < rw; i++) {
 			if (*lm != 0) {
 				if (SwapLE16(*lm) >= lengthof(ObjConvTbl) || ObjConvTbl[SwapLE16(*lm)] == 0) {
-					dProgressErr() << QApplication::tr("Invalid object %1 at %2:%3").arg(*lm).arg(i).arg(j);
+					dProgressErr() << QApplication::tr("Invalid object %1 at %2:%3").arg(SwapLE16(*lm)).arg(i).arg(j);
 				} else {
 //				assert(objanimdata[objectdata[ObjConvTbl[SwapLE16(*lm)]].ofindex] != NULL);
-				oi = AddObject(ObjConvTbl[SwapLE16(*lm)], i, j);
+				AddObject(ObjConvTbl[SwapLE16(*lm)], i, j);
 				}
 			}
 			lm++;
@@ -1017,7 +1017,7 @@ void SetMapObjects(BYTE* pMap)
 //	}
 	if (pMap == NULL) {
 		return;
-    }
+	}
 
 	lm = (uint16_t*)pMap;
 	rw = SwapLE16(*lm);
