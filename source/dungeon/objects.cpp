@@ -945,7 +945,7 @@ void InitObjects()
 		}
 		if (pSetPieces[0]._sptype == SPT_WARLORD) { // QuestStatus(Q_WARLORD)
 			AddBookLever(OBJ_STEELTOME, -1, 0, pSetPieces[0]._spx + 7, pSetPieces[0]._spy + 1, pSetPieces[0]._spx + 7, pSetPieces[0]._spy + 5, Q_WARLORD);
-			if (pSetPieces[0]._spData != NULL) {
+			/*if (pSetPieces[0]._spData != NULL) {
 			// patch set-piece to add objects - Warlord2.DUN
 			uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 2 + 3 * 8 * 2] = 108;
@@ -954,7 +954,7 @@ void InitObjects()
 			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 8 + 2 * 8 * 2] = 109;
 			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 5 + 10 * 8 * 2] = 109;
 			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 8 + 10 * 8 * 2] = 109;
-			}
+			}*/
 			LoadMapSetObjs(pSetPieces[0]._spData); // "Levels\\L4Data\\Warlord.DUN");
 		}
 		if (currLvl._dLevelIdx == DLV_HELL3) // QuestStatus(Q_BETRAYER) / pSetPieces[0]._sptype == SPT_BETRAYER (single?)

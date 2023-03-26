@@ -1284,7 +1284,7 @@ static void DRLG_L4SetRoom(int n)
 
 static void DRLG_LoadDiabQuads(bool postflag)
 {
-	if (!postflag) {
+	if (postflag) {
 		int setpc_x = pSetPieces[0]._spx;
 		int setpc_y = pSetPieces[0]._spy;
 		pSetPieces[0]._spx = DIAB_QUAD_1X;
@@ -1296,14 +1296,10 @@ static void DRLG_LoadDiabQuads(bool postflag)
 		pSetPieces[3]._spx = DIAB_QUAD_4X;
 		pSetPieces[3]._spy = DIAB_QUAD_4Y;
 	} else {
-		MemFreeDbg(pSetPieces[0]._spData);
-		MemFreeDbg(pSetPieces[1]._spData);
-		MemFreeDbg(pSetPieces[2]._spData);
-		MemFreeDbg(pSetPieces[3]._spData);
-		pSetPieces[0]._spData = LoadFileInMem("Levels\\L4Data\\diab1.DUN");
-		pSetPieces[1]._spData = LoadFileInMem("Levels\\L4Data\\diab2a.DUN");
-		pSetPieces[2]._spData = LoadFileInMem("Levels\\L4Data\\diab3a.DUN");
-		pSetPieces[3]._spData = LoadFileInMem("Levels\\L4Data\\diab4a.DUN");
+		// LoadFileWithMem("Levels\\L4Data\\diab1.DUN", pSetPieces[0]._spData);
+		LoadFileWithMem("Levels\\L4Data\\diab2a.DUN", pSetPieces[1]._spData);
+		LoadFileWithMem("Levels\\L4Data\\diab3a.DUN", pSetPieces[2]._spData);
+		LoadFileWithMem("Levels\\L4Data\\diab4a.DUN", pSetPieces[3]._spData);
 	}
 
 	DRLG_L4SetRoom(0); // DIAB_QUAD_1X, DIAB_QUAD_1Y);

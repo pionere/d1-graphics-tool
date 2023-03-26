@@ -714,7 +714,7 @@ static void PlaceSetMapMonsters()
 		if (pSetPieces[0]._sptype == SPT_WARLORD) { // QuestStatus(Q_WARLORD)
 			// setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN"); // pre +4 100 -> 101
 			setp = pSetPieces[0]._spData;
-			if (setp != NULL) {
+			/*if (setp != NULL) {
 			lm = (uint16_t*)setp;
 			// patch set-piece to add monsters - Warlord2.DUN
 			// replace monsters
@@ -731,7 +731,7 @@ static void PlaceSetMapMonsters()
 			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 11 + 10 * 8 * 2] = 100;
 			// - add unique
 			lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 6 + 7 * 8 * 2] = SwapLE16((UMT_WARLORD + 1) | (1 << 15));
-			}
+			}*/
 			SetMapMonsters(setp, pSetPieces[0]._spx, pSetPieces[0]._spy);
 			// mem_free_dbg(setp);
 		}
