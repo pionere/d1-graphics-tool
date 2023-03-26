@@ -6,6 +6,7 @@
 #include "all.h"
 
 #include <QApplication>
+#include <QMessage>
 #include <QString>
 
 // #include "../d1dun.h"
@@ -88,15 +89,19 @@ static void LoadGameLevel(int lvldir, int seed)
 
     if (!currLvl._dSetLvl) {
         CreateLevel();
+QMessageBox::critical(nullptr, "Error", "CreateLevel done");
         if (pMegaTiles == NULL || pSolidTbl == NULL) {
             return;
         }
         IncProgress();
         if (currLvl._dType != DTYPE_TOWN) {
             GetLevelMTypes();
+QMessageBox::critical(nullptr, "Error", "MTypes done");
             InitThemes();
+QMessageBox::critical(nullptr, "Error", "InitThemes done");
             IncProgress();
             InitObjectGFX();
+QMessageBox::critical(nullptr, "Error", "InitObjectGFX done");
         } else {
 //            InitLvlStores();
             // TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
@@ -106,19 +111,27 @@ static void LoadGameLevel(int lvldir, int seed)
         IncProgress();
 
         if (currLvl._dType != DTYPE_TOWN) {
+QMessageBox::critical(nullptr, "Error", "HoldThemeRooms start");
             HoldThemeRooms();
+QMessageBox::critical(nullptr, "Error", "HoldThemeRooms done");
             InitMonsters();
+QMessageBox::critical(nullptr, "Error", "InitMonsters done");
             IncProgress();
 //            if (IsMultiGame || lvldir == ENTRY_LOAD || !IsLvlVisited(currLvl._dLevelIdx)) {
+QMessageBox::critical(nullptr, "Error", "InitObjects start");
                 InitObjects();
+QMessageBox::critical(nullptr, "Error", "InitObjects done");
                 InitItems();
+QMessageBox::critical(nullptr, "Error", "InitItems done");
                 CreateThemeRooms();
+QMessageBox::critical(nullptr, "Error", "CreateThemeRooms done");
 //            }
         } else {
 //            InitTowners();
             IncProgress();
 //            InitItems();
         }
+QMessageBox::critical(nullptr, "Error", "FreeSetPieces start");
 		FreeSetPieces();
     } else {
         LoadSetMap();
@@ -131,10 +144,12 @@ static void LoadGameLevel(int lvldir, int seed)
 
         InitItems();
     }
+QMessageBox::critical(nullptr, "Error", "Main done");
     IncProgress();
 //    InitMissiles();
 //    SavePreLighting();
     InitView(lvldir);
+QMessageBox::critical(nullptr, "Error", "InitView done");
 
     IncProgress();
 
