@@ -50,7 +50,6 @@ void DRLG_ListTrans(int num, const BYTE* List);
 void DRLG_AreaTrans(int num, const BYTE* List);
 void DRLG_FloodTVal(BYTE floor);
 void DRLG_SetMapTrans(BYTE* pMap);
-void DRLG_InitSetPC();
 void DRLG_SetPC();
 void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize);
 void DRLG_HoldThemeRooms();

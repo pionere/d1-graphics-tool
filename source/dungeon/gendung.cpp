@@ -13,7 +13,12 @@ BYTE dungeon[DMAXX][DMAXY];
 BYTE pdungeon[DMAXX][DMAXY];
 /** Flags of mega tiles during dungeon generation. */
 BYTE drlgFlags[DMAXX][DMAXY];
-/** Specifies the set level/pieces of the map. */
+/**
+ * Contains the information about the set pieces of the map.
+ * pData containts the content of the .DUN file.
+ *  - First the post version, at the end of CreateLevel the pre version is loaded.
+ *  - this is not available after the player enters the level.
+ */
 SetPieceStruct pSetPieces[4];
 /** List of the warp-points on the current level */
 WarpStruct pWarps[NUM_DWARP];
@@ -320,7 +325,7 @@ void InitLvlDungeon()
 
 void FreeSetPieces()
 {
-	for (int i = 0; i < lengthof(pSetPieces); i++) {
+	for (int i = lengthof(pSetPieces) - 1; >= 0; i--) {
 		MemFreeDbg(pSetPieces[i]._spData);
 	}
 }
@@ -671,36 +676,28 @@ void DRLG_SetMapTrans(BYTE* pMap)
 	}
 }
 
-void DRLG_InitSetPC()
-{
-	/*setpc_x = 0;
-	setpc_y = 0;
-	setpc_w = 0;
-	setpc_h = 0;
-	setpc_type = SPT_NONE;*/
-}
-
-static void Make_SetPC(int x, int y, int w, int h)
-{
-	int i, j, x0, x1, y0, y1;
-
-	x0 = 2 * x + DBORDERX;
-	y0 = 2 * y + DBORDERY;
-	x1 = 2 * w + x0;
-	y1 = 2 * h + y0;
-
-	for (j = y0; j < y1; j++) {
-		for (i = x0; i < x1; i++) {
-			dFlags[i][j] |= BFLAG_POPULATED;
-		}
-	}
-}
-
 void DRLG_SetPC()
 {
-	for (int i = 0; i < lengthof(pSetPieces); i++) {
-		if (pSetPieces[i]._spData != NULL) // pSetPieces[i]._sptype != SPT_NONE)
-			Make_SetPC(pSetPieces[i]._spx, pSetPieces[i]._spy, pSetPieces[i]._spData[0], pSetPieces[i]._spData[2]);
+	int x, y, w, h, i, j, x0, x1, y0, y1;
+
+	for (int n = lengthof(pSetPieces) - 1; n >= 0; n--) {
+		if (pSetPieces[n]._spData != NULL) { // pSetPieces[i]._sptype != SPT_NONE)
+			x = pSetPieces[n]._spx;
+			y = pSetPieces[n]._spy;
+			w = SwapLE16(*(uint16_t*)&pSetPieces[n]._spData[0]);
+			h = SwapLE16(*(uint16_t*)&pSetPieces[n]._spData[2]);
+
+			x0 = 2 * x + DBORDERX;
+			y0 = 2 * y + DBORDERY;
+			x1 = 2 * w + x0;
+			y1 = 2 * h + y0;
+
+			for (j = y0; j < y1; j++) {
+				for (i = x0; i < x1; i++) {
+					dFlags[i][j] |= BFLAG_POPULATED;
+				}
+			}
+		}
 	}
 }
 

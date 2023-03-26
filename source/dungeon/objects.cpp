@@ -909,7 +909,7 @@ void InitObjects()
 		if (QuestStatus(Q_PWATER))
 			AddCandles();
 		if (pSetPieces[0]._sptype == SPT_BUTCHER) // QuestStatus(Q_BUTCHER)
-			LoadMapSetObjs(pSetPieces[0]._spData); // "Levels\\L1Data\\Butcher.DUN");
+			LoadMapSetObjs(pSetPieces[0]._spData);
 		if (pSetPieces[0]._sptype == SPT_BANNER) // QuestStatus(Q_BANNER)
 			AddObject(OBJ_SIGNCHEST, 2 * pSetPieces[0]._spx + DBORDERX + 10, 2 * pSetPieces[0]._spy + DBORDERY + 3);
 		InitRndSarcs(OBJ_SARC);
@@ -921,11 +921,10 @@ void InitObjects()
 		if (QuestStatus(Q_ROCK))
 			InitRndLocObj5x5(OBJ_STAND);
 		if (pSetPieces[0]._sptype == SPT_BCHAMB) { // QuestStatus(Q_BCHAMB)
-			AddBookLever(OBJ_BOOK2R, -1, 0, pSetPieces[0]._spx, pSetPieces[0]._spy, pSetPieces[0]._spData[0] + pSetPieces[0]._spx, pSetPieces[0]._spData[2] + pSetPieces[0]._spy, Q_BCHAMB);
+			AddBookLever(OBJ_BOOK2R, -1, 0, pSetPieces[0]._spx, pSetPieces[0]._spy, pSetPieces[0]._spx + 5, pSetPieces[0]._spy + 5, Q_BCHAMB);
 		}
 		if (pSetPieces[0]._sptype == SPT_BLIND) { // QuestStatus(Q_BLIND)
-			AddBookLever(OBJ_BLINDBOOK, -1, 0, pSetPieces[0]._spx, pSetPieces[0]._spy, pSetPieces[0]._spData[0] + pSetPieces[0]._spx, pSetPieces[0]._spData[2] + pSetPieces[0]._spy, Q_BLIND);
-			// LoadMapSetObjs("Levels\\L2Data\\Blind2.DUN");
+			AddBookLever(OBJ_BLINDBOOK, -1, 0, pSetPieces[0]._spx, pSetPieces[0]._spy + 1, pSetPieces[0]._spx + 11, pSetPieces[0]._spy + 10, Q_BLIND);
 		}
 		if (pSetPieces[0]._sptype == SPT_BLOOD) { // QuestStatus(Q_BLOOD)
 			AddBookLever(OBJ_BLOODBOOK, 2 * pSetPieces[0]._spx + DBORDERX + 9, 2 * pSetPieces[0]._spy + DBORDERY + 24, 0, 0, 0, 0, Q_BLOOD); // NULL_LVR_EFFECT

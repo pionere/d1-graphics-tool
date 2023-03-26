@@ -1015,11 +1015,6 @@ static void DRLG_LoadL3SP()
 	}
 }
 
-static void DRLG_FreeL3SP()
-{
-	// MemFreeDbg(pSetPiece);
-}
-
 static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2)
 {
 	int i, j;
@@ -2439,7 +2434,6 @@ void CreateL3Dungeon()
 {
 	DRLG_LoadL3SP();
 	DRLG_L3();
-	DRLG_FreeL3SP();
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L3);
 	DRLG_Init_Globals();
 	DRLG_L3LightTiles();

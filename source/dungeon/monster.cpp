@@ -312,7 +312,7 @@ void GetLevelMTypes()
 			AddMonsterType(uniqMonData[UMT_DEFILER].mtype, FALSE);
 		if (lvl == DLV_CRYPT4) {
 			AddMonsterType(MT_ARCHLICH, TRUE);
-			AddMonsterType(uniqMonData[UMT_NAKRUL].mtype, FALSE);
+			// AddMonsterType(uniqMonData[UMT_NAKRUL].mtype, FALSE);
 		}
 #endif
 		//if (QuestStatus(Q_BUTCHER))
@@ -337,8 +337,8 @@ void GetLevelMTypes()
 		//}
 		if (QuestStatus(Q_VEIL))
 			AddMonsterType(uniqMonData[UMT_LACHDAN].mtype, TRUE);
-		//if (QuestStatus(Q_WARLORD))
-		//	AddMonsterType(uniqMonData[UMT_WARLORD].mtype, TRUE);
+		if (QuestStatus(Q_WARLORD))
+			AddMonsterType(uniqMonData[UMT_WARLORD].mtype, TRUE);
 		//if (QuestStatus(Q_BETRAYER) && IsMultiGame) {
 		//if (currLvl._dLevelIdx == questlist[Q_BETRAYER]._qdlvl && IsMultiGame) {
 		//	AddMonsterType(uniqMonData[UMT_LAZARUS].mtype, FALSE);
@@ -521,56 +521,6 @@ static void PlaceGroup(int mtidx, int num, int leaderf, int leader)
 	}
 }
 
-void InitUniqueMonster(int mnum, int uniqindex);
-static void PlaceUniqueMonst(int uniqindex, int mtidx)
-{
-	int xp, yp, x, y;
-	int count2;
-	int mnum, count;
-	static_assert(NUM_COLOR_TRNS <= UCHAR_MAX, "Color transform index stored in BYTE field.");
-	if (uniquetrans >= NUM_COLOR_TRNS) {
-		return;
-	}
-
-	switch (uniqindex) {
-	case UMT_ZHAR:
-		assert(nummonsters == MAX_MINIONS);
-		if (zharlib == -1)
-			return;
-		xp = 2 * themeLoc[zharlib].x + DBORDERX + 4;
-		yp = 2 * themeLoc[zharlib].y + DBORDERY + 4;
-		break;
-	default:
-		count = 0;
-		while (TRUE) {
-			xp = random_(91, DSIZEX) + DBORDERX;
-			yp = random_(91, DSIZEY) + DBORDERY;
-			count2 = 0;
-			for (x = xp - MON_PACK_DISTANCE; x <= xp + MON_PACK_DISTANCE; x++) {
-				for (y = yp - MON_PACK_DISTANCE; y <= yp + MON_PACK_DISTANCE; y++) {
-					if (MonstPlace(x, y)) {
-						count2++;
-					}
-				}
-			}
-
-			if (count2 < 2 * MON_PACK_SIZE) {
-				count++;
-				if (count < 1000) {
-					continue;
-				}
-			}
-
-			if (MonstPlace(xp, yp)) {
-				break;
-			}
-		}
-	}
-	// assert(nummonsters < MAXMONSTERS);
-	mnum = PlaceMonster(mtidx, xp, yp);
-	InitUniqueMonster(mnum, uniqindex);
-}
-
 static void InitUniqueMonster(int mnum, int uniqindex)
 {
 //	char filestr[DATA_ARCHIVE_MAX_PATH];
@@ -633,6 +583,55 @@ static void InitUniqueMonster(int mnum, int uniqindex)
 //		mon->_mMaxDamage2 = 4 * mon->_mMaxDamage2 + 6;
 //		mon->_mMagicRes = uniqm->mMagicRes2;
 	}
+}
+
+static void PlaceUniqueMonst(int uniqindex, int mtidx)
+{
+	int xp, yp, x, y;
+	int count2;
+	int mnum, count;
+	static_assert(NUM_COLOR_TRNS <= UCHAR_MAX, "Color transform index stored in BYTE field.");
+	if (uniquetrans >= NUM_COLOR_TRNS) {
+		return;
+	}
+
+	switch (uniqindex) {
+	case UMT_ZHAR:
+		assert(nummonsters == MAX_MINIONS);
+		if (zharlib == -1)
+			return;
+		xp = 2 * themeLoc[zharlib].x + DBORDERX + 4;
+		yp = 2 * themeLoc[zharlib].y + DBORDERY + 4;
+		break;
+	default:
+		count = 0;
+		while (TRUE) {
+			xp = random_(91, DSIZEX) + DBORDERX;
+			yp = random_(91, DSIZEY) + DBORDERY;
+			count2 = 0;
+			for (x = xp - MON_PACK_DISTANCE; x <= xp + MON_PACK_DISTANCE; x++) {
+				for (y = yp - MON_PACK_DISTANCE; y <= yp + MON_PACK_DISTANCE; y++) {
+					if (MonstPlace(x, y)) {
+						count2++;
+					}
+				}
+			}
+
+			if (count2 < 2 * MON_PACK_SIZE) {
+				count++;
+				if (count < 1000) {
+					continue;
+				}
+			}
+
+			if (MonstPlace(xp, yp)) {
+				break;
+			}
+		}
+	}
+	// assert(nummonsters < MAXMONSTERS);
+	mnum = PlaceMonster(mtidx, xp, yp);
+	InitUniqueMonster(mnum, uniqindex);
 }
 
 static void PlaceUniques()

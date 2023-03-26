@@ -248,27 +248,20 @@ static void DRLG_LoadL4SP()
 	}
 }
 
-static void DRLG_FreeL4SP()
+static void DRLG_L4SetRoom(int idx)
 {
-	// MemFreeDbg(pSetPiece);
-}
-
-static void DRLG_L4SetSPRoom(int idx)
-{
-	int rx1, ry1, rw, rh, i, j;
+	int rx1, ry1, rx2, ry2, i, j;
 	BYTE* sp;
 
-	rx1 = pSetPieces[idx]._spx;
-	ry1 = pSetPieces[idx]._spy;
+	SetPieceStruct* pSetPiece = &pSetPieces[idx];
+	rx1 = pSetPiece->_spx;
+	ry1 = pSetPiece->_spy;
+	rx2 = rx1 + SwapLE16(*(uint16_t*)&pSetPiece->_spData[0]);
+	ry2 = ry1 + SwapLE16(*(uint16_t*)&pSetPiece->_spData[2]);
+	sp = &pSetPiece->_spData[4];
 
-	rw = SwapLE16(*(uint16_t*)&pSetPieces[idx]._spData[0]);
-	rh = SwapLE16(*(uint16_t*)&pSetPieces[idx]._spData[2]);
-	sp = &pSetPieces[idx]._spData[4];
-
-	rw += rx1;
-	rh += ry1;
-	for (j = ry1; j < rh; j++) {
-		for (i = rx1; i < rw; i++) {
+	for (j = ry1; j < ry2; j++) {
+		for (i = rx1; i < rx2; i++) {
 			dungeon[i][j] = *sp != 0 ? *sp : DEFAULT_MEGATILE_L4;
 			// drlgFlags[i][j] = *sp != 0 ? TRUE : FALSE; // |= DLRG_PROTECTED; - commented out because it requires too many patches to the setpieces due to DRLG_L4Subs
 			drlgFlags[i][j] = TRUE; // |= DLRG_PROTECTED;
@@ -1207,8 +1200,8 @@ static void L4FirstRoom()
 
 	if (currLvl._dLevelIdx != DLV_HELL4) {
 		if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
-			w = pSetPieces[0]._spData[0] + 4; // TODO: add border to the setmaps
-			h = pSetPieces[0]._spData[2] + 4;
+			w = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[0]) + 4; // TODO: add border to the setmaps
+			h = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[2]) + 4;
 			if (pSetPieces[0]._sptype == SPT_WARLORD)
 				w--;
 		} else {
@@ -1253,73 +1246,12 @@ static void L4FirstRoom()
 	L4RoomGen(x, y, w, h, random_(0, 2));
 }
 
-/*static void L4SaveQuads()
+static void DRLG_LoadDiabQuads()
 {
-	int i, j, x, y;
-
-	x = pSetPieces[0]._spx - 1;
-	y = pSetPieces[0]._spy - 1;
-
-	for (j = y; j < y + DQUAD_ROOM_SIZE; j++) {
-		for (i = x; i < x + DQUAD_ROOM_SIZE; i++) {
-			drlgFlags[i][j] = TRUE;
-			drlgFlags[DMAXX - 1 - i][j] = TRUE;
-			drlgFlags[i][DMAXY - 1 - j] = TRUE;
-			drlgFlags[DMAXX - 1 - i][DMAXY - 1 - j] = TRUE;
-		}
-	}
-}*/
-
-//static void DRLG_L4SetRoom(int rx1, int ry1)
-static void DRLG_L4SetRoom(int n)
-{
-	int rx1, ry1, rx2, ry2, i, j;
-	BYTE* sp;
-
-	SetPieceStruct* pSetPiece = &pSetPieces[n];
-	if (pSetPiece == NULL) {
-		return;
-	}
-	rx1 = pSetPiece->_spx;
-	ry1 = pSetPiece->_spy;
-	rx2 = rx1 + SwapLE16(*(uint16_t*)&pSetPiece->_spData[0]);
-	ry2 = ry1 + SwapLE16(*(uint16_t*)&pSetPiece->_spData[2]);
-	sp = &pSetPiece->_spData[4];
-
-	for (j = ry1; j < ry2; j++) {
-		for (i = rx1; i < rx2; i++) {
-			dungeon[i][j] = *sp != 0 ? *sp : DEFAULT_MEGATILE_L4;
-			// drlgFlags[i][j] = *sp != 0 ? TRUE : FALSE; // |= DLRG_PROTECTED; - commented out because it requires too many patches to the setpieces due to DRLG_L4Subs
-			drlgFlags[i][j] = TRUE; // |= DLRG_PROTECTED;
-			sp += 2;
-		}
-	}
-}
-
-static void DRLG_LoadDiabQuads(bool postflag)
-{
-	if (postflag) {
-		/*int setpc_x = pSetPieces[0]._spx;
-		int setpc_y = pSetPieces[0]._spy;
-		pSetPieces[0]._spx = DIAB_QUAD_1X;
-		pSetPieces[0]._spy = DIAB_QUAD_1Y;
-		pSetPieces[1]._spx = DIAB_QUAD_2X;
-		pSetPieces[1]._spy = DIAB_QUAD_2Y;
-		pSetPieces[2]._spx = DIAB_QUAD_3X;
-		pSetPieces[2]._spy = DIAB_QUAD_3Y;
-		pSetPieces[3]._spx = DIAB_QUAD_4X;
-		pSetPieces[3]._spy = DIAB_QUAD_4Y;*/
-	} else {
-		// LoadFileWithMem("Levels\\L4Data\\diab1.DUN", pSetPieces[0]._spData);
-		LoadFileWithMem("Levels\\L4Data\\diab2a.DUN", pSetPieces[1]._spData);
-		LoadFileWithMem("Levels\\L4Data\\diab3a.DUN", pSetPieces[2]._spData);
-		LoadFileWithMem("Levels\\L4Data\\diab4a.DUN", pSetPieces[3]._spData);
-	}
-
-	DRLG_L4SetRoom(0); // DIAB_QUAD_1X, DIAB_QUAD_1Y);
-	DRLG_L4SetRoom(1); // DIAB_QUAD_2X, DIAB_QUAD_2Y);
-	DRLG_L4SetRoom(2); // DIAB_QUAD_3X, DIAB_QUAD_3Y);
-	DRLG_L4SetRoom(3); // DIAB_QUAD_4X, DIAB_QUAD_4Y);
+	DRLG_L4SetRoom(0);
+	DRLG_L4SetRoom(1);
+	DRLG_L4SetRoom(2);
+	DRLG_L4SetRoom(3);
 }
 
 /*
@@ -1853,10 +1785,9 @@ static void DRLG_L4()
 		L4TileFix();
 		memset(drlgFlags, 0, sizeof(drlgFlags));
 		if (currLvl._dLevelIdx == DLV_HELL4) {
-			// L4SaveQuads();
-			DRLG_LoadDiabQuads(true);
+			DRLG_LoadDiabQuads();
 		} else if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
-			DRLG_L4SetSPRoom(0);
+			DRLG_L4SetRoom(0);
 		}
 		L4AddWall();
 		DRLG_InitTrans();
@@ -1924,7 +1855,6 @@ static void DRLG_L4()
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
 	if (currLvl._dLevelIdx == DLV_HELL4) {
-		// DRLG_LoadDiabQuads(false);
 		// LoadFileWithMem("Levels\\L4Data\\diab1.DUN", pSetPieces[0]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab2a.DUN", pSetPieces[1]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab3a.DUN", pSetPieces[2]._spData);
@@ -1945,7 +1875,6 @@ void CreateL4Dungeon()
 {
 	DRLG_LoadL4SP();
 	DRLG_L4();
-	DRLG_FreeL4SP();
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
 	DRLG_Init_Globals();
 	if (currLvl._dLevelIdx != DLV_HELL4)
