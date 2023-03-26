@@ -35,6 +35,7 @@ inline int RandRangeLow(int minVal, int maxVal)
 }
 
 BYTE* LoadFileInMem(const char* pszName, size_t* pdwFileLen = NULL);
+void LoadFileWithMem(const char* pszName, BYTE* p);
 
 void mem_free_dbg(void* p);
 #define MemFreeDbg(p)       \

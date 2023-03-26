@@ -342,7 +342,7 @@ const BYTE MonstConvTbl[128] = {
 	0, //MT_XMAGE,
 	MT_BMAGE, // Q_BETRAYER, Q_DIABLO
 	0,
-	0,
+	0, // Diablo from diab4*.dun
 	0,
 	0, //MT_GOLEM,
 	0,

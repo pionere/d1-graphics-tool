@@ -147,4 +147,32 @@ BYTE* LoadFileInMem(const char* pszName, size_t* pdwFileLen)
 	return buf;
 }
 
+/**
+ * @brief Load a file in to the given buffer
+ * @param pszName Path of file
+ * @param p Target buffer
+ */
+void LoadFileWithMem(const char* pszName, BYTE* p)
+{
+	QString path = assetPath + "/" + pszName;
+
+	if (p == NULL) {
+		dProgressErr() << QApplication::tr("Skipping file: %1.").arg(QDir::toNativeSeparators(path));
+		return;
+	}
+	QFile file = QFile(path);
+
+	if (!file.open(QIODevice::ReadOnly)) {
+		dProgressErr() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(path));
+		return;
+	}
+
+	const QByteArray fileData = file.readAll();
+
+	unsigned fileLen = fileData.size();
+	if (fileLen != 0) {
+		memcpy(p, fileData.constData(), fileLen);
+	}
+}
+
 DEVILUTION_END_NAMESPACE
