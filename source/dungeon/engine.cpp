@@ -172,8 +172,7 @@ void LoadFileWithMem(const char* pszName, BYTE* p)
 
 	unsigned fileLen = fileData.size();
 	if (fileLen != 0) {
-		buf = (BYTE*)DiabloAllocPtr(fileLen);
-		memcpy(buf, fileData.constData(), fileLen);
+		memcpy(p, fileData.constData(), fileLen);
 	}
 }
 
