@@ -5,6 +5,8 @@
  */
 #include "all.h"
 
+#include <QApplication>
+
 #include "../progressdialog.h"
 
 // BUGFIX: constant data should be const

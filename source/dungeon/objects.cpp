@@ -653,6 +653,7 @@ static void LoadMapSetObjects(const BYTE* map, int startx, int starty)
 				} else {
 //				assert(objanimdata[objectdata[ObjConvTbl[SwapLE16(*lm)]].ofindex] != NULL);
 				oi = AddObject(ObjConvTbl[SwapLE16(*lm)], i, j);
+				}
 			}
 			lm++;
 		}
