@@ -91,21 +91,16 @@ static void LoadGameLevel(int lvldir, int seed)
 		// fill in loop: dungeon, pdungeon, dTransVal, pWarps, pSetPieces, uses drlgFlags, dungBlock
 		// fill post: dPiece, dSpecial, dPreLight, dLight, themeLoc, dFlags
 		// reset: dMonster, dObject, dPlayer, dItem, dMissile
-QMessageBox::critical(nullptr, "Error", "CreateLevel start");
         CreateLevel();
-QMessageBox::critical(nullptr, "Error", "CreateLevel done");
         if (pMegaTiles == NULL || pSolidTbl == NULL) {
             return;
         }
         IncProgress();
         if (currLvl._dType != DTYPE_TOWN) {
             GetLevelMTypes(); // load monster types
-QMessageBox::critical(nullptr, "Error", "MTypes done");
             InitThemes(); // select theme types
-QMessageBox::critical(nullptr, "Error", "InitThemes done");
             IncProgress();
             InitObjectGFX(); // load object graphics
-QMessageBox::critical(nullptr, "Error", "InitObjectGFX done");
         } else {
 //            InitLvlStores();
             // TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
@@ -115,27 +110,19 @@ QMessageBox::critical(nullptr, "Error", "InitObjectGFX done");
         IncProgress();
 
         if (currLvl._dType != DTYPE_TOWN) {
-QMessageBox::critical(nullptr, "Error", "HoldThemeRooms start");
             HoldThemeRooms(); // protect themes
-QMessageBox::critical(nullptr, "Error", "HoldThemeRooms done");
             InitMonsters();   // place monsters
-QMessageBox::critical(nullptr, "Error", "InitMonsters done");
             IncProgress();
 //            if (IsMultiGame || lvldir == ENTRY_LOAD || !IsLvlVisited(currLvl._dLevelIdx)) {
-QMessageBox::critical(nullptr, "Error", "InitObjects start");
                 InitObjects(); // place objects
-QMessageBox::critical(nullptr, "Error", "InitObjects done");
                 InitItems();   // place items
-QMessageBox::critical(nullptr, "Error", "InitItems done");
                 CreateThemeRooms(); // populate theme rooms
-QMessageBox::critical(nullptr, "Error", "CreateThemeRooms done");
 //            }
         } else {
 //            InitTowners();
             IncProgress();
 //            InitItems();
         }
-QMessageBox::critical(nullptr, "Error", "FreeSetPieces start");
 		FreeSetPieces();
     } else {
         LoadSetMap();
@@ -148,12 +135,10 @@ QMessageBox::critical(nullptr, "Error", "FreeSetPieces start");
 
         InitItems();
     }
-QMessageBox::critical(nullptr, "Error", "Main done");
     IncProgress();
 //    InitMissiles();
 //    SavePreLighting();
     InitView(lvldir);
-QMessageBox::critical(nullptr, "Error", "InitView done");
 
     IncProgress();
 

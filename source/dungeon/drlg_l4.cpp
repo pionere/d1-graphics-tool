@@ -1234,8 +1234,18 @@ static void L4FirstRoom()
 			pSetPieces[0]._spy = y + 1;
 		}
 	} else {
-		pSetPieces[0]._spx = x + 1;
-		pSetPieces[0]._spy = y + 1;
+		int setpc_x = x + 1; // pSetPieces[0]._spx;
+		int setpc_y = y + 1; // pSetPieces[0]._spy;
+		pSetPieces[0]._spx = DIAB_QUAD_1X;
+		pSetPieces[0]._spy = DIAB_QUAD_1Y;
+		pSetPieces[1]._spx = DIAB_QUAD_2X;
+		pSetPieces[1]._spy = DIAB_QUAD_2Y;
+		pSetPieces[2]._spx = DIAB_QUAD_3X;
+		pSetPieces[2]._spy = DIAB_QUAD_3Y;
+		pSetPieces[3]._spx = DIAB_QUAD_4X;
+		pSetPieces[3]._spy = DIAB_QUAD_4Y;
+		// pSetPieces[0]._spx = x + 1;
+		// pSetPieces[0]._spy = y + 1;
 	}
 
 	L4DrawRoom(x, y, w, h);
@@ -1289,7 +1299,7 @@ static void DRLG_L4SetRoom(int n)
 static void DRLG_LoadDiabQuads(bool postflag)
 {
 	if (postflag) {
-		int setpc_x = pSetPieces[0]._spx;
+		/*int setpc_x = pSetPieces[0]._spx;
 		int setpc_y = pSetPieces[0]._spy;
 		pSetPieces[0]._spx = DIAB_QUAD_1X;
 		pSetPieces[0]._spy = DIAB_QUAD_1Y;
@@ -1298,7 +1308,7 @@ static void DRLG_LoadDiabQuads(bool postflag)
 		pSetPieces[2]._spx = DIAB_QUAD_3X;
 		pSetPieces[2]._spy = DIAB_QUAD_3Y;
 		pSetPieces[3]._spx = DIAB_QUAD_4X;
-		pSetPieces[3]._spy = DIAB_QUAD_4Y;
+		pSetPieces[3]._spy = DIAB_QUAD_4Y;*/
 	} else {
 		// LoadFileWithMem("Levels\\L4Data\\diab1.DUN", pSetPieces[0]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab2a.DUN", pSetPieces[1]._spData);
@@ -1916,7 +1926,6 @@ static void DRLG_L4()
 	if (currLvl._dLevelIdx == DLV_HELL4) {
 		DRLG_LoadDiabQuads(false);
 	} else if (pSetPieces[0]._sptype == SPT_WARLORD) {
-QMessageBox::critical(nullptr, "Error", "Still alive before pre-map");
 		// load pre-map
 		MemFreeDbg(pSetPieces[0]._spData);
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L4Data\\Warlord2.DUN");
@@ -1926,21 +1935,13 @@ QMessageBox::critical(nullptr, "Error", "Still alive before pre-map");
 
 void CreateL4Dungeon()
 {
-QMessageBox::critical(nullptr, "Error", "CreateL4Dungeon 0");
 	DRLG_LoadL4SP();
-QMessageBox::critical(nullptr, "Error", "CreateL4Dungeon 1");
 	DRLG_L4();
-QMessageBox::critical(nullptr, "Error", "CreateL4Dungeon 2");
 	DRLG_FreeL4SP();
-QMessageBox::critical(nullptr, "Error", "CreateL4Dungeon 3");
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
-QMessageBox::critical(nullptr, "Error", "CreateL4Dungeon 4");
 	DRLG_Init_Globals();
-QMessageBox::critical(nullptr, "Error", "CreateL4Dungeon 5");
-	if (currLvl._dLevelIdx != DLV_HELL4) {
+	if (currLvl._dLevelIdx != DLV_HELL4)
 		DRLG_SetPC();
-QMessageBox::critical(nullptr, "Error", "CreateL4Dungeon 6");
-    }
 }
 
 /*static BYTE* LoadL4DungeonData(const char* sFileName)

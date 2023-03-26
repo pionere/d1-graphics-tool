@@ -698,7 +698,10 @@ static void Make_SetPC(int x, int y, int w, int h)
 
 void DRLG_SetPC()
 {
-	Make_SetPC(pSetPieces[0]._spx, pSetPieces[0]._spy, pSetPieces[0]._spData[0], pSetPieces[0]._spData[2]);
+	for (int i = 0; i < lengthof(pSetPieces); i++) {
+		if (pSetPieces[i]._spData != NULL) // pSetPieces[i]._sptype != SPT_NONE)
+			Make_SetPC(pSetPieces[i]._spx, pSetPieces[i]._spy, pSetPieces[i]._spData[0], pSetPieces[i]._spData[2]);
+	}
 }
 
 /**
