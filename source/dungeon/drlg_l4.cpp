@@ -234,7 +234,6 @@ static void DRLG_LoadL4SP()
 		pSetPieces[1]._spData = LoadFileInMem("Levels\\L4Data\\diab2b.DUN");
 		pSetPieces[2]._spData = LoadFileInMem("Levels\\L4Data\\diab3b.DUN");
 		pSetPieces[3]._spData = LoadFileInMem("Levels\\L4Data\\diab4b.DUN");
-dProgress() << "Loaded b.Duns";
 	} else if (IsMultiGame && QuestStatus(Q_BETRAYER)) {
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L4Data\\Vile1.DUN");
 		pSetPieces[0]._sptype = SPT_BETRAYER;
@@ -1207,7 +1206,7 @@ static void L4FirstRoom()
 	int x, y, w, h, xmin, xmax, ymin, ymax;
 
 	if (currLvl._dLevelIdx != DLV_HELL4) {
-		if (pSetPieces[0]._sptype != SPT_NONE) {
+		if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
 			w = pSetPieces[0]._spData[0] + 4; // TODO: add border to the setmaps
 			h = pSetPieces[0]._spData[2] + 4;
 			if (pSetPieces[0]._sptype == SPT_WARLORD)
@@ -1305,7 +1304,6 @@ static void DRLG_LoadDiabQuads(bool postflag)
 		LoadFileWithMem("Levels\\L4Data\\diab2a.DUN", pSetPieces[1]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab3a.DUN", pSetPieces[2]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab4a.DUN", pSetPieces[3]._spData);
-dProgress() << "Loaded a.Duns";
 	}
 
 	DRLG_L4SetRoom(0); // DIAB_QUAD_1X, DIAB_QUAD_1Y);
@@ -1830,6 +1828,7 @@ static void DRLG_L4GeneralFix()
 
 static void DRLG_L4()
 {
+QMessageBox::critical(nullptr, "Error", "DRLG_L4 startup");
 	while (true) {
 		do {
 			memset(dungBlock, 0, sizeof(dungBlock));
@@ -1901,6 +1900,7 @@ static void DRLG_L4()
 		}
 		break;
 	}
+QMessageBox::critical(nullptr, "Error", "DRLG_L4 loop done");
 
 	DRLG_L4GeneralFix();
 	DRLG_L4TransFix();
@@ -1933,7 +1933,8 @@ void CreateL4Dungeon()
 	DRLG_FreeL4SP();
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
 	DRLG_Init_Globals();
-	DRLG_SetPC();
+	if (currLvl._dLevelIdx != DLV_HELL4)
+		DRLG_SetPC();
 }
 
 /*static BYTE* LoadL4DungeonData(const char* sFileName)

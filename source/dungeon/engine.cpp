@@ -155,7 +155,6 @@ BYTE* LoadFileInMem(const char* pszName, size_t* pdwFileLen)
 void LoadFileWithMem(const char* pszName, BYTE* p)
 {
 	QString path = assetPath + "/" + pszName;
-	BYTE* buf = NULL;
 
 	if (p == NULL) {
 		dProgressErr() << QApplication::tr("Skipping file: %1.").arg(QDir::toNativeSeparators(path));
