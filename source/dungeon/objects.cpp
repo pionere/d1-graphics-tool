@@ -5,6 +5,8 @@
  */
 #include "all.h"
 
+#include <QApplication>
+
 #include "../progressdialog.h"
 
 #define DOOR_CLOSED  0
@@ -619,15 +621,7 @@ static void AddChestTraps()
 	}
 }
 
-typedef struct LeverRect {
-	int x1;
-	int y1;
-	int x2;
-	int y2;
-	int leveridx;
-} LeverRect;
-//static void LoadMapSetObjects(const char* map, int startx, int starty, const LeverRect* lvrRect)
-static void LoadMapSetObjects(const BYTE* map, int startx, int starty, const LeverRect* lvrRect)
+static void LoadMapSetObjects(const BYTE* map, int startx, int starty)
 {
 	const BYTE* pMap = map; // LoadFileInMem(map);
 	int i, j, oi;
@@ -655,13 +649,10 @@ static void LoadMapSetObjects(const BYTE* map, int startx, int starty, const Lev
 		for (i = startx; i < rw; i++) {
 			if (*lm != 0) {
 				if (SwapLE16(*lm) >= lengthof(ObjConvTbl) || ObjConvTbl[SwapLE16(*lm)] == 0) {
-					dProgressErr() << QString("Invalid object %1 at %2:%3").arg(*lm).arg(i).arg(j);
+					dProgressErr() << QApplication::tr("Invalid object %1 at %2:%3").arg(*lm).arg(i).arg(j);
 				} else {
 //				assert(objanimdata[objectdata[ObjConvTbl[SwapLE16(*lm)]].ofindex] != NULL);
 				oi = AddObject(ObjConvTbl[SwapLE16(*lm)], i, j);
-				if (lvrRect != NULL)
-					SetObjMapRange(oi, lvrRect->x1, lvrRect->y1, lvrRect->x2, lvrRect->y2, lvrRect->leveridx);
-				}
 			}
 			lm++;
 		}
@@ -671,10 +662,9 @@ static void LoadMapSetObjects(const BYTE* map, int startx, int starty, const Lev
 	// mem_free_dbg(pMap);
 }
 
-//static void LoadMapSetObjs(const char* map)
 static void LoadMapSetObjs(const BYTE* map)
 {
-	LoadMapSetObjects(map, 2 * pSetPieces[0]._spx, 2 * pSetPieces[0]._spy, NULL);
+	LoadMapSetObjects(map, 2 * pSetPieces[0]._spx, 2 * pSetPieces[0]._spy);
 }
 
 static void SetupObject(int oi, int type)
@@ -1071,7 +1061,7 @@ void SetMapObjects(BYTE* pMap)
 		for (i = DBORDERX; i < rw; i++) {
 			if (*lm != 0) {
 				if (SwapLE16(*lm) >= lengthof(ObjConvTbl) || ObjConvTbl[SwapLE16(*lm)] == 0) {
-					dProgressErr() << QString("Invalid object %1 at %2:%3").arg(SwapLE16(*lm)).arg(i).arg(j);
+					dProgressErr() << QApplication::tr("Invalid object %1 at %2:%3").arg(SwapLE16(*lm)).arg(i).arg(j);
 				} else {
 				AddObject(ObjConvTbl[SwapLE16(*lm)], i, j);
 				}
