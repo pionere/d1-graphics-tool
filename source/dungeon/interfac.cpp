@@ -6,7 +6,7 @@
 #include "all.h"
 
 #include <QApplication>
-#include <QMessage>
+#include <QMessageBox>
 #include <QString>
 
 // #include "../d1dun.h"
@@ -70,7 +70,7 @@ static void LoadGameLevel(int lvldir, int seed)
     //SetRndSeed(seed);
 
     IncProgress();
-    InitLvlDungeon();
+    InitLvlDungeon(); // load tiles + meta data
 //    MakeLightTable();
     IncProgress();
 
@@ -81,26 +81,26 @@ static void LoadGameLevel(int lvldir, int seed)
 //        InitVision();
     //}
 
-    InitLevelMonsters();
-    InitLevelObjects();
+    InitLevelMonsters(); // reset monster types
+    InitLevelObjects();  // reset objects
     IncProgress();
 
     SetRndSeed(seed);
 
     if (!currLvl._dSetLvl) {
-        CreateLevel();
+        CreateLevel(); // fill dungeon, pdungeon, dPiece, dSpecial, dTransVal, dPreLight, dLight, pWarps, pSetPieces, themeLoc, dFlags, reset dMonster, dObject, dPlayer, dItem, dMissile, uses drlgFlags
 QMessageBox::critical(nullptr, "Error", "CreateLevel done");
         if (pMegaTiles == NULL || pSolidTbl == NULL) {
             return;
         }
         IncProgress();
         if (currLvl._dType != DTYPE_TOWN) {
-            GetLevelMTypes();
+            GetLevelMTypes(); // load monster types
 QMessageBox::critical(nullptr, "Error", "MTypes done");
-            InitThemes();
+            InitThemes(); // select theme types
 QMessageBox::critical(nullptr, "Error", "InitThemes done");
             IncProgress();
-            InitObjectGFX();
+            InitObjectGFX(); // load object graphics
 QMessageBox::critical(nullptr, "Error", "InitObjectGFX done");
         } else {
 //            InitLvlStores();
@@ -112,18 +112,18 @@ QMessageBox::critical(nullptr, "Error", "InitObjectGFX done");
 
         if (currLvl._dType != DTYPE_TOWN) {
 QMessageBox::critical(nullptr, "Error", "HoldThemeRooms start");
-            HoldThemeRooms();
+            HoldThemeRooms(); // protect themes
 QMessageBox::critical(nullptr, "Error", "HoldThemeRooms done");
-            InitMonsters();
+            InitMonsters();   // place monsters
 QMessageBox::critical(nullptr, "Error", "InitMonsters done");
             IncProgress();
 //            if (IsMultiGame || lvldir == ENTRY_LOAD || !IsLvlVisited(currLvl._dLevelIdx)) {
 QMessageBox::critical(nullptr, "Error", "InitObjects start");
-                InitObjects();
+                InitObjects(); // place objects
 QMessageBox::critical(nullptr, "Error", "InitObjects done");
-                InitItems();
+                InitItems();   // place items
 QMessageBox::critical(nullptr, "Error", "InitItems done");
-                CreateThemeRooms();
+                CreateThemeRooms(); // populate theme rooms
 QMessageBox::critical(nullptr, "Error", "CreateThemeRooms done");
 //            }
         } else {
