@@ -714,21 +714,29 @@ static void SetupObject(int oi, int type)
 	os->_oTrapChance = 0;
 }
 
+static int ObjIndex(int x, int y)
+{
+	int oi = dObject[x][y];
+	if (oi == 0) {
+		dProgressErr() << QApplication::tr("ObjIndex: Active object not found at (%1,%2)").arg(x).arg(y);
+		return 0;
+	}
+	oi = oi >= 0 ? oi - 1 : -(oi + 1);
+	return oi;
+}
+
 static void AddDiabObjs()
 {
-	LeverRect lr;
-	// lr = { DIAB_QUAD_2X, DIAB_QUAD_2Y, DIAB_QUAD_2X + 11, DIAB_QUAD_2Y + 12, 1 };
-	lr = { pSetPieces[1]._spx, pSetPieces[1]._spy, pSetPieces[1]._spx + 11, pSetPieces[1]._spy + 12, 1 };
-	// LoadMapSetObjects("Levels\\L4Data\\diab1.DUN", 2 * DIAB_QUAD_1X, 2 * DIAB_QUAD_1Y, &lr);
-	LoadMapSetObjects(pSetPieces[0]._spData, 2 * pSetPieces[0]._spx, 2 * pSetPieces[0]._spy, &lr);
-	// lr = { DIAB_QUAD_3X, DIAB_QUAD_3Y, DIAB_QUAD_3X + 11, DIAB_QUAD_3Y + 11, 2 };
-	lr = { pSetPieces[2]._spx, pSetPieces[2]._spy, pSetPieces[2]._spx + 11, pSetPieces[2]._spy + 11, 2 };
-	// LoadMapSetObjects("Levels\\L4Data\\diab2a.DUN", 2 * DIAB_QUAD_2X, 2 * DIAB_QUAD_2Y, &lr);
-	LoadMapSetObjects(pSetPieces[1]._spData, 2 * pSetPieces[1]._spx, 2 * pSetPieces[1]._spy, &lr);
-	// lr = { DIAB_QUAD_4X, DIAB_QUAD_4Y, DIAB_QUAD_4X + 9, DIAB_QUAD_4Y + 9, 3 };
-	lr = { pSetPieces[3]._spx, pSetPieces[3]._spy, pSetPieces[3]._spx + 9, pSetPieces[3]._spy + 9, 3 };
-	// LoadMapSetObjects("Levels\\L4Data\\diab3a.DUN", 2 * DIAB_QUAD_3X, 2 * DIAB_QUAD_3Y, &lr);
-	LoadMapSetObjects(pSetPieces[2]._spData, 2 * pSetPieces[2]._spx, 2 * pSetPieces[2]._spy, &lr);
+	LoadMapSetObjects(pSetPieces[0]._spData, 2 * pSetPieces[0]._spx, 2 * pSetPieces[0]._spy);
+	// lr = { pSetPieces[1]._spx, pSetPieces[1]._spy, pSetPieces[1]._spx + 11, pSetPieces[1]._spy + 12, 1 };
+	SetObjMapRange(ObjIndex(DBORDERX + 2 * pSetPieces[0]._spx + 5, DBORDERY + 2 * pSetPieces[0]._spy + 5), pSetPieces[1]._spx, pSetPieces[1]._spy, pSetPieces[1]._spx + 11, pSetPieces[1]._spy + 12, 1);
+	LoadMapSetObjects(pSetPieces[1]._spData, 2 * pSetPieces[1]._spx, 2 * pSetPieces[1]._spy);
+	// lr = { pSetPieces[2]._spx, pSetPieces[2]._spy, pSetPieces[2]._spx + 11, pSetPieces[2]._spy + 11, 2 };
+	SetObjMapRange(ObjIndex(DBORDERX + 2 * pSetPieces[1]._spx + 13, DBORDERY + 2 * pSetPieces[1]._spy + 10), pSetPieces[2]._spx, pSetPieces[2]._spy, pSetPieces[2]._spx + 11, pSetPieces[2]._spy + 11, 2);
+	LoadMapSetObjects(pSetPieces[2]._spData, 2 * pSetPieces[2]._spx, 2 * pSetPieces[2]._spy);
+	// lr = { pSetPieces[3]._spx, pSetPieces[3]._spy, pSetPieces[3]._spx + 9, pSetPieces[3]._spy + 9, 3 };
+	SetObjMapRange(ObjIndex(DBORDERX + 2 * pSetPieces[2]._spx + 8, DBORDERY + 2 * pSetPieces[2]._spy + 2), pSetPieces[3]._spx, pSetPieces[3]._spy, pSetPieces[3]._spx + 9, pSetPieces[3]._spy + 9, 3);
+	SetObjMapRange(ObjIndex(DBORDERX + 2 * pSetPieces[2]._spx + 8, DBORDERY + 2 * pSetPieces[2]._spy + 14), pSetPieces[3]._spx, pSetPieces[3]._spy, pSetPieces[3]._spx + 9, pSetPieces[3]._spy + 9, 3);
 }
 
 static void AddHBooks(int bookidx, int ox, int oy)

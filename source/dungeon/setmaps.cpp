@@ -5,6 +5,8 @@
  */
 #include "all.h"
 
+#include "../progressdialog.h"
+
 // BUGFIX: constant data should be const
 const BYTE BoneChamTrans1[] = {
 	DBORDERX + 27, DBORDERY + 3, DBORDERX + 34, DBORDERY + 10,
@@ -45,12 +47,13 @@ static int ObjIndex(int x, int y)
 {
 	int oi = dObject[x][y];
 
-	if (oi != 0) {
-		oi = oi >= 0 ? oi - 1 : -(oi + 1);
-		return oi;
+	if (oi == 0) {
+		dProgressErr() << QApplication::tr("ObjIndex: Active object not found at (%1,%2)").arg(x).arg(y);
+		return 0;
 	}
-	// FIXME log error
-	return -1;
+
+	oi = oi >= 0 ? oi - 1 : -(oi + 1);
+	return oi;
 }
 
 static void AddSKingObjs()
