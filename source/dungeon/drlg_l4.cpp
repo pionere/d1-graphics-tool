@@ -1226,8 +1226,8 @@ static void L4FirstRoom()
 			pSetPieces[0]._spy = y + 1;
 		}
 	} else {
-		int setpc_x = x + 1; // pSetPieces[0]._spx;
-		int setpc_y = y + 1; // pSetPieces[0]._spy;
+		int setpc_x = x + 1;
+		int setpc_y = y + 1;
 		pSetPieces[0]._spx = DIAB_QUAD_1X;
 		pSetPieces[0]._spy = DIAB_QUAD_1Y;
 		pSetPieces[1]._spx = DIAB_QUAD_2X;
@@ -1236,8 +1236,6 @@ static void L4FirstRoom()
 		pSetPieces[2]._spy = DIAB_QUAD_3Y;
 		pSetPieces[3]._spx = DIAB_QUAD_4X;
 		pSetPieces[3]._spy = DIAB_QUAD_4Y;
-		// pSetPieces[0]._spx = x + 1;
-		// pSetPieces[0]._spy = y + 1;
 	}
 
 	L4DrawRoom(x, y, w, h);

@@ -920,6 +920,7 @@ void DRLG_InitL1Specials(int x1, int y1, int x2, int y2)
 	}
 }
 
+#ifdef HELLFIRE
 static void DRLG_InitL5Specials()
 {
 	int i, *dp;
@@ -939,6 +940,7 @@ static void DRLG_InitL5Specials()
 		*dsp = pc;
 	}
 }
+#endif
 
 static void DRLG_L1SetMapFix(BYTE* pMap)
 {
@@ -2682,11 +2684,13 @@ static void DRLG_L1()
 		DRLG_CopyTrans(x, y + 10, x + 1, y + 10);
 		// set transVal in the room
 		DRLG_RectTrans(x + 3, y + 3, x + 10, y + 10);
+#ifdef HELLFIRE
 	} else if (pSetPieces[0]._sptype == SPT_NAKRUL) {
 		// load pre-map
 		MemFreeDbg(pSetPieces[0]._spData);
 		pSetPieces[0]._spData = LoadFileInMem("NLevels\\L5Data\\Nakrul1.DUN");
 		DRLG_DrawMap(0);
+#endif
 	}
 }
 
@@ -2697,9 +2701,11 @@ void CreateL1Dungeon()
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L1);
 
 	DRLG_Init_Globals();
+#ifdef HELLFIRE
 	if (currLvl._dType == DTYPE_CRYPT)
 		DRLG_InitL5Specials();
 	else
+#endif
 		// assert(currLvl._dType == DTYPE_CATHEDRAL);
 		DRLG_InitL1Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
 

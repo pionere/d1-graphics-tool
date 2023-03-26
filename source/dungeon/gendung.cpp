@@ -121,7 +121,7 @@ void InitLvlDungeon()
 	pSolidTbl = LoadFileInMem(lds->dSolidTable, &dwTiles);
 	if (pSolidTbl == NULL) {
 		return;
-    }
+	}
 	assert(dwTiles <= MAXTILES);
 	pTmp = pSolidTbl;
 
@@ -269,8 +269,12 @@ void InitLvlDungeon()
 	case DTYPE_HELL:
 		// patch dSolidTable - L4.SOL
 		nMissileTable[141] = false; // fix missile-blocking tile of down-stairs.
+		// nMissileTable[137] = false; // fix missile-blocking tile of down-stairs. - skip to keep in sync with the nSolidTable
+		// nSolidTable[137] = false;   // fix non-walkable tile of down-stairs. - skip, because it causes a graphic glitch
 		nSolidTable[130] = true;    // make the inner tiles of the down-stairs non-walkable I.
 		nSolidTable[132] = true;    // make the inner tiles of the down-stairs non-walkable II.
+		nSolidTable[131] = true;    // make the inner tiles of the down-stairs non-walkable III.
+		nSolidTable[133] = true;    // make the inner tiles of the down-stairs non-walkable IV.
 		// fix all-blocking tile on the diablo-level
 		nSolidTable[211] = false;
 		nMissileTable[211] = false;
@@ -468,7 +472,6 @@ void DRLG_DrawMap(int idx)
 	BYTE* pMap;
 	BYTE* sp;
 
-	// pMap = LoadFileInMem(name);
 	pMap = pSetPieces[idx]._spData;
 	if (pMap == NULL) {
 		return;
@@ -490,7 +493,6 @@ void DRLG_DrawMap(int idx)
 			sp += 2;
 		}
 	}
-	// mem_free_dbg(pMap);
 }
 
 void DRLG_InitTrans()
@@ -681,7 +683,7 @@ void DRLG_SetPC()
 	int x, y, w, h, i, j, x0, x1, y0, y1;
 
 	for (int n = lengthof(pSetPieces) - 1; n >= 0; n--) {
-		if (pSetPieces[n]._spData != NULL) { // pSetPieces[i]._sptype != SPT_NONE)
+		if (pSetPieces[n]._spData != NULL) { // pSetPieces[n]._sptype != SPT_NONE
 			x = pSetPieces[n]._spx;
 			y = pSetPieces[n]._spy;
 			w = SwapLE16(*(uint16_t*)&pSetPieces[n]._spData[0]);
