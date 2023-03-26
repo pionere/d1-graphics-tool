@@ -1788,7 +1788,7 @@ static void DRLG_LoadL2SP()
 			return;
 		}
 		// ensure the inner tiles are reserved
-		// pSetPieces[i]._spData[(2 + 5 + 12 * 10) * 2] = 3;
+		// pSetPieces[0]._spData[(2 + 5 + 12 * 10) * 2] = 3;
 		pSetPieces[0]._sptype = SPT_BLOOD;
 	} else if (QuestStatus(Q_BCHAMB)) {
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L2Data\\Bonestr2.DUN");
@@ -2821,14 +2821,14 @@ static void DRLG_L2CreateDungeon()
 	ForceH = 0;
 
 	if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
-		ForceW = pSetPieces[0]._spData[0] + 3; // TODO: add border to the setmaps?
-		ForceH = pSetPieces[0]._spData[2] + 3;
+		ForceW = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[0]) + 3; // TODO: add border to the setmaps?
+		ForceH = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[2]) + 3;
 	}
 
 	nRoomCnt = 0;
 	CreateRoom(1, 1, DMAXX - 2, DMAXY - 2, -1, HDIR_NONE, ForceW, ForceH);
 
-	if (pSetPieces[0]._spData[0] != NULL) { // pSetPieces[0]._sptype != SPT_NONE
+	if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
 		pSetPieces[0]._spx = RoomList[0].nRoomx1 + 2;
 		pSetPieces[0]._spy = RoomList[0].nRoomy1 + 2;
 	}

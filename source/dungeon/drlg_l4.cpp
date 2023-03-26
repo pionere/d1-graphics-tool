@@ -7,6 +7,10 @@
  */
 #include "all.h"
 
+#include <QMessageBox>
+
+#include "../progressdialog.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 /** Starting position of the megatiles. */
@@ -243,22 +247,20 @@ static void DRLG_LoadL4SP()
 	}
 }
 
-static void DRLG_L4SetSPRoom(int idx)
+static void DRLG_L4SetRoom(int idx)
 {
-	int rx1, ry1, rw, rh, i, j;
+	int rx1, ry1, rx2, ry2, i, j;
 	BYTE* sp;
 
-	rx1 = pSetPieces[idx]._spx;
-	ry1 = pSetPieces[idx]._spy;
+	SetPieceStruct* pSetPiece = &pSetPieces[idx];
+	rx1 = pSetPiece->_spx;
+	ry1 = pSetPiece->_spy;
+	rx2 = rx1 + SwapLE16(*(uint16_t*)&pSetPiece->_spData[0]);
+	ry2 = ry1 + SwapLE16(*(uint16_t*)&pSetPiece->_spData[2]);
+	sp = &pSetPiece->_spData[4];
 
-	rw = SwapLE16(*(uint16_t*)&pSetPieces[idx]._spData[0]);
-	rh = SwapLE16(*(uint16_t*)&pSetPieces[idx]._spData[2]);
-	sp = &pSetPieces[idx]._spData[4];
-
-	rw += rx1;
-	rh += ry1;
-	for (j = ry1; j < rh; j++) {
-		for (i = rx1; i < rw; i++) {
+	for (j = ry1; j < ry2; j++) {
+		for (i = rx1; i < rx2; i++) {
 			dungeon[i][j] = *sp != 0 ? *sp : DEFAULT_MEGATILE_L4;
 			// drlgFlags[i][j] = *sp != 0 ? TRUE : FALSE; // |= DLRG_PROTECTED; - commented out because it requires too many patches to the setpieces due to DRLG_L4Subs
 			drlgFlags[i][j] = TRUE; // |= DLRG_PROTECTED;
@@ -1197,8 +1199,8 @@ static void L4FirstRoom()
 
 	if (currLvl._dLevelIdx != DLV_HELL4) {
 		if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
-			w = pSetPieces[0]._spData[0] + 4; // TODO: add border to the setmaps
-			h = pSetPieces[0]._spData[2] + 4;
+			w = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[0]) + 4; // TODO: add border to the setmaps
+			h = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[2]) + 4;
 			if (pSetPieces[0]._sptype == SPT_WARLORD)
 				w--;
 		} else {
@@ -1239,31 +1241,6 @@ static void L4FirstRoom()
 	L4DrawRoom(x, y, w, h);
 	static_assert((int)true == 1, "Bool to int conversion in L4FirstRoom.");
 	L4RoomGen(x, y, w, h, random_(0, 2));
-}
-
-static void DRLG_L4SetRoom(int n)
-{
-	int rx1, ry1, rx2, ry2, i, j;
-	BYTE* sp;
-
-	SetPieceStruct* pSetPiece = &pSetPieces[n];
-	if (pSetPiece == NULL) {
-		return;
-	}
-	rx1 = pSetPiece->_spx;
-	ry1 = pSetPiece->_spy;
-	rx2 = rx1 + SwapLE16(*(uint16_t*)&pSetPiece->_spData[0]);
-	ry2 = ry1 + SwapLE16(*(uint16_t*)&pSetPiece->_spData[2]);
-	sp = &pSetPiece->_spData[4];
-
-	for (j = ry1; j < ry2; j++) {
-		for (i = rx1; i < rx2; i++) {
-			dungeon[i][j] = *sp != 0 ? *sp : DEFAULT_MEGATILE_L4;
-			// drlgFlags[i][j] = *sp != 0 ? TRUE : FALSE; // |= DLRG_PROTECTED; - commented out because it requires too many patches to the setpieces due to DRLG_L4Subs
-			drlgFlags[i][j] = TRUE; // |= DLRG_PROTECTED;
-			sp += 2;
-		}
-	}
 }
 
 static void DRLG_LoadDiabQuads()
@@ -1805,10 +1782,9 @@ static void DRLG_L4()
 		L4TileFix();
 		memset(drlgFlags, 0, sizeof(drlgFlags));
 		if (currLvl._dLevelIdx == DLV_HELL4) {
-			// L4SaveQuads();
 			DRLG_LoadDiabQuads();
 		} else if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
-			DRLG_L4SetSPRoom(0);
+			DRLG_L4SetRoom(0);
 		}
 		L4AddWall();
 		DRLG_InitTrans();

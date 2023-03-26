@@ -5,6 +5,8 @@
  */
 #include "all.h"
 
+#include <QApplication>
+
 #include "../progressdialog.h"
 
 #define DOOR_CLOSED  0
@@ -23,7 +25,7 @@
 
 int trapid;
 static BYTE* objanimdata[NUM_OFILE_TYPES] = { 0 };
-int objectactive[MAXOBJECTS];
+//int objectactive[MAXOBJECTS];
 /** Specifies the number of active objects. */
 int numobjects;
 int leverid;
@@ -619,17 +621,9 @@ static void AddChestTraps()
 	}
 }
 
-typedef struct LeverRect {
-	int x1;
-	int y1;
-	int x2;
-	int y2;
-	int leveridx;
-} LeverRect;
-//static void LoadMapSetObjects(const char* map, int startx, int starty, const LeverRect* lvrRect)
-static void LoadMapSetObjects(const BYTE* map, int startx, int starty, const LeverRect* lvrRect)
+static void LoadMapSetObjects(const BYTE* map, int startx, int starty)
 {
-	const BYTE* pMap = map; // LoadFileInMem(map);
+	const BYTE* pMap = map;
 	int i, j, oi;
 	uint16_t rw, rh, *lm;
 
@@ -655,26 +649,21 @@ static void LoadMapSetObjects(const BYTE* map, int startx, int starty, const Lev
 		for (i = startx; i < rw; i++) {
 			if (*lm != 0) {
 				if (SwapLE16(*lm) >= lengthof(ObjConvTbl) || ObjConvTbl[SwapLE16(*lm)] == 0) {
-					dProgressErr() << QString("Invalid object %1 at %2:%3").arg(*lm).arg(i).arg(j);
+					dProgressErr() << QApplication::tr("Invalid object %1 at %2:%3").arg(SwapLE16(*lm)).arg(i).arg(j);
 				} else {
 //				assert(objanimdata[objectdata[ObjConvTbl[SwapLE16(*lm)]].ofindex] != NULL);
 				oi = AddObject(ObjConvTbl[SwapLE16(*lm)], i, j);
-				if (lvrRect != NULL)
-					SetObjMapRange(oi, lvrRect->x1, lvrRect->y1, lvrRect->x2, lvrRect->y2, lvrRect->leveridx);
 				}
 			}
 			lm++;
 		}
 	}
 	//gbInitObjFlag = false;
-
-	// mem_free_dbg(pMap);
 }
 
-//static void LoadMapSetObjs(const char* map)
 static void LoadMapSetObjs(const BYTE* map)
 {
-	LoadMapSetObjects(map, 2 * pSetPieces[0]._spx, 2 * pSetPieces[0]._spy, NULL);
+	LoadMapSetObjects(map, 2 * pSetPieces[0]._spx, 2 * pSetPieces[0]._spy);
 }
 
 static void SetupObject(int oi, int type)
@@ -714,21 +703,26 @@ static void SetupObject(int oi, int type)
 	os->_oTrapChance = 0;
 }
 
+static int ObjIndex(int x, int y)
+{
+	int oi = dObject[x][y];
+	if (oi == 0) {
+		dProgressErr() << QApplication::tr("ObjIndex: Active object not found at (%1,%2)").arg(x).arg(y);
+		return 0;
+	}
+	oi = oi >= 0 ? oi - 1 : -(oi + 1);
+	return oi;
+}
+
 static void AddDiabObjs()
 {
-	LeverRect lr;
-	// lr = { DIAB_QUAD_2X, DIAB_QUAD_2Y, DIAB_QUAD_2X + 11, DIAB_QUAD_2Y + 12, 1 };
-	lr = { pSetPieces[1]._spx, pSetPieces[1]._spy, pSetPieces[1]._spx + 11, pSetPieces[1]._spy + 12, 1 };
-	// LoadMapSetObjects("Levels\\L4Data\\diab1.DUN", 2 * DIAB_QUAD_1X, 2 * DIAB_QUAD_1Y, &lr);
-	LoadMapSetObjects(pSetPieces[0]._spData, 2 * pSetPieces[0]._spx, 2 * pSetPieces[0]._spy, &lr);
-	// lr = { DIAB_QUAD_3X, DIAB_QUAD_3Y, DIAB_QUAD_3X + 11, DIAB_QUAD_3Y + 11, 2 };
-	lr = { pSetPieces[2]._spx, pSetPieces[2]._spy, pSetPieces[2]._spx + 11, pSetPieces[2]._spy + 11, 2 };
-	// LoadMapSetObjects("Levels\\L4Data\\diab2a.DUN", 2 * DIAB_QUAD_2X, 2 * DIAB_QUAD_2Y, &lr);
-	LoadMapSetObjects(pSetPieces[1]._spData, 2 * pSetPieces[1]._spx, 2 * pSetPieces[1]._spy, &lr);
-	// lr = { DIAB_QUAD_4X, DIAB_QUAD_4Y, DIAB_QUAD_4X + 9, DIAB_QUAD_4Y + 9, 3 };
-	lr = { pSetPieces[3]._spx, pSetPieces[3]._spy, pSetPieces[3]._spx + 9, pSetPieces[3]._spy + 9, 3 };
-	// LoadMapSetObjects("Levels\\L4Data\\diab3a.DUN", 2 * DIAB_QUAD_3X, 2 * DIAB_QUAD_3Y, &lr);
-	LoadMapSetObjects(pSetPieces[2]._spData, 2 * pSetPieces[2]._spx, 2 * pSetPieces[2]._spy, &lr);
+	LoadMapSetObjects(pSetPieces[0]._spData, 2 * pSetPieces[0]._spx, 2 * pSetPieces[0]._spy);
+	SetObjMapRange(ObjIndex(DBORDERX + 2 * pSetPieces[0]._spx + 5, DBORDERY + 2 * pSetPieces[0]._spy + 5), pSetPieces[1]._spx, pSetPieces[1]._spy, pSetPieces[1]._spx + 11, pSetPieces[1]._spy + 12, 1);
+	LoadMapSetObjects(pSetPieces[1]._spData, 2 * pSetPieces[1]._spx, 2 * pSetPieces[1]._spy);
+	SetObjMapRange(ObjIndex(DBORDERX + 2 * pSetPieces[1]._spx + 13, DBORDERY + 2 * pSetPieces[1]._spy + 10), pSetPieces[2]._spx, pSetPieces[2]._spy, pSetPieces[2]._spx + 11, pSetPieces[2]._spy + 11, 2);
+	LoadMapSetObjects(pSetPieces[2]._spData, 2 * pSetPieces[2]._spx, 2 * pSetPieces[2]._spy);
+	SetObjMapRange(ObjIndex(DBORDERX + 2 * pSetPieces[2]._spx + 8, DBORDERY + 2 * pSetPieces[2]._spy + 2), pSetPieces[3]._spx, pSetPieces[3]._spy, pSetPieces[3]._spx + 9, pSetPieces[3]._spy + 9, 3);
+	SetObjMapRange(ObjIndex(DBORDERX + 2 * pSetPieces[2]._spx + 8, DBORDERY + 2 * pSetPieces[2]._spy + 14), pSetPieces[3]._spx, pSetPieces[3]._spy, pSetPieces[3]._spx + 9, pSetPieces[3]._spy + 9, 3);
 }
 
 static void AddHBooks(int bookidx, int ox, int oy)
@@ -909,7 +903,7 @@ void InitObjects()
 		if (QuestStatus(Q_PWATER))
 			AddCandles();
 		if (pSetPieces[0]._sptype == SPT_BUTCHER) // QuestStatus(Q_BUTCHER)
-			LoadMapSetObjs(pSetPieces[0]._spData); // "Levels\\L1Data\\Butcher.DUN");
+			LoadMapSetObjs(pSetPieces[0]._spData);
 		if (pSetPieces[0]._sptype == SPT_BANNER) // QuestStatus(Q_BANNER)
 			AddObject(OBJ_SIGNCHEST, 2 * pSetPieces[0]._spx + DBORDERX + 10, 2 * pSetPieces[0]._spy + DBORDERY + 3);
 		InitRndSarcs(OBJ_SARC);
@@ -921,11 +915,10 @@ void InitObjects()
 		if (QuestStatus(Q_ROCK))
 			InitRndLocObj5x5(OBJ_STAND);
 		if (pSetPieces[0]._sptype == SPT_BCHAMB) { // QuestStatus(Q_BCHAMB)
-			AddBookLever(OBJ_BOOK2R, -1, 0, pSetPieces[0]._spx, pSetPieces[0]._spy, pSetPieces[0]._spData[0] + pSetPieces[0]._spx, pSetPieces[0]._spData[2] + pSetPieces[0]._spy, Q_BCHAMB);
+			AddBookLever(OBJ_BOOK2R, -1, 0, pSetPieces[0]._spx, pSetPieces[0]._spy, pSetPieces[0]._spx + 5, pSetPieces[0]._spy + 5, Q_BCHAMB);
 		}
 		if (pSetPieces[0]._sptype == SPT_BLIND) { // QuestStatus(Q_BLIND)
-			AddBookLever(OBJ_BLINDBOOK, -1, 0, pSetPieces[0]._spx, pSetPieces[0]._spy, pSetPieces[0]._spData[0] + pSetPieces[0]._spx, pSetPieces[0]._spData[2] + pSetPieces[0]._spy, Q_BLIND);
-			// LoadMapSetObjs("Levels\\L2Data\\Blind2.DUN");
+			AddBookLever(OBJ_BLINDBOOK, -1, 0, pSetPieces[0]._spx, pSetPieces[0]._spy + 1, pSetPieces[0]._spx + 11, pSetPieces[0]._spy + 10, Q_BLIND);
 		}
 		if (pSetPieces[0]._sptype == SPT_BLOOD) { // QuestStatus(Q_BLOOD)
 			AddBookLever(OBJ_BLOODBOOK, 2 * pSetPieces[0]._spx + DBORDERX + 9, 2 * pSetPieces[0]._spy + DBORDERY + 24, 0, 0, 0, 0, Q_BLOOD); // NULL_LVR_EFFECT
@@ -1024,7 +1017,7 @@ void SetMapObjects(BYTE* pMap)
 //	}
 	if (pMap == NULL) {
 		return;
-    }
+	}
 
 	lm = (uint16_t*)pMap;
 	rw = SwapLE16(*lm);
@@ -1064,7 +1057,7 @@ void SetMapObjects(BYTE* pMap)
 		for (i = DBORDERX; i < rw; i++) {
 			if (*lm != 0) {
 				if (SwapLE16(*lm) >= lengthof(ObjConvTbl) || ObjConvTbl[SwapLE16(*lm)] == 0) {
-					dProgressErr() << QString("Invalid object %1 at %2:%3").arg(SwapLE16(*lm)).arg(i).arg(j);
+					dProgressErr() << QApplication::tr("Invalid object %1 at %2:%3").arg(SwapLE16(*lm)).arg(i).arg(j);
 				} else {
 				AddObject(ObjConvTbl[SwapLE16(*lm)], i, j);
 				}
@@ -1334,7 +1327,7 @@ int AddObject(int type, int ox, int oy)
 
 //	oi = objectavail[0];
 	oi = numobjects;
-	objectactive[numobjects] = oi;
+	// objectactive[numobjects] = oi;
 	numobjects++;
 //	objectavail[0] = objectavail[MAXOBJECTS - numobjects];
 	SetupObject(oi, type);
