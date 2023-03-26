@@ -159,13 +159,13 @@ void LoadFileWithMem(const char* pszName, BYTE* p)
 
 	if (p == NULL) {
 		dProgressErr() << QApplication::tr("Skipping file: %1.").arg(QDir::toNativeSeparators(path));
-		return buf;
+		return;
 	}
 	QFile file = QFile(path);
 
 	if (!file.open(QIODevice::ReadOnly)) {
 		dProgressErr() << QApplication::tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(path));
-		return buf;
+		return;
 	}
 
 	const QByteArray fileData = file.readAll();
@@ -175,8 +175,6 @@ void LoadFileWithMem(const char* pszName, BYTE* p)
 		buf = (BYTE*)DiabloAllocPtr(fileLen);
 		memcpy(buf, fileData.constData(), fileLen);
 	}
-
-	return buf;
 }
 
 DEVILUTION_END_NAMESPACE
