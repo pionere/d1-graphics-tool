@@ -457,14 +457,14 @@ void DRLG_PlaceMegaTiles(int mt)
 	}
 }
 
-void DRLG_DrawMap()
+void DRLG_DrawMap(int idx)
 {
 	int x, y, rw, rh, i, j;
 	BYTE* pMap;
 	BYTE* sp;
 
 	// pMap = LoadFileInMem(name);
-	pMap = pSetPieces[0]._spData;
+	pMap = pSetPieces[idx]._spData;
 	if (pMap == NULL) {
 		return;
 	}
@@ -472,8 +472,8 @@ void DRLG_DrawMap()
 	rh = SwapLE16(*(uint16_t*)&pMap[2]);
 
 	sp = &pMap[4];
-	x = pSetPieces[0]._spx;
-	y = pSetPieces[0]._spy;
+	x = pSetPieces[idx]._spx;
+	y = pSetPieces[idx]._spy;
 	rw += x;
 	rh += y;
 	for (j = y; j < rh; j++) {

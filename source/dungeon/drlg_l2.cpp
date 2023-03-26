@@ -3370,7 +3370,7 @@ static void DRLG_L2()
 		// replace the door with wall
 //		dungeon[pSetPieces[0]._spx + 4][pSetPieces[0]._spy + 3] = 25;
 		pSetPieces[0]._spData[(2 + 4 + 3 * 11) * 2] = 25;
-		DRLG_DrawMap();
+		DRLG_DrawMap(0);
 	} else if (pSetPieces[0]._sptype == SPT_BLOOD) {
 		// load pre-map
 		MemFreeDbg(pSetPieces[0]._spData);
@@ -3398,7 +3398,7 @@ static void DRLG_L2()
 //		dungeon[pSetPieces[0]._spx + 5][pSetPieces[0]._spy + 8] = 50;
 		pSetPieces[0]._spData[(2 + 5 + 8 * 10) * 2] = 50;
 		}
-		DRLG_DrawMap();
+		DRLG_DrawMap(0);
 	} else if (pSetPieces[0]._sptype == SPT_BCHAMB) {
 		// load pre-map
 		MemFreeDbg(pSetPieces[0]._spData);
@@ -3411,7 +3411,7 @@ static void DRLG_L2()
 //		dungeon[pSetPieces[0]._spx][pSetPieces[0]._spy + 5] = 50;
 		pSetPieces[0]._spData[(2 + 0 + 5 * 7) * 2] = 50;
 		}
-		DRLG_DrawMap();
+		DRLG_DrawMap(0);
 	}
 }
 

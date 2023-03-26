@@ -88,16 +88,16 @@ static void LoadGameLevel(int lvldir, int seed)
     SetRndSeed(seed);
 
     if (!currLvl._dSetLvl) {
-		// fill in loop: dungeon, pdungeon, dTransVal, pWarps, pSetPieces, uses drlgFlags, dungBlock
-		// fill post: dPiece, dSpecial, dPreLight, dLight, themeLoc, dFlags
-		// reset: dMonster, dObject, dPlayer, dItem, dMissile
+		// fill in loop: dungeon, dTransVal, pWarps, pSetPieces, uses drlgFlags, dungBlock
+		// fill post: pdungeon, dPiece, dSpecial, themeLoc, dFlags
+		// reset: dMonster, dObject, dPlayer, dItem, dMissile, dLight+
         CreateLevel();
         if (pMegaTiles == NULL || pSolidTbl == NULL) {
             return;
         }
         IncProgress();
         if (currLvl._dType != DTYPE_TOWN) {
-            GetLevelMTypes(); // load monster types
+            GetLevelMTypes(); // select monster types and load their fx
             InitThemes(); // select theme types
             IncProgress();
             InitObjectGFX(); // load object graphics
@@ -110,7 +110,7 @@ static void LoadGameLevel(int lvldir, int seed)
         IncProgress();
 
         if (currLvl._dType != DTYPE_TOWN) {
-            HoldThemeRooms(); // protect themes
+            HoldThemeRooms(); // protect themes with dFlags
             InitMonsters();   // place monsters
             IncProgress();
 //            if (IsMultiGame || lvldir == ENTRY_LOAD || !IsLvlVisited(currLvl._dLevelIdx)) {
@@ -136,8 +136,8 @@ static void LoadGameLevel(int lvldir, int seed)
         InitItems();
     }
     IncProgress();
-//    InitMissiles();
-//    SavePreLighting();
+//    InitMissiles();  // reset missiles
+//    SavePreLighting(); // fill dPreLight
     InitView(lvldir);
 
     IncProgress();

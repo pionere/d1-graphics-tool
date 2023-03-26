@@ -2664,7 +2664,7 @@ static void DRLG_L1()
 		// - uncommented since the set-map is 'populated' -> monsters are not spawn there
 		//DRLG_MRectTrans(pSetPieces[0]._spx, pSetPieces[0]._spy + 3, pSetPieces[0]._spx, pSetPieces[0]._spy + 5,
 		//	dTransVal[2 * pSetPieces[0]._spx + DBORDERX + 1][2 * pSetPieces[0]._spy + DBORDERY + 11]);
-		DRLG_DrawMap();
+		DRLG_DrawMap(0);
 	} else if (pSetPieces[0]._sptype == SPT_SKELKING) {
 		int x, y;
 
@@ -2692,7 +2692,7 @@ static void DRLG_L1()
 		// load pre-map
 		MemFreeDbg(pSetPieces[0]._spData);
 		pSetPieces[0]._spData = LoadFileInMem("NLevels\\L5Data\\Nakrul1.DUN");
-		DRLG_DrawMap();
+		DRLG_DrawMap(0);
 	}
 }
 
