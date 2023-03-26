@@ -1140,9 +1140,25 @@ static void DRLG_L3CreateBlock(int x, int y, int obs, int dir)
 	}
 }
 
-static void DRLG_L3FloorArea(int x1, int y1, int x2, int y2)
+static void DRLG_L3FloorArea()
 {
-	int i, j;
+	int w, h, xr, yb, x1, y1, x2, y2, i, j;
+
+	w = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[0]);
+	h = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[2]);
+	xr = DMAXX - w - 10;
+	yb = DMAXY - h - 10;
+
+	assert(xr > 10);
+	assert(yb > 10);
+
+	x1 = RandRangeLow(10, xr);
+	y1 = RandRangeLow(10, yb);
+
+	pSetPieces[0]._spx = x1;
+	pSetPieces[0]._spy = y1;
+	x2 = x1 + w;
+	y2 = y1 + h;
 
 	for (j = y1; j <= y2; j++) {
 		for (i = x1; i <= x2; i++) {
@@ -2020,17 +2036,17 @@ static void DRLG_L3Wood()
 	}
 }
 
-static void DRLG_L3SetRoom(int rx1, int ry1)
+static void DRLG_L3SetRoom(int idx)
 {
-	int rw, rh, i, j;
+	int rx1, ry1, rw, rh, i, j;
 	BYTE* sp;
 
-	// assert(pSetPieces[0]._spx == rx1);
-	// assert(pSetPieces[0]._spy == ry1);
+	rx1 = pSetPieces[idx]._spx;
+	ry1 = pSetPieces[idx]._spy;
 
-	rw = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[0]);
-	rh = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[2]);
-	sp = &pSetPieces[0]._spData[4];
+	rw = SwapLE16(*(uint16_t*)&pSetPieces[idx]._spData[0]);
+	rh = SwapLE16(*(uint16_t*)&pSetPieces[idx]._spData[2]);
+	sp = &pSetPieces[idx]._spData[4];
 
 	rw += rx1;
 	rh += ry1;
@@ -2147,13 +2163,7 @@ static void DRLG_L3()
 				memset(dungeon, 0, sizeof(dungeon));
 				DRLG_L3CreateBlock(RandRange(10, 29), RandRange(10, 29), 0, 4);
 				if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
-					int xr = DMAXX - pSetPieces[0]._spData[0] - 10;
-					int yb = DMAXY - pSetPieces[0]._spData[2] - 10;
-					assert(xr > 10);
-					assert(yb > 10);
-					pSetPieces[0]._spx = RandRangeLow(10, xr);
-					pSetPieces[0]._spy = RandRangeLow(10, yb);
-					DRLG_L3FloorArea(pSetPieces[0]._spx, pSetPieces[0]._spy, pSetPieces[0]._spx + pSetPieces[0]._spData[0], pSetPieces[0]._spy + pSetPieces[0]._spData[2]);
+					DRLG_L3FloorArea();
 				}
 				do {
 					doneflag = !DRLG_L3FillDiags();
@@ -2165,7 +2175,7 @@ static void DRLG_L3()
 			DRLG_L3MakeMegas();
 			memset(drlgFlags, 0, sizeof(drlgFlags));
 			if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
-				DRLG_L3SetRoom(pSetPieces[0]._spx, pSetPieces[0]._spy);
+				DRLG_L3SetRoom(0);
 			}
 #ifdef HELLFIRE
 			if (currLvl._dType == DTYPE_NEST) {

@@ -1062,8 +1062,13 @@ void SetMapObjects(BYTE* pMap)
 	rh += DBORDERY;
 	for (j = DBORDERY; j < rh; j++) {
 		for (i = DBORDERX; i < rw; i++) {
-			if (*lm != 0)
+			if (*lm != 0) {
+				if (SwapLE16(*lm) >= lengthof(ObjConvTbl) || ObjConvTbl[SwapLE16(*lm)] == 0) {
+					dProgressErr() << QString("Invalid object %1 at %2:%3").arg(SwapLE16(*lm)).arg(i).arg(j);
+				} else {
 				AddObject(ObjConvTbl[SwapLE16(*lm)], i, j);
+				}
+			}
 			lm++;
 		}
 	}

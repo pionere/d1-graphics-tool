@@ -1840,17 +1840,17 @@ static void DRLG_FreeL2SP()
 /*
  * Draw set-room + reserve its tiles.
  */
-static void DRLG_L2SetRoom(int rx1, int ry1)
+static void DRLG_L2SetRoom(int idx)
 {
-	int rw, rh, i, j;
+	int rx1, ry1, rw, rh, i, j;
 	BYTE* sp;
 
-	// assert(pSetPieces[0]._spx == rx1);
-	// assert(pSetPieces[0]._spy == ry1);
+	rx1 = pSetPieces[idx]._spx;
+	ry1 = pSetPieces[idx]._spy;
 
-	rw = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[0]);
-	rh = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[2]);
-	sp = &pSetPieces[0]._spData[4];
+	rw = SwapLE16(*(uint16_t*)&pSetPieces[idx]._spData[0]);
+	rh = SwapLE16(*(uint16_t*)&pSetPieces[idx]._spData[2]);
+	sp = &pSetPieces[idx]._spData[4];
 
 	rw += rx1;
 	rh += ry1;
@@ -3201,7 +3201,7 @@ static void DRLG_L2()
 		L2TileFix();
 		memset(drlgFlags, 0, sizeof(drlgFlags));
 		if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
-			DRLG_L2SetRoom(pSetPieces[0]._spx, pSetPieces[0]._spy);
+			DRLG_L2SetRoom(0);
 		}
 
 		POS32 warpPos = DRLG_PlaceMiniSet(L2USTAIRS); // L2USTAIRS (5, 3)
