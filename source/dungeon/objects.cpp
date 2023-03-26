@@ -23,7 +23,7 @@
 
 int trapid;
 static BYTE* objanimdata[NUM_OFILE_TYPES] = { 0 };
-int objectactive[MAXOBJECTS];
+//int objectactive[MAXOBJECTS];
 /** Specifies the number of active objects. */
 int numobjects;
 int leverid;
@@ -1333,7 +1333,7 @@ int AddObject(int type, int ox, int oy)
 
 //	oi = objectavail[0];
 	oi = numobjects;
-	objectactive[numobjects] = oi;
+	// objectactive[numobjects] = oi;
 	numobjects++;
 //	objectavail[0] = objectavail[MAXOBJECTS - numobjects];
 	SetupObject(oi, type);

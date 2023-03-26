@@ -1004,8 +1004,7 @@ const BYTE L6WALLLPOOL2[] = {
 
 static void DRLG_LoadL3SP()
 {
-	DRLG_InitSetPC();
-	assert(pSetPieces[0]._spData == NULL);
+	// assert(pSetPieces[0]._spData == NULL);
 	if (QuestStatus(Q_ANVIL)) {
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L3Data\\Anvil.DUN");
 		if (pSetPieces[0]._spData == NULL) {

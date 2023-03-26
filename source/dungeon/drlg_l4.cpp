@@ -223,8 +223,7 @@ static void DRLG_L4Shadows()
 
 static void DRLG_LoadL4SP()
 {
-	DRLG_InitSetPC();
-	assert(pSetPieces[0]._spData == NULL);
+	// assert(pSetPieces[0]._spData == NULL && ...);
 	if (currLvl._dLevelIdx == DLV_HELL4) {
 		pSetPieces[0]._sptype = SPT_DIAB_QUAD_1;
 		pSetPieces[1]._sptype = SPT_DIAB_QUAD_2;

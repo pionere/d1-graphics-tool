@@ -851,8 +851,7 @@ static void DRLG_L1Floor()
 
 static void DRLG_LoadL1SP()
 {
-	DRLG_InitSetPC();
-	assert(pSetPieces[0]._spData == NULL);
+	// assert(pSetPieces[0]._spData == NULL);
 	if (QuestStatus(Q_BANNER)) {
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L1Data\\Banner1.DUN");
 		pSetPieces[0]._sptype = SPT_BANNER;
@@ -880,11 +879,6 @@ static void DRLG_LoadL1SP()
 			pSetPieces[i]._sptype = SPT_NONE;
 		}
 	}
-}
-
-static void DRLG_FreeL1SP()
-{
-	// MemFreeDbg(pSetPiece);
 }
 
 void DRLG_InitL1Specials(int x1, int y1, int x2, int y2)
@@ -2700,7 +2694,6 @@ void CreateL1Dungeon()
 {
 	DRLG_LoadL1SP();
 	DRLG_L1();
-	DRLG_FreeL1SP();
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L1);
 
 	DRLG_Init_Globals();

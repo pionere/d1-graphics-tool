@@ -1764,8 +1764,7 @@ static void DRLG_L2Shadows()
 
 static void DRLG_LoadL2SP()
 {
-	DRLG_InitSetPC();
-	assert(pSetPieces[0]._spData == NULL);
+	// assert(pSetPieces[0]._spData == NULL);
 	if (QuestStatus(Q_BLIND)) {
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L2Data\\Blind1.DUN");
 		if (pSetPieces[0]._spData == NULL) {
@@ -1830,11 +1829,6 @@ static void DRLG_LoadL2SP()
 		}*/
 		pSetPieces[0]._sptype = SPT_BCHAMB;
 	}
-}
-
-static void DRLG_FreeL2SP()
-{
-	// MemFreeDbg(pSetPiece);
 }
 
 /*
@@ -3554,7 +3548,6 @@ void CreateL2Dungeon()
 	// sized main room, changing DRLG_L2CreateDungeon would have been much cheaper solution.
 	DRLG_LoadL2SP();
 	DRLG_L2();
-	DRLG_FreeL2SP();
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L2);
 	DRLG_Init_Globals();
 	DRLG_InitL2Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);

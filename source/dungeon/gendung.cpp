@@ -325,7 +325,7 @@ void InitLvlDungeon()
 
 void FreeSetPieces()
 {
-	for (int i = lengthof(pSetPieces) - 1; >= 0; i--) {
+	for (int i = lengthof(pSetPieces) - 1; i >= 0; i--) {
 		MemFreeDbg(pSetPieces[i]._spData);
 	}
 }

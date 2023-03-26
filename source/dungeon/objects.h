@@ -6,7 +6,6 @@
 #ifndef __OBJECTS_H__
 #define __OBJECTS_H__
 
-extern int objectactive[MAXOBJECTS];
 extern int numobjects;
 extern ObjectStruct objects[MAXOBJECTS];
 
