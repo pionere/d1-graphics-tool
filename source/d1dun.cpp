@@ -2738,6 +2738,13 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeObjectAt(8, 2, 109);
         change |= this->changeObjectAt(5, 10, 109);
         change |= this->changeObjectAt(8, 10, 109);
+        // remove items
+        change |= this->changeItemAt(2, 3, 0);
+        change |= this->changeItemAt(2, 9, 0);
+        change |= this->changeItemAt(5, 2, 0);
+        change |= this->changeItemAt(8, 2, 0);
+        change |= this->changeItemAt(5, 10, 0);
+        change |= this->changeItemAt(8, 10, 0);
         break;
     case DUN_BANNER_PRE: // Banner2.DUN
         // replace entry tile
