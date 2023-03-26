@@ -1905,17 +1905,23 @@ QMessageBox::critical(nullptr, "Error", "DRLG_L4 loop done");
 	DRLG_L4GeneralFix();
 	DRLG_L4TransFix();
 
+QMessageBox::critical(nullptr, "Error", "DRLG_L4 fix done");
 	if (currLvl._dLevelIdx != DLV_HELL4) {
 		DRLG_PlaceThemeRooms(7, 10, DEFAULT_MEGATILE_L4, 8, true);
 	}
+QMessageBox::critical(nullptr, "Error", "DRLG_L4 theme done");
 
 	DRLG_L4Shadows();
+QMessageBox::critical(nullptr, "Error", "DRLG_L4 shadow done");
 	DRLG_L4Corners();
+QMessageBox::critical(nullptr, "Error", "DRLG_L4 corner done");
 	DRLG_L4Subs();
+QMessageBox::critical(nullptr, "Error", QString("DRLG_L4 subs done %1").arg(pSetPieces[0]._sptype));
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
 	if (currLvl._dLevelIdx == DLV_HELL4) {
+QMessageBox::critical(nullptr, "Error", "DRLG_L4 quads");
 		DRLG_LoadDiabQuads(false);
 	} else if (pSetPieces[0]._sptype == SPT_WARLORD) {
 QMessageBox::critical(nullptr, "Error", "Still alive before pre-map");
@@ -1923,6 +1929,8 @@ QMessageBox::critical(nullptr, "Error", "Still alive before pre-map");
 		MemFreeDbg(pSetPieces[0]._spData);
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L4Data\\Warlord2.DUN");
 		DRLG_DrawMap();
+	} else {
+QMessageBox::critical(nullptr, "Error", "DRLG_L4 nopi");
 	}
 }
 
