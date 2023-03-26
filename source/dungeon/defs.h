@@ -7,7 +7,7 @@
 #define _DEFS_H
 
 //#undef DEV_MODE
-//#define DEV_MODE 1
+#define DEV_MODE 1
 #define HELLFIRE 1
 
 #define DEVILUTION_BEGIN_NAMESPACE
