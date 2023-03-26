@@ -5,6 +5,8 @@
  */
 #include "all.h"
 
+#include "../progressdialog.h"
+
 #define DOOR_CLOSED  0
 #define DOOR_OPEN    1
 #define DOOR_BLOCKED 2
@@ -652,11 +654,19 @@ static void LoadMapSetObjects(const BYTE* map, int startx, int starty, const Lev
 	for (j = starty; j < rh; j++) {
 		for (i = startx; i < rw; i++) {
 			if (*lm != 0) {
+if (SwapLE16(*lm) >= lengthof(ObjConvTbl)) {
+	dProgressErr() << QString("Invalid object %1 at %2:%3").arg(*lm).arg(i).arg(j);
+} else if (ObjConvTbl[SwapLE16(*lm)] == 0) {
+	dProgressErr() << QString("Empty object %1 at %2:%3").arg(*lm).arg(i).arg(j);
+} else {
 				assert(SwapLE16(*lm) < lengthof(ObjConvTbl) && ObjConvTbl[SwapLE16(*lm)] != 0);
+
+
 //				assert(objanimdata[objectdata[ObjConvTbl[SwapLE16(*lm)]].ofindex] != NULL);
 				oi = AddObject(ObjConvTbl[SwapLE16(*lm)], i, j);
 				if (lvrRect != NULL)
 					SetObjMapRange(oi, lvrRect->x1, lvrRect->y1, lvrRect->x2, lvrRect->y2, lvrRect->leveridx);
+}
 			}
 			lm++;
 		}

@@ -7,6 +7,10 @@
  */
 #include "all.h"
 
+#include <QMessageBox>
+
+#include "../progressdialog.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 /** Starting position of the megatiles. */
@@ -230,6 +234,7 @@ static void DRLG_LoadL4SP()
 		pSetPieces[1]._spData = LoadFileInMem("Levels\\L4Data\\diab2b.DUN");
 		pSetPieces[2]._spData = LoadFileInMem("Levels\\L4Data\\diab3b.DUN");
 		pSetPieces[3]._spData = LoadFileInMem("Levels\\L4Data\\diab4b.DUN");
+dProgress() << "Loaded b.Duns";
 	} else if (IsMultiGame && QuestStatus(Q_BETRAYER)) {
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L4Data\\Vile1.DUN");
 		pSetPieces[0]._sptype = SPT_BETRAYER;
@@ -1300,6 +1305,7 @@ static void DRLG_LoadDiabQuads(bool postflag)
 		LoadFileWithMem("Levels\\L4Data\\diab2a.DUN", pSetPieces[1]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab3a.DUN", pSetPieces[2]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab4a.DUN", pSetPieces[3]._spData);
+dProgress() << "Loaded a.Duns";
 	}
 
 	DRLG_L4SetRoom(0); // DIAB_QUAD_1X, DIAB_QUAD_1Y);
@@ -1912,6 +1918,7 @@ static void DRLG_L4()
 	if (currLvl._dLevelIdx == DLV_HELL4) {
 		DRLG_LoadDiabQuads(false);
 	} else if (pSetPieces[0]._sptype == SPT_WARLORD) {
+QMessageBox::critical(nullptr, "Error", "Still alive before pre-map");
 		// load pre-map
 		MemFreeDbg(pSetPieces[0]._spData);
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L4Data\\Warlord2.DUN");
