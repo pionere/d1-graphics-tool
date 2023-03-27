@@ -1902,9 +1902,12 @@ static void DRLG_L4()
 		LoadFileWithMem("Levels\\L4Data\\diab3a.DUN", pSetPieces[2]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab4a.DUN", pSetPieces[3]._spData);
 		if (pSetPieces[3]._spData != NULL) {
-		// patch set-piece to replace diablo - Diab4a.DUN
+		// patch set-piece - Diab4a.DUN
+		// - replace diablo
 		uint16_t* lm = (uint16_t*)pSetPieces[3]._spData;
 		lm[2 + 9 * 9 + 9 * 9 * 2 * 2 + 8 + 8 * 9 * 2] = SwapLE16((UMT_DIABLO + 1) | (1 << 15));
+		// - replace the only black knight
+		lm[2 + 9 * 9 + 9 * 9 * 2 * 2 + 4 + 6 * 9 * 2] = SwapLE16(101);
 		}
 		// DRLG_DrawMap(0);
 		DRLG_DrawMap(1);

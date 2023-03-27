@@ -2875,9 +2875,10 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(6, 12, 101, false);
         change |= this->changeMonsterAt(12, 10, 101, false);
         change |= this->changeMonsterAt(10, 4, 101, false);
-        change |= this->changeMonsterAt(4, 6, 98, false);
         /* fall-through */
     case DUN_DIAB_4_PRE: // Diab4a.DUN
+        // add/replace monster
+        change |= this->changeMonsterAt(4, 6, 101, false);
         // make diablo unique
         change |= this->changeMonsterAt(8, 8, UMT_DIABLO + 1, true);
         break;
