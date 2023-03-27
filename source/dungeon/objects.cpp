@@ -455,7 +455,9 @@ static void AddDunObjs(int x1, int y1, int x2, int y2)
 				if (pn == 270)
 					AddObject(OBJ_L1LIGHT, i, j);
 				// these pieces are closed doors which are placed directly
-				assert(pn != 51 && pn != 56);
+				if (pn == 51 || pn == 56) {
+					dProgressErr() << QApplication::tr("Piece 51 and 56 are closed doors which are placed directly");
+				}
 				if (pn == 44 || /*pn == 51 ||*/ pn == 214)
 					AddObject(OBJ_L1LDOOR, i, j);
 				if (pn == 46 /*|| pn == 56*/)
@@ -1321,7 +1323,11 @@ int AddObject(int type, int ox, int oy)
 	ObjectStruct* os = &objects[oi];
 	os->_ox = ox;
 	os->_oy = oy;
-	assert(dObject[ox][oy] == 0);
+	if (dObject[ox][oy] != 0) {
+		int on = dObject[ox][oy];
+		on = on >= 0 ? on - 1 : -(on + 1);
+		dProgressErr() << QApplication::tr("Multiple objects on tile %1:%2 - type %3 with index %4 and type %5 with index %6.").arg(ox, oy).arg(type).arg(oi).arg(objects[on]._otype).arg(on);
+	}
 	dObject[ox][oy] = oi + 1;
 	// dFlags[ox][oy] |= BFLAG_POPULATED;
 	if (nSolidTable[dPiece[ox][oy]] && (os->_oModeFlags & OMF_FLOOR)) {
