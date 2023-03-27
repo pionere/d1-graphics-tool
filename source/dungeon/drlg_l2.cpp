@@ -3404,9 +3404,7 @@ static void DRLG_L2()
 		if (pSetPieces[0]._spData != NULL) {
 		// patch the map - Bonestr1.DUN
 		// shadow of the external-left column
-//		dungeon[pSetPieces[0]._spx][pSetPieces[0]._spy + 4] = 48;
 		pSetPieces[0]._spData[(2 + 0 + 4 * 7) * 2] = 48;
-//		dungeon[pSetPieces[0]._spx][pSetPieces[0]._spy + 5] = 50;
 		pSetPieces[0]._spData[(2 + 0 + 5 * 7) * 2] = 50;
 		}
 		DRLG_DrawMap(0);
