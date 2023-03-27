@@ -106,7 +106,7 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr },
                      { nullptr },
 /*OBJ_BOOK2L*/       { "Bookstand" }, // Q_BCHAMB, Q_BETRAYER
-                     { nullptr }, //OBJ_BOOK2R,
+                     { "BloodBook" }, // Q_BLOOD
 /*OBJ_TBCROSS*/      { "Burning cross" }, // Q_BCHAMB
                      { nullptr },
                      { nullptr }, //OBJ_CANDLE1,
@@ -181,8 +181,8 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr },
                      { nullptr },
                      { nullptr },
-                     { nullptr },
-                     { nullptr }, //OBJ_PEDISTAL,
+                     { "Sign Chest" }, // Q_BANNER
+                     { "Pedistal" }, // Q_BLOOD
                      { nullptr },
                      { nullptr },
                      { nullptr },
@@ -2651,6 +2651,17 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(5, 8, 50);
         // remove items
         change |= this->changeItemAt(9, 2, 0);
+        // adjust objects
+        // - book and the pedistal
+        change |= this->changeObjectAt(9, 16, 92);
+        change |= this->changeObjectAt(9, 24, 15);
+        // - remove torches
+        change |= this->changeObjectAt(11, 8, 0);
+        change |= this->changeObjectAt(11, 10, 0);
+        change |= this->changeObjectAt(11, 12, 0);
+        change |= this->changeObjectAt(6, 8, 0);
+        change |= this->changeObjectAt(6, 10, 0);
+        change |= this->changeObjectAt(6, 12, 0);
         break;
     case DUN_BLOOD_AFT: // Blood1.DUN
         // ensure the inner tiles are reserved
@@ -2665,9 +2676,9 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeObjectAt(7, 10, 0);
         change |= this->changeObjectAt(6, 12, 111);
         change |= this->changeObjectAt(7, 12, 0);
-        // remove book and the pedistal
+        // move book
         change |= this->changeObjectAt(8, 24, 0);
-        change |= this->changeObjectAt(9, 16, 0);
+        change |= this->changeObjectAt(9, 24, 15);
         // replace monsters
         // - corridor
         change |= this->changeMonsterAt(8, 3, 62, false);
@@ -2763,6 +2774,8 @@ void D1Dun::patch(int dunFileIndex)
     case DUN_BANNER_AFT: // Banner1.DUN
         // - add snotspil
         change |= this->changeMonsterAt(8, 12, UMT_SNOTSPIL + 1, true);
+        // - add sign-chest
+        change |= this->changeObjectAt(10, 3, 90);
         break;
     case DUN_SKELKING_AFT: // SklKng1.DUN
         // remove items

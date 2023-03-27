@@ -936,8 +936,8 @@ void DRLG_InitL5Specials(int x1, int y1, int x2, int y2)
 			else
 				pn = 0;
 			dSpecial[i][j] = pn;
-        }
-    }
+		}
+	}
 }
 #endif
 
