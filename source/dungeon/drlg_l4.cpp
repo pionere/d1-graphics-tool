@@ -1236,6 +1236,21 @@ static void L4FirstRoom()
 		pSetPieces[2]._spy = DIAB_QUAD_3Y;
 		pSetPieces[3]._spx = DIAB_QUAD_4X;
 		pSetPieces[3]._spy = DIAB_QUAD_4Y;
+		int config = random_(0, 8);
+		if (config & 1) {
+			std::swap(pSetPieces[0]._spx, pSetPieces[3]._spx);
+			std::swap(pSetPieces[0]._spy, pSetPieces[3]._spy);
+		}
+		if (config & 2) {
+			std::swap(pSetPieces[0]._spx, pSetPieces[1]._spx);
+			std::swap(pSetPieces[0]._spy, pSetPieces[1]._spy);
+			std::swap(pSetPieces[2]._spx, pSetPieces[3]._spx);
+			std::swap(pSetPieces[2]._spy, pSetPieces[3]._spy);
+		}
+		if (config & 4) {
+			std::swap(pSetPieces[1]._spx, pSetPieces[2]._spx);
+			std::swap(pSetPieces[1]._spy, pSetPieces[2]._spy);
+		}
 	}
 
 	L4DrawRoom(x, y, w, h);
