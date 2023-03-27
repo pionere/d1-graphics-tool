@@ -1040,7 +1040,7 @@ void InitObjects()
 
 void SetMapObjects(BYTE* pMap)
 {
-//	int i;
+	int i;
 	//gbInitObjFlag = true;
 
 	for (i = 0; i < NUM_OBJECTS; i++) {
