@@ -136,14 +136,14 @@ const int StoryText[3][3] = {
 
 void AddObjectType(int ofindex)
 {
-	char filestr[DATA_ARCHIVE_MAX_PATH];
+	/*char filestr[DATA_ARCHIVE_MAX_PATH];
 
 	if (objanimdata[ofindex] != NULL) {
 		return;
 	}
 
 	snprintf(filestr, sizeof(filestr), "Objects\\%s.CEL", objfiledata[ofindex].ofName);
-	objanimdata[ofindex] = LoadFileInMem(filestr);
+	objanimdata[ofindex] = LoadFileInMem(filestr);*/
 }
 
 void InitObjectGFX()
@@ -1043,10 +1043,10 @@ void SetMapObjects(BYTE* pMap)
 //	int i;
 	//gbInitObjFlag = true;
 
-//	for (i = 0; i < NUM_OBJECTS; i++) {
-//		if (currLvl._dType == objectdata[i].oSetLvlType)
-//			AddObjectType(objectdata[i].ofindex);
-//	}
+	for (i = 0; i < NUM_OBJECTS; i++) {
+		if (currLvl._dType == objectdata[i].oSetLvlType)
+			AddObjectType(objectdata[i].ofindex);
+	}
 
 	AddDunObjs(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
 
