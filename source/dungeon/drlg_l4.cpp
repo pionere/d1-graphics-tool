@@ -1856,6 +1856,11 @@ static void DRLG_L4()
 		LoadFileWithMem("Levels\\L4Data\\diab2a.DUN", pSetPieces[1]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab3a.DUN", pSetPieces[2]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab4a.DUN", pSetPieces[3]._spData);
+		if (pSetPieces[3]._spData != NULL) {
+		// patch set-piece to replace diablo - Diab4a.DUN
+		uint16_t* lm = (uint16_t*)pSetPieces[3]._spData;
+		lm[2 + 9 * 9 + 9 * 9 * 2 * 2 + 8 + 8 * 9 * 2] = SwapLE16((UMT_DIABLO + 1) | (1 << 15));
+		}
 		// DRLG_DrawMap(0);
 		DRLG_DrawMap(1);
 		DRLG_DrawMap(2);
@@ -1873,8 +1878,31 @@ static void DRLG_L4()
 		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 8 + 2 * 8 * 2] = SwapLE16(109);
 		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 5 + 10 * 8 * 2] = SwapLE16(109);
 		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 8 + 10 * 8 * 2] = SwapLE16(109);
+		// patch set-piece to add monsters - Warlord2.DUN
+		// replace monsters
+		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 2 + 2 * 8 * 2] = SwapLE16(100);
+		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 2 + 10 * 8 * 2] = SwapLE16(100);
+		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 13 + 4 * 8 * 2] = SwapLE16(100);
+		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 13 + 9 * 8 * 2] = SwapLE16(100);
+		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 10 + 2 * 8 * 2] = SwapLE16(100);
+		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 10 + 10 * 8 * 2] = SwapLE16(100);
+		// add monsters
+		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 6 + 2 * 8 * 2] = SwapLE16(100);
+		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 6 + 10 * 8 * 2] = SwapLE16(100);
+		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 11 + 2 * 8 * 2] = SwapLE16(100);
+		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 11 + 10 * 8 * 2] = SwapLE16(100);
+		// - add unique
+		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 6 + 7 * 8 * 2] = SwapLE16((UMT_WARLORD + 1) | (1 << 15));
 		}
 		DRLG_DrawMap(0);
+	} else if (pSetPieces[0]._sptype == SPT_BETRAYER) {
+		if (pSetPieces[0]._spData != NULL) {
+		// patch set-piece to add monsters - Vile1.DUN
+		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
+		lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 3 + 6 * 7 * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
+		lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 3 * 7 * 2] = SwapLE16((UMT_RED_VEX + 1) | (1 << 15));
+		lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 9 * 7 * 2] = SwapLE16((UMT_BLACKJADE + 1) | (1 << 15));
+		}
 	}
 }
 

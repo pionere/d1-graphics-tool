@@ -2662,6 +2662,19 @@ static void DRLG_L1()
 		//	dTransVal[2 * pSetPieces[0]._spx + DBORDERX + 1][2 * pSetPieces[0]._spy + DBORDERY + 11]);
 		// - add sign-chest
 		lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + 8 * 8 * 2 * 2 + 10 + 3 * 8 * 2] = SwapLE16(90);
+		// patch set-piece to add monsters - Banner2.DUN
+		// - replace monsters from Banner1.DUN
+		for (int y = 7; y <= 9; y++) {
+			for (int x = 7; x <= 13; x++) {
+				lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + x + y * 8 * 2] = SwapLE16(16);
+			}
+		}
+		// - remove monsters
+		lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + 1 + 4 * 8 * 2] = 0;
+		lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + 13 + 5 * 8 * 2] = 0;
+		lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + 7 + 12 * 8 * 2] = 0;
+		// - add unique
+		lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + 8 + 12 * 8 * 2] = SwapLE16((UMT_SNOTSPIL + 1) | (1 << 15));
 		}
 		DRLG_DrawMap(0);
 	} else if (pSetPieces[0]._sptype == SPT_SKELKING) {
