@@ -926,7 +926,6 @@ void InitObjects()
 		lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + 8 * 8 * 2 * 2 + 10 + 3 * 8 * 2] = 90;
 		}
 		LoadMapSetObjs(pSetPieces[0]._spData);
-		// AddObject(OBJ_SIGNCHEST, 2 * pSetPieces[0]._spx + DBORDERX + 10, 2 * pSetPieces[0]._spy + DBORDERY + 3);
 	}
 	if (pSetPieces[0]._sptype == SPT_BCHAMB) { // QuestStatus(Q_BCHAMB)
 		AddBookLever(OBJ_BOOK2R, pSetPieces[0]._spx, pSetPieces[0]._spy, pSetPieces[0]._spx + 5, pSetPieces[0]._spy + 5, Q_BCHAMB);
@@ -950,8 +949,6 @@ void InitObjects()
 		lm[2 + 10 * 16 + 10 * 16 * 2 * 2 + 10 * 16 * 2 * 2 + 6 + 12 * 10 * 2] = 0;
 		}
 		LoadMapSetObjs(pSetPieces[0]._spData);
-		// AddBookLever(OBJ_BLOODBOOK, 2 * pSetPieces[0]._spx + DBORDERX + 9, 2 * pSetPieces[0]._spy + DBORDERY + 24, 0, 0, 0, 0, Q_BLOOD); // NULL_LVR_EFFECT
-		// AddObject(OBJ_PEDISTAL, 2 * pSetPieces[0]._spx + DBORDERX + 9, 2 * pSetPieces[0]._spy + DBORDERY + 16);
 	}
 	if (pSetPieces[0]._sptype == SPT_WARLORD) { // QuestStatus(Q_WARLORD)
 		AddBookLever(OBJ_STEELTOME, pSetPieces[0]._spx + 7, pSetPieces[0]._spy + 1, pSetPieces[0]._spx + 7, pSetPieces[0]._spy + 5, Q_WARLORD);
@@ -1442,7 +1439,7 @@ int AddObject(int type, int ox, int oy)
 	case OBJ_PODEX:
 	case OBJ_BOOKSTAND:
 	case OBJ_SKELBOOK:
-	case OBJ_PEDISTAL:
+	case OBJ_PEDESTAL:
 	case OBJ_ARMORSTAND:
 	case OBJ_WEAPONRACKL:
 	case OBJ_WEAPONRACKR:

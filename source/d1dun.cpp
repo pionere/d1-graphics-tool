@@ -182,7 +182,7 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr },
                      { nullptr },
                      { "Sign Chest" }, // Q_BANNER
-                     { "Pedistal" }, // Q_BLOOD
+                     { "Pedestal" }, // Q_BLOOD
                      { nullptr },
                      { nullptr },
                      { nullptr },
