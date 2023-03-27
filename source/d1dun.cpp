@@ -2653,8 +2653,8 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeItemAt(9, 2, 0);
         // adjust objects
         // - book and the pedistal
-        change |= this->changeObjectAt(9, 16, 92);
         change |= this->changeObjectAt(9, 24, 15);
+        change |= this->changeObjectAt(9, 16, 91);
         // - remove torches
         change |= this->changeObjectAt(11, 8, 0);
         change |= this->changeObjectAt(11, 10, 0);
