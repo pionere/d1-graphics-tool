@@ -921,24 +921,23 @@ void DRLG_InitL1Specials(int x1, int y1, int x2, int y2)
 }
 
 #ifdef HELLFIRE
-static void DRLG_InitL5Specials()
+void DRLG_InitL5Specials(int x1, int y1, int x2, int y2)
 {
-	int i, *dp;
-	BYTE pc, *dsp;
+	int i, j, pn;
 
-	static_assert(sizeof(dPiece) == MAXDUNX * MAXDUNY * sizeof(int), "Linear traverse of dPiece does not work in DRLG_InitL5Vals.");
-	static_assert(sizeof(dSpecial) == MAXDUNX * MAXDUNY, "Linear traverse of dSpecial does not work in DRLG_InitL5Vals.");
-	dsp = &dSpecial[0][0];
-	dp = &dPiece[0][0];
-	for (i = 0; i < MAXDUNX * MAXDUNY; i++, dsp++, dp++) {
-		if (*dp == 77)
-			pc = 1;
-		else if (*dp == 80)
-			pc = 2;
-		else
-			continue;
-		*dsp = pc;
-	}
+	for (i = x1; i <= x2; ++i) {
+		for (j = y1; j <= y2; ++j) {
+			pn = dPiece[i][j];
+			pn = dPiece[i][j];
+			if (pn == 77)
+				pn = 1;
+			else if (pn == 80)
+				pn = 2;
+			else
+				pn = 0;
+			dSpecial[i][j] = pn;
+        }
+    }
 }
 #endif
 
@@ -2703,7 +2702,7 @@ void CreateL1Dungeon()
 	DRLG_Init_Globals();
 #ifdef HELLFIRE
 	if (currLvl._dType == DTYPE_CRYPT)
-		DRLG_InitL5Specials();
+		DRLG_InitL5Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
 	else
 #endif
 		// assert(currLvl._dType == DTYPE_CATHEDRAL);
