@@ -1250,12 +1250,12 @@ static void L4FirstRoom()
 		assert(SwapLE16(*(uint16_t*)&pSetPieces[3]._spData[2]) == DIAB_QUAD_4H);
 		pSetPieces[0]._spx = setpc_x;
 		pSetPieces[0]._spy = setpc_y;
-		pSetPieces[1]._spx = DMAXX - 1 - setpc_x - DQUAD_ROOM;
+		pSetPieces[1]._spx = DMAXX - setpc_x - DQUAD_ROOM;
 		pSetPieces[1]._spy = setpc_y;
 		pSetPieces[2]._spx = setpc_x;
-		pSetPieces[2]._spy = DMAXY - 1 - setpc_y - DQUAD_ROOM;
-		pSetPieces[3]._spx = DMAXX - 1 - setpc_x - DQUAD_ROOM;
-		pSetPieces[3]._spy = DMAXY - 1 - setpc_y - DQUAD_ROOM;
+		pSetPieces[2]._spy = DMAXY - setpc_y - DQUAD_ROOM;
+		pSetPieces[3]._spx = DMAXX - setpc_x - DQUAD_ROOM;
+		pSetPieces[3]._spy = DMAXY - setpc_y - DQUAD_ROOM;
 
 		int config = random_(0, 8);
 		if (config & 1) {
