@@ -18,6 +18,18 @@ DEVILUTION_BEGIN_NAMESPACE
 /** Default megatile if the tile is zero. */
 #define DEFAULT_MEGATILE_L4 6
 
+#define DQUAD_ROOM_SIZE 14
+#define DQUAD_ROOM      (DQUAD_ROOM_SIZE - 2)
+
+#define DIAB_QUAD_1W 6
+#define DIAB_QUAD_1H 6
+#define DIAB_QUAD_2W 11
+#define DIAB_QUAD_2H 12
+#define DIAB_QUAD_3W 11
+#define DIAB_QUAD_3H 11
+#define DIAB_QUAD_4W 9
+#define DIAB_QUAD_4H 9
+
 static_assert(DMAXX % 2 == 0, "DRLG_L4 constructs the dungeon by mirroring a quarter block -> requires to have a dungeon with even width.");
 #define L4BLOCKX (DMAXX / 2)
 static_assert(DMAXY % 2 == 0, "DRLG_L4 constructs the dungeon by mirroring a quarter block -> requires to have a dungeon with even height.");
@@ -1228,14 +1240,23 @@ static void L4FirstRoom()
 	} else {
 		int setpc_x = x + 1;
 		int setpc_y = y + 1;
-		pSetPieces[0]._spx = DIAB_QUAD_1X;
-		pSetPieces[0]._spy = DIAB_QUAD_1Y;
-		pSetPieces[1]._spx = DIAB_QUAD_2X;
-		pSetPieces[1]._spy = DIAB_QUAD_2Y;
-		pSetPieces[2]._spx = DIAB_QUAD_3X;
-		pSetPieces[2]._spy = DIAB_QUAD_3Y;
-		pSetPieces[3]._spx = DIAB_QUAD_4X;
-		pSetPieces[3]._spy = DIAB_QUAD_4Y;
+		assert(SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[0]) == DIAB_QUAD_1W);
+		assert(SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[2]) == DIAB_QUAD_1H);
+		assert(SwapLE16(*(uint16_t*)&pSetPieces[1]._spData[0]) == DIAB_QUAD_2W);
+		assert(SwapLE16(*(uint16_t*)&pSetPieces[1]._spData[2]) == DIAB_QUAD_2H);
+		assert(SwapLE16(*(uint16_t*)&pSetPieces[2]._spData[0]) == DIAB_QUAD_3W);
+		assert(SwapLE16(*(uint16_t*)&pSetPieces[2]._spData[2]) == DIAB_QUAD_3H);
+		assert(SwapLE16(*(uint16_t*)&pSetPieces[3]._spData[0]) == DIAB_QUAD_4W);
+		assert(SwapLE16(*(uint16_t*)&pSetPieces[3]._spData[2]) == DIAB_QUAD_4H);
+		pSetPieces[0]._spx = setpc_x;
+		pSetPieces[0]._spy = setpc_y;
+		pSetPieces[1]._spx = DMAXX - 1 - setpc_x - DQUAD_ROOM;
+		pSetPieces[1]._spy = setpc_y;
+		pSetPieces[2]._spx = setpc_x;
+		pSetPieces[2]._spy = DMAXY - 1 - setpc_y - DQUAD_ROOM;
+		pSetPieces[3]._spx = DMAXX - 1 - setpc_x - DQUAD_ROOM;
+		pSetPieces[3]._spy = DMAXY - 1 - setpc_y - DQUAD_ROOM;
+
 		int config = random_(0, 8);
 		if (config & 1) {
 			std::swap(pSetPieces[0]._spx, pSetPieces[3]._spx);
@@ -1251,6 +1272,15 @@ static void L4FirstRoom()
 			std::swap(pSetPieces[1]._spx, pSetPieces[2]._spx);
 			std::swap(pSetPieces[1]._spy, pSetPieces[2]._spy);
 		}
+
+		pSetPieces[0]._spx += (DQUAD_ROOM - DIAB_QUAD_1W) / 2;
+		pSetPieces[0]._spy += (DQUAD_ROOM - DIAB_QUAD_1H) / 2;
+		pSetPieces[1]._spx += (DQUAD_ROOM - DIAB_QUAD_2W) / 2;
+		pSetPieces[1]._spy += (DQUAD_ROOM - DIAB_QUAD_2H) / 2;
+		pSetPieces[2]._spx += (DQUAD_ROOM - DIAB_QUAD_3W) / 2;
+		pSetPieces[2]._spy += (DQUAD_ROOM - DIAB_QUAD_3H) / 2;
+		pSetPieces[3]._spx += (DQUAD_ROOM - DIAB_QUAD_4W) / 2;
+		pSetPieces[3]._spy += (DQUAD_ROOM - DIAB_QUAD_4H) / 2;
 	}
 
 	L4DrawRoom(x, y, w, h);
