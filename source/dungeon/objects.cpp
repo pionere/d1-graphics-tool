@@ -982,9 +982,6 @@ void InitObjects()
 		AddLvl24Books();
 		break;
 #endif
-	default:
-		ASSUME_UNREACHABLE
-		break;
 	}
 	AddDunObjs(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
 	BYTE lvlMask = 1 << currLvl._dType;
