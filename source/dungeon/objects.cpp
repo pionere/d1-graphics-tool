@@ -1439,7 +1439,7 @@ int AddObject(int type, int ox, int oy)
 	case OBJ_PODEX:
 	case OBJ_BOOKSTAND:
 	case OBJ_SKELBOOK:
-	case OBJ_PEDISTAL:
+	case OBJ_PEDESTAL:
 	case OBJ_ARMORSTAND:
 	case OBJ_WEAPONRACKL:
 	case OBJ_WEAPONRACKR:
