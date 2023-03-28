@@ -1327,6 +1327,7 @@ int AddObject(int type, int ox, int oy)
 		dObject[ox][oy] = 0;
 		os->_oModeFlags |= OMF_RESERVED;
 		os->_oSelFlag = 0;
+		dProgress() << QApplication::tr("Reserved object on tile %1:%2 - type %3 with index.").arg(ox, oy).arg(type).arg(oi);
 	}
 	// init object
 	switch (type) {

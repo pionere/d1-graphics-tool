@@ -2843,6 +2843,29 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(17, 13, 101, false);
         change |= this->changeMonsterAt(14, 10, 101, false);
         change |= this->changeMonsterAt(13, 12, 101, false);
+
+        // test tiles
+        change |= this->changeTileAt(0, 10, 0);
+        change |= this->changeTileAt(0, 11, 0);
+        for (int y = 2; y <= 2; y++) {
+            for (int x = 4; x <= 10; x++) {
+                change |= this->changeTileAt(x, y, 0);
+            }
+        }
+        for (int y = 2; y <= 9; y++) {
+            for (int x = 3; x <= 3; x++) {
+                change |= this->changeTileAt(x, y, 0);
+            }
+        }
+        change |= this->changeTileAt(4, 9, 0);
+        change |= this->changeTileAt(7, 9, 0);
+
+        change |= this->changeTileAt(8, 8, 0);
+
+        change |= this->changeTileAt(6, 5, 0);
+        change |= this->changeTileAt(6, 6, 0);
+        change |= this->changeTileAt(7, 5, 0);
+        change |= this->changeTileAt(7, 6, 0);
         break;
     case DUN_DIAB_3_AFT: // Diab3b.DUN
         // replace monsters from Diab3a.DUN
@@ -2860,6 +2883,17 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(19, 15, 101, false);
         // replace objects from Diab3a.DUN
         change |= this->changeObjectAt(8, 2, 51);
+        // test tiles
+        for (int y = 0; y <= 10; y++) {
+            for (int x = 0; x <= 10; x++) {
+                int pn = this->getTileAt(x * 2, y * 2);
+                if (pn == 71 || pn == 72 || pn == 94 || pn == 92 || pn == 93
+                    || pn == 51 || pn == 48 || pn == 47 || pn == 88 || pn == 89
+                     || pn == 49 || pn == 90 || pn == 91 || pn == 85 || pn == 84
+                     || pn == 86 || pn == 87)
+                    change |= this->changeTileAt(x, y, 0);
+            }
+        }
         break;
     case DUN_DIAB_4_AFT: // Diab4b.DUN
         // replace monsters from Diab4a.DUN
@@ -2875,6 +2909,17 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(6, 12, 101, false);
         change |= this->changeMonsterAt(12, 10, 101, false);
         change |= this->changeMonsterAt(10, 4, 101, false);
+
+        // test tiles
+        change |= this->changeTileAt(3, 8, 0);
+        change |= this->changeTileAt(4, 8, 0);
+        change |= this->changeTileAt(8, 4, 0);
+        change |= this->changeTileAt(8, 5, 0);
+        for (int y = 2; y <= 5; y++) {
+            for (int x = 2; x <= 5; x++) {
+                change |= this->changeTileAt(x, y, 0);
+            }
+        }
         /* fall-through */
     case DUN_DIAB_4_PRE: // Diab4a.DUN
         // add/replace monster
