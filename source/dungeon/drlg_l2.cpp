@@ -3305,7 +3305,7 @@ static void L2CreateArches()
 						dungeon[x][y - 1] = 41;
 						dungeon[x][y] = 3; // 44
                     }
-                } else if (pn == 1 && j < DMAXY - 2) {
+                } else if (pn == 1 && y < DMAXY - 2) {
 					// [4 1 6/7/8/9/146/147/148/149]
 					pn = dungeon[x][y + 2];
 					if ((pn >= 6 && pn <= 9) || (pn >= 146 && pn <= 149)) {
@@ -3321,6 +3321,7 @@ static void L2CreateArches()
 				if ((pn >= 6 && pn <= 9) || (pn >= 146 && pn <= 149)) {
 					// [1 + 9 5 6/7/8/9/146/147/148/149] */ */ [1 + 8 5 6/7/8/9/146/147/148/149]*/ [8 5 6/7/8/9/146/147/148/149]*/ [2 5 6/7/8/9/146/147/148/149]
 					pn = dungeon[x - 1][y];
+					// assert(!drlgFlags[x - 1][y]);
 					if (pn == 2 || pn == 9) {
 						dungeon[x - 1][y] = 40;
 						dungeon[x][y] = 3; // 45;
@@ -3328,7 +3329,7 @@ static void L2CreateArches()
 						dungeon[x - 1][y] = 43;
 						dungeon[x][y] = 3; // 45;
                     }
-                } else if (pn == 2 && i < DMAXX - 2) {
+                } else if (pn == 2 && x < DMAXX - 2) {
 					// [5 2 6/7/8/9/146/147/148/149]
 					pn = dungeon[x + 2][y];
 					if ((pn >= 6 && pn <= 9) || (pn >= 146 && pn <= 149)) {
