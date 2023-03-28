@@ -1805,25 +1805,28 @@ static void DRLG_L2Shadows()
 					if (dungeon[x + 1][y - 1] == 3) {
 						dungeon[x][y - 1] = 49;
 						dungeon[x + 1][y - 1] = 46;
-                    } else if (dungeon[x + 1][y - 1] == 47) { // overlapping shadows (missing tile to match the other part)
-						dungeon[x][y - 1] = 49;
+                    //} else if (dungeon[x + 1][y - 1] == 47) { // overlapping shadows (missing tile to match the other part)
+					//	dungeon[x][y - 1] = 49;
                     }
                 }
 				/* fall-through */
             case 39:
+            case 42:
 				// - vertical arch
-				if (dungeon[x - 1][y] == 3 && dungeon[x - 1][y + 1] == 3) {
-					if (dungeon[x - 1][y - 1] == 3) {
-						dungeon[x - 1][y - 1] = 48;
-						dungeon[x - 1][y] = 51;
-						dungeon[x - 1][y + 1] = 47;
-                    } else if (dungeon[x - 1][y - 1] == 2) {
-						dungeon[x - 1][y - 1] = 142;
-						dungeon[x - 1][y] = 51;
-						dungeon[x - 1][y + 1] = 47;
-                    } else if (dungeon[x - 1][y - 1] == 48 || dungeon[x - 1][y - 1] == 46) { // overlapping shadows
-						dungeon[x - 1][y] = 51;
-						dungeon[x - 1][y + 1] = 47;
+				if (dungeon[x - 1][y] == 3) {
+                    if (dungeon[x - 1][y + 1] == 3 || dungeon[x - 1][y + 1] == 46) { // overlapping shadows (missing tile to match the other part)
+						if (dungeon[x - 1][y - 1] == 3) {
+							dungeon[x - 1][y - 1] = 48;
+							dungeon[x - 1][y] = 51;
+							dungeon[x - 1][y + 1] = 47;
+						} else if (dungeon[x - 1][y - 1] == 2) {
+							dungeon[x - 1][y - 1] = 142;
+							dungeon[x - 1][y] = 51;
+							dungeon[x - 1][y + 1] = 47;
+						} else if (dungeon[x - 1][y - 1] == 48 || dungeon[x - 1][y - 1] == 46) { // overlapping shadows
+							dungeon[x - 1][y] = 51;
+							dungeon[x - 1][y + 1] = 47;
+						}
                     }
 					// TODO: else pillar = true?
                 }
@@ -1838,8 +1841,8 @@ static void DRLG_L2Shadows()
                     if (dungeon[x + 1][y - 1] == 3) {
 						dungeon[x][y - 1] = 49;
 						dungeon[x + 1][y - 1] = 46;
-                    } else if (dungeon[x + 1][y - 1] == 47) { // overlapping shadows (missing tile to match the other part)
-						dungeon[x][y - 1] = 49;
+                    //} else if (dungeon[x + 1][y - 1] == 47) { // overlapping shadows (missing tile to match the other part)
+					//	dungeon[x][y - 1] = 49;
                     }
                 } else if (dungeon[x][y - 1] == 1) {
 					dungeon[x][y - 1] = 140;

@@ -300,7 +300,7 @@ static void DRLG_LoadL4SP()
 		for (int y = 0; y < 11; y++) {
 			for (int x = 0; x < 12; x++) {
 				int pn = lm[2 + x + y * 11];
-				if (pn == 94 || pn == 96 || pn == 48 || pn == 47 || pn == 6)
+				if (pn == 94 || pn == 95 || pn == 96 || pn == 48 || pn == 47 || pn == 6)
 					lm[2 + x + y * 11] = SwapLE16(0);
 				if (pn >= 84 && pn <= 87)
 					lm[2 + x + y * 11] = SwapLE16(0);
