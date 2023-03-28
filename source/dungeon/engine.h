@@ -55,6 +55,17 @@ inline constexpr int lengthof(T (&array)[N])
 	return N;
 }
 
+/*
+ * Copy constant string from src to dest.
+ * The whole (padded) length of the src array is copied.
+ */
+template <DWORD N1, DWORD N2>
+inline void copy_cstr(char (&dest)[N1], const char (&src)[N2])
+{
+	static_assert(N1 >= N2, "String does not fit the destination.");
+	memcpy(dest, src, std::min(N1, (DWORD)(((N2 + sizeof(int) - 1) / sizeof(int)) * sizeof(int))));
+}
+
 DEVILUTION_END_NAMESPACE
 
 #endif /* __ENGINE_H__ */
