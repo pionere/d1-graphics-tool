@@ -552,6 +552,10 @@ static void AddL2Torches()
 			} else {
 				if (dObject[i][j - 1] == 0)
 					AddObject(OBJ_TORCHR2, i, j - 1);
+                else {
+					int on = abs(dObject[i][j - 1]) - 1;
+					dProgressErr() << QApplication::tr("Object %d next to wall. Frame %d").arg(objects[on]._otype).arg(objects[on]._oAnimFrame);
+                }
 			}
 			// skip a few tiles to prevent close placement
 			i += 4;
@@ -1603,7 +1607,7 @@ void GetObjectStr(int oi)
 		copy_cstr(infostr, "Slain Hero");
 		break;
 	default:
-		ASSUME_UNREACHABLE
+		// ASSUME_UNREACHABLE
 		break;
 	}
 	// infoclr = COL_WHITE;

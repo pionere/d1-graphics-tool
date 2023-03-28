@@ -245,6 +245,55 @@ static void DRLG_LoadL4SP()
 		pSetPieces[1]._spData = LoadFileInMem("Levels\\L4Data\\diab2b.DUN");
 		pSetPieces[2]._spData = LoadFileInMem("Levels\\L4Data\\diab3b.DUN");
 		pSetPieces[3]._spData = LoadFileInMem("Levels\\L4Data\\diab4b.DUN");
+
+		// test
+		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
+		// - diab1.DUN
+		lm[2 + 0 + 4 * 6] = SwapLE16(6);
+		lm[2 + 0 + 5 * 6] = SwapLE16(6);
+		// - diab2b.DUN
+		lm[2 + 0 + 10 * 11] = SwapLE16(6);
+		lm[2 + 0 + 11 * 11] = SwapLE16(6);
+		for (int y = 2; y <= 2; y++) {
+			for (int x = 4; x <= 10; x++) {
+				lm[2 + x + y * 11] = SwapLE16(6);
+			}
+		}
+		for (int y = 2; y <= 9; y++) {
+			for (int x = 3; x <= 3; x++) {
+				lm[2 + x + y * 11] = SwapLE16(6);
+			}
+		}
+		lm[2 + 4 + 9 * 11] = SwapLE16(6);
+		lm[2 + 7 + 9 * 11] = SwapLE16(6);
+
+		lm[2 + 8 + 8 * 11] = SwapLE16(6);
+
+		lm[2 + 6 + 5 * 11] = SwapLE16(6);
+		lm[2 + 6 + 6 * 11] = SwapLE16(6);
+		lm[2 + 7 + 5 * 11] = SwapLE16(6);
+		lm[2 + 7 + 6 * 11] = SwapLE16(6);
+		// - diab3b.DUN
+		for (int y = 0; y <= 10; y++) {
+			for (int x = 0; x <= 10; x++) {
+				if (lm[2 + x + y * 11] == 71 || lm[2 + x + y * 11] == 72 || lm[2 + x + y * 11] == 94 || lm[2 + x + y * 11] == 92 || lm[2 + x + y * 11] == 93
+                    || lm[2 + x + y * 11] == 51 || lm[2 + x + y * 11] == 48 || lm[2 + x + y * 11] == 47 || lm[2 + x + y * 11] == 88 || lm[2 + x + y * 11] == 89
+                     || lm[2 + x + y * 11] == 49 || lm[2 + x + y * 11] == 90 || lm[2 + x + y * 11] == 91 || lm[2 + x + y * 11] == 85 || lm[2 + x + y * 11] == 84
+                     || lm[2 + x + y * 11] == 86 || lm[2 + x + y * 11] == 87)
+					lm[2 + x + y * 11] = SwapLE16(6);
+			}
+		}
+		// - diab3b.DUN
+		lm[2 + 3 + 8 * 9] = SwapLE16(6);
+		lm[2 + 4 + 8 * 9] = SwapLE16(6);
+
+		lm[2 + 8 + 4 * 9] = SwapLE16(6);
+		lm[2 + 8 + 5 * 9] = SwapLE16(6);
+		for (int y = 2; y <= 5; y++) {
+			for (int x = 2; x <= 5; x++) {
+				lm[2 + x + y * 11] = SwapLE16(6);
+			}
+		}
 	} else if (IsMultiGame && QuestStatus(Q_BETRAYER)) {
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L4Data\\Vile1.DUN");
 		pSetPieces[0]._sptype = SPT_BETRAYER;
