@@ -25,6 +25,13 @@ typedef struct ObjStruct {
     int otype;
     int animFrame;
     QString name;
+
+    bool operator==(const ObjStruct & oval) const {
+        return otype == oval.otype && animFrame == oval.animFrame && name == oval.name;
+    };
+    bool operator!=(const ObjStruct & oval) const {
+        return otype != oval.otype || animFrame != oval.animFrame || name != oval.name;
+    };
 } ObjStruct;
 
 static void IncProgress()
