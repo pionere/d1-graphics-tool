@@ -336,7 +336,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
         AddResourceParam objRes = AddResourceParam();
         objRes.type = DUN_ENTITY_TYPE::OBJECT;
         objRes.index = lengthof(DunObjConvTbl) + i;
-        objRes.name = objType.name.isEmpty() ? objfiledata[objectdata[otype].ofindex].ofName; : objType.name;
+        objRes.name = objType.name.isEmpty() ? objfiledata[objectdata[otype].ofindex].ofName : objType.name;
         objRes.path = assetPath + "/Objects/" + objfiledata[objectdata[otype].ofindex].ofName + ".CEL";
         objRes.width = objfiledata[objectdata[otype].ofindex].oAnimWidth;
         objRes.frame = objType.animFrame;
