@@ -252,6 +252,7 @@ static void DRLG_LoadL4SP()
 		lm[2 + 0 + 4 * 6] = SwapLE16(6);
 		lm[2 + 0 + 5 * 6] = SwapLE16(6);
 		// - diab2b.DUN
+		lm = (uint16_t*)pSetPieces[1]._spData;
 		lm[2 + 0 + 10 * 11] = SwapLE16(6);
 		lm[2 + 0 + 11 * 11] = SwapLE16(6);
 		for (int y = 2; y <= 2; y++) {
@@ -274,6 +275,7 @@ static void DRLG_LoadL4SP()
 		lm[2 + 7 + 5 * 11] = SwapLE16(6);
 		lm[2 + 7 + 6 * 11] = SwapLE16(6);
 		// - diab3b.DUN
+		lm = (uint16_t*)pSetPieces[2]._spData;
 		for (int y = 0; y <= 10; y++) {
 			for (int x = 0; x <= 10; x++) {
 				if (lm[2 + x + y * 11] == 71 || lm[2 + x + y * 11] == 72 || lm[2 + x + y * 11] == 94 || lm[2 + x + y * 11] == 92 || lm[2 + x + y * 11] == 93
@@ -283,7 +285,8 @@ static void DRLG_LoadL4SP()
 					lm[2 + x + y * 11] = SwapLE16(6);
 			}
 		}
-		// - diab3b.DUN
+		// - diab4b.DUN
+		lm = (uint16_t*)pSetPieces[3]._spData;
 		lm[2 + 3 + 8 * 9] = SwapLE16(6);
 		lm[2 + 4 + 8 * 9] = SwapLE16(6);
 
