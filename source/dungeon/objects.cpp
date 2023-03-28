@@ -550,12 +550,8 @@ static void AddL2Torches()
 			if (!nSolidTable[dPiece[i][j + 1]]) {
 				AddObject(OBJ_TORCHR1, i, j);
 			} else {
-				if (dObject[i][j - 1] == 0)
+				if (dObject[i][j - 1] == 0) // check torches from the previous loop
 					AddObject(OBJ_TORCHR2, i, j - 1);
-                else {
-					int on = abs(dObject[i][j - 1]) - 1;
-					dProgressErr() << QApplication::tr("Object %d next to wall. Frame %d").arg(objects[on]._otype).arg(objects[on]._oAnimFrame);
-                }
 			}
 			// skip a few tiles to prevent close placement
 			i += 4;

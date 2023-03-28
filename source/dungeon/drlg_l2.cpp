@@ -1798,7 +1798,7 @@ static void DRLG_LoadL2SP()
 		// patch the map - Bonestr2.DUN
 		// place shadows
 		// NE-wall
-		pSetPieces[0]._spData[(2 + 1 + 0 * 7) * 2] = 49;
+		/*pSetPieces[0]._spData[(2 + 1 + 0 * 7) * 2] = 49;
 		pSetPieces[0]._spData[(2 + 2 + 0 * 7) * 2] = 46;
 		pSetPieces[0]._spData[(2 + 3 + 0 * 7) * 2] = 49;
 		pSetPieces[0]._spData[(2 + 4 + 0 * 7) * 2] = 46;
@@ -1817,7 +1817,7 @@ static void DRLG_LoadL2SP()
 		// SE-wall
 		pSetPieces[0]._spData[(2 + 4 + 1 * 7) * 2] = 51;
 		pSetPieces[0]._spData[(2 + 4 + 2 * 7) * 2] = 47;
-		pSetPieces[0]._spData[(2 + 4 + 3 * 7) * 2] = 50; // 51;
+		pSetPieces[0]._spData[(2 + 4 + 3 * 7) * 2] = 50; // 51;*/
 		// commented out because there is no matching shadow type
 		//pSetPieces[0]._spData[(2 + 4 + 5 * 7) * 2] = 47;
 		// ensure the changing tiles are reserved

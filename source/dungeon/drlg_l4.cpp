@@ -213,22 +213,60 @@ static void DRLG_L4Shadows()
 	for (y = 1; y < DMAXY; y++) {
 		for (x = 1; x < DMAXY; x++) {
 			bv = dungeon[x][y];
-			if (bv != 3 && bv != 4 && bv != 8 && bv != 15)
-				continue;
-			//6, 3/4/8/15,  search
+			if (bv == 3 || bv == 4 || bv == 8 || bv == 15 || bv == 81) { // 81 only to support setpieces
+				// 6, 0,
+				// 6, 3/4/8/15/81,  search
 
-			//47, 0, replace
-			if (dungeon[x - 1][y] == 6) {
-				dungeon[x - 1][y] = 47;
-			}
-			//6,  0, search
-			//0, 3/4/8/15,
+				//48, 0, replace
+				//47, 0,
+				if (dungeon[x - 1][y] == 6 && dungeon[x - 1][y - 1] == 6) {
+					dungeon[x - 1][y] = 47;
+				}
+            } else if (bv == 53) {
+				// 6, 0,
+				// 6, 53,  search
 
-			//48, 0, replace
-			// 0, 0,
-			if (dungeon[x - 1][y - 1] == 6) {
-				dungeon[x - 1][y - 1] = 48;
-			}
+				//55, 0, replace
+				//54, 0,
+				if (dungeon[x - 1][y] == 6) {
+					dungeon[x - 1][y] = 54;
+                }
+				if (dungeon[x - 1][y - 1] == 6) {
+					dungeon[x - 1][y - 1] = 55;
+				}
+            } else if (bv == 56) {
+				// 6, 6, 0,
+				// 0, 6/50, 56,  search
+
+				//58, 59, 0, replace
+				// 0, 60, 0,
+				if ((dungeon[x - 1][y] == 6 || (dungeon[x - 1][y] == 50 && !drlgFlags[x - 1][y]))
+				 && dungeon[x - 1][y - 1] == 6 && dungeon[x - 2][y - 1] == 6) {
+					dungeon[x - 1][y] = 60;
+					dungeon[x - 1][y - 1] = 59;
+					dungeon[x - 2][y - 1] = 58;
+				}
+            } else if (bv == 73) { // support setpieces
+				// 6, 0,
+				// 6, 73,  search
+
+				//72, 0, replace
+				//71, 0,
+				if (dungeon[x - 1][y] == 6 && dungeon[x - 1][y - 1] == 6) {
+					dungeon[x - 1][y] = 71;
+					dungeon[x - 1][y - 1] = 72;
+                }
+            } else if (bv == 76 || bv == 77) { // support setpieces
+				// 6, 0,
+				// 6, 76/77,  search
+
+				//75, 0, replace
+				//74, 0,
+				if (dungeon[x - 1][y] == 6 && dungeon[x - 1][y - 1] == 6) {
+					dungeon[x - 1][y] = 74;
+					dungeon[x - 1][y - 1] = 75;
+                }
+            }
 		}
 	}
 }
@@ -249,53 +287,44 @@ static void DRLG_LoadL4SP()
 		// test
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// - diab1.DUN
-		lm[2 + 0 + 4 * 6] = SwapLE16(0);
-		lm[2 + 0 + 5 * 6] = SwapLE16(0);
+		for (int y = 0; y < 6; y++) {
+			for (int x = 0; x < 6; x++) {
+				int pn = lm[2 + x + y * 11];
+				if (pn == 54 || pn == 55 || pn == 48 || pn == 47 || pn == 58 || pn == 59 || pn == 60)
+					lm[2 + x + y * 11] = SwapLE16(0);
+			}
+		}
 		// - diab2b.DUN
 		lm = (uint16_t*)pSetPieces[1]._spData;
-		lm[2 + 0 + 10 * 11] = SwapLE16(0);
-		lm[2 + 0 + 11 * 11] = SwapLE16(0);
-		for (int y = 2; y <= 2; y++) {
-			for (int x = 4; x <= 10; x++) {
-				lm[2 + x + y * 11] = SwapLE16(0);
+		for (int y = 0; y < 11; y++) {
+			for (int x = 0; x < 12; x++) {
+				int pn = lm[2 + x + y * 11];
+				if (pn == 94 || pn == 96 || pn == 48 || pn == 47 || pn == 6)
+					lm[2 + x + y * 11] = SwapLE16(0);
+				if (pn >= 84 && pn <= 87)
+					lm[2 + x + y * 11] = SwapLE16(0);
 			}
 		}
-		for (int y = 2; y <= 9; y++) {
-			for (int x = 3; x <= 3; x++) {
-				lm[2 + x + y * 11] = SwapLE16(0);
-			}
-		}
-		lm[2 + 4 + 9 * 11] = SwapLE16(0);
-		lm[2 + 7 + 9 * 11] = SwapLE16(0);
-
-		lm[2 + 8 + 8 * 11] = SwapLE16(0);
-
-		lm[2 + 6 + 5 * 11] = SwapLE16(0);
-		lm[2 + 6 + 6 * 11] = SwapLE16(0);
-		lm[2 + 7 + 5 * 11] = SwapLE16(0);
-		lm[2 + 7 + 6 * 11] = SwapLE16(0);
 		// - diab3b.DUN
 		lm = (uint16_t*)pSetPieces[2]._spData;
-		for (int y = 0; y <= 10; y++) {
-			for (int x = 0; x <= 10; x++) {
+		for (int y = 0; y < 11; y++) {
+			for (int x = 0; x < 11; x++) {
 				int pn = lm[2 + x + y * 11];
-				if (pn == 71 || pn == 72 || pn == 94 || pn == 92 || pn == 93
-                    || pn == 51 || pn == 48 || pn == 47 || pn == 88 || pn == 89
-                     || pn == 49 || pn == 90 || pn == 91 || pn == 85 || pn == 84
-                     || pn == 86 || pn == 87)
+				if (pn == 71 || pn == 72 || pn == 48 || pn == 47 || pn == 49 || pn == 50 || pn == 51 || pn == 54 || pn == 55 || pn == 58 || pn == 59 || pn == 60)
+					lm[2 + x + y * 11] = SwapLE16(0);
+				if (pn >= 84 && pn <= 94)
 					lm[2 + x + y * 11] = SwapLE16(0);
 			}
 		}
 		// - diab4b.DUN
 		lm = (uint16_t*)pSetPieces[3]._spData;
-		lm[2 + 3 + 8 * 9] = SwapLE16(0);
-		lm[2 + 4 + 8 * 9] = SwapLE16(0);
-
-		lm[2 + 8 + 4 * 9] = SwapLE16(0);
-		lm[2 + 8 + 5 * 9] = SwapLE16(0);
-		for (int y = 2; y <= 5; y++) {
-			for (int x = 2; x <= 5; x++) {
-				lm[2 + x + y * 11] = SwapLE16(0);
+		for (int y = 0; y < 11; y++) {
+			for (int x = 0; x < 11; x++) {
+				int pn = lm[2 + x + y * 11];
+				if (pn == 49 || pn == 50  || pn == 51 || pn == 6)
+					lm[2 + x + y * 11] = SwapLE16(0);
+				if (pn >= 84 && pn <= 106)
+					lm[2 + x + y * 11] = SwapLE16(0);
 			}
 		}
 	} else if (IsMultiGame && QuestStatus(Q_BETRAYER)) {
@@ -405,14 +434,14 @@ static bool L4HorizWall(int i, int j, int dx)
 	xx = RandRange(1, dx - 3);
 	dungeon[i + xx][j] = 57;
 	dungeon[i + xx + 2][j] = 56;
-	dungeon[i + xx + 1][j] = 60;
+	dungeon[i + xx + 1][j] = 50; // 60;
 
-	if (dungeon[i + xx][j - 1] == 6) {
+	/*if (dungeon[i + xx][j - 1] == 6) {
 		dungeon[i + xx][j - 1] = 58;
 	}
 	if (dungeon[i + xx + 1][j - 1] == 6) {
 		dungeon[i + xx + 1][j - 1] = 59;
-	}
+	}*/
 	// convert the first tile
 	if (dungeon[i][j] == 13) {
 		dungeon[i][j] = 17;
@@ -517,14 +546,14 @@ static void L4VertWall(int i, int j, int dy)
 	yy = RandRange(1, dy - 3);
 	dungeon[i][j + yy] = 53;
 	dungeon[i][j + yy + 2] = 52;
-	dungeon[i][j + yy + 1] = 60;
+	dungeon[i][j + yy + 1] = 50;
 
-	if (dungeon[i - 1][j + yy] == 6) {
+	/*if (dungeon[i - 1][j + yy] == 6) {
 		dungeon[i - 1][j + yy] = 54;
 	}
 	if (dungeon[i - 1][j + yy - 1] == 6) {
 		dungeon[i - 1][j + yy - 1] = 55;
-	}
+	}*/
 }
 
 static constexpr uint32_t VERT_WALL_ENDS =
@@ -1950,6 +1979,26 @@ static void DRLG_L4()
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
 	if (currLvl._dLevelIdx == DLV_HELL4) {
+		int x, y;
+
+		// fix transVal under diab1.DUN
+		x = 2 * pSetPieces[0]._spx + DBORDERX;
+		y = 2 * pSetPieces[0]._spy + DBORDERY;
+		BYTE tv = dTransVal[x][y];
+		assert(tv != 0);
+		assert(dTransVal[x + 1][y + 9] == 0);
+		assert(dTransVal[x + 1][y + 10] == 0);
+		assert(dTransVal[x + 2][y + 9] == 0);
+		assert(dTransVal[x + 2][y + 10] == 0);
+		dTransVal[x + 1][y + 9] = tv;
+		dTransVal[x + 1][y + 10] = tv;
+		dTransVal[x + 2][y + 9] = tv;
+		dTransVal[x + 2][y + 10] = tv;
+
+		// fix transVal under diab2.DUN
+		x = 2 * pSetPieces[1]._spx + DBORDERX;
+		y = 2 * pSetPieces[1]._spy + DBORDERY;
+
 		// LoadFileWithMem("Levels\\L4Data\\diab1.DUN", pSetPieces[0]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab2a.DUN", pSetPieces[1]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab3a.DUN", pSetPieces[2]._spData);
