@@ -1241,13 +1241,6 @@ static void AddDecap(int oi)
 	os->_oPreFlag = TRUE;
 }
 
-static void AddVileBook(int oi)
-{
-	if (currLvl._dLevelIdx == SL_VILEBETRAYER) {
-		objects[oi]._oAnimFrame = 4;
-	}
-}
-
 static void AddMagicCircle(int oi)
 {
 	ObjectStruct* os;
@@ -1436,9 +1429,6 @@ int AddObject(int type, int ox, int oy)
 	//case OBJ_TEARFTN:
 	//	ObjAddRndSeed(oi);
 	//	break;
-	case OBJ_BOOK2L:
-		AddVileBook(oi);
-		break;
 	case OBJ_MCIRCLE1:
 	case OBJ_MCIRCLE2:
 		AddMagicCircle(oi);

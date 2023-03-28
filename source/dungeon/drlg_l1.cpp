@@ -963,6 +963,9 @@ static void DRLG_L1SetMapFix(BYTE* pMap)
 		lm[2 + 21 * 23 + 21 * 23 * 2 * 2 + 16 + 30 * 21 * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
 		lm[2 + 21 * 23 + 21 * 23 * 2 * 2 + 24 + 29 * 21 * 2] = SwapLE16((UMT_RED_VEX + 1) | (1 << 15));
 		lm[2 + 21 * 23 + 21 * 23 * 2 * 2 + 22 + 33 * 21 * 2] = SwapLE16((UMT_BLACKJADE + 1) | (1 << 15));
+		// - replace the books
+		lm[2 + 21 * 23 + 21 * 23 * 2 * 2 + 21 * 23 * 2 * 2 + 10 + 29 * 21 * 2] = SwapLE16(47);
+		lm[2 + 21 * 23 + 21 * 23 * 2 * 2 + 21 * 23 * 2 * 2 + 29 + 30 * 21 * 2] = SwapLE16(47);
 	} else if (currLvl._dLevelIdx == SL_SKELKING) {
 		// patch set-piece to add monsters - SklKng2.DUN
 		lm[2 + 37 * 25 + 37 * 25 * 2 * 2 + 19 + 31 * 37 * 2] = SwapLE16((UMT_SKELKING + 1) | (1 << 15));

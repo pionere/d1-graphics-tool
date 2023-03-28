@@ -105,8 +105,8 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr },
                      { nullptr },
                      { nullptr },
-/*OBJ_BOOK2L*/       { "Bookstand" }, // Q_BCHAMB, Q_BETRAYER
-                     { "BloodBook" }, // Q_BLOOD
+/*OBJ_ANCIENTTOME*/  { "Ancient Tome" }, // Q_BCHAMB
+/*OBJ_BLOODBOOK*/    { "BloodBook" }, // Q_BLOOD
 /*OBJ_TBCROSS*/      { "Burning cross" }, // Q_BCHAMB
                      { nullptr },
                      { nullptr }, //OBJ_CANDLE1,
@@ -138,7 +138,7 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr }, //OBJ_SKSTICK5,
                      { nullptr },
                      { nullptr },
-                     { nullptr },
+/*OBJ_VILEBOOK*/     { "Book of Vileness" }, // Q_BETRAYER
                      { nullptr },
                      { nullptr },
                      { nullptr },
@@ -181,8 +181,8 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr },
                      { nullptr },
                      { nullptr },
-                     { "Sign Chest" }, // Q_BANNER
-                     { "Pedestal" }, // Q_BLOOD
+/*OBJ_SIGNCHEST*/    { "Sign Chest" }, // Q_BANNER
+/*OBJ_PEDESTAL*/     { "Pedestal" }, // Q_BLOOD
                      { nullptr },
                      { nullptr },
                      { nullptr },
