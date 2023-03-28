@@ -1761,6 +1761,7 @@ static void DRLG_L2Shadows()
 		}
 	}*/
 	BYTE bv;
+	int x, y;
 
 	for (x = 1; x < DMAXX; x++) {
 		for (y = 1; y < DMAXY; y++) {
@@ -3279,60 +3280,61 @@ static void L2DoorFix2()
 
 static void L2CreateArches()
 {
-	int pn;
+	BYTE pn;
+	int x, y;
 
-	for (i = 0; i < DMAXX; i++) {
-		for (j = 0; j < DMAXY; j++) {
-			if (drlgFlags[i][j])
+	for (x = 0; x < DMAXX; x++) {
+		for (y = 0; y < DMAXY; y++) {
+			if (drlgFlags[x][y])
 				continue;
-			if (dungeon[i][j] == 4) {
+			if (dungeon[x][y] == 4) {
 				// vertical door
-				// assert(j != 0 && j != DMAXY - 1);
-				pn = dungeon[i][j + 1];
+				// assert(y > 0 && y < DMAXY - 1);
+				pn = dungeon[x][y + 1];
 				if ((pn >= 6 && pn <= 9) || (pn >= 146 && pn <= 149)) {
 					//  [1 4 6/7/8/9/146/147/148/149]  [2 + 8 4 6/7/8/9/146/147/148/149] */ */ [2 + 7 4 6/7/8/9/146/147/148/149] */ [8 4 6/7/8/9/146/147/148/149]
-					pn = dungeon[i][j - 1];
-					// assert(!drlgFlags[i][j - 1]);
+					pn = dungeon[x][y - 1];
+					// assert(!drlgFlags[x][y - 1]);
 					if (pn == 1 || pn == 7) {
-						dungeon[i][j - 1] = 39;
-						dungeon[i][j] = 3; // 44
+						dungeon[x][y - 1] = 39;
+						dungeon[x][y] = 3; // 44
                     } else if (pn == 8) {
-						dungeon[i][j - 1] = 42;
-						dungeon[i][j] = 3; // 44
+						dungeon[x][y - 1] = 42;
+						dungeon[x][y] = 3; // 44
                     } else if (pn == 43) {
-						dungeon[i][j - 1] = 41;
-						dungeon[i][j] = 3; // 44
+						dungeon[x][y - 1] = 41;
+						dungeon[x][y] = 3; // 44
                     }
                 } else if (pn == 1 && j < DMAXY - 2) {
 					// [4 1 6/7/8/9/146/147/148/149]
-					pn = dungeon[i][j + 2];
+					pn = dungeon[x][y + 2];
 					if ((pn >= 6 && pn <= 9) || (pn >= 146 && pn <= 149)) {
-						// assert(!drlgFlags[i][j + 1]);
-						dungeon[i][j + 1] = 3; // 44
-						dungeon[i][j] = 39;
+						// assert(!drlgFlags[x][y + 1]);
+						dungeon[x][y + 1] = 3; // 44
+						dungeon[x][y] = 39;
                     }
                 }
-            } else if (dungeon[i][j] == 5) {
+            } else if (dungeon[x][y] == 5) {
 				// horizontal door
-				// assert(i != 0 && i != DMAXX - 1);
-				pn = dungeon[i + 1][j];
+				// assert(x > 0 && x < DMAXX - 1);
+				pn = dungeon[x + 1][y];
 				if ((pn >= 6 && pn <= 9) || (pn >= 146 && pn <= 149)) {
 					// [1 + 9 5 6/7/8/9/146/147/148/149] */ */ [1 + 8 5 6/7/8/9/146/147/148/149]*/ [8 5 6/7/8/9/146/147/148/149]*/ [2 5 6/7/8/9/146/147/148/149]
-					pn = dungeon[i - 1][j];
+					pn = dungeon[x - 1][y];
 					if (pn == 2 || pn == 9) {
-						dungeon[i - 1][j] = 40;
-						dungeon[i][j] = 3; // 45;
+						dungeon[x - 1][y] = 40;
+						dungeon[x][y] = 3; // 45;
                     } else if (pn == 8) {
-						dungeon[i - 1][j] = 43;
-						dungeon[i][j] = 3; // 45;
+						dungeon[x - 1][y] = 43;
+						dungeon[x][y] = 3; // 45;
                     }
                 } else if (pn == 2 && i < DMAXX - 2) {
 					// [5 2 6/7/8/9/146/147/148/149]
-					pn = dungeon[i + 2][j];
+					pn = dungeon[x + 2][y];
 					if ((pn >= 6 && pn <= 9) || (pn >= 146 && pn <= 149)) {
-						// assert(!drlgFlags[i + 1][j]);
-						dungeon[i + 1][j] = 3; // 45;
-						dungeon[i][j] = 40;
+						// assert(!drlgFlags[x + 1][y]);
+						dungeon[x + 1][y] = 3; // 45;
+						dungeon[x][y] = 40;
                     }
                 }
             }
