@@ -210,8 +210,8 @@ static void DRLG_L4Shadows()
 	int x, y;
 	BYTE bv;
 
-	for (y = 1; y < DMAXY; y++) {
-		for (x = 1; x < DMAXY; x++) {
+	for (x = 1; x < DMAXY; x++) {
+		for (y = 1; y < DMAXY; y++) {
 			bv = dungeon[x][y];
 			if (bv == 3 || bv == 4 || bv == 8 || bv == 15 || bv == 81) { // 81 only to support setpieces
 				// 6, 0,
@@ -221,6 +221,7 @@ static void DRLG_L4Shadows()
 				//47, 0,
 				if (dungeon[x - 1][y] == 6 && dungeon[x - 1][y - 1] == 6) {
 					dungeon[x - 1][y] = 47;
+					dungeon[x - 1][y - 1] = 48;
 				}
             } else if (bv == 53) {
 				// 6, 0,
@@ -1979,7 +1980,7 @@ static void DRLG_L4()
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
 	if (currLvl._dLevelIdx == DLV_HELL4) {
-		int x, y;
+		/*int x, y;
 
 		// fix transVal under diab1.DUN
 		x = 2 * pSetPieces[0]._spx + DBORDERX;
@@ -1997,7 +1998,7 @@ static void DRLG_L4()
 
 		// fix transVal under diab2.DUN
 		x = 2 * pSetPieces[1]._spx + DBORDERX;
-		y = 2 * pSetPieces[1]._spy + DBORDERY;
+		y = 2 * pSetPieces[1]._spy + DBORDERY;*/
 
 		// LoadFileWithMem("Levels\\L4Data\\diab1.DUN", pSetPieces[0]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab2a.DUN", pSetPieces[1]._spData);
