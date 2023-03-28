@@ -19,6 +19,13 @@ int ViewY;
 bool IsMultiGame;
 bool IsHellfireGame;
 QString assetPath;
+char infostr[256];
+
+typedef struct ObjStruct {
+    int otype;
+    int animFrame;
+    QString name;
+} ObjStruct;
 
 static void IncProgress()
 {
@@ -88,9 +95,9 @@ static void LoadGameLevel(int lvldir, int seed)
     SetRndSeed(seed);
 
     if (!currLvl._dSetLvl) {
-		// fill in loop: dungeon, dTransVal, pWarps, pSetPieces, uses drlgFlags, dungBlock
-		// fill post: pdungeon, dPiece, dSpecial, themeLoc, dFlags
-		// reset: dMonster, dObject, dPlayer, dItem, dMissile, dLight+
+        // fill in loop: dungeon, dTransVal, pWarps, pSetPieces, uses drlgFlags, dungBlock
+        // fill post: pdungeon, dPiece, dSpecial, themeLoc, dFlags
+        // reset: dMonster, dObject, dPlayer, dItem, dMissile, dLight+
         CreateLevel();
         if (pMegaTiles == NULL || pSolidTbl == NULL) {
             return;
@@ -123,7 +130,7 @@ static void LoadGameLevel(int lvldir, int seed)
             IncProgress();
 //            InitItems();
         }
-		FreeSetPieces();
+        FreeSetPieces();
     } else {
         LoadSetMap();
         IncProgress();
@@ -208,7 +215,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
             dun->setTileAt(DBORDERX + x * 2, DBORDERY + y * 2, dungeon[x][y]);
         }
     }
-    std::vector<std::pair<int, int>> objectTypes;
+    std::vector<ObjStruct> objectTypes;
     std::set<int> itemTypes;
     // std::vector<int> monUniques;
     for (int y = 0; y < MAXDUNY; y++) {
@@ -241,22 +248,22 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
             dun->setMonsterAt(x, y, monType);
             int obj = dObject[x][y];
             if (obj > 0) {
+                GetObjectStr(obj - 1);
                 ObjectStruct *os = &objects[obj - 1];
-                int otype = os->_otype;
-                int animFrame = os->_oAnimFlag == OAM_LOOP ? 0 : os->_oAnimFrame;
+                ObjStruct on;
+                on.otype = os->_otype;
+                on.animFrame = os->_oAnimFlag == OAM_LOOP ? 0 : os->_oAnimFrame;
+                on.name = infostr;
                 auto iter = objectTypes.begin();
                 for (; iter != objectTypes.end(); iter++) {
-                    if (iter->first == otype && iter->second == animFrame) {
+                    if (*iter == on) {
                         break;
                     }
                 }
+                obj = lengthof(DunObjConvTbl) + std::distance(objectTypes.begin(), iter);
                 if (iter == objectTypes.end()) {
-                    obj = objectTypes.size();
-                    objectTypes.push_back(std::pair<int, int>(otype, animFrame));
-                } else {
-                    obj = std::distance(objectTypes.begin(), iter);
+                    objectTypes.push_back(on);
                 }
-                obj += lengthof(DunObjConvTbl);
             } else {
                 obj = 0;
             }
@@ -317,15 +324,15 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
     }*/
     // add objects
     for (unsigned i = 0; i < objectTypes.size(); i++) {
-        const std::pair<int, int> &objType = objectTypes[i];
-        int otype = objType.first;
+        const ObjStruct &objType = objectTypes[i];
+        int otype = objType.otype;
         AddResourceParam objRes = AddResourceParam();
         objRes.type = DUN_ENTITY_TYPE::OBJECT;
         objRes.index = lengthof(DunObjConvTbl) + i;
-        objRes.name = objfiledata[objectdata[otype].ofindex].ofName; // TODO: object labels?
+        objRes.name = objType.name;
         objRes.path = assetPath + "/Objects/" + objfiledata[objectdata[otype].ofindex].ofName + ".CEL";
         objRes.width = objfiledata[objectdata[otype].ofindex].oAnimWidth;
-        objRes.frame = objType.second;
+        objRes.frame = objType.animFrame;
         dun->addResource(objRes);
     }
     view->updateEntityOptions();
