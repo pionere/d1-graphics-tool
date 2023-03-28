@@ -1795,7 +1795,7 @@ static void DRLG_L2Shadows()
 					dungeon[x][y - 1] = 46;
                 }
 				if (dungeon[x - 1][y - 1] == 3) {
-					dungeon[x + 1][y - 1] = 49;
+					dungeon[x - 1][y - 1] = 49;
                 }
 				break;
             case 41: // support setpieces

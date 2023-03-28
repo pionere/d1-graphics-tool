@@ -290,20 +290,20 @@ static void DRLG_LoadL4SP()
 		// - diab1.DUN
 		for (int y = 0; y < 6; y++) {
 			for (int x = 0; x < 6; x++) {
-				int pn = lm[2 + x + y * 11];
+				int pn = lm[2 + x + y * 6];
 				if (pn == 54 || pn == 55 || pn == 48 || pn == 47 || pn == 58 || pn == 59 || pn == 60)
-					lm[2 + x + y * 11] = SwapLE16(0);
+					lm[2 + x + y * 6] = SwapLE16(0);
 			}
 		}
 		// - diab2b.DUN
 		lm = (uint16_t*)pSetPieces[1]._spData;
 		for (int y = 0; y < 11; y++) {
 			for (int x = 0; x < 12; x++) {
-				int pn = lm[2 + x + y * 11];
+				int pn = lm[2 + x + y * 12];
 				if (pn == 94 || pn == 95 || pn == 96 || pn == 48 || pn == 47 || pn == 6)
-					lm[2 + x + y * 11] = SwapLE16(0);
+					lm[2 + x + y * 12] = SwapLE16(0);
 				if (pn >= 84 && pn <= 87)
-					lm[2 + x + y * 11] = SwapLE16(0);
+					lm[2 + x + y * 12] = SwapLE16(0);
 			}
 		}
 		// - diab3b.DUN
@@ -319,13 +319,13 @@ static void DRLG_LoadL4SP()
 		}
 		// - diab4b.DUN
 		lm = (uint16_t*)pSetPieces[3]._spData;
-		for (int y = 0; y < 11; y++) {
-			for (int x = 0; x < 11; x++) {
-				int pn = lm[2 + x + y * 11];
+		for (int y = 0; y < 9; y++) {
+			for (int x = 0; x < 9; x++) {
+				int pn = lm[2 + x + y * 9];
 				if (pn == 49 || pn == 50  || pn == 51 || pn == 6)
-					lm[2 + x + y * 11] = SwapLE16(0);
+					lm[2 + x + y * 9] = SwapLE16(0);
 				if (pn >= 84 && pn <= 106)
-					lm[2 + x + y * 11] = SwapLE16(0);
+					lm[2 + x + y * 9] = SwapLE16(0);
 			}
 		}
 	} else if (IsMultiGame && QuestStatus(Q_BETRAYER)) {
