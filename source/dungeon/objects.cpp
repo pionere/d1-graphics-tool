@@ -550,7 +550,7 @@ static void AddL2Torches()
 			if (!nSolidTable[dPiece[i][j + 1]]) {
 				AddObject(OBJ_TORCHR1, i, j);
 			} else {
-				if (dObject[i][j - 1] == 0)
+				if (dObject[i][j - 1] == 0) // check torches from the previous loop
 					AddObject(OBJ_TORCHR2, i, j - 1);
 			}
 			// skip a few tiles to prevent close placement
@@ -1322,7 +1322,7 @@ int AddObject(int type, int ox, int oy)
 	if (dObject[ox][oy] != 0) {
 		int on = dObject[ox][oy];
 		on = on >= 0 ? on - 1 : -(on + 1);
-		dProgressErr() << QApplication::tr("Multiple objects on tile %1:%2 - type %3 with index %4 and type %5 with index %6.").arg(ox, oy).arg(type).arg(oi).arg(objects[on]._otype).arg(on);
+		dProgressErr() << QApplication::tr("Multiple objects on tile %1:%2 - type %3 with index %4 and type %5 with index %6.").arg(ox).arg(oy).arg(type).arg(oi).arg(objects[on]._otype).arg(on);
 	}
 	dObject[ox][oy] = oi + 1;
 	// dFlags[ox][oy] |= BFLAG_POPULATED;
@@ -1330,6 +1330,7 @@ int AddObject(int type, int ox, int oy)
 		dObject[ox][oy] = 0;
 		os->_oModeFlags |= OMF_RESERVED;
 		os->_oSelFlag = 0;
+		dProgress() << QApplication::tr("Reserved object on tile %1:%2 - type %3 with index %4.").arg(ox).arg(oy).arg(type).arg(oi);
 	}
 	// init object
 	switch (type) {
@@ -1458,4 +1459,170 @@ int AddObject(int type, int ox, int oy)
 		break;
 	}
 	return oi;
+}
+
+void GetObjectStr(int oi)
+{
+	ObjectStruct* os;
+
+	os = &objects[oi];
+	switch (os->_otype) {
+	case OBJ_LEVER:
+#ifdef HELLFIRE
+	case OBJ_L5LEVER:
+#endif
+	//case OBJ_FLAMELVR:
+		copy_cstr(infostr, "Lever");
+		break;
+	case OBJ_CHEST1:
+	case OBJ_TCHEST1:
+		copy_cstr(infostr, "Small Chest");
+		break;
+	case OBJ_L1LDOOR:
+	case OBJ_L1RDOOR:
+#ifdef HELLFIRE
+	case OBJ_L5LDOOR:
+	case OBJ_L5RDOOR:
+#endif
+	case OBJ_L2LDOOR:
+	case OBJ_L2RDOOR:
+	case OBJ_L3LDOOR:
+	case OBJ_L3RDOOR:
+		if (os->_oVar4 == DOOR_OPEN)
+			copy_cstr(infostr, "Open Door");
+		else if (os->_oVar4 == DOOR_CLOSED)
+			copy_cstr(infostr, "Closed Door");
+		else // if (os->_oVar4 == DOOR_BLOCKED)
+			copy_cstr(infostr, "Blocked Door");
+		break;
+	case OBJ_BOOK2L:
+		if (currLvl._dLevelIdx == SL_BONECHAMB)
+			copy_cstr(infostr, "Ancient Tome");
+		else if (currLvl._dLevelIdx == SL_VILEBETRAYER)
+			copy_cstr(infostr, "Book of Vileness");
+		break;
+	case OBJ_SWITCHSKL:
+		copy_cstr(infostr, "Skull Lever");
+		break;
+	case OBJ_MYTHICBOOK:
+		copy_cstr(infostr, "Mythical Book");
+		break;
+	case OBJ_CHEST2:
+	case OBJ_TCHEST2:
+		copy_cstr(infostr, "Chest");
+		break;
+	case OBJ_CHEST3:
+	case OBJ_TCHEST3:
+	case OBJ_SIGNCHEST:
+		copy_cstr(infostr, "Large Chest");
+		break;
+	case OBJ_CRUXM:
+	case OBJ_CRUXR:
+	case OBJ_CRUXL:
+		copy_cstr(infostr, "Crucified Skeleton");
+		break;
+	case OBJ_SARC:
+#ifdef HELLFIRE
+	case OBJ_L5SARC:
+#endif
+		copy_cstr(infostr, "Sarcophagus");
+		break;
+	//case OBJ_BOOKSHELF:
+	//	copy_cstr(infostr, "Bookshelf");
+	//	break;
+#ifdef HELLFIRE
+	case OBJ_URN:
+	case OBJ_URNEX:
+		copy_cstr(infostr, "Urn");
+		break;
+	case OBJ_POD:
+	case OBJ_PODEX:
+		copy_cstr(infostr, "Pod");
+		break;
+#endif
+	case OBJ_BARREL:
+	case OBJ_BARRELEX:
+		copy_cstr(infostr, "Barrel");
+		break;
+	case OBJ_SKELBOOK:
+		copy_cstr(infostr, "Skeleton Tome");
+		break;
+	case OBJ_SHRINEL:
+	case OBJ_SHRINER:
+		snprintf(infostr, sizeof(infostr), "%s Shrine", shrinestrs[os->_oVar1]); // SHRINE_TYPE
+		break;
+	case OBJ_BOOKCASEL:
+	case OBJ_BOOKCASER:
+		copy_cstr(infostr, "Bookcase");
+		break;
+	case OBJ_BOOKSTAND:
+		copy_cstr(infostr, "Library Book");
+		break;
+	case OBJ_BLOODFTN:
+		copy_cstr(infostr, "Blood Fountain");
+		break;
+	case OBJ_DECAP:
+		copy_cstr(infostr, "Decapitated Body");
+		break;
+	case OBJ_BLINDBOOK:
+		copy_cstr(infostr, "Book of the Blind");
+		break;
+	case OBJ_BLOODBOOK:
+		copy_cstr(infostr, "Book of Blood");
+		break;
+	case OBJ_PEDESTAL:
+		copy_cstr(infostr, "Pedestal of Blood");
+		break;
+	case OBJ_PURIFYINGFTN:
+		copy_cstr(infostr, "Purifying Spring");
+		break;
+	case OBJ_ARMORSTAND:
+		copy_cstr(infostr, "Armor");
+		break;
+	case OBJ_GOATSHRINE:
+		copy_cstr(infostr, "Goat Shrine");
+		break;
+	case OBJ_CAULDRON:
+		copy_cstr(infostr, "Cauldron");
+		break;
+	case OBJ_MURKYFTN:
+		copy_cstr(infostr, "Murky Pool");
+		break;
+	case OBJ_TEARFTN:
+		copy_cstr(infostr, "Fountain of Tears");
+		break;
+	case OBJ_STEELTOME:
+		copy_cstr(infostr, "Steel Tome");
+		break;
+	case OBJ_STORYBOOK:
+#ifdef HELLFIRE
+	case OBJ_L5BOOK:
+#endif
+		copy_cstr(infostr, StoryBookName[os->_oVar3]); // STORY_BOOK_NAME
+		break;
+	case OBJ_WEAPONRACKL:
+	case OBJ_WEAPONRACKR:
+		copy_cstr(infostr, "Weapon Rack");
+		break;
+	case OBJ_MUSHPATCH:
+		copy_cstr(infostr, "Mushroom Patch");
+		break;
+	case OBJ_LAZSTAND:
+		copy_cstr(infostr, "Vile Stand");
+		break;
+	case OBJ_SLAINHERO:
+		copy_cstr(infostr, "Slain Hero");
+		break;
+	default:
+		// ASSUME_UNREACHABLE
+		break;
+	}
+	// infoclr = COL_WHITE;
+	// if (os->_oTrapChance != 0 && (3 * currLvl._dLevel + os->_oTrapChance) < myplr._pBaseDex) { // TRAP_CHANCE
+	if (os->_oTrapChance != 0) { // TRAP_CHANCE
+		char tempstr[256];
+		snprintf(tempstr, sizeof(tempstr), "Trapped %s", infostr);
+		copy_str(infostr, tempstr);
+		// infoclr = COL_RED;
+	}
 }
