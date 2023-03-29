@@ -2205,6 +2205,7 @@ static void DRLG_L4()
 		dTransVal[x + 8][y + 5] = tv;
 		dTransVal[x + 7][y + 6] = tv;
 		dTransVal[x + 8][y + 6] = tv;
+		}
 	}
 }
 
