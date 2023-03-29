@@ -2197,9 +2197,9 @@ static void DRLG_L4()
 	//	}
 		// fix transVal under Vile1.DUN
 		if (pSetPieces[0]._spData != NULL) {
-		x = 2 * pSetPieces[0]._spx + DBORDERX + 2;
-		y = 2 * pSetPieces[0]._spy + DBORDERY + 2;
-		tv = dTransVal[x][y];
+		int x = 2 * pSetPieces[0]._spx + DBORDERX + 2;
+		int y = 2 * pSetPieces[0]._spy + DBORDERY + 2;
+		BYTE tv = dTransVal[x][y];
 		// assert(tv != 0);
 		dTransVal[x + 7][y + 5] = tv;
 		dTransVal[x + 8][y + 5] = tv;
