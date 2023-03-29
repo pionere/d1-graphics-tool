@@ -1241,13 +1241,6 @@ static void AddDecap(int oi)
 	os->_oPreFlag = TRUE;
 }
 
-static void AddVileBook(int oi)
-{
-	if (currLvl._dLevelIdx == SL_VILEBETRAYER) {
-		objects[oi]._oAnimFrame = 4;
-	}
-}
-
 static void AddMagicCircle(int oi)
 {
 	ObjectStruct* os;
@@ -1437,9 +1430,6 @@ int AddObject(int type, int ox, int oy)
 	//case OBJ_TEARFTN:
 	//	ObjAddRndSeed(oi);
 	//	break;
-	case OBJ_BOOK2L:
-		AddVileBook(oi);
-		break;
 	case OBJ_MCIRCLE1:
 	case OBJ_MCIRCLE2:
 		AddMagicCircle(oi);
@@ -1495,11 +1485,11 @@ void GetObjectStr(int oi)
 		else // if (os->_oVar4 == DOOR_BLOCKED)
 			copy_cstr(infostr, "Blocked Door");
 		break;
-	case OBJ_BOOK2L:
-		if (currLvl._dLevelIdx == SL_BONECHAMB)
-			copy_cstr(infostr, "Ancient Tome");
-		else if (currLvl._dLevelIdx == SL_VILEBETRAYER)
-			copy_cstr(infostr, "Book of Vileness");
+	case OBJ_ANCIENTTOME:
+		copy_cstr(infostr, "Ancient Tome");
+		break;
+	case OBJ_VILEBOOK:
+		copy_cstr(infostr, "Book of Vileness");
 		break;
 	case OBJ_SWITCHSKL:
 		copy_cstr(infostr, "Skull Lever");
