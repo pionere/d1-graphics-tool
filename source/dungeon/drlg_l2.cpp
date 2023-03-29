@@ -1791,7 +1791,7 @@ static void DRLG_L2Shadows()
 				// fake shadow of the vertical doors
 				if (dungeon[x - 1][y] == 3) {
 					dungeon[x - 1][y] = 47;
-                }
+				}
 				if (dungeon[x - 1][y - 1] == 3) {
 					dungeon[x - 1][y - 1] = 51;
 				}
@@ -3307,7 +3307,7 @@ static void L2DoorFix()
 
 static bool IsPillar(BYTE bv)
 {
-	return (bv >= 6 && bv <= 9) || (bv >= 13 && bv <= 16);
+	return (bv >= 6 && bv <= 9) || (bv >= 146 && bv <= 149);
 }
 
 /*
@@ -3391,7 +3391,7 @@ static void L2CreateArches()
 {
 	BYTE pn;
 	int x, y;
-
+	// TODO: skip replace if there is no matching shadow?
 	for (x = 0; x < DMAXX; x++) {
 		for (y = 0; y < DMAXY; y++) {
 			if (drlgFlags[x][y])
@@ -3399,57 +3399,87 @@ static void L2CreateArches()
 			if (dungeon[x][y] == 4) {
 				// vertical door
 				// assert(y > 0 && y < DMAXY - 1);
-				pn = dungeon[x][y + 1];
-				if ((pn >= 6 && pn <= 9) || (pn >= 146 && pn <= 149)) {
-					//  [1 4 6/7/8/9/146/147/148/149]  [2 + 8 4 6/7/8/9/146/147/148/149] */ */ [2 + 7 4 6/7/8/9/146/147/148/149] */ [8 4 6/7/8/9/146/147/148/149]
+				if (IsPillar(dungeon[x][y + 1])) {
 					pn = dungeon[x][y - 1];
 					// assert(!drlgFlags[x][y - 1]);
 					if (pn == 1 || pn == 7) {
+						// 1/7,  search
+						// 4,
+						// P,
+
+						//39, replace
+						//3,
+						//0,
 						dungeon[x][y - 1] = 39;
-						dungeon[x][y] = 3; // 44
-                    } else if (pn == 8) {
+						dungeon[x][y] = 3;
+					} else if (pn == 8) {
+						// 8,  search
+						// 4,
+						// P,
+
+						//42, replace
+						//3,
+						//0,
 						dungeon[x][y - 1] = 42;
-						dungeon[x][y] = 3; // 44
-                    } else if (pn == 43) {
+						dungeon[x][y] = 3;
+					} else if (pn == 43) {
+						// 43,  search
+						// 4,
+						// P,
+
+						//41, replace
+						//3,
+						//0,
 						dungeon[x][y - 1] = 41;
-						dungeon[x][y] = 3; // 44
-                    }
-                } else if (pn == 1 && y < DMAXY - 2) {
-					// [4 1 6/7/8/9/146/147/148/149]
-					pn = dungeon[x][y + 2];
-					if ((pn >= 6 && pn <= 9) || (pn >= 146 && pn <= 149)) {
+						dungeon[x][y] = 3;
+					}
+				} else if (pn == 1 && y < DMAXY - 2) {
+					if (IsPillar(dungeon[x][y + 2])) { // TODO: is this possible after L2DoorFix2?
+						// 4,  search
+						// 1,
+						// P,
+
+						//39, replace
+						//3,
+						//0,
 						// assert(!drlgFlags[x][y + 1]);
-						dungeon[x][y + 1] = 3; // 44
+						dungeon[x][y + 1] = 3;
 						dungeon[x][y] = 39;
-                    }
-                }
-            } else if (dungeon[x][y] == 5) {
+					}
+				}
+			} else if (dungeon[x][y] == 5) {
 				// horizontal door
 				// assert(x > 0 && x < DMAXX - 1);
 				pn = dungeon[x + 1][y];
-				if ((pn >= 6 && pn <= 9) || (pn >= 146 && pn <= 149)) {
-					// [1 + 9 5 6/7/8/9/146/147/148/149] */ */ [1 + 8 5 6/7/8/9/146/147/148/149]*/ [8 5 6/7/8/9/146/147/148/149]*/ [2 5 6/7/8/9/146/147/148/149]
+				if (IsPillar(pn)) {
 					pn = dungeon[x - 1][y];
 					// assert(!drlgFlags[x - 1][y]);
 					if (pn == 2 || pn == 9) {
+						// 2/9, 5, P,  search
+
+						//40, 3, 0, replace
 						dungeon[x - 1][y] = 40;
-						dungeon[x][y] = 3; // 45;
-                    } else if (pn == 8) {
+						dungeon[x][y] = 3;
+					} else if (pn == 8) {
+						// 8, 5, P,  search
+
+						//43, 3, 0, replace
 						dungeon[x - 1][y] = 43;
-						dungeon[x][y] = 3; // 45;
-                    }
-                } else if (pn == 2 && x < DMAXX - 2) {
-					// [5 2 6/7/8/9/146/147/148/149]
-					pn = dungeon[x + 2][y];
-					if ((pn >= 6 && pn <= 9) || (pn >= 146 && pn <= 149)) {
+						dungeon[x][y] = 3;
+					}
+				} else if (pn == 2 && x < DMAXX - 2) {
+					if (IsPillar(dungeon[x + 2][y])) { // TODO: is this possible after L2DoorFix2?
+						// 5, 2, P,  search
+
+						//40, 3, 0, replace
 						// assert(!drlgFlags[x + 1][y]);
-						dungeon[x + 1][y] = 3; // 45;
+						dungeon[x + 1][y] = 3;
 						dungeon[x][y] = 40;
-                    }
-                }
-            }
-        }
-    }
+					}
+				}
+			}
+		}
+	}
 }
 
 static void DRLG_L2()
