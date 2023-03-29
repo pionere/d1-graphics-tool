@@ -1734,6 +1734,7 @@ static void DRLG_L2DoorSubs()
 /*
  * Place shadows under arches and pillars.
  * New dungeon values: 45..51   72   140 141 142
+ * TODO: use DRLG_PlaceMiniSet instead?
  */
 static void DRLG_L2Shadows()
 {
@@ -1829,16 +1830,37 @@ static void DRLG_L2Shadows()
 				if (dungeon[x - 1][y] == 3) {
 					if (dungeon[x - 1][y + 1] == 3 || dungeon[x - 1][y + 1] == 46) { // overlapping shadows (missing tile to match the other part)
 						if (dungeon[x - 1][y - 1] == 3) {
+							// 3, 0,  search
+							// 3, 39/41/42,
+							// 3/46, 0,
+
+							//48, 0, replace
+							//51, 0,
+							//47, 0,
 							dungeon[x - 1][y - 1] = 48;
 							dungeon[x - 1][y] = 51;
 							dungeon[x - 1][y + 1] = 47;
 							pillar = false;
 						} else if (dungeon[x - 1][y - 1] == 2) {
+							// 2, 0,  search
+							// 3, 39/41/42,
+							// 3/46, 0,
+
+							//142, 0, replace
+							//51, 0,
+							//47, 0,
 							dungeon[x - 1][y - 1] = 142;
 							dungeon[x - 1][y] = 51;
 							dungeon[x - 1][y + 1] = 47;
 							pillar = false;
 						} else if (dungeon[x - 1][y - 1] == 47 || dungeon[x - 1][y - 1] == 46) { // overlapping shadows
+							// 46/47, 0,  search
+							// 3, 39/41/42,
+							// 3/46, 0,
+
+							// 0, 0, replace
+							//51, 0,
+							//47, 0,
 							dungeon[x - 1][y] = 51;
 							dungeon[x - 1][y + 1] = 47;
 							pillar = false;
@@ -1846,10 +1868,20 @@ static void DRLG_L2Shadows()
 					}
 				} else if (dungeon[x - 1][y] == 2) {
 					if (dungeon[x - 1][y + 1] == 3) {
+						// 2, 39/41/42,  search
+						// 3, 0,
+
+						//141, 0, replace
+						//47, 0,
 						dungeon[x - 1][y] = 141;
 						dungeon[x - 1][y + 1] = 47;
 						pillar = false;
 					} else if (dungeon[x - 1][y + 1] == 46) { // overlapping shadows (missing tile to match the other part)
+						// 2, 39/41/42,  search
+						// 46, 0,
+
+						//141, 0, replace
+						// 0, 0,
 						dungeon[x - 1][y] = 141;
 						pillar = false;
 					}
@@ -1859,6 +1891,11 @@ static void DRLG_L2Shadows()
 				// - horizontal arch
 				if (dungeon[x][y - 1] == 3) {
 					if (dungeon[x + 1][y - 1] == 3) {
+						// 3, 3,  search
+						// 40/41/43, 0
+
+						//49,46, replace
+						// 0, 0,
 						dungeon[x][y - 1] = 49;
 						dungeon[x + 1][y - 1] = 46;
 					//} else if (dungeon[x + 1][y - 1] == 47) { // overlapping shadows (missing tile to match the other part)
@@ -1866,6 +1903,11 @@ static void DRLG_L2Shadows()
 					}
 				} else if (dungeon[x][y - 1] == 1) {
 					if (dungeon[x + 1][y - 1] == 3) {
+						// 1, 3,  search
+						// 40/41/43, 0
+
+						//140,46, replace
+						// 0, 0,
 						dungeon[x][y - 1] = 140;
 						dungeon[x + 1][y - 1] = 46;
 					//} else if (dungeon[x + 1][y - 1] == 47) { // overlapping shadows (missing tile to match the other part)
@@ -1877,14 +1919,34 @@ static void DRLG_L2Shadows()
 				// pillars
 				if (dungeon[x - 1][y] == 3) {
 					if (dungeon[x - 1][y - 1] == 3) {
+						// 3, 0,  search
+						// 3, 6/7/39/40/41/42/78
+
+						//48, 0, replace
+						//50, 0,
 						dungeon[x - 1][y] = 50;
 						dungeon[x - 1][y - 1] = 48;
 					} else if (dungeon[x - 1][y - 1] == 2) {
+						// 2, 0,  search
+						// 3, 6/7/39/40/41/42/78
+
+						//142, 0, replace
+						//50, 0,
 						dungeon[x - 1][y] = 50;
 						dungeon[x - 1][y - 1] = 142;
 					} else if (dungeon[x - 1][y - 1] == 47) { // overlapping shadows
+						//47, 0,  search
+						// 3, 6/7/39/40/41/42/78
+
+						// 0, 0, replace
+						//50, 0,
 						dungeon[x - 1][y] = 50;
 					} else if (dungeon[x - 1][y - 1] == 46) { // overlapping shadows
+						//46, 0,  search
+						// 3, 6/7/39/40/41/42/78
+
+						// 0, 0, replace
+						//45, 0,
 						dungeon[x - 1][y] = 45;
 					}
 				}

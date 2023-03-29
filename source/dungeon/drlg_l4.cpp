@@ -267,7 +267,7 @@ static void DRLG_L4Shadows()
 					dungeon[x - 1][y] = 74;
 					dungeon[x - 1][y - 1] = 75;
 				}
-			//} else if (bv == 78 || bv == 16) {
+			//} else if (bv == 78 || bv == 16) { -- not really necessary
 			//	if (dungeon[x - 1][y - 1] == 6) {
 			//		dungeon[x - 1][y - 1] = 72;
 			//	}
