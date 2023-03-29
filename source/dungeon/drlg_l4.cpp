@@ -322,31 +322,29 @@ static void DRGL_L4PatchSetPiece(BYTE *pMap)
 			//		lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
 			//	}
 			}
-
-			// check tiles with objects
-			if (lm[w * h + w * h * 2 * 2 + x * 2 + y * 2 * w] != 0 || lm[w * h + w * h * 2 * 2 + x * 2 + 1 + y * 2 * w] != 0
-			 || lm[w * h + w * h * 2 * 2 + x * 2 + (y * 2 + 1) * w] != 0 || lm[w * h + w * h * 2 * 2 + x * 2 + 1 + (y * 2 + 1) * w] != 0) {
-				if (pn == 0) {
-					lm[x + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-				}
-				continue;
-			}
-			// check tiles with monsters
-			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + y * 2 * w] != 0 || lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + 1 + y * 2 * w] != 0
-			 || lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + (y * 2 + 1) * w] != 0 || lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + 1 + (y * 2 + 1) * w] != 0) {
-				if (pn == 0) {
-					lm[x + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-				}
-				continue;
-			}
-
 			// remove standard decorations -- TODO: vanilla only?
-			if (pn == 95 || pn == 96 || pn == 97)
+			if (pn == 95 || pn == 96 || pn == 97) {
 				lm[x + y * w] = SwapLE16(0);
-
+				pn = 0;
+			}
 			// remove standard substitutions -- TODO: vanilla only?
-			if (L4BTYPES[pn] == DEFAULT_MEGATILE_L4)
+			if (L4BTYPES[pn] == DEFAULT_MEGATILE_L4) {
 				lm[x + y * w] = SwapLE16(0);
+				pn = 0;
+			}
+			// protect tiles
+			if (pn == 0) {
+				// - tiles with objects
+				if (lm[w * h + w * h * 2 * 2 + x * 2 + y * 2 * w] != 0 || lm[w * h + w * h * 2 * 2 + x * 2 + 1 + y * 2 * w] != 0
+				 || lm[w * h + w * h * 2 * 2 + x * 2 + (y * 2 + 1) * w] != 0 || lm[w * h + w * h * 2 * 2 + x * 2 + 1 + (y * 2 + 1) * w] != 0) {
+					lm[x + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+				}
+				// - tiles with monsters
+				if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + y * 2 * w] != 0 || lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + 1 + y * 2 * w] != 0
+				 || lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + (y * 2 + 1) * w] != 0 || lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + 1 + (y * 2 + 1) * w] != 0) {
+					lm[x + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+				}
+			}
 		}
 	}
 }
@@ -2206,7 +2204,7 @@ void CreateL4Dungeon()
 	DRLG_L4();
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
 	DRLG_Init_Globals();
-	if (currLvl._dLevelIdx != DLV_HELL4)
+	// if (currLvl._dLevelIdx != DLV_HELL4)
 		DRLG_SetPC();
 }
 
