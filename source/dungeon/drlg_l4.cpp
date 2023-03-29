@@ -369,12 +369,6 @@ static void DRLG_LoadL4SP()
 			pSetPieces[0]._spData[(2 + 0 + 4 * 6) * 2] = 75;
 			pSetPieces[0]._spData[(2 + 0 + 5 * 6) * 2] = 74;
 		}
-		// patch set-piece - diab2b.DUN
-		// - fix shadow of the bottom right corner
-		if (pSetPieces[1]._spData != NULL) {
-			pSetPieces[1]._spData[(2 + 0 + 10 * 11) * 2] = 75;
-			pSetPieces[1]._spData[(2 + 0 + 11 * 11) * 2] = 74;
-		}
 		/*// test
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// - diab1.DUN
@@ -2079,9 +2073,9 @@ static void DRLG_L4()
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
 	if (currLvl._dLevelIdx == DLV_HELL4) {
-		/*int x, y;
-
-		// fix transVal under diab1.DUN
+		int x, y;
+		BYTE tv;
+		/*// fix transVal under diab1.DUN
 		x = 2 * pSetPieces[0]._spx + DBORDERX;
 		y = 2 * pSetPieces[0]._spy + DBORDERY;
 		BYTE tv = dTransVal[x][y];
@@ -2099,6 +2093,56 @@ static void DRLG_L4()
 		x = 2 * pSetPieces[1]._spx + DBORDERX;
 		y = 2 * pSetPieces[1]._spy + DBORDERY;*/
 
+		// fix transVal under diab2*.DUN
+		if (pSetPieces[1]._spData != NULL) {
+		x = 2 * pSetPieces[1]._spx + DBORDERX;
+		y = 2 * pSetPieces[1]._spy + DBORDERY;
+		tv = dTransVal[x][y];
+		// assert(tv != 0);
+		x += 11;
+		y += 9;
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 6; j++) {
+				dTransVal[x + i][y + j] = tv;
+			}
+		}
+		}
+
+		// fix transVal under diab3*.DUN
+		if (pSetPieces[2]._spData != NULL) {
+		x = 2 * pSetPieces[2]._spx + DBORDERX;
+		y = 2 * pSetPieces[2]._spy + DBORDERY;
+		tv = dTransVal[x][y];
+		// assert(tv != 0);
+		x += 17;
+		y += 1;
+		for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < 4; j++) {
+				dTransVal[x + i][y + j] = tv;
+			}
+		}
+		y += 16;
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				dTransVal[x + i][y + j] = tv;
+			}
+		}
+		}
+
+		// fix transVal under diab4*.DUN
+		if (pSetPieces[3]._spData != NULL) {
+		x = 2 * pSetPieces[3]._spx + DBORDERX;
+		y = 2 * pSetPieces[3]._spy + DBORDERY;
+		tv = dTransVal[x][y];
+		// assert(tv != 0);
+		x += 3;
+		y += 3;
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				dTransVal[x + i][y + j] = tv;
+			}
+		}
+		}
 		// LoadFileWithMem("Levels\\L4Data\\diab1.DUN", pSetPieces[0]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab2a.DUN", pSetPieces[1]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab3a.DUN", pSetPieces[2]._spData);

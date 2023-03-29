@@ -1838,7 +1838,7 @@ static void DRLG_L2Shadows()
 							dungeon[x - 1][y] = 51;
 							dungeon[x - 1][y + 1] = 47;
 							pillar = false;
-						} else if (/*dungeon[x - 1][y - 1] == 48 ||*/ dungeon[x - 1][y - 1] == 46) { // overlapping shadows
+						} else if (dungeon[x - 1][y - 1] == 47 || dungeon[x - 1][y - 1] == 46) { // overlapping shadows
 							dungeon[x - 1][y] = 51;
 							dungeon[x - 1][y + 1] = 47;
 							pillar = false;
