@@ -2187,7 +2187,7 @@ static void DRLG_L4()
 		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 6 + 7 * 8 * 2] = SwapLE16((UMT_WARLORD + 1) | (1 << 15));
 		}
 		DRLG_DrawMap(0);
-	//} else if (pSetPieces[0]._sptype == SPT_BETRAYER) {
+	} else if (pSetPieces[0]._sptype == SPT_BETRAYER) {
 	//	if (pSetPieces[0]._spData != NULL) {
 	//	// patch set-piece to add monsters - Vile1.DUN
 	//	uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
@@ -2195,6 +2195,16 @@ static void DRLG_L4()
 	//	lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 3 * 7 * 2] = SwapLE16((UMT_RED_VEX + 1) | (1 << 15));
 	//	lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 9 * 7 * 2] = SwapLE16((UMT_BLACKJADE + 1) | (1 << 15));
 	//	}
+		// fix transVal under Vile1.DUN
+		if (pSetPieces[0]._spData != NULL) {
+		x = 2 * pSetPieces[0]._spx + DBORDERX + 2;
+		y = 2 * pSetPieces[0]._spy + DBORDERY + 2;
+		tv = dTransVal[x][y];
+		// assert(tv != 0);
+		dTransVal[x + 7][y + 5] = tv;
+		dTransVal[x + 8][y + 5] = tv;
+		dTransVal[x + 7][y + 6] = tv;
+		dTransVal[x + 8][y + 6] = tv;
 	}
 }
 
