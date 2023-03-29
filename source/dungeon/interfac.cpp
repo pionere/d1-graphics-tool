@@ -100,21 +100,26 @@ static void LoadGameLevel(int lvldir, int seed)
     IncProgress();
 
     SetRndSeed(seed);
-
+extern int32t sglGameSeed;
+dProgress() << QString("LoadGameLevel 0:").arg(sglGameSeed);
     if (!currLvl._dSetLvl) {
         // fill in loop: dungeon, dTransVal, pWarps, pSetPieces, uses drlgFlags, dungBlock
         // fill post: pdungeon, dPiece, dSpecial, themeLoc, dFlags
         // reset: dMonster, dObject, dPlayer, dItem, dMissile, dLight+
         CreateLevel();
+dProgress() << QString("LoadGameLevel 1:").arg(sglGameSeed);
         if (pMegaTiles == NULL || pSolidTbl == NULL) {
             return;
         }
         IncProgress();
         if (currLvl._dType != DTYPE_TOWN) {
             GetLevelMTypes(); // select monster types and load their fx
+dProgress() << QString("LoadGameLevel 2:").arg(sglGameSeed);
             InitThemes(); // select theme types
+dProgress() << QString("LoadGameLevel 3:").arg(sglGameSeed);
             IncProgress();
             InitObjectGFX(); // load object graphics
+dProgress() << QString("LoadGameLevel 4:").arg(sglGameSeed);
         } else {
 //            InitLvlStores();
             // TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
@@ -125,12 +130,17 @@ static void LoadGameLevel(int lvldir, int seed)
 
         if (currLvl._dType != DTYPE_TOWN) {
             HoldThemeRooms(); // protect themes with dFlags
+dProgress() << QString("LoadGameLevel 5:").arg(sglGameSeed);
             InitMonsters();   // place monsters
+dProgress() << QString("LoadGameLevel 6:").arg(sglGameSeed);
             IncProgress();
 //            if (IsMultiGame || lvldir == ENTRY_LOAD || !IsLvlVisited(currLvl._dLevelIdx)) {
                 InitObjects(); // place objects
+dProgress() << QString("LoadGameLevel 7:").arg(sglGameSeed);
                 InitItems();   // place items
+dProgress() << QString("LoadGameLevel 8:").arg(sglGameSeed);
                 CreateThemeRooms(); // populate theme rooms
+dProgress() << QString("LoadGameLevel 9:").arg(sglGameSeed);
 //            }
         } else {
 //            InitTowners();
@@ -149,6 +159,7 @@ static void LoadGameLevel(int lvldir, int seed)
 
         InitItems();
     }
+dProgress() << QString("LoadGameLevel 10:").arg(sglGameSeed);
     IncProgress();
 //    InitMissiles();  // reset missiles
 //    SavePreLighting(); // fill dPreLight
