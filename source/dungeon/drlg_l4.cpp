@@ -202,7 +202,7 @@ const BYTE L4BTYPES[140] = {
 
 /*
  * Miniset replacement to add shadows.
- * New dungeon values: 47 48
+ * New dungeon values: 47 48   54 55   58 59 60  71 72   74 75
  * TODO: use DRLG_PlaceMiniSet instead?
  */
 static void DRLG_L4Shadows()
@@ -223,7 +223,7 @@ static void DRLG_L4Shadows()
 					dungeon[x - 1][y] = 47;
 					dungeon[x - 1][y - 1] = 48;
 				}
-            } else if (bv == 53) {
+			} else if (bv == 53) {
 				// 6, 0,
 				// 6, 53,  search
 
@@ -231,11 +231,11 @@ static void DRLG_L4Shadows()
 				//54, 0,
 				if (dungeon[x - 1][y] == 6) {
 					dungeon[x - 1][y] = 54;
-                }
+				}
 				if (dungeon[x - 1][y - 1] == 6) {
 					dungeon[x - 1][y - 1] = 55;
 				}
-            } else if (bv == 56) {
+			} else if (bv == 56) {
 				// 6, 6, 0,
 				// 0, 6/50, 56,  search
 
@@ -247,7 +247,7 @@ static void DRLG_L4Shadows()
 					dungeon[x - 1][y - 1] = 59;
 					dungeon[x - 2][y - 1] = 58;
 				}
-            } else if (bv == 73) { // support setpieces
+			} else if (bv == 73) { // support setpieces
 				// 6, 0,
 				// 6, 73,  search
 
@@ -256,8 +256,8 @@ static void DRLG_L4Shadows()
 				if (dungeon[x - 1][y] == 6 && dungeon[x - 1][y - 1] == 6) {
 					dungeon[x - 1][y] = 71;
 					dungeon[x - 1][y - 1] = 72;
-                }
-            } else if (bv == 76 || bv == 77) { // support setpieces
+				}
+			} else if (bv == 76 || bv == 77) { // support setpieces
 				// 6, 0,
 				// 6, 76/77,  search
 
@@ -266,8 +266,87 @@ static void DRLG_L4Shadows()
 				if (dungeon[x - 1][y] == 6 && dungeon[x - 1][y - 1] == 6) {
 					dungeon[x - 1][y] = 74;
 					dungeon[x - 1][y - 1] = 75;
-                }
-            }
+				}
+			//} else if (bv == 78 || bv == 16) {
+			//	if (dungeon[x - 1][y - 1] == 6) {
+			//		dungeon[x - 1][y - 1] = 72;
+			//	}
+			}
+		}
+	}
+}
+
+static void DRGL_L4PatchSetPiece(BYTE *pMap)
+{
+	// patch setpieces - *.DUN in HELL
+	uint16_t* lm = (uint16_t*)pMap;
+	int w = lm[0];
+	int h = lm[1];
+
+	lm += 2;
+	for (int y = 0; y < h; y++) {
+		for (int x = 0; x < w; x++) {
+			int pn = lm[x + y * w];
+			
+			// remove generic shadows (going to be regenerated)
+			if ((pn == 3 || pn == 4 || pn == 8 || pn == 15 || pn == 81) && x != 0 && y != 0) {
+				if (lm[x - 1 + y * w] == 47 && lm[x - 1 + (y - 1) * w] == 48) {
+					lm[x + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+					lm[x + (y + 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+				}
+			} else if (pn == 53 && x != 0) {
+				if (lm[x - 1 + y * w] == 54) {
+					lm[x - 1 + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+				}
+				if (y != 0 && lm[x - 1 + (y - 1) * w] == 55) {
+					lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+				}
+			} else if (pn == 56 && x >= 2 && y != 0) {
+				if (lm[x - 1 + y * w] == 60 && lm[x - 1 + (y - 1) * w] == 59 && lm[x - 2 + (y - 1) * w] == 58) {
+					lm[x - 1 + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+					lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+					lm[x - 2 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+				}
+			} else if (pn == 73 && x != 0 && y != 0) {
+				if (lm[x - 1 + y * w] == 71 && lm[x - 1 + (y - 1) * w] == 72) {
+					lm[x - 1 + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+					lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+				}
+			} else if ((pn == 76 || pn == 77) && x != 0 && y != 0) {
+				if (lm[x - 1 + y * w] == 74 && lm[x - 1 + (y - 1) * w] == 75) {
+					lm[x - 1 + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+					lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+				}
+			//} else if ((pn == 78 || pn == 16) && x != 0 && y != 0) {
+			//	if (lm[x - 1 + (y - 1) * w] == 72) {
+			//		lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+			//	}
+			}
+
+			// check tiles with objects
+			if (lm[w * h + w * h * 2 * 2 + x * 2 + y * 2 * w] != 0 || lm[w * h + w * h * 2 * 2 + x * 2 + 1 + y * 2 * w] != 0
+			 || lm[w * h + w * h * 2 * 2 + x * 2 + (y * 2 + 1) * w] != 0 || lm[w * h + w * h * 2 * 2 + x * 2 + 1 + (y * 2 + 1) * w] != 0) {
+				if (pn == 0) {
+					lm[x + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+				}
+				continue;
+			}
+			// check tiles with monsters
+			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + y * 2 * w] != 0 || lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + 1 + y * 2 * w] != 0
+			 || lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + (y * 2 + 1) * w] != 0 || lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + 1 + (y * 2 + 1) * w] != 0) {
+				if (pn == 0) {
+					lm[x + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+				}
+				continue;
+			}
+
+			// remove standard decorations -- TODO: vanilla only?
+			if (pn == 95 || pn == 96 || pn == 97)
+				lm[x + y * w] = SwapLE16(0);
+
+			// remove standard substitutions -- TODO: vanilla only?
+			if (L4BTYPES[pn] == DEFAULT_MEGATILE_L4)
+				lm[x + y * w] = SwapLE16(0);
 		}
 	}
 }
@@ -285,7 +364,7 @@ static void DRLG_LoadL4SP()
 		pSetPieces[2]._spData = LoadFileInMem("Levels\\L4Data\\diab3b.DUN");
 		pSetPieces[3]._spData = LoadFileInMem("Levels\\L4Data\\diab4b.DUN");
 
-		// test
+		/*// test
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// - diab1.DUN
 		for (int y = 0; y < 6; y++) {
@@ -327,16 +406,25 @@ static void DRLG_LoadL4SP()
 				if (pn >= 84 && pn <= 106)
 					lm[2 + x + y * 9] = SwapLE16(0);
 			}
-		}
+		}*/
 	} else if (IsMultiGame && QuestStatus(Q_BETRAYER)) {
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L4Data\\Vile1.DUN");
+		if (pSetPieces[0]._spData != NULL) {
+		// patch set-piece to add monsters - Vile1.DUN
+		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
+		lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 3 + 6 * 7 * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
+		lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 3 * 7 * 2] = SwapLE16((UMT_RED_VEX + 1) | (1 << 15));
+		lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 9 * 7 * 2] = SwapLE16((UMT_BLACKJADE + 1) | (1 << 15));
+		}
 		pSetPieces[0]._sptype = SPT_BETRAYER;
 	} else if (QuestStatus(Q_WARLORD)) {
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L4Data\\Warlord.DUN");
 		pSetPieces[0]._sptype = SPT_WARLORD;
 	}
 	for (int i = 0; i < lengthof(pSetPieces); i++) {
-		if (pSetPieces[i]._spData == NULL) {
+		if (pSetPieces[i]._spData != NULL) {
+			DRGL_L4PatchSetPiece(pSetPieces[i]._spData);
+		} else {
 			pSetPieces[i]._sptype = SPT_NONE;
 		}
 	}
@@ -357,8 +445,8 @@ static void DRLG_L4SetRoom(int idx)
 	for (j = ry1; j < ry2; j++) {
 		for (i = rx1; i < rx2; i++) {
 			dungeon[i][j] = *sp != 0 ? *sp : DEFAULT_MEGATILE_L4;
-			// drlgFlags[i][j] = *sp != 0 ? TRUE : FALSE; // |= DLRG_PROTECTED; - commented out because it requires too many patches to the setpieces due to DRLG_L4Subs
-			drlgFlags[i][j] = TRUE; // |= DLRG_PROTECTED;
+			drlgFlags[i][j] = *sp != 0 ? TRUE : FALSE; // |= DLRG_PROTECTED; - commented out because it requires too many patches to the setpieces due to DRLG_L4Subs
+			//drlgFlags[i][j] = TRUE; // |= DLRG_PROTECTED;
 			sp += 2;
 		}
 	}
@@ -2046,14 +2134,14 @@ static void DRLG_L4()
 		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 6 + 7 * 8 * 2] = SwapLE16((UMT_WARLORD + 1) | (1 << 15));
 		}
 		DRLG_DrawMap(0);
-	} else if (pSetPieces[0]._sptype == SPT_BETRAYER) {
-		if (pSetPieces[0]._spData != NULL) {
-		// patch set-piece to add monsters - Vile1.DUN
-		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
-		lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 3 + 6 * 7 * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
-		lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 3 * 7 * 2] = SwapLE16((UMT_RED_VEX + 1) | (1 << 15));
-		lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 9 * 7 * 2] = SwapLE16((UMT_BLACKJADE + 1) | (1 << 15));
-		}
+	//} else if (pSetPieces[0]._sptype == SPT_BETRAYER) {
+	//	if (pSetPieces[0]._spData != NULL) {
+	//	// patch set-piece to add monsters - Vile1.DUN
+	//	uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
+	//	lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 3 + 6 * 7 * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
+	//	lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 3 * 7 * 2] = SwapLE16((UMT_RED_VEX + 1) | (1 << 15));
+	//	lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 9 * 7 * 2] = SwapLE16((UMT_BLACKJADE + 1) | (1 << 15));
+	//	}
 	}
 }
 
