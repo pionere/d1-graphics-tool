@@ -1315,7 +1315,7 @@ int AddObject(int type, int ox, int oy)
 	if (dObject[ox][oy] != 0) {
 		int on = dObject[ox][oy];
 		on = on >= 0 ? on - 1 : -(on + 1);
-		dProgressErr() << QApplication::tr("Multiple objects on tile %1:%2 - type %3 with index %4 and type %5 with index %6.").arg(ox, oy).arg(type).arg(oi).arg(objects[on]._otype).arg(on);
+		dProgressErr() << QApplication::tr("Multiple objects on tile %1:%2 - type %3 with index %4 and type %5 with index %6.").arg(ox).arg(oy).arg(type).arg(oi).arg(objects[on]._otype).arg(on);
 	}
 	dObject[ox][oy] = oi + 1;
 	// dFlags[ox][oy] |= BFLAG_POPULATED;
@@ -1323,7 +1323,7 @@ int AddObject(int type, int ox, int oy)
 		dObject[ox][oy] = 0;
 		os->_oModeFlags |= OMF_RESERVED;
 		os->_oSelFlag = 0;
-		dProgress() << QApplication::tr("Reserved object on tile %1:%2 - type %3 with index.").arg(ox, oy).arg(type).arg(oi);
+		dProgress() << QApplication::tr("Reserved object on tile %1:%2 - type %3 with index %4.").arg(ox).arg(oy).arg(type).arg(oi);
 	}
 	// init object
 	switch (type) {

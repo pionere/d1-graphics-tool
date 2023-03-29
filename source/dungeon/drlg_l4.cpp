@@ -291,8 +291,8 @@ static void DRGL_L4PatchSetPiece(BYTE *pMap)
 			// remove generic shadows (going to be regenerated)
 			if ((pn == 3 || pn == 4 || pn == 8 || pn == 15 || pn == 81) && x != 0 && y != 0) {
 				if (lm[x - 1 + y * w] == 47 && lm[x - 1 + (y - 1) * w] == 48) {
-					lm[x + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-					lm[x + (y + 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+					lm[x - 1 + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+					lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
 				}
 			} else if (pn == 53 && x != 0) {
 				if (lm[x - 1 + y * w] == 54) {
@@ -363,7 +363,18 @@ static void DRLG_LoadL4SP()
 		pSetPieces[1]._spData = LoadFileInMem("Levels\\L4Data\\diab2b.DUN");
 		pSetPieces[2]._spData = LoadFileInMem("Levels\\L4Data\\diab3b.DUN");
 		pSetPieces[3]._spData = LoadFileInMem("Levels\\L4Data\\diab4b.DUN");
-
+		// patch set-piece - diab1.DUN
+		// - fix shadow of the bottom right corner
+		if (pSetPieces[0]._spData != NULL) {
+			pSetPieces[0]._spData[(2 + 0 + 4 * 6) * 2] = 75;
+			pSetPieces[0]._spData[(2 + 0 + 5 * 6) * 2] = 74;
+		}
+		// patch set-piece - diab2b.DUN
+		// - fix shadow of the bottom right corner
+		if (pSetPieces[1]._spData != NULL) {
+			pSetPieces[1]._spData[(2 + 0 + 10 * 11) * 2] = 75;
+			pSetPieces[1]._spData[(2 + 0 + 11 * 11) * 2] = 74;
+		}
 		/*// test
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// - diab1.DUN

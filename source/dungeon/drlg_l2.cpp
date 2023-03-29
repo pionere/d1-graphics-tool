@@ -1804,7 +1804,7 @@ static void DRLG_L2Shadows()
 					dungeon[x - 1][y - 1] = 49;
 				}
 				break;
-			case 41: // support setpieces
+			case 41:
 				// arch to both directions
 				pillar = true;
 				harch = true;
@@ -1838,15 +1838,21 @@ static void DRLG_L2Shadows()
 							dungeon[x - 1][y] = 51;
 							dungeon[x - 1][y + 1] = 47;
 							pillar = false;
-						} else if (dungeon[x - 1][y - 1] == 48 || dungeon[x - 1][y - 1] == 46) { // overlapping shadows
+						} else if (/*dungeon[x - 1][y - 1] == 48 ||*/ dungeon[x - 1][y - 1] == 46) { // overlapping shadows
 							dungeon[x - 1][y] = 51;
 							dungeon[x - 1][y + 1] = 47;
 							pillar = false;
 						}
 					}
 				} else if (dungeon[x - 1][y] == 2) {
-					dungeon[x - 1][y] = 141;
-					pillar = false;
+					if (dungeon[x - 1][y + 1] == 3) {
+						dungeon[x - 1][y] = 141;
+						dungeon[x - 1][y + 1] = 47;
+						pillar = false;
+					} else if (dungeon[x - 1][y + 1] == 46) { // overlapping shadows (missing tile to match the other part)
+						dungeon[x - 1][y] = 141;
+						pillar = false;
+					}
 				}
 			}
 			if (harch) {
@@ -3314,6 +3320,11 @@ static void L2DoorFix2()
 	}
 }
 
+/*
+ * Replace doors with arches.
+ * TODO: skip if there is no corresponding shadow?
+ * New dungeon values: (3) 39 40 41 42 43
+ */
 static void L2CreateArches()
 {
 	BYTE pn;
