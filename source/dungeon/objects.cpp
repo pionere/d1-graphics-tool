@@ -1605,6 +1605,7 @@ void GetObjectStr(int oi)
 		break;
 	default:
 		// ASSUME_UNREACHABLE
+		infostr[0] = '\0';
 		break;
 	}
 	// infoclr = COL_WHITE;
