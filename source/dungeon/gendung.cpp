@@ -944,7 +944,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 				themeLoc[themeCount].y = j + 1;
 				themeLoc[themeCount].width = themeW;
 				themeLoc[themeCount].height = themeH;
-				themeLoc[themeCount].ttval = numtrans;
+				// themeLoc[themeCount].ttval = numtrans;
 				int x1 = 2 * i + DBORDERX + 3;
 				int y1 = 2 * j + DBORDERY + 3;
 				int x2 = 2 * (i + themeW) + DBORDERX;
@@ -954,28 +954,11 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 					y1++;
 					x2--;
 					y2--;
+					DRLG_RectTrans(x1, y1, x2, y2);
 				}
 				//DRLG_RectTrans(x1, y1, x2, y2);
 				DRLG_CreateThemeRoom(themeCount);
 				themeCount++;
-			}
-		}
-	}
-}
-
-void DRLG_HoldThemeRooms()
-{
-	int i, x, y, xx, yy;
-
-	for (i = 0; i < themeCount; i++) {
-		for (y = themeLoc[i].y; y < themeLoc[i].y + themeLoc[i].height; y++) {
-			for (x = themeLoc[i].x; x < themeLoc[i].x + themeLoc[i].width; x++) {
-				xx = 2 * x + DBORDERX;
-				yy = 2 * y + DBORDERY;
-				dFlags[xx][yy] |= BFLAG_POPULATED;
-				dFlags[xx + 1][yy] |= BFLAG_POPULATED;
-				dFlags[xx][yy + 1] |= BFLAG_POPULATED;
-				dFlags[xx + 1][yy + 1] |= BFLAG_POPULATED;
 			}
 		}
 	}
