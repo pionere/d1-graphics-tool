@@ -181,7 +181,7 @@ const BYTE L4PENTA2[] = {
  * Maps tile IDs to their corresponding undecorated tile ID.
  * Values with a single entry are commented out, because pointless to randomize a single option.
  */
-const BYTE L4BTYPES[140] = {
+const BYTE L4BTYPES[138] = {
 	// clang-format off
 	0, 1, 2, 0 /*3*/, 4, 5, 6, 7, 0/*8*/, 9,
 	0/*10*/, 0/*11*/, 12, 0/*13*/, 0/*14*/, 15, 16, 0/*17*/, 0, 0,
@@ -196,7 +196,29 @@ const BYTE L4BTYPES[140] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	0, 0, 0, 0, 0, 0, 0, 0
+	// clang-format on
+};
+
+/*
+ * Specifies whether the given tile ID should spread the room ID (transval).
+ */
+const bool L4FTYPES[138] = {
+	// clang-format off
+	false, false, false, false, false, false,  true, false, false, false,
+	false, false, false, false, false, false, false, false, false, false, // 10..
+	false, false, false, false, false, false, false, false, false, false, // 20..
+	false,  true,  true, false, false, false,  true,  true, false,  true, // 30..
+	 true,  true, false, false, false,  true,  true,  true,  true,  true, // 40..
+	 true,  true, false, false,  true,  true, false, false,  true,  true, // 50..
+	 true, false, false, false, false, false, false, false, false, false, // 60..
+	false,  true,  true, false,  true,  true, false, false, false, false, // 70..
+	false, false, false, false,  true,  true,  true,  true,  true,  true, // 80..
+	 true,  true,  true,  true,  true,  true,  true,  true,  true,  true, // 90..
+	 true,  true,  true,  true,  true,  true,  true,  true,  true,  true, //100..
+	 true,  true,  true,  true,  true, false, false, false, false, false, //110..
+	false, false, false, false, false, false, false, false, false,  true, //120..
+	 true, false, false, false,  true,  true, false, false,               //130..
 	// clang-format on
 };
 
@@ -289,7 +311,7 @@ static void DRGL_L4PatchSetPiece(BYTE *pMap)
 			int pn = lm[x + y * w];
 			
 			// remove generic shadows (going to be regenerated)
-			if ((pn == 3 || pn == 4 || pn == 8 || pn == 15 || pn == 81) && x != 0 && y != 0) {
+			/*if ((pn == 3 || pn == 4 || pn == 8 || pn == 15 || pn == 81) && x != 0 && y != 0) {
 				if (lm[x - 1 + y * w] == 47 && lm[x - 1 + (y - 1) * w] == 48) {
 					lm[x - 1 + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
 					lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
@@ -331,7 +353,7 @@ static void DRGL_L4PatchSetPiece(BYTE *pMap)
 			if (L4BTYPES[pn] == DEFAULT_MEGATILE_L4) {
 				lm[x + y * w] = SwapLE16(0);
 				pn = 0;
-			}
+			}*/
 			// protect tiles
 			if (pn == 0) {
 				// - tiles with objects
@@ -1090,24 +1112,47 @@ static void L4TileFix()
  */
 static void DRLG_L4Subs()
 {
-	int x, y, i, rv;
-	BYTE c;
+	int x, y;
+	BYTE c, i;
+	int8_t rv;
+	const unsigned MAX_MATCH = 8; // 6;
+	const unsigned NUM_L4TYPES = 84;
+	static_assert(MAX_MATCH <= INT8_MAX, "MAX_MATCH does not fit to rv(int8_t) in DRLG_L4Subs.");
+	static_assert(NUM_L4TYPES <= UCHAR_MAX, "NUM_L4TYPES does not fit to i(BYTE) in DRLG_L4Subs.");
+// #if DEBUG_MODE
+	for (i = sizeof(L4BTYPES) - 1; i >= 0; i--) {
+		if (L4BTYPES[i] != 0) {
+			if (i >= NUM_L4TYPES)
+				app_fatal("Value %d is ignored in L4BTYPES at %d", L4BTYPES[i], i);
+			break;
+		}
+	}
 
-	for (y = 0; y < DMAXY; y++) {
-		for (x = 0; x < DMAXX; x++) {
+	for (i = 0; i < sizeof(L4BTYPES); i++) {
+		c = L4BTYPES[i];
+		if (c == 0)
+			continue;
+		x = 0;
+		for (int j = 0; j < sizeof(L4BTYPES); j++) {
+			if (c == L4BTYPES[j])
+				x++;
+		}
+		if (x > MAX_MATCH)
+			app_fatal("Too many(%d) matching('%d') values in L4BTYPES", x, c);
+	}
+//#endif
+	for (x = 0; x < DMAXX; x++) {
+		for (y = 0; y < DMAXY; y++) {
 			if (random_(0, 3) == 0) {
 				c = L4BTYPES[dungeon[x][y]];
 				if (c != 0 && !drlgFlags[x][y]) {
-					rv = random_(0, 16);
-					i = -1;
-					while (rv >= 0) {
-						i++;
-						if (i == sizeof(L4BTYPES)) {
+					rv = random_(0, MAX_MATCH);
+					i = 0;
+					while (TRUE) {
+						if (c == L4BTYPES[i] && --rv < 0)
+							break;
+						if (++i == NUM_L4TYPES)
 							i = 0;
-						}
-						if (c == L4BTYPES[i]) {
-							rv--;
-						}
 					}
 					dungeon[x][y] = i;
 				}
@@ -1115,8 +1160,8 @@ static void DRLG_L4Subs()
 		}
 	}
 	// TODO: second round of replacement? why not merge with the first one?
-	for (y = 0; y < DMAXY; y++) {
-		for (x = 0; x < DMAXX; x++) {
+	for (x = 0; x < DMAXX; x++) {
+		for (y = 0; y < DMAXY; y++) {
 			if (random_(0, 10) == 0) {
 				if (L4BTYPES[dungeon[x][y]] == 6 && !drlgFlags[x][y]) {
 					dungeon[x][y] = RandRange(95, 97);
@@ -1470,6 +1515,22 @@ static void DRLG_LoadDiabQuads()
 	DRLG_L4SetRoom(3);
 }
 
+/* Block arches with walls to stop the spread of transval */
+static void DRLG_L4BlockArches()
+{
+	int i, j;
+
+	for (i = 0; i < DMAXX; i++) {
+		for (j = 0; j < DMAXY; j++) {
+			if (dungeon[i][j] == 53) {
+				dungeon[i][j + 1] = 1;
+			} else if (dungeon[i][j] == 57) {
+				dungeon[i + 1][j] = 2;
+			}
+		}
+	}
+}
+
 /*
  * Spread transVals further.
  * - spread transVals on corner tiles to make transparency smoother.
@@ -1527,7 +1588,7 @@ static void DRLG_L4TransFix()
 				//DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				break;
 			// fix transVals of 'doors'
-			case 52:
+			/*case 52:
 				DRLG_CopyTrans(xx + 1, yy + 1, xx, yy);
 				break;
 			case 53:
@@ -1808,7 +1869,7 @@ static void DRLG_L4TransFix()
 				// fix the corner on south-east
 				if (dTransVal[xx + 1][yy + 2] == 0)
 					dTransVal[xx + 1][yy + 2] = tv;
-				break;
+				break;*/
 			// fix transVals around the stairs - necessary only if DRLG_FloodTVal is run after the placement
 			// - due to complex cases with the horizontal/vertical 'doors', this is not really feasible
 			/*case 36:
@@ -1853,94 +1914,6 @@ static void DRLG_L4TransFix()
 		}
 		yy += 2;
 	}
-
-	/* fix transVals of the diablo-level
-	   - commented out because it does not really matter. The tiles with zero value are contained
-	     in the quads. the few random monsters are not bothered by them.
-	if (currLvl._dLevelIdx == DLV_HELL4) {
-		xx = DBORDERX + 2 * DIAB_QUAD_1X;
-		yy = DBORDERY + 2 * DIAB_QUAD_1Y;
-		tv = dTransVal[xx][yy];
-		assert(tv != 0);
-		// middle tiles of the 1. quad
-		const POS32 mm_offs[] = {
-			{  1,  9 }, {  1, 10 },
-			{  3,  9 }, {  4,  9 }, {  9,  3 },
-		};
-		for (i = 0; i < lengthof(mm_offs); i++)
-			dTransVal[xx + mm_offs[i].x][yy + mm_offs[i].y] = tv;
-
-		xx = DBORDERX + 2 * DIAB_QUAD_2X;
-		yy = DBORDERY + 2 * DIAB_QUAD_2Y;
-		tv = dTransVal[xx][yy];
-		assert(tv != 0);
-		// many tiles of the 2. quad
-		for (i = xx; i <= xx + 22; i++) {
-			for (j = yy; j <= yy + 22; j++) {
-				if (dTransVal[i][j] == 0)
-					dTransVal[i][j] = tv;
-			}
-		}
-
-		// outer tiles of the 3. quad
-		xx = DBORDERX + 2 * DIAB_QUAD_3X;
-		yy = DBORDERY + 2 * DIAB_QUAD_3Y;
-		tv = dTransVal[xx][yy];
-		assert(tv != 0);
-		const POS32 oo_offs[] = {
-			{  1,  1 }, {  1,  2 }, {  1,  3 },
-			{  2,  1 }, {  2,  2 }, {  2,  3 },
-			{  3,  1 }, {  3,  2 }, {  3,  3 },
-
-			{  1, 17 }, {  1, 18 }, {  1, 19 }, {  1, 20 },
-			{  2, 17 }, {  2, 18 }, {  2, 19 }, {  2, 20 },
-			{  3, 17 }, {  3, 18 }, {  3, 19 }, {  3, 20 },
-
-			{ 17,  1 }, { 17,  2 }, { 17,  3 },
-			{ 18,  1 }, { 18,  2 }, { 18,  3 },
-			{ 19,  1 }, { 19,  2 }, { 19,  3 },
-			{ 20,  1 }, { 20,  2 }, { 20,  3 },
-		
-			{ 17, 17 }, { 17, 18 }, { 17, 19 }, { 17, 20 },
-			{ 18, 17 }, { 18, 18 }, { 18, 19 }, { 18, 20 },
-			{ 19, 17 }, { 19, 18 }, { 19, 19 }, { 19, 20 },
-			{ 20, 17 }, { 20, 18 }, { 20, 19 }, { 20, 20 },
-		};
-
-		for (i = 0; i < lengthof(oo_offs); i++)
-			dTransVal[xx + oo_offs[i].x][yy + oo_offs[i].y] = tv;
-
-		// inner tiles of the 3. quad
-		tv = dTransVal[xx + 6][yy + 6];
-		assert(tv != 0);
-		const POS32 ii_offs[] = {
-			{  1,  5 }, {  1,  6 }, {  1,  7 }, {  1,  8 },
-			{  2,  5 }, {  2,  6 }, {  2,  7 }, {  2,  8 },
-			{  5,  1 }, {  5,  2 }, {  5,  3 }, {  5,  4 },
-			{  6,  1 }, {  6,  2 }, {  6,  3 }, {  6,  4 },
-			{  7, 11 }, {  7, 12 }, 
-
-			{ 13,  9 }, { 13, 10 }, { 13, 11 }, { 13, 12 },
-			{ 14,  9 }, { 14, 10 }, { 14, 11 }, { 14, 12 },
-
-			{ 15,  1 }, { 15,  2 }, { 15,  3 }, { 15,  4 },
-			{ 19,  5 }, { 19,  6 },
-		};
-		for (i = 0; i < lengthof(ii_offs); i++)
-			dTransVal[xx + ii_offs[i].x][yy + ii_offs[i].y] = tv;
-
-		xx = DBORDERX + 2 * DIAB_QUAD_4X;
-		yy = DBORDERY + 2 * DIAB_QUAD_4Y;
-		tv = dTransVal[xx][yy];
-		assert(tv != 0);
-		// inner tiles of the 4. quad
-		for (i = xx; i <= xx + 16; i++) {
-			for (j = yy; j <= yy + 16; j++) {
-				if (dTransVal[i][j] == 0)
-					dTransVal[i][j] = tv;
-			}
-		}
-	}*/
 }
 
 /*
@@ -2006,8 +1979,6 @@ static void DRLG_L4()
 			DRLG_L4SetRoom(0);
 		}
 		L4AddWall();
-		DRLG_InitTrans();
-		DRLG_FloodTVal(DEFAULT_MEGATILE_L4);
 
 		POS32 warpPos = DRLG_PlaceMiniSet(L4USTAIRS); // L4USTAIRS (5, 6)
 		if (warpPos.x < 0) {
@@ -2058,7 +2029,6 @@ static void DRLG_L4()
 	}
 
 	DRLG_L4GeneralFix();
-	DRLG_L4TransFix();
 
 	if (currLvl._dLevelIdx != DLV_HELL4) {
 		DRLG_PlaceThemeRooms(7, 10, DEFAULT_MEGATILE_L4, 8, true);
@@ -2070,27 +2040,17 @@ static void DRLG_L4()
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
+	// create rooms (transvals)
+	DRLG_L4BlockArches();
+	DRLG_InitTrans();
+	DRLG_FloodTVal(L4FTYPES);
+	DRLG_L4TransFix();
+	// restore arches
+	memcpy(dungeon, pdungeon, sizeof(pdungeon));
+
 	if (currLvl._dLevelIdx == DLV_HELL4) {
-		int x, y;
+		/*int x, y;
 		BYTE tv;
-		/*// fix transVal under diab1.DUN
-		x = 2 * pSetPieces[0]._spx + DBORDERX;
-		y = 2 * pSetPieces[0]._spy + DBORDERY;
-		BYTE tv = dTransVal[x][y];
-		assert(tv != 0);
-		assert(dTransVal[x + 1][y + 9] == 0);
-		assert(dTransVal[x + 1][y + 10] == 0);
-		assert(dTransVal[x + 2][y + 9] == 0);
-		assert(dTransVal[x + 2][y + 10] == 0);
-		dTransVal[x + 1][y + 9] = tv;
-		dTransVal[x + 1][y + 10] = tv;
-		dTransVal[x + 2][y + 9] = tv;
-		dTransVal[x + 2][y + 10] = tv;
-
-		// fix transVal under diab2.DUN
-		x = 2 * pSetPieces[1]._spx + DBORDERX;
-		y = 2 * pSetPieces[1]._spy + DBORDERY;*/
-
 		// fix transVal under diab2*.DUN
 		if (pSetPieces[1]._spData != NULL) {
 		x = 2 * pSetPieces[1]._spx + DBORDERX;
@@ -2140,7 +2100,7 @@ static void DRLG_L4()
 				dTransVal[x + i][y + j] = tv;
 			}
 		}
-		}
+		}*/
 		// LoadFileWithMem("Levels\\L4Data\\diab1.DUN", pSetPieces[0]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab2a.DUN", pSetPieces[1]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab3a.DUN", pSetPieces[2]._spData);
@@ -2188,7 +2148,7 @@ static void DRLG_L4()
 		}
 		DRLG_DrawMap(0);
 	} else if (pSetPieces[0]._sptype == SPT_BETRAYER) {
-		// fix transVal under Vile1.DUN
+		/*// fix transVal under Vile1.DUN
 		if (pSetPieces[0]._spData != NULL) {
 		int x = 2 * pSetPieces[0]._spx + DBORDERX;
 		int y = 2 * pSetPieces[0]._spy + DBORDERY;
@@ -2203,7 +2163,7 @@ static void DRLG_L4()
 		//lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 3 + 6 * 7 * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
 		//lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 3 * 7 * 2] = SwapLE16((UMT_RED_VEX + 1) | (1 << 15));
 		//lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 9 * 7 * 2] = SwapLE16((UMT_BLACKJADE + 1) | (1 << 15));
-		}
+		}*/
 	}
 }
 
@@ -2213,8 +2173,7 @@ void CreateL4Dungeon()
 	DRLG_L4();
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
 	DRLG_Init_Globals();
-	// if (currLvl._dLevelIdx != DLV_HELL4)
-		DRLG_SetPC();
+	DRLG_SetPC();
 }
 
 /*static BYTE* LoadL4DungeonData(const char* sFileName)

@@ -661,7 +661,7 @@ static void PlaceSetMapMonsters()
 {
 	for (int i = lengthof(pSetPieces) - 1; i >= 0; i--) {
 		if (pSetPieces[i]._spData != NULL) { // pSetPieces[i]._sptype != SPT_NONE
-			SetMapMonsters(pSetPieces[i]._spData, pSetPieces[0]._spx, pSetPieces[0]._spy);
+			SetMapMonsters(pSetPieces[i]._spData, pSetPieces[i]._spx, pSetPieces[i]._spy);
 		}
 	}
 }

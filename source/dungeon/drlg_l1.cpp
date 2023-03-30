@@ -213,6 +213,34 @@ const BYTE L1BTYPES[] = {
 	0, 0, 0, 0, 0, 0, 0
 	// clang-format on
 };
+/*
+ * Specifies whether the given tile ID should spread the room ID (transval).
+ */
+const bool L1FTYPES[] = {
+	// clang-format off
+	false, false, false, false, false, false, false, false, false, false,
+	false, false, false,  true, false,  true, false, false, false, false, // 10..
+	false, false, false, false, false, false, false, false, false, false, // 20..
+	false, false, false, false, false, false, false, false, false, false, // 30..
+	false, false, false, false, false,  true,  true,  true,  true,  true, // 40..
+	 true,  true,  true,  true,  true,  true,  true,  true,  true,  true, // 50..
+	 true,  true,  true, false,  true, false, false,  true,  true,  true, // 60..
+	 true, false, false,  true,  true,  true,  true,  true,  true, false, // 70..
+	false, false, false, false, false, false, false, false, false, false, // 80..
+	false, false, false, false, false, false, false, false, false, false, // 20..
+	false, false, false, false,  true,  true,  true, false, false, false, //100..
+	false, false, false, false, false, false, false, false, false, false, //110..
+	false, false, false, false, false,  true, false, false,  true,  true, //120..
+	 true,  true,  true,  true,  true,  true,  true,  true,  true,  true, //130..
+	 true,  true,  true,  true,  true, false, false, false, false, false, //140..
+	 true,  true,  true, false, false, false, false, false, false, false, //150..
+	false, false,  true,  true, false, false, false, false, false, false, //160..
+	false,  true,  true,  true,  true, false, false, false, false, false, //170..
+	false, false, false, false, false, false, false, false, false, false, //180..
+	false, false, false, false, false, false, false, false, false, false, //190..
+	0, 0, 0, 0, 0, 0, 0
+	// clang-format on
+};
 /** Miniset: stairs up on a corner wall. */
 //const BYTE STAIRSUP[] = {
 //	// clang-format off
@@ -2566,7 +2594,7 @@ static void DRLG_L1()
 		break;
 	}
 
-	if (placeWater) {
+	/*if (placeWater) {
 		int x, y;
 
 		x = pWarps[DWARP_SIDE]._wx + 1;
@@ -2576,8 +2604,7 @@ static void DRLG_L1()
 		DRLG_CopyTrans(x + 1, y + 2, x + 1, y + 0);
 		DRLG_CopyTrans(x + 0, y + 2, x + 0, y + 1);
 		DRLG_CopyTrans(x + 1, y + 2, x + 1, y + 1);
-	}
-	DRLG_L1TransFix();
+	}*/
 	DRLG_L1Corners();
 	DRLG_L1CornerFix();
 
@@ -2650,6 +2677,10 @@ static void DRLG_L1()
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
+	DRLG_InitTrans();
+	DRLG_FloodTVal(L1FTYPES);
+	DRLG_L1TransFix();
+
 	if (pSetPieces[0]._sptype == SPT_BANNER) {
 		// load pre-map
 		MemFreeDbg(pSetPieces[0]._spData);
@@ -2681,20 +2712,20 @@ static void DRLG_L1()
 		}
 		DRLG_DrawMap(0);
 	} else if (pSetPieces[0]._sptype == SPT_SKELKING) {
-		int x, y;
+		/*int x, y;
 
 		x = 2 * pSetPieces[0]._spx + DBORDERX;
 		y = 2 * pSetPieces[0]._spy + DBORDERY;
 		// fix transVal on the bottom left corner of the box
 		DRLG_CopyTrans(x, y + 11, x + 1, y + 11);
-		DRLG_CopyTrans(x, y + 12, x + 1, y + 12);
+		DRLG_CopyTrans(x, y + 12, x + 1, y + 12);*/
 		// fix transVal at the entrance - commented out because it makes the wall transparent
 		//DRLG_CopyTrans(x + 13, y + 7, x + 12, y + 7);
 		//DRLG_CopyTrans(x + 13, y + 8, x + 12, y + 8);
 		// patch dSolidTable - L1.SOL - commented out because 299 is used elsewhere
 		//nSolidTable[299] = true;
 	} else if (pSetPieces[0]._sptype == SPT_BUTCHER) {
-		int x, y;
+		/*int x, y;
 
 		x = 2 * pSetPieces[0]._spx + DBORDERX;
 		y = 2 * pSetPieces[0]._spy + DBORDERY;
@@ -2702,7 +2733,7 @@ static void DRLG_L1()
 		DRLG_CopyTrans(x, y + 9, x + 1, y + 9);
 		DRLG_CopyTrans(x, y + 10, x + 1, y + 10);
 		// set transVal in the room
-		DRLG_RectTrans(x + 3, y + 3, x + 10, y + 10);
+		DRLG_RectTrans(x + 3, y + 3, x + 10, y + 10);*/
 #ifdef HELLFIRE
 	} else if (pSetPieces[0]._sptype == SPT_NAKRUL) {
 		// load pre-map
