@@ -39,6 +39,7 @@ void DungeonGenerateDialog::on_generateButton_clicked()
     params.seed = this->ui->seedLineEdit->text().toInt();
     params.seedQuest = this->ui->questSeedLineEdit->text().toInt();
     params.entryMode = this->ui->entryComboBox->currentData().value<int>();
+    params.extraRounds = this->ui->extraRoundsLineEdit->text().toInt();
 
     LevelCelView *view = qobject_cast<LevelCelView *>(this->parentWidget());
 

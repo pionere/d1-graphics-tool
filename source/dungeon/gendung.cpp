@@ -124,6 +124,27 @@ void InitLvlDungeon()
 		pMegaTiles[(203 - 1) * 4 + 1] = 31 - 1;
 		pMegaTiles[(203 - 1) * 4 + 2] = 36 - 1;
 		pMegaTiles[(203 - 1) * 4 + 3] = 33 - 1;
+		// - remove lower layer of tile 201
+		// assert(pMegaTiles[(201 - 1) * 4 + 0] == SwapLE16(444 - 1));
+		// assert(pMegaTiles[(201 - 1) * 4 + 1] == SwapLE16(438 - 1));
+		// assert(pMegaTiles[(201 - 1) * 4 + 2] == SwapLE16(443 - 1));
+		// assert(pMegaTiles[(201 - 1) * 4 + 3] == SwapLE16(440 - 1));
+		pMegaTiles[(201 - 1) * 4 + 0] = 37 - 1;
+		pMegaTiles[(201 - 1) * 4 + 1] = 31 - 1;
+		pMegaTiles[(201 - 1) * 4 + 2] = 36 - 1;
+		pMegaTiles[(201 - 1) * 4 + 3] = 33 - 1;
+	}
+	if (currLvl._dType == DTYPE_CATACOMBS) {
+		// patch L2.TIL
+		// - remove lower layer of tile 145
+		// assert(pMegaTiles[(145 - 1) * 4 + 0] == SwapLE16(527 - 1));
+		// assert(pMegaTiles[(145 - 1) * 4 + 1] == SwapLE16(521 - 1));
+		// assert(pMegaTiles[(145 - 1) * 4 + 2] == SwapLE16(526 - 1));
+		// assert(pMegaTiles[(145 - 1) * 4 + 3] == SwapLE16(523 - 1));
+		pMegaTiles[(145 - 1) * 4 + 0] = 44 - 1;
+		pMegaTiles[(145 - 1) * 4 + 1] = 38 - 1;
+		pMegaTiles[(145 - 1) * 4 + 2] = 43 - 1;
+		pMegaTiles[(145 - 1) * 4 + 3] = 40 - 1;
 	}
 #ifdef HELLFIRE
 	if (currLvl._dType == DTYPE_CRYPT) {

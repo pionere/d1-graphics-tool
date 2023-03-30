@@ -203,10 +203,14 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
 //    FreeLevelMem();
     EnterLevel(params.level);
     IncProgress();
-    LoadGameLevel(params.entryMode, params.seed);
 
-    bool hasSubtiles = pMegaTiles != NULL;
-    FreeLvlDungeon();
+	bool hasSubtiles;
+	int extraRounds = params.entryRounds - 1;
+	do {
+		LoadGameLevel(params.entryMode, params.seed);
+		hasSubtiles = pMegaTiles != NULL;
+		FreeLvlDungeon();
+	} while (--extraRounds > 0);
 
     dun->setWidth(MAXDUNX, true);
     dun->setHeight(MAXDUNY, true);
