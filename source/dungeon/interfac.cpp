@@ -79,7 +79,7 @@ static void CreateLevel()
     int rv = RandRange(1, 4);
 }
 
-static void LoadGameLevel(int lvldir, int seed)
+static void LoadGameLevel(int lvldir)
 {
     //SetRndSeed(seed);
 
@@ -99,7 +99,7 @@ static void LoadGameLevel(int lvldir, int seed)
     InitLevelObjects();  // reset objects
     IncProgress();
 
-    SetRndSeed(seed);
+//    SetRndSeed(seed);
 
     if (!currLvl._dSetLvl) {
         // fill in loop: dungeon, dTransVal, pWarps, pSetPieces, uses drlgFlags, dungBlock
@@ -205,12 +205,15 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
     IncProgress();
 
 	bool hasSubtiles;
-	int extraRounds = params.extraRounds - 1;
+	int extraRounds = params.extraRounds;
+	SetRndSeed(params.seed);
 	do {
-		LoadGameLevel(params.entryMode, params.seed);
+		extern int32_t sglGameSeed;
+		dProgress() << QApplication::tr("Generating dungeon %d with seed: %d / %d. Entry mode: %d").arg(params.level).arg(sglGameSeed).arg(params.seedQuest).arg(params.entryMode);
+		LoadGameLevel(params.entryMode);
 		hasSubtiles = pMegaTiles != NULL;
 		FreeLvlDungeon();
-	} while (--extraRounds > 0);
+	} while (--extraRounds >= 0);
 
     dun->setWidth(MAXDUNX, true);
     dun->setHeight(MAXDUNY, true);
