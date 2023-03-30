@@ -1059,11 +1059,12 @@ static void DRLG_L4Subs()
 	const unsigned NUM_L4TYPES = 84;
 	static_assert(MAX_MATCH <= INT8_MAX, "MAX_MATCH does not fit to rv(int8_t) in DRLG_L4Subs.");
 	static_assert(NUM_L4TYPES <= UCHAR_MAX, "NUM_L4TYPES does not fit to i(BYTE) in DRLG_L4Subs.");
-// #if DEBUG_MODE
+#if DEBUG_MODE
 	for (i = sizeof(L4BTYPES) - 1; i >= 0; i--) {
 		if (L4BTYPES[i] != 0) {
 			if (i >= NUM_L4TYPES)
-				app_fatal("Value %d is ignored in L4BTYPES at %d", L4BTYPES[i], i);
+				// app_fatal("Value %d is ignored in L4BTYPES at %d", L4BTYPES[i], i);
+				assert(0);
 			break;
 		}
 	}
@@ -1078,9 +1079,10 @@ static void DRLG_L4Subs()
 				x++;
 		}
 		if (x > MAX_MATCH)
-			app_fatal("Too many(%d) matching('%d') values in L4BTYPES", x, c);
+			// app_fatal("Too many(%d) matching('%d') values in L4BTYPES", x, c);
+			assert(0);
 	}
-//#endif
+#endif
 	for (x = 0; x < DMAXX; x++) {
 		for (y = 0; y < DMAXY; y++) {
 			if (random_(0, 3) == 0) {

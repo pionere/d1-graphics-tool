@@ -616,6 +616,7 @@ void DRLG_AreaTrans(int num, const BYTE* List)
 static const bool *TVfloor;
 static void DRLG_FTVR(int i, int j, int x, int y, int dir)
 {
+	assert(i >= 0 && i < DMAXX && j >= 0 && j < DMAXY);
 	if (!TVfloor[dungeon[i][j]]) {
 		switch (dir) {
 		case 0:
