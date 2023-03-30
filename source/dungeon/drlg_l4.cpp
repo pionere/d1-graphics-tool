@@ -1572,18 +1572,18 @@ static void DRLG_L4TransFix()
 				DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				break;*/
 			// fix transVals of corners
-			case 24:
+			case 122: // 24:
 				DRLG_CopyTrans(xx, yy, xx + 1, yy);
 				DRLG_CopyTrans(xx, yy, xx, yy + 1);
 				//DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				break;
-			case 18:
-			case 25:
+			case 116: // 18:
+			case 123: // 25:
 				DRLG_CopyTrans(xx, yy, xx + 1, yy);
 				//DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				break;
-			case 19:
-			case 26:
+			case 117: // 19:
+			case 124: // 26:
 				DRLG_CopyTrans(xx, yy, xx, yy + 1);
 				//DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				break;
@@ -1919,6 +1919,7 @@ static void DRLG_L4TransFix()
 /*
  * Replace tiles with complete ones to hide rendering glitch of transparent corners.
  * New dungeon values: 116..128
+ * Obsolete dungeon values: 18..29
  */
 static void DRLG_L4Corners()
 {
@@ -1928,7 +1929,7 @@ static void DRLG_L4Corners()
 	static_assert(sizeof(dungeon) == DMAXX * DMAXY, "Linear traverse of dungeon does not work in DRLG_L4Corners.");
 	pTmp = &dungeon[0][0];
 	for (i = 0; i < DMAXX * DMAXY; i++, pTmp++) {
-		if (*pTmp >= 18 && *pTmp < 30 /*&& *pTmp != 20 && *pTmp != 24*/)
+		if (*pTmp >= 18 && *pTmp <= 29 /*&& *pTmp != 20 && *pTmp != 24*/)
 			*pTmp += 98;
 	}
 }
@@ -2028,7 +2029,7 @@ static void DRLG_L4()
 		break;
 	}
 
-	DRLG_L4GeneralFix();
+	// DRLG_L4GeneralFix();
 
 	if (currLvl._dLevelIdx != DLV_HELL4) {
 		DRLG_PlaceThemeRooms(7, 10, DEFAULT_MEGATILE_L4, 8, true);

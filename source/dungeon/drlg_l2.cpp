@@ -1974,27 +1974,27 @@ static void DRLG_L2TransFix()
 		for (i = 0; i < DMAXX; i++) {
 			switch (dungeon[i][j]) {
 			// fix transVals of corners
-			case 10:
+			case 143: // 10:
 				DRLG_CopyTrans(xx, yy, xx + 1, yy);
 				DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				break;
-			case 11:
+			case 144: // 11:
 				DRLG_CopyTrans(xx, yy, xx, yy + 1);
 				DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				break;
-			case 14:
+			case 147: // 14:
 				if (dungeon[i][j - 1] == 10) {
 					DRLG_CopyTrans(xx, yy, xx + 1, yy);
 					DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				}
 				break;
-			case 15:
+			case 148: // 15:
 				//if (dungeon[i + 1][j] == 11) {
 					DRLG_CopyTrans(xx, yy, xx, yy + 1);
 					DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				//}
 				break;
-			case 16:
+			case 149: // 16:
 				DRLG_CopyTrans(xx, yy, xx + 1, yy);
 				DRLG_CopyTrans(xx, yy, xx, yy + 1);
 				DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
@@ -2008,8 +2008,8 @@ static void DRLG_L2TransFix()
 
 /*
  * Replace tiles with complete ones to hide rendering glitch of transparent corners.
- * New dungeon values: 143 144  146 147 148 149
- * Obsolete dungeon values: 10 11  13 14 15 16
+ * New dungeon values: 143..149
+ * Obsolete dungeon values: 10..16
  */
 static void DRLG_L2Corners()
 {
@@ -2019,7 +2019,7 @@ static void DRLG_L2Corners()
 	static_assert(sizeof(dungeon) == DMAXX * DMAXY, "Linear traverse of dungeon does not work in DRLG_L2Corners.");
 	pTmp = &dungeon[0][0];
 	for (i = 0; i < DMAXX * DMAXY; i++, pTmp++) {
-		if (*pTmp >= 10 && *pTmp <= 16 && *pTmp != 12)
+		if (*pTmp >= 10 && *pTmp <= 16 /*&& *pTmp != 12*/)
 			*pTmp += 133;
 	}
 	/*int i, j;

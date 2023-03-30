@@ -564,7 +564,7 @@ void DRLG_AreaTrans(int num, const BYTE* List)
 #pragma GCC push_options
 #pragma GCC optimize("O0")
 #endif
-static bool *TVfloor;
+static const bool *TVfloor;
 static void DRLG_FTVR(int i, int j, int x, int y, int dir)
 {
 	if (!TVfloor[dungeon[i][j]]) {
@@ -621,7 +621,7 @@ static void DRLG_FTVR(int i, int j, int x, int y, int dir)
 	}
 }
 
-void DRLG_FloodTVal(bool *floor)
+void DRLG_FloodTVal(const bool *floor)
 {
 	int xx, yy, i, j;
 
