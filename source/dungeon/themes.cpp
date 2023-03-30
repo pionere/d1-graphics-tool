@@ -421,8 +421,7 @@ void HoldThemeRooms()
 	int i, xx, yy;
 	BYTE v;
 	// assert(currLvl._dType != DTYPE_TOWN);
-	if (currLvl._dLevelIdx >= DLV_HELL4) // there are no themes in hellfire (and on diablo-level)
-		return;
+	// assert(currLvl._dLevelIdx < DLV_HELL4 || numthemes == 0); // there are no themes in hellfire (and on diablo-level)
 
 	if (currLvl._dDunType == DTYPE_CATHEDRAL) { // TODO: use dType instead?
 		for (i = 0; i < numthemes; i++) {
@@ -436,8 +435,20 @@ void HoldThemeRooms()
 			}
 		}
 	} else {
-		//assert(numthemes == themeCount);
-		DRLG_HoldThemeRooms();
+		// assert((currLvl._dLevelIdx < DLV_HELL4 && numthemes == themeCount) || (currLvl._dLevelIdx >= DLV_HELL4 && numthemes == 0));
+		for (i = 0; i < numthemes; i++) {
+			themes[i].ttval = themeLoc[i].ttval = dTransVal[DBORDERX + 2 * themeLoc[i].x + themeLoc[i].width][DBORDERY + 2 * themeLoc[i].y + themeLoc[i].height];
+			for (x = themeLoc[i].x; x < themeLoc[i].x + themeLoc[i].width; x++) {
+				for (y = themeLoc[i].y; y < themeLoc[i].y + themeLoc[i].height; y++) {
+					xx = 2 * x + DBORDERX;
+					yy = 2 * y + DBORDERY;
+					dFlags[xx][yy] |= BFLAG_POPULATED;
+					dFlags[xx + 1][yy] |= BFLAG_POPULATED;
+					dFlags[xx][yy + 1] |= BFLAG_POPULATED;
+					dFlags[xx + 1][yy + 1] |= BFLAG_POPULATED;
+				}
+			}
+		}
 	}
 }
 
