@@ -160,7 +160,7 @@ void InitLvlDungeon()
 		pMegaTiles[(86 - 1) * 4 + 3] = 66 - 1;
 	}
 #endif
-    }
+	}
 	static_assert(false == 0, "InitLvlDungeon fills tables with 0 instead of false values.");
 	memset(nSolidTable, 0, sizeof(nSolidTable));
 	memset(nBlockTable, 0, sizeof(nBlockTable));
@@ -954,7 +954,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 					x2--;
 					y2--;
 				}
-				// DRLG_RectTrans(x1, y1, x2, y2);
+				//DRLG_RectTrans(x1, y1, x2, y2);
 				DRLG_CreateThemeRoom(themeCount);
 				themeCount++;
 			}

@@ -2433,7 +2433,6 @@ static void DRLG_L2()
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L2Data\\Blind2.DUN");
 		// patch the map - Blind2.DUN
 		// replace the door with wall
-//		dungeon[pSetPieces[0]._spx + 4][pSetPieces[0]._spy + 3] = 25;
 		pSetPieces[0]._spData[(2 + 4 + 3 * 11) * 2] = 25;
 		DRLG_DrawMap(0);
 	} else if (pSetPieces[0]._sptype == SPT_BLOOD) {

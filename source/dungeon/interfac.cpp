@@ -205,7 +205,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
     IncProgress();
 
 	bool hasSubtiles;
-	int extraRounds = params.entryRounds - 1;
+	int extraRounds = params.extraRounds - 1;
 	do {
 		LoadGameLevel(params.entryMode, params.seed);
 		hasSubtiles = pMegaTiles != NULL;
