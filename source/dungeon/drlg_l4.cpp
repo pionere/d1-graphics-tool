@@ -176,7 +176,6 @@ const BYTE L4PENTA2[] = {
 	0,   0,   0,   0, 0,
 	// clang-format on
 };
-
 /*
  * Maps tile IDs to their corresponding undecorated tile ID.
  * Values with a single entry are commented out, because pointless to randomize a single option.
@@ -199,7 +198,6 @@ const BYTE L4BTYPES[138] = {
 	0, 0, 0, 0, 0, 0, 0, 0
 	// clang-format on
 };
-
 /*
  * Specifies whether the given tile ID should spread the room ID (transval).
  */
@@ -221,7 +219,6 @@ const bool L4FTYPES[138] = {
 	 true, false, false, false,  true,  true, false, false,               //130..
 	// clang-format on
 };
-
 /*
  * Miniset replacement to add shadows.
  * New dungeon values: 47 48   54 55   58 59 60  71 72   74 75
@@ -389,49 +386,6 @@ static void DRLG_LoadL4SP()
 			pSetPieces[0]._spData[(2 + 0 + 4 * 6) * 2] = 75;
 			pSetPieces[0]._spData[(2 + 0 + 5 * 6) * 2] = 74;
 		}
-		/*// test
-		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
-		// - diab1.DUN
-		for (int y = 0; y < 6; y++) {
-			for (int x = 0; x < 6; x++) {
-				int pn = lm[2 + x + y * 6];
-				if (pn == 54 || pn == 55 || pn == 48 || pn == 47 || pn == 58 || pn == 59 || pn == 60)
-					lm[2 + x + y * 6] = SwapLE16(0);
-			}
-		}
-		// - diab2b.DUN
-		lm = (uint16_t*)pSetPieces[1]._spData;
-		for (int y = 0; y < 11; y++) {
-			for (int x = 0; x < 12; x++) {
-				int pn = lm[2 + x + y * 12];
-				if (pn == 94 || pn == 95 || pn == 96 || pn == 48 || pn == 47 || pn == 6)
-					lm[2 + x + y * 12] = SwapLE16(0);
-				if (pn >= 84 && pn <= 87)
-					lm[2 + x + y * 12] = SwapLE16(0);
-			}
-		}
-		// - diab3b.DUN
-		lm = (uint16_t*)pSetPieces[2]._spData;
-		for (int y = 0; y < 11; y++) {
-			for (int x = 0; x < 11; x++) {
-				int pn = lm[2 + x + y * 11];
-				if (pn == 71 || pn == 72 || pn == 48 || pn == 47 || pn == 49 || pn == 50 || pn == 51 || pn == 54 || pn == 55 || pn == 58 || pn == 59 || pn == 60)
-					lm[2 + x + y * 11] = SwapLE16(0);
-				if (pn >= 84 && pn <= 94)
-					lm[2 + x + y * 11] = SwapLE16(0);
-			}
-		}
-		// - diab4b.DUN
-		lm = (uint16_t*)pSetPieces[3]._spData;
-		for (int y = 0; y < 9; y++) {
-			for (int x = 0; x < 9; x++) {
-				int pn = lm[2 + x + y * 9];
-				if (pn == 49 || pn == 50  || pn == 51 || pn == 6)
-					lm[2 + x + y * 9] = SwapLE16(0);
-				if (pn >= 84 && pn <= 106)
-					lm[2 + x + y * 9] = SwapLE16(0);
-			}
-		}*/
 	} else if (IsMultiGame && QuestStatus(Q_BETRAYER)) {
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L4Data\\Vile1.DUN");
 		if (pSetPieces[0]._spData != NULL) {
@@ -1517,7 +1471,7 @@ static void DRLG_LoadDiabQuads()
 	DRLG_L4SetRoom(3);
 }
 
-/* Block arches with walls to stop the spread of transval */
+/* Block arches with walls to stop the spread of transVals */
 static void DRLG_L4BlockArches()
 {
 	int i, j;
@@ -1541,7 +1495,7 @@ static void DRLG_L4BlockArches()
 static void DRLG_L4TransFix()
 {
 	int i, j, xx, yy;
-	BYTE tv;
+	// BYTE tv;
 
 	yy = DBORDERY;
 	for (j = 0; j < DMAXY; j++) {

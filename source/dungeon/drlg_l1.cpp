@@ -224,7 +224,7 @@ const bool L1FTYPES[] = {
 	false, false, false, false, false, false, false, false, false, false, // 30..
 	false, false, false, false, false,  true,  true,  true,  true,  true, // 40..
 	 true,  true,  true,  true,  true,  true,  true,  true,  true,  true, // 50..
-	 true,  true,  true, false,  true, false, false,  true,  true,  true, // 60..
+	 true,  true,  true, false, false, false, false,  true,  true,  true, // 60..
 	 true, false, false,  true,  true,  true,  true,  true,  true, false, // 70..
 	false, false, false, false, false, false, false, false, false, false, // 80..
 	false, false, false, false, false, false, false, false, false, false, // 90..
@@ -238,7 +238,7 @@ const bool L1FTYPES[] = {
 	false,  true,  true,  true,  true, false, false, false, false, false, //170..
 	false, false, false, false, false, false, false, false, false, false, //180..
 	false, false, false, false, false, false, false, false, false, false, //190..
-	0, 0, 0, 0, 0, 0, 0
+	false, false, false, false, false, false, false
 	// clang-format on
 };
 #ifdef HELLFIRE
@@ -252,15 +252,15 @@ const bool L5FTYPES[] = {
 	false, false, false, false, false, false, false, false, false, false, // 20..
 	false, false, false, false, false, false, false, false, false, false, // 30..
 	false, false, false, false, false,  true,  true,  true,  true,  true, // 40..
-	 true,  true,  true, false, false, false,  true, false,  true,  true, // 50..
-	 true, false, false, false,  true, false,  true,  true,  true, false, // 60..
+	 true,  true,  true, false, false, false, false, false,  true,  true, // 50..
+	 true, false, false, false, false, false,  true,  true,  true, false, // 60..
 	false, false, false, false, false, false, false, false, false, false, // 70..
 	false, false, false, false, false, false, false, false, false, false, // 80..
 	false, false, false, false, false, false, false,  true,  true,  true, // 90..
 	 true,  true, false, false, false, false,  true,  true,  true,  true, //100..
-	 true,  true, false, false,  true, false, false, false, false, false, //110..
+	 true,  true, false, false, false, false, false, false, false, false, //110..
 	false, false, false, false,  true, false,  true, false, false, false, //120..
-	false,  true, false, false, false, false, false, false, false, false, //130..
+	false, false, false, false, false, false, false, false, false, false, //130..
 	false,  true, false, false, false, false, false, false, false, false, //140..
 	false, false, false, false, false, false, false, false,  true, false, //150..
 	 true, false, false,  true,  true,  true,  true,  true,  true,  true, //160..

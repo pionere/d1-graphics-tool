@@ -34,27 +34,6 @@ static int nRoomCnt;
 static ROOMHALLNODE RoomList[L2_MAXROOMS];
 const int Dir_Xadd[5] = { 0, 0, 1, 0, -1 };
 const int Dir_Yadd[5] = { 0, -1, 0, 1, 0 };
-const ShadowStruct L2SPATS[] = {
-	// clang-format off
-	//sh11, 01, 10,  00,   mask11    01    10    00    nv1, nv2, nv3
-	{ { SF,  0, SF,   6 }, { 0xFF, 0xFF, 0xFF, 0xFF },  48,   0,  50 },
-#if DEBUG_MODE
-	{ { SF, SF,  0,   6 }, { 0xFF, 0xFF, 0xFF, 0xFF },   0,   0,   0 }, // shadow is not necessary
-	{ {  0,  0,  2,   6 }, { 0x00, 0x00, 0xFF, 0xFF },   0,   0,   0 }, // shadow is not necessary
-	{ {  0,  0,  0,   6 }, { 0x00, 0x00, 0xFF, 0xFF },   0,   0,   0 }, // shadow is not necessary
-	{ {  0,  0,  0,   6 }, { 0xFF, 0x00, 0x00, 0xFF },   0,   0,   0 }, // shadow is not necessary
-#endif
-	{ { SF,  0, SF,   9 }, { 0xFF, 0x00, 0xFF, 0xFF },  48,   0,  50 },
-	//{ { SF,  1, SF,   9 }, { 0xFF, 0xFF, 0xFF, 0xFF },  48,   0,  50 }, // covered by above
-#if DEBUG_MODE
-	{ {  0,  0,  2,   9 }, { 0x00, 0x00, 0xFF, 0xFF },   0,   0,   0 }, // shadow is not necessary
-	{ {  0,  0,  0,   9 }, { 0x00, 0x00, 0xFF, 0xFF },   0,   0,   0 }, // shadow is not necessary
-	{ {  0,  0,  0,   9 }, { 0xFF, 0x00, 0x00, 0xFF },   0,   0,   0 }, // shadow is not necessary
-#endif
-	{ {  2,  0, SF,   9 }, { 0xFF, 0xFF, 0xFF, 0xFF }, 142,   0,  50 },
-	{ {  0,  0,  0, 255 }, {    0,    0,    0,    0 },   0,   0,   0 }
-	// clang-format on
-};
 /*
  * Maps tile IDs to their corresponding undecorated tile ID.
  * Values with a single entry are commented out, because pointless to randomize a single option.
@@ -104,7 +83,6 @@ const bool L2FTYPES[161] = {
 	false
 	// clang-format on
 };
-
 /** Miniset: Stairs up. */
 const BYTE L2USTAIRS[] = {
 	// clang-format off
@@ -857,6 +835,9 @@ static void DRLG_LoadL2SP()
 		if (pSetPieces[0]._spData == NULL) {
 			return;
 		}
+		// patch the map - Bonestr2.DUN
+		// - remove tile to leave space for shadow
+		pSetPieces[0]._spData[(2 + 2 + 4 * 7) * 2] = 0;
 		pSetPieces[0]._sptype = SPT_BCHAMB;
 	}
 }
@@ -1935,7 +1916,7 @@ static void DRLG_L2CreateDungeon()
 	}
 }
 
-/* Block arches with walls to stop the spread of transval */
+/* Block arches with walls to stop the spread of transVals */
 static void DRLG_L2BlockArches()
 {
 	int i, j;
@@ -2261,7 +2242,8 @@ static void L2CreateArches()
 			if (dungeon[x][y] == 4) {
 				// vertical door
 				// assert(y > 0 && y < DMAXY - 1);
-				if (IsPillar(dungeon[x][y + 1])) {
+				pn = dungeon[x][y + 1];
+				if (IsPillar(pn)) {
 					pn = dungeon[x][y - 1];
 					// assert(!drlgFlags[x][y - 1]);
 					if (pn == 1 || pn == 7) {
