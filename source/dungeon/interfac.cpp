@@ -42,10 +42,10 @@ static void LogErrorF(const char* msg, ...)
 {
 	char tmp[256];
 	//snprintf(tmp, sizeof(tmp), "f:\\logdebug%d_%d.txt", mypnum, SDL_ThreadID());
-	snprintf(tmp, sizeof(tmp), "f:\\logdebug%d.txt", 0);
+	/*snprintf(tmp, sizeof(tmp), "f:\\logdebug%d.txt", 0);
 	FILE* f0 = fopen(tmp, "a+");
 	if (f0 == NULL)
-		return;
+		return;*/
 
 	va_list va;
 
@@ -55,12 +55,12 @@ static void LogErrorF(const char* msg, ...)
 
 	va_end(va);
 
-//	dProgress() << QString(tmp);
-	fputs(tmp, f0);
+	dProgress() << QString(tmp);
+	/*fputs(tmp, f0);
 
 	fputc('\n', f0);
 
-	fclose(f0);
+	fclose(f0);*/
 }
 
 static void CreateLevel()
@@ -111,25 +111,20 @@ static void LoadGameLevel(int lvldir)
     IncProgress();
 
 //    SetRndSeed(seed);
-LogErrorF("LoadGameLevel 0");
     if (!currLvl._dSetLvl) {
         // fill in loop: dungeon, dTransVal, pWarps, pSetPieces, uses drlgFlags, dungBlock
         // fill post: pdungeon, dPiece, dSpecial, themeLoc, dFlags
         // reset: dMonster, dObject, dPlayer, dItem, dMissile, dLight+
         CreateLevel();
-LogErrorF("LoadGameLevel 1");
         if (pMegaTiles == NULL || pSolidTbl == NULL) {
             return;
         }
         IncProgress();
         if (currLvl._dType != DTYPE_TOWN) {
             GetLevelMTypes(); // select monster types and load their fx
-LogErrorF("LoadGameLevel 2");
             InitThemes(); // select theme types
-LogErrorF("LoadGameLevel 3");
             IncProgress();
             InitObjectGFX(); // load object graphics
-LogErrorF("LoadGameLevel 4");
         } else {
 //            InitLvlStores();
             // TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
@@ -140,17 +135,12 @@ LogErrorF("LoadGameLevel 4");
 
         if (currLvl._dType != DTYPE_TOWN) {
             HoldThemeRooms(); // protect themes with dFlags
-LogErrorF("LoadGameLevel 5");
             InitMonsters();   // place monsters
-LogErrorF("LoadGameLevel 6");
             IncProgress();
 //            if (IsMultiGame || lvldir == ENTRY_LOAD || !IsLvlVisited(currLvl._dLevelIdx)) {
                 InitObjects(); // place objects
-LogErrorF("LoadGameLevel 7");
                 InitItems();   // place items
-LogErrorF("LoadGameLevel 8");
                 CreateThemeRooms(); // populate theme rooms
-LogErrorF("LoadGameLevel 9");
 //            }
         } else {
 //            InitTowners();
@@ -169,12 +159,10 @@ LogErrorF("LoadGameLevel 9");
 
         InitItems();
     }
-LogErrorF("LoadGameLevel 10");
     IncProgress();
 //    InitMissiles();  // reset missiles
 //    SavePreLighting(); // fill dPreLight
     InitView(lvldir);
-LogErrorF("LoadGameLevel 11");
 
     IncProgress();
 
@@ -185,7 +173,6 @@ LogErrorF("LoadGameLevel 11");
 //        }
         //SyncPortals();
 //    }
-LogErrorF("LoadGameLevel 12");
     IncProgress();
 //    InitSync();
 //    PlayDungMsgs();
@@ -237,7 +224,6 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
 		hasSubtiles = pMegaTiles != NULL;
 		FreeLvlDungeon();
 	} while (--extraRounds >= 0);
-LogErrorF("LoadGameLevel done");
 
     dun->setWidth(MAXDUNX, true);
     dun->setHeight(MAXDUNY, true);
