@@ -295,8 +295,8 @@ static void DRGL_L4PatchSetPiece(BYTE *pMap)
 		for (int x = 0; x < w; x++) {
 			int pn = lm[x + y * w];
 			
-			// remove generic shadows (going to be regenerated)
-			/*if ((pn == 3 || pn == 4 || pn == 8 || pn == 15 || pn == 81) && x != 0 && y != 0) {
+			/*// remove generic shadows (going to be regenerated)
+			if ((pn == 3 || pn == 4 || pn == 8 || pn == 15 || pn == 81) && x != 0 && y != 0) {
 				if (lm[x - 1 + y * w] == 47 && lm[x - 1 + (y - 1) * w] == 48) {
 					lm[x - 1 + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
 					lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
@@ -371,8 +371,8 @@ static void DRLG_LoadL4SP()
 		// patch set-piece - diab1.DUN
 		// - fix shadow of the bottom right corner
 		if (pSetPieces[0]._spData != NULL) {
-			pSetPieces[0]._spData[(2 + 0 + 4 * 6) * 2] = 75;
-			pSetPieces[0]._spData[(2 + 0 + 5 * 6) * 2] = 74;
+		pSetPieces[0]._spData[(2 + 0 + 4 * 6) * 2] = 75;
+		pSetPieces[0]._spData[(2 + 0 + 5 * 6) * 2] = 74;
 		}
 	} else if (IsMultiGame && QuestStatus(Q_BETRAYER)) {
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L4Data\\Vile1.DUN");
@@ -388,8 +388,8 @@ static void DRLG_LoadL4SP()
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L4Data\\Warlord.DUN");
 		pSetPieces[0]._sptype = SPT_WARLORD;
 	}
-	for (int i = 0; i < lengthof(pSetPieces); i++) {
-		if (pSetPieces[i]._spData != NULL) {
+	for (int i = lengthof(pSetPieces) - 1; i >= 0; i--) {
+		if (pSetPieces[i]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
 			DRGL_L4PatchSetPiece(pSetPieces[i]._spData);
 		} else {
 			pSetPieces[i]._sptype = SPT_NONE;
@@ -1036,7 +1036,7 @@ static void L4TileFix()
 
 /*
  * Replace undecorated tiles with matching decorated tiles.
- * New dungeon values: 51 52 61..70 77..83 95 96 97
+ * New dungeon values: 49 50 51 61..70 77..83 95 96 97
  */
 static void DRLG_L4Subs()
 {
@@ -1047,7 +1047,7 @@ static void DRLG_L4Subs()
 	const unsigned NUM_L4TYPES = 84;
 	static_assert(MAX_MATCH <= INT8_MAX, "MAX_MATCH does not fit to rv(int8_t) in DRLG_L4Subs.");
 	static_assert(NUM_L4TYPES <= UCHAR_MAX, "NUM_L4TYPES does not fit to i(BYTE) in DRLG_L4Subs.");
- #if DEBUG_MODE
+#if DEBUG_MODE
 	for (i = sizeof(L4BTYPES) - 1; i >= 0; i--) {
 		if (L4BTYPES[i] != 0) {
 			if (i >= NUM_L4TYPES)
@@ -1484,8 +1484,8 @@ static void DRLG_L4TransFix()
 				DRLG_CopyTrans(xx, yy, xx, yy + 1);
 				//DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				break;
-			// fix transVals of 'doors'
-			/*case 52:
+			/*// fix transVals of 'doors'
+			case 52:
 				DRLG_CopyTrans(xx + 1, yy + 1, xx, yy);
 				break;
 			case 53:
@@ -2022,27 +2022,28 @@ static void DRLG_L4()
 		if (pSetPieces[0]._spData != NULL) {
 		// patch set-piece - Warlord2.DUN
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
-		// - add objects
-		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 2 + 3 * 8 * 2] = SwapLE16(108);
-		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 2 + 9 * 8 * 2] = SwapLE16(108);
-		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 5 + 2 * 8 * 2] = SwapLE16(109);
-		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 8 + 2 * 8 * 2] = SwapLE16(109);
-		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 5 + 10 * 8 * 2] = SwapLE16(109);
-		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 8 + 10 * 8 * 2] = SwapLE16(109);
-		// - replace monsters
+		// patch set-piece to add monsters - Warlord2.DUN
+		// replace monsters
 		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 2 + 2 * 8 * 2] = SwapLE16(100);
 		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 2 + 10 * 8 * 2] = SwapLE16(100);
 		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 13 + 4 * 8 * 2] = SwapLE16(100);
 		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 13 + 9 * 8 * 2] = SwapLE16(100);
 		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 10 + 2 * 8 * 2] = SwapLE16(100);
 		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 10 + 10 * 8 * 2] = SwapLE16(100);
-		// - add monsters
+		// add monsters
 		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 6 + 2 * 8 * 2] = SwapLE16(100);
 		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 6 + 10 * 8 * 2] = SwapLE16(100);
 		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 11 + 2 * 8 * 2] = SwapLE16(100);
 		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 11 + 10 * 8 * 2] = SwapLE16(100);
 		// - add unique
 		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 6 + 7 * 8 * 2] = SwapLE16((UMT_WARLORD + 1) | (1 << 15));
+		// add objects
+		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 2 + 3 * 8 * 2] = SwapLE16(108);
+		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 2 + 9 * 8 * 2] = SwapLE16(108);
+		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 5 + 2 * 8 * 2] = SwapLE16(109);
+		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 8 + 2 * 8 * 2] = SwapLE16(109);
+		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 5 + 10 * 8 * 2] = SwapLE16(109);
+		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 8 * 7 * 2 * 2 + 8 + 10 * 8 * 2] = SwapLE16(109);
 		}
 		DRLG_DrawMap(0);
 	} else if (pSetPieces[0]._sptype == SPT_BETRAYER) {

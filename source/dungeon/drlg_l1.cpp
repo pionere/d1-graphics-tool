@@ -987,7 +987,6 @@ void DRLG_InitL5Specials(int x1, int y1, int x2, int y2)
 	for (i = x1; i <= x2; ++i) {
 		for (j = y1; j <= y2; ++j) {
 			pn = dPiece[i][j];
-			pn = dPiece[i][j];
 			if (pn == 77)
 				pn = 1;
 			else if (pn == 80)
@@ -1005,7 +1004,8 @@ static void DRLG_L1SetMapFix(BYTE* pMap)
 	uint16_t* lm = (uint16_t*)pMap;
 
 	if (currLvl._dLevelIdx == SL_VILEBETRAYER) {
-		// patch set-piece to fix empty tiles - Vile2.DUN
+		// patch set-piece - Vile2.DUN
+		// - fix empty tiles
 		// assert(pMap[(2 + 8 + 16 * 21) * 2] == 0);
 		// assert(dungeon[8][16] == 13);
 		dungeon[8][16] = 203;
@@ -1018,7 +1018,7 @@ static void DRLG_L1SetMapFix(BYTE* pMap)
 		// assert(pMap[(2 + 14 + 22 * 21) * 2] == 0);
 		// assert(dungeon[14][22] == 13);
 		dungeon[14][22] = 203;
-		// add monsters
+		// - add monsters
 		lm[2 + 21 * 23 + 21 * 23 * 2 * 2 + 16 + 30 * 21 * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
 		lm[2 + 21 * 23 + 21 * 23 * 2 * 2 + 24 + 29 * 21 * 2] = SwapLE16((UMT_RED_VEX + 1) | (1 << 15));
 		lm[2 + 21 * 23 + 21 * 23 * 2 * 2 + 22 + 33 * 21 * 2] = SwapLE16((UMT_BLACKJADE + 1) | (1 << 15));
@@ -2536,7 +2536,7 @@ static void DRLG_L5TransFix()
 /*
  * Replace tiles with complete ones to hide rendering glitch of transparent corners.
  * New dungeon values: 199..205 / 82..88
- * Obsolete dungeon values: 18..24 
+ * Obsolete dungeon values: 18..24
  */
 static void DRLG_L1Corners()
 {
@@ -2658,7 +2658,6 @@ static void DRLG_L1()
 			pWarps[DWARP_SIDE]._wy = 2 * pWarps[DWARP_SIDE]._wy + DBORDERY;
 			pWarps[DWARP_SIDE]._wtype = WRPT_L1_PWATER;
 		}
-
 #ifdef HELLFIRE
 		if (currLvl._dType == DTYPE_CRYPT) {
 			POS32 warpPos = DRLG_PlaceMiniSet(L5USTAIRS); // L5USTAIRS (3, 6), was STAIRSUP, entry == ENTRY_MAIN
@@ -2827,10 +2826,8 @@ static void DRLG_L1()
 		// - uncommented since the set-map is 'populated' -> monsters are not spawn there
 		//DRLG_MRectTrans(pSetPieces[0]._spx, pSetPieces[0]._spy + 3, pSetPieces[0]._spx, pSetPieces[0]._spy + 5,
 		//	dTransVal[2 * pSetPieces[0]._spx + DBORDERX + 1][2 * pSetPieces[0]._spy + DBORDERY + 11]);
-		// - add sign-chest
-		lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + 8 * 8 * 2 * 2 + 10 + 3 * 8 * 2] = SwapLE16(90);
-		// patch set-piece to add monsters - Banner2.DUN
-		// - replace monsters from Banner1.DUN
+		// patch set-piece - Banner2.DUN
+		// - replace monsters
 		for (int y = 7; y <= 9; y++) {
 			for (int x = 7; x <= 13; x++) {
 				lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + x + y * 8 * 2] = SwapLE16(16);
@@ -2842,6 +2839,8 @@ static void DRLG_L1()
 		lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + 7 + 12 * 8 * 2] = 0;
 		// - add unique
 		lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + 8 + 12 * 8 * 2] = SwapLE16((UMT_SNOTSPIL + 1) | (1 << 15));
+		// - add sign-chest
+		lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + 8 * 8 * 2 * 2 + 10 + 3 * 8 * 2] = SwapLE16(90);
 		}
 		DRLG_DrawMap(0);
 	} else if (pSetPieces[0]._sptype == SPT_SKELKING) {
