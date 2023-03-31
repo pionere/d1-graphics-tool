@@ -88,7 +88,7 @@ static void CreateLevel()
     int rv = RandRange(1, 4);
 }
 
-static void LoadGameLevel(int lvldir, int seed)
+static void LoadGameLevel(int lvldir)
 {
     //SetRndSeed(seed);
 
@@ -109,8 +109,7 @@ static void LoadGameLevel(int lvldir, int seed)
 	InitLvlThemes();     // reset themes
     IncProgress();
 
-    SetRndSeed(seed);
-
+//	SetRndSeed(seed);
     if (!currLvl._dSetLvl) {
         CreateLevel();
         if (pMegaTiles == NULL || pSolidTbl == NULL) {
@@ -210,10 +209,17 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
 //    FreeLevelMem();
     EnterLevel(params.level);
     IncProgress();
-    LoadGameLevel(params.entryMode, params.seed);
 
-    bool hasSubtiles = pMegaTiles != NULL;
-    FreeLvlDungeon();
+	bool hasSubtiles;
+	int extraRounds = params.extraRounds;
+	SetRndSeed(params.seed);
+	do {
+		extern int32_t sglGameSeed;
+		LogErrorF("Generating dungeon %d with seed: %d / %d. Entry mode: %d", params.level, sglGameSeed, params.seedQuest, params.entryMode);
+		LoadGameLevel(params.entryMode);
+		hasSubtiles = pMegaTiles != NULL;
+		FreeLvlDungeon();
+	} while (--extraRounds >= 0);
 
     dun->setWidth(MAXDUNX, true);
     dun->setHeight(MAXDUNY, true);
