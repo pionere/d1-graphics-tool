@@ -939,7 +939,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 				themes[numthemes]._tsy = j + 1;
 				themes[numthemes]._tsWidth = themeW;
 				themes[numthemes]._tsHeight = themeH;
-				DRLG_CreateThemeRoom(numthemes, floor);
+				DRLG_CreateThemeRoom(numthemes);
 				numthemes++;
 			}
 		}
