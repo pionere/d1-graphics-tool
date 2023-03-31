@@ -37,18 +37,28 @@ static void IncProgress()
 {
 }
 
-static void LogErrorF(const char* type, const char* msg, ...)
+static void LogErrorF(const char* msg, ...)
 {
-    char tmp[256];
-    va_list va;
+	char tmp[256];
+	/*snprintf(tmp, sizeof(tmp), "c:\\logdebug%d.txt", 0);
+	FILE* f0 = fopen(tmp, "a+");
+	if (f0 == NULL)
+		return;*/
 
-    va_start(va, msg);
+	va_list va;
 
-    vsnprintf(tmp, sizeof(tmp), msg, va);
+	va_start(va, msg);
 
-    va_end(va);
+	vsnprintf(tmp, sizeof(tmp), msg, va);
 
-    dProgress() << QString(tmp);
+	va_end(va);
+
+	dProgress() << QString(tmp);
+	/*fputs(tmp, f0);
+
+	fputc('\n', f0);
+
+	fclose(f0);*/
 }
 
 static void CreateLevel()
@@ -96,6 +106,7 @@ static void LoadGameLevel(int lvldir, int seed)
 
     InitLevelMonsters();
     InitLevelObjects();
+	InitLvlThemes();     // reset themes
     IncProgress();
 
     SetRndSeed(seed);
