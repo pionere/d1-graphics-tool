@@ -493,14 +493,6 @@ typedef struct SpellData {
 // gendung
 //////////////////////////////////////////////////
 
-typedef struct THEME_LOC {
-	int x;
-	int y;
-	BYTE ttval;
-	int width;
-	int height;
-} THEME_LOC;
-
 //////////////////////////////////////////////////
 // drlg
 //////////////////////////////////////////////////
@@ -543,8 +535,12 @@ typedef struct ROOMHALLNODE {
 //////////////////////////////////////////////////
 
 typedef struct ThemeStruct {
-	BYTE ttype;
-	BYTE ttval;
+	int _tsx;
+	int _tsy;
+	BYTE _tsType;
+	BYTE _tsTransVal;
+	int _tsWidth;
+	int _tsHeight;
 } ThemeStruct;
 
 //////////////////////////////////////////////////

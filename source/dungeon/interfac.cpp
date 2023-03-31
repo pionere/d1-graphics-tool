@@ -108,6 +108,7 @@ static void LoadGameLevel(int lvldir)
 
     InitLevelMonsters(); // reset monster types
     InitLevelObjects();  // reset objects
+	InitLvlThemes();     // reset themes
     IncProgress();
 
 //    SetRndSeed(seed);
