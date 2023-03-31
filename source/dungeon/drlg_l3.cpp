@@ -1019,7 +1019,7 @@ static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2)
 	int i, j;
 	BYTE v;
 
-	if (x1 <= 1 || x2 >= DMAXX - 2 || y1 <= 1 || y2 >= DMAXY - 2) {
+	if (x1 <= 0 || x2 >= DMAXX - 1 || y1 <= 0 || y2 >= DMAXY - 1) {
 		return false;
 	}
 
@@ -1295,7 +1295,6 @@ static BYTE DRLG_L3FillStraights()
  */
 static void DRLG_L3Edges()
 {
-	/* Commented out because it is no longer necessary
 	int i, j;
 
 	for (j = 0; j < DMAXY; j++) {
@@ -1307,7 +1306,7 @@ static void DRLG_L3Edges()
 		assert(dungeon[i][DMAXY - 1] == 0);
 		assert(dungeon[i][0] == 0);
 		//dungeon[i][DMAXY - 1] = 0;
-	}*/
+	}
 }
 
 static int DRLG_L3GetFloorArea()
