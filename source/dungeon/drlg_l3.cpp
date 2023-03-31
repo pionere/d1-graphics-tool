@@ -1070,41 +1070,33 @@ static void DRLG_L3CreateBlock(int x, int y, int obs, int dir)
 	case 0: // block to the north
 		y2 = y - 1;
 		y1 = y2 - blksizey;
-		x1 = x;
-		if (blksizex < obs)
-			x1 += random_low(0, blksizex);
-		else if (blksizex > obs)
-			x1 -= random_low(0, blksizex);
+		x1 = random_low(0, blksizex);
+		x1 = blksizex < obs ? x1 : -x1;
+		x1 = x + x1;
 		x2 = blksizex + x1;
 		break;
 	case 1: // block to the east
 		x1 = x + 1;
 		x2 = x1 + blksizex;
-		y1 = y;
-		if (blksizey < obs)
-			y1 += random_low(0, blksizey);
-		else if (blksizey > obs)
-			y1 -= random_low(0, blksizey);
+		y1 = random_low(0, blksizey);
+		y1 = blksizey < obs ? y1 : -y1;
+		y1 = y + y1;
 		y2 = y1 + blksizey;
 		break;
 	case 2: // block to the south
 		y1 = y + 1;
 		y2 = y1 + blksizey;
-		x1 = x;
-		if (blksizex < obs)
-			x1 += random_low(0, blksizex);
-		else if (blksizex > obs)
-			x1 -= random_low(0, blksizex);
+		x1 = random_low(0, blksizex);
+		x1 = blksizex < obs ? x1 : -x1;
+		x1 = x + x1;
 		x2 = blksizex + x1;
 		break;
 	case 3: // block to the west
 		x2 = x - 1;
 		x1 = x2 - blksizex;
-		y1 = y;
-		if (blksizey < obs)
-			y1 += random_low(0, blksizey);
-		else if (blksizey > obs)
-			y1 -= random_low(0, blksizey);
+		y1 = random_low(0, blksizey);
+		y1 = blksizey < obs ? y1 : -y1;
+		y1 = y + y1;
 		y2 = y1 + blksizey;
 		break;
 	case 4: // the central block
@@ -1120,16 +1112,16 @@ static void DRLG_L3CreateBlock(int x, int y, int obs, int dir)
 
 	if (DRLG_L3FillRoom(x1, y1, x2, y2) && (random_(0, 4) != 0 || dir == 4)) {
 		if (dir != 2) {
-			DRLG_L3CreateBlock(x1, y1, blksizey, 0);
+			DRLG_L3CreateBlock(x1, y1, blksizex, 0); // to north
 		}
 		if (dir != 3) {
-			DRLG_L3CreateBlock(x2, y1, blksizex, 1);
+			DRLG_L3CreateBlock(x2, y1, blksizey, 1); // to east
 		}
 		if (dir != 0) {
-			DRLG_L3CreateBlock(x1, y2, blksizey, 2);
+			DRLG_L3CreateBlock(x1, y2, blksizex, 2); // to south
 		}
 		if (dir != 1) {
-			DRLG_L3CreateBlock(x1, y1, blksizex, 3);
+			DRLG_L3CreateBlock(x1, y1, blksizey, 3); // to west
 		}
 	}
 }
