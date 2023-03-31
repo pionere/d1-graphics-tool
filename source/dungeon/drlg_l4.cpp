@@ -695,7 +695,6 @@ static void L4AddWall()
 			case 23:
 				L4AddVWall(i, j);
 				break;*/
-			switch (dungeon[i][j]) {
 			case 12:
 				checkHoriz = true;
 				checkVert = true;
