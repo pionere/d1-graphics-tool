@@ -158,7 +158,7 @@ void InitObjectGFX()
 	memset(themeload, 0, sizeof(themeload));
 
 	for (i = 0; i < numthemes; i++)
-		themeload[themes[i].ttype] = true;
+		themeload[themes[i]._tsTtype] = true;
 
 	BYTE lvlMask = 1 << currLvl._dType;
 	for (i = 0; i < NUM_OBJECTS; i++) {
