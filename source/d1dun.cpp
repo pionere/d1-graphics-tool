@@ -110,7 +110,7 @@ const DunObjectStruct DunObjConvTbl[128] = {
 /*OBJ_TBCROSS*/      { "Burning cross" }, // Q_BCHAMB
                      { nullptr },
                      { nullptr }, //OBJ_CANDLE1,
-/*OBJ_CANDLE2*/      { "Candle" }, // Q_BCHAMB
+/*OBJ_CANDLE2*/      { "Candle" }, // Q_BCHAMB, Q_BETRAYER
                      { nullptr }, //OBJ_CANDLEO,
                      { nullptr }, //OBJ_CAULDRON,
                      { nullptr },
@@ -160,7 +160,7 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr },
                      { nullptr },
                      { nullptr },
-                     { nullptr },
+/*OBJ_LAZSTAND*/     { "Lazarus's stand" }, // Q_BETRAYER
 /*OBJ_TNUDEM*/       { "Tortured male 1" }, //1, Q_BUTCHER
 /*OBJ_TNUDEM*/       { "Tortured male 2" }, //2, Q_BUTCHER
 /*OBJ_TNUDEM*/       { "Tortured male 3" }, //3, Q_BUTCHER

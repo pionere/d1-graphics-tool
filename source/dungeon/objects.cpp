@@ -289,28 +289,6 @@ fail:
 	return { 0, 0 };
 }
 
-static POS32 RndLoc6x7()
-{
-	int xp, yp, i, j, tries;
-	static_assert(DBORDERX != 0, "RndLoc6x7 returns 0;0 position as a failed location.");
-	tries = 0;
-	while (TRUE) {
-		xp = random_(140, DSIZEX) + DBORDERX;
-		yp = random_(140, DSIZEY) + DBORDERY;
-		for (i = -2; i <= 3; i++) {
-			for (j = -3; j <= 3; j++) {
-				if (!RndLocOk(xp + i, yp + j))
-					goto fail;
-			}
-		}
-		return { xp, yp };
-fail:
-		if (++tries > 20000)
-			break;
-	}
-	return { 0, 0 };
-}
-
 static void InitRndLocObj(int min, int max, int objtype)
 {
 	int i, numobjs;
@@ -882,31 +860,6 @@ static void AddL4Goodies()
 	InitRndLocObj(1, 3, OBJ_CAULDRON);
 }
 
-static void AddLazStand()
-{
-	POS32 pos;
-
-	if (IsMultiGame) {
-		AddObject(OBJ_ALTBOY, 2 * pSetPieces[0]._spx + DBORDERX + 4, 2 * pSetPieces[0]._spy + DBORDERY + 6);
-		return;
-	}
-	pos = RndLoc6x7();
-	if (pos.x == 0) {
-		InitRndLocObj(1, 1, OBJ_LAZSTAND);
-		return;
-	}
-	AddObject(OBJ_LAZSTAND, pos.x, pos.y);
-	AddObject(OBJ_TNUDEM, pos.x, pos.y + 2);
-	AddObject(OBJ_STORYCANDLE, pos.x + 1, pos.y + 2);
-	AddObject(OBJ_TNUDEM, pos.x + 2, pos.y + 2);
-	AddObject(OBJ_TNUDEW, pos.x, pos.y - 2);
-	AddObject(OBJ_STORYCANDLE, pos.x + 1, pos.y - 2);
-	AddObject(OBJ_TNUDEW, pos.x + 2, pos.y - 2);
-	AddObject(OBJ_STORYCANDLE, pos.x - 1, pos.y - 1);
-	AddObject(OBJ_TNUDEW, pos.x - 1, pos.y);
-	AddObject(OBJ_STORYCANDLE, pos.x - 1, pos.y + 1);
-}
-
 void InitObjects()
 {
 	//gbInitObjFlag = true;
@@ -921,6 +874,8 @@ void InitObjects()
 	if (pSetPieces[0]._sptype == SPT_BANNER) // QuestStatus(Q_BANNER)
 		LoadMapSetObjs(pSetPieces[0]._spData);
 	if (pSetPieces[0]._sptype == SPT_BLOOD) // QuestStatus(Q_BLOOD)
+		LoadMapSetObjs(pSetPieces[0]._spData);
+	if (pSetPieces[0]._sptype == SPT_BETRAYER) // QuestStatus(Q_BLOOD)
 		LoadMapSetObjs(pSetPieces[0]._spData);
 	if (pSetPieces[0]._sptype == SPT_WARLORD) { // QuestStatus(Q_WARLORD)
 		LoadMapSetObjs(pSetPieces[0]._spData);
@@ -945,9 +900,6 @@ void InitObjects()
 		break;
 	case DLV_CAVES4:
 		AddStoryBook();
-		break;
-	case DLV_HELL3: // QuestStatus(Q_BETRAYER) / pSetPieces[0]._sptype == SPT_BETRAYER (single?)
-		AddLazStand();
 		break;
 	case DLV_HELL4:
 		AddDiabObjs();
