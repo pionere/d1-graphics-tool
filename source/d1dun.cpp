@@ -176,8 +176,8 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr }, //OBJ_CHEST2,
                      { nullptr }, //OBJ_CHEST3,
 /*OBJ_CHEST3*/       { "Chest 3" }, // Q_BCHAMB
-                     { nullptr }, //OBJ_CHEST3,
-                     { nullptr },
+/*OBJ_NAKRULBOOK*/   { "A Spellbook" }, // Nakrul1.DUN
+/*OBJ_NAKRULLEVER*/  { "Nakrul's lever" }, // Nakrul1.DUN
                      { nullptr },
                      { nullptr },
                      { nullptr },
