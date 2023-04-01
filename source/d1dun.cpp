@@ -92,10 +92,10 @@ const DungeonStruct dungeonTbl[NUM_DUNGEON_TYPES] = {
 const DunObjectStruct DunObjConvTbl[128] = {
     // clang-format off
                      { nullptr },
-/*OBJ_LEVER*/        { "Lever" }, // Q_SKELKING
-/*OBJ_CRUXM*/        { "Crucifix1" }, // Q_SKELKING
-/*OBJ_CRUXR*/        { "Crucifix2" }, // Q_SKELKING
-/*OBJ_CRUXL*/        { "Crucifix3" }, // Q_SKELKING
+/*OBJ_LEVER*/        { "Lever" }, // SklKng2.DUN
+/*OBJ_CRUXM*/        { "Crucifix1" }, // SklKng2.DUN
+/*OBJ_CRUXR*/        { "Crucifix2" }, // SklKng2.DUN
+/*OBJ_CRUXL*/        { "Crucifix3" }, // SklKng2.DUN
                      { nullptr }, //OBJ_ANGEL,
                      { nullptr }, //OBJ_BANNERL,
                      { nullptr }, //OBJ_BANNERM,
@@ -105,12 +105,12 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr },
                      { nullptr },
                      { nullptr },
-/*OBJ_ANCIENTTOME*/  { "Ancient Tome" }, // Q_BCHAMB
-/*OBJ_BLOODBOOK*/    { "BloodBook" }, // Q_BLOOD
-/*OBJ_TBCROSS*/      { "Burning cross" }, // Q_BCHAMB
+/*OBJ_ANCIENTTOME*/  { "Ancient Tome" }, // Bonecha1.DUN
+/*OBJ_BLOODBOOK*/    { "BloodBook" }, // Blood2.DUN (Q_BLOOD)
+/*OBJ_TBCROSS*/      { "Burning cross" }, // Bonecha1.DUN
                      { nullptr },
                      { nullptr }, //OBJ_CANDLE1,
-/*OBJ_CANDLE2*/      { "Candle" }, // Q_BCHAMB, Q_BETRAYER
+/*OBJ_CANDLE2*/      { "Candle" }, // Bonecha1.DUN, Viles.DUN (Q_BETRAYER)
                      { nullptr }, //OBJ_CANDLEO,
                      { nullptr }, //OBJ_CAULDRON,
                      { nullptr },
@@ -127,8 +127,8 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr },
                      { nullptr },
                      { nullptr },
-/*OBJ_MCIRCLE1*/     { "Magic Circle 1" }, // Q_BETRAYER
-/*OBJ_MCIRCLE2*/     { "Magic Circle 2" }, // Q_BETRAYER
+/*OBJ_MCIRCLE1*/     { "Magic Circle 1" }, // Vile2.DUN
+/*OBJ_MCIRCLE2*/     { "Magic Circle 2" }, // Vile2.DUN
                      { nullptr }, //OBJ_SKFIRE,
                      { nullptr }, //OBJ_SKPILE,
                      { nullptr }, //OBJ_SKSTICK1,
@@ -138,19 +138,19 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr }, //OBJ_SKSTICK5,
                      { nullptr },
                      { nullptr },
-/*OBJ_VILEBOOK*/     { "Book of Vileness" }, // Q_BETRAYER
+/*OBJ_VILEBOOK*/     { "Book of Vileness" }, // Vile2.DUN
                      { nullptr },
                      { nullptr },
                      { nullptr },
-/*OBJ_SWITCHSKL*/    { "Switch" }, // Q_BCHAMB, Q_DIABLO
+/*OBJ_SWITCHSKL*/    { "Switch" }, // Bonecha1.DUN, diab1.DUN, diab2a.DUN, diab3a.DUN
                      { nullptr },
                      { nullptr }, //OBJ_TRAPL,
                      { nullptr }, //OBJ_TRAPR,
-/*OBJ_TORTUREL1*/    { "Tortured body 1" }, // Q_BUTCHER
-/*OBJ_TORTUREL2*/    { "Tortured body 2" }, // Q_BUTCHER
-/*OBJ_TORTUREL3*/    { "Tortured body 3" }, // Q_BUTCHER
-/*OBJ_TORTUREL4*/    { "Tortured body 4" }, // Q_BUTCHER
-/*OBJ_TORTUREL5*/    { "Tortured body 5" }, // Q_BUTCHER
+/*OBJ_TORTUREL1*/    { "Tortured body 1" }, // Butcher.DUN (Q_BUTCHER)
+/*OBJ_TORTUREL2*/    { "Tortured body 2" }, // Butcher.DUN (Q_BUTCHER)
+/*OBJ_TORTUREL3*/    { "Tortured body 3" }, // Butcher.DUN (Q_BUTCHER)
+/*OBJ_TORTUREL4*/    { "Tortured body 4" }, // Butcher.DUN (Q_BUTCHER)
+/*OBJ_TORTUREL5*/    { "Tortured body 5" }, // Butcher.DUN (Q_BUTCHER)
                      { nullptr },
                      { nullptr },
                      { nullptr },
@@ -160,33 +160,29 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr },
                      { nullptr },
                      { nullptr },
-/*OBJ_LAZSTAND*/     { "Lazarus's stand" }, // Q_BETRAYER
-/*OBJ_TNUDEM*/       { "Tortured male 1" }, //1, Q_BUTCHER
-/*OBJ_TNUDEM*/       { "Tortured male 2" }, //2, Q_BUTCHER
-/*OBJ_TNUDEM*/       { "Tortured male 3" }, //3, Q_BUTCHER
-/*OBJ_TNUDEM*/       { "Tortured male 4" }, //4, Q_BUTCHER
-/*OBJ_TNUDEW*/       { "Tortured female 1" }, //1, Q_BUTCHER
-/*OBJ_TNUDEW*/       { "Tortured female 2" }, //2, Q_BUTCHER
-/*OBJ_TNUDEW*/       { "Tortured female 3" }, //3, Q_BUTCHER
+/*OBJ_LAZSTAND*/     { "Lazarus's stand" }, // Viles.DUN (Q_BETRAYER)
+/*OBJ_TNUDEM*/       { "Tortured male" }, // Butcher.DUN (Q_BUTCHER)
+                     { nullptr },
+                     { nullptr },
+                     { nullptr },
+/*OBJ_TNUDEW*/       { "Tortured female" }, // Butcher.DUN (Q_BUTCHER)
+                     { nullptr },
+                     { nullptr },
                      { nullptr }, //OBJ_CHEST1,
-/*OBJ_CHEST1*/       { "Chest 1" }, // Q_SKELKING
+/*OBJ_CHEST1*/       { "Chest 1" }, // SklKng2.DUN
                      { nullptr }, //OBJ_CHEST1,
                      { nullptr }, //OBJ_CHEST2,
-/*OBJ_CHEST2*/       { "Chest 2" }, // Q_SKELKING
+/*OBJ_CHEST2*/       { "Chest 2" }, // SklKng2.DUN
                      { nullptr }, //OBJ_CHEST2,
                      { nullptr }, //OBJ_CHEST3,
-/*OBJ_CHEST3*/       { "Chest 3" }, // Q_BCHAMB
-/*OBJ_NAKRULBOOK*/   { "A Spellbook" }, // Nakrul1.DUN
-/*OBJ_NAKRULLEVER*/  { "Nakrul's lever" }, // Nakrul1.DUN
+/*OBJ_CHEST3*/       { "Chest 3" }, // Bonecha1.DUN
+/*OBJ_NAKRULBOOK*/   { "A Spellbook" }, // Nakrul1.DUN (Q_NAKRUL)
+/*OBJ_NAKRULLEVER*/  { "Nakrul's lever" }, // Nakrul1.DUN (Q_NAKRUL)
                      { nullptr },
                      { nullptr },
                      { nullptr },
-/*OBJ_SIGNCHEST*/    { "Sign Chest" }, // Q_BANNER
-/*OBJ_PEDESTAL*/     { "Pedestal" }, // Q_BLOOD
-                     { nullptr },
-                     { nullptr },
-                     { nullptr },
-                     { nullptr },
+/*OBJ_SIGNCHEST*/    { "Sign Chest" }, // Banner2.DUN (Q_BANNER)
+/*OBJ_PEDESTAL*/     { "Pedestal" }, // Blood2.DUN (Q_BLOOD)
                      { nullptr },
                      { nullptr },
                      { nullptr },
@@ -196,13 +192,17 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr },
                      { nullptr },
                      { nullptr },
-/*OBJ_ALTBOY*/       { "Altarboy" }, // Q_BETRAYER
                      { nullptr },
                      { nullptr },
-/*OBJ_ARMORSTANDN*/  { "Armor stand" }, //OBJ_ARMORSTAND, // Q_WARLORD - changed to inactive versions to eliminate farming potential
-/*OBJ_WEAPONRACKLN*/ { "Weapon stand" }, //OBJ_WEAPONRACKL, // Q_WARLORD
-/*OBJ_TORCHR1*/      { "Torch 2" }, // Q_BLOOD
-/*OBJ_TORCHL1*/      { "Torch 1" }, // Q_BLOOD
+                     { nullptr },
+                     { nullptr },
+/*OBJ_ALTBOY*/       { "Altarboy" }, // L4Data/Vile1.DUN (Q_BETRAYER), L1Data/Vile2.DUN
+                     { nullptr },
+                     { nullptr },
+/*OBJ_ARMORSTANDN*/  { "Armor stand" }, //OBJ_ARMORSTAND, // Warlord2.DUN (Q_WARLORD) - changed to inactive versions to eliminate farming potential
+/*OBJ_WEAPONRACKLN*/ { "Weapon stand" }, //OBJ_WEAPONRACKL, // Warlord2.DUN (Q_WARLORD)
+/*OBJ_TORCHR1*/      { "Torch 2" }, // Blood2.DUN (Q_BLOOD)
+/*OBJ_TORCHL1*/      { "Torch 1" }, // Blood2.DUN (Q_BLOOD)
                      { nullptr }, //OBJ_MUSHPATCH,
                      { nullptr }, //OBJ_STAND,
                      { nullptr }, //OBJ_TORCHL2,
@@ -235,7 +235,7 @@ const DunMonsterStruct DunMonstConvTbl[128] = {
                { nullptr }, // {   8, DMOFILE_FALLSP, "FalSpear\\Blue",  "Dark One" }, // Monster from banner2.dun,
                { nullptr }, //MT_WSKELAX,
                { nullptr }, //MT_TSKELAX,
-/*MT_RSKELAX*/ { "Burning Dead" }, // Q_SKELKING
+/*MT_RSKELAX*/ { "Burning Dead" }, // SklKng2.DUN
                { nullptr }, //MT_XSKELAX,
                { nullptr }, //MT_RFALLSD,
                { nullptr }, //MT_DFALLSD,
@@ -246,16 +246,16 @@ const DunMonsterStruct DunMonstConvTbl[128] = {
                { nullptr }, //MT_WSCAV,
                { nullptr }, //MT_YSCAV,
                { nullptr }, //MT_WSKELBW,
-/*MT_TSKELBW*/ { "Corpse Bow" },   // Q_SKELKING
-/*MT_RSKELBW*/ { "Burning Dead" }, // Q_SKELKING
-/*MT_XSKELBW*/ { "Horror" },       // Q_SKELKING
+/*MT_TSKELBW*/ { "Corpse Bow" },   // SklKng2.DUN
+/*MT_RSKELBW*/ { "Burning Dead" }, // SklKng2.DUN
+/*MT_XSKELBW*/ { "Horror" },       // SklKng2.DUN
                { nullptr }, //MT_WSKELSD,
                { nullptr }, //MT_TSKELSD,
-/*MT_RSKELSD*/ { "Burning Dead Captain" }, // Q_SKELKING
-/*MT_XSKELSD*/ { "Horror Captain" },       // Q_BCHAMB
+/*MT_RSKELSD*/ { "Burning Dead Captain" }, // SklKng2.DUN
+/*MT_XSKELSD*/ { "Horror Captain" },       // Bonecha1.DUN
                { nullptr }, //MT_NSNEAK,
                { nullptr }, //MT_RSNEAK,
-/*MT_BSNEAK*/  { "Unseen" },            // Q_BCHAMB
+/*MT_BSNEAK*/  { "Unseen" },            // Bonecha1.DUN
 /*MT_YSNEAK*/  { "Illusion Weaver" },   // Q_BLIND
 /*MT_NGOATMC*/ { "Flesh Clan (Mace)" }, // Q_PWATER
                { nullptr }, //MT_BGOATMC,
@@ -268,7 +268,7 @@ const DunMonsterStruct DunMonstConvTbl[128] = {
 /*MT_NGOATBW*/ { "Flesh Clan (Bow)" }, // Q_PWATER
                { nullptr }, //MT_BGOATBW,
                { nullptr }, //MT_RGOATBW,
-/*MT_GGOATBW*/ { "Night Clan" }, // Q_ANVIL
+/*MT_GGOATBW*/ { "Night Clan" }, // Anvil.DUN
                { nullptr }, //MT_NACID,
                { nullptr }, //MT_RACID,
                { nullptr }, //MT_BACID,
@@ -286,10 +286,10 @@ const DunMonsterStruct DunMonstConvTbl[128] = {
                { nullptr }, //MT_YMAGMA,
                { nullptr }, //MT_BMAGMA,
                { nullptr }, //MT_WMAGMA,
-/*MT_NRHINO*/  { "Horned Demon" }, // Q_BLOOD, Q_BCHAMB
+/*MT_NRHINO*/  { "Horned Demon" }, // Blood2.DUN (Q_BLOOD), Bonecha1.DUN
                { nullptr }, // MT_XRHINO, // Q_MAZE
                { nullptr }, //MT_BRHINO,
-/*MT_DRHINO*/  { "Obsidian Lord" }, // Q_ANVIL
+/*MT_DRHINO*/  { "Obsidian Lord" }, // Anvil.DUN
                { nullptr }, ///MT_BONEDMN,
                { nullptr }, ///MT_REDDTH,
                { nullptr }, ///MT_LTCHDMN,
