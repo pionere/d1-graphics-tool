@@ -124,7 +124,6 @@ const char StoryBookName[][28] = {
 	"Journal: His Power Grows",
 	"Journal: NA-KRUL",
 	"Journal: The End",
-	"A Spellbook",
 #endif
 };
 /** Specifies the speech IDs of each dungeon type narrator book. */
@@ -717,28 +716,35 @@ static void AddDiabObjs()
 	SetObjMapRange(ObjIndex(DBORDERX + 2 * pSetPieces[2]._spx + 8, DBORDERY + 2 * pSetPieces[2]._spy + 14), pSetPieces[3]._spx, pSetPieces[3]._spy, pSetPieces[3]._spx + 9, pSetPieces[3]._spy + 9, 3);
 }
 
-static void AddHBooks(int bookidx, int ox, int oy)
+#ifdef HELLFIRE
+static void AddL5StoryBook(int bookidx, int ox, int oy)
 {
 	ObjectStruct* os;
-	constexpr int bookframe = 1;
+	constexpr int bookframe = 3;
 	int oi = AddObject(OBJ_L5BOOK, ox, oy);
 
-	if (oi == -1)
-		return;
+	// assert(oi != -1);
 
 	os = &objects[oi];
-	// os->_oVar1 = bookframe;
-	os->_oAnimFrame = 5 - 2 * bookframe;
-	os->_oVar4 = os->_oAnimFrame + 1; // STORY_BOOK_READ_FRAME
-	if (bookidx >= QNB_BOOK_A) {
-		os->_oVar2 = TEXT_BOOKA + bookidx - QNB_BOOK_A; // STORY_BOOK_MSG
-		os->_oVar3 = 14;                                // STORY_BOOK_NAME
-		os->_oVar8 = bookidx;                           // STORY_BOOK_NAKRUL_IDX
-	} else {
-		os->_oVar2 = TEXT_BOOK4 + bookidx; // STORY_BOOK_MSG
-		os->_oVar3 = bookidx + 9;          // STORY_BOOK_NAME
-		os->_oVar8 = 0;                    // STORY_BOOK_NAKRUL_IDX
-	}
+	os->_oAnimFrame = bookframe;
+	os->_oVar4 = os->_oAnimFrame + 1;  // STORY_BOOK_READ_FRAME
+	os->_oVar2 = TEXT_BOOK4 + bookidx; // STORY_BOOK_MSG
+	os->_oVar3 = 9 + bookidx;          // STORY_BOOK_NAME
+}
+
+static void AddNakrulBook(int bookidx, int ox, int oy)
+{
+	ObjectStruct* os;
+	constexpr int bookframe = 3;
+	int oi = AddObject(OBJ_NAKRULBOOK, ox, oy);
+
+	// assert(oi != -1);
+
+	os = &objects[oi];
+	os->_oAnimFrame = bookframe;
+	os->_oVar4 = os->_oAnimFrame + 1;               // STORY_BOOK_READ_FRAME
+	os->_oVar2 = TEXT_BOOKA + bookidx - QNB_BOOK_A; // STORY_BOOK_MSG
+	os->_oVar3 = bookidx;                           // STORY_BOOK_NAKRUL_IDX
 }
 
 static void AddLvl2xBooks(int bookidx)
@@ -748,7 +754,7 @@ static void AddLvl2xBooks(int bookidx)
 	if (pos.x == 0)
 		return;
 
-	AddHBooks(bookidx, pos.x, pos.y);
+	AddL5StoryBook(bookidx, pos.x, pos.y);
 	AddObject(OBJ_L5CANDLE, pos.x - 2, pos.y + 1);
 	AddObject(OBJ_L5CANDLE, pos.x - 2, pos.y);
 	AddObject(OBJ_L5CANDLE, pos.x - 1, pos.y - 1);
@@ -757,19 +763,13 @@ static void AddLvl2xBooks(int bookidx)
 	AddObject(OBJ_L5CANDLE, pos.x + 2, pos.y + 1);
 }
 
-static void AddUberLever()
-{
-	int oi;
-
-	oi = AddObject(OBJ_L5LEVER, 2 * pSetPieces[0]._spx + DBORDERX + 7, 2 * pSetPieces[0]._spy + DBORDERY + 5);
-	SetObjMapRange(oi, pSetPieces[0]._spx + 2, pSetPieces[0]._spy + 2, pSetPieces[0]._spx + 2, pSetPieces[0]._spy + 3, 1);
-}
-
 static void AddLvl24Books()
 {
 	BYTE books[4];
 
-	AddUberLever();
+	// add main lever
+	AddObject(OBJ_NAKRULLEVER, 2 * pSetPieces[0]._spx + DBORDERX + 7, 2 * pSetPieces[0]._spy + DBORDERY + 5);
+	// add books
 	switch (random_(0, 6)) {
 	case 0:
 		books[0] = QNB_BOOK_A; books[1] = QNB_BOOK_B; books[2] = QNB_BOOK_C; books[3] = 0;
@@ -793,10 +793,11 @@ static void AddLvl24Books()
 		ASSUME_UNREACHABLE
 		break;
 	}
-	AddHBooks(books[0], 2 * pSetPieces[0]._spx + DBORDERX + 7, 2 * pSetPieces[0]._spy + DBORDERY + 6);
-	AddHBooks(books[1], 2 * pSetPieces[0]._spx + DBORDERX + 6, 2 * pSetPieces[0]._spy + DBORDERY + 3);
-	AddHBooks(books[2], 2 * pSetPieces[0]._spx + DBORDERX + 6, 2 * pSetPieces[0]._spy + DBORDERY + 8);
+	AddNakrulBook(books[0], 2 * pSetPieces[0]._spx + DBORDERX + 7, 2 * pSetPieces[0]._spy + DBORDERY + 6);
+	AddNakrulBook(books[1], 2 * pSetPieces[0]._spx + DBORDERX + 6, 2 * pSetPieces[0]._spy + DBORDERY + 3);
+	AddNakrulBook(books[2], 2 * pSetPieces[0]._spx + DBORDERX + 6, 2 * pSetPieces[0]._spy + DBORDERY + 8);
 }
+#endif
 
 static void Alloc2x2Obj(int oi)
 {
@@ -1411,7 +1412,7 @@ void GetObjectStr(int oi)
 	switch (os->_otype) {
 	case OBJ_LEVER:
 #ifdef HELLFIRE
-	case OBJ_L5LEVER:
+	case OBJ_NAKRULLEVER:
 #endif
 	//case OBJ_FLAMELVR:
 		copy_cstr(infostr, "Lever");
@@ -1542,6 +1543,11 @@ void GetObjectStr(int oi)
 #endif
 		copy_cstr(infostr, StoryBookName[os->_oVar3]); // STORY_BOOK_NAME
 		break;
+#ifdef HELLFIRE
+	case OBJ_NAKRULBOOK:
+		copy_cstr(infostr, "A Spellbook");
+		break;
+#endif
 	case OBJ_WEAPONRACKL:
 	case OBJ_WEAPONRACKR:
 		copy_cstr(infostr, "Weapon Rack");
