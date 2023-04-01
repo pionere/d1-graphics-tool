@@ -1385,6 +1385,10 @@ bool D1Dun::setWidth(int newWidth, bool force)
     for (std::vector<int> &roomsRow : this->rooms) {
         roomsRow.resize(newWidth);
     }
+    // update subtiles to match the defaultTile - TODO: better solution?
+    int prevDefaultTile = this->defaultTile;
+    this->defaultTile = UNDEF_TILE;
+    this->setDefaultTile(prevDefaultTile);
 
     this->width = newWidth;
     this->modified = true;
@@ -1448,6 +1452,10 @@ bool D1Dun::setHeight(int newHeight, bool force)
         this->objects[y].resize(width);
         this->rooms[y].resize(width);
     }
+    // update subtiles to match the defaultTile - TODO: better solution?
+    int prevDefaultTile = this->defaultTile;
+    this->defaultTile = UNDEF_TILE;
+    this->setDefaultTile(prevDefaultTile);
 
     this->height = newHeight;
     this->modified = true;
