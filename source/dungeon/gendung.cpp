@@ -668,7 +668,7 @@ static void DRLG_FTVR(int i, int j, int x, int y, int dir)
 	}
 }
 
-void DRLG_FloodTVal(const bool *floor)
+void DRLG_FloodTVal()
 {
 	int xx, yy, i, j;
 
@@ -678,7 +678,6 @@ void DRLG_FloodTVal(const bool *floor)
 		yy = DBORDERY;
 
 		for (j = 0; j < DMAXY; j++) {
-
 			if (drlg.transvalMap[i][j] && dTransVal[xx][yy] == 0) {
 				DRLG_FTVR(i, j, xx, yy, 0);
 				numtrans++;
