@@ -38,6 +38,13 @@
 #define DSIZEY					80
 #define MAXDUNX					112
 #define MAXDUNY					112
+/** The number of generated rooms in catacombs. */
+#define L2_MAXROOMS 32
+/** The size of the quads in hell. */
+static_assert(DMAXX % 2 == 0, "DRLG_L4 constructs the dungeon by mirroring a quarter block -> requires to have a dungeon with even width.");
+#define L4BLOCKX (DMAXX / 2)
+static_assert(DMAXY % 2 == 0, "DRLG_L4 constructs the dungeon by mirroring a quarter block -> requires to have a dungeon with even height.");
+#define L4BLOCKY (DMAXY / 2)
 
 #define MAX_PLRS				4
 #define MAX_MINIONS				MAX_PLRS
