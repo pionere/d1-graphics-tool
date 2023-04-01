@@ -124,7 +124,6 @@ const char StoryBookName[][28] = {
 	"Journal: His Power Grows",
 	"Journal: NA-KRUL",
 	"Journal: The End",
-	"A Spellbook",
 #endif
 };
 /** Specifies the speech IDs of each dungeon type narrator book. */
@@ -277,28 +276,6 @@ static POS32 RndLoc7x5()
 		yp = random_(140, DSIZEY) + DBORDERY;
 		for (i = -3; i <= 3; i++) {
 			for (j = -2; j <= 2; j++) {
-				if (!RndLocOk(xp + i, yp + j))
-					goto fail;
-			}
-		}
-		return { xp, yp };
-fail:
-		if (++tries > 20000)
-			break;
-	}
-	return { 0, 0 };
-}
-
-static POS32 RndLoc6x7()
-{
-	int xp, yp, i, j, tries;
-	static_assert(DBORDERX != 0, "RndLoc6x7 returns 0;0 position as a failed location.");
-	tries = 0;
-	while (TRUE) {
-		xp = random_(140, DSIZEX) + DBORDERX;
-		yp = random_(140, DSIZEY) + DBORDERY;
-		for (i = -2; i <= 3; i++) {
-			for (j = -3; j <= 3; j++) {
 				if (!RndLocOk(xp + i, yp + j))
 					goto fail;
 			}
@@ -739,28 +716,51 @@ static void AddDiabObjs()
 	SetObjMapRange(ObjIndex(DBORDERX + 2 * pSetPieces[2]._spx + 8, DBORDERY + 2 * pSetPieces[2]._spy + 14), pSetPieces[3]._spx, pSetPieces[3]._spy, pSetPieces[3]._spx + 9, pSetPieces[3]._spy + 9, 3);
 }
 
-static void AddHBooks(int bookidx, int ox, int oy)
+#ifdef HELLFIRE
+static void AddL5StoryBook(int bookidx, int ox, int oy)
 {
 	ObjectStruct* os;
-	constexpr int bookframe = 1;
+	constexpr int bookframe = 3;
 	int oi = AddObject(OBJ_L5BOOK, ox, oy);
 
-	if (oi == -1)
-		return;
+	// assert(oi != -1);
 
 	os = &objects[oi];
-	// os->_oVar1 = bookframe;
-	os->_oAnimFrame = 5 - 2 * bookframe;
-	os->_oVar4 = os->_oAnimFrame + 1; // STORY_BOOK_READ_FRAME
-	if (bookidx >= QNB_BOOK_A) {
-		os->_oVar2 = TEXT_BOOKA + bookidx - QNB_BOOK_A; // STORY_BOOK_MSG
-		os->_oVar3 = 14;                                // STORY_BOOK_NAME
-		os->_oVar8 = bookidx;                           // STORY_BOOK_NAKRUL_IDX
-	} else {
-		os->_oVar2 = TEXT_BOOK4 + bookidx; // STORY_BOOK_MSG
-		os->_oVar3 = bookidx + 9;          // STORY_BOOK_NAME
-		os->_oVar8 = 0;                    // STORY_BOOK_NAKRUL_IDX
-	}
+	os->_oAnimFrame = bookframe;
+	os->_oVar4 = os->_oAnimFrame + 1;  // STORY_BOOK_READ_FRAME
+	os->_oVar2 = TEXT_BOOK4 + bookidx; // STORY_BOOK_MSG
+	os->_oVar3 = 9 + bookidx;          // STORY_BOOK_NAME
+}
+
+/*static void AddNakrulBook(int bookidx, int ox, int oy)
+{
+	ObjectStruct* os;
+	constexpr int bookframe = 3;
+	int oi = AddObject(OBJ_NAKRULBOOK, ox, oy);
+
+	// assert(oi != -1);
+
+	os = &objects[oi];
+	os->_oAnimFrame = bookframe;
+	os->_oVar4 = os->_oAnimFrame + 1;               // STORY_BOOK_READ_FRAME
+	os->_oVar2 = TEXT_BOOKA + bookidx - QNB_BOOK_A; // STORY_BOOK_MSG
+	os->_oVar3 = bookidx;                           // STORY_BOOK_NAKRUL_IDX
+}*/
+
+static void AddNakrulBook(int oi)
+{
+	ObjectStruct* os;
+	constexpr int bookframe = 3;
+
+	int bookidx = QNB_BOOK_A + (unsigned)(glSeedTbl[DLV_CRYPT4] + leverid) % 3;
+	leverid++;
+	// assert(oi != -1);
+
+	os = &objects[oi];
+	os->_oAnimFrame = bookframe;
+	os->_oVar4 = os->_oAnimFrame + 1;               // STORY_BOOK_READ_FRAME
+	os->_oVar2 = TEXT_BOOKA + bookidx - QNB_BOOK_A; // STORY_BOOK_MSG
+	os->_oVar3 = bookidx;                           // STORY_BOOK_NAKRUL_IDX
 }
 
 static void AddLvl2xBooks(int bookidx)
@@ -770,7 +770,7 @@ static void AddLvl2xBooks(int bookidx)
 	if (pos.x == 0)
 		return;
 
-	AddHBooks(bookidx, pos.x, pos.y);
+	AddL5StoryBook(bookidx, pos.x, pos.y);
 	AddObject(OBJ_L5CANDLE, pos.x - 2, pos.y + 1);
 	AddObject(OBJ_L5CANDLE, pos.x - 2, pos.y);
 	AddObject(OBJ_L5CANDLE, pos.x - 1, pos.y - 1);
@@ -779,19 +779,13 @@ static void AddLvl2xBooks(int bookidx)
 	AddObject(OBJ_L5CANDLE, pos.x + 2, pos.y + 1);
 }
 
-static void AddUberLever()
-{
-	int oi;
-
-	oi = AddObject(OBJ_L5LEVER, 2 * pSetPieces[0]._spx + DBORDERX + 7, 2 * pSetPieces[0]._spy + DBORDERY + 5);
-	SetObjMapRange(oi, pSetPieces[0]._spx + 2, pSetPieces[0]._spy + 2, pSetPieces[0]._spx + 2, pSetPieces[0]._spy + 3, 1);
-}
-
-static void AddLvl24Books()
+/*static void AddLvl24Books()
 {
 	BYTE books[4];
 
-	AddUberLever();
+	// add main lever
+	AddObject(OBJ_NAKRULLEVER, 2 * pSetPieces[0]._spx + DBORDERX + 7, 2 * pSetPieces[0]._spy + DBORDERY + 5);
+	// add books
 	switch (random_(0, 6)) {
 	case 0:
 		books[0] = QNB_BOOK_A; books[1] = QNB_BOOK_B; books[2] = QNB_BOOK_C; books[3] = 0;
@@ -815,10 +809,11 @@ static void AddLvl24Books()
 		ASSUME_UNREACHABLE
 		break;
 	}
-	AddHBooks(books[0], 2 * pSetPieces[0]._spx + DBORDERX + 7, 2 * pSetPieces[0]._spy + DBORDERY + 6);
-	AddHBooks(books[1], 2 * pSetPieces[0]._spx + DBORDERX + 6, 2 * pSetPieces[0]._spy + DBORDERY + 3);
-	AddHBooks(books[2], 2 * pSetPieces[0]._spx + DBORDERX + 6, 2 * pSetPieces[0]._spy + DBORDERY + 8);
-}
+	AddNakrulBook(books[0], 2 * pSetPieces[0]._spx + DBORDERX + 7, 2 * pSetPieces[0]._spy + DBORDERY + 6);
+	AddNakrulBook(books[1], 2 * pSetPieces[0]._spx + DBORDERX + 6, 2 * pSetPieces[0]._spy + DBORDERY + 3);
+	AddNakrulBook(books[2], 2 * pSetPieces[0]._spx + DBORDERX + 6, 2 * pSetPieces[0]._spy + DBORDERY + 8);
+}*/
+#endif
 
 static void Alloc2x2Obj(int oi)
 {
@@ -882,31 +877,6 @@ static void AddL4Goodies()
 	InitRndLocObj(1, 3, OBJ_CAULDRON);
 }
 
-static void AddLazStand()
-{
-	POS32 pos;
-
-	if (IsMultiGame) {
-		AddObject(OBJ_ALTBOY, 2 * pSetPieces[0]._spx + DBORDERX + 4, 2 * pSetPieces[0]._spy + DBORDERY + 6);
-		return;
-	}
-	pos = RndLoc6x7();
-	if (pos.x == 0) {
-		InitRndLocObj(1, 1, OBJ_LAZSTAND);
-		return;
-	}
-	AddObject(OBJ_LAZSTAND, pos.x, pos.y);
-	AddObject(OBJ_TNUDEM, pos.x, pos.y + 2);
-	AddObject(OBJ_STORYCANDLE, pos.x + 1, pos.y + 2);
-	AddObject(OBJ_TNUDEM, pos.x + 2, pos.y + 2);
-	AddObject(OBJ_TNUDEW, pos.x, pos.y - 2);
-	AddObject(OBJ_STORYCANDLE, pos.x + 1, pos.y - 2);
-	AddObject(OBJ_TNUDEW, pos.x + 2, pos.y - 2);
-	AddObject(OBJ_STORYCANDLE, pos.x - 1, pos.y - 1);
-	AddObject(OBJ_TNUDEW, pos.x - 1, pos.y);
-	AddObject(OBJ_STORYCANDLE, pos.x - 1, pos.y + 1);
-}
-
 void InitObjects()
 {
 	//gbInitObjFlag = true;
@@ -934,6 +904,10 @@ void InitObjects()
 	if (pSetPieces[0]._sptype == SPT_BLIND) { // QuestStatus(Q_BLIND)
 		AddBookLever(OBJ_BLINDBOOK, pSetPieces[0]._spx, pSetPieces[0]._spy + 1, pSetPieces[0]._spx + 11, pSetPieces[0]._spy + 10, Q_BLIND);
 	}
+#ifdef HELLFIRE
+	if (pSetPieces[0]._sptype == SPT_NAKRUL) // QuestStatus(Q_NAKRUL)
+		LoadMapSetObjs(pSetPieces[0]._spData);
+#endif
 	switch (currLvl._dLevelIdx) {
 	case DLV_CATHEDRAL4:
 		AddStoryBook();
@@ -948,9 +922,6 @@ void InitObjects()
 	case DLV_CAVES4:
 		AddStoryBook();
 		break;
-	//case DLV_HELL3: // QuestStatus(Q_BETRAYER) / pSetPieces[0]._sptype == SPT_BETRAYER (single?)
-	//	AddLazStand();
-	//	break;
 	case DLV_HELL4:
 		AddDiabObjs();
 		return;
@@ -966,9 +937,9 @@ void InitObjects()
 		AddLvl2xBooks(QNB_BOOK_4);
 		AddLvl2xBooks(QNB_BOOK_5);
 		break;
-	case DLV_CRYPT4:
-		AddLvl24Books();
-		break;
+	//case DLV_CRYPT4:
+	//	AddLvl24Books();
+	//	break;
 #endif
 	}
 	AddDunObjs(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
@@ -1449,6 +1420,11 @@ int AddObject(int type, int ox, int oy)
 	case OBJ_TNUDEW:
 		AddTorturedFemaleBody(oi);
 		break;
+#ifdef HELLFIRE
+	case OBJ_NAKRULBOOK:
+		AddNakrulBook(oi);
+		break;
+#endif
 	}
 	return oi;
 }
@@ -1461,7 +1437,7 @@ void GetObjectStr(int oi)
 	switch (os->_otype) {
 	case OBJ_LEVER:
 #ifdef HELLFIRE
-	case OBJ_L5LEVER:
+	case OBJ_NAKRULLEVER:
 #endif
 	//case OBJ_FLAMELVR:
 		copy_cstr(infostr, "Lever");
@@ -1592,6 +1568,11 @@ void GetObjectStr(int oi)
 #endif
 		copy_cstr(infostr, StoryBookName[os->_oVar3]); // STORY_BOOK_NAME
 		break;
+#ifdef HELLFIRE
+	case OBJ_NAKRULBOOK:
+		copy_cstr(infostr, "A Spellbook");
+		break;
+#endif
 	case OBJ_WEAPONRACKL:
 	case OBJ_WEAPONRACKR:
 		copy_cstr(infostr, "Weapon Rack");

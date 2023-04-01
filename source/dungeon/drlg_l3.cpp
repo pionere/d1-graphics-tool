@@ -2491,7 +2491,7 @@ void LoadL3Dungeon(const LevelData* lds)
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
-	assert(numthemes == 0);
+	// assert(numthemes == 0);
 	DRLG_L3InitTransVals();
 
 	// load dungeon
