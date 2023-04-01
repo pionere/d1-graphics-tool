@@ -752,9 +752,23 @@ static void AddNakrulBook(int oi)
 	ObjectStruct* os;
 	constexpr int bookframe = 3;
 
-	int bookidx = QNB_BOOK_A + (unsigned)(glSeedTbl[DLV_CRYPT4] + leverid) % 3;
-	leverid++;
-	// assert(oi != -1);
+	int bookidx;
+	if (leverid == 1) {
+		bookidx = random_(11, 3);
+		leverid = 16 | bookidx;
+	} else {
+		if ((leverid & 32) == 0) {
+			bookidx = random_(12, 2);
+			leverid |= 32 | (bookidx << 2);
+			bookidx = (bookidx & 1) ? 4 : 2;
+		} else {
+			bookidx = (leverid >> 2);
+			bookidx = (bookidx & 1) ? 2 : 4;
+		}
+		bookidx += leverid & 3;
+		bookidx = bookidx % 3;
+	}
+	bookidx += QNB_BOOK_A;
 
 	os = &objects[oi];
 	os->_oAnimFrame = bookframe;
