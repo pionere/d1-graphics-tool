@@ -922,6 +922,8 @@ void InitObjects()
 		LoadMapSetObjs(pSetPieces[0]._spData);
 	if (pSetPieces[0]._sptype == SPT_BLOOD) // QuestStatus(Q_BLOOD)
 		LoadMapSetObjs(pSetPieces[0]._spData);
+	if (pSetPieces[0]._sptype == SPT_BETRAYER) // QuestStatus(Q_BLOOD)
+		LoadMapSetObjs(pSetPieces[0]._spData);
 	if (pSetPieces[0]._sptype == SPT_WARLORD) { // QuestStatus(Q_WARLORD)
 		LoadMapSetObjs(pSetPieces[0]._spData);
 		AddBookLever(OBJ_STEELTOME, pSetPieces[0]._spx + 7, pSetPieces[0]._spy + 1, pSetPieces[0]._spx + 7, pSetPieces[0]._spy + 5, Q_WARLORD);
@@ -946,9 +948,9 @@ void InitObjects()
 	case DLV_CAVES4:
 		AddStoryBook();
 		break;
-	case DLV_HELL3: // QuestStatus(Q_BETRAYER) / pSetPieces[0]._sptype == SPT_BETRAYER (single?)
-		AddLazStand();
-		break;
+	//case DLV_HELL3: // QuestStatus(Q_BETRAYER) / pSetPieces[0]._sptype == SPT_BETRAYER (single?)
+	//	AddLazStand();
+	//	break;
 	case DLV_HELL4:
 		AddDiabObjs();
 		return;

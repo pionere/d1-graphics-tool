@@ -110,7 +110,7 @@ const DunObjectStruct DunObjConvTbl[128] = {
 /*OBJ_TBCROSS*/      { "Burning cross" }, // Q_BCHAMB
                      { nullptr },
                      { nullptr }, //OBJ_CANDLE1,
-/*OBJ_CANDLE2*/      { "Candle" }, // Q_BCHAMB
+/*OBJ_CANDLE2*/      { "Candle" }, // Q_BCHAMB, Q_BETRAYER
                      { nullptr }, //OBJ_CANDLEO,
                      { nullptr }, //OBJ_CAULDRON,
                      { nullptr },
@@ -160,7 +160,7 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr },
                      { nullptr },
                      { nullptr },
-                     { nullptr },
+/*OBJ_LAZSTAND*/     { "Lazarus's stand" }, // Q_BETRAYER
 /*OBJ_TNUDEM*/       { "Tortured male 1" }, //1, Q_BUTCHER
 /*OBJ_TNUDEM*/       { "Tortured male 2" }, //2, Q_BUTCHER
 /*OBJ_TNUDEM*/       { "Tortured male 3" }, //3, Q_BUTCHER
@@ -1385,6 +1385,10 @@ bool D1Dun::setWidth(int newWidth, bool force)
     for (std::vector<int> &roomsRow : this->rooms) {
         roomsRow.resize(newWidth);
     }
+    // update subtiles to match the defaultTile - TODO: better solution?
+    int prevDefaultTile = this->defaultTile;
+    this->defaultTile = UNDEF_TILE;
+    this->setDefaultTile(prevDefaultTile);
 
     this->width = newWidth;
     this->modified = true;
@@ -1448,6 +1452,10 @@ bool D1Dun::setHeight(int newHeight, bool force)
         this->objects[y].resize(width);
         this->rooms[y].resize(width);
     }
+    // update subtiles to match the defaultTile - TODO: better solution?
+    int prevDefaultTile = this->defaultTile;
+    this->defaultTile = UNDEF_TILE;
+    this->setDefaultTile(prevDefaultTile);
 
     this->height = newHeight;
     this->modified = true;
