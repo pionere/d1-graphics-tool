@@ -17,7 +17,6 @@ DEVILUTION_BEGIN_NAMESPACE
 #define MIN_LAVA_POOL 3
 /** Helper variable to check if sufficient number of lava pools have been generated */
 unsigned _guLavapools;
-static BYTE _gabLockout[DMAXX][DMAXY];
 
 /**
  * A lookup table for the 16 possible patterns of a 2x2 area,
@@ -1140,7 +1139,6 @@ static void DRLG_L3FloorArea()
 
 	x1 = RandRangeLow(10, xr);
 	y1 = RandRangeLow(10, yb);
-
 	pSetPieces[0]._spx = x1;
 	pSetPieces[0]._spy = y1;
 	x2 = x1 + w;
@@ -1293,7 +1291,7 @@ static BYTE DRLG_L3FillStraights()
 /*
  * Validate the dungeon to prevent OOB in DRLG_L3LockRec.
  */
-static void DRLG_L3Edges()
+/*static void DRLG_L3Edges()
 {
 	int i, j;
 
@@ -1307,7 +1305,7 @@ static void DRLG_L3Edges()
 		assert(dungeon[i][0] == 0);
 		//dungeon[i][DMAXY - 1] = 0;
 	}
-}
+}*/
 
 static int DRLG_L3GetFloorArea()
 {
@@ -2093,11 +2091,11 @@ static void FixL3HallofHeroes()
 
 static void DRLG_L3LockRec(int x, int y)
 {
-	if (!_gabLockout[x][y]) {
+	if (!drlg.lockoutMap[x][y]) {
 		return;
 	}
 
-	_gabLockout[x][y] = 0;
+	drlg.lockoutMap[x][y] = 0;
 	DRLG_L3LockRec(x, y - 1);
 	DRLG_L3LockRec(x, y + 1);
 	DRLG_L3LockRec(x - 1, y);
@@ -2113,12 +2111,12 @@ static bool DRLG_L3Lockout()
 	int i, j;
 	BYTE* pTmp;
 
-	static_assert(sizeof(dungeon) == sizeof(_gabLockout), "_gabLockout vs dungeon mismatch.");
-	memcpy(_gabLockout, dungeon, sizeof(dungeon));
+	static_assert(sizeof(dungeon) == sizeof(drlg.lockoutMap), "lockoutMap vs dungeon mismatch.");
+	memcpy(drlg.lockoutMap, dungeon, sizeof(dungeon));
 
 	for (i = 0; i < DMAXX; i++) {
 		for (j = 0; j < DMAXY; j++) {
-			if (_gabLockout[i][j] != 0) {
+			if (drlg.lockoutMap[i][j] != 0) {
 				// assert(i > 0 && i < DMAXX - 1 && j > 0 && j < DMAXY - 1);
 				DRLG_L3LockRec(i, j);
 				i = DMAXX;
@@ -2127,8 +2125,8 @@ static bool DRLG_L3Lockout()
 		}
 	}
 
-	static_assert(sizeof(_gabLockout) == DMAXX * DMAXY, "Linear traverse of _gabLockout does not work in DRLG_L3Lockout.");
-	pTmp = &_gabLockout[0][0];
+	static_assert(sizeof(drlg.lockoutMap) == DMAXX * DMAXY, "Linear traverse of lockoutMap does not work in DRLG_L3Lockout.");
+	pTmp = &drlg.lockoutMap[0][0];
 	for (i = 0; i < DMAXX * DMAXY; i++, pTmp++)
 		if (*pTmp != 0) {
 			return false;
@@ -2144,7 +2142,6 @@ static void DRLG_L3()
 	do {
 		while (true) {
 			do {
-				static_assert(sizeof(dungeon) == DMAXX * DMAXY, "Linear traverse of dungeon does not work in DRLG_L3.");
 				memset(dungeon, 0, sizeof(dungeon));
 				DRLG_L3CreateBlock(RandRange(10, 29), RandRange(10, 29), 0, 4);
 				if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
@@ -2155,7 +2152,7 @@ static void DRLG_L3()
 					doneflag &= !DRLG_L3FillStraights();
 				} while (!doneflag);
 				DRLG_L3FillSingles();
-				DRLG_L3Edges();
+				// DRLG_L3Edges(); - Commented out because it is no longer necessary
 			} while (DRLG_L3GetFloorArea() < 600 || !DRLG_L3Lockout());
 			DRLG_L3MakeMegas();
 			memset(drlgFlags, 0, sizeof(drlgFlags));
