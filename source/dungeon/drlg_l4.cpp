@@ -1843,20 +1843,23 @@ static void DRLG_L4InitTransVals()
 	// block arches with walls to stop the spread of transVals
 	for (i = 0; i < DMAXX - 1; i++) {
 		for (j = 0; j < DMAXY; j++) {
-			if (dungeon[i][j] == 53) {
-				dungeon[i][j + 1] = 1;
-			} else if (dungeon[i][j] == 57) {
-				dungeon[i + 1][j] = 2;
+			if (drlg.transvalMap[i][j] == 53) {
+				drlg.transvalMap[i][j + 1] = 1;
+			} else if (drlg.transvalMap[i][j] == 57) {
+				drlg.transvalMap[i + 1][j] = 2;
 			}
+		}
+	}
+	// prepare transvalMap
+	for (i = 0; i < DMAXX; i++) {
+		for (j = 0; j < DMAXY; j++) {
+			drlg.transvalMap[i][j] = L4FTYPES[drlg.transvalMap[i][j]];
 		}
 	}
 
 	DRLG_InitTrans();
-	DRLG_FloodTVal(L4FTYPES);
+	DRLG_FloodTVal();
 	DRLG_L4TransFix();
-
-	// restore arches
-	memcpy(dungeon, drlg.transvalMap, sizeof(dungeon));
 }
 
 /*
@@ -2088,8 +2091,8 @@ static void DRLG_L4()
 		}
 		DRLG_DrawMap(0);
 	} else if (pSetPieces[0]._sptype == SPT_BETRAYER) {
-		/*// fix transVal under Vile1.DUN
 		if (pSetPieces[0]._spData != NULL) {
+		/*// fix transVal under Vile1.DUN
 		int x = 2 * pSetPieces[0]._spx + DBORDERX;
 		int y = 2 * pSetPieces[0]._spy + DBORDERY;
 		BYTE tv = dTransVal[x + 4][y + 4];
@@ -2103,7 +2106,7 @@ static void DRLG_L4()
 		//lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 3 + 6 * 7 * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
 		//lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 3 * 7 * 2] = SwapLE16((UMT_RED_VEX + 1) | (1 << 15));
 		//lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 9 * 7 * 2] = SwapLE16((UMT_BLACKJADE + 1) | (1 << 15));
-		//}
+		}
 	}
 }
 

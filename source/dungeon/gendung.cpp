@@ -611,11 +611,10 @@ void DRLG_AreaTrans(int num, const BYTE* List)
 #pragma GCC push_options
 #pragma GCC optimize("O0")
 #endif
-static const bool *TVfloor;
 static void DRLG_FTVR(int i, int j, int x, int y, int dir)
 {
 	assert(i >= 0 && i < DMAXX && j >= 0 && j < DMAXY);
-	if (!TVfloor[dungeon[i][j]]) {
+	if (!drlg.transvalMap[i][j]) {
 		switch (dir) {
 		case 0:
 			dTransVal[x][y] = numtrans;
@@ -673,21 +672,20 @@ void DRLG_FloodTVal(const bool *floor)
 {
 	int xx, yy, i, j;
 
-	TVfloor = floor;
+	xx = DBORDERX;
 
-	yy = DBORDERY;
+	for (i = 0; i < DMAXX; i++) {
+		yy = DBORDERY;
 
-	for (j = 0; j < DMAXY; j++) {
-		xx = DBORDERX;
+		for (j = 0; j < DMAXY; j++) {
 
-		for (i = 0; i < DMAXX; i++) {
-			if (TVfloor[dungeon[i][j]] && dTransVal[xx][yy] == 0) {
+			if (drlg.transvalMap[i][j] && dTransVal[xx][yy] == 0) {
 				DRLG_FTVR(i, j, xx, yy, 0);
 				numtrans++;
 			}
-			xx += 2;
+			yy += 2;
 		}
-		yy += 2;
+		xx += 2;
 	}
 }
 #if defined(__3DS__)
