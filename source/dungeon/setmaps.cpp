@@ -120,10 +120,10 @@ void LoadSetMap()
 		// gbInitObjFlag = false;
 		break;
 	case SL_BONECHAMB:
-		numtrans = 1;
-		DRLG_ListTrans(sizeof(BoneChamTrans1) / 4, &BoneChamTrans1[0]);
-		DRLG_AreaTrans(sizeof(BoneChamTrans2) / 4, &BoneChamTrans2[0]);
-		DRLG_ListTrans(sizeof(BoneChamTrans3) / 4, &BoneChamTrans3[0]);
+		//numtrans = 1;
+		//DRLG_ListTrans(sizeof(BoneChamTrans1) / 4, &BoneChamTrans1[0]);
+		//DRLG_AreaTrans(sizeof(BoneChamTrans2) / 4, &BoneChamTrans2[0]);
+		//DRLG_ListTrans(sizeof(BoneChamTrans3) / 4, &BoneChamTrans3[0]);
 		AddSChamObjs();
 		// gbInitObjFlag = false;
 		break;
