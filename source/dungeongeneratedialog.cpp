@@ -16,6 +16,11 @@ DungeonGenerateDialog::DungeonGenerateDialog(QWidget *parent)
     this->ui->entryComboBox->addItem(tr("Exit"), QVariant(ENTRY_PREV));
     this->ui->entryComboBox->addItem(tr("Town"), QVariant(ENTRY_TWARPDN));
     this->ui->entryComboBox->addItem(tr("Return"), QVariant(ENTRY_RTNLVL));
+
+    QLayout *layout = this->ui->seedWithRefreshButtonLayout;
+    PushButtonWidget::addButton(this, layout, QStyle::SP_BrowserReload, tr("Generate"), this, &DungeonGenerateDialog::on_actionGenerateSeed_triggered);
+    layout = this->ui->questSeedWithRefreshButtonLayout;
+    PushButtonWidget::addButton(this, layout, QStyle::SP_BrowserReload, tr("Generate"), this, &DungeonGenerateDialog::on_actionGenerateQuestSeed_triggered);
 }
 
 DungeonGenerateDialog::~DungeonGenerateDialog()
@@ -26,6 +31,18 @@ DungeonGenerateDialog::~DungeonGenerateDialog()
 void DungeonGenerateDialog::initialize(D1Dun *d)
 {
     this->dun = d;
+}
+
+void DungeonGenerateDialog::on_actionGenerateSeed_triggered()
+{
+    QRandomGenerator *gen = QRandomGenerator::global();
+    this->ui->seedLineEdit->setText(QString::number(gen->generate()));
+}
+
+void DungeonGenerateDialog::on_actionGenerateQuestSeed_triggered()
+{
+    QRandomGenerator *gen = QRandomGenerator::global();
+    this->ui->questSeedLineEdit->setText(QString::number(gen->generate()));
 }
 
 void DungeonGenerateDialog::on_generateButton_clicked()

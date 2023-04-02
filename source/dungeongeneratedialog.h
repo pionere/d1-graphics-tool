@@ -31,6 +31,9 @@ public:
     void initialize(D1Dun *dun);
 
 private slots:
+    void on_actionGenerateSeed_triggered();
+    void on_actionGenerateQuestSeed_triggered();
+
     void on_generateButton_clicked();
     void on_cancelButton_clicked();
 
