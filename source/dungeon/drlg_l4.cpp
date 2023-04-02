@@ -416,16 +416,16 @@ static void DRLG_L4SetRoom(int idx)
 	rh = SwapLE16(*(uint16_t*)&pSetPiece->_spData[2]);
 	sp = &pSetPiece->_spData[4];
 	// load tiles
-	for (j = ry1; j < ry1 + h; j++) {
-		for (i = rx1; i < rx1 + w; i++) {
+	for (j = ry1; j < ry1 + rh; j++) {
+		for (i = rx1; i < rx1 + rw; i++) {
 			dungeon[i][j] = *sp != 0 ? *sp : DEFAULT_MEGATILE_L4;
 			// drlgFlags[i][j] = *sp != 0 ? TRUE : FALSE; // |= DLRG_PROTECTED;
 			sp += 2;
 		}
 	}
 	// load flags
-	for (j = ry1; j < ry1 + h; j++) {
-		for (i = rx1; i < rx1 + w; i++) {
+	for (j = ry1; j < ry1 + rh; j++) {
+		for (i = rx1; i < rx1 + rw; i++) {
 			drlgFlags[i][j] = (*sp & 1) != 0 ? TRUE : FALSE; // |= DLRG_PROTECTED;
 			sp += 2;
 		}

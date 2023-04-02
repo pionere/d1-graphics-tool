@@ -1569,8 +1569,8 @@ static void DRLG_L1SetRoom(int rx1, int ry1)
 		}
 	}
 	// load flags
-	for (j = ry1; j < ry1 + h; j++) {
-		for (i = rx1; i < rx1 + w; i++) {
+	for (j = ry1; j < ry1 + rh; j++) {
+		for (i = rx1; i < rx1 + rw; i++) {
 			drlgFlags[i][j] = (*sp & 1) != 0 ? DLRG_PROTECTED : 0; // |= DLRG_PROTECTED;
 			sp += 2;
 		}

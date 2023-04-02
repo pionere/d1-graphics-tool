@@ -2188,7 +2188,7 @@ void D1Dun::checkFlags() const
             //        ...
             // }
             if ((flag & 2) == 0) {
-                if (this->monsters[y][x] != 0) {
+                if (this->monsters[y][x].first != 0) {
                     dProgressWarn() << tr("Subtile with a monster is not protected at %1:%2.").arg(x).arg(y);
                     result = true;
                 }

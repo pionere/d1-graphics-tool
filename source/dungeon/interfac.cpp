@@ -109,7 +109,7 @@ static void CreateLevel()
     int rv = RandRange(1, 4);
 }
 
-static void LoadGameLevel(int lvldir)
+static void LoadGameLevel(int lvldir, D1Dun *dun)
 {
     //SetRndSeed(seed);
 
@@ -136,7 +136,7 @@ static void LoadGameLevel(int lvldir)
         // fill post: pdungeon, dPiece, dSpecial, themeLoc, dFlags
         // reset: dMonster, dObject, dPlayer, dItem, dMissile, dLight+
         CreateLevel();
-		StoreProtections();
+		StoreProtections(dun);
         if (pMegaTiles == NULL || pSolidTbl == NULL) {
             return;
         }
@@ -171,7 +171,7 @@ static void LoadGameLevel(int lvldir)
         FreeSetPieces();
     } else {
         LoadSetMap();
-		StoreProtections();
+		StoreProtections(dun);
         IncProgress();
         // GetLevelMTypes();
         IncProgress();
@@ -246,7 +246,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
 	do {
 		extern int32_t sglGameSeed;
 		LogErrorF("Generating dungeon %d with seed: %d / %d. Entry mode: %d", params.level, sglGameSeed, params.seedQuest, params.entryMode);
-		LoadGameLevel(params.entryMode);
+		LoadGameLevel(params.entryMode, dun);
 		hasSubtiles = pMegaTiles != NULL;
 		FreeLvlDungeon();
 	} while (--extraRounds >= 0);
