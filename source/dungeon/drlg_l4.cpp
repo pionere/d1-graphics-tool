@@ -1801,15 +1801,9 @@ static void DRLG_L4InitTransVals()
 			}
 		}
 	}
-	// prepare transvalMap
-	for (i = 0; i < DMAXX; i++) {
-		for (j = 0; j < DMAXY; j++) {
-			drlg.transvalMap[i][j] = L4FTYPES[drlg.transvalMap[i][j]];
-		}
-	}
 
 	DRLG_InitTrans();
-	DRLG_FloodTVal();
+	DRLG_FloodTVal(L4FTYPES);
 	DRLG_L4TransFix();
 }
 
