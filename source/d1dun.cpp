@@ -1002,15 +1002,16 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
         // draw the room meta info
         unsigned roomIndex = this->rooms[dunCursorY][dunCursorX];
         if (roomIndex != 0) {
-            QColor color = this->pal->getColor(roomIndex % D1PAL_COLORS);
             if (params.tileState == Qt::Unchecked) {
+                QColor color = this->pal->getColor(roomIndex % D1PAL_COLORS);
                 QImage *destImage = (QImage *)dungeon.device();
                 D1Dun::drawDiamond(*destImage, drawCursorX, drawCursorY - backHeight, backWidth, backHeight, color);
             } else {
-                QColor prevColor = dungeon.pen().color();
-                dungeon.pen().setColor(color);
+                QColor color = this->pal->getColor(((unsigned)(D1PAL_COLORS - 1 - roomIndex)) % D1PAL_COLORS);
+                const QPen prevPen = dungeon.pen();
+                dungeon.setPen(color);
                 dungeon.drawRect(drawCursorX + backWidth / 4, drawCursorY - 3 * backHeight / 4, backWidth / 2, backHeight / 2);
-                dungeon.pen().setColor(prevColor);
+                dungeon.setPen(prevPen);
             }
         }
     }
