@@ -2940,8 +2940,8 @@ void LevelCelView::displayFrame()
         this->ui->dungeonPosYLineEdit->setText(QString::number(this->currentDunPosY));
 
         DunDrawParam params;
-        params.tileState = this->ui->showTilesCheckBox->checkState();
-        params.showRooms = this->ui->showRoomsCheckBox->isChecked();
+        params.tileState = this->ui->showTilesRadioButton->isChecked() ? Qt::Checked : (this->ui->showFloorRadioButton->isChecked() ? Qt::PartiallyChecked : Qt::Unchecked);
+        params.showRooms = this->ui->showRoomsMetaRadioButton->isChecked();
         params.showItems = this->ui->showItemsCheckBox->isChecked();
         params.showMonsters = this->ui->showMonstersCheckBox->isChecked();
         params.showObjects = this->ui->showObjectsCheckBox->isChecked();
@@ -3677,13 +3677,7 @@ void LevelCelView::on_dungeonDefaultTileLineEdit_escPressed()
     this->ui->dungeonDefaultTileLineEdit->clearFocus();
 }
 
-void LevelCelView::on_showTilesCheckBox_clicked()
-{
-    // update the view
-    this->displayFrame();
-}
-
-void LevelCelView::on_showRoomsCheckBox_clicked()
+void LevelCelView::on_showButtonGroup_idClicked()
 {
     // update the view
     this->displayFrame();
@@ -3702,6 +3696,12 @@ void LevelCelView::on_showMonstersCheckBox_clicked()
 }
 
 void LevelCelView::on_showObjectsCheckBox_clicked()
+{
+    // update the view
+    this->displayFrame();
+}
+
+void LevelCelView::on_showMetaButtonGroup_idClicked()
 {
     // update the view
     this->displayFrame();

@@ -751,7 +751,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="4" colspan="2">
+      <item row="0" column="5">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -837,14 +837,14 @@
         </item>
        </widget>
       </item>
-      <item row="0" column="14" colspan="3">
+      <item row="0" column="14">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </spacer>
       </item>
-      <item row="0" column="17">
+      <item row="0" column="18">
        <layout class="QHBoxLayout" name="dunButtonsHorizontalLayout">
         <property name="topMargin">
          <number>0</number>
@@ -854,34 +854,14 @@
         </property>
        </layout>
       </item>
-      <item row="1" column="7" colspan="3">
-       <layout class="QHBoxLayout">
-        <item alignment="Qt::AlignCenter">
-         <widget class="QPushButton" name="moveUpButton">
-          <property name="minimumWidth">
-           <number>40</number>
-          </property>
-          <property name="maximumWidth">
-           <number>40</number>
-          </property>
-          <property name="toolTip">
-           <string>Move up</string>
-          </property>
-          <property name="text">
-           <string notr="true">A</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="2" column="0">
+      <item row="1" column="0">
        <widget class="QLabel">
         <property name="text">
          <string>Dungeon:</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1" colspan="4">
+      <item row="1" column="1" colspan="4">
        <layout class="QHBoxLayout">
         <item>
          <widget class="QComboBox" name="levelTypeComboBox">
@@ -942,7 +922,99 @@
         </item>
        </layout>
       </item>
-      <!--item row="2" column="5">
+      <item row="1" column="7" colspan="3">
+       <layout class="QHBoxLayout">
+        <item alignment="Qt::AlignCenter">
+         <widget class="QPushButton" name="moveUpButton">
+          <property name="minimumWidth">
+           <number>40</number>
+          </property>
+          <property name="maximumWidth">
+           <number>40</number>
+          </property>
+          <property name="toolTip">
+           <string>Move up</string>
+          </property>
+          <property name="text">
+           <string notr="true">A</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Entities:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="3">
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QRadioButton" name="showGridRadioButton">
+          <property name="toolTip">
+           <string>Draw grid only</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">showButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="showFloorRadioButton">
+          <property name="toolTip">
+           <string>Draw floor only</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">showButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="showTilesRadioButton">
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+          <property name="toolTip">
+           <string>Draw tiles</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">showButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel">
+          <property name="text">
+           <string notr="true">  </string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="showObjectsCheckBox">
+          <property name="toolTip">
+           <string>Draw objects</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="showMonstersCheckBox">
+          <property name="toolTip">
+           <string>Draw monsters</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="showItemsCheckBox">
+          <property name="toolTip">
+           <string>Draw items</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <!--item row="2" column="4" colspan="2">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -1030,7 +1102,7 @@
         </property>
        </spacer>
       </item>
-      <item row="2" column="14" colspan="4">
+      <item row="2" column="15" colspan="4">
        <layout class="QHBoxLayout">
         <item>
          <widget class="QPushButton" name="tilesetLoadPushButton">
@@ -1051,62 +1123,37 @@
         </item>
        </layout>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel">
-        <property name="text">
-         <string>Entities:</string>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="1" colspan="3">
        <layout class="QHBoxLayout">
         <item>
-         <widget class="QCheckBox" name="showTilesCheckBox">
-          <property name="tristate">
+         <widget class="QRadioButton" name="showNoMetaRadioButton">
+          <property name="checked">
            <bool>true</bool>
           </property>
-          <property name="checkState">
-           <enum>Qt::Checked</enum>
-          </property>
           <property name="toolTip">
-           <string>Show tiles</string>
+           <string>Draw no meta data</string>
           </property>
+          <attribute name="buttonGroup">
+           <string notr="true">showMetaButtonGroup</string>
+          </attribute>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="showRoomsCheckBox">
+         <widget class="QRadioButton" name="showRoomsMetaRadioButton">
           <property name="toolTip">
-           <string>Show rooms</string>
+           <string>Draw rooms</string>
           </property>
+          <attribute name="buttonGroup">
+           <string notr="true">showMetaButtonGroup</string>
+          </attribute>
          </widget>
         </item>
         <item>
-         <widget class="QLabel">
-          <property name="text">
-           <string notr="true">  </string>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="showObjectsCheckBox">
-          <property name="toolTip">
-           <string>Show objects</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="showMonstersCheckBox">
-          <property name="toolTip">
-           <string>Show monsters</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="showItemsCheckBox">
-          <property name="toolTip">
-           <string>Show items</string>
-          </property>
-         </widget>
+         </spacer>
         </item>
        </layout>
       </item>
@@ -1130,7 +1177,7 @@
         </item>
        </layout>
       </item>
-      <item row="3" column="15">
+      <item row="3" column="16">
        <widget class="LineEditWidget" name="dunWidthEdit">
         <property name="charWidth">
          <number>5</number>
@@ -1143,7 +1190,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="16">
+      <item row="3" column="17">
        <widget class="QLabel">
         <property name="minimumWidth">
          <number>8</number>
@@ -1156,7 +1203,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="17">
+      <item row="3" column="18">
        <widget class="LineEditWidget" name="dunHeightEdit">
         <property name="charWidth">
          <number>5</number>
@@ -1169,7 +1216,7 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0" colspan="18">
+      <item row="4" column="0" colspan="19">
        <widget class="QTabWidget" name="dungeonTabs">
         <property name="tabBarAutoHide">
          <bool>true</bool>
@@ -1408,5 +1455,8 @@
  <layoutdefault spacing="4" margin="4"/>
  <resources/>
  <connections/>
- <buttongroups/>
+ <buttongroups>
+  <buttongroup name="showButtonGroup"/>
+  <buttongroup name="showMetaButtonGroup"/>
+ </buttongroups>
 </ui>
