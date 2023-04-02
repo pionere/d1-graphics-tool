@@ -17,7 +17,7 @@ DungeonGenerateDialog::DungeonGenerateDialog(QWidget *parent)
     this->ui->entryComboBox->addItem(tr("Town"), QVariant(ENTRY_TWARPDN));
     this->ui->entryComboBox->addItem(tr("Return"), QVariant(ENTRY_RTNLVL));
 
-    QLayout *layout = this->ui->seedWithRefreshButtonLayout;
+    QHBoxLayout *layout = this->ui->seedWithRefreshButtonLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_BrowserReload, tr("Generate"), this, &DungeonGenerateDialog::on_actionGenerateSeed_triggered);
     layout->addStretch();
     layout = this->ui->questSeedWithRefreshButtonLayout;
