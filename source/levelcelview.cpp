@@ -2801,6 +2801,11 @@ void LevelCelView::checkTiles() const
     this->dun->checkTiles();
 }
 
+void LevelCelView::checkFlags() const
+{
+    this->dun->checkFlags();
+}
+
 void LevelCelView::checkItems() const
 {
     this->dun->checkItems(this->sol);
@@ -2818,9 +2823,20 @@ void LevelCelView::checkObjects() const
 
 void LevelCelView::checkEntities() const
 {
+    this->checkTiles();
+    this->checkFlags();
     this->checkItems();
     this->checkMonsters();
     this->checkObjects();
+}
+
+void LevelCelView::removeFlags()
+{
+    bool change = this->dun->removeFlags();
+    if (change) {
+        // update the view - done by the caller
+        // this->displayFrame();
+    }
 }
 
 void LevelCelView::removeItems()
@@ -2866,6 +2882,16 @@ static bool dimensionMatch(D1Dun *dun1, D1Dun *dun2)
     }
     QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Mismatching dungeons (Dimensions are %1:%2 vs %3:%4).").arg(dun1->getWidth()).arg(dun1->getHeight()).arg(dun2->getHeight()).arg(dun2->getWidth()));
     return false;
+}
+
+void LevelCelView::loadFlags(D1Dun *srcDun)
+{
+    if (!dimensionMatch(this->dun, srcDun)) {
+        return;
+    }
+    this->dun->loadFlags(srcDun);
+    // update the view - done by the caller
+    // this->displayFrame();
 }
 
 void LevelCelView::loadItems(D1Dun *srcDun)
@@ -2942,6 +2968,8 @@ void LevelCelView::displayFrame()
         DunDrawParam params;
         params.tileState = this->ui->showTilesRadioButton->isChecked() ? Qt::Checked : (this->ui->showFloorRadioButton->isChecked() ? Qt::PartiallyChecked : Qt::Unchecked);
         params.showRooms = this->ui->showRoomsMetaRadioButton->isChecked();
+        params.showTileFlags = this->ui->showTileMetaRadioButton->isChecked();
+        params.showSubtileFlags = this->ui->showSubtileMetaRadioButton->isChecked();
         params.showItems = this->ui->showItemsCheckBox->isChecked();
         params.showMonsters = this->ui->showMonstersCheckBox->isChecked();
         params.showObjects = this->ui->showObjectsCheckBox->isChecked();
@@ -3731,6 +3759,17 @@ void LevelCelView::on_dungeonTileLineEdit_escPressed()
     this->ui->dungeonTileLineEdit->clearFocus();
 }
 
+void LevelCelView::on_dungeonTileFlagCheckBox_clicked()
+{
+    bool checked = this->ui->dungeonTileFlagCheckBox->isChecked();
+
+    bool change = this->dun->setTileFlagAt(this->currentDunPosX, this->currentDunPosY, checked);
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
+}
+
 void LevelCelView::selectTilesetPath(QString path)
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 1, PAF_UPDATE_WINDOW);
@@ -3809,6 +3848,17 @@ void LevelCelView::on_dungeonSubtileLineEdit_escPressed()
 
     this->ui->dungeonSubtileLineEdit->setText(subtileRef == UNDEF_SUBTILE ? QStringLiteral("?") : QString::number(subtileRef));
     this->ui->dungeonSubtileLineEdit->clearFocus();
+}
+
+void LevelCelView::on_dungeonSubtileFlagCheckBox_clicked()
+{
+    bool checked = this->ui->dungeonSubtileFlagCheckBox->isChecked();
+
+    bool change = this->dun->setSubtileFlagAt(this->currentDunPosX, this->currentDunPosY, checked);
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
 }
 
 void LevelCelView::on_dungeonObjectLineEdit_returnPressed()

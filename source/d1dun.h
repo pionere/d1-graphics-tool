@@ -107,6 +107,8 @@ class DunDrawParam {
 public:
     Qt::CheckState tileState;
     bool showRooms;
+    bool showTileFlags;
+    bool showSubtileFlags;
     bool showItems;
     bool showMonsters;
     bool showObjects;
@@ -148,6 +150,10 @@ public:
     bool setObjectAt(int posx, int posy, int objectIndex);
     int getRoomAt(int posx, int posy) const;
     bool setRoomAt(int posx, int posy, int roomIndex);
+    bool getTileFlagAt(int posx, int posy) const;
+    bool setTileFlagAt(int posx, int posy, bool flag);
+    bool getSubtileFlagAt(int posx, int posy) const;
+    bool setSubtileFlagAt(int posx, int posy, bool flag);
 
     int getLevelType() const;
     bool setLevelType(int levelType);
@@ -164,13 +170,16 @@ public:
     void collectMonsters(std::vector<std::pair<DunMonsterType, int>> &monsters) const;
     void collectObjects(std::vector<std::pair<int, int>> &objects) const;
     void checkTiles() const;
+    void checkFlags() const;
     void checkItems(D1Sol *sol) const;
     void checkMonsters(D1Sol *sol) const;
     void checkObjects() const;
+    bool removeFlags();
     bool removeItems();
     bool removeMonsters();
     bool removeObjects();
     bool removeRooms();
+    void loadFlags(D1Dun *srcDun);
     void loadItems(D1Dun *srcDun);
     void loadMonsters(D1Dun *srcDun);
     void loadObjects(D1Dun *srcDun);
@@ -205,6 +214,7 @@ private:
     bool changeObjectAt(int posx, int posy, int objectIndex);
     bool changeMonsterAt(int posx, int posy, int monsterIndex, bool isUnique);
     bool changeItemAt(int posx, int posy, int itemIndex);
+    bool changeFlagAt(int posx, int posy, int flags);
 
 private:
     D1DUN_TYPE type = D1DUN_TYPE::NORMAL;
@@ -220,6 +230,7 @@ private:
     std::vector<std::vector<int>> tiles;
     std::vector<std::vector<int>> subtiles;
     std::vector<std::vector<int>> items;
+    std::vector<std::vector<int>> flags;
     std::vector<std::vector<DunMonsterType>> monsters;
     std::vector<std::vector<int>> objects;
     std::vector<std::vector<int>> rooms;

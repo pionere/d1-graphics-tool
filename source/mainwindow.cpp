@@ -1729,6 +1729,16 @@ void MainWindow::on_actionCheckTiles_Dungeon_triggered()
     ProgressDialog::done();
 }
 
+void MainWindow::on_actionCheckFlags_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->checkFlags();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
 void MainWindow::on_actionCheckItems_Dungeon_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
@@ -1769,6 +1779,50 @@ void MainWindow::on_actionCheckEntities_Dungeon_triggered()
     ProgressDialog::done();
 }
 
+D1Dun *MainWindow::loadDun(const QString &title)
+{
+    QString dunFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, title, "DUN Files (*.dun *.DUN)");
+
+    if (dunFilePath.isEmpty()) {
+        return nullptr;
+    }
+    D1Dun *srcDun = new D1Dun();
+    OpenAsParam params = OpenAsParam();
+    params.dunFilePath = dunFilePath;
+    if (srcDun->load(dunFilePath, params)) {
+        return srcDun;
+    }
+    delete srcDun;
+    QMessageBox::critical(this, tr("Error"), tr("Failed loading DUN file."));
+    return nullptr;
+}
+
+void MainWindow::on_actionRemoveFlags_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->removeFlags();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionLoadFlags_Dungeon_triggered()
+{
+    D1Dun *srcDun = this->loadDun(tr("Source of the flags"));
+    if (srcDun == nullptr) {
+        return;
+    }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->loadFlags(srcDun);
+    delete srcDun;
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
 void MainWindow::on_actionRemoveItems_Dungeon_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
@@ -1781,22 +1835,15 @@ void MainWindow::on_actionRemoveItems_Dungeon_triggered()
 
 void MainWindow::on_actionLoadItems_Dungeon_triggered()
 {
-    QString dunFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Source of the items"), "DUN Files (*.dun *.DUN)");
-
-    if (dunFilePath.isEmpty()) {
-        return;
-    }
-    D1Dun srcDun = D1Dun();
-    OpenAsParam params = OpenAsParam();
-    params.dunFilePath = dunFilePath;
-    if (!srcDun.load(dunFilePath, params)) {
-        this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
+    D1Dun *srcDun = this->loadDun(tr("Source of the items"));
+    if (srcDun == nullptr) {
         return;
     }
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
 
-    this->levelCelView->loadItems(&srcDun);
+    this->levelCelView->loadItems(srcDun);
+    delete srcDun;
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1814,22 +1861,15 @@ void MainWindow::on_actionRemoveMonsters_Dungeon_triggered()
 
 void MainWindow::on_actionLoadMonsters_Dungeon_triggered()
 {
-    QString dunFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Source of the monsters"), "DUN Files (*.dun *.DUN)");
-
-    if (dunFilePath.isEmpty()) {
-        return;
-    }
-    D1Dun srcDun = D1Dun();
-    OpenAsParam params = OpenAsParam();
-    params.dunFilePath = dunFilePath;
-    if (!srcDun.load(dunFilePath, params)) {
-        this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
+    D1Dun *srcDun = this->loadDun(tr("Source of the monsters"));
+    if (srcDun == nullptr) {
         return;
     }
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
 
-    this->levelCelView->loadMonsters(&srcDun);
+    this->levelCelView->loadMonsters(srcDun);
+    delete srcDun;
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1847,22 +1887,15 @@ void MainWindow::on_actionRemoveObjects_Dungeon_triggered()
 
 void MainWindow::on_actionLoadObjects_Dungeon_triggered()
 {
-    QString dunFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Source of the objects"), "DUN Files (*.dun *.DUN)");
-
-    if (dunFilePath.isEmpty()) {
-        return;
-    }
-    D1Dun srcDun = D1Dun();
-    OpenAsParam params = OpenAsParam();
-    params.dunFilePath = dunFilePath;
-    if (!srcDun.load(dunFilePath, params)) {
-        this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
+    D1Dun *srcDun = this->loadDun(tr("Source of the objects"));
+    if (srcDun == nullptr) {
         return;
     }
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
 
-    this->levelCelView->loadObjects(&srcDun);
+    this->levelCelView->loadObjects(srcDun);
+    delete srcDun;
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1880,22 +1913,15 @@ void MainWindow::on_actionRemoveRooms_Dungeon_triggered()
 
 void MainWindow::on_actionLoadRooms_Dungeon_triggered()
 {
-    QString dunFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Source of the rooms"), "DUN Files (*.dun *.DUN)");
-
-    if (dunFilePath.isEmpty()) {
-        return;
-    }
-    D1Dun srcDun = D1Dun();
-    OpenAsParam params = OpenAsParam();
-    params.dunFilePath = dunFilePath;
-    if (!srcDun.load(dunFilePath, params)) {
-        this->failWithError(tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(dunFilePath)));
+    D1Dun *srcDun = this->loadDun(tr("Source of the rooms"));
+    if (srcDun == nullptr) {
         return;
     }
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
 
-    this->levelCelView->loadRooms(&srcDun);
+    this->levelCelView->loadRooms(srcDun);
+    delete srcDun;
 
     // Clear loading message from status bar
     ProgressDialog::done();

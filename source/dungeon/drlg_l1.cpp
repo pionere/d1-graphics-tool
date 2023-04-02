@@ -1552,25 +1552,30 @@ static void DRLG_L1GHallVert(int x1, int y1, int y2)
 
 static void DRLG_L1SetRoom(int rx1, int ry1)
 {
-	int rw, rh, i, j;
-	BYTE* sp;
+	//int rw, rh, i, j;
+	//BYTE* sp;
 
 	pSetPieces[0]._spx = rx1;
 	pSetPieces[0]._spy = ry1;
-
-	rw = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[0]);
+	/*rw = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[0]);
 	rh = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[2]);
 	sp = &pSetPieces[0]._spData[4];
-
-	rw += rx1;
-	rh += ry1;
-	for (j = ry1; j < rh; j++) {
-		for (i = rx1; i < rw; i++) {
+	// load tiles
+	for (j = ry1; j < ry1 + rh; j++) {
+		for (i = rx1; i < rx1 + rw; i++) {
 			dungeon[i][j] = *sp != 0 ? *sp : DEFAULT_MEGATILE_L1;
-			drlgFlags[i][j] |= *sp != 0 ? DLRG_PROTECTED : 0;
+			// drlgFlags[i][j] |= *sp != 0 ? DLRG_PROTECTED : 0;
 			sp += 2;
 		}
 	}
+	// load flags
+	for (j = ry1; j < ry1 + h; j++) {
+		for (i = rx1; i < rx1 + w; i++) {
+			drlgFlags[i][j] = (*sp & 1) != 0 ? DLRG_PROTECTED : 0; // |= DLRG_PROTECTED;
+			sp += 2;
+		}
+	}*/
+	DRLG_LoadSP(0, DEFAULT_MEGATILE_L1);
 }
 
 /*

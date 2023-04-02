@@ -100,6 +100,7 @@ private:
     bool loadPal(const QString &palFilePath);
     bool loadUniqueTrn(const QString &trnfilePath);
     bool loadBaseTrn(const QString &trnfilePath);
+    D1Dun *loadDun(const QString &title);
 
     void addFrames(bool append);
     void addSubtiles(bool append);
@@ -170,10 +171,13 @@ private slots:
     void on_actionResetTiles_Dungeon_triggered();
     void on_actionResetSubtiles_Dungeon_triggered();
     void on_actionCheckTiles_Dungeon_triggered();
+    void on_actionCheckFlags_Dungeon_triggered();
     void on_actionCheckItems_Dungeon_triggered();
     void on_actionCheckMonsters_Dungeon_triggered();
     void on_actionCheckObjects_Dungeon_triggered();
     void on_actionCheckEntities_Dungeon_triggered();
+    void on_actionRemoveFlags_Dungeon_triggered();
+    void on_actionLoadFlags_Dungeon_triggered();
     void on_actionRemoveItems_Dungeon_triggered();
     void on_actionLoadItems_Dungeon_triggered();
     void on_actionRemoveMonsters_Dungeon_triggered();

@@ -2021,25 +2021,30 @@ static void DRLG_L3Wood()
 
 static void DRLG_L3SetRoom(int idx)
 {
-	int rx1, ry1, rw, rh, i, j;
+	/*int rx1, ry1, rw, rh, i, j;
 	BYTE* sp;
 
 	rx1 = pSetPieces[idx]._spx;
 	ry1 = pSetPieces[idx]._spy;
-
 	rw = SwapLE16(*(uint16_t*)&pSetPieces[idx]._spData[0]);
 	rh = SwapLE16(*(uint16_t*)&pSetPieces[idx]._spData[2]);
 	sp = &pSetPieces[idx]._spData[4];
-
-	rw += rx1;
-	rh += ry1;
-	for (j = ry1; j < rh; j++) {
-		for (i = rx1; i < rw; i++) {
+	// load tiles
+	for (j = ry1; j < ry1 + rh; j++) {
+		for (i = rx1; i < rx1 + rw; i++) {
 			dungeon[i][j] = *sp != 0 ? *sp : DEFAULT_MEGATILE_L3;
-			drlgFlags[i][j] = *sp != 0 ? TRUE : FALSE; // |= DLRG_PROTECTED;
+			// drlgFlags[i][j] = *sp != 0 ? TRUE : FALSE; // |= DLRG_PROTECTED;
 			sp += 2;
 		}
 	}
+	// load flags
+	for (j = ry1; j < ry1 + h; j++) {
+		for (i = rx1; i < rx1 + w; i++) {
+			drlgFlags[i][j] = (*sp & 1) != 0 ? TRUE : FALSE; // |= DLRG_PROTECTED;
+			sp += 2;
+		}
+	}*/
+	DRLG_LoadSP(idx, DEFAULT_MEGATILE_L3);
 }
 
 static void FixL3Warp()

@@ -378,6 +378,10 @@ void D1Dun::initVectors(int dunWidth, int dunHeight)
     for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
         items[i].resize(dunWidth * TILE_WIDTH);
     }
+    flags.resize(dunHeight * TILE_HEIGHT);
+    for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
+        flags[i].resize(dunWidth * TILE_WIDTH);
+    }
     objects.resize(dunHeight * TILE_HEIGHT);
     for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
         objects[i].resize(dunWidth * TILE_WIDTH);
@@ -455,16 +459,22 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
             const unsigned dataUnitSize = subtileCount * sizeof(readWord);
             if (dataSize >= dataUnitSize) {
                 dataSize -= dataUnitSize;
-                // read items
-                for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
-                    for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                // read flags
+                for (int y = 0; y < dunHeight; y++) {
+                    for (int x = 0; x < dunWidth; x++) {
                         in >> readWord;
-                        this->items[y][x] = readWord;
+                        this->flags[2 * y][2 * x] = readWord & 3;
+                        this->flags[2 * y][2 * x + 1] = (readWord & 1) | ((readWord & (1 << 2)) != 0 ? 2 : 0);
+                        this->flags[2 * y + 1][2 * x] = (readWord & 1) | ((readWord & (1 << 3)) != 0 ? 2 : 0);
+                        this->flags[2 * y + 1][2 * x + 1] = (readWord & 1) | ((readWord & (1 << 4)) != 0 ? 2 : 0);
                     }
+                }
+                for (int x = 0; x < 3 * dunWidth * dunHeight; x++) {
+                    in >> readWord;
                 }
                 numLayers++;
             } else {
-                dProgressWarn() << tr("Items are not defined in the DUN file.");
+                dProgressWarn() << tr("Flags are not defined in the DUN file.");
             }
 
             if (dataSize >= dataUnitSize) {
@@ -664,7 +674,7 @@ bool D1Dun::save(const SaveAsParam &params)
     uint8_t layers = 0;
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
-            if (this->items[y][x] != 0) {
+            if (this->flags[y][x] != 0) {
                 layers |= 1 << 0;
             }
             if (this->monsters[y][x].first != 0) {
@@ -688,6 +698,14 @@ bool D1Dun::save(const SaveAsParam &params)
                 if (this->tiles[y][x] == UNDEF_TILE) {
                     dProgressFail() << tr("Undefined tiles (one at %1:%2) can not be saved in this format (DUN).").arg(x).arg(y);
                     return false;
+                }
+            }
+        }
+        // report unsaved information
+        for (int y = 0; y < dunHeight; y++) {
+            for (int x = 0; x < dunWidth; x++) {
+                if (this->items[y][x] != 0) {
+                    dProgressWarn() << tr("Defined item at %1:%2 is not saved.").arg(x).arg(y);
                 }
             }
         }
@@ -728,7 +746,7 @@ bool D1Dun::save(const SaveAsParam &params)
             // user defined the number of layers -> report unsaved information
             if (params.dunLayerNum < layersNeeded) {
                 if (params.dunLayerNum <= 0 && (layers & (1 << 0))) {
-                    dProgressWarn() << tr("Defined item is not saved.");
+                    dProgressWarn() << tr("Defined flag is not saved.");
                 }
                 if (params.dunLayerNum <= 1 && (layers & (1 << 1))) {
                     dProgressWarn() << tr("Defined monster is not saved.");
@@ -746,6 +764,10 @@ bool D1Dun::save(const SaveAsParam &params)
             if (layersNeeded > numLayers) {
                 numLayers = layersNeeded;
             }
+        }
+        // report if the requirement of the game is not meet
+        if (numLayers < 2) {
+            dProgressWarn() << tr("The DUN file has to have layers for flags and monsters to be used in the game.");
         }
     } else {
         // rdun - subtiles must be defined
@@ -772,8 +794,15 @@ bool D1Dun::save(const SaveAsParam &params)
                 }
             }
         }
+        for (int y = 0; y < dunHeight; y++) {
+            for (int x = 0; x < dunWidth; x++) {
+                if (this->items[y][x] != 0) {
+                    dProgressWarn() << tr("Defined item at %1:%2 is not saved.").arg(x).arg(y);
+                }
+            }
+        }
         if (layers & (1 << 0)) {
-            dProgressWarn() << tr("Defined item is not saved in this format (RDUN).");
+            dProgressWarn() << tr("Defined flag is not saved in this format (RDUN).");
         }
         if (layers & (1 << 1)) {
             dProgressWarn() << tr("Defined monster is not saved in this format (RDUN).");
@@ -817,13 +846,20 @@ bool D1Dun::save(const SaveAsParam &params)
             }
         }
 
-        // write items
+        // write flags
         if (numLayers >= 1) {
-            for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
-                for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                    writeWord = this->items[y][x];
+            for (int y = 0; y < dunHeight; y++) {
+                for (int x = 0; x < dunWidth; x++) {
+                    writeWord = this->flags[2 * y][2 * x];
+                    writeWord |= (this->flags[2 * y][2 * x + 1] & 2) != 0 ? (1 << 2) : 0;
+                    writeWord |= (this->flags[2 * y + 1][2 * x] & 2) != 0 ? (1 << 3) : 0;
+                    writeWord |= (this->flags[2 * y + 1][2 * x + 1] & 2) != 0 ? (1 << 4) : 0;
                     out << writeWord;
                 }
+            }
+            writeWord = 0;
+            for (int x = 0; x < dunWidth * dunHeight * 3; x++) {
+                out << writeWord;
             }
         }
 
@@ -1148,6 +1184,26 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             }
         }
     }
+    if (params.showTileFlags) {
+        // draw X if the tile-flag is set
+        int flags = this->flags[dunCursorY][dunCursorX];
+        if (flags & 1) {
+            QString text = "X";
+            QFontMetrics fm(dungeon.font());
+            unsigned textWidth = fm.horizontalAdvance(text);
+            dungeon.drawText(cellCenterX - textWidth / 2, drawCursorY - backHeight - fm.height() / 2, text);
+        }
+    }
+    if (params.showSubtileFlags) {
+        // draw X if the subtile-flag is set
+        int flags = this->flags[dunCursorY][dunCursorX];
+        if (flags & 2) {
+            QString text = "X";
+            QFontMetrics fm(dungeon.font());
+            unsigned textWidth = fm.horizontalAdvance(text);
+            dungeon.drawText(cellCenterX - textWidth / 2, drawCursorY - backHeight - fm.height() / 2, text);
+        }
+    }
 }
 
 QImage D1Dun::getImage(const DunDrawParam &params)
@@ -1360,6 +1416,7 @@ bool D1Dun::setWidth(int newWidth, bool force)
                 hasContent |= this->tiles[y / TILE_HEIGHT][x / TILE_WIDTH] > 0; // !0 && !UNDEF_TILE
                 hasContent |= this->subtiles[y][x] > 0;                         // !0 && !UNDEF_SUBTILE
                 hasContent |= this->items[y][x] != 0;
+                hasContent |= this->flags[y][x] != 0;
                 hasContent |= this->monsters[y][x].first != 0;
                 hasContent |= this->objects[y][x] != 0;
                 hasContent |= this->rooms[y][x] != 0;
@@ -1384,6 +1441,9 @@ bool D1Dun::setWidth(int newWidth, bool force)
     }
     for (std::vector<int> &itemsRow : this->items) {
         itemsRow.resize(newWidth);
+    }
+    for (std::vector<int> &flagsRow : this->flags) {
+        flagsRow.resize(newWidth);
     }
     for (std::vector<DunMonsterType> &monsRow : this->monsters) {
         monsRow.resize(newWidth);
@@ -1431,6 +1491,7 @@ bool D1Dun::setHeight(int newHeight, bool force)
                 hasContent |= this->tiles[y / TILE_HEIGHT][x / TILE_WIDTH] > 0; // !0 && !UNDEF_TILE
                 hasContent |= this->subtiles[y][x] > 0;                         // !0 && !UNDEF_SUBTILE
                 hasContent |= this->items[y][x] != 0;
+                hasContent |= this->flags[y][x] != 0;
                 hasContent |= this->monsters[y][x].first != 0;
                 hasContent |= this->objects[y][x] != 0;
                 hasContent |= this->rooms[y][x] != 0;
@@ -1450,6 +1511,7 @@ bool D1Dun::setHeight(int newHeight, bool force)
     this->tiles.resize(newHeight / TILE_HEIGHT);
     this->subtiles.resize(newHeight);
     this->items.resize(newHeight);
+    this->flags.resize(newHeight);
     this->monsters.resize(newHeight);
     this->objects.resize(newHeight);
     this->rooms.resize(newHeight);
@@ -1457,6 +1519,7 @@ bool D1Dun::setHeight(int newHeight, bool force)
         this->tiles[y / TILE_HEIGHT].resize(width / TILE_WIDTH);
         this->subtiles[y].resize(width);
         this->items[y].resize(width);
+        this->flags[y].resize(width);
         this->monsters[y].resize(width);
         this->objects[y].resize(width);
         this->rooms[y].resize(width);
@@ -1580,6 +1643,41 @@ bool D1Dun::setRoomAt(int posx, int posy, int roomIndex)
         return false;
     }
     this->rooms[posy][posx] = roomIndex;
+    this->modified = true;
+    return true;
+}
+
+bool D1Dun::getTileFlagAt(int posx, int posy) const
+{
+    return (this->flags[posy][posx] & 1) != 0;
+}
+
+bool D1Dun::setTileFlagAt(int posx, int posy, bool flag)
+{
+    if (((this->flags[posy][posx] & 1) != 0) == flag) {
+        return false;
+    }
+    posx &= ~1;
+    posy &= ~1;
+    this->flags[posy][posx] = (this->flags[posy][posx] & ~1) | (flag ? 1 : 0);
+    this->flags[posy][posx + 1] = (this->flags[posy][posx + 1] & ~1) | (flag ? 1 : 0);
+    this->flags[posy + 1][posx] = (this->flags[posy + 1][posx] & ~1) | (flag ? 1 : 0);
+    this->flags[posy + 1][posx + 1] = (this->flags[posy + 1][posx + 1] & ~1) | (flag ? 1 : 0);
+    this->modified = true;
+    return true;
+}
+
+bool D1Dun::getSubtileFlagAt(int posx, int posy) const
+{
+    return (this->flags[posy][posx] & 2) != 0;
+}
+
+bool D1Dun::setSubtileFlagAt(int posx, int posy, bool flag)
+{
+    if (((this->flags[posy][posx] & 2) != 0) == flag) {
+        return false;
+    }
+    this->flags[posy][posx] = (this->flags[posy][posx] & ~2) | (flag ? 2 : 0);
     this->modified = true;
     return true;
 }
@@ -2074,6 +2172,41 @@ void D1Dun::checkTiles() const
     ProgressDialog::decBar();
 }
 
+void D1Dun::checkFlags() const
+{
+    ProgressDialog::incBar(tr("Checking Flags..."), 1);
+    bool result = false;
+
+    QPair<int, QString> progress;
+    progress.first = -1;
+    progress.second = tr("Flag inconsistencies:");
+    dProgress() << progress;
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            int flag = this->flags[y][x];
+            // if ((flag & 1) == 0 && (x & 1) == 0 && (y & 1) == 0) {
+            //        ...
+            // }
+            if ((flag & 2) == 0) {
+                if (this->monsters[y][x] != 0) {
+                    dProgressWarn() << tr("Subtile with a monster is not protected at %1:%2.").arg(x).arg(y);
+                    result = true;
+                }
+                if (this->items[y][x] != 0) {
+                    dProgressWarn() << tr("Subtile with an item is not protected at %1:%2.").arg(x).arg(y);
+                    result = true;
+                }
+            }
+        }
+    }
+    if (!result) {
+        progress.second = tr("No inconsistency detected with the Flags.");
+        dProgress() << progress;
+    }
+
+    ProgressDialog::decBar();
+}
+
 void D1Dun::checkItems(D1Sol *sol) const
 {
     ProgressDialog::incBar(tr("Checking Items..."), 1);
@@ -2200,6 +2333,21 @@ void D1Dun::checkObjects() const
     ProgressDialog::decBar();
 }
 
+bool D1Dun::removeFlags()
+{
+    bool result = false;
+    for (std::vector<int> &flagsRow : this->flags) {
+        for (int &flag : flagsRow) {
+            if (flag != 0) {
+                flag = 0;
+                result = true;
+                this->modified = true;
+            }
+        }
+    }
+    return result;
+}
+
 bool D1Dun::removeItems()
 {
     bool result = false;
@@ -2259,6 +2407,23 @@ bool D1Dun::removeRooms()
         }
     }
     return result;
+}
+
+void D1Dun::loadFlags(D1Dun *srcDun)
+{
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            int newFlags = srcDun->flags[y][x];
+            int currFlags = this->flags[y][x];
+            if (newFlags != 0 && currFlags != newFlags) {
+                if (currFlags != 0 && ((currFlags & ~1) != (newFlags & ~1) || ((x & 1) == 0 && (y & 1) == 0))) {
+                    dProgressWarn() << tr("Flags '%1' at %2:%3 was replaced by '%4'.").arg(currFlags).arg(x).arg(y).arg(newFlags);
+                }
+                this->flags[y][x] = newFlags;
+                this->modified = true;
+            }
+        }
+    }
 }
 
 void D1Dun::loadItems(D1Dun *srcDun)
@@ -2511,6 +2676,28 @@ bool D1Dun::changeItemAt(int posx, int posy, int itemIndex)
         dProgress() << tr("Added Item '%1' to %2:%3.").arg(itemIndex).arg(posx).arg(posy);
     } else {
         dProgress() << tr("Changed Item at %1:%2 from '%3' to '%4'.").arg(posx).arg(posy).arg(prevItem).arg(itemIndex);
+    }
+    this->modified = true;
+    return true;
+}
+
+bool D1Dun::changeFlagAt(int posx, int posy, int flag)
+{
+    int prevFlag = this->flags[posy][posx];
+    if (prevFlag == flag) {
+        return false;
+    }
+    this->flags[posy][posx] = flag;
+    bool tileFlag = (posx & 1) == 0 && (posy & 1) == 0;
+    if (flag == 0) {
+        if ((prevFlag & ~1) != 0 || tileFlag)
+            dProgress() << tr("Removed Flag '%1' from %2:%3.").arg(prevFlag).arg(posx).arg(posy);
+    } else if (prevFlag == 0) {
+        if ((flag & ~1) != 0 || tileFlag)
+            dProgress() << tr("Added flag '%1' to %2:%3.").arg(flag).arg(posx).arg(posy);
+    } else {
+        if ((flag & ~1) != (prevFlag & ~1) || tileFlag)
+            dProgress() << tr("Changed flag at %1:%2 from '%3' to '%4'.").arg(posx).arg(posy).arg(prevFlag).arg(flag);
     }
     this->modified = true;
     return true;

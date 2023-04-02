@@ -691,18 +691,45 @@ void DRLG_FloodTVal()
 #pragma GCC pop_options
 #endif
 
+void DRLG_LoadSP(int idx, BYTE bv)
+{
+	int rx1, ry1, rw, rh, i, j;
+	BYTE* sp;
+
+	rx1 = pSetPieces[idx]._spx;
+	ry1 = pSetPieces[idx]._spy;
+	rw = SwapLE16(*(uint16_t*)&pSetPieces[idx]._spData[0]);
+	rh = SwapLE16(*(uint16_t*)&pSetPieces[idx]._spData[2]);
+	sp = &pSetPieces[idx]._spData[4];
+	// load tiles
+	for (j = ry1; j < ry1 + rh; j++) {
+		for (i = rx1; i < rx1 + rw; i++) {
+			dungeon[i][j] = *sp != 0 ? *sp : bv;
+			// drlgFlags[i][j] = *sp != 0 ? TRUE : FALSE; // |= DLRG_PROTECTED;
+			sp += 2;
+		}
+	}
+	// load flags
+	for (j = ry1; j < ry1 + h; j++) {
+		for (i = rx1; i < rx1 + w; i++) {
+			drlgFlags[i][j] = (*sp & 1) != 0 ? DLRG_PROTECTED : 0; // |= DLRG_PROTECTED;
+			sp += 2;
+		}
+	}
+}
+
 void DRLG_SetPC()
 {
-	int x, y, w, h, i, j, x0, x1, y0, y1;
+	// int x, y, w, h, i, j, x0, x1, y0, y1;
 
 	for (int n = lengthof(pSetPieces) - 1; n >= 0; n--) {
 		if (pSetPieces[n]._spData != NULL) { // pSetPieces[n]._sptype != SPT_NONE
-			x = pSetPieces[n]._spx;
-			y = pSetPieces[n]._spy;
-			w = SwapLE16(*(uint16_t*)&pSetPieces[n]._spData[0]);
-			h = SwapLE16(*(uint16_t*)&pSetPieces[n]._spData[2]);
+			int x = pSetPieces[n]._spx;
+			int y = pSetPieces[n]._spy;
+			int w = SwapLE16(*(uint16_t*)&pSetPieces[n]._spData[0]);
+			int h = SwapLE16(*(uint16_t*)&pSetPieces[n]._spData[2]);
 
-			x0 = 2 * x + DBORDERX;
+			/*x0 = 2 * x + DBORDERX;
 			y0 = 2 * y + DBORDERY;
 			x1 = 2 * w + x0;
 			y1 = 2 * h + y0;
@@ -710,6 +737,30 @@ void DRLG_SetPC()
 			for (j = y0; j < y1; j++) {
 				for (i = x0; i < x1; i++) {
 					dFlags[i][j] |= BFLAG_POPULATED;
+				}
+			}*/
+			x = 2 * x + DBORDERX;
+			y = 2 * y + DBORDERY;
+
+			BYTE* sp = &pSetPieces[n]._spData[4];
+			sp += 2 * w * h; // skip tiles
+
+			for (int j = 0; j < h; j++) {
+				for (int i = 0; i < w; i++) {
+					BYTE flags = *sp;
+					if (flags & (1 << 1)) {
+						dFlags[x + 2 * i][y + 2 * j] |= BFLAG_POPULATED;
+					}
+					if (flags & (1 << 2)) {
+						dFlags[x + 2 * i + 1][y + 2 * j] |= BFLAG_POPULATED;
+					}
+					if (flags & (1 << 3)) {
+						dFlags[x + 2 * i][y + 2 * j  + 1] |= BFLAG_POPULATED;
+					}
+					if (flags & (1 << 4)) {
+						dFlags[x + 2 * i + 1][y + 2 * j + 1] |= BFLAG_POPULATED;
+					}
+					sp += 2;
 				}
 			}
 		}

@@ -63,6 +63,25 @@ static void LogErrorF(const char* msg, ...)
 	fclose(f0);*/
 }
 
+static void StoreProtections(D1Dun *dun)
+{
+	for (int y = 0; y < MAXDUNY; y += 2) {
+		for (int x = 0; x < MAXDUNX; x += 2) {
+			dun->setTileFlagAt(x, y, false);
+		}
+	}
+	for (int y = 0; y < DMAXY; y++) {
+		for (int x = 0; x < DMAXX; x++) {
+			dun->setTileFlagAt(DBORDERX + x * 2, DBORDERX + y * 2, (drlgFlags[x][y] & DLRG_PROTECTED) != 0);
+		}
+	}
+	for (int y = 0; y < MAXDUNY; y++) {
+		for (int x = 0; x < MAXDUNX; x++) {
+			dun->setSubtileFlagAt(x, y, (dFlags[x][y] & BFLAG_POPULATED) != 0);
+		}
+	}
+}
+
 static void CreateLevel()
 {
     switch (currLvl._dDunType) {
@@ -117,6 +136,7 @@ static void LoadGameLevel(int lvldir)
         // fill post: pdungeon, dPiece, dSpecial, themeLoc, dFlags
         // reset: dMonster, dObject, dPlayer, dItem, dMissile, dLight+
         CreateLevel();
+		StoreProtections();
         if (pMegaTiles == NULL || pSolidTbl == NULL) {
             return;
         }
@@ -151,6 +171,7 @@ static void LoadGameLevel(int lvldir)
         FreeSetPieces();
     } else {
         LoadSetMap();
+		StoreProtections();
         IncProgress();
         // GetLevelMTypes();
         IncProgress();
@@ -202,6 +223,10 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
     IsHellfireGame = params.isHellfire;
     gnDifficulty = params.difficulty;
     assetPath = dun->getAssetPath();
+
+	dun->setWidth(MAXDUNX, true);
+	dun->setHeight(MAXDUNY, true);
+
     InitQuests(params.seedQuest);
     ViewX = 0;
     ViewY = 0;
@@ -226,12 +251,10 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
 		FreeLvlDungeon();
 	} while (--extraRounds >= 0);
 
-    dun->setWidth(MAXDUNX, true);
-    dun->setHeight(MAXDUNY, true);
     dun->setLevelType(currLvl._dType);
 
     for (int y = 0; y < MAXDUNY; y += 2) {
-        for (int x = 0; x < MAXDUNY; x += 2) {
+        for (int x = 0; x < MAXDUNX; x += 2) {
             dun->setTileAt(x, y, 0);
         }
     }
@@ -244,7 +267,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
     std::set<int> itemTypes;
     // std::vector<int> monUniques;
     for (int y = 0; y < MAXDUNY; y++) {
-        for (int x = 0; x < MAXDUNY; x++) {
+        for (int x = 0; x < MAXDUNX; x++) {
             if (hasSubtiles) {
                 dun->setSubtileAt(x, y, dPiece[x][y]);
             }

@@ -171,6 +171,7 @@
      <bool>true</bool>
     </property>
     <addaction name="actionCheckTiles_Dungeon"/>
+    <addaction name="actionCheckFlags_Dungeon"/>
     <addaction name="actionCheckItems_Dungeon"/>
     <addaction name="actionCheckMonsters_Dungeon"/>
     <addaction name="actionCheckObjects_Dungeon"/>
@@ -183,6 +184,7 @@
     <property name="toolTipsVisible">
      <bool>true</bool>
     </property>
+    <addaction name="actionRemoveFlags_Dungeon"/>
     <addaction name="actionRemoveItems_Dungeon"/>
     <addaction name="actionRemoveMonsters_Dungeon"/>
     <addaction name="actionRemoveObjects_Dungeon"/>
@@ -195,6 +197,7 @@
     <property name="toolTipsVisible">
      <bool>true</bool>
     </property>
+    <addaction name="actionLoadFlags_Dungeon"/>
     <addaction name="actionLoadItems_Dungeon"/>
     <addaction name="actionLoadMonsters_Dungeon"/>
     <addaction name="actionLoadObjects_Dungeon"/>
