@@ -1188,10 +1188,6 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
         // draw X if the tile-flag is set
         int flags = this->flags[dunCursorY][dunCursorX];
         if (flags & 1) {
-            // QString text = "X";
-            // QFontMetrics fm(dungeon.font());
-            // unsigned textWidth = fm.horizontalAdvance(text);
-            // dungeon.drawText(cellCenterX - textWidth / 2, drawCursorY - backHeight / 2 - fm.height() / 2, text);
             dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - 3 * backHeight / 4);
             dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - 3 * backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - backHeight / 4);
         }
@@ -1200,10 +1196,6 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
         // draw X if the subtile-flag is set
         int flags = this->flags[dunCursorY][dunCursorX];
         if (flags & 2) {
-            //QString text = "X";
-            //QFontMetrics fm(dungeon.font());
-            //unsigned textWidth = fm.horizontalAdvance(text);
-            //dungeon.drawText(cellCenterX - textWidth / 2, drawCursorY - backHeight / 2 - fm.height() / 2, text);
             dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - 3 * backHeight / 4);
             dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - 3 * backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - backHeight / 4);
         }
@@ -2657,12 +2649,12 @@ bool D1Dun::protectSubtiles()
 {
     ProgressDialog::incBar(tr("Checking subtiles..."), 1);
     bool result = false;
-    for (int posy = 0; posy < this->height; posy++) {
-        for (int posx = 0; posx < this->width; posx++) {
-            bool needsProtection = this->monsters[posy][posx].first != 0;
-            needsProtection |= this->objects[posy][posx] != 0;
+    for (int duny = 0; duny < this->height; duny++) {
+        for (int dunx = 0; dunx < this->width; dunx++) {
+            bool needsProtection = this->monsters[duny][dunx].first != 0;
+            needsProtection |= this->objects[duny][dunx] != 0;
             // TODO: skip if non-walkable?
-            if (needsProtection && this->setSubtileFlagAt(posx, posy, true)) {
+            if (needsProtection && this->setSubtileFlagAt(dunx, duny, true)) {
                 dProgress() << tr("Subtile at %1:%2 is now protected.").arg(dunx).arg(duny);
                 result = true;
             }
