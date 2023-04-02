@@ -228,14 +228,13 @@
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="LineEditWidget" name="seedLineEdit">
-        <property name="charWidth">
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2">
-       <layout class="QHBoxLayout" name="seedRefreshButtonLayout"/>
+       <layout class="QHBoxLayout" name="seedWithRefreshButtonLayout">
+        <widget class="LineEditWidget" name="seedLineEdit">
+         <property name="charWidth">
+          <number>10</number>
+         </property>
+        </widget>
+       </layout>
       </item>
       <item row="5" column="0">
        <widget class="QLabel">
@@ -245,14 +244,13 @@
        </widget>
       </item>
       <item row="5" column="1">
-       <widget class="LineEditWidget" name="questSeedLineEdit">
-        <property name="charWidth">
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="2">
-       <layout class="QHBoxLayout" name="questSeedRefreshButtonLayout"/>
+       <layout class="QHBoxLayout" name="questSeedRefreshButtonLayout">
+        <widget class="LineEditWidget" name="questSeedLineEdit">
+         <property name="charWidth">
+          <number>10</number>
+         </property>
+        </widget>
+       </layout>
       </item>
       <item row="6" column="0">
        <widget class="QLabel">

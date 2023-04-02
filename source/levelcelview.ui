@@ -1117,7 +1117,6 @@
           </property>
          </spacer>
         </item-->
-        <!--item alignment="right"-->
         <item>
          <widget class="QPushButton" name="tilesetLoadPushButton">
           <property name="text">
@@ -1139,7 +1138,7 @@
       </item>
       <item row="3" column="1" colspan="3">
        <layout class="QHBoxLayout">
-        <item alignment="Qt::AlignLeft">
+        <item>
          <widget class="QRadioButton" name="showNoMetaRadioButton">
           <property name="checked">
            <bool>true</bool>
@@ -1152,7 +1151,7 @@
           </attribute>
          </widget>
         </item>
-        <item alignment="Qt::AlignLeft">
+        <item>
          <widget class="QRadioButton" name="showRoomsMetaRadioButton">
           <property name="toolTip">
            <string>Draw rooms</string>
@@ -1161,6 +1160,13 @@
            <string notr="true">showMetaButtonGroup</string>
           </attribute>
          </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
         </item>
        </layout>
       </item>
