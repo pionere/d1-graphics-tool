@@ -210,11 +210,13 @@ private slots:
     void on_dunHeightEdit_returnPressed();
     void on_dunHeightEdit_escPressed();
 
-    void on_showTilesCheckBox_clicked();
-    void on_showRoomsCheckBox_clicked();
+    void on_showButtonGroup_idClicked();
+
     void on_showItemsCheckBox_clicked();
     void on_showMonstersCheckBox_clicked();
     void on_showObjectsCheckBox_clicked();
+
+    void on_showMetaButtonGroup_idClicked();
 
     void on_levelTypeComboBox_activated(int index);
     void on_dungeonDefaultTileLineEdit_returnPressed();

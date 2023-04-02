@@ -854,34 +854,14 @@
         </property>
        </layout>
       </item>
-      <item row="1" column="7" colspan="3">
-       <layout class="QHBoxLayout">
-        <item alignment="Qt::AlignCenter">
-         <widget class="QPushButton" name="moveUpButton">
-          <property name="minimumWidth">
-           <number>40</number>
-          </property>
-          <property name="maximumWidth">
-           <number>40</number>
-          </property>
-          <property name="toolTip">
-           <string>Move up</string>
-          </property>
-          <property name="text">
-           <string notr="true">A</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="2" column="0">
+      <item row="1" column="0">
        <widget class="QLabel">
         <property name="text">
          <string>Dungeon:</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1" colspan="4">
+      <item row="1" column="1" colspan="4">
        <layout class="QHBoxLayout">
         <item>
          <widget class="QComboBox" name="levelTypeComboBox">
@@ -942,7 +922,99 @@
         </item>
        </layout>
       </item>
-      <!--item row="2" column="5">
+      <item row="1" column="7" colspan="3">
+       <layout class="QHBoxLayout">
+        <item alignment="Qt::AlignCenter">
+         <widget class="QPushButton" name="moveUpButton">
+          <property name="minimumWidth">
+           <number>40</number>
+          </property>
+          <property name="maximumWidth">
+           <number>40</number>
+          </property>
+          <property name="toolTip">
+           <string>Move up</string>
+          </property>
+          <property name="text">
+           <string notr="true">A</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Entities:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="3">
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QRadioButton" name="showGridRadioButton">
+          <property name="toolTip">
+           <string>Draw grid only</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">showButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="showFloorRadioButton">
+          <property name="toolTip">
+           <string>Draw floor only</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">showButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="showTilesRadioButton">
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+          <property name="toolTip">
+           <string>Draw tiles</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">showButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel">
+          <property name="text">
+           <string notr="true">  </string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="showObjectsCheckBox">
+          <property name="toolTip">
+           <string>Draw objects</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="showMonstersCheckBox">
+          <property name="toolTip">
+           <string>Draw monsters</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="showItemsCheckBox">
+          <property name="toolTip">
+           <string>Draw items</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <!--item row="2" column="4" colspan="2">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -1065,61 +1137,29 @@
         </item>
        </layout>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel">
-        <property name="text">
-         <string>Entities:</string>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="1" colspan="3">
        <layout class="QHBoxLayout">
         <item>
-         <widget class="QCheckBox" name="showTilesCheckBox">
-          <property name="tristate">
+         <widget class="QRadioButton" name="showNoMetaRadioButton">
+          <property name="checked">
            <bool>true</bool>
           </property>
-          <property name="checkState">
-           <enum>Qt::Checked</enum>
-          </property>
           <property name="toolTip">
-           <string>Show tiles</string>
+           <string>Draw no meta data</string>
           </property>
+          <attribute name="buttonGroup">
+           <string notr="true">showMetaButtonGroup</string>
+          </attribute>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="showRoomsCheckBox">
+         <widget class="QCheckBox" name="showRoomsMetaRadioButton">
           <property name="toolTip">
-           <string>Show rooms</string>
+           <string>Draw rooms</string>
           </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel">
-          <property name="text">
-           <string notr="true">  </string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="showObjectsCheckBox">
-          <property name="toolTip">
-           <string>Show objects</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="showMonstersCheckBox">
-          <property name="toolTip">
-           <string>Show monsters</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="showItemsCheckBox">
-          <property name="toolTip">
-           <string>Show items</string>
-          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">showMetaButtonGroup</string>
+          </attribute>
          </widget>
         </item>
        </layout>
@@ -1422,5 +1462,8 @@
  <layoutdefault spacing="4" margin="4"/>
  <resources/>
  <connections/>
- <buttongroups/>
+ <buttongroups>
+  <buttongroup name="showButtonGroup"/>
+  <buttongroup name="showMetaButtonGroup"/>
+ </buttongroups>
 </ui>
