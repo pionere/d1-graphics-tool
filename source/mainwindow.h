@@ -170,6 +170,8 @@ private slots:
     void on_actionPatchDungeon_Dungeon_triggered();
     void on_actionResetTiles_Dungeon_triggered();
     void on_actionResetSubtiles_Dungeon_triggered();
+    void on_actionProtectTiles_Dungeon_triggered();
+    void on_actionProtectSubtiles_Dungeon_triggered();
     void on_actionCheckTiles_Dungeon_triggered();
     void on_actionCheckFlags_Dungeon_triggered();
     void on_actionCheckItems_Dungeon_triggered();

@@ -2798,6 +2798,24 @@ void LevelCelView::resetDungeonSubtiles()
     }
 }
 
+void LevelCelView::protectDungeonTiles()
+{
+    bool change = this->dun->protectTiles();
+    if (change) {
+        // update the view - done by the caller
+        // this->displayFrame();
+    }
+}
+
+void LevelCelView::protectDungeonSubtiles()
+{
+    bool change = this->dun->protectSubtiles();
+    if (change) {
+        // update the view - done by the caller
+        // this->displayFrame();
+    }
+}
+
 void LevelCelView::checkTiles() const
 {
     this->dun->checkTiles();

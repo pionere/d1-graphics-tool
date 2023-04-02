@@ -1162,6 +1162,13 @@
          </widget>
         </item>
         <item>
+         <widget class="QLabel">
+          <property name="text">
+           <string notr="true">  </string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QRadioButton" name="showTileMetaRadioButton">
           <property name="toolTip">
            <string>Draw tile protections</string>

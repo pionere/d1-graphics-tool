@@ -216,6 +216,9 @@
     <addaction name="actionResetTiles_Dungeon"/>
     <addaction name="actionResetSubtiles_Dungeon"/>
     <addaction name="separator"/>
+    <addaction name="actionProtectTiles_Dungeon"/>
+    <addaction name="actionProtectSubtiles_Dungeon"/>
+    <addaction name="separator"/>
     <addaction name="menuDungeonCheck"/>
     <addaction name="menuDungeonRemove"/>
     <addaction name="menuDungeonLoad"/>
@@ -596,12 +599,36 @@
     <string>Reinitialize the subtiles based on the tiles</string>
    </property>
   </action>
+  <action name="actionProtectTiles_Dungeon">
+   <property name="text">
+    <string>Protect Tiles</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark tiles protected if the tile is set or there is an entity on the tile</string>
+   </property>
+  </action>
+  <action name="actionProtectSubtiles_Dungeon">
+   <property name="text">
+    <string>Protect Subtiles</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark subtiles protected if there is an entity on the tile</string>
+   </property>
+  </action>
   <action name="actionCheckTiles_Dungeon">
    <property name="text">
     <string>Tiles</string>
    </property>
    <property name="toolTip">
     <string>List inconsistent tiles/subtiles</string>
+   </property>
+  </action>
+  <action name="actionCheckFlags_Dungeon">
+   <property name="text">
+    <string>Flags</string>
+   </property>
+   <property name="toolTip">
+    <string>List inconsistent flags</string>
    </property>
   </action>
   <action name="actionCheckItems_Dungeon">
@@ -634,6 +661,22 @@
    </property>
    <property name="toolTip">
     <string>List inconsistent items/monsters/objects</string>
+   </property>
+  </action>
+  <action name="actionRemoveFlags_Dungeon">
+   <property name="text">
+    <string>Flags</string>
+   </property>
+   <property name="toolTip">
+    <string>Remove every flag from the dungeon</string>
+   </property>
+  </action>
+  <action name="actionLoadFlags_Dungeon">
+   <property name="text">
+    <string>Flags</string>
+   </property>
+   <property name="toolTip">
+    <string>Load flags from another dungeon</string>
    </property>
   </action>
   <action name="actionRemoveItems_Dungeon">

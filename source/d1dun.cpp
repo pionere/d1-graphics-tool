@@ -516,7 +516,7 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
                 }
                 numLayers++;
             } else {
-                dProgressWarn() << tr("Rooms are not defined in the DUN file.");
+                ; // dProgressWarn() << tr("Rooms are not defined in the DUN file.");
             }
 
             if (dataSize > 0) {
@@ -2610,6 +2610,68 @@ bool D1Dun::resetSubtiles()
         dProgress() << tr("No change was necessary.");
     } else {
         if (this->type == D1DUN_TYPE::RAW) {
+            this->modified = true;
+        }
+    }
+
+    ProgressDialog::decBar();
+    return result;
+}
+
+bool D1Dun::protectTiles()
+{
+    ProgressDialog::incBar(tr("Checking tiles..."), 1);
+    bool result = false;
+    for (int tilePosY = 0; tilePosY < this->height / TILE_HEIGHT; tilePosY++) {
+        for (int tilePosX = 0; tilePosX < this->width / TILE_WIDTH; tilePosX++) {
+            bool needsProtection = this->tiles[tilePosY][tilePosX] > 0; // !0 && !UNDEF_TILE
+            int dunx = tilePosX * TILE_WIDTH;
+            int duny = tilePosY * TILE_HEIGHT;
+            needsProtection |= this->monsters[duny + 0][dunx + 0].first != 0;
+            needsProtection |= this->monsters[duny + 0][dunx + 1].first != 0;
+            needsProtection |= this->monsters[duny + 1][dunx + 0].first != 0;
+            needsProtection |= this->monsters[duny + 1][dunx + 1].first != 0;
+            needsProtection |= this->objects[duny + 0][dunx + 0] != 0;
+            needsProtection |= this->objects[duny + 0][dunx + 1] != 0;
+            needsProtection |= this->objects[duny + 1][dunx + 0] != 0;
+            needsProtection |= this->objects[duny + 1][dunx + 1] != 0;
+            if (needsProtection && this->setTileFlagAt(dunx, duny, true)) {
+                dProgress() << tr("Tile at %1:%2 is now protected.").arg(dunx).arg(duny);
+                result = true;
+            }
+        }
+    }
+    if (!result) {
+        dProgress() << tr("No change was necessary.");
+    } else {
+        if (this->type != D1DUN_TYPE::RAW) {
+            this->modified = true;
+        }
+    }
+
+    ProgressDialog::decBar();
+    return result;
+}
+
+bool D1Dun::protectSubtiles()
+{
+    ProgressDialog::incBar(tr("Checking subtiles..."), 1);
+    bool result = false;
+    for (int posy = 0; posy < this->height; posy++) {
+        for (int posx = 0; posx < this->width; posx++) {
+            bool needsProtection = this->monsters[posy][posx].first != 0;
+            needsProtection |= this->objects[posy][posx] != 0;
+            // TODO: skip if non-walkable?
+            if (needsProtection && this->setSubtileFlagAt(posx, posy, true)) {
+                dProgress() << tr("Subtile at %1:%2 is now protected.").arg(dunx).arg(duny);
+                result = true;
+            }
+        }
+    }
+    if (!result) {
+        dProgress() << tr("No change was necessary.");
+    } else {
+        if (this->type != D1DUN_TYPE::RAW) {
             this->modified = true;
         }
     }

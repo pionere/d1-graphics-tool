@@ -187,6 +187,8 @@ public:
 
     bool resetTiles();
     bool resetSubtiles();
+    bool protectTiles();
+    bool protectSubtiles();
 
     void patch(int dunFileIndex); // dun_file_index
 

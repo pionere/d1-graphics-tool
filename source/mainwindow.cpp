@@ -1701,7 +1701,7 @@ void MainWindow::on_actionPatchDungeon_Dungeon_triggered()
 
 void MainWindow::on_actionResetTiles_Dungeon_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
 
     this->levelCelView->resetDungeonTiles();
 
@@ -1711,9 +1711,29 @@ void MainWindow::on_actionResetTiles_Dungeon_triggered()
 
 void MainWindow::on_actionResetSubtiles_Dungeon_triggered()
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
 
     this->levelCelView->resetDungeonSubtiles();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void on_actionProtectTiles_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->protectDungeonTiles();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void on_actionProtectSubtiles_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->protectDungeonSubtiles();
 
     // Clear loading message from status bar
     ProgressDialog::done();
