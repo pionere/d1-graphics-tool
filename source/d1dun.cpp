@@ -1188,20 +1188,24 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
         // draw X if the tile-flag is set
         int flags = this->flags[dunCursorY][dunCursorX];
         if (flags & 1) {
-            QString text = "X";
-            QFontMetrics fm(dungeon.font());
-            unsigned textWidth = fm.horizontalAdvance(text);
-            dungeon.drawText(cellCenterX - textWidth / 2, drawCursorY - backHeight - fm.height() / 2, text);
+            // QString text = "X";
+            // QFontMetrics fm(dungeon.font());
+            // unsigned textWidth = fm.horizontalAdvance(text);
+            // dungeon.drawText(cellCenterX - textWidth / 2, drawCursorY - backHeight / 2 - fm.height() / 2, text);
+            dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - 3 * backHeight / 4);
+            dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - 3 * backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - backHeight / 4);
         }
     }
     if (params.showSubtileFlags) {
         // draw X if the subtile-flag is set
         int flags = this->flags[dunCursorY][dunCursorX];
         if (flags & 2) {
-            QString text = "X";
-            QFontMetrics fm(dungeon.font());
-            unsigned textWidth = fm.horizontalAdvance(text);
-            dungeon.drawText(cellCenterX - textWidth / 2, drawCursorY - backHeight - fm.height() / 2, text);
+            //QString text = "X";
+            //QFontMetrics fm(dungeon.font());
+            //unsigned textWidth = fm.horizontalAdvance(text);
+            //dungeon.drawText(cellCenterX - textWidth / 2, drawCursorY - backHeight / 2 - fm.height() / 2, text);
+            dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - 3 * backHeight / 4);
+            dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - 3 * backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - backHeight / 4);
         }
     }
 }

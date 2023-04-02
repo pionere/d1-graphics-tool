@@ -336,8 +336,10 @@ void LevelCelView::update()
         int posy = this->currentDunPosY;
         int tileRef = this->dun->getTileAt(posx, posy);
         this->ui->dungeonTileLineEdit->setText(tileRef == UNDEF_TILE ? QStringLiteral("?") : QString::number(tileRef));
+        this->ui->dungeonTileFlagCheckBox->setChecked(this->dun->getTileFlagAt(posx, posy);
         int subtileRef = this->dun->getSubtileAt(posx, posy);
         this->ui->dungeonSubtileLineEdit->setText(subtileRef == UNDEF_SUBTILE ? QStringLiteral("?") : QString::number(subtileRef));
+        this->ui->dungeonSubtileFlagCheckBox->setChecked(this->dun->getSubtileFlagAt(posx, posy);
         int itemIndex = this->dun->getItemAt(posx, posy);
         this->ui->dungeonItemLineEdit->setText(QString::number(itemIndex));
         this->ui->dungeonItemComboBox->setCurrentIndex(this->ui->dungeonItemComboBox->findData(itemIndex));
