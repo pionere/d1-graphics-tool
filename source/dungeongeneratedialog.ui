@@ -229,6 +229,12 @@
       </item>
       <item row="4" column="1">
        <layout class="QHBoxLayout" name="seedWithRefreshButtonLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
         <item>
          <widget class="LineEditWidget" name="seedLineEdit">
           <property name="charWidth">
@@ -247,6 +253,12 @@
       </item>
       <item row="5" column="1">
        <layout class="QHBoxLayout" name="questSeedWithRefreshButtonLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
         <item>
          <widget class="LineEditWidget" name="questSeedLineEdit">
           <property name="charWidth">
@@ -279,9 +291,16 @@
          <number>5</number>
         </property>
         <property name="toolTip">
-         <string>Number of addition maps to generate</string>
+         <string>Number of extra maps to generate</string>
         </property>
        </widget>
+      </item>
+      <item row="7" column="2">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>
