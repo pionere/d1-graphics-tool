@@ -766,8 +766,8 @@ bool D1Dun::save(const SaveAsParam &params)
             }
         }
         // report if the requirement of the game is not meet
-        if (numLayers < 2) {
-            dProgressWarn() << tr("The DUN file has to have layers for flags and monsters to be used in the game.");
+        if (numLayers < 1) {
+            dProgressWarn() << tr("The DUN file has to have a layer for flags to be used in the game.");
         }
     } else {
         // rdun - subtiles must be defined

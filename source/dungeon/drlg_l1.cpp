@@ -904,13 +904,13 @@ static void DRLG_LoadL1SP()
 		pSetPieces[0]._sptype = SPT_BANNER;
 	} else if (QuestStatus(Q_SKELKING)) {
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L1Data\\SKngDO.DUN");
-		if (pSetPieces[0]._spData != NULL) {
+		/*if (pSetPieces[0]._spData != NULL) {
 		// patch set-piece to use common tiles - SKngDO.DUN
 		pSetPieces[0]._spData[(2 + 5 + 3 * 7) * 2] = 203;
 		pSetPieces[0]._spData[(2 + 5 + 4 * 7) * 2] = 22;
 		// patch set-piece to use common tiles and make the inner tile at the entrance non-walkable - SKngDO.DUN
 		pSetPieces[0]._spData[(2 + 5 + 2 * 7) * 2] = 203;
-		}
+		}*/
 		pSetPieces[0]._sptype = SPT_SKELKING;
 	} else if (QuestStatus(Q_BUTCHER)) {
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L1Data\\Butcher.DUN");
@@ -2732,7 +2732,7 @@ static void DRLG_L1()
 		// load pre-map
 		MemFreeDbg(pSetPieces[0]._spData);
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L1Data\\Banner2.DUN");
-		if (pSetPieces[0]._spData != NULL) {
+		/*if (pSetPieces[0]._spData != NULL) {
 		// patch the map - Banner2.DUN
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// - replace the wall with door
@@ -2756,7 +2756,7 @@ static void DRLG_L1()
 		lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + 8 + 12 * 8 * 2] = SwapLE16((UMT_SNOTSPIL + 1) | (1 << 15));
 		// - add sign-chest
 		lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + 8 * 8 * 2 * 2 + 10 + 3 * 8 * 2] = SwapLE16(90);
-		}
+		}*/
 		DRLG_DrawMap(0);
 	} else if (pSetPieces[0]._sptype == SPT_SKELKING) {
 		/*int x, y;

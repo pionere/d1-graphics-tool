@@ -54,7 +54,7 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Dun *dun)
             this->ui->dunLayerTilesRadioButton->setChecked(true);
             break;
         case 1:
-            this->ui->dunLayerItemsRadioButton->setChecked(true);
+            this->ui->dunLayerFlagsRadioButton->setChecked(true);
             break;
         case 2:
             this->ui->dunLayerMonstersRadioButton->setChecked(true);
@@ -189,7 +189,7 @@ void SaveAsDialog::on_saveButton_clicked()
     params.dunFilePath = this->ui->outputDunFileEdit->text();
     if (this->ui->dunLayerTilesRadioButton->isChecked()) {
         params.dunLayerNum = 0;
-    } else if (this->ui->dunLayerItemsRadioButton->isChecked()) {
+    } else if (this->ui->dunLayerFlagsRadioButton->isChecked()) {
         params.dunLayerNum = 1;
     } else if (this->ui->dunLayerMonstersRadioButton->isChecked()) {
         params.dunLayerNum = 2;

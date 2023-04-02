@@ -351,13 +351,15 @@ static void DRGL_L4PatchSetPiece(BYTE *pMap)
 				// - tiles with objects
 				if (lm[w * h + w * h * 2 * 2 + x * 2 + y * 2 * w] != 0 || lm[w * h + w * h * 2 * 2 + x * 2 + 1 + y * 2 * w] != 0
 				 || lm[w * h + w * h * 2 * 2 + x * 2 + (y * 2 + 1) * w] != 0 || lm[w * h + w * h * 2 * 2 + x * 2 + 1 + (y * 2 + 1) * w] != 0) {
-					lm[x + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+					lm[w * h + x + y * w] = 1 | (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4); // lm[x + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
 				}
 				// - tiles with monsters
 				if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + y * 2 * w] != 0 || lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + 1 + y * 2 * w] != 0
 				 || lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + (y * 2 + 1) * w] != 0 || lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + 1 + (y * 2 + 1) * w] != 0) {
-					lm[x + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
+					lm[w * h + x + y * w] = 1; // lm[x + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
 				}
+			} else {
+				lm[w * h + x + y * w] = 1 | (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4);
 			}
 		}
 	}
@@ -2114,6 +2116,13 @@ static void DRLG_L4()
 		//lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 3 + 6 * 7 * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
 		//lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 3 * 7 * 2] = SwapLE16((UMT_RED_VEX + 1) | (1 << 15));
 		//lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 9 * 7 * 2] = SwapLE16((UMT_BLACKJADE + 1) | (1 << 15));
+		}
+	}
+	for (int i = lengthof(pSetPieces) - 1; i >= 0; i--) {
+		if (pSetPieces[i]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
+			DRGL_L4PatchSetPiece(pSetPieces[i]._spData);
+		} else {
+			pSetPieces[i]._sptype = SPT_NONE;
 		}
 	}
 }

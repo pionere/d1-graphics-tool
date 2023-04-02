@@ -818,6 +818,17 @@ static void DRLG_LoadL2SP()
 					pSetPieces[0]._spData[(2 + x + y * 11) * 2] = DEFAULT_MEGATILE_L2;
 			}
 		}*/
+		// protect the main structure
+		for (int y = 0; y < 7; y++) {
+			for (int x = 0; x < 7; x++) {
+				pSetPieces[0]._spData[(2 + 11 * 11 + x + y * 11) * 2] = 1;
+			}
+		}
+		for (int y = 4; y < 11; y++) {
+			for (int x = 4; x < 11; x++) {
+				pSetPieces[0]._spData[(2 + 11 * 11 + x + y * 11) * 2] = 1;
+			}
+		}
 		pSetPieces[0]._sptype = SPT_BLIND;
 	} else if (QuestStatus(Q_BLOOD)) {
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L2Data\\Blood1.DUN");
@@ -826,6 +837,23 @@ static void DRLG_LoadL2SP()
 		}
 		// ensure the inner tiles are reserved
 		// pSetPieces[0]._spData[(2 + 5 + 12 * 10) * 2] = 3;
+		// ensure the changing tiles are reserved
+		for (int y = 3; y <= 7; y++) {
+			for (int x = 0; x <= 9; x++) {
+				pSetPieces[0]._spData[(2 + 10 * 16 + x + y * 10) * 2] = 1;
+			}
+		}
+		for (int y = 0; y < 3; y++) {
+			for (int x = 2; x <= 6; x++) {
+				pSetPieces[0]._spData[(2 + 10 * 16 + x + y * 10) * 2] = 1;
+			}
+		}
+		// protect the main room
+		for (int y = 7; y < 16; y++) {
+			for (int x = 2; x < 8; x++) {
+				pSetPieces[0]._spData[(2 + 10 * 16 + x + y * 10) * 2] = 1;
+			}
+		}
 		pSetPieces[0]._sptype = SPT_BLOOD;
 	} else if (QuestStatus(Q_BCHAMB)) {
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L2Data\\Bonestr2.DUN");
@@ -836,6 +864,12 @@ static void DRLG_LoadL2SP()
 		// - remove tile to leave space for shadow
 		pSetPieces[0]._spData[(2 + 2 + 4 * 7) * 2] = 0;
 		pSetPieces[0]._sptype = SPT_BCHAMB;
+		// protect the main room
+		for (int y = 1; y < 6; y++) {
+			for (int x = 1; x < 6; x++) {
+				pSetPieces[0]._spData[(2 + 7 * 7 + x + y * 7) * 2] = 1;
+			}
+		}
 	}
 }
 
@@ -2443,6 +2477,17 @@ static void DRLG_L2()
 		// patch the map - Blind2.DUN
 		// replace the door with wall
 		pSetPieces[0]._spData[(2 + 4 + 3 * 11) * 2] = 25;
+		// protect the inner subtiles
+		for (int y = 0; y < 7; y++) {
+			for (int x = 0; x < 7; x++) {
+				pSetPieces[0]._spData[(2 + 11 * 11 + x + y * 11) * 2] = (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4);
+			}
+		}
+		for (int y = 4; y < 11; y++) {
+			for (int x = 4; x < 11; x++) {
+				pSetPieces[0]._spData[(2 + 11 * 11 + x + y * 11) * 2] = (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4);
+			}
+		}
 		DRLG_DrawMap(0);
 	} else if (pSetPieces[0]._sptype == SPT_BLOOD) {
 		// load pre-map
@@ -2474,6 +2519,12 @@ static void DRLG_L2()
 		lm[2 + 10 * 16 + 10 * 16 * 2 * 2 + 10 * 16 * 2 * 2 + 6 + 8 * 10 * 2] = 0;
 		lm[2 + 10 * 16 + 10 * 16 * 2 * 2 + 10 * 16 * 2 * 2 + 6 + 10 * 10 * 2] = 0;
 		lm[2 + 10 * 16 + 10 * 16 * 2 * 2 + 10 * 16 * 2 * 2 + 6 + 12 * 10 * 2] = 0;
+		// protect the main room
+		for (int y = 7; y < 16; y++) {
+			for (int x = 2; x < 8; x++) {
+				lm[2 + 10 * 16 + x + y * 10] = (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4);
+			}
+		}
 		}
 		DRLG_DrawMap(0);
 	} else if (pSetPieces[0]._sptype == SPT_BCHAMB) {
@@ -2485,6 +2536,12 @@ static void DRLG_L2()
 		// shadow of the external-left column
 		pSetPieces[0]._spData[(2 + 0 + 4 * 7) * 2] = 48;
 		pSetPieces[0]._spData[(2 + 0 + 5 * 7) * 2] = 50;
+		// protect the main room
+		for (int y = 1; y < 6; y++) {
+			for (int x = 1; x < 6; x++) {
+				pSetPieces[0]._spData[(2 + 7 * 7 + x + y * 7) * 2] = (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4);
+			}
+		}
 		}
 		DRLG_DrawMap(0);
 	}
