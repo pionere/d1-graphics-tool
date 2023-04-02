@@ -229,18 +229,25 @@
       </item>
       <item row="4" column="1">
        <layout class="QHBoxLayout" name="seedWithRefreshButtonLayout">
-        <property name="leftMargin">
+        <!--property name="leftMargin">
          <number>0</number>
         </property>
         <property name="rightMargin">
          <number>0</number>
-        </property>
+        </property-->
         <item>
          <widget class="LineEditWidget" name="seedLineEdit">
           <property name="charWidth">
            <number>10</number>
           </property>
          </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
         </item>
        </layout>
       </item>
@@ -253,18 +260,25 @@
       </item>
       <item row="5" column="1">
        <layout class="QHBoxLayout" name="questSeedWithRefreshButtonLayout">
-        <property name="leftMargin">
+        <!--property name="leftMargin">
          <number>0</number>
         </property>
         <property name="rightMargin">
          <number>0</number>
-        </property>
+        </property-->
         <item>
          <widget class="LineEditWidget" name="questSeedLineEdit">
           <property name="charWidth">
            <number>10</number>
           </property>
          </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
         </item>
        </layout>
       </item>
