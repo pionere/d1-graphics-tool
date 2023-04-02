@@ -19,8 +19,10 @@ DungeonGenerateDialog::DungeonGenerateDialog(QWidget *parent)
 
     QLayout *layout = this->ui->seedWithRefreshButtonLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_BrowserReload, tr("Generate"), this, &DungeonGenerateDialog::on_actionGenerateSeed_triggered);
+    layout->addStretch();
     layout = this->ui->questSeedWithRefreshButtonLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_BrowserReload, tr("Generate"), this, &DungeonGenerateDialog::on_actionGenerateQuestSeed_triggered);
+    layout->addStretch();
 }
 
 DungeonGenerateDialog::~DungeonGenerateDialog()
