@@ -5,6 +5,10 @@
  */
 #include "all.h"
 
+#include <QString>
+
+#include "../progressdialog.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 /** Contains the mega tile IDs of the (mega-)map. */
@@ -704,6 +708,9 @@ static void DRLG_FTVR(unsigned offset)
 	if (tvp[offset] != 0) {
 		return;
 	}
+	if (numtrans == 1 || numtrans == 2 || numtrans == 6) {
+		dProgress() << QString("%1:%2 set to %3").arg(offset / DSIZEY).arg(offset % DSIZEY).arg(numtrans);
+	}
 
 	tvp[offset] = numtrans;
 	BYTE *tp = (BYTE*)&dPiece[0][0];
@@ -801,13 +808,18 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 		numtrans++;
 	}
 
-	static_assert(DBORDERY + DBORDERX * MAXDUNY > DSIZEY, "DRLG_FloodTVal requires large enough border(x) to use memcpy instead of memmove and simple zerofill.");
+	static_assert(DBORDERY + DBORDERX * MAXDUNY > DSIZEY, "DRLG_FloodTVal requires large enough border(x) to use memcpy instead of memmove.");
 	for (i = DSIZEX - 1; (int)i >= 0; i--) {
 		BYTE *tvpSrc = tvp + i * DSIZEY;
 		BYTE *tvpDst = tvp + (i + DBORDERX) * MAXDUNY + DBORDERY;
 		memcpy(tvpDst, tvpSrc, DSIZEY);
-		//memset(tvpSrc, 0, i >= DBORDERX ? DBORDERY : DSIZEY);
-		memset(tvpSrc, 0, DSIZEY);
+	}
+
+	memset(tvp, 0, MAXDUNY * DBORDERX + DBORDERY);
+	tvp += MAXDUNY * DBORDERX + MAXDUNY;
+	while (tvp < (BYTE*)&dTransVal[0][0] + DSIZEX * DSIZEY) {
+		memset(tvp, 0, DBORDERY);
+		tvp += MAXDUNY;
 	}
 }
 

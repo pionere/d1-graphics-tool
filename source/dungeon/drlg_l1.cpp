@@ -2478,13 +2478,6 @@ static void DRLG_L1InitTransVals()
 
 	static_assert(sizeof(drlg.transvalMap) == sizeof(dungeon), "transvalMap vs dungeon mismatch.");
 	memcpy(drlg.transvalMap, dungeon, sizeof(dungeon));
-	for (i = 0; i < DMAXX; i++) {
-		for (j = 0; j < DMAXY; j++) {
-			if (drlg.transvalMap[i][j] == 0) {
-				drlg.transvalMap[i][j] = BASE_MEGATILE_L1;
-			}
-		}
-	}
 
 	DRLG_InitTrans();
 	const BYTE *floorTypes = L1FTYPES;
