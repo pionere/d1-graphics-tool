@@ -239,7 +239,7 @@ const BYTE L1FTYPES[207] = {
 	false, false, false, false, false, false, false, false, false, false, //180..
 	false, false, false, false, false, false, false, false, false, false, //190..
 	false, false, false, false, false, false, false*/
-	 0, 10, 12,  8,  8,  8, 10, 12, 10, 12,
+	 0, 10, 12, 14,  8,  8, 10, 12, 10, 12,
 	 8, 10, 12, 15,  8, 14, 14, 14,  0,  0, // 10..
 	 0,  0,  0,  0,  0, 10, 12,  8,  8,  8, // 20..
 	10, 12, 10, 12,  8, 10, 12,  8,  8,  8, // 30..
