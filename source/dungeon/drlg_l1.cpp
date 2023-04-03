@@ -2478,7 +2478,7 @@ static void DRLG_L1InitTransVals()
 	memcpy(drlg.transvalMap, dungeon, sizeof(dungeon));
 
 	DRLG_InitTrans();
-	const bool *floorTypes = L1FTYPES;
+	const BYTE *floorTypes = L1FTYPES;
 #ifdef HELLFIRE
 	if (currLvl._dType == DTYPE_CRYPT) {
 		floorTypes = L5FTYPES;
