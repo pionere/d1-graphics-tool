@@ -757,9 +757,9 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 			// 1. subtile
 			if (tvm & (1 << 0)) {
 				tpm = (1 << 3) | (1 << 4) | (1 << 5); // DIR_NW, DIR_N, DIR_NE
-				if (tvm & (1 << 1))
-					tpm |= (1 << 7); // DIR_SE
 				if (tvm & (1 << 2))
+					tpm |= (1 << 7); // DIR_SE
+				if (tvm & (1 << 1))
 					tpm |= (1 << 1); // DIR_SW
 			} else {
 				tpm = 0;
@@ -790,9 +790,9 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 			// 4. subtile
 			if (tvm & (1 << 3)) {
 				tpm = (1 << 7) | (1 << 0) | (1 << 1); // DIR_SE, DIR_S, DIR_SW
-				if (tvm & (1 << 1))
-					tpm |= (1 << 5); // DIR_NE
 				if (tvm & (1 << 2))
+					tpm |= (1 << 5); // DIR_NE
+				if (tvm & (1 << 1))
 					tpm |= (1 << 3); // DIR_NW
 			} else {
 				tpm = 0;
