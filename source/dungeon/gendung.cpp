@@ -801,13 +801,13 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 		numtrans++;
 	}
 
-	static_assert(DBORDERX + DBORDERY * MAXDUNX > DSIZEX, "DRLG_FloodTVal requires large enough border(y) to use memcpy instead of memmove and simple zerofill.");
+	/*static_assert(DBORDERX + DBORDERY * MAXDUNX > DSIZEX, "DRLG_FloodTVal requires large enough border(y) to use memcpy instead of memmove and simple zerofill.");
 	for (i = DSIZEY - 1; (int)i >= 0; i--) {
 		BYTE *tvpSrc = tvp + i * DSIZEX;
 		BYTE *tvpDst = tvp + (i + DBORDERY) * MAXDUNX + DBORDERX;
 		memcpy(tvpDst, tvpSrc, DSIZEX);
 		memset(tvpSrc, 0, i >= DBORDERY ? DBORDERX : DSIZEX);
-	}
+	}*/
 }
 
 void DRLG_LoadSP(int idx, BYTE bv)
