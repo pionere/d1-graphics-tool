@@ -59,9 +59,9 @@ const BYTE L2BTYPES[161] = {
 /*
  * Specifies whether the given tile ID should spread the room ID (transval).
  */
-const bool L2FTYPES[161] = {
+const BYTE L2FTYPES[161] = {
 	// clang-format off
-	false, false, false,  true, false, false, false, false, false, false,
+	/*false, false, false,  true, false, false, false, false, false, false,
 	false, false, false, false, false, false, false, false, false, false, // 10..
 	false, false, false, false, false, false, false, false, false, false, // 20..
 	false, false, false, false, false, false, false, false, false, false, // 30..
@@ -77,7 +77,24 @@ const bool L2FTYPES[161] = {
 	 true,  true, false, false,  true,  true, false, false,  true,  true, //130..
 	false, false, false, false, false, false, false, false, false, false, //140..
 	false, false, false, false, false, false, false, false,  true,  true, //150..
-	false
+	false*/
+	 0, 10, 12, 15, 10, 12, 14, 10,  8, 12,
+	 0,  0,  0,  0,  0,  0,  0,  0,  0, 10, // 10..
+	10, 12, 12, 10, 10, 10, 10, 10, 10, 12, // 20..
+	12, 12, 12, 12, 10, 10, 12, 12,  8, 10, // 30..
+	12,  8,  8,  8, 15, 15, 15, 15, 15, 15, // 40..
+	15, 15, 10, 10, 10,  8, 12, 12, 12, 15, // 50..
+	15, 15, 15, 15, 15, 15, 15, 15, 10, 10, // 60..
+	10,  7, 15, 12, 12, 12, 15, 10,  0, 10, // 70..
+	10, 10, 10, 14, 12, 12, 12,  8, 15, 15, // 80..
+	15, 15, 15, 15, 15, 15, 15, 15, 15, 15, // 90..
+	15, 15, 15, 15, 15, 15, 15, 15, 15, 15, //100..
+	15, 15, 15, 15, 15, 15, 10, 10, 12, 12, //110..
+	15, 15, 15, 15, 10, 10, 12, 12, 15, 15, //120..
+	15, 15, 10, 10, 15, 15, 12, 12, 15, 15, //130..
+	10, 12, 12,  0,  0,  0,  0,  0,  0,  0, //140..
+	10, 12, 10, 12, 10, 12, 10, 12, 15, 15, //150..
+	10
 	// clang-format on
 };
 /** Miniset: Stairs up. */
@@ -2023,15 +2040,9 @@ static void DRLG_L2InitTransVals()
 			}
 		}
 	}
-	// prepare transvalMap
-	for (i = 0; i < DMAXX; i++) {
-		for (j = 0; j < DMAXY; j++) {
-			drlg.transvalMap[i][j] = L2FTYPES[drlg.transvalMap[i][j]];
-		}
-	}
 
 	DRLG_InitTrans();
-	DRLG_FloodTVal();
+	DRLG_FloodTVal(L2FTYPES);
 	DRLG_L2TransFix();
 }
 
@@ -2490,6 +2501,18 @@ static void DRLG_L2()
 		}
 		DRLG_DrawMap(0);
 	} else if (pSetPieces[0]._sptype == SPT_BLOOD) {
+		// patch transvals to prevent transparent walls in the central room
+		int x = DBORDERX + 2 * pSetPieces[0]._spx;
+		int y = DBORDERY + 2 * pSetPieces[0]._spy;
+		BYTE tv0 = dTransVal[x + 7][y + 15];
+		BYTE tv1 = numtrans;
+		numtrans++;
+		for (int i = x + 4; i < x + 16; i++) {
+			for (int j = y + 0; j < y + 15; j++) {
+				if (dTransVal[i][j] == tv0)
+					dTransVal[i][j] = tv1;
+			}
+		}
 		// load pre-map
 		MemFreeDbg(pSetPieces[0]._spData);
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L2Data\\Blood2.DUN");

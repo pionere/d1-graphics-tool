@@ -196,9 +196,9 @@ const BYTE L4BTYPES[138] = {
 /*
  * Specifies whether the given tile ID should spread the room ID (transval).
  */
-const bool L4FTYPES[138] = {
+const BYTE L4FTYPES[138] = {
 	// clang-format off
-	false, false, false, false, false, false,  true, false, false, false,
+	/*false, false, false, false, false, false,  true, false, false, false,
 	false, false, false, false, false, false, false, false, false, false, // 10..
 	false, false, false, false, false, false, false, false, false, false, // 20..
 	false,  true,  true, false, false, false,  true,  true, false,  true, // 30..
@@ -211,7 +211,21 @@ const bool L4FTYPES[138] = {
 	 true,  true,  true,  true,  true,  true,  true,  true,  true,  true, //100..
 	 true,  true,  true,  true,  true, false, false, false, false, false, //110..
 	false, false, false, false, false, false, false, false, false,  true, //120..
-	 true, false, false, false,  true,  true, false, false,               //130..
+	 true, false, false, false,  true,  true, false, false,               //130..*/
+	 0, 10, 12,  8, 10, 12, 15, 10, 12,  8,
+	 8,  8,  8, 10, 12,  8,  8,  8,  0,  0, // 10..
+	 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 20..
+	 0, 15, 15,  0,  0,  0,  0, 15,  0, 15, // 30..
+	15, 15, 12,  0,  0,  3, 13, 15, 15, 15, // 40..
+	15, 15, 10, 10, 15, 15, 12, 12, 15, 15, // 50..
+	15, 10, 12, 10, 12, 10, 12, 10, 10, 12, // 60..
+	12, 15, 15, 15, 15, 15,  8,  8,  8,  8, // 70..
+	 8, 10, 12, 10, 15, 15, 15, 15, 15, 15, // 80..
+	15, 15, 15, 15, 15, 15, 15, 15, 15, 15, // 90..
+	15, 15, 15, 15, 15, 15, 15, 15, 15, 15, //100..
+	15, 15, 15, 15, 15, 15,  0,  0,  0,  0, //110..
+	 0,  0,  0,  0,  0,  0,  0,  0,  0, 15, //120..
+	15,  0,  0,  0,  0, 15,  0,  0,         //130..
 	// clang-format on
 };
 /*
@@ -1860,15 +1874,9 @@ static void DRLG_L4InitTransVals()
 			}
 		}
 	}
-	// prepare transvalMap
-	for (i = 0; i < DMAXX; i++) {
-		for (j = 0; j < DMAXY; j++) {
-			drlg.transvalMap[i][j] = L4FTYPES[drlg.transvalMap[i][j]];
-		}
-	}
 
 	DRLG_InitTrans();
-	DRLG_FloodTVal();
+	DRLG_FloodTVal(L4FTYPES);
 	DRLG_L4TransFix();
 }
 

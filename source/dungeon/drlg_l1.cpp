@@ -214,11 +214,11 @@ const BYTE L1BTYPES[] = {
 	// clang-format on
 };
 /*
- * Specifies whether the given tile ID should spread the room ID (transval).
+ * Specifies whether the given tile ID should spread the room ID (transval). TODO: add to SOL with trap type?
  */
-const bool L1FTYPES[] = {
+const BYTE L1FTYPES[207] = {
 	// clang-format off
-	false, false, false, false, false, false, false, false, false, false,
+	/*false, false, false, false, false, false, false, false, false, false,
 	false, false, false,  true, false,  true, false, false, false, false, // 10..
 	false, false, false, false, false, false, false, false, false, false, // 20..
 	false, false, false, false, false, false, false, false, false, false, // 30..
@@ -238,16 +238,37 @@ const bool L1FTYPES[] = {
 	false,  true,  true,  true,  true, false, false, false, false, false, //170..
 	false, false, false, false, false, false, false, false, false, false, //180..
 	false, false, false, false, false, false, false, false, false, false, //190..
-	false, false, false, false, false, false, false
+	false, false, false, false, false, false, false*/
+	 0, 10, 12,  8,  8,  8, 10, 12, 10, 12,
+	 8, 10, 12, 15,  8, 14, 14, 14,  0,  0, // 10..
+	 0,  0,  0,  0,  0, 10, 12,  8,  8,  8, // 20..
+	10, 12, 10, 12,  8, 10, 12,  8,  8,  8, // 30..
+	 8,  8,  8,  8,  8, 15, 15, 15, 15, 15, // 40..
+	15, 15, 15, 15, 15, 15, 15,  0, 10, 12, // 50..
+	14, 15, 15,  4,  0,  8,  0, 15, 15, 15, // 60..
+	15,  0,  0, 15, 15, 15, 15, 15, 15, 10, // 70..
+	12, 14,  8, 10, 10, 12, 14, 14, 12, 10, // 80..
+	10, 12, 12, 10, 10, 12, 12, 12, 12, 12, // 90..
+	10, 10, 10, 10, 15, 15, 15, 10, 12, 10, //100..
+	12, 10, 12, 10, 12, 12, 12, 12, 12, 12, //110..
+	12, 10, 10, 10, 10, 15, 10, 10, 15, 15, //120..
+	15, 15, 15, 15, 15, 15, 15, 15, 15, 15, //130..
+	15, 15, 15, 15, 15, 15, 10, 10, 12, 12, //140..
+	15, 15, 15, 12, 12, 10, 12, 12,  8,  8, //150..
+	 8,  8, 15, 15,  8,  8, 10, 10,  8, 12, //160..
+	12, 15, 15, 15, 15, 10, 12,  8, 10, 12, //170..
+	 8,  8,  8,  8,  8,  8, 10,  8,  8,  8, //180..
+	 8, 10, 12, 10, 12,  0,  0, 10, 12,  0, //190..
+	 0,  0,  0,  0,  0,  0, 12
 	// clang-format on
 };
 #ifdef HELLFIRE
 /*
  * Specifies whether the given tile ID should spread the room ID (transval).
  */
-const bool L5FTYPES[] = {
+const BYTE L5FTYPES[218] = {
 	// clang-format off
-	false, false, false, false, false, false, false, false, false, false,
+	/*false, false, false, false, false, false, false, false, false, false,
 	false, false, false,  true, false,  true, false, false, false, false, // 10..
 	false, false, false, false, false, false, false, false, false, false, // 20..
 	false, false, false, false, false, false, false, false, false, false, // 30..
@@ -268,7 +289,29 @@ const bool L5FTYPES[] = {
 	false, false, false, false, false, false, false, false, false,  true, //180..
 	 true,  true,  true,  true,  true,  true,  true,  true,  true, false, //190..
 	false, false, false,  true,  true,  true,  true,  true,  true,  true, //200..
-	 true,  true,  true,  true,  true,  true,  true,  true,               //210..
+	 true,  true,  true,  true,  true,  true,  true,  true,               //210..*/
+	 0, 10, 12,  8,  8,  8, 10, 12, 10, 12,
+	 8, 10, 12, 15,  8,  8,  8,  8,  0,  0, // 10..
+	 0,  0,  0,  0,  0, 10, 12,  8,  8,  8, // 20..
+	10, 12, 10, 12,  8, 10, 12,  8,  8,  8, // 30..
+	 8,  8,  8,  8,  8, 15, 15, 15, 15, 15, // 40..
+	15, 15, 15,  0,  0,  0,  0,  0, 15, 15, // 50..
+	15,  0,  0,  0,  0,  0, 15, 15, 15, 10, // 60..
+	12,  8,  8,  8,  8,  8,  8,  8,  8,  8, // 70..
+	 8,  8,  0,  0,  0,  0,  0,  0,  0, 10, // 80..
+	10, 10, 12, 12, 12, 10, 12, 15, 15, 15, // 90..
+	15, 15, 10, 10, 10, 10, 15, 15, 15, 15, //100..
+	15, 15, 10, 12,  8,  8,  8,  8,  8,  8, //110..
+	 8,  8, 10, 12, 15,  8,  8,  8,  8, 10, //120..
+	12,  8,  8,  8,  8,  8,  8,  8,  8, 10, //130..
+	12, 15,  8,  8,  8,  8, 10, 12,  8,  8, //140..
+	 8,  8,  8,  8,  8,  8, 10, 12, 15,  8, //150..
+	15,  8,  8, 15, 15, 15, 15, 15, 15, 15, //160..
+	15, 15, 15, 10, 10, 10, 10, 10, 10, 12, //170..
+	12, 12, 12, 12, 12, 10, 10, 12, 12, 15, //180..
+	15, 15, 15, 15, 15, 15, 15, 15, 15,  0, //190..
+	 0,  0,  0, 15, 15, 15, 15, 15, 15, 15, //200..
+	15, 15, 15, 15, 15, 15, 15, 15,         //210..
 	// clang-format on
 };
 #endif
@@ -2431,25 +2474,17 @@ static void DRLG_L5TransFix()
 
 static void DRLG_L1InitTransVals()
 {
-	int i, j;
-
 	static_assert(sizeof(drlg.transvalMap) == sizeof(dungeon), "transvalMap vs dungeon mismatch.");
 	memcpy(drlg.transvalMap, dungeon, sizeof(dungeon));
-	// prepare transvalMap
+
+	DRLG_InitTrans();
 	const bool *floorTypes = L1FTYPES;
 #ifdef HELLFIRE
 	if (currLvl._dType == DTYPE_CRYPT) {
 		floorTypes = L5FTYPES;
 	}
 #endif
-	for (i = 0; i < DMAXX; i++) {
-		for (j = 0; j < DMAXY; j++) {
-			drlg.transvalMap[i][j] = floorTypes[drlg.transvalMap[i][j]];
-		}
-	}
-
-	DRLG_InitTrans();
-	DRLG_FloodTVal();
+	DRLG_FloodTVal(floorTypes);
 #ifdef HELLFIRE
 	if (currLvl._dType == DTYPE_CRYPT) {
 		DRLG_L5TransFix();
