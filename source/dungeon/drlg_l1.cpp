@@ -2939,8 +2939,8 @@ void LoadL1Dungeon(const LevelData* lds)
 	DRLG_Init_Globals();
 	DRLG_InitL1Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
 
-	SetMapMonsters(pMap, 0, 0);
-	SetMapObjects(pMap);
+//	SetMapMonsters(pMap, 0, 0);
+//	SetMapObjects(pMap);
 
 //	mem_free_dbg(pMap);
 }
