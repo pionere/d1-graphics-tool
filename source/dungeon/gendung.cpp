@@ -755,7 +755,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 			} else {
 				tpm = 0;
 			}
-			tp[2 * i * DMAXX + 2 * j + 1] = tpm;
+			tp[2 * i * DMAXX + 2 * j] = tpm;
 			// 2. subtile
 			if (tvm & (1 << 1)) {
 				tpm = (1 << 5) | (1 << 6) | (1 << 7); // DIR_NE, DIR_E, DIR_SE
