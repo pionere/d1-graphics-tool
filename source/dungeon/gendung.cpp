@@ -713,6 +713,9 @@ static void DRLG_FTVR(unsigned offset)
 	//if (numtrans == 1 || numtrans == 2 || numtrans == 6) {
 	//	dProgress() << QString("%1:%2 set to %3 on %4 with flags:%5 tpos%6:%7 off%8:%9").arg(offset / DSIZEY).arg(offset % DSIZEY).arg(numtrans).arg(drlg.transvalMap[(offset / DSIZEY) /2][(offset % DSIZEY) / 2]).arg(tp[offset]).arg((offset / DSIZEY) /2).arg(((offset % DSIZEY) / 2) & 1).arg().arg(((offset % DSIZEY) / 2) & 1);
 	//}
+	if (drlg.transvalMap[(offset / DSIZEY) /2][(offset % DSIZEY) / 2] == 2) {
+		dProgress() << QString("%1:%2 has %3 flags").arg(offset / DSIZEY).arg(offset % DSIZEY).arg(tp[offset]);
+    }
 	if (tp[offset] & (1 << 0)) { // DIR_S
 		DRLG_FTVR(offset + DSIZEY + 1);
 	}
