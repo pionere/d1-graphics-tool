@@ -806,7 +806,8 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 		BYTE *tvpSrc = tvp + i * DSIZEY;
 		BYTE *tvpDst = tvp + (i + DBORDERX) * MAXDUNY + DBORDERY;
 		memcpy(tvpDst, tvpSrc, DSIZEY);
-		memset(tvpSrc, 0, i >= DBORDERX ? DBORDERY : DSIZEY);
+		//memset(tvpSrc, 0, i >= DBORDERX ? DBORDERY : DSIZEY);
+		memset(tvpSrc, 0, DSIZEY);
 	}
 }
 
