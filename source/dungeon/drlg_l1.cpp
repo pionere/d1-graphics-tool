@@ -2474,8 +2474,6 @@ static void DRLG_L5TransFix()
 
 static void DRLG_L1InitTransVals()
 {
-	int i, j;
-
 	static_assert(sizeof(drlg.transvalMap) == sizeof(dungeon), "transvalMap vs dungeon mismatch.");
 	memcpy(drlg.transvalMap, dungeon, sizeof(dungeon));
 
