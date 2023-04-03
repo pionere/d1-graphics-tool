@@ -2942,7 +2942,7 @@ void LoadL1Dungeon(const LevelData* lds)
 	SetMapMonsters(pMap, 0, 0);
 	SetMapObjects(pMap);
 
-	mem_free_dbg(pMap);
+//	mem_free_dbg(pMap);
 }
 
 DEVILUTION_END_NAMESPACE
