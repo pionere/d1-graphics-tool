@@ -763,8 +763,8 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 				tpm = 0;
 			}
 			tp[2 * i * DSIZEY + 2 * j] = tpm;
-			// 2. subtile
-			if (tvm & (1 << 1)) {
+			// 3. subtile
+			if (tvm & (1 << 2)) {
 				tpm = (1 << 5) | (1 << 6) | (1 << 7); // DIR_NE, DIR_E, DIR_SE
 				if (tvm & (1 << 0))
 					tpm |= (1 << 3); // DIR_NW
@@ -774,8 +774,8 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 				tpm = 0;
 			}
 			tp[2 * i * DSIZEY + 2 * j + 1] = tpm;
-			// 3. subtile
-			if (tvm & (1 << 2)) {
+			// 2. subtile
+			if (tvm & (1 << 1)) {
 				tpm = (1 << 1) | (1 << 2) | (1 << 3); // DIR_SW, DIR_W, DIR_NW
 				if (tvm & (1 << 0))
 					tpm |= (1 << 5); // DIR_NE
