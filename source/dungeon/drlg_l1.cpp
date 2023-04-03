@@ -2491,7 +2491,7 @@ static void DRLG_L1InitTransVals()
 	} else
 #endif
 	{
-		DRLG_L1TransFix();
+		// DRLG_L1TransFix();
 	}
 }
 
