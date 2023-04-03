@@ -708,25 +708,25 @@ static void DRLG_FTVR(unsigned offset)
 	tvp[offset] = numtrans;
 	BYTE *tp = (BYTE*)&dPiece[0][0];
 	if (tp[offset] & (1 << 0)) { // DIR_S
-		DRLG_FTVR(offset + DSIZEX + 1);
+		DRLG_FTVR(offset + DSIZEY + 1);
 	}
 	if (tp[offset] & (1 << 1)) { // DIR_SW
-		DRLG_FTVR(offset + DSIZEX);
+		DRLG_FTVR(offset + DSIZEY);
 	}
 	if (tp[offset] & (1 << 2)) { // DIR_W
-		DRLG_FTVR(offset - 1 + DSIZEX);
+		DRLG_FTVR(offset - 1 + DSIZEY);
 	}
 	if (tp[offset] & (1 << 3)) { // DIR_NW
 		DRLG_FTVR(offset - 1);
 	}
 	if (tp[offset] & (1 << 4)) { // DIR_N
-		DRLG_FTVR(offset - 1 - DSIZEX);
+		DRLG_FTVR(offset - 1 - DSIZEY);
 	}
 	if (tp[offset] & (1 << 5)) { // DIR_NE
-		DRLG_FTVR(offset - DSIZEX);
+		DRLG_FTVR(offset - DSIZEY);
 	}
 	if (tp[offset] & (1 << 6)) { // DIR_E
-		DRLG_FTVR(offset + 1 - DSIZEX);
+		DRLG_FTVR(offset + 1 - DSIZEY);
 	}
 	if (tp[offset] & (1 << 7)) { // DIR_SE
 		DRLG_FTVR(offset + 1);
@@ -755,7 +755,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 			} else {
 				tpm = 0;
 			}
-			tp[2 * i * DMAXX + 2 * j] = tpm;
+			tp[2 * i * DSIZEY + 2 * j] = tpm;
 			// 2. subtile
 			if (tvm & (1 << 1)) {
 				tpm = (1 << 5) | (1 << 6) | (1 << 7); // DIR_NE, DIR_E, DIR_SE
@@ -766,7 +766,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 			} else {
 				tpm = 0;
 			}
-			tp[2 * i * DMAXX + 2 * j + 1] = tpm;
+			tp[2 * i * DSIZEY + 2 * j + 1] = tpm;
 			// 3. subtile
 			if (tvm & (1 << 2)) {
 				tpm = (1 << 1) | (1 << 2) | (1 << 3); // DIR_SW, DIR_W, DIR_NW
@@ -777,7 +777,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 			} else {
 				tpm = 0;
 			}
-			tp[(2 * i + 1) * DMAXX + 2 * j] = tpm;
+			tp[(2 * i + 1) * DSIZEY + 2 * j] = tpm;
 			// 4. subtile
 			if (tvm & (1 << 3)) {
 				tpm = (1 << 7) | (1 << 0) | (1 << 1); // DIR_SE, DIR_S, DIR_SW
@@ -788,7 +788,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 			} else {
 				tpm = 0;
 			}
-			tp[(2 * i + 1) * DMAXX + 2 * j + 1] = tpm;
+			tp[(2 * i + 1) * DSIZEY + 2 * j + 1] = tpm;
 		}
 	}
 
@@ -801,13 +801,13 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 		numtrans++;
 	}
 
-	/*static_assert(DBORDERX + DBORDERY * MAXDUNX > DSIZEX, "DRLG_FloodTVal requires large enough border(y) to use memcpy instead of memmove and simple zerofill.");
-	for (i = DSIZEY - 1; (int)i >= 0; i--) {
-		BYTE *tvpSrc = tvp + i * DSIZEX;
-		BYTE *tvpDst = tvp + (i + DBORDERY) * MAXDUNX + DBORDERX;
-		memcpy(tvpDst, tvpSrc, DSIZEX);
-		memset(tvpSrc, 0, i >= DBORDERY ? DBORDERX : DSIZEX);
-	}*/
+	static_assert(DBORDERY + DBORDERX * MAXDUNY > DSIZEY, "DRLG_FloodTVal requires large enough border(x) to use memcpy instead of memmove and simple zerofill.");
+	for (i = DSIZEX - 1; (int)i >= 0; i--) {
+		BYTE *tvpSrc = tvp + i * DSIZEY;
+		BYTE *tvpDst = tvp + (i + DBORDERX) * MAXDUNY + DBORDERY;
+		memcpy(tvpDst, tvpSrc, DSIZEY);
+		memset(tvpSrc, 0, i >= DBORDERX ? DBORDERY : DSIZEY);
+	}
 }
 
 void DRLG_LoadSP(int idx, BYTE bv)
