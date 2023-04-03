@@ -708,12 +708,11 @@ static void DRLG_FTVR(unsigned offset)
 	if (tvp[offset] != 0) {
 		return;
 	}
-	if (numtrans == 1 || numtrans == 2 || numtrans == 6) {
-		dProgress() << QString("%1:%2 set to %3").arg(offset / DSIZEY).arg(offset % DSIZEY).arg(numtrans);
-	}
-
 	tvp[offset] = numtrans;
 	BYTE *tp = (BYTE*)&dPiece[0][0];
+	if (numtrans == 1 || numtrans == 2 || numtrans == 6) {
+		dProgress() << QString("%1:%2 set to %3 on %4 with flags:%5 tpos%6:%7 off%8:%9").arg(offset / DSIZEY).arg(offset % DSIZEY).arg(numtrans).arg(drlg.transvalMap[(offset / DSIZEY) /2][(offset % DSIZEY) / 2]).arg(tp[offset]).arg((offset / DSIZEY) /2).arg(((offset % DSIZEY) / 2) & 1).arg().arg(((offset % DSIZEY) / 2) & 1);
+	}
 	if (tp[offset] & (1 << 0)) { // DIR_S
 		DRLG_FTVR(offset + DSIZEY + 1);
 	}
@@ -763,8 +762,8 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 				tpm = 0;
 			}
 			tp[2 * i * DSIZEY + 2 * j] = tpm;
-			// 3. subtile
-			if (tvm & (1 << 2)) {
+			// 2. subtile
+			if (tvm & (1 << 1)) {
 				tpm = (1 << 5) | (1 << 6) | (1 << 7); // DIR_NE, DIR_E, DIR_SE
 				if (tvm & (1 << 0))
 					tpm |= (1 << 3); // DIR_NW
@@ -774,8 +773,8 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 				tpm = 0;
 			}
 			tp[2 * i * DSIZEY + 2 * j + 1] = tpm;
-			// 2. subtile
-			if (tvm & (1 << 1)) {
+			// 3. subtile
+			if (tvm & (1 << 2)) {
 				tpm = (1 << 1) | (1 << 2) | (1 << 3); // DIR_SW, DIR_W, DIR_NW
 				if (tvm & (1 << 0))
 					tpm |= (1 << 5); // DIR_NE
