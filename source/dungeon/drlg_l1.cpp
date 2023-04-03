@@ -2928,9 +2928,9 @@ void LoadL1Dungeon(const LevelData* lds)
 	DRLG_L1InitTransVals();
 
 	// load dungeon
-	pMap = LoadL1DungeonData(lds->dSetLvlDun);
+//	pMap = LoadL1DungeonData(lds->dSetLvlDun);
 
-	DRLG_L1SetMapFix(pMap);
+//	DRLG_L1SetMapFix(pMap);
 
 	//DRLG_L1Floor();
 
