@@ -745,7 +745,7 @@ static void DRLG_FTVR(unsigned offset)
 void DRLG_FloodTVal(const BYTE *floorTypes)
 {
 	int i, j;
-	BYTE *tp = (BYTE*)&drlg.transDirMap[0][0];
+	BYTE *tp = (BYTE*)&dPiece[0][0];
 	BYTE *tm = &drlg.transvalMap[0][0];
 	BYTE *tvp = &dTransVal[0][0];
 
@@ -821,7 +821,9 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 	tvp += MAXDUNY * DBORDERX + MAXDUNY;
 	while (tvp < (BYTE*)&dTransVal[0][0] + DSIZEX * DSIZEY) {
 		memset(tvp, 0, DBORDERY);
-		tvp += MAXDUNY;
+		tvp += DBORDERY + DSIZEY;
+		memset(tvp, 0, DBORDERY);
+		tvp += DBORDERY;
 	}
 }
 
