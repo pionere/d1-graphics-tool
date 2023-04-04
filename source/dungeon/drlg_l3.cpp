@@ -7,10 +7,6 @@
  */
 #include "all.h"
 
-#include <QString>
-
-#include "../progressdialog.h"
-
 DEVILUTION_BEGIN_NAMESPACE
 
 /** Starting position of the megatiles. */
@@ -162,6 +158,32 @@ const BYTE L3FTYPES[157] = {
 	 7,  3,  5, 12, 12,  0,  0              //150..
 	// clang-format on
 };
+#ifdef HELLFIRE
+/*
+ * Specifies where the given tile ID should spread the room ID (transval).
+ */
+const BYTE L6FTYPES[167] = {
+	// clang-format off
+	 0,  2,  3,  4,  5,  7,  1, 15,  0, 10,
+	12,  8, 14, 13, 11, 10, 10, 12, 12,  0, // 10..
+	 0, 12, 12,  0,  0,  0,  0,  0,  0, 15, // 20..
+	15, 15, 15, 10, 10, 10, 10, 10,  8, 12, // 30..
+	12, 12, 12, 12,  8, 10, 10, 12, 12,  8, // 40..
+	 8, 15, 15, 15, 15, 15, 15, 15, 15, 15, // 50..
+	15, 12, 15, 15,  0, 15, 15, 15, 15, 15, // 60..
+	15, 15, 15, 15, 15, 15, 15, 15, 15, 15, // 70..
+	15, 15, 15, 15, 15, 15, 15, 15, 15,  0, // 80..
+	 0,  0,  0,  8,  8,  8,  0,  0,  0, 15, // 90..
+	15, 15, 15,  0,  1,  0,  0,  1,  7, 13, //100..
+	15,  5,  8,  1,  2,  2,  5,  7,  0,  0, //110..
+	 0,  8,  8,  8, 15,  0,  2,  0,  0,  0, //120..
+	 0,  0,  0,  0,  0,  0,  0,  0,  0,  8, //130..
+	 0, 15, 15, 15, 15,  0,  0, 15, 15, 15, //140..
+	 15, 0,  8,  0,  8,  8,  0,  0, 10,  0, //150..
+	 8,  8,  0,  0,  0,  0,  0,    //160..
+	// clang-format on
+};
+#endif
 /** Miniset: Stalagmite white stalactite 1. */
 const BYTE L3TITE1[] = {
 	// clang-format off
@@ -2185,23 +2207,22 @@ static void DRLG_L3InitTransVals()
 		int y2 = 2 * (y + themeH) + DBORDERY - 1;
 		DRLG_RectTrans(x1, y1, x2, y2);
 	}*/
-	DRLG_FloodTVal(L3FTYPES);
+	const BYTE *floorTypes = L3FTYPES;
+#ifdef HELLFIRE
+	if (currLvl._dType == DTYPE_NEST) {
+		floorTypes = L6FTYPES;
+	}
+#endif
+	DRLG_FloodTVal(floorTypes);
 }
 
 static void DRLG_L3()
 {
 	bool doneflag;
-//2961315201
-extern int32_t sglGameSeed;
-int32_t lastSeed;
-int loop0 = 0;
-int loop1 = 0;
+
 	do {
-loop0++;
 		while (true) {
 			do {
-loop1++;
-lastSeed = sglGameSeed;
 				memset(dungeon, 0, sizeof(dungeon));
 				DRLG_L3CreateBlock(RandRange(10, 29), RandRange(10, 29), 0, 4);
 				if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
@@ -2291,7 +2312,7 @@ lastSeed = sglGameSeed;
 			DRLG_L3Pool();
 		}
 	} while (_guLavapools < MIN_LAVA_POOL);
-dProgressErr() << QString("Last seed:%1 loop0:%2 loop1:%3").arg(lastSeed).arg(loop0).arg(loop1);
+
 	DRLG_L3PlaceRndSet(L3VERTWALLFIX1, 70);
 	DRLG_L3PlaceRndSet(L3HORZWALLFIX1, 70);
 #ifdef HELLFIRE

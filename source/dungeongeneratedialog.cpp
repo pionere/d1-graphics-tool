@@ -44,7 +44,7 @@ void DungeonGenerateDialog::on_actionGenerateSeed_triggered()
 void DungeonGenerateDialog::on_actionGenerateQuestSeed_triggered()
 {
     QRandomGenerator *gen = QRandomGenerator::global();
-    this->ui->questSeedLineEdit->setText(QString::number(gen->generate()));
+    this->ui->questSeedLineEdit->setText(QString::number((qint32)gen->generate()));
 }
 
 void DungeonGenerateDialog::on_generateButton_clicked()
