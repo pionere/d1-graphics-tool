@@ -745,7 +745,7 @@ static void DRLG_FTVR(unsigned offset)
 void DRLG_FloodTVal(const BYTE *floorTypes)
 {
 	int i, j;
-	BYTE *tp = (BYTE*)&drlg.transDirMap[0][0];
+	BYTE *tp = (BYTE*)&drlg.transDirMap[0][0]; // Overlaps with transvalMap!
 	BYTE *tm = &drlg.transvalMap[0][0];
 	BYTE *tvp = &dTransVal[0][0];
 
@@ -800,7 +800,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 			tp[(2 * i + 1) * DSIZEY + 2 * j + 1] = tpm;
 		}
 	}
-
+	// create the rooms
 	for (i = 0; i < DSIZEX * DSIZEY; i++) {
 		if (tvp[i] != 0)
 			continue;
@@ -809,19 +809,21 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 		DRLG_FTVR(i);
 		numtrans++;
 	}
-
+	// move the values into position (add borders)
 	static_assert(DBORDERY + DBORDERX * MAXDUNY > DSIZEY, "DRLG_FloodTVal requires large enough border(x) to use memcpy instead of memmove.");
 	for (i = DSIZEX - 1; (int)i >= 0; i--) {
 		BYTE *tvpSrc = tvp + i * DSIZEY;
 		BYTE *tvpDst = tvp + (i + DBORDERX) * MAXDUNY + DBORDERY;
 		memcpy(tvpDst, tvpSrc, DSIZEY);
 	}
-
-	memset(tvp, 0, MAXDUNY * DBORDERX + DBORDERY);
-	tvp += MAXDUNY * DBORDERX + DBORDERY + DSIZEY;
+	// clear the borders
+	memset(tvp, 0, MAXDUNY * DBORDERX);
+	tvp += MAXDUNY * DBORDERX;
 	while (tvp < (BYTE*)&dTransVal[0][0] + DSIZEX * DSIZEY) {
-		memset(tvp, 0, 2 * DBORDERY);
-		tvp += 2 * DBORDERY + DSIZEY;
+		memset(tvp, 0, DBORDERY);
+		tvp += DBORDERY + DSIZEY;
+		memset(tvp, 0, DBORDERY);
+		tvp += DBORDERY;
 	}
 }
 
