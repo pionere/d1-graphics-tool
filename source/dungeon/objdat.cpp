@@ -161,7 +161,7 @@ const BYTE ObjConvTbl[128] = {
 const ObjectData objectdata[NUM_OBJECTS] = {
 	// clang-format off
 //_object_id          ofindex,        oLvlTypes,                                 oSetLvlType,     otheme,                  oquest,   oAnimBaseFrame, oProc,      oModeFlags,             oDoorFlag, oSelFlag, oTrapFlag,
-/*OBJ_L1LIGHT*/     { OFILE_L1BRAZ,   DTM_CATHEDRAL,                             DTYPE_CATHEDRAL, THEME_NONE,              Q_INVALID,             0, OPF_NONE,   OMF_FLOOR,              ODT_NONE,         0, FALSE     , ALIGN }, // OPF_LIGHT if FLICKER_LIGHT
+/*OBJ_L1LIGHT*/     { OFILE_L1BRAZ,   DTM_CATHEDRAL,                             DTYPE_CATHEDRAL, THEME_NONE,              Q_INVALID,             0, OPF_NONE,   OMF_NONE,               ODT_NONE,         0, FALSE     , ALIGN }, // OPF_LIGHT if FLICKER_LIGHT
 /*OBJ_L1LDOOR*/     { OFILE_L1DOORS,  DTM_CATHEDRAL,                             DTYPE_CATHEDRAL, THEME_NONE,              Q_INVALID,             1, OPF_DOOR,   OMF_ACTIVE,             ODT_LEFT,         3, TRUE      , ALIGN },
 /*OBJ_L1RDOOR*/     { OFILE_L1DOORS,  DTM_CATHEDRAL,                             DTYPE_CATHEDRAL, THEME_NONE,              Q_INVALID,             2, OPF_DOOR,   OMF_ACTIVE,             ODT_RIGHT,        3, TRUE      , ALIGN },
 /*OBJ_SKFIRE*/      { OFILE_SKULFIRE, 0,                                         0,               THEME_SKELROOM,          Q_INVALID,             0, OPF_NONE,   OMF_FLOOR,              ODT_NONE,         0, FALSE     , ALIGN }, // OPF_LIGHT 5
