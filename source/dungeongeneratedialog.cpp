@@ -62,7 +62,7 @@ void DungeonGenerateDialog::on_generateButton_clicked()
     if (!ok && !seedTxt.isEmpty()) {
         QMessageBox::critical(this, "Error", "Failed to parse the seed to a 32-bit integer.");
         return;
-    }3475304357
+    }
     seedTxt = this->ui->questSeedLineEdit->text();
     params.seedQuest = seedTxt.toInt(&ok);
     if (!ok && !seedTxt.isEmpty()) {
