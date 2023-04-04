@@ -837,24 +837,25 @@ void DRLG_LoadSP(int idx, BYTE bv)
 {
 	int rx1, ry1, rw, rh, i, j;
 	BYTE* sp;
+	SetPieceStruct* pSetPiece = &pSetPieces[idx];
 
-	rx1 = pSetPieces[idx]._spx;
-	ry1 = pSetPieces[idx]._spy;
-	rw = SwapLE16(*(uint16_t*)&pSetPieces[idx]._spData[0]);
-	rh = SwapLE16(*(uint16_t*)&pSetPieces[idx]._spData[2]);
-	sp = &pSetPieces[idx]._spData[4];
+	rx1 = pSetPiece->_spx;
+	ry1 = pSetPiece->_spy;
+	rw = SwapLE16(*(uint16_t*)&pSetPiece->_spData[0]);
+	rh = SwapLE16(*(uint16_t*)&pSetPiece->_spData[2]);
+	sp = &pSetPiece->_spData[4];
 	// load tiles
 	for (j = ry1; j < ry1 + rh; j++) {
 		for (i = rx1; i < rx1 + rw; i++) {
 			dungeon[i][j] = *sp != 0 ? *sp : bv;
-			// drlgFlags[i][j] = *sp != 0 ? TRUE : FALSE; // |= DLRG_PROTECTED;
+			// drlgFlags[i][j] = *sp != 0 ? DRLG_PROTECTED : 0; // FIXME |= DRLG_PROTECTED
 			sp += 2;
 		}
 	}
 	// load flags
 	for (j = ry1; j < ry1 + rh; j++) {
 		for (i = rx1; i < rx1 + rw; i++) {
-			drlgFlags[i][j] = (*sp & 1) != 0 ? DLRG_PROTECTED : 0; // |= DLRG_PROTECTED;
+			drlgFlags[i][j] = (*sp & 1) != 0 ? DRLG_PROTECTED : 0; // FIXME |= DRLG_PROTECTED
 			sp += 2;
 		}
 	}

@@ -666,13 +666,13 @@ static void DRLG_L1PlaceDoors()
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
 			df = drlgFlags[i][j];
-			if ((df & ~DLRG_PROTECTED) == 0)
+			if ((df & ~DRLG_PROTECTED) == 0)
 				continue;
-			assert(!(df & DLRG_PROTECTED));
-			//if (!(df & DLRG_PROTECTED)) {
+			assert(!(df & DRLG_PROTECTED));
+			//if (!(df & DRLG_PROTECTED)) {
 				c = dungeon[i][j];
 
-				if (df == DLRG_HDOOR) {
+				if (df == DRLG_L1_HDOOR) {
 					assert(c == 2);
 					if (j == 1)
 						df = 0;
@@ -692,7 +692,7 @@ static void DRLG_L1PlaceDoors()
 					if (i != 1 && c == 6)
 						c = 30; ? */
 				} else {
-					assert(df == DLRG_VDOOR);
+					assert(df == DRLG_L1_VDOOR);
 					assert(c == 1);
 					if (i == 1)
 						df = 0;
@@ -712,7 +712,7 @@ static void DRLG_L1PlaceDoors()
 					if (j != 1 && c == 7)
 						c = 31; ? */
 				} /* commented out because this is not possible with the current implementation
-				  else if (df == (DLRG_HDOOR | DLRG_VDOOR)) {
+				  else if (df == (DRLG_L1_HDOOR | DRLG_L1_VDOOR)) {
 					if (i != 1 && j != 1 && c == 4)
 						c = 28; -- edge with double door
 					if (i != 1 && c == 10)
@@ -730,7 +730,7 @@ static void DRLG_L1PlaceDoors()
 				}*/
 				dungeon[i][j] = c;
 			//}
-			// TODO: might want to convert DLRG_VDOOR and DLRG_HDOOR to DLRG_PROTECTED
+			// TODO: might want to convert DRLG_L1_VDOOR and DRLG_L1_HDOOR to DRLG_PROTECTED
 			drlgFlags[i][j] = df;
 		}
 	}
@@ -1291,7 +1291,7 @@ static void DRLG_L1MakeMegas()
 
 	for (j = 0; j < DMAXY - 1; j++) {
 		for (i = 0; i < DMAXX - 1; i++) {
-			assert(dungeon[i][j] <= 1 && dungeon[i + 1][j] <= 1 && dungeon[i][j + 1] <= 1 && dungeon[i + 1][j + 1] <= 1);
+			// assert(dungeon[i][j] <= 1 && dungeon[i + 1][j] <= 1 && dungeon[i][j + 1] <= 1 && dungeon[i + 1][j + 1] <= 1);
 			v = dungeon[i][j]
 			 | (dungeon[i + 1][j] << 1)
 			 | (dungeon[i][j + 1] << 2)
@@ -1342,7 +1342,7 @@ static void L1HorizWall(int i, int j, int dx)
 	dungeon[i + xx][j] = wt;
 	if (wt != 12) {
 		assert(drlgFlags[i + xx][j] == 0);
-		drlgFlags[i + xx][j] = DLRG_HDOOR;
+		drlgFlags[i + xx][j] = DRLG_L1_HDOOR;
 	}
 }
 
@@ -1424,7 +1424,7 @@ static void L1VertWall(int i, int j, int dy)
 	dungeon[i][j + yy] = wt;
 	if (wt != 11) {
 		assert(drlgFlags[i][j + yy] == 0);
-		drlgFlags[i][j + yy] = DLRG_VDOOR;
+		drlgFlags[i][j + yy] = DRLG_L1_VDOOR;
 	}
 }
 
@@ -1595,29 +1595,8 @@ static void DRLG_L1GHallVert(int x1, int y1, int y2)
 
 static void DRLG_L1SetRoom(int rx1, int ry1)
 {
-	//int rw, rh, i, j;
-	//BYTE* sp;
-
 	pSetPieces[0]._spx = rx1;
 	pSetPieces[0]._spy = ry1;
-	/*rw = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[0]);
-	rh = SwapLE16(*(uint16_t*)&pSetPieces[0]._spData[2]);
-	sp = &pSetPieces[0]._spData[4];
-	// load tiles
-	for (j = ry1; j < ry1 + rh; j++) {
-		for (i = rx1; i < rx1 + rw; i++) {
-			dungeon[i][j] = *sp != 0 ? *sp : DEFAULT_MEGATILE_L1;
-			// drlgFlags[i][j] |= *sp != 0 ? DLRG_PROTECTED : 0;
-			sp += 2;
-		}
-	}
-	// load flags
-	for (j = ry1; j < ry1 + rh; j++) {
-		for (i = rx1; i < rx1 + rw; i++) {
-			drlgFlags[i][j] = (*sp & 1) != 0 ? DLRG_PROTECTED : 0; // |= DLRG_PROTECTED;
-			sp += 2;
-		}
-	}*/
 	DRLG_LoadSP(0, DEFAULT_MEGATILE_L1);
 }
 
@@ -2561,9 +2540,9 @@ static void DRLG_L1Corners()
 
 			// 0,  0, 0, replace
 			// 0, 16, 0,
-			if (!(drlgFlags[i][j] & DLRG_PROTECTED) && dungeon[i][j] == 17 && dungeon[i - 1][j] == 13 && dungeon[i][j - 1] == 1) {
+			if (!(drlgFlags[i][j] & DRLG_PROTECTED) && dungeon[i][j] == 17 && dungeon[i - 1][j] == 13 && dungeon[i][j - 1] == 1) {
 				dungeon[i][j] = 16;
-				drlgFlags[i][j - 1] &= DLRG_PROTECTED;
+				drlgFlags[i][j - 1] &= DRLG_PROTECTED;
 			}
 			// 0, 202, 13,  search
 			// 0,   1,  0,
@@ -2844,23 +2823,23 @@ void CreateL1Dungeon()
 	DRLG_SetPC();
 }
 
-static void DRLG_L1SetMapFix(BYTE* pMap)
+static void DRLG_L1SetMapFix()
 {
-	uint16_t* lm = (uint16_t*)pMap;
+	uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 
 	if (currLvl._dLevelIdx == SL_VILEBETRAYER) {
 		// patch set-piece - Vile2.DUN
 		// - fix empty tiles
-		// assert(pMap[(2 + 8 + 16 * 21) * 2] == 0);
+		// assert(lm[2 + 8 + 16 * 21] == 0);
 		// assert(dungeon[8][16] == 13);
 		dungeon[8][16] = 203;
-		// assert(pMap[(2 + 12 + 22 * 21) * 2] == 0);
+		// assert(lm[2 + 12 + 22 * 21] == 0);
 		// assert(dungeon[12][22] == 13);
 		dungeon[12][22] = 203;
-		// assert(pMap[(2 + 13 + 22 * 21) * 2] == 0);
+		// assert(lm[2 + 13 + 22 * 21] == 0);
 		// assert(dungeon[13][22] == 13);
 		dungeon[13][22] = 203;
-		// assert(pMap[(2 + 14 + 22 * 21) * 2] == 0);
+		// assert(lm[2 + 14 + 22 * 21] == 0);
 		// assert(dungeon[14][22] == 13);
 		dungeon[14][22] = 203;
 		// - add monsters
@@ -2876,51 +2855,33 @@ static void DRLG_L1SetMapFix(BYTE* pMap)
 	}
 }
 
-static BYTE* LoadL1DungeonData(const char* sFileName)
+static void LoadL1DungeonData(const char* sFileName)
 {
-	int rw, rh, i, j;
-	BYTE* pMap;
-	BYTE *sp;
-
-	pMap = LoadFileInMem(sFileName);
-
+	// memset(drlgFlags, 0, sizeof(drlgFlags)); - unused on setmaps
 	static_assert(sizeof(dungeon) == DMAXX * DMAXY, "Linear traverse of dungeon does not work in LoadL1DungeonData.");
 	memset(dungeon, BASE_MEGATILE_L1 + 1, sizeof(dungeon));
 
-	if (pMap == NULL) {
-		return pMap;
-	}
-	rw = SwapLE16(*(uint16_t*)&pMap[0]);
-	rh = SwapLE16(*(uint16_t*)&pMap[2]);
-
-	sp = &pMap[4];
-
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			dungeon[i][j] = *sp != 0 ? *sp : DEFAULT_MEGATILE_L1;
-			// no need to protect the fields, DRLG_L1Floor is commented out because Vile1 is not protected
-			// drlgFlags[i][j] |= *sp != 0 ? DLRG_PROTECTED : 0;
-			sp += 2;
-		}
+	pSetPieces[0]._spx = 0;
+	pSetPieces[0]._spy = 0;
+	pSetPieces[0]._spData = LoadFileInMem(sFileName);
+	if (pSetPieces[0]._spData == NULL) {
+		return;
 	}
 
-	return pMap;
+	DRLG_LoadSP(0, DEFAULT_MEGATILE_L1);
 }
 
 void LoadL1Dungeon(const LevelData* lds)
 {
-	BYTE* pMap;
-
 	pWarps[DWARP_ENTRY]._wx = lds->dSetLvlDunX;
 	pWarps[DWARP_ENTRY]._wy = lds->dSetLvlDunY;
 	pWarps[DWARP_ENTRY]._wtype = lds->dSetLvlWarp;
 
 	// load pre-dungeon
-	pMap = LoadL1DungeonData(lds->dSetLvlPreDun);
+	LoadL1DungeonData(lds->dSetLvlPreDun);
 
-	mem_free_dbg(pMap);
+	MemFreeDbg(pSetPieces[0]._spData);
 
-	//memset(drlgFlags, 0, sizeof(drlgFlags));
 	//DRLG_L1Floor();
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
@@ -2928,9 +2889,9 @@ void LoadL1Dungeon(const LevelData* lds)
 	DRLG_L1InitTransVals();
 
 	// load dungeon
-//	pMap = LoadL1DungeonData(lds->dSetLvlDun);
+	LoadL1DungeonData(lds->dSetLvlDun);
 
-//	DRLG_L1SetMapFix(pMap);
+	DRLG_L1SetMapFix();
 
 	//DRLG_L1Floor();
 
@@ -2939,10 +2900,10 @@ void LoadL1Dungeon(const LevelData* lds)
 	DRLG_Init_Globals();
 	DRLG_InitL1Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
 
-//	SetMapMonsters(pMap, 0, 0);
-//	SetMapObjects(pMap);
+	SetMapMonsters(pSetPieces[0]._spData, 0, 0);
+	SetMapObjects(pSetPieces[0]._spData);
 
-//	mem_free_dbg(pMap);
+	MemFreeDbg(pSetPieces[0]._spData);
 }
 
 DEVILUTION_END_NAMESPACE

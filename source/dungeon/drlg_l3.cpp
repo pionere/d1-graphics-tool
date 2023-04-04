@@ -106,8 +106,8 @@ const BYTE L3TWARP[] = {
 	10, 10, 0,
 	 7,  7, 0,
 
-	125, 125, 0, // replace
-	125, 125, 0,
+	156, 155, 0, // replace
+	153, 154, 0,
 	  0,   0, 0,
 /*  559,182    556,557,     0,  0,	// MegaTiles
 	560, 31    558, 31,     0,  0,
@@ -1372,6 +1372,10 @@ static int DRLG_L3GetFloorArea()
 	return rv;
 }
 
+/*
+ * Transform dungeon by replacing values using 2x2 block patterns defined in L3ConvTbl
+ * New dungeon values: 1..14
+ */
 static void DRLG_L3MakeMegas()
 {
 	int i, j;
@@ -1379,7 +1383,7 @@ static void DRLG_L3MakeMegas()
 
 	for (j = 0; j < DMAXY - 1; j++) {
 		for (i = 0; i < DMAXX - 1; i++) {
-			// assert(dungeon[i][j] <= 1);
+			// assert(dungeon[i][j] <= 1 && dungeon[i + 1][j] <= 1 && dungeon[i][j + 1] <= 1 && dungeon[i + 1][j + 1] <= 1);
 			v = dungeon[i + 1][j + 1]
 			 | (dungeon[i][j + 1] << 1)
 			 | (dungeon[i + 1][j] << 2)
@@ -1704,20 +1708,18 @@ static int lavaarea;
 static bool DRLG_L3SpawnLava(int x, int y, int dir)
 {
 	BYTE i; //                        0     1     2     3     4    ?5    ?6     7     8     9    10   ?11    12    13    14
-	static BYTE spawntable[15] = { 0x00, 0x0A, 0x08, 0x05, 0x01, 0x00, 0x00, 0xFF, 0x00, 0x02, 0x04, 0x00, 0x06, 0x05, 0x0A };
+	//                                  NW|SW    SW SE|NE    SE               ALL          NW    NE       NW|NE SE|NE NW|SW
+	static BYTE blocktable[15] = { 0x00, 0x0A, 0x08, 0x05, 0x01, 0x00, 0x00, 0xFF, 0x00, 0x02, 0x04, 0x00, 0x06, 0x05, 0x0A };
 
 	if (x < 0 || x >= DMAXX || y < 0 || y >= DMAXY) {
 		return true;
 	}
 	i = dungeon[x][y];
-	if (i & 0x80) {
-		return false;
-	}
-	if (i > 15) {
+	if (i >= 15) {
 		return true;
 	}
 
-	i = spawntable[i];
+	i = blocktable[i];
 	/*switch (dir) {
 	case 3: // DIR_S
 		if (i & 8)
@@ -1739,25 +1741,29 @@ static bool DRLG_L3SpawnLava(int x, int y, int dir)
 		ASSUME_UNREACHABLE
 		break;
 	}*/
-	if (i & (1 << dir))
+	//if (i & (1 << dir))
+	if (i & dir)
 		return false;
 
-	dungeon[x][y] |= 0x80;
+	if (drlgFlags[x][y] & (DRLG_L3_LAVA | DRLG_PROTECTED)) {
+		return false;
+    }
+	drlgFlags[x][y] |= DRLG_L3_LAVA;
 	lavaarea += 1;
 	if (lavaarea > 40) {
 		return true;
 	}
 
-	if (DRLG_L3SpawnLava(x + 1, y, 0)) {
+	if (DRLG_L3SpawnLava(x + 1, y, (1 << 0))) { // SE
 		return true;
 	}
-	if (DRLG_L3SpawnLava(x - 1, y, 1)) {
+	if (DRLG_L3SpawnLava(x - 1, y, (1 << 1))) { // NW
 		return true;
 	}
-	if (DRLG_L3SpawnLava(x, y + 1, 3)) {
+	if (DRLG_L3SpawnLava(x, y + 1, (1 << 3))) { // SW
 		return true;
 	}
-	if (DRLG_L3SpawnLava(x, y - 1, 2)) {
+	if (DRLG_L3SpawnLava(x, y - 1, (1 << 2))) { // NE
 		return true;
 	}
 
@@ -1772,13 +1778,12 @@ static void DRLG_L3DrawLava(int x, int y)
 	if (x < 0 || x >= DMAXX || y < 0 || y >= DMAXY) {
 		return;
 	}
+	if (!(drlgFlags[x][y] & DRLG_L3_LAVA)) {
+		return false;
+	}
+	drlgFlags[x][y] &= ~DRLG_L3_LAVA;
 
 	i = dungeon[x][y];
-	if (!(i & 0x80)) {
-		return;
-	}
-
-	i &= ~0x80;
 	if (lavaarea != 0) {
 		i = poolsub[i];
 	}
@@ -1803,7 +1808,7 @@ static void DRLG_L3Pool()
 
 	for (i = 3; i < DMAXY - 3; i++) {
 		for (j = 3; j < DMAXY - 3; j++) {
-			if (dungeon[i][j] != 8 || random_(0, 2) != 0) {
+			if (dungeon[i][j] != 8 || dungeon[i][j + 1] == 8 || random_(0, 2) != 0) {
 				continue;
 			}
 			lavaarea = 0;
@@ -2070,29 +2075,6 @@ static void DRLG_L3Wood()
 
 static void DRLG_L3SetRoom(int idx)
 {
-	/*int rx1, ry1, rw, rh, i, j;
-	BYTE* sp;
-
-	rx1 = pSetPieces[idx]._spx;
-	ry1 = pSetPieces[idx]._spy;
-	rw = SwapLE16(*(uint16_t*)&pSetPieces[idx]._spData[0]);
-	rh = SwapLE16(*(uint16_t*)&pSetPieces[idx]._spData[2]);
-	sp = &pSetPieces[idx]._spData[4];
-	// load tiles
-	for (j = ry1; j < ry1 + rh; j++) {
-		for (i = rx1; i < rx1 + rw; i++) {
-			dungeon[i][j] = *sp != 0 ? *sp : DEFAULT_MEGATILE_L3;
-			// drlgFlags[i][j] = *sp != 0 ? TRUE : FALSE; // |= DLRG_PROTECTED;
-			sp += 2;
-		}
-	}
-	// load flags
-	for (j = ry1; j < ry1 + rh; j++) {
-		for (i = rx1; i < rx1 + rw; i++) {
-			drlgFlags[i][j] = (*sp & 1) != 0 ? TRUE : FALSE; // |= DLRG_PROTECTED;
-			sp += 2;
-		}
-	}*/
 	DRLG_LoadSP(idx, DEFAULT_MEGATILE_L3);
 }
 
@@ -2143,7 +2125,7 @@ static void FixL3HallofHeroes()
 	}*/
 }
 
-static void DRLG_L3LockRec(int x, int y)
+/*static void DRLG_L3LockRec(int x, int y)
 {
 	if (!drlg.lockoutMap[x][y]) {
 		return;
@@ -2154,6 +2136,19 @@ static void DRLG_L3LockRec(int x, int y)
 	DRLG_L3LockRec(x, y + 1);
 	DRLG_L3LockRec(x - 1, y);
 	DRLG_L3LockRec(x + 1, y);
+}*/
+static void DRLG_L3LockRec(unsigned offset)
+{
+	BYTE* pTmp = &drlg.lockoutMap[0][0];
+	if (pTmp[offset] == 0) {
+		return;
+	}
+
+	*pTmp = 0;
+	DRLG_L3LockRec(offset + 1);
+	DRLG_L3LockRec(offset - 1);
+	DRLG_L3LockRec(offset - DMAXY);
+	DRLG_L3LockRec(offset + DMAXY);
 }
 
 /*
@@ -2163,12 +2158,18 @@ static void DRLG_L3LockRec(int x, int y)
 static bool DRLG_L3Lockout()
 {
 	int i, j;
-	BYTE* pTmp;
+	BYTE* pTmp = &drlg.lockoutMap[0][0];
 
 	static_assert(sizeof(dungeon) == sizeof(drlg.lockoutMap), "lockoutMap vs dungeon mismatch.");
 	memcpy(drlg.lockoutMap, dungeon, sizeof(dungeon));
 
-	for (i = 0; i < DMAXX; i++) {
+	for (i = 0; i < DMAXX * DMAXY; i++) {
+		if (pTmp[i] != 0) {
+			DRLG_L3LockRec(i);
+			break;
+		}
+	}
+	/*for (i = 0; i < DMAXX; i++) {
 		for (j = 0; j < DMAXY; j++) {
 			if (drlg.lockoutMap[i][j] != 0) {
 				// assert(i > 0 && i < DMAXX - 1 && j > 0 && j < DMAXY - 1);
@@ -2177,10 +2178,9 @@ static bool DRLG_L3Lockout()
 				break;
 			}
 		}
-	}
+	}*/
 
 	static_assert(sizeof(drlg.lockoutMap) == DMAXX * DMAXY, "Linear traverse of lockoutMap does not work in DRLG_L3Lockout.");
-	pTmp = &drlg.lockoutMap[0][0];
 	for (i = 0; i < DMAXX * DMAXY; i++, pTmp++)
 		if (*pTmp != 0) {
 			return false;
@@ -2422,8 +2422,8 @@ static void DRLG_L3()
 #endif
 	{
 		// assert(currLvl._dType == DTYPE_CAVES);
-		if (currLvl._dLevelIdx == DLV_CAVES1)
-			FixL3Warp();
+		//if (currLvl._dLevelIdx == DLV_CAVES1)
+		//	FixL3Warp();
 		FixL3HallofHeroes();
 		DRLG_L3River();
 		DRLG_PlaceThemeRooms(5, 10, DEFAULT_MEGATILE_L3, 0, false);
@@ -2509,49 +2509,32 @@ void CreateL3Dungeon()
 	DRLG_SetPC();
 }
 
-static BYTE* LoadL3DungeonData(const char* sFileName)
+static void LoadL3DungeonData(const char* sFileName)
 {
-	int rw, rh, i, j;
-	BYTE* pMap;
-	BYTE* sp;
-
-	pMap = LoadFileInMem(sFileName);
-
+	// memset(drlgFlags, 0, sizeof(drlgFlags)); - unused on setmaps
 	static_assert(sizeof(dungeon[0][0]) == 1, "memset on dungeon does not work in LoadL3DungeonData.");
 	memset(dungeon, BASE_MEGATILE_L3 + 1, sizeof(dungeon));
 
-	if (pMap == NULL) {
-		return pMap;
-	}
-	rw = SwapLE16(*(uint16_t*)&pMap[0]);
-	rh = SwapLE16(*(uint16_t*)&pMap[2]);
-
-	sp = &pMap[4];
-
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			dungeon[i][j] = *sp != 0 ? *sp : DEFAULT_MEGATILE_L3;
-			// no need to protect the fields, unused on setmaps
-			// drlgFlags[i][j] = *sp != 0 ? TRUE : FALSE; // |= DLRG_PROTECTED;
-			sp += 2;
-		}
+	pSetPieces[0]._spx = 0;
+	pSetPieces[0]._spy = 0;
+	pSetPieces[0]._spData = LoadFileInMem(sFileName);
+	if (pSetPieces[0]._spData == NULL) {
+		return;
 	}
 
-	return pMap;
+	DRLG_LoadSP(0, DEFAULT_MEGATILE_L3);
 }
 
 void LoadL3Dungeon(const LevelData* lds)
 {
-	BYTE* pMap;
-
 	pWarps[DWARP_ENTRY]._wx = lds->dSetLvlDunX;
 	pWarps[DWARP_ENTRY]._wy = lds->dSetLvlDunY;
 	pWarps[DWARP_ENTRY]._wtype = lds->dSetLvlWarp;
 
 	// load pre-dungeon
-	pMap = LoadL3DungeonData(lds->dSetLvlPreDun);
+	LoadL3DungeonData(lds->dSetLvlPreDun);
 
-	mem_free_dbg(pMap);
+	MemFreeDbg(pSetPieces[0]._spData);
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
@@ -2559,17 +2542,17 @@ void LoadL3Dungeon(const LevelData* lds)
 	DRLG_L3InitTransVals();
 
 	// load dungeon
-	pMap = LoadL3DungeonData(lds->dSetLvlDun);
+	LoadL3DungeonData(lds->dSetLvlDun);
 
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L3);
 
 	DRLG_Init_Globals();
 	DRLG_L3LightTiles();
 
-	SetMapMonsters(pMap, 0, 0);
-	SetMapObjects(pMap);
+	SetMapMonsters(pSetPieces[0]._spData, 0, 0);
+	SetMapObjects(pSetPieces[0]._spData);
 
-	mem_free_dbg(pMap);
+	MemFreeDbg(pSetPieces[0]._spData);
 }
 
 DEVILUTION_END_NAMESPACE
