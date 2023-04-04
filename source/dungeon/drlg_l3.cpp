@@ -2165,8 +2165,8 @@ static bool DRLG_L3Lockout()
 
 static void DRLG_L3InitTransVals()
 {
-	DRLG_InitTrans();
-	/*DRLG_L3FloodTVal();
+	/*DRLG_InitTrans();
+	DRLG_L3FloodTVal();
 	for (int i = 0; i < numthemes; i++) {
 		int x = themes[i]._tsx - 1;
 		int y = themes[i]._tsy - 1;
