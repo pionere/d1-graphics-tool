@@ -5,6 +5,10 @@
  */
 #include "all.h"
 
+#include <QApplication>
+
+#include "../progressdialog.h"
+
 /* Limit the number of monsters to be placed. */
 int totalmonsters;
 /* Limit the number of (scattered) monster-types on the current level by the required resources (In CRYPT the values are not valid). */
@@ -476,7 +480,11 @@ static void PlaceGroup(int mtidx, int num, int leaderf, int leader)
 			} while (!MonstPlace(x1, y1));
 		}
 
-		assert(dTransVal[x1][y1] != 0);
+		if (dTransVal[x1][y1] == 0) {
+			dProgressErr() << QApplication::tr("Missing room-ID for possible monster-placement at %1:%2").arg(x1).arg(y1);
+			continue;
+		}
+		//assert(dTransVal[x1][y1] != 0);
 		static_assert(DBORDERX >= 1, "PlaceGroup expects a large enough border I.");
 		static_assert(DBORDERY >= 1, "PlaceGroup expects a large enough border II.");
 		xp = x1; yp = y1;
