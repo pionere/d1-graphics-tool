@@ -666,17 +666,18 @@ static void DRLG_L1PlaceDoors()
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
 			df = drlgFlags[i][j];
-			if ((df & ~DRLG_PROTECTED) == 0)
+			if ((df & (DRLG_L1_HDOOR | DRLG_L1_VDOOR)) == 0)
 				continue;
-			assert(!(df & DRLG_PROTECTED));
+			assert(!(df & ~(DRLG_L1_HDOOR | DRLG_L1_VDOOR)));
 			//if (!(df & DRLG_PROTECTED)) {
 				c = dungeon[i][j];
 
 				if (df == DRLG_L1_HDOOR) {
 					assert(c == 2);
-					if (j == 1)
-						df = 0;
-					else //if (j != 1 && c == 2)
+					assert(j != 1); // otherwise it should be preserved
+					//if (j == 1)
+					//	df = 0;
+					//else //if (j != 1 && c == 2)
 						c = 26;
 					/* commented out because this is not possible with the current implementation
 					if (j != 1 && c == 7)
@@ -694,9 +695,10 @@ static void DRLG_L1PlaceDoors()
 				} else {
 					assert(df == DRLG_L1_VDOOR);
 					assert(c == 1);
-					if (i == 1)
-						df = 0;
-					else // if (i != 1 && c == 1)
+					assert(i != 1); // otherwise it should be preserved
+					//if (i == 1)
+					//	df = 0;
+					//else // if (i != 1 && c == 1)
 						c = 25;
 					/* commented out because this is not possible with the current implementation
 					if (i != 1 && c == 6)
@@ -730,8 +732,7 @@ static void DRLG_L1PlaceDoors()
 				}*/
 				dungeon[i][j] = c;
 			//}
-			// TODO: might want to convert DRLG_L1_VDOOR and DRLG_L1_HDOOR to DRLG_PROTECTED
-			drlgFlags[i][j] = df;
+			drlgFlags[i][j] = 0;
 		}
 	}
 }
