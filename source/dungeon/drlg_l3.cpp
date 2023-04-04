@@ -135,6 +135,29 @@ const BYTE L6TWARP[] = {
 	// clang-format on
 };
 #endif*/
+/*
+ * Specifies where the given tile ID should spread the room ID (transval).
+ */
+const BYTE L3FTYPES[157] = {
+	// clang-format off
+	 0,  2,  3,  4,  5,  7,  1, 15,  0, 10,
+	12,  8, 14, 13, 11,  3,  3,  5,  5,  7, // 10..
+	 3, 13, 10,  2,  0,  5,  3, 12,  8,  7, // 20..
+	11,  5, 12,  0,  1,  0,  0,  8,  0,  0, // 30..
+	 0,  0,  0,  0,  0,  0, 10, 10, 12, 12, // 40..
+	 0,  0, 15, 15, 15, 15, 15, 15, 15, 15, // 50..
+	15, 15, 15, 15, 15, 15, 15, 15,  8, 12, // 60..
+	12, 12, 12, 10,  8, 10, 15, 15, 15,  8, // 70..
+	10, 15, 15, 15,  0, 10,  0,  8, 12,  0, // 80..
+	 0, 10,  0,  8, 12,  0,  0,  0,  0,  0, // 90..
+	 0,  2,  3,  4,  5,  1, 15, 15, 15, 10, //100..
+	12,  0,  4, 15, 15, 15, 15, 15, 15, 15, //110..
+	 3, 10, 10, 10, 10,  8, 12, 12, 12, 12, //120..
+	 0,  0,  0,  0,  3,  5,  3,  5,  1,  1, //130..
+	 1,  1,  1,  1,  5,  3,  3,  5,  3,  5, //140..
+	 7,  3,  5, 12, 12,  0,  0              //150..
+	// clang-format on
+};
 /** Miniset: Stalagmite white stalactite 1. */
 const BYTE L3TITE1[] = {
 	// clang-format off
@@ -2143,7 +2166,7 @@ static bool DRLG_L3Lockout()
 static void DRLG_L3InitTransVals()
 {
 	DRLG_InitTrans();
-	DRLG_L3FloodTVal();
+	/*DRLG_L3FloodTVal();
 	for (int i = 0; i < numthemes; i++) {
 		int x = themes[i]._tsx - 1;
 		int y = themes[i]._tsy - 1;
@@ -2154,7 +2177,8 @@ static void DRLG_L3InitTransVals()
 		int x2 = 2 * (x + themeW) + DBORDERX - 1;
 		int y2 = 2 * (y + themeH) + DBORDERY - 1;
 		DRLG_RectTrans(x1, y1, x2, y2);
-	}
+	}*/
+	DRLG_FloodTVal(L3FTYPES);
 }
 
 static void DRLG_L3()

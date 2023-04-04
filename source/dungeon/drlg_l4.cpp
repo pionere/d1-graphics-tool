@@ -194,7 +194,7 @@ const BYTE L4BTYPES[138] = {
 	// clang-format on
 };
 /*
- * Specifies whether the given tile ID should spread the room ID (transval).
+ * Specifies where the given tile ID should spread the room ID (transval).
  */
 const BYTE L4FTYPES[138] = {
 	// clang-format off
@@ -1875,7 +1875,7 @@ static void DRLG_L4InitTransVals()
 		}
 	}
 
-	DRLG_InitTrans();
+	//DRLG_InitTrans();
 	DRLG_FloodTVal(L4FTYPES);
 	DRLG_L4TransFix();
 }

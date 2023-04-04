@@ -214,7 +214,7 @@ const BYTE L1BTYPES[] = {
 	// clang-format on
 };
 /*
- * Specifies whether the given tile ID should spread the room ID (transval). TODO: add to SOL with trap type?
+ * Specifies where the given tile ID should spread the room ID (transval). TODO: add to SOL with trap type?
  */
 const BYTE L1FTYPES[207] = {
 	// clang-format off
@@ -264,7 +264,7 @@ const BYTE L1FTYPES[207] = {
 };
 #ifdef HELLFIRE
 /*
- * Specifies whether the given tile ID should spread the room ID (transval).
+ * Specifies where the given tile ID should spread the room ID (transval).
  */
 const BYTE L5FTYPES[218] = {
 	// clang-format off
@@ -2477,7 +2477,7 @@ static void DRLG_L1InitTransVals()
 	static_assert(sizeof(drlg.transvalMap) == sizeof(dungeon), "transvalMap vs dungeon mismatch.");
 	memcpy(drlg.transvalMap, dungeon, sizeof(dungeon));
 
-	DRLG_InitTrans();
+	//DRLG_InitTrans();
 	const BYTE *floorTypes = L1FTYPES;
 #ifdef HELLFIRE
 	if (currLvl._dType == DTYPE_CRYPT) {
