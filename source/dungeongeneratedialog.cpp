@@ -1,5 +1,7 @@
 #include "dungeongeneratedialog.h"
 
+#include <QMessageBox>
+
 #include "d1dun.h"
 #include "dungeon/interfac.h"
 #include "mainwindow.h"
@@ -38,13 +40,13 @@ void DungeonGenerateDialog::initialize(D1Dun *d)
 void DungeonGenerateDialog::on_actionGenerateSeed_triggered()
 {
     QRandomGenerator *gen = QRandomGenerator::global();
-    this->ui->seedLineEdit->setText(QString::number(gen->generate()));
+    this->ui->seedLineEdit->setText(QString::number((int)gen->generate()));
 }
 
 void DungeonGenerateDialog::on_actionGenerateQuestSeed_triggered()
 {
     QRandomGenerator *gen = QRandomGenerator::global();
-    this->ui->questSeedLineEdit->setText(QString::number(gen->generate()));
+    this->ui->questSeedLineEdit->setText(QString::number((int)gen->generate()));
 }
 
 void DungeonGenerateDialog::on_generateButton_clicked()
@@ -54,8 +56,19 @@ void DungeonGenerateDialog::on_generateButton_clicked()
     params.difficulty = this->ui->difficultyComboBox->currentIndex();
     params.isMulti = this->ui->multiCheckBox->isChecked();
     params.isHellfire = this->ui->hellfireCheckBox->isChecked();
-    params.seed = this->ui->seedLineEdit->text().toInt();
-    params.seedQuest = this->ui->questSeedLineEdit->text().toInt();
+    bool ok;
+    QString seedTxt = this->ui->seedLineEdit->text();
+    params.seed = seedTxt.toInt(&ok);
+    if (!ok && !seedTxt.isEmpty()) {
+        QMessageBox::critical(this, "Error", "Failed to parse the seed to a 32-bit integer.");
+        return;
+    }
+    seedTxt = this->ui->questSeedLineEdit->text();
+    params.seedQuest = seedTxt.toInt(&ok);
+    if (!ok && !seedTxt.isEmpty()) {
+        QMessageBox::critical(this, "Error", "Failed to parse the quest-seed to a 32-bit integer.");
+        return;
+    }
     params.entryMode = this->ui->entryComboBox->currentData().value<int>();
     params.extraRounds = this->ui->extraRoundsLineEdit->text().toInt();
 
