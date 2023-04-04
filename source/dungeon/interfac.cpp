@@ -58,8 +58,9 @@ static void LogErrorF(const char* msg, ...)
 	QString text = QString(tmp);
 	int i = 1;
 	int idx;
-	while ((idx = text.indexOf("%d") != -1) {
-		text[idx + 1] = QString::number(i).at(0);
+	while ((idx = text.indexOf("%d")) != -1) {
+		QString replacement = QString("%%1").arg(i);
+		text.replace(idx, sizeof("%d") - 1, replacement);
 		i++;
 	}
 	dProgress() << text;
