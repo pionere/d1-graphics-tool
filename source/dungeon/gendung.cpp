@@ -750,7 +750,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 	BYTE *tvp = &dTransVal[0][0];
 
 	// prepare the propagation-directions
-	for (i = DMAXX; i >= 0; i--) {
+	for (i = DMAXX - 1; i >= 0; i--) {
 		for (j = DMAXY - 1; j >= 0; j--) {
 			BYTE tvm = floorTypes[drlg.transvalMap[i][j]];
 			BYTE tpm;
