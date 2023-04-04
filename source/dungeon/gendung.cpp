@@ -716,84 +716,84 @@ static void DRLG_FTVR(unsigned offset)
 	//if (drlg.transvalMap[(offset / DSIZEY) /2][(offset % DSIZEY) / 2] == 2) {
 	//	dProgress() << QString("%1:%2 has %3 flags").arg(offset / DSIZEY).arg(offset % DSIZEY).arg(tp[offset]);
     //}
-	if (tp[offset] & (1 << 0)) { // DIR_S
-		DRLG_FTVR(offset + DSIZEY + 1);
+	if (tp[offset] & (1 << 0)) { // DIR_SE
+		DRLG_FTVR(offset + 1);
 	}
-	if (tp[offset] & (1 << 1)) { // DIR_SW
-		DRLG_FTVR(offset + DSIZEY);
-	}
-	if (tp[offset] & (1 << 2)) { // DIR_W
-		DRLG_FTVR(offset - 1 + DSIZEY);
-	}
-	if (tp[offset] & (1 << 3)) { // DIR_NW
+	if (tp[offset] & (1 << 1)) { // DIR_NW
 		DRLG_FTVR(offset - 1);
 	}
-	if (tp[offset] & (1 << 4)) { // DIR_N
+	if (tp[offset] & (1 << 2)) { // DIR_N
 		DRLG_FTVR(offset - 1 - DSIZEY);
 	}
-	if (tp[offset] & (1 << 5)) { // DIR_NE
+	if (tp[offset] & (1 << 3)) { // DIR_NE
 		DRLG_FTVR(offset - DSIZEY);
 	}
-	if (tp[offset] & (1 << 6)) { // DIR_E
+	if (tp[offset] & (1 << 4)) { // DIR_E
 		DRLG_FTVR(offset + 1 - DSIZEY);
 	}
-	if (tp[offset] & (1 << 7)) { // DIR_SE
-		DRLG_FTVR(offset + 1);
+	if (tp[offset] & (1 << 5)) { // DIR_W
+		DRLG_FTVR(offset - 1 + DSIZEY);
+	}
+	if (tp[offset] & (1 << 6)) { // DIR_SW
+		DRLG_FTVR(offset + DSIZEY);
+	}
+	if (tp[offset] & (1 << 7)) { // DIR_S
+		DRLG_FTVR(offset + DSIZEY + 1);
 	}
 }
 
 void DRLG_FloodTVal(const BYTE *floorTypes)
 {
-	unsigned i, j;
-	BYTE *tp = (BYTE*)&dPiece[0][0];
+	int i, j;
+	BYTE *tp = (BYTE*)&drlg.transDirMap[0][0];
 	BYTE *tm = &drlg.transvalMap[0][0];
 	BYTE *tvp = &dTransVal[0][0];
 
 	// prepare the propagation-directions
-	for (i = 0; i < DMAXX; i++) {
-		for (j = 0; j < DMAXY; j++) {
+	for (i = DMAXX; i >= 0; i--) {
+		for (j = DMAXY - 1; j >= 0; j--) {
 			BYTE tvm = floorTypes[drlg.transvalMap[i][j]];
 			BYTE tpm;
 			// 1. subtile
 			if (tvm & (1 << 0)) {
-				tpm = (1 << 3) | (1 << 4) | (1 << 5); // DIR_NW, DIR_N, DIR_NE
-				if (tvm & (1 << 2))
-					tpm |= (1 << 7); // DIR_SE
-				if (tvm & (1 << 1))
-					tpm |= (1 << 1); // DIR_SW
+				tpm = (1 << 1) | (1 << 2) | (1 << 3); // DIR_NW, DIR_N, DIR_NE
+				if (tvm & (1 << 2)) // 3. subtile
+					tpm |= (1 << 0); // DIR_SE
+				if (tvm & (1 << 1)) // 2. subtile
+					tpm |= (1 << 6); // DIR_SW
 			} else {
 				tpm = 0;
 			}
 			tp[2 * i * DSIZEY + 2 * j] = tpm;
 			// 3. subtile
 			if (tvm & (1 << 2)) {
-				tpm = (1 << 5) | (1 << 6) | (1 << 7); // DIR_NE, DIR_E, DIR_SE
-				if (tvm & (1 << 0))
-					tpm |= (1 << 3); // DIR_NW
-				if (tvm & (1 << 3))
-					tpm |= (1 << 1); // DIR_SW
+				tpm = (1 << 3) | (1 << 4) | (1 << 0); // DIR_NE, DIR_E, DIR_SE
+				if (tvm & (1 << 0)) // 1. subtile
+					tpm |= (1 << 1); // DIR_NW
+				if (tvm & (1 << 3)) // 4. subtile
+					tpm |= (1 << 6); // DIR_SW
 			} else {
 				tpm = 0;
 			}
 			tp[2 * i * DSIZEY + 2 * j + 1] = tpm;
 			// 2. subtile
 			if (tvm & (1 << 1)) {
-				tpm = (1 << 1) | (1 << 2) | (1 << 3); // DIR_SW, DIR_W, DIR_NW
-				if (tvm & (1 << 0))
-					tpm |= (1 << 5); // DIR_NE
-				if (tvm & (1 << 3))
-					tpm |= (1 << 7); // DIR_SE
+				tpm = (1 << 6) | (1 << 5) | (1 << 1); // DIR_SW, DIR_W, DIR_NW
+				if (tvm & (1 << 0)) // 1. subtile
+					tpm |= (1 << 3); // DIR_NE
+				if (tvm & (1 << 3)) // 4. subtile
+					tpm |= (1 << 0); // DIR_SE
 			} else {
 				tpm = 0;
 			}
 			tp[(2 * i + 1) * DSIZEY + 2 * j] = tpm;
 			// 4. subtile
 			if (tvm & (1 << 3)) {
-				tpm = (1 << 7) | (1 << 0) | (1 << 1); // DIR_SE, DIR_S, DIR_SW
-				if (tvm & (1 << 2))
-					tpm |= (1 << 5); // DIR_NE
-				if (tvm & (1 << 1))
-					tpm |= (1 << 3); // DIR_NW
+				tpm = (1 << 0) | (1 << 7) | (1 << 6); // DIR_SE, DIR_S, DIR_SW
+				if (tvm & (1 << 2)) // 3. subtile
+					tpm |= (1 << 3); // DIR_NE
+				if (tvm & (1 << 1)) // 2. subtile
+					tpm |= (1 << 1); // DIR_NW
 			} else {
 				tpm = 0;
 			}
