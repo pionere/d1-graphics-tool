@@ -709,7 +709,7 @@ static void DRLG_FTVR(unsigned offset)
 		return;
 	}
 	tvp[offset] = numtrans;
-	BYTE *tdp = (BYTE*)&dPiece[0][0];
+	BYTE *tdp = (BYTE*)&drlg.transDirMap[0][0];
 	//if (numtrans == 1 || numtrans == 2 || numtrans == 6) {
 	//	dProgress() << QString("%1:%2 set to %3 on %4 with flags:%5 tpos%6:%7 off%8:%9").arg(offset / DSIZEY).arg(offset % DSIZEY).arg(numtrans).arg(drlg.transvalMap[(offset / DSIZEY) /2][(offset % DSIZEY) / 2]).arg(tdp[offset]).arg((offset / DSIZEY) /2).arg(((offset % DSIZEY) / 2) & 1).arg().arg(((offset % DSIZEY) / 2) & 1);
 	//}
