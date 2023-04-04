@@ -55,7 +55,14 @@ static void LogErrorF(const char* msg, ...)
 
 	va_end(va);
 
-	dProgress() << QString(tmp);
+	QString text = QString(tmp);
+	int i = 1;
+	int idx;
+	while ((idx = text.indexOf("%d") != -1) {
+		text[idx + 1] = QString::number(i).at(0);
+		i++;
+	}
+	dProgress() << text;
 	/*fputs(tmp, f0);
 
 	fputc('\n', f0);
