@@ -1779,7 +1779,7 @@ static void DRLG_L3DrawLava(int x, int y)
 		return;
 	}
 	if (!(drlgFlags[x][y] & DRLG_L3_LAVA)) {
-		return false;
+		return;
 	}
 	drlgFlags[x][y] &= ~DRLG_L3_LAVA;
 

@@ -72,7 +72,7 @@ static void StoreProtections(D1Dun *dun)
 	}
 	for (int y = 0; y < DMAXY; y++) {
 		for (int x = 0; x < DMAXX; x++) {
-			dun->setTileFlagAt(DBORDERX + x * 2, DBORDERX + y * 2, (drlgFlags[x][y] & DLRG_PROTECTED) != 0);
+			dun->setTileFlagAt(DBORDERX + x * 2, DBORDERX + y * 2, (drlgFlags[x][y] & DRLG_PROTECTED) != 0);
 		}
 	}
 	for (int y = 0; y < MAXDUNY; y++) {
