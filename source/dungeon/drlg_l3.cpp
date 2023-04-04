@@ -2165,6 +2165,9 @@ static bool DRLG_L3Lockout()
 
 static void DRLG_L3InitTransVals()
 {
+	static_assert(sizeof(drlg.transvalMap) == sizeof(dungeon), "transvalMap vs dungeon mismatch.");
+	memcpy(drlg.transvalMap, dungeon, sizeof(dungeon));
+
 	/*DRLG_InitTrans();
 	DRLG_L3FloodTVal();
 	for (int i = 0; i < numthemes; i++) {
