@@ -1038,7 +1038,7 @@ static void L1ClearChamberFlags()
 	static_assert(sizeof(drlgFlags) == DMAXX * DMAXY, "Linear traverse of drlgFlags does not work in L1ClearFlags.");
 	pTmp = &drlgFlags[0][0];
 	for (i = 0; i < DMAXX * DMAXY; i++, pTmp++)
-		*pTmp &= ~DLRG_CHAMBER;
+		*pTmp &= ~DRLG_L1_CHAMBER;
 }
 
 static void L1DrawRoom(int x, int y, int width, int height)
@@ -1508,7 +1508,7 @@ static void DRLG_L1GChamber(int sx, int sy)
 	for (i = 0; i < CHAMBER_SIZE; i++) {
 		for (j = 0; j < CHAMBER_SIZE; j++) {
 			assert(dungeon[i + sx][j + sy] == 13);
-			drlgFlags[i + sx][j + sy] |= DLRG_CHAMBER;
+			drlgFlags[i + sx][j + sy] |= DRLG_L1_CHAMBER;
 		}
 	}
 	// add the four main pillars of the chamber
