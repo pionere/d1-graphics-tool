@@ -683,7 +683,7 @@ void InitMonsters()
 	int scatteridx[MAX_LVLMTYPES];
 	const int tdx[4] = { -1, -1,  2,  2 };
 	const int tdy[4] = { -1,  2, -1,  2 };
-
+return;
 	// reserve the entry/exit area
 	for (i = 0; i < numtrigs; i++) {
 		ts = &trigs[i];
