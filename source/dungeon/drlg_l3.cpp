@@ -7,6 +7,10 @@
  */
 #include "all.h"
 
+#include <QString>
+
+#include "../progressdialog.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 /** Starting position of the megatiles. */
@@ -2187,10 +2191,17 @@ static void DRLG_L3InitTransVals()
 static void DRLG_L3()
 {
 	bool doneflag;
-
+//2961315201
+extern int32_t sglGameSeed;
+int32_t lastSeed;
+int loop0 = 0;
+int loop1 = 0;
 	do {
+loop0++;
 		while (true) {
 			do {
+loop1++;
+lastSeed = sglGameSeed;
 				memset(dungeon, 0, sizeof(dungeon));
 				DRLG_L3CreateBlock(RandRange(10, 29), RandRange(10, 29), 0, 4);
 				if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
@@ -2280,7 +2291,7 @@ static void DRLG_L3()
 			DRLG_L3Pool();
 		}
 	} while (_guLavapools < MIN_LAVA_POOL);
-
+dProgressErr() << QString("Last seed:%1 loop0:%2 loop1:%3").arg(lastSeed).arg(loop0).arg(loop1);
 	DRLG_L3PlaceRndSet(L3VERTWALLFIX1, 70);
 	DRLG_L3PlaceRndSet(L3HORZWALLFIX1, 70);
 #ifdef HELLFIRE
