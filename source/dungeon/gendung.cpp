@@ -262,6 +262,7 @@ void InitLvlDungeon()
 		nTrapTable[534] = PTT_RIGHT;
 		break;
 	case DTYPE_CAVES:
+		nSolidTable[249] = false; // sync tile 68 and 69 by making subtile 249 of tile 68 walkable.
 		break;
 	case DTYPE_HELL:
 		// patch dSolidTable - L4.SOL
