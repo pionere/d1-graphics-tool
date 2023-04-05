@@ -7,6 +7,10 @@
  */
 #include "all.h"
 
+#include <QString>
+
+#include "../progressdialog.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 /** Starting position of the megatiles. */
@@ -2429,6 +2433,14 @@ static void DRLG_L3()
 		DRLG_PlaceThemeRooms(5, 10, DEFAULT_MEGATILE_L3, 0, false);
 
 		DRLG_L3Wood();
+		for (int i = 0; i < DMAXX - 1; i++) {
+			for (int j = 0; j < DMAXY; j++) {
+				if (dungeon[i][j] == 8 && dungeon[i + 1][j] == 7) {
+					dProgressErr() << QString("87 @ %1:%2").arg(i).arg(j);
+                }
+            }
+        }
+
 		DRLG_L3PlaceRndSet(L3TITE1, 10);
 		DRLG_L3PlaceRndSet(L3TITE2, 10);
 		DRLG_L3PlaceRndSet(L3TITE3, 10);
