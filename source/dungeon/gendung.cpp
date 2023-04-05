@@ -499,7 +499,7 @@ void DRLG_InitTrans()
 	numtrans = 1;
 }
 
-void DRLG_MRectTrans(int x1, int y1, int x2, int y2, int tv)
+/*void DRLG_MRectTrans(int x1, int y1, int x2, int y2, int tv)
 {
 	int i, j;
 
@@ -513,7 +513,7 @@ void DRLG_MRectTrans(int x1, int y1, int x2, int y2, int tv)
 			dTransVal[i][j] = tv;
 		}
 	}
-}
+}*/
 
 void DRLG_RectTrans(int x1, int y1, int x2, int y2)
 {
@@ -527,7 +527,7 @@ void DRLG_RectTrans(int x1, int y1, int x2, int y2)
 	numtrans++;
 }
 
-void DRLG_ListTrans(int num, const BYTE* List)
+/*void DRLG_ListTrans(int num, const BYTE* List)
 {
 	int i;
 	BYTE x1, y1, x2, y2;
@@ -555,7 +555,7 @@ void DRLG_AreaTrans(int num, const BYTE* List)
 		numtrans--;
 	}
 	numtrans++;
-}
+}*/
 
 static void DRLG_FTVR(unsigned offset)
 {
