@@ -266,6 +266,7 @@ void InitLvlDungeon()
 		nTrapTable[534] = PTT_RIGHT;
 		break;
 	case DTYPE_CAVES:
+		nSolidTable[249] = false; // sync tile 68 and 69 by making subtile 249 of tile 68 walkable.
 		break;
 	case DTYPE_HELL:
 		// patch dSolidTable - L4.SOL
@@ -496,12 +497,12 @@ void DRLG_DrawMap(int idx)
 	}
 }
 
-/*void DRLG_InitTrans()
+void DRLG_InitTrans()
 {
 	memset(dTransVal, 0, sizeof(dTransVal));
 	//memset(TransList, 0, sizeof(TransList));
 	numtrans = 1;
-}*/
+}
 
 /*void DRLG_MRectTrans(int x1, int y1, int x2, int y2, int tv)
 {
@@ -561,97 +562,6 @@ void DRLG_AreaTrans(int num, const BYTE* List)
 	numtrans++;
 }*/
 
-/*#if defined(__3DS__)
-#pragma GCC push_options
-#pragma GCC optimize("O0")
-#endif
-static void DRLG_FTVR(int i, int j, int x, int y, int dir)
-{
-	assert(i >= 0 && i < DMAXX && j >= 0 && j < DMAXY);
-	if (!drlg.transvalMap[i][j]) {
-		switch (dir) {
-		case 0:
-			dTransVal[x][y] = numtrans;
-			dTransVal[x][y + 1] = numtrans;
-			break;
-		case 1:
-			dTransVal[x + 1][y] = numtrans;
-			dTransVal[x + 1][y + 1] = numtrans;
-			break;
-		case 2:
-			dTransVal[x][y] = numtrans;
-			dTransVal[x + 1][y] = numtrans;
-			break;
-		case 3:
-			dTransVal[x][y + 1] = numtrans;
-			dTransVal[x + 1][y + 1] = numtrans;
-			break;
-		case 4:
-			dTransVal[x + 1][y + 1] = numtrans;
-			break;
-		case 5:
-			dTransVal[x][y + 1] = numtrans;
-			break;
-		case 6:
-			dTransVal[x + 1][y] = numtrans;
-			break;
-		case 7:
-			dTransVal[x][y] = numtrans;
-			break;
-		default:
-			ASSUME_UNREACHABLE
-			break;
-		}
-	} else {
-		if (dTransVal[x][y] != 0) {
-			// assert(dTransVal[x][y] == TransVal);
-			return;
-		}
-		dTransVal[x][y] = numtrans;
-		dTransVal[x + 1][y] = numtrans;
-		dTransVal[x][y + 1] = numtrans;
-		dTransVal[x + 1][y + 1] = numtrans;
-		DRLG_FTVR(i + 1, j, x + 2, y, 0);
-		DRLG_FTVR(i - 1, j, x - 2, y, 1);
-		DRLG_FTVR(i, j + 1, x, y + 2, 2);
-		DRLG_FTVR(i, j - 1, x, y - 2, 3);
-		DRLG_FTVR(i - 1, j - 1, x - 2, y - 2, 4);
-		DRLG_FTVR(i + 1, j - 1, x + 2, y - 2, 5);
-		DRLG_FTVR(i - 1, j + 1, x - 2, y + 2, 6);
-		DRLG_FTVR(i + 1, j + 1, x + 2, y + 2, 7);
-	}
-}
-
-void DRLG_FloodTVal(const bool *floorTypes)
-{
-	int xx, yy, i, j;
-
-	// prepare transvalMap
-	for (i = 0; i < DMAXX; i++) {
-		for (j = 0; j < DMAXY; j++) {
-			drlg.transvalMap[i][j] = floorTypes[drlg.transvalMap[i][j]];
-		}
-	}
-
-	xx = DBORDERX;
-
-	for (i = 0; i < DMAXX; i++) {
-		yy = DBORDERY;
-
-		for (j = 0; j < DMAXY; j++) {
-			if (drlg.transvalMap[i][j] && dTransVal[xx][yy] == 0) {
-				DRLG_FTVR(i, j, xx, yy, 0);
-				numtrans++;
-			}
-			yy += 2;
-		}
-		xx += 2;
-	}
-}
-#if defined(__3DS__)
-#pragma GCC pop_options
-#endif*/
-
 static void DRLG_FTVR(unsigned offset)
 {
 	BYTE *tvp = &dTransVal[0][0];
@@ -659,13 +569,8 @@ static void DRLG_FTVR(unsigned offset)
 		return;
 	}
 	tvp[offset] = numtrans;
-	BYTE *tdp = (BYTE*)&drlg.transDirMap[0][0];
-	//if (numtrans == 1 || numtrans == 2 || numtrans == 6) {
-	//	dProgress() << QString("%1:%2 set to %3 on %4 with flags:%5 tpos%6:%7 off%8:%9").arg(offset / DSIZEY).arg(offset % DSIZEY).arg(numtrans).arg(drlg.transvalMap[(offset / DSIZEY) /2][(offset % DSIZEY) / 2]).arg(tdp[offset]).arg((offset / DSIZEY) /2).arg(((offset % DSIZEY) / 2) & 1).arg().arg(((offset % DSIZEY) / 2) & 1);
-	//}
-	//if (drlg.transvalMap[(offset / DSIZEY) /2][(offset % DSIZEY) / 2] == 2) {
-	//	dProgress() << QString("%1:%2 has %3 flags").arg(offset / DSIZEY).arg(offset % DSIZEY).arg(tdp[offset]);
-    //}
+
+	BYTE *tdp = &drlg.transDirMap[0][0];
 	if (tdp[offset] & (1 << 0)) { // DIR_SE
 		DRLG_FTVR(offset + 1);
 	}
@@ -695,14 +600,10 @@ static void DRLG_FTVR(unsigned offset)
 void DRLG_FloodTVal(const BYTE *floorTypes)
 {
 	int i, j;
-	BYTE *tdp = (BYTE*)&drlg.transDirMap[0][0]; // Overlaps with transvalMap!
-	// BYTE *tm = &drlg.transvalMap[0][0];
+	BYTE *tdp = &drlg.transDirMap[0][0]; // Overlaps with transvalMap!
 	BYTE *tvp = &dTransVal[0][0];
 
-	//DRLG_InitTrans();
-	//memset(dTransVal, 0, sizeof(dTransVal));
-	//memset(TransList, 0, sizeof(TransList));
-	//numtrans = 1;
+	DRLG_InitTrans();
 
 	// prepare the propagation-directions
 	for (i = DMAXX - 1; i >= 0; i--) {
@@ -756,8 +657,6 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 		}
 	}
 	// create the rooms
-	memset(dTransVal, 0, sizeof(dTransVal));
-	numtrans = 1;
 	for (i = 0; i < DSIZEX * DSIZEY; i++) {
 		if (tvp[i] != 0)
 			continue;

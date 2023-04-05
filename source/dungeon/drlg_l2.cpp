@@ -61,23 +61,6 @@ const BYTE L2BTYPES[161] = {
  */
 const BYTE L2FTYPES[161] = {
 	// clang-format off
-	/*false, false, false,  true, false, false, false, false, false, false,
-	false, false, false, false, false, false, false, false, false, false, // 10..
-	false, false, false, false, false, false, false, false, false, false, // 20..
-	false, false, false, false, false, false, false, false, false, false, // 30..
-	false, false, false, false,  true,  true,  true,  true,  true,  true, // 40..
-	 true,  true, false, false, false, false, false, false, false,  true, // 50..
-	 true,  true,  true,  true,  true,  true,  true,  true, false, false, // 60..
-	false,  true,  true, false, false, false,  true, false, false, false, // 70..
-	false, false, false, false, false, false, false, false,  true,  true, // 80..
-	 true,  true,  true,  true,  true, false,  true,  true,  true,  true, // 90..
-	 true,  true,  true,  true,  true,  true,  true,  true,  true,  true, //100..
-	 true,  true,  true,  true,  true,  true, false, false, false, false, //110..
-	 true,  true,  true,  true, false, false, false, false,  true,  true, //120..
-	 true,  true, false, false,  true,  true, false, false,  true,  true, //130..
-	false, false, false, false, false, false, false, false, false, false, //140..
-	false, false, false, false, false, false, false, false,  true,  true, //150..
-	false*/
 	 0, 10, 12, 15, 10, 12, 14, 10,  8, 12,
 	 0,  0,  0,  0,  0,  0,  0,  0,  0, 10, // 10..
 	10, 12, 12, 10, 10, 10, 10, 10, 10, 12, // 20..
@@ -895,29 +878,6 @@ static void DRLG_LoadL2SP()
  */
 static void DRLG_L2SetRoom(int idx)
 {
-	/*int rx1, ry1, rw, rh, i, j;
-	BYTE* sp;
-
-	rx1 = pSetPieces[idx]._spx;
-	ry1 = pSetPieces[idx]._spy;
-	rw = SwapLE16(*(uint16_t*)&pSetPieces[idx]._spData[0]);
-	rh = SwapLE16(*(uint16_t*)&pSetPieces[idx]._spData[2]);
-	sp = &pSetPieces[idx]._spData[4];
-	// load tiles
-	for (j = ry1; j < ry1 + rh; j++) {
-		for (i = rx1; i < rx1 + rw; i++) {
-			dungeon[i][j] = *sp != 0 ? *sp : DEFAULT_MEGATILE_L2;
-			// drlgFlags[i][j] = *sp != 0 ? TRUE : FALSE; // |= DLRG_PROTECTED;
-			sp += 2;
-		}
-	}
-	// load flags
-	for (j = ry1; j < ry1 + rh; j++) {
-		for (i = rx1; i < rx1 + rw; i++) {
-			drlgFlags[i][j] = (*sp & 1) != 0 ? TRUE : FALSE; // |= DLRG_PROTECTED;
-			sp += 2;
-		}
-	}*/
 	DRLG_LoadSP(idx, DEFAULT_MEGATILE_L2);
 }
 
@@ -1983,28 +1943,33 @@ static void DRLG_L2TransFix()
 		for (i = 0; i < DMAXX; i++) {
 			switch (dungeon[i][j]) {
 			// fix transVals of corners
-			case 143: // 10:
+			// case 12:
+			// case 16:
+			// case 145:
+			case 149:
 				DRLG_CopyTrans(xx, yy, xx + 1, yy);
-				DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
-				break;
-			case 144: // 11:
 				DRLG_CopyTrans(xx, yy, xx, yy + 1);
 				DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				break;
-			case 147: // 14:
-				if (dungeon[i][j - 1] == 10) {
-					DRLG_CopyTrans(xx, yy, xx + 1, yy);
-					DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
-				}
-				break;
-			case 148: // 15:
-				//if (dungeon[i + 1][j] == 11) {
-					DRLG_CopyTrans(xx, yy, xx, yy + 1);
-					DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
+			// case 14:
+			// case 10:
+			case 147:
+				//if (dungeon[i][j - 1] != 143) {
+				//	break;
 				//}
-				break;
-			case 149: // 16:
+				/* fall-through */
+			case 143:
 				DRLG_CopyTrans(xx, yy, xx + 1, yy);
+				DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
+				break;
+			// case 15:
+			// case 11:
+			case 148:
+				//if (dungeon[i + 1][j] != 11, 144) {
+				//	break;
+				//}
+				/* fall-through */
+			case 144:
 				DRLG_CopyTrans(xx, yy, xx, yy + 1);
 				DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				break;
@@ -2041,7 +2006,6 @@ static void DRLG_L2InitTransVals()
 		}
 	}
 
-	//DRLG_InitTrans();
 	DRLG_FloodTVal(L2FTYPES);
 	DRLG_L2TransFix();
 }

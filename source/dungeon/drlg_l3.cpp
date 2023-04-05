@@ -7,10 +7,6 @@
  */
 #include "all.h"
 
-#include <QString>
-
-#include "../progressdialog.h"
-
 DEVILUTION_BEGIN_NAMESPACE
 
 /** Starting position of the megatiles. */
@@ -150,7 +146,7 @@ const BYTE L3FTYPES[157] = {
 	11,  5, 12,  0,  1,  0,  0,  8,  0,  0, // 30..
 	 0,  0,  0,  0,  0,  0, 10, 10, 12, 12, // 40..
 	 0,  0, 15, 15, 15, 15, 15, 15, 15, 15, // 50..
-	15, 15, 15, 15, 15, 15, 15, 15,  8, 12, // 60..
+	15, 15, 15, 15, 15, 15, 15, 15, 12, 12, // 60..
 	12, 12, 12, 10,  8, 10, 15, 15, 15,  8, // 70..
 	10, 15, 15, 15,  0, 10,  0,  8, 12,  0, // 80..
 	 0, 10,  0,  8, 12,  0,  0,  0,  0,  0, // 90..
@@ -184,7 +180,7 @@ const BYTE L6FTYPES[167] = {
 	 0,  0,  0,  0,  0,  0,  0,  0,  0,  8, //130..
 	 0, 15, 15, 15, 15,  0,  0, 15, 15, 15, //140..
 	 15, 0,  8,  0,  8,  8,  0,  0, 10,  0, //150..
-	 8,  8,  0,  0,  0,  0,  0,    //160..
+	 8,  8,  0,  0,  0,  0,  0,             //160..
 	// clang-format on
 };
 #endif
@@ -353,7 +349,7 @@ const BYTE L3CREV1[] = {
 	// clang-format off
 	2, 1, // width, height
 
-	8, 7, // search
+	8, 9, // search
 
 	84, 85, // replace
 	// clang-format on
@@ -385,7 +381,7 @@ const BYTE L3CREV4[] = {
 	// clang-format off
 	2, 1, // width, height
 
-	8, 7, // search
+	8, 9, // search
 
 	90, 91, // replace
 	// clang-format on
@@ -419,9 +415,9 @@ const BYTE L3CREV7[] = {
 	// clang-format off
 	2, 1, // width, height
 
-	8, 7, // search
+	8, 9, // search
 
-	96, 101, // replace
+	96, 91, // replace
 	// clang-format on
 };
 /** Miniset: Cracked horizontal wall - north. */
@@ -1745,7 +1741,6 @@ static bool DRLG_L3SpawnLava(int x, int y, int dir)
 		ASSUME_UNREACHABLE
 		break;
 	}*/
-	//if (i & (1 << dir))
 	if (i & dir)
 		return false;
 
@@ -2082,23 +2077,6 @@ static void DRLG_L3SetRoom(int idx)
 	DRLG_LoadSP(idx, DEFAULT_MEGATILE_L3);
 }
 
-static void FixL3Warp()
-{
-	int i, j;
-
-	for (j = 0; j < DMAXY - 1; j++) {
-		for (i = 0; i < DMAXX - 1; i++) {
-			if (dungeon[i][j] == 125 && dungeon[i + 1][j] == 125 && dungeon[i][j + 1] == 125 && dungeon[i + 1][j + 1] == 125) {
-				dungeon[i][j] = 156;
-				dungeon[i + 1][j] = 155;
-				dungeon[i][j + 1] = 153;
-				dungeon[i + 1][j + 1] = 154;
-				return;
-			}
-		}
-	}
-}
-
 static void FixL3HallofHeroes()
 {
 	/* Commented out because the checked values are impossible to occur at the moment.
@@ -2129,18 +2107,6 @@ static void FixL3HallofHeroes()
 	}*/
 }
 
-/*static void DRLG_L3LockRec(int x, int y)
-{
-	if (!drlg.lockoutMap[x][y]) {
-		return;
-	}
-
-	drlg.lockoutMap[x][y] = 0;
-	DRLG_L3LockRec(x, y - 1);
-	DRLG_L3LockRec(x, y + 1);
-	DRLG_L3LockRec(x - 1, y);
-	DRLG_L3LockRec(x + 1, y);
-}*/
 static void DRLG_L3LockRec(unsigned offset)
 {
 	BYTE* pTmp = &drlg.lockoutMap[0][0];
@@ -2158,31 +2124,22 @@ static void DRLG_L3LockRec(unsigned offset)
 /*
  * Check if every non-empty tile is reachable from the others
  * using only the four basic directions.
+ * Assumes the border of dungeon is empty.
  */
 static bool DRLG_L3Lockout()
 {
-	int i, j;
+	int i;
 	BYTE* pTmp = &drlg.lockoutMap[0][0];
 
 	static_assert(sizeof(dungeon) == sizeof(drlg.lockoutMap), "lockoutMap vs dungeon mismatch.");
 	memcpy(drlg.lockoutMap, dungeon, sizeof(dungeon));
 
-	for (i = 0; i < DMAXX * DMAXY; i++) {
+	for (i = DMAXX; i < DMAXX * DMAXY; i++) {
 		if (pTmp[i] != 0) {
 			DRLG_L3LockRec(i);
 			break;
 		}
 	}
-	/*for (i = 0; i < DMAXX; i++) {
-		for (j = 0; j < DMAXY; j++) {
-			if (drlg.lockoutMap[i][j] != 0) {
-				// assert(i > 0 && i < DMAXX - 1 && j > 0 && j < DMAXY - 1);
-				DRLG_L3LockRec(i, j);
-				i = DMAXX;
-				break;
-			}
-		}
-	}*/
 
 	static_assert(sizeof(drlg.lockoutMap) == DMAXX * DMAXY, "Linear traverse of lockoutMap does not work in DRLG_L3Lockout.");
 	for (i = 0; i < DMAXX * DMAXY; i++, pTmp++)
@@ -2198,19 +2155,6 @@ static void DRLG_L3InitTransVals()
 	static_assert(sizeof(drlg.transvalMap) == sizeof(dungeon), "transvalMap vs dungeon mismatch.");
 	memcpy(drlg.transvalMap, dungeon, sizeof(dungeon));
 
-	/*DRLG_InitTrans();
-	DRLG_L3FloodTVal();
-	for (int i = 0; i < numthemes; i++) {
-		int x = themes[i]._tsx - 1;
-		int y = themes[i]._tsy - 1;
-		int themeW = themes[i]._tsWidth;
-		int themeH = themes[i]._tsHeight;
-		int x1 = 2 * x + DBORDERX + 4;
-		int y1 = 2 * y + DBORDERY + 4;
-		int x2 = 2 * (x + themeW) + DBORDERX - 1;
-		int y2 = 2 * (y + themeH) + DBORDERY - 1;
-		DRLG_RectTrans(x1, y1, x2, y2);
-	}*/
 	const BYTE *floorTypes = L3FTYPES;
 #ifdef HELLFIRE
 	if (currLvl._dType == DTYPE_NEST) {
@@ -2335,14 +2279,6 @@ static void DRLG_L3()
 
 #ifdef HELLFIRE
 	if (currLvl._dType == DTYPE_NEST) {
-		/** Miniset: Use random external connection 1. */
-		DRLG_PlaceRndTile(8, 25, 20);
-		/** Miniset: Use random external connection 2. */
-		DRLG_PlaceRndTile(8, 26, 20);
-		/** Miniset: Use random external connection 3. */
-		DRLG_PlaceRndTile(8, 27, 20);
-		/** Miniset: Use random external connection 4. */
-		DRLG_PlaceRndTile(8, 28, 20);
 		DRLG_L3PlaceRndSet(L6WALLLPOOL1, 10);
 		DRLG_L3PlaceRndSet(L6WALLLPOOL2, 10);
 		DRLG_L3PlaceRndSet(L6WALLSPOOL1, 10);
@@ -2386,6 +2322,14 @@ static void DRLG_L3()
 		DRLG_PlaceRndTile(7, 31, 25);
 		/** Miniset: Use random floor tile 4. */
 		DRLG_PlaceRndTile(7, 32, 25);
+		/** Miniset: Use random external connection 1. */
+		DRLG_PlaceRndTile(8, 25, 20);
+		/** Miniset: Use random external connection 2. */
+		DRLG_PlaceRndTile(8, 26, 20);
+		/** Miniset: Use random external connection 3. */
+		DRLG_PlaceRndTile(8, 27, 20);
+		/** Miniset: Use random external connection 4. */
+		DRLG_PlaceRndTile(8, 28, 20);
 		/** Miniset: Use random vertical wall tile 1. */
 		DRLG_PlaceRndTile(9, 33, 25);
 		/** Miniset: Use random vertical wall tile 2. */
@@ -2426,21 +2370,11 @@ static void DRLG_L3()
 #endif
 	{
 		// assert(currLvl._dType == DTYPE_CAVES);
-		//if (currLvl._dLevelIdx == DLV_CAVES1)
-		//	FixL3Warp();
 		FixL3HallofHeroes();
 		DRLG_L3River();
 		DRLG_PlaceThemeRooms(5, 10, DEFAULT_MEGATILE_L3, 0, false);
 
 		DRLG_L3Wood();
-		for (int i = 0; i < DMAXX - 1; i++) {
-			for (int j = 0; j < DMAXY; j++) {
-				if (dungeon[i][j] == 8 && dungeon[i + 1][j] == 7) {
-					dProgressErr() << QString("87 @ %1:%2").arg(i).arg(j);
-                }
-            }
-        }
-
 		DRLG_L3PlaceRndSet(L3TITE1, 10);
 		DRLG_L3PlaceRndSet(L3TITE2, 10);
 		DRLG_L3PlaceRndSet(L3TITE3, 10);

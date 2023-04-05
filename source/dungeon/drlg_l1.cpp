@@ -218,27 +218,6 @@ const BYTE L1BTYPES[] = {
  */
 const BYTE L1FTYPES[207] = {
 	// clang-format off
-	/*false, false, false, false, false, false, false, false, false, false,
-	false, false, false,  true, false,  true, false, false, false, false, // 10..
-	false, false, false, false, false, false, false, false, false, false, // 20..
-	false, false, false, false, false, false, false, false, false, false, // 30..
-	false, false, false, false, false,  true,  true,  true,  true,  true, // 40..
-	 true,  true,  true,  true,  true,  true,  true,  true,  true,  true, // 50..
-	 true,  true,  true, false, false, false, false,  true,  true,  true, // 60..
-	 true, false, false,  true,  true,  true,  true,  true,  true, false, // 70..
-	false, false, false, false, false, false, false, false, false, false, // 80..
-	false, false, false, false, false, false, false, false, false, false, // 90..
-	false, false, false, false,  true,  true,  true, false, false, false, //100..
-	false, false, false, false, false, false, false, false, false, false, //110..
-	false, false, false, false, false,  true, false, false,  true,  true, //120..
-	 true,  true,  true,  true,  true,  true,  true,  true,  true,  true, //130..
-	 true,  true,  true,  true,  true, false, false, false, false, false, //140..
-	 true,  true,  true, false, false, false, false, false, false, false, //150..
-	false, false,  true,  true, false, false, false, false, false, false, //160..
-	false,  true,  true,  true,  true, false, false, false, false, false, //170..
-	false, false, false, false, false, false, false, false, false, false, //180..
-	false, false, false, false, false, false, false, false, false, false, //190..
-	false, false, false, false, false, false, false*/
 	 0, 10, 12, 14,  8,  8, 10, 12, 10, 12,
 	 8, 10, 12, 15,  8, 14, 14, 14,  0,  0, // 10..
 	 0,  0,  0,  0,  0, 10, 12,  8,  8,  8, // 20..
@@ -2310,19 +2289,33 @@ static void DRLG_L1TransFix()
 				}
 				break;*/
 			// fix transVals of corners
-			case 201: // 20:
-			case 203: // 22:
+			// case 22:
+			// case 20:
+			case 203:
+			case 201:
 				DRLG_CopyTrans(xx, yy, xx + 1, yy);
 				DRLG_CopyTrans(xx, yy, xx, yy + 1);
 				//DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				break;
-			case 199: // 18:
-			case 204: // 23:
+			// case 23:
+			// case 18:
+			case 204:
+				//if (dungeon[i][j - 1] != 199) {
+				//	break;
+				//}
+				/* fall-through */
+			case 199:
 				DRLG_CopyTrans(xx, yy, xx + 1, yy);
 				//DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				break;
-			case 200: // 19:
-			case 205: // 24:
+			// case 19:
+			// case 24:
+			case 205:
+				//if (dungeon[i + 1][j] != 200) {
+				//	break;
+				//}
+				/* fall-through */
+			case 200:
 				DRLG_CopyTrans(xx, yy, xx, yy + 1);
 				//DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				break;
@@ -2404,19 +2397,33 @@ static void DRLG_L5TransFix()
 				}
 				break;*/
 			// fix transVals of corners
-			case 84: // 20:
-			case 86: // 22:
+			// case 22:
+			// case 20:
+			case 86:
+			case 84:
 				DRLG_CopyTrans(xx, yy, xx + 1, yy);
 				DRLG_CopyTrans(xx, yy, xx, yy + 1);
 				//DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				break;
-			case 82: // 18:
-			case 87: // 23:
+			// case 23:
+			// case 18:
+			case 87:
+				//if (dungeon[i][j - 1] != 82) {
+				//	break;
+				//}
+				/* fall-through */
+			case 82:
 				DRLG_CopyTrans(xx, yy, xx + 1, yy);
 				//DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				break;
-			case 83: // 19:
-			case 88: // 24:
+			// case 24:
+			// case 19:
+			case 88:
+				//if (dungeon[i + 1][j] != 83) {
+				//	break;
+				//}
+				/* fall-through */
+			case 83:
 				DRLG_CopyTrans(xx, yy, xx, yy + 1);
 				//DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				break;
@@ -2458,7 +2465,6 @@ static void DRLG_L1InitTransVals()
 	static_assert(sizeof(drlg.transvalMap) == sizeof(dungeon), "transvalMap vs dungeon mismatch.");
 	memcpy(drlg.transvalMap, dungeon, sizeof(dungeon));
 
-	//DRLG_InitTrans();
 	const BYTE *floorTypes = L1FTYPES;
 #ifdef HELLFIRE
 	if (currLvl._dType == DTYPE_CRYPT) {
