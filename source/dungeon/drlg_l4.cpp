@@ -1784,7 +1784,7 @@ static void DRLG_L4TransFix()
 	}
 }
 
-static void DRLG_L4InitTransVals()
+void DRLG_L4InitTransVals()
 {
 	int i, j;
 
@@ -1930,9 +1930,6 @@ static void DRLG_L4()
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
-	// create rooms (transvals)
-	DRLG_L4InitTransVals();
-
 	if (currLvl._dLevelIdx == DLV_HELL4) {
 		/*int x, y;
 		BYTE tv;
@@ -2058,6 +2055,7 @@ void CreateL4Dungeon()
 	DRLG_LoadL4SP();
 	DRLG_L4();
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
+	DRLG_L4InitTransVals();
 	DRLG_Init_Globals();
 	DRLG_SetPC();
 }
@@ -2091,13 +2089,11 @@ void LoadL4Dungeon(const LevelData* lds)
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
-	DRLG_L4InitTransVals();
-
 	// load dungeon
 	LoadL4DungeonData(lds->dSetLvlDun);
 
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
-
+	DRLG_L4InitTransVals();
 	DRLG_Init_Globals();
 
 	SetMapMonsters(pSetPieces[0]._spData, 0, 0);

@@ -2366,7 +2366,7 @@ static bool DRLG_L3Lockout()
 	return true;
 }
 
-static void DRLG_L3InitTransVals()
+void DRLG_L3InitTransVals()
 {
 	static_assert(sizeof(drlg.transvalMap) == sizeof(dungeon), "transvalMap vs dungeon mismatch.");
 	memcpy(drlg.transvalMap, dungeon, sizeof(dungeon));
@@ -2571,9 +2571,6 @@ static void DRLG_L3()
 	}
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
-
-	// create rooms (transvals)
-	DRLG_L3InitTransVals();
 }
 
 static void DRLG_L3LightTiles()
@@ -2611,6 +2608,7 @@ void CreateL3Dungeon()
 	DRLG_LoadL3SP();
 	DRLG_L3();
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L3);
+	DRLG_L3InitTransVals();
 	DRLG_Init_Globals();
 	DRLG_L3LightTiles();
 	DRLG_SetPC();
@@ -2645,14 +2643,12 @@ void LoadL3Dungeon(const LevelData* lds)
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
-	// assert(numthemes == 0);
-	DRLG_L3InitTransVals();
-
 	// load dungeon
 	LoadL3DungeonData(lds->dSetLvlDun);
 
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L3);
 
+	DRLG_L3InitTransVals();
 	DRLG_Init_Globals();
 	DRLG_L3LightTiles();
 
