@@ -1931,58 +1931,6 @@ static void DRLG_L4()
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
 	if (currLvl._dLevelIdx == DLV_HELL4) {
-		/*int x, y;
-		BYTE tv;
-		// fix transVal under diab2*.DUN
-		if (pSetPieces[1]._spData != NULL) {
-		x = 2 * pSetPieces[1]._spx + DBORDERX;
-		y = 2 * pSetPieces[1]._spy + DBORDERY;
-		tv = dTransVal[x][y];
-		// assert(tv != 0);
-		x += 11;
-		y += 9;
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 6; j++) {
-				dTransVal[x + i][y + j] = tv;
-			}
-		}
-		}
-
-		// fix transVal under diab3*.DUN
-		if (pSetPieces[2]._spData != NULL) {
-		x = 2 * pSetPieces[2]._spx + DBORDERX;
-		y = 2 * pSetPieces[2]._spy + DBORDERY;
-		tv = dTransVal[x][y];
-		// assert(tv != 0);
-		x += 17;
-		y += 1;
-		for (int i = 0; i < 2; i++) {
-			for (int j = 0; j < 4; j++) {
-				dTransVal[x + i][y + j] = tv;
-			}
-		}
-		y += 16;
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				dTransVal[x + i][y + j] = tv;
-			}
-		}
-		}
-
-		// fix transVal under diab4*.DUN
-		if (pSetPieces[3]._spData != NULL) {
-		x = 2 * pSetPieces[3]._spx + DBORDERX;
-		y = 2 * pSetPieces[3]._spy + DBORDERY;
-		tv = dTransVal[x][y];
-		// assert(tv != 0);
-		x += 3;
-		y += 3;
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				dTransVal[x + i][y + j] = tv;
-			}
-		}
-		}*/
 		// LoadFileWithMem("Levels\\L4Data\\diab1.DUN", pSetPieces[0]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab2a.DUN", pSetPieces[1]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab3a.DUN", pSetPieces[2]._spData);
@@ -2032,20 +1980,18 @@ static void DRLG_L4()
 		DRLG_DrawMap(0);
 	} else if (pSetPieces[0]._sptype == SPT_BETRAYER) {
 		if (pSetPieces[0]._spData != NULL && IsMultiGame) {
-		/*// fix transVal under Vile1.DUN
-		int x = 2 * pSetPieces[0]._spx + DBORDERX;
-		int y = 2 * pSetPieces[0]._spy + DBORDERY;
-		BYTE tv = dTransVal[x + 4][y + 4];
-		// assert(tv != 0);
-		dTransVal[x + 7][y + 5] = tv;
-		dTransVal[x + 8][y + 5] = tv;
-		dTransVal[x + 7][y + 6] = tv;
-		dTransVal[x + 8][y + 6] = tv;*/
 		// patch set-piece to add monsters - Vile1.DUN - done in DRLG_LoadL4SP
 		//uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		//lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 3 + 6 * 7 * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
 		//lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 3 * 7 * 2] = SwapLE16((UMT_RED_VEX + 1) | (1 << 15));
 		//lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 9 * 7 * 2] = SwapLE16((UMT_BLACKJADE + 1) | (1 << 15));
+		}
+	}
+	for (int i = lengthof(pSetPieces) - 1; i >= 0; i--) {
+		if (pSetPieces[i]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
+			DRGL_L4PatchSetPiece(pSetPieces[i]._spData);
+		} else {
+			pSetPieces[i]._sptype = SPT_NONE;
 		}
 	}
 }

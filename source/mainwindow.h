@@ -100,6 +100,7 @@ private:
     bool loadPal(const QString &palFilePath);
     bool loadUniqueTrn(const QString &trnfilePath);
     bool loadBaseTrn(const QString &trnfilePath);
+    D1Dun *loadDun(const QString &title);
 
     void addFrames(bool append);
     void addSubtiles(bool append);
