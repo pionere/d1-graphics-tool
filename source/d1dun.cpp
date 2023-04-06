@@ -3035,6 +3035,9 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(16, 30, UMT_LAZARUS + 1, true);
         change |= this->changeMonsterAt(24, 29, UMT_RED_VEX + 1, true);
         change |= this->changeMonsterAt(22, 33, UMT_BLACKJADE + 1, true);
+        // replace books
+        change |= this->changeObjectAt(10, 29, 47);
+        change |= this->changeObjectAt(29, 30, 47);
         break;
     case DUN_WARLORD_AFT: // Warlord.DUN
         // ensure the changing tiles are reserved
