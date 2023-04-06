@@ -187,6 +187,7 @@ public:
 
     bool resetTiles();
     bool resetSubtiles();
+    bool fixCorners();
     bool protectTiles();
     bool protectSubtiles();
 

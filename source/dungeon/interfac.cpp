@@ -188,19 +188,6 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 
     IncProgress();
 
-//    if (!IsMultiGame) {
-        ResyncQuests();
-//        if (lvldir != ENTRY_LOAD && IsLvlVisited(currLvl._dLevelIdx)) {
-//            LoadLevel();
-//        }
-        //SyncPortals();
-//    }
-    IncProgress();
-//    InitSync();
-//    PlayDungMsgs();
-
-//    guLvlVisited |= LEVEL_MASK(currLvl._dLevelIdx);
-
 //    music_start(AllLevels[currLvl._dLevelIdx].dMusic);
 }
 

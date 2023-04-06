@@ -53,6 +53,8 @@ int gnDifficulty;
 LevelStruct currLvl;
 /** Specifies the number of transparency blocks on the map. */
 BYTE numtrans;
+/* Specifies whether the transvals should be re-processed. */
+static bool gbDoTransVals;
 /** Specifies the active transparency indices. */
 bool TransList[256];
 /** Contains the tile IDs of each square on the map. */
@@ -502,6 +504,7 @@ void DRLG_InitTrans()
 	memset(dTransVal, 0, sizeof(dTransVal));
 	//memset(TransList, 0, sizeof(TransList));
 	numtrans = 1;
+	gbDoTransVals = false;
 }
 
 /*void DRLG_MRectTrans(int x1, int y1, int x2, int y2, int tv)

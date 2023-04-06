@@ -2442,9 +2442,6 @@ static void DRLG_L2()
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
-	// create rooms (transvals)
-	DRLG_L2InitTransVals();
-
 	if (pSetPieces[0]._sptype == SPT_BLIND) {
 		// load pre-map
 		MemFreeDbg(pSetPieces[0]._spData);
@@ -2465,18 +2462,6 @@ static void DRLG_L2()
 		}
 		DRLG_DrawMap(0);
 	} else if (pSetPieces[0]._sptype == SPT_BLOOD) {
-		// patch transvals to prevent transparent walls in the central room
-		int x = DBORDERX + 2 * pSetPieces[0]._spx;
-		int y = DBORDERY + 2 * pSetPieces[0]._spy;
-		BYTE tv0 = dTransVal[x + 7][y + 15];
-		BYTE tv1 = numtrans;
-		numtrans++;
-		for (int i = x + 4; i < x + 16; i++) {
-			for (int j = y + 0; j < y + 15; j++) {
-				if (dTransVal[i][j] == tv0)
-					dTransVal[i][j] = tv1;
-			}
-		}
 		// load pre-map
 		MemFreeDbg(pSetPieces[0]._spData);
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L2Data\\Blood2.DUN");
@@ -2578,6 +2563,7 @@ void CreateL2Dungeon()
 	DRLG_LoadL2SP();
 	DRLG_L2();
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L2);
+	DRLG_L2InitTransVals();
 	DRLG_Init_Globals();
 	DRLG_InitL2Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
 	DRLG_SetPC();
@@ -2641,14 +2627,12 @@ void LoadL2Dungeon(const LevelData* lds)
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
-	DRLG_L2InitTransVals();
-
 	// load dungeon
 	LoadL2DungeonData(lds->dSetLvlDun);
-
 	DRLG_L2SetMapFix();
 
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L2);
+	DRLG_L2InitTransVals();
 	DRLG_Init_Globals();
 	DRLG_InitL2Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
 

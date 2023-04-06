@@ -215,6 +215,7 @@
     <addaction name="separator"/>
     <addaction name="actionResetTiles_Dungeon"/>
     <addaction name="actionResetSubtiles_Dungeon"/>
+    <addaction name="actionFixCorners_Dungeon"/>
     <addaction name="separator"/>
     <addaction name="actionProtectTiles_Dungeon"/>
     <addaction name="actionProtectSubtiles_Dungeon"/>
@@ -597,6 +598,14 @@
    </property>
    <property name="toolTip">
     <string>Reinitialize the subtiles based on the tiles</string>
+   </property>
+  </action>
+  <action name="actionFixCorners_Dungeon">
+   <property name="text">
+    <string>Fix Corners</string>
+   </property>
+   <property name="toolTip">
+    <string>Replace external tiles which might cause a glitch in the game based on the current dungeon-type</string>
    </property>
   </action>
   <action name="actionProtectTiles_Dungeon">

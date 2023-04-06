@@ -43,6 +43,7 @@ POS32 DRLG_PlaceMiniSet(const BYTE* miniset);
 void DRLG_PlaceMegaTiles(int idx);
 void DRLG_DrawMap(int idx);
 void DRLG_InitTrans();
+// void DRLG_RedoTrans();
 //void DRLG_MRectTrans(int x1, int y1, int x2, int y2, int tv);
 void DRLG_RectTrans(int x1, int y1, int x2, int y2);
 //void DRLG_ListTrans(int num, const BYTE* List);
@@ -52,6 +53,7 @@ void DRLG_LoadSP(int idx, BYTE bv);
 void DRLG_SetPC();
 void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize);
 bool NearThemeRoom(int x, int y);
+// void DRLG_ChangeMap(int x1, int y1, int x2, int y2/*, bool hasNewObjPiece*/);
 
 inline void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
 {
