@@ -903,7 +903,7 @@ static void DRLG_LoadL1SP()
 		/*if (pSetPieces[0]._spData != NULL) {
 		// patch set-piece to use common tiles - SKngDO.DUN
 		pSetPieces[0]._spData[(2 + 5 + 3 * 7) * 2] = 203;
-		pSetPieces[0]._spData[(2 + 5 + 4 * 7) * 2] = 22;
+		pSetPieces[0]._spData[(2 + 5 + 4 * 7) * 2] = 203;
 		// patch set-piece to use common tiles and make the inner tile at the entrance non-walkable - SKngDO.DUN
 		pSetPieces[0]._spData[(2 + 5 + 2 * 7) * 2] = 203;
 		}*/
@@ -2835,7 +2835,7 @@ void LoadL1Dungeon(const LevelData* lds)
 
 	// load dungeon
 	LoadL1DungeonData(lds->dSetLvlDun);
-	DRLG_L1SetMapFix();
+	//DRLG_L1SetMapFix();
 	//DRLG_L1Floor();
 
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L1);

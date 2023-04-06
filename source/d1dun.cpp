@@ -463,10 +463,15 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
                 for (int y = 0; y < dunHeight; y++) {
                     for (int x = 0; x < dunWidth; x++) {
                         in >> readWord;
-                        this->flags[2 * y][2 * x] = readWord & 3; // 0xFF
-                        this->flags[2 * y][2 * x + 1] = (readWord & 1) | ((readWord & (1 << 2)) != 0 ? 2 : 0);
-                        this->flags[2 * y + 1][2 * x] = (readWord & 1) | ((readWord & (1 << 3)) != 0 ? 2 : 0);
-                        this->flags[2 * y + 1][2 * x + 1] = (readWord & 1) | ((readWord & (1 << 4)) != 0 ? 2 : 0);
+                        int tileFlags = readWord & 0xFF;
+                        int subtileFlags = (readWord >> 8) & 3;
+                        this->flags[2 * y][2 * x] = tileFlags | (subtileFlags << 1);
+                        subtileFlags = (readWord >> 10) & 3;
+                        this->flags[2 * y][2 * x + 1] = tileFlags | (subtileFlags << 1);
+                        subtileFlags = (readWord >> 12) & 3;
+                        this->flags[2 * y + 1][2 * x] = tileFlags | (subtileFlags << 1);
+                        subtileFlags = (readWord >> 14) & 3;
+                        this->flags[2 * y + 1][2 * x + 1] = tileFlags | (subtileFlags << 1);
                     }
                 }
                 for (int x = 0; x < 3 * dunWidth * dunHeight; x++) {
