@@ -2453,7 +2453,7 @@ bool D1Dun::fixCorners()
 {
     ProgressDialog::incBar(tr("Checking tiles..."), 1);
     bool result = false;
-    int rangeFrom = 0, rangeTo = 0, deltaVal = 0;
+    int rangeFrom = 0, rangeTo = -1, deltaVal = 0;
     // L1
     if (this->levelType == DTYPE_CATHEDRAL) {
         rangeFrom = 18;
@@ -2479,7 +2479,7 @@ bool D1Dun::fixCorners()
             if (currTileRef >= rangeFrom && currTileRef <= rangeTo) {
                 int newTileRef = currTileRef + deltaVal;
                 dProgress() << tr("Tile%1 at %2:%3 was replaced with %4.").arg(currTileRef).arg(tilePosX * TILE_WIDTH).arg(tilePosY * TILE_HEIGHT).arg(newTileRef);
-                this->tiles[tilePosY][tilePosX] = newTileRef;
+                this->setTileAt(tilePosX * TILE_WIDTH, tilePosY * TILE_HEIGHT, newTileRef);
                 result = true;
             }
         }
@@ -2600,7 +2600,7 @@ void D1Dun::patch(int dunFileIndex)
     case DUN_SKELKING_ENTRY: // SKngDO.DUN
         // patch set-piece to use common tiles
         change |= this->changeTileAt(5, 3, 203);
-        change |= this->changeTileAt(5, 4, 22);
+        change |= this->changeTileAt(5, 4, 203);
         // patch set-piece to use common tiles and make the inner tile at the entrance non-walkable
         change |= this->changeTileAt(5, 2, 203);
         break;
@@ -2776,7 +2776,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(14, 22, 203);
         // - SE
         for (int i = 1; i < 23; i++) {
-            change |= this->changeTileAt(20, i, 22);
+            change |= this->changeTileAt(20, i, 203);
         }
         // fix corners (L1)
         for (int y = 0; y < 23; y++) {
