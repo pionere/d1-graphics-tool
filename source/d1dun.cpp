@@ -463,7 +463,7 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
                 for (int y = 0; y < dunHeight; y++) {
                     for (int x = 0; x < dunWidth; x++) {
                         in >> readWord;
-                        this->flags[2 * y][2 * x] = readWord & 3;
+                        this->flags[2 * y][2 * x] = readWord & 3; // 0xFF
                         this->flags[2 * y][2 * x + 1] = (readWord & 1) | ((readWord & (1 << 2)) != 0 ? 2 : 0);
                         this->flags[2 * y + 1][2 * x] = (readWord & 1) | ((readWord & (1 << 3)) != 0 ? 2 : 0);
                         this->flags[2 * y + 1][2 * x + 1] = (readWord & 1) | ((readWord & (1 << 4)) != 0 ? 2 : 0);
@@ -850,10 +850,11 @@ bool D1Dun::save(const SaveAsParam &params)
         if (numLayers >= 1) {
             for (int y = 0; y < dunHeight; y++) {
                 for (int x = 0; x < dunWidth; x++) {
-                    writeWord = this->flags[2 * y][2 * x];
-                    writeWord |= (this->flags[2 * y][2 * x + 1] & 2) != 0 ? (1 << 2) : 0;
-                    writeWord |= (this->flags[2 * y + 1][2 * x] & 2) != 0 ? (1 << 3) : 0;
-                    writeWord |= (this->flags[2 * y + 1][2 * x + 1] & 2) != 0 ? (1 << 4) : 0;
+                    writeWord = this->flags[2 * y][2 * x] & 1;
+                    writeWord |= (this->flags[2 * y][2 * x] & 2) != 0 ? (3 << 8) : 0;
+                    writeWord |= (this->flags[2 * y][2 * x + 1] & 2) != 0 ? (3 << 10) : 0;
+                    writeWord |= (this->flags[2 * y + 1][2 * x] & 2) != 0 ? (3 << 12) : 0;
+                    writeWord |= (this->flags[2 * y + 1][2 * x + 1] & 2) != 0 ? (3 << 14) : 0;
                     out << writeWord;
                 }
             }
@@ -2640,7 +2641,7 @@ bool D1Dun::fixCorners()
             if (currTileRef >= rangeFrom && currTileRef <= rangeTo) {
                 int newTileRef = currTileRef + deltaVal;
                 dProgress() << tr("Tile%1 at %2:%3 was replaced with %4.").arg(currTileRef).arg(tilePosX * TILE_WIDTH).arg(tilePosY * TILE_HEIGHT).arg(newTileRef);
-                this->tiles[tilePosY][tilePosX] = newTileRef;
+                this->setTileAt(tilePosX * TILE_WIDTH, tilePosY * TILE_HEIGHT, newTileRef);
                 result = true;
             }
         }

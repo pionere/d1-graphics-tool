@@ -172,25 +172,24 @@ const BYTE L4PENTA2[] = {
 	// clang-format on
 };
 /*
- * Maps tile IDs to their corresponding undecorated tile ID.
- * Values with a single entry are commented out, because pointless to randomize a single option.
+ * Maps tile IDs to their corresponding undecorated tile type.
  */
 const BYTE L4BTYPES[138] = {
 	// clang-format off
-	0, 1, 2, 0 /*3*/, 4, 5, 6, 7, 0/*8*/, 9,
-	0/*10*/, 0/*11*/, 12, 0/*13*/, 0/*14*/, 15, 16, 0/*17*/, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 6,
-	6, 6, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 1, 2, 1, 2, 1, 2, 1, 1, 2,
-	2, 0, 0, 0, 0, 0, 0, 15, 16, 9,
-	12, 4, 5, 7, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0
+	 0,  1,  2,  0,  3,  4,  5,  6,  0,  7,
+	 0,  0,  8,  0,  0,  9, 10,  0,  0,  0, // 10..
+	 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 20..
+	 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 30..
+	 0,  0,  0,  0,  0,  0,  0,  0,  0,  5, // 40..
+	 5,  5,  0,  0,  0,  0,  0,  0,  0,  0, // 50..
+	 0,  1,  2,  1,  2,  1,  2,  1,  1,  2, // 60..
+	 2,  0,  0,  0,  0,  0,  0,  9, 10,  7, // 70..
+	 8,  3,  4,  6,  0,  0,  0,  0,  0,  0, // 80..
+	 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, // 90..
+	 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, //100..
+	 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, //110..
+	 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, //120..
+	 0,  0,  0,  0,  0,  0,  0,  0          //130..
 	// clang-format on
 };
 /*
@@ -1026,7 +1025,7 @@ static void L4TileFix()
 
 /*
  * Replace undecorated tiles with matching decorated tiles.
- * New dungeon values: 49 50 51 61..70 77..83 95 96 97
+ * New dungeon values: 49 50 51 61..70 77..83
  */
 static void DRLG_L4Subs()
 {
@@ -1075,16 +1074,6 @@ static void DRLG_L4Subs()
 							i = 0;
 					}
 					dungeon[x][y] = i;
-				}
-			}
-		}
-	}
-	// TODO: second round of replacement? why not merge with the first one?
-	for (x = 0; x < DMAXX; x++) {
-		for (y = 0; y < DMAXY; y++) {
-			if (random_(0, 10) == 0) {
-				if (L4BTYPES[dungeon[x][y]] == 6 && !drlgFlags[x][y]) {
-					dungeon[x][y] = RandRange(95, 97);
 				}
 			}
 		}
@@ -1977,63 +1966,14 @@ static void DRLG_L4()
 
 	DRLG_L4Shadows();
 	DRLG_L4Corners();
+	DRLG_PlaceRndTile(6, 95, 3);
+	DRLG_PlaceRndTile(6, 96, 4);
+	DRLG_PlaceRndTile(6, 97, 4);
 	DRLG_L4Subs();
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
 	if (currLvl._dLevelIdx == DLV_HELL4) {
-		/*int x, y;
-		BYTE tv;
-		// fix transVal under diab2*.DUN
-		if (pSetPieces[1]._spData != NULL) {
-		x = 2 * pSetPieces[1]._spx + DBORDERX;
-		y = 2 * pSetPieces[1]._spy + DBORDERY;
-		tv = dTransVal[x][y];
-		// assert(tv != 0);
-		x += 11;
-		y += 9;
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 6; j++) {
-				dTransVal[x + i][y + j] = tv;
-			}
-		}
-		}
-
-		// fix transVal under diab3*.DUN
-		if (pSetPieces[2]._spData != NULL) {
-		x = 2 * pSetPieces[2]._spx + DBORDERX;
-		y = 2 * pSetPieces[2]._spy + DBORDERY;
-		tv = dTransVal[x][y];
-		// assert(tv != 0);
-		x += 17;
-		y += 1;
-		for (int i = 0; i < 2; i++) {
-			for (int j = 0; j < 4; j++) {
-				dTransVal[x + i][y + j] = tv;
-			}
-		}
-		y += 16;
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				dTransVal[x + i][y + j] = tv;
-			}
-		}
-		}
-
-		// fix transVal under diab4*.DUN
-		if (pSetPieces[3]._spData != NULL) {
-		x = 2 * pSetPieces[3]._spx + DBORDERX;
-		y = 2 * pSetPieces[3]._spy + DBORDERY;
-		tv = dTransVal[x][y];
-		// assert(tv != 0);
-		x += 3;
-		y += 3;
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				dTransVal[x + i][y + j] = tv;
-			}
-		}
-		}*/
 		// LoadFileWithMem("Levels\\L4Data\\diab1.DUN", pSetPieces[0]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab2a.DUN", pSetPieces[1]._spData);
 		LoadFileWithMem("Levels\\L4Data\\diab3a.DUN", pSetPieces[2]._spData);
@@ -2083,15 +2023,6 @@ static void DRLG_L4()
 		DRLG_DrawMap(0);
 	} else if (pSetPieces[0]._sptype == SPT_BETRAYER) {
 		if (pSetPieces[0]._spData != NULL && IsMultiGame) {
-		/*// fix transVal under Vile1.DUN
-		int x = 2 * pSetPieces[0]._spx + DBORDERX;
-		int y = 2 * pSetPieces[0]._spy + DBORDERY;
-		BYTE tv = dTransVal[x + 4][y + 4];
-		// assert(tv != 0);
-		dTransVal[x + 7][y + 5] = tv;
-		dTransVal[x + 8][y + 5] = tv;
-		dTransVal[x + 7][y + 6] = tv;
-		dTransVal[x + 8][y + 6] = tv;*/
 		// patch set-piece to add monsters - Vile1.DUN - done in DRLG_LoadL4SP
 		//uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		//lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 3 + 6 * 7 * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
