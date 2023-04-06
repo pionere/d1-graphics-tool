@@ -1835,7 +1835,7 @@ static void DRLG_L4TransFix()
 	}
 }
 
-static void DRLG_L4InitTransVals()
+void DRLG_L4InitTransVals()
 {
 	int i, j;
 

@@ -2366,7 +2366,7 @@ static bool DRLG_L3Lockout()
 	return true;
 }
 
-static void DRLG_L3InitTransVals()
+void DRLG_L3InitTransVals()
 {
 	static_assert(sizeof(drlg.transvalMap) == sizeof(dungeon), "transvalMap vs dungeon mismatch.");
 	memcpy(drlg.transvalMap, dungeon, sizeof(dungeon));

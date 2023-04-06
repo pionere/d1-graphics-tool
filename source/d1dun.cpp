@@ -3143,6 +3143,14 @@ void D1Dun::patch(int dunFileIndex)
     case DUN_SKELKING_PRE: // SklKng2.DUN
         // - add the skeleton king
         change |= this->changeMonsterAt(19, 31, UMT_SKELKING + 1, true);
+        // fix corners (L1)
+        for (int y = 0; y < 25; y++) {
+            for (int x = 0; x < 37; x++) {
+                int currTileRef = this->tiles[y][x];
+                if (currTileRef >= 18 && currTileRef <= 24)
+                    change |= this->changeTileAt(x, y, currTileRef + 181);
+            }
+        }
         break;
     case DUN_BETRAYER: // Vile1.DUN
         // - add the unique monsters
