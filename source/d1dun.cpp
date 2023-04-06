@@ -2615,7 +2615,7 @@ bool D1Dun::fixCorners()
 {
     ProgressDialog::incBar(tr("Checking tiles..."), 1);
     bool result = false;
-    int rangeFrom = -1, rangeTo = 0, deltaVal = 0;
+    int rangeFrom = 0, rangeTo = -1, deltaVal = 0;
     // L1
     if (this->levelType == DTYPE_CATHEDRAL) {
         rangeFrom = 18;
