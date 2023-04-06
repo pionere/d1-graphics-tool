@@ -3022,7 +3022,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(14, 22, 203);
         // - SE
         for (int i = 1; i < 23; i++) {
-            change |= this->changeTileAt(20, i, 22);
+            change |= this->changeTileAt(20, i, 203);
         }
         // fix corners (L1)
         for (int y = 0; y < 23; y++) {
