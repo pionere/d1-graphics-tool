@@ -162,19 +162,6 @@ static void LoadGameLevel(int lvldir)
 
     IncProgress();
 
-//    if (!IsMultiGame) {
-        ResyncQuests();
-//        if (lvldir != ENTRY_LOAD && IsLvlVisited(currLvl._dLevelIdx)) {
-//            LoadLevel();
-//        }
-        //SyncPortals();
-//    }
-    IncProgress();
-//    InitSync();
-//    PlayDungMsgs();
-
-//    guLvlVisited |= LEVEL_MASK(currLvl._dLevelIdx);
-
 //    music_start(AllLevels[currLvl._dLevelIdx].dMusic);
 }
 
@@ -226,7 +213,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
     dun->setLevelType(currLvl._dType);
 
     for (int y = 0; y < MAXDUNY; y += 2) {
-        for (int x = 0; x < MAXDUNY; x += 2) {
+        for (int x = 0; x < MAXDUNX; x += 2) {
             dun->setTileAt(x, y, 0);
         }
     }
@@ -239,7 +226,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
     std::set<int> itemTypes;
     // std::vector<int> monUniques;
     for (int y = 0; y < MAXDUNY; y++) {
-        for (int x = 0; x < MAXDUNY; x++) {
+        for (int x = 0; x < MAXDUNX; x++) {
             if (hasSubtiles) {
                 dun->setSubtileAt(x, y, dPiece[x][y]);
             }
