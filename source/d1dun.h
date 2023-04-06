@@ -178,6 +178,7 @@ public:
 
     bool resetTiles();
     bool resetSubtiles();
+    bool fixCorners();
 
     void patch(int dunFileIndex); // dun_file_index
 

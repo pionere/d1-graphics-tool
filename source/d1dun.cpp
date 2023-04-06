@@ -2449,6 +2449,53 @@ bool D1Dun::resetSubtiles()
     return result;
 }
 
+bool D1Dun::fixCorners()
+{
+    ProgressDialog::incBar(tr("Checking tiles..."), 1);
+    bool result = false;
+    int rangeFrom = 0, rangeTo = 0, deltaVal = 0;
+    // L1
+    if (this->levelType == DTYPE_CATHEDRAL) {
+        rangeFrom = 18;
+        rangeTo = 24;
+        deltaVal = 181;
+    } else if (this->levelType == DTYPE_CRYPT) {
+        rangeFrom = 18;
+        rangeTo = 24;
+        deltaVal = 64;
+    } else if (this->levelType == DTYPE_CATACOMBS) {
+        rangeFrom = 10;
+        rangeTo = 16;
+        deltaVal = 133;
+    } else if (this->levelType == DTYPE_HELL) {
+        rangeFrom = 18;
+        rangeTo = 29;
+        deltaVal = 98;
+    }
+
+    for (int tilePosY = 0; tilePosY < this->height / TILE_HEIGHT; tilePosY++) {
+        for (int tilePosX = 0; tilePosX < this->width / TILE_WIDTH; tilePosX++) {
+            int currTileRef = this->tiles[tilePosY][tilePosX];
+            if (currTileRef >= rangeFrom && currTileRef <= rangeTo) {
+                int newTileRef = currTileRef + deltaVal;
+                dProgress() << tr("Tile%1 at %2:%3 was replaced with %4.").arg(currTileRef).arg(tilePosX * TILE_WIDTH).arg(tilePosY * TILE_HEIGHT).arg(newTileRef);
+                this->tiles[tilePosY][tilePosX] = newTileRef;
+                result = true;
+            }
+        }
+    }
+    if (!result) {
+        dProgress() << tr("No change was necessary.");
+    } else {
+        if (this->type == D1DUN_TYPE::NORMAL) {
+            this->modified = true;
+        }
+    }
+
+    ProgressDialog::decBar();
+    return result;
+}
+
 bool D1Dun::changeTileAt(int tilePosX, int tilePosY, int tileRef)
 {
     int prevTile = this->tiles[tilePosY][tilePosX];
@@ -2731,10 +2778,21 @@ void D1Dun::patch(int dunFileIndex)
         for (int i = 1; i < 23; i++) {
             change |= this->changeTileAt(20, i, 22);
         }
+        // fix corners (L1)
+        for (int y = 0; y < 23; y++) {
+            for (int x = 0; x < 21; x++) {
+                int currTileRef = this->tiles[y][x];
+                if (currTileRef >= 18 && currTileRef <= 24)
+                    change |= this->changeTileAt(x, y, currTileRef + 181);
+            }
+        }
         // - add the unique monsters
         change |= this->changeMonsterAt(16, 30, UMT_LAZARUS + 1, true);
         change |= this->changeMonsterAt(24, 29, UMT_RED_VEX + 1, true);
         change |= this->changeMonsterAt(22, 33, UMT_BLACKJADE + 1, true);
+        // replace books
+        change |= this->changeObjectAt(10, 29, 47);
+        change |= this->changeObjectAt(29, 30, 47);
         break;
     case DUN_WARLORD_AFT: // Warlord.DUN
         // ensure the changing tiles are reserved
@@ -2843,6 +2901,14 @@ void D1Dun::patch(int dunFileIndex)
     case DUN_SKELKING_PRE: // SklKng2.DUN
         // - add the skeleton king
         change |= this->changeMonsterAt(19, 31, UMT_SKELKING + 1, true);
+        // fix corners (L1)
+        for (int y = 0; y < 25; y++) {
+            for (int x = 0; x < 37; x++) {
+                int currTileRef = this->tiles[y][x];
+                if (currTileRef >= 18 && currTileRef <= 24)
+                    change |= this->changeTileAt(x, y, currTileRef + 181);
+            }
+        }
         break;
     case DUN_BETRAYER: // Vile1.DUN
         // - add the unique monsters

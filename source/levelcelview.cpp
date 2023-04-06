@@ -2796,6 +2796,15 @@ void LevelCelView::resetDungeonSubtiles()
     }
 }
 
+void LevelCelView::fixDungeonCorners()
+{
+    bool change = this->dun->fixCorners();
+    if (change) {
+        // update the view - done by the caller
+        // this->displayFrame();
+    }
+}
+
 void LevelCelView::checkTiles() const
 {
     this->dun->checkTiles();

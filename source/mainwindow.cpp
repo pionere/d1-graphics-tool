@@ -1719,6 +1719,16 @@ void MainWindow::on_actionResetSubtiles_Dungeon_triggered()
     ProgressDialog::done();
 }
 
+void MainWindow::on_actionFixCorners_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
+
+    this->levelCelView->fixDungeonCorners();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
 void MainWindow::on_actionCheckTiles_Dungeon_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
