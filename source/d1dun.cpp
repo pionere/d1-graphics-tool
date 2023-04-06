@@ -2615,7 +2615,7 @@ bool D1Dun::fixCorners()
 {
     ProgressDialog::incBar(tr("Checking tiles..."), 1);
     bool result = false;
-    int rangeFrom = 0, rangeTo = 0, deltaVal = 0;
+    int rangeFrom = -1, rangeTo = 0, deltaVal = 0;
     // L1
     if (this->levelType == DTYPE_CATHEDRAL) {
         rangeFrom = 18;
@@ -2846,7 +2846,7 @@ void D1Dun::patch(int dunFileIndex)
     case DUN_SKELKING_ENTRY: // SKngDO.DUN
         // patch set-piece to use common tiles
         change |= this->changeTileAt(5, 3, 203);
-        change |= this->changeTileAt(5, 4, 22);
+        change |= this->changeTileAt(5, 4, 203);
         // patch set-piece to use common tiles and make the inner tile at the entrance non-walkable
         change |= this->changeTileAt(5, 2, 203);
         break;
