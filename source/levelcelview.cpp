@@ -3792,9 +3792,11 @@ void LevelCelView::on_dungeonTileLineEdit_escPressed()
     this->ui->dungeonTileLineEdit->clearFocus();
 }
 
-void LevelCelView::on_dungeonTileProtectionCheckBox_stateChanged(int state)
+void LevelCelView::on_dungeonTileProtectionCheckBox_clicked()
 {
-    bool change = this->dun->setTileProtectionAt(this->currentDunPosX, this->currentDunPosY, (Qt::CheckState)state);
+    Qt::CheckState state = this->ui->dungeonTileProtectionCheckBox->checkState();
+
+    bool change = this->dun->setTileProtectionAt(this->currentDunPosX, this->currentDunPosY, state);
     if (change) {
         // update the view
         this->displayFrame();

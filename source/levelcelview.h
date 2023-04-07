@@ -229,7 +229,7 @@ private slots:
     void on_dungeonDefaultTileLineEdit_escPressed();
     void on_dungeonTileLineEdit_returnPressed();
     void on_dungeonTileLineEdit_escPressed();
-    void on_dungeonTileProtectionCheckBox_stateChanged(int state);
+    void on_dungeonTileProtectionCheckBox_clicked();
     void on_tilesetLoadPushButton_clicked();
     void on_tilesetClearPushButton_clicked();
     void on_assetLoadPushButton_clicked();
