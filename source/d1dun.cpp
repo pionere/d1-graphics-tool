@@ -469,7 +469,7 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
                     for (int x = 0; x < dunWidth; x++) {
                         in >> readWord;
                         Qt::CheckState tps = (readWord & 3) == 3 ? Qt::Checked : ((readWord & 1) ? Qt::PartiallyChecked : Qt::Unchecked);
-                        this->tileProtections[2 * y][2 * x] = tps;
+                        this->tileProtections[y][x] = tps;
                         int sps = (readWord >> 8) & 3;
                         this->subtileProtections[2 * y][2 * x] = sps != 0;
                         sps = (readWord >> 10) & 3;
