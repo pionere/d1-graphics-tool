@@ -2915,10 +2915,10 @@ void D1Dun::patch(int dunFileIndex)
         // protect inner tiles from spawning additional monsters/objects
         for (int y = 1; y < 6; y++) {
             for (int x = 1; x < 6; x++) {
-                change |= this->changeSubtileProtectionAt(x + 0, y + 0, true);
-                change |= this->changeSubtileProtectionAt(x + 1, y + 0, true);
-                change |= this->changeSubtileProtectionAt(x + 0, y + 1, true);
-                change |= this->changeSubtileProtectionAt(x + 1, y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, true);
             }
         }
         break;
@@ -2985,18 +2985,18 @@ void D1Dun::patch(int dunFileIndex)
         // protect inner tiles from spawning additional monsters/objects
         for (int y = 0; y < 6; y++) {
             for (int x = 0; x < 6; x++) {
-                change |= this->changeSubtileProtectionAt(x + 0, y + 0, true);
-                change |= this->changeSubtileProtectionAt(x + 1, y + 0, true);
-                change |= this->changeSubtileProtectionAt(x + 0, y + 1, true);
-                change |= this->changeSubtileProtectionAt(x + 1, y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, true);
             }
         }
         for (int y = 4; y < 11; y++) {
             for (int x = 4; x < 11; x++) {
-                change |= this->changeSubtileProtectionAt(x + 0, y + 0, true);
-                change |= this->changeSubtileProtectionAt(x + 1, y + 0, true);
-                change |= this->changeSubtileProtectionAt(x + 0, y + 1, true);
-                change |= this->changeSubtileProtectionAt(x + 1, y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, true);
             }
         }
         break;
@@ -3060,10 +3060,10 @@ void D1Dun::patch(int dunFileIndex)
         // protect inner tiles from spawning additional monsters/objects
         for (int y = 7; y < 15; y++) {
             for (int x = 2; x <= 6; x++) {
-                change |= this->changeSubtileProtectionAt(x + 0, y + 0, true);
-                change |= this->changeSubtileProtectionAt(x + 1, y + 0, true);
-                change |= this->changeSubtileProtectionAt(x + 0, y + 1, true);
-                change |= this->changeSubtileProtectionAt(x + 1, y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, true);
             }
         }
         break;
@@ -3183,10 +3183,10 @@ void D1Dun::patch(int dunFileIndex)
         // protect inner tiles from spawning additional monsters/objects
         for (int y = 0; y <= 5; y++) {
             for (int x = 0; x <= 6; x++) {
-                change |= this->changeSubtileProtectionAt(x + 0, y + 0, true);
-                change |= this->changeSubtileProtectionAt(x + 1, y + 0, true);
-                change |= this->changeSubtileProtectionAt(x + 0, y + 1, true);
-                change |= this->changeSubtileProtectionAt(x + 1, y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, true);
             }
         }
         break;
@@ -3276,10 +3276,10 @@ void D1Dun::patch(int dunFileIndex)
         // protect inner tiles from spawning additional monsters/objects
         for (int y = 0; y <= 5; y++) {
             for (int x = 0; x <= 5; x++) {
-                change |= this->changeSubtileProtectionAt(x + 0, y + 0, true);
-                change |= this->changeSubtileProtectionAt(x + 1, y + 0, true);
-                change |= this->changeSubtileProtectionAt(x + 0, y + 1, true);
-                change |= this->changeSubtileProtectionAt(x + 1, y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, true);
             }
         }
         break;
