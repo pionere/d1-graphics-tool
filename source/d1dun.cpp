@@ -1681,10 +1681,10 @@ bool D1Dun::setTileProtectionAt(int posx, int posy, Qt::CheckState protection)
 {
     int tilePosX = posx / TILE_WIDTH;
     int tilePosY = posy / TILE_HEIGHT;
-    if (this->tileProtections[tilePosX][tilePosY] == protection) {
+    if (this->tileProtections[tilePosY][tilePosX] == protection) {
         return false;
     }
-    this->tileProtections[tilePosX][tilePosY] = protection;
+    this->tileProtections[tilePosY][tilePosX] = protection;
     this->modified = true;
     return true;
 }
