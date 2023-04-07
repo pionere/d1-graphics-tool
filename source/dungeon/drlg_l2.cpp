@@ -811,17 +811,17 @@ static void DRLG_LoadL2SP()
 		// patch the map - Blind1.DUN
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// place pieces with closed doors
-		lm[2 + 4 + 3 * 11] = 150;
-		lm[2 + 6 + 7 * 11] = 150;
+		lm[2 + 4 + 3 * 11] = SwapLE16(150);
+		lm[2 + 6 + 7 * 11] = SwapLE16(150);
 		// protect the main structure
 		for (int y = 0; y < 7; y++) {
 			for (int x = 0; x < 7; x++) {
-				lm[2 + 11 * 11 + x + y * 11] = 3;
+				lm[2 + 11 * 11 + x + y * 11] = SwapLE16(3);
 			}
 		}
 		for (int y = 4; y < 11; y++) {
 			for (int x = 4; x < 11; x++) {
-				lm[2 + 11 * 11 + x + y * 11] = 3;
+				lm[2 + 11 * 11 + x + y * 11] = SwapLE16(3);
 			}
 		}
 		pSetPieces[0]._sptype = SPT_BLIND;
@@ -835,12 +835,12 @@ static void DRLG_LoadL2SP()
 		// protect the main structure
 		for (int y = 0; y <= 15; y++) {
 			for (int x = 2; x <= 7; x++) {
-				lm[2 + 10 * 16 + x + y * 10] = 3;
+				lm[2 + 10 * 16 + x + y * 10] = SwapLE16(3);
 			}
 		}
 		for (int y = 3; y <= 8; y++) {
 			for (int x = 0; x <= 9; x++) {
-				lm[2 + 10 * 16 + x + y * 10] = 3;
+				lm[2 + 10 * 16 + x + y * 10] = SwapLE16(3);
 			}
 		}
 		pSetPieces[0]._sptype = SPT_BLOOD;
@@ -856,7 +856,7 @@ static void DRLG_LoadL2SP()
 		// protect the main structure
 		for (int y = 1; y < 6; y++) {
 			for (int x = 1; x < 6; x++) {
-				lm[2 + 7 * 7 + x + y * 7] = 3;
+				lm[2 + 7 * 7 + x + y * 7] = SwapLE16(3);
 			}
 		}
 		pSetPieces[0]._sptype = SPT_BCHAMB;
@@ -2443,12 +2443,12 @@ static void DRLG_L2()
 		// protect inner tiles from spawning additional monsters/objects
 		for (int y = 0; y < 6; y++) {
 			for (int x = 0; x < 6; x++) {
-				lm[2 + 11 * 11 + x + y * 11] = (1 << 8) | (1 << 10) | (1 << 12) | (1 << 14);
+				lm[2 + 11 * 11 + x + y * 11] = SwapLE16((1 << 8) | (1 << 10) | (1 << 12) | (1 << 14));
 			}
 		}
 		for (int y = 4; y < 11; y++) {
 			for (int x = 4; x < 11; x++) {
-				lm[2 + 11 * 11 + x + y * 11] = (1 << 8) | (1 << 10) | (1 << 12) | (1 << 14);
+				lm[2 + 11 * 11 + x + y * 11] = SwapLE16((1 << 8) | (1 << 10) | (1 << 12) | (1 << 14));
 			}
 		}
 		DRLG_DrawMap(0);
@@ -2485,7 +2485,7 @@ static void DRLG_L2()
 		// protect inner tiles from spawning additional monsters/objects
 		for (int y = 7; y < 15; y++) {
 			for (int x = 2; x <= 6; x++) {
-				lm[2 + 10 * 16 + x + y * 10] = (1 << 8) | (1 << 10) | (1 << 12) | (1 << 14);
+				lm[2 + 10 * 16 + x + y * 10] = SwapLE16((1 << 8) | (1 << 10) | (1 << 12) | (1 << 14));
 			}
 		}
 		}
@@ -2498,12 +2498,12 @@ static void DRLG_L2()
 		// patch the map - Bonestr1.DUN
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// shadow of the external-left column
-		lm[2 + 0 + 4 * 7] = 48;
-		lm[2 + 0 + 5 * 7] = 50;
+		lm[2 + 0 + 4 * 7] = SwapLE16(48);
+		lm[2 + 0 + 5 * 7] = SwapLE16(50);
 		// protect inner tiles from spawning additional monsters/objects
 		for (int y = 1; y < 6; y++) {
 			for (int x = 1; x < 6; x++) {
-				lm[2 + 7 * 7 + x + y * 7] = (1 << 8) | (1 << 10) | (1 << 12) | (1 << 14);
+				lm[2 + 7 * 7 + x + y * 7] = SwapLE16((1 << 8) | (1 << 10) | (1 << 12) | (1 << 14));
 			}
 		}
 		}

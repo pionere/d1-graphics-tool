@@ -350,7 +350,7 @@ static void DRGL_L4PatchSetPiece(BYTE *pMap)
 			if (pn != 0) {
 				modp |= 3;
 			}
-			// - tiles with objects
+			// - tiles with monsters
 			/*if (lm[w * h + w * h * 2 * 2 + x * 2 + y * 2 * w] != 0) {
 				modp |= 1 | (1 << 8);
 			}
@@ -363,17 +363,17 @@ static void DRGL_L4PatchSetPiece(BYTE *pMap)
 			if (lm[w * h + w * h * 2 * 2 + x * 2 + 1 + (y * 2 + 1) * w] != 0) {
 				modp |= 1 | (1 << 14);
 			}*/
-			// - tiles with monsters
+			// - tiles with objects
 			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + y * 2 * w] != 0) {
 				modp |= 1 | (1 << 8);
 			}
 			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + 1 + y * 2 * w] != 0) {
 				modp |= 1 | (1 << 10);
 			}
-			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + (y * 2 + 1) * w] != 0) {
+			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + (y + 1) * 2 * w] != 0) {
 				modp |= 1 | (1 << 12);
 			}
-			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + 1 + (y * 2 + 1) * w] != 0) {
+			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + 1 + (y + 1) * 2 * w] != 0) {
 				modp |= 1 | (1 << 14);
 			}
 			lm[w * h + x + y * w] |= SwapLE16(modp);
