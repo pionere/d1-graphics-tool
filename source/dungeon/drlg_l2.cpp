@@ -551,11 +551,9 @@ static void DRLG_L2Subs()
 #endif
 	for (x = 0; x < DMAXX; x++) {
 		for (y = 0; y < DMAXY; y++) {
-			if (drlgFlags[x][y])
-				continue;
 			if (random_(0, 4) == 0) {
 				c = L2BTYPES[dungeon[x][y]];
-				if (c != 0) {
+				if (c != 0 && drlgFlags[x][y] == 0) {
 					rv = random_(0, MAX_MATCH);
 					k = 0;
 					while (TRUE) {
@@ -1459,9 +1457,8 @@ static void DRLG_L2MakeMegas()
 	}
 }
 
-static void L2TileFix()
+/*static void L2TileFix()
 {
-	/* commented out because this is no longer necessary
 	int i, j;
 
 	for (j = 0; j < DMAXY; j++) {
@@ -1482,8 +1479,8 @@ static void L2TileFix()
 				dungeon[i + 1][j] = 16;
 			}
 		}
-	}*/
-}
+	}
+}*/
 
 static int DL2_NumNoChar()
 {
@@ -2121,9 +2118,8 @@ static void L2LockoutFix()
 	}
 }
 
-static void L2DoorFix()
+/*static void L2DoorFix()
 {
-	/* commented out, because this is no longer necessary
 	int i, j;
 
 	for (j = 1; j < DMAXY; j++) {
@@ -2137,8 +2133,8 @@ static void L2DoorFix()
 				dungeon[i][j] = 9;
 			}
 		}
-	}*/
-}
+	}
+}*/
 
 static bool IsPillar(BYTE bv)
 {
@@ -2329,7 +2325,7 @@ static void DRLG_L2()
 
 		DRLG_L2MakeMegas();
 
-		L2TileFix();
+		// L2TileFix(); - commented out, because this is no longer necessary
 		memset(drlgFlags, 0, sizeof(drlgFlags));
 		if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
 			DRLG_L2SetRoom(0);
@@ -2376,7 +2372,7 @@ static void DRLG_L2()
 	}
 
 	L2LockoutFix();
-	// L2DoorFix();
+	// L2DoorFix(); - commented out, because this is no longer necessary
 
 	DRLG_PlaceThemeRooms(6, 10, DEFAULT_MEGATILE_L2, 0, false);
 
