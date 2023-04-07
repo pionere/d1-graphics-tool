@@ -1576,7 +1576,7 @@ static void DRLG_L3River()
 		do {
 			rx = random_(0, DMAXX);
 			ry = random_(0, DMAXY);
-			while (dungeon[rx][ry] < 25 || dungeon[rx][ry] > 28) {
+			while (dungeon[rx][ry] < 25 || dungeon[rx][ry] > 28 || drlgFlags[rx][ry] != 0) {
 				if (++rx == DMAXX) {
 					rx = 0;
 					if (++ry == DMAXY)
@@ -1620,7 +1620,7 @@ static void DRLG_L3River()
 				py = ry + diroff_y[dir];
 				assert(px >= 0 && px < DMAXX);
 				assert(py >= 0 && py < DMAXY);
-				if (dungeon[px][py] == 7)
+				if (dungeon[px][py] == 7 && drlgFlags[rx][ry] == 0)
 					break;
 			}
 
