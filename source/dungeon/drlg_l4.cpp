@@ -364,16 +364,16 @@ static void DRGL_L4PatchSetPiece(BYTE *pMap)
 				modp |= 1 | (1 << 14);
 			}*/
 			// - tiles with objects
-			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + y * 2 * w] != 0) {
+			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + (2 * x + 0) + (2 * y + 0) * w * 2] != 0) {
 				modp |= 1 | (1 << 8);
 			}
-			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + 1 + y * 2 * w] != 0) {
+			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + (2 * x + 1) + (2 * y + 0) * w * 2] != 0) {
 				modp |= 1 | (1 << 10);
 			}
-			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + (y + 1) * 2 * w] != 0) {
+			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + (2 * x + 0) + (2 * y + 1) * w * 2] != 0) {
 				modp |= 1 | (1 << 12);
 			}
-			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + 1 + (y + 1) * 2 * w] != 0) {
+			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + (2 * x + 1) + (2 * y + 1) * w * 2] != 0) {
 				modp |= 1 | (1 << 14);
 			}
 			lm[w * h + x + y * w] |= SwapLE16(modp);

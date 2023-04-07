@@ -471,11 +471,11 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
                         Qt::CheckState tps = (readWord & 3) == 3 ? Qt::Checked : ((readWord & 1) ? Qt::PartiallyChecked : Qt::Unchecked);
                         this->tileProtections[y][x] = tps;
                         int sps = (readWord >> 8) & 3;
-                        this->subtileProtections[2 * y][2 * x] = sps != 0;
+                        this->subtileProtections[2 * y + 0][2 * x + 0] = sps != 0;
                         sps = (readWord >> 10) & 3;
-                        this->subtileProtections[2 * y][2 * x + 1] = sps != 0;
+                        this->subtileProtections[2 * y + 0][2 * x + 1] = sps != 0;
                         sps = (readWord >> 12) & 3;
-                        this->subtileProtections[2 * y + 1][2 * x] = sps != 0;
+                        this->subtileProtections[2 * y + 1][2 * x + 0] = sps != 0;
                         sps = (readWord >> 14) & 3;
                         this->subtileProtections[2 * y + 1][2 * x + 1] = sps != 0;
                     }
@@ -866,9 +866,9 @@ bool D1Dun::save(const SaveAsParam &params)
                 for (int x = 0; x < dunWidth; x++) {
                     Qt::CheckState tps = this->tileProtections[y][x];
                     writeWord = tps == Qt::Checked ? 3 : (tps == Qt::PartiallyChecked ? 1 : 0);
-                    writeWord |= this->subtileProtections[2 * y][2 * x] ? (3 << 8) : 0;
-                    writeWord |= this->subtileProtections[2 * y][2 * x + 1] ? (3 << 10) : 0;
-                    writeWord |= this->subtileProtections[2 * y + 1][2 * x] ? (3 << 12) : 0;
+                    writeWord |= this->subtileProtections[2 * y + 0][2 * x + 0] ? (3 << 8) : 0;
+                    writeWord |= this->subtileProtections[2 * y + 0][2 * x + 1] ? (3 << 10) : 0;
+                    writeWord |= this->subtileProtections[2 * y + 1][2 * x + 0] ? (3 << 12) : 0;
                     writeWord |= this->subtileProtections[2 * y + 1][2 * x + 1] ? (3 << 14) : 0;
                     out << writeWord;
                 }
