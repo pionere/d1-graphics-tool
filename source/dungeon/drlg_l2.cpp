@@ -2437,8 +2437,9 @@ static void DRLG_L2()
 		MemFreeDbg(pSetPieces[0]._spData);
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L2Data\\Blind2.DUN");
 		// patch the map - Blind2.DUN
+		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// replace the door with wall
-		pSetPieces[0]._spData[(2 + 4 + 3 * 11) * 2] = 25;
+		lm[2 + 4 + 3 * 11] = 25;
 		// protect inner tiles from spawning additional monsters/objects
 		for (int y = 0; y < 6; y++) {
 			for (int x = 0; x < 6; x++) {

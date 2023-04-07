@@ -2912,6 +2912,15 @@ void D1Dun::patch(int dunFileIndex)
         // shadow of the external-left column
         change |= this->changeTileAt(0, 4, 48);
         change |= this->changeTileAt(0, 5, 50);
+        // protect inner tiles from spawning additional monsters/objects
+        for (int y = 1; y < 6; y++) {
+            for (int x = 1; x < 6; x++) {
+                change |= this->changeSubtileProtectionAt(x + 0, y + 0, true);
+                change |= this->changeSubtileProtectionAt(x + 1, y + 0, true);
+                change |= this->changeSubtileProtectionAt(x + 0, y + 1, true);
+                change |= this->changeSubtileProtectionAt(x + 1, y + 1, true);
+            }
+        }
         break;
     case DUN_BONECHAMB_ENTRY_AFT: // Bonestr2.DUN
         // place shadows
@@ -2936,12 +2945,10 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(4, 1, 51);
         change |= this->changeTileAt(4, 2, 47);
         change |= this->changeTileAt(4, 3, 50); // 51
-        // ensure the changing tiles are reserved
-        for (int y = 0; y < 7; y++) {
-            for (int x = 0; x < 7; x++) {
-                if (this->tiles[y][x] == 0) {
-                    this->changeTileAt(x, y, 3);
-                }
+        // protect the main structure
+        for (int y = 1; y < 6; y++) {
+            for (int x = 1; x < 6; x++) {
+                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
             }
         }
         break;
@@ -2975,19 +2982,28 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(4, 3, 25);
         // remove items
         change |= this->changeItemAt(5, 5, 0);
+        // protect inner tiles from spawning additional monsters/objects
+        for (int y = 0; y < 6; y++) {
+            for (int x = 0; x < 6; x++) {
+                change |= this->changeSubtileProtectionAt(x + 0, y + 0, true);
+                change |= this->changeSubtileProtectionAt(x + 1, y + 0, true);
+                change |= this->changeSubtileProtectionAt(x + 0, y + 1, true);
+                change |= this->changeSubtileProtectionAt(x + 1, y + 1, true);
+            }
+        }
+        for (int y = 4; y < 11; y++) {
+            for (int x = 4; x < 11; x++) {
+                change |= this->changeSubtileProtectionAt(x + 0, y + 0, true);
+                change |= this->changeSubtileProtectionAt(x + 1, y + 0, true);
+                change |= this->changeSubtileProtectionAt(x + 0, y + 1, true);
+                change |= this->changeSubtileProtectionAt(x + 1, y + 1, true);
+            }
+        }
         break;
     case DUN_BLIND_AFT: // Blind1.DUN
         // place pieces with closed doors
         change |= this->changeTileAt(4, 3, 150);
         change |= this->changeTileAt(6, 7, 150);
-        // ensure the changing tiles are reserved
-        for (int y = 0; y < 11; y++) {
-            for (int x = 0; x < 11; x++) {
-                if (this->tiles[y][x] == 0) {
-                    this->changeTileAt(x, y, 3);
-                }
-            }
-        }
         // add monsters from Blind2.DUN
         change |= this->changeMonsterAt(1, 6, 32, false);
         change |= this->changeMonsterAt(4, 1, 32, false);
@@ -3002,6 +3018,17 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(15, 13, 32, false);
         // remove items
         change |= this->changeItemAt(5, 5, 0);
+        // protect the main structure
+        for (int y = 0; y < 7; y++) {
+            for (int x = 0; x < 7; x++) {
+                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+            }
+        }
+        for (int y = 4; y < 11; y++) {
+            for (int x = 4; x < 11; x++) {
+                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+            }
+        }
         break;
     case DUN_BLOOD_PRE: // Blood2.DUN
         // place pieces with closed doors
@@ -3030,10 +3057,17 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeObjectAt(6, 8, 0);
         change |= this->changeObjectAt(6, 10, 0);
         change |= this->changeObjectAt(6, 12, 0);
+        // protect inner tiles from spawning additional monsters/objects
+        for (int y = 7; y < 15; y++) {
+            for (int x = 2; x <= 6; x++) {
+                change |= this->changeSubtileProtectionAt(x + 0, y + 0, true);
+                change |= this->changeSubtileProtectionAt(x + 1, y + 0, true);
+                change |= this->changeSubtileProtectionAt(x + 0, y + 1, true);
+                change |= this->changeSubtileProtectionAt(x + 1, y + 1, true);
+            }
+        }
         break;
     case DUN_BLOOD_AFT: // Blood1.DUN
-        // ensure the inner tiles are reserved
-        change |= this->changeTileAt(5, 12, 3);
         // replace torches
         change |= this->changeObjectAt(11, 8, 110);
         change |= this->changeObjectAt(11, 10, 110);
@@ -3066,6 +3100,17 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(12, 25, 62, false);
         // remove items
         change |= this->changeItemAt(9, 2, 0);
+        // protect the main structure
+        for (int y = 0; y <= 15; y++) {
+            for (int x = 2; x <= 7; x++) {
+                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+            }
+        }
+        for (int y = 3; y <= 8; y++) {
+            for (int x = 0; x <= 9; x++) {
+                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+            }
+        }
         break;
     case DUN_VILE_PRE: // Vile2.DUN
         // replace default tiles with external piece I.
@@ -3100,9 +3145,9 @@ void D1Dun::patch(int dunFileIndex)
         break;
     case DUN_WARLORD_AFT: // Warlord.DUN
         // ensure the changing tiles are reserved
-        change |= this->changeTileAt(7, 2, 6);
-        change |= this->changeTileAt(7, 3, 6);
-        change |= this->changeTileAt(7, 4, 6);
+        change |= this->changeTileProtectionAt(7, 2, Qt::Checked);
+        change |= this->changeTileProtectionAt(7, 3, Qt::Checked);
+        change |= this->changeTileProtectionAt(7, 4, Qt::Checked);
         // - add the Warlord
         change |= this->changeMonsterAt(6, 7, UMT_WARLORD + 1, true);
         break;
@@ -3135,6 +3180,15 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeItemAt(8, 2, 0);
         change |= this->changeItemAt(5, 10, 0);
         change |= this->changeItemAt(8, 10, 0);
+        // protect inner tiles from spawning additional monsters/objects
+        for (int y = 0; y <= 5; y++) {
+            for (int x = 0; x <= 6; x++) {
+                change |= this->changeSubtileProtectionAt(x + 0, y + 0, true);
+                change |= this->changeSubtileProtectionAt(x + 1, y + 0, true);
+                change |= this->changeSubtileProtectionAt(x + 0, y + 1, true);
+                change |= this->changeSubtileProtectionAt(x + 1, y + 1, true);
+            }
+        }
         break;
     case DUN_BANNER_PRE: // Banner2.DUN
         // replace entry tile
@@ -3219,6 +3273,15 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(3, 6, UMT_LAZARUS + 1, true);
         change |= this->changeMonsterAt(5, 3, UMT_RED_VEX + 1, true);
         change |= this->changeMonsterAt(5, 9, UMT_BLACKJADE + 1, true);
+        // protect inner tiles from spawning additional monsters/objects
+        for (int y = 0; y <= 5; y++) {
+            for (int x = 0; x <= 5; x++) {
+                change |= this->changeSubtileProtectionAt(x + 0, y + 0, true);
+                change |= this->changeSubtileProtectionAt(x + 1, y + 0, true);
+                change |= this->changeSubtileProtectionAt(x + 0, y + 1, true);
+                change |= this->changeSubtileProtectionAt(x + 1, y + 1, true);
+            }
+        }
         break;
     case DUN_DIAB_2_AFT: // Diab2b.DUN
         // replace monsters from Diab2a.DUN

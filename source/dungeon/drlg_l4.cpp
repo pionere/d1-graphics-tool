@@ -417,6 +417,14 @@ static void DRLG_LoadL4SP()
 		pSetPieces[0]._sptype = SPT_BETRAYER;
 	} else if (QuestStatus(Q_WARLORD)) {
 		pSetPieces[0]._spData = LoadFileInMem("Levels\\L4Data\\Warlord.DUN");
+		if (pSetPieces[0]._spData != NULL) {
+		// patch set-piece - Warlord.DUN
+		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
+		// ensure the changing tiles are protected
+		lm[2 + 8 * 7 + 7 + 2 * 8] = 3;
+		lm[2 + 8 * 7 + 7 + 3 * 8] = 3;
+		lm[2 + 8 * 7 + 7 + 4 * 8] = 3;
+		}
 		pSetPieces[0]._sptype = SPT_WARLORD;
 	}
 	for (int i = lengthof(pSetPieces) - 1; i >= 0; i--) {
