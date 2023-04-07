@@ -467,7 +467,7 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
                 for (int y = 0; y < dunHeight; y++) {
                     for (int x = 0; x < dunWidth; x++) {
                         in >> readWord;
-                        Qt::CheckState tps = (readWord & 3) == 3 ? Qt::Checked : ((readWord & 1) ? Qt::PartiallyChecked : Qt::Unchecked)
+                        Qt::CheckState tps = (readWord & 3) == 3 ? Qt::Checked : ((readWord & 1) ? Qt::PartiallyChecked : Qt::Unchecked);
                         this->tileProtections[2 * y][2 * x] = tps;
                         int sps = (readWord >> 8) & 3;
                         this->subtileProtections[2 * y][2 * x] = sps != 0;
@@ -1671,7 +1671,7 @@ bool D1Dun::setRoomAt(int posx, int posy, int roomIndex)
     return true;
 }
 
-bool D1Dun::getTileProtectionAt(int posx, int posy) const
+Qt::CheckState D1Dun::getTileProtectionAt(int posx, int posy) const
 {
     return this->tileProtections[posy / TILE_WIDTH][posx / TILE_HEIGHT];
 }
@@ -2857,7 +2857,7 @@ bool D1Dun::changeSubtileProtectionAt(int posx, int posy, bool protection)
         return false;
     }
     this->subtileProtections[posy][posx] = protection;
-    if (protection)
+    if (protection) {
         dProgress() << tr("Added Subtile-Protection to %1:%2.").arg(posx).arg(posy);
     } else {
         dProgress() << tr("Removed Subtile-Protection from %1:%2.").arg(posx).arg(posy);

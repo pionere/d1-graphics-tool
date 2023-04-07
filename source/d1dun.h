@@ -234,7 +234,7 @@ private:
     std::vector<std::vector<int>> tiles;
     std::vector<std::vector<int>> subtiles;
     std::vector<std::vector<Qt::CheckState>> tileProtections;
-    std::vector<std::vector<bool> subtileProtections;
+    std::vector<std::vector<bool>> subtileProtections;
     std::vector<std::vector<int>> items;
     std::vector<std::vector<DunMonsterType>> monsters;
     std::vector<std::vector<int>> objects;
