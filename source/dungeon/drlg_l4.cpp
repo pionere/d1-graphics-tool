@@ -347,11 +347,11 @@ static void DRGL_L4PatchSetPiece(BYTE *pMap)
 			}*/
 			// protect tiles
 			uint16_t modp = 0;
-			if (pn == 0) {
+			if (pn != 0) {
 				modp |= 3;
 			}
 			// - tiles with objects
-			if (lm[w * h + w * h * 2 * 2 + x * 2 + y * 2 * w] != 0) {
+			/*if (lm[w * h + w * h * 2 * 2 + x * 2 + y * 2 * w] != 0) {
 				modp |= 1 | (1 << 8);
 			}
 			if (lm[w * h + w * h * 2 * 2 + x * 2 + 1 + y * 2 * w] != 0) {
@@ -362,7 +362,7 @@ static void DRGL_L4PatchSetPiece(BYTE *pMap)
 			}
 			if (lm[w * h + w * h * 2 * 2 + x * 2 + 1 + (y * 2 + 1) * w] != 0) {
 				modp |= 1 | (1 << 14);
-			}
+			}*/
 			// - tiles with monsters
 			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + y * 2 * w] != 0) {
 				modp |= 1 | (1 << 8);
@@ -376,7 +376,7 @@ static void DRGL_L4PatchSetPiece(BYTE *pMap)
 			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + x * 2 + 1 + (y * 2 + 1) * w] != 0) {
 				modp |= 1 | (1 << 14);
 			}
-			lm[w * h + x + y * w] |= modp;
+			lm[w * h + x + y * w] |= SwapLE16(modp);
 		}
 	}
 }
@@ -410,7 +410,7 @@ static void DRLG_LoadL4SP()
 		// protect inner tiles from spawning additional monsters/objects
 		for (int y = 0; y <= 5; y++) {
 			for (int x = 0; x <= 5; x++) {
-				lm[7 * 7 + x + y * 7] |= (1 << 8) | (1 << 10) | (1 << 12) | (1 << 14);
+				lm[7 * 7 + x + y * 7] |= SwapLE16((1 << 8) | (1 << 10) | (1 << 12) | (1 << 14));
 			}
 		}
 		}
@@ -421,9 +421,11 @@ static void DRLG_LoadL4SP()
 		// patch set-piece - Warlord.DUN
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// ensure the changing tiles are protected
-		lm[2 + 8 * 7 + 7 + 2 * 8] = 3;
-		lm[2 + 8 * 7 + 7 + 3 * 8] = 3;
-		lm[2 + 8 * 7 + 7 + 4 * 8] = 3;
+		lm[2 + 8 * 7 + 7 + 1 * 8] = SwapLE16(3);
+		lm[2 + 8 * 7 + 7 + 2 * 8] = SwapLE16(3);
+		lm[2 + 8 * 7 + 7 + 3 * 8] = SwapLE16(3);
+		lm[2 + 8 * 7 + 7 + 4 * 8] = SwapLE16(3);
+		lm[2 + 8 * 7 + 7 + 5 * 8] = SwapLE16(3);
 		}
 		pSetPieces[0]._sptype = SPT_WARLORD;
 	}
@@ -2053,7 +2055,7 @@ static void DRLG_L4()
 		// protect inner tiles from spawning additional monsters/objects
 		for (int y = 0; y <= 5; y++) {
 			for (int x = 0; x <= 6; x++) {
-				lm[8 * 7 + x + y * 8] = (1 << 8) | (1 << 10) | (1 << 12) | (1 << 14);
+				lm[8 * 7 + x + y * 8] = SwapLE16((1 << 8) | (1 << 10) | (1 << 12) | (1 << 14));
 			}
 		}
 		}

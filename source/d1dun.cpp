@@ -2846,7 +2846,7 @@ bool D1Dun::changeTileProtectionAt(int tilePosX, int tilePosY, Qt::CheckState pr
         return false;
     }
     this->tileProtections[tilePosY][tilePosX] = protection;
-    dProgressWarn() << tr("'%1' at %2:%3 was replaced by '%4'.").arg(protectionString(prevProtection)).arg(tilePosX * TILE_WIDTH).arg(tilePosY * TILE_HEIGHT).arg(protectionString(protection));
+    dProgress() << tr("'%1' at %2:%3 was replaced by '%4'.").arg(protectionString(prevProtection)).arg(tilePosX * TILE_WIDTH).arg(tilePosY * TILE_HEIGHT).arg(protectionString(protection));
     this->modified = true;
     return true;
 }
@@ -3145,9 +3145,11 @@ void D1Dun::patch(int dunFileIndex)
         break;
     case DUN_WARLORD_AFT: // Warlord.DUN
         // ensure the changing tiles are reserved
+        change |= this->changeTileProtectionAt(7, 1, Qt::Checked);
         change |= this->changeTileProtectionAt(7, 2, Qt::Checked);
         change |= this->changeTileProtectionAt(7, 3, Qt::Checked);
         change |= this->changeTileProtectionAt(7, 4, Qt::Checked);
+        change |= this->changeTileProtectionAt(7, 5, Qt::Checked);
         // - add the Warlord
         change |= this->changeMonsterAt(6, 7, UMT_WARLORD + 1, true);
         break;
