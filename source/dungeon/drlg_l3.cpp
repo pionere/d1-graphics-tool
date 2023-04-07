@@ -1833,7 +1833,8 @@ static bool DRLG_L3SpawnLava(int x, int y, int dir)
 	if (i & dir)
 		return false;
 
-	if (drlgFlags[x][y] & (DRLG_L3_LAVA | DRLG_PROTECTED)) {
+	//if (drlgFlags[x][y] & (DRLG_L3_LAVA | DRLG_PROTECTED)) {
+	if (drlgFlags[x][y]) {
 		return false;
 	}
 	drlgFlags[x][y] |= DRLG_L3_LAVA;
@@ -1997,11 +1998,9 @@ static void DRLG_L3Subs()
 #endif
 	for (x = 0; x < DMAXX; x++) {
 		for (y = 0; y < DMAXY; y++) {
-			if (drlgFlags[x][y])
-				continue;
 			if (random_(0, 4) == 0) {
 				c = L3BTYPES[dungeon[x][y]];
-				if (c != 0) {
+				if (c != 0 && (drlgFlags[x][y] & DRLG_FROZEN) == 0) {
 					rv = random_(0, MAX_MATCH);
 					k = 0;
 					while (TRUE) {

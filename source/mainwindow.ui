@@ -184,7 +184,7 @@
     <property name="toolTipsVisible">
      <bool>true</bool>
     </property>
-    <addaction name="actionRemoveFlags_Dungeon"/>
+    <addaction name="actionRemoveProtections_Dungeon"/>
     <addaction name="actionRemoveItems_Dungeon"/>
     <addaction name="actionRemoveMonsters_Dungeon"/>
     <addaction name="actionRemoveObjects_Dungeon"/>
@@ -197,7 +197,7 @@
     <property name="toolTipsVisible">
      <bool>true</bool>
     </property>
-    <addaction name="actionLoadFlags_Dungeon"/>
+    <addaction name="actionLoadProtections_Dungeon"/>
     <addaction name="actionLoadItems_Dungeon"/>
     <addaction name="actionLoadMonsters_Dungeon"/>
     <addaction name="actionLoadObjects_Dungeon"/>
@@ -632,12 +632,12 @@
     <string>List inconsistent tiles/subtiles</string>
    </property>
   </action>
-  <action name="actionCheckFlags_Dungeon">
+  <action name="actionCheckProtections_Dungeon">
    <property name="text">
-    <string>Flags</string>
+    <string>Protections</string>
    </property>
    <property name="toolTip">
-    <string>List inconsistent flags</string>
+    <string>List inconsistent protections</string>
    </property>
   </action>
   <action name="actionCheckItems_Dungeon">
@@ -672,20 +672,20 @@
     <string>List inconsistent items/monsters/objects</string>
    </property>
   </action>
-  <action name="actionRemoveFlags_Dungeon">
+  <action name="actionRemoveProtections_Dungeon">
    <property name="text">
-    <string>Flags</string>
+    <string>Protections</string>
    </property>
    <property name="toolTip">
-    <string>Remove every flag from the dungeon</string>
+    <string>Remove every protection from the dungeon</string>
    </property>
   </action>
-  <action name="actionLoadFlags_Dungeon">
+  <action name="actionLoadProtections_Dungeon">
    <property name="text">
-    <string>Flags</string>
+    <string>Protections</string>
    </property>
    <property name="toolTip">
-    <string>Load flags from another dungeon</string>
+    <string>Load protections from another dungeon</string>
    </property>
   </action>
   <action name="actionRemoveItems_Dungeon">

@@ -374,13 +374,17 @@ void D1Dun::initVectors(int dunWidth, int dunHeight)
     for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
         subtiles[i].resize(dunWidth * TILE_WIDTH);
     }
+    tileProtections.resize(dunHeight);
+    for (int i = 0; i < dunHeight; i++) {
+        tileProtections[i].resize(dunWidth);
+    }
+    subtileProtections.resize(dunHeight * TILE_HEIGHT);
+    for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
+        subtileProtections[i].resize(dunWidth * TILE_WIDTH);
+    }
     items.resize(dunHeight * TILE_HEIGHT);
     for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
         items[i].resize(dunWidth * TILE_WIDTH);
-    }
-    flags.resize(dunHeight * TILE_HEIGHT);
-    for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
-        flags[i].resize(dunWidth * TILE_WIDTH);
     }
     objects.resize(dunHeight * TILE_HEIGHT);
     for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
@@ -459,19 +463,20 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
             const unsigned dataUnitSize = subtileCount * sizeof(readWord);
             if (dataSize >= dataUnitSize) {
                 dataSize -= dataUnitSize;
-                // read flags
+                // read protections
                 for (int y = 0; y < dunHeight; y++) {
                     for (int x = 0; x < dunWidth; x++) {
                         in >> readWord;
-                        int tileFlags = readWord & 0xFF;
-                        int subtileFlags = (readWord >> 8) & 3;
-                        this->flags[2 * y][2 * x] = tileFlags | (subtileFlags << 1);
-                        subtileFlags = (readWord >> 10) & 3;
-                        this->flags[2 * y][2 * x + 1] = tileFlags | (subtileFlags << 1);
-                        subtileFlags = (readWord >> 12) & 3;
-                        this->flags[2 * y + 1][2 * x] = tileFlags | (subtileFlags << 1);
-                        subtileFlags = (readWord >> 14) & 3;
-                        this->flags[2 * y + 1][2 * x + 1] = tileFlags | (subtileFlags << 1);
+                        Qt::CheckState tps = (readWord & 3) == 3 ? Qt::Checked : ((readWord & 1) ? Qt::PartiallyChecked : Qt::Unchecked)
+                        this->tileProtections[2 * y][2 * x] = tps;
+                        int sps = (readWord >> 8) & 3;
+                        this->subtileProtections[2 * y][2 * x] = sps != 0;
+                        sps = (readWord >> 10) & 3;
+                        this->subtileProtections[2 * y][2 * x + 1] = sps != 0;
+                        sps = (readWord >> 12) & 3;
+                        this->subtileProtections[2 * y + 1][2 * x] = sps != 0;
+                        sps = (readWord >> 14) & 3;
+                        this->subtileProtections[2 * y + 1][2 * x + 1] = sps != 0;
                     }
                 }
                 for (int x = 0; x < 3 * dunWidth * dunHeight; x++) {
@@ -479,7 +484,7 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
                 }
                 numLayers++;
             } else {
-                dProgressWarn() << tr("Flags are not defined in the DUN file.");
+                dProgressWarn() << tr("Protections are not defined in the DUN file.");
             }
 
             if (dataSize >= dataUnitSize) {
@@ -679,7 +684,10 @@ bool D1Dun::save(const SaveAsParam &params)
     uint8_t layers = 0;
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
-            if (this->flags[y][x] != 0) {
+            if (this->tileProtections[y / TILE_WIDTH][x / TILE_HEIGHT] != Qt::Unchecked) {
+                layers |= 1 << 0;
+            }
+            if (this->subtileProtections[y][x]) {
                 layers |= 1 << 0;
             }
             if (this->monsters[y][x].first != 0) {
@@ -772,7 +780,7 @@ bool D1Dun::save(const SaveAsParam &params)
         }
         // report if the requirement of the game is not meet
         if (numLayers < 1) {
-            dProgressWarn() << tr("The DUN file has to have a layer for flags to be used in the game.");
+            dProgressWarn() << tr("The DUN file has to have a layer for protections to be used in the game.");
         }
     } else {
         // rdun - subtiles must be defined
@@ -851,15 +859,16 @@ bool D1Dun::save(const SaveAsParam &params)
             }
         }
 
-        // write flags
+        // write protections
         if (numLayers >= 1) {
             for (int y = 0; y < dunHeight; y++) {
                 for (int x = 0; x < dunWidth; x++) {
-                    writeWord = this->flags[2 * y][2 * x] & 1;
-                    writeWord |= (this->flags[2 * y][2 * x] & 2) != 0 ? (3 << 8) : 0;
-                    writeWord |= (this->flags[2 * y][2 * x + 1] & 2) != 0 ? (3 << 10) : 0;
-                    writeWord |= (this->flags[2 * y + 1][2 * x] & 2) != 0 ? (3 << 12) : 0;
-                    writeWord |= (this->flags[2 * y + 1][2 * x + 1] & 2) != 0 ? (3 << 14) : 0;
+                    Qt::CheckState tps = this->tileProtections[y][x];
+                    writeWord = tps == Qt::Checked ? 3 : (tps == Qt::PartiallyChecked ? 1 : 0);
+                    writeWord |= this->subtileProtections[2 * y][2 * x] ? (3 << 8) : 0;
+                    writeWord |= this->subtileProtections[2 * y][2 * x + 1] ? (3 << 10) : 0;
+                    writeWord |= this->subtileProtections[2 * y + 1][2 * x] ? (3 << 12) : 0;
+                    writeWord |= this->subtileProtections[2 * y + 1][2 * x + 1] ? (3 << 14) : 0;
                     out << writeWord;
                 }
             }
@@ -1190,18 +1199,24 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             }
         }
     }
-    if (params.showTileFlags) {
+    if (params.showTileProtections) {
         // draw X if the tile-flag is set
-        int flags = this->flags[dunCursorY][dunCursorX];
-        if (flags & 1) {
+        Qt::CheckState tps = this->tileProtections[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
+        if (tps == Qt::PartiallyChecked) {
             dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - 3 * backHeight / 4);
             dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - 3 * backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - backHeight / 4);
+        } else if (tps == Qt::Checked) {
+            constexpr int SHIFT = 3;
+            dungeon.drawLine(drawCursorX + backWidth / 4 - SHIFT, drawCursorY - backHeight / 4 - SHIFT, drawCursorX + 3 * backWidth / 4 - SHIFT, drawCursorY - 3 * backHeight / 4 - SHIFT);
+            dungeon.drawLine(drawCursorX + backWidth / 4 + SHIFT, drawCursorY - backHeight / 4 + SHIFT, drawCursorX + 3 * backWidth / 4 + SHIFT, drawCursorY - 3 * backHeight / 4 + SHIFT);
+            dungeon.drawLine(drawCursorX + backWidth / 4 - SHIFT, drawCursorY - 3 * backHeight / 4 + SHIFT, drawCursorX + 3 * backWidth / 4 - SHIFT, drawCursorY - backHeight / 4 + SHIFT);
+            dungeon.drawLine(drawCursorX + backWidth / 4 + SHIFT, drawCursorY - 3 * backHeight / 4 - SHIFT, drawCursorX + 3 * backWidth / 4 + SHIFT, drawCursorY - backHeight / 4 - SHIFT);
         }
     }
-    if (params.showSubtileFlags) {
+    if (params.showSubtileProtections) {
         // draw X if the subtile-flag is set
-        int flags = this->flags[dunCursorY][dunCursorX];
-        if (flags & 2) {
+        bool sps = this->subtileProtections[dunCursorY][dunCursorX];
+        if (sps) {
             dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - 3 * backHeight / 4);
             dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - 3 * backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - backHeight / 4);
         }
@@ -1418,7 +1433,8 @@ bool D1Dun::setWidth(int newWidth, bool force)
                 hasContent |= this->tiles[y / TILE_HEIGHT][x / TILE_WIDTH] > 0; // !0 && !UNDEF_TILE
                 hasContent |= this->subtiles[y][x] > 0;                         // !0 && !UNDEF_SUBTILE
                 hasContent |= this->items[y][x] != 0;
-                hasContent |= this->flags[y][x] != 0;
+                hasContent |= this->tileProtections[y / TILE_HEIGHT][x / TILE_WIDTH] != Qt::Unchecked;
+                hasContent |= this->subtileProtections[y][x];
                 hasContent |= this->monsters[y][x].first != 0;
                 hasContent |= this->objects[y][x] != 0;
                 hasContent |= this->rooms[y][x] != 0;
@@ -1441,11 +1457,14 @@ bool D1Dun::setWidth(int newWidth, bool force)
     for (std::vector<int> &subtilesRow : this->subtiles) {
         subtilesRow.resize(newWidth);
     }
+    for (std::vector<int> &tileProtectionsRow : this->tileProtections) {
+        tileProtectionsRow.resize(newWidth / TILE_WIDTH);
+    }
+    for (std::vector<int> &subtileProtectionsRow : this->subtileProtections) {
+        subtileProtectionsRow.resize(newWidth);
+    }
     for (std::vector<int> &itemsRow : this->items) {
         itemsRow.resize(newWidth);
-    }
-    for (std::vector<int> &flagsRow : this->flags) {
-        flagsRow.resize(newWidth);
     }
     for (std::vector<DunMonsterType> &monsRow : this->monsters) {
         monsRow.resize(newWidth);
@@ -1493,7 +1512,8 @@ bool D1Dun::setHeight(int newHeight, bool force)
                 hasContent |= this->tiles[y / TILE_HEIGHT][x / TILE_WIDTH] > 0; // !0 && !UNDEF_TILE
                 hasContent |= this->subtiles[y][x] > 0;                         // !0 && !UNDEF_SUBTILE
                 hasContent |= this->items[y][x] != 0;
-                hasContent |= this->flags[y][x] != 0;
+                hasContent |= this->tileProtections[y / TILE_HEIGHT][x / TILE_WIDTH] != Qt::Unchecked;
+                hasContent |= this->subtileProtections[y][x];
                 hasContent |= this->monsters[y][x].first != 0;
                 hasContent |= this->objects[y][x] != 0;
                 hasContent |= this->rooms[y][x] != 0;
@@ -1512,16 +1532,18 @@ bool D1Dun::setHeight(int newHeight, bool force)
     // resize the dungeon
     this->tiles.resize(newHeight / TILE_HEIGHT);
     this->subtiles.resize(newHeight);
+    this->tileProtections.resize(newHeight / TILE_HEIGHT);
+    this->subtileProtections.resize(newHeight);
     this->items.resize(newHeight);
-    this->flags.resize(newHeight);
     this->monsters.resize(newHeight);
     this->objects.resize(newHeight);
     this->rooms.resize(newHeight);
     for (int y = prevHeight; y < newHeight; y++) {
         this->tiles[y / TILE_HEIGHT].resize(width / TILE_WIDTH);
         this->subtiles[y].resize(width);
+        this->tileProtections[y / TILE_HEIGHT].resize(width / TILE_WIDTH);
+        this->subtileProtections[y].resize(width);
         this->items[y].resize(width);
-        this->flags[y].resize(width);
         this->monsters[y].resize(width);
         this->objects[y].resize(width);
         this->rooms[y].resize(width);
@@ -1649,37 +1671,34 @@ bool D1Dun::setRoomAt(int posx, int posy, int roomIndex)
     return true;
 }
 
-bool D1Dun::getTileFlagAt(int posx, int posy) const
+bool D1Dun::getTileProtectionAt(int posx, int posy) const
 {
-    return (this->flags[posy][posx] & 1) != 0;
+    return this->tileProtections[posy / TILE_WIDTH][posx / TILE_HEIGHT];
 }
 
-bool D1Dun::setTileFlagAt(int posx, int posy, bool flag)
+bool D1Dun::setTileProtectionAt(int posx, int posy, Qt::CheckState protection)
 {
-    if (((this->flags[posy][posx] & 1) != 0) == flag) {
+    int tilePosX = posx / TILE_WIDTH;
+    int tilePosY = posy / TILE_HEIGHT;
+    if (this->tileProtections[tilePosX][tilePosY] == protection) {
         return false;
     }
-    posx &= ~1;
-    posy &= ~1;
-    this->flags[posy][posx] = (this->flags[posy][posx] & ~1) | (flag ? 1 : 0);
-    this->flags[posy][posx + 1] = (this->flags[posy][posx + 1] & ~1) | (flag ? 1 : 0);
-    this->flags[posy + 1][posx] = (this->flags[posy + 1][posx] & ~1) | (flag ? 1 : 0);
-    this->flags[posy + 1][posx + 1] = (this->flags[posy + 1][posx + 1] & ~1) | (flag ? 1 : 0);
+    this->tileProtections[tilePosX][tilePosY] = protection;
     this->modified = true;
     return true;
 }
 
-bool D1Dun::getSubtileFlagAt(int posx, int posy) const
+bool D1Dun::getSubtileProtectionAt(int posx, int posy) const
 {
-    return (this->flags[posy][posx] & 2) != 0;
+    return this->subtileProtections[posy][posx];
 }
 
-bool D1Dun::setSubtileFlagAt(int posx, int posy, bool flag)
+bool D1Dun::setSubtileProtectionAt(int posx, int posy, bool protection)
 {
-    if (((this->flags[posy][posx] & 2) != 0) == flag) {
+    if (this->subtileProtections[posy][posx] == protection) {
         return false;
     }
-    this->flags[posy][posx] = (this->flags[posy][posx] & ~2) | (flag ? 2 : 0);
+    this->subtileProtections[posy][posx] = protection;
     this->modified = true;
     return true;
 }
@@ -2174,22 +2193,19 @@ void D1Dun::checkTiles() const
     ProgressDialog::decBar();
 }
 
-void D1Dun::checkFlags() const
+void D1Dun::checkProtections() const
 {
-    ProgressDialog::incBar(tr("Checking Flags..."), 1);
+    ProgressDialog::incBar(tr("Checking Protections..."), 1);
     bool result = false;
 
     QPair<int, QString> progress;
     progress.first = -1;
-    progress.second = tr("Flag inconsistencies:");
+    progress.second = tr("Protection inconsistencies:");
     dProgress() << progress;
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
-            int flag = this->flags[y][x];
-            // if ((flag & 1) == 0 && (x & 1) == 0 && (y & 1) == 0) {
-            //        ...
-            // }
-            if ((flag & 2) == 0) {
+            bool protection = this->subtileProtections[y][x] && this->tileProtections[y / TILE_HEIGHT][x / TILE_WIDTH] != Qt::Unchecked;
+            if (!protection) {
                 if (this->monsters[y][x].first != 0) {
                     dProgressWarn() << tr("Subtile with a monster is not protected at %1:%2.").arg(x).arg(y);
                     result = true;
@@ -2202,7 +2218,7 @@ void D1Dun::checkFlags() const
         }
     }
     if (!result) {
-        progress.second = tr("No inconsistency detected with the Flags.");
+        progress.second = tr("No inconsistency detected with the Protections.");
         dProgress() << progress;
     }
 
@@ -2335,13 +2351,22 @@ void D1Dun::checkObjects() const
     ProgressDialog::decBar();
 }
 
-bool D1Dun::removeFlags()
+bool D1Dun::removeProtections()
 {
     bool result = false;
-    for (std::vector<int> &flagsRow : this->flags) {
-        for (int &flag : flagsRow) {
-            if (flag != 0) {
-                flag = 0;
+    for (std::vector<Qt::CheckState> &tileProtectionsRow : this->tileProtections) {
+        for (Qt::CheckState &protection : tileProtectionsRow) {
+            if (protection != Qt::Unchecked) {
+                protection = Qt::Unchecked;
+                result = true;
+                this->modified = true;
+            }
+        }
+    }
+    for (std::vector<int> &subtileProtectionsRow : this->subtileProtections) {
+        for (bool &protection : subtileProtectionsRow) {
+            if (protection) {
+                protection = false;
                 result = true;
                 this->modified = true;
             }
@@ -2411,17 +2436,38 @@ bool D1Dun::removeRooms()
     return result;
 }
 
-void D1Dun::loadFlags(D1Dun *srcDun)
+static QString protectionString(Qt::CheckState protectionState)
 {
+    if (protectionState == Qt::Unchecked) {
+        return QApplication::tr("No Protection");
+    }
+    if (protectionState == Qt::PartiallyChecked) {
+        return QApplication::tr("Partial Protection");
+    }
+    return QApplication::tr("Complete Protection");
+}
+
+void D1Dun::loadProtections(D1Dun *srcDun)
+{
+    for (int y = 0; y < this->height / TILE_HEIGHT; y++) {
+        for (int x = 0; x < this->width / TILE_WIDTH; x++) {
+            Qt::CheckState newProtections = srcDun->tileProtections[y][x];
+            Qt::CheckState currProtections = this->tileProtections[y][x];
+            if (newProtections != Qt::Unchecked && currProtections != newProtections) {
+                if (currProtections != Qt::Unchecked) {
+                    dProgressWarn() << tr("'%1' at %2:%3 was replaced by '%4'.").arg(protectionString(currProtections)).arg(x).arg(y).arg(protectionString(newProtections));
+                }
+                this->tileProtections[y][x] = newProtections;
+                this->modified = true;
+            }
+        }
+    }
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
-            int newFlags = srcDun->flags[y][x];
-            int currFlags = this->flags[y][x];
-            if (newFlags != 0 && currFlags != newFlags) {
-                if (currFlags != 0 && ((currFlags & ~1) != (newFlags & ~1) || ((x & 1) == 0 && (y & 1) == 0))) {
-                    dProgressWarn() << tr("Flags '%1' at %2:%3 was replaced by '%4'.").arg(currFlags).arg(x).arg(y).arg(newFlags);
-                }
-                this->flags[y][x] = newFlags;
+            bool newProtections = srcDun->subtileProtections[y][x];
+            bool currProtections = this->subtileProtections[y][x];
+            if (newProtections && currProtections != newProtections) {
+                this->subtileProtections[y][x] = newProtections;
                 this->modified = true;
             }
         }
@@ -2680,8 +2726,8 @@ bool D1Dun::protectTiles()
             needsProtection |= this->objects[duny + 0][dunx + 1] != 0;
             needsProtection |= this->objects[duny + 1][dunx + 0] != 0;
             needsProtection |= this->objects[duny + 1][dunx + 1] != 0;
-            if (needsProtection && this->setTileFlagAt(dunx, duny, true)) {
-                dProgress() << tr("Tile at %1:%2 is now protected.").arg(dunx).arg(duny);
+            if (needsProtection && this->setTileProtectionAt(dunx, duny, Qt::PartiallyChecked)) {
+                dProgress() << tr("Tile at %1:%2 is now '%3'.").arg(dunx).arg(duny).arg(protectionString(Qt::PartiallyChecked));
                 result = true;
             }
         }
@@ -2707,7 +2753,7 @@ bool D1Dun::protectSubtiles()
             bool needsProtection = this->monsters[duny][dunx].first != 0;
             needsProtection |= this->objects[duny][dunx] != 0;
             // TODO: skip if non-walkable?
-            if (needsProtection && this->setSubtileFlagAt(dunx, duny, true)) {
+            if (needsProtection && this->setSubtileProtectionAt(dunx, duny, true)) {
                 dProgress() << tr("Subtile at %1:%2 is now protected.").arg(dunx).arg(duny);
                 result = true;
             }
@@ -2792,23 +2838,29 @@ bool D1Dun::changeItemAt(int posx, int posy, int itemIndex)
     return true;
 }
 
-bool D1Dun::changeFlagAt(int posx, int posy, int flag)
+bool D1Dun::changeTileProtectionAt(int tilePosX, int tilePosY, Qt::CheckState protection)
 {
-    int prevFlag = this->flags[posy][posx];
-    if (prevFlag == flag) {
+    Qt::CheckState prevProtection = this->tileProtections[tilePosY][tilePosX];
+    if (prevProtection == protection) {
         return false;
     }
-    this->flags[posy][posx] = flag;
-    bool tileFlag = (posx & 1) == 0 && (posy & 1) == 0;
-    if (flag == 0) {
-        if ((prevFlag & ~1) != 0 || tileFlag)
-            dProgress() << tr("Removed Flag '%1' from %2:%3.").arg(prevFlag).arg(posx).arg(posy);
-    } else if (prevFlag == 0) {
-        if ((flag & ~1) != 0 || tileFlag)
-            dProgress() << tr("Added flag '%1' to %2:%3.").arg(flag).arg(posx).arg(posy);
+    this->tileProtections[tilePosY][tilePosX] = protection;
+    dProgressWarn() << tr("'%1' at %2:%3 was replaced by '%4'.").arg(protectionString(prevProtection)).arg(tilePosX * TILE_WIDTH).arg(tilePosY * TILE_HEIGHT).arg(protectionString(protection));
+    this->modified = true;
+    return true;
+}
+
+bool D1Dun::changeSubtileProtectionAt(int posx, int posy, bool protection)
+{
+    bool prevProtection = this->subtileProtections[posy][posx];
+    if (prevProtection == protection) {
+        return false;
+    }
+    this->subtileProtections[posy][posx] = protection;
+    if (protection)
+        dProgress() << tr("Added Subtile-Protection to %1:%2.").arg(posx).arg(posy);
     } else {
-        if ((flag & ~1) != (prevFlag & ~1) || tileFlag)
-            dProgress() << tr("Changed flag at %1:%2 from '%3' to '%4'.").arg(posx).arg(posy).arg(prevFlag).arg(flag);
+        dProgress() << tr("Removed Subtile-Protection from %1:%2.").arg(posx).arg(posy);
     }
     this->modified = true;
     return true;

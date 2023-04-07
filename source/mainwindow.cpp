@@ -1759,11 +1759,11 @@ void MainWindow::on_actionCheckTiles_Dungeon_triggered()
     ProgressDialog::done();
 }
 
-void MainWindow::on_actionCheckFlags_Dungeon_triggered()
+void MainWindow::on_actionCheckProtections_Dungeon_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
-    this->levelCelView->checkFlags();
+    this->levelCelView->checkProtections();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1827,17 +1827,17 @@ D1Dun *MainWindow::loadDun(const QString &title)
     return nullptr;
 }
 
-void MainWindow::on_actionRemoveFlags_Dungeon_triggered()
+void MainWindow::on_actionRemoveProtections_Dungeon_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
 
-    this->levelCelView->removeFlags();
+    this->levelCelView->removeProtections();
 
     // Clear loading message from status bar
     ProgressDialog::done();
 }
 
-void MainWindow::on_actionLoadFlags_Dungeon_triggered()
+void MainWindow::on_actionLoadProtections_Dungeon_triggered()
 {
     D1Dun *srcDun = this->loadDun(tr("Source of the flags"));
     if (srcDun == nullptr) {
@@ -1846,7 +1846,7 @@ void MainWindow::on_actionLoadFlags_Dungeon_triggered()
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
 
-    this->levelCelView->loadFlags(srcDun);
+    this->levelCelView->loadProtections(srcDun);
     delete srcDun;
 
     // Clear loading message from status bar

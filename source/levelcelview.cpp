@@ -336,10 +336,14 @@ void LevelCelView::update()
         int posy = this->currentDunPosY;
         int tileRef = this->dun->getTileAt(posx, posy);
         this->ui->dungeonTileLineEdit->setText(tileRef == UNDEF_TILE ? QStringLiteral("?") : QString::number(tileRef));
-        this->ui->dungeonTileFlagCheckBox->setChecked(this->dun->getTileFlagAt(posx, posy));
+        Qt::CheckState tps = this->dun->getTileProtectionAt(posx, posy);
+        this->ui->dungeonTileProtectionCheckBox->setCheckState(tps);
+        this->ui->dungeonTileProtectionCheckBox->setToolTip(tps == Qt::Unchecked ? tr("Tile might be replaced in the game") : (tps == Qt::PartiallyChecked ? tr("Tile might be decorated in the game") : tr("Tile is used as is in the game")));
         int subtileRef = this->dun->getSubtileAt(posx, posy);
         this->ui->dungeonSubtileLineEdit->setText(subtileRef == UNDEF_SUBTILE ? QStringLiteral("?") : QString::number(subtileRef));
-        this->ui->dungeonSubtileFlagCheckBox->setChecked(this->dun->getSubtileFlagAt(posx, posy));
+        bool sps = this->dun->getSubtileProtectionAt(posx, posy);
+        this->ui->dungeonSubtileProtectionCheckBox->setChecked(sps);
+        this->ui->dungeonSubtileProtectionCheckBox->setToolTip(sps ? tr("Monster, object or item might be placed by the game on this subtile") : tr("No actor might be placed by the game on this subtile"));
         int itemIndex = this->dun->getItemAt(posx, posy);
         this->ui->dungeonItemLineEdit->setText(QString::number(itemIndex));
         this->ui->dungeonItemComboBox->setCurrentIndex(this->ui->dungeonItemComboBox->findData(itemIndex));
@@ -2830,9 +2834,9 @@ void LevelCelView::checkTiles() const
     this->dun->checkTiles();
 }
 
-void LevelCelView::checkFlags() const
+void LevelCelView::checkProtections() const
 {
-    this->dun->checkFlags();
+    this->dun->checkProtections();
 }
 
 void LevelCelView::checkItems() const
@@ -2853,15 +2857,15 @@ void LevelCelView::checkObjects() const
 void LevelCelView::checkEntities() const
 {
     this->checkTiles();
-    this->checkFlags();
+    this->checkProtections();
     this->checkItems();
     this->checkMonsters();
     this->checkObjects();
 }
 
-void LevelCelView::removeFlags()
+void LevelCelView::removeProtections()
 {
-    bool change = this->dun->removeFlags();
+    bool change = this->dun->removeProtections();
     if (change) {
         // update the view - done by the caller
         // this->displayFrame();
@@ -2913,12 +2917,12 @@ static bool dimensionMatch(D1Dun *dun1, D1Dun *dun2)
     return false;
 }
 
-void LevelCelView::loadFlags(D1Dun *srcDun)
+void LevelCelView::loadProtections(D1Dun *srcDun)
 {
     if (!dimensionMatch(this->dun, srcDun)) {
         return;
     }
-    this->dun->loadFlags(srcDun);
+    this->dun->loadProtections(srcDun);
     // update the view - done by the caller
     // this->displayFrame();
 }
@@ -2997,8 +3001,8 @@ void LevelCelView::displayFrame()
         DunDrawParam params;
         params.tileState = this->ui->showTilesRadioButton->isChecked() ? Qt::Checked : (this->ui->showFloorRadioButton->isChecked() ? Qt::PartiallyChecked : Qt::Unchecked);
         params.showRooms = this->ui->showRoomsMetaRadioButton->isChecked();
-        params.showTileFlags = this->ui->showTileMetaRadioButton->isChecked();
-        params.showSubtileFlags = this->ui->showSubtileMetaRadioButton->isChecked();
+        params.showTileProtections = this->ui->showTileMetaRadioButton->isChecked();
+        params.showSubtileProtections = this->ui->showSubtileMetaRadioButton->isChecked();
         params.showItems = this->ui->showItemsCheckBox->isChecked();
         params.showMonsters = this->ui->showMonstersCheckBox->isChecked();
         params.showObjects = this->ui->showObjectsCheckBox->isChecked();
@@ -3788,11 +3792,9 @@ void LevelCelView::on_dungeonTileLineEdit_escPressed()
     this->ui->dungeonTileLineEdit->clearFocus();
 }
 
-void LevelCelView::on_dungeonTileFlagCheckBox_clicked()
+void LevelCelView::on_dungeonTileProtectionCheckBox_stateChanged(int state)
 {
-    bool checked = this->ui->dungeonTileFlagCheckBox->isChecked();
-
-    bool change = this->dun->setTileFlagAt(this->currentDunPosX, this->currentDunPosY, checked);
+    bool change = this->dun->setTileProtectionAt(this->currentDunPosX, this->currentDunPosY, state);
     if (change) {
         // update the view
         this->displayFrame();
@@ -3879,11 +3881,11 @@ void LevelCelView::on_dungeonSubtileLineEdit_escPressed()
     this->ui->dungeonSubtileLineEdit->clearFocus();
 }
 
-void LevelCelView::on_dungeonSubtileFlagCheckBox_clicked()
+void LevelCelView::on_dungeonSubtileProtectionCheckBox_clicked()
 {
-    bool checked = this->ui->dungeonSubtileFlagCheckBox->isChecked();
+    bool checked = this->ui->dungeonSubtileProtectionCheckBox->isChecked();
 
-    bool change = this->dun->setSubtileFlagAt(this->currentDunPosX, this->currentDunPosY, checked);
+    bool change = this->dun->setSubtileProtectionAt(this->currentDunPosX, this->currentDunPosY, checked);
     if (change) {
         // update the view
         this->displayFrame();

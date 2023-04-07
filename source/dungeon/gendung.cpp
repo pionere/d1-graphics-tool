@@ -523,7 +523,7 @@ void DRLG_InitTrans()
 	}
 }*/
 
-void DRLG_RectTrans(int x1, int y1, int x2, int y2)
+/*void DRLG_RectTrans(int x1, int y1, int x2, int y2)
 {
 	int i, j;
 
@@ -533,7 +533,7 @@ void DRLG_RectTrans(int x1, int y1, int x2, int y2)
 		}
 	}
 	numtrans++;
-}
+}*/
 
 /*void DRLG_ListTrans(int num, const BYTE* List)
 {
@@ -700,14 +700,15 @@ void DRLG_LoadSP(int idx, BYTE bv)
 	for (j = ry1; j < ry1 + rh; j++) {
 		for (i = rx1; i < rx1 + rw; i++) {
 			dungeon[i][j] = *sp != 0 ? *sp : bv;
-			// drlgFlags[i][j] = *sp != 0 ? DRLG_PROTECTED : 0; // FIXME |= DRLG_PROTECTED
 			sp += 2;
 		}
 	}
 	// load flags
 	for (j = ry1; j < ry1 + rh; j++) {
 		for (i = rx1; i < rx1 + rw; i++) {
-			drlgFlags[i][j] = (*sp & 1) != 0 ? DRLG_PROTECTED : 0; // FIXME |= DRLG_PROTECTED
+			static_assert((int)DRLG_PROTECTED == 1 << 14, "DRLG_LoadSP sets the protection flags with a simple bit-shift I.");
+			static_assert((int)DRLG_FROZEN == 1 << 15, "DRLG_LoadSP sets the protection flags with a simple bit-shift II.");
+			drlgFlags[i][j] |= (*sp & 3) << 14;
 			sp += 2;
 		}
 	}
@@ -740,19 +741,20 @@ void DRLG_SetPC()
 			BYTE* sp = &pSetPieces[n]._spData[4];
 			sp += 2 * w * h; // skip tiles
 
+			sp++;
 			for (int j = 0; j < h; j++) {
 				for (int i = 0; i < w; i++) {
 					BYTE flags = *sp;
-					if (flags & (1 << 1)) {
+					if (flags & (1 << 0)) {
 						dFlags[x + 2 * i][y + 2 * j] |= BFLAG_POPULATED;
 					}
 					if (flags & (1 << 2)) {
 						dFlags[x + 2 * i + 1][y + 2 * j] |= BFLAG_POPULATED;
 					}
-					if (flags & (1 << 3)) {
+					if (flags & (1 << 4)) {
 						dFlags[x + 2 * i][y + 2 * j  + 1] |= BFLAG_POPULATED;
 					}
-					if (flags & (1 << 4)) {
+					if (flags & (1 << 6)) {
 						dFlags[x + 2 * i + 1][y + 2 * j + 1] |= BFLAG_POPULATED;
 					}
 					sp += 2;
