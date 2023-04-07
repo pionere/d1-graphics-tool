@@ -2365,7 +2365,7 @@ bool D1Dun::removeProtections()
         }
     }
     for (std::vector<bool> &subtileProtectionsRow : this->subtileProtections) {
-        for (bool &protection : subtileProtectionsRow) {
+        for (bool &&protection : subtileProtectionsRow) {
             if (protection) {
                 protection = false;
                 result = true;
