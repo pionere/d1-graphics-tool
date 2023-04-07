@@ -67,12 +67,13 @@ static void StoreProtections(D1Dun *dun)
 {
 	for (int y = 0; y < MAXDUNY; y += 2) {
 		for (int x = 0; x < MAXDUNX; x += 2) {
-			dun->setTileFlagAt(x, y, false);
+			dun->setTileProtectionAt(x, y, Qt::Unchecked);
+			dun->setSubtileFlagAt(x, y, false);
 		}
 	}
 	for (int y = 0; y < DMAXY; y++) {
 		for (int x = 0; x < DMAXX; x++) {
-			dun->setTileFlagAt(DBORDERX + x * 2, DBORDERX + y * 2, (drlgFlags[x][y] & DRLG_PROTECTED) != 0);
+			dun->setTileProtectionAt(DBORDERX + x * 2, DBORDERX + y * 2, (drlgFlags[x][y] & DRLG_FROZEN) != 0 ? Qt::Checked : ((drlgFlags[x][y] & DRLG_PROTECTED) != 0 ? Qt::PartiallyChecked : Qt::Unchecked));
 		}
 	}
 	for (int y = 0; y < MAXDUNY; y++) {

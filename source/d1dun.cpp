@@ -1,5 +1,6 @@
 #include "d1dun.h"
 
+#include <QApplication>
 #include <QBuffer>
 #include <QDataStream>
 #include <QDebug>
@@ -1457,10 +1458,10 @@ bool D1Dun::setWidth(int newWidth, bool force)
     for (std::vector<int> &subtilesRow : this->subtiles) {
         subtilesRow.resize(newWidth);
     }
-    for (std::vector<int> &tileProtectionsRow : this->tileProtections) {
+    for (std::vector<Qt::CheckState> &tileProtectionsRow : this->tileProtections) {
         tileProtectionsRow.resize(newWidth / TILE_WIDTH);
     }
-    for (std::vector<int> &subtileProtectionsRow : this->subtileProtections) {
+    for (std::vector<bool> &subtileProtectionsRow : this->subtileProtections) {
         subtileProtectionsRow.resize(newWidth);
     }
     for (std::vector<int> &itemsRow : this->items) {
@@ -2363,7 +2364,7 @@ bool D1Dun::removeProtections()
             }
         }
     }
-    for (std::vector<int> &subtileProtectionsRow : this->subtileProtections) {
+    for (std::vector<bool> &subtileProtectionsRow : this->subtileProtections) {
         for (bool &protection : subtileProtectionsRow) {
             if (protection) {
                 protection = false;

@@ -171,7 +171,7 @@
      <bool>true</bool>
     </property>
     <addaction name="actionCheckTiles_Dungeon"/>
-    <addaction name="actionCheckFlags_Dungeon"/>
+    <addaction name="actionCheckProtections_Dungeon"/>
     <addaction name="actionCheckItems_Dungeon"/>
     <addaction name="actionCheckMonsters_Dungeon"/>
     <addaction name="actionCheckObjects_Dungeon"/>

@@ -706,9 +706,9 @@ void DRLG_LoadSP(int idx, BYTE bv)
 	// load flags
 	for (j = ry1; j < ry1 + rh; j++) {
 		for (i = rx1; i < rx1 + rw; i++) {
-			static_assert((int)DRLG_PROTECTED == 1 << 14, "DRLG_LoadSP sets the protection flags with a simple bit-shift I.");
-			static_assert((int)DRLG_FROZEN == 1 << 15, "DRLG_LoadSP sets the protection flags with a simple bit-shift II.");
-			drlgFlags[i][j] |= (*sp & 3) << 14;
+			static_assert((int)DRLG_PROTECTED == 1 << 6, "DRLG_LoadSP sets the protection flags with a simple bit-shift I.");
+			static_assert((int)DRLG_FROZEN == 1 << 7, "DRLG_LoadSP sets the protection flags with a simple bit-shift II.");
+			drlgFlags[i][j] |= (*sp & 3) << 6;
 			sp += 2;
 		}
 	}
