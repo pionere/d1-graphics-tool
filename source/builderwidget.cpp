@@ -380,7 +380,7 @@ void BuilderWidget::setObjectIndex(int objectIndex)
 
 void BuilderWidget::setMonsterType(DunMonsterType monType)
 {
-    this>currentMonsterType = monType;
+    this->currentMonsterType = monType;
     this->ui->monsterLineEdit->setText(QString::number(monType.first));
     this->ui->monsterCheckBox->setChecked(monType.second);
 }

@@ -403,12 +403,12 @@ int LevelCelView::getCurrentTileIndex() const
     return this->currentTileIndex;
 }
 
-const QComboBox *getObjects() const
+const QComboBox *LevelCelView::getObjects() const
 {
     return this->ui->dungeonObjectComboBox;
 }
 
-const QComboBox *getMonsters() const
+const QComboBox *LevelCelView::getMonsters() const
 {
     return this->ui->dungeonObjectComboBox;
 }

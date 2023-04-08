@@ -55,7 +55,7 @@ class BuilderWidget : public QFrame {
     Q_OBJECT
 
 public:
-    explicit BuilderWidget(QWidget *parent, D1Dun *dun, LevelCelView *levelCelView);
+    explicit BuilderWidget(QWidget *parent, QUndoStack *us, D1Dun *dun, LevelCelView *levelCelView);
     ~BuilderWidget();
 
     void show(); // override;
