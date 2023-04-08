@@ -4,6 +4,7 @@
 #include <QGraphicsView>
 #include <QMouseEvent>
 #include <QPoint>
+#include <QPointer>
 #include <QUndoCommand>
 
 #include "d1dun.h"
@@ -30,7 +31,7 @@ class EditDungeonCommand : public QObject, public QUndoCommand {
 
 public:
     explicit EditDungeonCommand(D1Dun *dun, int cellX, int cellY, int value);
-    ~EditFrameCommand() = default;
+    ~EditDungeonCommand() = default;
 
     void undo() override;
     void redo() override;
@@ -99,9 +100,10 @@ private:
     D1Dun *dun;
     LevelCelView *levelCelView;
     QGraphicsView *graphView;
-    bool moving;
-    bool moved;
-    int mode; // builder_edit_mode
+    bool moving = false;
+    bool moved = false;
+    QPoint lastPos;
+    int mode = BEM_TILE; // builder_edit_mode
 
     int currentTileIndex = 0;
     int currentSubtileIndex = 0;

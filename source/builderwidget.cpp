@@ -35,34 +35,35 @@ void EditDungeonCommand::undo()
     }
 
     for (DunPos &dp : this->modValues) {
+        int currValue;
         switch (this->valueType) {
         case BEM_TILE:
-            int currValue = this->dun->getTileAt(dp.cellX, dp.cellY); // TODO: store subtiles as well
+            currValue = this->dun->getTileAt(dp.cellX, dp.cellY); // TODO: store subtiles as well
             this->dun->setTileAt(dp.cellX, dp.cellY, dp.value);
             dp.value = currValue;
             break;
         case BEM_TILE_PROTECTION:
-            int currValue = (int)this->dun->getTileProtectionAt(dp.cellX, dp.cellY);
+            currValue = (int)this->dun->getTileProtectionAt(dp.cellX, dp.cellY);
             this->dun->setTileProtectionAt(dp.cellX, dp.cellY, (Qt::CheckState)dp.value);
             dp.value = currValue;
             break;
         case BEM_SUBTILE:
-            int currValue = (int)this->dun->getSubtileAt(dp.cellX, dp.cellY); // TODO: store tiles as well
+            currValue = (int)this->dun->getSubtileAt(dp.cellX, dp.cellY); // TODO: store tiles as well
             this->dun->setSubtileProtectionAt(dp.cellX, dp.cellY, (bool)dp.value);
             dp.value = currValue;
             break;
         case BEM_SUBTILE_PROTECTION:
-            int currValue = (int)this->dun->getSubtileProtectionAt(dp.cellX, dp.cellY);
+            currValue = (int)this->dun->getSubtileProtectionAt(dp.cellX, dp.cellY);
             this->dun->setSubtileProtectionAt(dp.cellX, dp.cellY, (bool)dp.value);
             dp.value = currValue;
             break;
         case BEM_OBJECT:
-            int currValue = this->dun->getObjectAt(dp.cellX, dp.cellY);
+            currValue = this->dun->getObjectAt(dp.cellX, dp.cellY);
             this->dun->setObjectAt(dp.cellX, dp.cellY, dp.value);
             dp.value = currValue;
             break;
         case BEM_MONSTER:
-            int currValue = this->dun->getMonsterAt(dp.cellX, dp.cellY);
+            currValue = this->dun->getMonsterAt(dp.cellX, dp.cellY);
             this->dun->setMonsterAt(dp.cellX, dp.cellY, dp.value);
             dp.value = currValue;
             break;
@@ -83,9 +84,6 @@ BuilderWidget::BuilderWidget(QWidget *parent, QUndoStack *us, D1Dun *d, LevelCel
     , undoStack(us)
     , dun(d)
     , levelCelView(lcv)
-    , moving(false)
-    , moved(false)
-    , mode(BEM_TILE);
 {
     this->ui->setupUi(this);
 
@@ -99,7 +97,7 @@ BuilderWidget::BuilderWidget(QWidget *parent, QUndoStack *us, D1Dun *d, LevelCel
     this->on_subtileLineEdit_escPressed();
     this->on_objectLineEdit_escPressed();
     this->on_monsterLineEdit_escPressed();
-    
+
     // connect esc events of LineEditWidgets
     QObject::connect(this->ui->tileLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_tileLineEdit_escPressed()));
     QObject::connect(this->ui->subtileLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_subtileLineEdit_escPressed()));
