@@ -1729,11 +1729,41 @@ void MainWindow::on_actionFixCorners_Dungeon_triggered()
     ProgressDialog::done();
 }
 
+void MainWindow::on_actionProtectTiles_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->protectDungeonTiles();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionProtectSubtiles_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->protectDungeonSubtiles();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
 void MainWindow::on_actionCheckTiles_Dungeon_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
     this->levelCelView->checkTiles();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionCheckProtections_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
+
+    this->levelCelView->checkProtections();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1795,6 +1825,32 @@ D1Dun *MainWindow::loadDun(const QString &title)
     delete srcDun;
     QMessageBox::critical(this, tr("Error"), tr("Failed loading DUN file."));
     return nullptr;
+}
+
+void MainWindow::on_actionRemoveProtections_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->removeProtections();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionLoadProtections_Dungeon_triggered()
+{
+    D1Dun *srcDun = this->loadDun(tr("Source of the flags"));
+    if (srcDun == nullptr) {
+        return;
+    }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->loadProtections(srcDun);
+    delete srcDun;
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
 }
 
 void MainWindow::on_actionRemoveItems_Dungeon_triggered()

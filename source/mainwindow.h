@@ -171,11 +171,16 @@ private slots:
     void on_actionResetTiles_Dungeon_triggered();
     void on_actionResetSubtiles_Dungeon_triggered();
     void on_actionFixCorners_Dungeon_triggered();
+    void on_actionProtectTiles_Dungeon_triggered();
+    void on_actionProtectSubtiles_Dungeon_triggered();
     void on_actionCheckTiles_Dungeon_triggered();
+    void on_actionCheckProtections_Dungeon_triggered();
     void on_actionCheckItems_Dungeon_triggered();
     void on_actionCheckMonsters_Dungeon_triggered();
     void on_actionCheckObjects_Dungeon_triggered();
     void on_actionCheckEntities_Dungeon_triggered();
+    void on_actionRemoveProtections_Dungeon_triggered();
+    void on_actionLoadProtections_Dungeon_triggered();
     void on_actionRemoveItems_Dungeon_triggered();
     void on_actionLoadItems_Dungeon_triggered();
     void on_actionRemoveMonsters_Dungeon_triggered();

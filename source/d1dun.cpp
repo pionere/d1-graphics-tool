@@ -1,5 +1,6 @@
 #include "d1dun.h"
 
+#include <QApplication>
 #include <QBuffer>
 #include <QDataStream>
 #include <QDebug>
@@ -374,6 +375,14 @@ void D1Dun::initVectors(int dunWidth, int dunHeight)
     for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
         subtiles[i].resize(dunWidth * TILE_WIDTH);
     }
+    tileProtections.resize(dunHeight);
+    for (int i = 0; i < dunHeight; i++) {
+        tileProtections[i].resize(dunWidth);
+    }
+    subtileProtections.resize(dunHeight * TILE_HEIGHT);
+    for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
+        subtileProtections[i].resize(dunWidth * TILE_WIDTH);
+    }
     items.resize(dunHeight * TILE_HEIGHT);
     for (int i = 0; i < dunHeight * TILE_HEIGHT; i++) {
         items[i].resize(dunWidth * TILE_WIDTH);
@@ -455,16 +464,28 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
             const unsigned dataUnitSize = subtileCount * sizeof(readWord);
             if (dataSize >= dataUnitSize) {
                 dataSize -= dataUnitSize;
-                // read items
-                for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
-                    for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
+                // read protections
+                for (int y = 0; y < dunHeight; y++) {
+                    for (int x = 0; x < dunWidth; x++) {
                         in >> readWord;
-                        this->items[y][x] = readWord;
+                        Qt::CheckState tps = (readWord & 3) == 3 ? Qt::Checked : ((readWord & 1) ? Qt::PartiallyChecked : Qt::Unchecked);
+                        this->tileProtections[y][x] = tps;
+                        int sps = (readWord >> 8) & 3;
+                        this->subtileProtections[2 * y + 0][2 * x + 0] = sps != 0;
+                        sps = (readWord >> 10) & 3;
+                        this->subtileProtections[2 * y + 0][2 * x + 1] = sps != 0;
+                        sps = (readWord >> 12) & 3;
+                        this->subtileProtections[2 * y + 1][2 * x + 0] = sps != 0;
+                        sps = (readWord >> 14) & 3;
+                        this->subtileProtections[2 * y + 1][2 * x + 1] = sps != 0;
                     }
+                }
+                for (int x = 0; x < 3 * dunWidth * dunHeight; x++) {
+                    in >> readWord;
                 }
                 numLayers++;
             } else {
-                dProgressWarn() << tr("Items are not defined in the DUN file.");
+                dProgressWarn() << tr("Protections are not defined in the DUN file.");
             }
 
             if (dataSize >= dataUnitSize) {
@@ -506,7 +527,7 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
                 }
                 numLayers++;
             } else {
-                dProgressWarn() << tr("Rooms are not defined in the DUN file.");
+                ; // dProgressWarn() << tr("Rooms are not defined in the DUN file.");
             }
 
             if (dataSize > 0) {
@@ -664,7 +685,10 @@ bool D1Dun::save(const SaveAsParam &params)
     uint8_t layers = 0;
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
-            if (this->items[y][x] != 0) {
+            if (this->tileProtections[y / TILE_WIDTH][x / TILE_HEIGHT] != Qt::Unchecked) {
+                layers |= 1 << 0;
+            }
+            if (this->subtileProtections[y][x]) {
                 layers |= 1 << 0;
             }
             if (this->monsters[y][x].first != 0) {
@@ -688,6 +712,14 @@ bool D1Dun::save(const SaveAsParam &params)
                 if (this->tiles[y][x] == UNDEF_TILE) {
                     dProgressFail() << tr("Undefined tiles (one at %1:%2) can not be saved in this format (DUN).").arg(x).arg(y);
                     return false;
+                }
+            }
+        }
+        // report unsaved information
+        for (int y = 0; y < dunHeight; y++) {
+            for (int x = 0; x < dunWidth; x++) {
+                if (this->items[y][x] != 0) {
+                    dProgressWarn() << tr("Defined item at %1:%2 is not saved.").arg(x).arg(y);
                 }
             }
         }
@@ -728,7 +760,7 @@ bool D1Dun::save(const SaveAsParam &params)
             // user defined the number of layers -> report unsaved information
             if (params.dunLayerNum < layersNeeded) {
                 if (params.dunLayerNum <= 0 && (layers & (1 << 0))) {
-                    dProgressWarn() << tr("Defined item is not saved.");
+                    dProgressWarn() << tr("Defined protection is not saved.");
                 }
                 if (params.dunLayerNum <= 1 && (layers & (1 << 1))) {
                     dProgressWarn() << tr("Defined monster is not saved.");
@@ -746,6 +778,10 @@ bool D1Dun::save(const SaveAsParam &params)
             if (layersNeeded > numLayers) {
                 numLayers = layersNeeded;
             }
+        }
+        // report if the requirement of the game is not meet
+        if (numLayers < 1) {
+            dProgressWarn() << tr("The DUN file has to have a layer for protections to be used in the game.");
         }
     } else {
         // rdun - subtiles must be defined
@@ -772,8 +808,15 @@ bool D1Dun::save(const SaveAsParam &params)
                 }
             }
         }
+        for (int y = 0; y < dunHeight; y++) {
+            for (int x = 0; x < dunWidth; x++) {
+                if (this->items[y][x] != 0) {
+                    dProgressWarn() << tr("Defined item at %1:%2 is not saved.").arg(x).arg(y);
+                }
+            }
+        }
         if (layers & (1 << 0)) {
-            dProgressWarn() << tr("Defined item is not saved in this format (RDUN).");
+            dProgressWarn() << tr("Defined protection is not saved in this format (RDUN).");
         }
         if (layers & (1 << 1)) {
             dProgressWarn() << tr("Defined monster is not saved in this format (RDUN).");
@@ -817,13 +860,22 @@ bool D1Dun::save(const SaveAsParam &params)
             }
         }
 
-        // write items
+        // write protections
         if (numLayers >= 1) {
-            for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
-                for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                    writeWord = this->items[y][x];
+            for (int y = 0; y < dunHeight; y++) {
+                for (int x = 0; x < dunWidth; x++) {
+                    Qt::CheckState tps = this->tileProtections[y][x];
+                    writeWord = tps == Qt::Checked ? 3 : (tps == Qt::PartiallyChecked ? 1 : 0);
+                    writeWord |= this->subtileProtections[2 * y + 0][2 * x + 0] ? (3 << 8) : 0;
+                    writeWord |= this->subtileProtections[2 * y + 0][2 * x + 1] ? (3 << 10) : 0;
+                    writeWord |= this->subtileProtections[2 * y + 1][2 * x + 0] ? (3 << 12) : 0;
+                    writeWord |= this->subtileProtections[2 * y + 1][2 * x + 1] ? (3 << 14) : 0;
                     out << writeWord;
                 }
+            }
+            writeWord = 0;
+            for (int x = 0; x < dunWidth * dunHeight * 3; x++) {
+                out << writeWord;
             }
         }
 
@@ -1148,6 +1200,28 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             }
         }
     }
+    if (params.showTileProtections) {
+        // draw X if the tile-flag is set
+        Qt::CheckState tps = this->tileProtections[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
+        if (tps == Qt::PartiallyChecked) {
+            dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - 3 * backHeight / 4);
+            dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - 3 * backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - backHeight / 4);
+        } else if (tps == Qt::Checked) {
+            constexpr int SHIFT = 3;
+            dungeon.drawLine(drawCursorX + backWidth / 4 - SHIFT, drawCursorY - backHeight / 4 - SHIFT, drawCursorX + 3 * backWidth / 4 - SHIFT, drawCursorY - 3 * backHeight / 4 - SHIFT);
+            dungeon.drawLine(drawCursorX + backWidth / 4 + SHIFT, drawCursorY - backHeight / 4 + SHIFT, drawCursorX + 3 * backWidth / 4 + SHIFT, drawCursorY - 3 * backHeight / 4 + SHIFT);
+            dungeon.drawLine(drawCursorX + backWidth / 4 - SHIFT, drawCursorY - 3 * backHeight / 4 + SHIFT, drawCursorX + 3 * backWidth / 4 - SHIFT, drawCursorY - backHeight / 4 + SHIFT);
+            dungeon.drawLine(drawCursorX + backWidth / 4 + SHIFT, drawCursorY - 3 * backHeight / 4 - SHIFT, drawCursorX + 3 * backWidth / 4 + SHIFT, drawCursorY - backHeight / 4 - SHIFT);
+        }
+    }
+    if (params.showSubtileProtections) {
+        // draw X if the subtile-flag is set
+        bool sps = this->subtileProtections[dunCursorY][dunCursorX];
+        if (sps) {
+            dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - 3 * backHeight / 4);
+            dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - 3 * backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - backHeight / 4);
+        }
+    }
 }
 
 QImage D1Dun::getImage(const DunDrawParam &params)
@@ -1360,6 +1434,8 @@ bool D1Dun::setWidth(int newWidth, bool force)
                 hasContent |= this->tiles[y / TILE_HEIGHT][x / TILE_WIDTH] > 0; // !0 && !UNDEF_TILE
                 hasContent |= this->subtiles[y][x] > 0;                         // !0 && !UNDEF_SUBTILE
                 hasContent |= this->items[y][x] != 0;
+                hasContent |= this->tileProtections[y / TILE_HEIGHT][x / TILE_WIDTH] != Qt::Unchecked;
+                hasContent |= this->subtileProtections[y][x];
                 hasContent |= this->monsters[y][x].first != 0;
                 hasContent |= this->objects[y][x] != 0;
                 hasContent |= this->rooms[y][x] != 0;
@@ -1381,6 +1457,12 @@ bool D1Dun::setWidth(int newWidth, bool force)
     }
     for (std::vector<int> &subtilesRow : this->subtiles) {
         subtilesRow.resize(newWidth);
+    }
+    for (std::vector<Qt::CheckState> &tileProtectionsRow : this->tileProtections) {
+        tileProtectionsRow.resize(newWidth / TILE_WIDTH);
+    }
+    for (std::vector<bool> &subtileProtectionsRow : this->subtileProtections) {
+        subtileProtectionsRow.resize(newWidth);
     }
     for (std::vector<int> &itemsRow : this->items) {
         itemsRow.resize(newWidth);
@@ -1431,6 +1513,8 @@ bool D1Dun::setHeight(int newHeight, bool force)
                 hasContent |= this->tiles[y / TILE_HEIGHT][x / TILE_WIDTH] > 0; // !0 && !UNDEF_TILE
                 hasContent |= this->subtiles[y][x] > 0;                         // !0 && !UNDEF_SUBTILE
                 hasContent |= this->items[y][x] != 0;
+                hasContent |= this->tileProtections[y / TILE_HEIGHT][x / TILE_WIDTH] != Qt::Unchecked;
+                hasContent |= this->subtileProtections[y][x];
                 hasContent |= this->monsters[y][x].first != 0;
                 hasContent |= this->objects[y][x] != 0;
                 hasContent |= this->rooms[y][x] != 0;
@@ -1449,6 +1533,8 @@ bool D1Dun::setHeight(int newHeight, bool force)
     // resize the dungeon
     this->tiles.resize(newHeight / TILE_HEIGHT);
     this->subtiles.resize(newHeight);
+    this->tileProtections.resize(newHeight / TILE_HEIGHT);
+    this->subtileProtections.resize(newHeight);
     this->items.resize(newHeight);
     this->monsters.resize(newHeight);
     this->objects.resize(newHeight);
@@ -1456,6 +1542,8 @@ bool D1Dun::setHeight(int newHeight, bool force)
     for (int y = prevHeight; y < newHeight; y++) {
         this->tiles[y / TILE_HEIGHT].resize(width / TILE_WIDTH);
         this->subtiles[y].resize(width);
+        this->tileProtections[y / TILE_HEIGHT].resize(width / TILE_WIDTH);
+        this->subtileProtections[y].resize(width);
         this->items[y].resize(width);
         this->monsters[y].resize(width);
         this->objects[y].resize(width);
@@ -1580,6 +1668,38 @@ bool D1Dun::setRoomAt(int posx, int posy, int roomIndex)
         return false;
     }
     this->rooms[posy][posx] = roomIndex;
+    this->modified = true;
+    return true;
+}
+
+Qt::CheckState D1Dun::getTileProtectionAt(int posx, int posy) const
+{
+    return this->tileProtections[posy / TILE_WIDTH][posx / TILE_HEIGHT];
+}
+
+bool D1Dun::setTileProtectionAt(int posx, int posy, Qt::CheckState protection)
+{
+    int tilePosX = posx / TILE_WIDTH;
+    int tilePosY = posy / TILE_HEIGHT;
+    if (this->tileProtections[tilePosY][tilePosX] == protection) {
+        return false;
+    }
+    this->tileProtections[tilePosY][tilePosX] = protection;
+    this->modified = true;
+    return true;
+}
+
+bool D1Dun::getSubtileProtectionAt(int posx, int posy) const
+{
+    return this->subtileProtections[posy][posx];
+}
+
+bool D1Dun::setSubtileProtectionAt(int posx, int posy, bool protection)
+{
+    if (this->subtileProtections[posy][posx] == protection) {
+        return false;
+    }
+    this->subtileProtections[posy][posx] = protection;
     this->modified = true;
     return true;
 }
@@ -2074,6 +2194,38 @@ void D1Dun::checkTiles() const
     ProgressDialog::decBar();
 }
 
+void D1Dun::checkProtections() const
+{
+    ProgressDialog::incBar(tr("Checking Protections..."), 1);
+    bool result = false;
+
+    QPair<int, QString> progress;
+    progress.first = -1;
+    progress.second = tr("Protection inconsistencies:");
+    dProgress() << progress;
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            bool protection = this->subtileProtections[y][x] && this->tileProtections[y / TILE_HEIGHT][x / TILE_WIDTH] != Qt::Unchecked;
+            if (!protection) {
+                if (this->monsters[y][x].first != 0) {
+                    dProgressWarn() << tr("Subtile with a monster is not protected at %1:%2.").arg(x).arg(y);
+                    result = true;
+                }
+                if (this->items[y][x] != 0) {
+                    dProgressWarn() << tr("Subtile with an item is not protected at %1:%2.").arg(x).arg(y);
+                    result = true;
+                }
+            }
+        }
+    }
+    if (!result) {
+        progress.second = tr("No inconsistency detected with the Protections.");
+        dProgress() << progress;
+    }
+
+    ProgressDialog::decBar();
+}
+
 void D1Dun::checkItems(D1Sol *sol) const
 {
     ProgressDialog::incBar(tr("Checking Items..."), 1);
@@ -2200,6 +2352,30 @@ void D1Dun::checkObjects() const
     ProgressDialog::decBar();
 }
 
+bool D1Dun::removeProtections()
+{
+    bool result = false;
+    for (std::vector<Qt::CheckState> &tileProtectionsRow : this->tileProtections) {
+        for (Qt::CheckState &protection : tileProtectionsRow) {
+            if (protection != Qt::Unchecked) {
+                protection = Qt::Unchecked;
+                result = true;
+                this->modified = true;
+            }
+        }
+    }
+    for (std::vector<bool> &subtileProtectionsRow : this->subtileProtections) {
+        for (bool &&protection : subtileProtectionsRow) {
+            if (protection) {
+                protection = false;
+                result = true;
+                this->modified = true;
+            }
+        }
+    }
+    return result;
+}
+
 bool D1Dun::removeItems()
 {
     bool result = false;
@@ -2259,6 +2435,44 @@ bool D1Dun::removeRooms()
         }
     }
     return result;
+}
+
+static QString protectionString(Qt::CheckState protectionState)
+{
+    if (protectionState == Qt::Unchecked) {
+        return QApplication::tr("No Protection");
+    }
+    if (protectionState == Qt::PartiallyChecked) {
+        return QApplication::tr("Partial Protection");
+    }
+    return QApplication::tr("Complete Protection");
+}
+
+void D1Dun::loadProtections(D1Dun *srcDun)
+{
+    for (int y = 0; y < this->height / TILE_HEIGHT; y++) {
+        for (int x = 0; x < this->width / TILE_WIDTH; x++) {
+            Qt::CheckState newProtections = srcDun->tileProtections[y][x];
+            Qt::CheckState currProtections = this->tileProtections[y][x];
+            if (newProtections != Qt::Unchecked && currProtections != newProtections) {
+                if (currProtections != Qt::Unchecked) {
+                    dProgressWarn() << tr("'%1' at %2:%3 was replaced by '%4'.").arg(protectionString(currProtections)).arg(x).arg(y).arg(protectionString(newProtections));
+                }
+                this->tileProtections[y][x] = newProtections;
+                this->modified = true;
+            }
+        }
+    }
+    for (int y = 0; y < this->height; y++) {
+        for (int x = 0; x < this->width; x++) {
+            bool newProtections = srcDun->subtileProtections[y][x];
+            bool currProtections = this->subtileProtections[y][x];
+            if (newProtections && currProtections != newProtections) {
+                this->subtileProtections[y][x] = newProtections;
+                this->modified = true;
+            }
+        }
+    }
 }
 
 void D1Dun::loadItems(D1Dun *srcDun)
@@ -2496,6 +2710,68 @@ bool D1Dun::fixCorners()
     return result;
 }
 
+bool D1Dun::protectTiles()
+{
+    ProgressDialog::incBar(tr("Checking tiles..."), 1);
+    bool result = false;
+    for (int tilePosY = 0; tilePosY < this->height / TILE_HEIGHT; tilePosY++) {
+        for (int tilePosX = 0; tilePosX < this->width / TILE_WIDTH; tilePosX++) {
+            bool needsProtection = this->tiles[tilePosY][tilePosX] > 0; // !0 && !UNDEF_TILE
+            int dunx = tilePosX * TILE_WIDTH;
+            int duny = tilePosY * TILE_HEIGHT;
+            needsProtection |= this->monsters[duny + 0][dunx + 0].first != 0;
+            needsProtection |= this->monsters[duny + 0][dunx + 1].first != 0;
+            needsProtection |= this->monsters[duny + 1][dunx + 0].first != 0;
+            needsProtection |= this->monsters[duny + 1][dunx + 1].first != 0;
+            needsProtection |= this->objects[duny + 0][dunx + 0] != 0;
+            needsProtection |= this->objects[duny + 0][dunx + 1] != 0;
+            needsProtection |= this->objects[duny + 1][dunx + 0] != 0;
+            needsProtection |= this->objects[duny + 1][dunx + 1] != 0;
+            if (needsProtection && this->setTileProtectionAt(dunx, duny, Qt::PartiallyChecked)) {
+                dProgress() << tr("Tile at %1:%2 is now '%3'.").arg(dunx).arg(duny).arg(protectionString(Qt::PartiallyChecked));
+                result = true;
+            }
+        }
+    }
+    if (!result) {
+        dProgress() << tr("No change was necessary.");
+    } else {
+        if (this->type != D1DUN_TYPE::RAW) {
+            this->modified = true;
+        }
+    }
+
+    ProgressDialog::decBar();
+    return result;
+}
+
+bool D1Dun::protectSubtiles()
+{
+    ProgressDialog::incBar(tr("Checking subtiles..."), 1);
+    bool result = false;
+    for (int duny = 0; duny < this->height; duny++) {
+        for (int dunx = 0; dunx < this->width; dunx++) {
+            bool needsProtection = this->monsters[duny][dunx].first != 0;
+            needsProtection |= this->objects[duny][dunx] != 0;
+            // TODO: skip if non-walkable?
+            if (needsProtection && this->setSubtileProtectionAt(dunx, duny, true)) {
+                dProgress() << tr("Subtile at %1:%2 is now protected.").arg(dunx).arg(duny);
+                result = true;
+            }
+        }
+    }
+    if (!result) {
+        dProgress() << tr("No change was necessary.");
+    } else {
+        if (this->type != D1DUN_TYPE::RAW) {
+            this->modified = true;
+        }
+    }
+
+    ProgressDialog::decBar();
+    return result;
+}
+
 bool D1Dun::changeTileAt(int tilePosX, int tilePosY, int tileRef)
 {
     int prevTile = this->tiles[tilePosY][tilePosX];
@@ -2563,6 +2839,34 @@ bool D1Dun::changeItemAt(int posx, int posy, int itemIndex)
     return true;
 }
 
+bool D1Dun::changeTileProtectionAt(int tilePosX, int tilePosY, Qt::CheckState protection)
+{
+    Qt::CheckState prevProtection = this->tileProtections[tilePosY][tilePosX];
+    if (prevProtection == protection) {
+        return false;
+    }
+    this->tileProtections[tilePosY][tilePosX] = protection;
+    dProgress() << tr("'%1' at %2:%3 was replaced by '%4'.").arg(protectionString(prevProtection)).arg(tilePosX * TILE_WIDTH).arg(tilePosY * TILE_HEIGHT).arg(protectionString(protection));
+    this->modified = true;
+    return true;
+}
+
+bool D1Dun::changeSubtileProtectionAt(int posx, int posy, bool protection)
+{
+    bool prevProtection = this->subtileProtections[posy][posx];
+    if (prevProtection == protection) {
+        return false;
+    }
+    this->subtileProtections[posy][posx] = protection;
+    if (protection) {
+        dProgress() << tr("Added Subtile-Protection to %1:%2.").arg(posx).arg(posy);
+    } else {
+        dProgress() << tr("Removed Subtile-Protection from %1:%2.").arg(posx).arg(posy);
+    }
+    this->modified = true;
+    return true;
+}
+
 void D1Dun::patch(int dunFileIndex)
 {
     const quint8 dunSizes[][2] {
@@ -2608,6 +2912,15 @@ void D1Dun::patch(int dunFileIndex)
         // shadow of the external-left column
         change |= this->changeTileAt(0, 4, 48);
         change |= this->changeTileAt(0, 5, 50);
+        // protect inner tiles from spawning additional monsters/objects
+        for (int y = 1; y < 6; y++) {
+            for (int x = 1; x < 6; x++) {
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, true);
+            }
+        }
         break;
     case DUN_BONECHAMB_ENTRY_AFT: // Bonestr2.DUN
         // place shadows
@@ -2632,12 +2945,10 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(4, 1, 51);
         change |= this->changeTileAt(4, 2, 47);
         change |= this->changeTileAt(4, 3, 50); // 51
-        // ensure the changing tiles are reserved
-        for (int y = 0; y < 7; y++) {
-            for (int x = 0; x < 7; x++) {
-                if (this->tiles[y][x] == 0) {
-                    this->changeTileAt(x, y, 3);
-                }
+        // protect the main structure
+        for (int y = 1; y < 6; y++) {
+            for (int x = 1; x < 6; x++) {
+                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
             }
         }
         break;
@@ -2671,19 +2982,28 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(4, 3, 25);
         // remove items
         change |= this->changeItemAt(5, 5, 0);
+        // protect inner tiles from spawning additional monsters/objects
+        for (int y = 0; y < 6; y++) {
+            for (int x = 0; x < 6; x++) {
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, true);
+            }
+        }
+        for (int y = 4; y < 11; y++) {
+            for (int x = 4; x < 11; x++) {
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, true);
+            }
+        }
         break;
     case DUN_BLIND_AFT: // Blind1.DUN
         // place pieces with closed doors
         change |= this->changeTileAt(4, 3, 150);
         change |= this->changeTileAt(6, 7, 150);
-        // ensure the changing tiles are reserved
-        for (int y = 0; y < 11; y++) {
-            for (int x = 0; x < 11; x++) {
-                if (this->tiles[y][x] == 0) {
-                    this->changeTileAt(x, y, 3);
-                }
-            }
-        }
         // add monsters from Blind2.DUN
         change |= this->changeMonsterAt(1, 6, 32, false);
         change |= this->changeMonsterAt(4, 1, 32, false);
@@ -2698,6 +3018,17 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(15, 13, 32, false);
         // remove items
         change |= this->changeItemAt(5, 5, 0);
+        // protect the main structure
+        for (int y = 0; y < 7; y++) {
+            for (int x = 0; x < 7; x++) {
+                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+            }
+        }
+        for (int y = 4; y < 11; y++) {
+            for (int x = 4; x < 11; x++) {
+                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+            }
+        }
         break;
     case DUN_BLOOD_PRE: // Blood2.DUN
         // place pieces with closed doors
@@ -2726,10 +3057,17 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeObjectAt(6, 8, 0);
         change |= this->changeObjectAt(6, 10, 0);
         change |= this->changeObjectAt(6, 12, 0);
+        // protect inner tiles from spawning additional monsters/objects
+        for (int y = 7; y < 15; y++) {
+            for (int x = 2; x <= 6; x++) {
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, true);
+            }
+        }
         break;
     case DUN_BLOOD_AFT: // Blood1.DUN
-        // ensure the inner tiles are reserved
-        change |= this->changeTileAt(5, 12, 3);
         // replace torches
         change |= this->changeObjectAt(11, 8, 110);
         change |= this->changeObjectAt(11, 10, 110);
@@ -2762,6 +3100,17 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(12, 25, 62, false);
         // remove items
         change |= this->changeItemAt(9, 2, 0);
+        // protect the main structure
+        for (int y = 0; y <= 15; y++) {
+            for (int x = 2; x <= 7; x++) {
+                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+            }
+        }
+        for (int y = 3; y <= 8; y++) {
+            for (int x = 0; x <= 9; x++) {
+                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+            }
+        }
         break;
     case DUN_VILE_PRE: // Vile2.DUN
         // replace default tiles with external piece I.
@@ -2796,9 +3145,11 @@ void D1Dun::patch(int dunFileIndex)
         break;
     case DUN_WARLORD_AFT: // Warlord.DUN
         // ensure the changing tiles are reserved
-        change |= this->changeTileAt(7, 2, 6);
-        change |= this->changeTileAt(7, 3, 6);
-        change |= this->changeTileAt(7, 4, 6);
+        change |= this->changeTileProtectionAt(7, 1, Qt::Checked);
+        change |= this->changeTileProtectionAt(7, 2, Qt::Checked);
+        change |= this->changeTileProtectionAt(7, 3, Qt::Checked);
+        change |= this->changeTileProtectionAt(7, 4, Qt::Checked);
+        change |= this->changeTileProtectionAt(7, 5, Qt::Checked);
         // - add the Warlord
         change |= this->changeMonsterAt(6, 7, UMT_WARLORD + 1, true);
         break;
@@ -2831,6 +3182,15 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeItemAt(8, 2, 0);
         change |= this->changeItemAt(5, 10, 0);
         change |= this->changeItemAt(8, 10, 0);
+        // protect inner tiles from spawning additional monsters/objects
+        /*for (int y = 0; y <= 5; y++) {
+            for (int x = 0; x <= 6; x++) {
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, true);
+            }
+        }*/
         break;
     case DUN_BANNER_PRE: // Banner2.DUN
         // replace entry tile
@@ -2915,6 +3275,15 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(3, 6, UMT_LAZARUS + 1, true);
         change |= this->changeMonsterAt(5, 3, UMT_RED_VEX + 1, true);
         change |= this->changeMonsterAt(5, 9, UMT_BLACKJADE + 1, true);
+        // protect inner tiles from spawning additional monsters/objects
+        for (int y = 0; y <= 5; y++) {
+            for (int x = 0; x <= 5; x++) {
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, true);
+            }
+        }
         break;
     case DUN_DIAB_2_AFT: // Diab2b.DUN
         // replace monsters from Diab2a.DUN

@@ -1149,6 +1149,33 @@
          </widget>
         </item>
         <item>
+         <widget class="QLabel">
+          <property name="text">
+           <string notr="true">  </string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="showTileMetaRadioButton">
+          <property name="toolTip">
+           <string>Draw tile protections</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">showMetaButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="showSubtileMetaRadioButton">
+          <property name="toolTip">
+           <string>Draw subtile protections</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">showMetaButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
          <spacer>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -1243,6 +1270,13 @@
             </property>
            </widget>
           </item>
+          <item row="0" column="2">
+           <widget class="QCheckBox" name="dungeonTileProtectionCheckBox">
+            <property name="tristate">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="4">
            <spacer>
             <property name="orientation">
@@ -1269,6 +1303,9 @@
              <set>Qt::AlignCenter</set>
             </property>
            </widget>
+          </item>
+          <item row="0" column="7">
+           <widget class="QCheckBox" name="dungeonSubtileProtectionCheckBox"/>
           </item>
           <item row="0" column="10">
            <spacer>

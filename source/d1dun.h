@@ -107,6 +107,8 @@ class DunDrawParam {
 public:
     Qt::CheckState tileState;
     bool showRooms;
+    bool showTileProtections;
+    bool showSubtileProtections;
     bool showItems;
     bool showMonsters;
     bool showObjects;
@@ -148,6 +150,10 @@ public:
     bool setObjectAt(int posx, int posy, int objectIndex);
     int getRoomAt(int posx, int posy) const;
     bool setRoomAt(int posx, int posy, int roomIndex);
+    Qt::CheckState getTileProtectionAt(int posx, int posy) const;
+    bool setTileProtectionAt(int posx, int posy, Qt::CheckState protection);
+    bool getSubtileProtectionAt(int posx, int posy) const;
+    bool setSubtileProtectionAt(int posx, int posy, bool protection);
 
     int getLevelType() const;
     bool setLevelType(int levelType);
@@ -164,13 +170,16 @@ public:
     void collectMonsters(std::vector<std::pair<DunMonsterType, int>> &monsters) const;
     void collectObjects(std::vector<std::pair<int, int>> &objects) const;
     void checkTiles() const;
+    void checkProtections() const;
     void checkItems(D1Sol *sol) const;
     void checkMonsters(D1Sol *sol) const;
     void checkObjects() const;
+    bool removeProtections();
     bool removeItems();
     bool removeMonsters();
     bool removeObjects();
     bool removeRooms();
+    void loadProtections(D1Dun *srcDun);
     void loadItems(D1Dun *srcDun);
     void loadMonsters(D1Dun *srcDun);
     void loadObjects(D1Dun *srcDun);
@@ -179,6 +188,8 @@ public:
     bool resetTiles();
     bool resetSubtiles();
     bool fixCorners();
+    bool protectTiles();
+    bool protectSubtiles();
 
     void patch(int dunFileIndex); // dun_file_index
 
@@ -206,6 +217,8 @@ private:
     bool changeObjectAt(int posx, int posy, int objectIndex);
     bool changeMonsterAt(int posx, int posy, int monsterIndex, bool isUnique);
     bool changeItemAt(int posx, int posy, int itemIndex);
+    bool changeTileProtectionAt(int tilePosX, int tilePosY, Qt::CheckState protection);
+    bool changeSubtileProtectionAt(int posx, int posy, bool protection);
 
 private:
     D1DUN_TYPE type = D1DUN_TYPE::NORMAL;
@@ -220,6 +233,8 @@ private:
     int height;
     std::vector<std::vector<int>> tiles;
     std::vector<std::vector<int>> subtiles;
+    std::vector<std::vector<Qt::CheckState>> tileProtections;
+    std::vector<std::vector<bool>> subtileProtections;
     std::vector<std::vector<int>> items;
     std::vector<std::vector<DunMonsterType>> monsters;
     std::vector<std::vector<int>> objects;

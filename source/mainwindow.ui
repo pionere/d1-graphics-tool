@@ -171,6 +171,7 @@
      <bool>true</bool>
     </property>
     <addaction name="actionCheckTiles_Dungeon"/>
+    <addaction name="actionCheckProtections_Dungeon"/>
     <addaction name="actionCheckItems_Dungeon"/>
     <addaction name="actionCheckMonsters_Dungeon"/>
     <addaction name="actionCheckObjects_Dungeon"/>
@@ -183,6 +184,7 @@
     <property name="toolTipsVisible">
      <bool>true</bool>
     </property>
+    <addaction name="actionRemoveProtections_Dungeon"/>
     <addaction name="actionRemoveItems_Dungeon"/>
     <addaction name="actionRemoveMonsters_Dungeon"/>
     <addaction name="actionRemoveObjects_Dungeon"/>
@@ -195,6 +197,7 @@
     <property name="toolTipsVisible">
      <bool>true</bool>
     </property>
+    <addaction name="actionLoadProtections_Dungeon"/>
     <addaction name="actionLoadItems_Dungeon"/>
     <addaction name="actionLoadMonsters_Dungeon"/>
     <addaction name="actionLoadObjects_Dungeon"/>
@@ -213,6 +216,9 @@
     <addaction name="actionResetTiles_Dungeon"/>
     <addaction name="actionResetSubtiles_Dungeon"/>
     <addaction name="actionFixCorners_Dungeon"/>
+    <addaction name="separator"/>
+    <addaction name="actionProtectTiles_Dungeon"/>
+    <addaction name="actionProtectSubtiles_Dungeon"/>
     <addaction name="separator"/>
     <addaction name="menuDungeonCheck"/>
     <addaction name="menuDungeonRemove"/>
@@ -602,12 +608,36 @@
     <string>Replace external tiles which might cause a glitch in the game based on the current dungeon-type</string>
    </property>
   </action>
+  <action name="actionProtectTiles_Dungeon">
+   <property name="text">
+    <string>Protect Tiles</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark tiles protected if the tile is set or there is an actor on the tile</string>
+   </property>
+  </action>
+  <action name="actionProtectSubtiles_Dungeon">
+   <property name="text">
+    <string>Protect Subtiles</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark subtiles protected if there is an actor on the tile</string>
+   </property>
+  </action>
   <action name="actionCheckTiles_Dungeon">
    <property name="text">
     <string>Tiles</string>
    </property>
    <property name="toolTip">
     <string>List inconsistent tiles/subtiles</string>
+   </property>
+  </action>
+  <action name="actionCheckProtections_Dungeon">
+   <property name="text">
+    <string>Protections</string>
+   </property>
+   <property name="toolTip">
+    <string>List inconsistent protections</string>
    </property>
   </action>
   <action name="actionCheckItems_Dungeon">
@@ -640,6 +670,22 @@
    </property>
    <property name="toolTip">
     <string>List inconsistent items/monsters/objects</string>
+   </property>
+  </action>
+  <action name="actionRemoveProtections_Dungeon">
+   <property name="text">
+    <string>Protections</string>
+   </property>
+   <property name="toolTip">
+    <string>Remove every protection from the dungeon</string>
+   </property>
+  </action>
+  <action name="actionLoadProtections_Dungeon">
+   <property name="text">
+    <string>Protections</string>
+   </property>
+   <property name="toolTip">
+    <string>Load protections from another dungeon</string>
    </property>
   </action>
   <action name="actionRemoveItems_Dungeon">
