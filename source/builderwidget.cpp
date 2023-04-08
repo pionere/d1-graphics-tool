@@ -236,7 +236,7 @@ void BuilderWidget::dunResourcesModified()
         comboBox->addItem(monSrc->itemText(i), monSrc->itemData(i));
     }
 
-    comboBox->setCurrentIndex(comboBox->findData(this->currentMonsterType));
+    comboBox->setCurrentIndex(comboBox->findData(QVariant::fromValue(this->currentMonsterType)));
 }
 
 void BuilderWidget::on_closePushButtonClicked()
