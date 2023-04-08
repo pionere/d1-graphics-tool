@@ -354,6 +354,8 @@ void BuilderWidget::on_builderModeComboBox_activated(int index)
         break;
     }
     layout->setVisible(true);
+
+    this->adjustSize(); // not sure why this is necessary...
 }
 
 void BuilderWidget::setTileIndex(int tileIndex)
