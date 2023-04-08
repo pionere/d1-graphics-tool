@@ -24,7 +24,7 @@ EditDungeonCommand::EditDungeonCommand(D1Dun *d, int cellX, int cellY, int value
     , dun(d)
     , valueType(vt)
 {
-    this.modValues.push_back(DunPos(cellX, cellY, value));
+    this->modValues.push_back(DunPos(cellX, cellY, value));
 }
 
 void EditDungeonCommand::undo()
@@ -109,13 +109,7 @@ BuilderWidget::BuilderWidget(QWidget *parent, QUndoStack *us, D1Dun *d, LevelCel
     QObject::connect(this->ui->monsterLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_monsterLineEdit_escPressed()));
 
     // cache the active graphics view
-    QList<QGraphicsView *> views;
-    if (cv != nullptr) {
-        views = cv->getCelScene()->views();
-    }
-    if (lcv != nullptr) {
-        views = lcv->getCelScene()->views();
-    }
+    QList<QGraphicsView *> views = lcv->getCelScene()->views();;
     this->graphView = views[0];
 }
 
@@ -177,7 +171,7 @@ bool BuilderWidget::dunClicked(int cellX, int cellY, bool first)
         break;
     case BEM_MONSTER:
         value = this->ui->monsterLineEdit->text->toInt();
-        value |= this->ui->monsterCheckBox->checked() ? 1 << 31 : 0;
+        value |= this->ui->monsterCheckBox->isChecked() ? 1 << 31 : 0;
         break;
     }
 
@@ -242,7 +236,7 @@ void BuilderWidget::dunResourcesModified()
         comboBox->addItem(monSrc->itemText(i), monSrc->itemData(i));
     }
 
-    comboBox->setCurrentIndex(comboBox->findData(this->currentMonsterIndex));
+    comboBox->setCurrentIndex(comboBox->findData(this->currentMonsterType));
 }
 
 void BuilderWidget::on_closePushButtonClicked()
@@ -444,7 +438,7 @@ void BuilderWidget::on_monsterLineEdit_returnPressed()
 {
     DunMonsterType monType;
     monType.first = this->ui->monsterLineEdit->text().toInt();
-    monType.second = this->ui->monsterCheckBox->checked();
+    monType.second = this->ui->monsterCheckBox->isChecked();
 
     this->setMonsterType(monType);
 
@@ -453,7 +447,7 @@ void BuilderWidget::on_monsterLineEdit_returnPressed()
 
 void BuilderWidget::on_monsterLineEdit_escPressed()
 {
-    this->ui->monsterLineEdit->setText(QString::number(this->currentMonsterIndex));
+    this->ui->monsterLineEdit->setText(QString::number(this->currentMonsterType.first));
     this->ui->monsterLineEdit->clearFocus();
 }
 
