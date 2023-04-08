@@ -109,7 +109,7 @@ BuilderWidget::BuilderWidget(QWidget *parent, QUndoStack *us, D1Dun *d, LevelCel
     QObject::connect(this->ui->monsterLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_monsterLineEdit_escPressed()));
 
     // cache the active graphics view
-    QList<QGraphicsView *> views = lcv->getCelScene()->views();;
+    QList<QGraphicsView *> views = lcv->getCelScene()->views();
     this->graphView = views[0];
 }
 
@@ -154,24 +154,24 @@ bool BuilderWidget::dunClicked(int cellX, int cellY, bool first)
     int value;
     switch (this->mode) {
     case BEM_TILE:
-        value = this->ui->tileLineEdit->text->toInt();
+        value = this->currentTileIndex; // this->ui->tileLineEdit->text().toInt();
         break;
     case BEM_TILE_PROTECTION:
         value = this->ui->tileProtectionModeComboBox->currentIndex();
         value = (int)(value == 0 ? Qt::Unchecked : (value == 1 ? Qt::PartiallyChecked : Qt::Checked));
         break;
     case BEM_SUBTILE:
-        value = this->ui->subtileLineEdit->text->toInt();
+        value = this->currentSubtileIndex; // this->ui->subtileLineEdit->text().toInt();
         break;
     case BEM_SUBTILE_PROTECTION:
         value = (int)(this->ui->subtileProtectionModeComboBox->currentIndex() == 1);
         break;
     case BEM_OBJECT:
-        value = this->ui->objectLineEdit->text->toInt();
+        value = this->currentObjectIndex; // this->ui->objectLineEdit->text().toInt();
         break;
     case BEM_MONSTER:
-        value = this->ui->monsterLineEdit->text->toInt();
-        value |= this->ui->monsterCheckBox->isChecked() ? 1 << 31 : 0;
+        value = this->currentMonsterType.first; // this->ui->monsterLineEdit->text().toInt();
+        value |= currentMonsterType.second /*this->ui->monsterCheckBox->isChecked()*/ ? 1 << 31 : 0;
         break;
     }
 
