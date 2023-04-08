@@ -116,7 +116,7 @@
       <item row="0" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Tile-Id:</string>
+         <string>Id:</string>
         </property>
        </widget>
       </item>
@@ -130,7 +130,7 @@
         </property>
        </widget>
       </item>
-      <item>
+      <item row="0" column="2">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -149,7 +149,7 @@
       <item row="0" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Tile Protection Mode:</string>
+         <string>Protection Mode:</string>
         </property>
        </widget>
       </item>
@@ -172,7 +172,7 @@
         </item>
        </widget>
       </item>
-      <item>
+      <item row="0" column="2">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -191,7 +191,7 @@
       <item row="0" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Subtile-Id:</string>
+         <string>Id:</string>
         </property>
        </widget>
       </item>
@@ -205,7 +205,7 @@
         </property>
        </widget>
       </item>
-      <item>
+      <item row="0" column="2">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -224,7 +224,7 @@
       <item row="0" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Subtile Protection Mode:</string>
+         <string>Protection Mode:</string>
         </property>
        </widget>
       </item>
@@ -242,7 +242,7 @@
         </item>
        </widget>
       </item>
-      <item>
+      <item row="0" column="2">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -261,7 +261,7 @@
       <item row="0" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Object:</string>
+         <string>Id:</string>
         </property>
        </widget>
       </item>
@@ -282,7 +282,7 @@
         </property>
        </widget>
       </item>
-      <item>
+      <item row="0" column="3">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -301,7 +301,7 @@
       <item row="0" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Monster:</string>
+         <string>Id:</string>
         </property>
        </widget>
       </item>
@@ -325,7 +325,7 @@
         </property>
        </widget>
       </item>
-      <item>
+      <item row="0" column="4">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
