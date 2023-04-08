@@ -2663,53 +2663,6 @@ bool D1Dun::resetSubtiles()
     return result;
 }
 
-bool D1Dun::fixCorners()
-{
-    ProgressDialog::incBar(tr("Checking tiles..."), 1);
-    bool result = false;
-    int rangeFrom = 0, rangeTo = -1, deltaVal = 0;
-    // L1
-    if (this->levelType == DTYPE_CATHEDRAL) {
-        rangeFrom = 18 + 181;
-        rangeTo = 24 + 181;
-        deltaVal = -181;
-    } else if (this->levelType == DTYPE_CRYPT) {
-        rangeFrom = 18 + 64;
-        rangeTo = 24 + 64;
-        deltaVal = -64;
-    } else if (this->levelType == DTYPE_CATACOMBS) {
-        rangeFrom = 10 + 133;
-        rangeTo = 16 + 133;
-        deltaVal = -133;
-    } else if (this->levelType == DTYPE_HELL) {
-        rangeFrom = 18 + 98;
-        rangeTo = 29 + 98;
-        deltaVal = -98;
-    }
-
-    for (int tilePosY = 0; tilePosY < this->height / TILE_HEIGHT; tilePosY++) {
-        for (int tilePosX = 0; tilePosX < this->width / TILE_WIDTH; tilePosX++) {
-            int currTileRef = this->tiles[tilePosY][tilePosX];
-            if (currTileRef >= rangeFrom && currTileRef <= rangeTo) {
-                int newTileRef = currTileRef + deltaVal;
-                dProgress() << tr("Tile%1 at %2:%3 was replaced with %4.").arg(currTileRef).arg(tilePosX * TILE_WIDTH).arg(tilePosY * TILE_HEIGHT).arg(newTileRef);
-                this->setTileAt(tilePosX * TILE_WIDTH, tilePosY * TILE_HEIGHT, newTileRef);
-                result = true;
-            }
-        }
-    }
-    if (!result) {
-        dProgress() << tr("No change was necessary.");
-    } else {
-        if (this->type == D1DUN_TYPE::NORMAL) {
-            this->modified = true;
-        }
-    }
-
-    ProgressDialog::decBar();
-    return result;
-}
-
 bool D1Dun::protectTiles()
 {
     ProgressDialog::incBar(tr("Checking tiles..."), 1);
