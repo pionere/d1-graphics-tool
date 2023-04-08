@@ -1933,32 +1933,32 @@ static void DRLG_L2TransFix()
 			switch (dungeon[i][j]) {
 			// fix transVals of corners
 			// case 12:
-			// case 16:
 			// case 145:
-			case 149:
+			case 16:
+			// case 149:
 				DRLG_CopyTrans(xx, yy, xx + 1, yy);
 				DRLG_CopyTrans(xx, yy, xx, yy + 1);
 				DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				break;
-			// case 14:
-			// case 10:
-			case 147:
+			case 14:
+			//case 147:
 				//if (dungeon[i][j - 1] != 143) {
 				//	break;
 				//}
 				/* fall-through */
-			case 143:
+			case 10:
+			//case 143:
 				DRLG_CopyTrans(xx, yy, xx + 1, yy);
 				DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				break;
-			// case 15:
-			// case 11:
-			case 148:
+			case 15:
+			//case 148:
 				//if (dungeon[i + 1][j] != 11, 144) {
 				//	break;
 				//}
 				/* fall-through */
-			case 144:
+			case 11:
+			//case 144:
 				DRLG_CopyTrans(xx, yy, xx, yy + 1);
 				DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
 				break;
@@ -2403,7 +2403,7 @@ static void DRLG_L2()
 	L2DoorFix2();
 
 	DRLG_L2Shadows();
-	DRLG_L2Corners();
+	// DRLG_L2Corners(); - commented out, because this is no longer necessary
 
 	DRLG_L2PlaceRndSet(CRUSHCOL, 99);
 	//DRLG_L2PlaceRndSet(RUINS1, 10);
