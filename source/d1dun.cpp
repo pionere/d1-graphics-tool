@@ -760,7 +760,7 @@ bool D1Dun::save(const SaveAsParam &params)
             // user defined the number of layers -> report unsaved information
             if (params.dunLayerNum < layersNeeded) {
                 if (params.dunLayerNum <= 0 && (layers & (1 << 0))) {
-                    dProgressWarn() << tr("Defined flag is not saved.");
+                    dProgressWarn() << tr("Defined protection is not saved.");
                 }
                 if (params.dunLayerNum <= 1 && (layers & (1 << 1))) {
                     dProgressWarn() << tr("Defined monster is not saved.");
@@ -816,7 +816,7 @@ bool D1Dun::save(const SaveAsParam &params)
             }
         }
         if (layers & (1 << 0)) {
-            dProgressWarn() << tr("Defined flag is not saved in this format (RDUN).");
+            dProgressWarn() << tr("Defined protection is not saved in this format (RDUN).");
         }
         if (layers & (1 << 1)) {
             dProgressWarn() << tr("Defined monster is not saved in this format (RDUN).");
@@ -2670,21 +2670,21 @@ bool D1Dun::fixCorners()
     int rangeFrom = 0, rangeTo = -1, deltaVal = 0;
     // L1
     if (this->levelType == DTYPE_CATHEDRAL) {
-        rangeFrom = 18;
-        rangeTo = 24;
-        deltaVal = 181;
+        rangeFrom = 18 + 181;
+        rangeTo = 24 + 181;
+        deltaVal = -181;
     } else if (this->levelType == DTYPE_CRYPT) {
-        rangeFrom = 18;
-        rangeTo = 24;
-        deltaVal = 64;
+        rangeFrom = 18 + 64;
+        rangeTo = 24 + 64;
+        deltaVal = -64;
     } else if (this->levelType == DTYPE_CATACOMBS) {
-        rangeFrom = 10;
-        rangeTo = 16;
-        deltaVal = 133;
+        rangeFrom = 10 + 133;
+        rangeTo = 16 + 133;
+        deltaVal = -133;
     } else if (this->levelType == DTYPE_HELL) {
-        rangeFrom = 18;
-        rangeTo = 29;
-        deltaVal = 98;
+        rangeFrom = 18 + 98;
+        rangeTo = 29 + 98;
+        deltaVal = -98;
     }
 
     for (int tilePosY = 0; tilePosY < this->height / TILE_HEIGHT; tilePosY++) {
@@ -3183,14 +3183,14 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeItemAt(5, 10, 0);
         change |= this->changeItemAt(8, 10, 0);
         // protect inner tiles from spawning additional monsters/objects
-        for (int y = 0; y <= 5; y++) {
+        /*for (int y = 0; y <= 5; y++) {
             for (int x = 0; x <= 6; x++) {
                 change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, true);
                 change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, true);
                 change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, true);
                 change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, true);
             }
-        }
+        }*/
         break;
     case DUN_BANNER_PRE: // Banner2.DUN
         // replace entry tile
