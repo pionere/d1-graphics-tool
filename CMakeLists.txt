@@ -41,6 +41,9 @@ file(APPEND ${TRANSLATIONS_QRC} "\n    </qresource>\n</RCC>")
 include_directories(source)
 
 set(PROJECT_SOURCES
+        source/builderwidget.cpp
+        source/builderwidget.h
+        source/builderwidget.ui
         source/celview.cpp
         source/celview.h
         source/celview.ui

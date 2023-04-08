@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include <QComboBox>
 #include <QContextMenuEvent>
 #include <QDragEnterEvent>
 #include <QDropEvent>
@@ -46,6 +47,8 @@ public:
     int getCurrentFrameIndex() const;
     int getCurrentSubtileIndex() const;
     int getCurrentTileIndex() const;
+    const QComboBox *getObjects() const;
+    const QComboBox *getMonsters() const;
 
     void framePixelClicked(const QPoint &pos, bool first);
 
@@ -117,6 +120,7 @@ public:
     void toggleBottomPanel();
 
     void scrollTo(int posx, int posy);
+    void selectPos(int posx, int posy);
 
 private:
     void collectFrameUsers(int frameIndex, std::vector<int> &users) const;
@@ -161,6 +165,7 @@ private:
 signals:
     void frameRefreshed();
     void palModified();
+    void dunResourcesModified();
 
 private slots:
     void on_firstFrameButton_clicked();

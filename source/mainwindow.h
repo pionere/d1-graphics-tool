@@ -7,6 +7,7 @@
 #include <QTranslator>
 #include <QUndoCommand>
 
+#include "builderwidget.h"
 #include "celview.h"
 #include "d1dun.h"
 #include "d1gfx.h"
@@ -77,6 +78,7 @@ public:
     void changeColor(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, bool all);
     void colorModified();
     void frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first);
+    void dunClicked(int cellX, int cellY, bool first);
     void frameModified();
 
     void initPaletteCycle();
@@ -125,7 +127,8 @@ public slots:
     void on_actionReplace_Tile_triggered();
     void on_actionDel_Tile_triggered();
 
-    void on_actionToggle_Draw_triggered();
+    void on_actionToggle_Painter_triggered();
+    void on_actionToggle_Builder_triggered();
 
 private slots:
     void on_actionNew_CEL_triggered();
@@ -242,6 +245,7 @@ private:
     CelView *celView = nullptr;
     LevelCelView *levelCelView = nullptr;
     PaintWidget *paintWidget = nullptr;
+    BuilderWidget *builderWidget = nullptr;
 
     PaletteWidget *palWidget = nullptr;
     PaletteWidget *trnUniqueWidget = nullptr;
