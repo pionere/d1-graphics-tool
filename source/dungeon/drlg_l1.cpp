@@ -664,7 +664,8 @@ const BYTE L1ConvTbl[16] = { BASE_MEGATILE_L1 + 1, 13, 1, 13, 2, 13, 13, 13, 4, 
 					//	c = 42; ?
 					//if (j != 1 && c == 7)
 					//	c = 31; ?
-				} // commented out because this is not possible with the current implementation
+				}
+				// commented out because this is not possible with the current implementation
 				//else if (df == (DRLG_L1_HDOOR | DRLG_L1_VDOOR)) {
 				//	if (i != 1 && j != 1 && c == 4)
 				//		c = 28; -- edge with double door
@@ -2715,7 +2716,6 @@ static void DRLG_L1()
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// - replace the wall with door
 		lm[2 + 7 + 6 * 8] = SwapLE16(193);
-		// patch set-piece - Banner2.DUN
 		// - replace monsters
 		for (int y = 7; y <= 9; y++) {
 			for (int x = 7; x <= 13; x++) {

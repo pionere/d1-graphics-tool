@@ -1480,9 +1480,8 @@ static void DRLG_L2MakeMegas()
 	}
 }
 
-static void L2TileFix()
+/*static void L2TileFix()
 {
-	/* commented out because this is no longer necessary
 	int i, j;
 
 	for (j = 0; j < DMAXY; j++) {
@@ -1503,8 +1502,8 @@ static void L2TileFix()
 				dungeon[i + 1][j] = 16;
 			}
 		}
-	}*/
-}
+	}
+}*/
 
 static int DL2_NumNoChar()
 {
@@ -2142,9 +2141,8 @@ static void L2LockoutFix()
 	}
 }
 
-static void L2DoorFix()
+/*static void L2DoorFix()
 {
-	/* commented out, because this is no longer necessary
 	int i, j;
 
 	for (j = 1; j < DMAXY; j++) {
@@ -2158,8 +2156,8 @@ static void L2DoorFix()
 				dungeon[i][j] = 9;
 			}
 		}
-	}*/
-}
+	}
+}*/
 
 static bool IsPillar(BYTE bv)
 {
@@ -2350,7 +2348,7 @@ static void DRLG_L2()
 
 		DRLG_L2MakeMegas();
 
-		L2TileFix();
+		// L2TileFix(); - commented out, because this is no longer necessary
 		memset(drlgFlags, 0, sizeof(drlgFlags));
 		if (pSetPieces[0]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
 			DRLG_L2SetRoom(0);
@@ -2439,7 +2437,7 @@ static void DRLG_L2()
 		// patch the map - Blind2.DUN
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// replace the door with wall
-		lm[2 + 4 + 3 * 11] = 25;
+		lm[2 + 4 + 3 * 11] = SwapLE16(25);
 		// protect inner tiles from spawning additional monsters/objects
 		for (int y = 0; y < 6; y++) {
 			for (int x = 0; x < 6; x++) {

@@ -402,17 +402,17 @@ static void DRLG_LoadL4SP()
 	} else if (QuestStatus(Q_BETRAYER)) {
 		pSetPieces[0]._spData = LoadFileInMem(IsMultiGame ? "Levels\\L4Data\\Vile1.DUN" : "Levels\\L4Data\\Viles.DUN");
 		if (pSetPieces[0]._spData != NULL && IsMultiGame) {
-		// patch set-piece to add monsters - Vile1.DUN
-		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
-		lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 3 + 6 * 7 * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
-		lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 3 * 7 * 2] = SwapLE16((UMT_RED_VEX + 1) | (1 << 15));
-		lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 9 * 7 * 2] = SwapLE16((UMT_BLACKJADE + 1) | (1 << 15));
-		// protect inner tiles from spawning additional monsters/objects
-		for (int y = 0; y <= 5; y++) {
-			for (int x = 0; x <= 5; x++) {
-				lm[7 * 7 + x + y * 7] |= SwapLE16((1 << 8) | (1 << 10) | (1 << 12) | (1 << 14));
+			// patch set-piece to add monsters - Vile1.DUN
+			uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
+			lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 3 + 6 * 7 * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
+			lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 3 * 7 * 2] = SwapLE16((UMT_RED_VEX + 1) | (1 << 15));
+			lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 9 * 7 * 2] = SwapLE16((UMT_BLACKJADE + 1) | (1 << 15));
+			// protect inner tiles from spawning additional monsters/objects
+			for (int y = 0; y <= 5; y++) {
+				for (int x = 0; x <= 5; x++) {
+					lm[7 * 7 + x + y * 7] |= SwapLE16((1 << 8) | (1 << 10) | (1 << 12) | (1 << 14));
+				}
 			}
-		}
 		}
 		pSetPieces[0]._sptype = SPT_BETRAYER;
 	} else if (QuestStatus(Q_WARLORD)) {
@@ -1901,9 +1901,8 @@ static void DRLG_L4Corners()
  * New dungeon values: (17)
  * TODO: use DRLG_PlaceMiniSet instead?
  */
-static void DRLG_L4GeneralFix()
+/*static void DRLG_L4GeneralFix()
 {
-	/* commented out because this is no longer necessary
 	int i, j;
 
 	for (j = 0; j < DMAXY - 1; j++) {
@@ -1917,8 +1916,8 @@ static void DRLG_L4GeneralFix()
 				dungeon[i][j] = 17;
 			}
 		}
-	}*/
-}
+	}
+}*/
 
 static void DRLG_L4()
 {
@@ -2030,7 +2029,6 @@ static void DRLG_L4()
 		if (pSetPieces[0]._spData != NULL) {
 		// patch set-piece - Warlord2.DUN
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
-		// patch set-piece to add monsters - Warlord2.DUN
 		// replace monsters
 		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 2 + 2 * 8 * 2] = SwapLE16(100);
 		lm[2 + 8 * 7 + 8 * 7 * 2 * 2 + 2 + 10 * 8 * 2] = SwapLE16(100);
