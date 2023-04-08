@@ -222,12 +222,12 @@ void BuilderWidget::dunResourcesModified()
     comboBox = this->ui->objectComboBox;
     comboBox->hide();
     comboBox->clear();
-
     const QComboBox *objSrc = this->levelCelView->getObjects();
     for (int i = 0; i < objSrc->count(); i++) {
         comboBox->addItem(objSrc->itemText(i), objSrc->itemData(i));
     }
     comboBox->setCurrentIndex(comboBox->findData(this->currentObjectIndex));
+    comboBox->show();
 
     // - monsters
     comboBox = this->ui->monsterComboBox;
@@ -237,8 +237,8 @@ void BuilderWidget::dunResourcesModified()
     for (int i = 0; i < monSrc->count(); i++) {
         comboBox->addItem(monSrc->itemText(i), monSrc->itemData(i));
     }
-
     comboBox->setCurrentIndex(comboBox->findData(QVariant::fromValue(this->currentMonsterType)));
+    comboBox->show();
 }
 
 void BuilderWidget::on_closePushButtonClicked()
