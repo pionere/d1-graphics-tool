@@ -111,7 +111,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QWidget" name="tileModeGridLayout">
+    <widget class="QWidget" name="tileModeWidget">
      <layout class="QGridLayout">
       <item row="0" column="0">
        <widget class="QLabel">
@@ -141,7 +141,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="tileProtectionModeGridLayout">
+    <widget class="QWidget" name="tileProtectionModeWidget">
      <property name="visible">
       <bool>false</bool>
      </property>
@@ -183,7 +183,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="subtileModeGridLayout">
+    <widget class="QWidget" name="subtileModeWidget">
      <property name="visible">
       <bool>false</bool>
      </property>
@@ -216,7 +216,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="subtileProtectionModeGridLayout">
+    <widget class="QWidget" name="subtileProtectionModeWidget">
      <property name="visible">
       <bool>false</bool>
      </property>
@@ -253,7 +253,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="objectModeGridLayout">
+    <widget class="QWidget" name="objectModeWidget">
      <property name="visible">
       <bool>false</bool>
      </property>
@@ -293,7 +293,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="monsterModeGridLayout">
+    <widget class="QWidget" name="monsterModeWidget">
      <property name="visible">
       <bool>false</bool>
      </property>
@@ -316,6 +316,9 @@
        </widget>
       </item>
       <item row="0" column="2">
+       <widget class="QCheckBox" name="monsterCheckBox"/>
+      </item>
+      <item row="0" column="3">
        <widget class="QComboBox" name="monsterComboBox">
         <property name="sizeAdjustPolicy">
          <enum>QComboBox::AdjustToContents</enum>

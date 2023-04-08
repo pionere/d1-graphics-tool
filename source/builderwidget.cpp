@@ -36,6 +36,7 @@ void EditDungeonCommand::undo()
 
     for (DunPos &dp : this->modValues) {
         int currValue;
+        DunMonsterType dmt;
         switch (this->valueType) {
         case BEM_TILE:
             currValue = this->dun->getTileAt(dp.cellX, dp.cellY); // TODO: store subtiles as well
@@ -63,8 +64,11 @@ void EditDungeonCommand::undo()
             dp.value = currValue;
             break;
         case BEM_MONSTER:
-            currValue = this->dun->getMonsterAt(dp.cellX, dp.cellY);
-            this->dun->setMonsterAt(dp.cellX, dp.cellY, dp.value);
+            dmt = this->dun->getMonsterAt(dp.cellX, dp.cellY);
+            currValue = dmt.first | (dmt.second ? 1 << 31 : 0);
+            dmt.first = dp.value & INT32_MAX;
+            dmt.second = (dp.value & (1 << 31)) != 0;
+            this->dun->setMonsterAt(dp.cellX, dp.cellY, dmt);
             dp.value = currValue;
             break;
         }
@@ -173,6 +177,7 @@ bool BuilderWidget::dunClicked(int cellX, int cellY, bool first)
         break;
     case BEM_MONSTER:
         value = this->ui->monsterLineEdit->text->toInt();
+        value |= this->ui->monsterCheckBox->checked() ? 1 << 31 : 0;
         break;
     }
 
@@ -309,47 +314,47 @@ void BuilderWidget::mouseMoveEvent(QMouseEvent *event)
 void BuilderWidget::on_builderModeComboBox_activated(int index)
 {
     int prevMode = this->mode;
-    QGridLayout *layout;
+    QWidget *layout;
     switch (prevMode) {
     case BEM_TILE:
-        layout = this->ui->tileModeGridLayout;
+        layout = this->ui->tileModeWidget;
         break;
     case BEM_TILE_PROTECTION:
-        layout = this->ui->tileProtectionModeGridLayout;
+        layout = this->ui->tileProtectionModeWidget;
         break;
     case BEM_SUBTILE:
-        layout = this->ui->subtileModeGridLayout;
+        layout = this->ui->subtileModeWidget;
         break;
     case BEM_SUBTILE_PROTECTION:
-        layout = this->ui->subtileProtectionModeGridLayout;
+        layout = this->ui->subtileProtectionModeWidget;
         break;
     case BEM_OBJECT:
-        layout = this->ui->objectModeGridLayout;
+        layout = this->ui->objectModeWidget;
         break;
     case BEM_MONSTER:
-        layout = this->ui->monsterModeGridLayout;
+        layout = this->ui->monsterModeWidget;
         break;
     }
     layout->setVisible(false);
     this->mode = index;
     switch (this->mode) {
     case BEM_TILE:
-        layout = this->ui->tileModeGridLayout;
+        layout = this->ui->tileModeWidget;
         break;
     case BEM_TILE_PROTECTION:
-        layout = this->ui->tileProtectionModeGridLayout;
+        layout = this->ui->tileProtectionModeWidget;
         break;
     case BEM_SUBTILE:
-        layout = this->ui->subtileModeGridLayout;
+        layout = this->ui->subtileModeWidget;
         break;
     case BEM_SUBTILE_PROTECTION:
-        layout = this->ui->subtileProtectionModeGridLayout;
+        layout = this->ui->subtileProtectionModeWidget;
         break;
     case BEM_OBJECT:
-        layout = this->ui->objectModeGridLayout;
+        layout = this->ui->objectModeWidget;
         break;
     case BEM_MONSTER:
-        layout = this->ui->monsterModeGridLayout;
+        layout = this->ui->monsterModeWidget;
         break;
     }
     layout->setVisible(true);
@@ -357,22 +362,27 @@ void BuilderWidget::on_builderModeComboBox_activated(int index)
 
 void BuilderWidget::setTileIndex(int tileIndex)
 {
-    this->ui->tileLineEdit->setText(QString::number(this->currentTileIndex));
+    this->currentTileIndex = tileIndex;
+    this->ui->tileLineEdit->setText(QString::number(tileIndex));
 }
 
 void BuilderWidget::setSubtileIndex(int subtileIndex)
 {
-    this->ui->subtileLineEdit->setText(QString::number(this->currentSubtileIndex));
+    this->currentSubtileIndex = subtileIndex;
+    this->ui->subtileLineEdit->setText(QString::number(subtileIndex));
 }
 
 void BuilderWidget::setObjectIndex(int objectIndex)
 {
-    this->ui->objectLineEdit->setText(QString::number(this->currentObjectIndex));
+    this->currentObjectIndex = objectIndex;
+    this->ui->objectLineEdit->setText(QString::number(objectIndex));
 }
 
-void BuilderWidget::setMonsterIndex(int monsterIndex)
+void BuilderWidget::setMonsterType(DunMonsterType monType)
 {
-    this->ui->monsterLineEdit->setText(QString::number(this->currentMonsterIndex));
+    this>currentMonsterType = monType;
+    this->ui->monsterLineEdit->setText(QString::number(monType.first));
+    this->ui->monsterCheckBox->setChecked(monType.second);
 }
 
 void BuilderWidget::on_tileLineEdit_returnPressed()
@@ -432,9 +442,11 @@ void BuilderWidget::on_objectComboBox_activated(int index)
 
 void BuilderWidget::on_monsterLineEdit_returnPressed()
 {
-    int monsterIndex = this->ui->monsterLineEdit->text().toInt();
+    DunMonsterType monType;
+    monType.first = this->ui->monsterLineEdit->text().toInt();
+    monType.second = this->ui->monsterCheckBox->checked();
 
-    this->setMonsterIndex(monsterIndex);
+    this->setMonsterType(monType);
 
     this->on_monsterLineEdit_escPressed();
 }
@@ -450,7 +462,7 @@ void BuilderWidget::on_monsterComboBox_activated(int index)
     if (index < 0) {
         return;
     }
-    int monsterIndex = this->ui->monsterComboBox->itemData(index).value<int>();
+    DunMonsterType monType = this->ui->monsterComboBox->itemData(index).value<DunMonsterType>();
 
-    this->setMonsterIndex(monsterIndex);
+    this->setMonsterType(monType);
 }

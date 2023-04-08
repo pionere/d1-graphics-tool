@@ -30,7 +30,7 @@ class EditDungeonCommand : public QObject, public QUndoCommand {
     Q_OBJECT
 
 public:
-    explicit EditDungeonCommand(D1Dun *dun, int cellX, int cellY, int value);
+    explicit EditDungeonCommand(D1Dun *dun, int cellX, int cellY, int value, int valueType);
     ~EditDungeonCommand() = default;
 
     void undo() override;
@@ -67,7 +67,7 @@ private:
     void setTileIndex(int tileIndex);
     void setSubtileIndex(int subtileIndex);
     void setObjectIndex(int objectIndex);
-    void setMonsterIndex(int monsterIndex);
+    void setMonsterType(DunMonsterType monType);
 
 public slots:
     bool dunClicked(int cellX, int cellY, bool first);
@@ -108,5 +108,5 @@ private:
     int currentTileIndex = 0;
     int currentSubtileIndex = 0;
     int currentObjectIndex = 0;
-    int currentMonsterIndex = 0;
+    DunMonsterType currentMonsterType = { 0, false };
 };
