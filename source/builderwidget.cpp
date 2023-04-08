@@ -108,6 +108,8 @@ BuilderWidget::BuilderWidget(QWidget *parent, QUndoStack *us, D1Dun *d, LevelCel
     QObject::connect(this->ui->objectLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_objectLineEdit_escPressed()));
     QObject::connect(this->ui->monsterLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_monsterLineEdit_escPressed()));
 
+    this->adjustSize(); // not sure why this is necessary...
+
     // cache the active graphics view
     QList<QGraphicsView *> views = lcv->getCelScene()->views();
     this->graphView = views[0];
