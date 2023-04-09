@@ -55,6 +55,10 @@ void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     this->mouseEvent(event, false);
+}
+
+void CelScene::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
     // emit this->framePixelHovered(this->lastPos);
     QPointF scenePos = event->scenePos();
     QPoint currPos = QPoint(scenePos.x(), scenePos.y());

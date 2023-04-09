@@ -5,6 +5,7 @@
 #include <QDropEvent>
 #include <QGraphicsScene>
 #include <QGraphicsSceneDragDropEvent>
+#include <QGraphicsSceneHoverEvent>
 #include <QGraphicsSceneMouseEvent>
 #include <QPoint>
 #include <QStringList>
@@ -43,6 +44,7 @@ private:
 private slots:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
     void dragEnterEvent(QGraphicsSceneDragDropEvent *event) override;
     void dragMoveEvent(QGraphicsSceneDragDropEvent *event) override;
     void dropEvent(QGraphicsSceneDragDropEvent *event) override;
