@@ -125,7 +125,8 @@ void PaintWidget::show()
         QPoint viewBottomRight = this->graphView->mapToGlobal(QPoint(viewSize.width(), viewSize.height()));
         QSize mySize = this->frameSize();
         QPoint targetPos = viewBottomRight - QPoint(mySize.width(), mySize.height());
-        this->move(this->mapFromGlobal(targetPos));
+        QPoint destPos = this->mapFromGlobal(targetPos) + this->pos();
+        this->move(destPos);
     }
     QFrame::show();
 
