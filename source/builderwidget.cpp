@@ -130,13 +130,7 @@ BuilderWidget::~BuilderWidget()
 
 void BuilderWidget::show()
 {
-    if (!this->moved) {
-        QSize viewSize = this->graphView->frameSize();
-        QPoint viewBottomRight = this->graphView->mapToGlobal(QPoint(viewSize.width(), viewSize.height()));
-        QSize mySize = this->frameSize();
-        QPoint targetPos = viewBottomRight - QPoint(mySize.width(), mySize.height());
-        this->move(this->mapFromGlobal(targetPos));
-    }
+    this->resetPos();
     QFrame::show();
 
     this->setFocus(); // otherwise the widget does not receive keypress events...
@@ -210,7 +204,7 @@ bool BuilderWidget::dunClicked(int cellX, int cellY, bool first)
         }
 
         // rollback previous change
-        this->undoStack->pop();
+        this->undoStack->undo();
     } else {
         this->lastPos.setX(cellX);
         this->lastPos.setY(cellY);
@@ -326,6 +320,17 @@ void BuilderWidget::on_closePushButtonClicked()
     this->hide();
 }
 
+void BuilderWidget::resetPos()
+{
+    if (!this->moved) {
+        QSize viewSize = this->graphView->frameSize();
+        QPoint viewBottomRight = this->graphView->mapToGlobal(QPoint(viewSize.width(), viewSize.height()));
+        QSize mySize = this->frameSize();
+        QPoint targetPos = viewBottomRight - QPoint(mySize.width(), mySize.height());
+        this->move(this->mapFromGlobal(targetPos));
+    }
+}
+
 void BuilderWidget::stopMove()
 {
     this->setMouseTracking(false);
@@ -436,6 +441,7 @@ void BuilderWidget::on_builderModeComboBox_activated(int index)
     layout->setVisible(true);
 
     this->adjustSize(); // not sure why this is necessary...
+    this->resetPos();
 }
 
 void BuilderWidget::setTileIndex(int tileIndex)

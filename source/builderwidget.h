@@ -63,6 +63,7 @@ public:
     void hide(); // override;
 
 private:
+    void resetPos();
     void stopMove();
 
     void setTileIndex(int tileIndex);
