@@ -8,6 +8,7 @@
 #include <QGraphicsPixmapItem>
 #include <QImageReader>
 #include <QMenu>
+#include <QMessageBox>
 #include <QMimeData>
 
 #include "config.h"
@@ -57,7 +58,7 @@ void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     this->mouseEvent(event, false);
 }
 
-bool CelScene::event(QEvent *evt) override
+bool CelScene::event(QEvent *evt)
 {
     if (evt->type() == QEvent::MouseMove) {
         QMessageBox::critical(nullptr, "Err", QString("MouseMove"));
