@@ -331,12 +331,12 @@ void BuilderWidget::resetPos()
         // QMessageBox::critical(nullptr, "Error", QString("Moving v %1:%2 vr %3:%4 s%5:%6 tp %7:%8 dp %9%10").arg(viewSize.width()).arg(viewSize.height()).arg(viewBottomRight.x()).arg(viewBottomRight.y()).arg(mySize.width()).arg(mySize.height()).arg(targetPos.x()).arg(targetPos.y()).arg(destPos.x()).arg(destPos.y()));
         this->move(destPos);*/
         QSize viewSize = this->graphView->frameSize();
-        QPoint viewTopLeft = this->graphView->mapToGlobal(0, 0);
+        QPoint viewBottomRight = this->graphView->mapToGlobal(QPoint(viewSize.width(), viewSize.height()));
         QSize mySize = this->frameSize();
-        QPoint targetPos = viewTopLeft + QPoint(viewSize.width() - mySize.width(), viewSize.height() - mySize.height());
+        QPoint targetPos = viewBottomRight - QPoint(mySize.width(), mySize.height());
         QPoint destPos = this->mapFromGlobal(targetPos);
         QPoint nextPos = this->pos() + destPos;
-        QMessageBox::critical(nullptr, "Error", QString("Moving v %1:%2 vr %3:%4 s%5:%6 tp %7:%8 dp %9:%10 np %11:%12").arg(viewSize.width()).arg(viewSize.height()).arg(viewTopLeft.x()).arg(viewTopLeft.y()).arg(mySize.width()).arg(mySize.height()).arg(targetPos.x()).arg(targetPos.y()).arg(destPos.x()).arg(destPos.y()).arg(nextPos.x()).arg(nextPos.y()));
+        QMessageBox::critical(nullptr, "Error", QString("Moving v %1:%2 vr %3:%4 s%5:%6 tp %7:%8 dp %9:%10 np %11:%12").arg(viewSize.width()).arg(viewSize.height()).arg(viewBottomRight.x()).arg(viewBottomRight.y()).arg(mySize.width()).arg(mySize.height()).arg(targetPos.x()).arg(targetPos.y()).arg(destPos.x()).arg(destPos.y()).arg(nextPos.x()).arg(nextPos.y()));
         this->move(nextPos);
     }
 }
