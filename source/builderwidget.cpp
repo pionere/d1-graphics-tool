@@ -337,7 +337,7 @@ void BuilderWidget::resetPos()
         QPoint destPos = this->mapFromGlobal(targetPos);
         QPoint nextPos = this->pos() + destPos;
         QMessageBox::critical(nullptr, "Error", QString("Moving v %1:%2 vr %3:%4 s%5:%6 tp %7:%8 dp %9:%10 np %11:%12").arg(viewSize.width()).arg(viewSize.height()).arg(viewTopLeft.x()).arg(viewTopLeft.y()).arg(mySize.width()).arg(mySize.height()).arg(targetPos.x()).arg(targetPos.y()).arg(destPos.x()).arg(destPos.y()).arg(nextPos.x()).arg(nextPos.y()));
-        this->move(destPos);
+        this->move(nextPos);
     }
 }
 
