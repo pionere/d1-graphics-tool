@@ -49,6 +49,7 @@ private slots:
 
 signals:
     void framePixelClicked(const QPoint &pos, bool first);
+    // void framePixelHovered(const QPoint &pos);
 
 private:
     quint8 currentZoomNumerator = 1;
@@ -70,6 +71,7 @@ public:
     int getCurrentFrameIndex() const;
 
     void framePixelClicked(const QPoint &pos, bool first);
+    void framePixelHovered(const QPoint &pos);
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
     void addToCurrentFrame(const QString &imagefilePath);
     void replaceCurrentFrame(const QString &imagefilePath);

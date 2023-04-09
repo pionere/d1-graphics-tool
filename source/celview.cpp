@@ -55,6 +55,14 @@ void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     this->mouseEvent(event, false);
+    // emit this->framePixelHovered(this->lastPos, first);
+    QObject *view = this->parent();
+    CelView *celView = qobject_cast<CelView *>(view);
+    if (celView != nullptr) {
+        celView->framePixelHovered(this->lastPos, first);
+    } else {
+        qobject_cast<LevelCelView *>(view)->framePixelHovered(this->lastPos, first);
+    }
 }
 
 void CelScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
@@ -177,7 +185,8 @@ CelView::CelView(QWidget *parent)
     layout->setAlignment(btn, Qt::AlignRight);
 
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
-    QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &CelView::framePixelClicked);
+    // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &CelView::framePixelClicked);
+    // QObject::connect(&this->celScene, &CelScene::framePixelHovered, this, &CelView::framePixelHovered);
 
     // connect esc events of LineEditWidgets
     QObject::connect(this->ui->frameIndexEdit, SIGNAL(cancel_signal()), this, SLOT(on_frameIndexEdit_escPressed()));
@@ -268,6 +277,10 @@ void CelView::framePixelClicked(const QPoint &pos, bool first)
     QPoint p = pos;
     p -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
     dMainWindow().frameClicked(frame, p, first);
+}
+
+void CelView::framePixelHovered(const QPoint &pos)
+{
 }
 
 void CelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)

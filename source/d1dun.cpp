@@ -525,7 +525,7 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
                         this->rooms[y][x] = readWord;
                     }
                 }
-                numLayers++;
+                // numLayers++;
             } else {
                 ; // dProgressWarn() << tr("Rooms are not defined in the DUN file.");
             }
@@ -919,14 +919,14 @@ bool D1Dun::save(const SaveAsParam &params)
 
 #define CELL_BORDER 0
 
-void D1Dun::drawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, unsigned height, const QColor &color)
+void D1Dun::drawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, const QColor &color)
 {
     unsigned len = 0;
     unsigned y = 1;
     QRgb *destBits = reinterpret_cast<QRgb *>(image.scanLine(sy + y));
     destBits += sx;
     QRgb srcBit = color.rgba();
-    for (; y <= height / 2; y++) {
+    for (; y <= width / 4; y++) {
         len += 2;
         for (unsigned x = width / 2 - len - CELL_BORDER; x < width / 2 + len + CELL_BORDER; x++) {
             // image.setPixelColor(sx + x, sy + y, color);
@@ -934,7 +934,7 @@ void D1Dun::drawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width,
         }
         destBits += image.width();
     }
-    for (; y < height; y++) {
+    for (; y < width / 2; y++) {
         len -= 2;
         for (unsigned x = width / 2 - len - CELL_BORDER; x < width / 2 + len + CELL_BORDER; x++) {
             // image.setPixelColor(sx + x, sy + y, color);
@@ -1044,7 +1044,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             if (params.tileState == Qt::Unchecked) {
                 QColor color = this->pal->getColor(roomIndex % D1PAL_COLORS);
                 QImage *destImage = (QImage *)dungeon.device();
-                D1Dun::drawDiamond(*destImage, drawCursorX, drawCursorY - backHeight, backWidth, backHeight, color);
+                D1Dun::drawDiamond(*destImage, drawCursorX, drawCursorY - backHeight, backWidth, color);
             } else {
                 QColor color = this->pal->getColor(((unsigned)(D1PAL_COLORS - 1 - roomIndex)) % D1PAL_COLORS);
                 const QPen prevPen = dungeon.pen();
@@ -1232,7 +1232,7 @@ QImage D1Dun::getImage(const DunDrawParam &params)
     backImage.fill(Qt::transparent);
     QColor backColor = QColor(Config::getGraphicsTransparentColor());
     if (params.tileState != Qt::Unchecked) {
-        D1Dun::drawDiamond(backImage, 0 + CELL_BORDER, 0 + CELL_BORDER, cellWidth, cellHeight, backColor);
+        D1Dun::drawDiamond(backImage, 0 + CELL_BORDER, 0 + CELL_BORDER, cellWidth, backColor);
     } else {
         unsigned len = 0;
         unsigned y = 1;

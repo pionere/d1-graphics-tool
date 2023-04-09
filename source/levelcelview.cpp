@@ -56,7 +56,8 @@ LevelCelView::LevelCelView(QWidget *parent)
     btn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowLeft, tr("Switch to tileset view"), &dMainWindow(), &MainWindow::on_actionToggle_View_triggered);
 
     // If a pixel of the frame, subtile or tile was clicked get pixel color index and notify the palette widgets
-    QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &LevelCelView::framePixelClicked);
+    // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &LevelCelView::framePixelClicked);
+    // QObject::connect(&this->celScene, &CelScene::framePixelHovered, this, &LevelCelView::framePixelHovered);
 
     // connect esc events of LineEditWidgets
     QObject::connect(this->ui->frameIndexEdit, SIGNAL(cancel_signal()), this, SLOT(on_frameIndexEdit_escPressed()));
@@ -413,6 +414,48 @@ const QComboBox *LevelCelView::getMonsters() const
     return this->ui->dungeonMonsterComboBox;
 }
 
+QPoint LevelCelView::getCellPos(const QPoint &pos)
+{
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    int cellWidth = subtileWidth;
+    int cellHeight = subtileWidth / 2;
+    // move to 0;0
+    int cX = pos.x() - this->celScene.sceneRect().width() / 2;
+    int cY = pos.y() - (CEL_SCENE_MARGIN + subtileHeight - cellHeight);
+    int offX = (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
+    cX += offX;
+
+    // switch unit
+    int dunX = cX / cellWidth;
+    int dunY = cY / cellHeight;
+    int remX = cX % cellWidth;
+    int remY = cY % cellHeight;
+    // SHIFT_GRID
+    int cellX = dunX + dunY;
+    int cellY = dunY - dunX;
+
+    // Shift position to match diamond grid aligment
+    bool bottomLeft = remY >= cellHeight + (remX / 2);
+    bool bottomRight = remY >= cellHeight - (remX / 2);
+    if (bottomLeft) {
+        cellY++;
+    }
+    if (bottomRight) {
+        cellX++;
+    }
+    bool topRight = remY < (remX / 2);
+    bool topLeft = remY < -(remX / 2);
+    if (topRight) {
+        cellY--;
+    }
+    if (topLeft) {
+        cellX--;
+    }
+    return QPoint(cellX, cellY);
+}
+
 void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
 {
     unsigned celFrameWidth = MICRO_WIDTH; // this->gfx->getFrameWidth(this->currentFrameIndex);
@@ -425,41 +468,8 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
     unsigned tileHeight = subtileHeight + 2 * subtileShiftY;
 
     if (this->dunView) {
-        int cellWidth = subtileWidth;
-        int cellHeight = subtileWidth / 2;
-        // move to 0;0
-        int cX = pos.x() - this->celScene.sceneRect().width() / 2;
-        int cY = pos.y() - (CEL_SCENE_MARGIN + subtileHeight - cellHeight);
-        int offX = (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
-        cX += offX;
-
-        // switch unit
-        int dunX = cX / cellWidth;
-        int dunY = cY / cellHeight;
-        int remX = cX % cellWidth;
-        int remY = cY % cellHeight;
-        // SHIFT_GRID
-        int cellX = dunX + dunY;
-        int cellY = dunY - dunX;
-
-        // Shift position to match diamond grid aligment
-        bool bottomLeft = remY >= cellHeight + (remX / 2);
-        bool bottomRight = remY >= cellHeight - (remX / 2);
-        if (bottomLeft) {
-            cellY++;
-        }
-        if (bottomRight) {
-            cellX++;
-        }
-        bool topRight = remY < (remX / 2);
-        bool topLeft = remY < -(remX / 2);
-        if (topRight) {
-            cellY--;
-        }
-        if (topLeft) {
-            cellX--;
-        }
-        dMainWindow().dunClicked(cellX, cellY, first);
+        QPoint cellPos = this->getCellPos(pos);
+        dMainWindow().dunClicked(cellPos.x(), cellPos.y(), first);
         return;
     }
     if (pos.x() >= (int)(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING)
@@ -574,6 +584,91 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
     QPoint p = pos;
     p -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
     dMainWindow().frameClicked(frame, p, first);
+}
+
+#define CELL_BORDER 0
+
+static void drawHollowDiamond(QImage &image, unsigned width, const QColor &color)
+{
+    unsigned len = 0;
+    unsigned y = 1;
+    QRgb *destBits = reinterpret_cast<QRgb *>(image.scanLine(0 + CELL_BORDER + y));
+    destBits += 0;
+    QRgb srcBit = color.rgba();
+    for (; y <= width / 4; y++) {
+        len += 2;
+        for (unsigned x = width / 2 - len - CELL_BORDER - 1; x <= width / 2 - len; x++) {
+            // image.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, color);
+            destBits[x + CELL_BORDER] = srcBit;
+        }
+        for (unsigned x = width / 2 + len - 1; x <= width / 2 + len + CELL_BORDER; x++) {
+            // image.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, color);
+            destBits[x + CELL_BORDER] = srcBit;
+        }
+        destBits += width + 2 * CELL_BORDER; // image.width();
+    }
+    for (; y < width / 2; y++) {
+        len -= 2;
+        for (unsigned x = width / 2 - len - CELL_BORDER - 1; x <= width / 2 - len; x++) {
+            // image.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, color);
+            destBits[x + CELL_BORDER] = srcBit;
+        }
+        for (unsigned x = width / 2 + len - 1; x <= width / 2 + len + CELL_BORDER; x++) {
+            // image.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, color);
+            destBits[x + CELL_BORDER] = srcBit;
+        }
+        destBits += width + 2 * CELL_BORDER; // image.width();
+    }
+}
+void LevelCelView::framePixelHovered(const QPoint &pos)
+{
+    if (this->dunView) {
+        QPoint cellPos = this->getCellPos(pos);
+
+        int cellX = cellPos.x();
+        int cellY = cellPos.y();
+
+        // check if it is a valid position
+        if (cellX < 0 || cellX >= this->dun->getWidth() || cellY < 0 || cellY >= this->dun->getHeight()) {
+            // no target hit -> ignore
+            return;
+        }
+
+        unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+        unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+        int cellWidth = subtileWidth;
+        int cellHeight = subtileWidth / 2;
+
+        QList<QGraphicsItem *> items = this->celScene.items();
+        QGraphicsItem *overlay;
+        if (items.size() < 2) {
+            QColor color = QColorConstants::Svg::DarkCyan;
+            QImage image = QImage(cellWidth, cellWidth / 2, QImage::Format_ARGB32);
+            image.fill(Qt::transparent);
+            drawHollowDiamond(image, cellWidth, color);
+            overlay = this->celScene.addPixmap(QPixmap::fromImage(image));
+        }
+        else {
+            overlay = items[1];
+        }
+
+        // SHIFT_GRID
+        int dunX = cellX - cellY;
+        int dunY = cellX + cellY;
+
+        // switch unit
+        int cX = cX * cellWidth;
+        int cY = cY * cellHeight;
+
+        // move to 0;0
+        cX += this->celScene.sceneRect().width() / 2;
+        cY += (CEL_SCENE_MARGIN + subtileHeight - cellHeight);
+        int offX = (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
+        cX += offX;
+
+        overlay->setPos(cX, cY);
+    }
 }
 
 void LevelCelView::scrollTo(int posx, int posy)

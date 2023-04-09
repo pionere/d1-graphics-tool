@@ -51,6 +51,7 @@ public:
     const QComboBox *getMonsters() const;
 
     void framePixelClicked(const QPoint &pos, bool first);
+    void framePixelHovered(const QPoint &pos);
 
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
 
@@ -161,6 +162,7 @@ private:
     void selectAssetPath(QString path);
     void setPositionX(int posx);
     void setPositionY(int posy);
+    QPoint getCellPos(const QPoint &pos) const;
 
 signals:
     void frameRefreshed();
