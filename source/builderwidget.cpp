@@ -467,6 +467,7 @@ void BuilderWidget::setObjectIndex(int objectIndex)
 {
     this->currentObjectIndex = objectIndex;
     this->ui->objectLineEdit->setText(QString::number(objectIndex));
+    this->ui->objectComboBox->setCurrentIndex(this->ui->objectComboBox->findData(objectIndex));
 }
 
 void BuilderWidget::setMonsterType(DunMonsterType monType)
@@ -474,6 +475,7 @@ void BuilderWidget::setMonsterType(DunMonsterType monType)
     this->currentMonsterType = monType;
     this->ui->monsterLineEdit->setText(QString::number(monType.first));
     this->ui->monsterCheckBox->setChecked(monType.second);
+    this->ui->monsterComboBox->setCurrentIndex(this->ui->monsterComboBox->findData(QVariant::fromValue(monType)));
 }
 
 void BuilderWidget::on_tileLineEdit_returnPressed()
