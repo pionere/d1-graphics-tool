@@ -314,6 +314,20 @@ void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
     this->trnBaseWidget->selectColor(pixel);
 }
 
+void MainWindow::dunClicked(int cellX, int cellY, bool first)
+{
+    // check if it is a valid position
+    if (cellX < 0 || cellX >= this->dun->getWidth() || cellY < 0 || cellY >= this->dun->getHeight()) {
+        // no target hit -> ignore
+        return;
+    }
+    if (this->builderWidget != nullptr && this->builderWidget->dunClicked(cellX, cellY, first)) {
+        return;
+    }
+    // Set dungeon location
+    this->levelCelView->selectPos(cellX, cellY);
+}
+
 void MainWindow::frameModified()
 {
     this->gfx->setModified();
@@ -330,6 +344,9 @@ void MainWindow::colorModified()
         this->levelCelView->displayFrame();
     }
     this->paintWidget->colorModified();
+    if (this->builderWidget != nullptr) {
+        this->builderWidget->colorModified();
+    }
 }
 
 void MainWindow::reloadConfig()
@@ -637,6 +654,9 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_Escape) {
         if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
             this->paintWidget->hide();
+        }
+        if (this->builderWidget != nullptr && !this->builderWidget->isHidden()) {
+            this->builderWidget->hide();
         }
         return;
     }
@@ -973,6 +993,13 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->paintWidget = new PaintWidget(this, this->undoStack, this->gfx, this->celView, this->levelCelView);
     this->paintWidget->setPalette(this->trnBase->getResultingPalette());
 
+    // prepare the builder dialog
+    if (this->dun != nullptr) {
+        this->builderWidget = new BuilderWidget(this, this->undoStack, this->dun, this->levelCelView);
+        // Refresh builder widget when the resource-options are changed
+        QObject::connect(this->levelCelView, &LevelCelView::dunResourcesModified, this->builderWidget, &BuilderWidget::dunResourcesModified);
+    }
+
     // Initialize palette widgets
     this->palHits = new D1PalHits(this->gfx, this->tileset);
     this->palWidget->initialize(this->pal, this->celView, this->levelCelView, this->palHits);
@@ -1257,6 +1284,7 @@ void MainWindow::on_actionClose_triggered()
     this->undoStack->clear();
 
     MemFree(this->paintWidget);
+    MemFree(this->builderWidget);
     MemFree(this->celView);
     MemFree(this->levelCelView);
     MemFree(this->palWidget);
@@ -1458,6 +1486,9 @@ void MainWindow::on_actionDel_Tile_triggered()
 void MainWindow::on_actionToggle_View_triggered()
 {
     this->paintWidget->hide();
+    if (this->builderWidget != nullptr) {
+        this->builderWidget->hide();
+    }
     this->levelCelView->on_actionToggle_View_triggered();
 }
 
@@ -1467,6 +1498,15 @@ void MainWindow::on_actionToggle_Painter_triggered()
         this->paintWidget->show();
     } else {
         this->paintWidget->hide();
+    }
+}
+
+void MainWindow::on_actionToggle_Builder_triggered()
+{
+    if (this->builderWidget->isHidden()) {
+        this->builderWidget->show();
+    } else {
+        this->builderWidget->hide();
     }
 }
 
