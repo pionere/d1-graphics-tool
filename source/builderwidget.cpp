@@ -27,7 +27,7 @@ EditDungeonCommand::EditDungeonCommand(D1Dun *d, int cellX, int cellY, int value
     this->modValues.push_back(DunPos(cellX, cellY, value));
 }
 
-EditDungeonCommand::EditDungeonCommand(D1Dun *d, std::vector<DunPos> &mods, int vt)
+EditDungeonCommand::EditDungeonCommand(D1Dun *d, const std::vector<DunPos> &mods, int vt)
     : QUndoCommand(nullptr)
     , dun(d)
     , valueType(vt)
