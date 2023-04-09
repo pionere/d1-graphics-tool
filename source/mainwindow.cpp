@@ -1455,7 +1455,13 @@ void MainWindow::on_actionDel_Tile_triggered()
     this->updateWindow();
 }
 
-void MainWindow::on_actionToggle_Draw_triggered()
+void MainWindow::on_actionToggle_View_triggered()
+{
+    this->paintWidget->hide();
+    this->levelCelView->on_actionToggle_View_triggered();
+}
+
+void MainWindow::on_actionToggle_Painter_triggered()
 {
     if (this->paintWidget->isHidden()) {
         this->paintWidget->show();

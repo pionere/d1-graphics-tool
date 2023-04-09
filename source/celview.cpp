@@ -166,7 +166,7 @@ CelView::CelView(QWidget *parent)
     this->on_playDelayEdit_escPressed();
     this->ui->stopButton->setEnabled(false);
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
-    PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Draw_triggered);
+    PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Painter_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
 
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
