@@ -620,6 +620,7 @@ static void drawHollowDiamond(QImage &image, unsigned width, const QColor &color
         destBits += width + 2 * CELL_BORDER; // image.width();
     }
 }
+
 void LevelCelView::framePixelHovered(const QPoint &pos)
 {
     if (this->dunView) {
@@ -630,10 +631,12 @@ void LevelCelView::framePixelHovered(const QPoint &pos)
 
         // check if it is a valid position
         if (cellX < 0 || cellX >= this->dun->getWidth() || cellY < 0 || cellY >= this->dun->getHeight()) {
+            QMessageBox::critical(nullptr, "Err", QString("Not-Hovered").arg(cellX).arg(cellY));
             // no target hit -> ignore
             return;
         }
-
+        QMessageBox::critical(nullptr, "Err", QString("Hovered").arg(cellX).arg(cellY));
+        return;
         unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
         unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
 
