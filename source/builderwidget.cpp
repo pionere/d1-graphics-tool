@@ -327,7 +327,7 @@ void BuilderWidget::resetPos()
         QPoint viewBottomRight = this->graphView->mapToGlobal(QPoint(viewSize.width(), viewSize.height()));
         QSize mySize = this->frameSize();
         QPoint targetPos = viewBottomRight - QPoint(mySize.width(), mySize.height());
-        this->move(this->mapFromGlobal(targetPos));
+        this->move(this->mapFromGlobal(targetPos - this->pos()));
     }
 }
 
