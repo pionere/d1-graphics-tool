@@ -125,7 +125,9 @@ void PaintWidget::show()
         QPoint viewBottomRight = this->graphView->mapToGlobal(QPoint(viewSize.width(), viewSize.height()));
         QSize mySize = this->frameSize();
         QPoint targetPos = viewBottomRight - QPoint(mySize.width(), mySize.height());
-        this->move(this->mapFromGlobal(targetPos));
+        QPoint relPos = this->mapFromGlobal(targetPos);
+        QPoint destPos = relPos + this->pos();
+        this->move(destPos);
     }
     QFrame::show();
 
@@ -137,7 +139,9 @@ void PaintWidget::show()
 
 void PaintWidget::hide()
 {
-    this->stopMove();
+    if (this->moving) {
+        this->stopMove();
+    }
     this->graphView->unsetCursor();
 
     QFrame::hide();
