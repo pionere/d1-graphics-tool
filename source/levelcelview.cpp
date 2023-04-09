@@ -410,7 +410,7 @@ const QComboBox *LevelCelView::getObjects() const
 
 const QComboBox *LevelCelView::getMonsters() const
 {
-    return this->ui->dungeonObjectComboBox;
+    return this->ui->dungeonMonsterComboBox;
 }
 
 void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
