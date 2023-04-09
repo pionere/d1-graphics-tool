@@ -31,6 +31,26 @@
 
 Q_DECLARE_METATYPE(DunMonsterType);
 
+LevelCelPixmap::LevelCelPixmap(const QImage &image)
+    : QGraphicsPixmapItem(QPixmap::fromImage(image))
+{
+}
+
+void LevelCelPixmap::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    QMessageBox::critical(nullptr, "Err", QString("HoverEnter"));
+}
+
+void LevelCelPixmap::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
+{
+    QMessageBox::critical(nullptr, "Err", QString("HoverMove"));
+}
+
+void LevelCelPixmap::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    QMessageBox::critical(nullptr, "Err", QString("HoverLeave"));
+}
+
 LevelCelView::LevelCelView(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::LevelCelView())
@@ -3107,8 +3127,11 @@ void LevelCelView::displayFrame()
             CEL_SCENE_MARGIN + dunFrame.width() + CEL_SCENE_MARGIN,
             CEL_SCENE_MARGIN + dunFrame.height() + CEL_SCENE_MARGIN);
 
-        this->celScene.addPixmap(QPixmap::fromImage(dunFrame))
-            ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+        // this->celScene.addPixmap(QPixmap::fromImage(dunFrame))
+        //    ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+        LevelCelPixmap *pixmap = new LevelCelPixmap(dunFrame);
+        this->celScene.addItem(pixmap);
+        pixmap->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
         // scroll to the current position
         if (this->isScrolling) {
             this->isScrolling = false;

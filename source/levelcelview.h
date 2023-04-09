@@ -6,6 +6,7 @@
 #include <QContextMenuEvent>
 #include <QDragEnterEvent>
 #include <QDropEvent>
+#include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
 #include <QGraphicsSceneDragDropEvent>
 #include <QGraphicsSceneMouseEvent>
@@ -32,6 +33,22 @@ class LevelCelView;
 } // namespace Ui
 
 enum class IMAGE_FILE_MODE;
+
+class LevelCelPixmap : public QGraphicsPixmapItem {
+    Q_OBJECT
+
+public:
+    LevelCelPixmap(const QImage &image);
+    ~LevelCelPixmap() = default;
+
+private slots:
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
+
+// signals:
+//    // void framePixelHovered(const QPoint &pos);
+};
 
 class LevelCelView : public QWidget {
     Q_OBJECT
