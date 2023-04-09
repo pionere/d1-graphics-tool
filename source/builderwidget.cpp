@@ -327,7 +327,9 @@ void BuilderWidget::resetPos()
         QPoint viewBottomRight = this->graphView->mapToGlobal(QPoint(viewSize.width(), viewSize.height()));
         QSize mySize = this->frameSize();
         QPoint targetPos = viewBottomRight - QPoint(mySize.width(), mySize.height());
-        this->move(this->mapFromGlobal(targetPos) - this->pos());
+        targetPos = this->mapFromGlobal(targetPos);
+        QMessageBox::critical(nullptr, "Error", QString("Moving to %1:%2").arg(targetPos.x()).arg(targetPos.y()));
+        this->move(targetPos);
     }
 }
 
