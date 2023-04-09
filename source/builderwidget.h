@@ -31,6 +31,7 @@ class EditDungeonCommand : public QObject, public QUndoCommand {
 
 public:
     explicit EditDungeonCommand(D1Dun *dun, int cellX, int cellY, int value, int valueType);
+    explicit EditDungeonCommand(D1Dun *dun, const std::vector<DunPos> &modValues, int valueType);
     ~EditDungeonCommand() = default;
 
     void undo() override;

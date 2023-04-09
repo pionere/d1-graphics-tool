@@ -27,6 +27,14 @@ EditDungeonCommand::EditDungeonCommand(D1Dun *d, int cellX, int cellY, int value
     this->modValues.push_back(DunPos(cellX, cellY, value));
 }
 
+EditDungeonCommand::EditDungeonCommand(D1Dun *d, std::vector<DunPos> &mods, int vt)
+    : QUndoCommand(nullptr)
+    , dun(d)
+    , valueType(vt)
+    , modValues(mods)
+{
+}
+
 void EditDungeonCommand::undo()
 {
     if (this->dun.isNull()) {
@@ -152,52 +160,106 @@ bool BuilderWidget::dunClicked(int cellX, int cellY, bool first)
         return false;
     }
 
-    // handle the click based on the mode
+    // calculate the value
     int value;
     switch (this->mode) {
     case BEM_TILE:
         value = this->currentTileIndex; // this->ui->tileLineEdit->text().toInt();
-        if (value == this->dun->getTileAt(cellX, cellY)) {
-            value = 0;
-        }
         break;
     case BEM_TILE_PROTECTION:
         value = this->ui->tileProtectionModeComboBox->currentIndex();
         value = (int)(value == 0 ? Qt::Unchecked : (value == 1 ? Qt::PartiallyChecked : Qt::Checked));
-        if (value == (int)this->dun->getTileProtectionAt(cellX, cellY)) {
-            value = (int)Qt::Unchecked;
-        }
         break;
     case BEM_SUBTILE:
         value = this->currentSubtileIndex; // this->ui->subtileLineEdit->text().toInt();
-        if (value == this->dun->getSubtileAt(cellX, cellY)) {
-            value = 0;
-        }
         break;
     case BEM_SUBTILE_PROTECTION:
         value = (int)(this->ui->subtileProtectionModeComboBox->currentIndex() == 1);
-        if (value == (int)this->dun->getSubtileProtectionAt(cellX, cellY)) {
-            value = 0;
-        }
         break;
     case BEM_OBJECT:
         value = this->currentObjectIndex; // this->ui->objectLineEdit->text().toInt();
-        if (value == this->dun->getObjectAt(cellX, cellY)) {
-            value = 0;
-        }
         break;
     case BEM_MONSTER:
         value = this->currentMonsterType.first; // this->ui->monsterLineEdit->text().toInt();
         value |= this->currentMonsterType.second /*this->ui->monsterCheckBox->isChecked()*/ ? 1 << 31 : 0;
-        if (this->currentMonsterType == this->dun->getMonsterAt(cellX, cellY)) {
-            value = 0;
-        }
         break;
+    }
+
+    std::vector<DunPos> modValues;
+    if (!first) {
+        int fcx = cellX;
+        int lcx = this->lastPos.x();
+        int fcy = cellY;
+        int lcy = this->lastPos.y();
+
+        if (fcx == lcx && fcy == lcy) {
+            return true;
+        }
+
+        // collect locations
+        if (fcx > lcx) {
+            std::swap(fcx, lcx);
+        }
+        if (fcy > lcy) {
+            std::swap(fcx, lcx);
+        }
+        for (int x = fcx; x <= lcx; x++) {
+            for (int y = fcy; y <= lcy; y++) {
+                modValues.push_back(DunPos(x, y, 0));
+            }
+        }
+
+        // rollback previous change
+        this->undoStack->pop();
+    } else {
+        this->lastPos.setX(cellX);
+        this->lastPos.setY(cellY);
+        // collect locations
+        modValues.push_back(DunPos(cellX, cellY, 0));
+
+        // reset value if it is the same as before
+        switch (this->mode) {
+        case BEM_TILE:
+            if (value == this->dun->getTileAt(cellX, cellY)) {
+                value = 0;
+            }
+            break;
+        case BEM_TILE_PROTECTION:
+            if (value == (int)this->dun->getTileProtectionAt(cellX, cellY)) {
+                value = (int)Qt::Unchecked;
+            }
+            break;
+        case BEM_SUBTILE:
+            if (value == this->dun->getSubtileAt(cellX, cellY)) {
+                value = 0;
+            }
+            break;
+        case BEM_SUBTILE_PROTECTION:
+            if (value == (int)this->dun->getSubtileProtectionAt(cellX, cellY)) {
+                value = 0;
+            }
+            break;
+        case BEM_OBJECT:
+            if (value == this->dun->getObjectAt(cellX, cellY)) {
+                value = 0;
+            }
+            break;
+        case BEM_MONSTER:
+            if (this->currentMonsterType == this->dun->getMonsterAt(cellX, cellY)) {
+                value = 0;
+            }
+            break;
+        }
+    }
+
+    // set values
+    for (DunPos &dp : modValues) {
+        dp.value = value;
     }
 
     // Build frame editing command and connect it to the current main window widget
     // to update the palHits and CEL views when undo/redo is performed
-    EditDungeonCommand *command = new EditDungeonCommand(this->dun, cellX, cellY, value, this->mode);
+    EditDungeonCommand *command = new EditDungeonCommand(this->dun, modValues, this->mode);
     QObject::connect(command, &EditDungeonCommand::modified, &dMainWindow(), &MainWindow::updateWindow);
 
     this->undoStack->push(command);
@@ -373,7 +435,7 @@ void BuilderWidget::on_builderModeComboBox_activated(int index)
     }
     layout->setVisible(true);
 
-    // this->adjustSize(); // not sure why this is necessary...
+    this->adjustSize(); // not sure why this is necessary...
 }
 
 void BuilderWidget::setTileIndex(int tileIndex)
