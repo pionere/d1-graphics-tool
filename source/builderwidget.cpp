@@ -142,7 +142,9 @@ void BuilderWidget::show()
 
 void BuilderWidget::hide()
 {
-    this->stopMove();
+    if (this->moving) {
+        this->stopMove();
+    }
     this->graphView->unsetCursor();
 
     QFrame::hide();

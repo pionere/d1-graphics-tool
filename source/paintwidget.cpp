@@ -140,7 +140,9 @@ void PaintWidget::show()
 
 void PaintWidget::hide()
 {
-    this->stopMove();
+    if (this->moving) {
+        this->stopMove();
+    }
     this->graphView->unsetCursor();
 
     QFrame::hide();
