@@ -697,9 +697,6 @@ bool D1Dun::save(const SaveAsParam &params)
             if (this->objects[y][x] != 0) {
                 layers |= 1 << 2;
             }
-            if (this->rooms[y][x] != 0) {
-                layers |= 1 << 3;
-            }
         }
     }
     uint8_t numLayers = this->numLayers;
@@ -720,6 +717,9 @@ bool D1Dun::save(const SaveAsParam &params)
             for (int x = 0; x < dunWidth; x++) {
                 if (this->items[y][x] != 0) {
                     dProgressWarn() << tr("Defined item at %1:%2 is not saved.").arg(x).arg(y);
+                }
+                if (this->rooms[y][x] != 0) {
+                    dProgressWarn() << tr("Defined room at %1:%2 is not saved.").arg(x).arg(y);
                 }
             }
         }
@@ -755,7 +755,7 @@ bool D1Dun::save(const SaveAsParam &params)
             }
         }
         // calculate the number of layers
-        uint8_t layersNeeded = layers >= (1 << 3) ? 4 : (layers >= (1 << 2) ? 3 : (layers >= (1 << 1) ? 2 : (layers >= (1 << 0) ? 1 : 0)));
+        uint8_t layersNeeded = layers >= (1 << 2) ? 3 : (layers >= (1 << 1) ? 2 : (layers >= (1 << 0) ? 1 : 0));
         if (params.dunLayerNum != UINT8_MAX) {
             // user defined the number of layers -> report unsaved information
             if (params.dunLayerNum < layersNeeded) {
@@ -767,9 +767,6 @@ bool D1Dun::save(const SaveAsParam &params)
                 }
                 if (params.dunLayerNum <= 2 && (layers & (1 << 2))) {
                     dProgressWarn() << tr("Defined object is not saved.");
-                }
-                if (params.dunLayerNum <= 3 && (layers & (1 << 3))) {
-                    dProgressWarn() << tr("Defined room is not saved.");
                 }
             }
             numLayers = params.dunLayerNum;
@@ -813,6 +810,9 @@ bool D1Dun::save(const SaveAsParam &params)
                 if (this->items[y][x] != 0) {
                     dProgressWarn() << tr("Defined item at %1:%2 is not saved.").arg(x).arg(y);
                 }
+                if (this->rooms[y][x] != 0) {
+                    dProgressWarn() << tr("Defined room at %1:%2 is not saved.").arg(x).arg(y);
+                }
             }
         }
         if (layers & (1 << 0)) {
@@ -823,9 +823,6 @@ bool D1Dun::save(const SaveAsParam &params)
         }
         if (layers & (1 << 2)) {
             dProgressWarn() << tr("Defined object is not saved in this format (RDUN).");
-        }
-        if (layers & (1 << 3)) {
-            dProgressWarn() << tr("Defined room is not saved in this format (RDUN).");
         }
         numLayers = 0;
     }
@@ -894,16 +891,6 @@ bool D1Dun::save(const SaveAsParam &params)
             for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
                 for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
                     writeWord = this->objects[y][x];
-                    out << writeWord;
-                }
-            }
-        }
-
-        // write rooms
-        if (numLayers >= 4) {
-            for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
-                for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
-                    writeWord = this->rooms[y][x];
                     out << writeWord;
                 }
             }

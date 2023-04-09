@@ -96,6 +96,7 @@ private slots:
     void on_objectComboBox_activated(int index);
     void on_monsterLineEdit_escPressed();
     void on_monsterLineEdit_returnPressed();
+    void on_monsterCheckBox_clicked();
     void on_monsterComboBox_activated(int index);
 
 private:

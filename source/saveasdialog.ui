@@ -365,16 +365,6 @@
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="dunLayerRoomsRadioButton">
-          <property name="text">
-           <string>Rooms</string>
-          </property>
-          <attribute name="buttonGroup">
-           <string notr="true">dunLayerButtonGroup</string>
-          </attribute>
-         </widget>
-        </item>
-        <item>
          <spacer>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>

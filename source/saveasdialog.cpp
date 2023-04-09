@@ -62,9 +62,6 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Dun *dun)
         case 3:
             this->ui->dunLayerObjectsRadioButton->setChecked(true);
             break;
-        case 4:
-            this->ui->dunLayerRoomsRadioButton->setChecked(true);
-            break;
         }
     }
 
@@ -195,8 +192,6 @@ void SaveAsDialog::on_saveButton_clicked()
         params.dunLayerNum = 2;
     } else if (this->ui->dunLayerObjectsRadioButton->isChecked()) {
         params.dunLayerNum = 3;
-    } else if (this->ui->dunLayerRoomsRadioButton->isChecked()) {
-        params.dunLayerNum = 4;
     }
     params.autoOverwrite = this->ui->autoOverwriteCheckBox->isChecked();
 

@@ -535,11 +535,7 @@ void BuilderWidget::on_objectComboBox_activated(int index)
 
 void BuilderWidget::on_monsterLineEdit_returnPressed()
 {
-    DunMonsterType monType;
-    monType.first = this->ui->monsterLineEdit->text().toInt();
-    monType.second = this->ui->monsterCheckBox->isChecked();
-
-    this->setMonsterType(monType);
+    this->on_monsterCheckBox_clicked();
 
     this->on_monsterLineEdit_escPressed();
 }
@@ -548,6 +544,15 @@ void BuilderWidget::on_monsterLineEdit_escPressed()
 {
     this->ui->monsterLineEdit->setText(QString::number(this->currentMonsterType.first));
     this->ui->monsterLineEdit->clearFocus();
+}
+
+void BuilderWidget::on_monsterCheckBox_clicked()
+{
+    int monsterIndex = this->ui->monsterLineEdit->text().toUShort();
+    bool monsterUnique = this->ui->monsterCheckBox->isChecked();
+    DunMonsterType monType = { monsterIndex, monsterUnique };
+
+    this->setMonsterType(monType);
 }
 
 void BuilderWidget::on_monsterComboBox_activated(int index)
