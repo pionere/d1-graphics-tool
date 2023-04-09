@@ -286,6 +286,21 @@ void BuilderWidget::colorModified()
     this->ui->imageLabel->setPixmap(pixmap);*/
 }
 
+static void copyComboBox(QComboBox *cmbDst, const QComboBox *cmbSrc)
+{
+    cmbDst->hide();
+    cmbDst->clear();
+    for (int i = 0; i < cmbSrc->count(); i++) {
+        QVariant data = cmbSrc->itemData(i);
+        if (data != QVariant::Invalid) {
+            cmbDst->addItem(cmbSrc->itemText(i), data);
+        } else {
+            cmbDst->insertSeparator(i);
+        }
+    }
+    cmbDst->show();
+}
+
 void BuilderWidget::dunResourcesModified()
 {
     if (this->isHidden())
@@ -296,25 +311,13 @@ void BuilderWidget::dunResourcesModified()
     // prepare the comboboxes
     // - objects
     comboBox = this->ui->objectComboBox;
-    comboBox->hide();
-    comboBox->clear();
-    const QComboBox *objSrc = this->levelCelView->getObjects();
-    for (int i = 0; i < objSrc->count(); i++) {
-        comboBox->addItem(objSrc->itemText(i), objSrc->itemData(i));
-    }
+    copyComboBox(comboBox, this->levelCelView->getObjects());
     comboBox->setCurrentIndex(comboBox->findData(this->currentObjectIndex));
-    comboBox->show();
 
     // - monsters
     comboBox = this->ui->monsterComboBox;
-    comboBox->hide();
-    comboBox->clear();
-    const QComboBox *monSrc = this->levelCelView->getMonsters();
-    for (int i = 0; i < monSrc->count(); i++) {
-        comboBox->addItem(monSrc->itemText(i), monSrc->itemData(i));
-    }
+    copyComboBox(comboBox, this->levelCelView->getMonsters());
     comboBox->setCurrentIndex(comboBox->findData(QVariant::fromValue(this->currentMonsterType)));
-    comboBox->show();
 }
 
 void BuilderWidget::on_closePushButtonClicked()
