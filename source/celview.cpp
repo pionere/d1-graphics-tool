@@ -79,6 +79,18 @@ bool CelScene::event(QEvent *evt) override
         QMessageBox::critical(nullptr, "Err", QString("HoverLeave"));
         return true;
     }
+    if (evt->type() == QEvent::GraphicsSceneHoverMove) {
+        QMessageBox::critical(nullptr, "Err", QString("GraphicsSceneHoverMove"));
+        return true;
+    }
+    if (evt->type() == QEvent::GraphicsSceneHoverEnter) {
+        QMessageBox::critical(nullptr, "Err", QString("HoverEnter"));
+        return true;
+    }
+    if (evt->type() == QEvent::GraphicsSceneHoverLeave) {
+        QMessageBox::critical(nullptr, "Err", QString("GraphicsSceneHoverLeave"));
+        return true;
+    }
     return QGraphicsScene::event(evt);
 }
 
