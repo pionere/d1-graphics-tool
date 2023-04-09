@@ -149,7 +149,7 @@
       <item row="0" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Protection Mode:</string>
+         <string>Mode:</string>
         </property>
        </widget>
       </item>
@@ -224,7 +224,7 @@
       <item row="0" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Protection Mode:</string>
+         <string>Mode:</string>
         </property>
        </widget>
       </item>

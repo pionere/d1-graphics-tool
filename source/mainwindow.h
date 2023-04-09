@@ -127,6 +127,7 @@ public slots:
     void on_actionReplace_Tile_triggered();
     void on_actionDel_Tile_triggered();
 
+    void on_actionToggle_View_triggered();
     void on_actionToggle_Painter_triggered();
     void on_actionToggle_Builder_triggered();
 

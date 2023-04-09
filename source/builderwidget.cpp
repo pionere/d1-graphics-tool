@@ -50,7 +50,7 @@ void EditDungeonCommand::undo()
             break;
         case BEM_SUBTILE:
             currValue = (int)this->dun->getSubtileAt(dp.cellX, dp.cellY); // TODO: store tiles as well
-            this->dun->setSubtileProtectionAt(dp.cellX, dp.cellY, (bool)dp.value);
+            this->dun->setSubtileAt(dp.cellX, dp.cellY, dp.value);
             dp.value = currValue;
             break;
         case BEM_SUBTILE_PROTECTION:
@@ -157,23 +157,41 @@ bool BuilderWidget::dunClicked(int cellX, int cellY, bool first)
     switch (this->mode) {
     case BEM_TILE:
         value = this->currentTileIndex; // this->ui->tileLineEdit->text().toInt();
+        if (value == this->dun->getTileAt(cellX, cellY)) {
+            value = 0;
+        }
         break;
     case BEM_TILE_PROTECTION:
         value = this->ui->tileProtectionModeComboBox->currentIndex();
         value = (int)(value == 0 ? Qt::Unchecked : (value == 1 ? Qt::PartiallyChecked : Qt::Checked));
+        if (value == (int)this->dun->getTileProtectionAt(cellX, cellY)) {
+            value = (int)Qt::Unchecked;
+        }
         break;
     case BEM_SUBTILE:
         value = this->currentSubtileIndex; // this->ui->subtileLineEdit->text().toInt();
+        if (value == this->dun->getSubtileAt(cellX, cellY)) {
+            value = 0;
+        }
         break;
     case BEM_SUBTILE_PROTECTION:
         value = (int)(this->ui->subtileProtectionModeComboBox->currentIndex() == 1);
+        if (value == (int)this->dun->getSubtileProtectionAt(cellX, cellY)) {
+            value = 0;
+        }
         break;
     case BEM_OBJECT:
         value = this->currentObjectIndex; // this->ui->objectLineEdit->text().toInt();
+        if (value == this->dun->getObjectAt(cellX, cellY)) {
+            value = 0;
+        }
         break;
     case BEM_MONSTER:
         value = this->currentMonsterType.first; // this->ui->monsterLineEdit->text().toInt();
-        value |= currentMonsterType.second /*this->ui->monsterCheckBox->isChecked()*/ ? 1 << 31 : 0;
+        value |= this->currentMonsterType.second /*this->ui->monsterCheckBox->isChecked()*/ ? 1 << 31 : 0;
+        if (this->currentMonsterType == this->dun->getMonsterAt(cellX, cellY)) {
+            value = 0;
+        }
         break;
     }
 
@@ -355,7 +373,7 @@ void BuilderWidget::on_builderModeComboBox_activated(int index)
     }
     layout->setVisible(true);
 
-    this->adjustSize(); // not sure why this is necessary...
+    // this->adjustSize(); // not sure why this is necessary...
 }
 
 void BuilderWidget::setTileIndex(int tileIndex)
