@@ -34,6 +34,7 @@ Q_DECLARE_METATYPE(DunMonsterType);
 LevelCelPixmap::LevelCelPixmap(const QImage &image)
     : QGraphicsPixmapItem(QPixmap::fromImage(image))
 {
+    setAcceptHoverEvents(true);
 }
 
 void LevelCelPixmap::hoverEnterEvent(QGraphicsSceneHoverEvent *event)

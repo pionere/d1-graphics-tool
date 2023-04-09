@@ -34,7 +34,7 @@ class LevelCelView;
 
 enum class IMAGE_FILE_MODE;
 
-class LevelCelPixmap : public QGraphicsPixmapItem {
+class LevelCelPixmap : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 
 public:
@@ -45,9 +45,6 @@ private slots:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
     void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
-
-// signals:
-//    // void framePixelHovered(const QPoint &pos);
 };
 
 class LevelCelView : public QWidget {
