@@ -56,12 +56,14 @@ void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     this->mouseEvent(event, false);
     // emit this->framePixelHovered(this->lastPos);
+    QPointF scenePos = event->scenePos();
+    QPoint currPos = QPoint(scenePos.x(), scenePos.y());
     QObject *view = this->parent();
     CelView *celView = qobject_cast<CelView *>(view);
     if (celView != nullptr) {
-        celView->framePixelHovered(this->lastPos);
+        celView->framePixelHovered(currPos);
     } else {
-        qobject_cast<LevelCelView *>(view)->framePixelHovered(this->lastPos);
+        qobject_cast<LevelCelView *>(view)->framePixelHovered(currPos);
     }
 }
 
