@@ -414,7 +414,7 @@ const QComboBox *LevelCelView::getMonsters() const
     return this->ui->dungeonMonsterComboBox;
 }
 
-QPoint LevelCelView::getCellPos(const QPoint &pos)
+QPoint LevelCelView::getCellPos(const QPoint &pos) const
 {
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
@@ -643,13 +643,12 @@ void LevelCelView::framePixelHovered(const QPoint &pos)
         QList<QGraphicsItem *> items = this->celScene.items();
         QGraphicsItem *overlay;
         if (items.size() < 2) {
-            QColor color = QColorConstants::Svg::DarkCyan;
+            QColor color = QColorConstants::DarkCyan;
             QImage image = QImage(cellWidth, cellWidth / 2, QImage::Format_ARGB32);
             image.fill(Qt::transparent);
             drawHollowDiamond(image, cellWidth, color);
             overlay = this->celScene.addPixmap(QPixmap::fromImage(image));
-        }
-        else {
+        } else {
             overlay = items[1];
         }
 
