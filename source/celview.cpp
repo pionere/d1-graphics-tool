@@ -57,7 +57,32 @@ void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     this->mouseEvent(event, false);
 }
 
-void CelScene::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+bool CelScene::event(QEvent *evt) override
+{
+    if (evt->type() == QEvent::MouseMove) {
+        QMessageBox::critical(nullptr, "Err", QString("MouseMove"));
+        return true;
+    }
+    if (evt->type() == QEvent::GraphicsSceneMouseMove) {
+        QMessageBox::critical(nullptr, "Err", QString("GraphicsSceneMouseMove"));
+        return true;
+    }
+    if (evt->type() == QEvent::HoverMove) {
+        QMessageBox::critical(nullptr, "Err", QString("HoverMove"));
+        return true;
+    }
+    if (evt->type() == QEvent::HoverEnter) {
+        QMessageBox::critical(nullptr, "Err", QString("HoverEnter"));
+        return true;
+    }
+    if (evt->type() == QEvent::HoverLeave) {
+        QMessageBox::critical(nullptr, "Err", QString("HoverLeave"));
+        return true;
+    }
+    return QGraphicsScene::event(evt);
+}
+
+/*void CelScene::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     // emit this->framePixelHovered(this->lastPos);
     QPointF scenePos = event->scenePos();
@@ -69,7 +94,7 @@ void CelScene::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
     } else {
         qobject_cast<LevelCelView *>(view)->framePixelHovered(currPos);
     }
-}
+}*/
 
 void CelScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
