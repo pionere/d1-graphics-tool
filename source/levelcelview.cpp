@@ -49,11 +49,11 @@ LevelCelView::LevelCelView(QWidget *parent)
     QLayout *layout = this->ui->tilesetButtonsHorizontalLayout;
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Painter_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
-    this->viewBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowRight, tr("Switch to dungeon view"), this, &MainWindow::on_actionToggle_View_triggered);
+    this->viewBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowRight, tr("Switch to dungeon view"), &dMainWindow(), &MainWindow::on_actionToggle_View_triggered);
     layout = this->ui->dunButtonsHorizontalLayout;
     btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start building"), &dMainWindow(), &MainWindow::on_actionToggle_Builder_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
-    btn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowLeft, tr("Switch to tileset view"), this, &MainWindow::on_actionToggle_View_triggered);
+    btn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowLeft, tr("Switch to tileset view"), &dMainWindow(), &MainWindow::on_actionToggle_View_triggered);
 
     // If a pixel of the frame, subtile or tile was clicked get pixel color index and notify the palette widgets
     QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &LevelCelView::framePixelClicked);

@@ -167,6 +167,9 @@ signals:
     void palModified();
     void dunResourcesModified();
 
+public slots:
+    void on_actionToggle_View_triggered();
+
 private slots:
     void on_firstFrameButton_clicked();
     void on_previousFrameButton_clicked();
@@ -203,8 +206,6 @@ private slots:
     void on_playDelayEdit_escPressed();
     void on_playButton_clicked();
     void on_stopButton_clicked();
-
-    void on_actionToggle_View_triggered();
 
     void on_moveLeftButton_clicked();
     void on_moveRightButton_clicked();
