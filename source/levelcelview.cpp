@@ -677,7 +677,7 @@ void LevelCelView::framePixelHovered(const QPoint &pos)
         // move to 0;0
         cX += this->celScene.sceneRect().width() / 2;
         cY += (CEL_SCENE_MARGIN + subtileHeight - cellHeight);
-        int offX = (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
+        int offX = cellWidth / 2 - (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
         cX += offX;
 
         this->ui->dunPlayDelayEdit->setText(QString("%1:%2").arg(cX).arg(cY));

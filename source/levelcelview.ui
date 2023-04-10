@@ -791,7 +791,7 @@
       <item row="0" column="11">
        <widget class="LineEditWidget" name="dunPlayDelayEdit">
         <property name="charWidth">
-         <number>5</number>
+         <number>15</number>
         </property>
         <property name="toolTip">
          <string>Current playback delay</string>
