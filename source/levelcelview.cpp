@@ -602,6 +602,10 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
 void LevelCelView::framePixelHovered(const QPoint &pos)
 {
     if (this->dunView) {
+        QPoint op = QCursor::pos();
+        QPoint relop = this->ui->celGraphicsView->mapFromGlobal(op);
+        this->ui->dunPlayDelayEdit->setText(QString("%1:%2,%3:%4").arg(op.x()).arg(op.y()).arg(relop.x()).arg(relop.y()));
+
         QPoint cellPos = this->getCellPos(pos);
         dMainWindow().dunHovered(cellPos);
     }

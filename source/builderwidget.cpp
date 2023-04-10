@@ -337,15 +337,10 @@ void BuilderWidget::dunHovered(const QPoint &pos)
                 }
                 color = QColorConstants::Svg::magenta;
             }
-            if (image.isNull()) {
-                image = QImage(cellWidth * TILE_WIDTH, cellHeight * TILE_HEIGHT, QImage::Format_ARGB32);
-                image.fill(Qt::transparent);
-                drawHollowDiamond(image, cellWidth * TILE_WIDTH, color);
-            }
             break;
         case BEM_TILE_PROTECTION:
             value = this->ui->tileProtectionModeComboBox->currentIndex();
-            color = value == 0 ? QColorConstants::Svg::darkcyan : (value == 1 ? QColorConstants::Svg::plum : QColorConstants::Svg::orchid);
+            color = value == 0 ? QColorConstants::Svg::darkcyan : (value == 1 ? QColorConstants::Svg::plum : QColorConstants::Svg::orangered);
             break;
         case BEM_SUBTILE:
             if (this->currentSubtileIndex != 0) {
@@ -357,7 +352,7 @@ void BuilderWidget::dunHovered(const QPoint &pos)
             break;
         case BEM_SUBTILE_PROTECTION:
             value = this->ui->subtileProtectionModeComboBox->currentIndex();
-            color = value == 0 ? QColorConstants::Svg::darkcyan : QColorConstants::Svg::pink;
+            color = value == 0 ? QColorConstants::Svg::darkcyan : QColorConstants::Svg::lightcoral;
             break;
         case BEM_OBJECT:
             if (this->currentObjectIndex != 0) {
@@ -373,9 +368,10 @@ void BuilderWidget::dunHovered(const QPoint &pos)
             break;
         }
         if (image.isNull()) {
-            image = QImage(cellWidth, cellHeight, QImage::Format_ARGB32);
+            int mpl = (this->overlayType == BEM_TILE || this->overlayType == BEM_TILE_PROTECTION) ? 2 : 1;
+            image = QImage(cellWidth * mpl, cellHeight * mpl, QImage::Format_ARGB32);
             image.fill(Qt::transparent);
-            drawHollowDiamond(image, cellWidth, color);
+            drawHollowDiamond(image, cellWidth * mpl, color);
         } else {
             ; // maskImage(image);
         }
@@ -411,13 +407,13 @@ void BuilderWidget::dunHovered(const QPoint &pos)
         cX -= overlay->pixmap().width() / 2;
         cY -= overlay->pixmap().height();
 
-        if (this->overlayType == BEM_TILE) {
+        if (this->overlayType == BEM_TILE || this->overlayType == BEM_TILE_PROTECTION) {
             cY += cellHeight;
-            if (pos.x() & 1) {
+            if (cellX & 1) {
                 cX -= cellWidth / 2;
                 cY -= cellHeight / 2;
             }
-            if (pos.y() & 1) {
+            if (cellY & 1) {
                 cX += cellWidth / 2;
                 cY -= cellHeight / 2;
             }
