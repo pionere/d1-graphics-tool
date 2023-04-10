@@ -135,7 +135,7 @@ void BuilderWidget::show()
     QFrame::show();
 
     this->setFocus(); // otherwise the widget does not receive keypress events...
-    this->graphView->setCursor(Qt::CrossCursor);
+    this->graphView->setCursor(Qt::BlankCursor);
     // update the view
     this->dunResourcesModified();
     this->colorModified();
@@ -487,7 +487,7 @@ void BuilderWidget::stopMove()
     this->moving = false;
     this->moved = true;
     this->releaseMouse();
-    // this->setCursor(Qt::CrossCursor);
+    // this->setCursor(Qt::BlankCursor);
 }
 
 void BuilderWidget::on_movePushButtonClicked()
@@ -592,18 +592,21 @@ void BuilderWidget::on_builderModeComboBox_activated(int index)
 
     this->adjustSize(); // not sure why this is necessary...
     this->resetPos();
+    this->overlayType = -1;
 }
 
 void BuilderWidget::setTileIndex(int tileIndex)
 {
     this->currentTileIndex = tileIndex;
     this->ui->tileLineEdit->setText(QString::number(tileIndex));
+    this->overlayType = -1;
 }
 
 void BuilderWidget::setSubtileIndex(int subtileIndex)
 {
     this->currentSubtileIndex = subtileIndex;
     this->ui->subtileLineEdit->setText(QString::number(subtileIndex));
+    this->overlayType = -1;
 }
 
 void BuilderWidget::setObjectIndex(int objectIndex)
@@ -611,6 +614,7 @@ void BuilderWidget::setObjectIndex(int objectIndex)
     this->currentObjectIndex = objectIndex;
     this->ui->objectLineEdit->setText(QString::number(objectIndex));
     this->ui->objectComboBox->setCurrentIndex(this->ui->objectComboBox->findData(objectIndex));
+    this->overlayType = -1;
 }
 
 void BuilderWidget::setMonsterType(DunMonsterType monType)
@@ -619,6 +623,7 @@ void BuilderWidget::setMonsterType(DunMonsterType monType)
     this->ui->monsterLineEdit->setText(QString::number(monType.first));
     this->ui->monsterCheckBox->setChecked(monType.second);
     this->ui->monsterComboBox->setCurrentIndex(this->ui->monsterComboBox->findData(QVariant::fromValue(monType)));
+    this->overlayType = -1;
 }
 
 void BuilderWidget::on_tileLineEdit_returnPressed()
