@@ -296,17 +296,23 @@ static void drawHollowDiamond(QImage &image, unsigned width, const QColor &color
     }
 }
 
+static void maskImage(QImage &image)
+{
+    int y = 0;
+    unsigned width = image.width();
+    QRgb *destBits = reinterpret_cast<QRgb *>(image.scanLine(0 + CELL_BORDER + y));
+    QRgb srcBit = QColor(Qt::transparent).rgba();
+    for (y = image.height() - 1; y >= 0; y--) {
+        for (int x = y & 1; x < width; x += 2) {
+            // image.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, QColor(Qt::transparent));
+            destBits[x + CELL_BORDER] = srcBit;
+        }
+        destBits += width + 2 * CELL_BORDER; // image.width();
+    }
+}
+
 void BuilderWidget::dunHovered(const QPoint &pos)
 {
-    int cellX = pos.x();
-    int cellY = pos.y();
-
-    // check if it is a valid position
-    if (cellX < 0 || cellX >= this->dun->getWidth() || cellY < 0 || cellY >= this->dun->getHeight()) {
-        // no target hit -> ignore
-        return;
-    }
-
     unsigned subtileWidth = this->tileset->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = this->tileset->min->getSubtileHeight() * MICRO_HEIGHT;
 
@@ -365,6 +371,8 @@ void BuilderWidget::dunHovered(const QPoint &pos)
             image = QImage(cellWidth, cellHeight, QImage::Format_ARGB32);
             image.fill(Qt::transparent);
             drawHollowDiamond(image, cellWidth, color);
+        } else {
+            maskImage(image);
         }
 
         QPixmap pixmap = QPixmap::fromImage(image);
@@ -378,31 +386,30 @@ void BuilderWidget::dunHovered(const QPoint &pos)
         overlay = reinterpret_cast<QGraphicsPixmapItem *>(items[0]);
     }
 
-    /*if (items.size() < 2) {
-        QColor color = QColorConstants::DarkCyan;
-        QImage image = QImage(cellWidth, cellHeight, QImage::Format_ARGB32);
-        image.fill(Qt::transparent);
-        drawHollowDiamond(image, cellWidth, color);
-        overlay = scene->addPixmap(QPixmap::fromImage(image));
+    QPoint op;
+    int cellX = pos.x();
+    int cellY = pos.y();
+    if (cellX >= 0 && cellX < this->dun->getWidth() && cellY >= 0 && cellY < this->dun->getHeight()) {
+        // SHIFT_GRID
+        int dunX = cellX - cellY;
+        int dunY = cellX + cellY;
+
+        // switch unit
+        int cX = dunX * (cellWidth / 2);
+        int cY = dunY * (cellHeight / 2);
+
+        // move to 0;0
+        cX += scene->sceneRect().width() / 2;
+        cY += (CEL_SCENE_MARGIN + subtileHeight - overlay->pixmap().height());
+        int offX = overlay->pixmap().width() / 2 + (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
+        cX -= offX;
+
+        op = QPoint(cX, cY);
     } else {
-        overlay = reinterpret_cast<QGraphicsPixmapItem *>(items[0]);
-    }*/
+        op = QCursor::pos();
+    }
 
-    // SHIFT_GRID
-    int dunX = cellX - cellY;
-    int dunY = cellX + cellY;
-
-    // switch unit
-    int cX = dunX * (cellWidth / 2);
-    int cY = dunY * (cellHeight / 2);
-
-    // move to 0;0
-    cX += scene->sceneRect().width() / 2;
-    cY += (CEL_SCENE_MARGIN + subtileHeight - overlay->pixmap().height());
-    int offX = overlay->pixmap().width() / 2 + (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
-    cX -= offX;
-
-    overlay->setPos(cX, cY);
+    overlay->setPos(op);
 }
 
 void BuilderWidget::colorModified()
