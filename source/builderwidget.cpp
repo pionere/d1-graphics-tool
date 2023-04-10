@@ -90,12 +90,13 @@ void EditDungeonCommand::redo()
     this->undo();
 }
 
-BuilderWidget::BuilderWidget(QWidget *parent, QUndoStack *us, D1Dun *d, LevelCelView *lcv)
+BuilderWidget::BuilderWidget(QWidget *parent, QUndoStack *us, D1Dun *d, LevelCelView *lcv, D1Tileset *ts)
     : QFrame(parent)
     , ui(new Ui::BuilderWidget())
     , undoStack(us)
     , dun(d)
     , levelCelView(lcv)
+    , min(ts->min)
 {
     this->ui->setupUi(this);
 
@@ -150,7 +151,7 @@ void BuilderWidget::hide()
     QFrame::hide();
 }
 
-bool BuilderWidget::dunClicked(int cellX, int cellY, bool first)
+bool BuilderWidget::dunClicked(const QPoint &pos, bool first)
 {
     if (this->isHidden()) {
         return false;
@@ -183,14 +184,13 @@ bool BuilderWidget::dunClicked(int cellX, int cellY, bool first)
 
     std::vector<DunPos> modValues;
     if (!first) {
-        int fcx = cellX;
-        int lcx = this->lastPos.x();
-        int fcy = cellY;
-        int lcy = this->lastPos.y();
-
-        if (fcx == lcx && fcy == lcy) {
+        if (this->lastPos == pos) {
             return true;
         }
+        int fcx = pos.x();
+        int lcx = this->lastPos.x();
+        int fcy = pos.y();
+        int lcy = this->lastPos.y();
 
         // collect locations
         if (fcx > lcx) {
@@ -208,40 +208,39 @@ bool BuilderWidget::dunClicked(int cellX, int cellY, bool first)
         // rollback previous change
         this->undoStack->undo();
     } else {
-        this->lastPos.setX(cellX);
-        this->lastPos.setY(cellY);
+        this->lastPos = pos;
         // collect locations
-        modValues.push_back(DunPos(cellX, cellY, 0));
+        modValues.push_back(DunPos(pos.x(), pos.y(), 0));
 
         // reset value if it is the same as before
         switch (this->mode) {
         case BEM_TILE:
-            if (value == this->dun->getTileAt(cellX, cellY)) {
+            if (value == this->dun->getTileAt(pos.x(), pos.y())) {
                 value = 0;
             }
             break;
         case BEM_TILE_PROTECTION:
-            if (value == (int)this->dun->getTileProtectionAt(cellX, cellY)) {
+            if (value == (int)this->dun->getTileProtectionAt(pos.x(), pos.y())) {
                 value = (int)Qt::Unchecked;
             }
             break;
         case BEM_SUBTILE:
-            if (value == this->dun->getSubtileAt(cellX, cellY)) {
+            if (value == this->dun->getSubtileAt(pos.x(), pos.y())) {
                 value = 0;
             }
             break;
         case BEM_SUBTILE_PROTECTION:
-            if (value == (int)this->dun->getSubtileProtectionAt(cellX, cellY)) {
+            if (value == (int)this->dun->getSubtileProtectionAt(pos.x(), pos.y())) {
                 value = 0;
             }
             break;
         case BEM_OBJECT:
-            if (value == this->dun->getObjectAt(cellX, cellY)) {
+            if (value == this->dun->getObjectAt(pos.x(), pos.y())) {
                 value = 0;
             }
             break;
         case BEM_MONSTER:
-            if (this->currentMonsterType == this->dun->getMonsterAt(cellX, cellY)) {
+            if (this->currentMonsterType == this->dun->getMonsterAt(pos.x(), pos.y())) {
                 value = 0;
             }
             break;
@@ -260,6 +259,53 @@ bool BuilderWidget::dunClicked(int cellX, int cellY, bool first)
 
     this->undoStack->push(command);
     return true;
+}
+
+bool BuilderWidget::dunHovered(const QPoint &pos)
+{
+    int cellX = pos.x();
+    int cellY = pos.y();
+
+    // check if it is a valid position
+    if (cellX < 0 || cellX >= this->dun->getWidth() || cellY < 0 || cellY >= this->dun->getHeight()) {
+        // no target hit -> ignore
+        return;
+    }
+
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    int cellWidth = subtileWidth;
+    int cellHeight = subtileWidth / 2;
+
+    QGraphicsScene *scene = this->graphView->scene(); // this->levelCelView->getCelScene();
+    QList<QGraphicsItem *> items = scene->items();
+    QGraphicsPixmapItem *overlay;
+    if (items.size() < 2) {
+        QColor color = QColorConstants::DarkCyan;
+        QImage image = QImage(cellWidth, cellHeight, QImage::Format_ARGB32);
+        image.fill(Qt::transparent);
+        drawHollowDiamond(image, cellWidth, color);
+        overlay = scene->addPixmap(QPixmap::fromImage(image));
+    } else {
+        overlay = reinterpret_cast<QGraphicsPixmapItem *>(items[0]);
+    }
+
+    // SHIFT_GRID
+    int dunX = cellX - cellY;
+    int dunY = cellX + cellY;
+
+    // switch unit
+    int cX = dunX * (cellWidth / 2);
+    int cY = dunY * (cellHeight / 2);
+
+    // move to 0;0
+    cX += scene->sceneRect().width() / 2;
+    cY += (CEL_SCENE_MARGIN + subtileHeight - cellHeight);
+    int offX = overlay->pixmap().width() / 2 + (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
+    cX -= offX;
+
+    overlay->setPos(cX, cY);
 }
 
 void BuilderWidget::colorModified()

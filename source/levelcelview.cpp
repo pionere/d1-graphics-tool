@@ -638,49 +638,7 @@ void LevelCelView::framePixelHovered(const QPoint &pos)
 {
     if (this->dunView) {
         QPoint cellPos = this->getCellPos(pos);
-
-        int cellX = cellPos.x();
-        int cellY = cellPos.y();
-
-        // check if it is a valid position
-        if (cellX < 0 || cellX >= this->dun->getWidth() || cellY < 0 || cellY >= this->dun->getHeight()) {
-            // no target hit -> ignore
-            return;
-        }
-
-        unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
-        unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
-
-        int cellWidth = subtileWidth;
-        int cellHeight = subtileWidth / 2;
-
-        QList<QGraphicsItem *> items = this->celScene.items();
-        QGraphicsPixmapItem *overlay;
-        if (items.size() < 2) {
-            QColor color = QColorConstants::DarkCyan;
-            QImage image = QImage(cellWidth, cellHeight, QImage::Format_ARGB32);
-            image.fill(Qt::transparent);
-            drawHollowDiamond(image, cellWidth, color);
-            overlay = this->celScene.addPixmap(QPixmap::fromImage(image));
-        } else {
-            overlay = reinterpret_cast<QGraphicsPixmapItem *>(items[0]);
-        }
-
-        // SHIFT_GRID
-        int dunX = cellX - cellY;
-        int dunY = cellX + cellY;
-
-        // switch unit
-        int cX = dunX * (cellWidth / 2);
-        int cY = dunY * (cellHeight / 2);
-
-        // move to 0;0
-        cX += this->celScene.sceneRect().width() / 2;
-        cY += (CEL_SCENE_MARGIN + subtileHeight - cellHeight);
-        int offX = overlay->pixmap().width() / 2 + (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
-        cX -= offX;
-
-        overlay->setPos(cX, cY);
+        dMainWindow().dunHovered(cellPos);
     }
 }
 
@@ -691,10 +649,10 @@ void LevelCelView::scrollTo(int posx, int posy)
     this->isScrolling = true;
 }
 
-void LevelCelView::selectPos(int posx, int posy)
+void LevelCelView::selectPos(const QPoint &cell)
 {
-    this->currentDunPosX = posx;
-    this->currentDunPosY = posy;
+    this->currentDunPosX = cell.x();
+    this->currentDunPosY = cell.y();
     // update the view
     this->update();
 }

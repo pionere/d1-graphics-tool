@@ -130,7 +130,7 @@ public:
     void toggleBottomPanel();
 
     void scrollTo(int posx, int posy);
-    void selectPos(int posx, int posy);
+    void selectPos(const QPoint &cell);
 
 private:
     void collectFrameUsers(int frameIndex, std::vector<int> &users) const;
