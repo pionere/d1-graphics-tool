@@ -658,7 +658,7 @@ void LevelCelView::framePixelHovered(const QPoint &pos)
         QGraphicsItem *overlay;
         if (items.size() < 2) {
             QColor color = QColorConstants::DarkCyan;
-            QImage image = QImage(cellWidth, cellWidth / 2, QImage::Format_ARGB32);
+            QImage image = QImage(cellWidth, cellHeight, QImage::Format_ARGB32);
             image.fill(Qt::transparent);
             drawHollowDiamond(image, cellWidth, color);
             overlay = this->celScene.addPixmap(QPixmap::fromImage(image));
@@ -677,8 +677,8 @@ void LevelCelView::framePixelHovered(const QPoint &pos)
         // move to 0;0
         cX += this->celScene.sceneRect().width() / 2;
         cY += (CEL_SCENE_MARGIN + subtileHeight - cellHeight);
-        int offX = cellWidth / 2 - (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
-        cX += offX;
+        int offX = cellWidth / 2 + (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
+        cX -= offX;
 
         this->ui->dunPlayDelayEdit->setText(QString("%1:%2").arg(cX).arg(cY));
         overlay->setPos(cX, cY);
