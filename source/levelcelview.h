@@ -42,6 +42,7 @@ public:
     ~LevelCelPixmap() = default;
 
 private slots:
+    bool event(QEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
     void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override;

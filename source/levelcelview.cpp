@@ -37,6 +37,43 @@ LevelCelPixmap::LevelCelPixmap(const QImage &image)
     setAcceptHoverEvents(true);
 }
 
+bool LevelCelPixmap::event(QEvent *evt)
+{
+    if (evt->type() == QEvent::MouseMove) {
+        QMessageBox::critical(nullptr, "Err", QString("MouseMove"));
+        return true;
+    }
+    if (evt->type() == QEvent::GraphicsSceneMouseMove) {
+        QMessageBox::critical(nullptr, "Err", QString("GraphicsSceneMouseMove"));
+        return true;
+    }
+    if (evt->type() == QEvent::HoverMove) {
+        QMessageBox::critical(nullptr, "Err", QString("HoverMove"));
+        return true;
+    }
+    if (evt->type() == QEvent::HoverEnter) {
+        QMessageBox::critical(nullptr, "Err", QString("HoverEnter"));
+        return true;
+    }
+    if (evt->type() == QEvent::HoverLeave) {
+        QMessageBox::critical(nullptr, "Err", QString("HoverLeave"));
+        return true;
+    }
+    if (evt->type() == QEvent::GraphicsSceneHoverMove) {
+        QMessageBox::critical(nullptr, "Err", QString("GraphicsSceneHoverMove"));
+        return true;
+    }
+    if (evt->type() == QEvent::GraphicsSceneHoverEnter) {
+        QMessageBox::critical(nullptr, "Err", QString("HoverEnter"));
+        return true;
+    }
+    if (evt->type() == QEvent::GraphicsSceneHoverLeave) {
+        QMessageBox::critical(nullptr, "Err", QString("GraphicsSceneHoverLeave"));
+        return true;
+    }
+    return QGraphicsScene::event(evt);
+}
+
 void LevelCelPixmap::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::NoButton) {
