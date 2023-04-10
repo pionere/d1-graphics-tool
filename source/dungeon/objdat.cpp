@@ -152,7 +152,7 @@ const BYTE ObjConvTbl[128] = {
 //	0, //OBJ_TCHEST2,
 //	0, //OBJ_TCHEST3,
 //	0, //OBJ_LAZSTAND,
-//	0, //OBJ_BOOKL,
+//	0, //OBJ_BOOK2L,
 //	0, //OBJ_BOOKSHELFR,
 	// clang-format on
 };
@@ -225,8 +225,8 @@ const ObjectData objectdata[NUM_OBJECTS] = {
 /*OBJ_ANCIENTBOOK*/ { OFILE_BOOK2,    0,                                         0,               THEME_NONE,              Q_INVALID,             1, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
 /*OBJ_VILEBOOK*/    { OFILE_BOOK2,    0,                                         0,               THEME_NONE,              Q_INVALID,             4, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
 /*OBJ_MYTHICBOOK*/  { OFILE_BOOK2,    0,                                         0,               THEME_NONE,              Q_BCHAMB,              4, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
-/*OBJ_BOOKL*/       { OFILE_BOOK2,    0,                                         0,               THEME_LIBRARY,           Q_INVALID,             1, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
-/*OBJ_BOOKR*/       { OFILE_BOOK2,    0,                                         0,               THEME_SKELROOM,          Q_INVALID,             4, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
+/*OBJ_BOOK2L*/      { OFILE_BOOK2,    0,                                         0,               THEME_LIBRARY,           Q_INVALID,             1, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
+/*OBJ_BOOK2R*/      { OFILE_BOOK2,    0,                                         0,               THEME_SKELROOM,          Q_INVALID,             4, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
 /*OBJ_BOOKLVR*/ //  { OFILE_BOOK1,    0,                                         0,               THEME_NONE,              Q_INVALID,             1, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
 /*OBJ_BLINDBOOK*/   { OFILE_BOOK1,    0,                                         0,               THEME_NONE,              Q_BLIND,               1, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
 /*OBJ_BLOODBOOK*/   { OFILE_BOOK1,    0,                                         0,               THEME_NONE,              Q_BLOOD,               4, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },

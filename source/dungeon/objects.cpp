@@ -1341,8 +1341,8 @@ int AddObject(int type, int ox, int oy)
 	case OBJ_BARRELEX:
 	case OBJ_URNEX:
 	case OBJ_PODEX:
-	case OBJ_BOOKL:
-	case OBJ_BOOKR:
+	case OBJ_BOOK2L:
+	case OBJ_BOOK2R:
 	case OBJ_PEDESTAL:
 	case OBJ_ARMORSTAND:
 	case OBJ_WEAPONRACKL:
@@ -1495,9 +1495,9 @@ void GetObjectStr(int oi)
 	case OBJ_BOOKCASER:
 		copy_cstr(infostr, "Bookcase");
 		break;
-	case OBJ_BOOKL:
-	case OBJ_BOOKR:
-		copy_cstr(infostr, "Book");
+	case OBJ_BOOK2L:
+	case OBJ_BOOK2R:
+		copy_cstr(infostr, "Lectern");
 		break;
 	case OBJ_BLOODFTN:
 		copy_cstr(infostr, "Blood Fountain");

@@ -324,6 +324,7 @@ void BuilderWidget::dunHovered(const QPoint &pos)
     QGraphicsPixmapItem *overlay;
 
     int overlayType = this->isHidden() ? -1 : this->mode;
+    int offX = 0; int offY = 0;
     if (this->overlayType != overlayType || items.size() < 2) {
         this->overlayType = overlayType;
         QImage image;
@@ -336,6 +337,20 @@ void BuilderWidget::dunHovered(const QPoint &pos)
                     image = this->tileset->til->getTileImage(this->currentTileIndex - 1);
                 }
                 color = QColorConstants::Svg::magenta;
+            }
+            if (image.isNull()) {
+                image = QImage(cellWidth * TILE_WIDTH, cellHeight * TILE_HEIGHT, QImage::Format_ARGB32);
+                image.fill(Qt::transparent);
+                drawHollowDiamond(image, cellWidth * TILE_WIDTH, color);
+            }
+    	    offY = cellHeight;
+            if (pos.x() & 1) {
+                offX -= cellWidth / 2;
+                offY -= cellHeight / 2;
+            }
+            if (pos.y() & 1) {
+                offX += cellWidth / 2;
+                offY -= cellHeight / 2;
             }
             break;
         case BEM_TILE_PROTECTION:
@@ -372,7 +387,7 @@ void BuilderWidget::dunHovered(const QPoint &pos)
             image.fill(Qt::transparent);
             drawHollowDiamond(image, cellWidth, color);
         } else {
-            maskImage(image);
+            ; // maskImage(image);
         }
 
         QPixmap pixmap = QPixmap::fromImage(image);
@@ -399,14 +414,17 @@ void BuilderWidget::dunHovered(const QPoint &pos)
         int cY = dunY * (cellHeight / 2);
 
         // move to 0;0
-        cX += scene->sceneRect().width() / 2;
-        cY += (CEL_SCENE_MARGIN + subtileHeight - overlay->pixmap().height());
-        int offX = overlay->pixmap().width() / 2 + (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
-        cX -= offX;
+        cX += scene->sceneRect().width() / 2 - (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
+        cY += CEL_SCENE_MARGIN + subtileHeight;
+
+        // center the image
+        cX += offX - overlay->pixmap().width() / 2;
+        cY += offY - overlay->pixmap().height();
 
         op = QPoint(cX, cY);
     } else {
         op = QCursor::pos();
+        op = this->graphView->mapFromGlobal(op);
     }
 
     overlay->setPos(op);

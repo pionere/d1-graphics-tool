@@ -655,11 +655,11 @@ static void Theme_SkelRoom(BYTE tv)
 
 	if (dObject[xx][yy - 3] == 0) {
 		assert(dObject[xx][yy - 2] == 0);
-		AddObject(OBJ_BOOKR, xx, yy - 2);
+		AddObject(OBJ_BOOK2R, xx, yy - 2);
 	}
 	if (dObject[xx][yy + 3] == 0) {
 		assert(dObject[xx][yy + 2] == 0);
-		AddObject(OBJ_BOOKR, xx, yy + 2);
+		AddObject(OBJ_BOOK2R, xx, yy + 2);
 	}
 }
 
@@ -719,7 +719,7 @@ static void Theme_Library(bool isZharLib, BYTE tv)
 	for (yy = DBORDERY + 1; yy < DBORDERY + DSIZEY - 1; yy++) {
 		for (xx = DBORDERX + 1; xx < DBORDERX + DSIZEX - 1; xx++) {
 			if (CheckThemeObj3(xx, yy, tv, -1) && dMonster[xx][yy] == 0 && random_low(0, librnd) == 0) {
-				oi = AddObject(OBJ_BOOKL, xx, yy);
+				oi = AddObject(OBJ_BOOK2L, xx, yy);
 				if (random_low(0, 2 * librnd) != 0 && oi != -1) { /// BUGFIX: check AddObject succeeded (fixed)
 					objects[oi]._oSelFlag = 0;
 					objects[oi]._oAnimFrame += 2;
