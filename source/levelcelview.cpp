@@ -37,7 +37,7 @@ LevelCelPixmap::LevelCelPixmap(const QImage &image)
     setAcceptHoverEvents(true);
 }
 
-bool LevelCelPixmap::event(QEvent *evt)
+bool LevelCelPixmap::sceneEvent(QEvent *evt)
 {
     if (evt->type() == QEvent::MouseMove) {
         QMessageBox::critical(nullptr, "Err", QString("MouseMove"));
@@ -71,7 +71,7 @@ bool LevelCelPixmap::event(QEvent *evt)
         QMessageBox::critical(nullptr, "Err", QString("GraphicsSceneHoverLeave"));
         return true;
     }
-    return QGraphicsPixmapItem::event(evt);
+    return QGraphicsPixmapItem::sceneEvent(evt);
 }
 
 void LevelCelPixmap::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
