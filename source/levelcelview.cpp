@@ -677,7 +677,7 @@ void LevelCelView::framePixelHovered(const QPoint &pos)
         // move to 0;0
         cX += this->celScene.sceneRect().width() / 2;
         cY += (CEL_SCENE_MARGIN + subtileHeight - cellHeight);
-        int offX = overlay.pixmap().width() / 2 + (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
+        int offX = overlay->pixmap().width() / 2 + (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
         cX -= offX;
 
         overlay->setPos(cX, cY);

@@ -106,7 +106,7 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr },
                      { nullptr },
                      { nullptr },
-/*OBJ_ANCIENTTOME*/  { "Ancient Tome" }, // Bonecha1.DUN
+/*OBJ_ANCIENTBOOK*/  { "Ancient Book" }, // Bonecha1.DUN
 /*OBJ_BLOODBOOK*/    { "BloodBook" }, // Blood2.DUN (Q_BLOOD)
 /*OBJ_TBCROSS*/      { "Burning cross" }, // Bonecha1.DUN
                      { nullptr },

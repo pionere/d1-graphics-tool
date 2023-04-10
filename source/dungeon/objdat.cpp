@@ -29,7 +29,7 @@ const BYTE ObjConvTbl[128] = {
 	0,
 	0,
 	0,
-	OBJ_ANCIENTTOME, // Bonecha1.DUN
+	OBJ_ANCIENTBOOK, // Bonecha1.DUN
 	OBJ_BLOODBOOK, // Blood2.DUN (Q_BLOOD)
 	OBJ_TBCROSS, // Bonecha1.DUN
 	0,
@@ -152,7 +152,7 @@ const BYTE ObjConvTbl[128] = {
 //	0, //OBJ_TCHEST2,
 //	0, //OBJ_TCHEST3,
 //	0, //OBJ_LAZSTAND,
-//	0, //OBJ_BOOKSTAND,
+//	0, //OBJ_BOOKL,
 //	0, //OBJ_BOOKSHELFR,
 	// clang-format on
 };
@@ -222,11 +222,11 @@ const ObjectData objectdata[NUM_OBJECTS] = {
 /*OBJ_TCHEST1*/     { OFILE_CHEST1,   DTM_ANY & ~DTM_CATHEDRAL,                  0,               THEME_NONE,              Q_INVALID,             1, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         1, FALSE     , ALIGN },
 /*OBJ_TCHEST2*/     { OFILE_CHEST2,   DTM_ANY & ~DTM_CATHEDRAL,                  0,               THEME_NONE,              Q_INVALID,             1, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         1, FALSE     , ALIGN },
 /*OBJ_TCHEST3*/     { OFILE_CHEST3,   DTM_ANY & ~DTM_CATHEDRAL,                  0,               THEME_NONE,              Q_INVALID,             1, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         1, FALSE     , ALIGN },
-/*OBJ_ANCIENTTOME*/ { OFILE_BOOK2,    0,                                         0,               THEME_NONE,              Q_INVALID,             1, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
+/*OBJ_ANCIENTBOOK*/ { OFILE_BOOK2,    0,                                         0,               THEME_NONE,              Q_INVALID,             1, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
 /*OBJ_VILEBOOK*/    { OFILE_BOOK2,    0,                                         0,               THEME_NONE,              Q_INVALID,             4, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
 /*OBJ_MYTHICBOOK*/  { OFILE_BOOK2,    0,                                         0,               THEME_NONE,              Q_BCHAMB,              4, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
-/*OBJ_BOOKSTAND*/   { OFILE_BOOK2,    0,                                         0,               THEME_LIBRARY,           Q_INVALID,             1, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
-/*OBJ_SKELBOOK*/    { OFILE_BOOK2,    0,                                         0,               THEME_SKELROOM,          Q_INVALID,             4, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
+/*OBJ_BOOKL*/       { OFILE_BOOK2,    0,                                         0,               THEME_LIBRARY,           Q_INVALID,             1, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
+/*OBJ_BOOKR*/       { OFILE_BOOK2,    0,                                         0,               THEME_SKELROOM,          Q_INVALID,             4, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
 /*OBJ_BOOKLVR*/ //  { OFILE_BOOK1,    0,                                         0,               THEME_NONE,              Q_INVALID,             1, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
 /*OBJ_BLINDBOOK*/   { OFILE_BOOK1,    0,                                         0,               THEME_NONE,              Q_BLIND,               1, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
 /*OBJ_BLOODBOOK*/   { OFILE_BOOK1,    0,                                         0,               THEME_NONE,              Q_BLOOD,               4, OPF_NONE,   OMF_FLOOR | OMF_ACTIVE, ODT_NONE,         3, FALSE     , ALIGN },
