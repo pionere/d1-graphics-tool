@@ -92,8 +92,10 @@ private slots:
 
     void on_tileLineEdit_escPressed();
     void on_tileLineEdit_returnPressed();
+    void on_tileProtectionModeComboBox_activated(int index);
     void on_subtileLineEdit_escPressed();
     void on_subtileLineEdit_returnPressed();
+    void on_subtileProtectionModeComboBox_activated(int index);
     void on_objectLineEdit_escPressed();
     void on_objectLineEdit_returnPressed();
     void on_objectComboBox_activated(int index);

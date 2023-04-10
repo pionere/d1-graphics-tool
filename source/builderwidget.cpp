@@ -324,7 +324,6 @@ void BuilderWidget::dunHovered(const QPoint &pos)
     QGraphicsPixmapItem *overlay;
 
     int overlayType = this->isHidden() ? -1 : this->mode;
-    int offX = 0; int offY = 0;
     if (this->overlayType != overlayType || items.size() < 2) {
         this->overlayType = overlayType;
         QImage image;
@@ -342,15 +341,6 @@ void BuilderWidget::dunHovered(const QPoint &pos)
                 image = QImage(cellWidth * TILE_WIDTH, cellHeight * TILE_HEIGHT, QImage::Format_ARGB32);
                 image.fill(Qt::transparent);
                 drawHollowDiamond(image, cellWidth * TILE_WIDTH, color);
-            }
-    	    offY = cellHeight;
-            if (pos.x() & 1) {
-                offX -= cellWidth / 2;
-                offY -= cellHeight / 2;
-            }
-            if (pos.y() & 1) {
-                offX += cellWidth / 2;
-                offY -= cellHeight / 2;
             }
             break;
         case BEM_TILE_PROTECTION:
@@ -418,8 +408,20 @@ void BuilderWidget::dunHovered(const QPoint &pos)
         cY += CEL_SCENE_MARGIN + subtileHeight;
 
         // center the image
-        cX += offX - overlay->pixmap().width() / 2;
-        cY += offY - overlay->pixmap().height();
+        cX -= overlay->pixmap().width() / 2;
+        cY -= overlay->pixmap().height();
+
+        if (this->overlayType == BEM_TILE) {
+            cY += cellHeight;
+            if (pos.x() & 1) {
+                cX -= cellWidth / 2;
+                cY -= cellHeight / 2;
+            }
+            if (pos.y() & 1) {
+                cX += cellWidth / 2;
+                cY -= cellHeight / 2;
+            }
+        }
 
         op = QPoint(cX, cY);
     } else {
@@ -666,6 +668,11 @@ void BuilderWidget::on_tileLineEdit_escPressed()
     this->ui->tileLineEdit->clearFocus();
 }
 
+void BuilderWidget::on_tileProtectionModeComboBox_activated(int index)
+{
+    this->overlayType = -1;
+}
+
 void BuilderWidget::on_subtileLineEdit_returnPressed()
 {
     int subtileIndex = this->ui->subtileLineEdit->text().toInt();
@@ -679,6 +686,11 @@ void BuilderWidget::on_subtileLineEdit_escPressed()
 {
     this->ui->subtileLineEdit->setText(QString::number(this->currentSubtileIndex));
     this->ui->subtileLineEdit->clearFocus();
+}
+
+void BuilderWidget::on_subtileProtectionModeComboBox_activated(int index)
+{
+    this->overlayType = -1;
 }
 
 void BuilderWidget::on_objectLineEdit_returnPressed()
