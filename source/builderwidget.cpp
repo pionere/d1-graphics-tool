@@ -350,13 +350,13 @@ void BuilderWidget::dunHovered(const QPoint &pos)
             break;
         case BEM_OBJECT:
             if (this->currentObjectIndex != 0) {
-                image = this->dun->getObjectImage(this->currentObjectIndex);
+                image = this->dun->getObjectImage(this->currentObjectIndex, 0);
                 color = QColorConstants::Svg::magenta;
             }
             break;
         case BEM_MONSTER:
             if (this->currentMonsterType.first != 0) {
-                image = this->dun->getMonsterImage(this->currentMonsterType);
+                image = this->dun->getMonsterImage(this->currentMonsterType, 0);
                 color = QColorConstants::Svg::magenta;
             }
             break;

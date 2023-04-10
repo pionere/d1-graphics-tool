@@ -112,7 +112,7 @@ private:
     bool moving = false;
     bool moved = false;
     QPoint lastPos;
-    int mode = BEM_TILE; // builder_edit_mode
+    int mode = BEM_TILE;  // builder_edit_mode
     int overlayType = -1; // builder_edit_mode
 
     int currentTileIndex = 0;

@@ -127,9 +127,9 @@ public:
     bool save(const SaveAsParam &params);
 
     QImage getImage(const DunDrawParam &params);
-    QImage getObjectImage(int objectIndex);
-    QImage getMonsterImage(DunMonsterType monType);
-    QImage getItemImage(int itemIndex);
+    QImage getObjectImage(int objectIndex, unsigned time);
+    QImage getMonsterImage(DunMonsterType monType, unsigned time);
+    QImage getItemImage(int itemIndex, unsigned time);
 
     void setPal(D1Pal *pal);
 
