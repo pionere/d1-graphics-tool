@@ -37,6 +37,11 @@ LevelCelPixmap::LevelCelPixmap(const QImage &image)
     setAcceptHoverEvents(true);
 }
 
+void LevelCelPixmap::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    QMessageBox::critical(nullptr, "Err", QString("MyGraphicsSceneMouseMove"));
+}
+
 void LevelCelPixmap::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     QMessageBox::critical(nullptr, "Err", QString("HoverEnter"));
