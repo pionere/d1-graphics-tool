@@ -55,6 +55,7 @@ void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    QMessageBox::critical(nullptr, "Err", QString("BadGraphicsSceneMouseMove"));
     this->mouseEvent(event, false);
 }
 
