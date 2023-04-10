@@ -37,7 +37,7 @@ LevelCelPixmap::LevelCelPixmap(const QImage &image)
     setAcceptHoverEvents(true);
 }
 
-bool LevelCelPixmap::sceneEvent(QEvent *evt)
+/*bool LevelCelPixmap::sceneEvent(QEvent *evt)
 {
     if (evt->type() == QEvent::MouseMove) {
         QMessageBox::critical(nullptr, "Err", QString("MouseMove"));
@@ -96,7 +96,7 @@ void LevelCelPixmap::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 void LevelCelPixmap::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
     QMessageBox::critical(nullptr, "Err", QString("HoverLeave"));
-}
+}*/
 
 LevelCelView::LevelCelView(QWidget *parent)
     : QWidget(parent)

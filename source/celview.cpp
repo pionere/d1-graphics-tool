@@ -55,7 +55,19 @@ void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    QMessageBox::critical(nullptr, "Err", QString("BadGraphicsSceneMouseMove"));
+    if (event->buttons() == Qt::NoButton) {
+        // emit this->framePixelHovered(this->lastPos);
+        QPointF scenePos = event->scenePos();
+        QPoint currPos = QPoint(scenePos.x(), scenePos.y());
+        QObject *view = this->parent();
+        CelView *celView = qobject_cast<CelView *>(view);
+        if (celView != nullptr) {
+            celView->framePixelHovered(currPos);
+        } else {
+            qobject_cast<LevelCelView *>(view)->framePixelHovered(currPos);
+        }
+        return;
+    }
     this->mouseEvent(event, false);
 }
 
