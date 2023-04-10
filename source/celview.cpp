@@ -37,7 +37,14 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, bool first)
     }
     this->lastPos = currPos;
 
-    emit this->framePixelClicked(this->lastPos, first);
+    // emit this->framePixelClicked(this->lastPos, first);
+    QObject *view = this->parent();
+    CelView *celView = qobject_cast<CelView *>(view);
+    if (celView != nullptr) {
+        celView->framePixelClicked(this->lastPos, first);
+    } else {
+        qobject_cast<LevelCelView *>(view)->framePixelClicked(this->lastPos, first);
+    }
 }
 
 void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -47,6 +54,19 @@ void CelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    if (event->buttons() == Qt::NoButton) {
+        // emit this->framePixelHovered(this->lastPos);
+        QPointF scenePos = event->scenePos();
+        QPoint currPos = QPoint(scenePos.x(), scenePos.y());
+        QObject *view = this->parent();
+        CelView *celView = qobject_cast<CelView *>(view);
+        if (celView != nullptr) {
+            celView->framePixelHovered(currPos);
+        } else {
+            qobject_cast<LevelCelView *>(view)->framePixelHovered(currPos);
+        }
+        return;
+    }
     this->mouseEvent(event, false);
 }
 
@@ -170,7 +190,8 @@ CelView::CelView(QWidget *parent)
     layout->setAlignment(btn, Qt::AlignRight);
 
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
-    QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &CelView::framePixelClicked);
+    // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &CelView::framePixelClicked);
+    // QObject::connect(&this->celScene, &CelScene::framePixelHovered, this, &CelView::framePixelHovered);
 
     // connect esc events of LineEditWidgets
     QObject::connect(this->ui->frameIndexEdit, SIGNAL(cancel_signal()), this, SLOT(on_frameIndexEdit_escPressed()));
@@ -261,6 +282,10 @@ void CelView::framePixelClicked(const QPoint &pos, bool first)
     QPoint p = pos;
     p -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
     dMainWindow().frameClicked(frame, p, first);
+}
+
+void CelView::framePixelHovered(const QPoint &pos)
+{
 }
 
 void CelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)

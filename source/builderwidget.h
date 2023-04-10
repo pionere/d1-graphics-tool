@@ -53,12 +53,14 @@ class BuilderWidget;
 } // namespace Ui
 
 class LevelCelView;
+class D1Min;
+class D1Tileset;
 
 class BuilderWidget : public QFrame {
     Q_OBJECT
 
 public:
-    explicit BuilderWidget(QWidget *parent, QUndoStack *us, D1Dun *dun, LevelCelView *levelCelView);
+    explicit BuilderWidget(QWidget *parent, QUndoStack *us, D1Dun *dun, LevelCelView *levelCelView, D1Tileset *tileset);
     ~BuilderWidget();
 
     void show(); // override;
@@ -74,7 +76,8 @@ private:
     void setMonsterType(DunMonsterType monType);
 
 public slots:
-    bool dunClicked(int cellX, int cellY, bool first);
+    bool dunClicked(const QPoint &pos, bool first);
+    void dunHovered(const QPoint &pos);
     void colorModified();
     void dunResourcesModified();
 
@@ -104,6 +107,7 @@ private:
     QUndoStack *undoStack;
     D1Dun *dun;
     LevelCelView *levelCelView;
+    D1Min *min;
     QGraphicsView *graphView;
     bool moving = false;
     bool moved = false;

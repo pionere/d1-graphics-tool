@@ -78,7 +78,8 @@ public:
     void changeColor(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, bool all);
     void colorModified();
     void frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first);
-    void dunClicked(int cellX, int cellY, bool first);
+    void dunClicked(const QPoint &cell, bool first);
+    void dunHovered(const QPoint &cell);
     void frameModified();
 
     void initPaletteCycle();

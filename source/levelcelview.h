@@ -6,6 +6,7 @@
 #include <QContextMenuEvent>
 #include <QDragEnterEvent>
 #include <QDropEvent>
+#include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
 #include <QGraphicsSceneDragDropEvent>
 #include <QGraphicsSceneMouseEvent>
@@ -33,6 +34,14 @@ class LevelCelView;
 
 enum class IMAGE_FILE_MODE;
 
+class LevelCelPixmap : public QObject, public QGraphicsPixmapItem {
+    Q_OBJECT
+
+public:
+    LevelCelPixmap(const QImage &image);
+    ~LevelCelPixmap() = default;
+};
+
 class LevelCelView : public QWidget {
     Q_OBJECT
 
@@ -51,6 +60,7 @@ public:
     const QComboBox *getMonsters() const;
 
     void framePixelClicked(const QPoint &pos, bool first);
+    void framePixelHovered(const QPoint &pos);
 
     void insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append);
 
@@ -120,7 +130,7 @@ public:
     void toggleBottomPanel();
 
     void scrollTo(int posx, int posy);
-    void selectPos(int posx, int posy);
+    void selectPos(const QPoint &cell);
 
 private:
     void collectFrameUsers(int frameIndex, std::vector<int> &users) const;
@@ -161,6 +171,7 @@ private:
     void selectAssetPath(QString path);
     void setPositionX(int posx);
     void setPositionY(int posy);
+    QPoint getCellPos(const QPoint &pos) const;
 
 signals:
     void frameRefreshed();

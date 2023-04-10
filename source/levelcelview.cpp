@@ -31,6 +31,12 @@
 
 Q_DECLARE_METATYPE(DunMonsterType);
 
+LevelCelPixmap::LevelCelPixmap(const QImage &image)
+    : QGraphicsPixmapItem(QPixmap::fromImage(image))
+{
+    setAcceptHoverEvents(true);
+}
+
 LevelCelView::LevelCelView(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::LevelCelView())
@@ -56,7 +62,8 @@ LevelCelView::LevelCelView(QWidget *parent)
     btn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowLeft, tr("Switch to tileset view"), &dMainWindow(), &MainWindow::on_actionToggle_View_triggered);
 
     // If a pixel of the frame, subtile or tile was clicked get pixel color index and notify the palette widgets
-    QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &LevelCelView::framePixelClicked);
+    // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &LevelCelView::framePixelClicked);
+    // QObject::connect(&this->celScene, &CelScene::framePixelHovered, this, &LevelCelView::framePixelHovered);
 
     // connect esc events of LineEditWidgets
     QObject::connect(this->ui->frameIndexEdit, SIGNAL(cancel_signal()), this, SLOT(on_frameIndexEdit_escPressed()));
@@ -335,8 +342,15 @@ void LevelCelView::update()
     this->updateLabel();
 
     if (this->dunView) {
+        // Set dungeon width and height
+        this->ui->dunWidthEdit->setText(QString::number(this->dun->getWidth()));
+        this->ui->dunHeightEdit->setText(QString::number(this->dun->getHeight()));
+
         int posx = this->currentDunPosX;
         int posy = this->currentDunPosY;
+        // Set dungeon location
+        this->ui->dungeonPosXLineEdit->setText(QString::number(posx));
+        this->ui->dungeonPosYLineEdit->setText(QString::number(posy));
         int tileRef = this->dun->getTileAt(posx, posy);
         this->ui->dungeonTileLineEdit->setText(tileRef == UNDEF_TILE ? QStringLiteral("?") : QString::number(tileRef));
         Qt::CheckState tps = this->dun->getTileProtectionAt(posx, posy);
@@ -413,6 +427,48 @@ const QComboBox *LevelCelView::getMonsters() const
     return this->ui->dungeonMonsterComboBox;
 }
 
+QPoint LevelCelView::getCellPos(const QPoint &pos) const
+{
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    int cellWidth = subtileWidth;
+    int cellHeight = subtileWidth / 2;
+    // move to 0;0
+    int cX = pos.x() - this->celScene.sceneRect().width() / 2;
+    int cY = pos.y() - (CEL_SCENE_MARGIN + subtileHeight - cellHeight);
+    int offX = (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
+    cX += offX;
+
+    // switch unit
+    int dunX = cX / cellWidth;
+    int dunY = cY / cellHeight;
+    int remX = cX % cellWidth;
+    int remY = cY % cellHeight;
+    // SHIFT_GRID
+    int cellX = dunX + dunY;
+    int cellY = dunY - dunX;
+
+    // Shift position to match diamond grid aligment
+    bool bottomLeft = remY >= cellHeight + (remX / 2);
+    bool bottomRight = remY >= cellHeight - (remX / 2);
+    if (bottomLeft) {
+        cellY++;
+    }
+    if (bottomRight) {
+        cellX++;
+    }
+    bool topRight = remY < (remX / 2);
+    bool topLeft = remY < -(remX / 2);
+    if (topRight) {
+        cellY--;
+    }
+    if (topLeft) {
+        cellX--;
+    }
+    return QPoint(cellX, cellY);
+}
+
 void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
 {
     unsigned celFrameWidth = MICRO_WIDTH; // this->gfx->getFrameWidth(this->currentFrameIndex);
@@ -425,41 +481,8 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
     unsigned tileHeight = subtileHeight + 2 * subtileShiftY;
 
     if (this->dunView) {
-        int cellWidth = subtileWidth;
-        int cellHeight = subtileWidth / 2;
-        // move to 0;0
-        int cX = pos.x() - this->celScene.sceneRect().width() / 2;
-        int cY = pos.y() - (CEL_SCENE_MARGIN + subtileHeight - cellHeight);
-        int offX = (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
-        cX += offX;
-
-        // switch unit
-        int dunX = cX / cellWidth;
-        int dunY = cY / cellHeight;
-        int remX = cX % cellWidth;
-        int remY = cY % cellHeight;
-        // SHIFT_GRID
-        int cellX = dunX + dunY;
-        int cellY = dunY - dunX;
-
-        // Shift position to match diamond grid aligment
-        bool bottomLeft = remY >= cellHeight + (remX / 2);
-        bool bottomRight = remY >= cellHeight - (remX / 2);
-        if (bottomLeft) {
-            cellY++;
-        }
-        if (bottomRight) {
-            cellX++;
-        }
-        bool topRight = remY < (remX / 2);
-        bool topLeft = remY < -(remX / 2);
-        if (topRight) {
-            cellY--;
-        }
-        if (topLeft) {
-            cellX--;
-        }
-        dMainWindow().dunClicked(cellX, cellY, first);
+        QPoint cellPos = this->getCellPos(pos);
+        dMainWindow().dunClicked(cellPos, first);
         return;
     }
     if (pos.x() >= (int)(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING)
@@ -576,6 +599,14 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
     dMainWindow().frameClicked(frame, p, first);
 }
 
+void LevelCelView::framePixelHovered(const QPoint &pos)
+{
+    if (this->dunView) {
+        QPoint cellPos = this->getCellPos(pos);
+        dMainWindow().dunHovered(cellPos);
+    }
+}
+
 void LevelCelView::scrollTo(int posx, int posy)
 {
     this->currentDunPosX = posx;
@@ -583,10 +614,10 @@ void LevelCelView::scrollTo(int posx, int posy)
     this->isScrolling = true;
 }
 
-void LevelCelView::selectPos(int posx, int posy)
+void LevelCelView::selectPos(const QPoint &cell)
 {
-    this->currentDunPosX = posx;
-    this->currentDunPosY = posy;
+    this->currentDunPosX = cell.x();
+    this->currentDunPosY = cell.y();
     // update the view
     this->update();
 }
@@ -2990,13 +3021,6 @@ void LevelCelView::displayFrame()
     this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
     if (this->dunView) {
-        // Set dungeon width and height
-        this->ui->dunWidthEdit->setText(QString::number(this->dun->getWidth()));
-        this->ui->dunHeightEdit->setText(QString::number(this->dun->getHeight()));
-        // Set dungeon location
-        this->ui->dungeonPosXLineEdit->setText(QString::number(this->currentDunPosX));
-        this->ui->dungeonPosYLineEdit->setText(QString::number(this->currentDunPosY));
-
         DunDrawParam params;
         params.tileState = this->ui->showTilesRadioButton->isChecked() ? Qt::Checked : (this->ui->showFloorRadioButton->isChecked() ? Qt::PartiallyChecked : Qt::Unchecked);
         params.showRooms = this->ui->showRoomsMetaRadioButton->isChecked();
@@ -3012,8 +3036,11 @@ void LevelCelView::displayFrame()
             CEL_SCENE_MARGIN + dunFrame.width() + CEL_SCENE_MARGIN,
             CEL_SCENE_MARGIN + dunFrame.height() + CEL_SCENE_MARGIN);
 
-        this->celScene.addPixmap(QPixmap::fromImage(dunFrame))
-            ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+        // this->celScene.addPixmap(QPixmap::fromImage(dunFrame))
+        //    ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+        LevelCelPixmap *pixmap = new LevelCelPixmap(dunFrame);
+        this->celScene.addItem(pixmap);
+        pixmap->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
         // scroll to the current position
         if (this->isScrolling) {
             this->isScrolling = false;

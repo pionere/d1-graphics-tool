@@ -314,18 +314,23 @@ void MainWindow::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
     this->trnBaseWidget->selectColor(pixel);
 }
 
-void MainWindow::dunClicked(int cellX, int cellY, bool first)
+void MainWindow::dunClicked(const QPoint &cell, bool first)
 {
     // check if it is a valid position
-    if (cellX < 0 || cellX >= this->dun->getWidth() || cellY < 0 || cellY >= this->dun->getHeight()) {
+    if (cell.x() < 0 || cell.x() >= this->dun->getWidth() || cell.y() < 0 || cell.y() >= this->dun->getHeight()) {
         // no target hit -> ignore
         return;
     }
-    if (this->builderWidget != nullptr && this->builderWidget->dunClicked(cellX, cellY, first)) {
+    if (this->builderWidget != nullptr && this->builderWidget->dunClicked(cell, first)) {
         return;
     }
     // Set dungeon location
-    this->levelCelView->selectPos(cellX, cellY);
+    this->levelCelView->selectPos(cell);
+}
+
+void MainWindow::dunHovered(const QPoint &cell)
+{
+    this->builderWidget->dunHovered(cell);
 }
 
 void MainWindow::frameModified()
@@ -995,7 +1000,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // prepare the builder dialog
     if (this->dun != nullptr) {
-        this->builderWidget = new BuilderWidget(this, this->undoStack, this->dun, this->levelCelView);
+        this->builderWidget = new BuilderWidget(this, this->undoStack, this->dun, this->levelCelView, this->tileset);
         // Refresh builder widget when the resource-options are changed
         QObject::connect(this->levelCelView, &LevelCelView::dunResourcesModified, this->builderWidget, &BuilderWidget::dunResourcesModified);
     }
