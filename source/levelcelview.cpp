@@ -717,7 +717,7 @@ void LevelCelView::framePixelHovered(const QPoint &pos)
             drawHollowDiamond(image, cellWidth, color);
             overlay = this->celScene.addPixmap(QPixmap::fromImage(image));
         } else {
-            overlay = items[1];
+            overlay = items[0];
         }
 
         // SHIFT_GRID
