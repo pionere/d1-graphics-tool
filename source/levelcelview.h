@@ -40,13 +40,6 @@ class LevelCelPixmap : public QObject, public QGraphicsPixmapItem {
 public:
     LevelCelPixmap(const QImage &image);
     ~LevelCelPixmap() = default;
-
-/*private slots:
-    bool sceneEvent(QEvent *event) override;
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
-    void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override;
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;*/
 };
 
 class LevelCelView : public QWidget {

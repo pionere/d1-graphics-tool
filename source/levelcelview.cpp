@@ -37,67 +37,6 @@ LevelCelPixmap::LevelCelPixmap(const QImage &image)
     setAcceptHoverEvents(true);
 }
 
-/*bool LevelCelPixmap::sceneEvent(QEvent *evt)
-{
-    if (evt->type() == QEvent::MouseMove) {
-        QMessageBox::critical(nullptr, "Err", QString("MouseMove"));
-        return true;
-    }
-    if (evt->type() == QEvent::GraphicsSceneMouseMove) {
-        QMessageBox::critical(nullptr, "Err", QString("GraphicsSceneMouseMove"));
-        return true;
-    }
-    if (evt->type() == QEvent::HoverMove) {
-        QMessageBox::critical(nullptr, "Err", QString("HoverMove"));
-        return true;
-    }
-    if (evt->type() == QEvent::HoverEnter) {
-        QMessageBox::critical(nullptr, "Err", QString("HoverEnter"));
-        return true;
-    }
-    if (evt->type() == QEvent::HoverLeave) {
-        QMessageBox::critical(nullptr, "Err", QString("HoverLeave"));
-        return true;
-    }
-    if (evt->type() == QEvent::GraphicsSceneHoverMove) {
-        QMessageBox::critical(nullptr, "Err", QString("GraphicsSceneHoverMove"));
-        return true;
-    }
-    if (evt->type() == QEvent::GraphicsSceneHoverEnter) {
-        QMessageBox::critical(nullptr, "Err", QString("HoverEnter"));
-        return true;
-    }
-    if (evt->type() == QEvent::GraphicsSceneHoverLeave) {
-        QMessageBox::critical(nullptr, "Err", QString("GraphicsSceneHoverLeave"));
-        return true;
-    }
-    return QGraphicsPixmapItem::sceneEvent(evt);
-}
-
-void LevelCelPixmap::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (event->buttons() == Qt::NoButton) {
-        QMessageBox::critical(nullptr, "Err", QString("MyGraphicsSceneMouseMove"));
-        return;
-    }
-    QGraphicsPixmapItem::mouseMoveEvent(event);
-}
-
-void LevelCelPixmap::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
-{
-    QMessageBox::critical(nullptr, "Err", QString("HoverEnter"));
-}
-
-void LevelCelPixmap::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
-{
-    QMessageBox::critical(nullptr, "Err", QString("HoverMove"));
-}
-
-void LevelCelPixmap::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
-{
-    QMessageBox::critical(nullptr, "Err", QString("HoverLeave"));
-}*/
-
 LevelCelView::LevelCelView(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::LevelCelView())
@@ -403,8 +342,15 @@ void LevelCelView::update()
     this->updateLabel();
 
     if (this->dunView) {
+        // Set dungeon width and height
+        this->ui->dunWidthEdit->setText(QString::number(this->dun->getWidth()));
+        this->ui->dunHeightEdit->setText(QString::number(this->dun->getHeight()));
+
         int posx = this->currentDunPosX;
         int posy = this->currentDunPosY;
+        // Set dungeon location
+        this->ui->dungeonPosXLineEdit->setText(QString::number(posx));
+        this->ui->dungeonPosYLineEdit->setText(QString::number(posy));
         int tileRef = this->dun->getTileAt(posx, posy);
         this->ui->dungeonTileLineEdit->setText(tileRef == UNDEF_TILE ? QStringLiteral("?") : QString::number(tileRef));
         Qt::CheckState tps = this->dun->getTileProtectionAt(posx, posy);
@@ -734,6 +680,7 @@ void LevelCelView::framePixelHovered(const QPoint &pos)
         int offX = (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
         cX += offX;
 
+        this->ui->dunPlayDelayEdit->setText(QString("%1:%2").arg(cX).arg(cY));
         overlay->setPos(cX, cY);
     }
 }
@@ -3152,13 +3099,6 @@ void LevelCelView::displayFrame()
     this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
     if (this->dunView) {
-        // Set dungeon width and height
-        this->ui->dunWidthEdit->setText(QString::number(this->dun->getWidth()));
-        this->ui->dunHeightEdit->setText(QString::number(this->dun->getHeight()));
-        // Set dungeon location
-        this->ui->dungeonPosXLineEdit->setText(QString::number(this->currentDunPosX));
-        this->ui->dungeonPosYLineEdit->setText(QString::number(this->currentDunPosY));
-
         DunDrawParam params;
         params.tileState = this->ui->showTilesRadioButton->isChecked() ? Qt::Checked : (this->ui->showFloorRadioButton->isChecked() ? Qt::PartiallyChecked : Qt::Unchecked);
         params.showRooms = this->ui->showRoomsMetaRadioButton->isChecked();
