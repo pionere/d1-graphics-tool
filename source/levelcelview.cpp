@@ -481,6 +481,9 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
     unsigned tileHeight = subtileHeight + 2 * subtileShiftY;
 
     if (this->dunView) {
+        QImage image = QImage(0, 0, QImage::Format_ARGB32_Premultiplied); // QImage::Format_ARGB32;
+        QMessageBox::critical(nullptr, "Err", image.isNull() ? "isNull" : "not null");
+
         QPoint cellPos = this->getCellPos(pos);
         dMainWindow().dunClicked(cellPos, first);
         return;

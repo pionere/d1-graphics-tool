@@ -390,7 +390,9 @@ void BuilderWidget::dunHovered(const QPoint &pos)
     QPoint op;
     int cellX = pos.x();
     int cellY = pos.y();
+#if 0
     if (cellX >= 0 && cellX < this->dun->getWidth() && cellY >= 0 && cellY < this->dun->getHeight()) {
+#endif
         // SHIFT_GRID
         int dunX = cellX - cellY;
         int dunY = cellX + cellY;
@@ -420,36 +422,20 @@ void BuilderWidget::dunHovered(const QPoint &pos)
         }
 
         op = QPoint(cX, cY);
+#if 0
     } else {
         op = QCursor::pos();
         op = this->graphView->mapFromGlobal(op);
     }
-
+#endif
     overlay->setPos(op);
 }
 
 void BuilderWidget::colorModified()
 {
-    if (this->isHidden())
-        return;
-    // update the color-icon
-    /*QSize imageSize = this->ui->imageLabel->size();
-    QImage image = QImage(imageSize, QImage::Format_ARGB32);
-    image.fill(QColor(Config::getGraphicsTransparentColor()));
-
-    unsigned numColors = this->selectedColors.size();
-    if (numColors != 0) {
-        for (int x = 0; x < imageSize.width(); x++) {
-            QColor color = this->pal->getColor(this->selectedColors[x * numColors / imageSize.width()]);
-            for (int y = 0; y < imageSize.height(); y++) {
-                // image.setPixelColor(x, y, color);
-                QRgb *destBits = reinterpret_cast<QRgb *>(image.scanLine(y));
-                destBits[x] = color.rgba();
-            }
-        }
-    }
-    QPixmap pixmap = QPixmap::fromImage(std::move(image));
-    this->ui->imageLabel->setPixmap(pixmap);*/
+    // if (this->isHidden())
+    //    return;
+    this->overlayType = -1;
 }
 
 static void copyComboBox(QComboBox *cmbDst, const QComboBox *cmbSrc)
