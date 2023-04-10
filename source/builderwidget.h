@@ -107,12 +107,13 @@ private:
     QUndoStack *undoStack;
     D1Dun *dun;
     LevelCelView *levelCelView;
-    D1Min *min;
+    D1Tileset *tileset;
     QGraphicsView *graphView;
     bool moving = false;
     bool moved = false;
     QPoint lastPos;
     int mode = BEM_TILE; // builder_edit_mode
+    int overlayType = -1; // builder_edit_mode
 
     int currentTileIndex = 0;
     int currentSubtileIndex = 0;

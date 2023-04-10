@@ -944,6 +944,76 @@ void D1Dun::drawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width,
     }
 }
 
+QImage D1Dun::getObjectImage(int objectIndex)
+{
+    const ObjectCacheEntry *objEntry = nullptr;
+    for (const auto &obj : this->objectCache) {
+        if (obj.objectIndex == objectIndex) {
+            objEntry = &obj;
+            break;
+        }
+    }
+    if (objEntry == nullptr) {
+        this->loadObject(objectIndex);
+        objEntry = &this->objectCache.back();
+    }
+    if (objEntry->objGfx != nullptr) {
+        int frameNum = objEntry->frameNum;
+        if (frameNum == 0) {
+            frameNum = 1 + (params.time % objEntry->objGfx->getFrameCount());
+        } else if (objEntry->objGfx->getFrameCount() < frameNum) {
+            frameNum = 1;
+        }
+        return objEntry->objGfx->getFrameImage(frameNum - 1);
+    } else {
+        return QImage();
+    }
+}
+
+QImage D1Dun::getMonsterImage(DunMonsterType monType)
+{
+    const MonsterCacheEntry *monEntry = nullptr;
+    for (const auto &mon : this->monsterCache) {
+        if (mon.monType == monType) {
+            monEntry = &mon;
+            break;
+        }
+    }
+    if (monEntry == nullptr) {
+        this->loadMonster(monType);
+        monEntry = &this->monsterCache.back();
+    }
+    if (monEntry->monGfx != nullptr) {
+        std::pair<int, int> frameIndices = monEntry->monGfx->getGroupFrameIndices(0);
+        int frameNum = 1 + (params.time % (frameIndices.second /*- frameIndices.first*/ + 1));
+        monEntry->monGfx->setPalette(monEntry->monPal);
+        return monEntry->monGfx->getFrameImage(frameNum - 1);
+    } else {
+        return QImage();
+    }
+}
+
+QImage D1Dun::getItemImage(int itemIndex)
+{
+    const ItemCacheEntry *itemEntry = nullptr;
+    for (const auto &item : this->itemCache) {
+        if (item.itemIndex == itemIndex) {
+            itemEntry = &item;
+            break;
+        }
+    }
+    if (itemEntry == nullptr) {
+        this->loadItem(itemIndex);
+        itemEntry = &this->itemCache.back();
+    }
+    if (itemEntry->itemGfx != nullptr) {
+        int frameNum = itemEntry->itemGfx->getFrameCount();
+        return itemEntry->itemGfx->getFrameImage(frameNum - 1);
+    } else {
+        return QImage();
+    }
+}
+
 void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
 {
     const unsigned backWidth = backImage.width() - 2 * CELL_BORDER;
@@ -1058,25 +1128,8 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
         // draw the object
         int objectIndex = this->objects[dunCursorY][dunCursorX];
         if (objectIndex != 0) {
-            const ObjectCacheEntry *objEntry = nullptr;
-            for (const auto &obj : this->objectCache) {
-                if (obj.objectIndex == objectIndex) {
-                    objEntry = &obj;
-                    break;
-                }
-            }
-            if (objEntry == nullptr) {
-                this->loadObject(objectIndex);
-                objEntry = &this->objectCache.back();
-            }
-            if (objEntry->objGfx != nullptr) {
-                int frameNum = objEntry->frameNum;
-                if (frameNum == 0) {
-                    frameNum = 1 + (params.time % objEntry->objGfx->getFrameCount());
-                } else if (objEntry->objGfx->getFrameCount() < frameNum) {
-                    frameNum = 1;
-                }
-                QImage objectImage = objEntry->objGfx->getFrameImage(frameNum - 1);
+            QImage objectImage = this->getObjectImage(objectIndex);
+            if (!objectImage.isNull()) {
                 dungeon.drawImage(drawCursorX + ((int)backWidth - objectImage.width()) / 2, drawCursorY - objectImage.height(), objectImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             } else {
                 QString text = this->getObjectName(objectIndex);
@@ -1091,20 +1144,8 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
         // draw the item
         int itemIndex = this->items[dunCursorY][dunCursorX];
         if (itemIndex != 0) {
-            const ItemCacheEntry *itemEntry = nullptr;
-            for (const auto &item : this->itemCache) {
-                if (item.itemIndex == itemIndex) {
-                    itemEntry = &item;
-                    break;
-                }
-            }
-            if (itemEntry == nullptr) {
-                this->loadItem(itemIndex);
-                itemEntry = &this->itemCache.back();
-            }
-            if (itemEntry->itemGfx != nullptr) {
-                int frameNum = itemEntry->itemGfx->getFrameCount();
-                QImage itemImage = itemEntry->itemGfx->getFrameImage(frameNum - 1);
+            QImage itemImage = this->getItemImage(itemIndex);
+            if (!itemImage.isNull()) {
                 dungeon.drawImage(drawCursorX + ((int)backWidth - itemImage.width()) / 2, drawCursorY - itemImage.height(), itemImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             } else {
                 QString text = this->getItemName(itemIndex);
@@ -1120,22 +1161,8 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
         // draw the monster
         const DunMonsterType &monType = this->monsters[dunCursorY][dunCursorX];
         if (monType.first != 0) {
-            const MonsterCacheEntry *monEntry = nullptr;
-            for (const auto &mon : this->monsterCache) {
-                if (mon.monType == monType) {
-                    monEntry = &mon;
-                    break;
-                }
-            }
-            if (monEntry == nullptr) {
-                this->loadMonster(monType);
-                monEntry = &this->monsterCache.back();
-            }
-            if (monEntry->monGfx != nullptr) {
-                std::pair<int, int> frameIndices = monEntry->monGfx->getGroupFrameIndices(0);
-                int frameNum = 1 + (params.time % (frameIndices.second /*- frameIndices.first*/ + 1));
-                monEntry->monGfx->setPalette(monEntry->monPal);
-                QImage monImage = monEntry->monGfx->getFrameImage(frameNum - 1);
+            QImage monImage = this->getMonsterImage(monType);
+            if (!monImage.isNull()) {
                 dungeon.drawImage(drawCursorX + ((int)backWidth - monImage.width()) / 2, drawCursorY - monImage.height(), monImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             } else {
                 QString text = this->getMonsterName(monType);

@@ -96,7 +96,7 @@ BuilderWidget::BuilderWidget(QWidget *parent, QUndoStack *us, D1Dun *d, LevelCel
     , undoStack(us)
     , dun(d)
     , levelCelView(lcv)
-    , min(ts->min)
+    , tileset(ts)
 {
     this->ui->setupUi(this);
 
@@ -307,8 +307,8 @@ void BuilderWidget::dunHovered(const QPoint &pos)
         return;
     }
 
-    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
-    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+    unsigned subtileWidth = this->tileset->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->tileset->min->getSubtileHeight() * MICRO_HEIGHT;
 
     int cellWidth = subtileWidth;
     int cellHeight = subtileWidth / 2;
@@ -316,7 +316,69 @@ void BuilderWidget::dunHovered(const QPoint &pos)
     QGraphicsScene *scene = this->graphView->scene(); // this->levelCelView->getCelScene();
     QList<QGraphicsItem *> items = scene->items();
     QGraphicsPixmapItem *overlay;
-    if (items.size() < 2) {
+
+    int overlayType = this->isHidden() ? -1 : this->mode;
+    if (this->overlayType != overlayType || items.size() < 2) {
+        this->overlayType = overlayType;
+        QImage image;
+        QColor color = QColorConstants::Svg::darkcyan;
+        int value;
+        switch (overlayType) {
+        case BEM_TILE:
+            if (this->currentTileIndex != 0) {
+                if (this->currentTileIndex > 0 && this->currentTileIndex <= this->tileset->til->getTileCount()) {
+                    image = this->tileset->til->getTileImage(this->currentTileIndex - 1);
+                }
+                color = QColorConstants::Svg::magenta;
+            }
+            break;
+        case BEM_TILE_PROTECTION:
+            value = this->ui->tileProtectionModeComboBox->currentIndex();
+            color = value == 0 ? QColorConstants::Svg::darkcyan : (value == 1 ? QColorConstants::Svg::plum : QColorConstants::Svg::orchid);
+            break;
+        case BEM_SUBTILE:
+            if (this->currentSubtileIndex != 0) {
+                if (this->currentSubtileIndex > 0 && this->currentSubtileIndex <= this->tileset->min->getSubtileCount()) {
+                    image = this->tileset->min->getSubtileImage(this->currentSubtileIndex - 1);
+                }
+                color = QColorConstants::Svg::magenta;
+            }
+            break;
+        case BEM_SUBTILE_PROTECTION:
+            value = this->ui->subtileProtectionModeComboBox->currentIndex();
+            color = value == 0 ? QColorConstants::Svg::darkcyan : QColorConstants::Svg::pink;
+            break;
+        case BEM_OBJECT:
+            if (this->currentObjectIndex != 0) {
+                image = this->dun->getObjectImage(this->currentObjectIndex);
+                color = QColorConstants::Svg::magenta;
+            }
+            break;
+        case BEM_MONSTER:
+            if (this->currentMonsterType.first != 0) {
+                image = this->dun->getMonsterImage(this->currentMonsterType);
+                color = QColorConstants::Svg::magenta;
+            }
+            break;
+        }
+        if (image.isNull()) {
+            image = QImage(cellWidth, cellHeight, QImage::Format_ARGB32);
+            image.fill(Qt::transparent);
+            drawHollowDiamond(image, cellWidth, color);
+        }
+
+        QPixmap pixmap = QPixmap::fromImage(image);
+        if (items.size() < 2) {
+            overlay = scene->addPixmap(pixmap);
+        } else {
+            overlay = reinterpret_cast<QGraphicsPixmapItem *>(items[0]);
+            overlay->setPixmap(pixmap);
+        }
+    } else {
+        overlay = reinterpret_cast<QGraphicsPixmapItem *>(items[0]);
+    }
+
+    /*if (items.size() < 2) {
         QColor color = QColorConstants::DarkCyan;
         QImage image = QImage(cellWidth, cellHeight, QImage::Format_ARGB32);
         image.fill(Qt::transparent);
@@ -324,7 +386,7 @@ void BuilderWidget::dunHovered(const QPoint &pos)
         overlay = scene->addPixmap(QPixmap::fromImage(image));
     } else {
         overlay = reinterpret_cast<QGraphicsPixmapItem *>(items[0]);
-    }
+    }*/
 
     // SHIFT_GRID
     int dunX = cellX - cellY;
