@@ -202,7 +202,7 @@ public:
     void clearAssets();
 
 private:
-    static void drawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, unsigned height, const QColor &color);
+    static void drawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, const QColor &color);
     void drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
     void initVectors(int width, int height);
     void loadObjectGfx(const QString &filePath, int width, ObjectCacheEntry &result);
