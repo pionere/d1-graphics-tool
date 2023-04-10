@@ -79,7 +79,7 @@ public:
     void colorModified();
     void frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first);
     void dunClicked(const QPoint &cell, bool first);
-    void dunHovered(const QPoint &cell, bool first);
+    void dunHovered(const QPoint &cell);
     void frameModified();
 
     void initPaletteCycle();

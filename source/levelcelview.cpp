@@ -482,7 +482,7 @@ void LevelCelView::framePixelClicked(const QPoint &pos, bool first)
 
     if (this->dunView) {
         QPoint cellPos = this->getCellPos(pos);
-        dMainWindow().dunClicked(cellPos.x(), cellPos.y(), first);
+        dMainWindow().dunClicked(cellPos, first);
         return;
     }
     if (pos.x() >= (int)(CEL_SCENE_MARGIN + celFrameWidth + CEL_SCENE_SPACING)

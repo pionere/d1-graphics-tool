@@ -301,7 +301,7 @@ bool BuilderWidget::dunHovered(const QPoint &pos)
 
     // move to 0;0
     cX += scene->sceneRect().width() / 2;
-    cY += (CEL_SCENE_MARGIN + subtileHeight - cellHeight);
+    cY += (CEL_SCENE_MARGIN + subtileHeight - overlay->pixmap().height());
     int offX = overlay->pixmap().width() / 2 + (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
     cX -= offX;
 
