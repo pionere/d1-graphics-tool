@@ -107,7 +107,7 @@ const BYTE shrineavail[NUM_SHRINETYPE] = {
 #endif
 };
 /** Maps from book_id to book name. */
-const char* BookName[NUM_BOOKS][] = {
+const char BookName[NUM_BOOKS][28] = {
 /*BK_STORY_MAINA_1*/  "The Great Conflict",
 /*BK_STORY_MAINA_2*/  "The Wages of Sin are War",
 /*BK_STORY_MAINA_3*/  "The Tale of the Horadrim",
