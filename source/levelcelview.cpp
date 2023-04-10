@@ -671,8 +671,8 @@ void LevelCelView::framePixelHovered(const QPoint &pos)
         int dunY = cellX + cellY;
 
         // switch unit
-        int cX = dunX * cellWidth;
-        int cY = dunY * cellHeight;
+        int cX = dunX * (cellWidth / 2);
+        int cY = dunY * (cellHeight / 2);
 
         // move to 0;0
         cX += this->celScene.sceneRect().width() / 2;
