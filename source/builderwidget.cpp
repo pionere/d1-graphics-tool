@@ -296,7 +296,7 @@ static void drawHollowDiamond(QImage &image, unsigned width, const QColor &color
     }
 }
 
-bool BuilderWidget::dunHovered(const QPoint &pos)
+void BuilderWidget::dunHovered(const QPoint &pos)
 {
     int cellX = pos.x();
     int cellY = pos.y();
