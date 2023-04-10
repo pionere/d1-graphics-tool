@@ -3853,7 +3853,7 @@ typedef enum book_id {
 	BK_NAKRUL_SPELL,
 #endif
 	NUM_BOOKS
-};
+} book_id;
 
 typedef enum quest_nakrul_book {
 	QNB_BOOK_1,
