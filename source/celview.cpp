@@ -58,7 +58,7 @@ void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     this->mouseEvent(event, false);
 }
 
-bool CelScene::event(QEvent *evt)
+/*bool CelScene::event(QEvent *evt)
 {
     if (evt->type() == QEvent::MouseMove) {
         QMessageBox::critical(nullptr, "Err", QString("MouseMove"));
@@ -93,7 +93,7 @@ bool CelScene::event(QEvent *evt)
         return true;
     }
     return QGraphicsScene::event(evt);
-}
+}*/
 
 /*void CelScene::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {

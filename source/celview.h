@@ -42,7 +42,7 @@ private:
     void mouseEvent(QGraphicsSceneMouseEvent *event, bool first);
 
 private slots:
-    bool event(QEvent *event) override;
+    // bool event(QEvent *event) override;
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
     // void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
