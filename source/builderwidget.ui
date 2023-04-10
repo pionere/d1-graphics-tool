@@ -157,7 +157,7 @@
        <widget class="QComboBox" name="tileProtectionModeComboBox">
         <item>
          <property name="text">
-          <string>No Protection</string>
+          <string>Complete Protection</string>
          </property>
         </item>
         <item>
@@ -167,7 +167,7 @@
         </item>
         <item>
          <property name="text">
-          <string>Complete Protection</string>
+          <string>No Protection</string>
          </property>
         </item>
        </widget>
@@ -232,12 +232,12 @@
        <widget class="QComboBox" name="subtileProtectionModeComboBox">
         <item>
          <property name="text">
-          <string>No Protection</string>
+          <string>Complete Protection</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Complete Protection</string>
+          <string>No Protection</string>
          </property>
         </item>
        </widget>

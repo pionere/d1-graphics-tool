@@ -151,7 +151,7 @@ void BuilderWidget::hide()
     QFrame::hide();
 }
 
-bool BuilderWidget::dunClicked(const QPoint &pos, bool first)
+bool BuilderWidget::dunClicked(const QPoint &cell, bool first)
 {
     if (this->isHidden()) {
         return false;
@@ -165,13 +165,13 @@ bool BuilderWidget::dunClicked(const QPoint &pos, bool first)
         break;
     case BEM_TILE_PROTECTION:
         value = this->ui->tileProtectionModeComboBox->currentIndex();
-        value = (int)(value == 0 ? Qt::Unchecked : (value == 1 ? Qt::PartiallyChecked : Qt::Checked));
+        value = (int)(value == 0 ? Qt::Checked : (value == 1 ? Qt::PartiallyChecked : Qt::Unchecked));
         break;
     case BEM_SUBTILE:
         value = this->currentSubtileIndex; // this->ui->subtileLineEdit->text().toInt();
         break;
     case BEM_SUBTILE_PROTECTION:
-        value = (int)(this->ui->subtileProtectionModeComboBox->currentIndex() == 1);
+        value = (int)(this->ui->subtileProtectionModeComboBox->currentIndex() == 0);
         break;
     case BEM_OBJECT:
         value = this->currentObjectIndex; // this->ui->objectLineEdit->text().toInt();
@@ -184,12 +184,12 @@ bool BuilderWidget::dunClicked(const QPoint &pos, bool first)
 
     std::vector<DunPos> modValues;
     if (!first) {
-        if (this->lastPos == pos) {
+        if (this->lastPos == cell) {
             return true;
         }
-        int fcx = pos.x();
+        int fcx = cell.x();
         int lcx = this->lastPos.x();
-        int fcy = pos.y();
+        int fcy = cell.y();
         int lcy = this->lastPos.y();
 
         // collect locations
@@ -208,39 +208,39 @@ bool BuilderWidget::dunClicked(const QPoint &pos, bool first)
         // rollback previous change
         this->undoStack->undo();
     } else {
-        this->lastPos = pos;
+        this->lastPos = cell;
         // collect locations
-        modValues.push_back(DunPos(pos.x(), pos.y(), 0));
+        modValues.push_back(DunPos(cell.x(), cell.y(), 0));
 
         // reset value if it is the same as before
         switch (this->mode) {
         case BEM_TILE:
-            if (value == this->dun->getTileAt(pos.x(), pos.y())) {
+            if (value == this->dun->getTileAt(cell.x(), cell.y())) {
                 value = 0;
             }
             break;
         case BEM_TILE_PROTECTION:
-            if (value == (int)this->dun->getTileProtectionAt(pos.x(), pos.y())) {
+            if (value == (int)this->dun->getTileProtectionAt(cell.x(), cell.y())) {
                 value = (int)Qt::Unchecked;
             }
             break;
         case BEM_SUBTILE:
-            if (value == this->dun->getSubtileAt(pos.x(), pos.y())) {
+            if (value == this->dun->getSubtileAt(cell.x(), cell.y())) {
                 value = 0;
             }
             break;
         case BEM_SUBTILE_PROTECTION:
-            if (value == (int)this->dun->getSubtileProtectionAt(pos.x(), pos.y())) {
+            if (value == (int)this->dun->getSubtileProtectionAt(cell.x(), cell.y())) {
                 value = 0;
             }
             break;
         case BEM_OBJECT:
-            if (value == this->dun->getObjectAt(pos.x(), pos.y())) {
+            if (value == this->dun->getObjectAt(cell.x(), cell.y())) {
                 value = 0;
             }
             break;
         case BEM_MONSTER:
-            if (this->currentMonsterType == this->dun->getMonsterAt(pos.x(), pos.y())) {
+            if (this->currentMonsterType == this->dun->getMonsterAt(cell.x(), cell.y())) {
                 value = 0;
             }
             break;
@@ -311,7 +311,7 @@ static void maskImage(QImage &image)
     }
 }
 
-void BuilderWidget::dunHovered(const QPoint &pos)
+void BuilderWidget::dunHovered(const QPoint &cell)
 {
     unsigned subtileWidth = this->tileset->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = this->tileset->min->getSubtileHeight() * MICRO_HEIGHT;
@@ -340,7 +340,7 @@ void BuilderWidget::dunHovered(const QPoint &pos)
             break;
         case BEM_TILE_PROTECTION:
             value = this->ui->tileProtectionModeComboBox->currentIndex();
-            color = value == 0 ? QColorConstants::Svg::darkcyan : (value == 1 ? QColorConstants::Svg::plum : QColorConstants::Svg::orangered);
+            color = value == 0 ? QColorConstants::Svg::orangered : (value == 1 ? QColorConstants::Svg::plum : QColorConstants::Svg::darkcyan);
             break;
         case BEM_SUBTILE:
             if (this->currentSubtileIndex != 0) {
@@ -352,7 +352,7 @@ void BuilderWidget::dunHovered(const QPoint &pos)
             break;
         case BEM_SUBTILE_PROTECTION:
             value = this->ui->subtileProtectionModeComboBox->currentIndex();
-            color = value == 0 ? QColorConstants::Svg::darkcyan : QColorConstants::Svg::lightcoral;
+            color = value == 0 ? QColorConstants::Svg::lightcoral : QColorConstants::Svg::darkcyan;
             break;
         case BEM_OBJECT:
             if (this->currentObjectIndex != 0) {
@@ -388,46 +388,38 @@ void BuilderWidget::dunHovered(const QPoint &pos)
     }
 
     QPoint op;
-    int cellX = pos.x();
-    int cellY = pos.y();
-#if 0
-    if (cellX >= 0 && cellX < this->dun->getWidth() && cellY >= 0 && cellY < this->dun->getHeight()) {
-#endif
-        // SHIFT_GRID
-        int dunX = cellX - cellY;
-        int dunY = cellX + cellY;
+    int cellX = cell.x();
+    int cellY = cell.y();
+    // SHIFT_GRID
+    int dunX = cellX - cellY;
+    int dunY = cellX + cellY;
 
-        // switch unit
-        int cX = dunX * (cellWidth / 2);
-        int cY = dunY * (cellHeight / 2);
+    // switch unit
+    int cX = dunX * (cellWidth / 2);
+    int cY = dunY * (cellHeight / 2);
 
-        // move to 0;0
-        cX += scene->sceneRect().width() / 2 - (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
-        cY += CEL_SCENE_MARGIN + subtileHeight;
+    // move to 0;0
+    cX += scene->sceneRect().width() / 2 - (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
+    cY += CEL_SCENE_MARGIN + subtileHeight;
 
-        // center the image
-        cX -= overlay->pixmap().width() / 2;
-        cY -= overlay->pixmap().height();
+    // center the image
+    cX -= overlay->pixmap().width() / 2;
+    cY -= overlay->pixmap().height();
 
-        if (this->overlayType == BEM_TILE || this->overlayType == BEM_TILE_PROTECTION) {
-            cY += cellHeight;
-            if (cellX & 1) {
-                cX -= cellWidth / 2;
-                cY -= cellHeight / 2;
-            }
-            if (cellY & 1) {
-                cX += cellWidth / 2;
-                cY -= cellHeight / 2;
-            }
+    if (this->overlayType == BEM_TILE || this->overlayType == BEM_TILE_PROTECTION) {
+        cY += cellHeight;
+        if (cellX & 1) {
+            cX -= cellWidth / 2;
+            cY -= cellHeight / 2;
         }
-
-        op = QPoint(cX, cY);
-#if 0
-    } else {
-        op = QCursor::pos();
-        op = this->graphView->mapFromGlobal(op);
+        if (cellY & 1) {
+            cX += cellWidth / 2;
+            cY -= cellHeight / 2;
+        }
     }
-#endif
+
+    op = QPoint(cX, cY);
+
     overlay->setPos(op);
 }
 

@@ -76,8 +76,8 @@ private:
     void setMonsterType(DunMonsterType monType);
 
 public slots:
-    bool dunClicked(const QPoint &pos, bool first);
-    void dunHovered(const QPoint &pos);
+    bool dunClicked(const QPoint &cell, bool first);
+    void dunHovered(const QPoint &cell);
     void colorModified();
     void dunResourcesModified();
 
