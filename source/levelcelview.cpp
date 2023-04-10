@@ -71,7 +71,7 @@ bool LevelCelPixmap::event(QEvent *evt)
         QMessageBox::critical(nullptr, "Err", QString("GraphicsSceneHoverLeave"));
         return true;
     }
-    return QGraphicsScene::event(evt);
+    return QGraphicsPixmapItem::event(evt);
 }
 
 void LevelCelPixmap::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
