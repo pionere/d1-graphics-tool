@@ -6,6 +6,9 @@
 #include "all.h"
 
 int numthemes;
+static bool _gbShrineFlag;
+static bool _gbSkelRoomFlag;
+static bool _gbGoatFlag;
 static bool _gbArmorFlag;
 static bool _gbWeaponFlag;
 static bool _gbTreasureFlag;
@@ -164,16 +167,6 @@ static bool TFit_Obj5(BYTE tv)
 	return true;
 }
 
-static bool TFit_SkelRoom(BYTE tv)
-{
-	return numSkelTypes != 0 && TFit_Obj5(tv);
-}
-
-static bool TFit_GoatShrine(BYTE tv)
-{
-	return numGoatTypes != 0 && TFit_Obj5(tv);
-}
-
 static bool CheckThemeObj3(int x, int y, BYTE tv, int rndfrq)
 {
 	int i, xx, yy;
@@ -214,98 +207,104 @@ static bool TFit_Obj3(BYTE tv)
 	return false;
 }
 
-static bool CheckThemeReqs(int theme)
-{
-	switch (theme) {
-	case THEME_BARREL:
-	case THEME_MONSTPIT:
-	case THEME_TORTURE:
-	case THEME_DECAPITATED:
-	case THEME_GOATSHRINE:
-	case THEME_BRNCROSS:
-		return true;
-	case THEME_SHRINE:
-	case THEME_SKELROOM:
-	case THEME_LIBRARY:
-		return currLvl._dDunType != DTYPE_CAVES && currLvl._dDunType != DTYPE_HELL; // TODO: use dType instead
-	case THEME_BLOODFOUNTAIN:
-		return _gbBFountainFlag;
-	case THEME_PURIFYINGFOUNTAIN:
-		return _gbPFountainFlag;
-	case THEME_ARMORSTAND:
-		return currLvl._dDunType != DTYPE_CATHEDRAL; // TODO: use dType instead
-	case THEME_CAULDRON:
-		return currLvl._dDunType == DTYPE_HELL && _gbCauldronFlag; // TODO: use dType instead
-	case THEME_MURKYFOUNTAIN:
-		return _gbMFountainFlag;
-	case THEME_TEARFOUNTAIN:
-		return _gbTFountainFlag;
-	case THEME_WEAPONRACK:
-		return currLvl._dDunType != DTYPE_CATHEDRAL; // TODO: use dType instead
-	case THEME_TREASURE:
-		return _gbTreasureFlag;
-	default:
-		ASSUME_UNREACHABLE
-		return true;
-	}
-}
-
-static bool SpecialThemeFit(BYTE tv, int theme)
+static bool SpecialThemeFit(int themeId, int themeType)
 {
 	bool rv;
+	BYTE req;
+	BYTE tv = themes[themeId]._tsTransVal;
 
-	if (!CheckThemeReqs(theme))
-		return false;
-
-	switch (theme) {
+	switch (themeType) {
 	case THEME_BARREL:
 	case THEME_MONSTPIT:
 		rv = true;
+		req = 0;
 		break;
 	case THEME_SHRINE:
 	case THEME_LIBRARY:
-		rv = TFit_Shrine(tv);
+		rv = _gbShrineFlag;
+		req = 1;
 		break;
 	case THEME_SKELROOM:
-		rv = TFit_SkelRoom(tv);
+		rv = _gbSkelRoomFlag;
+		req = 3;
 		break;
 	case THEME_BLOODFOUNTAIN:
-		rv = TFit_Obj5(tv);
+		rv = _gbBFountainFlag;
+		req = 3;
 		_gbBFountainFlag = false;
 		break;
 	case THEME_PURIFYINGFOUNTAIN:
-		rv = TFit_Obj5(tv);
+		rv = _gbPFountainFlag;
+		req = 3;
 		_gbPFountainFlag = false;
 		break;
 	case THEME_MURKYFOUNTAIN:
-		rv = TFit_Obj5(tv);
+		rv = _gbMFountainFlag;
+		req = 3;
 		_gbMFountainFlag = false;
 		break;
 	case THEME_TEARFOUNTAIN:
-		rv = TFit_Obj5(tv);
+		rv = _gbTFountainFlag;
+		req = 3;
 		_gbTFountainFlag = false;
 		break;
 	case THEME_CAULDRON:
-		rv = TFit_Obj5(tv);
+		rv = _gbCauldronFlag;
+		req = 3;
 		_gbCauldronFlag = false;
 		break;
 	case THEME_GOATSHRINE:
-		rv = TFit_GoatShrine(tv);
+		rv = _gbGoatFlag;
+		req = 3;
+		break;
+	case THEME_ARMORSTAND:
+		rv = _gbArmorFlag;
+		req = 2;
+		break;
+	case THEME_WEAPONRACK:
+		rv = _gbWeaponFlag;
+		req = 2;
 		break;
 	case THEME_TORTURE:
 	case THEME_DECAPITATED:
-	case THEME_ARMORSTAND:
 	case THEME_BRNCROSS:
-	case THEME_WEAPONRACK:
-		rv = TFit_Obj3(tv);
+		rv = true;
+		req = 2;
 		break;
 	case THEME_TREASURE:
-		rv = true;
+		rv = _gbTreasureFlag;
+		req = 0;
 		_gbTreasureFlag = false;
 		break;
 	default:
 		ASSUME_UNREACHABLE
+		rv = false;
+		req = 0;
 		break;
+	}
+
+	if (rv) {
+		switch (req) {
+		case 0:
+			break;
+		case 1:
+			rv = TFit_Shrine(tv);
+			break;
+		case 2:
+			rv = TFit_Obj3(tv);
+			break;
+		case 3:
+			rv = TFit_Obj5(tv);
+			break;
+		default:
+			ASSUME_UNREACHABLE
+		}
+    }
+	if (rv) {
+		themes[themeId]._tsType = themeType;
+		themes[themeId]._tsObjX = themex;
+		themes[themeId]._tsObjY = themey;
+		themes[themeId]._tsObjVar1 = themeVar1;
 	}
 
 	return rv;
@@ -368,14 +367,18 @@ void InitThemes()
 	if (currLvl._dLevelIdx >= DLV_HELL4) // there are no themes in hellfire (and on diablo-level)
 		return;
 
-	_gbArmorFlag = true;
+	// TODO: use dType instead
+	_gbShrineFlag = currLvl._dDunType != DTYPE_CAVES && currLvl._dDunType != DTYPE_HELL;
+	_gbSkelRoomFlag = _gbShrineFlag && numSkelTypes != 0;
+	_gbGoatFlag = numGoatTypes != 0;
+	_gbArmorFlag = currLvl._dDunType != DTYPE_CATHEDRAL;
+	_gbCauldronFlag = currLvl._dDunType == DTYPE_HELL;
 	_gbBFountainFlag = true;
-	_gbCauldronFlag = true;
 	_gbMFountainFlag = true;
 	_gbPFountainFlag = true;
 	_gbTFountainFlag = true;
 	_gbTreasureFlag = true;
-	_gbWeaponFlag = true;
+	_gbWeaponFlag = currLvl._dDunType != DTYPE_CATHEDRAL;
 
 	if (currLvl._dDunType == DTYPE_CATHEDRAL) { // TODO: use dType instead?
 		for (i = 0; i < numtrans && numthemes < MAXTHEMES; i++) {
@@ -391,8 +394,7 @@ void InitThemes()
 	}
 	if (QuestStatus(Q_ZHAR)) {
 		for (i = 0; i < numthemes; i++) {
-			if (SpecialThemeFit(themes[i]._tsTransVal, THEME_LIBRARY)) {
-				themes[i]._tsType = THEME_LIBRARY;
+			if (SpecialThemeFit(i, THEME_LIBRARY)) {
 				zharlib = i;
 				break;
 			}
@@ -401,9 +403,8 @@ void InitThemes()
 	for (i = 0; i < numthemes; i++) {
 		if (i != zharlib) {
 			j = ThemeGood[random_(0, lengthof(ThemeGood))];
-			while (!SpecialThemeFit(themes[i]._tsTransVal, j))
+			while (!SpecialThemeFit(i, j))
 				j = random_(0, NUM_THEMES);
-			themes[i]._tsType = j;
 		}
 	}
 }
@@ -525,22 +526,24 @@ static void Theme_Barrel(BYTE tv)
 /**
  * Theme_Shrine initializes the shrine theme.
  *
- * @param tv: theme id in the dungeon matrix.
+ * @param themeId: theme id.
+ * @param tv: room id in the dungeon matrix.
  */
-static void Theme_Shrine(BYTE tv)
+static void Theme_Shrine(int themeId, BYTE tv)
 {
+	int xx, yy;
 	const BYTE monstrnds[4] = { 6, 6, 3, 9 };
 
-	if (TFit_Shrine(tv)) {
-		if (themeVar1 == 1) {
-			AddObject(OBJ_CANDLE2, themex - 1, themey);
-			AddObject(OBJ_SHRINER, themex, themey);
-			AddObject(OBJ_CANDLE2, themex + 1, themey);
-		} else {
-			AddObject(OBJ_CANDLE2, themex, themey - 1);
-			AddObject(OBJ_SHRINEL, themex, themey);
-			AddObject(OBJ_CANDLE2, themex, themey + 1);
-		}
+	xx = themes[themeId]._tsObjX;
+	yy = themes[themeId]._tsObjY;
+	if (themes[themeId]._tsObjVar1 == 1) {
+		AddObject(OBJ_CANDLE2, xx - 1, yy);
+		AddObject(OBJ_SHRINER, xx, yy);
+		AddObject(OBJ_CANDLE2, xx + 1, yy);
+	} else {
+		AddObject(OBJ_CANDLE2, xx, yy - 1);
+		AddObject(OBJ_SHRINEL, xx, yy);
+		AddObject(OBJ_CANDLE2, xx, yy + 1);
 	}
 	PlaceThemeMonsts(tv, monstrnds[currLvl._dDunType - 1]); // TODO: use dType instead?
 }
@@ -586,21 +589,17 @@ static void AddSkelMonster(int x, int y)
 /**
  * Theme_SkelRoom initializes the skeleton room theme.
  *
- * @param tv: theme id in the dungeon matrix.
+ * @param themeId: theme id.
+ * @param tv: room id in the dungeon matrix.
  */
-static void Theme_SkelRoom(BYTE tv)
+static void Theme_SkelRoom(int themeId, BYTE tv)
 {
 	int xx, yy;
 	const BYTE monstrnds[4] = { 6, 7, 3, 9 };
 	BYTE monstrnd;
 
-	// assert(numSkelTypes != 0);
-	//if (!TFit_SkelRoom(tv))
-	if (!TFit_Obj5(tv))
-		return;
-
-	xx = themex;
-	yy = themey;
+	xx = themes[themeId]._tsObjX;
+	yy = themes[themeId]._tsObjY;
 
 	AddObject(OBJ_SKFIRE, xx, yy);
 
@@ -683,25 +682,26 @@ static void Theme_Treasure(BYTE tv)
 /**
  * Theme_Library initializes the library theme.
  *
- * @param tv: theme id in the dungeon matrix.
+ * @param themeId: theme id.
+ * @param tv: room id in the dungeon matrix.
  */
-static void Theme_Library(bool isZharLib, BYTE tv)
+static void Theme_Library(int themeId, BYTE tv)
 {
 	int xx, yy, oi;
 	const BYTE librnds[4] = { 1, 2, 2, 5 };
 	const BYTE monstrnds[4] = { 5, 7, 3, 9 };
 	BYTE librnd, monstrnd;
 
-	if (TFit_Shrine(tv)) {
-		if (themeVar1 == 1) {
-			AddObject(OBJ_BOOKCANDLE, themex - 1, themey);
-			AddObject(OBJ_BOOKCASER, themex, themey);
-			AddObject(OBJ_BOOKCANDLE, themex + 1, themey);
-		} else {
-			AddObject(OBJ_BOOKCANDLE, themex, themey - 1);
-			AddObject(OBJ_BOOKCASEL, themex, themey);
-			AddObject(OBJ_BOOKCANDLE, themex, themey + 1);
-		}
+	xx = themes[themeId]._tsObjX;
+	yy = themes[themeId]._tsObjY;
+	if (themes[themeId]._tsObjVar1 == 1) {
+		AddObject(OBJ_BOOKCANDLE, xx - 1, yy);
+		AddObject(OBJ_BOOKCASER, xx, yy);
+		AddObject(OBJ_BOOKCANDLE, xx + 1, yy);
+	} else {
+		AddObject(OBJ_BOOKCANDLE, xx, yy - 1);
+		AddObject(OBJ_BOOKCASEL, xx, yy);
+		AddObject(OBJ_BOOKCANDLE, xx, yy + 1);
 	}
 
 	librnd = librnds[currLvl._dDunType - 1];     // TODO: use dType instead?
@@ -718,7 +718,7 @@ static void Theme_Library(bool isZharLib, BYTE tv)
 		}
 	}
 
-	if (QuestStatus(Q_ZHAR) && isZharLib)
+	if (QuestStatus(Q_ZHAR) && themeId == zharlib)
 		return;
 
 	PlaceThemeMonsts(tv, monstrnd);
@@ -743,14 +743,15 @@ static void Theme_Torture(BYTE tv)
 
 /**
  * Theme_BloodFountain initializes the blood fountain theme.
- * @param tv: theme id in the dungeon matrix.
+ *
+ * @param themeId: theme id.
+ * @param tv: room id in the dungeon matrix.
  */
-static void Theme_BloodFountain(BYTE tv)
+static void Theme_BloodFountain(int themeId, BYTE tv)
 {
 	const BYTE monstrnds[4] = { 6, 8, 3, 9 };
 
-	if (TFit_Obj5(tv))
-		AddObject(OBJ_BLOODFTN, themex, themey);
+	AddObject(OBJ_BLOODFTN, themes[themeId]._tsObjX, themes[themeId]._tsObjY);
 	PlaceThemeMonsts(tv, monstrnds[currLvl._dDunType - 1]); // TODO: use dType instead?
 }
 
@@ -773,23 +774,24 @@ static void Theme_Decap(BYTE tv)
 /**
  * Theme_PurifyingFountain initializes the purifying fountain theme.
  *
- * @param tv: theme id in the dungeon matrix.
+ * @param themeId: theme id.
+ * @param tv: room id in the dungeon matrix.
  */
-static void Theme_PurifyingFountain(BYTE tv)
+static void Theme_PurifyingFountain(int themeId, BYTE tv)
 {
 	const BYTE monstrnds[4] = { 6, 7, 3, 9 };
 
-	if (TFit_Obj5(tv))
-		AddObject(OBJ_PURIFYINGFTN, themex, themey);
+	AddObject(OBJ_PURIFYINGFTN, themes[themeId]._tsObjX, themes[themeId]._tsObjY);
 	PlaceThemeMonsts(tv, monstrnds[currLvl._dDunType - 1]); // TODO: use dType instead?
 }
 
 /**
  * Theme_ArmorStand initializes the armor stand theme.
  *
- * @param tv: theme id in the dungeon matrix.
+ * @param themeId: theme id.
+ * @param tv: room id in the dungeon matrix.
  */
-static void Theme_ArmorStand(BYTE tv)
+static void Theme_ArmorStand(int themeId, BYTE tv)
 {
 	const BYTE armorrnds[4] = { 6, 8, 3, 8 };
 	const BYTE monstrnds[4] = { 6, 7, 3, 9 };
@@ -797,73 +799,73 @@ static void Theme_ArmorStand(BYTE tv)
 	const BYTE monstrnd = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
 
 	if (_gbArmorFlag) {
-		if (TFit_Obj3(tv))
-			AddObject(OBJ_ARMORSTAND, themex, themey);
+		_gbArmorFlag = false;
+		AddObject(OBJ_ARMORSTAND, themes[themeId]._tsObjX, themes[themeId]._tsObjY);
 	}
 	Place_Obj3(tv, OBJ_ARMORSTANDN, armorrnd);
 	PlaceThemeMonsts(tv, monstrnd);
-	_gbArmorFlag = false;
 }
 
 /**
  * Theme_GoatShrine initializes the goat shrine theme.
  *
- * @param tv: theme id in the dungeon matrix.
+ * @param themeId: theme id.
+ * @param tv: room id in the dungeon matrix.
  */
-static void Theme_GoatShrine(BYTE tv)
+static void Theme_GoatShrine(int themeId, BYTE tv)
 {
-	int i, xx, yy;
+	int i, xx, yy, x, y;
 
-	if (!TFit_GoatShrine(tv))
-		return;
-	AddObject(OBJ_GOATSHRINE, themex, themey);
+	xx = themes[themeId]._tsObjX;
+	yy = themes[themeId]._tsObjY;
+	AddObject(OBJ_GOATSHRINE, xx, yy);
 	for (i = 0; i < lengthof(offset_x); i++) {
-		xx = themex + offset_x[i];
-		yy = themey + offset_y[i];
-		assert(dTransVal[xx][yy] == tv && !nSolidTable[dPiece[xx][yy]]);
-		AddMonster(mapGoatTypes[0], xx, yy); // OPPOSITE(i)
+		x = xx + offset_x[i];
+		y = yy + offset_y[i];
+		assert(dTransVal[x][y] == tv && !nSolidTable[dPiece[x][y]]);
+		AddMonster(mapGoatTypes[0], x, y); // OPPOSITE(i)
 	}
 }
 
 /**
  * Theme_Cauldron initializes the cauldron theme.
  *
- * @param tv: theme id in the dungeon matrix.
+ * @param themeId: theme id.
+ * @param tv: room id in the dungeon matrix.
  */
-static void Theme_Cauldron(BYTE tv)
+static void Theme_Cauldron(int themeId, BYTE tv)
 {
 	const BYTE monstrnds[4] = { 6, 7, 3, 9 };
 
-	if (TFit_Obj5(tv))
-		AddObject(OBJ_CAULDRON, themex, themey);
+	AddObject(OBJ_CAULDRON, themes[themeId]._tsObjX, themes[themeId]._tsObjY);
 	PlaceThemeMonsts(tv, monstrnds[currLvl._dDunType - 1]); // TODO: use dType instead?
 }
 
 /**
  * Theme_MurkyFountain initializes the murky fountain theme.
  *
- * @param tv: theme id in the dungeon matrix.
+ * @param themeId: theme id.
+ * @param tv: room id in the dungeon matrix.
  */
-static void Theme_MurkyFountain(BYTE tv)
+static void Theme_MurkyFountain(int themeId, BYTE tv)
 {
 	const BYTE monstrnds[4] = { 6, 7, 3, 9 };
 
-	if (TFit_Obj5(tv))
-		AddObject(OBJ_MURKYFTN, themex, themey);
+	AddObject(OBJ_MURKYFTN, themes[themeId]._tsObjX, themes[themeId]._tsObjY);
 	PlaceThemeMonsts(tv, monstrnds[currLvl._dDunType - 1]); // TODO: use dType instead?
 }
 
 /**
  * Theme_TearFountain initializes the tear fountain theme.
  *
- * @param tv: theme id in the dungeon matrix.
+ * @param themeId: theme id.
+ * @param tv: room id in the dungeon matrix.
  */
-static void Theme_TearFountain(BYTE tv)
+static void Theme_TearFountain(int themeId, BYTE tv)
 {
 	const BYTE monstrnds[4] = { 6, 7, 3, 9 };
 
-	if (TFit_Obj5(tv))
-		AddObject(OBJ_TEARFTN, themex, themey);
+	AddObject(OBJ_TEARFTN, themes[themeId]._tsObjX, themes[themeId]._tsObjY);
 	PlaceThemeMonsts(tv, monstrnds[currLvl._dDunType - 1]); // TODO: use dType instead?
 }
 
@@ -886,9 +888,10 @@ static void Theme_BrnCross(BYTE tv)
 /**
  * Theme_WeaponRack initializes the weapon rack theme.
  *
- * @param tv: theme id in the dungeon matrix.
+ * @param themeId: theme id.
+ * @param tv: room id in the dungeon matrix.
  */
-static void Theme_WeaponRack(BYTE tv)
+static void Theme_WeaponRack(int themeId, BYTE tv)
 {
 	int type;
 	const BYTE weaponrnds[4] = { 6, 8, 5, 8 };
@@ -899,8 +902,7 @@ static void Theme_WeaponRack(BYTE tv)
 	static_assert(OBJ_WEAPONRACKL + 2 == OBJ_WEAPONRACKR, "Theme_WeaponRack depends on the order of WEAPONRACKL/R");
 	type = OBJ_WEAPONRACKL + 2 * random_(0, 2);
 	if (_gbWeaponFlag) {
-		if (TFit_Obj3(tv))
-			AddObject(type, themex, themey);
+		AddObject(type, themex, themey);
 	}
 	static_assert(OBJ_WEAPONRACKL + 1 == OBJ_WEAPONRACKLN, "Theme_WeaponRack depends on the order of WEAPONRACKL(N)");
 	static_assert(OBJ_WEAPONRACKR + 1 == OBJ_WEAPONRACKRN, "Theme_WeaponRack depends on the order of WEAPONRACKR(N)");
@@ -941,52 +943,52 @@ void CreateThemeRooms()
 			Theme_Barrel(tv);
 			break;
 		case THEME_SHRINE:
-			Theme_Shrine(tv);
+			Theme_Shrine(i, tv);
 			break;
 		case THEME_MONSTPIT:
 			Theme_MonstPit(tv);
 			break;
 		case THEME_SKELROOM:
-			Theme_SkelRoom(tv);
+			Theme_SkelRoom(i, tv);
 			break;
 		case THEME_TREASURE:
 			Theme_Treasure(tv);
 			break;
 		case THEME_LIBRARY:
-			Theme_Library(i == zharlib, tv);
+			Theme_Library(i, tv);
 			break;
 		case THEME_TORTURE:
 			Theme_Torture(tv);
 			break;
 		case THEME_BLOODFOUNTAIN:
-			Theme_BloodFountain(tv);
+			Theme_BloodFountain(i, tv);
 			break;
 		case THEME_DECAPITATED:
 			Theme_Decap(tv);
 			break;
 		case THEME_PURIFYINGFOUNTAIN:
-			Theme_PurifyingFountain(tv);
+			Theme_PurifyingFountain(i, tv);
 			break;
 		case THEME_ARMORSTAND:
-			Theme_ArmorStand(tv);
+			Theme_ArmorStand(i, tv);
 			break;
 		case THEME_GOATSHRINE:
-			Theme_GoatShrine(tv);
+			Theme_GoatShrine(i, tv);
 			break;
 		case THEME_CAULDRON:
-			Theme_Cauldron(tv);
+			Theme_Cauldron(i, tv);
 			break;
 		case THEME_MURKYFOUNTAIN:
-			Theme_MurkyFountain(tv);
+			Theme_MurkyFountain(i, tv);
 			break;
 		case THEME_TEARFOUNTAIN:
-			Theme_TearFountain(tv);
+			Theme_TearFountain(i, tv);
 			break;
 		case THEME_BRNCROSS:
 			Theme_BrnCross(tv);
 			break;
 		case THEME_WEAPONRACK:
-			Theme_WeaponRack(tv);
+			Theme_WeaponRack(i, tv);
 			break;
 		default:
 			ASSUME_UNREACHABLE
