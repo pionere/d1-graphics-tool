@@ -615,7 +615,7 @@ void CelView::ShowContextMenu(const QPoint &pos)
     contextMenu.exec(mapToGlobal(pos));
 }
 
-void CelView::on_framesGroupCheckBox_stateChanged(int state)
+void CelView::on_framesGroupCheckBox_clicked()
 {
     // update frameIndexEdit and frameNumberEdit
     this->update();
