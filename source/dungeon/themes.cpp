@@ -76,7 +76,10 @@ static int TFit_Shrine(BYTE tv)
 					// assert(dObject[xx][yy] == 0);
 					// assert(dObject[xx - 1][yy] == 0);
 					// assert(dObject[xx + 1][yy] == 0);
-					drlg.thLocs[numMatches] = { xx, yy, 1, 0 };
+					drlg.thLocs[numMatches].tpdx = xx;
+					drlg.thLocs[numMatches].tpdy = yy;
+					drlg.thLocs[numMatches].tpdvar1 = 1;
+					drlg.thLocs[numMatches].tpdvar2 = 0;
 					numMatches++;
 					// if (numMatches == lengthof(drlg.thLocs))
 					//	goto done;
@@ -95,7 +98,10 @@ static int TFit_Shrine(BYTE tv)
 					// assert(dObject[xx][yy] == 0);
 					// assert(dObject[xx][yy - 1] == 0);
 					// assert(dObject[xx][yy + 1] == 0);
-					drlg.thLocs[numMatches] = { xx, yy, 0, 0 };
+					drlg.thLocs[numMatches].tpdx = xx;
+					drlg.thLocs[numMatches].tpdy = yy;
+					drlg.thLocs[numMatches].tpdvar1 = 0;
+					drlg.thLocs[numMatches].tpdvar2 = 0;
 					numMatches++;
 					// if (numMatches == lengthof(drlg.thLocs))
 					//	goto done;
@@ -128,7 +134,10 @@ static int TFit_Obj5(BYTE tv)
 					}
 				}
 				if (i == lengthof(trm5x)) {
-					drlg.thLocs[numMatches] = { xx, yy, 0, 0 };
+					drlg.thLocs[numMatches].tpdx = xx;
+					drlg.thLocs[numMatches].tpdy = yy;
+					drlg.thLocs[numMatches].tpdvar1 = 0;
+					drlg.thLocs[numMatches].tpdvar2 = 0;
 					numMatches++;
 					// if (numMatches == lengthof(drlg.thLocs))
 					//	goto done;
@@ -170,7 +179,10 @@ static int TFit_Obj3(BYTE tv)
 	for (xx = DBORDERX; xx < DBORDERX + DSIZEX; xx++) {
 		for (yy = DBORDERY; yy < DBORDERY + DSIZEY; yy++) {
 			if (CheckThemeObj3(xx, yy, tv)) {
-				drlg.thLocs[numMatches] = { xx, yy, 0, 0 };
+				drlg.thLocs[numMatches].tpdx = xx;
+				drlg.thLocs[numMatches].tpdy = yy;
+				drlg.thLocs[numMatches].tpdvar1 = 0;
+				drlg.thLocs[numMatches].tpdvar2 = 0;
 				numMatches++;
 				// if (numMatches == lengthof(drlg.thLocs))
 				//	goto done;
@@ -285,6 +297,7 @@ static bool SpecialThemeFit(int themeId, int themeType)
 	themes[themeId]._tsObjX = drlg.thLocs[loc].tpdx;
 	themes[themeId]._tsObjY = drlg.thLocs[loc].tpdy;
 	themes[themeId]._tsObjVar1 = drlg.thLocs[loc].tpdvar1;
+	// themes[themeId]._tsObjVar2 = drlg.thLocs[loc].tpdvar2;
 	return true;
 }
 
