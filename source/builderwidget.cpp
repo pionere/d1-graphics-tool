@@ -296,10 +296,10 @@ static void drawHollowDiamond(QImage &image, unsigned width, const QColor &color
     }
 }
 
-static void maskImage(QImage &image)
+/*static void maskImage(QImage &image)
 {
     int y = 0;
-    unsigned width = image.width();
+    int width = image.width();
     QRgb *destBits = reinterpret_cast<QRgb *>(image.scanLine(0 + CELL_BORDER + y));
     QRgb srcBit = QColor(Qt::transparent).rgba();
     for (y = image.height() - 1; y >= 0; y--) {
@@ -309,7 +309,7 @@ static void maskImage(QImage &image)
         }
         destBits += width + 2 * CELL_BORDER; // image.width();
     }
-}
+}*/
 
 void BuilderWidget::dunHovered(const QPoint &cell)
 {
@@ -653,7 +653,7 @@ void BuilderWidget::on_nextTileButton_clicked()
 
 void BuilderWidget::on_lastTileButton_clicked()
 {
-    this->setTileIndex(this->til->getTileCount() - 1);
+    this->setTileIndex(this->tileset->til->getTileCount() - 1);
 }
 
 void BuilderWidget::on_tileLineEdit_returnPressed()
@@ -702,7 +702,7 @@ void BuilderWidget::on_nextSubtileButton_clicked()
 
 void BuilderWidget::on_lastSubtileButton_clicked()
 {
-    this->setSubtileIndex(this->min->getSubtileCount() - 1);
+    this->setSubtileIndex(this->tileset->min->getSubtileCount() - 1);
 }
 
 void BuilderWidget::on_subtileLineEdit_returnPressed()
