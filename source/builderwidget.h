@@ -75,6 +75,8 @@ private:
     void setObjectIndex(int objectIndex);
     void setMonsterType(DunMonsterType monType);
 
+    void redrawOverlay(bool forceRedraw);
+
 public slots:
     bool dunClicked(const QPoint &cell, bool first);
     void dunHovered(const QPoint &cell);
@@ -126,6 +128,7 @@ private:
     bool moving = false;
     bool moved = false;
     QPoint lastPos;
+    QPoint lastHoverPos;
     int mode = BEM_TILE;  // builder_edit_mode
     int overlayType = -1; // builder_edit_mode
 
