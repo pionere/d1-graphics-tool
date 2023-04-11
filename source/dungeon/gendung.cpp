@@ -623,7 +623,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 			} else {
 				tpm = 0;
 			}
-			tdp[2 * i * DSIZEY + 2 * j] = tpm;
+			drlg.transDirMap[2 * i + 0][2 * j + 0] = tpm;
 			// 3. subtile
 			if (tvm & (1 << 2)) {
 				tpm = (1 << 3) | (1 << 4) | (1 << 0); // DIR_NE, DIR_E, DIR_SE
@@ -634,7 +634,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 			} else {
 				tpm = 0;
 			}
-			tdp[2 * i * DSIZEY + 2 * j + 1] = tpm;
+			drlg.transDirMap[2 * i + 0][2 * j + 1] = tpm;
 			// 2. subtile
 			if (tvm & (1 << 1)) {
 				tpm = (1 << 6) | (1 << 5) | (1 << 1); // DIR_SW, DIR_W, DIR_NW
@@ -645,7 +645,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 			} else {
 				tpm = 0;
 			}
-			tdp[(2 * i + 1) * DSIZEY + 2 * j] = tpm;
+			drlg.transDirMap[2 * i + 1][2 * j + 0] = tpm;
 			// 4. subtile
 			if (tvm & (1 << 3)) {
 				tpm = (1 << 0) | (1 << 7) | (1 << 6); // DIR_SE, DIR_S, DIR_SW
@@ -656,7 +656,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 			} else {
 				tpm = 0;
 			}
-			tdp[(2 * i + 1) * DSIZEY + 2 * j + 1] = tpm;
+			drlg.transDirMap[2 * i + 1][2 * j + 1] = tpm;
 		}
 	}
 	// create the rooms
@@ -716,8 +716,6 @@ void DRLG_LoadSP(int idx, BYTE bv)
 
 void DRLG_SetPC()
 {
-	// int x, y, w, h, i, j, x0, x1, y0, y1;
-
 	for (int n = lengthof(pSetPieces) - 1; n >= 0; n--) {
 		if (pSetPieces[n]._spData != NULL) { // pSetPieces[n]._sptype != SPT_NONE
 			int x = pSetPieces[n]._spx;
@@ -725,16 +723,6 @@ void DRLG_SetPC()
 			int w = SwapLE16(*(uint16_t*)&pSetPieces[n]._spData[0]);
 			int h = SwapLE16(*(uint16_t*)&pSetPieces[n]._spData[2]);
 
-			/*x0 = 2 * x + DBORDERX;
-			y0 = 2 * y + DBORDERY;
-			x1 = 2 * w + x0;
-			y1 = 2 * h + y0;
-
-			for (j = y0; j < y1; j++) {
-				for (i = x0; i < x1; i++) {
-					dFlags[i][j] |= BFLAG_POPULATED;
-				}
-			}*/
 			x = 2 * x + DBORDERX;
 			y = 2 * y + DBORDERY;
 
@@ -848,7 +836,7 @@ static POS32 DRLG_FitThemeRoom(int floor, int x, int y, int minSize, int maxSize
 	return { w - 2, h - 2 };
 }
 
-static void DRLG_CreateThemeRoom(int themeIndex)
+static void DRLG_CreateThemeRoom(int themeIndex, BYTE floor)
 {
 	int xx, yy;
 	const int lx = themes[themeIndex]._tsx;
@@ -857,6 +845,12 @@ static void DRLG_CreateThemeRoom(int themeIndex)
 	const int hy = ly + themes[themeIndex]._tsHeight;
 	BYTE v;
 
+	// inner tiles
+	for (yy = ly + 1; yy < hy - 1; yy++) {
+		for (xx = lx + 1; xx < hx - 1; xx++) {
+			dungeon[xx][yy] = floor;
+		}
+	}
 	// left/right side
 	v = currLvl._dDunType == DTYPE_CAVES ? 137 : 1;
 	for (yy = ly; yy < hy; yy++) {
@@ -868,13 +862,6 @@ static void DRLG_CreateThemeRoom(int themeIndex)
 	for (xx = lx; xx < hx; xx++) {
 		dungeon[xx][ly] = v;
 		dungeon[xx][hy - 1] = v;
-	}
-	// inner tiles
-	v = currLvl._dDunType == DTYPE_CATACOMBS ? 3 : (currLvl._dDunType == DTYPE_CAVES ? 7 : 6);
-	for (yy = ly + 1; yy < hy - 1; yy++) {
-		for (xx = lx + 1; xx < hx - 1; xx++) {
-			dungeon[xx][yy] = v;
-		}
 	}
 	// corners
 	if (currLvl._dDunType == DTYPE_CATACOMBS) {
@@ -929,7 +916,7 @@ static void DRLG_CreateThemeRoom(int themeIndex)
 	}
 }
 
-void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize)
+void DRLG_PlaceThemeRooms(int minSize, int maxSize, BYTE floor, int freq, bool rndSize)
 {
 	int i, j;
 	int min;
@@ -975,7 +962,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 			themes[numthemes]._tsy = j + 1;
 			themes[numthemes]._tsWidth = tArea.x;
 			themes[numthemes]._tsHeight = tArea.y;
-			DRLG_CreateThemeRoom(numthemes);
+			DRLG_CreateThemeRoom(numthemes, floor);
 			numthemes++;
 		}
 	}
