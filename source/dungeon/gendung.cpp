@@ -836,7 +836,7 @@ static POS32 DRLG_FitThemeRoom(int floor, int x, int y, int minSize, int maxSize
 	return { w - 2, h - 2 };
 }
 
-static void DRLG_CreateThemeRoom(int themeIndex, BYTE floor)
+static void DRLG_CreateThemeRoom(int themeIndex)
 {
 	int xx, yy;
 	const int lx = themes[themeIndex]._tsx;
@@ -845,12 +845,6 @@ static void DRLG_CreateThemeRoom(int themeIndex, BYTE floor)
 	const int hy = ly + themes[themeIndex]._tsHeight;
 	BYTE v;
 
-	// inner tiles
-	for (yy = ly + 1; yy < hy - 1; yy++) {
-		for (xx = lx + 1; xx < hx - 1; xx++) {
-			dungeon[xx][yy] = floor;
-		}
-	}
 	// left/right side
 	v = currLvl._dDunType == DTYPE_CAVES ? 137 : 1;
 	for (yy = ly; yy < hy; yy++) {
@@ -862,6 +856,13 @@ static void DRLG_CreateThemeRoom(int themeIndex, BYTE floor)
 	for (xx = lx; xx < hx; xx++) {
 		dungeon[xx][ly] = v;
 		dungeon[xx][hy - 1] = v;
+	}
+	// inner tiles
+	v = currLvl._dDunType == DTYPE_CATACOMBS ? 3 : (currLvl._dDunType == DTYPE_CAVES ? 7 : 6);
+	for (yy = ly + 1; yy < hy - 1; yy++) {
+		for (xx = lx + 1; xx < hx - 1; xx++) {
+			dungeon[xx][yy] = v;
+		}
 	}
 	// corners
 	if (currLvl._dDunType == DTYPE_CATACOMBS) {
@@ -916,7 +917,7 @@ static void DRLG_CreateThemeRoom(int themeIndex, BYTE floor)
 	}
 }
 
-void DRLG_PlaceThemeRooms(int minSize, int maxSize, BYTE floor, int freq, bool rndSize)
+void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize)
 {
 	int i, j;
 	int min;
@@ -962,7 +963,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, BYTE floor, int freq, bool r
 			themes[numthemes]._tsy = j + 1;
 			themes[numthemes]._tsWidth = tArea.x;
 			themes[numthemes]._tsHeight = tArea.y;
-			DRLG_CreateThemeRoom(numthemes, floor);
+			DRLG_CreateThemeRoom(numthemes);
 			numthemes++;
 		}
 	}
