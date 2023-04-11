@@ -5,7 +5,6 @@
 #include <QDropEvent>
 #include <QGraphicsScene>
 #include <QGraphicsSceneDragDropEvent>
-// #include <QGraphicsSceneHoverEvent>
 #include <QGraphicsSceneMouseEvent>
 #include <QPoint>
 #include <QStringList>
@@ -51,7 +50,7 @@ private slots:
     void dropEvent(QGraphicsSceneDragDropEvent *event) override;
 
 signals:
-    void framePixelClicked(const QPoint &pos, bool first);
+    // void framePixelClicked(const QPoint &pos, bool first);
     // void framePixelHovered(const QPoint &pos);
 
 private:

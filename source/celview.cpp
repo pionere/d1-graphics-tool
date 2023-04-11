@@ -8,7 +8,6 @@
 #include <QGraphicsPixmapItem>
 #include <QImageReader>
 #include <QMenu>
-#include <QMessageBox>
 #include <QMimeData>
 
 #include "config.h"
@@ -70,57 +69,6 @@ void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     this->mouseEvent(event, false);
 }
-
-/*bool CelScene::event(QEvent *evt)
-{
-    if (evt->type() == QEvent::MouseMove) {
-        QMessageBox::critical(nullptr, "Err", QString("MouseMove"));
-        return true;
-    }
-    if (evt->type() == QEvent::GraphicsSceneMouseMove) {
-        QMessageBox::critical(nullptr, "Err", QString("GraphicsSceneMouseMove"));
-        return true;
-    }
-    if (evt->type() == QEvent::HoverMove) {
-        QMessageBox::critical(nullptr, "Err", QString("HoverMove"));
-        return true;
-    }
-    if (evt->type() == QEvent::HoverEnter) {
-        QMessageBox::critical(nullptr, "Err", QString("HoverEnter"));
-        return true;
-    }
-    if (evt->type() == QEvent::HoverLeave) {
-        QMessageBox::critical(nullptr, "Err", QString("HoverLeave"));
-        return true;
-    }
-    if (evt->type() == QEvent::GraphicsSceneHoverMove) {
-        QMessageBox::critical(nullptr, "Err", QString("GraphicsSceneHoverMove"));
-        return true;
-    }
-    if (evt->type() == QEvent::GraphicsSceneHoverEnter) {
-        QMessageBox::critical(nullptr, "Err", QString("HoverEnter"));
-        return true;
-    }
-    if (evt->type() == QEvent::GraphicsSceneHoverLeave) {
-        QMessageBox::critical(nullptr, "Err", QString("GraphicsSceneHoverLeave"));
-        return true;
-    }
-    return QGraphicsScene::event(evt);
-}*/
-
-/*void CelScene::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
-{
-    // emit this->framePixelHovered(this->lastPos);
-    QPointF scenePos = event->scenePos();
-    QPoint currPos = QPoint(scenePos.x(), scenePos.y());
-    QObject *view = this->parent();
-    CelView *celView = qobject_cast<CelView *>(view);
-    if (celView != nullptr) {
-        celView->framePixelHovered(currPos);
-    } else {
-        qobject_cast<LevelCelView *>(view)->framePixelHovered(currPos);
-    }
-}*/
 
 void CelScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
 {
