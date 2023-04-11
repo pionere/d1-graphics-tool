@@ -106,6 +106,18 @@ inline void copy_cstr(char (&dest)[N1], const char (&src)[N2])
 	memcpy(dest, src, std::min(N1, (unsigned)(((N2 + sizeof(int) - 1) / sizeof(int)) * sizeof(int))));
 }
 
+/*  SStrCopy @ 501
+ *
+ *  Copies a string from src to dest (including NULL terminator)
+ *  until the max_length is reached.
+ *
+ *  dest:         The destination array.
+ *  src:          The source array.
+ *  max_length:   The maximum length of dest.
+ *
+ */
+void SStrCopy(char* dest, const char* src, int max_length);
+
 DEVILUTION_END_NAMESPACE
 
 #endif /* __ENGINE_H__ */
