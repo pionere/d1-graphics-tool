@@ -90,12 +90,24 @@ private slots:
 
     void on_builderModeComboBox_activated(int index);
 
+    void on_firstTileButton_clicked();
+    void on_previousTileButton_clicked();
+    void on_nextTileButton_clicked();
+    void on_lastTileButton_clicked();
     void on_tileLineEdit_escPressed();
     void on_tileLineEdit_returnPressed();
+
     void on_tileProtectionModeComboBox_activated(int index);
+
+    void on_firstSubtileButton_clicked();
+    void on_previousSubtileButton_clicked();
+    void on_nextSubtileButton_clicked();
+    void on_lastSubtileButton_clicked();
     void on_subtileLineEdit_escPressed();
     void on_subtileLineEdit_returnPressed();
+
     void on_subtileProtectionModeComboBox_activated(int index);
+
     void on_objectLineEdit_escPressed();
     void on_objectLineEdit_returnPressed();
     void on_objectComboBox_activated(int index);

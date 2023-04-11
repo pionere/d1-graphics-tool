@@ -627,6 +627,35 @@ void BuilderWidget::setMonsterType(DunMonsterType monType)
     this->overlayType = -1;
 }
 
+void BuilderWidget::on_firstTileButton_clicked()
+{
+    this->setTileIndex(0);
+}
+
+void BuilderWidget::on_previousTileButton_clicked()
+{
+    int tileIndex = this->currentTileIndex - 1;
+    if (tileIndex < 0) {
+        tileIndex = 0;
+    }
+    this->setTileIndex(tileIndex);
+}
+
+void BuilderWidget::on_nextTileButton_clicked()
+{
+    int tileIndex = this->currentTileIndex + 1;
+    int tileIndexLimit = this->tileset->til->getTileCount();
+    if (tileIndex == tileIndexLimit) {
+        tileIndex = tileIndexLimit - 1;
+    }
+    this->setTileIndex(tileIndex);
+}
+
+void BuilderWidget::on_lastTileButton_clicked()
+{
+    this->setTileIndex(this->til->getTileCount() - 1);
+}
+
 void BuilderWidget::on_tileLineEdit_returnPressed()
 {
     int tileIndex = this->ui->tileLineEdit->text().toInt();
@@ -645,6 +674,35 @@ void BuilderWidget::on_tileLineEdit_escPressed()
 void BuilderWidget::on_tileProtectionModeComboBox_activated(int index)
 {
     this->overlayType = -1;
+}
+
+void BuilderWidget::on_firstSubtileButton_clicked()
+{
+    this->setSubtileIndex(0);
+}
+
+void BuilderWidget::on_previousSubtileButton_clicked()
+{
+    int subtileIndex = this->currentSubtileIndex - 1;
+    if (subtileIndex < 0) {
+        subtileIndex = 0;
+    }
+    this->setSubtileIndex(subtileIndex);
+}
+
+void BuilderWidget::on_nextSubtileButton_clicked()
+{
+    int subtileIndex = this->currentSubtileIndex + 1;
+    int subtileIndexLimit = this->tileset->min->getSubtileCount();
+    if (subtileIndex == subtileIndexLimit) {
+        subtileIndex = subtileIndexLimit - 1;
+    }
+    this->setSubtileIndex(subtileIndex);
+}
+
+void BuilderWidget::on_lastSubtileButton_clicked()
+{
+    this->setSubtileIndex(this->min->getSubtileCount() - 1);
 }
 
 void BuilderWidget::on_subtileLineEdit_returnPressed()
