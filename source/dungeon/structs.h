@@ -530,6 +530,18 @@ typedef struct ROOMHALLNODE {
 	int nHalldir;
 } ROOMHALLNODE;
 
+typedef struct ThemePosDir {
+	BYTE tpdx;
+	BYTE tpdy;
+	BYTE tpdvar1;
+	BYTE tpdvar2; // unused
+} ThemePosDir;
+
+/** The number of generated rooms in catacombs. */
+#define L2_MAXROOMS 32
+/** Possible matching locations in a theme room. */
+#define TH_SHRINES ((DSIZEX * DSIZEY) / sizeof(ThemePosDir))
+
 typedef struct DrlgMem {
 	union {
 		ROOMHALLNODE RoomList[L2_MAXROOMS]; // drlg_l2
@@ -537,6 +549,7 @@ typedef struct DrlgMem {
 		BYTE transDirMap[DSIZEX][DSIZEY];   // drlg_l1, drlg_l2, drlg_l3, drlg_l4 (gendung)
 		BYTE lockoutMap[DMAXX][DMAXY];      // drlg_l3
 		BYTE dungBlock[L4BLOCKX][L4BLOCKY]; // drlg_l4
+		ThemePosDir thLocs[TH_SHRINES];     // themes
 	};
 } DrlgMem;
 
