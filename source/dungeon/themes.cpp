@@ -164,7 +164,7 @@ static bool CheckThemeObj3(int x, int y, BYTE tv)
 
 static int TFit_Obj3(BYTE tv)
 {
-	int xx, yy;
+	int xx, yy, numMatches;
 
 	numMatches = 0;
 	for (xx = DBORDERX; xx < DBORDERX + DSIZEX; xx++) {
@@ -397,8 +397,8 @@ void HoldThemeRooms()
 	if (currLvl._dDunType == DTYPE_CATHEDRAL) { // TODO: use dType instead?
 		for (i = 0; i < numthemes; i++) {
 			v = themes[i]._tsTransVal;
-			for (yy = DBORDERY; yy < DBORDERY + DSIZEY; yy++) {
-				for (xx = DBORDERX; xx < DBORDERX + DSIZEX; xx++) {
+			for (xx = DBORDERX; xx < DBORDERX + DSIZEX; xx++) {
+				for (yy = DBORDERY; yy < DBORDERY + DSIZEY; yy++) {
 					if (dTransVal[xx][yy] == v) {
 						dFlags[xx][yy] |= BFLAG_POPULATED;
 					}
@@ -431,8 +431,8 @@ static void Place_Obj3(BYTE tv, int type, int rndfrq)
 {
 	int xx, yy;
 	// assert(rndfrq > 0);
-	for (yy = DBORDERY + 1; yy < DBORDERY + DSIZEY - 1; yy++) {
-		for (xx = DBORDERX + 1; xx < DBORDERX + DSIZEX - 1; xx++) {
+	for (xx = DBORDERX + 1; xx < DBORDERX + DSIZEX - 1; xx++) {
+		for (yy = DBORDERY + 1; yy < DBORDERY + DSIZEY - 1; yy++) {
 			if (CheckThemeObj3(xx, yy, tv) && random_low(0, rndfrq) == 0) {
 				AddObject(type, xx, yy);
 			}
@@ -460,8 +460,8 @@ static void PlaceThemeMonsts(BYTE tv, int rndfrq)
 	}
 	// assert(numscattypes > 0);
 	mtype = scattertypes[random_low(0, numscattypes)];
-	for (yy = DBORDERY; yy < DBORDERY + DSIZEY; yy++) {
-		for (xx = DBORDERX; xx < DBORDERX + DSIZEX; xx++) {
+	for (xx = DBORDERX; xx < DBORDERX + DSIZEX; xx++) {
+		for (yy = DBORDERY; yy < DBORDERY + DSIZEY; yy++) {
 			if (dTransVal[xx][yy] == tv && (nSolidTable[dPiece[xx][yy]] | dItem[xx][yy] | dObject[xx][yy]) == 0) {
 				if (random_low(0, rndfrq) == 0) {
 					AddMonster(mtype, xx, yy);
@@ -484,8 +484,8 @@ static void Theme_Barrel(BYTE tv)
 	const BYTE barrnd = barrnds[currLvl._dDunType - 1];     // TODO: use dType instead?
 	const BYTE monstrnd = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
 
-	for (yy = DBORDERY; yy < DBORDERY + DSIZEY; yy++) {
-		for (xx = DBORDERX; xx < DBORDERX + DSIZEX; xx++) {
+	for (xx = DBORDERX; xx < DBORDERX + DSIZEX; xx++) {
+		for (yy = DBORDERY; yy < DBORDERY + DSIZEY; yy++) {
 			if (dTransVal[xx][yy] == tv && !nSolidTable[dPiece[xx][yy]]) {
 				if (random_low(0, barrnd) == 0) {
 					r = random_low(0, barrnd) == 0 ? OBJ_BARREL : OBJ_BARRELEX;
@@ -639,8 +639,8 @@ static void Theme_Treasure(BYTE tv)
 	const BYTE treasrnd = treasrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
 	const BYTE monstrnd = monstrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
 
-	for (yy = DBORDERY; yy < DBORDERY + DSIZEY; yy++) {
-		for (xx = DBORDERX; xx < DBORDERX + DSIZEX; xx++) {
+	for (xx = DBORDERX; xx < DBORDERX + DSIZEX; xx++) {
+		for (yy = DBORDERY; yy < DBORDERY + DSIZEY; yy++) {
 			if (dTransVal[xx][yy] == tv && !nSolidTable[dPiece[xx][yy]]) {
 				if (random_low(0, treasrnd) == 0) {
 					CreateTypeItem(xx, yy, CFDQ_NORMAL, ITYPE_GOLD, IMISC_NONE);
