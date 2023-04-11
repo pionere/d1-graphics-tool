@@ -114,13 +114,38 @@
     <widget class="QWidget" name="tileModeWidget">
      <layout class="QGridLayout">
       <item row="0" column="0">
-       <widget class="QLabel">
+       <widget class="QPushButton" name="firstTileButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>First tile</string>
+        </property>
         <property name="text">
-         <string>Id:</string>
+         <string notr="true">|&lt;</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
+       <widget class="QPushButton" name="previousTileButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Previous tile</string>
+        </property>
+        <property name="text">
+         <string notr="true">&lt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
        <widget class="LineEditWidget" name="tileLineEdit">
         <property name="charWidth">
          <number>4</number>
@@ -130,12 +155,37 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="nextTileButton">
+        <property name="minimumWidth">
+         <number>40</number>
         </property>
-       </spacer>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Next tile</string>
+        </property>
+        <property name="text">
+         <string notr="true">&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QPushButton" name="lastTileButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Last tile</string>
+        </property>
+        <property name="text">
+         <string notr="true">&gt;|</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -157,7 +207,7 @@
        <widget class="QComboBox" name="tileProtectionModeComboBox">
         <item>
          <property name="text">
-          <string>No Protection</string>
+          <string>Complete Protection</string>
          </property>
         </item>
         <item>
@@ -167,7 +217,7 @@
         </item>
         <item>
          <property name="text">
-          <string>Complete Protection</string>
+          <string>No Protection</string>
          </property>
         </item>
        </widget>
@@ -188,14 +238,39 @@
       <bool>false</bool>
      </property>
      <layout class="QGridLayout">
-      <item row="0" column="0">
-       <widget class="QLabel">
+      <item row="0" column="1">
+       <widget class="QPushButton" name="firstSubtileButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>First subtile</string>
+        </property>
         <property name="text">
-         <string>Id:</string>
+         <string notr="true">|&lt;</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
+      <item row="0" column="2">
+       <widget class="QPushButton" name="previousSubtileButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Previous subtile</string>
+        </property>
+        <property name="text">
+         <string notr="true">&lt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
        <widget class="LineEditWidget" name="subtileLineEdit">
         <property name="charWidth">
          <number>5</number>
@@ -205,12 +280,37 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="0" column="4">
+       <widget class="QPushButton" name="nextSubtileButton">
+        <property name="minimumWidth">
+         <number>40</number>
         </property>
-       </spacer>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Next subtile</string>
+        </property>
+        <property name="text">
+         <string notr="true">&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QPushButton" name="lastSubtileButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Last subtile</string>
+        </property>
+        <property name="text">
+         <string notr="true">&gt;|</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -232,12 +332,12 @@
        <widget class="QComboBox" name="subtileProtectionModeComboBox">
         <item>
          <property name="text">
-          <string>No Protection</string>
+          <string>Complete Protection</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Complete Protection</string>
+          <string>No Protection</string>
          </property>
         </item>
        </widget>

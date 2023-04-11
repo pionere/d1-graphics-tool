@@ -96,7 +96,7 @@ BuilderWidget::BuilderWidget(QWidget *parent, QUndoStack *us, D1Dun *d, LevelCel
     , undoStack(us)
     , dun(d)
     , levelCelView(lcv)
-    , min(ts->min)
+    , tileset(ts)
 {
     this->ui->setupUi(this);
 
@@ -135,7 +135,7 @@ void BuilderWidget::show()
     QFrame::show();
 
     this->setFocus(); // otherwise the widget does not receive keypress events...
-    this->graphView->setCursor(Qt::CrossCursor);
+    this->graphView->setCursor(Qt::BlankCursor);
     // update the view
     this->dunResourcesModified();
     this->colorModified();
@@ -151,7 +151,7 @@ void BuilderWidget::hide()
     QFrame::hide();
 }
 
-bool BuilderWidget::dunClicked(const QPoint &pos, bool first)
+bool BuilderWidget::dunClicked(const QPoint &cell, bool first)
 {
     if (this->isHidden()) {
         return false;
@@ -165,13 +165,13 @@ bool BuilderWidget::dunClicked(const QPoint &pos, bool first)
         break;
     case BEM_TILE_PROTECTION:
         value = this->ui->tileProtectionModeComboBox->currentIndex();
-        value = (int)(value == 0 ? Qt::Unchecked : (value == 1 ? Qt::PartiallyChecked : Qt::Checked));
+        value = (int)(value == 0 ? Qt::Checked : (value == 1 ? Qt::PartiallyChecked : Qt::Unchecked));
         break;
     case BEM_SUBTILE:
         value = this->currentSubtileIndex; // this->ui->subtileLineEdit->text().toInt();
         break;
     case BEM_SUBTILE_PROTECTION:
-        value = (int)(this->ui->subtileProtectionModeComboBox->currentIndex() == 1);
+        value = (int)(this->ui->subtileProtectionModeComboBox->currentIndex() == 0);
         break;
     case BEM_OBJECT:
         value = this->currentObjectIndex; // this->ui->objectLineEdit->text().toInt();
@@ -184,12 +184,12 @@ bool BuilderWidget::dunClicked(const QPoint &pos, bool first)
 
     std::vector<DunPos> modValues;
     if (!first) {
-        if (this->lastPos == pos) {
+        if (this->lastPos == cell) {
             return true;
         }
-        int fcx = pos.x();
+        int fcx = cell.x();
         int lcx = this->lastPos.x();
-        int fcy = pos.y();
+        int fcy = cell.y();
         int lcy = this->lastPos.y();
 
         // collect locations
@@ -208,39 +208,39 @@ bool BuilderWidget::dunClicked(const QPoint &pos, bool first)
         // rollback previous change
         this->undoStack->undo();
     } else {
-        this->lastPos = pos;
+        this->lastPos = cell;
         // collect locations
-        modValues.push_back(DunPos(pos.x(), pos.y(), 0));
+        modValues.push_back(DunPos(cell.x(), cell.y(), 0));
 
         // reset value if it is the same as before
         switch (this->mode) {
         case BEM_TILE:
-            if (value == this->dun->getTileAt(pos.x(), pos.y())) {
+            if (value == this->dun->getTileAt(cell.x(), cell.y())) {
                 value = 0;
             }
             break;
         case BEM_TILE_PROTECTION:
-            if (value == (int)this->dun->getTileProtectionAt(pos.x(), pos.y())) {
+            if (value == (int)this->dun->getTileProtectionAt(cell.x(), cell.y())) {
                 value = (int)Qt::Unchecked;
             }
             break;
         case BEM_SUBTILE:
-            if (value == this->dun->getSubtileAt(pos.x(), pos.y())) {
+            if (value == this->dun->getSubtileAt(cell.x(), cell.y())) {
                 value = 0;
             }
             break;
         case BEM_SUBTILE_PROTECTION:
-            if (value == (int)this->dun->getSubtileProtectionAt(pos.x(), pos.y())) {
+            if (value == (int)this->dun->getSubtileProtectionAt(cell.x(), cell.y())) {
                 value = 0;
             }
             break;
         case BEM_OBJECT:
-            if (value == this->dun->getObjectAt(pos.x(), pos.y())) {
+            if (value == this->dun->getObjectAt(cell.x(), cell.y())) {
                 value = 0;
             }
             break;
         case BEM_MONSTER:
-            if (this->currentMonsterType == this->dun->getMonsterAt(pos.x(), pos.y())) {
+            if (this->currentMonsterType == this->dun->getMonsterAt(cell.x(), cell.y())) {
                 value = 0;
             }
             break;
@@ -296,19 +296,25 @@ static void drawHollowDiamond(QImage &image, unsigned width, const QColor &color
     }
 }
 
-void BuilderWidget::dunHovered(const QPoint &pos)
+/*static void maskImage(QImage &image)
 {
-    int cellX = pos.x();
-    int cellY = pos.y();
-
-    // check if it is a valid position
-    if (cellX < 0 || cellX >= this->dun->getWidth() || cellY < 0 || cellY >= this->dun->getHeight()) {
-        // no target hit -> ignore
-        return;
+    int y = 0;
+    int width = image.width();
+    QRgb *destBits = reinterpret_cast<QRgb *>(image.scanLine(0 + CELL_BORDER + y));
+    QRgb srcBit = QColor(Qt::transparent).rgba();
+    for (y = image.height() - 1; y >= 0; y--) {
+        for (int x = y & 1; x < width; x += 2) {
+            // image.setPixelColor(x + CELL_BORDER, y + CELL_BORDER, QColor(Qt::transparent));
+            destBits[x + CELL_BORDER] = srcBit;
+        }
+        destBits += width + 2 * CELL_BORDER; // image.width();
     }
+}*/
 
-    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
-    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+void BuilderWidget::dunHovered(const QPoint &cell)
+{
+    unsigned subtileWidth = this->tileset->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->tileset->min->getSubtileHeight() * MICRO_HEIGHT;
 
     int cellWidth = subtileWidth;
     int cellHeight = subtileWidth / 2;
@@ -316,16 +322,74 @@ void BuilderWidget::dunHovered(const QPoint &pos)
     QGraphicsScene *scene = this->graphView->scene(); // this->levelCelView->getCelScene();
     QList<QGraphicsItem *> items = scene->items();
     QGraphicsPixmapItem *overlay;
-    if (items.size() < 2) {
-        QColor color = QColorConstants::DarkCyan;
-        QImage image = QImage(cellWidth, cellHeight, QImage::Format_ARGB32);
-        image.fill(Qt::transparent);
-        drawHollowDiamond(image, cellWidth, color);
-        overlay = scene->addPixmap(QPixmap::fromImage(image));
+
+    int overlayType = this->isHidden() ? -1 : this->mode;
+    if (this->overlayType != overlayType || items.size() < 2) {
+        this->overlayType = overlayType;
+        QImage image;
+        QColor color = QColorConstants::Svg::darkcyan;
+        int value;
+        switch (overlayType) {
+        case BEM_TILE:
+            if (this->currentTileIndex != 0) {
+                if (this->currentTileIndex > 0 && this->currentTileIndex <= this->tileset->til->getTileCount()) {
+                    image = this->tileset->til->getTileImage(this->currentTileIndex - 1);
+                }
+                color = QColorConstants::Svg::magenta;
+            }
+            break;
+        case BEM_TILE_PROTECTION:
+            value = this->ui->tileProtectionModeComboBox->currentIndex();
+            color = value == 0 ? QColorConstants::Svg::orangered : (value == 1 ? QColorConstants::Svg::plum : QColorConstants::Svg::darkcyan);
+            break;
+        case BEM_SUBTILE:
+            if (this->currentSubtileIndex != 0) {
+                if (this->currentSubtileIndex > 0 && this->currentSubtileIndex <= this->tileset->min->getSubtileCount()) {
+                    image = this->tileset->min->getSubtileImage(this->currentSubtileIndex - 1);
+                }
+                color = QColorConstants::Svg::magenta;
+            }
+            break;
+        case BEM_SUBTILE_PROTECTION:
+            value = this->ui->subtileProtectionModeComboBox->currentIndex();
+            color = value == 0 ? QColorConstants::Svg::lightcoral : QColorConstants::Svg::darkcyan;
+            break;
+        case BEM_OBJECT:
+            if (this->currentObjectIndex != 0) {
+                image = this->dun->getObjectImage(this->currentObjectIndex, 0);
+                color = QColorConstants::Svg::magenta;
+            }
+            break;
+        case BEM_MONSTER:
+            if (this->currentMonsterType.first != 0) {
+                image = this->dun->getMonsterImage(this->currentMonsterType, 0);
+                color = QColorConstants::Svg::magenta;
+            }
+            break;
+        }
+        if (image.isNull()) {
+            int mpl = (this->overlayType == BEM_TILE || this->overlayType == BEM_TILE_PROTECTION) ? 2 : 1;
+            image = QImage(cellWidth * mpl, cellHeight * mpl, QImage::Format_ARGB32);
+            image.fill(Qt::transparent);
+            drawHollowDiamond(image, cellWidth * mpl, color);
+        } else {
+            ; // maskImage(image);
+        }
+
+        QPixmap pixmap = QPixmap::fromImage(image);
+        if (items.size() < 2) {
+            overlay = scene->addPixmap(pixmap);
+        } else {
+            overlay = reinterpret_cast<QGraphicsPixmapItem *>(items[0]);
+            overlay->setPixmap(pixmap);
+        }
     } else {
         overlay = reinterpret_cast<QGraphicsPixmapItem *>(items[0]);
     }
 
+    QPoint op;
+    int cellX = cell.x();
+    int cellY = cell.y();
     // SHIFT_GRID
     int dunX = cellX - cellY;
     int dunY = cellX + cellY;
@@ -335,36 +399,35 @@ void BuilderWidget::dunHovered(const QPoint &pos)
     int cY = dunY * (cellHeight / 2);
 
     // move to 0;0
-    cX += scene->sceneRect().width() / 2;
-    cY += (CEL_SCENE_MARGIN + subtileHeight - overlay->pixmap().height());
-    int offX = overlay->pixmap().width() / 2 + (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
-    cX -= offX;
+    cX += scene->sceneRect().width() / 2 - (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
+    cY += CEL_SCENE_MARGIN + subtileHeight;
 
-    overlay->setPos(cX, cY);
+    // center the image
+    cX -= overlay->pixmap().width() / 2;
+    cY -= overlay->pixmap().height();
+
+    if (this->overlayType == BEM_TILE || this->overlayType == BEM_TILE_PROTECTION) {
+        cY += cellHeight;
+        if (cellX & 1) {
+            cX -= cellWidth / 2;
+            cY -= cellHeight / 2;
+        }
+        if (cellY & 1) {
+            cX += cellWidth / 2;
+            cY -= cellHeight / 2;
+        }
+    }
+
+    op = QPoint(cX, cY);
+
+    overlay->setPos(op);
 }
 
 void BuilderWidget::colorModified()
 {
-    if (this->isHidden())
-        return;
-    // update the color-icon
-    /*QSize imageSize = this->ui->imageLabel->size();
-    QImage image = QImage(imageSize, QImage::Format_ARGB32);
-    image.fill(QColor(Config::getGraphicsTransparentColor()));
-
-    unsigned numColors = this->selectedColors.size();
-    if (numColors != 0) {
-        for (int x = 0; x < imageSize.width(); x++) {
-            QColor color = this->pal->getColor(this->selectedColors[x * numColors / imageSize.width()]);
-            for (int y = 0; y < imageSize.height(); y++) {
-                // image.setPixelColor(x, y, color);
-                QRgb *destBits = reinterpret_cast<QRgb *>(image.scanLine(y));
-                destBits[x] = color.rgba();
-            }
-        }
-    }
-    QPixmap pixmap = QPixmap::fromImage(std::move(image));
-    this->ui->imageLabel->setPixmap(pixmap);*/
+    // if (this->isHidden())
+    //    return;
+    this->overlayType = -1;
 }
 
 static void copyComboBox(QComboBox *cmbDst, const QComboBox *cmbSrc)
@@ -425,7 +488,7 @@ void BuilderWidget::stopMove()
     this->moving = false;
     this->moved = true;
     this->releaseMouse();
-    // this->setCursor(Qt::CrossCursor);
+    // this->setCursor(Qt::BlankCursor);
 }
 
 void BuilderWidget::on_movePushButtonClicked()
@@ -530,18 +593,21 @@ void BuilderWidget::on_builderModeComboBox_activated(int index)
 
     this->adjustSize(); // not sure why this is necessary...
     this->resetPos();
+    this->overlayType = -1;
 }
 
 void BuilderWidget::setTileIndex(int tileIndex)
 {
     this->currentTileIndex = tileIndex;
     this->ui->tileLineEdit->setText(QString::number(tileIndex));
+    this->overlayType = -1;
 }
 
 void BuilderWidget::setSubtileIndex(int subtileIndex)
 {
     this->currentSubtileIndex = subtileIndex;
     this->ui->subtileLineEdit->setText(QString::number(subtileIndex));
+    this->overlayType = -1;
 }
 
 void BuilderWidget::setObjectIndex(int objectIndex)
@@ -549,6 +615,7 @@ void BuilderWidget::setObjectIndex(int objectIndex)
     this->currentObjectIndex = objectIndex;
     this->ui->objectLineEdit->setText(QString::number(objectIndex));
     this->ui->objectComboBox->setCurrentIndex(this->ui->objectComboBox->findData(objectIndex));
+    this->overlayType = -1;
 }
 
 void BuilderWidget::setMonsterType(DunMonsterType monType)
@@ -557,6 +624,36 @@ void BuilderWidget::setMonsterType(DunMonsterType monType)
     this->ui->monsterLineEdit->setText(QString::number(monType.first));
     this->ui->monsterCheckBox->setChecked(monType.second);
     this->ui->monsterComboBox->setCurrentIndex(this->ui->monsterComboBox->findData(QVariant::fromValue(monType)));
+    this->overlayType = -1;
+}
+
+void BuilderWidget::on_firstTileButton_clicked()
+{
+    this->setTileIndex(0);
+}
+
+void BuilderWidget::on_previousTileButton_clicked()
+{
+    int tileIndex = this->currentTileIndex - 1;
+    if (tileIndex < 0) {
+        tileIndex = 0;
+    }
+    this->setTileIndex(tileIndex);
+}
+
+void BuilderWidget::on_nextTileButton_clicked()
+{
+    int tileIndex = this->currentTileIndex + 1;
+    int tileIndexLimit = this->tileset->til->getTileCount();
+    if (tileIndex == tileIndexLimit) {
+        tileIndex = tileIndexLimit - 1;
+    }
+    this->setTileIndex(tileIndex);
+}
+
+void BuilderWidget::on_lastTileButton_clicked()
+{
+    this->setTileIndex(this->tileset->til->getTileCount() - 1);
 }
 
 void BuilderWidget::on_tileLineEdit_returnPressed()
@@ -574,6 +671,40 @@ void BuilderWidget::on_tileLineEdit_escPressed()
     this->ui->tileLineEdit->clearFocus();
 }
 
+void BuilderWidget::on_tileProtectionModeComboBox_activated(int index)
+{
+    this->overlayType = -1;
+}
+
+void BuilderWidget::on_firstSubtileButton_clicked()
+{
+    this->setSubtileIndex(0);
+}
+
+void BuilderWidget::on_previousSubtileButton_clicked()
+{
+    int subtileIndex = this->currentSubtileIndex - 1;
+    if (subtileIndex < 0) {
+        subtileIndex = 0;
+    }
+    this->setSubtileIndex(subtileIndex);
+}
+
+void BuilderWidget::on_nextSubtileButton_clicked()
+{
+    int subtileIndex = this->currentSubtileIndex + 1;
+    int subtileIndexLimit = this->tileset->min->getSubtileCount();
+    if (subtileIndex == subtileIndexLimit) {
+        subtileIndex = subtileIndexLimit - 1;
+    }
+    this->setSubtileIndex(subtileIndex);
+}
+
+void BuilderWidget::on_lastSubtileButton_clicked()
+{
+    this->setSubtileIndex(this->tileset->min->getSubtileCount() - 1);
+}
+
 void BuilderWidget::on_subtileLineEdit_returnPressed()
 {
     int subtileIndex = this->ui->subtileLineEdit->text().toInt();
@@ -587,6 +718,11 @@ void BuilderWidget::on_subtileLineEdit_escPressed()
 {
     this->ui->subtileLineEdit->setText(QString::number(this->currentSubtileIndex));
     this->ui->subtileLineEdit->clearFocus();
+}
+
+void BuilderWidget::on_subtileProtectionModeComboBox_activated(int index)
+{
+    this->overlayType = -1;
 }
 
 void BuilderWidget::on_objectLineEdit_returnPressed()

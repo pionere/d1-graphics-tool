@@ -76,8 +76,8 @@ private:
     void setMonsterType(DunMonsterType monType);
 
 public slots:
-    bool dunClicked(const QPoint &pos, bool first);
-    void dunHovered(const QPoint &pos);
+    bool dunClicked(const QPoint &cell, bool first);
+    void dunHovered(const QPoint &cell);
     void colorModified();
     void dunResourcesModified();
 
@@ -90,10 +90,24 @@ private slots:
 
     void on_builderModeComboBox_activated(int index);
 
+    void on_firstTileButton_clicked();
+    void on_previousTileButton_clicked();
+    void on_nextTileButton_clicked();
+    void on_lastTileButton_clicked();
     void on_tileLineEdit_escPressed();
     void on_tileLineEdit_returnPressed();
+
+    void on_tileProtectionModeComboBox_activated(int index);
+
+    void on_firstSubtileButton_clicked();
+    void on_previousSubtileButton_clicked();
+    void on_nextSubtileButton_clicked();
+    void on_lastSubtileButton_clicked();
     void on_subtileLineEdit_escPressed();
     void on_subtileLineEdit_returnPressed();
+
+    void on_subtileProtectionModeComboBox_activated(int index);
+
     void on_objectLineEdit_escPressed();
     void on_objectLineEdit_returnPressed();
     void on_objectComboBox_activated(int index);
@@ -107,12 +121,13 @@ private:
     QUndoStack *undoStack;
     D1Dun *dun;
     LevelCelView *levelCelView;
-    D1Min *min;
+    D1Tileset *tileset;
     QGraphicsView *graphView;
     bool moving = false;
     bool moved = false;
     QPoint lastPos;
-    int mode = BEM_TILE; // builder_edit_mode
+    int mode = BEM_TILE;  // builder_edit_mode
+    int overlayType = -1; // builder_edit_mode
 
     int currentTileIndex = 0;
     int currentSubtileIndex = 0;
