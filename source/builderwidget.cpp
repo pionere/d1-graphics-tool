@@ -313,6 +313,13 @@ static void drawHollowDiamond(QImage &image, unsigned width, const QColor &color
 
 void BuilderWidget::dunHovered(const QPoint &cell)
 {
+    this->lastHoverPos = cell;
+
+    this->redrawOverlay(false);
+}
+
+void BuilderWidget::redrawOverlay(bool forceRedraw)
+{
     unsigned subtileWidth = this->tileset->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = this->tileset->min->getSubtileHeight() * MICRO_HEIGHT;
 
@@ -324,7 +331,7 @@ void BuilderWidget::dunHovered(const QPoint &cell)
     QGraphicsPixmapItem *overlay;
 
     int overlayType = this->isHidden() ? -1 : this->mode;
-    if (this->overlayType != overlayType || items.size() < 2) {
+    if (this->overlayType != overlayType || items.size() < 2 || forceRedraw) {
         this->overlayType = overlayType;
         QImage image;
         QColor color = QColorConstants::Svg::darkcyan;
@@ -388,8 +395,8 @@ void BuilderWidget::dunHovered(const QPoint &cell)
     }
 
     QPoint op;
-    int cellX = cell.x();
-    int cellY = cell.y();
+    int cellX = this->lastHoverPos.x();
+    int cellY = this->lastHoverPos.y();
     // SHIFT_GRID
     int dunX = cellX - cellY;
     int dunY = cellX + cellY;
@@ -425,9 +432,9 @@ void BuilderWidget::dunHovered(const QPoint &cell)
 
 void BuilderWidget::colorModified()
 {
-    // if (this->isHidden())
-    //    return;
-    this->overlayType = -1;
+    if (this->isHidden())
+        return;
+    this->redrawOverlay(true);
 }
 
 static void copyComboBox(QComboBox *cmbDst, const QComboBox *cmbSrc)
@@ -593,21 +600,21 @@ void BuilderWidget::on_builderModeComboBox_activated(int index)
 
     this->adjustSize(); // not sure why this is necessary...
     this->resetPos();
-    this->overlayType = -1;
+    this->redrawOverlay(false);
 }
 
 void BuilderWidget::setTileIndex(int tileIndex)
 {
     this->currentTileIndex = tileIndex;
     this->ui->tileLineEdit->setText(QString::number(tileIndex));
-    this->overlayType = -1;
+    this->redrawOverlay(true);
 }
 
 void BuilderWidget::setSubtileIndex(int subtileIndex)
 {
     this->currentSubtileIndex = subtileIndex;
     this->ui->subtileLineEdit->setText(QString::number(subtileIndex));
-    this->overlayType = -1;
+    this->redrawOverlay(true);
 }
 
 void BuilderWidget::setObjectIndex(int objectIndex)
@@ -615,7 +622,7 @@ void BuilderWidget::setObjectIndex(int objectIndex)
     this->currentObjectIndex = objectIndex;
     this->ui->objectLineEdit->setText(QString::number(objectIndex));
     this->ui->objectComboBox->setCurrentIndex(this->ui->objectComboBox->findData(objectIndex));
-    this->overlayType = -1;
+    this->redrawOverlay(true);
 }
 
 void BuilderWidget::setMonsterType(DunMonsterType monType)
@@ -624,7 +631,7 @@ void BuilderWidget::setMonsterType(DunMonsterType monType)
     this->ui->monsterLineEdit->setText(QString::number(monType.first));
     this->ui->monsterCheckBox->setChecked(monType.second);
     this->ui->monsterComboBox->setCurrentIndex(this->ui->monsterComboBox->findData(QVariant::fromValue(monType)));
-    this->overlayType = -1;
+    this->redrawOverlay(true);
 }
 
 void BuilderWidget::on_firstTileButton_clicked()
@@ -673,7 +680,7 @@ void BuilderWidget::on_tileLineEdit_escPressed()
 
 void BuilderWidget::on_tileProtectionModeComboBox_activated(int index)
 {
-    this->overlayType = -1;
+    this->redrawOverlay(true);
 }
 
 void BuilderWidget::on_firstSubtileButton_clicked()
@@ -722,7 +729,7 @@ void BuilderWidget::on_subtileLineEdit_escPressed()
 
 void BuilderWidget::on_subtileProtectionModeComboBox_activated(int index)
 {
-    this->overlayType = -1;
+    this->redrawOverlay(true);
 }
 
 void BuilderWidget::on_objectLineEdit_returnPressed()
