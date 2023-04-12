@@ -1910,39 +1910,39 @@ static void DRLG_L1PlaceThemeRooms()
 		int w = drlg.L1RoomList[i].lrw;
 		int h = drlg.L1RoomList[i].lrh;
 		// check the inner tiles
-		int xx = x + 1, yy;
-		for ( ; xx < x + w - 1; xx++) {
+		int xx = x, yy;
+		for ( ; xx < x + w; xx++) {
 			yy = y + 1;
-			for ( ; yy < y + h - 1; yy++) {
+			for ( ; yy < y + h; yy++) {
 				if (dungeon[xx][yy] != DEFAULT_MEGATILE_L1) {
 					break;
 				}
 			}
-			if (xx < y + h - 1) {
+			if (xx < y + h) {
 				break;
 			}
 		}
-		if (xx < x + w - 1) {
+		if (xx < x + w) {
 			continue;
 		}
 		// check left and right side
-		yy = y;
-		for ( ; yy < y + h; yy++) {
-			if (dungeon[x][yy] == DEFAULT_MEGATILE_L1 || dungeon[x + w - 1][yy] == DEFAULT_MEGATILE_L1) {
+		yy = y - 1;
+		for ( ; yy < y + h + 1; yy++) {
+			if (dungeon[x - 1][yy] == DEFAULT_MEGATILE_L1 || dungeon[x + w][yy] == DEFAULT_MEGATILE_L1) {
 				break;
 			}
 		}
-		if (yy < y + h) {
+		if (yy < y + h + 1) {
 			continue;
 		}
 		// check top and bottom side
-		xx = x + 1;
-		for ( ; xx < x + w - 1; xx++) {
-			if (dungeon[xx][y] == DEFAULT_MEGATILE_L1 || dungeon[xx][y + h - 1] == DEFAULT_MEGATILE_L1) {
+		xx = x;
+		for ( ; xx < x + w; xx++) {
+			if (dungeon[xx][y - 1] == DEFAULT_MEGATILE_L1 || dungeon[xx][y + h] == DEFAULT_MEGATILE_L1) {
 				break;
 			}
 		}
-		if (xx < x + w - 1) {
+		if (xx < x + w) {
 			continue;
 		}
 		// create the room
