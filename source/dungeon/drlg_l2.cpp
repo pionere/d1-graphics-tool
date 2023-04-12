@@ -2337,6 +2337,7 @@ static void L2CreateArches()
 	}
 }
 
+extern int32_t sglGameSeed;
 static void DRLG_L2()
 {
 	while (true) {
@@ -2394,12 +2395,16 @@ static void DRLG_L2()
 		break;
 	}
 
+	LogErrorF("CAT", "Dun 7: %d - %d", dungeon[0][20], sglGameSeed);
 	L2LockoutFix();
 	// L2DoorFix(); - commented out, because this is no longer necessary
+	LogErrorF("CAT", "Dun 8: %d", dungeon[0][20], sglGameSeed);
 
 	DRLG_PlaceThemeRooms(6, 10, DEFAULT_MEGATILE_L2, 0, false);
 
+	LogErrorF("CAT", "Dun 9: %d", dungeon[0][20], sglGameSeed);
 	L2CreateArches();
+	LogErrorF("CAT", "Dun 10: %d", dungeon[0][20], sglGameSeed);
 	L2DoorFix2();
 
 	DRLG_L2Shadows();
@@ -2427,6 +2432,7 @@ static void DRLG_L2()
 	DRLG_L2PlaceRndSet(BIG10, 20);
 	DRLG_L2Subs();
 	DRLG_L2DoorSubs();
+	LogErrorF("CAT", "Dun 11: %d", dungeon[0][20], sglGameSeed);
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
@@ -2512,6 +2518,7 @@ static void DRLG_L2()
 		}
 		DRLG_DrawMap(0);
 	}
+	LogErrorF("CAT", "Dun 12: %d", dungeon[0][20], sglGameSeed);
 }
 
 void DRLG_InitL2Specials(int x1, int y1, int x2, int y2)
@@ -2562,6 +2569,7 @@ void CreateL2Dungeon()
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L2);
 	DRLG_Init_Globals();
 	DRLG_InitL2Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
+	LogErrorF("CAT", "Dun 13: %d", dungeon[0][20], sglGameSeed);
 
 	DRLG_SetPC();
 }
