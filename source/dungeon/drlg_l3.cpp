@@ -2614,10 +2614,12 @@ void CreateL3Dungeon()
 {
 	DRLG_LoadL3SP();
 	DRLG_L3();
+
 	DRLG_L3InitTransVals();
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L3);
 	DRLG_Init_Globals();
 	DRLG_L3LightTiles();
+
 	DRLG_SetPC();
 }
 
