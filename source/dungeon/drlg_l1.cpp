@@ -1920,7 +1920,7 @@ static void DRLG_L1PlaceThemeRooms()
 					break;
 				}
 			}
-			if (xx < y + h) {
+			if (yy < y + h) {
 				break;
 			}
 		}
