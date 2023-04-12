@@ -110,7 +110,8 @@ static void CreateLevel()
 
 static void LoadGameLevel(int lvldir, D1Dun *dun)
 {
-    //SetRndSeed(seed);
+	extern int32_t sglGameSeed;
+	int32_t gameSeed = sglGameSeed;
 
     IncProgress();
     InitLvlDungeon();
@@ -129,7 +130,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	InitLvlThemes();     // reset themes
     IncProgress();
 
-//	SetRndSeed(seed);
+	SetRndSeed(gameSeed); // restore seed after InitLevelMonsters
     if (!currLvl._dSetLvl) {
         CreateLevel();
 		StoreProtections(dun);
