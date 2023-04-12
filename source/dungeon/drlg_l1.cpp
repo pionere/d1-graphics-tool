@@ -1909,14 +1909,14 @@ static void DRLG_L1PlaceThemeRooms()
 		int y = drlg.L1RoomList[i].lry;
 		int w = drlg.L1RoomList[i].lrw;
 		int h = drlg.L1RoomList[i].lrh;
-		LogErrorF("Checking room at %d:%d - w/h:%d, %d", x, y, w, h);
+		LogErrorF("Checking room at %d:%d - w/h:%d, %d", DBORDERX + 2 * x, DBORDERX + 2 * y, 2 * w, 2 * h);
 		// check the inner tiles
 		int xx = x, yy;
 		for ( ; xx < x + w; xx++) {
 			yy = y + 1;
 			for ( ; yy < y + h; yy++) {
 				if (dungeon[xx][yy] != DEFAULT_MEGATILE_L1) {
-		LogErrorF("Failed at %d:%d - dv%d vs 13", xx, yy, dungeon[xx][yy]);
+		LogErrorF("Failed at %d:%d - dv%d vs 13", DBORDERX + 2 * xx, DBORDERX + 2 * yy, dungeon[xx][yy]);
 					break;
 				}
 			}
@@ -1931,7 +1931,7 @@ static void DRLG_L1PlaceThemeRooms()
 		yy = y - 1;
 		for ( ; yy < y + h + 1; yy++) {
 			if (dungeon[x - 1][yy] == DEFAULT_MEGATILE_L1 || dungeon[x + w][yy] == DEFAULT_MEGATILE_L1) {
-		LogErrorF("Failed at %d:%d - dv%d and %d", xx, yy, dungeon[x - 1][yy], dungeon[x + w][yy]);
+		LogErrorF("Failed at %d:%d - dv%d and %d", DBORDERX + 2 * xx, DBORDERX + 2 * yy, dungeon[x - 1][yy], dungeon[x + w][yy]);
 				break;
 			}
 		}
@@ -1942,7 +1942,7 @@ static void DRLG_L1PlaceThemeRooms()
 		xx = x;
 		for ( ; xx < x + w; xx++) {
 			if (dungeon[xx][y - 1] == DEFAULT_MEGATILE_L1 || dungeon[xx][y + h] == DEFAULT_MEGATILE_L1) {
-		LogErrorF("Failed at %d:%d - dv%d and %d", xx, yy, dungeon[xx][y - 1], dungeon[xx][y + h]);
+		LogErrorF("Failed at %d:%d - dv%d and %d", DBORDERX + 2 * xx, DBORDERX + 2 * yy, dungeon[xx][y - 1], dungeon[xx][y + h]);
 				break;
 			}
 		}
