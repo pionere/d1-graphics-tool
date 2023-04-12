@@ -38,7 +38,7 @@ static void IncProgress()
 {
 }
 
-static void LogErrorF(const char* msg, ...)
+void LogErrorF(const char* msg, ...)
 {
 	char tmp[256];
 	//snprintf(tmp, sizeof(tmp), "f:\\logdebug%d_%d.txt", mypnum, SDL_ThreadID());
