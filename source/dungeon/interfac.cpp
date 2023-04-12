@@ -132,11 +132,14 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
     IncProgress();
 
 //    SetRndSeed(seed);
+extern int32_t sglGameSeed;
+LogErrorF("Seed 0: %d", sglGameSeed);
     if (!currLvl._dSetLvl) {
         // fill in loop: dungeon, dTransVal, pWarps, pSetPieces, uses drlgFlags, dungBlock
         // fill post: pdungeon, dPiece, dSpecial, themeLoc, dFlags
         // reset: dMonster, dObject, dPlayer, dItem, dMissile, dLight+
         CreateLevel();
+LogErrorF("Seed 1: %d", sglGameSeed);
 		StoreProtections(dun);
         if (pMegaTiles == NULL || pSolidTbl == NULL) {
             return;
