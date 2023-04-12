@@ -2037,37 +2037,32 @@ void CreateL4Dungeon()
 	DRLG_SetPC();
 }
 
-/*static void LoadL4DungeonData(const char* sFileName)
-{
-	// memset(drlgFlags, 0, sizeof(drlgFlags)); - unused on setmaps
-	static_assert(sizeof(dungeon[0][0]) == 1, "memset on dungeon does not work in LoadL4DungeonData.");
-	memset(dungeon, BASE_MEGATILE_L4 + 1, sizeof(dungeon));
-
-	pSetPieces[0]._spx = 0;
-	pSetPieces[0]._spy = 0;
-	pSetPieces[0]._spData = LoadFileInMem(sFileName);
-	if (pSetPieces[0]._spData == NULL) {
-		return;
-	}
-
-	DRLG_LoadSP(0, DEFAULT_MEGATILE_L4);
-}
-
-void LoadL4Dungeon(const LevelData* lds)
+/*void LoadL4Dungeon(const LevelData* lds)
 {
 	pWarps[DWARP_ENTRY]._wx = lds->dSetLvlDunX;
 	pWarps[DWARP_ENTRY]._wy = lds->dSetLvlDunY;
 	pWarps[DWARP_ENTRY]._wtype = lds->dSetLvlWarp;
 
 	// load pre-dungeon
-	LoadL4DungeonData(lds->dSetLvlPreDun);
+	pSetPieces[0]._spx = 0;
+	pSetPieces[0]._spy = 0;
+	pSetPieces[0]._sptype = lds->dSetLvlPiece;
+	pSetPieces[0]._spData = LoadFileInMem(lds->dSetLvlPreDun);
+
+	// memset(drlgFlags, 0, sizeof(drlgFlags)); - unused on setmaps
+	static_assert(sizeof(dungeon[0][0]) == 1, "memset on dungeon does not work in LoadL4DungeonData.");
+	memset(dungeon, BASE_MEGATILE_L4 + 1, sizeof(dungeon));
+
+	DRLG_LoadSP(0, DEFAULT_MEGATILE_L4);
 
 	MemFreeDbg(pSetPieces[0]._spData);
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 
 	// load dungeon
-	LoadL4DungeonData(lds->dSetLvlDun);
+	pSetPieces[0]._spData = LoadFileInMem(lds->dSetLvlDun);
+
+	DRLG_DrawMap(0);
 
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
 	DRLG_L4InitTransVals();
@@ -2075,8 +2070,6 @@ void LoadL4Dungeon(const LevelData* lds)
 
 	SetMapMonsters(pSetPieces[0]._spData, 0, 0);
 	SetMapObjects(pSetPieces[0]._spData);
-
-	MemFreeDbg(pSetPieces[0]._spData);
 }*/
 
 DEVILUTION_END_NAMESPACE

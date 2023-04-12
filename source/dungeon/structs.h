@@ -427,6 +427,7 @@ typedef struct LevelData {
 	BYTE dSetLvlDunX;
 	BYTE dSetLvlDunY;
 	BYTE dSetLvlWarp; // dungeon_warp_type
+	BYTE dSetLvlPiece; // _setpiece_type
 	BYTE dMonTypes[32];
 } LevelData;
 
@@ -540,7 +541,7 @@ typedef struct ThemePosDir {
 /** The number of generated rooms in catacombs. */
 #define L2_MAXROOMS 32
 /** Possible matching locations in a theme room. */
-#define TH_SHRINES ((DSIZEX * DSIZEY) / sizeof(ThemePosDir))
+#define THEME_LOCS ((DSIZEX * DSIZEY) / sizeof(ThemePosDir))
 
 typedef struct DrlgMem {
 	union {
@@ -549,7 +550,7 @@ typedef struct DrlgMem {
 		BYTE transDirMap[DSIZEX][DSIZEY];   // drlg_l1, drlg_l2, drlg_l3, drlg_l4 (gendung)
 		BYTE lockoutMap[DMAXX][DMAXY];      // drlg_l3
 		BYTE dungBlock[L4BLOCKX][L4BLOCKY]; // drlg_l4
-		ThemePosDir thLocs[TH_SHRINES];     // themes
+		ThemePosDir thLocs[THEME_LOCS];     // themes
 	};
 } DrlgMem;
 
