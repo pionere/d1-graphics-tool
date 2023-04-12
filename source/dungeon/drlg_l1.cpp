@@ -16,14 +16,15 @@ DEVILUTION_BEGIN_NAMESPACE
 /** Shadow type of the base floor(13). */
 #define SF 4
 
+static int nRoomCnt;
 /** Specifies whether to generate a vertical or horizontal rooms in the Cathedral. */
-BOOLEAN ChambersVertical;
+static BOOLEAN ChambersVertical;
 /** Specifies whether to generate a room at position 1 in the Cathedral. */
-BOOLEAN ChambersFirst;
+static BOOLEAN ChambersFirst;
 /** Specifies whether to generate a room at position 2 in the Cathedral. */
-BOOLEAN ChambersMiddle;
+static BOOLEAN ChambersMiddle;
 /** Specifies whether to generate a room at position 3 in the Cathedral. */
-BOOLEAN ChambersLast;
+static BOOLEAN ChambersLast;
 
 /** Contains shadows for 2x2 blocks of tiles in the Cathedral. */
 const ShadowStruct L1SPATS[] = {
@@ -998,6 +999,12 @@ static void L1DrawRoom(int x, int y, int width, int height)
 {
 	int i, j, x2, y2;
 
+	drlg.L1RoomList[nRoomCnt].lrx = x;
+	drlg.L1RoomList[nRoomCnt].lry = y;
+	drlg.L1RoomList[nRoomCnt].lrw = width;
+	drlg.L1RoomList[nRoomCnt].lrh = height;
+	nRoomCnt++;
+
 	x2 = x + width;
 	y2 = y + height;
 	for (j = y; j < y2; j++) {
@@ -1136,10 +1143,11 @@ static void L1RoomGen(int x, int y, int w, int h, bool dir)
  * Create dungeon blueprint.
  * New dungeon values: 1
  */
-static void L1FirstRoom()
+static void DRLG_L1CreateDungeon()
 {
 	int is, ie, i;
 
+	nRoomCnt = 0;
 	ChambersVertical = random_(0, 2);
 	ChambersFirst = random_(0, 2);
 	ChambersMiddle = random_(0, 2);
@@ -1654,7 +1662,7 @@ static void L1FillChambers()
 */
 
 /*
- * Draw wall around the tiles selected by L1FirstRoom.
+ * Draw wall around the tiles selected by DRLG_L1CreateDungeon.
  * Assumes the border of dungeon was empty.
  * New dungeon values: 6 7 16 17 18 19 23 24
  */
@@ -1892,6 +1900,58 @@ static void L1TileFix()
 		}
 	}
 #endif
+}
+
+static void DRLG_L1PlaceThemeRooms()
+{
+	for (int i = ChambersFirst + ChambersMiddle + ChambersLast; i < nRoomCnt; i++) {
+		int x = drlg.L1RoomList[i].lrx;
+		int y = drlg.L1RoomList[i].lry;
+		int w = drlg.L1RoomList[i].lrw;
+		int h = drlg.L1RoomList[i].lrh;
+		// check the inner tiles
+		int xx = x + 1, yy;
+		for ( ; xx < x + w - 1; xx++) {
+			yy = y + 1;
+			for ( ; yy < y + h - 1; yy++) {
+				if (dungeon[xx][yy] != DEFAULT_MEGATILE_L1) {
+					break;
+				}
+			}
+			if (xx < y + h - 1) {
+				break;
+			}
+		}
+		if (xx < x + w - 1) {
+			continue;
+		}
+		// check left and right side
+		yy = y;
+		for ( ; yy < y + h; yy++) {
+			if (dungeon[x][yy] == DEFAULT_MEGATILE_L1 || dungeon[x + w - 1][yy] == DEFAULT_MEGATILE_L1) {
+				break;
+			}
+		}
+		if (yy < y + h) {
+			continue;
+		}
+		// check top and bottom side
+		xx = x + 1;
+		for ( ; xx < x + w - 1; xx++) {
+			if (dungeon[xx][y] == DEFAULT_MEGATILE_L1 || dungeon[xx][y + h - 1] == DEFAULT_MEGATILE_L1) {
+				break;
+			}
+		}
+		if (xx < x + w - 1) {
+			continue;
+		}
+		// create the room
+		themes[numthemes]._tsx = x;
+		themes[numthemes]._tsy = y;
+		themes[numthemes]._tsWidth = w;
+		themes[numthemes]._tsHeight = h;
+		numthemes++;
+	}
 }
 
 #ifdef HELLFIRE
@@ -2541,7 +2601,7 @@ static void DRLG_L1()
 	while (true) {
 		do {
 			memset(dungeon, 0, sizeof(dungeon));
-			L1FirstRoom();
+			DRLG_L1CreateDungeon();
 		} while (L1GetArea() < minarea);
 
 		DRLG_L1MakeMegas();
@@ -2695,6 +2755,8 @@ static void DRLG_L1()
 #endif
 	{
 		// assert(currLvl._dType == DTYPE_CATHEDRAL);
+		DRLG_L1PlaceThemeRooms();
+
 		DRLG_L1Subs();
 		DRLG_L1Shadows();
 		for (i = RandRange(5, 9); i > 0; i--)

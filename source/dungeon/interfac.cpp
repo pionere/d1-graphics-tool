@@ -228,6 +228,11 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
     EnterLevel(params.level);
     IncProgress();
 
+extern int minNa;
+extern int maxNa;
+minNa = INT32_MAX;
+maxNa = 0;
+
 	bool hasSubtiles;
 	int extraRounds = params.extraRounds;
 	SetRndSeed(params.seed);
@@ -238,6 +243,8 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
 		hasSubtiles = pMegaTiles != NULL;
 		FreeLvlDungeon();
 	} while (--extraRounds >= 0);
+
+	LogErrorF("Generated dungeon minimum area %d, max area %d. NumThemes:%d", minNa, maxNa, numthemes);
 
     dun->setLevelType(currLvl._dType);
 

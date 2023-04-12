@@ -830,6 +830,8 @@ static void AddL4Goodies()
 	InitRndLocObj(1, 3, OBJ_CAULDRON);
 }
 
+int minNa = INT32_MAX;
+int maxNa = 0;
 void InitObjects()
 {
 	//gbInitObjFlag = true;
@@ -885,6 +887,19 @@ void InitObjects()
 #endif
 	}
 	AddDunObjs(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
+
+	int	na = 0;
+		for (xx = DBORDERX; xx < DSIZEX + DBORDERX; xx++)
+			for (yy = DBORDERY; yy < DSIZEY + DBORDERY; yy++)
+				if ((nSolidTable[dPiece[xx][yy]] | (dFlags[xx][yy] & (BFLAG_ALERT | BFLAG_POPULATED))) == 0)
+					na++;
+if (na > maxNa) {
+	maxNa = na;
+}
+if (na < minNa) {
+	minNa = na;
+}
+
 	BYTE lvlMask = 1 << currLvl._dType;
 	if (lvlMask & objectdata[OBJ_SARC].oLvlTypes) {
 		InitRndSarcs(OBJ_SARC);

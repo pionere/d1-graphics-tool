@@ -372,21 +372,21 @@ void InitThemes()
 	_gbTFountainFlag = true;
 	_gbTreasureFlag = true;
 
-	if (currLvl._dDunType == DTYPE_CATHEDRAL) { // TODO: use dType instead?
+	/*if (currLvl._dDunType == DTYPE_CATHEDRAL) { // TODO: use dType instead?
 		for (i = 1; i < numtrans && numthemes < MAXTHEMES; i++) {
 			if (CheckThemeRoom(i)) {
 				themes[numthemes]._tsTransVal = i;
 				numthemes++;
 			}
 		}
-	} else {
+	} else {*/
 		for (i = 0; i < numthemes; i++) {
 			themes[i]._tsTransVal = dTransVal[DBORDERX + 2 * themes[i]._tsx + themes[i]._tsWidth][DBORDERY + 2 * themes[i]._tsy + themes[i]._tsHeight];
 			if (themes[i]._tsTransVal == 0) {
 				dProgressErr() << QApplication::tr("Invalid theme room @%1:%2 width:%3 height:%4.").arg(DBORDERX + 2 * themes[i]._tsx).arg(DBORDERY + 2 * themes[i]._tsy).arg(themes[i]._tsWidth).arg(themes[i]._tsHeight);
 			}
 		}
-	}
+	//}
 	if (QuestStatus(Q_ZHAR)) {
 		for (i = 0; i < numthemes; i++) {
 			if (SpecialThemeFit(i, THEME_LIBRARY)) {

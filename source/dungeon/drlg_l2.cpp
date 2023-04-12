@@ -1935,7 +1935,7 @@ static void DRLG_L2TransFix()
 			// case 12:
 			// case 145:
 			case 16:
-			// case 149:
+			//case 149:
 				DRLG_CopyTrans(xx, yy, xx + 1, yy);
 				DRLG_CopyTrans(xx, yy, xx, yy + 1);
 				DRLG_CopyTrans(xx, yy, xx + 1, yy + 1);
