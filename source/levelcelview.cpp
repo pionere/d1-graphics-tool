@@ -1963,7 +1963,7 @@ void LevelCelView::resetFrameTypes()
             int lmin = std::min(std::min(color.red(), color.green()), color.blue());
             int lmax = std::max(std::max(color.red(), color.green()), color.blue());
             int lightness = (lmax + lmin) / 2;
-            colors += QString("%1, ").arg(color);
+            colors += QString("%1, ").arg(lightness);
         }
         dProgress() << QString("Color line %1: %2.").arg(i).arg(colors);
     }

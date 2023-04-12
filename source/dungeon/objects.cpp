@@ -889,8 +889,8 @@ void InitObjects()
 	AddDunObjs(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
 
 	int	na = 0;
-		for (xx = DBORDERX; xx < DSIZEX + DBORDERX; xx++)
-			for (yy = DBORDERY; yy < DSIZEY + DBORDERY; yy++)
+		for (int xx = DBORDERX; xx < DSIZEX + DBORDERX; xx++)
+			for (int yy = DBORDERY; yy < DSIZEY + DBORDERY; yy++)
 				if ((nSolidTable[dPiece[xx][yy]] | (dFlags[xx][yy] & (BFLAG_ALERT | BFLAG_POPULATED))) == 0)
 					na++;
 if (na > maxNa) {
