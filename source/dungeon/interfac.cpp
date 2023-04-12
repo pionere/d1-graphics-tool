@@ -142,32 +142,32 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
             return;
         }
         IncProgress();
-        if (currLvl._dType != DTYPE_TOWN) {
-            GetLevelMTypes(); // select monster types and load their fx
-            InitThemes(); // select theme types
-            IncProgress();
-            InitObjectGFX(); // load object graphics
+		if (currLvl._dType != DTYPE_TOWN) {
+			GetLevelMTypes(); // select monster types and load their fx
+			InitThemes(); // select theme types
+			IncProgress();
+			InitObjectGFX(); // load object graphics
+			IncProgress();
+//			if (IsMultiGame || lvldir == ENTRY_LOAD || !IsLvlVisited(currLvl._dLevelIdx)) {
+				HoldThemeRooms(); // protect themes with dFlags
+				InitMonsters();   // place monsters
+				IncProgress();
+				InitObjects(); // place objects
+				InitItems();   // place items
+				CreateThemeRooms(); // populate theme rooms
+//			} else {
+//				IncProgress();
+//			}
         } else {
-//            InitLvlStores();
-            // TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
-            // SetRndSeed(seed);
-            IncProgress();
-        }
-        IncProgress();
+//			InitLvlStores();
+			// TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
+			// SetRndSeed(seed);
+			IncProgress();
+			IncProgress();
 
-        if (currLvl._dType != DTYPE_TOWN) {
-            HoldThemeRooms(); // protect themes with dFlags
-            InitMonsters();   // place monsters
-            IncProgress();
-//            if (IsMultiGame || lvldir == ENTRY_LOAD || !IsLvlVisited(currLvl._dLevelIdx)) {
-                InitObjects(); // place objects
-                InitItems();   // place items
-                CreateThemeRooms(); // populate theme rooms
-//            }
-        } else {
-//            InitTowners();
-            IncProgress();
-//            InitItems();
+//			InitTowners();
+			IncProgress();
+//			InitItems();
         }
     } else {
         LoadSetMap();

@@ -983,7 +983,6 @@ void DRLG_InitL1Specials(int x1, int y1, int x2, int y2)
 	}
 }
 
-
 static void L1ClearChamberFlags()
 {
 	int i;
@@ -2635,10 +2634,10 @@ static void DRLG_L1()
 		DRLG_CopyTrans(x + 0, y + 2, x + 0, y + 1);
 		DRLG_CopyTrans(x + 1, y + 2, x + 1, y + 1);
 	}*/
-	// DRLG_L1Corners(); - commented out because this is no longer necessary
-	// DRLG_L1CornerFix(); - commented out because this is no longer necessary
+	// DRLG_L1Corners(); - commented out, because this is no longer necessary
+	// DRLG_L1CornerFix(); - commented out, because this is no longer necessary
 
-	// DRLG_L1PlaceDoors(); - commented out because this is no longer necessary
+	// DRLG_L1PlaceDoors(); - commented out, because this is no longer necessary
 
 #ifdef HELLFIRE
 	if (currLvl._dType == DTYPE_CRYPT) {
@@ -2750,9 +2749,9 @@ void CreateL1Dungeon()
 {
 	DRLG_LoadL1SP();
 	DRLG_L1();
-	DRLG_PlaceMegaTiles(BASE_MEGATILE_L1);
 
 	DRLG_L1InitTransVals();
+	DRLG_PlaceMegaTiles(BASE_MEGATILE_L1);
 	DRLG_Init_Globals();
 	DRLG_InitL1Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
 
@@ -2826,13 +2825,13 @@ void LoadL1Dungeon(const LevelData* lds)
 	//DRLG_L1SetMapFix();
 	//DRLG_L1Floor();
 
-	DRLG_PlaceMegaTiles(BASE_MEGATILE_L1);
 	DRLG_L1InitTransVals();
+	DRLG_PlaceMegaTiles(BASE_MEGATILE_L1);
 	DRLG_Init_Globals();
 	DRLG_InitL1Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
 
-	SetMapMonsters(pSetPieces[0]._spData, 0, 0);
-	SetMapObjects(pSetPieces[0]._spData);
+	SetMapMonsters(0);
+	SetMapObjects();
 }
 
 DEVILUTION_END_NAMESPACE

@@ -2080,9 +2080,11 @@ void CreateL4Dungeon()
 {
 	DRLG_LoadL4SP();
 	DRLG_L4();
-	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
+
 	DRLG_L4InitTransVals();
+	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
 	DRLG_Init_Globals();
+
 	DRLG_SetPC();
 }
 
@@ -2113,12 +2115,12 @@ void CreateL4Dungeon()
 
 	DRLG_DrawMap(0);
 
-	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
 	DRLG_L4InitTransVals();
+	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
 	DRLG_Init_Globals();
 
-	SetMapMonsters(pSetPieces[0]._spData, 0, 0);
-	SetMapObjects(pSetPieces[0]._spData);
+	SetMapMonsters(0);
+	SetMapObjects();
 }*/
 
 DEVILUTION_END_NAMESPACE
