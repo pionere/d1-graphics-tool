@@ -730,7 +730,7 @@ static void AddL5StoryBook(int bookidx, int ox, int oy)
 	// assert(os->_oAnimFrame == objectdata[OBJ_L5BOOK].oAnimBaseFrame);
 	os->_oVar4 = objectdata[OBJ_L5BOOK].oAnimBaseFrame + 1; // STORY_BOOK_READ_FRAME
 	os->_oVar2 = TEXT_BOOK4 + bookidx;                      // STORY_BOOK_MSG
-	os->_oVar3 = BK_STORY_NAKRUL_1 + bookidx;               // STORY_BOOK_NAME
+	os->_oVar5 = BK_STORY_NAKRUL_1 + bookidx;               // STORY_BOOK_NAME
 }
 
 static void AddNakrulBook(int oi)
@@ -759,8 +759,8 @@ static void AddNakrulBook(int oi)
 	// assert(os->_oAnimFrame == objectdata[OBJ_NAKRULBOOK].oAnimBaseFrame);
 	os->_oVar4 = objectdata[OBJ_NAKRULBOOK].oAnimBaseFrame + 1; // STORY_BOOK_READ_FRAME
 	os->_oVar2 = TEXT_BOOKA + bookidx - QNB_BOOK_A;             // STORY_BOOK_MSG
-	os->_oVar3 = BK_NAKRUL_SPELL;                               // STORY_BOOK_NAME
-	os->_oVar5 = bookidx;                                       // STORY_BOOK_NAKRUL_IDX
+	os->_oVar3 = bookidx;                                       // STORY_BOOK_NAKRUL_IDX
+	os->_oVar5 = BK_NAKRUL_SPELL;                               // STORY_BOOK_NAME
 }
 
 static void AddLvl2xBooks(int bookidx)
@@ -1142,9 +1142,9 @@ static void ObjAddBloodBook(int oi)
 
 	os = &objects[oi];
 	os->_oRndSeed = NextRndSeed();
-	os->_oVar3 = BK_BLOOD;            // STORY_BOOK_NAME
-	os->_oVar6 = os->_oAnimFrame + 1; // LEVER_BOOK_ANIM
-	os->_oVar7 = Q_BLOOD; // LEVER_BOOK_QUEST
+	os->_oVar5 = BK_BLOOD;                   // STORY_BOOK_NAME
+	os->_oVar6 = os->_oAnimFrame + 1;        // LEVER_BOOK_ANIM
+	os->_oVar7 = Q_BLOOD;                    // LEVER_BOOK_QUEST
 	SetObjMapRange(oi, 0, 0, 0, 0, leverid); // NULL_LVR_EFFECT
 	leverid++;
 }
@@ -1154,7 +1154,7 @@ static void ObjAddBook(int oi, int bookidx)
 	ObjectStruct* os;
 
 	os = &objects[oi];
-	os->_oVar3 = bookidx; // STORY_BOOK_NAME
+	os->_oVar5 = bookidx; // STORY_BOOK_NAME
 }
 
 static void AddArmorStand(int oi)
@@ -1205,7 +1205,7 @@ static void AddStoryBook(int oi)
 	os = &objects[oi];
 	// os->_oVar1 = bookframe;
 	os->_oVar2 = 3 * bookframe + idx + TEXT_BOOK11;      // STORY_BOOK_MSG
-	os->_oVar3 = 3 * bookframe + idx + BK_STORY_MAINA_1; // STORY_BOOK_NAME
+	os->_oVar5 = 3 * bookframe + idx + BK_STORY_MAINA_1; // STORY_BOOK_NAME
 	os->_oAnimFrame = 5 - 2 * bookframe;                 //
 	os->_oVar4 = os->_oAnimFrame + 1;                    // STORY_BOOK_READ_FRAME
 }
@@ -1545,7 +1545,7 @@ void GetObjectStr(int oi)
 	case OBJ_L5BOOK:
 	case OBJ_NAKRULBOOK:
 #endif
-		SStrCopy(infostr, BookName[os->_oVar3], sizeof(infostr)); // STORY_BOOK_NAME
+		SStrCopy(infostr, BookName[os->_oVar5], sizeof(infostr)); // STORY_BOOK_NAME
 		break;
 	case OBJ_WEAPONRACKL:
 	case OBJ_WEAPONRACKR:
