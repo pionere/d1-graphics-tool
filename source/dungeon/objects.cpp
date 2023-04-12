@@ -158,7 +158,7 @@ void InitObjectGFX()
 	memset(themeload, 0, sizeof(themeload));
 
 	for (i = 0; i < numthemes; i++)
-		themeload[themes[i]._tsTtype] = true;
+		themeload[themes[i]._tsType] = true;
 
 	BYTE lvlMask = 1 << currLvl._dType;
 	for (i = 0; i < NUM_OBJECTS; i++) {
@@ -380,8 +380,10 @@ static void InitRndBarrels(int otype)
 
 	// assert(otype == OBJ_BARREL || otype == OBJ_URN || otype == OBJ_POD);
 	static_assert((int)OBJ_BARREL + 1 == (int)OBJ_BARRELEX, "InitRndBarrels expects ordered BARREL enum I.");
+#ifdef HELLFIRE
 	static_assert((int)OBJ_URN + 1 == (int)OBJ_URNEX, "InitRndBarrels expects ordered BARREL enum II.");
 	static_assert((int)OBJ_POD + 1 == (int)OBJ_PODEX, "InitRndBarrels expects ordered BARREL enum III.");
+#endif
 
 	// generate i number of groups of barrels
 	for (i = RandRange(3, 7); i != 0; i--) {
@@ -487,8 +489,8 @@ static void AddDunObjs(int x1, int y1, int x2, int y2)
 		ASSUME_UNREACHABLE
 		break;
 	}
-
 }
+
 static void AddL2Torches()
 {
 	int i, j;
@@ -763,18 +765,14 @@ static void AddNakrulBook(int oi)
 
 static void AddLvl2xBooks(int bookidx)
 {
-	POS32 pos = RndLoc7x5();
+	POS32 pos = RndLoc5x5();
 
 	if (pos.x == 0)
 		return;
 
 	AddL5StoryBook(bookidx, pos.x, pos.y);
-	AddObject(OBJ_L5CANDLE, pos.x - 2, pos.y + 1);
-	AddObject(OBJ_L5CANDLE, pos.x - 2, pos.y);
 	AddObject(OBJ_L5CANDLE, pos.x - 1, pos.y - 1);
-	AddObject(OBJ_L5CANDLE, pos.x + 1, pos.y - 1);
-	AddObject(OBJ_L5CANDLE, pos.x + 2, pos.y);
-	AddObject(OBJ_L5CANDLE, pos.x + 2, pos.y + 1);
+	AddObject(OBJ_L5CANDLE, pos.x - 1, pos.y + 1);
 }
 #endif
 
@@ -1279,7 +1277,9 @@ int AddObject(int type, int ox, int oy)
 		AddObjLight(oi, 5, 0, 0);
 		break;
 	case OBJ_STORYCANDLE:
+#ifdef HELLFIRE
 	case OBJ_L5CANDLE:
+#endif
 		AddObjLight(oi, 3, 0, 0);
 		break;
 	case OBJ_TORCHL1:
@@ -1298,8 +1298,10 @@ int AddObject(int type, int ox, int oy)
 	case OBJ_L2RDOOR:
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
+#ifdef HELLFIRE
 	case OBJ_L5LDOOR:
 	case OBJ_L5RDOOR:
+#endif
 		AddDoor(oi);
 		break;
 	case OBJ_CHEST1:
@@ -1315,7 +1317,9 @@ int AddObject(int type, int ox, int oy)
 		objects[oi]._oVar5 = 0; // TRAP_OI_BACKREF
 		break;
 	case OBJ_SARC:
+#ifdef HELLFIRE
 	case OBJ_L5SARC:
+#endif
 		AddSarc(oi);
 		break;
 	case OBJ_TRAPL:
@@ -1323,8 +1327,10 @@ int AddObject(int type, int ox, int oy)
 		AddTrap(oi);
 		break;
 	case OBJ_BARREL:
+#ifdef HELLFIRE
 	case OBJ_URN:
 	case OBJ_POD:
+#endif
 		AddBarrel(oi);
 		break;
 	case OBJ_SHRINEL:
@@ -1339,8 +1345,10 @@ int AddObject(int type, int ox, int oy)
 		AddDecap(oi);
 		break;
 	case OBJ_BARRELEX:
+#ifdef HELLFIRE
 	case OBJ_URNEX:
 	case OBJ_PODEX:
+#endif
 	case OBJ_BOOK2L:
 	case OBJ_BOOK2R:
 	case OBJ_PEDESTAL:
