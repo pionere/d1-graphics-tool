@@ -18,9 +18,6 @@ static bool _gbTFountainFlag;
 static bool _gbPFountainFlag;
 static bool _gbBFountainFlag;
 int zharlib;
-static int themex;
-static int themey;
-static int themeVar1;
 ThemeStruct themes[MAXTHEMES];
 
 /** Specifies the set of special theme IDs from which one will be selected at random. */
@@ -705,7 +702,7 @@ static void Theme_Library(int themeId, BYTE tv)
 		}
 	}
 
-	if (QuestStatus(Q_ZHAR) && themeId == zharlib)
+	if (/*QuestStatus(Q_ZHAR) &&*/ themeId == zharlib)
 		return;
 
 	PlaceThemeMonsts(tv, monstrnd);
@@ -894,7 +891,7 @@ static void Theme_WeaponRack(int themeId, BYTE tv)
 	type = OBJ_WEAPONRACKL + 2 * random_(0, 2);
 	static_assert(OBJ_WEAPONRACKL + 1 == OBJ_WEAPONRACKLN, "Theme_WeaponRack depends on the order of WEAPONRACKL(N)");
 	static_assert(OBJ_WEAPONRACKR + 1 == OBJ_WEAPONRACKRN, "Theme_WeaponRack depends on the order of WEAPONRACKR(N)");
-	AddObject(type + _gbWeaponFlag ? 0 : 1, themes[themeId]._tsObjX, themes[themeId]._tsObjY);
+	AddObject(type + (_gbWeaponFlag ? 0 : 1), themes[themeId]._tsObjX, themes[themeId]._tsObjY);
 	_gbWeaponFlag = false;
 	type += 1;
 	Place_Obj3(tv, type, weaponrnd);

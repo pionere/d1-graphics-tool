@@ -604,7 +604,7 @@
     <string>Protect Tiles</string>
    </property>
    <property name="toolTip">
-    <string>Mark tiles protected if the tile is set or there is an entity on the tile</string>
+    <string>Mark tiles protected if the tile is set or there is an actor on the tile</string>
    </property>
   </action>
   <action name="actionProtectSubtiles_Dungeon">
@@ -612,7 +612,7 @@
     <string>Protect Subtiles</string>
    </property>
    <property name="toolTip">
-    <string>Mark subtiles protected if there is an entity on the tile</string>
+    <string>Mark subtiles protected if there is an actor on the tile</string>
    </property>
   </action>
   <action name="actionCheckTiles_Dungeon">

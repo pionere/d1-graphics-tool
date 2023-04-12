@@ -1104,19 +1104,6 @@
       </item>
       <item row="2" column="15" colspan="4">
        <layout class="QHBoxLayout">
-        <!--property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property-->
-        <!--item>
-         <spacer>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </spacer>
-        </item-->
         <item>
          <widget class="QPushButton" name="tilesetLoadPushButton">
           <property name="text">

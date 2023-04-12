@@ -502,7 +502,7 @@ void DRLG_DrawMap(int idx)
 void DRLG_InitTrans()
 {
 	memset(dTransVal, 0, sizeof(dTransVal));
-	//memset(TransList, 0, sizeof(TransList));
+	//memset(TransList, 0, sizeof(TransList)); - LoadGame() needs this preserved
 	numtrans = 1;
 	gbDoTransVals = false;
 }
@@ -611,7 +611,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 	// prepare the propagation-directions
 	for (i = DMAXX - 1; i >= 0; i--) {
 		for (j = DMAXY - 1; j >= 0; j--) {
-			BYTE tvm = floorTypes[drlg.transvalMap[i][j]]; // tm[i * DMAXY + j]
+			BYTE tvm = floorTypes[drlg.transvalMap[i][j]];
 			BYTE tpm;
 			// 1. subtile
 			if (tvm & (1 << 0)) {

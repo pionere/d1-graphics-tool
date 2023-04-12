@@ -169,7 +169,6 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
             IncProgress();
 //            InitItems();
         }
-        FreeSetPieces();
     } else {
         LoadSetMap();
 		StoreProtections(dun);
@@ -182,6 +181,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 
         InitItems();
     }
+	FreeSetPieces();
     IncProgress();
 //    InitMissiles();  // reset missiles
 //    SavePreLighting(); // fill dPreLight
