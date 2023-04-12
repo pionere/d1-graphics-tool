@@ -113,8 +113,10 @@ static void CreateLevel()
 static void LoadGameLevel(int lvldir, D1Dun *dun)
 {
     //SetRndSeed(seed);
-
+extern int32_t sglGameSeed;
+LogErrorF("Seed -5: %d", sglGameSeed);
     IncProgress();
+LogErrorF("Seed -4: %d", sglGameSeed);
     InitLvlDungeon(); // load tiles + meta data, reset pWarps, pSetPieces
 //    MakeLightTable();
     IncProgress();
@@ -125,14 +127,15 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 //        InitLighting();
 //        InitVision();
     //}
-
+LogErrorF("Seed -3: %d", sglGameSeed);
     InitLevelMonsters(); // reset monster types
+LogErrorF("Seed -2: %d", sglGameSeed);
     InitLevelObjects();  // reset objects
+LogErrorF("Seed -1: %d", sglGameSeed);
 	InitLvlThemes();     // reset themes
     IncProgress();
 
 //    SetRndSeed(seed);
-extern int32_t sglGameSeed;
 LogErrorF("Seed 0: %d", sglGameSeed);
     if (!currLvl._dSetLvl) {
         // fill in loop: dungeon, dTransVal, pWarps, pSetPieces, uses drlgFlags, dungBlock
