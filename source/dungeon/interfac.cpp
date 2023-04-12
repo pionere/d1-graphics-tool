@@ -137,21 +137,13 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
             return;
         }
         IncProgress();
-        if (currLvl._dType != DTYPE_TOWN) {
-            GetLevelMTypes();
-            InitThemes();
-            IncProgress();
-            InitObjectGFX();
-        } else {
-//            InitLvlStores();
-            // TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
-            // SetRndSeed(seed);
-            IncProgress();
-        }
-        IncProgress();
-
-        if (currLvl._dType != DTYPE_TOWN) {
-//			if (IsMultiGame /*|| lvldir == ENTRY_LOAD */|| !IsLvlVisited(currLvl._dLevelIdx)) {
+		if (currLvl._dType != DTYPE_TOWN) {
+			GetLevelMTypes();
+			InitThemes();
+			IncProgress();
+			InitObjectGFX();
+			IncProgress();
+//			if (IsMultiGame || lvldir == ENTRY_LOAD || !IsLvlVisited(currLvl._dLevelIdx)) {
 				HoldThemeRooms();
 				InitMonsters();
 				IncProgress();
@@ -161,10 +153,16 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 //			} else {
 //				IncProgress();
 //			}
-        } else {
-//            InitTowners();
-            IncProgress();
-//            InitItems();
+		} else {
+//			InitLvlStores();
+			// TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
+			// SetRndSeed(seed);
+			IncProgress();
+			IncProgress();
+
+//			InitTowners();
+			IncProgress();
+//			InitItems();
         }
     } else {
         LoadSetMap();
