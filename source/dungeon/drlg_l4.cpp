@@ -289,50 +289,6 @@ static void DRGL_L4PatchSetPiece(BYTE *pMap)
 		for (int x = 0; x < w; x++) {
 			int pn = lm[x + y * w];
 			
-			/*// remove generic shadows (going to be regenerated)
-			if ((pn == 3 || pn == 4 || pn == 8 || pn == 15 || pn == 81) && x != 0 && y != 0) {
-				if (lm[x - 1 + y * w] == 47 && lm[x - 1 + (y - 1) * w] == 48) {
-					lm[x - 1 + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-					lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-				}
-			} else if (pn == 53 && x != 0) {
-				if (lm[x - 1 + y * w] == 54) {
-					lm[x - 1 + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-				}
-				if (y != 0 && lm[x - 1 + (y - 1) * w] == 55) {
-					lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-				}
-			} else if (pn == 56 && x >= 2 && y != 0) {
-				if (lm[x - 1 + y * w] == 60 && lm[x - 1 + (y - 1) * w] == 59 && lm[x - 2 + (y - 1) * w] == 58) {
-					lm[x - 1 + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-					lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-					lm[x - 2 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-				}
-			} else if (pn == 73 && x != 0 && y != 0) {
-				if (lm[x - 1 + y * w] == 71 && lm[x - 1 + (y - 1) * w] == 72) {
-					lm[x - 1 + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-					lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-				}
-			} else if ((pn == 76 || pn == 77) && x != 0 && y != 0) {
-				if (lm[x - 1 + y * w] == 74 && lm[x - 1 + (y - 1) * w] == 75) {
-					lm[x - 1 + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-					lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-				}
-			//} else if ((pn == 78 || pn == 16) && x != 0 && y != 0) {
-			//	if (lm[x - 1 + (y - 1) * w] == 72) {
-			//		lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-			//	}
-			}
-			// remove standard decorations -- TODO: vanilla only?
-			if (pn == 95 || pn == 96 || pn == 97) {
-				lm[x + y * w] = SwapLE16(0);
-				pn = 0;
-			}
-			// remove standard substitutions -- TODO: vanilla only?
-			if (L4BTYPES[pn] == DEFAULT_MEGATILE_L4) {
-				lm[x + y * w] = SwapLE16(0);
-				pn = 0;
-			}*/
 			// protect tiles
 			uint16_t modp = 0;
 			if (pn != 0) {
@@ -2031,9 +1987,11 @@ void CreateL4Dungeon()
 {
 	DRLG_LoadL4SP();
 	DRLG_L4();
-	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
+
 	DRLG_L4InitTransVals();
+	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
 	DRLG_Init_Globals();
+
 	DRLG_SetPC();
 }
 
@@ -2064,8 +2022,8 @@ void CreateL4Dungeon()
 
 	DRLG_DrawMap(0);
 
-	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
 	DRLG_L4InitTransVals();
+	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
 	DRLG_Init_Globals();
 
 	SetMapMonsters(pSetPieces[0]._spData, 0, 0);

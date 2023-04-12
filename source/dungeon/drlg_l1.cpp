@@ -2749,9 +2749,9 @@ void CreateL1Dungeon()
 {
 	DRLG_LoadL1SP();
 	DRLG_L1();
-	DRLG_PlaceMegaTiles(BASE_MEGATILE_L1);
 
 	DRLG_L1InitTransVals();
+	DRLG_PlaceMegaTiles(BASE_MEGATILE_L1);
 	DRLG_Init_Globals();
 	DRLG_InitL1Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
 
@@ -2825,8 +2825,8 @@ void LoadL1Dungeon(const LevelData* lds)
 	//DRLG_L1SetMapFix();
 	//DRLG_L1Floor();
 
-	DRLG_PlaceMegaTiles(BASE_MEGATILE_L1);
 	DRLG_L1InitTransVals();
+	DRLG_PlaceMegaTiles(BASE_MEGATILE_L1);
 	DRLG_Init_Globals();
 	DRLG_InitL1Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
 
