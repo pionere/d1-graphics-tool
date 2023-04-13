@@ -1904,10 +1904,12 @@ static void L1TileFix()
 
 static bool checkRoom(int x, int y, const L1ROOM const *room)
 {
-	if (dungeon[x][y] != DEFAULT_MEGATILE_L1) {
+	if (dungeon[x][y] != DEFAULT_MEGATILE_L1 || (drlgFlags[x][y] & DRLG_L1_CHAMBER)) {
 		// TODO: check if still inside the room?
 		return true;
 	}
+	drlgFlags[x][y] |= DRLG_L1_CHAMBER;
+
 	if (x < room->lrx || x >= room->lrx + room->lrw) {
 		return false;
 	}
@@ -1920,6 +1922,23 @@ static bool checkRoom(int x, int y, const L1ROOM const *room)
 		&& checkRoom(x + 1, y - 1, room) && checkRoom(x + 1, y, room) && checkRoom(x + 1, y + 1, room);
 }
 
+static void resetRoom(int x, int y)
+{
+	if (!drlgFlags[x][y] & DRLG_L1_CHAMBER) {
+		return;
+	}
+	drlgFlags[x][y] &= ~DRLG_L1_CHAMBER;
+
+	resetRoom(x, y - 1, room);
+	resetRoom(x, y + 1, room);
+	resetRoom(x - 1, y - 1, room);
+	resetRoom(x - 1, y, room);
+	resetRoom(x - 1, y + 1, room);
+	resetRoom(x + 1, y - 1, room);
+	resetRoom(x + 1, y, room);
+	resetRoom(x + 1, y + 1, room);
+}
+
 static void DRLG_L1PlaceThemeRooms()
 {
 	for (int i = ChambersFirst + ChambersMiddle + ChambersLast; i < nRoomCnt; i++) {
@@ -1930,7 +1949,9 @@ static void DRLG_L1PlaceThemeRooms()
 			LogErrorF("Failed room at %d:%d", DBORDERX + 2 * x, DBORDERY + 2 * y);
 			continue;
 		}
-		if (!checkRoom(x + 1, y + 1, &drlg.L1RoomList[i]))
+		bool fit = checkRoom(x + 1, y + 1, &drlg.L1RoomList[i]);
+		resetRoom(x + 1, y + 1);
+		if (!fit)
 			continue;
 		LogErrorF("Added as %d", numthemes);
 		int w = drlg.L1RoomList[i].lrw;
