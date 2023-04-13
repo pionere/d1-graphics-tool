@@ -6,6 +6,7 @@
 #include "all.h"
 
 #include <QApplication>
+#include <QDateTime>
 #include <QMessageBox>
 #include <QString>
 
@@ -229,13 +230,9 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
     EnterLevel(params.level);
     IncProgress();
 
-extern int minNa;
-extern int maxNa;
-minNa = INT32_MAX;
-maxNa = 0;
-
 	bool hasSubtiles;
 	int extraRounds = params.extraRounds;
+	quint64 started = QDateTime::currentMSecsSinceEpoch();
 	SetRndSeed(params.seed);
 	do {
 		extern int32_t sglGameSeed;
@@ -244,8 +241,8 @@ maxNa = 0;
 		hasSubtiles = pMegaTiles != NULL;
 		FreeLvlDungeon();
 	} while (--extraRounds >= 0);
-
-	LogErrorF("Generated dungeon minimum area %d, max area %d. NumThemes:%d", minNa, maxNa, numthemes);
+	quint64 now = QDateTime::currentMSecsSinceEpoch();
+	LogErrorF("Generated %d dungeon. Elapsed time: %dms.", now - started);
 
     dun->setLevelType(currLvl._dType);
 

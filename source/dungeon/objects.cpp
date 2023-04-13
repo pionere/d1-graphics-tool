@@ -25,7 +25,7 @@
 
 int trapid;
 static BYTE* objanimdata[NUM_OFILE_TYPES] = { 0 };
-//int objectactive[MAXOBJECTS];
+// int objectactive[MAXOBJECTS];
 /** Specifies the number of active objects. */
 int numobjects;
 int leverid;
@@ -310,7 +310,7 @@ static void InitRndLocObj(int numobjs, int objtype)
 	int i;
 	POS32 pos;
 
-	for (i = numobjs; i >= 0; i--) {
+	for (i = numobjs; i > 0; i--) {
 		pos = RndLoc3x3();
 		if (pos.x == 0)
 			break;
@@ -323,7 +323,7 @@ static void InitRndSarcs(int numobjs, int objtype)
 	int i;
 	POS32 pos;
 
-	for (i = numobjs; i >= 0; i--) {
+	for (i = numobjs; i > 0; i--) {
 		pos = RndLoc3x4();
 		if (pos.x == 0)
 			break;
@@ -382,7 +382,7 @@ static void InitRndBarrels(int numobjs, int otype)
 	static_assert((int)OBJ_POD + 1 == (int)OBJ_PODEX, "InitRndBarrels expects ordered BARREL enum III.");
 #endif
 
-	for (i = numobjs; i >= 0; i--) {
+	for (i = numobjs; i > 0; i--) {
 		do {
 			xp = random_(143, DSIZEX) + DBORDERX;
 			yp = random_(143, DSIZEY) + DBORDERY;
@@ -808,8 +808,6 @@ static void AddHookedBodies()
 	}
 }
 
-int minNa = INT32_MAX;
-int maxNa = 0;
 void InitObjects()
 {
 	//gbInitObjFlag = true;
@@ -871,12 +869,6 @@ void InitObjects()
 			for (int yy = DBORDERY; yy < DSIZEY + DBORDERY; yy++)
 				if ((nSolidTable[dPiece[xx][yy]] | (dFlags[xx][yy] & (BFLAG_ALERT | BFLAG_POPULATED))) == 0)
 					na++;
-if (na > maxNa) {
-	maxNa = na;
-}
-if (na < minNa) {
-	minNa = na;
-}
 
 	BYTE lvlMask = 1 << currLvl._dType;
 	if (lvlMask & objectdata[OBJ_SARC].oLvlTypes) {
