@@ -432,7 +432,7 @@ void HoldThemeRooms()
 			v = themes[i]._tsTransVal;
 			for (x = xx; x <= xx + w; x++) {
 				for (y = yy; y <= yy + h; y++) {
-					if (dTransVal[xx][yy] == v) {
+					if (dTransVal[x][y] == v) {
 						dFlags[x][y] |= BFLAG_POPULATED;
 					}
 				}
