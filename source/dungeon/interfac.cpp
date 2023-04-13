@@ -42,10 +42,10 @@ void LogErrorF(const char* msg, ...)
 {
 	char tmp[256];
 	//snprintf(tmp, sizeof(tmp), "f:\\logdebug%d_%d.txt", mypnum, SDL_ThreadID());
-	snprintf(tmp, sizeof(tmp), "f:\\logdebug%d.txt", 0);
+	/*snprintf(tmp, sizeof(tmp), "f:\\logdebug%d.txt", 0);
 	FILE* f0 = fopen(tmp, "a+");
 	if (f0 == NULL)
-		return;
+		return;*/
 
 	va_list va;
 
@@ -55,12 +55,12 @@ void LogErrorF(const char* msg, ...)
 
 	va_end(va);
 
-//	dProgress() << QString(tmp);
-	fputs(tmp, f0);
+	dProgress() << QString(tmp);
+	/*fputs(tmp, f0);
 
 	fputc('\n', f0);
 
-	fclose(f0);
+	fclose(f0);*/
 }
 
 static void StoreProtections(D1Dun *dun)
