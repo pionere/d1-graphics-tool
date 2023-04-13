@@ -1212,6 +1212,19 @@ static void AddTorturedFemaleBody(int oi)
 	//os->_oPreFlag = TRUE;
 }
 
+std::pair<int, int> themeLoc(int x, int y)
+{
+	for (int i = 0; i < numthemes; i++) {
+		if (themes[i]._tsx <= x && themes[i]._tsx + themes[i]._tsWidth > x && themes[i]._tsy <= y && themes[i]._tsy + themes[i]._tsHeight > y) {
+			return std::pair<int, bool>(i, 2);
+		}
+		if (themes[i]._tsTransVal == dTransVal[x][y]) {
+			return std::pair<int, bool>(i, 1);
+		}
+	}
+	return std::pair<int, bool>(0, 0);
+}
+
 int AddObject(int type, int ox, int oy)
 {
 	int oi;
@@ -1232,7 +1245,12 @@ int AddObject(int type, int ox, int oy)
 	if (dObject[ox][oy] != 0) {
 		int on = dObject[ox][oy];
 		on = on >= 0 ? on - 1 : -(on + 1);
-		dProgressErr() << QApplication::tr("Multiple objects on tile %1:%2 - type %3 with index %4 and type %5 with index %6.").arg(ox).arg(oy).arg(type).arg(oi).arg(objects[on]._otype).arg(on);
+		std::pair<int, bool> tl = themeLoc(ox, oy);
+		QString msg = QApplication::tr("Multiple objects on tile %1:%2 - type %3 with index %4 and type %5 with index %6. Theme loc %d:%d, pos %d:%d, w/h %d:%d tv %d");
+		msg = msg.arg(ox).arg(oy).arg(type).arg(oi).arg(objects[on]._otype).arg(on);
+		int i = tl.first;
+		msg = msg.arg(i).arg(tl.second).arg(themes[i]._tsx).arg(themes[i]._tsy).arg(themes[i]._tsWidth).arg(themes[i]._tsHeight).arg(themes[i]._tsTransVal);
+		dProgressErr() << msg;
 	}
 	dObject[ox][oy] = oi + 1;
 	// dFlags[ox][oy] |= BFLAG_POPULATED;
