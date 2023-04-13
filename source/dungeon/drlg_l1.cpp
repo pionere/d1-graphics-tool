@@ -1919,13 +1919,13 @@ static bool checkRoom(int x, int y, const L1ROOM* const room)
 	drlgFlags[x][y] |= DRLG_L1_CHAMBER;
 
 	if (dungeon[x][y] != DEFAULT_MEGATILE_L1) {
-		if ((x <= room->lrx || x >= room->lrx + room->lrw) && (y <= room->lry || y >= room->lry + room->lrh))
+		if ((x <= room->lrx || x >= room->lrx + room->lrw) || (y <= room->lry || y >= room->lry + room->lrh))
 			return true;
 		failReason = 4;
 		reason1 = x;
 		reason2 = y;
 		return false;
-		//return (x <= room->lrx || x >= room->lrx + room->lrw) && (y <= room->lry || y >= room->lry + room->lrh);
+		//return (x <= room->lrx || x >= room->lrx + room->lrw) || (y <= room->lry || y >= room->lry + room->lrh);
 	}
 	if (x < room->lrx || x >= room->lrx + room->lrw) {
 		failReason = 2;
