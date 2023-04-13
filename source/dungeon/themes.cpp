@@ -381,7 +381,8 @@ void InitThemes()
 		}
 	} else {*/
 		for (i = 0; i < numthemes; i++) {
-			themes[i]._tsTransVal = dTransVal[DBORDERX + 2 * themes[i]._tsx + themes[i]._tsWidth][DBORDERY + 2 * themes[i]._tsy + themes[i]._tsHeight];
+			//themes[i]._tsTransVal = dTransVal[DBORDERX + 2 * themes[i]._tsx + themes[i]._tsWidth][DBORDERY + 2 * themes[i]._tsy + themes[i]._tsHeight];
+			themes[i]._tsTransVal = dTransVal[DBORDERX + 2 * themes[i]._tsx][DBORDERY + 2 * themes[i]._tsy];
 			if (themes[i]._tsTransVal == 0) {
 				dProgressErr() << QApplication::tr("Invalid theme room @%1:%2 width:%3 height:%4.").arg(DBORDERX + 2 * themes[i]._tsx).arg(DBORDERY + 2 * themes[i]._tsy).arg(themes[i]._tsWidth).arg(themes[i]._tsHeight);
 			}

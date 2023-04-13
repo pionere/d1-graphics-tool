@@ -1902,20 +1902,41 @@ static void L1TileFix()
 #endif
 }
 
+static int failReason;
+static int reason1;
+static int reason2;
 static bool checkRoom(int x, int y, const L1ROOM* const room)
 {
+	if (drlgFlags[x][y] & DRLG_PROTECTED) {
+		failReason = 1;
+		reason1 = x;
+		reason2 = y;
+		return false;
+	}
 	if (drlgFlags[x][y] & DRLG_L1_CHAMBER) {
 		return true;
 	}
 	drlgFlags[x][y] |= DRLG_L1_CHAMBER;
 
 	if (dungeon[x][y] != DEFAULT_MEGATILE_L1) {
-		return (x <= room->lrx || x >= room->lrx + room->lrw) && (y <= room->lry || y >= room->lry + room->lrh);
+		if (x <= room->lrx || x >= room->lrx + room->lrw) && (y <= room->lry || y >= room->lry + room->lrh)
+			return true;
+		failReason = 4;
+		reason1 = x;
+		reason2 = y;
+		return false;
+		//return (x <= room->lrx || x >= room->lrx + room->lrw) && (y <= room->lry || y >= room->lry + room->lrh);
 	}
 	if (x < room->lrx || x >= room->lrx + room->lrw) {
+		failReason = 2;
+		reason1 = x;
+		reason2 = y;
 		return false;
 	}
 	if (y < room->lry || y >= room->lry + room->lrh) {
+		failReason = 3;
+		reason1 = x;
+		reason2 = y;
 		return false;
 	}
 
@@ -1948,6 +1969,7 @@ static void DRLG_L1PlaceThemeRooms()
 		int y = drlg.L1RoomList[i].lry;
 		int w = drlg.L1RoomList[i].lrw;
 		int h = drlg.L1RoomList[i].lrh;
+		failReason = 0;
 		if (dungeon[x][y] != DEFAULT_MEGATILE_L1) {
 			if (dungeon[x + 1][y] == DEFAULT_MEGATILE_L1) {
 				x++;
@@ -1961,15 +1983,16 @@ static void DRLG_L1PlaceThemeRooms()
 				y++;
 				h--;
 			} else {
-				LogErrorF("Failed room at %d:%d w/h %d:%d", DBORDERX + 2 * x, DBORDERY + 2 * y, w, h);
 				continue;
 			}
 		}
 		bool fit = checkRoom(x, y, &drlg.L1RoomList[i]);
 		resetRoom(x, y);
 		if (!fit) {
+		LogErrorF("Unfit room at %d:%d w/h %d:%d reason %d @ %d:%d", DBORDERX + 2 * x, DBORDERX + 2 * y, 2 * w, 2 * h, failReason, DBORDERX + 2 * reason1, DBORDERX + 2 * reason2)
 			continue;
 		}
+		LogErrorF("Added room at %d:%d w/h %d:%d", DBORDERX + 2 * x, DBORDERX + 2 * y, 2 * w, 2 * h)
 		// create the room
 		themes[numthemes]._tsx = x;
 		themes[numthemes]._tsy = y;
