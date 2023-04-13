@@ -1902,42 +1902,42 @@ static void L1TileFix()
 #endif
 }
 
-static int failReason;
+/*static int failReason;
 static int reason1;
-static int reason2;
+static int reason2;*/
 static bool checkRoom(int x, int y, const L1ROOM* const room)
 {
 	if (drlgFlags[x][y] & DRLG_PROTECTED) {
-		failReason = 1;
-		reason1 = x;
-		reason2 = y;
-		return false;
+		//failReason = 1;
+		//reason1 = x;
+		//reason2 = y;
+		return false; // setpiece in the room -> skip
 	}
 	if (drlgFlags[x][y] & DRLG_L1_CHAMBER) {
-		return true;
+		return true; // already checked -> done
 	}
 	drlgFlags[x][y] |= DRLG_L1_CHAMBER;
 
 	if (dungeon[x][y] != DEFAULT_MEGATILE_L1) {
 		if ((x <= room->lrx || x >= room->lrx + room->lrw - 1) || (y <= room->lry || y >= room->lry + room->lrh - 1))
 			return true;
-		failReason = 4;
-		reason1 = x;
-		reason2 = y;
-		return false;
+		//failReason = 4;
+		//reason1 = x;
+		//reason2 = y;
+		return false; // room is not intact -> skip
 		//return (x <= room->lrx || x >= room->lrx + room->lrw - 1) || (y <= room->lry || y >= room->lry + room->lrh - 1);
 	}
 	if (x < room->lrx || x >= room->lrx + room->lrw) {
-		failReason = 2;
-		reason1 = x;
-		reason2 = y;
-		return false;
+		//failReason = 2;
+		//reason1 = x;
+		//reason2 = y;
+		return false; // left the room -> skip
 	}
 	if (y < room->lry || y >= room->lry + room->lrh) {
-		failReason = 3;
-		reason1 = x;
-		reason2 = y;
-		return false;
+		//failReason = 3;
+		//reason1 = x;
+		//reason2 = y;
+		return false; // left the room -> skip
 	}
 
 	return checkRoom(x, y - 1, room) && checkRoom(x, y + 1, room)
@@ -1969,7 +1969,7 @@ static void DRLG_L1PlaceThemeRooms()
 		int y = drlg.L1RoomList[i].lry;
 		int w = drlg.L1RoomList[i].lrw;
 		int h = drlg.L1RoomList[i].lrh;
-		failReason = 0;
+		//failReason = 0;
 		if (dungeon[x][y] != DEFAULT_MEGATILE_L1) {
 			if (dungeon[x + 1][y] == DEFAULT_MEGATILE_L1) {
 				x++;
@@ -1989,10 +1989,10 @@ static void DRLG_L1PlaceThemeRooms()
 		bool fit = checkRoom(x, y, &drlg.L1RoomList[i]);
 		resetRoom(x, y);
 		if (!fit) {
-		LogErrorF("Unfit room at %d:%d w/h %d:%d reason %d @ %d:%d", DBORDERX + 2 * x, DBORDERX + 2 * y, 2 * w, 2 * h, failReason, DBORDERX + 2 * reason1, DBORDERX + 2 * reason2);
+		//LogErrorF("Unfit room at %d:%d w/h %d:%d reason %d @ %d:%d", DBORDERX + 2 * x, DBORDERX + 2 * y, 2 * w, 2 * h, failReason, DBORDERX + 2 * reason1, DBORDERX + 2 * reason2);
 			continue;
 		}
-		LogErrorF("Added room at %d:%d w/h %d:%d", DBORDERX + 2 * x, DBORDERX + 2 * y, 2 * w, 2 * h);
+		//LogErrorF("Added room at %d:%d w/h %d:%d", DBORDERX + 2 * x, DBORDERX + 2 * y, 2 * w, 2 * h);
 		// create the room
 		themes[numthemes]._tsx = x;
 		themes[numthemes]._tsy = y;
