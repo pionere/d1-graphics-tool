@@ -152,7 +152,7 @@ static void PlaceInitItems()
 
 void InitItems()
 {
-	if (!currLvl._dSetLvl) {
+	// if (!currLvl._dSetLvl) {
 		if (QuestStatus(Q_ROCK))
 			PlaceRock();
 		if (QuestStatus(Q_ANVIL))
@@ -176,7 +176,7 @@ void InitItems()
 		if (currLvl._dLevelIdx >= DLV_CRYPT1 && currLvl._dLevelIdx <= DLV_CRYPT3)
 			PlaceNote();
 #endif
-	}
+	// }
 }
 
 void SetItemData(int ii, int idata)

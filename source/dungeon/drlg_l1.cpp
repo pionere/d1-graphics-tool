@@ -1947,6 +1947,9 @@ static bool checkRoom(int x, int y, const L1ROOM* const room)
 
 static void resetRoom(int x, int y)
 {
+	if (x < 0 || x >= DMAXX || y < 0 || y >= DMAXY) {
+		return;
+	}
 	if (!(drlgFlags[x][y] & DRLG_L1_CHAMBER)) {
 		return;
 	}
@@ -1999,6 +2002,9 @@ static void DRLG_L1PlaceThemeRooms()
 		themes[numthemes]._tsWidth = w;
 		themes[numthemes]._tsHeight = h;
 		numthemes++;
+		if (numthemes == lengthof(numthemes)) {
+			break;
+		}
 	}
 }
 
@@ -2803,7 +2809,7 @@ static void DRLG_L1()
 #endif
 	{
 		// assert(currLvl._dType == DTYPE_CATHEDRAL);
-		//DRLG_L1PlaceThemeRooms();
+		DRLG_L1PlaceThemeRooms();
 
 		DRLG_L1Subs();
 		DRLG_L1Shadows();
