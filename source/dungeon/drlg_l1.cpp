@@ -2803,13 +2803,13 @@ static void DRLG_L1()
 #endif
 	{
 		// assert(currLvl._dType == DTYPE_CATHEDRAL);
-		/*DRLG_L1PlaceThemeRooms();
+		//DRLG_L1PlaceThemeRooms();
 
 		DRLG_L1Subs();
 		DRLG_L1Shadows();
 		for (i = RandRange(5, 9); i > 0; i--)
 			DRLG_PlaceMiniSet(LAMPS);
-		DRLG_L1Floor();*/
+		DRLG_L1Floor();
 	}
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
