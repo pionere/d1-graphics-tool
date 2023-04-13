@@ -1966,10 +1966,8 @@ static void DRLG_L1PlaceThemeRooms()
 		bool fit = checkRoom(x, y, &drlg.L1RoomList[i]);
 		resetRoom(x, y);
 		if (!fit) {
-			LogErrorF("Unfit room at %d:%d w/h %d:%d", DBORDERX + 2 * x, DBORDERY + 2 * y, w, h);
 			continue;
 		}
-		LogErrorF("Added room at %d:%d as %d sp %d:%d w/h %d:%d", DBORDERX + 2 * x, DBORDERY + 2 * y, numthemes, drlg.L1RoomList[i].lrx, drlg.L1RoomList[i].lry, w, h);
 		// create the room
 		themes[numthemes]._tsx = x;
 		themes[numthemes]._tsy = y;
@@ -1977,7 +1975,6 @@ static void DRLG_L1PlaceThemeRooms()
 		themes[numthemes]._tsHeight = h;
 		numthemes++;
 	}
-	LogErrorF("DRLG_L1PlaceThemeRooms done. %d", numthemes);
 }
 
 #ifdef HELLFIRE
