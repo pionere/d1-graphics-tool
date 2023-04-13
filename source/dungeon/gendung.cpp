@@ -456,8 +456,9 @@ void DRLG_PlaceMegaTiles(int mt)
 			mt = dungeon[i][j] - 1;
 			if (mt < 0) {
 				LogErrorF("Missing tile at %d:%d .. %d:%d", i, j, xx, yy);
+				xx += 2;
 				continue;
-            }
+			}
 			assert(mt >= 0);
 			Tiles = &pMegaTiles[mt * 4];
 			v1 = SwapLE16(Tiles[0]) + 1;
