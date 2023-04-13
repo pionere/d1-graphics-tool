@@ -1907,6 +1907,9 @@ static int reason1;
 static int reason2;*/
 static bool checkRoom(int x, int y, const L1ROOM* const room)
 {
+	if (x < 0 || x >= DMAXX || y < 0 || y >= DMAXY) {
+		return true;
+	}
 	if (drlgFlags[x][y] & DRLG_PROTECTED) {
 		//failReason = 1;
 		//reason1 = x;
