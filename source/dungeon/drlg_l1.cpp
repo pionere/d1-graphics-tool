@@ -1902,54 +1902,47 @@ static void L1TileFix()
 #endif
 }
 
+static bool checkRoom(int x, int y, const L1ROOM const *room)
+{
+	if (dungeon[x][y] != DEFAULT_MEGATILE_L1) {
+		// TODO: check if still inside the room?
+		return true;
+	}
+	if (x < room->lrx || x >= room->lrx + room->lrw) {
+		return false;
+	}
+	if (y < room->lry || y >= room->lry + room->lrh) {
+		return false;
+	}
+
+	return checkRoom(x, y - 1, room) && checkRoom(x, y + 1, room)
+		&& checkRoom(x - 1, y - 1, room) && checkRoom(x - 1, y, room) && checkRoom(x - 1, y + 1, room)
+		&& checkRoom(x + 1, y - 1, room) && checkRoom(x + 1, y, room) && checkRoom(x + 1, y + 1, room);
+}
+
 static void DRLG_L1PlaceThemeRooms()
 {
 	for (int i = ChambersFirst + ChambersMiddle + ChambersLast; i < nRoomCnt; i++) {
 		int x = drlg.L1RoomList[i].lrx;
 		int y = drlg.L1RoomList[i].lry;
+		// assert(dungeon[x + 1][y + 1] == DEFAULT_MEGATILE_L1);
+		if (dungeon[x + 1][y + 1] != DEFAULT_MEGATILE_L1) {
+			LogErrorF("Failed room at %d:%d", DBORDERX + 2 * x, DBORDERY + 2 * y);
+			continue;
+		}
+		if (!checkRoom(x + 1, y + 1, &drlg.L1RoomList[i]))
+			continue;
+		LogErrorF("Added as %d", numthemes);
 		int w = drlg.L1RoomList[i].lrw;
 		int h = drlg.L1RoomList[i].lrh;
-		LogErrorF("Checking room at %d:%d - w/h:%d, %d", DBORDERX + 2 * x, DBORDERX + 2 * y, 2 * w, 2 * h);
-		// check the inner tiles
-		int xx = x, yy;
-		for ( ; xx < x + w; xx++) {
-			yy = y + 1;
-			for ( ; yy < y + h; yy++) {
-				if (dungeon[xx][yy] != DEFAULT_MEGATILE_L1) {
-		LogErrorF("Failed at %d:%d - dv%d vs 13", DBORDERX + 2 * xx, DBORDERX + 2 * yy, dungeon[xx][yy]);
-					break;
-				}
-			}
-			if (yy < y + h) {
-				break;
-			}
+		if (dungeon[x][y] != DEFAULT_MEGATILE_L1) {
+			x++;
+			w--;
 		}
-		if (xx < x + w) {
-			continue;
+		if (dungeon[x][y] != DEFAULT_MEGATILE_L1) {
+			y++;
+			h--;
 		}
-		// check left and right side
-		yy = y - 1;
-		for ( ; yy < y + h + 1; yy++) {
-			if (dungeon[x - 1][yy] == DEFAULT_MEGATILE_L1 || dungeon[x + w][yy] == DEFAULT_MEGATILE_L1) {
-		LogErrorF("Failed at :%d - dv%d and %d", DBORDERX + 2 * yy, dungeon[x - 1][yy], dungeon[x + w][yy]);
-				break;
-			}
-		}
-		if (yy < y + h + 1) {
-			continue;
-		}
-		// check top and bottom side
-		xx = x;
-		for ( ; xx < x + w; xx++) {
-			if (dungeon[xx][y - 1] == DEFAULT_MEGATILE_L1 || dungeon[xx][y + h] == DEFAULT_MEGATILE_L1) {
-		LogErrorF("Failed at %d: - dv%d and %d", DBORDERX + 2 * xx, dungeon[xx][y - 1], dungeon[xx][y + h]);
-				break;
-			}
-		}
-		if (xx < x + w) {
-			continue;
-		}
-		LogErrorF("Added as %d", numthemes);
 		// create the room
 		themes[numthemes]._tsx = x;
 		themes[numthemes]._tsy = y;
