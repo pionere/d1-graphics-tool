@@ -571,7 +571,10 @@ static void Theme_MonstPit(BYTE tv)
 
 static void AddSkelMonster(int x, int y)
 {
-	assert(PosOkActor(x, y));
+	if (!PosOkActor(x, y)) {
+		LogErrorF("AddSkelMonster failed to place monster to %d:%d room-id:%d", x, y, dTransVal[x][y]);
+		return;
+	}
 	AddMonster(mapSkelTypes[random_low(136, numSkelTypes)], x, y);
 }
 
