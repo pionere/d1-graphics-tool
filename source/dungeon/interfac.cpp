@@ -234,6 +234,7 @@ extern int minNa;
 extern int maxNa;
 minNa = INT32_MAX;
 maxNa = 0;
+maxNc = 0;
 
 	bool hasSubtiles;
 	int extraRounds = params.extraRounds;
@@ -246,7 +247,7 @@ maxNa = 0;
 		FreeLvlDungeon();
 	} while (--extraRounds >= 0);
 
-	LogErrorF("Generated dungeon minimum area %d, max area %d. NumThemes:%d", minNa, maxNa, numthemes);
+	LogErrorF("Generated dungeon minimum area %d, max area %d. NumChests: %d NumThemes:%d", minNa, maxNa, maxNc, numthemes);
 
     dun->setLevelType(currLvl._dType);
 

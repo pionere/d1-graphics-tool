@@ -1931,7 +1931,7 @@ static void DRLG_L1PlaceThemeRooms()
 		yy = y - 1;
 		for ( ; yy < y + h + 1; yy++) {
 			if (dungeon[x - 1][yy] == DEFAULT_MEGATILE_L1 || dungeon[x + w][yy] == DEFAULT_MEGATILE_L1) {
-		LogErrorF("Failed at %d:%d - dv%d and %d", DBORDERX + 2 * xx, DBORDERX + 2 * yy, dungeon[x - 1][yy], dungeon[x + w][yy]);
+		LogErrorF("Failed at :%d - dv%d and %d", DBORDERX + 2 * yy, dungeon[x - 1][yy], dungeon[x + w][yy]);
 				break;
 			}
 		}
@@ -1942,7 +1942,7 @@ static void DRLG_L1PlaceThemeRooms()
 		xx = x;
 		for ( ; xx < x + w; xx++) {
 			if (dungeon[xx][y - 1] == DEFAULT_MEGATILE_L1 || dungeon[xx][y + h] == DEFAULT_MEGATILE_L1) {
-		LogErrorF("Failed at %d:%d - dv%d and %d", DBORDERX + 2 * xx, DBORDERX + 2 * yy, dungeon[xx][y - 1], dungeon[xx][y + h]);
+		LogErrorF("Failed at %d: - dv%d and %d", DBORDERX + 2 * xx, dungeon[xx][y - 1], dungeon[xx][y + h]);
 				break;
 			}
 		}

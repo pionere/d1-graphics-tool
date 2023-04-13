@@ -824,14 +824,15 @@ static void AddHookedBodies()
 static void AddL4Goodies()
 {
 	AddHookedBodies();
-	InitRndLocObj(2 * 4, 6 * 4, OBJ_TNUDEM);
-	InitRndLocObj(2 * 3, 6 * 3, OBJ_TNUDEW);
+	InitRndLocObj(8, 24, OBJ_TNUDEM);
+	InitRndLocObj(6, 18, OBJ_TNUDEW);
 	InitRndLocObj(2, 6, OBJ_DECAP);
 	InitRndLocObj(1, 3, OBJ_CAULDRON);
 }
 
 int minNa = INT32_MAX;
 int maxNa = 0;
+int maxNc = 0;
 void InitObjects()
 {
 	//gbInitObjFlag = true;
@@ -940,9 +941,14 @@ if (na < minNa) {
 	}
 #endif
 	assert(objectdata[OBJ_CHEST1].oLvlTypes == DTM_ANY && objectdata[OBJ_CHEST2].oLvlTypes == DTM_ANY && objectdata[OBJ_CHEST3].oLvlTypes == DTM_ANY);
+	int numchests = numobjects;
 	InitRndLocObj(5, 10, OBJ_CHEST1);
 	InitRndLocObj(3, 6, OBJ_CHEST2);
 	InitRndLocObj(1, 5, OBJ_CHEST3);
+	numchests = numobjects - numchests;
+	if (maxNc < numchests) {
+		maxNc = numchests;
+    }
 	assert(objectdata[OBJ_TRAPL].oLvlTypes == objectdata[OBJ_TRAPR].oLvlTypes);
 	if (lvlMask & objectdata[OBJ_TRAPL].oLvlTypes) {
 		AddObjTraps();
