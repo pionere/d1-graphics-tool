@@ -382,7 +382,7 @@ void InitThemes()
 	} else {*/
 		for (i = 0; i < numthemes; i++) {
 			//themes[i]._tsTransVal = dTransVal[DBORDERX + 2 * themes[i]._tsx + themes[i]._tsWidth][DBORDERY + 2 * themes[i]._tsy + themes[i]._tsHeight];
-			themes[i]._tsTransVal = dTransVal[DBORDERX + 2 * themes[i]._tsx + 1][DBORDERY + 2 * themes[i]._tsy + 1];
+			themes[i]._tsTransVal = dTransVal[DBORDERX + 2 * (themes[i]._tsx + 1)][DBORDERY + 2 * (themes[i]._tsy + 1)];
 			if (themes[i]._tsTransVal == 0) {
 				dProgressErr() << QApplication::tr("Invalid theme room @%1:%2 width:%3 height:%4.").arg(DBORDERX + 2 * themes[i]._tsx).arg(DBORDERY + 2 * themes[i]._tsy).arg(themes[i]._tsWidth).arg(themes[i]._tsHeight);
 			}
@@ -408,11 +408,11 @@ void InitThemes()
 void HoldThemeRooms()
 {
 	int i, x, y, xx, yy;
-	BYTE v;
+	// BYTE v;
 	// assert(currLvl._dType != DTYPE_TOWN);
 	// assert(currLvl._dLevelIdx < DLV_HELL4 || numthemes == 0); // there are no themes in hellfire (and on diablo-level)
 
-	if (currLvl._dDunType == DTYPE_CATHEDRAL) { // TODO: use dType instead?
+	/*if (currLvl._dDunType == DTYPE_CATHEDRAL) { // TODO: use dType instead?
 		for (i = 0; i < numthemes; i++) {
 			v = themes[i]._tsTransVal;
 			for (xx = DBORDERX; xx < DBORDERX + DSIZEX; xx++) {
@@ -423,20 +423,19 @@ void HoldThemeRooms()
 				}
 			}
 		}
-	} else {
-		for (i = 0; i < numthemes; i++) {
-			for (x = themes[i]._tsx; x < themes[i]._tsx + themes[i]._tsWidth; x++) {
-				for (y = themes[i]._tsy; y < themes[i]._tsy + themes[i]._tsHeight; y++) {
-					xx = 2 * x + DBORDERX;
-					yy = 2 * y + DBORDERY;
-					dFlags[xx][yy] |= BFLAG_POPULATED;
-					dFlags[xx + 1][yy] |= BFLAG_POPULATED;
-					dFlags[xx][yy + 1] |= BFLAG_POPULATED;
-					dFlags[xx + 1][yy + 1] |= BFLAG_POPULATED;
+	} else {*/
+		for (i = numthemes - 1; i >= 0; i--) {
+			xx = 2 * themes[i]._tsx + DBORDERX;
+			yy = 2 * themes[i]._tsy + DBORDERY;
+			int w = 2 * themes[i]._tsWidth;
+			int h = 2 * themes[i]._tsHeight;
+			for (x = xx; x < xx + w; x++) {
+				for (y = yy; y < yy + h; y++) {
+					dFlags[x][y] |= BFLAG_POPULATED;
 				}
 			}
 		}
-	}
+	//}
 }
 
 /*
