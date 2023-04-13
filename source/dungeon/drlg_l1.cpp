@@ -1904,12 +1904,14 @@ static void L1TileFix()
 
 static bool checkRoom(int x, int y, const L1ROOM* const room)
 {
-	if (dungeon[x][y] != DEFAULT_MEGATILE_L1 || (drlgFlags[x][y] & DRLG_L1_CHAMBER)) {
-		// TODO: check if still inside the room?
+	if (drlgFlags[x][y] & DRLG_L1_CHAMBER) {
 		return true;
 	}
 	drlgFlags[x][y] |= DRLG_L1_CHAMBER;
 
+	if (dungeon[x][y] != DEFAULT_MEGATILE_L1) {
+		return (x <= room->lrx || x >= room->lrx + room->lrw) && (y <= room->lry || y >= room->lry + room->lrh);
+	}
 	if (x < room->lrx || x >= room->lrx + room->lrw) {
 		return false;
 	}
