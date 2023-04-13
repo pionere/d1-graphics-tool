@@ -1997,10 +1997,10 @@ static void DRLG_L1PlaceThemeRooms()
 		}
 		//LogErrorF("Added room at %d:%d w/h %d:%d", DBORDERX + 2 * x, DBORDERX + 2 * y, 2 * w, 2 * h);
 		// create the room
-		themes[numthemes]._tsx = x;
-		themes[numthemes]._tsy = y;
-		themes[numthemes]._tsWidth = w;
-		themes[numthemes]._tsHeight = h;
+		themes[numthemes]._tsx = x - 1;
+		themes[numthemes]._tsy = y - 1;
+		themes[numthemes]._tsWidth = w + 1;
+		themes[numthemes]._tsHeight = h + 1;
 		numthemes++;
 		if (numthemes == lengthof(themes)) {
 			break;
