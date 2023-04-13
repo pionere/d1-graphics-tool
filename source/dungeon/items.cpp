@@ -105,6 +105,27 @@ void InitItemGFX()
 	}*/
 }
 
+void FreeItemGFX()
+{
+	/*int i;
+
+	for (i = 0; i < NUM_IFILE; i++) {
+		MemFreeDbg(itemanims[i]);
+	}*/
+}
+
+void InitLvlItems()
+{
+	int i;
+
+	numitems = 0;
+
+	//memset(items, 0, sizeof(items));
+	for (i = 0; i < MAXITEMS; i++) {
+		itemactive[i] = i;
+	}
+}
+
 static void PlaceInitItems()
 {
 	int ii, i, seed;
@@ -131,16 +152,7 @@ static void PlaceInitItems()
 
 void InitItems()
 {
-	int i;
-
-	numitems = 0;
-
-	//memset(items, 0, sizeof(items));
-	for (i = 0; i < MAXITEMS; i++) {
-		itemactive[i] = i;
-	}
-
-	if (!currLvl._dSetLvl) {
+	// if (!currLvl._dSetLvl) {
 		if (QuestStatus(Q_ROCK))
 			PlaceRock();
 		if (QuestStatus(Q_ANVIL))
@@ -164,7 +176,7 @@ void InitItems()
 		if (currLvl._dLevelIdx >= DLV_CRYPT1 && currLvl._dLevelIdx <= DLV_CRYPT3)
 			PlaceNote();
 #endif
-	}
+	// }
 }
 
 void SetItemData(int ii, int idata)
@@ -1362,13 +1374,4 @@ void RespawnItem(int ii)
 		PlaySfxLoc(itemfiledata[ItemCAnimTbl[ICURS_MAGIC_ROCK]].idSFX, is->_ix, is->_iy);
 	} else if (is->_iCurs == ICURS_TAVERN_SIGN || is->_iCurs == ICURS_ANVIL_OF_FURY)
 		is->_iSelFlag = 1;*/
-}
-
-void FreeItemGFX()
-{
-	/*int i;
-
-	for (i = 0; i < NUM_IFILE; i++) {
-		MemFreeDbg(itemanims[i]);
-	}*/
 }

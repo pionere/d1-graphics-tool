@@ -125,10 +125,11 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 //        InitVision();
     //}
 
-    InitLevelMonsters();
-    InitLevelObjects();
+	InitLevelMonsters(); // reset monsters
+	InitLevelObjects();  // reset objects
 	InitLvlThemes();     // reset themes
-    IncProgress();
+	InitLvlItems();      // reset items
+	IncProgress();
 
 	SetRndSeed(gameSeed); // restore seed after InitLevelMonsters
     if (!currLvl._dSetLvl) {
@@ -175,7 +176,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
         // InitMonsters();
         IncProgress();
 
-        InitItems();
+		// InitItems();
     }
 	FreeSetPieces();
     IncProgress();

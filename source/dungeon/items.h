@@ -24,6 +24,8 @@ extern ItemStruct items[MAXITEMS + 1];
 extern int numitems;
 
 void InitItemGFX();
+void FreeItemGFX();
+void InitLvlItems();
 void InitItems();
 void GetItemSeed(ItemStruct* is);
 void SetGoldItemValue(ItemStruct* is, int value);
@@ -36,6 +38,5 @@ void CreateQuestItemAt(int idx, int x, int y);
 void PlaceRock();
 void RespawnItem(int ii);
 void DeleteItems(int ii);
-void FreeItemGFX();
 
 #endif /* __ITEMS_H__ */
