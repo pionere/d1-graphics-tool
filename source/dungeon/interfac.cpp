@@ -232,6 +232,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
 
 extern int minNa;
 extern int maxNa;
+extern int maxNc;
 minNa = INT32_MAX;
 maxNa = 0;
 maxNc = 0;
