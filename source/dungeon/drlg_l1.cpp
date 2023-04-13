@@ -2002,7 +2002,7 @@ static void DRLG_L1PlaceThemeRooms()
 		themes[numthemes]._tsWidth = w;
 		themes[numthemes]._tsHeight = h;
 		numthemes++;
-		if (numthemes == lengthof(numthemes)) {
+		if (numthemes == lengthof(themes)) {
 			break;
 		}
 	}
