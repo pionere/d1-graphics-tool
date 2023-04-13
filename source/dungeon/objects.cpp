@@ -541,7 +541,7 @@ static void AddL2Torches()
 
 static void AddObjTraps()
 {
-	int i, oi, ox, oy, tx, ty, on, rndv;
+	int i, ox, oy, tx, ty, on, rndv;
 
 	rndv = 10 + (currLvl._dLevel >> 1);
 	for (i = 0; i < numobjects; i++) {
@@ -591,11 +591,11 @@ static void AddObjTraps()
 
 static void AddChestTraps()
 {
-	int oi;
-	ObjectStruct* os;
+	int i;
 
-	for (int oi = 0; oi < numobjects; oi++) {
-		os = &objects[oi];
+	for (i = 0; i < numobjects; i++) {
+		int oi = i; // objectactive[i];
+		ObjectStruct* os = &objects[oi];
 		if (os->_otype >= OBJ_CHEST1 && os->_otype <= OBJ_CHEST3 && os->_oTrapChance == 0 && random_(0, 100) < 10) {
 			os->_otype += OBJ_TCHEST1 - OBJ_CHEST1;
 			os->_oTrapChance = RandRange(1, 64);

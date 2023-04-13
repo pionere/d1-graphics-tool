@@ -1902,7 +1902,7 @@ static void L1TileFix()
 #endif
 }
 
-static bool checkRoom(int x, int y, const L1ROOM const *room)
+static bool checkRoom(int x, int y, const L1ROOM* const room)
 {
 	if (dungeon[x][y] != DEFAULT_MEGATILE_L1 || (drlgFlags[x][y] & DRLG_L1_CHAMBER)) {
 		// TODO: check if still inside the room?
@@ -1924,19 +1924,19 @@ static bool checkRoom(int x, int y, const L1ROOM const *room)
 
 static void resetRoom(int x, int y)
 {
-	if (!drlgFlags[x][y] & DRLG_L1_CHAMBER) {
+	if (!(drlgFlags[x][y] & DRLG_L1_CHAMBER)) {
 		return;
 	}
 	drlgFlags[x][y] &= ~DRLG_L1_CHAMBER;
 
-	resetRoom(x, y - 1, room);
-	resetRoom(x, y + 1, room);
-	resetRoom(x - 1, y - 1, room);
-	resetRoom(x - 1, y, room);
-	resetRoom(x - 1, y + 1, room);
-	resetRoom(x + 1, y - 1, room);
-	resetRoom(x + 1, y, room);
-	resetRoom(x + 1, y + 1, room);
+	resetRoom(x, y - 1);
+	resetRoom(x, y + 1);
+	resetRoom(x - 1, y - 1);
+	resetRoom(x - 1, y);
+	resetRoom(x - 1, y + 1);
+	resetRoom(x + 1, y - 1);
+	resetRoom(x + 1, y);
+	resetRoom(x + 1, y + 1);
 }
 
 static void DRLG_L1PlaceThemeRooms()
@@ -1951,8 +1951,10 @@ static void DRLG_L1PlaceThemeRooms()
 		}
 		bool fit = checkRoom(x + 1, y + 1, &drlg.L1RoomList[i]);
 		resetRoom(x + 1, y + 1);
-		if (!fit)
+		if (!fit) {
+			LogErrorF("Unfit room at %d:%d", DBORDERX + 2 * x, DBORDERY + 2 * y);
 			continue;
+		}
 		LogErrorF("Added as %d", numthemes);
 		int w = drlg.L1RoomList[i].lrw;
 		int h = drlg.L1RoomList[i].lrh;
