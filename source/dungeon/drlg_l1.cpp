@@ -1919,7 +1919,7 @@ static bool checkRoom(int x, int y, const L1ROOM* const room)
 	drlgFlags[x][y] |= DRLG_L1_CHAMBER;
 
 	if (dungeon[x][y] != DEFAULT_MEGATILE_L1) {
-		if (x <= room->lrx || x >= room->lrx + room->lrw) && (y <= room->lry || y >= room->lry + room->lrh)
+		if ((x <= room->lrx || x >= room->lrx + room->lrw) && (y <= room->lry || y >= room->lry + room->lrh))
 			return true;
 		failReason = 4;
 		reason1 = x;
@@ -1989,10 +1989,10 @@ static void DRLG_L1PlaceThemeRooms()
 		bool fit = checkRoom(x, y, &drlg.L1RoomList[i]);
 		resetRoom(x, y);
 		if (!fit) {
-		LogErrorF("Unfit room at %d:%d w/h %d:%d reason %d @ %d:%d", DBORDERX + 2 * x, DBORDERX + 2 * y, 2 * w, 2 * h, failReason, DBORDERX + 2 * reason1, DBORDERX + 2 * reason2)
+		LogErrorF("Unfit room at %d:%d w/h %d:%d reason %d @ %d:%d", DBORDERX + 2 * x, DBORDERX + 2 * y, 2 * w, 2 * h, failReason, DBORDERX + 2 * reason1, DBORDERX + 2 * reason2);
 			continue;
 		}
-		LogErrorF("Added room at %d:%d w/h %d:%d", DBORDERX + 2 * x, DBORDERX + 2 * y, 2 * w, 2 * h)
+		LogErrorF("Added room at %d:%d w/h %d:%d", DBORDERX + 2 * x, DBORDERX + 2 * y, 2 * w, 2 * h);
 		// create the room
 		themes[numthemes]._tsx = x;
 		themes[numthemes]._tsy = y;
