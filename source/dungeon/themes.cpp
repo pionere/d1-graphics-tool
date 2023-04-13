@@ -407,8 +407,8 @@ void InitThemes()
 
 void HoldThemeRooms()
 {
-	int i, x, y, xx, yy;
-	// BYTE v;
+	int i, x, y, xx, yy, w, h;
+	BYTE v;
 	// assert(currLvl._dType != DTYPE_TOWN);
 	// assert(currLvl._dLevelIdx < DLV_HELL4 || numthemes == 0); // there are no themes in hellfire (and on diablo-level)
 
@@ -427,11 +427,14 @@ void HoldThemeRooms()
 		for (i = numthemes - 1; i >= 0; i--) {
 			xx = 2 * themes[i]._tsx + DBORDERX;
 			yy = 2 * themes[i]._tsy + DBORDERY;
-			int w = 2 * themes[i]._tsWidth;
-			int h = 2 * themes[i]._tsHeight;
-			for (x = xx; x < xx + w; x++) {
-				for (y = yy; y < yy + h; y++) {
-					dFlags[x][y] |= BFLAG_POPULATED;
+			w = 2 * themes[i]._tsWidth;
+			h = 2 * themes[i]._tsHeight;
+			v = themes[i]._tsTransVal;
+			for (x = xx; x <= xx + w; x++) {
+				for (y = yy; y <= yy + h; y++) {
+					if (dTransVal[xx][yy] == v) {
+						dFlags[x][y] |= BFLAG_POPULATED;
+					}
 				}
 			}
 		}
