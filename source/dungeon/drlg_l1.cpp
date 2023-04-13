@@ -1950,6 +1950,7 @@ static void DRLG_L1PlaceThemeRooms()
 		themes[numthemes]._tsHeight = h;
 		numthemes++;
 	}
+	LogErrorF("DRLG_L1PlaceThemeRooms done. %d", numthemes);
 }
 
 #ifdef HELLFIRE

@@ -42,10 +42,10 @@ void LogErrorF(const char* msg, ...)
 {
 	char tmp[256];
 	//snprintf(tmp, sizeof(tmp), "f:\\logdebug%d_%d.txt", mypnum, SDL_ThreadID());
-	/*snprintf(tmp, sizeof(tmp), "f:\\logdebug%d.txt", 0);
+	snprintf(tmp, sizeof(tmp), "f:\\logdebug%d.txt", 0);
 	FILE* f0 = fopen(tmp, "a+");
 	if (f0 == NULL)
-		return;*/
+		return;
 
 	va_list va;
 
@@ -55,12 +55,12 @@ void LogErrorF(const char* msg, ...)
 
 	va_end(va);
 
-	dProgress() << QString(tmp);
-	/*fputs(tmp, f0);
+//	dProgress() << QString(tmp);
+	fputs(tmp, f0);
 
 	fputc('\n', f0);
 
-	fclose(f0);*/
+	fclose(f0);
 }
 
 static void StoreProtections(D1Dun *dun)
@@ -232,10 +232,8 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
 
 extern int minNa;
 extern int maxNa;
-extern int maxNc;
 minNa = INT32_MAX;
 maxNa = 0;
-maxNc = 0;
 
 	bool hasSubtiles;
 	int extraRounds = params.extraRounds;
@@ -248,7 +246,7 @@ maxNc = 0;
 		FreeLvlDungeon();
 	} while (--extraRounds >= 0);
 
-	LogErrorF("Generated dungeon minimum area %d, max area %d. NumChests: %d NumThemes:%d", minNa, maxNa, maxNc, numthemes);
+	LogErrorF("Generated dungeon minimum area %d, max area %d. NumThemes:%d", minNa, maxNa, numthemes);
 
     dun->setLevelType(currLvl._dType);
 
