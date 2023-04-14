@@ -1933,13 +1933,13 @@ static bool checkRoom(int x, int y)
 			numRoomRight++;
 			return true;
 		}
+		if (y > roomBottom) {
+			numRoomBottom++;
+			return true;
+		}
 		if (x == roomRight) {
 			roomRight--;
 			numRoomRight = 1;
-			return true;
-		}
-		if (y > roomBottom) {
-			numRoomBottom++;
 			return true;
 		}
 		if (y == roomBottom) {
