@@ -2035,6 +2035,14 @@ static void DRLG_L1PlaceThemeRooms()
 		LogErrorF("Unfit room at %d:%d w/h %d:%d reason %d @ %d:%d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh, failReason, DBORDERX + 2 * reason1, DBORDERX + 2 * reason2);
 			continue;
 		}
+		if (roomRight < roomLeft) {
+		LogErrorF("Narrow room at %d:%d w/h %d:%d reason left %d right %d orig %d:%d w/h %d:%d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * w, 2 * h, 2 * roomLeft, 2 * roomRight, DBORDERX + 2 * drlg.L1RoomList[i].lrx, DBORDERX + 2 * drlg.L1RoomList[i].lry, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh);
+			continue;
+		}
+		if (roomBottom < roomTop) {
+		LogErrorF("Short room at %d:%d w/h %d:%d reason top %d bottom %d orig %d:%d w/h %d:%d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * w, 2 * h, 2 * roomTop, 2 * roomBottom, DBORDERX + 2 * drlg.L1RoomList[i].lrx, DBORDERX + 2 * drlg.L1RoomList[i].lry, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh);
+			continue;
+		}
 		int w = roomRight - roomLeft + 1;
 		int h = roomBottom - roomTop + 1;
 		if (numRoomBottom != w) {
