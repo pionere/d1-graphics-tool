@@ -838,10 +838,6 @@ void InitObjects()
 	case DLV_CATACOMBS4:
 		AddStoryBook();
 		break;
-	case DLV_CAVES1:
-		if (!IsMultiGame)
-			InitRndLocObj5x5(OBJ_SLAINHERO);
-		break;
 	case DLV_CAVES4:
 		AddStoryBook();
 		break;
@@ -1325,7 +1321,6 @@ int AddObject(int type, int ox, int oy)
 	case OBJ_ARMORSTAND:
 	case OBJ_WEAPONRACKL:
 	case OBJ_WEAPONRACKR:
-	case OBJ_SLAINHERO:
 		ObjAddRndSeed(oi);
 		break;
 	case OBJ_BLOODBOOK:
@@ -1526,9 +1521,6 @@ void GetObjectStr(int oi)
 		break;
 	case OBJ_LAZSTAND:
 		copy_cstr(infostr, "Vile Stand");
-		break;
-	case OBJ_SLAINHERO:
-		copy_cstr(infostr, "Slain Hero");
 		break;
 	default:
 		// ASSUME_UNREACHABLE
