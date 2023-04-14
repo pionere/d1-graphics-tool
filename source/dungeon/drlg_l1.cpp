@@ -2047,6 +2047,7 @@ static void DRLG_L1PlaceThemeRooms()
 		for (int x = roomLeft; x <= roomRight; x++) {
 			for (int y = roomTop; y <= roomBottom; y++) {
 				if (dungeon[x][y] != DEFAULT_MEGATILE_L1) {
+					if (fit)
 		LogErrorF("Room at %d:%d w/h %d:%d is not intact @ %d:%d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh, DBORDERX + 2 * x, DBORDERY + 2 * y);
 					fit = false;
 				}
@@ -2054,12 +2055,14 @@ static void DRLG_L1PlaceThemeRooms()
 		}
 		for (int x = roomLeft - 1; x <= roomRight + 1; x++) {
 			if (dungeon[x][roomTop - 1] == DEFAULT_MEGATILE_L1 || dungeon[x][roomBottom + 1] == DEFAULT_MEGATILE_L1) {
+					if (fit)
 		LogErrorF("Room at %d:%d w/h %d:%d missing top/bottom wall tile @ %d:(%d/%d)", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh, DBORDERX + 2 * x, DBORDERY + 2 * (roomTop - 1), DBORDERY + 2 * (roomBottom + 1));
 				fit = false;
 			}
 		}
 		for (int y = roomTop - 1; y <= roomBottom + 1; y++) {
 			if (dungeon[roomLeft - 1][y] == DEFAULT_MEGATILE_L1 || dungeon[roomRight + 1][y] == DEFAULT_MEGATILE_L1) {
+					if (fit)
 		LogErrorF("Room at %d:%d w/h %d:%d missing side wall tile @ (%d/%d):%d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh, DBORDERX + 2 * (roomLeft - 1), DBORDERX + 2 * (roomRight + 1), DBORDERY + 2 * y);
 				fit = false;
 			}
