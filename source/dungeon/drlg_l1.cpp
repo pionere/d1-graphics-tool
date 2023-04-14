@@ -2024,7 +2024,7 @@ static void DRLG_L1PlaceThemeRooms()
 				roomLeft++;
 				roomTop++;
 			} else {
-		LogErrorF("Room at %d:%d w/h %d:%d missing top corner @ %d:%d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh, DBORDERX + 2 * roomLeft, DBORDERY + 2 * roomTop);
+//		LogErrorF("Room at %d:%d w/h %d:%d missing top corner @ %d:%d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh, DBORDERX + 2 * roomLeft, DBORDERY + 2 * roomTop);
 				continue;
 			}
 		}
@@ -2038,35 +2038,34 @@ static void DRLG_L1PlaceThemeRooms()
 				roomRight--;
 				roomBottom--;
 			} else {
-		LogErrorF("Room at %d:%d w/h %d:%d missing bottom corner @ %d:%d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh, DBORDERX + 2 * roomRight, DBORDERY + 2 * roomBottom);
+//		LogErrorF("Room at %d:%d w/h %d:%d missing bottom corner @ %d:%d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh, DBORDERX + 2 * roomRight, DBORDERY + 2 * roomBottom);
 				continue;
 			}
 		}
 
 		bool fit = roomLeft <= roomRight && roomTop <= roomBottom;
-		if (fit) {
-		LogErrorF("Room at %d:%d w/h %d:%d is not intact.", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh);
-		}
+//		if (!fit)
+//		LogErrorF("Room at %d:%d w/h %d:%d is not intact.", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh);
 		for (int x = roomLeft; x <= roomRight; x++) {
 			for (int y = roomTop; y <= roomBottom; y++) {
 				if (dungeon[x][y] != DEFAULT_MEGATILE_L1) {
-					if (fit)
-		LogErrorF("Room at %d:%d w/h %d:%d is not intact @ %d:%d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh, DBORDERX + 2 * x, DBORDERY + 2 * y);
+//					if (fit)
+//		LogErrorF("Room at %d:%d w/h %d:%d is not intact @ %d:%d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh, DBORDERX + 2 * x, DBORDERY + 2 * y);
 					fit = false;
 				}
 			}
 		}
 		for (int x = roomLeft - 1; x <= roomRight + 1; x++) {
 			if (dungeon[x][roomTop - 1] == DEFAULT_MEGATILE_L1 || dungeon[x][roomBottom + 1] == DEFAULT_MEGATILE_L1) {
-					if (fit)
-		LogErrorF("Room at %d:%d w/h %d:%d missing top/bottom wall tile @ %d:(%d/%d)", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh, DBORDERX + 2 * x, DBORDERY + 2 * (roomTop - 1), DBORDERY + 2 * (roomBottom + 1));
+//					if (fit)
+//		LogErrorF("Room at %d:%d w/h %d:%d missing top/bottom wall tile @ %d:(%d/%d)", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh, DBORDERX + 2 * x, DBORDERY + 2 * (roomTop - 1), DBORDERY + 2 * (roomBottom + 1));
 				fit = false;
 			}
 		}
 		for (int y = roomTop - 1; y <= roomBottom + 1; y++) {
 			if (dungeon[roomLeft - 1][y] == DEFAULT_MEGATILE_L1 || dungeon[roomRight + 1][y] == DEFAULT_MEGATILE_L1) {
-					if (fit)
-		LogErrorF("Room at %d:%d w/h %d:%d missing side wall tile @ (%d/%d):%d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh, DBORDERX + 2 * (roomLeft - 1), DBORDERX + 2 * (roomRight + 1), DBORDERY + 2 * y);
+//					if (fit)
+//		LogErrorF("Room at %d:%d w/h %d:%d missing side wall tile @ (%d/%d):%d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh, DBORDERX + 2 * (roomLeft - 1), DBORDERX + 2 * (roomRight + 1), DBORDERY + 2 * y);
 				fit = false;
 			}
 		}
@@ -2119,7 +2118,7 @@ static void DRLG_L1PlaceThemeRooms()
 		}*/
 		w += 2;
 		h += 2;
-		LogErrorF("Added room at %d:%d w/h %d:%d orig %d:%d w/h %d:%d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * w, 2 * h, DBORDERX + 2 * drlg.L1RoomList[i].lrx, DBORDERX + 2 * drlg.L1RoomList[i].lry, 2 * drlg.L1RoomList[i].lrh, 2 * drlg.L1RoomList[i].lrh);
+		// LogErrorF("Added room at %d:%d w/h %d:%d orig %d:%d w/h %d:%d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * w, 2 * h, DBORDERX + 2 * drlg.L1RoomList[i].lrx, DBORDERX + 2 * drlg.L1RoomList[i].lry, 2 * drlg.L1RoomList[i].lrh, 2 * drlg.L1RoomList[i].lrh);
 		// create the room
 		themes[numthemes]._tsx = roomLeft - 1;
 		themes[numthemes]._tsy = roomTop - 1;

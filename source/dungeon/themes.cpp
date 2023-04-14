@@ -403,11 +403,8 @@ void InitThemes()
 				j = random_(0, NUM_THEMES);
 		}
 	}
-}
 
-void HoldThemeRooms()
-{
-	int i, x, y, xx, yy, w, h;
+	int /*i,*/ x, y, xx, yy, w, h;
 	// BYTE v;
 	// assert(currLvl._dType != DTYPE_TOWN);
 	// assert(currLvl._dLevelIdx < DLV_HELL4 || numthemes == 0); // there are no themes in hellfire (and on diablo-level)

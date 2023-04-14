@@ -146,12 +146,11 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
         IncProgress();
 		if (currLvl._dType != DTYPE_TOWN) {
 			GetLevelMTypes(); // select monster types and load their fx
-			InitThemes(); // select theme types
 			IncProgress();
 			InitObjectGFX(); // load object graphics
 			IncProgress();
 //			if (IsMultiGame || lvldir == ENTRY_LOAD || !IsLvlVisited(currLvl._dLevelIdx)) {
-				HoldThemeRooms(); // protect themes with dFlags
+				InitThemes(); // select theme types and protect themes with dFlags
 				InitMonsters();   // place monsters
 				IncProgress();
 				InitObjects(); // place objects
