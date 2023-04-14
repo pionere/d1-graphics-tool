@@ -455,7 +455,7 @@ void DRLG_PlaceMegaTiles(int mt)
 		for (i = 0; i < DMAXX; i++) {
 			mt = dungeon[i][j] - 1;
 			if (mt < 0) {
-				LogErrorF("Missing tile at %d:%d .. %d:%d", i, j, xx, yy); 
+				LogErrorF("Missing tile at %d:%d .. %d:%d", i, j, xx, yy);
 				xx += 2;
 				continue;
 			}
@@ -851,7 +851,7 @@ static void DRLG_CreateThemeRoom(int themeIndex)
 	BYTE v;
 
 	// left/right side
-	v = currLvl._dDunType == DTYPE_CAVES ? 137 : 1;
+	v = currLvl._dDunType == DTYPE_CAVES ? 135 : 1;
 	for (yy = ly; yy < hy; yy++) {
 		dungeon[lx][yy] = v;
 		dungeon[hx - 1][yy] = v;
@@ -951,7 +951,9 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 				tArea.y = RandRangeLow(min, tArea.y);
 			}
 			// ensure there is no overlapping with previous themes
-			int n = numthemes - 1;
+			if (InThemeRoom(i + 1, j + 1))
+				continue;
+			/*int n = numthemes - 1;
 			for ( ; n >= 0; n--) {
 				if (themes[n]._tsx <= i + tArea.x && themes[n]._tsx + themes[n]._tsWidth >= i) {
 					break;
@@ -962,7 +964,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 			}
 			if (n >= 0) {
 				continue;
-			}
+			}*/
 			// create the room
 			themes[numthemes]._tsx = i + 1;
 			themes[numthemes]._tsy = j + 1;
@@ -974,13 +976,26 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 	}
 }
 
-bool NearThemeRoom(int x, int y)
+/*bool NearThemeRoom(int x, int y)
 {
 	int i;
 
 	for (i = 0; i < numthemes; i++) {
 		if (x >= themes[i]._tsx - 2 && x < themes[i]._tsx + themes[i]._tsWidth + 2
 		 && y >= themes[i]._tsy - 2 && y < themes[i]._tsy + themes[i]._tsHeight + 2)
+			return true;
+	}
+
+	return false;
+}*/
+
+bool InThemeRoom(int x, int y)
+{
+	int i;
+
+	for (i = numthemes - 1; i >= 0; i--) {
+		if (x > themes[i]._tsx && x < themes[i]._tsx + themes[i]._tsWidth - 1
+		 && y > themes[i]._tsy && y < themes[i]._tsy + themes[i]._tsHeight - 1)
 			return true;
 	}
 

@@ -302,7 +302,7 @@ static bool SpecialThemeFit(int themeId, int themeType)
 	return true;
 }
 
-static bool CheckThemeRoom(BYTE tv)
+/*static bool CheckThemeRoom(BYTE tv)
 {
 	int i, j, tarea;
 
@@ -343,7 +343,7 @@ static bool CheckThemeRoom(BYTE tv)
 	}
 
 	return true;
-}
+}*/
 
 void InitLvlThemes()
 {
@@ -425,16 +425,16 @@ void HoldThemeRooms()
 		}
 	} else {*/
 		for (i = numthemes - 1; i >= 0; i--) {
-			xx = 2 * themes[i]._tsx + DBORDERX;
-			yy = 2 * themes[i]._tsy + DBORDERY;
-			w = 2 * themes[i]._tsWidth;
-			h = 2 * themes[i]._tsHeight;
-			v = themes[i]._tsTransVal;
-			for (x = xx; x <= xx + w; x++) {
-				for (y = yy; y <= yy + h; y++) {
-					if (dTransVal[x][y] == v) {
+			xx = 2 * themes[i]._tsx + DBORDERX + 1;
+			yy = 2 * themes[i]._tsy + DBORDERY + 1;
+			w = 2 * (themes[i]._tsWidth - 1);
+			h = 2 * (themes[i]._tsHeight - 1);
+			//v = themes[i]._tsTransVal;
+			for (x = xx; x < xx + w; x++) {
+				for (y = yy; y < yy + h; y++) {
+					//if (dTransVal[x][y] == v) {
 						dFlags[x][y] |= BFLAG_POPULATED;
-					}
+					//}
 				}
 			}
 		}

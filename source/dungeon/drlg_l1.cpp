@@ -1902,15 +1902,21 @@ static void L1TileFix()
 #endif
 }
 
-/*static int failReason;
+static int failReason;
 static int reason1;
-static int reason2;*/
+static int reason2;
+static int roomLeft;
+static int roomRight;
+static int roomTop;
+static int roomBottom;
+static int numRoomRight;
+static int numRoomBottom;
 static bool checkRoom(int x, int y, const L1ROOM* const room)
 {
 	if (drlgFlags[x][y] & DRLG_PROTECTED) {
-		//failReason = 1;
-		//reason1 = x;
-		//reason2 = y;
+		failReason = 1;
+		reason1 = x;
+		reason2 = y;
 		return false; // setpiece in the room -> skip
 	}
 	if (drlgFlags[x][y] & DRLG_L1_CHAMBER) {
@@ -1919,15 +1925,50 @@ static bool checkRoom(int x, int y, const L1ROOM* const room)
 	drlgFlags[x][y] |= DRLG_L1_CHAMBER;
 
 	if (dungeon[x][y] != DEFAULT_MEGATILE_L1) {
-		if ((x <= room->lrx || x >= room->lrx + room->lrw - 1) || (y <= room->lry || y >= room->lry + room->lrh - 1))
+		if (y < roomTop)
 			return true;
-		//failReason = 4;
-		//reason1 = x;
-		//reason2 = y;
+		if (x < roomLeft)
+			return true;
+		if (x > roomRight) {
+			numRoomRight++;
+			return true;
+		}
+		if (x == roomRight) {
+			roomRight--;
+			numRoomRight = 1;
+			return true;
+		}
+		if (y > roomBottom) {
+			numRoomBottom++;
+			return true;
+		}
+		if (y == roomBottom) {
+			roomBottom--;
+			numRoomBottom = 1;
+			return true;
+		}
+		//if ((x <= room->lrx || x >= room->lrx + room->lrw - 1) || (y <= room->lry || y >= room->lry + room->lrh - 1))
+		//	return true;
+		failReason = 4;
+		reason1 = x;
+		reason2 = y;
 		return false; // room is not intact -> skip
 		//return (x <= room->lrx || x >= room->lrx + room->lrw - 1) || (y <= room->lry || y >= room->lry + room->lrh - 1);
 	}
-	if (x < room->lrx || x >= room->lrx + room->lrw) {
+	if (x < roomLeft || x > roomRight) {
+		failReason = 2;
+		reason1 = x;
+		reason2 = y;
+		return false; // left the room -> skip
+	}
+	if (y < roomTop || y > roomBottom) {
+		failReason = 3;
+		reason1 = x;
+		reason2 = y;
+		return false; // left the room -> skip
+	}
+
+	/*if (x < room->lrx || x >= room->lrx + room->lrw) {
 		//failReason = 2;
 		//reason1 = x;
 		//reason2 = y;
@@ -1940,9 +1981,11 @@ static bool checkRoom(int x, int y, const L1ROOM* const room)
 		return false; // left the room -> skip
 	}
 
-	return checkRoom(x, y - 1, room) && checkRoom(x, y + 1, room)
-		&& checkRoom(x - 1, y - 1, room) && checkRoom(x - 1, y, room) && checkRoom(x - 1, y + 1, room)
-		&& checkRoom(x + 1, y - 1, room) && checkRoom(x + 1, y, room) && checkRoom(x + 1, y + 1, room);
+	return checkRoom(x, y - 1) && checkRoom(x, y + 1)
+		&& checkRoom(x - 1, y - 1) && checkRoom(x - 1, y) && checkRoom(x - 1, y + 1)
+		&& checkRoom(x + 1, y - 1) && checkRoom(x + 1, y) && checkRoom(x + 1, y + 1);*/
+	return checkRoom(x, y - 1) && checkRoom(x, y + 1)
+		&& checkRoom(x - 1, y) && checkRoom(x + 1, y);
 }
 
 static void resetRoom(int x, int y)
@@ -1957,50 +2000,57 @@ static void resetRoom(int x, int y)
 
 	resetRoom(x, y - 1);
 	resetRoom(x, y + 1);
-	resetRoom(x - 1, y - 1);
+	//resetRoom(x - 1, y - 1);
 	resetRoom(x - 1, y);
-	resetRoom(x - 1, y + 1);
-	resetRoom(x + 1, y - 1);
+	//resetRoom(x - 1, y + 1);
+	//resetRoom(x + 1, y - 1);
 	resetRoom(x + 1, y);
-	resetRoom(x + 1, y + 1);
+	//resetRoom(x + 1, y + 1);
 }
 
 static void DRLG_L1PlaceThemeRooms()
 {
 	for (int i = ChambersFirst + ChambersMiddle + ChambersLast; i < nRoomCnt; i++) {
-		int x = drlg.L1RoomList[i].lrx;
-		int y = drlg.L1RoomList[i].lry;
-		int w = drlg.L1RoomList[i].lrw;
-		int h = drlg.L1RoomList[i].lrh;
-		//failReason = 0;
-		if (dungeon[x][y] != DEFAULT_MEGATILE_L1) {
-			if (dungeon[x + 1][y] == DEFAULT_MEGATILE_L1) {
-				x++;
-				w--;
-			} else if (dungeon[x][y + 1] == DEFAULT_MEGATILE_L1) {
-				y++;
-				h--;
-			} else if (dungeon[x + 1][y + 1] == DEFAULT_MEGATILE_L1) {
-				x++;
-				w--;
-				y++;
-				h--;
+		roomLeft = drlg.L1RoomList[i].lrx;
+		roomRight = roomLeft + drlg.L1RoomList[i].lrw - 1;
+		roomTop = drlg.L1RoomList[i].lry;
+		roomBottom = roomTop + drlg.L1RoomList[i].lrh - 1;
+		numRoomRight = numRoomBottom = 0;
+		failReason = 0;
+		if (dungeon[roomLeft][roomTop] != DEFAULT_MEGATILE_L1) {
+			if (dungeon[roomLeft + 1][roomTop] == DEFAULT_MEGATILE_L1) {
+				roomLeft++;
+			} else if (dungeon[roomLeft][roomTop + 1] == DEFAULT_MEGATILE_L1) {
+				roomTop++;
+			} else if (dungeon[roomLeft + 1][roomTop + 1] == DEFAULT_MEGATILE_L1) {
+				roomLeft++;
+				roomTop++;
 			} else {
 				continue;
 			}
 		}
-		bool fit = checkRoom(x, y, &drlg.L1RoomList[i]);
-		resetRoom(x, y);
+		bool fit = checkRoom(roomLeft, roomTop);
+		resetRoom(roomLeft, roomTop);
 		if (!fit) {
-		//LogErrorF("Unfit room at %d:%d w/h %d:%d reason %d @ %d:%d", DBORDERX + 2 * x, DBORDERX + 2 * y, 2 * w, 2 * h, failReason, DBORDERX + 2 * reason1, DBORDERX + 2 * reason2);
+		LogErrorF("Unfit room at %d:%d w/h %d:%d reason %d @ %d:%d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh, failReason, DBORDERX + 2 * reason1, DBORDERX + 2 * reason2);
 			continue;
 		}
-		//LogErrorF("Added room at %d:%d w/h %d:%d", DBORDERX + 2 * x, DBORDERX + 2 * y, 2 * w, 2 * h);
+		int w = roomRight - roomLeft + 1;
+		int h = roomBottom - roomTop + 1;
+		if (numRoomBottom != w) {
+		LogErrorF("Narrow room at %d:%d w/h %d:%d reason %d vs %d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * w, 2 * h, numRoomBottom, w);
+			continue;
+		}
+		if (numRoomRight != h) {
+		LogErrorF("Short room at %d:%d w/h %d:%d reason %d vs %d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * w, 2 * h, numRoomRight, h);
+			continue;
+		}
+		LogErrorF("Added room at %d:%d w/h %d:%d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomLeft, 2 * w, 2 * h);
 		// create the room
-		themes[numthemes]._tsx = x - 1;
-		themes[numthemes]._tsy = y - 1;
-		themes[numthemes]._tsWidth = w + 1;
-		themes[numthemes]._tsHeight = h + 1;
+		themes[numthemes]._tsx = roomLeft - 1;
+		themes[numthemes]._tsy = roomRight - 1;
+		themes[numthemes]._tsWidth = w + 2;
+		themes[numthemes]._tsHeight = h + 2;
 		numthemes++;
 		if (numthemes == lengthof(themes)) {
 			break;

@@ -1249,7 +1249,7 @@ int AddObject(int type, int ox, int oy)
 		QString msg = QApplication::tr("Multiple objects on tile %1:%2 - type %3 with index %4 and type %5 with index %6. Theme loc %7:%8, pos %9:%10, w/h %11:%12 tv %13");
 		msg = msg.arg(ox).arg(oy).arg(type).arg(oi).arg(objects[on]._otype).arg(on);
 		int i = tl.first;
-		msg = msg.arg(i).arg(tl.second).arg(themes[i]._tsx).arg(themes[i]._tsy).arg(themes[i]._tsWidth).arg(themes[i]._tsHeight).arg(themes[i]._tsTransVal);
+		msg = msg.arg(i).arg(tl.second).arg(DBORDERX + 2 * themes[i]._tsx).arg(DBORDERY + 2 * themes[i]._tsy).arg(themes[i]._tsWidth).arg(themes[i]._tsHeight).arg(themes[i]._tsTransVal);
 		dProgressErr() << msg;
 	}
 	dObject[ox][oy] = oi + 1;
