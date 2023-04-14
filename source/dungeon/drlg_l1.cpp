@@ -2066,6 +2066,8 @@ static void DRLG_L1PlaceThemeRooms()
 		}
 		if (!fit)
 			continue;
+		int w = roomRight - roomLeft + 1;
+		int h = roomBottom - roomTop + 1;
 		/*roomLeft = drlg.L1RoomList[i].lrx;
 		roomRight = roomLeft + drlg.L1RoomList[i].lrw - 1;
 		roomTop = drlg.L1RoomList[i].lry;
