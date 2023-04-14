@@ -242,7 +242,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
 		FreeLvlDungeon();
 	} while (--extraRounds >= 0);
 	quint64 now = QDateTime::currentMSecsSinceEpoch();
-	LogErrorF("Generated %d dungeon. Elapsed time: %dms.", params.extraRounds, now - started);
+	LogErrorF("Generated %d dungeon. Elapsed time: %dms.", params.extraRounds + 1, now - started);
 
     dun->setLevelType(currLvl._dType);
 

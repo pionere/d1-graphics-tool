@@ -2117,12 +2117,14 @@ static void DRLG_L1PlaceThemeRooms()
 		LogErrorF("Short room at %d:%d w/h %d:%d reason %d vs %d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * w, 2 * h, numRoomRight, h);
 			continue;
 		}*/
+		w += 2;
+		h += 2;
 		LogErrorF("Added room at %d:%d w/h %d:%d orig %d:%d w/h %d:%d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * w, 2 * h, DBORDERX + 2 * drlg.L1RoomList[i].lrx, DBORDERX + 2 * drlg.L1RoomList[i].lry, 2 * drlg.L1RoomList[i].lrh, 2 * drlg.L1RoomList[i].lrh);
 		// create the room
 		themes[numthemes]._tsx = roomLeft - 1;
-		themes[numthemes]._tsy = roomRight - 1;
-		themes[numthemes]._tsWidth = w + 2;
-		themes[numthemes]._tsHeight = h + 2;
+		themes[numthemes]._tsy = roomTop - 1;
+		themes[numthemes]._tsWidth = w;
+		themes[numthemes]._tsHeight = h;
 		numthemes++;
 		if (numthemes == lengthof(themes)) {
 			break;
