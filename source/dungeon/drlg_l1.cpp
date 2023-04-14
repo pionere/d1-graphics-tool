@@ -2043,7 +2043,10 @@ static void DRLG_L1PlaceThemeRooms()
 			}
 		}
 
-		bool fit = true;
+		bool fit = roomLeft <= roomRight && roomTop <= roomBottom;
+		if (fit) {
+		LogErrorF("Room at %d:%d w/h %d:%d is not intact.", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh);
+		}
 		for (int x = roomLeft; x <= roomRight; x++) {
 			for (int y = roomTop; y <= roomBottom; y++) {
 				if (dungeon[x][y] != DEFAULT_MEGATILE_L1) {
