@@ -127,11 +127,11 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 //        InitLighting();
 //        InitVision();
     //}
-	InitLevelMonsters(); // reset monster types
+	InitLevelMonsters(); // reset monsters
 	InitLevelObjects();  // reset objects
 	InitLvlThemes();     // reset themes
 	InitLvlItems();      // reset items
-    IncProgress();
+	IncProgress();
 
 	SetRndSeed(gameSeed); // restore seed after InitLevelMonsters
     if (!currLvl._dSetLvl) {
@@ -160,7 +160,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 //			} else {
 //				IncProgress();
 //			}
-        } else {
+		} else {
 //			InitLvlStores();
 			// TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
 			// SetRndSeed(seed);

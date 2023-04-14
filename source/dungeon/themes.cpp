@@ -302,49 +302,6 @@ static bool SpecialThemeFit(int themeId, int themeType)
 	return true;
 }
 
-/*static bool CheckThemeRoom(BYTE tv)
-{
-	int i, j, tarea;
-
-	for (i = 0; i < numtrigs; i++) {
-		if (dTransVal[trigs[i]._tx][trigs[i]._ty] == tv)
-			return false;
-	}
-
-	tarea = 0;
-	for (j = DBORDERY; j < DBORDERY + DSIZEY; j++) {
-		for (i = DBORDERX; i < DBORDERX + DSIZEX; i++) {
-			if (dTransVal[i][j] != tv)
-				continue;
-			if (dFlags[i][j] & BFLAG_POPULATED)
-				return false;
-
-			tarea++;
-		}
-	}
-
-	assert(currLvl._dType == DTYPE_CATHEDRAL);
-	if (tarea < 9 || tarea > 100)
-		return false;
-
-	for (j = DBORDERY; j < DBORDERY + DSIZEY; j++) {
-		for (i = DBORDERX; i < DBORDERX + DSIZEX; i++) {
-			if (dTransVal[i][j] != tv || nSolidTable[dPiece[i][j]])
-				continue;
-			if (dTransVal[i - 1][j] != tv && !nSolidTable[dPiece[i - 1][j]])
-				return false;
-			if (dTransVal[i + 1][j] != tv && !nSolidTable[dPiece[i + 1][j]])
-				return false;
-			if (dTransVal[i][j - 1] != tv && !nSolidTable[dPiece[i][j - 1]])
-				return false;
-			if (dTransVal[i][j + 1] != tv && !nSolidTable[dPiece[i][j + 1]])
-				return false;
-		}
-	}
-
-	return true;
-}*/
-
 void InitLvlThemes()
 {
 	numthemes = 0;
@@ -372,21 +329,12 @@ void InitThemes()
 	_gbTFountainFlag = true;
 	_gbTreasureFlag = true;
 
-	/*if (currLvl._dDunType == DTYPE_CATHEDRAL) { // TODO: use dType instead?
-		for (i = 1; i < numtrans && numthemes < MAXTHEMES; i++) {
-			if (CheckThemeRoom(i)) {
-				themes[numthemes]._tsTransVal = i;
-				numthemes++;
-			}
+	for (i = 0; i < numthemes; i++) {
+		themes[i]._tsTransVal = dTransVal[DBORDERX + 2 * (themes[i]._tsx + 1)][DBORDERY + 2 * (themes[i]._tsy + 1)];
+		if (themes[i]._tsTransVal == 0) {
+			dProgressErr() << QApplication::tr("Invalid theme room @%1:%2 width:%3 height:%4.").arg(DBORDERX + 2 * themes[i]._tsx).arg(DBORDERY + 2 * themes[i]._tsy).arg(2 * themes[i]._tsWidth).arg(2 * themes[i]._tsHeight);
 		}
-	} else {*/
-		for (i = 0; i < numthemes; i++) {
-			themes[i]._tsTransVal = dTransVal[DBORDERX + 2 * (themes[i]._tsx + 1)][DBORDERY + 2 * (themes[i]._tsy + 1)];
-			if (themes[i]._tsTransVal == 0) {
-				dProgressErr() << QApplication::tr("Invalid theme room @%1:%2 width:%3 height:%4.").arg(DBORDERX + 2 * themes[i]._tsx).arg(DBORDERY + 2 * themes[i]._tsy).arg(2 * themes[i]._tsWidth).arg(2 * themes[i]._tsHeight);
-			}
-		}
-	//}
+	}
 	if (QuestStatus(Q_ZHAR)) {
 		for (i = 0; i < numthemes; i++) {
 			if (SpecialThemeFit(i, THEME_LIBRARY)) {
@@ -407,37 +355,21 @@ void InitThemes()
 void HoldThemeRooms()
 {
 	int i, x, y, xx, yy, w, h;
-	// BYTE v;
-	// assert(currLvl._dType != DTYPE_TOWN);
-	// assert(currLvl._dLevelIdx < DLV_HELL4 || numthemes == 0); // there are no themes in hellfire (and on diablo-level)
 
-	/*if (currLvl._dDunType == DTYPE_CATHEDRAL) { // TODO: use dType instead?
-		for (i = 0; i < numthemes; i++) {
-			v = themes[i]._tsTransVal;
-			for (xx = DBORDERX; xx < DBORDERX + DSIZEX; xx++) {
-				for (yy = DBORDERY; yy < DBORDERY + DSIZEY; yy++) {
-					if (dTransVal[xx][yy] == v) {
-						dFlags[xx][yy] |= BFLAG_POPULATED;
-					}
-				}
+	for (i = numthemes - 1; i >= 0; i--) {
+		xx = 2 * themes[i]._tsx + DBORDERX + 1;
+		yy = 2 * themes[i]._tsy + DBORDERY + 1;
+		w = 2 * (themes[i]._tsWidth - 1);
+		h = 2 * (themes[i]._tsHeight - 1);
+		// v = themes[i]._tsTransVal;
+		for (x = xx; x < xx + w; x++) {
+			for (y = yy; y < yy + h; y++) {
+				// if (dTransVal[x][y] == v) { -- wall?
+					dFlags[x][y] |= BFLAG_POPULATED;
+				// }
 			}
 		}
-	} else {*/
-		for (i = numthemes - 1; i >= 0; i--) {
-			xx = 2 * themes[i]._tsx + DBORDERX + 1;
-			yy = 2 * themes[i]._tsy + DBORDERY + 1;
-			w = 2 * (themes[i]._tsWidth - 1);
-			h = 2 * (themes[i]._tsHeight - 1);
-			//v = themes[i]._tsTransVal;
-			for (x = xx; x < xx + w; x++) {
-				for (y = yy; y < yy + h; y++) {
-					//if (dTransVal[x][y] == v) {
-						dFlags[x][y] |= BFLAG_POPULATED;
-					//}
-				}
-			}
-		}
-	//}
+	}
 }
 
 /*

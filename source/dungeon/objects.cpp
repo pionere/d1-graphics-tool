@@ -540,7 +540,7 @@ static void AddObjTraps()
 	int i, ox, oy, tx, ty, on, rndv;
 
 	rndv = 10 + (currLvl._dLevel >> 1);
-	for (i = 0; i < numobjects; i++) {
+	for (i = numobjects - 1; i >= 0; i--) {
 		int oi = i; // objectactive[i];
 		ObjectStruct* os = &objects[oi];
 		if (!objectdata[os->_otype].oTrapFlag)
@@ -589,7 +589,7 @@ static void AddChestTraps()
 {
 	int i;
 
-	for (i = 0; i < numobjects; i++) {
+	for (i = numobjects - 1; i >= 0; i--) {
 		int oi = i; // objectactive[i];
 		ObjectStruct* os = &objects[oi];
 		if (os->_otype >= OBJ_CHEST1 && os->_otype <= OBJ_CHEST3 && os->_oTrapChance == 0 && random_(0, 100) < 10) {
@@ -838,10 +838,6 @@ void InitObjects()
 	case DLV_CATACOMBS4:
 		AddStoryBook();
 		break;
-	case DLV_CAVES1:
-		if (!IsMultiGame)
-			InitRndLocObj5x5(OBJ_SLAINHERO);
-		break;
 	case DLV_CAVES4:
 		AddStoryBook();
 		break;
@@ -864,22 +860,8 @@ void InitObjects()
 	}
 	AddDunObjs(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
 
-	int	na = 0;
-		for (int xx = DBORDERX; xx < DSIZEX + DBORDERX; xx++)
-			for (int yy = DBORDERY; yy < DSIZEY + DBORDERY; yy++)
-				if ((nSolidTable[dPiece[xx][yy]] | (dFlags[xx][yy] & (BFLAG_ALERT | BFLAG_POPULATED))) == 0)
-					na++;
-
-	BYTE lvlMask = 1 << currLvl._dType;
-	if (lvlMask & objectdata[OBJ_SARC].oLvlTypes) {
-		InitRndSarcs(RandRange(10, 15), OBJ_SARC);
-	}
-#ifdef HELLFIRE
-	if (lvlMask & objectdata[OBJ_L5SARC].oLvlTypes) {
-		InitRndSarcs(RandRange(10, 15), OBJ_L5SARC);
-	}
-#endif
 	assert(objectdata[OBJ_TORCHL1].oLvlTypes == objectdata[OBJ_TORCHL2].oLvlTypes && objectdata[OBJ_TORCHL1].oLvlTypes == objectdata[OBJ_TORCHR1].oLvlTypes && objectdata[OBJ_TORCHR1].oLvlTypes == objectdata[OBJ_TORCHR2].oLvlTypes);
+	BYTE lvlMask = 1 << currLvl._dType;
 	if (lvlMask & objectdata[OBJ_TORCHL1].oLvlTypes) {
 		AddL2Torches();
 	}
@@ -891,36 +873,90 @@ void InitObjects()
 	if (lvlMask & objectdata[OBJ_TORTUREL1].oLvlTypes) {
 		AddHookedBodies();
 	}
+
+	unsigned na = 0;
+	for (int xx = DBORDERX; xx < DSIZEX + DBORDERX; xx++)
+		for (int yy = DBORDERY; yy < DSIZEY + DBORDERY; yy++)
+			if ((nSolidTable[dPiece[xx][yy]] | (dFlags[xx][yy] & BFLAG_POPULATED)) == 0)
+				na++;
+
+	if (lvlMask & objectdata[OBJ_SARC].oLvlTypes) {
+		int num = na / 512;
+		if (num > 0) {
+			InitRndSarcs(RandRangeLow(num, num * 2), OBJ_SARC);
+		}
+	}
+#ifdef HELLFIRE
+	if (lvlMask & objectdata[OBJ_L5SARC].oLvlTypes) {
+		unsigned num = na / 512;
+		if (num > 0) {
+			InitRndSarcs(RandRangeLow(num, num * 2), OBJ_L5SARC);
+		}
+	}
+#endif
 	if (lvlMask & objectdata[OBJ_TNUDEM].oLvlTypes) {
-		InitRndLocObj(RandRange(8, 24), OBJ_TNUDEM);
+		unsigned num = na / 512;
+		if (num > 0) {
+			InitRndLocObj(RandRangeLow(num, num * 3), OBJ_TNUDEM);
+		}
 	}
 	if (lvlMask & objectdata[OBJ_TNUDEW].oLvlTypes) {
-		InitRndLocObj(RandRange(6, 18), OBJ_TNUDEW);
+		unsigned num = na / 768;
+		if (num > 0) {
+			InitRndLocObj(RandRangeLow(num, num * 3), OBJ_TNUDEW);
+		}
 	}
 	if (lvlMask & objectdata[OBJ_DECAP].oLvlTypes) {
-		InitRndLocObj(RandRange(2, 6), OBJ_DECAP);
+		unsigned num = na / 1024;
+		if (num > 0) {
+			InitRndLocObj(RandRangeLow(num, num * 2), OBJ_DECAP);
+		}
 	}
 	if (lvlMask & objectdata[OBJ_CAULDRON].oLvlTypes) {
-		InitRndLocObj(RandRange(1, 3), OBJ_CAULDRON);
+		unsigned num = na / 2048;
+		if (num > 0) {
+			InitRndLocObj(RandRangeLow(num, num + 1), OBJ_CAULDRON);
+		}
 	}
 	assert(objectdata[OBJ_BARREL].oLvlTypes == objectdata[OBJ_BARRELEX].oLvlTypes);
 	if (lvlMask & objectdata[OBJ_BARREL].oLvlTypes) {
-		InitRndBarrels(RandRange(3, 7), OBJ_BARREL);
+		unsigned num = na / 1024;
+		if (num > 0) {
+			InitRndBarrels(RandRangeLow(num, num * 2), OBJ_BARREL);
+		}
 	}
 #ifdef HELLFIRE
 	assert(objectdata[OBJ_URN].oLvlTypes == objectdata[OBJ_URNEX].oLvlTypes);
 	if (lvlMask & objectdata[OBJ_URN].oLvlTypes) {
-		InitRndBarrels(RandRange(3, 7), OBJ_URN);
+		unsigned num = na / 1024;
+		if (num > 0) {
+			InitRndBarrels(RandRangeLow(num, num * 2), OBJ_URN);
+		}
 	}
 	assert(objectdata[OBJ_POD].oLvlTypes == objectdata[OBJ_PODEX].oLvlTypes);
 	if (lvlMask & objectdata[OBJ_POD].oLvlTypes) {
-		InitRndBarrels(RandRange(3, 7), OBJ_POD);
+		unsigned num = na / 1024;
+		if (num > 0) {
+			InitRndBarrels(RandRangeLow(num, num * 2), OBJ_POD);
+		}
 	}
 #endif
 	assert(objectdata[OBJ_CHEST1].oLvlTypes == DTM_ANY && objectdata[OBJ_CHEST2].oLvlTypes == DTM_ANY && objectdata[OBJ_CHEST3].oLvlTypes == DTM_ANY);
-	InitRndLocObj(RandRange(5, 10), OBJ_CHEST1);
-	InitRndLocObj(RandRange(3, 6), OBJ_CHEST2);
-	InitRndLocObj(RandRange(1, 5), OBJ_CHEST3);
+    {
+		unsigned num;
+		num = na / 512;
+		if (num > 0) {
+			InitRndLocObj(RandRangeLow(num, num * 2), OBJ_CHEST1);
+		}
+		num = na / 1024;
+		if (num > 0) {
+			InitRndLocObj(RandRangeLow(num, num * 2), OBJ_CHEST2);
+		}
+		num = na / 2048;
+		if (num > 0) {
+			InitRndLocObj(RandRangeLow(num, num * 2), OBJ_CHEST3);
+		}
+	}
 	assert(objectdata[OBJ_TRAPL].oLvlTypes == objectdata[OBJ_TRAPR].oLvlTypes);
 	if (lvlMask & objectdata[OBJ_TRAPL].oLvlTypes) {
 		AddObjTraps();
@@ -1350,7 +1386,6 @@ int AddObject(int type, int ox, int oy)
 	case OBJ_ARMORSTAND:
 	case OBJ_WEAPONRACKL:
 	case OBJ_WEAPONRACKR:
-	case OBJ_SLAINHERO:
 		ObjAddRndSeed(oi);
 		break;
 	case OBJ_BLOODBOOK:
@@ -1551,9 +1586,6 @@ void GetObjectStr(int oi)
 		break;
 	case OBJ_LAZSTAND:
 		copy_cstr(infostr, "Vile Stand");
-		break;
-	case OBJ_SLAINHERO:
-		copy_cstr(infostr, "Slain Hero");
 		break;
 	default:
 		// ASSUME_UNREACHABLE

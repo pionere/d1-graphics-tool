@@ -1963,7 +1963,7 @@ static void DRLG_L3PlaceRndSet(const BYTE* miniset, int rndper)
 
 /*
  * Replace undecorated tiles with matching decorated tiles.
- * New dungeon values: 68 69 106 107 108 109 110 112
+ * New dungeon values: 68 69 106 107 108 109 110 112 136 137
  */
 static void DRLG_L3Subs()
 {
@@ -2152,7 +2152,7 @@ static void DRLG_L6PlaceRndPool(const BYTE* miniset, int rndper)
 /*
  * Add fences and planks to the dungeon.
  * New dungeon values: 121, 122, 123, 124, 125, 126, 127, 128, 129, 130,
- *                     131, 132, 133, 134, 135, 136, 137, 139, 140, 142, 143, 151, 152
+ *                     131, 132, 133, 134, 135, 139, 140, 142, 143, 151, 152
  */
 static void DRLG_L3Wood()
 {

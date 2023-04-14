@@ -951,43 +951,22 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 				tArea.y = RandRangeLow(min, tArea.y);
 			}
 			// ensure there is no overlapping with previous themes
-			if (InThemeRoom(i + 1, j + 1))
-				continue;
-			/*int n = numthemes - 1;
-			for ( ; n >= 0; n--) {
-				if (themes[n]._tsx <= i + tArea.x && themes[n]._tsx + themes[n]._tsWidth >= i) {
-					break;
-				}
-				if (themes[n]._tsy <= j + tArea.y && themes[n]._tsy + themes[n]._tsHeight >= j) {
-					break;
-				}
+			if (!InThemeRoom(i + 1, j + 1)) {
+				// create the room
+				themes[numthemes]._tsx = i + 1;
+				themes[numthemes]._tsy = j + 1;
+				themes[numthemes]._tsWidth = tArea.x;
+				themes[numthemes]._tsHeight = tArea.y;
+				DRLG_CreateThemeRoom(numthemes);
+				numthemes++;
+				if (numthemes == lengthof(themes))
+					return;
 			}
-			if (n >= 0) {
-				continue;
-			}*/
-			// create the room
-			themes[numthemes]._tsx = i + 1;
-			themes[numthemes]._tsy = j + 1;
-			themes[numthemes]._tsWidth = tArea.x;
-			themes[numthemes]._tsHeight = tArea.y;
-			DRLG_CreateThemeRoom(numthemes);
-			numthemes++;
+
+			j += tArea.x + 2;
 		}
 	}
 }
-
-/*bool NearThemeRoom(int x, int y)
-{
-	int i;
-
-	for (i = 0; i < numthemes; i++) {
-		if (x >= themes[i]._tsx - 2 && x < themes[i]._tsx + themes[i]._tsWidth + 2
-		 && y >= themes[i]._tsy - 2 && y < themes[i]._tsy + themes[i]._tsHeight + 2)
-			return true;
-	}
-
-	return false;
-}*/
 
 bool InThemeRoom(int x, int y)
 {

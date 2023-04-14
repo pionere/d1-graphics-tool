@@ -415,6 +415,11 @@ void D1Tileset::patch(int dunType, bool silent)
         break;
     case DTYPE_CRYPT:
         // patch dMiniTiles - L5.MIN
+        // pointless tree micros (re-drawn by dSpecial)
+        Blk2Mcr(77, 6);
+        Blk2Mcr(77, 8);
+        Blk2Mcr(80, 7);
+        Blk2Mcr(80, 9);
         // useless black micros
         Blk2Mcr(130, 0);
         Blk2Mcr(130, 1);
