@@ -1911,7 +1911,7 @@ static int roomTop;
 static int roomBottom;
 static int numRoomRight;
 static int numRoomBottom;
-static bool checkRoom(int x, int y, const L1ROOM* const room)
+static bool checkRoom(int x, int y)
 {
 	if (drlgFlags[x][y] & DRLG_PROTECTED) {
 		failReason = 1;
