@@ -56,7 +56,7 @@ void LogErrorF(const char* msg, ...)
 
 	va_end(va);
 
-	dProgress() << QString(tmp);
+	dProgressErr() << QString(tmp);
 	/*fputs(tmp, f0);
 
 	fputc('\n', f0);
@@ -146,11 +146,12 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
         IncProgress();
 		if (currLvl._dType != DTYPE_TOWN) {
 			GetLevelMTypes(); // select monster types and load their fx
+			InitThemes(); // select theme types
 			IncProgress();
 			InitObjectGFX(); // load object graphics
 			IncProgress();
 //			if (IsMultiGame || lvldir == ENTRY_LOAD || !IsLvlVisited(currLvl._dLevelIdx)) {
-				InitThemes(); // select theme types and protect themes with dFlags
+				HoldThemeRooms(); // protect themes with dFlags
 				InitMonsters();   // place monsters
 				IncProgress();
 				InitObjects(); // place objects
@@ -235,13 +236,14 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
 	SetRndSeed(params.seed);
 	do {
 		extern int32_t sglGameSeed;
-		LogErrorF("Generating dungeon %d with seed: %d / %d. Entry mode: %d", params.level, sglGameSeed, params.seedQuest, params.entryMode);
+		//LogErrorF("Generating dungeon %d with seed: %d / %d. Entry mode: %d", params.level, sglGameSeed, params.seedQuest, params.entryMode);
+		dProgress() << QApplication::tr("Generating dungeon %1 with seed: %2 / %3. Entry mode: %4").arg(params.level).arg(sglGameSeed).arg(params.seedQuest).arg(params.entryMode);
 		LoadGameLevel(params.entryMode, dun);
 		hasSubtiles = pMegaTiles != NULL;
 		FreeLvlDungeon();
 	} while (--extraRounds >= 0);
 	quint64 now = QDateTime::currentMSecsSinceEpoch();
-	LogErrorF("Generated %d dungeon. Elapsed time: %dms.", params.extraRounds + 1, now - started);
+	dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms.").arg(params.extraRounds + 1).arg(now - started);
 
     dun->setLevelType(currLvl._dType);
 

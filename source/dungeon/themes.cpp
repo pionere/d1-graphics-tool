@@ -381,7 +381,6 @@ void InitThemes()
 		}
 	} else {*/
 		for (i = 0; i < numthemes; i++) {
-			//themes[i]._tsTransVal = dTransVal[DBORDERX + 2 * themes[i]._tsx + themes[i]._tsWidth][DBORDERY + 2 * themes[i]._tsy + themes[i]._tsHeight];
 			themes[i]._tsTransVal = dTransVal[DBORDERX + 2 * (themes[i]._tsx + 1)][DBORDERY + 2 * (themes[i]._tsy + 1)];
 			if (themes[i]._tsTransVal == 0) {
 				dProgressErr() << QApplication::tr("Invalid theme room @%1:%2 width:%3 height:%4.").arg(DBORDERX + 2 * themes[i]._tsx).arg(DBORDERY + 2 * themes[i]._tsy).arg(2 * themes[i]._tsWidth).arg(2 * themes[i]._tsHeight);
@@ -403,8 +402,11 @@ void InitThemes()
 				j = random_(0, NUM_THEMES);
 		}
 	}
+}
 
-	int /*i,*/ x, y, xx, yy, w, h;
+void HoldThemeRooms()
+{
+	int i, x, y, xx, yy, w, h;
 	// BYTE v;
 	// assert(currLvl._dType != DTYPE_TOWN);
 	// assert(currLvl._dLevelIdx < DLV_HELL4 || numthemes == 0); // there are no themes in hellfire (and on diablo-level)
@@ -571,7 +573,7 @@ static void Theme_MonstPit(BYTE tv)
 static void AddSkelMonster(int x, int y)
 {
 	if (!PosOkActor(x, y)) {
-		LogErrorF("AddSkelMonster failed to place monster to %d:%d room-id:%d", x, y, dTransVal[x][y]);
+		dProgressErr() << QString("AddSkelMonster failed to place monster to %1:%2 room-id:%3").arg(x).arg(y).arg(dTransVal[x][y]);
 		return;
 	}
 	AddMonster(mapSkelTypes[random_low(136, numSkelTypes)], x, y);

@@ -455,7 +455,7 @@ void DRLG_PlaceMegaTiles(int mt)
 		for (i = 0; i < DMAXX; i++) {
 			mt = dungeon[i][j] - 1;
 			if (mt < 0) {
-				LogErrorF("Missing tile at %d:%d .. %d:%d", i, j, xx, yy);
+				dProgressErr() << QString("Missing tile at %1:%2 .. %3:%4").arg(i).arg(j).arg(xx).arg(yy);
 				xx += 2;
 				continue;
 			}

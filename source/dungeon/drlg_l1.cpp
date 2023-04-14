@@ -2048,7 +2048,7 @@ static void DRLG_L1PlaceThemeRooms()
 //		LogErrorF("Room at %d:%d w/h %d:%d is not intact.", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh);
 		for (int x = roomLeft; x <= roomRight; x++) {
 			for (int y = roomTop; y <= roomBottom; y++) {
-				if (dungeon[x][y] != DEFAULT_MEGATILE_L1) {
+				if (dungeon[x][y] != DEFAULT_MEGATILE_L1 || (drlgFlags[x][y] & DRLG_PROTECTED)) {
 //					if (fit)
 //		LogErrorF("Room at %d:%d w/h %d:%d is not intact @ %d:%d", DBORDERX + 2 * roomLeft, DBORDERX + 2 * roomTop, 2 * drlg.L1RoomList[i].lrw, 2 * drlg.L1RoomList[i].lrh, DBORDERX + 2 * x, DBORDERY + 2 * y);
 					fit = false;
