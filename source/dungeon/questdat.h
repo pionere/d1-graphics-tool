@@ -8,5 +8,6 @@
 
 extern const LevelData AllLevels[NUM_LEVELS];
 extern const QuestData questlist[NUM_QUESTS];
+extern const SetPieceData setpiecedata[NUM_SPT_TYPES];
 
 #endif /* __QUESTDAT_H__ */
