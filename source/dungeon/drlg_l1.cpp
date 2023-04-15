@@ -2788,7 +2788,7 @@ static void DRLG_L1()
 	if (pSetPieces[0]._sptype == SPT_BANNER) {
 		// load pre-map
 		MemFreeDbg(pSetPieces[0]._spData);
-		pSetPieces[0]._spData = LoadFileInMem(setpiecedata[setpiecedata[pSetPieces[0]._sptype]._spdSetLvlPreDun);
+		pSetPieces[0]._spData = LoadFileInMem(setpiecedata[setpiecedata[pSetPieces[0]._sptype]._spdPreDunFile);
 		/*if (pSetPieces[0]._spData != NULL) {
 		// patch the map - Banner2.DUN
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
@@ -2818,7 +2818,7 @@ static void DRLG_L1()
 	} else if (pSetPieces[0]._sptype == SPT_NAKRUL) {
 		// load pre-map
 		MemFreeDbg(pSetPieces[0]._spData);
-		pSetPieces[0]._spData = LoadFileInMem(setpiecedata[setpiecedata[pSetPieces[0]._sptype]._spdSetLvlPreDun);
+		pSetPieces[0]._spData = LoadFileInMem(setpiecedata[setpiecedata[pSetPieces[0]._sptype]._spdPreDunFile);
 		DRLG_DrawMap(0);
 #endif
 	}

@@ -2064,7 +2064,7 @@ static void DRLG_L4()
 		DRLG_DrawMap(0);
 	} else if (pSetPieces[0]._sptype == SPT_BETRAY_M) {
 		if (pSetPieces[0]._spData != NULL) {
-		// patch set-piece to add monsters - Vile1.DUN - done in DRLG_LoadL4SP
+		// patch set-piece - Vile1.DUN - done in DRLG_LoadL4SP
 		//uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		//lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 3 + 6 * 7 * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
 		//lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 3 * 7 * 2] = SwapLE16((UMT_RED_VEX + 1) | (1 << 15));
