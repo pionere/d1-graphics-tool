@@ -70,18 +70,18 @@ void LoadSetMap()
 
 	switch (lds->dDunType) {
 	case DTYPE_CATHEDRAL:
-		LoadL1Dungeon(lds);
+		CreateL1Dungeon();
 		// gbInitObjFlag = true;
 		break;
 	case DTYPE_CATACOMBS:
-		LoadL2Dungeon(lds);
+		CreateL2Dungeon();
 		// gbInitObjFlag = true;
 		break;
 	case DTYPE_CAVES:
-		LoadL3Dungeon(lds);
+		CreateL3Dungeon();
 		break;
 	//case DTYPE_HELL:
-	//	LoadL4Dungeon(lds);
+	//	CreateL4Dungeon();
 	//	break;
 	default:
 		ASSUME_UNREACHABLE

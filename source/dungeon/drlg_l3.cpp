@@ -2153,7 +2153,7 @@ static void DRLG_L6PlaceRndPool(const BYTE* miniset, int rndper)
 /*
  * Add fences and planks to the dungeon.
  * New dungeon values: 121, 122, 123, 124, 125, 126, 127, 128, 129, 130,
- *                     131, 132, 133, 134, 135, 136, 137, 139, 140, 142, 143, 151, 152
+ *                     131, 132, 133, 134, 135, 139, 140, 142, 143, 151, 152
  */
 static void DRLG_L3Wood()
 {
@@ -2641,19 +2641,6 @@ static void DRLG_L3LightTiles()
 	}
 }
 
-void CreateL3Dungeon()
-{
-	DRLG_LoadL3SP();
-	DRLG_L3();
-
-	DRLG_L3InitTransVals();
-	DRLG_PlaceMegaTiles(BASE_MEGATILE_L3);
-	DRLG_Init_Globals();
-	DRLG_L3LightTiles();
-
-	DRLG_SetPC();
-}
-
 void LoadL3Dungeon(const LevelData* lds)
 {
 	pWarps[DWARP_ENTRY]._wx = lds->dSetLvlDunX;
@@ -2689,6 +2676,26 @@ void LoadL3Dungeon(const LevelData* lds)
 
 	SetMapMonsters(0);
 	SetMapObjects();
+}
+
+void CreateL3Dungeon()
+{
+	const LevelData* lds = &AllLevels[currLvl._dLevelIdx];
+
+	if (lds->dSetLvl) {
+		LoadL3Dungeon(lds);
+		return;
+	}
+
+	DRLG_LoadL3SP();
+	DRLG_L3();
+
+	DRLG_L3InitTransVals();
+	DRLG_PlaceMegaTiles(BASE_MEGATILE_L3);
+	DRLG_Init_Globals();
+	DRLG_L3LightTiles();
+
+	DRLG_SetPC();
 }
 
 DEVILUTION_END_NAMESPACE
