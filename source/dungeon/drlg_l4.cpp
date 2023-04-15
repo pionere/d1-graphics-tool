@@ -2072,9 +2072,7 @@ static void DRLG_L4()
 		}
 	}
 	for (int i = lengthof(pSetPieces) - 1; i >= 0; i--) {
-		if (pSetPieces[i]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
-			DRGL_L4PatchSetPiece(pSetPieces[i]._spData);
-		} else {
+		if (pSetPieces[i]._spData == NULL) { // pSetPieces[0]._sptype != SPT_NONE
 			pSetPieces[i]._sptype = SPT_NONE;
 		}
 	}
