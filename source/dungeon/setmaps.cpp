@@ -109,6 +109,6 @@ void LoadSetMap()
 		ASSUME_UNREACHABLE
 		break;
 	}
-//	LoadPalette(lds->dPalName);
 	InitTriggers();
+// LoadRndLvlPal();
 }
