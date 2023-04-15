@@ -2016,8 +2016,8 @@ static void DRLG_L4()
 		pSetPieces[3]._spData = LoadFileInMem(setpiecedata[pSetPieces[3]._sptype]._spdPreDunFile);
 		if (pSetPieces[3]._spData != NULL) {
 		// patch set-piece - Diab4a.DUN
-		// - replace diablo
 		uint16_t* lm = (uint16_t*)pSetPieces[3]._spData;
+		// - replace diablo
 		lm[2 + 9 * 9 + 9 * 9 * 2 * 2 + 8 + 8 * 9 * 2] = SwapLE16((UMT_DIABLO + 1) | (1 << 15));
 		// - replace the only black knight
 		lm[2 + 9 * 9 + 9 * 9 * 2 * 2 + 4 + 6 * 9 * 2] = SwapLE16(101);

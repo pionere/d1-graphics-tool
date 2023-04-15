@@ -420,6 +420,14 @@ void D1Tileset::patch(int dunType, bool silent)
         Blk2Mcr(77, 8);
         Blk2Mcr(80, 7);
         Blk2Mcr(80, 9);
+        Blk2Mcr(206, 6);
+        Blk2Mcr(206, 8);
+        Blk2Mcr(209, 7);
+        Blk2Mcr(209, 9);
+        Blk2Mcr(213, 6);
+        Blk2Mcr(213, 8);
+        Blk2Mcr(216, 6);
+        Blk2Mcr(216, 8);
         // useless black micros
         Blk2Mcr(130, 0);
         Blk2Mcr(130, 1);

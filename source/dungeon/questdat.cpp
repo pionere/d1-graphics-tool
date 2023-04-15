@@ -188,7 +188,7 @@ const SetPieceData setpiecedata[NUM_SPT_TYPES] = {
 /*SPT_SKELKING*/     { "Levels\\L1Data\\SKngDO.DUN",    NULL                           },
 /*SPT_BUTCHER*/      { "Levels\\L1Data\\Butcher.DUN",   NULL                           },
 /*SPT_MAZE*///       { "Levels\\L1Data\\Lv1MazeA.DUN",  "Levels\\L1Data\\Lv1MazeB.DUN" },
-/*SPT_BLIND*/        { "Levels\\L2Data\\Blind1.DUN",    "Levels\\L2Data\\Blind1.DUN"   },
+/*SPT_BLIND*/        { "Levels\\L2Data\\Blind1.DUN",    "Levels\\L2Data\\Blind2.DUN"   },
 /*SPT_BLOOD*/        { "Levels\\L2Data\\Blood1.DUN",    "Levels\\L2Data\\Blood2.DUN"   },
 /*SPT_BCHAMB*/       { "Levels\\L2Data\\Bonestr2.DUN",  "Levels\\L2Data\\Bonestr1.DUN" },
 /*SPT_ANVIL*/        { "Levels\\L3Data\\Anvil.DUN",     NULL                           },
@@ -208,4 +208,5 @@ const SetPieceData setpiecedata[NUM_SPT_TYPES] = {
 #endif
 	// clang-format on
 };
+
 DEVILUTION_END_NAMESPACE

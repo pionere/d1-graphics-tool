@@ -927,13 +927,13 @@ void InitObjects()
 	}
 	assert(objectdata[OBJ_POD].oLvlTypes == objectdata[OBJ_PODEX].oLvlTypes);
 	if (lvlMask & objectdata[OBJ_POD].oLvlTypes) {
-		static_assert(DSIZEX * DSIZEY < 0x7FFF, "InitObjects uses RandRangeLow XI.");
+		static_assert(DSIZEX * DSIZEY < 0x7FFF, "InitObjects uses RandRangeLow IX.");
 		unsigned num = RandRangeLow(na, na * 2 + 1);
 		InitRndBarrels(num / 1024, OBJ_POD);
 	}
 #endif
 	assert(objectdata[OBJ_CHEST1].oLvlTypes == DTM_ANY && objectdata[OBJ_CHEST2].oLvlTypes == DTM_ANY && objectdata[OBJ_CHEST3].oLvlTypes == DTM_ANY);
-    {
+	{
 		static_assert(DSIZEX * DSIZEY < 0x7FFF, "InitObjects uses RandRangeLow X.");
 		unsigned num = RandRangeLow(na, na * 2 + 1);
 		InitRndLocObj(num / 512, OBJ_CHEST1);
