@@ -2515,6 +2515,11 @@ static void DRLG_L2()
 		}
 		DRLG_DrawMap(0);
 	}
+	for (int i = lengthof(pSetPieces) - 1; i >= 0; i--) {
+		if (pSetPieces[i]._spData == NULL) {
+			pSetPieces[i]._sptype = SPT_NONE;
+		}
+	}
 }
 
 void DRLG_InitL2Specials(int x1, int y1, int x2, int y2)

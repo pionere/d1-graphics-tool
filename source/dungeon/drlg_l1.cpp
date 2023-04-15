@@ -2822,6 +2822,11 @@ static void DRLG_L1()
 		DRLG_DrawMap(0);
 #endif
 	}
+	for (int i = lengthof(pSetPieces) - 1; i >= 0; i--) {
+		if (pSetPieces[i]._spData == NULL) {
+			pSetPieces[i]._sptype = SPT_NONE;
+		}
+	}
 }
 
 void CreateL1Dungeon()
