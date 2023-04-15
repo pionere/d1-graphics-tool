@@ -19,7 +19,7 @@
 	"Archbishop Lazarus' Lair",
 };*/
 
-static int ObjIndex(int x, int y)
+/*static int ObjIndex(int x, int y)
 {
 	int oi = dObject[x][y];
 
@@ -53,7 +53,7 @@ static void AddVileObjs()
 	SetObjMapRange(ObjIndex(DBORDERX + 10, DBORDERY + 29), 3, 4, 8, 10, 1);
 	SetObjMapRange(ObjIndex(DBORDERX + 29, DBORDERY + 30), 11, 4, 16, 10, 2);
 	//SetObjMapRange(ObjIndex(DBORDERX + 19, DBORDERY + 20), 7, 11, 13, 18, 3);
-}
+}*/
 
 /*static void AddMazeObjs()
 {
@@ -64,7 +64,7 @@ static void AddVileObjs()
 	SetObjMapRange(ObjIndex(DBORDERX + 79, DBORDERY + 51), ?, ?, ?, ?, ?);
 }*/
 
-void LoadSetMap()
+/*void LoadSetMap()
 {
 	const LevelData* lds = &AllLevels[currLvl._dLevelIdx];
 
@@ -97,8 +97,8 @@ void LoadSetMap()
 		AddSChamObjs();
 		// gbInitObjFlag = false;
 		break;
-	/*case SL_MAZE:
-		break;*/
+	//case SL_MAZE:
+	//	break;
 	case SL_POISONWATER:
 		break;
 	case SL_VILEBETRAYER:
@@ -111,4 +111,4 @@ void LoadSetMap()
 	}
 	InitTriggers();
 // LoadRndLvlPal();
-}
+}*/

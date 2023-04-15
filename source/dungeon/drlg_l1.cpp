@@ -2904,8 +2904,8 @@ static void LoadL1Dungeon(const LevelData* lds)
 
 	DRLG_SetPC();
 
-	SetMapMonsters(0);
-	SetMapObjects();
+	//SetMapMonsters(0);
+	//SetMapObjects();
 }
 
 void CreateL1Dungeon()

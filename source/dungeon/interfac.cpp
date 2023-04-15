@@ -134,7 +134,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	IncProgress();
 
 	SetRndSeed(gameSeed); // restore seed after InitLevelMonsters
-    if (!currLvl._dSetLvl) {
+    //if (!currLvl._dSetLvl) {
         // fill in loop: dungeon, dTransVal, pWarps, pSetPieces, uses drlgFlags, dungBlock
         // fill post: pdungeon, dPiece, dSpecial, themeLoc, dFlags
         // reset: dMonster, dObject, dPlayer, dItem, dMissile, dLight+
@@ -171,7 +171,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 			IncProgress();
 //			InitItems();
         }
-    } else {
+    /*} else {
         LoadSetMap();
 		StoreProtections(dun);
         IncProgress();
@@ -181,7 +181,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
         // InitMonsters();
         IncProgress();
 
-		// InitItems();
+		// InitItems();*/
     }
 	FreeSetPieces();
     IncProgress();

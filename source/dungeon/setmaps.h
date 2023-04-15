@@ -9,6 +9,6 @@
 /**
  * @brief Load a quest map, the given map is specified via the global setlvlnum
  */
-void LoadSetMap();
+//void LoadSetMap();
 
 #endif /* __SETMAPS_H__ */

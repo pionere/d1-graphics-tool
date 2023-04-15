@@ -295,7 +295,7 @@ void GetLevelMTypes()
 	int nt; // number of types
 
 	lvl = currLvl._dLevelIdx;
-	assert(!currLvl._dSetLvl);
+	//assert(!currLvl._dSetLvl);
 	//if (!currLvl._dSetLvl) {
 		if (lvl == DLV_HELL4) {
 			AddMonsterType(MT_BMAGE, TRUE);

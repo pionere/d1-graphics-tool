@@ -23,7 +23,7 @@ extern BYTE mapGoatTypes[MAX_LVLMTYPES];
 void InitLevelMonsters();
 void GetLevelMTypes();
 void InitMonsters();
-void SetMapMonsters(int idx);
+//void SetMapMonsters(int idx);
 void InitMonster(int mnum, int dir, int mtidx, int x, int y);
 void AddMonster(int mtidx, int x, int y);
 int PreSpawnSkeleton();
