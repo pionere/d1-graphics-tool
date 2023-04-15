@@ -2564,33 +2564,33 @@ static void DRLG_L2SetMapFix()
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// place pieces with closed doors
 		// shadow of the external-left column
-		lm[2 + 17 + 11 * 18] = SwapLE16(150);
+		lm[2 + 17 + 11 * 32] = SwapLE16(150);
 		// place shadows
 		// - right corridor
-		lm[2 + 12 + 6 * 18] = SwapLE16(47);
-		lm[2 + 12 + 7 * 18] = SwapLE16(51);
-		lm[2 + 16 + 6 * 18] = SwapLE16(47);
-		lm[2 + 16 + 7 * 18] = SwapLE16(51);
-		lm[2 + 16 + 8 * 18] = SwapLE16(41);
+		lm[2 + 12 + 6 * 32] = SwapLE16(47);
+		lm[2 + 12 + 7 * 32] = SwapLE16(51);
+		lm[2 + 16 + 6 * 32] = SwapLE16(47);
+		lm[2 + 16 + 7 * 32] = SwapLE16(51);
+		lm[2 + 16 + 8 * 32] = SwapLE16(41);
 		// - central room (top)
-		lm[2 + 17 + 8 * 18] = SwapLE16(49);
-		lm[2 + 18 + 8 * 18] = SwapLE16(46);
-		lm[2 + 19 + 8 * 18] = SwapLE16(49);
-		lm[2 + 20 + 8 * 18] = SwapLE16(46);
+		lm[2 + 17 + 8 * 32] = SwapLE16(49);
+		lm[2 + 18 + 8 * 32] = SwapLE16(46);
+		lm[2 + 19 + 8 * 32] = SwapLE16(49);
+		lm[2 + 20 + 8 * 32] = SwapLE16(46);
 		// - central room (bottom)
-		lm[2 + 18 + 12 * 18] = SwapLE16(46);
-		lm[2 + 19 + 12 * 18] = SwapLE16(49);
+		lm[2 + 18 + 12 * 32] = SwapLE16(46);
+		lm[2 + 19 + 12 * 32] = SwapLE16(49);
 		// - left corridor
-		lm[2 + 12 + 14 * 18] = SwapLE16(47);
-		lm[2 + 12 + 15 * 18] = SwapLE16(51);
-		lm[2 + 16 + 14 * 18] = SwapLE16(47);
-		lm[2 + 16 + 15 * 18] = SwapLE16(51);
+		lm[2 + 12 + 14 * 32] = SwapLE16(47);
+		lm[2 + 12 + 15 * 32] = SwapLE16(51);
+		lm[2 + 16 + 14 * 32] = SwapLE16(47);
+		lm[2 + 16 + 15 * 32] = SwapLE16(51);
 		// fix corners
 		// DRLG_L2Corners(); - commented out, because this is no longer necessary
 		// protect inner tiles from spawning additional monsters/objects
 		for (int y = 5; y < 17; y++) {
 			for (int x = 1; x < 31; x++) {
-				lm[2 + 32 * 18 + x + y * 18] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
+				lm[2 + 32 * 18 + x + y * 32] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 			}
 		}
 		}
