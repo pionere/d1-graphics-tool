@@ -113,18 +113,17 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	extern int32_t sglGameSeed;
 	int32_t gameSeed = sglGameSeed;
 
-    IncProgress();
-    InitLvlDungeon();
-//    MakeLightTable();
-    IncProgress();
+	IncProgress();
+	InitLvlDungeon();
+//	MakeLightTable();
+	IncProgress();
 
-//    InitLvlAutomap();
+//	InitLvlAutomap();
 
-    //if (lvldir != ENTRY_LOAD) {
-//        InitLighting();
-//        InitVision();
-    //}
-
+	//if (lvldir != ENTRY_LOAD) {
+//		InitLighting();
+//		InitVision();
+	//}
 	InitLevelMonsters(); // reset monsters
 	InitLevelObjects();  // reset objects
 	InitLvlThemes();     // reset themes
@@ -132,61 +131,44 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	IncProgress();
 
 	SetRndSeed(gameSeed); // restore seed after InitLevelMonsters
-    if (!currLvl._dSetLvl) {
-        CreateLevel();
-		StoreProtections(dun);
-        if (pMegaTiles == NULL || pSolidTbl == NULL) {
-            return;
-        }
-        IncProgress();
-		if (currLvl._dType != DTYPE_TOWN) {
-			GetLevelMTypes();
-			InitThemes();
-			IncProgress();
-			InitObjectGFX();
-			IncProgress();
-//			if (IsMultiGame || lvldir == ENTRY_LOAD || !IsLvlVisited(currLvl._dLevelIdx)) {
-				HoldThemeRooms();
-				InitMonsters();
-				IncProgress();
-				InitObjects();
-				InitItems();
-				CreateThemeRooms();
-//			} else {
-//				IncProgress();
-//			}
-		} else {
-//			InitLvlStores();
-			// TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
-			// SetRndSeed(seed);
-			IncProgress();
-			IncProgress();
+	CreateLevel();
+	StoreProtections(dun);
+	if (pMegaTiles == NULL || pSolidTbl == NULL) {
+		return;
+	}
+	IncProgress();
+	if (currLvl._dType != DTYPE_TOWN) {
+		GetLevelMTypes();
+		InitThemes();
+		IncProgress();
+		InitObjectGFX();
+		IncProgress();
+		HoldThemeRooms();
+		InitMonsters();
+		IncProgress();
+		InitObjects();
+		InitItems();
+		CreateThemeRooms();
+	} else {
+//		InitLvlStores();
+		// TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
+		// SetRndSeed(seed);
+		IncProgress();
+		IncProgress();
 
-//			InitTowners();
-			IncProgress();
-//			InitItems();
-        }
-    } else {
-        LoadSetMap();
-		StoreProtections(dun);
-        IncProgress();
-        // GetLevelMTypes();
-        IncProgress();
-        IncProgress();
-        // InitMonsters();
-        IncProgress();
-
-		// InitItems();
-    }
+//		InitTowners();
+		IncProgress();
+//		InitItems();
+	}
 	FreeSetPieces();
-    IncProgress();
-//    InitMissiles();
-//    SavePreLighting();
-    InitView(lvldir);
+	IncProgress();
+//	InitMissiles();
+//	SavePreLighting();
+	InitView(lvldir);
 
-    IncProgress();
+	IncProgress();
 
-//    music_start(AllLevels[currLvl._dLevelIdx].dMusic);
+//	music_start(AllLevels[currLvl._dLevelIdx].dMusic);
 }
 
 static void EnterLevel(int lvl)

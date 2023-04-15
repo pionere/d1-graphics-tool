@@ -2018,9 +2018,6 @@ void LoadL4Dungeon(const LevelData* lds)
 	DRLG_Init_Globals();
 
 	DRLG_SetPC();
-
-	SetMapMonsters(0);
-	SetMapObjects();
 }
 
 void CreateL4Dungeon()
