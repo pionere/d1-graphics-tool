@@ -2509,7 +2509,7 @@ static void DRLG_L2()
 		// protect inner tiles from spawning additional monsters/objects
 		for (int y = 1; y < 6; y++) {
 			for (int x = 1; x < 6; x++) {
-				lm[2 + 7 * 7 + x + y * 7] = SwapLE16((1 << 8) | (1 << 10) | (1 << 12) | (1 << 14));
+				lm[2 + 7 * 7 + x + y * 7] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 			}
 		}
 		}
@@ -2559,31 +2559,41 @@ void DRLG_InitL2Specials(int x1, int y1, int x2, int y2)
 static void DRLG_L2SetMapFix()
 {
 	if (pSetPieces[0]._sptype == SPT_LVL_BCHAMB) {
+		if (pSetPieces[0]._spData != NULL) {
 		// patch the map - Bonecha1.DUN
+		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// place pieces with closed doors
-		dungeon[17][11] = 150;
+		// shadow of the external-left column
+		lm[2 + 17 + 11 * 18] = SwapLE16(150);
 		// place shadows
 		// - right corridor
-		dungeon[12][6] = 47;
-		dungeon[12][7] = 51;
-		dungeon[16][6] = 47;
-		dungeon[16][7] = 51;
-		dungeon[16][8] = 47;
+		lm[2 + 12 + 6 * 18] = SwapLE16(47);
+		lm[2 + 12 + 7 * 18] = SwapLE16(51);
+		lm[2 + 16 + 6 * 18] = SwapLE16(47);
+		lm[2 + 16 + 7 * 18] = SwapLE16(51);
+		lm[2 + 16 + 8 * 18] = SwapLE16(41);
 		// - central room (top)
-		dungeon[17][8] = 49;
-		dungeon[18][8] = 46;
-		dungeon[19][8] = 49;
-		dungeon[20][8] = 46;
+		lm[2 + 17 + 8 * 18] = SwapLE16(49);
+		lm[2 + 18 + 8 * 18] = SwapLE16(46);
+		lm[2 + 19 + 8 * 18] = SwapLE16(49);
+		lm[2 + 20 + 8 * 18] = SwapLE16(46);
 		// - central room (bottom)
-		dungeon[18][12] = 46;
-		dungeon[19][12] = 49;
+		lm[2 + 18 + 12 * 18] = SwapLE16(46);
+		lm[2 + 19 + 12 * 18] = SwapLE16(49);
 		// - left corridor
-		dungeon[12][14] = 47;
-		dungeon[12][15] = 51;
-		dungeon[16][14] = 47;
-		dungeon[16][15] = 51;
+		lm[2 + 12 + 14 * 18] = SwapLE16(47);
+		lm[2 + 12 + 15 * 18] = SwapLE16(51);
+		lm[2 + 16 + 14 * 18] = SwapLE16(47);
+		lm[2 + 16 + 15 * 18] = SwapLE16(51);
 		// fix corners
 		// DRLG_L2Corners(); - commented out, because this is no longer necessary
+		// protect inner tiles from spawning additional monsters/objects
+		for (int y = 5; y < 17; y++) {
+			for (int x = 1; x < 31; x++) {
+				lm[2 + 32 * 18 + x + y * 18] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
+			}
+		}
+		}
 	}
 }
 
@@ -2611,15 +2621,17 @@ static void LoadL2Dungeon(const LevelData* lds)
 	if (setpiecedata[pSetPieces[0]._sptype]._spdPreDunFile != NULL) {
 		MemFreeDbg(pSetPieces[0]._spData);
 		pSetPieces[0]._spData = LoadFileInMem(setpiecedata[pSetPieces[0]._sptype]._spdPreDunFile);
+		DRLG_L2SetMapFix();
 
 		DRLG_DrawMap(0);
-		DRLG_L2SetMapFix();
 	}
 
 	DRLG_L2InitTransVals();
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L2);
 	DRLG_Init_Globals();
 	DRLG_InitL2Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
+
+	DRLG_SetPC();
 
 	SetMapMonsters(0);
 	SetMapObjects();

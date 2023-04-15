@@ -2110,6 +2110,8 @@ void LoadL4Dungeon(const LevelData* lds)
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
 	DRLG_Init_Globals();
 
+	DRLG_SetPC();
+
 	SetMapMonsters(0);
 	SetMapObjects();
 }
