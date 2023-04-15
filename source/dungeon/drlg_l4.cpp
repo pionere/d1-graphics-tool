@@ -2012,12 +2012,6 @@ void LoadL4Dungeon(const LevelData* lds)
 
 		DRLG_DrawMap(0);
 	}
-
-	DRLG_L4InitTransVals();
-	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
-	DRLG_Init_Globals();
-
-	DRLG_SetPC();
 }
 
 void CreateL4Dungeon()
@@ -2026,11 +2020,10 @@ void CreateL4Dungeon()
 
 	if (lds->dSetLvl) {
 		LoadL4Dungeon(lds);
-		return;
+	} else {
+		DRLG_LoadL4SP();
+		DRLG_L4();
 	}
-
-	DRLG_LoadL4SP();
-	DRLG_L4();
 
 	DRLG_L4InitTransVals();
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L4);
