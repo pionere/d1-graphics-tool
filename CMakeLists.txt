@@ -104,7 +104,6 @@ set(PROJECT_SOURCES
         source/dungeon/player.cpp
         source/dungeon/questdat.cpp
         source/dungeon/quests.cpp
-        source/dungeon/setmaps.cpp
         source/dungeon/spelldat.cpp
         source/dungeon/themes.cpp
         source/dungeon/trigs.cpp

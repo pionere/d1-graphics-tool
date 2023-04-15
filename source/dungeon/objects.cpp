@@ -160,11 +160,11 @@ void InitObjectGFX()
 	for (i = 0; i < numthemes; i++)
 		themeload[themes[i]._tsType] = true;
 
-	if (!currLvl.isSetLvl) {
 	BYTE lvlMask = 1 << currLvl._dType;
 	for (i = 0; i < NUM_OBJECTS; i++) {
 		ods = &objectdata[i];
-		if (!(ods->oLvlTypes & lvlMask)
+		if ((currLvl.isSetLvl || !(ods->oLvlTypes & lvlMask))
+		 && (!currLvl.isSetLvl || currLvl._dType != objectdata[i].oSetLvlType)
 		 && (ods->otheme == THEME_NONE || !themeload[ods->otheme])
 		 && (ods->oquest == Q_INVALID || !QuestStatus(ods->oquest))) {
 			continue;
@@ -174,14 +174,7 @@ void InitObjectGFX()
 		}
 		fileload[ods->ofindex] = true;
 		AddObjectType(ods->ofindex);
-	}
-	} else {
-	for (i = 0; i < NUM_OBJECTS; i++) {
-		if (currLvl._dType == objectdata[i].oSetLvlType)
-			AddObjectType(objectdata[i].ofindex);
-	}
-	}
-	*/
+	}*/
 }
 
 void FreeObjectGFX()
@@ -922,9 +915,8 @@ void InitObjects()
 #endif
 	}
 	AddDunObjs(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
-
-	assert(objectdata[OBJ_TORCHL1].oLvlTypes == objectdata[OBJ_TORCHL2].oLvlTypes && objectdata[OBJ_TORCHL1].oLvlTypes == objectdata[OBJ_TORCHR1].oLvlTypes && objectdata[OBJ_TORCHR1].oLvlTypes == objectdata[OBJ_TORCHR2].oLvlTypes);
 	BYTE lvlMask = 1 << currLvl._dType;
+	assert(objectdata[OBJ_TORCHL1].oLvlTypes == objectdata[OBJ_TORCHL2].oLvlTypes && objectdata[OBJ_TORCHL1].oLvlTypes == objectdata[OBJ_TORCHR1].oLvlTypes && objectdata[OBJ_TORCHR1].oLvlTypes == objectdata[OBJ_TORCHR2].oLvlTypes);
 	if (lvlMask & objectdata[OBJ_TORCHL1].oLvlTypes) {
 		AddL2Torches();
 	}
@@ -1015,22 +1007,6 @@ void InitObjects()
 	}
 	//gbInitObjFlag = false;
 }
-
-/*void SetMapObjects()
-{
-	int i;
-	//gbInitObjFlag = true;
-
-	for (i = 0; i < NUM_OBJECTS; i++) {
-		if (currLvl._dType == objectdata[i].oSetLvlType)
-			AddObjectType(objectdata[i].ofindex);
-	}
-
-	AddDunObjs(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
-
-	LoadMapSetObjects(0);
-	//gbInitObjFlag = false; -- setmap levers?
-}*/
 
 /*static void DeleteObject_(int oi, int idx)
 {

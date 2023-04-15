@@ -462,7 +462,6 @@ typedef struct QuestStruct {
 typedef struct QuestData {
 	BYTE _qdlvl; // dungeon level
 	BYTE _qslvl; // setmap level
-	BYTE _qssp;  // setpiece type
 	int _qdmsg;  // _speech_id
 	const char* _qlstr; // quest title
 } QuestData;

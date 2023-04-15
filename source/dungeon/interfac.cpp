@@ -116,17 +116,17 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	extern int32_t sglGameSeed;
 	int32_t gameSeed = sglGameSeed;
 
-    IncProgress();
-    InitLvlDungeon(); // load tiles + meta data, reset pWarps, pSetPieces
-//    MakeLightTable();
-    IncProgress();
+	IncProgress();
+	InitLvlDungeon(); // load tiles + meta data, reset pWarps, pSetPieces
+//	MakeLightTable();
+	IncProgress();
 
-//    InitLvlAutomap();
+//	InitLvlAutomap();
 
-    //if (lvldir != ENTRY_LOAD) {
-//        InitLighting();
-//        InitVision();
-    //}
+	//if (lvldir != ENTRY_LOAD) {
+	//	InitLighting();
+	//	InitVision();
+	//}
 	InitLevelMonsters(); // reset monsters
 	InitLevelObjects();  // reset objects
 	InitLvlThemes();     // reset themes
@@ -134,64 +134,47 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	IncProgress();
 
 	SetRndSeed(gameSeed); // restore seed after InitLevelMonsters
-    //if (!currLvl._dSetLvl) {
-        // fill in loop: dungeon, dTransVal, pWarps, pSetPieces, uses drlgFlags, dungBlock
-        // fill post: pdungeon, dPiece, dSpecial, themeLoc, dFlags
-        // reset: dMonster, dObject, dPlayer, dItem, dMissile, dLight+
-        CreateLevel();
-		StoreProtections(dun);
-        if (pMegaTiles == NULL || pSolidTbl == NULL) {
-            return;
-        }
-        IncProgress();
-		if (currLvl._dType != DTYPE_TOWN) {
-			GetLevelMTypes(); // select monster types and load their fx
-			InitThemes(); // select theme types
-			IncProgress();
-			InitObjectGFX(); // load object graphics
-			IncProgress();
-//			if (IsMultiGame || lvldir == ENTRY_LOAD || !IsLvlVisited(currLvl._dLevelIdx)) {
-				HoldThemeRooms(); // protect themes with dFlags
-				InitMonsters();   // place monsters
-				IncProgress();
-				InitObjects(); // place objects
-				InitItems();   // place items
-				CreateThemeRooms(); // populate theme rooms
-//			} else {
-//				IncProgress();
-//			}
-		} else {
-//			InitLvlStores();
-			// TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
-			// SetRndSeed(seed);
-			IncProgress();
-			IncProgress();
+	// fill in loop: dungeon, dTransVal, pWarps, pSetPieces, uses drlgFlags, dungBlock
+	// fill post: pdungeon, dPiece, dSpecial, themeLoc, dFlags
+	// reset: dMonster, dObject, dPlayer, dItem, dMissile, dLight+
+	CreateLevel();
+	StoreProtections(dun);
+	if (pMegaTiles == NULL || pSolidTbl == NULL) {
+		return;
+	}
+	IncProgress();
+	if (currLvl._dType != DTYPE_TOWN) {
+		GetLevelMTypes(); // select monster types and load their fx
+		InitThemes(); // select theme types
+		IncProgress();
+		InitObjectGFX(); // load object graphics
+		IncProgress();
+		HoldThemeRooms(); // protect themes with dFlags
+		InitMonsters();   // place monsters
+		IncProgress();
+		InitObjects(); // place objects
+		InitItems();   // place items
+		CreateThemeRooms(); // populate theme rooms
+	} else {
+//		InitLvlStores();
+		// TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment
+		// SetRndSeed(seed);
+		IncProgress();
+		IncProgress();
 
-//			InitTowners();
-			IncProgress();
-//			InitItems();
-        }
-    /*} else {
-        LoadSetMap();
-		StoreProtections(dun);
-        IncProgress();
-        // GetLevelMTypes();
-        IncProgress();
-        IncProgress();
-        // InitMonsters();
-        IncProgress();
-
-		// InitItems();
-    }*/
+//		InitTowners();
+		IncProgress();
+//		InitItems();
+	}
 	FreeSetPieces();
-    IncProgress();
-//    InitMissiles();  // reset missiles
-//    SavePreLighting(); // fill dPreLight
-    InitView(lvldir);
+	IncProgress();
+//	InitMissiles();  // reset missiles
+//	SavePreLighting(); // fill dPreLight
+	InitView(lvldir);
 
-    IncProgress();
+	IncProgress();
 
-//    music_start(AllLevels[currLvl._dLevelIdx].dMusic);
+//	music_start(AllLevels[currLvl._dLevelIdx].dMusic);
 }
 
 static void EnterLevel(int lvl)

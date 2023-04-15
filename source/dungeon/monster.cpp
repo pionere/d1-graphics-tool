@@ -295,7 +295,6 @@ void GetLevelMTypes()
 	int nt; // number of types
 
 	lvl = currLvl._dLevelIdx;
-	//assert(!currLvl._dSetLvl);
 	//if (!currLvl._dSetLvl) {
 		if (lvl == DLV_HELL4) {
 			AddMonsterType(MT_BMAGE, TRUE);
@@ -773,7 +772,7 @@ void InitMonsters()
 				numscattypes++;
 			}
 		}
-		// assert(numscattypes != 0);
+		// assert(numscattypes != 0 || na == 0);
 		i = currLvl._dLevelIdx;
 		while (nummonsters < totalmonsters) {
 			mtidx = scatteridx[random_low(95, numscattypes)];
