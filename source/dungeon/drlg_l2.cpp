@@ -2444,12 +2444,12 @@ static void DRLG_L2()
 		// protect inner tiles from spawning additional monsters/objects
 		for (int y = 0; y <= 6; y++) {
 			for (int x = 0; x <= 6; x++) {
-				lm[2 + 11 * 11 + x + y * 11] = SwapLE16((1 << 8) | (1 << 10) | (1 << 12) | (1 << 14));
+				lm[2 + 11 * 11 + x + y * 11] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 			}
 		}
 		for (int y = 4; y < 11; y++) {
 			for (int x = 4; x < 11; x++) {
-				lm[2 + 11 * 11 + x + y * 11] = SwapLE16((1 << 8) | (1 << 10) | (1 << 12) | (1 << 14));
+				lm[2 + 11 * 11 + x + y * 11] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 			}
 		}
 		DRLG_DrawMap(0);
@@ -2486,12 +2486,12 @@ static void DRLG_L2()
 		// protect inner tiles from spawning additional monsters/objects
 		for (int y = 0; y < 15; y++) {
 			for (int x = 2; x <= 7; x++) {
-				lm[2 + 10 * 16 + x + y * 10] = SwapLE16((1 << 8) | (1 << 10) | (1 << 12) | (1 << 14));
+				lm[2 + 10 * 16 + x + y * 10] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 			}
 		}
 		for (int y = 3; y < 9; y++) {
 			for (int x = 0; x <= 10; x++) {
-				lm[2 + 10 * 16 + x + y * 10] = SwapLE16((1 << 8) | (1 << 10) | (1 << 12) | (1 << 14));
+				lm[2 + 10 * 16 + x + y * 10] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 			}
 		}
 		}
@@ -2571,7 +2571,7 @@ static void DRLG_L2SetMapFix()
 		lm[2 + 12 + 7 * 32] = SwapLE16(51);
 		lm[2 + 16 + 6 * 32] = SwapLE16(47);
 		lm[2 + 16 + 7 * 32] = SwapLE16(51);
-		lm[2 + 16 + 8 * 32] = SwapLE16(41);
+		lm[2 + 16 + 8 * 32] = SwapLE16(47);
 		// - central room (top)
 		lm[2 + 17 + 8 * 32] = SwapLE16(49);
 		lm[2 + 18 + 8 * 32] = SwapLE16(46);
