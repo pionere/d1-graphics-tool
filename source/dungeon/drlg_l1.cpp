@@ -2822,19 +2822,11 @@ static void DRLG_L1()
 		DRLG_DrawMap(0);
 #endif
 	}
-}
-
-void CreateL1Dungeon()
-{
-	DRLG_LoadL1SP();
-	DRLG_L1();
-
-	DRLG_L1InitTransVals();
-	DRLG_PlaceMegaTiles(BASE_MEGATILE_L1);
-	DRLG_Init_Globals();
-	DRLG_InitL1Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
-
-	DRLG_SetPC();
+	for (int i = lengthof(pSetPieces) - 1; i >= 0; i--) {
+		if (pSetPieces[i]._spData == NULL) {
+			pSetPieces[i]._sptype = SPT_NONE;
+		}
+	}
 }
 
 static void DRLG_L1SetMapFix()
@@ -2873,7 +2865,7 @@ static void DRLG_L1SetMapFix()
 	}
 }
 
-void LoadL1Dungeon(const LevelData* lds)
+static void LoadL1Dungeon(const LevelData* lds)
 {
 	pWarps[DWARP_ENTRY]._wx = lds->dSetLvlDunX;
 	pWarps[DWARP_ENTRY]._wy = lds->dSetLvlDunY;
@@ -2899,10 +2891,10 @@ void LoadL1Dungeon(const LevelData* lds)
 	if (setpiecedata[pSetPieces[0]._sptype]._spdPreDunFile != NULL) {
 		MemFreeDbg(pSetPieces[0]._spData);
 		pSetPieces[0]._spData = LoadFileInMem(setpiecedata[pSetPieces[0]._sptype]._spdPreDunFile);
-		//DRLG_L1SetMapFix();
-		//DRLG_L1Floor();
 
 		DRLG_DrawMap(0);
+		//DRLG_L1SetMapFix();
+		//DRLG_L1Floor();
 	}
 
 	DRLG_L1InitTransVals();
@@ -2912,6 +2904,26 @@ void LoadL1Dungeon(const LevelData* lds)
 
 	SetMapMonsters(0);
 	SetMapObjects();
+}
+
+void CreateL1Dungeon()
+{
+	const LevelData* lds = &AllLevels[currLvl._dLevelIdx];
+
+	if (lds->dSetLvl) {
+		LoadL1Dungeon(lds);
+		return;
+	}
+
+	DRLG_LoadL1SP();
+	DRLG_L1();
+
+	DRLG_L1InitTransVals();
+	DRLG_PlaceMegaTiles(BASE_MEGATILE_L1);
+	DRLG_Init_Globals();
+	DRLG_InitL1Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
+
+	DRLG_SetPC();
 }
 
 DEVILUTION_END_NAMESPACE

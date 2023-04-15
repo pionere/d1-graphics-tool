@@ -881,81 +881,66 @@ void InitObjects()
 				na++;
 
 	if (lvlMask & objectdata[OBJ_SARC].oLvlTypes) {
-		int num = na / 512;
-		if (num > 0) {
-			InitRndSarcs(RandRangeLow(num, num * 2), OBJ_SARC);
-		}
+		static_assert(DSIZEX * DSIZEY < 0x7FFF, "InitObjects uses RandRangeLow I.");
+		unsigned num = RandRangeLow(na, na * 2 + 1);
+		InitRndSarcs(num / 512, OBJ_SARC);
 	}
 #ifdef HELLFIRE
 	if (lvlMask & objectdata[OBJ_L5SARC].oLvlTypes) {
-		unsigned num = na / 512;
-		if (num > 0) {
-			InitRndSarcs(RandRangeLow(num, num * 2), OBJ_L5SARC);
-		}
+		static_assert(DSIZEX * DSIZEY < 0x7FFF, "InitObjects uses RandRangeLow II.");
+		unsigned num = RandRangeLow(na, na * 2 + 1);
+		InitRndSarcs(num / 512, OBJ_L5SARC);
 	}
 #endif
 	if (lvlMask & objectdata[OBJ_TNUDEM].oLvlTypes) {
-		unsigned num = na / 512;
-		if (num > 0) {
-			InitRndLocObj(RandRangeLow(num, num * 3), OBJ_TNUDEM);
-		}
+		static_assert(DSIZEX * DSIZEY * 2 < 0x7FFF, "InitObjects uses RandRangeLow III.");
+		unsigned num = RandRangeLow(na, na * 3 + 1);
+		InitRndLocObj(num / 512, OBJ_TNUDEM);
 	}
 	if (lvlMask & objectdata[OBJ_TNUDEW].oLvlTypes) {
-		unsigned num = na / 768;
-		if (num > 0) {
-			InitRndLocObj(RandRangeLow(num, num * 3), OBJ_TNUDEW);
-		}
+		static_assert(DSIZEX * DSIZEY * 2 < 0x7FFF, "InitObjects uses RandRangeLow IV.");
+		unsigned num = RandRangeLow(na, na * 3 + 1);
+		InitRndLocObj(num / 768, OBJ_TNUDEW);
 	}
 	if (lvlMask & objectdata[OBJ_DECAP].oLvlTypes) {
-		unsigned num = na / 1024;
-		if (num > 0) {
-			InitRndLocObj(RandRangeLow(num, num * 2), OBJ_DECAP);
-		}
+		static_assert(DSIZEX * DSIZEY < 0x7FFF, "InitObjects uses RandRangeLow V.");
+		unsigned num = RandRangeLow(na, na * 2 + 1);
+		InitRndLocObj(num / 1024, OBJ_DECAP);
 	}
 	if (lvlMask & objectdata[OBJ_CAULDRON].oLvlTypes) {
-		unsigned num = na / 2048;
-		if (num > 0) {
-			InitRndLocObj(RandRangeLow(num, num + 1), OBJ_CAULDRON);
-		}
+		static_assert(DSIZEX * DSIZEY < 0x7FFF, "InitObjects uses RandRangeLow VI.");
+		unsigned num = RandRangeLow(na, na * 2 + 1);
+		InitRndLocObj(num / 2048, OBJ_CAULDRON);
 	}
 	assert(objectdata[OBJ_BARREL].oLvlTypes == objectdata[OBJ_BARRELEX].oLvlTypes);
 	if (lvlMask & objectdata[OBJ_BARREL].oLvlTypes) {
-		unsigned num = na / 1024;
-		if (num > 0) {
-			InitRndBarrels(RandRangeLow(num, num * 2), OBJ_BARREL);
-		}
+		static_assert(DSIZEX * DSIZEY < 0x7FFF, "InitObjects uses RandRangeLow VII.");
+		unsigned num = RandRangeLow(na, na * 2 + 1);
+		InitRndBarrels(num / 1024, OBJ_BARREL);
 	}
 #ifdef HELLFIRE
 	assert(objectdata[OBJ_URN].oLvlTypes == objectdata[OBJ_URNEX].oLvlTypes);
 	if (lvlMask & objectdata[OBJ_URN].oLvlTypes) {
-		unsigned num = na / 1024;
-		if (num > 0) {
-			InitRndBarrels(RandRangeLow(num, num * 2), OBJ_URN);
-		}
+		static_assert(DSIZEX * DSIZEY < 0x7FFF, "InitObjects uses RandRangeLow VIII.");
+		unsigned num = RandRangeLow(na, na * 2 + 1);
+		InitRndBarrels(num / 1024, OBJ_URN);
 	}
 	assert(objectdata[OBJ_POD].oLvlTypes == objectdata[OBJ_PODEX].oLvlTypes);
 	if (lvlMask & objectdata[OBJ_POD].oLvlTypes) {
-		unsigned num = na / 1024;
-		if (num > 0) {
-			InitRndBarrels(RandRangeLow(num, num * 2), OBJ_POD);
-		}
+		static_assert(DSIZEX * DSIZEY < 0x7FFF, "InitObjects uses RandRangeLow XI.");
+		unsigned num = RandRangeLow(na, na * 2 + 1);
+		InitRndBarrels(num / 1024, OBJ_POD);
 	}
 #endif
 	assert(objectdata[OBJ_CHEST1].oLvlTypes == DTM_ANY && objectdata[OBJ_CHEST2].oLvlTypes == DTM_ANY && objectdata[OBJ_CHEST3].oLvlTypes == DTM_ANY);
     {
-		unsigned num;
-		num = na / 512;
-		if (num > 0) {
-			InitRndLocObj(RandRangeLow(num, num * 2), OBJ_CHEST1);
-		}
-		num = na / 1024;
-		if (num > 0) {
-			InitRndLocObj(RandRangeLow(num, num * 2), OBJ_CHEST2);
-		}
-		num = na / 2048;
-		if (num > 0) {
-			InitRndLocObj(RandRangeLow(num, num * 2), OBJ_CHEST3);
-		}
+		static_assert(DSIZEX * DSIZEY < 0x7FFF, "InitObjects uses RandRangeLow X.");
+		unsigned num = RandRangeLow(na, na * 2 + 1);
+		InitRndLocObj(num / 512, OBJ_CHEST1);
+		num = RandRangeLow(na, na * 2 + 1);
+		InitRndLocObj(num / 1024, OBJ_CHEST2);
+		num = RandRangeLow(na, na * 2 + 1);
+		InitRndLocObj(num / 2048, OBJ_CHEST3);
 	}
 	assert(objectdata[OBJ_TRAPL].oLvlTypes == objectdata[OBJ_TRAPR].oLvlTypes);
 	if (lvlMask & objectdata[OBJ_TRAPL].oLvlTypes) {
