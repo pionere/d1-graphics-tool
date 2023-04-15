@@ -665,6 +665,58 @@ static void PlaceUniques()
 	}
 }
 
+static void SetMapMonsters(int idx)
+{
+	int startx = DBORDERX + pSetPieces[idx]._spx * 2;
+	int starty = DBORDERY + pSetPieces[idx]._spy * 2;
+	const BYTE* pMap = pSetPieces[idx]._spData;
+	uint16_t rw, rh, *lm, mtype;
+	int i, j;
+	int mtidx, mnum;
+	bool posOk;
+
+	if (pMap == NULL) {
+		return;
+	}
+	lm = (uint16_t*)pMap;
+	rw = SwapLE16(*lm);
+	lm++;
+	rh = SwapLE16(*lm);
+	lm++;
+	lm += rw * rh; // skip dun
+	rw <<= 1;
+	rh <<= 1;
+	lm += rw * rh; // skip items?
+
+	rw += startx;
+	rh += starty;
+	for (j = starty; j < rh; j++) {
+		for (i = startx; i < rw; i++) {
+			if (*lm != 0) {
+				mtype = SwapLE16(*lm);
+				// assert(nummonsters < MAXMONSTERS);
+				posOk = PosOkActor(i, j);
+				if ((mtype & (1 << 15)) == 0) {
+					mtidx = AddMonsterType(MonstConvTbl[mtype], FALSE);
+					mnum = PlaceMonster(mtidx, i, j);
+				} else {
+					mtype = (mtype & INT16_MAX) - 1;
+					mtidx = AddMonsterType(uniqMonData[mtype].mtype, FALSE);
+					// assert(uniquetrans < NUM_COLOR_TRNS);
+					mnum = PlaceMonster(mtidx, i, j);
+					InitUniqueMonster(mnum, mtype);
+				}
+				if (!posOk) {
+					dMonster[i][j] = 0;
+					monsters[mnum]._mmode = MM_RESERVED;
+					// ChangeLightRadius(monsters[mnum]._mlid, 0);
+				}
+			}
+			lm++;
+		}
+	}
+}
+
 static void PlaceSetMapMonsters()
 {
 	for (int i = lengthof(pSetPieces) - 1; i >= 0; i--) {
@@ -750,58 +802,6 @@ void InitMonsters()
 	// if (currLvl._dLevelIdx == DLV_HELL3) {
 	//	DoUnVision(quests[Q_BETRAYER]._qtx + 2, quests[Q_BETRAYER]._qty + 2, 4, false);
 	// }
-}
-
-void SetMapMonsters(int idx)
-{
-	int startx = DBORDERX + pSetPieces[idx]._spx * 2;
-	int starty = DBORDERY + pSetPieces[idx]._spy * 2;
-	const BYTE* pMap = pSetPieces[idx]._spData;
-	uint16_t rw, rh, *lm, mtype;
-	int i, j;
-	int mtidx, mnum;
-	bool posOk;
-
-	if (pMap == NULL) {
-		return;
-	}
-	lm = (uint16_t*)pMap;
-	rw = SwapLE16(*lm);
-	lm++;
-	rh = SwapLE16(*lm);
-	lm++;
-	lm += rw * rh; // skip dun
-	rw <<= 1;
-	rh <<= 1;
-	lm += rw * rh; // skip items?
-
-	rw += startx;
-	rh += starty;
-	for (j = starty; j < rh; j++) {
-		for (i = startx; i < rw; i++) {
-			if (*lm != 0) {
-				mtype = SwapLE16(*lm);
-				// assert(nummonsters < MAXMONSTERS);
-				posOk = PosOkActor(i, j);
-				if ((mtype & (1 << 15)) == 0) {
-					mtidx = AddMonsterType(MonstConvTbl[mtype], FALSE);
-					mnum = PlaceMonster(mtidx, i, j);
-				} else {
-					mtype = (mtype & INT16_MAX) - 1;
-					mtidx = AddMonsterType(uniqMonData[mtype].mtype, FALSE);
-					// assert(uniquetrans < NUM_COLOR_TRNS);
-					mnum = PlaceMonster(mtidx, i, j);
-					InitUniqueMonster(mnum, mtype);
-				}
-				if (!posOk) {
-					dMonster[i][j] = 0;
-					monsters[mnum]._mmode = MM_RESERVED;
-					// ChangeLightRadius(monsters[mnum]._mlid, 0);
-				}
-			}
-			lm++;
-		}
-	}
 }
 
 int PreSpawnSkeleton()

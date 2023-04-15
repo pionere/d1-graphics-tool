@@ -209,6 +209,20 @@ void InitLevelObjects()
 	leverid = 1;
 }
 
+static void SetObjMapRange(int oi, int x1, int y1, int x2, int y2, int v)
+{
+	ObjectStruct* os;
+
+	os = &objects[oi];
+	// LEVER_EFFECT
+	os->_oVar1 = x1;
+	os->_oVar2 = y1;
+	os->_oVar3 = x2;
+	os->_oVar4 = y2;
+	// LEVER_INDEX
+	os->_oVar8 = v;
+}
+
 /**
  * Check the location if an object can be placed there in the init phase.
  * Must not consider the player's position, since it could change the dungeon
@@ -1027,20 +1041,6 @@ void InitObjects()
 	if (numobjects > 0 && idx != numobjects)
 		objectactive[idx] = objectactive[numobjects];
 }*/
-
-void SetObjMapRange(int oi, int x1, int y1, int x2, int y2, int v)
-{
-	ObjectStruct* os;
-
-	os = &objects[oi];
-	// LEVER_EFFECT
-	os->_oVar1 = x1;
-	os->_oVar2 = y1;
-	os->_oVar3 = x2;
-	os->_oVar4 = y2;
-	// LEVER_INDEX
-	os->_oVar8 = v;
-}
 
 static void AddChest(int oi)
 {

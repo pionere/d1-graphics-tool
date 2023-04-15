@@ -181,8 +181,8 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
         // InitMonsters();
         IncProgress();
 
-		// InitItems();*/
-    }
+		// InitItems();
+    }*/
 	FreeSetPieces();
     IncProgress();
 //    InitMissiles();  // reset missiles
