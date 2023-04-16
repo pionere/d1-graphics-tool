@@ -66,7 +66,8 @@ static void StoreProtections(D1Dun *dun)
 	for (int y = 0; y < MAXDUNY; y += 2) {
 		for (int x = 0; x < MAXDUNX; x += 2) {
 			dun->setTileProtectionAt(x, y, Qt::Unchecked);
-			dun->setSubtileProtectionAt(x, y, false);
+			dun->setSubtileMonProtectionAt(x, y, false);
+			dun->setSubtileObjProtectionAt(x, y, false);
 		}
 	}
 	for (int y = 0; y < DMAXY; y++) {
@@ -76,7 +77,8 @@ static void StoreProtections(D1Dun *dun)
 	}
 	for (int y = 0; y < MAXDUNY; y++) {
 		for (int x = 0; x < MAXDUNX; x++) {
-			dun->setSubtileProtectionAt(x, y, (dFlags[x][y] & BFLAG_POPULATED) != 0);
+			dun->setSubtileMonProtectionAt(x, y, (dFlags[x][y] & BFLAG_MON_PROTECT) != 0);
+			dun->setSubtileObjProtectionAt(x, y, (dFlags[x][y] & BFLAG_OBJ_PROTECT) != 0);
 		}
 	}
 }

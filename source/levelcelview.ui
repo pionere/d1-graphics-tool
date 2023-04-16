@@ -1305,7 +1305,10 @@
            </widget>
           </item>
           <item row="0" column="7">
-           <widget class="QCheckBox" name="dungeonSubtileProtectionCheckBox"/>
+           <widget class="QCheckBox" name="dungeonSubtileMonProtectionCheckBox"/>
+          </item>
+          <item row="0" column="8">
+           <widget class="QCheckBox" name="dungeonSubtileObjProtectionCheckBox"/>
           </item>
           <item row="0" column="10">
            <spacer>

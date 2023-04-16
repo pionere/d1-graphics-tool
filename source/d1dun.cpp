@@ -470,14 +470,14 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
                         in >> readWord;
                         Qt::CheckState tps = (readWord & 3) == 3 ? Qt::Checked : ((readWord & 1) ? Qt::PartiallyChecked : Qt::Unchecked);
                         this->tileProtections[y][x] = tps;
-                        int sps = (readWord >> 8) & 3;
-                        this->subtileProtections[2 * y + 0][2 * x + 0] = sps != 0;
-                        sps = (readWord >> 10) & 3;
-                        this->subtileProtections[2 * y + 0][2 * x + 1] = sps != 0;
-                        sps = (readWord >> 12) & 3;
-                        this->subtileProtections[2 * y + 1][2 * x + 0] = sps != 0;
-                        sps = (readWord >> 14) & 3;
-                        this->subtileProtections[2 * y + 1][2 * x + 1] = sps != 0;
+                        readWord >>= 8;
+                        this->subtileProtections[2 * y + 0][2 * x + 0] = readWord & 3;
+                        readWord >>= 2;
+                        this->subtileProtections[2 * y + 0][2 * x + 1] = readWord & 3;
+                        readWord >>= 2;
+                        this->subtileProtections[2 * y + 1][2 * x + 0] = readWord & 3;
+                        readWord >>= 2;
+                        this->subtileProtections[2 * y + 1][2 * x + 1] = readWord & 3;
                     }
                 }
                 for (int x = 0; x < 3 * dunWidth * dunHeight; x++) {
@@ -688,7 +688,7 @@ bool D1Dun::save(const SaveAsParam &params)
             if (this->tileProtections[y / TILE_WIDTH][x / TILE_HEIGHT] != Qt::Unchecked) {
                 layers |= 1 << 0;
             }
-            if (this->subtileProtections[y][x]) {
+            if (this->subtileProtections[y][x] != 0) {
                 layers |= 1 << 0;
             }
             if (this->monsters[y][x].first != 0) {
@@ -863,10 +863,10 @@ bool D1Dun::save(const SaveAsParam &params)
                 for (int x = 0; x < dunWidth; x++) {
                     Qt::CheckState tps = this->tileProtections[y][x];
                     writeWord = tps == Qt::Checked ? 3 : (tps == Qt::PartiallyChecked ? 1 : 0);
-                    writeWord |= this->subtileProtections[2 * y + 0][2 * x + 0] ? (3 << 8) : 0;
-                    writeWord |= this->subtileProtections[2 * y + 0][2 * x + 1] ? (3 << 10) : 0;
-                    writeWord |= this->subtileProtections[2 * y + 1][2 * x + 0] ? (3 << 12) : 0;
-                    writeWord |= this->subtileProtections[2 * y + 1][2 * x + 1] ? (3 << 14) : 0;
+                    writeWord |= this->subtileProtections[2 * y + 0][2 * x + 0] << 8;
+                    writeWord |= this->subtileProtections[2 * y + 0][2 * x + 1] << 10;
+                    writeWord |= this->subtileProtections[2 * y + 1][2 * x + 0] << 12;
+                    writeWord |= this->subtileProtections[2 * y + 1][2 * x + 1] << 14;
                     out << writeWord;
                 }
             }
@@ -1230,9 +1230,11 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     }
     if (params.showSubtileProtections) {
         // draw X if the subtile-flag is set
-        bool sps = this->subtileProtections[dunCursorY][dunCursorX];
-        if (sps) {
+        int sps = this->subtileProtections[dunCursorY][dunCursorX];
+        if (sps & 1) {
             dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - 3 * backHeight / 4);
+        }
+        if (sps & 2) {
             dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - 3 * backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - backHeight / 4);
         }
     }
@@ -1449,7 +1451,7 @@ bool D1Dun::setWidth(int newWidth, bool force)
                 hasContent |= this->subtiles[y][x] > 0;                         // !0 && !UNDEF_SUBTILE
                 hasContent |= this->items[y][x] != 0;
                 hasContent |= this->tileProtections[y / TILE_HEIGHT][x / TILE_WIDTH] != Qt::Unchecked;
-                hasContent |= this->subtileProtections[y][x];
+                hasContent |= this->subtileProtections[y][x] != 0;
                 hasContent |= this->monsters[y][x].first != 0;
                 hasContent |= this->objects[y][x] != 0;
                 hasContent |= this->rooms[y][x] != 0;
@@ -1475,7 +1477,7 @@ bool D1Dun::setWidth(int newWidth, bool force)
     for (std::vector<Qt::CheckState> &tileProtectionsRow : this->tileProtections) {
         tileProtectionsRow.resize(newWidth / TILE_WIDTH);
     }
-    for (std::vector<bool> &subtileProtectionsRow : this->subtileProtections) {
+    for (std::vector<int> &subtileProtectionsRow : this->subtileProtections) {
         subtileProtectionsRow.resize(newWidth);
     }
     for (std::vector<int> &itemsRow : this->items) {
@@ -1528,7 +1530,7 @@ bool D1Dun::setHeight(int newHeight, bool force)
                 hasContent |= this->subtiles[y][x] > 0;                         // !0 && !UNDEF_SUBTILE
                 hasContent |= this->items[y][x] != 0;
                 hasContent |= this->tileProtections[y / TILE_HEIGHT][x / TILE_WIDTH] != Qt::Unchecked;
-                hasContent |= this->subtileProtections[y][x];
+                hasContent |= this->subtileProtections[y][x] != 0;
                 hasContent |= this->monsters[y][x].first != 0;
                 hasContent |= this->objects[y][x] != 0;
                 hasContent |= this->rooms[y][x] != 0;
@@ -1703,17 +1705,32 @@ bool D1Dun::setTileProtectionAt(int posx, int posy, Qt::CheckState protection)
     return true;
 }
 
-bool D1Dun::getSubtileProtectionAt(int posx, int posy) const
+bool D1Dun::getSubtileMonProtectionAt(int posx, int posy) const
 {
-    return this->subtileProtections[posy][posx];
+    return (this->subtileProtections[posy][posx] & 1) != 0;
 }
 
-bool D1Dun::setSubtileProtectionAt(int posx, int posy, bool protection)
+bool D1Dun::setSubtileMonProtectionAt(int posx, int posy, bool protection)
 {
-    if (this->subtileProtections[posy][posx] == protection) {
+    if (((this->subtileProtections[posy][posx] & 1) != 0) == protection) {
         return false;
     }
-    this->subtileProtections[posy][posx] = protection;
+    this->subtileProtections[posy][posx] = (this->subtileProtections[posy][posx] & ~1) | (protection ? 1 : 0);
+    this->modified = true;
+    return true;
+}
+
+bool D1Dun::getSubtileObjProtectionAt(int posx, int posy) const
+{
+    return (this->subtileProtections[posy][posx] & 2) != 0;
+}
+
+bool D1Dun::setSubtileObjProtectionAt(int posx, int posy, bool protection)
+{
+    if (((this->subtileProtections[posy][posx] & 2) != 0) == protection) {
+        return false;
+    }
+    this->subtileProtections[posy][posx] = (this->subtileProtections[posy][posx] & ~2) | (protection ? 2 : 0);
     this->modified = true;
     return true;
 }
@@ -2219,10 +2236,10 @@ void D1Dun::checkProtections() const
     dProgress() << progress;
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
-            bool protection = this->subtileProtections[y][x] && this->tileProtections[y / TILE_HEIGHT][x / TILE_WIDTH] != Qt::Unchecked;
+            bool protection = (this->subtileProtections[y][x] & 1) != 0 && this->tileProtections[y / TILE_HEIGHT][x / TILE_WIDTH] != Qt::Unchecked;
             if (!protection) {
-                if (this->monsters[y][x].first != 0) {
-                    dProgressWarn() << tr("Subtile with a monster is not protected at %1:%2.").arg(x).arg(y);
+                if (this->objects[y][x] != 0) {
+                    dProgressWarn() << tr("Subtile with an object is not protected at %1:%2.").arg(x).arg(y);
                     result = true;
                 }
                 if (this->items[y][x] != 0) {
@@ -2378,10 +2395,10 @@ bool D1Dun::removeProtections()
             }
         }
     }
-    for (std::vector<bool> &subtileProtectionsRow : this->subtileProtections) {
-        for (bool &&protection : subtileProtectionsRow) {
-            if (protection) {
-                protection = false;
+    for (std::vector<int> &subtileProtectionsRow : this->subtileProtections) {
+        for (int &protection : subtileProtectionsRow) {
+            if (protection != 0) {
+                protection = 0;
                 result = true;
                 this->modified = true;
             }
@@ -2479,8 +2496,8 @@ void D1Dun::loadProtections(const D1Dun *srcDun)
     }
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
-            bool newProtections = srcDun->subtileProtections[y][x];
-            bool currProtections = this->subtileProtections[y][x];
+            int newProtections = srcDun->subtileProtections[y][x];
+            int currProtections = this->subtileProtections[y][x];
             if (newProtections && currProtections != newProtections) {
                 this->subtileProtections[y][x] = newProtections;
                 this->modified = true;
@@ -2745,10 +2762,9 @@ bool D1Dun::protectSubtiles()
     bool result = false;
     for (int duny = 0; duny < this->height; duny++) {
         for (int dunx = 0; dunx < this->width; dunx++) {
-            bool needsProtection = this->monsters[duny][dunx].first != 0;
-            needsProtection |= this->objects[duny][dunx] != 0;
+            bool needsProtection = this->objects[duny][dunx] != 0;
             // TODO: skip if non-walkable?
-            if (needsProtection && this->setSubtileProtectionAt(dunx, duny, true)) {
+            if (needsProtection && this->setSubtileMonProtectionAt(dunx, duny, true)) {
                 dProgress() << tr("Subtile at %1:%2 is now protected.").arg(dunx).arg(duny);
                 result = true;
             }
@@ -2845,17 +2861,26 @@ bool D1Dun::changeTileProtectionAt(int tilePosX, int tilePosY, Qt::CheckState pr
     return true;
 }
 
-bool D1Dun::changeSubtileProtectionAt(int posx, int posy, bool protection)
+bool D1Dun::changeSubtileProtectionAt(int posx, int posy, int protection)
 {
-    bool prevProtection = this->subtileProtections[posy][posx];
+    int prevProtection = this->subtileProtections[posy][posx];
     if (prevProtection == protection) {
         return false;
     }
     this->subtileProtections[posy][posx] = protection;
-    if (protection) {
-        dProgress() << tr("Added Subtile-Protection to %1:%2.").arg(posx).arg(posy);
-    } else {
-        dProgress() << tr("Removed Subtile-Protection from %1:%2.").arg(posx).arg(posy);
+    if ((protection & 1) != (prevProtection & 1)) {
+        if (protection & 1) {
+            dProgress() << tr("Added Monster Protection to %1:%2.").arg(posx).arg(posy);
+        } else {
+            dProgress() << tr("Removed Monster Protection from %1:%2.").arg(posx).arg(posy);
+        }
+    }
+    if ((protection & 2) != (prevProtection & 2)) {
+        if (protection & 2) {
+            dProgress() << tr("Added Object Protection to %1:%2.").arg(posx).arg(posy);
+        } else {
+            dProgress() << tr("Removed Object Protection from %1:%2.").arg(posx).arg(posy);
+        }
     }
     this->modified = true;
     return true;
@@ -2909,10 +2934,10 @@ void D1Dun::patch(int dunFileIndex)
         // protect inner tiles from spawning additional monsters/objects
         for (int y = 1; y < 6; y++) {
             for (int x = 1; x < 6; x++) {
-                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, true);
-                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, true);
-                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, true);
-                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, 3);
             }
         }
         break;
@@ -2979,18 +3004,18 @@ void D1Dun::patch(int dunFileIndex)
         // protect inner tiles from spawning additional monsters/objects
         for (int y = 0; y < 6; y++) {
             for (int x = 0; x < 6; x++) {
-                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, true);
-                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, true);
-                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, true);
-                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, 3);
             }
         }
         for (int y = 4; y < 11; y++) {
             for (int x = 4; x < 11; x++) {
-                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, true);
-                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, true);
-                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, true);
-                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, 3);
             }
         }
         break;
@@ -3054,10 +3079,10 @@ void D1Dun::patch(int dunFileIndex)
         // protect inner tiles from spawning additional monsters/objects
         for (int y = 7; y < 15; y++) {
             for (int x = 2; x <= 6; x++) {
-                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, true);
-                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, true);
-                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, true);
-                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, 3);
             }
         }
         break;
@@ -3179,10 +3204,10 @@ void D1Dun::patch(int dunFileIndex)
         // protect inner tiles from spawning additional monsters/objects
         /*for (int y = 0; y <= 5; y++) {
             for (int x = 0; x <= 6; x++) {
-                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, true);
-                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, true);
-                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, true);
-                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, 3);
             }
         }*/
         break;
@@ -3272,10 +3297,10 @@ void D1Dun::patch(int dunFileIndex)
         // protect inner tiles from spawning additional monsters/objects
         for (int y = 0; y <= 5; y++) {
             for (int x = 0; x <= 5; x++) {
-                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, true);
-                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, true);
-                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, true);
-                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, true);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, 3);
             }
         }
         break;
