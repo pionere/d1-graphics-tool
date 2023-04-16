@@ -1780,6 +1780,21 @@ void MainWindow::on_actionProtectTiles_Dungeon_triggered()
     ProgressDialog::done();
 }
 
+void MainWindow::on_actionProtectTilesFrom_Dungeon_triggered()
+{
+    D1Dun *srcDun = this->loadDun(tr("Dungeon file"));
+    if (srcDun == nullptr) {
+        return;
+    }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->protectDungeonTilesFrom(srcDun);
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
 void MainWindow::on_actionProtectSubtiles_Dungeon_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);

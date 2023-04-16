@@ -101,6 +101,7 @@ public:
     void resetDungeonTiles();
     void resetDungeonSubtiles();
     void protectDungeonTiles();
+    void protectDungeonTilesFrom(const D1Dun *srcDun);
     void protectDungeonSubtiles();
     void checkTiles() const;
     void checkProtections() const;
@@ -113,11 +114,11 @@ public:
     void removeMonsters();
     void removeObjects();
     void removeRooms();
-    void loadProtections(D1Dun *srcDun);
-    void loadItems(D1Dun *srcDun);
-    void loadMonsters(D1Dun *srcDun);
-    void loadObjects(D1Dun *srcDun);
-    void loadRooms(D1Dun *srcDun);
+    void loadProtections(const D1Dun *srcDun);
+    void loadItems(const D1Dun *srcDun);
+    void loadMonsters(const D1Dun *srcDun);
+    void loadObjects(const D1Dun *srcDun);
+    void loadRooms(const D1Dun *srcDun);
     void generateDungeon();
 
     void upscale(const UpscaleParam &params);

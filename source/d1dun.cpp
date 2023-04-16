@@ -2462,7 +2462,7 @@ static QString protectionString(Qt::CheckState protectionState)
     return QApplication::tr("Complete Protection");
 }
 
-void D1Dun::loadProtections(D1Dun *srcDun)
+void D1Dun::loadProtections(const D1Dun *srcDun)
 {
     for (int y = 0; y < this->height / TILE_HEIGHT; y++) {
         for (int x = 0; x < this->width / TILE_WIDTH; x++) {
@@ -2489,7 +2489,7 @@ void D1Dun::loadProtections(D1Dun *srcDun)
     }
 }
 
-void D1Dun::loadItems(D1Dun *srcDun)
+void D1Dun::loadItems(const D1Dun *srcDun)
 {
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
@@ -2508,7 +2508,7 @@ void D1Dun::loadItems(D1Dun *srcDun)
     }
 }
 
-void D1Dun::loadMonsters(D1Dun *srcDun)
+void D1Dun::loadMonsters(const D1Dun *srcDun)
 {
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
@@ -2527,7 +2527,7 @@ void D1Dun::loadMonsters(D1Dun *srcDun)
     }
 }
 
-void D1Dun::loadObjects(D1Dun *srcDun)
+void D1Dun::loadObjects(const D1Dun *srcDun)
 {
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
@@ -2546,7 +2546,7 @@ void D1Dun::loadObjects(D1Dun *srcDun)
     }
 }
 
-void D1Dun::loadRooms(D1Dun *srcDun)
+void D1Dun::loadRooms(const D1Dun *srcDun)
 {
     for (int y = 0; y < this->height; y++) {
         for (int x = 0; x < this->width; x++) {
@@ -2696,6 +2696,33 @@ bool D1Dun::protectTiles()
             needsProtection |= this->objects[duny + 1][dunx + 1] != 0;
             if (needsProtection && this->setTileProtectionAt(dunx, duny, Qt::PartiallyChecked)) {
                 dProgress() << tr("Tile at %1:%2 is now '%3'.").arg(dunx).arg(duny).arg(protectionString(Qt::PartiallyChecked));
+                result = true;
+            }
+        }
+    }
+    if (!result) {
+        dProgress() << tr("No change was necessary.");
+    } else {
+        if (this->type != D1DUN_TYPE::RAW) {
+            this->modified = true;
+        }
+    }
+
+    ProgressDialog::decBar();
+    return result;
+}
+
+bool D1Dun::protectTilesFrom(const D1Dun *srcDun)
+{
+    ProgressDialog::incBar(tr("Checking tiles..."), 1);
+    bool result = false;
+    for (int tilePosY = 0; tilePosY < this->height / TILE_HEIGHT; tilePosY++) {
+        for (int tilePosX = 0; tilePosX < this->width / TILE_WIDTH; tilePosX++) {
+            bool needsProtection = srcDun->tiles[tilePosY][tilePosX] > 0; // !0 && !UNDEF_TILE
+            int dunx = tilePosX * TILE_WIDTH;
+            int duny = tilePosY * TILE_HEIGHT;
+            if (needsProtection && this->setTileProtectionAt(dunx, duny, Qt::Checked)) {
+                dProgress() << tr("Tile at %1:%2 is now '%3'.").arg(dunx).arg(duny).arg(protectionString(Qt::Checked));
                 result = true;
             }
         }
