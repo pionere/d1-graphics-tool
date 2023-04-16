@@ -163,9 +163,9 @@ bool BuilderWidget::dunClicked(const QPoint &cellClick, bool first)
         if (this->lastPos == cellClick) {
             return true;
         }
-        int fcx = cell.x();
+        int fcx = cellClick.x();
         int lcx = this->lastPos.x();
-        int fcy = cell.y();
+        int fcy = cellClick.y();
         int lcy = this->lastPos.y();
 
         // collect locations
@@ -258,14 +258,14 @@ bool BuilderWidget::dunClicked(const QPoint &cellClick, bool first)
             // toggle monster protection
             v = v < 0 ? 0 : 1;
             for (DunPos &dp : modValues) {
-                value = v | (this->dun->getSubtileObjProtectionAt(dp.cellX(), dp.cellY()) ? 2 : 0);
+                value = v | (this->dun->getSubtileObjProtectionAt(dp.cellX, dp.cellY) ? 2 : 0);
                 dp.value = value;
             }
         } else {
             // toggle object protection
             v = v < 0 ? 0 : 2;
             for (DunPos &dp : modValues) {
-                value = v | (this->dun->getSubtileMonProtectionAt(dp.cellX(), dp.cellY()) ? 1 : 0);
+                value = v | (this->dun->getSubtileMonProtectionAt(dp.cellX, dp.cellY) ? 1 : 0);
                 dp.value = value;
             }
         }
