@@ -594,11 +594,10 @@ static void PlaceUniqueMonst(int uniqindex, int mtidx)
 
 	switch (uniqindex) {
 	case UMT_ZHAR:
-		assert(nummonsters == MAX_MINIONS);
 		if (zharlib == -1)
 			return;
-		xp = 2 * themes[zharlib]._tsx1 + DBORDERX + 4;
-		yp = 2 * themes[zharlib]._tsy1 + DBORDERY + 4;
+		xp = themes[zharlib]._tsx1 + 4;
+		yp = themes[zharlib]._tsy1 + 4;
 		break;
 	default:
 		count = 0;
@@ -762,7 +761,7 @@ void InitMonsters()
 				numscattypes++;
 			}
 		}
-		// assert(numscattypes != 0);
+		// assert(numscattypes != 0 || na == 0);
 		i = currLvl._dLevelIdx;
 		while (nummonsters < totalmonsters) {
 			mtidx = scatteridx[random_low(95, numscattypes)];
