@@ -358,9 +358,12 @@ void LevelCelView::update()
         this->ui->dungeonTileProtectionCheckBox->setToolTip(tps == Qt::Unchecked ? tr("Tile might be replaced in the game") : (tps == Qt::PartiallyChecked ? tr("Tile might be decorated in the game") : tr("Tile is used as is in the game")));
         int subtileRef = this->dun->getSubtileAt(posx, posy);
         this->ui->dungeonSubtileLineEdit->setText(subtileRef == UNDEF_SUBTILE ? QStringLiteral("?") : QString::number(subtileRef));
-        bool sps = this->dun->getSubtileProtectionAt(posx, posy);
-        this->ui->dungeonSubtileProtectionCheckBox->setChecked(sps);
-        this->ui->dungeonSubtileProtectionCheckBox->setToolTip(sps ? tr("Monster, object or item might be placed by the game on this subtile") : tr("No actor might be placed by the game on this subtile"));
+        bool smps = this->dun->getSubtileMonProtectionAt(posx, posy);
+        this->ui->dungeonSubtileMonProtectionCheckBox->setChecked(smps);
+        this->ui->dungeonSubtileMonProtectionCheckBox->setToolTip(smps ? tr("Monster might be placed by the game on this subtile") : tr("No monster might be placed by the game on this subtile"));
+        bool sops = this->dun->getSubtileObjProtectionAt(posx, posy);
+        this->ui->dungeonSubtileObjProtectionCheckBox->setChecked(sops);
+        this->ui->dungeonSubtileObjProtectionCheckBox->setToolTip(sops ? tr("Object or item might be placed by the game on this subtile") : tr("Neither an object nor an item might be placed by the game on this subtile"));
         int itemIndex = this->dun->getItemAt(posx, posy);
         this->ui->dungeonItemLineEdit->setText(QString::number(itemIndex));
         this->ui->dungeonItemComboBox->setCurrentIndex(this->ui->dungeonItemComboBox->findData(itemIndex));
@@ -3930,11 +3933,22 @@ void LevelCelView::on_dungeonSubtileLineEdit_escPressed()
     this->ui->dungeonSubtileLineEdit->clearFocus();
 }
 
-void LevelCelView::on_dungeonSubtileProtectionCheckBox_clicked()
+void LevelCelView::on_dungeonSubtileMonProtectionCheckBox_clicked()
 {
-    bool checked = this->ui->dungeonSubtileProtectionCheckBox->isChecked();
+    bool checked = this->ui->dungeonSubtileMonProtectionCheckBox->isChecked();
 
-    bool change = this->dun->setSubtileProtectionAt(this->currentDunPosX, this->currentDunPosY, checked);
+    bool change = this->dun->setSubtileMonProtectionAt(this->currentDunPosX, this->currentDunPosY, checked);
+    if (change) {
+        // update the view
+        this->displayFrame();
+    }
+}
+
+void LevelCelView::on_dungeonSubtileObjProtectionCheckBox_clicked()
+{
+    bool checked = this->ui->dungeonSubtileObjProtectionCheckBox->isChecked();
+
+    bool change = this->dun->setSubtileObjProtectionAt(this->currentDunPosX, this->currentDunPosY, checked);
     if (change) {
         // update the view
         this->displayFrame();

@@ -165,7 +165,7 @@
    </widget>
    <widget class="QMenu" name="menuDungeonProtect">
     <property name="title">
-     <string>Check</string>
+     <string>Protect</string>
     </property>
     <property name="toolTipsVisible">
      <bool>true</bool>

@@ -253,7 +253,8 @@ private slots:
     void on_assetClearPushButton_clicked();
     void on_dungeonSubtileLineEdit_returnPressed();
     void on_dungeonSubtileLineEdit_escPressed();
-    void on_dungeonSubtileProtectionCheckBox_clicked();
+    void on_dungeonSubtileMonProtectionCheckBox_clicked();
+    void on_dungeonSubtileObjProtectionCheckBox_clicked();
     void on_dungeonObjectLineEdit_returnPressed();
     void on_dungeonObjectLineEdit_escPressed();
     void on_dungeonObjectComboBox_activated(int index);

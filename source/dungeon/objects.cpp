@@ -224,7 +224,7 @@ static void SetObjMapRange(int oi, int x1, int y1, int x2, int y2, int v)
 static bool RndLocOk(int xp, int yp)
 {
 	if ((dMonster[xp][yp] | /*dPlayer[xp][yp] |*/ dObject[xp][yp]
-	 | nSolidTable[dPiece[xp][yp]] | (dFlags[xp][yp] & BFLAG_POPULATED)) != 0)
+	 | nSolidTable[dPiece[xp][yp]] | (dFlags[xp][yp] & BFLAG_OBJ_PROTECT)) != 0)
 		return false;
 	// should be covered by Freeupstairs.
 	//if (currLvl._dDunType != DTYPE_CATHEDRAL || dPiece[xp][yp] <= 126 || dPiece[xp][yp] >= 144)
@@ -509,7 +509,7 @@ static void AddL2Torches()
 	for (i = DBORDERX; i < DBORDERX + DSIZEX; i++) {
 		for (j = DBORDERY; j < DBORDERY + DSIZEY; j++) {
 			// skip setmap pieces
-			if (dFlags[i][j] & BFLAG_POPULATED)
+			if (dFlags[i][j] & BFLAG_OBJ_PROTECT)
 				continue;
 			// select 'trapable' position
 			if (nTrapTable[dPiece[i][j]] != PTT_LEFT)
@@ -530,7 +530,7 @@ static void AddL2Torches()
 	for (j = DBORDERY; j < DBORDERY + DSIZEY; j++) {
 		for (i = DBORDERX; i < DBORDERX + DSIZEX; i++) {
 			// skip setmap pieces
-			if (dFlags[i][j] & BFLAG_POPULATED)
+			if (dFlags[i][j] & BFLAG_OBJ_PROTECT)
 				continue;
 			// select 'trapable' position
 			if (nTrapTable[dPiece[i][j]] != PTT_RIGHT)
@@ -585,7 +585,7 @@ static void AddObjTraps()
 			tx = ox;
 			on = OBJ_TRAPR;
 		}
-		if (dFlags[tx][ty] & BFLAG_POPULATED)
+		if (dFlags[tx][ty] & BFLAG_OBJ_PROTECT)
 			continue;
 		if (dObject[tx][ty] != 0)
 			continue;
@@ -839,7 +839,7 @@ static void AddHookedBodies()
 			ttv = nTrapTable[dPiece[i][j]];
 			if (ttv == PTT_NONE)
 				continue;
-			if (dFlags[i][j] & BFLAG_POPULATED)
+			if (dFlags[i][j] & BFLAG_OBJ_PROTECT)
 				continue;
 			type = random_(0, 32);
 			if (type >= 3)
@@ -932,7 +932,7 @@ void InitObjects()
 	unsigned na = 0;
 	for (int xx = DBORDERX; xx < DSIZEX + DBORDERX; xx++)
 		for (int yy = DBORDERY; yy < DSIZEY + DBORDERY; yy++)
-			if ((nSolidTable[dPiece[xx][yy]] | (dFlags[xx][yy] & BFLAG_POPULATED)) == 0)
+			if ((nSolidTable[dPiece[xx][yy]] | (dFlags[xx][yy] & BFLAG_OBJ_PROTECT)) == 0)
 				na++;
 
 	if (lvlMask & objectdata[OBJ_SARC].oLvlTypes) {
@@ -1299,7 +1299,7 @@ int AddObject(int type, int ox, int oy)
 		dProgressErr() << msg;
 	}
 	dObject[ox][oy] = oi + 1;
-	// dFlags[ox][oy] |= BFLAG_POPULATED;
+	// dFlags[ox][oy] |= BFLAG_OBJ_PROTECT | BFLAG_MON_PROTECT;
 	if (nSolidTable[dPiece[ox][oy]] && (os->_oModeFlags & OMF_FLOOR)) {
 		dObject[ox][oy] = 0;
 		os->_oModeFlags |= OMF_RESERVED;
