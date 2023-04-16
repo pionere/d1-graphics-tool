@@ -34,7 +34,6 @@
 #include "player.h"
 #include "questdat.h"
 #include "quests.h"
-//#include "setmaps.h"
 #include "spelldat.h"
 #include "themes.h"
 #include "trigs.h"
