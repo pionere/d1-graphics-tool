@@ -361,6 +361,8 @@ void InitThemes()
 void HoldThemeRooms()
 {
 	int i, x, y, x1, y1, x2, y2;
+	// assert(currLvl._dType != DTYPE_TOWN);
+	// assert(currLvl._dLevelIdx < DLV_HELL4 || numthemes == 0); // there are no themes in hellfire (and on diablo-level)
 
 	for (i = numthemes - 1; i >= 0; i--) {
 		x1 = themes[i]._tsx1;
@@ -492,7 +494,7 @@ static void Theme_MonstPit(int themeId, BYTE tv)
 restart:
 	for (xx = themes[themeId]._tsx1 + 1; xx < themes[themeId]._tsx2 && !done; xx++) {
 		for (yy = themes[themeId]._tsy1 + 1; yy < themes[themeId]._tsy2 && !done; yy++) {
-			if (dTransVal[xx][yy] == tv && --r < 0) {
+			if (dTransVal[xx][yy] == tv && !nSolidTable[dPiece[xx][yy]] && --r < 0) {
 				CreateRndItem(xx, yy, CFDQ_GOOD);
 		dProgressErr() << QString("Added Item to %1:%2").arg(xx).arg(yy);
 				done = true;
@@ -838,8 +840,7 @@ void CreateThemeRooms()
 	int i;
 	BYTE tv;
 	// assert(currLvl._dType != DTYPE_TOWN);
-	if (currLvl._dLevelIdx >= DLV_HELL4) // there are no themes in hellfire (and on diablo-level)
-		return;
+	// assert(currLvl._dLevelIdx < DLV_HELL4 || numthemes == 0); // there are no themes in hellfire (and on diablo-level)
 
 	//gbInitObjFlag = true;
 	for (i = 0; i < numthemes; i++) {
