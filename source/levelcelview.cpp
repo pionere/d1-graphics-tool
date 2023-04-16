@@ -2959,7 +2959,7 @@ void LevelCelView::removeRooms()
     }
 }
 
-static bool dimensionMatch(D1Dun *dun1, D1Dun *dun2)
+static bool dimensionMatch(const D1Dun *dun1, const D1Dun *dun2)
 {
     if (dun1->getWidth() == dun2->getWidth() && dun1->getHeight() == dun2->getHeight()) {
         return true;
@@ -2968,7 +2968,7 @@ static bool dimensionMatch(D1Dun *dun1, D1Dun *dun2)
     return false;
 }
 
-void LevelCelView::loadProtections(D1Dun *srcDun)
+void LevelCelView::loadProtections(const D1Dun *srcDun)
 {
     if (!dimensionMatch(this->dun, srcDun)) {
         return;
@@ -2978,7 +2978,7 @@ void LevelCelView::loadProtections(D1Dun *srcDun)
     // this->displayFrame();
 }
 
-void LevelCelView::loadItems(D1Dun *srcDun)
+void LevelCelView::loadItems(const D1Dun *srcDun)
 {
     if (!dimensionMatch(this->dun, srcDun)) {
         return;
@@ -2988,7 +2988,7 @@ void LevelCelView::loadItems(D1Dun *srcDun)
     // this->displayFrame();
 }
 
-void LevelCelView::loadMonsters(D1Dun *srcDun)
+void LevelCelView::loadMonsters(const D1Dun *srcDun)
 {
     if (!dimensionMatch(this->dun, srcDun)) {
         return;
@@ -2998,7 +2998,7 @@ void LevelCelView::loadMonsters(D1Dun *srcDun)
     // this->displayFrame();
 }
 
-void LevelCelView::loadObjects(D1Dun *srcDun)
+void LevelCelView::loadObjects(const D1Dun *srcDun)
 {
     if (!dimensionMatch(this->dun, srcDun)) {
         return;
@@ -3008,7 +3008,7 @@ void LevelCelView::loadObjects(D1Dun *srcDun)
     // this->displayFrame();
 }
 
-void LevelCelView::loadRooms(D1Dun *srcDun)
+void LevelCelView::loadRooms(const D1Dun *srcDun)
 {
     if (!dimensionMatch(this->dun, srcDun)) {
         return;
