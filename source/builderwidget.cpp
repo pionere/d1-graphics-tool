@@ -152,41 +152,15 @@ void BuilderWidget::hide()
     QFrame::hide();
 }
 
-bool BuilderWidget::dunClicked(const QPoint &cell, bool first)
+bool BuilderWidget::dunClicked(const QPoint &cellClick, bool first)
 {
     if (this->isHidden()) {
         return false;
     }
 
-    // calculate the value
-    int value, v;
-    switch (this->mode) {
-    case BEM_TILE:
-        value = this->currentTileIndex; // this->ui->tileLineEdit->text().toInt();
-        break;
-    case BEM_TILE_PROTECTION:
-        value = this->ui->tileProtectionModeComboBox->currentIndex();
-        value = (int)(value == 0 ? Qt::Checked : (value == 1 ? Qt::PartiallyChecked : Qt::Unchecked));
-        break;
-    case BEM_SUBTILE:
-        value = this->currentSubtileIndex; // this->ui->subtileLineEdit->text().toInt();
-        break;
-    case BEM_SUBTILE_PROTECTION:
-        value = this->ui->subtileProtectionModeComboBox->currentIndex();
-        value = (int)(value == 0 ? 3 : (value == 1 ? 1 : (value == 2 ? 2 : 0)));
-        break;
-    case BEM_OBJECT:
-        value = this->currentObjectIndex; // this->ui->objectLineEdit->text().toInt();
-        break;
-    case BEM_MONSTER:
-        value = this->currentMonsterType.first; // this->ui->monsterLineEdit->text().toInt();
-        value |= this->currentMonsterType.second /*this->ui->monsterCheckBox->isChecked()*/ ? 1 << 31 : 0;
-        break;
-    }
-
     std::vector<DunPos> modValues;
     if (!first) {
-        if (this->lastPos == cell) {
+        if (this->lastPos == cellClick) {
             return true;
         }
         int fcx = cell.x();
@@ -210,49 +184,91 @@ bool BuilderWidget::dunClicked(const QPoint &cell, bool first)
         // rollback previous change
         this->undoStack->undo();
     } else {
-        this->lastPos = cell;
+        this->lastPos = cellClick;
         // collect locations
-        modValues.push_back(DunPos(cell.x(), cell.y(), 0));
+        modValues.push_back(DunPos(cellClick.x(), cellClick.y(), 0));
+    }
 
-        // reset value if it is the same as before
-        switch (this->mode) {
-        case BEM_TILE:
-            if (value == this->dun->getTileAt(cell.x(), cell.y())) {
-                value = 0;
-            }
-            break;
-        case BEM_TILE_PROTECTION:
-            if (value == (int)this->dun->getTileProtectionAt(cell.x(), cell.y())) {
-                value = (int)Qt::Unchecked;
-            }
-            break;
-        case BEM_SUBTILE:
-            if (value == this->dun->getSubtileAt(cell.x(), cell.y())) {
-                value = 0;
-            }
-            break;
-        case BEM_SUBTILE_PROTECTION:
-            v = (this->dun->getSubtileMonProtectionAt(cell.x(), cell.y()) ? 1 : 0) | (this->dun->getSubtileObjProtectionAt(cell.x(), cell.y()) ? 2 : 0);
-            if (value == v) {
-                value = 0;
-            }
-            break;
-        case BEM_OBJECT:
-            if (value == this->dun->getObjectAt(cell.x(), cell.y())) {
-                value = 0;
-            }
-            break;
-        case BEM_MONSTER:
-            if (this->currentMonsterType == this->dun->getMonsterAt(cell.x(), cell.y())) {
-                value = 0;
-            }
-            break;
+    // calculate the value (reset value if it is the same as before)
+    const QPoint cell = this->lastPos;
+    int value, v;
+    switch (this->mode) {
+    case BEM_TILE:
+        value = this->currentTileIndex; // this->ui->tileLineEdit->text().toInt();
+        if (value == this->dun->getTileAt(cell.x(), cell.y())) {
+            value = 0;
         }
+        break;
+    case BEM_TILE_PROTECTION:
+        value = this->ui->tileProtectionModeComboBox->currentIndex();
+        value = (int)(value == 0 ? Qt::Checked : (value == 1 ? Qt::PartiallyChecked : Qt::Unchecked));
+        if (value == (int)this->dun->getTileProtectionAt(cell.x(), cell.y())) {
+            value = (int)Qt::Unchecked;
+        }
+        break;
+    case BEM_SUBTILE:
+        value = this->currentSubtileIndex; // this->ui->subtileLineEdit->text().toInt();
+        if (value == this->dun->getSubtileAt(cell.x(), cell.y())) {
+            value = 0;
+        }
+        break;
+    case BEM_SUBTILE_PROTECTION:
+        value = this->ui->subtileProtectionModeComboBox->currentIndex();
+        v = (this->dun->getSubtileMonProtectionAt(cell.x(), cell.y()) ? 1 : 0) | (this->dun->getSubtileObjProtectionAt(cell.x(), cell.y()) ? 2 : 0);
+        if (value == 0) {
+            if (v == 3) {
+                value = 0;
+            } else {
+                value = 3;
+            }
+        } else if (value == 1) {
+            if (v & 1) {
+                v = -1;
+            }
+        } else if (value == 2) {
+            if (v & 2) {
+                v = -1;
+            }
+        } else {
+            value = 0;
+        }
+        break;
+    case BEM_OBJECT:
+        value = this->currentObjectIndex; // this->ui->objectLineEdit->text().toInt();
+        if (value == this->dun->getObjectAt(cell.x(), cell.y())) {
+            value = 0;
+        }
+        break;
+    case BEM_MONSTER:
+        value = this->currentMonsterType.first; // this->ui->monsterLineEdit->text().toInt();
+        value |= this->currentMonsterType.second /*this->ui->monsterCheckBox->isChecked()*/ ? 1 << 31 : 0;
+        if (this->currentMonsterType == this->dun->getMonsterAt(cell.x(), cell.y())) {
+            value = 0;
+        }
+        break;
     }
 
     // set values
-    for (DunPos &dp : modValues) {
-        dp.value = value;
+    if (this->mode != BEM_SUBTILE_PROTECTION || value == 0 || value == 3) {
+        for (DunPos &dp : modValues) {
+            dp.value = value;
+        }
+    } else {
+        if (value == 1) {
+            // toggle monster protection
+            v = v < 0 ? 0 : 1;
+            for (DunPos &dp : modValues) {
+                value = v | (this->dun->getSubtileObjProtectionAt(dp.cellX(), dp.cellY()) ? 2 : 0);
+                dp.value = value;
+            }
+        } else {
+            // toggle object protection
+            v = v < 0 ? 0 : 2;
+            for (DunPos &dp : modValues) {
+                value = v | (this->dun->getSubtileMonProtectionAt(dp.cellX(), dp.cellY()) ? 1 : 0);
+                dp.value = value;
+            }
+        }
     }
 
     // Build frame editing command and connect it to the current main window widget

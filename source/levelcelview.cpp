@@ -360,10 +360,10 @@ void LevelCelView::update()
         this->ui->dungeonSubtileLineEdit->setText(subtileRef == UNDEF_SUBTILE ? QStringLiteral("?") : QString::number(subtileRef));
         bool smps = this->dun->getSubtileMonProtectionAt(posx, posy);
         this->ui->dungeonSubtileMonProtectionCheckBox->setChecked(smps);
-        this->ui->dungeonSubtileMonProtectionCheckBox->setToolTip(smps ? tr("Monster might be placed by the game on this subtile") : tr("No monster might be placed by the game on this subtile"));
+        this->ui->dungeonSubtileMonProtectionCheckBox->setToolTip(smps ? tr("No monster might be placed by the game on this subtile") : tr("Monster might be placed by the game on this subtile"));
         bool sops = this->dun->getSubtileObjProtectionAt(posx, posy);
         this->ui->dungeonSubtileObjProtectionCheckBox->setChecked(sops);
-        this->ui->dungeonSubtileObjProtectionCheckBox->setToolTip(sops ? tr("Object or item might be placed by the game on this subtile") : tr("Neither an object nor an item might be placed by the game on this subtile"));
+        this->ui->dungeonSubtileObjProtectionCheckBox->setToolTip(sops ? tr("Neither an object nor an item might be placed by the game on this subtile") : tr("Object or item might be placed by the game on this subtile"));
         int itemIndex = this->dun->getItemAt(posx, posy);
         this->ui->dungeonItemLineEdit->setText(QString::number(itemIndex));
         this->ui->dungeonItemComboBox->setCurrentIndex(this->ui->dungeonItemComboBox->findData(itemIndex));
