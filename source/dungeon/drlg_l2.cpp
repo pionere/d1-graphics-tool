@@ -2525,7 +2525,6 @@ static void DRLG_L2FixPreMap(int idx)
 				lm[2 + 10 * 16 + x + y * 10] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 			}
 		}
-		}
 	} else if (pSetPieces[idx]._sptype == SPT_BCHAMB) {
 		// patch the map - Bonestr1.DUN
 		// shadow of the external-left column
@@ -2536,7 +2535,6 @@ static void DRLG_L2FixPreMap(int idx)
 			for (int x = 1; x < 6; x++) {
 				lm[2 + 7 * 7 + x + y * 7] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 			}
-		}
 		}
 	} else if (pSetPieces[idx]._sptype == SPT_LVL_BCHAMB) {
 		// patch the map - Bonecha1.DUN
