@@ -2809,7 +2809,6 @@ static void DRLG_L1()
 		lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + 8 + 12 * 8 * 2] = SwapLE16((UMT_SNOTSPIL + 1) | (1 << 15));
 		// - add sign-chest
 		lm[2 + 8 * 8 + 8 * 8 * 2 * 2 + 8 * 8 * 2 * 2 + 10 + 3 * 8 * 2] = SwapLE16(90);
-		}
 	} else if (pSetPieces[idx]._sptype == SPT_LVL_BETRAYER) {
 		// patch set-piece - Vile2.DUN
 		// - fix empty tiles
