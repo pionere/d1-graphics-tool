@@ -330,9 +330,15 @@ void InitThemes()
 	_gbTreasureFlag = true;
 
 	for (i = 0; i < numthemes; i++) {
-		themes[i]._tsTransVal = dTransVal[DBORDERX + 2 * (themes[i]._tsx1 + 1)][DBORDERY + 2 * (themes[i]._tsy1 + 1)];
+		// convert to subtile-coordinates
+		themes[i]._tsx1 = DBORDERX + 2 * themes[i]._tsx1;
+		themes[i]._tsy1 = DBORDERY + 2 * themes[i]._tsy1;
+		themes[i]._tsx2 = DBORDERX + 2 * themes[i]._tsx2 + 1;
+		themes[i]._tsy2 = DBORDERY + 2 * themes[i]._tsy2 + 1;
+		// select transval
+		themes[i]._tsTransVal = dTransVal[themes[i]._tsx1 + 2][themes[i]._tsy1 + 2];
 		if (themes[i]._tsTransVal == 0) {
-			dProgressErr() << QApplication::tr("Invalid theme room @%1:%2 .. %3:%4.").arg(DBORDERX + 2 * themes[i]._tsx1).arg(DBORDERY + 2 * themes[i]._tsy1).arg(DBORDERX + 2 * themes[i]._tsx2).arg(DBORDERY + 2 * themes[i]._tsy2);
+			dProgressErr() << QApplication::tr("Invalid theme room @%1:%2 .. %3:%4.").arg(themes[i]._tsx1).arg(themes[i]._tsy1).arg(themes[i]._tsx2).arg(themes[i]._tsy2);
 		}
 	}
 	if (QuestStatus(Q_ZHAR)) {
@@ -357,13 +363,13 @@ void HoldThemeRooms()
 	int i, x, y, x1, y1, x2, y2;
 
 	for (i = numthemes - 1; i >= 0; i--) {
-		x1 = 2 * themes[i]._tsx1 + DBORDERX + 1;
-		y1 = 2 * themes[i]._tsy1 + DBORDERY + 1;
-		x2 = 2 * themes[i]._tsx2 + DBORDERX + 1;
-		y2 = 2 * themes[i]._tsy2 + DBORDERY + 1;
+		x1 = themes[i]._tsx1;
+		y1 = themes[i]._tsy1;
+		x2 = themes[i]._tsx2;
+		y2 = themes[i]._tsy2;
 		// v = themes[i]._tsTransVal;
-		for (x = x1; x < x2; x++) {
-			for (y = y1; y < y2; y++) {
+		for (x = x1 + 1; x < x2; x++) {
+			for (y = y1 + 1; y < y2; y++) {
 				// if (dTransVal[x][y] == v) { -- wall?
 					dFlags[x][y] |= BFLAG_POPULATED;
 				// }
