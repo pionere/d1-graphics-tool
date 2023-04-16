@@ -2238,7 +2238,7 @@ void D1Dun::checkProtections() const
         for (int x = 0; x < this->width; x++) {
             bool protection = (this->subtileProtections[y][x] & 1) != 0 && this->tileProtections[y / TILE_HEIGHT][x / TILE_WIDTH] != Qt::Unchecked;
             if (!protection) {
-                if (this->objects[y][x].first != 0) {
+                if (this->objects[y][x] != 0) {
                     dProgressWarn() << tr("Subtile with an object is not protected at %1:%2.").arg(x).arg(y);
                     result = true;
                 }
