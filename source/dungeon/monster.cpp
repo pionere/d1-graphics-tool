@@ -604,7 +604,6 @@ static void PlaceUniqueMonst(int uniqindex, int mtidx)
 
 	switch (uniqindex) {
 	case UMT_ZHAR:
-		assert(nummonsters == MAX_MINIONS);
 		if (zharlib == -1)
 			return;
 		xp = 2 * themes[zharlib]._tsx1 + DBORDERX + 4;

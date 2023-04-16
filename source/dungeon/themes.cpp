@@ -474,31 +474,27 @@ static void Theme_Shrine(int themeId, BYTE tv)
 /**
  * Theme_MonstPit initializes the monster pit theme.
  *
- * @param tv: theme id in the dungeon matrix.
+ * @param themeId: theme id.
+ * @param tv: room id in the dungeon matrix.
  */
-static void Theme_MonstPit(BYTE tv)
+static void Theme_MonstPit(int themeId, BYTE tv)
 {
 	int r, xx, yy;
 
-	r = RandRange(1, 100);
-	xx = DBORDERX;
-	yy = DBORDERY;
-	while (TRUE) {
-		if (dTransVal[xx][yy] == tv && !nSolidTable[dPiece[xx][yy]]) {
-			--r;
-			if (r <= 0)
-				break;
-		}
-		xx++;
-		if (xx == DBORDERX + DSIZEX) {
-			xx = DBORDERX;
-			yy++;
-			if (yy == DBORDERY + DSIZEY) {
-				yy = DBORDERY;
+	r = random_(11, (themes[themeId]._tsx2 - themes[themeId]._tsx1 - 1) * (themes[themeId]._tsy2 - themes[themeId]._tsy1 - 1));
+restart:
+	for (xx = themes[themeId]._tsx1 + 1; xx < themes[themeId]._tsx2 && !done; xx++) {
+		for (yy = themes[themeId]._tsy1 + 1; yy < themes[themeId]._tsy2 && !done; yy++) {
+			if (dTransVal[xx][yy] == tv && --r < 0) {
+				CreateRndItem(xx, yy, CFDQ_GOOD, ICM_DELTA);
+		dProgressErr() << QString("Added Item to %1:%2").arg(xx).arg(yy);
+				done = true;
 			}
 		}
 	}
-	CreateRndItem(xx, yy, CFDQ_GOOD);
+	if (!done)
+		goto restart;
+
 	PlaceThemeMonsts(tv);
 }
 
@@ -849,7 +845,7 @@ void CreateThemeRooms()
 			Theme_Shrine(i, tv);
 			break;
 		case THEME_MONSTPIT:
-			Theme_MonstPit(tv);
+			Theme_MonstPit(i, tv);
 			break;
 		case THEME_SKELROOM:
 			Theme_SkelRoom(i, tv);

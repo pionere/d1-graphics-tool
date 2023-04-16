@@ -2673,7 +2673,7 @@ static void DRLG_L3DrawPreMaps()
 	}
 }
 
-void LoadL3Dungeon(const LevelData* lds)
+static void LoadL3Dungeon(const LevelData* lds)
 {
 	pWarps[DWARP_ENTRY]._wx = lds->dSetLvlDunX;
 	pWarps[DWARP_ENTRY]._wy = lds->dSetLvlDunY;

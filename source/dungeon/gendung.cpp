@@ -844,80 +844,80 @@ static POS32 DRLG_FitThemeRoom(int floor, int x, int y, int minSize, int maxSize
 static void DRLG_CreateThemeRoom(int themeIndex)
 {
 	int xx, yy;
-	const int lx = themes[themeIndex]._tsx1;
-	const int ly = themes[themeIndex]._tsy1;
-	const int hx = themes[themeIndex]._tsx2;
-	const int hy = themes[themeIndex]._tsy2;
+	const int x1 = themes[themeIndex]._tsx1;
+	const int y1 = themes[themeIndex]._tsy1;
+	const int x2 = themes[themeIndex]._tsx2;
+	const int y2 = themes[themeIndex]._tsy2;
 	BYTE v;
 
 	// left/right side
 	v = currLvl._dDunType == DTYPE_CAVES ? 135 : 1;
-	for (yy = ly; yy <= hy; yy++) {
-		dungeon[lx][yy] = v;
-		dungeon[hx][yy] = v;
+	for (yy = y1; yy <= y2; yy++) {
+		dungeon[x1][yy] = v;
+		dungeon[x2][yy] = v;
 	}
 	// top/bottom line
 	v = currLvl._dDunType == DTYPE_CAVES ? 134 : 2;
-	for (xx = lx + 1; xx < hx; xx++) {
-		dungeon[xx][ly] = v;
-		dungeon[xx][hy] = v;
+	for (xx = x1 + 1; xx < x2; xx++) {
+		dungeon[xx][y1] = v;
+		dungeon[xx][y2] = v;
 	}
 	// inner tiles
 	v = currLvl._dDunType == DTYPE_CATACOMBS ? 3 : (currLvl._dDunType == DTYPE_CAVES ? 7 : 6);
-	for (yy = ly + 1; yy < hy; yy++) {
-		for (xx = lx + 1; xx < hx; xx++) {
+	for (xx = x1 + 1; xx < x2; xx++) {
+		for (yy = y1 + 1; yy < y2; yy++) {
 			dungeon[xx][yy] = v;
 		}
 	}
 	// corners
 	if (currLvl._dDunType == DTYPE_CATACOMBS) {
-		dungeon[lx][ly] = 8;
-		dungeon[hx][ly] = 7;
-		dungeon[lx][hy] = 9;
-		dungeon[hx][hy] = 6;
+		dungeon[x1][y1] = 8;
+		dungeon[x2][y1] = 7;
+		dungeon[x1][y2] = 9;
+		dungeon[x2][y2] = 6;
 	}
 	if (currLvl._dDunType == DTYPE_CAVES) {
-		dungeon[lx][ly] = 150;
-		dungeon[hx][ly] = 151;
-		dungeon[lx][hy] = 152;
-		dungeon[hx][hy] = 138;
+		dungeon[x1][y1] = 150;
+		dungeon[x2][y1] = 151;
+		dungeon[x1][y2] = 152;
+		dungeon[x2][y2] = 138;
 	}
 	if (currLvl._dDunType == DTYPE_HELL) {
-		dungeon[lx][ly] = 9;
-		dungeon[hx][ly] = 16;
-		dungeon[lx][hy] = 15;
-		dungeon[hx][hy] = 12;
+		dungeon[x1][y1] = 9;
+		dungeon[x2][y1] = 16;
+		dungeon[x1][y2] = 15;
+		dungeon[x2][y2] = 12;
 	}
 
 	// exits
 	if (currLvl._dDunType == DTYPE_CATACOMBS) {
 		if (random_(0, 2) == 0) {
-			dungeon[hx][(ly + hy + 1) / 2] = 4;
+			dungeon[x2][(y1 + y2 + 1) / 2] = 4;
 		} else {
-			dungeon[(lx + hx + 1) / 2][hy] = 5;
+			dungeon[(x1 + x2 + 1) / 2][y2] = 5;
 		}
 	}
 	if (currLvl._dDunType == DTYPE_CAVES) {
 		if (random_(0, 2) == 0) {
-			dungeon[hx][(ly + hy + 1) / 2] = 147;
+			dungeon[x2][(y1 + y2 + 1) / 2] = 147;
 		} else {
-			dungeon[(lx + hx + 1) / 2][hy] = 146;
+			dungeon[(x1 + x2 + 1) / 2][y2] = 146;
 		}
 	}
 	if (currLvl._dDunType == DTYPE_HELL) {
 		if (random_(0, 2) == 0) {
-			yy = (ly + hy + 1) / 2;
-			dungeon[hx][yy - 1] = 53;
-			dungeon[hx][yy] = 6;
-			dungeon[hx][yy + 1] = 52;
-			//dungeon[hx - 2][yy - 1] = 54;
+			yy = (y1 + y2 + 1) / 2;
+			dungeon[x2][yy - 1] = 53;
+			dungeon[x2][yy] = 6;
+			dungeon[x2][yy + 1] = 52;
+			//dungeon[x2 - 1][yy - 1] = 54;
 		} else {
-			xx = (lx + hx + 1) / 2;
-			dungeon[xx - 1][hy] = 57;
-			dungeon[xx][hy] = 6;
-			dungeon[xx + 1][hy] = 56;
-			//dungeon[xx][hy - 2] = 59;
-			//dungeon[xx - 1][hy - 2] = 58;
+			xx = (x1 + x2 + 1) / 2;
+			dungeon[xx - 1][y2] = 57;
+			dungeon[xx][y2] = 6;
+			dungeon[xx + 1][y2] = 56;
+			//dungeon[xx][y2 - 1] = 59;
+			//dungeon[xx - 1][y2 - 1] = 58;
 		}
 	}
 }

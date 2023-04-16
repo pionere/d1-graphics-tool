@@ -161,7 +161,7 @@ void InitObjectGFX()
 		themeload[themes[i]._tsType] = true;
 
 	BYTE lvlMask = 1 << currLvl._dType;
-	for (i = 0; i < NUM_OBJECTS; i++) {
+	for (i = NUM_OBJECTS - 1; i >= 0; i--) {
 		ods = &objectdata[i];
 		if ((currLvl.isSetLvl || !(ods->oLvlTypes & lvlMask))
 		 && (!currLvl.isSetLvl || currLvl._dType != objectdata[i].oSetLvlType)
