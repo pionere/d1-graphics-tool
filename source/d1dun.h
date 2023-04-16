@@ -182,15 +182,16 @@ public:
     bool removeMonsters();
     bool removeObjects();
     bool removeRooms();
-    void loadProtections(D1Dun *srcDun);
-    void loadItems(D1Dun *srcDun);
-    void loadMonsters(D1Dun *srcDun);
-    void loadObjects(D1Dun *srcDun);
-    void loadRooms(D1Dun *srcDun);
+    void loadProtections(const D1Dun *srcDun);
+    void loadItems(const D1Dun *srcDun);
+    void loadMonsters(const D1Dun *srcDun);
+    void loadObjects(const D1Dun *srcDun);
+    void loadRooms(const D1Dun *srcDun);
 
     bool resetTiles();
     bool resetSubtiles();
     bool protectTiles();
+    bool protectTilesFrom(const D1Dun *srcDun);
     bool protectSubtiles();
 
     void patch(int dunFileIndex); // dun_file_index

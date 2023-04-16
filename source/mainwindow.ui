@@ -163,6 +163,17 @@
     <addaction name="menuTilesetCompress"/>
     <addaction name="menuTilesetSort"/>
    </widget>
+   <widget class="QMenu" name="menuDungeonProtect">
+    <property name="title">
+     <string>Protect</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionProtectTiles_Dungeon"/>
+    <addaction name="actionProtectTilesFrom_Dungeon"/>
+    <addaction name="actionProtectSubtiles_Dungeon"/>
+   </widget>
    <widget class="QMenu" name="menuDungeonCheck">
     <property name="title">
      <string>Check</string>
@@ -216,9 +227,7 @@
     <addaction name="actionResetTiles_Dungeon"/>
     <addaction name="actionResetSubtiles_Dungeon"/>
     <addaction name="separator"/>
-    <addaction name="actionProtectTiles_Dungeon"/>
-    <addaction name="actionProtectSubtiles_Dungeon"/>
-    <addaction name="separator"/>
+    <addaction name="menuDungeonProtect"/>
     <addaction name="menuDungeonCheck"/>
     <addaction name="menuDungeonRemove"/>
     <addaction name="menuDungeonLoad"/>
@@ -601,15 +610,23 @@
   </action>
   <action name="actionProtectTiles_Dungeon">
    <property name="text">
-    <string>Protect Tiles</string>
+    <string>Tiles</string>
    </property>
    <property name="toolTip">
     <string>Mark tiles protected if the tile is set or there is an actor on the tile</string>
    </property>
   </action>
+  <action name="actionProtectTilesFrom_Dungeon">
+   <property name="text">
+    <string>Tiles From</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark tiles protected if the tile is set in an another dungeon</string>
+   </property>
+  </action>
   <action name="actionProtectSubtiles_Dungeon">
    <property name="text">
-    <string>Protect Subtiles</string>
+    <string>Subtiles</string>
    </property>
    <property name="toolTip">
     <string>Mark subtiles protected if there is an actor on the tile</string>
