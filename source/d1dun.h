@@ -223,7 +223,7 @@ private:
     bool changeMonsterAt(int posx, int posy, int monsterIndex, bool isUnique);
     bool changeItemAt(int posx, int posy, int itemIndex);
     bool changeTileProtectionAt(int tilePosX, int tilePosY, Qt::CheckState protection);
-    bool changeSubtileProtectionAt(int posx, int posy, bool protection);
+    bool changeSubtileProtectionAt(int posx, int posy, int protection);
 
 private:
     D1DUN_TYPE type = D1DUN_TYPE::NORMAL;

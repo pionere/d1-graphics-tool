@@ -62,8 +62,9 @@ void EditDungeonCommand::undo()
             dp.value = currValue;
             break;
         case BEM_SUBTILE_PROTECTION:
-            currValue = (int)this->dun->getSubtileProtectionAt(dp.cellX, dp.cellY);
-            this->dun->setSubtileProtectionAt(dp.cellX, dp.cellY, (bool)dp.value);
+            currValue = (this->dun->getSubtileMonProtectionAt(dp.cellX, dp.cellY) ? 1 : 0) | (this->dun->getSubtileObjProtectionAt(dp.cellX, dp.cellY) ? 2 : 0);
+            this->dun->setSubtileMonProtectionAt(dp.cellX, dp.cellY, (dp.value & 1) != 0);
+            this->dun->setSubtileObjProtectionAt(dp.cellX, dp.cellY, (dp.value & 2) != 0);
             dp.value = currValue;
             break;
         case BEM_OBJECT:

@@ -738,7 +738,7 @@ void DRLG_SetPC()
 			for (int j = 0; j < h; j++) {
 				for (int i = 0; i < w; i++) {
 					BYTE flags = *sp;
-					static_assert((1 << (BFLAG_OBJ_PROTECT_SHL + 1) == (int)BFLAG_OBJ_PROTECT);
+					static_assert((1 << (BFLAG_MON_PROTECT_SHL + 1) == (int)BFLAG_OBJ_PROTECT);
 					dFlags[x + 2 * i][y + 2 * j] |= (flags & 3) << BFLAG_MON_PROTECT_SHL;
 					flags >>= 2;
 					dFlags[x + 2 * i + 1][y + 2 * j] |= (flags & 3) << BFLAG_MON_PROTECT_SHL;
