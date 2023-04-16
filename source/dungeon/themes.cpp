@@ -332,7 +332,7 @@ void InitThemes()
 	for (i = 0; i < numthemes; i++) {
 		themes[i]._tsTransVal = dTransVal[DBORDERX + 2 * (themes[i]._tsx1 + 1)][DBORDERY + 2 * (themes[i]._tsy1 + 1)];
 		if (themes[i]._tsTransVal == 0) {
-			dProgressErr() << QApplication::tr("Invalid theme room @%1:%2 width:%3 height:%4.").arg(DBORDERX + 2 * themes[i]._tsx1).arg(DBORDERY + 2 * themes[i]._tsy1).arg(2 * themes[i]._tsWidth).arg(2 * themes[i]._tsHeight);
+			dProgressErr() << QApplication::tr("Invalid theme room @%1:%2 .. %3:%4.").arg(DBORDERX + 2 * themes[i]._tsx1).arg(DBORDERY + 2 * themes[i]._tsy1).arg(DBORDERX + 2 * themes[i]._tsx2).arg(DBORDERY + 2 * themes[i]._tsy2);
 		}
 	}
 	if (QuestStatus(Q_ZHAR)) {

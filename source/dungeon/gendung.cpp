@@ -973,8 +973,8 @@ bool InThemeRoom(int x, int y)
 	int i;
 
 	for (i = numthemes - 1; i >= 0; i--) {
-		if (x > themes[i]._tsx && x < themes[i]._tsx + themes[i]._tsWidth - 1
-		 && y > themes[i]._tsy && y < themes[i]._tsy + themes[i]._tsHeight - 1)
+		if (x > themes[i]._tsx1 && x < themes[i]._tsx2
+		 && y > themes[i]._tsy1 && y < themes[i]._tsy2)
 			return true;
 	}
 
