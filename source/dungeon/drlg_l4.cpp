@@ -34,7 +34,7 @@ static_assert(DQUAD_ROOM_SIZE <= L4BLOCKX, "Rooms of diablo-quads must fit to th
 static_assert(DQUAD_ROOM_SIZE <= L4BLOCKY, "Rooms of diablo-quads must fit to the dungeon blocks of DRLG_L4 II.");
 
 /* Tiles to build the theme rooms. */
-const BYTE themeTiles[NUM_DRT_TYPES] = { DEFAULT_MEGATILE_L2, 1, 2, 4, 5, 8, 7, 9, 6 };
+const BYTE themeTiles[NUM_DRT_TYPES] = { DEFAULT_MEGATILE_L4, 1, 2, 1, 2, 9, 16, 15, 12 };
 
 /**
  * A lookup table for the 16 possible patterns of a 2x2 area,
