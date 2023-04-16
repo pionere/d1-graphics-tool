@@ -158,7 +158,7 @@ bool BuilderWidget::dunClicked(const QPoint &cell, bool first)
     }
 
     // calculate the value
-    int value;
+    int value, v;
     switch (this->mode) {
     case BEM_TILE:
         value = this->currentTileIndex; // this->ui->tileLineEdit->text().toInt();
@@ -171,7 +171,8 @@ bool BuilderWidget::dunClicked(const QPoint &cell, bool first)
         value = this->currentSubtileIndex; // this->ui->subtileLineEdit->text().toInt();
         break;
     case BEM_SUBTILE_PROTECTION:
-        value = (int)(this->ui->subtileProtectionModeComboBox->currentIndex() == 0);
+        value = this->ui->subtileProtectionModeComboBox->currentIndex();
+        value = (int)(value == 0 ? 3 : (value == 1 ? 1 : (value == 2 ? 2 : 0)));
         break;
     case BEM_OBJECT:
         value = this->currentObjectIndex; // this->ui->objectLineEdit->text().toInt();
@@ -230,7 +231,8 @@ bool BuilderWidget::dunClicked(const QPoint &cell, bool first)
             }
             break;
         case BEM_SUBTILE_PROTECTION:
-            if (value == (int)this->dun->getSubtileProtectionAt(cell.x(), cell.y())) {
+            v = (this->dun->getSubtileMonProtectionAt(cell.x(), cell.y()) ? 1 : 0) | (this->dun->getSubtileObjProtectionAt(cell.x(), cell.y()) ? 2 : 0);
+            if (value == v) {
                 value = 0;
             }
             break;
@@ -359,7 +361,7 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
             break;
         case BEM_SUBTILE_PROTECTION:
             value = this->ui->subtileProtectionModeComboBox->currentIndex();
-            color = value == 0 ? QColorConstants::Svg::lightcoral : QColorConstants::Svg::darkcyan;
+            color = value == 0 ? QColorConstants::Svg::crimson : (value == 1 ? QColorConstants::Svg::lightcoral : (value == 2 ? QColorConstants::Svg::peru : QColorConstants::Svg::darkcyan));
             break;
         case BEM_OBJECT:
             if (this->currentObjectIndex != 0) {

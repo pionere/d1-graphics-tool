@@ -79,7 +79,8 @@ static void StoreProtections(D1Dun *dun)
 	}
 	for (int y = 0; y < MAXDUNY; y++) {
 		for (int x = 0; x < MAXDUNX; x++) {
-			dun->setSubtileProtectionAt(x, y, (dFlags[x][y] & BFLAG_POPULATED) != 0);
+			dun->setSubtileMonProtectionAt(x, y, (dFlags[x][y] & BFLAG_MON_PROTECT) != 0);
+			dun->setSubtileObjProtectionAt(x, y, (dFlags[x][y] & BFLAG_OBJ_PROTECT) != 0);
 		}
 	}
 }

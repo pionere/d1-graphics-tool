@@ -337,6 +337,16 @@
         </item>
         <item>
          <property name="text">
+          <string>Monster Protection</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Object Protection</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>No Protection</string>
          </property>
         </item>
