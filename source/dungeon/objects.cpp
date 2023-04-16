@@ -1261,7 +1261,7 @@ static void AddTorturedFemaleBody(int oi)
 std::pair<int, int> themeLoc(int x, int y)
 {
 	for (int i = 0; i < numthemes; i++) {
-		if (themes[i]._tsx <= x && themes[i]._tsx + themes[i]._tsWidth > x && themes[i]._tsy <= y && themes[i]._tsy + themes[i]._tsHeight > y) {
+		if (themes[i]._tsx1 <= x && themes[i]._tsx2 > x && themes[i]._tsy1 <= y && themes[i]._tsy2 > y) {
 			return std::pair<int, bool>(i, 2);
 		}
 		if (themes[i]._tsTransVal == dTransVal[x][y]) {
@@ -1292,10 +1292,10 @@ int AddObject(int type, int ox, int oy)
 		int on = dObject[ox][oy];
 		on = on >= 0 ? on - 1 : -(on + 1);
 		std::pair<int, bool> tl = themeLoc(ox, oy);
-		QString msg = QApplication::tr("Multiple objects on tile %1:%2 - type %3 with index %4 and type %5 with index %6. Theme loc %7:%8, pos %9:%10, w/h %11:%12 tv %13");
+		QString msg = QApplication::tr("Multiple objects on tile %1:%2 - type %3 with index %4 and type %5 with index %6. Theme loc %7:%8, pos %9:%10 .. %11:%12 tv %13");
 		msg = msg.arg(ox).arg(oy).arg(type).arg(oi).arg(objects[on]._otype).arg(on);
 		int i = tl.first;
-		msg = msg.arg(i).arg(tl.second).arg(DBORDERX + 2 * themes[i]._tsx).arg(DBORDERY + 2 * themes[i]._tsy).arg(themes[i]._tsWidth).arg(themes[i]._tsHeight).arg(themes[i]._tsTransVal);
+		msg = msg.arg(i).arg(tl.second).arg(DBORDERX + 2 * themes[i]._tsx1).arg(DBORDERY + 2 * themes[i]._tsy1).arg(DBORDERX + 2 * themes[i]._tsx2).arg(DBORDERY + 2 * themes[i]._tsy2).arg(themes[i]._tsTransVal);
 		dProgressErr() << msg;
 	}
 	dObject[ox][oy] = oi + 1;
