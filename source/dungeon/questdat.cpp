@@ -139,7 +139,7 @@ const LevelData AllLevels[NUM_LEVELS] = {
 					},*/
 /*SL_POISONWATER*/	{       4, TRUE,    DTYPE_CAVES,     DTYPE_CAVES,     TMUSIC_L3,              10,      10, "Poisoned Water Supply",
 						"Levels\\L3Data\\L3.AMP", "Levels\\L3Data\\L3.SOL",      "Levels\\L3Data\\L3.TMI",      "Levels\\L3Data\\L3.CEL",      "Levels\\L3Data\\L3.TIL",      "Levels\\L3Data\\L3.MIN",      "Levels\\L1Data\\L1S.CEL",     "Levels\\L3Data\\L3pfoul.pal",   "Gendata\\Cutl1d.CEL",   "Gendata\\Cutl1d.pal",            TRUE,           138, 70,          0,           DBORDERX + 2 * 7, DBORDERY + 2 * 33,     WRPT_L3_DOWN, SPT_LVL_PWATER,
-						{ MT_DFALLSP, MT_YFALLSD, MT_NGOATMC, MT_INVALID }, /* , MT_NGOATBW */ ALIGN32
+						{ MT_DFALLSP, MT_YFALLSD, MT_INVALID }, /* , MT_NGOATMC, MT_NGOATBW */ ALIGN32
 					},
 /*SL_VILEBETRAYER*/	{      30, TRUE,    DTYPE_CATHEDRAL, DTYPE_CATHEDRAL, TMUSIC_L1,              10,      10, "Archbishop Lazarus' Lair",
 						"Levels\\L1Data\\L1.AMP", "Levels\\L1Data\\L1.SOL",      "Levels\\L1Data\\L1.TMI",      "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1.TIL",      "Levels\\L1Data\\L1.MIN",      "Levels\\L1Data\\L1S.CEL",     "Levels\\L1Data\\L1_2.pal",      "Gendata\\Cutportr.CEL", "Gendata\\Cutportr.pal",         FALSE,            43, 0,           0,           DBORDERX + 2 * 9 + 1, DBORDERY + 2 * 10, WRPT_CIRCLE,  SPT_LVL_BETRAYER,
