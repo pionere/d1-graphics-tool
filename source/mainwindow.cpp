@@ -1770,7 +1770,7 @@ void MainWindow::on_actionResetSubtiles_Dungeon_triggered()
     ProgressDialog::done();
 }
 
-void MainWindow::on_aactionMaskTiles_Dungeon_triggered()
+void MainWindow::on_actionMaskTiles_Dungeon_triggered()
 {
     D1Dun *srcDun = this->loadDun(tr("Dungeon map file"));
     if (srcDun == nullptr) {

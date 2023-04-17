@@ -2716,7 +2716,7 @@ bool D1Dun::resetSubtiles()
     return result;
 }
 
-bool maskTilesFrom(const D1Dun *srcDun)
+bool D1Dun::maskTilesFrom(const D1Dun *srcDun)
 {
     ProgressDialog::incBar(tr("Checking tiles..."), 1);
     bool result = false;
