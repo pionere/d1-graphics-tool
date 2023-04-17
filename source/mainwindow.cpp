@@ -2002,32 +2002,6 @@ void MainWindow::on_actionLoadObjects_Dungeon_triggered()
     ProgressDialog::done();
 }
 
-void MainWindow::on_actionRemoveRooms_Dungeon_triggered()
-{
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
-
-    this->levelCelView->removeRooms();
-
-    // Clear loading message from status bar
-    ProgressDialog::done();
-}
-
-void MainWindow::on_actionLoadRooms_Dungeon_triggered()
-{
-    D1Dun *srcDun = this->loadDun(tr("Source of the rooms"));
-    if (srcDun == nullptr) {
-        return;
-    }
-
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
-
-    this->levelCelView->loadRooms(srcDun);
-    delete srcDun;
-
-    // Clear loading message from status bar
-    ProgressDialog::done();
-}
-
 void MainWindow::on_actionGenerate_Dungeon_triggered()
 {
     this->levelCelView->generateDungeon();

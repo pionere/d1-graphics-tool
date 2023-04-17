@@ -114,12 +114,10 @@ public:
     void removeItems();
     void removeMonsters();
     void removeObjects();
-    void removeRooms();
     void loadProtections(const D1Dun *srcDun);
     void loadItems(const D1Dun *srcDun);
     void loadMonsters(const D1Dun *srcDun);
     void loadObjects(const D1Dun *srcDun);
-    void loadRooms(const D1Dun *srcDun);
     void generateDungeon();
 
     void upscale(const UpscaleParam &params);

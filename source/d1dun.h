@@ -184,12 +184,10 @@ public:
     bool removeItems();
     bool removeMonsters();
     bool removeObjects();
-    bool removeRooms();
     void loadProtections(const D1Dun *srcDun);
     void loadItems(const D1Dun *srcDun);
     void loadMonsters(const D1Dun *srcDun);
     void loadObjects(const D1Dun *srcDun);
-    void loadRooms(const D1Dun *srcDun);
 
     bool resetTiles();
     bool resetSubtiles();
