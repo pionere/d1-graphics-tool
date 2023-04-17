@@ -7,7 +7,6 @@
  */
 
 #include "all.h"
-#include <vector>
 
 DEVILUTION_BEGIN_NAMESPACE
 
