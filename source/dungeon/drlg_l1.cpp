@@ -2867,7 +2867,8 @@ static void LoadL1Dungeon(const LevelData* lds)
 
 	DRLG_LoadSP(0, DEFAULT_MEGATILE_L1);
 
-	//DRLG_L1Floor();
+	DRLG_L1Subs();
+	DRLG_L1Floor();
 }
 
 void CreateL1Dungeon()
