@@ -2475,21 +2475,6 @@ bool D1Dun::removeObjects()
     return result;
 }
 
-bool D1Dun::removeRooms()
-{
-    bool result = false;
-    for (std::vector<int> &roomRow : this->rooms) {
-        for (int &roomIndex : roomRow) {
-            if (roomIndex != 0) {
-                roomIndex = 0;
-                result = true;
-                this->modified = true;
-            }
-        }
-    }
-    return result;
-}
-
 static QString protectionString(Qt::CheckState protectionState)
 {
     if (protectionState == Qt::Unchecked) {
@@ -2579,18 +2564,6 @@ void D1Dun::loadObjects(const D1Dun *srcDun)
                     dProgressWarn() << tr("'%1'(%2) object at %3:%4 was replaced by '%5'(%6).").arg(currObjectName).arg(currObjectIndex).arg(x).arg(y).arg(newObjectName).arg(newObjectIndex);
                 }
                 this->objects[y][x] = newObjectIndex;
-                this->modified = true;
-            }
-        }
-    }
-}
-
-void D1Dun::loadRooms(const D1Dun *srcDun)
-{
-    for (int y = 0; y < this->height; y++) {
-        for (int x = 0; x < this->width; x++) {
-            if (this->rooms[y][x] != srcDun->rooms[y][x]) {
-                this->rooms[y][x] = srcDun->rooms[y][x];
                 this->modified = true;
             }
         }
