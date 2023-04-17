@@ -1924,28 +1924,30 @@ static void DRLG_L4Corners()
 
 static void DRLG_L4ThemeExitFix()
 {
-	for (int i = numthemes - 1; i >= 0; i--) {
-		const int x1 = themes[i]._tsx1;
-		const int y1 = themes[i]._tsy1;
-		const int x2 = themes[i]._tsx2;
-		const int y2 = themes[i]._tsy2;
+	int i, x1, y1, x2, y2, xx, yy;
+
+	for (i = numthemes - 1; i >= 0; i--) {
+		x1 = themes[i]._tsx1;
+		y1 = themes[i]._tsy1;
+		x2 = themes[i]._tsx2;
+		y2 = themes[i]._tsy2;
 		switch (random_(0, 4)) {
 		case 0:
-			int yy = (y1 + y2 + 1) / 2;
+			yy = (y1 + y2 + 1) / 2;
 			dungeon[x1][yy - 1] = 53;
 			dungeon[x1][yy + 0] = 6;
 			dungeon[x1][yy + 1] = 52;
 			//dungeon[x2 - 1][yy - 1] = 54;
 			break;
 		case 1:
-			int yy = (y1 + y2 + 1) / 2;
+			yy = (y1 + y2 + 1) / 2;
 			dungeon[x2][yy - 1] = 53;
 			dungeon[x2][yy + 0] = 6;
 			dungeon[x2][yy + 1] = 52;
 			//dungeon[x2 - 1][yy - 1] = 54;
 			break;
 		case 2:
-			int xx = (x1 + x2 + 1) / 2;
+			xx = (x1 + x2 + 1) / 2;
 			dungeon[xx - 1][y1] = 57;
 			dungeon[xx + 0][y1] = 6;
 			dungeon[xx + 1][y1] = 56;
@@ -1953,7 +1955,7 @@ static void DRLG_L4ThemeExitFix()
 			//dungeon[xx - 1][y2 - 1] = 58;
 			break;
 		case 3:
-			int xx = (x1 + x2 + 1) / 2;
+			xx = (x1 + x2 + 1) / 2;
 			dungeon[xx - 1][y2] = 57;
 			dungeon[xx + 0][y2] = 6;
 			dungeon[xx + 1][y2] = 56;

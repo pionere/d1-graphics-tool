@@ -2115,7 +2115,7 @@ void D1Dun::updateSubtiles(int tilePosX, int tilePosY, int tileRef)
 
 std::pair<int, int> D1Dun::collectSpace(const D1Sol *sol) const
 {
-    int spaceMonster = 0; spaceObject = 0;
+    int spaceMonster = 0, spaceObject = 0;
     for (int posy = 0; posy < this->height; posy++) {
         for (int posx = 0; posx < this->width; posx++) {
             int subtileRef = this->subtiles[posy][posx];
