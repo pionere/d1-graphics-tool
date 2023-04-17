@@ -275,7 +275,7 @@ static void ReplaceSubtile(D1Til *til, int tileIndex, unsigned index, int subtil
         dProgressErr() << QApplication::tr("Not enough subtiles in Tile %1.").arg(tileIndex + 1);
         return;
     }
-    unsigned subtileReference = tilSubtiles[tSubtile];
+    unsigned subtileReference = tilSubtiles[index];
     if (til->setSubtileIndex(tileIndex, index, subtileIndex)) {
         if (!silent) {
             dProgress() << QApplication::tr("Subtile %1 of Tile%2 is set to %3.").arg(index + 1).arg(tileIndex + 1).arg(subtileIndex + 1);
