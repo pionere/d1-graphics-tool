@@ -126,7 +126,7 @@ const LevelData AllLevels[NUM_LEVELS] = {
 						{ MT_INVALID }, ALIGN32
 					},*/
 /*SL_SKELKING*/		{       6, TRUE,    DTYPE_CATHEDRAL, DTYPE_CATHEDRAL, TMUSIC_L1,              10,      10, "Skeleton King's Lair",
-						"Levels\\L1Data\\L1.AMP", "Levels\\L1Data\\L1.SOL",      "Levels\\L1Data\\L1.TMI",      "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1.TIL",      "Levels\\L1Data\\L1.MIN",      "Levels\\L1Data\\L1S.CEL",     "Levels\\L1Data\\L1_2.pal",      "Gendata\\Cutl1d.CEL",   "Gendata\\Cutl1d.pal",            TRUE,           138, 48,          0,           DBORDERX + 2 * 33, DBORDERY + 2 * 13,    WRPT_L1_UP,   SPT_LVL_SKELKING,
+						"Levels\\L1Data\\L1.AMP", "Levels\\L1Data\\L1.SOL",      "Levels\\L1Data\\L1.TMI",      "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1.TIL",      "Levels\\L1Data\\L1.MIN",      "Levels\\L1Data\\L1S.CEL",     "Levels\\L1Data\\L1_2.pal",      "Gendata\\Cutl1d.CEL",   "Gendata\\Cutl1d.pal",            TRUE,           138, 60,          0,           DBORDERX + 2 * 33, DBORDERY + 2 * 13,    WRPT_L1_UP,   SPT_LVL_SKELKING,
 						{ MT_RSKELAX, MT_TSKELBW, MT_RSKELBW, MT_XSKELBW, MT_RSKELSD, MT_INVALID }, /* MT_RSKELAX, MT_TSKELBW, MT_RSKELBW, MT_XSKELBW, MT_RSKELSD, */ ALIGN32
 					},
 /*SL_BONECHAMB*/	{      12, TRUE,    DTYPE_CATACOMBS, DTYPE_CATACOMBS, TMUSIC_L2,              10,      10, "Chamber of Bone",
