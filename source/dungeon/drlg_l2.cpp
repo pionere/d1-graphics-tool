@@ -2564,11 +2564,11 @@ static void DRLG_L2FixPreMap(int idx)
 		// fix corners
 		// DRLG_L2Corners(); - commented out, because this is no longer necessary
 		// protect inner tiles from spawning additional monsters/objects
-		for (int y = 5; y < 17; y++) {
+		/*for (int y = 5; y < 17; y++) {
 			for (int x = 1; x < 31; x++) {
 				lm[2 + 32 * 18 + x + y * 32] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 			}
-		}
+		}*/
 	}
 }
 
