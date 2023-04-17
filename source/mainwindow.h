@@ -175,6 +175,7 @@ private slots:
     void on_actionPatchDungeon_Dungeon_triggered();
     void on_actionResetTiles_Dungeon_triggered();
     void on_actionResetSubtiles_Dungeon_triggered();
+    void on_actionMaskTiles_Dungeon_triggered();
     void on_actionProtectTiles_Dungeon_triggered();
     void on_actionProtectTilesFrom_Dungeon_triggered();
     void on_actionProtectSubtiles_Dungeon_triggered();

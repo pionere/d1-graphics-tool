@@ -226,6 +226,7 @@
     <addaction name="separator"/>
     <addaction name="actionResetTiles_Dungeon"/>
     <addaction name="actionResetSubtiles_Dungeon"/>
+    <addaction name="actionMaskTiles_Dungeon"/>
     <addaction name="separator"/>
     <addaction name="menuDungeonProtect"/>
     <addaction name="menuDungeonCheck"/>
@@ -606,6 +607,14 @@
    </property>
    <property name="toolTip">
     <string>Reinitialize the subtiles based on the tiles</string>
+   </property>
+  </action>
+  <action name="actionMaskTiles_Dungeon">
+   <property name="text">
+    <string>Mask Tiles</string>
+   </property>
+   <property name="toolTip">
+    <string>Mask tiles with the tiles of an another dungeon</string>
    </property>
   </action>
   <action name="actionProtectTiles_Dungeon">

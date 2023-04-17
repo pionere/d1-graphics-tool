@@ -2861,6 +2861,15 @@ void LevelCelView::resetDungeonSubtiles()
     }
 }
 
+void LevelCelView::maskDungeonTiles(const D1Dun *srcDun)
+{
+    bool change = this->dun->maskTilesFrom(srcDun);
+    if (change) {
+        // update the view - done by the caller
+        // this->displayFrame();
+    }
+}
+
 void LevelCelView::protectDungeonTiles()
 {
     bool change = this->dun->protectTiles();

@@ -1770,6 +1770,21 @@ void MainWindow::on_actionResetSubtiles_Dungeon_triggered()
     ProgressDialog::done();
 }
 
+void MainWindow::on_actionMaskTiles_Dungeon_triggered()
+{
+    D1Dun *srcDun = this->loadDun(tr("Dungeon map file"));
+    if (srcDun == nullptr) {
+        return;
+    }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
+
+    this->levelCelView->maskDungeonTiles(srcDun);
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
 void MainWindow::on_actionProtectTiles_Dungeon_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
@@ -1782,7 +1797,7 @@ void MainWindow::on_actionProtectTiles_Dungeon_triggered()
 
 void MainWindow::on_actionProtectTilesFrom_Dungeon_triggered()
 {
-    D1Dun *srcDun = this->loadDun(tr("Dungeon file"));
+    D1Dun *srcDun = this->loadDun(tr("Pre-Dungeon map file"));
     if (srcDun == nullptr) {
         return;
     }
