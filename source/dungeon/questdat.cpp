@@ -138,7 +138,7 @@ const LevelData AllLevels[NUM_LEVELS] = {
 						{ MT_INVALID }, / * MT_XRHINO * / ALIGN32
 					},*/
 /*SL_POISONWATER*/	{       4, TRUE,    DTYPE_CAVES,     DTYPE_CAVES,     TMUSIC_L3,              10,      10, "Poisoned Water Supply",
-						"Levels\\L3Data\\L3.AMP", "Levels\\L3Data\\L3.SOL",      "Levels\\L3Data\\L3.TMI",      "Levels\\L3Data\\L3.CEL",      "Levels\\L3Data\\L3.TIL",      "Levels\\L3Data\\L3.MIN",      "Levels\\L1Data\\L1S.CEL",     "Levels\\L3Data\\L3pfoul.pal",   "Gendata\\Cutl1d.CEL",   "Gendata\\Cutl1d.pal",            TRUE,           138, 64,          0,           DBORDERX + 2 * 7, DBORDERY + 2 * 33,     WRPT_L3_DOWN, SPT_LVL_PWATER,
+						"Levels\\L3Data\\L3.AMP", "Levels\\L3Data\\L3.SOL",      "Levels\\L3Data\\L3.TMI",      "Levels\\L3Data\\L3.CEL",      "Levels\\L3Data\\L3.TIL",      "Levels\\L3Data\\L3.MIN",      "Levels\\L1Data\\L1S.CEL",     "Levels\\L3Data\\L3pfoul.pal",   "Gendata\\Cutl1d.CEL",   "Gendata\\Cutl1d.pal",            TRUE,           138, 70,          0,           DBORDERX + 2 * 7, DBORDERY + 2 * 33,     WRPT_L3_DOWN, SPT_LVL_PWATER,
 						{ MT_DFALLSP, MT_YFALLSD, MT_NGOATMC, MT_INVALID }, /* , MT_NGOATBW */ ALIGN32
 					},
 /*SL_VILEBETRAYER*/	{      30, TRUE,    DTYPE_CATHEDRAL, DTYPE_CATHEDRAL, TMUSIC_L1,              10,      10, "Archbishop Lazarus' Lair",
