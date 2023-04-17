@@ -2716,6 +2716,26 @@ bool D1Dun::resetSubtiles()
     return result;
 }
 
+bool maskTilesFrom(const D1Dun *srcDun)
+{
+    ProgressDialog::incBar(tr("Checking tiles..."), 1);
+    bool result = false;
+    for (int tilePosY = 0; tilePosY < this->height / TILE_HEIGHT; tilePosY++) {
+        for (int tilePosX = 0; tilePosX < this->width / TILE_WIDTH; tilePosX++) {
+            if (this->tiles[tilePosY][tilePosX] != 0 && srcDun->tiles[tilePosY][tilePosX] == this->tiles[tilePosY][tilePosX]) {
+                this->changeTileAt(tilePosX, tilePosY, 0);
+                result = true;
+            }
+        }
+    }
+    if (!result) {
+        dProgress() << tr("No change was necessary.");
+    }
+
+    ProgressDialog::decBar();
+    return result;
+}
+
 bool D1Dun::protectTiles()
 {
     ProgressDialog::incBar(tr("Checking tiles..."), 1);

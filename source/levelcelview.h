@@ -100,6 +100,7 @@ public:
     void reportDungeonUsage() const;
     void resetDungeonTiles();
     void resetDungeonSubtiles();
+    void maskDungeonTiles(const D1Dun *srcDun);
     void protectDungeonTiles();
     void protectDungeonTilesFrom(const D1Dun *srcDun);
     void protectDungeonSubtiles();
