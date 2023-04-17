@@ -2430,7 +2430,6 @@ static void DRLG_L2()
 	DRLG_L2PlaceRndSet(BIG8, 3);
 	DRLG_L2PlaceRndSet(BIG9, 20);
 	DRLG_L2PlaceRndSet(BIG10, 20);
-	DRLG_L2Subs();
 	DRLG_L2DoorSubs();
 }
 
@@ -2602,7 +2601,7 @@ static void LoadL2Dungeon(const LevelData* lds)
 	pSetPieces[0]._sptype = lds->dSetLvlPiece;
 	pSetPieces[0]._spData = LoadFileInMem(setpiecedata[pSetPieces[0]._sptype]._spdDunFile);
 
-	// memset(drlgFlags, 0, sizeof(drlgFlags)); - unused on setmaps
+	memset(drlgFlags, 0, sizeof(drlgFlags));
 	static_assert(sizeof(dungeon[0][0]) == 1, "memset on dungeon does not work in LoadL2DungeonData.");
 	memset(dungeon, BASE_MEGATILE_L2 + 1, sizeof(dungeon));
 
@@ -2624,6 +2623,8 @@ void CreateL2Dungeon()
 		DRLG_LoadL2SP();
 		DRLG_L2();
 	}
+
+	DRLG_L2Subs();
 
 	memcpy(pdungeon, dungeon, sizeof(pdungeon));
 	DRLG_L2DrawPreMaps();
