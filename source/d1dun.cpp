@@ -2124,10 +2124,10 @@ std::pair<int, int> D1Dun::collectSpace(const D1Sol *sol) const
             quint8 solFlags = sol->getSubtileProperties(subtileRef - 1);
             if (solFlags & (1 << 0))
                 continue; // subtile is non-passable
-            if ((this->subtileProtections[posy][posx] & 1) == 0 && this->monsters[posy][posx] == 0) {
+            if ((this->subtileProtections[posy][posx] & 1) == 0 && this->monsters[posy][posx].first == 0) {
                 spaceMonster++;
             }
-            if ((this->subtileProtections[posy][posx] & 2) == 0 && this->monsters[posy][posx] == 0 && this->objects[posy][posx] == 0) {
+            if ((this->subtileProtections[posy][posx] & 2) == 0 && this->monsters[posy][posx].first == 0 && this->objects[posy][posx] == 0) {
                 spaceObject++;
             }
         }
