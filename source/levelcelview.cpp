@@ -363,7 +363,7 @@ void LevelCelView::update()
         this->ui->dungeonSubtileMonProtectionCheckBox->setToolTip(smps ? tr("No monster might be placed by the game on this subtile") : tr("Monster might be placed by the game on this subtile"));
         bool sops = this->dun->getSubtileObjProtectionAt(posx, posy);
         this->ui->dungeonSubtileObjProtectionCheckBox->setChecked(sops);
-        this->ui->dungeonSubtileObjProtectionCheckBox->setToolTip(sops ? tr("Neither an object nor an item might be placed by the game on this subtile") : tr("Object or item might be placed by the game on this subtile"));
+        this->ui->dungeonSubtileObjProtectionCheckBox->setToolTip(sops ? tr("No object might be placed by the game on this subtile") : tr("Object might be placed by the game on this subtile"));
         int itemIndex = this->dun->getItemAt(posx, posy);
         this->ui->dungeonItemLineEdit->setText(QString::number(itemIndex));
         this->ui->dungeonItemComboBox->setCurrentIndex(this->ui->dungeonItemComboBox->findData(itemIndex));
@@ -2760,7 +2760,24 @@ void LevelCelView::sortTileset()
 
 void LevelCelView::reportDungeonUsage() const
 {
-    ProgressDialog::incBar(tr("Scanning..."), 3);
+    ProgressDialog::incBar(tr("Scanning..."), 4);
+
+    std::pair<int, int> space = this->dun->collectSpace(this->sol);
+
+    if (space.first != 0) {
+        dProgress() << tr("There are %1 subtiles in the dungeon for monsters.", "", space.first).arg(space.first);
+        dProgress() << "\n";
+    }
+    if (space.second != 0) {
+        dProgress() << tr("There are %1 subtiles in the dungeon for objects.", "", space.first).arg(space.first);
+        dProgress() << "\n";
+    }
+    if (space.first == 0 && space.second == 0) {
+        dProgress() << tr("There is no available space in the dungeon to generate monsters or objects.");
+        dProgress() << "\n";
+    }
+
+    ProgressDialog::incValue();
 
     std::vector<std::pair<int, int>> items;
     this->dun->collectItems(items);

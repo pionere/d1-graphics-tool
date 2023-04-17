@@ -2113,6 +2113,28 @@ void D1Dun::updateSubtiles(int tilePosX, int tilePosY, int tileRef)
     }
 }
 
+std::pair<int, int> D1Dun::collectSpace(const D1Sol *sol) const
+{
+    int spaceMonster = 0, spaceObject = 0;
+    for (int posy = 0; posy < this->height; posy++) {
+        for (int posx = 0; posx < this->width; posx++) {
+            int subtileRef = this->subtiles[posy][posx];
+            if (subtileRef <= 0) // UNDEF_SUBTILE || 0
+                continue;
+            quint8 solFlags = sol->getSubtileProperties(subtileRef - 1);
+            if (solFlags & (1 << 0))
+                continue; // subtile is non-passable
+            if ((this->subtileProtections[posy][posx] & 1) == 0 && this->monsters[posy][posx].first == 0) {
+                spaceMonster++;
+            }
+            if ((this->subtileProtections[posy][posx] & 2) == 0 && this->monsters[posy][posx].first == 0 && this->objects[posy][posx] == 0) {
+                spaceObject++;
+            }
+        }
+    }
+    return std::pair<int, int>(spaceMonster, spaceObject);
+}
+
 void D1Dun::collectItems(std::vector<std::pair<int, int>> &foundItems) const
 {
     for (const std::vector<int> &itemsRow : this->items) {
@@ -2257,7 +2279,7 @@ void D1Dun::checkProtections() const
     ProgressDialog::decBar();
 }
 
-void D1Dun::checkItems(D1Sol *sol) const
+void D1Dun::checkItems(const D1Sol *sol) const
 {
     ProgressDialog::incBar(tr("Checking Items..."), 1);
     bool result = false;
@@ -2297,7 +2319,7 @@ void D1Dun::checkItems(D1Sol *sol) const
     ProgressDialog::decBar();
 }
 
-void D1Dun::checkMonsters(D1Sol *sol) const
+void D1Dun::checkMonsters(const D1Sol *sol) const
 {
     ProgressDialog::incBar(tr("Checking Monsters..."), 1);
     bool result = false;
