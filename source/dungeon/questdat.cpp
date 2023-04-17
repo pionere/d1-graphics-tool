@@ -127,7 +127,7 @@ const LevelData AllLevels[NUM_LEVELS] = {
 					},*/
 /*SL_SKELKING*/		{       6, TRUE,    DTYPE_CATHEDRAL, DTYPE_CATHEDRAL, TMUSIC_L1,              10,      10, "Skeleton King's Lair",
 						"Levels\\L1Data\\L1.AMP", "Levels\\L1Data\\L1.SOL",      "Levels\\L1Data\\L1.TMI",      "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1.TIL",      "Levels\\L1Data\\L1.MIN",      "Levels\\L1Data\\L1S.CEL",     "Levels\\L1Data\\L1_2.pal",      "Gendata\\Cutl1d.CEL",   "Gendata\\Cutl1d.pal",            TRUE,           138, 64,          0,           DBORDERX + 2 * 33, DBORDERY + 2 * 13,    WRPT_L1_UP,   SPT_LVL_SKELKING,
-						{ MT_RSKELAX, MT_TSKELBW, MT_RSKELBW, MT_XSKELBW, MT_RSKELSD }, /* MT_RSKELAX, MT_TSKELBW, MT_RSKELBW, MT_XSKELBW, MT_RSKELSD, */ ALIGN32
+						{ MT_RSKELAX, MT_TSKELBW, MT_RSKELBW, MT_XSKELBW, MT_RSKELSD, MT_INVALID }, /* MT_RSKELAX, MT_TSKELBW, MT_RSKELBW, MT_XSKELBW, MT_RSKELSD, */ ALIGN32
 					},
 /*SL_BONECHAMB*/	{      12, TRUE,    DTYPE_CATACOMBS, DTYPE_CATACOMBS, TMUSIC_L2,              10,      10, "Chamber of Bone",
 						"Levels\\L2Data\\L2.AMP", "Levels\\L2Data\\L2.SOL",      "Levels\\L2Data\\L2.TMI",      "Levels\\L2Data\\L2.CEL",      "Levels\\L2Data\\L2.TIL",      "Levels\\L2Data\\L2.MIN",      "Levels\\L2Data\\L2S.CEL",     "Levels\\L2Data\\L2_2.pal",      "Gendata\\Cut2.CEL",     "Gendata\\Cut2.pal",              TRUE,           254, 0,           0,           DBORDERX + 2 * 27, DBORDERY + 2 * 11,    WRPT_L2_DOWN, SPT_LVL_BCHAMB,
