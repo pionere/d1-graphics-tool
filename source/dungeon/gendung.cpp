@@ -879,7 +879,7 @@ static void DRLG_CreateThemeRoom(int themeIndex, const BYTE (&themeTiles)[NUM_DR
 	}
 }
 
-void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM_DRT_TYPES], int freq, bool rndSize)
+void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM_DRT_TYPES], int rndSkip, bool rndSize)
 {
 	int i, j;
 	int min;
@@ -890,7 +890,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM
 			if (dungeon[i][j] != themeTiles[DRT_FLOOR]) {
 				continue;
 			}
-			if (random_(0, 128) < freq) {
+			if (random_(0, 128) < rndSkip) {
 				continue;
 			}
 			// check if there is enough space
