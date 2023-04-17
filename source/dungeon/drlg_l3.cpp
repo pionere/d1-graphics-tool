@@ -2655,8 +2655,8 @@ static void DRLG_L3SetMapFix()
 			}
 		}*/
 		// protect island tiles from spawning additional monsters
-		for (int y = 2; y < 14; y++) {
-			for (int x = 15; x < 27; x++) {
+		for (int y = 1; y < 7; y++) {
+			for (int x = 7; x < 14; x++) {
 				lm[2 + 19 * 37 + x + y * 19] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 			}
 		}
