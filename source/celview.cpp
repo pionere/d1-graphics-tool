@@ -42,8 +42,17 @@ void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, bool first)
     CelView *celView = qobject_cast<CelView *>(view);
     if (celView != nullptr) {
         celView->framePixelClicked(this->lastPos, first);
-    } else {
-        qobject_cast<LevelCelView *>(view)->framePixelClicked(this->lastPos, first);
+        return;
+    }
+    LevelCelView *levelCelView = qobject_cast<LevelCelView *>(view);
+    if (levelCelView != nullptr) {
+        levelCelView->framePixelClicked(this->lastPos, first);
+        return;
+    }
+    TblView *tblView = qobject_cast<TblView *>(view);
+    if (tblView != nullptr) {
+        tblView->framePixelClicked(this->lastPos, first);
+        return;
     }
 }
 
@@ -62,8 +71,17 @@ void CelScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         CelView *celView = qobject_cast<CelView *>(view);
         if (celView != nullptr) {
             celView->framePixelHovered(currPos);
-        } else {
-            qobject_cast<LevelCelView *>(view)->framePixelHovered(currPos);
+            return;
+        }
+        LevelCelView *levelCelView = qobject_cast<LevelCelView *>(view);
+        if (levelCelView != nullptr) {
+            levelCelView->framePixelHovered(currPos);
+            return;
+        }
+        TblView *tblView = qobject_cast<TblView *>(view);
+        if (tblView != nullptr) {
+            tblView->framePixelHovered(currPos);
+            return;
         }
         return;
     }
