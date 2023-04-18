@@ -196,7 +196,9 @@ void MainWindow::setBaseTrn(const QString &path)
     this->gfx->setPalette(this->trnBase->getResultingPalette());
     // update the widgets
     // - paint widget
-    this->paintWidget->setPalette(this->trnBase->getResultingPalette());
+    if (this->paintWidget != nullptr) {
+        this->paintWidget->setPalette(this->trnBase->getResultingPalette());
+    }
 
     // update trnBaseWidget
     this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), path);
@@ -358,7 +360,9 @@ void MainWindow::colorModified()
     if (this->tblView != nullptr) {
         this->tblView->displayFrame();
     }
-    this->paintWidget->colorModified();
+    if (this->paintWidget != nullptr) {
+        this->paintWidget->colorModified();
+    }
     if (this->builderWidget != nullptr) {
         this->builderWidget->colorModified();
     }
@@ -976,7 +980,6 @@ void MainWindow::openFile(const OpenAsParam &params)
             return;
         }
         this->tbl->setPalette(this->trnBase->getResultingPalette());
-        isMeta = true;
     } else {
         // gfxFilePath.isEmpty()
         this->gfx->setType(params.clipped == OPEN_CLIPPED_TYPE::TRUE ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V1_REGULAR);
@@ -991,6 +994,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     palLayout->addWidget(this->trnUniqueWidget);
     palLayout->addWidget(this->trnBaseWidget);
 
+    QWidget *view;
     if (isTileset) {
         // build a LevelCelView
         this->levelCelView = new LevelCelView(this);
@@ -1001,7 +1005,9 @@ void MainWindow::openFile(const OpenAsParam &params)
 
         // Refresh palette widgets when the palette is changed (loading a PCX file)
         QObject::connect(this->levelCelView, &LevelCelView::palModified, this->palWidget, &PaletteWidget::refresh);
-    } else if (!isMeta) {
+
+        view = this->levelCelView;
+    } else if (fileType != 4) {
         // build a CelView
         this->celView = new CelView(this);
         this->celView->initialize(this->pal, this->gfx, this->bottomPanelHidden);
@@ -1011,19 +1017,25 @@ void MainWindow::openFile(const OpenAsParam &params)
 
         // Refresh palette widgets when the palette is changed (loading a PCX file)
         QObject::connect(this->celView, &CelView::palModified, this->palWidget, &PaletteWidget::refresh);
+
+        view = this->celView;
     } else {
         this->tblView = new TblView(this);
         this->tblView->initialize(this->pal, this->tbl, this->bottomPanelHidden);
 
         // Refresh palette widgets when frame is changed
         QObject::connect(this->tblView, &TblView::frameRefreshed, this->palWidget, &PaletteWidget::update);
+
+        view = this->tblView;
     }
     // Add the view to the main frame
-    this->ui->mainFrameLayout->addWidget(isTileset ? (QWidget *)this->levelCelView : (isMeta ? (QWidget *)this->tblView : this->celView));
+    this->ui->mainFrameLayout->addWidget(view);
 
     // prepare the paint dialog
-    this->paintWidget = new PaintWidget(this, this->undoStack, this->gfx, this->celView, this->levelCelView);
-    this->paintWidget->setPalette(this->trnBase->getResultingPalette());
+    if (fileType != 4) {
+        this->paintWidget = new PaintWidget(this, this->undoStack, this->gfx, this->celView, this->levelCelView);
+        this->paintWidget->setPalette(this->trnBase->getResultingPalette());
+    }
 
     // prepare the builder dialog
     if (this->dun != nullptr) {
@@ -1065,7 +1077,9 @@ void MainWindow::openFile(const OpenAsParam &params)
     QObject::connect(this->trnUniqueWidget, &PaletteWidget::colorPicking_stopped, this->trnBaseWidget, &PaletteWidget::stopTrnColorPicking);  // cancel color picking
 
     // Refresh paint dialog when the selected color is changed
-    QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->paintWidget, &PaintWidget::palColorsSelected);
+    if (this->paintWidget != nullptr) {
+        QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->paintWidget, &PaintWidget::palColorsSelected);
+    }
     // Refresh tbl-view when the selected color is changed
     if (this->tblView != nullptr) {
         QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->tblView, &TblView::palColorsSelected);
@@ -1089,10 +1103,10 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->setPal(firstPaletteFound); // should trigger view->displayFrame()
 
     // update available menu entries
-    this->ui->menuEdit->setEnabled(!isMeta);
+    this->ui->menuEdit->setEnabled(fileType != 4);
     this->ui->menuView->setEnabled(true);
     this->ui->menuPalette->setEnabled(true);
-    this->ui->actionExport->setEnabled(!isMeta);
+    this->ui->actionExport->setEnabled(fileType != 4);
     this->ui->actionSave->setEnabled(true);
     this->ui->actionSaveAs->setEnabled(true);
     this->ui->actionClose->setEnabled(true);
