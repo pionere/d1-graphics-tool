@@ -14,14 +14,14 @@ static int lightTableVersion = -1;
  *  darkTable[lr][dist]
  * unit of dist is 0.125 tile width
  */
-static BYTE darkTable[MAX_LIGHT_RAD + 1][MAX_LIGHT_DIST + 1];
+BYTE darkTable[MAX_LIGHT_RAD + 1][MAX_LIGHT_DIST + 1];
 /*
  * Precalculated distances from each offsets to a point in one quadrant.
  *  distMatrix[offy][offx][dy][dx]
  * Note: the distance value is limited to MAX_LIGHT_DIST to reduce the necessary
  *		checks in DoLighting.
  */
-static BYTE distMatrix[MAX_OFFSET][MAX_OFFSET][MAX_TILE_DIST][MAX_TILE_DIST];
+BYTE distMatrix[MAX_OFFSET][MAX_OFFSET][MAX_TILE_DIST][MAX_TILE_DIST];
 /*
  * In-game color translation tables.
  * 0-MAXDARKNESS: inverse brightness translations.
