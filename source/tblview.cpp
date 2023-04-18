@@ -90,7 +90,7 @@ void TblView::framePixelClicked(const QPoint &pos, bool first)
 
 void TblView::framePixelHovered(const QPoint &pos)
 {
-    /*int tableImageWidth = D1Tbl::getTableImageWidth();
+    int tableImageWidth = D1Tbl::getTableImageWidth();
     int tableImageHeight = D1Tbl::getTableImageHeight();
     int darkImageWidth = D1Tbl::getDarkImageWidth();
     int darkImageHeight = D1Tbl::getDarkImageHeight();
@@ -114,7 +114,7 @@ void TblView::framePixelHovered(const QPoint &pos)
         QPoint valuePos = pos - QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN + tableImageHeight + CEL_SCENE_SPACING);
         int value = this->tbl->getDarkValueAt(valuePos.x(), this->currentLightRadius);
         this->ui->valueLineEdit->setText(QString::number(value));
-    }*/
+    }
 }
 
 void TblView::palColorsSelected(const std::vector<quint8> &indices)
