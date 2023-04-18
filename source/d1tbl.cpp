@@ -8,7 +8,7 @@
 
 #include "progressdialog.h"
 
-#include "dungeon/lighting.h
+#include "dungeon/lighting.h"
 
 bool D1Tbl::load(const QString &filePath)
 {
@@ -124,7 +124,7 @@ void D1Tbl::setModified()
     this->modified = true;
 }
 
-void D1Tbl::setPal(D1Pal *pal)
+void D1Tbl::setPalette(D1Pal *pal)
 {
     this->pal = pal;
 }
