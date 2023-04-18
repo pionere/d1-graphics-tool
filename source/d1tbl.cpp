@@ -162,7 +162,7 @@ QImage D1Tbl::getDarkImage(int radius) const
     // darkPainter.fillRect(DARK_BORDER_WIDTH - axisWidth, 0, axisWidth, D1Tbl::getDarkImageHeight(), QColorConstants::Black);
 
     for (int i = 0; i < lengthof(darkTable[0]); i++) {
-        darkPainter.fillRect(i * DARK_COLUMN_WIDTH + DARK_BORDER_WIDTH, DARK_BORDER_WIDTH + DARK_COLUMN_HEIGHT_UNIT * MAXDARKNESS - 1,
+        darkPainter.fillRect(i * DARK_COLUMN_WIDTH + DARK_BORDER_WIDTH, DARK_BORDER_WIDTH + darkTable[radius][i] * DARK_COLUMN_HEIGHT_UNIT,
             DARK_COLUMN_WIDTH, DARK_BORDER_WIDTH + DARK_COLUMN_HEIGHT_UNIT * (MAXDARKNESS - darkTable[radius][i]), color);
     }
 
