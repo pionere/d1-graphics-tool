@@ -12,6 +12,11 @@
 
 #include "dungeon/all.h"
 
+#define TABLE_TILE_SIZE 32
+#define DARK_COLUMN_WIDTH 4
+#define DARK_BORDER_WIDTH 4
+#define DARK_COLUMN_HEIGHT_UNIT 32
+
 bool D1Tbl::load(const QString &filePath)
 {
     // prepare file data source
@@ -89,25 +94,44 @@ bool D1Tbl::save(const SaveAsParam &params)
     return true;
 }
 
+int D1Tbl::getTableImageWidth()
+{
+    return lengthof(dLight) * TABLE_TILE_SIZE;
+}
+
+int D1Tbl::getTableImageHeight()
+{
+    return lengthof(dLight[0]) * TABLE_TILE_SIZE;
+}
+
+int D1Tbl::getDarkImageWidth()
+{
+    return DARK_COLUMN_WIDTH * lengthof(darkTable[0]) + 2 * DARK_BORDER_WIDTH;
+}
+
+int D1Tbl::getDarkImageHeight()
+{
+    return DARK_COLUMN_HEIGHT_UNIT * MAXDARKNESS + 2 * DARK_BORDER_WIDTH;
+}
+
 QImage D1Tbl::getTableImage(int radius, int dunType, int color) const
 {
-    constexpr int tileSize = 32;
     currLvl._dType = dunType;
     MakeLightTable();
 
     memset(dLight, MAXDARKNESS, sizeof(dLight));
     DoLighting(MAX_LIGHT_RAD + 1, MAX_LIGHT_RAD + 1, radius, MAXLIGHTS);
 
-    QImage image = QImage(lengthof(dLight) * tileSize, lengthof(dLight[0]) * tileSize, QImage::Format_ARGB32);
+    QImage image = QImage(D1Tbl::getTableImageWidth(), D1Tbl::getTableImageHeight(), QImage::Format_ARGB32);
 
     QRgb *destBits = reinterpret_cast<QRgb *>(image.scanLine(0));
     for (int x = 0; x < lengthof(dLight); x++) {
         for (int y = 0; y < lengthof(dLight[0]); y++) {
             QColor c = this->pal->getColor(ColorTrns[dLight[x][y]][color]);
-            for (int xx = x * tileSize; xx < x * tileSize + tileSize; xx++) {
-                for (int yy = y * tileSize; yy < y * tileSize + tileSize; yy++) {
+            for (int xx = x * TABLE_TILE_SIZE; xx < x * TABLE_TILE_SIZE + TABLE_TILE_SIZE; xx++) {
+                for (int yy = y * TABLE_TILE_SIZE; yy < y * TABLE_TILE_SIZE + TABLE_TILE_SIZE; yy++) {
                     // image.setPixelColor(xx, yy, color);
-                    destBits[yy * lengthof(dLight) * tileSize + xx] = c.rgba();
+                    destBits[yy * D1Tbl::getTableImageWidth() + xx] = c.rgba();
                 }
             }
         }
@@ -116,23 +140,41 @@ QImage D1Tbl::getTableImage(int radius, int dunType, int color) const
     return image;
 }
 
+int D1Tbl::getTableValueAt(int x, int y) const
+{
+    int vx = x / TABLE_TILE_SIZE;
+    int vy = y / TABLE_TILE_SIZE;
+
+    return dLight[vx][vy];
+}
+
 QImage D1Tbl::getDarkImage(int radius) const
 {
-    constexpr int columWidth = 16;
-    constexpr int columHeightUnit = 32;
+    constexpr int axisWidth = 2;
 
-    QImage image = QImage(columWidth * lengthof(darkTable[0]), columHeightUnit * MAXDARKNESS, QImage::Format_ARGB32);
+    QImage image = QImage(D1Tbl::getDarkImageWidth(), D1Tbl::getDarkImageHeight(), QImage::Format_ARGB32);
     image.fill(Qt::transparent);
 
     QPainter darkPainter(&image);
-    darkPainter.setPen(QColor(Config::getPaletteSelectionBorderColor()));
+    QColor color = QColor(Config::getPaletteSelectionBorderColor());
+
+    darkPainter.fillRect(0, D1Tbl::getDarkImageHeight() - border, D1Tbl::getDarkImageWidth(), axisWidth, QColorConstants::Black);
+    darkPainter.fillRect(border - axisWidth, 0, axisWidth, D1Tbl::getDarkImageHeight(), QColorConstants::Black);
 
     for (int i = 0; i < lengthof(darkTable[0]); i++) {
-        darkPainter.drawRect(i * columWidth, 0 + columHeightUnit * MAXDARKNESS - columHeightUnit * darkTable[radius][i], columWidth, columHeightUnit * darkTable[radius][i]);
+        darkPainter.fillRect(i * DARK_COLUMN_WIDTH + DARK_BORDER_WIDTH, DARK_BORDER_WIDTH + DARK_COLUMN_HEIGHT_UNIT * MAXDARKNESS - 1,
+            DARK_COLUMN_WIDTH, DARK_BORDER_WIDTH + DARK_COLUMN_HEIGHT_UNIT * (MAXDARKNESS - darkTable[radius][i]), color);
     }
 
     // darkPainter.end();
     return image;
+}
+
+int D1Tbl::getDarkValueAt(int x, int radius) const
+{
+    int vx = x / DARK_COLUMN_WIDTH;
+
+    return darkTable[radius][vx];
 }
 
 QString D1Tbl::getFilePath() const

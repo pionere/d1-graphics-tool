@@ -89,6 +89,31 @@ void TblView::framePixelClicked(const QPoint &pos, bool first)
 
 void TblView::framePixelHovered(const QPoint &pos)
 {
+    int tableImageWidth = D1Tbl::getTableImageWidth();
+    int tableImageHeight = D1Tbl::getTableImageHeight();
+    int darkImageWidth = D1Tbl::getDarkImageWidth();
+    int darkImageHeight = D1Tbl::getDarkImageHeight();
+
+    if (pos.x() < CEL_SCENE_MARGIN || pos.y() < CEL_SCENE_MARGIN) {
+        return;
+    }
+    if (pos.y() < CEL_SCENE_MARGIN + tableImageHeight) {
+        if (pos.x() >= tableImageWidth) {
+            return;
+        }
+
+        QPoint valuePos = pos - QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+        int value = this->tbl->getTableValueAt(valuePos.x(), valuePos.y());
+        this->ui->valueLineEdit->setText(QString::number(value));
+    } else if (pos.y() >= CEL_SCENE_MARGIN + tableImageHeight + CEL_SCENE_SPACING && pos.y() < CEL_SCENE_MARGIN + tableImageHeight + CEL_SCENE_SPACING + darkImageHeight) {
+        if (pos.x() >= darkImageWidth) {
+            return;
+        }
+
+        QPoint valuePos = pos - QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN + tableImageHeight + CEL_SCENE_SPACING);
+        int value = this->tbl->getDarkValueAt(valuePos.x(), this->currentLightRadius);
+        this->ui->valueLineEdit->setText(QString::number(value));
+    }
 }
 
 void TblView::palColorsSelected(const std::vector<quint8> &indices)
