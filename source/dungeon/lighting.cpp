@@ -31,6 +31,8 @@ static BYTE distMatrix[MAX_OFFSET][MAX_OFFSET][MAX_TILE_DIST][MAX_TILE_DIST];
  * MAXDARKNESS+4.. translations of unique monsters.
  */
 BYTE ColorTrns[NUM_COLOR_TRNS][NUM_COLORS];
+/** Specifies the current darkness levels of each tile on the map. */
+BYTE dLight[2 * (MAX_LIGHT_RAD + 1) + 1][2 * (MAX_LIGHT_RAD + 1) + 1];
 
 /**
  * CrawlTable specifies X- and Y-coordinate deltas from a missile target coordinate.

@@ -14,6 +14,7 @@
 #include "mainwindow.h"
 #include "progressdialog.h"
 #include "ui_tblview.h"
+
 #include "dungeon/lighting.h"
 
 TblView::TblView(QWidget *parent)

@@ -3,10 +3,11 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QMessageBox>
 #include <QImage>
+#include <QMessageBox>
 
 #include "progressdialog.h"
+
 #include "dungeon/lighting.h
 
 bool D1Tbl::load(const QString &filePath)
