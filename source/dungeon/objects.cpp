@@ -1099,7 +1099,7 @@ static void AddObjLight(int oi, int diffr, int dx, int dy)
 	ObjectStruct* os;
 
 	os = &objects[oi];
-	DoLighting(os->_ox + dx, os->_oy + dy, diffr, NO_LIGHT);
+//	DoLighting(os->_ox + dx, os->_oy + dy, diffr, NO_LIGHT);
 }
 
 static void AddBarrel(int oi)

@@ -443,7 +443,7 @@ void D1Tileset::patch(int dunType, bool silent)
         // assert(pMegaTiles[4 * (72 - 1) + 2] == SwapLE16(216 - 1));
         ReplaceSubtile(this->til, 72 - 1, 2, 206, silent);
         // patch dMiniTiles - L5.MIN
-        // pointless tree micros (re-drawn by dSpecial)
+        // pointless door micros (re-drawn by dSpecial)
         Blk2Mcr(77, 6);
         Blk2Mcr(77, 8);
         Blk2Mcr(80, 7);

@@ -157,6 +157,9 @@ void MainWindow::setPal(const QString &path)
     if (this->dun != nullptr) {
         this->dun->setPal(pal);
     }
+    if (this->tbl != nullptr) {
+        this->tbl->setPalette(pal);
+    }
     // update the widgets
     // - views
     if (this->celView != nullptr) {
@@ -231,6 +234,10 @@ void MainWindow::updateWindow()
     if (this->levelCelView != nullptr) {
         // this->levelCelView->update();
         this->levelCelView->displayFrame();
+    }
+    if (this->tblView != nullptr) {
+        // this->tblView->update();
+        this->tblView->displayFrame();
     }
 }
 
@@ -347,6 +354,9 @@ void MainWindow::colorModified()
     }
     if (this->levelCelView != nullptr) {
         this->levelCelView->displayFrame();
+    }
+    if (this->tblView != nullptr) {
+        this->tblView->displayFrame();
     }
     this->paintWidget->colorModified();
     if (this->builderWidget != nullptr) {
@@ -603,7 +613,7 @@ void MainWindow::openNew(OPEN_TILESET_TYPE tileset, OPEN_CLIPPED_TYPE clipped, b
 
 void MainWindow::on_actionOpen_triggered()
 {
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;DUN Files (*.dun *.DUN *.rdun *.RDUN)"));
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;DUN Files (*.dun *.DUN *.rdun *.RDUN);;TBL Files (*.tbl *.TBL)"));
 
     if (!openFilePath.isEmpty()) {
         QStringList filePaths;
@@ -623,7 +633,7 @@ void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 
     for (const QUrl &url : event->mimeData()->urls()) {
         QString fileLower = url.toLocalFile().toLower();
-        if (fileLower.endsWith(".cel") || fileLower.endsWith(".cl2") || fileLower.endsWith(".dun") || fileLower.endsWith(".rdun") || (unloaded && fileLower.endsWith(".pcx"))) {
+        if (fileLower.endsWith(".cel") || fileLower.endsWith(".cl2") || fileLower.endsWith(".dun") || fileLower.endsWith(".rdun") || fileLower.endsWith(".tbl") || (unloaded && fileLower.endsWith(".pcx"))) {
             event->acceptProposedAction();
             return;
         }
@@ -817,6 +827,8 @@ void MainWindow::openFile(const OpenAsParam &params)
             fileType = 2;
         else if (fileLower.endsWith(".pcx"))
             fileType = 3;
+        else if (fileLower.endsWith(".tbl"))
+            fileType = 4;
         else
             return;
     }
@@ -893,6 +905,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     this->gfx = new D1Gfx();
     this->gfx->setPalette(this->trnBase->getResultingPalette());
+    bool isMeta = false;
     if (isTileset) {
         this->tileset = new D1Tileset(this->gfx);
         // Loading SOL
@@ -956,6 +969,14 @@ void MainWindow::openFile(const OpenAsParam &params)
             this->failWithError(tr("Failed loading PCX file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
+    } else if (fileType == 4) { // TBL
+        this->tbl = new D1Tbl();
+        if (!this->tbl->load(gfxFilePath)) {
+            this->failWithError(tr("Failed loading TBL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+        this->tbl->setPalette(this->trnBase->getResultingPalette());
+        isMeta = true;
     } else {
         // gfxFilePath.isEmpty()
         this->gfx->setType(params.clipped == OPEN_CLIPPED_TYPE::TRUE ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V1_REGULAR);
@@ -980,7 +1001,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
         // Refresh palette widgets when the palette is changed (loading a PCX file)
         QObject::connect(this->levelCelView, &LevelCelView::palModified, this->palWidget, &PaletteWidget::refresh);
-    } else {
+    } else if (!isMeta) {
         // build a CelView
         this->celView = new CelView(this);
         this->celView->initialize(this->pal, this->gfx, this->bottomPanelHidden);
@@ -990,9 +1011,15 @@ void MainWindow::openFile(const OpenAsParam &params)
 
         // Refresh palette widgets when the palette is changed (loading a PCX file)
         QObject::connect(this->celView, &CelView::palModified, this->palWidget, &PaletteWidget::refresh);
+    } else {
+        this->tblView = new TblView(this);
+        this->tblView->initialize(this->pal, this->tbl, this->bottomPanelHidden);
+
+        // Refresh palette widgets when frame is changed
+        QObject::connect(this->tblView, &TblView::frameRefreshed, this->palWidget, &PaletteWidget::update);
     }
-    // Add the (level)CelView to the main frame
-    this->ui->mainFrameLayout->addWidget(isTileset ? (QWidget *)this->levelCelView : this->celView);
+    // Add the view to the main frame
+    this->ui->mainFrameLayout->addWidget(isTileset ? (QWidget *)this->levelCelView : (isMeta ? this->tblView : this->celView));
 
     // prepare the paint dialog
     this->paintWidget = new PaintWidget(this, this->undoStack, this->gfx, this->celView, this->levelCelView);
@@ -1039,6 +1066,10 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // Refresh paint dialog when the selected color is changed
     QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->paintWidget, &PaintWidget::palColorsSelected);
+    // Refresh tbl-view when the selected color is changed
+    if (this->tblView != nullptr) {
+        QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->tblView, &TblView::palColorsSelected);
+    }
 
     // Look for all palettes in the same folder as the CEL/CL2 file
     QString firstPaletteFound = fileType == 3 ? D1Pal::DEFAULT_PATH : "";
@@ -1058,10 +1089,10 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->setPal(firstPaletteFound); // should trigger view->displayFrame()
 
     // update available menu entries
-    this->ui->menuEdit->setEnabled(true);
+    this->ui->menuEdit->setEnabled(!isMeta);
     this->ui->menuView->setEnabled(true);
     this->ui->menuPalette->setEnabled(true);
-    this->ui->actionExport->setEnabled(true);
+    this->ui->actionExport->setEnabled(!isMeta);
     this->ui->actionSave->setEnabled(true);
     this->ui->actionSaveAs->setEnabled(true);
     this->ui->actionClose->setEnabled(true);
@@ -1172,6 +1203,9 @@ void MainWindow::saveFile(const SaveAsParam &params)
 
     if (this->dun != nullptr) {
         this->dun->save(params);
+    }
+    if (this->tbl != nullptr) {
+        this->tbl->save(params);
     }
 
     // Clear loading message from status bar
@@ -1292,12 +1326,14 @@ void MainWindow::on_actionClose_triggered()
     MemFree(this->builderWidget);
     MemFree(this->celView);
     MemFree(this->levelCelView);
+    MemFree(this->tblView);
     MemFree(this->palWidget);
     MemFree(this->trnUniqueWidget);
     MemFree(this->trnBaseWidget);
     MemFree(this->gfx);
     MemFree(this->tileset);
     MemFree(this->dun);
+    MemFree(this->tbl);
 
     qDeleteAll(this->pals);
     this->pals.clear();
@@ -1528,6 +1564,9 @@ void MainWindow::on_actionToggleBottomPanel_triggered()
     }
     if (this->celView != nullptr) {
         this->celView->toggleBottomPanel();
+    }
+    if (this->tblView != nullptr) {
+        this->tblView->toggleBottomPanel();
     }
 }
 

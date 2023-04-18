@@ -61,6 +61,9 @@ bool TransList[256];
 int dPiece[MAXDUNX][MAXDUNY];
 /** Specifies the transparency index at each coordinate of the map. */
 BYTE dTransVal[MAXDUNX][MAXDUNY];
+/** Specifies the current darkness levels of each tile on the map. */
+//BYTE dLight[MAXDUNX][MAXDUNY];
+BYTE dLight[2 * (MAX_LIGHT_RAD + 1) + 1][2 * (MAX_LIGHT_RAD + 1) + 1];
 /** Specifies the (runtime) flags of each tile on the map (dflag) */
 BYTE dFlags[MAXDUNX][MAXDUNY];
 /**
