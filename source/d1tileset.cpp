@@ -244,13 +244,17 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
     return result != 0;
 }
 
-#define Blk2Mcr(n, x) RemoveMicro(min, n, x, deletedFrames, silent);
-static void RemoveMicro(D1Min *min, int subtileRef, int microIndex, std::set<unsigned> &deletedFrames, bool silent)
+#define Blk2Mcr(n, x) RemoveFrame(min, n, x, deletedFrames, silent);
+static void RemoveFrame(D1Min *min, int subtileRef, int microIndex, std::set<unsigned> &deletedFrames, bool silent)
 {
     int subtileIndex = subtileRef - 1;
     std::vector<unsigned> &frameReferences = min->getFrameReferences(subtileIndex);
     // assert(min->getSubtileWidth() == 2);
-    int index = frameReferences.size() - (2 + (microIndex & ~1)) + (microIndex & 1);
+    unsigned index = frameReferences.size() - (2 + (microIndex & ~1)) + (microIndex & 1);
+    if (index >= frameReferences.size()) {
+        dProgressErr() << QApplication::tr("Not enough frames in Subtile %1.").arg(subtileIndex + 1);
+        return;
+    }
     unsigned frameReference = frameReferences[index];
     if (frameReference != 0) {
         deletedFrames.insert(frameReference);
@@ -260,6 +264,24 @@ static void RemoveMicro(D1Min *min, int subtileRef, int microIndex, std::set<uns
         }
     } else {
         dProgressWarn() << QApplication::tr("The frame @%1 in Subtile %2 is already empty.").arg(index + 1).arg(subtileIndex + 1);
+    }
+}
+
+static void ReplaceSubtile(D1Til *til, int tileIndex, unsigned index, int subtileRef, bool silent)
+{
+    int subtileIndex = subtileRef - 1;
+    std::vector<int> &tilSubtiles = til->getSubtileIndices(tileIndex);
+    if (index >= tilSubtiles.size()) {
+        dProgressErr() << QApplication::tr("Not enough subtiles in Tile %1.").arg(tileIndex + 1);
+        return;
+    }
+    unsigned subtileReference = tilSubtiles[index];
+    if (til->setSubtileIndex(tileIndex, index, subtileIndex)) {
+        if (!silent) {
+            dProgress() << QApplication::tr("Subtile %1 of Tile%2 is set to %3.").arg(index + 1).arg(tileIndex + 1).arg(subtileIndex + 1);
+        }
+    } else {
+        dProgressWarn() << QApplication::tr("Subtile %1 of Tile%2 is already %3.").arg(index + 1).arg(tileIndex + 1).arg(subtileIndex + 1);
     }
 }
 
@@ -414,7 +436,24 @@ void D1Tileset::patch(int dunType, bool silent)
         Blk2Mcr(366, 1);
         break;
     case DTYPE_CRYPT:
+        // patch dMegaTiles - L5.TIL
+        // use common subtiles of doors
+        ReplaceSubtile(this->til, 71 - 1, 2, 206, silent);
+        ReplaceSubtile(this->til, 72 - 1, 2, 206, silent);
         // patch dMiniTiles - L5.MIN
+        // pointless door micros (re-drawn by dSpecial)
+        Blk2Mcr(77, 6);
+        Blk2Mcr(77, 8);
+        Blk2Mcr(80, 7);
+        Blk2Mcr(80, 9);
+        Blk2Mcr(206, 6);
+        Blk2Mcr(206, 8);
+        Blk2Mcr(209, 7);
+        Blk2Mcr(209, 9);
+        Blk2Mcr(213, 6);
+        Blk2Mcr(213, 8);
+        Blk2Mcr(216, 6);
+        Blk2Mcr(216, 8);
         // useless black micros
         Blk2Mcr(130, 0);
         Blk2Mcr(130, 1);
