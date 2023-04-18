@@ -33,5 +33,5 @@ private:
     D1TBL_TYPE type = D1TBL_TYPE::V1_DARK;
     QString tblFilePath;
     bool modified;
-    D1Pal *palette = nullptr;
+    D1Pal *pal = nullptr;
 };

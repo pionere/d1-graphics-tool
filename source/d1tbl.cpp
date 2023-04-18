@@ -8,7 +8,7 @@
 
 #include "progressdialog.h"
 
-#include "dungeon/lighting.h"
+#include "dungeon/all.h"
 
 bool D1Tbl::load(const QString &filePath)
 {
@@ -89,20 +89,25 @@ bool D1Tbl::save(const SaveAsParam &params)
 
 QImage D1Tbl::getTableImage(int radius, int dunType, int color) const
 {
+    constexpr int tileSize = 32;
     currLvl._dType = dunType;
     MakeLightTable();
 
     memset(dLight, MAXDARKNESS, sizeof(dLight));
     DoLighting(MAX_LIGHT_RAD + 1, MAX_LIGHT_RAD + 1, radius, MAXLIGHTS);
 
-    QImage image = QImage(lengthof(dLight), lengthof(dLight[0]), QImage::Format_ARGB32);
+    QImage image = QImage(lengthof(dLight) * tileSize, lengthof(dLight[0]) * tileSize, QImage::Format_ARGB32);
 
     QRgb *destBits = reinterpret_cast<QRgb *>(image.scanLine(0));
     for (int x = 0; x < lengthof(dLight); x++) {
         for (int y = 0; y < lengthof(dLight[0]); y++) {
             QColor c = this->pal->getColor(ColorTrns[dLight[x][y]][color]);
-            // image.setPixelColor(x, y, color);
-            destBits[x] = c.rgba();
+            for (int xx = x * tileSize; xx < x * tileSize + tileSize; xx++) {
+                for (int yy = y * tileSize; yy < y * tileSize + tileSize; yy++) {
+                    // image.setPixelColor(xx, yy, color);
+                    destBits[yy * lengthof(dLight) * tileSize + xx] = c.rgba();
+                }
+            }
         }
     }
 
@@ -111,7 +116,7 @@ QImage D1Tbl::getTableImage(int radius, int dunType, int color) const
 
 QString D1Tbl::getFilePath() const
 {
-    return this->tilFilePath;
+    return this->tblFilePath;
 }
 
 bool D1Tbl::isModified() const
