@@ -8,6 +8,7 @@
 #include <QGraphicsPixmapItem>
 #include <QImageReader>
 #include <QMenu>
+#include <QMessageBox>
 #include <QMimeData>
 
 #include "config.h"
@@ -94,7 +95,7 @@ void TblView::framePixelHovered(const QPoint &pos)
     int tableImageHeight = D1Tbl::getTableImageHeight();
     int darkImageWidth = D1Tbl::getDarkImageWidth();
     int darkImageHeight = D1Tbl::getDarkImageHeight();
-
+QMessageBox::critical(nullptr, "Warn", "Hovar");
     if (pos.x() < CEL_SCENE_MARGIN || pos.y() < CEL_SCENE_MARGIN) {
         return;
     }

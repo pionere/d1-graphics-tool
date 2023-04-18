@@ -13,7 +13,7 @@
 #include "dungeon/all.h"
 
 #define TABLE_TILE_SIZE 32
-#define DARK_COLUMN_WIDTH 4
+#define DARK_COLUMN_WIDTH 8
 #define DARK_BORDER_WIDTH 4
 #define DARK_COLUMN_HEIGHT_UNIT 32
 
