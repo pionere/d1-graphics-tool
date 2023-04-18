@@ -136,6 +136,7 @@ void TblView::on_levelTypeComboBox_activated(int index)
     // update the view
     this->displayFrame();
 }
+
 void TblView::setRadius(int nextRadius)
 {
     if (nextRadius < 0) {
@@ -250,9 +251,6 @@ void TblView::on_stopButton_clicked()
 
 void TblView::timerEvent(QTimerEvent *event)
 {
-    if (this->gfx->getGroupCount() == 0) {
-        return;
-    }
     int cycleType = this->ui->playComboBox->currentIndex();
     if (cycleType == 0) {
         // normal playback

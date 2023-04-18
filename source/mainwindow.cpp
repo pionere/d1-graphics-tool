@@ -1019,7 +1019,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         QObject::connect(this->tblView, &TblView::frameRefreshed, this->palWidget, &PaletteWidget::update);
     }
     // Add the view to the main frame
-    this->ui->mainFrameLayout->addWidget(isTileset ? (QWidget *)this->levelCelView : (isMeta ? this->tblView : this->celView));
+    this->ui->mainFrameLayout->addWidget(isTileset ? (QWidget *)this->levelCelView : (isMeta ? (QWidget *)this->tblView : this->celView));
 
     // prepare the paint dialog
     this->paintWidget = new PaintWidget(this, this->undoStack, this->gfx, this->celView, this->levelCelView);

@@ -30,6 +30,7 @@ public:
 
 private:
     void updateLabel();
+    void setRadius(int nextRadius);
 
 signals:
     void frameRefreshed();

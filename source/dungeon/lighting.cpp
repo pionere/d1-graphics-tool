@@ -467,7 +467,7 @@ void DoLighting(int nXPos, int nYPos, int nRadius, unsigned lnum)
 	block_x = 0;
 	block_y = 0;
 
-	if (lnum < MAXLIGHTS) {
+	/*if (lnum < MAXLIGHTS) {
 		xoff = LightList[lnum]._xoff;
 		yoff = LightList[lnum]._yoff;
 		if (xoff < 0) {
@@ -486,7 +486,7 @@ void DoLighting(int nXPos, int nYPos, int nRadius, unsigned lnum)
 		}
 		assert((unsigned)xoff < 8);
 		assert((unsigned)yoff < 8);
-	}
+	}*/
 
 	dist_x = xoff;
 	dist_y = yoff;

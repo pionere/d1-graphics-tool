@@ -76,9 +76,9 @@ bool D1Tbl::save(const SaveAsParam &params)
     // write to file
     QDataStream out(&outFile);
     if (this->type == D1TBL_TYPE::V1_DARK) {
-        out.writeRawData((const char *)this->darkTable, sizeof(this->darkTable));
+        out.writeRawData((const char *)darkTable, sizeof(darkTable));
     } else {
-        out.writeRawData((const char *)this->distMatrix, sizeof(this->distMatrix));
+        out.writeRawData((const char *)distMatrix, sizeof(distMatrix));
     }
 
     this->tblFilePath = filePath;
