@@ -155,7 +155,7 @@ QImage D1Tbl::getDarkImage(int radius) const
     QImage image = QImage(D1Tbl::getDarkImageWidth(), D1Tbl::getDarkImageHeight(), QImage::Format_ARGB32);
     image.fill(Qt::transparent);
 
-    QPainter darkPainter(&image);
+    /*QPainter darkPainter(&image);
     QColor color = QColor(Config::getPaletteSelectionBorderColor());
 
     darkPainter.fillRect(0, D1Tbl::getDarkImageHeight() - DARK_BORDER_WIDTH, D1Tbl::getDarkImageWidth(), axisWidth, QColorConstants::Black);
@@ -164,7 +164,7 @@ QImage D1Tbl::getDarkImage(int radius) const
     for (int i = 0; i < lengthof(darkTable[0]); i++) {
         darkPainter.fillRect(i * DARK_COLUMN_WIDTH + DARK_BORDER_WIDTH, DARK_BORDER_WIDTH + darkTable[radius][i] * DARK_COLUMN_HEIGHT_UNIT,
             DARK_COLUMN_WIDTH, DARK_COLUMN_HEIGHT_UNIT * (MAXDARKNESS - darkTable[radius][i]), color);
-    }
+    }*/
 
     // darkPainter.end();
     return image;
