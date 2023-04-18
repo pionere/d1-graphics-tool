@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QPainter>
 
+#include "config.h"
 #include "progressdialog.h"
 
 #include "dungeon/all.h"
