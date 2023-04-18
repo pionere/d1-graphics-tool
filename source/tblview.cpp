@@ -23,7 +23,7 @@ TblView::TblView(QWidget *parent)
 {
     this->ui->setupUi(this);
     this->ui->tblGraphicsView->setScene(&this->tblScene);
-    this->on_radiusLineEdit_escPressed();
+    // this->on_radiusLineEdit_escPressed();
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
     this->ui->stopButton->setEnabled(false);
