@@ -5,6 +5,7 @@
 #include <QFileInfo>
 #include <QImage>
 #include <QMessageBox>
+#include <QPainter>
 
 #include "progressdialog.h"
 
@@ -111,6 +112,25 @@ QImage D1Tbl::getTableImage(int radius, int dunType, int color) const
         }
     }
 
+    return image;
+}
+
+QImage D1Tbl::getDarkImage(int radius) const
+{
+    constexpr int columWidth = 16;
+    constexpr int columHeightUnit = 32;
+
+    QImage image = QImage(columWidth * lengthof(darkTable[0]), columHeightUnit * MAXDARKNESS, QImage::Format_ARGB32);
+    image.fill(Qt::transparent);
+
+    QPainter darkPainter(&image);
+    darkPainter.setPen(QColor(Config::getPaletteSelectionBorderColor()));
+
+    for (int i = 0; i < lengthof(darkTable[0]); i++) {
+        darkPainter.drawRect(i * columWidth, 0 + columHeightUnit * MAXDARKNESS - columHeightUnit * darkTable[radius][i], columWidth, columHeightUnit * darkTable[radius][i]);
+    }
+
+    // darkPainter.end();
     return image;
 }
 

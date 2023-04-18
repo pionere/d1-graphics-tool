@@ -23,6 +23,7 @@ public:
     bool save(const SaveAsParam &params);
 
     QImage getTableImage(int radius, int dunType, int color) const;
+    QImage getDarkImage(int radius) const;
 
     QString getFilePath() const;
     bool isModified() const;

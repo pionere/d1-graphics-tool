@@ -94,6 +94,8 @@ void TblView::framePixelHovered(const QPoint &pos)
 void TblView::palColorsSelected(const std::vector<quint8> &indices)
 {
     this->currentColor = indices.empty() ? 0 : indices[0];
+    // update the view
+    this->displayFrame();
 }
 
 void TblView::displayFrame()
@@ -103,6 +105,7 @@ void TblView::displayFrame()
 
     // Getting the current frame to display
     QImage tblFrame = this->tbl->getTableImage(this->currentLightRadius, this->ui->levelTypeComboBox->currentIndex(), this->currentColor);
+    QImage equalImage = this->tbl->getDarkImage(this->currentLightRadius);
 
     this->tblScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
@@ -112,8 +115,8 @@ void TblView::displayFrame()
 
     // Resize the scene rectangle to include some padding around the CEL frame
     this->tblScene.setSceneRect(0, 0,
-        CEL_SCENE_MARGIN + tblFrame.width() + CEL_SCENE_MARGIN,
-        CEL_SCENE_MARGIN + tblFrame.height() + CEL_SCENE_MARGIN);
+        CEL_SCENE_MARGIN + std::max(tblFrame.width(), equalImage.width()) + CEL_SCENE_MARGIN,
+        CEL_SCENE_MARGIN + tblFrame.height() + CEL_SCENE_SPACING + equalImage.height() + CEL_SCENE_MARGIN);
     // ui->celGraphicsView->adjustSize();
 
     // Add the backgrond and CEL frame while aligning it in the center
@@ -121,6 +124,8 @@ void TblView::displayFrame()
     //    ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
     this->tblScene.addPixmap(QPixmap::fromImage(tblFrame))
         ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+    this->tblScene.addPixmap(QPixmap::fromImage(equalImage))
+        ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN + tblFrame.height() + CEL_SCENE_SPACING);
 
     // Notify PalView that the frame changed (used to refresh palette widget)
     emit this->frameRefreshed();
