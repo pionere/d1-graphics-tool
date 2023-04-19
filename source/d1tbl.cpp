@@ -112,7 +112,7 @@ int D1Tbl::getTableImageHeight()
     return lengthof(dLight[0]) * TABLE_TILE_SIZE;
 }
 
-QImage D1Tbl::getTableImage(const D1Pal *pal, int radius, int dunType, int color) const
+QImage D1Tbl::getTableImage(const D1Pal *pal, int radius, int dunType, int color)
 {
     currLvl._dType = dunType;
     MakeLightTable();
@@ -143,7 +143,7 @@ QImage D1Tbl::getTableImage(const D1Pal *pal, int radius, int dunType, int color
     return image;
 }
 
-int D1Tbl::getTableValueAt(int x, int y) const
+int D1Tbl::getTableValueAt(int x, int y)
 {
     int vx = x / TABLE_TILE_SIZE;
     int vy = y / TABLE_TILE_SIZE;
@@ -161,7 +161,7 @@ int D1Tbl::getLightImageHeight()
     return LIGHT_COLUMN_HEIGHT_UNIT * 256 + 2 * LIGHT_BORDER_WIDTH;
 }
 
-QImage D1Tbl::getLightImage(const D1Pal *pal, int color) const
+QImage D1Tbl::getLightImage(const D1Pal *pal, int color)
 {
     constexpr int axisWidth = 2;
     constexpr int valueHeight = 2;
@@ -189,7 +189,7 @@ QImage D1Tbl::getLightImage(const D1Pal *pal, int color) const
     return image;
 }
 
-int D1Tbl::getLightValueAt(const D1Pal *pal, int x, int color) const
+int D1Tbl::getLightValueAt(const D1Pal *pal, int x, int color)
 {
     int vx = x / LIGHT_COLUMN_WIDTH;
 
@@ -209,7 +209,7 @@ int D1Tbl::getDarkImageHeight()
     return DARK_COLUMN_HEIGHT_UNIT * MAXDARKNESS + 2 * DARK_BORDER_WIDTH;
 }
 
-QImage D1Tbl::getDarkImage(int radius) const
+QImage D1Tbl::getDarkImage(int radius)
 {
     constexpr int axisWidth = 2;
 
@@ -232,7 +232,7 @@ QImage D1Tbl::getDarkImage(int radius) const
     return image;
 }
 
-int D1Tbl::getDarkValueAt(int x, int radius) const
+int D1Tbl::getDarkValueAt(int x, int radius)
 {
     int vx = x / DARK_COLUMN_WIDTH;
 

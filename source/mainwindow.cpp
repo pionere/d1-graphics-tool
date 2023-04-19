@@ -869,9 +869,9 @@ void MainWindow::openFile(const OpenAsParam &params)
     if (fileType == 4) {
         if (tblFilePath.isEmpty()) {
             tblFilePath = gfxFilePath;
-            if (gfxFilePath.toLower().endsWith("dark.tbl") {
+            if (gfxFilePath.toLower().endsWith("dark.tbl")) {
                 tblFilePath.replace(tblFilePath.length() - (sizeof("dark.tbl") - 2), 3, "ist");
-            } else if (gfxFilePath.toLower().endsWith("dist.tbl") {
+            } else if (gfxFilePath.toLower().endsWith("dist.tbl")) {
                 tblFilePath.replace(tblFilePath.length() - (sizeof("dist.tbl") - 2), 3, "ark");
             }
         }

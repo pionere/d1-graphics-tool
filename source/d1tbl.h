@@ -5,6 +5,7 @@
 #include <QImage>
 
 #include "d1pal.h"
+#include "openasdialog.h"
 #include "saveasdialog.h"
 
 enum class D1TBL_TYPE {
@@ -25,16 +26,16 @@ public:
 
     static int getTableImageWidth();
     static int getTableImageHeight();
-    static QImage getTableImage(const D1Pal *pal, int radius, int dunType, int color) const;
-    static int getTableValueAt(int x, int y) const;
+    static QImage getTableImage(const D1Pal *pal, int radius, int dunType, int color);
+    static int getTableValueAt(int x, int y);
     static int getLightImageWidth();
     static int getLightImageHeight();
-    static QImage getLightImage(const D1Pal *pal, int color) const;
-    static int getLightValueAt(const D1Pal *pal, int x, int color) const;
+    static QImage getLightImage(const D1Pal *pal, int color);
+    static int getLightValueAt(const D1Pal *pal, int x, int color);
     static int getDarkImageWidth();
     static int getDarkImageHeight();
-    static QImage getDarkImage(int radius) const;
-    static int getDarkValueAt(int x, int radius) const;
+    static QImage getDarkImage(int radius);
+    static int getDarkValueAt(int x, int radius);
 
     D1TBL_TYPE getType() const;
     void setType(D1TBL_TYPE type);

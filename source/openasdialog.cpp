@@ -106,12 +106,12 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
     }
     QString tblPath;
     if (openFilePath.toLower().endsWith(".tbl") && !this->ui->isTilesetYesRadioButton->isChecked()) {
-        if (openFilePath.toLower().endsWith("dark.tbl") {
+        if (openFilePath.toLower().endsWith("dark.tbl")) {
             tblPath = openFilePath;
-                tblPath.replace(tblPath.length() - (sizeof("dark.tbl") - 2), 3, "ist");
-        } else if (openFilePath.toLower().endsWith("dist.tbl") {
+            tblPath.replace(tblPath.length() - (sizeof("dark.tbl") - 2), 3, "ist");
+        } else if (openFilePath.toLower().endsWith("dist.tbl")) {
             tblPath = openFilePath;
-                tblPath.replace(tblPath.length() - (sizeof("dist.tbl") - 2), 3, "ark");
+            tblPath.replace(tblPath.length() - (sizeof("dist.tbl") - 2), 3, "ark");
         }
         if (!QFileInfo::exists(tblPath))
             tblPath = "";
