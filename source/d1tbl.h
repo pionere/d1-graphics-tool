@@ -32,6 +32,10 @@ public:
     static int getLightImageHeight();
     static QImage getLightImage(const D1Pal *pal, int color);
     static int getLightValueAt(const D1Pal *pal, int x, int color);
+    static int getLumImageWidth();
+    static int getLumImageHeight();
+    static QImage getLumImage(const D1Pal *pal, int color);
+    static int getLumValueAt(const D1Pal *pal, int x, int color);
     static int getDarkImageWidth();
     static int getDarkImageHeight();
     static QImage getDarkImage(int radius);

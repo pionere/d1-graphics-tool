@@ -16,6 +16,11 @@
 #define LIGHT_COLUMN_WIDTH 32
 #define LIGHT_BORDER_WIDTH 4
 #define LIGHT_COLUMN_HEIGHT_UNIT 2
+#define LIGHT_MAX_VALUE 256
+#define LUM_COLUMN_WIDTH 32
+#define LUM_BORDER_WIDTH 4
+#define LUM_COLUMN_HEIGHT_UNIT 4
+#define LUM_MAX_VALUE 100
 #define DARK_COLUMN_WIDTH 8
 #define DARK_BORDER_WIDTH 4
 #define DARK_COLUMN_HEIGHT_UNIT 32
@@ -158,7 +163,7 @@ int D1Tbl::getLightImageWidth()
 
 int D1Tbl::getLightImageHeight()
 {
-    return LIGHT_COLUMN_HEIGHT_UNIT * 256 + 2 * LIGHT_BORDER_WIDTH;
+    return LIGHT_COLUMN_HEIGHT_UNIT * LIGHT_MAX_VALUE + 2 * LIGHT_BORDER_WIDTH;
 }
 
 QImage D1Tbl::getLightImage(const D1Pal *pal, int color)
@@ -181,7 +186,7 @@ QImage D1Tbl::getLightImage(const D1Pal *pal, int color)
         unsigned minValue = std::min(std::min(c.red(), c.green()), c.blue());
         int v = (maxValue + minValue) / 2;
 
-        lightPainter.fillRect(LIGHT_BORDER_WIDTH + i * LIGHT_COLUMN_WIDTH, LIGHT_BORDER_WIDTH + (256 - v) * LIGHT_COLUMN_HEIGHT_UNIT,
+        lightPainter.fillRect(LIGHT_BORDER_WIDTH + i * LIGHT_COLUMN_WIDTH, LIGHT_BORDER_WIDTH + (LIGHT_MAX_VALUE - v) * LIGHT_COLUMN_HEIGHT_UNIT,
             LIGHT_COLUMN_WIDTH, valueHeight, valueColor);
     }
 
@@ -197,6 +202,92 @@ int D1Tbl::getLightValueAt(const D1Pal *pal, int x, int color)
     unsigned maxValue = std::max(std::max(c.red(), c.green()), c.blue());
     unsigned minValue = std::min(std::min(c.red(), c.green()), c.blue());
     return (maxValue + minValue) / 2;
+}
+
+int D1Tbl::getLumImageWidth()
+{
+    return LUM_COLUMN_WIDTH * (MAXDARKNESS + 1) + 2 * LUM_BORDER_WIDTH;
+}
+
+int D1Tbl::getLumImageHeight()
+{
+    return LUM_COLUMN_HEIGHT_UNIT * LUM_MAX_VALUE + 2 * LUM_BORDER_WIDTH;
+}
+
+/*
+ * Calculate the linearized value from a color value
+ *
+ * @param cv: color value (in the range of 0.0 .. 1.0)
+ * @returns: the linearized value (in the range of 0.0 .. 1.0)
+ */
+static double sRGBtoLin(double cv)
+{
+    if (cv <= 0.04045) {
+        return cv / 12.92;
+    } else {
+        return pow(((cv + 0.055) / 1.055), 2.4);
+    }
+}
+
+/*
+ * Calculate the perceived lightness from a luminance.
+ *
+ * @param Y: a luminance value (in the range of 0.0 .. 1.0)
+ * @returns: L* which is "perceptual lightness" (in the range of 0 .. 100)
+ */
+static int YtoLstar(double Y)
+{
+
+    if (Y <= (216.0 / 24389)) {    // The CIE standard states 0.008856 but 216/24389 is the intent for 0.008856451679036
+        return Y * (24389.0 / 27); // The CIE standard states 903.3, but 24389/27 is the intent, making 903.296296296296296
+    } else {
+        return pow(Y, (1.0 / 3)) * 116 - 16;
+    }
+}
+
+static int getLumValue(const QColor c)
+{
+    double vR = c.red() / 255.0;
+    double vG = c.green() / 255.0;
+    double vB = c.blue() / 255.0;
+
+    double Y = 0.2126 * sRGBtoLin(vR) + 0.7152 * sRGBtoLin(vG) + 0.0722 * sRGBtoLin(vB);
+
+    return YtoLstar(Y);
+}
+
+QImage D1Tbl::getLumImage(const D1Pal *pal, int color)
+{
+    constexpr int axisWidth = 2;
+    constexpr int valueHeight = 2;
+
+    QImage image = QImage(D1Tbl::getLumImageWidth(), D1Tbl::getLumImageHeight(), QImage::Format_ARGB32);
+    image.fill(Qt::transparent);
+
+    QPainter lumPainter(&image);
+    QColor valueColor = QColor(Config::getPaletteSelectionBorderColor());
+
+    lumPainter.fillRect(0, D1Tbl::getLumImageHeight() - LUM_BORDER_WIDTH, D1Tbl::getLumImageWidth(), axisWidth, QColorConstants::Black);
+    lumPainter.fillRect(LUM_BORDER_WIDTH - axisWidth, 0, axisWidth, D1Tbl::getLumImageHeight(), QColorConstants::Black);
+
+    for (int i = 0; i <= MAXDARKNESS; i++) {
+        QColor c = pal->getColor(ColorTrns[i][color]);
+        int v = getLumValue(c);
+
+        lumPainter.fillRect(LUM_BORDER_WIDTH + i * LUM_COLUMN_WIDTH, LUM_BORDER_WIDTH + (LUM_MAX_VALUE - v) * LUM_COLUMN_HEIGHT_UNIT,
+            LUM_COLUMN_WIDTH, valueHeight, valueColor);
+    }
+
+    // lumPainter.end();
+    return image;
+}
+
+int D1Tbl::getLumValueAt(const D1Pal *pal, int x, int color)
+{
+    int vx = x / LUM_COLUMN_WIDTH;
+
+    QColor c = pal->getColor(ColorTrns[vx][color]);
+    return getLumValue(c);
 }
 
 int D1Tbl::getDarkImageWidth()
