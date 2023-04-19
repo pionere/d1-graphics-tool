@@ -13,6 +13,7 @@
 #include "d1gfx.h"
 #include "d1pal.h"
 #include "d1palhits.h"
+#include "d1tableset.h"
 #include "d1tileset.h"
 #include "d1trn.h"
 #include "exportdialog.h"
@@ -25,6 +26,7 @@
 #include "progressdialog.h"
 #include "saveasdialog.h"
 #include "settingsdialog.h"
+#include "tblview.h"
 #include "upscaledialog.h"
 #include "upscaletaskdialog.h"
 
@@ -246,6 +248,7 @@ private:
 
     CelView *celView = nullptr;
     LevelCelView *levelCelView = nullptr;
+    TblView *tblView = nullptr;
     PaintWidget *paintWidget = nullptr;
     BuilderWidget *builderWidget = nullptr;
 
@@ -270,6 +273,7 @@ private:
     D1Gfx *gfx = nullptr;
     D1Tileset *tileset = nullptr;
     D1Dun *dun = nullptr;
+    D1Tableset *tableset = nullptr;
 
     QMap<QString, D1Pal *> pals;       // key: path, value: pointer to palette
     QMap<QString, D1Trn *> uniqueTrns; // key: path, value: pointer to translation

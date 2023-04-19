@@ -595,3 +595,28 @@ typedef struct TriggerStruct {
 	int _tmsg;
 	int _tlvl;
 } TriggerStruct;
+
+//////////////////////////////////////////////////
+// lighting
+//////////////////////////////////////////////////
+
+typedef struct LightListStruct {
+	int _lx;
+	int _ly;
+	int _lunx;
+	int _luny;
+	BYTE _lradius;
+	BYTE _lunr;
+	int8_t _lunxoff;
+	int8_t _lunyoff;
+	BOOLEAN _ldel;
+	BOOLEAN _lunflag;
+	BOOLEAN _lmine;
+	BYTE _lAlign2;
+	int _lxoff;
+	int _lyoff;
+} LightListStruct;
+
+#if defined(X86_32bit_COMP) || defined(X86_64bit_COMP)
+static_assert((sizeof(LightListStruct) & (sizeof(LightListStruct) - 1)) == 0, "Align LightListStruct closer to power of 2 for better performance.");
+#endif

@@ -38,22 +38,27 @@ void OpenAsDialog::initialize()
     this->ui->minWidthEdit->setText("0");
     this->ui->minHeightEdit->setText("0");
     this->ui->createDunCheckBox->setChecked(false);
+    // - tblSettingsGroupBox
+    this->ui->tblFileEdit->setText("");
 
     this->update();
 }
 
 void OpenAsDialog::update()
 {
-    bool hasInputFile = !this->ui->inputFileEdit->text().isEmpty();
+    QString filePath = this->ui->inputFileEdit->text();
+    bool hasInputFile = !filePath.isEmpty();
     bool isTileset = this->ui->isTilesetYesRadioButton->isChecked() || (this->ui->isTilesetAutoRadioButton->isChecked() && !this->ui->tilFileEdit->text().isEmpty());
+    bool isMeta = !isTileset && filePath.toLower().endsWith(".tbl");
 
-    this->ui->celSettingsGroupBox->setEnabled(hasInputFile && !isTileset);
+    this->ui->celSettingsGroupBox->setEnabled(hasInputFile && !isTileset && !isMeta);
     this->ui->tilSettingsGroupBox->setEnabled(hasInputFile && isTileset);
+    this->ui->tblSettingsGroupBox->setEnabled(hasInputFile && isMeta);
 }
 
 void OpenAsDialog::on_inputFileBrowseButton_clicked()
 {
-    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX)"));
+    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Graphics"), tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2);;PCX Files (*.pcx *.PCX);;TBL Files (*.tbl *.TBL)"));
 
     if (openFilePath.isEmpty())
         return;
@@ -99,6 +104,19 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
             this->ui->tmiFileEdit->setText("");
         }
     }
+    QString tblPath;
+    if (openFilePath.toLower().endsWith(".tbl") && !this->ui->isTilesetYesRadioButton->isChecked()) {
+        if (openFilePath.toLower().endsWith("dark.tbl")) {
+            tblPath = openFilePath;
+            tblPath.replace(tblPath.length() - (sizeof("dark.tbl") - 2), 3, "ist");
+        } else if (openFilePath.toLower().endsWith("dist.tbl")) {
+            tblPath = openFilePath;
+            tblPath.replace(tblPath.length() - (sizeof("dist.tbl") - 2), 3, "ark");
+        }
+        if (!QFileInfo::exists(tblPath))
+            tblPath = "";
+    }
+    this->ui->tblFileEdit->setText(tblPath);
 
     this->update();
 }
@@ -178,6 +196,16 @@ void OpenAsDialog::on_dunFileBrowseButton_clicked()
     this->ui->dunFileEdit->setText(openFilePath);
 }
 
+void OpenAsDialog::on_tblFileBrowseButton_clicked()
+{
+    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select TBL file"), tr("TBL Files (*.tbl *.TBL)"));
+
+    if (openFilePath.isEmpty())
+        return;
+
+    this->ui->tblFileEdit->setText(openFilePath);
+}
+
 void OpenAsDialog::on_openButton_clicked()
 {
     OpenAsParam params;
@@ -219,6 +247,7 @@ void OpenAsDialog::on_openButton_clicked()
     params.createDun = this->ui->createDunCheckBox->isChecked();
     params.minWidth = this->ui->minWidthEdit->nonNegInt();
     params.minHeight = this->ui->minHeightEdit->nonNegInt();
+    params.tblFilePath = this->ui->tblFileEdit->text();
 
     this->close();
 

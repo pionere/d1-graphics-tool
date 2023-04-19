@@ -2613,13 +2613,18 @@ static void DRLG_L3LightTiles()
 {
 	int i, j, pn;
 
+//	assert(LightList[MAXLIGHTS]._xoff == 0);
+//	assert(LightList[MAXLIGHTS]._yoff == 0);
 #ifdef HELLFIRE
 	if (currLvl._dType == DTYPE_NEST) {
+//		LightList[MAXLIGHTS]._lradius = 6; // 9
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++) {
 				pn = dPiece[i][j];
 				if ((pn >= 386 && pn <= 496) || (pn >= 534 && pn <= 537)) {
-					DoLighting(i, j, 6, NO_LIGHT); // 9
+//					LightList[MAXLIGHTS]._lx = i;
+//					LightList[MAXLIGHTS]._ly = j;
+//					DoLighting(MAXLIGHTS);
 				}
 			}
 		}
@@ -2627,12 +2632,15 @@ static void DRLG_L3LightTiles()
 #endif
 	{
 		// assert(currLvl._dType == DTYPE_CAVES);
+//		LightList[MAXLIGHTS]._lradius = 7;
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++) {
 				pn = dPiece[i][j];
 				if (pn >= 56 && pn <= 161
 				 && (pn <= 147 || pn >= 154 || pn == 150 || pn == 152)) {
-					DoLighting(i, j, 7, NO_LIGHT);
+//					LightList[MAXLIGHTS]._lx = i;
+//					LightList[MAXLIGHTS]._ly = j;
+//					DoLighting(MAXLIGHTS);
 				}
 			}
 		}

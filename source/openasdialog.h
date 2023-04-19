@@ -35,6 +35,7 @@ public:
     QString ampFilePath;
     QString tmiFilePath;
     QString dunFilePath;
+    QString tblFilePath;
     int minWidth = 0;
     int minHeight = 0;
     bool createDun = false;
@@ -67,6 +68,7 @@ private slots:
     void on_ampFileBrowseButton_clicked();
     void on_tmiFileBrowseButton_clicked();
     void on_dunFileBrowseButton_clicked();
+    void on_tblFileBrowseButton_clicked();
     void on_openButton_clicked();
     void on_openCancelButton_clicked();
 

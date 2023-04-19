@@ -5,7 +5,40 @@
  */
 #include "all.h"
 
+#include <QMessageBox>
+#include <QString>
+
 DEVILUTION_BEGIN_NAMESPACE
+
+/* Specifies whether the light table is initialized */
+static int lightTableVersion = -1;
+
+/* The list of light-sources in the game + one for temporary use. */
+LightListStruct LightList[MAXLIGHTS + 1];
+/*
+ * Precalculated darkness (inverse brightness) levels for each light radius at a given distance.
+ *  darkTable[lr][dist]
+ * unit of dist is 0.125 tile width
+ */
+BYTE darkTable[MAX_LIGHT_RAD + 1][MAX_LIGHT_DIST + 1];
+/*
+ * Precalculated distances from each offsets to a point in one quadrant.
+ *  distMatrix[offy][offx][dy][dx]
+ * Note: the distance value is limited to MAX_LIGHT_DIST to reduce the necessary
+ *		checks in DoLighting.
+ */
+BYTE distMatrix[MAX_OFFSET][MAX_OFFSET][MAX_TILE_DIST][MAX_TILE_DIST];
+/*
+ * In-game color translation tables.
+ * 0-MAXDARKNESS: inverse brightness translations.
+ * MAXDARKNESS+1: RED color translation.
+ * MAXDARKNESS+2: GRAY color translation.
+ * MAXDARKNESS+3: CORAL color translation.
+ * MAXDARKNESS+4.. translations of unique monsters.
+ */
+BYTE ColorTrns[NUM_COLOR_TRNS][NUM_COLORS];
+/** Specifies the current darkness levels of each tile on the map. */
+BYTE dLight[2 * (MAX_LIGHT_RAD + 1) + 1][2 * (MAX_LIGHT_RAD + 1) + 1];
 
 /**
  * CrawlTable specifies X- and Y-coordinate deltas from a missile target coordinate.
@@ -399,8 +432,160 @@ const int8_t CrawlTable[2749] = {
 /** Indices of CrawlTable to select the entries at a given distance. */
 const int CrawlNum[19] = { 0, 3, 12, 45, 94, 159, 240, 337, 450, 579, 724, 885, 1062, 1255, 1464, 1689, 1930, 2187, 2460 };
 
-void DoLighting(int nXPos, int nYPos, int nRadius, unsigned lnum)
+static void RotateRadius(int* ox, int* oy, int* dx, int* dy, int* lx, int* ly, int* bx, int* by)
 {
+	int swap, nx, ny;
+
+	swap = *dx;
+	*dx = 7 - *dy;
+	*dy = swap;
+	swap = *lx;
+	*lx = 7 - *ly;
+	*ly = swap;
+
+	nx = *dx - *lx;
+	ny = *dy - *ly;
+
+	*bx = nx < 0 ? 1 : 0;
+	if (*bx == 1) {
+		nx += 8;
+	}
+	*by = ny < 0 ? 1 : 0;
+	if (*by == 1) {
+		ny += 8;
+	}
+	*ox = nx;
+	*oy = ny;
+}
+
+void DoLighting(unsigned lnum)
+{
+	LightListStruct* lis = &LightList[lnum];
+	int x, y, xoff, yoff;
+	int min_x, max_x, min_y, max_y;
+	int dist_x, dist_y, light_x, light_y, block_x, block_y, temp_x, temp_y;
+	int nXPos = lis->_lx;
+	int nYPos = lis->_ly;
+	int nRadius = lis->_lradius;
+	BYTE (&dark)[128] = darkTable[nRadius];
+	BYTE v, radius_block;
+
+	light_x = 0;
+	light_y = 0;
+	block_x = 0;
+	block_y = 0;
+
+	xoff = lis->_lxoff;
+	yoff = lis->_lyoff;
+	if (xoff < 0) {
+		xoff += 8;
+		nXPos--;
+	} else if (xoff >= 8) {
+		xoff -= 8;
+		nXPos++;
+	}
+	if (yoff < 0) {
+		yoff += 8;
+		nYPos--;
+	} else if (yoff >= 8) {
+		yoff -= 8;
+		nYPos++;
+	}
+	assert((unsigned)xoff < 8);
+	assert((unsigned)yoff < 8);
+
+	dist_x = xoff;
+	dist_y = yoff;
+
+	static_assert(DBORDERX >= MAX_LIGHT_RAD + 1, "DoLighting expects a large enough border I.");
+	static_assert(DBORDERY >= MAX_LIGHT_RAD + 1, "DoLighting expects a large enough border II.");
+	assert(MAX_LIGHT_RAD <= MAXDUNX - nXPos);
+	//max_x = MAX_LIGHT_RAD; //std::min(15, MAXDUNX - nXPos);
+	assert(MAX_LIGHT_RAD <= MAXDUNY - nYPos);
+	//max_y = MAX_LIGHT_RAD; //std::min(15, MAXDUNY - nYPos);
+	assert(MAX_LIGHT_RAD <= nXPos + 1);
+	//min_x = MAX_LIGHT_RAD; //std::min(15, nXPos + 1);
+	assert(MAX_LIGHT_RAD <= nYPos + 1);
+	//min_y = MAX_LIGHT_RAD; //std::min(15, nYPos + 1);
+
+	nRadius++;
+	min_x = min_y = max_x = max_y = std::min(MAX_LIGHT_RAD, nRadius);
+
+	BYTE (&dist0)[MAX_TILE_DIST][MAX_TILE_DIST] = distMatrix[yoff][xoff];
+	// Add light to (0;0)
+	{
+			radius_block = dist0[0][0];
+			//assert(radius_block <= MAX_LIGHT_DIST);
+			//if (radius_block <= MAX_LIGHT_DIST) {
+				temp_x = nXPos + 0;
+				temp_y = nYPos + 0;
+				v = dark[radius_block];
+				if (v < dLight[temp_x][temp_y])
+					dLight[temp_x][temp_y] = v;
+			//}
+	}
+	// Add light to the I. (+;+) quadrant
+	for (y = 0; y < max_y; y++) {
+		for (x = 1; x < max_x; x++) {
+			radius_block = dist0[y][x];
+			//assert(radius_block <= MAX_LIGHT_DIST);
+			//if (radius_block <= MAX_LIGHT_DIST) {
+				temp_x = nXPos + x;
+				temp_y = nYPos + y;
+				v = dark[radius_block];
+				if (v < dLight[temp_x][temp_y])
+					dLight[temp_x][temp_y] = v;
+			//}
+		}
+	}
+	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
+	// Add light to the II. (+;-) quadrant
+	BYTE (&dist1)[MAX_TILE_DIST][MAX_TILE_DIST] = distMatrix[yoff][xoff];
+	for (y = 0; y < max_x; y++) {
+		for (x = 1; x < min_y; x++) {
+			radius_block = dist1[y + block_y][x + block_x];
+			//assert(radius_block <= MAX_LIGHT_DIST);
+			//if (radius_block <= MAX_LIGHT_DIST) {
+				temp_x = nXPos + y;
+				temp_y = nYPos - x;
+				v = dark[radius_block];
+				if (v < dLight[temp_x][temp_y])
+					dLight[temp_x][temp_y] = v;
+			//}
+		}
+	}
+	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
+	// Add light to the III. (-;-) quadrant
+	BYTE (&dist2)[MAX_TILE_DIST][MAX_TILE_DIST] = distMatrix[yoff][xoff];
+	for (y = 0; y < min_y; y++) {
+		for (x = 1; x < min_x; x++) {
+			radius_block = dist2[y + block_y][x + block_x];
+			//assert(radius_block <= MAX_LIGHT_DIST);
+			//if (radius_block <= MAX_LIGHT_DIST) {
+				temp_x = nXPos - x;
+				temp_y = nYPos - y;
+				v = dark[radius_block];
+				if (v < dLight[temp_x][temp_y])
+					dLight[temp_x][temp_y] = v;
+			//}
+		}
+	}
+	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
+	// Add light to the IV. (-;+) quadrant
+	BYTE (&dist3)[MAX_TILE_DIST][MAX_TILE_DIST] = distMatrix[yoff][xoff];
+	for (y = 0; y < min_x; y++) {
+		for (x = 1; x < max_y; x++) {
+			radius_block = dist3[y + block_y][x + block_x];
+			//assert(radius_block <= MAX_LIGHT_DIST);
+			//if (radius_block <= MAX_LIGHT_DIST) {
+				temp_x = nXPos - y;
+				temp_y = nYPos + x;
+				v = dark[radius_block];
+				if (v < dLight[temp_x][temp_y])
+					dLight[temp_x][temp_y] = v;
+			//}
+		}
+	}
 }
 
 static void DoUnLight(int nXPos, int nYPos, int nRadius)
@@ -512,6 +697,145 @@ void DoVision(int nXPos, int nYPos, int nRadius)
 					break;
 			} while (LightPos(x1, y1));
 		}
+	}
+}
+
+void MakeLightTable()
+{
+	unsigned i, j, k, shade, l1, l2, cnt, rem, div;
+	BYTE col, max;
+	BYTE* tbl;
+	BYTE blood[16];
+
+	if (lightTableVersion == currLvl._dType) {
+		return;
+	}
+	lightTableVersion = currLvl._dType;
+
+	tbl = ColorTrns[0];
+	for (i = 0; i < MAXDARKNESS; i++) {
+		static_assert(MAXDARKNESS == 15, "Shade calculation requires MAXDARKNESS to be 15.");
+		// shade calculation is simplified by using a fix MAXDARKNESS value.
+		// otherwise the correct calculation would be as follows:
+		//	shade = (i * 15 + (MAXDARKNESS + 1) / 2) / MAXDARKNESS;
+		shade = i;
+		// light trns of the level palette
+		*tbl++ = 0;
+		for (j = 0; j < 8; j++) {
+			col = 16 * j + shade;
+			max = 16 * j + 15;
+			for (k = 0; k < 16; k++) {
+				if (k != 0 || j != 0) {
+					*tbl++ = col;
+				}
+				if (col < max) {
+					col++;
+				} else {
+					max = 0;
+					col = 0;
+				}
+			}
+		}
+		// light trns of the standard palette
+		//  (PAL8_BLUE, PAL8_RED, PAL8_YELLOW, PAL8_ORANGE)
+		for (j = 16; j < 20; j++) {
+			col = 8 * j + (shade >> 1);
+			max = 8 * j + 7;
+			for (k = 0; k < 8; k++) {
+				*tbl++ = col;
+				if (col < max) {
+					col++;
+				} else {
+					max = 0;
+					col = 0;
+				}
+			}
+		}
+		//  (PAL16_BEIGE, PAL16_BLUE, PAL16_YELLOW, PAL16_ORANGE, PAL16_RED, PAL16_GRAY)
+		for (j = 10; j < 16; j++) {
+			col = 16 * j + shade;
+			max = 16 * j + 15;
+			if (max == 255) {
+				max = 254;
+			}
+			for (k = 0; k < 16; k++) {
+				*tbl++ = col;
+				if (col < max) {
+					col++;
+				} else {
+					max = 0;
+					col = 0;
+				}
+				/*if (col == 255) {
+					max = 0;
+					col = 0;
+				}*/
+			}
+		}
+	}
+
+	// assert(tbl == ColorTrns[MAXDARKNESS]);
+	tbl = ColorTrns[0];
+	memset(ColorTrns[MAXDARKNESS], 0, sizeof(ColorTrns[MAXDARKNESS]));
+
+	if (currLvl._dType == DTYPE_HELL) {
+		for (i = 0; i < MAXDARKNESS; i++) {
+			l1 = MAXDARKNESS - i;
+			l2 = l1;
+			div = 15 / l1;
+			rem = 15 % l1;
+			cnt = 0;
+			blood[0] = 0;
+			col = 1;
+			for (j = 1; j < 16; j++) {
+				blood[j] = col;
+				l2 += rem;
+				if (l2 > l1 && j < 15) {
+					j++;
+					blood[j] = col;
+					l2 -= l1;
+				}
+				cnt++;
+				if (cnt == div) {
+					col++;
+					cnt = 0;
+				}
+			}
+			*tbl++ = 0;
+			for (j = 1; j <= 15; j++) {
+				*tbl++ = blood[j];
+			}
+			for (j = 15; j > 0; j--) {
+				*tbl++ = blood[j];
+			}
+			*tbl++ = 1;
+			tbl += NUM_COLORS - 32;
+		}
+		/**tbl++ = 0;
+		for (j = 0; j < 31; j++) {
+			*tbl++ = 1;
+		}
+		tbl += NUM_COLORS - 32;*/
+	} else if (currLvl._dType == DTYPE_CAVES) {
+		for (i = 0; i < MAXDARKNESS; i++) {
+			*tbl++ = 0;
+			for (j = 1; j < 32; j++)
+				*tbl++ = j;
+			tbl += NUM_COLORS - 32;
+		}
+#ifdef HELLFIRE
+	} else if (currLvl._dType == DTYPE_NEST || currLvl._dType == DTYPE_CRYPT) {
+		for (i = 0; i < MAXDARKNESS; i++) {
+			*tbl++ = 0;
+			for (j = 1; j < 16; j++)
+				*tbl++ = j;
+			tbl += NUM_COLORS - 16;
+		}
+		/**tbl++ = 0;
+		for (j = 1; j < 16; j++)
+			*tbl++ = 1;
+		tbl += NUM_COLORS - 16;*/
+#endif
 	}
 }
 

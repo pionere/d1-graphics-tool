@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TblView</class>
+ <widget class="QWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>625</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <layout class="QVBoxLayout">
+   <item>
+    <widget class="QLabel" name="tblLabel"/>
+   </item>
+   <item>
+    <widget class="QGraphicsView" name="tblGraphicsView">
+     <property name="minimumSize">
+      <size>
+       <width>500</width>
+       <height>360</height>
+      </size>
+     </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAsNeeded</enum>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QAbstractScrollArea::AdjustToContents</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="bottomPanel">
+     <layout class="QGridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Zoom:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="zoomOutButton">
+        <property name="minimumWidth">
+         <number>24</number>
+        </property>
+        <property name="maximumWidth">
+         <number>24</number>
+        </property>
+        <property name="text">
+         <string notr="true">-</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="LineEditWidget" name="zoomEdit">
+        <property name="charWidth">
+         <number>4</number>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="zoomInButton">
+        <property name="minimumWidth">
+         <number>24</number>
+        </property>
+        <property name="maximumWidth">
+         <number>24</number>
+        </property>
+        <property name="text">
+         <string notr="true">+</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4" colspan="2">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="6" colspan="2">
+       <widget class="QPushButton" name="stopButton">
+        <property name="text">
+         <string>Stop</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="8">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>8</number>
+        </property>
+        <property name="maximumWidth">
+         <number>8</number>
+        </property>
+        <property name="text">
+         <string notr="true">-</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="9" colspan="2">
+       <widget class="QPushButton" name="playButton">
+        <property name="text">
+         <string>Play</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="11">
+       <widget class="LineEditWidget" name="playDelayEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>Current playback delay</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="12">
+       <widget class="QLabel">
+        <property name="text">
+         <string>ms</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="13">
+       <widget class="QComboBox" name="playComboBox">
+        <item>
+         <property name="text">
+          <string>Normal</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>(L3) Caves</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>(L4) Hell</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>(L5) Crypt</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>(L6) Nest</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="0" column="14" colspan="5">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Dungeon:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="4">
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QComboBox" name="levelTypeComboBox">
+          <item>
+           <property name="text">
+            <string>Town</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>(L1) Cathedral</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>(L2) Catacombs</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>(L3) Caves</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>(L4) Hell</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>(L5) Crypt</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>(L6) Nest</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>None</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="6">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Radius:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="7">
+       <widget class="QPushButton" name="radiusDecButton">
+        <property name="minimumWidth">
+         <number>24</number>
+        </property>
+        <property name="maximumWidth">
+         <number>24</number>
+        </property>
+        <property name="text">
+         <string notr="true">-</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="8">
+       <widget class="LineEditWidget" name="radiusLineEdit">
+        <property name="charWidth">
+         <number>4</number>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="9">
+       <widget class="QPushButton" name="radiusIncButton">
+        <property name="minimumWidth">
+         <number>24</number>
+        </property>
+        <property name="maximumWidth">
+         <number>24</number>
+        </property>
+        <property name="text">
+         <string notr="true">+</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="10" colspan="5">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="15">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Value:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="16">
+       <widget class="LineEditWidget" name="valueLineEdit">
+        <property name="charWidth">
+         <number>4</number>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="17">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>8</number>
+        </property>
+        <property name="maximumWidth">
+         <number>8</number>
+        </property>
+        <property name="text">
+         <string notr="true">@</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="18">
+       <widget class="LineEditWidget" name="valueAtLineEdit">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="charWidth">
+         <number>6</number>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="4" margin="4"/>
+ <resources/>
+ <connections/>
+ <buttongroups/>
+</ui>

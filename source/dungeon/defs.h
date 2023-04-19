@@ -60,7 +60,8 @@ static_assert(DMAXY % 2 == 0, "DRLG_L4 constructs the dungeon by mirroring a qua
 #define MAXITEMS				127
 #define ITEM_NONE				0xFF
 #define MAXBELTITEMS			8
-#define MAXLIGHTS				32
+//#define MAXLIGHTS				31
+#define MAXLIGHTS				0
 #define MAXMONSTERS				200
 #define MON_NONE				0xFF
 #define MAXOBJECTS				127
@@ -84,6 +85,11 @@ static_assert(DMAXY % 2 == 0, "DRLG_L4 constructs the dungeon by mirroring a qua
 #define GOLD_SMALL_LIMIT		1000
 #define GOLD_MEDIUM_LIMIT		2500
 #define GOLD_MAX_LIMIT			5000
+
+// Diablo uses a 256 color palette
+// Entry 0-127 (0x00-0x7F) are level specific
+// Entry 128-255 (0x80-0xFF) are global
+#define NUM_COLORS		256
 
 // standard palette for all levels
 // 8 or 16 shades per color
