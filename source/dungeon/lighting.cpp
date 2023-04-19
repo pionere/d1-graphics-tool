@@ -472,8 +472,8 @@ void DoLighting(unsigned lnum)
 	block_x = 0;
 	block_y = 0;
 
-	xoff = lis->_xoff;
-	yoff = lis->_yoff;
+	xoff = lis->_lxoff;
+	yoff = lis->_lyoff;
 	if (xoff < 0) {
 		xoff += 8;
 		nXPos--;

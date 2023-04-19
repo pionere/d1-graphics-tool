@@ -159,7 +159,7 @@ void TblView::displayFrame()
     item = this->tblScene.addPixmap(QPixmap::fromImage(lightImage));
     item->setPos(CEL_SCENE_MARGIN + D1Tbl::getTableImageWidth() + CEL_SCENE_SPACING, CEL_SCENE_MARGIN);
     // add darkness equalizer frame
-    item = this->tblScene.addPixmap(QPixmap::fromImage(darkImage))
+    item = this->tblScene.addPixmap(QPixmap::fromImage(darkImage));
     item->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN + D1Tbl::getTableImageHeight() + CEL_SCENE_SPACING);
     item->setAcceptHoverEvents(true);
 

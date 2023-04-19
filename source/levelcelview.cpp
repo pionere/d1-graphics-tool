@@ -3064,7 +3064,7 @@ void LevelCelView::displayFrame()
         // this->celScene.addPixmap(QPixmap::fromImage(dunFrame))
         //    ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
         QGraphicsPixmapItem *item;
-        item = this->celScene.addItem(QPixmap::fromImage(dunFrame));
+        item = this->celScene.addPixmap(QPixmap::fromImage(dunFrame));
         item->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
         item->setAcceptHoverEvents(true);
         // scroll to the current position

@@ -613,8 +613,8 @@ typedef struct LightListStruct {
 	BOOLEAN _lunflag;
 	BOOLEAN _lmine;
 	BYTE _lAlign2;
-	int _xoff;
-	int _yoff;
+	int _lxoff;
+	int _lyoff;
 } LightListStruct;
 
 #if defined(X86_32bit_COMP) || defined(X86_64bit_COMP)
