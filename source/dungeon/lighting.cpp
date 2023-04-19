@@ -5,6 +5,9 @@
  */
 #include "all.h"
 
+#include <QMessageBox>
+#include <QString>
+
 DEVILUTION_BEGIN_NAMESPACE
 
 /* Specifies whether the light table is initialized */
@@ -707,6 +710,7 @@ void MakeLightTable()
 	if (lightTableVersion == currLvl._dType) {
 		return;
 	}
+QMessageBox::critical(nullptr, "MLT", QString::number(currLvl._dType));
 	lightTableVersion = currLvl._dType;
 
 	tbl = ColorTrns[0];

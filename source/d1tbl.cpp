@@ -184,6 +184,16 @@ QImage D1Tbl::getLightImage(int color) const
     return image;
 }
 
+int D1Tbl::getLightValueAt(int x, int color) const
+{
+    int vx = x / DARK_COLUMN_WIDTH;
+
+    QColor c = this->pal->getColor(ColorTrns[vx][color]);
+    unsigned maxValue = std::max(std::max(c.red(), c.green()), c.blue());
+    unsigned minValue = std::min(std::min(c.red(), c.green()), c.blue());
+    return (maxValue + minValue) / 2;
+}
+
 int D1Tbl::getDarkImageWidth()
 {
     return DARK_COLUMN_WIDTH * lengthof(darkTable[0]) + 2 * DARK_BORDER_WIDTH;
@@ -221,7 +231,7 @@ int D1Tbl::getDarkValueAt(int x, int radius) const
 {
     int vx = x / DARK_COLUMN_WIDTH;
 
-    return darkTable[radius][vx];
+    return MAXDARKNESS - darkTable[radius][vx];
 }
 
 QString D1Tbl::getFilePath() const

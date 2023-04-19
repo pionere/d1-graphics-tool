@@ -29,6 +29,7 @@ public:
     static int getLightImageWidth();
     static int getLightImageHeight();
     QImage getLightImage(int color) const;
+    int getLightValueAt(int x, int color) const;
     static int getDarkImageWidth();
     static int getDarkImageHeight();
     QImage getDarkImage(int radius) const;

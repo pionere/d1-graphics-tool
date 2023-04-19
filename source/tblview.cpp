@@ -91,30 +91,27 @@ void TblView::framePixelClicked(const QPoint &pos, bool first)
 
 void TblView::framePixelHovered(const QPoint &pos)
 {
-    int tableImageWidth = D1Tbl::getTableImageWidth();
-    int tableImageHeight = D1Tbl::getTableImageHeight();
-    int darkImageWidth = D1Tbl::getDarkImageWidth();
-    int darkImageHeight = D1Tbl::getDarkImageHeight();
+    QRect tableImageRect = QRect(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN, D1Tbl::getTableImageWidth(), D1Tbl::getTableImageHeight());
+    QRect lightImageRect = QRect(CEL_SCENE_MARGIN + D1Tbl::getTableImageWidth() + CEL_SCENE_SPACING, CEL_SCENE_MARGIN, D1Tbl::getLightImageWidth(), D1Tbl::getLightImageHeight());
+    QRect darkImageRect = QRect(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN + D1Tbl::getTableImageHeight() + CEL_SCENE_SPACING, D1Tbl::getDarkImageWidth(), D1Tbl::getDarkImageHeight());
 
-    if (pos.x() < CEL_SCENE_MARGIN || pos.y() < CEL_SCENE_MARGIN) {
-        return;
-    }
-    if (pos.y() < CEL_SCENE_MARGIN + tableImageHeight) {
-        if (pos.x() >= tableImageWidth) {
-            return;
-        }
-
-        QPoint valuePos = pos - QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+    if (tableImageRect.contains(pos)) {
+        QPoint valuePos = pos - tableImageRect.topLeft();
         int value = this->tbl->getTableValueAt(valuePos.x(), valuePos.y());
         this->ui->valueLineEdit->setText(QString::number(value));
-    } else if (pos.y() >= CEL_SCENE_MARGIN + tableImageHeight + CEL_SCENE_SPACING && pos.y() < CEL_SCENE_MARGIN + tableImageHeight + CEL_SCENE_SPACING + darkImageHeight) {
-        if (pos.x() >= darkImageWidth) {
-            return;
-        }
-
-        QPoint valuePos = pos - QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN + tableImageHeight + CEL_SCENE_SPACING);
+        return;
+    }
+    if (lightImageRect.contains(pos)) {
+        QPoint valuePos = pos - lightImageRect.topLeft();
+        int value = this->tbl->getLightValueAt(valuePos.x(), valuePos.y());
+        this->ui->valueLineEdit->setText(QString::number(value));
+        return;
+    }
+    if (darkImageRect.contains(pos)) {
+        QPoint valuePos = pos - darkImageRect.topLeft();
         int value = this->tbl->getDarkValueAt(valuePos.x(), this->currentLightRadius);
         this->ui->valueLineEdit->setText(QString::number(value));
+        return;
     }
 }
 
