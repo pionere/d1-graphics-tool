@@ -135,6 +135,8 @@ void TblView::palColorsSelected(const std::vector<quint8> &indices)
 
 void TblView::displayFrame()
 {
+    QMessageBox::critical(nullptr, "Warn", QString("View Display start: %1").arg(darkTable[0][10]));
+
     this->update();
     this->tblScene.clear();
 
@@ -171,6 +173,7 @@ void TblView::displayFrame()
     item->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN + D1Tbl::getTableImageHeight() + CEL_SCENE_SPACING);
     item->setAcceptHoverEvents(true);
 
+    QMessageBox::critical(nullptr, "Warn", QString("View Display end: %1").arg(darkTable[0][10]));
     // Notify PalView that the frame changed (used to refresh palette widget)
     emit this->frameRefreshed();
 }

@@ -1127,6 +1127,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // Clear loading message from status bar
     ProgressDialog::done();
+    QMessageBox::critical(nullptr, "Warn", QString("MainWindow end: %1").arg(darkTable[0][10]));
 }
 
 void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append)
