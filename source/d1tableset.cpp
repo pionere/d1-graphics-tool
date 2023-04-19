@@ -18,11 +18,11 @@ D1Tableset::~D1Tableset()
 
 bool D1Tableset::load(const QString &tblfilePath1, const QString &tblfilePath2, const OpenAsParam &params)
 {
-    if (!this->distTbl->load(tblfilePath1)) {
+    if (!this->distTbl->load(tblfilePath1, params)) {
         dProgressErr() << QApplication::tr("Failed loading TBL file: %1.").arg(QDir::toNativeSeparators(tblfilePath1));
         return false;
     }
-    if (!this->darkTbl->load(tblfilePath2)) {
+    if (!this->darkTbl->load(tblfilePath2, params)) {
         dProgressErr() << QApplication::tr("Failed loading TBL file: %1.").arg(QDir::toNativeSeparators(tblfilePath2));
         return false;
     }
