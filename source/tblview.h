@@ -3,7 +3,7 @@
 #include <QWidget>
 
 #include "celview.h"
-#include "d1tbl.h"
+#include "d1tableset.h"
 
 namespace Ui {
 class TblView;
@@ -18,7 +18,7 @@ public:
     explicit TblView(QWidget *parent);
     ~TblView();
 
-    void initialize(D1Pal *pal, D1Tbl *tbl, bool bottomPanelHidden);
+    void initialize(D1Pal *pal, D1Tableset *tableset, bool bottomPanelHidden);
     void setPal(D1Pal *pal);
 
     void framePixelClicked(const QPoint &pos, bool first);
@@ -63,7 +63,7 @@ private:
     CelScene tblScene = CelScene(this);
 
     D1Pal *pal;
-    D1Tbl *tbl;
+    D1Tableset *tableset;
     int currentLightRadius = 0;
     quint8 currentColor = 0;
     quint16 currentPlayDelay = 50;

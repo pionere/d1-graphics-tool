@@ -13,7 +13,7 @@
 #include "d1gfx.h"
 #include "d1pal.h"
 #include "d1palhits.h"
-#include "d1tbl.h"
+#include "d1tableset.h"
 #include "d1tileset.h"
 #include "d1trn.h"
 #include "exportdialog.h"
@@ -273,7 +273,7 @@ private:
     D1Gfx *gfx = nullptr;
     D1Tileset *tileset = nullptr;
     D1Dun *dun = nullptr;
-    D1Tbl *tbl = nullptr;
+    D1Tableset *tableset = nullptr;
 
     QMap<QString, D1Pal *> pals;       // key: path, value: pointer to palette
     QMap<QString, D1Trn *> uniqueTrns; // key: path, value: pointer to translation

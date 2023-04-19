@@ -20,7 +20,7 @@
 #define DARK_BORDER_WIDTH 4
 #define DARK_COLUMN_HEIGHT_UNIT 32
 
-bool D1Tbl::load(const QString &filePath)
+bool D1Tbl::load(const QString &filePath, const OpenAsParam &params)
 {
     // prepare file data source
     QFile file;
@@ -30,8 +30,8 @@ bool D1Tbl::load(const QString &filePath)
     // }
     if (!filePath.isEmpty()) {
         file.setFileName(filePath);
-        if (!file.open(QIODevice::ReadOnly)) {
-            return false;
+        if (!file.open(QIODevice::ReadOnly) && (params.celFilePath == filePath || params.tblFilePath == filePath)) {
+            return false; // report read-error only if the file was explicitly requested
         }
     }
 
@@ -44,10 +44,15 @@ bool D1Tbl::load(const QString &filePath)
     unsigned fileSize = fileData.size();
     if (fileSize == sizeof(darkTable)) {
         // dark table
+        this->type = D1TBL_TYPE::V1_DARK;
         memcpy(darkTable, fileData.data(), fileSize);
     } else if (fileSize == sizeof(distMatrix)) {
         // dist matrix
+        this->type = D1TBL_TYPE::V1_DIST;
         memcpy(distMatrix, fileData.data(), fileSize);
+    } else if (fileSize == 0) {
+        // empty file
+        this->type = D1TBL_TYPE::V1_UNDEF;
     } else {
         dProgressErr() << tr("Invalid TBL file.");
         return false;
@@ -107,7 +112,7 @@ int D1Tbl::getTableImageHeight()
     return lengthof(dLight[0]) * TABLE_TILE_SIZE;
 }
 
-QImage D1Tbl::getTableImage(int radius, int dunType, int color) const
+QImage D1Tbl::getTableImage(const D1Pal *pal, int radius, int dunType, int color) const
 {
     currLvl._dType = dunType;
     MakeLightTable();
@@ -125,7 +130,7 @@ QImage D1Tbl::getTableImage(int radius, int dunType, int color) const
     QRgb *destBits = reinterpret_cast<QRgb *>(image.scanLine(0));
     for (int x = 0; x < lengthof(dLight); x++) {
         for (int y = 0; y < lengthof(dLight[0]); y++) {
-            QColor c = this->pal->getColor(ColorTrns[dLight[x][y]][color]);
+            QColor c = pal->getColor(ColorTrns[dLight[x][y]][color]);
             for (int xx = x * TABLE_TILE_SIZE; xx < x * TABLE_TILE_SIZE + TABLE_TILE_SIZE; xx++) {
                 for (int yy = y * TABLE_TILE_SIZE; yy < y * TABLE_TILE_SIZE + TABLE_TILE_SIZE; yy++) {
                     // image.setPixelColor(xx, yy, color);
@@ -156,7 +161,7 @@ int D1Tbl::getLightImageHeight()
     return LIGHT_COLUMN_HEIGHT_UNIT * 256 + 2 * LIGHT_BORDER_WIDTH;
 }
 
-QImage D1Tbl::getLightImage(int color) const
+QImage D1Tbl::getLightImage(const D1Pal *pal, int color) const
 {
     constexpr int axisWidth = 2;
     constexpr int valueHeight = 2;
@@ -171,7 +176,7 @@ QImage D1Tbl::getLightImage(int color) const
     lightPainter.fillRect(LIGHT_BORDER_WIDTH - axisWidth, 0, axisWidth, D1Tbl::getLightImageHeight(), QColorConstants::Black);
 
     for (int i = 0; i <= MAXDARKNESS; i++) {
-        QColor c = this->pal->getColor(ColorTrns[i][color]);
+        QColor c = pal->getColor(ColorTrns[i][color]);
         unsigned maxValue = std::max(std::max(c.red(), c.green()), c.blue());
         unsigned minValue = std::min(std::min(c.red(), c.green()), c.blue());
         int v = (maxValue + minValue) / 2;
@@ -184,11 +189,11 @@ QImage D1Tbl::getLightImage(int color) const
     return image;
 }
 
-int D1Tbl::getLightValueAt(int x, int color) const
+int D1Tbl::getLightValueAt(const D1Pal *pal, int x, int color) const
 {
     int vx = x / LIGHT_COLUMN_WIDTH;
 
-    QColor c = this->pal->getColor(ColorTrns[vx][color]);
+    QColor c = pal->getColor(ColorTrns[vx][color]);
     unsigned maxValue = std::max(std::max(c.red(), c.green()), c.blue());
     unsigned minValue = std::min(std::min(c.red(), c.green()), c.blue());
     return (maxValue + minValue) / 2;
@@ -234,6 +239,16 @@ int D1Tbl::getDarkValueAt(int x, int radius) const
     return MAXDARKNESS - darkTable[radius][vx];
 }
 
+D1TBL_TYPE D1Tbl::getType() const
+{
+    return this->type;
+}
+
+void D1Tbl::setType(D1TBL_TYPE type)
+{
+    this->type = type;
+}
+
 QString D1Tbl::getFilePath() const
 {
     return this->tblFilePath;
@@ -247,9 +262,4 @@ bool D1Tbl::isModified() const
 void D1Tbl::setModified()
 {
     this->modified = true;
-}
-
-void D1Tbl::setPalette(D1Pal *pal)
-{
-    this->pal = pal;
 }

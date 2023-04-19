@@ -44,10 +44,10 @@ TblView::~TblView()
     delete ui;
 }
 
-void TblView::initialize(D1Pal *p, D1Tbl *t, bool bottomPanelHidden)
+void TblView::initialize(D1Pal *p, D1Tableset *t, bool bottomPanelHidden)
 {
     this->pal = p;
-    this->tbl = t;
+    this->tableset = t;
 
     this->ui->bottomPanel->setVisible(!bottomPanelHidden);
 
@@ -62,11 +62,19 @@ void TblView::setPal(D1Pal *p)
 // Displaying CEL file path information
 void TblView::updateLabel()
 {
-    QFileInfo tblFileInfo(this->tbl->getFilePath());
-    QString label = tblFileInfo.fileName();
-    if (this->tbl->isModified()) {
+    QFileInfo distTblFileInfo(this->tableset->distTbl->getFilePath());
+    QFileInfo darkTblFileInfo(this->tableset->darkTbl->getFilePath());
+
+    QString label = distTblFileInfo.fileName();
+    if (this->tableset->distTbl->isModified()) {
         label += "*";
     }
+    label += ", ";
+    label += darkTblFileInfo.fileName();
+    if (this->tableset->darkTbl->isModified()) {
+        label += "*";
+    }
+
     ui->tblLabel->setText(label);
 }
 
@@ -97,23 +105,23 @@ void TblView::framePixelHovered(const QPoint &pos)
 
     if (tableImageRect.contains(pos)) {
         QPoint valuePos = pos - tableImageRect.topLeft();
-        int value = this->tbl->getTableValueAt(valuePos.x(), valuePos.y());
+        int value = D1Tbl::getTableValueAt(valuePos.x(), valuePos.y());
         this->ui->valueLineEdit->setText(QString::number(value));
         this->ui->valueAtLineEdit->setText(QString("%1:%2").arg(valuePos.x()).arg(valuePos.y()));
         return;
     }
     if (lightImageRect.contains(pos)) {
         QPoint valuePos = pos - lightImageRect.topLeft();
-        int value = this->tbl->getLightValueAt(valuePos.x(), this->currentColor);
+        int value = D1Tbl::getLightValueAt(this->pal, valuePos.x(), this->currentColor);
         this->ui->valueLineEdit->setText(QString::number(value));
         this->ui->valueAtLineEdit->setText(QString("%1:%2").arg(valuePos.x() / 32).arg(this->currentColor)); // LIGHT_COLUMN_WIDTH
         return;
     }
     if (darkImageRect.contains(pos)) {
         QPoint valuePos = pos - darkImageRect.topLeft();
-        int value = this->tbl->getDarkValueAt(valuePos.x(), this->currentLightRadius);
+        int value = D1Tbl::getDarkValueAt(valuePos.x(), this->currentLightRadius);
         this->ui->valueLineEdit->setText(QString::number(value));
-        this->ui->valueAtLineEdit->setText(QString("%1:%2").arg(valuePos.x() / 8).arg(this->currentLightRadius)); // DARK_COLUMN_WIDTH
+        this->ui->valueAtLineEdit->setText(QString("%1:%2").arg(valuePos.x() / 8).arg(darkTable[0][10])); // DARK_COLUMN_WIDTH
         return;
     }
 }
@@ -131,9 +139,9 @@ void TblView::displayFrame()
     this->tblScene.clear();
 
     // Getting the current frame to display
-    QImage tblFrame = this->tbl->getTableImage(this->currentLightRadius, this->ui->levelTypeComboBox->currentIndex(), this->currentColor);
-    QImage lightImage = this->tbl->getLightImage(this->currentColor);
-    QImage darkImage = this->tbl->getDarkImage(this->currentLightRadius);
+    QImage tblFrame = D1Tbl::getTableImage(this->pal, this->currentLightRadius, this->ui->levelTypeComboBox->currentIndex(), this->currentColor);
+    QImage lightImage = D1Tbl::getLightImage(this->pal, this->currentColor);
+    QImage darkImage = D1Tbl::getDarkImage(this->currentLightRadius);
 
     this->tblScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 

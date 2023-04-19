@@ -157,9 +157,6 @@ void MainWindow::setPal(const QString &path)
     if (this->dun != nullptr) {
         this->dun->setPal(pal);
     }
-    if (this->tbl != nullptr) {
-        this->tbl->setPalette(pal);
-    }
     // update the widgets
     // - views
     if (this->celView != nullptr) {
@@ -167,6 +164,9 @@ void MainWindow::setPal(const QString &path)
     }
     if (this->levelCelView != nullptr) {
         this->levelCelView->setPal(pal);
+    }
+    if (this->tblView != nullptr) {
+        this->tblView->setPal(pal);
     }
     // - palWidget
     this->palWidget->updatePathComboBoxOptions(this->pals.keys(), path);
@@ -863,9 +863,19 @@ void MainWindow::openFile(const OpenAsParam &params)
     QString ampFilePath = params.ampFilePath;
     QString tmiFilePath = params.tmiFilePath;
     QString dunFilePath = params.dunFilePath;
+    QString tblFilePath = params.tblFilePath;
 
     QString baseDir;
-    if (!gfxFilePath.isEmpty()) {
+    if (fileType == 4) {
+        if (tblFilePath.isEmpty()) {
+            tblFilePath = gfxFilePath;
+            if (gfxFilePath.toLower().endsWith("dark.tbl") {
+                tblFilePath.replace(tblFilePath.length() - (sizeof("dark.tbl") - 2), 3, "ist");
+            } else if (gfxFilePath.toLower().endsWith("dist.tbl") {
+                tblFilePath.replace(tblFilePath.length() - (sizeof("dist.tbl") - 2), 3, "ark");
+            }
+        }
+    } else if (!gfxFilePath.isEmpty()) {
         QFileInfo celFileInfo = QFileInfo(gfxFilePath);
 
         baseDir = celFileInfo.absolutePath();
@@ -909,7 +919,6 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     this->gfx = new D1Gfx();
     this->gfx->setPalette(this->trnBase->getResultingPalette());
-    bool isMeta = false;
     if (isTileset) {
         this->tileset = new D1Tileset(this->gfx);
         // Loading SOL
@@ -974,12 +983,11 @@ void MainWindow::openFile(const OpenAsParam &params)
             return;
         }
     } else if (fileType == 4) { // TBL
-        this->tbl = new D1Tbl();
-        if (!this->tbl->load(gfxFilePath)) {
+        this->tableset = new D1Tableset();
+        if (!this->tableset->load(gfxFilePath, tblFilePath, params)) {
             this->failWithError(tr("Failed loading TBL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
-        this->tbl->setPalette(this->trnBase->getResultingPalette());
     } else {
         // gfxFilePath.isEmpty()
         this->gfx->setType(params.clipped == OPEN_CLIPPED_TYPE::TRUE ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V1_REGULAR);
@@ -1021,7 +1029,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         view = this->celView;
     } else {
         this->tblView = new TblView(this);
-        this->tblView->initialize(this->pal, this->tbl, this->bottomPanelHidden);
+        this->tblView->initialize(this->pal, this->tableset, this->bottomPanelHidden);
 
         // Refresh palette widgets when frame is changed
         QObject::connect(this->tblView, &TblView::frameRefreshed, this->palWidget, &PaletteWidget::update);
@@ -1218,8 +1226,8 @@ void MainWindow::saveFile(const SaveAsParam &params)
     if (this->dun != nullptr) {
         this->dun->save(params);
     }
-    if (this->tbl != nullptr) {
-        this->tbl->save(params);
+    if (this->tableset != nullptr) {
+        this->tableset->save(params);
     }
 
     // Clear loading message from status bar
@@ -1347,7 +1355,7 @@ void MainWindow::on_actionClose_triggered()
     MemFree(this->gfx);
     MemFree(this->tileset);
     MemFree(this->dun);
-    MemFree(this->tbl);
+    MemFree(this->tableset);
 
     qDeleteAll(this->pals);
     this->pals.clear();
