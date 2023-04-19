@@ -101,12 +101,12 @@
       </item>
       <item row="0" column="8">
        <widget class="QLabel">
-        <property name="minimumWidth">
+        <!--property name="minimumWidth">
          <number>8</number>
         </property>
         <property name="maximumWidth">
          <number>8</number>
-        </property>
+        </property-->
         <property name="text">
          <string notr="true">-</string>
         </property>

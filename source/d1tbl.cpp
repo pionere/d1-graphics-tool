@@ -148,7 +148,7 @@ int D1Tbl::getTableValueAt(int x, int y)
     int vx = x / TABLE_TILE_SIZE;
     int vy = y / TABLE_TILE_SIZE;
 
-    return dLight[vx][vy];
+    return MAXDARKNESS - dLight[vx][vy];
 }
 
 int D1Tbl::getLightImageWidth()
