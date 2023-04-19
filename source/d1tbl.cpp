@@ -13,6 +13,9 @@
 #include "dungeon/all.h"
 
 #define TABLE_TILE_SIZE 32
+#define LIGHT_COLUMN_WIDTH 8
+#define LIGHT_BORDER_WIDTH 4
+#define LIGHT_COLUMN_HEIGHT_UNIT 2
 #define DARK_COLUMN_WIDTH 8
 #define DARK_BORDER_WIDTH 4
 #define DARK_COLUMN_HEIGHT_UNIT 32
@@ -104,23 +107,18 @@ int D1Tbl::getTableImageHeight()
     return lengthof(dLight[0]) * TABLE_TILE_SIZE;
 }
 
-int D1Tbl::getDarkImageWidth()
-{
-    return DARK_COLUMN_WIDTH * lengthof(darkTable[0]) + 2 * DARK_BORDER_WIDTH;
-}
-
-int D1Tbl::getDarkImageHeight()
-{
-    return DARK_COLUMN_HEIGHT_UNIT * MAXDARKNESS + 2 * DARK_BORDER_WIDTH;
-}
-
 QImage D1Tbl::getTableImage(int radius, int dunType, int color) const
 {
     currLvl._dType = dunType;
     MakeLightTable();
 
     memset(dLight, MAXDARKNESS, sizeof(dLight));
-    DoLighting(MAX_LIGHT_RAD + 1, MAX_LIGHT_RAD + 1, radius, MAXLIGHTS);
+    LightList[MAXLIGHTS]._lx = MAX_LIGHT_RAD + 1;
+    LightList[MAXLIGHTS]._ly = MAX_LIGHT_RAD + 1;
+    LightList[MAXLIGHTS]._lradius = radius;
+    LightList[MAXLIGHTS]._lxoff = 0;
+    LightList[MAXLIGHTS]._lyoff = 0;
+    DoLighting(MAXLIGHTS);
 
     QImage image = QImage(D1Tbl::getTableImageWidth(), D1Tbl::getTableImageHeight(), QImage::Format_ARGB32);
 
@@ -148,6 +146,54 @@ int D1Tbl::getTableValueAt(int x, int y) const
     return dLight[vx][vy];
 }
 
+int D1Tbl::getLightImageWidth()
+{
+    return LIGHT_COLUMN_WIDTH * (MAXDARKNESS + 1) + 2 * LIGHT_BORDER_WIDTH;
+}
+
+int D1Tbl::getLightImageHeight()
+{
+    return LIGHT_COLUMN_HEIGHT_UNIT * 256 + 2 * LIGHT_BORDER_WIDTH;
+}
+
+QImage D1Tbl::getLightImage(int color) const
+{
+    constexpr int axisWidth = 2;
+    constexpr int valueHeight = 2;
+
+    QImage image = QImage(D1Tbl::getLightImageWidth(), D1Tbl::getLightImageHeight(), QImage::Format_ARGB32);
+    image.fill(Qt::transparent);
+
+    QPainter lightPainter(&image);
+    QColor valueColor = QColor(Config::getPaletteSelectionBorderColor());
+
+    lightPainter.fillRect(0, D1Tbl::getLightImageHeight() - LIGHT_BORDER_WIDTH, D1Tbl::getLightImageWidth(), axisWidth, QColorConstants::Black);
+    lightPainter.fillRect(LIGHT_BORDER_WIDTH - axisWidth, 0, axisWidth, D1Tbl::getLightImageHeight(), QColorConstants::Black);
+
+    for (int i = 0; i <= MAXDARKNESS; i++) {
+        QColor c = this->pal->getColor(ColorTrns[i][color]);
+        unsigned maxValue = std::max(std::max(c.red(), c.green()), c.blue());
+        unsigned minValue = std::min(std::min(c.red(), c.green()), c.blue());
+        int v = (maxValue + minValue) / 2;
+
+        lightPainter.fillRect(LIGHT_BORDER_WIDTH + i * LIGHT_COLUMN_WIDTH, LIGHT_BORDER_WIDTH + (256 - v) * LIGHT_COLUMN_HEIGHT_UNIT,
+            LIGHT_COLUMN_WIDTH, valueHeight, valueColor);
+    }
+
+    // lightPainter.end();
+    return image;
+}
+
+int D1Tbl::getDarkImageWidth()
+{
+    return DARK_COLUMN_WIDTH * lengthof(darkTable[0]) + 2 * DARK_BORDER_WIDTH;
+}
+
+int D1Tbl::getDarkImageHeight()
+{
+    return DARK_COLUMN_HEIGHT_UNIT * MAXDARKNESS + 2 * DARK_BORDER_WIDTH;
+}
+
 QImage D1Tbl::getDarkImage(int radius) const
 {
     constexpr int axisWidth = 2;
@@ -156,14 +202,15 @@ QImage D1Tbl::getDarkImage(int radius) const
     image.fill(Qt::transparent);
 
     QPainter darkPainter(&image);
-    QColor color = QColor(Config::getPaletteSelectionBorderColor());
+    QColor valueColor = QColor(Config::getPaletteSelectionBorderColor());
 
     darkPainter.fillRect(0, D1Tbl::getDarkImageHeight() - DARK_BORDER_WIDTH, D1Tbl::getDarkImageWidth(), axisWidth, QColorConstants::Black);
     darkPainter.fillRect(DARK_BORDER_WIDTH - axisWidth, 0, axisWidth, D1Tbl::getDarkImageHeight(), QColorConstants::Black);
 
     for (int i = 0; i < lengthof(darkTable[0]); i++) {
-        darkPainter.fillRect(i * DARK_COLUMN_WIDTH + DARK_BORDER_WIDTH, DARK_BORDER_WIDTH + darkTable[radius][i] * DARK_COLUMN_HEIGHT_UNIT,
-            DARK_COLUMN_WIDTH, DARK_COLUMN_HEIGHT_UNIT * (MAXDARKNESS - darkTable[radius][i]), color);
+        if (MAXDARKNESS != darkTable[radius][i])
+            darkPainter.fillRect(i * DARK_COLUMN_WIDTH + DARK_BORDER_WIDTH, DARK_BORDER_WIDTH + darkTable[radius][i] * DARK_COLUMN_HEIGHT_UNIT,
+                DARK_COLUMN_WIDTH, DARK_COLUMN_HEIGHT_UNIT * (MAXDARKNESS - darkTable[radius][i]), valueColor);
     }
 
     // darkPainter.end();

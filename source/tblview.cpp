@@ -95,7 +95,7 @@ void TblView::framePixelHovered(const QPoint &pos)
     int tableImageHeight = D1Tbl::getTableImageHeight();
     int darkImageWidth = D1Tbl::getDarkImageWidth();
     int darkImageHeight = D1Tbl::getDarkImageHeight();
-QMessageBox::critical(nullptr, "Warn", "Hovar");
+
     if (pos.x() < CEL_SCENE_MARGIN || pos.y() < CEL_SCENE_MARGIN) {
         return;
     }
@@ -132,7 +132,8 @@ void TblView::displayFrame()
 
     // Getting the current frame to display
     QImage tblFrame = this->tbl->getTableImage(this->currentLightRadius, this->ui->levelTypeComboBox->currentIndex(), this->currentColor);
-    QImage equalImage = this->tbl->getDarkImage(this->currentLightRadius);
+    QImage lightImage = this->tbl->getLightImage(this->currentColor);
+    QImage darkImage = this->tbl->getDarkImage(this->currentLightRadius);
 
     this->tblScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
@@ -142,17 +143,25 @@ void TblView::displayFrame()
 
     // Resize the scene rectangle to include some padding around the CEL frame
     this->tblScene.setSceneRect(0, 0,
-        CEL_SCENE_MARGIN + std::max(tblFrame.width(), equalImage.width()) + CEL_SCENE_MARGIN,
-        CEL_SCENE_MARGIN + tblFrame.height() + CEL_SCENE_SPACING + equalImage.height() + CEL_SCENE_MARGIN);
+        CEL_SCENE_MARGIN + std::max(D1Tbl::getTableImageWidth() + CEL_SCENE_SPACING + D1Tbl::getLightImageWidth(), D1Tbl::getDarkImageWidth()) + CEL_SCENE_MARGIN,
+        CEL_SCENE_MARGIN + D1Tbl::getTableImageHeight() + CEL_SCENE_SPACING + D1Tbl::getDarkImageHeight() + CEL_SCENE_MARGIN);
     // ui->celGraphicsView->adjustSize();
 
     // Add the backgrond and CEL frame while aligning it in the center
     // this->tblScene.addPixmap(QPixmap::fromImage(tblFrameBackground))
     //    ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-    this->tblScene.addPixmap(QPixmap::fromImage(tblFrame))
-        ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-    this->tblScene.addPixmap(QPixmap::fromImage(equalImage))
-        ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN + tblFrame.height() + CEL_SCENE_SPACING);
+    QGraphicsPixmapItem *item;
+    // add table frame
+    item = this->tblScene.addPixmap(QPixmap::fromImage(tblFrame));
+    item->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+    item->setAcceptHoverEvents(true);
+    // add light-plot frame
+    item = this->tblScene.addPixmap(QPixmap::fromImage(lightImage));
+    item->setPos(CEL_SCENE_MARGIN + D1Tbl::getTableImageWidth() + CEL_SCENE_SPACING, CEL_SCENE_MARGIN);
+    // add darkness equalizer frame
+    item = this->tblScene.addPixmap(QPixmap::fromImage(darkImage))
+    item->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN + D1Tbl::getTableImageHeight() + CEL_SCENE_SPACING);
+    item->setAcceptHoverEvents(true);
 
     // Notify PalView that the frame changed (used to refresh palette widget)
     emit this->frameRefreshed();

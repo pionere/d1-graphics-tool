@@ -22,14 +22,17 @@ public:
     bool load(const QString &filePath);
     bool save(const SaveAsParam &params);
 
-    QImage getTableImage(int radius, int dunType, int color) const;
-    int getTableValueAt(int x, int y) const;
-    QImage getDarkImage(int radius) const;
-    int getDarkValueAt(int x, int radius) const;
     static int getTableImageWidth();
     static int getTableImageHeight();
+    QImage getTableImage(int radius, int dunType, int color) const;
+    int getTableValueAt(int x, int y) const;
+    static int getLightImageWidth();
+    static int getLightImageHeight();
+    QImage getLightImage(int color) const;
     static int getDarkImageWidth();
     static int getDarkImageHeight();
+    QImage getDarkImage(int radius) const;
+    int getDarkValueAt(int x, int radius) const;
 
     QString getFilePath() const;
     bool isModified() const;

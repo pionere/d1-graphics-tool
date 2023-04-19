@@ -34,14 +34,6 @@ class LevelCelView;
 
 enum class IMAGE_FILE_MODE;
 
-class LevelCelPixmap : public QObject, public QGraphicsPixmapItem {
-    Q_OBJECT
-
-public:
-    LevelCelPixmap(const QImage &image);
-    ~LevelCelPixmap() = default;
-};
-
 class LevelCelView : public QWidget {
     Q_OBJECT
 

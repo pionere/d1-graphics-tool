@@ -9,6 +9,9 @@ DEVILUTION_BEGIN_NAMESPACE
 
 /* Specifies whether the light table is initialized */
 static int lightTableVersion = -1;
+
+/* The list of light-sources in the game + one for temporary use. */
+LightListStruct LightList[MAXLIGHTS + 1];
 /*
  * Precalculated darkness (inverse brightness) levels for each light radius at a given distance.
  *  darkTable[lr][dist]
@@ -452,41 +455,41 @@ static void RotateRadius(int* ox, int* oy, int* dx, int* dy, int* lx, int* ly, i
 	*oy = ny;
 }
 
-void DoLighting(int nXPos, int nYPos, int nRadius, unsigned lnum)
+void DoLighting(unsigned lnum)
 {
+	LightListStruct* lis = &LightList[lnum];
 	int x, y, xoff, yoff;
 	int min_x, max_x, min_y, max_y;
 	int dist_x, dist_y, light_x, light_y, block_x, block_y, temp_x, temp_y;
+	int nXPos = lis->_lx;
+	int nYPos = lis->_ly;
+	int nRadius = lis->_lradius;
 	BYTE (&dark)[128] = darkTable[nRadius];
 	BYTE v, radius_block;
 
-	xoff = 0;
-	yoff = 0;
 	light_x = 0;
 	light_y = 0;
 	block_x = 0;
 	block_y = 0;
 
-	/*if (lnum < MAXLIGHTS) {
-		xoff = LightList[lnum]._xoff;
-		yoff = LightList[lnum]._yoff;
-		if (xoff < 0) {
-			xoff += 8;
-			nXPos--;
-		} else if (xoff >= 8) {
-			xoff -= 8;
-			nXPos++;
-		}
-		if (yoff < 0) {
-			yoff += 8;
-			nYPos--;
-		} else if (yoff >= 8) {
-			yoff -= 8;
-			nYPos++;
-		}
-		assert((unsigned)xoff < 8);
-		assert((unsigned)yoff < 8);
-	}*/
+	xoff = lis->_xoff;
+	yoff = lis->_yoff;
+	if (xoff < 0) {
+		xoff += 8;
+		nXPos--;
+	} else if (xoff >= 8) {
+		xoff -= 8;
+		nXPos++;
+	}
+	if (yoff < 0) {
+		yoff += 8;
+		nYPos--;
+	} else if (yoff >= 8) {
+		yoff -= 8;
+		nYPos++;
+	}
+	assert((unsigned)xoff < 8);
+	assert((unsigned)yoff < 8);
 
 	dist_x = xoff;
 	dist_y = yoff;

@@ -12,6 +12,8 @@ DEVILUTION_BEGIN_NAMESPACE
 #define NO_VISION     MAXVISION
 #define MAX_LIGHT_RAD 15
 
+extern LightListStruct LightList[MAXLIGHTS + 1];
+
 #define MAXDARKNESS     15
 //#define NUM_COLOR_TRNS  MAXDARKNESS + 12
 #define NUM_COLOR_TRNS  MAXDARKNESS
@@ -21,7 +23,7 @@ DEVILUTION_BEGIN_NAMESPACE
 #define COLOR_TRN_UNIQ  MAXDARKNESS + 4
 extern BYTE ColorTrns[NUM_COLOR_TRNS][NUM_COLORS];
 
-void DoLighting(int nXPos, int nYPos, int nRadius, unsigned lnum);
+void DoLighting(unsigned lnum);
 void DoUnVision(int nXPos, int nYPos, int nRadius);
 void DoVision(int nXPos, int nYPos, int nRadius);
 void MakeLightTable();
