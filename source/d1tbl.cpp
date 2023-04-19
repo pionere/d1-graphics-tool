@@ -46,7 +46,6 @@ bool D1Tbl::load(const QString &filePath, const OpenAsParam &params)
         // dark table
         this->type = D1TBL_TYPE::V1_DARK;
         memcpy(darkTable, fileData.data(), fileSize);
-        dProgress() << QString("Darktabla after load: %1").arg(darkTable[0][10]);
     } else if (fileSize == sizeof(distMatrix)) {
         // dist matrix
         this->type = D1TBL_TYPE::V1_DIST;
@@ -59,7 +58,6 @@ bool D1Tbl::load(const QString &filePath, const OpenAsParam &params)
         return false;
     }
     this->modified = !file.isOpen();
-    dProgress() << QString("Darktabla after file load: %1").arg(darkTable[0][10]);
     return true;
 }
 
