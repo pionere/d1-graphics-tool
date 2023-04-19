@@ -142,17 +142,7 @@
         </property>
        </widget>
       </item>
-      <!--item row="0" column="13">
-       <widget class="QCheckBox" name="playFrameCheckBox">
-        <property name="tristate">
-         <bool>true</bool>
-        </property>
-        <property name="toolTip">
-         <string>Play frames to or from the current frame</string>
-        </property>
-       </widget>
-      </item-->
-      <item row="0" column="14">
+      <item row="0" column="13">
        <widget class="QComboBox" name="playComboBox">
         <item>
          <property name="text">
@@ -181,7 +171,7 @@
         </item>
        </widget>
       </item>
-      <item row="0" column="15" colspan="4">
+      <item row="0" column="14" colspan="5">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>

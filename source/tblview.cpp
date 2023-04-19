@@ -107,21 +107,21 @@ void TblView::framePixelHovered(const QPoint &pos)
         QPoint valuePos = pos - tableImageRect.topLeft();
         int value = D1Tbl::getTableValueAt(valuePos.x(), valuePos.y());
         this->ui->valueLineEdit->setText(QString::number(value));
-        this->ui->valueAtLineEdit->setText(QString("%1:%2").arg(valuePos.x()).arg(valuePos.y()));
+        this->ui->valueAtLineEdit->setText(QString("%1:%2").arg(valuePos.x() / 32).arg(valuePos.y() / 32)); // TABLE_TILE_SIZE
         return;
     }
     if (lightImageRect.contains(pos)) {
         QPoint valuePos = pos - lightImageRect.topLeft();
         int value = D1Tbl::getLightValueAt(this->pal, valuePos.x(), this->currentColor);
         this->ui->valueLineEdit->setText(QString::number(value));
-        this->ui->valueAtLineEdit->setText(QString("%1:%2").arg(valuePos.x() / 32).arg(this->currentColor)); // LIGHT_COLUMN_WIDTH
+        this->ui->valueAtLineEdit->setText(QString::number(valuePos.x() / 32)); // LIGHT_COLUMN_WIDTH
         return;
     }
     if (darkImageRect.contains(pos)) {
         QPoint valuePos = pos - darkImageRect.topLeft();
         int value = D1Tbl::getDarkValueAt(valuePos.x(), this->currentLightRadius);
         this->ui->valueLineEdit->setText(QString::number(value));
-        this->ui->valueAtLineEdit->setText(QString("%1:%2").arg(valuePos.x() / 8).arg(darkTable[0][10])); // DARK_COLUMN_WIDTH
+        this->ui->valueAtLineEdit->setText(QString::number(valuePos.x() / 8)); // DARK_COLUMN_WIDTH
         return;
     }
 }
