@@ -2656,12 +2656,6 @@ static void DRLG_L3SetMapFix()
 	}
 	if (pSetPieces[0]._sptype == SPT_LVL_PWATER) {
 		// patch the map - Foulwatr.DUN
-		// protect inner tiles from spawning additional monsters/objects
-		/*for (int y = 1; y < 36; y++) {
-			for (int x = 1; x < 18; x++) {
-				lm[2 + 19 * 37 + x + y * 19] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
-			}
-		}*/
 		// protect island tiles from spawning additional monsters
 		for (int y = 1; y < 7; y++) {
 			for (int x = 7; x < 14; x++) {

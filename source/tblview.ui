@@ -233,7 +233,7 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="5">
+      <item row="1" column="6">
        <widget class="QLabel">
         <property name="minimumWidth">
          <number>48</number>
@@ -243,7 +243,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="6">
+      <item row="1" column="7">
        <widget class="QPushButton" name="radiusDecButton">
         <property name="minimumWidth">
          <number>24</number>
@@ -256,7 +256,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="7">
+      <item row="1" column="8">
        <widget class="LineEditWidget" name="radiusLineEdit">
         <property name="charWidth">
          <number>4</number>
@@ -266,7 +266,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="8">
+      <item row="1" column="9">
        <widget class="QPushButton" name="radiusIncButton">
         <property name="minimumWidth">
          <number>24</number>
@@ -279,7 +279,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="9" colspan="6">
+      <item row="1" column="10" colspan="5">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -305,8 +305,17 @@
       </item>
       <item row="1" column="17">
        <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>8</number>
+        </property>
+        <property name="maximumWidth">
+         <number>8</number>
+        </property>
         <property name="text">
-         <string>@</string>
+         <string notr="true">@</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
