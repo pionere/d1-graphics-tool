@@ -196,6 +196,16 @@ void OpenAsDialog::on_dunFileBrowseButton_clicked()
     this->ui->dunFileEdit->setText(openFilePath);
 }
 
+void OpenAsDialog::on_tblFileBrowseButton_clicked()
+{
+    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select TBL file"), tr("TBL Files (*.tbl *.TBL)"));
+
+    if (openFilePath.isEmpty())
+        return;
+
+    this->ui->tblFileEdit->setText(openFilePath);
+}
+
 void OpenAsDialog::on_openButton_clicked()
 {
     OpenAsParam params;
