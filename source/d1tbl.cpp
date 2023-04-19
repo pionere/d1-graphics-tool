@@ -13,7 +13,7 @@
 #include "dungeon/all.h"
 
 #define TABLE_TILE_SIZE 32
-#define LIGHT_COLUMN_WIDTH 8
+#define LIGHT_COLUMN_WIDTH 32
 #define LIGHT_BORDER_WIDTH 4
 #define LIGHT_COLUMN_HEIGHT_UNIT 2
 #define DARK_COLUMN_WIDTH 8
@@ -186,7 +186,7 @@ QImage D1Tbl::getLightImage(int color) const
 
 int D1Tbl::getLightValueAt(int x, int color) const
 {
-    int vx = x / DARK_COLUMN_WIDTH;
+    int vx = x / LIGHT_COLUMN_WIDTH;
 
     QColor c = this->pal->getColor(ColorTrns[vx][color]);
     unsigned maxValue = std::max(std::max(c.red(), c.green()), c.blue());

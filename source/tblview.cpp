@@ -99,18 +99,21 @@ void TblView::framePixelHovered(const QPoint &pos)
         QPoint valuePos = pos - tableImageRect.topLeft();
         int value = this->tbl->getTableValueAt(valuePos.x(), valuePos.y());
         this->ui->valueLineEdit->setText(QString::number(value));
+        this->ui->valueAtLineEdit->setText(QString("%1:%2").arg(valuePos.x()).arg(valuePos.y()));
         return;
     }
     if (lightImageRect.contains(pos)) {
         QPoint valuePos = pos - lightImageRect.topLeft();
-        int value = this->tbl->getLightValueAt(valuePos.x(), valuePos.y());
+        int value = this->tbl->getLightValueAt(valuePos.x(), this->currentColor);
         this->ui->valueLineEdit->setText(QString::number(value));
+        this->ui->valueAtLineEdit->setText(QString("%1:%2").arg(valuePos.x() / 32).arg(this->currentColor)); // LIGHT_COLUMN_WIDTH
         return;
     }
     if (darkImageRect.contains(pos)) {
         QPoint valuePos = pos - darkImageRect.topLeft();
         int value = this->tbl->getDarkValueAt(valuePos.x(), this->currentLightRadius);
         this->ui->valueLineEdit->setText(QString::number(value));
+        this->ui->valueAtLineEdit->setText(QString("%1:%2").arg(valuePos.x() / 8).arg(this->currentLightRadius)); // DARK_COLUMN_WIDTH
         return;
     }
 }

@@ -710,7 +710,6 @@ void MakeLightTable()
 	if (lightTableVersion == currLvl._dType) {
 		return;
 	}
-QMessageBox::critical(nullptr, "MLT", QString::number(currLvl._dType));
 	lightTableVersion = currLvl._dType;
 
 	tbl = ColorTrns[0];
