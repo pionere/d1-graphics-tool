@@ -31,12 +31,6 @@
 
 Q_DECLARE_METATYPE(DunMonsterType);
 
-LevelCelPixmap::LevelCelPixmap(const QImage &image)
-    : QGraphicsPixmapItem(QPixmap::fromImage(image))
-{
-    setAcceptHoverEvents(true);
-}
-
 LevelCelView::LevelCelView(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::LevelCelView())
@@ -3057,9 +3051,10 @@ void LevelCelView::displayFrame()
 
         // this->celScene.addPixmap(QPixmap::fromImage(dunFrame))
         //    ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-        LevelCelPixmap *pixmap = new LevelCelPixmap(dunFrame);
-        this->celScene.addItem(pixmap);
-        pixmap->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+        QGraphicsPixmapItem *item;
+        item = this->celScene.addPixmap(QPixmap::fromImage(dunFrame));
+        item->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+        item->setAcceptHoverEvents(true);
         // scroll to the current position
         if (this->isScrolling) {
             this->isScrolling = false;
