@@ -4,6 +4,8 @@
 
 #include "progressdialog.h"
 
+#include "dungeon/all.h"
+
 D1Tableset::D1Tableset()
 {
     this->distTbl = new D1Tbl();
