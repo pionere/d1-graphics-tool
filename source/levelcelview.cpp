@@ -39,10 +39,8 @@ LevelCelView::LevelCelView(QWidget *parent)
     this->ui->celGraphicsView->setScene(&this->celScene);
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
-    this->ui->stopButton->setEnabled(false);
     this->on_dunZoomEdit_escPressed();
     this->on_dunPlayDelayEdit_escPressed();
-    this->ui->dunStopButton->setEnabled(false);
     this->ui->tilesTabs->addTab(&this->tabTileWidget, tr("Tile properties"));
     this->ui->tilesTabs->addTab(&this->tabSubtileWidget, tr("Subtile properties"));
     this->ui->tilesTabs->addTab(&this->tabFrameWidget, tr("Frame properties"));

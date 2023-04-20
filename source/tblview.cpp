@@ -27,7 +27,6 @@ TblView::TblView(QWidget *parent)
     // this->on_radiusLineEdit_escPressed();
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
-    this->ui->stopButton->setEnabled(false);
 
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->tblScene, &CelScene::framePixelClicked, this, &TblView::framePixelClicked);
@@ -298,7 +297,7 @@ void TblView::on_playStopButton_clicked()
     // disable the related fields
     this->ui->playDelayEdit->setReadOnly(true);
     this->ui->playComboBox->setEnabled(false);
-        // change the label of the button
+    // change the label of the button
     this->ui->playStopButton->setText(tr("Stop"));
     // preserve the palette
     dMainWindow().initPaletteCycle();

@@ -202,7 +202,6 @@ CelView::CelView(QWidget *parent)
     this->ui->celGraphicsView->setScene(&this->celScene);
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
-    this->ui->stopButton->setEnabled(false);
     QLayout *layout = this->ui->paintbuttonHorizontalLayout;
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Painter_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
