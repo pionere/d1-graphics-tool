@@ -207,8 +207,7 @@ private slots:
 
     void on_playDelayEdit_returnPressed();
     void on_playDelayEdit_escPressed();
-    void on_playButton_clicked();
-    void on_stopButton_clicked();
+    void on_playStopButton_clicked();
 
     void on_moveLeftButton_clicked();
     void on_moveRightButton_clicked();
@@ -269,8 +268,7 @@ private slots:
 
     void on_dunPlayDelayEdit_returnPressed();
     void on_dunPlayDelayEdit_escPressed();
-    void on_dunPlayButton_clicked();
-    void on_dunStopButton_clicked();
+    void on_dunPlayStopButton_clicked();
 
     void timerEvent(QTimerEvent *event) override;
 

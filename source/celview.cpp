@@ -776,40 +776,34 @@ void CelView::on_playDelayEdit_escPressed()
     this->ui->playDelayEdit->clearFocus();
 }
 
-void CelView::on_playButton_clicked()
+void CelView::on_playStopButton_clicked()
 {
     if (this->playTimer != 0) {
+        this->killTimer(this->playTimer);
+        this->playTimer = 0;
+
+        // restore the currentFrameIndex
+        this->currentFrameIndex = this->origFrameIndex;
+        // restore palette
+        dMainWindow().resetPaletteCycle();
+        // change the label of the button
+        this->ui->playStopButton->setText(tr("Play"));
+        // enable the related fields
+        this->ui->playDelayEdit->setReadOnly(false);
+        this->ui->playComboBox->setEnabled(true);
         return;
     }
     // disable the related fields
-    this->ui->playButton->setEnabled(false);
     this->ui->playDelayEdit->setReadOnly(true);
     this->ui->playComboBox->setEnabled(false);
-    // enable the stop button
-    this->ui->stopButton->setEnabled(true);
+    // change the label of the button
+    this->ui->playStopButton->setText(tr("Stop"));
     // preserve the currentFrameIndex
     this->origFrameIndex = this->currentFrameIndex;
     // preserve the palette
     dMainWindow().initPaletteCycle();
 
     this->playTimer = this->startTimer(this->currentPlayDelay);
-}
-
-void CelView::on_stopButton_clicked()
-{
-    this->killTimer(this->playTimer);
-    this->playTimer = 0;
-
-    // restore the currentFrameIndex
-    this->currentFrameIndex = this->origFrameIndex;
-    // restore palette
-    dMainWindow().resetPaletteCycle();
-    // disable the stop button
-    this->ui->stopButton->setEnabled(false);
-    // enable the related fields
-    this->ui->playButton->setEnabled(true);
-    this->ui->playDelayEdit->setReadOnly(false);
-    this->ui->playComboBox->setEnabled(true);
 }
 
 void CelView::timerEvent(QTimerEvent *event)

@@ -92,31 +92,8 @@
         </property>
        </spacer>
       </item>
-      <item row="0" column="6" colspan="2">
-       <widget class="QPushButton" name="stopButton">
-        <property name="text">
-         <string>Stop</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="8">
-       <widget class="QLabel">
-        <!--property name="minimumWidth">
-         <number>8</number>
-        </property>
-        <property name="maximumWidth">
-         <number>8</number>
-        </property-->
-        <property name="text">
-         <string notr="true">-</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="9" colspan="2">
-       <widget class="QPushButton" name="playButton">
+      <item row="0" column="7" colspan="3">
+       <widget class="QPushButton" name="playStopButton">
         <property name="text">
          <string>Play</string>
         </property>
