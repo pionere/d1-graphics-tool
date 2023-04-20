@@ -27,7 +27,6 @@ TblView::TblView(QWidget *parent)
     // this->on_radiusLineEdit_escPressed();
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
-    this->ui->stopButton->setEnabled(false);
 
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->tblScene, &CelScene::framePixelClicked, this, &TblView::framePixelClicked);
@@ -280,36 +279,30 @@ void TblView::on_playDelayEdit_escPressed()
     this->ui->playDelayEdit->clearFocus();
 }
 
-void TblView::on_playButton_clicked()
+void TblView::on_playStopButton_clicked()
 {
     if (this->playTimer != 0) {
+        this->killTimer(this->playTimer);
+        this->playTimer = 0;
+
+        // restore palette
+        dMainWindow().resetPaletteCycle();
+        // change the label of the button
+        this->ui->playStopButton->setText(tr("Play"));
+        // enable the related fields
+        this->ui->playDelayEdit->setReadOnly(false);
+        this->ui->playComboBox->setEnabled(true);
         return;
     }
     // disable the related fields
-    this->ui->playButton->setEnabled(false);
     this->ui->playDelayEdit->setReadOnly(true);
     this->ui->playComboBox->setEnabled(false);
-    // enable the stop button
-    this->ui->stopButton->setEnabled(true);
+    // change the label of the button
+    this->ui->playStopButton->setText(tr("Stop"));
     // preserve the palette
     dMainWindow().initPaletteCycle();
 
     this->playTimer = this->startTimer(this->currentPlayDelay);
-}
-
-void TblView::on_stopButton_clicked()
-{
-    this->killTimer(this->playTimer);
-    this->playTimer = 0;
-
-    // restore palette
-    dMainWindow().resetPaletteCycle();
-    // disable the stop button
-    this->ui->stopButton->setEnabled(false);
-    // enable the related fields
-    this->ui->playButton->setEnabled(true);
-    this->ui->playDelayEdit->setReadOnly(false);
-    this->ui->playComboBox->setEnabled(true);
 }
 
 void TblView::timerEvent(QTimerEvent *event)

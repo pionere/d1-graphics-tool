@@ -92,37 +92,14 @@
         </property>
        </spacer>
       </item>
-      <item row="0" column="6" colspan="2">
-       <widget class="QPushButton" name="stopButton">
-        <property name="text">
-         <string>Stop</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="8">
-       <widget class="QLabel">
-        <property name="minimumWidth">
-         <number>8</number>
-        </property>
-        <property name="maximumWidth">
-         <number>8</number>
-        </property>
-        <property name="text">
-         <string notr="true">-</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="9" colspan="2">
-       <widget class="QPushButton" name="playButton">
+      <item row="0" column="7" colspan="3">
+       <widget class="QPushButton" name="playStopButton">
         <property name="text">
          <string>Play</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="11">
+      <item row="0" column="10">
        <widget class="LineEditWidget" name="playDelayEdit">
         <property name="charWidth">
          <number>5</number>
@@ -135,14 +112,14 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="12">
+      <item row="0" column="11">
        <widget class="QLabel">
         <property name="text">
          <string>ms</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="13">
+      <item row="0" column="12">
        <widget class="QComboBox" name="playComboBox">
         <item>
          <property name="text">
@@ -171,7 +148,7 @@
         </item>
        </widget>
       </item>
-      <item row="0" column="14" colspan="5">
+      <item row="0" column="13" colspan="6">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>

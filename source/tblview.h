@@ -53,8 +53,7 @@ private slots:
 
     void on_playDelayEdit_returnPressed();
     void on_playDelayEdit_escPressed();
-    void on_playButton_clicked();
-    void on_stopButton_clicked();
+    void on_playStopButton_clicked();
 
     void timerEvent(QTimerEvent *event) override;
 

@@ -39,10 +39,8 @@ LevelCelView::LevelCelView(QWidget *parent)
     this->ui->celGraphicsView->setScene(&this->celScene);
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
-    this->ui->stopButton->setEnabled(false);
     this->on_dunZoomEdit_escPressed();
     this->on_dunPlayDelayEdit_escPressed();
-    this->ui->dunStopButton->setEnabled(false);
     this->ui->tilesTabs->addTab(&this->tabTileWidget, tr("Tile properties"));
     this->ui->tilesTabs->addTab(&this->tabSubtileWidget, tr("Subtile properties"));
     this->ui->tilesTabs->addTab(&this->tabFrameWidget, tr("Frame properties"));
@@ -3501,46 +3499,38 @@ void LevelCelView::on_playDelayEdit_escPressed()
     this->ui->playDelayEdit->clearFocus();
 }
 
-void LevelCelView::on_playButton_clicked()
+void LevelCelView::on_playStopButton_clicked()
 {
     if (this->playTimer != 0) {
+        this->killTimer(this->playTimer);
+        this->playTimer = 0;
+        this->playCounter = 0;
+
+        // restore palette
+        dMainWindow().resetPaletteCycle();
+        // change the label of the button
+        this->ui->playStopButton->setText(tr("Play"));
+        this->ui->dunPlayStopButton->setText(tr("Play"));
+        // enable the related fields
+        this->ui->playDelayEdit->setReadOnly(false);
+        this->ui->playComboBox->setEnabled(true);
+        this->ui->dunPlayDelayEdit->setReadOnly(false);
+        this->ui->dunPlayComboBox->setEnabled(true);
         return;
     }
 
     // disable the related fields
-    this->ui->playButton->setEnabled(false);
     this->ui->playDelayEdit->setReadOnly(true);
     this->ui->playComboBox->setEnabled(false);
-    this->ui->dunPlayButton->setEnabled(false);
     this->ui->dunPlayDelayEdit->setReadOnly(true);
     this->ui->dunPlayComboBox->setEnabled(false);
-    // enable the stop button
-    this->ui->stopButton->setEnabled(true);
-    this->ui->dunStopButton->setEnabled(true);
+    // change the label of the button
+    this->ui->playStopButton->setText(tr("Stop"));
+    this->ui->dunPlayStopButton->setText(tr("Stop"));
     // preserve the palette
     dMainWindow().initPaletteCycle();
 
     this->playTimer = this->startTimer(this->dunView ? this->dunviewPlayDelay : this->tilesetPlayDelay);
-}
-
-void LevelCelView::on_stopButton_clicked()
-{
-    this->killTimer(this->playTimer);
-    this->playTimer = 0;
-    this->playCounter = 0;
-
-    // restore palette
-    dMainWindow().resetPaletteCycle();
-    // disable the stop button
-    this->ui->stopButton->setEnabled(false);
-    this->ui->dunStopButton->setEnabled(false);
-    // enable the related fields
-    this->ui->playButton->setEnabled(true);
-    this->ui->playDelayEdit->setReadOnly(false);
-    this->ui->playComboBox->setEnabled(true);
-    this->ui->dunPlayButton->setEnabled(true);
-    this->ui->dunPlayDelayEdit->setReadOnly(false);
-    this->ui->dunPlayComboBox->setEnabled(true);
 }
 
 void LevelCelView::timerEvent(QTimerEvent *event)
@@ -3585,7 +3575,7 @@ void LevelCelView::on_actionToggle_View_triggered()
 {
     // stop playback
     if (this->playTimer != 0) {
-        this->on_stopButton_clicked();
+        this->on_playStopButton_clicked();
     }
 
     bool dunMode = !this->dunView;
@@ -4145,12 +4135,7 @@ void LevelCelView::on_dunPlayDelayEdit_escPressed()
     this->ui->dunPlayDelayEdit->clearFocus();
 }
 
-void LevelCelView::on_dunPlayButton_clicked()
+void LevelCelView::on_dunPlayStopButton_clicked()
 {
-    this->on_playButton_clicked();
-}
-
-void LevelCelView::on_dunStopButton_clicked()
-{
-    this->on_stopButton_clicked();
+    this->on_playStopButton_clicked();
 }
