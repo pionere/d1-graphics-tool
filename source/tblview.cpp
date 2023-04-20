@@ -247,21 +247,21 @@ void TblView::setOffset(int xoff, int yoff)
     if (xoff <= -MAX_OFFSET) {
         xoff = 1 - MAX_OFFSET;
     }
-    // if (xoff >= 2 * MAX_OFFSET) {
-    //    xoff = 2 * MAX_OFFSET - 1;
-    // }
-    if (xoff >= MAX_OFFSET) {
-        xoff = MAX_OFFSET - 1;
+    if (xoff >= 2 * MAX_OFFSET) {
+        xoff = 2 * MAX_OFFSET - 1;
     }
+    // if (xoff >= MAX_OFFSET) {
+    //     xoff = MAX_OFFSET - 1;
+    // }
     if (yoff <= -MAX_OFFSET) {
         yoff = 1 - MAX_OFFSET;
     }
-    // if (yoff >= 2 * MAX_OFFSET) {
-    //    yoff = 2 * MAX_OFFSET - 1;
-    // }
-    if (yoff >= MAX_OFFSET) {
-        yoff = MAX_OFFSET - 1;
+    if (yoff >= 2 * MAX_OFFSET) {
+        yoff = 2 * MAX_OFFSET - 1;
     }
+    // if (yoff >= MAX_OFFSET) {
+    //     yoff = MAX_OFFSET - 1;
+    // }
     this->currentXOffset = xoff;
     this->currentYOffset = yoff;
     // update the view

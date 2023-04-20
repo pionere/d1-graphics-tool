@@ -345,7 +345,7 @@
       <item row="2" column="7">
        <widget class="LineEditWidget" name="offsetXLineEdit">
         <property name="charWidth">
-         <number>2</number>
+         <number>4</number>
         </property>
         <property name="toolTip">
          <string>current X-offset</string>
@@ -374,7 +374,7 @@
       <item row="2" column="9">
        <widget class="LineEditWidget" name="offsetYLineEdit">
         <property name="charWidth">
-         <number>2</number>
+         <number>4</number>
         </property>
         <property name="toolTip">
          <string>current Y-offset</string>

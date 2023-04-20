@@ -35,7 +35,7 @@ BYTE distMatrix[MAX_OFFSET][MAX_OFFSET][MAX_TILE_DIST][MAX_TILE_DIST];
  */
 BYTE ColorTrns[NUM_COLOR_TRNS][NUM_COLORS];
 /** Specifies the current darkness levels of each tile on the map. */
-BYTE dLight[2 * DBORDERX + 1][2 * DBORDERY + 1];
+BYTE dLight[2 * (DBORDERX + 2) + 1][2 * (DBORDERY + 2) + 1];
 
 /**
  * CrawlTable specifies X- and Y-coordinate deltas from a missile target coordinate.

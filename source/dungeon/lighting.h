@@ -48,7 +48,7 @@ extern const int CrawlNum[19];
 extern BYTE darkTable[MAX_LIGHT_RAD + 1][MAX_LIGHT_DIST + 1];
 extern BYTE distMatrix[MAX_OFFSET][MAX_OFFSET][MAX_TILE_DIST][MAX_TILE_DIST];
 
-extern BYTE dLight[2 * DBORDERX + 1][2 * DBORDERY + 1];
+extern BYTE dLight[2 * (DBORDERX + 2) + 1][2 * (DBORDERY + 2) + 1];
 
 DEVILUTION_END_NAMESPACE
 
