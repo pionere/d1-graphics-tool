@@ -105,7 +105,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="11">
+      <item row="0" column="10">
        <widget class="LineEditWidget" name="playDelayEdit">
         <property name="charWidth">
          <number>5</number>
@@ -118,14 +118,14 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="12">
+      <item row="0" column="11">
        <widget class="QLabel">
         <property name="text">
          <string>ms</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="13">
+      <item row="0" column="12">
        <widget class="QCheckBox" name="playFrameCheckBox">
         <property name="tristate">
          <bool>true</bool>
@@ -135,7 +135,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="14">
+      <item row="0" column="13">
        <widget class="QComboBox" name="playComboBox">
         <item>
          <property name="text">
@@ -164,7 +164,7 @@
         </item>
        </widget>
       </item>
-      <item row="0" column="15" colspan="3">
+      <item row="0" column="14" colspan="4">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
