@@ -31,6 +31,7 @@ public:
 private:
     void updateLabel();
     void setRadius(int nextRadius);
+    void setOffset(int xoff, int yoff);
 
 signals:
     void frameRefreshed();
@@ -45,6 +46,19 @@ private slots:
     void on_radiusIncButton_clicked();
     void on_radiusLineEdit_returnPressed();
     void on_radiusLineEdit_escPressed();
+
+    void on_moveNWButton_clicked();
+    void on_moveNButton_clicked();
+    void on_moveNEButton_clicked();
+    void on_moveWButton_clicked();
+    void on_moveEButton_clicked();
+    void on_moveSWButton_clicked();
+    void on_moveSButton_clicked();
+    void on_moveSEButton_clicked();
+    void on_offsetXLineEdit_returnPressed();
+    void on_offsetXLineEdit_escPressed();
+    void on_offsetYLineEdit_returnPressed();
+    void on_offsetYLineEdit_escPressed();
 
     void on_zoomOutButton_clicked();
     void on_zoomInButton_clicked();
@@ -64,6 +78,8 @@ private:
     D1Pal *pal;
     D1Tableset *tableset;
     int currentLightRadius = 0;
+    int currentXOffset = 0;
+    int currentYOffset = 0;
     quint8 currentColor = 0;
     quint16 currentPlayDelay = 50;
     int playTimer = 0;

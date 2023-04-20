@@ -10,9 +10,6 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-/* Specifies whether the light table is initialized */
-static int lightTableVersion = -1;
-
 /* The list of light-sources in the game + one for temporary use. */
 LightListStruct LightList[MAXLIGHTS + 1];
 /*
@@ -38,7 +35,7 @@ BYTE distMatrix[MAX_OFFSET][MAX_OFFSET][MAX_TILE_DIST][MAX_TILE_DIST];
  */
 BYTE ColorTrns[NUM_COLOR_TRNS][NUM_COLORS];
 /** Specifies the current darkness levels of each tile on the map. */
-BYTE dLight[2 * (MAX_LIGHT_RAD + 1) + 1][2 * (MAX_LIGHT_RAD + 1) + 1];
+BYTE dLight[2 * DBORDERX + 1][2 * DBORDERY + 1];
 
 /**
  * CrawlTable specifies X- and Y-coordinate deltas from a missile target coordinate.
@@ -478,21 +475,21 @@ void DoLighting(unsigned lnum)
 	xoff = lis->_lxoff;
 	yoff = lis->_lyoff;
 	if (xoff < 0) {
-		xoff += 8;
+		xoff += MAX_OFFSET;
 		nXPos--;
-	} else if (xoff >= 8) {
-		xoff -= 8;
+	} else if (xoff >= MAX_OFFSET) {
+		xoff -= MAX_OFFSET;
 		nXPos++;
 	}
 	if (yoff < 0) {
-		yoff += 8;
+		yoff += MAX_OFFSET;
 		nYPos--;
-	} else if (yoff >= 8) {
-		yoff -= 8;
+	} else if (yoff >= MAX_OFFSET) {
+		yoff -= MAX_OFFSET;
 		nYPos++;
 	}
-	assert((unsigned)xoff < 8);
-	assert((unsigned)yoff < 8);
+	assert((unsigned)xoff < MAX_OFFSET);
+	assert((unsigned)yoff < MAX_OFFSET);
 
 	dist_x = xoff;
 	dist_y = yoff;
@@ -588,8 +585,50 @@ void DoLighting(unsigned lnum)
 	}
 }
 
-static void DoUnLight(int nXPos, int nYPos, int nRadius)
+static void DoUnLight(LightListStruct* lis)
 {
+	int x, y, xoff, yoff, min_x, min_y, max_x, max_y;
+	int nXPos = lis->_lunx + lis->_lunxoff;
+	int nYPos = lis->_luny + lis->_lunyoff;
+	int nRadius = lis->_lunr;
+
+	nRadius++;
+	min_y = nYPos - nRadius;
+	max_y = nYPos + nRadius;
+	min_x = nXPos - nRadius;
+	max_x = nXPos + nRadius;
+	static_assert(DBORDERY >= MAX_LIGHT_RAD + 1, "DoUnLight skips limit-checks assuming large enough border I.");
+	assert(min_y >= 0);
+	assert(max_y <= MAXDUNY);
+	static_assert(DBORDERX >= MAX_LIGHT_RAD + 1, "DoUnLight skips limit-checks assuming large enough border II.");
+	assert(min_x >= 0);
+	assert(max_x <= MAXDUNX);
+
+	for (y = min_y; y < max_y; y++) {
+		for (x = min_x; x < max_x; x++) {
+//			dLight[x][y] = dPreLight[x][y];
+			dLight[x][y] = MAXDARKNESS;
+		}
+	}
+
+	lis->_lunx = lis->_lx;
+	lis->_luny = lis->_ly;
+	lis->_lunr = lis->_lradius;
+	xoff = lis->_lxoff;
+	yoff = lis->_lyoff;
+	lis->_lunxoff = 0;
+	if (xoff < 0) {
+		lis->_lunxoff = -1;
+	} else if (xoff >= 8) {
+		lis->_lunxoff = 1;
+	}
+	lis->_lunyoff = 0;
+	if (yoff < 0) {
+		lis->_lunyoff = -1;
+	} else if (yoff >= 8) {
+		lis->_lunyoff = 1;
+	}
+	lis->_lunflag = false;
 }
 
 void DoUnVision(int nXPos, int nYPos, int nRadius)
@@ -702,15 +741,9 @@ void DoVision(int nXPos, int nYPos, int nRadius)
 
 void MakeLightTable()
 {
-	unsigned i, j, k, shade, l1, l2, cnt, rem, div;
+	unsigned i, j, k, shade;
 	BYTE col, max;
 	BYTE* tbl;
-	BYTE blood[16];
-
-	if (lightTableVersion == currLvl._dType) {
-		return;
-	}
-	lightTableVersion = currLvl._dType;
 
 	tbl = ColorTrns[0];
 	for (i = 0; i < MAXDARKNESS; i++) {
@@ -766,10 +799,6 @@ void MakeLightTable()
 					max = 0;
 					col = 0;
 				}
-				/*if (col == 255) {
-					max = 0;
-					col = 0;
-				}*/
 			}
 		}
 	}
@@ -779,107 +808,53 @@ void MakeLightTable()
 	memset(ColorTrns[MAXDARKNESS], 0, sizeof(ColorTrns[MAXDARKNESS]));
 
 	if (currLvl._dType == DTYPE_HELL) {
-		/*for (i = 0; i < MAXDARKNESS; i++) {
-			/*l1 = MAXDARKNESS - i;
-			l2 = l1;
-			div = 15 / l1;
-			rem = 15 % l1;
-			cnt = 0;
-			blood[0] = 0;
-			col = 1;
-			for (j = 1; j < 16; j++) {
-				blood[j] = col;
-				l2 += rem;
-				if (l2 > l1 && j < 15) {
-					j++;
-					blood[j] = col;
-					l2 -= l1;
-				}
-				cnt++;
-				if (cnt == div) {
-					col++;
-					cnt = 0;
-				}
-			}*/
-			/*l1 = 14 - i;
-			// blood[0] = 0;
-			col = 1;
-			l2 = 0;
-			for (j = 1; j < 16; j++) {
-				blood[j] = col;
-				l2 += l1;
-				if (l2 >= 14) {
-					l2 -= 14;
-					col++;
-				}
-			}
-			*tbl++ = 0;
-			for (j = 1; j <= 15; j++) {
-				*tbl++ = blood[j];
-			}
-			for (j = 15; j > 0; j--) {
-				*tbl++ = blood[j];
-			}
-			*tbl++ = 1;*/
 		for (i = 0; i <= MAXDARKNESS; i++) {
 			shade = i;
-			col = 15 - shade;
-			BYTE min = 1;
-			if (col < min)
-				col = min;
-			for (k = 15; k > 0; k--) {
-				tbl[k] = col;
-				if (col > min) {
-					col--;
+			col = 1;
+			*tbl++ = 0;
+			for (k = 1; k < 16; k++) {
+				*tbl++ = col;
+				if (shade > 0) {
+					shade--;
+				} else {
+					col++;
 				}
 			}
-			for (k = 16; k < 32; k++) {
-				if (tbl[k] == 0)
-					tbl[k] = 1;
+			shade = i;
+			col = 16 * 1 + shade;
+			max = 16 * 1 + 15;
+			for (k = 0; k < 16; k++) {
+				*tbl++ = col;
+				if (col < max) {
+					col++;
+				} else {
+					max = 1;
+					col = 1;
+				}
 			}
-			tbl += 32;
-
 			tbl += NUM_COLORS - 32;
 		}
-		/**tbl++ = 0;
-		for (j = 0; j < 31; j++) {
-			*tbl++ = 1;
-		}
-		tbl += NUM_COLORS - 32;*/
+#ifdef HELLFIRE
+	} else if (currLvl._dType == DTYPE_CAVES || currLvl._dType == DTYPE_CRYPT) {
+#else
 	} else if (currLvl._dType == DTYPE_CAVES) {
-		for (i = 0; i < MAXDARKNESS; i++) {
+#endif
+		for (i = 0; i <= MAXDARKNESS; i++) {
 			*tbl++ = 0;
 			for (j = 1; j < 32; j++)
 				*tbl++ = j;
 			tbl += NUM_COLORS - 32;
 		}
 #ifdef HELLFIRE
-	} else if (currLvl._dType == DTYPE_NEST || currLvl._dType == DTYPE_CRYPT) {
-		for (i = 0; i < MAXDARKNESS; i++) {
+	} else if (currLvl._dType == DTYPE_NEST) {
+		for (i = 0; i <= MAXDARKNESS; i++) {
 			*tbl++ = 0;
 			for (j = 1; j < 16; j++)
 				*tbl++ = j;
 			tbl += NUM_COLORS - 16;
 		}
-		/**tbl++ = 0;
-		for (j = 1; j < 16; j++)
-			*tbl++ = 1;
-		tbl += NUM_COLORS - 16;*/
 #endif
 	}
-}
-
-void InitLightGFX()
-{
-}
-
-void InitLighting()
-{
-}
-
-unsigned AddLight(int x, int y, int r)
-{
-	return 0;
 }
 
 void InitVision()

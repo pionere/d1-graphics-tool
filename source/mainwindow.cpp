@@ -1226,6 +1226,7 @@ void MainWindow::saveFile(const SaveAsParam &params)
     if (this->dun != nullptr) {
         this->dun->save(params);
     }
+
     if (this->tableset != nullptr) {
         this->tableset->save(params);
     }
