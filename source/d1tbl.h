@@ -51,5 +51,5 @@ private:
     D1TBL_TYPE type = D1TBL_TYPE::V1_UNDEF;
     QString tblFilePath;
     bool modified;
-	int lastDunType = -1;
+    int lastDunType = -1;
 };

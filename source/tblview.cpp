@@ -153,7 +153,7 @@ void TblView::displayFrame()
     this->tblScene.clear();
 
     // Getting the current frame to display
-    QImage tblFrame = this->tableset->darkType->getTableImage(this->pal, this->currentLightRadius, this->currentXOffset, this->currentYOffset, this->ui->levelTypeComboBox->currentIndex(), this->currentColor);
+    QImage tblFrame = this->tableset->darkTbl->getTableImage(this->pal, this->currentLightRadius, this->currentXOffset, this->currentYOffset, this->ui->levelTypeComboBox->currentIndex(), this->currentColor);
     QImage lightImage = D1Tbl::getLightImage(this->pal, this->currentColor);
     QImage lumImage = D1Tbl::getLumImage(this->pal, this->currentColor);
     QImage darkImage = D1Tbl::getDarkImage(this->currentLightRadius);
@@ -247,7 +247,7 @@ void TblView::setOffset(int xoff, int yoff)
     if (xoff <= -MAX_OFFSET) {
         xoff = 1 - MAX_OFFSET;
     }
-    //if (xoff >= 2 * MAX_OFFSET) {
+    // if (xoff >= 2 * MAX_OFFSET) {
     //    xoff = 2 * MAX_OFFSET - 1;
     // }
     if (xoff >= MAX_OFFSET) {
@@ -256,7 +256,7 @@ void TblView::setOffset(int xoff, int yoff)
     if (yoff <= -MAX_OFFSET) {
         yoff = 1 - MAX_OFFSET;
     }
-    //if (yoff >= 2 * MAX_OFFSET) {
+    // if (yoff >= 2 * MAX_OFFSET) {
     //    yoff = 2 * MAX_OFFSET - 1;
     // }
     if (yoff >= MAX_OFFSET) {
