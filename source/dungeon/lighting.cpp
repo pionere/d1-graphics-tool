@@ -702,10 +702,9 @@ void DoVision(int nXPos, int nYPos, int nRadius)
 
 void MakeLightTable()
 {
-	unsigned i, j, k, shade, l1, l2, cnt, rem, div;
+	unsigned i, j, k, shade;
 	BYTE col, max;
 	BYTE* tbl;
-	BYTE blood[16];
 
 	if (lightTableVersion == currLvl._dType) {
 		return;
@@ -766,10 +765,6 @@ void MakeLightTable()
 					max = 0;
 					col = 0;
 				}
-				/*if (col == 255) {
-					max = 0;
-					col = 0;
-				}*/
 			}
 		}
 	}
@@ -779,62 +774,51 @@ void MakeLightTable()
 	memset(ColorTrns[MAXDARKNESS], 0, sizeof(ColorTrns[MAXDARKNESS]));
 
 	if (currLvl._dType == DTYPE_HELL) {
-		for (i = 0; i < MAXDARKNESS; i++) {
-			l1 = MAXDARKNESS - i;
-			l2 = l1;
-			div = 15 / l1;
-			rem = 15 % l1;
-			cnt = 0;
-			blood[0] = 0;
+		for (i = 0; i <= MAXDARKNESS; i++) {
+			shade = i;
 			col = 1;
-			for (j = 1; j < 16; j++) {
-				blood[j] = col;
-				l2 += rem;
-				if (l2 > l1 && j < 15) {
-					j++;
-					blood[j] = col;
-					l2 -= l1;
-				}
-				cnt++;
-				if (cnt == div) {
-					col++;
-					cnt = 0;
-				}
-			}
 			*tbl++ = 0;
-			for (j = 1; j <= 15; j++) {
-				*tbl++ = blood[j];
+			for (k = 1; k < 16; k++) {
+				*tbl++ = col;
+				if (shade > 0) {
+					shade--;
+				} else {
+					col++;
+				}
 			}
-			for (j = 15; j > 0; j--) {
-				*tbl++ = blood[j];
+			shade = i;
+			col = 16 * 1 + shade;
+			max = 16 * 1 + 15;
+			for (k = 0; k < 16; k++) {
+				*tbl++ = col;
+				if (col < max) {
+					col++;
+				} else {
+					max = 1;
+					col = 1;
+				}
 			}
-			*tbl++ = 1;
 			tbl += NUM_COLORS - 32;
 		}
-		/**tbl++ = 0;
-		for (j = 0; j < 31; j++) {
-			*tbl++ = 1;
-		}
-		tbl += NUM_COLORS - 32;*/
+#ifdef HELLFIRE
+	} else if (currLvl._dType == DTYPE_CAVES || currLvl._dType == DTYPE_CRYPT) {
+#else
 	} else if (currLvl._dType == DTYPE_CAVES) {
-		for (i = 0; i < MAXDARKNESS; i++) {
+#endif
+		for (i = 0; i <= MAXDARKNESS; i++) {
 			*tbl++ = 0;
 			for (j = 1; j < 32; j++)
 				*tbl++ = j;
 			tbl += NUM_COLORS - 32;
 		}
 #ifdef HELLFIRE
-	} else if (currLvl._dType == DTYPE_NEST || currLvl._dType == DTYPE_CRYPT) {
-		for (i = 0; i < MAXDARKNESS; i++) {
+	} else if (currLvl._dType == DTYPE_NEST) {
+		for (i = 0; i <= MAXDARKNESS; i++) {
 			*tbl++ = 0;
 			for (j = 1; j < 16; j++)
 				*tbl++ = j;
 			tbl += NUM_COLORS - 16;
 		}
-		/**tbl++ = 0;
-		for (j = 1; j < 16; j++)
-			*tbl++ = 1;
-		tbl += NUM_COLORS - 16;*/
 #endif
 	}
 }
