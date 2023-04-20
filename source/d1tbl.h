@@ -26,7 +26,7 @@ public:
 
     static int getTableImageWidth();
     static int getTableImageHeight();
-    QImage getTableImage(const D1Pal *pal, int radius, int xoff, int yoff, int dunType, int color) const;
+    QImage getTableImage(const D1Pal *pal, int radius, int xoff, int yoff, int dunType, int color);
     static int getTableValueAt(int x, int y);
     static int getLightImageWidth();
     static int getLightImageHeight();

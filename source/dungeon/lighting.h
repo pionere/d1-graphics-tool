@@ -23,6 +23,7 @@ extern LightListStruct LightList[MAXLIGHTS + 1];
 #define COLOR_TRN_UNIQ  MAXDARKNESS + 4
 extern BYTE ColorTrns[NUM_COLOR_TRNS][NUM_COLORS];
 
+void DoUnLight(LightListStruct* lis);
 void DoLighting(unsigned lnum);
 void DoUnVision(int nXPos, int nYPos, int nRadius);
 void DoVision(int nXPos, int nYPos, int nRadius);

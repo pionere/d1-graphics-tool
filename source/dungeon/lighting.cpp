@@ -585,7 +585,7 @@ void DoLighting(unsigned lnum)
 	}
 }
 
-static void DoUnLight(LightListStruct* lis)
+void DoUnLight(LightListStruct* lis)
 {
 	int x, y, xoff, yoff, min_x, min_y, max_x, max_y;
 	int nXPos = lis->_lunx + lis->_lunxoff;

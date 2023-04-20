@@ -117,7 +117,7 @@ int D1Tbl::getTableImageHeight()
     return lengthof(dLight[0]) * TABLE_TILE_SIZE;
 }
 
-QImage D1Tbl::getTableImage(const D1Pal *pal, int radius, int xoff, int yoff int dunType, int color) const
+QImage D1Tbl::getTableImage(const D1Pal *pal, int radius, int xoff, int yoff, int dunType, int color)
 {
     if (this->lastDunType == -1) {
         // first run
