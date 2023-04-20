@@ -779,7 +779,7 @@ void MakeLightTable()
 	memset(ColorTrns[MAXDARKNESS], 0, sizeof(ColorTrns[MAXDARKNESS]));
 
 	if (currLvl._dType == DTYPE_HELL) {
-		for (i = 0; i < MAXDARKNESS; i++) {
+		/*for (i = 0; i < MAXDARKNESS; i++) {
 			/*l1 = MAXDARKNESS - i;
 			l2 = l1;
 			div = 15 / l1;
@@ -801,7 +801,7 @@ void MakeLightTable()
 					cnt = 0;
 				}
 			}*/
-			l1 = 14 - i;
+			/*l1 = 14 - i;
 			// blood[0] = 0;
 			col = 1;
 			l2 = 0;
@@ -820,7 +820,25 @@ void MakeLightTable()
 			for (j = 15; j > 0; j--) {
 				*tbl++ = blood[j];
 			}
-			*tbl++ = 1;
+			*tbl++ = 1;*/
+		for (i = 0; i <= MAXDARKNESS; i++) {
+			shade = i;
+			col = 15 - shade;
+			BYTE min = 1;
+			if (col < min)
+				col = min;
+			for (k = 15; k > 0; k--) {
+				tbl[k] = col;
+				if (col > min) {
+					col--;
+				}
+			}
+			for (k = 16; k < 32; k++) {
+				if (tbl[k] == 0)
+					tbl[k] = 1;
+			}
+			tbl += 32;
+
 			tbl += NUM_COLORS - 32;
 		}
 		/**tbl++ = 0;
