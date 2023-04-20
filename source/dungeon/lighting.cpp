@@ -780,7 +780,7 @@ void MakeLightTable()
 
 	if (currLvl._dType == DTYPE_HELL) {
 		for (i = 0; i < MAXDARKNESS; i++) {
-			l1 = MAXDARKNESS - i;
+			/*l1 = MAXDARKNESS - i;
 			l2 = l1;
 			div = 15 / l1;
 			rem = 15 % l1;
@@ -799,6 +799,18 @@ void MakeLightTable()
 				if (cnt == div) {
 					col++;
 					cnt = 0;
+				}
+			}*/
+			l1 = 14 - i;
+			// blood[0] = 0;
+			col = 1;
+			l2 = 0;
+			for (j = 1; j < 16; j++) {
+				blood[j] = col;
+				l2 += l1;
+				if (l2 >= 14) {
+					l2 -= 14;
+					col++;
 				}
 			}
 			*tbl++ = 0;
