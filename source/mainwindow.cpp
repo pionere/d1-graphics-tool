@@ -1192,7 +1192,7 @@ void MainWindow::saveFile(const SaveAsParam &params)
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Saving..."), 0, PAF_UPDATE_WINDOW);
 
     QString filePath = params.celFilePath.isEmpty() ? this->gfx->getFilePath() : params.celFilePath;
-    if (!filePath.isEmpty()) {
+    if (!filePath.isEmpty() && this->tableset == nullptr) {
         QString fileLower = filePath.toLower();
         if (this->gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
             if (!fileLower.endsWith(".cel")) {
