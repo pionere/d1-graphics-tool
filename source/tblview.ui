@@ -207,7 +207,80 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="6">
+      <item row="1" column="6" colspan="5">
+       <layout class="QHBoxLayout">
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="moveNWButton">
+          <property name="minimumWidth">
+           <number>40</number>
+          </property>
+          <property name="maximumWidth">
+           <number>40</number>
+          </property>
+          <property name="toolTip">
+           <string>Move NW</string>
+          </property>
+          <property name="text">
+           <string notr="true">\</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="moveNButton">
+          <property name="minimumWidth">
+           <number>40</number>
+          </property>
+          <property name="maximumWidth">
+           <number>40</number>
+          </property>
+          <property name="toolTip">
+           <string>Move N</string>
+          </property>
+          <property name="text">
+           <string notr="true">A</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="moveNEButton">
+          <property name="minimumWidth">
+           <number>40</number>
+          </property>
+          <property name="maximumWidth">
+           <number>40</number>
+          </property>
+          <property name="toolTip">
+           <string>Move NE</string>
+          </property>
+          <property name="text">
+           <string notr="true">/</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="10" colspan="5">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="0">
        <widget class="QLabel">
         <property name="minimumWidth">
          <number>48</number>
@@ -217,7 +290,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="7">
+      <item row="2" column="1">
        <widget class="QPushButton" name="radiusDecButton">
         <property name="minimumWidth">
          <number>24</number>
@@ -230,7 +303,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="8">
+      <item row="2" column="2">
        <widget class="LineEditWidget" name="radiusLineEdit">
         <property name="charWidth">
          <number>4</number>
@@ -240,7 +313,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="9">
+      <item row="2" column="3">
        <widget class="QPushButton" name="radiusIncButton">
         <property name="minimumWidth">
          <number>24</number>
@@ -253,21 +326,125 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="10" colspan="5">
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="2" column="6">
+       <widget class="QPushButton" name="moveWButton">
+        <property name="minimumWidth">
+         <number>40</number>
         </property>
-       </spacer>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Move W</string>
+        </property>
+        <property name="text">
+         <string notr="true">&lt;</string>
+        </property>
+       </widget>
       </item>
-      <item row="1" column="15">
+      <item row="2" column="8">
+       <widget class="LineEditWidget" name="offsetXYLineEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>current (X:Y)-offset</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="10">
+       <widget class="QPushButton" name="moveEButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Move E</string>
+        </property>
+        <property name="text">
+         <string notr="true">&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="6" colspan="5">
+       <layout class="QHBoxLayout">
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="moveSWButton">
+          <property name="minimumWidth">
+           <number>40</number>
+          </property>
+          <property name="maximumWidth">
+           <number>40</number>
+          </property>
+          <property name="toolTip">
+           <string>Move SW</string>
+          </property>
+          <property name="text">
+           <string notr="true">/</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="moveSButton">
+          <property name="minimumWidth">
+           <number>40</number>
+          </property>
+          <property name="maximumWidth">
+           <number>40</number>
+          </property>
+          <property name="toolTip">
+           <string>Move S</string>
+          </property>
+          <property name="text">
+           <string notr="true">V</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="moveSEButton">
+          <property name="minimumWidth">
+           <number>40</number>
+          </property>
+          <property name="maximumWidth">
+           <number>40</number>
+          </property>
+          <property name="toolTip">
+           <string>Move SE</string>
+          </property>
+          <property name="text">
+           <string notr="true">\</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item row="3" column="15">
        <widget class="QLabel">
         <property name="text">
          <string>Value:</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="16">
+      <item row="3" column="16">
        <widget class="LineEditWidget" name="valueLineEdit">
         <property name="charWidth">
          <number>4</number>
@@ -277,7 +454,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="17">
+      <item row="3" column="17">
        <widget class="QLabel">
         <property name="minimumWidth">
          <number>8</number>
@@ -293,7 +470,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="18">
+      <item row="3" column="18">
        <widget class="LineEditWidget" name="valueAtLineEdit">
         <property name="readOnly">
          <bool>true</bool>

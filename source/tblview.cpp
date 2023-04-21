@@ -24,7 +24,8 @@ TblView::TblView(QWidget *parent)
 {
     this->ui->setupUi(this);
     this->ui->tblGraphicsView->setScene(&this->tblScene);
-    // this->on_radiusLineEdit_escPressed();
+    this->on_radiusLineEdit_escPressed();
+    this->on_offsetXYLineEdit_escPressed();
     this->on_zoomEdit_escPressed();
     this->on_playDelayEdit_escPressed();
 
@@ -34,6 +35,7 @@ TblView::TblView(QWidget *parent)
 
     // connect esc events of LineEditWidgets
     QObject::connect(this->ui->radiusLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_radiusLineEdit_escPressed()));
+    QObject::connect(this->ui->offsetXYLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_offsetXYLineEdit_escPressed()));
     QObject::connect(this->ui->zoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_zoomEdit_escPressed()));
     QObject::connect(this->ui->playDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_playDelayEdit_escPressed()));
 }
@@ -83,6 +85,8 @@ void TblView::update()
 
     // Set current radius
     this->ui->radiusLineEdit->setText(QString::number(this->currentLightRadius));
+    // Set current offset
+    this->ui->offsetXYLineEdit->setText(QString("%1:%2").arg(this->currentXOffset).arg(this->currentYOffset));
 }
 
 void TblView::framePixelClicked(const QPoint &pos, bool first)
@@ -146,7 +150,7 @@ void TblView::displayFrame()
     this->tblScene.clear();
 
     // Getting the current frame to display
-    QImage tblFrame = D1Tbl::getTableImage(this->pal, this->currentLightRadius, this->ui->levelTypeComboBox->currentIndex(), this->currentColor);
+    QImage tblFrame = this->tableset->darkTbl->getTableImage(this->pal, this->currentLightRadius, this->currentXOffset, this->currentYOffset, this->ui->levelTypeComboBox->currentIndex(), this->currentColor);
     QImage lightImage = D1Tbl::getLightImage(this->pal, this->currentColor);
     QImage lumImage = D1Tbl::getLumImage(this->pal, this->currentColor);
     QImage darkImage = D1Tbl::getDarkImage(this->currentLightRadius);
@@ -231,9 +235,106 @@ void TblView::on_radiusLineEdit_returnPressed()
 
 void TblView::on_radiusLineEdit_escPressed()
 {
-    // update radiusLineEdit
-    this->update();
+    this->ui->radiusLineEdit->setText(QString::number(this->currentLightRadius));
     this->ui->radiusLineEdit->clearFocus();
+}
+
+void TblView::setOffset(int xoff, int yoff)
+{
+    if (xoff <= -MAX_OFFSET) {
+        xoff = 1 - MAX_OFFSET;
+    }
+    if (xoff >= 2 * MAX_OFFSET) {
+        xoff = 2 * MAX_OFFSET - 1;
+    }
+    // if (xoff >= MAX_OFFSET) {
+    //     xoff = MAX_OFFSET - 1;
+    // }
+    if (yoff <= -MAX_OFFSET) {
+        yoff = 1 - MAX_OFFSET;
+    }
+    if (yoff >= 2 * MAX_OFFSET) {
+        yoff = 2 * MAX_OFFSET - 1;
+    }
+    // if (yoff >= MAX_OFFSET) {
+    //     yoff = MAX_OFFSET - 1;
+    // }
+    this->currentXOffset = xoff;
+    this->currentYOffset = yoff;
+    // update the view
+    this->displayFrame();
+}
+
+void TblView::on_moveNWButton_clicked()
+{
+    this->setOffset(this->currentXOffset - 1, this->currentYOffset - 1);
+}
+
+void TblView::on_moveNButton_clicked()
+{
+    this->setOffset(this->currentXOffset, this->currentYOffset - 1);
+}
+
+void TblView::on_moveNEButton_clicked()
+{
+    this->setOffset(this->currentXOffset + 1, this->currentYOffset - 1);
+}
+
+void TblView::on_moveWButton_clicked()
+{
+    this->setOffset(this->currentXOffset - 1, this->currentYOffset);
+}
+
+void TblView::on_moveEButton_clicked()
+{
+    this->setOffset(this->currentXOffset + 1, this->currentYOffset);
+}
+
+void TblView::on_moveSWButton_clicked()
+{
+    this->setOffset(this->currentXOffset - 1, this->currentYOffset + 1);
+}
+
+void TblView::on_moveSButton_clicked()
+{
+    this->setOffset(this->currentXOffset, this->currentYOffset + 1);
+}
+
+void TblView::on_moveSEButton_clicked()
+{
+    this->setOffset(this->currentXOffset + 1, this->currentYOffset + 1);
+}
+
+void TblView::on_offsetXYLineEdit_returnPressed()
+{
+    QString offset = this->ui->offsetXYLineEdit->text();
+    int sepIdx = offset.indexOf(":");
+    int xoff, yoff;
+
+    if (sepIdx >= 0) {
+        if (sepIdx == 0) {
+            xoff = 0;
+            yoff = offset.mid(1).toInt();
+        } else if (sepIdx == offset.length() - 1) {
+            offset.chop(1);
+            xoff = offset.toInt();
+            yoff = 0;
+        } else {
+            xoff = offset.mid(0, sepIdx).toInt();
+            yoff = offset.mid(sepIdx + 1).toInt();
+        }
+    } else {
+        xoff = offset.toInt();
+        yoff = 0;
+    }
+    this->setOffset(xoff, yoff);
+    this->on_offsetXYLineEdit_escPressed();
+}
+
+void TblView::on_offsetXYLineEdit_escPressed()
+{
+    this->ui->offsetXYLineEdit->setText(QString("%1:%2").arg(this->currentXOffset).arg(this->currentYOffset));
+    this->ui->offsetXYLineEdit->clearFocus();
 }
 
 void TblView::on_zoomOutButton_clicked()

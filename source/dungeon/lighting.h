@@ -23,6 +23,7 @@ extern LightListStruct LightList[MAXLIGHTS + 1];
 #define COLOR_TRN_UNIQ  MAXDARKNESS + 4
 extern BYTE ColorTrns[NUM_COLOR_TRNS][NUM_COLORS];
 
+void DoUnLight(LightListStruct* lis);
 void DoLighting(unsigned lnum);
 void DoUnVision(int nXPos, int nYPos, int nRadius);
 void DoVision(int nXPos, int nYPos, int nRadius);
@@ -47,7 +48,7 @@ extern const int CrawlNum[19];
 extern BYTE darkTable[MAX_LIGHT_RAD + 1][MAX_LIGHT_DIST + 1];
 extern BYTE distMatrix[MAX_OFFSET][MAX_OFFSET][MAX_TILE_DIST][MAX_TILE_DIST];
 
-extern BYTE dLight[2 * (MAX_LIGHT_RAD + 1) + 1][2 * (MAX_LIGHT_RAD + 1) + 1];
+extern BYTE dLight[2 * (DBORDERX + 2) + 1][2 * (DBORDERY + 2) + 1];
 
 DEVILUTION_END_NAMESPACE
 

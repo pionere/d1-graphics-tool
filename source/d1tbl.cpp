@@ -118,17 +118,35 @@ int D1Tbl::getTableImageHeight()
     return lengthof(dLight[0]) * TABLE_TILE_SIZE;
 }
 
-QImage D1Tbl::getTableImage(const D1Pal *pal, int radius, int dunType, int color)
+QImage D1Tbl::getTableImage(const D1Pal *pal, int radius, int xoff, int yoff, int dunType, int color)
 {
-    currLvl._dType = dunType;
-    MakeLightTable();
+    if (this->lastDunType == -1) {
+        // first run
+        memset(dLight, MAXDARKNESS, sizeof(dLight));
+    } else {
+        DoUnLight(&LightList[MAXLIGHTS]);
+    }
 
-    memset(dLight, MAXDARKNESS, sizeof(dLight));
-    LightList[MAXLIGHTS]._lx = MAX_LIGHT_RAD + 1;
-    LightList[MAXLIGHTS]._ly = MAX_LIGHT_RAD + 1;
+    if (this->lastDunType != dunType) {
+        this->lastDunType = dunType;
+        currLvl._dType = dunType;
+        MakeLightTable();
+    }
+
+    int cx = (lengthof(dLight) + 1) / 2;
+    int cy = (lengthof(dLight[0]) + 1) / 2;
+
+    LightList[MAXLIGHTS]._lx = cx;
+    LightList[MAXLIGHTS]._ly = cy;
     LightList[MAXLIGHTS]._lradius = radius;
-    LightList[MAXLIGHTS]._lxoff = 0;
-    LightList[MAXLIGHTS]._lyoff = 0;
+    LightList[MAXLIGHTS]._lxoff = xoff;
+    LightList[MAXLIGHTS]._lyoff = yoff;
+    LightList[MAXLIGHTS]._lunx = cx;
+    LightList[MAXLIGHTS]._luny = cy;
+    LightList[MAXLIGHTS]._lunr = radius;
+    LightList[MAXLIGHTS]._lunxoff = xoff < 0 ? -1 : (xoff >= MAX_OFFSET ? 1 : 0);
+    LightList[MAXLIGHTS]._lunyoff = yoff < 0 ? -1 : (yoff >= MAX_OFFSET ? 1 : 0);
+
     DoLighting(MAXLIGHTS);
 
     QImage image = QImage(D1Tbl::getTableImageWidth(), D1Tbl::getTableImageHeight(), QImage::Format_ARGB32);

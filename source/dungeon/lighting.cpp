@@ -10,9 +10,6 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-/* Specifies whether the light table is initialized */
-static int lightTableVersion = -1;
-
 /* The list of light-sources in the game + one for temporary use. */
 LightListStruct LightList[MAXLIGHTS + 1];
 /*
@@ -38,7 +35,7 @@ BYTE distMatrix[MAX_OFFSET][MAX_OFFSET][MAX_TILE_DIST][MAX_TILE_DIST];
  */
 BYTE ColorTrns[NUM_COLOR_TRNS][NUM_COLORS];
 /** Specifies the current darkness levels of each tile on the map. */
-BYTE dLight[2 * (MAX_LIGHT_RAD + 1) + 1][2 * (MAX_LIGHT_RAD + 1) + 1];
+BYTE dLight[2 * (DBORDERX + 2) + 1][2 * (DBORDERY + 2) + 1];
 
 /**
  * CrawlTable specifies X- and Y-coordinate deltas from a missile target coordinate.
@@ -580,8 +577,51 @@ void DoLighting(unsigned lnum)
 	}
 }
 
-static void DoUnLight(int nXPos, int nYPos, int nRadius)
+void DoUnLight(LightListStruct* lis)
 {
+	int x, y, xoff, yoff, min_x, min_y, max_x, max_y;
+	int nXPos = lis->_lunx + lis->_lunxoff;
+	int nYPos = lis->_luny + lis->_lunyoff;
+	int nRadius = lis->_lunr;
+
+	nRadius++;
+	nRadius = std::min(MAX_LIGHT_RAD, nRadius);
+	min_y = nYPos - nRadius;
+	max_y = nYPos + nRadius;
+	min_x = nXPos - nRadius;
+	max_x = nXPos + nRadius;
+	static_assert(DBORDERY >= MAX_LIGHT_RAD + 1, "DoUnLight skips limit-checks assuming large enough border I.");
+	assert(min_y >= 0);
+	assert(max_y <= MAXDUNY);
+	static_assert(DBORDERX >= MAX_LIGHT_RAD + 1, "DoUnLight skips limit-checks assuming large enough border II.");
+	assert(min_x >= 0);
+	assert(max_x <= MAXDUNX);
+
+	for (y = min_y; y < max_y; y++) {
+		for (x = min_x; x < max_x; x++) {
+//			dLight[x][y] = dPreLight[x][y];
+			dLight[x][y] = MAXDARKNESS;
+		}
+	}
+
+	lis->_lunx = lis->_lx;
+	lis->_luny = lis->_ly;
+	lis->_lunr = lis->_lradius;
+	xoff = lis->_lxoff;
+	yoff = lis->_lyoff;
+	lis->_lunxoff = 0;
+	if (xoff < 0) {
+		lis->_lunxoff = -1;
+	} else if (xoff >= 8) {
+		lis->_lunxoff = 1;
+	}
+	lis->_lunyoff = 0;
+	if (yoff < 0) {
+		lis->_lunyoff = -1;
+	} else if (yoff >= 8) {
+		lis->_lunyoff = 1;
+	}
+	lis->_lunflag = false;
 }
 
 void DoUnVision(int nXPos, int nYPos, int nRadius)
@@ -697,11 +737,6 @@ void MakeLightTable()
 	unsigned i, j, k, shade;
 	BYTE col, max;
 	BYTE* tbl;
-
-	if (lightTableVersion == currLvl._dType) {
-		return;
-	}
-	lightTableVersion = currLvl._dType;
 
 	tbl = ColorTrns[0];
 	for (i = 0; i < MAXDARKNESS; i++) {
