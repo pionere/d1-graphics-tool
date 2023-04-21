@@ -58,10 +58,10 @@ bool D1Tbl::load(const QString &filePath, const OpenAsParam &params)
         for (int j = 0; j < MAX_OFFSET; j++) {
             for (int i = 0; i < MAX_OFFSET; i++) {
                 for (int k = 0; k < MAX_TILE_DIST; k++) {
-                    double fa = (MAX_OFFSET * k - i);
+                    double fa = (MAX_OFFSET * k - j);
                     fa *= fa;
                     for (int l = 0; l < MAX_TILE_DIST; l++) {
-                        double fs = (MAX_OFFSET * l - j);
+                        double fs = (MAX_OFFSET * l - i);
                         fs *= fs;
                         fs = sqrt(fs + fa);
                         // round to nearest int
