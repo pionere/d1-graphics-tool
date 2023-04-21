@@ -314,17 +314,17 @@ void TblView::on_offsetXYLineEdit_returnPressed()
     if (sepIdx >= 0) {
         if (sepIdx == 0) {
             xoff = 0;
-            yoff = offset.mid(1).toUShort();
+            yoff = offset.mid(1).toInt();
         } else if (sepIdx == offset.length() - 1) {
             offset.chop(1);
-            xoff = offset.toUShort();
+            xoff = offset.toInt();
             yoff = 0;
         } else {
-            xoff = offset.mid(0, sepIdx).toUShort();
-            yoff = offset.mid(sepIdx + 1).toUShort();
+            xoff = offset.mid(0, sepIdx).toInt();
+            yoff = offset.mid(sepIdx + 1).toInt();
         }
     } else {
-        xoff = offset.toUShort();
+        xoff = offset.toInt();
         yoff = 0;
     }
     this->setOffset(xoff, yoff);

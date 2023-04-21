@@ -429,7 +429,7 @@ const int8_t CrawlTable[2749] = {
 /** Indices of CrawlTable to select the entries at a given distance. */
 const int CrawlNum[19] = { 0, 3, 12, 45, 94, 159, 240, 337, 450, 579, 724, 885, 1062, 1255, 1464, 1689, 1930, 2187, 2460 };
 
-static void RotateRadius(int* ox, int* oy, int* dx, int* dy, int* lx, int* ly, int* bx, int* by)
+/*static void RotateRadius(int* ox, int* oy, int* dx, int* dy, int* lx, int* ly, int* bx, int* by)
 {
 	int swap, nx, ny;
 
@@ -442,6 +442,28 @@ static void RotateRadius(int* ox, int* oy, int* dx, int* dy, int* lx, int* ly, i
 
 	nx = *dx - *lx;
 	ny = *dy - *ly;
+
+	*bx = nx < 0 ? 1 : 0;
+	if (*bx == 1) {
+		nx += 8;
+	}
+	*by = ny < 0 ? 1 : 0;
+	if (*by == 1) {
+		ny += 8;
+	}
+	*ox = nx;
+	*oy = ny;
+}*/
+
+static void RotateRadius(int* ox, int* oy, int* dx, int* dy, int* bx, int* by)
+{
+	int nx, ny;
+
+	nx = - *dy;
+	ny = *dx;
+
+	*dx = nx;
+	*dy = ny;
 
 	*bx = nx < 0 ? 1 : 0;
 	if (*bx == 1) {
@@ -535,7 +557,8 @@ void DoLighting(unsigned lnum)
 			//}
 		}
 	}
-	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
+	//RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
+	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &block_x, &block_y);
 	// Add light to the II. (+;-) quadrant
 	BYTE (&dist1)[MAX_TILE_DIST][MAX_TILE_DIST] = distMatrix[yoff][xoff];
 	for (y = 0; y < max_x; y++) {
@@ -551,7 +574,8 @@ void DoLighting(unsigned lnum)
 			//}
 		}
 	}
-	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
+	//RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
+	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &block_x, &block_y);
 	// Add light to the III. (-;-) quadrant
 	BYTE (&dist2)[MAX_TILE_DIST][MAX_TILE_DIST] = distMatrix[yoff][xoff];
 	for (y = 0; y < min_y; y++) {
@@ -567,7 +591,8 @@ void DoLighting(unsigned lnum)
 			//}
 		}
 	}
-	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
+	//RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
+	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &block_x, &block_y);
 	// Add light to the IV. (-;+) quadrant
 	BYTE (&dist3)[MAX_TILE_DIST][MAX_TILE_DIST] = distMatrix[yoff][xoff];
 	for (y = 0; y < min_x; y++) {
@@ -593,6 +618,7 @@ void DoUnLight(LightListStruct* lis)
 	int nRadius = lis->_lunr;
 
 	nRadius++;
+	nRadius = std::min(MAX_LIGHT_RAD, nRadius);
 	min_y = nYPos - nRadius;
 	max_y = nYPos + nRadius;
 	min_x = nXPos - nRadius;
