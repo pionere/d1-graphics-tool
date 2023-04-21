@@ -132,13 +132,16 @@ QImage D1Tbl::getTableImage(const D1Pal *pal, int radius, int xoff, int yoff, in
         MakeLightTable();
     }
 
-    LightList[MAXLIGHTS]._lx = MAX_LIGHT_RAD + 1;
-    LightList[MAXLIGHTS]._ly = MAX_LIGHT_RAD + 1;
+    int cx = (lengthof(dLight) + 1) / 2;
+    int cy = (lengthof(dLight[0]) + 1) / 2;
+
+    LightList[MAXLIGHTS]._lx = cx;
+    LightList[MAXLIGHTS]._ly = cy;
     LightList[MAXLIGHTS]._lradius = radius;
     LightList[MAXLIGHTS]._lxoff = xoff;
     LightList[MAXLIGHTS]._lyoff = yoff;
-    LightList[MAXLIGHTS]._lunx = MAX_LIGHT_RAD + 1;
-    LightList[MAXLIGHTS]._luny = MAX_LIGHT_RAD + 1;
+    LightList[MAXLIGHTS]._lunx = cx;
+    LightList[MAXLIGHTS]._luny = cy;
     LightList[MAXLIGHTS]._lunr = radius;
     LightList[MAXLIGHTS]._lunxoff = xoff < 0 ? -1 : (xoff >= MAX_OFFSET ? 1 : 0);
     LightList[MAXLIGHTS]._lunyoff = yoff < 0 ? -1 : (yoff >= MAX_OFFSET ? 1 : 0);

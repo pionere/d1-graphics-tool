@@ -342,42 +342,13 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="7">
-       <widget class="LineEditWidget" name="offsetXLineEdit">
+      <item row="2" column="7" colspan="3">
+       <widget class="LineEditWidget" name="offsetXYLineEdit">
         <property name="charWidth">
-         <number>4</number>
+         <number>5</number>
         </property>
         <property name="toolTip">
-         <string>current X-offset</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="8">
-       <widget class="QLabel">
-        <property name="minimumWidth">
-         <number>8</number>
-        </property>
-        <property name="maximumWidth">
-         <number>8</number>
-        </property>
-        <property name="text">
-         <string notr="true">:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="9">
-       <widget class="LineEditWidget" name="offsetYLineEdit">
-        <property name="charWidth">
-         <number>4</number>
-        </property>
-        <property name="toolTip">
-         <string>current Y-offset</string>
+         <string>current (X:Y)-offset</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -396,7 +367,7 @@
          <string>Move E</string>
         </property>
         <property name="text">
-         <string notr="true">&lt;</string>
+         <string notr="true">&gt;</string>
         </property>
        </widget>
       </item>
@@ -453,7 +424,7 @@
            <string>Move SE</string>
           </property>
           <property name="text">
-           <string notr="true">/</string>
+           <string notr="true">\</string>
           </property>
          </widget>
         </item>

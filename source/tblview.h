@@ -55,10 +55,8 @@ private slots:
     void on_moveSWButton_clicked();
     void on_moveSButton_clicked();
     void on_moveSEButton_clicked();
-    void on_offsetXLineEdit_returnPressed();
-    void on_offsetXLineEdit_escPressed();
-    void on_offsetYLineEdit_returnPressed();
-    void on_offsetYLineEdit_escPressed();
+    void on_offsetXYLineEdit_returnPressed();
+    void on_offsetXYLineEdit_escPressed();
 
     void on_zoomOutButton_clicked();
     void on_zoomInButton_clicked();
