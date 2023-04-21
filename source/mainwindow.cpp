@@ -1324,7 +1324,9 @@ void MainWindow::on_actionOpenAs_triggered()
 
 void MainWindow::on_actionSave_triggered()
 {
-    if (this->gfx->getFilePath().isEmpty()) {
+    if (this->gfx->getFilePath().isEmpty()
+        && (this->dun == nullptr || this->dun->getFilePath().isEmpty())
+        && (this->tableset == nullptr || this->tableset->distTbl->getFilePath().isEmpty() || this->tableset->darkTbl->getFilePath().isEmpty())) {
         this->on_actionSaveAs_triggered();
         return;
     }
@@ -1337,7 +1339,7 @@ void MainWindow::on_actionSaveAs_triggered()
     if (this->saveAsDialog == nullptr) {
         this->saveAsDialog = new SaveAsDialog(this);
     }
-    this->saveAsDialog->initialize(this->gfx, this->tileset, this->dun);
+    this->saveAsDialog->initialize(this->gfx, this->tileset, this->dun, this->tableset);
     this->saveAsDialog->show();
 }
 

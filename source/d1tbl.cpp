@@ -88,8 +88,9 @@ bool D1Tbl::load(const QString &filePath, const OpenAsParam &params)
 bool D1Tbl::save(const SaveAsParam &params)
 {
     QString filePath = this->getFilePath();
-    if (!params.celFilePath.isEmpty()) {
-        filePath = params.celFilePath;
+    QString targetFilePath = this->type == D1TBL_TYPE::V1_DIST ? params.celFilePath : params.tblFilePath;
+    if (!targetFilePath.isEmpty()) {
+        filePath = targetFilePath;
         if (!params.autoOverwrite && QFile::exists(filePath)) {
             QMessageBox::StandardButton reply;
             reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to overwrite %1?").arg(QDir::toNativeSeparators(filePath)), QMessageBox::Yes | QMessageBox::No);
