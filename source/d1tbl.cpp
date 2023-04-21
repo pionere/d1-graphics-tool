@@ -54,7 +54,26 @@ bool D1Tbl::load(const QString &filePath, const OpenAsParam &params)
     } else if (fileSize == sizeof(distMatrix)) {
         // dist matrix
         this->type = D1TBL_TYPE::V1_DIST;
-        memcpy(distMatrix, fileData.data(), fileSize);
+        //memcpy(distMatrix, fileData.data(), fileSize);
+        for (int j = 0; j < MAX_OFFSET; j++) {
+            for (int i = 0; i < MAX_OFFSET; i++) {
+                for (int k = 0; k < MAX_TILE_DIST; k++) {
+                    double fa = (MAX_OFFSET * k - i);
+                    fa *= fa;
+                    for (int l = 0; l < MAX_TILE_DIST; l++) {
+                        double fs = (MAX_OFFSET * l - j);
+                        fs *= fs;
+                        fs = sqrt(fs + fa);
+                        // round to nearest int
+                        BYTE col = fs + 0.5;
+                        // limit to MAX_LIGHT_DIST to reduce the necessary checks in DoLighting
+                        static_assert(MAX_LIGHT_DIST <= UCHAR_MAX, "Distance can not be stored in a BYTE.");
+                        col = std::min((BYTE)MAX_LIGHT_DIST, col);
+                        distMatrix[j][i][k][l] = col;
+                    }
+                }
+            }
+        }
     } else if (fileSize == 0) {
         // empty file
         this->type = D1TBL_TYPE::V1_UNDEF;

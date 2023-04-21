@@ -486,7 +486,7 @@ void DoLighting(unsigned lnum)
 	int nXPos = lis->_lx;
 	int nYPos = lis->_ly;
 	int nRadius = lis->_lradius;
-	BYTE (&dark)[128] = darkTable[nRadius];
+	BYTE (&dark)[MAX_LIGHT_DIST + 1] = darkTable[nRadius];
 	BYTE v, radius_block;
 
 	light_x = 0;
