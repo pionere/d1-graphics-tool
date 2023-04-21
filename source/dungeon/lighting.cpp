@@ -577,7 +577,7 @@ void DoLighting(unsigned lnum)
 	//RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
 	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &block_x, &block_y);
 	// Add light to the III. (-;-) quadrant
-	BYTE (&dist2)[MAX_TILE_DIST][MAX_TILE_DIST] = distMatrix[yoff][xoff];
+	/*BYTE (&dist2)[MAX_TILE_DIST][MAX_TILE_DIST] = distMatrix[yoff][xoff];
 	for (y = 0; y < min_y; y++) {
 		for (x = 1; x < min_x; x++) {
 			radius_block = dist2[y + block_y][x + block_x];
@@ -590,7 +590,7 @@ void DoLighting(unsigned lnum)
 					dLight[temp_x][temp_y] = v;
 			//}
 		}
-	}
+	}*/
 	//RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
 	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &block_x, &block_y);
 	// Add light to the IV. (-;+) quadrant

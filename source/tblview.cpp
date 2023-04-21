@@ -292,7 +292,7 @@ void TblView::on_moveEButton_clicked()
 
 void TblView::on_moveSWButton_clicked()
 {
-    this->setOffset(this->currentXOffset - 1, this->currentYOffset - 1);
+    this->setOffset(this->currentXOffset - 1, this->currentYOffset + 1);
 }
 
 void TblView::on_moveSButton_clicked()
