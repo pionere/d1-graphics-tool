@@ -1106,8 +1106,8 @@ static void AddObjLight(int oi, int diffr, int dx, int dy)
 		} else
 #endif
 		{
-			assert(LightList[MAXLIGHTS]._xoff == 0);
-			assert(LightList[MAXLIGHTS]._yoff == 0);
+			assert(LightList[MAXLIGHTS]._lxoff == 0);
+			assert(LightList[MAXLIGHTS]._lyoff == 0);
 			LightList[MAXLIGHTS]._lradius = diffr;
 			LightList[MAXLIGHTS]._lx = os->_ox;
 			LightList[MAXLIGHTS]._ly = os->_oy;
