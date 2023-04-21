@@ -54,7 +54,7 @@ bool D1Tbl::load(const QString &filePath, const OpenAsParam &params)
     } else if (fileSize == sizeof(distMatrix)) {
         // dist matrix
         this->type = D1TBL_TYPE::V1_DIST;
-        //memcpy(distMatrix, fileData.data(), fileSize);
+        // memcpy(distMatrix, fileData.data(), fileSize);
         for (int j = 0; j < MAX_OFFSET; j++) {
             for (int i = 0; i < MAX_OFFSET; i++) {
                 for (int k = 0; k < MAX_TILE_DIST; k++) {

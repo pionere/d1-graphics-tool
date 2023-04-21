@@ -164,7 +164,7 @@ void SaveAsDialog::on_outputDunFileBrowseButton_clicked()
     this->ui->outputDunFileEdit->setText(saveFilePath);
 }
 
-void SaveAsDialog::on_outputDunFileBrowseButton_clicked()
+void SaveAsDialog::on_tblFileBrowseButton_clicked()
 {
     QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save Dark TBL as..."), tr("TBL Files (*.tbl *.TBL)"));
 
