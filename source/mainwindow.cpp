@@ -1192,7 +1192,7 @@ void MainWindow::saveFile(const SaveAsParam &params)
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Saving..."), 0, PAF_UPDATE_WINDOW);
 
     QString filePath = params.celFilePath.isEmpty() ? this->gfx->getFilePath() : params.celFilePath;
-    if (!filePath.isEmpty()) {
+    if (!filePath.isEmpty() && this->tableset == nullptr) {
         QString fileLower = filePath.toLower();
         if (this->gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
             if (!fileLower.endsWith(".cel")) {
@@ -1324,7 +1324,9 @@ void MainWindow::on_actionOpenAs_triggered()
 
 void MainWindow::on_actionSave_triggered()
 {
-    if (this->gfx->getFilePath().isEmpty()) {
+    if (this->gfx->getFilePath().isEmpty()
+        && (this->dun == nullptr || this->dun->getFilePath().isEmpty())
+        && (this->tableset == nullptr || this->tableset->distTbl->getFilePath().isEmpty() || this->tableset->darkTbl->getFilePath().isEmpty())) {
         this->on_actionSaveAs_triggered();
         return;
     }
@@ -1337,7 +1339,7 @@ void MainWindow::on_actionSaveAs_triggered()
     if (this->saveAsDialog == nullptr) {
         this->saveAsDialog = new SaveAsDialog(this);
     }
-    this->saveAsDialog->initialize(this->gfx, this->tileset, this->dun);
+    this->saveAsDialog->initialize(this->gfx, this->tileset, this->dun, this->tableset);
     this->saveAsDialog->show();
 }
 

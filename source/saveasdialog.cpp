@@ -23,16 +23,19 @@ SaveAsDialog::~SaveAsDialog()
     delete ui;
 }
 
-void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Dun *dun)
+void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Dun *dun, D1Tableset *tableset)
 {
     bool isTilesetGfx = tileset != nullptr;
+    bool isTableset = tableset != nullptr;
 
     this->gfx = g;
     this->isTileset = isTilesetGfx;
+    this->isTableset = isTableset;
 
+    // initialize the main file-path
+    QString filePath = isTableset ? tableset->distTbl->getFilePath() : this->gfx->getFilePath();
+    this->ui->outputCelFileEdit->setText(filePath);
     // reset fields
-    this->ui->outputCelFileEdit->setText(this->gfx->getFilePath());
-
     this->ui->celClippedAutoRadioButton->setChecked(true);
     this->ui->celGroupEdit->setText("0");
 
@@ -43,10 +46,13 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Dun *dun)
     this->ui->outputSolFileEdit->setText(isTilesetGfx ? tileset->sol->getFilePath() : "");
     this->ui->outputAmpFileEdit->setText(isTilesetGfx ? tileset->amp->getFilePath() : "");
     this->ui->outputTmiFileEdit->setText(isTilesetGfx ? tileset->tmi->getFilePath() : "");
+    this->ui->tblFileEdit->setText(isTableset ? tableset->darkTbl->getFilePath() : "");
 
     if (dun == nullptr) {
+        this->ui->outputDunFileLabel->setVisible(false);
         this->ui->outputDunFileEdit->setVisible(false);
         this->ui->outputDunFileEdit->setText("");
+        this->ui->outputDunFileBrowseButton->setVisible(false);
     } else {
         this->ui->outputDunFileEdit->setText(dun->getFilePath());
         switch (dun->getNumLayers()) {
@@ -65,16 +71,18 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Dun *dun)
         }
     }
 
-    this->ui->celSettingsGroupBox->setEnabled(!isTilesetGfx);
+    this->ui->celSettingsGroupBox->setEnabled(!isTilesetGfx && !isTableset);
     this->ui->tilSettingsGroupBox->setEnabled(isTilesetGfx);
+    this->ui->tblSettingsGroupBox->setEnabled(isTableset);
 }
 
 void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
 {
     QString filePath = this->gfx->getFilePath();
-    const QString filter = this->isTileset ? tr("CEL Files (*.cel *.CEL)") : tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)");
+    const QString filter = this->isTileset ? tr("CEL Files (*.cel *.CEL)") : (this->isTableset ? tr("TBL Files (*.tbl *.TBL)") : tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)"));
+    const QString title = this->isTableset ? tr("Save Dist TBL as...") : tr("Save Graphics as...");
 
-    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save Graphics as..."), filter);
+    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, title, filter);
 
     if (saveFilePath.isEmpty()) {
         return;
@@ -156,6 +164,16 @@ void SaveAsDialog::on_outputDunFileBrowseButton_clicked()
     this->ui->outputDunFileEdit->setText(saveFilePath);
 }
 
+void SaveAsDialog::on_tblFileBrowseButton_clicked()
+{
+    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save Dark TBL as..."), tr("TBL Files (*.tbl *.TBL)"));
+
+    if (saveFilePath.isEmpty())
+        return;
+
+    this->ui->tblFileEdit->setText(saveFilePath);
+}
+
 void SaveAsDialog::on_saveButton_clicked()
 {
     SaveAsParam params;
@@ -194,6 +212,7 @@ void SaveAsDialog::on_saveButton_clicked()
         params.dunLayerNum = 3;
     }
     params.autoOverwrite = this->ui->autoOverwriteCheckBox->isChecked();
+    params.tblFilePath = this->ui->tblFileEdit->text();
 
     this->close();
 

@@ -5,6 +5,7 @@
 
 class D1Gfx;
 class D1Tileset;
+class D1Tableset;
 class D1Dun;
 
 enum class SAVE_CLIPPED_TYPE {
@@ -33,6 +34,7 @@ public:
     SAVE_CLIPPED_TYPE clipped = SAVE_CLIPPED_TYPE::AUTODETECT;
     SAVE_UPSCALED_TYPE upscaled = SAVE_UPSCALED_TYPE::AUTODETECT;
     bool autoOverwrite = false;
+    QString tblFilePath;
 };
 
 namespace Ui {
@@ -46,7 +48,7 @@ public:
     explicit SaveAsDialog(QWidget *parent);
     ~SaveAsDialog();
 
-    void initialize(D1Gfx *gfx, D1Tileset *tileset, D1Dun *dun);
+    void initialize(D1Gfx *gfx, D1Tileset *tileset, D1Dun *dun, D1Tableset *tableset);
 
 private slots:
     void on_outputCelFileBrowseButton_clicked();
@@ -56,6 +58,7 @@ private slots:
     void on_outputAmpFileBrowseButton_clicked();
     void on_outputTmiFileBrowseButton_clicked();
     void on_outputDunFileBrowseButton_clicked();
+    void on_tblFileBrowseButton_clicked();
     void on_saveButton_clicked();
     void on_saveCancelButton_clicked();
 
@@ -66,4 +69,5 @@ private:
     Ui::SaveAsDialog *ui;
     D1Gfx *gfx = nullptr;
     bool isTileset;
+    bool isTableset;
 };
