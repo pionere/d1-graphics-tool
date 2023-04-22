@@ -113,4 +113,5 @@ private:
     quint16 currentPlayDelay = 50;
     int playTimer = 0;
     QPoint lastPos;
+    QPoint firstPos;
 };
