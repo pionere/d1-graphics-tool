@@ -213,7 +213,7 @@ void TblView::framePixelClicked(const QPoint &pos, bool first)
                 }
             }
         }
-        QMessageBox::critical(nullptr, "Modded", QString::number(monValues.size()));
+        QMessageBox::critical(nullptr, "Modded", QString::number(modValues.size()));
         // Build frame editing command and connect it to the current main window widget
         // to update the palHits and CEL views when undo/redo is performed
         EditTableCommand *command = new EditTableCommand(this->tableset->darkTbl, modValues);
