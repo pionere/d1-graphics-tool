@@ -372,8 +372,6 @@ void D1Tbl::setDarkValueAt(int x, int radius, int value)
 {
     int vx = x / DARK_COLUMN_WIDTH;
 
-    QMessageBox::critical(nullptr, "setDarkValueAt", QString("%1 r %2 v %3 was %4").arg(vx).arg(radius).arg(MAXDARKNESS - value).arg(darkTable[radius][vx]));
-
     darkTable[radius][vx] = MAXDARKNESS - value;
     this->modified = true;
 }

@@ -42,7 +42,7 @@ void EditTableCommand::undo()
     for (TableValue &tv : this->modValues) {
         int value = D1Tbl::getDarkValueAt(tv.tblX, tv.tblY);
         if (value != tv.value) {
-            this->table->setDarkValueAt(tv.tblX, tv.tblY, value);
+            this->table->setDarkValueAt(tv.tblX, tv.tblY, tv.value);
             tv.value = value;
             num++;
         }
@@ -214,7 +214,7 @@ void TblView::framePixelClicked(const QPoint &pos, bool first)
                 }
             }
         }
-        QMessageBox::critical(nullptr, "Modded", QString::number(modValues.size()));
+
         // Build frame editing command and connect it to the current main window widget
         // to update the palHits and CEL views when undo/redo is performed
         EditTableCommand *command = new EditTableCommand(this->tableset->darkTbl, modValues);
