@@ -522,9 +522,8 @@ void DoLighting(unsigned lnum)
 	assert(MAX_LIGHT_RAD <= nYPos + 1);
 	//min_y = MAX_LIGHT_RAD; //std::min(15, nYPos + 1);
 
-	if (xoff != 0 || yoff != 0) {
+	if ((xoff != 0 || yoff != 0) && nRadius < MAX_LIGHT_RAD) {
 		nRadius++;
-		nRadius = std::min(MAX_LIGHT_RAD, nRadius);
 	}
 	min_x = min_y = max_x = max_y = nRadius;
 

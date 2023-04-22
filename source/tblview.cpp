@@ -55,9 +55,10 @@ void EditTableCommand::redo()
     this->undo();
 }
 
-TblView::TblView(QWidget *parent)
+TblView::TblView(QWidget *parent, QUndoStack *us)
     : QWidget(parent)
     , ui(new Ui::TblView())
+    , undoStack(us)
 {
     this->ui->setupUi(this);
     this->ui->tblGraphicsView->setScene(&this->tblScene);
@@ -156,7 +157,7 @@ void TblView::framePixelClicked(const QPoint &pos, bool first)
             value = 0;
         }
 
-        int deltaValue = lastValue - value;
+        int deltaValue = value - lastValue;
         if (deltaValue == 0) {
             return;
         }
@@ -175,7 +176,7 @@ void TblView::framePixelClicked(const QPoint &pos, bool first)
             for (int i = valuePos.x(); i < darkImageRect.width(); i += 8) { // DARK_COLUMN_WIDTH
                 int v = D1Tbl::getDarkValueAt(i, this->currentLightRadius);
                 if (v >= value) {
-                    modValues.push_back(i, this->currentLightRadius, value);
+                    modValues.push_back(TableValue(i, this->currentLightRadius, value));
                 } else {
                     break;
                 }
@@ -184,7 +185,7 @@ void TblView::framePixelClicked(const QPoint &pos, bool first)
             for (int i = valuePos.x(); i >= 0; i -= 8) { // DARK_COLUMN_WIDTH
                 int v = D1Tbl::getDarkValueAt(i, this->currentLightRadius);
                 if (v <= value) {
-                    modValues.push_back(i, this->currentLightRadius, value);
+                    modValues.push_back(TableValue(i, this->currentLightRadius, value));
                 } else {
                     break;
                 }

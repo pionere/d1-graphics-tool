@@ -45,7 +45,7 @@ class TblView : public QWidget {
     Q_OBJECT
 
 public:
-    explicit TblView(QWidget *parent);
+    explicit TblView(QWidget *parent, QUndoStack *undoStack);
     ~TblView();
 
     void initialize(D1Pal *pal, D1Tableset *tableset, bool bottomPanelHidden);
@@ -101,6 +101,7 @@ private slots:
 
 private:
     Ui::TblView *ui;
+    QUndoStack *undoStack;
     CelScene tblScene = CelScene(this);
 
     D1Pal *pal;

@@ -1028,7 +1028,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
         view = this->celView;
     } else {
-        this->tblView = new TblView(this);
+        this->tblView = new TblView(this, this->undoStack);
         this->tblView->initialize(this->pal, this->tableset, this->bottomPanelHidden);
 
         // Refresh palette widgets when frame is changed
