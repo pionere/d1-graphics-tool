@@ -485,6 +485,20 @@ quint8 *D1CelTilesetFrame::WriteRightTrapezoid(const D1GfxFrame &frame, quint8 *
     return pDst;
 }
 
+bool D1CelTilesetFrame::altFrame(const D1GfxFrame *frame1, const D1GfxFrame *frame2, int *limit)
+{
+    if (frame1->getWidth() != frame2->getWidth() || frame1->getHeight() != frame2->getHeight())
+        return false;
+    for (int x = 0; x < frame1->getWidth(); x++) {
+        for (int y = 0; y < frame1->getHeight(); y++) {
+            if (frame1->getPixel(x, y) != frame2->getPixel(x, y) && --*limit < 0) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 D1CEL_FRAME_TYPE D1CelTilesetFrame::altFrameType(const D1GfxFrame *frame, int *limit)
 {
     D1CEL_FRAME_TYPE frameType = D1CEL_FRAME_TYPE::TransparentSquare;

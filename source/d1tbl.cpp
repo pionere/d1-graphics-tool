@@ -368,6 +368,14 @@ int D1Tbl::getDarkValueAt(int x, int radius)
     return MAXDARKNESS - darkTable[radius][vx];
 }
 
+void D1Tbl::setDarkValueAt(int x, int radius, int value)
+{
+    int vx = x / DARK_COLUMN_WIDTH;
+
+    darkTable[radius][vx] = MAXDARKNESS - value;
+    this->modified = true;
+}
+
 D1TBL_TYPE D1Tbl::getType() const
 {
     return this->type;

@@ -17,6 +17,7 @@ public:
     static quint8 *writeFrameData(D1GfxFrame &frame, quint8 *pBuf);
 
     static void collectPixels(const D1GfxFrame *frame, D1CEL_FRAME_TYPE mask, std::vector<FramePixel> &pixels);
+    static bool altFrame(const D1GfxFrame *frame1, const D1GfxFrame *frame2, int *limit);
     static D1CEL_FRAME_TYPE altFrameType(const D1GfxFrame *frame, int *limit);
     static void selectFrameType(D1GfxFrame *frame);
     static void validate(const D1GfxFrame *frame, QString &error, QString &warning);

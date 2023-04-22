@@ -91,13 +91,55 @@ void TblView::update()
 
 void TblView::framePixelClicked(const QPoint &pos, bool first)
 {
-    /*if (this->gfx->getFrameCount() == 0) {
+    QRect darkImageRect = QRect(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN + std::max(D1Tbl::getTableImageHeight(), D1Tbl::getLightImageHeight() + CEL_SCENE_SPACING + D1Tbl::getLumImageHeight()) + CEL_SCENE_SPACING, D1Tbl::getDarkImageWidth(), D1Tbl::getDarkImageHeight());
+
+    if (first) {
+        this->lastPos = pos;
         return;
     }
-    D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
-    QPoint p = pos;
-    p -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-    dMainWindow().frameClicked(frame, p, first);*/
+
+    if (darkImageRect.contains(this->lastPos)) {
+        int lastValue = this->lastPos.y() - (darkImageRect.y() + 4); // DARK_BORDER_WIDTH
+        if (lastValue < 0) {
+            return;
+        }
+        lastValue /= 32; // DARK_COLUMN_HEIGHT_UNIT
+        lastValue = MAXDARKNESS - lastValue;
+        if (lastValue < 0) {
+            return;
+        }
+
+        int value = pos.y() - (darkImageRect.y() + 4); // DARK_BORDER_WIDTH
+        if (value < 0) {
+            value = 0;
+        }
+        value /= 32; // DARK_COLUMN_HEIGHT_UNIT
+        value = MAXDARKNESS - value;
+        if (value < 0) {
+            value = 0;
+        }
+
+        int deltaValue = lastValue - value;
+        if (deltaValue == 0) {
+            return;
+        }
+
+        QPoint valuePos = pos - darkImageRect.topLeft();
+        int value += D1Tbl::getDarkValueAt(valuePos.x(), this->currentLightRadius);
+        if (value < 0) {
+            value = 0;
+        }
+        if (value > MAXDARKNESS) {
+            value = MAXDARKNESS;
+        }
+
+        this->darkTbl->setDarkValueAt(valuePos.x(), this->currentLightRadius, value);
+
+        // QPoint valuePos = pos - darkImageRect.topLeft();
+        // this->ui->valueLineEdit->setText(QString::number(value));
+        // this->ui->valueAtLineEdit->setText(QString::number(valuePos.x() / 8)); // DARK_COLUMN_WIDTH
+        return;
+    }
 }
 
 void TblView::framePixelHovered(const QPoint &pos)
@@ -241,24 +283,18 @@ void TblView::on_radiusLineEdit_escPressed()
 
 void TblView::setOffset(int xoff, int yoff)
 {
-    if (xoff <= -MAX_OFFSET) {
-        xoff = 1 - MAX_OFFSET;
+    if (xoff < -MAX_OFFSET) {
+        xoff = -MAX_OFFSET;
     }
-    if (xoff >= 2 * MAX_OFFSET) {
-        xoff = 2 * MAX_OFFSET - 1;
+    if (xoff > MAX_OFFSET) {
+        xoff = MAX_OFFSET;
     }
-    // if (xoff >= MAX_OFFSET) {
-    //     xoff = MAX_OFFSET - 1;
-    // }
-    if (yoff <= -MAX_OFFSET) {
-        yoff = 1 - MAX_OFFSET;
+    if (yoff < -MAX_OFFSET) {
+        yoff = -MAX_OFFSET;
     }
-    if (yoff >= 2 * MAX_OFFSET) {
-        yoff = 2 * MAX_OFFSET - 1;
+    if (yoff > MAX_OFFSET) {
+        yoff = MAX_OFFSET;
     }
-    // if (yoff >= MAX_OFFSET) {
-    //     yoff = MAX_OFFSET - 1;
-    // }
     this->currentXOffset = xoff;
     this->currentYOffset = yoff;
     // update the view

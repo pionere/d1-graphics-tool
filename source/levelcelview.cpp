@@ -1925,7 +1925,7 @@ void LevelCelView::inefficientFrames() const
 {
     ProgressDialog::incBar(tr("Scanning frames..."), 1);
 
-    int limit = 10;
+    const int limit = 10;
     bool result = false;
     for (int i = 0; i < this->gfx->getFrameCount(); i++) {
         const D1GfxFrame *frame = this->gfx->getFrame(i);
@@ -1938,6 +1938,18 @@ void LevelCelView::inefficientFrames() const
             diff = limit - diff;
             dProgress() << tr("Frame %1 could be '%2' by changing %n pixel(s).", "", diff).arg(i + 1).arg(getFrameTypeName(effType));
             result = true;
+        }
+    }
+    for (int i = 0; i < this->gfx->getFrameCount(); i++) {
+        const D1GfxFrame *frame1 = this->gfx->getFrame(i);
+        for (int j = i + 1; j < this->gfx->getFrameCount(); j++) {
+            int diff = limit;
+            const D1GfxFrame *frame2 = this->gfx->getFrame(j);
+            if (D1CelTilesetFrame::altFrame(frame1, frame2, &diff)) {
+                diff = limit - diff;
+                dProgress() << tr("The difference between Frame %1 and Frame %2 is only %n pixel(s).", "", diff).arg(i + 1).arg(j + 1).arg(diff);
+                result = true;
+            }
         }
     }
     if (!result) {

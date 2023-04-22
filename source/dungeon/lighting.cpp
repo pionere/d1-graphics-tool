@@ -482,17 +482,12 @@ void DoLighting(unsigned lnum)
 	LightListStruct* lis = &LightList[lnum];
 	int x, y, xoff, yoff;
 	int min_x, max_x, min_y, max_y;
-	int dist_x, dist_y, light_x, light_y, block_x, block_y, temp_x, temp_y;
+	int baseOffX, baseOffY, block_x, block_y, temp_x, temp_y;
 	int nXPos = lis->_lx;
 	int nYPos = lis->_ly;
 	int nRadius = lis->_lradius;
 	BYTE (&dark)[MAX_LIGHT_DIST + 1] = darkTable[nRadius];
 	BYTE v, radius_block;
-
-	light_x = 0;
-	light_y = 0;
-	block_x = 0;
-	block_y = 0;
 
 	xoff = lis->_lxoff;
 	yoff = lis->_lyoff;
@@ -513,8 +508,8 @@ void DoLighting(unsigned lnum)
 	assert((unsigned)xoff < MAX_OFFSET);
 	assert((unsigned)yoff < MAX_OFFSET);
 
-	dist_x = xoff;
-	dist_y = yoff;
+	baseOffX = xoff;
+	baseOffY = yoff;
 
 	static_assert(DBORDERX >= MAX_LIGHT_RAD + 1, "DoLighting expects a large enough border I.");
 	static_assert(DBORDERY >= MAX_LIGHT_RAD + 1, "DoLighting expects a large enough border II.");
@@ -557,8 +552,7 @@ void DoLighting(unsigned lnum)
 			//}
 		}
 	}
-	//RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
-	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &block_x, &block_y);
+	RotateRadius(&xoff, &yoff, &baseOffX, &baseOffY, &block_x, &block_y);
 	// Add light to the II. (+;-) quadrant
 	BYTE (&dist1)[MAX_TILE_DIST][MAX_TILE_DIST] = distMatrix[yoff][xoff];
 	for (y = 0; y < max_x; y++) {
@@ -574,8 +568,7 @@ void DoLighting(unsigned lnum)
 			//}
 		}
 	}
-	//RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
-	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &block_x, &block_y);
+	RotateRadius(&xoff, &yoff, &baseOffX, &baseOffY, &block_x, &block_y);
 	// Add light to the III. (-;-) quadrant
 	BYTE (&dist2)[MAX_TILE_DIST][MAX_TILE_DIST] = distMatrix[yoff][xoff];
 	for (y = 0; y < min_y; y++) {
@@ -591,8 +584,7 @@ void DoLighting(unsigned lnum)
 			//}
 		}
 	}
-	//RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
-	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &block_x, &block_y);
+	RotateRadius(&xoff, &yoff, &baseOffX, &baseOffY, &block_x, &block_y);
 	// Add light to the IV. (-;+) quadrant
 	BYTE (&dist3)[MAX_TILE_DIST][MAX_TILE_DIST] = distMatrix[yoff][xoff];
 	for (y = 0; y < min_x; y++) {

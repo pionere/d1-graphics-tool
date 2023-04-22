@@ -40,6 +40,7 @@ public:
     static int getDarkImageHeight();
     static QImage getDarkImage(int radius);
     static int getDarkValueAt(int x, int radius);
+    int setDarkValueAt(int x, int radius, int value);
 
     D1TBL_TYPE getType() const;
     void setType(D1TBL_TYPE type);
