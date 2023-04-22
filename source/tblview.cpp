@@ -47,7 +47,7 @@ void EditTableCommand::undo()
             num++;
         }
     }
-    QMessageBox::critical(nullptr, "Realmod", QString("%1 vs. %2").arg(num).arg(this->modValues.size()));
+
     emit this->modified();
 }
 
