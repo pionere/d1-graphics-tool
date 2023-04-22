@@ -38,15 +38,16 @@ void EditTableCommand::undo()
         this->setObsolete(true);
         return;
     }
-
+    int num = 0;
     for (TableValue &tv : this->modValues) {
         int value = D1Tbl::getDarkValueAt(tv.tblX, tv.tblY);
         if (value != tv.value) {
             this->table->setDarkValueAt(tv.tblX, tv.tblY, value);
             tv.value = value;
+            num++;
         }
     }
-
+    QMessageBox::critical(nullptr, "Realmod", QString("%1 vs. %2").arg(num).arg(this->modValues.size()));
     emit this->modified();
 }
 
@@ -192,7 +193,7 @@ void TblView::framePixelClicked(const QPoint &pos, bool first)
         if (value > MAXDARKNESS) {
             value = MAXDARKNESS;
         }
-        QMessageBox::critical(nullptr, "Modding", "");
+
         std::vector<TableValue> modValues;
         if (deltaValue < 0) {
             for (int i = valuePos.x(); i < darkImageRect.width(); i += 8) { // DARK_COLUMN_WIDTH
