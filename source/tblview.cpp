@@ -104,8 +104,11 @@ void TblView::framePixelHovered(const QPoint &pos)
 {
     QRect tableImageRect = QRect(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN, D1Tbl::getTableImageWidth(), D1Tbl::getTableImageHeight());
     QRect lightImageRect = QRect(CEL_SCENE_MARGIN + D1Tbl::getTableImageWidth() + CEL_SCENE_SPACING, CEL_SCENE_MARGIN, D1Tbl::getLightImageWidth(), D1Tbl::getLightImageHeight());
+    lightImageRect.adjust(4, 4, -4, -4); // LIGHT_BORDER_WIDTH
     QRect lumImageRect = QRect(CEL_SCENE_MARGIN + D1Tbl::getTableImageWidth() + CEL_SCENE_SPACING, CEL_SCENE_MARGIN + D1Tbl::getLightImageHeight() + CEL_SCENE_SPACING, D1Tbl::getLumImageWidth(), D1Tbl::getLumImageHeight());
+    lumImageRect.adjust(4, 4, -4, -4); // LUM_BORDER_WIDTH
     QRect darkImageRect = QRect(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN + std::max(D1Tbl::getTableImageHeight(), D1Tbl::getLightImageHeight() + CEL_SCENE_SPACING + D1Tbl::getLumImageHeight()) + CEL_SCENE_SPACING, D1Tbl::getDarkImageWidth(), D1Tbl::getDarkImageHeight());
+    darkImageRect.adjust(4, 4, -4, -4); // DARK_BORDER_WIDTH
 
     if (tableImageRect.contains(pos)) {
         QPoint valuePos = pos - tableImageRect.topLeft();
