@@ -192,7 +192,7 @@ void TblView::framePixelClicked(const QPoint &pos, bool first)
         if (value > MAXDARKNESS) {
             value = MAXDARKNESS;
         }
-
+        QMessageBox::critical(nullptr, "Modding", "");
         std::vector<TableValue> modValues;
         if (deltaValue < 0) {
             for (int i = valuePos.x(); i < darkImageRect.width(); i += 8) { // DARK_COLUMN_WIDTH
@@ -213,7 +213,7 @@ void TblView::framePixelClicked(const QPoint &pos, bool first)
                 }
             }
         }
-
+        QMessageBox::critical(nullptr, "Modded", QString::number(monValues.size()));
         // Build frame editing command and connect it to the current main window widget
         // to update the palHits and CEL views when undo/redo is performed
         EditTableCommand *command = new EditTableCommand(this->tableset->darkTbl, modValues);
