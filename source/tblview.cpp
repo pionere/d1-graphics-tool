@@ -133,7 +133,7 @@ void TblView::framePixelClicked(const QPoint &pos, bool first)
             value = MAXDARKNESS;
         }
 
-        this->darkTbl->setDarkValueAt(valuePos.x(), this->currentLightRadius, value);
+        this->tableset->darkTbl->setDarkValueAt(valuePos.x(), this->currentLightRadius, value);
 
         // QPoint valuePos = pos - darkImageRect.topLeft();
         // this->ui->valueLineEdit->setText(QString::number(value));

@@ -522,8 +522,11 @@ void DoLighting(unsigned lnum)
 	assert(MAX_LIGHT_RAD <= nYPos + 1);
 	//min_y = MAX_LIGHT_RAD; //std::min(15, nYPos + 1);
 
-	nRadius++;
-	min_x = min_y = max_x = max_y = std::min(MAX_LIGHT_RAD, nRadius);
+	if (xoff != 0 || yoff != 0) {
+		nRadius++;
+		nRadius = std::min(MAX_LIGHT_RAD + 1, nRadius);
+	}
+	min_x = min_y = max_x = max_y = nRadius;
 
 	BYTE (&dist0)[MAX_TILE_DIST][MAX_TILE_DIST] = distMatrix[yoff][xoff];
 	// Add light to (0;0)
@@ -610,7 +613,7 @@ void DoUnLight(LightListStruct* lis)
 	int nRadius = lis->_lunr;
 
 	nRadius++;
-	nRadius = std::min(MAX_LIGHT_RAD, nRadius);
+	nRadius = std::min(MAX_LIGHT_RAD + 1, nRadius);
 	min_y = nYPos - nRadius;
 	max_y = nYPos + nRadius;
 	min_x = nXPos - nRadius;
