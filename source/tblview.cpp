@@ -125,7 +125,7 @@ void TblView::framePixelClicked(const QPoint &pos, bool first)
         }
 
         QPoint valuePos = pos - darkImageRect.topLeft();
-        int value += D1Tbl::getDarkValueAt(valuePos.x(), this->currentLightRadius);
+        value = D1Tbl::getDarkValueAt(valuePos.x(), this->currentLightRadius) + deltaValue;
         if (value < 0) {
             value = 0;
         }
