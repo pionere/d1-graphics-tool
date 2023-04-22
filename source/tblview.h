@@ -1,9 +1,39 @@
 #pragma once
 
+#include <vector>
+
+#include <QPointer>
+#include <QUndoCommand>
 #include <QWidget>
 
 #include "celview.h"
 #include "d1tableset.h"
+
+typedef struct TableValue {
+    TableValue(int tblX, int tblY, int value);
+
+    int tblX;
+    int tblY;
+    int value;
+} TableValue;
+
+class EditTableCommand : public QObject, public QUndoCommand {
+    Q_OBJECT
+
+public:
+    explicit EditTableCommand(D1Tbl *table, const std::vector<TableValue> &modValues);
+    ~EditTableCommand() = default;
+
+    void undo() override;
+    void redo() override;
+
+signals:
+    void modified();
+
+private:
+    QPointer<D1Tbl> table;
+    std::vector<TableValue> modValues;
+};
 
 namespace Ui {
 class TblView;

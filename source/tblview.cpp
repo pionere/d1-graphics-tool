@@ -18,6 +18,43 @@
 
 #include "dungeon/all.h"
 
+TableValue::TableValue(int x, int y, int v)
+    : tblX(x)
+    , tblY(y)
+    , value(v)
+{
+}
+
+EditTableCommand::EditTableCommand(D1Tbl *t, const std::vector<TableValue> &values)
+    : QUndoCommand(nullptr)
+    , table(t)
+    , modValues(values)
+{
+}
+
+void EditTableCommand::undo()
+{
+    if (this->table.isNull()) {
+        this->setObsolete(true);
+        return;
+    }
+
+    for (TableValue &tv : this->modValues) {
+        int value = D1Tbl::getDarkValueAt(tv.tblX, tv.tblY);
+        if (value != tv.value) {
+            this->table->setDarkValueAt(tv.tblX, tv.tblY, value);
+            tv.value = value;
+        }
+    }
+
+    emit this->modified();
+}
+
+void EditTableCommand::redo()
+{
+    this->undo();
+}
+
 TblView::TblView(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::TblView())
@@ -133,11 +170,33 @@ void TblView::framePixelClicked(const QPoint &pos, bool first)
             value = MAXDARKNESS;
         }
 
-        this->tableset->darkTbl->setDarkValueAt(valuePos.x(), this->currentLightRadius, value);
+        std::vector<TableValue> modValues;
+        if (deltaValue >= 0) {
+            for (int i = valuePos.x(); i < darkImageRect.width(); i += 8) { // DARK_COLUMN_WIDTH
+                int v = D1Tbl::getDarkValueAt(i, this->currentLightRadius);
+                if (v >= value) {
+                    modValues.push_back(i, this->currentLightRadius, value);
+                } else {
+                    break;
+                }
+            }
+        } else {
+            for (int i = valuePos.x(); i >= 0; i -= 8) { // DARK_COLUMN_WIDTH
+                int v = D1Tbl::getDarkValueAt(i, this->currentLightRadius);
+                if (v <= value) {
+                    modValues.push_back(i, this->currentLightRadius, value);
+                } else {
+                    break;
+                }
+            }
+        }
 
-        // QPoint valuePos = pos - darkImageRect.topLeft();
-        // this->ui->valueLineEdit->setText(QString::number(value));
-        // this->ui->valueAtLineEdit->setText(QString::number(valuePos.x() / 8)); // DARK_COLUMN_WIDTH
+        // Build frame editing command and connect it to the current main window widget
+        // to update the palHits and CEL views when undo/redo is performed
+        EditTableCommand *command = new EditTableCommand(this->tableset->darkTbl, modValues);
+        QObject::connect(command, &EditTableCommand::modified, this, &TblView::displayFrame);
+
+        this->undoStack->push(command);
         return;
     }
 }

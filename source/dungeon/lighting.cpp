@@ -524,7 +524,7 @@ void DoLighting(unsigned lnum)
 
 	if (xoff != 0 || yoff != 0) {
 		nRadius++;
-		nRadius = std::min(MAX_LIGHT_RAD + 1, nRadius);
+		nRadius = std::min(MAX_LIGHT_RAD, nRadius);
 	}
 	min_x = min_y = max_x = max_y = nRadius;
 
@@ -613,7 +613,7 @@ void DoUnLight(LightListStruct* lis)
 	int nRadius = lis->_lunr;
 
 	nRadius++;
-	nRadius = std::min(MAX_LIGHT_RAD + 1, nRadius);
+	nRadius = std::min(MAX_LIGHT_RAD, nRadius);
 	min_y = nYPos - nRadius;
 	max_y = nYPos + nRadius;
 	min_x = nXPos - nRadius;
