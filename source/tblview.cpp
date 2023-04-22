@@ -18,9 +18,47 @@
 
 #include "dungeon/all.h"
 
-TblView::TblView(QWidget *parent)
+TableValue::TableValue(int x, int y, int v)
+    : tblX(x)
+    , tblY(y)
+    , value(v)
+{
+}
+
+EditTableCommand::EditTableCommand(D1Tbl *t, const std::vector<TableValue> &values)
+    : QUndoCommand(nullptr)
+    , table(t)
+    , modValues(values)
+{
+}
+
+void EditTableCommand::undo()
+{
+    if (this->table.isNull()) {
+        this->setObsolete(true);
+        return;
+    }
+
+    for (TableValue &tv : this->modValues) {
+        int value = D1Tbl::getDarkValueAt(tv.tblX, tv.tblY);
+        if (value != tv.value) {
+            this->table->setDarkValueAt(tv.tblX, tv.tblY, tv.value);
+            tv.value = value;
+        }
+    }
+
+    emit this->modified();
+}
+
+void EditTableCommand::redo()
+{
+    this->undo();
+}
+
+TblView::TblView(QWidget *parent, QUndoStack *us)
     : QWidget(parent)
     , ui(new Ui::TblView())
+    , undoStack(us)
 {
     this->ui->setupUi(this);
     this->ui->tblGraphicsView->setScene(&this->tblScene);
@@ -91,13 +129,99 @@ void TblView::update()
 
 void TblView::framePixelClicked(const QPoint &pos, bool first)
 {
-    /*if (this->gfx->getFrameCount() == 0) {
+    QRect darkImageRect = QRect(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN + std::max(D1Tbl::getTableImageHeight(), D1Tbl::getLightImageHeight() + CEL_SCENE_SPACING + D1Tbl::getLumImageHeight()) + CEL_SCENE_SPACING, D1Tbl::getDarkImageWidth(), D1Tbl::getDarkImageHeight());
+    darkImageRect.adjust(4, 4, -4, -4); // DARK_BORDER_WIDTH
+
+    if (first) {
+        this->lastPos = this->firstPos = pos;
         return;
     }
-    D1GfxFrame *frame = this->gfx->getFrame(this->currentFrameIndex);
-    QPoint p = pos;
-    p -= QPoint(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-    dMainWindow().frameClicked(frame, p, first);*/
+
+    if (darkImageRect.contains(this->firstPos)) {
+        int firstValue = this->firstPos.y() - (darkImageRect.y() + 4); // DARK_BORDER_WIDTH
+        if (firstValue < 0) {
+            return; // out of the table -> skip
+        }
+        firstValue /= 32; // DARK_COLUMN_HEIGHT_UNIT
+        firstValue = MAXDARKNESS - firstValue;
+        if (firstValue < 0) {
+            return; // out of the table -> skip
+        }
+
+        int lastValue = this->lastPos.y() - (darkImageRect.y() + 4); // DARK_BORDER_WIDTH
+        if (lastValue < 0) {
+            lastValue = 0;
+        }
+        lastValue /= 32; // DARK_COLUMN_HEIGHT_UNIT
+        lastValue = MAXDARKNESS - lastValue;
+        if (lastValue < 0) {
+            lastValue = 0;
+        }
+
+        int value = pos.y() - (darkImageRect.y() + 4); // DARK_BORDER_WIDTH
+        if (value < 0) {
+            value = 0;
+        }
+        value /= 32; // DARK_COLUMN_HEIGHT_UNIT
+        value = MAXDARKNESS - value;
+        if (value < 0) {
+            value = 0;
+        }
+
+        if (lastValue == value) {
+            return; // same value as before -> skip
+        }
+
+        this->lastPos = pos;
+
+        if (firstValue != lastValue) {
+            // rollback previous change
+            this->undoStack->undo();
+        }
+
+        int deltaValue = value - firstValue;
+        if (deltaValue == 0) {
+            return;
+        }
+
+        QPoint valuePos = pos - darkImageRect.topLeft();
+        value = D1Tbl::getDarkValueAt(valuePos.x(), this->currentLightRadius) + deltaValue;
+        if (value < 0) {
+            value = 0;
+        }
+        if (value > MAXDARKNESS) {
+            value = MAXDARKNESS;
+        }
+
+        std::vector<TableValue> modValues;
+        if (deltaValue < 0) {
+            for (int i = valuePos.x(); i < darkImageRect.width(); i += 8) { // DARK_COLUMN_WIDTH
+                int v = D1Tbl::getDarkValueAt(i, this->currentLightRadius);
+                if (v >= value) {
+                    modValues.push_back(TableValue(i, this->currentLightRadius, value));
+                } else {
+                    break;
+                }
+            }
+        } else {
+            for (int i = valuePos.x(); i >= 0; i -= 8) { // DARK_COLUMN_WIDTH
+                int v = D1Tbl::getDarkValueAt(i, this->currentLightRadius);
+                if (v <= value) {
+                    modValues.push_back(TableValue(i, this->currentLightRadius, value));
+                } else {
+                    break;
+                }
+            }
+        }
+
+        // Build frame editing command and connect it to the current main window widget
+        // to update the palHits and CEL views when undo/redo is performed
+        EditTableCommand *command = new EditTableCommand(this->tableset->darkTbl, modValues);
+        QObject::connect(command, &EditTableCommand::modified, this, &TblView::displayFrame);
+
+        this->undoStack->push(command);
+        return;
+    }
 }
 
 void TblView::framePixelHovered(const QPoint &pos)

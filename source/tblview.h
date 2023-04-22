@@ -1,9 +1,39 @@
 #pragma once
 
+#include <vector>
+
+#include <QPointer>
+#include <QUndoCommand>
 #include <QWidget>
 
 #include "celview.h"
 #include "d1tableset.h"
+
+typedef struct TableValue {
+    TableValue(int tblX, int tblY, int value);
+
+    int tblX;
+    int tblY;
+    int value;
+} TableValue;
+
+class EditTableCommand : public QObject, public QUndoCommand {
+    Q_OBJECT
+
+public:
+    explicit EditTableCommand(D1Tbl *table, const std::vector<TableValue> &modValues);
+    ~EditTableCommand() = default;
+
+    void undo() override;
+    void redo() override;
+
+signals:
+    void modified();
+
+private:
+    QPointer<D1Tbl> table;
+    std::vector<TableValue> modValues;
+};
 
 namespace Ui {
 class TblView;
@@ -15,7 +45,7 @@ class TblView : public QWidget {
     Q_OBJECT
 
 public:
-    explicit TblView(QWidget *parent);
+    explicit TblView(QWidget *parent, QUndoStack *undoStack);
     ~TblView();
 
     void initialize(D1Pal *pal, D1Tableset *tableset, bool bottomPanelHidden);
@@ -71,6 +101,7 @@ private slots:
 
 private:
     Ui::TblView *ui;
+    QUndoStack *undoStack;
     CelScene tblScene = CelScene(this);
 
     D1Pal *pal;
@@ -81,4 +112,6 @@ private:
     quint8 currentColor = 0;
     quint16 currentPlayDelay = 50;
     int playTimer = 0;
+    QPoint lastPos;
+    QPoint firstPos;
 };
