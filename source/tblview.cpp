@@ -132,19 +132,29 @@ void TblView::framePixelClicked(const QPoint &pos, bool first)
     QRect darkImageRect = QRect(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN + std::max(D1Tbl::getTableImageHeight(), D1Tbl::getLightImageHeight() + CEL_SCENE_SPACING + D1Tbl::getLumImageHeight()) + CEL_SCENE_SPACING, D1Tbl::getDarkImageWidth(), D1Tbl::getDarkImageHeight());
 
     if (first) {
-        this->lastPos = pos;
+        this->lastPos = this->firstPos = pos;
         return;
     }
 
-    if (darkImageRect.contains(this->lastPos)) {
+    if (darkImageRect.contains(this->firstPos)) {
+        int firstValue = this->firstPos.y() - (darkImageRect.y() + 4); // DARK_BORDER_WIDTH
+        if (firstValue < 0) {
+            return; // out of the table -> skip
+        }
+        firstValue /= 32; // DARK_COLUMN_HEIGHT_UNIT
+        firstValue = MAXDARKNESS - firstValue;
+        if (firstValue < 0) {
+            return; // out of the table -> skip
+        }
+
         int lastValue = this->lastPos.y() - (darkImageRect.y() + 4); // DARK_BORDER_WIDTH
         if (lastValue < 0) {
-            return;
+            lastValue = 0;
         }
         lastValue /= 32; // DARK_COLUMN_HEIGHT_UNIT
         lastValue = MAXDARKNESS - lastValue;
         if (lastValue < 0) {
-            return;
+            lastValue = 0;
         }
 
         int value = pos.y() - (darkImageRect.y() + 4); // DARK_BORDER_WIDTH
@@ -157,7 +167,18 @@ void TblView::framePixelClicked(const QPoint &pos, bool first)
             value = 0;
         }
 
-        int deltaValue = value - lastValue;
+        if (lastValue == value) {
+            return; // same value as before -> skip
+        }
+
+        this->lastPos = pos;
+
+        if (firstValue != lastValue) {
+            // rollback previous change
+            this->undoStack->undo();
+        }
+
+        int deltaValue = value - firstValue;
         if (deltaValue == 0) {
             return;
         }
@@ -172,7 +193,7 @@ void TblView::framePixelClicked(const QPoint &pos, bool first)
         }
 
         std::vector<TableValue> modValues;
-        if (deltaValue >= 0) {
+        if (deltaValue < 0) {
             for (int i = valuePos.x(); i < darkImageRect.width(); i += 8) { // DARK_COLUMN_WIDTH
                 int v = D1Tbl::getDarkValueAt(i, this->currentLightRadius);
                 if (v >= value) {
