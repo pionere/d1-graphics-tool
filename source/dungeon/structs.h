@@ -332,6 +332,9 @@ typedef struct ObjectData {
 	//int oAnimWidth;
 	//int oSFX;
 	//BYTE oSFXCnt;
+	BYTE oLightRadius;
+	int8_t oLightOffX;
+	int8_t oLightOffY;
 	BYTE oProc;       // object_proc_func
 	BYTE oModeFlags;  // object_mode_flags
 	//BOOL oSolidFlag;
