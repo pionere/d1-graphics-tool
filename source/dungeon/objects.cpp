@@ -652,7 +652,7 @@ static void LoadMapSetObjects(int idx)
 	//gbInitObjFlag = false;
 }
 
-static void SetupObject(int type, int x, int y)
+static void SetupObject(int type, int ox, int oy)
 {
 	int oi;
 	ObjectStruct* os;
