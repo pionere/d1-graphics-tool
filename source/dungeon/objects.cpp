@@ -652,7 +652,20 @@ static void LoadMapSetObjects(int idx)
 	//gbInitObjFlag = false;
 }
 
-static void SetupObject(int type, int ox, int oy)
+std::pair<int, int> themeLoc(int x, int y)
+{
+	for (int i = 0; i < numthemes; i++) {
+		if (themes[i]._tsx1 <= x && themes[i]._tsx2 > x && themes[i]._tsy1 <= y && themes[i]._tsy2 > y) {
+			return std::pair<int, bool>(i, 2);
+		}
+		if (themes[i]._tsTransVal == dTransVal[x][y]) {
+			return std::pair<int, bool>(i, 1);
+		}
+	}
+	return std::pair<int, bool>(0, 0);
+}
+
+static int SetupObject(int type, int ox, int oy)
 {
 	int oi;
 	ObjectStruct* os;
@@ -698,7 +711,6 @@ static void SetupObject(int type, int ox, int oy)
 	os->_oPreFlag = FALSE;
 	os->_oTrapChance = 0;
 	// place object
-	ObjectStruct* os = &objects[oi];
 	os->_ox = ox;
 	os->_oy = oy;
 	if (dObject[ox][oy] != 0) {
@@ -1291,19 +1303,6 @@ static void AddTorturedFemaleBody(int oi)
 	//os->_oRndSeed = NextRndSeed();
 	os->_oAnimFrame = RandRange(1, 3);
 	//os->_oPreFlag = TRUE;
-}
-
-std::pair<int, int> themeLoc(int x, int y)
-{
-	for (int i = 0; i < numthemes; i++) {
-		if (themes[i]._tsx1 <= x && themes[i]._tsx2 > x && themes[i]._tsy1 <= y && themes[i]._tsy2 > y) {
-			return std::pair<int, bool>(i, 2);
-		}
-		if (themes[i]._tsTransVal == dTransVal[x][y]) {
-			return std::pair<int, bool>(i, 1);
-		}
-	}
-	return std::pair<int, bool>(0, 0);
 }
 
 int AddObject(int type, int ox, int oy)
