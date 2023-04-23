@@ -80,7 +80,7 @@ void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
 {
     QString filePath = this->gfx->getFilePath();
     const QString filter = this->isTileset ? tr("CEL Files (*.cel *.CEL)") : (this->isTableset ? tr("TBL Files (*.tbl *.TBL)") : tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)"));
-    const QString title = this->isTableset ? tr("TBL Files (*.tbl *.TBL)") : tr("Save Graphics as...");
+    const QString title = this->isTableset ? tr("Save Dist TBL as...") : tr("Save Graphics as...");
 
     QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, title, filter);
 

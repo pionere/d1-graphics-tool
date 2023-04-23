@@ -38,13 +38,12 @@ void EditTableCommand::undo()
         this->setObsolete(true);
         return;
     }
-    int num = 0;
+
     for (TableValue &tv : this->modValues) {
         int value = D1Tbl::getDarkValueAt(tv.tblX, tv.tblY);
         if (value != tv.value) {
             this->table->setDarkValueAt(tv.tblX, tv.tblY, tv.value);
             tv.value = value;
-            num++;
         }
     }
 
