@@ -463,7 +463,6 @@ void DoLighting(unsigned lnum)
 	BYTE (&dark)[128] = darkTable[nRadius];
 	BYTE v, radius_block;
 
-
 	xoff = lis->_lxoff;
 	yoff = lis->_lyoff;
 	if (xoff < 0) {

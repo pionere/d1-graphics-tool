@@ -671,8 +671,10 @@ static int SetupObject(int type, int ox, int oy)
 	os = &objects[oi];
 	os->_otype = type;
 	ods = &objectdata[type];
-	os->_oSelFlag = ods->oSelFlag;
+	os->_oMissFlag = ods->oMissFlag;
 	os->_oDoorFlag = ods->oDoorFlag;
+	os->_oSelFlag = ods->oSelFlag;
+	os->_oPreFlag = ods->oPreFlag;
 	os->_oProc = ods->oProc;
 	os->_oModeFlags = ods->oModeFlags;
 	os->_oAnimFrame = ods->oAnimBaseFrame;
@@ -691,11 +693,8 @@ static int SetupObject(int type, int ox, int oy)
 //	os->_oAnimWidth = ofd->oAnimWidth * ASSET_MPL;
 //	os->_oAnimXOffset = (os->_oAnimWidth - TILE_WIDTH) >> 1;
 	os->_oSolidFlag = ofd->oSolidFlag;
-	os->_oMissFlag = ofd->oMissFlag;
-	os->_oLightFlag = ofd->oLightFlag;
 	os->_oBreak = ofd->oBreak;
 	// os->_oDelFlag = FALSE; - unused
-	os->_oPreFlag = FALSE;
 	os->_oTrapChance = 0;
 	// place object
 	os->_ox = ox;
@@ -712,19 +711,38 @@ static int SetupObject(int type, int ox, int oy)
 		os->_oModeFlags |= OMF_RESERVED;
 		os->_oSelFlag = 0;
 		dProgress() << QApplication::tr("Reserved object on tile %1:%2 - type %3 with index %4.").arg(ox).arg(oy).arg(type).arg(oi);
-	} else if (ods->oLightRadius != 0) {
+	} else {
+		if (ods->oLightRadius != 0) {
 #if FLICKER_LIGHT
-		if (type == OBJ_L1LIGHT) {
-			os->_olid = NO_LIGHT;
-		} else
+			if (type == OBJ_L1LIGHT) {
+				os->_olid = NO_LIGHT;
+			} else
 #endif
-		{
-			assert(LightList[MAXLIGHTS]._lxoff == 0);
-			assert(LightList[MAXLIGHTS]._lyoff == 0);
-			LightList[MAXLIGHTS]._lradius = ods->oLightRadius;
-			LightList[MAXLIGHTS]._lx = ox + ods->oLightOffX;
-			LightList[MAXLIGHTS]._ly = oy + ods->oLightOffY;
-			DoLighting(MAXLIGHTS);
+			{
+				assert(LightList[MAXLIGHTS]._lxoff == 0);
+				assert(LightList[MAXLIGHTS]._lyoff == 0);
+				LightList[MAXLIGHTS]._lradius = ods->oLightRadius;
+				LightList[MAXLIGHTS]._lx = ox + ods->oLightOffX;
+				LightList[MAXLIGHTS]._ly = oy + ods->oLightOffY;
+				DoLighting(MAXLIGHTS);
+			}
+		}
+		if (ods->oDoorFlag != ODT_NONE) {
+			os->_oVar4 = DOOR_CLOSED;
+			//os->_oPreFlag = FALSE;
+			//os->_oSelFlag = 3;
+			//os->_oSolidFlag = FALSE; // TODO: should be TRUE;
+			//os->_oMissFlag = FALSE;
+			//os->_oDoorFlag = ldoor ? ODT_LEFT : ODT_RIGHT;
+			os->_oVar1 = dPiece[ox][oy]; // DOOR_PIECE_CLOSED
+			// DOOR_SIDE_PIECE_CLOSED
+			int bx = ox;
+			int by = oy;
+			if (os->_oDoorFlag == ODT_LEFT)
+				by--;
+			else
+				bx--;
+			os->_oVar2 = dPiece[bx][by];
 		}
 	}
 	return oi;
@@ -1079,31 +1097,6 @@ static void AddChest(int oi)
 	//assert(num <= 3); otherwise the seeds are not 'reserved'
 }
 
-static void AddDoor(int oi)
-{
-	ObjectStruct* os;
-	int x, y, bx, by;
-
-	os = &objects[oi];
-	x = os->_ox;
-	y = os->_oy;
-	os->_oVar4 = DOOR_CLOSED;
-	//os->_oPreFlag = FALSE;
-	//os->_oSelFlag = 3;
-	//os->_oSolidFlag = FALSE; // TODO: should be TRUE;
-	//os->_oMissFlag = FALSE;
-	//os->_oDoorFlag = ldoor ? ODT_LEFT : ODT_RIGHT;
-	os->_oVar1 = dPiece[x][y]; // DOOR_PIECE_CLOSED
-	// DOOR_SIDE_PIECE_CLOSED
-	bx = x;
-	by = y;
-	if (os->_oDoorFlag == ODT_LEFT)
-		by--;
-	else
-		bx--;
-	os->_oVar2 = dPiece[bx][by];
-}
-
 static void AddSarc(int oi)
 {
 	ObjectStruct* os;
@@ -1165,22 +1158,12 @@ static void AddShrine(int oi)
 	ObjectStruct* os;
 
 	os = &objects[oi];
-	os->_oPreFlag = TRUE;
 	os->_oRndSeed = NextRndSeed();
 	os->_oVar1 = FindValidShrine(NUM_SHRINETYPE); // SHRINE_TYPE
 	if (random_(150, 2) != 0) {
 		os->_oAnimFrame = 12;
 		os->_oAnimLen = 22;
 	}
-}
-
-static void AddBookcase(int oi)
-{
-	ObjectStruct* os;
-
-	os = &objects[oi];
-	os->_oRndSeed = NextRndSeed();
-	os->_oPreFlag = TRUE;
 }
 
 static void ObjAddRndSeed(int oi)
@@ -1209,11 +1192,6 @@ static void ObjAddBook(int oi, int bookidx)
 	os->_oVar5 = bookidx; // STORY_BOOK_NAME
 }
 
-static void AddArmorStand(int oi)
-{
-	objects[oi]._oMissFlag = TRUE;
-}
-
 static void AddCauldronGoatShrine(int oi)
 {
 	ObjectStruct* os;
@@ -1230,7 +1208,6 @@ static void AddDecap(int oi)
 	os = &objects[oi];
 	os->_oRndSeed = NextRndSeed();
 	os->_oAnimFrame = RandRange(1, 8);
-	os->_oPreFlag = TRUE;
 }
 
 static void AddMagicCircle(int oi)
@@ -1239,7 +1216,6 @@ static void AddMagicCircle(int oi)
 
 	os = &objects[oi];
 	//os->_oRndSeed = NextRndSeed();
-	os->_oPreFlag = TRUE;
 	os->_oVar5 = 0; // VILE_CIRCLE_PROGRESS
 }
 
@@ -1262,11 +1238,6 @@ static void AddStoryBook(int oi)
 	os->_oVar4 = os->_oAnimFrame + 1;                    // STORY_BOOK_READ_FRAME
 }
 
-static void AddWeaponRack(int oi)
-{
-	objects[oi]._oMissFlag = TRUE;
-}
-
 static void AddTorturedMaleBody(int oi)
 {
 	ObjectStruct* os;
@@ -1274,7 +1245,6 @@ static void AddTorturedMaleBody(int oi)
 	os = &objects[oi];
 	//os->_oRndSeed = NextRndSeed();
 	os->_oAnimFrame = RandRange(1, 4);
-	//os->_oPreFlag = TRUE;
 }
 
 static void AddTorturedFemaleBody(int oi)
@@ -1284,7 +1254,6 @@ static void AddTorturedFemaleBody(int oi)
 	os = &objects[oi];
 	//os->_oRndSeed = NextRndSeed();
 	os->_oAnimFrame = RandRange(1, 3);
-	//os->_oPreFlag = TRUE;
 }
 
 int AddObject(int type, int ox, int oy)
@@ -1293,18 +1262,6 @@ int AddObject(int type, int ox, int oy)
 	if (oi >= 0) {
 		// init object
 		switch (type) {
-		case OBJ_L1LDOOR:
-		case OBJ_L1RDOOR:
-		case OBJ_L2LDOOR:
-		case OBJ_L2RDOOR:
-		case OBJ_L3LDOOR:
-		case OBJ_L3RDOOR:
-#ifdef HELLFIRE
-		case OBJ_L5LDOOR:
-		case OBJ_L5RDOOR:
-#endif
-			AddDoor(oi);
-			break;
 		case OBJ_CHEST1:
 		case OBJ_CHEST2:
 		case OBJ_CHEST3:
@@ -1338,13 +1295,11 @@ int AddObject(int type, int ox, int oy)
 		case OBJ_SHRINER:
 			AddShrine(oi);
 			break;
-		case OBJ_BOOKCASEL:
-		case OBJ_BOOKCASER:
-			AddBookcase(oi);
-			break;
 		case OBJ_DECAP:
 			AddDecap(oi);
 			break;
+		case OBJ_BOOKCASEL:
+		case OBJ_BOOKCASER:
 		case OBJ_BARRELEX:
 #ifdef HELLFIRE
 		case OBJ_URNEX:
@@ -1375,13 +1330,6 @@ int AddObject(int type, int ox, int oy)
 			break;
 		case OBJ_VILEBOOK:
 			ObjAddBook(oi, BK_VILENESS);
-			break;
-		case OBJ_ARMORSTANDN:
-			AddArmorStand(oi);
-			break;
-		case OBJ_WEAPONRACKLN:
-		case OBJ_WEAPONRACKRN:
-			AddWeaponRack(oi);
 			break;
 		case OBJ_GOATSHRINE:
 		case OBJ_CAULDRON:
