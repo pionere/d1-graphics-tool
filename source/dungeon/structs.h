@@ -338,9 +338,8 @@ typedef struct ObjectData {
 	BYTE oProc;       // object_proc_func
 	BYTE oModeFlags;  // object_mode_flags
 	//BOOL oSolidFlag;
-	//BOOL oMissFlag;
-	//BOOL oLightFlag;
 	//BYTE oBreak;
+	BOOLEAN oMissFlag;
 	BYTE oDoorFlag;   // object_door_type
 	BYTE oSelFlag;
 	BOOLEAN oTrapFlag;
@@ -355,8 +354,6 @@ typedef struct ObjFileData {
 	int oAnimLen;   // Number of frames in current animation
 	int oAnimWidth;
 	BOOLEAN oSolidFlag;
-	BOOLEAN oMissFlag;
-	BOOLEAN oLightFlag;
 	BYTE oBreak; // object_break_mode
 } ObjFileData;
 
@@ -374,7 +371,7 @@ typedef struct ObjectStruct {
 	int _oAnimFrame; // Current frame of animation.
 	BOOLEAN _oSolidFlag;
 	BOOLEAN _oMissFlag;
-	BOOLEAN _oLightFlag;
+	BYTE _oAlign;
 	BYTE _oBreak; // object_break_mode
 	BYTE _oDoorFlag; // object_door_type
 	BYTE _oSelFlag;

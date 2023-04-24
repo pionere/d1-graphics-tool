@@ -705,7 +705,6 @@ static int SetupObject(int type, int ox, int oy)
 //	os->_oAnimXOffset = (os->_oAnimWidth - TILE_WIDTH) >> 1;
 	os->_oSolidFlag = ofd->oSolidFlag;
 	os->_oMissFlag = ofd->oMissFlag;
-	os->_oLightFlag = ofd->oLightFlag;
 	os->_oBreak = ofd->oBreak;
 	// os->_oDelFlag = FALSE; - unused
 	os->_oPreFlag = FALSE;
@@ -730,19 +729,38 @@ static int SetupObject(int type, int ox, int oy)
 		os->_oModeFlags |= OMF_RESERVED;
 		os->_oSelFlag = 0;
 		dProgress() << QApplication::tr("Reserved object on tile %1:%2 - type %3 with index %4.").arg(ox).arg(oy).arg(type).arg(oi);
-	} else if (ods->oLightRadius != 0) {
+	} else {
+		if (ods->oLightRadius != 0) {
 #if FLICKER_LIGHT
-		if (type == OBJ_L1LIGHT) {
-			os->_olid = NO_LIGHT;
-		} else
+			if (type == OBJ_L1LIGHT) {
+				os->_olid = NO_LIGHT;
+			} else
 #endif
-		{
-			assert(LightList[MAXLIGHTS]._lxoff == 0);
-			assert(LightList[MAXLIGHTS]._lyoff == 0);
-			LightList[MAXLIGHTS]._lradius = ods->oLightRadius;
-			LightList[MAXLIGHTS]._lx = ox + ods->oLightOffX;
-			LightList[MAXLIGHTS]._ly = oy + ods->oLightOffY;
-			DoLighting(MAXLIGHTS);
+			{
+				assert(LightList[MAXLIGHTS]._lxoff == 0);
+				assert(LightList[MAXLIGHTS]._lyoff == 0);
+				LightList[MAXLIGHTS]._lradius = ods->oLightRadius;
+				LightList[MAXLIGHTS]._lx = ox + ods->oLightOffX;
+				LightList[MAXLIGHTS]._ly = oy + ods->oLightOffY;
+				DoLighting(MAXLIGHTS);
+			}
+		}
+		if (ods->oDoorFlag != ODT_NONE) {
+			os->_oVar4 = DOOR_CLOSED;
+			//os->_oPreFlag = FALSE;
+			//os->_oSelFlag = 3;
+			//os->_oSolidFlag = FALSE; // TODO: should be TRUE;
+			//os->_oMissFlag = FALSE;
+			//os->_oDoorFlag = ldoor ? ODT_LEFT : ODT_RIGHT;
+			os->_oVar1 = dPiece[ox][oy]; // DOOR_PIECE_CLOSED
+			// DOOR_SIDE_PIECE_CLOSED
+			int bx = ox;
+			int by = oy;
+			if (os->_oDoorFlag == ODT_LEFT)
+				by--;
+			else
+				bx--;
+			os->_oVar2 = dPiece[bx][by];
 		}
 	}
 	return oi;
@@ -1097,31 +1115,6 @@ static void AddChest(int oi)
 	//assert(num <= 3); otherwise the seeds are not 'reserved'
 }
 
-static void AddDoor(int oi)
-{
-	ObjectStruct* os;
-	int x, y, bx, by;
-
-	os = &objects[oi];
-	x = os->_ox;
-	y = os->_oy;
-	os->_oVar4 = DOOR_CLOSED;
-	//os->_oPreFlag = FALSE;
-	//os->_oSelFlag = 3;
-	//os->_oSolidFlag = FALSE; // TODO: should be TRUE;
-	//os->_oMissFlag = FALSE;
-	//os->_oDoorFlag = ldoor ? ODT_LEFT : ODT_RIGHT;
-	os->_oVar1 = dPiece[x][y]; // DOOR_PIECE_CLOSED
-	// DOOR_SIDE_PIECE_CLOSED
-	bx = x;
-	by = y;
-	if (os->_oDoorFlag == ODT_LEFT)
-		by--;
-	else
-		bx--;
-	os->_oVar2 = dPiece[bx][by];
-}
-
 static void AddSarc(int oi)
 {
 	ObjectStruct* os;
@@ -1227,11 +1220,6 @@ static void ObjAddBook(int oi, int bookidx)
 	os->_oVar5 = bookidx; // STORY_BOOK_NAME
 }
 
-static void AddArmorStand(int oi)
-{
-	objects[oi]._oMissFlag = TRUE;
-}
-
 static void AddCauldronGoatShrine(int oi)
 {
 	ObjectStruct* os;
@@ -1280,11 +1268,6 @@ static void AddStoryBook(int oi)
 	os->_oVar4 = os->_oAnimFrame + 1;                    // STORY_BOOK_READ_FRAME
 }
 
-static void AddWeaponRack(int oi)
-{
-	objects[oi]._oMissFlag = TRUE;
-}
-
 static void AddTorturedMaleBody(int oi)
 {
 	ObjectStruct* os;
@@ -1311,18 +1294,6 @@ int AddObject(int type, int ox, int oy)
 	if (oi >= 0) {
 		// init object
 		switch (type) {
-		case OBJ_L1LDOOR:
-		case OBJ_L1RDOOR:
-		case OBJ_L2LDOOR:
-		case OBJ_L2RDOOR:
-		case OBJ_L3LDOOR:
-		case OBJ_L3RDOOR:
-#ifdef HELLFIRE
-		case OBJ_L5LDOOR:
-		case OBJ_L5RDOOR:
-#endif
-			AddDoor(oi);
-			break;
 		case OBJ_CHEST1:
 		case OBJ_CHEST2:
 		case OBJ_CHEST3:
@@ -1350,8 +1321,8 @@ int AddObject(int type, int ox, int oy)
 		case OBJ_URN:
 		case OBJ_POD:
 #endif
-		    AddBarrel(oi);
-		    break;
+			AddBarrel(oi);
+			break;
 		case OBJ_SHRINEL:
 		case OBJ_SHRINER:
 			AddShrine(oi);
@@ -1393,13 +1364,6 @@ int AddObject(int type, int ox, int oy)
 			break;
 		case OBJ_VILEBOOK:
 			ObjAddBook(oi, BK_VILENESS);
-			break;
-		case OBJ_ARMORSTANDN:
-			AddArmorStand(oi);
-			break;
-		case OBJ_WEAPONRACKLN:
-		case OBJ_WEAPONRACKRN:
-			AddWeaponRack(oi);
 			break;
 		case OBJ_GOATSHRINE:
 		case OBJ_CAULDRON:
