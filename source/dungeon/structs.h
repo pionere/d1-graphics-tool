@@ -342,6 +342,7 @@ typedef struct ObjectData {
 	BOOLEAN oMissFlag;
 	BYTE oDoorFlag;   // object_door_type
 	BYTE oSelFlag;
+	BYTE oPreFlag;
 	BOOLEAN oTrapFlag;
 } ObjectData;
 
@@ -370,12 +371,12 @@ typedef struct ObjectStruct {
 	int _oAnimLen;   // Number of frames in current animation
 	int _oAnimFrame; // Current frame of animation.
 	BOOLEAN _oSolidFlag;
-	BOOLEAN _oMissFlag;
-	BYTE _oAlign;
 	BYTE _oBreak; // object_break_mode
+	BYTE _oTrapChance;
+	BYTE _oAlign;
+	BOOLEAN _oMissFlag;
 	BYTE _oDoorFlag; // object_door_type
 	BYTE _oSelFlag;
-	BYTE _oTrapChance;
 	BOOLEAN _oPreFlag;
 	int _oRndSeed;
 	int _oVar1;
