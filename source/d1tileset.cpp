@@ -296,7 +296,7 @@ static void CopyFrame(D1Min *min, D1Gfx *gfx, int dstSubtileRef, int dstMicroInd
         dProgressErr() << QApplication::tr("Not enough frames in Subtile %1.").arg(dstSubtileIndex + 1);
         return;
     }
-    unsigned dstFrameRef = frameReferences[dstIndex];
+    unsigned dstFrameRef = dstFrameReferences[dstIndex];
     if (dstFrameRef == 0) {
         dProgressErr() << QApplication::tr("Frame %1 of Subtile %2 is empty.").arg(dstIndex + 1).arg(dstSubtileIndex + 1);
         return;
@@ -310,7 +310,7 @@ static void CopyFrame(D1Min *min, D1Gfx *gfx, int dstSubtileRef, int dstMicroInd
         dProgressErr() << QApplication::tr("Not enough frames in Subtile %1.").arg(srcSubtileIndex + 1);
         return;
     }
-    unsigned srcFrameRef = frameReferences[srcIndex];
+    unsigned srcFrameRef = srcFrameReferences[srcIndex];
     if (srcFrameRef == 0) {
         dProgressErr() << QApplication::tr("Frame %1 of Subtile %2 is empty.").arg(srcIndex + 1).arg(srcSubtileIndex + 1);
         return;
