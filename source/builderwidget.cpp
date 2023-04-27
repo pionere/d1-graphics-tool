@@ -173,7 +173,7 @@ bool BuilderWidget::dunClicked(const QPoint &cellClick, bool first)
             std::swap(fcx, lcx);
         }
         if (fcy > lcy) {
-            std::swap(fcx, lcx);
+            std::swap(fcy, lcy);
         }
         for (int x = fcx; x <= lcx; x++) {
             for (int y = fcy; y <= lcy; y++) {
