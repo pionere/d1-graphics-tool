@@ -285,6 +285,57 @@ static void ReplaceSubtile(D1Til *til, int tileIndex, unsigned index, int subtil
     }
 }
 
+static void CopyFrame(D1Min *min, D1Gfx *gfx, int dstSubtileRef, int dstMicroIndex, int srcSubtileRef, int srcMicroIndex, bool silent)
+{
+    int dstSubtileIndex = dstSubtileRef - 1;
+    std::vector<unsigned> &dstFrameReferences = min->getFrameReferences(dstSubtileIndex);
+    // assert(min->getSubtileWidth() == 2);
+    unsigned dstIndex = dstFrameReferences.size() - (2 + (dstMicroIndex & ~1)) + (dstMicroIndex & 1);
+    if (dstIndex >= dstFrameReferences.size()) {
+        dProgressErr() << QApplication::tr("Not enough frames in Subtile %1.").arg(dstSubtileIndex + 1);
+        return;
+    }
+    unsigned dstFrameRef = dstFrameReferences[dstIndex];
+    if (dstFrameRef == 0) {
+        dProgressErr() << QApplication::tr("Frame %1 of Subtile %2 is empty.").arg(dstIndex + 1).arg(dstSubtileIndex + 1);
+        return;
+    }
+
+    int srcSubtileIndex = srcSubtileRef - 1;
+    std::vector<unsigned> &srcFrameReferences = min->getFrameReferences(srcSubtileIndex);
+    // assert(min->getSubtileWidth() == 2);
+    unsigned srcIndex = srcFrameReferences.size() - (2 + (srcMicroIndex & ~1)) + (srcMicroIndex & 1);
+    if (srcIndex >= srcFrameReferences.size()) {
+        dProgressErr() << QApplication::tr("Not enough frames in Subtile %1.").arg(srcSubtileIndex + 1);
+        return;
+    }
+    unsigned srcFrameRef = srcFrameReferences[srcIndex];
+    if (srcFrameRef == 0) {
+        dProgressErr() << QApplication::tr("Frame %1 of Subtile %2 is empty.").arg(srcIndex + 1).arg(srcSubtileIndex + 1);
+        return;
+    }
+
+    D1GfxFrame *frameDst = gfx->getFrame(dstFrameRef - 1);
+    const D1GfxFrame *frameSrc = gfx->getFrame(srcFrameRef - 1);
+    if (frameDst->getWidth() != frameSrc->getWidth() || frameDst->getHeight() != frameSrc->getHeight()) {
+        dProgressErr() << QApplication::tr("Mismatching frame-dimensions. %1:%2 vs %3:%4 in frame %5 and %6").arg(frameDst->getWidth()).arg(frameDst->getHeight()).arg(frameSrc->getWidth()).arg(frameSrc->getHeight()).arg(dstFrameRef).arg(srcFrameRef);
+        return;
+    }
+    bool change = false;
+    for (int x = 0; x < frameSrc->getWidth(); x++) {
+        for (int y = 0; y < frameSrc->getHeight(); y++) {
+            change |= frameDst->setPixel(x, y, frameSrc->getPixel(x, y));
+        }
+    }
+    if (change) {
+        if (!silent) {
+            dProgress() << QApplication::tr("The content of Frame %1 overwritten by Frame %2.").arg(dstFrameRef).arg(srcFrameRef);
+        }
+    } else {
+        dProgressWarn() << QApplication::tr("The contents of Frame %1 and Frame %2 are already the same.").arg(dstFrameRef).arg(srcFrameRef);
+    }
+}
+
 void D1Tileset::patch(int dunType, bool silent)
 {
     std::set<unsigned> deletedFrames;
@@ -405,6 +456,12 @@ void D1Tileset::patch(int dunType, bool silent)
             Blk2Mcr(1273, 7);
             Blk2Mcr(1303, 7);
         }
+        // patch dMicroCels - TOWN.CEL
+        // - overwrite subtile 557 and 558 with subtile 939 and 940 to make the inner tile of Griswold's house non-walkable
+        // CopyFrame(this->gfx, 557, 939, silent);
+        // CopyFrame(this->gfx, 558, 940, silent);
+        CopyFrame(this->min, this->gfx, 237, 0, 402, 0, silent);
+        CopyFrame(this->min, this->gfx, 237, 1, 402, 1, silent);
         break;
     case DTYPE_CATHEDRAL:
         // patch dMiniTiles - L1.MIN
