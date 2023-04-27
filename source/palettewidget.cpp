@@ -1103,7 +1103,7 @@ void PaletteWidget::on_translationIndexLineEdit_escPressed()
     this->ui->translationIndexLineEdit->clearFocus();
 }
 
-void PaletteWidget::on_monsterTrnPushButton_clicked()
+void PaletteWidget::patchTrn()
 {
     this->initStopColorPicking();
 

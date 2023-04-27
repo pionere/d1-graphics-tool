@@ -237,6 +237,9 @@
     <property name="title">
      <string>Palette</string>
     </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
     <addaction name="actionNew_PAL"/>
     <addaction name="actionOpen_PAL"/>
     <addaction name="actionSave_PAL"/>
@@ -248,12 +251,14 @@
     <addaction name="actionSave_Translation_Unique"/>
     <addaction name="actionSave_Translation_Unique_as"/>
     <addaction name="actionClose_Translation_Unique"/>
+    <addaction name="actionPatch_Translation_Unique"/>
     <addaction name="separator"/>
     <addaction name="actionNew_Translation_Base"/>
     <addaction name="actionOpen_Translation_Base"/>
     <addaction name="actionSave_Translation_Base"/>
     <addaction name="actionSave_Translation_Base_as"/>
     <addaction name="actionClose_Translation_Base"/>
+    <addaction name="actionPatch_Translation_Base"/>
    </widget>
    <widget class="QMenu" name="menuTasks">
     <property name="toolTipsVisible">
@@ -799,6 +804,14 @@
     <string>Close unique translation</string>
    </property>
   </action>
+  <action name="actionPatch_Translation_Unique">
+   <property name="text">
+    <string>Patch unique translation</string>
+   </property>
+   <property name="toolTip">
+    <string>Replace translation values of 255 with 0</string>
+   </property>
+  </action>
   <action name="actionNew_Translation_Base">
    <property name="text">
     <string>New base translation</string>
@@ -817,6 +830,14 @@
   <action name="actionClose_Translation_Base">
    <property name="text">
     <string>Close base translation</string>
+   </property>
+  </action>
+  <action name="actionPatch_Translation_Base">
+   <property name="text">
+    <string>Patch base translation</string>
+   </property>
+   <property name="toolTip">
+    <string>Replace translation values of 255 with 0</string>
    </property>
   </action>
  </widget>
