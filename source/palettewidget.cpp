@@ -236,7 +236,6 @@ PaletteWidget::PaletteWidget(QWidget *parent, QUndoStack *us, QString title)
     QFontMetrics fm = this->fontMetrics();
     QPushButton *pickBtn = this->ui->colorPickPushButton;
     QPushButton *clearBtn = this->ui->colorClearPushButton;
-    QPushButton *monTrnBtn = this->ui->monsterTrnPushButton;
     // - calculate the border
     QSize pickSize = fm.size(Qt::TextShowMnemonic, pickBtn->text());
     QStyleOptionButton opt;
@@ -246,14 +245,11 @@ PaletteWidget::PaletteWidget(QWidget *parent, QUndoStack *us, QString title)
     // - calculate the width of the other buttons
     constexpr int spacing = 4;
     int clearWidth = fm.size(Qt::TextShowMnemonic, clearBtn->text()).width() + border;
-    int monTrnWidth = fm.size(Qt::TextShowMnemonic, monTrnBtn->text()).width() + border;
     // - select appropriate width
     int colorWidth = std::max(pickWidth, clearWidth);
-    int btnsWidth = std::max(2 * colorWidth + spacing, monTrnWidth);
+    int btnsWidth = 2 * colorWidth + spacing;
     colorWidth = (btnsWidth - spacing) / 2;
     // - set the calculated widths
-    monTrnBtn->setMinimumWidth(btnsWidth);
-    monTrnBtn->setMaximumWidth(btnsWidth);
     pickBtn->setMinimumWidth(colorWidth);
     pickBtn->setMaximumWidth(colorWidth);
     clearBtn->setMinimumWidth(colorWidth);
