@@ -129,6 +129,7 @@ public:
     void refreshColorLineEdit();
     void refreshIndexLineEdit();
     void refreshTranslationIndexLineEdit();
+    void patchTrn();
 
     void update();
     void modify();
@@ -176,7 +177,6 @@ private slots:
     void on_colorClearPushButton_clicked();
     void on_translationIndexLineEdit_returnPressed();
     void on_translationIndexLineEdit_escPressed();
-    void on_monsterTrnPushButton_clicked();
 
     void keyPressEvent(QKeyEvent *event) override;
 

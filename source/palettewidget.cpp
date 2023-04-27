@@ -236,7 +236,6 @@ PaletteWidget::PaletteWidget(QWidget *parent, QUndoStack *us, QString title)
     QFontMetrics fm = this->fontMetrics();
     QPushButton *pickBtn = this->ui->colorPickPushButton;
     QPushButton *clearBtn = this->ui->colorClearPushButton;
-    QPushButton *monTrnBtn = this->ui->monsterTrnPushButton;
     // - calculate the border
     QSize pickSize = fm.size(Qt::TextShowMnemonic, pickBtn->text());
     QStyleOptionButton opt;
@@ -246,14 +245,11 @@ PaletteWidget::PaletteWidget(QWidget *parent, QUndoStack *us, QString title)
     // - calculate the width of the other buttons
     constexpr int spacing = 4;
     int clearWidth = fm.size(Qt::TextShowMnemonic, clearBtn->text()).width() + border;
-    int monTrnWidth = fm.size(Qt::TextShowMnemonic, monTrnBtn->text()).width() + border;
     // - select appropriate width
     int colorWidth = std::max(pickWidth, clearWidth);
-    int btnsWidth = std::max(2 * colorWidth + spacing, monTrnWidth);
+    int btnsWidth = 2 * colorWidth + spacing;
     colorWidth = (btnsWidth - spacing) / 2;
     // - set the calculated widths
-    monTrnBtn->setMinimumWidth(btnsWidth);
-    monTrnBtn->setMaximumWidth(btnsWidth);
     pickBtn->setMinimumWidth(colorWidth);
     pickBtn->setMaximumWidth(colorWidth);
     clearBtn->setMinimumWidth(colorWidth);
@@ -324,8 +320,6 @@ void PaletteWidget::initialize(D1Trn *t, CelView *c, LevelCelView *lc, D1PalHits
 void PaletteWidget::initializeUi()
 {
     bool trnMode = this->isTrn;
-
-    this->ui->monsterTrnPushButton->setVisible(trnMode);
 
     this->ui->translationIndexLineEdit->setToolTip(trnMode ? tr("Enter the color index to which the selected color(s) should map to.") : tr("Enter the color index or 256 to replace the selected color(s) of the frame(s) with the given color or transparent pixel."));
 
@@ -1103,7 +1097,7 @@ void PaletteWidget::on_translationIndexLineEdit_escPressed()
     this->ui->translationIndexLineEdit->clearFocus();
 }
 
-void PaletteWidget::on_monsterTrnPushButton_clicked()
+void PaletteWidget::patchTrn()
 {
     this->initStopColorPicking();
 

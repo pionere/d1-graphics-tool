@@ -2233,6 +2233,11 @@ void MainWindow::on_actionClose_Translation_Unique_triggered()
     this->setUniqueTrn(D1Trn::IDENTITY_PATH);
 }
 
+void MainWindow::on_actionPatch_Translation_Unique_triggered()
+{
+    this->trnUniqueWidget->patchTrn();
+}
+
 void MainWindow::on_actionNew_Translation_Base_triggered()
 {
     QString trnFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, tr("New Translation File"), tr("TRN Files (*.trn *.TRN)"));
@@ -2312,6 +2317,11 @@ void MainWindow::on_actionClose_Translation_Base_triggered()
     // this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), D1Trn::IDENTITY_PATH);
     // select the default trn
     this->setBaseTrn(D1Trn::IDENTITY_PATH);
+}
+
+void MainWindow::on_actionPatch_Translation_Base_triggered()
+{
+    this->trnBaseWidget->patchTrn();
 }
 
 void MainWindow::on_actionUpscaleTask_triggered()
