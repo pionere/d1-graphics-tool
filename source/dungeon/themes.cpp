@@ -790,7 +790,7 @@ static void Theme_TearFountain(int themeId, BYTE tv)
  */
 static void Theme_BrnCross(int themeId, BYTE tv)
 {
-	const BYTE bcrossrnds[4] = { 6, 8, 3, 8 };
+	const BYTE bcrossrnds[4] = { 5, 7, 3, 8 };
 	const BYTE bcrossrnd = bcrossrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
 
 	AddObject(OBJ_TBCROSS, themes[themeId]._tsObjX, themes[themeId]._tsObjY);
@@ -807,7 +807,7 @@ static void Theme_BrnCross(int themeId, BYTE tv)
 static void Theme_WeaponRack(int themeId, BYTE tv)
 {
 	int type;
-	const BYTE weaponrnds[4] = { 6, 8, 3, 8 };
+	const BYTE weaponrnds[4] = { 6, 8, 5, 8 };
 	const BYTE weaponrnd = weaponrnds[currLvl._dDunType - 1]; // TODO: use dType instead?
 
 	static_assert(OBJ_WEAPONRACKL + 2 == OBJ_WEAPONRACKR, "Theme_WeaponRack depends on the order of WEAPONRACKL/R");

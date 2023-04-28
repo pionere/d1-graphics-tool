@@ -7,7 +7,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-/** Default external tile. */
+/** The default external tile. */
 #define BASE_MEGATILE_L1 22
 /** The default floor tile. */
 #define DEFAULT_MEGATILE_L1 13
