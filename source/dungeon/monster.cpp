@@ -655,6 +655,7 @@ static void PlaceUniques()
 				PlaceUniqueMonst(u, mt);
 				if (uniqMonData[u].mUnqFlags & UMF_GROUP) {
 					// assert(mnum == nummonsters - 1);
+dProgressErr() << QApplication::tr("Placing unique typp %1 of %2 utype%3 mtype:%4 vs %5 flags %6").arg(mt).arg(nummtypes).arg(u).arg(mapMonTypes[mt].cmType).arg(uniqMonData[u].mtype).arg(uniqMonData[u].mUnqFlags);
 					PlaceGroup(mt, MON_PACK_SIZE - 1, uniqMonData[u].mUnqFlags, nummonsters - 1);
 				}
 				break;
