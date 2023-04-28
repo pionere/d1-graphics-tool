@@ -480,7 +480,7 @@ static void PlaceGroup(int mtidx, int num, int leaderf, int leader)
 		}
 
 		if (dTransVal[x1][y1] == 0) {
-			dProgressErr() << QApplication::tr("Missing room-ID for possible monster-placement at %1:%2 leader%3 lf:%4 lt:%5").arg(x1).arg(y1).arg(leader).arg(leaderf).arg(monsters[leader]._mType);
+			dProgressErr() << QApplication::tr("Missing room-ID for possible monster-placement at %1:%2 leader%3 lf:%4 lt:%5 curr%d").arg(x1).arg(y1).arg(leader).arg(leaderf).arg(monsters[leader]._mType).arg(nummonsters);
 			continue;
 		}
 		//assert(dTransVal[x1][y1] != 0);
@@ -644,6 +644,7 @@ static void PlaceUniques()
 {
 	int u, mt;
 
+dProgressErr() << QApplication::tr("Placing uniques start");
 	for (u = 0; uniqMonData[u].mtype != MT_INVALID; u++) {
 		if (uniqMonData[u].muLevelIdx != currLvl._dLevelIdx)
 			continue;
@@ -788,6 +789,7 @@ void InitMonsters()
 				na = RandRange(2, 3);
 			else
 				na = RandRange(3, 5);
+dProgressErr() << QApplication::tr("Placing unique type %1 group %2 num %3").arg(mtidx).arg(na).arg(nummonsters).arg(totalmonsters);
 			PlaceGroup(mtidx, na, 0, 0);
 		}
 	// }
