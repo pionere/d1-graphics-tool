@@ -141,7 +141,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	// reset: dMonster, dObject, dPlayer, dItem, dMissile, dLight+
 	CreateLevel();
 	StoreProtections(dun);
-	if (pMegaTiles == NULL || pSolidTbl == NULL) {
+	if (pSolidTbl == NULL) {
 		return;
 	}
 	IncProgress();
@@ -215,7 +215,6 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
     EnterLevel(params.level);
     IncProgress();
 
-	bool hasSubtiles;
 	int extraRounds = params.extraRounds;
 	quint64 started = QDateTime::currentMSecsSinceEpoch();
 	SetRndSeed(params.seed);
@@ -224,7 +223,6 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
 		//LogErrorF("Generating dungeon %d with seed: %d / %d. Entry mode: %d", params.level, sglGameSeed, params.seedQuest, params.entryMode);
 		dProgress() << QApplication::tr("Generating dungeon %1 with seed: %2 / %3. Entry mode: %4").arg(params.level).arg(sglGameSeed).arg(params.seedQuest).arg(params.entryMode);
 		LoadGameLevel(params.entryMode, dun);
-		hasSubtiles = pMegaTiles != NULL;
 		FreeLvlDungeon();
 	} while (--extraRounds >= 0);
 	quint64 now = QDateTime::currentMSecsSinceEpoch();
@@ -247,9 +245,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
     // std::vector<int> monUniques;
     for (int y = 0; y < MAXDUNY; y++) {
         for (int x = 0; x < MAXDUNX; x++) {
-            if (hasSubtiles) {
-                dun->setSubtileAt(x, y, dPiece[x][y]);
-            }
+            dun->setSubtileAt(x, y, dPiece[x][y]);
             int item = dItem[x][y];
             if (item != 0) {
                 item = items[item - 1]._iIdx + 1;

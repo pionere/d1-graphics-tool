@@ -28,25 +28,25 @@ DrlgMem drlg;
 SetPieceStruct pSetPieces[4];
 /** List of the warp-points on the current level */
 WarpStruct pWarps[NUM_DWARP];
-/** Specifies the mega tiles (groups of four tiles). */
-uint16_t* pMegaTiles;
+/** Specifies the tiles (groups of four subtiles). */
+uint16_t pTiles[MAXTILES + 1][4];
 BYTE* pSolidTbl;
 /**
  * List of light blocking dPieces
  */
-bool nBlockTable[MAXTILES + 1];
+bool nBlockTable[MAXSUBTILES + 1];
 /**
  * List of path blocking dPieces
  */
-bool nSolidTable[MAXTILES + 1];
+bool nSolidTable[MAXSUBTILES + 1];
 /**
  * List of trap-source dPieces (_piece_trap_type)
  */
-BYTE nTrapTable[MAXTILES + 1];
+BYTE nTrapTable[MAXSUBTILES + 1];
 /**
  * List of missile blocking dPieces
  */
-bool nMissileTable[MAXTILES + 1];
+bool nMissileTable[MAXSUBTILES + 1];
 /** The difficuly level of the current game (_difficulty) */
 int gnDifficulty;
 /** Contains the data of the active dungeon level. */
@@ -57,13 +57,13 @@ BYTE numtrans;
 static bool gbDoTransVals;
 /** Specifies the active transparency indices. */
 bool TransList[256];
-/** Contains the tile IDs of each square on the map. */
+/** Contains the subtile IDs of each square on the map. */
 int dPiece[MAXDUNX][MAXDUNY];
-/** Specifies the transparency index at each coordinate of the map. */
+/** Specifies the transparency index of each square on the map. */
 BYTE dTransVal[MAXDUNX][MAXDUNY];
-/** Specifies the current darkness levels of each tile on the map. */
+/** Specifies the current darkness levels of each square on the map. */
 //BYTE dLight[MAXDUNX][MAXDUNY];
-/** Specifies the (runtime) flags of each tile on the map (dflag) */
+/** Specifies the (runtime) flags of each square on the map (dflag) */
 BYTE dFlags[MAXDUNX][MAXDUNY];
 /**
  * Contains the NPC numbers of the map. The NPC number represents a
@@ -105,7 +105,7 @@ void DRLG_Init_Globals()
 void InitLvlDungeon()
 {
 	uint16_t bv;
-	size_t i, dwTiles;
+	size_t dwSubtiles;
 	BYTE *pTmp;
 	const LevelData* lds;
 	lds = &AllLevels[currLvl._dLevelIdx];
@@ -115,26 +115,38 @@ void InitLvlDungeon()
 	static_assert((int)SPT_NONE == 0, "InitLvlDungeon fills pSetPieces with 0 instead of SPT_NONE values.");
 	memset(pSetPieces, 0, sizeof(pSetPieces));
 
-	assert(pMegaTiles == NULL);
-	pMegaTiles = (uint16_t*)LoadFileInMem(lds->dMegaTiles);
+	memset(pTiles, 0, sizeof(pTiles));
+	LoadFileWithMem(lds->dMegaTiles, (BYTE*)&pTiles[1][0]); // .TIL
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+	for (int i = 1; i < lengthof(pTiles); i++) {
+		for (bv = 0; bv < lengthof(pTiles[0]); bv++) {
+			pTiles[i][bv] = SwapLE16(pTiles[i][bv]);
+		}
+	}
+#endif
+	for (int i = 1; i < lengthof(pTiles); i++) {
+		for (bv = 0; bv < lengthof(pTiles[0]); bv++) {
+			pTiles[i][bv] = pTiles[i][bv] + 1;
+		}
+	}
 	static_assert(false == 0, "InitLvlDungeon fills tables with 0 instead of false values.");
-	memset(nSolidTable, 0, sizeof(nSolidTable));
 	memset(nBlockTable, 0, sizeof(nBlockTable));
-	memset(nMissileTable, 0, sizeof(nBlockTable));
+	memset(nSolidTable, 0, sizeof(nSolidTable));
 	memset(nTrapTable, 0, sizeof(nTrapTable));
+	memset(nMissileTable, 0, sizeof(nMissileTable));
 	assert(pSolidTbl == NULL);
-	pSolidTbl = LoadFileInMem(lds->dSolidTable, &dwTiles);
+	pSolidTbl = LoadFileInMem(lds->dSolidTable, &dwSubtiles); // .SOL
 	if (pSolidTbl == NULL) {
 		return;
 	}
-	assert(dwTiles <= MAXTILES);
+	assert(dwSubtiles <= MAXSUBTILES);
 	pTmp = pSolidTbl;
 
 	// dpiece 0 is always black/void -> make it non-passable to reduce the necessary checks
 	// no longer necessary, because dPiece is never zero
 	//nSolidTable[0] = true;
 
-	for (i = 1; i <= dwTiles; i++) {
+	for (unsigned i = 1; i <= dwSubtiles; i++) {
 		bv = *pTmp++;
 		nSolidTable[i] = (bv & PFLAG_BLOCK_PATH) != 0;
 		nBlockTable[i] = (bv & PFLAG_BLOCK_LIGHT) != 0;
@@ -154,6 +166,27 @@ void InitLvlDungeon()
 		nMissileTable[8] = false; // the only column which was blocking missiles
 		break;
 	case DTYPE_CATACOMBS:
+		// patch dMegaTiles and dMiniTiles - L2.TIL, L2.MIN
+		// reuse subtiles
+		assert(pTiles[41][1] == 139);
+		pTiles[41][1] = 135;
+		// add separate tiles and subtiles for the arches
+		pTiles[161][0] = 560;
+		pTiles[161][1] = 10;
+		pTiles[161][2] = 561;
+		pTiles[161][3] = 12;
+		pTiles[162][0] = 562;
+		pTiles[162][1] = 563;
+		pTiles[162][2] = 11;
+		pTiles[162][3] = 12;
+		pSubtiles[560][0] = 29;
+		pSubtiles[560][1] = 30;
+		pSubtiles[561][0] = 33;
+		pSubtiles[561][1] = 34;
+		pSubtiles[562][0] = 29;
+		pSubtiles[562][1] = 30;
+		pSubtiles[563][0] = 31;
+		pSubtiles[563][1] = 32;
 		// patch dSolidTable - L2.SOL
 		// specify direction for torches
 		nTrapTable[1] = PTT_LEFT;
@@ -342,7 +375,6 @@ void FreeSetPieces()
 
 void FreeLvlDungeon()
 {
-	MemFreeDbg(pMegaTiles);
 	MemFreeDbg(pSolidTbl);
 }
 
@@ -417,30 +449,27 @@ void DRLG_PlaceMegaTiles(int mt)
 {
 	int i, j, xx, yy;
 	int v1, v2, v3, v4;
-	uint16_t* Tiles;
+	uint16_t* pTile;
 
 	/*int cursor = 0;
 	char tmpstr[1024];
 	long lvs[] = { 22, 56, 57, 58, 59, 60, 61 };
 	for (i = 0; i < lengthof(lvs); i++) {
 		lv = lvs[i];
-		Tiles = &pMegaTiles[mt * 4];
-		v1 = SwapLE16(Tiles[0]) + 1;
-		v2 = SwapLE16(Tiles[1]) + 1;
-		v3 = SwapLE16(Tiles[2]) + 1;
-		v4 = SwapLE16(Tiles[3]) + 1;
+		pTile = &pTiles[mt][0];
+		v1 = pTile[0];
+		v2 = pTile[1];
+		v3 = pTile[2];
+		v4 = pTile[3];
 		cat_str(tmpstr, cursor, "- %d: %d, %d, %d, %d", lv, v1, v2, v3, v4);
 	}
 	app_fatal(tmpstr);*/
 
-	if (pMegaTiles == NULL) {
-		return;
-	}
-	Tiles = &pMegaTiles[mt * 4];
-	v1 = SwapLE16(Tiles[0]) + 1;
-	v2 = SwapLE16(Tiles[1]) + 1;
-	v3 = SwapLE16(Tiles[2]) + 1;
-	v4 = SwapLE16(Tiles[3]) + 1;
+	pTile = &pTiles[mt][0];
+	v1 = pTile[0];
+	v2 = pTile[1];
+	v3 = pTile[2];
+	v4 = pTile[3];
 
 	for (j = 0; j < MAXDUNY; j += 2) {
 		for (i = 0; i < MAXDUNX; i += 2) {
@@ -455,18 +484,18 @@ void DRLG_PlaceMegaTiles(int mt)
 	for (j = 0; j < DMAXY; j++) {
 		xx = DBORDERX;
 		for (i = 0; i < DMAXX; i++) {
-			mt = dungeon[i][j] - 1;
-			if (mt < 0) {
+			mt = dungeon[i][j];
+			if (mt <= 0) {
 				dProgressErr() << QString("Missing tile at %1:%2 .. %3:%4").arg(i).arg(j).arg(xx).arg(yy);
 				xx += 2;
 				continue;
 			}
-			assert(mt >= 0);
-			Tiles = &pMegaTiles[mt * 4];
-			v1 = SwapLE16(Tiles[0]) + 1;
-			v2 = SwapLE16(Tiles[1]) + 1;
-			v3 = SwapLE16(Tiles[2]) + 1;
-			v4 = SwapLE16(Tiles[3]) + 1;
+			assert(mt > 0);
+			pTile = &pTiles[mt][0];
+			v1 = pTile[0];
+			v2 = pTile[1];
+			v3 = pTile[2];
+			v4 = pTile[3];
 			dPiece[xx][yy] = v1;
 			dPiece[xx + 1][yy] = v2;
 			dPiece[xx][yy + 1] = v3;
