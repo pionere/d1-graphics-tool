@@ -856,6 +856,15 @@ static void DRLG_LoadL2SP()
 		}
 		// patch the map - Bonestr2.DUN
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
+		// add tiles with subtiles for arches
+		lm[2 + 2 + 1 * 7] = SwapLE16(162);
+		lm[2 + 4 + 1 * 7] = SwapLE16(162);
+		lm[2 + 2 + 5 * 7] = SwapLE16(162);
+		lm[2 + 4 + 5 * 7] = SwapLE16(162);
+		lm[2 + 1 + 2 * 7] = SwapLE16(161);
+		lm[2 + 1 + 4 * 7] = SwapLE16(161);
+		lm[2 + 5 + 2 * 7] = SwapLE16(161);
+		lm[2 + 5 + 4 * 7] = SwapLE16(161);
 		// - remove tile to leave space for shadow
 		lm[2 + 2 + 4 * 7] = 0;
 		// protect the main structure
@@ -2474,6 +2483,34 @@ void DRLG_InitL2Specials(int x1, int y1, int x2, int y2)
 	}*/
 }
 
+static void DRLG_L2FixMap()
+{
+	uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
+
+	if (lm == NULL) {
+		return;
+	}
+
+	if (pSetPieces[0]._sptype == SPT_LVL_BCHAMB) {
+		// patch the map - Bonestr2.DUN
+		// add tiles with subtiles for arches
+		lm[2 + 13 + 6 * 32] = SwapLE16(161);
+		lm[2 + 13 + 8 * 32] = SwapLE16(161);
+		lm[2 + 17 + 6 * 32] = SwapLE16(161);
+		lm[2 + 17 + 8 * 32] = SwapLE16(161);
+
+		lm[2 + 13 + 14 * 32] = SwapLE16(161);
+		lm[2 + 13 + 16 * 32] = SwapLE16(161);
+		lm[2 + 17 + 14 * 32] = SwapLE16(161);
+		lm[2 + 17 + 16 * 32] = SwapLE16(161);
+
+		lm[2 + 18 + 9 * 32] = SwapLE16(162);
+		lm[2 + 20 + 9 * 32] = SwapLE16(162);
+		lm[2 + 18 + 13 * 32] = SwapLE16(162);
+		lm[2 + 20 + 13 * 32] = SwapLE16(162);
+    }
+}
+
 static void DRLG_L2FixPreMap(int idx)
 {
 	uint16_t* lm = (uint16_t*)pSetPieces[idx]._spData;
@@ -2612,6 +2649,7 @@ static void LoadL2Dungeon(const LevelData* lds)
 	static_assert(sizeof(dungeon[0][0]) == 1, "memset on dungeon does not work in LoadL2DungeonData.");
 	memset(dungeon, BASE_MEGATILE_L2, sizeof(dungeon));
 
+	DRLG_L2FixMap();
 	DRLG_LoadSP(0, DEFAULT_MEGATILE_L2);
 }
 
