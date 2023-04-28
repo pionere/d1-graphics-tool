@@ -480,7 +480,7 @@ static void PlaceGroup(int mtidx, int num, int leaderf, int leader)
 		}
 
 		if (dTransVal[x1][y1] == 0) {
-			dProgressErr() << QApplication::tr("Missing room-ID for possible monster-placement at %1:%2 leader%3 lf:%4 lt:%5 curr%d").arg(x1).arg(y1).arg(leader).arg(leaderf).arg(monsters[leader]._mType).arg(nummonsters);
+			dProgressErr() << QApplication::tr("Missing room-ID for possible monster-placement at %1:%2 leader%3 lf:%4 lt:%5 curr%6").arg(x1).arg(y1).arg(leader).arg(leaderf).arg(monsters[leader]._mType).arg(nummonsters);
 			continue;
 		}
 		//assert(dTransVal[x1][y1] != 0);
@@ -656,13 +656,15 @@ dProgressErr() << QApplication::tr("Placing uniques start");
 				PlaceUniqueMonst(u, mt);
 				if (uniqMonData[u].mUnqFlags & UMF_GROUP) {
 					// assert(mnum == nummonsters - 1);
-dProgressErr() << QApplication::tr("Placing unique typp %1 of %2 utype%3 mtype:%4 vs %5 flags %6").arg(mt).arg(nummtypes).arg(u).arg(mapMonTypes[mt].cmType).arg(uniqMonData[u].mtype).arg(uniqMonData[u].mUnqFlags);
+dProgressErr() << QApplication::tr("Placing unique typp %1 of %2 utype%3 mtype:%4 vs %5 flags %6 mnum:%7").arg(mt).arg(nummtypes).arg(u).arg(mapMonTypes[mt].cmType).arg(uniqMonData[u].mtype).arg(uniqMonData[u].mUnqFlags).arg(nummonsters - 1);
 					PlaceGroup(mt, MON_PACK_SIZE - 1, uniqMonData[u].mUnqFlags, nummonsters - 1);
+dProgressErr() << QApplication::tr("Placing unique done").arg(mt).arg(nummtypes).arg(u).arg(mapMonTypes[mt].cmType).arg(uniqMonData[u].mtype).arg(uniqMonData[u].mUnqFlags);
 				}
 				break;
 			}
 		}
 	}
+dProgressErr() << QApplication::tr("Placing uniques done");
 }
 
 static void SetMapMonsters(int idx)
