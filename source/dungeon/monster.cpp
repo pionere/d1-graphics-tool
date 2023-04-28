@@ -592,20 +592,20 @@ static void InitUniqueMonster(int mnum, int uniqindex)
 	}
 }
 
-static void PlaceUniqueMonst(int uniqindex, int mtidx)
+static bool PlaceUniqueMonst(int uniqindex, int mtidx)
 {
 	int xp, yp, x, y;
 	int count2;
 	int mnum, count;
 	static_assert(NUM_COLOR_TRNS <= UCHAR_MAX, "Color transform index stored in BYTE field.");
 	if (uniquetrans >= NUM_COLOR_TRNS) {
-		return;
+		return false;
 	}
 
 	switch (uniqindex) {
 	case UMT_ZHAR:
 		if (zharlib == -1)
-			return;
+			return false;
 		xp = themes[zharlib]._tsx1 + 4;
 		yp = themes[zharlib]._tsy1 + 4;
 		break;
@@ -638,13 +638,13 @@ static void PlaceUniqueMonst(int uniqindex, int mtidx)
 	// assert(nummonsters < MAXMONSTERS);
 	mnum = PlaceMonster(mtidx, xp, yp);
 	InitUniqueMonster(mnum, uniqindex);
+	return true;
 }
 
 static void PlaceUniques()
 {
 	int u, mt;
 
-dProgressErr() << QApplication::tr("Placing uniques start");
 	for (u = 0; uniqMonData[u].mtype != MT_INVALID; u++) {
 		if (uniqMonData[u].muLevelIdx != currLvl._dLevelIdx)
 			continue;
@@ -653,18 +653,14 @@ dProgressErr() << QApplication::tr("Placing uniques start");
 			continue;
 		for (mt = 0; mt < nummtypes; mt++) {
 			if (mapMonTypes[mt].cmType == uniqMonData[u].mtype) {
-				PlaceUniqueMonst(u, mt);
-				if (uniqMonData[u].mUnqFlags & UMF_GROUP) {
+				if (PlaceUniqueMonst(u, mt) && uniqMonData[u].mUnqFlags & UMF_GROUP) {
 					// assert(mnum == nummonsters - 1);
-dProgressErr() << QApplication::tr("Placing unique typp %1 of %2 utype%3 mtype:%4 vs %5 flags %6 mnum:%7").arg(mt).arg(nummtypes).arg(u).arg(mapMonTypes[mt].cmType).arg(uniqMonData[u].mtype).arg(uniqMonData[u].mUnqFlags).arg(nummonsters - 1);
 					PlaceGroup(mt, MON_PACK_SIZE - 1, uniqMonData[u].mUnqFlags, nummonsters - 1);
-dProgressErr() << QApplication::tr("Placing unique done").arg(mt).arg(nummtypes).arg(u).arg(mapMonTypes[mt].cmType).arg(uniqMonData[u].mtype).arg(uniqMonData[u].mUnqFlags);
 				}
 				break;
 			}
 		}
 	}
-dProgressErr() << QApplication::tr("Placing uniques done");
 }
 
 static void SetMapMonsters(int idx)
@@ -791,7 +787,6 @@ void InitMonsters()
 				na = RandRange(2, 3);
 			else
 				na = RandRange(3, 5);
-dProgressErr() << QApplication::tr("Placing unique type %1 group %2 num %3").arg(mtidx).arg(na).arg(nummonsters).arg(totalmonsters);
 			PlaceGroup(mtidx, na, 0, 0);
 		}
 	// }
