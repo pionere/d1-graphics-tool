@@ -35,7 +35,7 @@ const BYTE themeTiles[NUM_DRT_TYPES] = { DEFAULT_MEGATILE_L2, 1, 2, 4, 5, 8, 7, 
 /*
  * Maps tile IDs to their corresponding undecorated tile type.
  */
-const BYTE L2BTYPES[163] = {
+const BYTE L2BTYPES[165] = {
 	// clang-format off
 	0, 1, 2, 3, 0, 0, 0, 0, 4, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 1, // 10..
@@ -53,13 +53,13 @@ const BYTE L2BTYPES[163] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //130..
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //140..
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //150..
-	0, 0, 0
+	0, 0, 0, 0, 0
 	// clang-format on
 };
 /*
  * Specifies where the given tile ID should spread the room ID (transval).
  */
-const BYTE L2FTYPES[163] = {
+const BYTE L2FTYPES[165] = {
 	// clang-format off
 	 0, 10, 12, 15, 10, 12, 14, 10,  8, 12,
 	 0,  0,  0,  0,  0,  0,  0,  0,  0, 10, // 10..
@@ -77,7 +77,7 @@ const BYTE L2FTYPES[163] = {
 	15, 15, 10, 10, 15, 15, 12, 12, 15, 15, //130..
 	10, 12, 12,  0,  0,  0,  0,  0,  0,  0, //140..
 	10, 12, 10, 12, 10, 12, 10, 12, 15, 15, //150..
-	10, 10, 12
+	10, 10, 12, 10, 12
 	// clang-format on
 };
 /** Miniset: Stairs up. */
@@ -673,39 +673,39 @@ static void DRLG_L2Shadows()
 				break;
 			}
 			if (varch) {
-				if (dungeon[x - 1][y] == 3) {
+				if (dungeon[x - 1][y] == 3 || dungeon[x - 1][y] == 162) {
 					if (dungeon[x - 1][y + 1] == 3 || dungeon[x - 1][y + 1] == 46) { // overlapping shadows (missing tile to match the other part)
 						if (dungeon[x - 1][y - 1] == 3) {
 							// 3, 0,  search
-							// 3, 39/41/42,
+							// 3/162, 39/41/42,
 							// 3/46, 0,
 
 							//48, 0, replace
-							//51, 0,
+							//51/164, 0,
 							//47, 0,
 							dungeon[x - 1][y - 1] = 48;
-							dungeon[x - 1][y] = 51;
+							dungeon[x - 1][y] = dungeon[x - 1][y] == 3 ? 51 : 164;
 							dungeon[x - 1][y + 1] = 47;
 							pillar = false;
 						} else if (dungeon[x - 1][y - 1] == 2) {
 							// 2, 0,  search
-							// 3, 39/41/42,
+							// 3/162, 39/41/42,
 							// 3/46, 0,
 
 							//142, 0, replace
-							//51, 0,
+							//51/164, 0,
 							//47, 0,
 							dungeon[x - 1][y - 1] = 142;
-							dungeon[x - 1][y] = 51;
+							dungeon[x - 1][y] = dungeon[x - 1][y] == 3 ? 51 : 164;
 							dungeon[x - 1][y + 1] = 47;
 							pillar = false;
 						} else if (dungeon[x - 1][y - 1] == 47 || dungeon[x - 1][y - 1] == 46) { // overlapping shadows
 							// 46/47, 0,  search
-							// 3, 39/41/42,
+							// 3/162, 39/41/42,
 							// 3/46, 0,
 
 							// 0, 0, replace
-							//51, 0,
+							//51/164, 0,
 							//47, 0,
 							dungeon[x - 1][y] = 51;
 							dungeon[x - 1][y + 1] = 47;
@@ -735,14 +735,14 @@ static void DRLG_L2Shadows()
 			}
 			if (harch) {
 				// - horizontal arch
-				if (dungeon[x][y - 1] == 3) {
+				if (dungeon[x][y - 1] == 3 || dungeon[x - 1][y] == 161) {
 					if (dungeon[x + 1][y - 1] == 3) {
-						// 3, 3,  search
+						// 3/161, 3,  search
 						// 40/41/43, 0
 
-						//49,46, replace
+						//49/163,46, replace
 						// 0, 0,
-						dungeon[x][y - 1] = 49;
+						dungeon[x][y - 1] = dungeon[x][y - 1] == 3 ? 49 : 163;
 						dungeon[x + 1][y - 1] = 46;
 					//} else if (dungeon[x + 1][y - 1] == 47) { // overlapping shadows (missing tile to match the other part)
 					//	dungeon[x][y - 1] = 49;
@@ -2497,7 +2497,7 @@ static void DRLG_L2FixMap()
 		lm[2 + 13 + 6 * 32] = SwapLE16(161);
 		lm[2 + 13 + 8 * 32] = SwapLE16(161);
 		lm[2 + 17 + 6 * 32] = SwapLE16(161);
-		lm[2 + 17 + 8 * 32] = SwapLE16(161);
+		lm[2 + 17 + 8 * 32] = SwapLE16(163);
 
 		lm[2 + 13 + 14 * 32] = SwapLE16(161);
 		lm[2 + 13 + 16 * 32] = SwapLE16(161);

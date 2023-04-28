@@ -510,18 +510,50 @@ void D1Tileset::patch(int dunType, bool silent)
             this->createSubtile();
         CopyFrame(this->min, this->gfx, 563, 0, 10, 0, silent);
         CopyFrame(this->min, this->gfx, 563, 1, 10, 1, silent);
+        if (this->min->getSubtileCount() < 564)
+            this->createSubtile();
+        CopyFrame(this->min, this->gfx, 564, 0, 159, 0);
+        CopyFrame(this->min, this->gfx, 564, 1, 159, 1);
+        if (this->min->getSubtileCount() < 565)
+            this->createSubtile();
+        CopyFrame(this->min, this->gfx, 565, 0, 161, 0);
+        CopyFrame(this->min, this->gfx, 565, 1, 161, 1);
+        if (this->min->getSubtileCount() < 566)
+            this->createSubtile();
+        CopyFrame(this->min, this->gfx, 566, 0, 166, 0);
+        CopyFrame(this->min, this->gfx, 566, 1, 166, 1);
+        if (this->min->getSubtileCount() < 567)
+            this->createSubtile();
+        CopyFrame(this->min, this->gfx, 567, 0, 167, 0);
+        CopyFrame(this->min, this->gfx, 567, 1, 167, 1);
+        // - floor tile(3) with vertical arch
         if (this->til->getTileCount() < 161)
             this->createTile();
         ReplaceSubtile(this->til, 161 - 1, 0, 560, silent);
         ReplaceSubtile(this->til, 161 - 1, 1, 10, silent);
         ReplaceSubtile(this->til, 161 - 1, 2, 561, silent);
         ReplaceSubtile(this->til, 161 - 1, 3, 12, silent);
+        // - floor tile(3) with horizontal arch
         if (this->til->getTileCount() < 162)
             this->createTile();
         ReplaceSubtile(this->til, 162 - 1, 0, 562, silent);
         ReplaceSubtile(this->til, 162 - 1, 1, 563, silent);
         ReplaceSubtile(this->til, 162 - 1, 2, 11, silent);
         ReplaceSubtile(this->til, 162 - 1, 3, 12, silent);
+        // - floor tile with shadow(49) with vertical arch
+        if (this->til->getTileCount() < 163)
+            this->createTile();
+        ReplaceSubtile(this->til, 163 - 1, 0, 564, silent); // - 159
+        ReplaceSubtile(this->til, 163 - 1, 1, 160, silent);
+        ReplaceSubtile(this->til, 163 - 1, 2, 565, silent); // - 161
+        ReplaceSubtile(this->til, 163 - 1, 3, 162, silent);
+        // - floor tile with shadow(51) with horizontal arch
+        if (this->til->getTileCount() < 164)
+            this->createTile();
+        ReplaceSubtile(this->til, 164 - 1, 0, 566, silent); // - 166
+        ReplaceSubtile(this->til, 164 - 1, 1, 567, silent); // - 167
+        ReplaceSubtile(this->til, 164 - 1, 2, 168, silent);
+        ReplaceSubtile(this->til, 164 - 1, 3, 169, silent);
         break;
     case DTYPE_CAVES:
         // patch dMiniTiles - L3.MIN

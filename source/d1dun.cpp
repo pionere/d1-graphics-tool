@@ -3001,7 +3001,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(13, 6, 161);
         change |= this->changeTileAt(13, 8, 161);
         change |= this->changeTileAt(17, 6, 161);
-        change |= this->changeTileAt(17, 8, 161);
+        change |= this->changeTileAt(17, 8, 163);
 
         change |= this->changeTileAt(13, 14, 161);
         change |= this->changeTileAt(13, 16, 161);

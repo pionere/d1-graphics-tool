@@ -171,14 +171,26 @@ void InitLvlDungeon()
 		assert(pTiles[41][1] == 139);
 		pTiles[41][1] = 135;
 		// add separate tiles and subtiles for the arches
+		// - floor tile(3) with vertical arch
 		pTiles[161][0] = 560;
 		pTiles[161][1] = 10;
 		pTiles[161][2] = 561;
 		pTiles[161][3] = 12;
+		// - floor tile(3) with horizontal arch
 		pTiles[162][0] = 562;
 		pTiles[162][1] = 563;
 		pTiles[162][2] = 11;
 		pTiles[162][3] = 12;
+		// - floor tile with shadow(49) with vertical arch
+		pTiles[163][0] = 564; // - 159
+		pTiles[163][1] = 160;
+		pTiles[163][2] = 565; // - 161
+		pTiles[163][3] = 162;
+		// - floor tile with shadow(51) with horizontal arch
+		pTiles[164][0] = 566; // - 166
+		pTiles[164][1] = 567; // - 167
+		pTiles[164][2] = 168;
+		pTiles[164][3] = 169;
 		// pSubtiles[560][0] = 29;
 		// pSubtiles[560][1] = 30;
 		// pSubtiles[561][0] = 33;
@@ -187,6 +199,14 @@ void InitLvlDungeon()
 		// pSubtiles[562][1] = 30;
 		// pSubtiles[563][0] = 31;
 		// pSubtiles[563][1] = 32;
+		// pSubtiles[564][0] = 510;
+		// pSubtiles[564][1] = 511;
+		// pSubtiles[565][0] = 514;
+		// pSubtiles[565][1] = 515;
+		// pSubtiles[566][0] = 522;
+		// pSubtiles[566][1] = 523;
+		// pSubtiles[567][0] = 524;
+		// pSubtiles[567][1] = 525;
 		// patch dSolidTable - L2.SOL
 		// specify direction for torches
 		nTrapTable[1] = PTT_LEFT;
