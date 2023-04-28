@@ -22,6 +22,7 @@ public:
     bool load(const OpenAsParam &params);
     void save(const SaveAsParam &params);
 
+    void createTile();
     void createSubtile();
     void removeSubtile(int subtileIndex, int replacement);
     bool reuseFrames(std::set<int> &removedIndices, bool silent);
