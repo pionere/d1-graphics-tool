@@ -135,7 +135,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	SetRndSeed(gameSeed); // restore seed after InitLevelMonsters
 	CreateLevel();
 	StoreProtections(dun);
-	if (pTiles == NULL || pSolidTbl == NULL) {
+	if (pSolidTbl == NULL) {
 		return;
 	}
 	IncProgress();
@@ -209,14 +209,12 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
     EnterLevel(params.level);
     IncProgress();
 
-	bool hasSubtiles;
 	int extraRounds = params.extraRounds;
 	SetRndSeed(params.seed);
 	do {
 		extern int32_t sglGameSeed;
 		LogErrorF("Generating dungeon %d with seed: %d / %d. Entry mode: %d", params.level, sglGameSeed, params.seedQuest, params.entryMode);
 		LoadGameLevel(params.entryMode, dun);
-		hasSubtiles = pTiles != NULL;
 		FreeLvlDungeon();
 	} while (--extraRounds >= 0);
 
@@ -237,9 +235,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
     // std::vector<int> monUniques;
     for (int y = 0; y < MAXDUNY; y++) {
         for (int x = 0; x < MAXDUNX; x++) {
-            if (hasSubtiles) {
-                dun->setSubtileAt(x, y, dPiece[x][y]);
-            }
+            dun->setSubtileAt(x, y, dPiece[x][y]);
             int item = dItem[x][y];
             if (item != 0) {
                 item = items[item - 1]._iIdx + 1;

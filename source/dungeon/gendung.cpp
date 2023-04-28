@@ -25,7 +25,7 @@ SetPieceStruct pSetPieces[4];
 /** List of the warp-points on the current level */
 WarpStruct pWarps[NUM_DWARP];
 /** Specifies the tiles (groups of four subtiles). */
-uint16_t* pTiles;
+uint16_t pTiles[MAXTILES + 1][4];
 BYTE* pSolidTbl;
 /**
  * List of light blocking dPieces
@@ -111,8 +111,8 @@ void InitLvlDungeon()
 	static_assert((int)SPT_NONE == 0, "InitLvlDungeon fills pSetPieces with 0 instead of SPT_NONE values.");
 	memset(pSetPieces, 0, sizeof(pSetPieces));
 
-	assert(pTiles == NULL);
-	pTiles = (uint16_t*)LoadFileInMem(lds->dMegaTiles); // .TIL
+	memset(pTiles, 0, sizeof(pTiles));
+	LoadFileWithMem(lds->dMegaTiles, (BYTE*)&pTiles[1][0]); // .TIL
 	static_assert(false == 0, "InitLvlDungeon fills tables with 0 instead of false values.");
 	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nSolidTable, 0, sizeof(nSolidTable));
@@ -338,7 +338,6 @@ void FreeSetPieces()
 
 void FreeLvlDungeon()
 {
-	MemFreeDbg(pTiles);
 	MemFreeDbg(pSolidTbl);
 }
 
@@ -420,7 +419,7 @@ void DRLG_PlaceMegaTiles(int mt)
 	long lvs[] = { 22, 56, 57, 58, 59, 60, 61 };
 	for (i = 0; i < lengthof(lvs); i++) {
 		lv = lvs[i];
-		pTile = &pTiles[mt * 4];
+		pTile = &pTiles[mt][]0;
 		v1 = SwapLE16(pTile[0]) + 1;
 		v2 = SwapLE16(pTile[1]) + 1;
 		v3 = SwapLE16(pTile[2]) + 1;
@@ -429,10 +428,7 @@ void DRLG_PlaceMegaTiles(int mt)
 	}
 	app_fatal(tmpstr);*/
 
-	if (pTiles == NULL) {
-		return;
-	}
-	pTile = &pTiles[mt * 4];
+	pTile = &pTiles[mt][0];
 	v1 = SwapLE16(pTile[0]) + 1;
 	v2 = SwapLE16(pTile[1]) + 1;
 	v3 = SwapLE16(pTile[2]) + 1;
@@ -451,9 +447,9 @@ void DRLG_PlaceMegaTiles(int mt)
 	for (j = 0; j < DMAXY; j++) {
 		xx = DBORDERX;
 		for (i = 0; i < DMAXX; i++) {
-			mt = dungeon[i][j] - 1;
-			assert(mt >= 0);
-			pTile = &pTiles[mt * 4];
+			mt = dungeon[i][j];
+			assert(mt > 0);
+			pTile = &pTiles[mt][0];
 			v1 = SwapLE16(pTile[0]) + 1;
 			v2 = SwapLE16(pTile[1]) + 1;
 			v3 = SwapLE16(pTile[2]) + 1;

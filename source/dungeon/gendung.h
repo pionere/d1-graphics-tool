@@ -14,7 +14,7 @@ extern BYTE drlgFlags[DMAXX][DMAXY];
 extern DrlgMem drlg;
 extern SetPieceStruct pSetPieces[4];
 extern WarpStruct pWarps[NUM_DWARP];
-extern uint16_t* pTiles;
+extern uint16_t pTiles[MAXTILES + 1][4];
 extern BYTE* pSolidTbl;
 extern BYTE microFlags[MAXSUBTILES + 1];
 extern bool nBlockTable[MAXSUBTILES + 1];
