@@ -512,20 +512,20 @@ void D1Tileset::patch(int dunType, bool silent)
         CopyFrame(this->min, this->gfx, 563, 1, 10, 1, silent);
         if (this->min->getSubtileCount() < 564)
             this->createSubtile();
-        CopyFrame(this->min, this->gfx, 564, 0, 159, 0);
-        CopyFrame(this->min, this->gfx, 564, 1, 159, 1);
+        CopyFrame(this->min, this->gfx, 564, 0, 159, 0, silent);
+        CopyFrame(this->min, this->gfx, 564, 1, 159, 1, silent);
         if (this->min->getSubtileCount() < 565)
             this->createSubtile();
-        CopyFrame(this->min, this->gfx, 565, 0, 161, 0);
-        CopyFrame(this->min, this->gfx, 565, 1, 161, 1);
+        CopyFrame(this->min, this->gfx, 565, 0, 161, 0, silent);
+        CopyFrame(this->min, this->gfx, 565, 1, 161, 1, silent);
         if (this->min->getSubtileCount() < 566)
             this->createSubtile();
-        CopyFrame(this->min, this->gfx, 566, 0, 166, 0);
-        CopyFrame(this->min, this->gfx, 566, 1, 166, 1);
+        CopyFrame(this->min, this->gfx, 566, 0, 166, 0, silent);
+        CopyFrame(this->min, this->gfx, 566, 1, 166, 1, silent);
         if (this->min->getSubtileCount() < 567)
             this->createSubtile();
-        CopyFrame(this->min, this->gfx, 567, 0, 167, 0);
-        CopyFrame(this->min, this->gfx, 567, 1, 167, 1);
+        CopyFrame(this->min, this->gfx, 567, 0, 167, 0, silent);
+        CopyFrame(this->min, this->gfx, 567, 1, 167, 1, silent);
         // - floor tile(3) with vertical arch
         if (this->til->getTileCount() < 161)
             this->createTile();
