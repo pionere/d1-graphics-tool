@@ -135,7 +135,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	SetRndSeed(gameSeed); // restore seed after InitLevelMonsters
 	CreateLevel();
 	StoreProtections(dun);
-	if (pMegaTiles == NULL || pSolidTbl == NULL) {
+	if (pTiles == NULL || pSolidTbl == NULL) {
 		return;
 	}
 	IncProgress();
@@ -216,7 +216,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
 		extern int32_t sglGameSeed;
 		LogErrorF("Generating dungeon %d with seed: %d / %d. Entry mode: %d", params.level, sglGameSeed, params.seedQuest, params.entryMode);
 		LoadGameLevel(params.entryMode, dun);
-		hasSubtiles = pMegaTiles != NULL;
+		hasSubtiles = pTiles != NULL;
 		FreeLvlDungeon();
 	} while (--extraRounds >= 0);
 
