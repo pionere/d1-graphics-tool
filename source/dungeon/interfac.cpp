@@ -230,9 +230,10 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
 
     dun->setLevelType(currLvl._dType);
 
+    int defaultTile = dun->getDefaultTile();
     for (int y = 0; y < MAXDUNY; y += 2) {
         for (int x = 0; x < MAXDUNX; x += 2) {
-            dun->setTileAt(x, y, 0);
+            dun->setTileAt(x, y, defaultTile);
         }
     }
     for (int y = 0; y < DMAXY; y++) {

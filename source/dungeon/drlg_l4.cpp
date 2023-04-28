@@ -13,9 +13,9 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-/** Starting position of the megatiles. */
+/** Default external tile. */
 #define BASE_MEGATILE_L4 30
-/** Default megatile if the tile is zero. */
+/** The default floor tile. */
 #define DEFAULT_MEGATILE_L4 6
 
 #define DQUAD_ROOM_SIZE 14

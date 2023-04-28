@@ -480,7 +480,7 @@ static void PlaceGroup(int mtidx, int num, int leaderf, int leader)
 		}
 
 		if (dTransVal[x1][y1] == 0) {
-			dProgressErr() << QApplication::tr("Missing room-ID for possible monster-placement at %1:%2").arg(x1).arg(y1);
+			dProgressErr() << QApplication::tr("Missing room-ID for possible monster-placement at %1:%2 leader%3 lf:%4 lt:%5").arg(x1).arg(y1).arg(leader).arg(leaderf).arg(monsters[leader]._mType);
 			continue;
 		}
 		//assert(dTransVal[x1][y1] != 0);
