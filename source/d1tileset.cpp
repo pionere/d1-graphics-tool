@@ -476,6 +476,38 @@ void D1Tileset::patch(int dunType, bool silent)
         Blk2Mcr(140, 1);
         break;
     case DTYPE_CATACOMBS:
+        // patch dMegaTiles and dMiniTiles - L2.TIL, L2.MIN
+        // reuse subtiles
+        ReplaceSubtile(this->til, 41 - 1, 1, 135, silent);
+        // add separate tiles and subtiles for the arches
+        if (this->min->getSubtileCount() < 560)
+            this->min->createSubtile();
+        CopyFrame(this->min, this->gfx, 560, 0, 9, 0, silent);
+        CopyFrame(this->min, this->gfx, 560, 1, 9, 1, silent);
+        if (this->min->getSubtileCount() < 561)
+            this->min->createSubtile();
+        CopyFrame(this->min, this->gfx, 561, 0, 11, 0, silent);
+        CopyFrame(this->min, this->gfx, 561, 1, 11, 1, silent);
+        if (this->min->getSubtileCount() < 562)
+            this->min->createSubtile();
+        CopyFrame(this->min, this->gfx, 562, 0, 9, 0, silent);
+        CopyFrame(this->min, this->gfx, 562, 1, 9, 1, silent);
+        if (this->min->getSubtileCount() < 563)
+            this->min->createSubtile();
+        CopyFrame(this->min, this->gfx, 563, 0, 10, 0, silent);
+        CopyFrame(this->min, this->gfx, 563, 1, 10, 1, silent);
+        if (this->til->getTileCount() < 161)
+            this->til->createTile();
+        ReplaceSubtile(this->til, 161 - 1, 0, 560, silent);
+        ReplaceSubtile(this->til, 161 - 1, 1, 10, silent);
+        ReplaceSubtile(this->til, 161 - 1, 2, 561, silent);
+        ReplaceSubtile(this->til, 161 - 1, 3, 12, silent);
+        if (this->til->getTileCount() < 162)
+            this->til->createTile();
+        ReplaceSubtile(this->til, 162 - 1, 0, 562, silent);
+        ReplaceSubtile(this->til, 162 - 1, 1, 563, silent);
+        ReplaceSubtile(this->til, 162 - 1, 2, 11, silent);
+        ReplaceSubtile(this->til, 162 - 1, 3, 12, silent);
         break;
     case DTYPE_CAVES:
         // patch dMiniTiles - L3.MIN

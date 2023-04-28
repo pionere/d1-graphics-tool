@@ -179,14 +179,14 @@ void InitLvlDungeon()
 		pTiles[162][1] = 563;
 		pTiles[162][2] = 11;
 		pTiles[162][3] = 12;
-		pSubtiles[560][0] = 29;
-		pSubtiles[560][1] = 30;
-		pSubtiles[561][0] = 33;
-		pSubtiles[561][1] = 34;
-		pSubtiles[562][0] = 29;
-		pSubtiles[562][1] = 30;
-		pSubtiles[563][0] = 31;
-		pSubtiles[563][1] = 32;
+		// pSubtiles[560][0] = 29;
+		// pSubtiles[560][1] = 30;
+		// pSubtiles[561][0] = 33;
+		// pSubtiles[561][1] = 34;
+		// pSubtiles[562][0] = 29;
+		// pSubtiles[562][1] = 30;
+		// pSubtiles[563][0] = 31;
+		// pSubtiles[563][1] = 32;
 		// patch dSolidTable - L2.SOL
 		// specify direction for torches
 		nTrapTable[1] = PTT_LEFT;
