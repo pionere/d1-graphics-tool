@@ -93,6 +93,12 @@ void D1Tileset::save(const SaveAsParam &params)
     this->tmi->save(params);
 }
 
+void D1Tileset::createTile()
+{
+    this->til->createTile();
+    this->amp->createTile();
+}
+
 void D1Tileset::createSubtile()
 {
     this->min->createSubtile();
@@ -288,20 +294,6 @@ static void ReplaceSubtile(D1Til *til, int tileIndex, unsigned index, int subtil
 // static void CopyFrame(D1Gfx *gfx, int dstFrameRef, int srcFrameRef, bool silent)
 static void CopyFrame(D1Min *min, D1Gfx *gfx, int dstSubtileRef, int dstMicroIndex, int srcSubtileRef, int srcMicroIndex, bool silent)
 {
-    int dstSubtileIndex = dstSubtileRef - 1;
-    std::vector<unsigned> &dstFrameReferences = min->getFrameReferences(dstSubtileIndex);
-    // assert(min->getSubtileWidth() == 2);
-    unsigned dstIndex = dstFrameReferences.size() - (2 + (dstMicroIndex & ~1)) + (dstMicroIndex & 1);
-    if (dstIndex >= dstFrameReferences.size()) {
-        dProgressErr() << QApplication::tr("Not enough frames in Subtile %1.").arg(dstSubtileIndex + 1);
-        return;
-    }
-    unsigned dstFrameRef = dstFrameReferences[dstIndex];
-    if (dstFrameRef == 0) {
-        dProgressErr() << QApplication::tr("Frame %1 of Subtile %2 is empty.").arg(dstIndex + 1).arg(dstSubtileIndex + 1);
-        return;
-    }
-
     int srcSubtileIndex = srcSubtileRef - 1;
     std::vector<unsigned> &srcFrameReferences = min->getFrameReferences(srcSubtileIndex);
     // assert(min->getSubtileWidth() == 2);
@@ -313,6 +305,28 @@ static void CopyFrame(D1Min *min, D1Gfx *gfx, int dstSubtileRef, int dstMicroInd
     unsigned srcFrameRef = srcFrameReferences[srcIndex];
     if (srcFrameRef == 0) {
         dProgressErr() << QApplication::tr("Frame %1 of Subtile %2 is empty.").arg(srcIndex + 1).arg(srcSubtileIndex + 1);
+        return;
+    }
+
+    int dstSubtileIndex = dstSubtileRef - 1;
+    std::vector<unsigned> &dstFrameReferences = min->getFrameReferences(dstSubtileIndex);
+    // assert(min->getSubtileWidth() == 2);
+    unsigned dstIndex = dstFrameReferences.size() - (2 + (dstMicroIndex & ~1)) + (dstMicroIndex & 1);
+    if (dstIndex >= dstFrameReferences.size()) {
+        dProgressErr() << QApplication::tr("Not enough frames in Subtile %1.").arg(dstSubtileIndex + 1);
+        return;
+    }
+    if (this->min->setFrameReference(dstSubtileIndex, dstIndex, srcFrameRef)) {
+        if (!silent) {
+            dProgress() << QApplication::tr("Frame %1 of Subtile %2 is set to Frame %3.").arg(dstIndex + 1).arg(dstSubtileIndex + 1).arg(srcFrameRef);
+        }
+    }
+    /*unsigned dstFrameRef = dstFrameReferences[dstIndex];
+    if (dstFrameRef == 0) {
+        dstFrameReferences[dstIndex] = srcFrameRef;
+        if (!silent) {
+            dProgress() << QApplication::tr("Frame %1 of Subtile %2 is set to Frame %3.").arg(dstIndex + 1).arg(dstSubtileIndex + 1).arg(srcFrameRef);
+        }
         return;
     }
 
@@ -334,7 +348,7 @@ static void CopyFrame(D1Min *min, D1Gfx *gfx, int dstSubtileRef, int dstMicroInd
         }
     } else {
         dProgressWarn() << QApplication::tr("The contents of Frame %1 and Frame %2 are already the same.").arg(dstFrameRef).arg(srcFrameRef);
-    }
+    }*/
 }
 
 void D1Tileset::patch(int dunType, bool silent)
@@ -481,29 +495,29 @@ void D1Tileset::patch(int dunType, bool silent)
         ReplaceSubtile(this->til, 41 - 1, 1, 135, silent);
         // add separate tiles and subtiles for the arches
         if (this->min->getSubtileCount() < 560)
-            this->min->createSubtile();
+            this->createSubtile();
         CopyFrame(this->min, this->gfx, 560, 0, 9, 0, silent);
         CopyFrame(this->min, this->gfx, 560, 1, 9, 1, silent);
         if (this->min->getSubtileCount() < 561)
-            this->min->createSubtile();
+            this->createSubtile();
         CopyFrame(this->min, this->gfx, 561, 0, 11, 0, silent);
         CopyFrame(this->min, this->gfx, 561, 1, 11, 1, silent);
         if (this->min->getSubtileCount() < 562)
-            this->min->createSubtile();
+            this->createSubtile();
         CopyFrame(this->min, this->gfx, 562, 0, 9, 0, silent);
         CopyFrame(this->min, this->gfx, 562, 1, 9, 1, silent);
         if (this->min->getSubtileCount() < 563)
-            this->min->createSubtile();
+            this->createSubtile();
         CopyFrame(this->min, this->gfx, 563, 0, 10, 0, silent);
         CopyFrame(this->min, this->gfx, 563, 1, 10, 1, silent);
         if (this->til->getTileCount() < 161)
-            this->til->createTile();
+            this->createTile();
         ReplaceSubtile(this->til, 161 - 1, 0, 560, silent);
         ReplaceSubtile(this->til, 161 - 1, 1, 10, silent);
         ReplaceSubtile(this->til, 161 - 1, 2, 561, silent);
         ReplaceSubtile(this->til, 161 - 1, 3, 12, silent);
         if (this->til->getTileCount() < 162)
-            this->til->createTile();
+            this->createTile();
         ReplaceSubtile(this->til, 162 - 1, 0, 562, silent);
         ReplaceSubtile(this->til, 162 - 1, 1, 563, silent);
         ReplaceSubtile(this->til, 162 - 1, 2, 11, silent);

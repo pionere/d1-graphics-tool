@@ -1614,8 +1614,7 @@ void LevelCelView::removeCurrentSubtile()
 
 void LevelCelView::createTile()
 {
-    this->til->createTile();
-    this->amp->createTile();
+    this->tileset->createTile();
     // jump to the new tile
     this->currentTileIndex = this->til->getTileCount() - 1;
     // update the view - done by the caller
