@@ -2454,13 +2454,13 @@ void DRLG_InitL2Specials(int x1, int y1, int x2, int y2)
 				pn = 5;
 			else if (pn == 17 || pn == 553)
 				pn = 6;
-			else if (pn == 560)
+			else if (pn == 560 || pn == 564)
 				pn = 2;
-			else if (pn == 561)
+			else if (pn == 561 || pn == 565)
 				pn = 1;
-			else if (pn == 562)
+			else if (pn == 562 || pn == 566)
 				pn = 3;
-			else if (pn == 563)
+			else if (pn == 563 || pn == 567)
 				pn = 4;
 			else
 				pn = 0;
