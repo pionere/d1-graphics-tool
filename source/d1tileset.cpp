@@ -93,6 +93,12 @@ void D1Tileset::save(const SaveAsParam &params)
     this->tmi->save(params);
 }
 
+void D1Tileset::createTile()
+{
+    this->til->createTile();
+    this->amp->createTile();
+}
+
 void D1Tileset::createSubtile()
 {
     this->min->createSubtile();
