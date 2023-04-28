@@ -101,7 +101,7 @@ void DRLG_Init_Globals()
 void InitLvlDungeon()
 {
 	uint16_t bv;
-	size_t i, dwSubtiles;
+	size_t dwSubtiles;
 	BYTE *pTmp;
 	const LevelData* lds;
 	lds = &AllLevels[currLvl._dLevelIdx];
@@ -114,12 +114,17 @@ void InitLvlDungeon()
 	memset(pTiles, 0, sizeof(pTiles));
 	LoadFileWithMem(lds->dMegaTiles, (BYTE*)&pTiles[1][0]); // .TIL
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-	for (i = 1; i < lengthof(pTiles); i++) {
+	for (int i = 1; i < lengthof(pTiles); i++) {
 		for (bv = 0; bv < lengthof(pTiles[0]); bv++) {
 			pTiles[i][bv] = SwapLE16(pTiles[i][bv]);
 		}
 	}
 #endif
+	for (int i = 1; i < lengthof(pTiles); i++) {
+		for (bv = 0; bv < lengthof(pTiles[0]); bv++) {
+			pTiles[i][bv] = pTiles[i][bv] + 1;
+		}
+	}
 	static_assert(false == 0, "InitLvlDungeon fills tables with 0 instead of false values.");
 	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nSolidTable, 0, sizeof(nSolidTable));
@@ -137,7 +142,7 @@ void InitLvlDungeon()
 	// no longer necessary, because dPiece is never zero
 	//nSolidTable[0] = true;
 
-	for (i = 1; i <= dwSubtiles; i++) {
+	for (unsigned i = 1; i <= dwSubtiles; i++) {
 		bv = *pTmp++;
 		nSolidTable[i] = (bv & PFLAG_BLOCK_PATH) != 0;
 		nBlockTable[i] = (bv & PFLAG_BLOCK_LIGHT) != 0;
@@ -426,20 +431,20 @@ void DRLG_PlaceMegaTiles(int mt)
 	long lvs[] = { 22, 56, 57, 58, 59, 60, 61 };
 	for (i = 0; i < lengthof(lvs); i++) {
 		lv = lvs[i];
-		pTile = &pTiles[mt][]0;
-		v1 = pTile[0] + 1;
-		v2 = pTile[1] + 1;
-		v3 = pTile[2] + 1;
-		v4 = pTile[3] + 1;
+		pTile = &pTiles[mt][0];
+		v1 = pTile[0];
+		v2 = pTile[1];
+		v3 = pTile[2];
+		v4 = pTile[3];
 		cat_str(tmpstr, cursor, "- %d: %d, %d, %d, %d", lv, v1, v2, v3, v4);
 	}
 	app_fatal(tmpstr);*/
 
 	pTile = &pTiles[mt][0];
-	v1 = pTile[0] + 1;
-	v2 = pTile[1] + 1;
-	v3 = pTile[2] + 1;
-	v4 = pTile[3] + 1;
+	v1 = pTile[0];
+	v2 = pTile[1];
+	v3 = pTile[2];
+	v4 = pTile[3];
 
 	for (j = 0; j < MAXDUNY; j += 2) {
 		for (i = 0; i < MAXDUNX; i += 2) {
@@ -457,10 +462,10 @@ void DRLG_PlaceMegaTiles(int mt)
 			mt = dungeon[i][j];
 			assert(mt > 0);
 			pTile = &pTiles[mt][0];
-			v1 = pTile[0] + 1;
-			v2 = pTile[1] + 1;
-			v3 = pTile[2] + 1;
-			v4 = pTile[3] + 1;
+			v1 = pTile[0];
+			v2 = pTile[1];
+			v3 = pTile[2];
+			v4 = pTile[3];
 			dPiece[xx][yy] = v1;
 			dPiece[xx + 1][yy] = v2;
 			dPiece[xx][yy + 1] = v3;
