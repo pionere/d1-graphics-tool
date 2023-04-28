@@ -316,7 +316,7 @@ static void CopyFrame(D1Min *min, D1Gfx *gfx, int dstSubtileRef, int dstMicroInd
         dProgressErr() << QApplication::tr("Not enough frames in Subtile %1.").arg(dstSubtileIndex + 1);
         return;
     }
-    if (this->min->setFrameReference(dstSubtileIndex, dstIndex, srcFrameRef)) {
+    if (min->setFrameReference(dstSubtileIndex, dstIndex, srcFrameRef)) {
         if (!silent) {
             dProgress() << QApplication::tr("Frame %1 of Subtile %2 is set to Frame %3.").arg(dstIndex + 1).arg(dstSubtileIndex + 1).arg(srcFrameRef);
         }

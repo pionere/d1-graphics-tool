@@ -1975,7 +1975,7 @@ static void DRLG_L2TransFix()
 
 void DRLG_L2InitTransVals()
 {
-	int i, j;
+	// int i, j;
 
 	static_assert(sizeof(drlg.transvalMap) == sizeof(dungeon), "transvalMap vs dungeon mismatch.");
 	memcpy(drlg.transvalMap, dungeon, sizeof(dungeon));
