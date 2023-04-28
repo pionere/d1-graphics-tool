@@ -1962,18 +1962,6 @@ void LevelCelView::resetFrameTypes()
 {
     ProgressDialog::incBar(tr("Checking frames..."), 1);
 
-    for (int i = 0; i < 16; i++) {
-        QString colors;
-        for (int j = 0; j < 16; j++) {
-            QColor color = this->pal->getColor(i * 16 + j);
-            int lmin = std::min(std::min(color.red(), color.green()), color.blue());
-            int lmax = std::max(std::max(color.red(), color.green()), color.blue());
-            int lightness = (lmax + lmin) / 2;
-            colors += QString("%1, ").arg(lightness);
-        }
-        dProgress() << QString("Color line %1: %2.").arg(i).arg(colors);
-    }
-
     bool result = false;
     for (int i = 0; i < this->gfx->getFrameCount(); i++) {
         D1GfxFrame *frame = this->gfx->getFrame(i);
