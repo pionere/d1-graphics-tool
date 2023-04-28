@@ -2957,6 +2957,15 @@ void D1Dun::patch(int dunFileIndex)
         }
         break;
     case DUN_BONECHAMB_ENTRY_AFT: // Bonestr2.DUN
+        // add tiles with subtiles for arches
+        change |= this->changeTileAt(2, 1, 162);
+        change |= this->changeTileAt(4, 1, 162);
+        change |= this->changeTileAt(2, 5, 162);
+        change |= this->changeTileAt(4, 5, 162);
+        change |= this->changeTileAt(1, 2, 161);
+        change |= this->changeTileAt(1, 4, 161);
+        change |= this->changeTileAt(5, 2, 161);
+        change |= this->changeTileAt(5, 4, 161);
         // place shadows
         // NE-wall
         change |= this->changeTileAt(1, 0, 49);
@@ -2988,6 +2997,21 @@ void D1Dun::patch(int dunFileIndex)
         break;
     case DUN_BONECHAMB_PRE: // Bonecha1.DUN
     case DUN_BONECHAMB_AFT: // Bonecha2.DUN
+        // add tiles with subtiles for arches
+        change |= this->changeTileAt(13, 6, 161);
+        change |= this->changeTileAt(13, 8, 161);
+        change |= this->changeTileAt(17, 6, 161);
+        change |= this->changeTileAt(17, 8, 161);
+
+        change |= this->changeTileAt(13, 14, 161);
+        change |= this->changeTileAt(13, 16, 161);
+        change |= this->changeTileAt(17, 14, 161);
+        change |= this->changeTileAt(17, 16, 161);
+
+        change |= this->changeTileAt(18, 9, 162);
+        change |= this->changeTileAt(20, 9, 162);
+        change |= this->changeTileAt(18, 13, 162);
+        change |= this->changeTileAt(20, 13, 162);
         // place pieces with closed doors
         change |= this->changeTileAt(17, 11, 150);
         // place shadows
