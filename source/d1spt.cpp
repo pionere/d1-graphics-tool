@@ -133,7 +133,7 @@ bool D1Spt::isModified() const
 
 int D1Spt::getSubtileTrapProperty(int subtileIndex) const
 {
-    if (subtileIndex >= this->subProperties.count()) {
+    if (subtileIndex >= this->trapProperties.count()) {
         QMessageBox::critical(nullptr, "Error", QStringLiteral("SPT-Properties of an invalid subtile %1 requested. Trap-Properties count: %2").arg(subtileIndex).arg(this->trapProperties.count()));
         return 0;
     }
