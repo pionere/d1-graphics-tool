@@ -28,7 +28,7 @@ bool D1Amp::load(const QString &filePath, int tileCount, const OpenAsParam &para
     this->clear();
     this->ampFilePath = filePath;
 
-    bool changed = !file.isOpen();
+    bool changed = false; // !file.isOpen();
 
     const QByteArray fileData = file.readAll();
 
@@ -93,18 +93,33 @@ bool D1Amp::save(const SaveAsParam &params)
         return false;
     }
 
-    QDir().mkpath(QFileInfo(filePath).absolutePath());
-    QFile outFile = QFile(filePath);
-    if (!outFile.open(QIODevice::WriteOnly)) {
-        dProgressFail() << tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(filePath));
-        return false;
-    }
-
-    // write to file
-    QDataStream out(&outFile);
+    bool isEmpty = true;
     for (int i = 0; i < this->types.size(); i++) {
-        out << this->types[i];
-        out << this->properties[i];
+        if (this->types[i] != 0 || this->properties[i] != 0) {
+            isEmpty = false;
+            break;
+        }
+    }
+    if (isEmpty) {
+        // AMP with content -> create or change
+        QDir().mkpath(QFileInfo(filePath).absolutePath());
+        QFile outFile = QFile(filePath);
+        if (!outFile.open(QIODevice::WriteOnly)) {
+            dProgressFail() << tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(filePath));
+            return false;
+        }
+
+        // write to file
+        QDataStream out(&outFile);
+        for (int i = 0; i < this->types.size(); i++) {
+            out << this->types[i];
+            out << this->properties[i];
+        }
+    } else {
+        // AMP without content -> delete
+        if (QFile::exists(filePath)) {
+            QFile::remove(filePath);
+        }
     }
 
     this->ampFilePath = filePath; // this->load(filePath, allocate);
