@@ -252,7 +252,7 @@ void LevelTabSubtileWidget::on_specCelLineEdit_returnPressed()
 void LevelTabSubtileWidget::on_specCelLineEdit_escPressed()
 {
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
-    int sptSpecCel = this->ui->getSubtileSpecProperty(subtileIdx);
+    int sptSpecCel = this->spt->getSubtileSpecProperty(subtileIdx);
 
     this->ui->specCelLineEdit->setText(QString::number(sptSpecCel));
     this->ui->specCelLineEdit->clearFocus();

@@ -272,7 +272,6 @@ void LevelCelView::updateLabel()
 {
     bool hasDun = this->dun != nullptr;
 
-    QLabel *label;
     QHBoxLayout *layout = this->ui->celLabelsHorizontalLayout;
     const int labelCount = hasDun ? 9 : 7;
     while (layout->count() != labelCount + 1) {
@@ -2102,17 +2101,17 @@ void LevelCelView::checkSubtileFlags() const
     dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         int trapFlags = this->spt->getSubtileTrapProperty(i);
-		if (trapFlags > 2) {
+        if (trapFlags > 2) {
             dProgressErr() << tr("Subtile %1 has an invalid trap-setting: %2.").arg(i + 1).arg(trapFlags);
             result = true;
         }
         int specFrame = this->spt->getSubtileSpecProperty(i);
-		if (specFrame > 63) {
+        if (specFrame > 63) {
             dProgressErr() << tr("Subtile %1 has an invalid special tile setting: %2.").arg(i + 1).arg(specFrame);
             result = true;
         }
-		if (specFrame != 0) {
-			// FIXME: validate 
+        if (specFrame != 0) {
+            // FIXME: validate 
         }
     }
     if (!result) {

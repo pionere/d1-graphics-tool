@@ -101,10 +101,10 @@ bool D1Spt::save(const SaveAsParam &params)
     // write to file
     QDataStream out(&outFile);
     out << (quint8)0; // add leading zero
-	quint8 writeByte;
+    quint8 writeByte;
     for (int i = 0; i < this->trapProperties.size(); i++) {
-		writeByte = this->specProperties[i];
-		writeByte |= this->trapProperties[i] << 6;
+        writeByte = this->specProperties[i];
+        writeByte |= this->trapProperties[i] << 6;
         out << writeByte;
     }
 
@@ -184,7 +184,7 @@ void D1Spt::removeSubtile(int subtileIndex)
 
 void D1Spt::remapSubtiles(const std::map<unsigned, unsigned> &remap)
 {
-    QList<std::pair<bool, bool>> newTrapProperties;
+    QList<int> newTrapProperties;
     QList<int> newSpecProperties;
 
     for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {

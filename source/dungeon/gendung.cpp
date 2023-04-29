@@ -151,7 +151,7 @@ void InitLvlDungeon()
 		nSolidTable[i] = (bv & PFLAG_BLOCK_PATH) != 0;
 		nBlockTable[i] = (bv & PFLAG_BLOCK_LIGHT) != 0;
 		nMissileTable[i] = (bv & PFLAG_BLOCK_MISSILE) != 0;
-		nTrapTable[i] = (bv & PFLAG_TRAP_SOURCE) != 0 ? PTT_ANY : PTT_NONE;
+		nTrapTable[i] = (bv & PFLAG_TRAP_SOURCE) != 0 ? PTT_LEFT : PTT_NONE;
 	}
 
 	switch (currLvl._dType) {
