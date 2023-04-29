@@ -67,7 +67,8 @@ static const SpecCell l1SpecialCels[] = {
 static const SpecCell l2SpecialCels[] = {
     // clang-format off
     {  13,  0,  0, 5 - 1 }, { 178,  0,  0, 5 - 1 },/* { 541,  0,  0, 5 - 1 },*/ { 551,  0,  0, 5 - 1 }, {  17,  0,  0, 6 - 1 },/* { 542,  0,  0, 6 - 1 },*/ { 553,  0,  0, 6 - 1 },
-    { 132,  0,  1, 2 - 1 }, { 132,  0,  2, 1 - 1 }, { 135,  1,  0, 3 - 1 }, { 135,  2,  0, 4 - 1 }, { 139,  1,  0, 3 - 1 }, { 139,  2,  0, 4 - 1 }
+    { 560,  0,  0, 2 - 1 }, { 561,  0,  0, 1 - 1 }, { 562,  0,  0, 3 - 1 }, { 563,  0,  0, 4 - 1 },
+    { 564,  0,  0, 2 - 1 }, { 565,  0,  0, 1 - 1 }, { 566,  0,  0, 3 - 1 }, { 567,  0,  0, 4 - 1 }
     // clang-format on
 };
 
@@ -2957,6 +2958,15 @@ void D1Dun::patch(int dunFileIndex)
         }
         break;
     case DUN_BONECHAMB_ENTRY_AFT: // Bonestr2.DUN
+        // add tiles with subtiles for arches
+        change |= this->changeTileAt(2, 1, 162);
+        change |= this->changeTileAt(4, 1, 164);
+        change |= this->changeTileAt(2, 5, 162);
+        change |= this->changeTileAt(4, 5, 162);
+        change |= this->changeTileAt(1, 2, 161);
+        change |= this->changeTileAt(1, 4, 163);
+        change |= this->changeTileAt(5, 2, 161);
+        change |= this->changeTileAt(5, 4, 161);
         // place shadows
         // NE-wall
         change |= this->changeTileAt(1, 0, 49);
@@ -2964,7 +2974,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(3, 0, 49);
         change |= this->changeTileAt(4, 0, 46);
         // SW-wall
-        change |= this->changeTileAt(1, 4, 49);
+        // change |= this->changeTileAt(1, 4, 49);
         change |= this->changeTileAt(2, 4, 46);
         change |= this->changeTileAt(3, 4, 49);
         change |= this->changeTileAt(4, 4, 46);
@@ -2976,7 +2986,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(0, 4, 47);
         change |= this->changeTileAt(0, 5, 50);
         // SE-wall
-        change |= this->changeTileAt(4, 1, 51);
+        // change |= this->changeTileAt(4, 1, 51);
         change |= this->changeTileAt(4, 2, 47);
         change |= this->changeTileAt(4, 3, 50); // 51
         // protect the main structure
@@ -2988,6 +2998,21 @@ void D1Dun::patch(int dunFileIndex)
         break;
     case DUN_BONECHAMB_PRE: // Bonecha1.DUN
     case DUN_BONECHAMB_AFT: // Bonecha2.DUN
+        // add tiles with subtiles for arches
+        change |= this->changeTileAt(13, 6, 161);
+        change |= this->changeTileAt(13, 8, 161);
+        change |= this->changeTileAt(17, 6, 161);
+        change |= this->changeTileAt(17, 8, 163);
+
+        change |= this->changeTileAt(13, 14, 161);
+        change |= this->changeTileAt(13, 16, 161);
+        change |= this->changeTileAt(17, 14, 161);
+        change |= this->changeTileAt(17, 16, 161);
+
+        change |= this->changeTileAt(18, 9, 162);
+        change |= this->changeTileAt(20, 9, 162);
+        change |= this->changeTileAt(18, 13, 162);
+        change |= this->changeTileAt(20, 13, 162);
         // place pieces with closed doors
         change |= this->changeTileAt(17, 11, 150);
         // place shadows
