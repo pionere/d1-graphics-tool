@@ -25,6 +25,13 @@
      <property name="bottomMargin">
       <number>0</number>
      </property>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
     </layout>
    </item>
    <item>
