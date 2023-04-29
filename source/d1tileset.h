@@ -28,6 +28,7 @@ public:
     void insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList);
     void createSubtile();
     void removeSubtile(int subtileIndex, int replacement);
+    void resetSubtileFlags(int subtileIndex);
     void remapSubtiles(const std::map<unsigned, unsigned> &remap);
     bool reuseFrames(std::set<int> &removedIndices, bool silent);
     bool reuseSubtiles(std::set<int> &removedIndices);

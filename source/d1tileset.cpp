@@ -120,6 +120,12 @@ void D1Tileset::removeSubtile(int subtileIndex, int replacement)
     this->tmi->removeSubtile(subtileIndex);
 }
 
+void D1Tileset::resetSubtileFlags(int subtileIndex)
+{
+    this->sol->setSubtileProperties(subtileIndex, 0);
+    this->tmi->setSubtileProperties(subtileIndex, 0);
+}
+
 void D1Tileset::remapSubtiles(const std::map<unsigned, unsigned> &remap)
 {
     this->min->remapSubtiles(remap);

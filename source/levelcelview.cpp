@@ -637,9 +637,7 @@ void LevelCelView::assignFrames(const QImage &image, int subtileIndex, int frame
     if (subtileIndex >= 0) {
         this->min->getFrameReferences(subtileIndex).swap(frameReferencesList);
         this->min->setModified();
-        // reset subtile flags
-        this->sol->setSubtileProperties(subtileIndex, 0);
-        this->tmi->setSubtileProperties(subtileIndex, 0);
+        this->tileset->resetSubtileFlags(subtileIndex);
     }
 }
 
@@ -680,9 +678,7 @@ void LevelCelView::assignFrames(const D1GfxFrame &frame, int subtileIndex, int f
     if (subtileIndex >= 0) {
         this->min->getFrameReferences(subtileIndex).swap(frameReferencesList);
         this->min->setModified();
-        // reset subtile flags
-        this->sol->setSubtileProperties(subtileIndex, 0);
-        this->tmi->setSubtileProperties(subtileIndex, 0);
+        this->tileset->resetSubtileFlags(subtileIndex);
     }
 }
 
@@ -1517,9 +1513,7 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
             this->pal->updateColors(basePal);
             emit this->palModified();
         }
-        // reset subtile flags
-        this->sol->setSubtileProperties(subtileIndex, 0);
-        this->tmi->setSubtileProperties(subtileIndex, 0);
+        this->tileset->resetSubtileFlags(subtileIndex);
         // update the view - done by the caller
         // this->displayFrame();
         return;
@@ -1540,9 +1534,7 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
     int subtileIndex = this->currentSubtileIndex;
     this->assignFrames(image, subtileIndex, this->gfx->getFrameCount());
 
-    // reset subtile flags
-    this->sol->setSubtileProperties(subtileIndex, 0);
-    this->tmi->setSubtileProperties(subtileIndex, 0);
+    this->tileset->resetSubtileFlags(subtileIndex);
 
     // update the view - done by the caller
     // this->displayFrame();
@@ -1690,9 +1682,7 @@ void LevelCelView::pasteCurrent(const QImage &image)
             this->assignSubtiles(image, -1, subtileIndex);
         }
 
-        // reset subtile flags
-        this->sol->setSubtileProperties(subtileIndex, 0);
-        this->tmi->setSubtileProperties(subtileIndex, 0);
+        this->tileset->resetSubtileFlags(subtileIndex);
         // update the view - done by the caller
         // this->displayFrame();
         return;
