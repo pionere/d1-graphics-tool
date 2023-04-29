@@ -123,7 +123,7 @@
       <item row="0" column="5">
        <widget class="LineEditWidget" name="specCelLineEdit">
         <property name="charWidth">
-         <number>4</number>
+         <number>2</number>
         </property>
         <property name="toolTip">
          <string>Special cel-frame assigned to this subtile</string>

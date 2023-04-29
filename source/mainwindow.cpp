@@ -942,12 +942,13 @@ void MainWindow::openFile(const OpenAsParam &params)
         }
 
         // Loading MIN
+QMessageBox::critical(nullptr, "Error", "Loading min");
         std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
         if (!this->tileset->min->load(minFilePath, this->tileset, celFrameTypes, params)) {
             this->failWithError(tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath)));
             return;
         }
-
+QMessageBox::critical(nullptr, "Error", "Loaded min");
         // Loading TIL
         if (!this->tileset->til->load(tilFilePath, this->tileset->min)) {
             this->failWithError(tr("Failed loading TIL file: %1.").arg(QDir::toNativeSeparators(tilFilePath)));
@@ -959,13 +960,13 @@ void MainWindow::openFile(const OpenAsParam &params)
             this->failWithError(tr("Failed loading AMP file: %1.").arg(QDir::toNativeSeparators(ampFilePath)));
             return;
         }
-
+QMessageBox::critical(nullptr, "Error", "Loadng spt");
         // Loading SPT
         if (!this->tileset->spt->load(sptFilePath, this->tileset->sol, params)) {
             this->failWithError(tr("Failed loading SPT file: %1.").arg(QDir::toNativeSeparators(sptFilePath)));
             return;
         }
-
+QMessageBox::critical(nullptr, "Error", "Loaded spt");
         // Loading TMI
         if (!this->tileset->tmi->load(tmiFilePath, this->tileset->sol, params)) {
             this->failWithError(tr("Failed loading TMI file: %1.").arg(QDir::toNativeSeparators(tmiFilePath)));
@@ -977,13 +978,13 @@ void MainWindow::openFile(const OpenAsParam &params)
             this->failWithError(tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
-
+QMessageBox::critical(nullptr, "Error", "Loading special cels");
         // Loading sCEL
         if (!this->tileset->loadCls(clsFilePath, params)) {
             this->failWithError(tr("Failed loading Special-CEL file: %1.").arg(QDir::toNativeSeparators(clsFilePath)));
             return;
         }
-
+QMessageBox::critical(nullptr, "Error", "Loaded special cels");
         // Loading DUN
         if (!dunFilePath.isEmpty() || params.createDun) {
             this->dun = new D1Dun();
