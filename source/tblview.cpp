@@ -103,7 +103,7 @@ void TblView::updateLabel()
 {
     QHBoxLayout *layout = this->ui->tblLabelsHorizontalLayout;
     while (layout->count() != 2) {
-        layout->addWidget(new QLabel(""));
+        layout->addWidget(new QLabel(""), 0, Qt::AlignLeft);
     }
 
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(0)->widget()), this->tableset->distTbl->getFilePath(), this->tableset->distTbl->isModified());

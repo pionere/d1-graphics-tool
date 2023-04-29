@@ -275,7 +275,7 @@ void LevelCelView::updateLabel()
     QHBoxLayout *layout = this->ui->celLabelsHorizontalLayout;
     const int labelCount = hasDun ? 8 : 6;
     while (layout->count() != labelCount) {
-        layout->addWidget(new QLabel(""));
+        layout->addWidget(new QLabel(""), 0, Qt::AlignLeft);
     }
 
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(0)->widget()), this->gfx->getFilePath(), this->gfx->isModified());
