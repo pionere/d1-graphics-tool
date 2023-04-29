@@ -370,6 +370,12 @@ QString D1Gfx::getFilePath() const
     return this->gfxFilePath;
 }
 
+void D1Gfx::setFilePath(const QString &filePath)
+{
+    this->gfxFilePath = filePath;
+    this->modified = true;
+}
+
 D1Pal *D1Gfx::getPalette() const
 {
     return const_cast<D1Pal *>(this->palette);

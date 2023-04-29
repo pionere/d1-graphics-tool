@@ -9,9 +9,10 @@
 #include <QPainter>
 
 #include "d1image.h"
+#include "d1tileset.h"
 #include "progressdialog.h"
 
-bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const OpenAsParam &params)
+bool D1Min::load(const QString &filePath, D1Tileset *ts, D1Sol *sol, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const OpenAsParam &params)
 {
     // prepare file data source
     QFile file;
@@ -28,7 +29,8 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
 
     this->clear();
     this->minFilePath = filePath;
-    this->gfx = g;
+    this->tileset = ts;
+    this->gfx = ts->gfx;
 
     bool changed = !file.isOpen();
 
@@ -216,6 +218,7 @@ void D1Min::clear()
     this->frameReferences.clear();
     this->subtileWidth = 2;
     this->subtileHeight = 5;
+    // this->tileset = nullptr;
     // this->gfx = nullptr;
     this->modified = true;
 }
@@ -247,6 +250,37 @@ QImage D1Min::getSubtileImage(int subtileIndex) const
             dx = 0;
             dy += MICRO_HEIGHT;
         }
+    }
+
+    return subtile;
+}
+
+QImage D1Min::getSpecSubtileImage(int subtileIndex) const
+{
+    unsigned subtileWidthPx = this->subtileWidth * MICRO_WIDTH;
+    unsigned subtileHeightPx = this->subtileHeight * MICRO_HEIGHT;
+    QImage subtile = QImage(subtileWidthPx, subtileHeightPx, QImage::Format_ARGB32);
+    subtile.fill(Qt::transparent);
+    QPainter subtilePainter(&subtile);
+
+    unsigned dx = 0, dy = 0;
+    const std::vector<unsigned> &frameRefs = this->frameReferences[subtileIndex];
+    for (unsigned frameRef : frameRefs) {
+        if (frameRef > 0) {
+            subtilePainter.drawImage(dx, dy, this->gfx->getFrameImage(frameRef - 1));
+        }
+
+        dx += MICRO_WIDTH;
+        if (dx == subtileWidthPx) {
+            dx = 0;
+            dy += MICRO_HEIGHT;
+        }
+    }
+
+    unsigned specRef = this->tileset->spt->getSubtileSpecProperty(subtileIndex);
+    if (specRef != 0 && (unsigned)this->tileset->cls->getFrameCount() >= specRef) {
+        QImage specImage = this->tileset->cls->getFrameImage(specRef - 1);
+        subtilePainter.drawImage(0, subtileHeightPx - specImage.height(), specImage);
     }
 
     return subtile;

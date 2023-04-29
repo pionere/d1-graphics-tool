@@ -33,6 +33,8 @@
     </layout>
    </item>
    <item>
+    <layout class="QHBoxLayout" name="solAndSptHorizontalLayout">
+   <item>
     <widget class="QGroupBox" name="solSettingsGroupBox">
      <property name="maximumHeight">
       <number>80</number>
@@ -130,6 +132,8 @@
       </item>
      </layout>
     </widget>
+   </item>
+    </layout>
    </item>
    <item>
     <widget class="QGroupBox" name="tmiSettingsGroupBox">

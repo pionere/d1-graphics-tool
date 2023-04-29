@@ -178,6 +178,32 @@ QImage D1Til::getFlatTileImage(int tileIndex) const
     return tile;
 }
 
+QImage D1Til::getSpecTileImage(int tileIndex) const
+{
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+    // assert(TILE_WIDTH == 2 &&  TILE_HEIGHT == 2);
+    unsigned subtileShiftY = subtileWidth / 4;
+    const std::vector<int> &subtiles = this->subtileIndices[tileIndex];
+    QImage tile = QImage(subtileWidth * 2,
+        subtileHeight + 2 * subtileShiftY, QImage::Format_ARGB32);
+    tile.fill(Qt::transparent);
+    QPainter tilePainter(&tile);
+    //      0
+    //    2   1
+    //      3
+    tilePainter.drawImage(subtileWidth / 2, 0, this->min->getSpecSubtileImage(subtiles[0]));
+
+    tilePainter.drawImage(subtileWidth, subtileShiftY, this->min->getSpecSubtileImage(subtiles[1]));
+
+    tilePainter.drawImage(0, subtileShiftY, this->min->getSpecSubtileImage(subtiles[2]));
+
+    tilePainter.drawImage(subtileWidth / 2, 2 * subtileShiftY, this->min->getSpecSubtileImage(subtiles[3]));
+
+    tilePainter.end();
+    return tile;
+}
+
 std::vector<std::vector<D1GfxPixel>> D1Til::getTilePixelImage(int tileIndex) const
 {
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;

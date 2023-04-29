@@ -22,6 +22,7 @@ public:
     D1Tileset(D1Gfx *gfx);
     ~D1Tileset();
 
+    bool loadCls(const QString &clsFilePath, const OpenAsParam &params);
     bool load(const OpenAsParam &params);
     void save(const SaveAsParam &params);
 
@@ -37,6 +38,7 @@ public:
     void patch(int dunType, bool silent);
 
     D1Gfx *gfx;
+    D1Gfx *cls;
     D1Min *min;
     D1Til *til;
     D1Sol *sol;

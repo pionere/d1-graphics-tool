@@ -292,6 +292,7 @@ private:
     D1Pal *pal;
     D1Gfx *gfx;
     D1Tileset *tileset;
+    D1Gfx *cls;
     D1Min *min;
     D1Til *til;
     D1Sol *sol;

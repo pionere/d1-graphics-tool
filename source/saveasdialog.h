@@ -23,6 +23,7 @@ enum class SAVE_UPSCALED_TYPE {
 class SaveAsParam {
 public:
     QString celFilePath;
+    QString clsFilePath;
     QString tilFilePath;
     QString minFilePath;
     QString solFilePath;
@@ -53,6 +54,7 @@ public:
 
 private slots:
     void on_outputCelFileBrowseButton_clicked();
+    void on_outputClsFileBrowseButton_clicked();
     void on_outputMinFileBrowseButton_clicked();
     void on_outputTilFileBrowseButton_clicked();
     void on_outputSolFileBrowseButton_clicked();

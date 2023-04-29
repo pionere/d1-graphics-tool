@@ -96,6 +96,7 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
     this->pal = p;
     this->tileset = ts;
     this->gfx = ts->gfx;
+    this->cls = ts->cls;
     this->min = ts->min;
     this->til = ts->til;
     this->sol = ts->sol;
@@ -283,14 +284,11 @@ void LevelCelView::updateLabel()
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(2)->widget()), this->til->getFilePath(), this->til->isModified());
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(3)->widget()), this->sol->getFilePath(), this->sol->isModified());
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(4)->widget()), this->amp->getFilePath(), this->amp->isModified());
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(5)->widget()), this->spt->getFilePath(), this->spt->isModified());
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(6)->widget()), this->tmi->getFilePath(), this->tmi->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(5)->widget()), this->cls->getFilePath(), this->cls->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(6)->widget()), this->spt->getFilePath(), this->spt->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(7)->widget()), this->tmi->getFilePath(), this->tmi->isModified());
 
     if (hasDun) {
-        const D1Gfx *specGfx = this->dun->getSpecGfx();
-        if (specGfx != nullptr) {
-            CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(7)->widget()), specGfx->getFilePath(), specGfx->isModified());
-        }
         CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(8)->widget()), this->dun->getFilePath(), this->dun->isModified());
     }
 }
@@ -2109,9 +2107,9 @@ void LevelCelView::checkSubtileFlags() const
         if ((unsigned)specFrame > ((1 << 6) - 1)) {
             dProgressErr() << tr("Subtile %1 has a too high special cel-frame setting: %2. Limit it %3").arg(i + 1).arg(specFrame).arg((1 << 6) - 1);
             result = true;
-        }
-        if (specFrame != 0) {
-            // FIXME: validate 
+        } else if (specFrame != 0 && this->cls->getFrameCount() < specFrame) {
+            dProgressErr() << tr("The special cel-frame (%1) referenced by Subtile %2 does not exist.").arg(specFrame).arg(i + 1);
+            result = true;
         }
     }
     if (!result) {
@@ -3079,8 +3077,8 @@ void LevelCelView::displayFrame()
 
     // Getting the current frame/sub-tile/tile to display
     QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
-    QImage subtile = this->min->getSubtileCount() != 0 ? this->min->getSubtileImage(this->currentSubtileIndex) : QImage();
-    QImage tile = this->til->getTileCount() != 0 ? this->til->getTileImage(this->currentTileIndex) : QImage();
+    QImage subtile = this->min->getSubtileCount() != 0 ? this->min->getSpecSubtileImage(this->currentSubtileIndex) : QImage();
+    QImage tile = this->til->getTileCount() != 0 ? this->til->getSpecTileImage(this->currentTileIndex) : QImage();
 
     QColor backColor = QColor(Config::getGraphicsTransparentColor());
     // Building a gray background of the width/height of the CEL frame

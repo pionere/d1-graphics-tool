@@ -41,6 +41,7 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Dun *dun, D1Tables
 
     this->ui->minUpscaledAutoRadioButton->setChecked(true);
 
+    this->ui->outputClsFileEdit->setText(isTilesetGfx ? tileset->cls->getFilePath() : "");
     this->ui->outputMinFileEdit->setText(isTilesetGfx ? tileset->min->getFilePath() : "");
     this->ui->outputTilFileEdit->setText(isTilesetGfx ? tileset->til->getFilePath() : "");
     this->ui->outputSolFileEdit->setText(isTilesetGfx ? tileset->sol->getFilePath() : "");
@@ -95,15 +96,26 @@ void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
         int extPos = saveFilePath.lastIndexOf('.', saveFilePath.length() - 1);
         if (extPos >= 0 && extPos < saveFilePath.length() - 1) {
             bool upperCase = saveFilePath.at(extPos + 1).isUpper();
-            saveFilePath.chop(saveFilePath.length() - 1 - extPos);
-            this->ui->outputMinFileEdit->setText(saveFilePath + (upperCase ? "MIN" : "min"));
-            this->ui->outputTilFileEdit->setText(saveFilePath + (upperCase ? "TIL" : "til"));
-            this->ui->outputSolFileEdit->setText(saveFilePath + (upperCase ? "SOL" : "sol"));
-            this->ui->outputAmpFileEdit->setText(saveFilePath + (upperCase ? "AMP" : "amp"));
-            this->ui->outputSptFileEdit->setText(saveFilePath + (upperCase ? "SPT" : "spt"));
-            this->ui->outputTmiFileEdit->setText(saveFilePath + (upperCase ? "TMI" : "tmi"));
+            saveFilePath.chop(saveFilePath.length() - extPos);
+            this->ui->outputClsFileEdit->setText(saveFilePath + (upperCase ? "S.CEL" : "s.cel"));
+            this->ui->outputMinFileEdit->setText(saveFilePath + (upperCase ? ".MIN" : ".min"));
+            this->ui->outputTilFileEdit->setText(saveFilePath + (upperCase ? ".TIL" : ".til"));
+            this->ui->outputSolFileEdit->setText(saveFilePath + (upperCase ? ".SOL" : ".sol"));
+            this->ui->outputAmpFileEdit->setText(saveFilePath + (upperCase ? ".AMP" : ".amp"));
+            this->ui->outputSptFileEdit->setText(saveFilePath + (upperCase ? ".SPT" : ".spt"));
+            this->ui->outputTmiFileEdit->setText(saveFilePath + (upperCase ? ".TMI" : ".tmi"));
         }
     }
+}
+
+void SaveAsDialog::on_outputClsFileBrowseButton_clicked()
+{
+    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save Special-CEL as..."), tr("CEL Files (*.cel *.CEL)"));
+
+    if (saveFilePath.isEmpty())
+        return;
+
+    this->ui->outputClsFileEdit->setText(saveFilePath);
 }
 
 void SaveAsDialog::on_outputMinFileBrowseButton_clicked()
@@ -208,6 +220,7 @@ void SaveAsDialog::on_saveButton_clicked()
     } else {
         params.upscaled = SAVE_UPSCALED_TYPE::AUTODETECT;
     }
+    params.clsFilePath = this->ui->outputClsFileEdit->text();
     params.minFilePath = this->ui->outputMinFileEdit->text();
     params.tilFilePath = this->ui->outputTilFileEdit->text();
     params.solFilePath = this->ui->outputSolFileEdit->text();

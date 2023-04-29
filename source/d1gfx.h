@@ -132,6 +132,7 @@ public:
     bool isUpscaled() const;
     void setUpscaled(bool upscaled);
     QString getFilePath() const;
+    void setFilePath(const QString &filePath);
     bool isModified() const;
     void setModified(bool modified = true);
     D1Pal *getPalette() const;

@@ -29,6 +29,7 @@ public:
     OPEN_CLIPPED_TYPE clipped = OPEN_CLIPPED_TYPE::AUTODETECT;
 
     OPEN_UPSCALED_TYPE upscaled = OPEN_UPSCALED_TYPE::AUTODETECT;
+    QString clsFilePath;
     QString tilFilePath;
     QString minFilePath;
     QString solFilePath;
@@ -63,6 +64,7 @@ private slots:
     void on_isTilesetYesRadioButton_toggled(bool checked);
     void on_isTilesetNoRadioButton_toggled(bool checked);
     void on_isTilesetAutoRadioButton_toggled(bool checked);
+    void on_clsFileBrowseButton_clicked();
     void on_tilFileBrowseButton_clicked();
     void on_minFileBrowseButton_clicked();
     void on_solFileBrowseButton_clicked();
