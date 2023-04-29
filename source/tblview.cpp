@@ -107,8 +107,8 @@ void TblView::updateLabel()
         layout->addWidget(new QLabel(""));
     }
 
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(0)), this->tableset->distTbl->getFilePath(), this->tableset->distTbl->isModified());
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(1)), this->tableset->darkTbl->getFilePath(), this->tableset->darkTbl->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(0)->widget()), this->tableset->distTbl->getFilePath(), this->tableset->distTbl->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(1)->widget()), this->tableset->darkTbl->getFilePath(), this->tableset->darkTbl->isModified());
 }
 
 void TblView::update()
