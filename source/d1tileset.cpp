@@ -293,20 +293,6 @@ static void ReplaceSubtile(D1Til *til, int tileIndex, unsigned index, int subtil
 
 static void CopyFrame(D1Min *min, D1Gfx *gfx, int dstSubtileRef, int dstMicroIndex, int srcSubtileRef, int srcMicroIndex, bool silent)
 {
-    int dstSubtileIndex = dstSubtileRef - 1;
-    std::vector<unsigned> &dstFrameReferences = min->getFrameReferences(dstSubtileIndex);
-    // assert(min->getSubtileWidth() == 2);
-    unsigned dstIndex = dstFrameReferences.size() - (2 + (dstMicroIndex & ~1)) + (dstMicroIndex & 1);
-    if (dstIndex >= dstFrameReferences.size()) {
-        dProgressErr() << QApplication::tr("Not enough frames in Subtile %1.").arg(dstSubtileIndex + 1);
-        return;
-    }
-    unsigned dstFrameRef = dstFrameReferences[dstIndex];
-    if (dstFrameRef == 0) {
-        dProgressErr() << QApplication::tr("Frame %1 of Subtile %2 is empty.").arg(dstIndex + 1).arg(dstSubtileIndex + 1);
-        return;
-    }
-
     int srcSubtileIndex = srcSubtileRef - 1;
     std::vector<unsigned> &srcFrameReferences = min->getFrameReferences(srcSubtileIndex);
     // assert(min->getSubtileWidth() == 2);
@@ -318,6 +304,28 @@ static void CopyFrame(D1Min *min, D1Gfx *gfx, int dstSubtileRef, int dstMicroInd
     unsigned srcFrameRef = srcFrameReferences[srcIndex];
     if (srcFrameRef == 0) {
         dProgressErr() << QApplication::tr("Frame %1 of Subtile %2 is empty.").arg(srcIndex + 1).arg(srcSubtileIndex + 1);
+        return;
+    }
+
+    int dstSubtileIndex = dstSubtileRef - 1;
+    std::vector<unsigned> &dstFrameReferences = min->getFrameReferences(dstSubtileIndex);
+    // assert(min->getSubtileWidth() == 2);
+    unsigned dstIndex = dstFrameReferences.size() - (2 + (dstMicroIndex & ~1)) + (dstMicroIndex & 1);
+    if (dstIndex >= dstFrameReferences.size()) {
+        dProgressErr() << QApplication::tr("Not enough frames in Subtile %1.").arg(dstSubtileIndex + 1);
+        return;
+    }
+    if (min->setFrameReference(dstSubtileIndex, dstIndex, srcFrameRef)) {
+        if (!silent) {
+            dProgress() << QApplication::tr("Frame %1 of Subtile %2 is set to Frame %3.").arg(dstIndex + 1).arg(dstSubtileIndex + 1).arg(srcFrameRef);
+        }
+    }
+    /*unsigned dstFrameRef = dstFrameReferences[dstIndex];
+    if (dstFrameRef == 0) {
+        dstFrameReferences[dstIndex] = srcFrameRef;
+        if (!silent) {
+            dProgress() << QApplication::tr("Frame %1 of Subtile %2 is set to Frame %3.").arg(dstIndex + 1).arg(dstSubtileIndex + 1).arg(srcFrameRef);
+        }
         return;
     }
 
@@ -339,7 +347,7 @@ static void CopyFrame(D1Min *min, D1Gfx *gfx, int dstSubtileRef, int dstMicroInd
         }
     } else {
         dProgressWarn() << QApplication::tr("The contents of Frame %1 and Frame %2 are already the same.").arg(dstFrameRef).arg(srcFrameRef);
-    }
+    }*/
 }
 
 void D1Tileset::patch(int dunType, bool silent)
