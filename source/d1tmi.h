@@ -20,7 +20,7 @@ public:
     bool save(const SaveAsParam &params);
     void clear();
 
-    void insertSubtile(int subtileIndex, quint8 value);
+    void insertSubtile(int subtileIndex);
     void createSubtile();
     void removeSubtile(int subtileIndex);
     void remapSubtiles(const std::map<unsigned, unsigned> &remap);

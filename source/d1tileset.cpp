@@ -102,8 +102,8 @@ void D1Tileset::createTile()
 void D1Tileset::insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList)
 {
     this->min->insertSubtile(subtileIndex, frameReferencesList);
-    this->sol->insertSubtile(subtileIndex, 0);
-    this->tmi->insertSubtile(subtileIndex, 0);
+    this->sol->insertSubtile(subtileIndex);
+    this->tmi->insertSubtile(subtileIndex);
 }
 
 void D1Tileset::createSubtile()

@@ -143,9 +143,9 @@ bool D1Tmi::setSubtileProperties(int subtileIndex, quint8 value)
     return true;
 }
 
-void D1Tmi::insertSubtile(int subtileIndex, quint8 value)
+void D1Tmi::insertSubtile(int subtileIndex)
 {
-    this->subProperties.insert(subtileIndex, value);
+    this->subProperties.insert(subtileIndex, 0);
     this->modified = true;
 }
 
