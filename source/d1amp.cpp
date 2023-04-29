@@ -40,9 +40,9 @@ bool D1Amp::load(const QString &filePath, int tileCount, const OpenAsParam &para
     }
 
     int ampTileCount = fileSize / 2;
-    if (ampTileCount != tileCount) {
+    if (ampTileCount != tileCount && ampTileCount != 0) {
         // warn about misalignment if the files are not empty
-        if (ampTileCount != 0 && tileCount != 0) {
+        if (tileCount != 0) {
             dProgressWarn() << tr("The size of AMP file does not align with TIL file.");
         }
         if (ampTileCount > tileCount) {
