@@ -231,7 +231,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
 	dun->setLevelType(currLvl._dType);
 
 	int baseTile = 0;
-	switch (currLvl._dType) {
+	switch (currLvl._dDunType) {
 	case DTYPE_TOWN:
 		break;
 	case DTYPE_CATHEDRAL:
