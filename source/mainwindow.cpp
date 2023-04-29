@@ -942,13 +942,12 @@ void MainWindow::openFile(const OpenAsParam &params)
         }
 
         // Loading MIN
-QMessageBox::critical(nullptr, "Error", "Loading min");
         std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
         if (!this->tileset->min->load(minFilePath, this->tileset, celFrameTypes, params)) {
             this->failWithError(tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath)));
             return;
         }
-QMessageBox::critical(nullptr, "Error", "Loaded min");
+
         // Loading TIL
         if (!this->tileset->til->load(tilFilePath, this->tileset->min)) {
             this->failWithError(tr("Failed loading TIL file: %1.").arg(QDir::toNativeSeparators(tilFilePath)));
@@ -1019,7 +1018,6 @@ QMessageBox::critical(nullptr, "Error", "Loaded min");
         // gfxFilePath.isEmpty()
         this->gfx->setType(params.clipped == OPEN_CLIPPED_TYPE::TRUE ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V1_REGULAR);
     }
-QMessageBox::critical(nullptr, "Error", "Creating pal widgets");
     // Add palette widgets for PAL and TRNs
     this->palWidget = new PaletteWidget(this, this->undoStack, tr("Palette"));
     this->trnUniqueWidget = new PaletteWidget(this, this->undoStack, tr("Unique translation"));
@@ -1028,7 +1026,7 @@ QMessageBox::critical(nullptr, "Error", "Creating pal widgets");
     palLayout->addWidget(this->palWidget);
     palLayout->addWidget(this->trnUniqueWidget);
     palLayout->addWidget(this->trnBaseWidget);
-QMessageBox::critical(nullptr, "Error", "Created pal widgets");
+
     QWidget *view;
     if (isTileset) {
         // build a LevelCelView
@@ -1063,10 +1061,9 @@ QMessageBox::critical(nullptr, "Error", "Created pal widgets");
 
         view = this->tblView;
     }
-QMessageBox::critical(nullptr, "Error", "Adding view");
     // Add the view to the main frame
     this->ui->mainFrameLayout->addWidget(view);
-QMessageBox::critical(nullptr, "Error", "View added");
+
     // prepare the paint dialog
     if (fileType != 4) {
         this->paintWidget = new PaintWidget(this, this->undoStack, this->gfx, this->celView, this->levelCelView);
@@ -1152,7 +1149,7 @@ QMessageBox::critical(nullptr, "Error", "View added");
 
     this->ui->menuTileset->setEnabled(isTileset);
     this->ui->menuDungeon->setEnabled(this->dun != nullptr);
-QMessageBox::critical(nullptr, "Error", "Load done");
+
     // Clear loading message from status bar
     ProgressDialog::done();
 }

@@ -38,6 +38,7 @@ bool D1Tileset::loadCls(const QString &clsFilePath, const OpenAsParam &params)
     }
 
     this->cls->setFilePath(clsFilePath);
+    this->cls->setModified(false);
     return params.clsFilePath.isEmpty();
 }
 
