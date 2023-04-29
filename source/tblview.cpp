@@ -101,7 +101,6 @@ void TblView::setPal(D1Pal *p)
 // Displaying CEL file path information
 void TblView::updateLabel()
 {
-    QLabel *label;
     QHBoxLayout *layout = this->ui->tblLabelsHorizontalLayout;
     while (layout->count() != 2) {
         layout->addWidget(new QLabel(""));

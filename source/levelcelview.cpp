@@ -288,7 +288,7 @@ void LevelCelView::updateLabel()
     if (hasDun) {
         const D1Gfx *specGfx = this->dun->getSpecGfx();
         if (specGfx != nullptr) {
-            CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(6)->widget()), this->specGfx->getFilePath(), this->specGfx->isModified());
+            CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(6)->widget()), specGfx->getFilePath(), specGfx->isModified());
         }
         CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(7)->widget()), this->dun->getFilePath(), this->dun->isModified());
     }
