@@ -12,6 +12,7 @@ D1Tileset::D1Tileset(D1Gfx *g)
     this->til = new D1Til();
     this->sol = new D1Sol();
     this->amp = new D1Amp();
+    this->spt = new D1Spt();
     this->tmi = new D1Tmi();
 }
 
@@ -21,6 +22,7 @@ D1Tileset::~D1Tileset()
     delete til;
     delete sol;
     delete amp;
+    delete spt;
     delete tmi;
 }
 
@@ -34,6 +36,7 @@ bool D1Tileset::load(const OpenAsParam &params)
     QString minFilePath = params.minFilePath;
     QString solFilePath = params.solFilePath;
     QString ampFilePath = params.ampFilePath;
+    QString sptFilePath = params.sptFilePath;
     QString tmiFilePath = params.tmiFilePath;
 
     if (!gfxFilePath.isEmpty()) {
@@ -53,6 +56,9 @@ bool D1Tileset::load(const OpenAsParam &params)
         if (ampFilePath.isEmpty()) {
             ampFilePath = basePath + ".amp";
         }
+        if (sptFilePath.isEmpty()) {
+            sptFilePath = basePath + ".spt";
+        }
         if (tmiFilePath.isEmpty()) {
             tmiFilePath = basePath + ".tmi";
         }
@@ -67,6 +73,8 @@ bool D1Tileset::load(const OpenAsParam &params)
         dProgressErr() << QApplication::tr("Failed loading TIL file: %1.").arg(QDir::toNativeSeparators(tilFilePath));
     } else if (!this->amp->load(ampFilePath, this->til->getTileCount(), params)) {
         dProgressErr() << QApplication::tr("Failed loading AMP file: %1.").arg(QDir::toNativeSeparators(ampFilePath));
+    } else if (!this->spt->load(sptFilePath, this->sol, params)) {
+        dProgressErr() << QApplication::tr("Failed loading SPT file: %1.").arg(QDir::toNativeSeparators(sptFilePath));
     } else if (!this->tmi->load(tmiFilePath, this->sol, params)) {
         dProgressErr() << QApplication::tr("Failed loading TMI file: %1.").arg(QDir::toNativeSeparators(tmiFilePath));
     } else if (!D1CelTileset::load(*this->gfx, celFrameTypes, gfxFilePath, params)) {
@@ -80,6 +88,7 @@ bool D1Tileset::load(const OpenAsParam &params)
     this->til->clear();
     this->sol->clear();
     this->amp->clear();
+    this->spt->clear();
     this->tmi->clear();
     return true;
 }
@@ -90,6 +99,7 @@ void D1Tileset::save(const SaveAsParam &params)
     this->til->save(params);
     this->sol->save(params);
     this->amp->save(params);
+    this->spt->save(params);
     this->tmi->save(params);
 }
 
@@ -99,10 +109,19 @@ void D1Tileset::createTile()
     this->amp->createTile();
 }
 
+void D1Tileset::insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList)
+{
+    this->min->insertSubtile(subtileIndex, frameReferencesList);
+    this->sol->insertSubtile(subtileIndex);
+    this->spt->insertSubtile(subtileIndex);
+    this->tmi->insertSubtile(subtileIndex);
+}
+
 void D1Tileset::createSubtile()
 {
     this->min->createSubtile();
     this->sol->createSubtile();
+    this->spt->createSubtile();
     this->tmi->createSubtile();
 }
 
@@ -110,7 +129,24 @@ void D1Tileset::removeSubtile(int subtileIndex, int replacement)
 {
     this->til->removeSubtile(subtileIndex, replacement);
     this->sol->removeSubtile(subtileIndex);
+    this->spt->removeSubtile(subtileIndex);
     this->tmi->removeSubtile(subtileIndex);
+}
+
+void D1Tileset::resetSubtileFlags(int subtileIndex)
+{
+    this->sol->setSubtileProperties(subtileIndex, 0);
+    this->spt->setSubtileTrapProperty(subtileIndex, 0);
+    this->spt->setSubtileSpecProperty(subtileIndex, 0);
+    this->tmi->setSubtileProperties(subtileIndex, 0);
+}
+
+void D1Tileset::remapSubtiles(const std::map<unsigned, unsigned> &remap)
+{
+    this->min->remapSubtiles(remap);
+    this->sol->remapSubtiles(remap);
+    this->spt->remapSubtiles(remap);
+    this->tmi->remapSubtiles(remap);
 }
 
 bool D1Tileset::reuseFrames(std::set<int> &removedIndices, bool silent)
@@ -291,7 +327,6 @@ static void ReplaceSubtile(D1Til *til, int tileIndex, unsigned index, int subtil
     }
 }
 
-// static void CopyFrame(D1Gfx *gfx, int dstFrameRef, int srcFrameRef, bool silent)
 static void CopyFrame(D1Min *min, D1Gfx *gfx, int dstSubtileRef, int dstMicroIndex, int srcSubtileRef, int srcMicroIndex, bool silent)
 {
     int srcSubtileIndex = srcSubtileRef - 1;

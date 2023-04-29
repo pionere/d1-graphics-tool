@@ -2493,7 +2493,7 @@ static void DRLG_L2FixMap()
 	}
 
 	if (pSetPieces[0]._sptype == SPT_LVL_BCHAMB) {
-		// patch the map - Bonestr2.DUN
+		// patch the map - Bonecha2.DUN
 		// add tiles with subtiles for arches
 		lm[2 + 13 + 6 * 32] = SwapLE16(161);
 		lm[2 + 13 + 8 * 32] = SwapLE16(161);

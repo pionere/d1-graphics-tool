@@ -27,6 +27,7 @@ public:
     QString minFilePath;
     QString solFilePath;
     QString ampFilePath;
+    QString sptFilePath;
     QString tmiFilePath;
     QString dunFilePath;
     uint8_t dunLayerNum = UINT8_MAX;
@@ -57,6 +58,7 @@ private slots:
     void on_outputSolFileBrowseButton_clicked();
     void on_outputAmpFileBrowseButton_clicked();
     void on_outputTmiFileBrowseButton_clicked();
+    void on_outputSptFileBrowseButton_clicked();
     void on_outputDunFileBrowseButton_clicked();
     void on_tblFileBrowseButton_clicked();
     void on_saveButton_clicked();

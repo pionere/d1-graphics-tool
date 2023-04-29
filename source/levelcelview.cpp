@@ -100,11 +100,12 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
     this->til = ts->til;
     this->sol = ts->sol;
     this->amp = ts->amp;
+    this->spt = ts->spt;
     this->tmi = ts->tmi;
     this->dun = d;
 
     this->tabTileWidget.initialize(this, this->til, this->min, this->amp);
-    this->tabSubtileWidget.initialize(this, this->gfx, this->min, this->sol, this->tmi);
+    this->tabSubtileWidget.initialize(this, this->gfx, this->min, this->sol, this->spt, this->tmi);
     this->tabFrameWidget.initialize(this, this->gfx);
 
     bool dunMode = d != nullptr;
@@ -273,7 +274,7 @@ void LevelCelView::updateLabel()
 
     QLabel *label;
     QHBoxLayout *layout = this->ui->celLabelsHorizontalLayout;
-    const int labelCount = hasDun ? 8 : 6;
+    const int labelCount = hasDun ? 9 : 7;
     while (layout->count() != labelCount + 1) {
         layout->insertWidget(0, new QLabel(""), 0, Qt::AlignLeft);
     }
@@ -283,14 +284,15 @@ void LevelCelView::updateLabel()
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(2)->widget()), this->til->getFilePath(), this->til->isModified());
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(3)->widget()), this->sol->getFilePath(), this->sol->isModified());
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(4)->widget()), this->amp->getFilePath(), this->amp->isModified());
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(5)->widget()), this->tmi->getFilePath(), this->tmi->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(5)->widget()), this->spt->getFilePath(), this->spt->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(6)->widget()), this->tmi->getFilePath(), this->tmi->isModified());
 
     if (hasDun) {
         const D1Gfx *specGfx = this->dun->getSpecGfx();
         if (specGfx != nullptr) {
-            CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(6)->widget()), specGfx->getFilePath(), specGfx->isModified());
+            CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(7)->widget()), specGfx->getFilePath(), specGfx->isModified());
         }
-        CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(7)->widget()), this->dun->getFilePath(), this->dun->isModified());
+        CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(8)->widget()), this->dun->getFilePath(), this->dun->isModified());
     }
 }
 
@@ -637,9 +639,7 @@ void LevelCelView::assignFrames(const QImage &image, int subtileIndex, int frame
     if (subtileIndex >= 0) {
         this->min->getFrameReferences(subtileIndex).swap(frameReferencesList);
         this->min->setModified();
-        // reset subtile flags
-        this->sol->setSubtileProperties(subtileIndex, 0);
-        this->tmi->setSubtileProperties(subtileIndex, 0);
+        this->tileset->resetSubtileFlags(subtileIndex);
     }
 }
 
@@ -680,9 +680,7 @@ void LevelCelView::assignFrames(const D1GfxFrame &frame, int subtileIndex, int f
     if (subtileIndex >= 0) {
         this->min->getFrameReferences(subtileIndex).swap(frameReferencesList);
         this->min->setModified();
-        // reset subtile flags
-        this->sol->setSubtileProperties(subtileIndex, 0);
-        this->tmi->setSubtileProperties(subtileIndex, 0);
+        this->tileset->resetSubtileFlags(subtileIndex);
     }
 }
 
@@ -1084,9 +1082,7 @@ void LevelCelView::insertSubtile(int subtileIndex, const QImage &image)
             frameIndex++;
         }
     }
-    this->min->insertSubtile(subtileIndex, frameReferencesList);
-    this->sol->insertSubtile(subtileIndex, 0);
-    this->tmi->insertSubtile(subtileIndex, 0);
+    this->tileset->insertSubtile(subtileIndex, frameReferencesList);
 }
 
 void LevelCelView::insertSubtile(int subtileIndex, const D1GfxFrame &frame)
@@ -1124,9 +1120,7 @@ void LevelCelView::insertSubtile(int subtileIndex, const D1GfxFrame &frame)
             frameIndex++;
         }
     }
-    this->min->insertSubtile(subtileIndex, frameReferencesList);
-    this->sol->insertSubtile(subtileIndex, 0);
-    this->tmi->insertSubtile(subtileIndex, 0);
+    this->tileset->insertSubtile(subtileIndex, frameReferencesList);
 }
 
 void LevelCelView::insertTile(int tileIndex, const QImage &image)
@@ -1521,9 +1515,7 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
             this->pal->updateColors(basePal);
             emit this->palModified();
         }
-        // reset subtile flags
-        this->sol->setSubtileProperties(subtileIndex, 0);
-        this->tmi->setSubtileProperties(subtileIndex, 0);
+        this->tileset->resetSubtileFlags(subtileIndex);
         // update the view - done by the caller
         // this->displayFrame();
         return;
@@ -1544,9 +1536,7 @@ void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
     int subtileIndex = this->currentSubtileIndex;
     this->assignFrames(image, subtileIndex, this->gfx->getFrameCount());
 
-    // reset subtile flags
-    this->sol->setSubtileProperties(subtileIndex, 0);
-    this->tmi->setSubtileProperties(subtileIndex, 0);
+    this->tileset->resetSubtileFlags(subtileIndex);
 
     // update the view - done by the caller
     // this->displayFrame();
@@ -1694,9 +1684,7 @@ void LevelCelView::pasteCurrent(const QImage &image)
             this->assignSubtiles(image, -1, subtileIndex);
         }
 
-        // reset subtile flags
-        this->sol->setSubtileProperties(subtileIndex, 0);
-        this->tmi->setSubtileProperties(subtileIndex, 0);
+        this->tileset->resetSubtileFlags(subtileIndex);
         // update the view - done by the caller
         // this->displayFrame();
         return;
@@ -2101,6 +2089,34 @@ void LevelCelView::checkSubtileFlags() const
     }
     if (!result) {
         progress.second = tr("No inconsistency detected in the SOL flags.");
+        dProgress() << progress;
+    }
+
+    ProgressDialog::decBar();
+    ProgressDialog::incBar(tr("Checking SPT flags..."), 1);
+
+    // SPT:
+    result = false;
+    progress.first = -1;
+    progress.second = tr("SPT inconsistencies:");
+    dProgress() << progress;
+    for (int i = 0; i < this->min->getSubtileCount(); i++) {
+        int trapFlags = this->spt->getSubtileTrapProperty(i);
+		if (trapFlags > 2) {
+            dProgressErr() << tr("Subtile %1 has an invalid trap-setting: %2.").arg(i + 1).arg(trapFlags);
+            result = true;
+        }
+        int specFrame = this->spt->getSubtileSpecProperty(i);
+		if (specFrame > 63) {
+            dProgressErr() << tr("Subtile %1 has an invalid special tile setting: %2.").arg(i + 1).arg(specFrame);
+            result = true;
+        }
+		if (specFrame != 0) {
+			// FIXME: validate 
+        }
+    }
+    if (!result) {
+        progress.second = tr("No inconsistency detected in the SPT flags.");
         dProgress() << progress;
     }
 
@@ -2694,9 +2710,7 @@ bool LevelCelView::sortSubtiles_impl()
     for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
         backmap[iter->second] = iter->first;
     }
-    this->min->remapSubtiles(backmap);
-    this->sol->remapSubtiles(backmap);
-    this->tmi->remapSubtiles(backmap);
+    this->tileset->remapSubtiles(backmap);
     return true;
 }
 

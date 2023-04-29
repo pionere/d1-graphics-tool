@@ -23,12 +23,13 @@ LevelTabSubtileWidget::~LevelTabSubtileWidget()
     delete ui;
 }
 
-void LevelTabSubtileWidget::initialize(LevelCelView *v, D1Gfx *g, D1Min *m, D1Sol *s, D1Tmi *t)
+void LevelTabSubtileWidget::initialize(LevelCelView *v, D1Gfx *g, D1Min *m, D1Sol *s, D1Spt *p, D1Tmi *t)
 {
     this->levelCelView = v;
     this->gfx = g;
     this->min = m;
     this->sol = s;
+    this->spt = p;
     this->tmi = t;
 }
 
@@ -41,21 +42,9 @@ void LevelTabSubtileWidget::update()
     this->clearButton->setEnabled(hasSubtile);
     this->deleteButton->setEnabled(hasSubtile);
 
-    this->ui->sol0->setEnabled(hasSubtile);
-    this->ui->sol1->setEnabled(hasSubtile);
-    this->ui->sol2->setEnabled(hasSubtile);
-    this->ui->sol3->setEnabled(hasSubtile);
-    this->ui->sol4->setEnabled(hasSubtile);
-    this->ui->sol5->setEnabled(hasSubtile);
-    this->ui->sol7->setEnabled(hasSubtile);
-
-    this->ui->tmi0->setEnabled(hasSubtile);
-    this->ui->tmi1->setEnabled(hasSubtile);
-    this->ui->tmi2->setEnabled(hasSubtile);
-    this->ui->tmi3->setEnabled(hasSubtile);
-    this->ui->tmi4->setEnabled(hasSubtile);
-    this->ui->tmi5->setEnabled(hasSubtile);
-    this->ui->tmi6->setEnabled(hasSubtile);
+    this->ui->solSettingsGroupBox->setEnabled(hasSubtile);
+    this->ui->sptSettingsGroupBox->setEnabled(hasSubtile);
+    this->ui->tmiSettingsGroupBox->setEnabled(hasSubtile);
 
     this->ui->framesComboBox->setEnabled(hasSubtile);
 
@@ -63,10 +52,9 @@ void LevelTabSubtileWidget::update()
         this->ui->sol0->setChecked(false);
         this->ui->sol1->setChecked(false);
         this->ui->sol2->setChecked(false);
-        this->ui->sol3->setChecked(false);
-        this->ui->sol4->setChecked(false);
-        this->ui->sol5->setChecked(false);
-        this->ui->sol7->setChecked(false);
+
+        this->ui->trapNoneRadioButton->setChecked(true);
+        this->ui->specCelLineEdit->setText("");
 
         this->ui->tmi0->setChecked(false);
         this->ui->tmi1->setChecked(false);
@@ -88,15 +76,21 @@ void LevelTabSubtileWidget::update()
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
     quint8 solFlags = this->sol->getSubtileProperties(subtileIdx);
     quint8 tmiFlags = this->tmi->getSubtileProperties(subtileIdx);
+    int sptTrapFlags = this->spt->getSubtileTrapProperty(subtileIdx);
+    int sptSpecCel = this->spt->getSubtileSpecProperty(subtileIdx);
     std::vector<unsigned> &frames = this->min->getFrameReferences(subtileIdx);
 
     this->ui->sol0->setChecked((solFlags & 1 << 0) != 0);
     this->ui->sol1->setChecked((solFlags & 1 << 1) != 0);
     this->ui->sol2->setChecked((solFlags & 1 << 2) != 0);
-    this->ui->sol3->setChecked((solFlags & 1 << 3) != 0);
-    this->ui->sol4->setChecked((solFlags & 1 << 4) != 0);
-    this->ui->sol5->setChecked((solFlags & 1 << 5) != 0);
-    this->ui->sol7->setChecked((solFlags & 1 << 7) != 0);
+
+    if (sptTrapFlags == PTT_NONE)
+        this->ui->trapNoneRadioButton->setChecked(true);
+    else if (sptTrapFlags == PTT_LEFT)
+        this->ui->trapLeftRadioButton->setChecked(true);
+    else if (sptTrapFlags == PTT_RIGHT)
+        this->ui->trapRightRadioButton->setChecked(true);
+    this->ui->specCelLineEdit->setText(QString::number(sptSpecCel));
 
     this->ui->tmi0->setChecked((tmiFlags & 1 << 0) != 0);
     this->ui->tmi1->setChecked((tmiFlags & 1 << 1) != 0);
@@ -157,14 +151,6 @@ void LevelTabSubtileWidget::updateSolProperty()
         flags |= 1 << 1;
     if (this->ui->sol2->checkState())
         flags |= 1 << 2;
-    if (this->ui->sol3->checkState())
-        flags |= 1 << 3;
-    if (this->ui->sol4->checkState())
-        flags |= 1 << 4;
-    if (this->ui->sol5->checkState())
-        flags |= 1 << 5;
-    if (this->ui->sol7->checkState())
-        flags |= 1 << 7;
 
     this->setSolProperty(flags);
 }
@@ -202,6 +188,7 @@ void LevelTabSubtileWidget::updateTmiProperty()
 void LevelTabSubtileWidget::on_clearPushButtonClicked()
 {
     this->setSolProperty(0);
+    this->setTrapProperty(PTT_NONE);
     this->setTmiProperty(0);
     this->update();
 }
@@ -226,29 +213,49 @@ void LevelTabSubtileWidget::on_sol2_clicked()
     this->updateSolProperty();
 }
 
-void LevelTabSubtileWidget::on_sol3_clicked()
+void LevelTabSubtileWidget::setTrapProperty(int trap)
 {
-    this->updateSolProperty();
+    int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
+
+    if (this->spt->setSubtileTrapProperty(subtileIdx, trap)) {
+        this->levelCelView->updateLabel();
+    }
 }
 
-void LevelTabSubtileWidget::on_sol4_clicked()
+void LevelTabSubtileWidget::on_trapNoneRadioButton_clicked()
 {
-    this->updateSolProperty();
+    this->setTrapProperty(PTT_NONE);
 }
 
-void LevelTabSubtileWidget::on_sol5_clicked()
+void LevelTabSubtileWidget::on_trapLeftRadioButton_clicked()
 {
-    this->updateSolProperty();
+    this->setTrapProperty(PTT_LEFT);
 }
 
-void LevelTabSubtileWidget::on_sol7_clicked()
+void LevelTabSubtileWidget::on_trapRightRadioButton_clicked()
 {
-    this->updateSolProperty();
+    this->setTrapProperty(PTT_RIGHT);
 }
 
-void LevelTabSubtileWidget::on_tmi0_clicked()
+void LevelTabSubtileWidget::on_specCelLineEdit_returnPressed()
 {
-    this->updateTmiProperty();
+    int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
+    int sptSpecCel = this->ui->specCelLineEdit->text().toInt();
+
+    if (this->spt->setSubtileSpecProperty(subtileIdx, sptSpecCel)) {
+        // this->levelCelView->updateLabel();
+        this->levelCelView->displayFrame();
+    }
+    this->on_specCelLineEdit_escPressed();
+}
+
+void LevelTabSubtileWidget::on_specCelLineEdit_escPressed()
+{
+    int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
+    int sptSpecCel = this->ui->getSubtileSpecProperty(subtileIdx);
+
+    this->ui->specCelLineEdit->setText(QString::number(sptSpecCel));
+    this->ui->specCelLineEdit->clearFocus();
 }
 
 void LevelTabSubtileWidget::on_tmi1_clicked()
@@ -296,7 +303,7 @@ void LevelTabSubtileWidget::on_framesPrevButton_clicked()
         // this->ui->subtilesComboBox->setItemText(index, QString::number(frameRef));
         // this->updateFramesSelection(index);
 
-        this->levelCelView->updateLabel();
+        // this->levelCelView->updateLabel();
         this->levelCelView->displayFrame();
     }
 }
@@ -324,7 +331,7 @@ void LevelTabSubtileWidget::on_framesComboBox_currentTextChanged(const QString &
         // this->ui->subtilesComboBox->setItemText(index, QString::number(frameRef));
         // this->updateFramesSelection(index);
 
-        this->levelCelView->updateLabel();
+        // this->levelCelView->updateLabel();
         this->levelCelView->displayFrame();
     }
 }
@@ -344,7 +351,7 @@ void LevelTabSubtileWidget::on_framesNextButton_clicked()
         // this->ui->subtilesComboBox->setItemText(index, QString::number(frameRef));
         // this->updateFramesSelection(index);
 
-        this->levelCelView->updateLabel();
+        // this->levelCelView->updateLabel();
         this->levelCelView->displayFrame();
     }
 }

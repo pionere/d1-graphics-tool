@@ -77,6 +77,8 @@ set(PROJECT_SOURCES
         source/d1palhits.h
         source/d1pcx.cpp
         source/d1pcx.h
+        source/d1spt.cpp
+        source/d1spt.h
         source/d1sol.cpp
         source/d1sol.h
         source/d1tableset.cpp

@@ -12,6 +12,7 @@ class LevelCelView;
 class D1Gfx;
 class D1Min;
 class D1Sol;
+class D1Spt;
 class D1Tmi;
 
 class LevelTabSubtileWidget : public QWidget {
@@ -21,7 +22,7 @@ public:
     explicit LevelTabSubtileWidget(QWidget *parent);
     ~LevelTabSubtileWidget();
 
-    void initialize(LevelCelView *v, D1Gfx *gfx, D1Min *min, D1Sol *sol, D1Tmi *tmi);
+    void initialize(LevelCelView *v, D1Gfx *gfx, D1Min *min, D1Sol *sol, D1Spt *spt, D1Tmi *tmi);
     void update();
 
     void selectFrame(int index);
@@ -33,10 +34,12 @@ private slots:
     void on_sol0_clicked();
     void on_sol1_clicked();
     void on_sol2_clicked();
-    void on_sol3_clicked();
-    void on_sol4_clicked();
-    void on_sol5_clicked();
-    void on_sol7_clicked();
+
+    void on_trapNoneRadioButton_clicked();
+    void on_trapLeftRadioButton_clicked();
+    void on_trapRightRadioButton_clicked();
+    void on_specCelLineEdit_returnPressed();
+    void on_specCelLineEdit_escPressed();
 
     void on_tmi0_clicked();
     void on_tmi1_clicked();
@@ -57,6 +60,7 @@ private:
     void updateSolProperty();
     void setTmiProperty(quint8 flags);
     void updateTmiProperty();
+    void setTrapProperty(int trap);
 
     Ui::LevelTabSubtileWidget *ui;
     QPushButton *clearButton;
@@ -65,6 +69,7 @@ private:
     D1Gfx *gfx;
     D1Min *min;
     D1Sol *sol;
+    D1Spt *spt;
     D1Tmi *tmi;
 
     bool onUpdate = false;
