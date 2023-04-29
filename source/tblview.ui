@@ -18,7 +18,14 @@
   </property>
   <layout class="QVBoxLayout">
    <item>
-    <widget class="QLabel" name="tblLabel"/>
+    <layout class="QHBoxLayout" name="tblLabelsHorizontalLayout">
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+    </layout>
    </item>
    <item>
     <widget class="QGraphicsView" name="tblGraphicsView">

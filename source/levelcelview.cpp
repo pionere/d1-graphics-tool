@@ -269,62 +269,29 @@ void LevelCelView::updateEntityOptions()
 // Displaying CEL file path information
 void LevelCelView::updateLabel()
 {
-    QFileInfo gfxFileInfo(this->gfx->getFilePath());
-    QFileInfo minFileInfo(this->min->getFilePath());
-    QFileInfo tilFileInfo(this->til->getFilePath());
-    QFileInfo solFileInfo(this->sol->getFilePath());
-    QFileInfo ampFileInfo(this->amp->getFilePath());
-    QFileInfo tmiFileInfo(this->tmi->getFilePath());
+    bool hasDun = this->dun != nullptr;
 
-    QString label = gfxFileInfo.fileName();
-    if (this->gfx->isModified()) {
-        label += "*";
-    }
-    label += ", ";
-    label += minFileInfo.fileName();
-    if (this->min->isModified()) {
-        label += "*";
-    }
-    label += ", ";
-    label += tilFileInfo.fileName();
-    if (this->til->isModified()) {
-        label += "*";
-    }
-    label += ", ";
-    label += solFileInfo.fileName();
-    if (this->sol->isModified()) {
-        label += "*";
-    }
-    label += ", ";
-    label += ampFileInfo.fileName();
-    if (this->amp->isModified()) {
-        label += "*";
-    }
-    label += ", ";
-    label += tmiFileInfo.fileName();
-    if (this->tmi->isModified()) {
-        label += "*";
+    QLabel *label;
+    QHBoxLayout *layout = this->ui->celLabelsHorizontalLayout;
+    const int labelCount = hasDun ? 8 : 6;
+    while (layout->count() != labelCount) {
+        layout->addWidget(new QLabel(""));
     }
 
-    if (this->dun != nullptr) {
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(0)), this->gfx->getFilePath(), this->gfx->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(1)), this->min->getFilePath(), this->min->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(2)), this->til->getFilePath(), this->til->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(3)), this->sol->getFilePath(), this->sol->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(4)), this->amp->getFilePath(), this->amp->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(5)), this->tmi->getFilePath(), this->tmi->isModified());
+
+    if (hasDun) {
         const D1Gfx *specGfx = this->dun->getSpecGfx();
         if (specGfx != nullptr) {
-            QFileInfo specFileInfo(specGfx->getFilePath());
-            label += ", ";
-            label += specFileInfo.fileName();
-            if (specGfx->isModified()) {
-                label += "*";
-            }
+            CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(6)), this->specGfx->getFilePath(), this->specGfx->isModified());
         }
-        QFileInfo dunFileInfo(this->dun->getFilePath());
-        label += ", ";
-        label += dunFileInfo.fileName();
-        if (this->dun->isModified()) {
-            label += "*";
-        }
+        CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(7)), this->dun->getFilePath(), this->dun->isModified());
     }
-
-    this->ui->celLabel->setText(label);
 }
 
 void LevelCelView::update()

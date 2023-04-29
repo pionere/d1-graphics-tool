@@ -86,6 +86,8 @@ public:
     void displayFrame();
     void toggleBottomPanel();
 
+    static void setLabelContent(QLabel *label, const QString &filePath, bool modified);
+
 private:
     void updateLabel();
     void insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);

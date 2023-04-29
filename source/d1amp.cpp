@@ -100,7 +100,7 @@ bool D1Amp::save(const SaveAsParam &params)
             break;
         }
     }
-    if (isEmpty) {
+    if (!isEmpty) {
         // AMP with content -> create or change
         QDir().mkpath(QFileInfo(filePath).absolutePath());
         QFile outFile = QFile(filePath);
@@ -118,7 +118,10 @@ bool D1Amp::save(const SaveAsParam &params)
     } else {
         // AMP without content -> delete
         if (QFile::exists(filePath)) {
-            QFile::remove(filePath);
+            if (!QFile::remove(filePath)) {
+                dProgressFail() << tr("Failed to remove file: %1.").arg(QDir::toNativeSeparators(filePath));
+                return false;
+            }
         }
     }
 
