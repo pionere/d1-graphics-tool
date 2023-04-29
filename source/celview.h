@@ -6,7 +6,9 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneDragDropEvent>
 #include <QGraphicsSceneMouseEvent>
+#include <QLabel>
 #include <QPoint>
+#include <QString>
 #include <QStringList>
 #include <QTimer>
 #include <QWidget>
