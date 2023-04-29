@@ -260,6 +260,7 @@ QImage D1Min::getSubtileImage(int subtileIndex) const
 
 QImage D1Min::getSpecSubtileImage(int subtileIndex) const
 {
+QMessageBox::critical(nullptr, "Error", QString("getting spec subtile image %1 of %2").arg(subtileIndex).arg(this->frameReferences.size()));
     unsigned subtileWidthPx = this->subtileWidth * MICRO_WIDTH;
     unsigned subtileHeightPx = this->subtileHeight * MICRO_HEIGHT;
     QImage subtile = QImage(subtileWidthPx, subtileHeightPx, QImage::Format_ARGB32);
@@ -279,13 +280,14 @@ QImage D1Min::getSpecSubtileImage(int subtileIndex) const
             dy += MICRO_HEIGHT;
         }
     }
-
+QMessageBox::critical(nullptr, "Error", QString("spec subtile image created"));
     unsigned specRef = this->tileset->spt->getSubtileSpecProperty(subtileIndex);
+QMessageBox::critical(nullptr, "Error", QString("getting spec image %1 of %2").arg(specRef).arg(this->tileset->cls->getFrameCount()));
     if (specRef != 0 && (unsigned)this->tileset->cls->getFrameCount() >= specRef) {
         QImage specImage = this->tileset->cls->getFrameImage(specRef - 1);
         subtilePainter.drawImage(0, subtileHeightPx - specImage.height(), specImage);
     }
-
+QMessageBox::critical(nullptr, "Error", QString("Final spec subtile image created"));
     return subtile;
 }
 

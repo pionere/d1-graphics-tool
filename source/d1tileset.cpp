@@ -34,10 +34,9 @@ D1Tileset::~D1Tileset()
 bool D1Tileset::loadCls(const QString &clsFilePath, const OpenAsParam &params)
 {
     if (QFileInfo::exists(clsFilePath)) {
-QMessageBox::critical(nullptr, "Error", "Loading exisiting special cels");
         return D1Cel::load(*this->cls, clsFilePath, params);
     }
-QMessageBox::critical(nullptr, "Error", "Loading non-exisiting special cels");
+
     this->cls->setFilePath(clsFilePath);
     return params.clsFilePath.isEmpty();
 }
