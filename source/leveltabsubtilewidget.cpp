@@ -258,6 +258,11 @@ void LevelTabSubtileWidget::on_specCelLineEdit_escPressed()
     this->ui->specCelLineEdit->clearFocus();
 }
 
+void LevelTabSubtileWidget::on_tmi0_clicked()
+{
+    this->updateTmiProperty();
+}
+
 void LevelTabSubtileWidget::on_tmi1_clicked()
 {
     this->updateTmiProperty();
