@@ -12,6 +12,7 @@ D1Tileset::D1Tileset(D1Gfx *g)
 {
     this->cls = new D1Gfx();
     this->cls->setPalette(g->getPalette());
+    this->min = new D1Min();
     this->til = new D1Til();
     this->sol = new D1Sol();
     this->amp = new D1Amp();
