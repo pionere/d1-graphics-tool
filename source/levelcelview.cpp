@@ -2101,13 +2101,13 @@ void LevelCelView::checkSubtileFlags() const
     dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         int trapFlags = this->spt->getSubtileTrapProperty(i);
-        if (trapFlags > 2) {
+        if (trapFlags != PTT_NONE && trapFlags != PTT_LEFT && trapFlags != PTT_RIGHT) {
             dProgressErr() << tr("Subtile %1 has an invalid trap-setting: %2.").arg(i + 1).arg(trapFlags);
             result = true;
         }
         int specFrame = this->spt->getSubtileSpecProperty(i);
-        if (specFrame > 63) {
-            dProgressErr() << tr("Subtile %1 has an invalid special tile setting: %2.").arg(i + 1).arg(specFrame);
+        if ((unsigned)specFrame > ((1 << 6) - 1)) {
+            dProgressErr() << tr("Subtile %1 has a too high special cel-frame setting: %2. Limit it %3").arg(i + 1).arg(specFrame).arg((1 << 6) - 1);
             result = true;
         }
         if (specFrame != 0) {

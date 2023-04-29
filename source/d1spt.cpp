@@ -133,6 +133,10 @@ bool D1Spt::isModified() const
 
 int D1Spt::getSubtileTrapProperty(int subtileIndex) const
 {
+    if (subtileIndex >= this->subProperties.count()) {
+        QMessageBox::critical(nullptr, "Error", QStringLiteral("SPT-Properties of an invalid subtile %1 requested. Trap-Properties count: %2").arg(subtileIndex).arg(this->trapProperties.count()));
+        return 0;
+    }
     return this->trapProperties.at(subtileIndex);
 }
 
@@ -148,6 +152,10 @@ bool D1Spt::setSubtileTrapProperty(int subtileIndex, int value)
 
 int D1Spt::getSubtileSpecProperty(int subtileIndex) const
 {
+    if (subtileIndex >= this->specProperties.count()) {
+        QMessageBox::critical(nullptr, "Error", QStringLiteral("SPT-Properties of an invalid subtile %1 requested. Spec-Properties count: %2").arg(subtileIndex).arg(this->specProperties.count()));
+        return 0;
+    }
     return this->specProperties.at(subtileIndex);
 }
 
