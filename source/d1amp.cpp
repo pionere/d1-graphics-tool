@@ -28,7 +28,7 @@ bool D1Amp::load(const QString &filePath, int tileCount, const OpenAsParam &para
     this->clear();
     this->ampFilePath = filePath;
 
-    bool changed = !file.isOpen();
+    bool changed = false; // !file.isOpen();
 
     const QByteArray fileData = file.readAll();
 
@@ -40,9 +40,9 @@ bool D1Amp::load(const QString &filePath, int tileCount, const OpenAsParam &para
     }
 
     int ampTileCount = fileSize / 2;
-    if (ampTileCount != tileCount) {
+    if (ampTileCount != tileCount && ampTileCount != 0) {
         // warn about misalignment if the files are not empty
-        if (ampTileCount != 0 && tileCount != 0) {
+        if (tileCount != 0) {
             dProgressWarn() << tr("The size of AMP file does not align with TIL file.");
         }
         if (ampTileCount > tileCount) {
@@ -93,18 +93,36 @@ bool D1Amp::save(const SaveAsParam &params)
         return false;
     }
 
-    QDir().mkpath(QFileInfo(filePath).absolutePath());
-    QFile outFile = QFile(filePath);
-    if (!outFile.open(QIODevice::WriteOnly)) {
-        dProgressFail() << tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(filePath));
-        return false;
-    }
-
-    // write to file
-    QDataStream out(&outFile);
+    bool isEmpty = true;
     for (int i = 0; i < this->types.size(); i++) {
-        out << this->types[i];
-        out << this->properties[i];
+        if (this->types[i] != 0 || this->properties[i] != 0) {
+            isEmpty = false;
+            break;
+        }
+    }
+    if (!isEmpty) {
+        // AMP with content -> create or change
+        QDir().mkpath(QFileInfo(filePath).absolutePath());
+        QFile outFile = QFile(filePath);
+        if (!outFile.open(QIODevice::WriteOnly)) {
+            dProgressFail() << tr("Failed to open file: %1.").arg(QDir::toNativeSeparators(filePath));
+            return false;
+        }
+
+        // write to file
+        QDataStream out(&outFile);
+        for (int i = 0; i < this->types.size(); i++) {
+            out << this->types[i];
+            out << this->properties[i];
+        }
+    } else {
+        // AMP without content -> delete
+        if (QFile::exists(filePath)) {
+            if (!QFile::remove(filePath)) {
+                dProgressFail() << tr("Failed to remove file: %1.").arg(QDir::toNativeSeparators(filePath));
+                return false;
+            }
+        }
     }
 
     this->ampFilePath = filePath; // this->load(filePath, allocate);
