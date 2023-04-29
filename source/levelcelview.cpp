@@ -274,7 +274,7 @@ void LevelCelView::updateLabel()
     bool hasDun = this->dun != nullptr;
 
     QHBoxLayout *layout = this->ui->celLabelsHorizontalLayout;
-    const int labelCount = hasDun ? 9 : 7;
+    const int labelCount = hasDun ? 9 : 8;
     while (layout->count() != labelCount + 1) {
         layout->insertWidget(0, new QLabel(""), 0, Qt::AlignLeft);
     }
