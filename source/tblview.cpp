@@ -101,20 +101,13 @@ void TblView::setPal(D1Pal *p)
 // Displaying CEL file path information
 void TblView::updateLabel()
 {
-    QFileInfo distTblFileInfo(this->tableset->distTbl->getFilePath());
-    QFileInfo darkTblFileInfo(this->tableset->darkTbl->getFilePath());
-
-    QString label = distTblFileInfo.fileName();
-    if (this->tableset->distTbl->isModified()) {
-        label += "*";
-    }
-    label += ", ";
-    label += darkTblFileInfo.fileName();
-    if (this->tableset->darkTbl->isModified()) {
-        label += "*";
+    QHBoxLayout *layout = this->ui->tblLabelsHorizontalLayout;
+    while (layout->count() != 2 + 1) {
+        layout->insertWidget(0, new QLabel(""), 0, Qt::AlignLeft);
     }
 
-    ui->tblLabel->setText(label);
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(0)->widget()), this->tableset->distTbl->getFilePath(), this->tableset->distTbl->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(1)->widget()), this->tableset->darkTbl->getFilePath(), this->tableset->darkTbl->isModified());
 }
 
 void TblView::update()

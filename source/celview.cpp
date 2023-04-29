@@ -243,15 +243,22 @@ void CelView::setPal(D1Pal *p)
     this->pal = p;
 }
 
+void CelView::setLabelContent(QLabel *label, const QString &filePath, bool modified)
+{
+    label->setToolTip(filePath);
+
+    QFileInfo fileInfo(filePath);
+    QString labelText = fileInfo.fileName();
+    if (modified) {
+        labelText += "*";
+    }
+    label->setText(labelText);
+}
+
 // Displaying CEL file path information
 void CelView::updateLabel()
 {
-    QFileInfo gfxFileInfo(this->gfx->getFilePath());
-    QString label = gfxFileInfo.fileName();
-    if (this->gfx->isModified()) {
-        label += "*";
-    }
-    ui->celLabel->setText(label);
+    CelView::setLabelContent(this->ui->celLabel, this->gfx->getFilePath(), this->gfx->isModified());
 }
 
 void CelView::update()

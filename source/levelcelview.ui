@@ -18,7 +18,21 @@
   </property>
   <layout class="QVBoxLayout">
    <item>
-    <widget class="QLabel" name="celLabel"/>
+    <layout class="QHBoxLayout" name="celLabelsHorizontalLayout">
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QGraphicsView" name="celGraphicsView">

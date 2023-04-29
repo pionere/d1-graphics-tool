@@ -6,7 +6,9 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneDragDropEvent>
 #include <QGraphicsSceneMouseEvent>
+#include <QLabel>
 #include <QPoint>
+#include <QString>
 #include <QStringList>
 #include <QTimer>
 #include <QWidget>
@@ -85,6 +87,8 @@ public:
     void update();
     void displayFrame();
     void toggleBottomPanel();
+
+    static void setLabelContent(QLabel *label, const QString &filePath, bool modified);
 
 private:
     void updateLabel();
