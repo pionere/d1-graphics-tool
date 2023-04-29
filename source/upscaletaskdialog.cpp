@@ -259,7 +259,7 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, c
     }
     // Loading MIN
     std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
-    if (!tileset.min->load(minFilePath, tileset.gfx, tileset.sol, celFrameTypes, opParams)) {
+    if (!tileset.min->load(minFilePath, &tileset, celFrameTypes, opParams)) {
         dProgressErr() << tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath));
         return;
     }

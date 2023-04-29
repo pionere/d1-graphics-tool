@@ -9,7 +9,6 @@
 #include "saveasdialog.h"
 
 class D1Gfx;
-class D1Sol;
 class D1Tileset;
 
 class D1Min : public QObject {
@@ -21,7 +20,7 @@ public:
     D1Min() = default;
     ~D1Min() = default;
 
-    bool load(const QString &minFilePath, D1Tileset *tileset, D1Sol *sol, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const OpenAsParam &params);
+    bool load(const QString &minFilePath, D1Tileset *tileset, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const OpenAsParam &params);
     bool save(const SaveAsParam &params);
     void clear();
 

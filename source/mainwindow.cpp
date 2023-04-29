@@ -943,7 +943,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
         // Loading MIN
         std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
-        if (!this->tileset->min->load(minFilePath, this->gfx, this->tileset->cls, this->tileset->sol, celFrameTypes, params)) {
+        if (!this->tileset->min->load(minFilePath, this->tileset, celFrameTypes, params)) {
             this->failWithError(tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath)));
             return;
         }

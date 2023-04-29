@@ -83,7 +83,7 @@ bool D1Tileset::load(const OpenAsParam &params)
     std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
     if (!this->sol->load(solFilePath)) {
         dProgressErr() << QApplication::tr("Failed loading SOL file: %1.").arg(QDir::toNativeSeparators(solFilePath));
-    } else if (!this->min->load(minFilePath, this, this->sol, celFrameTypes, params)) {
+    } else if (!this->min->load(minFilePath, this, celFrameTypes, params)) {
         dProgressErr() << QApplication::tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath));
     } else if (!this->til->load(tilFilePath, this->min)) {
         dProgressErr() << QApplication::tr("Failed loading TIL file: %1.").arg(QDir::toNativeSeparators(tilFilePath));
