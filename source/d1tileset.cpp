@@ -99,6 +99,13 @@ void D1Tileset::createTile()
     this->amp->createTile();
 }
 
+void D1Tileset::insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList)
+{
+    this->min->insertSubtile(subtileIndex, frameReferencesList);
+    this->sol->insertSubtile(subtileIndex, 0);
+    this->tmi->insertSubtile(subtileIndex, 0);
+}
+
 void D1Tileset::createSubtile()
 {
     this->min->createSubtile();
@@ -111,6 +118,13 @@ void D1Tileset::removeSubtile(int subtileIndex, int replacement)
     this->til->removeSubtile(subtileIndex, replacement);
     this->sol->removeSubtile(subtileIndex);
     this->tmi->removeSubtile(subtileIndex);
+}
+
+void D1Tileset::remapSubtiles(const std::map<unsigned, unsigned> &remap)
+{
+    this->min->remapSubtiles(remap);
+    this->sol->remapSubtiles(remap);
+    this->tmi->remapSubtiles(remap);
 }
 
 bool D1Tileset::reuseFrames(std::set<int> &removedIndices, bool silent)

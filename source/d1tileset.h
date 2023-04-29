@@ -1,6 +1,8 @@
 #pragma once
 
+#include <map>
 #include <set>
+#include <vector>
 
 #include "d1amp.h"
 #include "d1gfx.h"
@@ -23,8 +25,10 @@ public:
     void save(const SaveAsParam &params);
 
     void createTile();
+    void insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList);
     void createSubtile();
     void removeSubtile(int subtileIndex, int replacement);
+    void remapSubtiles(const std::map<unsigned, unsigned> &remap);
     bool reuseFrames(std::set<int> &removedIndices, bool silent);
     bool reuseSubtiles(std::set<int> &removedIndices);
 

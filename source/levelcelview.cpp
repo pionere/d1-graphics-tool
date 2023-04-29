@@ -1084,9 +1084,7 @@ void LevelCelView::insertSubtile(int subtileIndex, const QImage &image)
             frameIndex++;
         }
     }
-    this->min->insertSubtile(subtileIndex, frameReferencesList);
-    this->sol->insertSubtile(subtileIndex, 0);
-    this->tmi->insertSubtile(subtileIndex, 0);
+    this->tileset->insertSubtile(subtileIndex, frameReferencesList);
 }
 
 void LevelCelView::insertSubtile(int subtileIndex, const D1GfxFrame &frame)
@@ -1124,9 +1122,7 @@ void LevelCelView::insertSubtile(int subtileIndex, const D1GfxFrame &frame)
             frameIndex++;
         }
     }
-    this->min->insertSubtile(subtileIndex, frameReferencesList);
-    this->sol->insertSubtile(subtileIndex, 0);
-    this->tmi->insertSubtile(subtileIndex, 0);
+    this->tileset->insertSubtile(subtileIndex, frameReferencesList);
 }
 
 void LevelCelView::insertTile(int tileIndex, const QImage &image)
@@ -2694,9 +2690,7 @@ bool LevelCelView::sortSubtiles_impl()
     for (auto iter = remap.cbegin(); iter != remap.cend(); ++iter) {
         backmap[iter->second] = iter->first;
     }
-    this->min->remapSubtiles(backmap);
-    this->sol->remapSubtiles(backmap);
-    this->tmi->remapSubtiles(backmap);
+    this->tileset->remapSubtiles(backmap);
     return true;
 }
 
