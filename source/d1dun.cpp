@@ -603,7 +603,6 @@ void D1Dun::initialize(D1Pal *p, D1Tileset *ts)
         }
     }
     this->setAssetPath(assetDir);
-    // this->loadSpecCels();
 }
 
 bool D1Dun::save(const SaveAsParam &params)

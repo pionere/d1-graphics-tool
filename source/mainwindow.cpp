@@ -1018,6 +1018,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         // gfxFilePath.isEmpty()
         this->gfx->setType(params.clipped == OPEN_CLIPPED_TYPE::TRUE ? D1CEL_TYPE::V2_MONO_GROUP : D1CEL_TYPE::V1_REGULAR);
     }
+
     // Add palette widgets for PAL and TRNs
     this->palWidget = new PaletteWidget(this, this->undoStack, tr("Palette"));
     this->trnUniqueWidget = new PaletteWidget(this, this->undoStack, tr("Unique translation"));

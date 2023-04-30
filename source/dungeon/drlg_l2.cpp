@@ -2421,39 +2421,6 @@ static void DRLG_L2()
 	DRLG_L2DoorSubs();
 }
 
-void DRLG_InitL2Specials(int x1, int y1, int x2, int y2)
-{
-	int i, j; // , pn;
-
-	/*for (j = y1; j <= y2; j++) {
-		for (i = x1; i <= x2; i++) {
-			pn = dPiece[i][j];
-			// 13 and 17 are open doors
-			// 178, 551 and 553 are doorways (TODO: add 541 and 542?)
-			if (pn == 13 || pn == 178 || pn == 551)
-				pn = 5;
-			else if (pn == 17 || pn == 553)
-				pn = 6;
-			else if (pn == 560 || pn == 564)
-				pn = 2;
-			else if (pn == 561 || pn == 565)
-				pn = 1;
-			else if (pn == 562 || pn == 566)
-				pn = 3;
-			else if (pn == 563 || pn == 567)
-				pn = 4;
-			else
-				pn = 0;
-			dSpecial[i][j] = pn;
-		}
-	}*/
-	for (i = x1; i <= x2; ++i) {
-		for (j = y1; j <= y2; ++j) {
-			dSpecial[i][j] = nSpecTrapTable[dPiece[i][j]] & ((1 << 6) - 1);
-		}
-	}
-}
-
 static void DRLG_L2FixMap()
 {
 	uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
@@ -2648,7 +2615,6 @@ void CreateL2Dungeon()
 	DRLG_L2InitTransVals();
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L2);
 	DRLG_Init_Globals();
-	DRLG_InitL2Specials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
 
 	DRLG_SetPC();
 }
