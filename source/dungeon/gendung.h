@@ -33,7 +33,6 @@ extern BYTE dFlags[MAXDUNX][MAXDUNY];
 extern int dMonster[MAXDUNX][MAXDUNY];
 extern int8_t dObject[MAXDUNX][MAXDUNY];
 extern BYTE dItem[MAXDUNX][MAXDUNY];
-extern BYTE dSpecial[MAXDUNX][MAXDUNY];
 
 void InitLvlDungeon();
 void FreeSetPieces();
