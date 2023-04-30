@@ -416,6 +416,7 @@ typedef struct LevelData {
 	const char* dMicroCels;
 	const char* dMegaTiles;
 	const char* dMiniTiles;
+	const char* dSpecFlags;
 	const char* dSpecCels;
 	const char* dPalName;
 	const char* dLoadCels;

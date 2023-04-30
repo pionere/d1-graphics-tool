@@ -42,7 +42,7 @@ bool nSolidTable[MAXSUBTILES + 1];
 /**
  * List of trap-source dPieces (_piece_trap_type)
  */
-BYTE nTrapTable[MAXSUBTILES + 1];
+BYTE nSpecTrapTable[MAXSUBTILES + 1];
 /**
  * List of missile blocking dPieces
  */
@@ -129,10 +129,11 @@ void InitLvlDungeon()
 			pTiles[i][bv] = pTiles[i][bv] + 1;
 		}
 	}
+	LoadFileWithMem(lds->dSpecFlags, &nSpecTrapTable[0]); // .SPT
 	static_assert(false == 0, "InitLvlDungeon fills tables with 0 instead of false values.");
 	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nSolidTable, 0, sizeof(nSolidTable));
-	memset(nTrapTable, 0, sizeof(nTrapTable));
+	// memset(nTrapTable, 0, sizeof(nTrapTable));
 	memset(nMissileTable, 0, sizeof(nMissileTable));
 	assert(pSolidTbl == NULL);
 	pSolidTbl = LoadFileInMem(lds->dSolidTable, &dwSubtiles); // .SOL
@@ -151,7 +152,7 @@ void InitLvlDungeon()
 		nSolidTable[i] = (bv & PFLAG_BLOCK_PATH) != 0;
 		nBlockTable[i] = (bv & PFLAG_BLOCK_LIGHT) != 0;
 		nMissileTable[i] = (bv & PFLAG_BLOCK_MISSILE) != 0;
-		nTrapTable[i] = (bv & PFLAG_TRAP_SOURCE) != 0 ? PTT_LEFT : PTT_NONE;
+		// nTrapTable[i] = (bv & PFLAG_TRAP_SOURCE) != 0 ? PTT_LEFT : PTT_NONE;
 	}
 
 	switch (currLvl._dType) {
@@ -209,7 +210,7 @@ void InitLvlDungeon()
 		// pSubtiles[567][1] = pSubtiles[167][1];
 		// patch dSolidTable - L2.SOL
 		// specify direction for torches
-		nTrapTable[1] = PTT_LEFT;
+		/*nTrapTable[1] = PTT_LEFT;
 		nTrapTable[3] = PTT_LEFT;
 		nTrapTable[5] = PTT_RIGHT;
 		nTrapTable[6] = PTT_RIGHT;
@@ -320,7 +321,7 @@ void InitLvlDungeon()
 		nTrapTable[529] = PTT_RIGHT;
 		nTrapTable[530] = PTT_LEFT;
 		nTrapTable[532] = PTT_LEFT;
-		nTrapTable[534] = PTT_RIGHT;
+		nTrapTable[534] = PTT_RIGHT;*/
 		break;
 	case DTYPE_CAVES:
 		nSolidTable[249] = false; // sync tile 68 and 69 by making subtile 249 of tile 68 walkable.
@@ -338,7 +339,7 @@ void InitLvlDungeon()
 		nSolidTable[211] = false;
 		nMissileTable[211] = false;
 		nBlockTable[211] = false;
-		// enable hooked bodies on  walls
+		/*// enable hooked bodies on walls
 		nTrapTable[2] = PTT_LEFT;
 		nTrapTable[189] = PTT_LEFT;
 		nTrapTable[197] = PTT_LEFT;
@@ -347,7 +348,7 @@ void InitLvlDungeon()
 		nTrapTable[5] = PTT_RIGHT;
 		nTrapTable[192] = PTT_RIGHT;
 		nTrapTable[212] = PTT_RIGHT;
-		nTrapTable[216] = PTT_RIGHT;
+		nTrapTable[216] = PTT_RIGHT;*/
 		break;
 #ifdef HELLFIRE
 	case DTYPE_NEST:

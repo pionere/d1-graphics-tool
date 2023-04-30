@@ -1032,8 +1032,8 @@ static void DRLG_LoadL1SP()
 
 void DRLG_InitL1Specials(int x1, int y1, int x2, int y2)
 {
-	int i, j, pn;
-#ifdef HELLFIRE
+	int i, j; // , pn;
+/*#ifdef HELLFIRE
 	if (currLvl._dType == DTYPE_CRYPT) {
 		// add rims above doors
 		for (i = x1; i <= x2; ++i) {
@@ -1075,6 +1075,11 @@ void DRLG_InitL1Specials(int x1, int y1, int x2, int y2)
 					pn = 0;
 				dSpecial[i][j] = pn;
 			}
+		}
+	}*/
+	for (i = x1; i <= x2; ++i) {
+		for (j = y1; j <= y2; ++j) {
+			dSpecial[i][j] = nSpecTrapTable[dPiece[i][j]] & ((1 << 6) - 1);
 		}
 	}
 }

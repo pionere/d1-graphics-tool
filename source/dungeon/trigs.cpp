@@ -244,8 +244,8 @@ void InitView(int entry)
 				ViewY = 59 + DBORDERY;
 				break;
 			case TWARP_HELL:
-				ViewX = 31 + DBORDERX;
-				ViewY = 71 + DBORDERY;
+				ViewX = 30 + DBORDERX;
+				ViewY = 70 + DBORDERY;
 				break;
 #ifdef HELLFIRE
 			case TWARP_CRYPT:

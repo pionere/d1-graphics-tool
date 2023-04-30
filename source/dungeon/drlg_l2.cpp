@@ -2444,9 +2444,9 @@ static void DRLG_L2()
 
 void DRLG_InitL2Specials(int x1, int y1, int x2, int y2)
 {
-	int i, j, pn;
+	int i, j; // , pn;
 
-	for (j = y1; j <= y2; j++) {
+	/*for (j = y1; j <= y2; j++) {
 		for (i = x1; i <= x2; i++) {
 			pn = dPiece[i][j];
 			// 13 and 17 are open doors
@@ -2467,21 +2467,12 @@ void DRLG_InitL2Specials(int x1, int y1, int x2, int y2)
 				pn = 0;
 			dSpecial[i][j] = pn;
 		}
-	}
-	/*for (j = y1; j <= y2; j++) {
-		for (i = x1; i <= x2; i++) {
-			pn = dPiece[i][j];
-			// 132 is L-arch
-			// 135 and 139 are R-arch
-			if (pn == 132) {
-				dSpecial[i][j + 1] = 2;
-				dSpecial[i][j + 2] = 1;
-			} else if (pn == 135 || pn == 139) {
-				dSpecial[i + 1][j] = 3;
-				dSpecial[i + 2][j] = 4;
-			}
-		}
 	}*/
+	for (i = x1; i <= x2; ++i) {
+		for (j = y1; j <= y2; ++j) {
+			dSpecial[i][j] = nSpecTrapTable[dPiece[i][j]] & ((1 << 6) - 1);
+		}
+	}
 }
 
 static void DRLG_L2FixMap()
