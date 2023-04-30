@@ -9,9 +9,13 @@
 #include <QPainter>
 
 #include "d1image.h"
+#include "d1tileset.h"
 #include "progressdialog.h"
 
-bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const OpenAsParam &params)
+/*
+ * Load a MIN file based on the SOL file. Adjusts gfx + sol if necessary.
+ */
+bool D1Min::load(const QString &filePath, D1Tileset *ts, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const OpenAsParam &params)
 {
     // prepare file data source
     QFile file;
@@ -28,7 +32,8 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
 
     this->clear();
     this->minFilePath = filePath;
-    this->gfx = g;
+    this->tileset = ts;
+    this->gfx = ts->gfx;
 
     bool changed = !file.isOpen();
 
@@ -36,7 +41,7 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
 
     // calculate subtileWidth/Height
     unsigned fileSize = fileData.size();
-    int subtileCount = sol->getSubtileCount();
+    int subtileCount = this->tileset->sol->getSubtileCount();
     int width = params.minWidth;
     if (width == 0) {
         width = 2;
@@ -72,7 +77,7 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
     if (params.upscaled == OPEN_UPSCALED_TYPE::AUTODETECT) {
         upscaled = width != 2;
     }
-    g->upscaled = upscaled; // setUpscaled
+    this->gfx->upscaled = upscaled; // setUpscaled
 
     this->subtileWidth = width;
     this->subtileHeight = height;
@@ -85,7 +90,7 @@ bool D1Min::load(const QString &filePath, D1Gfx *g, D1Sol *sol, std::map<unsigne
         // add subtiles to sol if necessary
         while (minSubtileCount > subtileCount) {
             subtileCount++;
-            sol->createSubtile();
+            this->tileset->sol->createSubtile();
         }
         if (minSubtileCount < subtileCount) {
             changed = true;
@@ -216,6 +221,7 @@ void D1Min::clear()
     this->frameReferences.clear();
     this->subtileWidth = 2;
     this->subtileHeight = 5;
+    // this->tileset = nullptr;
     // this->gfx = nullptr;
     this->modified = true;
 }
@@ -243,6 +249,20 @@ QImage D1Min::getSubtileImage(int subtileIndex) const
             dx = 0;
             dy += MICRO_HEIGHT;
         }
+    }
+
+    return subtile;
+}
+
+QImage D1Min::getSpecSubtileImage(int subtileIndex) const
+{
+    QImage subtile = this->getSubtileImage(subtileIndex);
+
+    unsigned specRef = this->tileset->spt->getSubtileSpecProperty(subtileIndex);
+    if (specRef != 0 && (unsigned)this->tileset->cls->getFrameCount() >= specRef) {
+        QImage specImage = this->tileset->cls->getFrameImage(specRef - 1);
+        QPainter subtilePainter(&subtile);
+        subtilePainter.drawImage(0, subtile.height() - specImage.height(), specImage);
     }
 
     return subtile;

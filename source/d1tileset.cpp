@@ -1,27 +1,45 @@
 #include "d1tileset.h"
 
 #include <QApplication>
+#include <QMessageBox>
 
+#include "d1cel.h"
 #include "d1celtileset.h"
 #include "progressdialog.h"
 
 D1Tileset::D1Tileset(D1Gfx *g)
     : gfx(g)
 {
+    this->cls = new D1Gfx();
+    this->cls->setPalette(g->getPalette());
     this->min = new D1Min();
     this->til = new D1Til();
     this->sol = new D1Sol();
     this->amp = new D1Amp();
+    this->spt = new D1Spt();
     this->tmi = new D1Tmi();
 }
 
 D1Tileset::~D1Tileset()
 {
+    delete cls;
     delete min;
     delete til;
     delete sol;
     delete amp;
+    delete spt;
     delete tmi;
+}
+
+bool D1Tileset::loadCls(const QString &clsFilePath, const OpenAsParam &params)
+{
+    if (QFileInfo::exists(clsFilePath)) {
+        return D1Cel::load(*this->cls, clsFilePath, params);
+    }
+
+    this->cls->setFilePath(clsFilePath);
+    this->cls->setModified(false);
+    return params.clsFilePath.isEmpty();
 }
 
 bool D1Tileset::load(const OpenAsParam &params)
@@ -30,10 +48,12 @@ bool D1Tileset::load(const OpenAsParam &params)
 
     // TODO: use in MainWindow::openFile?
     QString gfxFilePath = params.celFilePath;
+    QString clsFilePath = params.clsFilePath;
     QString tilFilePath = params.tilFilePath;
     QString minFilePath = params.minFilePath;
     QString solFilePath = params.solFilePath;
     QString ampFilePath = params.ampFilePath;
+    QString sptFilePath = params.sptFilePath;
     QString tmiFilePath = params.tmiFilePath;
 
     if (!gfxFilePath.isEmpty()) {
@@ -41,6 +61,9 @@ bool D1Tileset::load(const OpenAsParam &params)
 
         QString basePath = celFileInfo.absolutePath() + "/" + celFileInfo.completeBaseName();
 
+        if (clsFilePath.isEmpty()) {
+            clsFilePath = basePath + "s.cel";
+        }
         if (tilFilePath.isEmpty()) {
             tilFilePath = basePath + ".til";
         }
@@ -53,6 +76,9 @@ bool D1Tileset::load(const OpenAsParam &params)
         if (ampFilePath.isEmpty()) {
             ampFilePath = basePath + ".amp";
         }
+        if (sptFilePath.isEmpty()) {
+            sptFilePath = basePath + ".spt";
+        }
         if (tmiFilePath.isEmpty()) {
             tmiFilePath = basePath + ".tmi";
         }
@@ -61,14 +87,18 @@ bool D1Tileset::load(const OpenAsParam &params)
     std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
     if (!this->sol->load(solFilePath)) {
         dProgressErr() << QApplication::tr("Failed loading SOL file: %1.").arg(QDir::toNativeSeparators(solFilePath));
-    } else if (!this->min->load(minFilePath, this->gfx, this->sol, celFrameTypes, params)) {
+    } else if (!this->min->load(minFilePath, this, celFrameTypes, params)) {
         dProgressErr() << QApplication::tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath));
     } else if (!this->til->load(tilFilePath, this->min)) {
         dProgressErr() << QApplication::tr("Failed loading TIL file: %1.").arg(QDir::toNativeSeparators(tilFilePath));
     } else if (!this->amp->load(ampFilePath, this->til->getTileCount(), params)) {
         dProgressErr() << QApplication::tr("Failed loading AMP file: %1.").arg(QDir::toNativeSeparators(ampFilePath));
+    } else if (!this->spt->load(sptFilePath, this->sol, params)) {
+        dProgressErr() << QApplication::tr("Failed loading SPT file: %1.").arg(QDir::toNativeSeparators(sptFilePath));
     } else if (!this->tmi->load(tmiFilePath, this->sol, params)) {
         dProgressErr() << QApplication::tr("Failed loading TMI file: %1.").arg(QDir::toNativeSeparators(tmiFilePath));
+    } else if (!this->loadCls(clsFilePath, params)) {
+        dProgressErr() << QApplication::tr("Failed loading Special-CEL file: %1.").arg(QDir::toNativeSeparators(clsFilePath));
     } else if (!D1CelTileset::load(*this->gfx, celFrameTypes, gfxFilePath, params)) {
         dProgressErr() << QApplication::tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
     } else {
@@ -76,20 +106,24 @@ bool D1Tileset::load(const OpenAsParam &params)
     }
     // clear possible inconsistent data
     // this->gfx->clear();
+    // this->cls->clear();
     this->min->clear();
     this->til->clear();
     this->sol->clear();
     this->amp->clear();
+    this->spt->clear();
     this->tmi->clear();
     return true;
 }
 
 void D1Tileset::save(const SaveAsParam &params)
 {
+    // this->cls->save(params);
     this->min->save(params);
     this->til->save(params);
     this->sol->save(params);
     this->amp->save(params);
+    this->spt->save(params);
     this->tmi->save(params);
 }
 
@@ -103,6 +137,7 @@ void D1Tileset::insertSubtile(int subtileIndex, const std::vector<unsigned> &fra
 {
     this->min->insertSubtile(subtileIndex, frameReferencesList);
     this->sol->insertSubtile(subtileIndex);
+    this->spt->insertSubtile(subtileIndex);
     this->tmi->insertSubtile(subtileIndex);
 }
 
@@ -110,6 +145,7 @@ void D1Tileset::createSubtile()
 {
     this->min->createSubtile();
     this->sol->createSubtile();
+    this->spt->createSubtile();
     this->tmi->createSubtile();
 }
 
@@ -117,12 +153,15 @@ void D1Tileset::removeSubtile(int subtileIndex, int replacement)
 {
     this->til->removeSubtile(subtileIndex, replacement);
     this->sol->removeSubtile(subtileIndex);
+    this->spt->removeSubtile(subtileIndex);
     this->tmi->removeSubtile(subtileIndex);
 }
 
 void D1Tileset::resetSubtileFlags(int subtileIndex)
 {
     this->sol->setSubtileProperties(subtileIndex, 0);
+    this->spt->setSubtileTrapProperty(subtileIndex, 0);
+    this->spt->setSubtileSpecProperty(subtileIndex, 0);
     this->tmi->setSubtileProperties(subtileIndex, 0);
 }
 
@@ -130,6 +169,7 @@ void D1Tileset::remapSubtiles(const std::map<unsigned, unsigned> &remap)
 {
     this->min->remapSubtiles(remap);
     this->sol->remapSubtiles(remap);
+    this->spt->remapSubtiles(remap);
     this->tmi->remapSubtiles(remap);
 }
 
@@ -430,28 +470,28 @@ void D1Tileset::patch(int dunType, bool silent)
         Blk2Mcr(212, 9);
         Blk2Mcr(212, 10);
         Blk2Mcr(212, 11);
-        // Blk2Mcr(214, 4);
-        // Blk2Mcr(214, 6);
+        Blk2Mcr(214, 4);
+        Blk2Mcr(214, 6);
         Blk2Mcr(216, 2);
         Blk2Mcr(216, 4);
         Blk2Mcr(216, 6);
-        // Blk2Mcr(217, 4);
-        // Blk2Mcr(217, 6);
-        // Blk2Mcr(217, 8);
-        // Blk2Mcr(358, 4);
-        // Blk2Mcr(358, 5);
-        // Blk2Mcr(358, 6);
-        // Blk2Mcr(358, 7);
-        // Blk2Mcr(358, 8);
-        // Blk2Mcr(358, 9);
-        // Blk2Mcr(358, 10);
-        // Blk2Mcr(358, 11);
-        // Blk2Mcr(358, 12);
-        // Blk2Mcr(358, 13);
-        // Blk2Mcr(360, 4);
-        // Blk2Mcr(360, 6);
-        // Blk2Mcr(360, 8);
-        // Blk2Mcr(360, 10);
+        Blk2Mcr(217, 4);
+        Blk2Mcr(217, 6);
+        Blk2Mcr(217, 8);
+        Blk2Mcr(358, 4);
+        Blk2Mcr(358, 5);
+        Blk2Mcr(358, 6);
+        Blk2Mcr(358, 7);
+        Blk2Mcr(358, 8);
+        Blk2Mcr(358, 9);
+        Blk2Mcr(358, 10);
+        Blk2Mcr(358, 11);
+        Blk2Mcr(358, 12);
+        Blk2Mcr(358, 13);
+        Blk2Mcr(360, 4);
+        Blk2Mcr(360, 6);
+        Blk2Mcr(360, 8);
+        Blk2Mcr(360, 10);
         // fix bad artifact
         Blk2Mcr(233, 6);
         // useless black micros

@@ -8,6 +8,7 @@
 #include "d1gfx.h"
 #include "d1min.h"
 #include "d1sol.h"
+#include "d1spt.h"
 #include "d1til.h"
 #include "d1tmi.h"
 #include "openasdialog.h"
@@ -21,6 +22,7 @@ public:
     D1Tileset(D1Gfx *gfx);
     ~D1Tileset();
 
+    bool loadCls(const QString &clsFilePath, const OpenAsParam &params);
     bool load(const OpenAsParam &params);
     void save(const SaveAsParam &params);
 
@@ -36,9 +38,11 @@ public:
     void patch(int dunType, bool silent);
 
     D1Gfx *gfx;
+    D1Gfx *cls;
     D1Min *min;
     D1Til *til;
     D1Sol *sol;
     D1Amp *amp;
+    D1Spt *spt;
     D1Tmi *tmi;
 };

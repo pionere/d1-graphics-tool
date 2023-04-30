@@ -192,12 +192,16 @@ void MainWindow::setBaseTrn(const QString &path)
     this->trnBase->setPalette(this->trnUnique->getResultingPalette());
     this->trnBase->refreshResultingPalette();
 
+    D1Pal *resPal = this->trnBase->getResultingPalette();
     // update entities
-    this->gfx->setPalette(this->trnBase->getResultingPalette());
+    this->gfx->setPalette(resPal);
+    if (this->tileset != nullptr) {
+        this->tileset->cls->setPalette(resPal);
+    }
     // update the widgets
     // - paint widget
     if (this->paintWidget != nullptr) {
-        this->paintWidget->setPalette(this->trnBase->getResultingPalette());
+        this->paintWidget->setPalette(resPal);
     }
 
     // update trnBaseWidget
@@ -857,10 +861,12 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->baseTrns[D1Trn::IDENTITY_PATH] = newTrn;
     this->trnBase = newTrn;
 
+    QString clsFilePath = params.clsFilePath;
     QString tilFilePath = params.tilFilePath;
     QString minFilePath = params.minFilePath;
     QString solFilePath = params.solFilePath;
     QString ampFilePath = params.ampFilePath;
+    QString sptFilePath = params.sptFilePath;
     QString tmiFilePath = params.tmiFilePath;
     QString dunFilePath = params.dunFilePath;
     QString tblFilePath = params.tblFilePath;
@@ -881,6 +887,9 @@ void MainWindow::openFile(const OpenAsParam &params)
         baseDir = celFileInfo.absolutePath();
         QString basePath = baseDir + "/" + celFileInfo.completeBaseName();
 
+        if (clsFilePath.isEmpty()) {
+            clsFilePath = basePath + "s.cel";
+        }
         if (tilFilePath.isEmpty()) {
             tilFilePath = basePath + ".til";
         }
@@ -892,6 +901,9 @@ void MainWindow::openFile(const OpenAsParam &params)
         }
         if (ampFilePath.isEmpty()) {
             ampFilePath = basePath + ".amp";
+        }
+        if (sptFilePath.isEmpty()) {
+            sptFilePath = basePath + ".spt";
         }
         if (tmiFilePath.isEmpty()) {
             tmiFilePath = basePath + ".tmi";
@@ -906,8 +918,10 @@ void MainWindow::openFile(const OpenAsParam &params)
         findFirstFile(baseDir, QStringLiteral("*.min"), minFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.sol"), solFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.amp"), ampFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*.spt"), sptFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.tmi"), tmiFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.cel"), gfxFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*s.cel"), clsFilePath, baseName);
     }
 
     // If SOL, MIN and TIL files exist then build a LevelCelView
@@ -929,7 +943,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
         // Loading MIN
         std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
-        if (!this->tileset->min->load(minFilePath, this->gfx, this->tileset->sol, celFrameTypes, params)) {
+        if (!this->tileset->min->load(minFilePath, this->tileset, celFrameTypes, params)) {
             this->failWithError(tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath)));
             return;
         }
@@ -946,6 +960,12 @@ void MainWindow::openFile(const OpenAsParam &params)
             return;
         }
 
+        // Loading SPT
+        if (!this->tileset->spt->load(sptFilePath, this->tileset->sol, params)) {
+            this->failWithError(tr("Failed loading SPT file: %1.").arg(QDir::toNativeSeparators(sptFilePath)));
+            return;
+        }
+
         // Loading TMI
         if (!this->tileset->tmi->load(tmiFilePath, this->tileset->sol, params)) {
             this->failWithError(tr("Failed loading TMI file: %1.").arg(QDir::toNativeSeparators(tmiFilePath)));
@@ -955,6 +975,12 @@ void MainWindow::openFile(const OpenAsParam &params)
         // Loading CEL
         if (!D1CelTileset::load(*this->gfx, celFrameTypes, gfxFilePath, params)) {
             this->failWithError(tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+
+        // Loading sCEL
+        if (!this->tileset->loadCls(clsFilePath, params)) {
+            this->failWithError(tr("Failed loading Special-CEL file: %1.").arg(QDir::toNativeSeparators(clsFilePath)));
             return;
         }
 

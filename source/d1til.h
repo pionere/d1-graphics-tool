@@ -23,6 +23,7 @@ public:
 
     QImage getTileImage(int tileIndex) const;
     QImage getFlatTileImage(int tileIndex) const;
+    QImage getSpecTileImage(int tileIndex) const;
     std::vector<std::vector<D1GfxPixel>> getTilePixelImage(int tileIndex) const;
     std::vector<std::vector<D1GfxPixel>> getFlatTilePixelImage(int tileIndex) const;
 

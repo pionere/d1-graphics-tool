@@ -6,9 +6,10 @@
 #include <QImage>
 
 #include "d1celtilesetframe.h"
-#include "d1gfx.h"
-#include "d1sol.h"
 #include "saveasdialog.h"
+
+class D1Gfx;
+class D1Tileset;
 
 class D1Min : public QObject {
     Q_OBJECT
@@ -19,11 +20,12 @@ public:
     D1Min() = default;
     ~D1Min() = default;
 
-    bool load(const QString &minFilePath, D1Gfx *gfx, D1Sol *sol, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const OpenAsParam &params);
+    bool load(const QString &minFilePath, D1Tileset *tileset, std::map<unsigned, D1CEL_FRAME_TYPE> &celFrameTypes, const OpenAsParam &params);
     bool save(const SaveAsParam &params);
     void clear();
 
     QImage getSubtileImage(int subtileIndex) const;
+    QImage getSpecSubtileImage(int subtileIndex) const;
     std::vector<std::vector<D1GfxPixel>> getSubtilePixelImage(int subtileIndex) const;
     QImage getFloorImage(int subtileIndex) const;
     void getFrameUses(std::vector<bool> &frameUses) const;
@@ -51,5 +53,6 @@ private:
     int subtileWidth;
     int subtileHeight;
     std::vector<std::vector<unsigned>> frameReferences;
+    D1Tileset *tileset = nullptr;
     D1Gfx *gfx = nullptr;
 };

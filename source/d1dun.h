@@ -13,6 +13,7 @@ class D1Gfx;
 class D1Min;
 class D1Pal;
 class D1Sol;
+class D1Spt;
 class D1Til;
 class D1Tmi;
 class D1Trn;
@@ -166,7 +167,6 @@ public:
     bool setDefaultTile(int defaultTile);
     bool setAssetPath(QString path);
     QString getAssetPath() const;
-    const D1Gfx *getSpecGfx() const;
     QString getItemName(int itemIndex) const;
     QString getMonsterName(const DunMonsterType &monType) const;
     QString getObjectName(int objectIndex) const;
@@ -198,7 +198,6 @@ public:
 
     void patch(int dunFileIndex); // dun_file_index
 
-    void loadSpecCels();
     bool reloadTileset(const QString &celFilePath);
 
     bool addResource(const AddResourceParam &params);
@@ -232,6 +231,8 @@ private:
     D1Tileset *tileset;
     D1Min *min;
     D1Til *til;
+    D1Spt *spt;
+    D1Gfx *cls;
     bool modified;
     uint8_t numLayers;
     int width;
@@ -248,7 +249,6 @@ private:
     int defaultTile;
     QString assetPath;
     int levelType; // dungeon_type
-    D1Gfx *specGfx = nullptr;
     std::vector<CustomObjectStruct> customObjectTypes;
     std::vector<CustomMonsterStruct> customMonsterTypes;
     std::vector<CustomItemStruct> customItemTypes;

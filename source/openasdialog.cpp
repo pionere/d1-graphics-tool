@@ -29,10 +29,12 @@ void OpenAsDialog::initialize()
     this->ui->celClippedAutoRadioButton->setChecked(true);
     // - tilSettingsGroupBox
     this->ui->minUpscaledAutoRadioButton->setChecked(true);
+    this->ui->clsFileEdit->setText("");
     this->ui->tilFileEdit->setText("");
     this->ui->minFileEdit->setText("");
     this->ui->solFileEdit->setText("");
     this->ui->ampFileEdit->setText("");
+    this->ui->sptFileEdit->setText("");
     this->ui->tmiFileEdit->setText("");
     this->ui->dunFileEdit->setText("");
     this->ui->minWidthEdit->setText("0");
@@ -74,33 +76,47 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
         if (openFilePath.toLower().endsWith(".cel")) {
             // If a SOL, MIN and TIL files exists then preset them
             basePath = openFilePath;
-            basePath.chop(3);
-            tilFilePath = basePath + "til";
-            minFilePath = basePath + "min";
-            solFilePath = basePath + "sol";
+            basePath.chop(4);
+            tilFilePath = basePath + ".til";
+            minFilePath = basePath + ".min";
+            solFilePath = basePath + ".sol";
             isTileset = QFileInfo::exists(tilFilePath) && QFileInfo::exists(minFilePath) && QFileInfo::exists(solFilePath);
         }
         if (isTileset) {
+            QString clsFilePath = basePath + "s.cel";
+            if (QFileInfo::exists(clsFilePath)) {
+                this->ui->clsFileEdit->setText(clsFilePath);
+            } else {
+                this->ui->clsFileEdit->setText("");
+            }
             this->ui->tilFileEdit->setText(tilFilePath);
             this->ui->minFileEdit->setText(minFilePath);
             this->ui->solFileEdit->setText(solFilePath);
-            QString ampFilePath = basePath + "amp";
+            QString ampFilePath = basePath + ".amp";
             if (QFileInfo::exists(ampFilePath)) {
                 this->ui->ampFileEdit->setText(ampFilePath);
             } else {
                 this->ui->ampFileEdit->setText("");
             }
-            QString tmiFilePath = basePath + "tmi";
+            QString sptFilePath = basePath + ".spt";
+            if (QFileInfo::exists(sptFilePath)) {
+                this->ui->sptFileEdit->setText(sptFilePath);
+            } else {
+                this->ui->sptFileEdit->setText("");
+            }
+            QString tmiFilePath = basePath + ".tmi";
             if (QFileInfo::exists(tmiFilePath)) {
                 this->ui->tmiFileEdit->setText(tmiFilePath);
             } else {
                 this->ui->tmiFileEdit->setText("");
             }
         } else {
+            this->ui->clsFileEdit->setText("");
             this->ui->tilFileEdit->setText("");
             this->ui->minFileEdit->setText("");
             this->ui->solFileEdit->setText("");
             this->ui->ampFileEdit->setText("");
+            this->ui->sptFileEdit->setText("");
             this->ui->tmiFileEdit->setText("");
         }
     }
@@ -136,6 +152,16 @@ void OpenAsDialog::on_isTilesetAutoRadioButton_toggled(bool checked)
     this->update();
 }
 
+void OpenAsDialog::on_clsFileBrowseButton_clicked()
+{
+    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select Special-CEL file"), tr("CEL Files (*.cel *.CEL)"));
+
+    if (openFilePath.isEmpty())
+        return;
+
+    this->ui->clsFileEdit->setText(openFilePath);
+}
+
 void OpenAsDialog::on_tilFileBrowseButton_clicked()
 {
     QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select TIL file"), tr("TIL Files (*.til *.TIL)"));
@@ -143,7 +169,7 @@ void OpenAsDialog::on_tilFileBrowseButton_clicked()
     if (openFilePath.isEmpty())
         return;
 
-    ui->tilFileEdit->setText(openFilePath);
+    this->ui->tilFileEdit->setText(openFilePath);
 }
 
 void OpenAsDialog::on_minFileBrowseButton_clicked()
@@ -174,6 +200,16 @@ void OpenAsDialog::on_ampFileBrowseButton_clicked()
         return;
 
     this->ui->ampFileEdit->setText(openFilePath);
+}
+
+void OpenAsDialog::on_sptFileBrowseButton_clicked()
+{
+    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select SPT file"), tr("SPT Files (*.spt *.SPT)"));
+
+    if (openFilePath.isEmpty())
+        return;
+
+    this->ui->sptFileEdit->setText(openFilePath);
 }
 
 void OpenAsDialog::on_tmiFileBrowseButton_clicked()
@@ -238,10 +274,12 @@ void OpenAsDialog::on_openButton_clicked()
     } else {
         params.upscaled = OPEN_UPSCALED_TYPE::AUTODETECT;
     }
+    params.clsFilePath = this->ui->clsFileEdit->text();
     params.tilFilePath = this->ui->tilFileEdit->text();
     params.minFilePath = this->ui->minFileEdit->text();
     params.solFilePath = this->ui->solFileEdit->text();
     params.ampFilePath = this->ui->ampFileEdit->text();
+    params.sptFilePath = this->ui->sptFileEdit->text();
     params.tmiFilePath = this->ui->tmiFileEdit->text();
     params.dunFilePath = this->ui->dunFileEdit->text();
     params.createDun = this->ui->createDunCheckBox->isChecked();

@@ -489,7 +489,7 @@
     <string>Subtile</string>
    </property>
    <property name="toolTip">
-    <string>List inconsistent subtile-flags (SOL + TMI)</string>
+    <string>List inconsistent subtile-flags (SOL + SPT + TMI)</string>
    </property>
   </action>
   <action name="actionCheckTileFlags_Tileset">
@@ -505,7 +505,7 @@
     <string>Tileset</string>
    </property>
    <property name="toolTip">
-    <string>List inconsistent tile-flags (AMP) and subtile-flags (SOL + TMI)</string>
+    <string>List inconsistent tile-flags (AMP) and subtile-flags (SOL + SPT + TMI)</string>
    </property>
   </action>
   <action name="actionCleanupFrames_Tileset">

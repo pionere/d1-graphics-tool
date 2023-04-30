@@ -19,7 +19,7 @@ extern BYTE* pSolidTbl;
 extern BYTE microFlags[MAXSUBTILES + 1];
 extern bool nBlockTable[MAXSUBTILES + 1];
 extern bool nSolidTable[MAXSUBTILES + 1];
-extern BYTE nTrapTable[MAXSUBTILES + 1];
+extern BYTE nSpecTrapTable[MAXSUBTILES + 1];
 extern bool nMissileTable[MAXSUBTILES + 1];
 extern int gnDifficulty;
 extern LevelStruct currLvl;

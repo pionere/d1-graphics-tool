@@ -174,6 +174,9 @@ public slots:
     void on_actionToggle_View_triggered();
 
 private slots:
+    void on_showSpecTileCheckBox_clicked();
+    void on_showSpecSubtileCheckBox_clicked();
+
     void on_firstFrameButton_clicked();
     void on_previousFrameButton_clicked();
     void on_nextFrameButton_clicked();
@@ -292,10 +295,12 @@ private:
     D1Pal *pal;
     D1Gfx *gfx;
     D1Tileset *tileset;
+    D1Gfx *cls;
     D1Min *min;
     D1Til *til;
     D1Sol *sol;
     D1Amp *amp;
+    D1Spt *spt;
     D1Tmi *tmi;
     D1Dun *dun;
     bool dunView = false;

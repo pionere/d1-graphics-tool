@@ -189,19 +189,22 @@
       <item row="1" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Til File:</string>
+         <string>CLS File:</string>
+        </property>
+        <property name="toolTip">
+         <string>Path of the special-CEL File</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="LineEditWidget" name="outputTilFileEdit">
+       <widget class="LineEditWidget" name="outputClsFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QPushButton" name="outputTilFileBrowseButton">
+       <widget class="QPushButton" name="outputClsFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
@@ -210,19 +213,19 @@
       <item row="2" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Min File:</string>
+         <string>Til File:</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="LineEditWidget" name="outputMinFileEdit">
+       <widget class="LineEditWidget" name="outputTilFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="QPushButton" name="outputMinFileBrowseButton">
+       <widget class="QPushButton" name="outputTilFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
@@ -231,19 +234,19 @@
       <item row="3" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Sol File:</string>
+         <string>Min File:</string>
         </property>
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="LineEditWidget" name="outputSolFileEdit">
+       <widget class="LineEditWidget" name="outputMinFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="3" column="2">
-       <widget class="QPushButton" name="outputSolFileBrowseButton">
+       <widget class="QPushButton" name="outputMinFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
@@ -252,19 +255,19 @@
       <item row="4" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Amp File:</string>
+         <string>Sol File:</string>
         </property>
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="LineEditWidget" name="outputAmpFileEdit">
+       <widget class="LineEditWidget" name="outputSolFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="4" column="2">
-       <widget class="QPushButton" name="outputAmpFileBrowseButton">
+       <widget class="QPushButton" name="outputSolFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
@@ -273,46 +276,88 @@
       <item row="5" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Tmi File:</string>
+         <string>Amp File:</string>
         </property>
        </widget>
       </item>
       <item row="5" column="1">
-       <widget class="LineEditWidget" name="outputTmiFileEdit">
+       <widget class="LineEditWidget" name="outputAmpFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="5" column="2">
-       <widget class="QPushButton" name="outputTmiFileBrowseButton">
+       <widget class="QPushButton" name="outputAmpFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
        </widget>
       </item>
       <item row="6" column="0">
-       <widget class="QLabel" name="outputDunFileLabel">
+       <widget class="QLabel">
         <property name="text">
-         <string>Dun File:</string>
+         <string>Spt File:</string>
         </property>
        </widget>
       </item>
       <item row="6" column="1">
-       <widget class="LineEditWidget" name="outputDunFileEdit">
+       <widget class="LineEditWidget" name="outputSptFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="6" column="2">
-       <widget class="QPushButton" name="outputDunFileBrowseButton">
+       <widget class="QPushButton" name="outputSptFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
        </widget>
       </item>
       <item row="7" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Tmi File:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="LineEditWidget" name="outputTmiFileEdit">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="2">
+       <widget class="QPushButton" name="outputTmiFileBrowseButton">
+        <property name="text">
+         <string>Browse</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="outputDunFileLabel">
+        <property name="text">
+         <string>Dun File:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="LineEditWidget" name="outputDunFileEdit">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="2">
+       <widget class="QPushButton" name="outputDunFileBrowseButton">
+        <property name="text">
+         <string>Browse</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0">
        <widget class="QLabel">
         <property name="text">
          <string>Last Layer:</string>
@@ -322,7 +367,7 @@
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
+      <item row="9" column="1">
        <layout class="QHBoxLayout">
         <item>
          <widget class="QRadioButton" name="dunLayerTilesRadioButton">

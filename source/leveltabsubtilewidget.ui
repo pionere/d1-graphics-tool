@@ -33,75 +33,127 @@
     </layout>
    </item>
    <item>
-    <widget class="QGroupBox">
-     <property name="maximumHeight">
-      <number>80</number>
-     </property>
-     <property name="title">
-      <string>SOL flags</string>
-     </property>
-     <layout class="QGridLayout">
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="sol0">
-        <property name="text">
-         <string>Solid</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QCheckBox" name="sol1">
-        <property name="text">
-         <string>Block light</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QCheckBox" name="sol2">
-        <property name="text">
-         <string>Block missile</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QCheckBox" name="sol7">
-        <property name="text">
-         <string>Allow trap</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel">
-        <property name="text">
-         <string>Transparency:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QCheckBox" name="sol3">
-        <property name="text">
-         <string>Enabled</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QCheckBox" name="sol4">
-        <property name="text">
-         <string>Left floor</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QCheckBox" name="sol5">
-        <property name="text">
-         <string>Right floor</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
+    <layout class="QHBoxLayout" name="solAndSptHorizontalLayout">
+     <item>
+      <widget class="QGroupBox" name="solSettingsGroupBox">
+       <property name="maximumHeight">
+        <number>80</number>
+       </property>
+       <property name="title">
+        <string>SOL flags</string>
+       </property>
+       <layout class="QGridLayout">
+        <item row="0" column="0">
+         <widget class="QCheckBox" name="sol0">
+          <property name="text">
+           <string>Solid</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QCheckBox" name="sol1">
+          <property name="text">
+           <string>Block light</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QCheckBox" name="sol2">
+          <property name="text">
+           <string>Block missile</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="sptSettingsGroupBox">
+       <property name="maximumHeight">
+        <number>80</number>
+       </property>
+       <property name="title">
+        <string>SPT flags</string>
+       </property>
+       <layout class="QGridLayout">
+        <item row="0" column="0">
+         <widget class="QLabel">
+          <property name="text">
+           <string>Trap:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QRadioButton" name="trapNoneRadioButton">
+          <property name="text">
+           <string>None</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">trapButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QRadioButton" name="trapLeftRadioButton">
+          <property name="text">
+           <string>Left</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">trapButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QRadioButton" name="trapRightRadioButton">
+          <property name="text">
+           <string>Right</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">trapButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item row="0" column="4">
+         <widget class="QLabel">
+          <property name="text">
+           <string>Spec:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="5">
+         <widget class="LineEditWidget" name="specCelLineEdit">
+          <property name="charWidth">
+           <number>2</number>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="toolTip">
+           <string>Special cel-frame assigned to this subtile</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="5">
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
-    <widget class="QGroupBox">
+    <widget class="QGroupBox" name="tmiSettingsGroupBox">
      <property name="maximumHeight">
       <number>80</number>
      </property>
@@ -248,4 +300,7 @@
  </widget>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="trapButtonGroup"/>
+ </buttongroups>
 </ui>
