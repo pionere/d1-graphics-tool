@@ -908,7 +908,7 @@ static void AddHookedBodies()
 	// TODO: straight loop (in dlrgs)?
 	for (j = DBORDERY; j < DBORDERY + DSIZEY; j++) {
 		for (i = DBORDERX; i < DBORDERX + DSIZEX; i++) {
-			ttv = (nTrapTable[dPiece[i][j]] >> 6) & 3;
+			ttv = (nSpecTrapTable[dPiece[i][j]] >> 6) & 3;
 			if (ttv == PTT_NONE)
 				continue;
 			if (dFlags[i][j] & BFLAG_OBJ_PROTECT)
