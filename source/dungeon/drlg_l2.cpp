@@ -10,7 +10,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-/** Default external tile. */
+/** The default external tile. */
 #define BASE_MEGATILE_L2 12
 /** The default floor tile. */
 #define DEFAULT_MEGATILE_L2 3
@@ -708,7 +708,7 @@ static void DRLG_L2Shadows()
 							// 0, 0, replace
 							//51/164, 0,
 							//47, 0,
-							dungeon[x - 1][y] = 51;
+							dungeon[x - 1][y] = dungeon[x - 1][y] == 3 ? 51 : 164;
 							dungeon[x - 1][y + 1] = 47;
 							pillar = false;
 						}
@@ -736,7 +736,7 @@ static void DRLG_L2Shadows()
 			}
 			if (harch) {
 				// - horizontal arch
-				if (dungeon[x][y - 1] == 3 || dungeon[x - 1][y] == 161) {
+				if (dungeon[x][y - 1] == 3 || dungeon[x][y - 1] == 161) {
 					if (dungeon[x + 1][y - 1] == 3) {
 						// 3/161, 3,  search
 						// 40/41/43, 0
@@ -1985,29 +1985,8 @@ static void DRLG_L2TransFix()
 
 void DRLG_L2InitTransVals()
 {
-	// int i, j;
-
 	static_assert(sizeof(drlg.transvalMap) == sizeof(dungeon), "transvalMap vs dungeon mismatch.");
 	memcpy(drlg.transvalMap, dungeon, sizeof(dungeon));
-	// block arches with walls to stop the spread of transVals
-	/*for (i = 0; i < DMAXX; i++) {
-		for (j = 0; j < DMAXY; j++) {
-			switch (drlg.transvalMap[i][j]) {
-			case 39:
-			case 42:
-				drlg.transvalMap[i][j + 1] = 1;
-				break;
-			case 41:
-				drlg.transvalMap[i][j + 1] = 1;
-				drlg.transvalMap[i + 1][j] = 2;
-				break;
-			case 40:
-			case 43:
-				drlg.transvalMap[i + 1][j] = 2;
-				break;
-			}
-		}
-	}*/
 
 	DRLG_FloodTVal(L2FTYPES);
 	DRLG_L2TransFix();
@@ -2018,7 +1997,7 @@ void DRLG_L2InitTransVals()
  * New dungeon values: 143..149
  * Obsolete dungeon values: 10..16
  */
-static void DRLG_L2Corners()
+/*static void DRLG_L2Corners()
 {
 	int i;
 	BYTE* pTmp;
@@ -2026,56 +2005,56 @@ static void DRLG_L2Corners()
 	static_assert(sizeof(dungeon) == DMAXX * DMAXY, "Linear traverse of dungeon does not work in DRLG_L2Corners.");
 	pTmp = &dungeon[0][0];
 	for (i = 0; i < DMAXX * DMAXY; i++, pTmp++) {
-		if (*pTmp >= 10 && *pTmp <= 16 /*&& *pTmp != 12*/)
+		if (*pTmp >= 10 && *pTmp <= 16) // && *pTmp != 12
 			*pTmp += 133;
 	}
-	/*int i, j;
+	//int i, j;
 
 	// check borders out-of-order
-	for (i = 0; i < DMAXX; i++) {
-		if (dungeon[i][DMAXY - 1] == 10)
-			dungeon[i][DMAXY - 1] = 143;
-		else if (dungeon[i][DMAXY - 1] == 13)
-			dungeon[i][DMAXY - 1] = 146;
-		else if (dungeon[i][DMAXY - 1] == 14)
-			dungeon[i][DMAXY - 1] = 147;
-	}
-	for (j = 0; j < DMAXY; j++) {
-		if (dungeon[DMAXX - 1][j] == 11)
-			dungeon[DMAXX - 1][j] = 144;
-		else if (dungeon[DMAXX - 1][j] == 13)
-			dungeon[DMAXX - 1][j] = 146;
-		else if (dungeon[DMAXX - 1][j] == 15)
-			dungeon[DMAXX - 1][j] = 148;
-	}
+	//for (i = 0; i < DMAXX; i++) {
+	//	if (dungeon[i][DMAXY - 1] == 10)
+	//		dungeon[i][DMAXY - 1] = 143;
+	//	else if (dungeon[i][DMAXY - 1] == 13)
+	//		dungeon[i][DMAXY - 1] = 146;
+	//	else if (dungeon[i][DMAXY - 1] == 14)
+	//		dungeon[i][DMAXY - 1] = 147;
+	//}
+	//for (j = 0; j < DMAXY; j++) {
+	//	if (dungeon[DMAXX - 1][j] == 11)
+	//		dungeon[DMAXX - 1][j] = 144;
+	//	else if (dungeon[DMAXX - 1][j] == 13)
+	//		dungeon[DMAXX - 1][j] = 146;
+	//	else if (dungeon[DMAXX - 1][j] == 15)
+	//		dungeon[DMAXX - 1][j] = 148;
+	//}
 	// check the rest of the map
-	for (i = 0; i < DMAXX; i++) {
-		for (j = 0; j < DMAXY; j++) {
-			switch (dungeon[i][j]) {
-			case 10:
-				if (dungeon[i][j + 1] != 10)
-					dungeon[i][j] = 143;
-				break;
-			case 11:
-				if (dungeon[i + 1][j] != 11)
-					dungeon[i][j] = 144;
-				break;
-			case 13:
-				if (dungeon[i + 1][j] != 11 || dungeon[i][j + 1] != 10)
-					dungeon[i][j] = 146;
-				break;
-			case 14:
-				if (dungeon[i][j + 1] != 15)
-					dungeon[i][j] = 147;
-				break;
-			case 15:
-				if (dungeon[i + 1][j] != 11)
-					dungeon[i][j] = 148;
-				break;
-			}
-		}
-	}*/
-}
+	//for (i = 0; i < DMAXX; i++) {
+	//	for (j = 0; j < DMAXY; j++) {
+	//		switch (dungeon[i][j]) {
+	//		case 10:
+	//			if (dungeon[i][j + 1] != 10)
+	//				dungeon[i][j] = 143;
+	//			break;
+	//		case 11:
+	//			if (dungeon[i + 1][j] != 11)
+	//				dungeon[i][j] = 144;
+	//			break;
+	//		case 13:
+	//			if (dungeon[i + 1][j] != 11 || dungeon[i][j + 1] != 10)
+	//				dungeon[i][j] = 146;
+	//			break;
+	//		case 14:
+	//			if (dungeon[i][j + 1] != 15)
+	//				dungeon[i][j] = 147;
+	//			break;
+	//		case 15:
+	//			if (dungeon[i + 1][j] != 11)
+	//				dungeon[i][j] = 148;
+	//			break;
+	//		}
+	//	}
+	//}
+}*/
 
 /*
  * Ensure the dungeon is 'minimally' traversible.
@@ -2500,7 +2479,7 @@ static void DRLG_L2FixMap()
 		lm[2 + 20 + 9 * 32] = SwapLE16(162);
 		lm[2 + 18 + 13 * 32] = SwapLE16(162);
 		lm[2 + 20 + 13 * 32] = SwapLE16(162);
-    }
+	}
 }
 
 static void DRLG_L2FixPreMap(int idx)
