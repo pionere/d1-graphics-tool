@@ -169,7 +169,7 @@ void InitLvlDungeon()
 	case DTYPE_CATACOMBS:
 		// patch dMegaTiles and dMiniTiles - L2.TIL, L2.MIN
 		// reuse subtiles
-		assert(pTiles[41][1] == 139);
+		assert(pTiles[41][1] == 139 || pTiles[41][1] == 135);
 		pTiles[41][1] = 135;
 		// add separate tiles and subtiles for the arches
 		// - floor tile(3) with vertical arch
