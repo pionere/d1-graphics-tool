@@ -360,8 +360,8 @@ const DunMonsterStruct DunMonstConvTbl[128] = {
 D1Dun::~D1Dun()
 {
     // TODO: MemFree?
-    delete this->specGfx;
-    this->specGfx = nullptr;
+    // delete this->specGfx;
+    // this->specGfx = nullptr;
 
     this->clearAssets();
 }
@@ -568,7 +568,7 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
     this->modified = changed;
     this->numLayers = numLayers;
     this->defaultTile = UNDEF_TILE;
-    this->specGfx = nullptr;
+    // this->specGfx = nullptr;
     return true;
 }
 
@@ -576,8 +576,10 @@ void D1Dun::initialize(D1Pal *p, D1Tileset *ts)
 {
     this->pal = p;
     this->tileset = ts;
+    this->cls = ts->cls;
     this->til = ts->til;
     this->min = ts->min;
+    this->spt = ts->spt;
 
     if (this->type == D1DUN_TYPE::NORMAL) {
         // prepare subtiles
@@ -657,7 +659,7 @@ void D1Dun::initialize(D1Pal *p, D1Tileset *ts)
         }
     }
     this->setAssetPath(assetDir);
-    this->loadSpecCels();
+    // this->loadSpecCels();
 }
 
 bool D1Dun::save(const SaveAsParam &params)
@@ -1173,45 +1175,31 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             }
         }
     }
-    if (params.tileState == Qt::Checked && specGfx != nullptr) {
+    if (params.tileState == Qt::Checked /*&& specGfx != nullptr*/) {
         // draw special cel
-        const DungeonStruct &ds = dungeonTbl[this->levelType];
-        /*for (int dy = -2; dy <= 0; dy++) {
-            int y = dunCursorY + dy;
-            if (y < 0 || y >= this->height) {
-                continue;
-            }
-            for (int dx = -2; dx <= 0; dx++) {
-                int x = dunCursorX + dx;
-                if (x < 0 || x >= this->width) {
-                    continue;
-                }
-                int subtileRef = this->subtiles[y][x];
-                if (subtileRef != 0) {
-                    for (int i = 0; i < ds.numSpecCels; i++) {
-                        const SpecCell &specCel = ds.specialCels[i];
-                        if (specCel.subtileRef == subtileRef && x + specCel.dx == dunCursorX && y + specCel.dy == dunCursorY) {
-                            QImage subtileImage = specGfx->getFrameImage(specCel.specIndex);
-                            dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
-                        }
-                    }
-                }
-            }
-        }*/
+        /*const DungeonStruct &ds = dungeonTbl[this->levelType];
         for (int i = 0; i < ds.numSpecCels; i++) {
             const SpecCell &specCel = ds.specialCels[i];
             int x = dunCursorX - specCel.dx;
-            if (x < 0 /*|| x >= this->width*/) {
+            if (x < 0 / *|| x >= this->width* /) {
                 continue;
             }
             int y = dunCursorY - specCel.dy;
-            if (y < 0 /*|| y >= this->height*/) {
+            if (y < 0 / *|| y >= this->height* /) {
                 continue;
             }
             int subtileRef = this->subtiles[y][x];
             if (specCel.subtileRef == subtileRef && specGfx->getFrameCount() > specCel.specIndex) {
                 QImage subtileImage = specGfx->getFrameImage(specCel.specIndex);
                 dungeon.drawImage(drawCursorX, drawCursorY - subtileImage.height(), subtileImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+            }
+        }*/
+        int subtileRef = this->subtiles[dunCursorY][dunCursorX];
+        if (subtileRef > 0 && subtileRef <= this->min->getSubtileCount()) {
+            int specRef = this->spt->getSubtileSpecProperty(subtileRef - 1);
+            if (specRef != 0 && this->cls->getFrameCount() >= specRef) {
+                QImage specImage = this->cls->getFrameImage(specRef - 1);
+                dungeon.drawImage(drawCursorX, drawCursorY - specImage.height(), specImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
             }
         }
     }
@@ -1385,9 +1373,9 @@ QImage D1Dun::getImage(const DunDrawParam &params)
 void D1Dun::setPal(D1Pal *pal)
 {
     this->pal = pal;
-    if (this->specGfx != nullptr) {
+    /*if (this->specGfx != nullptr) {
         this->specGfx->setPalette(pal);
-    }
+    }*/
     for (auto &entry : this->objectCache) {
         entry.objGfx->setPalette(pal);
     }
@@ -1792,10 +1780,10 @@ bool D1Dun::setAssetPath(QString path)
     return true;
 }
 
-const D1Gfx *D1Dun::getSpecGfx() const
+/*const D1Gfx *D1Dun::getSpecGfx() const
 {
     return this->specGfx;
-}
+}*/
 
 QString D1Dun::getItemName(int itemIndex) const
 {
@@ -3399,7 +3387,7 @@ void D1Dun::patch(int dunFileIndex)
     }
 }
 
-void D1Dun::loadSpecCels()
+/*void D1Dun::loadSpecCels()
 {
     // TODO: MemFree?
     delete this->specGfx;
@@ -3429,7 +3417,7 @@ void D1Dun::loadSpecCels()
             dProgress() << tr("Loaded special CEL file %1.").arg(QDir::toNativeSeparators(specFilePath));
         }
     }
-}
+}*/
 
 bool D1Dun::reloadTileset(const QString &celFilePath)
 {
@@ -3438,7 +3426,7 @@ bool D1Dun::reloadTileset(const QString &celFilePath)
     if (!this->tileset->load(params)) {
         return false;
     }
-    this->loadSpecCels();
+    //this->loadSpecCels();
     return true;
 }
 
