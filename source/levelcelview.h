@@ -174,6 +174,9 @@ public slots:
     void on_actionToggle_View_triggered();
 
 private slots:
+    void on_showSpecTileCheckBox_clicked();
+    void on_showSpecSubtileCheckBox_clicked();
+
     void on_firstFrameButton_clicked();
     void on_previousFrameButton_clicked();
     void on_nextFrameButton_clicked();

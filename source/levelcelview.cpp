@@ -3077,8 +3077,8 @@ void LevelCelView::displayFrame()
 
     // Getting the current frame/sub-tile/tile to display
     QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
-    QImage subtile = this->min->getSubtileCount() != 0 ? this->min->getSpecSubtileImage(this->currentSubtileIndex) : QImage();
-    QImage tile = this->til->getTileCount() != 0 ? this->til->getSpecTileImage(this->currentTileIndex) : QImage();
+    QImage subtile = this->min->getSubtileCount() != 0 ? (this->ui->showSpecSubtileCheckBox->isChecked() ? this->min->getSpecSubtileImage(this->currentSubtileIndex) : this->min->getSubtileImage(this->currentSubtileIndex)) : QImage();
+    QImage tile = this->til->getTileCount() != 0 ? (this->ui->showSpecTileCheckBox->isChecked() ? this->til->getSpecTileImage(this->currentTileIndex) : this->til->getTileImage(this->currentTileIndex)) : QImage();
 
     QColor backColor = QColor(Config::getGraphicsTransparentColor());
     // Building a gray background of the width/height of the CEL frame
@@ -3304,6 +3304,18 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
     contextMenu.addMenu(&tileMenu);
 
     contextMenu.exec(mapToGlobal(pos));
+}
+
+void LevelCelView::on_showSpecTileCheckBox_clicked()
+{
+    // update the view
+    this->displayFrame();
+}
+
+void LevelCelView::on_showSpecSubtileCheckBox_clicked()
+{
+    // update the view
+    this->displayFrame();
 }
 
 void LevelCelView::on_firstFrameButton_clicked()

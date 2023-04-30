@@ -180,7 +180,14 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1" colspan="4">
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="showSpecTileCheckBox">
+        <property name="toolTip">
+         <string>Draw special cels over the tile</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2" colspan="3">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -355,7 +362,14 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1" colspan="4">
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="showSpecSubtileCheckBox">
+        <property name="toolTip">
+         <string>Draw special cel over the subtile</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2" colspan="3">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
