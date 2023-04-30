@@ -13,6 +13,7 @@ class D1Gfx;
 class D1Min;
 class D1Pal;
 class D1Sol;
+class D1Spt;
 class D1Til;
 class D1Tmi;
 class D1Trn;
