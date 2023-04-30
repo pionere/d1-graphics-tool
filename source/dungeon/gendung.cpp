@@ -89,8 +89,22 @@ static_assert(MAXITEMS <= UCHAR_MAX, "Index of an item might not fit to dItem.")
  */
 BYTE dSpecial[MAXDUNX][MAXDUNY];
 
+static void DRLG_InitSpecials(int x1, int y1, int x2, int y2)
+{
+	int i, j;
+
+	for (i = x1; i <= x2; i++) {
+		for (j = y1; j <= y2; j++) {
+			dSpecial[i][j] = nSpecTrapTable[dPiece[i][j]] & ((1 << 6) - 1);
+			assert(dSpecial[i][j] == 0 || currLvl._dDunType == DTYPE_TOWN || currLvl._dDunType == DTYPE_CATHEDRAL || currLvl._dDunType == DTYPE_CATACOMBS);
+		}
+	}
+}
+
 void DRLG_Init_Globals()
 {
+	DRLG_InitSpecials(DBORDERX, DBORDERY, MAXDUNX - DBORDERX - 1, MAXDUNY - DBORDERY - 1);
+
 	memset(dFlags, 0, sizeof(dFlags));
 	memset(dMonster, 0, sizeof(dMonster));
 	memset(dObject, 0, sizeof(dObject));
