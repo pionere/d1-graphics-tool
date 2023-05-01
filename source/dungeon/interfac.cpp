@@ -88,29 +88,27 @@ static void StoreProtections(D1Dun *dun)
 
 static void CreateLevel()
 {
-    switch (currLvl._dDunType) {
-    case DTYPE_TOWN:
-        // CreateTown();
-        break;
-    case DTYPE_CATHEDRAL:
-        CreateL1Dungeon();
-        break;
-    case DTYPE_CATACOMBS:
-        CreateL2Dungeon();
-        break;
-    case DTYPE_CAVES:
-        CreateL3Dungeon();
-        break;
-    case DTYPE_HELL:
-        CreateL4Dungeon();
-        break;
-    default:
-        ASSUME_UNREACHABLE
-        break;
-    }
-    InitTriggers();
-    // LoadRndLvlPal();
-    int rv = RandRange(1, 4);
+	switch (currLvl._dDunType) {
+	case DTYPE_TOWN:
+		// CreateTown();
+		break;
+	case DTYPE_CATHEDRAL:
+		CreateL1Dungeon();
+		break;
+	case DTYPE_CATACOMBS:
+		CreateL2Dungeon();
+		break;
+	case DTYPE_CAVES:
+		CreateL3Dungeon();
+		break;
+	case DTYPE_HELL:
+		CreateL4Dungeon();
+		break;
+	default:
+		ASSUME_UNREACHABLE
+		break;
+	}
+	InitTriggers();
 }
 
 static void LoadGameLevel(int lvldir, D1Dun *dun)
@@ -129,17 +127,20 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	//	InitLighting();
 	//	InitVision();
 	//}
-	InitLevelMonsters(); // reset monsters
-	InitLevelObjects();  // reset objects
-	InitLvlThemes();     // reset themes
-	InitLvlItems();      // reset items
+	InitLvlMonsters(); // reset monsters
+	InitLvlObjects();  // reset objects
+	InitLvlThemes();   // reset themes
+	InitLvlItems();    // reset items
 	IncProgress();
 
 	SetRndSeed(gameSeed); // restore seed after InitLevelMonsters
-	// fill in loop: dungeon, dTransVal, pWarps, pSetPieces, uses drlgFlags, dungBlock
-	// fill post: pdungeon, dPiece, dSpecial, themeLoc, dFlags
-	// reset: dMonster, dObject, dPlayer, dItem, dMissile, dLight+
-	CreateLevel();
+	// fill pre: pSetPieces
+	// fill in loop: dungeon, pWarps, uses drlgFlags, dungBlock
+	// fill post: themeLoc, pdungeon, dPiece, dTransVal
+	CreateDungeon();
+	// LoadLvlPalette();
+	int rv = RandRange(1, 4);
+	InitLvlMap(); // reset: dMonster, dObject, dPlayer, dItem, dMissile, dFlags+, dLight+
 	StoreProtections(dun);
 	if (pSolidTbl == NULL) {
 		return;
@@ -147,15 +148,15 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	IncProgress();
 	if (currLvl._dType != DTYPE_TOWN) {
 		GetLevelMTypes(); // select monster types and load their fx
-		InitThemes(); // select theme types
+		InitThemes();     // select theme types
 		IncProgress();
 		InitObjectGFX(); // load object graphics
 		IncProgress();
 		HoldThemeRooms(); // protect themes with dFlags
 		InitMonsters();   // place monsters
 		IncProgress();
-		InitObjects(); // place objects
-		InitItems();   // place items
+		InitObjects();      // place objects
+		InitItems();        // place items
 		CreateThemeRooms(); // populate theme rooms
 	} else {
 //		InitLvlStores();

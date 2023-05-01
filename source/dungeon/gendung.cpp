@@ -87,14 +87,6 @@ static_assert(MAXOBJECTS <= CHAR_MAX, "Index of an object might not fit to dObje
 BYTE dItem[MAXDUNX][MAXDUNY];
 static_assert(MAXITEMS <= UCHAR_MAX, "Index of an item might not fit to dItem.");
 
-void DRLG_Init_Globals()
-{
-	memset(dFlags, 0, sizeof(dFlags));
-	memset(dMonster, 0, sizeof(dMonster));
-	memset(dObject, 0, sizeof(dObject));
-	memset(dItem, 0, sizeof(dItem));
-}
-
 void InitLvlDungeon()
 {
 	uint16_t bv;
@@ -638,8 +630,10 @@ void DRLG_LoadSP(int idx, BYTE bv)
 	}
 }
 
-void DRLG_SetPC()
+static void DRLG_InitFlags()
 {
+	memset(dFlags, 0, sizeof(dFlags));
+
 	for (int n = lengthof(pSetPieces) - 1; n >= 0; n--) {
 		if (pSetPieces[n]._spData != NULL) { // pSetPieces[n]._sptype != SPT_NONE
 			int x = pSetPieces[n]._spx;
@@ -670,6 +664,63 @@ void DRLG_SetPC()
 			}
 		}
 	}
+}
+
+static void DRLG_LightTiles()
+{
+	/*BYTE c;
+	int i, j, pn;
+
+	c = currLvl._dType == DTYPE_TOWN ? 0 : MAXDARKNESS;
+#if DEBUG_MODE
+	if (lightflag)
+		c = 0;
+#endif
+	memset(dLight, c, sizeof(dLight));
+
+	assert(LightList[MAXLIGHTS]._lxoff == 0);
+	assert(LightList[MAXLIGHTS]._lyoff == 0);
+	if (currLvl._dType == DTYPE_CAVES) {
+		LightList[MAXLIGHTS]._lradius = 7;
+		for (i = 0; i < MAXDUNX; i++) {
+			for (j = 0; j < MAXDUNY; j++) {
+				pn = dPiece[i][j];
+				if (pn >= 56 && pn <= 161
+				 && (pn <= 147 || pn >= 154 || pn == 150 || pn == 152)) {
+					LightList[MAXLIGHTS]._lx = i;
+					LightList[MAXLIGHTS]._ly = j;
+					DoLighting(MAXLIGHTS);
+				}
+			}
+		}
+#ifdef HELLFIRE
+	} else if (currLvl._dType == DTYPE_NEST) {
+		LightList[MAXLIGHTS]._lradius = 6; // 9
+		for (i = 0; i < MAXDUNX; i++) {
+			for (j = 0; j < MAXDUNY; j++) {
+				pn = dPiece[i][j];
+				if ((pn >= 386 && pn <= 496) || (pn >= 534 && pn <= 537)) {
+					LightList[MAXLIGHTS]._lx = i;
+					LightList[MAXLIGHTS]._ly = j;
+					DoLighting(MAXLIGHTS);
+				}
+			}
+		}
+#endif
+	}*/
+}
+
+void InitLvlMap()
+{
+	DRLG_LightTiles();
+	DRLG_InitFlags();
+
+	// memset(dPlayer, 0, sizeof(dPlayer));
+	memset(dMonster, 0, sizeof(dMonster));
+	// memset(dDead, 0, sizeof(dDead));
+	memset(dObject, 0, sizeof(dObject));
+	memset(dItem, 0, sizeof(dItem));
+	// memset(dMissile, 0, sizeof(dMissile));
 }
 
 /**

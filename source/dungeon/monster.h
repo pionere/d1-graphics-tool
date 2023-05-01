@@ -20,7 +20,7 @@ extern BYTE mapSkelTypes[MAX_LVLMTYPES];
 /* Goat-monster types on the current level. */
 extern BYTE mapGoatTypes[MAX_LVLMTYPES];
 
-void InitLevelMonsters();
+void InitLvlMonsters();
 void GetLevelMTypes();
 void InitMonsters();
 void InitMonster(int mnum, int dir, int mtidx, int x, int y);
