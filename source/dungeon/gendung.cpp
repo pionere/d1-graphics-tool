@@ -203,7 +203,6 @@ void InitLvlDungeon()
 		nSolidTable[130] = true;    // make the inner tiles of the down-stairs non-walkable I.
 		nSolidTable[132] = true;    // make the inner tiles of the down-stairs non-walkable II.
 		nSolidTable[131] = true;    // make the inner tiles of the down-stairs non-walkable III.
-		nSolidTable[133] = true;    // make the inner tiles of the down-stairs non-walkable IV.
 		// fix all-blocking tile on the diablo-level
 		nSolidTable[211] = false;
 		nMissileTable[211] = false;
@@ -633,6 +632,26 @@ void DRLG_LoadSP(int idx, BYTE bv)
 static void DRLG_InitFlags()
 {
 	memset(dFlags, 0, sizeof(dFlags));
+
+	if (!currLvl._dSetLvl) {
+		for (int i = lengthof(pWarps) - 1; i >= 0; i--) {
+			int tx = pWarps[i]._wx;
+			int ty = pWarps[i]._wy;
+
+			if (tx == 0) {
+				continue;
+			}
+			int r = pWarps[i]._wtype == WRPT_L4_PENTA ? 4 : 2;
+			tx -= r;
+			ty -= r;
+			r = 2 * r + 1;
+			for (int xx = 0; xx < r; xx++) {
+				for (int yy = 0; yy < r; yy++) {
+					dFlags[tx + xx][ty + yy] |= (BFLAG_MON_PROTECT | BFLAG_OBJ_PROTECT);
+				}
+			}
+		}
+	}
 
 	for (int n = lengthof(pSetPieces) - 1; n >= 0; n--) {
 		if (pSetPieces[n]._spData != NULL) { // pSetPieces[n]._sptype != SPT_NONE
