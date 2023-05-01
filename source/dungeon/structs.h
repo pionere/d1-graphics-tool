@@ -588,17 +588,6 @@ typedef struct ThemeStruct {
 } ThemeStruct;
 
 //////////////////////////////////////////////////
-// trigs
-//////////////////////////////////////////////////
-
-typedef struct TriggerStruct {
-	int _tx;
-	int _ty;
-	int _tmsg;
-	int _tlvl;
-} TriggerStruct;
-
-//////////////////////////////////////////////////
 // lighting
 //////////////////////////////////////////////////
 
@@ -622,3 +611,15 @@ typedef struct LightListStruct {
 #if defined(X86_32bit_COMP) || defined(X86_64bit_COMP)
 static_assert((sizeof(LightListStruct) & (sizeof(LightListStruct) - 1)) == 0, "Align LightListStruct closer to power of 2 for better performance.");
 #endif
+
+//////////////////////////////////////////////////
+// trigs
+//////////////////////////////////////////////////
+
+typedef struct TriggerStruct {
+	int _tx;
+	int _ty;
+	int _tmsg;  // window_messages
+	int _tlvl;  // dungeon_level
+	int _ttype; // trig_type
+} TriggerStruct;
