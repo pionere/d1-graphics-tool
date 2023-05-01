@@ -2936,9 +2936,6 @@ void CreateL1Dungeon()
 
 	DRLG_L1InitTransVals();
 	DRLG_PlaceMegaTiles(BASE_MEGATILE_L1);
-	DRLG_Init_Globals();
-
-	DRLG_SetPC();
 }
 
 DEVILUTION_END_NAMESPACE

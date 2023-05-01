@@ -83,31 +83,29 @@ static void StoreProtections(D1Dun *dun)
 	}
 }
 
-static void CreateLevel()
+static void CreateDungeon()
 {
-    switch (currLvl._dDunType) {
-    case DTYPE_TOWN:
-        // CreateTown();
-        break;
-    case DTYPE_CATHEDRAL:
-        CreateL1Dungeon();
-        break;
-    case DTYPE_CATACOMBS:
-        CreateL2Dungeon();
-        break;
-    case DTYPE_CAVES:
-        CreateL3Dungeon();
-        break;
-    case DTYPE_HELL:
-        CreateL4Dungeon();
-        break;
-    default:
-        ASSUME_UNREACHABLE
-        break;
-    }
-    InitTriggers();
-    // LoadRndLvlPal();
-    int rv = RandRange(1, 4);
+	switch (currLvl._dDunType) {
+	case DTYPE_TOWN:
+		// CreateTown();
+		break;
+	case DTYPE_CATHEDRAL:
+		CreateL1Dungeon();
+		break;
+	case DTYPE_CATACOMBS:
+		CreateL2Dungeon();
+		break;
+	case DTYPE_CAVES:
+		CreateL3Dungeon();
+		break;
+	case DTYPE_HELL:
+		CreateL4Dungeon();
+		break;
+	default:
+		ASSUME_UNREACHABLE
+		break;
+	}
+	InitTriggers();
 }
 
 static void LoadGameLevel(int lvldir, D1Dun *dun)
@@ -126,31 +124,37 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 //		InitLighting();
 //		InitVision();
 	//}
-	InitLevelMonsters(); // reset monsters
-	InitLevelObjects();  // reset objects
-	InitLvlThemes();     // reset themes
-	InitLvlItems();      // reset items
+	InitLvlMonsters(); // reset monsters
+	InitLvlObjects();  // reset objects
+	InitLvlThemes();   // reset themes
+	InitLvlItems();    // reset items
 	IncProgress();
 
 	SetRndSeed(gameSeed); // restore seed after InitLevelMonsters
-	CreateLevel();
+	// fill pre: pSetPieces
+	// fill in loop: dungeon, pWarps, uses drlgFlags, dungBlock
+	// fill post: themeLoc, pdungeon, dPiece, dTransVal
+	CreateDungeon();
+	// LoadLvlPalette();
+	int rv = RandRange(1, 4);
+	InitLvlMap(); // reset: dMonster, dObject, dPlayer, dItem, dMissile, dFlags+, dLight+
 	StoreProtections(dun);
 	if (pSolidTbl == NULL) {
 		return;
 	}
 	IncProgress();
 	if (currLvl._dType != DTYPE_TOWN) {
-		GetLevelMTypes();
-		InitThemes();
+		GetLevelMTypes(); // select monster types and load their fx
+		InitThemes();     // select theme types
 		IncProgress();
-		InitObjectGFX();
+		InitObjectGFX(); // load object graphics
 		IncProgress();
-		HoldThemeRooms();
-		InitMonsters();
+		HoldThemeRooms(); // protect themes with dFlags
+		InitMonsters();   // place monsters
 		IncProgress();
-		InitObjects();
-		InitItems();
-		CreateThemeRooms();
+		InitObjects();      // place objects
+		InitItems();        // place items
+		CreateThemeRooms(); // populate theme rooms
 	} else {
 //		InitLvlStores();
 		// TODO: might want to reset RndSeed, since InitLvlStores is player dependent, but it does not matter at the moment

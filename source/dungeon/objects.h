@@ -11,7 +11,7 @@ extern ObjectStruct objects[MAXOBJECTS];
 
 void InitObjectGFX();
 void FreeObjectGFX();
-void InitLevelObjects();
+void InitLvlObjects();
 void InitObjects();
 int AddObject(int type, int ox, int oy);
 // void ObjChangeMap(int x1, int y1, int x2, int y2 /*, bool hasNewObjPiece*/);

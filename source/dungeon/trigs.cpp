@@ -107,8 +107,8 @@ static void InitL4Triggers()
 	// }
 	if (pWarps[DWARP_EXIT]._wx != 0) {
 		if (currLvl._dLevelIdx != DLV_HELL3) {
-			trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx;
-			trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy;
+			trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx + 1;
+			trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy + 1;
 			trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
 			numtrigs++;
 		} else if (quests[Q_BETRAYER]._qactive == QUEST_DONE) {
@@ -187,29 +187,6 @@ static void InitPWaterTriggers()
 	trigs[0]._ty = pWarps[DWARP_ENTRY]._wy + 1; // DBORDERY + 67
 	trigs[0]._tmsg = DVL_DWM_RTNLVL;
 	trigs[0]._tlvl = questlist[Q_PWATER]._qdlvl;
-}
-
-static void Freeupstairs()
-{
-	int i, tx, ty, xx, yy;
-
-	for (i = 0; i < NUM_DWARP; i++) {
-		tx = pWarps[i]._wx;
-		ty = pWarps[i]._wy;
-
-		if (tx == 0) {
-			continue;
-		}
-		int r = (currLvl._dLevelIdx == DLV_HELL3 && i == DWARP_EXIT) ? 4 : 2;
-		tx -= r;
-		ty -= r;
-		r = 2 * r + 1;
-		for (xx = 0; xx < r; xx++) {
-			for (yy = 0; yy < r; yy++) {
-				dFlags[tx + xx][ty + yy] |= (BFLAG_MON_PROTECT | BFLAG_OBJ_PROTECT);
-			}
-		}
-	}
 }
 
 void InitView(int entry)
@@ -349,7 +326,7 @@ void InitView(int entry)
 		ViewY += 2;
 		break;
 	case WRPT_L4_DOWN:
-		ViewX += 1;
+		ViewX += 2;
 		ViewY += 1;
 		break;
 	case WRPT_L4_PENTA:
@@ -394,7 +371,6 @@ void InitTriggers()
 			ASSUME_UNREACHABLE
 			break;
 		}
-		Freeupstairs();
 	} else {
 		switch (currLvl._dLevelIdx) {
 		case SL_SKELKING:

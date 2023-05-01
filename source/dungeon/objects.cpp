@@ -185,7 +185,7 @@ void FreeObjectGFX()
 	}*/
 }
 
-void InitLevelObjects()
+void InitLvlObjects()
 {
 //	int i;
 
