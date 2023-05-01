@@ -86,7 +86,7 @@ static void StoreProtections(D1Dun *dun)
 	}
 }
 
-static void CreateLevel()
+static void CreateDungeon()
 {
 	switch (currLvl._dDunType) {
 	case DTYPE_TOWN:
