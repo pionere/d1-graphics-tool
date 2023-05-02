@@ -105,7 +105,6 @@ static void CreateDungeon()
 		ASSUME_UNREACHABLE
 		break;
 	}
-	InitTriggers();
 }
 
 static void LoadGameLevel(int lvldir, D1Dun *dun)
