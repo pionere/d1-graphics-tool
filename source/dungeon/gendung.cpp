@@ -92,8 +92,8 @@ void InitLvlDungeon()
 	uint16_t bv;
 	size_t dwSubtiles;
 	BYTE *pTmp;
-	const LevelData* lds;
-	lds = &AllLevels[currLvl._dLevelIdx];
+	const LevelData* lds = &AllLevels[currLvl._dLevelIdx];
+	const LevelFileData* lfd = &levelfiledata[lds->dfindex];
 
 	static_assert((int)WRPT_NONE == 0, "InitLvlDungeon fills pWarps with 0 instead of WRPT_NONE values.");
 	memset(pWarps, 0, sizeof(pWarps));
@@ -101,7 +101,7 @@ void InitLvlDungeon()
 	memset(pSetPieces, 0, sizeof(pSetPieces));
 
 	memset(pTiles, 0, sizeof(pTiles));
-	LoadFileWithMem(lds->dMegaTiles, (BYTE*)&pTiles[1][0]); // .TIL
+	LoadFileWithMem(lfd->dMegaTiles, (BYTE*)&pTiles[1][0]); // .TIL
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 	for (int i = 1; i < lengthof(pTiles); i++) {
 		for (bv = 0; bv < lengthof(pTiles[0]); bv++) {
@@ -114,13 +114,13 @@ void InitLvlDungeon()
 			pTiles[i][bv] = pTiles[i][bv] + 1;
 		}
 	}
-	LoadFileWithMem(lds->dSpecFlags, &nSpecTrapTable[0]); // .SPT
+	LoadFileWithMem(lfd->dSpecFlags, &nSpecTrapTable[0]); // .SPT
 	static_assert(false == 0, "InitLvlDungeon fills tables with 0 instead of false values.");
 	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nSolidTable, 0, sizeof(nSolidTable));
 	memset(nMissileTable, 0, sizeof(nMissileTable));
 	assert(pSolidTbl == NULL);
-	pSolidTbl = LoadFileInMem(lds->dSolidTable, &dwSubtiles); // .SOL
+	pSolidTbl = LoadFileInMem(lfd->dSolidTable, &dwSubtiles); // .SOL
 	if (pSolidTbl == NULL) {
 		return;
 	}
@@ -647,7 +647,7 @@ static void DRLG_InitFlags()
 			r = 2 * r + 1;
 			for (int xx = 0; xx < r; xx++) {
 				for (int yy = 0; yy < r; yy++) {
-					dFlags[tx + xx][ty + yy] |= (BFLAG_MON_PROTECT | BFLAG_OBJ_PROTECT);
+					dFlags[tx + xx][ty + yy] |= BFLAG_MON_PROTECT | BFLAG_OBJ_PROTECT;
 				}
 			}
 		}
@@ -685,7 +685,7 @@ static void DRLG_InitFlags()
 	}
 }
 
-static void DRLG_LightTiles()
+static void DRLG_LightSubtiles()
 {
 	/*BYTE c;
 	int i, j, pn;
@@ -731,7 +731,7 @@ static void DRLG_LightTiles()
 
 void InitLvlMap()
 {
-	DRLG_LightTiles();
+	DRLG_LightSubtiles();
 	DRLG_InitFlags();
 
 	// memset(dPlayer, 0, sizeof(dPlayer));
@@ -765,10 +765,6 @@ static POS32 DRLG_FitThemeRoom(BYTE floor, int x, int y, int minSize, int maxSiz
 	// BUGFIX: change '&&' to '||' (fixed)
 	if (xmax < minSize || ymax < minSize)
 		return { 0, 0 };
-
-	//if (NearThemeRoom(x, y)) {
-	//	return false;
-	//}
 
 	memset(xArray, 0, sizeof(xArray));
 	memset(yArray, 0, sizeof(yArray));

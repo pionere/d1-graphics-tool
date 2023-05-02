@@ -77,7 +77,6 @@ typedef enum item_indexes {
 	IDI_CLUB       = 0x7A,
 	IDI_DROPSHSTAFF= 0x86,
 #ifdef HELLFIRE
-	IDI_RUNE_ANY   = 0x99,
 	NUM_IDI        = 0x9A,
 #else
 	NUM_IDI        = 0x93,
@@ -3142,6 +3141,14 @@ typedef enum dungeon_type {
 	NUM_DUNGEON_TYPES,
 } dungeon_type;
 
+typedef enum dungeon_gen_type {
+	DGT_TOWN,
+	DGT_CATHEDRAL,
+	DGT_CATACOMBS,
+	DGT_CAVES,
+	DGT_HELL,
+} dungeon_gen_type;
+
 typedef enum dungeon_type_mask {
 	DTM_TOWN      = 1 << DTYPE_TOWN,
 	DTM_CATHEDRAL = 1 << DTYPE_CATHEDRAL,
@@ -3167,8 +3174,8 @@ typedef enum townwarp_dest {
 } townwarp_dest;
 
 typedef enum dungeon_warp {
-	DWARP_ENTRY,
 	DWARP_EXIT,
+	DWARP_ENTRY,
 	DWARP_TOWN,
 	DWARP_SIDE,
 	NUM_DWARP
@@ -3188,7 +3195,52 @@ typedef enum dungeon_warp_type {
 	WRPT_L4_DOWN,
 	WRPT_L4_PENTA,
 	WRPT_CIRCLE,
+	WRPT_RPORTAL,
+	WRPT_TOWN_L1,
+	WRPT_TOWN_L2,
+	WRPT_TOWN_L3,
+	WRPT_TOWN_L4,
+	WRPT_TOWN_L5,
+	WRPT_TOWN_L6,
 } dungeon_warp_type;
+
+typedef enum trig_type {
+	TRT_TOWN_L1,
+	TRT_L1_UP,
+	TRT_L1_TOWN,
+	TRT_L1_DOWN,
+	TRT_L1_SKING,
+	TRT_SKING_L1,
+	TRT_L1_PWATER,
+	TRT_PWATER_L1,
+	TRT_TOWN_L2,
+	TRT_L2_UP,
+	TRT_L2_TOWN,
+	TRT_L2_DOWN,
+	TRT_L2_BCHAMB,
+	TRT_BCHAMB_L2,
+	TRT_TOWN_L3,
+	TRT_L3_UP,
+	TRT_L3_TOWN,
+	TRT_L3_DOWN,
+	TRT_TOWN_L4,
+	TRT_L4_UP,
+	TRT_L4_TOWN,
+	TRT_L4_DOWN,
+	TRT_L4_PENTA,
+	TRT_L4_BETR,
+	TRT_BETR_L4,
+#ifdef HELLFIRE
+	TRT_TOWN_L5,
+	TRT_L5_UP,
+	TRT_L5_TOWN,
+	TRT_L5_DOWN,
+	TRT_TOWN_L6,
+	TRT_L6_UP,
+	TRT_L6_TOWN,
+	TRT_L6_DOWN,
+#endif
+} trig_type;
 
 typedef enum dungeon_theme_room_tiles {
 	DRT_FLOOR,
@@ -3200,8 +3252,19 @@ typedef enum dungeon_theme_room_tiles {
 	DRT_TOP_RIGHT,
 	DRT_BOTTOM_LEFT,
 	DRT_BOTTOM_RIGHT,
-	NUM_DRT_TYPES,
+	NUM_DRT_TYPES
 } dungeon_theme_room_tiles;
+
+typedef enum level_graphic_id {
+	LFILE_TOWN,
+	LFILE_L1,
+	LFILE_L2,
+	LFILE_L3,
+	LFILE_L4,
+	LFILE_L5,
+	LFILE_L6,
+	NUM_LFILE_TYPES
+} level_graphic_id;
 
 typedef enum dungeon_level {
 	DLV_TOWN,
@@ -3515,6 +3578,76 @@ typedef enum MON_ANIM {
 	NUM_MON_ANIM
 } MON_ANIM;
 
+typedef enum MON_SFX {
+	MS_ATTACK,
+	MS_GOTHIT,
+	MS_DEATH,
+	MS_SPECIAL,
+	NUM_MON_SFX
+} MON_SFX;
+
+typedef enum MYPLR_DEATH_MODE {
+	MDM_ALIVE,
+	MDM_DYING,
+	MDM_DEAD
+} MYPLR_DEATH_MODE;
+
+typedef enum PLR_MODE {
+	PM_STAND,
+	PM_WALK, // Movement towards N, NW, NE or W
+	PM_WALK2, // Movement towards S, SW, SE or E
+	PM_CHARGE,
+	PM_ATTACK,
+	PM_RATTACK,
+	PM_BLOCK,
+	PM_GOTHIT,
+	PM_SPELL,
+	PM_DYING, // pre-death mode which might be out of sync
+	PM_DEATH, // death mode which is in sync with external players
+	PM_NEWLVL,
+	NUM_PLR_MODES,
+	PM_INVALID = 0xFF
+} PLR_MODE;
+
+typedef enum PLR_ANIM {
+	PA_STAND,
+	PA_WALK,
+	PA_ATTACK,
+	PA_SPELL,
+	PA_BLOCK,
+	PA_GOTHIT,
+	PA_DEATH,
+	NUM_PLR_ANIMS
+} PLR_ANIM;
+
+typedef enum PLR_EAR {
+	DMGTYPE_NPC,
+	DMGTYPE_PLAYER,
+	DMGTYPE_UNKNOWN,
+} PLR_EAR;
+
+typedef enum spell_type {
+	RSPLTYPE_ABILITY,
+	RSPLTYPE_SPELL,
+	RSPLTYPE_SCROLL,
+	RSPLTYPE_CHARGES,
+	RSPLTYPE_INVALID,
+#ifdef HELLFIRE
+	RSPLTYPE_RUNE,
+#endif
+	NUM_RSPLTYPES,
+	RSPLTYPE_INV = RSPLTYPE_SCROLL,
+} spell_type;
+
+typedef enum spell_from_type {
+	SPLFROM_ABILITY        = -1,
+	SPLFROM_MANA           = -2,
+	SPLFROM_INVALID_SOURCE = -3,
+	SPLFROM_INVALID_MANA   = -4,
+	SPLFROM_INVALID_LEVEL  = -5,
+	SPLFROM_INVALID_TYPE   = -6,
+} spell_from_type;
+
 typedef enum cursor_id {
 	CURSOR_NONE,
 	CURSOR_HAND,
@@ -3544,6 +3677,29 @@ typedef enum direction {
 	DIR_NONE = NUM_DIRS,
 } direction;
 
+typedef enum _scroll_direction {
+	SDIR_NONE,
+	SDIR_N,
+	SDIR_NE,
+	SDIR_E,
+	SDIR_SE,
+	SDIR_S,
+	SDIR_SW,
+	SDIR_W,
+	SDIR_NW,
+} _scroll_direction;
+
+typedef enum _path_direction {
+	PDIR_N,
+	PDIR_W,
+	PDIR_E,
+	PDIR_S,
+	PDIR_NW,
+	PDIR_NE,
+	PDIR_SE,
+	PDIR_SW
+} _path_direction;
+
 typedef enum lvl_entry {
 	ENTRY_MAIN,
 	ENTRY_PREV,
@@ -3555,6 +3711,15 @@ typedef enum lvl_entry {
 	ENTRY_TWARPUP,
 	ENTRY_RETOWN,
 } lvl_entry;
+
+/*typedef enum game_info {
+	GAMEINFO_NAME         = 1,
+	GAMEINFO_PASSWORD     = 2,
+	GAMEINFO_STATS        = 3,
+	GAMEINFO_MODEFLAG     = 4,
+	GAMEINFO_GAMETEMPLATE = 5,
+	GAMEINFO_PLAYERS      = 6,
+} game_info;*/
 
 typedef enum spell_id {
 	SPL_NULL,
@@ -3626,6 +3791,223 @@ typedef enum spell_id {
 	SPL_RUNE_LAST = SPL_RUNESTONE
 #endif
 } spell_id;
+
+typedef enum _msg_id {
+	NMSG_SEND_GAME_DELTA,
+	NMSG_PLRINFO,
+	NMSG_DLEVEL_DATA,
+	NMSG_DLEVEL_JUNK,
+	NMSG_DLEVEL_PLR,
+	NMSG_DLEVEL_END,
+	NMSG_LVL_DELTA,
+	NMSG_LVL_DELTA_END,
+	NMSG_STRING,
+	NMSG_PLRDROP, // internal use only (supposedly)
+} _msg_id;
+
+typedef enum _cmd_id {
+	CMD_SYNCDATA,
+	CMD_WALKXY,
+	CMD_SKILLXY,
+	CMD_OPOBJXY,
+	CMD_DISARMXY,
+	CMD_SKILLPLR,
+	CMD_SKILLMON,
+	CMD_BLOCK,
+	CMD_TALKXY,
+	CMD_MONSTDEATH,
+	CMD_MONSTDAMAGE,
+	CMD_MONSTCORPSE,
+	CMD_MONSTSUMMON,
+	CMD_AWAKEGOLEM,
+	CMD_PLRDEAD,
+	CMD_PLRRESURRECT,
+	CMD_SETSHIELD,
+	CMD_REMSHIELD,
+	CMD_ADDSTR,
+	CMD_ADDMAG,
+	CMD_ADDDEX,
+	CMD_ADDVIT,
+	CMD_DECHP,
+	CMD_SPLITPLRGOLD,
+	CMD_PASTEPLRITEM,
+	CMD_PASTEPLRBELTITEM,
+	CMD_CUTPLRITEM,
+	CMD_DELPLRITEM,
+	CMD_USEPLRITEM,
+	CMD_PUTITEM,
+	CMD_SPAWNITEM,
+	CMD_GETITEM,
+	CMD_AUTOGETITEM,
+	CMD_GOTOGETITEM,
+	CMD_GOTOAGETITEM,
+	CMD_OPERATEITEM,
+	CMD_OPERATEOBJ,
+	CMD_DOOROPEN,
+	CMD_DOORCLOSE,
+	CMD_TRAPDISABLE,
+	CMD_TRAPOPEN,
+	CMD_TRAPCLOSE,
+	CMD_SHRINE,
+	CMD_TELEKINXY,
+	CMD_TELEKINID,
+	CMD_TELEKINOID,
+	CMD_ACTIVATEPORTAL,
+	CMD_NEWLVL,
+	CMD_TWARP,
+	CMD_RETOWN,
+	CMD_JOINLEVEL,
+	CMD_DISCONNECT,
+	CMD_INVITE,
+	CMD_ACK_INVITE,
+	CMD_DEC_INVITE,
+	CMD_REV_INVITE,
+	CMD_KICK_PLR,
+	CMD_STORE_1,
+	CMD_STORE_2,
+	CMD_QTOWNER,
+	CMD_QMONSTER,
+	CMD_SYNCQUEST,
+	CMD_SYNCQUESTEXT,
+	CMD_BLOODPASS,
+	CMD_OPENSPIL,
+	CMD_OPENNAKRUL,        // HELLFIRE
+	CMD_DUMP_MONSTERS,     // DEV_MODE
+	CMD_REQUEST_PLRCHECK,  // DEV_MODE
+	CMD_DO_PLRCHECK,       // DEV_MODE
+	CMD_REQUEST_ITEMCHECK, // DEV_MODE
+	CMD_DO_ITEMCHECK,      // DEV_MODE
+	CMD_CHEAT_EXPERIENCE,  // DEBUG_MODE
+	CMD_CHEAT_SPELL_LEVEL, // DEBUG_MODE
+	CMD_DEBUG,             // DEBUG_MODE
+} _cmd_id;
+
+typedef enum _dcmd_item {
+	DCMD_INVALID,
+	DCMD_ITM_SPAWNED,
+	DCMD_ITM_TAKEN,
+	DCMD_ITM_MOVED,
+	DCMD_ITM_DROPPED,
+} _dcmd_item;
+
+typedef enum _dcmd_monster {
+	DCMD_MON_INVALID,
+	DCMD_MON_ACTIVE,
+	DCMD_MON_DEAD,
+	DCMD_MON_DESTROYED,
+	NUM_DCMD_MON
+} _dcmd_monster;
+
+typedef enum _msg_mode {
+	MSG_NORMAL,
+	MSG_GAME_DELTA_WAIT, // wait for game delta information
+	MSG_GAME_DELTA_LOAD, // download game delta
+	//MSG_RUN_DELTA,
+	MSG_LVL_DELTA_WAIT, // wait for level delta information
+	MSG_LVL_DELTA_PROC, // process turns till the timestamp of the level delta info
+	MSG_LVL_DELTA_SKIP_JOIN // skip most of the JOINLEVEL message of the level-delta timestamp (level delta is supposed to contain this)
+} _msg_mode;
+
+typedef enum _talker_id {
+	TOWN_SMITH,
+	TOWN_HEALER,
+	TOWN_TAVERN,
+	TOWN_STORY,
+	TOWN_DRUNK,
+	TOWN_WITCH,
+	TOWN_BARMAID,
+	TOWN_PEGBOY,
+	TOWN_PRIEST,
+	TOWN_DEADGUY,
+#ifdef HELLFIRE
+	TOWN_FARMER,
+	TOWN_COWFARM,
+	TOWN_GIRL,
+#endif
+	TOWN_COW,
+} _talker_id;
+
+typedef enum _music_id {
+	TMUSIC_TOWN,
+	TMUSIC_L1,
+	TMUSIC_L2,
+	TMUSIC_L3,
+	TMUSIC_L4,
+#ifdef HELLFIRE
+	TMUSIC_L5,
+	TMUSIC_L6,
+#endif
+	TMUSIC_INTRO,
+	NUM_MUSIC,
+} _music_id;
+
+enum _artFontTables {
+	AFT_SMALL,
+	AFT_MED,
+	AFT_BIG,
+	AFT_HUGE,
+};
+
+enum _artFontColors {
+	AFC_SILVER,
+	AFC_GOLD,
+};
+
+typedef enum _mainmenu_selections {
+	MAINMENU_SINGLE_PLAYER,
+	MAINMENU_MULTIPLAYER,
+	MAINMENU_SETTINGS,
+	MAINMENU_REPLAY_INTRO,
+	MAINMENU_SHOW_CREDITS,
+	MAINMENU_EXIT_DIABLO,
+	NUM_MAINMENU,
+} _mainmenu_selections;
+
+typedef enum _selhero_selections {
+	SELHERO_NEW_DUNGEON = 1,
+	SELHERO_CONTINUE    = 2,
+	SELHERO_PREVIOUS    = 3
+} _selhero_selections;
+
+typedef enum _selgame_selections {
+	SELGAME_CREATE,
+	SELGAME_JOIN,
+	SELGAME_PREVIOUS
+} _selgame_selections;
+
+typedef enum conn_type {
+	SELCONN_ZT,       // zerotier (p2p)
+	SELCONN_TCP,      // tcp/ip server-client
+	SELCONN_TCPD,     // tcp/ip server-client + p2p
+	SELCONN_TCPS,     // tcp/ip server
+	SELCONN_TCPDS,    // tcp/ip server + p2p
+	SELCONN_LOOPBACK, // local
+} conn_type;
+
+typedef enum _create_hero {
+	NEWHERO_DONE,
+	NEWHERO_INVALID_NAME,
+	NEWHERO_HERO_LIMIT,
+	NEWHERO_FAIL,
+} _create_hero;
+
+typedef enum server_type {
+	SRV_BASIC,
+	SRV_DIRECT,
+} server_type;
+
+typedef enum panel_button_id {
+	PANBTN_MAINMENU,
+	PANBTN_OPTIONS,
+	PANBTN_CHARINFO,
+	PANBTN_INVENTORY,
+	PANBTN_SPELLBOOK,
+	PANBTN_QLOG,
+	PANBTN_AUTOMAP,
+	PANBTN_SENDMSG,
+	PANBTN_TEAMBOOK,
+	NUM_PANBTNS
+} panel_button_id;
 
 typedef enum attribute_id {
 	ATTRIB_STR,
@@ -3917,6 +4299,29 @@ typedef enum talk_id {
 	STORE_WAIT,
 } talk_id;
 
+typedef enum plr_class {
+	PC_WARRIOR,
+	PC_ROGUE,
+	PC_SORCERER,
+#ifdef HELLFIRE
+	PC_MONK,
+	PC_BARD,
+	PC_BARBARIAN,
+#endif
+	NUM_CLASSES
+} plr_class;
+
+/*typedef enum _walk_path {
+	WALK_NE   = 0x1,
+	WALK_NW   = 0x2,
+	WALK_SE   = 0x3,
+	WALK_SW   = 0x4,
+	WALK_N    = 0x5,
+	WALK_E    = 0x6,
+	WALK_S    = 0x7,
+	WALK_W    = 0x8,
+} _walk_path;*/
+
 typedef enum magic_type {
 	STYPE_FIRE,
 	STYPE_LIGHTNING,
@@ -3936,6 +4341,70 @@ typedef enum player_skill_flags {
 	SFLAG_BLOCK   = 1 << 3,
 	SFLAG_RAGE    = 1 << 4,
 } player_skill_flags;
+
+typedef enum window_active {
+	WND_INV,
+	WND_CHAR,
+	WND_BOOK,
+	WND_TEAM,
+	WND_QUEST,
+	WND_BELT,
+	NUM_WNDS,
+	WND_NONE = 0xFF,
+} window_active;
+
+typedef enum player_graphic_idx {
+	PGX_STAND,
+	PGX_WALK,
+	PGX_ATTACK,
+	PGX_FIRE,
+	PGX_LIGHTNING,
+	PGX_MAGIC,
+	PGX_BLOCK,
+	PGX_GOTHIT,
+	PGX_DEATH,
+	NUM_PGXS
+} player_graphic_idx;
+
+typedef enum player_graphic_type {
+	PGT_STAND_TOWN,
+	PGT_STAND_DUNGEON,
+	PGT_WALK_TOWN,
+	PGT_WALK_DUNGEON,
+	PGT_ATTACK,
+	PGT_FIRE,
+	PGT_LIGHTNING,
+	PGT_MAGIC,
+	PGT_BLOCK,
+	PGT_GOTHIT,
+	PGT_DEATH,
+	NUM_PGTS
+} player_graphic_type;
+
+typedef enum player_graphic_flag {
+	PGF_STAND_TOWN    = 1 << PGT_STAND_TOWN,
+	PGF_STAND_DUNGEON = 1 << PGT_STAND_DUNGEON,
+	PGF_WALK_TOWN     = 1 << PGT_WALK_TOWN,
+	PGF_WALK_DUNGEON  = 1 << PGT_WALK_DUNGEON,
+	PGF_ATTACK        = 1 << PGT_ATTACK,
+	PGF_FIRE          = 1 << PGT_FIRE,
+	PGF_LIGHTNING     = 1 << PGT_LIGHTNING,
+	PGF_MAGIC         = 1 << PGT_MAGIC,
+	PGF_BLOCK         = 1 << PGT_BLOCK,
+	PGF_GOTHIT        = 1 << PGT_GOTHIT,
+	PGF_DEATH         = 1 << PGT_DEATH,
+
+	PGF_STAND    = PGF_STAND_TOWN | PGF_STAND_DUNGEON,
+	PGF_WALK     = PGF_WALK_TOWN | PGF_WALK_DUNGEON,
+	// everything except PGF_DEATH
+	PGF_NONDEATH = (PGF_STAND |	PGF_WALK | PGF_ATTACK | PGF_FIRE | PGF_LIGHTNING | PGF_MAGIC | PGF_BLOCK | PGF_GOTHIT)
+} player_graphic_flag;
+
+typedef enum player_timer {
+	PLTR_INFRAVISION,
+	PLTR_RAGE,
+	NUM_PLRTIMERS
+} player_timer;
 
 typedef enum anim_weapon_id {
 	ANIM_ID_UNARMED,
@@ -4000,6 +4469,25 @@ typedef enum shrine_type {
 	NUM_SHRINETYPE
 } shrine_type;
 
+typedef enum action_id {
+	ACTION_NONE,
+	ACTION_WALK,
+	ACTION_OPERATE,
+	ACTION_ATTACK,
+	ACTION_ATTACKMON,
+	ACTION_ATTACKPLR,
+	ACTION_RATTACK,
+	ACTION_RATTACKMON,
+	ACTION_RATTACKPLR,
+	ACTION_SPELL,
+	ACTION_SPELLMON,
+	ACTION_SPELLPLR,
+	ACTION_BLOCK,
+	ACTION_PICKUPITEM,  // put item in hand (inventory screen open)
+	ACTION_PICKUPAITEM, // put item in inventory
+	ACTION_TALK,
+} action_id;
+
 typedef enum drlg_flag {
 	// DRLG_L1_HDOOR   = 0x01,
 	// DRLG_L1_VDOOR   = 0x02,
@@ -4008,3 +4496,225 @@ typedef enum drlg_flag {
 	DRLG_PROTECTED  = 0x40,
 	DRLG_FROZEN     = 0x80,
 } drlg_flag;
+
+typedef enum movie_flag {
+	MOV_SKIP       = 1 << 0, // Makes the video skippable by mouse-button or keypress (not just ESC).
+	MOV_LOOP       = 1 << 1, // Playback in loop.
+} movie_flag;
+
+typedef enum movie_playback_result {
+	MPR_DONE,   // the movie is finished
+	MPR_CANCEL, // the movie is cancelled
+	MPR_QUIT,   // the user wants to leave the game
+} movie_playback_result;
+
+typedef enum _artfonts {
+	AF_SMALL,
+	AF_SMALLGRAY,
+	AF_MED,
+	AF_MEDGRAY,
+	AF_BIG,
+	AF_BIGGRAY,
+	AF_HUGE,
+	AF_HUGEGRAY,
+} _artfonts;
+
+typedef enum _gmenu_flags {
+	GMF_SLIDER  = 1 << 0,
+	GMF_ENABLED = 1 << 1,
+} _gmenu_flags;
+
+typedef enum mpq_files {
+#if ASSET_MPL != 1
+	MPQ_DEVILHD,
+#endif
+	MPQ_DEVILX,
+#ifdef HELLFIRE
+	MPQ_HF_OPT2,
+	MPQ_HF_OPT1,
+	MPQ_HF_VOICE,
+	MPQ_HF_MUSIC,
+	MPQ_HF_BARB,
+	MPQ_HF_BARD,
+	MPQ_HF_MONK,
+	MPQ_HELLFIRE,
+#endif
+	MPQ_PATCH_RT,
+	MPQ_DIABDAT,
+	NUM_MPQS
+} mpq_files;
+
+typedef enum game_logic_progress {
+	GLP_NONE,
+	GLP_PLAYERS_DONE,
+	GLP_MONSTERS_DONE,
+	//GLP_TOWNERS_DONE,
+	//GLP_OBJECTS_DONE,
+	//GLP_MISSILES_DONE,
+	//GLP_ITEMS_DONE,
+} game_logic_progress; 
+
+typedef enum redraw_flags {
+	REDRAW_HP_FLASK      = 1 << 0,
+	REDRAW_MANA_FLASK    = 1 << 1,
+	REDRAW_SPELL_ICON    = 1 << 2,
+	REDRAW_CTRL_BUTTONS  = 1 << 3,
+	REDRAW_SPEED_BAR     = 1 << 4,
+	REDRAW_CTRL_PANEL    = 1 << 5,
+	REDRAW_ALL = REDRAW_HP_FLASK | REDRAW_MANA_FLASK | REDRAW_SPELL_ICON
+               | REDRAW_CTRL_BUTTONS | REDRAW_SPEED_BAR | REDRAW_CTRL_PANEL,
+} redraw_flags;
+
+typedef enum input_key {
+	ACT_NONE,
+	ACT_ACT,
+	ACT_ALTACT,
+	ACT_SKL0,
+	ACT_SKL1,
+	ACT_SKL2,
+	ACT_SKL3,
+	ACT_SKL4,
+	ACT_SKL5,
+	ACT_SKL6,
+	ACT_SKL7,
+	ACT_INV,
+	ACT_CHAR,
+	ACT_SKLBOOK,
+	ACT_SKLLIST,
+	ACT_ITEM0,
+	ACT_ITEM1,
+	ACT_ITEM2,
+	ACT_ITEM3,
+	ACT_ITEM4,
+	ACT_ITEM5,
+	ACT_ITEM6,
+	ACT_ITEM7,
+	ACT_AUTOMAP,
+	ACT_MAPZ_IN,
+	ACT_MAPZ_OUT,
+	ACT_CLEARUI,
+	ACT_UP,
+	ACT_DOWN,
+	ACT_LEFT,
+	ACT_RIGHT,
+	ACT_PGUP,
+	ACT_PGDOWN,
+	ACT_RETURN,
+	ACT_TEAM,
+	ACT_QUESTS,
+	ACT_MSG0,
+	ACT_MSG1,
+	ACT_MSG2,
+	ACT_MSG3,
+	ACT_GAMMA_DEC,
+	ACT_GAMMA_INC,
+	ACT_ZOOM,
+	ACT_VER,
+	ACT_HELP,
+	ACT_PAUSE,
+	ACT_ESCAPE,
+	ACT_TOOLTIP,
+	NUM_ACTS
+} input_key;
+
+typedef enum application_error {
+	ERR_APP_FRAME_BUFSIZE,
+	ERR_APP_LOOPBACK_JOIN,
+	ERR_APP_LOOPBACK_SENDMSG,
+	ERR_APP_LOOPBACK_QUEUE_SIZE,
+	ERR_APP_LOOPBACK_POLLTURN,
+	ERR_APP_LOOPBACK_LASTTURN,
+	ERR_APP_LOOPBACK_DROPPLR,
+	ERR_APP_LOOPBACK_TRANSIT,
+	ERR_APP_PACKET_ENCRYPT,
+	ERR_APP_PACKET_SETUP,
+	ERR_APP_PACKET_PASSWD,
+	ERR_APP_SETMAP,
+} application_error;
+
+typedef enum app_sdl_error {
+	ERR_SDL_ART_COLOR,
+	ERR_SDL_ART_BLIT,
+	ERR_SDL_CREDIT_BLIT,
+	ERR_SDL_CREDIT_PRE_SURFACE,
+	ERR_SDL_CREDIT_PRE_TEXT,
+	ERR_SDL_CREDIT_PRE_TEXT_COLOR,
+	ERR_SDL_CREDIT_PRE_SHADOW,
+	ERR_SDL_CREDIT_PRE_SHADOW_COLOR,
+	ERR_SDL_UI_CURSOR_DISABLE,
+	ERR_SDL_TDRAW_TEXT,
+	ERR_SDL_TDRAW_SHADOW,
+	ERR_SDL_DX_FLIP,
+	ERR_SDL_DX_RENDER_SURFACE,
+	ERR_SDL_DX_RENDER_COPY,
+	ERR_SDL_FULLSCREEN_SDL1,
+	ERR_SDL_FULLSCREEN_SDL2,
+	ERR_SDL_PALETTE_UPDATE,
+	ERR_SDL_DX_BLIT_SDL1,
+	ERR_SDL_DX_BLIT_SDL2,
+	ERR_SDL_DX_BLIT_SCALE,
+	ERR_SDL_DX_BLIT_STRETCH,
+	ERR_SDL_DX_BLIT_CONVERTED,
+	ERR_SDL_DX_UPDATE_TEXTURE,
+	ERR_SDL_DX_DRAW_COLOR,
+	ERR_SDL_DX_RENDER_CLEAR,
+	ERR_SDL_BACK_PALETTE_ALLOC,
+	ERR_SDL_BACK_PALETTE_SET,
+	ERR_SDL_TEXTURE_CREATE,
+	ERR_SDL_SURFACE_CHECK,
+	ERR_SDL_BACK_PALETTE_CREATE,
+	ERR_SDL_MUSIC_FILE,
+	ERR_SDL_SOUND_FILE,
+	ERR_SDL_VIDEO_BLIT_SCALED,
+	ERR_SDL_VIDEO_BLIT_B,
+	ERR_SDL_VIDEO_BLIT_A,
+	ERR_SDL_VIDEO_AUDIO,
+	ERR_SDL_VIDEO_CREATE,
+	ERR_SDL_VIDEO_PALETTE,
+	ERR_SDL_VIDEO_SURFACE,
+	ERR_SDL_AUDIO_DEVICE_SDL1,
+	ERR_SDL_AUDIO_DEVICE_SDL2,
+	ERR_SDL_DISPLAY_MODE_SET,
+	ERR_SDL_DISPLAY_MODE_GET,
+	ERR_SDL_INIT,
+	ERR_SDL_WINDOW_CREATE,
+	ERR_SDL_RENDERER_CREATE,
+	ERR_SDL_RENDERER_TEXTURE,
+	ERR_SDL_RENDERER_SCALE,
+	ERR_SDL_RENDERER_SIZE,
+	ERR_SDL_WINDOW_STRETCH,
+	ERR_SDL_THREAD_CREATE,
+	ERR_SDL_MUTEX_CREATE,
+	ERR_SDL_MUTEX_LOCK,
+	ERR_SDL_MUTEX_UNLOCK,
+	ERR_SDL_COND_CREATE,
+	ERR_SDL_EVENT_SET,
+	ERR_SDL_EVENT_RESET,
+	ERR_SDL_EVENT_LOCK,
+	ERR_SDL_EVENT_WAIT,
+	ERR_SDL_TTF_INIT,
+	ERR_SDL_TTF_FONT,
+} app_sdl_error;
+
+typedef enum SDL_LogCategory {
+    SDL_LOG_CATEGORY_APPLICATION,
+    SDL_LOG_CATEGORY_ERROR,
+    SDL_LOG_CATEGORY_ASSERT,
+    SDL_LOG_CATEGORY_SYSTEM,
+    SDL_LOG_CATEGORY_AUDIO,
+    SDL_LOG_CATEGORY_VIDEO,
+    SDL_LOG_CATEGORY_RENDER,
+    SDL_LOG_CATEGORY_INPUT,
+    SDL_LOG_CATEGORY_TEST,
+} SDL_LogCategory;
+
+typedef enum SDL_LogPriority
+{
+    SDL_LOG_PRIORITY_VERBOSE = 1,
+    SDL_LOG_PRIORITY_DEBUG,
+    SDL_LOG_PRIORITY_INFO,
+    SDL_LOG_PRIORITY_WARN,
+    SDL_LOG_PRIORITY_ERROR,
+    SDL_LOG_PRIORITY_CRITICAL,
+    SDL_NUM_LOG_PRIORITIES
+} SDL_LogPriority;

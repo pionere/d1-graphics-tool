@@ -100,7 +100,7 @@ const BYTE L6DSTAIRS[] = {
 };
 #endif
 /** Miniset: Stairs up to town. */
-const BYTE L3TWARP[] = {
+/*const BYTE L3TWARP[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -111,16 +111,8 @@ const BYTE L3TWARP[] = {
 	156, 155, 0, // replace
 	153, 154, 0,
 	  0,   0, 0,
-/*  559,182    556,557,     0,  0,	// MegaTiles
-	560, 31    558, 31,     0,  0,
-
-	548,549    552,553,     0,  0,
-	550,551    554,555,     0,  0,
-
-	  0,  0,     0,  0,     0,  0,
-	  0,  0,     0,  0,     0,  0, */
 	// clang-format on
-};
+};*/
 /* same look as L6USTAIRS
 #ifdef HELLFIRE
 const BYTE L6TWARP[] = {
@@ -2438,11 +2430,19 @@ static void DRLG_L3()
 				if (warpPos.x < 0) {
 					continue;
 				}
-				pWarps[DWARP_ENTRY]._wx = warpPos.x + 0;
-				pWarps[DWARP_ENTRY]._wy = warpPos.y + 1;
-				pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
-				pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
-				pWarps[DWARP_ENTRY]._wtype = WRPT_L3_UP;
+				if (currLvl._dLevelIdx == DLV_NEST1) {
+					pWarps[DWARP_TOWN]._wx = warpPos.x + 0;
+					pWarps[DWARP_TOWN]._wy = warpPos.y + 1;
+					pWarps[DWARP_TOWN]._wx = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX + 1;
+					pWarps[DWARP_TOWN]._wy = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
+					pWarps[DWARP_TOWN]._wtype = WRPT_L3_UP;
+				} else {
+					pWarps[DWARP_ENTRY]._wx = warpPos.x + 0;
+					pWarps[DWARP_ENTRY]._wy = warpPos.y + 1;
+					pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX + 1;
+					pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+					pWarps[DWARP_ENTRY]._wtype = WRPT_L3_UP;
+				}
 				if (currLvl._dLevelIdx != DLV_NEST4) {
 					warpPos = DRLG_PlaceMiniSet(L6DSTAIRS); // L6DSTAIRS(3, 1)
 					if (warpPos.x < 0) {
@@ -2451,7 +2451,7 @@ static void DRLG_L3()
 					pWarps[DWARP_EXIT]._wx = warpPos.x + 1;
 					pWarps[DWARP_EXIT]._wy = warpPos.y + 0;
 					pWarps[DWARP_EXIT]._wx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
-					pWarps[DWARP_EXIT]._wy = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
+					pWarps[DWARP_EXIT]._wy = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY + 1;
 					pWarps[DWARP_EXIT]._wtype = WRPT_L3_DOWN;
 				}
 			} else
@@ -2464,7 +2464,7 @@ static void DRLG_L3()
 				}
 				pWarps[DWARP_ENTRY]._wx = warpPos.x + 0;
 				pWarps[DWARP_ENTRY]._wy = warpPos.y + 1;
-				pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+				pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX + 1;
 				pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
 				pWarps[DWARP_ENTRY]._wtype = WRPT_L3_UP;
 				warpPos = DRLG_PlaceMiniSet(L3DSTAIRS); // L3DSTAIRS(3, 1)
@@ -2474,16 +2474,16 @@ static void DRLG_L3()
 				pWarps[DWARP_EXIT]._wx = warpPos.x + 1;
 				pWarps[DWARP_EXIT]._wy = warpPos.y + 0;
 				pWarps[DWARP_EXIT]._wx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
-				pWarps[DWARP_EXIT]._wy = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
+				pWarps[DWARP_EXIT]._wy = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY + 1;
 				pWarps[DWARP_EXIT]._wtype = WRPT_L3_DOWN;
 				if (currLvl._dLevelIdx == DLV_CAVES1) {
-					warpPos = DRLG_PlaceMiniSet(L3TWARP); // L3TWARP(1, 3)
+					warpPos = DRLG_PlaceMiniSet(L3USTAIRS); // L3TWARP(1, 3)
 					if (warpPos.x < 0) {
 						continue;
 					}
 					pWarps[DWARP_TOWN]._wx = warpPos.x + 0;
 					pWarps[DWARP_TOWN]._wy = warpPos.y + 1;
-					pWarps[DWARP_TOWN]._wx = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
+					pWarps[DWARP_TOWN]._wx = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX + 1;
 					pWarps[DWARP_TOWN]._wy = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
 					pWarps[DWARP_TOWN]._wtype = WRPT_L3_UP;
 				}

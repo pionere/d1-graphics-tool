@@ -2681,9 +2681,10 @@ static void DRLG_L1()
 			}
 			pWarps[DWARP_SIDE]._wx = warpPos.x + 2;
 			pWarps[DWARP_SIDE]._wy = warpPos.y + 3;
-			pWarps[DWARP_SIDE]._wx = 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
+			pWarps[DWARP_SIDE]._wx = 2 * pWarps[DWARP_SIDE]._wx + DBORDERX + 1;
 			pWarps[DWARP_SIDE]._wy = 2 * pWarps[DWARP_SIDE]._wy + DBORDERY;
 			pWarps[DWARP_SIDE]._wtype = WRPT_L1_PWATER;
+			pWarps[DWARP_SIDE]._wlvl = questlist[Q_PWATER]._qslvl;
 		}
 #ifdef HELLFIRE
 		if (currLvl._dType == DTYPE_CRYPT) {
@@ -2691,11 +2692,19 @@ static void DRLG_L1()
 			if (warpPos.x < 0) {
 				continue;
 			}
-			pWarps[DWARP_ENTRY]._wx = warpPos.x + 1;
-			pWarps[DWARP_ENTRY]._wy = warpPos.y + 2;
-			pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
-			pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
-			pWarps[DWARP_ENTRY]._wtype = WRPT_L1_UP;
+			if (currLvl._dLevelIdx == DLV_CRYPT1) {
+				pWarps[DWARP_TOWN]._wx = warpPos.x + 1;
+				pWarps[DWARP_TOWN]._wy = warpPos.y + 2;
+				pWarps[DWARP_TOWN]._wx = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
+				pWarps[DWARP_TOWN]._wy = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
+				pWarps[DWARP_TOWN]._wtype = WRPT_L1_UP;
+			} else {
+				pWarps[DWARP_ENTRY]._wx = warpPos.x + 1;
+				pWarps[DWARP_ENTRY]._wy = warpPos.y + 2;
+				pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+				pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+				pWarps[DWARP_ENTRY]._wtype = WRPT_L1_UP;
+			}
 			if (currLvl._dLevelIdx != DLV_CRYPT4) {
 				warpPos = DRLG_PlaceMiniSet(L5DSTAIRS); // L5DSTAIRS (3, 7)
 				if (warpPos.x < 0) {
@@ -2703,7 +2712,7 @@ static void DRLG_L1()
 				}
 				pWarps[DWARP_EXIT]._wx = warpPos.x + 1;
 				pWarps[DWARP_EXIT]._wy = warpPos.y + 3;
-				pWarps[DWARP_EXIT]._wx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+				pWarps[DWARP_EXIT]._wx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX + 1;
 				pWarps[DWARP_EXIT]._wy = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
 				pWarps[DWARP_EXIT]._wtype = WRPT_L1_DOWN;
 			}
@@ -2715,17 +2724,26 @@ static void DRLG_L1()
 			if (warpPos.x < 0) {
 				continue;
 			}
-			pWarps[DWARP_ENTRY]._wx = warpPos.x + 1;
-			pWarps[DWARP_ENTRY]._wy = warpPos.y + 1;
-			pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
-			pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
-			pWarps[DWARP_ENTRY]._wtype = WRPT_L1_UP;
+			if (currLvl._dLevelIdx == DLV_CATHEDRAL1) {
+				pWarps[DWARP_TOWN]._wx = warpPos.x + 1;
+				pWarps[DWARP_TOWN]._wy = warpPos.y + 1;
+				pWarps[DWARP_TOWN]._wx = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
+				pWarps[DWARP_TOWN]._wy = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
+				pWarps[DWARP_TOWN]._wtype = WRPT_L1_UP;
+			} else {
+				pWarps[DWARP_ENTRY]._wx = warpPos.x + 1;
+				pWarps[DWARP_ENTRY]._wy = warpPos.y + 1;
+				pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
+				pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+				pWarps[DWARP_ENTRY]._wtype = WRPT_L1_UP;
+			}
 			if (pSetPieces[0]._sptype == SPT_SKELKING) {
 				pWarps[DWARP_SIDE]._wx = pSetPieces[0]._spx + 6; // L1DSTAIRS (3, 5)
 				pWarps[DWARP_SIDE]._wy = pSetPieces[0]._spy + 3;
 				pWarps[DWARP_SIDE]._wx = 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
-				pWarps[DWARP_SIDE]._wy = 2 * pWarps[DWARP_SIDE]._wy + DBORDERY;
+				pWarps[DWARP_SIDE]._wy = 2 * pWarps[DWARP_SIDE]._wy + DBORDERY + 1;
 				pWarps[DWARP_SIDE]._wtype = WRPT_L1_SKING;
+				pWarps[DWARP_SIDE]._wlvl = questlist[Q_SKELKING]._qslvl;
 			}
 			if (pSetPieces[0]._sptype == SPT_BANNER) {
 				pWarps[DWARP_EXIT]._wx = pSetPieces[0]._spx + 1; // L1DSTAIRS (3, 5)
@@ -2738,7 +2756,7 @@ static void DRLG_L1()
 				pWarps[DWARP_EXIT]._wx = warpPos.x + 1;
 				pWarps[DWARP_EXIT]._wy = warpPos.y + 2;
 			}
-			pWarps[DWARP_EXIT]._wx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
+			pWarps[DWARP_EXIT]._wx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX + 1;
 			pWarps[DWARP_EXIT]._wy = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
 			pWarps[DWARP_EXIT]._wtype = WRPT_L1_DOWN;
 		}

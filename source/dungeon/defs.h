@@ -20,14 +20,6 @@
 #define SwapLE16(X) qToLittleEndian((quint16)(X))
 #define SwapLE32(X) qToLittleEndian((quint32)(X))
 
-#define TMUSIC_TOWN 0
-#define TMUSIC_L1 0
-#define TMUSIC_L2 0
-#define TMUSIC_L3 0
-#define TMUSIC_L4 0
-#define TMUSIC_L5 0
-#define TMUSIC_L6 0
-
 // MAXDUN = DSIZE + 2 * DBORDER
 // DSIZE = 2 * DMAX
 #define DMAXX					40

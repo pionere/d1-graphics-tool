@@ -58,24 +58,10 @@ const BYTE L4USTAIRS[] = {
 	37, 34, 33, 32,
 	 0,  0, 31,  0,
 	 0,  0,  0,  0,
-/*    0,  0,     0,  0,     0,  0,     0,  0,	// MegaTiles
-	  0,  0,     0,  0,     0,  0,     0,  0,
-
-	102,103,   110,111,    98, 99,     0,  0,
-	104,105,   112,113,   100,101,     0,  0,
-
-	106,107,    94, 95,    90, 91,    86, 87,
-	108,109,    96, 97,    92, 93,    88, 89 
-
-	  0,  0,     0,  0,    82, 83,     0,  0,
-	  0,  0,     0,  0,    84, 85,     0,  0,
-
-	  0,  0,     0,  0,     0,  0,     0,  0,
-	  0,  0,     0,  0,     0,  0,     0,  0, */
 	// clang-format on
 };
 /** Miniset: Stairs up to town. */
-const BYTE L4TWARP[] = {
+/*const BYTE L4TWARP[] = {
 	// clang-format off
 	4, 5, // width, height
 
@@ -90,22 +76,8 @@ const BYTE L4TWARP[] = {
 	135, 132, 131, 130,
 	  0,   0, 129,   0,
 	  0,   0,   0,   0,
-/*    0,  0,     0,  0,     0,  0,     0,  0,	// MegaTiles
-	  0,  0,     0,  0,     0,  0,     0,  0,
-
-	441,442,   449,450,   437,438,     0,  0,
-	443,444,   451,452,   439,440,     0,  0,
-
-	445,446,   433,434,   429,430,   425,426,
-	447,448,   435,436,   431,432,   427,428,
-
-	  0,  0,     0,  0,   421,422,     0,  0,
-	  0,  0,     0,  0,   423,424,     0,  0,
-
-	  0,  0,     0,  0,     0,  0,     0,  0,
-	  0,  0,     0,  0,     0,  0,     0,  0, */
 	// clang-format on
-};
+};*/
 /** Miniset: Stairs down. */
 const BYTE L4DSTAIRS[] = {
 	// clang-format off
@@ -1995,19 +1967,19 @@ static void DRLG_L4()
 		}
 		pWarps[DWARP_ENTRY]._wx = warpPos.x + 1;
 		pWarps[DWARP_ENTRY]._wy = warpPos.y + 2;
-		pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
-		pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+		pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX + 1;
+		pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY + 1;
 		pWarps[DWARP_ENTRY]._wtype = WRPT_L4_UP;
 		if (currLvl._dLevelIdx != DLV_HELL4) {
 			if (currLvl._dLevelIdx == DLV_HELL1) {
-				warpPos = DRLG_PlaceMiniSet(L4TWARP); // L4TWARP (5, 6)
+				warpPos = DRLG_PlaceMiniSet(L4USTAIRS); // L4TWARP (5, 6)
 				if (warpPos.x < 0) {
 					continue;
 				}
 				pWarps[DWARP_TOWN]._wx = warpPos.x + 1;
 				pWarps[DWARP_TOWN]._wy = warpPos.y + 2;
-				pWarps[DWARP_TOWN]._wx = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
-				pWarps[DWARP_TOWN]._wy = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
+				pWarps[DWARP_TOWN]._wx = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX + 1;
+				pWarps[DWARP_TOWN]._wy = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY + 1;
 				pWarps[DWARP_TOWN]._wtype = WRPT_L4_UP;
 			}
 			if (currLvl._dLevelIdx == DLV_HELL3) {
@@ -2031,8 +2003,8 @@ static void DRLG_L4()
 				pWarps[DWARP_EXIT]._wy = warpPos.y + 2;
 				pWarps[DWARP_EXIT]._wtype = WRPT_L4_DOWN;
 			}
-			pWarps[DWARP_EXIT]._wx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
-			pWarps[DWARP_EXIT]._wy = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
+			pWarps[DWARP_EXIT]._wx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX + 1;
+			pWarps[DWARP_EXIT]._wy = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY + 1;
 		}
 		break;
 	}
