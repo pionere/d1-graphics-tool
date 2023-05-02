@@ -3174,8 +3174,8 @@ typedef enum townwarp_dest {
 } townwarp_dest;
 
 typedef enum dungeon_warp {
-	DWARP_ENTRY,
 	DWARP_EXIT,
+	DWARP_ENTRY,
 	DWARP_TOWN,
 	DWARP_SIDE,
 	NUM_DWARP

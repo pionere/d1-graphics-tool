@@ -624,7 +624,7 @@ static_assert((sizeof(LightListStruct) & (sizeof(LightListStruct) - 1)) == 0, "A
 typedef struct TriggerStruct {
 	int _tx;
 	int _ty;
-	int _tmsg;  // window_messages
-	int _tlvl;  // dungeon_level
 	int _ttype; // dungeon_warp_type
+	int _tlvl;  // dungeon_level
+	int _tmsg;  // window_messages
 } TriggerStruct;
