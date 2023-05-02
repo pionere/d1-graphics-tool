@@ -319,12 +319,12 @@ void InitThemes()
 		return;
 
 	// TODO: use dType instead
-	_gbShrineFlag = currLvl._dDunType != DTYPE_CAVES && currLvl._dDunType != DTYPE_HELL;
+	_gbShrineFlag = currLvl._dDunType != DGT_CAVES && currLvl._dDunType != DGT_HELL;
 	_gbSkelRoomFlag = _gbShrineFlag && numSkelTypes != 0;
 	_gbGoatFlag = numGoatTypes != 0;
-	_gbWeaponFlag = currLvl._dDunType != DTYPE_CATHEDRAL;
-	_gbArmorFlag = currLvl._dDunType != DTYPE_CATHEDRAL;
-	_gbCauldronFlag = currLvl._dDunType == DTYPE_HELL;
+	_gbWeaponFlag = currLvl._dDunType != DGT_CATHEDRAL;
+	_gbArmorFlag = currLvl._dDunType != DGT_CATHEDRAL;
+	_gbCauldronFlag = currLvl._dDunType == DGT_HELL;
 	_gbBFountainFlag = true;
 	_gbMFountainFlag = true;
 	_gbPFountainFlag = true;
@@ -375,7 +375,7 @@ void HoldThemeRooms()
 		for (x = x1 + 1; x < x2; x++) {
 			for (y = y1 + 1; y < y2; y++) {
 				// if (dTransVal[x][y] == v) { -- wall?
-					dFlags[x][y] |= BFLAG_OBJ_PROTECT | BFLAG_MON_PROTECT;
+					dFlags[x][y] |= BFLAG_MON_PROTECT | BFLAG_OBJ_PROTECT;
 				// }
 			}
 		}

@@ -86,19 +86,19 @@ static void StoreProtections(D1Dun *dun)
 static void CreateDungeon()
 {
 	switch (currLvl._dDunType) {
-	case DTYPE_TOWN:
+	case DGT_TOWN:
 		// CreateTown();
 		break;
-	case DTYPE_CATHEDRAL:
+	case DGT_CATHEDRAL:
 		CreateL1Dungeon();
 		break;
-	case DTYPE_CATACOMBS:
+	case DGT_CATACOMBS:
 		CreateL2Dungeon();
 		break;
-	case DTYPE_CAVES:
+	case DGT_CAVES:
 		CreateL3Dungeon();
 		break;
-	case DTYPE_HELL:
+	case DGT_HELL:
 		CreateL4Dungeon();
 		break;
 	default:
@@ -147,7 +147,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 		GetLevelMTypes(); // select monster types and load their fx
 		InitThemes();     // select theme types
 		IncProgress();
-		InitObjectGFX(); // load object graphics
+		InitObjectGFX();  // load object graphics
 		IncProgress();
 		HoldThemeRooms(); // protect themes with dFlags
 		InitMonsters();   // place monsters
@@ -226,18 +226,18 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
 
 	int baseTile = 0;
 	switch (currLvl._dDunType) {
-	case DTYPE_TOWN:
+	case DGT_TOWN:
 		break;
-	case DTYPE_CATHEDRAL:
+	case DGT_CATHEDRAL:
 		baseTile = 22; // BASE_MEGATILE_L1
 		break;
-	case DTYPE_CATACOMBS:
+	case DGT_CATACOMBS:
 		baseTile = 12; // BASE_MEGATILE_L2
 		break;
-	case DTYPE_CAVES:
+	case DGT_CAVES:
 		baseTile = 8; // BASE_MEGATILE_L3
 		break;
-	case DTYPE_HELL:
+	case DGT_HELL:
 		baseTile = 30; // BASE_MEGATILE_L4
 		break;
 	default:

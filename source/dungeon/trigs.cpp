@@ -16,28 +16,32 @@ static void InitNoTriggers()
 static void InitL1Triggers()
 {
 	numtrigs = 0;
-	// if (pWarps[DWARP_ENTRY]._wx != 0) {
+	if (pWarps[DWARP_ENTRY]._wx != 0) {
 		trigs[numtrigs]._tx = pWarps[DWARP_ENTRY]._wx;
 		trigs[numtrigs]._ty = pWarps[DWARP_ENTRY]._wy;
-		trigs[numtrigs]._tmsg = currLvl._dLevelIdx == DLV_CATHEDRAL1 ? DVL_DWM_TWARPUP : DVL_DWM_PREVLVL;
+		trigs[numtrigs]._tmsg = DVL_DWM_PREVLVL;
+		trigs[numtrigs]._ttype = pWarps[DWARP_ENTRY]._wtype;
 		numtrigs++;
-	// }
+	}
 	// if (pWarps[DWARP_EXIT]._wx != 0) {
-		trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx + 1;
+		trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx;
 		trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy;
 		trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
+		trigs[numtrigs]._ttype = pWarps[DWARP_EXIT]._wtype;
 		numtrigs++;
 	// }
+	if (pWarps[DWARP_TOWN]._wx != 0) {
+		trigs[numtrigs]._tx = pWarps[DWARP_TOWN]._wx;
+		trigs[numtrigs]._ty = pWarps[DWARP_TOWN]._wy;
+		trigs[numtrigs]._tmsg = DVL_DWM_TWARPUP;
+		trigs[numtrigs]._ttype = pWarps[DWARP_TOWN]._wtype;
+		numtrigs++;
+	}
 	if (pWarps[DWARP_SIDE]._wx != 0) {
 		trigs[numtrigs]._tx = pWarps[DWARP_SIDE]._wx;
 		trigs[numtrigs]._ty = pWarps[DWARP_SIDE]._wy;
-		if (currLvl._dLevelIdx == questlist[Q_SKELKING]._qdlvl) { // TODO: add qn to pWarps?
-			trigs[numtrigs]._tlvl = questlist[Q_SKELKING]._qslvl;
-			trigs[numtrigs]._ty += 1;
-		} else {
-			trigs[numtrigs]._tlvl = questlist[Q_PWATER]._qslvl;
-			trigs[numtrigs]._tx += 1;
-		}
+		trigs[numtrigs]._tlvl = pWarps[DWARP_SIDE]._wlvl;
+		trigs[numtrigs]._ttype = pWarps[DWARP_SIDE]._wtype;
 		trigs[numtrigs]._tmsg = DVL_DWM_SETLVL;
 		numtrigs++;
 	}
@@ -48,27 +52,31 @@ static void InitL2Triggers()
 	numtrigs = 0;
 	// if (pWarps[DWARP_ENTRY]._wx != 0) {
 		trigs[numtrigs]._tx = pWarps[DWARP_ENTRY]._wx;
-		trigs[numtrigs]._ty = pWarps[DWARP_ENTRY]._wy + 1;
+		trigs[numtrigs]._ty = pWarps[DWARP_ENTRY]._wy;
 		trigs[numtrigs]._tmsg = DVL_DWM_PREVLVL;
+		trigs[numtrigs]._ttype = pWarps[DWARP_ENTRY]._wtype;
 		numtrigs++;
 	// }
 	// if (pWarps[DWARP_EXIT]._wx != 0) {
 		trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx;
-		trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy + 1;
+		trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy;
 		trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
+		trigs[numtrigs]._ttype = pWarps[DWARP_EXIT]._wtype;
 		numtrigs++;
 	// }
 	if (pWarps[DWARP_TOWN]._wx != 0) {
 		trigs[numtrigs]._tx = pWarps[DWARP_TOWN]._wx;
-		trigs[numtrigs]._ty = pWarps[DWARP_TOWN]._wy + 1;
+		trigs[numtrigs]._ty = pWarps[DWARP_TOWN]._wy;
 		trigs[numtrigs]._tmsg = DVL_DWM_TWARPUP;
+		trigs[numtrigs]._ttype = pWarps[DWARP_TOWN]._wtype;
 		numtrigs++;
 	}
 	if (pWarps[DWARP_SIDE]._wx != 0) {
 		trigs[numtrigs]._tx = pWarps[DWARP_SIDE]._wx;
-		trigs[numtrigs]._ty = pWarps[DWARP_SIDE]._wy + 1;
-		trigs[numtrigs]._tlvl = questlist[Q_BCHAMB]._qslvl;
+		trigs[numtrigs]._ty = pWarps[DWARP_SIDE]._wy;
+		trigs[numtrigs]._tlvl = pWarps[DWARP_SIDE]._wlvl;
 		trigs[numtrigs]._tmsg = DVL_DWM_SETLVL;
+		trigs[numtrigs]._ttype = pWarps[DWARP_SIDE]._wtype;
 		numtrigs++;
 	}
 }
@@ -77,21 +85,24 @@ static void InitL3Triggers()
 {
 	numtrigs = 0;
 	// if (pWarps[DWARP_ENTRY]._wx != 0) {
-		trigs[numtrigs]._tx = pWarps[DWARP_ENTRY]._wx + 1;
+		trigs[numtrigs]._tx = pWarps[DWARP_ENTRY]._wx;
 		trigs[numtrigs]._ty = pWarps[DWARP_ENTRY]._wy;
 		trigs[numtrigs]._tmsg = DVL_DWM_PREVLVL;
+		trigs[numtrigs]._ttype = pWarps[DWARP_ENTRY]._wtype;
 		numtrigs++;
 	// }
 	// if (pWarps[DWARP_EXIT]._wx != 0) {
 		trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx;
-		trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy + 1;
+		trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy;
 		trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
+		trigs[numtrigs]._ttype = pWarps[DWARP_EXIT]._wtype;
 		numtrigs++;
 	// }
 	if (pWarps[DWARP_TOWN]._wx != 0) {
-		trigs[numtrigs]._tx = pWarps[DWARP_TOWN]._wx + 1;
+		trigs[numtrigs]._tx = pWarps[DWARP_TOWN]._wx;
 		trigs[numtrigs]._ty = pWarps[DWARP_TOWN]._wy;
 		trigs[numtrigs]._tmsg = DVL_DWM_TWARPUP;
+		trigs[numtrigs]._ttype = pWarps[DWARP_TOWN]._wtype;
 		numtrigs++;
 	}
 }
@@ -100,28 +111,32 @@ static void InitL4Triggers()
 {
 	numtrigs = 0;
 	// if (pWarps[DWARP_ENTRY]._wx != 0) {
-		trigs[numtrigs]._tx = pWarps[DWARP_ENTRY]._wx + 1;
-		trigs[numtrigs]._ty = pWarps[DWARP_ENTRY]._wy + 1;
+		trigs[numtrigs]._tx = pWarps[DWARP_ENTRY]._wx;
+		trigs[numtrigs]._ty = pWarps[DWARP_ENTRY]._wy;
 		trigs[numtrigs]._tmsg = DVL_DWM_PREVLVL;
+		trigs[numtrigs]._ttype = pWarps[DWARP_ENTRY]._wtype;
 		numtrigs++;
 	// }
 	if (pWarps[DWARP_EXIT]._wx != 0) {
 		if (currLvl._dLevelIdx != DLV_HELL3) {
-			trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx + 1;
-			trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy + 1;
+			trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx;
+			trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy;
 			trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
+			trigs[numtrigs]._ttype = pWarps[DWARP_EXIT]._wtype;
 			numtrigs++;
 		} else if (quests[Q_BETRAYER]._qactive == QUEST_DONE) {
-			trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx + 1;
-			trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy + 1;
+			trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx;
+			trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy;
 			trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
+			trigs[numtrigs]._ttype = pWarps[DWARP_EXIT]._wtype;
 			numtrigs++;
 		}
 	}
 	if (pWarps[DWARP_TOWN]._wx != 0) {
-		trigs[numtrigs]._tx = pWarps[DWARP_TOWN]._wx + 1;
-		trigs[numtrigs]._ty = pWarps[DWARP_TOWN]._wy + 1;
+		trigs[numtrigs]._tx = pWarps[DWARP_TOWN]._wx;
+		trigs[numtrigs]._ty = pWarps[DWARP_TOWN]._wy;
 		trigs[numtrigs]._tmsg = DVL_DWM_TWARPUP;
+		trigs[numtrigs]._ttype = pWarps[DWARP_TOWN]._wtype;
 		numtrigs++;
 	}
 }
@@ -130,16 +145,25 @@ static void InitL4Triggers()
 static void InitL5Triggers()
 {
 	numtrigs = 0;
-	// if (pWarps[DWARP_ENTRY]._wx != 0) {
+	if (pWarps[DWARP_ENTRY]._wx != 0) {
 		trigs[numtrigs]._tx = pWarps[DWARP_ENTRY]._wx;
 		trigs[numtrigs]._ty = pWarps[DWARP_ENTRY]._wy;
-		trigs[numtrigs]._tmsg = currLvl._dLevelIdx == DLV_CRYPT1 ? DVL_DWM_TWARPUP : DVL_DWM_PREVLVL;
+		trigs[numtrigs]._tmsg = DVL_DWM_PREVLVL;
+		trigs[numtrigs]._ttype = pWarps[DWARP_ENTRY]._wtype;
 		numtrigs++;
-	// }
+	}
 	if (pWarps[DWARP_EXIT]._wx != 0) {
-		trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx + 1;
+		trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx;
 		trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy;
 		trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
+		trigs[numtrigs]._ttype = pWarps[DWARP_EXIT]._wtype;
+		numtrigs++;
+	}
+	if (pWarps[DWARP_TOWN]._wx != 0) {
+		trigs[numtrigs]._tx = pWarps[DWARP_TOWN]._wx;
+		trigs[numtrigs]._ty = pWarps[DWARP_TOWN]._wy;
+		trigs[numtrigs]._tmsg = DVL_DWM_TWARPUP;
+		trigs[numtrigs]._ttype = pWarps[DWARP_TOWN]._wtype;
 		numtrigs++;
 	}
 }
@@ -147,16 +171,25 @@ static void InitL5Triggers()
 static void InitL6Triggers()
 {
 	numtrigs = 0;
-	// if (pWarps[DWARP_ENTRY]._wx != 0) {
-		trigs[numtrigs]._tx = pWarps[DWARP_ENTRY]._wx + 1;
+	if (pWarps[DWARP_ENTRY]._wx != 0) {
+		trigs[numtrigs]._tx = pWarps[DWARP_ENTRY]._wx;
 		trigs[numtrigs]._ty = pWarps[DWARP_ENTRY]._wy;
-		trigs[numtrigs]._tmsg = currLvl._dLevelIdx == DLV_NEST1 ? DVL_DWM_TWARPUP : DVL_DWM_PREVLVL;
+		trigs[numtrigs]._tmsg = DVL_DWM_PREVLVL;
+		trigs[numtrigs]._ttype = pWarps[DWARP_ENTRY]._wtype;
 		numtrigs++;
-	// }
+	}
 	if (pWarps[DWARP_EXIT]._wx != 0) {
 		trigs[numtrigs]._tx = pWarps[DWARP_EXIT]._wx;
-		trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy + 1;
+		trigs[numtrigs]._ty = pWarps[DWARP_EXIT]._wy;
 		trigs[numtrigs]._tmsg = DVL_DWM_NEXTLVL;
+		trigs[numtrigs]._ttype = pWarps[DWARP_EXIT]._wtype;
+		numtrigs++;
+	}
+	if (pWarps[DWARP_TOWN]._wx != 0) {
+		trigs[numtrigs]._tx = pWarps[DWARP_TOWN]._wx;
+		trigs[numtrigs]._ty = pWarps[DWARP_TOWN]._wy;
+		trigs[numtrigs]._tmsg = DVL_DWM_TWARPUP;
+		trigs[numtrigs]._ttype = pWarps[DWARP_TOWN]._wtype;
 		numtrigs++;
 	}
 }
@@ -169,24 +202,27 @@ static void InitSKingTriggers()
 	trigs[0]._ty = pWarps[DWARP_ENTRY]._wy; // DBORDERY + 26
 	trigs[0]._tmsg = DVL_DWM_RTNLVL;
 	trigs[0]._tlvl = questlist[Q_SKELKING]._qdlvl;
+	trigs[0]._ttype = pWarps[DWARP_ENTRY]._wtype;
 }
 
 static void InitSChambTriggers()
 {
 	numtrigs = 1;
-	trigs[0]._tx = pWarps[DWARP_ENTRY]._wx;     // DBORDERX + 54
-	trigs[0]._ty = pWarps[DWARP_ENTRY]._wy + 1; // DBORDERY + 23
+	trigs[0]._tx = pWarps[DWARP_ENTRY]._wx; // DBORDERX + 54
+	trigs[0]._ty = pWarps[DWARP_ENTRY]._wy; // DBORDERY + 23
 	trigs[0]._tmsg = DVL_DWM_RTNLVL;
 	trigs[0]._tlvl = questlist[Q_BCHAMB]._qdlvl;
+	trigs[0]._ttype = pWarps[DWARP_ENTRY]._wtype;
 }
 
 static void InitPWaterTriggers()
 {
 	numtrigs = 1;
-	trigs[0]._tx = pWarps[DWARP_ENTRY]._wx;     // DBORDERX + 14
-	trigs[0]._ty = pWarps[DWARP_ENTRY]._wy + 1; // DBORDERY + 67
+	trigs[0]._tx = pWarps[DWARP_ENTRY]._wx; // DBORDERX + 14
+	trigs[0]._ty = pWarps[DWARP_ENTRY]._wy; // DBORDERY + 67
 	trigs[0]._tmsg = DVL_DWM_RTNLVL;
 	trigs[0]._tlvl = questlist[Q_PWATER]._qdlvl;
+	trigs[0]._ttype = pWarps[DWARP_ENTRY]._wtype;
 }
 
 void InitView(int entry)
@@ -265,8 +301,8 @@ void InitView(int entry)
 			ViewX = pWarps[type]._wx;
 			ViewY = pWarps[type]._wy;
 			assert(pWarps[type]._wtype == WRPT_L4_PENTA);
-			ViewX += -1;
-			ViewY += -1;
+			ViewX += -2;
+			ViewY += -2;
 			return;
 		}
 		break;
@@ -275,8 +311,8 @@ void InitView(int entry)
 		return;
 	case ENTRY_TWARPDN:
 		type = DWARP_TOWN;
-		if (pWarps[type]._wtype == WRPT_NONE)
-			type = DWARP_ENTRY; // MAIN vs TWARPDN from town
+		// if (pWarps[type]._wtype == WRPT_NONE)
+		//	type = DWARP_ENTRY; // MAIN vs TWARPDN from town
 		break;
 	case ENTRY_TWARPUP: // should not happen
 	case ENTRY_RETOWN:  // should not happen
@@ -294,44 +330,44 @@ void InitView(int entry)
 		ViewY += 2;
 		break;
 	case WRPT_L1_DOWN:
-		ViewX += 1;
+		ViewX += 0;
 		ViewY += 1;
 		break;
 	case WRPT_L1_SKING:
 		ViewX += 1;
-		ViewY += 1;
+		ViewY += 0;
 		break;
 	case WRPT_L1_PWATER:
-		ViewX += 1;
+		ViewX += 0;
 		ViewY += 1;
 		break;
 	case WRPT_L2_UP:
 		ViewX += 1;
-		ViewY += 1;
+		ViewY += 0;
 		break;
 	case WRPT_L2_DOWN:
 		ViewX += -1;
-		ViewY += 1;
+		ViewY += 0;
 		break;
 	case WRPT_L3_UP:
-		ViewX += 1;
+		ViewX += 0;
 		ViewY += 1;
 		break;
 	case WRPT_L3_DOWN:
 		ViewX += 1;
-		ViewY += 1;
+		ViewY += 0;
 		break;
 	case WRPT_L4_UP:
-		ViewX += 1;
-		ViewY += 2;
-		break;
-	case WRPT_L4_DOWN:
-		ViewX += 2;
+		ViewX += 0;
 		ViewY += 1;
 		break;
-	case WRPT_L4_PENTA:
+	case WRPT_L4_DOWN:
 		ViewX += 1;
-		ViewY += 2;
+		ViewY += 0;
+		break;
+	case WRPT_L4_PENTA:
+		ViewX += 0;
+		ViewY += 1;
 		break;
 	case WRPT_CIRCLE:
 		break;

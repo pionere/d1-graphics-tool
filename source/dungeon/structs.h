@@ -401,15 +401,7 @@ typedef struct LevelStruct {
 	BYTE _dDunType;   // cached type of the dungeon
 } LevelStruct;
 
-typedef struct LevelData {
-	BYTE dLevel;
-	BOOLEAN dSetLvl;
-	BYTE dType;
-	BYTE dDunType;
-	BYTE dMusic;
-	BYTE dMicroTileLen;
-	BYTE dBlocks;
-	const char* dLevelName;
+typedef struct LevelFileData {
 	const char* dAutomapData;
 	const char* dSolidTable;
 	const char* dMicroFlags;
@@ -418,6 +410,18 @@ typedef struct LevelData {
 	const char* dMiniTiles;
 	const char* dSpecFlags;
 	const char* dSpecCels;
+} LevelFileData;
+
+typedef struct LevelData {
+	BYTE dLevel;
+	BOOLEAN dSetLvl;
+	BYTE dType;    // dungeon_type
+	BYTE dDunType; // dungeon_gen_type
+	BYTE dMusic;   // _music_id
+	BYTE dfindex;  // level_graphic_id
+	BYTE dMicroTileLen;
+	BYTE dBlocks;
+	const char* dLevelName;
 	const char* dPalName;
 	const char* dLoadCels;
 	const char* dLoadPal;
@@ -436,6 +440,7 @@ typedef struct WarpStruct {
 	int _wx;
 	int _wy;
 	int _wtype; // dungeon_warp_type
+	int _wlvl;  // dungeon_level / _setlevels
 } WarpStruct;
 
 typedef struct SetPieceStruct {
@@ -463,8 +468,8 @@ typedef struct QuestStruct {
 } QuestStruct;
 
 typedef struct QuestData {
-	BYTE _qdlvl; // dungeon level
-	BYTE _qslvl; // setmap level
+	BYTE _qdlvl; // dungeon_level
+	BYTE _qslvl; // _setlevels
 	int _qdmsg;  // _speech_id
 	const char* _qlstr; // quest title
 } QuestData;
@@ -621,5 +626,5 @@ typedef struct TriggerStruct {
 	int _ty;
 	int _tmsg;  // window_messages
 	int _tlvl;  // dungeon_level
-	int _ttype; // trig_type
+	int _ttype; // dungeon_warp_type
 } TriggerStruct;

@@ -9,6 +9,8 @@
 
 #include "../progressdialog.h"
 
+DEVILUTION_BEGIN_NAMESPACE
+
 #define DOOR_CLOSED  0
 #define DOOR_OPEN    1
 #define DOOR_BLOCKED 2
@@ -226,7 +228,7 @@ static bool RndLocOk(int xp, int yp)
 	 | nSolidTable[dPiece[xp][yp]] | (dFlags[xp][yp] & BFLAG_OBJ_PROTECT)) != 0)
 		return false;
 	// should be covered by Freeupstairs.
-	//if (currLvl._dDunType != DTYPE_CATHEDRAL || dPiece[xp][yp] <= 126 || dPiece[xp][yp] >= 144)
+	//if (currLvl._dDunType != DGT_CATHEDRAL || dPiece[xp][yp] <= 126 || dPiece[xp][yp] >= 144)
 		return true;
 	//return false;
 }
@@ -1516,3 +1518,5 @@ void GetObjectStr(int oi)
 		// infoclr = COL_RED;
 	}
 }
+
+DEVILUTION_END_NAMESPACE

@@ -2354,7 +2354,7 @@ static void DRLG_L2()
 		pWarps[DWARP_ENTRY]._wx = warpPos.x + 2;
 		pWarps[DWARP_ENTRY]._wy = warpPos.y + 1;
 		pWarps[DWARP_ENTRY]._wx = 2 * pWarps[DWARP_ENTRY]._wx + DBORDERX;
-		pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY;
+		pWarps[DWARP_ENTRY]._wy = 2 * pWarps[DWARP_ENTRY]._wy + DBORDERY + 1;
 		pWarps[DWARP_ENTRY]._wtype = WRPT_L2_UP;
 		warpPos = DRLG_PlaceMiniSet(L2DSTAIRS); // L2DSTAIRS (3, 5)
 		if (warpPos.x < 0) {
@@ -2363,7 +2363,7 @@ static void DRLG_L2()
 		pWarps[DWARP_EXIT]._wx = warpPos.x + 2;
 		pWarps[DWARP_EXIT]._wy = warpPos.y + 2;
 		pWarps[DWARP_EXIT]._wx = 2 * pWarps[DWARP_EXIT]._wx + DBORDERX;
-		pWarps[DWARP_EXIT]._wy = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY;
+		pWarps[DWARP_EXIT]._wy = 2 * pWarps[DWARP_EXIT]._wy + DBORDERY + 1;
 		pWarps[DWARP_EXIT]._wtype = WRPT_L2_DOWN;
 		if (currLvl._dLevelIdx == DLV_CATACOMBS1) {
 			warpPos = DRLG_PlaceMiniSet(L2USTAIRS); // L2TWARP (5, 3)
@@ -2373,7 +2373,7 @@ static void DRLG_L2()
 			pWarps[DWARP_TOWN]._wx = warpPos.x + 2;
 			pWarps[DWARP_TOWN]._wy = warpPos.y + 1;
 			pWarps[DWARP_TOWN]._wx = 2 * pWarps[DWARP_TOWN]._wx + DBORDERX;
-			pWarps[DWARP_TOWN]._wy = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY;
+			pWarps[DWARP_TOWN]._wy = 2 * pWarps[DWARP_TOWN]._wy + DBORDERY + 1;
 			pWarps[DWARP_TOWN]._wtype = WRPT_L2_UP;
 		}
 
@@ -2381,8 +2381,9 @@ static void DRLG_L2()
 			pWarps[DWARP_SIDE]._wx = pSetPieces[0]._spx + 3; // L2USTAIRS (5, 3)
 			pWarps[DWARP_SIDE]._wy = pSetPieces[0]._spy + 3;
 			pWarps[DWARP_SIDE]._wx = 2 * pWarps[DWARP_SIDE]._wx + DBORDERX;
-			pWarps[DWARP_SIDE]._wy = 2 * pWarps[DWARP_SIDE]._wy + DBORDERY;
+			pWarps[DWARP_SIDE]._wy = 2 * pWarps[DWARP_SIDE]._wy + DBORDERY + 1;
 			pWarps[DWARP_SIDE]._wtype = WRPT_L2_UP;
+			pWarps[DWARP_SIDE]._wlvl = questlist[Q_BCHAMB]._qslvl;
 		}
 		break;
 	}
