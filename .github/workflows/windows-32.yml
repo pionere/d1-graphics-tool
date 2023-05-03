@@ -48,6 +48,12 @@ jobs:
         name: D1GraphicsTool-Windows-x86
         path: dist
 
+    #  run: Start-Sleep -s 60
+    #  shell: powershell
+    - name: Sleep for 60 seconds
+      run: sleep 60s
+      shell: bash
+
     - name: Upload-translations
       if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v3
