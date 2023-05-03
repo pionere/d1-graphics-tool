@@ -57,8 +57,10 @@ bool TransList[256];
 int dPiece[MAXDUNX][MAXDUNY];
 /** Specifies the transparency index of each square on the map. */
 BYTE dTransVal[MAXDUNX][MAXDUNY];
+/** Specifies the base darkness levels of each square on the map. */
+// BYTE dPreLight[MAXDUNX][MAXDUNY];
 /** Specifies the current darkness levels of each square on the map. */
-//BYTE dLight[MAXDUNX][MAXDUNY];
+// BYTE dLight[MAXDUNX][MAXDUNY];
 /** Specifies the (runtime) flags of each square on the map (dflag) */
 BYTE dFlags[MAXDUNX][MAXDUNY];
 /**
@@ -97,17 +99,19 @@ void InitLvlDungeon()
 	memset(pSetPieces, 0, sizeof(pSetPieces));
 
 	memset(pTiles, 0, sizeof(pTiles));
-	LoadFileWithMem(lfd->dMegaTiles, (BYTE*)&pTiles[1][0]); // .TIL
+	if (lfd->dMegaTiles != NULL) { 
+		LoadFileWithMem(lfd->dMegaTiles, (BYTE*)&pTiles[1][0]); // .TIL
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-	for (int i = 1; i < lengthof(pTiles); i++) {
-		for (bv = 0; bv < lengthof(pTiles[0]); bv++) {
-			pTiles[i][bv] = SwapLE16(pTiles[i][bv]);
+		for (int i = 1; i < lengthof(pTiles); i++) {
+			for (bv = 0; bv < lengthof(pTiles[0]); bv++) {
+				pTiles[i][bv] = SwapLE16(pTiles[i][bv]);
+			}
 		}
-	}
 #endif
-	for (int i = 1; i < lengthof(pTiles); i++) {
-		for (bv = 0; bv < lengthof(pTiles[0]); bv++) {
-			pTiles[i][bv] = pTiles[i][bv] + 1;
+		for (int i = 1; i < lengthof(pTiles); i++) {
+			for (bv = 0; bv < lengthof(pTiles[0]); bv++) {
+				pTiles[i][bv] = pTiles[i][bv] + 1;
+			}
 		}
 	}
 	LoadFileWithMem(lfd->dSpecFlags, &nSpecTrapTable[0]); // .SPT
@@ -375,6 +379,25 @@ void DRLG_PlaceMegaTiles(int mt)
 	}
 }
 
+void DRLG_DrawMiniSet(const BYTE* miniset, int sx, int sy)
+{
+	int xx, yy, sh, sw, ii;
+
+	sw = miniset[0];
+	sh = miniset[1];
+
+	ii = sw * sh + 2;
+
+	for (yy = sy; yy < sy + sh; yy++) {
+		for (xx = sx; xx < sx + sw; xx++) {
+			if (miniset[ii] != 0) {
+				dungeon[xx][yy] = miniset[ii];
+			}
+			ii++;
+		}
+	}
+}
+
 void DRLG_DrawMap(int idx)
 {
 	int x, y, rw, rh, i, j;
@@ -621,7 +644,10 @@ void DRLG_LoadSP(int idx, BYTE bv)
 
 static void DRLG_InitFlags()
 {
-	memset(dFlags, 0, sizeof(dFlags));
+	BYTE c;
+
+	c = currLvl._dType == DTYPE_TOWN ? BFLAG_VISIBLE : 0;
+	memset(dFlags, c, sizeof(dFlags));
 
 	if (!currLvl._dSetLvl) {
 		for (int i = lengthof(pWarps) - 1; i >= 0; i--) {

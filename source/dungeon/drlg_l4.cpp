@@ -1122,13 +1122,13 @@ static void L4ConnectBlock()
 	}
 }
 
-static int GetArea()
+static int DRLG_L4GetArea()
 {
 	int i, rv;
 	BYTE* pTmp;
 
 	rv = 0;
-	static_assert(sizeof(drlg.dungBlock) == L4BLOCKX * L4BLOCKY, "Linear traverse of dungBlock does not work in GetArea.");
+	static_assert(sizeof(drlg.dungBlock) == L4BLOCKX * L4BLOCKY, "Linear traverse of dungBlock does not work in DRLG_L4GetArea.");
 	pTmp = &drlg.dungBlock[0][0];
 	for (i = 0; i < L4BLOCKX * L4BLOCKY; i++, pTmp++) {
 		assert(*pTmp <= 1);
@@ -1854,7 +1854,7 @@ static void DRLG_L4()
 			//static_assert(sizeof(dungeon) == DMAXX * DMAXY, "Linear traverse of dungeon does not work in DRLG_L4.");
 			//memset(dungeon, 30, sizeof(dungeon));
 			L4FirstRoom();
-		} while (GetArea() < 173);
+		} while (DRLG_L4GetArea() < 173);
 		L4ConnectBlock();
 
 		L4Block2Dungeon();
@@ -1890,7 +1890,7 @@ static void DRLG_L4()
 				pWarps[DWARP_TOWN]._wtype = WRPT_L4_UP;
 			}
 			if (currLvl._dLevelIdx == DLV_HELL3) {
-				warpPos = DRLG_PlaceMiniSet((!IsMultiGame && quests[Q_DIABLO]._qactive != QUEST_ACTIVE) ? L4PENTA : L4PENTA2); // L4PENTA (5, 6)
+				warpPos = DRLG_PlaceMiniSet(L4PENTA2); // L4PENTA (5, 6)
 				if (warpPos.x < 0) {
 					continue;
 				}
@@ -1990,6 +1990,12 @@ static void DRLG_L4DrawPreMaps()
 		if (pSetPieces[i]._spData == NULL) {
 			pSetPieces[i]._sptype = SPT_NONE;
 		}
+	}
+	// TODO: add setpiece?
+	if (currLvl._dLevelIdx == DLV_HELL3) {
+		int sx = (pWarps[DWARP_EXIT]._wx - (1 + 4 + DBORDERX)) >> 1;
+		int sy = (pWarps[DWARP_EXIT]._wy - (1 + 4 + DBORDERY)) >> 1;
+		DRLG_DrawMiniSet(L4PENTA, sx, sy);
 	}
 }
 

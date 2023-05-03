@@ -5,6 +5,8 @@
  */
 #include "all.h"
 
+DEVILUTION_BEGIN_NAMESPACE
+
 /** Contains the quests of the current game. */
 QuestStruct quests[NUM_QUESTS];
 
@@ -82,10 +84,18 @@ bool QuestStatus(int qn)
 
 void ResyncBanner()
 {
-	if (quests[Q_BANNER]._qvar1 == QV_BANNER_ATTACK) {
-		// DRLG_ChangeMap(pSetPieces[0]._spx, pSetPieces[0]._spy, pSetPieces[0]._spx + pSetPieces[0]._spData[0], pSetPieces[0]._spy + pSetPieces[0]._spData[2]/*, false*/);
-		//DRLG_ChangeMap(pSetPieces[0]._spx + 3, pSetPieces[0]._spy + 3, pSetPieces[0]._spx + 6, pSetPieces[0]._spy + 6/*, false*/);
-		//for (i = 0; i < numobjects; i++)
-		//	SyncObjectAnim(objectactive[i]);
-	}
+	// assert(currLvl._dLevelIdx == questlist[Q_BANNER]._qdlvl && quests[Q_BANNER]._qvar1 == QV_BANNER_ATTACK);
+	int sx = pSetPieces[0]._spx + 3;
+	int sy = pSetPieces[0]._spy + 3;
+	// DRLG_ChangeMap(sx, sy, sx + 3, sy + 3/*, false*/);
 }
+
+void ResyncDiablo()
+{
+	// assert(currLvl._dLevelIdx == questlist[Q_BETRAYER]._qdlvl && quests[Q_BETRAYER]._qvar1 >= QV_BETRAYER_DEAD);
+	int sx = (pWarps[DWARP_EXIT]._wx - (1 + 2 + DBORDERX)) >> 1;
+	int sy = (pWarps[DWARP_EXIT]._wy - (1 + 2 + DBORDERY)) >> 1;
+	// DRLG_ChangeMap(sx, sy, sx + 2, sy + 2);
+}
+
+DEVILUTION_END_NAMESPACE
