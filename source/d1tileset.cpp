@@ -311,7 +311,7 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
 }
 
 #define Blk2Mcr(n, x) RemoveFrame(min, n, x, deletedFrames, silent);
-#define MICRO_IDX(blockSize, microIndex) ((blockSize) - (2 + ((microIndex) & ~1)) + ((microIndex) & 1))
+#define MICRO_IDX(blockSize, microIndex) ((blockSize) - (2 + ((microIndex) & ~1)) + ((microIndex)&1))
 static void RemoveFrame(D1Min *min, int subtileRef, int microIndex, std::set<unsigned> &deletedFrames, bool silent)
 {
     int subtileIndex = subtileRef - 1;
@@ -441,7 +441,7 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
         return; // upscaled(?) frames -> assume it is already done
     }
     if ((frameLeft1->getWidth() != MICRO_WIDTH || frameLeft1->getHeight() != MICRO_HEIGHT)
-     || (frameLeft2->getWidth() != MICRO_WIDTH || frameLeft2->getHeight() != MICRO_HEIGHT)) {
+         || (frameLeft2->getWidth() != MICRO_WIDTH || frameLeft2->getHeight() != MICRO_HEIGHT)) {
         dProgressErr() << QApplication::tr("Invalid (mismatching frames) pot floor subtile (%1).").arg(potLeftSubtileRef);
         return;
     }
@@ -498,7 +498,7 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
             D1GfxPixel pixel = frameLeft1->getPixel(x, y);
             if (pixel.isTransparent())
                 continue;
-            frameLeft1->setPixel(x, y + MICRO_HEIGHT / 2, pixel);
+            frameLeft1->setPixel(x, y - MICRO_HEIGHT / 2, pixel);
             frameLeft1->setPixel(x, y, D1GfxPixel::transparentPixel());
         }
     }
