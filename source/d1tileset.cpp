@@ -531,7 +531,7 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
         }
     }
     D1CelTilesetFrame::selectFrameType(frameLeft0);
-	D1CelTilesetFrame::selectFrameType(frameRight0);
+    D1CelTilesetFrame::selectFrameType(frameRight0);
     if (frameLeft0->getFrameType() != D1CEL_FRAME_TYPE::RightTriangle) {
         dProgressErr() << QApplication::tr("Pot floor subtile (%1) is not triangle after patch.").arg(potLeftSubtileRef);
     } else if (!silent) {

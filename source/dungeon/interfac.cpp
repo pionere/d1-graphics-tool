@@ -108,7 +108,6 @@ static void CreateDungeon()
 		ASSUME_UNREACHABLE
 		break;
 	}
-	InitTriggers();
 }
 
 static void LoadGameLevel(int lvldir, D1Dun *dun)
@@ -150,7 +149,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 		GetLevelMTypes(); // select monster types and load their fx
 		InitThemes();     // select theme types
 		IncProgress();
-		InitObjectGFX(); // load object graphics
+		InitObjectGFX();  // load object graphics
 		IncProgress();
 		HoldThemeRooms(); // protect themes with dFlags
 		InitMonsters();   // place monsters

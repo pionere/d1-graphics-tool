@@ -8,6 +8,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern BYTE dungeon[DMAXX][DMAXY];
 extern BYTE pdungeon[DMAXX][DMAXY];
 extern BYTE drlgFlags[DMAXX][DMAXY];
@@ -41,6 +45,7 @@ void InitLvlMap();
 void DRLG_PlaceRndTile(BYTE search, BYTE replace, BYTE rndper);
 POS32 DRLG_PlaceMiniSet(const BYTE* miniset);
 void DRLG_PlaceMegaTiles(int idx);
+void DRLG_DrawMiniSet(const BYTE* miniset, int sx, int sy);
 void DRLG_DrawMap(int idx);
 void DRLG_InitTrans();
 // void DRLG_RedoTrans();
@@ -58,6 +63,10 @@ inline void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
 {
 	dTransVal[dx][dy] = dTransVal[sx][sy];
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 
