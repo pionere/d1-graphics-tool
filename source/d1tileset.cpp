@@ -311,12 +311,13 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
 }
 
 #define Blk2Mcr(n, x) RemoveFrame(min, n, x, deletedFrames, silent);
+#define MICRO_IDX(blockSize, microIndex) ((blockSize) - (2 + ((microIndex) & ~1)) + ((microIndex) & 1))
 static void RemoveFrame(D1Min *min, int subtileRef, int microIndex, std::set<unsigned> &deletedFrames, bool silent)
 {
     int subtileIndex = subtileRef - 1;
     std::vector<unsigned> &frameReferences = min->getFrameReferences(subtileIndex);
     // assert(min->getSubtileWidth() == 2);
-    unsigned index = frameReferences.size() - (2 + (microIndex & ~1)) + (microIndex & 1);
+    unsigned index = MICRO_IDX(frameReferences.size(), microIndex);
     if (index >= frameReferences.size()) {
         dProgressErr() << QApplication::tr("Not enough frames in Subtile %1.").arg(subtileIndex + 1);
         return;
@@ -356,7 +357,7 @@ static void CopyFrame(D1Min *min, D1Gfx *gfx, int dstSubtileRef, int dstMicroInd
     int srcSubtileIndex = srcSubtileRef - 1;
     std::vector<unsigned> &srcFrameReferences = min->getFrameReferences(srcSubtileIndex);
     // assert(min->getSubtileWidth() == 2);
-    unsigned srcIndex = srcFrameReferences.size() - (2 + (srcMicroIndex & ~1)) + (srcMicroIndex & 1);
+    unsigned srcIndex = MICRO_IDX(srcFrameReferences.size(), srcMicroIndex);
     if (srcIndex >= srcFrameReferences.size()) {
         dProgressErr() << QApplication::tr("Not enough frames in Subtile %1.").arg(srcSubtileIndex + 1);
         return;
@@ -370,7 +371,7 @@ static void CopyFrame(D1Min *min, D1Gfx *gfx, int dstSubtileRef, int dstMicroInd
     int dstSubtileIndex = dstSubtileRef - 1;
     std::vector<unsigned> &dstFrameReferences = min->getFrameReferences(dstSubtileIndex);
     // assert(min->getSubtileWidth() == 2);
-    unsigned dstIndex = dstFrameReferences.size() - (2 + (dstMicroIndex & ~1)) + (dstMicroIndex & 1);
+    unsigned dstIndex = MICRO_IDX(dstFrameReferences.size(), dstMicroIndex);
     if (dstIndex >= dstFrameReferences.size()) {
         dProgressErr() << QApplication::tr("Not enough frames in Subtile %1.").arg(dstSubtileIndex + 1);
         return;
@@ -408,6 +409,133 @@ static void CopyFrame(D1Min *min, D1Gfx *gfx, int dstSubtileRef, int dstMicroInd
     } else {
         dProgressWarn() << QApplication::tr("The contents of Frame %1 and Frame %2 are already the same.").arg(dstFrameRef).arg(srcFrameRef);
     }*/
+}
+
+void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool silent)
+{
+    std::vector<unsigned> &leftFrameReferences = this->min->getFrameReferences(potLeftSubtileRef - 1);
+    std::vector<unsigned> &rightFrameReferences = this->min->getFrameReferences(potRightSubtileRef - 1);
+
+    unsigned blockSize = leftFrameReferences.size();
+    unsigned leftIndex0 = MICRO_IDX(blockSize, 1);
+    unsigned leftFrameRef0 = leftFrameReferences[leftIndex0];
+    unsigned leftIndex1 = MICRO_IDX(blockSize, 3);
+    unsigned leftFrameRef1 = leftFrameReferences[leftIndex1];
+    unsigned leftIndex2 = MICRO_IDX(blockSize, 5);
+    unsigned leftFrameRef2 = leftFrameReferences[leftIndex2];
+
+    if (leftFrameRef1 == 0 || leftFrameRef2 == 0) {
+        // TODO: report error if not empty both? + additional checks
+        return; // left frames are empty -> assume it is already done
+    }
+    if (leftFrameRef0 == 0) {
+        dProgressErr() << QApplication::tr("Invalid (empty) pot floor subtile (%1).").arg(potLeftSubtileRef);
+        return;
+    }
+
+    D1GfxFrame *frameLeft0 = this->gfx->getFrame(leftFrameRef0 - 1);
+    D1GfxFrame *frameLeft1 = this->gfx->getFrame(leftFrameRef1 - 1);
+    D1GfxFrame *frameLeft2 = this->gfx->getFrame(leftFrameRef2 - 1);
+
+    if (frameLeft0->getWidth() != MICRO_WIDTH || frameLeft0->getHeight() != MICRO_HEIGHT) {
+        return; // upscaled(?) frames -> assume it is already done
+    }
+    if ((frameLeft1->getWidth() != MICRO_WIDTH || frameLeft1->getHeight() != MICRO_HEIGHT)
+     || (frameLeft2->getWidth() != MICRO_WIDTH || frameLeft2->getHeight() != MICRO_HEIGHT)) {
+        dProgressErr() << QApplication::tr("Invalid (mismatching frames) pot floor subtile (%1).").arg(potLeftSubtileRef);
+        return;
+    }
+
+    if (rightFrameReferences.size() != blockSize) {
+        dProgressErr() << QApplication::tr("Invalid (mismatching subtiles) pot floor subtiles (%1, %2).").arg(potLeftSubtileRef).arg(potRightSubtileRef);
+        return;
+    }
+
+    unsigned rightIndex0 = MICRO_IDX(blockSize, 0);
+    unsigned rightFrameRef0 = rightFrameReferences[rightIndex0];
+    unsigned rightIndex1 = MICRO_IDX(blockSize, 2);
+    unsigned rightFrameRef1 = rightFrameReferences[rightIndex1];
+    unsigned rightIndex2 = MICRO_IDX(blockSize, 4);
+    unsigned rightFrameRef2 = rightFrameReferences[rightIndex2];
+
+    if (rightFrameRef1 != 0 || rightFrameRef2 != 0) {
+        // TODO: report error if not empty both? + additional checks
+        return; // right frames are not empty -> assume it is already done
+    }
+    if (rightFrameRef0 == 0) {
+        dProgressErr() << QApplication::tr("Invalid (empty) pot floor subtile (%1).").arg(potRightSubtileRef);
+        return;
+    }
+
+    // move the frames to the right side
+    rightFrameReferences[rightIndex1] = leftFrameRef1;
+    rightFrameReferences[rightIndex2] = leftFrameRef2;
+    leftFrameReferences[leftIndex1] = 0;
+    leftFrameReferences[leftIndex2] = 0;
+
+    D1GfxFrame *frameRight0 = this->gfx->getFrame(rightFrameRef0 - 1);
+
+    for (int x = MICRO_WIDTH / 2; x < MICRO_WIDTH; x++) {
+        for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+            D1GfxPixel pixel = frameLeft2->getPixel(x, y);
+            if (pixel.isTransparent())
+                continue;
+            frameLeft2->setPixel(x, y - MICRO_HEIGHT / 2, pixel);
+            frameLeft2->setPixel(x, y, D1GfxPixel::transparentPixel());
+        }
+    }
+    for (int x = MICRO_WIDTH / 2; x < MICRO_WIDTH; x++) {
+        for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+            D1GfxPixel pixel = frameLeft1->getPixel(x, y);
+            if (pixel.isTransparent())
+                continue;
+            frameLeft2->setPixel(x, y + MICRO_HEIGHT / 2, pixel);
+            frameLeft1->setPixel(x, y, D1GfxPixel::transparentPixel());
+        }
+    }
+    for (int x = MICRO_WIDTH / 2; x < MICRO_WIDTH; x++) {
+        for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+            D1GfxPixel pixel = frameLeft1->getPixel(x, y);
+            if (pixel.isTransparent())
+                continue;
+            frameLeft1->setPixel(x, y + MICRO_HEIGHT / 2, pixel);
+            frameLeft1->setPixel(x, y, D1GfxPixel::transparentPixel());
+        }
+    }
+    for (int x = MICRO_WIDTH / 2 + 3; x < MICRO_WIDTH - 4; x++) {
+        for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+            D1GfxPixel pixel = frameLeft0->getPixel(x, y);
+            if (pixel.isTransparent())
+                continue;
+            frameLeft1->setPixel(x, y + MICRO_HEIGHT / 2, pixel);
+            frameLeft0->setPixel(x, y, D1GfxPixel::transparentPixel());
+        }
+    }
+    for (int x = MICRO_WIDTH / 2 + 3; x < MICRO_WIDTH - 4; x++) {
+        for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT / 2 + 8; y++) {
+            D1GfxPixel pixel = frameLeft0->getPixel(x, y);
+            if (pixel.isTransparent())
+                continue;
+            frameRight0->setPixel(x, y - MICRO_HEIGHT / 2, pixel);
+            // frameLeft0->setPixel(x, y, D1GfxPixel::transparentPixel());
+        }
+    }
+    // convert the left floor to triangle
+    std::vector<FramePixel> pixels;
+    D1CelTilesetFrame::collectPixels(frameLeft0, D1CEL_FRAME_TYPE::RightTriangle, pixels);
+    for (const FramePixel framePixel : pixels) {
+        if (framePixel.pixel.isTransparent()) {
+            frameLeft0->setPixel(framePixel.pos.x(), framePixel.pos.y(), D1GfxPixel::colorPixel(0));
+        } else {
+            frameLeft0->setPixel(framePixel.pos.x(), framePixel.pos.y(), D1GfxPixel::transparentPixel());
+        }
+    }
+    D1CelTilesetFrame::selectFrameType(frameLeft0);
+    if (frameLeft0->getFrameType() != D1CEL_FRAME_TYPE::RightTriangle) {
+        dProgressErr() << QApplication::tr("Pot floor subtile (%1) is not triangle after patch.").arg(potLeftSubtileRef);
+    } else if (!silent) {
+        dProgress() << QApplication::tr("Frame %1 and %2 are modified and moved from subtile %3 to subtile %4.").arg(leftFrameRef1).arg(leftFrameRef2).arg(potLeftSubtileRef).arg(potRightSubtileRef);
+    }
 }
 
 void D1Tileset::patch(int dunType, bool silent)
@@ -536,6 +664,8 @@ void D1Tileset::patch(int dunType, bool silent)
         // CopyFrame(this->gfx, 558, 940, silent);
         CopyFrame(this->min, this->gfx, 237, 0, 402, 0, silent);
         CopyFrame(this->min, this->gfx, 237, 1, 402, 1, silent);
+        // patch subtiles around the pot of Adria to prevent graphical glitch when a player passes it
+        patchTownPot(553, 554, silent);
         break;
     case DTYPE_CATHEDRAL:
         // patch dMiniTiles - L1.MIN
