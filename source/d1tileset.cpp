@@ -441,7 +441,7 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
         return; // upscaled(?) frames -> assume it is already done
     }
     if ((frameLeft1->getWidth() != MICRO_WIDTH || frameLeft1->getHeight() != MICRO_HEIGHT)
-         || (frameLeft2->getWidth() != MICRO_WIDTH || frameLeft2->getHeight() != MICRO_HEIGHT)) {
+        || (frameLeft2->getWidth() != MICRO_WIDTH || frameLeft2->getHeight() != MICRO_HEIGHT)) {
         dProgressErr() << QApplication::tr("Invalid (mismatching frames) pot floor subtile (%1).").arg(potLeftSubtileRef);
         return;
     }
@@ -502,7 +502,7 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
             frameLeft1->setPixel(x, y, D1GfxPixel::transparentPixel());
         }
     }
-    for (int x = MICRO_WIDTH / 2 + 3; x < MICRO_WIDTH - 4; x++) {
+    for (int x = MICRO_WIDTH / 2 + 2; x < MICRO_WIDTH - 4; x++) {
         for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
             D1GfxPixel pixel = frameLeft0->getPixel(x, y);
             if (pixel.isTransparent())
@@ -511,7 +511,7 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
             frameLeft0->setPixel(x, y, D1GfxPixel::transparentPixel());
         }
     }
-    for (int x = MICRO_WIDTH / 2 + 3; x < MICRO_WIDTH - 4; x++) {
+    for (int x = MICRO_WIDTH / 2 + 2; x < MICRO_WIDTH - 4; x++) {
         for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT / 2 + 8; y++) {
             D1GfxPixel pixel = frameLeft0->getPixel(x, y);
             if (pixel.isTransparent())
