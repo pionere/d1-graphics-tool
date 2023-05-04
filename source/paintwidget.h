@@ -7,6 +7,7 @@
 #include <QMouseEvent>
 #include <QPoint>
 #include <QPointer>
+#include <QRubberBand>
 #include <QUndoCommand>
 
 #include "d1gfx.h"
@@ -89,6 +90,7 @@ private:
     CelView *celView;
     LevelCelView *levelCelView;
     QGraphicsView *graphView;
+    QRubberBand *rubberBand;
     bool moving;
     bool moved;
     QPoint lastPos;

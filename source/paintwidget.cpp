@@ -66,6 +66,7 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, D1Gfx *g, CelView *cv,
     , gfx(g)
     , celView(cv)
     , levelCelView(lcv)
+    , rubberBand(nullptr)
     , moving(false)
     , moved(false)
 {
@@ -111,6 +112,7 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, D1Gfx *g, CelView *cv,
 PaintWidget::~PaintWidget()
 {
     delete ui;
+    delete rubberBand;
 }
 
 void PaintWidget::setPalette(D1Pal *p)
@@ -325,7 +327,34 @@ void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std:
 
 bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
 {
-    if (this->isHidden() || this->ui->pickModeRadioButton->isChecked()) {
+    if (this->isHidden()) {
+        return false;
+    }
+
+    if (this->ui->selectModeRadioButton->isChecked()) {
+        // select mode
+        if (first) {
+            this->lastPos = pos;
+            MemFree(this->rubberBand);
+            return true;
+        }
+        if (this->rubberBand == nullptr) {
+            this->rubberBand = new QRubberBand(QRubberBand::Rectangle, parentWidget());
+        }
+        int x = std::min(pos.x(), this->lastPos.x());
+        int y = std::min(pos.y(), this->lastPos.y());
+        int w = std::abs(pos.x() - this->lastPos.x());
+        int h = std::abs(pos.y() - this->lastPos.y());
+        this->rubberBand->setGeometry(x, y, w, h);
+        this->rubberBand->show();
+        return true;
+    }
+    if (this->rubberBand) {
+        MemFree(this->rubberBand);
+    }
+
+    if (this->ui->pickModeRadioButton->isChecked()) {
+        // pick mode
         return false;
     }
 
