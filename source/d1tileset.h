@@ -45,4 +45,7 @@ public:
     D1Amp *amp;
     D1Spt *spt;
     D1Tmi *tmi;
+
+private:
+    void patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool silent);
 };
