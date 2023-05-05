@@ -373,12 +373,13 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
         result = result.arg(scenePTL.x()).arg(scenePTL.y()).arg(scenePBR.x()).arg(scenePBR.y());
         QRect rect = poly.boundingRect();
         result = result.arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height());
-        QPoint topLeft = this->graphView->viewport()->mapToGlobal(rect.topLeft());
+        /*QPoint topLeft = this->graphView->viewport()->mapToGlobal(rect.topLeft());
         QPoint bottomRight = this->graphView->viewport()->mapToGlobal(rect.bottomRight());
         result = result.arg(topLeft.x()).arg(topLeft.y()).arg(bottomRight.x()).arg(bottomRight.y());
-        this->rubberBand->setGeometry(QRect(topLeft, bottomRight));
+        this->rubberBand->setGeometry(QRect(topLeft, bottomRight));*/
+        this->rubberBand->setGeometry(rect);
         this->rubberBand->show();
-        QMessageBox::critical(nullptr, "Error", result);
+        // QMessageBox::critical(nullptr, "Error", result);
         return true;
     }
     if (this->rubberBand) {

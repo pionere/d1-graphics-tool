@@ -677,15 +677,6 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
     D1CelTilesetFrame::selectFrameType(topLeft_RightFrame);     // 369
     D1CelTilesetFrame::selectFrameType(bottomRight_RightFrame); // 377
 
-    // adjust the TMI flags
-    quint8 tmiFlags;
-    tmiFlags = this->tmi->getSubtileProperties(140 - 1);
-    tmiFlags |= (1 << 1) | (1 << 4);
-    this->tmi->setSubtileProperties(140 - 1, tmiFlags);
-    tmiFlags = this->tmi->getSubtileProperties(139 - 1);
-    tmiFlags &= ~(1 << 4);
-    this->tmi->setSubtileProperties(139 - 1, tmiFlags);
-
     this->gfx->setModified();
 
     if (!silent) {
