@@ -542,9 +542,8 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
     }
 }
 
-void D1Tileset::patchHellExit(int tileRef, bool silent)
+void D1Tileset::patchHellExit(int tileIndex, bool silent)
 {
-    int subtileIndex = subtileRef - 1;
     std::vector<int> &tilSubtiles = this->til->getSubtileIndices(tileIndex);
 
     if (tilSubtiles[1] != 138 || tilSubtiles[3] != 140 || tilSubtiles[0] != 137) {
@@ -578,7 +577,7 @@ void D1Tileset::patchHellExit(int tileRef, bool silent)
     }
     if ((topLeft_RightFrame->getWidth() != MICRO_WIDTH || topLeft_RightFrame->getHeight() != MICRO_HEIGHT)
         || (bottomRight_RightFrame->getWidth() != MICRO_WIDTH || bottomRight_RightFrame->getHeight() != MICRO_HEIGHT)) {
-        dProgressErr() << QApplication::tr("Invalid (mismatching frames) exit tile (%1).").arg(tileRef);
+        dProgressErr() << QApplication::tr("Invalid (mismatching frames) exit tile (%1).").arg(tileIndex + 1);
         return;
     }
 
@@ -629,7 +628,7 @@ void D1Tileset::patchHellExit(int tileRef, bool silent)
     topLeftFrameReferences[2] = 0;
 
     if (!silent) {
-        dProgress() << QApplication::tr("The subtiles of Tile %1 are modified.").arg(tileRef);
+        dProgress() << QApplication::tr("The subtiles of Tile %1 are modified.").arg(tileIndex + 1);
     }
 }
 
@@ -845,7 +844,7 @@ void D1Tileset::patch(int dunType, bool silent)
         Blk2Mcr(82, 4);
         break;
     case DTYPE_HELL:
-        patchExit(45, silent);
+        patchHellExit(45 - 1, silent);
         break;
     case DTYPE_NEST:
         // patch dMiniTiles - L6.MIN
