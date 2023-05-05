@@ -546,12 +546,13 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
 {
     std::vector<int> &tilSubtiles = this->til->getSubtileIndices(tileIndex);
 
-    if (tilSubtiles[1] != 138 || tilSubtiles[3] != 140 || tilSubtiles[0] != 137) {
+    if (tilSubtiles[1] != (138 - 1) || tilSubtiles[3] != (140 - 1) || tilSubtiles[0] != (137 - 1)) {
+        dProgressErr() << QApplication::tr("The exit tile (%1) has invalid (not original) subtiles.").arg(tileIndex + 1);
         return;
     }
 
-    tilSubtiles[1] = 2;
-    tilSubtiles[0] = 17;
+    tilSubtiles[1] = 2 - 1;
+    tilSubtiles[0] = 17 - 1;
 
     std::vector<unsigned> &topLeftFrameReferences = this->min->getFrameReferences(137 - 1);
     std::vector<unsigned> &topRightFrameReferences = this->min->getFrameReferences(138 - 1);
@@ -559,6 +560,7 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
 
     unsigned blockSize = topLeftFrameReferences.size();
     if (blockSize != 16 || topRightFrameReferences.size() != 16 || bottomRightFrameReferences.size() != 16) {
+        dProgressErr() << QApplication::tr("The exit tile (%1) has invalid (upscaled?) subtiles.").arg(tileIndex + 1);
         return;
     }
     unsigned topRight_LeftIndex0 = MICRO_IDX(blockSize, 0);
@@ -568,8 +570,8 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
     unsigned bottomRight_RightIndex0 = MICRO_IDX(blockSize, 1);
     unsigned bottomRight_RightFrameRef0 = bottomRightFrameReferences[bottomRight_RightIndex0];
 
-    D1GfxFrame *topRight_LeftFrame = this->gfx->getFrame(topRight_LeftFrameRef0 - 1); // 370
-    D1GfxFrame *topLeft_RightFrame = this->gfx->getFrame(topLeft_RightFrameRef0 - 1); // 369
+    D1GfxFrame *topRight_LeftFrame = this->gfx->getFrame(topRight_LeftFrameRef0 - 1);         // 370
+    D1GfxFrame *topLeft_RightFrame = this->gfx->getFrame(topLeft_RightFrameRef0 - 1);         // 369
     D1GfxFrame *bottomRight_RightFrame = this->gfx->getFrame(bottomRight_RightFrameRef0 - 1); // 377
 
     if (topRight_LeftFrame->getWidth() != MICRO_WIDTH || topRight_LeftFrame->getHeight() != MICRO_HEIGHT) {
@@ -587,8 +589,8 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
             D1GfxPixel pixel = topRight_LeftFrame->getPixel(x, y);
             if (pixel.isTransparent())
                 continue;
-            if (pixel.getPaletteIndex() < 112)
-                continue; // filter floor pixels
+            if (pixel.getPaletteIndex() < 112) // filter floor pixels
+                continue;
             topLeft_RightFrame->setPixel(x, y + MICRO_HEIGHT / 2, pixel); // 369
         }
     }
@@ -597,8 +599,8 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
             D1GfxPixel pixel = topRight_LeftFrame->getPixel(x, y);
             if (pixel.isTransparent())
                 continue;
-            if (pixel.getPaletteIndex() < 112)
-                continue; // filter floor pixels
+            if (pixel.getPaletteIndex() < 112) // filter floor pixels
+                continue;
             bottomRight_RightFrame->setPixel(x, y - MICRO_HEIGHT / 2, pixel); // 377
         }
     }
@@ -615,7 +617,7 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
         }
     }
 
-    D1CelTilesetFrame::selectFrameType(topLeft_RightFrame); // 369
+    D1CelTilesetFrame::selectFrameType(topLeft_RightFrame);     // 369
     D1CelTilesetFrame::selectFrameType(bottomRight_RightFrame); // 377
 
     // move the frames to the bottom right subtile

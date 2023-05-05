@@ -348,14 +348,14 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
         int y = std::min(pos.y(), this->lastPos.y()) + CEL_SCENE_MARGIN;
         int w = std::abs(pos.x() - this->lastPos.x());
         int h = std::abs(pos.y() - this->lastPos.y());
-        QMessageBox::critical(nullptr, "Error", QString("Scene rect (%1:%2) - w:%3, h:%4").arg(x).arg(y).arg(w).arg(h));
+        // QMessageBox::critical(nullptr, "Error", QString("Scene rect (%1:%2) - w:%3, h:%4").arg(x).arg(y).arg(w).arg(h));
         QRectF rectf = QRect(x, y, w, h);
         QPolygon poly = this->graphView->mapFromScene(rectf);
         QRect rect = poly.boundingRect();
-        QMessageBox::critical(nullptr, "Error", QString("View rect (%1:%2) - w:%3, h:%4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height()));
+        // QMessageBox::critical(nullptr, "Error", QString("View rect (%1:%2) - w:%3, h:%4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height()));
         QPoint topLeft = this->graphView->mapToGlobal(rect.topLeft());
         QPoint bottomRight = this->graphView->mapToGlobal(rect.bottomRight());
-        QMessageBox::critical(nullptr, "Error", QString("Global rect (%1:%2) - (%3:%4)").arg(topLeft.x()).arg(topLeft.y()).arg(bottomRight.x()).arg(bottomRight.y()));
+        // QMessageBox::critical(nullptr, "Error", QString("Global rect (%1:%2) - (%3:%4)").arg(topLeft.x()).arg(topLeft.y()).arg(bottomRight.x()).arg(bottomRight.y()));
         this->rubberBand->setGeometry(QRect(topLeft, bottomRight));
         this->rubberBand->show();
         return true;
