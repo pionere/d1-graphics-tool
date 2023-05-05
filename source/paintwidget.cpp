@@ -360,11 +360,11 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
         QPoint bottomRight = this->graphView->parentWidget()->mapToGlobal(rect.bottomRight());
         this->rubberBand->setGeometry(QRect(topLeft, bottomRight));
         // this->rubberBand->setGeometry(rect);*/
-        QList<QGraphicsItem *> items = this->graphView->scene()->items;
+        QList<QGraphicsItem *> items = this->graphView->scene()->items(Qt::AscendingOrder);
         if (items.isEmpty())
             return false;
-        QRectF sceneRectF = items[0]->mapToScene(rectf);
-        QPolygon poly = this->graphView->mapFromScene(sceneRectF);
+        QPolygonF scenePolyF = items[0]->mapToScene(rectf);
+        QPolygon poly = this->graphView->mapFromScene(scenePolyF);
         QRect rect = poly.boundingRect();
         QPoint topLeft = this->graphView->viewport()->mapToGlobal(rect.topLeft());
         QPoint bottomRight = this->graphView->viewport()->mapToGlobal(rect.bottomRight());
