@@ -363,8 +363,8 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
         QList<QGraphicsItem *> items = this->graphView->scene()->items(Qt::AscendingOrder);
         if (items.isEmpty())
             return false;
-        QString result = QString("%1:%2, %3:%4 .. %5:%6, %7:%8 .. %9:%10, %11:%12 .. %13:%14, %15:%16 .. %17:%18, %19:%20").arg(x).arg(y).arg(w).arg(h);
-        result = result.arg(items[0]->x()).arg(items[0]->y()).arg(items[0]->width()).arg(items[0]->height());
+        QString result = QString("%1:%2, %3:%4 .. %5:%6 .. %7:%8, %9:%10 .. %11:%12, %13:%14 .. %15:%16, %17:%18").arg(x).arg(y).arg(w).arg(h);
+        result = result.arg(items[0]->x()).arg(items[0]->y());
         QPolygonF scenePolyF = items[0]->mapToScene(rectf);
         result = result.arg(scenePolyF.boundingRect().x()).arg(scenePolyF.boundingRect().y()).arg(scenePolyF.boundingRect().width()).arg(scenePolyF.boundingRect().height());
         QPolygon poly = this->graphView->mapFromScene(scenePolyF);

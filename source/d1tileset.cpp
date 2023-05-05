@@ -476,6 +476,8 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
     leftFrameReferences[leftIndex1] = 0;
     leftFrameReferences[leftIndex2] = 0;
 
+    this->min->setModified();
+
     D1GfxFrame *frameRight0 = this->gfx->getFrame(rightFrameRef0 - 1);
 
     for (int x = MICRO_WIDTH / 2; x < MICRO_WIDTH; x++) {
@@ -533,6 +535,8 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
             frameLeft0->setPixel(framePixel.pos.x(), framePixel.pos.y(), D1GfxPixel::transparentPixel());
         }
     }
+    this->gfx->setModified();
+
     D1CelTilesetFrame::selectFrameType(frameLeft0);
     D1CelTilesetFrame::selectFrameType(frameRight0);
     if (frameLeft0->getFrameType() != D1CEL_FRAME_TYPE::RightTriangle) {
@@ -554,8 +558,10 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
         return;
     }
 
-    tilSubtiles[0] = 17 - 1;
-    tilSubtiles[1] = 18 - 1;
+    this->til->setSubtileIndex(tileIndex, 0, 17 - 1);
+    this->til->setSubtileIndex(tileIndex, 1, 18 - 1);
+    // tilSubtiles[0] = 17 - 1;
+    // tilSubtiles[1] = 18 - 1;
 
     std::vector<unsigned> &topLeftFrameReferences = this->min->getFrameReferences(137 - 1);
     std::vector<unsigned> &topRightFrameReferences = this->min->getFrameReferences(138 - 1);
@@ -610,6 +616,8 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
 
     // eliminate right frame of the bottom left subtile
     bottomLeftFrameReferences[MICRO_IDX(blockSize, 1)] = 0;
+
+    this->min->setModified();
 
     // copy 'bone' from topRight_LeftFrame (370) to the other frames 369  /377
     for (int x = 0; x < 14; x++) {
@@ -677,6 +685,8 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
     tmiFlags = this->tmi->getSubtileProperties(139 - 1);
     tmiFlags &= ~(1 << 4);
     this->tmi->setSubtileProperties(139 - 1, tmiFlags);
+
+    this->gfx->setModified();
 
     if (!silent) {
         dProgress() << QApplication::tr("The subtiles of Tile %1 are modified.").arg(tileIndex + 1);
