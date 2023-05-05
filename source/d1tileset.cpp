@@ -417,6 +417,9 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
     std::vector<unsigned> &rightFrameReferences = this->min->getFrameReferences(potRightSubtileRef - 1);
 
     unsigned blockSize = leftFrameReferences.size();
+    if (blockSize != 16) {
+        return;
+    }
     unsigned leftIndex0 = MICRO_IDX(blockSize, 1);
     unsigned leftFrameRef0 = leftFrameReferences[leftIndex0];
     unsigned leftIndex1 = MICRO_IDX(blockSize, 3);
@@ -536,6 +539,97 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
         dProgressErr() << QApplication::tr("Pot floor subtile (%1) is not triangle after patch.").arg(potLeftSubtileRef);
     } else if (!silent) {
         dProgress() << QApplication::tr("Frame %1 and %2 are modified and moved from subtile %3 to subtile %4.").arg(leftFrameRef1).arg(leftFrameRef2).arg(potLeftSubtileRef).arg(potRightSubtileRef);
+    }
+}
+
+void D1Tileset::patchHellExit(int tileRef, bool silent)
+{
+    int subtileIndex = subtileRef - 1;
+    std::vector<int> &tilSubtiles = this->til->getSubtileIndices(tileIndex);
+
+    if (tilSubtiles[1] != 138 || tilSubtiles[3] != 140 || tilSubtiles[0] != 137) {
+        return;
+    }
+
+    tilSubtiles[1] = 2;
+    tilSubtiles[0] = 17;
+
+    std::vector<unsigned> &topLeftFrameReferences = this->min->getFrameReferences(137 - 1);
+    std::vector<unsigned> &topRightFrameReferences = this->min->getFrameReferences(138 - 1);
+    std::vector<unsigned> &bottomRightFrameReferences = this->min->getFrameReferences(140 - 1);
+
+    unsigned blockSize = topLeftFrameReferences.size();
+    if (blockSize != 16 || topRightFrameReferences.size() != 16 || bottomRightFrameReferences.size() != 16) {
+        return;
+    }
+    unsigned topRight_LeftIndex0 = MICRO_IDX(blockSize, 0);
+    unsigned topRight_LeftFrameRef0 = topRightFrameReferences[topRight_LeftIndex0];
+    unsigned topLeft_RightIndex0 = MICRO_IDX(blockSize, 1);
+    unsigned topLeft_RightFrameRef0 = topLeftFrameReferences[topLeft_RightIndex0];
+    unsigned bottomRight_RightIndex0 = MICRO_IDX(blockSize, 1);
+    unsigned bottomRight_RightFrameRef0 = bottomRightFrameReferences[bottomRight_RightIndex0];
+
+    D1GfxFrame *topRight_LeftFrame = this->gfx->getFrame(topRight_LeftFrameRef0 - 1); // 370
+    D1GfxFrame *topLeft_RightFrame = this->gfx->getFrame(topLeft_RightFrameRef0 - 1); // 369
+    D1GfxFrame *bottomRight_RightFrame = this->gfx->getFrame(bottomRight_RightFrameRef0 - 1); // 377
+
+    if (topRight_LeftFrame->getWidth() != MICRO_WIDTH || topRight_LeftFrame->getHeight() != MICRO_HEIGHT) {
+        return; // upscaled(?) frames -> assume it is already done
+    }
+    if ((topLeft_RightFrame->getWidth() != MICRO_WIDTH || topLeft_RightFrame->getHeight() != MICRO_HEIGHT)
+        || (bottomRight_RightFrame->getWidth() != MICRO_WIDTH || bottomRight_RightFrame->getHeight() != MICRO_HEIGHT)) {
+        dProgressErr() << QApplication::tr("Invalid (mismatching frames) exit tile (%1).").arg(tileRef);
+        return;
+    }
+
+    // copy 'bone' from topRight_LeftFrame (370) to the other frames
+    for (int x = 0; x < 14; x++) {
+        for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+            D1GfxPixel pixel = topRight_LeftFrame->getPixel(x, y);
+            if (pixel.isTransparent())
+                continue;
+            if (pixel.getPaletteIndex() < 112)
+                continue; // filter floor pixels
+            topLeft_RightFrame->setPixel(x, y + MICRO_HEIGHT / 2, pixel); // 369
+        }
+    }
+    for (int x = 0; x < 15; x++) {
+        for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+            D1GfxPixel pixel = topRight_LeftFrame->getPixel(x, y);
+            if (pixel.isTransparent())
+                continue;
+            if (pixel.getPaletteIndex() < 112)
+                continue; // filter floor pixels
+            bottomRight_RightFrame->setPixel(x, y - MICRO_HEIGHT / 2, pixel); // 377
+        }
+    }
+
+    // eliminate floor pixels of the topLeft_Right frame (369)
+    for (int x = 0; x < 12; x++) {
+        for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+            D1GfxPixel pixel = topLeft_RightFrame->getPixel(x, y);
+            if (pixel.isTransparent())
+                continue;
+            if (pixel.getPaletteIndex() < 112) {
+                topLeft_RightFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
+            }
+        }
+    }
+
+    D1CelTilesetFrame::selectFrameType(topLeft_RightFrame); // 369
+    D1CelTilesetFrame::selectFrameType(bottomRight_RightFrame); // 377
+
+    // move the frames to the bottom right subtile
+    bottomRightFrameReferences[3] = topLeftFrameReferences[1]; // 369
+    topLeftFrameReferences[1] = 0;
+
+    bottomRightFrameReferences[2] = topLeftFrameReferences[0]; // 368
+    bottomRightFrameReferences[4] = topLeftFrameReferences[2]; // 367
+    topLeftFrameReferences[0] = 0;
+    topLeftFrameReferences[2] = 0;
+
+    if (!silent) {
+        dProgress() << QApplication::tr("The subtiles of Tile %1 are modified.").arg(tileRef);
     }
 }
 
@@ -751,6 +845,7 @@ void D1Tileset::patch(int dunType, bool silent)
         Blk2Mcr(82, 4);
         break;
     case DTYPE_HELL:
+        patchExit(45, silent);
         break;
     case DTYPE_NEST:
         // patch dMiniTiles - L6.MIN
