@@ -352,11 +352,12 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
         QRectF rectf = QRect(x, y, w, h);
         QPolygon poly = this->graphView->mapFromScene(rectf);
         QRect rect = poly.boundingRect();
-        // QMessageBox::critical(nullptr, "Error", QString("View rect (%1:%2) - w:%3, h:%4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height()));
+        /*// QMessageBox::critical(nullptr, "Error", QString("View rect (%1:%2) - w:%3, h:%4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height()));
         QPoint topLeft = this->graphView->mapToGlobal(rect.topLeft());
         QPoint bottomRight = this->graphView->mapToGlobal(rect.bottomRight());
         // QMessageBox::critical(nullptr, "Error", QString("Global rect (%1:%2) - (%3:%4)").arg(topLeft.x()).arg(topLeft.y()).arg(bottomRight.x()).arg(bottomRight.y()));
-        this->rubberBand->setGeometry(QRect(topLeft, bottomRight));
+        this->rubberBand->setGeometry(QRect(topLeft, bottomRight));*/
+        this->rubberBand->setGeometry(rect);
         this->rubberBand->show();
         return true;
     }

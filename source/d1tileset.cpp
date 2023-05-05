@@ -547,7 +547,10 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
     std::vector<int> &tilSubtiles = this->til->getSubtileIndices(tileIndex);
 
     if (tilSubtiles[1] != (138 - 1) || tilSubtiles[3] != (140 - 1) || tilSubtiles[0] != (137 - 1)) {
-        dProgressErr() << QApplication::tr("The exit tile (%1) has invalid (not original) subtiles.").arg(tileIndex + 1);
+        if (tilSubtiles[1] != (2 - 1) || tilSubtiles[0] != (17 - 1))
+            dProgressErr() << QApplication::tr("The exit tile (%1) has invalid (not original) subtiles.").arg(tileIndex + 1);
+        else if (!silent)
+            dProgress() << QApplication::tr("The exit tile (%1) is already patched.").arg(tileIndex + 1);
         return;
     }
 
@@ -589,7 +592,7 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
             D1GfxPixel pixel = topRight_LeftFrame->getPixel(x, y);
             if (pixel.isTransparent())
                 continue;
-            if (pixel.getPaletteIndex() < 112) // filter floor pixels
+            if (pixel.getPaletteIndex() < 96) // filter floor pixels
                 continue;
             topLeft_RightFrame->setPixel(x, y + MICRO_HEIGHT / 2, pixel); // 369
         }
@@ -599,7 +602,7 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
             D1GfxPixel pixel = topRight_LeftFrame->getPixel(x, y);
             if (pixel.isTransparent())
                 continue;
-            if (pixel.getPaletteIndex() < 112) // filter floor pixels
+            if (pixel.getPaletteIndex() < 96) // filter floor pixels
                 continue;
             bottomRight_RightFrame->setPixel(x, y - MICRO_HEIGHT / 2, pixel); // 377
         }
@@ -611,23 +614,28 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
             D1GfxPixel pixel = topLeft_RightFrame->getPixel(x, y);
             if (pixel.isTransparent())
                 continue;
-            if (pixel.getPaletteIndex() < 112) {
+            if (pixel.getPaletteIndex() < 96) {
                 topLeft_RightFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
             }
         }
     }
-
+    // adjust the frame types
     D1CelTilesetFrame::selectFrameType(topLeft_RightFrame);     // 369
     D1CelTilesetFrame::selectFrameType(bottomRight_RightFrame); // 377
 
     // move the frames to the bottom right subtile
-    bottomRightFrameReferences[3] = topLeftFrameReferences[1]; // 369
-    topLeftFrameReferences[1] = 0;
+    bottomRightFrameReferences[MICRO_IDX(blockSize, 3)] = topLeftFrameReferences[MICRO_IDX(blockSize, 1)]; // 369
+    topLeftFrameReferences[MICRO_IDX(blockSize, 1)] = 0;
 
-    bottomRightFrameReferences[2] = topLeftFrameReferences[0]; // 368
-    bottomRightFrameReferences[4] = topLeftFrameReferences[2]; // 367
-    topLeftFrameReferences[0] = 0;
-    topLeftFrameReferences[2] = 0;
+    bottomRightFrameReferences[MICRO_IDX(blockSize, 2)] = topLeftFrameReferences[MICRO_IDX(blockSize, 0)]; // 368
+    bottomRightFrameReferences[MICRO_IDX(blockSize, 4)] = topLeftFrameReferences[MICRO_IDX(blockSize, 2)]; // 367
+    topLeftFrameReferences[MICRO_IDX(blockSize, 0)] = 0;
+    topLeftFrameReferences[MICRO_IDX(blockSize, 2)] = 0;
+
+    // adjust the TMI flags
+    quint8 tmiFlags = this->tmi->getSubtileProperties(140 - 1);
+    tmiFlags |= (1 << 1) | (1 << 4);
+    this->tmi->setSubtileProperties(140 - 1, tmiFlags);
 
     if (!silent) {
         dProgress() << QApplication::tr("The subtiles of Tile %1 are modified.").arg(tileIndex + 1);
