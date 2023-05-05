@@ -363,13 +363,18 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
         QList<QGraphicsItem *> items = this->graphView->scene()->items(Qt::AscendingOrder);
         if (items.isEmpty())
             return false;
+        QString result = QString("%1:%2, %3:%4 .. %5:%6, %7:%8 .. %9:%10, %11:%12 .. %13:%14, %15:%16").arg(x).arg(y).arg(w).arg(h);
         QPolygonF scenePolyF = items[0]->mapToScene(rectf);
+        result = result.arg(scenePolyF.boundingRect().x()).arg(scenePolyF.boundingRect().y()).arg(scenePolyF.boundingRect().width()).arg(scenePolyF.boundingRect().height());
         QPolygon poly = this->graphView->mapFromScene(scenePolyF);
         QRect rect = poly.boundingRect();
+        result = result.arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height());
         QPoint topLeft = this->graphView->viewport()->mapToGlobal(rect.topLeft());
         QPoint bottomRight = this->graphView->viewport()->mapToGlobal(rect.bottomRight());
+        result = result.arg(topLeft.x()).arg(topLeft.y()).arg(bottomRight.x()).arg(bottomRight.y());
         this->rubberBand->setGeometry(QRect(topLeft, bottomRight));
         this->rubberBand->show();
+        QMessageBox::critical(nullptr, "Error", result);
         return true;
     }
     if (this->rubberBand) {

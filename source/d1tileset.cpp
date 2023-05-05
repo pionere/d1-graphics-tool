@@ -641,7 +641,7 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
             topLeft_Left0Frame->setPixel(x, y + MICRO_HEIGHT / 2, pixel); // 368
         }
     }
-    for (int x = 0; x < 15; x++) {
+    for (int x = 0; x < MICRO_WIDTH; x++) {
         for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
             D1GfxPixel pixel = bottomLeft_RightFrame->getPixel(x, y);
             if (pixel.isTransparent())
@@ -676,7 +676,7 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
     this->tmi->setSubtileProperties(140 - 1, tmiFlags);
     tmiFlags = this->tmi->getSubtileProperties(139 - 1);
     tmiFlags &= ~(1 << 4);
-    this->tmi->setSubtileProperties(140 - 1, tmiFlags);
+    this->tmi->setSubtileProperties(139 - 1, tmiFlags);
 
     if (!silent) {
         dProgress() << QApplication::tr("The subtiles of Tile %1 are modified.").arg(tileIndex + 1);
