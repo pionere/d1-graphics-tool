@@ -620,7 +620,7 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
     this->min->setModified();
 
     // copy 'bone' from topRight_LeftFrame (370) to the other frames 369  /377
-    for (int x = 0; x < 14; x++) {
+    for (int x = 0; x < 15; x++) {
         for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
             D1GfxPixel pixel = topRight_LeftFrame->getPixel(x, y);
             if (pixel.isTransparent())
