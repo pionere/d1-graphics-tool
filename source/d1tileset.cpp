@@ -546,16 +546,16 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
 {
     std::vector<int> &tilSubtiles = this->til->getSubtileIndices(tileIndex);
 
-    if (tilSubtiles[1] != (138 - 1) || tilSubtiles[3] != (140 - 1) || tilSubtiles[0] != (137 - 1)) {
-        if (tilSubtiles[1] != (2 - 1) || tilSubtiles[0] != (17 - 1))
+    if (tilSubtiles[0] != (137 - 1) || tilSubtiles[1] != (138 - 1) || tilSubtiles[3] != (140 - 1)) {
+        if (tilSubtiles[0] != (17 - 1) || tilSubtiles[1] != (18 - 1))
             dProgressErr() << QApplication::tr("The exit tile (%1) has invalid (not original) subtiles.").arg(tileIndex + 1);
         else if (!silent)
             dProgress() << QApplication::tr("The exit tile (%1) is already patched.").arg(tileIndex + 1);
         return;
     }
 
-    tilSubtiles[1] = 2 - 1;
     tilSubtiles[0] = 17 - 1;
+    tilSubtiles[1] = 18 - 1;
 
     std::vector<unsigned> &topLeftFrameReferences = this->min->getFrameReferences(137 - 1);
     std::vector<unsigned> &topRightFrameReferences = this->min->getFrameReferences(138 - 1);
@@ -607,14 +607,16 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
             bottomRight_RightFrame->setPixel(x, y - MICRO_HEIGHT / 2, pixel); // 377
         }
     }
+    // fix bad artifact
+    bottomRight_RightFrame->setPixel(0, 14, D1GfxPixel::transparentPixel()); // 377
 
     // eliminate floor pixels of the topLeft_Right frame (369)
-    for (int x = 0; x < 12; x++) {
-        for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+    for (int x = 0; x < MICRO_WIDTH; x++) {
+        for (int y = 0; y < MICRO_HEIGHT; y++) {
             D1GfxPixel pixel = topLeft_RightFrame->getPixel(x, y);
             if (pixel.isTransparent())
                 continue;
-            if (pixel.getPaletteIndex() < 96) {
+            if (x >= 12 || pixel.getPaletteIndex() < 80) {
                 topLeft_RightFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
             }
         }
