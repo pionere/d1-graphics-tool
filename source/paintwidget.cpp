@@ -361,6 +361,7 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
         this->rubberBand->setGeometry(QRect(topLeft, bottomRight));
         // this->rubberBand->setGeometry(rect);*/
         QPolygon poly = this->graphView->mapFromScene(rectf);
+        QRect rect = poly.boundingRect();
         QPoint topLeft = this->graphView->viewport()->mapToGlobal(rect.topLeft());
         QPoint bottomRight = this->graphView->viewport()->mapToGlobal(rect.bottomRight());
         this->rubberBand->setGeometry(QRect(topLeft, bottomRight));

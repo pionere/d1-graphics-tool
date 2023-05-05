@@ -546,7 +546,7 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
 {
     std::vector<int> &tilSubtiles = this->til->getSubtileIndices(tileIndex);
 
-    if (tilSubtiles[0] != (137 - 1) || tilSubtiles[1] != (138 - 1) || tilSubtiles[3] != (140 - 1)) {
+    if (tilSubtiles[0] != (137 - 1) || tilSubtiles[1] != (138 - 1) || tilSubtiles[2] != (139 - 1) || tilSubtiles[3] != (140 - 1)) {
         if (tilSubtiles[0] != (17 - 1) || tilSubtiles[1] != (18 - 1))
             dProgressErr() << QApplication::tr("The exit tile (%1) has invalid (not original) subtiles.").arg(tileIndex + 1);
         else if (!silent)
@@ -562,8 +562,8 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
     std::vector<unsigned> &bottomLeftFrameReferences = this->min->getFrameReferences(139 - 1);
     std::vector<unsigned> &bottomRightFrameReferences = this->min->getFrameReferences(140 - 1);
 
-    unsigned blockSize = topLeftFrameReferences.size();
-    if (blockSize != 16 || topRightFrameReferences.size() != 16 || bottomLeftFrameReferences.size() != 16 bottomRightFrameReferences.size() != 16) {
+    unsigned blockSize = 16;
+    if (topLeftFrameReferences.size() != blockSize || topRightFrameReferences.size() != blockSize || bottomLeftFrameReferences.size() != blockSize || bottomRightFrameReferences.size() != blockSize) {
         dProgressErr() << QApplication::tr("The exit tile (%1) has invalid (upscaled?) subtiles.").arg(tileIndex + 1);
         return;
     }
@@ -651,7 +651,7 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
     }
     // fix bad artifacts
     bottomRight_RightFrame->setPixel(14, 0, D1GfxPixel::transparentPixel()); // 377
-    topLeft_RightFrame->setPixel(7, 7, D1GfxPixel::transparentPixel()); // 369
+    topLeft_RightFrame->setPixel(7, 7, D1GfxPixel::transparentPixel());      // 369
 
     // adjust the frame types
     D1CelTilesetFrame::selectFrameType(topLeft_RightFrame);     // 369
@@ -670,8 +670,12 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
     bottomLeftFrameReferences[MICRO_IDX(blockSize, 1)] = 0;
 
     // adjust the TMI flags
-    quint8 tmiFlags = this->tmi->getSubtileProperties(140 - 1);
+    quint8 tmiFlags;
+    tmiFlags = this->tmi->getSubtileProperties(140 - 1);
     tmiFlags |= (1 << 1) | (1 << 4);
+    this->tmi->setSubtileProperties(140 - 1, tmiFlags);
+    tmiFlags = this->tmi->getSubtileProperties(139 - 1);
+    tmiFlags &= ~(1 << 4);
     this->tmi->setSubtileProperties(140 - 1, tmiFlags);
 
     if (!silent) {
