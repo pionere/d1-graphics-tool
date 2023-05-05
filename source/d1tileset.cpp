@@ -674,7 +674,9 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
     topLeft_RightFrame->setPixel(7, 7, D1GfxPixel::transparentPixel());      // 369
 
     // adjust the frame types
+    D1CelTilesetFrame::selectFrameType(topLeft_Left0Frame);     // 368
     D1CelTilesetFrame::selectFrameType(topLeft_RightFrame);     // 369
+    D1CelTilesetFrame::selectFrameType(bottomRight_LeftFrame);  // 376
     D1CelTilesetFrame::selectFrameType(bottomRight_RightFrame); // 377
 
     this->gfx->setModified();

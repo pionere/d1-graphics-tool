@@ -363,23 +363,33 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
         QList<QGraphicsItem *> items = this->graphView->scene()->items(Qt::AscendingOrder);
         if (items.isEmpty())
             return false;
-        QString result = QString("%1:%2, %3:%4 .. %5:%6 .. scpoly %7:%8, %9:%10 .. screct %11:%12, %13:%14 .. polyrect %15:%16, %17:%18 .. grect %19:%20, %21:%22").arg(x).arg(y).arg(w).arg(h);
+        QString result = QString("%1:%2, %3:%4 .. %5:%6 .. poly %7:%8, %9:%10 .. view %11:%12, %13:%14 .. widget %15:%16, %17:%18 .. vp %19:%20, %21:%22").arg(x).arg(y).arg(w).arg(h);
         result = result.arg(items[0]->x()).arg(items[0]->y());
         QPolygonF scenePolyF = items[0]->mapToScene(rectf);
-        result = result.arg(scenePolyF.boundingRect().x()).arg(scenePolyF.boundingRect().y()).arg(scenePolyF.boundingRect().width()).arg(scenePolyF.boundingRect().height());
+        // result = result.arg(scenePolyF.boundingRect().x()).arg(scenePolyF.boundingRect().y()).arg(scenePolyF.boundingRect().width()).arg(scenePolyF.boundingRect().height());
         QPolygon poly = this->graphView->mapFromScene(scenePolyF);
-        QPoint scenePTL = this->graphView->mapFromScene(x, y);
-        QPoint scenePBR = this->graphView->mapFromScene(x + w, y + h);
-        result = result.arg(scenePTL.x()).arg(scenePTL.y()).arg(scenePBR.x()).arg(scenePBR.y());
+        // QPoint scenePTL = this->graphView->mapFromScene(x, y);
+        // QPoint scenePBR = this->graphView->mapFromScene(x + w, y + h);
+        // result = result.arg(scenePTL.x()).arg(scenePTL.y()).arg(scenePBR.x()).arg(scenePBR.y());
         QRect rect = poly.boundingRect();
         result = result.arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height());
         /*QPoint topLeft = this->graphView->viewport()->mapToGlobal(rect.topLeft());
         QPoint bottomRight = this->graphView->viewport()->mapToGlobal(rect.bottomRight());
         result = result.arg(topLeft.x()).arg(topLeft.y()).arg(bottomRight.x()).arg(bottomRight.y());
         this->rubberBand->setGeometry(QRect(topLeft, bottomRight));*/
-        this->rubberBand->setGeometry(rect);
+        QPoint topLeftV = this->graphView->mapToGlobal(rect.topLeft());
+        QPoint bottomRightV = this->graphView->mapToGlobal(rect.bottomRight());
+        result = result.arg(topLeftV.x()).arg(topLeftV.y()).arg(bottomRightV.x()).arg(bottomRightV.y());
+        QPoint topLeftW= this->graphView->parentWidget()->mapToGlobal(rect.topLeft());
+        QPoint bottomRightW = this->graphView->parentWidget()->mapToGlobal(rect.bottomRight());
+        result = result.arg(topLeftW.x()).arg(topLeftW.y()).arg(bottomRightW.x()).arg(bottomRightW.y());
+        QPoint topLeftVP = this->graphView->viewport()->mapToGlobal(rect.topLeft());
+        QPoint bottomRightVP = this->graphView->viewport()->mapToGlobal(rect.bottomRight());
+        result = result.arg(topLeftVP.x()).arg(topLeftVP.y()).arg(bottomRightVP.x()).arg(bottomRightVP.y());
+        // this->rubberBand->setGeometry(rect);
+        this->rubberBand->setGeometry(QRect(topLeftW, bottomRightW));
         this->rubberBand->show();
-        // QMessageBox::critical(nullptr, "Error", result);
+        QMessageBox::critical(nullptr, "Error", result);
         return true;
     }
     if (this->rubberBand) {
