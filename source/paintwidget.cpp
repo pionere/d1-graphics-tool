@@ -392,8 +392,8 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
         QRect rect = poly.boundingRect();
         QPoint globalTopLeft = this->graphView->viewport()->mapToGlobal(rect.topLeft());
         QPoint globalBottomRight = this->graphView->viewport()->mapToGlobal(rect.topLeft());
-        QPoint topLeft = this->parentWidget->mapFromGlobal(globalTopLeft);
-        QPoint bottomRight = this->parentWidget->mapFromGlobal(globalBottomRight);
+        QPoint topLeft = this->parentWidget()->mapFromGlobal(globalTopLeft);
+        QPoint bottomRight = this->parentWidget()->mapFromGlobal(globalBottomRight);
         this->rubberBand->setGeometry(QRect(topLeft, bottomRight));
         this->rubberBand->show();
         // QMessageBox::critical(nullptr, "Error", result);
