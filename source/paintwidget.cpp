@@ -388,19 +388,19 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
         result = result.arg(topLeftVP.x()).arg(topLeftVP.y()).arg(bottomRightVP.x()).arg(bottomRightVP.y());
         // this->rubberBand->setGeometry(rect);
         this->rubberBand->setGeometry(QRect(topLeftW, bottomRightW));*/
-        QString result = QString("%1:%2, %3:%4 .. rect %5:%6, %7:%8 .. global %9:%10, %11:%12 .. widget %13:%14, %15:%16").arg(x).arg(y).arg(w).arg(h);
+        // QString result = QString("%1:%2, %3:%4 .. rect %5:%6, %7:%8 .. global %9:%10, %11:%12 .. widget %13:%14, %15:%16").arg(x).arg(y).arg(w).arg(h);
         QPolygon poly = this->graphView->mapFromScene(rectf);
         QRect rect = poly.boundingRect();
-        result = result.arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height());
+        // result = result.arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height());
         QPoint globalTopLeft = this->graphView->viewport()->mapToGlobal(rect.topLeft());
         QPoint globalBottomRight = this->graphView->viewport()->mapToGlobal(rect.bottomRight());
-        result = result.arg(globalTopLeft.x()).arg(globalTopLeft.y()).arg(globalBottomRight.x()).arg(globalBottomRight.y());
+        // result = result.arg(globalTopLeft.x()).arg(globalTopLeft.y()).arg(globalBottomRight.x()).arg(globalBottomRight.y());
         QPoint topLeft = this->parentWidget()->mapFromGlobal(globalTopLeft);
         QPoint bottomRight = this->parentWidget()->mapFromGlobal(globalBottomRight);
-        result = result.arg(topLeft.x()).arg(topLeft.y()).arg(bottomRight.x()).arg(bottomRight.y());
+        // result = result.arg(topLeft.x()).arg(topLeft.y()).arg(bottomRight.x()).arg(bottomRight.y());
         this->rubberBand->setGeometry(QRect(topLeft, bottomRight));
         this->rubberBand->show();
-        QMessageBox::critical(nullptr, "Error", result);
+        // QMessageBox::critical(nullptr, "Error", result);
         return true;
     }
     if (this->rubberBand) {
