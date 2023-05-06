@@ -176,14 +176,14 @@ QImage PaintWidget::copyCurrent() const
     if (area.left() < 0) {
         area.setLeft(0);
     }
-    if (area.right() > frame->getWidth()) {
-        area.setRight(frame->getWidth());
+    if (area.right() >= frame->getWidth()) {
+        area.setRight(frame->getWidth() - 1);
     }
     if (area.top() < 0) {
         area.setTop(0);
     }
-    if (area.bottom() > frame->getHeight()) {
-        area.setBottom(frame->getHeight());
+    if (area.bottom() >= frame->getHeight()) {
+        area.setBottom(frame->getHeight() - 1);
     }
     QImage image = QImage(area.size(), QImage::Format_ARGB32);
     QRgb *destBits = reinterpret_cast<QRgb *>(image.bits());
@@ -197,7 +197,7 @@ QImage PaintWidget::copyCurrent() const
             else
                 color = this->pal->getColor(d1pix.getPaletteIndex());
 
-            destBits[x] = color.rgba();
+            *destBits = color.rgba();
         }
     }
     return image;
@@ -239,10 +239,9 @@ void PaintWidget::pasteCurrent(const QImage &image)
 
     QMessageBox::critical(nullptr, "Error", QString("image loaded %1:%2").arg(image.width()).arg(image.height()));
     // copy to the destination
-    const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
     std::vector<FramePixel> pixels;
-    for (int y = 0; y < image.height(); y++) {
-        for (int x = 0; x < image.width(); x++, srcBits++) {
+    for (int y = 0; y < srcFrame.getHeight(); y++) {
+        for (int x = 0; x < srcFrame.getWidth(); x++) {
             D1GfxPixel pixel = srcFrame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 continue;
