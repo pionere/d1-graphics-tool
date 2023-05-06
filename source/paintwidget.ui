@@ -85,6 +85,16 @@
       </widget>
      </item>
      <item>
+      <widget class="QRadioButton" name="selectModeRadioButton">
+       <property name="text">
+        <string>Select</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">brushModeButtonGroup</string>
+       </attribute>
+      </widget>
+     </item>
+     <item>
       <widget class="QRadioButton" name="drawModeRadioButton">
        <property name="checked">
         <bool>true</bool>

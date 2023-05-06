@@ -66,8 +66,10 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, D1Gfx *g, CelView *cv,
     , gfx(g)
     , celView(cv)
     , levelCelView(lcv)
+    , rubberBand(nullptr)
     , moving(false)
     , moved(false)
+    , lastMoveCmd(nullptr)
 {
     this->ui->setupUi(this);
 
@@ -111,6 +113,7 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, D1Gfx *g, CelView *cv,
 PaintWidget::~PaintWidget()
 {
     delete ui;
+    delete rubberBand;
 }
 
 void PaintWidget::setPalette(D1Pal *p)
@@ -139,6 +142,9 @@ void PaintWidget::show()
 
 void PaintWidget::hide()
 {
+    if (this->rubberBand) {
+        MemFree(this->rubberBand);
+    }
     if (this->moving) {
         this->stopMove();
     }
@@ -323,6 +329,25 @@ void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std:
     }
 }
 
+static QRect getArea(const QPoint &pos1, const QPoint &pos2)
+{
+    return QRect(pos1, pos2).normalized();
+}
+
+void PaintWidget::selectArea(const QRect &area)
+{
+    QRect sceneRect = area;
+    sceneRect.adjust(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN, CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+    QPolygon poly = this->graphView->mapFromScene(sceneRect);
+    QRect vpRect = poly.boundingRect();
+    QPoint globalTopLeft = this->graphView->viewport()->mapToGlobal(vpRect.topLeft());
+    QPoint globalBottomRight = this->graphView->viewport()->mapToGlobal(vpRect.bottomRight());
+    QPoint topLeft = this->parentWidget()->mapFromGlobal(globalTopLeft);
+    QPoint bottomRight = this->parentWidget()->mapFromGlobal(globalBottomRight);
+    this->rubberBand->setGeometry(QRect(topLeft, bottomRight));
+    this->rubberBand->show();
+}
+
 bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
 {
     if (this->isHidden()) {
@@ -330,6 +355,110 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
     }
 
     this->ui->currPosLabel->setText(QString("(%1:%2)").arg(pos.x()).arg(pos.y()));
+
+    if (this->ui->selectModeRadioButton->isChecked()) {
+        // select mode
+        if (first) {
+            if (this->rubberBand && this->selectionMoveMode != 1) {
+                QPoint globalCursorPos = QCursor::pos();
+                QRect rubberBandRect = this->rubberBand->geometry();
+                QPoint globalTopLeft = this->parentWidget()->mapToGlobal(rubberBandRect.topLeft());
+                QPoint globalBottomRight = this->parentWidget()->mapToGlobal(rubberBandRect.bottomRight());
+                QRect globalRubberBandRect = QRect(globalTopLeft, globalBottomRight);
+                if (globalRubberBandRect.contains(globalCursorPos)) {
+                    if (this->selectionMoveMode == 0) {
+                        this->movePos = pos;
+                        this->lastMoveCmd = nullptr;
+                    }
+                    this->selectionMoveMode = 1;
+                    return true;
+                }
+            }
+            this->lastMoveCmd = nullptr;
+            this->selectionMoveMode = 0;
+            this->lastPos = pos;
+            MemFree(this->rubberBand);
+            return true;
+        }
+        if (this->selectionMoveMode != 0) {
+            if (this->lastMoveCmd != nullptr && this->undoStack->count() != 0 && this->undoStack->command(0) == this->lastMoveCmd) {
+                this->undoStack->undo();
+            }
+            this->selectionMoveMode = 2;
+
+            QRect area = getArea(this->currPos, this->lastPos);
+            if (area.left() < 0) {
+                area.setLeft(0);
+            }
+            if (area.right() > frame->getWidth()) {
+                area.setRight(frame->getWidth());
+            }
+            if (area.top() < 0) {
+                area.setTop(0);
+            }
+            if (area.bottom() > frame->getHeight()) {
+                area.setBottom(frame->getHeight());
+            }
+            std::vector<FramePixel> pixels;
+            for (int x = area.left(); x <= area.right(); x++) {
+                for (int y = area.top(); y <= area.bottom(); y++) {
+                    pixels.push_back(FramePixel(QPoint(x, y), D1GfxPixel::transparentPixel()));
+                }
+            }
+            QPoint delta = pos - this->movePos;
+            for (int x = area.left(); x <= area.right(); x++) {
+                for (int y = area.top(); y <= area.bottom(); y++) {
+                    QPoint tp = QPoint(x, y) + delta;
+                    if (tp.x() < 0 || tp.x() >= frame->getWidth()) {
+                        continue;
+                    }
+                    if (tp.y() < 0 || tp.y() >= frame->getHeight()) {
+                        continue;
+                    }
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (pixel.isTransparent()) {
+                        continue;
+                    }
+
+                    unsigned n = 0;
+                    for (; n < pixels.size(); n++) {
+                        if (pixels[n].pos == tp) {
+                            pixels[n].pixel = pixel;
+                            break;
+                        }
+                    }
+                    if (n < pixels.size()) {
+                        continue;
+                    }
+                    pixels.push_back(FramePixel(tp, pixel));
+                }
+            }
+
+            area.translate(delta);
+            this->selectArea(area);
+
+            // Build frame editing command and connect it to the current main window widget
+            // to update the palHits and CEL views when undo/redo is performed
+            EditFrameCommand *command = new EditFrameCommand(frame, pixels);
+            QObject::connect(command, &EditFrameCommand::modified, &dMainWindow(), &MainWindow::frameModified);
+
+            this->lastMoveCmd = command;
+            this->undoStack->push(command);
+            return true;
+        }
+
+        if (this->rubberBand == nullptr) {
+            this->rubberBand = new QRubberBand(QRubberBand::Rectangle, this->parentWidget());
+        }
+        this->currPos = pos;
+        this->selectArea(getArea(this->currPos, this->lastPos));
+        return true;
+    }
+    this->selectionMoveMode = 0;
+    this->lastMoveCmd = nullptr;
+    if (this->rubberBand) {
+        MemFree(this->rubberBand);
+    }
 
     if (this->ui->pickModeRadioButton->isChecked()) {
         // pick mode

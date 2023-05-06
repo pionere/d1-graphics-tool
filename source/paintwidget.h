@@ -7,6 +7,7 @@
 #include <QMouseEvent>
 #include <QPoint>
 #include <QPointer>
+#include <QRubberBand>
 #include <QUndoCommand>
 
 #include "d1gfx.h"
@@ -57,6 +58,7 @@ private:
     void collectPixelsSquare(int baseX, int baseY, int baseDist, std::vector<FramePixel> &pixels);
     void collectPixelsRound(int baseX, int baseY, int baseDist, std::vector<FramePixel> &pixels);
     void traceClick(const QPoint &startPos, const QPoint &destPos, std::vector<FramePixel> &pixels, void (PaintWidget::*collectorFunc)(int, int, int, std::vector<FramePixel> &));
+    void selectArea(const QRect &area);
 
 public slots:
     bool frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first);
@@ -89,8 +91,12 @@ private:
     CelView *celView;
     LevelCelView *levelCelView;
     QGraphicsView *graphView;
+    QRubberBand *rubberBand;
     bool moving;
     bool moved;
+    int8_t selectionMoveMode;
+    EditFrameCommand *lastMoveCmd;
+    QPoint movePos;
     QPoint currPos;
     QPoint lastPos;
     int distance;
