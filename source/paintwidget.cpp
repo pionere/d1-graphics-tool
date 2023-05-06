@@ -359,13 +359,16 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
         return false;
     }
 
+    this->ui->currPosLabel->setText(QString("(%1:%2)").arg(pos.x()).arg(pos.y()));
+
     if (this->ui->selectModeRadioButton->isChecked()) {
         // select mode
         if (first) {
-            if (this->rubberBand && getArea(this->currPos, this->lastPos).contains(pos)) {
+            if (this->rubberBand && getArea(this->currPos, this->lastPos).contains(pos) && this->selectionMoveMode != 1) {
                 this->movePos = pos;
                 this->lastMoveCmd = nullptr;
                 this->selectionMoveMode = 1;
+                this->ui->gradientXLineEdit->setText(QString("%1:%2").arg(pos.x()).arg(pos.y()));
                 return true;
             }
             this->lastMoveCmd = nullptr;
@@ -399,6 +402,7 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
                 }
             }
             QPoint delta = pos - this->movePos;
+            this->ui->gradientYLineEdit->setText(QString("%1:%2").arg(delta.x()).arg(delta.y()));
             for (int x = area.left(); x < area.right(); x++) {
                 for (int y = area.top(); y < area.bottom(); y++) {
                     QPoint tp = QPoint(x, y) + delta;
@@ -611,7 +615,6 @@ void PaintWidget::colorModified()
     }
     QPixmap pixmap = QPixmap::fromImage(std::move(image));
     this->ui->imageLabel->setPixmap(pixmap);
-    this->ui->currPosLabel->setText(QString("(%1:%2)").arg(this->currPos.x()).arg(this->currPos.y()));
 }
 
 void PaintWidget::on_closePushButtonClicked()
