@@ -200,7 +200,7 @@ QImage PaintWidget::copyCurrent() const
             destBits[x] = color.rgba();
         }
     }
-    return result;
+    return image;
 }
 
 void PaintWidget::pasteCurrent(const QImage &image)
@@ -209,8 +209,7 @@ void PaintWidget::pasteCurrent(const QImage &image)
     int frameIndex = INT_MAX;
     if (this->levelCelView != nullptr) {
         frameIndex = this->levelCelView->getCurrentFrameIndex();
-    }
-    else if (this->celView != nullptr) {
+    } else if (this->celView != nullptr) {
         frameIndex = this->celView->getCurrentFrameIndex();
     }
     if (this->gfx->getFrameCount() <= frameIndex) {
@@ -223,8 +222,7 @@ void PaintWidget::pasteCurrent(const QImage &image)
     if (this->rubberBand != nullptr) {
         QRect area = getArea(this->currPos, this->lastPos);
         destPos = area.topLeft();
-    }
-    else {
+    } else {
         this->rubberBand = new QRubberBand(QRubberBand::Rectangle, this->parentWidget());
     }
     this->currPos = destPos;
@@ -242,7 +240,7 @@ void PaintWidget::pasteCurrent(const QImage &image)
     std::vector<FramePixel> pixels;
     for (int y = 0; y < image.height(); y++) {
         for (int x = 0; x < image.width(); x++, srcBits++) {
-            D1GfxPixel pixel = srcFrame->getPixel(x, y);
+            D1GfxPixel pixel = srcFrame.getPixel(x, y);
             if (pixel.isTransparent()) {
                 continue;
             }
