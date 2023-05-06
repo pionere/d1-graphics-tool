@@ -371,10 +371,11 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
                 QPoint globalBottomRight = this->parentWidget()->mapToGlobal(rubberBandRect.bottomRight());
                 QRect globalRubberBandRect = QRect(globalTopLeft, globalBottomRight);
                 if (globalRubberBandRect.contains(globalCursorPos)) {
-                    this->movePos = pos;
-                    this->lastMoveCmd = nullptr;
+                    if (this->selectionMoveMode == 0) {
+                        this->movePos = pos;
+                        this->lastMoveCmd = nullptr;
+                    }
                     this->selectionMoveMode = 1;
-                    this->ui->gradientXLineEdit->setText(QString("%1:%2").arg(pos.x()).arg(pos.y()));
                     return true;
                 }
             }
@@ -410,7 +411,6 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
                 }
             }
             QPoint delta = pos - this->movePos;
-            this->ui->gradientYLineEdit->setText(QString("%1:%2").arg(delta.x()).arg(delta.y()));
             for (int x = area.left(); x <= area.right(); x++) {
                 for (int y = area.top(); y <= area.bottom(); y++) {
                     QPoint tp = QPoint(x, y) + delta;
