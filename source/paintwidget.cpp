@@ -388,6 +388,7 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
             if (this->lastMoveCmd != nullptr && this->undoStack->count() != 0 && this->undoStack->command(0) == this->lastMoveCmd) {
                 this->undoStack->undo();
             }
+            this->selectionMoveMode = 2;
 
             QRect area = getArea(this->currPos, this->lastPos);
             if (area.left() < 0) {
