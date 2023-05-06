@@ -150,7 +150,7 @@ void InitLvlDungeon()
 		nMissileTable[8] = false; // the only column which was blocking missiles
 		break;
 	case DTYPE_CATACOMBS:
-		// patch dMegaTiles and dMiniTiles - L2.TIL, L2.MIN
+		// patch dMegaTiles, dMiniTiles and dSolidTable - L2.TIL, L2.MIN, L2.SOL
 		// reuse subtiles
 		pTiles[41][1] = 135;
 		// add separate tiles and subtiles for the arches
@@ -190,6 +190,11 @@ void InitLvlDungeon()
 		// pSubtiles[566][1] = pSubtiles[166][1];
 		// pSubtiles[567][0] = pSubtiles[167][0];
 		// pSubtiles[567][1] = pSubtiles[167][1];
+		// make the back of the stairs non-walkable
+		pTiles[72][1] = 56;
+		nSolidTable[252] = true;
+		nBlockTable[252] = true;
+		nMissileTable[252] = true;
 		break;
 	case DTYPE_CAVES:
 		nSolidTable[249] = false; // sync tile 68 and 69 by making subtile 249 of tile 68 walkable.
@@ -197,8 +202,8 @@ void InitLvlDungeon()
 	case DTYPE_HELL:
 		// patch dSolidTable - L4.SOL
 		nMissileTable[141] = false; // fix missile-blocking tile of down-stairs.
-		// nMissileTable[137] = false; // fix missile-blocking tile of down-stairs. - skip to keep in sync with the nSolidTable
-		// nSolidTable[137] = false;   // fix non-walkable tile of down-stairs. - skip, because it causes a graphic glitch
+		nMissileTable[137] = false; // fix missile-blocking tile of down-stairs.
+		nSolidTable[137] = false;   // fix non-walkable tile of down-stairs. - causes a graphic glitch, but keep in sync with patch users
 		nSolidTable[130] = true;    // make the inner tiles of the down-stairs non-walkable I.
 		nSolidTable[132] = true;    // make the inner tiles of the down-stairs non-walkable II.
 		nSolidTable[131] = true;    // make the inner tiles of the down-stairs non-walkable III.

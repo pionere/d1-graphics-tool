@@ -48,4 +48,5 @@ public:
 
 private:
     void patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool silent);
+    void patchHellExit(int tileIndex, bool silent);
 };
