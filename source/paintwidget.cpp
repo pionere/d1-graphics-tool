@@ -22,25 +22,18 @@ FramePixel::FramePixel(const QPoint &p, D1GfxPixel px)
 {
 }
 
-EditFrameCommand::EditFrameCommand(PAINT_EDIT_TYPE t, D1GfxFrame *f, const QPoint &pos, D1GfxPixel newPixel)
+EditFrameCommand::EditFrameCommand(D1GfxFrame *f, const QPoint &pos, D1GfxPixel newPixel)
     : QUndoCommand(nullptr)
-    , type(t)
     , frame(f)
 {
     this->modPixels.push_back(FramePixel(pos, newPixel));
 }
 
-EditFrameCommand::EditFrameCommand(PAINT_EDIT_TYPE t, D1GfxFrame *f, const std::vector<FramePixel> &pixels)
+EditFrameCommand::EditFrameCommand(D1GfxFrame *f, const std::vector<FramePixel> &pixels)
     : QUndoCommand(nullptr)
-    , type(t)
     , frame(f)
     , modPixels(pixels)
 {
-}
-
-PAINT_EDIT_TYPE EditFrameCommand::getType() const
-{
-    return this->type;
 }
 
 void EditFrameCommand::undo()
@@ -76,6 +69,7 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, D1Gfx *g, CelView *cv,
     , rubberBand(nullptr)
     , moving(false)
     , moved(false)
+    , lastMoveCmd(nullptr);
 {
     this->ui->setupUi(this);
 
@@ -337,11 +331,26 @@ void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std:
 
 static QRect getArea(const QPoint &pos1, const QPoint &pos2)
 {
-    int x = std::min(pos1.x(), pos2.x());
+    /*int x = std::min(pos1.x(), pos2.x());
     int y = std::min(pos1.y(), pos2.y());
     int w = std::abs(pos1.x() - pos2.x());
     int h = std::abs(pos1.y() - pos2.y());
-    return QRect(x, y, w, h);
+    return QRect(x, y, w, h);*/
+    return QRect(pos1, pos2).normalized();
+}
+
+void PaintWidget::selectArea(const QRect &area)
+{
+    QRect sceneRect = area;
+    sceneRect.adjust(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN, CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
+    QPolygon poly = this->graphView->mapFromScene(sceneRect);
+    QRect vpRect = poly.boundingRect();
+    QPoint globalTopLeft = this->graphView->viewport()->mapToGlobal(vpRect.topLeft());
+    QPoint globalBottomRight = this->graphView->viewport()->mapToGlobal(vpRect.bottomRight());
+    QPoint topLeft = this->parentWidget()->mapFromGlobal(globalTopLeft);
+    QPoint bottomRight = this->parentWidget()->mapFromGlobal(globalBottomRight);
+    this->rubberBand->setGeometry(QRect(topLeft, bottomRight));
+    this->rubberBand->show();
 }
 
 bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
@@ -355,23 +364,20 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
         if (first) {
             if (this->rubberBand && getArea(this->currPos, this->lastPos).contains(pos)) {
                 this->movePos = pos;
+                this->lastMoveCmd = nullptr;
                 this->selectionMoveMode = 1;
                 return true;
             }
+            this->lastMoveCmd = nullptr;
             this->selectionMoveMode = 0;
             this->lastPos = pos;
             MemFree(this->rubberBand);
             return true;
         }
         if (this->selectionMoveMode != 0) {
-            if (this->selectionMoveMode == 2) {
-                const QUndoCommand *prevCommand = this->undoStack->command(0);
-                const EditFrameCommand *prevEditCommand = qobject_cast<const EditFrameCommand *>(prevCommand);
-                if (prevEditCommand != nullptr && prevEditCommand->getType() == PAINT_EDIT_TYPE::Move) {
-                    this->undoStack->undo();
-                }
+            if (this->lastMoveCmd != nullptr && this->undoStack->count() != 0 && this->undoStack->command(0) == this->lastMoveCmd) {
+                this->undoStack->undo();
             }
-            this->selectionMoveMode = 2;
 
             QRect area = getArea(this->currPos, this->lastPos);
             if (area.left() < 0) {
@@ -410,11 +416,15 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
                 }
             }
 
+            area.translate(delta);
+            this->selectArea(area);
+
             // Build frame editing command and connect it to the current main window widget
             // to update the palHits and CEL views when undo/redo is performed
-            EditFrameCommand *command = new EditFrameCommand(PAINT_EDIT_TYPE::Move, frame, pixels);
+            EditFrameCommand *command = new EditFrameCommand(frame, pixels);
             QObject::connect(command, &EditFrameCommand::modified, &dMainWindow(), &MainWindow::frameModified);
 
+            this->lastMoveCmd = command;
             this->undoStack->push(command);
             return true;
         }
@@ -423,7 +433,8 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
             this->rubberBand = new QRubberBand(QRubberBand::Rectangle, this->parentWidget());
         }
         this->currPos = pos;
-        QRect sceneRect = getArea(this->currPos, this->lastPos);
+        this->selectArea(getArea(this->currPos, this->lastPos));
+        /*QRect sceneRect = getArea(this->currPos, this->lastPos);
         sceneRect.adjust(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN, CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
         QPolygon poly = this->graphView->mapFromScene(sceneRect);
         QRect vpRect = poly.boundingRect();
@@ -432,10 +443,11 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
         QPoint topLeft = this->parentWidget()->mapFromGlobal(globalTopLeft);
         QPoint bottomRight = this->parentWidget()->mapFromGlobal(globalBottomRight);
         this->rubberBand->setGeometry(QRect(topLeft, bottomRight));
-        this->rubberBand->show();
+        this->rubberBand->show();*/
         return true;
     }
     this->selectionMoveMode = 0;
+    this->lastMoveCmd = nullptr;
     if (this->rubberBand) {
         MemFree(this->rubberBand);
     }
@@ -553,7 +565,7 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
 
     // Build frame editing command and connect it to the current main window widget
     // to update the palHits and CEL views when undo/redo is performed
-    EditFrameCommand *command = new EditFrameCommand(PAINT_EDIT_TYPE::Draw, frame, pixels);
+    EditFrameCommand *command = new EditFrameCommand(frame, pixels);
     QObject::connect(command, &EditFrameCommand::modified, &dMainWindow(), &MainWindow::frameModified);
 
     this->undoStack->push(command);
@@ -785,7 +797,7 @@ void PaintWidget::on_tilesetMaskPushButton_clicked()
 
     // Build frame editing command and connect it to the current main window widget
     // to update the palHits and CEL views when undo/redo is performed
-    EditFrameCommand *command = new EditFrameCommand(PAINT_EDIT_TYPE::Mask, frame, pixels);
+    EditFrameCommand *command = new EditFrameCommand(frame, pixels);
     QObject::connect(command, &EditFrameCommand::modified, &dMainWindow(), &MainWindow::frameModified);
 
     this->undoStack->push(command);
