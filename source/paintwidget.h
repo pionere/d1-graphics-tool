@@ -91,6 +91,7 @@ private:
     QGraphicsView *graphView;
     bool moving;
     bool moved;
+    QPoint currPos;
     QPoint lastPos;
     int distance;
     D1Pal *pal;

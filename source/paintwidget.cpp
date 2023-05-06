@@ -325,7 +325,14 @@ void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std:
 
 bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
 {
-    if (this->isHidden() || this->ui->pickModeRadioButton->isChecked()) {
+    if (this->isHidden()) {
+        return false;
+    }
+
+    this->ui->currPosLabel->setText(QString("(%1:%2)").arg(pos.x()).arg(pos.y()));
+
+    if (this->ui->pickModeRadioButton->isChecked()) {
+        // pick mode
         return false;
     }
 
@@ -350,7 +357,7 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
             if (!xGradient.isEmpty() || !yGradient.isEmpty()) {
                 int gx = xGradient.toInt();
                 int gy = yGradient.toInt();
-                QPoint dPos = pos - this->lastPos;
+                QPoint dPos = pos - this->currPos;
                 bool sx = (gx < 0) == (dPos.x() < 0);
                 bool sy = (gy < 0) == (dPos.y() < 0);
                 if (gx == 0) {
@@ -366,7 +373,7 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
                     dPos.setY(dy);
                     // 'step back' to let the user do equal advances
                     if (this->distance == 0 && dy != 0 && abs(gy) > 1) {
-                        this->lastPos.ry() += dy < 0 ? 1 : -1;
+                        this->currPos.ry() += dy < 0 ? 1 : -1;
                         this->distance = -1;
                     }
                 } else if (gy == 0) {
@@ -379,7 +386,7 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
                     dPos.setX(dx);
                     // 'step back' to let the user do equal advances
                     if (this->distance == 0 && dx != 0 && abs(gx) > 1) {
-                        this->lastPos.rx() += dx < 0 ? 1 : -1;
+                        this->currPos.rx() += dx < 0 ? 1 : -1;
                         this->distance = -1;
                     }
                 } else {
@@ -401,21 +408,21 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
                     // TODO: 'step back' to let the user do equal advances?
                 }
 
-                destPos = this->lastPos + dPos;
+                destPos = this->currPos + dPos;
             }
 
-            (this->*collectorFunc)(this->lastPos.x(), this->lastPos.y(), 0, allPixels);
+            (this->*collectorFunc)(this->currPos.x(), this->currPos.y(), 0, allPixels);
             unsigned n = allPixels.size();
 
-            traceClick(this->lastPos, destPos, allPixels, collectorFunc);
+            traceClick(this->currPos, destPos, allPixels, collectorFunc);
 
             allPixels.erase(allPixels.begin(), allPixels.begin() + n);
 
-            QPoint dPos = destPos - this->lastPos;
+            QPoint dPos = destPos - this->currPos;
             this->distance += std::max(abs(dPos.x()), abs(dPos.y()));
         }
     }
-    this->lastPos = destPos;
+    this->currPos = destPos;
     // filter pixels
     std::vector<FramePixel> pixels;
     for (const FramePixel &framePixel : allPixels) {
@@ -540,10 +547,10 @@ void PaintWidget::mousePressEvent(QMouseEvent *event)
 void PaintWidget::mouseMoveEvent(QMouseEvent *event)
 {
     if (this->moving) {
-        QPoint currPos = QCursor::pos();
+        QPoint cursorPos = QCursor::pos();
         QPoint wndPos = this->pos();
-        wndPos += currPos - this->lastPos;
-        this->lastPos = currPos;
+        wndPos += cursorPos - this->lastPos;
+        this->lastPos = cursorPos;
         this->move(wndPos);
         // return;
     }
