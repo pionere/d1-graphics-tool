@@ -3185,6 +3185,34 @@ void LevelCelView::setTileIndex(int tileIndex)
 void LevelCelView::ShowContextMenu(const QPoint &pos)
 {
     if (this->dunView) {
+        QAction actions[4];
+        QMenu contextMenu(this);
+
+        int cursor = 0;
+        actions[cursor].setText(tr("Insert Row"));
+        actions[cursor].setToolTip(tr("Add a row before the one at the current position"));
+        QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionInsert_DunRow_triggered()));
+        contextMenu.addAction(&actions[cursor]);
+
+        cursor++;
+        actions[cursor].setText(tr("Insert Column"));
+        actions[cursor].setToolTip(tr("Add a column before the one at the current position"));
+        QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionInsert_DunColumn_triggered()));
+        contextMenu.addAction(&actions[cursor]);
+
+        cursor++;
+        actions[cursor].setText(tr("Delete Row"));
+        actions[cursor].setToolTip(tr("Delete the row at the current position"));
+        QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionDel_DunRow_triggered()));
+        actions[cursor].setEnabled(this->dun->getHeight() > TILE_HEIGHT);
+        contextMenu.addAction(&actions[cursor]);
+
+        cursor++;
+        actions[cursor].setText(tr("Delete Column"));
+        actions[cursor].setToolTip(tr("Delete the column at the current position"));
+        QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionDel_DunColumn_triggered()));
+        actions[cursor].setEnabled(this->dun->getWidth() > TILE_WIDTH);
+        contextMenu.addAction(&actions[cursor]);
         return;
     }
     MainWindow *mw = &dMainWindow();
@@ -3600,6 +3628,53 @@ void LevelCelView::on_actionToggle_View_triggered()
     }
     QString zoomText = zoomField->text();
     this->celScene.setZoom(zoomText);
+    // update the view
+    this->displayFrame();
+}
+
+void LevelCelView::on_actionInsert_DunRow_triggered()
+{
+    int row = this->currentDunPosY;
+
+    this->dun->insertRow(row);
+
+    // update the view
+    this->displayFrame();
+}
+
+void LevelCelView::on_actionInsert_DunColumn_triggered()
+{
+    int column = this->currentDunPosX;
+
+    this->dun->insertColumn(column);
+
+    // update the view
+    this->displayFrame();
+}
+
+void LevelCelView::on_actionDel_DunRow_triggered()
+{
+    int row = this->currentDunPosY;
+
+    this->dun->removeRow(row);
+
+    if (row >= this->dun->getHeight()) {
+        this->currentDunPosY = this->dun->getHeight() - 1;
+    }
+
+    // update the view
+    this->displayFrame();
+}
+
+void LevelCelView::on_actionDel_DunColumn_triggered()
+{
+    int column = this->currentDunPosX;
+
+    this->dun->removeColumn(column);
+    if (column >= this->dun->getWidth()) {
+        this->currentDunPosX = this->dun->getWidth() - 1;
+    }
+
     // update the view
     this->displayFrame();
 }

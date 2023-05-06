@@ -196,6 +196,11 @@ public:
     bool protectTilesFrom(const D1Dun *srcDun);
     bool protectSubtiles();
 
+    void insertRow(int row);
+    void insertColumn(int column);
+    void removeRow(int row);
+    void removeColumn(int column);
+
     void patch(int dunFileIndex); // dun_file_index
 
     bool reloadTileset(const QString &celFilePath);

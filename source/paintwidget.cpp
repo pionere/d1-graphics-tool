@@ -225,16 +225,19 @@ void PaintWidget::pasteCurrent(const QImage &image)
     } else {
         this->rubberBand = new QRubberBand(QRubberBand::Rectangle, this->parentWidget());
     }
+    QMessageBox::critical(nullptr, "Error", QString("pasting to %1:%2").arg(destPos.x()).arg(destPos.y()));
     this->currPos = destPos;
     QRect area = QRect(destPos, QSize(image.size()));
     this->lastPos = area.bottomRight();
     this->selectArea(area);
     this->selectionMoveMode = 0;
+    QMessageBox::critical(nullptr, "Error", QString("area selected to %1:%2").arg(lastPos.x()).arg(lastPos.y()));
 
     // load the image
     D1GfxFrame srcFrame;
     D1ImageFrame::load(srcFrame, image, false, this->pal);
 
+    QMessageBox::critical(nullptr, "Error", QString("image loaded %1:%2").arg(image.width()).arg(image.height()));
     // copy to the destination
     const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
     std::vector<FramePixel> pixels;
@@ -254,6 +257,7 @@ void PaintWidget::pasteCurrent(const QImage &image)
             pixels.push_back(FramePixel(tp, pixel));
         }
     }
+    QMessageBox::critical(nullptr, "Error", QString("pixels collected %1").arg(pixels.size());
     if (!pixels.empty()) {
         // Build frame editing command and connect it to the current main window widget
         // to update the palHits and CEL views when undo/redo is performed
