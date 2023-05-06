@@ -69,7 +69,7 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, D1Gfx *g, CelView *cv,
     , rubberBand(nullptr)
     , moving(false)
     , moved(false)
-    , lastMoveCmd(nullptr);
+    , lastMoveCmd(nullptr)
 {
     this->ui->setupUi(this);
 
