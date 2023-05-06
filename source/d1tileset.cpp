@@ -670,8 +670,12 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
         }
     }
     // fix bad artifacts
-    bottomRight_RightFrame->setPixel(14, 0, D1GfxPixel::transparentPixel()); // 377
-    topLeft_RightFrame->setPixel(7, 7, D1GfxPixel::transparentPixel());      // 369
+    // bottomRight_RightFrame->setPixel(14, 0, D1GfxPixel::transparentPixel()); // 377
+    // topLeft_RightFrame->setPixel(7, 7, D1GfxPixel::transparentPixel());      // 369
+
+    // gpBuffer[MICRO_WIDTH + 7 + (MICRO_HEIGHT * 2 - (MICRO_HEIGHT - 8) - 1) * BUFFER_WIDTH] = TRANS_COLOR; // 369
+    // gpBuffer[2 * MICRO_WIDTH + 14 + (MICRO_HEIGHT * 3 - (MICRO_HEIGHT / 2 - 1) - 1) * BUFFER_WIDTH] = TRANS_COLOR; // 370
+    // gpBuffer[2 * MICRO_WIDTH + 12 + (MICRO_HEIGHT * 3 - (MICRO_HEIGHT / 2 + 2) - 1) * BUFFER_WIDTH] = 122; // 370
 
     // adjust the frame types
     D1CelTilesetFrame::selectFrameType(topLeft_Left0Frame);     // 368

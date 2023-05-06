@@ -364,12 +364,19 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
     if (this->ui->selectModeRadioButton->isChecked()) {
         // select mode
         if (first) {
-            if (this->rubberBand && getArea(this->currPos, this->lastPos).contains(pos) && this->selectionMoveMode != 1) {
-                this->movePos = pos;
-                this->lastMoveCmd = nullptr;
-                this->selectionMoveMode = 1;
-                this->ui->gradientXLineEdit->setText(QString("%1:%2").arg(pos.x()).arg(pos.y()));
-                return true;
+            if (this->rubberBand && this->selectionMoveMode != 1) {
+                QPoint globalCursorPos = QCursor::pos();
+                QRect rubberBandRect = this->rubberBand->geometry();
+                QPoint globalTopLeft = this->parentWidget()->mapToGlobal(rubberBandRect.topLeft());
+                QPoint globalBottomRight = this->parentWidget()->mapToGlobal(rubberBandRect.bottomRight());
+                QRect globalRubberBandRect = QRect(globalTopLeft, globalBottomRight);
+                if (globalRubberBandRect.contains(globalCursorPos)) {
+                    this->movePos = pos;
+                    this->lastMoveCmd = nullptr;
+                    this->selectionMoveMode = 1;
+                    this->ui->gradientXLineEdit->setText(QString("%1:%2").arg(pos.x()).arg(pos.y()));
+                    return true;
+                }
             }
             this->lastMoveCmd = nullptr;
             this->selectionMoveMode = 0;
