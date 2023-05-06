@@ -3213,6 +3213,8 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
         QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionDel_DunTileColumn_triggered()));
         actions[cursor].setEnabled(this->dun->getWidth() > TILE_WIDTH);
         contextMenu.addAction(&actions[cursor]);
+
+        contextMenu.exec(mapToGlobal(pos));
         return;
     }
     MainWindow *mw = &dMainWindow();
