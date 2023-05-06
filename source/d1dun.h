@@ -196,10 +196,10 @@ public:
     bool protectTilesFrom(const D1Dun *srcDun);
     bool protectSubtiles();
 
-    void insertRow(int row);
-    void insertColumn(int column);
-    void removeRow(int row);
-    void removeColumn(int column);
+    void insertTileRow(int posy);
+    void insertTileColumn(int posx);
+    void removeTileRow(int posy);
+    void removeTileColumn(int posx);
 
     void patch(int dunFileIndex); // dun_file_index
 

@@ -3189,28 +3189,28 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
         QMenu contextMenu(this);
 
         int cursor = 0;
-        actions[cursor].setText(tr("Insert Row"));
-        actions[cursor].setToolTip(tr("Add a row before the one at the current position"));
-        QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionInsert_DunRow_triggered()));
+        actions[cursor].setText(tr("Insert Tile-Row"));
+        actions[cursor].setToolTip(tr("Add a tile-row before the one at the current position"));
+        QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionInsert_DunTileRow_triggered()));
         contextMenu.addAction(&actions[cursor]);
 
         cursor++;
-        actions[cursor].setText(tr("Insert Column"));
-        actions[cursor].setToolTip(tr("Add a column before the one at the current position"));
-        QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionInsert_DunColumn_triggered()));
+        actions[cursor].setText(tr("Insert Tile-Column"));
+        actions[cursor].setToolTip(tr("Add a tile-column before the one at the current position"));
+        QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionInsert_DunTileColumn_triggered()));
         contextMenu.addAction(&actions[cursor]);
 
         cursor++;
-        actions[cursor].setText(tr("Delete Row"));
-        actions[cursor].setToolTip(tr("Delete the row at the current position"));
-        QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionDel_DunRow_triggered()));
+        actions[cursor].setText(tr("Delete Tile-Row"));
+        actions[cursor].setToolTip(tr("Delete the tile-row at the current position"));
+        QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionDel_DunTileRow_triggered()));
         actions[cursor].setEnabled(this->dun->getHeight() > TILE_HEIGHT);
         contextMenu.addAction(&actions[cursor]);
 
         cursor++;
-        actions[cursor].setText(tr("Delete Column"));
-        actions[cursor].setToolTip(tr("Delete the column at the current position"));
-        QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionDel_DunColumn_triggered()));
+        actions[cursor].setText(tr("Delete Tile-Column"));
+        actions[cursor].setToolTip(tr("Delete the tile-column at the current position"));
+        QObject::connect(&actions[cursor], SIGNAL(triggered()), this, SLOT(on_actionDel_DunTileColumn_triggered()));
         actions[cursor].setEnabled(this->dun->getWidth() > TILE_WIDTH);
         contextMenu.addAction(&actions[cursor]);
         return;
@@ -3632,31 +3632,31 @@ void LevelCelView::on_actionToggle_View_triggered()
     this->displayFrame();
 }
 
-void LevelCelView::on_actionInsert_DunRow_triggered()
+void LevelCelView::on_actionInsert_DunTileRow_triggered()
 {
     int row = this->currentDunPosY;
 
-    this->dun->insertRow(row);
+    this->dun->insertTileRow(row);
 
     // update the view
     this->displayFrame();
 }
 
-void LevelCelView::on_actionInsert_DunColumn_triggered()
+void LevelCelView::on_actionInsert_DunTileColumn_triggered()
 {
     int column = this->currentDunPosX;
 
-    this->dun->insertColumn(column);
+    this->dun->insertTileColumn(column);
 
     // update the view
     this->displayFrame();
 }
 
-void LevelCelView::on_actionDel_DunRow_triggered()
+void LevelCelView::on_actionDel_DunTileRow_triggered()
 {
     int row = this->currentDunPosY;
 
-    this->dun->removeRow(row);
+    this->dun->removeTileRow(row);
 
     if (row >= this->dun->getHeight()) {
         this->currentDunPosY = this->dun->getHeight() - 1;
@@ -3666,11 +3666,11 @@ void LevelCelView::on_actionDel_DunRow_triggered()
     this->displayFrame();
 }
 
-void LevelCelView::on_actionDel_DunColumn_triggered()
+void LevelCelView::on_actionDel_DunTileColumn_triggered()
 {
     int column = this->currentDunPosX;
 
-    this->dun->removeColumn(column);
+    this->dun->removeTileColumn(column);
     if (column >= this->dun->getWidth()) {
         this->currentDunPosX = this->dun->getWidth() - 1;
     }
