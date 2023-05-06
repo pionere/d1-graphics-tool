@@ -403,15 +403,15 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
                 area.setBottom(frame->getHeight());
             }
             std::vector<FramePixel> pixels;
-            for (int x = area.left(); x < area.right(); x++) {
-                for (int y = area.top(); y < area.bottom(); y++) {
+            for (int x = area.left(); x <= area.right(); x++) {
+                for (int y = area.top(); y <= area.bottom(); y++) {
                     pixels.push_back(FramePixel(QPoint(x, y), D1GfxPixel::transparentPixel()));
                 }
             }
             QPoint delta = pos - this->movePos;
             this->ui->gradientYLineEdit->setText(QString("%1:%2").arg(delta.x()).arg(delta.y()));
-            for (int x = area.left(); x < area.right(); x++) {
-                for (int y = area.top(); y < area.bottom(); y++) {
+            for (int x = area.left(); x <= area.right(); x++) {
+                for (int y = area.top(); y <= area.bottom(); y++) {
                     QPoint tp = QPoint(x, y) + delta;
                     if (tp.x() < 0 || tp.x() >= frame->getWidth()) {
                         continue;
