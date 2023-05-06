@@ -893,6 +893,8 @@ void D1Tileset::patch(int dunType, bool silent)
         ReplaceSubtile(this->til, 164 - 1, 1, 567, silent); // - 167
         ReplaceSubtile(this->til, 164 - 1, 2, 168, silent);
         ReplaceSubtile(this->til, 164 - 1, 3, 169, silent);
+        // make the back of the stairs non-walkable
+        ReplaceSubtile(this->til, 72 - 1, 1, 56, silent);
         break;
     case DTYPE_CAVES:
         // patch dMiniTiles - L3.MIN
