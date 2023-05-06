@@ -12,13 +12,21 @@
 
 #include "d1gfx.h"
 
+enum class PAINT_EDIT_TYPE {
+    Draw,
+    Mask,
+    Move,
+};
+
 class EditFrameCommand : public QObject, public QUndoCommand {
     Q_OBJECT
 
 public:
-    explicit EditFrameCommand(D1GfxFrame *frame, const QPoint &pos, D1GfxPixel newPixel);
-    explicit EditFrameCommand(D1GfxFrame *frame, const std::vector<FramePixel> &modPixels);
+    explicit EditFrameCommand(PAINT_EDIT_TYPE type, D1GfxFrame *frame, const QPoint &pos, D1GfxPixel newPixel);
+    explicit EditFrameCommand(PAINT_EDIT_TYPE type, D1GfxFrame *frame, const std::vector<FramePixel> &modPixels);
     ~EditFrameCommand() = default;
+
+    PAINT_EDIT_TYPE getType() const;
 
     void undo() override;
     void redo() override;
@@ -27,6 +35,7 @@ signals:
     void modified();
 
 private:
+    PAINT_EDIT_TYPE type;
     QPointer<D1GfxFrame> frame;
     std::vector<FramePixel> modPixels;
 };
@@ -93,6 +102,8 @@ private:
     QRubberBand *rubberBand;
     bool moving;
     bool moved;
+    int8_t selectionMoveMode;
+    QPoint currPos;
     QPoint lastPos;
     int distance;
     D1Pal *pal;

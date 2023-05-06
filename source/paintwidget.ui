@@ -21,20 +21,27 @@
    <item>
     <layout class="QHBoxLayout">
      <item>
-      <widget class="QLabel" name="imageLabel">
-       <property name="minimumSize">
-        <size>
-         <width>16</width>
-         <height>16</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16</width>
-         <height>16</height>
-        </size>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout">
+       <item>
+        <widget class="QLabel" name="imageLabel">
+         <property name="minimumSize">
+          <size>
+           <width>16</width>
+           <height>16</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16</width>
+           <height>16</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="currPosLabel"/>
+       </item>
+      </layout>
      </item>
      <item>
       <spacer>
