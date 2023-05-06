@@ -153,6 +153,91 @@ void PaintWidget::hide()
     QFrame::hide();
 }
 
+QImage PaintWidget::copyCurrent() const
+{
+    int frameIndex = INT_MAX;
+    if (this->levelCelView != nullptr) {
+        frameIndex = this->levelCelView->getCurrentFrameIndex();
+    } else if (this->celView != nullptr) {
+        frameIndex = this->celView->getCurrentFrameIndex();
+    }
+    if (this->gfx->getFrameCount() <= frameIndex || this->rubberBand == nullptr) {
+        return QImage();
+    }
+    D1GfxFrame *frame = this->gfx->getFrame(frameIndex);
+
+    QRect area = getArea(this->currPos, this->lastPos);
+    if (area.left() < 0) {
+        area.setLeft(0);
+    }
+    if (area.right() > frame->getWidth()) {
+        area.setRight(frame->getWidth());
+    }
+    if (area.top() < 0) {
+        area.setTop(0);
+    }
+    if (area.bottom() > frame->getHeight()) {
+        area.setBottom(frame->getHeight());
+    }
+    QImage result = QImage(area.size(), QImage::Format_ARGB32);
+    QRgb *destBits = reinterpret_cast<QRgb *>(image.bits());
+    for (int y = 0; y < area.height(); y++) {
+        for (int x = 0; x < area.width(); x++, destBits++) {
+            D1GfxPixel d1pix = frame->getPixel(x + area.left(), area.top() + y);
+
+            QColor color;
+            if (d1pix.isTransparent())
+                color = QColor(Qt::transparent);
+            else
+                color = this->pal->getColor(d1pix.getPaletteIndex());
+
+            destBits[x] = color.rgba();
+        }
+    }
+    return result;
+}
+
+static QRect getArea(const QPoint &pos1, const QPoint &pos2)
+{
+    return QRect(pos1, pos2).normalized();
+}
+
+void PaintWidget::pasteCurrent(const QImage &image)
+{
+
+}
+
+void PaintWidget::deleteCurrent()
+{
+    int frameIndex = INT_MAX;
+    if (this->levelCelView != nullptr) {
+        frameIndex = this->levelCelView->getCurrentFrameIndex();
+    } else if (this->celView != nullptr) {
+        frameIndex = this->celView->getCurrentFrameIndex();
+    }
+    if (this->gfx->getFrameCount() <= frameIndex || this->rubberBand == nullptr) {
+        return;
+    }
+    D1GfxFrame *frame = this->gfx->getFrame(frameIndex);
+
+    QRect area = getArea(this->currPos, this->lastPos);
+    bool change = false;
+    for (int y = area.top(); y <= area.bottom(); y++) {
+        for (int x = area.left(); x <= area.right(); x++) {
+            if (x < 0 || x >= frame->getWidth()) {
+                continue;
+            }
+            if (y < 0 || y >= frame->getHeight()) {
+                continue;
+            }
+            change |= frame->setPixel(x, y, D1GfxPixel::tranparentColor());
+        }
+    }
+    if (change) {
+        this->gfx->setModified();
+    }
+}
+
 D1GfxPixel PaintWidget::getCurrentColor(unsigned counter) const
 {
     unsigned numColors = this->selectedColors.size();
@@ -327,16 +412,6 @@ void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std:
                 break;
         }
     }
-}
-
-static QRect getArea(const QPoint &pos1, const QPoint &pos2)
-{
-    /*int x = std::min(pos1.x(), pos2.x());
-    int y = std::min(pos1.y(), pos2.y());
-    int w = std::abs(pos1.x() - pos2.x());
-    int h = std::abs(pos1.y() - pos2.y());
-    return QRect(x, y, w, h);*/
-    return QRect(pos1, pos2).normalized();
 }
 
 void PaintWidget::selectArea(const QRect &area)
@@ -770,7 +845,7 @@ void PaintWidget::on_tilesetMaskPushButton_clicked()
 {
     D1CEL_FRAME_TYPE maskType = this->ui->tilesetMaskComboBox->currentData().value<D1CEL_FRAME_TYPE>();
     int frameIndex = this->levelCelView->getCurrentFrameIndex();
-    if (this->gfx->getFrameCount() == 0) {
+    if (this->gfx->getFrameCount() <= frameIndex) {
         return;
     }
     D1GfxFrame *frame = this->gfx->getFrame(frameIndex);

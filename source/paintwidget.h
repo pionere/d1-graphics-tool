@@ -51,6 +51,10 @@ public:
     void show(); // override;
     void hide(); // override;
 
+    QImage copyCurrent() const;
+    void pasteCurrent(const QImage &image);
+    void deleteCurrent();
+
 private:
     D1GfxPixel getCurrentColor(unsigned counter) const;
     void stopMove();

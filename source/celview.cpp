@@ -26,7 +26,6 @@ CelScene::CelScene(QWidget *v)
 void CelScene::mouseEvent(QGraphicsSceneMouseEvent *event, bool first)
 {
     if (!(event->buttons() & Qt::LeftButton)) {
-        event->ignore();
         return;
     }
 
