@@ -416,6 +416,17 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
                     if (pixel.isTransparent()) {
                         continue;
                     }
+
+                    unsigned n = 0;
+                    for (; n < pixels.size(); n++) {
+                        if (pixels[n].pos == tp) {
+                            pixels[n].pixel = pixel;
+                            break;
+                        }
+                    }
+                    if (n < pixels.size()) {
+                        continue;
+                    }
                     pixels.push_back(FramePixel(tp, pixel));
                 }
             }
