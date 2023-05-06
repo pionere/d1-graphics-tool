@@ -242,7 +242,8 @@ void PaintWidget::pasteCurrent(const QImage &image)
     std::vector<FramePixel> pixels;
     for (int y = 0; y < image.height(); y++) {
         for (int x = 0; x < image.width(); x++, srcBits++) {
-            if (srcFrame->getPixel(x, y).isTransparent()) {
+            D1GfxPixel pixel = srcFrame->getPixel(x, y);
+            if (pixel.isTransparent()) {
                 continue;
             }
             QPoint tp = destPos + QPoint(x, y);
@@ -252,7 +253,7 @@ void PaintWidget::pasteCurrent(const QImage &image)
             if (tp.y() < 0 || tp.y() >= frame->getHeight()) {
                 continue;
             }
-            pixels.push_back(FramePixel(tp, D1GfxPixel::transparentPixel()));
+            pixels.push_back(FramePixel(tp, pixel));
         }
     }
     if (!pixels.empty()) {
