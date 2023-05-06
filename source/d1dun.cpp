@@ -2747,7 +2747,7 @@ void D1Dun::insertColumn(int column)
         tilesRow.insert(tilesRow.begin() + column, 0);
     }
     for (std::vector<Qt::CheckState> &tileProtectionsRow : this->tileProtections) {
-        tileProtectionsRow.insert(tileProtectionsRow.begin() + column, 0);
+        tileProtectionsRow.insert(tileProtectionsRow.begin() + column, Qt::Unchecked);
     }
     for (int i = 0; i < TILE_WIDTH; i++) {
         for (std::vector<int> &subtilesRow : this->subtiles) {

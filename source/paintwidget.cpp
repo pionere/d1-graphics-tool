@@ -257,7 +257,7 @@ void PaintWidget::pasteCurrent(const QImage &image)
             pixels.push_back(FramePixel(tp, pixel));
         }
     }
-    QMessageBox::critical(nullptr, "Error", QString("pixels collected %1").arg(pixels.size());
+    QMessageBox::critical(nullptr, "Error", QString("pixels collected %1").arg(pixels.size()));
     if (!pixels.empty()) {
         // Build frame editing command and connect it to the current main window widget
         // to update the palHits and CEL views when undo/redo is performed
