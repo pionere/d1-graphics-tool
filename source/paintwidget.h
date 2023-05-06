@@ -103,6 +103,7 @@ private:
     bool moving;
     bool moved;
     int8_t selectionMoveMode;
+    QPoint movePos;
     QPoint currPos;
     QPoint lastPos;
     int distance;

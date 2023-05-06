@@ -599,7 +599,7 @@ void PaintWidget::colorModified()
     }
     QPixmap pixmap = QPixmap::fromImage(std::move(image));
     this->ui->imageLabel->setPixmap(pixmap);
-    this->ui->currPosLabel->setText(Qstring("(%1:%2)").arg(this->currPos.x()).arg(this->currPos.y()));
+    this->ui->currPosLabel->setText(QString("(%1:%2)").arg(this->currPos.x()).arg(this->currPos.y()));
 }
 
 void PaintWidget::on_closePushButtonClicked()
