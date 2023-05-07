@@ -86,8 +86,9 @@ MainWindow::MainWindow()
     this->tileMenu.addAction("Delete", this, SLOT(on_actionDel_Tile_triggered()));
     this->ui->menuEdit->addMenu(&this->tileMenu);
 
-    // Initialize upscale option of 'Edit'
+    // Initialize resize/upscale option of 'Edit'
     this->ui->menuEdit->addSeparator();
+    this->resizeAction = this->ui->menuEdit->addAction("Resize", this, SLOT(on_actionResize_triggered()));
     this->upscaleAction = this->ui->menuEdit->addAction("Upscale", this, SLOT(on_actionUpscale_triggered()));
 
     this->on_actionClose_triggered();
@@ -783,7 +784,9 @@ void MainWindow::changeEvent(QEvent *event)
             menuActions[4]->setText(tr("Delete"));
             menuActions[4]->setToolTip(tr("Delete the current tile"));
         }
-        // (re)translate the upscale option of 'Edit'
+        // (re)translate the resize/upscale options of 'Edit'
+        this->upscaleAction->setText(tr("Resize"));
+        this->upscaleAction->setToolTip(tr("Resize the current graphics"));
         this->upscaleAction->setText(tr("Upscale"));
         this->upscaleAction->setToolTip(tr("Upscale the current graphics"));
     }
@@ -1138,6 +1141,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(fileType != 4);
+    this->resizeAction->setEnabled(this->celView != nullptr);
     this->ui->menuView->setEnabled(true);
     this->ui->menuPalette->setEnabled(true);
     this->ui->actionExport->setEnabled(fileType != 4);
@@ -1259,6 +1263,20 @@ void MainWindow::saveFile(const SaveAsParam &params)
 
     // Clear loading message from status bar
     ProgressDialog::done();
+}
+
+void MainWindow::resize(const ResizeParam &params)
+{
+    /*ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Resizing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->celView->resize(params);
+
+    // Clear loading message from status bar
+    ProgressDialog::done();*/
+    std::function<void()> func = [this, params]() {
+        this->celView->resize(params);
+    };
+    ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Resizing..."), 1, PAF_UPDATE_WINDOW, std::move(func));
 }
 
 void MainWindow::upscale(const UpscaleParam &params)
@@ -1619,6 +1637,15 @@ void MainWindow::on_actionToggleBottomPanel_triggered()
     if (this->tblView != nullptr) {
         this->tblView->toggleBottomPanel();
     }
+}
+
+void MainWindow::on_actionResize_triggered()
+{
+    if (this->resizeDialog == nullptr) {
+        this->resizeDialog = new ResizeDialog(this);
+    }
+    this->resizeDialog->initialize(this->gfx);
+    this->resizeDialog->show();
 }
 
 void MainWindow::on_actionUpscale_triggered()

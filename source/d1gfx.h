@@ -71,7 +71,9 @@ public:
     ~D1GfxFrame() = default;
 
     int getWidth() const;
+    void setWidth(int width);
     int getHeight() const;
+    void setHeight(int height);
     D1GfxPixel getPixel(int x, int y) const;
     std::vector<std::vector<D1GfxPixel>> &getPixels() const;
     bool setPixel(int x, int y, D1GfxPixel pixel);

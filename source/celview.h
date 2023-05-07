@@ -14,6 +14,7 @@
 #include <QWidget>
 
 #include "d1gfx.h"
+#include "resizedialog.h"
 #include "upscaledialog.h"
 
 #define ZOOM_LIMIT 10
@@ -82,6 +83,7 @@ public:
     QImage copyCurrent() const;
     void pasteCurrent(const QImage &image);
 
+    void resize(const ResizeParam &params);
     void upscale(const UpscaleParam &params);
 
     void update();
