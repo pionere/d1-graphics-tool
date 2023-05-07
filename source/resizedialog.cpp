@@ -1,0 +1,61 @@
+#include "resizedialog.h"
+
+#include "d1gfx.h"
+#include "mainwindow.h"
+#include "ui_resizedialog.h"
+
+ResizeDialog::ResizeDialog(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::ResizeDialog())
+{
+    ui->setupUi(this);
+}
+
+ResizeDialog::~ResizeDialog()
+{
+    delete ui;
+}
+
+void ResizeDialog::initialize(D1Gfx *gfx)
+{
+    if (this->ui->backColorLineEdit->text().isEmpty()) {
+        this->ui->backColorLineEdit->setText("256");
+    }
+    this->ui->widthLineEdit->setText(gfx->getWidth());
+    this->ui->heightLineEdit->setText(gfx->getHeight());
+    this->ui->rangeFromLineEdit->setText("");
+    this->ui->rangeFromToLineEdit->setText("");
+}
+
+void ResizeDialog::on_resizeButton_clicked()
+{
+    ResizeParam params;
+
+    params.width = this->ui->widthLineEdit->nonNegInt();
+    params.height = this->ui->heightLineEdit->nonNegInt();
+    params.backcolor = this->ui->backColorLineEdit->text().toUShort();
+    params.rangeFrom = this->ui->rangeFromLineEdit->nonNegInt();
+    params.rangeTo = this->ui->rangeFromToLineEdit->nonNegInt();
+    params.center = this->ui->centerCheckBox->isChecked();
+
+    if (params.backcolor > D1PAL_COLORS) {
+        params.backcolor = D1PAL_COLORS;
+    }
+
+    this->close();
+
+    dMainWindow().resize(params);
+}
+
+void ResizeDialog::on_resizeCancelButton_clicked()
+{
+    this->close();
+}
+
+void ResizeDialog::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        this->ui->retranslateUi(this);
+    }
+    QDialog::changeEvent(event);
+}

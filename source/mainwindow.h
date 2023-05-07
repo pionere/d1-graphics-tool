@@ -24,6 +24,7 @@
 #include "patchdungeondialog.h"
 #include "patchtilesetdialog.h"
 #include "progressdialog.h"
+#include "resizedialog.h"
 #include "saveasdialog.h"
 #include "settingsdialog.h"
 #include "tblview.h"
@@ -74,6 +75,7 @@ public:
     void openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append);
     void openPalFiles(const QStringList &filePaths, PaletteWidget *widget);
     void saveFile(const SaveAsParam &params);
+    void resize(const ResizeParam &params);
     void upscale(const UpscaleParam &params);
 
     void paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type);
@@ -152,6 +154,7 @@ private slots:
     void on_actionTogglePalTrn_triggered();
     void on_actionToggleBottomPanel_triggered();
 
+    void on_actionResize_triggered();
     void on_actionUpscale_triggered();
 
     void on_actionReportUse_Tileset_triggered();
@@ -264,6 +267,7 @@ private:
     SaveAsDialog *saveAsDialog = nullptr;
     SettingsDialog *settingsDialog = nullptr;
     ExportDialog *exportDialog = nullptr;
+    ResizeDialog *resizeDialog = nullptr;
     UpscaleDialog *upscaleDialog = nullptr;
     PatchTilesetDialog *patchTilesetDialog = nullptr;
     PatchDungeonDialog *patchDungeonDialog = nullptr;
