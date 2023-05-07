@@ -202,7 +202,7 @@ QImage PaintWidget::copyCurrent() const
     }
     const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
     QColor color = QColor(*srcBits);
-    QMessageBox::critical(nullptr, "Error", QString("copy value %1").arg(color.alpha()));
+    QMessageBox::critical(nullptr, "Error", QString("copy value %1 .. %2 is %3").arg(color.alpha()).arg(qAlpha(*srcBits)).arg(frame->getPixel(area.left(), area.top()).isTransparent()));
     return image;
 }
 
