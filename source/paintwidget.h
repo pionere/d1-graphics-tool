@@ -51,6 +51,10 @@ public:
     void show(); // override;
     void hide(); // override;
 
+    QImage copyCurrent() const;
+    void pasteCurrent(const QImage &image);
+    void deleteCurrent();
+
 private:
     D1GfxPixel getCurrentColor(unsigned counter) const;
     void stopMove();
@@ -97,6 +101,7 @@ private:
     int8_t selectionMoveMode;
     EditFrameCommand *lastMoveCmd;
     QPoint movePos;
+    QPoint lastDelta;
     QPoint currPos;
     QPoint lastPos;
     int distance;

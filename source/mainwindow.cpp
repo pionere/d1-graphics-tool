@@ -692,10 +692,11 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     }
     if (event->matches(QKeySequence::Copy)) {
         QImage image;
-        if (this->celView != nullptr) {
+        if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
+            image = this->paintWidget->copyCurrent();
+        } else if (this->celView != nullptr) {
             image = this->celView->copyCurrent();
-        }
-        if (this->levelCelView != nullptr) {
+        } else if (this->levelCelView != nullptr) {
             image = this->levelCelView->copyCurrent();
         }
         if (!image.isNull()) {
@@ -704,30 +705,49 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         }
         return;
     }
+    if (event->matches(QKeySequence::Cut)) {
+        if (this->paintWidget != nullptr) {
+            QImage image = this->paintWidget->copyCurrent();
+            if (!image.isNull()) {
+                this->paintWidget->deleteCurrent();
+                QClipboard *clipboard = QGuiApplication::clipboard();
+                clipboard->setImage(image);
+            }
+        }
+        return;
+    }
+    if (event->matches(QKeySequence::Delete)) {
+        if (this->paintWidget != nullptr) {
+            this->paintWidget->deleteCurrent();
+        }
+        return;
+    }
     if (event->matches(QKeySequence::Paste)) {
         QClipboard *clipboard = QGuiApplication::clipboard();
         QImage image = clipboard->image();
         if (!image.isNull()) {
-            /*ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW);
+            ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW);
 
-            if (this->celView != nullptr) {
+            if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
+                this->paintWidget->pasteCurrent(image);
+            } else if (this->celView != nullptr) {
                 this->celView->pasteCurrent(image);
-            }
-            if (this->levelCelView != nullptr) {
+            } else if (this->levelCelView != nullptr) {
                 this->levelCelView->pasteCurrent(image);
             }
 
             // Clear loading message from status bar
-            ProgressDialog::done();*/
-            std::function<void()> func = [this, image]() {
-                if (this->celView != nullptr) {
+            ProgressDialog::done();
+            /*std::function<void()> func = [this, image]() {
+                if (this->paintWidget != nullptr && !this->paintWidget->isHidden()) {
+                    this->paintWidget->pasteCurrent(image);
+                } else if (this->celView != nullptr) {
                     this->celView->pasteCurrent(image);
-                }
-                if (this->levelCelView != nullptr) {
+                } else if (this->levelCelView != nullptr) {
                     this->levelCelView->pasteCurrent(image);
                 }
             };
-            ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW, std::move(func));
+            ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW, std::move(func));*/
         }
         return;
     }

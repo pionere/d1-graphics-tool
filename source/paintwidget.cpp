@@ -10,6 +10,7 @@
 #include <QString>
 
 #include "config.h"
+#include "d1image.h"
 #include "mainwindow.h"
 #include "pushbuttonwidget.h"
 #include "ui_paintwidget.h"
@@ -151,6 +152,153 @@ void PaintWidget::hide()
     this->graphView->unsetCursor();
 
     QFrame::hide();
+}
+
+static QRect getArea(const QPoint &pos1, const QPoint &pos2)
+{
+    return QRect(pos1, pos2).normalized();
+}
+
+QImage PaintWidget::copyCurrent() const
+{
+    int frameIndex = INT_MAX;
+    if (this->levelCelView != nullptr) {
+        frameIndex = this->levelCelView->getCurrentFrameIndex();
+    } else if (this->celView != nullptr) {
+        frameIndex = this->celView->getCurrentFrameIndex();
+    }
+    if (this->gfx->getFrameCount() <= frameIndex || this->rubberBand == nullptr) {
+        return QImage();
+    }
+    D1GfxFrame *frame = this->gfx->getFrame(frameIndex);
+
+    QRect area = getArea(this->currPos, this->lastPos);
+    if (area.left() < 0) {
+        area.setLeft(0);
+    }
+    if (area.right() >= frame->getWidth()) {
+        area.setRight(frame->getWidth() - 1);
+    }
+    if (area.top() < 0) {
+        area.setTop(0);
+    }
+    if (area.bottom() >= frame->getHeight()) {
+        area.setBottom(frame->getHeight() - 1);
+    }
+    QImage image = QImage(area.size(), QImage::Format_ARGB32);
+    QRgb *destBits = reinterpret_cast<QRgb *>(image.bits());
+    for (int y = 0; y < area.height(); y++) {
+        for (int x = 0; x < area.width(); x++, destBits++) {
+            D1GfxPixel d1pix = frame->getPixel(x + area.left(), area.top() + y);
+
+            QColor color;
+            if (d1pix.isTransparent())
+                color = QColor(Qt::transparent);
+            else
+                color = this->pal->getColor(d1pix.getPaletteIndex());
+
+            *destBits = color.rgba();
+        }
+    }
+    return image;
+}
+
+void PaintWidget::pasteCurrent(const QImage &image)
+{
+    // select frame
+    int frameIndex = INT_MAX;
+    if (this->levelCelView != nullptr) {
+        frameIndex = this->levelCelView->getCurrentFrameIndex();
+    } else if (this->celView != nullptr) {
+        frameIndex = this->celView->getCurrentFrameIndex();
+    }
+    if (this->gfx->getFrameCount() <= frameIndex) {
+        return;
+    }
+    D1GfxFrame *frame = this->gfx->getFrame(frameIndex);
+
+    // select starting position + select the destination rectangle
+    QPoint destPos = QPoint(0, 0);
+    if (this->rubberBand != nullptr) {
+        QRect area = getArea(this->currPos, this->lastPos);
+        destPos = area.topLeft() + this->lastDelta;
+    } else {
+        this->rubberBand = new QRubberBand(QRubberBand::Rectangle, this->parentWidget());
+    }
+    this->currPos = destPos;
+    QRect area = QRect(destPos, QSize(image.size()));
+    this->lastPos = area.bottomRight();
+    this->selectArea(area);
+    this->selectionMoveMode = 0;
+
+    // load the image
+    D1GfxFrame srcFrame;
+    D1ImageFrame::load(srcFrame, image, false, this->pal);
+
+    // copy to the destination
+    std::vector<FramePixel> pixels;
+    for (int y = 0; y < srcFrame.getHeight(); y++) {
+        for (int x = 0; x < srcFrame.getWidth(); x++) {
+            D1GfxPixel pixel = srcFrame.getPixel(x, y);
+            if (pixel.isTransparent()) {
+                continue;
+            }
+            QPoint tp = destPos + QPoint(x, y);
+            if (tp.x() < 0 || tp.x() >= frame->getWidth()) {
+                continue;
+            }
+            if (tp.y() < 0 || tp.y() >= frame->getHeight()) {
+                continue;
+            }
+            pixels.push_back(FramePixel(tp, pixel));
+        }
+    }
+    if (!pixels.empty()) {
+        // Build frame editing command and connect it to the current main window widget
+        // to update the palHits and CEL views when undo/redo is performed
+        EditFrameCommand *command = new EditFrameCommand(frame, pixels);
+        QObject::connect(command, &EditFrameCommand::modified, &dMainWindow(), &MainWindow::frameModified);
+
+        this->undoStack->push(command);
+    }
+}
+
+void PaintWidget::deleteCurrent()
+{
+    int frameIndex = INT_MAX;
+    if (this->levelCelView != nullptr) {
+        frameIndex = this->levelCelView->getCurrentFrameIndex();
+    } else if (this->celView != nullptr) {
+        frameIndex = this->celView->getCurrentFrameIndex();
+    }
+    if (this->gfx->getFrameCount() <= frameIndex || this->rubberBand == nullptr) {
+        return;
+    }
+    D1GfxFrame *frame = this->gfx->getFrame(frameIndex);
+
+    QRect area = getArea(this->currPos, this->lastPos);
+    std::vector<FramePixel> pixels;
+    for (int y = area.top(); y <= area.bottom(); y++) {
+        for (int x = area.left(); x <= area.right(); x++) {
+            if (x < 0 || x >= frame->getWidth()) {
+                continue;
+            }
+            if (y < 0 || y >= frame->getHeight()) {
+                continue;
+            }
+            if (!frame->getPixel(x, y).isTransparent()) {
+                pixels.push_back(FramePixel(QPoint(x, y), D1GfxPixel::transparentPixel()));
+            }
+        }
+    }
+    if (!pixels.empty()) {
+        // Build frame editing command and connect it to the current main window widget
+        // to update the palHits and CEL views when undo/redo is performed
+        EditFrameCommand *command = new EditFrameCommand(frame, pixels);
+        QObject::connect(command, &EditFrameCommand::modified, &dMainWindow(), &MainWindow::frameModified);
+
+        this->undoStack->push(command);
+    }
 }
 
 D1GfxPixel PaintWidget::getCurrentColor(unsigned counter) const
@@ -329,11 +477,6 @@ void PaintWidget::traceClick(const QPoint &startPos, const QPoint &destPos, std:
     }
 }
 
-static QRect getArea(const QPoint &pos1, const QPoint &pos2)
-{
-    return QRect(pos1, pos2).normalized();
-}
-
 void PaintWidget::selectArea(const QRect &area)
 {
     QRect sceneRect = area;
@@ -369,20 +512,23 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
                     if (this->selectionMoveMode == 0) {
                         this->movePos = pos;
                         this->lastMoveCmd = nullptr;
+                        this->lastDelta = QPoint(0, 0);
                     }
                     this->selectionMoveMode = 1;
-                    return true;
+                    return false;
                 }
             }
-            this->lastMoveCmd = nullptr;
-            this->selectionMoveMode = 0;
             this->lastPos = pos;
             MemFree(this->rubberBand);
-            return true;
+            this->lastMoveCmd = nullptr;
+            this->lastDelta = QPoint(0, 0);
+            this->selectionMoveMode = 0;
+            return false;
         }
         if (this->selectionMoveMode != 0) {
-            if (this->lastMoveCmd != nullptr && this->undoStack->count() != 0 && this->undoStack->command(0) == this->lastMoveCmd) {
+            if (this->lastMoveCmd != nullptr && this->undoStack->count() != 0 && this->undoStack->command(this->undoStack->count() - 1) == this->lastMoveCmd) {
                 this->undoStack->undo();
+                this->lastMoveCmd->setObsolete(true);
             }
             this->selectionMoveMode = 2;
 
@@ -433,7 +579,7 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
                     pixels.push_back(FramePixel(tp, pixel));
                 }
             }
-
+            this->lastDelta = delta;
             area.translate(delta);
             this->selectArea(area);
 
@@ -454,16 +600,10 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
         this->selectArea(getArea(this->currPos, this->lastPos));
         return true;
     }
-    this->selectionMoveMode = 0;
+    MemFree(this->rubberBand);
     this->lastMoveCmd = nullptr;
-    if (this->rubberBand) {
-        MemFree(this->rubberBand);
-    }
-
-    if (this->ui->pickModeRadioButton->isChecked()) {
-        // pick mode
-        return false;
-    }
+    this->lastDelta = QPoint(0, 0);
+    this->selectionMoveMode = 0;
 
     QPoint destPos = pos;
     std::vector<FramePixel> allPixels;
@@ -755,7 +895,7 @@ void PaintWidget::on_tilesetMaskPushButton_clicked()
 {
     D1CEL_FRAME_TYPE maskType = this->ui->tilesetMaskComboBox->currentData().value<D1CEL_FRAME_TYPE>();
     int frameIndex = this->levelCelView->getCurrentFrameIndex();
-    if (this->gfx->getFrameCount() == 0) {
+    if (this->gfx->getFrameCount() <= frameIndex) {
         return;
     }
     D1GfxFrame *frame = this->gfx->getFrame(frameIndex);
