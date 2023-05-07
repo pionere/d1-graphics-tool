@@ -2709,25 +2709,15 @@ void D1Dun::insertTileRow(int posy)
     int tilePosY = posy / TILE_HEIGHT;
 
     // resize the dungeon
-    this->tiles.insert(this->tiles.begin() + tilePosY, std::vector<int>());
-    this->tileProtections.insert(this->tileProtections.begin() + tilePosY, std::vector<Qt::CheckState>());
+    this->tiles.insert(this->tiles.begin() + tilePosY, std::vector<int>(this->width / TILE_WIDTH));
+    this->tileProtections.insert(this->tileProtections.begin() + tilePosY, std::vector<Qt::CheckState>(this->width / TILE_WIDTH));
     for (int i = 0; i < TILE_HEIGHT; i++) {
-        this->subtileProtections.insert(this->subtileProtections.begin() + TILE_HEIGHT * tilePosY, std::vector<int>());
-        this->subtiles.insert(this->subtiles.begin() + TILE_HEIGHT * tilePosY, std::vector<int>());
-        this->items.insert(this->items.begin() + TILE_HEIGHT * tilePosY, std::vector<int>());
-        this->monsters.insert(this->monsters.begin() + TILE_HEIGHT * tilePosY, std::vector<DunMonsterType>());
-        this->objects.insert(this->objects.begin() + TILE_HEIGHT * tilePosY, std::vector<int>());
-        this->rooms.insert(this->rooms.begin() + TILE_HEIGHT * tilePosY, std::vector<int>());
-    }
-    for (int y = tilePosY; y < tilePosY + TILE_HEIGHT; y++) {
-        this->tiles[y].resize(this->width / TILE_WIDTH);
-        this->subtiles[y * TILE_HEIGHT].resize(this->width);
-        this->tileProtections[y].resize(this->width / TILE_WIDTH);
-        this->subtileProtections[y * TILE_HEIGHT].resize(this->width);
-        this->items[y * TILE_HEIGHT].resize(this->width);
-        this->monsters[y * TILE_HEIGHT].resize(this->width);
-        this->objects[y * TILE_HEIGHT].resize(this->width);
-        this->rooms[y * TILE_HEIGHT].resize(this->width);
+        this->subtileProtections.insert(this->subtileProtections.begin() + TILE_HEIGHT * tilePosY, std::vector<int>(this->width));
+        this->subtiles.insert(this->subtiles.begin() + TILE_HEIGHT * tilePosY, std::vector<int>(this->width));
+        this->items.insert(this->items.begin() + TILE_HEIGHT * tilePosY, std::vector<int>(this->width));
+        this->monsters.insert(this->monsters.begin() + TILE_HEIGHT * tilePosY, std::vector<DunMonsterType>(this->width));
+        this->objects.insert(this->objects.begin() + TILE_HEIGHT * tilePosY, std::vector<int>(this->width));
+        this->rooms.insert(this->rooms.begin() + TILE_HEIGHT * tilePosY, std::vector<int>(this->width));
     }
     // update subtiles to match the defaultTile - TODO: better solution?
     int prevDefaultTile = this->defaultTile;

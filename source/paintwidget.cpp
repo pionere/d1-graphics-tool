@@ -200,6 +200,9 @@ QImage PaintWidget::copyCurrent() const
             *destBits = color.rgba();
         }
     }
+    const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
+    QColor color = QColor(*srcBits);
+    QMessageBox::critical(nullptr, "Error", QString("copy value %1").arg(color.alpha()));
     return image;
 }
 
@@ -231,6 +234,9 @@ void PaintWidget::pasteCurrent(const QImage &image)
     this->selectArea(area);
     this->selectionMoveMode = 0;
 
+    const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
+    QColor color = QColor(*srcBits);
+    QMessageBox::critical(nullptr, "Error", QString("paste value %1").arg(color.alpha()));
     // load the image
     D1GfxFrame srcFrame;
     D1ImageFrame::load(srcFrame, image, false, this->pal);
@@ -514,6 +520,8 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
                         this->lastDelta = QPoint(0, 0);
                         this->lastMoveCmd = nullptr;
                     }
+                    this->ui->gradientXLineEdit->setText(QString("%1:%2").arg(this->selectionMoveMode).arg(this->lastDelta.x()));
+                    this->ui->gradientYLineEdit->setText(QString::number(this->lastDelta.y()));
                     this->selectionMoveMode = 1;
                     return false;
                 }
@@ -522,6 +530,8 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
             this->selectionMoveMode = 0;
             this->lastPos = pos;
             MemFree(this->rubberBand);
+            this->ui->gradientXLineEdit->setText(QString("%1.%2").arg(this->selectionMoveMode).arg(this->lastDelta.x()));
+            this->ui->gradientYLineEdit->setText(QString::number(this->lastDelta.y()));
             return false;
         }
         if (this->selectionMoveMode != 0) {
@@ -579,6 +589,8 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
                 }
             }
             this->lastDelta = delta;
+            this->ui->gradientXLineEdit->setText(QString("%1!%2").arg(this->selectionMoveMode).arg(this->lastDelta.x()));
+            this->ui->gradientYLineEdit->setText(QString::number(this->lastDelta.y()));
             area.translate(delta);
             this->selectArea(area);
 
