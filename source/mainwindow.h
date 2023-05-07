@@ -245,6 +245,7 @@ private:
     QMenu subtileMenu = QMenu("Subtile");
     QMenu tileMenu = QMenu("Tile");
 
+    QAction *resizeAction;
     QAction *upscaleAction;
 
     QUndoStack *undoStack;

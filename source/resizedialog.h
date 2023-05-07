@@ -9,9 +9,9 @@ public:
     int width;
     int height;
     int backcolor;
-	int rangeFrom;
-	int rangeTo;
-	bool center;
+    int rangeFrom;
+    int rangeTo;
+    bool center;
 };
 
 namespace Ui {

@@ -21,10 +21,10 @@ void ResizeDialog::initialize(D1Gfx *gfx)
     if (this->ui->backColorLineEdit->text().isEmpty()) {
         this->ui->backColorLineEdit->setText("256");
     }
-    this->ui->widthLineEdit->setText(gfx->getWidth());
-    this->ui->heightLineEdit->setText(gfx->getHeight());
+    this->ui->widthLineEdit->setText("");
+    this->ui->heightLineEdit->setText("");
     this->ui->rangeFromLineEdit->setText("");
-    this->ui->rangeFromToLineEdit->setText("");
+    this->ui->rangeToLineEdit->setText("");
 }
 
 void ResizeDialog::on_resizeButton_clicked()
@@ -35,7 +35,7 @@ void ResizeDialog::on_resizeButton_clicked()
     params.height = this->ui->heightLineEdit->nonNegInt();
     params.backcolor = this->ui->backColorLineEdit->text().toUShort();
     params.rangeFrom = this->ui->rangeFromLineEdit->nonNegInt();
-    params.rangeTo = this->ui->rangeFromToLineEdit->nonNegInt();
+    params.rangeTo = this->ui->rangeToLineEdit->nonNegInt();
     params.center = this->ui->centerCheckBox->isChecked();
 
     if (params.backcolor > D1PAL_COLORS) {
