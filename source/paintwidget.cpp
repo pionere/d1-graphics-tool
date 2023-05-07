@@ -221,7 +221,7 @@ void PaintWidget::pasteCurrent(const QImage &image)
     QPoint destPos = QPoint(0, 0);
     if (this->rubberBand != nullptr) {
         QRect area = getArea(this->currPos, this->lastPos);
-        destPos = area.topLeft();
+        destPos = area.topLeft() + this->lastDelta;
     } else {
         this->rubberBand = new QRubberBand(QRubberBand::Rectangle, this->parentWidget());
     }
@@ -511,6 +511,7 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
                 if (globalRubberBandRect.contains(globalCursorPos)) {
                     if (this->selectionMoveMode == 0) {
                         this->movePos = pos;
+                        this->lastDelta = QPoint(0, 0);
                         this->lastMoveCmd = nullptr;
                     }
                     this->selectionMoveMode = 1;
@@ -526,6 +527,7 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
         if (this->selectionMoveMode != 0) {
             if (this->lastMoveCmd != nullptr && this->undoStack->count() != 0 && this->undoStack->command(this->undoStack->count() - 1) == this->lastMoveCmd) {
                 this->undoStack->undo();
+                this->lastMoveCmd->setObsolete(true);
             }
             this->selectionMoveMode = 2;
 
@@ -576,7 +578,7 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
                     pixels.push_back(FramePixel(tp, pixel));
                 }
             }
-
+            this->lastDelta = delta;
             area.translate(delta);
             this->selectArea(area);
 

@@ -101,6 +101,7 @@ private:
     int8_t selectionMoveMode;
     EditFrameCommand *lastMoveCmd;
     QPoint movePos;
+    QPoint lastDelta;
     QPoint currPos;
     QPoint lastPos;
     int distance;

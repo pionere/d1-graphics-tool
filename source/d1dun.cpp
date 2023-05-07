@@ -2712,22 +2712,22 @@ void D1Dun::insertTileRow(int posy)
     this->tiles.insert(this->tiles.begin() + tilePosY, std::vector<int>());
     this->tileProtections.insert(this->tileProtections.begin() + tilePosY, std::vector<Qt::CheckState>());
     for (int i = 0; i < TILE_HEIGHT; i++) {
-        this->subtileProtections.insert(this->subtileProtections.begin() + TILE_WIDTH * tilePosY, std::vector<int>());
-        this->subtiles.insert(this->subtiles.begin() + TILE_WIDTH * tilePosY, std::vector<int>());
-        this->items.insert(this->items.begin() + TILE_WIDTH * tilePosY, std::vector<int>());
-        this->monsters.insert(this->monsters.begin() + TILE_WIDTH * tilePosY, std::vector<DunMonsterType>());
-        this->objects.insert(this->objects.begin() + TILE_WIDTH * tilePosY, std::vector<int>());
-        this->rooms.insert(this->rooms.begin() + TILE_WIDTH * tilePosY, std::vector<int>());
+        this->subtileProtections.insert(this->subtileProtections.begin() + TILE_HEIGHT * tilePosY, std::vector<int>());
+        this->subtiles.insert(this->subtiles.begin() + TILE_HEIGHT * tilePosY, std::vector<int>());
+        this->items.insert(this->items.begin() + TILE_HEIGHT * tilePosY, std::vector<int>());
+        this->monsters.insert(this->monsters.begin() + TILE_HEIGHT * tilePosY, std::vector<DunMonsterType>());
+        this->objects.insert(this->objects.begin() + TILE_HEIGHT * tilePosY, std::vector<int>());
+        this->rooms.insert(this->rooms.begin() + TILE_HEIGHT * tilePosY, std::vector<int>());
     }
     for (int y = tilePosY; y < tilePosY + TILE_HEIGHT; y++) {
-        this->tiles[y / TILE_HEIGHT].resize(this->width / TILE_WIDTH);
-        this->subtiles[y].resize(this->width);
-        this->tileProtections[y / TILE_HEIGHT].resize(this->width / TILE_WIDTH);
-        this->subtileProtections[y].resize(this->width);
-        this->items[y].resize(this->width);
-        this->monsters[y].resize(this->width);
-        this->objects[y].resize(this->width);
-        this->rooms[y].resize(this->width);
+        this->tiles[y].resize(this->width / TILE_WIDTH);
+        this->subtiles[y * TILE_HEIGHT].resize(this->width);
+        this->tileProtections[y].resize(this->width / TILE_WIDTH);
+        this->subtileProtections[y * TILE_HEIGHT].resize(this->width);
+        this->items[y * TILE_HEIGHT].resize(this->width);
+        this->monsters[y * TILE_HEIGHT].resize(this->width);
+        this->objects[y * TILE_HEIGHT].resize(this->width);
+        this->rooms[y * TILE_HEIGHT].resize(this->width);
     }
     // update subtiles to match the defaultTile - TODO: better solution?
     int prevDefaultTile = this->defaultTile;
