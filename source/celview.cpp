@@ -8,8 +8,8 @@
 #include <QGraphicsPixmapItem>
 #include <QImageReader>
 #include <QMenu>
-#include <QMimeData>
 #include <QMessageBox>
+#include <QMimeData>
 
 #include "config.h"
 #include "d1pcx.h"
@@ -504,7 +504,7 @@ void CelView::resize(const ResizeParam &params)
     }
     rangeTo--;
 
-    const bool center = params.center
+    const bool center = params.center;
     int frameWithPixelLost = -1;
     for (int i = rangeFrom; i <= rangeTo; i++) {
         D1GfxFrame *frame = this->gfx->getFrame(i);
