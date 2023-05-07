@@ -524,7 +524,7 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
             return false;
         }
         if (this->selectionMoveMode != 0) {
-            if (this->lastMoveCmd != nullptr && this->undoStack->count() != 0 && this->undoStack->command(0) == this->lastMoveCmd) {
+            if (this->lastMoveCmd != nullptr && this->undoStack->count() != 0 && this->undoStack->command(this->undoStack->count() - 1) == this->lastMoveCmd) {
                 this->undoStack->undo();
             }
             this->selectionMoveMode = 2;
