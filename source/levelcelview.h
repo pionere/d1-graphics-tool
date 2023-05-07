@@ -281,6 +281,11 @@ private slots:
 
     void ShowContextMenu(const QPoint &pos);
 
+    void on_actionInsert_DunTileRow_triggered();
+    void on_actionInsert_DunTileColumn_triggered();
+    void on_actionDel_DunTileRow_triggered();
+    void on_actionDel_DunTileColumn_triggered();
+
 private:
     Ui::LevelCelView *ui;
     CelScene celScene = CelScene(this);

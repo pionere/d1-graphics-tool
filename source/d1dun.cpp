@@ -2704,6 +2704,126 @@ bool D1Dun::protectSubtiles()
     return result;
 }
 
+void D1Dun::insertTileRow(int posy)
+{
+    int tilePosY = posy / TILE_HEIGHT;
+
+    // resize the dungeon
+    this->tiles.insert(this->tiles.begin() + tilePosY, std::vector<int>(this->width / TILE_WIDTH));
+    this->tileProtections.insert(this->tileProtections.begin() + tilePosY, std::vector<Qt::CheckState>(this->width / TILE_WIDTH));
+    for (int i = 0; i < TILE_HEIGHT; i++) {
+        this->subtileProtections.insert(this->subtileProtections.begin() + TILE_HEIGHT * tilePosY, std::vector<int>(this->width));
+        this->subtiles.insert(this->subtiles.begin() + TILE_HEIGHT * tilePosY, std::vector<int>(this->width));
+        this->items.insert(this->items.begin() + TILE_HEIGHT * tilePosY, std::vector<int>(this->width));
+        this->monsters.insert(this->monsters.begin() + TILE_HEIGHT * tilePosY, std::vector<DunMonsterType>(this->width));
+        this->objects.insert(this->objects.begin() + TILE_HEIGHT * tilePosY, std::vector<int>(this->width));
+        this->rooms.insert(this->rooms.begin() + TILE_HEIGHT * tilePosY, std::vector<int>(this->width));
+    }
+    // update subtiles to match the defaultTile - TODO: better solution?
+    int prevDefaultTile = this->defaultTile;
+    this->defaultTile = UNDEF_TILE;
+    this->setDefaultTile(prevDefaultTile);
+
+    this->height += TILE_HEIGHT;
+    this->modified = true;
+}
+
+void D1Dun::insertTileColumn(int posx)
+{
+    int tilePosX = posx / TILE_WIDTH;
+
+    // resize the dungeon
+    for (std::vector<int> &tilesRow : this->tiles) {
+        tilesRow.insert(tilesRow.begin() + tilePosX, 0);
+    }
+    for (std::vector<Qt::CheckState> &tileProtectionsRow : this->tileProtections) {
+        tileProtectionsRow.insert(tileProtectionsRow.begin() + tilePosX, Qt::Unchecked);
+    }
+    for (int i = 0; i < TILE_WIDTH; i++) {
+        for (std::vector<int> &subtilesRow : this->subtiles) {
+            subtilesRow.insert(subtilesRow.begin() + TILE_WIDTH * tilePosX, 0);
+        }
+        for (std::vector<int> &subtileProtectionsRow : this->subtileProtections) {
+            subtileProtectionsRow.insert(subtileProtectionsRow.begin() + TILE_WIDTH * tilePosX, 0);
+        }
+        for (std::vector<int> &itemsRow : this->items) {
+            itemsRow.insert(itemsRow.begin() + TILE_WIDTH * tilePosX, 0);
+        }
+        for (std::vector<DunMonsterType> &monsRow : this->monsters) {
+            monsRow.insert(monsRow.begin() + TILE_WIDTH * tilePosX, DunMonsterType());
+        }
+        for (std::vector<int> &objsRow : this->objects) {
+            objsRow.insert(objsRow.begin() + TILE_WIDTH * tilePosX, 0);
+        }
+        for (std::vector<int> &roomsRow : this->rooms) {
+            roomsRow.insert(roomsRow.begin() + TILE_WIDTH * tilePosX, 0);
+        }
+    }
+    // update subtiles to match the defaultTile - TODO: better solution?
+    int prevDefaultTile = this->defaultTile;
+    this->defaultTile = UNDEF_TILE;
+    this->setDefaultTile(prevDefaultTile);
+
+    this->width += TILE_WIDTH;
+    this->modified = true;
+}
+
+void D1Dun::removeTileRow(int posy)
+{
+    int tilePosY = posy / TILE_HEIGHT;
+
+    // resize the dungeon
+    this->tiles.erase(this->tiles.begin() + tilePosY);
+    this->tileProtections.erase(this->tileProtections.begin() + tilePosY);
+    for (int i = 0; i < TILE_HEIGHT; i++) {
+        this->subtileProtections.erase(this->subtileProtections.begin() + TILE_WIDTH * tilePosY);
+        this->subtiles.erase(this->subtiles.begin() + TILE_WIDTH * tilePosY);
+        this->items.erase(this->items.begin() + TILE_WIDTH * tilePosY);
+        this->monsters.erase(this->monsters.begin() + TILE_WIDTH * tilePosY);
+        this->objects.erase(this->objects.begin() + TILE_WIDTH * tilePosY);
+        this->rooms.erase(this->rooms.begin() + TILE_WIDTH * tilePosY);
+    }
+
+    this->height -= TILE_HEIGHT;
+    this->modified = true;
+}
+
+void D1Dun::removeTileColumn(int posx)
+{
+    int tilePosX = posx / TILE_WIDTH;
+
+    // resize the dungeon
+    for (std::vector<int> &tilesRow : this->tiles) {
+        tilesRow.erase(tilesRow.begin() + tilePosX);
+    }
+    for (std::vector<Qt::CheckState> &tileProtectionsRow : this->tileProtections) {
+        tileProtectionsRow.erase(tileProtectionsRow.begin() + tilePosX);
+    }
+    for (int i = 0; i < TILE_WIDTH; i++) {
+        for (std::vector<int> &subtilesRow : this->subtiles) {
+            subtilesRow.erase(subtilesRow.begin() + TILE_WIDTH * tilePosX);
+        }
+        for (std::vector<int> &subtileProtectionsRow : this->subtileProtections) {
+            subtileProtectionsRow.erase(subtileProtectionsRow.begin() + TILE_WIDTH * tilePosX);
+        }
+        for (std::vector<int> &itemsRow : this->items) {
+            itemsRow.erase(itemsRow.begin() + TILE_WIDTH * tilePosX);
+        }
+        for (std::vector<DunMonsterType> &monsRow : this->monsters) {
+            monsRow.erase(monsRow.begin() + TILE_WIDTH * tilePosX);
+        }
+        for (std::vector<int> &objsRow : this->objects) {
+            objsRow.erase(objsRow.begin() + TILE_WIDTH * tilePosX);
+        }
+        for (std::vector<int> &roomsRow : this->rooms) {
+            roomsRow.erase(roomsRow.begin() + TILE_WIDTH * tilePosX);
+        }
+    }
+
+    this->width -= TILE_WIDTH;
+    this->modified = true;
+}
+
 bool D1Dun::changeTileAt(int tilePosX, int tilePosY, int tileRef)
 {
     int prevTile = this->tiles[tilePosY][tilePosX];
