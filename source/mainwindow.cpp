@@ -1161,7 +1161,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(fileType != 4);
-    this->ui->resizeAction->setEnabled(this->celView != nullptr);
+    this->resizeAction->setEnabled(this->celView != nullptr);
     this->ui->menuView->setEnabled(true);
     this->ui->menuPalette->setEnabled(true);
     this->ui->actionExport->setEnabled(fileType != 4);
