@@ -200,9 +200,6 @@ QImage PaintWidget::copyCurrent() const
             *destBits = color.rgba();
         }
     }
-    const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
-    QColor color = QColor::fromRgba(*srcBits);
-    QMessageBox::critical(nullptr, "Error", QString("copy value %1 .. %2 is %3").arg(color.alpha()).arg(qAlpha(*srcBits)).arg(frame->getPixel(area.left(), area.top()).isTransparent()));
     return image;
 }
 
@@ -234,9 +231,6 @@ void PaintWidget::pasteCurrent(const QImage &image)
     this->selectArea(area);
     this->selectionMoveMode = 0;
 
-    const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
-    QColor color = QColor::fromRgba(*srcBits);
-    QMessageBox::critical(nullptr, "Error", QString("paste value %1").arg(color.alpha()));
     // load the image
     D1GfxFrame srcFrame;
     D1ImageFrame::load(srcFrame, image, false, this->pal);
@@ -517,8 +511,8 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
                 if (globalRubberBandRect.contains(globalCursorPos)) {
                     if (this->selectionMoveMode == 0) {
                         this->movePos = pos;
-                        this->lastDelta = QPoint(0, 0);
                         this->lastMoveCmd = nullptr;
+                        this->lastDelta = QPoint(0, 0);
                     }
                     this->ui->gradientXLineEdit->setText(QString("%1:%2").arg(this->selectionMoveMode).arg(this->lastDelta.x()));
                     this->ui->gradientYLineEdit->setText(QString::number(this->lastDelta.y()));
@@ -526,10 +520,11 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
                     return false;
                 }
             }
-            this->lastMoveCmd = nullptr;
-            this->selectionMoveMode = 0;
             this->lastPos = pos;
             MemFree(this->rubberBand);
+            this->lastMoveCmd = nullptr;
+            this->lastDelta = QPoint(0, 0);
+            this->selectionMoveMode = 0;
             this->ui->gradientXLineEdit->setText(QString("%1.%2").arg(this->selectionMoveMode).arg(this->lastDelta.x()));
             this->ui->gradientYLineEdit->setText(QString::number(this->lastDelta.y()));
             return false;
@@ -621,11 +616,10 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
         this->rubberBand->show();*/
         return true;
     }
-    this->selectionMoveMode = 0;
+    MemFree(this->rubberBand);
     this->lastMoveCmd = nullptr;
-    if (this->rubberBand) {
-        MemFree(this->rubberBand);
-    }
+    this->lastDelta = QPoint(0, 0);
+    this->selectionMoveMode = 0;
 
     QPoint destPos = pos;
     std::vector<FramePixel> allPixels;
