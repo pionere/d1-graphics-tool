@@ -613,6 +613,7 @@ done:
             currWidth--;
             change = true;
         }
+        frame->setWidth(width);
 
         counter = 0;
         std::vector<D1GfxPixel> pixelLine;
@@ -640,6 +641,7 @@ done:
             currHeight--;
             change = true;
         }
+        frame->setHeight(height);
     }
 
     if (change) {

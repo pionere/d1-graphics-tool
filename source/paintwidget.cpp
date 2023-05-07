@@ -235,7 +235,7 @@ void PaintWidget::pasteCurrent(const QImage &image)
     this->selectionMoveMode = 0;
 
     const QRgb *srcBits = reinterpret_cast<const QRgb *>(image.bits());
-    QColor color = QColor(*srcBits);
+    QColor color = QColor::fromRgba(*srcBits);
     QMessageBox::critical(nullptr, "Error", QString("paste value %1").arg(color.alpha()));
     // load the image
     D1GfxFrame srcFrame;

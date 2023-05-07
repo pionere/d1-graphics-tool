@@ -56,9 +56,19 @@ int D1GfxFrame::getWidth() const
     return this->width;
 }
 
+void D1GfxFrame::setWidth(int width)
+{
+    this->width = width;
+}
+
 int D1GfxFrame::getHeight() const
 {
     return this->height;
+}
+
+void D1GfxFrame::setHeight(int height)
+{
+    this->height = height;
 }
 
 D1GfxPixel D1GfxFrame::getPixel(int x, int y) const

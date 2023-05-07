@@ -42,7 +42,7 @@ bool D1ImageFrame::load(D1GfxFrame &frame, const QImage &image, bool clipped, co
         std::vector<D1GfxPixel> pixelLine;
         for (int x = 0; x < frame.width; x++, srcBits++) {
             // QColor color = image.pixelColor(x, y);
-            QColor color = QColor(*srcBits);
+            QColor color = QColor::fromRgba(*srcBits);
             // if (color == QColor(Qt::transparent)) {
             if (color.alpha() < COLOR_ALPHA_LIMIT) {
                 pixelLine.push_back(D1GfxPixel::transparentPixel());
