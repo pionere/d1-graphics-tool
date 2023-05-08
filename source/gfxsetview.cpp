@@ -53,7 +53,7 @@ GfxsetView::~GfxsetView()
     delete ui;
 }
 
-void GfxsetView::initialize(D1Pal *p, D1Gfx *gs, bool bottomPanelHidden)
+void GfxsetView::initialize(D1Pal *p, D1Gfxset *gs, bool bottomPanelHidden)
 {
     this->pal = p;
     this->gfx = gs->getGfx(0);
