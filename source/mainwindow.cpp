@@ -1287,12 +1287,12 @@ void MainWindow::saveFile(const SaveAsParam &params)
 
 void MainWindow::resize(const ResizeParam &params)
 {
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Resizing..."), 1, PAF_UPDATE_WINDOW);
+    // ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Resizing..."), 1, PAF_UPDATE_WINDOW);
 
     this->celView->resize(params);
 
     // Clear loading message from status bar
-    ProgressDialog::done();
+    // ProgressDialog::done();
     /*std::function<void()> func = [this, params]() {
         this->celView->resize(params);
     };

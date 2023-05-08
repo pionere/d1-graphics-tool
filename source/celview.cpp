@@ -505,6 +505,7 @@ void CelView::resize(const ResizeParam &params)
     rangeTo--;
 
     const RESIZE_PLACEMENT placement = params.placement;
+    QMessageBox::critical(nullptr, "Error", QString::number((int)placement));
     int frameWithPixelLost = -1;
     for (int i = rangeFrom; i <= rangeTo; i++) {
         D1GfxFrame *frame = this->gfx->getFrame(i);
@@ -577,6 +578,8 @@ done:
             return;
         }
     }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Resizing..."), 1, PAF_NONE);
 
     bool change = false;
     for (int i = rangeFrom; i <= rangeTo; i++) {
@@ -652,10 +655,12 @@ done:
         frame->setHeight(height);
     }
 
+    ProgressDialog::done();
+
     if (change) {
         this->gfx->setModified();
-        // update the view - done by the caller
-        // this->displayFrame();
+        // update the view
+        this->displayFrame();
     }
 }
 
