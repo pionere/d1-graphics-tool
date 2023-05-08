@@ -775,7 +775,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int backSubtileRef1, int
     for (int x = 0; x < MICRO_WIDTH; x++) {
         for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
             D1GfxPixel pixel0 = stairs_LeftFrame2->getPixel(x, y);
-            stairs_LeftFrame0->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 770
+            back_RightFrame->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 36
             D1GfxPixel pixel1 = stairs_LeftFrame2->getPixel(x, y - MICRO_HEIGHT / 2);
             stairs_LeftFrame2->setPixel(x, y, pixel1); // 769
         }
@@ -796,10 +796,16 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int backSubtileRef1, int
             stairs_LeftFrame6->setPixel(x, y, pixel1); // 767
         }
     }
+    for (int x = 0; x < MICRO_WIDTH; x++) {
+        for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+            stairs_LeftFrame6->setPixel(x,  y, D1GfxPixel::transparentPixel()); // 767
+        }
+    }
 
     // adjust the frame types
     D1CelTilesetFrame::selectFrameType(back_RightFrame);        // 36
     D1CelTilesetFrame::selectFrameType(stairs_LeftFrame0);      // 770
+    D1CelTilesetFrame::selectFrameType(stairs_LeftFrame2);      // 769
 
     this->gfx->setModified();
 
@@ -809,10 +815,10 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int backSubtileRef1, int
     properties |= (1 << 4);
     this->tmi->setSubtileProperties(backSubtileRef3 - 1, properties);
     properties = this->tmi->getSubtileProperties(stairsSubtileRef1 - 1);
-    properties &= ~(1 << 1);
+    properties &= ~((1 << 1) | (1 << 2);
     this->tmi->setSubtileProperties(stairsSubtileRef1 - 1, properties);
     properties = this->tmi->getSubtileProperties(stairsSubtileRef2 - 1);
-    properties &= ~(1 << 1);
+    properties &= ~((1 << 1) | (1 << 2);
     this->tmi->setSubtileProperties(stairsSubtileRef2 - 1, properties);
 
     if (!silent) {
