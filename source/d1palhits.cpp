@@ -74,7 +74,7 @@ void D1PalHits::buildSubtilePalHits()
             if (frameRef == 0)
                 continue;
             // Go through the hits of the CEL frame and add them to the subtile hits
-            QMapIterator<quint8, int> it2(this->framePalHits.value(frameRef - 1));
+            QMapIterator<quint8, int> it2(this->framePalHits[frameRef - 1]);
             while (it2.hasNext()) {
                 it2.next();
                 subtileHits.insert(it2.key(), it2.value());
@@ -100,7 +100,7 @@ void D1PalHits::buildTilePalHits()
         // Go through the subtiles
         for (int subtileIndex : subtileIndices) {
             // Go through the hits of the subtile and add them to the tile hits
-            QMapIterator<quint8, int> it2(this->subtilePalHits.value(subtileIndex));
+            QMapIterator<quint8, int> it2(this->subtilePalHits[subtileIndex]);
             while (it2.hasNext()) {
                 it2.next();
                 tileHits.insert(it2.key(), it2.value());
