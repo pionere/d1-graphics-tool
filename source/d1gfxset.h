@@ -20,6 +20,7 @@ public:
     int getGfxCount() const;
     D1Gfx *getGfx(int i) const;
     void frameModified(D1GfxFrame *frame);
+    void setPalette(D1Pal *pal);
 
 private:
     std::vector<D1Gfx *> gfxList;

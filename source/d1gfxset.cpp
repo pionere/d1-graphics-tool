@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QMessageBox>
 
+#include "d1cl2.h"
 #include "progressdialog.h"
 
 D1Gfxset::D1Gfxset(D1Gfx *g)
@@ -34,7 +35,7 @@ void D1Gfxset::save(const SaveAsParam &params)
     }
 }
 
-void D1Gfxset::getGfxCount() const
+int D1Gfxset::getGfxCount() const
 {
     return this->gfxList.size();
 }
@@ -52,5 +53,12 @@ void D1Gfxset::frameModified(D1GfxFrame *frame)
                 gfx->setModified();
             }
         }
+    }
+}
+
+void D1Gfxset::setPalette(D1Pal *pal)
+{
+    for (D1Gfx *gfx : this->gfxList) {
+        gfx->setPalette(pal);
     }
 }

@@ -1656,8 +1656,8 @@ void MainWindow::on_actionToggleBottomPanel_triggered()
     if (this->levelCelView != nullptr) {
         this->levelCelView->toggleBottomPanel();
     }
-    if (this->gfsxetView != nullptr) {
-        this->gfsxetView->toggleBottomPanel();
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->toggleBottomPanel();
     }
     if (this->tblView != nullptr) {
         this->tblView->toggleBottomPanel();

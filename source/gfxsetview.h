@@ -15,6 +15,7 @@
 #include <QTimer>
 #include <QWidget>
 
+#include "celview.h"
 #include "d1gfxset.h"
 #include "resizedialog.h"
 #include "upscaledialog.h"
