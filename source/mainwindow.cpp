@@ -1185,8 +1185,8 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // this->subtileMenu.setEnabled(isTileset);
     // this->tileMenu.setEnabled(isTileset);
-    this->ui->menuSubtile.setEnabled(isTileset);
-    this->ui->menuTile.setEnabled(isTileset);
+    this->ui->menuSubtile->setEnabled(isTileset);
+    this->ui->menuTile->setEnabled(isTileset);
     this->ui->actionResize->setEnabled(this->celView != nullptr);
 
     this->ui->menuTileset->setEnabled(isTileset);
