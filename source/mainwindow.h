@@ -241,13 +241,6 @@ private:
     QString currLang;         // currently loaded language e.g. "de_DE"
     QString lastFilePath;
 
-    QMenu frameMenu = QMenu("Frame");
-    QMenu subtileMenu = QMenu("Subtile");
-    QMenu tileMenu = QMenu("Tile");
-
-    QAction *resizeAction;
-    QAction *upscaleAction;
-
     QUndoStack *undoStack;
     QAction *undoAction;
     QAction *redoAction;

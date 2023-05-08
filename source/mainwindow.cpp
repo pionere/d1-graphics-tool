@@ -55,41 +55,9 @@ MainWindow::MainWindow()
     this->undoAction->setShortcut(QKeySequence::Undo);
     this->redoAction = undoStack->createRedoAction(this, "Redo");
     this->redoAction->setShortcut(QKeySequence::Redo);
-    this->ui->menuEdit->addAction(this->undoAction);
-    this->ui->menuEdit->addAction(this->redoAction);
-    this->ui->menuEdit->addSeparator();
-
-    // Initialize 'Frame' submenu of 'Edit'
-    this->frameMenu.setToolTipsVisible(true);
-    this->frameMenu.addAction("Add Layer", this, SLOT(on_actionAddTo_Frame_triggered()));
-    this->frameMenu.addAction("Insert", this, SLOT(on_actionInsert_Frame_triggered()));
-    this->frameMenu.addAction("Append", this, SLOT(on_actionAppend_Frame_triggered()));
-    this->frameMenu.addAction("Replace", this, SLOT(on_actionReplace_Frame_triggered()));
-    this->frameMenu.addAction("Delete", this, SLOT(on_actionDel_Frame_triggered()));
-    this->ui->menuEdit->addMenu(&this->frameMenu);
-
-    // Initialize 'Subtile' submenu of 'Edit'
-    this->subtileMenu.setToolTipsVisible(true);
-    this->subtileMenu.addAction("Create", this, SLOT(on_actionCreate_Subtile_triggered()));
-    this->subtileMenu.addAction("Insert", this, SLOT(on_actionInsert_Subtile_triggered()));
-    this->subtileMenu.addAction("Append", this, SLOT(on_actionAppend_Subtile_triggered()));
-    this->subtileMenu.addAction("Replace", this, SLOT(on_actionReplace_Subtile_triggered()));
-    this->subtileMenu.addAction("Delete", this, SLOT(on_actionDel_Subtile_triggered()));
-    this->ui->menuEdit->addMenu(&this->subtileMenu);
-
-    // Initialize 'Tile' submenu of 'Edit'
-    this->tileMenu.setToolTipsVisible(true);
-    this->tileMenu.addAction("Create", this, SLOT(on_actionCreate_Tile_triggered()));
-    this->tileMenu.addAction("Insert", this, SLOT(on_actionInsert_Tile_triggered()));
-    this->tileMenu.addAction("Append", this, SLOT(on_actionAppend_Tile_triggered()));
-    this->tileMenu.addAction("Replace", this, SLOT(on_actionReplace_Tile_triggered()));
-    this->tileMenu.addAction("Delete", this, SLOT(on_actionDel_Tile_triggered()));
-    this->ui->menuEdit->addMenu(&this->tileMenu);
-
-    // Initialize resize/upscale option of 'Edit'
-    this->ui->menuEdit->addSeparator();
-    this->resizeAction = this->ui->menuEdit->addAction("Resize", this, SLOT(on_actionResize_triggered()));
-    this->upscaleAction = this->ui->menuEdit->addAction("Upscale", this, SLOT(on_actionUpscale_triggered()));
+    QAction *firstEditAction = this->ui->menuEdit->actions()[0];
+    this->ui->menuEdit->insertAction(firstEditAction, this->undoAction);
+    this->ui->menuEdit->insertAction(firstEditAction, this->redoAction);
 
     this->on_actionClose_triggered();
 
@@ -222,17 +190,18 @@ void MainWindow::updateWindow()
     // }
     // update menu options
     bool hasFrame = this->gfx != nullptr && this->gfx->getFrameCount() != 0;
-    this->frameMenu.actions()[2]->setEnabled(hasFrame); // replace frame
-    this->frameMenu.actions()[3]->setEnabled(hasFrame); // delete frame
-    if (this->levelCelView != nullptr) {
-        bool hasSubtile = this->tileset->min->getSubtileCount() != 0;
-        this->subtileMenu.actions()[3]->setEnabled(hasSubtile); // replace subtile
-        this->subtileMenu.actions()[4]->setEnabled(hasSubtile); // delete subtile
-        this->tileMenu.actions()[0]->setEnabled(hasSubtile);    // create tile
-        bool hasTile = this->tileset->til->getTileCount() != 0;
-        this->tileMenu.actions()[3]->setEnabled(hasTile); // replace tile
-        this->tileMenu.actions()[4]->setEnabled(hasTile); // delete tile
-    }
+    this->ui->actionReplace_Frame->setEnabled(hasFrame);
+    this->ui->actionDel_Frame->setEnabled(hasFrame);
+    bool hasSubtile = this->tileset != nullptr && this->tileset->min->getSubtileCount() != 0;
+    this->ui->actionReplace_Subtile->setEnabled(hasSubtile);
+    this->ui->actionDel_Subtile->setEnabled(hasSubtile);
+    this->ui->actionCreate_Tile->setEnabled(hasSubtile);
+    this->ui->actionInsert_Tile->setEnabled(hasSubtile);
+    this->ui->actionAppend_Tile->setEnabled(hasSubtile);
+    bool hasTile = this->tileset != nullptr && this->tileset->til->getTileCount() != 0;
+    this->ui->actionReplace_Tile->setEnabled(hasTile);
+    this->ui->actionDel_Tile->setEnabled(hasTile);
+
     // update the view
     if (this->celView != nullptr) {
         // this->celView->update();
@@ -762,53 +731,6 @@ void MainWindow::changeEvent(QEvent *event)
         // (re)translate undoAction, redoAction
         this->undoAction->setText(tr("Undo"));
         this->redoAction->setText(tr("Redo"));
-        { // (re)translate 'Frame' submenu of 'Edit'
-            this->frameMenu.setTitle(tr("Frame"));
-            QList<QAction *> menuActions = this->frameMenu.actions();
-            menuActions[0]->setText(tr("Add Layer"));
-            menuActions[0]->setToolTip(tr("Add the content of an image to the current frame"));
-            menuActions[1]->setText(tr("Insert"));
-            menuActions[1]->setToolTip(tr("Add new frames before the current one"));
-            menuActions[2]->setText(tr("Append"));
-            menuActions[2]->setToolTip(tr("Append new frames at the end"));
-            menuActions[3]->setText(tr("Replace"));
-            menuActions[3]->setToolTip(tr("Replace the current frame"));
-            menuActions[4]->setText(tr("Delete"));
-            menuActions[4]->setToolTip(tr("Delete the current frame"));
-        }
-        { // (re)translate 'Subtile' submenu of 'Edit'
-            this->subtileMenu.setTitle(tr("Subtile"));
-            QList<QAction *> menuActions = this->subtileMenu.actions();
-            menuActions[0]->setText(tr("Create"));
-            menuActions[0]->setToolTip(tr("Create a new subtile"));
-            menuActions[1]->setText(tr("Insert"));
-            menuActions[1]->setToolTip(tr("Add new subtiles before the current one"));
-            menuActions[2]->setText(tr("Append"));
-            menuActions[2]->setToolTip(tr("Append new subtiles at the end"));
-            menuActions[3]->setText(tr("Replace"));
-            menuActions[3]->setToolTip(tr("Replace the current subtile"));
-            menuActions[4]->setText(tr("Delete"));
-            menuActions[4]->setToolTip(tr("Delete the current subtile"));
-        }
-        { // (re)translate 'Tile' submenu of 'Edit'
-            this->tileMenu.setTitle(tr("Tile"));
-            QList<QAction *> menuActions = this->tileMenu.actions();
-            menuActions[0]->setText(tr("Create"));
-            menuActions[0]->setToolTip(tr("Create a new tile"));
-            menuActions[1]->setText(tr("Insert"));
-            menuActions[1]->setToolTip(tr("Add new tiles before the current one"));
-            menuActions[2]->setText(tr("Append"));
-            menuActions[2]->setToolTip(tr("Append new tiles at the end"));
-            menuActions[3]->setText(tr("Replace"));
-            menuActions[3]->setToolTip(tr("Replace the current tile"));
-            menuActions[4]->setText(tr("Delete"));
-            menuActions[4]->setToolTip(tr("Delete the current tile"));
-        }
-        // (re)translate the resize/upscale options of 'Edit'
-        this->upscaleAction->setText(tr("Resize"));
-        this->upscaleAction->setToolTip(tr("Resize the current graphics"));
-        this->upscaleAction->setText(tr("Upscale"));
-        this->upscaleAction->setToolTip(tr("Upscale the current graphics"));
     }
     QMainWindow::changeEvent(event);
 }
@@ -1161,7 +1083,6 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(fileType != 4);
-    this->resizeAction->setEnabled(this->celView != nullptr);
     this->ui->menuView->setEnabled(true);
     this->ui->menuPalette->setEnabled(true);
     this->ui->actionExport->setEnabled(fileType != 4);
@@ -1169,8 +1090,9 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionSaveAs->setEnabled(true);
     this->ui->actionClose->setEnabled(true);
 
-    this->subtileMenu.setEnabled(isTileset);
-    this->tileMenu.setEnabled(isTileset);
+    this->ui->menuSubtile->setEnabled(isTileset);
+    this->ui->menuTile->setEnabled(isTileset);
+    this->ui->actionResize->setEnabled(this->celView != nullptr);
 
     this->ui->menuTileset->setEnabled(isTileset);
     this->ui->menuDungeon->setEnabled(this->dun != nullptr);
