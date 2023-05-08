@@ -6,13 +6,13 @@ class D1Gfx;
 
 enum class RESIZE_PLACEMENT {
     TOP_LEFT,
-    TOP_CENTER,
+    TOP,
     TOP_RIGHT,
     CENTER_LEFT,
     CENTER,
     CENTER_RIGHT,
     BOTTOM_LEFT,
-    BOTTOM_CENTER,
+    BOTTOM,
     BOTTOM_RIGHT,
 };
 

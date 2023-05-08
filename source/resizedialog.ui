@@ -97,7 +97,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QRadioButton" name="topCenterPlacementRadioButton">
+          <widget class="QRadioButton" name="topPlacementRadioButton">
            <property name="toolTip">
             <string>The current image is on the top</string>
            </property>
@@ -164,7 +164,7 @@
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QRadioButton" name="bottomCenterPlacementRadioButton">
+          <widget class="QRadioButton" name="bottomPlacementRadioButton">
            <property name="toolTip">
             <string>The current image is on the bottom</string>
            </property>

@@ -525,7 +525,7 @@ void CelView::resize(const ResizeParam &params)
             int counter = 0;
             for (int n = 0; n < currWidth - width; n++, counter++) {
                 int idx;
-                if (placement == RESIZE_PLACEMENT::TOP_CENTER || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::BOTTOM_CENTER) {
+                if (placement == RESIZE_PLACEMENT::TOP || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::BOTTOM) {
                     if (counter & 1) {
                         idx = n / 2;
                     } else {
@@ -555,7 +555,7 @@ void CelView::resize(const ResizeParam &params)
                     } else {
                         idx = currHeight - 1 - n / 2;
                     }
-                } else if (placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM_CENTER || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT) {
+                } else if (placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT) {
                     idx = n;
                 } else {
                     idx = currHeight - 1 - n;
@@ -598,7 +598,7 @@ done:
         while (width > currWidth) {
             for (std::vector<D1GfxPixel> &pixelLine : pixelLines) {
                 if ((placement == RESIZE_PLACEMENT::TOP_RIGHT || placement == RESIZE_PLACEMENT::CENTER_RIGHT || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
-                    || ((placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::TOP_CENTER || placement == RESIZE_PLACEMENT::BOTTOM_CENTER) && (counter & 1))) {
+                    || ((placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::TOP || placement == RESIZE_PLACEMENT::BOTTOM) && (counter & 1))) {
                     pixelLine.insert(pixelLine.begin(), backPixel);
                 } else {
                     pixelLine.push_back(backPixel);
@@ -612,7 +612,7 @@ done:
         while (width < currWidth) {
             for (std::vector<D1GfxPixel> &pixelLine : pixelLines) {
                 if ((placement == RESIZE_PLACEMENT::TOP_RIGHT || placement == RESIZE_PLACEMENT::CENTER_RIGHT || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
-                    || ((placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::TOP_CENTER || placement == RESIZE_PLACEMENT::BOTTOM_CENTER) && (counter & 1))) {
+                    || ((placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::TOP || placement == RESIZE_PLACEMENT::BOTTOM) && (counter & 1))) {
                     pixelLine.erase(pixelLine.begin());
                 } else {
                     pixelLine.pop_back();
@@ -630,7 +630,7 @@ done:
             pixelLine.push_back(backPixel);
         }
         while (height > currHeight) {
-            if ((placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM_CENTER || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
+            if ((placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
                 || ((placement == RESIZE_PLACEMENT::CENTER_LEFT || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::CENTER_RIGHT) && (counter & 1))) {
                 pixelLines.insert(pixelLines.begin(), pixelLine);
             } else {
@@ -642,7 +642,7 @@ done:
         }
 
         while (height < currHeight) {
-            if ((placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM_CENTER || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
+            if ((placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
                 || ((placement == RESIZE_PLACEMENT::CENTER_LEFT || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::CENTER_RIGHT) && (counter & 1))) {
                 pixelLines.erase(pixelLines.begin());
             } else {
