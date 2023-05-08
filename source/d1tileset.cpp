@@ -815,10 +815,10 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int backSubtileRef1, int
     properties |= (1 << 4);
     this->tmi->setSubtileProperties(backSubtileRef3 - 1, properties);
     properties = this->tmi->getSubtileProperties(stairsSubtileRef1 - 1);
-    properties &= ~((1 << 1) | (1 << 2);
+    properties &= ~((1 << 1) | (1 << 2));
     this->tmi->setSubtileProperties(stairsSubtileRef1 - 1, properties);
     properties = this->tmi->getSubtileProperties(stairsSubtileRef2 - 1);
-    properties &= ~((1 << 1) | (1 << 2);
+    properties &= ~((1 << 1) | (1 << 2));
     this->tmi->setSubtileProperties(stairsSubtileRef2 - 1, properties);
 
     if (!silent) {
