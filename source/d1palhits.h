@@ -1,8 +1,11 @@
 #pragma once
 
+#include <vector>
+
 #include <QMap>
 
 #include "d1gfx.h"
+#include "d1gfxset.h"
 #include "d1tileset.h"
 
 enum class D1PALHITS_MODE {
@@ -17,7 +20,7 @@ class D1PalHits : public QObject {
     Q_OBJECT
 
 public:
-    D1PalHits(D1Gfx *g, D1Tileset *ts);
+    D1PalHits(D1Gfx *g, D1Tileset *ts, D1Gfxset *gs);
 
     void update();
 
@@ -25,7 +28,7 @@ public:
     void setMode(D1PALHITS_MODE m);
 
     // Returns the number of hits for a specific index
-    int getIndexHits(quint8 colorIndex, int itemIndex) const;
+    int getIndexHits(quint8 colorIndex, unsigned itemIndex) const;
 
 private:
     void buildPalHits();
@@ -37,10 +40,11 @@ private:
 
     D1Gfx *gfx;
     D1Tileset *tileset;
+    D1Gfxset *gfxset;
 
     // Palette hits are stored with a palette index key and a hit count value
     QMap<quint8, int> allFramesPalHits;
-    QMap<int, QMap<quint8, int>> framePalHits;
-    QMap<int, QMap<quint8, int>> tilePalHits;
-    QMap<int, QMap<quint8, int>> subtilePalHits;
+    std::vector<QMap<quint8, int>> framePalHits;
+    std::vector<QMap<quint8, int>> tilePalHits;
+    std::vector<QMap<quint8, int>> subtilePalHits;
 };

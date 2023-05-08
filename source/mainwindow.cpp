@@ -912,11 +912,13 @@ void MainWindow::openFile(const OpenAsParam &params)
             || (fileType == 1 && QFileInfo::exists(tilFilePath) && QFileInfo::exists(minFilePath) && QFileInfo::exists(solFilePath));
     }
 
+    bool isGfxset = params.isGfxset;
+
     this->gfx = new D1Gfx();
     this->gfx->setPalette(this->trnBase->getResultingPalette());
     if (isGfxset) {
         this->gfxset = new D1Gfxset(this->gfx);
-        if (!this->gfxset->load(gfxFilePath)) {
+        if (!this->gfxset->load(gfxFilePath, params)) {
             this->failWithError(tr("Failed loading GFX file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }

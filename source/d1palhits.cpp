@@ -1,8 +1,9 @@
 #include "d1palhits.h"
 
-D1PalHits::D1PalHits(D1Gfx *g, D1Tileset *ts)
+D1PalHits::D1PalHits(D1Gfx *g, D1Tileset *ts, D1Gfxset *gs)
     : gfx(g)
     , tileset(ts)
+    , gfxset(gs)
 {
     this->update();
 }
@@ -27,10 +28,11 @@ void D1PalHits::setMode(D1PALHITS_MODE m)
 void D1PalHits::buildPalHits()
 {
     // Go through all frames
-    this->framePalHits.clear();
     this->allFramesPalHits.clear();
+    this->framePalHits.resize(this->gfx->getFrameCount());
     for (int i = 0; i < this->gfx->getFrameCount(); i++) {
-        QMap<quint8, int> frameHits;
+        QMap<quint8, int> &frameHits = this->framePalHits[i];
+        frameHits.clear();
 
         // Get frame pointer
         D1GfxFrame *frame = this->gfx->getFrame(i);
@@ -50,21 +52,19 @@ void D1PalHits::buildPalHits()
                 this->allFramesPalHits.insert(paletteIndex, frameHits.value(paletteIndex) + 1);
             }
         }
-
-        this->framePalHits[i] = frameHits;
     }
 }
 
 void D1PalHits::buildSubtilePalHits()
 {
-    this->subtilePalHits.clear();
-
     if (this->tileset == nullptr) {
         return;
     }
+    this->subtilePalHits.resize(this->tileset->min->getSubtileCount());
     // Go through all sub-tiles
     for (int i = 0; i < this->tileset->min->getSubtileCount(); i++) {
-        QMap<quint8, int> subtileHits;
+        QMap<quint8, int> &subtileHits = this->subtilePalHits[i];
+        subtileHits.clear();
 
         // Retrieve the CEL frame references of the current sub-tile
         std::vector<unsigned> &frameReferences = this->tileset->min->getFrameReferences(i);
@@ -80,20 +80,19 @@ void D1PalHits::buildSubtilePalHits()
                 subtileHits.insert(it2.key(), it2.value());
             }
         }
-
-        this->subtilePalHits[i] = subtileHits;
     }
 }
 
 void D1PalHits::buildTilePalHits()
 {
-    this->tilePalHits.clear();
     if (this->tileset == nullptr) {
         return;
     }
+    this->tilePalHits.resize(this->tileset->til->getTileCount());
     // Go through all tiles
     for (int i = 0; i < this->tileset->til->getTileCount(); i++) {
-        QMap<quint8, int> tileHits;
+        QMap<quint8, int> &tileHits = this->tilePalHits[i];
+        tileHits.clear();
 
         // Retrieve the subtile indices of the current tile
         std::vector<int> &subtileIndices = this->tileset->til->getSubtileIndices(i);
@@ -107,12 +106,10 @@ void D1PalHits::buildTilePalHits()
                 tileHits.insert(it2.key(), it2.value());
             }
         }
-
-        this->tilePalHits[i] = tileHits;
     }
 }
 
-int D1PalHits::getIndexHits(quint8 colorIndex, int itemIndex) const
+int D1PalHits::getIndexHits(quint8 colorIndex, unsigned itemIndex) const
 {
     switch (this->mode) {
     case D1PALHITS_MODE::ALL_COLORS:
@@ -122,15 +119,15 @@ int D1PalHits::getIndexHits(quint8 colorIndex, int itemIndex) const
             return this->allFramesPalHits[colorIndex];
         break;
     case D1PALHITS_MODE::CURRENT_TILE:
-        if (this->tilePalHits.contains(itemIndex) && this->tilePalHits[itemIndex].contains(colorIndex))
+        if (this->tilePalHits.size() > itemIndex && this->tilePalHits[itemIndex].contains(colorIndex))
             return this->tilePalHits[itemIndex][colorIndex];
         break;
     case D1PALHITS_MODE::CURRENT_SUBTILE:
-        if (this->subtilePalHits.contains(itemIndex) && this->subtilePalHits[itemIndex].contains(colorIndex))
+        if (this->subtilePalHits.size() > itemIndex && this->subtilePalHits[itemIndex].contains(colorIndex))
             return this->subtilePalHits[itemIndex][colorIndex];
         break;
     case D1PALHITS_MODE::CURRENT_FRAME:
-        if (this->framePalHits.contains(itemIndex) && this->framePalHits[itemIndex].contains(colorIndex))
+        if (this->framePalHits.size() > itemIndex && this->framePalHits[itemIndex].contains(colorIndex))
             return this->framePalHits[itemIndex][colorIndex];
         break;
     }
