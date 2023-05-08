@@ -701,9 +701,9 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int backSutileRef, int s
         return;
     }
     unsigned back_RightIndex0 = MICRO_IDX(blockSize, 0);
-    unsigned back_RightFrameRef0 = backFrameReferences[back_bottomRightIndex]; // 36
+    unsigned back_RightFrameRef0 = backFrameReferences[back_RightIndex0]; // 36
     unsigned stairs_LeftIndex0 = MICRO_IDX(blockSize, 0);
-    unsigned stairs_LeftFrameRef0 = stairs1FrameReferences[stairs_BottomLeftIndex0]; // 770
+    unsigned stairs_LeftFrameRef0 = stairs1FrameReferences[stairs_LeftIndex0]; // 770
     unsigned stairs_LeftIndex2 = MICRO_IDX(blockSize, 2);
     unsigned stairs_LeftFrameRef2 = stairs1FrameReferences[stairs_LeftIndex2]; // 769
     unsigned stairs_LeftIndex4 = MICRO_IDX(blockSize, 4);
@@ -721,7 +721,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int backSutileRef, int s
         || stairs1FrameReferences[stairs_LeftIndex2] != stairs_LeftFrameRef2
         || stairs1FrameReferences[stairs_LeftIndex4] != stairs_LeftFrameRef4
         || stairs1FrameReferences[stairs_LeftIndex6] != stairs_LeftFrameRef6) {
-        dProgressErr() << QApplication::tr("The stairs subtiles (%1, %2) have invalid (mismatching) frames.").arg(stairsSubtileRef1).arg(stairsSutileRef2);
+        dProgressErr() << QApplication::tr("The stairs subtiles (%1, %2) have invalid (mismatching) frames.").arg(stairsSubtileRef1).arg(stairsSubtileRef2);
         return;
     }
 
@@ -767,13 +767,6 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int backSutileRef, int s
             stairs_LeftFrame0->setPixel(x, y, D1GfxPixel::transparentPixel()); // 770
         }
     }
-
-    D1GfxFrame *back_RightFrame = this->gfx->getFrame(back_RightFrameRef0 - 1);    // 36
-    D1GfxFrame *stairs_LeftFrame0 = this->gfx->getFrame(stairs_LeftFrameRef0 - 1); // 770
-    D1GfxFrame *stairs_LeftFrame2 = this->gfx->getFrame(stairs_LeftFrameRef2 - 1); // 769
-    D1GfxFrame *stairs_LeftFrame4 = this->gfx->getFrame(stairs_LeftFrameRef4 - 1); // 768
-    D1GfxFrame *stairs_LeftFrame6 = this->gfx->getFrame(stairs_LeftFrameRef6 - 1); // 767
-
     // shift the stairs-pixel down
     for (int x = 0; x < MICRO_WIDTH; x++) {
         for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
@@ -801,10 +794,8 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int backSutileRef, int s
     }
 
     // adjust the frame types
+    D1CelTilesetFrame::selectFrameType(back_RightFrame);        // 36
     D1CelTilesetFrame::selectFrameType(stairs_LeftFrame0);      // 770
-    D1CelTilesetFrame::selectFrameType(topLeft_RightFrame);     // 369
-    D1CelTilesetFrame::selectFrameType(bottomRight_LeftFrame);  // 376
-    D1CelTilesetFrame::selectFrameType(bottomRight_RightFrame); // 377
 
     this->gfx->setModified();
 
