@@ -269,6 +269,45 @@
     </property>
     <addaction name="actionUpscaleTask"/>
    </widget>
+   <widget class="QMenu" name="menuFrame">
+    <property name="title">
+     <string>Frame</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionAddTo_Frame"/>
+    <addaction name="actionInsert_Frame"/>
+    <addaction name="actionAppend_Frame"/>
+    <addaction name="actionReplace_Frame"/>
+    <addaction name="actionDel_Frame"/>
+   </widget>
+   <widget class="QMenu" name="menuSubtile">
+    <property name="title">
+     <string>Subtile</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionCreate_Subtile"/>
+    <addaction name="actionInsert_Subtile"/>
+    <addaction name="actionAppend_Subtile"/>
+    <addaction name="actionReplace_Subtile"/>
+    <addaction name="actionDel_Subtile"/>
+   </widget>
+   <widget class="QMenu" name="menuTile">
+    <property name="title">
+     <string>Tile</string>
+    </property>
+    <property name="toolTipsVisible">
+     <bool>true</bool>
+    </property>
+    <addaction name="actionCreate_Tile"/>
+    <addaction name="actionInsert_Tile"/>
+    <addaction name="actionAppend_Tile"/>
+    <addaction name="actionReplace_Tile"/>
+    <addaction name="actionDel_Tile"/>
+   </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>Edit</string>
@@ -276,6 +315,13 @@
     <property name="toolTipsVisible">
      <bool>true</bool>
     </property>
+    <addaction name="separator"/>
+    <addaction name="menuFrame"/>
+    <addaction name="menuSubtile"/>
+    <addaction name="menuTile"/>
+    <addaction name="separator"/>
+    <addaction name="actionResize"/>
+    <addaction name="actionUpscale"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -412,6 +458,142 @@
   <action name="actionSettings">
    <property name="text">
     <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionAddTo_Frame">
+   <property name="text">
+    <string>Add Layer</string>
+   </property>
+   <property name="toolTip">
+    <string>Add the content of an image to the current frame</string>
+   </property>
+  </action>
+  <action name="actionInsert_Frame">
+   <property name="text">
+    <string>Insert</string>
+   </property>
+   <property name="toolTip">
+    <string>Add new frames before the current one</string>
+   </property>
+  </action>
+  <action name="actionAppend_Frame">
+   <property name="text">
+    <string>Append</string>
+   </property>
+   <property name="toolTip">
+    <string>Append new frames at the end</string>
+   </property>
+  </action>
+  <action name="actionReplace_Frame">
+   <property name="text">
+    <string>Replace</string>
+   </property>
+   <property name="toolTip">
+    <string>Replace the current frame</string>
+   </property>
+  </action>
+  <action name="actionDel_Frame">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete the current frame</string>
+   </property>
+  </action>
+  <action name="actionCreate_Subtile">
+   <property name="text">
+    <string>Create</string>
+   </property>
+   <property name="toolTip">
+    <string>Create a new subtile</string>
+   </property>
+  </action>
+  <action name="actionInsert_Subtile">
+   <property name="text">
+    <string>Insert</string>
+   </property>
+   <property name="toolTip">
+    <string>Add new subtiles before the current one</string>
+   </property>
+  </action>
+  <action name="actionAppend_Subtile">
+   <property name="text">
+    <string>Append</string>
+   </property>
+   <property name="toolTip">
+    <string>Append new subtiles at the end</string>
+   </property>
+  </action>
+  <action name="actionReplace_Subtile">
+   <property name="text">
+    <string>Replace</string>
+   </property>
+   <property name="toolTip">
+    <string>Replace the current subtile</string>
+   </property>
+  </action>
+  <action name="actionDel_Subtile">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete the current subtile</string>
+   </property>
+  </action>
+  <action name="actionCreate_Tile">
+   <property name="text">
+    <string>Create</string>
+   </property>
+   <property name="toolTip">
+    <string>Create a new tile</string>
+   </property>
+  </action>
+  <action name="actionInsert_Tile">
+   <property name="text">
+    <string>Insert</string>
+   </property>
+   <property name="toolTip">
+    <string>Add new tiles before the current one</string>
+   </property>
+  </action>
+  <action name="actionAppend_Tile">
+   <property name="text">
+    <string>Append</string>
+   </property>
+   <property name="toolTip">
+    <string>Append new tiles at the end</string>
+   </property>
+  </action>
+  <action name="actionReplace_Tile">
+   <property name="text">
+    <string>Replace</string>
+   </property>
+   <property name="toolTip">
+    <string>Replace the current tile</string>
+   </property>
+  </action>
+  <action name="actionDel_Tile">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete the current tile</string>
+   </property>
+  </action>
+  <action name="actionResize">
+   <property name="text">
+    <string>Resize</string>
+   </property>
+   <property name="toolTip">
+    <string>Resize the current graphics</string>
+   </property>
+  </action>
+  <action name="actionUpscale">
+   <property name="text">
+    <string>Upscale</string>
+   </property>
+   <property name="toolTip">
+    <string>Upscale the current graphics</string>
    </property>
   </action>
   <action name="actionTogglePalTrn">

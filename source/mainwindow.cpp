@@ -55,7 +55,10 @@ MainWindow::MainWindow()
     this->undoAction->setShortcut(QKeySequence::Undo);
     this->redoAction = undoStack->createRedoAction(this, "Redo");
     this->redoAction->setShortcut(QKeySequence::Redo);
-    this->ui->menuEdit->addAction(this->undoAction);
+    QAction *firstEditAction = this->ui->menuEdit->actions()[0];
+    this->ui->menuEdit->insertAction(firstEditAction, this->undoAction);
+    this->ui->menuEdit->insertAction(firstEditAction, this->redoAction);
+    /*this->ui->menuEdit->addAction(this->undoAction);
     this->ui->menuEdit->addAction(this->redoAction);
     this->ui->menuEdit->addSeparator();
 
@@ -89,7 +92,7 @@ MainWindow::MainWindow()
     // Initialize resize/upscale option of 'Edit'
     this->ui->menuEdit->addSeparator();
     this->resizeAction = this->ui->menuEdit->addAction("Resize", this, SLOT(on_actionResize_triggered()));
-    this->upscaleAction = this->ui->menuEdit->addAction("Upscale", this, SLOT(on_actionUpscale_triggered()));
+    this->upscaleAction = this->ui->menuEdit->addAction("Upscale", this, SLOT(on_actionUpscale_triggered()));*/
 
     this->on_actionClose_triggered();
 
@@ -222,7 +225,7 @@ void MainWindow::updateWindow()
     // }
     // update menu options
     bool hasFrame = this->gfx != nullptr && this->gfx->getFrameCount() != 0;
-    this->frameMenu.actions()[2]->setEnabled(hasFrame); // replace frame
+    /*this->frameMenu.actions()[2]->setEnabled(hasFrame); // replace frame
     this->frameMenu.actions()[3]->setEnabled(hasFrame); // delete frame
     if (this->levelCelView != nullptr) {
         bool hasSubtile = this->tileset->min->getSubtileCount() != 0;
@@ -232,7 +235,19 @@ void MainWindow::updateWindow()
         bool hasTile = this->tileset->til->getTileCount() != 0;
         this->tileMenu.actions()[3]->setEnabled(hasTile); // replace tile
         this->tileMenu.actions()[4]->setEnabled(hasTile); // delete tile
-    }
+    }*/
+    this->ui->actionFrameReplace_Edit->setEnabled(hasFrame);
+    this->ui->actionFrameDelete_Edit->setEnabled(hasFrame);
+    bool hasSubtile = this->tileset != nullptr && this->tileset->min->getSubtileCount() != 0;
+    this->ui->actionSubtileReplace_Edit->setEnabled(hasSubtile);
+    this->ui->actionSubtileDelete_Edit->setEnabled(hasSubtile);
+    this->ui->actionTileCreate_Edit->setEnabled(hasSubtile);
+    this->ui->actionTileInsert_Edit->setEnabled(hasSubtile);
+    this->ui->actionTileAppend_Edit->setEnabled(hasSubtile);
+    bool hasTile = this->tileset != nullptr && this->tileset->til->getTileCount() != 0;
+    this->ui->actionTileReplace_Edit->setEnabled(hasTile);
+    this->ui->actionTileDelete_Edit->setEnabled(hasTile);
+
     // update the view
     if (this->celView != nullptr) {
         // this->celView->update();
@@ -762,7 +777,7 @@ void MainWindow::changeEvent(QEvent *event)
         // (re)translate undoAction, redoAction
         this->undoAction->setText(tr("Undo"));
         this->redoAction->setText(tr("Redo"));
-        { // (re)translate 'Frame' submenu of 'Edit'
+        /*{ // (re)translate 'Frame' submenu of 'Edit'
             this->frameMenu.setTitle(tr("Frame"));
             QList<QAction *> menuActions = this->frameMenu.actions();
             menuActions[0]->setText(tr("Add Layer"));
@@ -805,10 +820,10 @@ void MainWindow::changeEvent(QEvent *event)
             menuActions[4]->setToolTip(tr("Delete the current tile"));
         }
         // (re)translate the resize/upscale options of 'Edit'
-        this->upscaleAction->setText(tr("Resize"));
-        this->upscaleAction->setToolTip(tr("Resize the current graphics"));
+        this->resizeAction->setText(tr("Resize"));
+        this->resizeAction->setToolTip(tr("Resize the current graphics"));
         this->upscaleAction->setText(tr("Upscale"));
-        this->upscaleAction->setToolTip(tr("Upscale the current graphics"));
+        this->upscaleAction->setToolTip(tr("Upscale the current graphics"));*/
     }
     QMainWindow::changeEvent(event);
 }
@@ -1161,7 +1176,6 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(fileType != 4);
-    this->resizeAction->setEnabled(this->celView != nullptr);
     this->ui->menuView->setEnabled(true);
     this->ui->menuPalette->setEnabled(true);
     this->ui->actionExport->setEnabled(fileType != 4);
@@ -1169,8 +1183,11 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->actionSaveAs->setEnabled(true);
     this->ui->actionClose->setEnabled(true);
 
-    this->subtileMenu.setEnabled(isTileset);
-    this->tileMenu.setEnabled(isTileset);
+    // this->subtileMenu.setEnabled(isTileset);
+    // this->tileMenu.setEnabled(isTileset);
+    this->ui->menuSubtile.setEnabled(isTileset);
+    this->ui->menuTile.setEnabled(isTileset);
+    this->ui->actionResize_Edit->setEnabled(this->celView != nullptr);
 
     this->ui->menuTileset->setEnabled(isTileset);
     this->ui->menuDungeon->setEnabled(this->dun != nullptr);

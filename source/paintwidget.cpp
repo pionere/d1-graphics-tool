@@ -598,16 +598,6 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
         }
         this->currPos = pos;
         this->selectArea(getArea(this->currPos, this->lastPos));
-        /*QRect sceneRect = getArea(this->currPos, this->lastPos);
-        sceneRect.adjust(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN, CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
-        QPolygon poly = this->graphView->mapFromScene(sceneRect);
-        QRect vpRect = poly.boundingRect();
-        QPoint globalTopLeft = this->graphView->viewport()->mapToGlobal(vpRect.topLeft());
-        QPoint globalBottomRight = this->graphView->viewport()->mapToGlobal(vpRect.bottomRight());
-        QPoint topLeft = this->parentWidget()->mapFromGlobal(globalTopLeft);
-        QPoint bottomRight = this->parentWidget()->mapFromGlobal(globalBottomRight);
-        this->rubberBand->setGeometry(QRect(topLeft, bottomRight));
-        this->rubberBand->show();*/
         return true;
     }
     MemFree(this->rubberBand);
