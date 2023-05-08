@@ -9,6 +9,16 @@ ResizeDialog::ResizeDialog(QWidget *parent)
     , ui(new Ui::ResizeDialog())
 {
     ui->setupUi(this);
+
+    this->ui->placementButtonGroup->setId(this->ui->topLeftPlacementRadioButton, (int)RESIZE_PLACEMENT::TOP_LEFT);
+    this->ui->placementButtonGroup->setId(this->ui->topPlacementRadioButton, (int)RESIZE_PLACEMENT::TOP);
+    this->ui->placementButtonGroup->setId(this->ui->topRightPlacementRadioButton, (int)RESIZE_PLACEMENT::TOP_RIGHT);
+    this->ui->placementButtonGroup->setId(this->ui->centerLeftPlacementRadioButton, (int)RESIZE_PLACEMENT::CENTER_LEFT);
+    this->ui->placementButtonGroup->setId(this->ui->centerPlacementRadioButton, (int)RESIZE_PLACEMENT::CENTER);
+    this->ui->placementButtonGroup->setId(this->ui->centerRightPlacementRadioButton, (int)RESIZE_PLACEMENT::CENTER_RIGHT);
+    this->ui->placementButtonGroup->setId(this->ui->bottomLeftPlacementRadioButton, (int)RESIZE_PLACEMENT::BOTTOM_LEFT);
+    this->ui->placementButtonGroup->setId(this->ui->bottomPlacementRadioButton, (int)RESIZE_PLACEMENT::BOTTOM);
+    this->ui->placementButtonGroup->setId(this->ui->bottomRightPlacementRadioButton, (int)RESIZE_PLACEMENT::BOTTOM_RIGHT);
 }
 
 ResizeDialog::~ResizeDialog()
@@ -25,6 +35,7 @@ void ResizeDialog::initialize(D1Gfx *gfx)
     this->ui->heightLineEdit->setText("");
     this->ui->rangeFromLineEdit->setText("");
     this->ui->rangeToLineEdit->setText("");
+    this->ui->centerPlacementRadioButton->setChecked(true);
 }
 
 void ResizeDialog::on_resizeButton_clicked()
@@ -36,7 +47,7 @@ void ResizeDialog::on_resizeButton_clicked()
     params.backcolor = this->ui->backColorLineEdit->text().toUShort();
     params.rangeFrom = this->ui->rangeFromLineEdit->nonNegInt();
     params.rangeTo = this->ui->rangeToLineEdit->nonNegInt();
-    params.center = this->ui->centerCheckBox->isChecked();
+    params.placement = (RESIZE_PLACEMENT)this->ui->placementButtonGroup->checkedId();
 
     if (params.backcolor > D1PAL_COLORS) {
         params.backcolor = D1PAL_COLORS;

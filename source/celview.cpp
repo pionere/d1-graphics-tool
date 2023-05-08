@@ -504,7 +504,7 @@ void CelView::resize(const ResizeParam &params)
     }
     rangeTo--;
 
-    const bool center = params.center;
+    const RESIZE_PLACEMENT placement = params.placement;
     int frameWithPixelLost = -1;
     for (int i = rangeFrom; i <= rangeTo; i++) {
         D1GfxFrame *frame = this->gfx->getFrame(i);
@@ -524,12 +524,14 @@ void CelView::resize(const ResizeParam &params)
             int counter = 0;
             for (int n = 0; n < currWidth - width; n++, counter++) {
                 int idx;
-                if (center) {
+                if (placement == RESIZE_PLACEMENT::TOP || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::BOTTOM) {
                     if (counter & 1) {
                         idx = n / 2;
                     } else {
                         idx = currWidth - 1 - n / 2;
                     }
+                } else if (placement == RESIZE_PLACEMENT::TOP_RIGHT || placement == RESIZE_PLACEMENT::CENTER_RIGHT || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT) {
+                    idx = n;
                 } else {
                     idx = currWidth - 1 - n;
                 }
@@ -546,12 +548,14 @@ void CelView::resize(const ResizeParam &params)
             int counter = 0;
             for (int n = 0; n < currHeight - height; n++, counter++) {
                 int idx;
-                if (center) {
+                if (placement == RESIZE_PLACEMENT::CENTER_LEFT || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::CENTER_RIGHT) {
                     if (counter & 1) {
                         idx = n / 2;
                     } else {
                         idx = currHeight - 1 - n / 2;
                     }
+                } else if (placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT) {
+                    idx = n;
                 } else {
                     idx = currHeight - 1 - n;
                 }
@@ -574,6 +578,8 @@ done:
         }
     }
 
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Resizing..."), 1, PAF_NONE);
+
     bool change = false;
     for (int i = rangeFrom; i <= rangeTo; i++) {
         D1GfxFrame *frame = this->gfx->getFrame(i);
@@ -590,7 +596,8 @@ done:
         int counter = 0;
         while (width > currWidth) {
             for (std::vector<D1GfxPixel> &pixelLine : pixelLines) {
-                if (center && (counter & 1)) {
+                if ((placement == RESIZE_PLACEMENT::TOP_RIGHT || placement == RESIZE_PLACEMENT::CENTER_RIGHT || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
+                    || ((placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::TOP || placement == RESIZE_PLACEMENT::BOTTOM) && (counter & 1))) {
                     pixelLine.insert(pixelLine.begin(), backPixel);
                 } else {
                     pixelLine.push_back(backPixel);
@@ -603,7 +610,8 @@ done:
 
         while (width < currWidth) {
             for (std::vector<D1GfxPixel> &pixelLine : pixelLines) {
-                if (center && (counter & 1)) {
+                if ((placement == RESIZE_PLACEMENT::TOP_RIGHT || placement == RESIZE_PLACEMENT::CENTER_RIGHT || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
+                    || ((placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::TOP || placement == RESIZE_PLACEMENT::BOTTOM) && (counter & 1))) {
                     pixelLine.erase(pixelLine.begin());
                 } else {
                     pixelLine.pop_back();
@@ -621,7 +629,8 @@ done:
             pixelLine.push_back(backPixel);
         }
         while (height > currHeight) {
-            if (center && (counter & 1)) {
+            if ((placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
+                || ((placement == RESIZE_PLACEMENT::CENTER_LEFT || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::CENTER_RIGHT) && (counter & 1))) {
                 pixelLines.insert(pixelLines.begin(), pixelLine);
             } else {
                 pixelLines.push_back(pixelLine);
@@ -632,7 +641,8 @@ done:
         }
 
         while (height < currHeight) {
-            if (center && (counter & 1)) {
+            if ((placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
+                || ((placement == RESIZE_PLACEMENT::CENTER_LEFT || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::CENTER_RIGHT) && (counter & 1))) {
                 pixelLines.erase(pixelLines.begin());
             } else {
                 pixelLines.pop_back();
@@ -644,10 +654,12 @@ done:
         frame->setHeight(height);
     }
 
+    ProgressDialog::done();
+
     if (change) {
         this->gfx->setModified();
-        // update the view - done by the caller
-        // this->displayFrame();
+        // update the view
+        this->displayFrame();
     }
 }
 
