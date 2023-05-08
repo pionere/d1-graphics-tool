@@ -260,31 +260,6 @@ QImage D1Min::getSubtileImage(int subtileIndex) const
 
 QImage D1Min::getSpecSubtileImage(int subtileIndex) const
 {
-    /*unsigned subtileWidthPx = this->subtileWidth * MICRO_WIDTH;
-    unsigned subtileHeightPx = this->subtileHeight * MICRO_HEIGHT;
-    QImage subtile = QImage(subtileWidthPx, subtileHeightPx, QImage::Format_ARGB32);
-    subtile.fill(Qt::transparent);
-    QPainter subtilePainter(&subtile);
-
-    unsigned dx = 0, dy = 0;
-    const std::vector<unsigned> &frameRefs = this->frameReferences[subtileIndex];
-    for (unsigned frameRef : frameRefs) {
-        if (frameRef > 0) {
-            subtilePainter.drawImage(dx, dy, this->gfx->getFrameImage(frameRef - 1));
-        }
-
-        dx += MICRO_WIDTH;
-        if (dx == subtileWidthPx) {
-            dx = 0;
-            dy += MICRO_HEIGHT;
-        }
-    }
-
-    unsigned specRef = this->tileset->spt->getSubtileSpecProperty(subtileIndex);
-    if (specRef != 0 && (unsigned)this->tileset->cls->getFrameCount() >= specRef) {
-        QImage specImage = this->tileset->cls->getFrameImage(specRef - 1);
-        subtilePainter.drawImage(0, subtileHeightPx - specImage.height(), specImage);
-    }*/
     QImage subtile = this->getSubtileImage(subtileIndex);
 
     unsigned specRef = this->tileset->spt->getSubtileSpecProperty(subtileIndex);

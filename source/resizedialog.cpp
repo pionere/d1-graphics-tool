@@ -25,6 +25,7 @@ void ResizeDialog::initialize(D1Gfx *gfx)
     this->ui->heightLineEdit->setText("");
     this->ui->rangeFromLineEdit->setText("");
     this->ui->rangeToLineEdit->setText("");
+    this->ui->centerPlacementRadioButton->setChecked(true);
 }
 
 void ResizeDialog::on_resizeButton_clicked()
@@ -36,7 +37,7 @@ void ResizeDialog::on_resizeButton_clicked()
     params.backcolor = this->ui->backColorLineEdit->text().toUShort();
     params.rangeFrom = this->ui->rangeFromLineEdit->nonNegInt();
     params.rangeTo = this->ui->rangeToLineEdit->nonNegInt();
-    params.center = this->ui->centerCheckBox->isChecked();
+    params.placement = (RESIZE_PLACEMENT)this->ui->placementButtonGroup->checkedId();
 
     if (params.backcolor > D1PAL_COLORS) {
         params.backcolor = D1PAL_COLORS;

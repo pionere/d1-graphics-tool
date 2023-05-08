@@ -916,9 +916,7 @@ void D1Tileset::patch(int dunType, bool silent)
     case DTYPE_CRYPT:
         // patch dMegaTiles - L5.TIL
         // use common subtiles of doors
-        // assert(pMegaTiles[4 * (71 - 1) + 2] == SwapLE16(213 - 1));
         ReplaceSubtile(this->til, 71 - 1, 2, 206, silent);
-        // assert(pMegaTiles[4 * (72 - 1) + 2] == SwapLE16(216 - 1));
         ReplaceSubtile(this->til, 72 - 1, 2, 206, silent);
         // patch dMiniTiles - L5.MIN
         // pointless door micros (re-drawn by dSpecial)

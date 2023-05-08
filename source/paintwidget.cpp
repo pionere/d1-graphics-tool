@@ -514,8 +514,6 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
                         this->lastMoveCmd = nullptr;
                         this->lastDelta = QPoint(0, 0);
                     }
-                    this->ui->gradientXLineEdit->setText(QString("%1:%2").arg(this->selectionMoveMode).arg(this->lastDelta.x()));
-                    this->ui->gradientYLineEdit->setText(QString::number(this->lastDelta.y()));
                     this->selectionMoveMode = 1;
                     return false;
                 }
@@ -525,8 +523,6 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
             this->lastMoveCmd = nullptr;
             this->lastDelta = QPoint(0, 0);
             this->selectionMoveMode = 0;
-            this->ui->gradientXLineEdit->setText(QString("%1.%2").arg(this->selectionMoveMode).arg(this->lastDelta.x()));
-            this->ui->gradientYLineEdit->setText(QString::number(this->lastDelta.y()));
             return false;
         }
         if (this->selectionMoveMode != 0) {
@@ -584,8 +580,6 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
                 }
             }
             this->lastDelta = delta;
-            this->ui->gradientXLineEdit->setText(QString("%1!%2").arg(this->selectionMoveMode).arg(this->lastDelta.x()));
-            this->ui->gradientYLineEdit->setText(QString::number(this->lastDelta.y()));
             area.translate(delta);
             this->selectArea(area);
 

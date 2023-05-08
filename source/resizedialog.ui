@@ -76,25 +76,117 @@
       <item row="2" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Center:</string>
+         <string>Placement:</string>
         </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QCheckBox" name="centerCheckBox">
         <property name="toolTip">
-         <string>Play frames to or from the current frame</string>
+         <string>Placement of the current image</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
+      <item row="2" column="1" rowspan="3">
+       <widget class="QWidget">
+        <layout class="QGridLayout">
+         <item row="0" column="0">
+          <widget class="QRadioButton" name="topLeftPlacementRadioButton">
+           <property name="toolTip">
+            <string>The current image is on the top left</string>
+           </property>
+           <attribute name="buttonGroup">
+            <string notr="true">placementButtonGroup</string>
+           </attribute>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QRadioButton" name="topCenterPlacementRadioButton">
+           <property name="toolTip">
+            <string>The current image is on the top</string>
+           </property>
+           <attribute name="buttonGroup">
+            <string notr="true">placementButtonGroup</string>
+           </attribute>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QRadioButton" name="topRightPlacementRadioButton">
+           <property name="toolTip">
+            <string>The current image is on the top right</string>
+           </property>
+           <attribute name="buttonGroup">
+            <string notr="true">placementButtonGroup</string>
+           </attribute>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <spacer>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="0">
+          <widget class="QRadioButton" name="centerLeftPlacementRadioButton">
+           <property name="toolTip">
+            <string>The current image is on the left</string>
+           </property>
+           <attribute name="buttonGroup">
+            <string notr="true">placementButtonGroup</string>
+           </attribute>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QRadioButton" name="centerPlacementRadioButton">
+           <property name="toolTip">
+            <string>The current image is in the center</string>
+           </property>
+           <attribute name="buttonGroup">
+            <string notr="true">placementButtonGroup</string>
+           </attribute>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QRadioButton" name="centerRightPlacementRadioButton">
+           <property name="toolTip">
+            <string>The current image is on the right</string>
+           </property>
+           <attribute name="buttonGroup">
+            <string notr="true">placementButtonGroup</string>
+           </attribute>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QRadioButton" name="bottomLeftPlacementRadioButton">
+           <property name="toolTip">
+            <string>The current image is on the bottom left</string>
+           </property>
+           <attribute name="buttonGroup">
+            <string notr="true">placementButtonGroup</string>
+           </attribute>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QRadioButton" name="bottomCenterPlacementRadioButton">
+           <property name="toolTip">
+            <string>The current image is on the bottom</string>
+           </property>
+           <attribute name="buttonGroup">
+            <string notr="true">placementButtonGroup</string>
+           </attribute>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QRadioButton" name="bottomRightPlacementRadioButton">
+           <property name="toolTip">
+            <string>The current image is on the bottom right</string>
+           </property>
+           <attribute name="buttonGroup">
+            <string notr="true">placementButtonGroup</string>
+           </attribute>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </item>
-      <item row="3" column="0">
+      <item row="5" column="0">
        <widget class="QLabel">
         <property name="text">
          <string>Range:</string>
@@ -104,7 +196,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="5" column="1">
        <layout class="QHBoxLayout">
         <property name="spacing">
          <number>4</number>
@@ -178,7 +270,7 @@
         </item>
        </layout>
       </item>
-      <item row="3" column="2">
+      <item row="5" column="2">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -218,5 +310,7 @@
  <layoutdefault spacing="4" margin="4"/>
  <resources/>
  <connections/>
- <buttongroups/>
+ <buttongroups>
+  <buttongroup name="placementButtonGroup"/>
+ </buttongroups>
 </ui>

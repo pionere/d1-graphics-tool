@@ -4,6 +4,18 @@
 
 class D1Gfx;
 
+enum class RESIZE_PLACEMENT {
+    TOP_LEFT,
+    TOP_CENTER,
+    TOP_RIGHT,
+    CENTER_LEFT,
+    CENTER,
+    CENTER_RIGHT,
+    BOTTOM_LEFT,
+    BOTTOM_CENTER,
+    BOTTOM_RIGHT,
+};
+
 class ResizeParam {
 public:
     int width;
@@ -11,7 +23,7 @@ public:
     int backcolor;
     int rangeFrom;
     int rangeTo;
-    bool center;
+    RESIZE_PLACEMENT placement;
 };
 
 namespace Ui {
