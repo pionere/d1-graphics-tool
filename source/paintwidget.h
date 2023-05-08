@@ -23,9 +23,6 @@ public:
     void undo() override;
     void redo() override;
 
-signals:
-    void modified();
-
 private:
     QPointer<D1GfxFrame> frame;
     std::vector<FramePixel> modPixels;
@@ -36,14 +33,14 @@ class PaintWidget;
 } // namespace Ui
 
 class CelView;
-class D1Tileset;
 class LevelCelView;
+class GfxsetView;
 
 class PaintWidget : public QFrame {
     Q_OBJECT
 
 public:
-    explicit PaintWidget(QWidget *parent, QUndoStack *undoStack, D1Gfx *gfx, CelView *celView, LevelCelView *levelCelView);
+    explicit PaintWidget(QWidget *parent, QUndoStack *undoStack, D1Gfx *gfx, CelView *celView, LevelCelView *levelCelView, GfxsetView *gfxsetView);
     ~PaintWidget();
 
     void setPalette(D1Pal *pal);
@@ -94,6 +91,7 @@ private:
     D1Gfx *gfx;
     CelView *celView;
     LevelCelView *levelCelView;
+    GfxsetView *gfxsetView;
     QGraphicsView *graphView;
     QRubberBand *rubberBand;
     bool moving;

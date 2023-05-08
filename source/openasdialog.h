@@ -41,6 +41,7 @@ public:
     int minWidth = 0;
     int minHeight = 0;
     bool createDun = false;
+    bool isGfxset = false;
 };
 
 namespace Ui {

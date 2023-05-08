@@ -11,12 +11,14 @@
 #include "celview.h"
 #include "d1dun.h"
 #include "d1gfx.h"
+#include "d1gfxset.h"
 #include "d1pal.h"
 #include "d1palhits.h"
 #include "d1tableset.h"
 #include "d1tileset.h"
 #include "d1trn.h"
 #include "exportdialog.h"
+#include "gfxsetview.h"
 #include "levelcelview.h"
 #include "openasdialog.h"
 #include "paintwidget.h"
@@ -84,7 +86,7 @@ public:
     void frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first);
     void dunClicked(const QPoint &cell, bool first);
     void dunHovered(const QPoint &cell);
-    void frameModified();
+    void frameModified(D1GfxFrame *frame);
 
     void initPaletteCycle();
     void nextPaletteCycle(D1PAL_CYCLE_TYPE type);
@@ -140,6 +142,7 @@ private slots:
     void on_actionNew_CEL_triggered();
     void on_actionNew_CL2_triggered();
     void on_actionNew_Tileset_triggered();
+    void on_actionNew_Gfxset_triggered();
     void on_actionNew_Dungeon_triggered();
 
     void on_actionOpen_triggered();
@@ -241,19 +244,13 @@ private:
     QString currLang;         // currently loaded language e.g. "de_DE"
     QString lastFilePath;
 
-    /*QMenu frameMenu = QMenu("Frame");
-    QMenu subtileMenu = QMenu("Subtile");
-    QMenu tileMenu = QMenu("Tile");
-
-    QAction *resizeAction;
-    QAction *upscaleAction;*/
-
     QUndoStack *undoStack;
     QAction *undoAction;
     QAction *redoAction;
 
     CelView *celView = nullptr;
     LevelCelView *levelCelView = nullptr;
+    GfxsetView *gfxsetView = nullptr;
     TblView *tblView = nullptr;
     PaintWidget *paintWidget = nullptr;
     BuilderWidget *builderWidget = nullptr;
@@ -279,6 +276,7 @@ private:
     D1Trn *trnBase = nullptr;
     D1Gfx *gfx = nullptr;
     D1Tileset *tileset = nullptr;
+    D1Gfxset *gfxset = nullptr;
     D1Dun *dun = nullptr;
     D1Tableset *tableset = nullptr;
 

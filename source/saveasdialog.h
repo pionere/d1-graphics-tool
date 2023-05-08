@@ -5,6 +5,7 @@
 
 class D1Gfx;
 class D1Tileset;
+class D1Gfxset;
 class D1Tableset;
 class D1Dun;
 
@@ -50,7 +51,7 @@ public:
     explicit SaveAsDialog(QWidget *parent);
     ~SaveAsDialog();
 
-    void initialize(D1Gfx *gfx, D1Tileset *tileset, D1Dun *dun, D1Tableset *tableset);
+    void initialize(D1Gfx *gfx, D1Tileset *tileset, D1Gfxset *gfxset, D1Dun *dun, D1Tableset *tableset);
 
 private slots:
     void on_outputCelFileBrowseButton_clicked();
@@ -73,5 +74,6 @@ private:
     Ui::SaveAsDialog *ui;
     D1Gfx *gfx = nullptr;
     bool isTileset;
+    bool isGfxset;
     bool isTableset;
 };

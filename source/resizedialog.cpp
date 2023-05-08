@@ -26,7 +26,7 @@ ResizeDialog::~ResizeDialog()
     delete ui;
 }
 
-void ResizeDialog::initialize(D1Gfx *gfx)
+void ResizeDialog::initialize()
 {
     if (this->ui->backColorLineEdit->text().isEmpty()) {
         this->ui->backColorLineEdit->setText("256");

@@ -293,25 +293,27 @@ bool PaletteWidget::isTrnWidget()
     return this->isTrn;
 }
 
-void PaletteWidget::initialize(D1Pal *p, CelView *c, LevelCelView *lc, D1PalHits *ph)
+void PaletteWidget::initialize(D1Pal *p, CelView *cv, LevelCelView *lcv, GfxsetView *gsv, D1PalHits *ph)
 {
     this->isTrn = false;
     this->pal = p;
     this->trn = nullptr;
-    this->celView = c;
-    this->levelCelView = lc;
+    this->celView = cv;
+    this->levelCelView = lcv;
+    this->gfxsetView = gsv;
     this->palHits = ph;
 
     this->initializeUi();
 }
 
-void PaletteWidget::initialize(D1Trn *t, CelView *c, LevelCelView *lc, D1PalHits *ph)
+void PaletteWidget::initialize(D1Trn *t, CelView *cv, LevelCelView *lcv, GfxsetView *gsv, D1PalHits *ph)
 {
     this->isTrn = true;
     this->pal = nullptr;
     this->trn = t;
-    this->celView = c;
-    this->levelCelView = lc;
+    this->celView = cv;
+    this->levelCelView = lcv;
+    this->gfxsetView = gsv;
     this->palHits = ph;
 
     this->initializeUi();
@@ -578,6 +580,8 @@ void PaletteWidget::displayColors()
                     itemIndex = this->levelCelView->getCurrentFrameIndex();
                 } else if (this->celView != nullptr) {
                     itemIndex = this->celView->getCurrentFrameIndex();
+                } else if (this->gfxsetView != nullptr) {
+                    itemIndex = this->gfxsetView->getCurrentFrameIndex();
                 }
                 break;
             }

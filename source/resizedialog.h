@@ -37,7 +37,7 @@ public:
     explicit ResizeDialog(QWidget *parent);
     ~ResizeDialog();
 
-    void initialize(D1Gfx *gfx);
+    void initialize();
 
 private slots:
     void on_resizeButton_clicked();

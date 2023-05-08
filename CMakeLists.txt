@@ -67,6 +67,8 @@ set(PROJECT_SOURCES
         source/d1dun.h
         source/d1gfx.cpp
         source/d1gfx.h
+        source/d1gfxset.cpp
+        source/d1gfxset.h
         source/d1image.cpp
         source/d1image.h
         source/d1min.cpp
@@ -122,6 +124,9 @@ set(PROJECT_SOURCES
         source/exportdialog.cpp
         source/exportdialog.h
         source/exportdialog.ui
+        source/gfxsetview.cpp
+        source/gfxsetview.h
+        source/gfxsetview.ui
         source/levelcelview.cpp
         source/levelcelview.h
         source/levelcelview.ui

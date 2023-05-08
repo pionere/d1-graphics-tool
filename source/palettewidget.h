@@ -13,6 +13,7 @@
 #include "d1pal.h"
 #include "d1palhits.h"
 #include "d1trn.h"
+#include "gfxsetview.h"
 #include "levelcelview.h"
 
 #define PALETTE_WIDTH 192
@@ -106,8 +107,8 @@ public:
     void setTrn(D1Trn *t);
     bool isTrnWidget();
 
-    void initialize(D1Pal *p, CelView *c, LevelCelView *lc, D1PalHits *ph);
-    void initialize(D1Trn *t, CelView *c, LevelCelView *lc, D1PalHits *ph);
+    void initialize(D1Pal *p, CelView *cv, LevelCelView *lcv, GfxsetView *gsv, D1PalHits *ph);
+    void initialize(D1Trn *t, CelView *cv, LevelCelView *lcv, GfxsetView *gsv, D1PalHits *ph);
 
     void initializeUi();
     // void initializePathComboBox();
@@ -187,6 +188,7 @@ private:
 
     CelView *celView;
     LevelCelView *levelCelView;
+    GfxsetView *gfxsetView;
 
     PaletteScene *scene;
 
