@@ -76,7 +76,7 @@ void GfxsetView::updateLabel()
     QHBoxLayout *layout = this->ui->celLabelsHorizontalLayout;
     while (layout->count() > labelCount) {
         QLayoutItem *child = layout->takeAt(labelCount);
-        delete child->widget;
+        delete child->widget();
         delete child;
     }
     while (layout->count() < labelCount) {
