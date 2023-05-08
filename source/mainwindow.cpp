@@ -236,17 +236,17 @@ void MainWindow::updateWindow()
         this->tileMenu.actions()[3]->setEnabled(hasTile); // replace tile
         this->tileMenu.actions()[4]->setEnabled(hasTile); // delete tile
     }*/
-    this->ui->actionFrameReplace_Edit->setEnabled(hasFrame);
-    this->ui->actionFrameDelete_Edit->setEnabled(hasFrame);
+    this->ui->actionReplace_Frame->setEnabled(hasFrame);
+    this->ui->actionDel_Frame->setEnabled(hasFrame);
     bool hasSubtile = this->tileset != nullptr && this->tileset->min->getSubtileCount() != 0;
-    this->ui->actionSubtileReplace_Edit->setEnabled(hasSubtile);
-    this->ui->actionSubtileDelete_Edit->setEnabled(hasSubtile);
-    this->ui->actionTileCreate_Edit->setEnabled(hasSubtile);
-    this->ui->actionTileInsert_Edit->setEnabled(hasSubtile);
-    this->ui->actionTileAppend_Edit->setEnabled(hasSubtile);
+    this->ui->actionReplace_Subtile->setEnabled(hasSubtile);
+    this->ui->actionDel_Subtile->setEnabled(hasSubtile);
+    this->ui->actionCreate_Tile->setEnabled(hasSubtile);
+    this->ui->actionInsert_Tile->setEnabled(hasSubtile);
+    this->ui->actionAppend_Tile->setEnabled(hasSubtile);
     bool hasTile = this->tileset != nullptr && this->tileset->til->getTileCount() != 0;
-    this->ui->actionTileReplace_Edit->setEnabled(hasTile);
-    this->ui->actionTileDelete_Edit->setEnabled(hasTile);
+    this->ui->actionReplace_Tile->setEnabled(hasTile);
+    this->ui->actionDel_Tile->setEnabled(hasTile);
 
     // update the view
     if (this->celView != nullptr) {
@@ -1187,7 +1187,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     // this->tileMenu.setEnabled(isTileset);
     this->ui->menuSubtile.setEnabled(isTileset);
     this->ui->menuTile.setEnabled(isTileset);
-    this->ui->actionResize_Edit->setEnabled(this->celView != nullptr);
+    this->ui->actionResize->setEnabled(this->celView != nullptr);
 
     this->ui->menuTileset->setEnabled(isTileset);
     this->ui->menuDungeon->setEnabled(this->dun != nullptr);
