@@ -18,7 +18,7 @@ ResizeDialog::ResizeDialog(QWidget *parent)
     this->ui->placementButtonGroup->setId(this->ui->centerRightPlacementRadioButton, (int)RESIZE_PLACEMENT::CENTER_RIGHT);
     this->ui->placementButtonGroup->setId(this->ui->bottomLeftPlacementRadioButton, (int)RESIZE_PLACEMENT::BOTTOM_LEFT);
     this->ui->placementButtonGroup->setId(this->ui->bottomPlacementRadioButton, (int)RESIZE_PLACEMENT::BOTTOM);
-    this->ui->placementButtonGroup->setId(this->ui->bottomRightPlacementRadioButton, (int)RESIZE_PLACEMENT::BOTTOM_LEFT);
+    this->ui->placementButtonGroup->setId(this->ui->bottomRightPlacementRadioButton, (int)RESIZE_PLACEMENT::BOTTOM_RIGHT);
 }
 
 ResizeDialog::~ResizeDialog()

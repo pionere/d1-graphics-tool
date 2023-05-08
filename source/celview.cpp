@@ -505,7 +505,6 @@ void CelView::resize(const ResizeParam &params)
     rangeTo--;
 
     const RESIZE_PLACEMENT placement = params.placement;
-    QMessageBox::critical(nullptr, "Error", QString::number((int)placement));
     int frameWithPixelLost = -1;
     for (int i = rangeFrom; i <= rangeTo; i++) {
         D1GfxFrame *frame = this->gfx->getFrame(i);
