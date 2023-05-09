@@ -72,17 +72,14 @@ void GfxsetView::setPal(D1Pal *p)
 // Displaying CEL file path information
 void GfxsetView::updateLabel()
 {
-    QMessageBox::critical(nullptr, "Error", "updateLabel 0");
     const int labelCount = this->gfxset->getGfxCount();
-    QMessageBox::critical(nullptr, "Error", QString("updateLabel 1: %1").arg(labelCount));
     QHBoxLayout *layout = this->ui->celLabelsHorizontalLayout;
-    while (layout->count() > labelCount) {
+    while (layout->count() > labelCount  + 1) {
         QLayoutItem *child = layout->takeAt(labelCount);
         delete child->widget();
         delete child;
     }
-    QMessageBox::critical(nullptr, "Error", "updateLabel 2");
-    while (layout->count() < labelCount) {
+    while (layout->count() < labelCount + 1) {
         layout->insertWidget(0, new QLabel(""), 0, Qt::AlignLeft);
     }
 

@@ -741,7 +741,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     unsigned stairsExt_FrameRef5 = stairsExt1FrameReferences[microIndex5]; // 760
 
     if (back3_FrameRef0 == 0 || back2_FrameRef1 == 0 || back0_FrameRef0 == 0) {
-        dProgress() << QApplication::tr("The back-stairs tile (%1) has invalid (missing) frames.").arg(backTileIndex1 + 1);
+        dProgressErr() << QApplication::tr("The back-stairs tile (%1) has invalid (missing) frames.").arg(backTileIndex1 + 1);
         return;
     }
 
@@ -753,16 +753,16 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     }
 
     if (stairs2FrameReferences[microIndex0] != stairs_FrameRef0
-        || stairs1FrameReferences[microIndex2] != stairs_FrameRef2
-        || stairs1FrameReferences[microIndex4] != stairs_FrameRef4
-        || stairs1FrameReferences[microIndex6] != stairs_FrameRef6) {
-        dProgressErr() << QApplication::tr("The stairs subtiles (%1, %2) have invalid (mismatching) frames.").arg(stairsSubtileRef1).arg(stairsSubtileRef2);
+        || stairs2FrameReferences[microIndex2] != stairs_FrameRef2
+        || stairs2FrameReferences[microIndex4] != stairs_FrameRef4
+        || stairs2FrameReferences[microIndex6] != stairs_FrameRef6) {
+        dProgressErr() << QApplication::tr("The stairs subtiles (%1, %2) have invalid (mismatching) frames I.").arg(stairsSubtileRef1).arg(stairsSubtileRef2);
         return;
     }
     if (stairsExt2FrameReferences[microIndex1] != stairsExt_FrameRef1
         || stairsExt2FrameReferences[microIndex3] != stairsExt_FrameRef3
         || stairsExt2FrameReferences[microIndex5] != stairsExt_FrameRef5) {
-        dProgressErr() << QApplication::tr("The stairs subtiles (%1, %2) have invalid (mismatching) frames.").arg(stairsExtSubtileRef1).arg(stairsExtSubtileRef2);
+        dProgressErr() << QApplication::tr("The stairs subtiles (%1, %2) have invalid (mismatching) frames II.").arg(stairsExtSubtileRef1).arg(stairsExtSubtileRef2);
         return;
     }
 
@@ -791,13 +791,13 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
         || (stairs_LeftFrame2->getWidth() != MICRO_WIDTH || stairs_LeftFrame2->getHeight() != MICRO_HEIGHT)
         || (stairs_LeftFrame4->getWidth() != MICRO_WIDTH || stairs_LeftFrame4->getHeight() != MICRO_HEIGHT)
         || (stairs_LeftFrame6->getWidth() != MICRO_WIDTH || stairs_LeftFrame6->getHeight() != MICRO_HEIGHT)) {
-        dProgressErr() << QApplication::tr("The stairs subtile (%1) has invalid (mismatching) frames.").arg(stairsSubtileRef1);
+        dProgressErr() << QApplication::tr("The stairs subtile (%1) has invalid (mismatching) frames I.").arg(stairsSubtileRef1);
         return;
     }
     if ((stairsExt_RightFrame1->getWidth() != MICRO_WIDTH || stairsExt_RightFrame1->getHeight() != MICRO_HEIGHT)
         || (stairsExt_RightFrame3->getWidth() != MICRO_WIDTH || stairsExt_RightFrame3->getHeight() != MICRO_HEIGHT)
         || (stairsExt_RightFrame5->getWidth() != MICRO_WIDTH || stairsExt_RightFrame5->getHeight() != MICRO_HEIGHT)) {
-        dProgressErr() << QApplication::tr("The stairs subtile (%1) has invalid (mismatching) frames.").arg(stairsExtSubtileRef1);
+        dProgressErr() << QApplication::tr("The stairs subtile (%1) has invalid (mismatching) frames II.").arg(stairsExtSubtileRef1);
         return;
     }
 
