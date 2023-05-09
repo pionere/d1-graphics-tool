@@ -7,6 +7,15 @@
 #include "d1celtileset.h"
 #include "progressdialog.h"
 
+// base mapflags set in the corresponding .AMP file (only the lower byte is used)
+#define MAPFLAG_TYPE      0x00FF
+#define MAPFLAG_VERTDOOR  0x0100
+#define MAPFLAG_HORZDOOR  0x0200
+#define MAPFLAG_VERTARCH  0x0400
+#define MAPFLAG_HORZARCH  0x0800
+#define MAPFLAG_VERTGRATE 0x1000
+#define MAPFLAG_HORZGRATE 0x2000
+
 D1Tileset::D1Tileset(D1Gfx *g)
     : gfx(g)
 {
