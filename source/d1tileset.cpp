@@ -714,7 +714,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int stairsSubtileRef1, i
 
     if (back0FrameReferences.size() != blockSize || back2FrameReferences.size() != blockSize || back3FrameReferences.size() != blockSize
         || stairs1FrameReferences.size() != blockSize || stairs2FrameReferences.size() != blockSize
-        || stairsExt1FrameReferences.size() != blockSize || stairs2FramstairsExt2FrameReferenceseReferences.size() != blockSize) {
+        || stairsExt1FrameReferences.size() != blockSize || stairsExt2FrameReferences.size() != blockSize) {
         dProgressErr() << QApplication::tr("At least one of the upstairs-subtiles (%1, %2, %3, %4, %5) is invalid (upscaled?).").arg(backSubtileRef0).arg(backSubtileRef2).arg(backSubtileRef3).arg(stairsSubtileRef1).arg(stairsSubtileRef2).arg(stairsExtSubtileRef1).arg(stairsExtSubtileRef2);
         return;
     }
@@ -854,7 +854,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int stairsSubtileRef1, i
     for (int x = 0; x < MICRO_WIDTH; x++) {
         for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
             D1GfxPixel pixel0 = stairsExt_RightFrame3->getPixel(x, y);
-            if (!pixel.isTransparent()) {
+            if (!pixel0.isTransparent()) {
                 back3_LeftFrame->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 719
             }
             D1GfxPixel pixel1 = stairsExt_RightFrame3->getPixel(x, y - MICRO_HEIGHT / 2);
