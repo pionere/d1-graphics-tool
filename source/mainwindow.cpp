@@ -1019,9 +1019,11 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     QWidget *view;
     if (isGfxset) {
+        QMessageBox::critical(nullptr, "Error", "Building gfxset 0");
         // build a GfxsetView
         this->gfxsetView = new GfxsetView(this);
         this->gfxsetView->initialize(this->pal, this->gfxset, this->bottomPanelHidden);
+        QMessageBox::critical(nullptr, "Error", "Building gfxset 1");
 
         // Refresh palette widgets when frame, subtile of tile is changed
         QObject::connect(this->gfxsetView, &GfxsetView::frameRefreshed, this->palWidget, &PaletteWidget::update);
@@ -1067,11 +1069,17 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->mainFrameLayout->addWidget(view);
 
     // prepare the paint dialog
+    if (isGfxset) {
+        QMessageBox::critical(nullptr, "Error", "Building gfxset 2");
+    }
     if (fileType != 4) {
         this->paintWidget = new PaintWidget(this, this->undoStack, this->gfx, this->celView, this->levelCelView, this->gfxsetView);
         this->paintWidget->setPalette(this->trnBase->getResultingPalette());
     }
 
+    if (isGfxset) {
+        QMessageBox::critical(nullptr, "Error", "Building gfxset 3");
+    }
     // prepare the builder dialog
     if (this->dun != nullptr) {
         this->builderWidget = new BuilderWidget(this, this->undoStack, this->dun, this->levelCelView, this->tileset);
@@ -1080,10 +1088,19 @@ void MainWindow::openFile(const OpenAsParam &params)
     }
 
     // Initialize palette widgets
+    if (isGfxset) {
+        QMessageBox::critical(nullptr, "Error", "Building gfxset 4");
+    }
     this->palHits = new D1PalHits(this->gfx, this->tileset, this->gfxset);
+    if (isGfxset) {
+        QMessageBox::critical(nullptr, "Error", "Building gfxset 5");
+    }
     this->palWidget->initialize(this->pal, this->celView, this->levelCelView, this->gfxsetView, this->palHits);
     this->trnUniqueWidget->initialize(this->trnUnique, this->celView, this->levelCelView, this->gfxsetView, this->palHits);
     this->trnBaseWidget->initialize(this->trnBase, this->celView, this->levelCelView, this->gfxsetView, this->palHits);
+    if (isGfxset) {
+        QMessageBox::critical(nullptr, "Error", "Building gfxset 6");
+    }
 
     // setup default options in the palette widgets
     // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), this->pal->getFilePath());
@@ -1120,6 +1137,9 @@ void MainWindow::openFile(const OpenAsParam &params)
         QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->tblView, &TblView::palColorsSelected);
     }
 
+    if (isGfxset) {
+        QMessageBox::critical(nullptr, "Error", "Building gfxset 7");
+    }
     // Look for all palettes in the same folder as the CEL/CL2 file
     QString firstPaletteFound = fileType == 3 ? D1Pal::DEFAULT_PATH : "";
     if (!baseDir.isEmpty()) {
@@ -1136,6 +1156,9 @@ void MainWindow::openFile(const OpenAsParam &params)
         firstPaletteFound = D1Pal::DEFAULT_PATH;
     }
     this->setPal(firstPaletteFound); // should trigger view->displayFrame()
+    if (isGfxset) {
+        QMessageBox::critical(nullptr, "Error", "Building gfxset 8");
+    }
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(fileType != 4);
@@ -1153,8 +1176,14 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->menuTileset->setEnabled(isTileset);
     this->ui->menuDungeon->setEnabled(this->dun != nullptr);
 
+    if (isGfxset) {
+        QMessageBox::critical(nullptr, "Error", "Building gfxset 9");
+    }
     // Clear loading message from status bar
     ProgressDialog::done();
+    if (isGfxset) {
+        QMessageBox::critical(nullptr, "Error", "Building gfxset 10");
+    }
 }
 
 void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append)
