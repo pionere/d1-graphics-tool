@@ -728,7 +728,6 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     const unsigned microIndex6 = MICRO_IDX(blockSize, 6);
 
     unsigned back3_FrameRef0 = back3FrameReferences[microIndex0]; // 719
-    unsigned back3_FrameRef1 = back3FrameReferences[microIndex1]; // 36
     unsigned back2_FrameRef1 = back2FrameReferences[microIndex1]; // 718
     unsigned back0_FrameRef0 = back0FrameReferences[microIndex0]; // 716
 
@@ -741,13 +740,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     unsigned stairsExt_FrameRef3 = stairsExt1FrameReferences[microIndex3]; // 761
     unsigned stairsExt_FrameRef5 = stairsExt1FrameReferences[microIndex5]; // 760
 
-    // 762, 761, 760 -> 36
-    //   \ / \   /  
-    //   719  761
-    // 267/559: block light?
-    // 288[7] := 0?
-
-    if (back3_FrameRef0 == 0 || back3_FrameRef1 == 0 || back2_FrameRef1 == 0 || back0_FrameRef0 == 0) {
+    if (back3_FrameRef0 == 0 || back2_FrameRef1 == 0 || back0_FrameRef0 == 0) {
         dProgress() << QApplication::tr("The back-stairs tile (%1) has invalid (missing) frames.").arg(backTileIndex1 + 1);
         return;
     }
@@ -774,7 +767,6 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     }
 
     D1GfxFrame *back3_LeftFrame = this->gfx->getFrame(back3_FrameRef0 - 1);  // 719
-    D1GfxFrame *back3_RightFrame = this->gfx->getFrame(back3_FrameRef1 - 1); // 36
     D1GfxFrame *back2_LeftFrame = this->gfx->getFrame(back2_FrameRef1 - 1);  // 718
     D1GfxFrame *back0_RightFrame = this->gfx->getFrame(back0_FrameRef0 - 1); // 716
 
@@ -787,11 +779,10 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     D1GfxFrame *stairsExt_RightFrame3 = this->gfx->getFrame(stairsExt_FrameRef3 - 1); // 761
     D1GfxFrame *stairsExt_RightFrame5 = this->gfx->getFrame(stairsExt_FrameRef5 - 1); // 760
 
-    if (back3_RightFrame->getWidth() != MICRO_WIDTH || back3_RightFrame->getHeight() != MICRO_HEIGHT) {
+    if (back3_LeftFrame->getWidth() != MICRO_WIDTH || back3_LeftFrame->getHeight() != MICRO_HEIGHT) {
         return; // upscaled(?) frames -> assume it is already done
     }
-    if ((back3_RightFrame->getWidth() != MICRO_WIDTH || back3_RightFrame->getHeight() != MICRO_HEIGHT)
-        || (back2_LeftFrame->getWidth() != MICRO_WIDTH || back2_LeftFrame->getHeight() != MICRO_HEIGHT)
+    if ((back2_LeftFrame->getWidth() != MICRO_WIDTH || back2_LeftFrame->getHeight() != MICRO_HEIGHT)
         || (back0_RightFrame->getWidth() != MICRO_WIDTH || back0_RightFrame->getHeight() != MICRO_HEIGHT)) {
         dProgressErr() << QApplication::tr("The back-stairs tile (%1) has invalid (mismatching) frames.").arg(backTileIndex1 + 1);
         return;

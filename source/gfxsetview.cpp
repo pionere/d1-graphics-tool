@@ -72,34 +72,44 @@ void GfxsetView::setPal(D1Pal *p)
 // Displaying CEL file path information
 void GfxsetView::updateLabel()
 {
+    QMessageBox::critical(nullptr, "Error", "updateLabel 0");
     const int labelCount = this->gfxset->getGfxCount();
+    QMessageBox::critical(nullptr, "Error", QString("updateLabel 1: %1").arg(labelCount));
     QHBoxLayout *layout = this->ui->celLabelsHorizontalLayout;
     while (layout->count() > labelCount) {
         QLayoutItem *child = layout->takeAt(labelCount);
         delete child->widget();
         delete child;
     }
+    QMessageBox::critical(nullptr, "Error", "updateLabel 2");
     while (layout->count() < labelCount) {
         layout->insertWidget(0, new QLabel(""), 0, Qt::AlignLeft);
     }
 
+    QMessageBox::critical(nullptr, "Error", "updateLabel 3");
     for (int i = 0; i < labelCount; i++) {
+        QMessageBox::critical(nullptr, "Error", QString("updateLabel 3a: %1").arg(i));
         D1Gfx *gfx = this->gfxset->getGfx(i);
+        QMessageBox::critical(nullptr, "Error", QString("updateLabel 3b: %1").arg(i));
         CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(i)->widget()), gfx->getFilePath(), gfx->isModified());
     }
+    QMessageBox::critical(nullptr, "Error", "updateLabel 4");
 }
 
 void GfxsetView::update()
 {
     int count;
 
+    QMessageBox::critical(nullptr, "Error", "update 0");
     this->updateLabel();
+    QMessageBox::critical(nullptr, "Error", "update 1");
 
     // Set current and maximum group text
     count = this->gfx->getGroupCount();
     this->ui->groupIndexEdit->setText(
         QString::number(count != 0 ? this->currentGroupIndex + 1 : 0));
     this->ui->groupNumberEdit->setText(QString::number(count));
+    QMessageBox::critical(nullptr, "Error", "update 2");
 
     // Set current and maximum frame text
     int frameIndex = this->currentFrameIndex;
@@ -110,9 +120,11 @@ void GfxsetView::update()
     } else {
         count = this->gfx->getFrameCount();
     }
+    QMessageBox::critical(nullptr, "Error", "update 3");
     this->ui->frameIndexEdit->setText(
         QString::number(count != 0 ? frameIndex + 1 : 0));
     this->ui->frameNumberEdit->setText(QString::number(count));
+    QMessageBox::critical(nullptr, "Error", "update 4");
 }
 
 CelScene *GfxsetView::getCelScene() const
