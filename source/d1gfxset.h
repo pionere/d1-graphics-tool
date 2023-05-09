@@ -9,10 +9,17 @@
 #include "dungeon/defs.h"
 #include "dungeon/enums.h"
 
+enum class D1GFX_SET_TYPE {
+    Missile,
+    Monster,
+    Player,
+    Unknown = -1,
+};
+
 class D1Gfxset {
 public:
     D1Gfxset(D1Gfx *gfx);
-    ~D1Gfxset() = default;
+    ~D1Gfxset();
 
     bool load(const QString &gfxFilePath, const OpenAsParam &params);
     void save(const SaveAsParam &params);
@@ -23,5 +30,7 @@ public:
     void setPalette(D1Pal *pal);
 
 private:
+    D1GFX_SET_TYPE type = D1GFX_SET_TYPE::Unknown;
+    D1Gfx *baseGfx;
     std::vector<D1Gfx *> gfxList;
 };

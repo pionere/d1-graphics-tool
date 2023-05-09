@@ -1084,9 +1084,6 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->palWidget->initialize(this->pal, this->celView, this->levelCelView, this->gfxsetView, this->palHits);
     this->trnUniqueWidget->initialize(this->trnUnique, this->celView, this->levelCelView, this->gfxsetView, this->palHits);
     this->trnBaseWidget->initialize(this->trnBase, this->celView, this->levelCelView, this->gfxsetView, this->palHits);
-    if (isGfxset) {
-        QMessageBox::critical(nullptr, "Error", "Building gfxset 6");
-    }
 
     // setup default options in the palette widgets
     // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), this->pal->getFilePath());
@@ -1123,9 +1120,6 @@ void MainWindow::openFile(const OpenAsParam &params)
         QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->tblView, &TblView::palColorsSelected);
     }
 
-    if (isGfxset) {
-        QMessageBox::critical(nullptr, "Error", "Building gfxset 7");
-    }
     // Look for all palettes in the same folder as the CEL/CL2 file
     QString firstPaletteFound = fileType == 3 ? D1Pal::DEFAULT_PATH : "";
     if (!baseDir.isEmpty()) {
@@ -1142,9 +1136,6 @@ void MainWindow::openFile(const OpenAsParam &params)
         firstPaletteFound = D1Pal::DEFAULT_PATH;
     }
     this->setPal(firstPaletteFound); // should trigger view->displayFrame()
-    if (isGfxset) {
-        QMessageBox::critical(nullptr, "Error", "Building gfxset 8");
-    }
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(fileType != 4);
@@ -1162,14 +1153,8 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->menuTileset->setEnabled(isTileset);
     this->ui->menuDungeon->setEnabled(this->dun != nullptr);
 
-    if (isGfxset) {
-        QMessageBox::critical(nullptr, "Error", "Building gfxset 9");
-    }
     // Clear loading message from status bar
     ProgressDialog::done();
-    if (isGfxset) {
-        QMessageBox::critical(nullptr, "Error", "Building gfxset 10");
-    }
 }
 
 void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append)

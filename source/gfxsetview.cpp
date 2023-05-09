@@ -83,30 +83,23 @@ void GfxsetView::updateLabel()
         layout->insertWidget(0, new QLabel(""), 0, Qt::AlignLeft);
     }
 
-    QMessageBox::critical(nullptr, "Error", "updateLabel 3");
     for (int i = 0; i < labelCount; i++) {
-        QMessageBox::critical(nullptr, "Error", QString("updateLabel 3a: %1").arg(i));
         D1Gfx *gfx = this->gfxset->getGfx(i);
-        QMessageBox::critical(nullptr, "Error", QString("updateLabel 3b: %1").arg(i));
         CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(i)->widget()), gfx->getFilePath(), gfx->isModified());
     }
-    QMessageBox::critical(nullptr, "Error", "updateLabel 4");
 }
 
 void GfxsetView::update()
 {
     int count;
 
-    QMessageBox::critical(nullptr, "Error", "update 0");
     this->updateLabel();
-    QMessageBox::critical(nullptr, "Error", "update 1");
 
     // Set current and maximum group text
     count = this->gfx->getGroupCount();
     this->ui->groupIndexEdit->setText(
         QString::number(count != 0 ? this->currentGroupIndex + 1 : 0));
     this->ui->groupNumberEdit->setText(QString::number(count));
-    QMessageBox::critical(nullptr, "Error", "update 2");
 
     // Set current and maximum frame text
     int frameIndex = this->currentFrameIndex;
@@ -117,11 +110,9 @@ void GfxsetView::update()
     } else {
         count = this->gfx->getFrameCount();
     }
-    QMessageBox::critical(nullptr, "Error", "update 3");
     this->ui->frameIndexEdit->setText(
         QString::number(count != 0 ? frameIndex + 1 : 0));
     this->ui->frameNumberEdit->setText(QString::number(count));
-    QMessageBox::critical(nullptr, "Error", "update 4");
 }
 
 CelScene *GfxsetView::getCelScene() const
@@ -509,15 +500,12 @@ void GfxsetView::upscale(const UpscaleParam &params)
 
 void GfxsetView::displayFrame()
 {
-    QMessageBox::critical(nullptr, "Error", "displayFrame 0");
     this->update();
-    QMessageBox::critical(nullptr, "Error", "displayFrame 1");
+
     this->celScene.clear();
-    QMessageBox::critical(nullptr, "Error", "displayFrame 2");
 
     // Getting the current frame to display
     QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
-    QMessageBox::critical(nullptr, "Error", "displayFrame 3");
 
     this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
@@ -537,15 +525,12 @@ void GfxsetView::displayFrame()
     this->celScene.addPixmap(QPixmap::fromImage(celFrame))
         ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
 
-    QMessageBox::critical(nullptr, "Error", "displayFrame 4");
     // Set current frame width and height
     this->ui->celFrameWidthEdit->setText(QString::number(celFrame.width()) + " px");
     this->ui->celFrameHeightEdit->setText(QString::number(celFrame.height()) + " px");
 
-    QMessageBox::critical(nullptr, "Error", "displayFrame 5");
     // Notify PalView that the frame changed (used to refresh palette widget)
     emit this->frameRefreshed();
-    QMessageBox::critical(nullptr, "Error", "displayFrame 6");
 }
 
 void GfxsetView::toggleBottomPanel()
