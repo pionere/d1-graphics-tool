@@ -752,17 +752,14 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
         return;
     }
 
-    if (stairs2FrameReferences[microIndex0] != stairs_FrameRef0
-        || stairs2FrameReferences[microIndex2] != stairs_FrameRef2
-        || stairs2FrameReferences[microIndex4] != stairs_FrameRef4
-        || stairs2FrameReferences[microIndex6] != stairs_FrameRef6) {
-        dProgressErr() << QApplication::tr("The stairs subtiles (%1, %2) have invalid (mismatching) frames I.").arg(stairsSubtileRef1).arg(stairsSubtileRef2);
+    if (stairs2FrameReferences[microIndex0] != stairs_FrameRef0) {
+        dProgressErr() << QApplication::tr("The stairs subtiles (%1, %2) have invalid (mismatching) floor frames.").arg(stairsSubtileRef1).arg(stairsSubtileRef2);
         return;
     }
     if (stairsExt2FrameReferences[microIndex1] != stairsExt_FrameRef1
         || stairsExt2FrameReferences[microIndex3] != stairsExt_FrameRef3
         || stairsExt2FrameReferences[microIndex5] != stairsExt_FrameRef5) {
-        dProgressErr() << QApplication::tr("The stairs subtiles (%1, %2) have invalid (mismatching) frames II.").arg(stairsExtSubtileRef1).arg(stairsExtSubtileRef2);
+        dProgressErr() << QApplication::tr("The stairs external subtiles (%1, %2) have invalid (mismatching) frames.").arg(stairsExtSubtileRef1).arg(stairsExtSubtileRef2);
         return;
     }
 
@@ -815,11 +812,11 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
 
     back3FrameReferences[microIndex3] = stairs1FrameReferences[microIndex2]; // 769
     stairs1FrameReferences[microIndex2] = 0;
-    stairs2FrameReferences[microIndex2] = 0;
+    stairs2FrameReferences[microIndex2] = 0; // 1471
 
     back3FrameReferences[microIndex5] = stairs1FrameReferences[microIndex4]; // 768
     stairs1FrameReferences[microIndex4] = 0;
-    stairs2FrameReferences[microIndex4] = 0;
+    stairs2FrameReferences[microIndex4] = 0; // 1470
 
     back3FrameReferences[microIndex7] = stairs1FrameReferences[microIndex6]; // 767
     stairs1FrameReferences[microIndex6] = 0;
