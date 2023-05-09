@@ -7,15 +7,6 @@
 #include "d1celtileset.h"
 #include "progressdialog.h"
 
-// base mapflags set in the corresponding .AMP file (only the lower byte is used)
-#define MAPFLAG_TYPE      0x00FF
-#define MAPFLAG_VERTDOOR  0x0100
-#define MAPFLAG_HORZDOOR  0x0200
-#define MAPFLAG_VERTARCH  0x0400
-#define MAPFLAG_HORZARCH  0x0800
-#define MAPFLAG_VERTGRATE 0x1000
-#define MAPFLAG_HORZGRATE 0x2000
-
 D1Tileset::D1Tileset(D1Gfx *g)
     : gfx(g)
 {
@@ -1207,9 +1198,9 @@ void D1Tileset::patch(int dunType, bool silent)
         // fix bad artifact
         Blk2Mcr(288, 7);
         // patch dAutomapData - L2.AMP
-        this->amp->setTileProperties(42 - 1, this->amp->getTileProperties(42 - 1) & ~MAPFLAG_HORZARCH);
-        this->amp->setTileProperties(156 - 1, this->amp->getTileProperties(156 - 1) & ~(MAPFLAG_VERTDOOR | MAPFLAG_TYPE));
-        this->amp->setTileProperties(157 - 1, this->amp->getTileProperties(157 - 1) & ~(MAPFLAG_HORZDOOR | MAPFLAG_TYPE));
+        this->amp->setTileProperties(42 - 1, this->amp->getTileProperties(42 - 1) & ~(MAPFLAG_HORZARCH >> 8));
+        this->amp->setTileProperties(156 - 1, this->amp->getTileProperties(156 - 1) & ~(MAPFLAG_VERTDOOR >> 8));
+        this->amp->setTileProperties(157 - 1, this->amp->getTileProperties(157 - 1) & ~(MAPFLAG_HORZDOOR >> 8));
         break;
     case DTYPE_CAVES:
         // patch dMiniTiles - L3.MIN
@@ -1219,8 +1210,8 @@ void D1Tileset::patch(int dunType, bool silent)
     case DTYPE_HELL:
         this->patchHellExit(45 - 1, silent);
         // patch dAutomapData - L4.AMP
-        this->amp->setTileProperties(52 - 1, this->amp->getTileProperties(52 - 1) | MAPFLAG_VERTGRATE);
-        this->amp->setTileProperties(56 - 1, this->amp->getTileProperties(56 - 1) | MAPFLAG_HORZGRATE);
+        this->amp->setTileProperties(52 - 1, this->amp->getTileProperties(52 - 1) | (MAPFLAG_VERTGRATE >> 8));
+        this->amp->setTileProperties(56 - 1, this->amp->getTileProperties(56 - 1) | (MAPFLAG_HORZGRATE >> 8));
         break;
     case DTYPE_NEST:
         // patch dMiniTiles - L6.MIN
