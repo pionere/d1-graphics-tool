@@ -49,5 +49,5 @@ public:
 private:
     void patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool silent);
     void patchHellExit(int tileIndex, bool silent);
-    void patchCatacombsStairs(int backTileIndex, int stairsSubtileRef1, int stairsSubtileRef2, int stairsExtSubtileRef1, int stairsExtSubtileRef2, bool silent);
+    void patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int stairsSubtileRef1, int stairsSubtileRef2, int stairsExtSubtileRef1, int stairsExtSubtileRef2, bool silent);
 };

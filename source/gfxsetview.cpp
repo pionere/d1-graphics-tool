@@ -500,11 +500,15 @@ void GfxsetView::upscale(const UpscaleParam &params)
 
 void GfxsetView::displayFrame()
 {
+    QMessageBox::critical(nullptr, "Error", "displayFrame 0");
     this->update();
+    QMessageBox::critical(nullptr, "Error", "displayFrame 1");
     this->celScene.clear();
+    QMessageBox::critical(nullptr, "Error", "displayFrame 2");
 
     // Getting the current frame to display
     QImage celFrame = this->gfx->getFrameCount() != 0 ? this->gfx->getFrameImage(this->currentFrameIndex) : QImage();
+    QMessageBox::critical(nullptr, "Error", "displayFrame 3");
 
     this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
 
@@ -524,12 +528,15 @@ void GfxsetView::displayFrame()
     this->celScene.addPixmap(QPixmap::fromImage(celFrame))
         ->setPos(CEL_SCENE_MARGIN, CEL_SCENE_MARGIN);
 
+    QMessageBox::critical(nullptr, "Error", "displayFrame 4");
     // Set current frame width and height
     this->ui->celFrameWidthEdit->setText(QString::number(celFrame.width()) + " px");
     this->ui->celFrameHeightEdit->setText(QString::number(celFrame.height()) + " px");
 
+    QMessageBox::critical(nullptr, "Error", "displayFrame 5");
     // Notify PalView that the frame changed (used to refresh palette widget)
     emit this->frameRefreshed();
+    QMessageBox::critical(nullptr, "Error", "displayFrame 6");
 }
 
 void GfxsetView::toggleBottomPanel()

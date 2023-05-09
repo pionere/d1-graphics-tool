@@ -686,11 +686,11 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
     }
 }
 
-void D1Tileset::patchCatacombsStairs(int backTileIndex, int stairsSubtileRef1, int stairsSubtileRef2, int stairsExtSubtileRef1, int stairsExtSubtileRef2, bool silent)
+void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int stairsSubtileRef1, int stairsSubtileRef2, int stairsExtSubtileRef1, int stairsExtSubtileRef2, bool silent)
 {
     constexpr unsigned blockSize = 10;
 
-    std::vector<int> &backSubtiles = this->til->getSubtileIndices(backTileIndex);
+    std::vector<int> &backSubtiles = this->til->getSubtileIndices(backTileIndex1);
     constexpr int backSubtileRef0 = 250;
     constexpr int backSubtileRef2 = 251;
     constexpr int backSubtileRef3 = 252;
@@ -698,9 +698,9 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int stairsSubtileRef1, i
     constexpr int backSubtileRef2Replacement = 11;
     if (backSubtiles[0] != (backSubtileRef0 - 1) || backSubtiles[2] != (backSubtileRef2 - 1) || backSubtiles[3] != (backSubtileRef3 - 1)) {
         if (backSubtiles[0] != (backSubtileRef0Replacement - 1) || backSubtiles[2] != (backSubtileRef2Replacement - 1) || backSubtiles[3] != (backSubtileRef3 - 1))
-            dProgressErr() << QApplication::tr("The back-stairs tile (%1) has invalid (not original) subtiles.").arg(backTileIndex + 1);
+            dProgressErr() << QApplication::tr("The back-stairs tile (%1) has invalid (not original) subtiles.").arg(backTileIndex1 + 1);
         else if (!silent)
-            dProgress() << QApplication::tr("The back-stairs tile (%1) is already patched.").arg(backTileIndex + 1);
+            dProgress() << QApplication::tr("The back-stairs tile (%1) is already patched.").arg(backTileIndex1 + 1);
         return;
     }
 
@@ -748,7 +748,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int stairsSubtileRef1, i
     // 288[7] := 0?
 
     if (back3_FrameRef0 == 0 || back3_FrameRef1 == 0 || back2_FrameRef1 == 0 || back0_FrameRef0 == 0) {
-        dProgress() << QApplication::tr("The back-stairs tile (%1) has invalid (missing) frames.").arg(backTileIndex + 1);
+        dProgress() << QApplication::tr("The back-stairs tile (%1) has invalid (missing) frames.").arg(backTileIndex1 + 1);
         return;
     }
 
@@ -793,7 +793,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int stairsSubtileRef1, i
     if ((back3_RightFrame->getWidth() != MICRO_WIDTH || back3_RightFrame->getHeight() != MICRO_HEIGHT)
         || (back2_LeftFrame->getWidth() != MICRO_WIDTH || back2_LeftFrame->getHeight() != MICRO_HEIGHT)
         || (back0_RightFrame->getWidth() != MICRO_WIDTH || back0_RightFrame->getHeight() != MICRO_HEIGHT)) {
-        dProgressErr() << QApplication::tr("The back-stairs tile (%1) has invalid (mismatching) frames.").arg(backTileIndex + 1);
+        dProgressErr() << QApplication::tr("The back-stairs tile (%1) has invalid (mismatching) frames.").arg(backTileIndex1 + 1);
         return;
     }
     if ((stairs_LeftFrame0->getWidth() != MICRO_WIDTH || stairs_LeftFrame0->getHeight() != MICRO_HEIGHT)
@@ -963,6 +963,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int stairsSubtileRef1, i
     // adjust the frame types
     D1CelTilesetFrame::selectFrameType(stairs_LeftFrame0);     // 770
     D1CelTilesetFrame::selectFrameType(stairs_LeftFrame2);     // 769
+    D1CelTilesetFrame::selectFrameType(stairsExt_RightFrame5); // 760
     D1CelTilesetFrame::selectFrameType(stairsExt_RightFrame1); // 762
     D1CelTilesetFrame::selectFrameType(back3_LeftFrame);       // 719
 
@@ -970,13 +971,11 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int stairsSubtileRef1, i
 
     // patch TMI
     quint8 properties;
-    properties = this->tmi->getSubtileProperties(backSubtileRef3 - 1);
-    properties |= TMIF_LEFT_REDRAW | TMIF_RIGHT_REDRAW;
-    this->tmi->setSubtileProperties(backSubtileRef3 - 1, properties);
-    properties = this->tmi->getSubtileProperties(stairsSubtileRef1 - 1);
-    properties &= ~(TMIF_LEFT_REDRAW | TMIF_LEFT_FOLIAGE);
-    this->tmi->setSubtileProperties(stairsSubtileRef1 - 1, properties);
-    this->tmi->setSubtileProperties(stairsSubtileRef2 - 1, properties);
+    this->tmi->setSubtileProperties(backSubtileRef3 - 1, TMIF_LEFT_REDRAW | TMIF_RIGHT_REDRAW);
+    this->tmi->setSubtileProperties(stairsSubtileRef1 - 1, 0);
+    this->tmi->setSubtileProperties(stairsSubtileRef2 - 1, 0);
+    this->tmi->setSubtileProperties(stairsExtSubtileRef1 - 1, 0);
+    this->tmi->setSubtileProperties(stairsExtSubtileRef2 - 1, 0);
 
     // patch SOL
     properties = this->sol->getSubtileProperties(backSubtileRef3 - 1);
@@ -988,12 +987,16 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int stairsSubtileRef1, i
     this->sol->setSubtileProperties(stairsSubtileRef2 - 1, properties);
 
     // replace subtiles
-    ReplaceSubtile(this->til, backTileIndex, 0, backSubtileRef0Replacement, silent); // use common subtile
-    ReplaceSubtile(this->til, backTileIndex, 1, 56, silent);                         // make the back of the stairs non-walkable
-    ReplaceSubtile(this->til, backTileIndex, 2, backSubtileRef2Replacement, silent); // use common subtile
+    ReplaceSubtile(this->til, backTileIndex1, 0, backSubtileRef0Replacement, silent); // use common subtile
+    ReplaceSubtile(this->til, backTileIndex1, 1, 56, silent);                         // make the back of the stairs non-walkable
+    ReplaceSubtile(this->til, backTileIndex1, 2, backSubtileRef2Replacement, silent); // use common subtile
+
+    ReplaceSubtile(this->til, backTileIndex2, 0, backSubtileRef0Replacement, silent); // use common subtile
+    ReplaceSubtile(this->til, backTileIndex2, 1, 56, silent);                         // make the back of the stairs non-walkable
+    ReplaceSubtile(this->til, backTileIndex2, 2, backSubtileRef2Replacement, silent); // use common subtile
 
     if (!silent) {
-        dProgress() << QApplication::tr("The back-stair tile (%1) and the stair-subtiles (%2, %3, %4, %5) are modified.").arg(backTileIndex + 1).arg(stairsSubtileRef1).arg(stairsSubtileRef2).arg(stairsExtSubtileRef1).arg(stairsExtSubtileRef2);
+        dProgress() << QApplication::tr("The back-stair tiles (%1, %2) and the stair-subtiles (%2, %3, %4, %5) are modified.").arg(backTileIndex1 + 1).arg(backTileIndex2 + 1).arg(stairsSubtileRef1).arg(stairsSubtileRef2).arg(stairsExtSubtileRef1).arg(stairsExtSubtileRef2);
     }
 }
 
@@ -1203,7 +1206,9 @@ void D1Tileset::patch(int dunType, bool silent)
         ReplaceSubtile(this->til, 164 - 1, 2, 168, silent);
         ReplaceSubtile(this->til, 164 - 1, 3, 169, silent);
         // fix the upstairs
-        this->patchCatacombsStairs(72 - 1, 267, 559, 265, 556, silent);
+        this->patchCatacombsStairs(72 - 1, 158 - 1, 267, 559, 265, 556, silent);
+        // fix bad artifact
+        Blk2Mcr(288, 7);
         break;
     case DTYPE_CAVES:
         // patch dMiniTiles - L3.MIN
