@@ -833,7 +833,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
                 continue;
             if (!back2_LeftFrame->getPixel(x, y).isTransparent()) // use 718 as a mask
                 continue;
-            back3_LeftFrame->setPixel(x, y + MICRO_HEIGHT / 2, pixel); // 719
+            back3_LeftFrame->setPixel(x, y + MICRO_HEIGHT / 2, pixel);             // 719
             stairsExt_RightFrame1->setPixel(x, y, D1GfxPixel::transparentPixel()); // 762
         }
     }
@@ -866,7 +866,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
             D1GfxPixel pixel = stairs_LeftFrame0->getPixel(x, y);
             if (!back0_RightFrame->getPixel(x, y).isTransparent()) // use 716 as a mask
                 continue;
-            stairsExt_RightFrame5->setPixel(x, y + MICRO_HEIGHT / 2, pixel); // 760
+            stairsExt_RightFrame5->setPixel(x, y + MICRO_HEIGHT / 2, pixel);   // 760
             stairs_LeftFrame0->setPixel(x, y, D1GfxPixel::transparentPixel()); // 770
         }
     }
@@ -897,7 +897,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     }
     for (int x = 0; x < MICRO_WIDTH; x++) {
         for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
-            stairs_LeftFrame6->setPixel(x,  y, D1GfxPixel::transparentPixel()); // 767
+            stairs_LeftFrame6->setPixel(x, y, D1GfxPixel::transparentPixel()); // 767
         }
     }
 
@@ -1197,6 +1197,10 @@ void D1Tileset::patch(int dunType, bool silent)
         this->patchCatacombsStairs(72 - 1, 158 - 1, 267, 559, 265, 556, silent);
         // fix bad artifact
         Blk2Mcr(288, 7);
+        // patch dAutomapData - L2.AMP
+        this->amp->setTileProperties(42 - 1, this->amp->getTileProperties(42 - 1) & ~MAPFLAG_HORZARCH);
+        this->amp->setTileProperties(156 - 1, this->amp->getTileProperties(156 - 1) & ~(MAPFLAG_VERTDOOR | MAPFLAG_TYPE));
+        this->amp->setTileProperties(157 - 1, this->amp->getTileProperties(157 - 1) & ~(MAPFLAG_HORZDOOR | MAPFLAG_TYPE));
         break;
     case DTYPE_CAVES:
         // patch dMiniTiles - L3.MIN
@@ -1205,6 +1209,9 @@ void D1Tileset::patch(int dunType, bool silent)
         break;
     case DTYPE_HELL:
         this->patchHellExit(45 - 1, silent);
+        // patch dAutomapData - L4.AMP
+        this->amp->setTileProperties(52 - 1, this->amp->getTileProperties(52 - 1) | MAPFLAG_VERTGRATE);
+        this->amp->setTileProperties(56 - 1, this->amp->getTileProperties(56 - 1) | MAPFLAG_HORZGRATE);
         break;
     case DTYPE_NEST:
         // patch dMiniTiles - L6.MIN
