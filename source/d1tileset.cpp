@@ -886,7 +886,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int stairsSubtileRef1, i
     for (int x = 0; x < MICRO_WIDTH; x++) {
         for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
             D1GfxPixel pixel0 = stairs_LeftFrame2->getPixel(x, y);
-            back3_RightFrame->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 36
+            stairsExt_RightFrame5->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 760
             D1GfxPixel pixel1 = stairs_LeftFrame2->getPixel(x, y - MICRO_HEIGHT / 2);
             stairs_LeftFrame2->setPixel(x, y, pixel1); // 769
         }
@@ -954,6 +954,12 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int stairsSubtileRef1, i
         }
     }
 
+    // fix bad artifacts
+    stairsExt_RightFrame3->setPixel(23, 20, D1GfxPixel::transparentPixel()); // 761
+    stairsExt_RightFrame3->setPixel(24, 20, D1GfxPixel::transparentPixel()); // 761
+    stairsExt_RightFrame3->setPixel(22, 21, D1GfxPixel::transparentPixel()); // 761
+    stairsExt_RightFrame3->setPixel(23, 21, D1GfxPixel::transparentPixel()); // 761
+
     // adjust the frame types
     D1CelTilesetFrame::selectFrameType(stairs_LeftFrame0);     // 770
     D1CelTilesetFrame::selectFrameType(stairs_LeftFrame2);     // 769
@@ -965,7 +971,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int stairsSubtileRef1, i
     // patch TMI
     quint8 properties;
     properties = this->tmi->getSubtileProperties(backSubtileRef3 - 1);
-    properties |= TMIF_RIGHT_REDRAW;
+    properties |= TMIF_LEFT_REDRAW | TMIF_RIGHT_REDRAW;
     this->tmi->setSubtileProperties(backSubtileRef3 - 1, properties);
     properties = this->tmi->getSubtileProperties(stairsSubtileRef1 - 1);
     properties &= ~(TMIF_LEFT_REDRAW | TMIF_LEFT_FOLIAGE);
@@ -973,6 +979,9 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex, int stairsSubtileRef1, i
     this->tmi->setSubtileProperties(stairsSubtileRef2 - 1, properties);
 
     // patch SOL
+    properties = this->sol->getSubtileProperties(backSubtileRef3 - 1);
+    properties |= (PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE);
+    this->sol->setSubtileProperties(backSubtileRef3 - 1, properties);
     properties = this->sol->getSubtileProperties(stairsSubtileRef1 - 1);
     properties &= ~(PFLAG_BLOCK_LIGHT);
     this->sol->setSubtileProperties(stairsSubtileRef1 - 1, properties);

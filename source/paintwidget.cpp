@@ -109,6 +109,9 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, D1Gfx *g, CelView *cv,
     if (lcv != nullptr) {
         views = lcv->getCelScene()->views();
     }
+    if (gsv != nullptr) {
+        views = gsv->getCelScene()->views();
+    }
     this->graphView = views[0];
 }
 
