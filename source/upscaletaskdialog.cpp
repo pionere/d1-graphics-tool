@@ -268,8 +268,9 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, c
         dProgressErr() << tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(celFilePath));
         return;
     }*/
-    if (!tileset.load(opParams)
+    if (!tileset.load(opParams)) {
         return;
+    }
     // Patch MIN if requested
     if (params.patchTilesets) {
         tileset.patch(dunType, true);
