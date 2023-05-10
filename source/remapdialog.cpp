@@ -1,5 +1,7 @@
 #include "remapdialog.h"
 
+#include <QMessageBox>
+
 #include "mainwindow.h"
 #include "ui_remapdialog.h"
 
@@ -71,7 +73,7 @@ void RemapDialog::on_remapButton_clicked()
 
     if (params.colorTo.first != params.colorTo.second && abs(params.colorTo.second - params.colorTo.first) != params.colorFrom.second - params.colorFrom.first) {
         this->ui->colorFrom0LineEdit->setText(QString::number(params.colorFrom.first));
-        this->ui->colorFrom1LineEdit->setText(QString::number(params.colorFrom..second));
+        this->ui->colorFrom1LineEdit->setText(QString::number(params.colorFrom.second));
         this->ui->colorTo0LineEdit->setText(QString::number(params.colorTo.first));
         this->ui->colorTo1LineEdit->setText(QString::number(params.colorTo.second));
         this->ui->range0LineEdit->setText(QString::number(params.frames.first));

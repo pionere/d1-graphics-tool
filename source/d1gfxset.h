@@ -3,8 +3,8 @@
 #include <vector>
 
 #include "d1gfx.h"
-#include "remapdialog.h"
 #include "openasdialog.h"
+#include "remapdialog.h"
 #include "saveasdialog.h"
 
 #include "dungeon/defs.h"
