@@ -734,12 +734,12 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     std::vector<unsigned> &stairs1FrameReferences = this->min->getFrameReferences(stairsSubtileRef1 - 1);
     std::vector<unsigned> &stairs2FrameReferences = this->min->getFrameReferences(stairsSubtileRef2 - 1);
     std::vector<unsigned> &stairsExt1FrameReferences = this->min->getFrameReferences(ext1SubtileRef1 - 1);
-    std::vector<unsigned> &stairsExt2FrameReferences = this->min->getFrameReferences(stairsExtSubtileRef2 - 1);
+    std::vector<unsigned> &stairsExt2FrameReferences = this->min->getFrameReferences(ext2SubtileRef1 - 1);
 
     if (back0FrameReferences.size() != blockSize || back2FrameReferences.size() != blockSize || back3FrameReferences.size() != blockSize
         || stairs1FrameReferences.size() != blockSize || stairs2FrameReferences.size() != blockSize
         || stairsExt1FrameReferences.size() != blockSize || stairsExt2FrameReferences.size() != blockSize) {
-        dProgressErr() << QApplication::tr("At least one of the upstairs-subtiles (%1, %2, %3, %4, %5) is invalid (upscaled?).").arg(backSubtileRef0).arg(backSubtileRef2).arg(backSubtileRef3).arg(stairsSubtileRef1).arg(stairsSubtileRef2).arg(ext1SubtileRef1).arg(ext1SubtileRef2);
+        dProgressErr() << QApplication::tr("At least one of the upstairs-subtiles (%1, %2, %3, %4, %5) is invalid (upscaled?).").arg(backSubtileRef0).arg(backSubtileRef2).arg(backSubtileRef3).arg(stairsSubtileRef1).arg(stairsSubtileRef2).arg(ext1SubtileRef1).arg(ext2SubtileRef1);
         return;
     }
 
@@ -783,7 +783,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     if (stairsExt2FrameReferences[microIndex1] != stairsExt_FrameRef1
         || stairsExt2FrameReferences[microIndex3] != stairsExt_FrameRef3
         || stairsExt2FrameReferences[microIndex5] != stairsExt_FrameRef5) {
-        dProgressErr() << QApplication::tr("The stairs external subtiles (%1, %2) have invalid (mismatching) frames.").arg(ext1SubtileRef1).arg(ext1SubtileRef2);
+        dProgressErr() << QApplication::tr("The stairs external subtiles (%1, %2) have invalid (mismatching) frames.").arg(ext1SubtileRef1).arg(ext2SubtileRef1);
         return;
     }
 
@@ -987,7 +987,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     this->tmi->setSubtileProperties(stairsSubtileRef1 - 1, 0);
     this->tmi->setSubtileProperties(stairsSubtileRef2 - 1, 0);
     this->tmi->setSubtileProperties(ext1SubtileRef1 - 1, 0);
-    this->tmi->setSubtileProperties(ext1SubtileRef2 - 1, 0);
+    this->tmi->setSubtileProperties(ext2SubtileRef1 - 1, 0);
 
     // patch SOL
     properties = this->sol->getSubtileProperties(backSubtileRef3 - 1);
