@@ -82,14 +82,14 @@ void LevelTabTileWidget::update()
     // update the combo box of the amp-type
     this->ui->ampTypeComboBox->setCurrentIndex(ampType);
     // update the checkboxes
-    this->ui->amp0->setChecked((ampProperty & 1 << 0) != 0);
-    this->ui->amp1->setChecked((ampProperty & 1 << 1) != 0);
-    this->ui->amp2->setChecked((ampProperty & 1 << 2) != 0);
-    this->ui->amp3->setChecked((ampProperty & 1 << 3) != 0);
-    this->ui->amp4->setChecked((ampProperty & 1 << 4) != 0);
-    this->ui->amp5->setChecked((ampProperty & 1 << 5) != 0);
-    this->ui->amp6->setChecked((ampProperty & 1 << 6) != 0);
-    this->ui->amp7->setChecked((ampProperty & 1 << 7) != 0);
+    this->ui->amp0->setChecked((ampProperty & (MAPFLAG_VERTDOOR >> 8)) != 0);
+    this->ui->amp1->setChecked((ampProperty & (MAPFLAG_HORZDOOR >> 8)) != 0);
+    this->ui->amp2->setChecked((ampProperty & (MAPFLAG_VERTARCH >> 8)) != 0);
+    this->ui->amp3->setChecked((ampProperty & (MAPFLAG_HORZARCH >> 8)) != 0);
+    this->ui->amp4->setChecked((ampProperty & (MAPFLAG_VERTGRATE >> 8)) != 0);
+    this->ui->amp5->setChecked((ampProperty & (MAPFLAG_HORZGRATE >> 8)) != 0);
+    this->ui->amp6->setChecked((ampProperty & (MAPFLAG_DIRT >> 8)) != 0);
+    this->ui->amp7->setChecked((ampProperty & (MAPFLAG_STAIRS >> 8)) != 0);
     // update combo box of the subtiles
     for (int i = this->ui->subtilesComboBox->count() - subtiles.size(); i > 0; i--)
         this->ui->subtilesComboBox->removeItem(0);
@@ -136,21 +136,21 @@ void LevelTabTileWidget::updateAmpProperty()
 {
     quint8 flags = 0;
     if (this->ui->amp0->checkState())
-        flags |= 1 << 0;
+        flags |= (MAPFLAG_VERTDOOR >> 8);
     if (this->ui->amp1->checkState())
-        flags |= 1 << 1;
+        flags |= (MAPFLAG_HORZDOOR >> 8);
     if (this->ui->amp2->checkState())
-        flags |= 1 << 2;
+        flags |= (MAPFLAG_VERTARCH >> 8);
     if (this->ui->amp3->checkState())
-        flags |= 1 << 3;
+        flags |= (MAPFLAG_HORZARCH >> 8);
     if (this->ui->amp4->checkState())
-        flags |= 1 << 4;
+        flags |= (MAPFLAG_VERTGRATE >> 8);
     if (this->ui->amp5->checkState())
-        flags |= 1 << 5;
+        flags |= (MAPFLAG_HORZGRATE >> 8);
     if (this->ui->amp6->checkState())
-        flags |= 1 << 6;
+        flags |= (MAPFLAG_DIRT >> 8);
     if (this->ui->amp7->checkState())
-        flags |= 1 << 7;
+        flags |= (MAPFLAG_STAIRS >> 8);
 
     this->setAmpProperty(flags);
 }
