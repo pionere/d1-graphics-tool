@@ -1239,6 +1239,8 @@ void D1Tileset::patch(int dunType, bool silent)
         ReplaceSubtile(this->til, 164 - 1, 3, 169, silent);
         // fix the upstairs
         this->patchCatacombsStairs(72 - 1, 158 - 1, 76 - 1, 159 - 1, 267, 559, silent);
+        // fix bad artifact
+        Blk2Mcr(288, 7);
         break;
     case DTYPE_CAVES:
         // patch dMiniTiles - L3.MIN
