@@ -686,6 +686,336 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
     }
 }
 
+void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int extTileIndex1, int extTileIndex2, int stairsSubtileRef1, int stairsSubtileRef2, bool silent)
+{
+    constexpr unsigned blockSize = 10;
+
+    constexpr int backSubtileRef0 = 250;
+    constexpr int backSubtileRef2 = 251;
+    constexpr int backSubtileRef3 = 252;
+    constexpr int backSubtileRef0Replacement = 9;
+    constexpr int backSubtileRef2Replacement = 11;
+    { // check the back subtiles
+        std::vector<int> &backSubtiles = this->til->getSubtileIndices(backTileIndex1);
+        if (backSubtiles[0] != (backSubtileRef0 - 1) || backSubtiles[2] != (backSubtileRef2 - 1) || backSubtiles[3] != (backSubtileRef3 - 1)) {
+            if (backSubtiles[0] != (backSubtileRef0Replacement - 1) || backSubtiles[2] != (backSubtileRef2Replacement - 1) || backSubtiles[3] != (backSubtileRef3 - 1))
+                dProgressErr() << QApplication::tr("The back-stairs tile (%1) has invalid (not original) subtiles.").arg(backTileIndex1 + 1);
+            else if (!silent)
+                dProgress() << QApplication::tr("The back-stairs tile (%1) is already patched.").arg(backTileIndex1 + 1);
+            return;
+        }
+    }
+
+    constexpr int ext1SubtileRef1 = 265;
+    constexpr int ext2SubtileRef1 = 556;
+    constexpr int extSubtileRef1Replacement = 10;
+    { // check the external subtiles
+        std::vector<int> &ext1Subtiles = this->til->getSubtileIndices(extTileIndex1);
+        if (ext1Subtiles[1] != (ext1SubtileRef1 - 1)) {
+            if (ext1Subtiles[1] != (extSubtileRef1Replacement - 1))
+                dProgressErr() << QApplication::tr("The ext-stairs tile (%1) has invalid (not original) subtiles.").arg(extTileIndex1 + 1);
+            else if (!silent)
+                dProgress() << QApplication::tr("The ext-stairs tile (%1) is already patched.").arg(extTileIndex1 + 1);
+            return;
+        }
+        std::vector<int> &ext2Subtiles = this->til->getSubtileIndices(extTileIndex2);
+        if (ext2Subtiles[1] != (ext2SubtileRef1 - 1)) {
+            if (ext2Subtiles[1] != (extSubtileRef1Replacement - 1))
+                dProgressErr() << QApplication::tr("The ext-stairs tile (%1) has invalid (not original) subtiles.").arg(extTileIndex2 + 1);
+            else if (!silent)
+                dProgress() << QApplication::tr("The ext-stairs tile (%1) is already patched.").arg(extTileIndex2 + 1);
+            return;
+        }
+    }
+
+    std::vector<unsigned> &back0FrameReferences = this->min->getFrameReferences(backSubtileRef0 - 1);
+    std::vector<unsigned> &back2FrameReferences = this->min->getFrameReferences(backSubtileRef2 - 1);
+    std::vector<unsigned> &back3FrameReferences = this->min->getFrameReferences(backSubtileRef3 - 1);
+    std::vector<unsigned> &stairs1FrameReferences = this->min->getFrameReferences(stairsSubtileRef1 - 1);
+    std::vector<unsigned> &stairs2FrameReferences = this->min->getFrameReferences(stairsSubtileRef2 - 1);
+    std::vector<unsigned> &stairsExt1FrameReferences = this->min->getFrameReferences(ext1SubtileRef1 - 1);
+    std::vector<unsigned> &stairsExt2FrameReferences = this->min->getFrameReferences(ext2SubtileRef1 - 1);
+
+    if (back0FrameReferences.size() != blockSize || back2FrameReferences.size() != blockSize || back3FrameReferences.size() != blockSize
+        || stairs1FrameReferences.size() != blockSize || stairs2FrameReferences.size() != blockSize
+        || stairsExt1FrameReferences.size() != blockSize || stairsExt2FrameReferences.size() != blockSize) {
+        dProgressErr() << QApplication::tr("At least one of the upstairs-subtiles (%1, %2, %3, %4, %5) is invalid (upscaled?).").arg(backSubtileRef0).arg(backSubtileRef2).arg(backSubtileRef3).arg(stairsSubtileRef1).arg(stairsSubtileRef2).arg(ext1SubtileRef1).arg(ext2SubtileRef1);
+        return;
+    }
+
+    const unsigned microIndex0 = MICRO_IDX(blockSize, 0);
+    const unsigned microIndex1 = MICRO_IDX(blockSize, 1);
+    const unsigned microIndex2 = MICRO_IDX(blockSize, 2);
+    const unsigned microIndex3 = MICRO_IDX(blockSize, 3);
+    const unsigned microIndex4 = MICRO_IDX(blockSize, 4);
+    const unsigned microIndex5 = MICRO_IDX(blockSize, 5);
+    const unsigned microIndex6 = MICRO_IDX(blockSize, 6);
+
+    unsigned back3_FrameRef0 = back3FrameReferences[microIndex0]; // 719
+    unsigned back2_FrameRef1 = back2FrameReferences[microIndex1]; // 718
+    unsigned back0_FrameRef0 = back0FrameReferences[microIndex0]; // 716
+
+    unsigned stairs_FrameRef0 = stairs1FrameReferences[microIndex0]; // 770
+    unsigned stairs_FrameRef2 = stairs1FrameReferences[microIndex2]; // 769
+    unsigned stairs_FrameRef4 = stairs1FrameReferences[microIndex4]; // 768
+    unsigned stairs_FrameRef6 = stairs1FrameReferences[microIndex6]; // 767
+
+    unsigned stairsExt_FrameRef1 = stairsExt1FrameReferences[microIndex1]; // 762
+    unsigned stairsExt_FrameRef3 = stairsExt1FrameReferences[microIndex3]; // 761
+    unsigned stairsExt_FrameRef5 = stairsExt1FrameReferences[microIndex5]; // 760
+
+    if (back3_FrameRef0 == 0 || back2_FrameRef1 == 0 || back0_FrameRef0 == 0) {
+        dProgressErr() << QApplication::tr("The back-stairs tile (%1) has invalid (missing) frames.").arg(backTileIndex1 + 1);
+        return;
+    }
+
+    if (stairs_FrameRef0 == 0 || stairs_FrameRef2 == 0 || stairs_FrameRef4 == 0 || stairs_FrameRef6 == 0
+        || stairsExt_FrameRef1 == 0 || stairsExt_FrameRef3 == 0 || stairsExt_FrameRef5 == 0) {
+        if (!silent)
+            dProgress() << QApplication::tr("The stairs subtiles (%1) are already patched.").arg(stairsSubtileRef1);
+        return;
+    }
+
+    if (stairs2FrameReferences[microIndex0] != stairs_FrameRef0) {
+        dProgressErr() << QApplication::tr("The stairs subtiles (%1, %2) have invalid (mismatching) floor frames.").arg(stairsSubtileRef1).arg(stairsSubtileRef2);
+        return;
+    }
+    if (stairsExt2FrameReferences[microIndex1] != stairsExt_FrameRef1
+        || stairsExt2FrameReferences[microIndex3] != stairsExt_FrameRef3
+        || stairsExt2FrameReferences[microIndex5] != stairsExt_FrameRef5) {
+        dProgressErr() << QApplication::tr("The stairs external subtiles (%1, %2) have invalid (mismatching) frames.").arg(ext1SubtileRef1).arg(ext2SubtileRef1);
+        return;
+    }
+
+    D1GfxFrame *back3_LeftFrame = this->gfx->getFrame(back3_FrameRef0 - 1);  // 719
+    D1GfxFrame *back2_LeftFrame = this->gfx->getFrame(back2_FrameRef1 - 1);  // 718
+    D1GfxFrame *back0_RightFrame = this->gfx->getFrame(back0_FrameRef0 - 1); // 716
+
+    D1GfxFrame *stairs_LeftFrame0 = this->gfx->getFrame(stairs_FrameRef0 - 1); // 770
+    D1GfxFrame *stairs_LeftFrame2 = this->gfx->getFrame(stairs_FrameRef2 - 1); // 769
+    D1GfxFrame *stairs_LeftFrame4 = this->gfx->getFrame(stairs_FrameRef4 - 1); // 768
+    D1GfxFrame *stairs_LeftFrame6 = this->gfx->getFrame(stairs_FrameRef6 - 1); // 767
+
+    D1GfxFrame *stairsExt_RightFrame1 = this->gfx->getFrame(stairsExt_FrameRef1 - 1); // 762
+    D1GfxFrame *stairsExt_RightFrame3 = this->gfx->getFrame(stairsExt_FrameRef3 - 1); // 761
+    D1GfxFrame *stairsExt_RightFrame5 = this->gfx->getFrame(stairsExt_FrameRef5 - 1); // 760
+
+    if (back3_LeftFrame->getWidth() != MICRO_WIDTH || back3_LeftFrame->getHeight() != MICRO_HEIGHT) {
+        return; // upscaled(?) frames -> assume it is already done
+    }
+    if ((back2_LeftFrame->getWidth() != MICRO_WIDTH || back2_LeftFrame->getHeight() != MICRO_HEIGHT)
+        || (back0_RightFrame->getWidth() != MICRO_WIDTH || back0_RightFrame->getHeight() != MICRO_HEIGHT)) {
+        dProgressErr() << QApplication::tr("The back-stairs tile (%1) has invalid (mismatching) frames.").arg(backTileIndex1 + 1);
+        return;
+    }
+    if ((stairs_LeftFrame0->getWidth() != MICRO_WIDTH || stairs_LeftFrame0->getHeight() != MICRO_HEIGHT)
+        || (stairs_LeftFrame2->getWidth() != MICRO_WIDTH || stairs_LeftFrame2->getHeight() != MICRO_HEIGHT)
+        || (stairs_LeftFrame4->getWidth() != MICRO_WIDTH || stairs_LeftFrame4->getHeight() != MICRO_HEIGHT)
+        || (stairs_LeftFrame6->getWidth() != MICRO_WIDTH || stairs_LeftFrame6->getHeight() != MICRO_HEIGHT)) {
+        dProgressErr() << QApplication::tr("The stairs subtile (%1) has invalid (mismatching) frames I.").arg(stairsSubtileRef1);
+        return;
+    }
+    if ((stairsExt_RightFrame1->getWidth() != MICRO_WIDTH || stairsExt_RightFrame1->getHeight() != MICRO_HEIGHT)
+        || (stairsExt_RightFrame3->getWidth() != MICRO_WIDTH || stairsExt_RightFrame3->getHeight() != MICRO_HEIGHT)
+        || (stairsExt_RightFrame5->getWidth() != MICRO_WIDTH || stairsExt_RightFrame5->getHeight() != MICRO_HEIGHT)) {
+        dProgressErr() << QApplication::tr("The stairs subtile (%1) has invalid (mismatching) frames II.").arg(ext1SubtileRef1);
+        return;
+    }
+
+    // move the frames to the back subtile
+    const unsigned microIndex7 = MICRO_IDX(blockSize, 7);
+    // - left side
+    back3FrameReferences[microIndex2] = stairsExt1FrameReferences[microIndex3]; // 761
+    stairsExt1FrameReferences[microIndex3] = 0;
+    stairsExt2FrameReferences[microIndex3] = 0;
+
+    // - right side
+    back3FrameReferences[microIndex1] = stairsExt1FrameReferences[microIndex5]; // 760
+    stairsExt1FrameReferences[microIndex5] = 0;
+    stairsExt2FrameReferences[microIndex5] = 0;
+
+    back3FrameReferences[microIndex3] = stairs1FrameReferences[microIndex2]; // 769
+    stairs1FrameReferences[microIndex2] = 0;
+    stairs2FrameReferences[microIndex2] = 0; // 1471
+
+    back3FrameReferences[microIndex5] = stairs1FrameReferences[microIndex4]; // 768
+    stairs1FrameReferences[microIndex4] = 0;
+    stairs2FrameReferences[microIndex4] = 0; // 1470
+
+    back3FrameReferences[microIndex7] = stairs1FrameReferences[microIndex6]; // 767
+    stairs1FrameReferences[microIndex6] = 0;
+    stairs2FrameReferences[microIndex6] = 0;
+
+    this->min->setModified();
+
+    // move external-stairs
+    // - from stairsExt_RightFrame1 (762) to the right side of the back3 frame 719
+    for (int x = 0; x < MICRO_WIDTH; x++) {
+        for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+            D1GfxPixel pixel = stairsExt_RightFrame1->getPixel(x, y);
+            if (pixel.isTransparent())
+                continue;
+            if (!back2_LeftFrame->getPixel(x, y).isTransparent()) // use 718 as a mask
+                continue;
+            back3_LeftFrame->setPixel(x, y + MICRO_HEIGHT / 2, pixel);             // 719
+            stairsExt_RightFrame1->setPixel(x, y, D1GfxPixel::transparentPixel()); // 762
+        }
+    }
+    // - from stairsExt_RightFrame3 (761) to the right side of the back3 frame 719
+    //  and shift the external-stairs down
+    for (int x = 0; x < MICRO_WIDTH; x++) {
+        for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+            D1GfxPixel pixel0 = stairsExt_RightFrame3->getPixel(x, y);
+            if (!pixel0.isTransparent()) {
+                back3_LeftFrame->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 719
+            }
+            D1GfxPixel pixel1 = stairsExt_RightFrame3->getPixel(x, y - MICRO_HEIGHT / 2);
+            stairsExt_RightFrame3->setPixel(x, y, pixel1); // 761
+        }
+    }
+    // shift the rest of the external-stairs down
+    for (int x = 0; x < MICRO_WIDTH; x++) {
+        for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+            D1GfxPixel pixel0 = stairsExt_RightFrame5->getPixel(x, y);
+            stairsExt_RightFrame3->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 761
+            D1GfxPixel pixel1 = stairsExt_RightFrame5->getPixel(x, y - MICRO_HEIGHT / 2);
+            stairsExt_RightFrame5->setPixel(x, y, pixel1); // 760
+        }
+    }
+
+    // move external-stairs
+    // move stairs from stairs_LeftFrame0 (770) to the new back3 right frame 760
+    for (int x = 0; x < MICRO_WIDTH; x++) {
+        for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+            D1GfxPixel pixel = stairs_LeftFrame0->getPixel(x, y);
+            if (!back0_RightFrame->getPixel(x, y).isTransparent()) // use 716 as a mask
+                continue;
+            stairsExt_RightFrame5->setPixel(x, y + MICRO_HEIGHT / 2, pixel);   // 760
+            stairs_LeftFrame0->setPixel(x, y, D1GfxPixel::transparentPixel()); // 770
+        }
+    }
+    // shift the stairs down
+    for (int x = 0; x < MICRO_WIDTH; x++) {
+        for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+            D1GfxPixel pixel0 = stairs_LeftFrame2->getPixel(x, y);
+            stairsExt_RightFrame5->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 760
+            D1GfxPixel pixel1 = stairs_LeftFrame2->getPixel(x, y - MICRO_HEIGHT / 2);
+            stairs_LeftFrame2->setPixel(x, y, pixel1); // 769
+        }
+    }
+    for (int x = 0; x < MICRO_WIDTH; x++) {
+        for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+            D1GfxPixel pixel0 = stairs_LeftFrame4->getPixel(x, y);
+            stairs_LeftFrame2->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 769
+            D1GfxPixel pixel1 = stairs_LeftFrame4->getPixel(x, y - MICRO_HEIGHT / 2);
+            stairs_LeftFrame4->setPixel(x, y, pixel1); // 768
+        }
+    }
+    for (int x = 0; x < MICRO_WIDTH; x++) {
+        for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+            D1GfxPixel pixel0 = stairs_LeftFrame6->getPixel(x, y);
+            stairs_LeftFrame4->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 768
+            D1GfxPixel pixel1 = stairs_LeftFrame6->getPixel(x, y - MICRO_HEIGHT / 2);
+            stairs_LeftFrame6->setPixel(x, y, pixel1); // 767
+        }
+    }
+    for (int x = 0; x < MICRO_WIDTH; x++) {
+        for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+            stairs_LeftFrame6->setPixel(x, y, D1GfxPixel::transparentPixel()); // 767
+        }
+    }
+
+    // copy shadow
+    // - from back2_LeftFrame 718 to the back3 left frame 719
+    for (int x = 22; x < MICRO_WIDTH; x++) {
+        for (int y = MICRO_HEIGHT / 2; y < 20; y++) {
+            D1GfxPixel pixel = back2_LeftFrame->getPixel(x, y);
+            if (pixel.isTransparent())
+                continue;
+            if (pixel.getPaletteIndex() % 16 < 11)
+                continue;
+            if (!back3_LeftFrame->getPixel(x, y - MICRO_HEIGHT / 2).isTransparent())
+                continue;
+            back3_LeftFrame->setPixel(x, y - MICRO_HEIGHT / 2, pixel); // 719
+        }
+    }
+    // - from back2_LeftFrame 718 to the new back3 left frame 761
+    for (int x = 22; x < MICRO_WIDTH; x++) {
+        for (int y = 12; y < MICRO_HEIGHT / 2; y++) {
+            D1GfxPixel pixel = back2_LeftFrame->getPixel(x, y);
+            if (pixel.isTransparent())
+                continue;
+            if (pixel.getPaletteIndex() % 16 < 11)
+                continue;
+            if (!stairsExt_RightFrame3->getPixel(x, y + MICRO_HEIGHT / 2).isTransparent())
+                continue;
+            stairsExt_RightFrame3->setPixel(x, y + MICRO_HEIGHT / 2, pixel); // 761
+        }
+    }
+    // - from back0_RightFrame 716 to the new back3 left frame 761
+    for (int x = 22; x < MICRO_WIDTH; x++) {
+        for (int y = 20; y < MICRO_HEIGHT; y++) {
+            D1GfxPixel pixel = back0_RightFrame->getPixel(x, y);
+            if (pixel.isTransparent())
+                continue;
+            if (pixel.getPaletteIndex() % 16 < 11)
+                continue;
+            if (!stairsExt_RightFrame3->getPixel(x, y).isTransparent())
+                continue;
+            stairsExt_RightFrame3->setPixel(x, y, pixel); // 761
+        }
+    }
+
+    // fix bad artifacts
+    stairsExt_RightFrame3->setPixel(23, 20, D1GfxPixel::transparentPixel()); // 761
+    stairsExt_RightFrame3->setPixel(24, 20, D1GfxPixel::transparentPixel()); // 761
+    stairsExt_RightFrame3->setPixel(22, 21, D1GfxPixel::transparentPixel()); // 761
+    stairsExt_RightFrame3->setPixel(23, 21, D1GfxPixel::transparentPixel()); // 761
+
+    // adjust the frame types
+    D1CelTilesetFrame::selectFrameType(stairs_LeftFrame0);     // 770
+    D1CelTilesetFrame::selectFrameType(stairs_LeftFrame2);     // 769
+    D1CelTilesetFrame::selectFrameType(stairsExt_RightFrame5); // 760
+    D1CelTilesetFrame::selectFrameType(stairsExt_RightFrame1); // 762
+    D1CelTilesetFrame::selectFrameType(back3_LeftFrame);       // 719
+
+    this->gfx->setModified();
+
+    quint8 properties;
+    // patch TMI
+    /*this->tmi->setSubtileProperties(backSubtileRef3 - 1, TMIF_LEFT_REDRAW | TMIF_RIGHT_REDRAW);
+    this->tmi->setSubtileProperties(stairsSubtileRef1 - 1, 0);
+    this->tmi->setSubtileProperties(stairsSubtileRef2 - 1, 0);
+    this->tmi->setSubtileProperties(ext1SubtileRef1 - 1, 0);
+    this->tmi->setSubtileProperties(ext2SubtileRef1 - 1, 0);*/
+
+    // patch SOL
+    properties = this->sol->getSubtileProperties(backSubtileRef3 - 1);
+    properties |= (PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE);
+    this->sol->setSubtileProperties(backSubtileRef3 - 1, properties);
+    properties = this->sol->getSubtileProperties(stairsSubtileRef1 - 1);
+    properties &= ~(PFLAG_BLOCK_LIGHT);
+    this->sol->setSubtileProperties(stairsSubtileRef1 - 1, properties);
+    this->sol->setSubtileProperties(stairsSubtileRef2 - 1, properties);
+
+    // replace subtiles
+    ReplaceSubtile(this->til, backTileIndex1, 0, backSubtileRef0Replacement, silent); // use common subtile
+    ReplaceSubtile(this->til, backTileIndex1, 1, 56, silent);                         // make the back of the stairs non-walkable
+    ReplaceSubtile(this->til, backTileIndex1, 2, backSubtileRef2Replacement, silent); // use common subtile
+    ReplaceSubtile(this->til, extTileIndex1, 1, extSubtileRef1Replacement, silent);   // use common subtile
+
+    ReplaceSubtile(this->til, backTileIndex2, 0, backSubtileRef0Replacement, silent); // use common subtile
+    ReplaceSubtile(this->til, backTileIndex2, 1, 56, silent);                         // make the back of the stairs non-walkable
+    ReplaceSubtile(this->til, backTileIndex2, 2, backSubtileRef2Replacement, silent); // use common subtile
+    ReplaceSubtile(this->til, extTileIndex2, 0, backSubtileRef0Replacement, silent);  // use common subtile
+    ReplaceSubtile(this->til, extTileIndex2, 1, extSubtileRef1Replacement, silent);   // use common subtile
+    ReplaceSubtile(this->til, extTileIndex2, 2, backSubtileRef2Replacement, silent);  // use common subtile
+
+    if (!silent) {
+        dProgress() << QApplication::tr("The back-stair tiles (%1, %2) and the stair-subtiles (%2, %3, %4, %5) are modified.").arg(backTileIndex1 + 1).arg(backTileIndex2 + 1).arg(extTileIndex1 + 1).arg(extTileIndex2 + 1).arg(stairsSubtileRef1).arg(stairsSubtileRef2);
+    }
+}
+
 void D1Tileset::patch(int dunType, bool silent)
 {
     std::set<unsigned> deletedFrames;
@@ -907,8 +1237,8 @@ void D1Tileset::patch(int dunType, bool silent)
         ReplaceSubtile(this->til, 164 - 1, 1, 567, silent); // - 167
         ReplaceSubtile(this->til, 164 - 1, 2, 168, silent);
         ReplaceSubtile(this->til, 164 - 1, 3, 169, silent);
-        // make the back of the stairs non-walkable
-        ReplaceSubtile(this->til, 72 - 1, 1, 56, silent);
+        // fix the upstairs
+        this->patchCatacombsStairs(72 - 1, 158 - 1, 76 - 1, 159 - 1, 267, 559, silent);
         break;
     case DTYPE_CAVES:
         // patch dMiniTiles - L3.MIN
