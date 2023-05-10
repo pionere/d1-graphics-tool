@@ -733,13 +733,13 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     std::vector<unsigned> &back3FrameReferences = this->min->getFrameReferences(backSubtileRef3 - 1);
     std::vector<unsigned> &stairs1FrameReferences = this->min->getFrameReferences(stairsSubtileRef1 - 1);
     std::vector<unsigned> &stairs2FrameReferences = this->min->getFrameReferences(stairsSubtileRef2 - 1);
-    std::vector<unsigned> &stairsExt1FrameReferences = this->min->getFrameReferences(stairsExtSubtileRef1 - 1);
+    std::vector<unsigned> &stairsExt1FrameReferences = this->min->getFrameReferences(ext1SubtileRef1 - 1);
     std::vector<unsigned> &stairsExt2FrameReferences = this->min->getFrameReferences(stairsExtSubtileRef2 - 1);
 
     if (back0FrameReferences.size() != blockSize || back2FrameReferences.size() != blockSize || back3FrameReferences.size() != blockSize
         || stairs1FrameReferences.size() != blockSize || stairs2FrameReferences.size() != blockSize
         || stairsExt1FrameReferences.size() != blockSize || stairsExt2FrameReferences.size() != blockSize) {
-        dProgressErr() << QApplication::tr("At least one of the upstairs-subtiles (%1, %2, %3, %4, %5) is invalid (upscaled?).").arg(backSubtileRef0).arg(backSubtileRef2).arg(backSubtileRef3).arg(stairsSubtileRef1).arg(stairsSubtileRef2).arg(stairsExtSubtileRef1).arg(stairsExtSubtileRef2);
+        dProgressErr() << QApplication::tr("At least one of the upstairs-subtiles (%1, %2, %3, %4, %5) is invalid (upscaled?).").arg(backSubtileRef0).arg(backSubtileRef2).arg(backSubtileRef3).arg(stairsSubtileRef1).arg(stairsSubtileRef2).arg(ext1SubtileRef1).arg(ext1SubtileRef2);
         return;
     }
 
@@ -783,7 +783,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     if (stairsExt2FrameReferences[microIndex1] != stairsExt_FrameRef1
         || stairsExt2FrameReferences[microIndex3] != stairsExt_FrameRef3
         || stairsExt2FrameReferences[microIndex5] != stairsExt_FrameRef5) {
-        dProgressErr() << QApplication::tr("The stairs external subtiles (%1, %2) have invalid (mismatching) frames.").arg(stairsExtSubtileRef1).arg(stairsExtSubtileRef2);
+        dProgressErr() << QApplication::tr("The stairs external subtiles (%1, %2) have invalid (mismatching) frames.").arg(ext1SubtileRef1).arg(ext1SubtileRef2);
         return;
     }
 
@@ -818,7 +818,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     if ((stairsExt_RightFrame1->getWidth() != MICRO_WIDTH || stairsExt_RightFrame1->getHeight() != MICRO_HEIGHT)
         || (stairsExt_RightFrame3->getWidth() != MICRO_WIDTH || stairsExt_RightFrame3->getHeight() != MICRO_HEIGHT)
         || (stairsExt_RightFrame5->getWidth() != MICRO_WIDTH || stairsExt_RightFrame5->getHeight() != MICRO_HEIGHT)) {
-        dProgressErr() << QApplication::tr("The stairs subtile (%1) has invalid (mismatching) frames II.").arg(stairsExtSubtileRef1);
+        dProgressErr() << QApplication::tr("The stairs subtile (%1) has invalid (mismatching) frames II.").arg(ext1SubtileRef1);
         return;
     }
 
@@ -986,8 +986,8 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     this->tmi->setSubtileProperties(backSubtileRef3 - 1, TMIF_LEFT_REDRAW | TMIF_RIGHT_REDRAW);
     this->tmi->setSubtileProperties(stairsSubtileRef1 - 1, 0);
     this->tmi->setSubtileProperties(stairsSubtileRef2 - 1, 0);
-    this->tmi->setSubtileProperties(stairsExtSubtileRef1 - 1, 0);
-    this->tmi->setSubtileProperties(stairsExtSubtileRef2 - 1, 0);
+    this->tmi->setSubtileProperties(ext1SubtileRef1 - 1, 0);
+    this->tmi->setSubtileProperties(ext1SubtileRef2 - 1, 0);
 
     // patch SOL
     properties = this->sol->getSubtileProperties(backSubtileRef3 - 1);
@@ -1012,7 +1012,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     ReplaceSubtile(this->til, extTileIndex2, 2, backSubtileRef2Replacement, silent);  // use common subtile
 
     if (!silent) {
-        dProgress() << QApplication::tr("The back-stair tiles (%1, %2) and the stair-subtiles (%2, %3, %4, %5) are modified.").arg(backTileIndex1 + 1).arg(backTileIndex2 + 1).arg(stairsSubtileRef1).arg(stairsSubtileRef2).arg(stairsExtSubtileRef1).arg(stairsExtSubtileRef2);
+        dProgress() << QApplication::tr("The back-stair tiles (%1, %2) and the stair-subtiles (%2, %3, %4, %5) are modified.").arg(backTileIndex1 + 1).arg(backTileIndex2 + 1).arg(extTileIndex1 + 1).arg(extTileIndex2 + 1).arg(stairsSubtileRef1).arg(stairsSubtileRef2);
     }
 }
 
@@ -1161,36 +1161,52 @@ void D1Tileset::patch(int dunType, bool silent)
         // reuse subtiles
         ReplaceSubtile(this->til, 41 - 1, 1, 135, silent);
         // add separate tiles and subtiles for the arches
-        if (this->min->getSubtileCount() < 560)
+        if (this->min->getSubtileCount() < 560) {
             this->createSubtile();
+            this->spt->setSubtileSpecProperty(560 - 1, 2);
+        }
         CopyFrame(this->min, this->gfx, 560, 0, 9, 0, silent);
         CopyFrame(this->min, this->gfx, 560, 1, 9, 1, silent);
-        if (this->min->getSubtileCount() < 561)
+        if (this->min->getSubtileCount() < 561) {
             this->createSubtile();
+            this->spt->setSubtileSpecProperty(561 - 1, 1);
+        }
         CopyFrame(this->min, this->gfx, 561, 0, 11, 0, silent);
         CopyFrame(this->min, this->gfx, 561, 1, 11, 1, silent);
-        if (this->min->getSubtileCount() < 562)
+        if (this->min->getSubtileCount() < 562) {
             this->createSubtile();
+            this->spt->setSubtileSpecProperty(562 - 1, 3);
+        }
         CopyFrame(this->min, this->gfx, 562, 0, 9, 0, silent);
         CopyFrame(this->min, this->gfx, 562, 1, 9, 1, silent);
-        if (this->min->getSubtileCount() < 563)
+        if (this->min->getSubtileCount() < 563) {
             this->createSubtile();
+            this->spt->setSubtileSpecProperty(563 - 1, 4);
+        }
         CopyFrame(this->min, this->gfx, 563, 0, 10, 0, silent);
         CopyFrame(this->min, this->gfx, 563, 1, 10, 1, silent);
-        if (this->min->getSubtileCount() < 564)
+        if (this->min->getSubtileCount() < 564) {
             this->createSubtile();
+            this->spt->setSubtileSpecProperty(564 - 1, 2);
+        }
         CopyFrame(this->min, this->gfx, 564, 0, 159, 0, silent);
         CopyFrame(this->min, this->gfx, 564, 1, 159, 1, silent);
-        if (this->min->getSubtileCount() < 565)
+        if (this->min->getSubtileCount() < 565) {
             this->createSubtile();
+            this->spt->setSubtileSpecProperty(565 - 1, 1);
+        }
         CopyFrame(this->min, this->gfx, 565, 0, 161, 0, silent);
         CopyFrame(this->min, this->gfx, 565, 1, 161, 1, silent);
-        if (this->min->getSubtileCount() < 566)
+        if (this->min->getSubtileCount() < 566) {
             this->createSubtile();
+            this->spt->setSubtileSpecProperty(566 - 1, 3);
+        }
         CopyFrame(this->min, this->gfx, 566, 0, 166, 0, silent);
         CopyFrame(this->min, this->gfx, 566, 1, 166, 1, silent);
-        if (this->min->getSubtileCount() < 567)
+        if (this->min->getSubtileCount() < 567) {
             this->createSubtile();
+            this->spt->setSubtileSpecProperty(567 - 1, 4);
+        }
         CopyFrame(this->min, this->gfx, 567, 0, 167, 0, silent);
         CopyFrame(this->min, this->gfx, 567, 1, 167, 1, silent);
         // - floor tile(3) with vertical arch
