@@ -695,7 +695,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     constexpr int backSubtileRef3 = 252;
     constexpr int backSubtileRef0Replacement = 9;
     constexpr int backSubtileRef2Replacement = 11;
-    {  // check the back subtiles
+    { // check the back subtiles
         std::vector<int> &backSubtiles = this->til->getSubtileIndices(backTileIndex1);
         if (backSubtiles[0] != (backSubtileRef0 - 1) || backSubtiles[2] != (backSubtileRef2 - 1) || backSubtiles[3] != (backSubtileRef3 - 1)) {
             if (backSubtiles[0] != (backSubtileRef0Replacement - 1) || backSubtiles[2] != (backSubtileRef2Replacement - 1) || backSubtiles[3] != (backSubtileRef3 - 1))
