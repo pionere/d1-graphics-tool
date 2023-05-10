@@ -99,27 +99,16 @@ MainWindow &dMainWindow()
 
 void MainWindow::changeColors(const RemapParam &params)
 {
-    int firstColorIndex = params.colorFrom.first;
-    int lastColorIndex = params.colorFrom.first;
-    std::pair<int, int> targetRange = params.colorTo;
-    if (firstColorIndex > lastColorIndex) {
-        std::swap(firstColorIndex, lastColorIndex);
-        std::swap(targetRange.first, targetRange.second);
-    }
-
-    if (targetRange.first != targetRange.second && abs(targetRange.second - targetRange.first) != lastColorIndex - firstColorIndex) {
-        QMessageBox::warning(this, tr("Error"), tr("Source and target selection length do not match."));
-        return;
-    }
-
     std::vector<std::pair<D1GfxPixel, D1GfxPixel>> replacements;
-    int index = targetRange.first;
-    const int dc = targetRange.first == targetRange.second ? 0 : (targetRange.first < targetRange.second ? 1 : -1);
-    for (int i = firstColorIndex; i <= lastColorIndex; i++, index += dc) {
+    int index = params.colorTo.first;
+    const int dc = params.colorTo.first == params.colorTo.second ? 0 : (params.colorTo.first < params.colorTo.second ? 1 : -1);
+    for (int i = params.colorFrom.first; i <= params.colorFrom.second; i++, index += dc) {
         D1GfxPixel source = (i == D1PAL_COLORS) ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(i);
         D1GfxPixel replacement = (index == D1PAL_COLORS) ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(index);
         replacements.push_back(std::pair<D1GfxPixel, D1GfxPixel>(source, replacement));
     }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
     int rangeFrom = params.frames.first;
     if (rangeFrom != 0) {
@@ -130,8 +119,6 @@ void MainWindow::changeColors(const RemapParam &params)
         rangeTo = this->gfx->getFrameCount();
     }
     rangeTo--;
-
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
     for (int i = rangeFrom; i <= rangeTo; i++) {
         D1GfxFrame *frame = this->gfx->getFrame(i);

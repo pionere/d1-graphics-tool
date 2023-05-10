@@ -64,6 +64,23 @@ void RemapDialog::on_remapButton_clicked()
         params.colorTo.second = D1PAL_COLORS;
     }
 
+    if (params.colorFrom.first > params.colorFrom.second) {
+        std::swap(params.colorFrom.first, params.colorFrom.second);
+        std::swap(params.colorTo.first, params.colorTo.second);
+    }
+
+    if (params.colorTo.first != params.colorTo.second && abs(params.colorTo.second - params.colorTo.first) != params.colorFrom.second - params.colorFrom.first) {
+        this->ui->colorFrom0LineEdit->setText(QString::number(params.colorFrom.first));
+        this->ui->colorFrom1LineEdit->setText(QString::number(params.colorFrom..second));
+        this->ui->colorTo0LineEdit->setText(QString::number(params.colorTo.first));
+        this->ui->colorTo1LineEdit->setText(QString::number(params.colorTo.second));
+        this->ui->range0LineEdit->setText(QString::number(params.frames.first));
+        this->ui->range1LineEdit->setText(QString::number(params.frames.second));
+
+        QMessageBox::warning(this, tr("Warning"), tr("Source and target selection length do not match."));
+        return;
+    }
+
     this->close();
 
     dMainWindow().changeColors(params);
