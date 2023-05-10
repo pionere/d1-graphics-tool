@@ -1241,6 +1241,12 @@ void D1Tileset::patch(int dunType, bool silent)
         this->patchCatacombsStairs(72 - 1, 158 - 1, 76 - 1, 159 - 1, 267, 559, silent);
         // fix bad artifact
         Blk2Mcr(288, 7);
+        // patch dAutomapData - L2.AMP
+        this->amp->setTileProperties(42 - 1, this->amp->getTileProperties(42 - 1) & ~(MAPFLAG_HORZARCH >> 8));
+        this->amp->setTileProperties(156 - 1, this->amp->getTileProperties(156 - 1) & ~(MAPFLAG_VERTDOOR >> 8));
+        this->amp->setTileType(156 - 1, 0);
+        this->amp->setTileProperties(157 - 1, this->amp->getTileProperties(157 - 1) & ~(MAPFLAG_HORZDOOR >> 8));
+        this->amp->setTileType(157 - 1, 0);
         break;
     case DTYPE_CAVES:
         // patch dMiniTiles - L3.MIN
@@ -1249,6 +1255,9 @@ void D1Tileset::patch(int dunType, bool silent)
         break;
     case DTYPE_HELL:
         this->patchHellExit(45 - 1, silent);
+        // patch dAutomapData - L4.AMP
+        this->amp->setTileProperties(52 - 1, this->amp->getTileProperties(52 - 1) | (MAPFLAG_VERTGRATE >> 8));
+        this->amp->setTileProperties(56 - 1, this->amp->getTileProperties(56 - 1) | (MAPFLAG_HORZGRATE >> 8));
         break;
     case DTYPE_NEST:
         // patch dMiniTiles - L6.MIN

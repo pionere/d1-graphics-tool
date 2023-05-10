@@ -2321,22 +2321,22 @@ void LevelCelView::checkTileFlags() const
     dProgress() << progress;
     for (int i = 0; i < this->til->getTileCount(); i++) {
         quint8 ampType = this->amp->getTileType(i);
-        quint8 ampFlags = this->amp->getTileProperties(i);
-        if (ampFlags & (1 << 0)) {
+        quint16 ampFlags = (quint16)this->amp->getTileProperties(i) << 8;
+        if (ampFlags & MAPFLAG_VERTDOOR) {
             // western door
-            if (ampFlags & (1 << 2)) {
+            if (ampFlags & MAPFLAG_VERTARCH) {
                 dProgressWarn() << tr("Tile %1 has both west-door and west-arch flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 4)) {
+            if (ampFlags & MAPFLAG_VERTGRATE) {
                 dProgressWarn() << tr("Tile %1 has both west-door and west-grate flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 6)) {
+            if (ampFlags & MAPFLAG_DIRT) {
                 dProgressWarn() << tr("Tile %1 has both west-door and external flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 7)) {
+            if (ampFlags & MAPFLAG_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both west-door and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -2345,21 +2345,21 @@ void LevelCelView::checkTileFlags() const
                 result = true;
             }
         }
-        if (ampFlags & (1 << 1)) {
+        if (ampFlags & MAPFLAG_HORZDOOR) {
             // eastern door
-            if (ampFlags & (1 << 3)) {
+            if (ampFlags & MAPFLAG_HORZARCH) {
                 dProgressWarn() << tr("Tile %1 has both east-door and east-arch flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 5)) {
+            if (ampFlags & MAPFLAG_HORZGRATE) {
                 dProgressWarn() << tr("Tile %1 has both east-door and east-grate flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 6)) {
+            if (ampFlags & MAPFLAG_DIRT) {
                 dProgressWarn() << tr("Tile %1 has both east-door and external flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 7)) {
+            if (ampFlags & MAPFLAG_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both east-door and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -2368,17 +2368,17 @@ void LevelCelView::checkTileFlags() const
                 result = true;
             }
         }
-        if (ampFlags & (1 << 2)) {
+        if (ampFlags & MAPFLAG_VERTARCH) {
             // western arch
             if (ampFlags & (1 << 4)) {
                 dProgressWarn() << tr("Tile %1 has both west-arch and west-grate flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 6)) {
+            if (ampFlags & MAPFLAG_DIRT) {
                 dProgressWarn() << tr("Tile %1 has both west-arch and external flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 7)) {
+            if (ampFlags & MAPFLAG_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both west-arch and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -2387,17 +2387,17 @@ void LevelCelView::checkTileFlags() const
                 result = true;
             }
         }
-        if (ampFlags & (1 << 3)) {
+        if (ampFlags & MAPFLAG_HORZARCH) {
             // eastern arch
-            if (ampFlags & (1 << 5)) {
+            if (ampFlags & MAPFLAG_HORZGRATE) {
                 dProgressWarn() << tr("Tile %1 has both east-arch and east-grate flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 6)) {
+            if (ampFlags & MAPFLAG_DIRT) {
                 dProgressWarn() << tr("Tile %1 has both east-arch and external flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 7)) {
+            if (ampFlags & MAPFLAG_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both east-arch and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -2406,13 +2406,13 @@ void LevelCelView::checkTileFlags() const
                 result = true;
             }
         }
-        if (ampFlags & (1 << 4)) {
+        if (ampFlags & MAPFLAG_VERTGRATE) {
             // western grate
-            if (ampFlags & (1 << 6)) {
+            if (ampFlags & MAPFLAG_DIRT) {
                 dProgressWarn() << tr("Tile %1 has both west-grate and external flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 7)) {
+            if (ampFlags & MAPFLAG_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both west-grate and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -2421,13 +2421,13 @@ void LevelCelView::checkTileFlags() const
                 result = true;
             }
         }
-        if (ampFlags & (1 << 5)) {
+        if (ampFlags & MAPFLAG_HORZGRATE) {
             // eastern grate
-            if (ampFlags & (1 << 6)) {
+            if (ampFlags & MAPFLAG_DIRT) {
                 dProgressWarn() << tr("Tile %1 has both east-grate and external flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 7)) {
+            if (ampFlags & MAPFLAG_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both east-grate and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -2436,9 +2436,9 @@ void LevelCelView::checkTileFlags() const
                 result = true;
             }
         }
-        if (ampFlags & (1 << 6)) {
+        if (ampFlags & MAPFLAG_DIRT) {
             // external
-            if (ampFlags & (1 << 7)) {
+            if (ampFlags & MAPFLAG_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both external and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -2447,7 +2447,7 @@ void LevelCelView::checkTileFlags() const
                 result = true;
             }
         }
-        if (ampFlags & (1 << 7)) {
+        if (ampFlags & MAPFLAG_STAIRS) {
             // stairs
             if (ampType != 0) {
                 dProgressWarn() << tr("Tile %1 is stairs but its type is also set (not None).").arg(i + 1);
