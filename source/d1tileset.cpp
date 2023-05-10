@@ -113,7 +113,7 @@ bool D1Tileset::load(const OpenAsParam &params)
     this->amp->clear();
     this->spt->clear();
     this->tmi->clear();
-    return true;
+    return false;
 }
 
 void D1Tileset::save(const SaveAsParam &params)
@@ -686,22 +686,46 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
     }
 }
 
-void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int stairsSubtileRef1, int stairsSubtileRef2, int stairsExtSubtileRef1, int stairsExtSubtileRef2, bool silent)
+void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int extTileIndex1, int extTileIndex2, int stairsSubtileRef1, int stairsSubtileRef2, bool silent)
 {
     constexpr unsigned blockSize = 10;
 
-    std::vector<int> &backSubtiles = this->til->getSubtileIndices(backTileIndex1);
     constexpr int backSubtileRef0 = 250;
     constexpr int backSubtileRef2 = 251;
     constexpr int backSubtileRef3 = 252;
     constexpr int backSubtileRef0Replacement = 9;
     constexpr int backSubtileRef2Replacement = 11;
-    if (backSubtiles[0] != (backSubtileRef0 - 1) || backSubtiles[2] != (backSubtileRef2 - 1) || backSubtiles[3] != (backSubtileRef3 - 1)) {
-        if (backSubtiles[0] != (backSubtileRef0Replacement - 1) || backSubtiles[2] != (backSubtileRef2Replacement - 1) || backSubtiles[3] != (backSubtileRef3 - 1))
-            dProgressErr() << QApplication::tr("The back-stairs tile (%1) has invalid (not original) subtiles.").arg(backTileIndex1 + 1);
-        else if (!silent)
-            dProgress() << QApplication::tr("The back-stairs tile (%1) is already patched.").arg(backTileIndex1 + 1);
-        return;
+    {  // check the back subtiles
+        std::vector<int> &backSubtiles = this->til->getSubtileIndices(backTileIndex1);
+        if (backSubtiles[0] != (backSubtileRef0 - 1) || backSubtiles[2] != (backSubtileRef2 - 1) || backSubtiles[3] != (backSubtileRef3 - 1)) {
+            if (backSubtiles[0] != (backSubtileRef0Replacement - 1) || backSubtiles[2] != (backSubtileRef2Replacement - 1) || backSubtiles[3] != (backSubtileRef3 - 1))
+                dProgressErr() << QApplication::tr("The back-stairs tile (%1) has invalid (not original) subtiles.").arg(backTileIndex1 + 1);
+            else if (!silent)
+                dProgress() << QApplication::tr("The back-stairs tile (%1) is already patched.").arg(backTileIndex1 + 1);
+            return;
+        }
+    }
+
+    constexpr int ext1SubtileRef1 = 265;
+    constexpr int ext2SubtileRef1 = 556;
+    constexpr int extSubtileRef1Replacement = 10;
+    { // check the external subtiles
+        std::vector<int> &ext1Subtiles = this->til->getSubtileIndices(extTileIndex1);
+        if (ext1Subtiles[1] != (ext1SubtileRef1 - 1)) {
+            if (ext1Subtiles[1] != (extSubtileRef1Replacement - 1))
+                dProgressErr() << QApplication::tr("The ext-stairs tile (%1) has invalid (not original) subtiles.").arg(extTileIndex1 + 1);
+            else if (!silent)
+                dProgress() << QApplication::tr("The ext-stairs tile (%1) is already patched.").arg(extTileIndex1 + 1);
+            return;
+        }
+        std::vector<int> &ext2Subtiles = this->til->getSubtileIndices(extTileIndex2);
+        if (ext2Subtiles[1] != (ext2SubtileRef1 - 1)) {
+            if (ext2Subtiles[1] != (extSubtileRef1Replacement - 1))
+                dProgressErr() << QApplication::tr("The ext-stairs tile (%1) has invalid (not original) subtiles.").arg(extTileIndex2 + 1);
+            else if (!silent)
+                dProgress() << QApplication::tr("The ext-stairs tile (%1) is already patched.").arg(extTileIndex2 + 1);
+            return;
+        }
     }
 
     std::vector<unsigned> &back0FrameReferences = this->min->getFrameReferences(backSubtileRef0 - 1);
@@ -978,10 +1002,14 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     ReplaceSubtile(this->til, backTileIndex1, 0, backSubtileRef0Replacement, silent); // use common subtile
     ReplaceSubtile(this->til, backTileIndex1, 1, 56, silent);                         // make the back of the stairs non-walkable
     ReplaceSubtile(this->til, backTileIndex1, 2, backSubtileRef2Replacement, silent); // use common subtile
+    ReplaceSubtile(this->til, extTileIndex1, 1, extSubtileRef1Replacement, silent);   // use common subtile
 
     ReplaceSubtile(this->til, backTileIndex2, 0, backSubtileRef0Replacement, silent); // use common subtile
     ReplaceSubtile(this->til, backTileIndex2, 1, 56, silent);                         // make the back of the stairs non-walkable
     ReplaceSubtile(this->til, backTileIndex2, 2, backSubtileRef2Replacement, silent); // use common subtile
+    ReplaceSubtile(this->til, extTileIndex2, 0, backSubtileRef0Replacement, silent);  // use common subtile
+    ReplaceSubtile(this->til, extTileIndex2, 1, extSubtileRef1Replacement, silent);   // use common subtile
+    ReplaceSubtile(this->til, extTileIndex2, 2, backSubtileRef2Replacement, silent);  // use common subtile
 
     if (!silent) {
         dProgress() << QApplication::tr("The back-stair tiles (%1, %2) and the stair-subtiles (%2, %3, %4, %5) are modified.").arg(backTileIndex1 + 1).arg(backTileIndex2 + 1).arg(stairsSubtileRef1).arg(stairsSubtileRef2).arg(stairsExtSubtileRef1).arg(stairsExtSubtileRef2);
@@ -1194,7 +1222,7 @@ void D1Tileset::patch(int dunType, bool silent)
         ReplaceSubtile(this->til, 164 - 1, 2, 168, silent);
         ReplaceSubtile(this->til, 164 - 1, 3, 169, silent);
         // fix the upstairs
-        this->patchCatacombsStairs(72 - 1, 158 - 1, 267, 559, 265, 556, silent);
+        this->patchCatacombsStairs(72 - 1, 158 - 1, 76 - 1, 159 - 1, 267, 559, silent);
         // fix bad artifact
         // Blk2Mcr(288, 7);
         // patch dAutomapData - L2.AMP

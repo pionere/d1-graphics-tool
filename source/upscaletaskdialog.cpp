@@ -252,7 +252,7 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, c
     D1Gfx gfx = D1Gfx();
     gfx.setPalette(pal);
     D1Tileset tileset = D1Tileset(&gfx);
-    // Loading SOL
+    /*// Loading SOL
     if (!tileset.sol->load(solFilePath)) {
         dProgressErr() << tr("Failed loading SOL file: %1.").arg(QDir::toNativeSeparators(solFilePath));
         return;
@@ -267,7 +267,9 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, c
     if (!D1CelTileset::load(*tileset.gfx, celFrameTypes, celFilePath, opParams)) {
         dProgressErr() << tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(celFilePath));
         return;
-    }
+    }*/
+    if (!tileset.load(opParams)
+        return;
     // Patch MIN if requested
     if (params.patchTilesets) {
         tileset.patch(dunType, true);
