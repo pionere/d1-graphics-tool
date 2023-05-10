@@ -321,7 +321,8 @@ void PaletteWidget::initializeUi()
 {
     bool trnMode = this->isTrn;
 
-    this->ui->translationIndexLineEdit->setToolTip(trnMode ? tr("Enter the color index to which the selected color(s) should map to.") : tr("Enter the color index or 256 to replace the selected color(s) of the frame(s) with the given color or transparent pixel."));
+    this->ui->translationIndexSep->setVisible(trnMode);
+    this->ui->translationIndexLineEdit->setVisible(trnMode);
 
     // this->initializePathComboBox();
     this->initializeDisplayComboBox();
@@ -358,6 +359,11 @@ void PaletteWidget::selectColor(const D1GfxPixel &pixel)
     this->selectedLastColorIndex = index;
 
     this->update();
+}
+
+std::pair<int, int> PaletteWidget::getCurrentSelection() const
+{
+    return std::pair<int, int>(this->selectedFirstColorIndex, this->selectedLastColorIndex);
 }
 
 void PaletteWidget::checkTranslationsSelection(const std::vector<quint8> &indexes)
@@ -1032,6 +1038,8 @@ void PaletteWidget::on_colorClearPushButton_clicked()
 
 void PaletteWidget::on_translationIndexLineEdit_returnPressed()
 {
+    // assert(!this->isTrn);
+
     std::pair<int, int> targetRange = ui->translationIndexLineEdit->nonNegRange();
     if (targetRange.first > D1PAL_COLORS || targetRange.second > D1PAL_COLORS) {
         QMessageBox::warning(this, tr("Warning"), tr("Invalid palette index-range."));
@@ -1048,42 +1056,24 @@ void PaletteWidget::on_translationIndexLineEdit_returnPressed()
         return;
     }
 
-    if (this->isTrn) {
-        // New translations
-        static_assert(D1PAL_COLORS <= std::numeric_limits<quint8>::max() + 1, "on_translationIndexLineEdit_returnPressed stores color indices in quint8.");
-        std::vector<quint8> newTranslations;
-        int index = targetRange.first;
-        const int dc = targetRange.first == targetRange.second ? 0 : (targetRange.first < targetRange.second ? 1 : -1);
-        for (int i = firstColorIndex; i <= lastColorIndex; i++, index += dc) {
-            if (index == D1PAL_COLORS) {
-                newTranslations.push_back(i);
-            } else {
-                newTranslations.push_back(index);
-            }
-        }
-        // Build translation editing command and connect it to the current palette widget
-        // to update the PAL/TRN and CEL views when undo/redo is performed
-        EditTranslationCommand *command = new EditTranslationCommand(
-            this->trn, firstColorIndex, lastColorIndex, &newTranslations);
-        QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modify);
-        this->undoStack->push(command);
-    } else {
-        // Color replacement
-        QString replacement = targetRange.first == D1PAL_COLORS ? tr("transparent pixels") : (targetRange.first == targetRange.second ? tr("color %1").arg(targetRange.first) : tr("color %1-%2").arg(targetRange.first).arg(targetRange.second));
-        QString range = this->ui->indexLineEdit->text();
-        QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Pixels with color %1 are going to be replaced with %2. This change is not reversible. Are you sure you want to proceed?").arg(range).arg(replacement), QMessageBox::YesToAll | QMessageBox::Yes | QMessageBox::No);
-        if (reply != QMessageBox::No) {
-            std::vector<std::pair<D1GfxPixel, D1GfxPixel>> replacements;
-            int index = targetRange.first;
-            const int dc = targetRange.first == targetRange.second ? 0 : (targetRange.first < targetRange.second ? 1 : -1);
-            for (int i = firstColorIndex; i <= lastColorIndex; i++, index += dc) {
-                D1GfxPixel replacement = (index == D1PAL_COLORS) ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(index);
-                replacements.push_back(std::pair<D1GfxPixel, D1GfxPixel>(D1GfxPixel::colorPixel(i), replacement));
-            }
-            dMainWindow().changeColor(replacements, reply == QMessageBox::YesToAll);
+    // New translations
+    static_assert(D1PAL_COLORS <= std::numeric_limits<quint8>::max() + 1, "on_translationIndexLineEdit_returnPressed stores color indices in quint8.");
+    std::vector<quint8> newTranslations;
+    int index = targetRange.first;
+    const int dc = targetRange.first == targetRange.second ? 0 : (targetRange.first < targetRange.second ? 1 : -1);
+    for (int i = firstColorIndex; i <= lastColorIndex; i++, index += dc) {
+        if (index == D1PAL_COLORS) {
+            newTranslations.push_back(i);
+        } else {
+            newTranslations.push_back(index);
         }
     }
+    // Build translation editing command and connect it to the current palette widget
+    // to update the PAL/TRN and CEL views when undo/redo is performed
+    EditTranslationCommand *command = new EditTranslationCommand(
+        this->trn, firstColorIndex, lastColorIndex, &newTranslations);
+    QObject::connect(command, &EditTranslationCommand::modified, this, &PaletteWidget::modify);
+    this->undoStack->push(command);
 
     // Release focus to allow keyboard shortcuts to work as expected
     this->on_translationIndexLineEdit_escPressed();

@@ -84,9 +84,11 @@ MainWindow::~MainWindow()
     delete this->saveAsDialog;
     delete this->settingsDialog;
     delete this->exportDialog;
+    delete this->resizeDialog;
+    delete this->upscaleDialog;
     delete this->patchTilesetDialog;
     delete this->patchDungeonDialog;
-    delete this->upscaleDialog;
+    delete this->remapDialog;
     delete this->upscaleTaskDialog;
 }
 
@@ -95,18 +97,32 @@ MainWindow &dMainWindow()
     return *theMainWindow;
 }
 
-void MainWindow::changeColor(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, bool all)
+void MainWindow::changeColors(const RemapParam &params)
 {
+
+    std::vector<std::pair<D1GfxPixel, D1GfxPixel>> replacements;
+    int index = params.colorTo.first;
+    const int dc = params.colorTo.first == params.colorTo.second ? 0 : (params.colorTo.first < params.colorTo.second ? 1 : -1);
+    for (int i = params.colorFrom.first; i <= params.colorFrom.second; i++, index += dc) {
+        D1GfxPixel source = (i == D1PAL_COLORS) ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(i);
+        D1GfxPixel replacement = (index == D1PAL_COLORS) ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(index);
+        replacements.push_back(std::pair<D1GfxPixel, D1GfxPixel>(source, replacement));
+    }
+
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
-    if (all || this->gfx->getFrameCount() == 0) {
-        for (int i = 0; i < this->gfx->getFrameCount(); i++) {
-            D1GfxFrame *frame = this->gfx->getFrame(i);
-            frame->replacePixels(replacements);
-        }
-    } else {
-        int currentFrameIndex = this->celView != nullptr ? this->celView->getCurrentFrameIndex() : this->levelCelView->getCurrentFrameIndex();
-        D1GfxFrame *frame = this->gfx->getFrame(currentFrameIndex);
+    int rangeFrom = params.frames.first;
+    if (rangeFrom != 0) {
+        rangeFrom--;
+    }
+    int rangeTo = params.frames.second;
+    if (rangeTo == 0 || rangeTo > this->gfx->getFrameCount()) {
+        rangeTo = this->gfx->getFrameCount();
+    }
+    rangeTo--;
+
+    for (int i = rangeFrom; i <= rangeTo; i++) {
+        D1GfxFrame *frame = this->gfx->getFrame(i);
         frame->replacePixels(replacements);
     }
     this->gfx->setModified();
@@ -1586,7 +1602,7 @@ void MainWindow::on_actionResize_triggered()
     if (this->resizeDialog == nullptr) {
         this->resizeDialog = new ResizeDialog(this);
     }
-    this->resizeDialog->initialize(this->gfx);
+    this->resizeDialog->initialize();
     this->resizeDialog->show();
 }
 
@@ -2317,6 +2333,15 @@ void MainWindow::on_actionClose_Translation_Base_triggered()
 void MainWindow::on_actionPatch_Translation_Base_triggered()
 {
     this->trnBaseWidget->patchTrn();
+}
+
+void MainWindow::on_actionRemap_Colors_triggered()
+{
+    if (this->remapDialog == nullptr) {
+        this->remapDialog = new RemapDialog(this);
+    }
+    this->remapDialog->initialize(this->palWidget);
+    this->remapDialog->show();
 }
 
 void MainWindow::on_actionUpscaleTask_triggered()

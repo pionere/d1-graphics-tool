@@ -24,6 +24,7 @@
 #include "patchdungeondialog.h"
 #include "patchtilesetdialog.h"
 #include "progressdialog.h"
+#include "remapdialog.h"
 #include "resizedialog.h"
 #include "saveasdialog.h"
 #include "settingsdialog.h"
@@ -79,7 +80,7 @@ public:
     void upscale(const UpscaleParam &params);
 
     void paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type);
-    void changeColor(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, bool all);
+    void changeColors(const RemapParam &params);
     void colorModified();
     void frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first);
     void dunClicked(const QPoint &cell, bool first);
@@ -220,6 +221,8 @@ private slots:
     void on_actionClose_Translation_Base_triggered();
     void on_actionPatch_Translation_Base_triggered();
 
+    void on_actionRemap_Colors_triggered();
+
     void on_actionUpscaleTask_triggered();
 
     void on_actionAbout_triggered();
@@ -265,6 +268,7 @@ private:
     UpscaleDialog *upscaleDialog = nullptr;
     PatchTilesetDialog *patchTilesetDialog = nullptr;
     PatchDungeonDialog *patchDungeonDialog = nullptr;
+    RemapDialog *remapDialog = nullptr;
     UpscaleTaskDialog *upscaleTaskDialog = nullptr;
 
     D1Pal *pal = nullptr;
