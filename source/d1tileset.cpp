@@ -560,8 +560,6 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
 
     this->til->setSubtileIndex(tileIndex, 0, 17 - 1);
     this->til->setSubtileIndex(tileIndex, 1, 18 - 1);
-    // tilSubtiles[0] = 17 - 1;
-    // tilSubtiles[1] = 18 - 1;
 
     std::vector<unsigned> &topLeftFrameReferences = this->min->getFrameReferences(137 - 1);
     std::vector<unsigned> &topRightFrameReferences = this->min->getFrameReferences(138 - 1);
@@ -815,7 +813,7 @@ void D1Tileset::patch(int dunType, bool silent)
         CopyFrame(this->min, this->gfx, 237, 0, 402, 0, silent);
         CopyFrame(this->min, this->gfx, 237, 1, 402, 1, silent);
         // patch subtiles around the pot of Adria to prevent graphical glitch when a player passes it
-        patchTownPot(553, 554, silent);
+        this->patchTownPot(553, 554, silent);
         break;
     case DTYPE_CATHEDRAL:
         // patch dMiniTiles - L1.MIN
@@ -833,36 +831,52 @@ void D1Tileset::patch(int dunType, bool silent)
         // reuse subtiles
         ReplaceSubtile(this->til, 41 - 1, 1, 135, silent);
         // add separate tiles and subtiles for the arches
-        if (this->min->getSubtileCount() < 560)
+        if (this->min->getSubtileCount() < 560) {
             this->createSubtile();
+            this->spt->setSubtileSpecProperty(560 - 1, 2);
+        }
         CopyFrame(this->min, this->gfx, 560, 0, 9, 0, silent);
         CopyFrame(this->min, this->gfx, 560, 1, 9, 1, silent);
-        if (this->min->getSubtileCount() < 561)
+        if (this->min->getSubtileCount() < 561) {
             this->createSubtile();
+            this->spt->setSubtileSpecProperty(561 - 1, 1);
+        }
         CopyFrame(this->min, this->gfx, 561, 0, 11, 0, silent);
         CopyFrame(this->min, this->gfx, 561, 1, 11, 1, silent);
-        if (this->min->getSubtileCount() < 562)
+        if (this->min->getSubtileCount() < 562) {
             this->createSubtile();
+            this->spt->setSubtileSpecProperty(562 - 1, 3);
+        }
         CopyFrame(this->min, this->gfx, 562, 0, 9, 0, silent);
         CopyFrame(this->min, this->gfx, 562, 1, 9, 1, silent);
-        if (this->min->getSubtileCount() < 563)
+        if (this->min->getSubtileCount() < 563) {
             this->createSubtile();
+            this->spt->setSubtileSpecProperty(563 - 1, 4);
+        }
         CopyFrame(this->min, this->gfx, 563, 0, 10, 0, silent);
         CopyFrame(this->min, this->gfx, 563, 1, 10, 1, silent);
-        if (this->min->getSubtileCount() < 564)
+        if (this->min->getSubtileCount() < 564) {
             this->createSubtile();
+            this->spt->setSubtileSpecProperty(564 - 1, 2);
+        }
         CopyFrame(this->min, this->gfx, 564, 0, 159, 0, silent);
         CopyFrame(this->min, this->gfx, 564, 1, 159, 1, silent);
-        if (this->min->getSubtileCount() < 565)
+        if (this->min->getSubtileCount() < 565) {
             this->createSubtile();
+            this->spt->setSubtileSpecProperty(565 - 1, 1);
+        }
         CopyFrame(this->min, this->gfx, 565, 0, 161, 0, silent);
         CopyFrame(this->min, this->gfx, 565, 1, 161, 1, silent);
-        if (this->min->getSubtileCount() < 566)
+        if (this->min->getSubtileCount() < 566) {
             this->createSubtile();
+            this->spt->setSubtileSpecProperty(566 - 1, 3);
+        }
         CopyFrame(this->min, this->gfx, 566, 0, 166, 0, silent);
         CopyFrame(this->min, this->gfx, 566, 1, 166, 1, silent);
-        if (this->min->getSubtileCount() < 567)
+        if (this->min->getSubtileCount() < 567) {
             this->createSubtile();
+            this->spt->setSubtileSpecProperty(567 - 1, 4);
+        }
         CopyFrame(this->min, this->gfx, 567, 0, 167, 0, silent);
         CopyFrame(this->min, this->gfx, 567, 1, 167, 1, silent);
         // - floor tile(3) with vertical arch
@@ -902,7 +916,7 @@ void D1Tileset::patch(int dunType, bool silent)
         Blk2Mcr(82, 4);
         break;
     case DTYPE_HELL:
-        patchHellExit(45 - 1, silent);
+        this->patchHellExit(45 - 1, silent);
         break;
     case DTYPE_NEST:
         // patch dMiniTiles - L6.MIN
