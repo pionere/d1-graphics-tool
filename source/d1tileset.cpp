@@ -411,6 +411,31 @@ static void CopyFrame(D1Min *min, D1Gfx *gfx, int dstSubtileRef, int dstMicroInd
     }*/
 }
 
+static void ChangeTileMapFlags(D1Amp *amp, int tileIndex, int mapFlag, bool add, bool silent)
+{
+    quint8 currProperties = amp->getTileProperties(tileIndex);
+    quint8 newProperties = currProperties;
+    if (add) {
+        newProperties = currProperties | (mapFlag >> 8);
+    } else {
+        newProperties = currProperties & ~(mapFlag >> 8);
+    }
+    if (amp->setTileProperties(tileIndex, newProperties)) {
+        if (!silent) {
+            dProgress() << QApplication::tr("The automap-flag of Tile %1 is changed from %2 to %3.").arg(tileIndex + 1).arg(currProperties).arg(newProperties);
+        }
+    }
+}
+static void ChangeTileMapType(D1Amp *amp, int tileIndex, int mapType, bool silent)
+{
+    quint8 currMapType = amp->getTileType(tileIndex);
+    if (amp->setTileType(tileIndex, mapType)) {
+        if (!silent) {
+            dProgress() << QApplication::tr("The automap-type of Tile %1 is changed from %2 to %3.").arg(tileIndex + 1).arg(currMapType).arg(mapType);
+        }
+    }
+}
+
 void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool silent)
 {
     std::vector<unsigned> &leftFrameReferences = this->min->getFrameReferences(potLeftSubtileRef - 1);
@@ -1242,11 +1267,11 @@ void D1Tileset::patch(int dunType, bool silent)
         // fix bad artifact
         Blk2Mcr(288, 7);
         // patch dAutomapData - L2.AMP
-        this->amp->setTileProperties(42 - 1, this->amp->getTileProperties(42 - 1) & ~(MAPFLAG_HORZARCH >> 8));
-        this->amp->setTileProperties(156 - 1, this->amp->getTileProperties(156 - 1) & ~(MAPFLAG_VERTDOOR >> 8));
-        this->amp->setTileType(156 - 1, 0);
-        this->amp->setTileProperties(157 - 1, this->amp->getTileProperties(157 - 1) & ~(MAPFLAG_HORZDOOR >> 8));
-        this->amp->setTileType(157 - 1, 0);
+        ChangeTileMapFlags(this->amp, 42 - 1, MAPFLAG_HORZARCH, false, silent);
+        ChangeTileMapFlags(this->amp, 156 - 1, MAPFLAG_VERTDOOR, false, silent);
+        ChangeTileMapType(this->amp, 156 - 1, 0, silent);
+        ChangeTileMapFlags(this->amp, 157 - 1, MAPFLAG_HORZDOOR, false, silent);
+        ChangeTileMapType(this->amp, 157 - 1, 0, silent);
         break;
     case DTYPE_CAVES:
         // patch dMiniTiles - L3.MIN
@@ -1256,8 +1281,8 @@ void D1Tileset::patch(int dunType, bool silent)
     case DTYPE_HELL:
         this->patchHellExit(45 - 1, silent);
         // patch dAutomapData - L4.AMP
-        this->amp->setTileProperties(52 - 1, this->amp->getTileProperties(52 - 1) | (MAPFLAG_VERTGRATE >> 8));
-        this->amp->setTileProperties(56 - 1, this->amp->getTileProperties(56 - 1) | (MAPFLAG_HORZGRATE >> 8));
+        ChangeTileMapFlags(this->amp, 52 - 1, MAPFLAG_VERTGRATE, true, silent);
+        ChangeTileMapFlags(this->amp, 56 - 1, MAPFLAG_HORZGRATE, true, silent);
         break;
     case DTYPE_NEST:
         // patch dMiniTiles - L6.MIN
