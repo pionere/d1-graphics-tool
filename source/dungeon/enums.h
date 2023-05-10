@@ -21,24 +21,6 @@ typedef enum window_messages {
 	DVL_DWM_RETOWN,  //   = 0x409, // restart in town
 } window_messages;
 
-// base mapflags set in the corresponding .AMP file (only the lower byte is used)
-typedef enum automap_flags {
-	MAPFLAG_TYPE      = 0x00FF,
-	MAPFLAG_VERTDOOR  = 0x0100,
-	MAPFLAG_HORZDOOR  = 0x0200,
-	MAPFLAG_VERTARCH  = 0x0400,
-	MAPFLAG_HORZARCH  = 0x0800,
-	MAPFLAG_VERTGRATE = 0x1000,
-	MAPFLAG_HORZGRATE = 0x2000,
-	MAPFLAG_DIRT      = 0x4000,
-	MAPFLAG_STAIRS    = 0x8000,
-	// calculated mapflags
-	MAPFLAG_DOVERT      = 0x0010,
-	MAPFLAG_DOHORZ      = 0x0020,
-	MAPFLAG_DOVERT_CAVE = 0x0040,
-	MAPFLAG_DOHORZ_CAVE = 0x0080,
-} automap_flags;
-
 typedef enum item_indexes {
 	IDI_GOLD,
 	IDI_WARRSWORD,
@@ -3409,6 +3391,23 @@ typedef enum _draw_mask_type {
 	DMT_FLOOR_TRN_UP_RIGHT,		// UpperRightMask
 	DMT_EMPTY,
 } _draw_mask_type;
+
+typedef enum _automap_flags {
+	MAPFLAG_TYPE      = 0x00FF,
+	MAPFLAG_VERTDOOR  = 0x0100,
+	MAPFLAG_HORZDOOR  = 0x0200,
+	MAPFLAG_VERTARCH  = 0x0400,
+	MAPFLAG_HORZARCH  = 0x0800,
+	MAPFLAG_VERTGRATE = 0x1000,
+	MAPFLAG_HORZGRATE = 0x2000,
+	MAPFLAG_DIRT      = 0x4000,
+	MAPFLAG_STAIRS    = 0x8000,
+	// calculated mapflags
+	MAPFLAG_DOVERT      = 0x0010,
+	MAPFLAG_DOHORZ      = 0x0020,
+	MAPFLAG_DOVERT_CAVE = 0x0040,
+	MAPFLAG_DOHORZ_CAVE = 0x0080,
+} _automap_flags;
 
 typedef enum dflag {
 	BFLAG_MISSILE_PRE = 0x01, // 'missile-on-floor' flag, used by DrawView to draw missiles in pre-phase

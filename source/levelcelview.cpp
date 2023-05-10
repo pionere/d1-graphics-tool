@@ -2004,56 +2004,55 @@ void LevelCelView::checkSubtileFlags() const
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         const std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
         quint8 solFlags = this->sol->getSubtileProperties(i);
-        if (solFlags & (1 << 1)) {
+        if (solFlags & PFLAG_BLOCK_LIGHT) {
             // block light
-            if (!(solFlags & (1 << 0))) {
+            if (!(solFlags & PFLAG_BLOCK_PATH)) {
                 dProgressWarn() << tr("Subtile %1 blocks the light, but still passable (not solid).").arg(i + 1);
                 result = true;
             }
-            if (!(solFlags & (1 << 2))) {
+            if (!(solFlags & PFLAG_BLOCK_MISSILE)) {
                 dProgressWarn() << tr("Subtile %1 blocks the light, but it does not block missiles.").arg(i + 1);
                 result = true;
             }
         }
-        if (solFlags & (1 << 2)) {
+        if (solFlags & PFLAG_BLOCK_MISSILE) {
             // block missile
-            if (!(solFlags & (1 << 0))) {
+            if (!(solFlags & PFLAG_BLOCK_PATH)) {
                 dProgressWarn() << tr("Subtile %1 blocks missiles, but still passable (not solid).").arg(i + 1);
                 result = true;
             }
         }
-        if (solFlags & (1 << 4)) {
+        /*if (solFlags & PFLAG_TRANS_MASK_LEFT) {
             // left transparency
-            if (!(solFlags & (1 << 3))) {
+            if (!(solFlags & PFLAG_TRANSPARENT)) {
                 dProgressWarn() << tr("Subtile %1 has left transparency enabled, but transparency is not enabled.").arg(i + 1);
                 result = true;
             }
         }
-        if (solFlags & (1 << 5)) {
+        if (solFlags & PFLAG_TRANS_MASK_RIGHT) {
             // right transparency
-            if (!(solFlags & (1 << 3))) {
+            if (!(solFlags & PFLAG_TRANSPARENT)) {
                 dProgressWarn() << tr("Subtile %1 has right transparency enabled, but transparency is not enabled.").arg(i + 1);
                 result = true;
             }
         }
-        if (solFlags & (1 << 7)) {
-            // trap
-            if (!(solFlags & (1 << 0))) {
+        if (solFlags & PFLAG_TRAP_SOURCE) {
+            if (!(solFlags & PFLAG_BLOCK_PATH)) {
                 dProgressWarn() << tr("Subtile %1 is for traps, but still passable (not solid).").arg(i + 1);
                 result = true;
             }
-            if (!(solFlags & (1 << 1))) {
+            if (!(solFlags & PFLAG_BLOCK_LIGHT)) {
                 dProgressWarn() << tr("Subtile %1 is for traps, but it does not block light.").arg(i + 1);
                 result = true;
             }
-            if (!(solFlags & (1 << 2))) {
+            if (!(solFlags & PFLAG_BLOCK_MISSILE)) {
                 dProgressWarn() << tr("Subtile %1 is for traps, but it does not block missiles.").arg(i + 1);
                 result = true;
             }
-        }
+        }*/
         // checks for non-upscaled tilesets
         if (!this->gfx->isUpscaled()) {
-            if (solFlags & ((1 << 1) | (1 << 2))) {
+            if (solFlags & (PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE)) {
                 // block light or missile
                 // - at least one not transparent frame above the floor
                 bool hasColor = false;
@@ -2070,7 +2069,7 @@ void LevelCelView::checkSubtileFlags() const
                     result = true;
                 }
             }
-            if (solFlags & (1 << 7) && this->min->getSubtileHeight() > 1) {
+            /*if (solFlags & PFLAG_TRAP_SOURCE && this->min->getSubtileHeight() > 1) {
                 // trap
                 // - one above the floor is square (left or right)
                 unsigned frameRefLeft = frameRefs[frameRefs.size() - 2 * floorMicros];
@@ -2081,7 +2080,7 @@ void LevelCelView::checkSubtileFlags() const
                     dProgressWarn() << tr("Subtile %1 is for traps, but the frames above the floor is not square on either side.").arg(i + 1);
                     result = true;
                 }
-            }
+            }*/
         }
     }
     if (!result) {
@@ -2099,9 +2098,28 @@ void LevelCelView::checkSubtileFlags() const
     dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         int trapFlags = this->spt->getSubtileTrapProperty(i);
-        if (trapFlags != PTT_NONE && trapFlags != PTT_LEFT && trapFlags != PTT_RIGHT) {
-            dProgressErr() << tr("Subtile %1 has an invalid trap-setting: %2.").arg(i + 1).arg(trapFlags);
-            result = true;
+        if (trapFlags != PTT_NONE) {
+            const std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
+            if (trapFlags == PTT_LEFT && this->min->getSubtileHeight() > 1) {
+                // - one above the floor is square (left or right)
+                unsigned frameRefLeft = frameRefs[frameRefs.size() - 2 * floorMicros];
+                bool trapLeft = frameRefLeft != 0 && this->gfx->getFrame(frameRefLeft - 1)->getFrameType() == D1CEL_FRAME_TYPE::Square;
+                if (!trapLeft) {
+                    dProgressWarn() << tr("Subtile %1 is for traps, but the frames above the floor is not square on the left side.").arg(i + 1);
+                    result = true;
+                }
+            } else if (trapFlags == PTT_RIGHT && this->min->getSubtileHeight() > 1) {
+                // - one above the floor is square (left or right)
+                unsigned frameRefRight = frameRefs[frameRefs.size() - (floorMicros + 1)];
+                bool trapRight = frameRefRight != 0 && this->gfx->getFrame(frameRefRight - 1)->getFrameType() == D1CEL_FRAME_TYPE::Square;
+                if (!trapRight) {
+                    dProgressWarn() << tr("Subtile %1 is for traps, but the frames above the floor is not square on the right side.").arg(i + 1);
+                    result = true;
+                }
+            } else {
+                dProgressErr() << tr("Subtile %1 has an invalid trap-setting: %2.").arg(i + 1).arg(trapFlags);
+                result = true;
+            }
         }
         int specFrame = this->spt->getSubtileSpecProperty(i);
         if ((unsigned)specFrame > ((1 << 6) - 1)) {
@@ -2128,7 +2146,7 @@ void LevelCelView::checkSubtileFlags() const
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         const std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
         quint8 tmiFlags = this->tmi->getSubtileProperties(i);
-        if (tmiFlags & (1 << 0)) {
+        if (tmiFlags & TMIF_WALL_TRANS) {
             // transp.wall
             // - at least one not transparent frame above the floor
             bool hasColor = false;
@@ -2145,46 +2163,46 @@ void LevelCelView::checkSubtileFlags() const
                 result = true;
             }
         }
-        /*if (tmiFlags & (1 << 1)) {
+        /*if (tmiFlags & TMIF_LEFT_REDRAW) {
             // left second pass
-            if (tmiFlags & (1 << 2)) {
+            if (tmiFlags & TMIF_LEFT_FOLIAGE) {
                 dProgressWarn() << tr("Subtile %1 has both second pass and foliage enabled on the left side.").arg(i + 1);
                 result = true;
             }
         }*/
-        /*if (tmiFlags & (1 << 2)) {
+        /*if (tmiFlags & TMIF_LEFT_FOLIAGE) {
             // left foliage
-            if (tmiFlags & (1 << 3)) {
+            if (tmiFlags & TMIF_LEFT_WALL_TRANS) {
                 dProgressWarn() << tr("Subtile %1 has both foliage and floor transparency enabled on the left side.").arg(i + 1);
                 result = true;
             }
         }*/
-        if (tmiFlags & (1 << 3)) {
+        if (tmiFlags & TMIF_LEFT_WALL_TRANS) {
             // left transparency
             // - wall transparency must be set
-            if (!(tmiFlags & (1 << 0))) {
+            if (!(tmiFlags & TMIF_WALL_TRANS)) {
                 dProgressWarn() << tr("Subtile %1 has floor transparency on the left side, but no wall transparency.").arg(i + 1);
                 result = true;
             }
         }
-        /*if (tmiFlags & (1 << 4)) {
+        /*if (tmiFlags & TMIF_RIGHT_REDRAW) {
             // right second pass
-            if (tmiFlags & (1 << 5)) {
+            if (tmiFlags & TMIF_RIGHT_FOLIAGE) {
                 dProgressWarn() << tr("Subtile %1 has both second pass and foliage enabled on the right side.").arg(i + 1);
                 result = true;
             }
         }*/
-        /*if (tmiFlags & (1 << 5)) {
+        /*if (tmiFlags & TMIF_RIGHT_FOLIAGE) {
             // right foliage
-            if (tmiFlags & (1 << 6)) {
+            if (tmiFlags & TMIF_RIGHT_WALL_TRANS) {
                 dProgressWarn() << tr("Subtile %1 has both foliage and floor transparency enabled on the right side.").arg(i + 1);
                 result = true;
             }
         }*/
-        if (tmiFlags & (1 << 6)) {
+        if (tmiFlags & TMIF_RIGHT_WALL_TRANS) {
             // right transparency
             // - wall transparency must be set
-            if (!(tmiFlags & (1 << 0))) {
+            if (!(tmiFlags & TMIF_WALL_TRANS)) {
                 dProgressWarn() << tr("Subtile %1 has floor transparency on the right side, but no wall transparency.").arg(i + 1);
                 result = true;
             }
@@ -2217,20 +2235,20 @@ void LevelCelView::checkSubtileFlags() const
                 else
                     leftAbove = true;
             }
-            if (tmiFlags & (1 << 0)) {
+            if (tmiFlags & TMIF_WALL_TRANS) {
                 // transp.wall
                 // - trapezoid floor on the left without transparency
-                if ((/*(leftType == D1CEL_FRAME_TYPE::LeftTrapezoid || */ (leftAbove && leftPixels > 30)) && !(tmiFlags & (1 << 3))) {
+                if ((/*(leftType == D1CEL_FRAME_TYPE::LeftTrapezoid || */ (leftAbove && leftPixels > 30)) && !(tmiFlags & TMIF_LEFT_WALL_TRANS)) {
                     dProgressWarn() << tr("Subtile %1 has transparency on the wall while the frames above the left floor are not empty, but the left floor with many (%2) foliage pixels does not have transparency.").arg(i + 1).arg(leftPixels);
                     result = true;
                 }
                 // - trapezoid floor on the right without transparency
-                if ((/*(rightType == D1CEL_FRAME_TYPE::RightTrapezoid || */ (rightAbove && rightPixels > 30)) && !(tmiFlags & (1 << 6))) {
+                if ((/*(rightType == D1CEL_FRAME_TYPE::RightTrapezoid || */ (rightAbove && rightPixels > 30)) && !(tmiFlags & TMIF_RIGHT_WALL_TRANS)) {
                     dProgressWarn() << tr("Subtile %1 has transparency on the wall while the frames above the right floor are not empty, but the right floor with many (%2) foliage pixels does not have transparency.").arg(i + 1).arg(rightPixels);
                     result = true;
                 }
             }
-            if ((tmiFlags & (1 << 1)) && (tmiFlags & (1 << 4))) {
+            if ((tmiFlags & TMIF_LEFT_REDRAW) && (tmiFlags & TMIF_RIGHT_REDRAW)) {
                 // left&right second pass
                 // - at least one not transparent frame above the floor or left floor with foliage or right floor with foliage
                 bool hasColor = leftPixels != 0 || rightPixels != 0 || leftAbove || rightAbove;
@@ -2239,7 +2257,7 @@ void LevelCelView::checkSubtileFlags() const
                     result = true;
                 }
             }
-            if ((tmiFlags & (1 << 1)) && !(tmiFlags & (1 << 4))) {
+            if ((tmiFlags & TMIF_LEFT_REDRAW) && !(tmiFlags & TMIF_RIGHT_REDRAW)) {
                 // left second pass without right
                 // - at least one not transparent frame above the floor or left floor is not triangle
                 bool hasColor = leftPixels != 0 || leftAbove;
@@ -2248,7 +2266,7 @@ void LevelCelView::checkSubtileFlags() const
                     result = true;
                 }
             }
-            if (tmiFlags & (1 << 2)) {
+            if (tmiFlags & TMIF_LEFT_FOLIAGE) {
                 // left foliage
                 // - left floor has a foliage pixel
                 if (leftPixels == 0) {
@@ -2256,7 +2274,7 @@ void LevelCelView::checkSubtileFlags() const
                     result = true;
                 }
             }
-            if (tmiFlags & (1 << 3)) {
+            if (tmiFlags & TMIF_LEFT_WALL_TRANS) {
                 // left floor transparency
                 // - must have non-transparent bits above the (left-)floor
                 if (!leftAbove) {
@@ -2264,12 +2282,12 @@ void LevelCelView::checkSubtileFlags() const
                     result = true;
                 }
                 // - must have wall transparency set if there are non-transparent bits above the floor
-                if (leftAbove && !(tmiFlags & (1 << 0))) {
+                if (leftAbove && !(tmiFlags & TMIF_WALL_TRANS)) {
                     dProgressWarn() << tr("Subtile %1 has left floor transparency set, but the parts above the floor are not going to be transparent (wall transparency not set).").arg(i + 1);
                     result = true;
                 }
             }
-            if (tmiFlags & (1 << 4) && !(tmiFlags & (1 << 1))) {
+            if ((tmiFlags & TMIF_RIGHT_REDRAW) && !(tmiFlags & TMIF_LEFT_REDRAW)) {
                 // right second pass without left
                 // - at least one not transparent frame above the floor or right floor is not triangle
                 bool hasColor = rightPixels != 0 || rightAbove;
@@ -2278,7 +2296,7 @@ void LevelCelView::checkSubtileFlags() const
                     result = true;
                 }
             }
-            if (tmiFlags & (1 << 5)) {
+            if (tmiFlags & TMIF_RIGHT_FOLIAGE) {
                 // right foliage
                 // - right floor has a foliage pixel
                 if (rightPixels == 0) {
@@ -2286,7 +2304,7 @@ void LevelCelView::checkSubtileFlags() const
                     result = true;
                 }
             }
-            if (tmiFlags & (1 << 6)) {
+            if (tmiFlags & TMIF_RIGHT_WALL_TRANS) {
                 // right floor transparency
                 // - must have non-transparent bits above the (right-)floor
                 if (!rightAbove) {
@@ -2294,7 +2312,7 @@ void LevelCelView::checkSubtileFlags() const
                     result = true;
                 }
                 // - must have wall transparency set if there are non-transparent bits above the floor
-                if (rightAbove && !(tmiFlags & (1 << 0))) {
+                if (rightAbove && !(tmiFlags & TMIF_WALL_TRANS)) {
                     dProgressWarn() << tr("Subtile %1 has right floor transparency set, but the parts above the floor are not going to be transparent (wall transparency not set).").arg(i + 1);
                     result = true;
                 }
@@ -2321,22 +2339,22 @@ void LevelCelView::checkTileFlags() const
     dProgress() << progress;
     for (int i = 0; i < this->til->getTileCount(); i++) {
         quint8 ampType = this->amp->getTileType(i);
-        quint8 ampFlags = this->amp->getTileProperties(i);
-        if (ampFlags & (1 << 0)) {
+        quint16 ampFlags = (quint16)this->amp->getTileProperties(i) << 8;
+        if (ampFlags & MAPFLAG_VERTDOOR) {
             // western door
-            if (ampFlags & (1 << 2)) {
+            if (ampFlags & MAPFLAG_VERTARCH) {
                 dProgressWarn() << tr("Tile %1 has both west-door and west-arch flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 4)) {
+            if (ampFlags & MAPFLAG_VERTGRATE) {
                 dProgressWarn() << tr("Tile %1 has both west-door and west-grate flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 6)) {
+            if (ampFlags & MAPFLAG_DIRT) {
                 dProgressWarn() << tr("Tile %1 has both west-door and external flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 7)) {
+            if (ampFlags & MAPFLAG_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both west-door and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -2345,21 +2363,21 @@ void LevelCelView::checkTileFlags() const
                 result = true;
             }
         }
-        if (ampFlags & (1 << 1)) {
+        if (ampFlags & MAPFLAG_HORZDOOR) {
             // eastern door
-            if (ampFlags & (1 << 3)) {
+            if (ampFlags & MAPFLAG_HORZARCH) {
                 dProgressWarn() << tr("Tile %1 has both east-door and east-arch flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 5)) {
+            if (ampFlags & MAPFLAG_HORZGRATE) {
                 dProgressWarn() << tr("Tile %1 has both east-door and east-grate flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 6)) {
+            if (ampFlags & MAPFLAG_DIRT) {
                 dProgressWarn() << tr("Tile %1 has both east-door and external flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 7)) {
+            if (ampFlags & MAPFLAG_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both east-door and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -2368,17 +2386,17 @@ void LevelCelView::checkTileFlags() const
                 result = true;
             }
         }
-        if (ampFlags & (1 << 2)) {
+        if (ampFlags & MAPFLAG_VERTARCH) {
             // western arch
-            if (ampFlags & (1 << 4)) {
+            if (ampFlags & MAPFLAG_VERTGRATE) {
                 dProgressWarn() << tr("Tile %1 has both west-arch and west-grate flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 6)) {
+            if (ampFlags & MAPFLAG_DIRT) {
                 dProgressWarn() << tr("Tile %1 has both west-arch and external flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 7)) {
+            if (ampFlags & MAPFLAG_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both west-arch and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -2387,17 +2405,17 @@ void LevelCelView::checkTileFlags() const
                 result = true;
             }
         }
-        if (ampFlags & (1 << 3)) {
+        if (ampFlags & MAPFLAG_HORZARCH) {
             // eastern arch
-            if (ampFlags & (1 << 5)) {
+            if (ampFlags & MAPFLAG_HORZGRATE) {
                 dProgressWarn() << tr("Tile %1 has both east-arch and east-grate flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 6)) {
+            if (ampFlags & MAPFLAG_DIRT) {
                 dProgressWarn() << tr("Tile %1 has both east-arch and external flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 7)) {
+            if (ampFlags & MAPFLAG_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both east-arch and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -2406,13 +2424,13 @@ void LevelCelView::checkTileFlags() const
                 result = true;
             }
         }
-        if (ampFlags & (1 << 4)) {
+        if (ampFlags & MAPFLAG_VERTGRATE) {
             // western grate
-            if (ampFlags & (1 << 6)) {
+            if (ampFlags & MAPFLAG_DIRT) {
                 dProgressWarn() << tr("Tile %1 has both west-grate and external flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 7)) {
+            if (ampFlags & MAPFLAG_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both west-grate and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -2421,13 +2439,13 @@ void LevelCelView::checkTileFlags() const
                 result = true;
             }
         }
-        if (ampFlags & (1 << 5)) {
+        if (ampFlags & MAPFLAG_HORZGRATE) {
             // eastern grate
-            if (ampFlags & (1 << 6)) {
+            if (ampFlags & MAPFLAG_DIRT) {
                 dProgressWarn() << tr("Tile %1 has both east-grate and external flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & (1 << 7)) {
+            if (ampFlags & MAPFLAG_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both east-grate and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -2436,9 +2454,9 @@ void LevelCelView::checkTileFlags() const
                 result = true;
             }
         }
-        if (ampFlags & (1 << 6)) {
+        if (ampFlags & MAPFLAG_DIRT) {
             // external
-            if (ampFlags & (1 << 7)) {
+            if (ampFlags & MAPFLAG_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both external and stairs flags set.").arg(i + 1);
                 result = true;
             }
@@ -2447,7 +2465,7 @@ void LevelCelView::checkTileFlags() const
                 result = true;
             }
         }
-        if (ampFlags & (1 << 7)) {
+        if (ampFlags & MAPFLAG_STAIRS) {
             // stairs
             if (ampType != 0) {
                 dProgressWarn() << tr("Tile %1 is stairs but its type is also set (not None).").arg(i + 1);

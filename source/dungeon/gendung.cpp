@@ -156,7 +156,6 @@ void InitLvlDungeon()
 	case DTYPE_CATACOMBS:
 		// patch dMegaTiles, dMiniTiles and dSolidTable - L2.TIL, L2.MIN, L2.SOL
 		// reuse subtiles
-		assert(pTiles[41][1] == 139 || pTiles[41][1] == 135);
 		pTiles[41][1] = 135;
 		// add separate tiles and subtiles for the arches
 		// - floor tile(3) with vertical arch
@@ -196,10 +195,21 @@ void InitLvlDungeon()
 		// pSubtiles[567][0] = pSubtiles[167][0];
 		// pSubtiles[567][1] = pSubtiles[167][1];
 		// make the back of the stairs non-walkable
+		// - reset flags of the 'new' floor tiles with arches
+		for (int ii = 0; ii < 8; ii++) {
+			nSolidTable[559 + ii] = false;
+			nBlockTable[559 + ii] = false;
+			nMissileTable[559 + ii] = false;
+		}
+		// fix the upstairs
+		// - make the back of the stairs non-walkable
 		pTiles[72][1] = 56;
 		nSolidTable[252] = true;
 		nBlockTable[252] = true;
 		nMissileTable[252] = true;
+		// - make the stair-floor non light-blocker
+		nBlockTable[267] = false;
+		nBlockTable[559] = false;
 		break;
 	case DTYPE_CAVES:
 		nSolidTable[249] = false; // sync tile 68 and 69 by making subtile 249 of tile 68 walkable.

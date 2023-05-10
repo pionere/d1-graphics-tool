@@ -411,6 +411,48 @@ static void CopyFrame(D1Min *min, D1Gfx *gfx, int dstSubtileRef, int dstMicroInd
     }*/
 }
 
+static void ChangeTileMapFlags(D1Amp *amp, int tileIndex, int mapFlag, bool add, bool silent)
+{
+    quint8 currProperties = amp->getTileProperties(tileIndex);
+    quint8 newProperties = currProperties;
+    if (add) {
+        newProperties = currProperties | (mapFlag >> 8);
+    } else {
+        newProperties = currProperties & ~(mapFlag >> 8);
+    }
+    if (amp->setTileProperties(tileIndex, newProperties)) {
+        if (!silent) {
+            dProgress() << QApplication::tr("The automap flags of Tile %1 is changed from %2 to %3.").arg(tileIndex + 1).arg(currProperties).arg(newProperties);
+        }
+    }
+}
+
+static void ChangeTileMapType(D1Amp *amp, int tileIndex, int mapType, bool silent)
+{
+    quint8 currMapType = amp->getTileType(tileIndex);
+    if (amp->setTileType(tileIndex, mapType)) {
+        if (!silent) {
+            dProgress() << QApplication::tr("The automap type of Tile %1 is changed from %2 to %3.").arg(tileIndex + 1).arg(currMapType).arg(mapType);
+        }
+    }
+}
+
+static void ChangeSubtileSolFlags(D1Sol *sol, int subtileIndex, int solFlag, bool add, bool silent)
+{
+    quint8 currProperties = sol->getSubtileProperties(subtileIndex);
+    quint8 newProperties = currProperties;
+    if (add) {
+        newProperties = currProperties | solFlag;
+    } else {
+        newProperties = currProperties & ~solFlag;
+    }
+    if (sol->setSubtileProperties(subtileIndex, newProperties)) {
+        if (!silent) {
+            dProgress() << QApplication::tr("The SOL flags of Subtile %1 is changed from %2 to %3.").arg(subtileIndex + 1).arg(currProperties).arg(newProperties);
+        }
+    }
+}
+
 void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool silent)
 {
     std::vector<unsigned> &leftFrameReferences = this->min->getFrameReferences(potLeftSubtileRef - 1);
@@ -981,13 +1023,13 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
 
     this->gfx->setModified();
 
-    // patch TMI
     quint8 properties;
-    this->tmi->setSubtileProperties(backSubtileRef3 - 1, TMIF_LEFT_REDRAW | TMIF_RIGHT_REDRAW);
+    // patch TMI
+    /*this->tmi->setSubtileProperties(backSubtileRef3 - 1, TMIF_LEFT_REDRAW | TMIF_RIGHT_REDRAW);
     this->tmi->setSubtileProperties(stairsSubtileRef1 - 1, 0);
     this->tmi->setSubtileProperties(stairsSubtileRef2 - 1, 0);
     this->tmi->setSubtileProperties(ext1SubtileRef1 - 1, 0);
-    this->tmi->setSubtileProperties(ext2SubtileRef1 - 1, 0);
+    this->tmi->setSubtileProperties(ext2SubtileRef1 - 1, 0);*/
 
     // patch SOL
     properties = this->sol->getSubtileProperties(backSubtileRef3 - 1);
@@ -1155,6 +1197,8 @@ void D1Tileset::patch(int dunType, bool silent)
         Blk2Mcr(138, 0);
         Blk2Mcr(138, 1);
         Blk2Mcr(140, 1);
+        // patch dSolidTable - L1.SOL
+        ChangeSubtileSolFlags(this->sol, 8 - 1, PFLAG_BLOCK_MISSILE, false, silent); // the only column which was blocking missiles
         break;
     case DTYPE_CATACOMBS:
         // patch dMegaTiles and dMiniTiles - L2.TIL, L2.MIN
@@ -1240,24 +1284,35 @@ void D1Tileset::patch(int dunType, bool silent)
         // fix the upstairs
         this->patchCatacombsStairs(72 - 1, 158 - 1, 76 - 1, 159 - 1, 267, 559, silent);
         // fix bad artifact
-        // Blk2Mcr(288, 7);
+        Blk2Mcr(288, 7);
         // patch dAutomapData - L2.AMP
-        this->amp->setTileProperties(42 - 1, this->amp->getTileProperties(42 - 1) & ~(MAPFLAG_HORZARCH >> 8));
-        this->amp->setTileProperties(156 - 1, this->amp->getTileProperties(156 - 1) & ~(MAPFLAG_VERTDOOR >> 8));
-        this->amp->setTileType(156 - 1, 0);
-        this->amp->setTileProperties(157 - 1, this->amp->getTileProperties(157 - 1) & ~(MAPFLAG_HORZDOOR >> 8));
-        this->amp->setTileType(157 - 1, 0);
+        ChangeTileMapFlags(this->amp, 42 - 1, MAPFLAG_HORZARCH, false, silent);
+        ChangeTileMapFlags(this->amp, 156 - 1, MAPFLAG_VERTDOOR, false, silent);
+        ChangeTileMapType(this->amp, 156 - 1, 0, silent);
+        ChangeTileMapFlags(this->amp, 157 - 1, MAPFLAG_HORZDOOR, false, silent);
+        ChangeTileMapType(this->amp, 157 - 1, 0, silent);
         break;
     case DTYPE_CAVES:
         // patch dMiniTiles - L3.MIN
         // fix bad artifact
         Blk2Mcr(82, 4);
+        // patch dSolidTable - L3.SOL
+        ChangeSubtileSolFlags(this->sol, 249 - 1, PFLAG_BLOCK_PATH, false, silent); // sync tile 68 and 69 by making subtile 249 of tile 68 walkable.
         break;
     case DTYPE_HELL:
         this->patchHellExit(45 - 1, silent);
         // patch dAutomapData - L4.AMP
-        this->amp->setTileProperties(52 - 1, this->amp->getTileProperties(52 - 1) | (MAPFLAG_VERTGRATE >> 8));
-        this->amp->setTileProperties(56 - 1, this->amp->getTileProperties(56 - 1) | (MAPFLAG_HORZGRATE >> 8));
+        ChangeTileMapFlags(this->amp, 52 - 1, MAPFLAG_VERTGRATE, true, silent);
+        ChangeTileMapFlags(this->amp, 56 - 1, MAPFLAG_HORZGRATE, true, silent);
+        // patch dSolidTable - L4.SOL
+        ChangeSubtileSolFlags(this->sol, 141 - 1, PFLAG_BLOCK_MISSILE, false, silent); // fix missile-blocking tile of down-stairs.
+        // fix missile-blocking tile of down-stairs + fix non-walkable tile of down-stairs
+        ChangeSubtileSolFlags(this->sol, 137 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_MISSILE, false, silent);
+        ChangeSubtileSolFlags(this->sol, 130 - 1, PFLAG_BLOCK_PATH, true, silent); // make the inner tiles of the down-stairs non-walkable I.
+        ChangeSubtileSolFlags(this->sol, 132 - 1, PFLAG_BLOCK_PATH, true, silent); // make the inner tiles of the down-stairs non-walkable II.
+        ChangeSubtileSolFlags(this->sol, 131 - 1, PFLAG_BLOCK_PATH, true, silent); // make the inner tiles of the down-stairs non-walkable III.
+        // fix all-blocking tile on the diablo-level
+        ChangeSubtileSolFlags(this->sol, 211 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         break;
     case DTYPE_NEST:
         // patch dMiniTiles - L6.MIN
@@ -1267,6 +1322,10 @@ void D1Tileset::patch(int dunType, bool silent)
         // fix bad artifacts
         Blk2Mcr(132, 7);
         Blk2Mcr(366, 1);
+        // patch dSolidTable - L6.SOL
+        ChangeSubtileSolFlags(this->sol, 390 - 1, PFLAG_BLOCK_PATH, false, silent); // make a pool tile walkable I.
+        ChangeSubtileSolFlags(this->sol, 413 - 1, PFLAG_BLOCK_PATH, false, silent); // make a pool tile walkable II.
+        ChangeSubtileSolFlags(this->sol, 416 - 1, PFLAG_BLOCK_PATH, false, silent); // make a pool tile walkable III.
         break;
     case DTYPE_CRYPT:
         // patch dMegaTiles - L5.TIL
@@ -1334,6 +1393,27 @@ void D1Tileset::patch(int dunType, bool silent)
         Blk2Mcr(178, 1);
         Blk2Mcr(179, 0);
         Blk2Mcr(179, 1);
+        // patch dSolidTable - L5.SOL
+        ChangeSubtileSolFlags(this->sol, 143 - 1, PFLAG_BLOCK_PATH, false, silent); // make right side of down-stairs consistent (walkable)
+        ChangeSubtileSolFlags(this->sol, 148 - 1, PFLAG_BLOCK_PATH, false, silent); // make the back of down-stairs consistent (walkable)
+        // make collision-checks more reasonable
+        //  - prevent non-crossable floor-tile configurations I.
+        ChangeSubtileSolFlags(this->sol, 461 - 1, PFLAG_BLOCK_PATH, false, silent);
+        //  - set top right tile of an arch non-walkable (full of lava) - skip to prevent lockout
+        // ChangeSubtileSolFlags(this->sol, 471 - 1, PFLAG_BLOCK_PATH, true, silent);
+        //  - set top right tile of a pillar walkable (just a small obstacle)
+        ChangeSubtileSolFlags(this->sol, 481 - 1, PFLAG_BLOCK_PATH, false, silent);
+        //  - tile 491 is the same as tile 594 which is not solid
+        //  - prevents non-crossable floor-tile configurations
+        ChangeSubtileSolFlags(this->sol, 491 - 1, PFLAG_BLOCK_PATH, false, silent);
+        //  - set bottom left tile of a rock non-walkable (rather large obstacle, feet of the hero does not fit)
+        //  - prevents non-crossable floor-tile configurations
+        ChangeSubtileSolFlags(this->sol, 523 - 1, PFLAG_BLOCK_PATH, true, silent);
+        //  - set the top right tile of a floor mega walkable (similar to 594 which is not solid)
+        ChangeSubtileSolFlags(this->sol, 570 - 1, PFLAG_BLOCK_PATH, false, silent);
+        //  - prevent non-crossable floor-tile configurations II.
+        ChangeSubtileSolFlags(this->sol, 598 - 1, PFLAG_BLOCK_PATH, false, silent);
+        ChangeSubtileSolFlags(this->sol, 600 - 1, PFLAG_BLOCK_PATH, false, silent);
         break;
     }
     for (auto it = deletedFrames.crbegin(); it != deletedFrames.crend(); it++) {

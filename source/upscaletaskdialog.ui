@@ -142,8 +142,11 @@
       </item>
       <item row="3" column="1">
        <widget class="QCheckBox" name="patchTilesetsCheckBox">
+        <property name="checked">
+         <bool>true</bool>
+        </property>
         <property name="toolTip">
-         <string>Eliminate useless frames of the original tilesets</string>
+         <string>Fix and optimize the original tilesets</string>
         </property>
        </widget>
       </item>
