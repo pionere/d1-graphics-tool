@@ -80,9 +80,9 @@ void LevelTabSubtileWidget::update()
     int sptSpecCel = this->spt->getSubtileSpecProperty(subtileIdx);
     std::vector<unsigned> &frames = this->min->getFrameReferences(subtileIdx);
 
-    this->ui->sol0->setChecked((solFlags & 1 << 0) != 0);
-    this->ui->sol1->setChecked((solFlags & 1 << 1) != 0);
-    this->ui->sol2->setChecked((solFlags & 1 << 2) != 0);
+    this->ui->sol0->setChecked((solFlags & PFLAG_BLOCK_PATH) != 0);
+    this->ui->sol1->setChecked((solFlags & PFLAG_BLOCK_LIGHT) != 0);
+    this->ui->sol2->setChecked((solFlags & PFLAG_BLOCK_MISSILE) != 0);
 
     if (sptTrapFlags == PTT_NONE)
         this->ui->trapNoneRadioButton->setChecked(true);
@@ -92,13 +92,13 @@ void LevelTabSubtileWidget::update()
         this->ui->trapRightRadioButton->setChecked(true);
     this->ui->specCelLineEdit->setText(QString::number(sptSpecCel));
 
-    this->ui->tmi0->setChecked((tmiFlags & 1 << 0) != 0);
-    this->ui->tmi1->setChecked((tmiFlags & 1 << 1) != 0);
-    this->ui->tmi2->setChecked((tmiFlags & 1 << 2) != 0);
-    this->ui->tmi3->setChecked((tmiFlags & 1 << 3) != 0);
-    this->ui->tmi4->setChecked((tmiFlags & 1 << 4) != 0);
-    this->ui->tmi5->setChecked((tmiFlags & 1 << 5) != 0);
-    this->ui->tmi6->setChecked((tmiFlags & 1 << 6) != 0);
+    this->ui->tmi0->setChecked((tmiFlags & TMIF_WALL_TRANS) != 0);
+    this->ui->tmi1->setChecked((tmiFlags & TMIF_LEFT_REDRAW) != 0);
+    this->ui->tmi2->setChecked((tmiFlags & TMIF_LEFT_FOLIAGE) != 0);
+    this->ui->tmi3->setChecked((tmiFlags & TMIF_LEFT_WALL_TRANS) != 0);
+    this->ui->tmi4->setChecked((tmiFlags & TMIF_RIGHT_REDRAW) != 0);
+    this->ui->tmi5->setChecked((tmiFlags & TMIF_RIGHT_FOLIAGE) != 0);
+    this->ui->tmi6->setChecked((tmiFlags & TMIF_RIGHT_WALL_TRANS) != 0);
 
     // update combo box of the frames
     for (int i = this->ui->framesComboBox->count() - frames.size(); i > 0; i--)
@@ -146,11 +146,11 @@ void LevelTabSubtileWidget::updateSolProperty()
 {
     quint8 flags = 0;
     if (this->ui->sol0->checkState())
-        flags |= 1 << 0;
+        flags |= PFLAG_BLOCK_PATH;
     if (this->ui->sol1->checkState())
-        flags |= 1 << 1;
+        flags |= PFLAG_BLOCK_LIGHT;
     if (this->ui->sol2->checkState())
-        flags |= 1 << 2;
+        flags |= PFLAG_BLOCK_MISSILE;
 
     this->setSolProperty(flags);
 }
@@ -168,19 +168,19 @@ void LevelTabSubtileWidget::updateTmiProperty()
 {
     quint8 flags = 0;
     if (this->ui->tmi0->checkState())
-        flags |= 1 << 0;
+        flags |= TMIF_WALL_TRANS;
     if (this->ui->tmi1->checkState())
-        flags |= 1 << 1;
+        flags |= TMIF_LEFT_REDRAW;
     if (this->ui->tmi2->checkState())
-        flags |= 1 << 2;
+        flags |= TMIF_LEFT_FOLIAGE;
     if (this->ui->tmi3->checkState())
-        flags |= 1 << 3;
+        flags |= TMIF_LEFT_WALL_TRANS;
     if (this->ui->tmi4->checkState())
-        flags |= 1 << 4;
+        flags |= TMIF_RIGHT_REDRAW;
     if (this->ui->tmi5->checkState())
-        flags |= 1 << 5;
+        flags |= TMIF_RIGHT_FOLIAGE;
     if (this->ui->tmi6->checkState())
-        flags |= 1 << 6;
+        flags |= TMIF_RIGHT_WALL_TRANS;
 
     this->setTmiProperty(flags);
 }
