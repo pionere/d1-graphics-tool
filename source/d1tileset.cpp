@@ -113,7 +113,7 @@ bool D1Tileset::load(const OpenAsParam &params)
     this->amp->clear();
     this->spt->clear();
     this->tmi->clear();
-    return true;
+    return false;
 }
 
 void D1Tileset::save(const SaveAsParam &params)
