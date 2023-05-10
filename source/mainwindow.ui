@@ -448,7 +448,7 @@
   </action>
   <action name="actionOpen_PAL">
    <property name="text">
-    <string>Open</string>
+    <string>Open...</string>
    </property>
    <property name="shortcut">
     <string notr="true">Ctrl+P</string>
@@ -456,7 +456,7 @@
   </action>
   <action name="actionOpen_Translation_Unique">
    <property name="text">
-    <string>Open</string>
+    <string>Open...</string>
    </property>
    <property name="shortcut">
     <string notr="true">Ctrl+U</string>
@@ -464,7 +464,7 @@
   </action>
   <action name="actionOpen_Translation_Base">
    <property name="text">
-    <string>Open</string>
+    <string>Open...</string>
    </property>
    <property name="shortcut">
     <string notr="true">Ctrl+T</string>
