@@ -33,7 +33,7 @@ void RemapDialog::on_remapButton_clicked()
     RemapParam params;
 
     line = this->ui->colorFrom0LineEdit->text();
-    params.colorFrom.first = line->toShort();
+    params.colorFrom.first = line.toShort();
     line = this->ui->colorFrom1LineEdit->text();
     if (line.isEmpty()) {
         params.colorFrom.second = params.colorFrom.first;
@@ -41,7 +41,7 @@ void RemapDialog::on_remapButton_clicked()
         params.colorFrom.second = line.toShort();
     }
     line = this->ui->colorTo0LineEdit->text();
-    params.colorTo.first = line->toShort();
+    params.colorTo.first = line.toShort();
     line = this->ui->colorTo1LineEdit->text();
     if (line.isEmpty()) {
         params.colorTo.second = params.colorTo.first;

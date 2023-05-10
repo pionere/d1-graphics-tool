@@ -90,7 +90,6 @@ void LevelTabTileWidget::update()
     this->ui->amp5->setChecked((ampProperty & (MAPFLAG_HORZGRATE >> 8)) != 0);
     this->ui->amp6->setChecked((ampProperty & (MAPFLAG_DIRT >> 8)) != 0);
     this->ui->amp7->setChecked((ampProperty & (MAPFLAG_STAIRS >> 8)) != 0);
-
     // update combo box of the subtiles
     for (int i = this->ui->subtilesComboBox->count() - subtiles.size(); i > 0; i--)
         this->ui->subtilesComboBox->removeItem(0);

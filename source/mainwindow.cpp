@@ -84,9 +84,11 @@ MainWindow::~MainWindow()
     delete this->saveAsDialog;
     delete this->settingsDialog;
     delete this->exportDialog;
+    delete this->resizeDialog;
+    delete this->upscaleDialog;
     delete this->patchTilesetDialog;
     delete this->patchDungeonDialog;
-    delete this->upscaleDialog;
+    delete this->remapDialog;
     delete this->upscaleTaskDialog;
 }
 
