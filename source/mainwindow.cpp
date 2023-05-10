@@ -110,21 +110,25 @@ void MainWindow::changeColors(const RemapParam &params)
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
-    int rangeFrom = params.frames.first;
-    if (rangeFrom != 0) {
-        rangeFrom--;
-    }
-    int rangeTo = params.frames.second;
-    if (rangeTo == 0 || rangeTo >= this->gfx->getFrameCount()) {
-        rangeTo = this->gfx->getFrameCount();
-    }
-    rangeTo--;
+    if (this->gfxset != nullptr) {
+        this->gfxset->replacePixels(replacements, params);
+    } else {
+        int rangeFrom = params.frames.first;
+        if (rangeFrom != 0) {
+            rangeFrom--;
+        }
+        int rangeTo = params.frames.second;
+        if (rangeTo == 0 || rangeTo >= this->gfx->getFrameCount()) {
+            rangeTo = this->gfx->getFrameCount();
+        }
+        rangeTo--;
 
-    for (int i = rangeFrom; i <= rangeTo; i++) {
-        D1GfxFrame *frame = this->gfx->getFrame(i);
-        frame->replacePixels(replacements);
+        for (int i = rangeFrom; i <= rangeTo; i++) {
+            D1GfxFrame *frame = this->gfx->getFrame(i);
+            frame->replacePixels(replacements);
+        }
+        this->gfx->setModified();
     }
-    this->gfx->setModified();
 
     // Clear loading message from status bar
     ProgressDialog::done();

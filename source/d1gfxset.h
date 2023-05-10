@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "d1gfx.h"
+#include "remapdialog.h"
 #include "openasdialog.h"
 #include "saveasdialog.h"
 
@@ -26,6 +27,7 @@ public:
 
     int getGfxCount() const;
     D1Gfx *getGfx(int i) const;
+    void replacePixels(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params);
     void frameModified(D1GfxFrame *frame);
     void setPalette(D1Pal *pal);
 

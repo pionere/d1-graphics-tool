@@ -179,6 +179,27 @@ D1Gfx *D1Gfxset::getGfx(int index) const
     return this->gfxList[index];
 }
 
+void D1Gfxset::replacePixels(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params)
+{
+    for (D1Gfx *gfx : this->gfxList) {
+        int rangeFrom = params.frames.first;
+        if (rangeFrom != 0) {
+            rangeFrom--;
+        }
+        int rangeTo = params.frames.second;
+        if (rangeTo == 0 || rangeTo >= gfx->getFrameCount()) {
+            rangeTo = gfx->getFrameCount();
+        }
+        rangeTo--;
+
+        for (int i = rangeFrom; i <= rangeTo; i++) {
+            D1GfxFrame *frame = gfx->getFrame(i);
+            frame->replacePixels(replacements);
+        }
+        gfx->setModified();
+    }
+}
+
 void D1Gfxset::frameModified(D1GfxFrame *frame)
 {
     for (D1Gfx *gfx : this->gfxList) {
