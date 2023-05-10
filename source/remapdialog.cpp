@@ -29,12 +29,25 @@ void RemapDialog::initialize(PaletteWidget *palWidget)
 
 void RemapDialog::on_remapButton_clicked()
 {
+    QString line;
     RemapParam params;
 
-    params.colorFrom.first = this->ui->colorFrom0LineEdit->nonNegInt();
-    params.colorFrom.second = this->ui->colorFrom1LineEdit->nonNegInt();
-    params.colorTo.first = this->ui->colorTo0LineEdit->nonNegInt();
-    params.colorTo.second = this->ui->colorTo1LineEdit->nonNegInt();
+    line = this->ui->colorFrom0LineEdit->text();
+    params.colorFrom.first = line->toShort();
+    line = this->ui->colorFrom1LineEdit->text();
+    if (line.isEmpty()) {
+        params.colorFrom.second = params.colorFrom.first;
+    } else {
+        params.colorFrom.second = line.toShort();
+    }
+    line = this->ui->colorTo0LineEdit->text();
+    params.colorTo.first = line->toShort();
+    line = this->ui->colorTo1LineEdit->text();
+    if (line.isEmpty()) {
+        params.colorTo.second = params.colorTo.first;
+    } else {
+        params.colorTo.second = line.toShort();
+    }
     params.frames.first = this->ui->range0LineEdit->nonNegInt();
     params.frames.second = this->ui->range1LineEdit->nonNegInt();
 
