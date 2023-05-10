@@ -1084,7 +1084,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     // update available menu entries
     this->ui->menuEdit->setEnabled(fileType != 4);
     this->ui->menuView->setEnabled(true);
-    this->ui->menuPalette->setEnabled(true);
+    this->ui->menuColors->setEnabled(true);
     this->ui->actionExport->setEnabled(fileType != 4);
     this->ui->actionSave->setEnabled(true);
     this->ui->actionSaveAs->setEnabled(true);
@@ -1362,7 +1362,7 @@ void MainWindow::on_actionClose_triggered()
     this->ui->menuView->setEnabled(false);
     this->ui->menuTileset->setEnabled(false);
     this->ui->menuDungeon->setEnabled(false);
-    this->ui->menuPalette->setEnabled(false);
+    this->ui->menuColors->setEnabled(false);
     this->ui->actionExport->setEnabled(false);
     this->ui->actionSave->setEnabled(false);
     this->ui->actionSaveAs->setEnabled(false);
