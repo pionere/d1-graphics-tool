@@ -95,20 +95,44 @@ MainWindow &dMainWindow()
     return *theMainWindow;
 }
 
-void MainWindow::changeColor(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, bool all)
+void MainWindow::changeColors(const RemapParam &params)
 {
+    int firstColorIndex = params.colorFrom.first;
+    int lastColorIndex = params.colorFrom.first;
+    std::pair<int, int> targetRange = params.colorTo;
+    if (firstColorIndex > lastColorIndex) {
+        std::swap(firstColorIndex, lastColorIndex);
+        std::swap(targetRange.first, targetRange.second);
+    }
+
+    if (targetRange.first != targetRange.second && abs(targetRange.second - targetRange.first) != lastColorIndex - firstColorIndex) {
+        QMessageBox::warning(this, tr("Error"), tr("Source and target selection length do not match."));
+        return;
+    }
+
+    std::vector<std::pair<D1GfxPixel, D1GfxPixel>> replacements;
+    int index = targetRange.first;
+    const int dc = targetRange.first == targetRange.second ? 0 : (targetRange.first < targetRange.second ? 1 : -1);
+    for (int i = firstColorIndex; i <= lastColorIndex; i++, index += dc) {
+        D1GfxPixel source = (i == D1PAL_COLORS) ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(i);
+        D1GfxPixel replacement = (index == D1PAL_COLORS) ? D1GfxPixel::transparentPixel() : D1GfxPixel::colorPixel(index);
+        replacements.push_back(std::pair<D1GfxPixel, D1GfxPixel>(source, replacement));
+    }
+
+    int rangeFrom = params.frames.first;
+    if (rangeFrom != 0) {
+        rangeFrom--;
+    }
+    int rangeTo = params.frames.second;
+    if (rangeTo == 0 || rangeTo >= this->gfx->getFrameCount()) {
+        rangeTo = this->gfx->getFrameCount();
+    }
+    rangeTo--;
+
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
-    if (this->gfxsetView != nullptr) {
-        this->gfxsetView->changeColor(replacements, all);
-    } else if (all || this->gfx->getFrameCount() == 0) {
-        for (int i = 0; i < this->gfx->getFrameCount(); i++) {
-            D1GfxFrame *frame = this->gfx->getFrame(i);
-            frame->replacePixels(replacements);
-        }
-    } else {
-        int currentFrameIndex = this->celView != nullptr ? this->celView->getCurrentFrameIndex() : this->levelCelView->getCurrentFrameIndex();
-        D1GfxFrame *frame = this->gfx->getFrame(currentFrameIndex);
+    for (int i = rangeFrom; i <= rangeTo; i++) {
+        D1GfxFrame *frame = this->gfx->getFrame(i);
         frame->replacePixels(replacements);
     }
     this->gfx->setModified();
@@ -2402,6 +2426,15 @@ void MainWindow::on_actionClose_Translation_Base_triggered()
 void MainWindow::on_actionPatch_Translation_Base_triggered()
 {
     this->trnBaseWidget->patchTrn();
+}
+
+void MainWindow::on_actionRemap_Colors_triggered()
+{
+    if (this->remapDialog == nullptr) {
+        this->remapDialog = new RemapDialog(this);
+    }
+    this->remapDialog->initialize(this->palWidget);
+    this->remapDialog->show();
 }
 
 void MainWindow::on_actionUpscaleTask_triggered()

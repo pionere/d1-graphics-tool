@@ -285,6 +285,8 @@
     <addaction name="menuPalette"/>
     <addaction name="menuTrnBase"/>
     <addaction name="menuTrnUnique"/>
+    <addaction name="separator"/>
+    <addaction name="actionRemap_Colors"/>
    </widget>
    <widget class="QMenu" name="menuTasks">
     <property name="toolTipsVisible">
@@ -1051,6 +1053,14 @@
    </property>
    <property name="toolTip">
     <string>Replace translation values of 255 with 0</string>
+   </property>
+  </action>
+  <action name="actionRemap_Colors">
+   <property name="text">
+    <string>Remap Colors</string>
+   </property>
+   <property name="toolTip">
+    <string>Replace colors of the graphics with another colors from the palette or with transparent pixels</string>
    </property>
   </action>
  </widget>

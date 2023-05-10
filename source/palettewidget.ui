@@ -182,7 +182,7 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="2">
+            <item row="1" column="2" name="translationIndexSep">
              <widget class="QLabel">
               <property name="minimumWidth">
                <number>8</number>
@@ -202,6 +202,9 @@
               </property>
               <property name="maxLength">
                <number>7</number>
+              </property>
+              <property name="toolTip">
+               <string>Enter the color index to which the selected color(s) should map to.</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
