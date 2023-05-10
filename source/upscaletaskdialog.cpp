@@ -223,14 +223,14 @@ void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const Upscal
     }
 }
 
-void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams, int dunType)
+void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams, int dunType)
 {
     QString celFilePath = params.assetsFolder + "/" + opParams.celFilePath;
     QString outFilePath = params.outFolder + "/" + opParams.celFilePath;
 
-    QString basePath = celFilePath;
+    /*QString basePath = celFilePath;
     basePath.chop(4);
-    /*QString minFilePath = opParams.minFilePath;
+    QString minFilePath = opParams.minFilePath;
     if (minFilePath.isEmpty()) {
         minFilePath = basePath + ".min";
     } else {
@@ -242,8 +242,6 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, c
     } else {
         solFilePath = params.assetsFolder + "/" + solFilePath;
     }*/
-    QString minFilePath = basePath + ".min";
-    QString solFilePath = basePath + ".sol";
 
     QString outMinPath = outFilePath;
     outMinPath.chop(4);
@@ -252,20 +250,8 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, c
     D1Gfx gfx = D1Gfx();
     gfx.setPalette(pal);
     D1Tileset tileset = D1Tileset(&gfx);
-    // Loading SOL
-    if (!tileset.sol->load(solFilePath)) {
-        dProgressErr() << tr("Failed loading SOL file: %1.").arg(QDir::toNativeSeparators(solFilePath));
-        return;
-    }
-    // Loading MIN
-    std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
-    if (!tileset.min->load(minFilePath, &tileset, celFrameTypes, opParams)) {
-        dProgressErr() << tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath));
-        return;
-    }
-    // Loading CEL
-    if (!D1CelTileset::load(*tileset.gfx, celFrameTypes, celFilePath, opParams)) {
-        dProgressErr() << tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(celFilePath));
+    opParams.celFilePath = celFilePath;
+    if (!tileset.load(opParams)) {
         return;
     }
     // Patch MIN if requested
