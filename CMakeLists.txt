@@ -121,6 +121,9 @@ set(PROJECT_SOURCES
         source/dungeonresourcedialog.cpp
         source/dungeonresourcedialog.h
         source/dungeonresourcedialog.ui
+        source/dungeonsearchdialog.cpp
+        source/dungeonsearchdialog.h
+        source/dungeonsearchdialog.ui
         source/exportdialog.cpp
         source/exportdialog.h
         source/exportdialog.ui

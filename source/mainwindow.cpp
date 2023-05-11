@@ -2168,6 +2168,11 @@ void MainWindow::on_actionGenerate_Dungeon_triggered()
     this->levelCelView->generateDungeon();
 }
 
+void MainWindow::on_actionSearch_Dungeon_triggered()
+{
+    this->levelCelView->searchDungeon();
+}
+
 void MainWindow::on_actionNew_PAL_triggered()
 {
     QString palFilePath = this->fileDialog(FILE_DIALOG_MODE::SAVE_CONF, tr("New Palette File"), tr("PAL Files (*.pal *.PAL)"));
