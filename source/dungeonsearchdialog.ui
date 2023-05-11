@@ -269,14 +269,14 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="remapButton">
+      <widget class="QPushButton" name="searchButton">
        <property name="text">
         <string>Search</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="remapCancelButton">
+      <widget class="QPushButton" name="searchCancelButton">
        <property name="text">
         <string>Cancel</string>
        </property>
