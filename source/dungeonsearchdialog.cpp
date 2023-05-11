@@ -30,8 +30,8 @@ void DungeonSearchDialog::initialize(D1Dun *dun)
     // this->ui->searchSpecCheckBox->setChecked(false);
 
     if (this->ui->searchWLineEdit->text().isEmpty() || this->ui->searchHLineEdit->text().isEmpty()
-        || this->ui->searchXLineEdit->nonNegInt() + this->ui->searchWLineEdit->nonNegInt() >= dun->getWidth()
-        || this->ui->searchYLineEdit->nonNegInt() + this->ui->searchHLineEdit->nonNegInt() >= dun->getHeight()) {
+        || this->ui->searchXLineEdit->nonNegInt() + this->ui->searchWLineEdit->nonNegInt() > dun->getWidth()
+        || this->ui->searchYLineEdit->nonNegInt() + this->ui->searchHLineEdit->nonNegInt() > dun->getHeight()) {
         this->ui->searchXLineEdit->setText("0");
         this->ui->searchYLineEdit->setText("0");
 
@@ -58,13 +58,12 @@ void DungeonSearchDialog::on_searchButton_clicked()
     QString typeTxt = this->ui->searchTypeComboBox->currentText();
 
     this->close();
-    QMessageBox::critical(nullptr, "Error", QString("before %1:%2, %3, %4").arg(params.area.x()).arg(params.area.y()).arg(params.area.height()).arg(params.area.width()));
+
     params.area = params.area.intersected(QRect(0, 0, this->dun->getWidth(), this->dun->getHeight()));
-    QMessageBox::critical(nullptr, "Error", QString("after %1:%2, %3, %4").arg(params.area.x()).arg(params.area.y()).arg(params.area.height()).arg(params.area.width()));
+
     if (params.area.width() == 0 || params.area.height() == 0) {
         return;
     }
-    QMessageBox::critical(nullptr, "Error", QString("searching %1:%2, %3, %4").arg(params.area.x()).arg(params.area.y()).arg(params.area.height()).arg(params.area.width()));
 
     // do the search
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
@@ -137,7 +136,6 @@ void DungeonSearchDialog::on_searchButton_clicked()
         dProgress() << msg;
     }
 
-    QMessageBox::critical(nullptr, "Error", QString("done %1").arg(matches.size()));
     // Clear loading message from status bar
     ProgressDialog::done();
 
