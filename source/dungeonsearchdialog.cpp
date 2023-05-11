@@ -30,8 +30,8 @@ void DungeonSearchDialog::initialize(D1Dun *dun)
     // this->ui->searchSpecCheckBox->setChecked(false);
 
     if (this->ui->searchWLineEdit->text().isEmpty() || this->ui->searchHLineEdit->text().isEmpty()
-        || this->ui->searchXLineEdit->text().nonNegInt() + this->ui->searchWLineEdit->text().nonNegInt() >= dun->getWidth()
-        || this->ui->searchYLineEdit->text().nonNegInt() + this->ui->searchHLineEdit->text().nonNegInt() >= dun->getHeight()) {
+        || this->ui->searchXLineEdit->nonNegInt() + this->ui->searchWLineEdit->nonNegInt() >= dun->getWidth()
+        || this->ui->searchYLineEdit->nonNegInt() + this->ui->searchHLineEdit->nonNegInt() >= dun->getHeight()) {
         this->ui->searchXLineEdit->setText("0");
         this->ui->searchYLineEdit->setText("0");
 
@@ -47,10 +47,10 @@ void DungeonSearchDialog::on_searchButton_clicked()
     params.type = (DUN_SEARCH_TYPE)this->ui->searchTypeComboBox->currentIndex();
     params.index = this->ui->searchIndexLineEdit->text().asInt();
     params.special = this->ui->searchSpecCheckBox->isChecked();
-    params.area.setX(this->ui->searchXLineEdit->text().nonNegInt());
-    params.area.setY(this->ui->searchYLineEdit->text().nonNegInt());
-    params.area.setWidth(this->ui->searchXLineEdit->text().nonNegInt());
-    params.area.setHeight(this->ui->searchYLineEdit->text().nonNegInt());
+    params.area.setX(this->ui->searchXLineEdit->nonNegInt());
+    params.area.setY(this->ui->searchYLineEdit->nonNegInt());
+    params.area.setWidth(this->ui->searchXLineEdit->nonNegInt());
+    params.area.setHeight(this->ui->searchYLineEdit->nonNegInt());
     params.scrollTo = this->ui->scrollToCheckBox->isChecked();
 
     LevelCelView *view = qobject_cast<LevelCelView *>(this->parentWidget());
@@ -100,10 +100,9 @@ void DungeonSearchDialog::on_searchButton_clicked()
             case DUN_SEARCH_TYPE::Room:
                 found = this->dun->getRoomAt(posx, posy) == params.index;
                 break;
-            case DUN_SEARCH_TYPE::Monster:
-            {
+            case DUN_SEARCH_TYPE::Monster: {
                 DunMonsterType monType = this->dun->getMonsterAt(posx, posy);
-                found == monType.first == params.index && monType.second == params.special;
+                found = monType.first == params.index && monType.second == params.special;
             } break;
             case DUN_SEARCH_TYPE::Object:
                 found = this->dun->getObjectAt(posx, posy) == params.index;
@@ -131,7 +130,7 @@ void DungeonSearchDialog::on_searchButton_clicked()
             for (const QPoint &match : matches) {
                 msg += QString(" %1:%2,").arg(match.x()).arg(match.y());
             }
-            msg[msg.length() - 1] = ".";
+            msg[msg.length() - 1] = '.';
         }
         dProgress() << msg;
     }
