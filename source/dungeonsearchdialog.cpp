@@ -28,6 +28,8 @@ void DungeonSearchDialog::initialize(D1Dun *dun)
     // this->ui->searchTypeComboBox->setCurrentIndex(0);
     // this->ui->searchIndexLineEdit->setText("");
     // this->ui->searchSpecCheckBox->setChecked(false);
+    this->ui->replaceIndexLineEdit->setText("");
+    this->ui->replaceSpecCheckBox->setChecked(false);
 
     if (this->ui->searchWLineEdit->text().isEmpty() || this->ui->searchHLineEdit->text().isEmpty()
         || this->ui->searchXLineEdit->nonNegInt() + this->ui->searchWLineEdit->nonNegInt() > dun->getWidth()
@@ -46,7 +48,10 @@ void DungeonSearchDialog::on_searchButton_clicked()
 
     params.type = (DUN_SEARCH_TYPE)this->ui->searchTypeComboBox->currentIndex();
     params.index = this->ui->searchIndexLineEdit->text().toInt();
+    params.replace = this->ui->replaceIndexLineEdit->text().toInt();
+	params.doReplace = !this->ui->replaceIndexLineEdit->text().isEmpty();
     params.special = this->ui->searchSpecCheckBox->isChecked();
+    params.replaceSpec = this->ui->replaceSpecCheckBox->isChecked();
     params.area.setX(this->ui->searchXLineEdit->nonNegInt());
     params.area.setY(this->ui->searchYLineEdit->nonNegInt());
     params.area.setWidth(this->ui->searchWLineEdit->nonNegInt());
@@ -134,6 +139,41 @@ void DungeonSearchDialog::on_searchButton_clicked()
             msg[msg.length() - 1] = '.';
         }
         dProgress() << msg;
+    }
+
+    if (params.doReplace) {
+        for (const QPoint &match : matches) {
+            switch (params.type) {
+            case DUN_SEARCH_TYPE::Tile:
+                this->dun->setTileAt(posx, posy, params.replace);
+                break;
+            case DUN_SEARCH_TYPE::Subtile:
+                this->dun->setSubtileAt(posx, posy, params.replace);
+                break;
+            case DUN_SEARCH_TYPE::Tile_Protection:
+                this->dun->setTileProtectionAt(posx, posy, (Qt::CheckState)params.replace);
+                break;
+            case DUN_SEARCH_TYPE::Monster_Protection:
+                this->dun->setSubtileMonProtectionAt(posx, posy, params.replace != 0);
+                break;
+            case DUN_SEARCH_TYPE::Object_Protection:
+                this->dun->setSubtileObjProtectionAt(posx, posy, params.replace != 0);
+                break;
+            case DUN_SEARCH_TYPE::Room:
+                this->dun->setRoomAt(posx, posy, params.replace);
+                break;
+            case DUN_SEARCH_TYPE::Monster: {
+                DunMonsterType monType = { params.replace, params.replaceSpec };
+                this->dun->setMonsterAt(posx, posy, monType);
+            } break;
+            case DUN_SEARCH_TYPE::Object:
+                this->dun->setObjectAt(posx, posy, params.replace);
+                break;
+            case DUN_SEARCH_TYPE::Item:
+                this->dun->setItemAt(posx, posy, params.replace);
+                break;
+            }
+        }
     }
 
     // Clear loading message from status bar
