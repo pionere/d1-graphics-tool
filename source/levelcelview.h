@@ -22,6 +22,7 @@
 #include "d1tileset.h"
 #include "dungeongeneratedialog.h"
 #include "dungeonresourcedialog.h"
+#include "dungeonsearchdialog.h"
 #include "leveltabframewidget.h"
 #include "leveltabsubtilewidget.h"
 #include "leveltabtilewidget.h"
@@ -111,6 +112,7 @@ public:
     void loadMonsters(const D1Dun *srcDun);
     void loadObjects(const D1Dun *srcDun);
     void generateDungeon();
+    void searchDungeon();
 
     void upscale(const UpscaleParam &params);
 
@@ -121,7 +123,8 @@ public:
     void displayFrame();
     void toggleBottomPanel();
 
-    void scrollTo(int posx, int posy);
+    void scrollTo(int posx, int posy); // initiate scrolling
+    void scrollToCurrent();            // do the scrolling
     void selectPos(const QPoint &cell);
 
 private:
@@ -296,6 +299,7 @@ private:
 
     DungeonGenerateDialog dungeonGenerateDialog = DungeonGenerateDialog(this);
     DungeonResourceDialog dungeonResourceDialog = DungeonResourceDialog(this);
+    DungeonSearchDialog dungeonSearchDialog = DungeonSearchDialog(this);
 
     D1Pal *pal;
     D1Gfx *gfx;

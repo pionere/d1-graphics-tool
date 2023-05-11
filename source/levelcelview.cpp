@@ -575,6 +575,34 @@ void LevelCelView::scrollTo(int posx, int posy)
     this->isScrolling = true;
 }
 
+void LevelCelView::scrollToCurrent()
+{
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    int cellWidth = subtileWidth;
+    int cellHeight = subtileWidth / 2;
+    // move to 0;0
+    int cX = this->celScene.sceneRect().width() / 2;
+    int cY = CEL_SCENE_MARGIN + subtileHeight - cellHeight / 2;
+    int bX = cX, bY = cY;
+    int offX = (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
+    cX += offX;
+
+    int dunX = this->currentDunPosX;
+    int dunY = this->currentDunPosY;
+    // SHIFT_GRID
+    int cellX = dunX - dunY;
+    int cellY = dunY + dunX;
+    // switch unit
+    cellX *= cellWidth / 2;
+    cellY *= cellHeight / 2;
+
+    cX += cellX;
+    cY += cellY;
+    this->ui->celGraphicsView->centerOn(cX, cY);
+}
+
 void LevelCelView::selectPos(const QPoint &cell)
 {
     this->currentDunPosX = cell.x();
@@ -3021,6 +3049,12 @@ void LevelCelView::generateDungeon()
     this->dungeonGenerateDialog.show();
 }
 
+void LevelCelView::searchDungeon()
+{
+    this->dungeonSearchDialog.initialize(this->dun);
+    this->dungeonSearchDialog.show();
+}
+
 void LevelCelView::upscale(const UpscaleParam &params)
 {
     if (Upscaler::upscaleTileset(this->gfx, this->min, params, false)) {
@@ -3063,30 +3097,7 @@ void LevelCelView::displayFrame()
         // scroll to the current position
         if (this->isScrolling) {
             this->isScrolling = false;
-            unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
-            unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
-
-            int cellWidth = subtileWidth;
-            int cellHeight = subtileWidth / 2;
-            // move to 0;0
-            int cX = this->celScene.sceneRect().width() / 2;
-            int cY = CEL_SCENE_MARGIN + subtileHeight - cellHeight / 2;
-            int bX = cX, bY = cY;
-            int offX = (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
-            cX += offX;
-
-            int dunX = this->currentDunPosX;
-            int dunY = this->currentDunPosY;
-            // SHIFT_GRID
-            int cellX = dunX - dunY;
-            int cellY = dunY + dunX;
-            // switch unit
-            cellX *= cellWidth / 2;
-            cellY *= cellHeight / 2;
-
-            cX += cellX;
-            cY += cellY;
-            this->ui->celGraphicsView->centerOn(cX, cY);
+            this->scrollToCurrent();
         }
         // Notify PalView that the frame changed (used to refresh palette widget)
         emit frameRefreshed();

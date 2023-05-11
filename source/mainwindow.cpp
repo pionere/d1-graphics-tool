@@ -99,7 +99,6 @@ MainWindow &dMainWindow()
 
 void MainWindow::changeColors(const RemapParam &params)
 {
-
     std::vector<std::pair<D1GfxPixel, D1GfxPixel>> replacements;
     int index = params.colorTo.first;
     const int dc = params.colorTo.first == params.colorTo.second ? 0 : (params.colorTo.first < params.colorTo.second ? 1 : -1);
@@ -2080,6 +2079,11 @@ void MainWindow::on_actionLoadObjects_Dungeon_triggered()
 void MainWindow::on_actionGenerate_Dungeon_triggered()
 {
     this->levelCelView->generateDungeon();
+}
+
+void MainWindow::on_actionSearch_Dungeon_triggered()
+{
+    this->levelCelView->searchDungeon();
 }
 
 void MainWindow::on_actionNew_PAL_triggered()
