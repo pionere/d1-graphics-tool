@@ -45,7 +45,7 @@ void DungeonSearchDialog::on_searchButton_clicked()
     DungeonSearchParam params;
 
     params.type = (DUN_SEARCH_TYPE)this->ui->searchTypeComboBox->currentIndex();
-    params.index = this->ui->searchIndexLineEdit->text().asInt();
+    params.index = this->ui->searchIndexLineEdit->text().toInt();
     params.special = this->ui->searchSpecCheckBox->isChecked();
     params.area.setX(this->ui->searchXLineEdit->nonNegInt());
     params.area.setY(this->ui->searchYLineEdit->nonNegInt());
