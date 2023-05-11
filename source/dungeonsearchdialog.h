@@ -17,7 +17,7 @@ enum class DUN_SEARCH_TYPE {
 
 class DungeonSearchParam {
 public:
-    int type;
+    DUN_SEARCH_TYPE type;
     int index;
     bool special;
     bool scrollTo;
