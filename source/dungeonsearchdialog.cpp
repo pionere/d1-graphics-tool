@@ -49,7 +49,7 @@ void DungeonSearchDialog::on_searchButton_clicked()
     params.type = (DUN_SEARCH_TYPE)this->ui->searchTypeComboBox->currentIndex();
     params.index = this->ui->searchIndexLineEdit->text().toInt();
     params.replace = this->ui->replaceIndexLineEdit->text().toInt();
-	params.doReplace = !this->ui->replaceIndexLineEdit->text().isEmpty();
+    params.doReplace = !this->ui->replaceIndexLineEdit->text().isEmpty();
     params.special = this->ui->searchSpecCheckBox->isChecked();
     params.replaceSpec = this->ui->replaceSpecCheckBox->isChecked();
     params.area.setX(this->ui->searchXLineEdit->nonNegInt());
@@ -145,32 +145,32 @@ void DungeonSearchDialog::on_searchButton_clicked()
         for (const QPoint &match : matches) {
             switch (params.type) {
             case DUN_SEARCH_TYPE::Tile:
-                this->dun->setTileAt(posx, posy, params.replace);
+                this->dun->setTileAt(match.x(), match.y(), params.replace);
                 break;
             case DUN_SEARCH_TYPE::Subtile:
-                this->dun->setSubtileAt(posx, posy, params.replace);
+                this->dun->setSubtileAt(match.x(), match.y(), params.replace);
                 break;
             case DUN_SEARCH_TYPE::Tile_Protection:
-                this->dun->setTileProtectionAt(posx, posy, (Qt::CheckState)params.replace);
+                this->dun->setTileProtectionAt(match.x(), match.y(), (Qt::CheckState)params.replace);
                 break;
             case DUN_SEARCH_TYPE::Monster_Protection:
-                this->dun->setSubtileMonProtectionAt(posx, posy, params.replace != 0);
+                this->dun->setSubtileMonProtectionAt(match.x(), match.y(), params.replace != 0);
                 break;
             case DUN_SEARCH_TYPE::Object_Protection:
-                this->dun->setSubtileObjProtectionAt(posx, posy, params.replace != 0);
+                this->dun->setSubtileObjProtectionAt(match.x(), match.y(), params.replace != 0);
                 break;
             case DUN_SEARCH_TYPE::Room:
-                this->dun->setRoomAt(posx, posy, params.replace);
+                this->dun->setRoomAt(match.x(), match.y(), params.replace);
                 break;
             case DUN_SEARCH_TYPE::Monster: {
                 DunMonsterType monType = { params.replace, params.replaceSpec };
-                this->dun->setMonsterAt(posx, posy, monType);
+                this->dun->setMonsterAt(match.x(), match.y(), monType);
             } break;
             case DUN_SEARCH_TYPE::Object:
-                this->dun->setObjectAt(posx, posy, params.replace);
+                this->dun->setObjectAt(match.x(), match.y(), params.replace);
                 break;
             case DUN_SEARCH_TYPE::Item:
-                this->dun->setItemAt(posx, posy, params.replace);
+                this->dun->setItemAt(match.x(), match.y(), params.replace);
                 break;
             }
         }
