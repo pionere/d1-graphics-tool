@@ -49,8 +49,8 @@ void DungeonSearchDialog::on_searchButton_clicked()
     params.special = this->ui->searchSpecCheckBox->isChecked();
     params.area.setX(this->ui->searchXLineEdit->nonNegInt());
     params.area.setY(this->ui->searchYLineEdit->nonNegInt());
-    params.area.setWidth(this->ui->searchXLineEdit->nonNegInt());
-    params.area.setHeight(this->ui->searchYLineEdit->nonNegInt());
+    params.area.setWidth(this->ui->searchWLineEdit->nonNegInt());
+    params.area.setHeight(this->ui->searchHLineEdit->nonNegInt());
     params.scrollTo = this->ui->scrollToCheckBox->isChecked();
 
     LevelCelView *view = qobject_cast<LevelCelView *>(this->parentWidget());
