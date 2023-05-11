@@ -3,7 +3,7 @@
  <class>DungeonSearchDialog</class>
  <widget class="QDialog">
   <property name="windowTitle">
-   <string>Search</string>
+   <string>Search &amp; Replace</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -121,11 +121,61 @@
       <item row="2" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Area:</string>
+         <string>Replace:</string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
+       <layout class="QHBoxLayout">
+        <property name="spacing">
+         <number>4</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="LineEditWidget" name="replaceIndexLineEdit">
+          <property name="charWidth">
+           <number>8</number>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="replaceSpecCheckBox">
+          <property name="toolTip">
+           <string>Index of a special monster</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Area:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
        <layout class="QHBoxLayout">
         <property name="spacing">
          <number>4</number>
@@ -193,7 +243,7 @@
         </item>
        </layout>
       </item>
-      <item row="3" column="1">
+      <item row="4" column="1">
        <layout class="QHBoxLayout">
         <property name="spacing">
          <number>4</number>
@@ -261,21 +311,21 @@
         </item>
        </layout>
       </item>
-      <item row="4" column="0">
+      <item row="5" column="0">
        <widget class="QLabel">
         <property name="text">
          <string>Scroll:</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
+      <item row="5" column="1">
        <widget class="QCheckBox" name="scrollToCheckBox">
         <property name="toolTip">
          <string>Scroll to the first match</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="2">
+      <item row="5" column="2">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -297,7 +347,7 @@
      <item>
       <widget class="QPushButton" name="searchButton">
        <property name="text">
-        <string>Search</string>
+        <string>Start</string>
        </property>
       </widget>
      </item>

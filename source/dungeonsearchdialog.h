@@ -19,7 +19,10 @@ class DungeonSearchParam {
 public:
     DUN_SEARCH_TYPE type;
     int index;
+    int replace;
     bool special;
+    bool doReplace;
+    bool replaceSpec;
     bool scrollTo;
     QRect area;
 };
