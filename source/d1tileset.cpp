@@ -640,35 +640,38 @@ void D1Tileset::patchTownCathedral(int cathedralTopLeftRef, int cathedralTopRigh
     }
 
     // draw extra line to each frame
+    bool change = false;
     for (int x = 0; x < MICRO_WIDTH; x++) {
         int y = MICRO_HEIGHT / 2 - x / 2;
-        frameLeft0->setPixel(x, y, frameLeft0->getPixel(x, y + 6)); // 2145
+        change |= frameLeft0->setPixel(x, y, frameLeft0->getPixel(x, y + 6)); // 2145
     }
     for (int x = 0; x < MICRO_WIDTH - 4; x++) {
         int y = MICRO_HEIGHT / 2 - x / 2;
-        frameLeft1->setPixel(x, y, frameLeft1->getPixel(x + 4, y + 4)); // 2123 I.
+        change |= frameLeft1->setPixel(x, y, frameLeft1->getPixel(x + 4, y + 4)); // 2123 I.
     }
     for (int x = MICRO_WIDTH - 4; x < MICRO_WIDTH; x++) {
         int y = MICRO_HEIGHT / 2 - x / 2;
-        frameLeft1->setPixel(x, y, frameLeft1->getPixel(x, y + 2)); // 2123 II.
+        change |= frameLeft1->setPixel(x, y, frameLeft1->getPixel(x, y + 2)); // 2123 II.
     }
     for (int x = 0; x < 20; x++) {
         int y = 1 + x / 2;
-        frameRight0->setPixel(x, y, frameRight0->getPixel(x, y + 1)); // 2124 I.
+        change |= frameRight0->setPixel(x, y, frameRight0->getPixel(x, y + 1)); // 2124 I.
     }
     for (int x = 20; x < MICRO_WIDTH; x++) {
         int y = 1 + x / 2;
-        frameRight0->setPixel(x, y, frameRight0->getPixel(x - 12, y - 6)); // 2124 II.
+        change |= frameRight0->setPixel(x, y, frameRight0->getPixel(x - 12, y - 6)); // 2124 II.
     }
     for (int x = 0; x < MICRO_WIDTH; x++) {
         int y = 1 + x / 2;
-        frameRight1->setPixel(x, y, frameRight0->getPixel(x, y)); // 2137
+        change |= frameRight1->setPixel(x, y, frameRight0->getPixel(x, y)); // 2137
     }
 
-    this->gfx->setModified();
+    if (change) {
+        this->gfx->setModified();
 
-    if (!silent) {
-        dProgress() << QApplication::tr("Frames %1, %2, %3 and %4 of subtiles %4, %5 and %6 are modified.").arg(leftFrameRef0).arg(leftFrameRef1).arg(rightFrameRef0).arg(rightFrameRef1).arg(cathedralTopLeftRef).arg(cathedralTopRightRef).arg(cathedralBottomLeftRef);
+        if (!silent) {
+            dProgress() << QApplication::tr("Frames %1, %2, %3 and %4 of subtiles %5, %6 and %7 are modified.").arg(leftFrameRef0).arg(leftFrameRef1).arg(rightFrameRef0).arg(rightFrameRef1).arg(cathedralTopLeftRef).arg(cathedralTopRightRef).arg(cathedralBottomLeftRef);
+        }
     }
 }
 
