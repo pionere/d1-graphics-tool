@@ -622,9 +622,8 @@ void D1Tileset::patchTownCathedral(int cathedralTopLeftRef, int cathedralTopRigh
     unsigned rightFrameRef1 = topRightFrameReferences[rightIndex1];
 
     if (leftFrameRef0 == 0 || leftFrameRef1 == 0 || rightFrameRef0 == 0 || rightFrameRef1 == 0) {
-        mem_free_dbg(celBuf);
-        app_warn("Invalid (empty) cathedral subtiles (%d).", leftFrameRef0 == 0 ? cathedralBottomLeftRef : (rightFrameRef1 == 0 ? cathedralTopRightRef : cathedralTopLeftRef));
-        return NULL;
+        dProgressErr() << QApplication::tr("Invalid (empty) cathedral subtiles (%1).", leftFrameRef0 == 0 ? cathedralBottomLeftRef : (rightFrameRef1 == 0 ? cathedralTopRightRef : cathedralTopLeftRef));
+        return;
     }
 
     D1GfxFrame *frameLeft0 = this->gfx->getFrame(leftFrameRef0 - 1);   // 2145
