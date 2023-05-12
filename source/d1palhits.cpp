@@ -10,9 +10,9 @@ D1PalHits::D1PalHits(D1Gfx *g, D1Tileset *ts, D1Gfxset *gs)
 
 void D1PalHits::update()
 {
-    this->buildPalHits();
-    this->buildSubtilePalHits();
-    this->buildTilePalHits();
+    this->framePalHitsBuilt = false;
+    this->tilePalHitsBuilt = false;
+    this->subtilePalHitsBuilt = false;
 }
 
 D1PALHITS_MODE D1PalHits::getMode() const
@@ -25,8 +25,10 @@ void D1PalHits::setMode(D1PALHITS_MODE m)
     this->mode = m;
 }
 
-void D1PalHits::buildPalHits()
+void D1PalHits::buildFramePalHits()
 {
+    this->framePalHitsBuilt = true;
+
     // Go through all frames
     this->allFramesPalHits.clear();
     this->framePalHits.resize(this->gfx->getFrameCount());
@@ -57,9 +59,13 @@ void D1PalHits::buildPalHits()
 
 void D1PalHits::buildSubtilePalHits()
 {
-    if (this->tileset == nullptr) {
-        return;
+    if (!this->framePalHitsBuilt) {
+        this->buildFramePalHits();
     }
+
+    // assert(this->tileset != nullptr);
+    this->subtilePalHitsBuilt = true;
+
     this->subtilePalHits.resize(this->tileset->min->getSubtileCount());
     // Go through all sub-tiles
     for (int i = 0; i < this->tileset->min->getSubtileCount(); i++) {
@@ -85,9 +91,12 @@ void D1PalHits::buildSubtilePalHits()
 
 void D1PalHits::buildTilePalHits()
 {
-    if (this->tileset == nullptr) {
-        return;
+    if (!this->subtilePalHitsBuilt) {
+        this->buildSubtilePalHits();
     }
+    // assert(this->tileset != nullptr);
+    this->tilePalHitsBuilt = true;
+
     this->tilePalHits.resize(this->tileset->til->getTileCount());
     // Go through all tiles
     for (int i = 0; i < this->tileset->til->getTileCount(); i++) {
@@ -115,18 +124,30 @@ int D1PalHits::getIndexHits(quint8 colorIndex, unsigned itemIndex) const
     case D1PALHITS_MODE::ALL_COLORS:
         return 1;
     case D1PALHITS_MODE::ALL_FRAMES:
+        if (!this->framePalHitsBuilt) {
+            this->buildFramePalHits();
+        }
         if (this->allFramesPalHits.contains(colorIndex))
             return this->allFramesPalHits[colorIndex];
         break;
     case D1PALHITS_MODE::CURRENT_TILE:
+        if (!this->tilePalHitsBuilt) {
+            this->buildTilePalHits();
+        }
         if (this->tilePalHits.size() > itemIndex && this->tilePalHits[itemIndex].contains(colorIndex))
             return this->tilePalHits[itemIndex][colorIndex];
         break;
     case D1PALHITS_MODE::CURRENT_SUBTILE:
+        if (!this->subtilePalHitsBuilt) {
+            this->buildSubtilePalHits();
+        }
         if (this->subtilePalHits.size() > itemIndex && this->subtilePalHits[itemIndex].contains(colorIndex))
             return this->subtilePalHits[itemIndex][colorIndex];
         break;
     case D1PALHITS_MODE::CURRENT_FRAME:
+        if (!this->framePalHitsBuilt) {
+            this->buildFramePalHits();
+        }
         if (this->framePalHits.size() > itemIndex && this->framePalHits[itemIndex].contains(colorIndex))
             return this->framePalHits[itemIndex][colorIndex];
         break;

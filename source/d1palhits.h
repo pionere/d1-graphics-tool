@@ -31,7 +31,7 @@ public:
     int getIndexHits(quint8 colorIndex, unsigned itemIndex) const;
 
 private:
-    void buildPalHits();
+    void buildFramePalHits();
     void buildSubtilePalHits();
     void buildTilePalHits();
 
@@ -47,4 +47,7 @@ private:
     std::vector<QMap<quint8, int>> framePalHits;
     std::vector<QMap<quint8, int>> tilePalHits;
     std::vector<QMap<quint8, int>> subtilePalHits;
+    bool framePalHitsBuilt;
+    bool subtilePalHitsBuilt;
+    bool tilePalHitsBuilt;
 };
