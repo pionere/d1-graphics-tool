@@ -7,6 +7,16 @@
 #include "d1celtileset.h"
 #include "progressdialog.h"
 
+#include "dungeon/all.h"
+
+static constexpr int BLOCK_SIZE_TOWN = 16;
+static constexpr int BLOCK_SIZE_L1 = 10;
+static constexpr int BLOCK_SIZE_L2 = 10;
+static constexpr int BLOCK_SIZE_L3 = 10;
+static constexpr int BLOCK_SIZE_L4 = 16;
+static constexpr int BLOCK_SIZE_L5 = 10;
+static constexpr int BLOCK_SIZE_L6 = 10;
+
 D1Tileset::D1Tileset(D1Gfx *g)
     : gfx(g)
 {
@@ -310,7 +320,7 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
     return result != 0;
 }
 
-#define Blk2Mcr(n, x) RemoveFrame(min, n, x, deletedFrames, silent);
+#define Blk2Mcr(n, x) RemoveFrame(this->min, n, x, deletedFrames, silent);
 #define MICRO_IDX(blockSize, microIndex) ((blockSize) - (2 + ((microIndex) & ~1)) + ((microIndex)&1))
 static void RemoveFrame(D1Min *min, int subtileRef, int microIndex, std::set<unsigned> &deletedFrames, bool silent)
 {
@@ -330,7 +340,7 @@ static void RemoveFrame(D1Min *min, int subtileRef, int microIndex, std::set<uns
             dProgress() << QApplication::tr("Removed frame (%1) @%2 in Subtile %3.").arg(frameReference).arg(index + 1).arg(subtileIndex + 1);
         }
     } else {
-        dProgressWarn() << QApplication::tr("The frame @%1 in Subtile %2 is already empty.").arg(index + 1).arg(subtileIndex + 1);
+        ; // dProgressWarn() << QApplication::tr("The frame @%1 in Subtile %2 is already empty.").arg(index + 1).arg(subtileIndex + 1);
     }
 }
 
@@ -352,7 +362,8 @@ static void ReplaceSubtile(D1Til *til, int tileIndex, unsigned index, int subtil
     }
 }
 
-static void CopyFrame(D1Min *min, D1Gfx *gfx, int dstSubtileRef, int dstMicroIndex, int srcSubtileRef, int srcMicroIndex, bool silent)
+#define ReplaceMcr(dn, dx, sn, sx) ReplaceFrame(this->min, dn, dx, sn, sx, deletedFrames, silent);
+static void ReplaceFrame(D1Min *min, int dstSubtileRef, int dstMicroIndex, int srcSubtileRef, int srcMicroIndex, std::set<unsigned> &deletedFrames, bool silent)
 {
     int srcSubtileIndex = srcSubtileRef - 1;
     std::vector<unsigned> &srcFrameReferences = min->getFrameReferences(srcSubtileIndex);
@@ -376,7 +387,11 @@ static void CopyFrame(D1Min *min, D1Gfx *gfx, int dstSubtileRef, int dstMicroInd
         dProgressErr() << QApplication::tr("Not enough frames in Subtile %1.").arg(dstSubtileIndex + 1);
         return;
     }
+    unsigned currFrameReference = dstFrameReferences[dstIndex];
     if (min->setFrameReference(dstSubtileIndex, dstIndex, srcFrameRef)) {
+        if (currFrameReference != 0) {
+            deletedFrames.insert(currFrameReference);
+        }
         if (!silent) {
             dProgress() << QApplication::tr("Frame %1 of Subtile %2 is set to Frame %3.").arg(dstIndex + 1).arg(dstSubtileIndex + 1).arg(srcFrameRef);
         }
@@ -459,7 +474,7 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
     std::vector<unsigned> &rightFrameReferences = this->min->getFrameReferences(potRightSubtileRef - 1);
 
     unsigned blockSize = leftFrameReferences.size();
-    if (blockSize != 16) {
+    if (blockSize != BLOCK_SIZE_TOWN) {
         return;
     }
     unsigned leftIndex0 = MICRO_IDX(blockSize, 1);
@@ -596,7 +611,7 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
         if (tilSubtiles[0] != (17 - 1) || tilSubtiles[1] != (18 - 1))
             dProgressErr() << QApplication::tr("The exit tile (%1) has invalid (not original) subtiles.").arg(tileIndex + 1);
         else if (!silent)
-            dProgress() << QApplication::tr("The exit tile (%1) is already patched.").arg(tileIndex + 1);
+            dProgressWarn() << QApplication::tr("The exit tile (%1) is already patched.").arg(tileIndex + 1);
         return;
     }
 
@@ -608,7 +623,7 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
     std::vector<unsigned> &bottomLeftFrameReferences = this->min->getFrameReferences(139 - 1);
     std::vector<unsigned> &bottomRightFrameReferences = this->min->getFrameReferences(140 - 1);
 
-    unsigned blockSize = 16;
+    constexpr unsigned blockSize = BLOCK_SIZE_L4;
     if (topLeftFrameReferences.size() != blockSize || topRightFrameReferences.size() != blockSize || bottomLeftFrameReferences.size() != blockSize || bottomRightFrameReferences.size() != blockSize) {
         dProgressErr() << QApplication::tr("The exit tile (%1) has invalid (upscaled?) subtiles.").arg(tileIndex + 1);
         return;
@@ -730,7 +745,7 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
 
 void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int extTileIndex1, int extTileIndex2, int stairsSubtileRef1, int stairsSubtileRef2, bool silent)
 {
-    constexpr unsigned blockSize = 10;
+    constexpr unsigned blockSize = BLOCK_SIZE_L2;
 
     constexpr int backSubtileRef0 = 250;
     constexpr int backSubtileRef2 = 251;
@@ -743,7 +758,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
             if (backSubtiles[0] != (backSubtileRef0Replacement - 1) || backSubtiles[2] != (backSubtileRef2Replacement - 1) || backSubtiles[3] != (backSubtileRef3 - 1))
                 dProgressErr() << QApplication::tr("The back-stairs tile (%1) has invalid (not original) subtiles.").arg(backTileIndex1 + 1);
             else if (!silent)
-                dProgress() << QApplication::tr("The back-stairs tile (%1) is already patched.").arg(backTileIndex1 + 1);
+                dProgressWarn() << QApplication::tr("The back-stairs tile (%1) is already patched.").arg(backTileIndex1 + 1);
             return;
         }
     }
@@ -757,7 +772,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
             if (ext1Subtiles[1] != (extSubtileRef1Replacement - 1))
                 dProgressErr() << QApplication::tr("The ext-stairs tile (%1) has invalid (not original) subtiles.").arg(extTileIndex1 + 1);
             else if (!silent)
-                dProgress() << QApplication::tr("The ext-stairs tile (%1) is already patched.").arg(extTileIndex1 + 1);
+                dProgressWarn() << QApplication::tr("The ext-stairs tile (%1) is already patched.").arg(extTileIndex1 + 1);
             return;
         }
         std::vector<int> &ext2Subtiles = this->til->getSubtileIndices(extTileIndex2);
@@ -765,7 +780,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
             if (ext2Subtiles[1] != (extSubtileRef1Replacement - 1))
                 dProgressErr() << QApplication::tr("The ext-stairs tile (%1) has invalid (not original) subtiles.").arg(extTileIndex2 + 1);
             else if (!silent)
-                dProgress() << QApplication::tr("The ext-stairs tile (%1) is already patched.").arg(extTileIndex2 + 1);
+                dProgressWarn() << QApplication::tr("The ext-stairs tile (%1) is already patched.").arg(extTileIndex2 + 1);
             return;
         }
     }
@@ -814,7 +829,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     if (stairs_FrameRef0 == 0 || stairs_FrameRef2 == 0 || stairs_FrameRef4 == 0 || stairs_FrameRef6 == 0
         || stairsExt_FrameRef1 == 0 || stairsExt_FrameRef3 == 0 || stairsExt_FrameRef5 == 0) {
         if (!silent)
-            dProgress() << QApplication::tr("The stairs subtiles (%1) are already patched.").arg(stairsSubtileRef1);
+            dProgressWarn() << QApplication::tr("The stairs subtiles (%1) are already patched.").arg(stairsSubtileRef1);
         return;
     }
 
@@ -1062,7 +1077,7 @@ void D1Tileset::patch(int dunType, bool silent)
 {
     std::set<unsigned> deletedFrames;
     switch (dunType) {
-    case DTYPE_TOWN:
+    case DTYPE_TOWN: {
         // patch dMiniTiles - Town.MIN
         // pointless tree micros (re-drawn by dSpecial)
         Blk2Mcr(117, 3);
@@ -1172,7 +1187,8 @@ void D1Tileset::patch(int dunType, bool silent)
         Blk2Mcr(1205, 1);
         Blk2Mcr(1212, 0);
         Blk2Mcr(1219, 0);
-        if (this->min->getSubtileCount() > 1258) {
+        bool isHellfireTown = this->min->getSubtileCount() == 1379;
+        if (isHellfireTown) {
             // #ifdef HELLFIRE
             // fix bad artifacts
             Blk2Mcr(1273, 7);
@@ -1180,13 +1196,79 @@ void D1Tileset::patch(int dunType, bool silent)
         }
         // patch dMicroCels - TOWN.CEL
         // - overwrite subtile 557 and 558 with subtile 939 and 940 to make the inner tile of Griswold's house non-walkable
-        // CopyFrame(this->gfx, 557, 939, silent);
-        // CopyFrame(this->gfx, 558, 940, silent);
-        CopyFrame(this->min, this->gfx, 237, 0, 402, 0, silent);
-        CopyFrame(this->min, this->gfx, 237, 1, 402, 1, silent);
+        ReplaceMcr(237, 0, 402, 0);
+        ReplaceMcr(237, 1, 402, 1);
         // patch subtiles around the pot of Adria to prevent graphical glitch when a player passes it
         this->patchTownPot(553, 554, silent);
-        break;
+        // eliminate micros of unused subtiles
+        ReplaceMcr(169, 1, 129, 1);
+        ReplaceMcr(178, 1, 118, 1);
+        ReplaceMcr(181, 1, 129, 1);
+        ReplaceMcr(1159, 1, 291, 1);
+        // ReplaceMcr(871, 11, 358, 12);
+        Blk2Mcr(358, 12);
+        ReplaceMcr(947, 15, 946, 15);
+        ReplaceMcr(1175, 4, 1171, 4);
+        ReplaceMcr(1218, 3, 1211, 3);
+        ReplaceMcr(1218, 5, 1211, 5);
+        Blk2Mcr(110, 0);
+        Blk2Mcr(113, 0);
+        Blk2Mcr(183, 0);
+        Blk2Mcr(235, 0);
+        Blk2Mcr(239, 0);
+        Blk2Mcr(240, 0);
+        Blk2Mcr(243, 0);
+        Blk2Mcr(244, 0);
+        Blk2Mcr(1132, 2);
+        Blk2Mcr(1132, 3);
+        Blk2Mcr(1132, 4);
+        Blk2Mcr(1132, 5);
+        Blk2Mcr(1152, 0);
+        Blk2Mcr(1139, 0);
+        Blk2Mcr(1139, 1);
+        Blk2Mcr(1139, 2);
+        Blk2Mcr(1139, 3);
+        Blk2Mcr(1139, 4);
+        Blk2Mcr(1139, 5);
+        Blk2Mcr(1139, 6);
+        Blk2Mcr(1140, 0);
+        Blk2Mcr(1164, 1);
+        Blk2Mcr(1258, 0);
+        Blk2Mcr(1258, 1);
+        Blk2Mcr(1214, 1);
+        Blk2Mcr(1214, 2);
+        Blk2Mcr(1214, 3);
+        Blk2Mcr(1214, 4);
+        Blk2Mcr(1214, 5);
+        Blk2Mcr(1214, 6);
+        Blk2Mcr(1214, 7);
+        Blk2Mcr(1214, 8);
+        Blk2Mcr(1214, 9);
+        Blk2Mcr(1216, 8);
+        int unusedSubtiles[] = {
+            71, 79, 80, 166, 176, 228, 230, 236, 238, 241, 242, 245, 246, 247, 248, 249, 250, 251, 252, 253, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 577, 578, 579, 580, 750, 751, 752, 753, 1064, 1115, 1116, 1117, 1118, 1135, 1136, 1137, 1138, 1141, 1142, 1143, 1144, 1145, 1146, 1147, 1148, 1149, 1150, 1151, 1153, 1199, 1200, 1201, 1202, 1221, 1222, 1223, 1224, 1225, 1226, 1227, 1228, 1229, 1230, 1231, 1232, 1233, 1234, 1235, 1236
+        };
+        for (int n = 0; n < lengthof(unusedSubtiles); n++) {
+            for (int i = 0; i < BLOCK_SIZE_TOWN; i++) {
+                Blk2Mcr(unusedSubtiles[n], i);
+            }
+        }
+        if (isHellfireTown) {
+            Blk2Mcr(1344, 1);
+            Blk2Mcr(1360, 0);
+            Blk2Mcr(1370, 0);
+            Blk2Mcr(1376, 0);
+            Blk2Mcr(1295, 1);
+            int unusedSubtilesHellfire[] = {
+                1293, 1341, 1342, 1343, 1345, 1346, 1347, 1348, 1349, 1350, 1351, 1352, 1353, 1354, 1355, 1356, 1357, 1358, 1359, 1361, 1362, 1363, 1364, 1365, 1366, 1367, 1368, 1369, 1371, 1372, 1373, 1374, 1375, 1377, 1378, 1379
+            };
+            for (int n = 0; n < lengthof(unusedSubtilesHellfire); n++) {
+                for (int i = 0; i < BLOCK_SIZE_TOWN; i++) {
+                    Blk2Mcr(unusedSubtilesHellfire[n], i);
+                }
+            }
+        }
+    } break;
     case DTYPE_CATHEDRAL:
         // patch dMiniTiles - L1.MIN
         // useless black micros
@@ -1209,50 +1291,50 @@ void D1Tileset::patch(int dunType, bool silent)
             this->createSubtile();
             this->spt->setSubtileSpecProperty(560 - 1, 2);
         }
-        CopyFrame(this->min, this->gfx, 560, 0, 9, 0, silent);
-        CopyFrame(this->min, this->gfx, 560, 1, 9, 1, silent);
+        ReplaceMcr(560, 0, 9, 0);
+        ReplaceMcr(560, 1, 9, 1);
         if (this->min->getSubtileCount() < 561) {
             this->createSubtile();
             this->spt->setSubtileSpecProperty(561 - 1, 1);
         }
-        CopyFrame(this->min, this->gfx, 561, 0, 11, 0, silent);
-        CopyFrame(this->min, this->gfx, 561, 1, 11, 1, silent);
+        ReplaceMcr(561, 0, 11, 0);
+        ReplaceMcr(561, 1, 11, 1);
         if (this->min->getSubtileCount() < 562) {
             this->createSubtile();
             this->spt->setSubtileSpecProperty(562 - 1, 3);
         }
-        CopyFrame(this->min, this->gfx, 562, 0, 9, 0, silent);
-        CopyFrame(this->min, this->gfx, 562, 1, 9, 1, silent);
+        ReplaceMcr(562, 0, 9, 0);
+        ReplaceMcr(562, 1, 9, 1);
         if (this->min->getSubtileCount() < 563) {
             this->createSubtile();
             this->spt->setSubtileSpecProperty(563 - 1, 4);
         }
-        CopyFrame(this->min, this->gfx, 563, 0, 10, 0, silent);
-        CopyFrame(this->min, this->gfx, 563, 1, 10, 1, silent);
+        ReplaceMcr(563, 0, 10, 0);
+        ReplaceMcr(563, 1, 10, 1);
         if (this->min->getSubtileCount() < 564) {
             this->createSubtile();
             this->spt->setSubtileSpecProperty(564 - 1, 2);
         }
-        CopyFrame(this->min, this->gfx, 564, 0, 159, 0, silent);
-        CopyFrame(this->min, this->gfx, 564, 1, 159, 1, silent);
+        ReplaceMcr(564, 0, 159, 0);
+        ReplaceMcr(564, 1, 159, 1);
         if (this->min->getSubtileCount() < 565) {
             this->createSubtile();
             this->spt->setSubtileSpecProperty(565 - 1, 1);
         }
-        CopyFrame(this->min, this->gfx, 565, 0, 161, 0, silent);
-        CopyFrame(this->min, this->gfx, 565, 1, 161, 1, silent);
+        ReplaceMcr(565, 0, 161, 0);
+        ReplaceMcr(565, 1, 161, 1);
         if (this->min->getSubtileCount() < 566) {
             this->createSubtile();
             this->spt->setSubtileSpecProperty(566 - 1, 3);
         }
-        CopyFrame(this->min, this->gfx, 566, 0, 166, 0, silent);
-        CopyFrame(this->min, this->gfx, 566, 1, 166, 1, silent);
+        ReplaceMcr(566, 0, 166, 0);
+        ReplaceMcr(566, 1, 166, 1);
         if (this->min->getSubtileCount() < 567) {
             this->createSubtile();
             this->spt->setSubtileSpecProperty(567 - 1, 4);
         }
-        CopyFrame(this->min, this->gfx, 567, 0, 167, 0, silent);
-        CopyFrame(this->min, this->gfx, 567, 1, 167, 1, silent);
+        ReplaceMcr(567, 0, 167, 0);
+        ReplaceMcr(567, 1, 167, 1);
         // - floor tile(3) with vertical arch
         if (this->til->getTileCount() < 161)
             this->createTile();
