@@ -64,8 +64,37 @@ void GfxsetView::initialize(D1Pal *p, D1Gfxset *gs, bool bottomPanelHidden)
     this->update();
 }
 
+void GfxsetView::setPal(D1Pal *p)
+{
+    this->pal = p;
+}
+
+// Displaying CEL file path information
+void GfxsetView::updateLabel()
+{
+    const int labelCount = this->gfxset->getGfxCount();
+    QHBoxLayout *layout = this->ui->celLabelsHorizontalLayout;
+    while (layout->count() > labelCount + 1) {
+        QLayoutItem *child = layout->takeAt(labelCount);
+        delete child->widget();
+        delete child;
+    }
+    while (layout->count() < labelCount + 1) {
+        layout->insertWidget(0, new QLabel(""), 0, Qt::AlignLeft);
+    }
+
+    for (int i = 0; i < labelCount; i++) {
+        D1Gfx *gfx = this->gfxset->getGfx(i);
+        CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(i)->widget()), gfx->getFilePath(), gfx->isModified());
+    }
+}
+
 void GfxsetView::update()
 {
+    int count;
+
+    this->updateLabel();
+
     D1Gfxset *gs = this->gfxset;
 
     this->ui->misGfxsetPanel->setVisible(gs->getType() == D1GFX_SET_TYPE::Missile);
@@ -116,7 +145,7 @@ void GfxsetView::update()
             buttons[DIR_W] = this->ui->misWButton;
             buttons[DIR_NW] = this->ui->misNWButton;
             buttons[DIR_N] = this->ui->misNButton;
-            buttons[DIR_NE] = this->ui->misWEButton;
+            buttons[DIR_NE] = this->ui->misNEButton;
             buttons[DIR_E] = this->ui->misEButton;
             buttons[DIR_SE] = this->ui->misSEButton;
             this->ui->misNNWButton->setVisible(false);
@@ -191,38 +220,6 @@ void GfxsetView::update()
         buttons[i]->setEnabled(gfx != baseGfx);
         buttons[i]->setToolTip(gfx->getFilePath());
     }
-}
-
-void GfxsetView::setPal(D1Pal *p)
-{
-    this->pal = p;
-}
-
-// Displaying CEL file path information
-void GfxsetView::updateLabel()
-{
-    const int labelCount = this->gfxset->getGfxCount();
-    QHBoxLayout *layout = this->ui->celLabelsHorizontalLayout;
-    while (layout->count() > labelCount + 1) {
-        QLayoutItem *child = layout->takeAt(labelCount);
-        delete child->widget();
-        delete child;
-    }
-    while (layout->count() < labelCount + 1) {
-        layout->insertWidget(0, new QLabel(""), 0, Qt::AlignLeft);
-    }
-
-    for (int i = 0; i < labelCount; i++) {
-        D1Gfx *gfx = this->gfxset->getGfx(i);
-        CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(i)->widget()), gfx->getFilePath(), gfx->isModified());
-    }
-}
-
-void GfxsetView::update()
-{
-    int count;
-
-    this->updateLabel();
 
     // Set current and maximum group text
     count = this->gfx->getGroupCount();
