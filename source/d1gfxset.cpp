@@ -169,6 +169,11 @@ void D1Gfxset::save(const SaveAsParam &params)
     }
 }
 
+D1GFX_SET_TYPE D1Gfxset::getType() const
+{
+    return this->type;
+}
+
 int D1Gfxset::getGfxCount() const
 {
     return this->gfxList.size();

@@ -60,7 +60,67 @@ void GfxsetView::initialize(D1Pal *p, D1Gfxset *gs, bool bottomPanelHidden)
     this->gfxset = gs;
 
     this->ui->bottomPanel->setVisible(!bottomPanelHidden);
-
+    this->ui->misGfxsetPanel->setVisible(gs->getType() == D1GFX_SET_TYPE::Missile);
+    this->ui->monGfxsetPanel->setVisible(gs->getType() == D1GFX_SET_TYPE::Monster);
+    this->ui->plrGfxsetPanel->setVisible(gs->getType() == D1GFX_SET_TYPE::Player);
+    if (gs->getType() == D1GFX_SET_TYPE::Missile) {
+        if (gs->getGfxCount() == 16) {
+            this->ui->misNWButton->setToolTip(gs->getGfx(6)->getFilePath());
+            this->ui->misNNWButton->setToolTip(gs->getGfx(7)->getFilePath());
+            this->ui->misNButton->setToolTip(gs->getGfx(8)->getFilePath());
+            this->ui->misNNEButton->setToolTip(gs->getGfx(9)->getFilePath());
+            this->ui->misNEButton->setToolTip(gs->getGfx(10)->getFilePath());
+            this->ui->misWNWButton->setToolTip(gs->getGfx(5)->getFilePath());
+            this->ui->misENEButton->setToolTip(gs->getGfx(11)->getFilePath());
+            this->ui->misWButton->setToolTip(gs->getGfx(4)->getFilePath());
+            this->ui->misEButton->setToolTip(gs->getGfx(12)->getFilePath());
+            this->ui->misWSWButton->setToolTip(gs->getGfx(3)->getFilePath());
+            this->ui->misESEButton->setToolTip(gs->getGfx(13)->getFilePath());
+            this->ui->misSWButton->setToolTip(gs->getGfx(2)->getFilePath());
+            this->ui->misSSWButton->setToolTip(gs->getGfx(1)->getFilePath());
+            this->ui->misSButton->setToolTip(gs->getGfx(0)->getFilePath());
+            this->ui->misSSEButton->setToolTip(gs->getGfx(15)->getFilePath());
+            this->ui->misSEButton->setToolTip(gs->getGfx(14)->getFilePath());
+        } else {
+            // assert(gs->getGfxCount() == 8);
+            this->ui->misNWButton->setToolTip(gs->getGfx(DIR_NW)->getFilePath());
+            this->ui->misNNWButton->setVisible(false);
+            this->ui->misNButton->setToolTip(gs->getGfx(DIR_N)->getFilePath());
+            this->ui->misNNEButton->setVisible(false);
+            this->ui->misNEButton->setToolTip(gs->getGfx(DIR_NE)->getFilePath());
+            this->ui->misWNWButton->setVisible(false);
+            this->ui->misENEButton->setVisible(false);
+            this->ui->misWButton->setToolTip(gs->getGfx(DIR_W)->getFilePath());
+            this->ui->misEButton->setToolTip(gs->getGfx(DIR_E)->getFilePath());
+            this->ui->misWSWButton->setVisible(false);
+            this->ui->misESEButton->setVisible(false);
+            this->ui->misSWButton->setToolTip(gs->getGfx(DIR_SW)->getFilePath());
+            this->ui->misSSWButton->setVisible(false);
+            this->ui->misSButton->setToolTip(gs->getGfx(DIR_S)->getFilePath());
+            this->ui->misSSEButton->setVisible(false);
+            this->ui->misSEButton->setToolTip(gs->getGfx(DIR_SE)->getFilePath());
+        }
+    } else if (gs->getType() == D1GFX_SET_TYPE::Monster) {
+        this->ui->monStandButton->setToolTip(gs->getGfx(MA_STAND)->getFilePath());
+        this->ui->monAttackButton->setToolTip(gs->getGfx(MA_ATTACK)->getFilePath());
+        this->ui->monWalkButton->setToolTip(gs->getGfx(MA_WALK)->getFilePath());
+        this->ui->monSpecButton->setToolTip(gs->getGfx(MA_SPECIAL)->getFilePath());
+        this->ui->monHitButton->setToolTip(gs->getGfx(MA_GOTHIT)->getFilePath());
+        this->ui->monDeathButton->setToolTip(gs->getGfx(MA_DEATH)->getFilePath());
+    } else {
+        // assert(gs->getType() == D1GFX_SET_TYPE::Player);
+        this->ui->plrStandTownButton->setToolTip(gs->getGfx(PGT_STAND_TOWN)->getFilePath());
+        this->ui->plrStandDunButton->setToolTip(gs->getGfx(PGT_STAND_DUNGEON)->getFilePath());
+        this->ui->plrWalkTownButton->setToolTip(gs->getGfx(PGT_WALK_TOWN)->getFilePath());
+        this->ui->plrWalkDunButton->setToolTip(gs->getGfx(PGT_WALK_DUNGEON)->getFilePath());
+        this->ui->plrAttackButton->setToolTip(gs->getGfx(PGT_ATTACK)->getFilePath());
+        this->ui->plrBlockButton->setToolTip(gs->getGfx(PGT_BLOCK)->getFilePath());
+        this->ui->plrFireButton->setToolTip(gs->getGfx(PGT_FIRE)->getFilePath());
+        this->ui->plrMagicButton->setToolTip(gs->getGfx(PGT_MAGIC)->getFilePath());
+        this->ui->plrLightButton->setToolTip(gs->getGfx(PGT_LIGHTNING)->getFilePath());
+        this->ui->plrHitButton->setToolTip(gs->getGfx(PGT_GOTHIT)->getFilePath());
+        this->ui->plrDeathButton->setToolTip(gs->getGfx(PGT_DEATH)->getFilePath());
+    }
     // this->update();
 }
 

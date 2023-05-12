@@ -49,6 +49,461 @@
    </item>
    <item>
     <widget class="QWidget" name="bottomPanel">
+     <layout class="QHBoxLayout">
+     <item>
+      <widget class="QWidget">
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QWidget" name="misGfxsetPanel">
+          <layout class="QGridLayout">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="misNWButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">\</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="misNNWButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">&apos;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="misNButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">|</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QPushButton" name="misNNEButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">&apos;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QPushButton" name="misNEButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">/</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="misWNWButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">`</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="4">
+            <widget class="QPushButton" name="misENEButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">´</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="misWButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">-</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="4">
+            <widget class="QPushButton" name="misEButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">-</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QPushButton" name="misWSWButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">,</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="4">
+            <widget class="QPushButton" name="misESEButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">.</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QPushButton" name="misSWButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">/</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QPushButton" name="misSSWButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">,</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="2">
+            <widget class="QPushButton" name="misSButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">|</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="3">
+            <widget class="QPushButton" name="misSSEButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">.</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="4">
+            <widget class="QPushButton" name="misSEButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">\</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="monGfxsetPanel">
+          <layout class="QGridLayout">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="monStandButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Stand</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="monAttackButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Attack</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="monWalkButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Stand</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QPushButton" name="monSpecButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Spec</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="monHitButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Hit</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QPushButton" name="monDeathButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Death</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="plrGfxsetPanel">
+          <layout class="QGridLayout">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="plrStandTownButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Stand</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="plrStandDunButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Stand</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="plrWalkTownButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Walk</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QPushButton" name="plrWalkDunButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Walk</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="plrAttackButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Attack</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QPushButton" name="plrBlockButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Block</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QPushButton" name="plrFireButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Fire</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QPushButton" name="plrMagicButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Magic</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QPushButton" name="plrLightButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Light</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QPushButton" name="plrHitButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Hit</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="2">
+            <widget class="QPushButton" name="plrDeathButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Death</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
      <layout class="QGridLayout">
       <item row="0" column="0">
        <widget class="QLabel">
@@ -504,6 +959,8 @@
         </property>
        </widget>
       </item>
+     </layout>
+     </item>
      </layout>
     </widget>
    </item>

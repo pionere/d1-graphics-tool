@@ -25,6 +25,7 @@ public:
     bool load(const QString &gfxFilePath, const OpenAsParam &params);
     void save(const SaveAsParam &params);
 
+    D1GFX_SET_TYPE getType() const;
     int getGfxCount() const;
     D1Gfx *getGfx(int i) const;
     void replacePixels(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params);
