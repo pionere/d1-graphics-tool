@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include <QMap>
 
 #include "d1gfx.h"
@@ -25,10 +27,10 @@ public:
     void setMode(D1PALHITS_MODE m);
 
     // Returns the number of hits for a specific index
-    int getIndexHits(quint8 colorIndex, int itemIndex) const;
+    int getIndexHits(quint8 colorIndex, unsigned itemIndex);
 
 private:
-    void buildPalHits();
+    void buildFramePalHits();
     void buildSubtilePalHits();
     void buildTilePalHits();
 
@@ -40,7 +42,10 @@ private:
 
     // Palette hits are stored with a palette index key and a hit count value
     QMap<quint8, int> allFramesPalHits;
-    QMap<int, QMap<quint8, int>> framePalHits;
-    QMap<int, QMap<quint8, int>> tilePalHits;
-    QMap<int, QMap<quint8, int>> subtilePalHits;
+    std::vector<QMap<quint8, int>> framePalHits;
+    std::vector<QMap<quint8, int>> tilePalHits;
+    std::vector<QMap<quint8, int>> subtilePalHits;
+    bool framePalHitsBuilt;
+    bool subtilePalHitsBuilt;
+    bool tilePalHitsBuilt;
 };
