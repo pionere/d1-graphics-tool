@@ -473,10 +473,12 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
     std::vector<unsigned> &leftFrameReferences = this->min->getFrameReferences(potLeftSubtileRef - 1);
     std::vector<unsigned> &rightFrameReferences = this->min->getFrameReferences(potRightSubtileRef - 1);
 
-    unsigned blockSize = leftFrameReferences.size();
-    if (blockSize != BLOCK_SIZE_TOWN) {
+    constexpr unsigned blockSize = BLOCK_SIZE_TOWN;
+    if (leftFrameReferences.size() != blockSize || rightFrameReferences.size() != blockSize) {
+        dProgressErr() << QApplication::tr("The pot subtiles (%1, %2) are invalid (upscaled?).").arg(potLeftSubtileRef).arg(potRightSubtileRef);
         return;
     }
+
     unsigned leftIndex0 = MICRO_IDX(blockSize, 1);
     unsigned leftFrameRef0 = leftFrameReferences[leftIndex0];
     unsigned leftIndex1 = MICRO_IDX(blockSize, 3);
@@ -503,11 +505,6 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
     if ((frameLeft1->getWidth() != MICRO_WIDTH || frameLeft1->getHeight() != MICRO_HEIGHT)
         || (frameLeft2->getWidth() != MICRO_WIDTH || frameLeft2->getHeight() != MICRO_HEIGHT)) {
         dProgressErr() << QApplication::tr("Invalid (mismatching frames) pot floor subtile (%1).").arg(potLeftSubtileRef);
-        return;
-    }
-
-    if (rightFrameReferences.size() != blockSize) {
-        dProgressErr() << QApplication::tr("Invalid (mismatching subtiles) pot floor subtiles (%1, %2).").arg(potLeftSubtileRef).arg(potRightSubtileRef);
         return;
     }
 
@@ -600,6 +597,81 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
         dProgressErr() << QApplication::tr("Pot floor subtile (%1) is not triangle after patch.").arg(potLeftSubtileRef);
     } else if (!silent) {
         dProgress() << QApplication::tr("Frame %1 and %2 are modified and moved from subtile %3 to subtile %4.").arg(leftFrameRef1).arg(leftFrameRef2).arg(potLeftSubtileRef).arg(potRightSubtileRef);
+    }
+}
+
+void D1Tileset::patchTownCathedral(int cathedralTopLeftRef, int cathedralTopRightRef, int cathedralBottomLeftRef, bool silent)
+{
+    std::vector<unsigned> &topLeftFrameReferences = this->min->getFrameReferences(cathedralTopLeftRef - 1);
+    std::vector<unsigned> &topRightFrameReferences = this->min->getFrameReferences(cathedralTopRightRef - 1);
+    std::vector<unsigned> &bottomLeftFrameReferences = this->min->getFrameReferences(cathedralBottomLeftRef - 1);
+
+    constexpr unsigned blockSize = BLOCK_SIZE_TOWN;
+    if (topLeftFrameReferences.size() != blockSize || topRightFrameReferences.size() != blockSize || bottomLeftFrameReferences.size() != blockSize) {
+        dProgressErr() << QApplication::tr("The cathedral subtiles (%1, %2, %3) are invalid (upscaled?).").arg(cathedralTopLeftRef).arg(cathedralTopRightRef).arg(cathedralBottomLeftRef);
+        return;
+    }
+
+    unsigned leftIndex0 = MICRO_IDX(blockSize, 12); // 2145
+    unsigned leftFrameRef0 = bottomLeftFrameReferences[leftIndex0];
+    unsigned leftIndex1 = MICRO_IDX(blockSize, 12); // 2123
+    unsigned leftFrameRef1 = topLeftFrameReferences[leftIndex1];
+    unsigned rightIndex0 = MICRO_IDX(blockSize, 13); // 2124
+    unsigned rightFrameRef0 = topLeftFrameReferences[rightIndex0];
+    unsigned rightIndex1 = MICRO_IDX(blockSize, 13); // 2137
+    unsigned rightFrameRef1 = topRightFrameReferences[rightIndex1];
+
+    if (leftFrameRef0 == 0 || leftFrameRef1 == 0 || rightFrameRef0 == 0 || rightFrameRef1 == 0) {
+        dProgressErr() << QApplication::tr("Invalid (empty) cathedral subtiles (%1).").arg(leftFrameRef0 == 0 ? cathedralBottomLeftRef : (rightFrameRef1 == 0 ? cathedralTopRightRef : cathedralTopLeftRef));
+        return;
+    }
+
+    D1GfxFrame *frameLeft0 = this->gfx->getFrame(leftFrameRef0 - 1);   // 2145
+    D1GfxFrame *frameLeft1 = this->gfx->getFrame(leftFrameRef1 - 1);   // 2123
+    D1GfxFrame *frameRight0 = this->gfx->getFrame(rightFrameRef0 - 1); // 2124
+    D1GfxFrame *frameRight1 = this->gfx->getFrame(rightFrameRef1 - 1); // 2137
+
+    if ((frameLeft0->getWidth() != MICRO_WIDTH || frameLeft0->getHeight() != MICRO_HEIGHT)
+        || (frameLeft1->getWidth() != MICRO_WIDTH || frameLeft1->getHeight() != MICRO_HEIGHT)
+        || (frameRight0->getWidth() != MICRO_WIDTH || frameRight0->getHeight() != MICRO_HEIGHT)
+        || (frameRight1->getWidth() != MICRO_WIDTH || frameRight1->getHeight() != MICRO_HEIGHT)) {
+        dProgressErr() << QApplication::tr("Invalid (non standard dimensions) cathedral subtiles (%1, %2, %3).").arg(cathedralTopLeftRef).arg(cathedralTopRightRef).arg(cathedralBottomLeftRef);
+        return;
+    }
+
+    // draw extra line to each frame
+    bool change = false;
+    for (int x = 0; x < MICRO_WIDTH; x++) {
+        int y = MICRO_HEIGHT / 2 - x / 2;
+        change |= frameLeft0->setPixel(x, y, frameLeft0->getPixel(x, y + 6)); // 2145
+    }
+    for (int x = 0; x < MICRO_WIDTH - 4; x++) {
+        int y = MICRO_HEIGHT / 2 - x / 2;
+        change |= frameLeft1->setPixel(x, y, frameLeft1->getPixel(x + 4, y + 4)); // 2123 I.
+    }
+    for (int x = MICRO_WIDTH - 4; x < MICRO_WIDTH; x++) {
+        int y = MICRO_HEIGHT / 2 - x / 2;
+        change |= frameLeft1->setPixel(x, y, frameLeft1->getPixel(x, y + 2)); // 2123 II.
+    }
+    for (int x = 0; x < 20; x++) {
+        int y = 1 + x / 2;
+        change |= frameRight0->setPixel(x, y, frameRight0->getPixel(x, y + 1)); // 2124 I.
+    }
+    for (int x = 20; x < MICRO_WIDTH; x++) {
+        int y = 1 + x / 2;
+        change |= frameRight0->setPixel(x, y, frameRight0->getPixel(x - 12, y - 6)); // 2124 II.
+    }
+    for (int x = 0; x < MICRO_WIDTH; x++) {
+        int y = 1 + x / 2;
+        change |= frameRight1->setPixel(x, y, frameRight0->getPixel(x, y)); // 2137
+    }
+
+    if (change) {
+        this->gfx->setModified();
+
+        if (!silent) {
+            dProgress() << QApplication::tr("Frames %1, %2, %3 and %4 of subtiles %5, %6 and %7 are modified.").arg(leftFrameRef0).arg(leftFrameRef1).arg(rightFrameRef0).arg(rightFrameRef1).arg(cathedralTopLeftRef).arg(cathedralTopRightRef).arg(cathedralBottomLeftRef);
+        }
     }
 }
 
@@ -1268,6 +1340,8 @@ void D1Tileset::patch(int dunType, bool silent)
                 }
             }
         }
+        // patch subtiles of the cathedral to fix graphical glitch
+        this->patchTownCathedral(805, 806, 807, silent);
     } break;
     case DTYPE_CATHEDRAL:
         // patch dMiniTiles - L1.MIN
