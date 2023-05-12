@@ -60,12 +60,39 @@ void GfxsetView::initialize(D1Pal *p, D1Gfxset *gs, bool bottomPanelHidden)
     this->gfxset = gs;
 
     this->ui->bottomPanel->setVisible(!bottomPanelHidden);
+
+    this->update();
+}
+
+void GfxsetView::update()
+{
+    D1Gfxset *gs = this->gfxset;
+
     this->ui->misGfxsetPanel->setVisible(gs->getType() == D1GFX_SET_TYPE::Missile);
     this->ui->monGfxsetPanel->setVisible(gs->getType() == D1GFX_SET_TYPE::Monster);
     this->ui->plrGfxsetPanel->setVisible(gs->getType() == D1GFX_SET_TYPE::Player);
+    QPushButton *buttons[16];
+    unsigned numButtons = 0;
     if (gs->getType() == D1GFX_SET_TYPE::Missile) {
         if (gs->getGfxCount() == 16) {
-            this->ui->misNWButton->setToolTip(gs->getGfx(6)->getFilePath());
+            numButtons = 16;
+            buttons[0] = this->ui->misSButton;
+            buttons[1] = this->ui->misSSWButton;
+            buttons[2] = this->ui->misSWButton;
+            buttons[3] = this->ui->misWSWButton;
+            buttons[4] = this->ui->misWButton;
+            buttons[5] = this->ui->misWNWButton;
+            buttons[6] = this->ui->misNWButton;
+            buttons[7] = this->ui->misNNWButton;
+            buttons[8] = this->ui->misNButton;
+            buttons[9] = this->ui->misNNEButton;
+            buttons[10] = this->ui->misNEButton;
+            buttons[11] = this->ui->misENEButton;
+            buttons[12] = this->ui->misEButton;
+            buttons[13] = this->ui->misESEButton;
+            buttons[14] = this->ui->misSEButton;
+            buttons[15] = this->ui->misSSEButton;
+            /*this->ui->misNWButton->setToolTip(gs->getGfx(6)->getFilePath());
             this->ui->misNNWButton->setToolTip(gs->getGfx(7)->getFilePath());
             this->ui->misNButton->setToolTip(gs->getGfx(8)->getFilePath());
             this->ui->misNNEButton->setToolTip(gs->getGfx(9)->getFilePath());
@@ -80,10 +107,27 @@ void GfxsetView::initialize(D1Pal *p, D1Gfxset *gs, bool bottomPanelHidden)
             this->ui->misSSWButton->setToolTip(gs->getGfx(1)->getFilePath());
             this->ui->misSButton->setToolTip(gs->getGfx(0)->getFilePath());
             this->ui->misSSEButton->setToolTip(gs->getGfx(15)->getFilePath());
-            this->ui->misSEButton->setToolTip(gs->getGfx(14)->getFilePath());
+            this->ui->misSEButton->setToolTip(gs->getGfx(14)->getFilePath());*/
         } else {
             // assert(gs->getGfxCount() == 8);
-            this->ui->misNWButton->setToolTip(gs->getGfx(DIR_NW)->getFilePath());
+            numButtons = 8;
+            buttons[DIR_S] = this->ui->misSButton;
+            buttons[DIR_SW] = this->ui->misSWButton;
+            buttons[DIR_W] = this->ui->misWButton;
+            buttons[DIR_NW] = this->ui->misNWButton;
+            buttons[DIR_N] = this->ui->misNButton;
+            buttons[DIR_NE] = this->ui->misWEButton;
+            buttons[DIR_E] = this->ui->misEButton;
+            buttons[DIR_SE] = this->ui->misSEButton;
+            this->ui->misNNWButton->setVisible(false);
+            this->ui->misNNEButton->setVisible(false);
+            this->ui->misWNWButton->setVisible(false);
+            this->ui->misENEButton->setVisible(false);
+            this->ui->misWSWButton->setVisible(false);
+            this->ui->misESEButton->setVisible(false);
+            this->ui->misSSWButton->setVisible(false);
+            this->ui->misSSEButton->setVisible(false);
+            /*this->ui->misNWButton->setToolTip(gs->getGfx(DIR_NW)->getFilePath());
             this->ui->misNNWButton->setVisible(false);
             this->ui->misNButton->setToolTip(gs->getGfx(DIR_N)->getFilePath());
             this->ui->misNNEButton->setVisible(false);
@@ -98,18 +142,37 @@ void GfxsetView::initialize(D1Pal *p, D1Gfxset *gs, bool bottomPanelHidden)
             this->ui->misSSWButton->setVisible(false);
             this->ui->misSButton->setToolTip(gs->getGfx(DIR_S)->getFilePath());
             this->ui->misSSEButton->setVisible(false);
-            this->ui->misSEButton->setToolTip(gs->getGfx(DIR_SE)->getFilePath());
+            this->ui->misSEButton->setToolTip(gs->getGfx(DIR_SE)->getFilePath());*/
         }
     } else if (gs->getType() == D1GFX_SET_TYPE::Monster) {
-        this->ui->monStandButton->setToolTip(gs->getGfx(MA_STAND)->getFilePath());
+        numButtons = 6;
+        buttons[MA_STAND] = this->ui->monStandButton;
+        buttons[MA_ATTACK] = this->ui->monAttackButton;
+        buttons[MA_WALK] = this->ui->monWalkButton;
+        buttons[MA_SPECIAL] = this->ui->monSpecButton;
+        buttons[MA_GOTHIT] = this->ui->monHitButton;
+        buttons[MA_DEATH] = this->ui->monDeathButton;
+        /*this->ui->monStandButton->setToolTip(gs->getGfx(MA_STAND)->getFilePath());
         this->ui->monAttackButton->setToolTip(gs->getGfx(MA_ATTACK)->getFilePath());
         this->ui->monWalkButton->setToolTip(gs->getGfx(MA_WALK)->getFilePath());
         this->ui->monSpecButton->setToolTip(gs->getGfx(MA_SPECIAL)->getFilePath());
         this->ui->monHitButton->setToolTip(gs->getGfx(MA_GOTHIT)->getFilePath());
-        this->ui->monDeathButton->setToolTip(gs->getGfx(MA_DEATH)->getFilePath());
+        this->ui->monDeathButton->setToolTip(gs->getGfx(MA_DEATH)->getFilePath());*/
     } else {
         // assert(gs->getType() == D1GFX_SET_TYPE::Player);
-        this->ui->plrStandTownButton->setToolTip(gs->getGfx(PGT_STAND_TOWN)->getFilePath());
+        numButtons = 11;
+        buttons[PGT_STAND_TOWN] = this->ui->plrStandTownButton;
+        buttons[PGT_STAND_DUNGEON] = this->ui->plrStandDunButton;
+        buttons[PGT_WALK_TOWN] = this->ui->plrWalkTownButton;
+        buttons[PGT_WALK_DUNGEON] = this->ui->plrWalkDunButton;
+        buttons[PGT_ATTACK] = this->ui->plrAttackButton;
+        buttons[PGT_BLOCK] = this->ui->plrBlockButton;
+        buttons[PGT_FIRE] = this->ui->plrFireButton;
+        buttons[PGT_MAGIC] = this->ui->plrMagicButton;
+        buttons[PGT_LIGHTNING] = this->ui->plrLightButton;
+        buttons[PGT_GOTHIT] = this->ui->plrHitButton;
+        buttons[PGT_DEATH] = this->ui->plrDeathButton;
+        /*this->ui->plrStandTownButton->setToolTip(gs->getGfx(PGT_STAND_TOWN)->getFilePath());
         this->ui->plrStandDunButton->setToolTip(gs->getGfx(PGT_STAND_DUNGEON)->getFilePath());
         this->ui->plrWalkTownButton->setToolTip(gs->getGfx(PGT_WALK_TOWN)->getFilePath());
         this->ui->plrWalkDunButton->setToolTip(gs->getGfx(PGT_WALK_DUNGEON)->getFilePath());
@@ -119,9 +182,15 @@ void GfxsetView::initialize(D1Pal *p, D1Gfxset *gs, bool bottomPanelHidden)
         this->ui->plrMagicButton->setToolTip(gs->getGfx(PGT_MAGIC)->getFilePath());
         this->ui->plrLightButton->setToolTip(gs->getGfx(PGT_LIGHTNING)->getFilePath());
         this->ui->plrHitButton->setToolTip(gs->getGfx(PGT_GOTHIT)->getFilePath());
-        this->ui->plrDeathButton->setToolTip(gs->getGfx(PGT_DEATH)->getFilePath());
+        this->ui->plrDeathButton->setToolTip(gs->getGfx(PGT_DEATH)->getFilePath());*/
     }
-    // this->update();
+
+    D1Gfx *baseGfx = gs->getBaseGfx();
+    for (unsigned i = 0; i < numButtons; i++) {
+        D1Gfx *gfx = gs->getGfx(i);
+        buttons[i]->setEnabled(gfx != baseGfx);
+        buttons[i]->setToolTip(gfx->getFilePath());
+    }
 }
 
 void GfxsetView::setPal(D1Pal *p)

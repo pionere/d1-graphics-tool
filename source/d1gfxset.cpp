@@ -184,6 +184,11 @@ D1Gfx *D1Gfxset::getGfx(int index) const
     return this->gfxList[index];
 }
 
+D1Gfx *D1Gfxset::getBaseGfx() const
+{
+    return this->baseGfx;
+}
+
 void D1Gfxset::replacePixels(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params)
 {
     for (D1Gfx *gfx : this->gfxList) {

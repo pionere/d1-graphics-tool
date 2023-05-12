@@ -305,7 +305,7 @@
               <number>48</number>
              </property>
              <property name="text">
-              <string>Stand</string>
+              <string>Walk</string>
              </property>
             </widget>
            </item>
