@@ -3067,6 +3067,7 @@ void LevelCelView::upscale(const UpscaleParam &params)
 
 void LevelCelView::displayFrame()
 {
+    QMessageBox::critical(nullptr, "Error", "displayFrame");
     this->update();
 
     this->celScene.clear();
