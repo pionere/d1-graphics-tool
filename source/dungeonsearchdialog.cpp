@@ -73,7 +73,7 @@ void DungeonSearchDialog::on_searchButton_clicked()
     // do the search
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG);
 
-    QString msg = tr("Searching for %1 with index %2").arg(typeTxt).arg(params.index);
+    QString msg = tr("Searching for %1 with index %2%3").arg(typeTxt).arg(params.index).arg(params.special ? "*" : "");
     if (params.area.x() != 0 || params.area.y() != 0 || params.area.width() != this->dun->getWidth() || params.area.height() != this->dun->getHeight()) {
         msg += tr(" starting from %1:%2").arg(params.area.x()).arg(params.area.y());
         if (params.area.x() + params.area.width() != this->dun->getWidth() || params.area.y() + params.area.height() != this->dun->getHeight()) {
@@ -125,20 +125,19 @@ void DungeonSearchDialog::on_searchButton_clicked()
     if (matches.empty()) {
         dProgress() << tr("Not found.");
     } else {
-        QString msg;
         if (matches.size() > 4) {
-            msg = tr("Found at:");
+            dProgress() << tr("Found at:");
             for (const QPoint &match : matches) {
-                msg += QString("\n\t%1:%2").arg(match.x()).arg(match.y());
+                dProgress() << QString("    %1:%2").arg(match.x()).arg(match.y());
             }
         } else {
-            msg = tr("Found at");
+            QString msg = tr("Found at");
             for (const QPoint &match : matches) {
                 msg += QString(" %1:%2,").arg(match.x()).arg(match.y());
             }
             msg[msg.length() - 1] = '.';
+            dProgress() << msg;
         }
-        dProgress() << msg;
     }
 
     if (params.doReplace) {
@@ -174,6 +173,7 @@ void DungeonSearchDialog::on_searchButton_clicked()
                 break;
             }
         }
+        dProgress() << tr("Replaced with %1%2.").arg(params.replace).arg(params.replaceSpec ? "*" : "");
     }
 
     // Clear loading message from status bar
