@@ -841,7 +841,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     this->on_actionClose_triggered();
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_NONE);
 
     // Loading default.pal
     D1Pal *newPal = new D1Pal();
@@ -1034,13 +1034,14 @@ void MainWindow::openFile(const OpenAsParam &params)
     palLayout->addWidget(this->trnUniqueWidget);
     palLayout->addWidget(this->trnBaseWidget);
 
+    QMessageBox::critical(nullptr, "Error", "Load 0");
     QWidget *view;
     if (isGfxset) {
         // build a GfxsetView
         this->gfxsetView = new GfxsetView(this);
         this->gfxsetView->initialize(this->pal, this->gfxset, this->bottomPanelHidden);
 
-        // Refresh palette widgets when frame, subtile of tile is changed
+        // Refresh palette widgets when frame is changed
         QObject::connect(this->gfxsetView, &GfxsetView::frameRefreshed, this->palWidget, &PaletteWidget::update);
 
         // Refresh palette widgets when the palette is changed (loading a PCX file)
@@ -1052,7 +1053,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->levelCelView = new LevelCelView(this);
         this->levelCelView->initialize(this->pal, this->tileset, this->dun, this->bottomPanelHidden);
 
-        // Refresh palette widgets when frame, subtile of tile is changed
+        // Refresh palette widgets when frame, subtile or tile is changed
         QObject::connect(this->levelCelView, &LevelCelView::frameRefreshed, this->palWidget, &PaletteWidget::update);
 
         // Refresh palette widgets when the palette is changed (loading a PCX file)
@@ -1089,6 +1090,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->paintWidget->setPalette(this->trnBase->getResultingPalette());
     }
 
+    QMessageBox::critical(nullptr, "Error", "Load 1");
     // prepare the builder dialog
     if (this->dun != nullptr) {
         this->builderWidget = new BuilderWidget(this, this->undoStack, this->dun, this->levelCelView, this->tileset);
@@ -1096,17 +1098,20 @@ void MainWindow::openFile(const OpenAsParam &params)
         QObject::connect(this->levelCelView, &LevelCelView::dunResourcesModified, this->builderWidget, &BuilderWidget::dunResourcesModified);
     }
 
+    QMessageBox::critical(nullptr, "Error", "Load 2");
     // Initialize palette widgets
     this->palHits = new D1PalHits(this->gfx, this->tileset, this->gfxset);
     this->palWidget->initialize(this->pal, this->celView, this->levelCelView, this->gfxsetView, this->palHits);
     this->trnUniqueWidget->initialize(this->trnUnique, this->celView, this->levelCelView, this->gfxsetView, this->palHits);
     this->trnBaseWidget->initialize(this->trnBase, this->celView, this->levelCelView, this->gfxsetView, this->palHits);
 
+    QMessageBox::critical(nullptr, "Error", "Load 3");
     // setup default options in the palette widgets
     // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), this->pal->getFilePath());
     this->trnUniqueWidget->updatePathComboBoxOptions(this->uniqueTrns.keys(), this->trnUnique->getFilePath());
     this->trnBaseWidget->updatePathComboBoxOptions(this->baseTrns.keys(), this->trnBase->getFilePath());
 
+    QMessageBox::critical(nullptr, "Error", "Load 4");
     // Palette and translation file selection
     // When a .pal or .trn file is selected in the PaletteWidget update the pal or trn
     QObject::connect(this->palWidget, &PaletteWidget::pathSelected, this, &MainWindow::setPal);
@@ -1152,7 +1157,9 @@ void MainWindow::openFile(const OpenAsParam &params)
     if (firstPaletteFound.isEmpty()) {
         firstPaletteFound = D1Pal::DEFAULT_PATH;
     }
+    QMessageBox::critical(nullptr, "Error", "Load 5");
     this->setPal(firstPaletteFound); // should trigger view->displayFrame()
+    QMessageBox::critical(nullptr, "Error", "Load 6");
 
     // update available menu entries
     this->ui->menuEdit->setEnabled(fileType != 4);
@@ -1170,8 +1177,10 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->menuTileset->setEnabled(isTileset);
     this->ui->menuDungeon->setEnabled(this->dun != nullptr);
 
+    QMessageBox::critical(nullptr, "Error", "Load 7");
     // Clear loading message from status bar
     ProgressDialog::done();
+    QMessageBox::critical(nullptr, "Error", "Load 8");
 }
 
 void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append)

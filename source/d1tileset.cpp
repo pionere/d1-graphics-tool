@@ -7,6 +7,16 @@
 #include "d1celtileset.h"
 #include "progressdialog.h"
 
+#include "dungeon/all.h"
+
+static constexpr int BLOCK_SIZE_TOWN = 16;
+static constexpr int BLOCK_SIZE_L1 = 10;
+static constexpr int BLOCK_SIZE_L2 = 10;
+static constexpr int BLOCK_SIZE_L3 = 10;
+static constexpr int BLOCK_SIZE_L4 = 16;
+static constexpr int BLOCK_SIZE_L5 = 10;
+static constexpr int BLOCK_SIZE_L6 = 10;
+
 D1Tileset::D1Tileset(D1Gfx *g)
     : gfx(g)
 {
@@ -380,7 +390,7 @@ static void ReplaceFrame(D1Min *min, int dstSubtileRef, int dstMicroIndex, int s
     unsigned currFrameReference = dstFrameReferences[dstIndex];
     if (min->setFrameReference(dstSubtileIndex, dstIndex, srcFrameRef)) {
         if (currFrameReference != 0) {
-            deletedFrames.insert(frameReference);
+            deletedFrames.insert(currFrameReference);
         }
         if (!silent) {
             dProgress() << QApplication::tr("Frame %1 of Subtile %2 is set to Frame %3.").arg(dstIndex + 1).arg(dstSubtileIndex + 1).arg(srcFrameRef);
@@ -464,7 +474,7 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
     std::vector<unsigned> &rightFrameReferences = this->min->getFrameReferences(potRightSubtileRef - 1);
 
     unsigned blockSize = leftFrameReferences.size();
-    if (blockSize != 16) {
+    if (blockSize != BLOCK_SIZE_TOWN) {
         return;
     }
     unsigned leftIndex0 = MICRO_IDX(blockSize, 1);
@@ -613,7 +623,7 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
     std::vector<unsigned> &bottomLeftFrameReferences = this->min->getFrameReferences(139 - 1);
     std::vector<unsigned> &bottomRightFrameReferences = this->min->getFrameReferences(140 - 1);
 
-    unsigned blockSize = 16;
+    constexpr unsigned blockSize = BLOCK_SIZE_L4;
     if (topLeftFrameReferences.size() != blockSize || topRightFrameReferences.size() != blockSize || bottomLeftFrameReferences.size() != blockSize || bottomRightFrameReferences.size() != blockSize) {
         dProgressErr() << QApplication::tr("The exit tile (%1) has invalid (upscaled?) subtiles.").arg(tileIndex + 1);
         return;
@@ -735,7 +745,7 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
 
 void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int extTileIndex1, int extTileIndex2, int stairsSubtileRef1, int stairsSubtileRef2, bool silent)
 {
-    constexpr unsigned blockSize = 10;
+    constexpr unsigned blockSize = BLOCK_SIZE_L2;
 
     constexpr int backSubtileRef0 = 250;
     constexpr int backSubtileRef2 = 251;
@@ -1239,7 +1249,7 @@ void D1Tileset::patch(int dunType, bool silent)
             71, 79, 80, 166, 176, 228, 230, 236, 238, 241, 242, 245, 246, 247, 248, 249, 250, 251, 252, 253, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 577, 578, 579, 580, 750, 751, 752, 753, 1064, 1115, 1116, 1117, 1118, 1135, 1136, 1137, 1138, 1141, 1142, 1143, 1144, 1145, 1146, 1147, 1148, 1149, 1150, 1151, 1153, 1199, 1200, 1201, 1202, 1221, 1222, 1223, 1224, 1225, 1226, 1227, 1228, 1229, 1230, 1231, 1232, 1233, 1234, 1235, 1236
         };
         for (int n = 0; n < lengthof(unusedSubtiles); n++) {
-            for (int i = 0; i < blockSize; i++) {
+            for (int i = 0; i < BLOCK_SIZE_TOWN; i++) {
                 Blk2Mcr(unusedSubtiles[n], i);
             }
         }
@@ -1253,7 +1263,7 @@ void D1Tileset::patch(int dunType, bool silent)
                 1293, 1341, 1342, 1343, 1345, 1346, 1347, 1348, 1349, 1350, 1351, 1352, 1353, 1354, 1355, 1356, 1357, 1358, 1359, 1361, 1362, 1363, 1364, 1365, 1366, 1367, 1368, 1369, 1371, 1372, 1373, 1374, 1375, 1377, 1378, 1379
             };
             for (int n = 0; n < lengthof(unusedSubtilesHellfire); n++) {
-                for (int i = 0; i < blockSize; i++) {
+                for (int i = 0; i < BLOCK_SIZE_TOWN; i++) {
                     Blk2Mcr(unusedSubtilesHellfire[n], i);
                 }
             }
