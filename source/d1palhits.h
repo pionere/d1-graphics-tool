@@ -28,7 +28,7 @@ public:
     void setMode(D1PALHITS_MODE m);
 
     // Returns the number of hits for a specific index
-    int getIndexHits(quint8 colorIndex, unsigned itemIndex) const;
+    int getIndexHits(quint8 colorIndex, unsigned itemIndex);
 
 private:
     void buildFramePalHits();

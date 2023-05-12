@@ -118,7 +118,7 @@ void D1PalHits::buildTilePalHits()
     }
 }
 
-int D1PalHits::getIndexHits(quint8 colorIndex, unsigned itemIndex) const
+int D1PalHits::getIndexHits(quint8 colorIndex, unsigned itemIndex)
 {
     switch (this->mode) {
     case D1PALHITS_MODE::ALL_COLORS:
