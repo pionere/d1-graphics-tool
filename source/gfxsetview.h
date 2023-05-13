@@ -17,6 +17,7 @@
 
 #include "celview.h"
 #include "d1gfxset.h"
+#include "pushbuttonwidget.h"
 #include "resizedialog.h"
 #include "upscaledialog.h"
 

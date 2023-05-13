@@ -172,8 +172,44 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
 
 void D1Gfxset::save(const SaveAsParam &params)
 {
-    for (D1Gfx *gfx : this->gfxList) {
-        D1Cl2::save(*gfx, params);
+    SaveAsParam saveParams = params;
+    QString filePath = saveParams.celFilePath;
+    bool uppercase = false;
+    if (!filePath.isEmpty()) {
+        if (filePath.toLower().endsWith(".cl2")) {
+            uppercase = filePath[filePath.length() - 2] == 'L';
+            filePath.chop(4);
+        }
+        if (this->type == D1GFX_SET_TYPE::Missile) {
+            if (filePath[filePath.length() - 1] == '1') {
+                filePath.chop(1);
+            }
+        } else if (this->type == D1GFX_SET_TYPE::Monster) {
+            if (filePath[filePath.length() - 1].toLower() == animletter[0]) {
+                filePath.chop(1);
+            }
+        } else {
+            // assert(this->type == D1GFX_SET_TYPE::Player);
+            if ((filePath[filePath.length() - 2].toLower() == PlrAnimTypes[0].patTxt[0])
+                && (filePath[filePath.length() - 1].toLower() == PlrAnimTypes[0].patTxt[1]))
+                filePath.chop(2);
+        }
+    }
+    for (unsigned i = 0; i < this->gfxList.size(); i++) {
+        if (!filePath.isEmpty()) {
+            QString anim;
+            if (this->type == D1GFX_SET_TYPE::Missile) {
+                anim = QString::number(i + 1);
+            } else if (this->type == D1GFX_SET_TYPE::Monster) {
+                anim = animletter[i];
+            } else {
+                // assert(this->type == D1GFX_SET_TYPE::Player);
+                anim += QChar(PlrAnimTypes[i].patTxt[0]) + QChar(PlrAnimTypes[i].patTxt[1]);
+            }
+            anim += ".cl2";
+            saveParams.celFilePath = filePath + (uppercase ? anim.toUpper() : anim);
+        }
+        D1Cl2::save(*this->gfxList[i], saveParams);
     }
 }
 

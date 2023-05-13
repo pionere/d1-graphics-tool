@@ -12,10 +12,18 @@
 class PushButtonWidget : public QPushButton {
     Q_OBJECT
 
-public:
     explicit PushButtonWidget(QWidget *parent, QStyle::StandardPixmap type, const QString &tooltip);
+
+public:
     ~PushButtonWidget() = default;
 
+    template <typename Object, typename PointerToMemberFunction>
+    static PushButtonWidget *addButton(QWidget *parent, QStyle::StandardPixmap type, const QString &tooltip, const Object receiver, PointerToMemberFunction method)
+    {
+        PushButtonWidget *widget = new PushButtonWidget(parent, type, tooltip);
+        QObject::connect(widget, &QPushButton::clicked, receiver, method);
+        return widget;
+    }
     template <typename Object, typename PointerToMemberFunction>
     static PushButtonWidget *addButton(QWidget *parent, QLayout *layout, QStyle::StandardPixmap type, const QString &tooltip, const Object receiver, PointerToMemberFunction method)
     {

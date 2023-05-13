@@ -16,7 +16,6 @@
 #include "d1pcx.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
-#include "pushbuttonwidget.h"
 #include "ui_gfxsetview.h"
 #include "upscaler.h"
 
@@ -32,8 +31,7 @@ GfxsetView::GfxsetView(QWidget *parent)
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Painter_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
 
-    this->loadGfxBtn = new PushButtonWidget(this, QStyle::SP_DialogOpenButton, tr("Select graphics"));
-    QObject::connect(this->loadGfxBtn, &QPushButton::clicked, this, &GfxsetView::on_loadGfxPushButtonClicked);
+    this->loadGfxBtn = PushButtonWidget::addButton(this, QStyle::SP_DialogOpenButton, tr("Select graphics"), this, &GfxsetView::on_loadGfxPushButtonClicked);
 
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &GfxsetView::framePixelClicked);
