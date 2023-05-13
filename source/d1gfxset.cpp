@@ -271,7 +271,7 @@ void D1Gfxset::save(const SaveAsParam &params)
             // CL2 without content -> delete
             QString cl2FilePath = saveParams.celFilePath;
             if (QFile::exists(cl2FilePath) && !QFile::remove(cl2FilePath)) {
-                dProgressFail() << tr("Failed to remove file: %1.").arg(QDir::toNativeSeparators(cl2FilePath));
+                dProgressFail() << QApplication::tr("Failed to remove file: %1.").arg(QDir::toNativeSeparators(cl2FilePath));
             } else {
                 // treat empty files as non-modified
                 gfx->setModified(false);
