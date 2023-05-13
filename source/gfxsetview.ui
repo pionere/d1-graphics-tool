@@ -370,7 +370,7 @@
            <item row="0" column="1">
             <widget class="QLabel" name="plrClassLabel">
              <property name="alignment">
-              <set>Qt::AlignJustify</set>
+              <set>Qt::AlignCenter</set>
              </property>
             </widget>
            </item>
@@ -403,7 +403,7 @@
            <item row="1" column="1">
             <widget class="QLabel" name="plrArmorLabel">
              <property name="alignment">
-              <set>Qt::AlignJustify</set>
+              <set>Qt::AlignCenter</set>
              </property>
             </widget>
            </item>
@@ -436,7 +436,7 @@
            <item row="2" column="1">
             <widget class="QLabel" name="plrWeaponLabel">
              <property name="alignment">
-              <set>Qt::AlignJustify</set>
+              <set>Qt::AlignCenter</set>
              </property>
             </widget>
            </item>
@@ -979,6 +979,13 @@
          <bool>true</bool>
         </property>
        </widget>
+      </item>
+      <item row="3" column="0" colspan="18">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </spacer>
       </item>
      </layout>
      </item>
