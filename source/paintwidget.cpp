@@ -126,6 +126,11 @@ void PaintWidget::setPalette(D1Pal *p)
     this->pal = p;
 }
 
+void PaintWidget::setGfx(D1Gfx *g)
+{
+    this->gfx = g;
+}
+
 void PaintWidget::show()
 {
     if (!this->moved) {

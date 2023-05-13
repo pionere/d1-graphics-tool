@@ -39,6 +39,7 @@ public:
 
     void initialize(D1Pal *pal, D1Gfxset *gfxset, bool bottomPanelHidden);
     void setPal(D1Pal *pal);
+    void setGfx(D1Gfx *gfx);
 
     CelScene *getCelScene() const;
     int getCurrentFrameIndex() const;
@@ -67,12 +68,47 @@ private:
     void setFrameIndex(int frameIndex);
     void updateGroupIndex();
     void setGroupIndex(int groupIndex);
+    void selectGfx(int gfxIndex);
 
 signals:
     void frameRefreshed();
     void palModified();
 
 private slots:
+    void on_misNWButton_clicked();
+    void on_misNNWButton_clicked();
+    void on_misNButton_clicked();
+    void on_misNNEButton_clicked();
+    void on_misNEButton_clicked();
+    void on_misWNWButton_clicked();
+    void on_misENEButton_clicked();
+    void on_misWButton_clicked();
+    void on_misEButton_clicked();
+    void on_misWSWButton_clicked();
+    void on_misESEButton_clicked();
+    void on_misSWButton_clicked();
+    void on_misSSWButton_clicked();
+    void on_misSButton_clicked();
+    void on_misSSEButton_clicked();
+    void on_misSEButton_clicked();
+    void on_monStandButton_clicked();
+    void on_monAttackButton_clicked();
+    void on_monWalkButton_clicked();
+    void on_monSpecButton_clicked();
+    void on_monHitButton_clicked();
+    void on_monDeathButton_clicked();
+    void on_plrStandTownButton_clicked();
+    void on_plrStandDunButton_clicked();
+    void on_plrWalkTownButton_clicked();
+    void on_plrWalkDunButton_clicked();
+    void on_plrAttackButton_clicked();
+    void on_plrBlockButton_clicked();
+    void on_plrFireButton_clicked();
+    void on_plrMagicButton_clicked();
+    void on_plrLightButton_clicked();
+    void on_plrHitButton_clicked();
+    void on_plrDeathButton_clicked();
+
     void on_framesGroupCheckBox_clicked();
     void on_firstFrameButton_clicked();
     void on_previousFrameButton_clicked();

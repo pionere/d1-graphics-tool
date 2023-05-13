@@ -44,6 +44,7 @@ public:
     ~PaintWidget();
 
     void setPalette(D1Pal *pal);
+    void setGfx(D1Gfx *gfx);
 
     void show(); // override;
     void hide(); // override;

@@ -15,6 +15,12 @@ void D1PalHits::update()
     this->subtilePalHitsBuilt = false;
 }
 
+void D1PalHits::setGfx(D1Gfx *gfx)
+{
+    this->gfx = gfx;
+    this->update();
+}
+
 D1PALHITS_MODE D1PalHits::getMode() const
 {
     return this->mode;

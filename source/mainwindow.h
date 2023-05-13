@@ -81,6 +81,7 @@ public:
     void resize(const ResizeParam &params);
     void upscale(const UpscaleParam &params);
 
+    void gfxChanged(D1Gfx *gfx);
     void paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type);
     void changeColors(const RemapParam &params);
     void colorModified();

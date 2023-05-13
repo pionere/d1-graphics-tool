@@ -27,6 +27,7 @@ public:
 
     D1GFX_SET_TYPE getType() const;
     int getGfxCount() const;
+    void setGfx(D1Gfx *gfx); // set base gfx
     D1Gfx *getGfx(int i) const;
     D1Gfx *getBaseGfx() const;
     void replacePixels(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, const RemapParam &params);

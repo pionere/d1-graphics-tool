@@ -69,6 +69,16 @@ void GfxsetView::setPal(D1Pal *p)
     this->pal = p;
 }
 
+void GfxsetView::setGfx(D1Gfx *gfx)
+{
+    this->gfx = gfx;
+
+    if (this->currentFrameIndex >= this->gfx->getFrameCount()) {
+        this->currentFrameIndex = 0;
+    }
+    this->updateGroupIndex();
+}
+
 // Displaying CEL file path information
 void GfxsetView::updateLabel()
 {
@@ -121,22 +131,6 @@ void GfxsetView::update()
             buttons[13] = this->ui->misESEButton;
             buttons[14] = this->ui->misSEButton;
             buttons[15] = this->ui->misSSEButton;
-            /*this->ui->misNWButton->setToolTip(gs->getGfx(6)->getFilePath());
-            this->ui->misNNWButton->setToolTip(gs->getGfx(7)->getFilePath());
-            this->ui->misNButton->setToolTip(gs->getGfx(8)->getFilePath());
-            this->ui->misNNEButton->setToolTip(gs->getGfx(9)->getFilePath());
-            this->ui->misNEButton->setToolTip(gs->getGfx(10)->getFilePath());
-            this->ui->misWNWButton->setToolTip(gs->getGfx(5)->getFilePath());
-            this->ui->misENEButton->setToolTip(gs->getGfx(11)->getFilePath());
-            this->ui->misWButton->setToolTip(gs->getGfx(4)->getFilePath());
-            this->ui->misEButton->setToolTip(gs->getGfx(12)->getFilePath());
-            this->ui->misWSWButton->setToolTip(gs->getGfx(3)->getFilePath());
-            this->ui->misESEButton->setToolTip(gs->getGfx(13)->getFilePath());
-            this->ui->misSWButton->setToolTip(gs->getGfx(2)->getFilePath());
-            this->ui->misSSWButton->setToolTip(gs->getGfx(1)->getFilePath());
-            this->ui->misSButton->setToolTip(gs->getGfx(0)->getFilePath());
-            this->ui->misSSEButton->setToolTip(gs->getGfx(15)->getFilePath());
-            this->ui->misSEButton->setToolTip(gs->getGfx(14)->getFilePath());*/
         } else {
             // assert(gs->getGfxCount() == 8);
             numButtons = 8;
@@ -156,22 +150,6 @@ void GfxsetView::update()
             this->ui->misESEButton->setVisible(false);
             this->ui->misSSWButton->setVisible(false);
             this->ui->misSSEButton->setVisible(false);
-            /*this->ui->misNWButton->setToolTip(gs->getGfx(DIR_NW)->getFilePath());
-            this->ui->misNNWButton->setVisible(false);
-            this->ui->misNButton->setToolTip(gs->getGfx(DIR_N)->getFilePath());
-            this->ui->misNNEButton->setVisible(false);
-            this->ui->misNEButton->setToolTip(gs->getGfx(DIR_NE)->getFilePath());
-            this->ui->misWNWButton->setVisible(false);
-            this->ui->misENEButton->setVisible(false);
-            this->ui->misWButton->setToolTip(gs->getGfx(DIR_W)->getFilePath());
-            this->ui->misEButton->setToolTip(gs->getGfx(DIR_E)->getFilePath());
-            this->ui->misWSWButton->setVisible(false);
-            this->ui->misESEButton->setVisible(false);
-            this->ui->misSWButton->setToolTip(gs->getGfx(DIR_SW)->getFilePath());
-            this->ui->misSSWButton->setVisible(false);
-            this->ui->misSButton->setToolTip(gs->getGfx(DIR_S)->getFilePath());
-            this->ui->misSSEButton->setVisible(false);
-            this->ui->misSEButton->setToolTip(gs->getGfx(DIR_SE)->getFilePath());*/
         }
     } else if (gs->getType() == D1GFX_SET_TYPE::Monster) {
         numButtons = 6;
@@ -181,12 +159,6 @@ void GfxsetView::update()
         buttons[MA_SPECIAL] = this->ui->monSpecButton;
         buttons[MA_GOTHIT] = this->ui->monHitButton;
         buttons[MA_DEATH] = this->ui->monDeathButton;
-        /*this->ui->monStandButton->setToolTip(gs->getGfx(MA_STAND)->getFilePath());
-        this->ui->monAttackButton->setToolTip(gs->getGfx(MA_ATTACK)->getFilePath());
-        this->ui->monWalkButton->setToolTip(gs->getGfx(MA_WALK)->getFilePath());
-        this->ui->monSpecButton->setToolTip(gs->getGfx(MA_SPECIAL)->getFilePath());
-        this->ui->monHitButton->setToolTip(gs->getGfx(MA_GOTHIT)->getFilePath());
-        this->ui->monDeathButton->setToolTip(gs->getGfx(MA_DEATH)->getFilePath());*/
     } else {
         // assert(gs->getType() == D1GFX_SET_TYPE::Player);
         numButtons = 11;
@@ -201,17 +173,6 @@ void GfxsetView::update()
         buttons[PGT_LIGHTNING] = this->ui->plrLightButton;
         buttons[PGT_GOTHIT] = this->ui->plrHitButton;
         buttons[PGT_DEATH] = this->ui->plrDeathButton;
-        /*this->ui->plrStandTownButton->setToolTip(gs->getGfx(PGT_STAND_TOWN)->getFilePath());
-        this->ui->plrStandDunButton->setToolTip(gs->getGfx(PGT_STAND_DUNGEON)->getFilePath());
-        this->ui->plrWalkTownButton->setToolTip(gs->getGfx(PGT_WALK_TOWN)->getFilePath());
-        this->ui->plrWalkDunButton->setToolTip(gs->getGfx(PGT_WALK_DUNGEON)->getFilePath());
-        this->ui->plrAttackButton->setToolTip(gs->getGfx(PGT_ATTACK)->getFilePath());
-        this->ui->plrBlockButton->setToolTip(gs->getGfx(PGT_BLOCK)->getFilePath());
-        this->ui->plrFireButton->setToolTip(gs->getGfx(PGT_FIRE)->getFilePath());
-        this->ui->plrMagicButton->setToolTip(gs->getGfx(PGT_MAGIC)->getFilePath());
-        this->ui->plrLightButton->setToolTip(gs->getGfx(PGT_LIGHTNING)->getFilePath());
-        this->ui->plrHitButton->setToolTip(gs->getGfx(PGT_GOTHIT)->getFilePath());
-        this->ui->plrDeathButton->setToolTip(gs->getGfx(PGT_DEATH)->getFilePath());*/
     }
 
     D1Gfx *baseGfx = gs->getBaseGfx();
@@ -785,6 +746,176 @@ void GfxsetView::ShowContextMenu(const QPoint &pos)
     contextMenu.addAction(&actions[cursor]);
 
     contextMenu.exec(mapToGlobal(pos));
+}
+
+void GfxsetView::selectGfx(int gfxIndex)
+{
+    dMainWindow().setGfx(this->gfxset->getGfx(gfxIndex));
+}
+
+void GfxsetView::on_misNWButton_clicked()
+{
+    this->selectGfx(6);
+}
+
+void GfxsetView::on_misNNWButton_clicked()
+{
+    this->selectGfx(7);
+}
+
+void GfxsetView::on_misNButton_clicked()
+{
+    this->selectGfx(8);
+}
+
+void GfxsetView::on_misNNEButton_clicked()
+{
+    this->selectGfx(9);
+}
+
+void GfxsetView::on_misNEButton_clicked()
+{
+    this->selectGfx(10);
+}
+
+void GfxsetView::on_misWNWButton_clicked()
+{
+    this->selectGfx(5);
+}
+
+void GfxsetView::on_misENEButton_clicked()
+{
+    this->selectGfx(11);
+}
+
+void GfxsetView::on_misWButton_clicked()
+{
+    this->selectGfx(4);
+}
+
+void GfxsetView::on_misEButton_clicked()
+{
+    this->selectGfx(12);
+}
+
+void GfxsetView::on_misWSWButton_clicked()
+{
+    this->selectGfx(3);
+}
+
+void GfxsetView::on_misESEButton_clicked()
+{
+    this->selectGfx(13);
+}
+
+void GfxsetView::on_misSWButton_clicked()
+{
+    this->selectGfx(2);
+}
+
+void GfxsetView::on_misSSWButton_clicked()
+{
+    this->selectGfx(1);
+}
+
+void GfxsetView::on_misSButton_clicked()
+{
+    this->selectGfx(0);
+}
+
+void GfxsetView::on_misSSEButton_clicked()
+{
+    this->selectGfx(15);
+}
+
+void GfxsetView::on_misSEButton_clicked()
+{
+    this->selectGfx(14);
+}
+
+void GfxsetView::on_monStandButton_clicked()
+{
+    this->selectGfx(MA_STAND);
+}
+
+void GfxsetView::on_monAttackButton_clicked()
+{
+    this->selectGfx(MA_ATTACK);
+}
+
+void GfxsetView::on_monWalkButton_clicked()
+{
+    this->selectGfx(MA_WALK);
+}
+
+void GfxsetView::on_monSpecButton_clicked()
+{
+    this->selectGfx(MA_SPECIAL);
+}
+
+void GfxsetView::on_monHitButton_clicked()
+{
+    this->selectGfx(MA_GOTHIT);
+}
+
+void GfxsetView::on_monDeathButton_clicked()
+{
+    this->selectGfx(MA_DEATH);
+}
+
+void GfxsetView::on_plrStandTownButton_clicked()
+{
+    this->selectGfx(PGT_STAND_TOWN);
+}
+
+void GfxsetView::on_plrStandDunButton_clicked()
+{
+    this->selectGfx(PGT_STAND_DUNGEON);
+}
+
+void GfxsetView::on_plrWalkTownButton_clicked()
+{
+    this->selectGfx(PGT_WALK_TOWN);
+}
+
+void GfxsetView::on_plrWalkDunButton_clicked()
+{
+    this->selectGfx(PGT_WALK_DUNGEON);
+}
+
+void GfxsetView::on_plrAttackButton_clicked()
+{
+    this->selectGfx(PGT_ATTACK);
+}
+
+void GfxsetView::on_plrBlockButton_clicked()
+{
+    this->selectGfx(PGT_BLOCK);
+}
+
+void GfxsetView::on_plrFireButton_clicked()
+{
+    this->selectGfx(PGT_FIRE);
+}
+
+void GfxsetView::on_plrMagicButton_clicked()
+{
+    this->selectGfx(PGT_MAGIC);
+}
+
+void GfxsetView::on_plrLightButton_clicked()
+{
+    this->selectGfx(PGT_LIGHTNING);
+}
+
+void GfxsetView::on_plrHitButton_clicked()
+{
+    this->selectGfx(PGT_GOTHIT);
+}
+
+void GfxsetView::on_plrDeathButton_clicked()
+{
+    this->selectGfx(PGT_DEATH);
 }
 
 void GfxsetView::on_framesGroupCheckBox_clicked()

@@ -179,6 +179,11 @@ int D1Gfxset::getGfxCount() const
     return this->gfxList.size();
 }
 
+void D1Gfxset::setGfx(D1Gfx *gfx)
+{
+    this->baseGfx = gfx;
+}
+
 D1Gfx *D1Gfxset::getGfx(int index) const
 {
     return this->gfxList[index];
