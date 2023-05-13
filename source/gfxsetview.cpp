@@ -132,38 +132,37 @@ void GfxsetView::updateFields()
         this->adjustSize();
     }
 
-    QPushButton *buttons[16];
     unsigned numButtons = 0;
     if (this->currType == D1GFX_SET_TYPE::Missile) {
         if (gs->getGfxCount() == 16) {
             numButtons = 16;
-            buttons[0] = this->ui->misSButton;
-            buttons[1] = this->ui->misSSWButton;
-            buttons[2] = this->ui->misSWButton;
-            buttons[3] = this->ui->misWSWButton;
-            buttons[4] = this->ui->misWButton;
-            buttons[5] = this->ui->misWNWButton;
-            buttons[6] = this->ui->misNWButton;
-            buttons[7] = this->ui->misNNWButton;
-            buttons[8] = this->ui->misNButton;
-            buttons[9] = this->ui->misNNEButton;
-            buttons[10] = this->ui->misNEButton;
-            buttons[11] = this->ui->misENEButton;
-            buttons[12] = this->ui->misEButton;
-            buttons[13] = this->ui->misESEButton;
-            buttons[14] = this->ui->misSEButton;
-            buttons[15] = this->ui->misSSEButton;
+            this->buttons[0] = this->ui->misSButton;
+            this->buttons[1] = this->ui->misSSWButton;
+            this->buttons[2] = this->ui->misSWButton;
+            this->buttons[3] = this->ui->misWSWButton;
+            this->buttons[4] = this->ui->misWButton;
+            this->buttons[5] = this->ui->misWNWButton;
+            this->buttons[6] = this->ui->misNWButton;
+            this->buttons[7] = this->ui->misNNWButton;
+            this->buttons[8] = this->ui->misNButton;
+            this->buttons[9] = this->ui->misNNEButton;
+            this->buttons[10] = this->ui->misNEButton;
+            this->buttons[11] = this->ui->misENEButton;
+            this->buttons[12] = this->ui->misEButton;
+            this->buttons[13] = this->ui->misESEButton;
+            this->buttons[14] = this->ui->misSEButton;
+            this->buttons[15] = this->ui->misSSEButton;
         } else {
             // assert(gs->getGfxCount() == 8);
             numButtons = 8;
-            buttons[DIR_S] = this->ui->misSButton;
-            buttons[DIR_SW] = this->ui->misSWButton;
-            buttons[DIR_W] = this->ui->misWButton;
-            buttons[DIR_NW] = this->ui->misNWButton;
-            buttons[DIR_N] = this->ui->misNButton;
-            buttons[DIR_NE] = this->ui->misNEButton;
-            buttons[DIR_E] = this->ui->misEButton;
-            buttons[DIR_SE] = this->ui->misSEButton;
+            this->buttons[DIR_S] = this->ui->misSButton;
+            this->buttons[DIR_SW] = this->ui->misSWButton;
+            this->buttons[DIR_W] = this->ui->misWButton;
+            this->buttons[DIR_NW] = this->ui->misNWButton;
+            this->buttons[DIR_N] = this->ui->misNButton;
+            this->buttons[DIR_NE] = this->ui->misNEButton;
+            this->buttons[DIR_E] = this->ui->misEButton;
+            this->buttons[DIR_SE] = this->ui->misSEButton;
             this->ui->misNNWButton->setVisible(false);
             this->ui->misNNEButton->setVisible(false);
             this->ui->misWNWButton->setVisible(false);
@@ -175,12 +174,12 @@ void GfxsetView::updateFields()
         }
     } else if (this->currType == D1GFX_SET_TYPE::Monster) {
         numButtons = 6;
-        buttons[MA_STAND] = this->ui->monStandButton;
-        buttons[MA_ATTACK] = this->ui->monAttackButton;
-        buttons[MA_WALK] = this->ui->monWalkButton;
-        buttons[MA_SPECIAL] = this->ui->monSpecButton;
-        buttons[MA_GOTHIT] = this->ui->monHitButton;
-        buttons[MA_DEATH] = this->ui->monDeathButton;
+        this->buttons[MA_STAND] = this->ui->monStandButton;
+        this->buttons[MA_ATTACK] = this->ui->monAttackButton;
+        this->buttons[MA_WALK] = this->ui->monWalkButton;
+        this->buttons[MA_SPECIAL] = this->ui->monSpecButton;
+        this->buttons[MA_GOTHIT] = this->ui->monHitButton;
+        this->buttons[MA_DEATH] = this->ui->monDeathButton;
     } else {
         // assert(this->currType == D1GFX_SET_TYPE::Player);
         QString classLabel;
@@ -251,27 +250,27 @@ void GfxsetView::updateFields()
         this->ui->plrWeaponLabel->setText(weaponLabel);
 
         numButtons = 11;
-        buttons[PGT_STAND_TOWN] = this->ui->plrStandTownButton;
-        buttons[PGT_STAND_DUNGEON] = this->ui->plrStandDunButton;
-        buttons[PGT_WALK_TOWN] = this->ui->plrWalkTownButton;
-        buttons[PGT_WALK_DUNGEON] = this->ui->plrWalkDunButton;
-        buttons[PGT_ATTACK] = this->ui->plrAttackButton;
-        buttons[PGT_BLOCK] = this->ui->plrBlockButton;
-        buttons[PGT_FIRE] = this->ui->plrFireButton;
-        buttons[PGT_MAGIC] = this->ui->plrMagicButton;
-        buttons[PGT_LIGHTNING] = this->ui->plrLightButton;
-        buttons[PGT_GOTHIT] = this->ui->plrHitButton;
-        buttons[PGT_DEATH] = this->ui->plrDeathButton;
+        this->buttons[PGT_STAND_TOWN] = this->ui->plrStandTownButton;
+        this->buttons[PGT_STAND_DUNGEON] = this->ui->plrStandDunButton;
+        this->buttons[PGT_WALK_TOWN] = this->ui->plrWalkTownButton;
+        this->buttons[PGT_WALK_DUNGEON] = this->ui->plrWalkDunButton;
+        this->buttons[PGT_ATTACK] = this->ui->plrAttackButton;
+        this->buttons[PGT_BLOCK] = this->ui->plrBlockButton;
+        this->buttons[PGT_FIRE] = this->ui->plrFireButton;
+        this->buttons[PGT_MAGIC] = this->ui->plrMagicButton;
+        this->buttons[PGT_LIGHTNING] = this->ui->plrLightButton;
+        this->buttons[PGT_GOTHIT] = this->ui->plrHitButton;
+        this->buttons[PGT_DEATH] = this->ui->plrDeathButton;
     }
 
     D1Gfx *baseGfx = gs->getBaseGfx();
     for (unsigned i = 0; i < numButtons; i++) {
         D1Gfx *gfx = gs->getGfx(i);
-        buttons[i]->setToolTip(gfx->getFilePath());
-        // buttons[i]->setDown(gfx == baseGfx);
-        buttons[i]->setCheckable(gfx == baseGfx);
-        buttons[i]->setChecked(gfx == baseGfx);
-        buttons[i]->update();
+        this->buttons[i]->setToolTip(gfx->getFilePath());
+        // this->buttons[i]->setDown(gfx == baseGfx);
+        this->buttons[i]->setCheckable(gfx == baseGfx);
+        this->buttons[i]->setChecked(gfx == baseGfx);
+        this->buttons[i]->update();
     }
 
     // Set current and maximum group text
@@ -500,76 +499,83 @@ void GfxsetView::pasteCurrent(const QImage &image)
 void GfxsetView::resize(const ResizeParam &params)
 {
     D1GfxPixel backPixel = (unsigned)params.backcolor < D1PAL_COLORS ? D1GfxPixel::colorPixel(params.backcolor) : D1GfxPixel::transparentPixel();
-    int rangeFrom = params.rangeFrom;
-    if (rangeFrom != 0) {
-        rangeFrom--;
-    }
-    int rangeTo = params.rangeTo;
-    if (rangeTo == 0 || rangeTo >= this->gfx->getFrameCount()) {
-        rangeTo = this->gfx->getFrameCount();
-    }
-    rangeTo--;
 
     const RESIZE_PLACEMENT placement = params.placement;
     int frameWithPixelLost = -1;
-    for (int i = rangeFrom; i <= rangeTo; i++) {
-        D1GfxFrame *frame = this->gfx->getFrame(i);
-        int width = params.width;
-        int currWidth = frame->getWidth();
-        if (width == 0) {
-            width = currWidth;
+    int gn = 0;
+    for (; gn < this->gfxset->getGfxCount(); gn++) {
+        D1Gfx *gfx = this->gfxset->getGfx(gn);
+        if (!params.resizeAll && gfx != this->gfx) {
+            continue;
         }
-        int height = params.height;
-        int currHeight = frame->getHeight();
-        if (height == 0) {
-            height = currHeight;
+        int rangeFrom = params.rangeFrom;
+        if (rangeFrom != 0) {
+            rangeFrom--;
         }
+        int rangeTo = params.rangeTo;
+        if (rangeTo == 0 || rangeTo >= gfx->getFrameCount()) {
+            rangeTo = gfx->getFrameCount();
+        }
+        rangeTo--;
+        for (int i = rangeFrom; i <= rangeTo; i++) {
+            D1GfxFrame *frame = gfx->getFrame(i);
+            int width = params.width;
+            int currWidth = frame->getWidth();
+            if (width == 0) {
+                width = currWidth;
+            }
+            int height = params.height;
+            int currHeight = frame->getHeight();
+            if (height == 0) {
+                height = currHeight;
+            }
 
-        const std::vector<std::vector<D1GfxPixel>> &pixelLines = frame->getPixels();
-        if (width < currWidth) {
-            int counter = 0;
-            for (int n = 0; n < currWidth - width; n++, counter++) {
-                int idx;
-                if (placement == RESIZE_PLACEMENT::TOP || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::BOTTOM) {
-                    if (counter & 1) {
-                        idx = n / 2;
+            const std::vector<std::vector<D1GfxPixel>> &pixelLines = frame->getPixels();
+            if (width < currWidth) {
+                int counter = 0;
+                for (int n = 0; n < currWidth - width; n++, counter++) {
+                    int idx;
+                    if (placement == RESIZE_PLACEMENT::TOP || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::BOTTOM) {
+                        if (counter & 1) {
+                            idx = n / 2;
+                        } else {
+                            idx = currWidth - 1 - n / 2;
+                        }
+                    } else if (placement == RESIZE_PLACEMENT::TOP_RIGHT || placement == RESIZE_PLACEMENT::CENTER_RIGHT || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT) {
+                        idx = n;
                     } else {
-                        idx = currWidth - 1 - n / 2;
+                        idx = currWidth - 1 - n;
                     }
-                } else if (placement == RESIZE_PLACEMENT::TOP_RIGHT || placement == RESIZE_PLACEMENT::CENTER_RIGHT || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT) {
-                    idx = n;
-                } else {
-                    idx = currWidth - 1 - n;
-                }
-                for (const std::vector<D1GfxPixel> &pixelLine : pixelLines) {
-                    if (pixelLine[idx] != backPixel) {
-                        frameWithPixelLost = i;
-                        goto done;
+                    for (const std::vector<D1GfxPixel> &pixelLine : pixelLines) {
+                        if (pixelLine[idx] != backPixel) {
+                            frameWithPixelLost = i;
+                            goto done;
+                        }
                     }
                 }
             }
-        }
 
-        if (height < currHeight) {
-            int counter = 0;
-            for (int n = 0; n < currHeight - height; n++, counter++) {
-                int idx;
-                if (placement == RESIZE_PLACEMENT::CENTER_LEFT || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::CENTER_RIGHT) {
-                    if (counter & 1) {
-                        idx = n / 2;
+            if (height < currHeight) {
+                int counter = 0;
+                for (int n = 0; n < currHeight - height; n++, counter++) {
+                    int idx;
+                    if (placement == RESIZE_PLACEMENT::CENTER_LEFT || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::CENTER_RIGHT) {
+                        if (counter & 1) {
+                            idx = n / 2;
+                        } else {
+                            idx = currHeight - 1 - n / 2;
+                        }
+                    } else if (placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT) {
+                        idx = n;
                     } else {
-                        idx = currHeight - 1 - n / 2;
+                        idx = currHeight - 1 - n;
                     }
-                } else if (placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT) {
-                    idx = n;
-                } else {
-                    idx = currHeight - 1 - n;
-                }
-                const std::vector<D1GfxPixel> &pixelLine = pixelLines[idx];
-                for (const D1GfxPixel &pixel : pixelLine) {
-                    if (pixel != backPixel) {
-                        frameWithPixelLost = i;
-                        goto done;
+                    const std::vector<D1GfxPixel> &pixelLine = pixelLines[idx];
+                    for (const D1GfxPixel &pixel : pixelLine) {
+                        if (pixel != backPixel) {
+                            frameWithPixelLost = i;
+                            goto done;
+                        }
                     }
                 }
             }
@@ -578,7 +584,11 @@ void GfxsetView::resize(const ResizeParam &params)
 done:
     if (frameWithPixelLost != -1) {
         QMessageBox::StandardButton reply;
-        reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Pixels with non-background colors are going to be eliminated (At least Frame %1 is affected). Are you sure you want to proceed?").arg(frameWithPixelLost + 1), QMessageBox::Yes | QMessageBox::No);
+        QString frameId = tr("Frame %1").arg(frameWithPixelLost + 1);
+        if (this->gfx != this->gfxset->getGfx(gn)) {
+            frameId += tr(" of %1").arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn) : this->buttons[gn]->text());
+        }
+        reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Pixels with non-background colors are going to be eliminated (At least %1 is affected). Are you sure you want to proceed?").arg(frameId), QMessageBox::Yes | QMessageBox::No);
         if (reply != QMessageBox::Yes) {
             return;
         }
@@ -586,84 +596,102 @@ done:
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Resizing..."), 1, PAF_NONE);
 
-    bool change = false;
-    for (int i = rangeFrom; i <= rangeTo; i++) {
-        D1GfxFrame *frame = this->gfx->getFrame(i);
-        int width = params.width;
-        int currWidth = frame->getWidth();
-        if (width == 0)
-            width = currWidth;
-        int height = params.height;
-        int currHeight = frame->getHeight();
-        if (height == 0)
-            height = currHeight;
+    bool ch = false;
+    for (int gn = 0; gn < this->gfxset->getGfxCount(); gn++) {
+        D1Gfx *gfx = this->gfxset->getGfx(gn);
+        if (!params.resizeAll && gfx != this->gfx) {
+            continue;
+        }
+        bool change = false;
+        int rangeFrom = params.rangeFrom;
+        if (rangeFrom != 0) {
+            rangeFrom--;
+        }
+        int rangeTo = params.rangeTo;
+        if (rangeTo == 0 || rangeTo >= gfx->getFrameCount()) {
+            rangeTo = gfx->getFrameCount();
+        }
+        rangeTo--;
+        for (int i = rangeFrom; i <= rangeTo; i++) {
+            D1GfxFrame *frame = gfx->getFrame(i);
+            int width = params.width;
+            int currWidth = frame->getWidth();
+            if (width == 0)
+                width = currWidth;
+            int height = params.height;
+            int currHeight = frame->getHeight();
+            if (height == 0)
+                height = currHeight;
 
-        std::vector<std::vector<D1GfxPixel>> &pixelLines = frame->getPixels();
-        int counter = 0;
-        while (width > currWidth) {
-            for (std::vector<D1GfxPixel> &pixelLine : pixelLines) {
-                if ((placement == RESIZE_PLACEMENT::TOP_RIGHT || placement == RESIZE_PLACEMENT::CENTER_RIGHT || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
-                    || ((placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::TOP || placement == RESIZE_PLACEMENT::BOTTOM) && (counter & 1))) {
-                    pixelLine.insert(pixelLine.begin(), backPixel);
-                } else {
-                    pixelLine.push_back(backPixel);
+            std::vector<std::vector<D1GfxPixel>> &pixelLines = frame->getPixels();
+            int counter = 0;
+            while (width > currWidth) {
+                for (std::vector<D1GfxPixel> &pixelLine : pixelLines) {
+                    if ((placement == RESIZE_PLACEMENT::TOP_RIGHT || placement == RESIZE_PLACEMENT::CENTER_RIGHT || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
+                        || ((placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::TOP || placement == RESIZE_PLACEMENT::BOTTOM) && (counter & 1))) {
+                        pixelLine.insert(pixelLine.begin(), backPixel);
+                    } else {
+                        pixelLine.push_back(backPixel);
+                    }
                 }
+                counter++;
+                currWidth++;
+                change = true;
             }
-            counter++;
-            currWidth++;
-            change = true;
-        }
 
-        while (width < currWidth) {
-            for (std::vector<D1GfxPixel> &pixelLine : pixelLines) {
-                if ((placement == RESIZE_PLACEMENT::TOP_RIGHT || placement == RESIZE_PLACEMENT::CENTER_RIGHT || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
-                    || ((placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::TOP || placement == RESIZE_PLACEMENT::BOTTOM) && (counter & 1))) {
-                    pixelLine.erase(pixelLine.begin());
-                } else {
-                    pixelLine.pop_back();
+            while (width < currWidth) {
+                for (std::vector<D1GfxPixel> &pixelLine : pixelLines) {
+                    if ((placement == RESIZE_PLACEMENT::TOP_RIGHT || placement == RESIZE_PLACEMENT::CENTER_RIGHT || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
+                        || ((placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::TOP || placement == RESIZE_PLACEMENT::BOTTOM) && (counter & 1))) {
+                        pixelLine.erase(pixelLine.begin());
+                    } else {
+                        pixelLine.pop_back();
+                    }
                 }
+                counter++;
+                currWidth--;
+                change = true;
             }
-            counter++;
-            currWidth--;
-            change = true;
-        }
-        frame->setWidth(width);
+            frame->setWidth(width);
 
-        counter = 0;
-        std::vector<D1GfxPixel> pixelLine;
-        for (int x = 0; x < width; x++) {
-            pixelLine.push_back(backPixel);
-        }
-        while (height > currHeight) {
-            if ((placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
-                || ((placement == RESIZE_PLACEMENT::CENTER_LEFT || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::CENTER_RIGHT) && (counter & 1))) {
-                pixelLines.insert(pixelLines.begin(), pixelLine);
-            } else {
-                pixelLines.push_back(pixelLine);
+            counter = 0;
+            std::vector<D1GfxPixel> pixelLine;
+            for (int x = 0; x < width; x++) {
+                pixelLine.push_back(backPixel);
             }
-            counter++;
-            currHeight++;
-            change = true;
-        }
+            while (height > currHeight) {
+                if ((placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
+                    || ((placement == RESIZE_PLACEMENT::CENTER_LEFT || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::CENTER_RIGHT) && (counter & 1))) {
+                    pixelLines.insert(pixelLines.begin(), pixelLine);
+                } else {
+                    pixelLines.push_back(pixelLine);
+                }
+                counter++;
+                currHeight++;
+                change = true;
+            }
 
-        while (height < currHeight) {
-            if ((placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
-                || ((placement == RESIZE_PLACEMENT::CENTER_LEFT || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::CENTER_RIGHT) && (counter & 1))) {
-                pixelLines.erase(pixelLines.begin());
-            } else {
-                pixelLines.pop_back();
+            while (height < currHeight) {
+                if ((placement == RESIZE_PLACEMENT::BOTTOM_LEFT || placement == RESIZE_PLACEMENT::BOTTOM || placement == RESIZE_PLACEMENT::BOTTOM_RIGHT)
+                    || ((placement == RESIZE_PLACEMENT::CENTER_LEFT || placement == RESIZE_PLACEMENT::CENTER || placement == RESIZE_PLACEMENT::CENTER_RIGHT) && (counter & 1))) {
+                    pixelLines.erase(pixelLines.begin());
+                } else {
+                    pixelLines.pop_back();
+                }
+                counter++;
+                currHeight--;
+                change = true;
             }
-            counter++;
-            currHeight--;
-            change = true;
+            frame->setHeight(height);
         }
-        frame->setHeight(height);
+        if (change) {
+            gfx->setModified();
+            ch = true;
+        }
     }
-
     ProgressDialog::done();
 
-    if (change) {
-        this->gfx->setModified();
+    if (ch) {
         // update the view
         this->displayFrame();
     }

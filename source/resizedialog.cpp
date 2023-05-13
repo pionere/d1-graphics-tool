@@ -1,6 +1,6 @@
 #include "resizedialog.h"
 
-#include "d1gfx.h"
+#include "d1gfxset.h"
 #include "mainwindow.h"
 #include "ui_resizedialog.h"
 
@@ -26,8 +26,9 @@ ResizeDialog::~ResizeDialog()
     delete ui;
 }
 
-void ResizeDialog::initialize()
+void ResizeDialog::initialize(D1Gfxset *gfxset)
 {
+    this->ui->resizeAllCheckBox->setVisible(gfxset != nullptr);
     if (this->ui->backColorLineEdit->text().isEmpty()) {
         this->ui->backColorLineEdit->setText("256");
     }
@@ -47,6 +48,7 @@ void ResizeDialog::on_resizeButton_clicked()
     params.backcolor = this->ui->backColorLineEdit->text().toUShort();
     params.rangeFrom = this->ui->rangeFromLineEdit->nonNegInt();
     params.rangeTo = this->ui->rangeToLineEdit->nonNegInt();
+    params.resizeAll = this->ui->resizeAllCheckBox->isChecked();
     params.placement = (RESIZE_PLACEMENT)this->ui->placementButtonGroup->checkedId();
 
     if (params.backcolor > D1PAL_COLORS) {
