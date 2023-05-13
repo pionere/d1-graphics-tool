@@ -24,7 +24,7 @@ enum class OPEN_UPSCALED_TYPE {
 class OpenAsParam {
 public:
     QString celFilePath;
-    OPEN_CEL_TYPE gfxType = OPEN_CEL_TYPE::AUTODETECT;
+    OPEN_CEL_TYPE gfxType = OPEN_GFX_TYPE::AUTODETECT;
 
     int celWidth = 0;
     OPEN_CLIPPED_TYPE clipped = OPEN_CLIPPED_TYPE::AUTODETECT;
