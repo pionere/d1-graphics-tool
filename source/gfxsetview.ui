@@ -980,13 +980,6 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0" colspan="18">
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-       </spacer>
-      </item>
      </layout>
      </item>
      </layout>
