@@ -169,12 +169,12 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                     }
                 }
                 for (int i = 0; i < lengthof(ArmorChar); i++) {
-                    if (baseName[0].toUpper() == ArmorChar[i]) {
+                    if (baseName[1].toUpper() == ArmorChar[i]) {
                         atype = (D1GFX_SET_ARMOR_TYPE)i;
                     }
                 }
                 for (int i = 0; i < lengthof(WepChar); i++) {
-                    if (baseName[0].toUpper() == WepChar[i]) {
+                    if (baseName[2].toUpper() == WepChar[i]) {
                         wtype = (D1GFX_SET_WEAPON_TYPE)i;
                     }
                 }
