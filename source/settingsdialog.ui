@@ -60,7 +60,7 @@
          <string>Background color of the graphics's window</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -87,7 +87,7 @@
          <string>Color of the transparent pixels in the graphics's window</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -123,7 +123,7 @@
          <string>Color of the undefined (cleared) entries in the palette</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -150,7 +150,7 @@
          <string>Border color of the selected palette entries and subtiles</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>

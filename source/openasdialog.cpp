@@ -48,10 +48,10 @@ void OpenAsDialog::initialize()
     // - tblSettingsGroupBox
     this->ui->tblFileEdit->setText("");
 
-    this->update();
+    this->updateFields();
 }
 
-void OpenAsDialog::update()
+void OpenAsDialog::updateFields()
 {
     QString filePath = this->ui->inputFileEdit->text();
     bool hasInputFile = !filePath.isEmpty();
@@ -139,22 +139,22 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
     }
     this->ui->tblFileEdit->setText(tblPath);
 
-    this->update();
+    this->updateFields();
 }
 
 void OpenAsDialog::on_isTilesetYesRadioButton_toggled(bool checked)
 {
-    this->update();
+    this->updateFields();
 }
 
 void OpenAsDialog::on_isTilesetNoRadioButton_toggled(bool checked)
 {
-    this->update();
+    this->updateFields();
 }
 
 void OpenAsDialog::on_isTilesetAutoRadioButton_toggled(bool checked)
 {
-    this->update();
+    this->updateFields();
 }
 
 void OpenAsDialog::on_clsFileBrowseButton_clicked()

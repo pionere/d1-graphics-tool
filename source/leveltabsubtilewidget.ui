@@ -133,7 +133,7 @@
            <number>2</number>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <enum>Qt::AlignCenter</enum>
           </property>
           <property name="toolTip">
            <string>Special cel-frame assigned to this subtile</string>

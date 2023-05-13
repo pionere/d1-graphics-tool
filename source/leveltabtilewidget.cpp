@@ -32,7 +32,7 @@ void LevelTabTileWidget::initialize(LevelCelView *v, D1Til *t, D1Min *m, D1Amp *
     this->amp = a;
 }
 
-void LevelTabTileWidget::update()
+void LevelTabTileWidget::updateFields()
 {
     this->onUpdate = true;
 
@@ -158,7 +158,7 @@ void LevelTabTileWidget::updateAmpProperty()
 void LevelTabTileWidget::on_clearPushButtonClicked()
 {
     this->setAmpProperty(0);
-    this->update();
+    this->updateFields();
 }
 
 void LevelTabTileWidget::on_deletePushButtonClicked()

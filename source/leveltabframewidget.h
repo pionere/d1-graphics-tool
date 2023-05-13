@@ -21,7 +21,7 @@ public:
     ~LevelTabFrameWidget();
 
     void initialize(LevelCelView *v, D1Gfx *g);
-    void update();
+    void updateFields();
 
 private slots:
     void on_deletePushButtonClicked();

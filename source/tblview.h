@@ -54,11 +54,11 @@ public:
     void framePixelClicked(const QPoint &pos, bool first);
     void framePixelHovered(const QPoint &pos);
 
-    void update();
     void displayFrame();
     void toggleBottomPanel();
 
 private:
+    void updateFields();
     void updateLabel();
     void setRadius(int nextRadius);
     void setOffset(int xoff, int yoff);

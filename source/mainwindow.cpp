@@ -229,19 +229,19 @@ void MainWindow::updateWindow()
 
     // update the view
     if (this->celView != nullptr) {
-        // this->celView->update();
+        // this->celView->updateFields();
         this->celView->displayFrame();
     }
     if (this->levelCelView != nullptr) {
-        // this->levelCelView->update();
+        // this->levelCelView->updateFields();
         this->levelCelView->displayFrame();
     }
     if (this->gfxsetView != nullptr) {
-        // this->gfxsetView->update();
+        // this->gfxsetView->updateFields();
         this->gfxsetView->displayFrame();
     }
     if (this->tblView != nullptr) {
-        // this->tblView->update();
+        // this->tblView->updateFields();
         this->tblView->displayFrame();
     }
 }

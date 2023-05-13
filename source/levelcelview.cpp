@@ -129,7 +129,7 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
         // prepare the entities
         this->updateEntityOptions();
     }
-    this->update();
+    this->updateFields();
 }
 
 void LevelCelView::setPal(D1Pal *p)
@@ -293,7 +293,7 @@ void LevelCelView::updateLabel()
     }
 }
 
-void LevelCelView::update()
+void LevelCelView::updateFields()
 {
     int count;
 
@@ -352,9 +352,9 @@ void LevelCelView::update()
             QString::number(count != 0 ? this->currentTileIndex + 1 : 0));
         this->ui->tileNumberEdit->setText(QString::number(count));
 
-        this->tabTileWidget.update();
-        this->tabSubtileWidget.update();
-        this->tabFrameWidget.update();
+        this->tabTileWidget.updateFields();
+        this->tabSubtileWidget.updateFields();
+        this->tabFrameWidget.updateFields();
     }
 }
 
@@ -608,7 +608,7 @@ void LevelCelView::selectPos(const QPoint &cell)
     this->currentDunPosX = cell.x();
     this->currentDunPosY = cell.y();
     // update the view
-    this->update();
+    this->updateFields();
 }
 
 void LevelCelView::insertImageFiles(IMAGE_FILE_MODE mode, const QStringList &imagefilePaths, bool append)
@@ -1963,8 +1963,8 @@ void LevelCelView::resetFrameTypes()
         }
         // update the view
         // this->updateLabel();
-        // this->tabFrameWidget.update();
-        this->update();
+        // this->tabFrameWidget.updateFields();
+        this->updateFields();
     }
 
     ProgressDialog::decBar();
@@ -3067,7 +3067,7 @@ void LevelCelView::upscale(const UpscaleParam &params)
 
 void LevelCelView::displayFrame()
 {
-    this->update();
+    this->updateFields();
 
     this->celScene.clear();
     this->celScene.setBackgroundBrush(QColor(Config::getGraphicsBackgroundColor()));
@@ -3723,7 +3723,7 @@ void LevelCelView::setPositionX(int posx)
     this->on_dungeonPosXLineEdit_escPressed();
     if (change) {
         // update the view
-        this->update();
+        this->updateFields();
     }
 }
 
@@ -3740,7 +3740,7 @@ void LevelCelView::setPositionY(int posy)
     this->on_dungeonPosYLineEdit_escPressed();
     if (change) {
         // update the view
-        this->update();
+        this->updateFields();
     }
 }
 

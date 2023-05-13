@@ -23,7 +23,7 @@ public:
     ~LevelTabSubtileWidget();
 
     void initialize(LevelCelView *v, D1Gfx *gfx, D1Min *min, D1Sol *sol, D1Spt *spt, D1Tmi *tmi);
-    void update();
+    void updateFields();
 
     void selectFrame(int index);
 

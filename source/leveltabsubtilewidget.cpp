@@ -33,7 +33,7 @@ void LevelTabSubtileWidget::initialize(LevelCelView *v, D1Gfx *g, D1Min *m, D1So
     this->tmi = t;
 }
 
-void LevelTabSubtileWidget::update()
+void LevelTabSubtileWidget::updateFields()
 {
     this->onUpdate = true;
 
@@ -190,7 +190,7 @@ void LevelTabSubtileWidget::on_clearPushButtonClicked()
     this->setSolProperty(0);
     this->setTrapProperty(PTT_NONE);
     this->setTmiProperty(0);
-    this->update();
+    this->updateFields();
 }
 
 void LevelTabSubtileWidget::on_deletePushButtonClicked()

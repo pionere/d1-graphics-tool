@@ -58,7 +58,7 @@ public:
     void initialize();
 
 private:
-    void update();
+    void updateFields();
 
 private slots:
     void on_inputFileBrowseButton_clicked();

@@ -133,7 +133,6 @@ public:
     void refreshTranslationIndexLineEdit();
     void patchTrn();
 
-    void update();
     void modify();
     void refresh();
 
@@ -148,6 +147,7 @@ signals:
     void refreshed();
 
 private:
+    void updateFields();
     // Display functions
     void displayColors();
     void displaySelection();

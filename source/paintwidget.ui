@@ -194,7 +194,7 @@
         <number>3</number>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <enum>Qt::AlignCenter</enum>
        </property>
        <property name="toolTip">
         <string>Brush size</string>
@@ -257,7 +257,7 @@
         <number>3</number>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <enum>Qt::AlignCenter</enum>
        </property>
        <property name="toolTip">
         <string>Brushstroke length</string>
@@ -307,7 +307,7 @@
         <string>A line's gradient in the x direction</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <enum>Qt::AlignCenter</enum>
        </property>
       </widget>
      </item>
@@ -323,7 +323,7 @@
         <string notr="true">:</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <enum>Qt::AlignCenter</enum>
        </property>
       </widget>
      </item>
@@ -336,7 +336,7 @@
         <string>A line's gradient in the y direction</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <enum>Qt::AlignCenter</enum>
        </property>
       </widget>
      </item>

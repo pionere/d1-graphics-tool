@@ -116,7 +116,7 @@ public:
 
     void upscale(const UpscaleParam &params);
 
-    void update();
+    void updateFields();
     void updateLabel();
     void updateTilesetIcon();
     void updateEntityOptions();

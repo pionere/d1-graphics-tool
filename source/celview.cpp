@@ -236,7 +236,7 @@ void CelView::initialize(D1Pal *p, D1Gfx *g, bool bottomPanelHidden)
 
     this->ui->bottomPanel->setVisible(!bottomPanelHidden);
 
-    this->update();
+    this->updateFields();
 }
 
 void CelView::setPal(D1Pal *p)
@@ -262,7 +262,7 @@ void CelView::updateLabel()
     CelView::setLabelContent(this->ui->celLabel, this->gfx->getFilePath(), this->gfx->isModified());
 }
 
-void CelView::update()
+void CelView::updateFields()
 {
     int count;
 
@@ -673,7 +673,7 @@ void CelView::upscale(const UpscaleParam &params)
 
 void CelView::displayFrame()
 {
-    this->update();
+    this->updateFields();
     this->celScene.clear();
 
     // Getting the current frame to display
@@ -815,7 +815,7 @@ void CelView::ShowContextMenu(const QPoint &pos)
 void CelView::on_framesGroupCheckBox_clicked()
 {
     // update frameIndexEdit and frameNumberEdit
-    this->update();
+    this->updateFields();
 }
 
 void CelView::on_firstFrameButton_clicked()
@@ -872,7 +872,7 @@ void CelView::on_frameIndexEdit_returnPressed()
 void CelView::on_frameIndexEdit_escPressed()
 {
     // update frameIndexEdit
-    this->update();
+    this->updateFields();
     this->ui->frameIndexEdit->clearFocus();
 }
 
@@ -898,7 +898,7 @@ void CelView::on_groupIndexEdit_returnPressed()
 void CelView::on_groupIndexEdit_escPressed()
 {
     // update groupIndexEdit
-    this->update();
+    this->updateFields();
     this->ui->groupIndexEdit->clearFocus();
 }
 

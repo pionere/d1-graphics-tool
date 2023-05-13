@@ -58,12 +58,12 @@ public:
     void resize(const ResizeParam &params);
     void upscale(const UpscaleParam &params);
 
-    void update();
     void displayFrame();
     void toggleBottomPanel();
     void changeColor(const std::vector<std::pair<D1GfxPixel, D1GfxPixel>> &replacements, bool all);
 
 private:
+    void updateFields();
     void updateLabel();
     void insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);
     void setFrameIndex(int frameIndex);

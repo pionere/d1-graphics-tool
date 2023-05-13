@@ -64,7 +64,7 @@ void GfxsetView::initialize(D1Pal *p, D1Gfxset *gs, bool bottomPanelHidden)
 
     this->ui->bottomPanel->setVisible(!bottomPanelHidden);
 
-    this->update();
+    this->updateFields();
 }
 
 void GfxsetView::setPal(D1Pal *p)
@@ -108,7 +108,7 @@ void GfxsetView::updateLabel()
     }
 }
 
-void GfxsetView::update()
+void GfxsetView::updateFields()
 {
     int count;
 
@@ -679,7 +679,7 @@ void GfxsetView::upscale(const UpscaleParam &params)
 
 void GfxsetView::displayFrame()
 {
-    this->update();
+    this->updateFields();
 
     this->celScene.clear();
 
@@ -1032,7 +1032,7 @@ void GfxsetView::on_loadGfxPushButtonClicked()
 void GfxsetView::on_framesGroupCheckBox_clicked()
 {
     // update frameIndexEdit and frameNumberEdit
-    this->update();
+    this->updateFields();
 }
 
 void GfxsetView::on_firstFrameButton_clicked()
@@ -1089,7 +1089,7 @@ void GfxsetView::on_frameIndexEdit_returnPressed()
 void GfxsetView::on_frameIndexEdit_escPressed()
 {
     // update frameIndexEdit
-    this->update();
+    this->updateFields();
     this->ui->frameIndexEdit->clearFocus();
 }
 
@@ -1115,7 +1115,7 @@ void GfxsetView::on_groupIndexEdit_returnPressed()
 void GfxsetView::on_groupIndexEdit_escPressed()
 {
     // update groupIndexEdit
-    this->update();
+    this->updateFields();
     this->ui->groupIndexEdit->clearFocus();
 }
 

@@ -76,7 +76,7 @@
          <number>4</number>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -116,7 +116,7 @@
          <string>Current playback delay</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -238,7 +238,7 @@
          <string notr="true">0</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -254,7 +254,7 @@
          <string notr="true">/</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -270,7 +270,7 @@
          <string notr="true">0</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
         <property name="readOnly">
          <bool>true</bool>
@@ -322,7 +322,7 @@
          <number>5</number>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
         <property name="readOnly">
          <bool>true</bool>
@@ -348,7 +348,7 @@
          <number>5</number>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
         <property name="readOnly">
          <bool>true</bool>
@@ -417,7 +417,7 @@
          <string>Current subtile</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -433,7 +433,7 @@
          <string notr="true">/</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -446,7 +446,7 @@
          <string>Number of subtiles</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
         <property name="readOnly">
          <bool>true</bool>
@@ -498,7 +498,7 @@
          <number>5</number>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -521,7 +521,7 @@
          <number>5</number>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -580,7 +580,7 @@
          <string>Current frame</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -596,7 +596,7 @@
          <string notr="true">/</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -609,7 +609,7 @@
          <string>Number of frames</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
         <property name="readOnly">
          <bool>true</bool>
@@ -664,7 +664,7 @@
          <string>Current frame width</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
         <property name="readOnly">
          <bool>true</bool>
@@ -693,7 +693,7 @@
          <string>Current frame height</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
         <property name="readOnly">
          <bool>true</bool>
@@ -736,7 +736,7 @@
          <number>4</number>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -776,7 +776,7 @@
          <string>Current playback delay</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -895,7 +895,7 @@
            <string>Default tile if the dungeon tile is set to zero</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <enum>Qt::AlignCenter</enum>
           </property>
          </widget>
         </item>
@@ -1025,7 +1025,7 @@
          <string>X-coordinate of the selected position</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -1041,7 +1041,7 @@
          <string notr="true">:</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -1054,7 +1054,7 @@
          <string>Y-coordinate of the selected position</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -1192,7 +1192,7 @@
          <string>Width of the dungeon</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -1218,7 +1218,7 @@
          <string>Height of the dungeon</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -1245,7 +1245,7 @@
              <string>Current tile at the selected position</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignCenter</set>
+             <enum>Qt::AlignCenter</enum>
             </property>
            </widget>
           </item>
@@ -1279,7 +1279,7 @@
              <string>Current subtile at the selected position</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignCenter</set>
+             <enum>Qt::AlignCenter</enum>
             </property>
            </widget>
           </item>
@@ -1312,7 +1312,7 @@
              <string>Room-ID of the selected position</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignCenter</set>
+             <enum>Qt::AlignCenter</enum>
             </property>
            </widget>
           </item>
@@ -1353,7 +1353,7 @@
              <string>Current object at the selected position</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignCenter</set>
+             <enum>Qt::AlignCenter</enum>
             </property>
            </widget>
           </item>
@@ -1390,7 +1390,7 @@
              <string>Current monster at the selected position</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignCenter</set>
+             <enum>Qt::AlignCenter</enum>
             </property>
            </widget>
           </item>
@@ -1434,7 +1434,7 @@
              <string>Current item at the selected position</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignCenter</set>
+             <enum>Qt::AlignCenter</enum>
             </property>
            </widget>
           </item>

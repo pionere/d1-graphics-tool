@@ -9,7 +9,7 @@
    <item>
     <widget class="QLabel" name="progressLabel">
      <property name="alignment">
-      <set>Qt::AlignCenter</set>
+      <enum>Qt::AlignCenter</enum>
      </property>
     </widget>
    </item>
