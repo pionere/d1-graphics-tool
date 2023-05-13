@@ -83,7 +83,7 @@ void GfxsetView::setGfx(D1Gfx *gfx)
 void GfxsetView::updateLabel()
 {
     const int labelCount = this->gfxset->getGfxCount();
-    QHBoxLayout *layout = this->ui->celLabelsHorizontalLayout;
+    QHBoxLayout *layout = this->ui->celLabelsHorizontalLayout; // TODO: use FlowLayout?
     while (layout->count() > labelCount + 1) {
         QLayoutItem *child = layout->takeAt(labelCount);
         delete child->widget();

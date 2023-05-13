@@ -952,7 +952,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // If SOL, MIN and TIL files exist then build a LevelCelView
     bool isTileset = params.gfxType == OPEN_GFX_TYPE::TILESET;
-    if (params.isTileset == OPEN_GFX_TYPE::AUTODETECT) {
+    if (params.gfxType == OPEN_GFX_TYPE::AUTODETECT) {
         isTileset = ((fileType == 1 || fileType == 0) && QFileInfo::exists(dunFilePath))
             || (fileType == 1 && QFileInfo::exists(tilFilePath) && QFileInfo::exists(minFilePath) && QFileInfo::exists(solFilePath));
     }
