@@ -262,7 +262,7 @@
            <string notr="true">0</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <enum>Qt::AlignCenter</enum>
           </property>
          </widget>
         </item>
@@ -278,7 +278,7 @@
            <string notr="true">-</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <enum>Qt::AlignCenter</enum>
           </property>
          </widget>
         </item>
@@ -294,7 +294,7 @@
            <string notr="true">0</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <enum>Qt::AlignCenter</enum>
           </property>
          </widget>
         </item>
@@ -350,7 +350,7 @@
            <string>Palette index of the transparent pixels in the output image</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <enum>Qt::AlignCenter</enum>
           </property>
          </widget>
         </item>
@@ -366,7 +366,7 @@
            <string notr="true">/</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <enum>Qt::AlignCenter</enum>
           </property>
          </widget>
         </item>
@@ -379,7 +379,7 @@
            <string>Color of the transparent pixels in the output image</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <enum>Qt::AlignCenter</enum>
           </property>
          </widget>
         </item>

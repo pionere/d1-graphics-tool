@@ -25,7 +25,7 @@
          <number>3</number>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -42,7 +42,7 @@
          <number>3</number>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -58,7 +58,7 @@
          <string notr="true">/</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -68,7 +68,7 @@
          <number>3</number>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>

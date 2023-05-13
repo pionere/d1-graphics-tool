@@ -65,7 +65,7 @@
          <number>4</number>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -105,7 +105,7 @@
          <string>Current playback delay</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -230,7 +230,7 @@
          <string>Current group</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -246,7 +246,7 @@
          <string notr="true">/</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -259,7 +259,7 @@
          <string>Number of groups</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
         <property name="readOnly">
          <bool>true</bool>
@@ -370,7 +370,7 @@
          <string>Current frame</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -386,7 +386,7 @@
          <string notr="true">/</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
        </widget>
       </item>
@@ -399,7 +399,7 @@
          <string>Number of frames</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
         <property name="readOnly">
          <bool>true</bool>
@@ -454,7 +454,7 @@
          <string>Current frame width</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
         <property name="readOnly">
          <bool>true</bool>
@@ -483,7 +483,7 @@
          <string>Current frame height</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <enum>Qt::AlignCenter</enum>
         </property>
         <property name="readOnly">
          <bool>true</bool>
