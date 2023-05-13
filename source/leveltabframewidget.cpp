@@ -29,7 +29,7 @@ void LevelTabFrameWidget::initialize(LevelCelView *v, D1Gfx *g)
     this->gfx = g;
 }
 
-void LevelTabFrameWidget::update()
+void LevelTabFrameWidget::updateFields()
 {
     bool hasFrame = this->gfx->getFrameCount() != 0;
 

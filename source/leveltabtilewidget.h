@@ -21,7 +21,7 @@ public:
     ~LevelTabTileWidget();
 
     void initialize(LevelCelView *v, D1Til *t, D1Min *m, D1Amp *a);
-    void update();
+    void updateFields();
 
     void selectSubtile(int index);
 

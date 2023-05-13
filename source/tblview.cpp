@@ -90,7 +90,7 @@ void TblView::initialize(D1Pal *p, D1Tableset *t, bool bottomPanelHidden)
 
     this->ui->bottomPanel->setVisible(!bottomPanelHidden);
 
-    // this->update();
+    // this->updateFields();
 }
 
 void TblView::setPal(D1Pal *p)
@@ -110,7 +110,7 @@ void TblView::updateLabel()
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(1)->widget()), this->tableset->darkTbl->getFilePath(), this->tableset->darkTbl->isModified());
 }
 
-void TblView::update()
+void TblView::updateFields()
 {
     this->updateLabel();
 
@@ -266,7 +266,7 @@ void TblView::palColorsSelected(const std::vector<quint8> &indices)
 
 void TblView::displayFrame()
 {
-    this->update();
+    this->updateFields();
     this->tblScene.clear();
 
     // Getting the current frame to display

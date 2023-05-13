@@ -358,7 +358,7 @@ void PaletteWidget::selectColor(const D1GfxPixel &pixel)
     this->selectedFirstColorIndex = index;
     this->selectedLastColorIndex = index;
 
-    this->update();
+    this->updateFields();
 }
 
 std::pair<int, int> PaletteWidget::getCurrentSelection() const
@@ -490,7 +490,7 @@ void PaletteWidget::changeColorSelection(int colorIndex)
 {
     this->selectedLastColorIndex = colorIndex;
 
-    this->update();
+    this->updateFields();
 }
 
 void PaletteWidget::finishColorSelection()
@@ -506,7 +506,7 @@ void PaletteWidget::finishColorSelection()
         std::swap(this->selectedFirstColorIndex, this->selectedLastColorIndex);
     }
 
-    this->update();
+    this->updateFields();
 
     // emit selected colors
     std::vector<quint8> indexes;
@@ -791,7 +791,7 @@ void PaletteWidget::modify()
     dMainWindow().colorModified();
 }
 
-void PaletteWidget::update()
+void PaletteWidget::updateFields()
 {
     /*if (!this->isVisible() && !refreshing) {
         return;
@@ -808,7 +808,7 @@ void PaletteWidget::refresh()
     if (this->isTrn)
         this->trn->refreshResultingPalette();
 
-    this->update();
+    this->updateFields();
 
     emit refreshed();
 }

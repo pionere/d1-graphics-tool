@@ -132,7 +132,7 @@ public:
     void refreshTranslationIndexLineEdit();
     void patchTrn();
 
-    void update();
+    void updateFields();
     void modify();
     void refresh();
 

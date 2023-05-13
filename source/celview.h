@@ -86,13 +86,13 @@ public:
     void resize(const ResizeParam &params);
     void upscale(const UpscaleParam &params);
 
-    void update();
     void displayFrame();
     void toggleBottomPanel();
 
     static void setLabelContent(QLabel *label, const QString &filePath, bool modified);
 
 private:
+    void updateFields();
     void updateLabel();
     void insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);
     void setFrameIndex(int frameIndex);
