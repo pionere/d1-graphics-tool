@@ -145,6 +145,7 @@ private slots:
 
 private:
     Ui::GfxsetView *ui;
+    PushButtonWidget *loadGfxBtn;
     CelScene celScene = CelScene(this);
 
     D1Pal *pal;

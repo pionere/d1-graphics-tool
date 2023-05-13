@@ -12,6 +12,7 @@
 #include <QMimeData>
 
 #include "config.h"
+#include "d1cl2.h"
 #include "d1pcx.h"
 #include "mainwindow.h"
 #include "progressdialog.h"
@@ -32,7 +33,7 @@ GfxsetView::GfxsetView(QWidget *parent)
     layout->setAlignment(btn, Qt::AlignRight);
 
     this->loadGfxBtn = new PushButtonWidget(this, QStyle::SP_DialogOpenButton, tr("Select graphics"));
-    QObject::connect(this->loadBtn, &QPushButton::clicked, this, &GfxsetView::on_loadGfxPushButtonClicked);
+    QObject::connect(this->loadGfxBtn, &QPushButton::clicked, this, &GfxsetView::on_loadGfxPushButtonClicked);
 
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &GfxsetView::framePixelClicked);
@@ -54,6 +55,7 @@ GfxsetView::GfxsetView(QWidget *parent)
 GfxsetView::~GfxsetView()
 {
     delete ui;
+    delete loadGfxBtn;
 }
 
 void GfxsetView::initialize(D1Pal *p, D1Gfxset *gs, bool bottomPanelHidden)
@@ -932,13 +934,19 @@ void GfxsetView::on_plrDeathButton_clicked()
 
 void GfxsetView::on_loadGfxPushButtonClicked()
 {
-    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Graphics"), tr("CL2 Files (*.cl2 *.CL2)"));
+    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Graphics"), tr("CL2 Files (*.cl2 *.CL2)"));
 
     if (!openFilePath.isEmpty()) {
+        D1Gfx *baseGfx = gs->getBaseGfx();
+        QString currFilePath = baseGfx->getFilePath();
+
         OpenAsParam params = OpenAsParam();
         params.gfxType = OPEN_GFX_TYPE::BASIC;
         params.celFilePath = openFilePath;
-        D1Cl2::load(*this->baseGfx, openFilePath, params);
+        D1Cl2::load(*baseGfx, openFilePath, params);
+        if (baseGfx->getFilePath() != currFilePath) {
+            baseGfx->setFilePath(currFilePath);
+        }
         dMainWindow().updateWindow();
     }
 }
