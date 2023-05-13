@@ -1069,7 +1069,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->gfxsetView->initialize(this->pal, this->gfxset, this->bottomPanelHidden);
 
         // Refresh palette widgets when frame is changed
-        QObject::connect(this->gfxsetView, &GfxsetView::frameRefreshed, this->palWidget, &PaletteWidget::update);
+        QObject::connect(this->gfxsetView, &GfxsetView::frameRefreshed, this->palWidget, &PaletteWidget::updateFields);
 
         // Refresh palette widgets when the palette is changed (loading a PCX file)
         QObject::connect(this->gfxsetView, &GfxsetView::palModified, this->palWidget, &PaletteWidget::refresh);
@@ -1081,7 +1081,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->levelCelView->initialize(this->pal, this->tileset, this->dun, this->bottomPanelHidden);
 
         // Refresh palette widgets when frame, subtile or tile is changed
-        QObject::connect(this->levelCelView, &LevelCelView::frameRefreshed, this->palWidget, &PaletteWidget::update);
+        QObject::connect(this->levelCelView, &LevelCelView::frameRefreshed, this->palWidget, &PaletteWidget::updateFields);
 
         // Refresh palette widgets when the palette is changed (loading a PCX file)
         QObject::connect(this->levelCelView, &LevelCelView::palModified, this->palWidget, &PaletteWidget::refresh);
@@ -1093,7 +1093,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->celView->initialize(this->pal, this->gfx, this->bottomPanelHidden);
 
         // Refresh palette widgets when frame is changed
-        QObject::connect(this->celView, &CelView::frameRefreshed, this->palWidget, &PaletteWidget::update);
+        QObject::connect(this->celView, &CelView::frameRefreshed, this->palWidget, &PaletteWidget::updateFields);
 
         // Refresh palette widgets when the palette is changed (loading a PCX file)
         QObject::connect(this->celView, &CelView::palModified, this->palWidget, &PaletteWidget::refresh);
@@ -1104,7 +1104,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         this->tblView->initialize(this->pal, this->tableset, this->bottomPanelHidden);
 
         // Refresh palette widgets when frame is changed
-        QObject::connect(this->tblView, &TblView::frameRefreshed, this->palWidget, &PaletteWidget::update);
+        QObject::connect(this->tblView, &TblView::frameRefreshed, this->palWidget, &PaletteWidget::updateFields);
 
         view = this->tblView;
     }

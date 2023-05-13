@@ -260,7 +260,18 @@ void D1Gfxset::save(const SaveAsParam &params)
             anim += ".cl2";
             saveParams.celFilePath = filePath + (uppercase ? anim : anim.toLower());
         }
-        D1Cl2::save(*this->gfxList[i], saveParams);
+        D1Gfx *gfx = this->gfxList[i];
+        if (gfx->getFrameCount() != 0) {
+            D1Cl2::save(*gfx, saveParams);
+        } else {
+            // CL2 without content -> delete
+            QString cl2FilePath = saveParams.celFilePath;
+            if (QFile::exists(cl2FilePath) && !QFile::remove(cl2FilePath)) {
+                dProgressFail() << tr("Failed to remove file: %1.").arg(QDir::toNativeSeparators(cl2FilePath));
+            } else {
+                gfx->setModified(false);
+            }
+        }
     }
 }
 
