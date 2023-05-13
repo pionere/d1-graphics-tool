@@ -98,11 +98,12 @@ void GfxsetView::updateLabel()
     D1Gfx *baseGfx = this->gfxset->getBaseGfx();
     for (int i = 0; i < labelCount; i++) {
         D1Gfx *gfx = this->gfxset->getGfx(i);
-        QString text = gfx->getFilePath();
+        QLabel *label = qobject_cast<QLabel *>(layout->itemAt(i)->widget());
+        CelView::setLabelContent(label, gfx->getFilePath(), gfx->isModified());
         if (gfx == baseGfx) {
-            text = QString("<b>%1</b>").arg(text);
+            QString text = QString("<b>%1</b>").arg(label->text());
+            label->setText(text);
         }
-        CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(i)->widget()), text, gfx->isModified());
     }
 }
 
