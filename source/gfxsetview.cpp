@@ -586,7 +586,7 @@ done:
         QMessageBox::StandardButton reply;
         QString frameId = tr("Frame %1").arg(frameWithPixelLost + 1);
         if (this->gfx != this->gfxset->getGfx(gn)) {
-            frameId += tr(" of %1").arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn) : this->buttons[gn]->getText());
+            frameId += tr(" of %1").arg(this->currType == D1GFX_SET_TYPE::Missile ? tr("Dir%1").arg(gn) : this->buttons[gn]->text());
         }
         reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Pixels with non-background colors are going to be eliminated (At least %1 is affected). Are you sure you want to proceed?").arg(frameId), QMessageBox::Yes | QMessageBox::No);
         if (reply != QMessageBox::Yes) {
