@@ -34,15 +34,17 @@ class PaintWidget;
 
 class CelView;
 class LevelCelView;
+class GfxsetView;
 
 class PaintWidget : public QFrame {
     Q_OBJECT
 
 public:
-    explicit PaintWidget(QWidget *parent, QUndoStack *undoStack, D1Gfx *gfx, CelView *celView, LevelCelView *levelCelView);
+    explicit PaintWidget(QWidget *parent, QUndoStack *undoStack, D1Gfx *gfx, CelView *celView, LevelCelView *levelCelView, GfxsetView *gfxsetView);
     ~PaintWidget();
 
     void setPalette(D1Pal *pal);
+    void setGfx(D1Gfx *gfx);
 
     void show(); // override;
     void hide(); // override;
@@ -90,6 +92,7 @@ private:
     D1Gfx *gfx;
     CelView *celView;
     LevelCelView *levelCelView;
+    GfxsetView *gfxsetView;
     QGraphicsView *graphView;
     QRubberBand *rubberBand;
     bool moving;

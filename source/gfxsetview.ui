@@ -1,0 +1,997 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GfxsetView</class>
+ <widget class="QWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>625</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <layout class="QVBoxLayout">
+   <item>
+    <layout class="QHBoxLayout" name="celLabelsHorizontalLayout">
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QGraphicsView" name="celGraphicsView">
+     <property name="minimumSize">
+      <size>
+       <width>500</width>
+       <height>360</height>
+      </size>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QAbstractScrollArea::AdjustToContents</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="bottomPanel">
+     <layout class="QHBoxLayout">
+     <item>
+      <widget class="QWidget">
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QWidget" name="misGfxsetPanel">
+          <layout class="QGridLayout">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="misNWButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">\</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="misNNWButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">&apos;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="misNButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">|</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QPushButton" name="misNNEButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">&apos;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QPushButton" name="misNEButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">/</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="misWNWButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">`</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="4">
+            <widget class="QPushButton" name="misENEButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">´</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="misWButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">-</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="4">
+            <widget class="QPushButton" name="misEButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">-</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QPushButton" name="misWSWButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">,</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="4">
+            <widget class="QPushButton" name="misESEButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">.</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QPushButton" name="misSWButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">/</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QPushButton" name="misSSWButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">,</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="2">
+            <widget class="QPushButton" name="misSButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">|</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="3">
+            <widget class="QPushButton" name="misSSEButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">.</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="4">
+            <widget class="QPushButton" name="misSEButton">
+             <property name="minimumWidth">
+              <number>24</number>
+             </property>
+             <property name="maximumWidth">
+              <number>24</number>
+             </property>
+             <property name="text">
+              <string notr="true">\</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="monGfxsetPanel">
+          <layout class="QGridLayout">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="monStandButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Stand</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="monAttackButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Attack</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="monWalkButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Walk</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QPushButton" name="monSpecButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Spec</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="monHitButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Hit</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QPushButton" name="monDeathButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Death</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="plrGfxsetPanel">
+          <layout class="QGridLayout">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="plrStandTownButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Stand</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="plrClassLabel">
+             <property name="alignment">
+              <enum>Qt::AlignCenter</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="plrStandDunButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Stand</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="plrWalkTownButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Walk</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="plrArmorLabel">
+             <property name="alignment">
+              <enum>Qt::AlignCenter</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QPushButton" name="plrWalkDunButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Walk</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="plrAttackButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Attack</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="plrWeaponLabel">
+             <property name="alignment">
+              <enum>Qt::AlignCenter</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QPushButton" name="plrBlockButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Block</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QPushButton" name="plrFireButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Fire</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QPushButton" name="plrLightButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Light</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QPushButton" name="plrMagicButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Magic</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QPushButton" name="plrHitButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Hit</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="2">
+            <widget class="QPushButton" name="plrDeathButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Death</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+     <layout class="QGridLayout">
+      <property name="alignment">
+       <enum>Qt::AlignTop</enum>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Zoom:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="zoomOutButton">
+        <property name="minimumWidth">
+         <number>24</number>
+        </property>
+        <property name="maximumWidth">
+         <number>24</number>
+        </property>
+        <property name="text">
+         <string notr="true">-</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="LineEditWidget" name="zoomEdit">
+        <property name="charWidth">
+         <number>4</number>
+        </property>
+        <property name="alignment">
+         <enum>Qt::AlignCenter</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="zoomInButton">
+        <property name="minimumWidth">
+         <number>24</number>
+        </property>
+        <property name="maximumWidth">
+         <number>24</number>
+        </property>
+        <property name="text">
+         <string notr="true">+</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4" colspan="2">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="7" colspan="3">
+       <widget class="QPushButton" name="playStopButton">
+        <property name="text">
+         <string>Play</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="10">
+       <widget class="LineEditWidget" name="playDelayEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>Current playback delay</string>
+        </property>
+        <property name="alignment">
+         <enum>Qt::AlignCenter</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="11">
+       <widget class="QLabel">
+        <property name="text">
+         <string>ms</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="12">
+       <widget class="QCheckBox" name="playFrameCheckBox">
+        <property name="tristate">
+         <bool>true</bool>
+        </property>
+        <property name="toolTip">
+         <string>Play frames to or from the current frame</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="13">
+       <widget class="QComboBox" name="playComboBox">
+        <item>
+         <property name="text">
+          <string>Normal</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>(L3) Caves</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>(L4) Hell</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>(L5) Crypt</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>(L6) Nest</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="0" column="14" colspan="4">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="18">
+       <layout class="QHBoxLayout" name="paintbuttonHorizontalLayout">
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+       </layout>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Groups:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="4">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="5">
+       <widget class="QPushButton" name="firstGroupButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>First group</string>
+        </property>
+        <property name="text">
+         <string notr="true">|&lt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="6">
+       <widget class="QPushButton" name="previousGroupButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Previous group</string>
+        </property>
+        <property name="text">
+         <string notr="true">&lt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="7">
+       <widget class="LineEditWidget" name="groupIndexEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>Current group</string>
+        </property>
+        <property name="alignment">
+         <enum>Qt::AlignCenter</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="8">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>8</number>
+        </property>
+        <property name="maximumWidth">
+         <number>8</number>
+        </property>
+        <property name="text">
+         <string notr="true">/</string>
+        </property>
+        <property name="alignment">
+         <enum>Qt::AlignCenter</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="9">
+       <widget class="LineEditWidget" name="groupNumberEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>Number of groups</string>
+        </property>
+        <property name="alignment">
+         <enum>Qt::AlignCenter</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="10">
+       <widget class="QPushButton" name="nextGroupButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Next group</string>
+        </property>
+        <property name="text">
+         <string notr="true">&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="11">
+       <widget class="QPushButton" name="lastGroupButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Last group</string>
+        </property>
+        <property name="text">
+         <string notr="true">&gt;|</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="12" colspan="7">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>48</number>
+        </property>
+        <property name="text">
+         <string>Frames:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="framesGroupCheckBox">
+        <property name="toolTip">
+         <string>Handle frames in groups</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2" colspan="3">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="5">
+       <widget class="QPushButton" name="firstFrameButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>First frame</string>
+        </property>
+        <property name="text">
+         <string notr="true">|&lt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="6">
+       <widget class="QPushButton" name="previousFrameButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Previous frame</string>
+        </property>
+        <property name="text">
+         <string notr="true">&lt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="7">
+       <widget class="LineEditWidget" name="frameIndexEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>Current frame</string>
+        </property>
+        <property name="alignment">
+         <enum>Qt::AlignCenter</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="8">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>8</number>
+        </property>
+        <property name="maximumWidth">
+         <number>8</number>
+        </property>
+        <property name="text">
+         <string notr="true">/</string>
+        </property>
+        <property name="alignment">
+         <enum>Qt::AlignCenter</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="9">
+       <widget class="LineEditWidget" name="frameNumberEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>Number of frames</string>
+        </property>
+        <property name="alignment">
+         <enum>Qt::AlignCenter</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="10">
+       <widget class="QPushButton" name="nextFrameButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Next frame</string>
+        </property>
+        <property name="text">
+         <string notr="true">&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="11">
+       <widget class="QPushButton" name="lastFrameButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Last frame</string>
+        </property>
+        <property name="text">
+         <string notr="true">&gt;|</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="12" colspan="4">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="16">
+       <widget class="LineEditWidget" name="celFrameWidthEdit">
+        <property name="charWidth">
+         <number>7</number>
+        </property>
+        <property name="toolTip">
+         <string>Current frame width</string>
+        </property>
+        <property name="alignment">
+         <enum>Qt::AlignCenter</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="17">
+       <widget class="QLabel">
+        <property name="minimumWidth">
+         <number>8</number>
+        </property>
+        <property name="maximumWidth">
+         <number>8</number>
+        </property>
+        <property name="text">
+         <string notr="true">*</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="18">
+       <widget class="LineEditWidget" name="celFrameHeightEdit">
+        <property name="charWidth">
+         <number>7</number>
+        </property>
+        <property name="toolTip">
+         <string>Current frame height</string>
+        </property>
+        <property name="alignment">
+         <enum>Qt::AlignCenter</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+     </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="4" margin="4"/>
+ <resources/>
+ <connections/>
+ <buttongroups/>
+</ui>

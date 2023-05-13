@@ -52,7 +52,7 @@ void EditFrameCommand::undo()
         }
     }
 
-    dMainWindow().frameModified();
+    dMainWindow().frameModified(this->frame);
 }
 
 void EditFrameCommand::redo()
@@ -60,13 +60,14 @@ void EditFrameCommand::redo()
     this->undo();
 }
 
-PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, D1Gfx *g, CelView *cv, LevelCelView *lcv)
+PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, D1Gfx *g, CelView *cv, LevelCelView *lcv, GfxsetView *gsv)
     : QFrame(parent)
     , ui(new Ui::PaintWidget())
     , undoStack(us)
     , gfx(g)
     , celView(cv)
     , levelCelView(lcv)
+    , gfxsetView(gsv)
     , rubberBand(nullptr)
     , moving(false)
     , moved(false)
@@ -108,6 +109,9 @@ PaintWidget::PaintWidget(QWidget *parent, QUndoStack *us, D1Gfx *g, CelView *cv,
     if (lcv != nullptr) {
         views = lcv->getCelScene()->views();
     }
+    if (gsv != nullptr) {
+        views = gsv->getCelScene()->views();
+    }
     this->graphView = views[0];
 }
 
@@ -120,6 +124,11 @@ PaintWidget::~PaintWidget()
 void PaintWidget::setPalette(D1Pal *p)
 {
     this->pal = p;
+}
+
+void PaintWidget::setGfx(D1Gfx *g)
+{
+    this->gfx = g;
 }
 
 void PaintWidget::show()
@@ -166,6 +175,8 @@ QImage PaintWidget::copyCurrent() const
         frameIndex = this->levelCelView->getCurrentFrameIndex();
     } else if (this->celView != nullptr) {
         frameIndex = this->celView->getCurrentFrameIndex();
+    } else if (this->gfxsetView != nullptr) {
+        frameIndex = this->gfxsetView->getCurrentFrameIndex();
     }
     if (this->gfx->getFrameCount() <= frameIndex || this->rubberBand == nullptr) {
         return QImage();
@@ -211,6 +222,8 @@ void PaintWidget::pasteCurrent(const QImage &image)
         frameIndex = this->levelCelView->getCurrentFrameIndex();
     } else if (this->celView != nullptr) {
         frameIndex = this->celView->getCurrentFrameIndex();
+    } else if (this->gfxsetView != nullptr) {
+        frameIndex = this->gfxsetView->getCurrentFrameIndex();
     }
     if (this->gfx->getFrameCount() <= frameIndex) {
         return;
@@ -269,6 +282,8 @@ void PaintWidget::deleteCurrent()
         frameIndex = this->levelCelView->getCurrentFrameIndex();
     } else if (this->celView != nullptr) {
         frameIndex = this->celView->getCurrentFrameIndex();
+    } else if (this->gfxsetView != nullptr) {
+        frameIndex = this->gfxsetView->getCurrentFrameIndex();
     }
     if (this->gfx->getFrameCount() <= frameIndex || this->rubberBand == nullptr) {
         return;

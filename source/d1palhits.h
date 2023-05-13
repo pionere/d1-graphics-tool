@@ -23,8 +23,9 @@ public:
 
     void update();
 
+    void setGfx(D1Gfx *gfx);
     D1PALHITS_MODE getMode() const;
-    void setMode(D1PALHITS_MODE m);
+    void setMode(D1PALHITS_MODE mode);
 
     // Returns the number of hits for a specific index
     int getIndexHits(quint8 colorIndex, unsigned itemIndex);

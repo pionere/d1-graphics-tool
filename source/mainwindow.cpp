@@ -110,21 +110,25 @@ void MainWindow::changeColors(const RemapParam &params)
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 0, PAF_UPDATE_WINDOW);
 
-    int rangeFrom = params.frames.first;
-    if (rangeFrom != 0) {
-        rangeFrom--;
-    }
-    int rangeTo = params.frames.second;
-    if (rangeTo == 0 || rangeTo > this->gfx->getFrameCount()) {
-        rangeTo = this->gfx->getFrameCount();
-    }
-    rangeTo--;
+    if (this->gfxset != nullptr) {
+        this->gfxset->replacePixels(replacements, params);
+    } else {
+        int rangeFrom = params.frames.first;
+        if (rangeFrom != 0) {
+            rangeFrom--;
+        }
+        int rangeTo = params.frames.second;
+        if (rangeTo == 0 || rangeTo >= this->gfx->getFrameCount()) {
+            rangeTo = this->gfx->getFrameCount();
+        }
+        rangeTo--;
 
-    for (int i = rangeFrom; i <= rangeTo; i++) {
-        D1GfxFrame *frame = this->gfx->getFrame(i);
-        frame->replacePixels(replacements);
+        for (int i = rangeFrom; i <= rangeTo; i++) {
+            D1GfxFrame *frame = this->gfx->getFrame(i);
+            frame->replacePixels(replacements);
+        }
+        this->gfx->setModified();
     }
-    this->gfx->setModified();
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -148,6 +152,9 @@ void MainWindow::setPal(const QString &path)
     }
     if (this->levelCelView != nullptr) {
         this->levelCelView->setPal(pal);
+    }
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->setPal(pal);
     }
     if (this->tblView != nullptr) {
         this->tblView->setPal(pal);
@@ -181,6 +188,9 @@ void MainWindow::setBaseTrn(const QString &path)
     this->gfx->setPalette(resPal);
     if (this->tileset != nullptr) {
         this->tileset->cls->setPalette(resPal);
+    }
+    if (this->gfxset != nullptr) {
+        this->gfxset->setPalette(resPal);
     }
     // update the widgets
     // - paint widget
@@ -225,6 +235,10 @@ void MainWindow::updateWindow()
     if (this->levelCelView != nullptr) {
         // this->levelCelView->updateFields();
         this->levelCelView->displayFrame();
+    }
+    if (this->gfxsetView != nullptr) {
+        // this->gfxsetView->updateFields();
+        this->gfxsetView->displayFrame();
     }
     if (this->tblView != nullptr) {
         // this->tblView->updateFields();
@@ -331,20 +345,28 @@ void MainWindow::dunHovered(const QPoint &cell)
     this->builderWidget->dunHovered(cell);
 }
 
-void MainWindow::frameModified()
+void MainWindow::frameModified(D1GfxFrame *frame)
 {
-    this->gfx->setModified();
+    if (this->gfxset != nullptr) {
+        this->gfxset->frameModified(frame);
+    } else {
+        this->gfx->setModified();
+    }
 
     this->updateWindow();
 }
 
 void MainWindow::colorModified()
 {
+    // update the view
     if (this->celView != nullptr) {
         this->celView->displayFrame();
     }
     if (this->levelCelView != nullptr) {
         this->levelCelView->displayFrame();
+    }
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->displayFrame();
     }
     if (this->tblView != nullptr) {
         this->tblView->displayFrame();
@@ -386,6 +408,34 @@ void MainWindow::reloadConfig()
     if (currPalChanged) {
         this->palWidget->modify();
     }
+}
+
+void MainWindow::gfxChanged(D1Gfx *gfx)
+{
+    this->gfx = gfx;
+    if (this->palHits != nullptr) {
+        this->palHits->setGfx(gfx);
+    }
+    // if (this->tileset != nullptr) {
+    //    this->tileset->gfx = gfx;
+    //    this->tileset->min->setGfx(gfx);
+    // }
+    if (this->gfxset != nullptr) {
+        this->gfxset->setGfx(gfx);
+    }
+    // if (this->celView != nullptr) {
+    //    this->celView->setGfx(gfx);
+    // }
+    // if (this->levelCelView != nullptr) {
+    //    this->levelCelView->setGfx(gfx);
+    // }
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->setGfx(gfx);
+    }
+    if (this->paintWidget != nullptr) {
+        this->paintWidget->setGfx(gfx);
+    }
+    this->updateWindow();
 }
 
 void MainWindow::paletteWidget_callback(PaletteWidget *widget, PWIDGET_CALLBACK_TYPE type)
@@ -577,31 +627,43 @@ bool MainWindow::isResourcePath(const QString &path)
 
 void MainWindow::on_actionNew_CEL_triggered()
 {
-    this->openNew(OPEN_TILESET_TYPE::FALSE, OPEN_CLIPPED_TYPE::FALSE, false);
+    this->openNew(OPEN_GFX_TYPE::BASIC, OPEN_CLIPPED_TYPE::FALSE, false);
 }
 
 void MainWindow::on_actionNew_CL2_triggered()
 {
-    this->openNew(OPEN_TILESET_TYPE::FALSE, OPEN_CLIPPED_TYPE::TRUE, false);
+    this->openNew(OPEN_GFX_TYPE::BASIC, OPEN_CLIPPED_TYPE::TRUE, false);
 }
 
 void MainWindow::on_actionNew_Tileset_triggered()
 {
-    this->openNew(OPEN_TILESET_TYPE::TRUE, OPEN_CLIPPED_TYPE::FALSE, false);
+    this->openNew(OPEN_GFX_TYPE::TILESET, OPEN_CLIPPED_TYPE::FALSE, false);
 }
 
 void MainWindow::on_actionNew_Dungeon_triggered()
 {
-    this->openNew(OPEN_TILESET_TYPE::TRUE, OPEN_CLIPPED_TYPE::FALSE, true);
+    this->openNew(OPEN_GFX_TYPE::TILESET, OPEN_CLIPPED_TYPE::FALSE, true);
 }
 
-void MainWindow::openNew(OPEN_TILESET_TYPE tileset, OPEN_CLIPPED_TYPE clipped, bool createDun)
+void MainWindow::openNew(OPEN_GFX_TYPE gfxType, OPEN_CLIPPED_TYPE clipped, bool createDun)
 {
     OpenAsParam params = OpenAsParam();
-    params.isTileset = tileset;
+    params.gfxType = gfxType;
     params.clipped = clipped;
     params.createDun = createDun;
     this->openFile(params);
+}
+
+void MainWindow::on_actionNew_Gfxset_triggered()
+{
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Open Graphics"), tr("CL2 Files (*.cl2 *.CL2)"));
+
+    if (!openFilePath.isEmpty()) {
+        OpenAsParam params = OpenAsParam();
+        params.gfxType = OPEN_GFX_TYPE::GFXSET;
+        params.celFilePath = openFilePath;
+        this->openFile(params);
+    }
 }
 
 void MainWindow::on_actionOpen_triggered()
@@ -622,7 +684,7 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 
 void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 {
-    bool unloaded = this->celView == nullptr && this->levelCelView == nullptr;
+    bool unloaded = this->celView == nullptr && this->levelCelView == nullptr && this->gfxsetView == nullptr;
 
     for (const QUrl &url : event->mimeData()->urls()) {
         QString fileLower = url.toLocalFile().toLower();
@@ -682,6 +744,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             image = this->celView->copyCurrent();
         } else if (this->levelCelView != nullptr) {
             image = this->levelCelView->copyCurrent();
+        } else if (this->gfxsetView != nullptr) {
+            image = this->gfxsetView->copyCurrent();
         }
         if (!image.isNull()) {
             QClipboard *clipboard = QGuiApplication::clipboard();
@@ -718,6 +782,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
                 this->celView->pasteCurrent(image);
             } else if (this->levelCelView != nullptr) {
                 this->levelCelView->pasteCurrent(image);
+            } else if (this->gfxsetView != nullptr) {
+                this->gfxsetView->pasteCurrent(image);
             }
 
             // Clear loading message from status bar
@@ -885,15 +951,23 @@ void MainWindow::openFile(const OpenAsParam &params)
     }
 
     // If SOL, MIN and TIL files exist then build a LevelCelView
-    bool isTileset = params.isTileset == OPEN_TILESET_TYPE::TRUE;
-    if (params.isTileset == OPEN_TILESET_TYPE::AUTODETECT) {
+    bool isTileset = params.gfxType == OPEN_GFX_TYPE::TILESET;
+    if (params.gfxType == OPEN_GFX_TYPE::AUTODETECT) {
         isTileset = ((fileType == 1 || fileType == 0) && QFileInfo::exists(dunFilePath))
             || (fileType == 1 && QFileInfo::exists(tilFilePath) && QFileInfo::exists(minFilePath) && QFileInfo::exists(solFilePath));
     }
 
+    bool isGfxset = params.gfxType == OPEN_GFX_TYPE::GFXSET;
+
     this->gfx = new D1Gfx();
     this->gfx->setPalette(this->trnBase->getResultingPalette());
-    if (isTileset) {
+    if (isGfxset) {
+        this->gfxset = new D1Gfxset(this->gfx);
+        if (!this->gfxset->load(gfxFilePath, params)) {
+            this->failWithError(tr("Failed loading GFX file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
+            return;
+        }
+    } else if (isTileset) {
         this->tileset = new D1Tileset(this->gfx);
         // Loading SOL
         if (!this->tileset->sol->load(solFilePath)) {
@@ -989,7 +1063,19 @@ void MainWindow::openFile(const OpenAsParam &params)
     palLayout->addWidget(this->trnBaseWidget);
 
     QWidget *view;
-    if (isTileset) {
+    if (isGfxset) {
+        // build a GfxsetView
+        this->gfxsetView = new GfxsetView(this);
+        this->gfxsetView->initialize(this->pal, this->gfxset, this->bottomPanelHidden);
+
+        // Refresh palette widgets when frame is changed
+        QObject::connect(this->gfxsetView, &GfxsetView::frameRefreshed, this->palWidget, &PaletteWidget::updateFields);
+
+        // Refresh palette widgets when the palette is changed (loading a PCX file)
+        QObject::connect(this->gfxsetView, &GfxsetView::palModified, this->palWidget, &PaletteWidget::refresh);
+
+        view = this->gfxsetView;
+    } else if (isTileset) {
         // build a LevelCelView
         this->levelCelView = new LevelCelView(this);
         this->levelCelView->initialize(this->pal, this->tileset, this->dun, this->bottomPanelHidden);
@@ -1027,7 +1113,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // prepare the paint dialog
     if (fileType != 4) {
-        this->paintWidget = new PaintWidget(this, this->undoStack, this->gfx, this->celView, this->levelCelView);
+        this->paintWidget = new PaintWidget(this, this->undoStack, this->gfx, this->celView, this->levelCelView, this->gfxsetView);
         this->paintWidget->setPalette(this->trnBase->getResultingPalette());
     }
 
@@ -1040,9 +1126,9 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     // Initialize palette widgets
     this->palHits = new D1PalHits(this->gfx, this->tileset);
-    this->palWidget->initialize(this->pal, this->celView, this->levelCelView, this->palHits);
-    this->trnUniqueWidget->initialize(this->trnUnique, this->celView, this->levelCelView, this->palHits);
-    this->trnBaseWidget->initialize(this->trnBase, this->celView, this->levelCelView, this->palHits);
+    this->palWidget->initialize(this->pal, this->celView, this->levelCelView, this->gfxsetView, this->palHits);
+    this->trnUniqueWidget->initialize(this->trnUnique, this->celView, this->levelCelView, this->gfxsetView, this->palHits);
+    this->trnBaseWidget->initialize(this->trnBase, this->celView, this->levelCelView, this->gfxsetView, this->palHits);
 
     // setup default options in the palette widgets
     // this->palWidget->updatePathComboBoxOptions(this->pals.keys(), this->pal->getFilePath());
@@ -1107,7 +1193,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     this->ui->menuSubtile->setEnabled(isTileset);
     this->ui->menuTile->setEnabled(isTileset);
-    this->ui->actionResize->setEnabled(this->celView != nullptr);
+    this->ui->actionResize->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
 
     this->ui->menuTileset->setEnabled(isTileset);
     this->ui->menuDungeon->setEnabled(this->dun != nullptr);
@@ -1129,6 +1215,9 @@ void MainWindow::openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, boo
     }
     if (this->levelCelView != nullptr) {
         this->levelCelView->insertImageFiles(mode, filePaths, append);
+    }
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->insertImageFiles(mode, filePaths, append);
     }
 
     // Clear loading message from status bar
@@ -1179,7 +1268,7 @@ void MainWindow::saveFile(const SaveAsParam &params)
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Saving..."), 0, PAF_UPDATE_WINDOW);
 
     QString filePath = params.celFilePath.isEmpty() ? this->gfx->getFilePath() : params.celFilePath;
-    if (!filePath.isEmpty() && this->tableset == nullptr) {
+    if (!filePath.isEmpty() && this->tableset == nullptr && this->gfxset == nullptr) {
         QString fileLower = filePath.toLower();
         if (this->gfx->getType() == D1CEL_TYPE::V1_LEVEL) {
             if (!fileLower.endsWith(".cel")) {
@@ -1210,6 +1299,10 @@ void MainWindow::saveFile(const SaveAsParam &params)
         this->tileset->save(params);
     }
 
+    if (this->gfxset != nullptr) {
+        this->gfxset->save(params);
+    }
+
     if (this->dun != nullptr) {
         this->dun->save(params);
     }
@@ -1226,7 +1319,12 @@ void MainWindow::resize(const ResizeParam &params)
 {
     // ProgressDialog::start(PROGRESS_DIALOG_STATE::ACTIVE, tr("Resizing..."), 1, PAF_UPDATE_WINDOW);
 
-    this->celView->resize(params);
+    if (this->celView != nullptr) {
+        this->celView->resize(params);
+    }
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->resize(params);
+    }
 
     // Clear loading message from status bar
     // ProgressDialog::done();
@@ -1255,6 +1353,9 @@ void MainWindow::upscale(const UpscaleParam &params)
         }
         if (this->levelCelView != nullptr) {
             this->levelCelView->upscale(params);
+        }
+        if (this->gfxsetView != nullptr) {
+            this->gfxsetView->upscale(params);
         }
     };
     ProgressDialog::startAsync(PROGRESS_DIALOG_STATE::ACTIVE, tr("Upscaling..."), 1, PAF_UPDATE_WINDOW, std::move(func));
@@ -1340,7 +1441,7 @@ void MainWindow::on_actionSaveAs_triggered()
     if (this->saveAsDialog == nullptr) {
         this->saveAsDialog = new SaveAsDialog(this);
     }
-    this->saveAsDialog->initialize(this->gfx, this->tileset, this->dun, this->tableset);
+    this->saveAsDialog->initialize(this->gfx, this->tileset, this->gfxset, this->dun, this->tableset);
     this->saveAsDialog->show();
 }
 
@@ -1352,12 +1453,14 @@ void MainWindow::on_actionClose_triggered()
     MemFree(this->builderWidget);
     MemFree(this->celView);
     MemFree(this->levelCelView);
+    MemFree(this->gfxsetView);
     MemFree(this->tblView);
     MemFree(this->palWidget);
     MemFree(this->trnUniqueWidget);
     MemFree(this->trnBaseWidget);
     MemFree(this->gfx);
     MemFree(this->tileset);
+    MemFree(this->gfxset);
     MemFree(this->dun);
     MemFree(this->tableset);
 
@@ -1424,6 +1527,9 @@ void MainWindow::on_actionAddTo_Frame_triggered()
     if (this->levelCelView != nullptr) {
         this->levelCelView->addToCurrentFrame(imgFilePath);
     }
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->addToCurrentFrame(imgFilePath);
+    }
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1456,6 +1562,9 @@ void MainWindow::on_actionReplace_Frame_triggered()
     if (this->levelCelView != nullptr) {
         this->levelCelView->replaceCurrentFrame(imgFilePath);
     }
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->replaceCurrentFrame(imgFilePath);
+    }
 
     // Clear loading message from status bar
     ProgressDialog::done();
@@ -1468,6 +1577,9 @@ void MainWindow::on_actionDel_Frame_triggered()
     }
     if (this->levelCelView != nullptr) {
         this->levelCelView->removeCurrentFrame();
+    }
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->removeCurrentFrame();
     }
     this->updateWindow();
 }
@@ -1585,11 +1697,14 @@ void MainWindow::on_actionTogglePalTrn_triggered()
 void MainWindow::on_actionToggleBottomPanel_triggered()
 {
     this->bottomPanelHidden = !this->bottomPanelHidden;
+    if (this->celView != nullptr) {
+        this->celView->toggleBottomPanel();
+    }
     if (this->levelCelView != nullptr) {
         this->levelCelView->toggleBottomPanel();
     }
-    if (this->celView != nullptr) {
-        this->celView->toggleBottomPanel();
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->toggleBottomPanel();
     }
     if (this->tblView != nullptr) {
         this->tblView->toggleBottomPanel();

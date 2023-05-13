@@ -8,10 +8,11 @@ enum class OPEN_CLIPPED_TYPE {
     FALSE,
 };
 
-enum class OPEN_TILESET_TYPE {
+enum class OPEN_GFX_TYPE {
     AUTODETECT,
-    TRUE,
-    FALSE,
+    BASIC,
+    TILESET,
+    GFXSET,
 };
 
 enum class OPEN_UPSCALED_TYPE {
@@ -23,7 +24,7 @@ enum class OPEN_UPSCALED_TYPE {
 class OpenAsParam {
 public:
     QString celFilePath;
-    OPEN_TILESET_TYPE isTileset = OPEN_TILESET_TYPE::AUTODETECT;
+    OPEN_GFX_TYPE gfxType = OPEN_GFX_TYPE::AUTODETECT;
 
     int celWidth = 0;
     OPEN_CLIPPED_TYPE clipped = OPEN_CLIPPED_TYPE::AUTODETECT;
