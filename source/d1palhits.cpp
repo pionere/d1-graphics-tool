@@ -1,9 +1,8 @@
 #include "d1palhits.h"
 
-D1PalHits::D1PalHits(D1Gfx *g, D1Tileset *ts, D1Gfxset *gs)
+D1PalHits::D1PalHits(D1Gfx *g, D1Tileset *ts)
     : gfx(g)
     , tileset(ts)
-    , gfxset(gs)
 {
     this->update();
 }

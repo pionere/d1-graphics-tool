@@ -2,7 +2,7 @@
 
 #include <QDialog>
 
-class D1Gfx;
+class D1Gfxset;
 
 enum class RESIZE_PLACEMENT {
     TOP_LEFT,
@@ -38,7 +38,7 @@ public:
     explicit ResizeDialog(QWidget *parent);
     ~ResizeDialog();
 
-    void initialize();
+    void initialize(D1Gfxset *gfxset);
 
 private slots:
     void on_resizeButton_clicked();

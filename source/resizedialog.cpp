@@ -1,6 +1,6 @@
 #include "resizedialog.h"
 
-#include "d1gfx.h"
+#include "d1gfxset.h"
 #include "mainwindow.h"
 #include "ui_resizedialog.h"
 
