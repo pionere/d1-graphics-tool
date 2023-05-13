@@ -370,7 +370,7 @@
            <item row="0" column="1">
             <widget class="QLabel" name="plrClassLabel">
              <property name="alignment">
-              <set>Qt::AlignHCenter</set>
+              <set>Qt::AlignJustify</set>
              </property>
             </widget>
            </item>
@@ -403,7 +403,7 @@
            <item row="1" column="1">
             <widget class="QLabel" name="plrArmorLabel">
              <property name="alignment">
-              <set>Qt::AlignHCenter</set>
+              <set>Qt::AlignJustify</set>
              </property>
             </widget>
            </item>
@@ -436,7 +436,7 @@
            <item row="2" column="1">
             <widget class="QLabel" name="plrWeaponLabel">
              <property name="alignment">
-              <set>Qt::AlignHCenter</set>
+              <set>Qt::AlignJustify</set>
              </property>
             </widget>
            </item>
@@ -466,6 +466,19 @@
              </property>
             </widget>
            </item>
+           <item row="3" column="1">
+            <widget class="QPushButton" name="plrLightButton">
+             <property name="minimumWidth">
+              <number>48</number>
+             </property>
+             <property name="maximumWidth">
+              <number>48</number>
+             </property>
+             <property name="text">
+              <string>Light</string>
+             </property>
+            </widget>
+           </item>
            <item row="3" column="2">
             <widget class="QPushButton" name="plrMagicButton">
              <property name="minimumWidth">
@@ -480,19 +493,6 @@
             </widget>
            </item>
            <item row="4" column="0">
-            <widget class="QPushButton" name="plrLightButton">
-             <property name="minimumWidth">
-              <number>48</number>
-             </property>
-             <property name="maximumWidth">
-              <number>48</number>
-             </property>
-             <property name="text">
-              <string>Light</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
             <widget class="QPushButton" name="plrHitButton">
              <property name="minimumWidth">
               <number>48</number>
@@ -505,7 +505,7 @@
              </property>
             </widget>
            </item>
-           <item row="5" column="2">
+           <item row="4" column="2">
             <widget class="QPushButton" name="plrDeathButton">
              <property name="minimumWidth">
               <number>48</number>

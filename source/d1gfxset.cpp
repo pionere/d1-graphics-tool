@@ -42,12 +42,8 @@ const char WepChar[] = {
     'T', // staff
 };
 /** Maps from player class to letter used in graphic files. */
-const char CharChar[NUM_CLASSES] = { 'W', 'R', 'S',
-#ifdef HELLFIRE
-//	'M', 'B', 'C'
-    'M', 'R', 'W'
-#endif
-};
+const char CharChar[NUM_CLASSES] = { 'W', 'R', 'S', 'M' };
+
 static const char animletter[NUM_MON_ANIM] = { 'N', 'W', 'A', 'H', 'D', 'S' };
 // clang-format on
 
