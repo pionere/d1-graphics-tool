@@ -186,11 +186,12 @@ void GfxsetView::update()
         case D1GFX_SET_CLASS_TYPE::Monk:
             classLabel = tr("Monk");
             break;
-        default: classLabel = tr("N/A");
+        default:
+            classLabel = tr("N/A");
         };
         this->ui->plrClassLabel->setText(classLabel);
         QString armorLabel;
-        switch (gs->getClassType()) {
+        switch (gs->getArmorType()) {
         case D1GFX_SET_ARMOR_TYPE::Light:
             armorLabel = tr("Light");
             break;
@@ -200,11 +201,12 @@ void GfxsetView::update()
         case D1GFX_SET_ARMOR_TYPE::Heavy:
             armorLabel = tr("Heavy");
             break;
-        default: armorLabel = tr("N/A");
+        default:
+            armorLabel = tr("N/A");
         };
         this->ui->plrArmorLabel->setText(armorLabel);
-        QString armorLabel;
-        switch (gs->getClassType()) {
+        QString weaponLabel;
+        switch (gs->getWeaponType()) {
         case D1GFX_SET_WEAPON_TYPE::Unarmed:
             weaponLabel = tr("Unarmed");
             break;
@@ -232,7 +234,8 @@ void GfxsetView::update()
         case D1GFX_SET_WEAPON_TYPE::Staff:
             weaponLabel = tr("Staff");
             break;
-        default: weaponLabel = tr("N/A");
+        default:
+            weaponLabel = tr("N/A");
         };
         this->ui->plrWeaponLabel->setText(weaponLabel);
 
