@@ -172,7 +172,71 @@ void GfxsetView::update()
         buttons[MA_DEATH] = this->ui->monDeathButton;
     } else {
         // assert(gs->getType() == D1GFX_SET_TYPE::Player);
-        qobject_cast<QGridLayout *>(this->ui->plrGfxsetPanel->layout())->addWidget(this->loadGfxBtn, 1, 2);
+        QString classLabel;
+        switch (gs->getClassType()) {
+        case D1GFX_SET_CLASS_TYPE::Warrior:
+            classLabel = tr("Warrior");
+            break;
+        case D1GFX_SET_CLASS_TYPE::Rogue:
+            classLabel = tr("Rogue");
+            break;
+        case D1GFX_SET_CLASS_TYPE::Mage:
+            classLabel = tr("Mage");
+            break;
+        case D1GFX_SET_CLASS_TYPE::Monk:
+            classLabel = tr("Monk");
+            break;
+        default: classLabel = tr("N/A");
+        };
+        this->ui->plrClassLabel->setText(classLabel);
+        QString armorLabel;
+        switch (gs->getClassType()) {
+        case D1GFX_SET_ARMOR_TYPE::Light:
+            armorLabel = tr("Light");
+            break;
+        case D1GFX_SET_ARMOR_TYPE::Medium:
+            armorLabel = tr("Medium");
+            break;
+        case D1GFX_SET_ARMOR_TYPE::Heavy:
+            armorLabel = tr("Heavy");
+            break;
+        default: armorLabel = tr("N/A");
+        };
+        this->ui->plrArmorLabel->setText(armorLabel);
+        QString armorLabel;
+        switch (gs->getClassType()) {
+        case D1GFX_SET_WEAPON_TYPE::Unarmed:
+            weaponLabel = tr("Unarmed");
+            break;
+        case D1GFX_SET_WEAPON_TYPE::ShieldOnly:
+            weaponLabel = tr("Shield");
+            break;
+        case D1GFX_SET_WEAPON_TYPE::Sword:
+            weaponLabel = tr("Sword");
+            break;
+        case D1GFX_SET_WEAPON_TYPE::SwordShield:
+            weaponLabel = tr("Sword+");
+            break;
+        case D1GFX_SET_WEAPON_TYPE::Bow:
+            weaponLabel = tr("Bow");
+            break;
+        case D1GFX_SET_WEAPON_TYPE::Axe:
+            weaponLabel = tr("Axe");
+            break;
+        case D1GFX_SET_WEAPON_TYPE::Blunt:
+            weaponLabel = tr("Blunt");
+            break;
+        case D1GFX_SET_WEAPON_TYPE::BluntShield:
+            weaponLabel = tr("Blunt+");
+            break;
+        case D1GFX_SET_WEAPON_TYPE::Staff:
+            weaponLabel = tr("Staff");
+            break;
+        default: weaponLabel = tr("N/A");
+        };
+        this->ui->plrWeaponLabel->setText(weaponLabel);
+
+        qobject_cast<QGridLayout *>(this->ui->plrGfxsetPanel->layout())->addWidget(this->loadGfxBtn, 1, 4);
         numButtons = 11;
         buttons[PGT_STAND_TOWN] = this->ui->plrStandTownButton;
         buttons[PGT_STAND_DUNGEON] = this->ui->plrStandDunButton;

@@ -24,7 +24,36 @@ static const PlrAnimType PlrAnimTypes[NUM_PGTS] = {
     // clang-format on
 };
 
-static const char animletter[NUM_MON_ANIM] = { 'n', 'w', 'a', 'h', 'd', 's' };
+/** Maps from armor animation to letter used in graphic files. */
+const char ArmorChar[] = {
+    // clang-format off
+    'L', // light
+    'M', // medium
+    'H', // heavy
+    // clang-format on
+};
+/** Maps from weapon animation to letter used in graphic files. */
+const char WepChar[] = {
+    // clang-format off
+    'N', // unarmed
+    'U', // no weapon + shield
+    'S', // sword + no shield
+    'D', // sword + shield
+    'B', // bow
+    'A', // axe
+    'M', // blunt + no shield
+    'H', // blunt + shield
+    'T', // staff
+    // clang-format on
+};
+/** Maps from player class to letter used in graphic files. */
+const char CharChar[NUM_CLASSES] = { 'W', 'R', 'S',
+#ifdef HELLFIRE
+//	'M', 'B', 'C'
+    'M', 'R', 'W'
+#endif
+};
+static const char animletter[NUM_MON_ANIM] = { 'N', 'W', 'A', 'H', 'D', 'S' };
 
 D1Gfxset::D1Gfxset(D1Gfx *g)
     : baseGfx(g)
@@ -49,11 +78,15 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
     } else {
         QFileInfo celFileInfo = QFileInfo(gfxFilePath);
 
-        const QString extension = gfxFilePath.endsWith(".CL2") ? ".CL2" : ".cl2";
+        const bool uppercase = gfxFilePath.endsWith(".CL2");
+        const QString extension = uppercase ? ".CL2" : ".cl2";
         QString baseName = celFileInfo.completeBaseName();
         QString basePath = celFileInfo.absolutePath() + "/";
         std::vector<QString> filePaths;
-        D1GFX_SET_TYPE type;
+        D1GFX_SET_TYPE type = D1GFX_SET_TYPE::Unknown;
+        D1GFX_SET_CLASS_TYPE ctype = D1GFX_SET_CLASS_TYPE::Unknown;
+        D1GFX_SET_ARMOR_TYPE atype = D1GFX_SET_ARMOR_TYPE::Unknown;
+        D1GFX_SET_WEAPON_TYPE wtype = D1GFX_SET_WEAPON_TYPE::Unknown;
         if (!baseName.isEmpty() && baseName[baseName.length() - 1].isDigit()) {
             // ends with a number -> missile animation
             while (!baseName.isEmpty() && baseName[baseName.length() - 1].isDigit()) {
@@ -116,19 +149,45 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 QString baseMonPath = basePath + baseName;
                 baseMonPath.chop(1);
                 for (int i = 0; i < lengthof(animletter); i++) {
-                    QString filePath = baseMonPath + animletter[i] + extension;
+                    QString anim;
+                    anim = anim + animletter[i] + extension;
+                    if (!uppercase)
+                        anim = anim.toLower();
+                    QString filePath = baseMonPath + anim;
                     filePaths.push_back(filePath);
                 }
             } else {
                 type = D1GFX_SET_TYPE::Player;
                 QString basePlrPath = basePath + baseName.mid(0, 3);
                 for (int i = 0; i < lengthof(PlrAnimTypes); i++) {
-                    QString filePath = basePlrPath + PlrAnimTypes[i].patTxt[0] + PlrAnimTypes[i].patTxt[1] + extension;
+                    QString anim;
+                    anim = anim + PlrAnimTypes[i].patTxt[0] + PlrAnimTypes[i].patTxt[1] + extension;
+                    if (!uppercase)
+                        anim = anim.toLower();
+                    QString filePath = basePlrPath + anim;
                     filePaths.push_back(filePath);
+                }
+                for (int i = 0; i < lengthof(CharChar); i++) {
+                    if (baseName[0].toUpper() == CharChar[i]) {
+                        ctype = (D1GFX_SET_CLASS_TYPE)i;
+                    }
+                }
+                for (int i = 0; i < lengthof(ArmorChar); i++) {
+                    if (baseName[0].toUpper() == ArmorChar[i]) {
+                        atype = (D1GFX_SET_ARMOR_TYPE)i;
+                    }
+                }
+                for (int i = 0; i < lengthof(WepChar); i++) {
+                    if (baseName[0].toUpper() == WepChar[i]) {
+                        wtype = (D1GFX_SET_WEAPON_TYPE)i;
+                    }
                 }
             }
         }
         this->type = type;
+        this->ctype = ctype;
+        this->atype = atype;
+        this->wtype = wtype;
 
         // load the files
         std::vector<D1Gfx *> gfxs;
@@ -185,13 +244,13 @@ void D1Gfxset::save(const SaveAsParam &params)
                 filePath.chop(1);
             }
         } else if (this->type == D1GFX_SET_TYPE::Monster) {
-            if (filePath[filePath.length() - 1].toLower() == animletter[0]) {
+            if (filePath[filePath.length() - 1].toUpper() == animletter[0]) {
                 filePath.chop(1);
             }
         } else {
             // assert(this->type == D1GFX_SET_TYPE::Player);
-            if ((filePath[filePath.length() - 2].toLower() == PlrAnimTypes[0].patTxt[0])
-                && (filePath[filePath.length() - 1].toLower() == PlrAnimTypes[0].patTxt[1]))
+            if ((filePath[filePath.length() - 2].toUpper() == PlrAnimTypes[0].patTxt[0])
+                && (filePath[filePath.length() - 1].toUpper() == PlrAnimTypes[0].patTxt[1]))
                 filePath.chop(2);
         }
     }
@@ -207,7 +266,7 @@ void D1Gfxset::save(const SaveAsParam &params)
                 anim = anim + QChar(PlrAnimTypes[i].patTxt[0]) + QChar(PlrAnimTypes[i].patTxt[1]);
             }
             anim += ".cl2";
-            saveParams.celFilePath = filePath + (uppercase ? anim.toUpper() : anim);
+            saveParams.celFilePath = filePath + (uppercase ? anim : anim.toLower());
         }
         D1Cl2::save(*this->gfxList[i], saveParams);
     }
@@ -216,6 +275,21 @@ void D1Gfxset::save(const SaveAsParam &params)
 D1GFX_SET_TYPE D1Gfxset::getType() const
 {
     return this->type;
+}
+
+D1GFX_SET_CLASS_TYPE D1Gfxset::getClassType() const
+{
+    return this->ctype;
+}
+
+D1GFX_SET_ARMOR_TYPE D1Gfxset::getArmorType() const
+{
+    return this->atype;
+}
+
+D1GFX_SET_WEAPON_TYPE D1Gfxset::getWeaponType() const
+{
+    return this->wtype;
 }
 
 int D1Gfxset::getGfxCount() const
