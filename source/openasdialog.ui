@@ -44,7 +44,7 @@
       <item row="1" column="0">
         <widget class="QLabel">
           <property name="text">
-            <string>Tileset:</string>
+            <string>Type:</string>
           </property>
         </widget>
       </item>
@@ -66,32 +66,42 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QRadioButton" name="isTilesetYesRadioButton">
+         <widget class="QRadioButton" name="celTypeBasicRadioButton">
           <property name="text">
-           <string>YES</string>
+           <string>Basic</string>
           </property>
           <attribute name="buttonGroup">
-           <string notr="true">isTilesetButtonGroup</string>
+           <string notr="true">celTypeButtonGroup</string>
           </attribute>
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="isTilesetNoRadioButton">
+         <widget class="QRadioButton" name="celTypeTilesetRadioButton">
           <property name="text">
-           <string>NO</string>
+           <string>Tileset</string>
           </property>
           <attribute name="buttonGroup">
-           <string notr="true">isTilesetButtonGroup</string>
+           <string notr="true">celTypeButtonGroup</string>
           </attribute>
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="isTilesetAutoRadioButton">
+         <widget class="QRadioButton" name="celTypeGfxsetRadioButton">
+          <property name="text">
+           <string>Gfxset</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">celTypeButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="celTypeAutoRadioButton">
           <property name="text">
            <string>Auto detect</string>
           </property>
           <attribute name="buttonGroup">
-           <string notr="true">isTilesetButtonGroup</string>
+           <string notr="true">celTypeButtonGroup</string>
           </attribute>
          </widget>
         </item>
@@ -574,7 +584,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="isTilesetButtonGroup"/>
+  <buttongroup name="celTypeButtonGroup"/>
   <buttongroup name="celClippedButtonGroup"/>
   <buttongroup name="minUpscaledButtonGroup"/>
  </buttongroups>

@@ -12,6 +12,11 @@ OpenAsDialog::OpenAsDialog(QWidget *parent)
     , ui(new Ui::OpenAsDialog)
 {
     this->ui->setupUi(this);
+
+    this->ui->celTypeButtonGroup->setId(this->ui->celTypeAutoRadioButton, (int)OPEN_GFX_TYPE::AUTODETECT);
+    this->ui->celTypeButtonGroup->setId(this->ui->celTypeBasicRadioButton, (int)OPEN_GFX_TYPE::BASIC);
+    this->ui->celTypeButtonGroup->setId(this->ui->celTypeTilesetRadioButton, (int)OPEN_GFX_TYPE::TILESET);
+    this->ui->celTypeButtonGroup->setId(this->ui->celTypeGfxsetRadioButton, (int)OPEN_GFX_TYPE::GFXSET);
 }
 
 OpenAsDialog::~OpenAsDialog()
@@ -23,7 +28,7 @@ void OpenAsDialog::initialize()
 {
     // clear the input fields
     this->ui->inputFileEdit->setText("");
-    this->ui->isTilesetAutoRadioButton->setChecked(true);
+    this->ui->celTypeAutoRadioButton->setChecked(true);
     // - celSettingsGroupBox
     this->ui->celWidthEdit->setText("0");
     this->ui->celClippedAutoRadioButton->setChecked(true);
@@ -50,8 +55,8 @@ void OpenAsDialog::update()
 {
     QString filePath = this->ui->inputFileEdit->text();
     bool hasInputFile = !filePath.isEmpty();
-    bool isTileset = this->ui->isTilesetYesRadioButton->isChecked() || (this->ui->isTilesetAutoRadioButton->isChecked() && !this->ui->tilFileEdit->text().isEmpty());
-    bool isMeta = !isTileset && filePath.toLower().endsWith(".tbl");
+    bool isTileset = this->ui->celTypeTilesetRadioButton->isChecked() || (this->ui->celTypeAutoRadioButton->isChecked() && !this->ui->tilFileEdit->text().isEmpty());
+    bool isMeta = !isTileset && !this->ui->celTypeGfxsetRadioButton->isChecked() && filePath.toLower().endsWith(".tbl");
 
     this->ui->celSettingsGroupBox->setEnabled(hasInputFile && !isTileset && !isMeta);
     this->ui->tilSettingsGroupBox->setEnabled(hasInputFile && isTileset);
@@ -67,7 +72,7 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
 
     this->ui->inputFileEdit->setText(openFilePath);
     // activate optional fields based on the extension
-    if (this->ui->isTilesetAutoRadioButton->isChecked()) {
+    if (this->ui->celTypeAutoRadioButton->isChecked()) {
         bool isTileset = false;
         QString basePath;
         QString tilFilePath;
@@ -121,7 +126,7 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
         }
     }
     QString tblPath;
-    if (openFilePath.toLower().endsWith(".tbl") && !this->ui->isTilesetYesRadioButton->isChecked()) {
+    if (openFilePath.toLower().endsWith(".tbl") && !this->ui->celTypeTilesetRadioButton->isChecked() && !this->ui->celTypeGfxsetRadioButton->isChecked()) {
         if (openFilePath.toLower().endsWith("dark.tbl")) {
             tblPath = openFilePath;
             tblPath.replace(tblPath.length() - (sizeof("dark.tbl") - 2), 3, "ist");
@@ -250,13 +255,8 @@ void OpenAsDialog::on_openButton_clicked()
         QMessageBox::warning(this, tr("Warning"), tr("Input file is missing, please choose an input file."));
         return;
     }
-    if (this->ui->isTilesetYesRadioButton->isChecked()) {
-        params.isTileset = OPEN_TILESET_TYPE::TRUE;
-    } else if (this->ui->isTilesetNoRadioButton->isChecked()) {
-        params.isTileset = OPEN_TILESET_TYPE::FALSE;
-    } else {
-        params.isTileset = OPEN_TILESET_TYPE::AUTODETECT;
-    }
+
+    params.gfxType = (OPEN_GFX_TYPE)this->ui->celTypeButtonGroup->checkedId();
     // cel/cl2/pcx: clipped, width
     params.celWidth = this->ui->celWidthEdit->nonNegInt();
     if (this->ui->celClippedYesRadioButton->isChecked()) {

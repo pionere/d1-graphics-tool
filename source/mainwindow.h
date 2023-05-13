@@ -72,7 +72,7 @@ public:
     void reloadConfig();
     void updateWindow();
 
-    void openNew(OPEN_TILESET_TYPE tileset, OPEN_CLIPPED_TYPE clipped, bool createDun);
+    void openNew(OPEN_GFX_TYPE gfxType, OPEN_CLIPPED_TYPE clipped, bool createDun);
     void openFile(const OpenAsParam &params);
     void openFiles(const QStringList &filePaths);
     void openImageFiles(IMAGE_FILE_MODE mode, QStringList filePaths, bool append);

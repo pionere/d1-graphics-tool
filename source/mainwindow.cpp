@@ -627,28 +627,28 @@ bool MainWindow::isResourcePath(const QString &path)
 
 void MainWindow::on_actionNew_CEL_triggered()
 {
-    this->openNew(OPEN_TILESET_TYPE::FALSE, OPEN_CLIPPED_TYPE::FALSE, false);
+    this->openNew(OPEN_GFX_TYPE::BASIC, OPEN_CLIPPED_TYPE::FALSE, false);
 }
 
 void MainWindow::on_actionNew_CL2_triggered()
 {
-    this->openNew(OPEN_TILESET_TYPE::FALSE, OPEN_CLIPPED_TYPE::TRUE, false);
+    this->openNew(OPEN_GFX_TYPE::BASIC, OPEN_CLIPPED_TYPE::TRUE, false);
 }
 
 void MainWindow::on_actionNew_Tileset_triggered()
 {
-    this->openNew(OPEN_TILESET_TYPE::TRUE, OPEN_CLIPPED_TYPE::FALSE, false);
+    this->openNew(OPEN_GFX_TYPE::TILESET, OPEN_CLIPPED_TYPE::FALSE, false);
 }
 
 void MainWindow::on_actionNew_Dungeon_triggered()
 {
-    this->openNew(OPEN_TILESET_TYPE::TRUE, OPEN_CLIPPED_TYPE::FALSE, true);
+    this->openNew(OPEN_GFX_TYPE::TILESET, OPEN_CLIPPED_TYPE::FALSE, true);
 }
 
-void MainWindow::openNew(OPEN_TILESET_TYPE tileset, OPEN_CLIPPED_TYPE clipped, bool createDun)
+void MainWindow::openNew(OPEN_GFX_TYPE gfxType, OPEN_CLIPPED_TYPE clipped, bool createDun)
 {
     OpenAsParam params = OpenAsParam();
-    params.isTileset = tileset;
+    params.gfxType = gfxType;
     params.clipped = clipped;
     params.createDun = createDun;
     this->openFile(params);
@@ -660,7 +660,7 @@ void MainWindow::on_actionNew_Gfxset_triggered()
 
     if (!openFilePath.isEmpty()) {
         OpenAsParam params = OpenAsParam();
-        params.isGfxset = true;
+        params.gfxType = OPEN_GFX_TYPE::GFXSET;
         params.celFilePath = openFilePath;
         this->openFile(params);
     }
@@ -951,13 +951,13 @@ void MainWindow::openFile(const OpenAsParam &params)
     }
 
     // If SOL, MIN and TIL files exist then build a LevelCelView
-    bool isTileset = params.isTileset == OPEN_TILESET_TYPE::TRUE;
-    if (params.isTileset == OPEN_TILESET_TYPE::AUTODETECT) {
+    bool isTileset = params.gfxType == OPEN_GFX_TYPE::TILESET;
+    if (params.isTileset == OPEN_GFX_TYPE::AUTODETECT) {
         isTileset = ((fileType == 1 || fileType == 0) && QFileInfo::exists(dunFilePath))
             || (fileType == 1 && QFileInfo::exists(tilFilePath) && QFileInfo::exists(minFilePath) && QFileInfo::exists(solFilePath));
     }
 
-    bool isGfxset = params.isGfxset;
+    bool isGfxset = params.gfxType == OPEN_GFX_TYPE::GFXSET;
 
     this->gfx = new D1Gfx();
     this->gfx->setPalette(this->trnBase->getResultingPalette());
