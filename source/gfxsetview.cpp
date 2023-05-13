@@ -750,7 +750,7 @@ void GfxsetView::ShowContextMenu(const QPoint &pos)
 
 void GfxsetView::selectGfx(int gfxIndex)
 {
-    dMainWindow().setGfx(this->gfxset->getGfx(gfxIndex));
+    dMainWindow().gfxChanged(this->gfxset->getGfx(gfxIndex));
 }
 
 void GfxsetView::on_misNWButton_clicked()
