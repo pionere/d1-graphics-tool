@@ -193,6 +193,10 @@ bool D1Gfxset::load(const QString &gfxFilePath, const OpenAsParam &params)
                 if (!D1Cl2::load(*gfx, filePath, params) || this->baseGfx->getType() != gfx->getType()) {
                     gfx->setType(this->baseGfx->getType());
                     gfx->setFilePath(filePath);
+                    // treat empty files as non-modified
+                    if (gfx->getFrameCount() == 0) {
+                        gfx->setModified(false);
+                    }
                 }
             } else {
                 gfx = this->baseGfx;
@@ -269,6 +273,7 @@ void D1Gfxset::save(const SaveAsParam &params)
             if (QFile::exists(cl2FilePath) && !QFile::remove(cl2FilePath)) {
                 dProgressFail() << tr("Failed to remove file: %1.").arg(QDir::toNativeSeparators(cl2FilePath));
             } else {
+                // treat empty files as non-modified
                 gfx->setModified(false);
             }
         }
