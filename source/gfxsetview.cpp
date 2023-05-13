@@ -56,7 +56,7 @@ GfxsetView::~GfxsetView()
 void GfxsetView::initialize(D1Pal *p, D1Gfxset *gs, bool bottomPanelHidden)
 {
     this->pal = p;
-    this->gfx = gs->getGfx(0);
+    this->gfx = gs->getBaseGfx();
     this->gfxset = gs;
 
     this->ui->bottomPanel->setVisible(!bottomPanelHidden);
@@ -90,12 +90,19 @@ void GfxsetView::updateLabel()
         delete child;
     }
     while (layout->count() < labelCount + 1) {
-        layout->insertWidget(0, new QLabel(""), 0, Qt::AlignLeft);
+        QLabel *label = new QLabel("");
+        // label->setTextFormat(Qt::TextFormat);
+        layout->insertWidget(0, label, 0, Qt::AlignLeft);
     }
 
+    D1Gfx *baseGfx = this->gfxset->getBaseGfx();
     for (int i = 0; i < labelCount; i++) {
         D1Gfx *gfx = this->gfxset->getGfx(i);
-        CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(i)->widget()), gfx->getFilePath(), gfx->isModified());
+        QString text = gfx->getFilePath();
+        if (gfx == baseGfx) {
+            text = QString("<b>%1</b>").arg(text);
+        }
+        CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(i)->widget()), text, gfx->isModified());
     }
 }
 
