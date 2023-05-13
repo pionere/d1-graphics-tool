@@ -31,6 +31,9 @@ GfxsetView::GfxsetView(QWidget *parent)
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Painter_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
 
+    this->loadGfxBtn = new PushButtonWidget(this, QStyle::SP_DialogOpenButton, tr("Select graphics"));
+    QObject::connect(this->loadBtn, &QPushButton::clicked, this, &GfxsetView::on_loadGfxPushButtonClicked);
+
     // If a pixel of the frame was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &GfxsetView::framePixelClicked);
     // QObject::connect(&this->celScene, &CelScene::framePixelHovered, this, &GfxsetView::framePixelHovered);
@@ -90,9 +93,7 @@ void GfxsetView::updateLabel()
         delete child;
     }
     while (layout->count() < labelCount + 1) {
-        QLabel *label = new QLabel("");
-        // label->setTextFormat(Qt::TextFormat);
-        layout->insertWidget(0, label, 0, Qt::AlignLeft);
+        layout->insertWidget(0, new QLabel(""), 0, Qt::AlignLeft);
     }
 
     D1Gfx *baseGfx = this->gfxset->getBaseGfx();
@@ -121,6 +122,7 @@ void GfxsetView::update()
     QPushButton *buttons[16];
     unsigned numButtons = 0;
     if (gs->getType() == D1GFX_SET_TYPE::Missile) {
+        qobject_cast<QGridLayout *>(this->ui->misGfxsetPanel->layout())->addWidget(this->loadGfxBtn, 2, 2);
         if (gs->getGfxCount() == 16) {
             numButtons = 16;
             buttons[0] = this->ui->misSButton;
@@ -160,6 +162,7 @@ void GfxsetView::update()
             this->ui->misSSEButton->setVisible(false);
         }
     } else if (gs->getType() == D1GFX_SET_TYPE::Monster) {
+        qobject_cast<QGridLayout *>(this->ui->monGfxsetPanel->layout())->addWidget(this->loadGfxBtn, 1, 2);
         numButtons = 6;
         buttons[MA_STAND] = this->ui->monStandButton;
         buttons[MA_ATTACK] = this->ui->monAttackButton;
@@ -169,6 +172,7 @@ void GfxsetView::update()
         buttons[MA_DEATH] = this->ui->monDeathButton;
     } else {
         // assert(gs->getType() == D1GFX_SET_TYPE::Player);
+        qobject_cast<QGridLayout *>(this->ui->plrGfxsetPanel->layout())->addWidget(this->loadGfxBtn, 1, 2);
         numButtons = 11;
         buttons[PGT_STAND_TOWN] = this->ui->plrStandTownButton;
         buttons[PGT_STAND_DUNGEON] = this->ui->plrStandDunButton;
@@ -924,6 +928,19 @@ void GfxsetView::on_plrHitButton_clicked()
 void GfxsetView::on_plrDeathButton_clicked()
 {
     this->selectGfx(PGT_DEATH);
+}
+
+void GfxsetView::on_loadGfxPushButtonClicked()
+{
+    QString openFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Graphics"), tr("CL2 Files (*.cl2 *.CL2)"));
+
+    if (!openFilePath.isEmpty()) {
+        OpenAsParam params = OpenAsParam();
+        params.gfxType = OPEN_GFX_TYPE::BASIC;
+        params.celFilePath = openFilePath;
+        D1Cl2::load(*this->baseGfx, openFilePath, params);
+        dMainWindow().updateWindow();
+    }
 }
 
 void GfxsetView::on_framesGroupCheckBox_clicked()

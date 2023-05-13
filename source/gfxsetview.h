@@ -109,6 +109,8 @@ private slots:
     void on_plrHitButton_clicked();
     void on_plrDeathButton_clicked();
 
+    void on_loadGfxPushButtonClicked();
+
     void on_framesGroupCheckBox_clicked();
     void on_firstFrameButton_clicked();
     void on_previousFrameButton_clicked();
