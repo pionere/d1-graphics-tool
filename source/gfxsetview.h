@@ -2,14 +2,11 @@
 
 #include <vector>
 
-#include <QContextMenuEvent>
 #include <QDragEnterEvent>
 #include <QDropEvent>
-#include <QGraphicsScene>
-#include <QGraphicsSceneDragDropEvent>
-#include <QGraphicsSceneMouseEvent>
 #include <QLabel>
 #include <QPoint>
+#include <QPushButton>
 #include <QString>
 #include <QStringList>
 #include <QTimer>
@@ -150,6 +147,7 @@ private:
     D1Pal *pal;
     D1Gfx *gfx;
     D1Gfxset *gfxset;
+    QPushButton *buttons[16];
     D1GFX_SET_TYPE currType = D1GFX_SET_TYPE::Unknown;
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;

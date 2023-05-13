@@ -48,7 +48,7 @@ void ResizeDialog::on_resizeButton_clicked()
     params.backcolor = this->ui->backColorLineEdit->text().toUShort();
     params.rangeFrom = this->ui->rangeFromLineEdit->nonNegInt();
     params.rangeTo = this->ui->rangeToLineEdit->nonNegInt();
-	params.resizeAll = this->ui->resizeAllCheckBox->isChecked();
+    params.resizeAll = this->ui->resizeAllCheckBox->isChecked();
     params.placement = (RESIZE_PLACEMENT)this->ui->placementButtonGroup->checkedId();
 
     if (params.backcolor > D1PAL_COLORS) {
