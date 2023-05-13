@@ -935,7 +935,7 @@ void GfxsetView::on_loadGfxPushButtonClicked()
     QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Load Graphics"), tr("CL2 Files (*.cl2 *.CL2)"));
 
     if (!openFilePath.isEmpty()) {
-        D1Gfx *baseGfx = gs->getBaseGfx();
+        D1Gfx *baseGfx = this->gfxset->getBaseGfx();
         QString currFilePath = baseGfx->getFilePath();
 
         OpenAsParam params = OpenAsParam();

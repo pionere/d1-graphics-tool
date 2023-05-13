@@ -204,7 +204,7 @@ void D1Gfxset::save(const SaveAsParam &params)
                 anim = animletter[i];
             } else {
                 // assert(this->type == D1GFX_SET_TYPE::Player);
-                anim += QChar(PlrAnimTypes[i].patTxt[0]) + QChar(PlrAnimTypes[i].patTxt[1]);
+                anim = anim + QChar(PlrAnimTypes[i].patTxt[0]) + QChar(PlrAnimTypes[i].patTxt[1]);
             }
             anim += ".cl2";
             saveParams.celFilePath = filePath + (uppercase ? anim.toUpper() : anim);
