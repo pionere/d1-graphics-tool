@@ -23,9 +23,6 @@ public:
     void undo() override;
     void redo() override;
 
-signals:
-    void modified();
-
 private:
     QPointer<D1GfxFrame> frame;
     std::vector<FramePixel> modPixels;
@@ -36,7 +33,6 @@ class PaintWidget;
 } // namespace Ui
 
 class CelView;
-class D1Tileset;
 class LevelCelView;
 
 class PaintWidget : public QFrame {

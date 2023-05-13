@@ -52,7 +52,7 @@ void EditFrameCommand::undo()
         }
     }
 
-    emit this->modified();
+    dMainWindow().frameModified();
 }
 
 void EditFrameCommand::redo()
@@ -257,7 +257,6 @@ void PaintWidget::pasteCurrent(const QImage &image)
         // Build frame editing command and connect it to the current main window widget
         // to update the palHits and CEL views when undo/redo is performed
         EditFrameCommand *command = new EditFrameCommand(frame, pixels);
-        QObject::connect(command, &EditFrameCommand::modified, &dMainWindow(), &MainWindow::frameModified);
 
         this->undoStack->push(command);
     }
@@ -295,7 +294,6 @@ void PaintWidget::deleteCurrent()
         // Build frame editing command and connect it to the current main window widget
         // to update the palHits and CEL views when undo/redo is performed
         EditFrameCommand *command = new EditFrameCommand(frame, pixels);
-        QObject::connect(command, &EditFrameCommand::modified, &dMainWindow(), &MainWindow::frameModified);
 
         this->undoStack->push(command);
     }
@@ -586,7 +584,6 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
             // Build frame editing command and connect it to the current main window widget
             // to update the palHits and CEL views when undo/redo is performed
             EditFrameCommand *command = new EditFrameCommand(frame, pixels);
-            QObject::connect(command, &EditFrameCommand::modified, &dMainWindow(), &MainWindow::frameModified);
 
             this->lastMoveCmd = command;
             this->undoStack->push(command);
@@ -714,7 +711,6 @@ bool PaintWidget::frameClicked(D1GfxFrame *frame, const QPoint &pos, bool first)
     // Build frame editing command and connect it to the current main window widget
     // to update the palHits and CEL views when undo/redo is performed
     EditFrameCommand *command = new EditFrameCommand(frame, pixels);
-    QObject::connect(command, &EditFrameCommand::modified, &dMainWindow(), &MainWindow::frameModified);
 
     this->undoStack->push(command);
     return true;
@@ -945,7 +941,6 @@ void PaintWidget::on_tilesetMaskPushButton_clicked()
     // Build frame editing command and connect it to the current main window widget
     // to update the palHits and CEL views when undo/redo is performed
     EditFrameCommand *command = new EditFrameCommand(frame, pixels);
-    QObject::connect(command, &EditFrameCommand::modified, &dMainWindow(), &MainWindow::frameModified);
 
     this->undoStack->push(command);
 
