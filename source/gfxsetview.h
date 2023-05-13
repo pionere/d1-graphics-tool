@@ -21,9 +21,7 @@
 #include "resizedialog.h"
 #include "upscaledialog.h"
 
-#define ZOOM_LIMIT 10
-#define CEL_SCENE_SPACING 8
-#define CEL_SCENE_MARGIN 0
+#define SET_SCENE_MARGIN 0
 
 namespace Ui {
 class GfxsetView;

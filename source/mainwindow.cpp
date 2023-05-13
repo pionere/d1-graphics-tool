@@ -1716,7 +1716,7 @@ void MainWindow::on_actionResize_triggered()
     if (this->resizeDialog == nullptr) {
         this->resizeDialog = new ResizeDialog(this);
     }
-    this->resizeDialog->initialize();
+    this->resizeDialog->initialize(this->gfxset);
     this->resizeDialog->show();
 }
 

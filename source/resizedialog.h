@@ -23,6 +23,7 @@ public:
     int backcolor;
     int rangeFrom;
     int rangeTo;
+    bool resizeAll;
     RESIZE_PLACEMENT placement;
 };
 
