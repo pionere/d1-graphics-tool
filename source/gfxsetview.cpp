@@ -267,10 +267,11 @@ void GfxsetView::update()
     D1Gfx *baseGfx = gs->getBaseGfx();
     for (unsigned i = 0; i < numButtons; i++) {
         D1Gfx *gfx = gs->getGfx(i);
+        buttons[i]->setToolTip(gfx->getFilePath());
         // buttons[i]->setDown(gfx == baseGfx);
         buttons[i]->setCheckable(gfx == baseGfx);
         buttons[i]->setChecked(gfx == baseGfx);
-        buttons[i]->setToolTip(gfx->getFilePath());
+        buttons[i]->update();
     }
 
     // Set current and maximum group text
