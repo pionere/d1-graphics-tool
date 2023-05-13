@@ -129,7 +129,7 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
         // prepare the entities
         this->updateEntityOptions();
     }
-    // this->updateFields();
+    this->updateFields();
 }
 
 void LevelCelView::setPal(D1Pal *p)

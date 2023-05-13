@@ -803,7 +803,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     this->on_actionClose_triggered();
 
-    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_UPDATE_WINDOW);
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_NONE); // PAF_UPDATE_WINDOW
 
     // Loading default.pal
     D1Pal *newPal = new D1Pal();

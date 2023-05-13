@@ -236,7 +236,7 @@ void CelView::initialize(D1Pal *p, D1Gfx *g, bool bottomPanelHidden)
 
     this->ui->bottomPanel->setVisible(!bottomPanelHidden);
 
-    // this->updateFields();
+    this->updateFields();
 }
 
 void CelView::setPal(D1Pal *p)

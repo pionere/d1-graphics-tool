@@ -90,7 +90,7 @@ void TblView::initialize(D1Pal *p, D1Tableset *t, bool bottomPanelHidden)
 
     this->ui->bottomPanel->setVisible(!bottomPanelHidden);
 
-    // this->updateFields();
+    this->updateFields();
 }
 
 void TblView::setPal(D1Pal *p)
