@@ -50,9 +50,6 @@
    <item>
     <widget class="QWidget" name="bottomPanel">
      <layout class="QHBoxLayout">
-     <property name="alignment">
-      <enum>Qt::AlignTop</enum>
-     </property>
      <item>
       <widget class="QWidget">
        <layout class="QVBoxLayout">
@@ -529,6 +526,9 @@
      </item>
      <item>
      <layout class="QGridLayout">
+      <property name="alignment">
+       <enum>Qt::AlignTop</enum>
+      </property>
       <item row="0" column="0">
        <widget class="QLabel">
         <property name="minimumWidth">
