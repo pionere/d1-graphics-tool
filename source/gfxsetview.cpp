@@ -116,13 +116,25 @@ void GfxsetView::update()
 
     D1Gfxset *gs = this->gfxset;
 
-    this->ui->misGfxsetPanel->setVisible(gs->getType() == D1GFX_SET_TYPE::Missile);
-    this->ui->monGfxsetPanel->setVisible(gs->getType() == D1GFX_SET_TYPE::Monster);
-    this->ui->plrGfxsetPanel->setVisible(gs->getType() == D1GFX_SET_TYPE::Player);
+    if (this->currType != gs->getType()) {
+        this->currType = gs->getType();
+        this->ui->misGfxsetPanel->setVisible(gs->getType() == D1GFX_SET_TYPE::Missile);
+        this->ui->monGfxsetPanel->setVisible(gs->getType() == D1GFX_SET_TYPE::Monster);
+        this->ui->plrGfxsetPanel->setVisible(gs->getType() == D1GFX_SET_TYPE::Player);
+        if (this->currType == D1GFX_SET_TYPE::Missile) {
+            qobject_cast<QGridLayout *>(this->ui->misGfxsetPanel->layout())->addWidget(this->loadGfxBtn, 2, 2);
+        } else if (this->currType == D1GFX_SET_TYPE::Monster) {
+            qobject_cast<QGridLayout *>(this->ui->monGfxsetPanel->layout())->addWidget(this->loadGfxBtn, 1, 2);
+        } else {
+            // assert(this->currType == D1GFX_SET_TYPE::Player);
+            qobject_cast<QGridLayout *>(this->ui->plrGfxsetPanel->layout())->addWidget(this->loadGfxBtn, 4, 1);
+        }
+        this->adjustSize();
+    }
+
     QPushButton *buttons[16];
     unsigned numButtons = 0;
-    if (gs->getType() == D1GFX_SET_TYPE::Missile) {
-        qobject_cast<QGridLayout *>(this->ui->misGfxsetPanel->layout())->addWidget(this->loadGfxBtn, 2, 2);
+    if (this->currType == D1GFX_SET_TYPE::Missile) {
         if (gs->getGfxCount() == 16) {
             numButtons = 16;
             buttons[0] = this->ui->misSButton;
@@ -161,8 +173,7 @@ void GfxsetView::update()
             this->ui->misSSWButton->setVisible(false);
             this->ui->misSSEButton->setVisible(false);
         }
-    } else if (gs->getType() == D1GFX_SET_TYPE::Monster) {
-        qobject_cast<QGridLayout *>(this->ui->monGfxsetPanel->layout())->addWidget(this->loadGfxBtn, 1, 2);
+    } else if (this->currType == D1GFX_SET_TYPE::Monster) {
         numButtons = 6;
         buttons[MA_STAND] = this->ui->monStandButton;
         buttons[MA_ATTACK] = this->ui->monAttackButton;
@@ -171,7 +182,7 @@ void GfxsetView::update()
         buttons[MA_GOTHIT] = this->ui->monHitButton;
         buttons[MA_DEATH] = this->ui->monDeathButton;
     } else {
-        // assert(gs->getType() == D1GFX_SET_TYPE::Player);
+        // assert(this->currType == D1GFX_SET_TYPE::Player);
         QString classLabel;
         switch (gs->getClassType()) {
         case D1GFX_SET_CLASS_TYPE::Warrior:
@@ -239,7 +250,6 @@ void GfxsetView::update()
         };
         this->ui->plrWeaponLabel->setText(weaponLabel);
 
-        qobject_cast<QGridLayout *>(this->ui->plrGfxsetPanel->layout())->addWidget(this->loadGfxBtn, 1, 4);
         numButtons = 11;
         buttons[PGT_STAND_TOWN] = this->ui->plrStandTownButton;
         buttons[PGT_STAND_DUNGEON] = this->ui->plrStandDunButton;

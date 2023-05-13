@@ -8,8 +8,8 @@
 
 #include "dungeon/all.h"
 
+// clang-format off
 static const PlrAnimType PlrAnimTypes[NUM_PGTS] = {
-    // clang-format off
     { "ST", PGX_STAND },     // PGT_STAND_TOWN
     { "AS", PGX_STAND },     // PGT_STAND_DUNGEON
     { "WL", PGX_WALK },      // PGT_WALK_TOWN
@@ -21,20 +21,16 @@ static const PlrAnimType PlrAnimTypes[NUM_PGTS] = {
     { "BL", PGX_BLOCK },     // PGT_BLOCK
     { "HT", PGX_GOTHIT },    // PGT_GOTHIT
     { "DT", PGX_DEATH },     // PGT_DEATH
-    // clang-format on
 };
 
 /** Maps from armor animation to letter used in graphic files. */
 const char ArmorChar[] = {
-    // clang-format off
     'L', // light
     'M', // medium
     'H', // heavy
-    // clang-format on
 };
 /** Maps from weapon animation to letter used in graphic files. */
 const char WepChar[] = {
-    // clang-format off
     'N', // unarmed
     'U', // no weapon + shield
     'S', // sword + no shield
@@ -44,7 +40,6 @@ const char WepChar[] = {
     'M', // blunt + no shield
     'H', // blunt + shield
     'T', // staff
-    // clang-format on
 };
 /** Maps from player class to letter used in graphic files. */
 const char CharChar[NUM_CLASSES] = { 'W', 'R', 'S',
@@ -54,6 +49,7 @@ const char CharChar[NUM_CLASSES] = { 'W', 'R', 'S',
 #endif
 };
 static const char animletter[NUM_MON_ANIM] = { 'N', 'W', 'A', 'H', 'D', 'S' };
+// clang-format on
 
 D1Gfxset::D1Gfxset(D1Gfx *g)
     : baseGfx(g)

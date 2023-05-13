@@ -152,6 +152,7 @@ private:
     D1Pal *pal;
     D1Gfx *gfx;
     D1Gfxset *gfxset;
+    D1GFX_SET_TYPE currType = D1GFX_SET_TYPE::Unknown;
     int currentGroupIndex = 0;
     int currentFrameIndex = 0;
     int origFrameIndex = 0;
