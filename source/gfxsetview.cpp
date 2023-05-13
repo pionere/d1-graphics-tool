@@ -118,16 +118,16 @@ void GfxsetView::update()
 
     if (this->currType != gs->getType()) {
         this->currType = gs->getType();
-        this->ui->misGfxsetPanel->setVisible(gs->getType() == D1GFX_SET_TYPE::Missile);
-        this->ui->monGfxsetPanel->setVisible(gs->getType() == D1GFX_SET_TYPE::Monster);
-        this->ui->plrGfxsetPanel->setVisible(gs->getType() == D1GFX_SET_TYPE::Player);
+        this->ui->misGfxsetPanel->setVisible(this->currType == D1GFX_SET_TYPE::Missile);
+        this->ui->monGfxsetPanel->setVisible(this->currType == D1GFX_SET_TYPE::Monster);
+        this->ui->plrGfxsetPanel->setVisible(this->currType == D1GFX_SET_TYPE::Player);
         if (this->currType == D1GFX_SET_TYPE::Missile) {
-            qobject_cast<QGridLayout *>(this->ui->misGfxsetPanel->layout())->addWidget(this->loadGfxBtn, 2, 2);
+            qobject_cast<QGridLayout *>(this->ui->misGfxsetPanel->layout())->addWidget(this->loadGfxBtn, 2, 2, Qt::AlignHCenter);
         } else if (this->currType == D1GFX_SET_TYPE::Monster) {
-            qobject_cast<QGridLayout *>(this->ui->monGfxsetPanel->layout())->addWidget(this->loadGfxBtn, 1, 2);
+            qobject_cast<QGridLayout *>(this->ui->monGfxsetPanel->layout())->addWidget(this->loadGfxBtn, 2, 1, Qt::AlignHCenter);
         } else {
             // assert(this->currType == D1GFX_SET_TYPE::Player);
-            qobject_cast<QGridLayout *>(this->ui->plrGfxsetPanel->layout())->addWidget(this->loadGfxBtn, 4, 1);
+            qobject_cast<QGridLayout *>(this->ui->plrGfxsetPanel->layout())->addWidget(this->loadGfxBtn, 4, 1, Qt::AlignHCenter);
         }
         this->adjustSize();
     }
