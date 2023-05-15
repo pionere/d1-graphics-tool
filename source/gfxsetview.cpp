@@ -685,7 +685,7 @@ done:
             frame->setHeight(height);
         }
         if (change) {
-            this->gfx->setModified();
+            gfx->setModified();
             ch = true;
         }
     }
