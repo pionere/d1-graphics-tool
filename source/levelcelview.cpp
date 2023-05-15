@@ -587,7 +587,7 @@ void LevelCelView::scrollToCurrent()
     int cY = CEL_SCENE_MARGIN + subtileHeight - cellHeight / 2;
     int bX = cX, bY = cY;
     int offX = (this->dun->getWidth() - this->dun->getHeight()) * (cellWidth / 2);
-    cX += offX;
+    cX -= offX;
 
     int dunX = this->currentDunPosX;
     int dunY = this->currentDunPosY;
