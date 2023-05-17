@@ -265,7 +265,7 @@ void LevelTabSubtileWidget::setSolProperty(quint8 flags)
     // Build sol editing command and connect it to the views widget
     // to update the label when undo/redo is performed
     EditSolCommand *command = new EditSolCommand(this->sol, subtileIdx, flags);
-    QObject::connect(command, &EditSolCommand::modified, this->levelCelView, &LevelCelView::updateLabel);
+    QObject::connect(command, &EditSolCommand::modified, this->levelCelView, &LevelCelView::updateFields);
 
     this->undoStack->push(command);
 }
@@ -290,7 +290,7 @@ void LevelTabSubtileWidget::setTmiProperty(quint8 flags)
     // Build tmi editing command and connect it to the views widget
     // to update the label when undo/redo is performed
     EditTmiCommand *command = new EditTmiCommand(this->tmi, subtileIdx, flags);
-    QObject::connect(command, &EditTmiCommand::modified, this->levelCelView, &LevelCelView::updateLabel);
+    QObject::connect(command, &EditTmiCommand::modified, this->levelCelView, &LevelCelView::updateFields);
 
     this->undoStack->push(command);
 }

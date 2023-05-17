@@ -198,7 +198,7 @@ void LevelTabTileWidget::setAmpProperty(quint8 flags)
     // Build amp editing command and connect it to the views widget
     // to update the label when undo/redo is performed
     EditAmpCommand *command = new EditAmpCommand(this->amp, tileIdx, flags, false);
-    QObject::connect(command, &EditAmpCommand::modified, this->levelCelView, &LevelCelView::updateLabel);
+    QObject::connect(command, &EditAmpCommand::modified, this->levelCelView, &LevelCelView::updateFields);
 
     this->undoStack->push(command);
 }
@@ -248,7 +248,7 @@ void LevelTabTileWidget::on_ampTypeComboBox_activated(int index)
     // Build amp editing command and connect it to the views widget
     // to update the label when undo/redo is performed
     EditAmpCommand *command = new EditAmpCommand(this->amp, tileIdx, index, true);
-    QObject::connect(command, &EditAmpCommand::modified, this->levelCelView, &LevelCelView::updateLabel);
+    QObject::connect(command, &EditAmpCommand::modified, this->levelCelView, &LevelCelView::updateFields);
 
     this->undoStack->push(command);
 }

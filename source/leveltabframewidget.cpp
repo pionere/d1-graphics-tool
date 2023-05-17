@@ -118,6 +118,6 @@ void LevelTabFrameWidget::on_frameTypeComboBox_activated(int index)
 
 void LevelTabFrameWidget::updateTab()
 {
-    this->validate();
+    this->updateFields();
     this->levelCelView->updateLabel();
 }
