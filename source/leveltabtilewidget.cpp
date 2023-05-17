@@ -26,8 +26,13 @@ void EditTileCommand::undo()
         return;
     }
 
+    std::vector<int> &subtileIndices = this->til->getSubtileIndices(this->tileIndex);
+    if (subtileIndices.size() < (unsigned)this->index) {
+        this->setObsolete(true);
+        return;
+    }
     int nsi = this->subtileIndex;
-    this->subtileIndex = this->til->getSubtileIndex(this->tileIndex, this->index);
+    this->subtileIndex = subtileIndices[this->index];
     this->til->setSubtileIndex(this->tileIndex, this->index, nsi);
 
     emit this->modified();
@@ -38,7 +43,7 @@ void EditTileCommand::redo()
     this->undo();
 }
 
-EditAmpCommand::EditAmpCommand(D1Amp *a, int ti, int value, bool type)
+EditAmpCommand::EditAmpCommand(D1Amp *a, int ti, int v, bool t)
     : QUndoCommand(nullptr)
     , amp(a)
     , tileIndex(ti)

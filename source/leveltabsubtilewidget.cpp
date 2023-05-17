@@ -25,8 +25,13 @@ void EditMinCommand::undo()
         return;
     }
 
+    std::vector<unsigned> &frames = this->min->getFrameReferences(this->subtileIndex);
+    if (frames.size() < (unsigned)this->index) {
+        this->setObsolete(true);
+        return;
+    }
     int nf = this->frameRef;
-    this->frameRef = this->min->getFrameReference(this->subtileIndex, this->index);
+    this->frameRef = frames[this->index];
     this->min->setFrameReference(this->subtileIndex, this->index, nf);
 
     emit this->modified();
@@ -96,7 +101,7 @@ EditSptCommand::EditSptCommand(D1Spt *s, int si, int v, bool t)
     , spt(s)
     , subtileIndex(si)
     , value(v)
-    , trap(b)
+    , trap(t)
 {
 }
 
@@ -429,7 +434,7 @@ void LevelTabSubtileWidget::setFrameReference(int subtileIndex, int index, int f
 {
     // Build min editing command and connect it to the views widget
     // to update the label and refresh the view when undo/redo is performed
-    EditMinCommand *command = new EditMinCommand(this->min, subtileIdx, index, frameRef);
+    EditMinCommand *command = new EditMinCommand(this->min, subtileIndex, index, frameRef);
     QObject::connect(command, &EditMinCommand::modified, this->levelCelView, &LevelCelView::displayFrame);
 
     this->undoStack->push(command);

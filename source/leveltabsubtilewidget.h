@@ -22,6 +22,9 @@ public:
     void undo() override;
     void redo() override;
 
+signals:
+    void modified();
+
 private:
     QPointer<D1Min> min;
     int subtileIndex;

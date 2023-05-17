@@ -24,9 +24,10 @@ void EditFrameTypeCommand::undo()
         return;
     }
 
+    D1GfxFrame *frame = this->gfx->getFrame(this->frameIndex);
     D1CEL_FRAME_TYPE nt = this->type;
-    this->type = this->gfx->getFrameType(this->frameIndex);
-    this->gfx->setFrameType(this->frameIndex, nt);
+    this->type = frame->getFrameType();
+    frame->setFrameType(nt);
 
     emit this->modified();
 }
