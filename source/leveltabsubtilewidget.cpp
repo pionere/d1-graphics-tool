@@ -351,7 +351,7 @@ void LevelTabSubtileWidget::setTrapProperty(int trap)
     // Build spt editing command and connect it to the views widget
     // to update the label when undo/redo is performed
     EditSptCommand *command = new EditSptCommand(this->spt, subtileIdx, trap, true);
-    QObject::connect(command, &EditSptCommand::trapModified, this->levelCelView, &LevelCelView::updateLabel);
+    QObject::connect(command, &EditSptCommand::trapModified, this->levelCelView, &LevelCelView::updateFields);
 
     this->undoStack->push(command);
 }
