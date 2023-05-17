@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QPointer>
 #include <QPushButton>
 #include <QUndoCommand>
 #include <QWidget>

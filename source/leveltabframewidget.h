@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QPointer>
 #include <QPushButton>
 #include <QUndoCommand>
 #include <QWidget>
@@ -31,7 +32,6 @@ private:
 namespace Ui {
 class LevelTabFrameWidget;
 } // namespace Ui
-
 
 class LevelTabFrameWidget : public QWidget {
     Q_OBJECT

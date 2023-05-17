@@ -61,7 +61,6 @@ void EditAmpCommand::undo()
     } else {
         this->value = this->amp->getTileProperties(this->tileIndex);
         this->amp->setTileProperties(this->tileIndex, nv);
-
     }
     emit this->modified();
 }
