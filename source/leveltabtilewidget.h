@@ -1,17 +1,58 @@
 #pragma once
 
+#include <QPointer>
 #include <QPushButton>
-#include <QStyle>
+#include <QUndoCommand>
 #include <QWidget>
-
-namespace Ui {
-class LevelTabTileWidget;
-} // namespace Ui
 
 class LevelCelView;
 class D1Til;
 class D1Min;
 class D1Amp;
+
+class EditTileCommand : public QObject, public QUndoCommand {
+    Q_OBJECT
+
+public:
+    explicit EditTileCommand(D1Til *til, int tileIndex, int index, int subtileIndex);
+    ~EditTileCommand() = default;
+
+    void undo() override;
+    void redo() override;
+
+signals:
+    void modified();
+
+private:
+    QPointer<D1Til> til;
+    int tileIndex;
+    int index;
+    int subtileIndex;
+};
+
+class EditAmpCommand : public QObject, public QUndoCommand {
+    Q_OBJECT
+
+public:
+    explicit EditAmpCommand(D1Amp *amp, int tileIndex, int value, bool type);
+    ~EditAmpCommand() = default;
+
+    void undo() override;
+    void redo() override;
+
+signals:
+    void modified();
+
+private:
+    QPointer<D1Amp> amp;
+    int tileIndex;
+    int value;
+    bool type;
+};
+
+namespace Ui {
+class LevelTabTileWidget;
+} // namespace Ui
 
 class LevelTabTileWidget : public QWidget {
     Q_OBJECT
@@ -20,7 +61,7 @@ public:
     explicit LevelTabTileWidget(QWidget *parent);
     ~LevelTabTileWidget();
 
-    void initialize(LevelCelView *v, D1Til *t, D1Min *m, D1Amp *a);
+    void initialize(LevelCelView *v, QUndoStack *undoStack, D1Til *t, D1Min *m, D1Amp *a);
     void updateFields();
 
     void selectSubtile(int index);
@@ -46,6 +87,7 @@ private slots:
     void on_subtilesNextButton_clicked();
 
 private:
+    void setSubtileIndex(int tileIndex, int index, int subtileIndex);
     void updateSubtilesSelection(int index);
     void setAmpProperty(quint8 flags);
     void updateAmpProperty();
@@ -55,6 +97,7 @@ private:
     QPushButton *clearButton;
     QPushButton *deleteButton;
     LevelCelView *levelCelView;
+    QUndoStack *undoStack;
     D1Til *til;
     D1Min *min;
     D1Amp *amp;

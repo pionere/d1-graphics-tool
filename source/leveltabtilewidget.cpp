@@ -1,5 +1,7 @@
 #include "leveltabtilewidget.h"
 
+#include <QStyle>
+
 #include "d1amp.h"
 #include "d1min.h"
 #include "d1til.h"
@@ -7,6 +9,71 @@
 #include "mainwindow.h"
 #include "pushbuttonwidget.h"
 #include "ui_leveltabtilewidget.h"
+
+EditTileCommand::EditTileCommand(D1Til *t, int ti, int idx, int si)
+    : QUndoCommand(nullptr)
+    , til(t)
+    , tileIndex(ti)
+    , index(idx)
+    , subtileIndex(si)
+{
+}
+
+void EditTileCommand::undo()
+{
+    if (this->til.isNull()) {
+        this->setObsolete(true);
+        return;
+    }
+
+    std::vector<int> &subtileIndices = this->til->getSubtileIndices(this->tileIndex);
+    if (subtileIndices.size() < (unsigned)this->index) {
+        this->setObsolete(true);
+        return;
+    }
+    int nsi = this->subtileIndex;
+    this->subtileIndex = subtileIndices[this->index];
+    this->til->setSubtileIndex(this->tileIndex, this->index, nsi);
+
+    emit this->modified();
+}
+
+void EditTileCommand::redo()
+{
+    this->undo();
+}
+
+EditAmpCommand::EditAmpCommand(D1Amp *a, int ti, int v, bool t)
+    : QUndoCommand(nullptr)
+    , amp(a)
+    , tileIndex(ti)
+    , value(v)
+    , type(t)
+{
+}
+
+void EditAmpCommand::undo()
+{
+    if (this->amp.isNull()) {
+        this->setObsolete(true);
+        return;
+    }
+
+    int nv = this->value;
+    if (this->type) {
+        this->value = this->amp->getTileType(this->tileIndex);
+        this->amp->setTileType(this->tileIndex, nv);
+    } else {
+        this->value = this->amp->getTileProperties(this->tileIndex);
+        this->amp->setTileProperties(this->tileIndex, nv);
+    }
+    emit this->modified();
+}
+
+void EditAmpCommand::redo()
+{
+    this->undo();
+}
 
 LevelTabTileWidget::LevelTabTileWidget(QWidget *parent)
     : QWidget(parent)
@@ -24,9 +91,10 @@ LevelTabTileWidget::~LevelTabTileWidget()
     delete ui;
 }
 
-void LevelTabTileWidget::initialize(LevelCelView *v, D1Til *t, D1Min *m, D1Amp *a)
+void LevelTabTileWidget::initialize(LevelCelView *v, QUndoStack *us, D1Til *t, D1Min *m, D1Amp *a)
 {
     this->levelCelView = v;
+    this->undoStack = us;
     this->til = t;
     this->min = m;
     this->amp = a;
@@ -127,9 +195,12 @@ void LevelTabTileWidget::setAmpProperty(quint8 flags)
 {
     int tileIdx = this->levelCelView->getCurrentTileIndex();
 
-    if (this->amp->setTileProperties(tileIdx, flags)) {
-        this->levelCelView->updateLabel();
-    }
+    // Build amp editing command and connect it to the views widget
+    // to update the label when undo/redo is performed
+    EditAmpCommand *command = new EditAmpCommand(this->amp, tileIdx, flags, false);
+    QObject::connect(command, &EditAmpCommand::modified, this->levelCelView, &LevelCelView::updateFields);
+
+    this->undoStack->push(command);
 }
 
 void LevelTabTileWidget::updateAmpProperty()
@@ -174,9 +245,12 @@ void LevelTabTileWidget::on_ampTypeComboBox_activated(int index)
         return;
     }
 
-    if (this->amp->setTileType(tileIdx, index)) {
-        this->levelCelView->updateLabel();
-    }
+    // Build amp editing command and connect it to the views widget
+    // to update the label when undo/redo is performed
+    EditAmpCommand *command = new EditAmpCommand(this->amp, tileIdx, index, true);
+    QObject::connect(command, &EditAmpCommand::modified, this->levelCelView, &LevelCelView::updateFields);
+
+    this->undoStack->push(command);
 }
 
 void LevelTabTileWidget::on_amp0_clicked()
@@ -219,6 +293,16 @@ void LevelTabTileWidget::on_amp7_clicked()
     this->updateAmpProperty();
 }
 
+void LevelTabTileWidget::setSubtileIndex(int tileIndex, int index, int subtileIndex)
+{
+    // Build tile editing command and connect it to the views widget
+    // to update the label and refresh the view when undo/redo is performed
+    EditTileCommand *command = new EditTileCommand(this->til, tileIndex, index, subtileIndex);
+    QObject::connect(command, &EditTileCommand::modified, this->levelCelView, &LevelCelView::displayFrame);
+
+    this->undoStack->push(command);
+}
+
 void LevelTabTileWidget::on_subtilesPrevButton_clicked()
 {
     int index = this->ui->subtilesComboBox->currentIndex();
@@ -229,14 +313,7 @@ void LevelTabTileWidget::on_subtilesPrevButton_clicked()
     if (subtileIdx < 0) {
         subtileIdx = 0;
     }
-
-    if (this->til->setSubtileIndex(tileIdx, index, subtileIdx)) {
-        // this->ui->subtilesComboBox->setItemText(index, QString::number(subtileIdx + 1));
-        // this->updateSubtilesSelection(index);
-
-        this->levelCelView->updateLabel();
-        this->levelCelView->displayFrame();
-    }
+    this->setSubtileIndex(tileIdx, index, subtileIdx);
 }
 
 void LevelTabTileWidget::on_subtilesComboBox_activated(int index)
@@ -258,13 +335,7 @@ void LevelTabTileWidget::on_subtilesComboBox_currentTextChanged(const QString &a
         return; // invalid value -> ignore
 
     int tileIdx = this->levelCelView->getCurrentTileIndex();
-    if (this->til->setSubtileIndex(tileIdx, index, subtileIdx)) {
-        // this->ui->subtilesComboBox->setItemText(index, QString::number(subtileIdx + 1));
-        // this->updateSubtilesSelection(index);
-
-        this->levelCelView->updateLabel();
-        this->levelCelView->displayFrame();
-    }
+    this->setSubtileIndex(tileIdx, index, subtileIdx);
 }
 
 void LevelTabTileWidget::on_subtilesNextButton_clicked()
@@ -277,12 +348,5 @@ void LevelTabTileWidget::on_subtilesNextButton_clicked()
     if (subtileIdx > this->min->getSubtileCount() - 1) {
         subtileIdx = this->min->getSubtileCount() - 1;
     }
-
-    if (this->til->setSubtileIndex(tileIdx, index, subtileIdx)) {
-        // this->ui->subtilesComboBox->setItemText(index, QString::number(subtileIdx + 1));
-        // this->updateSubtilesSelection(index);
-
-        this->levelCelView->updateLabel();
-        this->levelCelView->displayFrame();
-    }
+    this->setSubtileIndex(tileIdx, index, subtileIdx);
 }
