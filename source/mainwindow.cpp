@@ -1077,7 +1077,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         view = this->gfxsetView;
     } else if (isTileset) {
         // build a LevelCelView
-        this->levelCelView = new LevelCelView(this);
+        this->levelCelView = new LevelCelView(this, this->undoStack);
         this->levelCelView->initialize(this->pal, this->tileset, this->dun, this->bottomPanelHidden);
 
         // Refresh palette widgets when frame, subtile or tile is changed

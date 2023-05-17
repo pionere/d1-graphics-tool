@@ -1,12 +1,8 @@
 #pragma once
 
 #include <QPushButton>
-#include <QStyle>
+#include <QUndoCommand>
 #include <QWidget>
-
-namespace Ui {
-class LevelTabSubtileWidget;
-} // namespace Ui
 
 class LevelCelView;
 class D1Gfx;
@@ -15,6 +11,86 @@ class D1Sol;
 class D1Spt;
 class D1Tmi;
 
+class EditMinCommand : public QObject, public QUndoCommand {
+    Q_OBJECT
+
+public:
+    explicit EditMinCommand(D1Min *min, int subtileIndex, int index, int frameRef);
+    ~EditMinCommand() = default;
+
+    void undo() override;
+    void redo() override;
+
+private:
+    QPointer<D1Min> min;
+    int subtileIndex;
+    int index;
+    int frameRef;
+};
+
+class EditSolCommand : public QObject, public QUndoCommand {
+    Q_OBJECT
+
+public:
+    explicit EditSolCommand(D1Sol *sol, int subtileIndex, quint8 flags);
+    ~EditSolCommand() = default;
+
+    void undo() override;
+    void redo() override;
+
+signals:
+    void modified();
+
+private:
+    QPointer<D1Sol> sol;
+    int subtileIndex;
+    quint8 flags;
+};
+
+class EditTmiCommand : public QObject, public QUndoCommand {
+    Q_OBJECT
+
+public:
+    explicit EditTmiCommand(D1Tmi *tmi, int subtileIndex, quint8 flags);
+    ~EditTmiCommand() = default;
+
+    void undo() override;
+    void redo() override;
+
+signals:
+    void modified();
+
+private:
+    QPointer<D1Tmi> tmi;
+    int subtileIndex;
+    quint8 flags;
+};
+
+class EditSptCommand : public QObject, public QUndoCommand {
+    Q_OBJECT
+
+public:
+    explicit EditSptCommand(D1Spt *spt, int subtileIndex, int value, bool trap);
+    ~EditSptCommand() = default;
+
+    void undo() override;
+    void redo() override;
+
+signals:
+    void trapModified();
+    void specModified();
+
+private:
+    QPointer<D1Spt> spt;
+    int subtileIndex;
+    int value;
+    bool trap;
+};
+
+namespace Ui {
+class LevelTabSubtileWidget;
+} // namespace Ui
+
 class LevelTabSubtileWidget : public QWidget {
     Q_OBJECT
 
@@ -22,7 +98,7 @@ public:
     explicit LevelTabSubtileWidget(QWidget *parent);
     ~LevelTabSubtileWidget();
 
-    void initialize(LevelCelView *v, D1Gfx *gfx, D1Min *min, D1Sol *sol, D1Spt *spt, D1Tmi *tmi);
+    void initialize(LevelCelView *v, QUndoStack *undoStack, D1Gfx *gfx, D1Min *min, D1Sol *sol, D1Spt *spt, D1Tmi *tmi);
     void updateFields();
 
     void selectFrame(int index);
@@ -55,6 +131,7 @@ private slots:
     void on_framesNextButton_clicked();
 
 private:
+    void setFrameReference(int subtileIndex, int index, int frameRef);
     void updateFramesSelection(int index);
     void setSolProperty(quint8 flags);
     void updateSolProperty();
@@ -66,6 +143,7 @@ private:
     QPushButton *clearButton;
     QPushButton *deleteButton;
     LevelCelView *levelCelView;
+    QUndoStack *undoStack;
     D1Gfx *gfx;
     D1Min *min;
     D1Sol *sol;

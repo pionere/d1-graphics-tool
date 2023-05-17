@@ -1,12 +1,40 @@
 #include "leveltabframewidget.h"
 
 #include <QApplication>
+#include <QStyle>
 
 #include "d1gfx.h"
 #include "levelcelview.h"
 #include "mainwindow.h"
 #include "pushbuttonwidget.h"
 #include "ui_leveltabframewidget.h"
+
+EditFrameTypeCommand::EditFrameTypeCommand(D1Gfx *g, int fi, D1CEL_FRAME_TYPE t)
+    : QUndoCommand(nullptr)
+    , gfx(g)
+    , frameIndex(fi)
+    , type(t)
+{
+}
+
+void EditFrameTypeCommand::undo()
+{
+    if (this->gfx.isNull()) {
+        this->setObsolete(true);
+        return;
+    }
+
+    D1CEL_FRAME_TYPE nt = this->type;
+    this->type = this->gfx->getFrameType(this->frameIndex);
+    this->gfx->setFrameType(this->frameIndex, nt);
+
+    emit this->modified();
+}
+
+void EditFrameTypeCommand::redo()
+{
+    this->undo();
+}
 
 LevelTabFrameWidget::LevelTabFrameWidget(QWidget *parent)
     : QWidget(parent)
@@ -23,9 +51,10 @@ LevelTabFrameWidget::~LevelTabFrameWidget()
     delete ui;
 }
 
-void LevelTabFrameWidget::initialize(LevelCelView *v, D1Gfx *g)
+void LevelTabFrameWidget::initialize(LevelCelView *v, QUndoStack *us, D1Gfx *g)
 {
     this->levelCelView = v;
+    this->undoStack = us;
     this->gfx = g;
 }
 
@@ -78,8 +107,16 @@ void LevelTabFrameWidget::on_frameTypeComboBox_activated(int index)
 {
     int frameIdx = this->levelCelView->getCurrentFrameIndex();
 
-    if (this->gfx->setFrameType(frameIdx, (D1CEL_FRAME_TYPE)index)) {
-        this->validate();
-        this->levelCelView->updateLabel();
-    }
+    // Build frame editing command and connect it to the current widget
+    // to update the label and validate when undo/redo is performed
+    EditFrameTypeCommand *command = new EditFrameTypeCommand(this->gfx, frameIdx, (D1CEL_FRAME_TYPE)index);
+    QObject::connect(command, &EditFrameTypeCommand::modified, this, &LevelTabFrameWidget::updateTab);
+
+    this->undoStack->push(command);
+}
+
+void LevelTabFrameWidget::updateTab()
+{
+    this->validate();
+    this->levelCelView->updateLabel();
 }

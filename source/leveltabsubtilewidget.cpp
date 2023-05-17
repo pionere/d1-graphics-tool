@@ -1,11 +1,130 @@
 #include "leveltabsubtilewidget.h"
 
+#include <QStyle>
+
 #include <vector>
 
 #include "levelcelview.h"
 #include "mainwindow.h"
 #include "pushbuttonwidget.h"
 #include "ui_leveltabsubtilewidget.h"
+
+EditMinCommand::EditMinCommand(D1Min *m, int si, int idx, int fr)
+    : QUndoCommand(nullptr)
+    , min(m)
+    , subtileIndex(si)
+    , index(idx)
+    , frameRef(fr)
+{
+}
+
+void EditMinCommand::undo()
+{
+    if (this->min.isNull()) {
+        this->setObsolete(true);
+        return;
+    }
+
+    int nf = this->frameRef;
+    this->frameRef = this->min->getFrameReference(this->subtileIndex, this->index);
+    this->min->setFrameReference(this->subtileIndex, this->index, nf);
+
+    emit this->modified();
+}
+
+void EditMinCommand::redo()
+{
+    this->undo();
+}
+
+EditSolCommand::EditSolCommand(D1Sol *s, int si, quint8 f)
+    : QUndoCommand(nullptr)
+    , sol(s)
+    , subtileIndex(si)
+    , flags(f)
+{
+}
+
+void EditSolCommand::undo()
+{
+    if (this->sol.isNull()) {
+        this->setObsolete(true);
+        return;
+    }
+
+    quint8 nf = this->flags;
+    this->flags = this->sol->getSubtileProperties(this->subtileIndex);
+    this->sol->setSubtileProperties(this->subtileIndex, nf);
+
+    emit this->modified();
+}
+
+void EditSolCommand::redo()
+{
+    this->undo();
+}
+
+EditTmiCommand::EditTmiCommand(D1Tmi *t, int si, quint8 f)
+    : QUndoCommand(nullptr)
+    , tmi(t)
+    , subtileIndex(si)
+    , flags(f)
+{
+}
+
+void EditTmiCommand::undo()
+{
+    if (this->tmi.isNull()) {
+        this->setObsolete(true);
+        return;
+    }
+
+    quint8 nf = this->flags;
+    this->flags = this->tmi->getSubtileProperties(this->subtileIndex);
+    this->tmi->setSubtileProperties(this->subtileIndex, nf);
+
+    emit this->modified();
+}
+
+void EditTmiCommand::redo()
+{
+    this->undo();
+}
+
+EditSptCommand::EditSptCommand(D1Spt *s, int si, int v, bool t)
+    : QUndoCommand(nullptr)
+    , spt(s)
+    , subtileIndex(si)
+    , value(v)
+    , trap(b)
+{
+}
+
+void EditSptCommand::undo()
+{
+    if (this->spt.isNull()) {
+        this->setObsolete(true);
+        return;
+    }
+
+    int nv = this->value;
+    if (this->trap) {
+        this->value = this->spt->getSubtileTrapProperty(this->subtileIndex);
+        this->spt->setSubtileTrapProperty(this->subtileIndex, nv);
+
+        emit this->trapModified();
+    } else {
+        this->value = this->spt->getSubtileSpecProperty(this->subtileIndex);
+        this->spt->setSubtileSpecProperty(this->subtileIndex, nv);
+
+        emit this->specModified();
+    }
+}
+
+void EditSptCommand::redo()
+{
+    this->undo();
+}
 
 LevelTabSubtileWidget::LevelTabSubtileWidget(QWidget *parent)
     : QWidget(parent)
@@ -23,9 +142,10 @@ LevelTabSubtileWidget::~LevelTabSubtileWidget()
     delete ui;
 }
 
-void LevelTabSubtileWidget::initialize(LevelCelView *v, D1Gfx *g, D1Min *m, D1Sol *s, D1Spt *p, D1Tmi *t)
+void LevelTabSubtileWidget::initialize(LevelCelView *v, QUndoStack *us, D1Gfx *g, D1Min *m, D1Sol *s, D1Spt *p, D1Tmi *t)
 {
     this->levelCelView = v;
+    this->undoStack = us;
     this->gfx = g;
     this->min = m;
     this->sol = s;
@@ -137,9 +257,12 @@ void LevelTabSubtileWidget::setSolProperty(quint8 flags)
 {
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
 
-    if (this->sol->setSubtileProperties(subtileIdx, flags)) {
-        this->levelCelView->updateLabel();
-    }
+    // Build sol editing command and connect it to the views widget
+    // to update the label when undo/redo is performed
+    EditSolCommand *command = new EditSolCommand(this->sol, subtileIdx, flags);
+    QObject::connect(command, &EditSolCommand::modified, this->levelCelView, &LevelCelView::updateLabel);
+
+    this->undoStack->push(command);
 }
 
 void LevelTabSubtileWidget::updateSolProperty()
@@ -159,9 +282,12 @@ void LevelTabSubtileWidget::setTmiProperty(quint8 flags)
 {
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
 
-    if (this->tmi->setSubtileProperties(subtileIdx, flags)) {
-        this->levelCelView->updateLabel();
-    }
+    // Build tmi editing command and connect it to the views widget
+    // to update the label when undo/redo is performed
+    EditTmiCommand *command = new EditTmiCommand(this->tmi, subtileIdx, flags);
+    QObject::connect(command, &EditTmiCommand::modified, this->levelCelView, &LevelCelView::updateLabel);
+
+    this->undoStack->push(command);
 }
 
 void LevelTabSubtileWidget::updateTmiProperty()
@@ -217,9 +343,12 @@ void LevelTabSubtileWidget::setTrapProperty(int trap)
 {
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
 
-    if (this->spt->setSubtileTrapProperty(subtileIdx, trap)) {
-        this->levelCelView->updateLabel();
-    }
+    // Build spt editing command and connect it to the views widget
+    // to update the label when undo/redo is performed
+    EditSptCommand *command = new EditSptCommand(this->spt, subtileIdx, trap, true);
+    QObject::connect(command, &EditSptCommand::trapModified, this->levelCelView, &LevelCelView::updateLabel);
+
+    this->undoStack->push(command);
 }
 
 void LevelTabSubtileWidget::on_trapNoneRadioButton_clicked()
@@ -242,10 +371,13 @@ void LevelTabSubtileWidget::on_specCelLineEdit_returnPressed()
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
     int sptSpecCel = this->ui->specCelLineEdit->text().toInt();
 
-    if (this->spt->setSubtileSpecProperty(subtileIdx, sptSpecCel)) {
-        // this->levelCelView->updateLabel();
-        this->levelCelView->displayFrame();
-    }
+    // Build spt editing command and connect it to the views widget
+    // to update the label and refresh the view when undo/redo is performed
+    EditSptCommand *command = new EditSptCommand(this->spt, subtileIdx, sptSpecCel, false);
+    QObject::connect(command, &EditSptCommand::specModified, this->levelCelView, &LevelCelView::displayFrame);
+
+    this->undoStack->push(command);
+
     this->on_specCelLineEdit_escPressed();
 }
 
@@ -293,6 +425,16 @@ void LevelTabSubtileWidget::on_tmi6_clicked()
     this->updateTmiProperty();
 }
 
+void LevelTabSubtileWidget::setFrameReference(int subtileIndex, int index, int frameRef)
+{
+    // Build min editing command and connect it to the views widget
+    // to update the label and refresh the view when undo/redo is performed
+    EditMinCommand *command = new EditMinCommand(this->min, subtileIdx, index, frameRef);
+    QObject::connect(command, &EditMinCommand::modified, this->levelCelView, &LevelCelView::displayFrame);
+
+    this->undoStack->push(command);
+}
+
 void LevelTabSubtileWidget::on_framesPrevButton_clicked()
 {
     int index = this->ui->framesComboBox->currentIndex();
@@ -303,14 +445,7 @@ void LevelTabSubtileWidget::on_framesPrevButton_clicked()
     if (frameRef < 0) {
         frameRef = 0;
     }
-
-    if (this->min->setFrameReference(subtileIdx, index, frameRef)) {
-        // this->ui->subtilesComboBox->setItemText(index, QString::number(frameRef));
-        // this->updateFramesSelection(index);
-
-        // this->levelCelView->updateLabel();
-        this->levelCelView->displayFrame();
-    }
+    this->setFrameReference(subtileIdx, index, frameRef);
 }
 
 void LevelTabSubtileWidget::on_framesComboBox_activated(int index)
@@ -332,13 +467,7 @@ void LevelTabSubtileWidget::on_framesComboBox_currentTextChanged(const QString &
         return; // invalid value -> ignore
 
     int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
-    if (this->min->setFrameReference(subtileIdx, index, frameRef)) {
-        // this->ui->subtilesComboBox->setItemText(index, QString::number(frameRef));
-        // this->updateFramesSelection(index);
-
-        // this->levelCelView->updateLabel();
-        this->levelCelView->displayFrame();
-    }
+    this->setFrameReference(subtileIdx, index, frameRef);
 }
 
 void LevelTabSubtileWidget::on_framesNextButton_clicked()
@@ -351,12 +480,5 @@ void LevelTabSubtileWidget::on_framesNextButton_clicked()
     if (frameRef > this->gfx->getFrameCount()) {
         frameRef = this->gfx->getFrameCount();
     }
-
-    if (this->min->setFrameReference(subtileIdx, index, frameRef)) {
-        // this->ui->subtilesComboBox->setItemText(index, QString::number(frameRef));
-        // this->updateFramesSelection(index);
-
-        // this->levelCelView->updateLabel();
-        this->levelCelView->displayFrame();
-    }
+    this->setFrameReference(subtileIdx, index, frameRef);
 }

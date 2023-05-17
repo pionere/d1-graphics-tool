@@ -13,6 +13,7 @@
 #include <QImage>
 #include <QPoint>
 #include <QTimer>
+#include <QUndoStack>
 #include <QWidget>
 
 #include "celview.h"
@@ -39,7 +40,7 @@ class LevelCelView : public QWidget {
     Q_OBJECT
 
 public:
-    explicit LevelCelView(QWidget *parent);
+    explicit LevelCelView(QWidget *parent, QUndoStack *undoStack);
     ~LevelCelView();
 
     void initialize(D1Pal *pal, D1Tileset *tileset, D1Dun *dun, bool bottomPanelHidden);
@@ -291,6 +292,7 @@ private slots:
 
 private:
     Ui::LevelCelView *ui;
+    QUndoStack *undoStack;
     CelScene celScene = CelScene(this);
     LevelTabTileWidget tabTileWidget = LevelTabTileWidget(this);
     LevelTabSubtileWidget tabSubtileWidget = LevelTabSubtileWidget(this);

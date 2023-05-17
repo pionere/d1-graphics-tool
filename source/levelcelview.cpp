@@ -31,9 +31,10 @@
 
 Q_DECLARE_METATYPE(DunMonsterType);
 
-LevelCelView::LevelCelView(QWidget *parent)
+LevelCelView::LevelCelView(QWidget *parent, QUndoStack *us)
     : QWidget(parent)
     , ui(new Ui::LevelCelView())
+    , undoStack(us)
 {
     this->ui->setupUi(this);
     this->ui->celGraphicsView->setScene(&this->celScene);
@@ -105,9 +106,9 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
     this->tmi = ts->tmi;
     this->dun = d;
 
-    this->tabTileWidget.initialize(this, this->til, this->min, this->amp);
-    this->tabSubtileWidget.initialize(this, this->gfx, this->min, this->sol, this->spt, this->tmi);
-    this->tabFrameWidget.initialize(this, this->gfx);
+    this->tabTileWidget.initialize(this, this->undoStack, this->til, this->min, this->amp);
+    this->tabSubtileWidget.initialize(this, this->undoStack, this->gfx, this->min, this->sol, this->spt, this->tmi);
+    this->tabFrameWidget.initialize(this, this->undoStack, this->gfx);
 
     bool dunMode = d != nullptr;
     this->dunView = dunMode;
