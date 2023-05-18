@@ -16,6 +16,7 @@
 #include <QMimeData>
 #include <QPen>
 #include <QRectF>
+#include <QScrollBar>
 #include <QTimer>
 
 #include "config.h"
@@ -3641,6 +3642,11 @@ void LevelCelView::on_actionToggle_View_triggered()
 
     bool dunMode = !this->dunView;
     this->dunView = dunMode;
+    // preserve scroll value
+    int horizScrollValue = this->lastHorizScrollValue;
+    int vertScrollValue = this->lastVertScrollValue;
+    this->lastVertScrollValue = this->ui->celGraphicsView->verticalScrollBar()->value();
+    this->lastHorizScrollValue = this->ui->celGraphicsView->horizontalScrollBar()->value();
     // select gridlayout
     if (dunMode) {
         bool hidden = this->ui->tilesetWidget->isHidden();
@@ -3662,6 +3668,9 @@ void LevelCelView::on_actionToggle_View_triggered()
     this->celScene.setZoom(zoomText);
     // update the view
     this->displayFrame();
+    // restore scroll value
+    this->ui->celGraphicsView->verticalScrollBar()->setValue(vertScrollValue);
+    this->ui->celGraphicsView->horizontalScrollBar()->setValue(horizScrollValue);
 }
 
 void LevelCelView::on_actionInsert_DunTileRow_triggered()
