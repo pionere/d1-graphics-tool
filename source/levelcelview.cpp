@@ -3642,6 +3642,11 @@ void LevelCelView::on_actionToggle_View_triggered()
 
     bool dunMode = !this->dunView;
     this->dunView = dunMode;
+    // preserve scroll value
+    int horizScrollValue = this->lastHorizScrollValue;
+    int vertScrollValue = this->lastVertScrollValue;
+    this->lastVertScrollValue = this->ui->celGraphicsView->verticalScrollBar()->value();
+    this->lastHorizScrollValue = this->ui->celGraphicsView->horizontalScrollBar()->value();
     // select gridlayout
     if (dunMode) {
         bool hidden = this->ui->tilesetWidget->isHidden();
@@ -3652,11 +3657,6 @@ void LevelCelView::on_actionToggle_View_triggered()
         this->ui->dungeonWidget->setVisible(false);
         this->ui->tilesetWidget->setVisible(!hidden);
     }
-    // preserve scroll value
-    int horizScrollValue = this->lastHorizScrollValue;
-    int vertScrollValue = this->lastVertScrollValue;
-    this->lastVertScrollValue = this->ui->celGraphicsView->verticalScrollBar()->value();
-    this->lastHorizScrollValue = this->ui->celGraphicsView->horizontalScrollBar()->value();
     // update zoom
     QLineEdit *zoomField;
     if (dunMode) {
