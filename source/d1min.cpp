@@ -493,6 +493,7 @@ bool D1Min::setFrameReference(int subtileIndex, int index, unsigned frameRef)
         return false;
     }
     this->frameReferences[subtileIndex][index] = frameRef;
+    this->modified = true;
     return true;
 }
 

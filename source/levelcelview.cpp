@@ -3651,6 +3651,11 @@ void LevelCelView::on_actionToggle_View_triggered()
         this->ui->dungeonWidget->setVisible(false);
         this->ui->tilesetWidget->setVisible(!hidden);
     }
+    // preserve scroll value
+    int horizScrollValue = this->lastHorizScrollValue;
+    int vertScrollValue = this->lastVertScrollValue;
+    this->lastHorizScrollValue = this->ui->celGraphicsView->verticalScrollBar()->value();
+    this->lastVertScrollValue = this->ui->celGraphicsView->horizontalScrollBar()->value();
     // update zoom
     QLineEdit *zoomField;
     if (dunMode) {
@@ -3662,6 +3667,9 @@ void LevelCelView::on_actionToggle_View_triggered()
     this->celScene.setZoom(zoomText);
     // update the view
     this->displayFrame();
+    // restore scroll value
+    this->ui->celGraphicsView->verticalScrollBar()->setValue(vertScrollValue);
+    this->ui->celGraphicsView->horizontalScrollBar()->setValue(horizScrollValue);
 }
 
 void LevelCelView::on_actionInsert_DunTileRow_triggered()

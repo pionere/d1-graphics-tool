@@ -316,6 +316,8 @@ private:
     D1Dun *dun;
     bool dunView = false;
     bool isScrolling = false;
+    int lastHorizScrollValue = 0;
+    int lastVertScrollValue = 0;
     int currentFrameIndex = 0;
     int currentSubtileIndex = 0;
     int currentTileIndex = 0;
