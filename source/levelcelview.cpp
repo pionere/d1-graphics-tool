@@ -3655,8 +3655,8 @@ void LevelCelView::on_actionToggle_View_triggered()
     // preserve scroll value
     int horizScrollValue = this->lastHorizScrollValue;
     int vertScrollValue = this->lastVertScrollValue;
-    this->lastHorizScrollValue = this->ui->celGraphicsView->verticalScrollBar()->value();
-    this->lastVertScrollValue = this->ui->celGraphicsView->horizontalScrollBar()->value();
+    this->lastVertScrollValue = this->ui->celGraphicsView->verticalScrollBar()->value();
+    this->lastHorizScrollValue = this->ui->celGraphicsView->horizontalScrollBar()->value();
     // update zoom
     QLineEdit *zoomField;
     if (dunMode) {
