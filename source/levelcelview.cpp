@@ -16,6 +16,7 @@
 #include <QMimeData>
 #include <QPen>
 #include <QRectF>
+#include <QScrollBar>
 #include <QTimer>
 
 #include "config.h"
