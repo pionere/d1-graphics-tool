@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QDialog>
+#include <QLabel>
 
 namespace Ui {
 class SettingsDialog;
@@ -14,6 +15,10 @@ public:
     ~SettingsDialog();
 
     void initialize();
+
+private:
+    void setIconColor(QLabel *imageLabel, const QString &colorText);
+    void updateIcons();
 
 private slots:
     void on_graphicsBackgroundColorPushButton_clicked();
@@ -36,4 +41,9 @@ private slots:
 
 private:
     Ui::SettingsDialog *ui;
+
+    QString graphicsBackgroundColor;
+    QString graphicsTransparentColor;
+    QString undefinedPaletteColor;
+    QString paletteSelectionBorderColor;
 };
