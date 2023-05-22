@@ -56,6 +56,10 @@ void LineEditWidget::keyPressEvent(QKeyEvent *event)
         emit cancel_signal();
         return;
     }
+    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
+        emit returnPressed();
+        return;
+    }
 
     QLineEdit::keyPressEvent(event);
 }
