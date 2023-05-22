@@ -15,6 +15,10 @@ public:
 
     void initialize();
 
+private:
+    void setIconColor(QLabel *imageLabel, const QString &colorText);
+    void updateIcons();
+
 private slots:
     void on_graphicsBackgroundColorPushButton_clicked();
     void on_graphicsBackgroundColorLineEdit_returnPressed();

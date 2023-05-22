@@ -59,6 +59,33 @@ void SettingsDialog::initialize()
     this->on_graphicsTransparentColorLineEdit_escPressed();
     this->on_undefinedPaletteColorLineEdit_escPressed();
     this->on_paletteSelectionBorderColorLineEdit_escPressed();
+
+    this->updateIcons();
+}
+
+void SettingsDialog::setIconColor(QLabel *imageLabel, const QString &colorText)
+{
+    QSize imageSize = imageLabel->size();
+    QImage image = QImage(imageSize, QImage::Format_ARGB32);
+
+    const QColor color = QColor(colorText);
+    QRgb *destBits = reinterpret_cast<QRgb *>(image.bits());
+    for (int y = 0; y < imageSize.height(); y++) {
+        for (int x = 0; x < imageSize.width(); x++, destBits++) {
+            // image.setPixelColor(x, y, color);
+            *destBits = color.rgba();
+        }
+    }
+    QPixmap pixmap = QPixmap::fromImage(std::move(image));
+    imageLabel->setPixmap(pixmap);
+}
+
+void SettingsDialog::updateIcons()
+{
+    this->setIconColor(this->ui->graphicsBackgroundColorImageLabel, this->ui->graphicsBackgroundColorLineEdit->text());
+    this->setIconColor(this->ui->graphicsTransparentColorImageLabel, this->ui->graphicsTransparentColorLineEdit->text());
+    this->setIconColor(this->ui->paletteSelectionBorderColorImageLabel, this->ui->paletteSelectionBorderColorLineEdit->text());
+    this->setIconColor(this->ui->undefinedPaletteColorImageLabel, this->ui->undefinedPaletteColorLineEdit->text());
 }
 
 void SettingsDialog::on_graphicsBackgroundColorPushButton_clicked()
@@ -72,7 +99,9 @@ void SettingsDialog::on_graphicsBackgroundColorPushButton_clicked()
 void SettingsDialog::on_graphicsBackgroundColorLineEdit_returnPressed()
 {
     QColor color = QColor(this->ui->graphicsBackgroundColorLineEdit->text());
-    if (!color.isValid()) {
+    if (color.isValid()) {
+        this->updateIcons();
+    } else {
         this->on_graphicsBackgroundColorLineEdit_escPressed();
     }
 }
@@ -87,13 +116,16 @@ void SettingsDialog::on_graphicsTransparentColorPushButton_clicked()
     QColor color = QColorDialog::getColor();
     if (color.isValid()) {
         this->ui->graphicsTransparentColorLineEdit->setText(color.name());
+        this->updateIcons();
     }
 }
 
 void SettingsDialog::on_graphicsTransparentColorLineEdit_returnPressed()
 {
     QColor color = QColor(this->ui->graphicsTransparentColorLineEdit->text());
-    if (!color.isValid()) {
+    if (color.isValid()) {
+        this->updateIcons();
+    } else {
         this->on_graphicsTransparentColorLineEdit_escPressed();
     }
 }
@@ -108,13 +140,16 @@ void SettingsDialog::on_undefinedPaletteColorPushButton_clicked()
     QColor color = QColorDialog::getColor();
     if (color.isValid()) {
         this->ui->undefinedPaletteColorLineEdit->setText(color.name());
+        this->updateIcons();
     }
 }
 
 void SettingsDialog::on_undefinedPaletteColorLineEdit_returnPressed()
 {
     QColor color = QColor(this->ui->undefinedPaletteColorLineEdit->text());
-    if (!color.isValid()) {
+    if (color.isValid()) {
+        this->updateIcons();
+    } else {
         this->on_undefinedPaletteColorLineEdit_escPressed();
     }
 }
@@ -129,13 +164,16 @@ void SettingsDialog::on_paletteSelectionBorderColorPushButton_clicked()
     QColor color = QColorDialog::getColor();
     if (color.isValid()) {
         this->ui->paletteSelectionBorderColorLineEdit->setText(color.name());
+        this->updateIcons();
     }
 }
 
 void SettingsDialog::on_paletteSelectionBorderColorLineEdit_returnPressed()
 {
     QColor color = QColor(this->ui->paletteSelectionBorderColorLineEdit->text());
-    if (!color.isValid()) {
+    if (color.isValid()) {
+        this->updateIcons();
+    } else {
         this->on_paletteSelectionBorderColorLineEdit_escPressed();
     }
 }
