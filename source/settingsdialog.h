@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QDialog>
+#include <QLabel>
 
 namespace Ui {
 class SettingsDialog;
