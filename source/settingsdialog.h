@@ -41,4 +41,9 @@ private slots:
 
 private:
     Ui::SettingsDialog *ui;
+
+    QString graphicsBackgroundColor;
+    QString graphicsTransparentColor;
+    QString undefinedPaletteColor;
+    QString paletteSelectionBorderColor;
 };
