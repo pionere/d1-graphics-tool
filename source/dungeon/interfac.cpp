@@ -247,7 +247,7 @@ bool EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
 		extern int32_t sglGameSeed;
 		//LogErrorF("Generating dungeon %d with seed: %d / %d. Entry mode: %d", params.level, sglGameSeed, params.seedQuest, params.entryMode);
 		dProgress() << QApplication::tr("Generating dungeon %1 with seed: %2 / %3. Entry mode: %4").arg(params.level).arg(sglGameSeed).arg(params.seedQuest).arg(params.entryMode);
-		LoadGameLevel(params.entryMode, dun, tileset);
+		LoadGameLevel(params.entryMode, dun);
 		FreeLvlDungeon();
 	} while (--extraRounds >= 0);
 	quint64 now = QDateTime::currentMSecsSinceEpoch();
