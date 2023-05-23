@@ -1252,12 +1252,12 @@ void D1Tileset::maskCryptBlacks(bool silent)
         }
         const unsigned microIndex = MICRO_IDX(blockSize, micro.microIndex);
 
-        unsigned frameRef = frameReferences[microIndex]; // 719
+        unsigned frameRef = frameReferences[microIndex];
         if (frameRef == 0) {
             dProgressErr() << QApplication::tr("Subtile (%1) has invalid (missing) frames.").arg(micro.subtileIndex + 1);
             return;
         }
-        D1GfxFrame *frame = this->gfx->getFrame(frameRef - 1);  // 719
+        D1GfxFrame *frame = this->gfx->getFrame(frameRef - 1);
         if (frame->getWidth() != MICRO_WIDTH || frame->getWidth() != MICRO_WIDTH) {
             dProgressErr() << QApplication::tr("Subtile (%1) is invalid (upscaled?).").arg(micro.subtileIndex + 1);
             return;
@@ -1339,12 +1339,12 @@ void D1Tileset::fixCryptShadows(bool silent)
         }
         const unsigned microIndex = MICRO_IDX(blockSize, micro.microIndex);
 
-        unsigned frameRef = frameReferences[microIndex]; // 719
+        unsigned frameRef = frameReferences[microIndex];
         if (frameRef == 0) {
             dProgressErr() << QApplication::tr("Subtile (%1) has invalid (missing) frames.").arg(micro.subtileIndex + 1);
             return;
         }
-        D1GfxFrame *frame = this->gfx->getFrame(frameRef - 1);  // 719
+        D1GfxFrame *frame = this->gfx->getFrame(frameRef - 1);
         if (frame->getWidth() != MICRO_WIDTH || frame->getWidth() != MICRO_WIDTH) {
             dProgressErr() << QApplication::tr("Subtile (%1) is invalid (upscaled?).").arg(micro.subtileIndex + 1);
             return;
@@ -1679,10 +1679,10 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(14, 7, 6, 7); // lost shine
     ReplaceMcr(26, 7, 6, 7); // lost shine
     // ReplaceMcr(80, 7, 6, 7);
-    ReplaceMcr(451, 7, 6, 7);  // lost shine
-    ReplaceMcr(340, 7, 6, 7);  // lost shine
-    ReplaceMcr(364, 7, 6, 7);  // lost crack
-    ReplaceMcr(394, 7, 6, 7);  // lost shine
+    ReplaceMcr(451, 7, 6, 7); // lost shine
+    ReplaceMcr(340, 7, 6, 7); // lost shine
+    ReplaceMcr(364, 7, 6, 7); // lost crack
+    ReplaceMcr(394, 7, 6, 7); // lost shine
     ReplaceMcr(554, 7, 269, 7);
     ReplaceMcr(608, 7, 6, 7);   // lost details
     ReplaceMcr(616, 7, 6, 7);   // lost details

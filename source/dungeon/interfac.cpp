@@ -103,7 +103,7 @@ static void LoadTileset(D1Tileset *tileset)
 	// replace subtiles using the current tileset
 	for (int n = 0; n < lengthof(pTiles) && n < tileset->til->getTileCount(); n++) {
 		std::vector<int> &tilSubtiles = tileset->til->getSubtileIndices(n);
-		for (unsigned i = 0; i < lengthof(pTiles[0]) && i < tilSubtiles.size(); i++) {
+		for (int i = 0; i < lengthof(pTiles[0]) && i < (int)tilSubtiles.size(); i++) {
 			pTiles[n][i] = tilSubtiles[i];
 		}
 	}
