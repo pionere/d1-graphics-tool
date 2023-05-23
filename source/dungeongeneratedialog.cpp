@@ -57,6 +57,7 @@ void DungeonGenerateDialog::on_generateButton_clicked()
     params.difficulty = this->ui->difficultyComboBox->currentIndex();
     params.isMulti = this->ui->multiCheckBox->isChecked();
     params.isHellfire = this->ui->hellfireCheckBox->isChecked();
+    params.useTileset = this->ui->tilesetCheckBox->isChecked();
     bool ok;
     QString seedTxt = this->ui->seedLineEdit->text();
     params.seed = seedTxt.toInt(&ok);

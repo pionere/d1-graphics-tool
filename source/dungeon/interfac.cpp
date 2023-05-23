@@ -164,7 +164,6 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	int rv = RandRange(1, 4);
 	InitLvlMap(); // reset: dMonster, dObject, dPlayer, dItem, dMissile, dFlags+, dLight+
 	StoreProtections(dun);
-	LoadTileset(tileset);
 	IncProgress();
 	if (currLvl._dType != DTYPE_TOWN) {
 		GetLevelMTypes(); // select monster types and load their fx
@@ -219,14 +218,14 @@ bool EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     IsHellfireGame = params.isHellfire;
     gnDifficulty = params.difficulty;
     assetPath = dun->getAssetPath();
-	HasTileset = tileset != nullptr;
+    HasTileset = params.useTileset && tileset != nullptr;
 
-	if (HasTileset) {
-		LoadTileset(tileset);
+    if (HasTileset) {
+        LoadTileset(tileset);
     }
 
-	dun->setWidth(MAXDUNX, true);
-	dun->setHeight(MAXDUNY, true);
+    dun->setWidth(MAXDUNX, true);
+    dun->setHeight(MAXDUNY, true);
 
     InitQuests(params.seedQuest);
     ViewX = 0;
@@ -254,38 +253,38 @@ bool EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
 	quint64 now = QDateTime::currentMSecsSinceEpoch();
 	dProgress() << QApplication::tr("Generated %1 dungeon. Elapsed time: %2ms.").arg(params.extraRounds + 1).arg(now - started);
 
-	dun->setLevelType(currLvl._dType);
+    dun->setLevelType(currLvl._dType);
 
-	int baseTile = 0;
-	switch (currLvl._dDunType) {
-	case DGT_TOWN:
-		break;
-	case DGT_CATHEDRAL:
-		baseTile = 22; // BASE_MEGATILE_L1
-		break;
-	case DGT_CATACOMBS:
-		baseTile = 12; // BASE_MEGATILE_L2
-		break;
-	case DGT_CAVES:
-		baseTile = 8; // BASE_MEGATILE_L3
-		break;
-	case DGT_HELL:
-		baseTile = 30; // BASE_MEGATILE_L4
-		break;
-	default:
-		ASSUME_UNREACHABLE
-		break;
-	}
-	for (int y = 0; y < MAXDUNY; y += 2) {
-		for (int x = 0; x < MAXDUNX; x += 2) {
-			dun->setTileAt(x, y, baseTile);
-		}
-	}
-	for (int y = 0; y < DMAXY; y++) {
-		for (int x = 0; x < DMAXX; x++) {
-			dun->setTileAt(DBORDERX + x * 2, DBORDERY + y * 2, dungeon[x][y]);
-		}
-	}
+    int baseTile = 0;
+    switch (currLvl._dDunType) {
+    case DGT_TOWN:
+        break;
+    case DGT_CATHEDRAL:
+        baseTile = 22; // BASE_MEGATILE_L1
+        break;
+    case DGT_CATACOMBS:
+        baseTile = 12; // BASE_MEGATILE_L2
+        break;
+    case DGT_CAVES:
+        baseTile = 8; // BASE_MEGATILE_L3
+        break;
+    case DGT_HELL:
+        baseTile = 30; // BASE_MEGATILE_L4
+        break;
+    default:
+        ASSUME_UNREACHABLE
+        break;
+    }
+    for (int y = 0; y < MAXDUNY; y += 2) {
+        for (int x = 0; x < MAXDUNX; x += 2) {
+            dun->setTileAt(x, y, baseTile);
+        }
+    }
+    for (int y = 0; y < DMAXY; y++) {
+        for (int x = 0; x < DMAXX; x++) {
+            dun->setTileAt(DBORDERX + x * 2, DBORDERY + y * 2, dungeon[x][y]);
+        }
+    }
     std::vector<ObjStruct> objectTypes;
     std::set<int> itemTypes;
     // std::vector<int> monUniques;

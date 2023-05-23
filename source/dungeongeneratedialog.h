@@ -12,6 +12,7 @@ public:
     int difficulty; // _difficulty
     bool isMulti;
     bool isHellfire;
+    bool useTileset;
     int32_t seed;
     int32_t seedQuest;
     int entryMode;
