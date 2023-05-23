@@ -104,7 +104,7 @@ static void LoadTileset(D1Tileset *tileset)
 	for (int n = 0; n < lengthof(pTiles) && n < tileset->til->getTileCount(); n++) {
 		std::vector<int> &tilSubtiles = tileset->til->getSubtileIndices(n);
 		for (int i = 0; i < lengthof(pTiles[0]) && i < (int)tilSubtiles.size(); i++) {
-			pTiles[n + 1][i] = tilSubtiles[i];
+			pTiles[n + 1][i] = tilSubtiles[i] + 1;
 		}
 	}
 }
