@@ -1150,7 +1150,7 @@ void D1Tileset::fillCryptShapes(bool silent)
     typedef struct {
         unsigned subtileIndex;
         unsigned microIndex;
-        unsigned res_encoding;
+        D1CEL_FRAME_TYPE res_encoding;
     } CelMicro;
     const CelMicro micros[] = {
         { 159 - 1, 3, D1CEL_FRAME_TYPE::Square }, // 473
@@ -1285,7 +1285,7 @@ void D1Tileset::maskCryptBlacks(bool silent)
                     if (i == 18 && x < 10 && y < 3) { // 159, 1
                         continue;
                     }
-                    frame->setPixel(D1GfxPixel::transparentPixel());
+                    frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
             }
         }
@@ -1372,6 +1372,8 @@ void D1Tileset::fixCryptShadows(bool silent)
 
 void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
 {
+    constexpr int blockSize = BLOCK_SIZE_L5;
+
     // use common subtiles of doors
     ReplaceSubtile(this->til, 71 - 1, 2, 206, silent);
     ReplaceSubtile(this->til, 72 - 1, 2, 206, silent);
