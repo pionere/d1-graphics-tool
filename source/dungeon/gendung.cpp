@@ -102,6 +102,10 @@ void InitLvlDungeon()
 	static_assert((int)SPT_NONE == 0, "InitLvlDungeon fills pSetPieces with 0 instead of SPT_NONE values.");
 	memset(pSetPieces, 0, sizeof(pSetPieces));
 
+	if (HasTileset) {
+		return;
+	}
+
 	memset(pTiles, 0, sizeof(pTiles));
 	if (lfd->dMegaTiles != NULL) { 
 		LoadFileWithMem(lfd->dMegaTiles, (BYTE*)&pTiles[1][0]); // .TIL

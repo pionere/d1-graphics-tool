@@ -88,11 +88,10 @@ static void StoreProtections(D1Dun *dun)
 
 static void LoadTileset(D1Tileset *tileset)
 {
-	if (tileset == nullptr) {
-		return;
-	}
-
-	// update SOL-tables using the current tileset
+	// 'load' SOL-tables
+	memset(nBlockTable, 0, sizeof(nBlockTable));
+	memset(nSolidTable, 0, sizeof(nSolidTable));
+	memset(nMissileTable, 0, sizeof(nMissileTable));
 	for (int n = 0; n < lengthof(nSolidTable) && n < tileset->sol->getSubtileCount(); n++) {
 		quint8 bv = tileset->sol->getSubtileProperties(n);
 		nSolidTable[n + 1] = (bv & PFLAG_BLOCK_PATH) != 0;
@@ -100,35 +99,14 @@ static void LoadTileset(D1Tileset *tileset)
 		nMissileTable[n + 1] = (bv & PFLAG_BLOCK_MISSILE) != 0;
 	}
 
-	// replace subtiles using the current tileset
+	// 'load' tiles
+	memset(pTiles, 0, sizeof(pTiles));
 	for (int n = 0; n < lengthof(pTiles) && n < tileset->til->getTileCount(); n++) {
 		std::vector<int> &tilSubtiles = tileset->til->getSubtileIndices(n);
 		for (int i = 0; i < lengthof(pTiles[0]) && i < (int)tilSubtiles.size(); i++) {
-			pTiles[n][i] = tilSubtiles[i];
+			pTiles[n + 1][i] = tilSubtiles[i];
 		}
 	}
-	int baseTile = 0;
-	switch (currLvl._dDunType) {
-	case DGT_TOWN:
-		// CreateTown();
-		break;
-	case DGT_CATHEDRAL:
-		baseTile = 22; // BASE_MEGATILE_L1
-		break;
-	case DGT_CATACOMBS:
-		baseTile = 12; // BASE_MEGATILE_L2
-		break;
-	case DGT_CAVES:
-		baseTile = 8; // BASE_MEGATILE_L3
-		break;
-	case DGT_HELL:
-		baseTile = 30; // BASE_MEGATILE_L4
-		break;
-	default:
-		ASSUME_UNREACHABLE
-		break;
-	}
-	DRLG_PlaceMegaTiles(baseTile);
 }
 
 static void CreateDungeon()
@@ -155,7 +133,7 @@ static void CreateDungeon()
 	}
 }
 
-static void LoadGameLevel(int lvldir, D1Dun *dun, D1Tileset *tileset)
+static void LoadGameLevel(int lvldir, D1Dun *dun)
 {
 	extern int32_t sglGameSeed;
 	int32_t gameSeed = sglGameSeed;
@@ -241,6 +219,11 @@ bool EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     IsHellfireGame = params.isHellfire;
     gnDifficulty = params.difficulty;
     assetPath = dun->getAssetPath();
+	HasTileset = tileset != nullptr;
+
+	if (HasTileset) {
+		LoadTileset(tileset);
+    }
 
 	dun->setWidth(MAXDUNX, true);
 	dun->setHeight(MAXDUNY, true);
