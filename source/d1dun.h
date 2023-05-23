@@ -191,6 +191,7 @@ public:
 
     bool resetTiles();
     bool resetSubtiles();
+    void refreshSubtiles();
     bool maskTilesFrom(const D1Dun *srcDun);
     bool protectTiles();
     bool protectTilesFrom(const D1Dun *srcDun);

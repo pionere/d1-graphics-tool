@@ -2596,6 +2596,42 @@ bool D1Dun::resetSubtiles()
     return result;
 }
 
+/*
+ * Update subtiles which have a valid corresponding tile. TODO: silent resetSubtiles?
+ */
+void D1Dun::refreshSubtiles()
+{
+    if (this->type == D1DUN_TYPE::RAW) {
+        return;
+    }
+    for (int tilePosY = 0; tilePosY < this->height / TILE_HEIGHT; tilePosY++) {
+        for (int tilePosX = 0; tilePosX < this->width / TILE_WIDTH; tilePosX++) {
+            int tileRef = this->tiles[tilePosY][tilePosX];
+            // this->updateSubtiles(tilePosX, tilePosY, tileRef);
+            std::vector<int> subs = std::vector<int>(TILE_WIDTH * TILE_HEIGHT);
+            if (tileRef == 0 && this->defaultTile != UNDEF_TILE) {
+                tileRef = this->defaultTile;
+            }
+            if (tileRef <= 0 || this->til->getTileCount() < tileRef) {
+                continue;
+            }
+            subs = this->til->getSubtileIndices(tileRef - 1);
+            for (int &sub : subs) {
+                sub += 1;
+            }
+            int posx = tilePosX * TILE_WIDTH;
+            int posy = tilePosY * TILE_HEIGHT;
+            for (int y = 0; y < TILE_HEIGHT; y++) {
+                for (int x = 0; x < TILE_WIDTH; x++) {
+                    int dunx = posx + x;
+                    int duny = posy + y;
+                    this->subtiles[duny][dunx] = subs[y * TILE_WIDTH + x];
+                }
+            }
+        }
+    }
+}
+
 bool D1Dun::maskTilesFrom(const D1Dun *srcDun)
 {
     ProgressDialog::incBar(tr("Checking tiles..."), 1);

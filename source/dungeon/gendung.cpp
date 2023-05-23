@@ -125,21 +125,20 @@ void InitLvlDungeon()
 	memset(nMissileTable, 0, sizeof(nMissileTable));
 	assert(pSolidTbl == NULL);
 	pSolidTbl = LoadFileInMem(lfd->dSolidTable, &dwSubtiles); // .SOL
-	if (pSolidTbl == NULL) {
-		return;
-	}
-	assert(dwSubtiles <= MAXSUBTILES);
-	pTmp = pSolidTbl;
+	if (pSolidTbl != NULL) {
+		assert(dwSubtiles <= MAXSUBTILES);
+		pTmp = pSolidTbl;
 
-	// dpiece 0 is always black/void -> make it non-passable to reduce the necessary checks
-	// no longer necessary, because dPiece is never zero
-	//nSolidTable[0] = true;
+		// dpiece 0 is always black/void -> make it non-passable to reduce the necessary checks
+		// no longer necessary, because dPiece is never zero
+		//nSolidTable[0] = true;
 
-	for (unsigned i = 1; i <= dwSubtiles; i++) {
-		bv = *pTmp++;
-		nSolidTable[i] = (bv & PFLAG_BLOCK_PATH) != 0;
-		nBlockTable[i] = (bv & PFLAG_BLOCK_LIGHT) != 0;
-		nMissileTable[i] = (bv & PFLAG_BLOCK_MISSILE) != 0;
+		for (unsigned i = 1; i <= dwSubtiles; i++) {
+			bv = *pTmp++;
+			nSolidTable[i] = (bv & PFLAG_BLOCK_PATH) != 0;
+			nBlockTable[i] = (bv & PFLAG_BLOCK_LIGHT) != 0;
+			nMissileTable[i] = (bv & PFLAG_BLOCK_MISSILE) != 0;
+		}
 	}
 
 	switch (currLvl._dType) {

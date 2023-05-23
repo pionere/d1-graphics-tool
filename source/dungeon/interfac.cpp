@@ -86,6 +86,51 @@ static void StoreProtections(D1Dun *dun)
 	}
 }
 
+static void LoadTileset(D1Tileset *tileset)
+{
+	if (tileset == nullptr) {
+		return;
+	}
+
+	// update SOL-tables using the current tileset
+	for (int n = 0; n < lengthof(nSolidTable) && n < tileset->sol->getSubtileCount(); n++) {
+		quint8 bv = tileset->sol->getSubtileProperties(n);
+		nSolidTable[n + 1] = (bv & PFLAG_BLOCK_PATH) != 0;
+		nBlockTable[n + 1] = (bv & PFLAG_BLOCK_LIGHT) != 0;
+		nMissileTable[n + 1] = (bv & PFLAG_BLOCK_MISSILE) != 0;
+	}
+
+	// replace subtiles using the current tileset
+	for (int n = 0; n < lengthof(pTiles) && n < tileset->til->getTileCount(); n++) {
+		std::vector<int> &tilSubtiles = tileset->til->getSubtileIndices(n);
+		for (unsigned i = 0; i < lengthof(pTiles[0]) && i < tilSubtiles.size(); i++) {
+			pTiles[n][i] = tilSubtiles[i];
+		}
+	}
+	int baseTile = 0;
+	switch (currLvl._dDunType) {
+	case DGT_TOWN:
+		// CreateTown();
+		break;
+	case DGT_CATHEDRAL:
+		baseTile = 22; // BASE_MEGATILE_L1
+		break;
+	case DGT_CATACOMBS:
+		baseTile = 12; // BASE_MEGATILE_L2
+		break;
+	case DGT_CAVES:
+		baseTile = 8; // BASE_MEGATILE_L3
+		break;
+	case DGT_HELL:
+		baseTile = 30; // BASE_MEGATILE_L4
+		break;
+	default:
+		ASSUME_UNREACHABLE
+		break;
+	}
+	DRLG_PlaceMegaTiles(baseTile);
+}
+
 static void CreateDungeon()
 {
 	switch (currLvl._dDunType) {
@@ -110,7 +155,7 @@ static void CreateDungeon()
 	}
 }
 
-static void LoadGameLevel(int lvldir, D1Dun *dun)
+static void LoadGameLevel(int lvldir, D1Dun *dun, D1Tileset *tileset)
 {
 	extern int32_t sglGameSeed;
 	int32_t gameSeed = sglGameSeed;
@@ -141,9 +186,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	int rv = RandRange(1, 4);
 	InitLvlMap(); // reset: dMonster, dObject, dPlayer, dItem, dMissile, dFlags+, dLight+
 	StoreProtections(dun);
-	if (pSolidTbl == NULL) {
-		return;
-	}
+	LoadTileset(tileset);
 	IncProgress();
 	if (currLvl._dType != DTYPE_TOWN) {
 		GetLevelMTypes(); // select monster types and load their fx
@@ -192,7 +235,7 @@ static void EnterLevel(int lvl)
         currLvl._dLevel += HELL_LEVEL_BONUS;
 }
 
-bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &params)
+bool EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const GenerateDunParam &params)
 {
     IsMultiGame = params.isMulti;
     IsHellfireGame = params.isHellfire;
@@ -222,7 +265,7 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
 		extern int32_t sglGameSeed;
 		//LogErrorF("Generating dungeon %d with seed: %d / %d. Entry mode: %d", params.level, sglGameSeed, params.seedQuest, params.entryMode);
 		dProgress() << QApplication::tr("Generating dungeon %1 with seed: %2 / %3. Entry mode: %4").arg(params.level).arg(sglGameSeed).arg(params.seedQuest).arg(params.entryMode);
-		LoadGameLevel(params.entryMode, dun);
+		LoadGameLevel(params.entryMode, dun, tileset);
 		FreeLvlDungeon();
 	} while (--extraRounds >= 0);
 	quint64 now = QDateTime::currentMSecsSinceEpoch();

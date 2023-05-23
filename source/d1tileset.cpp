@@ -1153,14 +1153,16 @@ void D1Tileset::fillCryptShapes(bool silent)
         D1CEL_FRAME_TYPE res_encoding;
     } CelMicro;
     const CelMicro micros[] = {
-        { 159 - 1, 3, D1CEL_FRAME_TYPE::Square }, // 473
+        // clang-format off
+        { 159 - 1, 3, D1CEL_FRAME_TYPE::Square },         // 473
 //      { 159 - 1, 3, D1CEL_FRAME_TYPE::RightTrapezoid }, // 475
-        { 336 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle }, // 907
-        { 409 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle }, // 1168
-        { 481 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1406
-        { 492 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle }, // 1436
-        { 519 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle }, // 1493
-        { 595 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1710
+        { 336 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },   // 907
+        { 409 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },   // 1168
+        { 481 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },  // 1406
+        { 492 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },   // 1436
+        { 519 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },   // 1493
+        { 595 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },  // 1710
+        // clang-format o
     };
 
     // TODO: check if there are enough subtiles
@@ -1174,29 +1176,35 @@ void D1Tileset::fillCryptShapes(bool silent)
         }
         const unsigned microIndex = MICRO_IDX(blockSize, micro.microIndex);
 
-        unsigned frameRef = frameReferences[microIndex]; // 719
+        unsigned frameRef = frameReferences[microIndex];
         if (frameRef == 0) {
             dProgressErr() << QApplication::tr("Subtile (%1) has invalid (missing) frames.").arg(micro.subtileIndex + 1);
             return;
         }
-        D1GfxFrame *frame = this->gfx->getFrame(frameRef - 1);  // 719
+        D1GfxFrame *frame = this->gfx->getFrame(frameRef - 1);
         if (frame->getWidth() != MICRO_WIDTH || frame->getWidth() != MICRO_WIDTH) {
             dProgressErr() << QApplication::tr("Subtile (%1) is invalid (upscaled?).").arg(micro.subtileIndex + 1);
             return;
         }
+		bool change = false;
         if (i == 1) { // 907
-            frame->setPixel(30, 1, D1GfxPixel::colorPixel(46));
-            frame->setPixel(31, 1, D1GfxPixel::colorPixel(76));
+            change |= frame->setPixel(30, 1, D1GfxPixel::colorPixel(46));
+            change |= frame->setPixel(31, 1, D1GfxPixel::colorPixel(76));
         }
         if (i == 5) { // 1493
-            frame->setPixel(0, 16, D1GfxPixel::colorPixel(43));
+            change |= frame->setPixel(0, 16, D1GfxPixel::colorPixel(43));
         }
         std::vector<FramePixel> pixels;
         D1CelTilesetFrame::collectPixels(frame, micro.res_encoding, pixels);
         for (const FramePixel &pix : pixels) {
-            frame->setPixel(pix.pos.x(), pix.pos.y(), D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(pix.pos.x(), pix.pos.y(), D1GfxPixel::colorPixel(0));
         }
-        frame->setFrameType(micro.res_encoding);
+        if (change) {
+            frame->setFrameType(micro.res_encoding);
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(frameRef).arg(micro.subtileIndex + 1);
+            }
+        }
     }
 }
 
@@ -1207,6 +1215,7 @@ void D1Tileset::maskCryptBlacks(bool silent)
         unsigned microIndex;
     } CelMicro;
     const CelMicro micros[] = {
+        // clang-format off
         { 126 - 1, 1 }, // 347
         { 129 - 1, 0 }, // 356
         { 129 - 1, 1 }, // 357
@@ -1229,6 +1238,7 @@ void D1Tileset::maskCryptBlacks(bool silent)
         { 153 - 1, 2 }, // 442
         { 153 - 1, 4 }, // 441
         { 159 - 1, 1 }, // 475
+        // clang-format on
     };
 
     // TODO: check if there are enough subtiles
@@ -1254,6 +1264,7 @@ void D1Tileset::maskCryptBlacks(bool silent)
         }
 
         // mask the black pixels
+        bool change = false;
         for (int y = 0; y < MICRO_WIDTH; y++) {
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 D1GfxPixel pixel = frame->getPixel(x, y);
@@ -1285,12 +1296,17 @@ void D1Tileset::maskCryptBlacks(bool silent)
                     if (i == 18 && x < 10 && y < 3) { // 159, 1
                         continue;
                     }
-                    frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
             }
         }
-
-        frame->setFrameType(D1CEL_FRAME_TYPE::TransparentSquare);
+        if (change) {
+            frame->setFrameType(D1CEL_FRAME_TYPE::TransparentSquare);
+            this->gfx->setModified();
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(frameRef).arg(micro.subtileIndex + 1);
+            }
+        }
     }
 }
 
@@ -1301,6 +1317,7 @@ void D1Tileset::fixCryptShadows(bool silent)
         unsigned microIndex;
     } CelMicro;
     const CelMicro micros[] = {
+        // clang-format off
         { 626 - 1, 0 }, // 1806 - 205
         { 626 - 1, 1 }, // 1807
         { 627 - 1, 0 }, // 1808
@@ -1308,6 +1325,7 @@ void D1Tileset::fixCryptShadows(bool silent)
         { 639 - 1, 0 }, // 1825
         { 639 - 1, 1 }, // 1799
         { 631 - 1, 1 }, // 1815 - 207
+        // clang-format on
     };
 
     // TODO: check if there are enough subtiles
@@ -1332,6 +1350,7 @@ void D1Tileset::fixCryptShadows(bool silent)
             return;
         }
 
+        bool change = false;
         for (int y = 0; y < MICRO_WIDTH; y++) {
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 D1GfxPixel pixel = frame->getPixel(x, y);
@@ -1364,7 +1383,13 @@ void D1Tileset::fixCryptShadows(bool silent)
                         continue;
                     }
                 }
-                frame->setPixel(x, y, D1GfxPixel::colorPixel(0)); // 79;
+                change |= frame->setPixel(x, y, D1GfxPixel::colorPixel(0)); // 79;
+            }
+        }
+        if (change) {
+            this->gfx->setModified();
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(frameRef).arg(micro.subtileIndex + 1);
             }
         }
     }
@@ -1378,7 +1403,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 71 - 1, 2, 206, silent);
     ReplaceSubtile(this->til, 72 - 1, 2, 206, silent);
     // use common subtiles
-    ReplaceSubtile(this->til, 127 - 1, 2, 4, silent); // 372
+    ReplaceSubtile(this->til, 127 - 1, 2, 4, silent);  // 372
     ReplaceSubtile(this->til, 132 - 1, 2, 15, silent); // 388
     ReplaceSubtile(this->til, 156 - 1, 2, 31, silent); // 468
     // use better subtiles
@@ -1423,19 +1448,19 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // use common subtiles instead of minor alterations
     ReplaceSubtile(this->til, 159 - 1, 1, 14, silent); // 479
     ReplaceSubtile(this->til, 133 - 1, 2, 19, silent); // 390
-    ReplaceSubtile(this->til, 10 - 1, 1, 18, silent); // 37
+    ReplaceSubtile(this->til, 10 - 1, 1, 18, silent);  // 37
     ReplaceSubtile(this->til, 138 - 1, 1, 18, silent);
     ReplaceSubtile(this->til, 188 - 1, 1, 277, silent); // 564
     ReplaceSubtile(this->til, 178 - 1, 2, 258, silent); // 564
-    ReplaceSubtile(this->til, 5 - 1, 2, 31, silent); // 19
+    ReplaceSubtile(this->til, 5 - 1, 2, 31, silent);    // 19
     ReplaceSubtile(this->til, 14 - 1, 2, 31, silent);
     ReplaceSubtile(this->til, 159 - 1, 2, 31, silent);
-    ReplaceSubtile(this->til, 133 - 1, 2, 31, silent); // 390
+    ReplaceSubtile(this->til, 133 - 1, 2, 31, silent);  // 390
     ReplaceSubtile(this->til, 185 - 1, 2, 274, silent); // 558
     ReplaceSubtile(this->til, 186 - 1, 2, 274, silent); // 560
-    ReplaceSubtile(this->til, 139 - 1, 0, 39, silent); // 402
+    ReplaceSubtile(this->til, 139 - 1, 0, 39, silent);  // 402
 
-    ReplaceSubtile(this->til, 2 - 1, 3, 4, silent); // 8
+    ReplaceSubtile(this->til, 2 - 1, 3, 4, silent);  // 8
     ReplaceSubtile(this->til, 3 - 1, 1, 60, silent); // 10
     ReplaceSubtile(this->til, 114 - 1, 1, 32, silent);
     ReplaceSubtile(this->til, 3 - 1, 2, 4, silent); // 11
@@ -1450,7 +1475,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 10 - 1, 3, 7, silent); // 38
     ReplaceSubtile(this->til, 138 - 1, 3, 4, silent);
     ReplaceSubtile(this->til, 121 - 1, 3, 4, silent); // 354
-    ReplaceSubtile(this->til, 8 - 1, 3, 4, silent); // 32
+    ReplaceSubtile(this->til, 8 - 1, 3, 4, silent);   // 32
     ReplaceSubtile(this->til, 136 - 1, 3, 7, silent);
     ReplaceSubtile(this->til, 91 - 1, 1, 47, silent); // 257
     ReplaceSubtile(this->til, 178 - 1, 1, 47, silent);
@@ -1458,8 +1483,8 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 177 - 1, 3, 7, silent);
     ReplaceSubtile(this->til, 178 - 1, 3, 48, silent);
     ReplaceSubtile(this->til, 130 - 1, 2, 395, silent); // 381
-    ReplaceSubtile(this->til, 157 - 1, 2, 4, silent); // 472
-    ReplaceSubtile(this->til, 177 - 1, 1, 4, silent); // 540
+    ReplaceSubtile(this->til, 157 - 1, 2, 4, silent);   // 472
+    ReplaceSubtile(this->til, 177 - 1, 1, 4, silent);   // 540
 
     ReplaceSubtile(this->til, 27 - 1, 3, 4, silent); // 85
     // ReplaceSubtile(this->til, 28 - 1, 3, 4, silent); // 87
@@ -1524,13 +1549,13 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 167 - 1, 2, 4, silent);
     ReplaceSubtile(this->til, 49 - 1, 3, 4, silent); // 139
     ReplaceSubtile(this->til, 167 - 1, 3, 4, silent);
-    ReplaceSubtile(this->til, 50 - 1, 1, 4, silent); // 141
-    ReplaceSubtile(this->til, 50 - 1, 3, 4, silent); // 143
-    ReplaceSubtile(this->til, 51 - 1, 3, 4, silent); // 147
+    ReplaceSubtile(this->til, 50 - 1, 1, 4, silent);  // 141
+    ReplaceSubtile(this->til, 50 - 1, 3, 4, silent);  // 143
+    ReplaceSubtile(this->til, 51 - 1, 3, 4, silent);  // 147
     ReplaceSubtile(this->til, 103 - 1, 1, 4, silent); // 295
     ReplaceSubtile(this->til, 105 - 1, 1, 4, silent);
     ReplaceSubtile(this->til, 127 - 1, 3, 4, silent); // 373
-    ReplaceSubtile(this->til, 89 - 1, 3, 4, silent); // 251
+    ReplaceSubtile(this->til, 89 - 1, 3, 4, silent);  // 251
     ReplaceSubtile(this->til, 173 - 1, 3, 7, silent);
     ReplaceSubtile(this->til, 174 - 1, 3, 7, silent);
     ReplaceSubtile(this->til, 6 - 1, 3, 4, silent); // 24
@@ -1651,36 +1676,36 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(340, 9, 6, 9);
     ReplaceMcr(394, 9, 6, 9);
     ReplaceMcr(451, 9, 6, 9);
-    ReplaceMcr(14, 7, 6, 7);  // lost shine
-    ReplaceMcr(26, 7, 6, 7);  // lost shine
+    ReplaceMcr(14, 7, 6, 7); // lost shine
+    ReplaceMcr(26, 7, 6, 7); // lost shine
     // ReplaceMcr(80, 7, 6, 7);
-    ReplaceMcr(451, 7, 6, 7); // lost shine
+    ReplaceMcr(451, 7, 6, 7);  // lost shine
     ReplaceMcr(340, 7, 6, 7);  // lost shine
     ReplaceMcr(364, 7, 6, 7);  // lost crack
     ReplaceMcr(394, 7, 6, 7);  // lost shine
     ReplaceMcr(554, 7, 269, 7);
-    ReplaceMcr(608, 7, 6, 7); // lost details
-    ReplaceMcr(616, 7, 6, 7); // lost details
+    ReplaceMcr(608, 7, 6, 7);   // lost details
+    ReplaceMcr(616, 7, 6, 7);   // lost details
     ReplaceMcr(269, 5, 554, 5); // lost details
     ReplaceMcr(556, 5, 554, 5);
     ReplaceMcr(440, 5, 432, 5); // lost details
-    ReplaceMcr(14, 5, 6, 5); // lost details
-    ReplaceMcr(26, 5, 6, 5); // lost details
-    ReplaceMcr(451, 5, 6, 5); // lost details
-    ReplaceMcr(80, 5, 6, 5); // lost details
+    ReplaceMcr(14, 5, 6, 5);    // lost details
+    ReplaceMcr(26, 5, 6, 5);    // lost details
+    ReplaceMcr(451, 5, 6, 5);   // lost details
+    ReplaceMcr(80, 5, 6, 5);    // lost details
     ReplaceMcr(324, 5, 432, 5); // lost details
     ReplaceMcr(340, 5, 432, 5); // lost details
     ReplaceMcr(364, 5, 432, 5); // lost details
     ReplaceMcr(380, 5, 432, 5); // lost details
     ReplaceMcr(394, 5, 432, 5); // lost details
-    ReplaceMcr(6, 3, 14, 3); // lost details
-    ReplaceMcr(26, 3, 14, 3); // lost details
-    ReplaceMcr(80, 3, 14, 3); // lost details
-    ReplaceMcr(269, 3, 14, 3); // lost details
-    ReplaceMcr(414, 3, 14, 3); // lost details
-    ReplaceMcr(451, 3, 14, 3); // lost details
-    ReplaceMcr(554, 3, 14, 3); // lost details
-    ReplaceMcr(556, 3, 14, 3); // lost details
+    ReplaceMcr(6, 3, 14, 3);    // lost details
+    ReplaceMcr(26, 3, 14, 3);   // lost details
+    ReplaceMcr(80, 3, 14, 3);   // lost details
+    ReplaceMcr(269, 3, 14, 3);  // lost details
+    ReplaceMcr(414, 3, 14, 3);  // lost details
+    ReplaceMcr(451, 3, 14, 3);  // lost details
+    ReplaceMcr(554, 3, 14, 3);  // lost details
+    ReplaceMcr(556, 3, 14, 3);  // lost details
     // ? ReplaceMcr(608, 3, 103, 3); // lost details
     ReplaceMcr(324, 3, 380, 3); // lost details
     ReplaceMcr(324, 3, 380, 3); // lost details
@@ -1691,7 +1716,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(6, 0, 14, 0);
     ReplaceMcr(26, 0, 14, 0);
     ReplaceMcr(269, 0, 14, 0);
-    ReplaceMcr(554, 0, 14, 0); // lost details
+    ReplaceMcr(554, 0, 14, 0);  // lost details
     ReplaceMcr(340, 0, 324, 0); // lost details
     ReplaceMcr(364, 0, 324, 0); // lost details
     ReplaceMcr(451, 0, 324, 0); // lost details
@@ -1712,22 +1737,22 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(551, 1, 265, 1);
     ReplaceMcr(261, 0, 14, 0); // lost details
     ReplaceMcr(545, 0, 14, 0); // lost details
-    ReplaceMcr(18, 9, 6, 9); // lost details
-    ReplaceMcr(34, 9, 6, 9); // lost details
+    ReplaceMcr(18, 9, 6, 9);   // lost details
+    ReplaceMcr(34, 9, 6, 9);   // lost details
     // ReplaceMcr(37, 9, 6, 9);
-    ReplaceMcr(277, 9, 6, 9); // lost details
-    ReplaceMcr(332, 9, 6, 9); // lost details
-    ReplaceMcr(348, 9, 6, 9); // lost details
-    ReplaceMcr(352, 9, 6, 9); // lost details
-    ReplaceMcr(358, 9, 6, 9); // lost details
-    ReplaceMcr(406, 9, 6, 9); // lost details
-    ReplaceMcr(444, 9, 6, 9); // lost details
-    ReplaceMcr(459, 9, 6, 9); // lost details
-    ReplaceMcr(463, 9, 6, 9); // lost details
-    ReplaceMcr(562, 9, 6, 9); // lost details
-    ReplaceMcr(564, 9, 6, 9); // lost details
-    ReplaceMcr(277, 7, 18, 7); // lost details
-    ReplaceMcr(562, 7, 18, 7); // lost details
+    ReplaceMcr(277, 9, 6, 9);   // lost details
+    ReplaceMcr(332, 9, 6, 9);   // lost details
+    ReplaceMcr(348, 9, 6, 9);   // lost details
+    ReplaceMcr(352, 9, 6, 9);   // lost details
+    ReplaceMcr(358, 9, 6, 9);   // lost details
+    ReplaceMcr(406, 9, 6, 9);   // lost details
+    ReplaceMcr(444, 9, 6, 9);   // lost details
+    ReplaceMcr(459, 9, 6, 9);   // lost details
+    ReplaceMcr(463, 9, 6, 9);   // lost details
+    ReplaceMcr(562, 9, 6, 9);   // lost details
+    ReplaceMcr(564, 9, 6, 9);   // lost details
+    ReplaceMcr(277, 7, 18, 7);  // lost details
+    ReplaceMcr(562, 7, 18, 7);  // lost details
     ReplaceMcr(277, 5, 459, 5); // lost details
     ReplaceMcr(562, 5, 459, 5); // lost details
     ReplaceMcr(277, 3, 459, 3); // lost details
@@ -1740,21 +1765,21 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(564, 3, 459, 3); // lost details
     ReplaceMcr(34, 7, 18, 7); // lost details
     // ReplaceMcr(37, 7, 18, 7);
-    ReplaceMcr(84, 7, 18, 7); // lost details
-    ReplaceMcr(406, 7, 18, 7); // lost details
-    ReplaceMcr(444, 7, 18, 7); // lost details
-    ReplaceMcr(463, 7, 18, 7); // lost details
-    ReplaceMcr(332, 7, 18, 7); // lost details
-    ReplaceMcr(348, 7, 18, 7); // lost details
-    ReplaceMcr(352, 7, 18, 7); // lost details
-    ReplaceMcr(358, 7, 18, 7); // lost details
-    ReplaceMcr(459, 7, 18, 7); // lost details
-    ReplaceMcr(34, 5, 18, 5); // lost details
+    ReplaceMcr(84, 7, 18, 7);   // lost details
+    ReplaceMcr(406, 7, 18, 7);  // lost details
+    ReplaceMcr(444, 7, 18, 7);  // lost details
+    ReplaceMcr(463, 7, 18, 7);  // lost details
+    ReplaceMcr(332, 7, 18, 7);  // lost details
+    ReplaceMcr(348, 7, 18, 7);  // lost details
+    ReplaceMcr(352, 7, 18, 7);  // lost details
+    ReplaceMcr(358, 7, 18, 7);  // lost details
+    ReplaceMcr(459, 7, 18, 7);  // lost details
+    ReplaceMcr(34, 5, 18, 5);   // lost details
     ReplaceMcr(348, 5, 332, 5); // lost details
     ReplaceMcr(352, 5, 332, 5); // lost details
     ReplaceMcr(358, 5, 332, 5); // lost details
-    ReplaceMcr(34, 3, 18, 3); // lost details
-    ReplaceMcr(358, 3, 18, 3); // lost details
+    ReplaceMcr(34, 3, 18, 3);   // lost details
+    ReplaceMcr(358, 3, 18, 3);  // lost details
     ReplaceMcr(348, 3, 332, 3); // lost details
     ReplaceMcr(352, 3, 332, 3); // lost details
     ReplaceMcr(34, 0, 18, 0);
@@ -1770,8 +1795,8 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(209, 9, 6, 9);
     ReplaceMcr(616, 9, 6, 9);
     ReplaceMcr(14, 9, 6, 9);  // lost details
-    ReplaceMcr(68, 9, 6, 9); // lost details
-    ReplaceMcr(84, 9, 6, 9); // lost details
+    ReplaceMcr(68, 9, 6, 9);  // lost details
+    ReplaceMcr(84, 9, 6, 9);  // lost details
     ReplaceMcr(152, 9, 6, 9); // lost details
     ReplaceMcr(241, 9, 6, 9); // lost details
     ReplaceMcr(265, 9, 6, 9); // lost details
@@ -1809,7 +1834,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(441, 6, 15, 6);
     ReplaceMcr(532, 6, 15, 6);
     ReplaceMcr(605, 6, 15, 6);
-    ReplaceMcr(206, 6, 77, 6);
+    // ReplaceMcr(206, 6, 77, 6);
     ReplaceMcr(534, 6, 254, 6);
     ReplaceMcr(537, 6, 254, 6);
     ReplaceMcr(541, 6, 258, 6);
@@ -1911,7 +1936,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(11, 1, 12, 1);
     // ReplaceMcr(53, 1, 12, 1);
     ReplaceMcr(577, 1, 12, 1); // lost details
-    ReplaceMcr(31, 1, 4, 1); // lost details
+    ReplaceMcr(31, 1, 4, 1);   // lost details
     // ReplaceMcr(279, 1, 28, 1);
     // ReplaceMcr(35, 1, 28, 1);
     // ReplaceMcr(35, 1, 4, 1); // lost details
@@ -1922,9 +1947,9 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(225, 1, 28, 1);
     // ReplaceMcr(273, 1, 28, 1); // lost details
     ReplaceMcr(281, 1, 12, 1); // lost details
-    ReplaceMcr(356, 1, 7, 1); // lost details
-    ReplaceMcr(574, 1, 4, 1); // lost details
-    ReplaceMcr(612, 1, 4, 1); // lost details
+    ReplaceMcr(356, 1, 7, 1);  // lost details
+    ReplaceMcr(574, 1, 4, 1);  // lost details
+    ReplaceMcr(612, 1, 4, 1);  // lost details
     // ReplaceMcr(76, 1, 2, 1);
     // ReplaceMcr(205, 1, 2, 1);
     ReplaceMcr(428, 1, 2, 1);
@@ -2027,15 +2052,15 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(258, 8, 296, 8); // lost details
     ReplaceMcr(541, 8, 296, 8); // lost details
     // ReplaceMcr(543, 8, 296, 8); // lost details
-    ReplaceMcr(89, 6, 31, 6); // lost details
+    ReplaceMcr(89, 6, 31, 6);  // lost details
     ReplaceMcr(274, 6, 31, 6); // lost details
     // ReplaceMcr(558, 6, 31, 6); // lost details
     // ReplaceMcr(560, 6, 31, 6); // lost details
-    ReplaceMcr(356, 6, 31, 6); // lost details
+    ReplaceMcr(356, 6, 31, 6);  // lost details
     ReplaceMcr(333, 6, 445, 6); // lost details
     ReplaceMcr(345, 6, 445, 6); // lost details
     ReplaceMcr(365, 6, 445, 6); // lost details
-    ReplaceMcr(274, 4, 31, 4); // lost details
+    ReplaceMcr(274, 4, 31, 4);  // lost details
     // ReplaceMcr(560, 4, 31, 4); // lost details
     ReplaceMcr(333, 4, 345, 4); // lost details
     ReplaceMcr(365, 4, 345, 4); // lost details
@@ -2046,11 +2071,11 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(365, 2, 345, 2); // lost details
     ReplaceMcr(415, 2, 345, 2); // lost details
     ReplaceMcr(445, 2, 345, 2); // lost details
-    ReplaceMcr(333, 0, 31, 0); // lost details
-    ReplaceMcr(345, 0, 31, 0); // lost details
-    ReplaceMcr(365, 0, 31, 0); // lost details
-    ReplaceMcr(445, 0, 31, 0); // lost details
-    ReplaceMcr(333, 1, 31, 1); // lost details
+    ReplaceMcr(333, 0, 31, 0);  // lost details
+    ReplaceMcr(345, 0, 31, 0);  // lost details
+    ReplaceMcr(365, 0, 31, 0);  // lost details
+    ReplaceMcr(445, 0, 31, 0);  // lost details
+    ReplaceMcr(333, 1, 31, 1);  // lost details
     ReplaceMcr(365, 1, 31, 1);
 
     ReplaceMcr(125, 0, 136, 0); // lost details
@@ -2061,7 +2086,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(508, 2, 136, 2); // lost details
     ReplaceMcr(508, 3, 129, 3); // lost details
     ReplaceMcr(146, 0, 142, 0); // lost details
-    ReplaceMcr(146, 1, 15, 1); // lost details
+    ReplaceMcr(146, 1, 15, 1);  // lost details
     ReplaceMcr(136, 3, 129, 3); // lost details TODO: add missing pixels?
     ReplaceMcr(140, 1, 136, 1); // lost details
 
@@ -2071,13 +2096,13 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(73, 8, 95, 8); // lost details
     ReplaceMcr(74, 8, 95, 8); // lost details
 
-    ReplaceMcr(1, 8, 95, 8); // lost details
-    ReplaceMcr(21, 8, 95, 8); // lost details
-    ReplaceMcr(36, 8, 95, 8); // lost details
-    ReplaceMcr(75, 8, 95, 8); // lost details
-    ReplaceMcr(83, 8, 95, 8); // lost details
-    ReplaceMcr(91, 8, 95, 8); // lost details
-    ReplaceMcr(99, 8, 95, 8); // lost details
+    ReplaceMcr(1, 8, 95, 8);   // lost details
+    ReplaceMcr(21, 8, 95, 8);  // lost details
+    ReplaceMcr(36, 8, 95, 8);  // lost details
+    ReplaceMcr(75, 8, 95, 8);  // lost details
+    ReplaceMcr(83, 8, 95, 8);  // lost details
+    ReplaceMcr(91, 8, 95, 8);  // lost details
+    ReplaceMcr(99, 8, 95, 8);  // lost details
     ReplaceMcr(113, 8, 95, 8); // lost details
     ReplaceMcr(115, 8, 95, 8); // lost details
     ReplaceMcr(119, 8, 95, 8); // lost details
@@ -2116,11 +2141,11 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(603, 8, 95, 8); // lost details
     ReplaceMcr(611, 8, 95, 8); // lost details
 
-    ReplaceMcr(1, 6, 119, 6); // lost details
-    ReplaceMcr(13, 6, 119, 6); // lost details
-    ReplaceMcr(21, 6, 119, 6); // lost details
-    ReplaceMcr(36, 6, 119, 6); // lost details
-    ReplaceMcr(83, 6, 119, 6); // lost details
+    ReplaceMcr(1, 6, 119, 6);   // lost details
+    ReplaceMcr(13, 6, 119, 6);  // lost details
+    ReplaceMcr(21, 6, 119, 6);  // lost details
+    ReplaceMcr(36, 6, 119, 6);  // lost details
+    ReplaceMcr(83, 6, 119, 6);  // lost details
     ReplaceMcr(149, 6, 119, 6); // lost details
     ReplaceMcr(387, 6, 119, 6); // lost details
     ReplaceMcr(400, 6, 119, 6); // lost details
@@ -2128,11 +2153,11 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(462, 6, 119, 6); // lost details
     ReplaceMcr(603, 6, 119, 6); // lost details
     ReplaceMcr(611, 6, 119, 6); // lost details
-    ReplaceMcr(75, 6, 99, 6); // lost details
-    ReplaceMcr(91, 6, 99, 6); // lost details
-    ReplaceMcr(115, 6, 99, 6); // lost details
-    ReplaceMcr(204, 6, 99, 6); // lost details
-    ReplaceMcr(215, 6, 99, 6); // lost details
+    ReplaceMcr(75, 6, 99, 6);   // lost details
+    ReplaceMcr(91, 6, 99, 6);   // lost details
+    ReplaceMcr(115, 6, 99, 6);  // lost details
+    ReplaceMcr(204, 6, 99, 6);  // lost details
+    ReplaceMcr(215, 6, 99, 6);  // lost details
 
     ReplaceMcr(71, 6, 63, 6);
     ReplaceMcr(71, 7, 67, 7);
@@ -2163,41 +2188,41 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(375, 6, 328, 6); // lost details
     ReplaceMcr(391, 6, 328, 6); // lost details
 
-    ReplaceMcr(13, 4, 1, 4); // lost details
-    ReplaceMcr(21, 4, 1, 4); // lost details
-    ReplaceMcr(36, 4, 1, 4); // lost details
-    ReplaceMcr(328, 4, 1, 4); // lost details
-    ReplaceMcr(375, 4, 1, 4); // lost details
+    ReplaceMcr(13, 4, 1, 4);    // lost details
+    ReplaceMcr(21, 4, 1, 4);    // lost details
+    ReplaceMcr(36, 4, 1, 4);    // lost details
+    ReplaceMcr(328, 4, 1, 4);   // lost details
+    ReplaceMcr(375, 4, 1, 4);   // lost details
     ReplaceMcr(531, 4, 248, 4); // lost details
     ReplaceMcr(533, 4, 252, 4); // lost details
 
-    ReplaceMcr(1, 2, 256, 2); // lost details
-    ReplaceMcr(13, 2, 256, 2); // lost details
-    ReplaceMcr(21, 2, 256, 2); // lost details
-    ReplaceMcr(36, 2, 256, 2); // lost details
+    ReplaceMcr(1, 2, 256, 2);   // lost details
+    ReplaceMcr(13, 2, 256, 2);  // lost details
+    ReplaceMcr(21, 2, 256, 2);  // lost details
+    ReplaceMcr(36, 2, 256, 2);  // lost details
     ReplaceMcr(248, 2, 256, 2); // lost details
-    ReplaceMcr(83, 2, 256, 2); // lost details
+    ReplaceMcr(83, 2, 256, 2);  // lost details
     ReplaceMcr(119, 2, 256, 2); // lost details
     ReplaceMcr(230, 2, 256, 2); // lost details
 
-    ReplaceMcr(13, 0, 1, 0); // lost details
-    ReplaceMcr(21, 0, 1, 0); // lost details
-    ReplaceMcr(36, 0, 1, 0); // lost details
+    ReplaceMcr(13, 0, 1, 0);  // lost details
+    ReplaceMcr(21, 0, 1, 0);  // lost details
+    ReplaceMcr(36, 0, 1, 0);  // lost details
     ReplaceMcr(248, 0, 1, 0); // lost details
     ReplaceMcr(256, 0, 1, 0); // lost details
     ReplaceMcr(328, 0, 1, 0); // lost details
 
-    ReplaceMcr(13, 8, 95, 8); // lost details
-    ReplaceMcr(17, 8, 95, 8); // lost details
-    ReplaceMcr(25, 8, 95, 8); // lost details
-    ReplaceMcr(29, 8, 95, 8); // lost details
-    ReplaceMcr(33, 8, 95, 8); // lost details
-    ReplaceMcr(39, 8, 95, 8); // lost details
-    ReplaceMcr(49, 8, 95, 8); // lost details
-    ReplaceMcr(51, 8, 95, 8); // lost details
-    ReplaceMcr(88, 8, 95, 8); // lost details
-    ReplaceMcr(93, 8, 95, 8); // lost details
-    ReplaceMcr(97, 8, 95, 8); // lost details
+    ReplaceMcr(13, 8, 95, 8);  // lost details
+    ReplaceMcr(17, 8, 95, 8);  // lost details
+    ReplaceMcr(25, 8, 95, 8);  // lost details
+    ReplaceMcr(29, 8, 95, 8);  // lost details
+    ReplaceMcr(33, 8, 95, 8);  // lost details
+    ReplaceMcr(39, 8, 95, 8);  // lost details
+    ReplaceMcr(49, 8, 95, 8);  // lost details
+    ReplaceMcr(51, 8, 95, 8);  // lost details
+    ReplaceMcr(88, 8, 95, 8);  // lost details
+    ReplaceMcr(93, 8, 95, 8);  // lost details
+    ReplaceMcr(97, 8, 95, 8);  // lost details
     ReplaceMcr(101, 8, 95, 8); // lost details
     ReplaceMcr(107, 8, 95, 8); // lost details
     ReplaceMcr(109, 8, 95, 8); // lost details
@@ -2235,11 +2260,11 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(154, 8, 55, 8); // lost details
     ReplaceMcr(154, 9, 13, 9); // lost details
 
-    ReplaceMcr(9, 6, 25, 6); // lost details
-    ReplaceMcr(33, 6, 25, 6); // lost details
-    ReplaceMcr(51, 6, 25, 6); // lost details
-    ReplaceMcr(93, 6, 25, 6); // lost details
-    ReplaceMcr(97, 6, 25, 6); // lost details
+    ReplaceMcr(9, 6, 25, 6);   // lost details
+    ReplaceMcr(33, 6, 25, 6);  // lost details
+    ReplaceMcr(51, 6, 25, 6);  // lost details
+    ReplaceMcr(93, 6, 25, 6);  // lost details
+    ReplaceMcr(97, 6, 25, 6);  // lost details
     ReplaceMcr(218, 6, 25, 6); // lost details
     ReplaceMcr(327, 6, 25, 6); // lost details
     ReplaceMcr(339, 6, 25, 6); // lost details
@@ -2249,11 +2274,11 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(458, 6, 25, 6); // lost details
     ReplaceMcr(615, 6, 25, 6); // lost details
 
-    ReplaceMcr(17, 6, 95, 6); // lost details
-    ReplaceMcr(29, 6, 95, 6); // lost details
-    ReplaceMcr(39, 6, 95, 6); // lost details
-    ReplaceMcr(49, 6, 95, 6); // lost details
-    ReplaceMcr(88, 6, 95, 6); // lost details
+    ReplaceMcr(17, 6, 95, 6);  // lost details
+    ReplaceMcr(29, 6, 95, 6);  // lost details
+    ReplaceMcr(39, 6, 95, 6);  // lost details
+    ReplaceMcr(49, 6, 95, 6);  // lost details
+    ReplaceMcr(88, 6, 95, 6);  // lost details
     ReplaceMcr(107, 6, 95, 6); // lost details
     ReplaceMcr(109, 6, 95, 6); // lost details
     ReplaceMcr(111, 6, 95, 6); // lost details
@@ -2265,9 +2290,9 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(389, 6, 95, 6); // lost details
     ReplaceMcr(397, 6, 95, 6); // lost details
     // ReplaceMcr(402, 6, 95, 6); // lost details
-    ReplaceMcr(443, 6, 95, 6); // lost details
-    ReplaceMcr(466, 6, 95, 6); // lost details
-    ReplaceMcr(478, 6, 95, 6); // lost details
+    ReplaceMcr(443, 6, 95, 6);  // lost details
+    ReplaceMcr(466, 6, 95, 6);  // lost details
+    ReplaceMcr(478, 6, 95, 6);  // lost details
     ReplaceMcr(347, 6, 393, 6); // lost details
     ReplaceMcr(399, 6, 393, 6); // lost details
     ReplaceMcr(417, 6, 393, 6); // lost details
@@ -2277,19 +2302,19 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(557, 6, 343, 6); // lost details
     ReplaceMcr(559, 6, 343, 6); // lost details
 
-    ReplaceMcr(17, 4, 29, 4); // lost details
-    ReplaceMcr(49, 4, 29, 4); // lost details
-    ReplaceMcr(389, 4, 29, 4); // lost details
-    ReplaceMcr(478, 4, 29, 4); // lost details
-    ReplaceMcr(9, 4, 25, 4); // lost details
-    ReplaceMcr(51, 4, 25, 4); // lost details
-    ReplaceMcr(55, 4, 25, 4); // lost details
-    ReplaceMcr(59, 4, 25, 4); // lost details
-    ReplaceMcr(366, 4, 25, 4); // lost details
-    ReplaceMcr(370, 4, 25, 4); // lost details
-    ReplaceMcr(374, 4, 25, 4); // lost details
-    ReplaceMcr(383, 4, 25, 4); // lost details
-    ReplaceMcr(423, 4, 25, 4); // lost details
+    ReplaceMcr(17, 4, 29, 4);   // lost details
+    ReplaceMcr(49, 4, 29, 4);   // lost details
+    ReplaceMcr(389, 4, 29, 4);  // lost details
+    ReplaceMcr(478, 4, 29, 4);  // lost details
+    ReplaceMcr(9, 4, 25, 4);    // lost details
+    ReplaceMcr(51, 4, 25, 4);   // lost details
+    ReplaceMcr(55, 4, 25, 4);   // lost details
+    ReplaceMcr(59, 4, 25, 4);   // lost details
+    ReplaceMcr(366, 4, 25, 4);  // lost details
+    ReplaceMcr(370, 4, 25, 4);  // lost details
+    ReplaceMcr(374, 4, 25, 4);  // lost details
+    ReplaceMcr(383, 4, 25, 4);  // lost details
+    ReplaceMcr(423, 4, 25, 4);  // lost details
     ReplaceMcr(331, 4, 343, 4); // lost details
     ReplaceMcr(355, 4, 343, 4); // lost details
     ReplaceMcr(363, 4, 343, 4); // lost details
@@ -2303,28 +2328,28 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(615, 4, 347, 4); // lost details
     ReplaceMcr(458, 4, 154, 4); // lost details
 
-    ReplaceMcr(9, 2, 29, 2); // lost details
-    ReplaceMcr(17, 2, 29, 2); // lost details
-    ReplaceMcr(25, 2, 29, 2); // lost details
-    ReplaceMcr(33, 2, 29, 2); // lost details
-    ReplaceMcr(49, 2, 29, 2); // lost details
-    ReplaceMcr(51, 2, 29, 2); // lost details
-    ReplaceMcr(55, 2, 29, 2); // lost details
-    ReplaceMcr(59, 2, 29, 2); // lost details
-    ReplaceMcr(93, 2, 29, 2); // lost details
-    ReplaceMcr(97, 2, 29, 2); // lost details
-    ReplaceMcr(218, 2, 29, 2); // lost details
-    ReplaceMcr(343, 2, 29, 2); // lost details
-    ReplaceMcr(363, 2, 29, 2); // lost details
-    ReplaceMcr(366, 2, 29, 2); // lost details
-    ReplaceMcr(413, 2, 29, 2); // lost details
-    ReplaceMcr(478, 2, 29, 2); // lost details
+    ReplaceMcr(9, 2, 29, 2);    // lost details
+    ReplaceMcr(17, 2, 29, 2);   // lost details
+    ReplaceMcr(25, 2, 29, 2);   // lost details
+    ReplaceMcr(33, 2, 29, 2);   // lost details
+    ReplaceMcr(49, 2, 29, 2);   // lost details
+    ReplaceMcr(51, 2, 29, 2);   // lost details
+    ReplaceMcr(55, 2, 29, 2);   // lost details
+    ReplaceMcr(59, 2, 29, 2);   // lost details
+    ReplaceMcr(93, 2, 29, 2);   // lost details
+    ReplaceMcr(97, 2, 29, 2);   // lost details
+    ReplaceMcr(218, 2, 29, 2);  // lost details
+    ReplaceMcr(343, 2, 29, 2);  // lost details
+    ReplaceMcr(363, 2, 29, 2);  // lost details
+    ReplaceMcr(366, 2, 29, 2);  // lost details
+    ReplaceMcr(413, 2, 29, 2);  // lost details
+    ReplaceMcr(478, 2, 29, 2);  // lost details
     ReplaceMcr(339, 2, 347, 2); // lost details
     ReplaceMcr(355, 2, 347, 2); // lost details
     ReplaceMcr(393, 2, 347, 2); // lost details
     ReplaceMcr(443, 2, 347, 2); // lost details
 
-    ReplaceMcr(9, 0, 33, 0); // lost details
+    ReplaceMcr(9, 0, 33, 0);  // lost details
     ReplaceMcr(17, 0, 33, 0); // lost details
     ReplaceMcr(29, 0, 33, 0); // lost details
     ReplaceMcr(39, 0, 33, 0); // lost details
@@ -2335,20 +2360,20 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(117, 0, 33, 0); // lost details
     ReplaceMcr(121, 0, 33, 0); // lost details
     ReplaceMcr(218, 0, 33, 0);
-    ReplaceMcr(228, 0, 33, 0); // lost details
-    ReplaceMcr(397, 0, 33, 0); // lost details
-    ReplaceMcr(466, 0, 33, 0); // lost details
-    ReplaceMcr(478, 0, 33, 0); // lost details
-    ReplaceMcr(55, 0, 33, 0); // lost details
-    ReplaceMcr(331, 0, 33, 0); // lost details
-    ReplaceMcr(339, 0, 33, 0); // lost details
-    ReplaceMcr(355, 0, 33, 0); // lost details
-    ReplaceMcr(363, 0, 33, 0); // lost details
-    ReplaceMcr(370, 0, 33, 0); // lost details
-    ReplaceMcr(443, 0, 33, 0); // lost details
+    ReplaceMcr(228, 0, 33, 0);  // lost details
+    ReplaceMcr(397, 0, 33, 0);  // lost details
+    ReplaceMcr(466, 0, 33, 0);  // lost details
+    ReplaceMcr(478, 0, 33, 0);  // lost details
+    ReplaceMcr(55, 0, 33, 0);   // lost details
+    ReplaceMcr(331, 0, 33, 0);  // lost details
+    ReplaceMcr(339, 0, 33, 0);  // lost details
+    ReplaceMcr(355, 0, 33, 0);  // lost details
+    ReplaceMcr(363, 0, 33, 0);  // lost details
+    ReplaceMcr(370, 0, 33, 0);  // lost details
+    ReplaceMcr(443, 0, 33, 0);  // lost details
     ReplaceMcr(559, 0, 272, 0); // lost details
-    ReplaceMcr(5, 9, 13, 9); // lost details
-    ReplaceMcr(25, 9, 13, 9); // lost details
+    ReplaceMcr(5, 9, 13, 9);    // lost details
+    ReplaceMcr(25, 9, 13, 9);   // lost details
     ReplaceMcr(79, 9, 13, 9);
     ReplaceMcr(93, 9, 13, 9);
     ReplaceMcr(151, 9, 13, 9);
@@ -2447,8 +2472,8 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(88, 9, 13, 9); // lost details
     ReplaceMcr(91, 9, 13, 9); // lost details
     ReplaceMcr(95, 9, 13, 9);
-    ReplaceMcr(97, 9, 13, 9); // lost details
-    ReplaceMcr(99, 9, 13, 9); // lost details
+    ReplaceMcr(97, 9, 13, 9);  // lost details
+    ReplaceMcr(99, 9, 13, 9);  // lost details
     ReplaceMcr(104, 9, 13, 9); // lost details
     ReplaceMcr(109, 9, 13, 9); // lost details
     ReplaceMcr(113, 9, 13, 9); // lost details
@@ -2477,103 +2502,103 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(443, 9, 13, 9); // lost details
     ReplaceMcr(446, 9, 13, 9); // lost details
     ReplaceMcr(454, 9, 13, 9);
-    ReplaceMcr(458, 9, 13, 9); // lost details
-    ReplaceMcr(462, 9, 13, 9); // lost details
-    ReplaceMcr(470, 9, 13, 9); // lost details
-    ReplaceMcr(484, 9, 13, 9); // lost details
-    ReplaceMcr(488, 9, 13, 9); // lost details
-    ReplaceMcr(561, 9, 13, 9); // lost details
-    ReplaceMcr(563, 9, 13, 9); // lost details
-    ReplaceMcr(611, 9, 13, 9); // lost details
-    ReplaceMcr(33, 7, 17, 7); // lost details
-    ReplaceMcr(36, 7, 17, 7); // lost details
-    ReplaceMcr(42, 7, 17, 7); // lost details
-    ReplaceMcr(83, 7, 17, 7); // lost details
-    ReplaceMcr(88, 7, 17, 7); // lost details
-    ReplaceMcr(97, 7, 17, 7); // lost details
-    ReplaceMcr(99, 7, 17, 7); // lost details
-    ReplaceMcr(104, 7, 17, 7); // lost details
-    ReplaceMcr(109, 7, 17, 7); // lost details
-    ReplaceMcr(113, 7, 17, 7); // lost details
-    ReplaceMcr(121, 7, 17, 7); // lost details
-    ReplaceMcr(220, 7, 17, 7); // lost details
-    ReplaceMcr(224, 7, 17, 7); // lost details
-    ReplaceMcr(331, 7, 17, 7); // lost details
-    ReplaceMcr(351, 7, 17, 7); // lost details
-    ReplaceMcr(357, 7, 17, 7); // lost details
-    ReplaceMcr(399, 7, 17, 7); // lost details
-    ReplaceMcr(400, 7, 17, 7); // lost details
-    ReplaceMcr(443, 7, 17, 7); // lost details
-    ReplaceMcr(462, 7, 17, 7); // lost details
-    ReplaceMcr(9, 7, 21, 7); // lost details
-    ReplaceMcr(29, 7, 21, 7); // lost details
-    ReplaceMcr(51, 7, 21, 7); // lost details
-    ReplaceMcr(95, 7, 21, 7); // lost details
-    ReplaceMcr(335, 7, 21, 7); // lost details
-    ReplaceMcr(366, 7, 21, 7); // lost details
-    ReplaceMcr(383, 7, 21, 7); // lost details
-    ReplaceMcr(391, 7, 21, 7); // lost details
-    ReplaceMcr(397, 7, 21, 7); // lost details
-    ReplaceMcr(611, 7, 21, 7); // lost details
-    ReplaceMcr(417, 7, 55, 7); // lost details
-    ReplaceMcr(421, 7, 55, 7); // lost details
-    ReplaceMcr(446, 7, 55, 7); // lost details
+    ReplaceMcr(458, 9, 13, 9);  // lost details
+    ReplaceMcr(462, 9, 13, 9);  // lost details
+    ReplaceMcr(470, 9, 13, 9);  // lost details
+    ReplaceMcr(484, 9, 13, 9);  // lost details
+    ReplaceMcr(488, 9, 13, 9);  // lost details
+    ReplaceMcr(561, 9, 13, 9);  // lost details
+    ReplaceMcr(563, 9, 13, 9);  // lost details
+    ReplaceMcr(611, 9, 13, 9);  // lost details
+    ReplaceMcr(33, 7, 17, 7);   // lost details
+    ReplaceMcr(36, 7, 17, 7);   // lost details
+    ReplaceMcr(42, 7, 17, 7);   // lost details
+    ReplaceMcr(83, 7, 17, 7);   // lost details
+    ReplaceMcr(88, 7, 17, 7);   // lost details
+    ReplaceMcr(97, 7, 17, 7);   // lost details
+    ReplaceMcr(99, 7, 17, 7);   // lost details
+    ReplaceMcr(104, 7, 17, 7);  // lost details
+    ReplaceMcr(109, 7, 17, 7);  // lost details
+    ReplaceMcr(113, 7, 17, 7);  // lost details
+    ReplaceMcr(121, 7, 17, 7);  // lost details
+    ReplaceMcr(220, 7, 17, 7);  // lost details
+    ReplaceMcr(224, 7, 17, 7);  // lost details
+    ReplaceMcr(331, 7, 17, 7);  // lost details
+    ReplaceMcr(351, 7, 17, 7);  // lost details
+    ReplaceMcr(357, 7, 17, 7);  // lost details
+    ReplaceMcr(399, 7, 17, 7);  // lost details
+    ReplaceMcr(400, 7, 17, 7);  // lost details
+    ReplaceMcr(443, 7, 17, 7);  // lost details
+    ReplaceMcr(462, 7, 17, 7);  // lost details
+    ReplaceMcr(9, 7, 21, 7);    // lost details
+    ReplaceMcr(29, 7, 21, 7);   // lost details
+    ReplaceMcr(51, 7, 21, 7);   // lost details
+    ReplaceMcr(95, 7, 21, 7);   // lost details
+    ReplaceMcr(335, 7, 21, 7);  // lost details
+    ReplaceMcr(366, 7, 21, 7);  // lost details
+    ReplaceMcr(383, 7, 21, 7);  // lost details
+    ReplaceMcr(391, 7, 21, 7);  // lost details
+    ReplaceMcr(397, 7, 21, 7);  // lost details
+    ReplaceMcr(611, 7, 21, 7);  // lost details
+    ReplaceMcr(417, 7, 55, 7);  // lost details
+    ReplaceMcr(421, 7, 55, 7);  // lost details
+    ReplaceMcr(446, 7, 55, 7);  // lost details
     ReplaceMcr(454, 7, 488, 7); // lost details
     ReplaceMcr(484, 7, 488, 7); // lost details
     ReplaceMcr(470, 7, 264, 7); // TODO: 470 would be better?
     ReplaceMcr(458, 7, 276, 7); // lost details
     ReplaceMcr(561, 7, 276, 7); // lost details
     ReplaceMcr(563, 7, 276, 7); // lost details
-    ReplaceMcr(17, 5, 33, 5); // lost details
-    ReplaceMcr(36, 5, 33, 5); // lost details
-    ReplaceMcr(331, 5, 33, 5); // lost details
-    ReplaceMcr(351, 5, 33, 5); // lost details
-    ReplaceMcr(389, 5, 33, 5); // lost details
-    ReplaceMcr(462, 5, 33, 5); // lost details
-    ReplaceMcr(9, 5, 21, 5); // lost details
-    ReplaceMcr(29, 5, 21, 5); // lost details
-    ReplaceMcr(51, 5, 21, 5); // lost details
-    ReplaceMcr(55, 5, 21, 5); // lost details
-    ReplaceMcr(59, 5, 21, 5); // lost details
-    ReplaceMcr(95, 5, 21, 5); // lost details
-    ReplaceMcr(335, 5, 21, 5); // lost details
-    ReplaceMcr(366, 5, 21, 5); // lost details
-    ReplaceMcr(383, 5, 21, 5); // lost details
-    ReplaceMcr(391, 5, 21, 5); // lost details
-    ReplaceMcr(421, 5, 21, 5); // lost details
-    ReplaceMcr(423, 5, 21, 5); // lost details
-    ReplaceMcr(611, 5, 21, 5); // lost details
+    ReplaceMcr(17, 5, 33, 5);   // lost details
+    ReplaceMcr(36, 5, 33, 5);   // lost details
+    ReplaceMcr(331, 5, 33, 5);  // lost details
+    ReplaceMcr(351, 5, 33, 5);  // lost details
+    ReplaceMcr(389, 5, 33, 5);  // lost details
+    ReplaceMcr(462, 5, 33, 5);  // lost details
+    ReplaceMcr(9, 5, 21, 5);    // lost details
+    ReplaceMcr(29, 5, 21, 5);   // lost details
+    ReplaceMcr(51, 5, 21, 5);   // lost details
+    ReplaceMcr(55, 5, 21, 5);   // lost details
+    ReplaceMcr(59, 5, 21, 5);   // lost details
+    ReplaceMcr(95, 5, 21, 5);   // lost details
+    ReplaceMcr(335, 5, 21, 5);  // lost details
+    ReplaceMcr(366, 5, 21, 5);  // lost details
+    ReplaceMcr(383, 5, 21, 5);  // lost details
+    ReplaceMcr(391, 5, 21, 5);  // lost details
+    ReplaceMcr(421, 5, 21, 5);  // lost details
+    ReplaceMcr(423, 5, 21, 5);  // lost details
+    ReplaceMcr(611, 5, 21, 5);  // lost details
     ReplaceMcr(561, 5, 276, 5); // lost details
-    ReplaceMcr(17, 3, 33, 3); // lost details
-    ReplaceMcr(36, 3, 33, 3); // lost details
-    ReplaceMcr(462, 3, 33, 3); // lost details
-    ReplaceMcr(9, 3, 21, 3); // lost details
-    ReplaceMcr(51, 3, 21, 3); // lost details
-    ReplaceMcr(55, 3, 21, 3); // lost details
-    ReplaceMcr(59, 3, 21, 3); // lost details
-    ReplaceMcr(335, 3, 21, 3); // lost details
-    ReplaceMcr(366, 3, 21, 3); // lost details
-    ReplaceMcr(391, 3, 21, 3); // lost details
-    ReplaceMcr(421, 3, 21, 3); // lost details
-    ReplaceMcr(423, 3, 21, 3); // lost details
+    ReplaceMcr(17, 3, 33, 3);   // lost details
+    ReplaceMcr(36, 3, 33, 3);   // lost details
+    ReplaceMcr(462, 3, 33, 3);  // lost details
+    ReplaceMcr(9, 3, 21, 3);    // lost details
+    ReplaceMcr(51, 3, 21, 3);   // lost details
+    ReplaceMcr(55, 3, 21, 3);   // lost details
+    ReplaceMcr(59, 3, 21, 3);   // lost details
+    ReplaceMcr(335, 3, 21, 3);  // lost details
+    ReplaceMcr(366, 3, 21, 3);  // lost details
+    ReplaceMcr(391, 3, 21, 3);  // lost details
+    ReplaceMcr(421, 3, 21, 3);  // lost details
+    ReplaceMcr(423, 3, 21, 3);  // lost details
     ReplaceMcr(470, 3, 276, 3); // lost details
     ReplaceMcr(331, 3, 347, 3); // lost details
     ReplaceMcr(351, 3, 347, 3); // lost details
     ReplaceMcr(488, 3, 484, 3); // lost details
-    ReplaceMcr(9, 1, 55, 1); // lost details
-    ReplaceMcr(29, 1, 55, 1); // lost details
-    ReplaceMcr(51, 1, 55, 1); // lost details
-    ReplaceMcr(59, 1, 55, 1); // lost details
-    ReplaceMcr(91, 1, 55, 1); // lost details
-    ReplaceMcr(95, 1, 55, 1); // lost details
-    ReplaceMcr(215, 1, 55, 1); // lost details
-    ReplaceMcr(335, 1, 55, 1); // lost details
-    ReplaceMcr(391, 1, 55, 1); // lost details
+    ReplaceMcr(9, 1, 55, 1);    // lost details
+    ReplaceMcr(29, 1, 55, 1);   // lost details
+    ReplaceMcr(51, 1, 55, 1);   // lost details
+    ReplaceMcr(59, 1, 55, 1);   // lost details
+    ReplaceMcr(91, 1, 55, 1);   // lost details
+    ReplaceMcr(95, 1, 55, 1);   // lost details
+    ReplaceMcr(215, 1, 55, 1);  // lost details
+    ReplaceMcr(335, 1, 55, 1);  // lost details
+    ReplaceMcr(391, 1, 55, 1);  // lost details
     ReplaceMcr(331, 1, 357, 1); // lost details
     ReplaceMcr(347, 1, 357, 1); // lost details
     ReplaceMcr(351, 1, 357, 1); // lost details
-    ReplaceMcr(17, 1, 33, 1); // lost details
-    ReplaceMcr(36, 1, 33, 1); // lost details
+    ReplaceMcr(17, 1, 33, 1);   // lost details
+    ReplaceMcr(36, 1, 33, 1);   // lost details
     ReplaceMcr(470, 1, 276, 1); // lost details
     ReplaceMcr(561, 1, 276, 1); // lost details
     ReplaceMcr(151, 2, 151, 5); // added details

@@ -1784,7 +1784,7 @@ void MainWindow::on_actionPatchTileset_Tileset_triggered()
     if (this->patchTilesetDialog == nullptr) {
         this->patchTilesetDialog = new PatchTilesetDialog(this);
     }
-    this->patchTilesetDialog->initialize(this->tileset);
+    this->patchTilesetDialog->initialize(this->tileset, this->dun);
     this->patchTilesetDialog->show();
 }
 

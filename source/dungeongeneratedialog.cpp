@@ -32,9 +32,10 @@ DungeonGenerateDialog::~DungeonGenerateDialog()
     delete ui;
 }
 
-void DungeonGenerateDialog::initialize(D1Dun *d)
+void DungeonGenerateDialog::initialize(D1Dun *d, D1Tileset *ts)
 {
     this->dun = d;
+    this->tileset = ts;
 }
 
 void DungeonGenerateDialog::on_actionGenerateSeed_triggered()
@@ -78,7 +79,7 @@ void DungeonGenerateDialog::on_generateButton_clicked()
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
 
-    EnterGameLevel(this->dun, view, params);
+    EnterGameLevel(this->dun, this->tileset, view, params);
 
     // Clear loading message from status bar
     ProgressDialog::done();

@@ -2,6 +2,7 @@
 
 #include <QDialog>
 
+#include "d1dun.h"
 #include "d1tileset.h"
 
 namespace Ui {
@@ -15,7 +16,7 @@ public:
     explicit PatchTilesetDialog(QWidget *parent);
     ~PatchTilesetDialog();
 
-    void initialize(D1Tileset *tileset);
+    void initialize(D1Tileset *tileset, D1Dun *dun);
 
 private slots:
     void on_runButton_clicked();
@@ -28,4 +29,5 @@ private:
     Ui::PatchTilesetDialog *ui;
 
     D1Tileset *tileset;
+    D1Dun *dun;
 };
