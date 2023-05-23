@@ -19,6 +19,7 @@ int ViewX;
 int ViewY;
 bool IsMultiGame;
 bool IsHellfireGame;
+bool HasTileset;
 QString assetPath;
 char infostr[256];
 
@@ -88,24 +89,31 @@ static void StoreProtections(D1Dun *dun)
 
 static void LoadTileset(D1Tileset *tileset)
 {
-	// 'load' SOL-tables
-	memset(nBlockTable, 0, sizeof(nBlockTable));
-	memset(nSolidTable, 0, sizeof(nSolidTable));
-	memset(nMissileTable, 0, sizeof(nMissileTable));
-	for (int n = 0; n < lengthof(nSolidTable) && n < tileset->sol->getSubtileCount(); n++) {
-		quint8 bv = tileset->sol->getSubtileProperties(n);
-		nSolidTable[n + 1] = (bv & PFLAG_BLOCK_PATH) != 0;
-		nBlockTable[n + 1] = (bv & PFLAG_BLOCK_LIGHT) != 0;
-		nMissileTable[n + 1] = (bv & PFLAG_BLOCK_MISSILE) != 0;
-	}
-
 	// 'load' tiles
 	memset(pTiles, 0, sizeof(pTiles));
-	for (int n = 0; n < lengthof(pTiles) && n < tileset->til->getTileCount(); n++) {
+	for (int n = 0; n < lengthof(pTiles) - 1 && n < tileset->til->getTileCount(); n++) {
 		std::vector<int> &tilSubtiles = tileset->til->getSubtileIndices(n);
 		for (int i = 0; i < lengthof(pTiles[0]) && i < (int)tilSubtiles.size(); i++) {
 			pTiles[n + 1][i] = tilSubtiles[i] + 1;
 		}
+	}
+
+	// 'load' SPT
+	memset(nSpecTrapTable, 0, sizeof(nSpecTrapTable));
+	for (int n = 0; n < lengthof(nSpecTrapTable) - 1 && n < tileset->sol->getSubtileCount(); n++) {
+		quint8 bv = tileset->spt->getSubtileTrapProperty(n);
+		nSpecTrapTable[n + 1] = bv << 6;
+	}
+
+	// 'load' SOL
+	memset(nBlockTable, 0, sizeof(nBlockTable));
+	memset(nSolidTable, 0, sizeof(nSolidTable));
+	memset(nMissileTable, 0, sizeof(nMissileTable));
+	for (int n = 0; n < lengthof(nSolidTable) - 1 && n < tileset->sol->getSubtileCount(); n++) {
+		quint8 bv = tileset->sol->getSubtileProperties(n);
+		nSolidTable[n + 1] = (bv & PFLAG_BLOCK_PATH) != 0;
+		nBlockTable[n + 1] = (bv & PFLAG_BLOCK_LIGHT) != 0;
+		nMissileTable[n + 1] = (bv & PFLAG_BLOCK_MISSILE) != 0;
 	}
 }
 
