@@ -51,4 +51,9 @@ private:
     void patchTownCathedral(int cathedralTopLeftRef, int cathedralTopRightRef, int cathedralBottomLeftRef, bool silent);
     void patchHellExit(int tileIndex, bool silent);
     void patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int extTileIndex1, int extTileIndex2, int stairsSubtileRef1, int stairsSubtileRef2, bool silent);
+
+    void fillCryptShapes(bool silent);
+    void maskCryptBlacks(bool silent);
+    void fixCryptShadows(bool silent);
+    void cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent);
 };

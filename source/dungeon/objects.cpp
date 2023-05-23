@@ -732,7 +732,7 @@ static int SetupObject(int type, int ox, int oy)
 		os->_oSelFlag = 0;
 		dProgress() << QApplication::tr("Reserved object on tile %1:%2 - type %3 with index %4.").arg(ox).arg(oy).arg(type).arg(oi);
 	} else {
-		if (ods->oLightRadius != 0) {
+		/*if (ods->oLightRadius != 0) {
 #if FLICKER_LIGHT
 			if (type == OBJ_L1LIGHT) {
 				os->_olid = NO_LIGHT;
@@ -746,7 +746,7 @@ static int SetupObject(int type, int ox, int oy)
 				LightList[MAXLIGHTS]._ly = oy + ods->oLightOffY;
 				DoLighting(MAXLIGHTS);
 			}
-		}
+		}*/
 		if (ods->oDoorFlag != ODT_NONE) {
 			os->_oVar4 = DOOR_CLOSED;
 			//os->_oPreFlag = FALSE;

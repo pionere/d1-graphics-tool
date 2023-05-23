@@ -202,19 +202,19 @@ void SettingsDialog::on_settingsOkButton_clicked()
     Config::setLocale(locale);
 
     // GraphicsBackgroundColor
-    QColor gfxBackgroundColor = QColor(this->ui->graphicsBackgroundColorLineEdit->text());
+    QColor gfxBackgroundColor = QColor(this->graphicsBackgroundColor);
     Config::setGraphicsBackgroundColor(gfxBackgroundColor.name());
 
     // GraphicsTransparentColor
-    QColor gfxTransparentColor = QColor(this->ui->graphicsTransparentColorLineEdit->text());
+    QColor gfxTransparentColor = QColor(this->graphicsTransparentColor);
     Config::setGraphicsTransparentColor(gfxTransparentColor.name());
 
     // PaletteUndefinedColor
-    QColor palUndefinedColor = QColor(this->ui->undefinedPaletteColorLineEdit->text());
+    QColor palUndefinedColor = QColor(this->undefinedPaletteColor);
     Config::setPaletteUndefinedColor(palUndefinedColor.name());
 
     // PaletteSelectionBorderColor
-    QColor palSelectionBorderColor = QColor(this->ui->paletteSelectionBorderColorLineEdit->text());
+    QColor palSelectionBorderColor = QColor(this->paletteSelectionBorderColor);
     Config::setPaletteSelectionBorderColor(palSelectionBorderColor.name());
 
     if (!Config::storeConfiguration()) {
