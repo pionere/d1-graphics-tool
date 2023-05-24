@@ -343,6 +343,7 @@ static void DecorateDungeon(D1Dun *dun, const DecorateDunParam &params)
 
     }*/
     if (params.addShadows) {
+        dProgress() << tr("Adding adding shadows: %1").arg(currLvl._dDunType);
         switch (currLvl._dDunType) {
         case DGT_TOWN:
             // CreateTown();
@@ -427,6 +428,7 @@ void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const
     assetPath = dun->getAssetPath();
     HasTileset = params.useTileset && tileset != nullptr;
 
+    dProgress() << tr("Decorating game level with tileset %1 adding shadows: %2").arg(HasTileset).arg(params.addShadows);
     if (HasTileset) {
         LoadTileset(tileset);
     }
