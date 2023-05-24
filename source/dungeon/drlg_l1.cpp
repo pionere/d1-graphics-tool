@@ -730,7 +730,7 @@ const BYTE L1ConvTbl[16] = { BASE_MEGATILE_L1, 13, 1, 13, 2, 13, 13, 13, 4, 13, 
 }*/
 
 #ifdef HELLFIRE
-static void DRLG_L5Shadows()
+void DRLG_L5Shadows()
 {
 	int i, j;
     dProgress() << QString("Adding L5 shadows");
