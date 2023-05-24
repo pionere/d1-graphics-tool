@@ -303,9 +303,6 @@
           <property name="text">
            <string>Tiles</string>
           </property>
-          <property name="visible">
-           <bool>false</bool>
-          </property>
           <property name="toolTip">
            <string>Decorate the dungeon tiles which are not protected</string>
           </property>

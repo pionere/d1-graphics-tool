@@ -1035,7 +1035,7 @@ static void L4TileFix()
  * Replace undecorated tiles with matching decorated tiles.
  * New dungeon values: 49 50 51 (49..51)   61 62 63 64 65 66 67 68 69 70 (61..70)  77 78 79 80 81 82 83 (77..83)
  */
-static void DRLG_L4Subs()
+void DRLG_L4Subs()
 {
 	int x, y;
 	BYTE c, k;

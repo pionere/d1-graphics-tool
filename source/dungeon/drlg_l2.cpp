@@ -544,7 +544,7 @@ static void DRLG_L2PlaceRndSet(const BYTE* miniset, int rndper)
  * Replace undecorated tiles with matching decorated tiles.
  * New dungeon values: 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 (19..33)  38 68 69 70 73 74 75  79 80 81 82 (79..82)  84 85 86 87 88 89 90 91 (84..91) 105 106 107 109 111
  */
-static void DRLG_L2Subs()
+void DRLG_L2Subs()
 {
 	int x, y; //, i, j;
 	BYTE c, k;

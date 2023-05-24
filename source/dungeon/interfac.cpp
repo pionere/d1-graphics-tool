@@ -339,26 +339,57 @@ static void LoadDungeon(D1Dun *dun, bool first)
 
 static void DecorateDungeon(D1Dun *dun, const DecorateDunParam &params)
 {
-    /*if (params.addTiles) {
-
-    }*/
-    if (params.addShadows) {
-        dProgress() << QApplication::tr("Adding adding shadows: %1").arg(currLvl._dDunType);
-        switch (currLvl._dDunType) {
-        case DGT_TOWN:
+    if (params.addTiles) {
+        switch (currLvl._dType) {
+        case DTYPE_TOWN:
             // CreateTown();
             break;
-        case DGT_CATHEDRAL:
+        case DTYPE_CATHEDRAL:
+            DRLG_L1Subs();
+            break;
+        case DTYPE_CATACOMBS:
+            DRLG_L2Subs();
+            break;
+        case DTYPE_CAVES:
+            DRLG_L3Subs();
+            break;
+        case DTYPE_HELL:
+            DRLG_L4Subs();
+            break;
+        case DTYPE_CRYPT:
+            DRLG_L5Subs();
+            break;
+        case DTYPE_NEST:
+            DRLG_L6Subs();
+            break;
+        default:
+            ASSUME_UNREACHABLE
+            break;
+        }
+    }
+    if (params.addShadows) {
+        dProgress() << QApplication::tr("Adding adding shadows: %1").arg(currLvl._dType);
+        switch (currLvl._dType) {
+        case DTYPE_TOWN:
+            // CreateTown();
+            break;
+        case DTYPE_CATHEDRAL:
             DRLG_L1Shadows();
             break;
-        case DGT_CATACOMBS:
+        case DTYPE_CATACOMBS:
             DRLG_L2Shadows();
             break;
-        case DGT_CAVES:
+        case DTYPE_CAVES:
             DRLG_L3Shadows();
             break;
-        case DGT_HELL:
+        case DTYPE_HELL:
             DRLG_L4Shadows();
+            break;
+        case DTYPE_CRYPT:
+            DRLG_L5Shadows();
+            break;
+        case DTYPE_NEST:
+            DRLG_L6Shadows();
             break;
         default:
             ASSUME_UNREACHABLE
