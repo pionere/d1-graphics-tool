@@ -5,6 +5,10 @@
  */
 #include "all.h"
 
+#include <QString>
+
+#include "../progressdialog.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 /** Contains the mega tile IDs of the (mega-)map. */
@@ -98,6 +102,10 @@ void InitLvlDungeon()
 	static_assert((int)SPT_NONE == 0, "InitLvlDungeon fills pSetPieces with 0 instead of SPT_NONE values.");
 	memset(pSetPieces, 0, sizeof(pSetPieces));
 
+	if (HasTileset) {
+		return;
+	}
+
 	memset(pTiles, 0, sizeof(pTiles));
 	if (lfd->dMegaTiles != NULL) { 
 		LoadFileWithMem(lfd->dMegaTiles, (BYTE*)&pTiles[1][0]); // .TIL
@@ -121,21 +129,20 @@ void InitLvlDungeon()
 	memset(nMissileTable, 0, sizeof(nMissileTable));
 	assert(pSolidTbl == NULL);
 	pSolidTbl = LoadFileInMem(lfd->dSolidTable, &dwSubtiles); // .SOL
-	if (pSolidTbl == NULL) {
-		return;
-	}
-	assert(dwSubtiles <= MAXSUBTILES);
-	pTmp = pSolidTbl;
+	if (pSolidTbl != NULL) {
+		assert(dwSubtiles <= MAXSUBTILES);
+		pTmp = pSolidTbl;
 
-	// dpiece 0 is always black/void -> make it non-passable to reduce the necessary checks
-	// no longer necessary, because dPiece is never zero
-	//nSolidTable[0] = true;
+		// dpiece 0 is always black/void -> make it non-passable to reduce the necessary checks
+		// no longer necessary, because dPiece is never zero
+		//nSolidTable[0] = true;
 
-	for (unsigned i = 1; i <= dwSubtiles; i++) {
-		bv = *pTmp++;
-		nSolidTable[i] = (bv & PFLAG_BLOCK_PATH) != 0;
-		nBlockTable[i] = (bv & PFLAG_BLOCK_LIGHT) != 0;
-		nMissileTable[i] = (bv & PFLAG_BLOCK_MISSILE) != 0;
+		for (unsigned i = 1; i <= dwSubtiles; i++) {
+			bv = *pTmp++;
+			nSolidTable[i] = (bv & PFLAG_BLOCK_PATH) != 0;
+			nBlockTable[i] = (bv & PFLAG_BLOCK_LIGHT) != 0;
+			nMissileTable[i] = (bv & PFLAG_BLOCK_MISSILE) != 0;
+		}
 	}
 
 	switch (currLvl._dType) {
@@ -379,6 +386,11 @@ void DRLG_PlaceMegaTiles(int mt)
 		xx = DBORDERX;
 		for (i = 0; i < DMAXX; i++) {
 			mt = dungeon[i][j];
+			if (mt <= 0) {
+				dProgressErr() << QString("Missing tile at %1:%2 .. %3:%4").arg(i).arg(j).arg(xx).arg(yy);
+				xx += 2;
+				continue;
+			}
 			assert(mt > 0);
 			pTile = &pTiles[mt][0];
 			v1 = pTile[0];

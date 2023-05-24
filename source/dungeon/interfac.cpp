@@ -17,6 +17,7 @@ int ViewX;
 int ViewY;
 bool IsMultiGame;
 bool IsHellfireGame;
+bool HasTileset;
 QString assetPath;
 char infostr[256];
 
@@ -83,6 +84,36 @@ static void StoreProtections(D1Dun *dun)
 	}
 }
 
+static void LoadTileset(D1Tileset *tileset)
+{
+	// 'load' tiles
+	memset(pTiles, 0, sizeof(pTiles));
+	for (int n = 0; n < lengthof(pTiles) - 1 && n < tileset->til->getTileCount(); n++) {
+		std::vector<int> &tilSubtiles = tileset->til->getSubtileIndices(n);
+		for (int i = 0; i < lengthof(pTiles[0]) && i < (int)tilSubtiles.size(); i++) {
+			pTiles[n + 1][i] = tilSubtiles[i] + 1;
+		}
+	}
+
+	// 'load' SPT
+	memset(nSpecTrapTable, 0, sizeof(nSpecTrapTable));
+	for (int n = 0; n < lengthof(nSpecTrapTable) - 1 && n < tileset->sol->getSubtileCount(); n++) {
+		quint8 bv = tileset->spt->getSubtileTrapProperty(n);
+		nSpecTrapTable[n + 1] = bv << 6;
+	}
+
+	// 'load' SOL
+	memset(nBlockTable, 0, sizeof(nBlockTable));
+	memset(nSolidTable, 0, sizeof(nSolidTable));
+	memset(nMissileTable, 0, sizeof(nMissileTable));
+	for (int n = 0; n < lengthof(nSolidTable) - 1 && n < tileset->sol->getSubtileCount(); n++) {
+		quint8 bv = tileset->sol->getSubtileProperties(n);
+		nSolidTable[n + 1] = (bv & PFLAG_BLOCK_PATH) != 0;
+		nBlockTable[n + 1] = (bv & PFLAG_BLOCK_LIGHT) != 0;
+		nMissileTable[n + 1] = (bv & PFLAG_BLOCK_MISSILE) != 0;
+	}
+}
+
 static void CreateDungeon()
 {
 	switch (currLvl._dDunType) {
@@ -138,9 +169,6 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 	int rv = RandRange(1, 4);
 	InitLvlMap(); // reset: dMonster, dObject, dPlayer, dItem, dMissile, dFlags+, dLight+
 	StoreProtections(dun);
-	if (pSolidTbl == NULL) {
-		return;
-	}
 	IncProgress();
 	if (currLvl._dType != DTYPE_TOWN) {
 		GetLevelMTypes(); // select monster types and load their fx
@@ -189,15 +217,20 @@ static void EnterLevel(int lvl)
         currLvl._dLevel += HELL_LEVEL_BONUS;
 }
 
-bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &params)
+bool EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const GenerateDunParam &params)
 {
     IsMultiGame = params.isMulti;
     IsHellfireGame = params.isHellfire;
     gnDifficulty = params.difficulty;
     assetPath = dun->getAssetPath();
+    HasTileset = params.useTileset && tileset != nullptr;
 
-	dun->setWidth(MAXDUNX, true);
-	dun->setHeight(MAXDUNY, true);
+    if (HasTileset) {
+        LoadTileset(tileset);
+    }
+
+    dun->setWidth(MAXDUNX, true);
+    dun->setHeight(MAXDUNY, true);
 
     InitQuests(params.seedQuest);
     ViewX = 0;
@@ -221,38 +254,38 @@ bool EnterGameLevel(D1Dun *dun, LevelCelView *view, const GenerateDunParam &para
 		FreeLvlDungeon();
 	} while (--extraRounds >= 0);
 
-	dun->setLevelType(currLvl._dType);
+    dun->setLevelType(currLvl._dType);
 
-	int baseTile = 0;
-	switch (currLvl._dDunType) {
-	case DGT_TOWN:
-		break;
-	case DGT_CATHEDRAL:
-		baseTile = 22; // BASE_MEGATILE_L1
-		break;
-	case DGT_CATACOMBS:
-		baseTile = 12; // BASE_MEGATILE_L2
-		break;
-	case DGT_CAVES:
-		baseTile = 8; // BASE_MEGATILE_L3
-		break;
-	case DGT_HELL:
-		baseTile = 30; // BASE_MEGATILE_L4
-		break;
-	default:
-		ASSUME_UNREACHABLE
-		break;
-	}
-	for (int y = 0; y < MAXDUNY; y += 2) {
-		for (int x = 0; x < MAXDUNX; x += 2) {
-			dun->setTileAt(x, y, baseTile);
-		}
-	}
-	for (int y = 0; y < DMAXY; y++) {
-		for (int x = 0; x < DMAXX; x++) {
-			dun->setTileAt(DBORDERX + x * 2, DBORDERY + y * 2, dungeon[x][y]);
-		}
-	}
+    int baseTile = 0;
+    switch (currLvl._dDunType) {
+    case DGT_TOWN:
+        break;
+    case DGT_CATHEDRAL:
+        baseTile = 22; // BASE_MEGATILE_L1
+        break;
+    case DGT_CATACOMBS:
+        baseTile = 12; // BASE_MEGATILE_L2
+        break;
+    case DGT_CAVES:
+        baseTile = 8; // BASE_MEGATILE_L3
+        break;
+    case DGT_HELL:
+        baseTile = 30; // BASE_MEGATILE_L4
+        break;
+    default:
+        ASSUME_UNREACHABLE
+        break;
+    }
+    for (int y = 0; y < MAXDUNY; y += 2) {
+        for (int x = 0; x < MAXDUNX; x += 2) {
+            dun->setTileAt(x, y, baseTile);
+        }
+    }
+    for (int y = 0; y < DMAXY; y++) {
+        for (int x = 0; x < DMAXX; x++) {
+            dun->setTileAt(DBORDERX + x * 2, DBORDERY + y * 2, dungeon[x][y]);
+        }
+    }
     std::vector<ObjStruct> objectTypes;
     std::set<int> itemTypes;
     // std::vector<int> monUniques;

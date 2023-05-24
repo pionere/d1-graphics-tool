@@ -3047,7 +3047,7 @@ void LevelCelView::loadObjects(const D1Dun *srcDun)
 
 void LevelCelView::generateDungeon()
 {
-    this->dungeonGenerateDialog.initialize(this->dun);
+    this->dungeonGenerateDialog.initialize(this->dun, this->tileset);
     this->dungeonGenerateDialog.show();
 }
 

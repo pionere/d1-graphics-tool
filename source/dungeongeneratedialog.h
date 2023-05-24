@@ -4,6 +4,7 @@
 #include <QDialog>
 
 class D1Dun;
+class D1Tileset;
 
 class GenerateDunParam {
 public:
@@ -11,6 +12,7 @@ public:
     int difficulty; // _difficulty
     bool isMulti;
     bool isHellfire;
+    bool useTileset;
     int32_t seed;
     int32_t seedQuest;
     int entryMode;
@@ -28,7 +30,7 @@ public:
     explicit DungeonGenerateDialog(QWidget *parent);
     ~DungeonGenerateDialog();
 
-    void initialize(D1Dun *dun);
+    void initialize(D1Dun *dun, D1Tileset *tileset);
 
 private slots:
     void on_actionGenerateSeed_triggered();
@@ -41,4 +43,5 @@ private:
     Ui::DungeonGenerateDialog *ui;
 
     D1Dun *dun;
+    D1Tileset *tileset;
 };
