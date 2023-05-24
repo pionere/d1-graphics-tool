@@ -52,6 +52,7 @@ private:
     void patchHellExit(int tileIndex, bool silent);
     void patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int extTileIndex1, int extTileIndex2, int stairsSubtileRef1, int stairsSubtileRef2, bool silent);
 
+    std::pair<unsigned, D1GfxFrame*> getFrame(int subtileIndex, int blockSize, unsigned microIndex);
     void fillCryptShapes(bool silent);
     void maskCryptBlacks(bool silent);
     void fixCryptShadows(bool silent);

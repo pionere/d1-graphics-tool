@@ -1145,6 +1145,28 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     }
 }
 
+std::pair<unsigned, D1GfxFrame*> D1Tileset::getFrame(int subtileIndex, int blockSize, unsigned microIndex)
+{
+    std::vector<unsigned> &frameReferences = this->min->getFrameReferences(subtileIndex);
+    if (frameReferences.size() != blockSize) {
+        dProgressErr() << QApplication::tr("Subtile (%1) is invalid (upscaled?).").arg(subtileIndex + 1);
+        return std::pair<unsigned, D1GfxFrame*>(0, nullptr);
+    }
+    microIndex = MICRO_IDX(blockSize, microIndex);
+
+    unsigned frameRef = frameReferences[microIndex];
+    if (frameRef == 0) {
+        dProgressErr() << QApplication::tr("Subtile (%1) has invalid (missing) frames.").arg(subtileIndex + 1);
+        return std::pair<unsigned, D1GfxFrame*>(0, nullptr);
+    }
+    D1GfxFrame *frame = this->gfx->getFrame(frameRef - 1);
+    if (frame->getWidth() != MICRO_WIDTH || frame->getWidth() != MICRO_WIDTH) {
+        dProgressErr() << QApplication::tr("Subtile (%1) is invalid (upscaled?).").arg(subtileIndex + 1);
+        return std::pair<unsigned, D1GfxFrame*>(0, nullptr);
+    }
+    return std::pair<unsigned, D1GfxFrame*>(frameRef, frame);
+}
+
 void D1Tileset::fillCryptShapes(bool silent)
 {
     typedef struct {
@@ -1169,21 +1191,9 @@ void D1Tileset::fillCryptShapes(bool silent)
     constexpr unsigned blockSize = BLOCK_SIZE_L5;
     for (int i = 0; i < lengthof(micros); i++) {
         const CelMicro &micro = micros[i];
-        std::vector<unsigned> &frameReferences = this->min->getFrameReferences(micro.subtileIndex);
-        if (frameReferences.size() != blockSize) {
-            dProgressErr() << QApplication::tr("Subtile (%1) is invalid (upscaled?).").arg(micro.subtileIndex + 1);
-            return;
-        }
-        const unsigned microIndex = MICRO_IDX(blockSize, micro.microIndex);
-
-        unsigned frameRef = frameReferences[microIndex];
-        if (frameRef == 0) {
-            dProgressErr() << QApplication::tr("Subtile (%1) has invalid (missing) frames.").arg(micro.subtileIndex + 1);
-            return;
-        }
-        D1GfxFrame *frame = this->gfx->getFrame(frameRef - 1);
-        if (frame->getWidth() != MICRO_WIDTH || frame->getWidth() != MICRO_WIDTH) {
-            dProgressErr() << QApplication::tr("Subtile (%1) is invalid (upscaled?).").arg(micro.subtileIndex + 1);
+        std::pair<unsigned, D1GfxFrame*> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
+        if (frame == nullptr) {
             return;
         }
 		bool change = false;
@@ -1202,7 +1212,7 @@ void D1Tileset::fillCryptShapes(bool silent)
         if (change) {
             frame->setFrameType(micro.res_encoding);
             if (!silent) {
-                dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(frameRef).arg(micro.subtileIndex + 1);
+                dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
         }
     }
@@ -1245,21 +1255,9 @@ void D1Tileset::maskCryptBlacks(bool silent)
     constexpr unsigned blockSize = BLOCK_SIZE_L5;
     for (int i = 0; i < lengthof(micros); i++) {
         const CelMicro &micro = micros[i];
-        std::vector<unsigned> &frameReferences = this->min->getFrameReferences(micro.subtileIndex);
-        if (frameReferences.size() != blockSize) {
-            dProgressErr() << QApplication::tr("Subtile (%1) is invalid (upscaled?).").arg(micro.subtileIndex + 1);
-            return;
-        }
-        const unsigned microIndex = MICRO_IDX(blockSize, micro.microIndex);
-
-        unsigned frameRef = frameReferences[microIndex];
-        if (frameRef == 0) {
-            dProgressErr() << QApplication::tr("Subtile (%1) has invalid (missing) frames.").arg(micro.subtileIndex + 1);
-            return;
-        }
-        D1GfxFrame *frame = this->gfx->getFrame(frameRef - 1);
-        if (frame->getWidth() != MICRO_WIDTH || frame->getWidth() != MICRO_WIDTH) {
-            dProgressErr() << QApplication::tr("Subtile (%1) is invalid (upscaled?).").arg(micro.subtileIndex + 1);
+        std::pair<unsigned, D1GfxFrame*> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
+        if (frame == nullptr) {
             return;
         }
 
@@ -1304,7 +1302,7 @@ void D1Tileset::maskCryptBlacks(bool silent)
             frame->setFrameType(D1CEL_FRAME_TYPE::TransparentSquare);
             this->gfx->setModified();
             if (!silent) {
-                dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(frameRef).arg(micro.subtileIndex + 1);
+                dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
         }
     }
@@ -1325,6 +1323,8 @@ void D1Tileset::fixCryptShadows(bool silent)
         { 639 - 1, 0 }, // 1825
         { 639 - 1, 1 }, // 1799
         { 631 - 1, 1 }, // 1815 - 207
+        { 277 - 1, 1 }, // 324 - 96
+//      { 303 - 1, 1 }, // 387 - 303
         // clang-format on
     };
 
@@ -1332,24 +1332,20 @@ void D1Tileset::fixCryptShadows(bool silent)
     constexpr unsigned blockSize = BLOCK_SIZE_L5;
     for (int i = 0; i < lengthof(micros); i++) {
         const CelMicro &micro = micros[i];
-        std::vector<unsigned> &frameReferences = this->min->getFrameReferences(micro.subtileIndex);
-        if (frameReferences.size() != blockSize) {
-            dProgressErr() << QApplication::tr("Subtile (%1) is invalid (upscaled?).").arg(micro.subtileIndex + 1);
-            return;
-        }
-        const unsigned microIndex = MICRO_IDX(blockSize, micro.microIndex);
-
-        unsigned frameRef = frameReferences[microIndex];
-        if (frameRef == 0) {
-            dProgressErr() << QApplication::tr("Subtile (%1) has invalid (missing) frames.").arg(micro.subtileIndex + 1);
-            return;
-        }
-        D1GfxFrame *frame = this->gfx->getFrame(frameRef - 1);
-        if (frame->getWidth() != MICRO_WIDTH || frame->getWidth() != MICRO_WIDTH) {
-            dProgressErr() << QApplication::tr("Subtile (%1) is invalid (upscaled?).").arg(micro.subtileIndex + 1);
+        std::pair<unsigned, D1GfxFrame*> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
+        if (frame == nullptr) {
             return;
         }
 
+        D1GfxFrame *frameSrc = nullptr;
+        if (i == 7) { // 324
+            std::pair<unsigned, D1GfxFrame*> mf = this->getFrame(303, blockSize, 1);
+            frameSrc = mf.second;
+            if (frameSrc == nullptr) {
+                return;
+            }
+        }
         bool change = false;
         for (int y = 0; y < MICRO_WIDTH; y++) {
             for (int x = 0; x < MICRO_WIDTH; x++) {
@@ -1382,6 +1378,24 @@ void D1Tileset::fixCryptShadows(bool silent)
                     if (i == 6 && y <= (x / 2) + 15) { // 1815
                         continue;
                     }
+                    //  use consistent lava + shadow micro II.
+                    if (i == 7) { // 324
+                        if (x > 11) {
+                            continue;
+                        }
+                        if (x == 11 && (y < 9 || (y >= 17 && y <= 20))) {
+                            continue;
+                        }
+                        if (x == 10 && (y == 18 || y == 19)) {
+                            continue;
+                        }
+                        D1GfxPixel pixelSrc = frameSrc->getPixel(x, y);
+                        if (pixel.isTransparent()) {
+                            continue;
+                        }
+                        change |= frame->setPixel(x, y, pixelSrc);
+                        continue;
+                    }
                 }
                 change |= frame->setPixel(x, y, D1GfxPixel::colorPixel(0)); // 79;
             }
@@ -1389,7 +1403,7 @@ void D1Tileset::fixCryptShadows(bool silent)
         if (change) {
             this->gfx->setModified();
             if (!silent) {
-                dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(frameRef).arg(micro.subtileIndex + 1);
+                dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
         }
     }
@@ -1670,6 +1684,10 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // - fix crack in the chair
     ReplaceMcr(162, 5, 154, 5);
     ReplaceMcr(162, 3, 154, 3);
+    // - use consistent lava + shadow micro I.
+    ReplaceMcr(277, 0, 303, 0);
+    ReplaceMcr(562, 0, 303, 0);
+    ReplaceMcr(564, 0, 303, 0);
     // prepare new subtiles for the shadows
     ReplaceMcr(623, 0, 631, 0);
     ReplaceMcr(623, 1, 638, 1);
@@ -1766,6 +1784,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(562, 5, 459, 5); // lost details
     ReplaceMcr(277, 3, 459, 3); // lost details
     ReplaceMcr(562, 1, 277, 1); // lost details
+    ReplaceMcr(564, 1, 277, 1); // lost details
     ReplaceMcr(585, 1, 284, 1);
     ReplaceMcr(590, 1, 285, 1); // lost details
     ReplaceMcr(598, 1, 289, 1); // lost details
