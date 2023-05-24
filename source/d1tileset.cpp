@@ -1430,20 +1430,25 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 108 - 1, 3, 626, silent); // 811
     ReplaceSubtile(this->til, 210 - 1, 3, 371, silent); // 637
     // - 'add' new shadow-types with horizontal arches
-    ReplaceSubtile(this->til, 209 - 1, 0, 5, silent);
+    ReplaceSubtile(this->til, 209 - 1, 0, 5, silent); // copy from tile 2
     ReplaceSubtile(this->til, 209 - 1, 1, 6, silent);
     ReplaceSubtile(this->til, 209 - 1, 2, 623, silent);
     ReplaceSubtile(this->til, 209 - 1, 3, 632, silent);
 
-    ReplaceSubtile(this->til, 212 - 1, 0, 42, silent);
+    ReplaceSubtile(this->til, 212 - 1, 0, 42, silent); // copy from tile 12
     ReplaceSubtile(this->til, 212 - 1, 1, 34, silent);
     ReplaceSubtile(this->til, 212 - 1, 2, 623, silent);
     ReplaceSubtile(this->til, 212 - 1, 3, 632, silent);
 
-    ReplaceSubtile(this->til, 213 - 1, 0, 104, silent);
+    ReplaceSubtile(this->til, 213 - 1, 0, 104, silent); // copy from tile 36
     ReplaceSubtile(this->til, 213 - 1, 1, 84, silent);
     ReplaceSubtile(this->til, 213 - 1, 2, 623, silent);
     ReplaceSubtile(this->til, 213 - 1, 3, 632, silent);
+
+    ReplaceSubtile(this->til, 214 - 1, 0, 25, silent); // copy from tile 7
+    ReplaceSubtile(this->til, 214 - 1, 1, 26, silent);
+    ReplaceSubtile(this->til, 214 - 1, 2, 623, silent);
+    ReplaceSubtile(this->til, 214 - 1, 3, 632, silent);
 
     // use common subtiles instead of minor alterations
     ReplaceSubtile(this->til, 159 - 1, 1, 14, silent); // 479
@@ -1485,10 +1490,10 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 130 - 1, 2, 395, silent); // 381
     ReplaceSubtile(this->til, 157 - 1, 2, 4, silent);   // 472
     ReplaceSubtile(this->til, 177 - 1, 1, 4, silent);   // 540
-    ReplaceSubtile(this->til, 211 - 1, 3, 48, silent); // 621
-    ReplaceSubtile(this->til, 205 - 1, 0, 45, silent); // 625
-    ReplaceSubtile(this->til, 207 - 1, 0, 45, silent); // 630
-    ReplaceSubtile(this->til, 208 - 1, 0, 45, silent); // 633
+    ReplaceSubtile(this->til, 211 - 1, 3, 48, silent);  // 621
+    ReplaceSubtile(this->til, 205 - 1, 0, 45, silent);  // 625
+    ReplaceSubtile(this->til, 207 - 1, 0, 45, silent);  // 630
+    ReplaceSubtile(this->til, 208 - 1, 0, 45, silent);  // 633
 
     ReplaceSubtile(this->til, 27 - 1, 3, 4, silent); // 85
     // ReplaceSubtile(this->til, 28 - 1, 3, 4, silent); // 87
