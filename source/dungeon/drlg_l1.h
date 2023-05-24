@@ -13,7 +13,7 @@ extern "C" {
 #endif
 
 void DRLG_L1Subs();
-inline void DRLG_L1Subs() { }
+inline void DRLG_L5Subs() { }
 void DRLG_L1Shadows();
 void DRLG_L5Shadows();
 void DRLG_L1InitTransVals();

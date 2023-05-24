@@ -246,48 +246,44 @@
        </widget>
       </item>
       <item row="5" column="1">
-       <layout class="QHBoxLayout">
-        <item>
-         <widget class="QCheckBox" name="resetMonstersCheckBox">
-          <property name="text">
-           <string>Monsters</string>
-          </property>
-          <property name="toolTip">
-           <string>Remove monsters which are not protected</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="resetObjectsCheckBox">
-          <property name="text">
-           <string>Objects</string>
-          </property>
-          <property name="toolTip">
-           <string>Remove objects which are not protected</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="resetItemsCheckBox">
-          <property name="text">
-           <string>Items</string>
-          </property>
-          <property name="toolTip">
-           <string>Remove the current items</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="resetRoomsCheckBox">
-          <property name="text">
-           <string>Rooms</string>
-          </property>
-          <property name="toolTip">
-           <string>Remove the current rooms</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <widget class="QCheckBox" name="resetMonstersCheckBox">
+        <property name="text">
+         <string>Monsters</string>
+        </property>
+        <property name="toolTip">
+         <string>Remove monsters which are not protected</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2">
+       <widget class="QCheckBox" name="resetObjectsCheckBox">
+        <property name="text">
+         <string>Objects</string>
+        </property>
+        <property name="toolTip">
+         <string>Remove objects which are not protected</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="3">
+       <widget class="QCheckBox" name="resetItemsCheckBox">
+        <property name="text">
+         <string>Items</string>
+        </property>
+        <property name="toolTip">
+         <string>Remove the current items</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="4">
+       <widget class="QCheckBox" name="resetRoomsCheckBox">
+        <property name="text">
+         <string>Rooms</string>
+        </property>
+        <property name="toolTip">
+         <string>Remove the current rooms</string>
+        </property>
+       </widget>
       </item>
       <item row="6" column="0">
        <widget class="QLabel">
@@ -297,65 +293,61 @@
        </widget>
       </item>
       <item row="6" column="1">
-       <layout class="QHBoxLayout">
-        <item>
-         <widget class="QCheckBox" name="addTilesCheckBox">
-          <property name="text">
-           <string>Tiles</string>
-          </property>
-          <property name="toolTip">
-           <string>Decorate the dungeon tiles which are not protected</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="addShadowsCheckBox">
-          <property name="text">
-           <string>Shadows</string>
-          </property>
-          <property name="toolTip">
-           <string>Generate dungeon tiles with shadows</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="addMonstersCheckBox">
-          <property name="text">
-           <string>Monsters</string>
-          </property>
-          <property name="visible">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="addObjectsCheckBox">
-          <property name="text">
-           <string>Objects</string>
-          </property>
-          <property name="visible">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="addItemsCheckBox">
-          <property name="text">
-           <string>Items</string>
-          </property>
-          <property name="visible">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="addRoomsCheckBox">
-          <property name="text">
-           <string>Rooms</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <widget class="QCheckBox" name="addTilesCheckBox">
+        <property name="text">
+         <string>Tiles</string>
+        </property>
+        <property name="toolTip">
+         <string>Decorate the dungeon tiles which are not protected</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="2">
+       <widget class="QCheckBox" name="addShadowsCheckBox">
+        <property name="text">
+         <string>Shadows</string>
+        </property>
+        <property name="toolTip">
+         <string>Generate dungeon tiles with shadows</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="3">
+       <widget class="QCheckBox" name="addMonstersCheckBox">
+        <property name="text">
+         <string>Monsters</string>
+        </property>
+        <property name="visible">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="4">
+       <widget class="QCheckBox" name="addObjectsCheckBox">
+        <property name="text">
+         <string>Objects</string>
+        </property>
+        <property name="visible">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="5">
+       <widget class="QCheckBox" name="addItemsCheckBox">
+        <property name="text">
+         <string>Items</string>
+        </property>
+        <property name="visible">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="6">
+       <widget class="QCheckBox" name="addRoomsCheckBox">
+        <property name="text">
+         <string>Rooms</string>
+        </property>
+       </widget>
       </item>
       <item row="7" column="0">
        <widget class="QLabel">
@@ -391,7 +383,7 @@
         </property>
        </widget>
       </item>
-      <item row="8" column="2">
+      <item row="8" column="2" colspan="6">
        <spacer>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
