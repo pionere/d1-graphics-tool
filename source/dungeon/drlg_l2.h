@@ -12,6 +12,7 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+void DRLG_L2Subs();
 void DRLG_L2Shadows();
 void DRLG_L2InitTransVals();
 void CreateL2Dungeon();
