@@ -96,7 +96,9 @@ void SettingsDialog::on_graphicsBackgroundColorPushButton_clicked()
 {
     QColor color = QColorDialog::getColor(this->graphicsBackgroundColor);
     if (color.isValid()) {
-        this->ui->graphicsBackgroundColorLineEdit->setText(color.name());
+        this->graphicsBackgroundColor = color.name();
+        this->ui->graphicsBackgroundColorLineEdit->setText(this->graphicsBackgroundColor);
+        this->updateIcons();
     }
 }
 
@@ -121,7 +123,8 @@ void SettingsDialog::on_graphicsTransparentColorPushButton_clicked()
 {
     QColor color = QColorDialog::getColor(this->graphicsTransparentColor);
     if (color.isValid()) {
-        this->ui->graphicsTransparentColorLineEdit->setText(color.name());
+        this->graphicsTransparentColor = color.name();
+        this->ui->graphicsTransparentColorLineEdit->setText(this->graphicsTransparentColor);
         this->updateIcons();
     }
 }
@@ -147,7 +150,8 @@ void SettingsDialog::on_undefinedPaletteColorPushButton_clicked()
 {
     QColor color = QColorDialog::getColor(this->undefinedPaletteColor);
     if (color.isValid()) {
-        this->ui->undefinedPaletteColorLineEdit->setText(color.name());
+        this->undefinedPaletteColor = color.name();
+        this->ui->undefinedPaletteColorLineEdit->setText(this->undefinedPaletteColor);
         this->updateIcons();
     }
 }
@@ -173,7 +177,8 @@ void SettingsDialog::on_paletteSelectionBorderColorPushButton_clicked()
 {
     QColor color = QColorDialog::getColor(this->paletteSelectionBorderColor);
     if (color.isValid()) {
-        this->ui->paletteSelectionBorderColorLineEdit->setText(color.name());
+        this->paletteSelectionBorderColor = color.name();
+        this->ui->paletteSelectionBorderColorLineEdit->setText(this->paletteSelectionBorderColor);
         this->updateIcons();
     }
 }
