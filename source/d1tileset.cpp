@@ -1145,26 +1145,26 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     }
 }
 
-std::pair<unsigned, D1GfxFrame*> D1Tileset::getFrame(int subtileIndex, int blockSize, unsigned microIndex)
+std::pair<unsigned, D1GfxFrame *> D1Tileset::getFrame(int subtileIndex, int blockSize, unsigned microIndex)
 {
     std::vector<unsigned> &frameReferences = this->min->getFrameReferences(subtileIndex);
     if (frameReferences.size() != blockSize) {
         dProgressErr() << QApplication::tr("Subtile (%1) is invalid (upscaled?).").arg(subtileIndex + 1);
-        return std::pair<unsigned, D1GfxFrame*>(0, nullptr);
+        return std::pair<unsigned, D1GfxFrame *>(0, nullptr);
     }
     microIndex = MICRO_IDX(blockSize, microIndex);
 
     unsigned frameRef = frameReferences[microIndex];
     if (frameRef == 0) {
         dProgressErr() << QApplication::tr("Subtile (%1) has invalid (missing) frames.").arg(subtileIndex + 1);
-        return std::pair<unsigned, D1GfxFrame*>(0, nullptr);
+        return std::pair<unsigned, D1GfxFrame *>(0, nullptr);
     }
     D1GfxFrame *frame = this->gfx->getFrame(frameRef - 1);
     if (frame->getWidth() != MICRO_WIDTH || frame->getWidth() != MICRO_WIDTH) {
         dProgressErr() << QApplication::tr("Subtile (%1) is invalid (upscaled?).").arg(subtileIndex + 1);
-        return std::pair<unsigned, D1GfxFrame*>(0, nullptr);
+        return std::pair<unsigned, D1GfxFrame *>(0, nullptr);
     }
-    return std::pair<unsigned, D1GfxFrame*>(frameRef, frame);
+    return std::pair<unsigned, D1GfxFrame *>(frameRef, frame);
 }
 
 void D1Tileset::fillCryptShapes(bool silent)
@@ -1340,7 +1340,7 @@ void D1Tileset::fixCryptShadows(bool silent)
 
         D1GfxFrame *frameSrc = nullptr;
         if (i == 7) { // 324
-            std::pair<unsigned, D1GfxFrame*> mf = this->getFrame(303, blockSize, 1);
+            std::pair<unsigned, D1GfxFrame*> mf = this->getFrame(303 - 1, blockSize, 1);
             frameSrc = mf.second;
             if (frameSrc == nullptr) {
                 return;
@@ -1390,7 +1390,7 @@ void D1Tileset::fixCryptShadows(bool silent)
                             continue;
                         }
                         D1GfxPixel pixelSrc = frameSrc->getPixel(x, y);
-                        if (pixel.isTransparent()) {
+                        if (pixelSrc.isTransparent()) {
                             continue;
                         }
                         change |= frame->setPixel(x, y, pixelSrc);
@@ -1688,6 +1688,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(277, 0, 303, 0);
     ReplaceMcr(562, 0, 303, 0);
     ReplaceMcr(564, 0, 303, 0);
+    ReplaceMcr(635, 0, 308, 0);
     // prepare new subtiles for the shadows
     ReplaceMcr(623, 0, 631, 0);
     ReplaceMcr(623, 1, 638, 1);
