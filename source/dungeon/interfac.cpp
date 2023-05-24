@@ -418,6 +418,8 @@ static void DecorateDungeon(D1Dun *dun, const DecorateDunParam &params)
             break;
         }
     }
+    int baseTile = GetBaseTile();
+    DRLG_PlaceMegaTiles(baseTile);
     /*if (params.addMonsters) {
 
     }

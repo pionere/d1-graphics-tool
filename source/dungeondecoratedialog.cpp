@@ -69,7 +69,6 @@ void DungeonDecorateDialog::on_decorateButton_clicked()
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
 
-    dProgress() << tr("Decorating level %1 adding shadows: %2").arg(params.level).arg(params.addShadows);
     DecorateGameLevel(this->dun, this->tileset, view, params);
 
     // Clear loading message from status bar
