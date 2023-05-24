@@ -15,9 +15,10 @@ PatchTilesetDialog::~PatchTilesetDialog()
     delete ui;
 }
 
-void PatchTilesetDialog::initialize(D1Tileset *ts)
+void PatchTilesetDialog::initialize(D1Tileset *ts, D1Dun *d)
 {
     this->tileset = ts;
+    this->dun = d;
 
     // initialize the dropdown based on the filename
     int dungeonType = -1;
@@ -63,6 +64,10 @@ void PatchTilesetDialog::on_runButton_clicked()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
 
     this->tileset->patch(dungeonType, false);
+
+    if (this->dun != nullptr) {
+        this->dun->refreshSubtiles();
+    }
 
     // Clear loading message from status bar
     ProgressDialog::done();
