@@ -89,13 +89,13 @@ void DungeonSearchDialog::on_searchButton_clicked()
             bool found = false;
             switch (params.type) {
             case DUN_SEARCH_TYPE::Tile:
-                found = this->dun->getTileAt(posx, posy) == params.index;
+                found = ((unsigned)posx % TILE_WIDTH) == 0 && ((unsigned)posy % TILE_HEIGHT) == 0 && this->dun->getTileAt(posx, posy) == params.index;
                 break;
             case DUN_SEARCH_TYPE::Subtile:
                 found = this->dun->getSubtileAt(posx, posy) == params.index;
                 break;
             case DUN_SEARCH_TYPE::Tile_Protection:
-                found = this->dun->getTileProtectionAt(posx, posy) == (Qt::CheckState)params.index;
+                found = ((unsigned)posx % TILE_WIDTH) == 0 && ((unsigned)posy % TILE_HEIGHT) == 0 && this->dun->getTileProtectionAt(posx, posy) == (Qt::CheckState)params.index;
                 break;
             case DUN_SEARCH_TYPE::Monster_Protection:
                 found = this->dun->getSubtileMonProtectionAt(posx, posy);
