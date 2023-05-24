@@ -808,19 +808,18 @@ void DRLG_L5Shadows()
 				}
 			}
 			if (vertArch) {
-				if (dungeon[i - 1][j] == 13 || dungeon[i - 1][j] == 207) {
-	                dProgress() << QString("Adding shadow to %1:%2").arg(i).arg(j);
+				if (dungeon[i - 1][j] == 13 || dungeon[i - 1][j] == 207 || dungeon[i - 1][j] == 205) {
 					if (dungeon[i - 1][j - 1] == 13) {
-						dungeon[i - 1][j] = 203;
+						dungeon[i - 1][j] = dungeon[i - 1][j] == 205 ? 204 : 203;
 						dungeon[i - 1][j - 1] = 207;
 					} else if (dungeon[i - 1][j - 1] == 2) {
-						dungeon[i - 1][j] = 203;
+						dungeon[i - 1][j] = dungeon[i - 1][j] == 205 ? 204 : 203;
 						dungeon[i - 1][j - 1] = 209;
 					} else if (dungeon[i - 1][j - 1] == 12) {
-						dungeon[i - 1][j] = 203;
+						dungeon[i - 1][j] = dungeon[i - 1][j] == 205 ? 204 : 203;
 						dungeon[i - 1][j - 1] = 212;
 					} else if (dungeon[i - 1][j - 1] == 36) {
-						dungeon[i - 1][j] = 203;
+						dungeon[i - 1][j] = dungeon[i - 1][j] == 205 ? 204 : 203;
 						dungeon[i - 1][j - 1] = 213;
 					} else {
 		                dProgressWarn() << QString("Missing case %1 for vertical arch %2 with floor").arg(dungeon[i - 1][j - 1]).arg(dungeon[i][j]);
