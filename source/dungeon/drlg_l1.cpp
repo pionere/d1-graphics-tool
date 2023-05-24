@@ -5,6 +5,8 @@
  */
 #include "all.h"
 
+#include <QString>
+
 #include "../progressdialog.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -731,7 +733,7 @@ const BYTE L1ConvTbl[16] = { BASE_MEGATILE_L1, 13, 1, 13, 2, 13, 13, 13, 4, 13, 
 static void DRLG_L5Shadows()
 {
 	int i, j;
-    dProgress() << tr("Adding L5 shadows");
+    dProgress() << QString("Adding L5 shadows");
 
 	for (j = DMAXY - 1; j > 0; j--) {
 		for (i = DMAXX - 1; i > 0; i--) {
@@ -776,7 +778,7 @@ static void DRLG_L5Shadows()
 				} else if (dungeon[i][j - 1] == 203) {
 					dungeon[i][j - 1] = 204;
 				} else {
-                    dProgressWarn() << tr("Missing case %1 for horizontal arch %2").arg(dungeon[i][j - 1]).arg(dungeon[i][j]);
+                    dProgressWarn() << QString("Missing case %1 for horizontal arch %2").arg(dungeon[i][j - 1]).arg(dungeon[i][j]);
 					// 1, 11, 35 -> not perfect, but ok
 					// FIXME: what else?
 				}
@@ -796,18 +798,18 @@ static void DRLG_L5Shadows()
 						dungeon[i - 1][j] = 206;
 						dungeon[i - 1][j - 1] = 213;
 					} else {
-	                    dProgressWarn() << tr("Missing case %1 for pillar %2 with floor").arg(dungeon[i - 1][j - 1]).arg(dungeon[i][j]);
+	                    dProgressWarn() << QString("Missing case %1 for pillar %2 with floor").arg(dungeon[i - 1][j - 1]).arg(dungeon[i][j]);
 						// FIXME: what else?
 					}
 				} else {
-	                dProgressWarn() << tr("Missing case %1 for pillar %2").arg(dungeon[i - 1][j]).arg(dungeon[i][j]);
+	                dProgressWarn() << QString("Missing case %1 for pillar %2").arg(dungeon[i - 1][j]).arg(dungeon[i][j]);
 					// 2, 12, 36 -> ok
 					// FIXME: what else?
 				}
 			}
 			if (vertArch) {
 				if (dungeon[i - 1][j] == 13 || dungeon[i - 1][j] == 207) {
-	                dProgress() << tr("Adding shadow to %1:%2").arg(i).arg(j);
+	                dProgress() << QString("Adding shadow to %1:%2").arg(i).arg(j);
 					if (dungeon[i - 1][j - 1] == 13) {
 						dungeon[i - 1][j] = 203;
 						dungeon[i - 1][j - 1] = 207;
@@ -821,18 +823,18 @@ static void DRLG_L5Shadows()
 						dungeon[i - 1][j] = 203;
 						dungeon[i - 1][j - 1] = 213;
 					} else {
-		                dProgressWarn() << tr("Missing case %1 for vertical arch %2 with floor").arg(dungeon[i - 1][j - 1]).arg(dungeon[i][j]);
+		                dProgressWarn() << QString("Missing case %1 for vertical arch %2 with floor").arg(dungeon[i - 1][j - 1]).arg(dungeon[i][j]);
 						// FIXME: what else?
 					}
 				} else {
-	                dProgressWarn() << tr("Missing case %1 for vertical arch %2").arg(dungeon[i - 1][j]).arg(dungeon[i][j]);
+	                dProgressWarn() << QString("Missing case %1 for vertical arch %2").arg(dungeon[i - 1][j]).arg(dungeon[i][j]);
 					// 2, 12, 36 -> ok
 					// FIXME: what else?
 				}
 			}
 		}
 	}
-    dProgress() << tr("L5 shadows done");
+    dProgress() << QString("L5 shadows done");
 }
 #endif
 
