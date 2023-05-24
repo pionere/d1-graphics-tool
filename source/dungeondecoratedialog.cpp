@@ -36,7 +36,7 @@ void DungeonDecorateDialog::on_actionGenerateSeed_triggered()
     this->ui->seedLineEdit->setText(QString::number((int)gen->generate()));
 }
 
-void DungeonDecorateDialog::on_generateButton_clicked()
+void DungeonDecorateDialog::on_decorateButton_clicked()
 {
     DecorateDunParam params;
     params.level = this->ui->levelComboBox->currentIndex() + 1;

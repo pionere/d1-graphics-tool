@@ -245,7 +245,7 @@ static void EnterLevel(int lvl)
 
 static void ResetGameLevel(D1Dun *dun, const DecorateDunParam &params)
 {
-    const DunMonsterType noMon = { 0 };
+    const DunMonsterType noMon = { 0, false };
     for (int y = 0; y < dun->getHeight(); y++) {
         for (int x = 0; x < dun->getWidth(); x++) {
             if (params.resetMonsters && !dun->getSubtileMonProtectionAt(x, y)) {
@@ -337,7 +337,7 @@ static void LoadDungeon(D1Dun *dun, bool first)
     }
 }
 
-void DecorateDungeon(D1Dun *dun, const DecorateDunParam &params)
+static void DecorateDungeon(D1Dun *dun, const DecorateDunParam &params)
 {
     /*if (params.addTiles) {
 
@@ -412,9 +412,9 @@ static void StoreDungeon(D1Dun *dun)
         for (int x = 0; x < dun->getWidth() && x < DMAXX * TILE_WIDTH; x++) {
             dun->setSubtileAt(baseX + x, baseY + y, dPiece[DBORDERX + x][DBORDERY + y]);
             dun->setRoomAt(baseX + x, baseY + y, dTransVal[DBORDERX + x][DBORDERY + y]);
-            // TODO: dun->setMonsterAt(baseX + x, baseY + y, dMonsters[DBORDERX + x][DBORDERY + y]);
-            dun->setObjectAt(baseX + x, baseY + y, dObjects[DBORDERX + x][DBORDERY + y]);
-            dun->setItemAt(baseX + x, baseY + y, dItems[DBORDERX + x][DBORDERY + y]);
+            // TODO: dun->setMonsterAt(baseX + x, baseY + y, dMonster[DBORDERX + x][DBORDERY + y]);
+            dun->setObjectAt(baseX + x, baseY + y, dObject[DBORDERX + x][DBORDERY + y]);
+            dun->setItemAt(baseX + x, baseY + y, dItem[DBORDERX + x][DBORDERY + y]);
         }
     }
 }
@@ -440,7 +440,7 @@ void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const
     do {
         LoadDungeon(dun, extraRounds == params.extraRounds);
 
-        DecoreateDungeon(dun, params);
+        DecorateDungeon(dun, params);
     } while (--extraRounds >= 0);
 
     StoreDungeon(dun);

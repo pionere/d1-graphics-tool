@@ -2196,7 +2196,7 @@ void MainWindow::on_actionGenerate_Dungeon_triggered()
     this->levelCelView->generateDungeon();
 }
 
-void MainWindow::on_actionGenerate_Dungeon_triggered()
+void MainWindow::on_actionDecorate_Dungeon_triggered()
 {
     this->levelCelView->decorateDungeon();
 }

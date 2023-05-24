@@ -414,7 +414,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="generateButton">
+      <widget class="QPushButton" name="decorateButton">
        <property name="text">
         <string>Decorate</string>
        </property>
