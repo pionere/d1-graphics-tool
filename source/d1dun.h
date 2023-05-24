@@ -149,7 +149,7 @@ public:
     int getItemAt(int posx, int posy) const;
     bool setItemAt(int posx, int posy, int itemIndex);
     DunMonsterType getMonsterAt(int posx, int posy) const;
-    bool setMonsterAt(int posx, int posy, DunMonsterType);
+    bool setMonsterAt(int posx, int posy, const DunMonsterType monType);
     int getObjectAt(int posx, int posy) const;
     bool setObjectAt(int posx, int posy, int objectIndex);
     int getRoomAt(int posx, int posy) const;

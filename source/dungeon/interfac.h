@@ -10,6 +10,7 @@
 
 class D1Dun;
 class D1Tileset;
+class DecorateDunParam;
 class GenerateDunParam;
 class LevelCelView;
 
@@ -22,6 +23,7 @@ extern QString assetPath;
 extern char infostr[256];
 
 void LogErrorF(const char* msg, ...);
-bool EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const GenerateDunParam &params);
+void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const DecorateDunParam &params);
+void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const GenerateDunParam &params);
 
 #endif /* __INTERFAC_H__ */

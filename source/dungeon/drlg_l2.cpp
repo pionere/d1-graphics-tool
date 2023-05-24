@@ -634,7 +634,7 @@ static void DRLG_L2DoorSubs()
  * New dungeon values: 45..51   72   140 141 142
  * TODO: use DRLG_PlaceMiniSet instead?
  */
-static void DRLG_L2Shadows()
+void DRLG_L2Shadows()
 {
 	BYTE bv;
 	bool pillar, harch, varch;

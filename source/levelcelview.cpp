@@ -3051,6 +3051,12 @@ void LevelCelView::generateDungeon()
     this->dungeonGenerateDialog.show();
 }
 
+void LevelCelView::decorateDungeon()
+{
+    this->dungeonDecorateDialog.initialize(this->dun, this->tileset);
+    this->dungeonDecorateDialog.show();
+}
+
 void LevelCelView::searchDungeon()
 {
     this->dungeonSearchDialog.initialize(this->dun);

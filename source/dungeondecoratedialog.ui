@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DungeonDecorateDialog</class>
+ <widget class="QDialog">
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout">
+   <item>
+    <widget class="QGroupBox">
+     <layout class="QGridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Level:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="levelComboBox">
+        <item>
+         <property name="text">
+          <string>Cathedral 1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Cathedral 2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Cathedral 3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Cathedral 4</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Catacombs 1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Catacombs 2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Catacombs 3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Catacombs 4</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Caves 1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Caves 2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Caves 3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Caves 4</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Hell 1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Hell 2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Hell 3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Hell 4</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Nest 1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Nest 2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Nest 3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Nest 4</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Crypt 1</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Crypt 2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Crypt 3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Crypt 4</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Skeleton King</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Chamber of Bone</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Poisoned Water</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Vile Betrayer</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Difficulty:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="difficultyComboBox">
+        <item>
+         <property name="text">
+          <string>Normal</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Nightmare</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Hell</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Multi:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="multiCheckBox">
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <property name="toolTip">
+         <string>Check if it is for a multiplayer game</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Hellfire:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="hellfireCheckBox">
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <property name="toolTip">
+         <string>Check if it is for a hellfire game</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Seed:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <layout class="QHBoxLayout" name="seedWithRefreshButtonLayout">
+        <item>
+         <widget class="LineEditWidget" name="seedLineEdit">
+          <property name="charWidth">
+           <number>10</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Reset:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QCheckBox" name="resetMonstersCheckBox">
+          <property name="text">
+           <string>Monsters</string>
+          </property>
+          <property name="toolTip">
+           <string>Remove monsters which are not protected</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="resetObjectsCheckBox">
+          <property name="text">
+           <string>Objects</string>
+          </property>
+          <property name="toolTip">
+           <string>Remove objects which are not protected</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="resetItemsCheckBox">
+          <property name="text">
+           <string>Items</string>
+          </property>
+          <property name="toolTip">
+           <string>Remove the current items</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="resetRoomsCheckBox">
+          <property name="text">
+           <string>Rooms</string>
+          </property>
+          <property name="toolTip">
+           <string>Remove the current rooms</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Add:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QCheckBox" name="addTilesCheckBox">
+          <property name="text">
+           <string>Tiles</string>
+          </property>
+          <property name="visible">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>Decorate the dungeon tiles which are not protected</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="addShadowsCheckBox">
+          <property name="text">
+           <string>Shadows</string>
+          </property>
+          <property name="toolTip">
+           <string>Generate dungeon tiles with shadows</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="addMonstersCheckBox">
+          <property name="text">
+           <string>Monsters</string>
+          </property>
+          <property name="visible">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="addObjectsCheckBox">
+          <property name="text">
+           <string>Objects</string>
+          </property>
+          <property name="visible">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="addItemsCheckBox">
+          <property name="text">
+           <string>Items</string>
+           <property name="visible">
+            <bool>false</bool>
+           </property>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="addRoomsCheckBox">
+          <property name="text">
+           <string>Rooms</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Extras:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="LineEditWidget" name="extraRoundsLineEdit">
+        <property name="charWidth">
+         <number>5</number>
+        </property>
+        <property name="toolTip">
+         <string>Number of extra rounds to generate</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Tileset:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QCheckBox" name="tilesetCheckBox">
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <property name="toolTip">
+         <string>Check if the current tileset should be used</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="2">
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="generateButton">
+       <property name="text">
+        <string>Decorate</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="cancelButton">
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="4" margin="4"/>
+ <resources/>
+ <connections/>
+ <buttongroups/>
+</ui>

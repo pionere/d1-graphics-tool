@@ -193,7 +193,7 @@ const BYTE L4FTYPES[138] = {
  * New dungeon values: 47 48   54 55   58 59 60  71 72   74 75
  * TODO: use DRLG_PlaceMiniSet instead?
  */
-static void DRLG_L4Shadows()
+void DRLG_L4Shadows()
 {
 	int x, y;
 	BYTE bv;

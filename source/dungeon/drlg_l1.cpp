@@ -761,6 +761,8 @@ static void DRLG_L5Shadows()
 			case 10:
 			case 12:
 			case 36:
+			case 212:
+			case 213:
 				horizArch = true;
 				break;
 			}
@@ -824,7 +826,7 @@ static void DRLG_L5Shadows()
 }
 #endif
 
-static void DRLG_L1Shadows()
+void DRLG_L1Shadows()
 {
 	const ShadowStruct* ss;
 	int x, y;

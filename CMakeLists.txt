@@ -115,6 +115,9 @@ set(PROJECT_SOURCES
         source/dungeon/spelldat.cpp
         source/dungeon/themes.cpp
         source/dungeon/trigs.cpp
+        source/dungeondecoratedialog.cpp
+        source/dungeondecoratedialog.h
+        source/dungeondecoratedialog.ui
         source/dungeongeneratedialog.cpp
         source/dungeongeneratedialog.h
         source/dungeongeneratedialog.ui

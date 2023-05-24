@@ -233,6 +233,7 @@
     <addaction name="menuDungeonLoad"/>
     <addaction name="separator"/>
     <addaction name="actionGenerate_Dungeon"/>
+    <addaction name="actionDecorate_Dungeon"/>
     <addaction name="actionSearch_Dungeon"/>
    </widget>
    <widget class="QMenu" name="menuPalette">
@@ -978,6 +979,14 @@
    </property>
    <property name="toolTip">
     <string>Create a dungeon</string>
+   </property>
+  </action>
+  <action name="actionDecorate_Dungeon">
+   <property name="text">
+    <string>Decorate</string>
+   </property>
+   <property name="toolTip">
+    <string>Generate contents to the dungeon</string>
    </property>
   </action>
   <action name="actionSearch_Dungeon">

@@ -1560,7 +1560,7 @@ DunMonsterType D1Dun::getMonsterAt(int posx, int posy) const
     return this->monsters[posy][posx];
 }
 
-bool D1Dun::setMonsterAt(int posx, int posy, DunMonsterType monType)
+bool D1Dun::setMonsterAt(int posx, int posy, const DunMonsterType monType)
 {
     if (this->monsters[posy][posx] == monType) {
         return false;

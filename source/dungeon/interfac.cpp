@@ -10,8 +10,6 @@
 #include <QMessageBox>
 #include <QString>
 
-// #include "../d1dun.h"
-// #include "../dungeongeneratedialog.h"
 #include "../levelcelview.h"
 #include "../progressdialog.h"
 
@@ -141,6 +139,31 @@ static void CreateDungeon()
 	}
 }
 
+static int GetBaseTile()
+{
+    int baseTile = 0;
+    switch (currLvl._dDunType) {
+    case DGT_TOWN:
+        break;
+    case DGT_CATHEDRAL:
+        baseTile = 22; // BASE_MEGATILE_L1
+        break;
+    case DGT_CATACOMBS:
+        baseTile = 12; // BASE_MEGATILE_L2
+        break;
+    case DGT_CAVES:
+        baseTile = 8; // BASE_MEGATILE_L3
+        break;
+    case DGT_HELL:
+        baseTile = 30; // BASE_MEGATILE_L4
+        break;
+    default:
+        ASSUME_UNREACHABLE
+        break;
+    }
+    return baseTile;
+}
+
 static void LoadGameLevel(int lvldir, D1Dun *dun)
 {
 	extern int32_t sglGameSeed;
@@ -220,7 +243,210 @@ static void EnterLevel(int lvl)
         currLvl._dLevel += HELL_LEVEL_BONUS;
 }
 
-bool EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const GenerateDunParam &params)
+static void ResetGameLevel(D1Dun *dun, const DecorateDunParam &params)
+{
+    const DunMonsterType noMon = { 0 };
+    for (int y = 0; y < dun->getHeight(); y++) {
+        for (int x = 0; x < dun->getWidth(); x++) {
+            if (params.resetMonsters && !dun->getSubtileMonProtectionAt(x, y)) {
+                dun->setMonsterAt(x, y, noMon);
+            }
+            if (params.resetObjects && !dun->getSubtileObjProtectionAt(x, y)) {
+                dun->setObjectAt(x, y, 0);
+            }
+            if (params.resetItems) {
+                dun->setItemAt(x, y, 0);
+            }
+            if (params.resetRooms) {
+                dun->setRoomAt(x, y, 0);
+            }
+        }
+    }
+}
+
+static void LoadDungeon(D1Dun *dun, bool first)
+{
+    if (first && (dun->getWidth() > TILE_WIDTH * DMAXX || dun->getHeight() > TILE_HEIGHT * DMAXY)) {
+        dProgressWarn() << QApplication::tr("Decoration is limited to %1x%2 dungeon.").arg(TILE_WIDTH * DMAXX).arg(TILE_HEIGHT * DMAXY);
+    }
+
+    memset(drlgFlags, 0, sizeof(drlgFlags));
+    int baseTile = GetBaseTile();
+    memset(dungeon, baseTile, sizeof(dungeon));
+
+    int defaultTile = dun->getDefaultTile();
+    int baseX = dun->getWidth() >= MAXDUNX ? DBORDERX : 0;
+    int baseY = dun->getHeight() >= MAXDUNY ? DBORDERY : 0;
+    for (int y = 0; y < dun->getHeight() / TILE_HEIGHT && y < DMAXY; y++) {
+        for (int x = 0; x < dun->getWidth() / TILE_WIDTH && x < DMAXX; x++) {
+            // load tile protection
+            Qt::CheckState tps = dun->getTileProtectionAt(baseX + x * TILE_WIDTH, baseY + y * TILE_HEIGHT);
+            if (tps == Qt::PartiallyChecked) {
+                drlgFlags[x][y] |= DRLG_FROZEN;
+            }
+            else if (tps == Qt::Checked) {
+                drlgFlags[x][y] |= DRLG_FROZEN | DRLG_PROTECTED;
+            }
+            // load tile
+            int tile = dun->getTileAt(baseX + x * TILE_WIDTH, baseY + y * TILE_HEIGHT);
+            if (tile == UNDEF_TILE) {
+                continue;
+            }
+            if (tile == 0) {
+                tile = defaultTile;
+            }
+            dungeon[x][y] = tile;
+        }
+    }
+    memset(dPiece, 0, sizeof(dPiece));
+    DRLG_InitTrans();
+    /*memset(dFlags, 0, sizeof(dFlags));
+    memset(dMonster, 0, sizeof(dMonster));
+    memset(dObject, 0, sizeof(dObject));
+    memset(dItem, 0, sizeof(dItem));*/
+    InitLvlMap();
+    for (int y = 0; y < dun->getHeight() && y < TILE_HEIGHT * DMAXY; y++) {
+        for (int x = 0; x < dun->getWidth() && y < TILE_WIDTH * DMAXX; x++) {
+            // load mon/obj protection
+            if (dun->getSubtileMonProtectionAt(x, y)) {
+                dFlags[DBORDERX + x][DBORDERX + y] |= BFLAG_MON_PROTECT;
+            }
+            if (dun->getSubtileObjProtectionAt(x, y)) {
+                dFlags[DBORDERX + x][DBORDERX + y] |= BFLAG_OBJ_PROTECT;
+            }
+            // load room
+            int room = dun->getRoomAt(baseX + x, baseY + y);
+            if (room != 0) {
+                dTransVal[DBORDERX + x][DBORDERX + y] = room;
+                if (numtrans <= room) {
+                    numtrans = room + 1;
+                }
+            }
+            // load entities
+            // DunMonsterType monType = dun->getMonsterAt(baseX + x, baseY + y);
+            // TODO: dMonster[DBORDERX + x][DBORDERX + y] = monType.first;
+            dObject[DBORDERX + x][DBORDERX + y] = dun->getObjectAt(baseX + x, baseY + y);
+            dItem[DBORDERX + x][DBORDERX + y] = dun->getItemAt(baseX + x, baseY + y);
+            // load subtile
+            int subtile = dun->getSubtileAt(baseX + x, baseY + y);
+            if (subtile == UNDEF_SUBTILE) {
+                continue;
+            }
+            dPiece[DBORDERX + x][DBORDERX + y] = subtile;
+        }
+    }
+}
+
+void DecorateDungeon(D1Dun *dun, const DecorateDunParam &params)
+{
+    /*if (params.addTiles) {
+
+    }*/
+    if (params.addShadows) {
+        switch (currLvl._dDunType) {
+        case DGT_TOWN:
+            // CreateTown();
+            break;
+        case DGT_CATHEDRAL:
+            DRLG_L1Shadows();
+            break;
+        case DGT_CATACOMBS:
+            DRLG_L2Shadows();
+            break;
+        case DGT_CAVES:
+            DRLG_L3Shadows();
+            break;
+        case DGT_HELL:
+            DRLG_L4Shadows();
+            break;
+        default:
+            ASSUME_UNREACHABLE
+            break;
+        }
+    }
+    if (params.addRooms) {
+        // TODO: preserve the original rooms?
+        switch (currLvl._dDunType) {
+        case DGT_TOWN:
+            // CreateTown();
+            break;
+        case DGT_CATHEDRAL:
+            DRLG_L1InitTransVals();
+            break;
+        case DGT_CATACOMBS:
+            DRLG_L2InitTransVals();
+            break;
+        case DGT_CAVES:
+            DRLG_L3InitTransVals();
+            break;
+        case DGT_HELL:
+            DRLG_L4InitTransVals();
+            break;
+        default:
+            ASSUME_UNREACHABLE
+            break;
+        }
+    }
+    /*if (params.addMonsters) {
+
+    }
+    if (params.addObjects) {
+
+    }
+    if (params.addItems) {
+
+    }*/
+}
+
+static void StoreDungeon(D1Dun *dun)
+{
+    int baseX = dun->getWidth() >= MAXDUNX ? DBORDERX : 0;
+    int baseY = dun->getHeight() >= MAXDUNY ? DBORDERY : 0;
+    for (int y = 0; y < dun->getHeight() / TILE_HEIGHT && y < DMAXY; y += TILE_HEIGHT) {
+        for (int x = 0; x < dun->getWidth() / TILE_WIDTH && x < DMAXX; x += TILE_WIDTH) {
+            dun->setTileAt(baseX + x * TILE_WIDTH, baseX + y * TILE_HEIGHT, dungeon[x][y]);
+        }
+    }
+
+    for (int y = 0; y < dun->getHeight() && y < DMAXY * TILE_HEIGHT; y++) {
+        for (int x = 0; x < dun->getWidth() && x < DMAXX * TILE_WIDTH; x++) {
+            dun->setSubtileAt(baseX + x, baseY + y, dPiece[DBORDERX + x][DBORDERY + y]);
+            dun->setRoomAt(baseX + x, baseY + y, dTransVal[DBORDERX + x][DBORDERY + y]);
+            // TODO: dun->setMonsterAt(baseX + x, baseY + y, dMonsters[DBORDERX + x][DBORDERY + y]);
+            dun->setObjectAt(baseX + x, baseY + y, dObjects[DBORDERX + x][DBORDERY + y]);
+            dun->setItemAt(baseX + x, baseY + y, dItems[DBORDERX + x][DBORDERY + y]);
+        }
+    }
+}
+
+void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const DecorateDunParam &params)
+{
+    IsMultiGame = params.isMulti;
+    IsHellfireGame = params.isHellfire;
+    gnDifficulty = params.difficulty;
+    assetPath = dun->getAssetPath();
+    HasTileset = params.useTileset && tileset != nullptr;
+
+    if (HasTileset) {
+        LoadTileset(tileset);
+    }
+
+    ResetGameLevel(dun, params);
+
+    EnterLevel(params.level);
+
+    int extraRounds = params.extraRounds;
+    SetRndSeed(params.seed);
+    do {
+        LoadDungeon(dun, extraRounds == params.extraRounds);
+
+        DecoreateDungeon(dun, params);
+    } while (--extraRounds >= 0);
+
+    StoreDungeon(dun);
+}
+
+void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const GenerateDunParam &params)
 {
     IsMultiGame = params.isMulti;
     IsHellfireGame = params.isHellfire;
@@ -263,34 +489,15 @@ bool EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
 
     dun->setLevelType(currLvl._dType);
 
-    int baseTile = 0;
-    switch (currLvl._dDunType) {
-    case DGT_TOWN:
-        break;
-    case DGT_CATHEDRAL:
-        baseTile = 22; // BASE_MEGATILE_L1
-        break;
-    case DGT_CATACOMBS:
-        baseTile = 12; // BASE_MEGATILE_L2
-        break;
-    case DGT_CAVES:
-        baseTile = 8; // BASE_MEGATILE_L3
-        break;
-    case DGT_HELL:
-        baseTile = 30; // BASE_MEGATILE_L4
-        break;
-    default:
-        ASSUME_UNREACHABLE
-        break;
-    }
-    for (int y = 0; y < MAXDUNY; y += 2) {
-        for (int x = 0; x < MAXDUNX; x += 2) {
+    int baseTile = GetBaseTile();
+    for (int y = 0; y < MAXDUNY; y += TILE_HEIGHT) {
+        for (int x = 0; x < MAXDUNX; x += TILE_WIDTH) {
             dun->setTileAt(x, y, baseTile);
         }
     }
     for (int y = 0; y < DMAXY; y++) {
         for (int x = 0; x < DMAXX; x++) {
-            dun->setTileAt(DBORDERX + x * 2, DBORDERY + y * 2, dungeon[x][y]);
+            dun->setTileAt(DBORDERX + x * TILE_WIDTH, DBORDERY + y * TILE_HEIGHT, dungeon[x][y]);
         }
     }
     std::vector<ObjStruct> objectTypes;
@@ -414,6 +621,4 @@ bool EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     view->updateEntityOptions();
 
     view->scrollTo(ViewX, ViewY);
-
-    return true;
 }

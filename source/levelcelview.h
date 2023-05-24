@@ -21,6 +21,7 @@
 #include "d1gfx.h"
 #include "d1pal.h"
 #include "d1tileset.h"
+#include "dungeondecoratedialog.h"
 #include "dungeongeneratedialog.h"
 #include "dungeonresourcedialog.h"
 #include "dungeonsearchdialog.h"
@@ -113,6 +114,7 @@ public:
     void loadMonsters(const D1Dun *srcDun);
     void loadObjects(const D1Dun *srcDun);
     void generateDungeon();
+    void decorateDungeon();
     void searchDungeon();
 
     void upscale(const UpscaleParam &params);
@@ -300,6 +302,7 @@ private:
     PushButtonWidget *viewBtn;
 
     DungeonGenerateDialog dungeonGenerateDialog = DungeonGenerateDialog(this);
+    DungeonDecorateDialog dungeonDecorateDialog = DungeonDecorateDialog(this);
     DungeonResourceDialog dungeonResourceDialog = DungeonResourceDialog(this);
     DungeonSearchDialog dungeonSearchDialog = DungeonSearchDialog(this);
 

@@ -204,6 +204,7 @@ private slots:
     void on_actionRemoveObjects_Dungeon_triggered();
     void on_actionLoadObjects_Dungeon_triggered();
     void on_actionGenerate_Dungeon_triggered();
+    void on_actionDecorate_Dungeon_triggered();
     void on_actionSearch_Dungeon_triggered();
 
     void on_actionNew_PAL_triggered();
