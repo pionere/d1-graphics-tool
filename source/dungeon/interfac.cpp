@@ -368,7 +368,6 @@ static void DecorateDungeon(D1Dun *dun, const DecorateDunParam &params)
         }
     }
     if (params.addShadows) {
-        dProgress() << QApplication::tr("Adding adding shadows: %1").arg(currLvl._dType);
         switch (currLvl._dType) {
         case DTYPE_TOWN:
             // CreateTown();
@@ -434,8 +433,8 @@ static void StoreDungeon(D1Dun *dun)
 {
     int baseX = dun->getWidth() >= MAXDUNX ? DBORDERX : 0;
     int baseY = dun->getHeight() >= MAXDUNY ? DBORDERY : 0;
-    for (int y = 0; y < dun->getHeight() / TILE_HEIGHT && y < DMAXY; y += TILE_HEIGHT) {
-        for (int x = 0; x < dun->getWidth() / TILE_WIDTH && x < DMAXX; x += TILE_WIDTH) {
+    for (int y = 0; y < dun->getHeight() / TILE_HEIGHT && y < DMAXY; y++) {
+        for (int x = 0; x < dun->getWidth() / TILE_WIDTH && x < DMAXX; x++) {
             dun->setTileAt(baseX + x * TILE_WIDTH, baseX + y * TILE_HEIGHT, dungeon[x][y]);
         }
     }
@@ -459,7 +458,6 @@ void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const
     assetPath = dun->getAssetPath();
     HasTileset = params.useTileset && tileset != nullptr;
 
-    dProgress() << QApplication::tr("Decorating game level with tileset %1 adding shadows: %2").arg(HasTileset).arg(params.addShadows);
     if (HasTileset) {
         LoadTileset(tileset);
     }
