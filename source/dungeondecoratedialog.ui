@@ -345,9 +345,9 @@
          <widget class="QCheckBox" name="addItemsCheckBox">
           <property name="text">
            <string>Items</string>
-           <property name="visible">
-            <bool>false</bool>
-           </property>
+          </property>
+          <property name="visible">
+           <bool>false</bool>
           </property>
          </widget>
         </item>

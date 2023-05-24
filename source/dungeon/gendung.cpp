@@ -524,9 +524,6 @@ void DRLG_AreaTrans(int num, const BYTE* List)
 static void DRLG_FTVR(unsigned offset)
 {
 	BYTE *tvp = &dTransVal[0][0];
-	if (offset >= sizeof(dTransVal)) {
-		return;
-	}
 	if (tvp[offset] != 0) {
 		return;
 	}
