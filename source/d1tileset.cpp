@@ -1191,7 +1191,7 @@ void D1Tileset::fillCryptShapes(bool silent)
     constexpr unsigned blockSize = BLOCK_SIZE_L5;
     for (int i = 0; i < lengthof(micros); i++) {
         const CelMicro &micro = micros[i];
-        std::pair<unsigned, D1GfxFrame*> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
         D1GfxFrame *frame = microFrame.second;
         if (frame == nullptr) {
             return;
@@ -1207,7 +1207,8 @@ void D1Tileset::fillCryptShapes(bool silent)
         std::vector<FramePixel> pixels;
         D1CelTilesetFrame::collectPixels(frame, micro.res_encoding, pixels);
         for (const FramePixel &pix : pixels) {
-            change |= frame->setPixel(pix.pos.x(), pix.pos.y(), D1GfxPixel::colorPixel(0));
+            D1GfxPixel resPix = pix.pixel.isTransparent() ? D1GfxPixel::colorPixel(0) : D1GfxPixel::transparentPixel();
+            change |= frame->setPixel(pix.pos.x(), pix.pos.y(), resPix);
         }
         if (change) {
             frame->setFrameType(micro.res_encoding);
@@ -1255,7 +1256,7 @@ void D1Tileset::maskCryptBlacks(bool silent)
     constexpr unsigned blockSize = BLOCK_SIZE_L5;
     for (int i = 0; i < lengthof(micros); i++) {
         const CelMicro &micro = micros[i];
-        std::pair<unsigned, D1GfxFrame*> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
         D1GfxFrame *frame = microFrame.second;
         if (frame == nullptr) {
             return;
@@ -1332,7 +1333,7 @@ void D1Tileset::fixCryptShadows(bool silent)
     constexpr unsigned blockSize = BLOCK_SIZE_L5;
     for (int i = 0; i < lengthof(micros); i++) {
         const CelMicro &micro = micros[i];
-        std::pair<unsigned, D1GfxFrame*> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
         D1GfxFrame *frame = microFrame.second;
         if (frame == nullptr) {
             return;
@@ -1340,7 +1341,7 @@ void D1Tileset::fixCryptShadows(bool silent)
 
         D1GfxFrame *frameSrc = nullptr;
         if (i == 7) { // 324
-            std::pair<unsigned, D1GfxFrame*> mf = this->getFrame(303 - 1, blockSize, 1);
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(303 - 1, blockSize, 1);
             frameSrc = mf.second;
             if (frameSrc == nullptr) {
                 return;
