@@ -1477,7 +1477,7 @@ void D1Tileset::fixCryptShadows(bool silent)
                 if (i == 7 + 5) { // 1797
                     srcPixel = y > 16 + x / 2 ? D1GfxPixel::transparentPixel() : SHADOW_COLOR;
                 }
-                if (i == 7 + 1) { // 1798
+                if (i == 7 + 1 && !srcPixel.isTransparent()) { // 14 -> 1798
                     // wall/floor in shadow
                     if (x <= 1) {
                         if (y >= 4 * x) {
@@ -1497,7 +1497,7 @@ void D1Tileset::fixCryptShadows(bool silent)
                         }
                     }
                 }
-                if (i == 7 + 3) { // 1805
+                if (i == 7 + 3 && !srcPixel.isTransparent()) { // 311 -> 1805
                     // grate/floor in shadow
                     if (x <= 1 && y >= 7 * x) {
                         srcPixel = SHADOW_COLOR;
@@ -1506,7 +1506,7 @@ void D1Tileset::fixCryptShadows(bool silent)
                         srcPixel = SHADOW_COLOR;
                     }
                 }
-                if (i == 7 + 2 || i == 7 + 4) { // 1800, 1813
+                if (i == 7 + 2 || i == 7 + 4) { // 12, 309 -> 1800, 1813
                     // wall/grate in shadow
                     if (y >= 7 * (x - 27) && !srcPixel.isTransparent()) {
                         srcPixel = SHADOW_COLOR;

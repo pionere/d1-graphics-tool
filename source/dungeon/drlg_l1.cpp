@@ -833,7 +833,7 @@ void DRLG_L5Shadows()
 						// FIXME: what else?
 					}
 				} else {
-					if (dungeon[i - 1][j] != 2 && dungeon[i - 1][j] != 4 && dungeon[i - 1][j] != 12 && dungeon[i - 1][j] != 36 && dungeon[i - 1][j] != 37 && dungeon[i - 1][j] != 209 && dungeon[i - 1][j] != 212 && dungeon[i - 1][j] != 213 && dungeon[i - 1][j] != 214)
+					if (dungeon[i - 1][j] != 2 && dungeon[i - 1][j] != 4 && dungeon[i - 1][j] != 12 && dungeon[i - 1][j] != 14 && dungeon[i - 1][j] != 36 && dungeon[i - 1][j] != 37 && dungeon[i - 1][j] != 209 && dungeon[i - 1][j] != 212 && dungeon[i - 1][j] != 213 && dungeon[i - 1][j] != 214)
 						dProgressWarn() << QString("Missing case %1 for pillar %2 @%3:%4").arg(dungeon[i - 1][j]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					// 2, 12, 36 -> ok
 					// FIXME: what else?
@@ -861,7 +861,7 @@ void DRLG_L5Shadows()
 						// FIXME: what else?
 					}
 				} else {
-					if (dungeon[i - 1][j] != 2 && dungeon[i - 1][j] != 4 && dungeon[i - 1][j] != 12 && dungeon[i - 1][j] != 36 && dungeon[i - 1][j] != 37 && dungeon[i - 1][j] != 209 && dungeon[i - 1][j] != 212 && dungeon[i - 1][j] != 213 && dungeon[i - 1][j] != 214)
+					if (dungeon[i - 1][j] != 2 && dungeon[i - 1][j] != 4 && dungeon[i - 1][j] != 12 && dungeon[i - 1][j] != 14 && dungeon[i - 1][j] != 36 && dungeon[i - 1][j] != 37 && dungeon[i - 1][j] != 209 && dungeon[i - 1][j] != 212 && dungeon[i - 1][j] != 213 && dungeon[i - 1][j] != 214)
 		                dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(dungeon[i - 1][j]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					// 2, 12, 36 -> ok
 					// FIXME: what else?
