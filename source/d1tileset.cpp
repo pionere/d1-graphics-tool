@@ -1188,6 +1188,7 @@ void D1Tileset::fillCryptShapes(bool silent)
         { 368 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },     // 1034
         { 162 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare }, // 483
         {  63 - 1, 4, D1CEL_FRAME_TYPE::Square },            // 239
+        { 450 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // 1315
         // clang-format on
     };
 
@@ -1225,6 +1226,23 @@ void D1Tileset::fillCryptShapes(bool silent)
         if (i == 9) { // 239
             change |= frame->setPixel(0, 19, D1GfxPixel::colorPixel(91));
             change |= frame->setPixel(0, 20, D1GfxPixel::colorPixel(93));
+        }
+        if (i == 10) { // 1315
+            for (int y = 13; y < 16; y++) {
+                for (int x = 2; x < 8; x++) {
+                    if (y > 14 + (x - 2) / 2) {
+                        quint8 color = 43;
+                        if (y == 14 + (x - 2) / 2) {
+                            if ((x & 1) == 0) {
+                                color = 44;
+                            } else if (x == 7) {
+                                color = 77;
+                            }
+                        }
+                        change |= frame->setPixel(x, y, D1GfxPixel::colorPixel(color));
+                    }
+                }
+            }
         }
         std::vector<FramePixel> pixels;
         D1CelTilesetFrame::collectPixels(frame, micro.res_encoding, pixels);
