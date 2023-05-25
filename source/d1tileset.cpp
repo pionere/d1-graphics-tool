@@ -362,8 +362,9 @@ static void ReplaceSubtile(D1Til *til, int tileIndex, unsigned index, int subtil
     }
 }
 
-#define ReplaceMcr(dn, dx, sn, sx) ReplaceFrame(this->min, dn, dx, sn, sx, deletedFrames, silent);
-static void ReplaceFrame(D1Min *min, int dstSubtileRef, int dstMicroIndex, int srcSubtileRef, int srcMicroIndex, std::set<unsigned> &deletedFrames, bool silent)
+#define ReplaceMcr(dn, dx, sn, sx) ReplaceFrame(this->min, dn, dx, sn, sx, &deletedFrames, silent);
+#define SetMcr(dn, dx, sn, sx) ReplaceFrame(this->min, dn, dx, sn, sx, nullptr, silent);
+static void ReplaceFrame(D1Min *min, int dstSubtileRef, int dstMicroIndex, int srcSubtileRef, int srcMicroIndex, std::set<unsigned> *deletedFrames, bool silent)
 {
     int srcSubtileIndex = srcSubtileRef - 1;
     std::vector<unsigned> &srcFrameReferences = min->getFrameReferences(srcSubtileIndex);
@@ -389,8 +390,8 @@ static void ReplaceFrame(D1Min *min, int dstSubtileRef, int dstMicroIndex, int s
     }
     unsigned currFrameReference = dstFrameReferences[dstIndex];
     if (min->setFrameReference(dstSubtileIndex, dstIndex, srcFrameRef)) {
-        if (currFrameReference != 0) {
-            deletedFrames.insert(currFrameReference);
+        if (currFrameReference != 0 && deletedFrames != nullptr) {
+            deletedFrames->insert(currFrameReference);
         }
         if (!silent) {
             dProgress() << QApplication::tr("Frame %1 of Subtile %2 is set to Frame %3.").arg(dstIndex + 1).arg(dstSubtileIndex + 1).arg(srcFrameRef);
@@ -1196,7 +1197,7 @@ void D1Tileset::fillCryptShapes(bool silent)
         if (frame == nullptr) {
             return;
         }
-		bool change = false;
+        bool change = false;
         if (i == 1) { // 907
             change |= frame->setPixel(30, 1, D1GfxPixel::colorPixel(46));
             change |= frame->setPixel(31, 1, D1GfxPixel::colorPixel(76));
@@ -1312,26 +1313,37 @@ void D1Tileset::maskCryptBlacks(bool silent)
 void D1Tileset::fixCryptShadows(bool silent)
 {
     typedef struct {
-        unsigned subtileIndex;
+        int subtileIndex;
         unsigned microIndex;
+        D1CEL_FRAME_TYPE res_encoding;
     } CelMicro;
     const CelMicro micros[] = {
         // clang-format off
-        { 626 - 1, 0 }, // 1806 - 205
-        { 626 - 1, 1 }, // 1807
-        { 627 - 1, 0 }, // 1808
-        { 638 - 1, 1 }, // 1824 - 211
-        { 639 - 1, 0 }, // 1825
-        { 639 - 1, 1 }, // 1799
-        { 631 - 1, 1 }, // 1815 - 207
-        { 277 - 1, 1 }, // 324 - 96
-//      { 303 - 1, 1 }, // 387 - 303
+        { 626 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },  // 1806 - 205
+        { 626 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1807
+        { 627 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },  // 1808
+        { 638 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1824 - 211
+        { 639 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },  // 1825
+        { 639 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1799
+        { 631 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1815 - 207
+        { 277 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare }, // 324 - 96
+//      { 303 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },     // 387 - 303
+        { 620 - 1, 0, D1CEL_FRAME_TYPE::RightTriangle },     // 1798 - '109'
+        { 621 - 1, 1, D1CEL_FRAME_TYPE::Square },            // 1800
+        { 625 - 1, 0, D1CEL_FRAME_TYPE::RightTriangle },     // 1805 - '215'
+        { 624 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // 1813
+        { 619 - 1, 1, D1CEL_FRAME_TYPE::LeftTrapezoid },     // 1797 - '109' + '215'
+        {  15 - 1, 1, D1CEL_FRAME_TYPE::Empty }, // 14
+        {  15 - 1, 2, D1CEL_FRAME_TYPE::Empty }, // 12
+        {  89 - 1, 1, D1CEL_FRAME_TYPE::Empty }, // 311
+        {  89 - 1, 2, D1CEL_FRAME_TYPE::Empty }, // 309
         // clang-format on
     };
 
     // TODO: check if there are enough subtiles
     constexpr unsigned blockSize = BLOCK_SIZE_L5;
-    for (int i = 0; i < lengthof(micros); i++) {
+    const D1GfxPixel SHADOW_COLOR = D1GfxPixel::colorPixel(0); // 79;
+    for (int i = 0; i < 7; i++) {
         const CelMicro &micro = micros[i];
         std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
         D1GfxFrame *frame = microFrame.second;
@@ -1339,14 +1351,6 @@ void D1Tileset::fixCryptShadows(bool silent)
             return;
         }
 
-        D1GfxFrame *frameSrc = nullptr;
-        if (i == 7) { // 324
-            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(303 - 1, blockSize, 1);
-            frameSrc = mf.second;
-            if (frameSrc == nullptr) {
-                return;
-            }
-        }
         bool change = false;
         for (int y = 0; y < MICRO_WIDTH; y++) {
             for (int x = 0; x < MICRO_WIDTH; x++) {
@@ -1379,29 +1383,102 @@ void D1Tileset::fixCryptShadows(bool silent)
                     if (i == 6 && y <= (x / 2) + 15) { // 1815
                         continue;
                     }
-                    //  use consistent lava + shadow micro II.
-                    if (i == 7) { // 324
-                        if (x > 11) {
-                            continue;
-                        }
-                        if (x == 11 && (y < 9 || (y >= 17 && y <= 20))) {
-                            continue;
-                        }
-                        if (x == 10 && (y == 18 || y == 19)) {
-                            continue;
-                        }
-                        D1GfxPixel pixelSrc = frameSrc->getPixel(x, y);
-                        if (pixelSrc.isTransparent()) {
-                            continue;
-                        }
-                        change |= frame->setPixel(x, y, pixelSrc);
-                        continue;
-                    }
                 }
-                change |= frame->setPixel(x, y, D1GfxPixel::colorPixel(0)); // 79;
+                change |= frame->setPixel(x, y, SHADOW_COLOR);
             }
         }
         if (change) {
+            // frame->setFrameType(micro.res_encoding);
+            this->gfx->setModified();
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
+            }
+        }
+    }
+    for (int i = 7; i < 13; i++) {
+        const CelMicro &micro = micros[i];
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
+        if (frame == nullptr) {
+            return;
+        }
+
+        D1GfxFrame *frameSrc = nullptr;
+        if (i != 7 + 5) { // 1797
+            const CelMicro &microSrc = micros[i + 5];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            frameSrc = mf.second;
+            if (frameSrc == nullptr) {
+                return;
+            }
+        }
+        bool change = false;
+        for (int y = 0; y < MICRO_WIDTH; y++) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                //  use consistent lava + shadow micro II.
+                if (i == 7) { // 324
+                    if (x > 11) {
+                        continue;
+                    }
+                    if (x == 11 && (y < 9 || (y >= 17 && y <= 20))) {
+                        continue;
+                    }
+                    if (x == 10 && (y == 18 || y == 19)) {
+                        continue;
+                    }
+                    D1GfxPixel pixelSrc = frameSrc->getPixel(x, y);
+                    if (pixelSrc.isTransparent()) {
+                        continue;
+                    }
+                    change |= frame->setPixel(x, y, pixelSrc);
+                    continue;
+                }
+
+                D1GfxPixel srcPixel = frameSrc != nullptr ? frameSrc->getPixel(x, y) : SHADOW_COLOR;
+                if (i == 7 + 5) { // 1797
+                    srcPixel = y > 16 + x / 2 ? D1GfxPixel::transparentPixel() : SHADOW_COLOR;
+                }
+                if (i == 7 + 1) { // 1798
+                    // wall/floor in shadow
+                    if (x <= 1) {
+                        if (y >= 4 * x) {
+                        srcPixel = SHADOW_COLOR;
+                        }
+                    } else if (x <= 3) {
+                        if (y > 6 + (x - 1) / 2) {
+                            srcPixel = SHADOW_COLOR;
+                        }
+                    } else if (x <= 5) {
+                        if (y >= 7 + 4 * (x - 3)) {
+                            srcPixel = SHADOW_COLOR;
+                        }
+                    } else {
+                        if (y >= 19 + (x - 5) / 2) {
+                            srcPixel = SHADOW_COLOR;
+                        }
+                    }
+                }
+                if (i == 7 + 3) { // 1805
+                    // grate/floor in shadow
+                    if (x <= 1 && y >= 7 * x) {
+                        srcPixel = SHADOW_COLOR;
+                    }
+                    if (x > 1 && y > 14 + (x - 1) / 2) {
+                        srcPixel = SHADOW_COLOR;
+                    }
+                }
+                if (i == 7 + 2 || i == 7 + 4) { // 1800, 1813
+                    // wall/grate in shadow
+                    if (y >= 7 * (x - 27) && !srcPixel.isTransparent()) {
+                        srcPixel = SHADOW_COLOR;
+                    }
+                }
+
+                change |= frame->setPixel(x, y, srcPixel);
+            }
+        }
+        if (change) {
+            frame->setFrameType(micro.res_encoding);
             this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
@@ -1418,6 +1495,16 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 71 - 1, 2, 206, silent);
     ReplaceSubtile(this->til, 72 - 1, 2, 206, silent);
     // use common subtiles
+    ReplaceSubtile(this->til, 4 - 1, 1, 6, silent); // 14
+    ReplaceSubtile(this->til, 14 - 1, 1, 6, silent);
+    ReplaceSubtile(this->til, 115 - 1, 1, 6, silent);
+    ReplaceSubtile(this->til, 132 - 1, 1, 6, silent);
+    ReplaceSubtile(this->til, 159 - 1, 1, 6, silent);
+    ReplaceSubtile(this->til, 1 - 1, 2, 15, silent); // 3
+    ReplaceSubtile(this->til, 27 - 1, 2, 15, silent);
+    ReplaceSubtile(this->til, 43 - 1, 2, 15, silent);
+    ReplaceSubtile(this->til, 79 - 1, 2, 15, silent);
+    ReplaceSubtile(this->til, 6 - 1, 2, 15, silent); // 23
     ReplaceSubtile(this->til, 127 - 1, 2, 4, silent);  // 372
     ReplaceSubtile(this->til, 132 - 1, 2, 15, silent); // 388
     ReplaceSubtile(this->til, 156 - 1, 2, 31, silent); // 468
@@ -1436,7 +1523,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 203 - 1, 0, 638, silent); // 619
     ReplaceSubtile(this->til, 203 - 1, 1, 639, silent); // 620
     ReplaceSubtile(this->til, 203 - 1, 2, 623, silent); // 47
-    ReplaceSubtile(this->til, 203 - 1, 3, 632, silent); // 621
+    ReplaceSubtile(this->til, 203 - 1, 3, 627, silent); // 621
     ReplaceSubtile(this->til, 204 - 1, 0, 638, silent); // 622
     ReplaceSubtile(this->til, 204 - 1, 1, 639, silent); // 46
     ReplaceSubtile(this->til, 204 - 1, 2, 636, silent); // 623
@@ -1444,28 +1531,47 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 108 - 1, 2, 631, silent); // 810
     ReplaceSubtile(this->til, 108 - 1, 3, 626, silent); // 811
     ReplaceSubtile(this->til, 210 - 1, 3, 371, silent); // 637
+
+    ReplaceSubtile(this->til, 109 - 1, 0, 1, silent);   // 312
+    ReplaceSubtile(this->til, 109 - 1, 1, 2, silent);   // 313
+    ReplaceSubtile(this->til, 109 - 1, 2, 3, silent);   // 314
+    ReplaceSubtile(this->til, 109 - 1, 3, 627, silent); // 315
+    ReplaceSubtile(this->til, 110 - 1, 0, 21, silent);  // 316
+    ReplaceSubtile(this->til, 110 - 1, 1, 22, silent);  // 313
+    ReplaceSubtile(this->til, 110 - 1, 2, 3, silent);   // 314
+    ReplaceSubtile(this->til, 110 - 1, 3, 627, silent); // 315
+    ReplaceSubtile(this->til, 111 - 1, 0, 39, silent);  // 317
+    ReplaceSubtile(this->til, 111 - 1, 1, 4, silent);   // 318
+    ReplaceSubtile(this->til, 111 - 1, 2, 242, silent); // 319
+    ReplaceSubtile(this->til, 111 - 1, 3, 627, silent); // 320
+    ReplaceSubtile(this->til, 215 - 1, 0, 101, silent); // 645
+    ReplaceSubtile(this->til, 215 - 1, 1, 4, silent);   // 646
+    ReplaceSubtile(this->til, 215 - 1, 2, 178, silent); // 45
+    ReplaceSubtile(this->til, 215 - 1, 3, 627, silent); // 647
+
     // - 'add' new shadow-types with horizontal arches
     ReplaceSubtile(this->til, 209 - 1, 0, 5, silent); // copy from tile 2
     ReplaceSubtile(this->til, 209 - 1, 1, 6, silent);
     ReplaceSubtile(this->til, 209 - 1, 2, 623, silent);
-    ReplaceSubtile(this->til, 209 - 1, 3, 632, silent);
+    ReplaceSubtile(this->til, 209 - 1, 3, 627, silent);
 
     ReplaceSubtile(this->til, 212 - 1, 0, 42, silent); // copy from tile 12
     ReplaceSubtile(this->til, 212 - 1, 1, 34, silent);
     ReplaceSubtile(this->til, 212 - 1, 2, 623, silent);
-    ReplaceSubtile(this->til, 212 - 1, 3, 632, silent);
+    ReplaceSubtile(this->til, 212 - 1, 3, 627, silent);
 
     ReplaceSubtile(this->til, 213 - 1, 0, 104, silent); // copy from tile 36
     ReplaceSubtile(this->til, 213 - 1, 1, 84, silent);
     ReplaceSubtile(this->til, 213 - 1, 2, 623, silent);
-    ReplaceSubtile(this->til, 213 - 1, 3, 632, silent);
+    ReplaceSubtile(this->til, 213 - 1, 3, 627, silent);
 
     ReplaceSubtile(this->til, 214 - 1, 0, 25, silent); // copy from tile 7
-    ReplaceSubtile(this->til, 214 - 1, 1, 26, silent);
+    ReplaceSubtile(this->til, 214 - 1, 1, 6, silent);
     ReplaceSubtile(this->til, 214 - 1, 2, 623, silent);
-    ReplaceSubtile(this->til, 214 - 1, 3, 632, silent);
+    ReplaceSubtile(this->til, 214 - 1, 3, 627, silent);
 
     // use common subtiles instead of minor alterations
+    ReplaceSubtile(this->til, 7 - 1, 1, 6, silent); // 26
     ReplaceSubtile(this->til, 159 - 1, 1, 14, silent); // 479
     ReplaceSubtile(this->til, 133 - 1, 2, 19, silent); // 390
     ReplaceSubtile(this->til, 10 - 1, 1, 18, silent);  // 37
@@ -1609,6 +1715,25 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 187 - 1, 2, 12, silent);
     ReplaceSubtile(this->til, 188 - 1, 2, 12, silent);
     // patch dMiniTiles - L5.MIN
+    // prepare subtiles after fixCryptShadows
+    ReplaceMcr(3, 0, 619, 1);
+    ReplaceMcr(3, 1, 620, 0);
+    ReplaceMcr(3, 2, 621, 1);
+    Blk2Mcr(3, 4);
+    ReplaceMcr(3, 6, 15, 6);
+    // SetMcr(242, 0, 630, 0);
+    SetMcr(242, 0, 626, 0);
+    ReplaceMcr(242, 1, 626, 1);
+    // SetMcr(242, 2, 31, 2);
+    Blk2Mcr(242, 4);
+    SetMcr(242, 8, 31, 8);
+    ReplaceMcr(242, 6, 31, 6);
+    ReplaceMcr(178, 0, 619, 1);
+    ReplaceMcr(178, 1, 625, 0);
+    SetMcr(178, 2, 624, 0);
+    Blk2Mcr(178, 4);
+    ReplaceMcr(178, 6, 31, 6);
+    ReplaceMcr(178, 8, 31, 8);
     // pointless door micros (re-drawn by dSpecial)
     Blk2Mcr(77, 6);
     Blk2Mcr(77, 8);
@@ -1701,12 +1826,12 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(324, 7, 6, 7);
     ReplaceMcr(432, 7, 6, 7);
     ReplaceMcr(440, 7, 6, 7);
-    ReplaceMcr(26, 9, 6, 9);
+    // ReplaceMcr(26, 9, 6, 9);
     ReplaceMcr(340, 9, 6, 9);
     ReplaceMcr(394, 9, 6, 9);
     ReplaceMcr(451, 9, 6, 9);
-    ReplaceMcr(14, 7, 6, 7); // lost shine
-    ReplaceMcr(26, 7, 6, 7); // lost shine
+    // ReplaceMcr(14, 7, 6, 7); // lost shine
+    // ReplaceMcr(26, 7, 6, 7); // lost shine
     // ReplaceMcr(80, 7, 6, 7);
     ReplaceMcr(451, 7, 6, 7); // lost shine
     ReplaceMcr(340, 7, 6, 7); // lost shine
@@ -1718,8 +1843,8 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(269, 5, 554, 5); // lost details
     ReplaceMcr(556, 5, 554, 5);
     ReplaceMcr(440, 5, 432, 5); // lost details
-    ReplaceMcr(14, 5, 6, 5);    // lost details
-    ReplaceMcr(26, 5, 6, 5);    // lost details
+    // ReplaceMcr(14, 5, 6, 5);    // lost details
+    // ReplaceMcr(26, 5, 6, 5);    // lost details
     ReplaceMcr(451, 5, 6, 5);   // lost details
     ReplaceMcr(80, 5, 6, 5);    // lost details
     ReplaceMcr(324, 5, 432, 5); // lost details
@@ -1728,7 +1853,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(380, 5, 432, 5); // lost details
     ReplaceMcr(394, 5, 432, 5); // lost details
     ReplaceMcr(6, 3, 14, 3);    // lost details
-    ReplaceMcr(26, 3, 14, 3);   // lost details
+    // ReplaceMcr(26, 3, 14, 3);   // lost details
     ReplaceMcr(80, 3, 14, 3);   // lost details
     ReplaceMcr(269, 3, 14, 3);  // lost details
     ReplaceMcr(414, 3, 14, 3);  // lost details
@@ -1743,14 +1868,14 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(432, 3, 380, 3); // lost details
     ReplaceMcr(440, 3, 380, 3); // lost details
     ReplaceMcr(6, 0, 14, 0);
-    ReplaceMcr(26, 0, 14, 0);
+    // ReplaceMcr(26, 0, 14, 0);
     ReplaceMcr(269, 0, 14, 0);
     ReplaceMcr(554, 0, 14, 0);  // lost details
     ReplaceMcr(340, 0, 324, 0); // lost details
     ReplaceMcr(364, 0, 324, 0); // lost details
     ReplaceMcr(451, 0, 324, 0); // lost details
-    ReplaceMcr(14, 1, 6, 1);
-    ReplaceMcr(26, 1, 6, 1);
+    // ReplaceMcr(14, 1, 6, 1);
+    // ReplaceMcr(26, 1, 6, 1);
     ReplaceMcr(80, 1, 6, 1);
     ReplaceMcr(269, 1, 6, 1);
     ReplaceMcr(380, 1, 6, 1);
@@ -1824,7 +1949,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(80, 9, 6, 9);
     // ReplaceMcr(209, 9, 6, 9);
     ReplaceMcr(616, 9, 6, 9);
-    ReplaceMcr(14, 9, 6, 9);  // lost details
+    // ReplaceMcr(14, 9, 6, 9);  // lost details
     ReplaceMcr(68, 9, 6, 9);  // lost details
     ReplaceMcr(84, 9, 6, 9);  // lost details
     ReplaceMcr(152, 9, 6, 9); // lost details
@@ -1836,8 +1961,8 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(554, 9, 6, 9); // lost details
     ReplaceMcr(556, 9, 6, 9); // lost details
     ReplaceMcr(608, 9, 6, 9); // lost details
-    ReplaceMcr(15, 8, 3, 8);
-    ReplaceMcr(23, 8, 3, 8);
+    // ReplaceMcr(15, 8, 3, 8);
+    // ReplaceMcr(23, 8, 3, 8);
     ReplaceMcr(65, 8, 3, 8);
     // ReplaceMcr(77, 8, 3, 8);
     ReplaceMcr(153, 8, 3, 8);
@@ -1858,7 +1983,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(605, 8, 3, 8);
     ReplaceMcr(613, 8, 3, 8);
     ReplaceMcr(3, 6, 15, 6);
-    ReplaceMcr(23, 6, 15, 6);
+    // ReplaceMcr(23, 6, 15, 6);
     ReplaceMcr(329, 6, 15, 6);
     ReplaceMcr(377, 6, 15, 6);
     ReplaceMcr(441, 6, 15, 6);
@@ -1875,24 +2000,24 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(429, 6, 353, 6);
     ReplaceMcr(530, 6, 353, 6);
     ReplaceMcr(613, 6, 353, 6);
-    ReplaceMcr(3, 4, 15, 4);
-    ReplaceMcr(23, 4, 15, 4);
+    // ReplaceMcr(3, 4, 15, 4);
+    // ReplaceMcr(23, 4, 15, 4);
     ReplaceMcr(401, 4, 15, 4);
     ReplaceMcr(605, 4, 15, 4);
     ReplaceMcr(322, 4, 337, 4);
     ReplaceMcr(353, 4, 337, 4);
     ReplaceMcr(377, 4, 337, 4);
-    ReplaceMcr(3, 2, 15, 2);
-    ReplaceMcr(23, 2, 15, 2);
+    // ReplaceMcr(3, 2, 15, 2);
+    // ReplaceMcr(23, 2, 15, 2);
     ReplaceMcr(464, 2, 15, 2);
     ReplaceMcr(541, 2, 258, 2);
-    ReplaceMcr(3, 0, 15, 0);
-    ReplaceMcr(23, 0, 15, 0);
+    // ReplaceMcr(3, 0, 15, 0);
+    // ReplaceMcr(23, 0, 15, 0);
     ReplaceMcr(337, 0, 15, 0);
     ReplaceMcr(322, 0, 392, 0);
     ReplaceMcr(353, 0, 392, 0);
-    ReplaceMcr(3, 1, 15, 1);
-    ReplaceMcr(23, 1, 15, 1);
+    // ReplaceMcr(3, 1, 15, 1);
+    // ReplaceMcr(23, 1, 15, 1);
     ReplaceMcr(250, 1, 15, 1);
     ReplaceMcr(258, 1, 15, 1);
     ReplaceMcr(543, 1, 15, 1);
@@ -2047,7 +2172,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(621, 1, 48, 1);
     ReplaceMcr(647, 1, 48, 1);
     // ReplaceMcr(627, 0, 624, 0);
-    ReplaceMcr(632, 0, 627, 0);
+    // ReplaceMcr(632, 0, 627, 0);
     ReplaceMcr(628, 0, 2, 0);
     ReplaceMcr(629, 1, 639, 1);
     // ReplaceMcr(637, 0, 624, 0);
@@ -2634,6 +2759,10 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(151, 2, 151, 5); // added details
     // eliminate micros of unused subtiles
     // Blk2Mcr(32, 202, 641, ..);
+    Blk2Mcr(14, 1);
+    Blk2Mcr(14, 5);
+    Blk2Mcr(14, 7);
+    Blk2Mcr(14, 9);
     Blk2Mcr(37, 7);
     Blk2Mcr(37, 9);
     Blk2Mcr(236, 0);
@@ -2653,10 +2782,6 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(241, 0);
     Blk2Mcr(241, 1);
     Blk2Mcr(241, 5);
-    Blk2Mcr(242, 0);
-    Blk2Mcr(242, 1);
-    Blk2Mcr(242, 4);
-    Blk2Mcr(242, 6);
     Blk2Mcr(243, 0);
     Blk2Mcr(243, 1);
     Blk2Mcr(243, 5);
@@ -2683,11 +2808,6 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(198, 1);
     Blk2Mcr(199, 0);
     Blk2Mcr(203, 0);
-    Blk2Mcr(178, 0);
-    Blk2Mcr(178, 1);
-    Blk2Mcr(178, 4);
-    Blk2Mcr(178, 6);
-    Blk2Mcr(178, 8);
     Blk2Mcr(180, 0);
     Blk2Mcr(180, 8);
     Blk2Mcr(180, 9);
@@ -2764,12 +2884,14 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(229, 1);
     Blk2Mcr(231, 1);
     Blk2Mcr(372, 1);
-    Blk2Mcr(619, 1);
-    Blk2Mcr(620, 0);
-    Blk2Mcr(621, 1);
-    Blk2Mcr(624, 0);
-    Blk2Mcr(625, 0);
+    // reused micros in fixCryptShadows
+    // Blk2Mcr(619, 1);
+    // Blk2Mcr(620, 0);
+    // Blk2Mcr(621, 1);
+    // Blk2Mcr(624, 0);
+    // Blk2Mcr(625, 0);
     Blk2Mcr(630, 0);
+    Blk2Mcr(632, 0);
     Blk2Mcr(633, 0);
     Blk2Mcr(637, 0);
     Blk2Mcr(642, 1);
@@ -2779,7 +2901,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(649, 1);
     Blk2Mcr(650, 0);
     int unusedSubtiles[] = {
-        8, 10, 11, 16, 19, 20, 24, 28, 30, 35, 38, 40, 43, 44, 50, 52, 56, 76, 78, 81, 82, 87, 90, 92, 94, 96, 98, 100, 102, 103, 105, 106, 108, 110, 112, 114, 116, 124, 127, 128, 137, 138, 139, 141, 143, 147, 148, 172, 174, 176, 177, 202, 205, 207, 210, 211, 214, 217, 219, 221, 223, 225, 227, 233, 235, 239, 249, 251, 253, 257, 259, 262, 263, 270, 273, 278, 279, 295, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 354, 373, 381, 390, 472, 489, 490, 540, 560, 640, 643, 648
+        8, 10, 11, 16, 19, 20, 23, 24, 26, 28, 30, 35, 38, 40, 43, 44, 50, 52, 56, 76, 78, 81, 82, 87, 90, 92, 94, 96, 98, 100, 102, 103, 105, 106, 108, 110, 112, 114, 116, 124, 127, 128, 137, 138, 139, 141, 143, 147, 148, 172, 174, 176, 177, 202, 205, 207, 210, 211, 214, 217, 219, 221, 223, 225, 227, 233, 235, 239, 249, 251, 253, 257, 259, 262, 263, 270, 273, 278, 279, 295, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 354, 373, 381, 390, 472, 489, 490, 540, 560, 640, 643, 648
     };
     for (int n = 0; n < lengthof(unusedSubtiles); n++) {
         for (int i = 0; i < blockSize; i++) {
