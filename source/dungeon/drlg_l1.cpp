@@ -756,6 +756,8 @@ void DRLG_L5Shadows()
 			case 35:
 			case 14:
 			case 37:
+			case 215:
+			case 111:
 				vertArch = true;
 				break;
 			case 9:
@@ -774,6 +776,14 @@ void DRLG_L5Shadows()
 			if (horizArch) {
 				if (dungeon[i][j - 1] == 13) {
 					dungeon[i][j - 1] = 205;
+				} else if (dungeon[i][j - 1] == 1) {
+					dungeon[i][j - 1] = 109;
+				} else if (dungeon[i][j - 1] == 6) {
+					dungeon[i][j - 1] = 110;
+				} else if (dungeon[i][j - 1] == 11) {
+					dungeon[i][j - 1] = 111;
+				} else if (dungeon[i][j - 1] == 35) {
+					dungeon[i][j - 1] = 215;
 				//} else if (dungeon[i][j - 1] == 203) {
 				//	dungeon[i][j - 1] = 204;
 				} else {

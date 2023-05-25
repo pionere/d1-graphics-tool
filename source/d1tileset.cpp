@@ -1177,14 +1177,17 @@ void D1Tileset::fillCryptShapes(bool silent)
     } CelMicro;
     const CelMicro micros[] = {
         // clang-format off
-        { 159 - 1, 3, D1CEL_FRAME_TYPE::Square },         // 473
-//      { 159 - 1, 3, D1CEL_FRAME_TYPE::RightTrapezoid }, // 475
-        { 336 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },   // 907
-        { 409 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },   // 1168
-        { 481 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },  // 1406
-        { 492 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },   // 1436
-        { 519 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },   // 1493
-        { 595 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },  // 1710
+        { 159 - 1, 3, D1CEL_FRAME_TYPE::Square },            // 473
+//      { 159 - 1, 3, D1CEL_FRAME_TYPE::RightTrapezoid },    // 475
+        { 336 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // 907
+        { 409 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // 1168
+        { 481 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },     // 1406
+        { 492 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // 1436
+        { 519 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // 1493
+        { 595 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },     // 1710
+        { 368 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },     // 1034
+        { 162 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare }, // 483
+        {  63 - 1, 4, D1CEL_FRAME_TYPE::Square },            // 239
         // clang-format o
     };
 
@@ -1204,6 +1207,24 @@ void D1Tileset::fillCryptShapes(bool silent)
         }
         if (i == 5) { // 1493
             change |= frame->setPixel(0, 16, D1GfxPixel::colorPixel(43));
+        }
+        if (i == 7) { // 1043
+            change |= frame->setPixel(0, 7, D1GfxPixel::colorPixel(43));
+            change |= frame->setPixel(0, 9, D1GfxPixel::colorPixel(41));
+        }
+        if (i == 8) { // 483
+            change |= frame->setPixel(31, 13, D1GfxPixel::colorPixel(41));
+            change |= frame->setPixel(31, 14, D1GfxPixel::colorPixel(36));
+            change |= frame->setPixel(31, 18, D1GfxPixel::colorPixel(36));
+            change |= frame->setPixel(30, 19, D1GfxPixel::colorPixel(35));
+            change |= frame->setPixel(31, 20, D1GfxPixel::colorPixel(45));
+            change |= frame->setPixel(31, 21, D1GfxPixel::colorPixel(63));
+            change |= frame->setPixel(31, 22, D1GfxPixel::colorPixel(40));
+            change |= frame->setPixel(31, 29, D1GfxPixel::colorPixel(36));
+        }
+        if (i == 9) { // 239
+            change |= frame->setPixel(0, 19, D1GfxPixel::colorPixel(91));
+            change |= frame->setPixel(0, 20, D1GfxPixel::colorPixel(93));
         }
         std::vector<FramePixel> pixels;
         D1CelTilesetFrame::collectPixels(frame, micro.res_encoding, pixels);
@@ -2056,6 +2077,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(12, 0, 53, 0);
     // ReplaceMcr(54, 0, 53, 0);
     ReplaceMcr(62, 0, 53, 0);
+    ReplaceMcr(368, 0, 53, 0); // lost details
     // ReplaceMcr(44, 0, 28, 0);
     // ReplaceMcr(82, 0, 28, 0);
     // ReplaceMcr(106, 0, 28, 0);
