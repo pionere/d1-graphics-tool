@@ -1442,7 +1442,7 @@ void D1Tileset::fixCryptShadows(bool silent)
                     // wall/floor in shadow
                     if (x <= 1) {
                         if (y >= 4 * x) {
-                        srcPixel = SHADOW_COLOR;
+                            srcPixel = SHADOW_COLOR;
                         }
                     } else if (x <= 3) {
                         if (y > 6 + (x - 1) / 2) {
@@ -1504,7 +1504,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 27 - 1, 2, 15, silent);
     ReplaceSubtile(this->til, 43 - 1, 2, 15, silent);
     ReplaceSubtile(this->til, 79 - 1, 2, 15, silent);
-    ReplaceSubtile(this->til, 6 - 1, 2, 15, silent); // 23
+    ReplaceSubtile(this->til, 6 - 1, 2, 15, silent);   // 23
     ReplaceSubtile(this->til, 127 - 1, 2, 4, silent);  // 372
     ReplaceSubtile(this->til, 132 - 1, 2, 15, silent); // 388
     ReplaceSubtile(this->til, 156 - 1, 2, 31, silent); // 468
@@ -1571,7 +1571,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 214 - 1, 3, 627, silent);
 
     // use common subtiles instead of minor alterations
-    ReplaceSubtile(this->til, 7 - 1, 1, 6, silent); // 26
+    ReplaceSubtile(this->til, 7 - 1, 1, 6, silent);    // 26
     ReplaceSubtile(this->til, 159 - 1, 1, 14, silent); // 479
     ReplaceSubtile(this->til, 133 - 1, 2, 19, silent); // 390
     ReplaceSubtile(this->til, 10 - 1, 1, 18, silent);  // 37
@@ -1854,12 +1854,12 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(394, 5, 432, 5); // lost details
     ReplaceMcr(6, 3, 14, 3);    // lost details
     // ReplaceMcr(26, 3, 14, 3);   // lost details
-    ReplaceMcr(80, 3, 14, 3);   // lost details
-    ReplaceMcr(269, 3, 14, 3);  // lost details
-    ReplaceMcr(414, 3, 14, 3);  // lost details
-    ReplaceMcr(451, 3, 14, 3);  // lost details
-    ReplaceMcr(554, 3, 14, 3);  // lost details
-    ReplaceMcr(556, 3, 14, 3);  // lost details
+    ReplaceMcr(80, 3, 14, 3);  // lost details
+    ReplaceMcr(269, 3, 14, 3); // lost details
+    ReplaceMcr(414, 3, 14, 3); // lost details
+    ReplaceMcr(451, 3, 14, 3); // lost details
+    ReplaceMcr(554, 3, 14, 3); // lost details
+    ReplaceMcr(556, 3, 14, 3); // lost details
     // ? ReplaceMcr(608, 3, 103, 3); // lost details
     ReplaceMcr(324, 3, 380, 3); // lost details
     ReplaceMcr(324, 3, 380, 3); // lost details
@@ -1961,7 +1961,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(554, 9, 6, 9); // lost details
     ReplaceMcr(556, 9, 6, 9); // lost details
     ReplaceMcr(608, 9, 6, 9); // lost details
-    // ReplaceMcr(15, 8, 3, 8);
+    ReplaceMcr(15, 8, 3, 8);
     // ReplaceMcr(23, 8, 3, 8);
     ReplaceMcr(65, 8, 3, 8);
     // ReplaceMcr(77, 8, 3, 8);
