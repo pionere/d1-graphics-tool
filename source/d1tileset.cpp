@@ -1635,7 +1635,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 211 - 1, 3, 48, silent);  // 621
     ReplaceSubtile(this->til, 205 - 1, 0, 45, silent);  // 625
     ReplaceSubtile(this->til, 207 - 1, 0, 45, silent);  // 630
-    ReplaceSubtile(this->til, 207 - 1, 2, 627, silent); // 632
+    ReplaceSubtile(this->til, 207 - 1, 3, 627, silent); // 632
     ReplaceSubtile(this->til, 208 - 1, 0, 45, silent);  // 633
 
     ReplaceSubtile(this->til, 27 - 1, 3, 4, silent); // 85

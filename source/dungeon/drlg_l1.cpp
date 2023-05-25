@@ -616,7 +616,18 @@ const BYTE L5RNDCOL7[] = {
 	 45, 160,
 	// clang-format on
 };
-const BYTE L5RNDCOL8[] = {
+const BYTE L5RNDCOL8a[] = {
+	// clang-format off
+	1, 2, // width, height
+
+	205, // search
+	 12,
+
+	208, // replace
+	187,
+	// clang-format on
+};
+const BYTE L5RNDCOL8b[] = {
 	// clang-format off
 	1, 2, // width, height
 
@@ -2153,11 +2164,11 @@ static void DRLG_L5Crypt_pattern6(BYTE rndper)
 	/** Miniset: Column on the northern side of a vertical wall 2. */
 	DRLG_PlaceRndTile(11, 185, rndper);
 	/** Miniset: Column on the northern side of a horizontal wall 2. */
-	DRLG_PlaceRndTile(12, 187, rndper);
+	DRLG_L5PlaceRndSet(L5RNDCOL8a, rndper); // 12 -> 187
 	/** Miniset: Column on the northern side of a vertical wall 3. */
 	DRLG_PlaceRndTile(11, 186, rndper);
 	/** Miniset: Column on the northern side of a horizontal wall 3. */
-	DRLG_L5PlaceRndSet(L5RNDCOL8, rndper); // 12 -> 188
+	DRLG_L5PlaceRndSet(L5RNDCOL8b, rndper); // 12 -> 188
 	/** Miniset: Use random column 1. (Cracked) */
 	DRLG_L5PlaceRndSet(L5RNDCOL9, rndper); // 15 -> 192
 	/** Miniset: Replace vertical wall tile on the bottom 1. */
