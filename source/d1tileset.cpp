@@ -1230,9 +1230,9 @@ void D1Tileset::fillCryptShapes(bool silent)
         if (i == 10) { // 1315
             for (int y = 13; y < 16; y++) {
                 for (int x = 2; x < 8; x++) {
-                    if (y > 14 + (x - 2) / 2) {
+                    if (y > 14 - (x - 2) / 2) {
                         quint8 color = 43;
-                        if (y == 14 + (x - 2) / 2) {
+                        if (y == 14 - (x - 2) / 2) {
                             if ((x & 1) == 0) {
                                 color = 44;
                             } else if (x == 7) {
