@@ -32,7 +32,7 @@ static BOOLEAN ChambersMiddle;
 static BOOLEAN ChambersLast;
 
 /** Contains shadows for 2x2 blocks of tiles in the Cathedral. */
-const ShadowStruct L1SPATS[] = {
+static const ShadowStruct L1SPATS[] = {
 	// clang-format off
 	//sh11, 01, 10,  00,   mask11    01    10    00    nv1, nv2, nv3
 	{ { SF, 11, 12,   3 }, { 0xFF, 0xFF, 0xFF, 0xFF }, 150,   0,   0 },
@@ -162,7 +162,7 @@ const ShadowStruct L1SPATS[] = {
  * Value 4 is reused for the most common floor type (13) to increase the speed.
  * BUGFIX: This array should contain an additional 0 (207 elements).
  */
-const BYTE BSTYPES[] = {
+static const BYTE BSTYPES[] = {
 	// clang-format off
 	0, 1, 2, 3, 0/*4*/, 5, 0/*6*/, 7, 8, 9,
 	10, 11, 12, SF, 14, 15, 16, 0/*17*/, 0, 0,
@@ -190,7 +190,7 @@ const BYTE BSTYPES[] = {
 /*
  * Maps tile IDs to their corresponding undecorated tile type.
  */
-const BYTE L1BTYPES[207] = {
+static const BYTE L1BTYPES[207] = {
 	// clang-format off
 	0, 1, 2, 0, 0, 0, 0, 0, 0, 0,
 	0, 3, 4, 5, 0, 0, 0, 0, 0, 0, // 10..
@@ -218,7 +218,7 @@ const BYTE L1BTYPES[207] = {
 /*
  * Specifies where the given tile ID should spread the room ID (transval). TODO: add to SOL with trap type?
  */
-const BYTE L1FTYPES[207] = {
+static const BYTE L1FTYPES[207] = {
 	// clang-format off
 	 0, 10, 12, 14,  8,  8, 10, 12, 10, 12,
 	 8, 10, 12, 15,  8, 14, 14, 14,  0,  0, // 10..
@@ -247,7 +247,7 @@ const BYTE L1FTYPES[207] = {
 /*
  * Specifies where the given tile ID should spread the room ID (transval).
  */
-const BYTE L5FTYPES[218] = {
+static const BYTE L5FTYPES[218] = {
 	// clang-format off
 	 0, 10, 12,  8,  8,  8, 10, 12, 10, 12,
 	 8, 10, 12, 15,  8,  8,  8,  8,  0,  0, // 10..
@@ -313,7 +313,7 @@ const BYTE L5FTYPES[218] = {
 //	// clang-format on
 //};
 #ifdef HELLFIRE
-const BYTE L5USTAIRS[] = {
+static const BYTE L5USTAIRS[] = {
 	// clang-format off
 	4, 5, // width, height
 
@@ -346,7 +346,7 @@ const BYTE L5USTAIRS[] = {
 };
 #endif
 /** Miniset: stairs up. */
-const BYTE L1USTAIRS[] = {
+static const BYTE L1USTAIRS[] = {
 	// clang-format off
 	4, 4, // width, height
 
@@ -376,7 +376,7 @@ const BYTE L1USTAIRS[] = {
  * Miniset: stairs down.
  * Added an extra line to the top to prevent placing it too close to other entities (eg. upstair)
  */
-const BYTE L1DSTAIRS[] = {
+static const BYTE L1DSTAIRS[] = {
 	// clang-format off
 	4, 4, // width, height
 
@@ -403,7 +403,7 @@ const BYTE L1DSTAIRS[] = {
 	// clang-format on
 };
 #ifdef HELLFIRE
-const BYTE L5DSTAIRS[] = {
+static const BYTE L5DSTAIRS[] = {
 	// clang-format off
 	4, 5, // width, height
 
@@ -440,7 +440,7 @@ const BYTE L5TWARP[] = {
 };*/
 #endif
 /** Miniset: candlestick. */
-const BYTE LAMPS[] = {
+static const BYTE LAMPS[] = {
 	// clang-format off
 	2, 2, // width, height
 
@@ -452,7 +452,7 @@ const BYTE LAMPS[] = {
 	// clang-format on
 };
 /** Miniset: Poisoned Water Supply entrance. */
-const BYTE PWATERIN[] = {
+static const BYTE PWATERIN[] = {
 	// clang-format off
 	6, 6, // width, height
 
@@ -473,11 +473,22 @@ const BYTE PWATERIN[] = {
 };
 #ifdef HELLFIRE
 /** Miniset: Column on the northern side of a vertical wall 1. */
-const BYTE L5VERTCOL1[] = { 1, 1, 11, 95 };
+static const BYTE L5VERTCOL1[] = { 1, 1, 11, 95 };
 /** Miniset: Column on the northern side of a horizontal wall 1. */
-const BYTE L5HORIZCOL1[] = { 1, 1, 12, 96 };
+//static const BYTE L5HORIZCOL1[] = { 1, 1, 12, 96 };
+static const BYTE L5HORIZCOL1[] = {
+	// clang-format off
+	1, 2, // width, height
+
+	205, // search
+	 12,
+
+	208, // replace
+	 96,
+	// clang-format on
+};
 /** Miniset: Prepare random large vertical wall tile */
-const BYTE L5PREVERTWALL[] = {
+static const BYTE L5PREVERTWALL[] = {
 	// clang-format off
 	1, 3, // width, height
 
@@ -491,7 +502,7 @@ const BYTE L5PREVERTWALL[] = {
 	// clang-format on
 };
 /** Miniset: Prepare random large horizontal wall tile */
-const BYTE L5PREHORIZWALL[] = {
+static const BYTE L5PREHORIZWALL[] = {
 	// clang-format off
 	3, 1, // width, height
 
@@ -501,15 +512,15 @@ const BYTE L5PREHORIZWALL[] = {
 	// clang-format on
 };
 /** Miniset: Use random floor tile 1. */
-const BYTE L5RNDFLOOR1[] = { 1, 1, 13, 97 };
+static const BYTE L5RNDFLOOR1[] = { 1, 1, 13, 97 };
 /** Miniset: Use random floor tile 2. */
-const BYTE L5RNDFLOOR2[] = { 1, 1, 13, 98 };
+static const BYTE L5RNDFLOOR2[] = { 1, 1, 13, 98 };
 /** Miniset: Use random floor tile 3. */
-const BYTE L5RNDFLOOR3[] = { 1, 1, 13, 99 };
+static const BYTE L5RNDFLOOR3[] = { 1, 1, 13, 99 };
 /** Miniset: Use random floor tile 4. */
-const BYTE L5RNDFLOOR4[] = { 1, 1, 13, 100 };
+static const BYTE L5RNDFLOOR4[] = { 1, 1, 13, 100 };
 /** Miniset: Use random large floor tile. */
-const BYTE L5RNDLFLOOR1[] = {
+static const BYTE L5RNDLFLOOR1[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -523,7 +534,7 @@ const BYTE L5RNDLFLOOR1[] = {
 	// clang-format on
 };
 /** Miniset: Lava fountain bowl. */
-const BYTE L5RNDLFLOOR2[] = {
+static const BYTE L5RNDLFLOOR2[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -537,7 +548,7 @@ const BYTE L5RNDLFLOOR2[] = {
 	// clang-format on
 };
 /** Miniset: Mooring on a stone. */
-const BYTE L5RNDLFLOOR3[] = {
+static const BYTE L5RNDLFLOOR3[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -564,7 +575,7 @@ const BYTE L5RNDLFLOOR4[] = {
 	0,   0, 0,
 };
 /** Miniset: A stone. */
-const BYTE L5RNDLFLOOR5[] = {
+static const BYTE L5RNDLFLOOR5[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -578,7 +589,7 @@ const BYTE L5RNDLFLOOR5[] = {
 	// clang-format on
 };
 /** Miniset: A broken head of a stone-column. */
-const BYTE L5RNDLFLOOR6[] = {
+static const BYTE L5RNDLFLOOR6[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -592,7 +603,7 @@ const BYTE L5RNDLFLOOR6[] = {
 	// clang-format on
 };
 /** Miniset: A leaf on the floor. */
-const BYTE L5RNDLFLOOR7[] = {
+static const BYTE L5RNDLFLOOR7[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -605,7 +616,7 @@ const BYTE L5RNDLFLOOR7[] = {
 	 0,   0, 0,
 	// clang-format on
 };
-const BYTE L5RNDCOL7[] = {
+static const BYTE L5RNDCOL7[] = {
 	// clang-format off
 	2, 2, // width, height
 
@@ -616,7 +627,7 @@ const BYTE L5RNDCOL7[] = {
 	 45, 160,
 	// clang-format on
 };
-const BYTE L5RNDCOL8a[] = {
+/*const BYTE L5RNDCOL8a[] = {
 	// clang-format off
 	1, 2, // width, height
 
@@ -637,8 +648,8 @@ const BYTE L5RNDCOL8b[] = {
 	208, // replace
 	188,
 	// clang-format on
-};
-const BYTE L5RNDCOL9[] = {
+};*/
+static const BYTE L5RNDCOL9[] = {
 	// clang-format off
 	2, 2, // width, height
 
@@ -655,7 +666,7 @@ const BYTE L5RNDCOL9[] = {
  * A lookup table for the 16 possible patterns of a 2x2 area,
  * where each cell either contains a SW wall or it doesn't.
  */
-const BYTE L1ConvTbl[16] = { BASE_MEGATILE_L1, 13, 1, 13, 2, 13, 13, 13, 4, 13, 1, 13, 2, 13, 16, 13 };
+static const BYTE L1ConvTbl[16] = { BASE_MEGATILE_L1, 13, 1, 13, 2, 13, 13, 13, 4, 13, 1, 13, 2, 13, 16, 13 };
 
 /*
  * Place doors on the marked places.
@@ -2163,12 +2174,14 @@ static void DRLG_L5Crypt_pattern6(BYTE rndper)
 {
 	/** Miniset: Column on the northern side of a vertical wall 2. */
 	DRLG_PlaceRndTile(11, 185, rndper);
-	/** Miniset: Column on the northern side of a horizontal wall 2. */
-	DRLG_L5PlaceRndSet(L5RNDCOL8a, rndper); // 12 -> 187
 	/** Miniset: Column on the northern side of a vertical wall 3. */
 	DRLG_PlaceRndTile(11, 186, rndper);
+	/** Miniset: Column on the northern side of a horizontal wall 2. */
+	// DRLG_L5PlaceRndSet(L5RNDCOL8a, rndper); // 12 -> 187
+	DRLG_L5PlaceRndSet(96, 187, rndper);
 	/** Miniset: Column on the northern side of a horizontal wall 3. */
-	DRLG_L5PlaceRndSet(L5RNDCOL8b, rndper); // 12 -> 188
+	//DRLG_L5PlaceRndSet(L5RNDCOL8b, rndper); // 12 -> 188
+	DRLG_PlaceRndTile(96, 188, rndper);
 	/** Miniset: Use random column 1. (Cracked) */
 	DRLG_L5PlaceRndSet(L5RNDCOL9, rndper); // 15 -> 192
 	/** Miniset: Replace vertical wall tile on the bottom 1. */

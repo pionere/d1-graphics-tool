@@ -2108,8 +2108,8 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(548, 0, 166, 0);
     // ReplaceMcr(105, 0, 43, 0);
     // ReplaceMcr(105, 1, 43, 1);
-    ReplaceMcr(278, 0, 43, 0);
-    ReplaceMcr(278, 1, 43, 1);
+    // ReplaceMcr(278, 0, 43, 0);
+    // ReplaceMcr(278, 1, 43, 1);
     // ReplaceMcr(10, 1, 12, 1);
     // ReplaceMcr(11, 1, 12, 1);
     // ReplaceMcr(53, 1, 12, 1);
