@@ -1188,7 +1188,7 @@ void D1Tileset::fillCryptShapes(bool silent)
         { 368 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },     // 1034
         { 162 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare }, // 483
         {  63 - 1, 4, D1CEL_FRAME_TYPE::Square },            // 239
-        // clang-format o
+        // clang-format on
     };
 
     // TODO: check if there are enough subtiles
@@ -1348,12 +1348,12 @@ void D1Tileset::fixCryptShadows(bool silent)
         { 639 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1799
         { 631 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1815 - 207
         { 277 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare }, // 324 - 96
-//      { 303 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },     // 387 - 303
         { 620 - 1, 0, D1CEL_FRAME_TYPE::RightTriangle },     // 1798 - '109'
         { 621 - 1, 1, D1CEL_FRAME_TYPE::Square },            // 1800
         { 625 - 1, 0, D1CEL_FRAME_TYPE::RightTriangle },     // 1805 - '215'
         { 624 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // 1813
         { 619 - 1, 1, D1CEL_FRAME_TYPE::LeftTrapezoid },     // 1797 - '109' + '215'
+        { 303 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },     // 387 - 303
         {  15 - 1, 1, D1CEL_FRAME_TYPE::Empty }, // 14
         {  15 - 1, 2, D1CEL_FRAME_TYPE::Empty }, // 12
         {  89 - 1, 1, D1CEL_FRAME_TYPE::Empty }, // 311
@@ -1426,7 +1426,7 @@ void D1Tileset::fixCryptShadows(bool silent)
 
         D1GfxFrame *frameSrc = nullptr;
         if (i != 7 + 5) { // 1797
-            const CelMicro &microSrc = micros[i + 5];
+            const CelMicro &microSrc = micros[i + 6];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             frameSrc = mf.second;
             if (frameSrc == nullptr) {
@@ -1635,6 +1635,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 211 - 1, 3, 48, silent);  // 621
     ReplaceSubtile(this->til, 205 - 1, 0, 45, silent);  // 625
     ReplaceSubtile(this->til, 207 - 1, 0, 45, silent);  // 630
+    ReplaceSubtile(this->til, 207 - 1, 2, 627, silent); // 632
     ReplaceSubtile(this->til, 208 - 1, 0, 45, silent);  // 633
 
     ReplaceSubtile(this->til, 27 - 1, 3, 4, silent); // 85
