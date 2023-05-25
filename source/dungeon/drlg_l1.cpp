@@ -2178,7 +2178,7 @@ static void DRLG_L5Crypt_pattern6(BYTE rndper)
 	DRLG_PlaceRndTile(11, 186, rndper);
 	/** Miniset: Column on the northern side of a horizontal wall 2. */
 	// DRLG_L5PlaceRndSet(L5RNDCOL8a, rndper); // 12 -> 187
-	DRLG_L5PlaceRndSet(96, 187, rndper);
+	DRLG_PlaceRndTile(96, 187, rndper);
 	/** Miniset: Column on the northern side of a horizontal wall 3. */
 	//DRLG_L5PlaceRndSet(L5RNDCOL8b, rndper); // 12 -> 188
 	DRLG_PlaceRndTile(96, 188, rndper);
