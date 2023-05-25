@@ -1611,7 +1611,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
 
     // use common subtiles instead of minor alterations
     ReplaceSubtile(this->til, 7 - 1, 1, 6, silent);    // 26
-    ReplaceSubtile(this->til, 159 - 1, 1, 14, silent); // 479
+    ReplaceSubtile(this->til, 159 - 1, 1, 6, silent);  // 479
     ReplaceSubtile(this->til, 133 - 1, 2, 19, silent); // 390
     ReplaceSubtile(this->til, 10 - 1, 1, 18, silent);  // 37
     ReplaceSubtile(this->til, 138 - 1, 1, 18, silent);
