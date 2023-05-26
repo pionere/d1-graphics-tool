@@ -15,10 +15,11 @@ PatchTilesetDialog::~PatchTilesetDialog()
     delete ui;
 }
 
-void PatchTilesetDialog::initialize(D1Tileset *ts, D1Dun *d)
+void PatchTilesetDialog::initialize(D1Tileset *ts, D1Dun *d, LevelCelView *lcv)
 {
     this->tileset = ts;
     this->dun = d;
+    this->levelCelView = lcv;
 
     // initialize the dropdown based on the filename
     int dungeonType = -1;
@@ -64,6 +65,9 @@ void PatchTilesetDialog::on_runButton_clicked()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
 
     this->tileset->patch(dungeonType, false);
+
+    // trigger the update of the selected indices
+    this->levelCelView->setTileset(this->tileset);
 
     if (this->dun != nullptr) {
         this->dun->refreshSubtiles();

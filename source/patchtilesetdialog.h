@@ -4,6 +4,7 @@
 
 #include "d1dun.h"
 #include "d1tileset.h"
+#include "levelcelview.h"
 
 namespace Ui {
 class PatchTilesetDialog;
@@ -16,7 +17,7 @@ public:
     explicit PatchTilesetDialog(QWidget *parent);
     ~PatchTilesetDialog();
 
-    void initialize(D1Tileset *tileset, D1Dun *dun);
+    void initialize(D1Tileset *tileset, D1Dun *dun, LevelCelView *levelCelView);
 
 private slots:
     void on_runButton_clicked();
@@ -30,4 +31,5 @@ private:
 
     D1Tileset *tileset;
     D1Dun *dun;
+    LevelCelView *levelCelView;
 };
