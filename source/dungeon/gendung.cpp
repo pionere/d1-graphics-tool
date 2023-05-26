@@ -259,6 +259,40 @@ void InitLvlDungeon()
 		//  - prevent non-crossable floor-tile configurations II.
 		nSolidTable[598] = false;
 		nSolidTable[600] = false;
+		// adjust TIL after cleanupCrypt
+		pTiles[109][0] = pTiles[1][0];
+		pTiles[109][1] = pTiles[1][1];
+		pTiles[109][2] = pTiles[1][2];
+		pTiles[109][3] = pTiles[1][3];
+		pTiles[110][0] = pTiles[6][0];
+		pTiles[110][1] = pTiles[6][1];
+		pTiles[110][2] = pTiles[6][2];
+		pTiles[110][3] = pTiles[6][3];
+		pTiles[111][0] = pTiles[11][0];
+		pTiles[111][1] = pTiles[11][1];
+		pTiles[111][2] = pTiles[11][2];
+		pTiles[111][3] = pTiles[11][3];
+
+		pTiles[212][0] = pTiles[12][0];
+		pTiles[212][1] = pTiles[12][1];
+		pTiles[212][2] = pTiles[12][2];
+		pTiles[212][3] = pTiles[12][3];
+		pTiles[213][0] = pTiles[36][0];
+		pTiles[213][1] = pTiles[36][1];
+		pTiles[213][2] = pTiles[36][2];
+		pTiles[213][3] = pTiles[36][3];
+		pTiles[214][0] = pTiles[7][0];
+		pTiles[214][1] = pTiles[7][1];
+		pTiles[214][2] = pTiles[7][2];
+		pTiles[214][3] = pTiles[7][3];
+		pTiles[215][0] = pTiles[35][0];
+		pTiles[215][1] = pTiles[35][1];
+		pTiles[215][2] = pTiles[35][2];
+		pTiles[215][3] = pTiles[35][3];
+		pTiles[216][0] = pTiles[11][0];
+		pTiles[216][1] = pTiles[11][1];
+		pTiles[216][2] = pTiles[11][2];
+		pTiles[216][3] = pTiles[11][3];
 		break;
 #endif /* HELLFIRE */
 	default:

@@ -3347,6 +3347,10 @@ void D1Tileset::patch(int dunType, bool silent)
         //  - prevent non-crossable floor-tile configurations II.
         ChangeSubtileSolFlags(this->sol, 598 - 1, PFLAG_BLOCK_PATH, false, silent);
         ChangeSubtileSolFlags(this->sol, 600 - 1, PFLAG_BLOCK_PATH, false, silent);
+        // - adjust SOL after cleanupCrypt
+        ChangeSubtileSolFlags(this->sol, 238 - 1, 0, false, silent);
+        ChangeSubtileSolFlags(this->sol, 178 - 1, PFLAG_BLOCK_PATH, false, silent);
+        ChangeSubtileSolFlags(this->sol, 242 - 1, 0, false, silent);
         break;
     }
     for (auto it = deletedFrames.crbegin(); it != deletedFrames.crend(); it++) {
