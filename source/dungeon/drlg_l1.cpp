@@ -871,7 +871,7 @@ void DRLG_L5Shadows()
 					// FIXME: what else?
 				}*/
 
-				BYTE replaceA, replaceB; bool okB;
+				BYTE replaceA; bool okB;
 				BYTE replaceB = dungeon[i - 1][j];
 				switch (replaceB) {
 				case 13:
