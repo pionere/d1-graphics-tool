@@ -498,6 +498,17 @@ static const BYTE L5HORIZCOL1b[] = {
 	 96,
 	// clang-format on
 };
+static const BYTE L5HORIZCOL1c[] = {
+	// clang-format off
+	1, 2, // width, height
+
+	204, // search
+	 12,
+
+	217, // replace
+	 96,
+	// clang-format on
+};
 /** Miniset: Prepare random large vertical wall tile */
 static const BYTE L5PREVERTWALL[] = {
 	// clang-format off
@@ -2717,6 +2728,7 @@ static void DRLG_L1()
 		DRLG_L5PlaceRndSet(L5VERTCOL1, 95);
 		DRLG_L5PlaceRndSet(L5HORIZCOL1a, 95);
 		DRLG_L5PlaceRndSet(L5HORIZCOL1b, 95);
+		DRLG_L5PlaceRndSet(L5HORIZCOL1c, 95);
 		DRLG_L5PlaceRndSet(L5PREVERTWALL, 100);
 		DRLG_L5PlaceRndSet(L5PREHORIZWALL, 100);
 		DRLG_L5PlaceRndSet(L5RNDLFLOOR1, 60);

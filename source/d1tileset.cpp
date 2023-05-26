@@ -1427,7 +1427,7 @@ void D1Tileset::fixCryptShadows(bool silent)
                     //    continue;
                     // }
                     // extend the shadows to NE: 208[2][0, 1]
-                    if (i == 5 && (y <= (x / 2) + 13 - MICRO_HEIGHT / 2 || (x >= 20 && y >= 10 && color >= 59 && color <= 95 && (color >= 77 || color <= 63)))) { // 1818
+                    if (i == 5 && (y <= (x / 2) + 13 - MICRO_HEIGHT / 2 || (x >= 20 && y >= 14 && color >= 59 && color <= 95 && (color >= 77 || color <= 63)))) { // 1818
                         continue;
                     }
                     if (i == 6 && (y <= (x / 2) + 13 || (x <= 8 && y >= 12 && color >= 62 && color <= 95 && (color >= 80 || color <= 63)))) { // 1819
@@ -1437,6 +1437,12 @@ void D1Tileset::fixCryptShadows(bool silent)
                 change |= frame->setPixel(x, y, SHADOW_COLOR);
             }
         }
+
+        // fix bad artifacts
+        if (i == 5) { // 1818
+            change |= frame->setPixel(22, 20, SHADOW_COLOR);
+        }
+
         if (change) {
             // frame->setFrameType(micro.res_encoding);
             this->gfx->setModified();
@@ -1597,11 +1603,15 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 215 - 1, 1, 4, silent);   // 646
     ReplaceSubtile(this->til, 215 - 1, 2, 178, silent); // 45
     ReplaceSubtile(this->til, 215 - 1, 3, 627, silent); // 647
+    // - 'add' new shadow-types with glow
     ReplaceSubtile(this->til, 216 - 1, 0, 39, silent);  // 622
     ReplaceSubtile(this->til, 216 - 1, 1, 4, silent);   // 46
-    ReplaceSubtile(this->til, 216 - 1, 2, 244, silent); // 648
+    ReplaceSubtile(this->til, 216 - 1, 2, 238, silent); // 648
     ReplaceSubtile(this->til, 216 - 1, 3, 635, silent); // 624
-
+    ReplaceSubtile(this->til, 217 - 1, 0, 638, silent); // 625
+    ReplaceSubtile(this->til, 217 - 1, 1, 639, silent); // 46
+    ReplaceSubtile(this->til, 217 - 1, 2, 634, silent); // 649
+    ReplaceSubtile(this->til, 217 - 1, 3, 635, silent); // 650
     // - 'add' new shadow-types with horizontal arches
     ReplaceSubtile(this->til, 209 - 1, 0, 5, silent); // copy from tile 2
     ReplaceSubtile(this->til, 209 - 1, 1, 6, silent);
@@ -1780,20 +1790,19 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(242, 1, 626, 1);
     // SetMcr(242, 2, 31, 2);
     Blk2Mcr(242, 4);
-    SetMcr(242, 8, 31, 8);
     ReplaceMcr(242, 6, 31, 6);
+    SetMcr(242, 8, 31, 8);
     ReplaceMcr(178, 0, 619, 1);
     ReplaceMcr(178, 1, 625, 0);
     SetMcr(178, 2, 624, 0);
     Blk2Mcr(178, 4);
     ReplaceMcr(178, 6, 31, 6);
     ReplaceMcr(178, 8, 31, 8);
-    ReplaceMcr(244, 0, 634, 0);
-    ReplaceMcr(244, 1, 634, 1);
-    Blk2Mcr(244, 5);
-    ReplaceMcr(244, 6, 31, 6);
-    Blk2Mcr(244, 7);
-    ReplaceMcr(244, 8, 31, 8);
+    ReplaceMcr(238, 0, 634, 0);
+    ReplaceMcr(238, 1, 634, 1);
+    Blk2Mcr(238, 4);
+    SetMcr(244, 6, 31, 6);
+    SetMcr(244, 8, 31, 8);
     // pointless door micros (re-drawn by dSpecial)
     Blk2Mcr(77, 6);
     Blk2Mcr(77, 8);
@@ -1875,6 +1884,9 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(562, 0, 303, 0);
     ReplaceMcr(564, 0, 303, 0);
     ReplaceMcr(635, 0, 308, 0);
+    // - extend shadow to make more usable (after fixCryptShadows)
+    ReplaceMcr(627, 0, 626, 0);
+    SetMcr(627, 1, 626, 1);
     // prepare new subtiles for the shadows
     ReplaceMcr(623, 0, 631, 0);
     ReplaceMcr(623, 1, 638, 1);
@@ -1882,7 +1894,6 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(636, 1, 638, 1);
     // reuse subtiles
     ReplaceMcr(631, 1, 626, 1);
-    ReplaceMcr(627, 0, 626, 0); // only after fixCryptShadows
     ReplaceMcr(149, 4, 1, 4);
     ReplaceMcr(150, 6, 15, 6);
     ReplaceMcr(324, 7, 6, 7);
@@ -2015,7 +2026,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(68, 9, 6, 9);  // lost details
     ReplaceMcr(84, 9, 6, 9);  // lost details
     ReplaceMcr(152, 9, 6, 9); // lost details
-    ReplaceMcr(241, 9, 6, 9); // lost details
+    // ReplaceMcr(241, 9, 6, 9); // lost details
     ReplaceMcr(265, 9, 6, 9); // lost details
     ReplaceMcr(269, 9, 6, 9); // lost details
     ReplaceMcr(364, 9, 6, 9); // lost details
@@ -2082,7 +2093,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(23, 1, 15, 1);
     ReplaceMcr(250, 1, 15, 1);
     ReplaceMcr(258, 1, 15, 1);
-    ReplaceMcr(543, 1, 15, 1);
+    // ReplaceMcr(543, 1, 15, 1);
     ReplaceMcr(322, 1, 15, 1);
     ReplaceMcr(534, 1, 254, 1);
     ReplaceMcr(541, 1, 530, 1);
@@ -2836,19 +2847,23 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(237, 1);
     Blk2Mcr(237, 5);
     Blk2Mcr(237, 7);
-    Blk2Mcr(238, 0);
-    Blk2Mcr(238, 1);
-    Blk2Mcr(238, 4);
     Blk2Mcr(240, 0);
     Blk2Mcr(240, 1);
     Blk2Mcr(240, 5);
     Blk2Mcr(241, 0);
     Blk2Mcr(241, 1);
     Blk2Mcr(241, 5);
+    Blk2Mcr(241, 9);
     Blk2Mcr(243, 0);
     Blk2Mcr(243, 1);
     Blk2Mcr(243, 5);
     Blk2Mcr(243, 8);
+    Blk2Mcr(244, 0);
+    Blk2Mcr(244, 1);
+    Blk2Mcr(244, 5);
+    Blk2Mcr(244, 6);
+    Blk2Mcr(244, 7);
+    Blk2Mcr(244, 8);
     Blk2Mcr(245, 0);
     Blk2Mcr(245, 1);
     Blk2Mcr(245, 5);
@@ -2919,6 +2934,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(479, 5);
     Blk2Mcr(479, 7);
     Blk2Mcr(479, 9);
+    Blk2Mcr(543, 1);
     Blk2Mcr(543, 2);
     Blk2Mcr(543, 4);
     Blk2Mcr(543, 8);
