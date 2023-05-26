@@ -876,7 +876,7 @@ void DRLG_L5Shadows()
 				switch (replaceB) {
 				case 13:
 				case 203: replaceA = 203; okB = false; break;
-				// case 207: replaceA = 203; okB = false; break;
+				case 207: replaceA = 203; okB = false; break;
 				case 205: replaceA = 204; okB = false; break;
 				// case 71:  replaceA = 80;  okB = true;  break;
 				case 80:  replaceA = 80;  okB = true;  break;
