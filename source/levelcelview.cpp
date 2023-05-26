@@ -2789,7 +2789,7 @@ void LevelCelView::sortTileset()
 
 void LevelCelView::reportDungeonUsage() const
 {
-    ProgressDialog::incBar(tr("Scanning..."), 4);
+    ProgressDialog::incBar(tr("Scanning..."), 5);
 
     std::pair<int, int> space = this->dun->collectSpace(this->sol);
 
@@ -2868,6 +2868,25 @@ void LevelCelView::reportDungeonUsage() const
     }
 
     dProgress() << "\n";
+
+    ProgressDialog::incValue();
+
+    std::map<int, int> subtiles;
+    for (int y = 0; y < this->dun->getHeight(); y++) {
+        for (int x = 0; x < this->dun->getWidth(); x++) {
+            subtiles[this->dun->getSubtileAt(x, y)]++;
+        }
+    }
+    subtiles.erase(UNDEF_SUBTILE);
+    subtiles.erase(0);
+    dProgress() << tr("Subtiles in the dungeon:");
+    if (subtiles.empty()) {
+        dProgress() << tr("   None.");
+    } else {
+        for (std::pair<int, int> &subtiles : subtiles) {
+            dProgress() << tr("    %1: %2").arg(subtiles.first).arg(subtiles.second);
+        }
+    }
 
     ProgressDialog::decBar();
 }

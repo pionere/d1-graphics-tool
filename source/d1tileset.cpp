@@ -1801,8 +1801,8 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(238, 0, 634, 0);
     ReplaceMcr(238, 1, 634, 1);
     Blk2Mcr(238, 4);
-    SetMcr(244, 6, 31, 6);
-    SetMcr(244, 8, 31, 8);
+    SetMcr(238, 6, 31, 6);
+    SetMcr(238, 8, 31, 8);
     // pointless door micros (re-drawn by dSpecial)
     Blk2Mcr(77, 6);
     Blk2Mcr(77, 8);
