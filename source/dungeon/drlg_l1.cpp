@@ -875,13 +875,19 @@ void DRLG_L5Shadows()
 				BYTE replaceB = dungeon[i - 1][j];
 				switch (replaceB) {
 				case 13:
-				case 207: replaceA = 203; okB = false; break;
+				case 203: replaceA = 203; okB = false; break;
+				// case 207: replaceA = 203; okB = false; break;
 				case 205: replaceA = 204; okB = false; break;
-				case 71:  replaceA = 80;  okB = true;  break;
-				case 85:  replaceA = 86;  okB = true;  break;
-				case 81:  replaceA = 82;  okB = true;  break;
-				case 87:  replaceA = 88;  okB = true;  break;
-				case 83:  replaceA = 84;  okB = true;  break;
+				// case 71:  replaceA = 80;  okB = true;  break;
+				case 80:  replaceA = 80;  okB = true;  break;
+				// case 85:  replaceA = 86;  okB = true;  break;
+				case 86:  replaceA = 86;  okB = true;  break;
+				// case 81:  replaceA = 82;  okB = true;  break;
+				case 82:  replaceA = 82;  okB = true;  break;
+				// case 87:  replaceA = 88;  okB = true;  break;
+				case 88:  replaceA = 88;  okB = true;  break;
+				// case 83:  replaceA = 84;  okB = true;  break;
+				case 84:  replaceA = 84;  okB = true;  break;
 				default:
 					if (replaceB != 2 && replaceB != 4 && replaceB != 12 && replaceB != 14 && replaceB != 26 && replaceB != 36 && replaceB != 37)
 		                dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
