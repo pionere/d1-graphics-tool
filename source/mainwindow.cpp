@@ -1784,7 +1784,7 @@ void MainWindow::on_actionPatchTileset_Tileset_triggered()
     if (this->patchTilesetDialog == nullptr) {
         this->patchTilesetDialog = new PatchTilesetDialog(this);
     }
-    this->patchTilesetDialog->initialize(this->tileset, this->dun);
+    this->patchTilesetDialog->initialize(this->tileset, this->dun, this->levelCelView);
     this->patchTilesetDialog->show();
 }
 
@@ -1935,7 +1935,7 @@ void MainWindow::on_actionPatchDungeon_Dungeon_triggered()
     if (this->patchDungeonDialog == nullptr) {
         this->patchDungeonDialog = new PatchDungeonDialog(this);
     }
-    this->patchDungeonDialog->initialize(this->dun, this->tileset, this->levelCelView);
+    this->patchDungeonDialog->initialize(this->dun);
     this->patchDungeonDialog->show();
 }
 

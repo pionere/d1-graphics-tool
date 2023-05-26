@@ -15,11 +15,9 @@ PatchDungeonDialog::~PatchDungeonDialog()
     delete ui;
 }
 
-void PatchDungeonDialog::initialize(D1Dun *d, D1Tileset *ts, LevelCelView *lcv)
+void PatchDungeonDialog::initialize(D1Dun *d)
 {
     this->dun = d;
-    this->tileset = ts;
-    this->levelCelView = lcv;
 
     // initialize the dropdown based on the filename
     int fileIndex = -1;
@@ -106,9 +104,6 @@ void PatchDungeonDialog::on_runButton_clicked()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
 
     this->dun->patch(fileIndex);
-
-    // trigger the update of the selected indices
-    this->levelCelView->setTileset(this->tileset);
 
     // Clear loading message from status bar
     ProgressDialog::done();
