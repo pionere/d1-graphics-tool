@@ -1636,7 +1636,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // use common subtiles instead of minor alterations
     ReplaceSubtile(this->til, 7 - 1, 1, 6, silent);    // 26
     ReplaceSubtile(this->til, 159 - 1, 1, 6, silent);  // 479
-    ReplaceSubtile(this->til, 133 - 1, 2, 19, silent); // 390
+    ReplaceSubtile(this->til, 133 - 1, 2, 31, silent); // 390
     ReplaceSubtile(this->til, 10 - 1, 1, 18, silent);  // 37
     ReplaceSubtile(this->til, 138 - 1, 1, 18, silent);
     ReplaceSubtile(this->til, 188 - 1, 1, 277, silent); // 564
@@ -1644,7 +1644,6 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 5 - 1, 2, 31, silent);    // 19
     ReplaceSubtile(this->til, 14 - 1, 2, 31, silent);
     ReplaceSubtile(this->til, 159 - 1, 2, 31, silent);
-    ReplaceSubtile(this->til, 133 - 1, 2, 31, silent);  // 390
     ReplaceSubtile(this->til, 185 - 1, 2, 274, silent); // 558
     ReplaceSubtile(this->til, 186 - 1, 2, 274, silent); // 560
     ReplaceSubtile(this->til, 139 - 1, 0, 39, silent);  // 402
@@ -1656,8 +1655,8 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 114 - 1, 2, 4, silent);
     ReplaceSubtile(this->til, 5 - 1, 3, 7, silent); // 20
     ReplaceSubtile(this->til, 14 - 1, 3, 4, silent);
-    ReplaceSubtile(this->til, 125 - 1, 3, 7, silent); // 50
     ReplaceSubtile(this->til, 133 - 1, 3, 4, silent);
+    ReplaceSubtile(this->til, 125 - 1, 3, 7, silent); // 50
     ReplaceSubtile(this->til, 159 - 1, 3, 7, silent);
     ReplaceSubtile(this->til, 4 - 1, 3, 7, silent); // 16
     ReplaceSubtile(this->til, 132 - 1, 3, 4, silent);
@@ -1758,7 +1757,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 8 - 1, 1, 2, silent); // 30
     ReplaceSubtile(this->til, 30 - 1, 1, 2, silent);
     ReplaceSubtile(this->til, 32 - 1, 1, 2, silent);
-    ReplaceSubtile(this->til, 72 - 1, 3, 2, silent);
+    ReplaceSubtile(this->til, 72 - 1, 1, 2, silent);
     ReplaceSubtile(this->til, 9 - 1, 3, 4, silent); // 35
     ReplaceSubtile(this->til, 137 - 1, 3, 4, silent);
     ReplaceSubtile(this->til, 11 - 1, 1, 4, silent); // 40
@@ -3348,9 +3347,9 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeSubtileSolFlags(this->sol, 598 - 1, PFLAG_BLOCK_PATH, false, silent);
         ChangeSubtileSolFlags(this->sol, 600 - 1, PFLAG_BLOCK_PATH, false, silent);
         // - adjust SOL after cleanupCrypt
-        ChangeSubtileSolFlags(this->sol, 238 - 1, 0, false, silent);
-        ChangeSubtileSolFlags(this->sol, 178 - 1, PFLAG_BLOCK_PATH, false, silent);
-        ChangeSubtileSolFlags(this->sol, 242 - 1, 0, false, silent);
+        ChangeSubtileSolFlags(this->sol, 238 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
+        ChangeSubtileSolFlags(this->sol, 178 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
+        ChangeSubtileSolFlags(this->sol, 242 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         break;
     }
     for (auto it = deletedFrames.crbegin(); it != deletedFrames.crend(); it++) {
