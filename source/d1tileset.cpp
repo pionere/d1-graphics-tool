@@ -1360,11 +1360,14 @@ void D1Tileset::fixCryptShadows(bool silent)
         // clang-format off
         { 626 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },  // 1806 - 205
         { 626 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1807
-        { 627 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },  // 1808
+        // { 627 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },  // 1808
         { 638 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1824 - 211
         { 639 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },  // 1825
         { 639 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1799
-        { 631 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1815 - 207
+        // { 631 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1815 - 207
+        { 634 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },  // 1818 - 208
+        { 634 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1819
+
         { 277 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare }, // 324 - 96
         { 620 - 1, 0, D1CEL_FRAME_TYPE::RightTriangle },     // 1798 - '109'
         { 621 - 1, 1, D1CEL_FRAME_TYPE::Square },            // 1800
@@ -1397,7 +1400,8 @@ void D1Tileset::fixCryptShadows(bool silent)
                 if (pixel.isTransparent()) {
                     continue;
                 }
-                if (pixel.getPaletteIndex() != 79) {
+                quint8 color = pixel.getPaletteIndex();
+                if (color != 79) {
                     // extend the shadows to NE: 205[2][0, 1], 205[3][0]
                     if (i == 0 && y <= (x / 2) + 13 - MICRO_HEIGHT / 2) { // 1806
                         continue;
@@ -1405,21 +1409,28 @@ void D1Tileset::fixCryptShadows(bool silent)
                     if (i == 1 && y <= (x / 2) + 13) { // 1807
                         continue;
                     }
-                    if (i == 2 && y <= (x / 2) + 13 - MICRO_HEIGHT / 2) { // 1808
-                        continue;
-                    }
+                    // if (i == 2 && y <= (x / 2) + 13 - MICRO_HEIGHT / 2) { // 1808
+                    //    continue;
+                    // }
                     // extend the shadows to NW: 211[0][1], 211[1][0]
-                    if (i == 3 && y <= 13 - (x / 2)) { // 1824
+                    if (i == 2 && y <= 13 - (x / 2)) { // 1824
                         continue;
                     }
-                    if (i == 4 && (x > 19 || y > 23) && (x != 16 || y != 24)) { // 1825
+                    if (i == 3 && (x > 19 || y > 23) && (x != 16 || y != 24)) { // 1825
                         continue;
                     }
-                    if (i == 5 && x <= 7) { // 1799
+                    if (i == 4 && x <= 7) { // 1799
                         continue;
                     }
                     // extend the shadows to NW: 207[2][1]
-                    if (i == 6 && y <= (x / 2) + 15) { // 1815
+                    // if (i == 6 && y <= (x / 2) + 15) { // 1815
+                    //    continue;
+                    // }
+                    // extend the shadows to NE: 208[2][0, 1]
+                    if (i == 5 && (y <= (x / 2) + 13 - MICRO_HEIGHT / 2 || (x >= 20 && y >= 10 && color >= 59 && color <= 95 && (color >= 77 || color <= 63)))) { // 1818
+                        continue;
+                    }
+                    if (i == 6 && (y <= (x / 2) + 13 || (x <= 8 && y >= 12 && color >= 62 && color <= 95 && (color >= 80 || color <= 63))) { // 1819
                         continue;
                     }
                 }
@@ -1538,7 +1549,6 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 14 - 1, 1, 6, silent);
     ReplaceSubtile(this->til, 115 - 1, 1, 6, silent);
     ReplaceSubtile(this->til, 132 - 1, 1, 6, silent);
-    ReplaceSubtile(this->til, 159 - 1, 1, 6, silent);
     ReplaceSubtile(this->til, 1 - 1, 2, 15, silent); // 3
     ReplaceSubtile(this->til, 27 - 1, 2, 15, silent);
     ReplaceSubtile(this->til, 43 - 1, 2, 15, silent);
@@ -1861,6 +1871,8 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(636, 0, 626, 0);
     ReplaceMcr(636, 1, 638, 1);
     // reuse subtiles
+    ReplaceMcr(631, 1, 626, 1);
+    ReplaceMcr(627, 0, 626, 0); // only after fixCryptShadows
     ReplaceMcr(149, 4, 1, 4);
     ReplaceMcr(150, 6, 15, 6);
     ReplaceMcr(324, 7, 6, 7);
