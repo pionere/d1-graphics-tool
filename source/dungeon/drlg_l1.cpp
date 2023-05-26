@@ -796,13 +796,13 @@ void DRLG_L5Shadows()
 				pillar = true;
 				break;
 			case 8:
+			case 14:
+			case 37:
 				pillar = true;
 				/* fall-through */
 			case 11:
 			// case 25:
 			case 35:
-			case 14:
-			case 37:
 			case 215:
 			case 111:
 				vertArch = true;
@@ -898,6 +898,7 @@ void DRLG_L5Shadows()
 				if (okB) {
 					continue;
 				}
+				pillar = pillar && (dungeon[i][j - 1] == 13 /* || 2 3 7 9 12 15 16 17 26 36 */);
 				switch (dungeon[i - 1][j - 1]) {
 				case 13: replaceB = pillar ? 207 : 203; break;
 				case 2:  replaceB = pillar ? 71 : 80;  break;
@@ -1463,7 +1464,7 @@ static void L1AddVWall(int x, int y)
 
 /*
  * Draw walls between pillars (out of the chambers)
- * New dungeon values: 27 35 36 37
+ * New dungeon values: 1 2 4 10 11 12 14 25 26 27 35 36 37
  */
 static void L1AddWall()
 {
@@ -1693,7 +1694,7 @@ static void L1FillChambers()
 /*
  * Draw wall around the tiles selected by DRLG_L1CreateDungeon.
  * Assumes the border of dungeon was empty.
- * New dungeon values: 6 7 16 17 18 19 23 24
+ * New dungeon values: 3 6 7 16 17 18 19 21 23 24
  */
 static void L1TileFix()
 {
