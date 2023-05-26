@@ -476,7 +476,7 @@ static const BYTE PWATERIN[] = {
 static const BYTE L5VERTCOL1[] = { 1, 1, 11, 95 };
 /** Miniset: Column on the northern side of a horizontal wall 1. */
 //static const BYTE L5HORIZCOL1[] = { 1, 1, 12, 96 };
-static const BYTE L5HORIZCOL1[] = {
+static const BYTE L5HORIZCOL1a[] = {
 	// clang-format off
 	1, 2, // width, height
 
@@ -484,6 +484,17 @@ static const BYTE L5HORIZCOL1[] = {
 	 12,
 
 	208, // replace
+	 96,
+	// clang-format on
+};
+static const BYTE L5HORIZCOL1b[] = {
+	// clang-format off
+	1, 2, // width, height
+
+	111, // search
+	 12,
+
+	216, // replace
 	 96,
 	// clang-format on
 };
@@ -2704,7 +2715,8 @@ static void DRLG_L1()
 		/** Miniset: Use random horizontal wall 5. (Succubus statue) */
 		DRLG_PlaceRndTile(2, 202, 10);
 		DRLG_L5PlaceRndSet(L5VERTCOL1, 95);
-		DRLG_L5PlaceRndSet(L5HORIZCOL1, 95);
+		DRLG_L5PlaceRndSet(L5HORIZCOL1a, 95);
+		DRLG_L5PlaceRndSet(L5HORIZCOL1b, 95);
 		DRLG_L5PlaceRndSet(L5PREVERTWALL, 100);
 		DRLG_L5PlaceRndSet(L5PREHORIZWALL, 100);
 		DRLG_L5PlaceRndSet(L5RNDLFLOOR1, 60);

@@ -1430,7 +1430,7 @@ void D1Tileset::fixCryptShadows(bool silent)
                     if (i == 5 && (y <= (x / 2) + 13 - MICRO_HEIGHT / 2 || (x >= 20 && y >= 10 && color >= 59 && color <= 95 && (color >= 77 || color <= 63)))) { // 1818
                         continue;
                     }
-                    if (i == 6 && (y <= (x / 2) + 13 || (x <= 8 && y >= 12 && color >= 62 && color <= 95 && (color >= 80 || color <= 63))) { // 1819
+                    if (i == 6 && (y <= (x / 2) + 13 || (x <= 8 && y >= 12 && color >= 62 && color <= 95 && (color >= 80 || color <= 63)))) { // 1819
                         continue;
                     }
                 }
@@ -1597,6 +1597,10 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 215 - 1, 1, 4, silent);   // 646
     ReplaceSubtile(this->til, 215 - 1, 2, 178, silent); // 45
     ReplaceSubtile(this->til, 215 - 1, 3, 627, silent); // 647
+    ReplaceSubtile(this->til, 216 - 1, 0, 39, silent);  // 622
+    ReplaceSubtile(this->til, 216 - 1, 1, 4, silent);   // 46
+    ReplaceSubtile(this->til, 216 - 1, 2, 244, silent); // 648
+    ReplaceSubtile(this->til, 216 - 1, 3, 635, silent); // 624
 
     // - 'add' new shadow-types with horizontal arches
     ReplaceSubtile(this->til, 209 - 1, 0, 5, silent); // copy from tile 2
@@ -1784,6 +1788,12 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(178, 4);
     ReplaceMcr(178, 6, 31, 6);
     ReplaceMcr(178, 8, 31, 8);
+    ReplaceMcr(244, 0, 634, 0);
+    ReplaceMcr(244, 1, 634, 1);
+    Blk2Mcr(244, 5);
+    ReplaceMcr(244, 6, 31, 6);
+    Blk2Mcr(244, 7);
+    ReplaceMcr(244, 8, 31, 8);
     // pointless door micros (re-drawn by dSpecial)
     Blk2Mcr(77, 6);
     Blk2Mcr(77, 8);
@@ -2839,12 +2849,6 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(243, 1);
     Blk2Mcr(243, 5);
     Blk2Mcr(243, 8);
-    Blk2Mcr(244, 0);
-    Blk2Mcr(244, 1);
-    Blk2Mcr(244, 5);
-    Blk2Mcr(244, 6);
-    Blk2Mcr(244, 7);
-    Blk2Mcr(244, 8);
     Blk2Mcr(245, 0);
     Blk2Mcr(245, 1);
     Blk2Mcr(245, 5);
