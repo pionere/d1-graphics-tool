@@ -1613,25 +1613,50 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 217 - 1, 2, 634, silent); // 649
     ReplaceSubtile(this->til, 217 - 1, 3, 635, silent); // 650
     // - 'add' new shadow-types with horizontal arches
-    ReplaceSubtile(this->til, 209 - 1, 0, 5, silent); // copy from tile 2
-    ReplaceSubtile(this->til, 209 - 1, 1, 6, silent);
-    ReplaceSubtile(this->til, 209 - 1, 2, 623, silent);
-    ReplaceSubtile(this->til, 209 - 1, 3, 627, silent);
+    ReplaceSubtile(this->til, 71 - 1, 0, 5, silent); // copy from tile 2
+    ReplaceSubtile(this->til, 71 - 1, 1, 6, silent);
+    ReplaceSubtile(this->til, 71 - 1, 2, 631, silent);
+    ReplaceSubtile(this->til, 71 - 1, 3, 627, silent);
+    ReplaceSubtile(this->til, 80 - 1, 0, 5, silent); // copy from tile 2
+    ReplaceSubtile(this->til, 80 - 1, 1, 6, silent);
+    ReplaceSubtile(this->til, 80 - 1, 2, 623, silent);
+    ReplaceSubtile(this->til, 80 - 1, 3, 627, silent);
 
-    ReplaceSubtile(this->til, 212 - 1, 0, 42, silent); // copy from tile 12
-    ReplaceSubtile(this->til, 212 - 1, 1, 34, silent);
-    ReplaceSubtile(this->til, 212 - 1, 2, 623, silent);
-    ReplaceSubtile(this->til, 212 - 1, 3, 627, silent);
+    ReplaceSubtile(this->til, 81 - 1, 0, 42, silent); // copy from tile 12
+    ReplaceSubtile(this->til, 81 - 1, 1, 34, silent);
+    ReplaceSubtile(this->til, 81 - 1, 2, 631, silent);
+    ReplaceSubtile(this->til, 81 - 1, 3, 627, silent);
+    ReplaceSubtile(this->til, 82 - 1, 0, 42, silent); // copy from tile 12
+    ReplaceSubtile(this->til, 82 - 1, 1, 34, silent);
+    ReplaceSubtile(this->til, 82 - 1, 2, 623, silent);
+    ReplaceSubtile(this->til, 82 - 1, 3, 627, silent);
 
-    ReplaceSubtile(this->til, 213 - 1, 0, 104, silent); // copy from tile 36
-    ReplaceSubtile(this->til, 213 - 1, 1, 84, silent);
-    ReplaceSubtile(this->til, 213 - 1, 2, 623, silent);
-    ReplaceSubtile(this->til, 213 - 1, 3, 627, silent);
+    ReplaceSubtile(this->til, 83 - 1, 0, 104, silent); // copy from tile 36
+    ReplaceSubtile(this->til, 83 - 1, 1, 84, silent);
+    ReplaceSubtile(this->til, 83 - 1, 2, 631, silent);
+    ReplaceSubtile(this->til, 83 - 1, 3, 627, silent);
+    ReplaceSubtile(this->til, 84 - 1, 0, 104, silent); // copy from tile 36
+    ReplaceSubtile(this->til, 84 - 1, 1, 84, silent);
+    ReplaceSubtile(this->til, 84 - 1, 2, 623, silent);
+    ReplaceSubtile(this->til, 84 - 1, 3, 627, silent);
 
-    ReplaceSubtile(this->til, 214 - 1, 0, 25, silent); // copy from tile 7
-    ReplaceSubtile(this->til, 214 - 1, 1, 6, silent);
-    ReplaceSubtile(this->til, 214 - 1, 2, 623, silent);
-    ReplaceSubtile(this->til, 214 - 1, 3, 627, silent);
+    ReplaceSubtile(this->til, 85 - 1, 0, 25, silent); // copy from tile 7
+    ReplaceSubtile(this->til, 85 - 1, 1, 6, silent);
+    ReplaceSubtile(this->til, 85 - 1, 2, 631, silent);
+    ReplaceSubtile(this->til, 85 - 1, 3, 627, silent);
+    ReplaceSubtile(this->til, 86 - 1, 0, 25, silent); // copy from tile 7
+    ReplaceSubtile(this->til, 86 - 1, 1, 6, silent);
+    ReplaceSubtile(this->til, 86 - 1, 2, 623, silent);
+    ReplaceSubtile(this->til, 86 - 1, 3, 627, silent);
+
+    ReplaceSubtile(this->til, 87 - 1, 0, 79, silent); // copy from tile 26
+    ReplaceSubtile(this->til, 87 - 1, 1, 80, silent);
+    ReplaceSubtile(this->til, 87 - 1, 2, 623, silent);
+    ReplaceSubtile(this->til, 87 - 1, 3, 627, silent);
+    ReplaceSubtile(this->til, 88 - 1, 0, 79, silent); // copy from tile 26
+    ReplaceSubtile(this->til, 88 - 1, 1, 80, silent);
+    ReplaceSubtile(this->til, 88 - 1, 2, 631, silent);
+    ReplaceSubtile(this->til, 88 - 1, 3, 627, silent);
 
     // use common subtiles instead of minor alterations
     ReplaceSubtile(this->til, 7 - 1, 1, 6, silent);    // 26
@@ -3350,6 +3375,7 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeSubtileSolFlags(this->sol, 238 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 178 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 242 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
+        // - adjust AMP after cleanupCrypt
         break;
     }
     for (auto it = deletedFrames.crbegin(); it != deletedFrames.crend(); it++) {
