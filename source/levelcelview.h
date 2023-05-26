@@ -46,6 +46,7 @@ public:
 
     void initialize(D1Pal *pal, D1Tileset *tileset, D1Dun *dun, bool bottomPanelHidden);
     void setPal(D1Pal *pal);
+    void setTileset(D1Tileset *tileset);
 
     CelScene *getCelScene() const;
     int getCurrentFrameIndex() const;

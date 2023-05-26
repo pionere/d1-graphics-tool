@@ -1282,7 +1282,7 @@ void D1Tileset::maskCryptBlacks(bool silent)
 //      { 146 - 1, 0 }, // 356
 //      { 149 - 1, 4 }, // 356
 //      { 150 - 1, 6 }, // 356
-        { 151 - 1, 2 }, // 438
+//      { 151 - 1, 2 }, // 438
         { 151 - 1, 4 }, // 436
         { 151 - 1, 5 }, // 437
         { 152 - 1, 7 }, // 439
@@ -1320,19 +1320,19 @@ void D1Tileset::maskCryptBlacks(bool silent)
                     if (i == 7 && y == 0) { // 133, 1
                         continue;
                     }
-                    if (i == 13 && (y < MICRO_HEIGHT - (x - 4) / 2)) { // 151, 4
+                    if (i == 12 && (y < MICRO_HEIGHT - (x - 4) / 2)) { // 151, 4
                         continue;
                     }
-                    if (i == 14 && ((x < 6 && y < 18) || (x >= 6 && y < 18 - (x - 6) / 2))) { // 151, 5
+                    if (i == 13 && ((x < 6 && y < 18) || (x >= 6 && y < 18 - (x - 6) / 2))) { // 151, 5
                         continue;
                     }
-                    if (i == 15 && (y < 16 - (x - 3) / 2)) { // 152, 7
+                    if (i == 14 && (y < 16 - (x - 3) / 2)) { // 152, 7
                         continue;
                     }
-                    if (i == 17 && y < 21) { // 153, 4
+                    if (i == 16 && y < 21) { // 153, 4
                         continue;
                     }
-                    if (i == 18 && x < 10 && y < 3) { // 159, 1
+                    if (i == 17 && x < 10 && y < 3) { // 159, 1
                         continue;
                     }
                     change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());

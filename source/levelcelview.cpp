@@ -96,15 +96,7 @@ LevelCelView::~LevelCelView()
 void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPanelHidden)
 {
     this->pal = p;
-    this->tileset = ts;
-    this->gfx = ts->gfx;
-    this->cls = ts->cls;
-    this->min = ts->min;
-    this->til = ts->til;
-    this->sol = ts->sol;
-    this->amp = ts->amp;
-    this->spt = ts->spt;
-    this->tmi = ts->tmi;
+    this->setTileset(ts);
     this->dun = d;
 
     this->tabTileWidget.initialize(this, this->undoStack, this->til, this->min, this->amp);
@@ -137,6 +129,29 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
 void LevelCelView::setPal(D1Pal *p)
 {
     this->pal = p;
+}
+
+void LevelCelView::setTileset(D1Tileset *ts)
+{
+    this->tileset = ts;
+    this->gfx = ts->gfx;
+    this->cls = ts->cls;
+    this->min = ts->min;
+    this->til = ts->til;
+    this->sol = ts->sol;
+    this->amp = ts->amp;
+    this->spt = ts->spt;
+    this->tmi = ts->tmi;
+
+    if (this->currentFrameIndex >= this->gfx->getFrameCount()) {
+        this->currentFrameIndex = 0;
+    }
+    if (this->currentSubtileIndex >= this->min->getSubtileCount()) {
+        this->currentSubtileIndex = 0;
+    }
+    if (this->currentTileIndex >= this->til->getTileCount()) {
+        this->currentTileIndex = 0;
+    }
 }
 
 void LevelCelView::updateTilesetIcon()
