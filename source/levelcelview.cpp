@@ -2883,8 +2883,8 @@ void LevelCelView::reportDungeonUsage() const
     if (subtiles.empty()) {
         dProgress() << tr("   None.");
     } else {
-        for (std::pair<int, int> &subtiles : subtiles) {
-            dProgress() << tr("    %1: %2").arg(subtiles.first).arg(subtiles.second);
+        for (auto subtile : subtiles) {
+            dProgress() << tr("    %1: %2").arg(subtile.first).arg(subtile.second);
         }
     }
 
