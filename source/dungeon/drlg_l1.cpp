@@ -763,6 +763,8 @@ void DRLG_L5Shadows()
 			bool pillar = false;
 			switch (dungeon[i][j]) {
 			case 5:
+			// case 38:
+			// case 44:
 				horizArch = true;
 				vertArch = true;
 				break;
@@ -780,6 +782,9 @@ void DRLG_L5Shadows()
 				/* fall-through */
 			case 11:
 			// case 25:
+			// case 32:
+			// case 39:
+			// case 42:
 			case 35:
 			case 215:
 			case 111:
@@ -792,6 +797,10 @@ void DRLG_L5Shadows()
 			case 10:
 			case 12:
 			// case 26:
+			// case 33:
+			// case 34:
+			// case 40:
+			case 27:
 			case 36:
 			case 81:
 			case 82:
