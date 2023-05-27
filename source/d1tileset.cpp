@@ -469,6 +469,23 @@ static void ChangeSubtileSolFlags(D1Sol *sol, int subtileIndex, int solFlag, boo
     }
 }
 
+static void ChangeTileAmpFlags(D1Amp *amp, int tileIndex, int ampFlag, bool silent)
+{
+    quint8 currType = amp->getTileType(subtileIndex);
+    quint8 newType = ampFlag & MAPFLAG_TYPE;
+    quint8 currProperties = amp->getTileProperties(subtileIndex);
+    quint8 newProperties = ampFlag >> 8;
+
+    bool change = amp->setTileType(tileIndex, newType);
+    change |= amp->setTileProperties(tileIndex, newProperties);
+
+    if (change) {
+        if (!silent) {
+            dProgress() << QApplication::tr("The AMP flags of Tile %1 are modified.").arg(tileIndex + 1);
+        }
+    }
+}
+
 void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool silent)
 {
     std::vector<unsigned> &leftFrameReferences = this->min->getFrameReferences(potLeftSubtileRef - 1);
@@ -1447,7 +1464,7 @@ void D1Tileset::fixCryptShadows(bool silent)
                         continue;
                     }
                     // add shadow to the floor
-                    if (i == 7 && y <= (x / 2) - 3) { // 589
+                    if (i == 7 && (x > 22 && y <= (x / 2) - 3)) { // 589
                         continue;
                     }
                 }
@@ -1562,7 +1579,7 @@ void D1Tileset::fixCryptShadows(bool silent)
                 }
                 if (i == 8 + 2 && !srcPixel.isTransparent()) { // 572 -> 1817
                     // open door in shadow
-                    if (y > 14 + (x - 1) / 2) {
+                    if (y > (x / 2) + 13) {
                         srcPixel = SHADOW_COLOR;
                     }
                 }
@@ -1633,7 +1650,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 28 - 1, 0, 75, silent);   // 86
     ReplaceSubtile(this->til, 28 - 1, 1, 4, silent);    // 80
     ReplaceSubtile(this->til, 28 - 1, 2, 216, silent);  // 77
-    ReplaceSubtile(this->til, 28 - 1, 3, 4, silent);    // 87
+    ReplaceSubtile(this->til, 28 - 1, 3, 626, silent);  // 87
     ReplaceSubtile(this->til, 109 - 1, 0, 1, silent);   // 312
     ReplaceSubtile(this->til, 109 - 1, 1, 2, silent);   // 313
     ReplaceSubtile(this->til, 109 - 1, 2, 3, silent);   // 314
@@ -3424,7 +3441,27 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeSubtileSolFlags(this->sol, 238 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 178 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 242 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
-        // - adjust AMP after cleanupCrypt
+        // patch automaptype - L5.AMP
+        // adjust AMP after cleanupCrypt
+        // - use the shadows created by fixCryptShadows
+        ChangeTileAmpFlags(this->amp, 28 - 1, MAPFLAG_VERTDOOR | 2, silent);   // 86
+        ChangeTileAmpFlags(this->amp, 109 - 1, 2, silent);   // 312
+        ChangeTileAmpFlags(this->amp, 110 - 1, 2, silent);  // 316
+        ChangeTileAmpFlags(this->amp, 111 - 1, MAPFLAG_VERTARCH | 2, silent);  // 317
+        ChangeTileAmpFlags(this->amp, 215 - 1, MAPFLAG_VERTGRATE | 2, 101, silent); // 645
+        // - 'add' new shadow-types with glow
+        ChangeTileAmpFlags(this->amp, 216 - 1, MAPFLAG_VERTARCH | 2, silent);  // 622
+        // - 'add' new shadow-types with horizontal arches
+        ChangeTileAmpFlags(this->amp, 71 - 1, 3, silent);
+        ChangeTileAmpFlags(this->amp, 80 - 1, 3, silent);
+        ChangeTileAmpFlags(this->amp, 81 - 1, MAPFLAG_VERTARCH | 3, silent);
+        ChangeTileAmpFlags(this->amp, 82 - 1, MAPFLAG_VERTARCH | 3, 42, silent);
+        ChangeTileAmpFlags(this->amp, 83 - 1, MAPFLAG_VERTGRATE | 3, silent);
+        ChangeTileAmpFlags(this->amp, 84 - 1, MAPFLAG_VERTGRATE | 3, silent);
+        ChangeTileAmpFlags(this->amp, 85 - 1, 3, silent);
+        ChangeTileAmpFlags(this->amp, 86 - 1, 3, silent);
+        ChangeTileAmpFlags(this->amp, 87 - 1, MAPFLAG_VERTDOOR | 3, silent);
+        ChangeTileAmpFlags(this->amp, 88 - 1, MAPFLAG_VERTDOOR | 3, silent);
         break;
     }
     for (auto it = deletedFrames.crbegin(); it != deletedFrames.crend(); it++) {
