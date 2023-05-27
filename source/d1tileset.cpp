@@ -1976,7 +1976,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(14, 5, 6, 5); // lost details
     // ReplaceMcr(26, 5, 6, 5); // lost details
     ReplaceMcr(451, 5, 6, 5);   // lost details
-    ReplaceMcr(80, 5, 6, 5);    // lost details
+    // ReplaceMcr(80, 5, 6, 5);    // lost details
     ReplaceMcr(324, 5, 432, 5); // lost details
     ReplaceMcr(340, 5, 432, 5); // lost details
     ReplaceMcr(364, 5, 432, 5); // lost details
@@ -1984,7 +1984,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(394, 5, 432, 5); // lost details
     ReplaceMcr(6, 3, 14, 3);    // lost details
     // ReplaceMcr(26, 3, 14, 3);   // lost details
-    ReplaceMcr(80, 3, 14, 3);  // lost details
+    // ReplaceMcr(80, 3, 14, 3);  // lost details
     ReplaceMcr(269, 3, 14, 3); // lost details
     ReplaceMcr(414, 3, 14, 3); // lost details
     ReplaceMcr(451, 3, 14, 3); // lost details
@@ -2006,7 +2006,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(451, 0, 324, 0); // lost details
     // ReplaceMcr(14, 1, 6, 1);
     // ReplaceMcr(26, 1, 6, 1);
-    ReplaceMcr(80, 1, 6, 1);
+    // ReplaceMcr(80, 1, 6, 1);
     ReplaceMcr(269, 1, 6, 1);
     ReplaceMcr(380, 1, 6, 1);
     ReplaceMcr(451, 1, 6, 1);
@@ -2973,9 +2973,13 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(234, 7);
     Blk2Mcr(234, 8);
     Blk2Mcr(213, 0);
+    Blk2Mcr(213, 2);
+    Blk2Mcr(213, 4);
     Blk2Mcr(213, 6);
     Blk2Mcr(213, 8);
     Blk2Mcr(216, 0);
+    Blk2Mcr(216, 2);
+    Blk2Mcr(216, 4);
     Blk2Mcr(216, 6);
     Blk2Mcr(216, 8);
     Blk2Mcr(388, 2);
