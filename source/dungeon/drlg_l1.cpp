@@ -832,15 +832,14 @@ void DRLG_L5Shadows()
 					dungeon[i][j - 1] = 110;
 				} else if (dungeon[i][j - 1] == 11) {
 					dungeon[i][j - 1] = 111;
-				} else if (dungeon[i][j - 1] == 25) {
-					dungeon[i][j - 1] = 28;
 				} else if (dungeon[i][j - 1] == 35) {
 					dungeon[i][j - 1] = 215;
 				//} else if (dungeon[i][j - 1] == 203) {
 				//	dungeon[i][j - 1] = 204;
 				} else {
-                    dProgressWarn() << QString("Missing case %1 for horizontal arch %2 @%3:%4").arg(dungeon[i][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
-					// 25 -> not perfect, but ok
+					if (dungeon[i][j - 1] != 25)
+	                    dProgressWarn() << QString("Missing case %1 for horizontal arch %2 @%3:%4").arg(dungeon[i][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+					// 25 -> not perfect, but ok and it would require a new door object as well
 					// FIXME: what else?
 				}
 			}

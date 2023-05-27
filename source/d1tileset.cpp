@@ -1390,20 +1390,13 @@ void D1Tileset::fixCryptShadows(bool silent)
         // { 631 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1815 - 207
         { 634 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },  // 1818 - 208
         { 634 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1819
-        { 213 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },  // 589 - 71
 
-        { 630 - 1, 0, D1CEL_FRAME_TYPE::RightTriangle },     // 1813 - '28'
-        { 632 - 1, 0, D1CEL_FRAME_TYPE::Square },            // 1816
-        { 633 - 1, 0, D1CEL_FRAME_TYPE::RightTriangle },     // 1817
         { 277 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare }, // 722 - 96
         { 620 - 1, 0, D1CEL_FRAME_TYPE::RightTriangle },     // 1798 - '109'
         { 621 - 1, 1, D1CEL_FRAME_TYPE::Square },            // 1800
         { 625 - 1, 0, D1CEL_FRAME_TYPE::RightTriangle },     // 1805 - '215'
         { 624 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // 1804
         { 619 - 1, 1, D1CEL_FRAME_TYPE::LeftTrapezoid },     // 1797 - '109' + '215'
-        {  77 - 1, 1, D1CEL_FRAME_TYPE::Empty }, // 268
-        {  77 - 1, 2, D1CEL_FRAME_TYPE::Empty }, // 266
-        { 206 - 1, 1, D1CEL_FRAME_TYPE::Empty }, // 572
         { 303 - 1, 1, D1CEL_FRAME_TYPE::Empty }, // 797
         {  15 - 1, 1, D1CEL_FRAME_TYPE::Empty }, // 14
         {  15 - 1, 2, D1CEL_FRAME_TYPE::Empty }, // 12
@@ -1415,7 +1408,7 @@ void D1Tileset::fixCryptShadows(bool silent)
     // TODO: check if there are enough subtiles
     constexpr unsigned blockSize = BLOCK_SIZE_L5;
     const D1GfxPixel SHADOW_COLOR = D1GfxPixel::colorPixel(0); // 79;
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 7; i++) {
         const CelMicro &micro = micros[i];
         std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
         D1GfxFrame *frame = microFrame.second;
@@ -1463,10 +1456,6 @@ void D1Tileset::fixCryptShadows(bool silent)
                     if (i == 6 && (y <= (x / 2) + 13 || (x <= 8 && y >= 12 && color >= 62 && color <= 95 && (color >= 80 || color <= 63)))) { // 1819
                         continue;
                     }
-                    // add shadow to the floor
-                    if (i == 7 && (x > 22 && y <= (x / 2) - 3)) { // 589
-                        continue;
-                    }
                 }
                 change |= frame->setPixel(x, y, SHADOW_COLOR);
             }
@@ -1485,7 +1474,7 @@ void D1Tileset::fixCryptShadows(bool silent)
             }
         }
     }
-    for (int i = 8; i < 17; i++) {
+    for (int i = 7; i < 13; i++) {
         const CelMicro &micro = micros[i];
         std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
         D1GfxFrame *frame = microFrame.second;
@@ -1494,8 +1483,8 @@ void D1Tileset::fixCryptShadows(bool silent)
         }
 
         D1GfxFrame *frameSrc = nullptr;
-        if (i != 8 + 8) { // 1797
-            const CelMicro &microSrc = micros[i + 9];
+        if (i != 7 + 5) { // 1797
+            const CelMicro &microSrc = micros[i + 6];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             frameSrc = mf.second;
             if (frameSrc == nullptr) {
@@ -1506,7 +1495,7 @@ void D1Tileset::fixCryptShadows(bool silent)
         for (int y = 0; y < MICRO_WIDTH; y++) {
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 //  use consistent lava + shadow micro II.
-                if (i == 8 + 3) { // 722
+                if (i == 7 + 0) { // 722
                     if (x > 11) {
                         continue;
                     }
@@ -1525,10 +1514,10 @@ void D1Tileset::fixCryptShadows(bool silent)
                 }
 
                 D1GfxPixel srcPixel = frameSrc != nullptr ? frameSrc->getPixel(x, y) : SHADOW_COLOR;
-                if (i == 8 + 8) { // 1797
+                if (i == 7 + 5) { // 1797
                     srcPixel = y > 16 + x / 2 ? D1GfxPixel::transparentPixel() : SHADOW_COLOR;
                 }
-                if (i == 8 + 4 && !srcPixel.isTransparent()) { // 14 -> 1798
+                if (i == 7 + 1 && !srcPixel.isTransparent()) { // 14 -> 1798
                     // wall/floor in shadow
                     if (x <= 1) {
                         if (y >= 4 * x) {
@@ -1548,7 +1537,7 @@ void D1Tileset::fixCryptShadows(bool silent)
                         }
                     }
                 }
-                if (i == 8 + 6 && !srcPixel.isTransparent()) { // 311 -> 1805
+                if (i == 7 + 3 && !srcPixel.isTransparent()) { // 311 -> 1805
                     // grate/floor in shadow
                     if (x <= 1 && y >= 7 * x) {
                         srcPixel = SHADOW_COLOR;
@@ -1557,34 +1546,8 @@ void D1Tileset::fixCryptShadows(bool silent)
                         srcPixel = SHADOW_COLOR;
                     }
                 }
-                if (i == 8 + 0 && !srcPixel.isTransparent()) { // 266 -> 1813
-                    // closed door in shadow
-                    if (x < 3) {
-                        if (y >= 7 * x - 1) {
-                            srcPixel = SHADOW_COLOR;
-                        }
-                    } else if (x < 7) {
-                        if (y >= 13 + (x - 3) / 2) {
-                            srcPixel = SHADOW_COLOR;
-                        }
-                    } else if (x < 8) {
-                        if (y >= 15 + 4 * (x - 7)) {
-                            srcPixel = SHADOW_COLOR;
-                        }
-                    } else {
-                        if (y >= 14 + (x - 1) / 2) {
-                            srcPixel = SHADOW_COLOR;
-                        }
-                    }
-                }
-                if (i == 8 + 2 && !srcPixel.isTransparent()) { // 572 -> 1817
-                    // open door in shadow
-                    if (y > (x / 2) + 13) {
-                        srcPixel = SHADOW_COLOR;
-                    }
-                }
-                if (i == 8 + 1 || i == 8 + 5 || i == 8 + 7) { // 12, 309 -> 1800, 1804
-                    // door/wall/grate in shadow
+                if (i == 7 + 2 || i == 7 + 4) { // 12, 309 -> 1800, 1804
+                    // wall/grate in shadow
                     if (y >= 7 * (x - 27) && !srcPixel.isTransparent()) {
                         srcPixel = SHADOW_COLOR;
                     }
@@ -1647,10 +1610,6 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 108 - 1, 3, 626, silent); // 811
     ReplaceSubtile(this->til, 210 - 1, 3, 371, silent); // 637
 
-    ReplaceSubtile(this->til, 28 - 1, 0, 75, silent);   // 86
-    ReplaceSubtile(this->til, 28 - 1, 1, 4, silent);    // 80
-    ReplaceSubtile(this->til, 28 - 1, 2, 216, silent);  // 77
-    ReplaceSubtile(this->til, 28 - 1, 3, 626, silent);  // 87
     ReplaceSubtile(this->til, 109 - 1, 0, 1, silent);   // 312
     ReplaceSubtile(this->til, 109 - 1, 1, 2, silent);   // 313
     ReplaceSubtile(this->til, 109 - 1, 2, 3, silent);   // 314
@@ -1891,19 +1850,21 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(238, 4);
     SetMcr(238, 6, 31, 6);
     SetMcr(238, 8, 31, 8);
-    SetMcr(213, 1, 633, 0);
-    Blk2Mcr(213, 6);
-    Blk2Mcr(213, 8);
-    ReplaceMcr(216, 0, 619, 1);
-    SetMcr(216, 1, 630, 0);
-    SetMcr(216, 2, 632, 0);
-    Blk2Mcr(216, 6);
-    Blk2Mcr(216, 8);
-    // pointless door micros (re-drawn by dSpecial)
+    // pointless door micros (re-drawn by dSpecial or the object)
+    Blk2Mcr(77, 2);
+    Blk2Mcr(77, 4);
     Blk2Mcr(77, 6);
     Blk2Mcr(77, 8);
+    ReplaceMcr(77, 0, 206, 0);
+    ReplaceMcr(77, 1, 206, 1);
     Blk2Mcr(80, 7);
     Blk2Mcr(80, 9);
+    ReplaceMcr(80, 0, 209, 0);
+    ReplaceMcr(80, 1, 209, 1);
+    ReplaceMcr(80, 3, 209, 3);
+    ReplaceMcr(80, 5, 209, 5);
+    Blk2Mcr(206, 2);
+    Blk2Mcr(206, 4);
     Blk2Mcr(206, 6);
     Blk2Mcr(206, 8);
     Blk2Mcr(209, 7);
@@ -3011,6 +2972,12 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(234, 6);
     Blk2Mcr(234, 7);
     Blk2Mcr(234, 8);
+    Blk2Mcr(213, 0);
+    Blk2Mcr(213, 6);
+    Blk2Mcr(213, 8);
+    Blk2Mcr(216, 0);
+    Blk2Mcr(216, 6);
+    Blk2Mcr(216, 8);
     Blk2Mcr(388, 2);
     Blk2Mcr(388, 8);
     Blk2Mcr(390, 2);
@@ -3053,9 +3020,9 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // Blk2Mcr(621, 1);
     // Blk2Mcr(624, 0);
     // Blk2Mcr(625, 0);
-    // Blk2Mcr(630, 0);
-    // Blk2Mcr(632, 0);
-    // Blk2Mcr(633, 0);
+    Blk2Mcr(630, 0);
+    Blk2Mcr(632, 0);
+    Blk2Mcr(633, 0);
     Blk2Mcr(637, 0);
     Blk2Mcr(642, 1);
     Blk2Mcr(644, 0);
@@ -3444,18 +3411,17 @@ void D1Tileset::patch(int dunType, bool silent)
         // patch automaptype - L5.AMP
         // adjust AMP after cleanupCrypt
         // - use the shadows created by fixCryptShadows
-        ChangeTileAmpFlags(this->amp, 28 - 1, MAPFLAG_VERTDOOR | 2, silent);   // 86
         ChangeTileAmpFlags(this->amp, 109 - 1, 2, silent);   // 312
         ChangeTileAmpFlags(this->amp, 110 - 1, 2, silent);  // 316
         ChangeTileAmpFlags(this->amp, 111 - 1, MAPFLAG_VERTARCH | 2, silent);  // 317
-        ChangeTileAmpFlags(this->amp, 215 - 1, MAPFLAG_VERTGRATE | 2, 101, silent); // 645
+        ChangeTileAmpFlags(this->amp, 215 - 1, MAPFLAG_VERTGRATE | 2, silent); // 645
         // - 'add' new shadow-types with glow
         ChangeTileAmpFlags(this->amp, 216 - 1, MAPFLAG_VERTARCH | 2, silent);  // 622
         // - 'add' new shadow-types with horizontal arches
         ChangeTileAmpFlags(this->amp, 71 - 1, 3, silent);
         ChangeTileAmpFlags(this->amp, 80 - 1, 3, silent);
         ChangeTileAmpFlags(this->amp, 81 - 1, MAPFLAG_VERTARCH | 3, silent);
-        ChangeTileAmpFlags(this->amp, 82 - 1, MAPFLAG_VERTARCH | 3, 42, silent);
+        ChangeTileAmpFlags(this->amp, 82 - 1, MAPFLAG_VERTARCH | 3, silent);
         ChangeTileAmpFlags(this->amp, 83 - 1, MAPFLAG_VERTGRATE | 3, silent);
         ChangeTileAmpFlags(this->amp, 84 - 1, MAPFLAG_VERTGRATE | 3, silent);
         ChangeTileAmpFlags(this->amp, 85 - 1, 3, silent);
