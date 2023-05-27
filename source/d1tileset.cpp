@@ -471,9 +471,9 @@ static void ChangeSubtileSolFlags(D1Sol *sol, int subtileIndex, int solFlag, boo
 
 static void ChangeTileAmpFlags(D1Amp *amp, int tileIndex, int ampFlag, bool silent)
 {
-    quint8 currType = amp->getTileType(subtileIndex);
+    quint8 currType = amp->getTileType(tileIndex);
     quint8 newType = ampFlag & MAPFLAG_TYPE;
-    quint8 currProperties = amp->getTileProperties(subtileIndex);
+    quint8 currProperties = amp->getTileProperties(tileIndex);
     quint8 newProperties = ampFlag >> 8;
 
     bool change = amp->setTileType(tileIndex, newType);
@@ -3411,12 +3411,12 @@ void D1Tileset::patch(int dunType, bool silent)
         // patch automaptype - L5.AMP
         // adjust AMP after cleanupCrypt
         // - use the shadows created by fixCryptShadows
-        ChangeTileAmpFlags(this->amp, 109 - 1, 2, silent);   // 312
-        ChangeTileAmpFlags(this->amp, 110 - 1, 2, silent);  // 316
-        ChangeTileAmpFlags(this->amp, 111 - 1, MAPFLAG_VERTARCH | 2, silent);  // 317
-        ChangeTileAmpFlags(this->amp, 215 - 1, MAPFLAG_VERTGRATE | 2, silent); // 645
+        ChangeTileAmpFlags(this->amp, 109 - 1, 2, silent);
+        ChangeTileAmpFlags(this->amp, 110 - 1, 2, silent);
+        ChangeTileAmpFlags(this->amp, 111 - 1, MAPFLAG_VERTARCH | 2, silent);
+        ChangeTileAmpFlags(this->amp, 215 - 1, MAPFLAG_VERTGRATE | 2, silent);
         // - 'add' new shadow-types with glow
-        ChangeTileAmpFlags(this->amp, 216 - 1, MAPFLAG_VERTARCH | 2, silent);  // 622
+        ChangeTileAmpFlags(this->amp, 216 - 1, MAPFLAG_VERTARCH | 2, silent);
         // - 'add' new shadow-types with horizontal arches
         ChangeTileAmpFlags(this->amp, 71 - 1, 3, silent);
         ChangeTileAmpFlags(this->amp, 80 - 1, 3, silent);
