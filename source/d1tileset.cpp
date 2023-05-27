@@ -1877,7 +1877,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     SetMcr(213, 1, 633, 0);
     Blk2Mcr(213, 6);
     Blk2Mcr(213, 8);
-    ReplaceMcr(216, 630, 0);
+    ReplaceMcr(216, 0, 630, 0);
     SetMcr(216, 1, 632, 0);
     Blk2Mcr(216, 6);
     Blk2Mcr(216, 8);

@@ -832,6 +832,8 @@ void DRLG_L5Shadows()
 					dungeon[i][j - 1] = 110;
 				} else if (dungeon[i][j - 1] == 11) {
 					dungeon[i][j - 1] = 111;
+				} else if (dungeon[i][j - 1] == 25) {
+					dungeon[i][j - 1] = 216;
 				} else if (dungeon[i][j - 1] == 35) {
 					dungeon[i][j - 1] = 215;
 				//} else if (dungeon[i][j - 1] == 203) {
