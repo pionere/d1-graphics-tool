@@ -1263,9 +1263,7 @@ void D1Tileset::fillCryptShapes(bool silent)
             }
         }
         if (i == 11) { // 571
-            change |= frame->setPixel(24, 4, D1GfxPixel::colorPixel(60));
-            change |= frame->setPixel(23, 5, D1GfxPixel::colorPixel(60));
-            change |= frame->setPixel(26, 4, D1GfxPixel::colorPixel(60));
+            change |= frame->setPixel(26, 4, D1GfxPixel::colorPixel(45));
         }
         std::vector<FramePixel> pixels;
         D1CelTilesetFrame::collectPixels(frame, micro.res_encoding, pixels);
@@ -1532,7 +1530,7 @@ void D1Tileset::fixCryptShadows(bool silent)
                             srcPixel = SHADOW_COLOR;
                         }
                     } else {
-                        if (y >= 14 + (x - 1) / 2) {
+                        if (y > 14 + (x - 1) / 2) {
                             srcPixel = SHADOW_COLOR;
                         }
                     }
@@ -2015,15 +2013,14 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(380, 5, 432, 5); // lost details
     ReplaceMcr(394, 5, 432, 5); // lost details
     ReplaceMcr(6, 3, 14, 3);    // lost details
-    // ReplaceMcr(26, 3, 14, 3);   // lost details
-    // ReplaceMcr(80, 3, 14, 3);  // lost details
+    // ReplaceMcr(26, 3, 14, 3); // lost details
+    // ReplaceMcr(80, 3, 14, 3); // lost details
     ReplaceMcr(269, 3, 14, 3); // lost details
     ReplaceMcr(414, 3, 14, 3); // lost details
     ReplaceMcr(451, 3, 14, 3); // lost details
     ReplaceMcr(554, 3, 14, 3); // lost details
     ReplaceMcr(556, 3, 14, 3); // lost details
     // ? ReplaceMcr(608, 3, 103, 3); // lost details
-    ReplaceMcr(324, 3, 380, 3); // lost details
     ReplaceMcr(324, 3, 380, 3); // lost details
     ReplaceMcr(340, 3, 380, 3); // lost details
     ReplaceMcr(364, 3, 380, 3); // lost details
@@ -2187,7 +2184,6 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(534, 1, 254, 1);
     ReplaceMcr(541, 1, 530, 1);
     ReplaceMcr(49, 5, 5, 5);
-    ReplaceMcr(329, 6, 15, 6);
     ReplaceMcr(13, 6, 36, 6);
     ReplaceMcr(13, 4, 36, 4);
     ReplaceMcr(387, 6, 36, 6);
@@ -2326,7 +2322,6 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(199, 0, 48, 0);
     ReplaceMcr(572, 0, 48, 0);
     ReplaceMcr(507, 1, 48, 1);
-    // ReplaceMcr(206, 6, 77, 6);
     ReplaceMcr(471, 7, 265, 7);
     ReplaceMcr(547, 7, 261, 7);
     ReplaceMcr(471, 9, 6, 9);
@@ -2340,10 +2335,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(629, 1, 639, 1);
     // ReplaceMcr(637, 0, 624, 0);
     // ReplaceMcr(643, 0, 631, 0);
-    ReplaceMcr(345, 8, 31, 8);
-    ReplaceMcr(456, 8, 31, 8);
     // ReplaceMcr(388, 2, 15, 2);
-    ReplaceMcr(401, 4, 15, 4);
     // ReplaceMcr(479, 5, 14, 5);
     ReplaceMcr(389, 6, 17, 6); // lost details
     // ReplaceMcr(19, 8, 31, 8);  // lost details
@@ -2406,11 +2398,11 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(73, 8, 95, 8); // lost details
     ReplaceMcr(74, 8, 95, 8); // lost details
 
-    ReplaceMcr(1, 8, 95, 8);   // lost details
-    ReplaceMcr(21, 8, 95, 8);  // lost details
-    ReplaceMcr(36, 8, 95, 8);  // lost details
+    ReplaceMcr(1, 8, 95, 8);  // lost details
+    ReplaceMcr(21, 8, 95, 8); // lost details
+    ReplaceMcr(36, 8, 95, 8); // lost details
     ReplaceMcr(75, 8, 95, 8);
-    ReplaceMcr(83, 8, 95, 8);  // lost details
+    ReplaceMcr(83, 8, 95, 8); // lost details
     ReplaceMcr(91, 8, 95, 8);
     ReplaceMcr(99, 8, 95, 8);  // lost details
     ReplaceMcr(113, 8, 95, 8); // lost details
