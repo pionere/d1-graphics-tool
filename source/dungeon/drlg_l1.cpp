@@ -896,18 +896,19 @@ void DRLG_L5Shadows()
 			if (pillar) {
 				if (dungeon[i - 1][j] == 13) {
 					BYTE replace;
+					pillar = (dungeon[i][j - 1] == 13 /* || 2 3 7 9 12 15 16 17 26 36 */);
 					if (dungeon[i - 1][j - 1] == 13) {
-						replace = 207;
+						replace = pillar ? 207 : 203;
 					} else if (dungeon[i - 1][j - 1] == 2) {
-						replace = 71;
+						replace = pillar ? 71 : 80;
 					} else if (dungeon[i - 1][j - 1] == 7) {
-						replace = 85;
+						replace = pillar ? 85 : 86;
 					} else if (dungeon[i - 1][j - 1] == 12) {
-						replace = 81;
+						replace = pillar ? 81 : 82;
 					} else if (dungeon[i - 1][j - 1] == 26) {
-						replace = 87;
+						replace = pillar ? 87 : 88;
 					} else if (dungeon[i - 1][j - 1] == 36) {
-						replace = 83;
+						replace = pillar ? 83 : 84;
 					} else {
 	                    dProgressWarn() << QString("Missing case %1 for pillar %2 with floor @%3:%4").arg(dungeon[i - 1][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 						continue;
