@@ -1189,7 +1189,7 @@ void D1Tileset::fillCryptShapes(bool silent)
         { 162 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare }, // 483
         {  63 - 1, 4, D1CEL_FRAME_TYPE::Square },            // 239
         { 450 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // 1315
-        { 206 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // 571
+        { 206 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // 571
         // clang-format on
     };
 
@@ -1440,14 +1440,14 @@ void D1Tileset::fixCryptShadows(bool silent)
                     //    continue;
                     // }
                     // extend the shadows to NE: 208[2][0, 1]
-                    if (i == 5 && (y <= (x / 2) + 13 - MICRO_HEIGHT / 2 || (x >= 20 && y >= 14 && color >= 59 && color <= 95 && (color >= 77 || color <= 63)))) { // 1818
+                    if (i == 5 && (y <= (x / 2) - 3 || (x >= 20 && y >= 14 && color >= 59 && color <= 95 && (color >= 77 || color <= 63)))) { // 1818
                         continue;
                     }
                     if (i == 6 && (y <= (x / 2) + 13 || (x <= 8 && y >= 12 && color >= 62 && color <= 95 && (color >= 80 || color <= 63)))) { // 1819
                         continue;
                     }
                     // add shadow to the floor
-                    if (i == 7 && y < 14 + (x - 1) / 2) { // 589
+                    if (i == 7 && y <= (x / 2) - 3) { // 589
                         continue;
                     }
                 }
@@ -1478,7 +1478,7 @@ void D1Tileset::fixCryptShadows(bool silent)
 
         D1GfxFrame *frameSrc = nullptr;
         if (i != 8 + 8) { // 1797
-            const CelMicro &microSrc = micros[i + 6];
+            const CelMicro &microSrc = micros[i + 9];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             frameSrc = mf.second;
             if (frameSrc == nullptr) {
@@ -1877,8 +1877,9 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     SetMcr(213, 1, 633, 0);
     Blk2Mcr(213, 6);
     Blk2Mcr(213, 8);
-    ReplaceMcr(216, 0, 630, 0);
-    SetMcr(216, 1, 632, 0);
+    ReplaceMcr(216, 0, 619, 1);
+    SetMcr(216, 1, 630, 0);
+    SetMcr(216, 2, 632, 0);
     Blk2Mcr(216, 6);
     Blk2Mcr(216, 8);
     // pointless door micros (re-drawn by dSpecial)
