@@ -3452,14 +3452,14 @@ void D1Tileset::patch(int dunType, bool silent)
         // - 'add' new shadow-types with horizontal arches
         ChangeTileAmpFlags(this->amp, 71 - 1, 3, silent);
         ChangeTileAmpFlags(this->amp, 80 - 1, 3, silent);
-        ChangeTileAmpFlags(this->amp, 81 - 1, MAPFLAG_VERTARCH | 3, silent);
-        ChangeTileAmpFlags(this->amp, 82 - 1, MAPFLAG_VERTARCH | 3, silent);
-        ChangeTileAmpFlags(this->amp, 83 - 1, MAPFLAG_VERTGRATE | 3, silent);
-        ChangeTileAmpFlags(this->amp, 84 - 1, MAPFLAG_VERTGRATE | 3, silent);
+        ChangeTileAmpFlags(this->amp, 81 - 1, MAPFLAG_HORZARCH | 3, silent);
+        ChangeTileAmpFlags(this->amp, 82 - 1, MAPFLAG_HORZARCH | 3, silent);
+        ChangeTileAmpFlags(this->amp, 83 - 1, MAPFLAG_HORZGRATE | 3, silent);
+        ChangeTileAmpFlags(this->amp, 84 - 1, MAPFLAG_HORZGRATE | 3, silent);
         ChangeTileAmpFlags(this->amp, 85 - 1, 3, silent);
         ChangeTileAmpFlags(this->amp, 86 - 1, 3, silent);
-        ChangeTileAmpFlags(this->amp, 87 - 1, MAPFLAG_VERTDOOR | 3, silent);
-        ChangeTileAmpFlags(this->amp, 88 - 1, MAPFLAG_VERTDOOR | 3, silent);
+        ChangeTileAmpFlags(this->amp, 87 - 1, MAPFLAG_HORZDOOR | 3, silent);
+        ChangeTileAmpFlags(this->amp, 88 - 1, MAPFLAG_HORZDOOR | 3, silent);
         break;
     }
     for (auto it = deletedFrames.crbegin(); it != deletedFrames.crend(); it++) {

@@ -80,14 +80,14 @@ void InitLvlAutomap()
 		// - 'add' new shadow-types with horizontal arches
 		automaptype[71] = 3;
 		automaptype[80] = 3;
-		automaptype[81] = MAPFLAG_VERTARCH | 3;
-		automaptype[82] = MAPFLAG_VERTARCH | 3;
-		automaptype[83] = MAPFLAG_VERTGRATE | 3;
-		automaptype[84] = MAPFLAG_VERTGRATE | 3;
+		automaptype[81] = MAPFLAG_HORZARCH | 3;
+		automaptype[82] = MAPFLAG_HORZARCH | 3;
+		automaptype[83] = MAPFLAG_HORZGRATE | 3;
+		automaptype[84] = MAPFLAG_HORZGRATE | 3;
 		automaptype[85] = 3;
 		automaptype[86] = 3;
-		automaptype[87] = MAPFLAG_VERTDOOR | 3;
-		automaptype[88] = MAPFLAG_VERTDOOR | 3;
+		automaptype[87] = MAPFLAG_HORZDOOR | 3;
+		automaptype[88] = MAPFLAG_HORZDOOR | 3;
 	}
 #endif // HELLFIRE
 }
