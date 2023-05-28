@@ -1369,7 +1369,7 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
                     }
                 }
             }
-            D1Dun::DrawMap(drawCursorX + backWidth / 2, drawCursorY - AmLine16, mapType | (mapProp << 8));
+            D1Dun::DrawMap(drawCursorX + backWidth / 2, drawCursorY - 1, mapType | (mapProp << 8));
         }
     }
     if (params.showRooms) {
