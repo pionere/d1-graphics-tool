@@ -1347,6 +1347,7 @@ void D1Dun::DrawMap(int sx, int sy, uint16_t automap_type)
 
 void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
 {
+    LogErrorF("Draw to %d:%d .. %d:%d", drawCursorX, drawCursorY, dunCursorX, dunCursorY);
     const unsigned backWidth = backImage.width() - 2 * CELL_BORDER;
     const unsigned backHeight = backImage.height() - 2 * CELL_BORDER;
 
@@ -1354,6 +1355,7 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
     if (params.showMap && (dunCursorX & 1) == 0 && (dunCursorY & 1) == 0) {
         int tileRef = this->tiles[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
         if (tileRef > 0 && tileRef <= this->til->getTileCount()) { // !0 || !UNDEF_TILE
+            LogErrorF("Draw tilerefmap to %d:%d .. %d:%d = %d", drawCursorX, drawCursorY, dunCursorX, dunCursorY, tileRef);
             quint8 mapType = this->tileset->amp->getTileType(tileRef - 1);
             quint8 mapProp = this->tileset->amp->getTileProperties(tileRef - 1);
 
@@ -1413,6 +1415,7 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
             dungeon.drawLine(drawCursorX + backWidth / 4, drawCursorY - 3 * backHeight / 4, drawCursorX + 3 * backWidth / 4, drawCursorY - backHeight / 4);
         }
     }
+    LogErrorF("Draw meta done");
 }
 
 void D1Dun::drawLayer(QPainter &dunPainter, QImage &backImage, const DunDrawParam &params, int layer)
