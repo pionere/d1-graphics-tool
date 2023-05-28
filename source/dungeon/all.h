@@ -16,7 +16,7 @@
 #include "enums.h"
 #include "structs.h"
 
-// #include "automap.h"
+#include "automap.h"
 #include "drlg_l1.h"
 #include "drlg_l2.h"
 #include "drlg_l3.h"

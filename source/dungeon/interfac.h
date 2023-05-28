@@ -21,6 +21,6 @@ extern bool HasTileset;
 extern QString assetPath;
 extern char infostr[256];
 
-bool EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const GenerateDunParam &params);
+void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const GenerateDunParam &params);
 
 #endif /* __INTERFAC_H__ */
