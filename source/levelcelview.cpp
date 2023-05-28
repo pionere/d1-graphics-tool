@@ -3117,6 +3117,7 @@ void LevelCelView::displayFrame()
     if (this->dunView) {
         DunDrawParam params;
         params.tileState = this->ui->showTilesRadioButton->isChecked() ? Qt::Checked : (this->ui->showFloorRadioButton->isChecked() ? Qt::PartiallyChecked : Qt::Unchecked);
+        params.showMap = this->ui->showMapMetaRadioButton->isChecked();
         params.showRooms = this->ui->showRoomsMetaRadioButton->isChecked();
         params.showTileProtections = this->ui->showTileMetaRadioButton->isChecked();
         params.showSubtileProtections = this->ui->showSubtileMetaRadioButton->isChecked();

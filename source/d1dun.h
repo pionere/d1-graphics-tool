@@ -107,6 +107,7 @@ typedef struct ItemCacheEntry {
 class DunDrawParam {
 public:
     Qt::CheckState tileState;
+    bool showMap;
     bool showRooms;
     bool showTileProtections;
     bool showSubtileProtections;
@@ -213,8 +214,18 @@ public:
     void clearAssets();
 
 private:
-    static void drawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, const QColor &color);
+    static void DrawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, const QColor &color);
+    static void DrawPixel(unsigned sx, unsigned sy, BYTE color);
+    static void DrawLine(unsigned x0, unsigned y0, unsigned x1, unsigned y1, BYTE color);
+    static void DrawAutomapDirt(unsigned sx, unsigned sy);
+    static void DrawAutomapStairs(unsigned sx, unsigned sy);
+    static void DrawAutomapDiamond(unsigned sx, unsigned sy);
+    static void DrawAutomapVertDoor(unsigned sx, unsigned sy);
+    static void DrawAutomapHorzDoor(unsigned sx, unsigned sy);
+    static void DrawMap(int drawCursorX, int drawCursorY, uint16_t automap_type);
     void drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
+    void drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
+    void drawLayer(QPainter &dungeon, const DunDrawParam &params, int layer);
     void initVectors(int width, int height);
     void loadObjectGfx(const QString &filePath, int width, ObjectCacheEntry &result);
     void loadMonsterGfx(const QString &filePath, int width, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result);
