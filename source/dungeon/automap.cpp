@@ -37,7 +37,7 @@ void InitLvlAutomap()
 	}
 
 	mapData = levelfiledata[AllLevels[currLvl._dLevelIdx].dfindex].dAutomapData;
-	_gbAutomapData = mapData != NULL;
+	bool _gbAutomapData = mapData != NULL;
 	if (!_gbAutomapData) {
 		memset(automaptype, 0, sizeof(automaptype));
 		return;
