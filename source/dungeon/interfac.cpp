@@ -87,9 +87,20 @@ static void StoreProtections(D1Dun *dun)
 
 static void LoadTileset(D1Tileset *tileset)
 {
+	int entries;
+	// 'load' AMP
+	memset(automaptype, 0, sizeof(automaptype));
+	entries = std::min(lengthof(automaptype) - 1, tileset->til->getTileCount());
+	for (int n = 0; n < entries; n++) {
+		unsigned maptype = tileset->amp->getTileType(n);
+		maptype |= tileset->amp->getTileProperties(n) << 8;
+		automaptype[n + 1] = maptype;
+	}
+
 	// 'load' tiles
 	memset(pTiles, 0, sizeof(pTiles));
-	for (int n = 0; n < lengthof(pTiles) - 1 && n < tileset->til->getTileCount(); n++) {
+	entries = std::min(lengthof(pTiles) - 1, tileset->til->getTileCount());
+	for (int n = 0; n < entries; n++) {
 		std::vector<int> &tilSubtiles = tileset->til->getSubtileIndices(n);
 		for (int i = 0; i < lengthof(pTiles[0]) && i < (int)tilSubtiles.size(); i++) {
 			pTiles[n + 1][i] = tilSubtiles[i] + 1;
@@ -98,7 +109,8 @@ static void LoadTileset(D1Tileset *tileset)
 
 	// 'load' SPT
 	memset(nSpecTrapTable, 0, sizeof(nSpecTrapTable));
-	for (int n = 0; n < lengthof(nSpecTrapTable) - 1 && n < tileset->sol->getSubtileCount(); n++) {
+	entries = std::min(lengthof(nSpecTrapTable) - 1, tileset->sol->getSubtileCount());
+	for (int n = 0; n < entries; n++) {
 		quint8 bv = tileset->spt->getSubtileTrapProperty(n);
 		nSpecTrapTable[n + 1] = bv << 6;
 	}
@@ -107,7 +119,8 @@ static void LoadTileset(D1Tileset *tileset)
 	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nSolidTable, 0, sizeof(nSolidTable));
 	memset(nMissileTable, 0, sizeof(nMissileTable));
-	for (int n = 0; n < lengthof(nSolidTable) - 1 && n < tileset->sol->getSubtileCount(); n++) {
+	entries = std::min(lengthof(nSolidTable) - 1, tileset->sol->getSubtileCount());
+	for (int n = 0; n < entries; n++) {
 		quint8 bv = tileset->sol->getSubtileProperties(n);
 		nSolidTable[n + 1] = (bv & PFLAG_BLOCK_PATH) != 0;
 		nBlockTable[n + 1] = (bv & PFLAG_BLOCK_LIGHT) != 0;
@@ -174,7 +187,7 @@ static void LoadGameLevel(int lvldir, D1Dun *dun)
 //	MakeLightTable();
 	IncProgress();
 
-//	InitLvlAutomap();
+	InitLvlAutomap();
 
 	//if (lvldir != ENTRY_LOAD) {
 	//	InitLighting();

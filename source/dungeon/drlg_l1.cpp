@@ -761,7 +761,7 @@ void DRLG_L5Shadows()
 			bool horizArch = false;
 			bool vertArch = false;
 			bool pillar = false;
-			switch (dungeon[i][j]) {
+			/*switch (dungeon[i][j]) {
 			case 5:
 			// case 29:
 			// case 38:
@@ -785,7 +785,7 @@ void DRLG_L5Shadows()
 			// case 39:
 			// case 42:
 				pillar = true;
-				/* fall-through */
+				// fall-through
 			case 11:
 			case 35:
 			case 215:
@@ -808,6 +808,33 @@ void DRLG_L5Shadows()
 			case 83:
 			case 84:
 				horizArch = true;
+				break;
+			}*/
+			horizArch = (automaptype[dungeon[i][j]] & (MAPFLAG_HORZARCH | MAPFLAG_HORZGRATE)) != 0;
+			vertArch = (automaptype[dungeon[i][j]] & (MAPFLAG_VERTARCH | MAPFLAG_VERTGRATE)) != 0;
+			switch (dungeon[i][j]) {
+			case 5:
+				pillar = true;
+				break;
+			case 3:
+			case 7:
+			case 15:
+			case 16:
+			case 17:
+			// case 31:
+				pillar = true;
+				break;
+			case 8:
+			case 14:
+			case 37:
+			// case 32:
+			// case 39:
+			// case 42:
+				pillar = true;
+				break;
+			case 9:
+			// case 33:
+				pillar = true;
 				break;
 			}
 
@@ -859,7 +886,8 @@ void DRLG_L5Shadows()
 				if (okB) {
 					continue;
 				}
-				pillar = pillar && (dungeon[i][j - 1] == 13 /* || 2 3 7 9 12 15 16 17 26 36 */);
+				// pillar = pillar && (dungeon[i][j - 1] == 13 /* || 203 207 204 81 ... 2 3 7 9 12 15 16 17 26 36 */);
+				pillar = pillar && (automaptype[dungeon[i][j - 1]] & MAPFLAG_TYPE) != 2 && (automaptype[dungeon[i][j - 1]] & MAPFLAG_TYPE) != 4;
 				switch (dungeon[i - 1][j - 1]) {
 				case 13: replaceB = pillar ? 207 : 203; break;
 				case 2:  replaceB = pillar ? 71 : 80;  break;
@@ -878,7 +906,8 @@ void DRLG_L5Shadows()
 			if (pillar) {
 				if (dungeon[i - 1][j] == 13) {
 					BYTE replace;
-					pillar = (dungeon[i][j - 1] == 13 /* || 2 3 7 9 12 15 16 17 26 36 */);
+					// pillar = (dungeon[i][j - 1] == 13 /* || 203 207 204 81 ... 2 3 7 9 12 15 16 17 26 36 */);
+					pillar = (automaptype[dungeon[i][j - 1]] & MAPFLAG_TYPE) != 2 && (automaptype[dungeon[i][j - 1]] & MAPFLAG_TYPE) != 4;
 					if (dungeon[i - 1][j - 1] == 13) {
 						replace = pillar ? 207 : 203;
 					} else if (dungeon[i - 1][j - 1] == 2) {
