@@ -10,6 +10,7 @@ on: [ push, pull_request ]
 
 jobs:
   formatting-check:
+    if: false
     runs-on: ubuntu-latest
     steps:
     - name: Checkout

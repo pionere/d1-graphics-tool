@@ -68,7 +68,14 @@ void InitLvlAutomap()
 		automaptype[56] |= MAPFLAG_HORZGRATE;
 	}
 #ifdef HELLFIRE
+	// patch dAutomapData - L5.AMP
 	if (currLvl._dType == DTYPE_CRYPT) {
+		// fix automap of the entrance
+		automaptype[52] = MAPFLAG_DIRT;
+		automaptype[53] = MAPFLAG_STAIRS | 4;
+		automaptype[54] = MAPFLAG_DIRT;
+		automaptype[56] = 0;
+		automaptype[58] = MAPFLAG_DIRT | 5;
 		// adjust AMP after cleanupCrypt
 		// - use the shadows created by fixCryptShadows
 		automaptype[109] = 2;

@@ -1568,15 +1568,6 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
 {
     constexpr int blockSize = BLOCK_SIZE_L5;
 
-    // fix automap of the entrance
-    ReplaceSubtile(this->til, 52 - 1, 0, 73, silent); // copy from tile 23
-    ReplaceSubtile(this->til, 52 - 1, 1, 64, silent);
-    ReplaceSubtile(this->til, 52 - 1, 2, 65, silent);
-    ReplaceSubtile(this->til, 52 - 1, 3, 66, silent);
-    ReplaceSubtile(this->til, 58 - 1, 0, 63, silent); // copy from tile 18
-    ReplaceSubtile(this->til, 58 - 1, 1, 64, silent);
-    ReplaceSubtile(this->til, 58 - 1, 2, 65, silent);
-    ReplaceSubtile(this->til, 58 - 1, 3, 66, silent);
     // use common subtiles of doors
     // ReplaceSubtile(this->til, 71 - 1, 2, 206, silent);
     ReplaceSubtile(this->til, 72 - 1, 2, 206, silent);
@@ -3469,6 +3460,20 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeTileAmpFlags(this->amp, 86 - 1, 3, silent);
         ChangeTileAmpFlags(this->amp, 87 - 1, MAPFLAG_HORZDOOR | 3, silent);
         ChangeTileAmpFlags(this->amp, 88 - 1, MAPFLAG_HORZDOOR | 3, silent);
+        // fix automap of the entrance
+        ReplaceSubtile(this->til, 52 - 1, 0, 73, silent); // copy from tile 23
+        ReplaceSubtile(this->til, 52 - 1, 1, 64, silent);
+        ReplaceSubtile(this->til, 52 - 1, 2, 65, silent);
+        ReplaceSubtile(this->til, 52 - 1, 3, 66, silent);
+        ReplaceSubtile(this->til, 58 - 1, 0, 63, silent); // copy from tile 18
+        ReplaceSubtile(this->til, 58 - 1, 1, 64, silent);
+        ReplaceSubtile(this->til, 58 - 1, 2, 65, silent);
+        ReplaceSubtile(this->til, 58 - 1, 3, 66, silent);
+        ChangeTileAmpFlags(this->amp, 52 - 1, MAPFLAG_DIRT, silent);
+        ChangeTileAmpFlags(this->amp, 53 - 1, MAPFLAG_STAIRS | 4, silent);
+        ChangeTileAmpFlags(this->amp, 54 - 1, MAPFLAG_DIRT, silent);
+        ChangeTileAmpFlags(this->amp, 56 - 1, 0, silent);
+        ChangeTileAmpFlags(this->amp, 58 - 1, MAPFLAG_DIRT | 5, silent);
         break;
     }
     for (auto it = deletedFrames.crbegin(); it != deletedFrames.crend(); it++) {
