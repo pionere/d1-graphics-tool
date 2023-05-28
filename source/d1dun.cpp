@@ -864,9 +864,9 @@ bool D1Dun::save(const SaveAsParam &params)
 }
 
 #define CELL_BORDER 0
-#define MAP_SCALE_MIN 64
+#define MAP_SCALE_MIN (128 * 2)
 constexpr unsigned AutoMapScale = MAP_SCALE_MIN;
-constexpr unsigned AmLine64 = (AutoMapScale * TILE_WIDTH) / 128;
+constexpr unsigned AmLine64 = (AutoMapScale * MICRO_WIDTH * TILE_WIDTH) / 128;
 constexpr unsigned AmLine32 = AmLine64 >> 1;
 constexpr unsigned AmLine16 = AmLine32 >> 1;
 /** color for bright map lines (doors, stairs etc.) */
@@ -1275,7 +1275,7 @@ void D1Dun::DrawMap(int sx, int sy, uint16_t automap_type)
         automap_type |= MAPFLAG_DOHORZ_CAVE | MAPFLAG_DOVERT_CAVE;
         break;
     default:
-        dMessageErr() << tr("Unknown automap-type: %1").arg(type);
+        dProgressErr() << tr("Unknown automap-type: %1").arg(type);
         break;
     }
 
