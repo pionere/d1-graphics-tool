@@ -3417,7 +3417,6 @@ void D1Tileset::patch(int dunType, bool silent)
         this->cleanupCrypt(deletedFrames, silent);
         // patch dSolidTable - L5.SOL
         ChangeSubtileSolFlags(this->sol, 143 - 1, PFLAG_BLOCK_PATH, false, silent); // make right side of down-stairs consistent (walkable)
-        ChangeSubtileSolFlags(this->sol, 148 - 1, PFLAG_BLOCK_PATH, false, silent); // make the back of down-stairs consistent (walkable)
         // make collision-checks more reasonable
         //  - prevent non-crossable floor-tile configurations I.
         ChangeSubtileSolFlags(this->sol, 461 - 1, PFLAG_BLOCK_PATH, false, silent);
@@ -3440,6 +3439,10 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeSubtileSolFlags(this->sol, 238 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 178 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 242 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
+        // fix automap of the entrance
+        ChangeSubtileSolFlags(this->sol, 158 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
+        ChangeSubtileSolFlags(this->sol, 159 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
+        ChangeSubtileSolFlags(this->sol, 148 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, true, silent);
         // patch automaptype - L5.AMP
         // adjust AMP after cleanupCrypt
         // - use the shadows created by fixCryptShadows
@@ -3461,6 +3464,14 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeTileAmpFlags(this->amp, 87 - 1, MAPFLAG_HORZDOOR | 3, silent);
         ChangeTileAmpFlags(this->amp, 88 - 1, MAPFLAG_HORZDOOR | 3, silent);
         // fix automap of the entrance
+        ChangeTileAmpFlags(this->amp, 48 - 1, MAPFLAG_STAIRS | 4, silent);
+        ChangeTileAmpFlags(this->amp, 51 - 1, 5, silent);
+        ChangeTileAmpFlags(this->amp, 52 - 1, MAPFLAG_DIRT, silent);
+        ChangeTileAmpFlags(this->amp, 53 - 1, MAPFLAG_STAIRS | 4, silent);
+        ChangeTileAmpFlags(this->amp, 54 - 1, MAPFLAG_DIRT, silent);
+        ChangeTileAmpFlags(this->amp, 56 - 1, 0, silent);
+        ChangeTileAmpFlags(this->amp, 58 - 1, MAPFLAG_DIRT | 5, silent);
+        // patch automaptype - L5.TIL
         ReplaceSubtile(this->til, 52 - 1, 0, 73, silent); // copy from tile 23
         ReplaceSubtile(this->til, 52 - 1, 1, 64, silent);
         ReplaceSubtile(this->til, 52 - 1, 2, 65, silent);
@@ -3469,11 +3480,8 @@ void D1Tileset::patch(int dunType, bool silent)
         ReplaceSubtile(this->til, 58 - 1, 1, 64, silent);
         ReplaceSubtile(this->til, 58 - 1, 2, 65, silent);
         ReplaceSubtile(this->til, 58 - 1, 3, 66, silent);
-        ChangeTileAmpFlags(this->amp, 52 - 1, MAPFLAG_DIRT, silent);
-        ChangeTileAmpFlags(this->amp, 53 - 1, MAPFLAG_STAIRS | 4, silent);
-        ChangeTileAmpFlags(this->amp, 54 - 1, MAPFLAG_DIRT, silent);
-        ChangeTileAmpFlags(this->amp, 56 - 1, 0, silent);
-        ChangeTileAmpFlags(this->amp, 58 - 1, MAPFLAG_DIRT | 5, silent);
+        ReplaceSubtile(this->til, 53 - 1, 1, 148, silent);
+        ReplaceSubtile(this->til, 53 - 1, 3, 148, silent);
         break;
     }
     for (auto it = deletedFrames.crbegin(); it != deletedFrames.crend(); it++) {
