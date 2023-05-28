@@ -3464,7 +3464,7 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeTileAmpFlags(this->amp, 87 - 1, MAPFLAG_HORZDOOR | 3, silent);
         ChangeTileAmpFlags(this->amp, 88 - 1, MAPFLAG_HORZDOOR | 3, silent);
         // fix automap of the entrance II.
-        ChangeTileAmpFlags(this->amp, 46 - 1, MAPFLAG_STAIRS | 2, silent);
+        ChangeTileAmpFlags(this->amp, 47 - 1, MAPFLAG_STAIRS | 2, silent);
         ChangeTileAmpFlags(this->amp, 50 - 1, 2, silent);
         ChangeTileAmpFlags(this->amp, 48 - 1, MAPFLAG_STAIRS | 4, silent);
         ChangeTileAmpFlags(this->amp, 51 - 1, 5, silent);
