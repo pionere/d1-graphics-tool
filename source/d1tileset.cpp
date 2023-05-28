@@ -3439,7 +3439,7 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeSubtileSolFlags(this->sol, 238 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 178 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 242 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
-        // fix automap of the entrance
+        // fix automap of the entrance I.
         ChangeSubtileSolFlags(this->sol, 158 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 159 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 148 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, true, silent);
@@ -3463,7 +3463,9 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeTileAmpFlags(this->amp, 86 - 1, 3, silent);
         ChangeTileAmpFlags(this->amp, 87 - 1, MAPFLAG_HORZDOOR | 3, silent);
         ChangeTileAmpFlags(this->amp, 88 - 1, MAPFLAG_HORZDOOR | 3, silent);
-        // fix automap of the entrance
+        // fix automap of the entrance II.
+        ChangeTileAmpFlags(this->amp, 46 - 1, MAPFLAG_STAIRS | 2, silent);
+        ChangeTileAmpFlags(this->amp, 50 - 1, 2, silent);
         ChangeTileAmpFlags(this->amp, 48 - 1, MAPFLAG_STAIRS | 4, silent);
         ChangeTileAmpFlags(this->amp, 51 - 1, 5, silent);
         ChangeTileAmpFlags(this->amp, 52 - 1, MAPFLAG_DIRT, silent);

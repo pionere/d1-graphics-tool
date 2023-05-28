@@ -71,6 +71,8 @@ void InitLvlAutomap()
 	// patch dAutomapData - L5.AMP
 	if (currLvl._dType == DTYPE_CRYPT) {
 		// fix automap of the entrance
+		automaptype[46] = MAPFLAG_STAIRS | 2;
+		automaptype[50] = 2;
 		automaptype[48] = MAPFLAG_STAIRS | 4;
 		automaptype[51] = 5;
 		automaptype[52] = MAPFLAG_DIRT;
