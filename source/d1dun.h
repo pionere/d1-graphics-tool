@@ -215,13 +215,13 @@ public:
 
 private:
     static void DrawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, const QColor &color);
-    static void DrawPixel(unsigned sx, unsigned sy, uint8_t color);
-    static void DrawLine(unsigned x0, unsigned y0, unsigned x1, unsigned y1, uint8_t color);
-    static void DrawAutomapDirt(unsigned sx, unsigned sy);
-    static void DrawAutomapStairs(unsigned sx, unsigned sy);
-    static void DrawAutomapDiamond(unsigned sx, unsigned sy);
-    static void DrawAutomapVertDoor(unsigned sx, unsigned sy);
-    static void DrawAutomapHorzDoor(unsigned sx, unsigned sy);
+    static void DrawPixel(int sx, int sy, uint8_t color);
+    static void DrawLine(int x0, int y0, int x1, int y1, uint8_t color);
+    static void DrawAutomapDirt(int sx, int sy);
+    static void DrawAutomapStairs(int sx, int sy);
+    static void DrawAutomapDiamond(int sx, int sy);
+    static void DrawAutomapVertDoor(int sx, int sy);
+    static void DrawAutomapHorzDoor(int sx, int sy);
     static void DrawMap(int drawCursorX, int drawCursorY, uint16_t automap_type);
     void drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
     void drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);

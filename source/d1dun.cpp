@@ -1126,7 +1126,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     }
 }
 
-void D1Dun::DrawPixel(unsigned sx, unsigned sy, uint8_t color)
+void D1Dun::DrawPixel(int sx, int sy, uint8_t color)
 {
     QColor col = QColor(DunPal->getColor(color));
     QImage *destImage = (QImage *)DunPainter->device();
@@ -1134,7 +1134,7 @@ void D1Dun::DrawPixel(unsigned sx, unsigned sy, uint8_t color)
     destBits[sx] = col.rgba();
 }
 
-void D1Dun::DrawLine(unsigned x0, unsigned y0, unsigned x1, unsigned y1, uint8_t color)
+void D1Dun::DrawLine(int x0, int y0, int x1, int y1, uint8_t color)
 {
     QColor col = QColor(DunPal->getColor(color));
     QPen basePen = DunPainter->pen();
@@ -1279,7 +1279,7 @@ void D1Dun::DrawMap(int sx, int sy, uint16_t automap_type)
         break;
     }
 
-    if (automap_type & MAPFLAG_DOVERT) { // right-facing obstacle
+    if (automap_type & MAPFLAG_DOVERT) {       // right-facing obstacle
         if (automap_type & MAPFLAG_VERTDOOR) { // two wall segments with a door in the middle
             unsigned d16 = AmLine16;
             unsigned d8 = (d16 >> 1);
@@ -1369,7 +1369,7 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
                     }
                 }
             }
-            D1Dun::DrawMap(dungeon, drawCursorX, drawCursorY, mapType | (mapProp << 8));
+            D1Dun::DrawMap(drawCursorX, drawCursorY, mapType | (mapProp << 8));
         }
     }
     if (params.showRooms) {
@@ -1543,8 +1543,7 @@ QImage D1Dun::getImage(const DunDrawParam &params)
     QColor backColor = QColor(Config::getGraphicsTransparentColor());
     if (params.tileState != Qt::Unchecked) {
         D1Dun::DrawDiamond(backImage, 0 + CELL_BORDER, 0 + CELL_BORDER, cellWidth, backColor);
-    }
-    else {
+    } else {
         unsigned len = 0;
         unsigned y = 1;
         QRgb *destBits = reinterpret_cast<QRgb *>(backImage.scanLine(0 + CELL_BORDER + y));
