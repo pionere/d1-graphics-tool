@@ -1118,6 +1118,16 @@
          </widget>
         </item>
         <item>
+         <widget class="QRadioButton" name="showMapMetaRadioButton">
+          <property name="toolTip">
+           <string>Draw map</string>
+          </property>
+          <attribute name="buttonGroup">
+           <string notr="true">showMetaButtonGroup</string>
+          </attribute>
+         </widget>
+        </item>
+        <item>
          <widget class="QRadioButton" name="showRoomsMetaRadioButton">
           <property name="toolTip">
            <string>Draw rooms</string>

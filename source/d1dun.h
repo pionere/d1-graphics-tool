@@ -107,6 +107,7 @@ typedef struct ItemCacheEntry {
 class DunDrawParam {
 public:
     Qt::CheckState tileState;
+    bool showMap;
     bool showRooms;
     bool showTileProtections;
     bool showSubtileProtections;
@@ -149,7 +150,7 @@ public:
     int getItemAt(int posx, int posy) const;
     bool setItemAt(int posx, int posy, int itemIndex);
     DunMonsterType getMonsterAt(int posx, int posy) const;
-    bool setMonsterAt(int posx, int posy, DunMonsterType);
+    bool setMonsterAt(int posx, int posy, const DunMonsterType monType);
     int getObjectAt(int posx, int posy) const;
     bool setObjectAt(int posx, int posy, int objectIndex);
     int getRoomAt(int posx, int posy) const;
@@ -213,8 +214,18 @@ public:
     void clearAssets();
 
 private:
-    static void drawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, const QColor &color);
+    static void DrawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, const QColor &color);
+    static void DrawPixel(int sx, int sy, uint8_t color);
+    static void DrawLine(int x0, int y0, int x1, int y1, uint8_t color);
+    static void DrawAutomapDirt(int sx, int sy);
+    static void DrawAutomapStairs(int sx, int sy);
+    static void DrawAutomapDiamond(int sx, int sy);
+    static void DrawAutomapVertDoor(int sx, int sy);
+    static void DrawAutomapHorzDoor(int sx, int sy);
+    static void DrawMap(int drawCursorX, int drawCursorY, uint16_t automap_type);
     void drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
+    void drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
+    void drawLayer(QPainter &dungeon, QImage &backImage, const DunDrawParam &params, int layer);
     void initVectors(int width, int height);
     void loadObjectGfx(const QString &filePath, int width, ObjectCacheEntry &result);
     void loadMonsterGfx(const QString &filePath, int width, const QString &baseTrnFilePath, const QString &uniqueTrnFilePath, MonsterCacheEntry &result);

@@ -864,8 +864,19 @@ bool D1Dun::save(const SaveAsParam &params)
 }
 
 #define CELL_BORDER 0
+#define MAP_SCALE_MIN (128 * 2)
+static unsigned AmLine64;
+static unsigned AmLine32;
+static unsigned AmLine16;
+/** color for bright map lines (doors, stairs etc.) */
+#define COLOR_BRIGHT PAL8_YELLOW
+/** color for dim map lines/dots */
+#define COLOR_DIM (PAL16_YELLOW + 8)
 
-void D1Dun::drawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, const QColor &color)
+static QPainter *DunPainter = nullptr;
+static D1Pal *DunPal = nullptr;
+
+void D1Dun::DrawDiamond(QImage &image, unsigned sx, unsigned sy, unsigned width, const QColor &color)
 {
     unsigned len = 0;
     unsigned y = 1;
@@ -1053,23 +1064,6 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             }
         }
     }
-    if (params.showRooms) {
-        // draw the room meta info
-        unsigned roomIndex = this->rooms[dunCursorY][dunCursorX];
-        if (roomIndex != 0) {
-            if (params.tileState == Qt::Unchecked) {
-                QColor color = this->pal->getColor(roomIndex % D1PAL_COLORS);
-                QImage *destImage = (QImage *)dungeon.device();
-                D1Dun::drawDiamond(*destImage, drawCursorX, drawCursorY - backHeight, backWidth, color);
-            } else {
-                QColor color = this->pal->getColor(((unsigned)(D1PAL_COLORS - 1 - roomIndex)) % D1PAL_COLORS);
-                const QPen prevPen = dungeon.pen();
-                dungeon.setPen(color);
-                dungeon.drawRect(drawCursorX + backWidth / 4, drawCursorY - 3 * backHeight / 4, backWidth / 2, backHeight / 2);
-                dungeon.setPen(prevPen);
-            }
-        }
-    }
     if (params.showObjects) {
         // draw the object
         int objectIndex = this->objects[dunCursorY][dunCursorX];
@@ -1129,6 +1123,279 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             }
         }
     }
+}
+
+static void InitAutomapScale(int subtileWidth)
+{
+    unsigned AutoMapScale = MAP_SCALE_MIN;
+    AmLine64 = (AutoMapScale * subtileWidth) / 128;
+    AmLine32 = AmLine64 >> 1;
+    AmLine16 = AmLine32 >> 1;
+}
+
+void D1Dun::DrawPixel(int sx, int sy, uint8_t color)
+{
+    QColor col = QColor(DunPal->getColor(color));
+    QImage *destImage = (QImage *)DunPainter->device();
+    QRgb *destBits = reinterpret_cast<QRgb *>(destImage->scanLine(sy));
+    destBits[sx] = col.rgba();
+}
+
+void D1Dun::DrawLine(int x0, int y0, int x1, int y1, uint8_t color)
+{
+    QColor col = QColor(DunPal->getColor(color));
+    QPen basePen = DunPainter->pen();
+    DunPainter->setPen(col);
+    DunPainter->drawLine(x0, y0, x1, y1);
+    DunPainter->setPen(basePen);
+}
+
+void D1Dun::DrawAutomapDirt(int x, int y)
+{
+    unsigned d32 = AmLine32;
+    unsigned d16 = (d32 >> 1), d8 = (d32 >> 2), d4 = (d32 >> 3);
+
+    /*            07
+              01      03
+          05      00      06
+      09      02      04      10
+          11      08      12
+              13      14
+                  15
+    */
+    DrawPixel(x, y, COLOR_DIM);                 // 00
+    DrawPixel(x - d8, y - d4, COLOR_DIM);       // 01
+    DrawPixel(x - d8, y + d4, COLOR_DIM);       // 02
+    DrawPixel(x + d8, y - d4, COLOR_DIM);       // 03
+    DrawPixel(x + d8, y + d4, COLOR_DIM);       // 04
+    DrawPixel(x - d16, y, COLOR_DIM);           // 05
+    DrawPixel(x + d16, y, COLOR_DIM);           // 06
+    DrawPixel(x, y - d8, COLOR_DIM);            // 07
+    DrawPixel(x, y + d8, COLOR_DIM);            // 08
+    DrawPixel(x - d32 + d8, y + d4, COLOR_DIM); // 09
+    DrawPixel(x + d32 - d8, y + d4, COLOR_DIM); // 10
+    DrawPixel(x - d16, y + d8, COLOR_DIM);      // 11
+    DrawPixel(x + d16, y + d8, COLOR_DIM);      // 12
+    DrawPixel(x - d8, y + d16 - d4, COLOR_DIM); // 13
+    DrawPixel(x + d8, y + d16 - d4, COLOR_DIM); // 14
+    DrawPixel(x, y + d16, COLOR_DIM);           // 15
+}
+
+void D1Dun::DrawAutomapStairs(int x, int y)
+{
+    unsigned d32 = AmLine32;
+    unsigned d16 = (d32 >> 1), d8 = (d32 >> 2), d4 = (d32 >> 3);
+
+    DrawLine(x - d8, y - d16 + d4, x + d32 - d8, y + d4, COLOR_BRIGHT);
+    DrawLine(x - d16, y - d8, x + d16, y + d8, COLOR_BRIGHT);
+    DrawLine(x - d32 + d8, y - d4, x + d8, y + d16 - d4, COLOR_BRIGHT);
+    DrawLine(x - d32, y, x, y + d16, COLOR_BRIGHT);
+}
+
+void D1Dun::DrawAutomapHorzDoor(int x, int y)
+{
+    unsigned d16 = AmLine16;
+    unsigned d8 = (d16 >> 1), d4 = (d16 >> 2);
+
+    DrawLine(x - d16, y - d8, x - d8, y - d4, COLOR_DIM); // left wall
+    DrawLine(x + d8, y + d4, x + d16, y + d8, COLOR_DIM); // right wall
+
+    // DrawAutomapDiamond(x, y + d8, COLOR_BRIGHT)
+    DrawLine(x - d16, y, x, y + d8, COLOR_BRIGHT); // top left
+    DrawLine(x, y + d8, x + d16, y, COLOR_BRIGHT); // top right
+    DrawLine(x, y - d8, x + d16, y, COLOR_BRIGHT); // bottom right
+    DrawLine(x - d16, y, x, y - d8, COLOR_BRIGHT); // bottom left
+}
+
+void D1Dun::DrawAutomapVertDoor(int x, int y)
+{
+    unsigned d16 = AmLine16;
+    unsigned d8 = (d16 >> 1), d4 = (d16 >> 2);
+
+    DrawLine(x - d16, y + d8, x - d8, y + d4, COLOR_DIM); // left wall
+    DrawLine(x + d8, y - d4, x + d16, y - d8, COLOR_DIM); // right wall
+
+    // DrawAutomapDiamond(x, y + d8, COLOR_BRIGHT)
+    DrawLine(x - d16, y, x, y + d8, COLOR_BRIGHT); // top left
+    DrawLine(x, y + d8, x + d16, y, COLOR_BRIGHT); // top right
+    DrawLine(x, y - d8, x + d16, y, COLOR_BRIGHT); // bottom right
+    DrawLine(x - d16, y, x, y - d8, COLOR_BRIGHT); // bottom left
+}
+
+void D1Dun::DrawAutomapDiamond(int x, int y)
+{
+    int d16 = AmLine16, y2;
+
+    y2 = y - (d16 >> 1);
+
+    DrawLine(x - d16, y2, x, y, COLOR_DIM);       // top left
+    DrawLine(x, y, x + d16, y2, COLOR_DIM);       // top right
+    DrawLine(x, y - d16, x + d16, y2, COLOR_DIM); // bottom right
+    DrawLine(x - d16, y2, x, y - d16, COLOR_DIM); // bottom left
+}
+
+void D1Dun::DrawMap(int sx, int sy, uint16_t automap_type)
+{
+    uint8_t type;
+
+    if (automap_type & MAPFLAG_DIRT) {
+        D1Dun::DrawAutomapDirt(sx, sy);
+    }
+
+    if (automap_type & MAPFLAG_STAIRS) {
+        D1Dun::DrawAutomapStairs(sx, sy);
+    }
+
+    type = automap_type & MAPFLAG_TYPE;
+    automap_type &= ~MAPFLAG_TYPE;
+    switch (type) {
+    case 0:
+    case 7:
+        break;
+    case 1: // stand-alone column or other unpassable object
+        D1Dun::DrawAutomapDiamond(sx, sy);
+        break;
+    case 2:
+    case 5:
+        automap_type |= MAPFLAG_DOVERT;
+        break;
+    case 3:
+    case 6:
+        automap_type |= MAPFLAG_DOHORZ;
+        break;
+    case 4:
+        automap_type |= MAPFLAG_DOHORZ | MAPFLAG_DOVERT;
+        break;
+    case 8:
+        automap_type |= MAPFLAG_DOVERT | MAPFLAG_DOHORZ_CAVE;
+        break;
+    case 9:
+        automap_type |= MAPFLAG_DOHORZ | MAPFLAG_DOVERT_CAVE;
+        break;
+    case 10:
+        automap_type |= MAPFLAG_DOHORZ_CAVE;
+        break;
+    case 11:
+        automap_type |= MAPFLAG_DOVERT_CAVE;
+        break;
+    case 12:
+        automap_type |= MAPFLAG_DOHORZ_CAVE | MAPFLAG_DOVERT_CAVE;
+        break;
+    default:
+        dProgressErr() << tr("Unknown automap-type: %1").arg(type);
+        break;
+    }
+
+    if (automap_type & MAPFLAG_DOVERT) {       // right-facing obstacle
+        if (automap_type & MAPFLAG_VERTDOOR) { // two wall segments with a door in the middle
+            unsigned d16 = AmLine16;
+            unsigned d8 = (d16 >> 1);
+            D1Dun::DrawAutomapVertDoor(sx - d16, sy - d8);
+        }
+        if (automap_type & MAPFLAG_VERTGRATE) { // right-facing half-wall
+            unsigned d32 = AmLine32;
+            unsigned d16 = (d32 >> 1), d8 = (d32 >> 2);
+            D1Dun::DrawLine(sx - d16, sy - d8, sx - d32, sy, COLOR_DIM);
+        }
+        if (automap_type & (MAPFLAG_VERTGRATE | MAPFLAG_VERTARCH)) { // window or passable column
+            D1Dun::DrawAutomapDiamond(sx, sy);
+        }
+        if ((automap_type & (MAPFLAG_VERTDOOR | MAPFLAG_VERTGRATE | MAPFLAG_VERTARCH)) == 0) {
+            unsigned d32 = AmLine32;
+            unsigned d16 = (d32 >> 1);
+            D1Dun::DrawLine(sx, sy - d16, sx - d32, sy, COLOR_DIM);
+        }
+    }
+
+    if (automap_type & MAPFLAG_DOHORZ) { // left-facing obstacle
+        if (automap_type & MAPFLAG_HORZDOOR) {
+            unsigned d16 = AmLine16;
+            unsigned d8 = (d16 >> 1);
+            D1Dun::DrawAutomapHorzDoor(sx + d16, sy - d8);
+        }
+        if (automap_type & MAPFLAG_HORZGRATE) {
+            unsigned d32 = AmLine32;
+            unsigned d16 = (d32 >> 1), d8 = (d32 >> 2);
+            D1Dun::DrawLine(sx + d16, sy - d8, sx + d32, sy, COLOR_DIM);
+        }
+        if (automap_type & (MAPFLAG_HORZGRATE | MAPFLAG_HORZARCH)) {
+            D1Dun::DrawAutomapDiamond(sx, sy);
+        }
+        if ((automap_type & (MAPFLAG_HORZDOOR | MAPFLAG_HORZGRATE | MAPFLAG_HORZARCH)) == 0) {
+            unsigned d32 = AmLine32;
+            unsigned d16 = (d32 >> 1);
+            D1Dun::DrawLine(sx, sy - d16, sx + d32, sy, COLOR_DIM);
+        }
+    }
+
+    // for caves the horz/vert flags are switched
+    if (automap_type & MAPFLAG_DOHORZ_CAVE) {
+        unsigned d32 = AmLine32;
+        unsigned d16 = (d32 >> 1);
+        if (automap_type & MAPFLAG_VERTDOOR) {
+            unsigned d8 = (d32 >> 2);
+            D1Dun::DrawAutomapHorzDoor(sx - d16, sy + d8);
+        } else {
+            D1Dun::DrawLine(sx, sy + d16, sx - d32, sy, COLOR_DIM);
+        }
+    }
+
+    if (automap_type & MAPFLAG_DOVERT_CAVE) {
+        unsigned d32 = AmLine32;
+        unsigned d16 = (d32 >> 1);
+        if (automap_type & MAPFLAG_HORZDOOR) {
+            unsigned d8 = (d32 >> 2);
+            D1Dun::DrawAutomapVertDoor(sx + d16, sy + d8);
+        } else {
+            D1Dun::DrawLine(sx, sy + d16, sx + d32, sy, COLOR_DIM);
+        }
+    }
+}
+
+void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
+{
+    const unsigned backWidth = backImage.width() - 2 * CELL_BORDER;
+    const unsigned backHeight = backImage.height() - 2 * CELL_BORDER;
+
+    static_assert(TILE_WIDTH == 2 && TILE_HEIGHT == 2, "D1Dun::drawMeta skips boundary checks.");
+    if (params.showMap && (dunCursorX & 1) == 0 && (dunCursorY & 1) == 0) {
+        int tileRef = this->tiles[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
+        if (tileRef > 0 && tileRef <= this->til->getTileCount()) { // !0 || !UNDEF_TILE
+            quint8 mapType = this->tileset->amp->getTileType(tileRef - 1);
+            quint8 mapProp = this->tileset->amp->getTileProperties(tileRef - 1);
+
+            if (mapType == 7 && mapProp == 0) {
+                if (dunCursorX >= 2 * TILE_WIDTH && dunCursorY >= 2 * TILE_HEIGHT) {
+                    int tileRefLeft = this->tiles[dunCursorY / TILE_HEIGHT - 2][dunCursorX / TILE_WIDTH];
+                    int tileRefTop = this->tiles[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH - 2];
+                    if (tileRefLeft > 0 && tileRefLeft <= this->til->getTileCount()  // !0 || !UNDEF_TILE
+                        && tileRefTop > 0 && tileRefTop <= this->til->getTileCount() // !0 || !UNDEF_TILE
+                        && (this->tileset->amp->getTileProperties(tileRefLeft - 1) & (MAPFLAG_HORZARCH >> 8))
+                        && (this->tileset->amp->getTileProperties(tileRefTop - 1) & (MAPFLAG_VERTARCH >> 8))) {
+                        mapType = 1;
+                    }
+                }
+            }
+            D1Dun::DrawMap(drawCursorX + backWidth / 2, drawCursorY - 1, mapType | (mapProp << 8));
+        }
+    }
+    if (params.showRooms) {
+        // draw the room meta info
+        unsigned roomIndex = this->rooms[dunCursorY][dunCursorX];
+        if (roomIndex != 0) {
+            if (params.tileState == Qt::Unchecked) {
+                QColor color = this->pal->getColor(roomIndex % D1PAL_COLORS);
+                QImage *destImage = (QImage *)dungeon.device();
+                D1Dun::DrawDiamond(*destImage, drawCursorX, drawCursorY - backHeight, backWidth, color);
+            } else {
+                QColor color = this->pal->getColor(((unsigned)(D1PAL_COLORS - 1 - roomIndex)) % D1PAL_COLORS);
+                const QPen prevPen = dungeon.pen();
+                dungeon.setPen(color);
+                dungeon.drawRect(drawCursorX + backWidth / 4, drawCursorY - 3 * backHeight / 4, backWidth / 2, backHeight / 2);
+                dungeon.setPen(prevPen);
+            }
+        }
+    }
     if (params.showTileProtections) {
         // draw X if the tile-flag is set
         Qt::CheckState tps = this->tileProtections[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
@@ -1155,11 +1422,117 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     }
 }
 
-QImage D1Dun::getImage(const DunDrawParam &params)
+void D1Dun::drawLayer(QPainter &dunPainter, QImage &backImage, const DunDrawParam &params, int layer)
 {
     int maxDunSize = std::max(this->width, this->height);
     int minDunSize = std::min(this->width, this->height);
-    int maxTilSize = std::max(TILE_WIDTH, TILE_HEIGHT);
+
+    unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
+    unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
+
+    unsigned cellWidth = subtileWidth;
+    unsigned cellHeight = cellWidth / 2;
+
+    int drawCursorX = ((maxDunSize - 1) * cellWidth) / 2 - (this->width - this->height) * (cellWidth / 2);
+    int drawCursorY = subtileHeight;
+    int dunCursorX;
+    int dunCursorY = 0;
+
+    // draw top triangle
+    for (int i = 0; i < minDunSize; i++) {
+        dunCursorX = 0;
+        dunCursorY = i;
+        while (dunCursorY >= 0) {
+            if (layer == 0) {
+                this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
+            } else { // if (layer == 1) {
+                this->drawMeta(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
+            }
+            dunCursorY--;
+            dunCursorX++;
+
+            drawCursorX += cellWidth;
+        }
+        // move back to start
+        drawCursorX -= cellWidth * (i + 1);
+        // move down one row (+ half left)
+        drawCursorX -= cellWidth / 2;
+        drawCursorY += cellHeight / 2;
+    }
+    // draw middle 'square'
+    if (this->width > this->height) {
+        drawCursorX += cellWidth;
+        for (int i = 0; i < this->width - this->height; i++) {
+            dunCursorX = i + 1;
+            dunCursorY = this->height - 1;
+            while (dunCursorY >= 0) {
+                if (layer == 0) {
+                    this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
+                } else { // if (layer == 1) {
+                    this->drawMeta(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
+                }
+                dunCursorY--;
+                dunCursorX++;
+
+                drawCursorX += cellWidth;
+            }
+            // move back to start
+            drawCursorX -= cellWidth * this->height;
+            // move down one row (+ half right)
+            drawCursorX += cellWidth / 2;
+            drawCursorY += cellHeight / 2;
+        }
+        // sync drawCursorX with the other branches
+        drawCursorX -= cellWidth;
+    } else if (this->width < this->height) {
+        for (int i = 0; i < this->height - this->width; i++) {
+            dunCursorX = 0;
+            dunCursorY = this->width + i;
+            while (dunCursorX < this->width) {
+                if (layer == 0) {
+                    this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
+                } else { // if (layer == 1) {
+                    this->drawMeta(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
+                }
+                dunCursorY--;
+                dunCursorX++;
+
+                drawCursorX += cellWidth;
+            }
+            // move back to start
+            drawCursorX -= cellWidth * this->width;
+            // move down one row (+ half left)
+            drawCursorX -= cellWidth / 2;
+            drawCursorY += cellHeight / 2;
+        }
+    }
+    // draw bottom triangle
+    drawCursorX += cellWidth;
+    for (int i = minDunSize - 1; i > 0; i--) {
+        dunCursorX = this->width - i;
+        dunCursorY = this->height - 1;
+        while (dunCursorX < this->width) {
+            if (layer == 0) {
+                this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
+            } else { // if (layer == 1) {
+                this->drawMeta(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
+            }
+            dunCursorY--;
+            dunCursorX++;
+
+            drawCursorX += cellWidth;
+        }
+        // move back to start
+        drawCursorX -= cellWidth * i;
+        // move down one row (+ half right)
+        drawCursorX += cellWidth / 2;
+        drawCursorY += cellHeight / 2;
+    }
+}
+
+QImage D1Dun::getImage(const DunDrawParam &params)
+{
+    int maxDunSize = std::max(this->width, this->height);
 
     unsigned subtileWidth = this->min->getSubtileWidth() * MICRO_WIDTH;
     unsigned subtileHeight = this->min->getSubtileHeight() * MICRO_HEIGHT;
@@ -1176,7 +1549,7 @@ QImage D1Dun::getImage(const DunDrawParam &params)
     backImage.fill(Qt::transparent);
     QColor backColor = QColor(Config::getGraphicsTransparentColor());
     if (params.tileState != Qt::Unchecked) {
-        D1Dun::drawDiamond(backImage, 0 + CELL_BORDER, 0 + CELL_BORDER, cellWidth, backColor);
+        D1Dun::DrawDiamond(backImage, 0 + CELL_BORDER, 0 + CELL_BORDER, cellWidth, backColor);
     } else {
         unsigned len = 0;
         unsigned y = 1;
@@ -1208,88 +1581,17 @@ QImage D1Dun::getImage(const DunDrawParam &params)
             destBits += cellWidth + 2 * CELL_BORDER; // backImage.width();
         }
     }
+    InitAutomapScale(subtileWidth);
 
     QPainter dunPainter(&dungeon);
     dunPainter.setPen(QColor(Config::getPaletteUndefinedColor()));
 
-    int drawCursorX = ((maxDunSize - 1) * cellWidth) / 2 - (this->width - this->height) * (cellWidth / 2);
-    int drawCursorY = subtileHeight;
-    int dunCursorX;
-    int dunCursorY = 0;
+    DunPainter = &dunPainter;
+    DunPal = this->pal;
 
-    // draw top triangle
-    for (int i = 0; i < minDunSize; i++) {
-        dunCursorX = 0;
-        dunCursorY = i;
-        while (dunCursorY >= 0) {
-            this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
-            dunCursorY--;
-            dunCursorX++;
-
-            drawCursorX += cellWidth;
-        }
-        // move back to start
-        drawCursorX -= cellWidth * (i + 1);
-        // move down one row (+ half left)
-        drawCursorX -= cellWidth / 2;
-        drawCursorY += cellHeight / 2;
-    }
-    // draw middle 'square'
-    if (this->width > this->height) {
-        drawCursorX += cellWidth;
-        for (int i = 0; i < this->width - this->height; i++) {
-            dunCursorX = i + 1;
-            dunCursorY = this->height - 1;
-            while (dunCursorY >= 0) {
-                this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
-                dunCursorY--;
-                dunCursorX++;
-
-                drawCursorX += cellWidth;
-            }
-            // move back to start
-            drawCursorX -= cellWidth * this->height;
-            // move down one row (+ half right)
-            drawCursorX += cellWidth / 2;
-            drawCursorY += cellHeight / 2;
-        }
-        // sync drawCursorX with the other branches
-        drawCursorX -= cellWidth;
-    } else if (this->width < this->height) {
-        for (int i = 0; i < this->height - this->width; i++) {
-            dunCursorX = 0;
-            dunCursorY = this->width + i;
-            while (dunCursorX < this->width) {
-                this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
-                dunCursorY--;
-                dunCursorX++;
-
-                drawCursorX += cellWidth;
-            }
-            // move back to start
-            drawCursorX -= cellWidth * this->width;
-            // move down one row (+ half left)
-            drawCursorX -= cellWidth / 2;
-            drawCursorY += cellHeight / 2;
-        }
-    }
-    // draw bottom triangle
-    drawCursorX += cellWidth;
-    for (int i = minDunSize - 1; i > 0; i--) {
-        dunCursorX = this->width - i;
-        dunCursorY = this->height - 1;
-        while (dunCursorX < this->width) {
-            this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
-            dunCursorY--;
-            dunCursorX++;
-
-            drawCursorX += cellWidth;
-        }
-        // move back to start
-        drawCursorX -= cellWidth * i;
-        // move down one row (+ half right)
-        drawCursorX += cellWidth / 2;
-        drawCursorY += cellHeight / 2;
+    this->drawLayer(dunPainter, backImage, params, 0);
+    if (params.showMap || params.showRooms || params.showTileProtections || params.showSubtileProtections) {
+        this->drawLayer(dunPainter, backImage, params, 1);
     }
 
     // dunPainter.end();
@@ -1560,7 +1862,7 @@ DunMonsterType D1Dun::getMonsterAt(int posx, int posy) const
     return this->monsters[posy][posx];
 }
 
-bool D1Dun::setMonsterAt(int posx, int posy, DunMonsterType monType)
+bool D1Dun::setMonsterAt(int posx, int posy, const DunMonsterType monType)
 {
     if (this->monsters[posy][posx] == monType) {
         return false;
