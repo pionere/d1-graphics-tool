@@ -877,7 +877,7 @@ void DRLG_L5Shadows()
 				// case 83:  replaceA = 84;  okB = true;  break;
 				case 84:  replaceA = 84;  okB = true;  break;
 				default:
-					if (replaceB != 2 && replaceB != 4 && replaceB != 12 && replaceB != 14 && replaceB != 26 && replaceB != 36 && replaceB != 37)
+					if (replaceB != 2 && replaceB != 4 && replaceB != 7 && replaceB != 12 && replaceB != 14 && replaceB != 26 && replaceB != 36 && replaceB != 37)
 		                dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					continue;
 				}
@@ -929,7 +929,6 @@ void DRLG_L5Shadows()
 				} else {
 					if (dungeon[i - 1][j] != 2 && dungeon[i - 1][j] != 4 && dungeon[i - 1][j] != 7 && dungeon[i - 1][j] != 12 && dungeon[i - 1][j] != 14 && dungeon[i - 1][j] != 36 && dungeon[i - 1][j] != 37 && dungeon[i - 1][j] != 209 && dungeon[i - 1][j] != 212 && dungeon[i - 1][j] != 213 && dungeon[i - 1][j] != 214)
 						dProgressWarn() << QString("Missing case %1 for pillar %2 @%3:%4").arg(dungeon[i - 1][j]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
-					// 2, 12, 36 -> ok
 					// TODO: what else?
 				}
 				continue;
