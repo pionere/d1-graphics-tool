@@ -865,10 +865,9 @@ bool D1Dun::save(const SaveAsParam &params)
 
 #define CELL_BORDER 0
 #define MAP_SCALE_MIN (128 * 2)
-constexpr unsigned AutoMapScale = MAP_SCALE_MIN;
-constexpr unsigned AmLine64 = (AutoMapScale * MICRO_WIDTH * TILE_WIDTH) / 128;
-constexpr unsigned AmLine32 = AmLine64 >> 1;
-constexpr unsigned AmLine16 = AmLine32 >> 1;
+static unsigned AmLine64;
+static unsigned AmLine32;
+static unsigned AmLine16;
 /** color for bright map lines (doors, stairs etc.) */
 #define COLOR_BRIGHT PAL8_YELLOW
 /** color for dim map lines/dots */
@@ -1124,6 +1123,14 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             }
         }
     }
+}
+
+static void InitAutomapScale(int subtileWidth)
+{
+    unsigned AutoMapScale = MAP_SCALE_MIN;
+    AmLine64 = (AutoMapScale * subtileWidth) / 128;
+    AmLine32 = AmLine64 >> 1;
+    AmLine16 = AmLine32 >> 1;
 }
 
 void D1Dun::DrawPixel(int sx, int sy, uint8_t color)
@@ -1574,6 +1581,7 @@ QImage D1Dun::getImage(const DunDrawParam &params)
             destBits += cellWidth + 2 * CELL_BORDER; // backImage.width();
         }
     }
+    InitAutomapScale(subtileWidth);
 
     QPainter dunPainter(&dungeon);
     dunPainter.setPen(QColor(Config::getPaletteUndefinedColor()));
