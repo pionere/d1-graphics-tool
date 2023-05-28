@@ -1568,6 +1568,15 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
 {
     constexpr int blockSize = BLOCK_SIZE_L5;
 
+    // fix automap of the entrance
+    ReplaceSubtile(this->til, 52 - 1, 0, 73, silent); // copy from tile 23
+    ReplaceSubtile(this->til, 52 - 1, 1, 64, silent);
+    ReplaceSubtile(this->til, 52 - 1, 2, 65, silent);
+    ReplaceSubtile(this->til, 52 - 1, 3, 66, silent);
+    ReplaceSubtile(this->til, 58 - 1, 0, 63, silent); // copy from tile 18
+    ReplaceSubtile(this->til, 58 - 1, 1, 64, silent);
+    ReplaceSubtile(this->til, 58 - 1, 2, 65, silent);
+    ReplaceSubtile(this->til, 58 - 1, 3, 66, silent);
     // use common subtiles of doors
     // ReplaceSubtile(this->til, 71 - 1, 2, 206, silent);
     ReplaceSubtile(this->til, 72 - 1, 2, 206, silent);
