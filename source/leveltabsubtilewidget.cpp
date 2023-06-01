@@ -190,7 +190,6 @@ void LevelTabSubtileWidget::updateFields()
         this->ui->tmi6->setChecked(false);
 
         this->ui->framesComboBox->setCurrentIndex(-1);
-        this->ui->framesComboBox->setEnabled(false);
         this->ui->framesPrevButton->setEnabled(false);
         this->ui->framesNextButton->setEnabled(false);
 
