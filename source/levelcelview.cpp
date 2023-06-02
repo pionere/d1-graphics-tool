@@ -54,6 +54,8 @@ LevelCelView::LevelCelView(QWidget *parent, QUndoStack *us)
     btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start building"), &dMainWindow(), &MainWindow::on_actionToggle_Builder_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
     btn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowLeft, tr("Switch to tileset view"), &dMainWindow(), &MainWindow::on_actionToggle_View_triggered);
+    QGridLayout *gridLayout = this->ui->dungeonLayout;
+    btn = PushButtonWidget::addButton(this, gridLayout, 3, 10, QStyle::SP_DialogOkButton, tr("Center Dungeon"), this, &LevelCelView::scrollToCurrent);
 
     // If a pixel of the frame, subtile or tile was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &LevelCelView::framePixelClicked);

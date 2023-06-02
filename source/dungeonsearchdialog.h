@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QDialog>
+#include <QPoint>
 #include <QRect>
 
 enum class DUN_SEARCH_TYPE {
@@ -44,13 +45,19 @@ public:
 
 private slots:
     void on_searchButton_clicked();
+    void on_searchNextButton_clicked();
     void on_searchCancelButton_clicked();
 
     // this event is called, when a new translator is loaded or the system language is changed
     void changeEvent(QEvent *event) override;
 
 private:
+    void search(bool next);
+    void replace(const QPoint &match, const DungeonSearchParam &params);
+
+private:
     Ui::DungeonSearchDialog *ui;
 
     D1Dun *dun;
+    int index;
 };

@@ -709,7 +709,7 @@
    </item>
    <item>
     <widget class="QWidget" name="dungeonWidget">
-     <layout class="QGridLayout">
+     <layout class="QGridLayout" name="dungeonLayout">
       <item row="0" column="0">
        <widget class="QLabel">
         <property name="text">

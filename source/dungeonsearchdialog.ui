@@ -352,6 +352,13 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="searchNextButton">
+       <property name="text">
+        <string>Next</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="searchCancelButton">
        <property name="text">
         <string>Cancel</string>
