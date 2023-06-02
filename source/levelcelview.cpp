@@ -46,14 +46,19 @@ LevelCelView::LevelCelView(QWidget *parent, QUndoStack *us)
     this->ui->tilesTabs->addTab(&this->tabTileWidget, tr("Tile properties"));
     this->ui->tilesTabs->addTab(&this->tabSubtileWidget, tr("Subtile properties"));
     this->ui->tilesTabs->addTab(&this->tabFrameWidget, tr("Frame properties"));
+
     QLayout *layout = this->ui->tilesetButtonsHorizontalLayout;
     PushButtonWidget *btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start drawing"), &dMainWindow(), &MainWindow::on_actionToggle_Painter_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
+    setTabOrder(this->ui->dunPlayComboBox, btn);
     this->viewBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowRight, tr("Switch to dungeon view"), &dMainWindow(), &MainWindow::on_actionToggle_View_triggered);
+    setTabOrder(btn, this->viewBtn);
     layout = this->ui->dunButtonsHorizontalLayout;
     btn = PushButtonWidget::addButton(this, layout, QStyle::SP_DialogResetButton, tr("Start building"), &dMainWindow(), &MainWindow::on_actionToggle_Builder_triggered);
     layout->setAlignment(btn, Qt::AlignRight);
-    btn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowLeft, tr("Switch to tileset view"), &dMainWindow(), &MainWindow::on_actionToggle_View_triggered);
+    setTabOrder(this->ui->dunPlayComboBox, btn);
+    PushButtonWidget *switchBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowLeft, tr("Switch to tileset view"), &dMainWindow(), &MainWindow::on_actionToggle_View_triggered);
+    setTabOrder(btn, switchBtn);
 
     // If a pixel of the frame, subtile or tile was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &LevelCelView::framePixelClicked);
