@@ -3903,6 +3903,7 @@ void LevelCelView::on_levelTypeComboBox_activated(int index)
     if (index < 0) {
         return;
     }
+    QMessageBox::critical(nullptr, "Error", QString("Activated %1").arg(index));
     bool change = this->dun->setLevelType(index);
     this->on_dungeonDefaultTileLineEdit_escPressed();
     if (change) {
@@ -3927,7 +3928,7 @@ void LevelCelView::on_dungeonDefaultTileLineEdit_returnPressed()
 
 void LevelCelView::on_dungeonDefaultTileLineEdit_escPressed()
 {
-    QString defaultText = " ";
+    QString defaultText;
     int defaultTile = this->dun->getDefaultTile();
     if (defaultTile != UNDEF_TILE) {
         defaultText = QString::number(defaultTile);
