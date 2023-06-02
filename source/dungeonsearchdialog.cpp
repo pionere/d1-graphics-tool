@@ -78,9 +78,8 @@ void DungeonSearchDialog::search(bool next)
 
     QString typeTxt = this->ui->searchTypeComboBox->currentText();
 
-    if (next) {
-        this->index++;
-    } else {
+    this->index++;
+    if (!next) {
         this->close();
     }
 
