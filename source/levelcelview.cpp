@@ -3927,7 +3927,7 @@ void LevelCelView::on_dungeonDefaultTileLineEdit_returnPressed()
 
 void LevelCelView::on_dungeonDefaultTileLineEdit_escPressed()
 {
-    QString defaultText;
+    QString defaultText = "";
     int defaultTile = this->dun->getDefaultTile();
     if (defaultTile != UNDEF_TILE) {
         defaultText = QString::number(defaultTile);
