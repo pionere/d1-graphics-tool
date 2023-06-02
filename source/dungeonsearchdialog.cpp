@@ -181,6 +181,7 @@ void DungeonSearchDialog::search(bool next)
                 dProgress() << tr("Reached the end of the dungeon.");
             }
         }
+        this->ui->searchNextButton->setText(QString("Next%1").arg(this->index));
     }
 
     // Clear loading message from status bar
