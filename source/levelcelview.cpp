@@ -3888,12 +3888,13 @@ void LevelCelView::on_levelTypeComboBox_activated(int index)
 
 void LevelCelView::on_dungeonDefaultTileLineEdit_returnPressed()
 {
-    int defaultTile = this->ui->dungeonDefaultTileLineEdit->text().toInt();
+    QString tileText = this->ui->dungeonDefaultTileLineEdit->text();
+    int defaultTile = tileText.isEmpty() ? UNDEF_TILE : tileText.toInt();
 
     bool change = this->dun->setDefaultTile(defaultTile);
     this->on_dungeonDefaultTileLineEdit_escPressed();
     if (change) {
-        this->ui->levelTypeComboBox->setCurrentIndex(-1);
+        this->ui->levelTypeComboBox->setCurrentIndex(DTYPE_NONE);
         // update the view
         this->displayFrame();
     }
