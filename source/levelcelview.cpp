@@ -60,6 +60,10 @@ LevelCelView::LevelCelView(QWidget *parent, QUndoStack *us)
     PushButtonWidget *switchBtn = PushButtonWidget::addButton(this, layout, QStyle::SP_ArrowLeft, tr("Switch to tileset view"), &dMainWindow(), &MainWindow::on_actionToggle_View_triggered);
     setTabOrder(btn, switchBtn);
 
+    QGridLayout *gridLayout = this->ui->dungeonLayout;
+    btn = PushButtonWidget::addButton(this, gridLayout, 3, 10, QStyle::SP_DialogOkButton, tr("Center Dungeon"), this, &LevelCelView::scrollToCurrent);
+    setTabOrder(this->ui->moveDownButton, btn);
+
     // If a pixel of the frame, subtile or tile was clicked get pixel color index and notify the palette widgets
     // QObject::connect(&this->celScene, &CelScene::framePixelClicked, this, &LevelCelView::framePixelClicked);
     // QObject::connect(&this->celScene, &CelScene::framePixelHovered, this, &LevelCelView::framePixelHovered);
