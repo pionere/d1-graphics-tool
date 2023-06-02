@@ -175,20 +175,20 @@ void DungeonSearchDialog::search(bool next)
     if (next) {
         if ((int)matches.size() <= this->index) {
             this->index = -1;
+            params.scrollTo = false;
             if (matches.empty()) {
                 popup = true;
             } else {
                 dProgress() << tr("Reached the end of the dungeon.");
             }
         }
-        this->ui->searchNextButton->setText(QString("Next%1").arg(this->index));
     }
 
     // Clear loading message from status bar
     ProgressDialog::done();
 
     if (!matches.empty() && params.scrollTo) {
-        view->selectPos(matches[0]);
+        view->selectPos(matches[this->index]);
         view->scrollToCurrent();
     }
 
