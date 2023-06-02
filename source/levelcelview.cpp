@@ -3903,7 +3903,7 @@ void LevelCelView::on_levelTypeComboBox_activated(int index)
     if (index < 0) {
         return;
     }
-    QMessageBox::critical(nullptr, "Error", QString("Activated %1").arg(index));
+
     bool change = this->dun->setLevelType(index);
     this->on_dungeonDefaultTileLineEdit_escPressed();
     if (change) {
@@ -3914,13 +3914,13 @@ void LevelCelView::on_levelTypeComboBox_activated(int index)
 
 void LevelCelView::on_dungeonDefaultTileLineEdit_returnPressed()
 {
-    bool ok;
-    int defaultTile = this->ui->dungeonDefaultTileLineEdit->text().toInt(&ok);
+    QString tileText = this->ui->dungeonDefaultTileLineEdit->text();
+    int defaultTile = tileText.isEmpty() ? UNDEF_TILE : tileText.toInt();
 
-    bool change = ok && this->dun->setDefaultTile(defaultTile);
+    bool change = this->dun->setDefaultTile(defaultTile);
     this->on_dungeonDefaultTileLineEdit_escPressed();
     if (change) {
-        this->ui->levelTypeComboBox->setCurrentIndex(-1);
+        this->ui->levelTypeComboBox->setCurrentIndex(DTYPE_NONE);
         // update the view
         this->displayFrame();
     }

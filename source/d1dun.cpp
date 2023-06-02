@@ -1978,6 +1978,10 @@ bool D1Dun::setDefaultTile(int defaultTile)
         return false;
     }
     this->defaultTile = defaultTile;
+    // keep defaultTile and levelType in sync
+    if (dungeonTbl[this->levelType].defaultTile != defaultTile) {
+        this->levelType = DTYPE_NONE;
+    }
     // update subtiles
     for (unsigned y = 0; y < this->tiles.size(); y++) {
         std::vector<int> &tilesRow = this->tiles[y];
