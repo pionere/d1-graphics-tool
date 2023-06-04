@@ -3903,7 +3903,6 @@ void LevelCelView::on_levelTypeComboBox_activated(int index)
     if (index < 0) {
         return;
     }
-
     bool change = this->dun->setLevelType(index);
     this->on_dungeonDefaultTileLineEdit_escPressed();
     if (change) {
