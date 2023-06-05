@@ -1001,7 +1001,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
                     continue;
                 }
                 // QColor color = subtileImage.pixelColor(x - CELL_BORDER, subtileImage.height() - y);
-                // if (/*color.isNull() ||*/ color.alpha() == 0) {
+                // if (/ *color.isNull() ||* / color.alpha() == 0) {
                 if (qAlpha(*srcBits) == 0) {
                     continue;
                 }
