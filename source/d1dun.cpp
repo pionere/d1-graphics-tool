@@ -971,6 +971,13 @@ QImage D1Dun::getItemImage(int itemIndex)
     }
 }
 
+void D1Dun::drawBack(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
+{
+    const unsigned backWidth = backImage.width() - 2 * CELL_BORDER;
+    const unsigned backHeight = backImage.height() - 2 * CELL_BORDER;
+    dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backHeight - CELL_BORDER, backImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+}
+
 void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
 {
     const unsigned backWidth = backImage.width() - 2 * CELL_BORDER;
@@ -980,7 +987,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     bool middleText = false;
     bool bottomText = false;
     // dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backHeight - CELL_BORDER, backImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
-    { // draw the background
+    /*{ // draw the background
         QRgb *srcBits = reinterpret_cast<QRgb *>(backImage.bits());
         // assert(drawCursorY >= backHeight);
         QImage *destImage = (QImage *)dungeon.device();
@@ -1003,7 +1010,7 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
             }
             destBits += destImage->width() - backWidth;
         }
-    }
+    }*/
     if (params.tileState != Qt::Unchecked) {
         // draw the subtile
         int tileRef = this->tiles[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
@@ -1467,8 +1474,10 @@ void D1Dun::drawLayer(QPainter &dunPainter, QImage &backImage, const DunDrawPara
         dunCursorY = i;
         while (dunCursorY >= 0) {
             if (layer == 0) {
+                this->drawBack(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
+            } else if (layer == 1) {
                 this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
-            } else { // if (layer == 1) {
+            } else { // if (layer == 2) {
                 this->drawMeta(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
             }
             dunCursorY--;
@@ -1490,8 +1499,10 @@ void D1Dun::drawLayer(QPainter &dunPainter, QImage &backImage, const DunDrawPara
             dunCursorY = this->height - 1;
             while (dunCursorY >= 0) {
                 if (layer == 0) {
+                    this->drawBack(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
+                } else if (layer == 1) {
                     this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
-                } else { // if (layer == 1) {
+                } else { // if (layer == 2) {
                     this->drawMeta(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
                 }
                 dunCursorY--;
@@ -1513,8 +1524,10 @@ void D1Dun::drawLayer(QPainter &dunPainter, QImage &backImage, const DunDrawPara
             dunCursorY = this->width + i;
             while (dunCursorX < this->width) {
                 if (layer == 0) {
+                    this->drawBack(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
+                } else if (layer == 1) {
                     this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
-                } else { // if (layer == 1) {
+                } else { // if (layer == 2) {
                     this->drawMeta(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
                 }
                 dunCursorY--;
@@ -1536,8 +1549,10 @@ void D1Dun::drawLayer(QPainter &dunPainter, QImage &backImage, const DunDrawPara
         dunCursorY = this->height - 1;
         while (dunCursorX < this->width) {
             if (layer == 0) {
+                this->drawBack(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
+            } else if (layer == 1) {
                 this->drawImage(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
-            } else { // if (layer == 1) {
+            } else { // if (layer == 2) {
                 this->drawMeta(dunPainter, backImage, drawCursorX, drawCursorY, dunCursorX, dunCursorY, params);
             }
             dunCursorY--;
@@ -1613,8 +1628,9 @@ QImage D1Dun::getImage(const DunDrawParam &params)
     DunPal = this->pal;
 
     this->drawLayer(dunPainter, backImage, params, 0);
+    this->drawLayer(dunPainter, backImage, params, 1);
     if (params.showMap || params.showRooms || params.showTileProtections || params.showSubtileProtections) {
-        this->drawLayer(dunPainter, backImage, params, 1);
+        this->drawLayer(dunPainter, backImage, params, 2);
     }
 
     // dunPainter.end();
