@@ -979,8 +979,31 @@ void D1Dun::drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int
     unsigned cellCenterY = drawCursorY - backHeight / 2;
     bool middleText = false;
     bool bottomText = false;
-    // draw the background
-    dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backHeight - CELL_BORDER, backImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+    // dungeon.drawImage(drawCursorX - CELL_BORDER, drawCursorY - backHeight - CELL_BORDER, backImage, 0, 0, -1, -1, Qt::NoFormatConversion | Qt::NoOpaqueDetection);
+    { // draw the background
+        QRgb *srcBits = reinterpret_cast<QRgb *>(backImage.bits());
+        // assert(drawCursorY >= backHeight);
+        QImage *destImage = (QImage *)dungeon.device();
+        QRgb *destBits = reinterpret_cast<QRgb *>(destImage->scanLine(drawCursorY - backHeight));
+        destBits += drawCursorX;
+        // assert(subtileImage.width() == backWidth);
+        for (unsigned y = 0; y < backHeight; y++) {
+            for (unsigned x = 0; x < backWidth; x++, srcBits++, destBits++) {
+                // if (destImage.pixelColor(x, y).alpha() != 0) {
+                if (qAlpha(*destBits) != 0) {
+                    continue;
+                }
+                // QColor color = subtileImage.pixelColor(x - CELL_BORDER, subtileImage.height() - y);
+                // if (/*color.isNull() ||*/ color.alpha() == 0) {
+                if (qAlpha(*srcBits) == 0) {
+                    continue;
+                }
+                // destImage->setPixelColor(drawCursorX + x - CELL_BORDER, drawCursorY - (y + 1), color);
+                *destBits = *srcBits;
+            }
+            destBits += destImage->width() - backWidth;
+        }
+    }
     if (params.tileState != Qt::Unchecked) {
         // draw the subtile
         int tileRef = this->tiles[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
