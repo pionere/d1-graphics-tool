@@ -320,6 +320,7 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
     return result != 0;
 }
 
+#define HideMcr(n, x) RemoveFrame(this->min, n, x, nullptr, silent);
 #define Blk2Mcr(n, x) RemoveFrame(this->min, n, x, &deletedFrames, silent);
 #define MICRO_IDX(blockSize, microIndex) ((blockSize) - (2 + ((microIndex) & ~1)) + ((microIndex)&1))
 static void RemoveFrame(D1Min *min, int subtileRef, int microIndex, std::set<unsigned> *deletedFrames, bool silent)
@@ -4507,13 +4508,13 @@ void D1Tileset::patch(int dunType, bool silent)
         Blk2Mcr(494, 0);
         Blk2Mcr(494, 1);
         Blk2Mcr(550, 1);
-        SetMcr(587, 0, 587, 2);
+        HideMcr(587, 0);
         Blk2Mcr(624, 1);
         Blk2Mcr(626, 1);
-        SetMcr(926, 0, 926, 2);
-        SetMcr(926, 1, 926, 2);
-        SetMcr(928, 0, 926, 2);
-        SetMcr(928, 1, 926, 2);
+        HideMcr(926, 0);
+        HideMcr(926, 1);
+        HideMcr(928, 0);
+        HideMcr(928, 1);
         // Blk2Mcr(1143, 0);
         // Blk2Mcr(1145, 0);
         // Blk2Mcr(1145, 1);
@@ -4538,8 +4539,8 @@ void D1Tileset::patch(int dunType, bool silent)
         }
         // patch dMicroCels - TOWN.CEL
         // - overwrite subtile 557 and 558 with subtile 939 and 940 to make the inner tile of Griswold's house non-walkable
-        ReplaceMcr(237, 0, 402, 0);
-        ReplaceMcr(237, 1, 402, 1);
+        // ReplaceMcr(237, 0, 402, 0);
+        // ReplaceMcr(237, 1, 402, 1);
         // patch subtiles around the pot of Adria to prevent graphical glitch when a player passes it
         this->patchTownPot(553, 554, silent);
         // patch subtiles of the cathedral to fix graphical glitch
