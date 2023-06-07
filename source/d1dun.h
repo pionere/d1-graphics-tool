@@ -223,6 +223,7 @@ private:
     static void DrawAutomapVertDoor(int sx, int sy);
     static void DrawAutomapHorzDoor(int sx, int sy);
     static void DrawMap(int drawCursorX, int drawCursorY, uint16_t automap_type);
+    void drawBack(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
     void drawImage(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
     void drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params);
     void drawLayer(QPainter &dungeon, QImage &backImage, const DunDrawParam &params, int layer);
