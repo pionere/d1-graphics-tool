@@ -84,7 +84,7 @@ std::vector<std::vector<D1GfxPixel>> &D1GfxFrame::getPixels() const
     return const_cast<std::vector<std::vector<D1GfxPixel>> &>(this->pixels);
 }
 
-bool D1GfxFrame::setPixel(int x, int y, D1GfxPixel pixel)
+bool D1GfxFrame::setPixel(int x, int y, const D1GfxPixel pixel)
 {
     if (x < 0 || x >= this->width || y < 0 || y >= this->height) {
         return false;
