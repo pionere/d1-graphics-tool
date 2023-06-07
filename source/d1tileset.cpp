@@ -560,11 +560,10 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
 
     D1GfxFrame *frameRight0 = this->gfx->getFrame(rightFrameRef0 - 1);
 
+    // move the image up 553[5] (1470) and 553[3] (1471)
     for (int x = MICRO_WIDTH / 2; x < MICRO_WIDTH; x++) {
         for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
             D1GfxPixel pixel = frameLeft2->getPixel(x, y);
-            if (pixel.isTransparent())
-                continue;
             frameLeft2->setPixel(x, y - MICRO_HEIGHT / 2, pixel);
             frameLeft2->setPixel(x, y, D1GfxPixel::transparentPixel());
         }
@@ -572,8 +571,6 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
     for (int x = MICRO_WIDTH / 2; x < MICRO_WIDTH; x++) {
         for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
             D1GfxPixel pixel = frameLeft1->getPixel(x, y);
-            if (pixel.isTransparent())
-                continue;
             frameLeft2->setPixel(x, y + MICRO_HEIGHT / 2, pixel);
             frameLeft1->setPixel(x, y, D1GfxPixel::transparentPixel());
         }
@@ -581,12 +578,11 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
     for (int x = MICRO_WIDTH / 2; x < MICRO_WIDTH; x++) {
         for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
             D1GfxPixel pixel = frameLeft1->getPixel(x, y);
-            if (pixel.isTransparent())
-                continue;
             frameLeft1->setPixel(x, y - MICRO_HEIGHT / 2, pixel);
             frameLeft1->setPixel(x, y, D1GfxPixel::transparentPixel());
         }
     }
+    // copy image to the other micros 553[1] (1473) -> 553[3] 1471, 554[0] 1475
     for (int x = MICRO_WIDTH / 2 + 2; x < MICRO_WIDTH - 4; x++) {
         for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
             D1GfxPixel pixel = frameLeft0->getPixel(x, y);
@@ -602,7 +598,7 @@ void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool
             if (pixel.isTransparent())
                 continue;
             frameRight0->setPixel(x, y - MICRO_HEIGHT / 2, pixel);
-            // frameLeft0->setPixel(x, y, D1GfxPixel::transparentPixel());
+            frameLeft0->setPixel(x, y, D1GfxPixel::transparentPixel());
         }
     }
     // convert the left floor to triangle
