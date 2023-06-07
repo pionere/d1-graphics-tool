@@ -973,15 +973,15 @@ bool D1Tileset::patchTownDoor(bool silent)
 /* 35 */{ 931 - 1, 5, D1CEL_FRAME_TYPE::Square }, // 2643
 /* 36 */{ 931 - 1, 3, D1CEL_FRAME_TYPE::Square }, // 2644
 /* 37 */{ 931 - 1, 1, D1CEL_FRAME_TYPE::RightTrapezoid }, // 2646
-/* 38 */{ 919 - 1, 9, D1CEL_FRAME_TYPE::Empty }, // 2587
-/* 39 */{ 919 - 1, 5, D1CEL_FRAME_TYPE::Empty }, // 2589
-/* 40 */{ 927 - 1, 5, D1CEL_FRAME_TYPE::Square }, // 2625
-/* 41 */{ 927 - 1, 1, D1CEL_FRAME_TYPE::RightTrapezoid }, // 2627
-/* 42 */{ 402 - 1, 0, D1CEL_FRAME_TYPE::Empty }, // 939
-/* 43 */{ 956 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle }, // 2760
+/* 38 */{ 402 - 1, 0, D1CEL_FRAME_TYPE::Empty }, // 939
+/* 39 */{ 954 - 1, 2, D1CEL_FRAME_TYPE::Empty }, // 2746
+/* 40 */{ 919 - 1, 9, D1CEL_FRAME_TYPE::Empty }, // 2587
+/* 41 */{ 919 - 1, 5, D1CEL_FRAME_TYPE::Empty }, // 2589
+/* 42 */{ 927 - 1, 5, D1CEL_FRAME_TYPE::Square }, // 2625
+/* 43 */{ 927 - 1, 1, D1CEL_FRAME_TYPE::RightTrapezoid }, // 2627
+/* 44 */{ 956 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle }, // 2760 - unused
         // { 956 - 1, 2, D1CEL_FRAME_TYPE::Empty }, // 2759
-/* 44 */{ 954 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle }, // 2748
-/* 45 */{ 954 - 1, 2, D1CEL_FRAME_TYPE::Empty }, // 2746
+/* 45 */{ 954 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle }, // 2748 - unused
 /* 46 */{ 919 - 1, 7, D1CEL_FRAME_TYPE::Square }, // 2588
 /* 47 */{ 918 - 1, 9, D1CEL_FRAME_TYPE::Empty }, // 2578
 /* 48 */{ 926 - 1, 5, D1CEL_FRAME_TYPE::Square }, // 2619
@@ -1407,7 +1407,7 @@ bool D1Tileset::patchTownDoor(bool silent)
         }
         // copy 919[9] (1849) to 927[5] (1912)
         // copy 919[5] (1849) to 927[1] (1912)
-        if (i == 38 || i == 39) {
+        if (i == 40 || i == 41) {
             const CelMicro &microDst = micros[i + 2];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
             D1GfxFrame *frameDst = mf.second;
@@ -1424,8 +1424,8 @@ bool D1Tileset::patchTownDoor(bool silent)
             }
         }
         // copy 402[0] (1849) to 927[1] (1912)
-        if (i == 42) {
-            const CelMicro &microDst = micros[i - 1];
+        if (i == 38) {
+            const CelMicro &microDst = micros[i + 5];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
             D1GfxFrame *frameDst = mf.second;
             if (frameDst == nullptr) {
@@ -1443,14 +1443,14 @@ bool D1Tileset::patchTownDoor(bool silent)
             }
         }
         // copy 954[2] (1849) to 919[7] (1912 -> 927[3]) and 927[1] (1912)
-        if (i == 45) {
-            const CelMicro &microDst1 = micros[i + 1];
+        if (i == 39) {
+            const CelMicro &microDst1 = micros[i + 7];
             std::pair<unsigned, D1GfxFrame *> mf1 = this->getFrame(microDst1.subtileIndex, blockSize, microDst1.microIndex);
             D1GfxFrame *frameDst1 = mf1.second;
             if (frameDst1 == nullptr) {
                 return false;
             }
-            const CelMicro &microDst2 = micros[i - 4];
+            const CelMicro &microDst2 = micros[i + 4];
             std::pair<unsigned, D1GfxFrame *> mf2 = this->getFrame(microDst2.subtileIndex, blockSize, microDst2.microIndex);
             D1GfxFrame *frameDst2 = mf2.second;
             if (frameDst2 == nullptr) {
@@ -2655,7 +2655,6 @@ void D1Tileset::maskCryptBlacks(bool silent)
         // clang-format on
     };
 
-    // TODO: check if there are enough subtiles
     constexpr unsigned blockSize = BLOCK_SIZE_L5;
     for (int i = 0; i < lengthof(micros); i++) {
         const CelMicro &micro = micros[i];
@@ -2745,7 +2744,6 @@ void D1Tileset::fixCryptShadows(bool silent)
         // clang-format on
     };
 
-    // TODO: check if there are enough subtiles
     constexpr unsigned blockSize = BLOCK_SIZE_L5;
     const D1GfxPixel SHADOW_COLOR = D1GfxPixel::colorPixel(0); // 79;
     for (int i = 0; i < 7; i++) {
@@ -4550,6 +4548,7 @@ void D1Tileset::patch(int dunType, bool silent)
             // use the micros created by patchTownFloor
             MoveMcr(732, 8, 731, 9);
             Blk2Mcr(974, 2);
+            Blk2Mcr(1030, 2);
             ReplaceMcr(220, 0, 17, 0);
             SetMcr(221, 2, 220, 1);
             SetMcr(220, 1, 17, 1);
@@ -4725,7 +4724,7 @@ void D1Tileset::patch(int dunType, bool silent)
         ReplaceMcr(986, 0, 3, 0);  // lost details
         ReplaceMcr(1011, 0, 7, 0); // lost details
         ReplaceMcr(1028, 1, 3, 1); // lost details
-        ReplaceMcr(1030, 2, 974, 2);
+        // ReplaceMcr(1030, 2, 974, 2);
         ReplaceMcr(1034, 1, 4, 1); // lost details
         ReplaceMcr(1042, 0, 8, 0); // lost details
         ReplaceMcr(1043, 1, 5, 1); // lost details
