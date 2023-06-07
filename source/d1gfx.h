@@ -76,7 +76,7 @@ public:
     void setHeight(int height);
     D1GfxPixel getPixel(int x, int y) const;
     std::vector<std::vector<D1GfxPixel>> &getPixels() const;
-    bool setPixel(int x, int y, D1GfxPixel pixel);
+    bool setPixel(int x, int y, const D1GfxPixel pixel);
     bool isClipped() const;
     D1CEL_FRAME_TYPE getFrameType() const;
     void setFrameType(D1CEL_FRAME_TYPE type);
