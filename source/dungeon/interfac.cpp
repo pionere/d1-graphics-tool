@@ -40,7 +40,7 @@ static void IncProgress()
 
 void LogErrorF(const char* msg, ...)
 {
-	char tmp[256];
+	/*char tmp[256];
 	char tmsg[256];
 	va_list va;
 
@@ -56,11 +56,11 @@ void LogErrorF(const char* msg, ...)
 	if (f0 == NULL)
 		return;
 
-    fputs(tmsg, f0);
+	fputs(tmsg, f0);
 
 	fputc('\n', f0);
 
-	fclose(f0);
+	fclose(f0);*/
 }
 
 static void StoreProtections(D1Dun *dun)
