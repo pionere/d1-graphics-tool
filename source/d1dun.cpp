@@ -43,11 +43,11 @@ const DungeonStruct dungeonTbl[NUM_DUNGEON_TYPES] = {
 const DunObjectStruct DunObjConvTbl[128] = {
     // clang-format off
                      { nullptr },
-/*OBJ_LEVER*/        { "Lever" }, // SklKng2.DUN
-/*OBJ_CRUXM*/        { "Crucifix1" }, // SklKng2.DUN
-/*OBJ_CRUXR*/        { "Crucifix2" }, // SklKng2.DUN
-/*OBJ_CRUXL*/        { "Crucifix3" }, // SklKng2.DUN
-                     { nullptr }, //OBJ_ANGEL,
+/*OBJ_LEVER*/        { "Lever" },       // SklKng2.DUN
+/*OBJ_CRUXM*/        { "Crucifix1" },   // SklKng2.DUN
+/*OBJ_CRUXR*/        { "Crucifix2" },   // SklKng2.DUN
+/*OBJ_CRUXL*/        { "Crucifix3" },   // SklKng2.DUN
+/*OBJ_SARC*/         { "Sarcophagus" }, // SklKng2.DUN
                      { nullptr }, //OBJ_BANNERL,
                      { nullptr }, //OBJ_BANNERM,
                      { nullptr }, //OBJ_BANNERR,
