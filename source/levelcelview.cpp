@@ -2556,7 +2556,7 @@ bool LevelCelView::removeUnusedFrames()
         }
         if (!frameUsed[i]) {
             this->removeFrame(i);
-            dProgress() << tr("Removed frame %1.").arg(i);
+            dProgress() << tr("Removed frame %1.").arg(i + 1);
             result = 1;
         }
         if (!ProgressDialog::incValue()) {
@@ -2588,7 +2588,7 @@ bool LevelCelView::removeUnusedSubtiles()
         }
         if (!subtileUsed[i]) {
             this->removeSubtile(i);
-            dProgress() << tr("Removed subtile %1.").arg(i);
+            dProgress() << tr("Removed subtile %1.").arg(i + 1);
             result = 1;
         }
         if (!ProgressDialog::incValue()) {
