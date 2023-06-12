@@ -3022,7 +3022,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 10 - 1, 1, 18, silent);  // 37
     ReplaceSubtile(this->til, 138 - 1, 1, 18, silent);
     ReplaceSubtile(this->til, 188 - 1, 1, 277, silent); // 564
-    ReplaceSubtile(this->til, 178 - 1, 2, 258, silent); // 564
+    ReplaceSubtile(this->til, 178 - 1, 2, 258, silent); // 543
     ReplaceSubtile(this->til, 5 - 1, 2, 31, silent);    // 19
     ReplaceSubtile(this->til, 14 - 1, 2, 31, silent);
     ReplaceSubtile(this->til, 159 - 1, 2, 31, silent);
@@ -3305,7 +3305,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // - use consistent lava + shadow micro I.
     ReplaceMcr(277, 0, 303, 0);
     ReplaceMcr(562, 0, 303, 0);
-    ReplaceMcr(564, 0, 303, 0);
+    // ReplaceMcr(564, 0, 303, 0);
     ReplaceMcr(635, 0, 308, 0);
     // - extend shadow to make more usable (after fixCryptShadows)
     ReplaceMcr(627, 0, 626, 0);
@@ -3399,14 +3399,14 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(459, 9, 6, 9);   // lost details
     ReplaceMcr(463, 9, 6, 9);   // lost details
     ReplaceMcr(562, 9, 6, 9);   // lost details
-    ReplaceMcr(564, 9, 6, 9);   // lost details
+    // ReplaceMcr(564, 9, 6, 9);   // lost details
     ReplaceMcr(277, 7, 18, 7);  // lost details
     ReplaceMcr(562, 7, 18, 7);  // lost details
     ReplaceMcr(277, 5, 459, 5); // lost details
     ReplaceMcr(562, 5, 459, 5); // lost details
     ReplaceMcr(277, 3, 459, 3); // lost details
     ReplaceMcr(562, 1, 277, 1); // lost details
-    ReplaceMcr(564, 1, 277, 1); // lost details
+    // ReplaceMcr(564, 1, 277, 1); // lost details
     ReplaceMcr(585, 1, 284, 1);
     ReplaceMcr(590, 1, 285, 1); // lost details
     ReplaceMcr(598, 1, 289, 1); // lost details
@@ -4399,7 +4399,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(649, 1);
     Blk2Mcr(650, 0);
     int unusedSubtiles[] = {
-        8, 10, 11, 16, 19, 20, 23, 24, 26, 28, 30, 35, 38, 40, 43, 44, 50, 52, 56, 76, 78, 81, 82, 87, 90, 92, 94, 96, 98, 100, 102, 103, 105, 106, 108, 110, 112, 114, 116, 124, 127, 128, 137, 138, 139, 141, 143, 147, 148, 167, 172, 174, 176, 177, 193, 202, 205, 207, 210, 211, 214, 217, 219, 221, 223, 225, 227, 233, 235, 239, 249, 251, 253, 257, 259, 262, 263, 270, 273, 278, 279, 295, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 354, 373, 381, 390, 472, 489, 490, 540, 560, 640, 643, 648
+        8, 10, 11, 16, 19, 20, 23, 24, 26, 28, 30, 35, 38, 40, 43, 44, 50, 52, 56, 76, 78, 81, 82, 87, 90, 92, 94, 96, 98, 100, 102, 103, 105, 106, 108, 110, 112, 114, 116, 124, 127, 128, 137, 138, 139, 141, 143, 147, 148, 167, 172, 174, 176, 177, 193, 202, 205, 207, 210, 211, 214, 217, 219, 221, 223, 225, 227, 233, 235, 239, 249, 251, 253, 257, 259, 262, 263, 270, 273, 278, 279, 295, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 354, 373, 381, 390, 472, 489, 490, 540, 560, 564, 640, 643, 648
     };
     for (int n = 0; n < lengthof(unusedSubtiles); n++) {
         for (int i = 0; i < blockSize; i++) {
