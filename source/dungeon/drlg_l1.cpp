@@ -235,8 +235,8 @@ static const BYTE L1FTYPES[207] = {
 	12, 10, 10, 10, 10, 15, 10, 10, 15, 15, //120..
 	15, 15, 15, 15, 15, 15, 15, 15, 15, 15, //130..
 	15, 15, 15, 15, 15, 10, 10, 10, 12, 12, //140..
-	12, 12, 12, 12, 12, 12, 12, 10,  8,  8, //150..
-	 8,  8, 15, 15,  8,  8, 10, 10,  8, 12, //160..
+	12, 12, 12, 12, 12, 12, 12, 10,  8, 12, //150..
+	 8,  8, 15, 15, 15, 15, 10, 10,  8, 12, //160..
 	12, 15, 15, 15, 15, 10, 12,  8, 10, 12, //170..
 	 8,  8,  8,  8,  8,  8, 10,  8,  8,  8, //180..
 	 8, 10, 12, 10, 12,  0,  0, 10, 12,  0, //190..
@@ -1061,11 +1061,13 @@ void DRLG_L1Shadows()
 				case 11:  replaceA = 145; okB = false; break;
 				case 35:  replaceA = 157; okB = false; break;
 				case 145: replaceA = 145; okB = false; break;
+				case 146: replaceA = 146; okB = true;  break;
 				case 164: replaceA = 164; okB = false; break;
 				// case 139: replaceA = 165; okB = false; break;
 				default:
+					okB = true;
 					if (replaceA != 25)
-	                    dProgressWarn() << QString("Missing case %1 for horizontal arch %2 @%3:%4").arg(dungeon[i][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+	                    dProgressWarn() << QString("Missing case %1 for horizontal arch %2 @%3:%4").arg(replaceA).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					// 25 -> not perfect, but ok and it would require a new door object as well
 					// TODO: what else?
 				}
@@ -1077,6 +1079,8 @@ void DRLG_L1Shadows()
 						dungeon[i - 1][j - 1] = 146;
 					} else if (dungeon[i - 1][j - 1] == 11) {
 						dungeon[i - 1][j - 1] = 145;
+					} else if (dungeon[i - 1][j - 1] == 35) {
+						dungeon[i - 1][j - 1] = 157;
 					} else {
                         dProgressWarn() << QString("Missing case %1 for horizontal arch %2 with floor @%3:%4").arg(dungeon[i - 1][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 						// TODO: what else?
