@@ -1089,9 +1089,18 @@ void DRLG_L1Shadows()
 				case 156:  replaceA = 156;  okB = true;  break;
 				// case 152:  replaceA = 153;  okB = true;  break;
 				case 153:  replaceA = 153;  okB = true;  break;
+				case 2:    replaceA = 148;  okB = true;  break;
+				case 4:    replaceA = 158;  okB = true;  break;
+				case 7:    replaceA = 159;  okB = true;  break;
+				case 12:   replaceA = 149;  okB = true;  break;
+				case 14:   replaceA = 160;  okB = true;  break;
+				case 36:   replaceA = 152;  okB = true;  break;
+				case 37:   replaceA = 161;  okB = true;  break;
 				default:
-					if (replaceB != 2 && replaceB != 4 && replaceB != 7 && replaceB != 12 && replaceB != 14 && replaceB != 26 && replaceB != 36 && replaceB != 37)
+					//if (replaceB != 4 && replaceB != 7 && replaceB != 12 && replaceB != 14 && replaceB != 26 && replaceB != 36 && replaceB != 37)
+					if (replaceB != 26)
 		                dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+					// 26 -> not perfect, but ok and it would require a new door object as well
 					continue;
 				}
 

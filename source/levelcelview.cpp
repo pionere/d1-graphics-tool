@@ -2613,6 +2613,9 @@ void LevelCelView::cleanupFrames()
 void LevelCelView::cleanupSubtiles()
 {
     if (this->removeUnusedSubtiles()) {
+        if (this->dun != nullptr) {
+            this->dun->refreshSubtiles();
+        }
         // update the view - done by the caller
         // this->displayFrame();
     } else {
@@ -2635,6 +2638,9 @@ void LevelCelView::cleanupTileset()
     bool removedFrame = this->removeUnusedFrames();
 
     if (removedSubtile || removedFrame) {
+        if (removedSubtile && this->dun != nullptr) {
+            this->dun->refreshSubtiles();
+        }
         // update the view - done by the caller
         // this->displayFrame();
     } else {
