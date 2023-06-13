@@ -1027,12 +1027,12 @@ void DRLG_L1Shadows()
 			case 5:
 				pillar = true;
 				break;
-			case 7:
+			case 15:
 				largePillar = true;
 				break;
 			case 3:
-			// case 7:
-			case 15:
+			case 7:
+			// case 15:
 			case 16:
 			case 17:
 			// case 31:
@@ -1094,6 +1094,7 @@ void DRLG_L1Shadows()
 				case 7:    replaceA = 159;  okB = true;  break;
 				case 12:   replaceA = 149;  okB = true;  break;
 				case 14:   replaceA = 160;  okB = true;  break;
+				case 25:   replaceA = 139;  okB = false; break;
 				case 36:   replaceA = 152;  okB = true;  break;
 				case 37:   replaceA = 161;  okB = true;  break;
 				default:
@@ -1146,7 +1147,7 @@ void DRLG_L1Shadows()
 	                    dProgressWarn() << QString("Missing case %1 for pillar %2 with floor @%3:%4").arg(dungeon[i - 1][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 						continue;
 					}
-					dungeon[i - 1][j] = 206;
+					dungeon[i - 1][j] = 142;
 					dungeon[i - 1][j - 1] = replace;
 				} else {
 					if (dungeon[i - 1][j] != 2 && dungeon[i - 1][j] != 4 && dungeon[i - 1][j] != 7 && dungeon[i - 1][j] != 12 && dungeon[i - 1][j] != 14 && dungeon[i - 1][j] != 36 && dungeon[i - 1][j] != 37 && dungeon[i - 1][j] != 209 && dungeon[i - 1][j] != 212 && dungeon[i - 1][j] != 213 && dungeon[i - 1][j] != 214)
