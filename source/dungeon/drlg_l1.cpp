@@ -1054,7 +1054,7 @@ void DRLG_L1Shadows()
 			if (horizArch) {
 				BYTE replaceA; bool okB;
 				replaceA = dungeon[i][j - 1];
-				bool pillarC = i == DMAXX - 1 || ((automaptype[dungeon[i + 1][j - 1]] & MAPFLAG_TYPE) != 2 && (automaptype[dungeon[i][j - 1]] & MAPFLAG_TYPE) != 4 && (automaptype[dungeon[i][j - 1]] & MAPFLAG_TYPE) != 5);
+				bool pillarC = i == DMAXX - 1 || ((automaptype[dungeon[i + 1][j - 1]] & MAPFLAG_TYPE) != 2 && (automaptype[dungeon[i + 1][j - 1]] & MAPFLAG_TYPE) != 4 && (automaptype[dungeon[i + 1][j - 1]] & MAPFLAG_TYPE) != 5);
 				if (!pillarC && replaceA != 13)
                     dProgressWarn() << QString("Missing case %1 for horizontal arch %2 with wall @%3:%4").arg(replaceA).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 				switch (replaceA) {
