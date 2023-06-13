@@ -852,7 +852,7 @@ void DRLG_L5Shadows()
 				//} else if (dungeon[i][j - 1] == 203) {
 				//	dungeon[i][j - 1] = 204;
 				} else {
-					if (dungeon[i][j - 1] != 25)
+					// if (dungeon[i][j - 1] != 25)
 	                    dProgressWarn() << QString("Missing case %1 for horizontal arch %2 @%3:%4").arg(dungeon[i][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					// 25 -> not perfect, but ok and it would require a new door object as well
 					// TODO: what else?
@@ -1070,7 +1070,7 @@ void DRLG_L1Shadows()
 				// case 139: replaceA = 165; okB = false; break;
 				default:
 					okB = true;
-					if (replaceA != 25)
+					// if (replaceA != 25)
 	                    dProgressWarn() << QString("Missing case %1 for horizontal arch %2 @%3:%4").arg(replaceA).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					// 25 -> not perfect, but ok and it would require a new door object as well
 					// TODO: what else?
@@ -1081,12 +1081,16 @@ void DRLG_L1Shadows()
 						dungeon[i - 1][j - 1] = 164;
 					} else if (dungeon[i - 1][j - 1] == 1) {
 						dungeon[i - 1][j - 1] = 146;
+					} else if (dungeon[i - 1][j - 1] == 6) {
+						dungeon[i - 1][j - 1] = 147;
 					} else if (dungeon[i - 1][j - 1] == 11) {
 						dungeon[i - 1][j - 1] = 145;
 					} else if (dungeon[i - 1][j - 1] == 35) {
 						dungeon[i - 1][j - 1] = 157;
 					} else {
-                        dProgressWarn() << QString("Missing case %1 for horizontal arch %2 with floor @%3:%4").arg(dungeon[i - 1][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+						if (dungeon[i - 1][j - 1] != 25)
+							dProgressWarn() << QString("Missing case %1 for horizontal arch %2 with floor @%3:%4").arg(dungeon[i - 1][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                        // 25 -> not perfect, but ok and it would require a new door object as well
 						// TODO: what else?
 					}
 				}
@@ -1120,7 +1124,6 @@ void DRLG_L1Shadows()
 				case 141:  replaceA = 141;  okB = false;  break;
 				case 164:  replaceA = 165;  okB = false;  break;
 				default:
-					//if (replaceB != 4 && replaceB != 7 && replaceB != 12 && replaceB != 14 && replaceB != 26 && replaceB != 36 && replaceB != 37)
 					if (replaceB != 26)
 		                dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					// 26 -> not perfect, but ok and it would require a new door object as well
