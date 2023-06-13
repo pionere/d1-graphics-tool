@@ -1052,23 +1052,30 @@ void DRLG_L1Shadows()
 				break;
 			}
 			if (horizArch) {
-				if (dungeon[i][j - 1] == 13) {
-					dungeon[i][j - 1] = 140;
-				} else if (dungeon[i][j - 1] == 1) {
-					dungeon[i][j - 1] = 146;
-				} else if (dungeon[i][j - 1] == 6) {
-					dungeon[i][j - 1] = 147;
-				} else if (dungeon[i][j - 1] == 11) {
-					dungeon[i][j - 1] = 145;
-				} else if (dungeon[i][j - 1] == 35) {
-					dungeon[i][j - 1] = 157;
-				//} else if (dungeon[i][j - 1] == 203) {
-				//	dungeon[i][j - 1] = 141;
-				} else {
-					if (dungeon[i][j - 1] != 25)
+				BYTE replaceA; bool okB;
+				replaceA = dungeon[i][j - 1];
+				switch (replaceA) {
+				case 13:  replaceA = 140; okB = false; break;
+				case 1:   replaceA = 146; okB = true;  break;
+				case 6:   replaceA = 147; okB = true;  break;
+				case 11:  replaceA = 145; okB = false; break;
+				case 35:  replaceA = 157; okB = false; break;
+				case 164: replaceA = 164; okB = false; break;
+				// case 139: replaceA = 165; okB = false; break;
+				default:
+					if (replaceA != 25)
 	                    dProgressWarn() << QString("Missing case %1 for horizontal arch %2 @%3:%4").arg(dungeon[i][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					// 25 -> not perfect, but ok and it would require a new door object as well
 					// TODO: what else?
+				}
+				dungeon[i][j - 1] = replaceA;
+				if (!okB) {
+					if (dungeon[i - 1][j - 1] == 13) {
+						dungeon[i - 1][j - 1] = 164;
+					} else {
+                        dProgressWarn() << QString("Missing case %1 for horizontal arch %2 with floor @%3:%4").arg(dungeon[i - 1][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+						// TODO: what else?
+					}
 				}
 			}
 			if (vertArch) {
@@ -1097,6 +1104,7 @@ void DRLG_L1Shadows()
 				case 25:   replaceA = 139;  okB = false; break;
 				case 36:   replaceA = 152;  okB = true;  break;
 				case 37:   replaceA = 161;  okB = true;  break;
+				case 164:  replaceA = 165;  okB = false;  break;
 				default:
 					//if (replaceB != 4 && replaceB != 7 && replaceB != 12 && replaceB != 14 && replaceB != 26 && replaceB != 36 && replaceB != 37)
 					if (replaceB != 26)
