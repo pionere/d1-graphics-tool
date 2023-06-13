@@ -1117,6 +1117,7 @@ void DRLG_L1Shadows()
 				case 25:   replaceA = 139;  okB = false; break;
 				case 36:   replaceA = 152;  okB = true;  break;
 				case 37:   replaceA = 161;  okB = true;  break;
+				case 141:  replaceA = 141;  okB = false;  break;
 				case 164:  replaceA = 165;  okB = false;  break;
 				default:
 					//if (replaceB != 4 && replaceB != 7 && replaceB != 12 && replaceB != 14 && replaceB != 26 && replaceB != 36 && replaceB != 37)
