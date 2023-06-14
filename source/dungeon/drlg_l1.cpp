@@ -822,6 +822,8 @@ void DRLG_L5Shadows()
 			case 16:
 			case 17:
 			// case 31:
+			case 85:
+			case 86:
 				pillar = true;
 				break;
 			case 8:
@@ -1036,6 +1038,9 @@ void DRLG_L1Shadows()
 			case 16:
 			case 17:
 			// case 31:
+			case 154:
+			case 155:
+			// case 159:
 				pillar = true;
 				break;
 			case 8:
@@ -1044,6 +1049,8 @@ void DRLG_L1Shadows()
 			// case 32:
 			// case 39:
 			// case 42:
+			case 160:
+			case 161:
 				pillar = true;
 				break;
 			case 9:
@@ -1116,7 +1123,7 @@ void DRLG_L1Shadows()
 				case 153:  replaceA = 153;  okB = true;  break;
 				case 2:    replaceA = 148;  okB = true;  break;
 				case 4:    replaceA = 158;  okB = true;  break;
-				case 7:    replaceA = 159;  okB = true;  break;
+				case 7:    replaceA = 155;  okB = true;  break;
 				case 12:   replaceA = 149;  okB = true;  break;
 				case 14:   replaceA = 160;  okB = true;  break;
 				case 25:   replaceA = 139;  okB = false; break;
