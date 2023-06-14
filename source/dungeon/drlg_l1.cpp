@@ -1065,7 +1065,7 @@ void DRLG_L1Shadows()
 				case 35:  replaceA = 157; okB = false; break;
 				case 145: replaceA = 145; okB = false; break;
 				case 146: replaceA = 146; okB = true;  break;
-				// case 157: replaceA = 157; okB = false; break;
+				case 157: replaceA = 157; okB = false; break;
 				case 131: replaceA = pillarC ? 131 : 132; okB = false; break;
 				// case 139: replaceA = 165; okB = false; break;
 				default:
