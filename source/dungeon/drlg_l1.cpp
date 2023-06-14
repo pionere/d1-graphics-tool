@@ -1145,7 +1145,7 @@ void DRLG_L1Shadows()
 				case 12: replaceB = pillar ? 151 : 149;  break;
 				case 26: replaceB = pillar ? 156 : 156;  break;
 				case 36: replaceB = pillar ? 152 : 153;  break;
-				// case 131: continue;
+				case 164: continue;
 				default:
 					dProgressWarn() << QString("Missing case %1 for vertical arch %2 with floor @%3:%4").arg(dungeon[i - 1][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					dungeon[i - 1][j] = replaceB; // restore original value
@@ -1171,7 +1171,7 @@ void DRLG_L1Shadows()
 						replace = pillar ? 156 : 156;
 					} else if (replace == 36) {
 						replace = pillar ? 152 : 153;
-					} else /*if (replace != 131)*/ {
+					} else if (replace != 164) {
 	                    dProgressWarn() << QString("Missing case %1 for pillar %2 with floor @%3:%4").arg(replace).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 						continue;
 					}
