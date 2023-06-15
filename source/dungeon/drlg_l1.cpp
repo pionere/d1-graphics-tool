@@ -736,11 +736,11 @@ void DRLG_L5Shadows()
 				pillar = pillar && (automaptype[dungeon[i][j - 1]] & MAPFLAG_TYPE) != 2 && (automaptype[dungeon[i][j - 1]] & MAPFLAG_TYPE) != 4 && (automaptype[dungeon[i][j - 1]] & MAPFLAG_TYPE) != 5;
 				switch (dungeon[i - 1][j - 1]) {
 				case 13: replaceB = pillar ? 207 : 203; break;
-				case 2:  replaceB = pillar ? 71 : 80;  break;
-				case 7:  replaceB = pillar ? 85 : 86;  break;
-				case 12: replaceB = pillar ? 81 : 82;  break;
-				case 26: replaceB = pillar ? 87 : 88;  break;
-				case 36: replaceB = pillar ? 83 : 84;  break;
+				case 2:  replaceB = pillar ? 71 : 80;   break;
+				case 7:  replaceB = pillar ? 85 : 86;   break;
+				case 12: replaceB = pillar ? 81 : 82;   break;
+				case 26: replaceB = pillar ? 87 : 88;   break;
+				case 36: replaceB = pillar ? 83 : 84;   break;
 				default:
 					dProgressWarn() << QString("Missing case %1 for vertical arch %2 with floor @%3:%4").arg(dungeon[i - 1][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					dungeon[i - 1][j] = replaceB; // restore original value
@@ -932,29 +932,29 @@ void DRLG_L1Shadows()
 				case 139: replaceA = 139; okB = false; break;
 				case 143: replaceA = 139; okB = false; break;
 				case 140: replaceA = 141; okB = false; break;
-				case 148:  replaceA = 148;  okB = true;  break;
-				case 149:  replaceA = 149;  okB = true;  break;
-				// case 150:  replaceA = 148;  okB = true;  break;
-				// case 151:  replaceA = 149;  okB = true;  break;
-				// case 152:  replaceA = 153;  okB = true;  break;
-				case 153:  replaceA = 153;  okB = true;  break;
-				// case 154:  replaceA = 155;  okB = true;  break;
-				case 155:  replaceA = 155;  okB = true;  break;
-				case 156:  replaceA = 156;  okB = true;  break;
-				case 159:  replaceA = 139;  okB = false; break;
-				case 2:    replaceA = 148;  okB = true;  break;
-				case 4:    replaceA = 158;  okB = true;  break;
-				case 7:    replaceA = 155;  okB = true;  break;
-				case 12:   replaceA = 149;  okB = true;  break;
-				case 14:   replaceA = 160;  okB = true;  break;
-				case 25:   replaceA = 139;  okB = false; break;
-				case 36:   replaceA = 152;  okB = true;  break;
-				case 37:   replaceA = 161;  okB = true;  break;
-				case 164:  replaceA = 165;  okB = false;  break;
-				case 132:  replaceA = 132;  okB = false;  break;
-				case 141:  replaceA = 141;  okB = false;  break;
+				case 148: replaceA = 148; okB = true;  break;
+				case 149: replaceA = 149; okB = true;  break;
+				// case 150: replaceA = 148; okB = true;  break;
+				// case 151: replaceA = 149; okB = true;  break;
+				// case 152: replaceA = 153; okB = true;  break;
+				case 153: replaceA = 153; okB = true;  break;
+				// case 154: replaceA = 155; okB = true;  break;
+				case 155: replaceA = 155; okB = true;  break;
+				case 156: replaceA = 156; okB = true;  break;
+				case 159: replaceA = 139; okB = false; break;
+				case 2:   replaceA = 148; okB = true;  break;
+				case 4:   replaceA = 158; okB = true;  break;
+				case 7:   replaceA = 155; okB = true;  break;
+				case 12:  replaceA = 149; okB = true;  break;
+				case 14:  replaceA = 160; okB = true;  break;
+				case 26:  replaceA = 156; okB = true;  break;
+				case 36:  replaceA = 152; okB = true;  break;
+				case 37:  replaceA = 161; okB = true;  break;
+				case 164: replaceA = 165; okB = false; break;
+				case 132: replaceA = 132; okB = false; break;
+				case 141: replaceA = 141; okB = false; break;
 				default:
-					if (replaceB != 26)
+					// if (replaceB != 26)
 		                dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					// 26 -> not perfect, but ok and it would require a new door object as well
 					continue;
@@ -968,11 +968,11 @@ void DRLG_L1Shadows()
 				pillar = pillar && (automaptype[dungeon[i][j - 1]] & MAPFLAG_TYPE) != 2 && (automaptype[dungeon[i][j - 1]] & MAPFLAG_TYPE) != 4 && (automaptype[dungeon[i][j - 1]] & MAPFLAG_TYPE) != 5;
 				switch (dungeon[i - 1][j - 1]) {
 				case 13: replaceB = pillar ? 143 : 159; break;
-				case 2:  replaceB = pillar ? 150 : 148;  break;
-				case 7:  replaceB = pillar ? 154 : 155;  break;
-				case 12: replaceB = pillar ? 151 : 149;  break;
-				case 26: replaceB = pillar ? 156 : 156;  break;
-				case 36: replaceB = pillar ? 152 : 153;  break;
+				case 2:  replaceB = pillar ? 150 : 148; break;
+				case 7:  replaceB = pillar ? 154 : 155; break;
+				case 12: replaceB = pillar ? 151 : 149; break;
+				case 26: replaceB = pillar ? 156 : 156; break;
+				case 36: replaceB = pillar ? 152 : 153; break;
 				case 164: continue;
 				default:
 					dProgressWarn() << QString("Missing case %1 for vertical arch %2 with floor @%3:%4").arg(dungeon[i - 1][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
