@@ -465,16 +465,16 @@ static void SetTileMapFlags(D1Amp *amp, int dstTileIndex, int srcTileIndex, bool
 {
     quint8 currMapType = amp->getTileType(dstTileIndex);
     quint8 newMapType = amp->getTileType(srcTileIndex);
-    if (amp->setTileType(dstTileIndex, newProperties)) {
+    if (amp->setTileType(dstTileIndex, newMapType)) {
         if (!silent) {
-            dProgress() << QApplication::tr("The automap type of Tile %1 is changed from %2 to %3.").arg(tileIndex + 1).arg(currMapType).arg(newMapType);
+            dProgress() << QApplication::tr("The automap type of Tile %1 is changed from %2 to %3.").arg(dstTileIndex + 1).arg(currMapType).arg(newMapType);
         }
     }
     quint8 currProperties = amp->getTileProperties(dstTileIndex);
     quint8 newProperties = amp->getTileProperties(srcTileIndex);
     if (amp->setTileProperties(dstTileIndex, newProperties)) {
         if (!silent) {
-            dProgress() << QApplication::tr("The automap flags of Tile %1 is changed from %2 to %3.").arg(tileIndex + 1).arg(currProperties).arg(newProperties);
+            dProgress() << QApplication::tr("The automap flags of Tile %1 is changed from %2 to %3.").arg(dstTileIndex + 1).arg(currProperties).arg(newProperties);
         }
     }
 }
@@ -2450,7 +2450,7 @@ bool D1Tileset::fixCathedralShadows(bool silent)
             }
             for (int x = 0; x < 7; x++) {
                 for (int y = 19; y < MICRO_HEIGHT; y++) {
-                    quint color = frame->getPixel(x, y).getPaletteIndex();
+                    quint8 color = frame->getPixel(x, y).getPaletteIndex();
                     if (color == 0 || color == 15 || color == 43 || color == 44 || color == 45 || color == 46 || color == 47 || color == 109 || color == 110 || color == 127) {
                         if (frameDst->getPixel(x, y).isTransparent()) {
                             change |= frameDst->setPixel(x, y, D1GfxPixel::colorPixel(color)); // 57[0]
@@ -2469,7 +2469,7 @@ bool D1Tileset::fixCathedralShadows(bool silent)
             }
             for (int x = 23; x < MICRO_WIDTH; x++) {
                 for (int y = 25; y < MICRO_HEIGHT; y++) {
-                    quint color = frame->getPixel(x, y).getPaletteIndex();
+                    quint8 color = frame->getPixel(x, y).getPaletteIndex();
                     if (color == 0 || color == 15 || color == 43 || color == 44 || color == 45 || color == 46 || color == 47 || color == 109 || color == 110 || color == 127) {
                         if (frameDst->getPixel(x, y).isTransparent()) {
                             change |= frameDst->setPixel(x, y, D1GfxPixel::colorPixel(color)); // 53[2]
@@ -2494,7 +2494,7 @@ bool D1Tileset::fixCathedralShadows(bool silent)
             }
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
-                    quint color = frame->getPixel(x, y).getPaletteIndex();
+                    quint8 color = frame->getPixel(x, y).getPaletteIndex();
                     if (color == 0 || color == 15 || color == 43 || color == 44 || color == 45 || color == 46 || color == 47 || color == 109 || color == 110 || color == 127) {
                         if (y < MICRO_HEIGHT / 2) {
                             if (frameDst1->getPixel(x, y + MICRO_HEIGHT / 2).isTransparent()) {
@@ -2632,7 +2632,7 @@ bool D1Tileset::fixCathedralShadows(bool silent)
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     D1GfxPixel pixel = frameSrc1->getPixel(x, y); // 48[0]
-                    quint color = pixel.getPaletteIndex();
+                    quint8 color = pixel.getPaletteIndex();
                     if (pixel.isTransparent() || (color != 0 && color != 45 && color != 46 && color != 47 && color != 109 && color != 110 && color != 111 && color != 127)) {
                         pixel = frameSrc1->getPixel(x, y); // 297[0]
                     }
@@ -2657,7 +2657,7 @@ bool D1Tileset::fixCathedralShadows(bool silent)
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     D1GfxPixel pixel = frameSrc1->getPixel(x, y); // 296[1]
-                    quint color = pixel.getPaletteIndex();
+                    quint8 color = pixel.getPaletteIndex();
                     if (x <= 16 || pixel.isTransparent() || (color != 0 && color != 45 && color != 46 && color != 47 && color != 109 && color != 110 && color != 111 && color != 127)) {
                         pixel = frameSrc2->getPixel(x, y); // 47[1]
                     }
@@ -2682,7 +2682,7 @@ bool D1Tileset::fixCathedralShadows(bool silent)
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     D1GfxPixel pixel = frameSrc1->getPixel(x, y); // 53[0]
-                    quint color = pixel.getPaletteIndex();
+                    quint8 color = pixel.getPaletteIndex();
                     if (x > 7 && !pixel.isTransparent()) {
                         if ((x >= 12 && x <= 14) || (x >= 21 && x <= 23)) {
                             pixel = D1GfxPixel::colorPixel(shadowColorCathedral(color));
@@ -2778,7 +2778,7 @@ bool D1Tileset::fixCathedralShadows(bool silent)
                     D1GfxPixel pixel = frameSrc->getPixel(x, y); // 112[1]
                     quint8 color = pixel.getPaletteIndex();
                     if (!pixel.isTransparent() && y > 17 - x / 2) {
-                        color = D1GfxPixel::colorPixel(shadowColorCathedral(color));
+                        pixel = D1GfxPixel::colorPixel(shadowColorCathedral(color));
                     }
                     change |= frame->setPixel(x, y, pixel);
                 }
@@ -6625,7 +6625,7 @@ void D1Tileset::patch(int dunType, bool silent)
         SetTileMapFlags(this->amp, 51 - 1, 2 - 1, silent);
         SetTileMapFlags(this->amp, 50 - 1, 1 - 1, silent);
         SetTileMapFlags(this->amp, 49 - 1, 17 - 1, silent);
-        SetTileMapFlags(this->amp, 48 - 1, 11 - 1silent);
+        SetTileMapFlags(this->amp, 48 - 1, 11 - 1, silent);
         SetTileMapFlags(this->amp, 47 - 1, 2 - 1, silent);
         SetTileMapFlags(this->amp, 46 - 1, 7 - 1, silent);
         break;

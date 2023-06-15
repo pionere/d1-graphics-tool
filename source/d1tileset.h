@@ -54,7 +54,7 @@ private:
     void patchTownChop(bool silent);
 
     bool patchCathedralFloor(bool silent);
-    bool fixCathedralShadows(bool silent)
+    bool fixCathedralShadows(bool silent);
     void patchCathedralMin(std::set<unsigned> &deletedFrames, bool silent);
     void patchHellExit(int tileIndex, bool silent);
     void patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int extTileIndex1, int extTileIndex2, int stairsSubtileRef1, int stairsSubtileRef2, bool silent);
