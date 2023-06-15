@@ -32,38 +32,6 @@ static BOOLEAN ChambersMiddle;
 static BOOLEAN ChambersLast;
 
 /*
- * Maps tile IDs to their corresponding shadow types.
- * Values with higher than 16 and the values 4 and 6 are commented out, because there is
- *  no matching possibility in L1SPATS.
- * Value 4 is reused for the most common floor type (13) to increase the speed.
- * BUGFIX: This array should contain an additional 0 (207 elements).
- */
-static const BYTE BSTYPES[] = {
-	// clang-format off
-	0, 1, 2, 3, 0/*4*/, 5, 0/*6*/, 7, 8, 9,
-	10, 11, 12, SF, 14, 15, 16, 0/*17*/, 0, 0,
-	0, 0, 0, 0, 0, 25/*1*/, 26/*2*/, 36/*10*/, 0/*4*/, 5,
-	0/*6*/, 7, 8, 9, 10, 35/*11*/, 36/*12*/, 35/*14*/, 5, 14,
-	10, 0/*4*/, 14, 0/*4*/, 5, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-	2, 3, 0/*4*/, 1, 0/*6*/, 7, 16, 0/*17*/, 2, 1,
-	1, 2, 2, 1, 1, 2, 2, 2, 2, 2,
-	1, 1, 11, 1, SF, SF, SF, 1, 2, 1, // 100 ...
-	2, 1, 2, 1, 2, 2, 2, 2, 12, 0,
-	0, 11, 1, 11, 1, SF, 0, 0, 0, 0,
-	0, 0, 0, SF, SF, SF, SF, SF, SF, SF,
-	SF, SF, SF, SF, SF, SF, 1, 11, 2, 12,
-	SF, SF, SF, 12, 2, 1, 2, 2, 0/*4*/, 14,
-	0/*4*/, 10, SF, SF, 0/*4*/, 0/*4*/, 1, 1, 0/*4*/, 2,
-	2, SF, SF, SF, SF, 0/*25*/, 0/*26*/, 0/*28*/, 0/*30*/, 0/*31*/,
-	0/*41*/, 0/*43*/, 0/*40*/, 0/*41*/, 0/*42*/, 0/*43*/, 0/*25*/, 0/*41*/, 0/*43*/, 0/*28*/,
-	0/*28*/, 1, 2, 0/*25*/, 0/*26*/, 0/*22*/, 0/*22*/, 0/*25*/, 0/*26*/, 0,
-	0, 0, 0, 0, 0, 0, 0
-	// clang-format on
-};
-/*
  * Maps tile IDs to their corresponding undecorated tile type.
  */
 static const BYTE L1BTYPES[207] = {
@@ -876,7 +844,7 @@ void DRLG_L1Shadows()
 				break;
 			}*/
 			horizArch = (automaptype[dungeon[i][j]] & (MAPFLAG_HORZARCH | MAPFLAG_HORZGRATE | MAPFLAG_HORZDOOR)) != 0;
-			vertArch = (automaptype[dungeon[i][j]] & (MAPFLAG_VERTARCH | MAPFLAG_VERTGRATE | MAPFLAG_VERTDOOR)) != 0;
+			vertArch = (automaptype[dungeon[i][j]] & (MAPFLAG_VERTARCH | MAPFLAG_VERTGRATE)) != 0; // MAPFLAG_VERTDOOR - not visible
 			switch (dungeon[i][j]) {
 			case 5:
 				pillar = true;
@@ -964,16 +932,16 @@ void DRLG_L1Shadows()
 				case 139: replaceA = 139; okB = false; break;
 				case 143: replaceA = 139; okB = false; break;
 				case 140: replaceA = 141; okB = false; break;
-				// case 150:  replaceA = 148;  okB = true;  break;
 				case 148:  replaceA = 148;  okB = true;  break;
-				// case 154:  replaceA = 155;  okB = true;  break;
-				case 155:  replaceA = 155;  okB = true;  break;
-				// case 151:  replaceA = 149;  okB = true;  break;
 				case 149:  replaceA = 149;  okB = true;  break;
-				// case 156:  replaceA = 156;  okB = true;  break;
-				case 156:  replaceA = 156;  okB = true;  break;
+				// case 150:  replaceA = 148;  okB = true;  break;
+				// case 151:  replaceA = 149;  okB = true;  break;
 				// case 152:  replaceA = 153;  okB = true;  break;
 				case 153:  replaceA = 153;  okB = true;  break;
+				// case 154:  replaceA = 155;  okB = true;  break;
+				case 155:  replaceA = 155;  okB = true;  break;
+				case 156:  replaceA = 156;  okB = true;  break;
+				case 159:  replaceA = 139;  okB = false; break;
 				case 2:    replaceA = 148;  okB = true;  break;
 				case 4:    replaceA = 158;  okB = true;  break;
 				case 7:    replaceA = 155;  okB = true;  break;
@@ -999,7 +967,7 @@ void DRLG_L1Shadows()
 				// pillar = pillar && (dungeon[i][j - 1] == 13 /* || 203 207 204 81 ... 2 3 7 9 12 15 16 17 26 36 */);
 				pillar = pillar && (automaptype[dungeon[i][j - 1]] & MAPFLAG_TYPE) != 2 && (automaptype[dungeon[i][j - 1]] & MAPFLAG_TYPE) != 4 && (automaptype[dungeon[i][j - 1]] & MAPFLAG_TYPE) != 5;
 				switch (dungeon[i - 1][j - 1]) {
-				case 13: replaceB = pillar ? 143 : 139; break;
+				case 13: replaceB = pillar ? 143 : 159; break;
 				case 2:  replaceB = pillar ? 150 : 148;  break;
 				case 7:  replaceB = pillar ? 154 : 155;  break;
 				case 12: replaceB = pillar ? 151 : 149;  break;
@@ -1020,7 +988,7 @@ void DRLG_L1Shadows()
 					// pillar = (dungeon[i][j - 1] == 13 /* || 203 207 204 81 ... 2 3 7 9 12 15 16 17 26 36 */);
 					pillar = (automaptype[dungeon[i][j - 1]] & MAPFLAG_TYPE) != 2 && (automaptype[dungeon[i][j - 1]] & MAPFLAG_TYPE) != 4 && (automaptype[dungeon[i][j - 1]] & MAPFLAG_TYPE) != 5;
 					if (replace == 13) {
-						replace = pillar ? 143 : 139;
+						replace = pillar ? 143 : 159;
 					} else if (replace == 2) {
 						replace = pillar ? 150 : 148;
 					} else if (replace == 7) {
