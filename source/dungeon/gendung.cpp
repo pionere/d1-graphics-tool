@@ -471,6 +471,13 @@ void DRLG_PlaceMegaTiles(int mt)
 		}
 	}
 
+    int et = -1;
+    switch (currLvl._dLevel) {
+    case DTYPE_CATHEDRAL: et = 74; break;
+#ifdef  HELLFIRE
+    case DTYPE_CRYPT:     et = 8;  break;
+#endif //  HELLFIRE
+    }
 	yy = DBORDERY;
 	for (j = 0; j < DMAXY; j++) {
 		xx = DBORDERX;
@@ -487,6 +494,9 @@ void DRLG_PlaceMegaTiles(int mt)
 			v2 = pTile[1];
 			v3 = pTile[2];
 			v4 = pTile[3];
+            if (v1 == et) {
+                dProgressErr() << QString("Missing subtile at %1:%2 .. %3:%4").arg(i).arg(j).arg(xx).arg(yy);
+            }
 			dPiece[xx][yy] = v1;
 			dPiece[xx + 1][yy] = v2;
 			dPiece[xx][yy + 1] = v3;
