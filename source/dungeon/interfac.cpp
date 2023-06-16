@@ -40,7 +40,7 @@ static void IncProgress()
 
 void LogErrorF(const char* msg, ...)
 {
-	/*char tmp[256];
+	char tmp[256];
 	char tmsg[256];
 	va_list va;
 
@@ -51,7 +51,7 @@ void LogErrorF(const char* msg, ...)
 	va_end(va);
 
 	// dProgressErr() << QString(tmsg);
-	*/
+	
 	snprintf(tmp, sizeof(tmp), "f:\\logdebug%d.txt", 0);
 	FILE* f0 = fopen(tmp, "a+");
 	if (f0 == NULL)
