@@ -2554,7 +2554,7 @@ bool LevelCelView::removeUnusedFrames()
         }
         if (!frameUsed[i]) {
             this->removeFrame(i);
-            dProgress() << tr("Removed frame %1.").arg(i);
+            dProgress() << tr("Removed frame %1.").arg(i + 1);
             result = 1;
         }
         if (!ProgressDialog::incValue()) {
@@ -2586,7 +2586,7 @@ bool LevelCelView::removeUnusedSubtiles()
         }
         if (!subtileUsed[i]) {
             this->removeSubtile(i);
-            dProgress() << tr("Removed subtile %1.").arg(i);
+            dProgress() << tr("Removed subtile %1.").arg(i + 1);
             result = 1;
         }
         if (!ProgressDialog::incValue()) {
@@ -2611,6 +2611,9 @@ void LevelCelView::cleanupFrames()
 void LevelCelView::cleanupSubtiles()
 {
     if (this->removeUnusedSubtiles()) {
+        if (this->dun != nullptr) {
+            this->dun->refreshSubtiles();
+        }
         // update the view - done by the caller
         // this->displayFrame();
     } else {
@@ -2633,6 +2636,9 @@ void LevelCelView::cleanupTileset()
     bool removedFrame = this->removeUnusedFrames();
 
     if (removedSubtile || removedFrame) {
+        if (removedSubtile && this->dun != nullptr) {
+            this->dun->refreshSubtiles();
+        }
         // update the view - done by the caller
         // this->displayFrame();
     } else {
