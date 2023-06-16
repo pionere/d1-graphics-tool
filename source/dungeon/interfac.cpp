@@ -51,6 +51,7 @@ void LogErrorF(const char* msg, ...)
 	va_end(va);
 
 	// dProgressErr() << QString(tmsg);
+	*/
 	snprintf(tmp, sizeof(tmp), "f:\\logdebug%d.txt", 0);
 	FILE* f0 = fopen(tmp, "a+");
 	if (f0 == NULL)
@@ -60,7 +61,7 @@ void LogErrorF(const char* msg, ...)
 
 	fputc('\n', f0);
 
-	fclose(f0);*/
+	fclose(f0);
 }
 
 static void StoreProtections(D1Dun *dun)
