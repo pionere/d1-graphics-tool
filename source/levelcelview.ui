@@ -1016,42 +1016,13 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="7">
-       <widget class="LineEditWidget" name="dungeonPosXLineEdit">
+      <item row="2" column="7" colspan="3">
+       <widget class="LineEditWidget" name="dungeonPosLineEdit">
         <property name="charWidth">
-         <number>5</number>
-        </property>
-        <property name="toolTip">
-         <string>X-coordinate of the selected position</string>
-        </property>
-        <property name="alignment">
-         <enum>Qt::AlignCenter</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="8">
-       <widget class="QLabel">
-        <property name="minimumWidth">
          <number>8</number>
         </property>
-        <property name="maximumWidth">
-         <number>8</number>
-        </property>
-        <property name="text">
-         <string notr="true">:</string>
-        </property>
-        <property name="alignment">
-         <enum>Qt::AlignCenter</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="9">
-       <widget class="LineEditWidget" name="dungeonPosYLineEdit">
-        <property name="charWidth">
-         <number>5</number>
-        </property>
         <property name="toolTip">
-         <string>Y-coordinate of the selected position</string>
+         <string>Coordinate of the selected position</string>
         </property>
         <property name="alignment">
          <enum>Qt::AlignCenter</enum>

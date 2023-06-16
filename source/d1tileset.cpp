@@ -2862,7 +2862,7 @@ bool D1Tileset::fixCathedralShadows(bool silent)
 
 void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
 {
-	QMessageBox::critical(nullptr, "cleanupCathedral 0");
+	QMessageBox::critical(nullptr, "Error", "cleanupCathedral 0");
     constexpr int blockSize = BLOCK_SIZE_L1;
     // patch dMegaTiles - L1.TIL
     // reuse subtiles
@@ -3080,13 +3080,13 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(108, 1);
     // use micros created by patchCathedralFloor
     if (patchCathedralFloor(silent)) {
-	QMessageBox::critical(nullptr, "cleanupCathedral patchCathedralFloor done");
+	QMessageBox::critical(nullptr, "Error", "cleanupCathedral patchCathedralFloor done");
     ReplaceMcr(160, 0, 23, 0);
     }
-	QMessageBox::critical(nullptr, "cleanupCathedral fixCathedralShadows start");
+	QMessageBox::critical(nullptr, "Error", "cleanupCathedral fixCathedralShadows start");
     // use micros created by fixCathedralShadows
     if (fixCathedralShadows(silent)) {
-	QMessageBox::critical(nullptr, "cleanupCathedral fixCathedralShadows done");
+	QMessageBox::critical(nullptr, "Error", "cleanupCathedral fixCathedralShadows done");
     ReplaceMcr(298, 0, 297, 0);
     ReplaceMcr(298, 1, 48, 1);
     SetMcr(298, 3, 48, 3);
@@ -3167,7 +3167,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     SetMcr(335, 5, 29, 5);
     SetMcr(335, 7, 29, 7);
     }
-	QMessageBox::critical(nullptr, "cleanupCathedral 2");
+	QMessageBox::critical(nullptr, "Error", "cleanupCathedral 2");
     // pointless door micros (re-drawn by dSpecial or the object)
     // - vertical doors    
     ReplaceMcr(392, 4, 231, 4);
@@ -6826,7 +6826,7 @@ void D1Tileset::patch(int dunType, bool silent)
     case DTYPE_CATHEDRAL:
         // patch dMiniTiles and dMegaTiles - L1.MIN and L1.TIL
         this->cleanupCathedral(deletedFrames, silent);
-        QMessageBox::critical(nullptr, "cleanupCathedral done");
+        QMessageBox::critical(nullptr, "Error", "cleanupCathedral done");
         // patch dSolidTable - L1.SOL
         ChangeSubtileSolFlags(this->sol, 8 - 1, PFLAG_BLOCK_MISSILE, false, silent); // the only column which was blocking missiles
         // adjust SOL after fixCathedralShadows
