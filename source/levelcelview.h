@@ -166,8 +166,7 @@ private:
 
     void selectTilesetPath(QString path);
     void selectAssetPath(QString path);
-    void setPositionX(int posx);
-    void setPositionY(int posy);
+    void setPosition(int posx, int posy);
     QPoint getCellPos(const QPoint &pos) const;
 
 signals:
@@ -221,10 +220,8 @@ private slots:
     void on_moveRightButton_clicked();
     void on_moveUpButton_clicked();
     void on_moveDownButton_clicked();
-    void on_dungeonPosXLineEdit_returnPressed();
-    void on_dungeonPosXLineEdit_escPressed();
-    void on_dungeonPosYLineEdit_returnPressed();
-    void on_dungeonPosYLineEdit_escPressed();
+    void on_dungeonPosLineEdit_returnPressed();
+    void on_dungeonPosLineEdit_escPressed();
 
     void on_dunWidthEdit_returnPressed();
     void on_dunWidthEdit_escPressed();

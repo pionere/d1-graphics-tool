@@ -901,25 +901,21 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="7" colspan="3">
-       <layout class="QHBoxLayout">
-        <item alignment="Qt::AlignCenter">
-         <widget class="QPushButton" name="moveUpButton">
-          <property name="minimumWidth">
-           <number>40</number>
-          </property>
-          <property name="maximumWidth">
-           <number>40</number>
-          </property>
-          <property name="toolTip">
-           <string>Move up</string>
-          </property>
-          <property name="text">
-           <string notr="true">A</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+      <item row="1" column="7" colspan="3" alignment="Qt::AlignCenter">
+       <widget class="QPushButton" name="moveUpButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Move up</string>
+        </property>
+        <property name="text">
+         <string notr="true">A</string>
+        </property>
+       </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel">
@@ -1016,42 +1012,13 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="7">
-       <widget class="LineEditWidget" name="dungeonPosXLineEdit">
+      <item row="2" column="7" colspan="3" alignment="Qt::AlignCenter">
+       <widget class="LineEditWidget" name="dungeonPosLineEdit">
         <property name="charWidth">
-         <number>5</number>
+         <number>7</number>
         </property>
         <property name="toolTip">
-         <string>X-coordinate of the selected position</string>
-        </property>
-        <property name="alignment">
-         <enum>Qt::AlignCenter</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="8">
-       <widget class="QLabel">
-        <property name="minimumWidth">
-         <number>8</number>
-        </property>
-        <property name="maximumWidth">
-         <number>8</number>
-        </property>
-        <property name="text">
-         <string notr="true">:</string>
-        </property>
-        <property name="alignment">
-         <enum>Qt::AlignCenter</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="9">
-       <widget class="LineEditWidget" name="dungeonPosYLineEdit">
-        <property name="charWidth">
-         <number>5</number>
-        </property>
-        <property name="toolTip">
-         <string>Y-coordinate of the selected position</string>
+         <string>Coordinate of the selected position</string>
         </property>
         <property name="alignment">
          <enum>Qt::AlignCenter</enum>
@@ -1173,25 +1140,21 @@
         </item>
        </layout>
       </item>
-      <item row="3" column="7" colspan="3">
-       <layout class="QHBoxLayout">
-        <item alignment="Qt::AlignCenter">
-         <widget class="QPushButton" name="moveDownButton">
-          <property name="minimumWidth">
-           <number>40</number>
-          </property>
-          <property name="maximumWidth">
-           <number>40</number>
-          </property>
-          <property name="toolTip">
-           <string>Move down</string>
-          </property>
-          <property name="text">
-           <string notr="true">V</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+      <item row="3" column="7" colspan="3" alignment="Qt::AlignCenter">
+       <widget class="QPushButton" name="moveDownButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Move down</string>
+        </property>
+        <property name="text">
+         <string notr="true">V</string>
+        </property>
+       </widget>
       </item>
       <item row="3" column="16">
        <widget class="LineEditWidget" name="dunWidthEdit">
