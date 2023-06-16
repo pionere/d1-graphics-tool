@@ -707,21 +707,32 @@ void MainWindow::on_actionLoad_triggered()
 
     if (!params.dunFilePath.isEmpty()) {
         D1Dun *dun = new D1Dun();
+LogErrorF("on_actionLoad_triggered 0");
         if (dun->load(params.dunFilePath, params)) {
+LogErrorF("on_actionLoad_triggered 1");
 			this->dun->initialize(this->pal, this->tileset);
+LogErrorF("on_actionLoad_triggered 2");
             // TODO: this->dunChanged(dun)
             delete this->dun;
             this->dun = dun;
+LogErrorF("on_actionLoad_triggered 3");
             this->levelCelView->setDungeon(dun);
+LogErrorF("on_actionLoad_triggered 4");
             if (this->builderWidget == nullptr) {
+LogErrorF("on_actionLoad_triggered 5");
                 // TODO: copy-paste from openFile()...
                 this->builderWidget = new BuilderWidget(this, this->undoStack, dun, this->levelCelView, this->tileset);
+LogErrorF("on_actionLoad_triggered 6");
                 // Refresh builder widget when the resource-options are changed
                 QObject::connect(this->levelCelView, &LevelCelView::dunResourcesModified, this->builderWidget, &BuilderWidget::dunResourcesModified);
+LogErrorF("on_actionLoad_triggered 7");
             } else {
                 this->builderWidget->setDungeon(dun);
+LogErrorF("on_actionLoad_triggered 8");
             }
+LogErrorF("on_actionLoad_triggered 9");
             this->updateWindow();
+LogErrorF("on_actionLoad_triggered 10");
         } else {
             delete dun;
             dProgressFail() << tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
