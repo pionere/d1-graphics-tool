@@ -79,8 +79,7 @@ LevelCelView::LevelCelView(QWidget *parent, QUndoStack *us)
     QObject::connect(this->ui->dunZoomEdit, SIGNAL(cancel_signal()), this, SLOT(on_dunZoomEdit_escPressed()));
     QObject::connect(this->ui->dunPlayDelayEdit, SIGNAL(cancel_signal()), this, SLOT(on_dunPlayDelayEdit_escPressed()));
     QObject::connect(this->ui->dungeonDefaultTileLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonDefaultTileLineEdit_escPressed()));
-    QObject::connect(this->ui->dungeonPosXLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonPosXLineEdit_escPressed()));
-    QObject::connect(this->ui->dungeonPosYLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonPosYLineEdit_escPressed()));
+    QObject::connect(this->ui->dungeonPosLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonPosLineEdit_escPressed()));
     QObject::connect(this->ui->dunWidthEdit, SIGNAL(cancel_signal()), this, SLOT(on_dunWidthEdit_escPressed()));
     QObject::connect(this->ui->dunHeightEdit, SIGNAL(cancel_signal()), this, SLOT(on_dunHeightEdit_escPressed()));
     QObject::connect(this->ui->dungeonTileLineEdit, SIGNAL(cancel_signal()), this, SLOT(on_dungeonTileLineEdit_escPressed()));
@@ -3859,7 +3858,7 @@ void LevelCelView::on_dunWidthEdit_returnPressed()
     if (change) {
         if (this->currentDunPosX >= newWidth) {
             this->currentDunPosX = newWidth - 1;
-            this->on_dungeonPosXLineEdit_escPressed();
+            this->on_dungeonPosLineEdit_escPressed();
         }
         // update the view
         this->displayFrame();
@@ -3883,7 +3882,7 @@ void LevelCelView::on_dunHeightEdit_returnPressed()
     if (change) {
         if (this->currentDunPosY >= newHeight) {
             this->currentDunPosY = newHeight - 1;
-            this->on_dungeonPosYLineEdit_escPressed();
+            this->on_dungeonPosLineEdit_escPressed();
         }
         // update the view
         this->displayFrame();
