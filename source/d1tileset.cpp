@@ -4898,7 +4898,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // patch dMegaTiles - L5.TIL
     // use common subtiles of doors
     // ReplaceSubtile(this->til, 71 - 1, 2, 206 - 1, silent);
-    ReplaceSubtile(this->til, 72 - 1, 2, 206 - 1, silent);
+    // ReplaceSubtile(this->til, 72 - 1, 2, 206 - 1, silent);
     // use common subtiles
     ReplaceSubtile(this->til, 4 - 1, 1, 6 - 1, silent); // 14
     ReplaceSubtile(this->til, 14 - 1, 1, 6 - 1, silent);
@@ -4907,7 +4907,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 1 - 1, 2, 15 - 1, silent); // 3
     ReplaceSubtile(this->til, 27 - 1, 2, 15 - 1, silent);
     ReplaceSubtile(this->til, 43 - 1, 2, 15 - 1, silent);
-    ReplaceSubtile(this->til, 79 - 1, 2, 15 - 1, silent);
+    // ReplaceSubtile(this->til, 79 - 1, 2, 15 - 1, silent);
     ReplaceSubtile(this->til, 6 - 1, 2, 15 - 1, silent);   // 23
     ReplaceSubtile(this->til, 127 - 1, 2, 4 - 1, silent);  // 372
     ReplaceSubtile(this->til, 132 - 1, 2, 15 - 1, silent); // 388

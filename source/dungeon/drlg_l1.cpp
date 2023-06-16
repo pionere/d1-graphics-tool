@@ -319,7 +319,7 @@ static const BYTE PWATERIN[] = {
 /** Miniset: Column on the northern side of a vertical wall 1. */
 static const BYTE L5VERTCOL1[] = { 1, 1, 11, 95 };
 /** Miniset: Column on the northern side of a horizontal wall 1. */
-//static const BYTE L5HORIZCOL1[] = { 1, 1, 12, 96 };
+// static const BYTE L5HORIZCOL1[] = { 1, 1, 12, 96 };
 static const BYTE L5HORIZCOL1a[] = {
 	// clang-format off
 	1, 2, // width, height
@@ -428,7 +428,7 @@ static const BYTE L5RNDLFLOOR3[] = {
 	// clang-format on
 };
 /** Miniset: A stone coffin(?). */
-const BYTE L5RNDLFLOOR4[] = {
+static const BYTE L5RNDLFLOOR4[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -953,9 +953,9 @@ void DRLG_L1Shadows()
 				case 132: replaceA = 132; okB = false; break;
 				case 141: replaceA = 141; okB = false; break;
 				default:
-					// if (replaceB != 26)
+					// if (replaceB != 25)
 		                dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
-					// 26 -> not perfect, but ok and it would require a new door object as well
+					// 25 -> not perfect, but ok and it would require a new door object as well
 					continue;
 				}
 
