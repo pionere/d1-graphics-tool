@@ -901,25 +901,21 @@
         </item>
        </layout>
       </item>
-      <item row="1" column="7" colspan="3">
-       <layout class="QHBoxLayout">
-        <item alignment="Qt::AlignCenter">
-         <widget class="QPushButton" name="moveUpButton">
-          <property name="minimumWidth">
-           <number>40</number>
-          </property>
-          <property name="maximumWidth">
-           <number>40</number>
-          </property>
-          <property name="toolTip">
-           <string>Move up</string>
-          </property>
-          <property name="text">
-           <string notr="true">A</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+      <item row="1" column="8" alignment="Qt::AlignCenter">
+       <widget class="QPushButton" name="moveUpButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Move up</string>
+        </property>
+        <property name="text">
+         <string notr="true">A</string>
+        </property>
+       </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel">
@@ -1000,7 +996,7 @@
         </property>
        </spacer>
       </item-->
-      <item row="2" column="6">
+      <item row="2" column="7">
        <widget class="QPushButton" name="moveLeftButton">
         <property name="minimumWidth">
          <number>40</number>
@@ -1016,7 +1012,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="7" colspan="3" alignment="Qt::AlignCenter">
+      <item row="2" column="8">
        <widget class="LineEditWidget" name="dungeonPosLineEdit">
         <property name="charWidth">
          <number>8</number>
@@ -1029,7 +1025,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="10">
+      <item row="2" column="9">
        <widget class="QPushButton" name="moveRightButton">
         <property name="minimumWidth">
          <number>40</number>
@@ -1144,25 +1140,21 @@
         </item>
        </layout>
       </item>
-      <item row="3" column="7" colspan="3">
-       <layout class="QHBoxLayout">
-        <item alignment="Qt::AlignCenter">
-         <widget class="QPushButton" name="moveDownButton">
-          <property name="minimumWidth">
-           <number>40</number>
-          </property>
-          <property name="maximumWidth">
-           <number>40</number>
-          </property>
-          <property name="toolTip">
-           <string>Move down</string>
-          </property>
-          <property name="text">
-           <string notr="true">V</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+      <item row="3" column="8" alignment="Qt::AlignCenter">
+       <widget class="QPushButton" name="moveDownButton">
+        <property name="minimumWidth">
+         <number>40</number>
+        </property>
+        <property name="maximumWidth">
+         <number>40</number>
+        </property>
+        <property name="toolTip">
+         <string>Move down</string>
+        </property>
+        <property name="text">
+         <string notr="true">V</string>
+        </property>
+       </widget>
       </item>
       <item row="3" column="16">
        <widget class="LineEditWidget" name="dunWidthEdit">
