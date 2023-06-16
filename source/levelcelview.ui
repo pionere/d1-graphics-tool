@@ -1015,7 +1015,7 @@
       <item row="2" column="7" colspan="3" alignment="Qt::AlignCenter">
        <widget class="LineEditWidget" name="dungeonPosLineEdit">
         <property name="charWidth">
-         <number>8</number>
+         <number>6</number>
         </property>
         <property name="toolTip">
          <string>Coordinate of the selected position</string>

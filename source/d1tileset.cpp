@@ -2465,15 +2465,16 @@ bool D1Tileset::fixCathedralShadows(bool silent)
             }
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
-                    quint8 color = frame->getPixel(x, y).getPaletteIndex();
-                    if (color == 0 || color == 15 || color == 43 || color == 44 || color == 45 || color == 46 || color == 47 || color == 109 || color == 110 || color == 127) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    quint8 color = pixel.getPaletteIndex();
+                    if (!pixel.isTransparent() && (color == 0 || color == 15 || color == 43 || color == 44 || color == 45 || color == 46 || color == 47 || color == 109 || color == 110 || color == 127)) {
                         if (y < MICRO_HEIGHT / 2) {
                             if (frameDst1->getPixel(x, y + MICRO_HEIGHT / 2).isTransparent()) {
-                                change |= frameDst1->setPixel(x, y + MICRO_HEIGHT / 2, D1GfxPixel::colorPixel(color));
+                                change |= frameDst1->setPixel(x, y + MICRO_HEIGHT / 2, pixel);
                             }
                         } else {
                             if (frameDst2->getPixel(x, y - MICRO_HEIGHT / 2).isTransparent()) {
-                                change |= frameDst2->setPixel(x, y - MICRO_HEIGHT / 2, D1GfxPixel::colorPixel(color));
+                                change |= frameDst2->setPixel(x, y - MICRO_HEIGHT / 2, pixel);
                             }
                         }
                     }
@@ -2490,10 +2491,11 @@ bool D1Tileset::fixCathedralShadows(bool silent)
             }
             for (int x = 23; x < MICRO_WIDTH; x++) {
                 for (int y = 25; y < MICRO_HEIGHT; y++) {
-                    quint8 color = frame->getPixel(x, y).getPaletteIndex();
-                    if (color == 0 || color == 15 || color == 43 || color == 44 || color == 45 || color == 46 || color == 47 || color == 109 || color == 110 || color == 127) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    quint8 color = pixel.getPaletteIndex();
+                    if (!pixel.isTransparent() && (color == 0 || color == 15 || color == 43 || color == 44 || color == 45 || color == 46 || color == 47 || color == 109 || color == 110 || color == 127)) {
                         if (frameDst->getPixel(x, y).isTransparent()) {
-                            change |= frameDst->setPixel(x, y, D1GfxPixel::colorPixel(color)); // 53[2]
+                            change |= frameDst->setPixel(x, y, pixel); // 53[2]
                         }
                     }
                 }
@@ -2509,10 +2511,11 @@ bool D1Tileset::fixCathedralShadows(bool silent)
             }
             for (int x = 0; x < 7; x++) {
                 for (int y = 19; y < MICRO_HEIGHT; y++) {
-                    quint8 color = frame->getPixel(x, y).getPaletteIndex();
-                    if (color == 0 || color == 15 || color == 43 || color == 44 || color == 45 || color == 46 || color == 47 || color == 109 || color == 110 || color == 127) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    quint8 color = pixel.getPaletteIndex();
+                    if (!pixel.isTransparent() && (color == 0 || color == 15 || color == 43 || color == 44 || color == 45 || color == 46 || color == 47 || color == 109 || color == 110 || color == 127)) {
                         if (frameDst->getPixel(x, y).isTransparent()) {
-                            change |= frameDst->setPixel(x, y, D1GfxPixel::colorPixel(color)); // 57[0]
+                            change |= frameDst->setPixel(x, y, pixel); // 57[0]
                         }
                     }
                 }
