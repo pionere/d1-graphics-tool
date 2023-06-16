@@ -5151,6 +5151,18 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 96 - 1, 2, 12 - 1, silent); // 278
     ReplaceSubtile(this->til, 187 - 1, 2, 12 - 1, silent);
     ReplaceSubtile(this->til, 188 - 1, 2, 12 - 1, silent);
+    // eliminate subtiles of unused tiles
+    const int unusedTiles[] = {
+        28,/* 29,*/ 30, 31, 34,/* 38,*/ 39, 40, 41, 42,/* 43, 44, */ 61, 62, 63, 64, 65, 66, 67, 68, 72, 73, 74, 75, 76, 77, 78, 79, 212, 213, 214
+    };
+    constexpr int blankSubtile = 8 - 1;
+    for (int n = 0; n < lengthof(unusedTiles); n++) {
+        int tileId = unusedTiles[n];
+        ReplaceSubtile(this->til, tileId - 1, 0, blankSubtile, silent);
+        ReplaceSubtile(this->til, tileId - 1, 1, blankSubtile, silent);
+        ReplaceSubtile(this->til, tileId - 1, 2, blankSubtile, silent);
+        ReplaceSubtile(this->til, tileId - 1, 3, blankSubtile, silent);
+    }
     // patch dMiniTiles - L5.MIN
     // prepare subtiles after fixCryptShadows
     ReplaceMcr(3, 0, 619, 1);
