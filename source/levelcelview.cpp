@@ -162,6 +162,22 @@ void LevelCelView::setTileset(D1Tileset *ts)
     }
 }
 
+void LevelCelView::setDungeon(D1Dun *dun)
+{
+    // stop playback
+    if (this->playTimer != 0) {
+        this->on_playStopButton_clicked();
+    }
+
+    if (this->dun == nullptr) {
+        this->initialize(this->pal, this->tileset, dun, this->ui->tilesetWidget->isHidden());
+    } else {
+        this->dun = dun;
+    }
+    this->currentDunPosX = 0;
+    this->currentDunPosY = 0;
+}
+
 void LevelCelView::updateTilesetIcon()
 {
     // update icon of tileset

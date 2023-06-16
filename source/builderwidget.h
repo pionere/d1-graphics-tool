@@ -63,6 +63,8 @@ public:
     explicit BuilderWidget(QWidget *parent, QUndoStack *us, D1Dun *dun, LevelCelView *levelCelView, D1Tileset *tileset);
     ~BuilderWidget();
 
+    void setDungeon(D1Dun *dun);
+
     void show(); // override;
     void hide(); // override;
 

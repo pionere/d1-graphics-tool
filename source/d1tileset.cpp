@@ -2903,6 +2903,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 58 - 1, 3, 4 - 1, silent);
     ReplaceSubtile(this->til, 59 - 1, 3, 4 - 1, silent);
     ReplaceSubtile(this->til, 60 - 1, 3, 4 - 1, silent);
+    ReplaceSubtile(this->til, 74 - 1, 3, 4 - 1, silent);
     ReplaceSubtile(this->til, 76 - 1, 3, 4 - 1, silent);
     ReplaceSubtile(this->til, 97 - 1, 3, 4 - 1, silent);
     ReplaceSubtile(this->til, 130 - 1, 3, 4 - 1, silent);
@@ -4810,9 +4811,6 @@ void D1Tileset::fixCryptShadows(bool silent)
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             frameSrc = mf.second;
             if (frameSrc == nullptr) {
-                return;
-            }
-            if (frameSrc->getWidth() != MICRO_WIDTH || frameSrc->getHeight() != MICRO_HEIGHT) {
                 return;
             }
         }
