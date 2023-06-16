@@ -2189,7 +2189,7 @@ bool D1Tileset::patchCathedralFloor(bool silent)
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
                     if (!pixel.isTransparent()) {
-                        D1GfxPixel dstPixel = frame->getPixel(x, y); // 276[1]
+                        D1GfxPixel dstPixel = frameDst->getPixel(x, y); // 276[1]
                         quint8 destColor = dstPixel.getPaletteIndex();
                         if (!dstPixel.isTransparent() && destColor < 124 && destColor > 21 && (destColor < 44 || destColor > 110 || destColor == 101 || destColor == 107)) {
                             change |= frameDst->setPixel(x, y, pixel);
