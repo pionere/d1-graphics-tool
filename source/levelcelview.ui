@@ -996,7 +996,7 @@
         </property>
        </spacer>
       </item-->
-      <item row="2" column="7">
+      <item row="2" column="6">
        <widget class="QPushButton" name="moveLeftButton">
         <property name="minimumWidth">
          <number>40</number>
