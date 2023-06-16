@@ -360,7 +360,7 @@ static void ReplaceSubtile(D1Til *til, int tileIndex, unsigned index, int subtil
             dProgress() << QApplication::tr("Subtile %1 of Tile%2 is set to %3.").arg(index + 1).arg(tileIndex + 1).arg(subtileIndex + 1);
         }
     } else {
-        dProgressWarn() << QApplication::tr("Subtile %1 of Tile%2 is already %3.").arg(index + 1).arg(tileIndex + 1).arg(subtileIndex + 1);
+        ; // dProgressWarn() << QApplication::tr("Subtile %1 of Tile%2 is already %3.").arg(index + 1).arg(tileIndex + 1).arg(subtileIndex + 1);
     }
 }
 
@@ -2102,7 +2102,6 @@ bool D1Tileset::patchCathedralFloor(bool silent)
         std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
         D1GfxFrame *frame = microFrame.second;
         if (frame == nullptr) {
-            dProgressErr() << QString("Skipping due to %1:%2").arg(micro.subtileIndex).arg(micro.microIndex);
             return false;
         }
         bool change = false;
@@ -2365,9 +2364,9 @@ bool D1Tileset::fixCathedralShadows(bool silent)
     } CelMicro;
     const CelMicro micros[] = {
         // add shadow of the grate
-/*  0 */{ 304 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/*  0 */{ 306 - 1, 1, D1CEL_FRAME_TYPE::Empty },
 /*  1 */{ 304 - 1, 0, D1CEL_FRAME_TYPE::Empty },
-/*  2 */{ 306 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/*  2 */{ 304 - 1, 1, D1CEL_FRAME_TYPE::Empty },
 /*  3 */{ 57 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 /*  4 */{ 53 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
 /*  5 */{ 53 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
@@ -2447,24 +2446,35 @@ bool D1Tileset::fixCathedralShadows(bool silent)
         std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
         D1GfxFrame *frame = microFrame.second;
         if (frame == nullptr) {
-            dProgressErr() << QString("Skipping due to %1:%2").arg(micro.subtileIndex).arg(micro.microIndex);
             return false;
         }
         bool change = false;
-        // copy 304[1] to 57[0]
+        // copy 306[1] to 53[2] and 53[0]
         if (i == 0) {
-            const CelMicro &microDst = micros[i + 3];
-            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
-            D1GfxFrame *frameDst = mf.second;
-            if (frameDst == nullptr) {
+            const CelMicro &microDst1 = micros[i + 4];
+            std::pair<unsigned, D1GfxFrame *> mf1 = this->getFrame(microDst1.subtileIndex, blockSize, microDst1.microIndex);
+            D1GfxFrame *frameDst1 = mf1.second;
+            if (frameDst1 == nullptr) {
                 return false;
             }
-            for (int x = 0; x < 7; x++) {
-                for (int y = 19; y < MICRO_HEIGHT; y++) {
+            const CelMicro &microDst2 = micros[i + 5];
+            std::pair<unsigned, D1GfxFrame *> mf2 = this->getFrame(microDst2.subtileIndex, blockSize, microDst2.microIndex);
+            D1GfxFrame *frameDst2 = mf2.second;
+            if (frameDst2 == nullptr) {
+                return false;
+            }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
                     quint8 color = frame->getPixel(x, y).getPaletteIndex();
                     if (color == 0 || color == 15 || color == 43 || color == 44 || color == 45 || color == 46 || color == 47 || color == 109 || color == 110 || color == 127) {
-                        if (frameDst->getPixel(x, y).isTransparent()) {
-                            change |= frameDst->setPixel(x, y, D1GfxPixel::colorPixel(color)); // 57[0]
+                        if (y < MICRO_HEIGHT / 2) {
+                            if (frameDst1->getPixel(x, y + MICRO_HEIGHT / 2).isTransparent()) {
+                                change |= frameDst1->setPixel(x, y + MICRO_HEIGHT / 2, D1GfxPixel::colorPixel(color));
+                            }
+                        } else {
+                            if (frameDst2->getPixel(x, y - MICRO_HEIGHT / 2).isTransparent()) {
+                                change |= frameDst2->setPixel(x, y - MICRO_HEIGHT / 2, D1GfxPixel::colorPixel(color));
+                            }
                         }
                     }
                 }
@@ -2489,32 +2499,20 @@ bool D1Tileset::fixCathedralShadows(bool silent)
                 }
             }
         }
-        // copy 306[1] to 53[2] and 53[0]
+        // copy 304[1] to 57[0]
         if (i == 2) {
-            const CelMicro &microDst1 = micros[i + 2];
-            std::pair<unsigned, D1GfxFrame *> mf1 = this->getFrame(microDst1.subtileIndex, blockSize, microDst1.microIndex);
-            D1GfxFrame *frameDst1 = mf1.second;
-            if (frameDst1 == nullptr) {
+            const CelMicro &microDst = micros[i + 1];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microDst.subtileIndex, blockSize, microDst.microIndex);
+            D1GfxFrame *frameDst = mf.second;
+            if (frameDst == nullptr) {
                 return false;
             }
-            const CelMicro &microDst2 = micros[i + 3];
-            std::pair<unsigned, D1GfxFrame *> mf2 = this->getFrame(microDst2.subtileIndex, blockSize, microDst2.microIndex);
-            D1GfxFrame *frameDst2 = mf2.second;
-            if (frameDst2 == nullptr) {
-                return false;
-            }
-            for (int x = 0; x < MICRO_WIDTH; x++) {
-                for (int y = 0; y < MICRO_HEIGHT; y++) {
+            for (int x = 0; x < 7; x++) {
+                for (int y = 19; y < MICRO_HEIGHT; y++) {
                     quint8 color = frame->getPixel(x, y).getPaletteIndex();
                     if (color == 0 || color == 15 || color == 43 || color == 44 || color == 45 || color == 46 || color == 47 || color == 109 || color == 110 || color == 127) {
-                        if (y < MICRO_HEIGHT / 2) {
-                            if (frameDst1->getPixel(x, y + MICRO_HEIGHT / 2).isTransparent()) {
-                                change |= frameDst1->setPixel(x, y + MICRO_HEIGHT / 2, D1GfxPixel::colorPixel(color));
-                            }
-                        } else {
-                            if (frameDst2->getPixel(x, y - MICRO_HEIGHT / 2).isTransparent()) {
-                                change |= frameDst2->setPixel(x, y - MICRO_HEIGHT / 2, D1GfxPixel::colorPixel(color));
-                            }
+                        if (frameDst->getPixel(x, y).isTransparent()) {
+                            change |= frameDst->setPixel(x, y, D1GfxPixel::colorPixel(color)); // 57[0]
                         }
                     }
                 }
@@ -3085,6 +3083,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     }
     // use micros created by fixCathedralShadows
     if (fixCathedralShadows(silent)) {
+    Blk2Mcr(306, 1);
     ReplaceMcr(298, 0, 297, 0);
     ReplaceMcr(298, 1, 48, 1);
     SetMcr(298, 3, 48, 3);
@@ -3895,7 +3894,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(269, 2);
     Blk2Mcr(269, 4);
 
-    Blk2Mcr(306, 1);
+    // Blk2Mcr(306, 1);
     Blk2Mcr(314, 0);
     Blk2Mcr(332, 1);
     Blk2Mcr(333, 0);
