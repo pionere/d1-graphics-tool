@@ -692,12 +692,12 @@ void MainWindow::on_actionLoad_triggered()
 
     QString gfxFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, title, filter);
     if (gfxFilePath.isEmpty()) {
-        return,
+        return;
     }
 
     QString fileLower = gfxFilePath.toLower();
     OpenAsParam params = OpenAsParam();
-    if (filePath.toLower().endsWith("dun")) { // .dun or .rdun
+    if (fileLower.endsWith("dun")) { // .dun or .rdun
         params.dunFilePath = gfxFilePath;
     } else {
         params.celFilePath = gfxFilePath;
