@@ -708,6 +708,7 @@ void MainWindow::on_actionLoad_triggered()
     if (!params.dunFilePath.isEmpty()) {
         D1Dun *dun = new D1Dun();
         if (dun->load(params.dunFilePath, params)) {
+			this->dun->initialize(this->pal, this->tileset);
             // TODO: this->dunChanged(dun)
             delete this->dun;
             this->dun = dun;
