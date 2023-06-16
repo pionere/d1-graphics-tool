@@ -2105,7 +2105,7 @@ bool D1Tileset::patchCathedralFloor(bool silent)
         std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
         D1GfxFrame *frame = microFrame.second;
         if (frame == nullptr) {
-            dProgressErr() << QString("Skipping due to %d:%d", micro.subtileIndex, micro.microIndex);
+            dProgressErr() << QString("Skipping due to %d:%d").arg(micro.subtileIndex).arg(micro.microIndex);
             return false;
         }
         if (frame->getWidth() != MICRO_WIDTH || frame->getHeight() != MICRO_HEIGHT) {
@@ -2446,7 +2446,7 @@ bool D1Tileset::fixCathedralShadows(bool silent)
         std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
         D1GfxFrame *frame = microFrame.second;
         if (frame == nullptr) {
-            dProgressErr() << QString("Skipping due to %d:%d", micro.subtileIndex, micro.microIndex);
+            dProgressErr() << QString("Skipping due to %d:%d").arg(micro.subtileIndex).arg(micro.microIndex);
             return false;
         }
         if (frame->getWidth() != MICRO_WIDTH || frame->getHeight() != MICRO_HEIGHT) {
