@@ -712,7 +712,7 @@ void MainWindow::on_actionLoad_triggered()
 LogErrorF("on_actionLoad_triggered 0");
         if (dun->load(params.dunFilePath, params)) {
 LogErrorF("on_actionLoad_triggered 1");
-			this->dun->initialize(this->pal, this->tileset);
+			dun->initialize(this->pal, this->tileset);
 LogErrorF("on_actionLoad_triggered 2");
             // TODO: this->dunChanged(dun)
             delete this->dun;
