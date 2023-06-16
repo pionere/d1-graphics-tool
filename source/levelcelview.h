@@ -168,7 +168,7 @@ private:
 
     void selectTilesetPath(QString path);
     void selectAssetPath(QString path);
-    void setPosition(int posx, posy);
+    void setPosition(int posx, int posy);
     QPoint getCellPos(const QPoint &pos) const;
 
 signals:
