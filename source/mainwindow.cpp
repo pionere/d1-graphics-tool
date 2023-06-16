@@ -30,6 +30,8 @@
 #include "d1pcx.h"
 #include "ui_mainwindow.h"
 
+#include "dungeon/all.h"
+
 static MainWindow *theMainWindow;
 
 MainWindow::MainWindow()
