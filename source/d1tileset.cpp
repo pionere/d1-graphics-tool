@@ -1880,9 +1880,6 @@ void D1Tileset::patchTownChop(bool silent)
         if (frame == nullptr) {
             return;
         }
-        if (frame->getWidth() != MICRO_WIDTH || frame->getHeight() != MICRO_HEIGHT) {
-            return;
-        }
         bool change = false;
         // fix bad artifacts
         if (i == 13) { // 828[12] (1854)
@@ -2105,10 +2102,7 @@ bool D1Tileset::patchCathedralFloor(bool silent)
         std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
         D1GfxFrame *frame = microFrame.second;
         if (frame == nullptr) {
-            dProgressErr() << QString("Skipping due to %d:%d").arg(micro.subtileIndex).arg(micro.microIndex);
-            return false;
-        }
-        if (frame->getWidth() != MICRO_WIDTH || frame->getHeight() != MICRO_HEIGHT) {
+            dProgressErr() << QString("Skipping due to %1:%2").arg(micro.subtileIndex).arg(micro.microIndex);
             return false;
         }
         bool change = false;
@@ -2446,10 +2440,7 @@ bool D1Tileset::fixCathedralShadows(bool silent)
         std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
         D1GfxFrame *frame = microFrame.second;
         if (frame == nullptr) {
-            dProgressErr() << QString("Skipping due to %d:%d").arg(micro.subtileIndex).arg(micro.microIndex);
-            return false;
-        }
-        if (frame->getWidth() != MICRO_WIDTH || frame->getHeight() != MICRO_HEIGHT) {
+            dProgressErr() << QString("Skipping due to %1:%2").arg(micro.subtileIndex).arg(micro.microIndex);
             return false;
         }
         bool change = false;
@@ -2920,28 +2911,28 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 132 - 1, 1, 297 - 1, silent);
     ReplaceSubtile(this->til, 132 - 1, 2, 310 - 1, silent);
     ReplaceSubtile(this->til, 132 - 1, 3, 302 - 1, silent);
-    ReplaceSubtile(this->til, 139 - 1, 0, 296 - 1, silent);
-    ReplaceSubtile(this->til, 139 - 1, 1, 297 - 1, silent);
+    // ReplaceSubtile(this->til, 139 - 1, 0, 296 - 1, silent);
+    // ReplaceSubtile(this->til, 139 - 1, 1, 297 - 1, silent);
     ReplaceSubtile(this->til, 139 - 1, 2, 328 - 1, silent);
-    ReplaceSubtile(this->til, 139 - 1, 3, 299 - 1, silent);
+    // ReplaceSubtile(this->til, 139 - 1, 3, 299 - 1, silent);
     ReplaceSubtile(this->til, 140 - 1, 0, 23 - 1, silent);
-    ReplaceSubtile(this->til, 140 - 1, 1, 2 - 1, silent);
-    ReplaceSubtile(this->til, 140 - 1, 2, 301 - 1, silent);
+    // ReplaceSubtile(this->til, 140 - 1, 1, 2 - 1, silent);
+    // ReplaceSubtile(this->til, 140 - 1, 2, 301 - 1, silent);
     ReplaceSubtile(this->til, 140 - 1, 3, 330 - 1, silent);
     ReplaceSubtile(this->til, 141 - 1, 0, 296 - 1, silent);
     ReplaceSubtile(this->til, 141 - 1, 1, 297 - 1, silent);
     ReplaceSubtile(this->til, 141 - 1, 2, 310 - 1, silent);
     ReplaceSubtile(this->til, 141 - 1, 3, 299 - 1, silent);
-    ReplaceSubtile(this->til, 142 - 1, 0, 307 - 1, silent);
-    ReplaceSubtile(this->til, 142 - 1, 1, 308 - 1, silent);
-    ReplaceSubtile(this->til, 142 - 1, 2, 7 - 1, silent);
-    ReplaceSubtile(this->til, 142 - 1, 3, 4 - 1, silent);
+    // ReplaceSubtile(this->til, 142 - 1, 0, 307 - 1, silent);
+    // ReplaceSubtile(this->til, 142 - 1, 1, 308 - 1, silent);
+    // ReplaceSubtile(this->til, 142 - 1, 2, 7 - 1, silent);
+    // ReplaceSubtile(this->til, 142 - 1, 3, 4 - 1, silent);
     ReplaceSubtile(this->til, 143 - 1, 0, 23 - 1, silent);
-    ReplaceSubtile(this->til, 143 - 1, 1, 2 - 1, silent);
+    // ReplaceSubtile(this->til, 143 - 1, 1, 2 - 1, silent);
     ReplaceSubtile(this->til, 143 - 1, 2, 313 - 1, silent);
     ReplaceSubtile(this->til, 143 - 1, 3, 330 - 1, silent);
     ReplaceSubtile(this->til, 144 - 1, 0, 315 - 1, silent);
-    ReplaceSubtile(this->til, 144 - 1, 1, 2 - 1, silent);
+    // ReplaceSubtile(this->til, 144 - 1, 1, 2 - 1, silent);
     ReplaceSubtile(this->til, 144 - 1, 2, 317 - 1, silent);
     ReplaceSubtile(this->til, 144 - 1, 3, 299 - 1, silent);
     ReplaceSubtile(this->til, 145 - 1, 0, 21 - 1, silent);
@@ -2949,32 +2940,32 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 145 - 1, 2, 321 - 1, silent);
     ReplaceSubtile(this->til, 145 - 1, 3, 302 - 1, silent);
     ReplaceSubtile(this->til, 146 - 1, 0, 1 - 1, silent);
-    ReplaceSubtile(this->til, 146 - 1, 1, 2 - 1, silent);
-    ReplaceSubtile(this->til, 146 - 1, 2, 320 - 1, silent);
-    ReplaceSubtile(this->til, 146 - 1, 3, 302 - 1, silent);
+    // ReplaceSubtile(this->til, 146 - 1, 1, 2 - 1, silent);
+    // ReplaceSubtile(this->til, 146 - 1, 2, 320 - 1, silent);
+    // ReplaceSubtile(this->til, 146 - 1, 3, 302 - 1, silent);
     ReplaceSubtile(this->til, 147 - 1, 0, 13 - 1, silent);
-    ReplaceSubtile(this->til, 147 - 1, 1, 2 - 1, silent);
+    // ReplaceSubtile(this->til, 147 - 1, 1, 2 - 1, silent);
     ReplaceSubtile(this->til, 147 - 1, 2, 320 - 1, silent);
-    ReplaceSubtile(this->til, 147 - 1, 3, 302 - 1, silent);
-    ReplaceSubtile(this->til, 148 - 1, 0, 322 - 1, silent);
-    ReplaceSubtile(this->til, 148 - 1, 1, 323 - 1, silent);
+    // ReplaceSubtile(this->til, 147 - 1, 3, 302 - 1, silent);
+    // ReplaceSubtile(this->til, 148 - 1, 0, 322 - 1, silent);
+    // ReplaceSubtile(this->til, 148 - 1, 1, 323 - 1, silent);
     ReplaceSubtile(this->til, 148 - 1, 2, 328 - 1, silent);
-    ReplaceSubtile(this->til, 148 - 1, 3, 299 - 1, silent);
-    ReplaceSubtile(this->til, 149 - 1, 0, 324 - 1, silent);
-    ReplaceSubtile(this->til, 149 - 1, 1, 325 - 1, silent);
+    // ReplaceSubtile(this->til, 148 - 1, 3, 299 - 1, silent);
+    // ReplaceSubtile(this->til, 149 - 1, 0, 324 - 1, silent);
+    // ReplaceSubtile(this->til, 149 - 1, 1, 325 - 1, silent);
     ReplaceSubtile(this->til, 149 - 1, 2, 328 - 1, silent);
-    ReplaceSubtile(this->til, 149 - 1, 3, 299 - 1, silent);
+    // ReplaceSubtile(this->til, 149 - 1, 3, 299 - 1, silent);
     ReplaceSubtile(this->til, 150 - 1, 0, 5 - 1, silent);
     ReplaceSubtile(this->til, 150 - 1, 1, 6 - 1, silent);
     ReplaceSubtile(this->til, 150 - 1, 2, 328 - 1, silent);
     ReplaceSubtile(this->til, 150 - 1, 3, 299 - 1, silent);
     ReplaceSubtile(this->til, 151 - 1, 0, 22 - 1, silent);
     ReplaceSubtile(this->til, 151 - 1, 1, 11 - 1, silent);
-    ReplaceSubtile(this->til, 151 - 1, 2, 328 - 1, silent);
+    // ReplaceSubtile(this->til, 151 - 1, 2, 328 - 1, silent);
     ReplaceSubtile(this->til, 151 - 1, 3, 299 - 1, silent);
     ReplaceSubtile(this->til, 152 - 1, 0, 64 - 1, silent);
     ReplaceSubtile(this->til, 152 - 1, 1, 48 - 1, silent);
-    ReplaceSubtile(this->til, 152 - 1, 2, 328 - 1, silent);
+    // ReplaceSubtile(this->til, 152 - 1, 2, 328 - 1, silent);
     ReplaceSubtile(this->til, 152 - 1, 3, 299 - 1, silent);
     ReplaceSubtile(this->til, 153 - 1, 0, 304 - 1, silent);
     ReplaceSubtile(this->til, 153 - 1, 1, 298 - 1, silent);
@@ -2991,27 +2982,27 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 156 - 1, 0, 45 - 1, silent);
     ReplaceSubtile(this->til, 156 - 1, 1, 46 - 1, silent);
     ReplaceSubtile(this->til, 156 - 1, 2, 328 - 1, silent);
-    ReplaceSubtile(this->til, 156 - 1, 3, 299 - 1, silent);
+    // ReplaceSubtile(this->til, 156 - 1, 3, 299 - 1, silent);
     ReplaceSubtile(this->til, 157 - 1, 0, 62 - 1, silent);
     ReplaceSubtile(this->til, 157 - 1, 1, 2 - 1, silent);
     ReplaceSubtile(this->til, 157 - 1, 2, 334 - 1, silent);
     ReplaceSubtile(this->til, 157 - 1, 3, 302 - 1, silent);
-    ReplaceSubtile(this->til, 158 - 1, 0, 339 - 1, silent);
+    // ReplaceSubtile(this->til, 158 - 1, 0, 339 - 1, silent);
     ReplaceSubtile(this->til, 158 - 1, 1, 323 - 1, silent);
-    ReplaceSubtile(this->til, 158 - 1, 2, 3 - 1, silent);
-    ReplaceSubtile(this->til, 158 - 1, 3, 4 - 1, silent);
+    // ReplaceSubtile(this->til, 158 - 1, 2, 3 - 1, silent);
+    // ReplaceSubtile(this->til, 158 - 1, 3, 4 - 1, silent);
     ReplaceSubtile(this->til, 159 - 1, 0, 23 - 1, silent);
     ReplaceSubtile(this->til, 159 - 1, 1, 2 - 1, silent);
     ReplaceSubtile(this->til, 159 - 1, 2, 328 - 1, silent);
     ReplaceSubtile(this->til, 159 - 1, 3, 299 - 1, silent);
-    ReplaceSubtile(this->til, 160 - 1, 0, 342 - 1, silent);
+    // ReplaceSubtile(this->til, 160 - 1, 0, 342 - 1, silent);
     ReplaceSubtile(this->til, 160 - 1, 1, 323 - 1, silent);
     ReplaceSubtile(this->til, 160 - 1, 2, 12 - 1, silent);
-    ReplaceSubtile(this->til, 160 - 1, 3, 4 - 1, silent);
-    ReplaceSubtile(this->til, 161 - 1, 0, 343 - 1, silent);
+    // ReplaceSubtile(this->til, 160 - 1, 3, 4 - 1, silent);
+    // ReplaceSubtile(this->til, 161 - 1, 0, 343 - 1, silent);
     ReplaceSubtile(this->til, 161 - 1, 1, 323 - 1, silent);
     ReplaceSubtile(this->til, 161 - 1, 2, 58 - 1, silent);
-    ReplaceSubtile(this->til, 161 - 1, 3, 4 - 1, silent);
+    // ReplaceSubtile(this->til, 161 - 1, 3, 4 - 1, silent);
     ReplaceSubtile(this->til, 164 - 1, 0, 23 - 1, silent);
     ReplaceSubtile(this->til, 164 - 1, 1, 2 - 1, silent);
     ReplaceSubtile(this->til, 164 - 1, 2, 313 - 1, silent);
@@ -3028,7 +3019,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 55 - 1, 0, 1 - 1, silent);
     ReplaceSubtile(this->til, 55 - 1, 1, 123 - 1, silent);
     ReplaceSubtile(this->til, 55 - 1, 2, 3 - 1, silent);
-    ReplaceSubtile(this->til, 55 - 1, 3, 4 - 1, silent);
+    // ReplaceSubtile(this->til, 55 - 1, 3, 4 - 1, silent);
     ReplaceSubtile(this->til, 54 - 1, 0, 338 - 1, silent);
     ReplaceSubtile(this->til, 54 - 1, 1, 297 - 1, silent);
     ReplaceSubtile(this->til, 54 - 1, 2, 328 - 1, silent);
@@ -3047,7 +3038,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 51 - 1, 2, 301 - 1, silent);
     ReplaceSubtile(this->til, 51 - 1, 3, 302 - 1, silent);
     ReplaceSubtile(this->til, 50 - 1, 0, 1 - 1, silent);
-    ReplaceSubtile(this->til, 50 - 1, 1, 2 - 1, silent);
+    // ReplaceSubtile(this->til, 50 - 1, 1, 2 - 1, silent);
     ReplaceSubtile(this->til, 50 - 1, 2, 320 - 1, silent);
     ReplaceSubtile(this->til, 50 - 1, 3, 330 - 1, silent);
     ReplaceSubtile(this->til, 49 - 1, 0, 335 - 1, silent);
@@ -3080,12 +3071,11 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     }
 
     // patch dMiniTiles - L1.MIN
-    // adjust the frame types
-    // - after patchCathedralFloor
-    Blk2Mcr(108, 1);
-    // use micros created by patchCathedralFloor
     if (patchCathedralFloor(silent)) {
 	QMessageBox::critical(nullptr, "Error", "cleanupCathedral patchCathedralFloor done");
+    // adjust the frame types
+    Blk2Mcr(108, 1);
+    // use micros created by patchCathedralFloor
     ReplaceMcr(160, 0, 23, 0);
     }
 	QMessageBox::critical(nullptr, "Error", "cleanupCathedral fixCathedralShadows start");
@@ -4554,9 +4544,6 @@ void D1Tileset::fillCryptShapes(bool silent)
         if (frame == nullptr) {
             return;
         }
-        if (frame->getWidth() != MICRO_WIDTH || frame->getHeight() != MICRO_HEIGHT) {
-            return;
-        }
         bool change = false;
         if (i == 1) { // 907
             change |= frame->setPixel(30, 1, D1GfxPixel::colorPixel(46));
@@ -4659,9 +4646,6 @@ void D1Tileset::maskCryptBlacks(bool silent)
         if (frame == nullptr) {
             return;
         }
-        if (frame->getWidth() != MICRO_WIDTH || frame->getHeight() != MICRO_HEIGHT) {
-            return;
-        }
         // mask the black pixels
         bool change = false;
         for (int y = 0; y < MICRO_WIDTH; y++) {
@@ -4751,9 +4735,6 @@ void D1Tileset::fixCryptShadows(bool silent)
         if (frame == nullptr) {
             return;
         }
-        if (frame->getWidth() != MICRO_WIDTH || frame->getHeight() != MICRO_HEIGHT) {
-            return;
-        }
         bool change = false;
         for (int y = 0; y < MICRO_WIDTH; y++) {
             for (int x = 0; x < MICRO_WIDTH; x++) {
@@ -4817,9 +4798,6 @@ void D1Tileset::fixCryptShadows(bool silent)
         std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
         D1GfxFrame *frame = microFrame.second;
         if (frame == nullptr) {
-            return;
-        }
-        if (frame->getWidth() != MICRO_WIDTH || frame->getHeight() != MICRO_HEIGHT) {
             return;
         }
         D1GfxFrame *frameSrc = nullptr;
