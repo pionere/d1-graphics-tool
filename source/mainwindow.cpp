@@ -695,6 +695,8 @@ void MainWindow::on_actionLoad_triggered()
         return;
     }
 
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_NONE); // PAF_UPDATE_WINDOW
+
     QString fileLower = gfxFilePath.toLower();
     OpenAsParam params = OpenAsParam();
     if (fileLower.endsWith("dun")) { // .dun or .rdun
@@ -718,6 +720,7 @@ void MainWindow::on_actionLoad_triggered()
             } else {
                 this->builderWidget->setDungeon(dun);
             }
+            this->updateWindow();
         } else {
             delete dun;
             dProgressFail() << tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
