@@ -2107,13 +2107,20 @@ bool D1Tileset::patchCathedralFloor(bool silent)
         }
         bool change = false;
         // mask 392[0]
-        // mask 392[2]
-        if (i == 4 || i == 5) {
+        if (i == 4) {
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
-                    D1GfxPixel pixel = frame->getPixel(x, y);
-                    quint8 color = pixel.getPaletteIndex();
-                    if (x < 17 && !pixel.isTransparent() && (color > 24 || (color > 11 && color < 16))) {
+                    if (x < 17 && (x != 16 || y != 24)) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // mask 392[2]
+        if (i == 5) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    if (x < 14 || (x == 14 && y > 1) || (x == 15 && y > 2) || (x == 16 && y > 4)) {
                         change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                     }
                 }
@@ -2214,7 +2221,7 @@ bool D1Tileset::patchCathedralFloor(bool silent)
         }
 
         // fix artifacts
-        if (i == 4) { // 392[0]
+        /*if (i == 4) { // 392[0]
             change |= frame->setPixel(16, 24, D1GfxPixel::colorPixel(42));
         }
         if (i == 5) { // 392[2]
@@ -2226,7 +2233,7 @@ bool D1Tileset::patchCathedralFloor(bool silent)
             change |= frame->setPixel(16, 3, D1GfxPixel::colorPixel(29));
             change |= frame->setPixel(16, 4, D1GfxPixel::colorPixel(46));
             change |= frame->setPixel(17, 28, D1GfxPixel::colorPixel(106));
-        }
+        }*/
         if (i == 12) { // 178[2]
             change |= frame->setPixel(14, 1, D1GfxPixel::colorPixel(10));
             change |= frame->setPixel(15, 1, D1GfxPixel::colorPixel(20));
@@ -2881,9 +2888,9 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 128 - 1, 1, 2 - 1, silent);
     ReplaceSubtile(this->til, 134 - 1, 1, 2 - 1, silent);
     ReplaceSubtile(this->til, 136 - 1, 1, 2 - 1, silent);
-    ReplaceSubtile(this->til, 42 - 1, 2, 12 - 1, silent);
+    // ReplaceSubtile(this->til, 42 - 1, 2, 12 - 1, silent);
     ReplaceSubtile(this->til, 44 - 1, 2, 12 - 1, silent);
-    ReplaceSubtile(this->til, 159 - 1, 2, 12 - 1, silent);
+    // ReplaceSubtile(this->til, 159 - 1, 2, 12 - 1, silent);
     ReplaceSubtile(this->til, 9 - 1, 2, 7 - 1, silent);
     ReplaceSubtile(this->til, 59 - 1, 2, 7 - 1, silent);
     ReplaceSubtile(this->til, 60 - 1, 2, 7 - 1, silent);
