@@ -2613,7 +2613,7 @@ bool D1Tileset::fixCathedralShadows(bool silent)
         }
         // reduce 313[1] using 7[1]
         if (i == 23) {
-            const CelMicro &microSrc = micros[i - 6];
+            const CelMicro &microSrc = micros[i - 12];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
             // if (frameSrc == nullptr) {
