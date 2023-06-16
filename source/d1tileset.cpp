@@ -347,9 +347,8 @@ static void RemoveFrame(D1Min *min, int subtileRef, int microIndex, std::set<uns
     }
 }
 
-static void ReplaceSubtile(D1Til *til, int tileIndex, unsigned index, int subtileRef, bool silent)
+static void ReplaceSubtile(D1Til *til, int tileIndex, unsigned index, int subtileIndex, bool silent)
 {
-    int subtileIndex = subtileRef - 1;
     std::vector<int> &tilSubtiles = til->getSubtileIndices(tileIndex);
     if (index >= tilSubtiles.size()) {
         dProgressErr() << QApplication::tr("Not enough subtiles in Tile %1.").arg(tileIndex + 1);
@@ -361,7 +360,7 @@ static void ReplaceSubtile(D1Til *til, int tileIndex, unsigned index, int subtil
             dProgress() << QApplication::tr("Subtile %1 of Tile%2 is set to %3.").arg(index + 1).arg(tileIndex + 1).arg(subtileIndex + 1);
         }
     } else {
-        dProgressWarn() << QApplication::tr("Subtile %1 of Tile%2 is already %3.").arg(index + 1).arg(tileIndex + 1).arg(subtileIndex + 1);
+        ; // dProgressWarn() << QApplication::tr("Subtile %1 of Tile%2 is already %3.").arg(index + 1).arg(tileIndex + 1).arg(subtileIndex + 1);
     }
 }
 
@@ -2484,17 +2483,17 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     this->sol->setSubtileProperties(stairsSubtileRef2 - 1, properties);
 
     // replace subtiles
-    ReplaceSubtile(this->til, backTileIndex1, 0, backSubtileRef0Replacement, silent); // use common subtile
-    ReplaceSubtile(this->til, backTileIndex1, 1, 56, silent);                         // make the back of the stairs non-walkable
-    ReplaceSubtile(this->til, backTileIndex1, 2, backSubtileRef2Replacement, silent); // use common subtile
-    ReplaceSubtile(this->til, extTileIndex1, 1, extSubtileRef1Replacement, silent);   // use common subtile
+    ReplaceSubtile(this->til, backTileIndex1, 0, backSubtileRef0Replacement - 1, silent); // use common subtile
+    ReplaceSubtile(this->til, backTileIndex1, 1, 56 - 1, silent);                         // make the back of the stairs non-walkable
+    ReplaceSubtile(this->til, backTileIndex1, 2, backSubtileRef2Replacement - 1, silent); // use common subtile
+    ReplaceSubtile(this->til, extTileIndex1, 1, extSubtileRef1Replacement - 1, silent);   // use common subtile
 
-    ReplaceSubtile(this->til, backTileIndex2, 0, backSubtileRef0Replacement, silent); // use common subtile
-    ReplaceSubtile(this->til, backTileIndex2, 1, 56, silent);                         // make the back of the stairs non-walkable
-    ReplaceSubtile(this->til, backTileIndex2, 2, backSubtileRef2Replacement, silent); // use common subtile
-    ReplaceSubtile(this->til, extTileIndex2, 0, backSubtileRef0Replacement, silent);  // use common subtile
-    ReplaceSubtile(this->til, extTileIndex2, 1, extSubtileRef1Replacement, silent);   // use common subtile
-    ReplaceSubtile(this->til, extTileIndex2, 2, backSubtileRef2Replacement, silent);  // use common subtile
+    ReplaceSubtile(this->til, backTileIndex2, 0, backSubtileRef0Replacement - 1, silent); // use common subtile
+    ReplaceSubtile(this->til, backTileIndex2, 1, 56 - 1, silent);                         // make the back of the stairs non-walkable
+    ReplaceSubtile(this->til, backTileIndex2, 2, backSubtileRef2Replacement - 1, silent); // use common subtile
+    ReplaceSubtile(this->til, extTileIndex2, 0, backSubtileRef0Replacement - 1, silent);  // use common subtile
+    ReplaceSubtile(this->til, extTileIndex2, 1, extSubtileRef1Replacement - 1, silent);   // use common subtile
+    ReplaceSubtile(this->til, extTileIndex2, 2, backSubtileRef2Replacement - 1, silent);  // use common subtile
 
     if (!silent) {
         dProgress() << QApplication::tr("The back-stair tiles (%1, %2) and the stair-subtiles (%2, %3, %4, %5) are modified.").arg(backTileIndex1 + 1).arg(backTileIndex2 + 1).arg(extTileIndex1 + 1).arg(extTileIndex2 + 1).arg(stairsSubtileRef1).arg(stairsSubtileRef2);
@@ -2659,7 +2658,6 @@ void D1Tileset::maskCryptBlacks(bool silent)
         if (frame == nullptr) {
             return;
         }
-
         // mask the black pixels
         bool change = false;
         for (int y = 0; y < MICRO_WIDTH; y++) {
@@ -2749,7 +2747,6 @@ void D1Tileset::fixCryptShadows(bool silent)
         if (frame == nullptr) {
             return;
         }
-
         bool change = false;
         for (int y = 0; y < MICRO_WIDTH; y++) {
             for (int x = 0; x < MICRO_WIDTH; x++) {
@@ -2815,7 +2812,6 @@ void D1Tileset::fixCryptShadows(bool silent)
         if (frame == nullptr) {
             return;
         }
-
         D1GfxFrame *frameSrc = nullptr;
         if (i != 7 + 5) { // 1797
             const CelMicro &microSrc = micros[i + 6];
@@ -2904,261 +2900,274 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
 {
     constexpr int blockSize = BLOCK_SIZE_L5;
 
+    // patch dMegaTiles - L5.TIL
     // use common subtiles of doors
-    // ReplaceSubtile(this->til, 71 - 1, 2, 206, silent);
-    ReplaceSubtile(this->til, 72 - 1, 2, 206, silent);
+    // ReplaceSubtile(this->til, 71 - 1, 2, 206 - 1, silent);
+    // ReplaceSubtile(this->til, 72 - 1, 2, 206 - 1, silent);
     // use common subtiles
-    ReplaceSubtile(this->til, 4 - 1, 1, 6, silent); // 14
-    ReplaceSubtile(this->til, 14 - 1, 1, 6, silent);
-    ReplaceSubtile(this->til, 115 - 1, 1, 6, silent);
-    ReplaceSubtile(this->til, 132 - 1, 1, 6, silent);
-    ReplaceSubtile(this->til, 1 - 1, 2, 15, silent); // 3
-    ReplaceSubtile(this->til, 27 - 1, 2, 15, silent);
-    ReplaceSubtile(this->til, 43 - 1, 2, 15, silent);
-    ReplaceSubtile(this->til, 79 - 1, 2, 15, silent);
-    ReplaceSubtile(this->til, 6 - 1, 2, 15, silent);   // 23
-    ReplaceSubtile(this->til, 127 - 1, 2, 4, silent);  // 372
-    ReplaceSubtile(this->til, 132 - 1, 2, 15, silent); // 388
-    ReplaceSubtile(this->til, 156 - 1, 2, 31, silent); // 468
+    ReplaceSubtile(this->til, 4 - 1, 1, 6 - 1, silent); // 14
+    ReplaceSubtile(this->til, 14 - 1, 1, 6 - 1, silent);
+    ReplaceSubtile(this->til, 115 - 1, 1, 6 - 1, silent);
+    ReplaceSubtile(this->til, 132 - 1, 1, 6 - 1, silent);
+    ReplaceSubtile(this->til, 1 - 1, 2, 15 - 1, silent); // 3
+    ReplaceSubtile(this->til, 27 - 1, 2, 15 - 1, silent);
+    ReplaceSubtile(this->til, 43 - 1, 2, 15 - 1, silent);
+    // ReplaceSubtile(this->til, 79 - 1, 2, 15 - 1, silent);
+    ReplaceSubtile(this->til, 6 - 1, 2, 15 - 1, silent);   // 23
+    ReplaceSubtile(this->til, 127 - 1, 2, 4 - 1, silent);  // 372
+    ReplaceSubtile(this->til, 132 - 1, 2, 15 - 1, silent); // 388
+    ReplaceSubtile(this->til, 156 - 1, 2, 31 - 1, silent); // 468
     // use better subtiles
     // - increase glow
-    ReplaceSubtile(this->til, 96 - 1, 3, 293, silent); // 279
-    ReplaceSubtile(this->til, 187 - 1, 3, 293, silent);
-    ReplaceSubtile(this->til, 188 - 1, 3, 293, silent);
-    ReplaceSubtile(this->til, 90 - 1, 1, 297, silent); // 253
-    ReplaceSubtile(this->til, 175 - 1, 1, 297, silent);
+    ReplaceSubtile(this->til, 96 - 1, 3, 293 - 1, silent); // 279
+    ReplaceSubtile(this->til, 187 - 1, 3, 293 - 1, silent);
+    ReplaceSubtile(this->til, 188 - 1, 3, 293 - 1, silent);
+    ReplaceSubtile(this->til, 90 - 1, 1, 297 - 1, silent); // 253
+    ReplaceSubtile(this->til, 175 - 1, 1, 297 - 1, silent);
     // - reduce glow
-    ReplaceSubtile(this->til, 162 - 1, 1, 297, silent); // 489
-    ReplaceSubtile(this->til, 162 - 1, 2, 266, silent); // 490
+    ReplaceSubtile(this->til, 162 - 1, 1, 297 - 1, silent); // 489
+    ReplaceSubtile(this->til, 162 - 1, 2, 266 - 1, silent); // 490
     // create the new shadows
     // - use the shadows created by fixCryptShadows
-    ReplaceSubtile(this->til, 203 - 1, 0, 638, silent); // 619
-    ReplaceSubtile(this->til, 203 - 1, 1, 639, silent); // 620
-    ReplaceSubtile(this->til, 203 - 1, 2, 623, silent); // 47
-    ReplaceSubtile(this->til, 203 - 1, 3, 627, silent); // 621
-    ReplaceSubtile(this->til, 204 - 1, 0, 638, silent); // 622
-    ReplaceSubtile(this->til, 204 - 1, 1, 639, silent); // 46
-    ReplaceSubtile(this->til, 204 - 1, 2, 636, silent); // 623
-    ReplaceSubtile(this->til, 204 - 1, 3, 627, silent); // 624
-    ReplaceSubtile(this->til, 108 - 1, 2, 631, silent); // 810
-    ReplaceSubtile(this->til, 108 - 1, 3, 626, silent); // 811
-    ReplaceSubtile(this->til, 210 - 1, 3, 371, silent); // 637
+    ReplaceSubtile(this->til, 203 - 1, 0, 638 - 1, silent); // 619
+    ReplaceSubtile(this->til, 203 - 1, 1, 639 - 1, silent); // 620
+    ReplaceSubtile(this->til, 203 - 1, 2, 623 - 1, silent); // 47
+    ReplaceSubtile(this->til, 203 - 1, 3, 627 - 1, silent); // 621
+    ReplaceSubtile(this->til, 204 - 1, 0, 638 - 1, silent); // 622
+    ReplaceSubtile(this->til, 204 - 1, 1, 639 - 1, silent); // 46
+    ReplaceSubtile(this->til, 204 - 1, 2, 636 - 1, silent); // 623
+    ReplaceSubtile(this->til, 204 - 1, 3, 627 - 1, silent); // 624
+    ReplaceSubtile(this->til, 108 - 1, 2, 631 - 1, silent); // 810
+    ReplaceSubtile(this->til, 108 - 1, 3, 626 - 1, silent); // 811
+    ReplaceSubtile(this->til, 210 - 1, 3, 371 - 1, silent); // 637
 
-    ReplaceSubtile(this->til, 109 - 1, 0, 1, silent);   // 312
-    ReplaceSubtile(this->til, 109 - 1, 1, 2, silent);   // 313
-    ReplaceSubtile(this->til, 109 - 1, 2, 3, silent);   // 314
-    ReplaceSubtile(this->til, 109 - 1, 3, 627, silent); // 315
-    ReplaceSubtile(this->til, 110 - 1, 0, 21, silent);  // 316
-    ReplaceSubtile(this->til, 110 - 1, 1, 22, silent);  // 313
-    ReplaceSubtile(this->til, 110 - 1, 2, 3, silent);   // 314
-    ReplaceSubtile(this->til, 110 - 1, 3, 627, silent); // 315
-    ReplaceSubtile(this->til, 111 - 1, 0, 39, silent);  // 317
-    ReplaceSubtile(this->til, 111 - 1, 1, 4, silent);   // 318
-    ReplaceSubtile(this->til, 111 - 1, 2, 242, silent); // 319
-    ReplaceSubtile(this->til, 111 - 1, 3, 627, silent); // 320
-    ReplaceSubtile(this->til, 215 - 1, 0, 101, silent); // 645
-    ReplaceSubtile(this->til, 215 - 1, 1, 4, silent);   // 646
-    ReplaceSubtile(this->til, 215 - 1, 2, 178, silent); // 45
-    ReplaceSubtile(this->til, 215 - 1, 3, 627, silent); // 647
+    ReplaceSubtile(this->til, 109 - 1, 0, 1 - 1, silent);   // 312
+    ReplaceSubtile(this->til, 109 - 1, 1, 2 - 1, silent);   // 313
+    ReplaceSubtile(this->til, 109 - 1, 2, 3 - 1, silent);   // 314
+    ReplaceSubtile(this->til, 109 - 1, 3, 627 - 1, silent); // 315
+    ReplaceSubtile(this->til, 110 - 1, 0, 21 - 1, silent);  // 316
+    ReplaceSubtile(this->til, 110 - 1, 1, 22 - 1, silent);  // 313
+    ReplaceSubtile(this->til, 110 - 1, 2, 3 - 1, silent);   // 314
+    ReplaceSubtile(this->til, 110 - 1, 3, 627 - 1, silent); // 315
+    ReplaceSubtile(this->til, 111 - 1, 0, 39 - 1, silent);  // 317
+    ReplaceSubtile(this->til, 111 - 1, 1, 4 - 1, silent);   // 318
+    ReplaceSubtile(this->til, 111 - 1, 2, 242 - 1, silent); // 319
+    ReplaceSubtile(this->til, 111 - 1, 3, 627 - 1, silent); // 320
+    ReplaceSubtile(this->til, 215 - 1, 0, 101 - 1, silent); // 645
+    ReplaceSubtile(this->til, 215 - 1, 1, 4 - 1, silent);   // 646
+    ReplaceSubtile(this->til, 215 - 1, 2, 178 - 1, silent); // 45
+    ReplaceSubtile(this->til, 215 - 1, 3, 627 - 1, silent); // 647
     // - 'add' new shadow-types with glow
-    ReplaceSubtile(this->til, 216 - 1, 0, 39, silent);  // 622
-    ReplaceSubtile(this->til, 216 - 1, 1, 4, silent);   // 46
-    ReplaceSubtile(this->til, 216 - 1, 2, 238, silent); // 648
-    ReplaceSubtile(this->til, 216 - 1, 3, 635, silent); // 624
-    ReplaceSubtile(this->til, 217 - 1, 0, 638, silent); // 625
-    ReplaceSubtile(this->til, 217 - 1, 1, 639, silent); // 46
-    ReplaceSubtile(this->til, 217 - 1, 2, 634, silent); // 649
-    ReplaceSubtile(this->til, 217 - 1, 3, 635, silent); // 650
+    ReplaceSubtile(this->til, 216 - 1, 0, 39 - 1, silent);  // 622
+    ReplaceSubtile(this->til, 216 - 1, 1, 4 - 1, silent);   // 46
+    ReplaceSubtile(this->til, 216 - 1, 2, 238 - 1, silent); // 648
+    ReplaceSubtile(this->til, 216 - 1, 3, 635 - 1, silent); // 624
+    ReplaceSubtile(this->til, 217 - 1, 0, 638 - 1, silent); // 625
+    ReplaceSubtile(this->til, 217 - 1, 1, 639 - 1, silent); // 46
+    ReplaceSubtile(this->til, 217 - 1, 2, 634 - 1, silent); // 649
+    ReplaceSubtile(this->til, 217 - 1, 3, 635 - 1, silent); // 650
     // - 'add' new shadow-types with horizontal arches
-    ReplaceSubtile(this->til, 71 - 1, 0, 5, silent); // copy from tile 2
-    ReplaceSubtile(this->til, 71 - 1, 1, 6, silent);
-    ReplaceSubtile(this->til, 71 - 1, 2, 631, silent);
-    ReplaceSubtile(this->til, 71 - 1, 3, 627, silent);
-    ReplaceSubtile(this->til, 80 - 1, 0, 5, silent); // copy from tile 2
-    ReplaceSubtile(this->til, 80 - 1, 1, 6, silent);
-    ReplaceSubtile(this->til, 80 - 1, 2, 623, silent);
-    ReplaceSubtile(this->til, 80 - 1, 3, 627, silent);
+    ReplaceSubtile(this->til, 71 - 1, 0, 5 - 1, silent); // copy from tile 2
+    ReplaceSubtile(this->til, 71 - 1, 1, 6 - 1, silent);
+    ReplaceSubtile(this->til, 71 - 1, 2, 631 - 1, silent);
+    ReplaceSubtile(this->til, 71 - 1, 3, 627 - 1, silent);
+    ReplaceSubtile(this->til, 80 - 1, 0, 5 - 1, silent); // copy from tile 2
+    ReplaceSubtile(this->til, 80 - 1, 1, 6 - 1, silent);
+    ReplaceSubtile(this->til, 80 - 1, 2, 623 - 1, silent);
+    ReplaceSubtile(this->til, 80 - 1, 3, 627 - 1, silent);
 
-    ReplaceSubtile(this->til, 81 - 1, 0, 42, silent); // copy from tile 12
-    ReplaceSubtile(this->til, 81 - 1, 1, 34, silent);
-    ReplaceSubtile(this->til, 81 - 1, 2, 631, silent);
-    ReplaceSubtile(this->til, 81 - 1, 3, 627, silent);
-    ReplaceSubtile(this->til, 82 - 1, 0, 42, silent); // copy from tile 12
-    ReplaceSubtile(this->til, 82 - 1, 1, 34, silent);
-    ReplaceSubtile(this->til, 82 - 1, 2, 623, silent);
-    ReplaceSubtile(this->til, 82 - 1, 3, 627, silent);
+    ReplaceSubtile(this->til, 81 - 1, 0, 42 - 1, silent); // copy from tile 12
+    ReplaceSubtile(this->til, 81 - 1, 1, 34 - 1, silent);
+    ReplaceSubtile(this->til, 81 - 1, 2, 631 - 1, silent);
+    ReplaceSubtile(this->til, 81 - 1, 3, 627 - 1, silent);
+    ReplaceSubtile(this->til, 82 - 1, 0, 42 - 1, silent); // copy from tile 12
+    ReplaceSubtile(this->til, 82 - 1, 1, 34 - 1, silent);
+    ReplaceSubtile(this->til, 82 - 1, 2, 623 - 1, silent);
+    ReplaceSubtile(this->til, 82 - 1, 3, 627 - 1, silent);
 
-    ReplaceSubtile(this->til, 83 - 1, 0, 104, silent); // copy from tile 36
-    ReplaceSubtile(this->til, 83 - 1, 1, 84, silent);
-    ReplaceSubtile(this->til, 83 - 1, 2, 631, silent);
-    ReplaceSubtile(this->til, 83 - 1, 3, 627, silent);
-    ReplaceSubtile(this->til, 84 - 1, 0, 104, silent); // copy from tile 36
-    ReplaceSubtile(this->til, 84 - 1, 1, 84, silent);
-    ReplaceSubtile(this->til, 84 - 1, 2, 623, silent);
-    ReplaceSubtile(this->til, 84 - 1, 3, 627, silent);
+    ReplaceSubtile(this->til, 83 - 1, 0, 104 - 1, silent); // copy from tile 36
+    ReplaceSubtile(this->til, 83 - 1, 1, 84 - 1, silent);
+    ReplaceSubtile(this->til, 83 - 1, 2, 631 - 1, silent);
+    ReplaceSubtile(this->til, 83 - 1, 3, 627 - 1, silent);
+    ReplaceSubtile(this->til, 84 - 1, 0, 104 - 1, silent); // copy from tile 36
+    ReplaceSubtile(this->til, 84 - 1, 1, 84 - 1, silent);
+    ReplaceSubtile(this->til, 84 - 1, 2, 623 - 1, silent);
+    ReplaceSubtile(this->til, 84 - 1, 3, 627 - 1, silent);
 
-    ReplaceSubtile(this->til, 85 - 1, 0, 25, silent); // copy from tile 7
-    ReplaceSubtile(this->til, 85 - 1, 1, 6, silent);
-    ReplaceSubtile(this->til, 85 - 1, 2, 631, silent);
-    ReplaceSubtile(this->til, 85 - 1, 3, 627, silent);
-    ReplaceSubtile(this->til, 86 - 1, 0, 25, silent); // copy from tile 7
-    ReplaceSubtile(this->til, 86 - 1, 1, 6, silent);
-    ReplaceSubtile(this->til, 86 - 1, 2, 623, silent);
-    ReplaceSubtile(this->til, 86 - 1, 3, 627, silent);
+    ReplaceSubtile(this->til, 85 - 1, 0, 25 - 1, silent); // copy from tile 7
+    ReplaceSubtile(this->til, 85 - 1, 1, 6 - 1, silent);
+    ReplaceSubtile(this->til, 85 - 1, 2, 631 - 1, silent);
+    ReplaceSubtile(this->til, 85 - 1, 3, 627 - 1, silent);
+    ReplaceSubtile(this->til, 86 - 1, 0, 25 - 1, silent); // copy from tile 7
+    ReplaceSubtile(this->til, 86 - 1, 1, 6 - 1, silent);
+    ReplaceSubtile(this->til, 86 - 1, 2, 623 - 1, silent);
+    ReplaceSubtile(this->til, 86 - 1, 3, 627 - 1, silent);
 
-    ReplaceSubtile(this->til, 87 - 1, 0, 79, silent); // copy from tile 26
-    ReplaceSubtile(this->til, 87 - 1, 1, 80, silent);
-    ReplaceSubtile(this->til, 87 - 1, 2, 623, silent);
-    ReplaceSubtile(this->til, 87 - 1, 3, 627, silent);
-    ReplaceSubtile(this->til, 88 - 1, 0, 79, silent); // copy from tile 26
-    ReplaceSubtile(this->til, 88 - 1, 1, 80, silent);
-    ReplaceSubtile(this->til, 88 - 1, 2, 631, silent);
-    ReplaceSubtile(this->til, 88 - 1, 3, 627, silent);
+    ReplaceSubtile(this->til, 87 - 1, 0, 79 - 1, silent); // copy from tile 26
+    ReplaceSubtile(this->til, 87 - 1, 1, 80 - 1, silent);
+    ReplaceSubtile(this->til, 87 - 1, 2, 623 - 1, silent);
+    ReplaceSubtile(this->til, 87 - 1, 3, 627 - 1, silent);
+    ReplaceSubtile(this->til, 88 - 1, 0, 79 - 1, silent); // copy from tile 26
+    ReplaceSubtile(this->til, 88 - 1, 1, 80 - 1, silent);
+    ReplaceSubtile(this->til, 88 - 1, 2, 631 - 1, silent);
+    ReplaceSubtile(this->til, 88 - 1, 3, 627 - 1, silent);
 
     // use common subtiles instead of minor alterations
-    ReplaceSubtile(this->til, 7 - 1, 1, 6, silent);    // 26
-    ReplaceSubtile(this->til, 159 - 1, 1, 6, silent);  // 479
-    ReplaceSubtile(this->til, 133 - 1, 2, 31, silent); // 390
-    ReplaceSubtile(this->til, 10 - 1, 1, 18, silent);  // 37
-    ReplaceSubtile(this->til, 138 - 1, 1, 18, silent);
-    ReplaceSubtile(this->til, 188 - 1, 1, 277, silent); // 564
-    ReplaceSubtile(this->til, 178 - 1, 2, 258, silent); // 564
-    ReplaceSubtile(this->til, 5 - 1, 2, 31, silent);    // 19
-    ReplaceSubtile(this->til, 14 - 1, 2, 31, silent);
-    ReplaceSubtile(this->til, 159 - 1, 2, 31, silent);
-    ReplaceSubtile(this->til, 185 - 1, 2, 274, silent); // 558
-    ReplaceSubtile(this->til, 186 - 1, 2, 274, silent); // 560
-    ReplaceSubtile(this->til, 139 - 1, 0, 39, silent);  // 402
+    ReplaceSubtile(this->til, 7 - 1, 1, 6 - 1, silent);    // 26
+    ReplaceSubtile(this->til, 159 - 1, 1, 6 - 1, silent);  // 479
+    ReplaceSubtile(this->til, 133 - 1, 2, 31 - 1, silent); // 390
+    ReplaceSubtile(this->til, 10 - 1, 1, 18 - 1, silent);  // 37
+    ReplaceSubtile(this->til, 138 - 1, 1, 18 - 1, silent);
+    ReplaceSubtile(this->til, 188 - 1, 1, 277 - 1, silent); // 564
+    ReplaceSubtile(this->til, 178 - 1, 2, 258 - 1, silent); // 543
+    ReplaceSubtile(this->til, 5 - 1, 2, 31 - 1, silent);    // 19
+    ReplaceSubtile(this->til, 14 - 1, 2, 31 - 1, silent);
+    ReplaceSubtile(this->til, 159 - 1, 2, 31 - 1, silent);
+    ReplaceSubtile(this->til, 185 - 1, 2, 274 - 1, silent); // 558
+    ReplaceSubtile(this->til, 186 - 1, 2, 274 - 1, silent); // 560
+    ReplaceSubtile(this->til, 139 - 1, 0, 39 - 1, silent);  // 402
 
-    ReplaceSubtile(this->til, 2 - 1, 3, 4, silent);  // 8
-    ReplaceSubtile(this->til, 3 - 1, 1, 60, silent); // 10
-    ReplaceSubtile(this->til, 114 - 1, 1, 32, silent);
-    ReplaceSubtile(this->til, 3 - 1, 2, 4, silent); // 11
-    ReplaceSubtile(this->til, 114 - 1, 2, 4, silent);
-    ReplaceSubtile(this->til, 5 - 1, 3, 7, silent); // 20
-    ReplaceSubtile(this->til, 14 - 1, 3, 4, silent);
-    ReplaceSubtile(this->til, 133 - 1, 3, 4, silent);
-    ReplaceSubtile(this->til, 125 - 1, 3, 7, silent); // 50
-    ReplaceSubtile(this->til, 159 - 1, 3, 7, silent);
-    ReplaceSubtile(this->til, 4 - 1, 3, 7, silent); // 16
-    ReplaceSubtile(this->til, 132 - 1, 3, 4, silent);
-    ReplaceSubtile(this->til, 10 - 1, 3, 7, silent); // 38
-    ReplaceSubtile(this->til, 138 - 1, 3, 4, silent);
-    ReplaceSubtile(this->til, 121 - 1, 3, 4, silent); // 354
-    ReplaceSubtile(this->til, 8 - 1, 3, 4, silent);   // 32
-    ReplaceSubtile(this->til, 136 - 1, 3, 7, silent);
-    ReplaceSubtile(this->til, 91 - 1, 1, 47, silent); // 257
-    ReplaceSubtile(this->til, 178 - 1, 1, 47, silent);
-    ReplaceSubtile(this->til, 91 - 1, 3, 48, silent); // 259
-    ReplaceSubtile(this->til, 177 - 1, 3, 7, silent);
-    ReplaceSubtile(this->til, 178 - 1, 3, 48, silent);
-    ReplaceSubtile(this->til, 130 - 1, 2, 395, silent); // 381
-    ReplaceSubtile(this->til, 157 - 1, 2, 4, silent);   // 472
-    ReplaceSubtile(this->til, 177 - 1, 1, 4, silent);   // 540
-    ReplaceSubtile(this->til, 211 - 1, 3, 48, silent);  // 621
-    ReplaceSubtile(this->til, 205 - 1, 0, 45, silent);  // 625
-    ReplaceSubtile(this->til, 207 - 1, 0, 45, silent);  // 630
-    ReplaceSubtile(this->til, 207 - 1, 3, 627, silent); // 632
-    ReplaceSubtile(this->til, 208 - 1, 0, 45, silent);  // 633
+    ReplaceSubtile(this->til, 2 - 1, 3, 4 - 1, silent);  // 8
+    ReplaceSubtile(this->til, 3 - 1, 1, 60 - 1, silent); // 10
+    ReplaceSubtile(this->til, 114 - 1, 1, 32 - 1, silent);
+    ReplaceSubtile(this->til, 3 - 1, 2, 4 - 1, silent); // 11
+    ReplaceSubtile(this->til, 114 - 1, 2, 4 - 1, silent);
+    ReplaceSubtile(this->til, 5 - 1, 3, 7 - 1, silent); // 20
+    ReplaceSubtile(this->til, 14 - 1, 3, 4 - 1, silent);
+    ReplaceSubtile(this->til, 133 - 1, 3, 4 - 1, silent);
+    ReplaceSubtile(this->til, 125 - 1, 3, 7 - 1, silent); // 50
+    ReplaceSubtile(this->til, 159 - 1, 3, 7 - 1, silent);
+    ReplaceSubtile(this->til, 4 - 1, 3, 7 - 1, silent); // 16
+    ReplaceSubtile(this->til, 132 - 1, 3, 4 - 1, silent);
+    ReplaceSubtile(this->til, 10 - 1, 3, 7 - 1, silent); // 38
+    ReplaceSubtile(this->til, 138 - 1, 3, 4 - 1, silent);
+    ReplaceSubtile(this->til, 121 - 1, 3, 4 - 1, silent); // 354
+    ReplaceSubtile(this->til, 8 - 1, 3, 4 - 1, silent);   // 32
+    ReplaceSubtile(this->til, 136 - 1, 3, 7 - 1, silent);
+    ReplaceSubtile(this->til, 91 - 1, 1, 47 - 1, silent); // 257
+    ReplaceSubtile(this->til, 178 - 1, 1, 47 - 1, silent);
+    ReplaceSubtile(this->til, 91 - 1, 3, 48 - 1, silent); // 259
+    ReplaceSubtile(this->til, 177 - 1, 3, 7 - 1, silent);
+    ReplaceSubtile(this->til, 178 - 1, 3, 48 - 1, silent);
+    ReplaceSubtile(this->til, 130 - 1, 2, 395 - 1, silent); // 381
+    ReplaceSubtile(this->til, 157 - 1, 2, 4 - 1, silent);   // 472
+    ReplaceSubtile(this->til, 177 - 1, 1, 4 - 1, silent);   // 540
+    ReplaceSubtile(this->til, 211 - 1, 3, 48 - 1, silent);  // 621
+    ReplaceSubtile(this->til, 205 - 1, 0, 45 - 1, silent);  // 625
+    ReplaceSubtile(this->til, 207 - 1, 0, 45 - 1, silent);  // 630
+    ReplaceSubtile(this->til, 207 - 1, 3, 627 - 1, silent); // 632
+    ReplaceSubtile(this->til, 208 - 1, 0, 45 - 1, silent);  // 633
 
-    ReplaceSubtile(this->til, 27 - 1, 3, 4, silent); // 85
-    // ReplaceSubtile(this->til, 28 - 1, 3, 4, silent); // 87
-    ReplaceSubtile(this->til, 29 - 1, 3, 4, silent); // 90
-    ReplaceSubtile(this->til, 30 - 1, 3, 4, silent); // 92
-    ReplaceSubtile(this->til, 31 - 1, 3, 4, silent); // 94
-    ReplaceSubtile(this->til, 32 - 1, 3, 4, silent); // 96
-    ReplaceSubtile(this->til, 33 - 1, 3, 4, silent); // 98
-    ReplaceSubtile(this->til, 34 - 1, 3, 4, silent); // 100
-    ReplaceSubtile(this->til, 37 - 1, 3, 4, silent); // 108
-    ReplaceSubtile(this->til, 38 - 1, 3, 4, silent); // 110
-    ReplaceSubtile(this->til, 39 - 1, 3, 4, silent); // 112
-    ReplaceSubtile(this->til, 40 - 1, 3, 4, silent); // 114
-    ReplaceSubtile(this->til, 41 - 1, 3, 4, silent); // 116
-    ReplaceSubtile(this->til, 42 - 1, 3, 4, silent); // 118
-    ReplaceSubtile(this->til, 43 - 1, 3, 4, silent); // 120
-    ReplaceSubtile(this->til, 44 - 1, 3, 4, silent); // 122
-    ReplaceSubtile(this->til, 45 - 1, 3, 4, silent); // 124
-    // ReplaceSubtile(this->til, 71 - 1, 3, 4, silent); // 214
-    ReplaceSubtile(this->til, 72 - 1, 3, 4, silent); // 217
-    ReplaceSubtile(this->til, 73 - 1, 3, 4, silent); // 219
-    ReplaceSubtile(this->til, 74 - 1, 3, 4, silent); // 221
-    ReplaceSubtile(this->til, 75 - 1, 3, 4, silent); // 223
-    ReplaceSubtile(this->til, 76 - 1, 3, 4, silent); // 225
-    ReplaceSubtile(this->til, 77 - 1, 3, 4, silent); // 227
-    ReplaceSubtile(this->til, 78 - 1, 3, 4, silent); // 229
-    ReplaceSubtile(this->til, 79 - 1, 3, 4, silent); // 231
-    // ReplaceSubtile(this->til, 80 - 1, 3, 4, silent); // 233
-    // ReplaceSubtile(this->til, 81 - 1, 3, 4, silent); // 235
-    ReplaceSubtile(this->til, 15 - 1, 1, 4, silent); // 52
-    ReplaceSubtile(this->til, 15 - 1, 2, 4, silent); // 53
-    ReplaceSubtile(this->til, 15 - 1, 3, 4, silent); // 54
-    ReplaceSubtile(this->til, 16 - 1, 1, 4, silent); // 56
-    ReplaceSubtile(this->til, 144 - 1, 1, 4, silent);
-    ReplaceSubtile(this->til, 16 - 1, 2, 4, silent); // 57
-    ReplaceSubtile(this->til, 16 - 1, 3, 4, silent); // 58
-    ReplaceSubtile(this->til, 144 - 1, 3, 7, silent);
-    ReplaceSubtile(this->til, 94 - 1, 2, 60, silent); // 270
-    ReplaceSubtile(this->til, 183 - 1, 2, 60, silent);
-    ReplaceSubtile(this->til, 184 - 1, 2, 60, silent);
-    ReplaceSubtile(this->til, 17 - 1, 2, 4, silent); // 61
-    ReplaceSubtile(this->til, 128 - 1, 2, 4, silent);
-    ReplaceSubtile(this->til, 92 - 1, 2, 62, silent); // 262
-    ReplaceSubtile(this->til, 179 - 1, 2, 62, silent);
-    ReplaceSubtile(this->til, 25 - 1, 1, 4, silent); // 76
-    ReplaceSubtile(this->til, 25 - 1, 3, 4, silent); // 78
-    ReplaceSubtile(this->til, 35 - 1, 1, 4, silent); // 102
-    ReplaceSubtile(this->til, 35 - 1, 3, 4, silent); // 103
-    ReplaceSubtile(this->til, 69 - 1, 1, 4, silent); // 205
-    ReplaceSubtile(this->til, 69 - 1, 3, 4, silent); // 207
-    ReplaceSubtile(this->til, 26 - 1, 2, 4, silent); // 81
-    ReplaceSubtile(this->til, 26 - 1, 3, 4, silent); // 82
-    ReplaceSubtile(this->til, 36 - 1, 2, 4, silent); // 105
-    ReplaceSubtile(this->til, 36 - 1, 3, 4, silent); // 106
-    ReplaceSubtile(this->til, 46 - 1, 2, 4, silent); // 127
-    ReplaceSubtile(this->til, 46 - 1, 3, 4, silent); // 128
-    ReplaceSubtile(this->til, 70 - 1, 2, 4, silent); // 210
-    ReplaceSubtile(this->til, 70 - 1, 3, 4, silent); // 211
-    ReplaceSubtile(this->til, 49 - 1, 1, 4, silent); // 137
-    ReplaceSubtile(this->til, 167 - 1, 1, 4, silent);
-    ReplaceSubtile(this->til, 49 - 1, 2, 4, silent); // 138
-    ReplaceSubtile(this->til, 167 - 1, 2, 4, silent);
-    ReplaceSubtile(this->til, 49 - 1, 3, 4, silent); // 139
-    ReplaceSubtile(this->til, 167 - 1, 3, 4, silent);
-    ReplaceSubtile(this->til, 50 - 1, 1, 4, silent);  // 141
-    ReplaceSubtile(this->til, 50 - 1, 3, 4, silent);  // 143
-    ReplaceSubtile(this->til, 51 - 1, 3, 4, silent);  // 147
-    ReplaceSubtile(this->til, 103 - 1, 1, 4, silent); // 295
-    ReplaceSubtile(this->til, 105 - 1, 1, 4, silent);
-    ReplaceSubtile(this->til, 127 - 1, 3, 4, silent); // 373
-    ReplaceSubtile(this->til, 89 - 1, 3, 4, silent);  // 251
-    ReplaceSubtile(this->til, 173 - 1, 3, 7, silent);
-    ReplaceSubtile(this->til, 174 - 1, 3, 7, silent);
-    ReplaceSubtile(this->til, 6 - 1, 3, 4, silent); // 24
-    ReplaceSubtile(this->til, 134 - 1, 3, 7, silent);
-    ReplaceSubtile(this->til, 7 - 1, 3, 7, silent); // 28
-    ReplaceSubtile(this->til, 8 - 1, 1, 2, silent); // 30
-    ReplaceSubtile(this->til, 30 - 1, 1, 2, silent);
-    ReplaceSubtile(this->til, 32 - 1, 1, 2, silent);
-    ReplaceSubtile(this->til, 72 - 1, 1, 2, silent);
-    ReplaceSubtile(this->til, 9 - 1, 3, 4, silent); // 35
-    ReplaceSubtile(this->til, 137 - 1, 3, 4, silent);
-    ReplaceSubtile(this->til, 11 - 1, 1, 4, silent); // 40
-    ReplaceSubtile(this->til, 122 - 1, 1, 4, silent);
-    ReplaceSubtile(this->til, 12 - 1, 2, 4, silent); // 43
-    ReplaceSubtile(this->til, 123 - 1, 2, 4, silent);
-    ReplaceSubtile(this->til, 12 - 1, 3, 4, silent); // 44
-    ReplaceSubtile(this->til, 123 - 1, 3, 7, silent);
-    ReplaceSubtile(this->til, 95 - 1, 1, 4, silent); // 273
-    ReplaceSubtile(this->til, 185 - 1, 1, 7, silent);
-    ReplaceSubtile(this->til, 186 - 1, 1, 4, silent);
-    ReplaceSubtile(this->til, 89 - 1, 1, 293, silent); // 249
-    ReplaceSubtile(this->til, 173 - 1, 1, 293, silent);
-    ReplaceSubtile(this->til, 174 - 1, 1, 293, silent);
-    ReplaceSubtile(this->til, 92 - 1, 3, 271, silent); // 263
-    ReplaceSubtile(this->til, 179 - 1, 3, 271, silent);
-    ReplaceSubtile(this->til, 96 - 1, 2, 12, silent); // 278
-    ReplaceSubtile(this->til, 187 - 1, 2, 12, silent);
-    ReplaceSubtile(this->til, 188 - 1, 2, 12, silent);
+    ReplaceSubtile(this->til, 27 - 1, 3, 4 - 1, silent); // 85
+    // ReplaceSubtile(this->til, 28 - 1, 3, 4 - 1, silent); // 87
+    ReplaceSubtile(this->til, 29 - 1, 3, 4 - 1, silent); // 90
+    // ReplaceSubtile(this->til, 30 - 1, 3, 4 - 1, silent); // 92
+    // ReplaceSubtile(this->til, 31 - 1, 3, 4 - 1, silent); // 94
+    ReplaceSubtile(this->til, 32 - 1, 3, 4 - 1, silent); // 96
+    ReplaceSubtile(this->til, 33 - 1, 3, 4 - 1, silent); // 98
+    // ReplaceSubtile(this->til, 34 - 1, 3, 4 - 1, silent); // 100
+    ReplaceSubtile(this->til, 37 - 1, 3, 4 - 1, silent); // 108
+    ReplaceSubtile(this->til, 38 - 1, 3, 4 - 1, silent); // 110
+    // ReplaceSubtile(this->til, 39 - 1, 3, 4 - 1, silent); // 112
+    // ReplaceSubtile(this->til, 40 - 1, 3, 4 - 1, silent); // 114
+    // ReplaceSubtile(this->til, 41 - 1, 3, 4 - 1, silent); // 116
+    // ReplaceSubtile(this->til, 42 - 1, 3, 4 - 1, silent); // 118
+    ReplaceSubtile(this->til, 43 - 1, 3, 4 - 1, silent); // 120
+    ReplaceSubtile(this->til, 44 - 1, 3, 4 - 1, silent); // 122
+    ReplaceSubtile(this->til, 45 - 1, 3, 4 - 1, silent); // 124
+    // ReplaceSubtile(this->til, 71 - 1, 3, 4 - 1, silent); // 214
+    // ReplaceSubtile(this->til, 72 - 1, 3, 4 - 1, silent); // 217
+    // ReplaceSubtile(this->til, 73 - 1, 3, 4 - 1, silent); // 219
+    // ReplaceSubtile(this->til, 74 - 1, 3, 4 - 1, silent); // 221
+    // ReplaceSubtile(this->til, 75 - 1, 3, 4 - 1, silent); // 223
+    // ReplaceSubtile(this->til, 76 - 1, 3, 4 - 1, silent); // 225
+    // ReplaceSubtile(this->til, 77 - 1, 3, 4 - 1, silent); // 227
+    // ReplaceSubtile(this->til, 78 - 1, 3, 4 - 1, silent); // 229
+    // ReplaceSubtile(this->til, 79 - 1, 3, 4 - 1, silent); // 231
+    // ReplaceSubtile(this->til, 80 - 1, 3, 4 - 1, silent); // 233
+    // ReplaceSubtile(this->til, 81 - 1, 3, 4 - 1, silent); // 235
+    ReplaceSubtile(this->til, 15 - 1, 1, 4 - 1, silent); // 52
+    ReplaceSubtile(this->til, 15 - 1, 2, 4 - 1, silent); // 53
+    ReplaceSubtile(this->til, 15 - 1, 3, 4 - 1, silent); // 54
+    ReplaceSubtile(this->til, 16 - 1, 1, 4 - 1, silent); // 56
+    ReplaceSubtile(this->til, 144 - 1, 1, 4 - 1, silent);
+    ReplaceSubtile(this->til, 16 - 1, 2, 4 - 1, silent); // 57
+    ReplaceSubtile(this->til, 16 - 1, 3, 4 - 1, silent); // 58
+    ReplaceSubtile(this->til, 144 - 1, 3, 7 - 1, silent);
+    ReplaceSubtile(this->til, 94 - 1, 2, 60 - 1, silent); // 270
+    ReplaceSubtile(this->til, 183 - 1, 2, 60 - 1, silent);
+    ReplaceSubtile(this->til, 184 - 1, 2, 60 - 1, silent);
+    ReplaceSubtile(this->til, 17 - 1, 2, 4 - 1, silent); // 61
+    ReplaceSubtile(this->til, 128 - 1, 2, 4 - 1, silent);
+    ReplaceSubtile(this->til, 92 - 1, 2, 62 - 1, silent); // 262
+    ReplaceSubtile(this->til, 179 - 1, 2, 62 - 1, silent);
+    ReplaceSubtile(this->til, 25 - 1, 1, 4 - 1, silent); // 76
+    ReplaceSubtile(this->til, 25 - 1, 3, 4 - 1, silent); // 78
+    ReplaceSubtile(this->til, 35 - 1, 1, 4 - 1, silent); // 102
+    ReplaceSubtile(this->til, 35 - 1, 3, 4 - 1, silent); // 103
+    ReplaceSubtile(this->til, 69 - 1, 1, 4 - 1, silent); // 205
+    ReplaceSubtile(this->til, 69 - 1, 3, 4 - 1, silent); // 207
+    ReplaceSubtile(this->til, 26 - 1, 2, 4 - 1, silent); // 81
+    ReplaceSubtile(this->til, 26 - 1, 3, 4 - 1, silent); // 82
+    ReplaceSubtile(this->til, 36 - 1, 2, 4 - 1, silent); // 105
+    ReplaceSubtile(this->til, 36 - 1, 3, 4 - 1, silent); // 106
+    ReplaceSubtile(this->til, 46 - 1, 2, 4 - 1, silent); // 127
+    ReplaceSubtile(this->til, 46 - 1, 3, 4 - 1, silent); // 128
+    ReplaceSubtile(this->til, 70 - 1, 2, 4 - 1, silent); // 210
+    ReplaceSubtile(this->til, 70 - 1, 3, 4 - 1, silent); // 211
+    ReplaceSubtile(this->til, 49 - 1, 1, 4 - 1, silent); // 137
+    ReplaceSubtile(this->til, 167 - 1, 1, 4 - 1, silent);
+    ReplaceSubtile(this->til, 49 - 1, 2, 4 - 1, silent); // 138
+    ReplaceSubtile(this->til, 167 - 1, 2, 4 - 1, silent);
+    ReplaceSubtile(this->til, 49 - 1, 3, 4 - 1, silent); // 139
+    ReplaceSubtile(this->til, 167 - 1, 3, 4 - 1, silent);
+    ReplaceSubtile(this->til, 50 - 1, 1, 4 - 1, silent);  // 141
+    ReplaceSubtile(this->til, 50 - 1, 3, 4 - 1, silent);  // 143
+    ReplaceSubtile(this->til, 51 - 1, 3, 4 - 1, silent);  // 147
+    ReplaceSubtile(this->til, 103 - 1, 1, 4 - 1, silent); // 295
+    ReplaceSubtile(this->til, 105 - 1, 1, 4 - 1, silent);
+    ReplaceSubtile(this->til, 127 - 1, 3, 4 - 1, silent); // 373
+    ReplaceSubtile(this->til, 89 - 1, 3, 4 - 1, silent);  // 251
+    ReplaceSubtile(this->til, 173 - 1, 3, 7 - 1, silent);
+    ReplaceSubtile(this->til, 174 - 1, 3, 7 - 1, silent);
+    ReplaceSubtile(this->til, 6 - 1, 3, 4 - 1, silent); // 24
+    ReplaceSubtile(this->til, 134 - 1, 3, 7 - 1, silent);
+    ReplaceSubtile(this->til, 7 - 1, 3, 7 - 1, silent); // 28
+    ReplaceSubtile(this->til, 8 - 1, 1, 2 - 1, silent); // 30
+    // ReplaceSubtile(this->til, 30 - 1, 1, 2 - 1, silent);
+    ReplaceSubtile(this->til, 32 - 1, 1, 2 - 1, silent);
+    // ReplaceSubtile(this->til, 72 - 1, 1, 2 - 1, silent);
+    ReplaceSubtile(this->til, 9 - 1, 3, 4 - 1, silent); // 35
+    ReplaceSubtile(this->til, 137 - 1, 3, 4 - 1, silent);
+    ReplaceSubtile(this->til, 11 - 1, 1, 4 - 1, silent); // 40
+    ReplaceSubtile(this->til, 122 - 1, 1, 4 - 1, silent);
+    ReplaceSubtile(this->til, 12 - 1, 2, 4 - 1, silent); // 43
+    ReplaceSubtile(this->til, 123 - 1, 2, 4 - 1, silent);
+    ReplaceSubtile(this->til, 12 - 1, 3, 4 - 1, silent); // 44
+    ReplaceSubtile(this->til, 123 - 1, 3, 7 - 1, silent);
+    ReplaceSubtile(this->til, 95 - 1, 1, 4 - 1, silent); // 273
+    ReplaceSubtile(this->til, 185 - 1, 1, 7 - 1, silent);
+    ReplaceSubtile(this->til, 186 - 1, 1, 4 - 1, silent);
+    ReplaceSubtile(this->til, 89 - 1, 1, 293 - 1, silent); // 249
+    ReplaceSubtile(this->til, 173 - 1, 1, 293 - 1, silent);
+    ReplaceSubtile(this->til, 174 - 1, 1, 293 - 1, silent);
+    ReplaceSubtile(this->til, 92 - 1, 3, 271 - 1, silent); // 263
+    ReplaceSubtile(this->til, 179 - 1, 3, 271 - 1, silent);
+    ReplaceSubtile(this->til, 96 - 1, 2, 12 - 1, silent); // 278
+    ReplaceSubtile(this->til, 187 - 1, 2, 12 - 1, silent);
+    ReplaceSubtile(this->til, 188 - 1, 2, 12 - 1, silent);
+    // eliminate subtiles of unused tiles
+    const int unusedTiles[] = {
+        28,/* 29,*/ 30, 31, 34,/* 38,*/ 39, 40, 41, 42,/* 43, 44, */ 61, 62, 63, 64, 65, 66, 67, 68, 72, 73, 74, 75, 76, 77, 78, 79, 212, 213, 214
+    };
+    constexpr int blankSubtile = 8 - 1;
+    for (int n = 0; n < lengthof(unusedTiles); n++) {
+        int tileId = unusedTiles[n];
+        ReplaceSubtile(this->til, tileId - 1, 0, blankSubtile, silent);
+        ReplaceSubtile(this->til, tileId - 1, 1, blankSubtile, silent);
+        ReplaceSubtile(this->til, tileId - 1, 2, blankSubtile, silent);
+        ReplaceSubtile(this->til, tileId - 1, 3, blankSubtile, silent);
+    }
     // patch dMiniTiles - L5.MIN
     // prepare subtiles after fixCryptShadows
     ReplaceMcr(3, 0, 619, 1);
@@ -3305,7 +3314,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // - use consistent lava + shadow micro I.
     ReplaceMcr(277, 0, 303, 0);
     ReplaceMcr(562, 0, 303, 0);
-    ReplaceMcr(564, 0, 303, 0);
+    // ReplaceMcr(564, 0, 303, 0);
     ReplaceMcr(635, 0, 308, 0);
     // - extend shadow to make more usable (after fixCryptShadows)
     ReplaceMcr(627, 0, 626, 0);
@@ -3399,14 +3408,14 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(459, 9, 6, 9);   // lost details
     ReplaceMcr(463, 9, 6, 9);   // lost details
     ReplaceMcr(562, 9, 6, 9);   // lost details
-    ReplaceMcr(564, 9, 6, 9);   // lost details
+    // ReplaceMcr(564, 9, 6, 9);   // lost details
     ReplaceMcr(277, 7, 18, 7);  // lost details
     ReplaceMcr(562, 7, 18, 7);  // lost details
     ReplaceMcr(277, 5, 459, 5); // lost details
     ReplaceMcr(562, 5, 459, 5); // lost details
     ReplaceMcr(277, 3, 459, 3); // lost details
     ReplaceMcr(562, 1, 277, 1); // lost details
-    ReplaceMcr(564, 1, 277, 1); // lost details
+    // ReplaceMcr(564, 1, 277, 1); // lost details
     ReplaceMcr(585, 1, 284, 1);
     ReplaceMcr(590, 1, 285, 1); // lost details
     ReplaceMcr(598, 1, 289, 1); // lost details
@@ -4399,7 +4408,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(649, 1);
     Blk2Mcr(650, 0);
     int unusedSubtiles[] = {
-        8, 10, 11, 16, 19, 20, 23, 24, 26, 28, 30, 35, 38, 40, 43, 44, 50, 52, 56, 76, 78, 81, 82, 87, 90, 92, 94, 96, 98, 100, 102, 103, 105, 106, 108, 110, 112, 114, 116, 124, 127, 128, 137, 138, 139, 141, 143, 147, 148, 167, 172, 174, 176, 177, 193, 202, 205, 207, 210, 211, 214, 217, 219, 221, 223, 225, 227, 233, 235, 239, 249, 251, 253, 257, 259, 262, 263, 270, 273, 278, 279, 295, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 354, 373, 381, 390, 472, 489, 490, 540, 560, 640, 643, 648
+        8, 10, 11, 16, 19, 20, 23, 24, 26, 28, 30, 35, 38, 40, 43, 44, 50, 52, 56, 76, 78, 81, 82, 87, 90, 92, 94, 96, 98, 100, 102, 103, 105, 106, 108, 110, 112, 114, 116, 124, 127, 128, 137, 138, 139, 141, 143, 147, 148, 167, 172, 174, 176, 177, 193, 202, 205, 207, 210, 211, 214, 217, 219, 221, 223, 225, 227, 233, 235, 239, 249, 251, 253, 257, 259, 262, 263, 270, 273, 278, 279, 295, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 354, 373, 381, 390, 472, 489, 490, 540, 560, 564, 640, 643, 648
     };
     for (int n = 0; n < lengthof(unusedSubtiles); n++) {
         for (int i = 0; i < blockSize; i++) {
@@ -4834,7 +4843,7 @@ void D1Tileset::patch(int dunType, bool silent)
     case DTYPE_CATACOMBS:
         // patch dMegaTiles and dMiniTiles - L2.TIL, L2.MIN
         // reuse subtiles
-        ReplaceSubtile(this->til, 41 - 1, 1, 135, silent);
+        ReplaceSubtile(this->til, 41 - 1, 1, 135 - 1, silent);
         // add separate tiles and subtiles for the arches
         if (this->min->getSubtileCount() < 560) {
             this->createSubtile();
@@ -4887,31 +4896,31 @@ void D1Tileset::patch(int dunType, bool silent)
         // - floor tile(3) with vertical arch
         if (this->til->getTileCount() < 161)
             this->createTile();
-        ReplaceSubtile(this->til, 161 - 1, 0, 560, silent);
-        ReplaceSubtile(this->til, 161 - 1, 1, 10, silent);
-        ReplaceSubtile(this->til, 161 - 1, 2, 561, silent);
-        ReplaceSubtile(this->til, 161 - 1, 3, 12, silent);
+        ReplaceSubtile(this->til, 161 - 1, 0, 560 - 1, silent);
+        ReplaceSubtile(this->til, 161 - 1, 1, 10 - 1, silent);
+        ReplaceSubtile(this->til, 161 - 1, 2, 561 - 1, silent);
+        ReplaceSubtile(this->til, 161 - 1, 3, 12 - 1, silent);
         // - floor tile(3) with horizontal arch
         if (this->til->getTileCount() < 162)
             this->createTile();
-        ReplaceSubtile(this->til, 162 - 1, 0, 562, silent);
-        ReplaceSubtile(this->til, 162 - 1, 1, 563, silent);
-        ReplaceSubtile(this->til, 162 - 1, 2, 11, silent);
-        ReplaceSubtile(this->til, 162 - 1, 3, 12, silent);
+        ReplaceSubtile(this->til, 162 - 1, 0, 562 - 1, silent);
+        ReplaceSubtile(this->til, 162 - 1, 1, 563 - 1, silent);
+        ReplaceSubtile(this->til, 162 - 1, 2, 11 - 1, silent);
+        ReplaceSubtile(this->til, 162 - 1, 3, 12 - 1, silent);
         // - floor tile with shadow(49) with vertical arch
         if (this->til->getTileCount() < 163)
             this->createTile();
-        ReplaceSubtile(this->til, 163 - 1, 0, 564, silent); // - 159
-        ReplaceSubtile(this->til, 163 - 1, 1, 160, silent);
-        ReplaceSubtile(this->til, 163 - 1, 2, 565, silent); // - 161
-        ReplaceSubtile(this->til, 163 - 1, 3, 162, silent);
+        ReplaceSubtile(this->til, 163 - 1, 0, 564 - 1, silent); // - 159
+        ReplaceSubtile(this->til, 163 - 1, 1, 160 - 1, silent);
+        ReplaceSubtile(this->til, 163 - 1, 2, 565 - 1, silent); // - 161
+        ReplaceSubtile(this->til, 163 - 1, 3, 162 - 1, silent);
         // - floor tile with shadow(51) with horizontal arch
         if (this->til->getTileCount() < 164)
             this->createTile();
-        ReplaceSubtile(this->til, 164 - 1, 0, 566, silent); // - 166
-        ReplaceSubtile(this->til, 164 - 1, 1, 567, silent); // - 167
-        ReplaceSubtile(this->til, 164 - 1, 2, 168, silent);
-        ReplaceSubtile(this->til, 164 - 1, 3, 169, silent);
+        ReplaceSubtile(this->til, 164 - 1, 0, 566 - 1, silent); // - 166
+        ReplaceSubtile(this->til, 164 - 1, 1, 567 - 1, silent); // - 167
+        ReplaceSubtile(this->til, 164 - 1, 2, 168 - 1, silent);
+        ReplaceSubtile(this->til, 164 - 1, 3, 169 - 1, silent);
         // fix the upstairs
         this->patchCatacombsStairs(72 - 1, 158 - 1, 76 - 1, 159 - 1, 267, 559, silent);
         // fix bad artifact
@@ -5022,16 +5031,16 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeTileAmpFlags(this->amp, 56 - 1, 0, silent);
         ChangeTileAmpFlags(this->amp, 58 - 1, MAPFLAG_DIRT | 5, silent);
         // patch automaptype - L5.TIL
-        ReplaceSubtile(this->til, 52 - 1, 0, 73, silent); // copy from tile 23
-        ReplaceSubtile(this->til, 52 - 1, 1, 64, silent);
-        ReplaceSubtile(this->til, 52 - 1, 2, 65, silent);
-        ReplaceSubtile(this->til, 52 - 1, 3, 66, silent);
-        ReplaceSubtile(this->til, 58 - 1, 0, 63, silent); // copy from tile 18
-        ReplaceSubtile(this->til, 58 - 1, 1, 64, silent);
-        ReplaceSubtile(this->til, 58 - 1, 2, 65, silent);
-        ReplaceSubtile(this->til, 58 - 1, 3, 66, silent);
-        ReplaceSubtile(this->til, 53 - 1, 1, 148, silent);
-        ReplaceSubtile(this->til, 53 - 1, 3, 148, silent);
+        ReplaceSubtile(this->til, 52 - 1, 0, 73 - 1, silent); // copy from tile 23
+        ReplaceSubtile(this->til, 52 - 1, 1, 64 - 1, silent);
+        ReplaceSubtile(this->til, 52 - 1, 2, 65 - 1, silent);
+        ReplaceSubtile(this->til, 52 - 1, 3, 66 - 1, silent);
+        ReplaceSubtile(this->til, 58 - 1, 0, 63 - 1, silent); // copy from tile 18
+        ReplaceSubtile(this->til, 58 - 1, 1, 64 - 1, silent);
+        ReplaceSubtile(this->til, 58 - 1, 2, 65 - 1, silent);
+        ReplaceSubtile(this->til, 58 - 1, 3, 66 - 1, silent);
+        ReplaceSubtile(this->til, 53 - 1, 1, 148 - 1, silent);
+        ReplaceSubtile(this->til, 53 - 1, 3, 148 - 1, silent);
         break;
     }
     for (auto it = deletedFrames.crbegin(); it != deletedFrames.crend(); it++) {
