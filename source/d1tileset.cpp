@@ -2514,8 +2514,8 @@ bool D1Tileset::fixCathedralShadows(bool silent)
                     D1GfxPixel pixel = frame->getPixel(x, y);
                     quint8 color = pixel.getPaletteIndex();
                     if (!pixel.isTransparent() && (color == 0 || color == 15 || color == 43 || color == 44 || color == 45 || color == 46 || color == 47 || color == 109 || color == 110 || color == 127)) {
-                        if (frameDst->getPixel(x, y).isTransparent()) {
-                            change |= frameDst->setPixel(x, y, pixel); // 57[0]
+                        if (frameDst->getPixel(x, y - MICRO_HEIGHT / 2).isTransparent()) {
+                            change |= frameDst->setPixel(x, y - MICRO_HEIGHT / 2, pixel); // 57[0]
                         }
                     }
                 }
