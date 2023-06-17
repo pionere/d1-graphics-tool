@@ -524,7 +524,7 @@ void D1Dun::initialize(D1Pal *p, D1Tileset *ts)
     this->til = ts->til;
     this->min = ts->min;
     this->spt = ts->spt;
-LogErrorF("D1Dun init 0");
+
     if (this->type == D1DUN_TYPE::NORMAL) {
         // prepare subtiles
         for (int y = 0; y < this->height / TILE_HEIGHT; y++) {
@@ -540,7 +540,7 @@ LogErrorF("D1Dun init 0");
             }
         }
     }
-LogErrorF("D1Dun init 1");
+
     // ensure there is at least one valid tile
     // assert((this->height == 0) == (this->width == 0));
     if (this->width == 0) {
@@ -551,21 +551,19 @@ LogErrorF("D1Dun init 1");
 
         // prepare the vectors
         this->initVectors(1, 1);
-LogErrorF("D1Dun init 2");
+
         // prepare tiles
         this->tiles[0][0] = UNDEF_TILE;
-LogErrorF("D1Dun init 3");
+
         // prepare subtiles
         this->updateSubtiles(0, 0, UNDEF_TILE);
     }
-LogErrorF("D1Dun init 4");
     // calculate meta info
     QString tilPath = this->til->getFilePath();
     QFileInfo fileInfo = QFileInfo(tilPath);
     // initialize levelType based on the fileName of D1Til
     QString baseName = fileInfo.completeBaseName().toLower();
     int dungeonType = DTYPE_TOWN;
-LogErrorF("D1Dun init 5");
     if (baseName.length() == 2 && baseName[0] == 'l') { // TODO: merge with PatchTilesetDialog::initialize?
         switch (baseName[1].digitValue()) {
         case 1:
@@ -590,12 +588,10 @@ LogErrorF("D1Dun init 5");
     }
     this->levelType = DTYPE_NONE; // ensure change is triggered
     this->setLevelType(dungeonType);
-LogErrorF("D1Dun init 6");
     // select asset path
     QDir tilDir = fileInfo.dir();
     QString assetDir = tilDir.absolutePath();
     if (!tilDir.isRoot()) {
-LogErrorF("D1Dun init 7");
         // check if assetDir is ../*levels/../, use root if it matches
         QFileInfo dirInfo = QFileInfo(assetDir);
         QDir parentDir = dirInfo.dir();
@@ -606,9 +602,7 @@ LogErrorF("D1Dun init 7");
             assetDir = parentDir.absolutePath();
         }
     }
-LogErrorF("D1Dun init 8");
     this->setAssetPath(assetDir);
-LogErrorF("D1Dun init 9");
 }
 
 bool D1Dun::save(const SaveAsParam &params)

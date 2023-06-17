@@ -439,6 +439,9 @@
    <property name="text">
     <string>Load</string>
    </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+L</string>
+   </property>
   </action>
   <action name="actionSave">
    <property name="text">

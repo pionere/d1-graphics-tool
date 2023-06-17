@@ -341,48 +341,38 @@ void LevelCelView::updateFields()
     this->updateLabel();
 
     if (this->dunView) {
-LogErrorF("updateFields dun 0");
         // Set dungeon width and height
         this->ui->dunWidthEdit->setText(QString::number(this->dun->getWidth()));
         this->ui->dunHeightEdit->setText(QString::number(this->dun->getHeight()));
 
         int posx = this->currentDunPosX;
         int posy = this->currentDunPosY;
-LogErrorF("updateFields dun 1");
         // Set dungeon location
         this->ui->dungeonPosLineEdit->setText(QString::number(posx) + ":" + QString::number(posy));
         int tileRef = this->dun->getTileAt(posx, posy);
         this->ui->dungeonTileLineEdit->setText(tileRef == UNDEF_TILE ? QStringLiteral("?") : QString::number(tileRef));
         Qt::CheckState tps = this->dun->getTileProtectionAt(posx, posy);
-LogErrorF("updateFields dun 2");
         this->ui->dungeonTileProtectionCheckBox->setCheckState(tps);
         this->ui->dungeonTileProtectionCheckBox->setToolTip(tps == Qt::Unchecked ? tr("Tile might be replaced in the game") : (tps == Qt::PartiallyChecked ? tr("Tile might be decorated in the game") : tr("Tile is used as is in the game")));
         int subtileRef = this->dun->getSubtileAt(posx, posy);
         this->ui->dungeonSubtileLineEdit->setText(subtileRef == UNDEF_SUBTILE ? QStringLiteral("?") : QString::number(subtileRef));
-LogErrorF("updateFields dun 3");
         bool smps = this->dun->getSubtileMonProtectionAt(posx, posy);
-LogErrorF("updateFields dun 4");
         this->ui->dungeonSubtileMonProtectionCheckBox->setChecked(smps);
         this->ui->dungeonSubtileMonProtectionCheckBox->setToolTip(smps ? tr("No monster might be placed by the game on this subtile") : tr("Monster might be placed by the game on this subtile"));
-LogErrorF("updateFields dun 5");
         bool sops = this->dun->getSubtileObjProtectionAt(posx, posy);
         this->ui->dungeonSubtileObjProtectionCheckBox->setChecked(sops);
         this->ui->dungeonSubtileObjProtectionCheckBox->setToolTip(sops ? tr("No object might be placed by the game on this subtile") : tr("Object might be placed by the game on this subtile"));
         int itemIndex = this->dun->getItemAt(posx, posy);
-LogErrorF("updateFields dun 6");
         this->ui->dungeonItemLineEdit->setText(QString::number(itemIndex));
         this->ui->dungeonItemComboBox->setCurrentIndex(this->ui->dungeonItemComboBox->findData(itemIndex));
         DunMonsterType monType = this->dun->getMonsterAt(posx, posy);
-LogErrorF("updateFields dun 7");
         this->ui->dungeonMonsterLineEdit->setText(QString::number(monType.first));
         this->ui->dungeonMonsterCheckBox->setChecked(monType.second);
         this->ui->dungeonMonsterComboBox->setCurrentIndex(this->ui->dungeonMonsterComboBox->findData(QVariant::fromValue(monType)));
         int objectIndex = this->dun->getObjectAt(posx, posy);
-LogErrorF("updateFields dun 8");
         this->ui->dungeonObjectLineEdit->setText(QString::number(objectIndex));
         this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
         this->ui->dungeonRoomLineEdit->setText(QString::number(this->dun->getRoomAt(posx, posy)));
-LogErrorF("updateFields dun 10");
     } else {
         // Set current and maximum frame text
         count = this->gfx->getFrameCount();
