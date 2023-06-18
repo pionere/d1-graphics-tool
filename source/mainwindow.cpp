@@ -721,6 +721,7 @@ void MainWindow::on_actionLoad_triggered()
             } else {
                 this->builderWidget->setDungeon(dun);
             }
+            this->ui->menuDungeon->setEnabled(true);
             this->updateWindow();
         } else {
             delete dun;
