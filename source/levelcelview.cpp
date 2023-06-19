@@ -180,7 +180,7 @@ void LevelCelView::setDungeon(D1Dun *dun)
         this->lastVertScrollValue = this->ui->celGraphicsView->verticalScrollBar()->value();
         this->lastHorizScrollValue = this->ui->celGraphicsView->horizontalScrollBar()->value();
         // update zoom
-        this->celScene.setZoom("1:0");
+        this->celScene.setZoom(this->ui->dunZoomEdit->text());
     } else {
         this->dun = dun;
     }
