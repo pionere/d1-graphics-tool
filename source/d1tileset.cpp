@@ -4446,7 +4446,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             for (int x = 14; x < 25; x++) {
                 for (int y = 16; y < 23; y++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
-                    quint8 color = pixel.paletteIndex();
+                    quint8 color = pixel.getPaletteIndex();
                     D1GfxPixel pixel2 = frame->getPixel(x, y - 6);
                     if (!pixel2.isTransparent() && !pixel.isTransparent() && (color == 34 || color == 37 || (color > 51 && color < 60) || (color > 77 && color < 75))) {
                         change |= frame->setPixel(x, y, pixel2); // 325[1]
@@ -4469,7 +4469,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             for (int x = 26; x < MICRO_WIDTH; x++) {
                 for (int y = 1; y < 7; y++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
-                    quint8 color = pixel.paletteIndex();
+                    quint8 color = pixel.getPaletteIndex();
                     if (!pixel.isTransparent() && color != 34 && color != 37 && color != 68 && color != 70) {
                         change |= frame->setPixel(x, y + 6, pixel);      // 342[0]
                         change |= frame->setPixel(57 - x, y + 3, pixel); // 342[0]
@@ -4499,7 +4499,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             for (int x = 0; x < 6; x++) {
                 for (int y = 1; y < 7; y++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
-                    quint8 color = pixel.paletteIndex();
+                    quint8 color = pixel.getPaletteIndex();
                     if (!pixel.isTransparent() && color != 34 && color != 39 && color != 54 && (color < 70 || color > 72)) {
                         change |= frame->setPixel(x, y + 6, pixel);     // 342[1]
                         change |= frame->setPixel(5 - x, y + 3, pixel); // 342[1]
@@ -4529,7 +4529,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             for (int x = 8; x < 20; x++) {
                 for (int y = 16; y < 23; y++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
-                    quint8 color = pixel.paletteIndex();
+                    quint8 color = pixel.getPaletteIndex();
                     D1GfxPixel pixel2 = frame->getPixel(x, y - 7);
                     if (!pixel2.isTransparent() && !pixel.isTransparent() && (color == 35 || color == 37 || color == 39 || (color > 49 && color < 57) || (color > 66 && color < 72))) {
                         change |= frame->setPixel(x, y, pixel2); // 348[0]
