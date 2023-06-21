@@ -77,14 +77,13 @@ const BYTE L2BTYPES[165] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //120..
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //130..
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //140..
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //150..
-	0, 0, 0, 0, 0
+	0, 0, 0, 0, 0, 0, 0, 0, 0,    //150..
 	// clang-format on
 };
 /*
  * Specifies where the given tile ID should spread the room ID (transval).
  */
-const BYTE L2FTYPES[165] = {
+const BYTE L2FTYPES[159] = {
 	// clang-format off
 	 0, 10, 12, 15, 10, 12, 14, 10,  8, 12,
 	 0,  0,  0,  0,  0,  0,  0,  0,  0, 10, // 10..
@@ -101,8 +100,7 @@ const BYTE L2FTYPES[165] = {
 	15, 15, 15, 15, 10, 10, 12, 12, 15, 15, //120..
 	15, 15, 10, 10, 15, 15, 12, 12, 15, 15, //130..
 	10, 12, 12,  0,  0,  0,  0,  0,  0,  0, //140..
-	10, 12, 10, 12, 10, 12, 10, 12, 15, 15, //150..
-	10, 10, 12, 10, 12
+	10, 12, 10, 12, 10, 12, 10, 12, 15,     //150..
 	// clang-format on
 };
 /** Miniset: Stairs up. */
@@ -117,7 +115,7 @@ const BYTE L2USTAIRS[] = {
 
 	0,  0,  0, 0, // replace
 	0, 72, 77, 0,
-	0, 76,  0, 0,
+	0,  0,  0, 0,
 	0,  0,  0, 0,
 	// clang-format on
 };
@@ -154,7 +152,7 @@ const BYTE L2DSTAIRS[] = {
 	// clang-format on
 };*/
 /** Miniset: Crumbled south pillar. */
-const BYTE CRUSHCOL[] = {
+/*const BYTE CRUSHCOL[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -166,7 +164,7 @@ const BYTE CRUSHCOL[] = {
 	0, 83, 0,
 	0,  0, 0,
 	// clang-format on
-};
+};*/
 /** Miniset: Vertical oil spill. */
 const BYTE BIG1[] = {
 	// clang-format off
@@ -280,7 +278,7 @@ const BYTE BIG10[] = {
 	3, 3,
 
 	136, 137, // replace
-	  3,   3,
+	138, 139,
 	// clang-format on
 };
 /** Miniset: Crumbled vertical wall 1. */
@@ -631,7 +629,7 @@ static void DRLG_L2DoorSubs()
 
 /*
  * Place shadows under arches and pillars.
- * New dungeon values: 45..51   72   140 141 142
+ * New dungeon values: 45..51   72   140 141 142 96 100
  * TODO: use DRLG_PlaceMiniSet instead?
  */
 void DRLG_L2Shadows()
@@ -658,23 +656,9 @@ void DRLG_L2Shadows()
 					dungeon[x - 1][y] = 72;
 				}
 				break;
-			case 4:
-				// fake shadow of the vertical doors
-				if (dungeon[x - 1][y] == 3) {
-					dungeon[x - 1][y] = 47;
-				}
-				if (dungeon[x - 1][y - 1] == 3) {
-					dungeon[x - 1][y - 1] = 51;
-				}
-				break;
 			case 5:
 				// fake shadow of the horizontal doors
-				if (dungeon[x][y - 1] == 3) {
-					dungeon[x][y - 1] = 46;
-				}
-				if (dungeon[x - 1][y - 1] == 3) {
-					dungeon[x - 1][y - 1] = 49;
-				}
+				harch = true;
 				break;
 			case 41:
 				// arch to both directions
@@ -698,41 +682,41 @@ void DRLG_L2Shadows()
 				break;
 			}
 			if (varch) {
-				if (dungeon[x - 1][y] == 3 || dungeon[x - 1][y] == 162) {
+				if (dungeon[x - 1][y] == 3 || dungeon[x - 1][y] == 45) {
 					if (dungeon[x - 1][y + 1] == 3 || dungeon[x - 1][y + 1] == 46) { // overlapping shadows (missing tile to match the other part)
 						if (dungeon[x - 1][y - 1] == 3) {
 							// 3, 0,  search
-							// 3/162, 39/41/42,
+							// 3/45, 39/41/42,
 							// 3/46, 0,
 
 							//48, 0, replace
-							//51/164, 0,
+							//51/100, 0,
 							//47, 0,
 							dungeon[x - 1][y - 1] = 48;
-							dungeon[x - 1][y] = dungeon[x - 1][y] == 3 ? 51 : 164;
+							dungeon[x - 1][y] = dungeon[x - 1][y] == 3 ? 51 : 100;
 							dungeon[x - 1][y + 1] = 47;
 							pillar = false;
 						} else if (dungeon[x - 1][y - 1] == 2) {
 							// 2, 0,  search
-							// 3/162, 39/41/42,
+							// 3/45, 39/41/42,
 							// 3/46, 0,
 
 							//142, 0, replace
-							//51/164, 0,
+							//51/100, 0,
 							//47, 0,
 							dungeon[x - 1][y - 1] = 142;
-							dungeon[x - 1][y] = dungeon[x - 1][y] == 3 ? 51 : 164;
+							dungeon[x - 1][y] = dungeon[x - 1][y] == 3 ? 51 : 100;
 							dungeon[x - 1][y + 1] = 47;
 							pillar = false;
 						} else if (dungeon[x - 1][y - 1] == 47 || dungeon[x - 1][y - 1] == 46) { // overlapping shadows
 							// 46/47, 0,  search
-							// 3/162, 39/41/42,
+							// 3/45, 39/41/42,
 							// 3/46, 0,
 
 							// 0, 0, replace
-							//51/164, 0,
+							//51/100, 0,
 							//47, 0,
-							dungeon[x - 1][y] = dungeon[x - 1][y] == 3 ? 51 : 164;
+							dungeon[x - 1][y] = dungeon[x - 1][y] == 3 ? 51 : 100;
 							dungeon[x - 1][y + 1] = 47;
 							pillar = false;
 						}
@@ -760,14 +744,14 @@ void DRLG_L2Shadows()
 			}
 			if (harch) {
 				// - horizontal arch
-				if (dungeon[x][y - 1] == 3 || dungeon[x][y - 1] == 161) {
+				if (dungeon[x][y - 1] == 3 || dungeon[x][y - 1] == 44) {
 					if (dungeon[x + 1][y - 1] == 3) {
-						// 3/161, 3,  search
+						// 3/44, 3,  search
 						// 40/41/43, 0
 
-						//49/163,46, replace
+						//49/96,46, replace
 						// 0, 0,
-						dungeon[x][y - 1] = dungeon[x][y - 1] == 3 ? 49 : 163;
+						dungeon[x][y - 1] = dungeon[x][y - 1] == 3 ? 49 : 96;
 						dungeon[x + 1][y - 1] = 46;
 					//} else if (dungeon[x + 1][y - 1] == 47) { // overlapping shadows (missing tile to match the other part)
 					//	dungeon[x][y - 1] = 49;
@@ -882,14 +866,14 @@ static void DRLG_LoadL2SP()
 		// patch the map - Bonestr2.DUN
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// add tiles with subtiles for arches
-		lm[2 + 2 + 1 * 7] = SwapLE16(162);
-		lm[2 + 4 + 1 * 7] = SwapLE16(162);
-		lm[2 + 2 + 5 * 7] = SwapLE16(162);
-		lm[2 + 4 + 5 * 7] = SwapLE16(162);
-		lm[2 + 1 + 2 * 7] = SwapLE16(161);
-		lm[2 + 1 + 4 * 7] = SwapLE16(161);
-		lm[2 + 5 + 2 * 7] = SwapLE16(161);
-		lm[2 + 5 + 4 * 7] = SwapLE16(161);
+		lm[2 + 2 + 1 * 7] = SwapLE16(45);
+		lm[2 + 4 + 1 * 7] = SwapLE16(45);
+		lm[2 + 2 + 5 * 7] = SwapLE16(45);
+		lm[2 + 4 + 5 * 7] = SwapLE16(45);
+		lm[2 + 1 + 2 * 7] = SwapLE16(44);
+		lm[2 + 1 + 4 * 7] = SwapLE16(44);
+		lm[2 + 5 + 2 * 7] = SwapLE16(44);
+		lm[2 + 5 + 4 * 7] = SwapLE16(44);
 		// - remove tile to leave space for shadow
 		lm[2 + 2 + 4 * 7] = 0;
 		// protect the main structure
@@ -2240,7 +2224,7 @@ static void L2DoorFix2()
 /*
  * Replace doors with arches.
  * TODO: skip if there is no corresponding shadow?
- * New dungeon values: (3) 39 40 41 42 43   161 162
+ * New dungeon values: (3) 39 40 41 42 43 44 45
  */
 static void L2CreateArches()
 {
@@ -2264,30 +2248,30 @@ static void L2CreateArches()
 						// P,
 
 						//39, replace
-						//161,
+						//44,
 						//0,
 						dungeon[x][y - 1] = 39;
-						dungeon[x][y] = 161;
+						dungeon[x][y] = 44;
 					} else if (pn == 8) {
 						// 8,  search
 						// 4,
 						// P,
 
 						//42, replace
-						//161,
+						//44,
 						//0,
 						dungeon[x][y - 1] = 42;
-						dungeon[x][y] = 161;
+						dungeon[x][y] = 44;
 					} else if (pn == 43) {
 						// 43,  search
 						// 4,
 						// P,
 
 						//41, replace
-						//161,
+						//44,
 						//0,
 						dungeon[x][y - 1] = 41;
-						dungeon[x][y] = 161;
+						dungeon[x][y] = 44;
 					}
 				} else if (pn == 1 && y < DMAXY - 2) {
 					if (IsPillar(dungeon[x][y + 2])) {
@@ -2296,10 +2280,10 @@ static void L2CreateArches()
 						// P,
 
 						//39, replace
-						//161,
+						//44,
 						//0,
 						// assert(!drlgFlags[x][y + 1]);
-						dungeon[x][y + 1] = 161;
+						dungeon[x][y + 1] = 44;
 						dungeon[x][y] = 39;
 					}
 				}
@@ -2313,23 +2297,23 @@ static void L2CreateArches()
 					if (pn == 2 || pn == 9) {
 						// 2/9, 5, P,  search
 
-						//40, 162, 0, replace
+						//40, 45, 0, replace
 						dungeon[x - 1][y] = 40;
-						dungeon[x][y] = 162;
+						dungeon[x][y] = 45;
 					} else if (pn == 8) {
 						// 8, 5, P,  search
 
-						//43, 162, 0, replace
+						//43, 45, 0, replace
 						dungeon[x - 1][y] = 43;
-						dungeon[x][y] = 162;
+						dungeon[x][y] = 45;
 					}
 				} else if (pn == 2 && x < DMAXX - 2) {
 					if (IsPillar(dungeon[x + 2][y])) {
 						// 5, 2, P,  search
 
-						//40, 162, 0, replace
+						//40, 45, 0, replace
 						// assert(!drlgFlags[x + 1][y]);
-						dungeon[x + 1][y] = 162;
+						dungeon[x + 1][y] = 45;
 						dungeon[x][y] = 40;
 					}
 				}
@@ -2407,7 +2391,8 @@ static void DRLG_L2()
 	DRLG_L2Shadows();
 	// DRLG_L2Corners(); - commented out, because this is no longer necessary
 
-	DRLG_L2PlaceRndSet(CRUSHCOL, 99);
+	//DRLG_L2PlaceRndSet(CRUSHCOL, 99);
+	DRLG_PlaceRndTile(6, 83, 99);
 	//DRLG_L2PlaceRndSet(RUINS1, 10);
 	//DRLG_L2PlaceRndSet(RUINS2, 10);
 	//DRLG_L2PlaceRndSet(RUINS3, 10);
@@ -2441,20 +2426,20 @@ static void DRLG_L2FixMap()
 	if (pSetPieces[0]._sptype == SPT_LVL_BCHAMB) {
 		// patch the map - Bonecha2.DUN
 		// add tiles with subtiles for arches
-		lm[2 + 13 + 6 * 32] = SwapLE16(161);
-		lm[2 + 13 + 8 * 32] = SwapLE16(161);
-		lm[2 + 17 + 6 * 32] = SwapLE16(161);
-		lm[2 + 17 + 8 * 32] = SwapLE16(163);
+		lm[2 + 13 + 6 * 32] = SwapLE16(44);
+		lm[2 + 13 + 8 * 32] = SwapLE16(44);
+		lm[2 + 17 + 6 * 32] = SwapLE16(44);
+		lm[2 + 17 + 8 * 32] = SwapLE16(96);
 
-		lm[2 + 13 + 14 * 32] = SwapLE16(161);
-		lm[2 + 13 + 16 * 32] = SwapLE16(161);
-		lm[2 + 17 + 14 * 32] = SwapLE16(161);
-		lm[2 + 17 + 16 * 32] = SwapLE16(161);
+		lm[2 + 13 + 14 * 32] = SwapLE16(44);
+		lm[2 + 13 + 16 * 32] = SwapLE16(44);
+		lm[2 + 17 + 14 * 32] = SwapLE16(44);
+		lm[2 + 17 + 16 * 32] = SwapLE16(44);
 
-		lm[2 + 18 + 9 * 32] = SwapLE16(162);
-		lm[2 + 20 + 9 * 32] = SwapLE16(162);
-		lm[2 + 18 + 13 * 32] = SwapLE16(162);
-		lm[2 + 20 + 13 * 32] = SwapLE16(162);
+		lm[2 + 18 + 9 * 32] = SwapLE16(45);
+		lm[2 + 20 + 9 * 32] = SwapLE16(45);
+		lm[2 + 18 + 13 * 32] = SwapLE16(45);
+		lm[2 + 20 + 13 * 32] = SwapLE16(45);
 	}
 }
 
@@ -2541,9 +2526,9 @@ static void DRLG_L2FixPreMap(int idx)
 		lm[2 + 16 + 8 * 32] = SwapLE16(47);
 		// - central room (top)
 		lm[2 + 17 + 8 * 32] = SwapLE16(49);
-		lm[2 + 18 + 8 * 32] = SwapLE16(46);
+		lm[2 + 18 + 8 * 32] = SwapLE16(49);
 		lm[2 + 19 + 8 * 32] = SwapLE16(49);
-		lm[2 + 20 + 8 * 32] = SwapLE16(46);
+		lm[2 + 20 + 8 * 32] = SwapLE16(49);
 		// - central room (bottom)
 		lm[2 + 18 + 12 * 32] = SwapLE16(46);
 		lm[2 + 19 + 12 * 32] = SwapLE16(49);
@@ -2552,6 +2537,14 @@ static void DRLG_L2FixPreMap(int idx)
 		lm[2 + 12 + 15 * 32] = SwapLE16(51);
 		lm[2 + 16 + 14 * 32] = SwapLE16(47);
 		lm[2 + 16 + 15 * 32] = SwapLE16(51);
+		// - use common tiles
+		lm[2 + 13 + 12 * 32] = SwapLE16(53);
+		lm[2 + 14 + 12 * 32] = SwapLE16(62);
+		lm[2 + 15 + 12 * 32] = SwapLE16(62);
+		lm[2 + 16 + 12 * 32] = SwapLE16(62);
+		lm[2 + 16 + 11 * 32] = SwapLE16(62);
+		lm[2 + 16 + 10 * 32] = SwapLE16(62);
+		lm[2 + 16 +  9 * 32] = SwapLE16(62);
 		// fix corners
 		// DRLG_L2Corners(); - commented out, because this is no longer necessary
 		// protect inner tiles from spawning additional monsters/objects

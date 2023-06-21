@@ -296,48 +296,30 @@ void InitLvlDungeon()
 		pTiles[41][1] = 135;
 		// add separate tiles and subtiles for the arches
 		// - floor tile(3) with vertical arch
-		pTiles[161][0] = 560;
-		pTiles[161][1] = 10;
-		pTiles[161][2] = 561;
-		pTiles[161][3] = 12;
-		// - floor tile(3) with horizontal arch
-		pTiles[162][0] = 562;
-		pTiles[162][1] = 563;
-		pTiles[162][2] = 11;
-		pTiles[162][3] = 12;
+		pTiles[44][0] = 150;
+		pTiles[44][1] = 10;
+		pTiles[44][2] = 153;
+		pTiles[44][3] = 12;
 		// - floor tile with shadow(49) with vertical arch
-		pTiles[163][0] = 564; // - 159
-		pTiles[163][1] = 160;
-		pTiles[163][2] = 565; // - 161
-		pTiles[163][3] = 162;
+		pTiles[96][0] = 150;
+		pTiles[96][1] = 160;
+		pTiles[96][2] = 156;
+		pTiles[96][3] = 162;
 		// - floor tile with shadow(51) with horizontal arch
-		pTiles[164][0] = 566; // - 166
-		pTiles[164][1] = 567; // - 167
-		pTiles[164][2] = 168;
-		pTiles[164][3] = 169;
-		// pSubtiles[560][0] = pSubtiles[9][0];
-		// pSubtiles[560][1] = pSubtiles[9][1];
-		// pSubtiles[561][0] = pSubtiles[11][0];
-		// pSubtiles[561][1] = pSubtiles[11][1];
-		// pSubtiles[562][0] = pSubtiles[9][0];
-		// pSubtiles[562][1] = pSubtiles[9][1];
-		// pSubtiles[563][0] = pSubtiles[10][0];
-		// pSubtiles[563][1] = pSubtiles[10][1];
-		// pSubtiles[564][0] = pSubtiles[159][0];
-		// pSubtiles[564][1] = pSubtiles[159][1];
-		// pSubtiles[565][0] = pSubtiles[161][0];
-		// pSubtiles[565][1] = pSubtiles[161][1];
-		// pSubtiles[566][0] = pSubtiles[166][0];
-		// pSubtiles[566][1] = pSubtiles[166][1];
-		// pSubtiles[567][0] = pSubtiles[167][0];
-		// pSubtiles[567][1] = pSubtiles[167][1];
-		// make the back of the stairs non-walkable
-		// - reset flags of the 'new' floor tiles with arches
-		for (int ii = 0; ii < 8; ii++) {
-			nSolidTable[559 + ii] = false;
-			nBlockTable[559 + ii] = false;
-			nMissileTable[559 + ii] = false;
-		}
+		pTiles[100][0] = 158;
+		pTiles[100][1] = 165;
+		pTiles[100][2] = 168;
+		pTiles[100][3] = 169;
+		// pSubtiles[150][0] = pSubtiles[9][0];
+		// pSubtiles[150][1] = pSubtiles[9][1];
+		// pSubtiles[153][0] = pSubtiles[11][0];
+		// pSubtiles[153][1] = pSubtiles[11][1];
+		// pSubtiles[156][0] = pSubtiles[161][0];
+		// pSubtiles[156][1] = pSubtiles[161][1];
+		// pSubtiles[158][0] = pSubtiles[166][0];
+		// pSubtiles[158][1] = pSubtiles[166][1];
+		// pSubtiles[165][0] = pSubtiles[167][0];
+		// pSubtiles[165][1] = pSubtiles[167][1];
 		// fix the upstairs
 		// - make the back of the stairs non-walkable
 		pTiles[72][1] = 56;
@@ -608,6 +590,7 @@ void DRLG_PlaceMegaTiles(int mt)
     int et = -1;
     switch (currLvl._dLevel) {
     case DTYPE_CATHEDRAL: et = 74; break;
+    case DTYPE_CATACOMBS: et = 2;  break;
 #ifdef  HELLFIRE
     case DTYPE_CRYPT:     et = 8;  break;
 #endif //  HELLFIRE
