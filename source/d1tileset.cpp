@@ -4025,40 +4025,40 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
 
 void D1Tileset::patchCatacombsSpec(bool silent)
 {
-	typedef struct {
-		int frameIndex;
-		int frameWidth;
-		int frameHeight;
-	} CelFrame;
-	const CelFrame frames[] = {
-		{ 0, 64, 160 }
-	};
+    typedef struct {
+        int frameIndex;
+        int frameWidth;
+        int frameHeight;
+    } CelFrame;
+    const CelFrame frames[] = {
+        { 0, 64, 160 }
+    };
 
-	int idx = 0;
-	for (int i = 0; i < this->cls->getFrameCount(); i++) {
-		const CelFrame &cFrame = frames[idx];
-		if (i == cFrame.frameIndex) {
-			D1GfxFrame *frame = this->cls->getFrame(i);
-			bool change = false;
-			if (i == 0) {				
-				change |= frame->setPixel(10, 52, D1GfxPixel::colorPixel(55);
-				change |= frame->setPixel(11, 52, D1GfxPixel::colorPixel(53);
-				change |= frame->setPixel(13, 53, D1GfxPixel::colorPixel(53);
-				change |= frame->setPixel(19, 55, D1GfxPixel::colorPixel(55);
-				change |= frame->setPixel(23, 57, D1GfxPixel::colorPixel(53);
-				change |= frame->setPixel(25, 58, D1GfxPixel::colorPixel(53);
-				change |= frame->setPixel(26, 59, D1GfxPixel::colorPixel(55);
-				change |= frame->setPixel(27, 60, D1GfxPixel::colorPixel(53);
-				change |= frame->setPixel(28, 61, D1GfxPixel::colorPixel(54);
-			}
-
-			if (change && !silent) {
-				dProgress() << QApplication::tr("Special-Frame %1 is modified.").arg(i + 1);
+    int idx = 0;
+    for (int i = 0; i < this->cls->getFrameCount(); i++) {
+        const CelFrame &cFrame = frames[idx];
+        if (i == cFrame.frameIndex) {
+            D1GfxFrame *frame = this->cls->getFrame(i);
+            bool change = false;
+            if (i == 0) {                
+                change |= frame->setPixel(10, 52, D1GfxPixel::colorPixel(55));
+                change |= frame->setPixel(11, 52, D1GfxPixel::colorPixel(53));
+                change |= frame->setPixel(13, 53, D1GfxPixel::colorPixel(53));
+                change |= frame->setPixel(19, 55, D1GfxPixel::colorPixel(55));
+                change |= frame->setPixel(23, 57, D1GfxPixel::colorPixel(53));
+                change |= frame->setPixel(25, 58, D1GfxPixel::colorPixel(53));
+                change |= frame->setPixel(26, 59, D1GfxPixel::colorPixel(55));
+                change |= frame->setPixel(27, 60, D1GfxPixel::colorPixel(53));
+                change |= frame->setPixel(28, 61, D1GfxPixel::colorPixel(54));
             }
 
-			idx++;
-		}
-	}
+            if (change && !silent) {
+                dProgress() << QApplication::tr("Special-Frame %1 is modified.").arg(i + 1);
+            }
+
+            idx++;
+        }
+    }
 }
 
 bool D1Tileset::fixCatacombsShadows(bool silent)
@@ -4066,12 +4066,12 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
     typedef struct {
         int subtileIndex;
         unsigned microIndex;
-        int res_encoding;
+        D1CEL_FRAME_TYPE res_encoding;
     } CelMicro;
     const CelMicro micros[] = {
-        /* 0 */{ 151 - 1, 0, -1 }, // used to block subsequent calls
-//        /* 0 */{ 146 - 1, 1, -1 },
-//        /* 1 */{ 166 - 1, 1, MET_RightTriangle },
+        /* 0 */{ 151 - 1, 0, D1CEL_FRAME_TYPE::Empty }, // used to block subsequent calls
+//        /* 0 */{ 146 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+//        /* 1 */{ 166 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
     };
 
     constexpr unsigned blockSize = BLOCK_SIZE_L2;
@@ -4126,12 +4126,12 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
 
 bool D1Tileset::patchCatacombsFloor(bool silent)
 {
-	typedef struct {
-		int subtileIndex;
-		unsigned microIndex;
-		int res_encoding;
-	} CelMicro;
-	const CelMicro micros[] = {
+    typedef struct {
+        int subtileIndex;
+        unsigned microIndex;
+        D1CEL_FRAME_TYPE res_encoding;
+    } CelMicro;
+    const CelMicro micros[] = {
 /*  0 */{ 323 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare }, // used to block subsequent calls
 /*  1 */{ 134 - 1, 5, D1CEL_FRAME_TYPE::Square },     // change type
 /*  2 */{ 283 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },  // change type
@@ -4190,7 +4190,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
 /* 50 */{ 167 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
 /* 51 */{ 270 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // change type
 /* 52 */{ 271 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle }, // reduce shadow
-	};
+    };
 
     constexpr unsigned blockSize = BLOCK_SIZE_L2;
     for (int i = 0; i < lengthof(micros); i++) {
@@ -4209,7 +4209,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             for (int x = 8; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     if (y < (x - 8) / 2 + 22) {
-						change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel()); // 17[1]
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel()); // 17[1]
                     }
                 }
             }
@@ -4323,7 +4323,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
 
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
-					D1GfxPixel pixel = frameSrc->getPixel(x, y);
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y);
                     if (pixel.isTransparent()) {
                         if (i == 21 && ((x == 4 && ((y > 3 && y < 7) || (y > 10 && y < 16)))) || (x == 5 && y != 17)) {
                             continue; // 287[2]
@@ -4364,11 +4364,11 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
                 for (int y = 10 + (x + 1) / 2; y < 11 + (x + 1) / 2; y++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
                     D1GfxPixel pixel3 = frame->getPixel(x + 2, y - 1);
-					change |= frame->setPixel(x, y + 4, pixel);
-					change |= frame->setPixel(x, y, pixel3);
+                    change |= frame->setPixel(x, y + 4, pixel);
+                    change |= frame->setPixel(x, y, pixel3);
                     if ((x & 1) == 0) {
-	                    D1GfxPixel pixel3_1 = frame->getPixel(x + 2 + 1, y - 1);
-						change |= frame->setPixel(x + 1, y, pixel3_1);
+                        D1GfxPixel pixel3_1 = frame->getPixel(x + 2 + 1, y - 1);
+                        change |= frame->setPixel(x + 1, y, pixel3_1);
                     }
                 }
             }
@@ -4446,7 +4446,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             for (int x = 14; x < 25; x++) {
                 for (int y = 16; y < 23; y++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
-					quint8 color = pixel.colorPixel();
+                    quint8 color = pixel.colorPixel();
                     D1GfxPixel pixel2 = frame->getPixel(x, y - 6);
                     if (!pixel2.isTransparent() && !pixel.isTransparent() && (color == 34 || color == 37 || (color > 51 && color < 60) || (color > 77 && color < 75))) {
                         change |= frame->setPixel(x, y, pixel2); // 325[1]
@@ -4469,7 +4469,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             for (int x = 26; x < MICRO_WIDTH; x++) {
                 for (int y = 1; y < 7; y++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
-					quint8 color = pixel.colorPixel();
+                    quint8 color = pixel.colorPixel();
                     if (!pixel.isTransparent() && color != 34 && color != 37 && color != 68 && color != 70) {
                         change |= frame->setPixel(x, y + 6, pixel);      // 342[0]
                         change |= frame->setPixel(57 - x, y + 3, pixel); // 342[0]
@@ -4499,7 +4499,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             for (int x = 0; x < 6; x++) {
                 for (int y = 1; y < 7; y++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
-					quint8 color = pixel.colorPixel();
+                    quint8 color = pixel.colorPixel();
                     if (!pixel.isTransparent() && color != 34 && color != 39 && color != 54 && (color < 70 || color > 72)) {
                         change |= frame->setPixel(x, y + 6, pixel);     // 342[1]
                         change |= frame->setPixel(5 - x, y + 3, pixel); // 342[1]
@@ -4529,7 +4529,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             for (int x = 8; x < 20; x++) {
                 for (int y = 16; y < 23; y++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
-					quint8 color = pixel.colorPixel();
+                    quint8 color = pixel.colorPixel();
                     D1GfxPixel pixel2 = frame->getPixel(x, y - 7);
                     if (!pixel2.isTransparent() && !pixel.isTransparent() && (color == 35 || color == 37 || color == 39 || (color > 49 && color < 57) || (color > 66 && color < 72))) {
                         change |= frame->setPixel(x, y, pixel2); // 348[0]
@@ -4776,7 +4776,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     //ReplaceSubtile(this->til, 49 - 1, 0, 9 - 1, silent);
     //ReplaceSubtile(this->til, 49 - 1, 1, 10 - 1, silent);
     ReplaceSubtile(this->til, 68 - 1, 1, 10 - 1, silent);
-    ReplaceSubtile(this->til, 70 - 1, 1, 10 - 1, silent);		
+    ReplaceSubtile(this->til, 70 - 1, 1, 10 - 1, silent);        
     ReplaceSubtile(this->til, 71 - 1, 0, 9 - 1, silent);
     ReplaceSubtile(this->til, 71 - 1, 1, 10 - 1, silent);
     ReplaceSubtile(this->til, 77 - 1, 3, 12 - 1, silent);
@@ -4922,9 +4922,9 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     }
 
 
-	// adjust the frame types
-	// - after patchCatacombsFloor
-	if (this->patchCatacombsFloor(silent)) {
+    // adjust the frame types
+    // - after patchCatacombsFloor
+    if (this->patchCatacombsFloor(silent)) {
         // unify the columns
         Blk2Mcr(22, 3);
         Blk2Mcr(26, 3);
@@ -4949,686 +4949,686 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
         Blk2Mcr(289, 4);
         Blk2Mcr(289, 2);
     }
-	// new shadows
-	if (this->fixCatacombsShadows()) {
-		Blk2Mcr(161, 0);
-		MoveMcr(161, 0, 151, 0);
-		Blk2Mcr(151, 1);
+    // new shadows
+    if (this->fixCatacombsShadows()) {
+        Blk2Mcr(161, 0);
+        MoveMcr(161, 0, 151, 0);
+        Blk2Mcr(151, 1);
 
-		ReplaceMcr(147, 1, 154, 1);
-		ReplaceMcr(167, 1, 154, 1);
+        ReplaceMcr(147, 1, 154, 1);
+        ReplaceMcr(167, 1, 154, 1);
 
-		ReplaceMcr(150, 0, 9, 0);
-		SetMcr(150, 1, 9, 1);
-		SetMcr(153, 0, 11, 0);
-		ReplaceMcr(153, 1, 11, 1);
-		ReplaceMcr(156, 0, 161, 0);
-		SetMcr(156, 1, 161, 1);
-		ReplaceMcr(158, 0, 166, 0);
-		SetMcr(158, 1, 166, 1);
-		SetMcr(165, 0, 167, 0);
-		ReplaceMcr(165, 1, 167, 1);
-		ReplaceMcr(164, 0, 147, 0);
-		ReplaceMcr(164, 1, 147, 1);
-	}
-	// pointless door micros (re-drawn by dSpecial or the object)
-	// - vertical doors	
-	ReplaceMcr(538, 0, 13, 0);
-	ReplaceMcr(538, 1, 13, 1);
-	ReplaceMcr(538, 2, 13, 2);
-	ReplaceMcr(538, 3, 13, 3);
-	Blk2Mcr(538, 4);
-	ReplaceMcr(538, 5, 13, 5);
-	Blk2Mcr(538, 6);
-	Blk2Mcr(538, 7);
-	ReplaceMcr(540, 0, 17, 0);
-	ReplaceMcr(540, 1, 17, 1);
-	ReplaceMcr(540, 2, 17, 2);
-	ReplaceMcr(540, 3, 17, 3);
-	ReplaceMcr(540, 4, 17, 5);
-	Blk2Mcr(540, 5);
-	Blk2Mcr(540, 6);
-	Blk2Mcr(540, 7);
-	// - reduce pointless bone-chamber complexity I.
-	Blk2Mcr(323, 2);
-	Blk2Mcr(325, 2);
-	Blk2Mcr(331, 2);
-	Blk2Mcr(331, 3);
-	Blk2Mcr(332, 3);
-	Blk2Mcr(348, 3);
-	Blk2Mcr(326, 0);
-	Blk2Mcr(326, 1);
-	Blk2Mcr(333, 0);
-	Blk2Mcr(333, 1);
-	Blk2Mcr(333, 2);
-	Blk2Mcr(340, 0);
-	Blk2Mcr(340, 1);
-	Blk2Mcr(341, 0);
-	Blk2Mcr(341, 1);
-	Blk2Mcr(347, 0);
-	Blk2Mcr(347, 1);
-	Blk2Mcr(347, 3);
-	Blk2Mcr(350, 0);
-	Blk2Mcr(350, 1);
+        ReplaceMcr(150, 0, 9, 0);
+        SetMcr(150, 1, 9, 1);
+        SetMcr(153, 0, 11, 0);
+        ReplaceMcr(153, 1, 11, 1);
+        ReplaceMcr(156, 0, 161, 0);
+        SetMcr(156, 1, 161, 1);
+        ReplaceMcr(158, 0, 166, 0);
+        SetMcr(158, 1, 166, 1);
+        SetMcr(165, 0, 167, 0);
+        ReplaceMcr(165, 1, 167, 1);
+        ReplaceMcr(164, 0, 147, 0);
+        ReplaceMcr(164, 1, 147, 1);
+    }
+    // pointless door micros (re-drawn by dSpecial or the object)
+    // - vertical doors    
+    ReplaceMcr(538, 0, 13, 0);
+    ReplaceMcr(538, 1, 13, 1);
+    ReplaceMcr(538, 2, 13, 2);
+    ReplaceMcr(538, 3, 13, 3);
+    Blk2Mcr(538, 4);
+    ReplaceMcr(538, 5, 13, 5);
+    Blk2Mcr(538, 6);
+    Blk2Mcr(538, 7);
+    ReplaceMcr(540, 0, 17, 0);
+    ReplaceMcr(540, 1, 17, 1);
+    ReplaceMcr(540, 2, 17, 2);
+    ReplaceMcr(540, 3, 17, 3);
+    ReplaceMcr(540, 4, 17, 5);
+    Blk2Mcr(540, 5);
+    Blk2Mcr(540, 6);
+    Blk2Mcr(540, 7);
+    // - reduce pointless bone-chamber complexity I.
+    Blk2Mcr(323, 2);
+    Blk2Mcr(325, 2);
+    Blk2Mcr(331, 2);
+    Blk2Mcr(331, 3);
+    Blk2Mcr(332, 3);
+    Blk2Mcr(348, 3);
+    Blk2Mcr(326, 0);
+    Blk2Mcr(326, 1);
+    Blk2Mcr(333, 0);
+    Blk2Mcr(333, 1);
+    Blk2Mcr(333, 2);
+    Blk2Mcr(340, 0);
+    Blk2Mcr(340, 1);
+    Blk2Mcr(341, 0);
+    Blk2Mcr(341, 1);
+    Blk2Mcr(347, 0);
+    Blk2Mcr(347, 1);
+    Blk2Mcr(347, 3);
+    Blk2Mcr(350, 0);
+    Blk2Mcr(350, 1);
 
-	ReplaceMcr(324, 0, 339, 0);
-	Blk2Mcr(334, 0);
-	Blk2Mcr(334, 1);
-	Blk2Mcr(339, 1);
-	Blk2Mcr(349, 0);
-	Blk2Mcr(349, 1);
-	// pointless pixels
-	Blk2Mcr(103, 6);
-	Blk2Mcr(107, 6);
-	Blk2Mcr(111, 2);
-	Blk2Mcr(283, 3);
-	Blk2Mcr(283, 7);
-	Blk2Mcr(295, 6);
-	Blk2Mcr(299, 4);
-	Blk2Mcr(494, 6);
-	Blk2Mcr(551, 7);
-	Blk2Mcr(482, 3);
-	Blk2Mcr(482, 7);
-	Blk2Mcr(553, 6);
-	// fix the upstairs III.
-	/*if (pSubtiles[MICRO_IDX(265 - 1, blockSize, 3)] != 0) {
-		// move the frames to the back subtile
-		// - left side
-		MoveMcr(252, 2, 265, 3);
-		HideMcr(556, 3);
+    ReplaceMcr(324, 0, 339, 0);
+    Blk2Mcr(334, 0);
+    Blk2Mcr(334, 1);
+    Blk2Mcr(339, 1);
+    Blk2Mcr(349, 0);
+    Blk2Mcr(349, 1);
+    // pointless pixels
+    Blk2Mcr(103, 6);
+    Blk2Mcr(107, 6);
+    Blk2Mcr(111, 2);
+    Blk2Mcr(283, 3);
+    Blk2Mcr(283, 7);
+    Blk2Mcr(295, 6);
+    Blk2Mcr(299, 4);
+    Blk2Mcr(494, 6);
+    Blk2Mcr(551, 7);
+    Blk2Mcr(482, 3);
+    Blk2Mcr(482, 7);
+    Blk2Mcr(553, 6);
+    // fix the upstairs III.
+    /*if (pSubtiles[MICRO_IDX(265 - 1, blockSize, 3)] != 0) {
+        // move the frames to the back subtile
+        // - left side
+        MoveMcr(252, 2, 265, 3);
+        HideMcr(556, 3);
 
-		// - right side
-		MoveMcr(252, 1, 265, 5);
-		HideMcr(556, 5);
+        // - right side
+        MoveMcr(252, 1, 265, 5);
+        HideMcr(556, 5);
 
-		MoveMcr(252, 3, 267, 2);
-		// Blk2Mcr(559, 2);
+        MoveMcr(252, 3, 267, 2);
+        // Blk2Mcr(559, 2);
 
-		MoveMcr(252, 5, 267, 4);
-		// Blk2Mcr(559, 4);
+        MoveMcr(252, 5, 267, 4);
+        // Blk2Mcr(559, 4);
 
-		MoveMcr(252, 7, 267, 6);
-		// HideMcr(559, 6);
-	}*/
-	// fix bad artifact
-	Blk2Mcr(288, 7);
-	// fix graphical glitch
-	Blk2Mcr(279, 7);
-	// ReplaceMcr(548, 0, 99, 0);
-	ReplaceMcr(552, 1, 244, 1);
+        MoveMcr(252, 7, 267, 6);
+        // HideMcr(559, 6);
+    }*/
+    // fix bad artifact
+    Blk2Mcr(288, 7);
+    // fix graphical glitch
+    Blk2Mcr(279, 7);
+    // ReplaceMcr(548, 0, 99, 0);
+    ReplaceMcr(552, 1, 244, 1);
 
-	// reuse subtiles
-	ReplaceMcr(27, 6, 3, 6);
-	ReplaceMcr(62, 6, 3, 6);
-	ReplaceMcr(66, 6, 3, 6);
-	ReplaceMcr(78, 6, 3, 6);
-	ReplaceMcr(82, 6, 3, 6);
-	ReplaceMcr(85, 6, 3, 6);
-	ReplaceMcr(88, 6, 3, 6);
-	// ReplaceMcr(92, 6, 3, 6);
-	ReplaceMcr(96, 6, 3, 6);
-	// ReplaceMcr(117, 6, 3, 6);
-	// ReplaceMcr(120, 6, 3, 6);
-	ReplaceMcr(129, 6, 3, 6);
-	ReplaceMcr(132, 6, 3, 6);
-	// ReplaceMcr(172, 6, 3, 6);
-	ReplaceMcr(176, 6, 3, 6);
-	ReplaceMcr(184, 6, 3, 6);
-	ReplaceMcr(236, 6, 3, 6);
-	ReplaceMcr(240, 6, 3, 6);
-	ReplaceMcr(244, 6, 3, 6);
-	ReplaceMcr(277, 6, 3, 6);
-	ReplaceMcr(285, 6, 3, 6);
-	ReplaceMcr(305, 6, 3, 6);
-	ReplaceMcr(416, 6, 3, 6);
-	ReplaceMcr(420, 6, 3, 6);
-	ReplaceMcr(480, 6, 3, 6);
-	ReplaceMcr(484, 6, 3, 6);
+    // reuse subtiles
+    ReplaceMcr(27, 6, 3, 6);
+    ReplaceMcr(62, 6, 3, 6);
+    ReplaceMcr(66, 6, 3, 6);
+    ReplaceMcr(78, 6, 3, 6);
+    ReplaceMcr(82, 6, 3, 6);
+    ReplaceMcr(85, 6, 3, 6);
+    ReplaceMcr(88, 6, 3, 6);
+    // ReplaceMcr(92, 6, 3, 6);
+    ReplaceMcr(96, 6, 3, 6);
+    // ReplaceMcr(117, 6, 3, 6);
+    // ReplaceMcr(120, 6, 3, 6);
+    ReplaceMcr(129, 6, 3, 6);
+    ReplaceMcr(132, 6, 3, 6);
+    // ReplaceMcr(172, 6, 3, 6);
+    ReplaceMcr(176, 6, 3, 6);
+    ReplaceMcr(184, 6, 3, 6);
+    ReplaceMcr(236, 6, 3, 6);
+    ReplaceMcr(240, 6, 3, 6);
+    ReplaceMcr(244, 6, 3, 6);
+    ReplaceMcr(277, 6, 3, 6);
+    ReplaceMcr(285, 6, 3, 6);
+    ReplaceMcr(305, 6, 3, 6);
+    ReplaceMcr(416, 6, 3, 6);
+    ReplaceMcr(420, 6, 3, 6);
+    ReplaceMcr(480, 6, 3, 6);
+    ReplaceMcr(484, 6, 3, 6);
 
-	ReplaceMcr(27, 4, 3, 4);
-	ReplaceMcr(62, 4, 3, 4);
-	ReplaceMcr(78, 4, 3, 4);
-	ReplaceMcr(82, 4, 3, 4);
-	ReplaceMcr(85, 4, 3, 4);
-	ReplaceMcr(88, 4, 3, 4);
-	// ReplaceMcr(92, 4, 3, 4);
-	ReplaceMcr(96, 4, 3, 4);
-	// ReplaceMcr(117, 4, 3, 4);
-	// ReplaceMcr(120, 4, 3, 4);
-	ReplaceMcr(129, 4, 3, 4);
-	// ReplaceMcr(172, 4, 3, 4);
-	ReplaceMcr(176, 4, 3, 4);
-	ReplaceMcr(236, 4, 66, 4);
-	ReplaceMcr(240, 4, 3, 4);
-	ReplaceMcr(244, 4, 66, 4);
-	ReplaceMcr(277, 4, 66, 4);
-	ReplaceMcr(281, 4, 3, 4);
-	ReplaceMcr(285, 4, 3, 4);
-	ReplaceMcr(305, 4, 3, 4);
-	ReplaceMcr(480, 4, 3, 4);
-	ReplaceMcr(552, 4, 3, 4);
+    ReplaceMcr(27, 4, 3, 4);
+    ReplaceMcr(62, 4, 3, 4);
+    ReplaceMcr(78, 4, 3, 4);
+    ReplaceMcr(82, 4, 3, 4);
+    ReplaceMcr(85, 4, 3, 4);
+    ReplaceMcr(88, 4, 3, 4);
+    // ReplaceMcr(92, 4, 3, 4);
+    ReplaceMcr(96, 4, 3, 4);
+    // ReplaceMcr(117, 4, 3, 4);
+    // ReplaceMcr(120, 4, 3, 4);
+    ReplaceMcr(129, 4, 3, 4);
+    // ReplaceMcr(172, 4, 3, 4);
+    ReplaceMcr(176, 4, 3, 4);
+    ReplaceMcr(236, 4, 66, 4);
+    ReplaceMcr(240, 4, 3, 4);
+    ReplaceMcr(244, 4, 66, 4);
+    ReplaceMcr(277, 4, 66, 4);
+    ReplaceMcr(281, 4, 3, 4);
+    ReplaceMcr(285, 4, 3, 4);
+    ReplaceMcr(305, 4, 3, 4);
+    ReplaceMcr(480, 4, 3, 4);
+    ReplaceMcr(552, 4, 3, 4);
 
-	ReplaceMcr(27, 2, 3, 2);
-	ReplaceMcr(62, 2, 3, 2);
-	ReplaceMcr(78, 2, 3, 2);
-	ReplaceMcr(82, 2, 3, 2);
-	ReplaceMcr(85, 2, 3, 2);
-	ReplaceMcr(88, 2, 3, 2);
-	// ReplaceMcr(92, 2, 3, 2);
-	ReplaceMcr(96, 2, 3, 2);
-	// ReplaceMcr(117, 2, 3, 2);
-	ReplaceMcr(129, 2, 3, 2);
-	// ReplaceMcr(172, 2, 3, 2);
-	ReplaceMcr(176, 2, 3, 2);
-	ReplaceMcr(180, 2, 3, 2);
-	ReplaceMcr(236, 2, 66, 2);
-	ReplaceMcr(244, 2, 66, 2);
-	ReplaceMcr(277, 2, 66, 2);
-	ReplaceMcr(281, 2, 3, 2);
-	ReplaceMcr(285, 2, 3, 2);
-	ReplaceMcr(305, 2, 3, 2);
-	ReplaceMcr(448, 2, 3, 2);
-	ReplaceMcr(480, 2, 3, 2);
-	ReplaceMcr(552, 2, 3, 2);
+    ReplaceMcr(27, 2, 3, 2);
+    ReplaceMcr(62, 2, 3, 2);
+    ReplaceMcr(78, 2, 3, 2);
+    ReplaceMcr(82, 2, 3, 2);
+    ReplaceMcr(85, 2, 3, 2);
+    ReplaceMcr(88, 2, 3, 2);
+    // ReplaceMcr(92, 2, 3, 2);
+    ReplaceMcr(96, 2, 3, 2);
+    // ReplaceMcr(117, 2, 3, 2);
+    ReplaceMcr(129, 2, 3, 2);
+    // ReplaceMcr(172, 2, 3, 2);
+    ReplaceMcr(176, 2, 3, 2);
+    ReplaceMcr(180, 2, 3, 2);
+    ReplaceMcr(236, 2, 66, 2);
+    ReplaceMcr(244, 2, 66, 2);
+    ReplaceMcr(277, 2, 66, 2);
+    ReplaceMcr(281, 2, 3, 2);
+    ReplaceMcr(285, 2, 3, 2);
+    ReplaceMcr(305, 2, 3, 2);
+    ReplaceMcr(448, 2, 3, 2);
+    ReplaceMcr(480, 2, 3, 2);
+    ReplaceMcr(552, 2, 3, 2);
 
-	ReplaceMcr(78, 0, 3, 0);
-	ReplaceMcr(88, 0, 3, 0);
-	// ReplaceMcr(92, 0, 3, 0);
-	ReplaceMcr(96, 0, 62, 0);
-	// ReplaceMcr(117, 0, 62, 0);
-	// ReplaceMcr(120, 0, 62, 0);
-	ReplaceMcr(236, 0, 62, 0);
-	ReplaceMcr(240, 0, 62, 0);
-	ReplaceMcr(244, 0, 62, 0);
-	ReplaceMcr(277, 0, 66, 0);
-	ReplaceMcr(281, 0, 62, 0);
-	ReplaceMcr(285, 0, 62, 0);
-	ReplaceMcr(305, 0, 62, 0);
-	ReplaceMcr(448, 0, 3, 0);
-	ReplaceMcr(480, 0, 62, 0);
-	ReplaceMcr(552, 0, 62, 0);
+    ReplaceMcr(78, 0, 3, 0);
+    ReplaceMcr(88, 0, 3, 0);
+    // ReplaceMcr(92, 0, 3, 0);
+    ReplaceMcr(96, 0, 62, 0);
+    // ReplaceMcr(117, 0, 62, 0);
+    // ReplaceMcr(120, 0, 62, 0);
+    ReplaceMcr(236, 0, 62, 0);
+    ReplaceMcr(240, 0, 62, 0);
+    ReplaceMcr(244, 0, 62, 0);
+    ReplaceMcr(277, 0, 66, 0);
+    ReplaceMcr(281, 0, 62, 0);
+    ReplaceMcr(285, 0, 62, 0);
+    ReplaceMcr(305, 0, 62, 0);
+    ReplaceMcr(448, 0, 3, 0);
+    ReplaceMcr(480, 0, 62, 0);
+    ReplaceMcr(552, 0, 62, 0);
 
-	ReplaceMcr(85, 1, 82, 1);
-	// ReplaceMcr(117, 1, 244, 1);
-	// ReplaceMcr(120, 1, 244, 1);
-	ReplaceMcr(236, 1, 244, 1);
-	ReplaceMcr(240, 1, 62, 1);
-	ReplaceMcr(452, 1, 244, 1);
-	// ReplaceMcr(539, 1, 15, 1);
+    ReplaceMcr(85, 1, 82, 1);
+    // ReplaceMcr(117, 1, 244, 1);
+    // ReplaceMcr(120, 1, 244, 1);
+    ReplaceMcr(236, 1, 244, 1);
+    ReplaceMcr(240, 1, 62, 1);
+    ReplaceMcr(452, 1, 244, 1);
+    // ReplaceMcr(539, 1, 15, 1);
 
-	// TODO: ReplaceMcr(30, 7, 6, 7); ?
-	ReplaceMcr(34, 7, 30, 7);
-	ReplaceMcr(69, 7, 6, 7);
-	ReplaceMcr(73, 7, 30, 7);
-	ReplaceMcr(99, 7, 6, 7);
-	ReplaceMcr(104, 7, 6, 7);
-	ReplaceMcr(108, 7, 6, 7);
-	ReplaceMcr(112, 7, 6, 7);
-	ReplaceMcr(128, 7, 30, 7);
-	ReplaceMcr(135, 7, 6, 7);
-	// ReplaceMcr(139, 7, 6, 7);
-	ReplaceMcr(187, 7, 6, 7);
-	ReplaceMcr(191, 7, 6, 7);
-	// ReplaceMcr(195, 7, 6, 7);
-	ReplaceMcr(254, 7, 6, 7);
-	ReplaceMcr(258, 7, 30, 7);
-	ReplaceMcr(262, 7, 6, 7);
-	ReplaceMcr(292, 7, 30, 7);
-	ReplaceMcr(296, 7, 6, 7);
-	ReplaceMcr(300, 7, 6, 7);
-	ReplaceMcr(304, 7, 30, 7);
-	ReplaceMcr(423, 7, 6, 7);
-	ReplaceMcr(427, 7, 6, 7);
-	ReplaceMcr(455, 7, 6, 7);
-	ReplaceMcr(459, 7, 6, 7);
-	ReplaceMcr(495, 7, 6, 7);
-	ReplaceMcr(499, 7, 6, 7);
+    // TODO: ReplaceMcr(30, 7, 6, 7); ?
+    ReplaceMcr(34, 7, 30, 7);
+    ReplaceMcr(69, 7, 6, 7);
+    ReplaceMcr(73, 7, 30, 7);
+    ReplaceMcr(99, 7, 6, 7);
+    ReplaceMcr(104, 7, 6, 7);
+    ReplaceMcr(108, 7, 6, 7);
+    ReplaceMcr(112, 7, 6, 7);
+    ReplaceMcr(128, 7, 30, 7);
+    ReplaceMcr(135, 7, 6, 7);
+    // ReplaceMcr(139, 7, 6, 7);
+    ReplaceMcr(187, 7, 6, 7);
+    ReplaceMcr(191, 7, 6, 7);
+    // ReplaceMcr(195, 7, 6, 7);
+    ReplaceMcr(254, 7, 6, 7);
+    ReplaceMcr(258, 7, 30, 7);
+    ReplaceMcr(262, 7, 6, 7);
+    ReplaceMcr(292, 7, 30, 7);
+    ReplaceMcr(296, 7, 6, 7);
+    ReplaceMcr(300, 7, 6, 7);
+    ReplaceMcr(304, 7, 30, 7);
+    ReplaceMcr(423, 7, 6, 7);
+    ReplaceMcr(427, 7, 6, 7);
+    ReplaceMcr(455, 7, 6, 7);
+    ReplaceMcr(459, 7, 6, 7);
+    ReplaceMcr(495, 7, 6, 7);
+    ReplaceMcr(499, 7, 6, 7);
 
-	ReplaceMcr(30, 5, 6, 5);
-	ReplaceMcr(34, 5, 6, 5);
-	ReplaceMcr(69, 5, 6, 5);
-	ReplaceMcr(99, 5, 6, 5);
-	ReplaceMcr(108, 5, 104, 5);
-	ReplaceMcr(112, 5, 6, 5);
-	ReplaceMcr(128, 5, 6, 5);
-	ReplaceMcr(183, 5, 6, 5);
-	ReplaceMcr(187, 5, 6, 5);
-	ReplaceMcr(191, 5, 6, 5);
-	// ReplaceMcr(195, 5, 6, 5);
-	ReplaceMcr(254, 5, 6, 5);
-	ReplaceMcr(258, 5, 73, 5);
-	ReplaceMcr(262, 5, 6, 5);
-	ReplaceMcr(292, 5, 73, 5);
-	ReplaceMcr(296, 5, 6, 5);
-	ReplaceMcr(300, 5, 6, 5);
-	ReplaceMcr(304, 5, 6, 5);
-	ReplaceMcr(455, 5, 6, 5);
-	ReplaceMcr(459, 5, 6, 5);
-	ReplaceMcr(499, 5, 6, 5);
-	// ReplaceMcr(548, 5, 6, 5); // Frame 159 is used by subtiles 46, 529.
+    ReplaceMcr(30, 5, 6, 5);
+    ReplaceMcr(34, 5, 6, 5);
+    ReplaceMcr(69, 5, 6, 5);
+    ReplaceMcr(99, 5, 6, 5);
+    ReplaceMcr(108, 5, 104, 5);
+    ReplaceMcr(112, 5, 6, 5);
+    ReplaceMcr(128, 5, 6, 5);
+    ReplaceMcr(183, 5, 6, 5);
+    ReplaceMcr(187, 5, 6, 5);
+    ReplaceMcr(191, 5, 6, 5);
+    // ReplaceMcr(195, 5, 6, 5);
+    ReplaceMcr(254, 5, 6, 5);
+    ReplaceMcr(258, 5, 73, 5);
+    ReplaceMcr(262, 5, 6, 5);
+    ReplaceMcr(292, 5, 73, 5);
+    ReplaceMcr(296, 5, 6, 5);
+    ReplaceMcr(300, 5, 6, 5);
+    ReplaceMcr(304, 5, 6, 5);
+    ReplaceMcr(455, 5, 6, 5);
+    ReplaceMcr(459, 5, 6, 5);
+    ReplaceMcr(499, 5, 6, 5);
+    // ReplaceMcr(548, 5, 6, 5); // Frame 159 is used by subtiles 46, 529.
 
-	ReplaceMcr(30, 3, 6, 3);
-	ReplaceMcr(34, 3, 6, 3);
-	ReplaceMcr(69, 3, 6, 3);
-	ReplaceMcr(99, 3, 6, 3);
-	ReplaceMcr(108, 3, 104, 3);
-	ReplaceMcr(112, 3, 6, 3);
-	ReplaceMcr(128, 3, 6, 3);
-	ReplaceMcr(183, 3, 6, 3);
-	ReplaceMcr(187, 3, 6, 3);
-	ReplaceMcr(191, 3, 6, 3);
-	// ReplaceMcr(195, 3, 6, 3);
-	ReplaceMcr(254, 3, 6, 3);
-	ReplaceMcr(258, 3, 73, 3);
-	ReplaceMcr(262, 3, 6, 3);
-	ReplaceMcr(292, 3, 73, 3);
-	ReplaceMcr(296, 3, 6, 3);
-	ReplaceMcr(300, 3, 6, 3);
-	ReplaceMcr(304, 3, 6, 3);
-	ReplaceMcr(455, 3, 6, 3);
-	ReplaceMcr(459, 3, 6, 3);
-	ReplaceMcr(499, 3, 6, 3);
-	// ReplaceMcr(548, 3, 6, 3);
+    ReplaceMcr(30, 3, 6, 3);
+    ReplaceMcr(34, 3, 6, 3);
+    ReplaceMcr(69, 3, 6, 3);
+    ReplaceMcr(99, 3, 6, 3);
+    ReplaceMcr(108, 3, 104, 3);
+    ReplaceMcr(112, 3, 6, 3);
+    ReplaceMcr(128, 3, 6, 3);
+    ReplaceMcr(183, 3, 6, 3);
+    ReplaceMcr(187, 3, 6, 3);
+    ReplaceMcr(191, 3, 6, 3);
+    // ReplaceMcr(195, 3, 6, 3);
+    ReplaceMcr(254, 3, 6, 3);
+    ReplaceMcr(258, 3, 73, 3);
+    ReplaceMcr(262, 3, 6, 3);
+    ReplaceMcr(292, 3, 73, 3);
+    ReplaceMcr(296, 3, 6, 3);
+    ReplaceMcr(300, 3, 6, 3);
+    ReplaceMcr(304, 3, 6, 3);
+    ReplaceMcr(455, 3, 6, 3);
+    ReplaceMcr(459, 3, 6, 3);
+    ReplaceMcr(499, 3, 6, 3);
+    // ReplaceMcr(548, 3, 6, 3);
 
-	ReplaceMcr(30, 1, 34, 1);
-	ReplaceMcr(69, 1, 6, 1);
-	ReplaceMcr(104, 1, 99, 1);
-	ReplaceMcr(112, 1, 99, 1);
-	ReplaceMcr(128, 1, 34, 1);
-	ReplaceMcr(254, 1, 6, 1);
-	ReplaceMcr(258, 1, 73, 1);
-	ReplaceMcr(262, 1, 99, 1);
-	ReplaceMcr(292, 1, 73, 1);
-	ReplaceMcr(296, 1, 99, 1);
-	ReplaceMcr(300, 1, 99, 1);
-	ReplaceMcr(304, 1, 34, 1);
-	ReplaceMcr(427, 1, 6, 1);
-	ReplaceMcr(459, 1, 6, 1);
-	ReplaceMcr(499, 1, 6, 1);
-	// ReplaceMcr(548, 1, 6, 1);
+    ReplaceMcr(30, 1, 34, 1);
+    ReplaceMcr(69, 1, 6, 1);
+    ReplaceMcr(104, 1, 99, 1);
+    ReplaceMcr(112, 1, 99, 1);
+    ReplaceMcr(128, 1, 34, 1);
+    ReplaceMcr(254, 1, 6, 1);
+    ReplaceMcr(258, 1, 73, 1);
+    ReplaceMcr(262, 1, 99, 1);
+    ReplaceMcr(292, 1, 73, 1);
+    ReplaceMcr(296, 1, 99, 1);
+    ReplaceMcr(300, 1, 99, 1);
+    ReplaceMcr(304, 1, 34, 1);
+    ReplaceMcr(427, 1, 6, 1);
+    ReplaceMcr(459, 1, 6, 1);
+    ReplaceMcr(499, 1, 6, 1);
+    // ReplaceMcr(548, 1, 6, 1);
 
-	ReplaceMcr(1, 6, 60, 6);
-	ReplaceMcr(21, 6, 33, 6);
-	ReplaceMcr(29, 6, 25, 6);
-	// ReplaceMcr(48, 6, 45, 6);
-	// ReplaceMcr(50, 6, 45, 6);
-	// ReplaceMcr(53, 6, 45, 6);
-	ReplaceMcr(80, 6, 60, 6);
-	ReplaceMcr(84, 6, 60, 6);
-	ReplaceMcr(94, 6, 60, 6);
-	ReplaceMcr(127, 6, 25, 6);
-	ReplaceMcr(131, 6, 25, 6);
-	ReplaceMcr(134, 6, 33, 6);
-	ReplaceMcr(138, 6, 25, 6);
-	ReplaceMcr(141, 6, 25, 6);
-	ReplaceMcr(143, 6, 25, 6);
-	ReplaceMcr(174, 6, 60, 6);
-	ReplaceMcr(182, 6, 72, 6);
-	ReplaceMcr(234, 6, 60, 6);
-	ReplaceMcr(238, 6, 60, 6);
-	ReplaceMcr(242, 6, 60, 6);
-	ReplaceMcr(275, 6, 60, 6);
-	ReplaceMcr(279, 6, 60, 6);
-	ReplaceMcr(283, 6, 60, 6);
-	ReplaceMcr(303, 6, 25, 6);
-	ReplaceMcr(414, 6, 60, 6);
-	ReplaceMcr(418, 6, 60, 6);
-	ReplaceMcr(446, 6, 60, 6);
-	ReplaceMcr(450, 6, 60, 6);
-	ReplaceMcr(478, 6, 60, 6);
-	ReplaceMcr(482, 6, 60, 6);
-	ReplaceMcr(510, 6, 60, 6);
+    ReplaceMcr(1, 6, 60, 6);
+    ReplaceMcr(21, 6, 33, 6);
+    ReplaceMcr(29, 6, 25, 6);
+    // ReplaceMcr(48, 6, 45, 6);
+    // ReplaceMcr(50, 6, 45, 6);
+    // ReplaceMcr(53, 6, 45, 6);
+    ReplaceMcr(80, 6, 60, 6);
+    ReplaceMcr(84, 6, 60, 6);
+    ReplaceMcr(94, 6, 60, 6);
+    ReplaceMcr(127, 6, 25, 6);
+    ReplaceMcr(131, 6, 25, 6);
+    ReplaceMcr(134, 6, 33, 6);
+    ReplaceMcr(138, 6, 25, 6);
+    ReplaceMcr(141, 6, 25, 6);
+    ReplaceMcr(143, 6, 25, 6);
+    ReplaceMcr(174, 6, 60, 6);
+    ReplaceMcr(182, 6, 72, 6);
+    ReplaceMcr(234, 6, 60, 6);
+    ReplaceMcr(238, 6, 60, 6);
+    ReplaceMcr(242, 6, 60, 6);
+    ReplaceMcr(275, 6, 60, 6);
+    ReplaceMcr(279, 6, 60, 6);
+    ReplaceMcr(283, 6, 60, 6);
+    ReplaceMcr(303, 6, 25, 6);
+    ReplaceMcr(414, 6, 60, 6);
+    ReplaceMcr(418, 6, 60, 6);
+    ReplaceMcr(446, 6, 60, 6);
+    ReplaceMcr(450, 6, 60, 6);
+    ReplaceMcr(478, 6, 60, 6);
+    ReplaceMcr(482, 6, 60, 6);
+    ReplaceMcr(510, 6, 60, 6);
 
-	ReplaceMcr(21, 4, 33, 4);
-	ReplaceMcr(29, 4, 25, 4);
-	ReplaceMcr(60, 4, 1, 4);
-	ReplaceMcr(94, 4, 1, 4);
-	ReplaceMcr(102, 4, 98, 4);
-	ReplaceMcr(127, 4, 25, 4);
-	ReplaceMcr(134, 4, 33, 4);
-	ReplaceMcr(143, 4, 25, 4);
-	ReplaceMcr(174, 4, 1, 4);
-	ReplaceMcr(182, 4, 25, 4);
-	ReplaceMcr(238, 4, 1, 4);
-	ReplaceMcr(242, 4, 64, 4);
-	ReplaceMcr(275, 4, 64, 4);
-	ReplaceMcr(418, 4, 1, 4);
+    ReplaceMcr(21, 4, 33, 4);
+    ReplaceMcr(29, 4, 25, 4);
+    ReplaceMcr(60, 4, 1, 4);
+    ReplaceMcr(94, 4, 1, 4);
+    ReplaceMcr(102, 4, 98, 4);
+    ReplaceMcr(127, 4, 25, 4);
+    ReplaceMcr(134, 4, 33, 4);
+    ReplaceMcr(143, 4, 25, 4);
+    ReplaceMcr(174, 4, 1, 4);
+    ReplaceMcr(182, 4, 25, 4);
+    ReplaceMcr(238, 4, 1, 4);
+    ReplaceMcr(242, 4, 64, 4);
+    ReplaceMcr(275, 4, 64, 4);
+    ReplaceMcr(418, 4, 1, 4);
 
-	ReplaceMcr(21, 2, 33, 2);
-	ReplaceMcr(29, 2, 25, 2);
-	ReplaceMcr(60, 2, 1, 2);
-	ReplaceMcr(94, 2, 1, 2);
-	ReplaceMcr(102, 2, 98, 2);
-	ReplaceMcr(107, 2, 103, 2);
-	ReplaceMcr(127, 2, 25, 2);
-	ReplaceMcr(134, 2, 33, 2);
-	ReplaceMcr(141, 2, 131, 2);
-	ReplaceMcr(143, 2, 25, 2);
-	ReplaceMcr(174, 2, 1, 2);
-	ReplaceMcr(182, 2, 25, 2);
+    ReplaceMcr(21, 2, 33, 2);
+    ReplaceMcr(29, 2, 25, 2);
+    ReplaceMcr(60, 2, 1, 2);
+    ReplaceMcr(94, 2, 1, 2);
+    ReplaceMcr(102, 2, 98, 2);
+    ReplaceMcr(107, 2, 103, 2);
+    ReplaceMcr(127, 2, 25, 2);
+    ReplaceMcr(134, 2, 33, 2);
+    ReplaceMcr(141, 2, 131, 2);
+    ReplaceMcr(143, 2, 25, 2);
+    ReplaceMcr(174, 2, 1, 2);
+    ReplaceMcr(182, 2, 25, 2);
 
-	ReplaceMcr(21, 0, 33, 0);
-	ReplaceMcr(29, 0, 25, 0);
-	ReplaceMcr(84, 0, 80, 0);
-	ReplaceMcr(127, 0, 25, 0);
-	ReplaceMcr(131, 0, 33, 0);
-	ReplaceMcr(134, 0, 33, 0);
-	ReplaceMcr(138, 0, 33, 0);
-	ReplaceMcr(141, 0, 33, 0);
-	ReplaceMcr(143, 0, 25, 0);
-	ReplaceMcr(182, 0, 25, 0);
-	ReplaceMcr(234, 0, 64, 0);
-	ReplaceMcr(446, 0, 1, 0);
-	ReplaceMcr(450, 0, 1, 0);
-	ReplaceMcr(478, 0, 283, 0);
+    ReplaceMcr(21, 0, 33, 0);
+    ReplaceMcr(29, 0, 25, 0);
+    ReplaceMcr(84, 0, 80, 0);
+    ReplaceMcr(127, 0, 25, 0);
+    ReplaceMcr(131, 0, 33, 0);
+    ReplaceMcr(134, 0, 33, 0);
+    ReplaceMcr(138, 0, 33, 0);
+    ReplaceMcr(141, 0, 33, 0);
+    ReplaceMcr(143, 0, 25, 0);
+    ReplaceMcr(182, 0, 25, 0);
+    ReplaceMcr(234, 0, 64, 0);
+    ReplaceMcr(446, 0, 1, 0);
+    ReplaceMcr(450, 0, 1, 0);
+    ReplaceMcr(478, 0, 283, 0);
 
-	ReplaceMcr(84, 1, 80, 1);
-	ReplaceMcr(127, 1, 33, 1);
-	ReplaceMcr(234, 1, 64, 1);
-	ReplaceMcr(253, 1, 111, 1);
-	ReplaceMcr(454, 1, 68, 1);
-	ReplaceMcr(458, 1, 111, 1);
+    ReplaceMcr(84, 1, 80, 1);
+    ReplaceMcr(127, 1, 33, 1);
+    ReplaceMcr(234, 1, 64, 1);
+    ReplaceMcr(253, 1, 111, 1);
+    ReplaceMcr(454, 1, 68, 1);
+    ReplaceMcr(458, 1, 111, 1);
 
-	ReplaceMcr(21, 7, 25, 7);
-	ReplaceMcr(131, 7, 25, 7);
-	ReplaceMcr(266, 7, 25, 7);
-	ReplaceMcr(33, 7, 29, 7);
-	ReplaceMcr(98, 7, 5, 7);
-	ReplaceMcr(102, 7, 5, 7);
-	ReplaceMcr(103, 7, 5, 7);
-	ReplaceMcr(107, 7, 5, 7);
-	ReplaceMcr(111, 7, 5, 7);
-	ReplaceMcr(127, 7, 29, 7);
-	ReplaceMcr(134, 7, 29, 7);
-	ReplaceMcr(138, 7, 29, 7);
-	ReplaceMcr(141, 7, 29, 7);
-	ReplaceMcr(143, 7, 29, 7);
-	ReplaceMcr(295, 7, 5, 7);
-	ReplaceMcr(299, 7, 5, 7);
-	ReplaceMcr(494, 7, 5, 7);
-	ReplaceMcr(68, 7, 5, 7);
-	ReplaceMcr(72, 7, 5, 7);
-	ReplaceMcr(186, 7, 5, 7);
-	ReplaceMcr(190, 7, 5, 7);
-	ReplaceMcr(253, 7, 5, 7);
-	ReplaceMcr(257, 7, 5, 7);
-	ReplaceMcr(261, 7, 5, 7);
-	ReplaceMcr(291, 7, 5, 7);
-	ReplaceMcr(422, 7, 5, 7);
-	ReplaceMcr(426, 7, 5, 7);
-	ReplaceMcr(454, 7, 5, 7);
-	ReplaceMcr(458, 7, 5, 7);
-	ReplaceMcr(498, 7, 5, 7);
+    ReplaceMcr(21, 7, 25, 7);
+    ReplaceMcr(131, 7, 25, 7);
+    ReplaceMcr(266, 7, 25, 7);
+    ReplaceMcr(33, 7, 29, 7);
+    ReplaceMcr(98, 7, 5, 7);
+    ReplaceMcr(102, 7, 5, 7);
+    ReplaceMcr(103, 7, 5, 7);
+    ReplaceMcr(107, 7, 5, 7);
+    ReplaceMcr(111, 7, 5, 7);
+    ReplaceMcr(127, 7, 29, 7);
+    ReplaceMcr(134, 7, 29, 7);
+    ReplaceMcr(138, 7, 29, 7);
+    ReplaceMcr(141, 7, 29, 7);
+    ReplaceMcr(143, 7, 29, 7);
+    ReplaceMcr(295, 7, 5, 7);
+    ReplaceMcr(299, 7, 5, 7);
+    ReplaceMcr(494, 7, 5, 7);
+    ReplaceMcr(68, 7, 5, 7);
+    ReplaceMcr(72, 7, 5, 7);
+    ReplaceMcr(186, 7, 5, 7);
+    ReplaceMcr(190, 7, 5, 7);
+    ReplaceMcr(253, 7, 5, 7);
+    ReplaceMcr(257, 7, 5, 7);
+    ReplaceMcr(261, 7, 5, 7);
+    ReplaceMcr(291, 7, 5, 7);
+    ReplaceMcr(422, 7, 5, 7);
+    ReplaceMcr(426, 7, 5, 7);
+    ReplaceMcr(454, 7, 5, 7);
+    ReplaceMcr(458, 7, 5, 7);
+    ReplaceMcr(498, 7, 5, 7);
 
-	ReplaceMcr(21, 5, 25, 5);
-	ReplaceMcr(33, 5, 29, 5);
-	ReplaceMcr(111, 5, 5, 5);
-	ReplaceMcr(127, 5, 29, 5);
-	ReplaceMcr(131, 5, 25, 5);
-	ReplaceMcr(141, 5, 29, 5);
-	ReplaceMcr(299, 5, 5, 5);
-	ReplaceMcr(68, 5, 5, 5);
-	ReplaceMcr(186, 5, 5, 5);
-	ReplaceMcr(190, 5, 5, 5);
-	ReplaceMcr(253, 5, 5, 5);
-	ReplaceMcr(257, 5, 72, 5);
-	ReplaceMcr(266, 5, 25, 5);
-	ReplaceMcr(422, 5, 5, 5);
-	ReplaceMcr(454, 5, 5, 5);
-	ReplaceMcr(458, 5, 5, 5);
+    ReplaceMcr(21, 5, 25, 5);
+    ReplaceMcr(33, 5, 29, 5);
+    ReplaceMcr(111, 5, 5, 5);
+    ReplaceMcr(127, 5, 29, 5);
+    ReplaceMcr(131, 5, 25, 5);
+    ReplaceMcr(141, 5, 29, 5);
+    ReplaceMcr(299, 5, 5, 5);
+    ReplaceMcr(68, 5, 5, 5);
+    ReplaceMcr(186, 5, 5, 5);
+    ReplaceMcr(190, 5, 5, 5);
+    ReplaceMcr(253, 5, 5, 5);
+    ReplaceMcr(257, 5, 72, 5);
+    ReplaceMcr(266, 5, 25, 5);
+    ReplaceMcr(422, 5, 5, 5);
+    ReplaceMcr(454, 5, 5, 5);
+    ReplaceMcr(458, 5, 5, 5);
 
-	ReplaceMcr(21, 3, 25, 3);
-	ReplaceMcr(33, 3, 29, 3);
-	ReplaceMcr(111, 3, 5, 3);
-	ReplaceMcr(127, 3, 29, 3);
-	ReplaceMcr(131, 3, 25, 3);
-	ReplaceMcr(141, 3, 29, 3);
-	ReplaceMcr(68, 3, 5, 3);
-	ReplaceMcr(186, 3, 5, 3);
-	ReplaceMcr(190, 3, 5, 3);
-	ReplaceMcr(266, 3, 25, 3);
-	ReplaceMcr(454, 3, 5, 3);
-	ReplaceMcr(458, 3, 5, 3);
-	ReplaceMcr(514, 3, 5, 3);
+    ReplaceMcr(21, 3, 25, 3);
+    ReplaceMcr(33, 3, 29, 3);
+    ReplaceMcr(111, 3, 5, 3);
+    ReplaceMcr(127, 3, 29, 3);
+    ReplaceMcr(131, 3, 25, 3);
+    ReplaceMcr(141, 3, 29, 3);
+    ReplaceMcr(68, 3, 5, 3);
+    ReplaceMcr(186, 3, 5, 3);
+    ReplaceMcr(190, 3, 5, 3);
+    ReplaceMcr(266, 3, 25, 3);
+    ReplaceMcr(454, 3, 5, 3);
+    ReplaceMcr(458, 3, 5, 3);
+    ReplaceMcr(514, 3, 5, 3);
 
-	ReplaceMcr(28, 1, 12, 1); // lost details
-	ReplaceMcr(36, 0, 12, 0); // lost details
-	ReplaceMcr(61, 1, 10, 1); // lost details
-	ReplaceMcr(63, 1, 12, 1); // lost details
-	ReplaceMcr(65, 1, 10, 1); // lost details
-	ReplaceMcr(67, 1, 12, 1); // lost details
-	ReplaceMcr(74, 0, 11, 0); // lost details
-	ReplaceMcr(75, 0, 12, 0); // lost details
-	ReplaceMcr(77, 1, 10, 1); // lost details
-	ReplaceMcr(79, 1, 12, 1); // lost details
-	ReplaceMcr(87, 1, 10, 1); // lost details
-	ReplaceMcr(83, 1, 12, 1); // lost details
-	ReplaceMcr(89, 1, 12, 1); // lost details
-	ReplaceMcr(91, 1, 10, 1); // lost details
-	ReplaceMcr(93, 1, 12, 1); // lost details
-	ReplaceMcr(105, 0, 11, 0); // lost details
-	ReplaceMcr(113, 0, 11, 0); // lost details
-	// ReplaceMcr(136, 1, 23, 1); // lost details
-	ReplaceMcr(239, 1, 10, 1); // lost details
-	ReplaceMcr(241, 1, 12, 1); // lost details
-	ReplaceMcr(245, 1, 4, 1); // lost details
-	ReplaceMcr(248, 0, 11, 0); // lost details
-	ReplaceMcr(260, 0, 12, 0); // lost details
-	ReplaceMcr(263, 0, 11, 0); // lost details
-	ReplaceMcr(293, 0, 11, 0); // lost details
-	ReplaceMcr(273, 1, 10, 1); // lost details
-	ReplaceMcr(301, 0, 11, 0); // lost details
-	ReplaceMcr(371, 1, 9, 1); // lost details
-	ReplaceMcr(373, 1, 11, 1); // lost details
-	ReplaceMcr(377, 0, 11, 0); // lost details
-	ReplaceMcr(380, 1, 10, 1); // lost details
-	ReplaceMcr(383, 1, 9, 1); // lost details
-	ReplaceMcr(408, 0, 11, 0); // lost details
-	ReplaceMcr(411, 1, 10, 1); // lost details
-	ReplaceMcr(419, 1, 10, 1); // lost details
-	ReplaceMcr(431, 1, 10, 1); // lost details
-	ReplaceMcr(436, 0, 11, 0); // lost details
-	ReplaceMcr(443, 1, 10, 1); // lost details
-	ReplaceMcr(451, 1, 10, 1); // lost details
-	ReplaceMcr(456, 0, 11, 0); // lost details
-	ReplaceMcr(468, 0, 11, 0); // lost details
-	ReplaceMcr(471, 1, 10, 1); // lost details
-	ReplaceMcr(490, 1, 9, 1); // lost details
-	ReplaceMcr(508, 0, 11, 0); // lost details
-	ReplaceMcr(510, 1, 1, 1); // lost details
-	ReplaceMcr(544, 1, 10, 1); // lost details
-	ReplaceMcr(546, 1, 16, 1); // lost details
-	ReplaceMcr(549, 0, 11, 0); // lost details
-	ReplaceMcr(550, 0, 12, 0); // lost details
+    ReplaceMcr(28, 1, 12, 1); // lost details
+    ReplaceMcr(36, 0, 12, 0); // lost details
+    ReplaceMcr(61, 1, 10, 1); // lost details
+    ReplaceMcr(63, 1, 12, 1); // lost details
+    ReplaceMcr(65, 1, 10, 1); // lost details
+    ReplaceMcr(67, 1, 12, 1); // lost details
+    ReplaceMcr(74, 0, 11, 0); // lost details
+    ReplaceMcr(75, 0, 12, 0); // lost details
+    ReplaceMcr(77, 1, 10, 1); // lost details
+    ReplaceMcr(79, 1, 12, 1); // lost details
+    ReplaceMcr(87, 1, 10, 1); // lost details
+    ReplaceMcr(83, 1, 12, 1); // lost details
+    ReplaceMcr(89, 1, 12, 1); // lost details
+    ReplaceMcr(91, 1, 10, 1); // lost details
+    ReplaceMcr(93, 1, 12, 1); // lost details
+    ReplaceMcr(105, 0, 11, 0); // lost details
+    ReplaceMcr(113, 0, 11, 0); // lost details
+    // ReplaceMcr(136, 1, 23, 1); // lost details
+    ReplaceMcr(239, 1, 10, 1); // lost details
+    ReplaceMcr(241, 1, 12, 1); // lost details
+    ReplaceMcr(245, 1, 4, 1); // lost details
+    ReplaceMcr(248, 0, 11, 0); // lost details
+    ReplaceMcr(260, 0, 12, 0); // lost details
+    ReplaceMcr(263, 0, 11, 0); // lost details
+    ReplaceMcr(293, 0, 11, 0); // lost details
+    ReplaceMcr(273, 1, 10, 1); // lost details
+    ReplaceMcr(301, 0, 11, 0); // lost details
+    ReplaceMcr(371, 1, 9, 1); // lost details
+    ReplaceMcr(373, 1, 11, 1); // lost details
+    ReplaceMcr(377, 0, 11, 0); // lost details
+    ReplaceMcr(380, 1, 10, 1); // lost details
+    ReplaceMcr(383, 1, 9, 1); // lost details
+    ReplaceMcr(408, 0, 11, 0); // lost details
+    ReplaceMcr(411, 1, 10, 1); // lost details
+    ReplaceMcr(419, 1, 10, 1); // lost details
+    ReplaceMcr(431, 1, 10, 1); // lost details
+    ReplaceMcr(436, 0, 11, 0); // lost details
+    ReplaceMcr(443, 1, 10, 1); // lost details
+    ReplaceMcr(451, 1, 10, 1); // lost details
+    ReplaceMcr(456, 0, 11, 0); // lost details
+    ReplaceMcr(468, 0, 11, 0); // lost details
+    ReplaceMcr(471, 1, 10, 1); // lost details
+    ReplaceMcr(490, 1, 9, 1); // lost details
+    ReplaceMcr(508, 0, 11, 0); // lost details
+    ReplaceMcr(510, 1, 1, 1); // lost details
+    ReplaceMcr(544, 1, 10, 1); // lost details
+    ReplaceMcr(546, 1, 16, 1); // lost details
+    ReplaceMcr(549, 0, 11, 0); // lost details
+    ReplaceMcr(550, 0, 12, 0); // lost details
 
-	// eliminate micros of unused subtiles
-	// Blk2Mcr(554,  ...),
-	Blk2Mcr(31, 0);
-	Blk2Mcr(31, 1);
-	Blk2Mcr(31, 2);
-	Blk2Mcr(31, 4);
-	Blk2Mcr(31, 6);
-	Blk2Mcr(46, 5);
-	Blk2Mcr(46, 6);
-	Blk2Mcr(46, 7);
-	Blk2Mcr(47, 4);
-	Blk2Mcr(47, 6);
-	Blk2Mcr(47, 7);
-	Blk2Mcr(49, 4);
-	Blk2Mcr(49, 6);
-	Blk2Mcr(49, 7);
-	Blk2Mcr(51, 5);
-	Blk2Mcr(51, 6);
-	Blk2Mcr(51, 7);
-	Blk2Mcr(52, 7);
-	Blk2Mcr(54, 6);
-	Blk2Mcr(81, 0);
-	Blk2Mcr(81, 1);
-	Blk2Mcr(92, 0);
-	Blk2Mcr(92, 1);
-	Blk2Mcr(92, 2);
-	Blk2Mcr(92, 4);
-	Blk2Mcr(92, 6);
-	Blk2Mcr(115, 0);
-	Blk2Mcr(115, 1);
-	Blk2Mcr(115, 2);
-	Blk2Mcr(115, 3);
-	Blk2Mcr(115, 4);
-	Blk2Mcr(115, 5);
-	Blk2Mcr(119, 0);
-	Blk2Mcr(119, 1);
-	Blk2Mcr(119, 2);
-	Blk2Mcr(119, 4);
-	Blk2Mcr(121, 0);
-	Blk2Mcr(121, 1);
-	Blk2Mcr(121, 2);
-	Blk2Mcr(121, 3);
-	Blk2Mcr(121, 4);
-	Blk2Mcr(121, 5);
-	Blk2Mcr(121, 6);
-	Blk2Mcr(121, 7);
-	Blk2Mcr(125, 0);
-	Blk2Mcr(125, 1);
-	Blk2Mcr(125, 3);
-	Blk2Mcr(125, 5); // Frame 231 is used by subtiles 68, 103, 107, 111, 121, 125. 68, 7
-	Blk2Mcr(125, 7);
-	Blk2Mcr(136, 1);
-	Blk2Mcr(139, 0);
-	Blk2Mcr(139, 1);
-	Blk2Mcr(139, 7);
-	Blk2Mcr(142, 0);
-	Blk2Mcr(144, 1);
-	Blk2Mcr(144, 2);
-	Blk2Mcr(144, 4);
-	Blk2Mcr(144, 6);
-	Blk2Mcr(148, 1);
-	// reused for the new shadows
-	// Blk2Mcr(150, 0);
-	// Blk2Mcr(151, 0);
-	// Blk2Mcr(151, 1);
-	// Blk2Mcr(153, 1);
-	// Blk2Mcr(156, 0);
-	// Blk2Mcr(158, 0);
-	// Blk2Mcr(164, 0);
-	// Blk2Mcr(164, 1);	
-	// Blk2Mcr(165, 1);
-	Blk2Mcr(152, 0);
-	Blk2Mcr(250, 0);
-	Blk2Mcr(251, 0);
-	Blk2Mcr(251, 1);
-	Blk2Mcr(265, 1);
-	Blk2Mcr(268, 0);
-	Blk2Mcr(268, 1);
-	Blk2Mcr(269, 0);
-	Blk2Mcr(269, 1);
-	Blk2Mcr(269, 2);
-	Blk2Mcr(269, 3);
-	Blk2Mcr(269, 4);
-	Blk2Mcr(269, 5);
-	Blk2Mcr(269, 6);
-	Blk2Mcr(269, 7);
-	Blk2Mcr(365, 1);
-	Blk2Mcr(395, 1);
-	Blk2Mcr(520, 0);
-	Blk2Mcr(520, 1);
-	Blk2Mcr(521, 0);
-	Blk2Mcr(521, 1);
-	Blk2Mcr(522, 0);
-	Blk2Mcr(522, 1);
-	Blk2Mcr(523, 0);
-	Blk2Mcr(523, 1);
-	Blk2Mcr(524, 0);
-	Blk2Mcr(524, 1);
-	Blk2Mcr(525, 0);
-	Blk2Mcr(525, 1);
-	Blk2Mcr(526, 0);
-	Blk2Mcr(526, 1);
-	Blk2Mcr(527, 0);
-	Blk2Mcr(527, 1);
-	Blk2Mcr(528, 0);
-	Blk2Mcr(528, 1);
-	Blk2Mcr(529, 0);
-	Blk2Mcr(529, 1);
-	Blk2Mcr(529, 5);
-	Blk2Mcr(529, 6);
-	Blk2Mcr(529, 7);
-	Blk2Mcr(530, 0);
-	Blk2Mcr(530, 1);
-	Blk2Mcr(530, 4);
-	Blk2Mcr(530, 6);
-	Blk2Mcr(530, 7);
-	Blk2Mcr(532, 0);
-	Blk2Mcr(532, 1);
-	Blk2Mcr(532, 4);
-	Blk2Mcr(532, 6);
-	Blk2Mcr(532, 7);
-	Blk2Mcr(534, 0);
-	Blk2Mcr(534, 1);
-	Blk2Mcr(534, 5);
-	Blk2Mcr(534, 6);
-	Blk2Mcr(534, 7);
-	Blk2Mcr(535, 0);
-	Blk2Mcr(535, 1);
-	Blk2Mcr(535, 7);
-	Blk2Mcr(537, 0);
-	Blk2Mcr(537, 1);
-	Blk2Mcr(537, 6);
-	Blk2Mcr(539, 1);
-	Blk2Mcr(542, 0);
-	Blk2Mcr(542, 2);
-	Blk2Mcr(542, 3);
-	Blk2Mcr(542, 4);
-	Blk2Mcr(542, 5);
-	Blk2Mcr(542, 6);
-	Blk2Mcr(542, 7);
-	Blk2Mcr(543, 0);
-	Blk2Mcr(543, 1);
-	Blk2Mcr(543, 2);
-	Blk2Mcr(543, 3);
-	Blk2Mcr(543, 4);
-	Blk2Mcr(543, 5);
-	Blk2Mcr(543, 6);
-	Blk2Mcr(543, 7);
-	Blk2Mcr(545, 0);
-	Blk2Mcr(545, 1);
-	Blk2Mcr(545, 2);
-	Blk2Mcr(545, 4);
-	Blk2Mcr(547, 0);
-	Blk2Mcr(547, 1);
-	Blk2Mcr(547, 2);
-	Blk2Mcr(547, 3);
-	Blk2Mcr(547, 4);
-	Blk2Mcr(547, 5);
-	Blk2Mcr(547, 6);
-	Blk2Mcr(547, 7);
-	Blk2Mcr(548, 0);
-	Blk2Mcr(548, 1);
-	Blk2Mcr(548, 3);
-	Blk2Mcr(548, 5);
-	Blk2Mcr(554, 0);
-	Blk2Mcr(554, 1);
-	Blk2Mcr(555, 1);
-	Blk2Mcr(556, 0);
-	Blk2Mcr(556, 1);
-	Blk2Mcr(557, 1);
-	Blk2Mcr(558, 0);
-	Blk2Mcr(558, 1);
-	Blk2Mcr(558, 2);
-	Blk2Mcr(558, 3);
-	Blk2Mcr(558, 4);
-	Blk2Mcr(558, 5);
-	Blk2Mcr(558, 7);
-	Blk2Mcr(559, 2);
-	Blk2Mcr(559, 4);
-	int unusedSubtiles[] = {
-		2, 7, 14, 19, 20, 24, 48, 50, 53, 55, 56, 57, 58, 59, 70, 71, 106, 109, 110, 116, 117, 118, 120, 122, 123, 124, 126, 133, 137, 140, 145, 149, 157, 159, 160, 170, 171, 172, 173, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 235, 243, 246, 247, 255, 256, 264, 327, 328, 329, 330, 335, 336, 337, 338, 343, 344, 345, 346, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 366, 367, 368, 369, 370, 376, 391, 400, 434, 487, 489, 491, 493, 504, 505, 507, 509, 511, 531, 533, 536, 541, 
-	};
+    // eliminate micros of unused subtiles
+    // Blk2Mcr(554,  ...),
+    Blk2Mcr(31, 0);
+    Blk2Mcr(31, 1);
+    Blk2Mcr(31, 2);
+    Blk2Mcr(31, 4);
+    Blk2Mcr(31, 6);
+    Blk2Mcr(46, 5);
+    Blk2Mcr(46, 6);
+    Blk2Mcr(46, 7);
+    Blk2Mcr(47, 4);
+    Blk2Mcr(47, 6);
+    Blk2Mcr(47, 7);
+    Blk2Mcr(49, 4);
+    Blk2Mcr(49, 6);
+    Blk2Mcr(49, 7);
+    Blk2Mcr(51, 5);
+    Blk2Mcr(51, 6);
+    Blk2Mcr(51, 7);
+    Blk2Mcr(52, 7);
+    Blk2Mcr(54, 6);
+    Blk2Mcr(81, 0);
+    Blk2Mcr(81, 1);
+    Blk2Mcr(92, 0);
+    Blk2Mcr(92, 1);
+    Blk2Mcr(92, 2);
+    Blk2Mcr(92, 4);
+    Blk2Mcr(92, 6);
+    Blk2Mcr(115, 0);
+    Blk2Mcr(115, 1);
+    Blk2Mcr(115, 2);
+    Blk2Mcr(115, 3);
+    Blk2Mcr(115, 4);
+    Blk2Mcr(115, 5);
+    Blk2Mcr(119, 0);
+    Blk2Mcr(119, 1);
+    Blk2Mcr(119, 2);
+    Blk2Mcr(119, 4);
+    Blk2Mcr(121, 0);
+    Blk2Mcr(121, 1);
+    Blk2Mcr(121, 2);
+    Blk2Mcr(121, 3);
+    Blk2Mcr(121, 4);
+    Blk2Mcr(121, 5);
+    Blk2Mcr(121, 6);
+    Blk2Mcr(121, 7);
+    Blk2Mcr(125, 0);
+    Blk2Mcr(125, 1);
+    Blk2Mcr(125, 3);
+    Blk2Mcr(125, 5); // Frame 231 is used by subtiles 68, 103, 107, 111, 121, 125. 68, 7
+    Blk2Mcr(125, 7);
+    Blk2Mcr(136, 1);
+    Blk2Mcr(139, 0);
+    Blk2Mcr(139, 1);
+    Blk2Mcr(139, 7);
+    Blk2Mcr(142, 0);
+    Blk2Mcr(144, 1);
+    Blk2Mcr(144, 2);
+    Blk2Mcr(144, 4);
+    Blk2Mcr(144, 6);
+    Blk2Mcr(148, 1);
+    // reused for the new shadows
+    // Blk2Mcr(150, 0);
+    // Blk2Mcr(151, 0);
+    // Blk2Mcr(151, 1);
+    // Blk2Mcr(153, 1);
+    // Blk2Mcr(156, 0);
+    // Blk2Mcr(158, 0);
+    // Blk2Mcr(164, 0);
+    // Blk2Mcr(164, 1);    
+    // Blk2Mcr(165, 1);
+    Blk2Mcr(152, 0);
+    Blk2Mcr(250, 0);
+    Blk2Mcr(251, 0);
+    Blk2Mcr(251, 1);
+    Blk2Mcr(265, 1);
+    Blk2Mcr(268, 0);
+    Blk2Mcr(268, 1);
+    Blk2Mcr(269, 0);
+    Blk2Mcr(269, 1);
+    Blk2Mcr(269, 2);
+    Blk2Mcr(269, 3);
+    Blk2Mcr(269, 4);
+    Blk2Mcr(269, 5);
+    Blk2Mcr(269, 6);
+    Blk2Mcr(269, 7);
+    Blk2Mcr(365, 1);
+    Blk2Mcr(395, 1);
+    Blk2Mcr(520, 0);
+    Blk2Mcr(520, 1);
+    Blk2Mcr(521, 0);
+    Blk2Mcr(521, 1);
+    Blk2Mcr(522, 0);
+    Blk2Mcr(522, 1);
+    Blk2Mcr(523, 0);
+    Blk2Mcr(523, 1);
+    Blk2Mcr(524, 0);
+    Blk2Mcr(524, 1);
+    Blk2Mcr(525, 0);
+    Blk2Mcr(525, 1);
+    Blk2Mcr(526, 0);
+    Blk2Mcr(526, 1);
+    Blk2Mcr(527, 0);
+    Blk2Mcr(527, 1);
+    Blk2Mcr(528, 0);
+    Blk2Mcr(528, 1);
+    Blk2Mcr(529, 0);
+    Blk2Mcr(529, 1);
+    Blk2Mcr(529, 5);
+    Blk2Mcr(529, 6);
+    Blk2Mcr(529, 7);
+    Blk2Mcr(530, 0);
+    Blk2Mcr(530, 1);
+    Blk2Mcr(530, 4);
+    Blk2Mcr(530, 6);
+    Blk2Mcr(530, 7);
+    Blk2Mcr(532, 0);
+    Blk2Mcr(532, 1);
+    Blk2Mcr(532, 4);
+    Blk2Mcr(532, 6);
+    Blk2Mcr(532, 7);
+    Blk2Mcr(534, 0);
+    Blk2Mcr(534, 1);
+    Blk2Mcr(534, 5);
+    Blk2Mcr(534, 6);
+    Blk2Mcr(534, 7);
+    Blk2Mcr(535, 0);
+    Blk2Mcr(535, 1);
+    Blk2Mcr(535, 7);
+    Blk2Mcr(537, 0);
+    Blk2Mcr(537, 1);
+    Blk2Mcr(537, 6);
+    Blk2Mcr(539, 1);
+    Blk2Mcr(542, 0);
+    Blk2Mcr(542, 2);
+    Blk2Mcr(542, 3);
+    Blk2Mcr(542, 4);
+    Blk2Mcr(542, 5);
+    Blk2Mcr(542, 6);
+    Blk2Mcr(542, 7);
+    Blk2Mcr(543, 0);
+    Blk2Mcr(543, 1);
+    Blk2Mcr(543, 2);
+    Blk2Mcr(543, 3);
+    Blk2Mcr(543, 4);
+    Blk2Mcr(543, 5);
+    Blk2Mcr(543, 6);
+    Blk2Mcr(543, 7);
+    Blk2Mcr(545, 0);
+    Blk2Mcr(545, 1);
+    Blk2Mcr(545, 2);
+    Blk2Mcr(545, 4);
+    Blk2Mcr(547, 0);
+    Blk2Mcr(547, 1);
+    Blk2Mcr(547, 2);
+    Blk2Mcr(547, 3);
+    Blk2Mcr(547, 4);
+    Blk2Mcr(547, 5);
+    Blk2Mcr(547, 6);
+    Blk2Mcr(547, 7);
+    Blk2Mcr(548, 0);
+    Blk2Mcr(548, 1);
+    Blk2Mcr(548, 3);
+    Blk2Mcr(548, 5);
+    Blk2Mcr(554, 0);
+    Blk2Mcr(554, 1);
+    Blk2Mcr(555, 1);
+    Blk2Mcr(556, 0);
+    Blk2Mcr(556, 1);
+    Blk2Mcr(557, 1);
+    Blk2Mcr(558, 0);
+    Blk2Mcr(558, 1);
+    Blk2Mcr(558, 2);
+    Blk2Mcr(558, 3);
+    Blk2Mcr(558, 4);
+    Blk2Mcr(558, 5);
+    Blk2Mcr(558, 7);
+    Blk2Mcr(559, 2);
+    Blk2Mcr(559, 4);
+    int unusedSubtiles[] = {
+        2, 7, 14, 19, 20, 24, 48, 50, 53, 55, 56, 57, 58, 59, 70, 71, 106, 109, 110, 116, 117, 118, 120, 122, 123, 124, 126, 133, 137, 140, 145, 149, 157, 159, 160, 170, 171, 172, 173, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 235, 243, 246, 247, 255, 256, 264, 327, 328, 329, 330, 335, 336, 337, 338, 343, 344, 345, 346, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 366, 367, 368, 369, 370, 376, 391, 400, 434, 487, 489, 491, 493, 504, 505, 507, 509, 511, 531, 533, 536, 541, 
+    };
 
-	for (int n = 0; n < lengthof(unusedSubtiles); n++) {
-		for (int i = 0; i < blockSize; i++) {
-			Blk2Mcr(unusedSubtiles[n], i);
-		}
-	}
+    for (int n = 0; n < lengthof(unusedSubtiles); n++) {
+        for (int i = 0; i < blockSize; i++) {
+            Blk2Mcr(unusedSubtiles[n], i);
+        }
+    }
 }
 
 void D1Tileset::patchHellExit(int tileIndex, bool silent)
