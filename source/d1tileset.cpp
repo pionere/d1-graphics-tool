@@ -4984,7 +4984,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(540, 1, 17, 1);
     ReplaceMcr(540, 2, 17, 2);
     ReplaceMcr(540, 3, 17, 3);
-    ReplaceMcr(540, 4, 17, 5);
+    ReplaceMcr(540, 4, 17, 4);
     Blk2Mcr(540, 5);
     Blk2Mcr(540, 6);
     Blk2Mcr(540, 7);
@@ -5262,7 +5262,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(141, 6, 25, 6);
     ReplaceMcr(143, 6, 25, 6);
     ReplaceMcr(174, 6, 60, 6);
-    ReplaceMcr(182, 6, 72, 6);
+    ReplaceMcr(182, 6, 25, 6);
     ReplaceMcr(234, 6, 60, 6);
     ReplaceMcr(238, 6, 60, 6);
     ReplaceMcr(242, 6, 60, 6);
@@ -8472,11 +8472,10 @@ void D1Tileset::patch(int dunType, bool silent)
         SetTileMapFlags(this->amp, 46 - 1, 7 - 1, silent);
         break;
     case DTYPE_CATACOMBS:
-        // patch dMegaTiles and dMiniTiles - L2.TIL, L2.MIN
         // patch dMiniTiles and dMegaTiles - L2.MIN and L2.TIL
-        this->cleanupCatacombs(deletedFrames, silent);
         // fix the upstairs
         this->patchCatacombsStairs(72 - 1, 158 - 1, 76 - 1, 159 - 1, 267, 559, silent);
+        this->cleanupCatacombs(deletedFrames, silent);
         // patch dAutomapData - L2.AMP
         ChangeTileMapFlags(this->amp, 42 - 1, MAPFLAG_HORZARCH, false, silent);
         ChangeTileMapFlags(this->amp, 156 - 1, MAPFLAG_VERTDOOR, false, silent);

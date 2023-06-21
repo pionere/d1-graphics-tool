@@ -8,6 +8,10 @@
 
 #include "all.h"
 
+#include <QString>
+
+#include "../progressdialog.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 /** The default external tile. */
@@ -719,8 +723,12 @@ void DRLG_L2Shadows()
 							dungeon[x - 1][y] = dungeon[x - 1][y] == 3 ? 51 : 100;
 							dungeon[x - 1][y + 1] = 47;
 							pillar = false;
-						}
-					}
+						} else {
+			                dProgressWarn() << QString("Missing case %1 for vertical arch %2 with floors @%3:%4").arg(dungeon[x - 1][y - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                        }
+					} else {
+						dProgressWarn() << QString("Missing case %1 for vertical arch %2 with floor @%3:%4").arg(dungeon[x - 1][y + 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                    }
 				} else if (dungeon[x - 1][y] == 2) {
 					if (dungeon[x - 1][y + 1] == 3) {
 						// 2, 39/41/42,  search
@@ -739,7 +747,11 @@ void DRLG_L2Shadows()
 						// 0, 0,
 						dungeon[x - 1][y] = 141;
 						pillar = false;
+                    } else {
+                        dProgressWarn() << QString("Missing case %1 for vertical arch %2 with wall @%3:%4").arg(dungeon[x - 1][y + 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					}
+                } else {
+                    dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(dungeon[x - 1][y]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 				}
 			}
 			if (harch) {
@@ -755,6 +767,8 @@ void DRLG_L2Shadows()
 						dungeon[x + 1][y - 1] = 46;
 					//} else if (dungeon[x + 1][y - 1] == 47) { // overlapping shadows (missing tile to match the other part)
 					//	dungeon[x][y - 1] = 49;
+                    } else {
+                        dProgressWarn() << QString("Missing case %1 for horizontal arch %2 with floor @%3:%4").arg(dungeon[x + 1][y - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					}
 				} else if (dungeon[x][y - 1] == 1) {
 					if (dungeon[x + 1][y - 1] == 3) {
@@ -767,7 +781,11 @@ void DRLG_L2Shadows()
 						dungeon[x + 1][y - 1] = 46;
 					//} else if (dungeon[x + 1][y - 1] == 47) { // overlapping shadows (missing tile to match the other part)
 					//	dungeon[x][y - 1] = 49;
+                    } else {
+                        dProgressWarn() << QString("Missing case %1 for horizontal arch %2 with wall @%3:%4").arg(dungeon[x + 1][y - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					}
+                } else {
+                    dProgressWarn() << QString("Missing case %1 for horizontal arch %2 @%3:%4").arg(dungeon[x][y - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 				}
 			}
 			if (pillar) {
@@ -803,7 +821,11 @@ void DRLG_L2Shadows()
 						// 0, 0, replace
 						//45, 0,
 						dungeon[x - 1][y] = 45;
+                    } else {
+                        dProgressWarn() << QString("Missing case %1 for pillar %2 with floor @%3:%4").arg(dungeon[x - 1][y - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					}
+                } else {
+                    dProgressWarn() << QString("Missing case %1 for pillar %2 @%3:%4").arg(dungeon[x - 1][y]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 				}
 			}
 		}
