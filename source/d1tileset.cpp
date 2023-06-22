@@ -4136,19 +4136,6 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
                     change |= frame->setPixel(x, y, frameSrc->getPixel(x, y));
                 }
             }
-            // draw shadows 268[0], 268[1], 148[1], 152[0]
-            if (i == 4 || i == 8) {
-                for (int x = 0; x < MICRO_WIDTH; x++) {
-                    for (int y = 0; y < MICRO_HEIGHT; y++) {
-                        D1GfxPixel pixel = frame->getPixel(x, y);
-                        if (!pixel.isTransparent()) {
-                            quint8 color = pixel.getPaletteIndex();
-                            pixel = D1GfxPixel::colorPixel(shadowColorCatacombs(color));
-                            change |= frame->setPixel(x, y, pixel);
-                        }
-                    }
-                }
-            }
             // draw shadow 268[0]
             if (i == 2) {
                 for (int x = 0; x < MICRO_WIDTH; x++) {
@@ -4164,11 +4151,24 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
                     }
                 }
             }
+            // draw shadows 268[1], 152[0]
+            if (i == 4 || i == 8) {
+                for (int x = 0; x < MICRO_WIDTH; x++) {
+                    for (int y = 0; y < MICRO_HEIGHT; y++) {
+                        D1GfxPixel pixel = frame->getPixel(x, y);
+                        if (!pixel.isTransparent()) {
+                            quint8 color = pixel.getPaletteIndex();
+                            pixel = D1GfxPixel::colorPixel(shadowColorCatacombs(color));
+                            change |= frame->setPixel(x, y, pixel);
+                        }
+                    }
+                }
+            }
             // draw shadow 148[1]
             if (i == 6) {
                 for (int x = 0; x < MICRO_WIDTH; x++) {
                     for (int y = 0; y < MICRO_HEIGHT; y++) {
-                        if (y > 27 - x / 2) {
+                        if (y > 17 - x / 2) {
                             D1GfxPixel pixel = frame->getPixel(x, y);
                             if (!pixel.isTransparent()) {
                                 quint8 color = pixel.getPaletteIndex();

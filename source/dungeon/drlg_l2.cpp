@@ -658,6 +658,8 @@ void DRLG_L2Shadows()
 			switch (dungeon[i][j]) {
 			case 6:
 			case 9:
+			case 36:
+			case 37:
 			case 78:
 				pillar = true;
 				break;
@@ -685,7 +687,7 @@ void DRLG_L2Shadows()
 				case 1:  replaceA = 140; okB = true;  break;
 				case 3:  replaceA = 49;  okB = false; break;
 				case 7:  replaceA = 35;  okB = true;  break;
-				case 9:  replaceA = 37;  okB = true;  break;
+				// case 9:  replaceA = 37;  okB = true;  break;
 				case 44: replaceA = 96;  okB = false; break;
 				case 46: replaceA = 46;  okB = false; break;
 				default:
@@ -693,7 +695,7 @@ void DRLG_L2Shadows()
 					continue;
 				}
 				dungeon[i][j - 1] = replaceA;
-				if (!okB) {
+				// if (!okB) {
 					switch (dungeon[i + 1][j - 1]) {
 					case 3:  replaceB = 49; break;
 					case 47: replaceB = 46; break;
@@ -704,7 +706,7 @@ void DRLG_L2Shadows()
 						continue;
 					}
 					dungeon[i + 1][j - 1] = replaceB;
-				}
+				// }
 			}
 			if (vertArch) {
 				BYTE replaceA, replaceC; bool okB;
