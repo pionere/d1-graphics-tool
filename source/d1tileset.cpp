@@ -5105,11 +5105,11 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
         ReplaceMcr(164, 1, 147, 1);
 
         SetMcr(268, 2, 33, 2);
-        SetMcr(268, 3, 33, 3);
+        SetMcr(268, 3, 29, 3);
         SetMcr(268, 4, 33, 4);
-        SetMcr(268, 5, 33, 5);
+        SetMcr(268, 5, 29, 5);
         SetMcr(268, 6, 33, 6);
-        SetMcr(268, 7, 33, 7);
+        SetMcr(268, 7, 29, 7);
 
         SetMcr(148, 0, 23, 0);
 
