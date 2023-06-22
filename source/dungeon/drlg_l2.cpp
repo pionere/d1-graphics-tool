@@ -649,7 +649,7 @@ void DRLG_L2Shadows()
 			if (automaptype[dungeon[i][j]] & MAPFLAG_HORZDOOR) {
 				// shadow of the horizontal doors
 				BYTE replaceB = dungeon[i][j - 1];
-				if (replaceB == 3) {
+				if (replaceB == 3 || replaceB == 49) {
 					dungeon[i][j - 1] = 49;
 				} else {
 					dProgressWarn() << QString("Missing case %1 for horizontal door %2 @%3:%4").arg(dungeon[i][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
@@ -890,6 +890,8 @@ static void DRLG_LoadL2SP()
 		}
 		// patch the map - Blood1.DUN
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
+		// eliminate invisible 'fancy' tile to leave space for shadow
+		lm[2 + 3 + 9 * 10] = SwapLE16(3);
 		// protect the main structure
 		for (int y = 0; y <= 15; y++) {
 			for (int x = 2; x <= 7; x++) {
