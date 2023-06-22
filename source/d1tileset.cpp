@@ -4168,7 +4168,7 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
             if (i == 6) {
                 for (int x = 0; x < MICRO_WIDTH; x++) {
                     for (int y = 0; y < MICRO_HEIGHT; y++) {
-                        if (y > 17 - x / 2) {
+                        if (y > 22 - x / 2) {
                             D1GfxPixel pixel = frame->getPixel(x, y);
                             if (!pixel.isTransparent()) {
                                 quint8 color = pixel.getPaletteIndex();
