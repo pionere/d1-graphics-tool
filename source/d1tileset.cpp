@@ -4426,7 +4426,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < 23; y++) {
                     // if ((x < 21 && y < 30 - (x + 1) / 2) || (x > 24 && (y < (x + 1) / 2 - 12))) {
-                    if (x < 21 && y < 30 - (x + 1) / 2)) {
+                    if (x < 21 && y < 30 - (x + 1) / 2) {
                         change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel()); // 13[0]
                     }
                 }
