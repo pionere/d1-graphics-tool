@@ -4123,6 +4123,7 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
             return false;
         }
         bool change = false;
+        // draw new shadow micros 268[0], 268[1], 148[1], 152[0], 250[0] using base micros 33[0], 33[1], 23[1], 6[3], 6[1]
         if (i >= 2 && i < 11 && (i & 1) == 0) {
             const CelMicro &microSrc = micros[i - 1];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
@@ -4135,11 +4136,11 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
                     change |= frame->setPixel(x, y, frameSrc->getPixel(x, y));
                 }
             }
-
-            if (i == 2 || i == 4 || i == 6 || i == 8) { // 268[0], 268[1], 148[1], 152[0]
+            // draw shadows 268[0], 268[1], 148[1], 152[0]
+            if (i == 2 || i == 4 || i == 6 || i == 8) {
                 for (int x = 0; x < MICRO_WIDTH; x++) {
                     for (int y = 0; y < MICRO_HEIGHT; y++) {
-                        D1GfxPixel pixel = frame->getPixel();
+                        D1GfxPixel pixel = frame->getPixel(x, y);
                         if (!pixel.isTransparent()) {
                             quint8 color = pixel.getPaletteIndex();
                             pixel = D1GfxPixel::colorPixel(shadowColorCatacombs(color));
@@ -4148,11 +4149,12 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
                     }
                 }
             }
-            if (i == 10) { // 250[0]
+            // draw shadow 250[0]
+            if (i == 10) {
                 for (int x = 0; x < 5; x++) {
                     for (int y = 0; y < 12; y++) {
                         if (y < (4 - x) * 3) {
-                            D1GfxPixel pixel = frame->getPixel();
+                            D1GfxPixel pixel = frame->getPixel(x, y);
                             quint8 color = pixel.getPaletteIndex();
                             pixel = D1GfxPixel::colorPixel(shadowColorCatacombs(color));
                             change |= frame->setPixel(x, y, pixel);
@@ -4161,7 +4163,8 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
                 }
             }
         }
-        if (i == 12) { // 514[1]
+        // fix shadow on 514[1] using 5[1]
+        if (i == 12) {
             const CelMicro &microSrc = micros[i - 1];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
@@ -4170,7 +4173,7 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
             // }
             for (int x = 26; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
-                    D1GfxPixel pixel = frameSrc->getPixel();
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y);
                     if (!pixel.isTransparent()) {
                         quint8 color = pixel.getPaletteIndex();
                         pixel = D1GfxPixel::colorPixel(shadowColorCatacombs(color));
@@ -4179,10 +4182,11 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
                 }
             }
         }
-        if (i == 13) { // 515[0]
+        // fix shadow on 515[0]
+        if (i == 13) {
             for (int x = 20; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < 18; y++) {
-                    D1GfxPixel pixel = frameSrc->getPixel();
+                    D1GfxPixel pixel = frame->getPixel(x, y);
                     if (!pixel.isTransparent()) {
                         if (x < 26) {
                             if (y > 37 - x) {
