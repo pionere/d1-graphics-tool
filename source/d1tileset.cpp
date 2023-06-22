@@ -4280,53 +4280,57 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
 /*  9 */{ 551 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 10 */{ 551 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 11 */{ 551 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 12 */{ 553 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 13 */{ 553 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 14 */{ 553 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 15 */{ 553 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 12 */{ 13 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // mask door
+/* 13 */{ 13 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 14 */{ 13 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 15 */{ 13 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 16 */{ 553 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 17 */{ 553 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 18 */{ 553 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 19 */{ 553 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 16 */{ 289 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // mask column
-/* 17 */{ 288 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 18 */{ 287 - 1, 0, D1CEL_FRAME_TYPE::LeftTrapezoid },
-/* 19 */{ 21 - 1, 2, D1CEL_FRAME_TYPE::Empty },
-/* 20 */{ 21 - 1, 3, D1CEL_FRAME_TYPE::Empty },
-/* 21 */{ 21 - 1, 4, D1CEL_FRAME_TYPE::Empty },
-/* 22 */{ 21 - 1, 5, D1CEL_FRAME_TYPE::Empty },
-/* 23 */{ 287 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 24 */{ 287 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 25 */{ 287 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 26 */{ 287 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 20 */{ 289 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // mask column
+/* 21 */{ 288 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 22 */{ 287 - 1, 0, D1CEL_FRAME_TYPE::LeftTrapezoid },
+/* 23 */{ 21 - 1, 2, D1CEL_FRAME_TYPE::Empty },
+/* 24 */{ 21 - 1, 3, D1CEL_FRAME_TYPE::Empty },
+/* 25 */{ 21 - 1, 4, D1CEL_FRAME_TYPE::Empty },
+/* 26 */{ 21 - 1, 5, D1CEL_FRAME_TYPE::Empty },
+/* 27 */{ 287 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 28 */{ 287 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 29 */{ 287 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 30 */{ 287 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 27 */{ 323 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle }, // redraw floor
-/* 28 */{ 323 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
-/* 29 */{ 324 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle }, // unused
-/* 30 */{ 324 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // unused
-/* 31 */{ 332 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
-/* 32 */{ 332 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
-/* 33 */{ 331 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
-/* 34 */{ 331 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
-/* 35 */{ 325 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
-/* 36 */{ 325 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
-/* 37 */{ 342 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
-/* 38 */{ 342 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
-/* 39 */{ 348 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
-/* 40 */{ 348 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/* 31 */{ 323 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle }, // redraw floor
+/* 22 */{ 323 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/* 33 */{ 324 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle }, // unused
+/* 34 */{ 324 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // unused
+/* 35 */{ 332 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 36 */{ 332 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/* 37 */{ 331 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 38 */{ 331 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/* 39 */{ 325 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 40 */{ 325 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/* 41 */{ 342 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 42 */{ 342 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/* 43 */{ 348 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 44 */{ 348 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
 
 // unify the columns
-/* 41 */{ 267 - 1, 1, D1CEL_FRAME_TYPE::Empty },
-/* 42 */{ 23 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
-/* 43 */{ 135 - 1, 0, D1CEL_FRAME_TYPE::Empty },
-/* 44 */{ 26 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
-/* 45 */{ 21 - 1, 1, D1CEL_FRAME_TYPE::Empty },
-/* 46 */{ 134 - 1, 1, D1CEL_FRAME_TYPE::RightTrapezoid },
-/* 47 */{ 10 - 1, 1, D1CEL_FRAME_TYPE::Empty },
-/* 48 */{ 135 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
-/* 49 */{ 9 - 1, 0, D1CEL_FRAME_TYPE::Empty },
-/* 50 */{ 146 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
-/* 51 */{ 147 - 1, 0, D1CEL_FRAME_TYPE::Empty },
-/* 52 */{ 167 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
-/* 53 */{ 270 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // change type
-/* 54 */{ 271 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle }, // reduce shadow
+/* 45 */{ 267 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 46 */{ 23 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/* 47 */{ 135 - 1, 0, D1CEL_FRAME_TYPE::Empty },
+/* 48 */{ 26 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 49 */{ 21 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 50 */{ 134 - 1, 1, D1CEL_FRAME_TYPE::RightTrapezoid },
+/* 51 */{ 10 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 52 */{ 135 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/* 53 */{ 9 - 1, 0, D1CEL_FRAME_TYPE::Empty },
+/* 54 */{ 146 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 55 */{ 147 - 1, 0, D1CEL_FRAME_TYPE::Empty },
+/* 56 */{ 167 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 57 */{ 270 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // change type
+/* 58 */{ 271 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle }, // reduce shadow
     };
 
     constexpr unsigned blockSize = BLOCK_SIZE_L2;
@@ -4417,8 +4421,36 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
                 }
             }
         }
-        // mask 553[1]
+        // mask 13[0]
         if (i == 12) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < 23; y++) {
+                    if ((x < 21 && y < 30 - (x + 1) / 2) || (x > 24 && (y < (x + 1) / 2 - 12))) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel()); // 13[0]
+                    }
+                }
+            }
+        }
+        // mask 13[1]
+        if (i == 13) {
+            for (int x = 0; x < 10; x++) {
+                for (int y = 0; y < 7; y++) {
+                    if (y < 4 + x / 2 && (y != 6 || (x != 8 && x != 9))) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel()); // 13[1]
+                    }
+                }
+            }
+        }
+        // mask 13[3], 13[5]
+        if (i >= 14 && i < 16) {
+            for (int x = 0; x < 10; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // mask 553[1]
+        if (i == 16) {
             for (int x = 8; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     if (y < (x - 8) / 2 + 22) {
@@ -4428,7 +4460,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // mask 553[3]
-        if (i == 13) {
+        if (i == 17) {
             for (int x = 8; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel()); // 553[3]
@@ -4436,7 +4468,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // mask 553[4]
-        if (i == 14) {
+        if (i == 18) {
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     if (y < 2 + x / 2) {
@@ -4446,7 +4478,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // mask 553[5]
-        if (i == 15) {
+        if (i == 19) {
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     if (x > 7 || y < 18 + x / 2) {
@@ -4457,7 +4489,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
         }
 
         // mask 289[0]
-        if (i == 16) {
+        if (i == 20) {
             for (int x = 15; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < 9; y++) {
                     if ((y < 8 - (x - 14) / 2 && (x != 19 || y != 5) && (x != 20 || y != 4) && (x != 21 || y != 4) && (x != 22 || y != 3) && (x != 23 || y != 3) && (x != 27 || y != 1))
@@ -4468,7 +4500,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // mask 288[1]
-        if (i == 17) {
+        if (i == 21) {
             for (int x = 0; x < 17; x++) {
                 for (int y = 0; y < 9; y++) {
                     if ((x < 9 && (y < x / 2 - 2 || (x == 3 && y == 0))) || (x >= 9 && y < x / 2)) {
@@ -4478,7 +4510,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // mask 287[2, 3, 4, 5] using 21[2, 3, 4, 5]
-        if (i >= 23 &&  i < 27) {
+        if (i >= 27 &&  i < 31) {
             const CelMicro &microSrc = micros[i - 4];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
@@ -4490,7 +4522,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     D1GfxPixel pixel = frameSrc->getPixel(x, y);
                     if (pixel.isTransparent()) {
-                        if (i == 23 && ((x == 4 && ((y > 3 && y < 7) || (y > 10 && y < 16)))) || (x == 5 && y != 17)) {
+                        if (i == 27 && ((x == 4 && ((y > 3 && y < 7) || (y > 10 && y < 16)))) || (x == 5 && y != 17)) {
                             continue; // 287[2]
                         }
                         change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel()); 
@@ -4500,7 +4532,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
         }
 
         // redraw 323[0]
-        if (i == 27) {
+        if (i == 31) {
             for (int x = 4; x < MICRO_WIDTH; x++) {
                 for (int y = 18 - x / 2; y > 12 - x / 2 && y >= 0; y--) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
@@ -4512,7 +4544,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // redraw 323[1]
-        if (i == 28) {
+        if (i == 32) {
             for (int x = 24; x < MICRO_WIDTH; x++) {
                 for (int y = 13; y < 20; y++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
@@ -4523,7 +4555,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // redraw 332[0]
-        if (i == 31) {
+        if (i == 35) {
             // move border down
             for (int x = 6; x < MICRO_WIDTH - 3; x++) {
                 for (int y = 10 + (x + 1) / 2; y < 11 + (x + 1) / 2; y++) {
@@ -4558,7 +4590,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // redraw 332[1]
-        if (i == 32) {
+        if (i == 36) {
             for (int x = 0; x < 30; x++) {
                 for (int y = x / 2 + 2; y > x / 2 - 4 && y >= 0; y--) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
@@ -4570,7 +4602,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // redraw 331[0]
-        if (i == 33) {
+        if (i == 37) {
             for (int x = 4; x < MICRO_WIDTH; x++) {
                 for (int y = 18 - x / 2; y > 12 - x / 2 && y >= 0; y--) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
@@ -4582,7 +4614,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // redraw 331[1]
-        if (i == 34) {
+        if (i == 38) {
             for (int x = 0; x < 30; x++) {
                 for (int y = x / 2 + 2; y > x / 2 - 4 && y >= 0; y--) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
@@ -4594,7 +4626,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // redraw 325[0]
-        if (i == 35) {
+        if (i == 39) {
             for (int x = 4; x < MICRO_WIDTH; x++) {
                 for (int y = 18 - x / 2; y > 12 - x / 2 && y >= 0; y--) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
@@ -4606,7 +4638,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // redraw 325[1]
-        if (i == 36) {
+        if (i == 40) {
             // reduce border on the right
             for (int x = 14; x < 25; x++) {
                 for (int y = 16; y < 23; y++) {
@@ -4629,7 +4661,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // redraw 342[0] - move border on top
-        if (i == 37) {
+        if (i == 41) {
             // remove border on the right
             for (int x = 26; x < MICRO_WIDTH; x++) {
                 for (int y = 1; y < 7; y++) {
@@ -4659,7 +4691,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // redraw 342[1] - move border on top
-        if (i == 38) {
+        if (i == 42) {
             // remove border on the left
             for (int x = 0; x < 6; x++) {
                 for (int y = 1; y < 7; y++) {
@@ -4689,7 +4721,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // redraw 348[0]
-        if (i == 39) {
+        if (i == 43) {
             // reduce border on the left
             for (int x = 8; x < 20; x++) {
                 for (int y = 16; y < 23; y++) {
@@ -4723,7 +4755,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // redraw 348[1]
-        if (i == 40) {
+        if (i == 44) {
             for (int x = 0; x < 30; x++) {
                 for (int y = x / 2 + 2; y > x / 2 - 4 && y >= 0; y--) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
@@ -4735,7 +4767,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // erase stone in 23[1] using 267[1]
-        if (i == 42) {
+        if (i == 46) {
             const CelMicro &microSrc = micros[i - 1];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
@@ -4752,7 +4784,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // erase stone in 26[0] using 135[0]
-        if (i == 44) {
+        if (i == 48) {
             const CelMicro &microSrc = micros[i - 1];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
@@ -4769,7 +4801,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // erase stone in 134[1] using 21[1]
-        if (i == 46) {
+        if (i == 50) {
             const CelMicro &microSrc = micros[i - 1];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
@@ -4786,7 +4818,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // erase stone in 135[1] using 10[1]
-        if (i == 48) {
+        if (i == 52) {
             const CelMicro &microSrc = micros[i - 1];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
@@ -4803,7 +4835,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // erase stone in 146[0] using 9[0]
-        if (i == 50) {
+        if (i == 54) {
             const CelMicro &microSrc = micros[i - 1];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
@@ -4820,7 +4852,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // fix shadow in 167[0] using 147[0]
-        if (i == 52) {
+        if (i == 56) {
             const CelMicro &microSrc = micros[i - 1];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
@@ -4841,7 +4873,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // fix artifacts
-        if (i == 18) { // 287[0]
+        if (i == 22) { // 287[0]
             change |= frame->setPixel( 0, 13, D1GfxPixel::colorPixel(62));
             change |= frame->setPixel( 0, 14, D1GfxPixel::colorPixel(76));
             change |= frame->setPixel( 0, 15, D1GfxPixel::colorPixel(77));
@@ -4851,7 +4883,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             change |= frame->setPixel( 1, 15, D1GfxPixel::colorPixel(59));
             change |= frame->setPixel( 1, 16, D1GfxPixel::colorPixel(78));
         }
-        if (i == 26) { // 287[5]
+        if (i == 30) { // 287[5]
             change |= frame->setPixel(27, 15, D1GfxPixel::transparentPixel());
             change |= frame->setPixel(27, 14, D1GfxPixel::transparentPixel());
             change |= frame->setPixel(27, 13, D1GfxPixel::transparentPixel());
@@ -4870,7 +4902,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             change |= frame->setPixel(26, 6, D1GfxPixel::transparentPixel());
             change |= frame->setPixel(26, 5, D1GfxPixel::transparentPixel());
         }
-        if (i == 54) { // 271[0]
+        if (i == 58) { // 271[0]
             change |= frame->setPixel(30, 1, D1GfxPixel::colorPixel(41));
             change |= frame->setPixel(31, 1, D1GfxPixel::colorPixel(27));
             change |= frame->setPixel(31, 2, D1GfxPixel::colorPixel(26));
@@ -5179,14 +5211,17 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     }
     // pointless door micros (re-drawn by dSpecial or the object)
     // - vertical doors    
+    Blk2Mcr(13, 2);
     ReplaceMcr(538, 0, 13, 0);
     ReplaceMcr(538, 1, 13, 1);
-    ReplaceMcr(538, 2, 13, 2);
     ReplaceMcr(538, 3, 13, 3);
+    Blk2Mcr(538, 2);
     Blk2Mcr(538, 4);
     ReplaceMcr(538, 5, 13, 5);
     Blk2Mcr(538, 6);
     Blk2Mcr(538, 7);
+    // - horizontal doors
+    Blk2Mcr(17, 3);
     ReplaceMcr(540, 0, 17, 0);
     ReplaceMcr(540, 1, 17, 1);
     ReplaceMcr(540, 2, 17, 2);
