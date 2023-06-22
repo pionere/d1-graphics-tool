@@ -3421,12 +3421,12 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(8, 15, 11);
         change |= this->changeTileAt(8, 16, 12);
         change |= this->changeTileAt(8, 17, 12);
-        change |= this->changeTileAt(8, 17, 15);
+        change |= this->changeTileAt(9, 17, 15);
 
-        change |= this->changeTileAt(20,  4, 12);
-        change |= this->changeTileAt(21,  4, 12);
+        change |= this->changeTileAt(20, 4, 12);
+        change |= this->changeTileAt(21, 4, 12);
         change |= this->changeTileAt(22, 13, 11);
-        change |= this->changeTileAt(21,  8, 10);
+        change |= this->changeTileAt(21, 8, 10);
 
         // add tiles with subtiles for arches
         change |= this->changeTileAt(13, 6, 44);
@@ -3467,6 +3467,16 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(16, 15, 51);
         break;
     case DUN_BLIND_PRE: // Blind2.DUN
+        // external tiles
+        change |= this->changeTileAt(2, 2, 13);
+        change |= this->changeTileAt(2, 3, 10);
+        change |= this->changeTileAt(3, 2, 11);
+        change |= this->changeTileAt(3, 3, 12);
+
+        change |= this->changeTileAt(6, 6, 13);
+        change |= this->changeTileAt(6, 7, 10);
+        change |= this->changeTileAt(7, 6, 11);
+        change |= this->changeTileAt(7, 7, 12);
         // replace the door with wall
         change |= this->changeTileAt(4, 3, 25);
         // remove items

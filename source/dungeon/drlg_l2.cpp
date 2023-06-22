@@ -726,8 +726,9 @@ void DRLG_L2Shadows()
 				BYTE replaceA, replaceC; bool okB;
 				BYTE replaceB = dungeon[i - 1][j];
 				switch (replaceB) {
-				case 2:  replaceA = 141; okB = true; break;
+				case 2:  replaceA = 141; okB = true;  break;
 				case 3:  replaceA = 51;  okB = false; break;
+				case 9:  replaceA = 37;  okB = true;  break;
 				case 45: replaceA = 100; okB = false; break;
 				default:
                     dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
@@ -2489,7 +2490,7 @@ static void DRLG_L2FixMap()
 		lm[2 + 8 + 15 * 32] = SwapLE16(11);
 		lm[2 + 8 + 16 * 32] = SwapLE16(12);
 		lm[2 + 8 + 17 * 32] = SwapLE16(12);
-		lm[2 + 8 + 17 * 32] = SwapLE16(15);
+		lm[2 + 9 + 17 * 32] = SwapLE16(15);
 
 		lm[2 + 20 + 4 * 32] = SwapLE16(12);
 		lm[2 + 21 + 4 * 32] = SwapLE16(12);
@@ -2524,6 +2525,16 @@ static void DRLG_L2FixPreMap(int idx)
 
 	if (pSetPieces[idx]._sptype == SPT_BLIND) {
 		// patch the map - Blind2.DUN
+		// external tiles
+		lm[2 + 2 + 2 * 11] = SwapLE16(13);
+		lm[2 + 2 + 3 * 11] = SwapLE16(10);
+		lm[2 + 3 + 2 * 11] = SwapLE16(11);
+		lm[2 + 3 + 3 * 11] = SwapLE16(12);
+
+		lm[2 + 6 + 6 * 11] = SwapLE16(13);
+		lm[2 + 6 + 7 * 11] = SwapLE16(10);
+		lm[2 + 7 + 6 * 11] = SwapLE16(11);
+		lm[2 + 7 + 7 * 11] = SwapLE16(12);
 		// replace the door with wall
 		lm[2 + 4 + 3 * 11] = SwapLE16(25);
 		// protect inner tiles from spawning additional monsters/objects
