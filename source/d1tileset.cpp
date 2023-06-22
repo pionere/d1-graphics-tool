@@ -4273,17 +4273,17 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
 /*  3 */{ 482 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },  // change type
 
 /*  4 */{ 17 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare }, // mask door
-/*  5 */{ 17 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/*  6 */{ 17 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
-/*  7 */{ 17 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  5 */{ 17 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // unused
+/*  6 */{ 17 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare }, // unused
+/*  7 */{ 17 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare }, // unused
 /*  8 */{ 551 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 /*  9 */{ 551 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 10 */{ 551 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 11 */{ 551 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 12 */{ 13 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // mask door
-/* 13 */{ 13 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 14 */{ 13 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 15 */{ 13 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 12 */{ 13 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 13 */{ 13 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare }, // unused
+/* 14 */{ 13 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare }, // unused
+/* 15 */{ 13 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare }, // unused
 /* 16 */{ 553 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 17 */{ 553 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 18 */{ 553 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
@@ -4356,7 +4356,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         // mask 17[0]
-        if (i == 5) {
+        /*if (i == 5) {
             for (int x = 19; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     if (y < 15 - (x + 1) / 2) {
@@ -4382,7 +4382,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
                     change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel()); // 17[4]
                 }
             }
-        }
+        }*/
         // mask 551[0]
         if (i == 8) {
             for (int x = 0; x < 21; x++) {
@@ -4425,14 +4425,15 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
         if (i == 12) {
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < 23; y++) {
-                    if ((x < 21 && y < 30 - (x + 1) / 2) || (x > 24 && (y < (x + 1) / 2 - 12))) {
+                    // if ((x < 21 && y < 30 - (x + 1) / 2) || (x > 24 && (y < (x + 1) / 2 - 12))) {
+                    if (x < 21 && y < 30 - (x + 1) / 2)) {
                         change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel()); // 13[0]
                     }
                 }
             }
         }
         // mask 13[1]
-        if (i == 13) {
+        /*if (i == 13) {
             for (int x = 0; x < 10; x++) {
                 for (int y = 0; y < 7; y++) {
                     if (y < 4 + x / 2 && (y != 6 || (x != 8 && x != 9))) {
@@ -4448,7 +4449,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
                     change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                 }
             }
-        }
+        }*/
         // mask 553[1]
         if (i == 16) {
             for (int x = 8; x < MICRO_WIDTH; x++) {
@@ -5211,11 +5212,12 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     }
     // pointless door micros (re-drawn by dSpecial or the object)
     // - vertical doors    
-    Blk2Mcr(13, 2);
+    // Blk2Mcr(13, 2);
     ReplaceMcr(538, 0, 13, 0);
     ReplaceMcr(538, 1, 13, 1);
+    ReplaceMcr(538, 1, 13, 2);
     ReplaceMcr(538, 3, 13, 3);
-    Blk2Mcr(538, 2);
+    // Blk2Mcr(538, 2);
     Blk2Mcr(538, 4);
     ReplaceMcr(538, 5, 13, 5);
     Blk2Mcr(538, 6);
@@ -5865,7 +5867,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(559, 2);
     Blk2Mcr(559, 4);
     int unusedSubtiles[] = {
-        2, 7, 14, 19, 20, 48, 50, 53, 55, 56, 57, 58, 59, 70, 71, 106, 109, 110, 116, 117, 118, 120, 122, 123, 124, 126, 137, 140, 145, 149, 157, 159, 160, 170, 171, 172, 173, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 235, 243, 246, 247, 255, 256, 264, 327, 328, 329, 330, 335, 336, 337, 338, 343, 344, 345, 346, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 366, 367, 368, 369, 370, 376, 391, 400, 434, 487, 489, 491, 493, 504, 505, 507, 509, 511, 516, 531, 533, 536, 541, 
+        2, 7, 14, 19, 20, 48, 50, 53, 55, 56, 57, 58, 59, 70, 71, 106, 109, 110, 116, 117, 118, 120, 122, 123, 124, 126, 137, 140, 145, 149, 157, 159, 160, 170, 171, 172, 173, 192, 193, 194, 195, 196, 197, 198, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 235, 243, 246, 247, 255, 256, 264, 327, 328, 329, 330, 335, 336, 337, 338, 343, 344, 345, 346, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 366, 367, 368, 369, 370, 376, 391, 400, 434, 487, 489, 491, 493, 504, 505, 507, 509, 511, 516, 531, 533, 536, 541, 
     };
 
     for (int n = 0; n < lengthof(unusedSubtiles); n++) {

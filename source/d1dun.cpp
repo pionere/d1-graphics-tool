@@ -3406,6 +3406,28 @@ void D1Dun::patch(int dunFileIndex)
         break;
     case DUN_BONECHAMB_PRE: // Bonecha1.DUN
     case DUN_BONECHAMB_AFT: // Bonecha2.DUN
+        // reduce pointless bone-chamber complexity
+        change |= this->changeTileAt(16, 9, 57);
+        change |= this->changeTileAt(16, 10, 62);
+        change |= this->changeTileAt(16, 11, 62);
+        change |= this->changeTileAt(16, 12, 62);
+        change |= this->changeTileAt(13, 12, 53);
+        change |= this->changeTileAt(14, 12, 62);
+        change |= this->changeTileAt(15, 12, 62);
+        // use standard tiles
+        change |= this->changeTileAt(0, 14, 12);
+        change |= this->changeTileAt(0, 15, 12);
+        change |= this->changeTileAt(1, 15, 15);
+        change |= this->changeTileAt(8, 15, 11);
+        change |= this->changeTileAt(8, 16, 12);
+        change |= this->changeTileAt(8, 17, 12);
+        change |= this->changeTileAt(8, 17, 15);
+
+        change |= this->changeTileAt(20,  4, 12);
+        change |= this->changeTileAt(21,  4, 12);
+        change |= this->changeTileAt(22, 13, 11);
+        change |= this->changeTileAt(21,  8, 10);
+
         // add tiles with subtiles for arches
         change |= this->changeTileAt(13, 6, 44);
         change |= this->changeTileAt(13, 8, 44);

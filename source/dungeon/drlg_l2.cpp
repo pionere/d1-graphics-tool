@@ -2470,6 +2470,30 @@ static void DRLG_L2FixMap()
 
 	if (pSetPieces[0]._sptype == SPT_LVL_BCHAMB) {
 		// patch the map - Bonecha2.DUN
+		// reduce pointless bone-chamber complexity
+		lm[2 + 16 + 9 * 32] = SwapLE16(57);
+		lm[2 + 13 + 12 * 32] = SwapLE16(53);
+		lm[2 + 16 + 9 * 32] = SwapLE16(57);
+		lm[2 + 16 + 10 * 32] = SwapLE16(62);
+		lm[2 + 16 + 11 * 32] = SwapLE16(62);
+		lm[2 + 16 + 12 * 32] = SwapLE16(62);
+		lm[2 + 13 + 12 * 32] = SwapLE16(53);
+		lm[2 + 14 + 12 * 32] = SwapLE16(62);
+		lm[2 + 15 + 12 * 32] = SwapLE16(62);
+		// use standard tiles
+		lm[2 + 0 + 14 * 32] = SwapLE16(12);
+		lm[2 + 0 + 15 * 32] = SwapLE16(12);
+		lm[2 + 1 + 15 * 32] = SwapLE16(15);
+		lm[2 + 8 + 15 * 32] = SwapLE16(11);
+		lm[2 + 8 + 16 * 32] = SwapLE16(12);
+		lm[2 + 8 + 17 * 32] = SwapLE16(12);
+		lm[2 + 8 + 17 * 32] = SwapLE16(15);
+
+		lm[2 + 20 + 4 * 32] = SwapLE16(12);
+		lm[2 + 21 + 4 * 32] = SwapLE16(12);
+		lm[2 + 22 + 13 * 32] = SwapLE16(11);
+		lm[2 + 21 + 8 * 32] = SwapLE16(10);
+
 		// add tiles with subtiles for arches
 		lm[2 + 13 + 6 * 32] = SwapLE16(44);
 		lm[2 + 13 + 8 * 32] = SwapLE16(44);
