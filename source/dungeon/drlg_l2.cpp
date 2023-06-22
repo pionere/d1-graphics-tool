@@ -633,7 +633,7 @@ static void DRLG_L2DoorSubs()
 
 /*
  * Place shadows under arches and pillars.
- * New dungeon values: 17 18 45 46 47 48 49 50 51   96 100 140 141 142
+ * New dungeon values: 17 18 35 36 45 46 47 48 49 50 51   95 96 100 140 141 142
  * TODO: use DRLG_PlaceMiniSet instead?
  */
 void DRLG_L2Shadows()
@@ -684,7 +684,7 @@ void DRLG_L2Shadows()
 				switch (replaceB) {
 				case 1:  replaceA = 140; okB = true;  break;
 				case 3:  replaceA = 49;  okB = false; break;
-				case 7:  replaceA = 17;  okB = true;  break;
+				case 7:  replaceA = 35;  okB = true;  break;
 				case 44: replaceA = 96;  okB = false; break;
 				case 46: replaceA = 46;  okB = false; break;
 				default:
@@ -720,9 +720,10 @@ void DRLG_L2Shadows()
 				replaceC = dungeon[i - 1][j - 1];
 				if (!okB) {
 					switch (replaceC) {
-					case 2: replaceA = 142; break;
-					case 3: replaceA = 48;  break;
-					case 9: replaceA = 18;  break;
+					case 2:  replaceA = 142; break;
+					case 3:  replaceA = 48;  break;
+					case 9:  replaceA = 36;  break;
+					case 45: replaceA = 95;  break;
 					default:
 						dProgressWarn() << QString("Missing case %1 for vertical arch %2 with floor @%3:%4").arg(replaceC).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
                         dungeon[i - 1][j] = replaceB; // restore original value
@@ -732,9 +733,10 @@ void DRLG_L2Shadows()
 				}
 
 				switch (dungeon[i - 1][j + 1]) {
-				case 3:  replaceA = 49; break;
+				case 3:  replaceA = 47; break;
+				case 49: replaceA = 46; break;
 				default:
-                    dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                    dProgressWarn() << QString("Missing case %1 for vertical arch %2 down @%3:%4").arg(dungeon[i - 1][j + 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					dungeon[i - 1][j] = replaceB; // restore original values
 					dungeon[i - 1][j - 1] = replaceC; // restore original value
 					continue;
@@ -813,7 +815,7 @@ void DRLG_L2Shadows()
 				if (dungeon[i - 1][j] == 3) {
 					if (dungeon[i - 1][j - 1] == 3) {
 						// 3, 0,  search
-						// 3, 6/7/39/40/41/42/78
+						// 3, P
 
 						//48, 0, replace
 						//50, 0,
@@ -821,17 +823,33 @@ void DRLG_L2Shadows()
 						dungeon[i - 1][j - 1] = 48;
 					} else if (dungeon[i - 1][j - 1] == 2) {
 						// 2, 0,  search
-						// 3, 6/7/39/40/41/42/78
+						// 3, P
 
 						//142, 0, replace
 						//50, 0,
 						dungeon[i - 1][j] = 50;
 						dungeon[i - 1][j - 1] = 142;
+					} else if (dungeon[i - 1][j - 1] == 5) {
+						// 5, 0,  search
+						// 3, P
+
+						//17, 0, replace
+						//50, 0,
+						dungeon[i - 1][j] = 50;
+						dungeon[i - 1][j - 1] = 17;
 					} else if (dungeon[i - 1][j - 1] == 9) {
-						// 2, 0,  search
-						// 3, 6/7/39/40/41/42/78
+						// 9, 0,  search
+						// 3, P
 
 						//142, 0, replace
+						//50, 0,
+						dungeon[i - 1][j] = 50;
+						dungeon[i - 1][j - 1] = 36;
+					} else if (dungeon[i - 1][j - 1] == 157) {
+						// 157, 0,  search
+						// 3, P
+
+						//18, 0, replace
 						//50, 0,
 						dungeon[i - 1][j] = 50;
 						dungeon[i - 1][j - 1] = 18;
