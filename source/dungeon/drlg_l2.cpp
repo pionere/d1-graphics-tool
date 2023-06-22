@@ -633,7 +633,7 @@ static void DRLG_L2DoorSubs()
 
 /*
  * Place shadows under arches and pillars.
- * New dungeon values: 45..51   72   140 141 142 96 100
+ * New dungeon values: 17 18 45 46 47 48 49 50 51   96 100 140 141 142
  * TODO: use DRLG_PlaceMiniSet instead?
  */
 void DRLG_L2Shadows()
@@ -720,7 +720,9 @@ void DRLG_L2Shadows()
 				replaceC = dungeon[i - 1][j - 1];
 				if (!okB) {
 					switch (replaceC) {
-					case 3:  replaceA = 48; break;
+					case 2: replaceA = 142; break;
+					case 3: replaceA = 48;  break;
+					case 9: replaceA = 18;  break;
 					default:
 						dProgressWarn() << QString("Missing case %1 for vertical arch %2 with floor @%3:%4").arg(replaceC).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
                         dungeon[i - 1][j] = replaceB; // restore original value
@@ -848,6 +850,7 @@ void DRLG_L2Shadows()
 						//45, 0,
 						dungeon[i - 1][j] = 45;*/
 					} else {
+						if (drlgFlags[i - 1][j - 1] == 0)
                         dProgressWarn() << QString("Missing case %1 for pillar %2 with floor @%3:%4").arg(dungeon[i - 1][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					}
 				} else {
@@ -2530,6 +2533,15 @@ static void DRLG_L2FixPreMap(int idx)
 		// - shadow of the internal column next to the pedistal
 		lm[2 + 5 + 7 * 10] = SwapLE16(142);
 		lm[2 + 5 + 8 * 10] = SwapLE16(50);
+        // external tiles
+		for (int y = 0; y < 8; y++) {
+			for (int x = 0; x <= 10; x++) {
+				uint16_t wv = SwapLE16(lm[2 + x + y * 10]);
+				if (wv >= 143 && wv <= 149) {
+					lm[2 + x + y * 10] = SwapLE16(wv - 133);
+				}
+			}
+		}
 		// - add book and pedistal
 		lm[2 + 10 * 16 + 10 * 16 * 2 * 2 + 10 * 16 * 2 * 2 + 9 + 24 * 10 * 2] = SwapLE16(15);
 		lm[2 + 10 * 16 + 10 * 16 * 2 * 2 + 10 * 16 * 2 * 2 + 9 + 16 * 10 * 2] = SwapLE16(91);

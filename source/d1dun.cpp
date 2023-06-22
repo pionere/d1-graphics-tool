@@ -3515,7 +3515,7 @@ void D1Dun::patch(int dunFileIndex)
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x <= 10; x++) {
                 if (this->tiles[y][x] >= 143 && this->tiles[y][x] <= 149) {
-                    change |= this->changeTileAt(4, 10, this->tiles[y][x] - 133);
+                    change |= this->changeTileAt(x, y, this->tiles[y][x] - 133);
                 }
             }
         }

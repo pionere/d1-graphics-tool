@@ -4780,7 +4780,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 71 - 1, 1, 10 - 1, silent);
     ReplaceSubtile(this->til, 77 - 1, 3, 12 - 1, silent);
     ReplaceSubtile(this->til, 140 - 1, 1, 10 - 1, silent);
-    ReplaceSubtile(this->til, 142 - 1, 1, 162 - 1, silent);
+    ReplaceSubtile(this->til, 142 - 1, 3, 162 - 1, silent);
 
     // use common subtiles instead of minor alterations
     ReplaceSubtile(this->til, 1 - 1, 1, 10 - 1, silent);
