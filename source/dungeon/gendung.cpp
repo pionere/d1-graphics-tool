@@ -588,7 +588,7 @@ void DRLG_PlaceMegaTiles(int mt)
 	}
 
     int et = -1;
-    switch (currLvl._dLevel) {
+    switch (currLvl._dType) {
     case DTYPE_CATHEDRAL: et = 74; break;
     case DTYPE_CATACOMBS: et = 2;  break;
 #ifdef  HELLFIRE

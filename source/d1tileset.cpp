@@ -4775,11 +4775,12 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     //ReplaceSubtile(this->til, 49 - 1, 0, 9 - 1, silent);
     //ReplaceSubtile(this->til, 49 - 1, 1, 10 - 1, silent);
     ReplaceSubtile(this->til, 68 - 1, 1, 10 - 1, silent);
-    ReplaceSubtile(this->til, 70 - 1, 1, 10 - 1, silent);        
+    ReplaceSubtile(this->til, 70 - 1, 1, 10 - 1, silent);
     ReplaceSubtile(this->til, 71 - 1, 0, 9 - 1, silent);
     ReplaceSubtile(this->til, 71 - 1, 1, 10 - 1, silent);
     ReplaceSubtile(this->til, 77 - 1, 3, 12 - 1, silent);
     ReplaceSubtile(this->til, 140 - 1, 1, 10 - 1, silent);
+    ReplaceSubtile(this->til, 142 - 1, 1, 162 - 1, silent);
 
     // use common subtiles instead of minor alterations
     ReplaceSubtile(this->til, 1 - 1, 1, 10 - 1, silent);
@@ -4859,6 +4860,16 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 99 - 1, 2, 324 - 1, silent);
     ReplaceSubtile(this->til, 99 - 1, 3, 323 - 1, silent);
     // create the new shadows
+    // - vertical wall end for a horizontal arch
+    ReplaceSubtile(this->til, 17 - 1, 0, 25 - 1, silent);
+    ReplaceSubtile(this->til, 17 - 1, 1, 26 - 1, silent);
+    ReplaceSubtile(this->til, 17 - 1, 2, 512 - 1, silent);
+    ReplaceSubtile(this->til, 17 - 1, 3, 513 - 1, silent);
+    // - horizontal wall end for a pillar
+	ReplaceSubtile(this->til, 18 - 1, 0, 33 - 1, silent);
+	ReplaceSubtile(this->til, 18 - 1, 1, 34 - 1, silent);
+	ReplaceSubtile(this->til, 18 - 1, 2, 155 - 1, silent);
+	ReplaceSubtile(this->til, 18 - 1, 3, 162 - 1, silent);
     // - floor tile with vertical arch
     ReplaceSubtile(this->til, 44 - 1, 0, 150 - 1, silent);
     ReplaceSubtile(this->til, 44 - 1, 1, 10 - 1, silent);
@@ -4909,7 +4920,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceSubtile(this->til, 159 - 1, 2, 11 - 1, silent);*/
     // eliminate subtiles of unused tiles
     const int unusedTiles[] = {
-        17, 18, 34, 35, 36, 37, 52, 58, 61, 64, 65, 66, 67, 76, 93, 95, 98, 101, 102, 103, 104, 143, 144, 145, 146, 147, 148, 149, 152, 153, 154, 155, 158, 159, 160
+        34, 35, 36, 37, 52, 58, 61, 64, 65, 66, 67, 76, 93, 95, 98, 101, 102, 103, 104, 143, 144, 145, 146, 147, 148, 149, 152, 153, 154, 155, 158, 159, 160
     };
     constexpr int blankSubtile = 2 - 1;
     for (int n = 0; n < lengthof(unusedTiles); n++) {
@@ -5489,7 +5500,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(125, 0);
     Blk2Mcr(125, 1);
     Blk2Mcr(125, 3);
-    Blk2Mcr(125, 5); // Frame 231 is used by subtiles 68, 103, 107, 111, 121, 125. 68, 7
+    Blk2Mcr(125, 5);
     Blk2Mcr(125, 7);
     Blk2Mcr(136, 1);
     Blk2Mcr(139, 0);
@@ -5528,6 +5539,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(269, 7);
     Blk2Mcr(365, 1);
     Blk2Mcr(395, 1);
+    Blk2Mcr(519, 0);
     Blk2Mcr(520, 0);
     Blk2Mcr(520, 1);
     Blk2Mcr(521, 0);
@@ -8477,6 +8489,8 @@ void D1Tileset::patch(int dunType, bool silent)
         this->patchCatacombsStairs(72 - 1, 158 - 1, 76 - 1, 159 - 1, 267, 559, silent);
         this->cleanupCatacombs(deletedFrames, silent);
         // patch dAutomapData - L2.AMP
+        SetTileMapFlags(this->amp, 17 - 1, 7 - 1, silent);
+        SetTileMapFlags(this->amp, 18 - 1, 9 - 1, silent);
         ChangeTileMapFlags(this->amp, 42 - 1, MAPFLAG_HORZARCH, false, silent);
         ChangeTileMapFlags(this->amp, 156 - 1, MAPFLAG_VERTDOOR, false, silent);
         ChangeTileMapType(this->amp, 156 - 1, 0, silent);

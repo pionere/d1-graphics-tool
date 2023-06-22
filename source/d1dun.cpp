@@ -3396,7 +3396,7 @@ void D1Dun::patch(int dunFileIndex)
         // change |= this->changeTileAt(4, 1, 100);
         change |= this->changeTileAt(4, 2, 47);
         change |= this->changeTileAt(4, 3, 51);
-        change |= this->changeTileAt(4, 3, 46);
+        change |= this->changeTileAt(4, 4, 46);
         // protect the main structure
         for (int y = 1; y < 6; y++) {
             for (int x = 1; x < 6; x++) {
@@ -3511,6 +3511,14 @@ void D1Dun::patch(int dunFileIndex)
         // shadow of the internal column next to the pedistal
         change |= this->changeTileAt(5, 7, 142);
         change |= this->changeTileAt(5, 8, 50);
+        // external tiles
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x <= 10; x++) {
+                if (this->tiles[y][x] >= 143 && this->tiles[y][x] <= 149) {
+                    change |= this->changeTileAt(4, 10, this->tiles[y][x] - 133);
+                }
+            }
+        }
         // remove items
         change |= this->changeItemAt(9, 2, 0);
         // adjust objects
