@@ -2497,20 +2497,7 @@ static void DRLG_L2FixPreMap(int idx)
 		}
 	} else if (pSetPieces[idx]._sptype == SPT_BLOOD) {
 		// patch the map - Blood2.DUN
-		// - place pieces with closed doors
-		lm[2 + 4 + 10 * 10] = SwapLE16(151);
-		lm[2 + 4 + 15 * 10] = SwapLE16(151);
-		lm[2 + 5 + 15 * 10] = SwapLE16(151);
-		// shadow of the external-left column -- do not place to prevent overwriting large decorations
-		//dungeon[pSetPieces[0]._spx - 1][pSetPieces[0]._spy + 7] = 48;
-		//dungeon[pSetPieces[0]._spx - 1][pSetPieces[0]._spy + 8] = 50;
-		// - shadow of the bottom-left column(s) -- one is missing
-		lm[2 + 1 + 13 * 10] = SwapLE16(48);
-		lm[2 + 1 + 14 * 10] = SwapLE16(50);
-		// - shadow of the internal column next to the pedistal
-		lm[2 + 5 + 7 * 10] = SwapLE16(142);
-		lm[2 + 5 + 8 * 10] = SwapLE16(50);
-        // external tiles
+		// external tiles
 		for (int y = 0; y < 8; y++) {
 			for (int x = 0; x <= 10; x++) {
 				uint16_t wv = SwapLE16(lm[2 + x + y * 10]);
@@ -2519,6 +2506,25 @@ static void DRLG_L2FixPreMap(int idx)
 				}
 			}
 		}
+		// useless tiles
+		for (int y = 9; y < 16; y++) {
+			for (int x = 0; x <= 10; x++) {
+				lm[2 + x + y * 10] = 0;
+			}
+		}
+		// - place pieces with closed doors
+		lm[2 + 4 + 10 * 10] = SwapLE16(151);
+		lm[2 + 4 + 15 * 10] = SwapLE16(151);
+		lm[2 + 5 + 15 * 10] = SwapLE16(151);
+		// shadow of the external-left column -- do not place to prevent overwriting large decorations
+		//dungeon[pSetPieces[0]._spx - 1][pSetPieces[0]._spy + 7] = 48;
+		//dungeon[pSetPieces[0]._spx - 1][pSetPieces[0]._spy + 8] = 50;
+		// - shadow of the bottom-left column(s) -- one is missing
+		// lm[2 + 1 + 13 * 10] = SwapLE16(48);
+		// lm[2 + 1 + 14 * 10] = SwapLE16(50);
+		// - shadow of the internal column next to the pedistal
+		lm[2 + 5 + 7 * 10] = SwapLE16(142);
+		lm[2 + 5 + 8 * 10] = SwapLE16(50);
 		// - add book and pedistal
 		lm[2 + 10 * 16 + 10 * 16 * 2 * 2 + 10 * 16 * 2 * 2 + 9 + 24 * 10 * 2] = SwapLE16(15);
 		lm[2 + 10 * 16 + 10 * 16 * 2 * 2 + 10 * 16 * 2 * 2 + 9 + 16 * 10 * 2] = SwapLE16(91);
