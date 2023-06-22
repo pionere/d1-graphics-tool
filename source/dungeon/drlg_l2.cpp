@@ -634,7 +634,6 @@ static void DRLG_L2DoorSubs()
 /*
  * Place shadows under arches and pillars.
  * New dungeon values: 17 18 35 36 45 46 47 48 49 50 51   95 96 100 140 141 142
- * TODO: use DRLG_PlaceMiniSet instead?
  */
 void DRLG_L2Shadows()
 {
@@ -648,12 +647,27 @@ void DRLG_L2Shadows()
 			horizArch = (automaptype[dungeon[i][j]] & MAPFLAG_HORZARCH) != 0;
 			vertArch = (automaptype[dungeon[i][j]] & MAPFLAG_VERTARCH) != 0;
 			if (automaptype[dungeon[i][j]] & MAPFLAG_HORZDOOR) {
-				// fake shadow of the horizontal doors
-				if (dungeon[i][j - 1] == 3) {
+				// shadow of the horizontal doors
+				BYTE replaceB = dungeon[i][j - 1];
+				if (replaceB == 3) {
 					dungeon[i][j - 1] = 49;
 				} else {
 					dProgressWarn() << QString("Missing case %1 for horizontal door %2 @%3:%4").arg(dungeon[i][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+					continue;
 				}
+				switch (dungeon[i - 1][j - 1]) {
+				case 1:  replaceB = 140; break;
+				case 3:  replaceB = 49;  break;
+				case 7:  replaceB = 35;  break;
+				case 44: replaceB = 96;  break;
+				case 46: replaceB = 46;  break;
+				default:
+					dProgressWarn() << QString("Missing case %1 for horizontal door %2 with floor @%3:%4").arg(dungeon[i - 1][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+					dungeon[i][j - 1] = replaceB; // restore original value
+					continue;
+				}
+				dungeon[i - 1][j - 1] = replaceB;
+				continue;
 			}
 			switch (dungeon[i][j]) {
 			case 6:
