@@ -4061,6 +4061,33 @@ void D1Tileset::patchCatacombsSpec(bool silent)
     }
 }
 
+static BYTE shadowColorCatacombs(BYTE color)
+{
+    // assert(color < 128);
+    if (color == 0) {
+        return 0;
+    }
+    switch (color % 16) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+        return (color & ~15) + 13;
+    case 6:
+    case 7:
+    case 8:
+    case 9:
+    case 10:
+        return (color & ~15) + 14;
+    case 11:
+    case 12:
+    case 13:
+        return (color & ~15) + 15;
+    }
+    return 0;
+}
 bool D1Tileset::fixCatacombsShadows(bool silent)
 {
     typedef struct {
@@ -4069,11 +4096,21 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
         D1CEL_FRAME_TYPE res_encoding;
     } CelMicro;
     const CelMicro micros[] = {
-        /* 0 */{ 151 - 1, 0, D1CEL_FRAME_TYPE::Empty }, // used to block subsequent calls
-//        /* 0 */{ 146 - 1, 1, D1CEL_FRAME_TYPE::Empty },
-//        /* 1 */{ 166 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/*  0 */{ 151 - 1, 0, D1CEL_FRAME_TYPE::Empty }, // used to block subsequent calls
+/*  1 */{  33 - 1, 0, D1CEL_FRAME_TYPE::Empty },
+/*  2 */{ 268 - 1, 0, D1CEL_FRAME_TYPE::LeftTrapezoid },
+/*  3 */{  33 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/*  4 */{ 268 - 1, 1, D1CEL_FRAME_TYPE::RightTrapezoid },
+/*  5 */{  23 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/*  6 */{ 148 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/*  7 */{   6 - 1, 3, D1CEL_FRAME_TYPE::Empty },
+/*  8 */{ 152 - 1, 0, D1CEL_FRAME_TYPE::Square },
+/*  9 */{   6 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 10 */{ 250 - 1, 0, D1CEL_FRAME_TYPE::RightTrapezoid },
+/* 11 */{   5 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 12 */{ 514 - 1, 1, D1CEL_FRAME_TYPE::RightTrapezoid },
+/* 13 */{ 515 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
     };
-
     constexpr unsigned blockSize = BLOCK_SIZE_L2;
     for (int i = 0; i < lengthof(micros); i++) {
         const CelMicro &micro = micros[i];
@@ -4086,24 +4123,88 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
             return false;
         }
         bool change = false;
-        // 'fix' shadow on 166[1] using 146[1]
-        /*if (i == 1) {
+        if (i >= 2 && i < 11 && (i & 1) == 0) {
             const CelMicro &microSrc = micros[i - 1];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
-            if (frameSrc == nullptr) {
-                return false;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    change |= frame->setPixel(x, y, frameSrc->getPixel(x, y));
+                }
             }
 
-            for (int x = 0; x < MICRO_WIDTH; x++) {
-                for (int y = 0; y < 16; y++) {
-                    if (y < (x - 13) / 2 + 17) {
-                        D1GfxPixel pixel = frameSrc->getPixel(x, y); // 146[1]
-                        change |= frame->setPixel(x, y, pixel);      // 166[1]
+            if (i == 2 || i == 4 || i == 6 || i == 8) { // 268[0], 268[1], 148[1], 152[0]
+                for (int x = 0; x < MICRO_WIDTH; x++) {
+                    for (int y = 0; y < MICRO_HEIGHT; y++) {
+                        D1GfxPixel pixel = frame->getPixel();
+                        if (!pixel.isTransparent()) {
+                            quint8 color = pixel.getPaletteIndex();
+                            pixel = D1GfxPixel::colorPixel(shadowColorCatacombs(color));
+                            change |= frame->setPixel(x, y, pixel);
+                        }
+                    }
+                }
+            }
+            if (i == 10) { // 250[0]
+                for (int x = 0; x < 5; x++) {
+                    for (int y = 0; y < 12; y++) {
+                        if (y < (4 - x) * 3) {
+                            D1GfxPixel pixel = frame->getPixel();
+                            quint8 color = pixel.getPaletteIndex();
+                            pixel = D1GfxPixel::colorPixel(shadowColorCatacombs(color));
+                            change |= frame->setPixel(x, y, pixel);
+                        }
                     }
                 }
             }
         }
+        if (i == 12) { // 514[1]
+            const CelMicro &microSrc = micros[i - 1];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 26; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel();
+                    if (!pixel.isTransparent()) {
+                        quint8 color = pixel.getPaletteIndex();
+                        pixel = D1GfxPixel::colorPixel(shadowColorCatacombs(color));
+                        change |= frame->setPixel(x, y, pixel);
+                    }
+                }
+            }
+        }
+        if (i == 13) { // 515[0]
+            for (int x = 20; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < 18; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel();
+                    if (!pixel.isTransparent()) {
+                        if (x < 26) {
+                            if (y > 37 - x) {
+                                continue;
+                            }
+                        } else if (x < 29) {
+                            if (y > 15 - x / 8) {
+                                continue;
+                            }
+                        } else {
+                            if (y > 40 - x) {
+                                continue;
+                            }
+                        }
+                        quint8 color = pixel.getPaletteIndex();
+                        pixel = D1GfxPixel::colorPixel(shadowColorCatacombs(color));
+                        change |= frame->setPixel(x, y, pixel);
+                    }
+                }
+            }
+        }
+
         if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {
             change = true;
             frame->setFrameType(micro.res_encoding);
@@ -4113,7 +4214,7 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
                 D1GfxPixel resPix = pix.pixel.isTransparent() ? D1GfxPixel::colorPixel(0) : D1GfxPixel::transparentPixel();
                 change |= frame->setPixel(pix.pos.x(), pix.pos.y(), resPix);
             }
-        }*/
+        }
         if (change) {
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
@@ -4866,20 +4967,25 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 17 - 1, 2, 155 - 1, silent);
     ReplaceSubtile(this->til, 17 - 1, 3, 162 - 1, silent);
     // - horizontal hallway for a pillar
-	ReplaceSubtile(this->til, 18 - 1, 0, 553 - 1, silent);
-	ReplaceSubtile(this->til, 18 - 1, 1, 99 - 1, silent);
-	ReplaceSubtile(this->til, 18 - 1, 2, 155 - 1, silent);
-	ReplaceSubtile(this->til, 18 - 1, 3, 162 - 1, silent);
+    ReplaceSubtile(this->til, 18 - 1, 0, 553 - 1, silent);
+    ReplaceSubtile(this->til, 18 - 1, 1, 99 - 1, silent);
+    ReplaceSubtile(this->til, 18 - 1, 2, 155 - 1, silent);
+    ReplaceSubtile(this->til, 18 - 1, 3, 162 - 1, silent);
     // - vertical wall end for a horizontal arch
     ReplaceSubtile(this->til, 35 - 1, 0, 25 - 1, silent);
     ReplaceSubtile(this->til, 35 - 1, 1, 26 - 1, silent);
     ReplaceSubtile(this->til, 35 - 1, 2, 512 - 1, silent);
     ReplaceSubtile(this->til, 35 - 1, 3, 513 - 1, silent);
     // - horizontal wall end for a pillar
-	ReplaceSubtile(this->til, 36 - 1, 0, 33 - 1, silent);
-	ReplaceSubtile(this->til, 36 - 1, 1, 34 - 1, silent);
-	ReplaceSubtile(this->til, 36 - 1, 2, 155 - 1, silent);
-	ReplaceSubtile(this->til, 36 - 1, 3, 162 - 1, silent);
+    ReplaceSubtile(this->til, 36 - 1, 0, 33 - 1, silent);
+    ReplaceSubtile(this->til, 36 - 1, 1, 34 - 1, silent);
+    ReplaceSubtile(this->til, 36 - 1, 2, 155 - 1, silent);
+    ReplaceSubtile(this->til, 36 - 1, 3, 162 - 1, silent);
+    // - horizontal wall end for a horizontal arch
+    ReplaceSubtile(this->til, 37 - 1, 0, 268 - 1, silent);
+    ReplaceSubtile(this->til, 37 - 1, 1, 515 - 1, silent);
+    ReplaceSubtile(this->til, 37 - 1, 2, 148 - 1, silent);
+    ReplaceSubtile(this->til, 37 - 1, 3, 517 - 1, silent);
     // - floor tile with vertical arch
     ReplaceSubtile(this->til, 44 - 1, 0, 150 - 1, silent);
     ReplaceSubtile(this->til, 44 - 1, 1, 10 - 1, silent);
@@ -4935,7 +5041,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceSubtile(this->til, 159 - 1, 2, 11 - 1, silent);*/
     // eliminate subtiles of unused tiles
     const int unusedTiles[] = {
-        34, 37, 52, 58, 61, 64, 65, 66, 67, 76, 93, 98, 101, 102, 103, 104, 143, 144, 145, 146, 147, 148, 149, 152, 153, 154, 155, 158, 159, 160
+        34, 52, 58, 61, 64, 65, 66, 67, 76, 93, 98, 101, 102, 103, 104, 143, 144, 145, 146, 147, 148, 149, 152, 153, 154, 155, 158, 159, 160
     };
     constexpr int blankSubtile = 2 - 1;
     for (int n = 0; n < lengthof(unusedTiles); n++) {
@@ -4948,7 +5054,6 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
 
 
     // adjust the frame types
-    // - after patchCatacombsFloor
     if (this->patchCatacombsFloor(silent)) {
         // unify the columns
         Blk2Mcr(22, 3);
@@ -4974,7 +5079,6 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
         Blk2Mcr(289, 4);
         Blk2Mcr(289, 2);
     }
-    // new shadows
     if (this->fixCatacombsShadows(silent)) {
         Blk2Mcr(161, 0);
         MoveMcr(161, 0, 151, 0);
@@ -4995,6 +5099,18 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
         ReplaceMcr(165, 1, 167, 1);
         ReplaceMcr(164, 0, 147, 0);
         ReplaceMcr(164, 1, 147, 1);
+
+        SetMcr(268, 2, 33, 2);
+        SetMcr(268, 3, 33, 3);
+        SetMcr(268, 4, 33, 4);
+        SetMcr(268, 5, 33, 5);
+        SetMcr(268, 6, 33, 6);
+        SetMcr(268, 7, 33, 7);
+
+        SetMcr(148, 0, 23, 0);
+
+        MoveMcr(515, 3, 152, 0);
+        MoveMcr(515, 1, 250, 0);
     }
     // pointless door micros (re-drawn by dSpecial or the object)
     // - vertical doors    
@@ -5526,24 +5642,24 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(144, 2);
     Blk2Mcr(144, 4);
     Blk2Mcr(144, 6);
-    Blk2Mcr(148, 1);
     // reused for the new shadows
+    // Blk2Mcr(148, 1);
     // Blk2Mcr(150, 0);
     // Blk2Mcr(151, 0);
     // Blk2Mcr(151, 1);
+    // Blk2Mcr(152, 0);
     // Blk2Mcr(153, 1);
     // Blk2Mcr(156, 0);
     // Blk2Mcr(158, 0);
     // Blk2Mcr(164, 0);
-    // Blk2Mcr(164, 1);    
+    // Blk2Mcr(164, 1);
     // Blk2Mcr(165, 1);
-    Blk2Mcr(152, 0);
-    Blk2Mcr(250, 0);
+    // Blk2Mcr(250, 0);
+    // Blk2Mcr(268, 0);
+    // Blk2Mcr(268, 1);
     Blk2Mcr(251, 0);
     Blk2Mcr(251, 1);
     Blk2Mcr(265, 1);
-    Blk2Mcr(268, 0);
-    Blk2Mcr(268, 1);
     Blk2Mcr(269, 0);
     Blk2Mcr(269, 1);
     Blk2Mcr(269, 2);
@@ -8508,6 +8624,7 @@ void D1Tileset::patch(int dunType, bool silent)
         // SetTileMapFlags(this->amp, 18 - 1, 5 - 1, silent);
         SetTileMapFlags(this->amp, 35 - 1, 7 - 1, silent);
         SetTileMapFlags(this->amp, 36 - 1, 9 - 1, silent);
+        SetTileMapFlags(this->amp, 37 - 1, 9 - 1, silent);
         // SetTileMapFlags(this->amp, 44 - 1, 3 - 1, silent);
         // SetTileMapFlags(this->amp, 95 - 1, 3 - 1, silent);
         // SetTileMapFlags(this->amp, 96 - 1, 3 - 1, silent);

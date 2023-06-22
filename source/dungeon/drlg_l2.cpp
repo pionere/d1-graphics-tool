@@ -685,6 +685,7 @@ void DRLG_L2Shadows()
 				case 1:  replaceA = 140; okB = true;  break;
 				case 3:  replaceA = 49;  okB = false; break;
 				case 7:  replaceA = 35;  okB = true;  break;
+				case 9:  replaceA = 37;  okB = true;  break;
 				case 44: replaceA = 96;  okB = false; break;
 				case 46: replaceA = 46;  okB = false; break;
 				default:
@@ -696,6 +697,7 @@ void DRLG_L2Shadows()
 					switch (dungeon[i + 1][j - 1]) {
 					case 3:  replaceB = 49; break;
 					case 47: replaceB = 46; break;
+					case 48: replaceB = 49; break;
 					default:
 						dProgressWarn() << QString("Missing case %1 for horizontal arch %2 with floor @%3:%4").arg(dungeon[i + 1][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 						dungeon[i][j - 1] = replaceB; // restore original value
@@ -735,6 +737,7 @@ void DRLG_L2Shadows()
 				switch (dungeon[i - 1][j + 1]) {
 				case 3:  replaceA = 47; break;
 				case 49: replaceA = 46; break;
+				case 48: replaceA = 47; break;
 				default:
                     dProgressWarn() << QString("Missing case %1 for vertical arch %2 down @%3:%4").arg(dungeon[i - 1][j + 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					dungeon[i - 1][j] = replaceB; // restore original values
@@ -813,64 +816,20 @@ void DRLG_L2Shadows()
 			}
 			if (pillar) {
 				if (dungeon[i - 1][j] == 3) {
-					if (dungeon[i - 1][j - 1] == 3) {
-						// 3, 0,  search
-						// 3, P
-
-						//48, 0, replace
-						//50, 0,
-						dungeon[i - 1][j] = 50;
-						dungeon[i - 1][j - 1] = 48;
-					} else if (dungeon[i - 1][j - 1] == 2) {
-						// 2, 0,  search
-						// 3, P
-
-						//142, 0, replace
-						//50, 0,
-						dungeon[i - 1][j] = 50;
-						dungeon[i - 1][j - 1] = 142;
-					} else if (dungeon[i - 1][j - 1] == 5) {
-						// 5, 0,  search
-						// 3, P
-
-						//17, 0, replace
-						//50, 0,
-						dungeon[i - 1][j] = 50;
-						dungeon[i - 1][j - 1] = 17;
-					} else if (dungeon[i - 1][j - 1] == 9) {
-						// 9, 0,  search
-						// 3, P
-
-						//142, 0, replace
-						//50, 0,
-						dungeon[i - 1][j] = 50;
-						dungeon[i - 1][j - 1] = 36;
-					} else if (dungeon[i - 1][j - 1] == 157) {
-						// 157, 0,  search
-						// 3, P
-
-						//18, 0, replace
-						//50, 0,
-						dungeon[i - 1][j] = 50;
-						dungeon[i - 1][j - 1] = 18;
-					/*} else if (dungeon[i - 1][j - 1] == 47) { // overlapping shadows
-						//47, 0,  search
-						// 3, 6/7/39/40/41/42/78
-
-						// 0, 0, replace
-						//50, 0,
-						dungeon[i - 1][j] = 50;
-					} else if (dungeon[i - 1][j - 1] == 46) { // overlapping shadows
-						//46, 0,  search
-						// 3, 6/7/39/40/41/42/78
-
-						// 0, 0, replace
-						//45, 0,
-						dungeon[i - 1][j] = 45;*/
-					} else {
+					BYTE replace = dungeon[i - 1][j - 1];
+					switch (replace) {
+					case 3:   replace = 48;  break;
+					case 2:   replace = 142; break;
+					case 5:   replace = 17;  break;
+					case 9:   replace = 36;  break;
+					case 157: replace = 18;  break;
+					default:
 						if (drlgFlags[i - 1][j - 1] == 0)
-                        dProgressWarn() << QString("Missing case %1 for pillar %2 with floor @%3:%4").arg(dungeon[i - 1][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+                        dProgressWarn() << QString("Missing case %1 for pillar %2 with floor @%3:%4").arg(replace).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+						continue;
 					}
+					dungeon[i - 1][j - 1] = replace;
+					dungeon[i - 1][j] = 50;
 				} else {
 					if (drlgFlags[i - 1][j] == 0 && (automaptype[dungeon[i - 1][j]] & MAPFLAG_TYPE) != 3 && (automaptype[dungeon[i - 1][j]] & MAPFLAG_TYPE) != 4 && dungeon[i - 1][j] != 9 && dungeon[i - 1][j] != 45 && dungeon[i - 1][j] != 50)
 						dProgressWarn() << QString("Missing case %1 for pillar %2 @%3:%4").arg(dungeon[i - 1][j]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
