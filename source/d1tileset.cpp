@@ -5046,7 +5046,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 134 - 1, 3, 12 - 1, silent);
     ReplaceSubtile(this->til, 135 - 1, 1, 10 - 1, silent);
     ReplaceSubtile(this->til, 135 - 1, 3, 12 - 1, silent);
-    ReplaceSubtile(this->til, 141 - 1, 2, 168 - 1, silent);
+    ReplaceSubtile(this->til, 141 - 1, 2, 155 - 1, silent);
 
     // - reduce pointless bone-chamber complexity II.
     // -- bones
@@ -5112,7 +5112,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     // - horizontal wall end for a pillar
     ReplaceSubtile(this->til, 36 - 1, 0, 33 - 1, silent);
     ReplaceSubtile(this->til, 36 - 1, 1, 34 - 1, silent);
-    ReplaceSubtile(this->til, 36 - 1, 2, 155 - 1, silent);
+    ReplaceSubtile(this->til, 36 - 1, 2, 148 - 1, silent);
     ReplaceSubtile(this->til, 36 - 1, 3, 162 - 1, silent);
     // - horizontal wall end for a horizontal arch
     ReplaceSubtile(this->til, 37 - 1, 0, 268 - 1, silent);
@@ -5157,7 +5157,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     // - floor tile with shadow(51) with horizontal arch
     ReplaceSubtile(this->til, 100 - 1, 0, 158 - 1, silent);
     ReplaceSubtile(this->til, 100 - 1, 1, 165 - 1, silent);
-    ReplaceSubtile(this->til, 100 - 1, 2, 168 - 1, silent);
+    ReplaceSubtile(this->til, 100 - 1, 2, 155 - 1, silent);
     ReplaceSubtile(this->til, 100 - 1, 3, 169 - 1, silent);
     // fix graphical glitch
     ReplaceSubtile(this->til, 157 - 1, 1, 99 - 1, silent);
@@ -5265,7 +5265,6 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
         MoveMcr(515, 1, 250, 0);
 
         // extend the shadow to make the micro more usable
-        ReplaceMcr(168, 0, 155, 0);
         SetMcr(148, 0, 155, 0);
     }
     // pointless door micros (re-drawn by dSpecial or the object)
@@ -5906,7 +5905,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(559, 2);
     Blk2Mcr(559, 4);
     int unusedSubtiles[] = {
-        2, 7, 14, 19, 20, 48, 50, 53, 55, 56, 57, 58, 59, 70, 71, 106, 109, 110, 116, 117, 118, 120, 122, 123, 124, 126, 137, 140, 145, 149, 157, 159, 160, 170, 171, 172, 173, 192, 193, 194, 195, 196, 197, 198, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 235, 243, 246, 247, 255, 256, 264, 327, 328, 329, 330, 335, 336, 337, 338, 343, 344, 345, 346, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 366, 367, 368, 369, 370, 376, 391, 400, 434, 487, 489, 491, 493, 504, 505, 507, 509, 511, 516, 531, 533, 536, 541, 
+        2, 7, 14, 19, 20, 48, 50, 53, 55, 56, 57, 58, 59, 70, 71, 106, 109, 110, 116, 117, 118, 120, 122, 123, 124, 126, 137, 140, 145, 149, 157, 159, 160, 168, 170, 171, 172, 173, 192, 193, 194, 195, 196, 197, 198, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 235, 243, 246, 247, 255, 256, 264, 327, 328, 329, 330, 335, 336, 337, 338, 343, 344, 345, 346, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 366, 367, 368, 369, 370, 376, 391, 400, 434, 487, 489, 491, 493, 504, 505, 507, 509, 511, 516, 531, 533, 536, 541, 
     };
 
     for (int n = 0; n < lengthof(unusedSubtiles); n++) {
