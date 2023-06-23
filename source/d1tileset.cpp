@@ -4041,7 +4041,7 @@ void D1Tileset::patchCatacombsSpec(bool silent)
         if (i == cFrame.frameIndex) {
             D1GfxFrame *frame = this->cls->getFrame(i);
             bool change = false;
-            if (i == 0) {
+            if (idx == 0) {
                 change |= frame->setPixel(10, 52, D1GfxPixel::colorPixel(55));
                 change |= frame->setPixel(11, 52, D1GfxPixel::colorPixel(53));
                 change |= frame->setPixel(13, 53, D1GfxPixel::colorPixel(53));
@@ -4053,7 +4053,7 @@ void D1Tileset::patchCatacombsSpec(bool silent)
                 change |= frame->setPixel(28, 61, D1GfxPixel::colorPixel(54));
             }
 
-            if (i == 1) {
+            if (idx == 1) {
                 change |= frame->setPixel( 9, 148, D1GfxPixel::colorPixel(39));
                 change |= frame->setPixel(10, 148, D1GfxPixel::colorPixel(66));
                 change |= frame->setPixel(10, 149, D1GfxPixel::colorPixel(50));
@@ -5232,12 +5232,13 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(538, 6);
     Blk2Mcr(538, 7);
     // - horizontal doors
-    Blk2Mcr(17, 3);
+    // Blk2Mcr(17, 3);
     ReplaceMcr(540, 0, 17, 0);
     ReplaceMcr(540, 1, 17, 1);
     ReplaceMcr(540, 2, 17, 2);
+    ReplaceMcr(540, 3, 17, 3);
     ReplaceMcr(540, 4, 17, 4);
-    Blk2Mcr(540, 3);
+    // Blk2Mcr(540, 3);
     Blk2Mcr(540, 5);
     Blk2Mcr(540, 6);
     Blk2Mcr(540, 7);

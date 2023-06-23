@@ -731,7 +731,9 @@ void DRLG_L2Shadows()
 				case 9:  replaceA = 37;  okB = true;  break;
 				case 45: replaceA = 100; okB = false; break;
 				default:
-                    dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+					if (replaceB != 5)
+						dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+					// 5 -> not ok, but it would require a new door piece as well
 					continue;
 				}
 
