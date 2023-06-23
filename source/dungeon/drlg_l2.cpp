@@ -633,7 +633,7 @@ static void DRLG_L2DoorSubs()
 
 /*
  * Place shadows under arches and pillars.
- * New dungeon values: 17 18 34 35 36 37 45 46 47 48 49 50 51   95 96 100 140 141 142
+ * New dungeon values: 17 (18) 34 35 36 37 45 46 47 48 49 50 51   (95) 96 100 140 141 142
  */
 void DRLG_L2Shadows()
 {
@@ -743,9 +743,11 @@ void DRLG_L2Shadows()
 					switch (replaceC) {
 					case 2:  replaceA = 142; break;
 					case 3:  replaceA = 48;  break;
+					case 5:  replaceA = 17;  break;
 					case 6:  replaceA = 34;  break;
 					case 9:  replaceA = 36;  break;
-					case 45: replaceA = 95;  break;
+					case 45: replaceA = 100;  break;
+					// case 157: replaceA = 18;  break;
 					default:
 						dProgressWarn() << QString("Missing case %1 for vertical arch %2 with floor @%3:%4").arg(replaceC).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
                         dungeon[i - 1][j] = replaceB; // restore original value
@@ -766,84 +768,18 @@ void DRLG_L2Shadows()
 				}
 				dungeon[i - 1][j + 1] = replaceA;
 				continue;
-				/*if (dungeon[i - 1][j] == 3 || dungeon[i - 1][j] == 45) {
-					if (dungeon[i - 1][j + 1] == 3 || dungeon[i - 1][j + 1] == 46) { // overlapping shadows (missing tile to match the other part)
-						if (dungeon[i - 1][j - 1] == 3) {
-							// 3, 0,  search
-							// 3/45, 39/41/42,
-							// 3/46, 0,
-
-							//48, 0, replace
-							//51/100, 0,
-							//47, 0,
-							dungeon[i - 1][j - 1] = 48;
-							dungeon[i - 1][j] = dungeon[i - 1][j] == 3 ? 51 : 100;
-							dungeon[i - 1][j + 1] = 47;
-							pillar = false;
-						} else if (dungeon[i - 1][j - 1] == 2) {
-							// 2, 0,  search
-							// 3/45, 39/41/42,
-							// 3/46, 0,
-
-							//142, 0, replace
-							//51/100, 0,
-							//47, 0,
-							dungeon[i - 1][j - 1] = 142;
-							dungeon[i - 1][j] = dungeon[i - 1][j] == 3 ? 51 : 100;
-							dungeon[i - 1][j + 1] = 47;
-							pillar = false;
-						} else if (dungeon[i - 1][j - 1] == 47 || dungeon[i - 1][j - 1] == 46) { // overlapping shadows
-							// 46/47, 0,  search
-							// 3/45, 39/41/42,
-							// 3/46, 0,
-
-							// 0, 0, replace
-							//51/100, 0,
-							//47, 0,
-							dungeon[i - 1][j] = dungeon[i - 1][j] == 3 ? 51 : 100;
-							dungeon[i - 1][j + 1] = 47;
-							pillar = false;
-						} else {
-			                dProgressWarn() << QString("Missing case %1 for vertical arch %2 with floors @%3:%4").arg(dungeon[i - 1][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
-                        }
-					} else {
-						dProgressWarn() << QString("Missing case %1 for vertical arch %2 with floor @%3:%4").arg(dungeon[i - 1][j + 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
-                    }
-				} else if (dungeon[i - 1][j] == 2) {
-					if (dungeon[i - 1][j + 1] == 3) {
-						// 2, 39/41/42,  search
-						// 3, 0,
-
-						//141, 0, replace
-						//47, 0,
-						dungeon[i - 1][j] = 141;
-						dungeon[i - 1][j + 1] = 47;
-						pillar = false;
-					} else if (dungeon[i - 1][j + 1] == 46) { // overlapping shadows (missing tile to match the other part)
-						// 2, 39/41/42,  search
-						// 46, 0,
-
-						//141, 0, replace
-						// 0, 0,
-						dungeon[i - 1][j] = 141;
-						pillar = false;
-                    } else {
-                        dProgressWarn() << QString("Missing case %1 for vertical arch %2 with wall @%3:%4").arg(dungeon[i - 1][j + 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
-					}
-                } else {
-                    dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(dungeon[i - 1][j]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
-				}*/
 			}
 			if (pillar) {
 				if (dungeon[i - 1][j] == 3) {
 					BYTE replace = dungeon[i - 1][j - 1];
 					switch (replace) {
-					case 3:   replace = 48;  break;
 					case 2:   replace = 142; break;
+					case 3:   replace = 48;  break;
 					case 5:   replace = 17;  break;
+					// case 6:   replace = 34;  break;
 					case 9:   replace = 36;  break;
 					case 45:  replace = 100; break;
-					case 157: replace = 18;  break;
+					// case 157: replace = 18;  break;
 					default:
 						if (drlgFlags[i - 1][j - 1] == 0)
                         dProgressWarn() << QString("Missing case %1 for pillar %2 with floor @%3:%4").arg(replace).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
@@ -897,6 +833,10 @@ static void DRLG_LoadL2SP()
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// eliminate invisible 'fancy' tile to leave space for shadow
 		lm[2 + 3 + 9 * 10] = SwapLE16(3);
+		// - place pieces with closed doors
+		lm[2 + 4 + 10 * 10] = SwapLE16(151);
+		lm[2 + 4 + 15 * 10] = SwapLE16(151);
+		lm[2 + 5 + 15 * 10] = SwapLE16(151);
 		// protect the main structure
 		for (int y = 0; y <= 15; y++) {
 			for (int x = 2; x <= 7; x++) {
@@ -2485,8 +2425,6 @@ static void DRLG_L2FixMap()
 		// patch the map - Bonecha2.DUN
 		// reduce pointless bone-chamber complexity
 		lm[2 + 16 + 9 * 32] = SwapLE16(57);
-		lm[2 + 13 + 12 * 32] = SwapLE16(53);
-		lm[2 + 16 + 9 * 32] = SwapLE16(57);
 		lm[2 + 16 + 10 * 32] = SwapLE16(62);
 		lm[2 + 16 + 11 * 32] = SwapLE16(62);
 		lm[2 + 16 + 12 * 32] = SwapLE16(62);
@@ -2522,6 +2460,29 @@ static void DRLG_L2FixMap()
 		lm[2 + 20 + 9 * 32] = SwapLE16(45);
 		lm[2 + 18 + 13 * 32] = SwapLE16(45);
 		lm[2 + 20 + 13 * 32] = SwapLE16(45);
+
+		// place pieces with closed doors
+		lm[2 + 17 + 11 * 32] = SwapLE16(150);
+		// place shadows
+		// - right corridor
+		lm[2 + 12 + 6 * 32] = SwapLE16(47);
+		lm[2 + 12 + 7 * 32] = SwapLE16(51);
+		lm[2 + 16 + 6 * 32] = SwapLE16(47);
+		lm[2 + 16 + 7 * 32] = SwapLE16(51);
+		lm[2 + 16 + 8 * 32] = SwapLE16(47);
+		// - central room (top)
+		// lm[2 + 17 + 8 * 32] = SwapLE16(49);
+		lm[2 + 18 + 8 * 32] = SwapLE16(49);
+		lm[2 + 19 + 8 * 32] = SwapLE16(49);
+		lm[2 + 20 + 8 * 32] = SwapLE16(49);
+		// - central room (bottom)
+		lm[2 + 18 + 12 * 32] = SwapLE16(46);
+		lm[2 + 19 + 12 * 32] = SwapLE16(49);
+		// - left corridor
+		lm[2 + 12 + 14 * 32] = SwapLE16(47);
+		lm[2 + 12 + 15 * 32] = SwapLE16(51);
+		lm[2 + 16 + 14 * 32] = SwapLE16(47);
+		lm[2 + 16 + 15 * 32] = SwapLE16(51);
 	}
 }
 
@@ -2576,9 +2537,9 @@ static void DRLG_L2FixPreMap(int idx)
 			}
 		}
 		// - place pieces with closed doors
-		lm[2 + 4 + 10 * 10] = SwapLE16(151);
-		lm[2 + 4 + 15 * 10] = SwapLE16(151);
-		lm[2 + 5 + 15 * 10] = SwapLE16(151);
+		// lm[2 + 4 + 10 * 10] = SwapLE16(151);
+		// lm[2 + 4 + 15 * 10] = SwapLE16(151);
+		// lm[2 + 5 + 15 * 10] = SwapLE16(151);
 		// shadow of the external-left column -- do not place to prevent overwriting large decorations
 		//dungeon[pSetPieces[0]._spx - 1][pSetPieces[0]._spy + 7] = 48;
 		//dungeon[pSetPieces[0]._spx - 1][pSetPieces[0]._spy + 8] = 50;
@@ -2624,7 +2585,29 @@ static void DRLG_L2FixPreMap(int idx)
 		}
 	} else if (pSetPieces[idx]._sptype == SPT_LVL_BCHAMB) {
 		// patch the map - Bonecha1.DUN
-		// place pieces with closed doors
+		// external tiles
+		lm[2 + 20 +  0 * 10] = 12;
+		lm[2 + 21 +  0 * 10] = 12;
+		lm[2 + 21 +  1 * 10] = 14;
+		lm[2 + 21 +  2 * 10] = 10;
+		lm[2 + 21 +  3 * 10] = 10;
+		lm[2 + 21 +  4 * 10] = 10;
+		// useless tiles
+		for (int y = 0; y < 18; y++) {
+			for (int x = 0; x < 32; x++) {
+				if (x >= 13 && x <= 21 && y >= 1 && y < 4) {
+					continue;
+                }
+				if (x == 18 && y == 5) {
+					continue;
+                }
+				if (x == 14 && y == 5) {
+					continue;
+                }
+				lm[2 + x + y * 10] = 0;
+			}
+		}
+		/*// place pieces with closed doors
 		lm[2 + 17 + 11 * 32] = SwapLE16(150);
 		// place shadows
 		// - right corridor
@@ -2653,7 +2636,7 @@ static void DRLG_L2FixPreMap(int idx)
 		lm[2 + 16 + 12 * 32] = SwapLE16(62);
 		lm[2 + 16 + 11 * 32] = SwapLE16(62);
 		lm[2 + 16 + 10 * 32] = SwapLE16(62);
-		lm[2 + 16 +  9 * 32] = SwapLE16(62);
+		lm[2 + 16 +  9 * 32] = SwapLE16(62);*/
 		// fix corners
 		// DRLG_L2Corners(); - commented out, because this is no longer necessary
 		// protect inner tiles from spawning additional monsters/objects
