@@ -2202,7 +2202,7 @@ static bool IsPillar(BYTE bv)
 /*
  * Move doors away from pillars.
  */
-static void L2DoorFix2()
+/*static void L2DoorFix2()
 {
 	int i, j;
 
@@ -2210,7 +2210,7 @@ static void L2DoorFix2()
 		for (j = 1; j < DMAXY - 1; j++) {
 			if (dungeon[i][j] != 4 || drlgFlags[i][j])
 				continue;
-			if (IsPillar(dungeon[i][j + 1])) {
+			if (IsPillar(dungeon[i][j + 1])) { -- mostly covered by L2CreateArches, not much point to handle the remaing few cases
 				//3, 1, 3,  search
 				//0, 4, 0,
 				//0, P, 0,
@@ -2224,7 +2224,7 @@ static void L2DoorFix2()
 					dungeon[i][j] = 1;
 					dungeon[i][j - 1] = 4;
 				}
-			} else if (IsPillar(dungeon[i][j - 1])) {
+			} else if (IsPillar(dungeon[i][j - 1])) { -- was not in vanilla
 				//0, P, 0,  search
 				//0, 4, 0,
 				//3, 1, 3,
@@ -2238,38 +2238,38 @@ static void L2DoorFix2()
 					dungeon[i][j] = 1;
 					dungeon[i][j + 1] = 4;
 				}
-			} else if (IsPillar(dungeon[i + 1][j])) {
+			} else if (IsPillar(dungeon[i + 1][j])) { -- impossible for vertical doors. check for horizontal doors?
 				//3, 0, 0,  search
-				//1, 4, P,
+				//1, 5, P,
 				//3, 0, 0,
 
 				//0, 0, 0, replace
-				//4, 1, 0,
+				//5, 1, 0,
 				//0, 0, 0,
 				if (dungeon[i - 1][j] == 1
 				 && dungeon[i - 1][j + 1] == 3
 				 && dungeon[i - 1][j - 1] == 3) {
 					dungeon[i][j] = 1;
-					dungeon[i - 1][j] = 4;
+					dungeon[i - 1][j] = 5;
 				}
 			} else if (IsPillar(dungeon[i - 1][j])) {
 				//0, 0, 3,  search
-				//P, 4, 1,
+				//P, 5, 1,
 				//0, 0, 3,
 
 				//0, 0, 0, replace
-				//0, 1, 4,
+				//0, 1, 5,
 				//0, 0, 0,
 				if (dungeon[i + 1][j] == 1
 				 && dungeon[i + 1][j - 1] == 3
 				 && dungeon[i + 1][j + 1] == 3) {
 					dungeon[i][j] = 1;
-					dungeon[i + 1][j] = 4;
+					dungeon[i + 1][j] = 5;
 				}
 			}
 		}
 	}
-}
+}*/
 
 /*
  * Replace doors with arches.
@@ -2442,7 +2442,7 @@ static void DRLG_L2()
 	DRLG_PlaceThemeRooms(6, 10, themeTiles, 0, false);
 
 	L2CreateArches();
-	L2DoorFix2();
+	// L2DoorFix2(); - commented out, because there is not much point to do this after L2CreateArches
 
 	DRLG_L2Shadows();
 	// DRLG_L2Corners(); - commented out, because this is no longer necessary
