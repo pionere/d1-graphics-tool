@@ -841,6 +841,7 @@ void DRLG_L2Shadows()
 					case 2:   replace = 142; break;
 					case 5:   replace = 17;  break;
 					case 9:   replace = 36;  break;
+					case 45:  replace = 100; break;
 					case 157: replace = 18;  break;
 					default:
 						if (drlgFlags[i - 1][j - 1] == 0)
@@ -2210,7 +2211,7 @@ static bool IsPillar(BYTE bv)
 		for (j = 1; j < DMAXY - 1; j++) {
 			if (dungeon[i][j] != 4 || drlgFlags[i][j])
 				continue;
-			if (IsPillar(dungeon[i][j + 1])) { -- mostly covered by L2CreateArches, not much point to handle the remaing few cases
+			if (IsPillar(dungeon[i][j + 1])) { -- mostly covered by L2CreateArches, not much point to handle the remaining few cases
 				//3, 1, 3,  search
 				//0, 4, 0,
 				//0, P, 0,

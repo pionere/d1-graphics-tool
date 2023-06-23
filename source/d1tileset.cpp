@@ -4058,9 +4058,9 @@ void D1Tileset::patchCatacombsSpec(bool silent)
                 change |= frame->setPixel(10, 148, D1GfxPixel::colorPixel(66));
                 change |= frame->setPixel(10, 149, D1GfxPixel::colorPixel(50));
                 change |= frame->setPixel(11, 149, D1GfxPixel::colorPixel(36));*/
-                change |= frame->setPixel( 8, 148, D1GfxPixel::colorPixel(55));
-                change |= frame->setPixel( 9, 148, D1GfxPixel::colorPixel(52));
-                change |= frame->setPixel(10, 149, D1GfxPixel::colorPixel(69));
+                change |= frame->setPixel( 9, 148, D1GfxPixel::colorPixel(55));
+                change |= frame->setPixel(10, 148, D1GfxPixel::colorPixel(52));
+                change |= frame->setPixel(11, 149, D1GfxPixel::colorPixel(69));
             }
 
             if (change && !silent) {
@@ -5221,6 +5221,8 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
 
         MoveMcr(515, 3, 152, 0);
         MoveMcr(515, 1, 250, 0);
+
+        ReplaceMcr(168, 0, 155, 0);
     }
     // pointless door micros (re-drawn by dSpecial or the object)
     // - vertical doors    
