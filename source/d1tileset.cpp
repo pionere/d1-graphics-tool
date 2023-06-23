@@ -8784,9 +8784,12 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeTileMapFlags(this->amp, 157 - 1, MAPFLAG_HORZDOOR, false, silent);
         ChangeTileMapType(this->amp, 157 - 1, 0, silent);
         // patch dSolidTable - L2.SOL
+        // - fix the upstairs IV.
         ChangeSubtileSolFlags(this->sol, 252 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, true, silent);
         ChangeSubtileSolFlags(this->sol, 267 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         // ChangeSubtileSolFlags(this->sol, 559 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        // - adjust SOL after cleanupCatacombs
+        ChangeSubtileSolFlags(this->sol, 268 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, true, silent);
         break;
     case DTYPE_CAVES:
         // patch dMiniTiles - L3.MIN
