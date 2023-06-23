@@ -5186,6 +5186,27 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     }
 
 
+    // fix the upstairs III.
+    //if (pSubtiles[MICRO_IDX(265 - 1, blockSize, 3)] != 0) {
+    if (this->patchCatacombsStairs(72 - 1, 158 - 1, 76 - 1, 159 - 1, 267, 559, silent)) {
+        // move the frames to the back subtile
+        // - left side
+        MoveMcr(252, 2, 265, 3);
+        // HideMcr(556, 3);
+
+        // - right side
+        MoveMcr(252, 1, 265, 5);
+        // HideMcr(556, 5);
+
+        MoveMcr(252, 3, 267, 2);
+        Blk2Mcr(559, 2);
+
+        MoveMcr(252, 5, 267, 4);
+        Blk2Mcr(559, 4);
+
+        MoveMcr(252, 7, 267, 6);
+        // HideMcr(559, 6);
+    }
     // adjust the frame types
     if (this->patchCatacombsFloor(silent)) {
         // unify the columns
@@ -5311,27 +5332,6 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(482, 3);
     Blk2Mcr(482, 7);
     Blk2Mcr(553, 6);
-    // fix the upstairs III.
-    //if (pSubtiles[MICRO_IDX(265 - 1, blockSize, 3)] != 0) {
-    if (this->patchCatacombsStairs(72 - 1, 158 - 1, 76 - 1, 159 - 1, 267, 559, silent)) {
-        // move the frames to the back subtile
-        // - left side
-        MoveMcr(252, 2, 265, 3);
-        // HideMcr(556, 3);
-
-        // - right side
-        MoveMcr(252, 1, 265, 5);
-        // HideMcr(556, 5);
-
-        MoveMcr(252, 3, 267, 2);
-        Blk2Mcr(559, 2);
-
-        MoveMcr(252, 5, 267, 4);
-        Blk2Mcr(559, 4);
-
-        MoveMcr(252, 7, 267, 6);
-        // HideMcr(559, 6);
-    }
     // fix bad artifact
     Blk2Mcr(288, 7);
     // fix graphical glitch
@@ -6351,7 +6351,7 @@ bool D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
 
     this->gfx->setModified();
 
-    quint8 properties;
+    /*quint8 properties;
     // patch TMI
     /*this->tmi->setSubtileProperties(backSubtileRef3 - 1, TMIF_LEFT_REDRAW | TMIF_RIGHT_REDRAW);
     this->tmi->setSubtileProperties(stairsSubtileRef1 - 1, 0);
