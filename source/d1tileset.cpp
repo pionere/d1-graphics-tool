@@ -5046,6 +5046,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 134 - 1, 3, 12 - 1, silent);
     ReplaceSubtile(this->til, 135 - 1, 1, 10 - 1, silent);
     ReplaceSubtile(this->til, 135 - 1, 3, 12 - 1, silent);
+    ReplaceSubtile(this->til, 51 - 1, 2, 155 - 1, silent);
     ReplaceSubtile(this->til, 141 - 1, 2, 155 - 1, silent);
     ReplaceSubtile(this->til, 142 - 1, 2, 155 - 1, silent);
 
