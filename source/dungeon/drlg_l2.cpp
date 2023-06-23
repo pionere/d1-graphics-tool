@@ -731,7 +731,7 @@ void DRLG_L2Shadows()
 				case 9:  replaceA = 37;  okB = true;  break;
 				case 45: replaceA = 100; okB = false; break;
 				default:
-					if (replaceB != 5)
+					// if (replaceB != 5)
 						dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 					// 5 -> not ok, but it would require a new door piece as well
 					continue;
@@ -1289,7 +1289,7 @@ static void ConnectHall(int nX1, int nY1, int nX2, int nY2, int nHd)
 			// find exit from the room
 			switch (nCurrd) {
 			case HDIR_UP:
-				// proceed up till a wall is hit
+				// proceed till a wall is hit
 				do {
 					nY1--;
 				} while (pdungeon[nX1][nY1] == PRE_FLOOR);
@@ -1316,7 +1316,7 @@ static void ConnectHall(int nX1, int nY1, int nX2, int nY2, int nHd)
 				}
 				break;
 			case HDIR_RIGHT:
-				// proceed up till a wall is hit
+				// proceed till a wall is hit
 				do {
 					nX1++;
 				} while (pdungeon[nX1][nY1] == PRE_FLOOR);
@@ -1343,7 +1343,7 @@ static void ConnectHall(int nX1, int nY1, int nX2, int nY2, int nHd)
 				}
 				break;
 			case HDIR_DOWN:
-				// proceed up till a wall is hit
+				// proceed till a wall is hit
 				do {
 					nY1++;
 				} while (pdungeon[nX1][nY1] == PRE_FLOOR);
@@ -1370,7 +1370,7 @@ static void ConnectHall(int nX1, int nY1, int nX2, int nY2, int nHd)
 				}
 				break;
 			case HDIR_LEFT:
-				// proceed up till a wall is hit
+				// proceed till a wall is hit
 				do {
 					nX1--;
 				} while (pdungeon[nX1][nY1] == PRE_FLOOR);
@@ -2196,7 +2196,7 @@ static void L2LockoutFix()
 
 static bool IsPillar(BYTE bv)
 {
-	return (bv >= 6 && bv <= 9) || (bv >= 146 && bv <= 149);
+	return (bv >= 6 && bv <= 9) || (bv >= 13 && bv <= 16);
 }
 
 /*
@@ -2355,6 +2355,12 @@ static void L2CreateArches()
 
 						//43, 45, 0, replace
 						dungeon[x - 1][y] = 43;
+						dungeon[x][y] = 45;
+					} else if (pn == 42) {
+						//42, 5, P,  search
+
+						//41, 45, 0, replace
+						dungeon[x - 1][y] = 41;
 						dungeon[x][y] = 45;
 					}
 				} else if (pn == 2 && x < DMAXX - 2) {
