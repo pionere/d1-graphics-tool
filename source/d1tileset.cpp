@@ -5162,16 +5162,16 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     // fix graphical glitch
     ReplaceSubtile(this->til, 157 - 1, 1, 99 - 1, silent);
     // fix the upstairs II.
-    /*ReplaceSubtile(this->til, 72 - 1, 1, 56 - 1, silent); // make the back of the stairs non-walkable
-    ReplaceSubtile(this->til, 72 - 1, 0, 9 - 1, silent);
-    ReplaceSubtile(this->til, 72 - 1, 2, 11 - 1, silent);
-    ReplaceSubtile(this->til, 76 - 1, 1, 10 - 1, silent);
-    // ReplaceSubtile(this->til, 158 - 1, 0, 9 - 1, silent);
-    // ReplaceSubtile(this->til, 158 - 1, 1, 56 - 1, silent); make the back of the stairs non-walkable
-    // ReplaceSubtile(this->til, 158 - 1, 2, 11 - 1, silent);
-    // ReplaceSubtile(this->til, 159 - 1, 0, 9 - 1, silent);
-    // ReplaceSubtile(this->til, 159 - 1, 1, 10 - 1, silent);
-    // ReplaceSubtile(this->til, 159 - 1, 2, 11 - 1, silent);*/
+    ReplaceSubtile(this->til, 72 - 1, 1, 56 - 1, silent);  // make the back of the stairs non-walkable
+    ReplaceSubtile(this->til, 72 - 1, 0, 9 - 1, silent);   // use common subtile
+    ReplaceSubtile(this->til, 72 - 1, 2, 11 - 1, silent);  // use common subtile
+    ReplaceSubtile(this->til, 76 - 1, 1, 10 - 1, silent);  // use common subtile
+    ReplaceSubtile(this->til, 158 - 1, 0, 9 - 1, silent);  // use common subtile
+    ReplaceSubtile(this->til, 158 - 1, 1, 56 - 1, silent); // make the back of the stairs non-walkable
+    ReplaceSubtile(this->til, 158 - 1, 2, 11 - 1, silent); // use common subtile
+    ReplaceSubtile(this->til, 159 - 1, 0, 9 - 1, silent);  // use common subtile
+    ReplaceSubtile(this->til, 159 - 1, 1, 10 - 1, silent); // use common subtile
+    ReplaceSubtile(this->til, 159 - 1, 2, 11 - 1, silent); // use common subtile
     // eliminate subtiles of unused tiles
     const int unusedTiles[] = {
         52, 58, 61, 64, 65, 66, 67, 76, 93, 98, 101, 102, 103, 104, 143, 144, 145, 146, 147, 148, 149, 152, 153, 154, 155, 158, 159, 160
@@ -5317,11 +5317,11 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
         // move the frames to the back subtile
         // - left side
         MoveMcr(252, 2, 265, 3);
-        HideMcr(556, 3);
+        // HideMcr(556, 3);
 
         // - right side
         MoveMcr(252, 1, 265, 5);
-        HideMcr(556, 5);
+        // HideMcr(556, 5);
 
         MoveMcr(252, 3, 267, 2);
         Blk2Mcr(559, 2);
@@ -5330,7 +5330,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
         Blk2Mcr(559, 4);
 
         MoveMcr(252, 7, 267, 6);
-        HideMcr(559, 6);
+        // HideMcr(559, 6);
     }
     // fix bad artifact
     Blk2Mcr(288, 7);
@@ -6063,7 +6063,7 @@ bool D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     constexpr int backSubtileRef0 = 250;
     constexpr int backSubtileRef2 = 251;
     constexpr int backSubtileRef3 = 252;
-    constexpr int backSubtileRef0Replacement = 9;
+    /*constexpr int backSubtileRef0Replacement = 9;
     constexpr int backSubtileRef2Replacement = 11;
     { // check the back subtiles
         std::vector<int> &backSubtiles = this->til->getSubtileIndices(backTileIndex1);
@@ -6074,11 +6074,11 @@ bool D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
                 dProgressWarn() << QApplication::tr("The back-stairs tile (%1) is already patched.").arg(backTileIndex1 + 1);
             return false;
         }
-    }
+    }*/
 
     constexpr int ext1SubtileRef1 = 265;
     constexpr int ext2SubtileRef1 = 556;
-    constexpr int extSubtileRef1Replacement = 10;
+    /*constexpr int extSubtileRef1Replacement = 10;
     { // check the external subtiles
         std::vector<int> &ext1Subtiles = this->til->getSubtileIndices(extTileIndex1);
         if (ext1Subtiles[1] != (ext1SubtileRef1 - 1)) {
@@ -6096,7 +6096,7 @@ bool D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
                 dProgressWarn() << QApplication::tr("The ext-stairs tile (%1) is already patched.").arg(extTileIndex2 + 1);
             return false;
         }
-    }
+    }*/
     // TODO: check if there are enough subtiles
     std::vector<unsigned> &back0FrameReferences = this->min->getFrameReferences(backSubtileRef0 - 1);
     std::vector<unsigned> &back2FrameReferences = this->min->getFrameReferences(backSubtileRef2 - 1);
@@ -6360,7 +6360,7 @@ bool D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     this->tmi->setSubtileProperties(ext2SubtileRef1 - 1, 0);*/
 
     // patch SOL
-    properties = this->sol->getSubtileProperties(backSubtileRef3 - 1);
+    /*properties = this->sol->getSubtileProperties(backSubtileRef3 - 1);
     properties |= (PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE);
     this->sol->setSubtileProperties(backSubtileRef3 - 1, properties);
     properties = this->sol->getSubtileProperties(stairsSubtileRef1 - 1);
@@ -6369,7 +6369,7 @@ bool D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     this->sol->setSubtileProperties(stairsSubtileRef2 - 1, properties);
 
     // replace subtiles
-    ReplaceSubtile(this->til, backTileIndex1, 0, backSubtileRef0Replacement - 1, silent); // use common subtile
+    /*ReplaceSubtile(this->til, backTileIndex1, 0, backSubtileRef0Replacement - 1, silent); // use common subtile
     ReplaceSubtile(this->til, backTileIndex1, 1, 56 - 1, silent);                         // make the back of the stairs non-walkable
     ReplaceSubtile(this->til, backTileIndex1, 2, backSubtileRef2Replacement - 1, silent); // use common subtile
     ReplaceSubtile(this->til, extTileIndex1, 1, extSubtileRef1Replacement - 1, silent);   // use common subtile
@@ -6379,7 +6379,7 @@ bool D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     ReplaceSubtile(this->til, backTileIndex2, 2, backSubtileRef2Replacement - 1, silent); // use common subtile
     ReplaceSubtile(this->til, extTileIndex2, 0, backSubtileRef0Replacement - 1, silent);  // use common subtile
     ReplaceSubtile(this->til, extTileIndex2, 1, extSubtileRef1Replacement - 1, silent);   // use common subtile
-    ReplaceSubtile(this->til, extTileIndex2, 2, backSubtileRef2Replacement - 1, silent);  // use common subtile
+    ReplaceSubtile(this->til, extTileIndex2, 2, backSubtileRef2Replacement - 1, silent);  // use common subtile*/
 
     if (!silent) {
         dProgress() << QApplication::tr("The back-stair tiles (%1, %2) and the stair-subtiles (%2, %3, %4, %5) are modified.").arg(backTileIndex1 + 1).arg(backTileIndex2 + 1).arg(extTileIndex1 + 1).arg(extTileIndex2 + 1).arg(stairsSubtileRef1).arg(stairsSubtileRef2);
@@ -8783,6 +8783,10 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeTileMapType(this->amp, 156 - 1, 0, silent);
         ChangeTileMapFlags(this->amp, 157 - 1, MAPFLAG_HORZDOOR, false, silent);
         ChangeTileMapType(this->amp, 157 - 1, 0, silent);
+        // patch dSolidTable - L2.SOL
+        ChangeSubtileSolFlags(this->sol, 252 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, true, silent);
+        ChangeSubtileSolFlags(this->sol, 267 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        // ChangeSubtileSolFlags(this->sol, 559 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         break;
     case DTYPE_CAVES:
         // patch dMiniTiles - L3.MIN
