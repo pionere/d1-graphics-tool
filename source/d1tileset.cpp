@@ -6086,7 +6086,7 @@ bool D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
                 dProgressErr() << QApplication::tr("The ext-stairs tile (%1) has invalid (not original) subtiles.").arg(extTileIndex1 + 1);
             else if (!silent)
                 dProgressWarn() << QApplication::tr("The ext-stairs tile (%1) is already patched.").arg(extTileIndex1 + 1);
-            return;
+            return false;
         }
         std::vector<int> &ext2Subtiles = this->til->getSubtileIndices(extTileIndex2);
         if (ext2Subtiles[1] != (ext2SubtileRef1 - 1)) {
@@ -6148,7 +6148,7 @@ bool D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
 
     if (stairs2FrameReferences[microIndex0] != stairs_FrameRef0) {
         dProgressErr() << QApplication::tr("The stairs subtiles (%1, %2) have invalid (mismatching) floor frames.").arg(stairsSubtileRef1).arg(stairsSubtileRef2);
-        return;
+        return false;
     }
     if (stairsExt2FrameReferences[microIndex1] != stairsExt_FrameRef1
         || stairsExt2FrameReferences[microIndex3] != stairsExt_FrameRef3

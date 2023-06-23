@@ -633,7 +633,7 @@ static void DRLG_L2DoorSubs()
 
 /*
  * Place shadows under arches and pillars.
- * New dungeon values: 17 18 35 36 45 46 47 48 49 50 51   95 96 100 140 141 142
+ * New dungeon values: 17 18 34 35 36 37 45 46 47 48 49 50 51   95 96 100 140 141 142
  */
 void DRLG_L2Shadows()
 {
@@ -743,6 +743,7 @@ void DRLG_L2Shadows()
 					switch (replaceC) {
 					case 2:  replaceA = 142; break;
 					case 3:  replaceA = 48;  break;
+					case 6:  replaceA = 34;  break;
 					case 9:  replaceA = 36;  break;
 					case 45: replaceA = 95;  break;
 					default:
