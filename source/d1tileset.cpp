@@ -4994,13 +4994,13 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 2 - 1, 2, 11 - 1, silent);
     ReplaceSubtile(this->til, 4 - 1, 1, 10 - 1, silent);
     ReplaceSubtile(this->til, 150 - 1, 1, 10 - 1, silent);
-    ReplaceSubtile(this->til, 152 - 1, 1, 10 - 1, silent);
+    // ReplaceSubtile(this->til, 152 - 1, 1, 10 - 1, silent);
     ReplaceSubtile(this->til, 5 - 1, 2, 11 - 1, silent);
     ReplaceSubtile(this->til, 151 - 1, 2, 11 - 1, silent);
-    ReplaceSubtile(this->til, 153 - 1, 2, 11 - 1, silent);
+    // ReplaceSubtile(this->til, 153 - 1, 2, 11 - 1, silent);
     ReplaceSubtile(this->til, 5 - 1, 3, 12 - 1, silent);
     ReplaceSubtile(this->til, 151 - 1, 3, 12 - 1, silent);
-    ReplaceSubtile(this->til, 153 - 1, 3, 12 - 1, silent);
+    // ReplaceSubtile(this->til, 153 - 1, 3, 12 - 1, silent);
     ReplaceSubtile(this->til, 21 - 1, 2, 11 - 1, silent);
     ReplaceSubtile(this->til, 21 - 1, 3, 12 - 1, silent);
     ReplaceSubtile(this->til, 31 - 1, 3, 12 - 1, silent);
@@ -8732,6 +8732,8 @@ void D1Tileset::patch(int dunType, bool silent)
         // fix the upstairs
         this->patchCatacombsStairs(72 - 1, 158 - 1, 76 - 1, 159 - 1, 267, 559, silent);
         this->cleanupCatacombs(deletedFrames, silent);
+        // patch pSpecialsCel - L2S.CEL
+        this->patchCatacombsSpec(silent);
         // patch dAutomapData - L2.AMP
         SetTileMapFlags(this->amp, 17 - 1, 5 - 1, silent);
         // SetTileMapFlags(this->amp, 18 - 1, 5 - 1, silent);

@@ -913,8 +913,6 @@ static void DRLG_LoadL2SP()
 		}
 		// patch the map - Bonestr2.DUN
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
-		// eliminate obsolete stair-tile
-		lm[2 + 3 + 4 * 7] = 0;
 		// add tiles with subtiles for arches
 		lm[2 + 2 + 1 * 7] = SwapLE16(45);
 		lm[2 + 4 + 1 * 7] = SwapLE16(45);
@@ -2604,7 +2602,7 @@ static void DRLG_L2FixPreMap(int idx)
 	} else if (pSetPieces[idx]._sptype == SPT_BCHAMB) {
 		// patch the map - Bonestr1.DUN
 		// eliminate obsolete stair-tile
-		lm[2 + 3 + 4 * 7] = 0;
+		lm[2 + 2 + 4 * 7] = 0;
 		// shadow of the external-left column
 		lm[2 + 0 + 4 * 7] = SwapLE16(48);
 		lm[2 + 0 + 5 * 7] = SwapLE16(50);
