@@ -4054,8 +4054,9 @@ void D1Tileset::patchCatacombsSpec(bool silent)
             }
 
             if (i == 0) {
-                change |= frame->setPixel(10, 148, D1GfxPixel::colorPixel(65));
-                change |= frame->setPixel(10, 149, D1GfxPixel::colorPixel(49));
+                change |= frame->setPixel( 9, 148, D1GfxPixel::colorPixel(39));
+                change |= frame->setPixel(10, 148, D1GfxPixel::colorPixel(66));
+                change |= frame->setPixel(10, 149, D1GfxPixel::colorPixel(50));
                 change |= frame->setPixel(11, 149, D1GfxPixel::colorPixel(36));
             }
 
@@ -4158,8 +4159,8 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
                     }
                 }
             }
-            // draw shadows 268[1]
-            if (i == 4) {
+            // draw shadows 268[1], 152[0]
+            if (i == 4 || i == 8) {
                 for (int x = 0; x < MICRO_WIDTH; x++) {
                     for (int y = 0; y < MICRO_HEIGHT; y++) {
                         D1GfxPixel pixel = frame->getPixel(x, y);
@@ -4186,23 +4187,8 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
                     }
                 }
             }
-            // draw shadow 152[0]
-            if (i == 8) {
-                for (int x = 0; x < MICRO_WIDTH; x++) {
-                    for (int y = 0; y < MICRO_HEIGHT; y++) {
-                        if (y < 29 - x * 4) {
-                            D1GfxPixel pixel = frame->getPixel(x, y);
-                            if (!pixel.isTransparent()) {
-                                quint8 color = pixel.getPaletteIndex();
-                                pixel = D1GfxPixel::colorPixel(shadowColorCatacombs(color));
-                                change |= frame->setPixel(x, y, pixel);
-                            }
-                        }
-                    }
-                }
-            }
             // draw shadow 250[0]
-            /*if (i == 10) {
+            if (i == 10) {
                 for (int x = 0; x < 5; x++) {
                     for (int y = 0; y < 12; y++) {
                         if (y < (4 - x) * 3) {
@@ -4213,7 +4199,7 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
                         }
                     }
                 }
-            }*/
+            }
         }
         // fix shadow on 514[1] using 5[1]
         if (i == 12) {
@@ -4237,10 +4223,10 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
         // fix shadow on 515[0]
         if (i == 13) {
             for (int x = 20; x < MICRO_WIDTH; x++) {
-                for (int y = 0; y < 18; y++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
                     if (!pixel.isTransparent()) {
-                        /*if (x < 26) {
+                        if (x < 26) {
                             if (y > 37 - x) {
                                 continue;
                             }
@@ -4250,19 +4236,6 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
                             }
                         } else {
                             if (y > 40 - x) {
-                                continue;
-                            }
-                        }*/
-                        if (x < 22) {
-                            if (y < 103 - x * 4) {
-                                continue;
-                            }
-                        } else if (x < 28) {
-                            if (y < 22 - x / 3) {
-                                continue;
-                            }
-                        } else {
-                            if (y < 125 - x * 4) {
                                 continue;
                             }
                         }
