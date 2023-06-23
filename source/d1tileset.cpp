@@ -4180,7 +4180,8 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
             if (i == 6) {
                 for (int x = 0; x < MICRO_WIDTH; x++) {
                     for (int y = 0; y < MICRO_HEIGHT; y++) {
-                        if (y > 22 - x / 2) {
+                        if (y > 22 - x / 2
+                         || (x < 6 && y > 14)) { // extend shadow to make the micro more usable
                             D1GfxPixel pixel = frame->getPixel(x, y);
                             if (!pixel.isTransparent()) {
                                 quint8 color = pixel.getPaletteIndex();
@@ -4590,6 +4591,12 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
 
                 change |= frame->setPixel(30, 29, D1GfxPixel::colorPixel(71));
                 change |= frame->setPixel(31, 30, D1GfxPixel::colorPixel(73));
+
+                change |= frame->setPixel(29, 25, D1GfxPixel::colorPixel(26));
+                change |= frame->setPixel(31, 25, D1GfxPixel::colorPixel(27));
+                change |= frame->setPixel(31, 26, D1GfxPixel::colorPixel(26));
+                change |= frame->setPixel(28, 29, D1GfxPixel::colorPixel(41));
+                change |= frame->setPixel(26, 25, D1GfxPixel::colorPixel(68));
             }
             // extend border
             for (int x = 0; x < 8; x++) {
@@ -4612,6 +4619,17 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
                         change |= frame->setPixel(x, y + 6, pixel); // 332[1]
                     }
                 }
+            }
+            // fix artifacts
+            {
+                change |= frame->setPixel( 2, 27, D1GfxPixel::colorPixel(25));
+                change |= frame->setPixel( 3, 27, D1GfxPixel::colorPixel(26));
+                change |= frame->setPixel( 4, 28, D1GfxPixel::colorPixel(25));
+                change |= frame->setPixel( 5, 29, D1GfxPixel::colorPixel(26));
+                change |= frame->setPixel( 3, 28, D1GfxPixel::colorPixel(26));
+                change |= frame->setPixel( 0, 31, D1GfxPixel::colorPixel(41));
+                change |= frame->setPixel( 1, 30, D1GfxPixel::colorPixel(68));
+                change |= frame->setPixel( 3, 30, D1GfxPixel::colorPixel(68));
             }
         }
         // redraw 331[0]
@@ -5081,6 +5099,11 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 18 - 1, 1, 99 - 1, silent);
     ReplaceSubtile(this->til, 18 - 1, 2, 155 - 1, silent);
     ReplaceSubtile(this->til, 18 - 1, 3, 162 - 1, silent);
+    // - pillar tile for a pillar
+    ReplaceSubtile(this->til, 34 - 1, 0, 21 - 1, silent);
+    ReplaceSubtile(this->til, 34 - 1, 1, 26 - 1, silent);
+    ReplaceSubtile(this->til, 34 - 1, 2, 148 - 1, silent);
+    ReplaceSubtile(this->til, 34 - 1, 3, 517 - 1, silent);
     // - vertical wall end for a horizontal arch
     ReplaceSubtile(this->til, 35 - 1, 0, 25 - 1, silent);
     ReplaceSubtile(this->til, 35 - 1, 1, 26 - 1, silent);
@@ -5151,7 +5174,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceSubtile(this->til, 159 - 1, 2, 11 - 1, silent);*/
     // eliminate subtiles of unused tiles
     const int unusedTiles[] = {
-        34, 52, 58, 61, 64, 65, 66, 67, 76, 93, 98, 101, 102, 103, 104, 143, 144, 145, 146, 147, 148, 149, 152, 153, 154, 155, 158, 159, 160
+        52, 58, 61, 64, 65, 66, 67, 76, 93, 98, 101, 102, 103, 104, 143, 144, 145, 146, 147, 148, 149, 152, 153, 154, 155, 158, 159, 160
     };
     constexpr int blankSubtile = 2 - 1;
     for (int n = 0; n < lengthof(unusedTiles); n++) {
@@ -5217,12 +5240,12 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
         SetMcr(268, 6, 33, 6);
         SetMcr(268, 7, 29, 7);
 
-        SetMcr(148, 0, 23, 0);
-
         MoveMcr(515, 3, 152, 0);
         MoveMcr(515, 1, 250, 0);
 
+        // extend the shadow to make the micro more usable
         ReplaceMcr(168, 0, 155, 0);
+        SetMcr(148, 0, 155, 0);
     }
     // pointless door micros (re-drawn by dSpecial or the object)
     // - vertical doors    
@@ -5289,7 +5312,8 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(482, 7);
     Blk2Mcr(553, 6);
     // fix the upstairs III.
-    /*if (pSubtiles[MICRO_IDX(265 - 1, blockSize, 3)] != 0) {
+    //if (pSubtiles[MICRO_IDX(265 - 1, blockSize, 3)] != 0) {
+    if (this->patchCatacombsStairs(72 - 1, 158 - 1, 76 - 1, 159 - 1, 267, 559, silent)) {
         // move the frames to the back subtile
         // - left side
         MoveMcr(252, 2, 265, 3);
@@ -5300,14 +5324,14 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
         HideMcr(556, 5);
 
         MoveMcr(252, 3, 267, 2);
-        // Blk2Mcr(559, 2);
+        Blk2Mcr(559, 2);
 
         MoveMcr(252, 5, 267, 4);
-        // Blk2Mcr(559, 4);
+        Blk2Mcr(559, 4);
 
         MoveMcr(252, 7, 267, 6);
-        // HideMcr(559, 6);
-    }*/
+        HideMcr(559, 6);
+    }
     // fix bad artifact
     Blk2Mcr(288, 7);
     // fix graphical glitch
@@ -6032,7 +6056,7 @@ void D1Tileset::patchHellExit(int tileIndex, bool silent)
     }
 }
 
-void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int extTileIndex1, int extTileIndex2, int stairsSubtileRef1, int stairsSubtileRef2, bool silent)
+bool D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int extTileIndex1, int extTileIndex2, int stairsSubtileRef1, int stairsSubtileRef2, bool silent)
 {
     constexpr unsigned blockSize = BLOCK_SIZE_L2;
 
@@ -6048,7 +6072,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
                 dProgressErr() << QApplication::tr("The back-stairs tile (%1) has invalid (not original) subtiles.").arg(backTileIndex1 + 1);
             else if (!silent)
                 dProgressWarn() << QApplication::tr("The back-stairs tile (%1) is already patched.").arg(backTileIndex1 + 1);
-            return;
+            return false;
         }
     }
 
@@ -6070,7 +6094,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
                 dProgressErr() << QApplication::tr("The ext-stairs tile (%1) has invalid (not original) subtiles.").arg(extTileIndex2 + 1);
             else if (!silent)
                 dProgressWarn() << QApplication::tr("The ext-stairs tile (%1) is already patched.").arg(extTileIndex2 + 1);
-            return;
+            return false;
         }
     }
     // TODO: check if there are enough subtiles
@@ -6086,7 +6110,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
         || stairs1FrameReferences.size() != blockSize || stairs2FrameReferences.size() != blockSize
         || stairsExt1FrameReferences.size() != blockSize || stairsExt2FrameReferences.size() != blockSize) {
         dProgressErr() << QApplication::tr("At least one of the upstairs-subtiles (%1, %2, %3, %4, %5) is invalid (upscaled?).").arg(backSubtileRef0).arg(backSubtileRef2).arg(backSubtileRef3).arg(stairsSubtileRef1).arg(stairsSubtileRef2).arg(ext1SubtileRef1).arg(ext2SubtileRef1);
-        return;
+        return false;
     }
 
     const unsigned microIndex0 = MICRO_IDX(blockSize, 0);
@@ -6112,14 +6136,14 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
 
     if (back3_FrameRef0 == 0 || back2_FrameRef1 == 0 || back0_FrameRef0 == 0) {
         dProgressErr() << QApplication::tr("The back-stairs tile (%1) has invalid (missing) frames.").arg(backTileIndex1 + 1);
-        return;
+        return false;
     }
 
     if (stairs_FrameRef0 == 0 || stairs_FrameRef2 == 0 || stairs_FrameRef4 == 0 || stairs_FrameRef6 == 0
         || stairsExt_FrameRef1 == 0 || stairsExt_FrameRef3 == 0 || stairsExt_FrameRef5 == 0) {
         if (!silent)
             dProgressWarn() << QApplication::tr("The stairs subtiles (%1) are already patched.").arg(stairsSubtileRef1);
-        return;
+        return false;
     }
 
     if (stairs2FrameReferences[microIndex0] != stairs_FrameRef0) {
@@ -6130,7 +6154,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
         || stairsExt2FrameReferences[microIndex3] != stairsExt_FrameRef3
         || stairsExt2FrameReferences[microIndex5] != stairsExt_FrameRef5) {
         dProgressErr() << QApplication::tr("The stairs external subtiles (%1, %2) have invalid (mismatching) frames.").arg(ext1SubtileRef1).arg(ext2SubtileRef1);
-        return;
+        return false;
     }
 
     D1GfxFrame *back3_LeftFrame = this->gfx->getFrame(back3_FrameRef0 - 1);  // 719
@@ -6147,29 +6171,29 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     D1GfxFrame *stairsExt_RightFrame5 = this->gfx->getFrame(stairsExt_FrameRef5 - 1); // 760
 
     if (back3_LeftFrame->getWidth() != MICRO_WIDTH || back3_LeftFrame->getHeight() != MICRO_HEIGHT) {
-        return; // upscaled(?) frames -> assume it is already done
+        return false; // upscaled(?) frames -> assume it is already done
     }
     if ((back2_LeftFrame->getWidth() != MICRO_WIDTH || back2_LeftFrame->getHeight() != MICRO_HEIGHT)
         || (back0_RightFrame->getWidth() != MICRO_WIDTH || back0_RightFrame->getHeight() != MICRO_HEIGHT)) {
         dProgressErr() << QApplication::tr("The back-stairs tile (%1) has invalid (mismatching) frames.").arg(backTileIndex1 + 1);
-        return;
+        return false;
     }
     if ((stairs_LeftFrame0->getWidth() != MICRO_WIDTH || stairs_LeftFrame0->getHeight() != MICRO_HEIGHT)
         || (stairs_LeftFrame2->getWidth() != MICRO_WIDTH || stairs_LeftFrame2->getHeight() != MICRO_HEIGHT)
         || (stairs_LeftFrame4->getWidth() != MICRO_WIDTH || stairs_LeftFrame4->getHeight() != MICRO_HEIGHT)
         || (stairs_LeftFrame6->getWidth() != MICRO_WIDTH || stairs_LeftFrame6->getHeight() != MICRO_HEIGHT)) {
         dProgressErr() << QApplication::tr("The stairs subtile (%1) has invalid (mismatching) frames I.").arg(stairsSubtileRef1);
-        return;
+        return false;
     }
     if ((stairsExt_RightFrame1->getWidth() != MICRO_WIDTH || stairsExt_RightFrame1->getHeight() != MICRO_HEIGHT)
         || (stairsExt_RightFrame3->getWidth() != MICRO_WIDTH || stairsExt_RightFrame3->getHeight() != MICRO_HEIGHT)
         || (stairsExt_RightFrame5->getWidth() != MICRO_WIDTH || stairsExt_RightFrame5->getHeight() != MICRO_HEIGHT)) {
         dProgressErr() << QApplication::tr("The stairs subtile (%1) has invalid (mismatching) frames II.").arg(ext1SubtileRef1);
-        return;
+        return false;
     }
 
     // move the frames to the back subtile
-    const unsigned microIndex7 = MICRO_IDX(blockSize, 7);
+    /*const unsigned microIndex7 = MICRO_IDX(blockSize, 7);
     // - left side
     back3FrameReferences[microIndex2] = stairsExt1FrameReferences[microIndex3]; // 761
     stairsExt1FrameReferences[microIndex3] = 0;
@@ -6182,15 +6206,15 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
 
     back3FrameReferences[microIndex3] = stairs1FrameReferences[microIndex2]; // 769
     stairs1FrameReferences[microIndex2] = 0;
-    stairs2FrameReferences[microIndex2] = 0; // 1471
+    // stairs2FrameReferences[microIndex2] = 0; // 1471
 
     back3FrameReferences[microIndex5] = stairs1FrameReferences[microIndex4]; // 768
     stairs1FrameReferences[microIndex4] = 0;
-    stairs2FrameReferences[microIndex4] = 0; // 1470
+    // stairs2FrameReferences[microIndex4] = 0; // 1470
 
     back3FrameReferences[microIndex7] = stairs1FrameReferences[microIndex6]; // 767
     stairs1FrameReferences[microIndex6] = 0;
-    stairs2FrameReferences[microIndex6] = 0;
+    // stairs2FrameReferences[microIndex6] = 0;*/
 
     this->min->setModified();
 
@@ -6360,6 +6384,7 @@ void D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     if (!silent) {
         dProgress() << QApplication::tr("The back-stair tiles (%1, %2) and the stair-subtiles (%2, %3, %4, %5) are modified.").arg(backTileIndex1 + 1).arg(backTileIndex2 + 1).arg(extTileIndex1 + 1).arg(extTileIndex2 + 1).arg(stairsSubtileRef1).arg(stairsSubtileRef2);
     }
+    return true;
 }
 
 std::pair<unsigned, D1GfxFrame *> D1Tileset::getFrame(int subtileIndex, int blockSize, unsigned microIndex)
@@ -8735,18 +8760,21 @@ void D1Tileset::patch(int dunType, bool silent)
         break;
     case DTYPE_CATACOMBS:
         // patch dMiniTiles and dMegaTiles - L2.MIN and L2.TIL
-        // fix the upstairs
-        this->patchCatacombsStairs(72 - 1, 158 - 1, 76 - 1, 159 - 1, 267, 559, silent);
         this->cleanupCatacombs(deletedFrames, silent);
         // patch pSpecialsCel - L2S.CEL
         this->patchCatacombsSpec(silent);
         // patch dAutomapData - L2.AMP
         SetTileMapFlags(this->amp, 17 - 1, 5 - 1, silent);
         // SetTileMapFlags(this->amp, 18 - 1, 5 - 1, silent);
+        SetTileMapFlags(this->amp, 34 - 1, 6 - 1, silent);
         SetTileMapFlags(this->amp, 35 - 1, 7 - 1, silent);
         SetTileMapFlags(this->amp, 36 - 1, 9 - 1, silent);
         SetTileMapFlags(this->amp, 37 - 1, 9 - 1, silent);
         // SetTileMapFlags(this->amp, 44 - 1, 3 - 1, silent);
+        // SetTileMapFlags(this->amp, 46 - 1, 3 - 1, silent);
+        // SetTileMapFlags(this->amp, 47 - 1, 3 - 1, silent);
+        // SetTileMapFlags(this->amp, 48 - 1, 3 - 1, silent);
+        // SetTileMapFlags(this->amp, 49 - 1, 3 - 1, silent);
         // SetTileMapFlags(this->amp, 95 - 1, 3 - 1, silent);
         // SetTileMapFlags(this->amp, 96 - 1, 3 - 1, silent);
         // SetTileMapFlags(this->amp, 100 - 1, 3 - 1, silent);
