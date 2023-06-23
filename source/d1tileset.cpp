@@ -4053,7 +4053,7 @@ void D1Tileset::patchCatacombsSpec(bool silent)
                 change |= frame->setPixel(28, 61, D1GfxPixel::colorPixel(54));
             }
 
-            if (i == 0) {
+            if (i == 1) {
                 change |= frame->setPixel( 9, 148, D1GfxPixel::colorPixel(39));
                 change |= frame->setPixel(10, 148, D1GfxPixel::colorPixel(66));
                 change |= frame->setPixel(10, 149, D1GfxPixel::colorPixel(50));
@@ -4061,6 +4061,7 @@ void D1Tileset::patchCatacombsSpec(bool silent)
             }
 
             if (change && !silent) {
+                this->cls->setModified();
                 dProgress() << QApplication::tr("Special-Frame %1 is modified.").arg(i + 1);
             }
 

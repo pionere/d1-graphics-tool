@@ -3351,6 +3351,8 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(5, 2, 203);
         break;
     case DUN_BONECHAMB_ENTRY_PRE: // Bonestr1.DUN
+        // eliminate obsolete stair-tile
+        change |= this->changeTileAt(3, 4, 0);
         // shadow of the external-left column
         change |= this->changeTileAt(0, 4, 48);
         change |= this->changeTileAt(0, 5, 50);
