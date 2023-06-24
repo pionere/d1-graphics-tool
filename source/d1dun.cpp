@@ -3326,6 +3326,8 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(5, 2, 203);
         break;
     case DUN_BONECHAMB_ENTRY_PRE: // Bonestr1.DUN
+        // eliminate obsolete stair-tile
+        change |= this->changeTileAt(3, 4, 0);
         // shadow of the external-left column
         change |= this->changeTileAt(0, 4, 48);
         change |= this->changeTileAt(0, 5, 50);
@@ -3341,25 +3343,25 @@ void D1Dun::patch(int dunFileIndex)
         break;
     case DUN_BONECHAMB_ENTRY_AFT: // Bonestr2.DUN
         // add tiles with subtiles for arches
-        change |= this->changeTileAt(2, 1, 162);
-        change |= this->changeTileAt(4, 1, 164);
-        change |= this->changeTileAt(2, 5, 162);
-        change |= this->changeTileAt(4, 5, 162);
-        change |= this->changeTileAt(1, 2, 161);
-        change |= this->changeTileAt(1, 4, 163);
-        change |= this->changeTileAt(5, 2, 161);
-        change |= this->changeTileAt(5, 4, 161);
+        change |= this->changeTileAt(2, 1, 45);
+        change |= this->changeTileAt(4, 1, 100);
+        change |= this->changeTileAt(2, 5, 45);
+        change |= this->changeTileAt(4, 5, 45);
+        change |= this->changeTileAt(1, 2, 44);
+        change |= this->changeTileAt(1, 4, 96);
+        change |= this->changeTileAt(5, 2, 44);
+        change |= this->changeTileAt(5, 4, 44);
         // place shadows
         // NE-wall
         change |= this->changeTileAt(1, 0, 49);
-        change |= this->changeTileAt(2, 0, 46);
+        change |= this->changeTileAt(2, 0, 49);
         change |= this->changeTileAt(3, 0, 49);
-        change |= this->changeTileAt(4, 0, 46);
+        change |= this->changeTileAt(4, 0, 49);
         // SW-wall
         // change |= this->changeTileAt(1, 4, 49);
-        change |= this->changeTileAt(2, 4, 46);
+        change |= this->changeTileAt(2, 4, 49);
         change |= this->changeTileAt(3, 4, 49);
-        change |= this->changeTileAt(4, 4, 46);
+        change |= this->changeTileAt(4, 4, 49);
         // NW-wall
         change |= this->changeTileAt(0, 0, 48);
         change |= this->changeTileAt(0, 1, 51);
@@ -3368,9 +3370,10 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(0, 4, 47);
         change |= this->changeTileAt(0, 5, 50);
         // SE-wall
-        // change |= this->changeTileAt(4, 1, 51);
+        // change |= this->changeTileAt(4, 1, 100);
         change |= this->changeTileAt(4, 2, 47);
-        change |= this->changeTileAt(4, 3, 50); // 51
+        change |= this->changeTileAt(4, 3, 51);
+        change |= this->changeTileAt(4, 4, 46);
         // protect the main structure
         for (int y = 1; y < 6; y++) {
             for (int x = 1; x < 6; x++) {
@@ -3379,22 +3382,109 @@ void D1Dun::patch(int dunFileIndex)
         }
         break;
     case DUN_BONECHAMB_PRE: // Bonecha1.DUN
+        // external tiles
+        change |= this->changeTileAt(20, 4, 12);
+        change |= this->changeTileAt(21, 4, 12);
+        // useless tiles
+        for (int y = 0; y < 18; y++) {
+            for (int x = 0; x < 32; x++) {
+                if (x >= 13 && x <= 21 && y >= 1 && y <= 4) {
+                    continue;
+                }
+                if (x == 18 && y == 5) {
+                    continue;
+                }
+                if (x == 14 && y == 5) {
+                    continue;
+                }
+                change |= this->changeTileAt(x, y, 0);
+            }
+        }
+        break;
     case DUN_BONECHAMB_AFT: // Bonecha2.DUN
+        // reduce pointless bone-chamber complexity
+        change |= this->changeTileAt(16, 9, 57);
+        change |= this->changeTileAt(16, 10, 62);
+        change |= this->changeTileAt(16, 11, 62);
+        change |= this->changeTileAt(16, 12, 62);
+        change |= this->changeTileAt(13, 12, 53);
+        change |= this->changeTileAt(14, 12, 62);
+        change |= this->changeTileAt(15, 12, 62);
+        // external tiles
+        change |= this->changeTileAt(2, 15, 11);
+        change |= this->changeTileAt(3, 15, 11);
+        change |= this->changeTileAt(4, 15, 11);
+        change |= this->changeTileAt(5, 15, 11);
+        change |= this->changeTileAt(6, 15, 11);
+        change |= this->changeTileAt(7, 15, 11);
+        change |= this->changeTileAt(8, 15, 11);
+
+        change |= this->changeTileAt(10, 17, 11);
+        change |= this->changeTileAt(11, 17, 11);
+        change |= this->changeTileAt(12, 17, 11);
+        change |= this->changeTileAt(13, 17, 15);
+        change |= this->changeTileAt(14, 17, 11);
+        change |= this->changeTileAt(15, 17, 11);
+        change |= this->changeTileAt(16, 17, 11);
+        change |= this->changeTileAt(17, 17, 15);
+        change |= this->changeTileAt(18, 17, 11);
+        change |= this->changeTileAt(19, 17, 11);
+        change |= this->changeTileAt(20, 17, 11);
+        change |= this->changeTileAt(21, 17, 16);
+        change |= this->changeTileAt(21, 16, 10);
+        change |= this->changeTileAt(21, 15, 10);
+        change |= this->changeTileAt(21, 14, 10);
+
+        change |= this->changeTileAt(20, 0, 12);
+        change |= this->changeTileAt(21, 0, 12);
+        change |= this->changeTileAt(21, 1, 14);
+        change |= this->changeTileAt(21, 2, 10);
+        change |= this->changeTileAt(21, 3, 10);
+        change |= this->changeTileAt(21, 4, 10);
+        change |= this->changeTileAt(21, 5, 14);
+        change |= this->changeTileAt(21, 6, 10);
+        change |= this->changeTileAt(21, 7, 10);
+        change |= this->changeTileAt(21, 8, 10);
+
+        change |= this->changeTileAt(31, 8, 10);
+        change |= this->changeTileAt(31, 9, 10);
+        change |= this->changeTileAt(31, 10, 10);
+        change |= this->changeTileAt(31, 11, 10);
+        change |= this->changeTileAt(31, 12, 10);
+        change |= this->changeTileAt(31, 13, 10);
+        change |= this->changeTileAt(31, 14, 10);
+        change |= this->changeTileAt(31, 15, 16);
+        change |= this->changeTileAt(24, 15, 11);
+        change |= this->changeTileAt(25, 15, 11);
+        change |= this->changeTileAt(26, 15, 11);
+        change |= this->changeTileAt(27, 15, 11);
+        change |= this->changeTileAt(28, 15, 11);
+        change |= this->changeTileAt(29, 15, 11);
+        change |= this->changeTileAt(30, 15, 11);
+
+        change |= this->changeTileAt(21, 13, 13);
+        change |= this->changeTileAt(22, 13, 11);
+
+        change |= this->changeTileAt(8, 15, 11);
+        change |= this->changeTileAt(8, 16, 12);
+        change |= this->changeTileAt(8, 17, 12);
+        change |= this->changeTileAt(9, 17, 15);
+
         // add tiles with subtiles for arches
-        change |= this->changeTileAt(13, 6, 161);
-        change |= this->changeTileAt(13, 8, 161);
-        change |= this->changeTileAt(17, 6, 161);
-        change |= this->changeTileAt(17, 8, 163);
+        change |= this->changeTileAt(13, 6, 44);
+        change |= this->changeTileAt(13, 8, 44);
+        change |= this->changeTileAt(17, 6, 44);
+        change |= this->changeTileAt(17, 8, 96);
 
-        change |= this->changeTileAt(13, 14, 161);
-        change |= this->changeTileAt(13, 16, 161);
-        change |= this->changeTileAt(17, 14, 161);
-        change |= this->changeTileAt(17, 16, 161);
+        change |= this->changeTileAt(13, 14, 44);
+        change |= this->changeTileAt(13, 16, 44);
+        change |= this->changeTileAt(17, 14, 44);
+        change |= this->changeTileAt(17, 16, 44);
 
-        change |= this->changeTileAt(18, 9, 162);
-        change |= this->changeTileAt(20, 9, 162);
-        change |= this->changeTileAt(18, 13, 162);
-        change |= this->changeTileAt(20, 13, 162);
+        change |= this->changeTileAt(18, 9, 45);
+        change |= this->changeTileAt(20, 9, 45);
+        change |= this->changeTileAt(18, 13, 45);
+        change |= this->changeTileAt(20, 13, 45);
         // place pieces with closed doors
         change |= this->changeTileAt(17, 11, 150);
         // place shadows
@@ -3405,12 +3495,12 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(16, 7, 51);
         change |= this->changeTileAt(16, 8, 47);
         // - central room (top)
-        change |= this->changeTileAt(17, 8, 49);
-        change |= this->changeTileAt(18, 8, 46);
+        change |= this->changeTileAt(17, 8, 96);
+        change |= this->changeTileAt(18, 8, 49);
         change |= this->changeTileAt(19, 8, 49);
-        change |= this->changeTileAt(20, 8, 46);
+        change |= this->changeTileAt(20, 8, 49);
         // - central room (bottom)
-        change |= this->changeTileAt(18, 12, 46);
+        change |= this->changeTileAt(18, 12, 49);
         change |= this->changeTileAt(19, 12, 49);
         // - left corridor
         change |= this->changeTileAt(12, 14, 47);
@@ -3419,6 +3509,33 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(16, 15, 51);
         break;
     case DUN_BLIND_PRE: // Blind2.DUN
+        // external tiles
+        change |= this->changeTileAt(2, 2, 13);
+        change |= this->changeTileAt(2, 3, 10);
+        change |= this->changeTileAt(3, 2, 11);
+        change |= this->changeTileAt(3, 3, 12);
+
+        change |= this->changeTileAt(6, 6, 13);
+        change |= this->changeTileAt(6, 7, 10);
+        change |= this->changeTileAt(7, 6, 11);
+        change |= this->changeTileAt(7, 7, 12);
+        // useless tiles
+        for (int y = 0; y < 11; y++) {
+            for (int x = 0; x < 11; x++) {
+                // keep the boxes
+                if (x >= 2 && y >= 2 && x < 4 && y < 4) {
+                    continue;
+                }
+                if (x >= 6 && y >= 6 && x < 8 && y < 8) {
+                    continue;
+                }
+                // keep the doors
+                if (x == 0 && y == 1/* || x == 4 && y == 3*/ || x == 10 && y == 8) {
+                    continue;
+                }
+                change |= this->changeTileAt(x, y, 0);
+            }
+        }
         // replace the door with wall
         change |= this->changeTileAt(4, 3, 25);
         // remove items
@@ -3472,16 +3589,30 @@ void D1Dun::patch(int dunFileIndex)
         }
         break;
     case DUN_BLOOD_PRE: // Blood2.DUN
+        // external tiles
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 10; x++) {
+                if (this->tiles[y][x] >= 143 && this->tiles[y][x] <= 149) {
+                    change |= this->changeTileAt(x, y, this->tiles[y][x] - 133);
+                }
+            }
+        }
+        // useless tiles
+        for (int y = 8; y < 16; y++) {
+            for (int x = 0; x < 10; x++) {
+                change |= this->changeTileAt(x, y, 0);
+            }
+        }
         // place pieces with closed doors
-        change |= this->changeTileAt(4, 10, 151);
-        change |= this->changeTileAt(4, 15, 151);
-        change |= this->changeTileAt(5, 15, 151);
+        // change |= this->changeTileAt(4, 10, 151);
+        // change |= this->changeTileAt(4, 15, 151);
+        // change |= this->changeTileAt(5, 15, 151);
         // shadow of the external-left column -- do not place to prevent overwriting large decorations
         // this->tiles[7][-1] = 48;
         // this->tiles[8][-1] = 50;
         // shadow of the bottom-left column(s) -- one is missing
-        change |= this->changeTileAt(1, 13, 48);
-        change |= this->changeTileAt(1, 14, 50);
+        // change |= this->changeTileAt(1, 13, 48);
+        // change |= this->changeTileAt(1, 14, 50);
         // shadow of the internal column next to the pedistal
         change |= this->changeTileAt(5, 7, 142);
         change |= this->changeTileAt(5, 8, 50);
@@ -3509,6 +3640,10 @@ void D1Dun::patch(int dunFileIndex)
         }
         break;
     case DUN_BLOOD_AFT: // Blood1.DUN
+        // place pieces with closed doors
+        change |= this->changeTileAt(4, 10, 151);
+        change |= this->changeTileAt(4, 15, 151);
+        change |= this->changeTileAt(5, 15, 151);
         // replace torches
         change |= this->changeObjectAt(11, 8, 110);
         change |= this->changeObjectAt(11, 10, 110);
