@@ -3427,13 +3427,6 @@ void D1Dun::patch(int dunFileIndex)
         }
 		break;
     case DUN_BONECHAMB_AFT: // Bonecha2.DUN
-        // external tiles
-        change |= this->changeTileAt(20, 0, 12);
-        change |= this->changeTileAt(21, 0, 12);
-        change |= this->changeTileAt(21, 1, 14);
-        change |= this->changeTileAt(21, 2, 10);
-        change |= this->changeTileAt(21, 3, 10);
-        change |= this->changeTileAt(21, 4, 10);
         // reduce pointless bone-chamber complexity
         change |= this->changeTileAt(16, 9, 57);
         change |= this->changeTileAt(16, 10, 62);
@@ -3442,19 +3435,65 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(13, 12, 53);
         change |= this->changeTileAt(14, 12, 62);
         change |= this->changeTileAt(15, 12, 62);
-        // use standard tiles
-        change |= this->changeTileAt(0, 14, 12);
-        change |= this->changeTileAt(0, 15, 12);
-        change |= this->changeTileAt(1, 15, 15);
+        // external tiles
+        change |= this->changeTileAt(2, 15, 11);
+        change |= this->changeTileAt(3, 15, 11);
+        change |= this->changeTileAt(4, 15, 11);
+        change |= this->changeTileAt(5, 15, 11);
+        change |= this->changeTileAt(6, 15, 11);
+        change |= this->changeTileAt(7, 15, 11);
+        change |= this->changeTileAt(8, 15, 11);
+
+        change |= this->changeTileAt(10, 17, 11);
+        change |= this->changeTileAt(11, 17, 11);
+        change |= this->changeTileAt(12, 17, 11);
+        change |= this->changeTileAt(13, 17, 15);
+        change |= this->changeTileAt(14, 17, 11);
+        change |= this->changeTileAt(15, 17, 11);
+        change |= this->changeTileAt(16, 17, 11);
+        change |= this->changeTileAt(17, 17, 15);
+        change |= this->changeTileAt(18, 17, 11);
+        change |= this->changeTileAt(19, 17, 11);
+        change |= this->changeTileAt(20, 17, 11);
+        change |= this->changeTileAt(21, 17, 16);
+        change |= this->changeTileAt(21, 16, 10);
+        change |= this->changeTileAt(21, 15, 10);
+        change |= this->changeTileAt(21, 14, 10);
+
+        change |= this->changeTileAt(20, 0, 12);
+        change |= this->changeTileAt(21, 0, 12);
+        change |= this->changeTileAt(21, 1, 14);
+        change |= this->changeTileAt(21, 2, 10);
+        change |= this->changeTileAt(21, 3, 10);
+        change |= this->changeTileAt(21, 4, 10);
+        change |= this->changeTileAt(21, 5, 14);
+        change |= this->changeTileAt(21, 6, 10);
+        change |= this->changeTileAt(21, 7, 10);
+        change |= this->changeTileAt(21, 8, 10);
+
+        change |= this->changeTileAt(31, 8, 10);
+        change |= this->changeTileAt(31, 9, 10);
+        change |= this->changeTileAt(31, 10, 10);
+        change |= this->changeTileAt(31, 11, 10);
+        change |= this->changeTileAt(31, 12, 10);
+        change |= this->changeTileAt(31, 13, 10);
+        change |= this->changeTileAt(31, 14, 10);
+        change |= this->changeTileAt(31, 15, 16);
+        change |= this->changeTileAt(24, 15, 11);
+        change |= this->changeTileAt(25, 15, 11);
+        change |= this->changeTileAt(26, 15, 11);
+        change |= this->changeTileAt(27, 15, 11);
+        change |= this->changeTileAt(28, 15, 11);
+        change |= this->changeTileAt(29, 15, 11);
+        change |= this->changeTileAt(30, 15, 11);
+
+        change |= this->changeTileAt(21, 13, 13);
+        change |= this->changeTileAt(22, 13, 11);
+
         change |= this->changeTileAt(8, 15, 11);
         change |= this->changeTileAt(8, 16, 12);
         change |= this->changeTileAt(8, 17, 12);
         change |= this->changeTileAt(9, 17, 15);
-
-        change |= this->changeTileAt(20, 4, 12);
-        change |= this->changeTileAt(21, 4, 12);
-        change |= this->changeTileAt(22, 13, 11);
-        change |= this->changeTileAt(21, 8, 10);
 
         // add tiles with subtiles for arches
         change |= this->changeTileAt(13, 6, 44);

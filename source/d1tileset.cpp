@@ -4056,6 +4056,7 @@ void D1Tileset::patchCatacombsSpec(bool silent)
                 change |= frame->setPixel(29, 97, D1GfxPixel::colorPixel(76));
                 change |= frame->setPixel(30, 95, D1GfxPixel::colorPixel(60));
                 change |= frame->setPixel(30, 96, D1GfxPixel::colorPixel(61));
+                change |= frame->setPixel(31, 93, D1GfxPixel::colorPixel(57));
             }
 
             if (idx == 1) {

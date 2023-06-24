@@ -2423,13 +2423,6 @@ static void DRLG_L2FixMap()
 
 	if (pSetPieces[0]._sptype == SPT_LVL_BCHAMB) {
 		// patch the map - Bonecha2.DUN
-		// external tiles
-		lm[2 + 20 +  0 * 10] = 12;
-		lm[2 + 21 +  0 * 10] = 12;
-		lm[2 + 21 +  1 * 10] = 14;
-		lm[2 + 21 +  2 * 10] = 10;
-		lm[2 + 21 +  3 * 10] = 10;
-		lm[2 + 21 +  4 * 10] = 10;
 		// reduce pointless bone-chamber complexity
 		lm[2 + 16 + 9 * 32] = SwapLE16(57);
 		lm[2 + 16 + 10 * 32] = SwapLE16(62);
@@ -2438,19 +2431,81 @@ static void DRLG_L2FixMap()
 		lm[2 + 13 + 12 * 32] = SwapLE16(53);
 		lm[2 + 14 + 12 * 32] = SwapLE16(62);
 		lm[2 + 15 + 12 * 32] = SwapLE16(62);
-		// use standard tiles
-		lm[2 + 0 + 14 * 32] = SwapLE16(12);
-		lm[2 + 0 + 15 * 32] = SwapLE16(12);
-		lm[2 + 1 + 15 * 32] = SwapLE16(15);
+		// external tiles
+		lm[2 + 2 + 15 * 32] = SwapLE16(11);
+		lm[2 + 3 + 15 * 32] = SwapLE16(11);
+		lm[2 + 4 + 15 * 32] = SwapLE16(11);
+		lm[2 + 5 + 15 * 32] = SwapLE16(11);
+		lm[2 + 6 + 15 * 32] = SwapLE16(11);
+		lm[2 + 7 + 15 * 32] = SwapLE16(11);
+		lm[2 + 8 + 15 * 32] = SwapLE16(11);
+
+		lm[2 + 10 + 17 * 32] = SwapLE16(11);
+		lm[2 + 11 + 17 * 32] = SwapLE16(11);
+		lm[2 + 12 + 17 * 32] = SwapLE16(11);
+		lm[2 + 13 + 17 * 32] = SwapLE16(15);
+		lm[2 + 14 + 17 * 32] = SwapLE16(11);
+		lm[2 + 15 + 17 * 32] = SwapLE16(11);
+		lm[2 + 16 + 17 * 32] = SwapLE16(11);
+		lm[2 + 17 + 17 * 32] = SwapLE16(15);
+		lm[2 + 18 + 17 * 32] = SwapLE16(11);
+		lm[2 + 19 + 17 * 32] = SwapLE16(11);
+		lm[2 + 20 + 17 * 32] = SwapLE16(11);
+		lm[2 + 21 + 17 * 32] = SwapLE16(16);
+		lm[2 + 21 + 16 * 32] = SwapLE16(10);
+		lm[2 + 21 + 15 * 32] = SwapLE16(10);
+		lm[2 + 21 + 14 * 32] = SwapLE16(10);
+
+		lm[2 + 20 + 0 * 32] = SwapLE16(12);
+		lm[2 + 21 + 0 * 32] = SwapLE16(12);
+		lm[2 + 21 + 1 * 32] = SwapLE16(14);
+		lm[2 + 21 + 2 * 32] = SwapLE16(10);
+		lm[2 + 21 + 3 * 32] = SwapLE16(10);
+		lm[2 + 21 + 4 * 32] = SwapLE16(10);
+		lm[2 + 21 + 5 * 32] = SwapLE16(14);
+		lm[2 + 21 + 6 * 32] = SwapLE16(10);
+		lm[2 + 21 + 7 * 32] = SwapLE16(10);
+		lm[2 + 21 + 8 * 32] = SwapLE16(10);
+
+		lm[2 + 31 + 8 * 32] = SwapLE16(10);
+		lm[2 + 31 + 9 * 32] = SwapLE16(10);
+		lm[2 + 31 + 10 * 32] = SwapLE16(10);
+		lm[2 + 31 + 11 * 32] = SwapLE16(10);
+		lm[2 + 31 + 12 * 32] = SwapLE16(10);
+		lm[2 + 31 + 13 * 32] = SwapLE16(10);
+		lm[2 + 31 + 14 * 32] = SwapLE16(10);
+		lm[2 + 31 + 15 * 32] = SwapLE16(16);
+		lm[2 + 24 + 15 * 32] = SwapLE16(11);
+		lm[2 + 25 + 15 * 32] = SwapLE16(11);
+		lm[2 + 26 + 15 * 32] = SwapLE16(11);
+		lm[2 + 27 + 15 * 32] = SwapLE16(11);
+		lm[2 + 28 + 15 * 32] = SwapLE16(11);
+		lm[2 + 29 + 15 * 32] = SwapLE16(11);
+		lm[2 + 30 + 15 * 32] = SwapLE16(11);
+
+		lm[2 + 21 + 13 * 32] = SwapLE16(13);
+		lm[2 + 22 + 13 * 32] = SwapLE16(11);
+
 		lm[2 + 8 + 15 * 32] = SwapLE16(11);
 		lm[2 + 8 + 16 * 32] = SwapLE16(12);
 		lm[2 + 8 + 17 * 32] = SwapLE16(12);
 		lm[2 + 9 + 17 * 32] = SwapLE16(15);
 
-		lm[2 + 20 + 4 * 32] = SwapLE16(12);
-		lm[2 + 21 + 4 * 32] = SwapLE16(12);
-		lm[2 + 22 + 13 * 32] = SwapLE16(11);
-		lm[2 + 21 + 8 * 32] = SwapLE16(10);
+		// add tiles with subtiles for arches
+		lm[2 + 13 + 6 * 32] = SwapLE16(44);
+		lm[2 + 13 + 8 * 32] = SwapLE16(44);
+		lm[2 + 17 + 6 * 32] = SwapLE16(44);
+		lm[2 + 17 + 8 * 32] = SwapLE16(96);
+
+		lm[2 + 13 + 14 * 32] = SwapLE16(44);
+		lm[2 + 13 + 16 * 32] = SwapLE16(44);
+		lm[2 + 17 + 14 * 32] = SwapLE16(44);
+		lm[2 + 17 + 16 * 32] = SwapLE16(44);
+
+		lm[2 + 18 + 9 * 32] = SwapLE16(45);
+		lm[2 + 20 + 9 * 32] = SwapLE16(45);
+		lm[2 + 18 + 13 * 32] = SwapLE16(45);
+		lm[2 + 20 + 13 * 32] = SwapLE16(45);
 
 		// add tiles with subtiles for arches
 		lm[2 + 13 + 6 * 32] = SwapLE16(44);
