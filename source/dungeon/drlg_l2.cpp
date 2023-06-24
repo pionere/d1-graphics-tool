@@ -64,7 +64,7 @@ const BYTE themeTiles[NUM_DRT_TYPES] = { DEFAULT_MEGATILE_L2, 1, 2, 4, 5, 8, 7, 
 /*
  * Maps tile IDs to their corresponding undecorated tile type.
  */
-const BYTE L2BTYPES[165] = {
+const BYTE L2BTYPES[159] = {
 	// clang-format off
 	0, 1, 2, 3, 0, 0, 0, 0, 4, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 1, // 10..
@@ -677,12 +677,6 @@ void DRLG_L2Shadows()
 			case 78:
 				pillar = true;
 				break;
-			/*case 77:
-				// stairs
-				if (dungeon[i - 1][j] == 3) {
-					dungeon[i - 1][j] = 72;
-				}
-				break;*/
 			case 41:
 				pillar = true;
 				break;

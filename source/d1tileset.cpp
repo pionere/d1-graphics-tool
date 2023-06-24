@@ -5216,20 +5216,20 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
         // move the frames to the back subtile
         // - left side
         MoveMcr(252, 2, 265, 3);
-        HideMcr(556, 3);
+        HideMcr(556, 3); // optional
 
         // - right side
         MoveMcr(252, 1, 265, 5);
-        HideMcr(556, 5);
+        HideMcr(556, 5); // optional
 
         MoveMcr(252, 3, 267, 2);
-        Blk2Mcr(559, 2);
+        // Blk2Mcr(559, 2);
 
         MoveMcr(252, 5, 267, 4);
-        Blk2Mcr(559, 4);
+        // Blk2Mcr(559, 4);
 
         MoveMcr(252, 7, 267, 6);
-        HideMcr(559, 6);
+        HideMcr(559, 6); // optional
     }
     // adjust the frame types
     if (this->patchCatacombsFloor(silent)) {

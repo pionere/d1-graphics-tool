@@ -292,34 +292,77 @@ void InitLvlDungeon()
 		break;
 	case DTYPE_CATACOMBS:
 		// patch dMegaTiles, dMiniTiles and dSolidTable - L2.TIL, L2.MIN, L2.SOL
-		// reuse subtiles
-		pTiles[41][1] = 135;
-		// add separate tiles and subtiles for the arches
-		// - floor tile(3) with vertical arch
+		// create the new shadows
+		// - horizontal door for a pillar
+		pTiles[17][0] = 540; // TODO: use 17 and update DRLG_L2DoorSubs?
+		pTiles[17][1] = 18;
+		pTiles[17][2] = 155;
+		pTiles[17][3] = 162;
+		// - horizontal hallway for a pillar
+		pTiles[18][0] = 553;
+		pTiles[18][1] = 99;
+		pTiles[18][2] = 155;
+		pTiles[18][3] = 162;
+		// - pillar tile for a pillar
+		pTiles[34][0] = 21;
+		pTiles[34][1] = 26;
+		pTiles[34][2] = 148;
+		pTiles[34][3] = 517;
+		// - vertical wall end for a horizontal arch
+		pTiles[35][0] = 25;
+		pTiles[35][1] = 26;
+		pTiles[35][2] = 512;
+		pTiles[35][3] = 513;
+		// - horizontal wall end for a pillar
+		pTiles[36][0] = 33;
+		pTiles[36][1] = 34;
+		pTiles[36][2] = 148;
+		pTiles[36][3] = 162;
+		// - horizontal wall end for a horizontal arch
+		pTiles[37][0] = 33; // 268
+		pTiles[37][1] = 515;
+		pTiles[37][2] = 148;
+		pTiles[37][3] = 517;
+		// - floor tile with vertical arch
 		pTiles[44][0] = 150;
 		pTiles[44][1] = 10;
 		pTiles[44][2] = 153;
 		pTiles[44][3] = 12;
+		// - floor tile with shadow of a vertical arch + horizontal arch
+		pTiles[46][0] = 9;   // 150
+		pTiles[46][1] = 154;
+		pTiles[46][2] = 161; // '151'
+		pTiles[46][3] = 162; // 152
+		// - floor tile with shadow of a pillar + vertical arch
+		pTiles[47][0] = 9;   // 153
+		// pTiles[47][1] = 154;
+		// pTiles[47][2] = 155;
+		pTiles[47][3] = 162; // 156
+		// - floor tile with shadow of a pillar
+		// pTiles[48][0] = 9;
+		// pTiles[48][1] = 10;
+		pTiles[48][2] = 155; // 157
+		pTiles[48][3] = 162; // 158
+		// - floor tile with shadow of a horizontal arch
+		pTiles[49][0] = 9;   // 159
+		pTiles[49][1] = 10;  // 160
+		// pTiles[49][2] = 161;
+		// pTiles[49][3] = 162;
+		// - floor tile with shadow(45) with vertical arch
+		pTiles[95][0] = 158;
+		pTiles[95][1] = 165;
+		pTiles[95][2] = 155;
+		pTiles[95][3] = 162;
 		// - floor tile with shadow(49) with vertical arch
 		pTiles[96][0] = 150;
-		pTiles[96][1] = 160;
+		pTiles[96][1] = 10;
 		pTiles[96][2] = 156;
 		pTiles[96][3] = 162;
 		// - floor tile with shadow(51) with horizontal arch
 		pTiles[100][0] = 158;
 		pTiles[100][1] = 165;
-		pTiles[100][2] = 168;
+		pTiles[100][2] = 155;
 		pTiles[100][3] = 169;
-		// pSubtiles[150][0] = pSubtiles[9][0];
-		// pSubtiles[150][1] = pSubtiles[9][1];
-		// pSubtiles[153][0] = pSubtiles[11][0];
-		// pSubtiles[153][1] = pSubtiles[11][1];
-		// pSubtiles[156][0] = pSubtiles[161][0];
-		// pSubtiles[156][1] = pSubtiles[161][1];
-		// pSubtiles[158][0] = pSubtiles[166][0];
-		// pSubtiles[158][1] = pSubtiles[166][1];
-		// pSubtiles[165][0] = pSubtiles[167][0];
-		// pSubtiles[165][1] = pSubtiles[167][1];
 		// fix the upstairs
 		// - make the back of the stairs non-walkable
 		pTiles[72][1] = 56;

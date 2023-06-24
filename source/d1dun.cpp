@@ -3425,7 +3425,7 @@ void D1Dun::patch(int dunFileIndex)
                 change |= this->changeTileAt(x, y, 0);
             }
         }
-		break;
+        break;
     case DUN_BONECHAMB_AFT: // Bonecha2.DUN
         // reduce pointless bone-chamber complexity
         change |= this->changeTileAt(16, 9, 57);
