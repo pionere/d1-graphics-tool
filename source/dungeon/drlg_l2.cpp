@@ -2423,6 +2423,13 @@ static void DRLG_L2FixMap()
 
 	if (pSetPieces[0]._sptype == SPT_LVL_BCHAMB) {
 		// patch the map - Bonecha2.DUN
+		// external tiles
+		lm[2 + 20 +  0 * 10] = 12;
+		lm[2 + 21 +  0 * 10] = 12;
+		lm[2 + 21 +  1 * 10] = 14;
+		lm[2 + 21 +  2 * 10] = 10;
+		lm[2 + 21 +  3 * 10] = 10;
+		lm[2 + 21 +  4 * 10] = 10;
 		// reduce pointless bone-chamber complexity
 		lm[2 + 16 + 9 * 32] = SwapLE16(57);
 		lm[2 + 16 + 10 * 32] = SwapLE16(62);
@@ -2540,7 +2547,7 @@ static void DRLG_L2FixPreMap(int idx)
 		// patch the map - Blood2.DUN
 		// external tiles
 		for (int y = 0; y < 8; y++) {
-			for (int x = 0; x <= 10; x++) {
+			for (int x = 0; x < 10; x++) {
 				uint16_t wv = SwapLE16(lm[2 + x + y * 10]);
 				if (wv >= 143 && wv <= 149) {
 					lm[2 + x + y * 10] = SwapLE16(wv - 133);
@@ -2549,7 +2556,7 @@ static void DRLG_L2FixPreMap(int idx)
 		}
 		// useless tiles
 		for (int y = 9; y < 16; y++) {
-			for (int x = 0; x <= 10; x++) {
+			for (int x = 0; x < 10; x++) {
 				lm[2 + x + y * 10] = 0;
 			}
 		}
@@ -2603,24 +2610,20 @@ static void DRLG_L2FixPreMap(int idx)
 	} else if (pSetPieces[idx]._sptype == SPT_LVL_BCHAMB) {
 		// patch the map - Bonecha1.DUN
 		// external tiles
-		lm[2 + 20 +  0 * 10] = 12;
-		lm[2 + 21 +  0 * 10] = 12;
-		lm[2 + 21 +  1 * 10] = 14;
-		lm[2 + 21 +  2 * 10] = 10;
-		lm[2 + 21 +  3 * 10] = 10;
-		lm[2 + 21 +  4 * 10] = 10;
+		lm[2 + 20 +  4 * 10] = 12;
+		lm[2 + 21 +  4 * 10] = 12;
 		// useless tiles
 		for (int y = 0; y < 18; y++) {
 			for (int x = 0; x < 32; x++) {
-				if (x >= 13 && x <= 21 && y >= 1 && y < 4) {
+				if (x >= 13 && x <= 21 && y >= 1 && y <= 4) {
 					continue;
-                }
+				}
 				if (x == 18 && y == 5) {
 					continue;
-                }
+				}
 				if (x == 14 && y == 5) {
 					continue;
-                }
+				}
 				lm[2 + x + y * 10] = 0;
 			}
 		}

@@ -3408,17 +3408,12 @@ void D1Dun::patch(int dunFileIndex)
         break;
     case DUN_BONECHAMB_PRE: // Bonecha1.DUN
         // external tiles
-        change |= this->changeTileAt(16, 9, 57);
-        change |= this->changeTileAt(20, 0, 12);
-        change |= this->changeTileAt(21, 0, 12);
-        change |= this->changeTileAt(21, 1, 14);
-        change |= this->changeTileAt(21, 2, 10);
-        change |= this->changeTileAt(21, 3, 10);
-        change |= this->changeTileAt(21, 4, 10);
+        change |= this->changeTileAt(20, 4, 12);
+        change |= this->changeTileAt(21, 4, 12);
         // useless tiles
         for (int y = 0; y < 18; y++) {
             for (int x = 0; x < 32; x++) {
-                if (x >= 13 && x <= 21 && y >= 1 && y < 4) {
+                if (x >= 13 && x <= 21 && y >= 1 && y <= 4) {
                     continue;
                 }
                 if (x == 18 && y == 5) {
@@ -3432,6 +3427,13 @@ void D1Dun::patch(int dunFileIndex)
         }
 		break;
     case DUN_BONECHAMB_AFT: // Bonecha2.DUN
+        // external tiles
+        change |= this->changeTileAt(20, 0, 12);
+        change |= this->changeTileAt(21, 0, 12);
+        change |= this->changeTileAt(21, 1, 14);
+        change |= this->changeTileAt(21, 2, 10);
+        change |= this->changeTileAt(21, 3, 10);
+        change |= this->changeTileAt(21, 4, 10);
         // reduce pointless bone-chamber complexity
         change |= this->changeTileAt(16, 9, 57);
         change |= this->changeTileAt(16, 10, 62);
@@ -3575,15 +3577,15 @@ void D1Dun::patch(int dunFileIndex)
     case DUN_BLOOD_PRE: // Blood2.DUN
         // external tiles
         for (int y = 0; y < 8; y++) {
-            for (int x = 0; x <= 10; x++) {
+            for (int x = 0; x < 10; x++) {
                 if (this->tiles[y][x] >= 143 && this->tiles[y][x] <= 149) {
                     change |= this->changeTileAt(x, y, this->tiles[y][x] - 133);
                 }
             }
         }
         // useless tiles
-        for (int y = 9; y < 16; y++) {
-            for (int x = 0; x <= 10; x++) {
+        for (int y = 8; y < 16; y++) {
+            for (int x = 0; x < 10; x++) {
                 change |= this->changeTileAt(x, y, 0);
             }
         }
