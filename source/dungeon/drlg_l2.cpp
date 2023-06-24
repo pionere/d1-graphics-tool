@@ -2506,6 +2506,23 @@ static void DRLG_L2FixPreMap(int idx)
 		lm[2 + 6 + 7 * 11] = SwapLE16(10);
 		lm[2 + 7 + 6 * 11] = SwapLE16(11);
 		lm[2 + 7 + 7 * 11] = SwapLE16(12);
+		// useless tiles
+		for (int y = 0; y < 11; y++) {
+			for (int x = 0; x < 11; x++) {
+				// keep the boxes
+				if (x >= 2 && y >= 2 && x < 4 && y < 4) {
+					continue;
+				}
+				if (x >= 6 && y >= 6 && x < 8 && y < 8) {
+					continue;
+				}
+				// keep the doors
+				if (x == 0 && y == 1/* || x == 4 && y == 3*/ || x == 10 && y == 8) {
+					continue;
+				}
+				lm[2 + x + y * 11] = 0;
+			}
+		}
 		// replace the door with wall
 		lm[2 + 4 + 3 * 11] = SwapLE16(25);
 		// protect inner tiles from spawning additional monsters/objects

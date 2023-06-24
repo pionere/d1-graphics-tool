@@ -4032,6 +4032,7 @@ void D1Tileset::patchCatacombsSpec(bool silent)
     } CelFrame;
     const CelFrame frames[] = {
         { 0, 64, 160 },
+        { 1, 64, 160 },
         { 4, 64, 160 }
     };
 
@@ -4051,13 +4052,17 @@ void D1Tileset::patchCatacombsSpec(bool silent)
                 change |= frame->setPixel(26, 59, D1GfxPixel::colorPixel(55));
                 change |= frame->setPixel(27, 60, D1GfxPixel::colorPixel(53));
                 change |= frame->setPixel(28, 61, D1GfxPixel::colorPixel(54));
+
+                change |= frame->setPixel(29, 97, D1GfxPixel::colorPixel(76));
+                change |= frame->setPixel(30, 95, D1GfxPixel::colorPixel(60));
+                change |= frame->setPixel(30, 96, D1GfxPixel::colorPixel(61));
             }
 
             if (idx == 1) {
-                /*change |= frame->setPixel( 9, 148, D1GfxPixel::colorPixel(39));
-                change |= frame->setPixel(10, 148, D1GfxPixel::colorPixel(66));
-                change |= frame->setPixel(10, 149, D1GfxPixel::colorPixel(50));
-                change |= frame->setPixel(11, 149, D1GfxPixel::colorPixel(36));*/
+                change |= frame->setPixel( 2, 104, D1GfxPixel::colorPixel(76));
+            }
+
+            if (idx == 2) {
                 change |= frame->setPixel( 9, 148, D1GfxPixel::colorPixel(55));
                 change |= frame->setPixel(10, 148, D1GfxPixel::colorPixel(52));
                 change |= frame->setPixel(11, 149, D1GfxPixel::colorPixel(69));
@@ -4122,6 +4127,7 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
 /* 11 */{   5 - 1, 1, D1CEL_FRAME_TYPE::Empty },
 /* 12 */{ 514 - 1, 1, D1CEL_FRAME_TYPE::RightTrapezoid },
 /* 13 */{ 515 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 14 */{ 155 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
     };
     constexpr unsigned blockSize = BLOCK_SIZE_L2;
     for (int i = 0; i < lengthof(micros); i++) {
@@ -4247,6 +4253,21 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
                         quint8 color = pixel.getPaletteIndex();
                         pixel = D1GfxPixel::colorPixel(shadowColorCatacombs(color));
                         change |= frame->setPixel(x, y, pixel);
+                    }
+                }
+            }
+        }
+        // draw shadow 155[1]
+        if (i == 14) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    if (y > 22 - x / 2) { // extend shadow to make the micro more usable
+                        D1GfxPixel pixel = frame->getPixel(x, y);
+                        if (!pixel.isTransparent()) {
+                            quint8 color = pixel.getPaletteIndex();
+                            pixel = D1GfxPixel::colorPixel(shadowColorCatacombs(color));
+                            change |= frame->setPixel(x, y, pixel);
+                        }
                     }
                 }
             }
