@@ -176,6 +176,7 @@ signals:
     void dunResourcesModified();
 
 public slots:
+    void on_tilModified();
     void on_actionToggle_View_triggered();
 
 private slots:

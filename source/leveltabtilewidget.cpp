@@ -298,7 +298,7 @@ void LevelTabTileWidget::setSubtileIndex(int tileIndex, int index, int subtileIn
     // Build tile editing command and connect it to the views widget
     // to update the label and refresh the view when undo/redo is performed
     EditTileCommand *command = new EditTileCommand(this->til, tileIndex, index, subtileIndex);
-    QObject::connect(command, &EditTileCommand::modified, this->levelCelView, &LevelCelView::displayFrame);
+    QObject::connect(command, &EditTileCommand::modified, this->levelCelView, &LevelCelView::on_tilModified);
 
     this->undoStack->push(command);
 }

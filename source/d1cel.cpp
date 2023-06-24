@@ -161,6 +161,7 @@ bool D1Cel::load(D1Gfx &gfx, const QString &filePath, const OpenAsParam &params)
     return true;
 }
 
+// assumes a zero filled pBuf-buffer
 static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize)
 {
     bool clipped = frame->isClipped();
@@ -168,8 +169,6 @@ static quint8 *writeFrameData(D1GfxFrame *frame, quint8 *pBuf, int subHeaderSize
     quint8 *pHeader = pBuf;
     if (clipped) {
         *(quint16 *)&pBuf[0] = SwapLE16(subHeaderSize); // SUB_HEADER_SIZE
-        *(quint32 *)&pBuf[2] = 0;
-        *(quint32 *)&pBuf[6] = 0;
         pBuf += subHeaderSize;
     }
     // convert to cel

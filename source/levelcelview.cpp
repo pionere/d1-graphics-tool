@@ -3686,6 +3686,14 @@ void LevelCelView::dropEvent(QDropEvent *event)
     dMainWindow().openImageFiles(IMAGE_FILE_MODE::AUTO, filePaths, false);
 }
 
+void LevelCelView::on_tilModified()
+{
+    if (this->dun != nullptr) {
+        this->dun->refreshSubtiles();
+    }
+    this->displayFrame();
+}
+
 void LevelCelView::on_actionToggle_View_triggered()
 {
     // stop playback
