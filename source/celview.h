@@ -69,6 +69,7 @@ public:
 
     void initialize(D1Pal *pal, D1Gfx *gfx, bool bottomPanelHidden);
     void setPal(D1Pal *pal);
+    void setGfx(D1Gfx *gfx);
 
     CelScene *getCelScene() const;
     int getCurrentFrameIndex() const;

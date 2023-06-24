@@ -423,9 +423,9 @@ void MainWindow::gfxChanged(D1Gfx *gfx)
     if (this->gfxset != nullptr) {
         this->gfxset->setGfx(gfx);
     }
-    // if (this->celView != nullptr) {
-    //    this->celView->setGfx(gfx);
-    // }
+    if (this->celView != nullptr) {
+        this->celView->setGfx(gfx);
+    }
     // if (this->levelCelView != nullptr) {
     //    this->levelCelView->setGfx(gfx);
     // }
@@ -675,6 +675,74 @@ void MainWindow::on_actionOpen_triggered()
         filePaths.append(openFilePath);
         this->openFiles(filePaths);
     }
+}
+
+void MainWindow::on_actionLoad_triggered()
+{
+    QString title;
+    QString filter;
+    if (this->levelCelView != nullptr) {
+        title = tr("Load Dungeon");
+        filter = tr("DUN Files (*.dun *.DUN *.rdun *.RDUN)");
+    } else {
+        // assert(this->celView != nullptr);
+        title = tr("Load Graphics");
+        filter = tr("CEL/CL2 Files (*.cel *.CEL *.cl2 *.CL2)");
+    }
+
+    QString gfxFilePath = this->fileDialog(FILE_DIALOG_MODE::OPEN, title, filter);
+    if (gfxFilePath.isEmpty()) {
+        return;
+    }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_NONE); // PAF_UPDATE_WINDOW
+
+    QString fileLower = gfxFilePath.toLower();
+    OpenAsParam params = OpenAsParam();
+    if (fileLower.endsWith("dun")) { // .dun or .rdun
+        params.dunFilePath = gfxFilePath;
+    } else {
+        params.celFilePath = gfxFilePath;
+    }
+
+    if (!params.dunFilePath.isEmpty()) {
+        D1Dun *dun = new D1Dun();
+        if (dun->load(params.dunFilePath, params)) {
+            dun->initialize(this->pal, this->tileset);
+            // TODO: this->dunChanged(dun)
+            delete this->dun;
+            this->dun = dun;
+            this->levelCelView->setDungeon(dun);
+            if (this->builderWidget == nullptr) {
+                // TODO: copy-paste from openFile()...
+                this->builderWidget = new BuilderWidget(this, this->undoStack, dun, this->levelCelView, this->tileset);
+                // Refresh builder widget when the resource-options are changed
+                QObject::connect(this->levelCelView, &LevelCelView::dunResourcesModified, this->builderWidget, &BuilderWidget::dunResourcesModified);
+            } else {
+                this->builderWidget->setDungeon(dun);
+            }
+            this->ui->menuDungeon->setEnabled(true);
+            this->updateWindow();
+        } else {
+            delete dun;
+            dProgressFail() << tr("Failed loading DUN file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
+        }
+    } else {
+        D1Gfx *gfx = new D1Gfx();
+        gfx->setPalette(this->trnBase->getResultingPalette());
+
+        if ((fileLower.endsWith(".cel") && D1Cel::load(*gfx, gfxFilePath, params)) || D1Cl2::load(*gfx, gfxFilePath, params)) {
+            delete this->gfx;
+            // this->gfx = gfx;
+            this->gfxChanged(gfx);
+        } else /* if (fileLower.endsWith(".cl2"))*/ {
+            delete gfx;
+            dProgressFail() << tr("Failed loading GFX file: %1.").arg(QDir::toNativeSeparators(gfxFilePath));
+        }
+    }
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -1187,6 +1255,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->ui->menuView->setEnabled(true);
     this->ui->menuColors->setEnabled(true);
     this->ui->actionExport->setEnabled(fileType != 4);
+    this->ui->actionLoad->setEnabled(this->celView != nullptr || this->levelCelView != nullptr);
     this->ui->actionSave->setEnabled(true);
     this->ui->actionSaveAs->setEnabled(true);
     this->ui->actionClose->setEnabled(true);
@@ -1482,6 +1551,7 @@ void MainWindow::on_actionClose_triggered()
     this->ui->menuDungeon->setEnabled(false);
     this->ui->menuColors->setEnabled(false);
     this->ui->actionExport->setEnabled(false);
+    this->ui->actionLoad->setEnabled(false);
     this->ui->actionSave->setEnabled(false);
     this->ui->actionSaveAs->setEnabled(false);
     this->ui->actionClose->setEnabled(false);

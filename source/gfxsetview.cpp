@@ -74,6 +74,11 @@ void GfxsetView::setPal(D1Pal *p)
 
 void GfxsetView::setGfx(D1Gfx *gfx)
 {
+    // stop playback
+    if (this->playTimer != 0) {
+        this->on_playStopButton_clicked();
+    }
+
     this->gfx = gfx;
 
     if (this->currentFrameIndex >= this->gfx->getFrameCount()) {

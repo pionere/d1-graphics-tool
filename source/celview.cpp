@@ -244,6 +244,21 @@ void CelView::setPal(D1Pal *p)
     this->pal = p;
 }
 
+void CelView::setGfx(D1Gfx *g)
+{
+    // stop playback
+    if (this->playTimer != 0) {
+        this->on_playStopButton_clicked();
+    }
+
+    this->gfx = g;
+
+    if (this->currentFrameIndex >= this->gfx->getFrameCount()) {
+        this->currentFrameIndex = 0;
+    }
+    this->updateGroupIndex();
+}
+
 void CelView::setLabelContent(QLabel *label, const QString &filePath, bool modified)
 {
     label->setToolTip(filePath);

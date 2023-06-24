@@ -162,6 +162,30 @@ void LevelCelView::setTileset(D1Tileset *ts)
     }
 }
 
+void LevelCelView::setDungeon(D1Dun *dun)
+{
+    // stop playback
+    if (this->playTimer != 0) {
+        this->on_playStopButton_clicked();
+    }
+
+    if (this->currentDunPosX >= dun->getWidth() || this->currentDunPosY >= dun->getHeight()) {
+        this->currentDunPosX = 0;
+        this->currentDunPosY = 0;
+    }
+    if (this->dun == nullptr) {
+        this->initialize(this->pal, this->tileset, dun, this->ui->tilesetWidget->isHidden());
+        // TODO: sync with on_actionToggle_View_triggered
+        // preserve scroll value
+        this->lastVertScrollValue = this->ui->celGraphicsView->verticalScrollBar()->value();
+        this->lastHorizScrollValue = this->ui->celGraphicsView->horizontalScrollBar()->value();
+        // update zoom
+        this->celScene.setZoom(this->ui->dunZoomEdit->text());
+    } else {
+        this->dun = dun;
+    }
+}
+
 void LevelCelView::updateTilesetIcon()
 {
     // update icon of tileset

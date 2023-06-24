@@ -130,6 +130,13 @@ BuilderWidget::~BuilderWidget()
     delete ui;
 }
 
+void BuilderWidget::setDungeon(D1Dun *d)
+{
+    this->dun = d;
+
+    this->colorModified();
+}
+
 void BuilderWidget::show()
 {
     this->resetPos();
