@@ -1092,6 +1092,12 @@ static void DRLG_LoadL1SP()
 		// let the game generate the shadow
 		lm[2 + 0 + 5 * 7] = 0;
 		lm[2 + 0 + 6 * 7] = 0;
+		// protect the main structure
+		for (int y = 1; y < 7; y++) {
+			for (int x = 1; x < 7; x++) {
+				lm[2 + 7 * 7 + x + y * 7] = SwapLE16(3);
+			}
+		}
 		}
 	} else if (QuestStatus(Q_BUTCHER)) {
 		pSetPieces[0]._sptype = SPT_BUTCHER;
@@ -2956,6 +2962,54 @@ static void DRLG_L1FixMap()
 		for (int i = 1; i < 23; i++) {
 			lm[2 + 20 + i * 21] = SwapLE16(203 - 181);
 		}
+	} else if (pSetPieces[idx]._sptype == SPT_LVL_SKELKING) {
+		// patch the map - SklKng1.DUN
+		// external tiles
+		for (int y = 0; y < 25; y++) {
+			for (int x = 0; x < 37; x++) {
+				uint16_t currTileRef = SwapLE16(lm[2 + x + y * 37]);
+				if (currTileRef >= 181 + 18 && currTileRef <= 181 + 24) {
+					lm[2 + x + y * 37] = SwapLE16(currTileRef - 181);
+				}
+			}
+		}
+		// remove fix decorations
+		lm[2 +  3 + 15 * 37] = SwapLE16(2);
+		lm[2 +  6 +  9 * 37] = SwapLE16(2);
+		lm[2 + 10 +  1 * 37] = SwapLE16(2);
+		lm[2 + 13 +  1 * 37] = SwapLE16(2);
+		lm[2 + 15 +  9 * 37] = SwapLE16(2);
+		lm[2 + 17 + 14 * 37] = SwapLE16(2);
+		lm[2 + 22 + 12 * 37] = SwapLE16(2);
+		lm[2 + 20 +  8 * 37] = SwapLE16(1);
+		lm[2 + 21 +  7 * 37] = SwapLE16(2);
+		lm[2 + 24 +  7 * 37] = SwapLE16(2);
+		lm[2 + 25 + 12 * 37] = SwapLE16(2);
+		lm[2 + 26 + 12 * 37] = SwapLE16(2);
+		lm[2 + 29 + 14 * 37] = SwapLE16(2);
+		lm[2 + 16 + 15 * 37] = SwapLE16(11);
+		lm[2 +  8 +  3 * 37] = SwapLE16(1);
+		lm[2 +  8 +  4 * 37] = SwapLE16(1);
+		lm[2 + 10 +  7 * 37] = SwapLE16(1);
+		lm[2 + 10 +  9 * 37] = SwapLE16(1);
+		lm[2 + 23 +  9 * 37] = SwapLE16(1);
+		lm[2 + 23 + 20 * 37] = SwapLE16(1);
+		lm[2 + 23 + 21 * 37] = SwapLE16(1);
+		lm[2 + 31 + 15 * 37] = SwapLE16(11);
+		lm[2 + 31 + 16 * 37] = SwapLE16(11);
+		lm[2 + 32 + 16 * 37] = 0;
+		lm[2 + 33 + 16 * 37] = 0;
+		// - remove sarcophagi tiles
+		lm[2 +  6 + 11 * 37] = 0;
+		lm[2 +  7 + 11 * 37] = 0;
+		lm[2 + 15 + 11 * 37] = 0;
+		lm[2 + 16 + 11 * 37] = 0;
+		lm[2 +  6 + 20 * 37] = 0;
+		lm[2 +  7 + 20 * 37] = 0;
+		lm[2 + 15 + 20 * 37] = 0;
+		lm[2 + 16 + 20 * 37] = 0;
+		lm[2 + 24 +  8 * 37] = 0;
+		lm[2 + 24 + 22 * 37] = 0;
 	}
 }
 
@@ -3112,6 +3166,20 @@ static void DRLG_L1FixPreMap(int idx)
 		lm[2 + 37 * 25 + 37 * 25 * 2 * 2 + 37 * 25 * 2 * 2 + 48 + 17 * 37 * 2] = SwapLE16(5);
 		// - add the skeleton king
 		lm[2 + 37 * 25 + 37 * 25 * 2 * 2 + 19 + 31 * 37 * 2] = SwapLE16((UMT_SKELKING + 1) | (1 << 15));
+		// remove monsters
+		for (int y = 21; y <= 41; y++) {
+			for (int x = 13; x <= 39; x++) {
+				if (x >= 18 && y >= 30 && x <= 20 && y <= 32) {
+					continue;
+				}
+				lm[2 + 37 * 25 + 37 * 25 * 2 * 2 + x + y * 37 * 2] = 0;
+			}
+		}
+		for (int y = 21; y <= 36; y++) {
+			for (int x = 43; x <= 59; x++) {
+				lm[2 + 37 * 25 + 37 * 25 * 2 * 2 + x + y * 37 * 2] = 0;
+			}
+		}
 		// protect subtiles from spawning additional monsters/objects
 		// - protect objects from monsters
 		lm[2 + 37 * 25 + (10 / 2) + (20 / 2) * 37] = SwapLE16(1 << 14);

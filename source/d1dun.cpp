@@ -3360,6 +3360,12 @@ void D1Dun::patch(int dunFileIndex)
                 }
             }
         }
+        // protect the main structure
+        for (int y = 1; y < 7; y++) {
+            for (int x = 1; x < 7; x++) {
+                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+            }
+        }
         break;
     case DUN_BONECHAMB_ENTRY_PRE: // Bonestr1.DUN
         // eliminate obsolete stair-tile
@@ -3924,6 +3930,9 @@ void D1Dun::patch(int dunFileIndex)
                 }
             }
         }
+        // fix the shadows
+        change |= this->changeTileAt(0, 2, 11);
+        change |= this->changeTileAt(6, 2, 11);
         // use the new shadows
         change |= this->changeTileAt(0, 4, 56);
         change |= this->changeTileAt(0, 5, 55);
@@ -4021,8 +4030,22 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeObjectAt(32, 41, 5);
         change |= this->changeObjectAt(48, 45, 5);
         change |= this->changeObjectAt(48, 17, 5);
-        // - add the skeleton king
+        // add the skeleton king
         change |= this->changeMonsterAt(19, 31, UMT_SKELKING + 1, true);
+		// remove monsters
+        for (int y = 21; y <= 41; y++) {
+            for (int x = 13; x <= 39; x++) {
+                if (x >= 18 && y >= 30 && x <= 20 && y <= 32) {
+                    continue;
+                }
+                change |= this->changeMonsterAt(x, y, 0, false);
+            }
+        }
+        for (int y = 21; y <= 36; y++) {
+            for (int x = 43; x <= 59; x++) {
+                change |= this->changeMonsterAt(x, y, 0, false);
+            }
+        }
         // protect subtiles from spawning monsters/objects
         // - protect objects from monsters
         change |= this->changeSubtileProtectionAt(10 + 1, 20 + 1, 1);
@@ -4106,9 +4129,17 @@ void D1Dun::patch(int dunFileIndex)
                     change |= this->changeTileAt(x, y, currTileRef + 181);
             }
         }*/
+        // external tiles
+        for (int y = 0; y < 25; y++) {
+            for (int x = 0; x < 37; x++) {
+                if (this->tiles[y][x] >= 181 + 18 && this->tiles[y][x] <= 181 + 24) {
+                    change |= this->changeTileAt(x, y, this->tiles[y][x] - 181);
+                }
+            }
+        }
         // fix the shadows
-        change |= this->changeTileAt( 9,  2, 157);
-        change |= this->changeTileAt(12,  2, 150);
+        change |= this->changeTileAt( 9,  2, 143);
+        change |= this->changeTileAt(12,  2, 143);
         change |= this->changeTileAt(10,  5, 157);
         // use the new shadows
         change |= this->changeTileAt( 4, 15, 150);
@@ -4121,12 +4152,15 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt( 8, 17, 144);
         change |= this->changeTileAt(13, 17, 144);
         // remove fix decorations
+        change |= this->changeTileAt( 3, 15,   2);
         change |= this->changeTileAt( 6,  9,   2);
         change |= this->changeTileAt(10,  1,   2);
         change |= this->changeTileAt(13,  1,   2);
         change |= this->changeTileAt(15,  9,   2);
         change |= this->changeTileAt(17, 14,   2);
         change |= this->changeTileAt(22, 12,   2);
+        change |= this->changeTileAt(20,  8,   1);
+        change |= this->changeTileAt(21,  7,   2);
         change |= this->changeTileAt(24,  7,   2);
         change |= this->changeTileAt(25, 12,   2);
         change |= this->changeTileAt(26, 12,   2);
@@ -4144,6 +4178,17 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(32, 16,   0);
         change |= this->changeTileAt(33, 16,   0);
         // remove objects, monsters, items
+        // - remove sarcophagi tiles
+        change |= this->changeTileAt( 6, 11,   0);
+        change |= this->changeTileAt( 7, 11,   0);
+        change |= this->changeTileAt(15, 11,   0);
+        change |= this->changeTileAt(16, 11,   0);
+        change |= this->changeTileAt( 6, 20,   0);
+        change |= this->changeTileAt( 7, 20,   0);
+        change |= this->changeTileAt(15, 20,   0);
+        change |= this->changeTileAt(16, 20,   0);
+        change |= this->changeTileAt(24,  8,   0);
+        change |= this->changeTileAt(24, 22,   0);
         for (int y = 0; y < 25 * 2; y++) {
             for (int x = 0; x < 37 * 2; x++) {
                 change |= this->changeObjectAt(x, y, 0);
