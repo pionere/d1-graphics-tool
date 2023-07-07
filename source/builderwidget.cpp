@@ -494,7 +494,7 @@ void BuilderWidget::dunResourcesModified()
     // - monsters
     comboBox = this->ui->monsterComboBox;
     copyComboBox(comboBox, this->levelCelView->getMonsters());
-    comboBox->setCurrentIndex(comboBox->findData(QVariant::fromValue(this->currentMonsterType)));
+    comboBox->setCurrentIndex(LevelCelView::findMonType(comboBox, this->currentMonsterType));
 }
 
 void BuilderWidget::on_closePushButtonClicked()
@@ -656,7 +656,7 @@ void BuilderWidget::setMonsterType(DunMonsterType monType)
     this->currentMonsterType = monType;
     this->ui->monsterLineEdit->setText(QString::number(monType.first));
     this->ui->monsterCheckBox->setChecked(monType.second);
-    this->ui->monsterComboBox->setCurrentIndex(this->ui->monsterComboBox->findData(QVariant::fromValue(monType)));
+    this->ui->monsterComboBox->setCurrentIndex(LevelCelView::findMonType(this->ui->monsterComboBox, monType));
     this->redrawOverlay(true);
 }
 

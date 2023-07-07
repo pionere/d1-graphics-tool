@@ -343,6 +343,17 @@ void LevelCelView::updateLabel()
     }
 }
 
+int LevelCelView::findMonType(const QComboBox *comboBox, const DunMonsterType &value)
+{
+    for (int index = 0; i < comboBox->count(); i++) {
+        const DunMonsterType monType = comboBox->itemData(index).value<DunMonsterType>();
+        if (monType == value) {
+            return index;
+        }
+    }
+    return -1;
+}
+
 void LevelCelView::updateFields()
 {
     int count;
@@ -377,11 +388,7 @@ void LevelCelView::updateFields()
         DunMonsterType monType = this->dun->getMonsterAt(posx, posy);
         this->ui->dungeonMonsterLineEdit->setText(QString::number(monType.first));
         this->ui->dungeonMonsterCheckBox->setChecked(monType.second);
-		if (monType.second) {
-			int idx = this->ui->dungeonMonsterComboBox->findData(QVariant::fromValue(monType));
-			QMessageBox::critical(nullptr, "Error", QString("Search for %1. Result:%2.").arg(monType.first).arg(idx));
-        }
-        this->ui->dungeonMonsterComboBox->setCurrentIndex(this->ui->dungeonMonsterComboBox->findData(QVariant::fromValue(monType)));
+        this->ui->dungeonMonsterComboBox->setCurrentIndex(LevelCelView::findMonType(this->ui->dungeonMonsterComboBox, monType));
         int objectIndex = this->dun->getObjectAt(posx, posy);
         this->ui->dungeonObjectLineEdit->setText(QString::number(objectIndex));
         this->ui->dungeonObjectComboBox->setCurrentIndex(this->ui->dungeonObjectComboBox->findData(objectIndex));
