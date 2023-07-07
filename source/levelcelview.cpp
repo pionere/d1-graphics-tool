@@ -377,6 +377,10 @@ void LevelCelView::updateFields()
         DunMonsterType monType = this->dun->getMonsterAt(posx, posy);
         this->ui->dungeonMonsterLineEdit->setText(QString::number(monType.first));
         this->ui->dungeonMonsterCheckBox->setChecked(monType.second);
+		if (monType.second) {
+			int idx = this->ui->dungeonMonsterComboBox->findData(QVariant::fromValue(monType));
+			QMessage::critical(nullptr, "Error", QString("Search for %1. Result:%2.").arg(monType.first).arg(idx));
+        }
         this->ui->dungeonMonsterComboBox->setCurrentIndex(this->ui->dungeonMonsterComboBox->findData(QVariant::fromValue(monType)));
         int objectIndex = this->dun->getObjectAt(posx, posy);
         this->ui->dungeonObjectLineEdit->setText(QString::number(objectIndex));

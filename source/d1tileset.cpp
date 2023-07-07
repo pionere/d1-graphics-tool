@@ -4977,6 +4977,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
     }
+    return true;
 }
 
 void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)

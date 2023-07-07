@@ -2597,11 +2597,11 @@ static void DRLG_L3()
 	}
 }
 
-static void DRLG_L3SetMapFix()
+static void DRLG_L3FixMap()
 {
 	uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 
-	if (lm == NULL) {
+	if (lm == NULL || !PatchDunFiles) {
 		return;
 	}
 	if (pSetPieces[0]._sptype == SPT_LVL_PWATER) {
@@ -2649,7 +2649,7 @@ static void LoadL3Dungeon(const LevelData* lds)
 	pSetPieces[0]._spy = 0;
 	pSetPieces[0]._sptype = lds->dSetLvlPiece;
 	pSetPieces[0]._spData = LoadFileInMem(setpiecedata[pSetPieces[0]._sptype]._spdDunFile);
-	DRLG_L3SetMapFix();
+	DRLG_L3FixMap();
 
 	memset(drlgFlags, 0, sizeof(drlgFlags));
 	static_assert(sizeof(dungeon[0][0]) == 1, "memset on dungeon does not work in LoadL3DungeonData.");

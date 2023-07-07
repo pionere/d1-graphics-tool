@@ -13,6 +13,7 @@ public:
     bool isMulti;
     bool isHellfire;
     bool useTileset;
+    bool patchDunFiles;
     int32_t seed;
     int32_t seedQuest;
     int entryMode;

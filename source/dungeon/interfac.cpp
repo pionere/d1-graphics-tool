@@ -18,6 +18,7 @@ int ViewY;
 bool IsMultiGame;
 bool IsHellfireGame;
 bool HasTileset;
+bool PatchDunFiles;
 QString assetPath;
 char infostr[256];
 
@@ -473,6 +474,7 @@ void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const
     gnDifficulty = params.difficulty;
     assetPath = dun->getAssetPath();
     HasTileset = params.useTileset && tileset != nullptr;
+    PatchDunFiles = params.patchDunFiles;
 
     if (HasTileset) {
         LoadTileset(tileset);

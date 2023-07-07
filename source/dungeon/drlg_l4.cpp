@@ -370,14 +370,15 @@ static void DRLG_LoadL4SP()
 		pSetPieces[3]._spData = LoadFileInMem(setpiecedata[pSetPieces[3]._sptype]._spdDunFile);
 		// patch set-piece - diab1.DUN
 		// - fix shadow of the bottom right corner
-		if (pSetPieces[0]._spData != NULL) {
-		pSetPieces[0]._spData[(2 + 0 + 4 * 6) * 2] = 75;
-		pSetPieces[0]._spData[(2 + 0 + 5 * 6) * 2] = 74;
+		if (pSetPieces[0]._spData != NULL && PatchDunFiles) {
+		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
+		lm[2 + 0 + 4 * 6] = SwapLE16(75);
+		lm[2 + 0 + 5 * 6] = SwapLE16(74);
 		}
 	} else if (QuestStatus(Q_BETRAYER)) {
 		pSetPieces[0]._sptype = IsMultiGame ? SPT_BETRAY_M : SPT_BETRAY_S;
 		pSetPieces[0]._spData = LoadFileInMem(setpiecedata[pSetPieces[0]._sptype]._spdDunFile);
-		if (pSetPieces[0]._spData != NULL && IsMultiGame) {
+		if (pSetPieces[0]._spData != NULL && PatchDunFiles && IsMultiGame) {
 			// patch set-piece to add monsters - Vile1.DUN
 			uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 			lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 3 + 6 * 7 * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
@@ -393,7 +394,7 @@ static void DRLG_LoadL4SP()
 	} else if (QuestStatus(Q_WARLORD)) {
 		pSetPieces[0]._sptype = SPT_WARLORD;
 		pSetPieces[0]._spData = LoadFileInMem(setpiecedata[pSetPieces[0]._sptype]._spdDunFile);
-		if (pSetPieces[0]._spData != NULL) {
+		if (pSetPieces[0]._spData != NULL && PatchDunFiles) {
 		// patch set-piece - Warlord.DUN
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// ensure the changing tiles are protected
@@ -406,7 +407,9 @@ static void DRLG_LoadL4SP()
 	}
 	for (int i = lengthof(pSetPieces) - 1; i >= 0; i--) {
 		if (pSetPieces[i]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
-			DRGL_L4PatchSetPiece(pSetPieces[i]._spData);
+			if (PatchDunFiles) {
+				DRGL_L4PatchSetPiece(pSetPieces[i]._spData);
+			}
 		} else {
 			pSetPieces[i]._sptype = SPT_NONE;
 		}
@@ -2027,7 +2030,7 @@ static void DRLG_L4FixPreMap(int idx)
 {
 	uint16_t* lm = (uint16_t*)pSetPieces[idx]._spData;
 
-	if (lm == NULL) {
+	if (lm == NULL || !PatchDunFiles) {
 		return;
 	}
 
