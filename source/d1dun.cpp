@@ -3885,6 +3885,21 @@ void D1Dun::patch(int dunFileIndex)
                 change |= this->changeTileAt(x, y, 0);
             }
         }
+        // protect subtiles from spawning monsters/objects
+        // - protect objects from monsters/objects
+        change |= this->changeSubtileProtectionAt(10 + 0,  2 + 1, 3);
+        // - protect monsters from monsters/objects
+        change |= this->changeSubtileProtectionAt( 0 + 1,  0 + 1, 3);
+        change |= this->changeSubtileProtectionAt( 2 + 1,  2 + 0, 3);
+        change |= this->changeSubtileProtectionAt( 8 + 0,  0 + 1, 3);
+        change |= this->changeSubtileProtectionAt( 8 + 1,  4 + 0, 3);
+        change |= this->changeSubtileProtectionAt(10 + 1,  2 + 0, 3);
+        // - protect area from monsters/objects
+        for (int y = 7; y <= 13; y++) {
+            for (int x = 1; x <= 13; x++) {
+                change |= this->changeSubtileProtectionAt(x, y, 3);
+            }
+        }
         // replace monsters
         for (int y = 7; y <= 9; y++) {
             for (int x = 7; x <= 13; x++) {
@@ -3895,7 +3910,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(1, 4, 0, false);
         change |= this->changeMonsterAt(13, 5, 0, false);
         change |= this->changeMonsterAt(7, 12, 0, false);
-        // - add snotspil
+        // - add unique
         change |= this->changeMonsterAt(8, 12, UMT_SNOTSPIL + 1, true);
         // - add sign-chest
         change |= this->changeObjectAt(10, 3, 90);
@@ -3916,6 +3931,46 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(2, 4, 53);
         change |= this->changeTileAt(2, 5, 54);
         change |= this->changeTileAt(6, 6, 139);
+        // protect the main structure
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                if (x >= 1 && y >= 3 && x <= 6 && y <= 5) {
+                    bool skip = true;
+                    if (x == 1 && y == 3) {
+                        skip = false;
+                    }
+                    if (x == 2 && y == 3) {
+                        skip = false;
+                    }
+                    if (x >= 4 && y == 4) {
+                        skip = false;
+                    }
+                    if (skip) {
+                        continue;
+                    }
+                }
+                if (x == 3 && y == 6) {
+                    continue;
+                }
+                change |= this->changeTileProtectionAt(x, y, Qt::PartiallyChecked);
+            }
+        }
+        // ensure the changing tiles are reserved
+        change |= this->changeTileProtectionAt(3, 6, Qt::Checked);
+        for (int y = 3; y <= 5; y++) {
+            for (int x = 1; x <= 6; x++) {
+                if (x == 1 && y == 3) {
+                    continue;
+                }
+                if (x == 2 && y == 3) {
+                    continue;
+                }
+                if (x >= 4 && y == 4) {
+                    continue;
+                }
+                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+            }
+        }
         // remove monsters
         for (int y = 0; y < 16; y++) {
             for (int x = 0; x < 16; x++) {
@@ -3968,6 +4023,46 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeObjectAt(48, 17, 5);
         // - add the skeleton king
         change |= this->changeMonsterAt(19, 31, UMT_SKELKING + 1, true);
+        // protect subtiles from spawning monsters/objects
+        // - protect objects from monsters
+        change |= this->changeSubtileProtectionAt(10 + 1, 20 + 1, 1);
+        change |= this->changeSubtileProtectionAt(10 + 1, 36 + 1, 1);
+        change |= this->changeSubtileProtectionAt(30 + 0, 18 + 1, 1);
+        change |= this->changeSubtileProtectionAt(32 + 1, 36 + 1, 1);
+        change |= this->changeSubtileProtectionAt(14 + 0, 22 + 0, 1);
+        change |= this->changeSubtileProtectionAt(14 + 0, 22 + 1, 1);
+        change |= this->changeSubtileProtectionAt(14 + 0, 40 + 0, 1);
+        change |= this->changeSubtileProtectionAt(14 + 0, 40 + 1, 1);
+        change |= this->changeSubtileProtectionAt(32 + 0, 22 + 0, 1);
+        change |= this->changeSubtileProtectionAt(32 + 0, 22 + 1, 1);
+        change |= this->changeSubtileProtectionAt(32 + 0, 40 + 0, 1);
+        change |= this->changeSubtileProtectionAt(32 + 0, 40 + 1, 1);
+        change |= this->changeSubtileProtectionAt(48 + 0, 16 + 0, 1);
+        change |= this->changeSubtileProtectionAt(48 + 0, 16 + 1, 1);
+        change |= this->changeSubtileProtectionAt(48 + 0, 18 + 0, 1);
+        change |= this->changeSubtileProtectionAt(48 + 0, 42 + 1, 1);
+        change |= this->changeSubtileProtectionAt(48 + 0, 44 + 0, 1);
+        change |= this->changeSubtileProtectionAt(48 + 0, 44 + 1, 1);
+        // - protect the back-room from additional monsters
+        for (int y = 31; y <= 37; y++) {
+            for (int x = 3; x <= 9; x++) {
+                change |= this->changeSubtileProtectionAt(x, y, 1);
+            }
+        }
+        for (int y = 33; y <= 35; y++) {
+            for (int x = 10; x <= 13; x++) {
+                change |= this->changeSubtileProtectionAt(x, y, 1);
+            }
+        }
+        // - add empty space after the grate
+        for (int y = 29; y <= 33; y++) {
+            for (int x = 32; x <= 41; x++) {
+                if (x == 32 && (y == 30 || y == 32)) {
+                    continue;
+                }
+                change |= this->changeSubtileProtectionAt(x, y, 1);
+            }
+        }
         break;
     case DUN_SKELKING_AFT: // SklKng1.DUN
         /*// add chests
@@ -4011,6 +4106,43 @@ void D1Dun::patch(int dunFileIndex)
                     change |= this->changeTileAt(x, y, currTileRef + 181);
             }
         }*/
+        // fix the shadows
+        change |= this->changeTileAt( 9,  2, 157);
+        change |= this->changeTileAt(12,  2, 150);
+        change |= this->changeTileAt(10,  5, 157);
+        // use the new shadows
+        change |= this->changeTileAt( 4, 15, 150);
+        change |= this->changeTileAt( 6, 16, 150);
+        change |= this->changeTileAt(15, 17, 159);
+        change |= this->changeTileAt(15, 13, 159);
+        change |= this->changeTileAt(27, 13, 159);
+        change |= this->changeTileAt( 8, 12, 144);
+        change |= this->changeTileAt(13, 12, 144);
+        change |= this->changeTileAt( 8, 17, 144);
+        change |= this->changeTileAt(13, 17, 144);
+        // remove fix decorations
+        change |= this->changeTileAt( 6,  9,   2);
+        change |= this->changeTileAt(10,  1,   2);
+        change |= this->changeTileAt(13,  1,   2);
+        change |= this->changeTileAt(15,  9,   2);
+        change |= this->changeTileAt(17, 14,   2);
+        change |= this->changeTileAt(22, 12,   2);
+        change |= this->changeTileAt(24,  7,   2);
+        change |= this->changeTileAt(25, 12,   2);
+        change |= this->changeTileAt(26, 12,   2);
+        change |= this->changeTileAt(29, 14,   2);
+        change |= this->changeTileAt(16, 15,  11);
+        change |= this->changeTileAt( 8,  3,   1);
+        change |= this->changeTileAt( 8,  4,   1);
+        change |= this->changeTileAt(10,  7,   1);
+        change |= this->changeTileAt(10,  9,   1);
+        change |= this->changeTileAt(23,  9,   1);
+        change |= this->changeTileAt(23, 20,   1);
+        change |= this->changeTileAt(23, 21,   1);
+        change |= this->changeTileAt(31, 15,  11);
+        change |= this->changeTileAt(31, 16,  11);
+        change |= this->changeTileAt(32, 16,   0);
+        change |= this->changeTileAt(33, 16,   0);
         // remove objects, monsters, items
         for (int y = 0; y < 25 * 2; y++) {
             for (int x = 0; x < 37 * 2; x++) {

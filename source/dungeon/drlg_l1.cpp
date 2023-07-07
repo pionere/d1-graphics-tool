@@ -1038,8 +1038,46 @@ static void DRLG_LoadL1SP()
 		// patch set-piece - Banner1.DUN
 		if (pSetPieces[0]._spData != NULL && PatchDunFiles) {
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
-		// - replace the wall with door
-		lm[2 + 7 + 6 * 8] = SwapLE16(193);
+		// - protect the main structure
+		for (int y = 0; y < 8; y++) {
+			for (int x = 0; x < 8; x++) {
+				if (x >= 1 && y >= 3 && x <= 6 && y <= 5) {
+					bool skip = true;
+					if (x == 1 && y == 3) {
+						skip = false;
+					}
+					if (x == 2 && y == 3) {
+						skip = false;
+					}
+					if (x >= 4 && y == 4) {
+						skip = false;
+					}
+					if (skip) {
+						continue;
+					}
+				}
+				if (x == 3 && y == 6) {
+					continue;
+				}
+				lm[2 + 8 * 8 + x + y * 8] = SwapLE16(1);
+			}
+		}
+		// ensure the changing tiles are reserved
+		lm[2 + 8 * 8 + 3 + 6 * 8] = SwapLE16(3);
+		for (int y = 3; y <= 5; y++) {
+			for (int x = 1; x <= 6; x++) {
+				if (x == 1 && y == 3) {
+					continue;
+				}
+				if (x == 2 && y == 3) {
+					continue;
+				}
+				if (x >= 4 && y == 4) {
+					continue;
+				}
+				lm[2 + 8 * 8 + x + y * 8] = SwapLE16(3);
+			}
+		}
 		}
 	} else if (QuestStatus(Q_SKELKING)) {
 		pSetPieces[0]._sptype = SPT_SKELKING;
@@ -2930,6 +2968,40 @@ static void DRLG_L1FixPreMap(int idx)
 	}
 	if (pSetPieces[idx]._sptype == SPT_BANNER) {
 		// patch set-piece - Banner2.DUN
+		// useless tiles
+		for (int y = 0; y < 8; y++) {
+			for (int x = 0; x < 8; x++) {
+				if (x >= 3 && y >= 3 && x <= 3 && y <= 6) {
+					continue;
+				}
+				if (x >= 3 && y >= 5 && x <= 6 && y <= 5) {
+					continue;
+				}
+				lm[2 + x + y * 8] = 0;
+			}
+		}
+		// protect subtiles from spawning monsters/objects
+		// - protect objects from monsters/objects
+		lm[2 + 8 * 8 + (10 / 2) + ( 2 / 2) * 8] = SwapLE16(3 << 12);
+		// - protect monsters from monsters/objects
+		lm[2 + 8 * 8 + ( 0 / 2) + ( 0 / 2) * 8] = SwapLE16(3 << 14);
+		lm[2 + 8 * 8 + ( 2 / 2) + ( 2 / 2) * 8] = SwapLE16(3 << 10);
+		lm[2 + 8 * 8 + ( 8 / 2) + ( 0 / 2) * 8] = SwapLE16(3 << 12);
+		lm[2 + 8 * 8 + ( 8 / 2) + ( 4 / 2) * 8] = SwapLE16(3 << 10);
+		lm[2 + 8 * 8 + (10 / 2) + ( 2 / 2) * 8] = SwapLE16(3 << 10);
+		// - protect area from monsters/objects
+		lm[2 + 8 * 8 + ( 0 / 2) + ( 6 / 2) * 8] = SwapLE16(1 << 14);
+		lm[2 + 8 * 8 + ( 0 / 2) + ( 8 / 2) * 8] = SwapLE16((3 << 10) | (3 << 14));
+		lm[2 + 8 * 8 + ( 0 / 2) + (10 / 2) * 8] = SwapLE16((3 << 10) | (3 << 14));
+		lm[2 + 8 * 8 + ( 0 / 2) + (12 / 2) * 8] = SwapLE16((3 << 10) | (3 << 14));
+		for (int x = 2 / 2; x <= 12 / 2; x++) {
+			lm[2 + 8 * 8 + x + (6 / 2) * 8] = SwapLE16((3 << 12) | (3 << 14));
+		}
+		for (int y = 8 / 2; y <= 12 / 2; y++) {
+			for (int x = 2 / 2; x <= 12 / 2; x++) {
+				lm[2 + 8 * 8 + x + y * 8] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
+			}
+		}
 		// - replace monsters
 		for (int y = 7; y <= 9; y++) {
 			for (int x = 7; x <= 13; x++) {
@@ -3040,6 +3112,53 @@ static void DRLG_L1FixPreMap(int idx)
 		lm[2 + 37 * 25 + 37 * 25 * 2 * 2 + 37 * 25 * 2 * 2 + 48 + 17 * 37 * 2] = SwapLE16(5);
 		// - add the skeleton king
 		lm[2 + 37 * 25 + 37 * 25 * 2 * 2 + 19 + 31 * 37 * 2] = SwapLE16((UMT_SKELKING + 1) | (1 << 15));
+		// protect subtiles from spawning additional monsters/objects
+		// - protect objects from monsters
+		lm[2 + 37 * 25 + (10 / 2) + (20 / 2) * 37] = SwapLE16(1 << 14);
+		lm[2 + 37 * 25 + (10 / 2) + (36 / 2) * 37] = SwapLE16(1 << 14);
+		lm[2 + 37 * 25 + (30 / 2) + (18 / 2) * 37] = SwapLE16(1 << 12);
+		lm[2 + 37 * 25 + (32 / 2) + (36 / 2) * 37] = SwapLE16(1 << 14);
+		lm[2 + 37 * 25 + (14 / 2) + (22 / 2) * 37] = SwapLE16((1 << 8) | (1 << 12));
+		lm[2 + 37 * 25 + (14 / 2) + (40 / 2) * 37] = SwapLE16((1 << 8) | (1 << 12));
+		lm[2 + 37 * 25 + (32 / 2) + (22 / 2) * 37] = SwapLE16((1 << 8) | (1 << 12));
+		lm[2 + 37 * 25 + (32 / 2) + (40 / 2) * 37] = SwapLE16((1 << 8) | (1 << 12));
+		lm[2 + 37 * 25 + (48 / 2) + (16 / 2) * 37] = SwapLE16((1 << 8) | (1 << 12));
+		lm[2 + 37 * 25 + (48 / 2) + (18 / 2) * 37] = SwapLE16(1 << 8);
+		lm[2 + 37 * 25 + (48 / 2) + (42 / 2) * 37] = SwapLE16(1 << 12);
+		lm[2 + 37 * 25 + (48 / 2) + (44 / 2) * 37] = SwapLE16((1 << 8) | (1 << 12));
+		// - protect the back-room from additional monsters
+		lm[2 + 37 * 25 + ( 2 / 2) + (30 / 2) * 37] = SwapLE16(3 << 14);
+		lm[2 + 37 * 25 + ( 2 / 2) + (32 / 2) * 37] = SwapLE16((3 << 10) | (3 << 14));
+		lm[2 + 37 * 25 + ( 2 / 2) + (34 / 2) * 37] = SwapLE16((3 << 10) | (3 << 14));
+		lm[2 + 37 * 25 + ( 2 / 2) + (36 / 2) * 37] = SwapLE16((3 << 10) | (3 << 14));
+		lm[2 + 37 * 25 + ( 4 / 2) + (30 / 2) * 37] = SwapLE16((3 << 12) | (3 << 14));
+		lm[2 + 37 * 25 + ( 6 / 2) + (30 / 2) * 37] = SwapLE16((3 << 12) | (3 << 14));
+		lm[2 + 37 * 25 + ( 8 / 2) + (30 / 2) * 37] = SwapLE16((3 << 12) | (3 << 14));
+		lm[2 + 37 * 25 + (10 / 2) + (32 / 2) * 37] = SwapLE16((3 << 12) | (3 << 14));
+		lm[2 + 37 * 25 + (12 / 2) + (32 / 2) * 37] = SwapLE16((3 << 12) | (3 << 14));
+		lm[2 + 37 * 25 + (10 / 2) + (34 / 2) * 37] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
+		lm[2 + 37 * 25 + (12 / 2) + (34 / 2) * 37] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
+		for (int y = 32 / 2; y <= 36 / 2; y++) {
+			for (int x = 4 / 2; x <= 8 / 2; x++) {
+				lm[2 + 37 * 25 + x + y * 37] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
+			}
+		}
+		// - add empty space after the grate
+		for (int y = 28 / 2; y <= 32 / 2; y++) {
+			for (int x = 32 / 2; x <= 32 / 2; x++) {
+				lm[2 + 37 * 25 + x + y * 37] = SwapLE16((3 << 10) | (3 << 12) | (3 << 14));
+			}
+		}
+		for (int y = 30 / 2; y <= 32 / 2; y++) {
+			for (int x = 34 / 2; x <= 40 / 2; x++) {
+				lm[2 + 37 * 25 + x + y * 37] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
+			}
+		}
+		for (int y = 28 / 2; y <= 28 / 2; y++) {
+			for (int x = 32 / 2; x <= 40 / 2; x++) {
+				lm[2 + 37 * 25 + x + y * 37] = SwapLE16((3 << 12) | (3 << 14));
+			}
+		}
 	}
 }
 
