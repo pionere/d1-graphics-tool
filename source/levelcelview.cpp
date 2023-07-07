@@ -345,7 +345,7 @@ void LevelCelView::updateLabel()
 
 int LevelCelView::findMonType(const QComboBox *comboBox, const DunMonsterType &value)
 {
-    for (int index = 0; i < comboBox->count(); i++) {
+    for (int index = 0; index < comboBox->count(); index++) {
         const DunMonsterType monType = comboBox->itemData(index).value<DunMonsterType>();
         if (monType == value) {
             return index;
