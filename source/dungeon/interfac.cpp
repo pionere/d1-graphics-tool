@@ -474,7 +474,6 @@ void DecorateGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const
     gnDifficulty = params.difficulty;
     assetPath = dun->getAssetPath();
     HasTileset = params.useTileset && tileset != nullptr;
-    PatchDunFiles = params.patchDunFiles;
 
     if (HasTileset) {
         LoadTileset(tileset);
@@ -502,6 +501,7 @@ void EnterGameLevel(D1Dun *dun, D1Tileset *tileset, LevelCelView *view, const Ge
     gnDifficulty = params.difficulty;
     assetPath = dun->getAssetPath();
     HasTileset = params.useTileset && tileset != nullptr;
+    PatchDunFiles = params.patchDunFiles;
 
     if (HasTileset) {
         LoadTileset(tileset);
