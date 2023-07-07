@@ -2962,7 +2962,7 @@ static void DRLG_L1FixMap()
 		for (int i = 1; i < 23; i++) {
 			lm[2 + 20 + i * 21] = SwapLE16(203 - 181);
 		}
-	} else if (pSetPieces[idx]._sptype == SPT_LVL_SKELKING) {
+	} else if (pSetPieces[0]._sptype == SPT_LVL_SKELKING) {
 		// patch the map - SklKng1.DUN
 		// external tiles
 		for (int y = 0; y < 25; y++) {
