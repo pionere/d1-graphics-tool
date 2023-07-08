@@ -152,8 +152,8 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr },
 /*OBJ_ARMORSTANDN*/  { "Armor stand" }, //OBJ_ARMORSTAND, // Warlord2.DUN (Q_WARLORD) - changed to inactive versions to eliminate farming potential
 /*OBJ_WEAPONRACKLN*/ { "Weapon stand" }, //OBJ_WEAPONRACKL, // Warlord2.DUN (Q_WARLORD)
-/*OBJ_TORCHR1*/      { "Torch 2" }, // Blood2.DUN (Q_BLOOD)
-/*OBJ_TORCHL1*/      { "Torch 1" }, // Blood2.DUN (Q_BLOOD)
+                     { nullptr }, //OBJ_TORCHR1  //Blood2.DUN (Q_BLOOD)
+                     { nullptr }, //OBJ_TORCHL1  //Blood2.DUN (Q_BLOOD)
                      { nullptr }, //OBJ_MUSHPATCH,
                      { nullptr }, //OBJ_STAND,
                      { nullptr }, //OBJ_TORCHL2,
@@ -3400,11 +3400,11 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(6, 0, 0);
         // add tiles with subtiles for arches
         change |= this->changeTileAt(2, 1, 45);
-        change |= this->changeTileAt(4, 1, 100);
+        change |= this->changeTileAt(4, 1, 45);
         change |= this->changeTileAt(2, 5, 45);
         change |= this->changeTileAt(4, 5, 45);
         change |= this->changeTileAt(1, 2, 44);
-        change |= this->changeTileAt(1, 4, 96);
+        change |= this->changeTileAt(1, 4, 44);
         change |= this->changeTileAt(5, 2, 44);
         change |= this->changeTileAt(5, 4, 44);
         // - remove tile to leave space for shadow
@@ -3559,7 +3559,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(20, 8, 49);
         // - central room (bottom)
         change |= this->changeTileAt(18, 12, 46);
-        change |= this->changeTileAt(19, 12, 49);
+        // change |= this->changeTileAt(19, 12, 49); -- ugly with the candle
         // - left corridor
         change |= this->changeTileAt(12, 14, 47);
         change |= this->changeTileAt(12, 15, 51);
