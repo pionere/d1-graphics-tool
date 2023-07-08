@@ -2657,8 +2657,8 @@ static void DRLG_L2FixPreMap(int idx)
 	} else if (pSetPieces[idx]._sptype == SPT_LVL_BCHAMB) {
 		// patch the map - Bonecha1.DUN
 		// external tiles
-		lm[2 + 20 +  4 * 10] = SwapLE16(12);
-		lm[2 + 21 +  4 * 10] = SwapLE16(12);
+		lm[2 + 20 +  4 * 32] = SwapLE16(12);
+		lm[2 + 21 +  4 * 32] = SwapLE16(12);
 		// useless tiles
 		for (int y = 0; y < 18; y++) {
 			for (int x = 0; x < 32; x++) {
@@ -2671,7 +2671,7 @@ static void DRLG_L2FixPreMap(int idx)
 				if (x == 14 && y == 5) {
 					continue;
 				}
-				lm[2 + x + y * 10] = 0;
+				lm[2 + x + y * 32] = 0;
 			}
 		}
 		/*// place pieces with closed doors
