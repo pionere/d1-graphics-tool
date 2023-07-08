@@ -2628,6 +2628,8 @@ static void DRLG_L2FixPreMap(int idx)
 		// - shadow of the internal column next to the pedistal
 		lm[2 + 5 + 7 * 10] = SwapLE16(142);
 		lm[2 + 5 + 8 * 10] = SwapLE16(50);
+		// remove 'items'
+		lm[2 + 10 * 16 + 9 + 2 * 10 * 2] = 0;
 		// - add book and pedistal
 		lm[2 + 10 * 16 + 10 * 16 * 2 * 2 + 10 * 16 * 2 * 2 + 9 + 24 * 10 * 2] = SwapLE16(15);
 		lm[2 + 10 * 16 + 10 * 16 * 2 * 2 + 10 * 16 * 2 * 2 + 9 + 16 * 10 * 2] = SwapLE16(91);
