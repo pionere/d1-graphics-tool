@@ -3549,6 +3549,13 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(12, 15, 51);
         change |= this->changeTileAt(16, 14, 47);
         change |= this->changeTileAt(16, 15, 51);
+        // remove objects, monsters
+        for (int y = 0; y < 18 * 2; y++) {
+            for (int x = 0; x < 32 * 2; x++) {
+                change |= this->changeObjectAt(x, y, 0);
+                change |= this->changeMonsterAt(x, y, 0, false);
+            }
+        }
         break;
     case DUN_BLIND_PRE: // Blind2.DUN
         // external tiles
@@ -3604,7 +3611,7 @@ void D1Dun::patch(int dunFileIndex)
         // place pieces with closed doors
         change |= this->changeTileAt(4, 3, 150);
         change |= this->changeTileAt(6, 7, 150);
-        // add monsters from Blind2.DUN
+        /*// add monsters from Blind2.DUN
         change |= this->changeMonsterAt(1, 6, 32, false);
         change |= this->changeMonsterAt(4, 1, 32, false);
         change |= this->changeMonsterAt(6, 3, 32, false);
@@ -3615,9 +3622,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(13, 14, 32, false);
         change |= this->changeMonsterAt(14, 17, 32, false);
         change |= this->changeMonsterAt(14, 11, 32, false);
-        change |= this->changeMonsterAt(15, 13, 32, false);
-        // remove items
-        change |= this->changeItemAt(5, 5, 0);
+        change |= this->changeMonsterAt(15, 13, 32, false);*/
         // protect the main structure
         for (int y = 0; y < 7; y++) {
             for (int x = 0; x < 7; x++) {
@@ -3627,6 +3632,12 @@ void D1Dun::patch(int dunFileIndex)
         for (int y = 4; y < 11; y++) {
             for (int x = 4; x < 11; x++) {
                 change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+            }
+        }
+        // remove monsters
+        for (int y = 0; y < 11 * 2; y++) {
+            for (int x = 0; x < 11 * 2; x++) {
+                change |= this->changeMonsterAt(x, y, 0, false);
             }
         }
         break;
@@ -3686,7 +3697,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(4, 10, 151);
         change |= this->changeTileAt(4, 15, 151);
         change |= this->changeTileAt(5, 15, 151);
-        // replace torches
+        /*// replace torches
         change |= this->changeObjectAt(11, 8, 110);
         change |= this->changeObjectAt(11, 10, 110);
         change |= this->changeObjectAt(11, 12, 110);
@@ -3717,7 +3728,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(6, 25, 62, false);
         change |= this->changeMonsterAt(12, 25, 62, false);
         // remove items
-        change |= this->changeItemAt(9, 2, 0);
+        change |= this->changeItemAt(9, 2, 0);*/
         // protect the main structure
         for (int y = 0; y <= 15; y++) {
             for (int x = 2; x <= 7; x++) {
@@ -3727,6 +3738,14 @@ void D1Dun::patch(int dunFileIndex)
         for (int y = 3; y <= 8; y++) {
             for (int x = 0; x <= 9; x++) {
                 change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+            }
+        }
+        // remove objects, monsters, items
+        for (int y = 0; y < 16 * 2; y++) {
+            for (int x = 0; x < 10 * 2; x++) {
+                change |= this->changeObjectAt(x, y, 0);
+                change |= this->changeMonsterAt(x, y, 0, false);
+                change |= this->changeItemAt(x, y, 0);
             }
         }
         break;

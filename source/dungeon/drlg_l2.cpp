@@ -2381,8 +2381,7 @@ static void DRLG_L2()
 	DRLG_L2Shadows();
 	// DRLG_L2Corners(); - commented out, because this is no longer necessary
 
-	//DRLG_L2PlaceRndSet(CRUSHCOL, 99);
-	DRLG_PlaceRndTile(6, 83, 99);
+	DRLG_PlaceRndTile(6, 83, 99); // CRUSHCOL
 	//DRLG_L2PlaceRndSet(RUINS1, 10);
 	//DRLG_L2PlaceRndSet(RUINS2, 10);
 	//DRLG_L2PlaceRndSet(RUINS3, 10);
@@ -2409,7 +2408,7 @@ static void DRLG_L2FixMap()
 {
 	uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 
-	if (lm == NULL) {
+	if (lm == NULL || !PatchDunFiles) {
 		return;
 	}
 
@@ -2544,7 +2543,7 @@ static void DRLG_L2FixPreMap(int idx)
 {
 	uint16_t* lm = (uint16_t*)pSetPieces[idx]._spData;
 
-	if (lm == NULL) {
+	if (lm == NULL || !PatchDunFiles) {
 		return;
 	}
 
@@ -2657,8 +2656,8 @@ static void DRLG_L2FixPreMap(int idx)
 	} else if (pSetPieces[idx]._sptype == SPT_LVL_BCHAMB) {
 		// patch the map - Bonecha1.DUN
 		// external tiles
-		lm[2 + 20 +  4 * 10] = SwapLE16(12);
-		lm[2 + 21 +  4 * 10] = SwapLE16(12);
+		lm[2 + 20 +  4 * 32] = SwapLE16(12);
+		lm[2 + 21 +  4 * 32] = SwapLE16(12);
 		// useless tiles
 		for (int y = 0; y < 18; y++) {
 			for (int x = 0; x < 32; x++) {
@@ -2671,7 +2670,7 @@ static void DRLG_L2FixPreMap(int idx)
 				if (x == 14 && y == 5) {
 					continue;
 				}
-				lm[2 + x + y * 10] = 0;
+				lm[2 + x + y * 32] = 0;
 			}
 		}
 		/*// place pieces with closed doors
