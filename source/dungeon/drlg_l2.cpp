@@ -2646,7 +2646,16 @@ static void DRLG_L2FixPreMap(int idx)
 		}
 	} else if (pSetPieces[idx]._sptype == SPT_BCHAMB) {
 		// patch the map - Bonestr1.DUN
-		// eliminate obsolete stair-tile
+		// useless tiles
+		lm[2 + 0 + 0 * 7] = 0;
+		lm[2 + 0 + 4 * 7] = 0;
+		lm[2 + 0 + 5 * 7] = 0;
+		lm[2 + 0 + 6 * 7] = 0;
+		lm[2 + 6 + 6 * 7] = 0;
+		lm[2 + 6 + 0 * 7] = 0;
+		lm[2 + 2 + 3 * 7] = 0;
+		lm[2 + 3 + 3 * 7] = 0;
+		// + eliminate obsolete stair-tile
 		lm[2 + 2 + 4 * 7] = 0;
 		// shadow of the external-left column
 		lm[2 + 0 + 4 * 7] = SwapLE16(48);

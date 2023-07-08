@@ -3375,7 +3375,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(0, 6, 0);
         change |= this->changeTileAt(6, 6, 0);
         change |= this->changeTileAt(6, 0, 0);
-        change |= this->changeTileAt(2, 2, 0);
+        change |= this->changeTileAt(2, 3, 0);
         change |= this->changeTileAt(3, 3, 0);
         // + eliminate obsolete stair-tile
         change |= this->changeTileAt(2, 4, 0);
@@ -3690,7 +3690,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(5, 7, 142);
         change |= this->changeTileAt(5, 8, 50);
         // remove items
-        change |= this->changeItemAt(9, 2, 0);
+        // change |= this->changeItemAt(9, 2, 0);
         // adjust objects
         // - book and the pedistal
         change |= this->changeObjectAt(9, 24, 15);
