@@ -119,6 +119,8 @@ public:
 
     void upscale(const UpscaleParam &params);
 
+    static int findMonType(const QComboBox *comboBox, const DunMonsterType &value);
+
     void updateFields();
     void updateLabel();
     void updateTilesetIcon();
