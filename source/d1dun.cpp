@@ -152,8 +152,8 @@ const DunObjectStruct DunObjConvTbl[128] = {
                      { nullptr },
 /*OBJ_ARMORSTANDN*/  { "Armor stand" }, //OBJ_ARMORSTAND, // Warlord2.DUN (Q_WARLORD) - changed to inactive versions to eliminate farming potential
 /*OBJ_WEAPONRACKLN*/ { "Weapon stand" }, //OBJ_WEAPONRACKL, // Warlord2.DUN (Q_WARLORD)
-/*OBJ_TORCHR1*/      { "Torch 2" }, // Blood2.DUN (Q_BLOOD)
-/*OBJ_TORCHL1*/      { "Torch 1" }, // Blood2.DUN (Q_BLOOD)
+                     { nullptr }, //OBJ_TORCHR1  //Blood2.DUN (Q_BLOOD)
+                     { nullptr }, //OBJ_TORCHL1  //Blood2.DUN (Q_BLOOD)
                      { nullptr }, //OBJ_MUSHPATCH,
                      { nullptr }, //OBJ_STAND,
                      { nullptr }, //OBJ_TORCHL2,
