@@ -18,6 +18,7 @@ extern int ViewY;
 extern bool IsMultiGame;
 extern bool IsHellfireGame;
 extern bool HasTileset;
+extern bool PatchDunFiles;
 extern QString assetPath;
 extern char infostr[256];
 

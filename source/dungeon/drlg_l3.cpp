@@ -2601,7 +2601,7 @@ static void DRLG_L3FixMap()
 {
 	uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 
-	if (lm == NULL) {
+	if (lm == NULL || !PatchDunFiles) {
 		return;
 	}
 	if (pSetPieces[0]._sptype == SPT_LVL_PWATER) {

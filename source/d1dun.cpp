@@ -3320,10 +3320,27 @@ void D1Dun::patch(int dunFileIndex)
     switch (dunFileIndex) {
     case DUN_SKELKING_ENTRY: // SKngDO.DUN
         // patch set-piece to use common tiles
-        change |= this->changeTileAt(5, 3, 203);
-        change |= this->changeTileAt(5, 4, 203);
+        // change |= this->changeTileAt(5, 3, 203 - 181);
+        change |= this->changeTileAt(5, 4, 203 - 181);
         // patch set-piece to use common tiles and make the inner tile at the entrance non-walkable
-        change |= this->changeTileAt(5, 2, 203);
+        change |= this->changeTileAt(5, 2, 203 - 181);
+        // let the game generate the shadow
+        change |= this->changeTileAt(0, 5, 0);
+        change |= this->changeTileAt(0, 6, 0);
+        // useless tiles
+        for (int y = 0; y < 7; y++) {
+            for (int x = 0; x < 7; x++) {
+                if (this->tiles[y][x] == 13) {
+                    change |= this->changeTileAt(x, y, 0);
+                }
+            }
+        }
+        // protect the main structure
+        for (int y = 1; y < 7; y++) {
+            for (int x = 1; x < 7; x++) {
+                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+            }
+        }
         break;
     case DUN_BONECHAMB_ENTRY_PRE: // Bonestr1.DUN
         // eliminate obsolete stair-tile
@@ -3689,29 +3706,45 @@ void D1Dun::patch(int dunFileIndex)
         }
         break;
     case DUN_VILE_PRE: // Vile2.DUN
-        // replace default tiles with external piece I.
-        // - central room
-        change |= this->changeTileAt(8, 16, 203);
-        /* fall-through */
-    case DUN_VILE_AFT: // Vile1.DUN
-        // replace default tiles with external piece
-        // - SW in the middle
-        change |= this->changeTileAt(12, 22, 203);
-        change |= this->changeTileAt(13, 22, 203);
-        change |= this->changeTileAt(14, 22, 203);
-        // - SE
-        for (int i = 1; i < 23; i++) {
-            change |= this->changeTileAt(20, i, 203);
-        }
-        // fix corners (L1)
+        // useless tiles
         for (int y = 0; y < 23; y++) {
             for (int x = 0; x < 21; x++) {
-                int currTileRef = this->tiles[y][x];
-                if (currTileRef >= 18 && currTileRef <= 24)
-                    change |= this->changeTileAt(x, y, currTileRef + 181);
+                // room on the left side
+                if (x >= 4 && y >= 5 && x <= 6 && y <= 7) {
+                    continue;
+                }
+                if (x >= 4 && y >= 8 && x <= 7 && y <= 10) {
+                    continue;
+                }
+                // room on the right side
+                if (x == 12 && y == 5) {
+                    continue;
+                }
+                if (x >= 13 && y >= 5 && x <= 15 && y <= 7) {
+                    continue;
+                }
+                if (x >= 12 && y >= 8 && x <= 14 && y <= 10) {
+                    continue;
+                }
+                // main room
+                if (x >= 7 && y >= 13 && x <= 13 && y <= 17) {
+                    continue;
+                }
+                if (x >= 7 && y >= 18 && x <= 12 && y <= 18) {
+                    continue;
+                }
+                if (x >= 8 && y >= 20 && x <= 11 && y <= 22) {
+                    continue;
+                }
+                change |= this->changeTileAt(x, y, 0);
             }
         }
-        // - add the unique monsters
+        // replace default tiles with external piece I.
+        // - central room
+        change |= this->changeTileAt(8, 16, 203 - 181);
+        // use the new shadows
+        change |= this->changeTileAt(14, 5, 152);
+        // add the unique monsters
         change |= this->changeMonsterAt(16, 30, UMT_LAZARUS + 1, true);
         change |= this->changeMonsterAt(24, 29, UMT_RED_VEX + 1, true);
         change |= this->changeMonsterAt(22, 33, UMT_BLACKJADE + 1, true);
@@ -3719,15 +3752,82 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeObjectAt(10, 29, 47);
         change |= this->changeObjectAt(29, 30, 47);
         break;
-    case DUN_WARLORD_AFT: // Warlord.DUN
+    case DUN_VILE_AFT: // Vile1.DUN
+        // external tiles
+        for (int y = 0; y < 23; y++) {
+            for (int x = 0; x < 21; x++) {
+                if (this->tiles[y][x] >= 181 + 18 && this->tiles[y][x] <= 181 + 24) {
+                    change |= this->changeTileAt(x, y, this->tiles[y][x] - 181);
+                }
+            }
+        }
+        // replace default tiles with external piece
+        // - SW in the middle
+        change |= this->changeTileAt(12, 22, 203 - 181);
+        change |= this->changeTileAt(13, 22, 203 - 181);
+        change |= this->changeTileAt(14, 22, 203 - 181);
+        // - SE
+        for (int i = 1; i < 23; i++) {
+            change |= this->changeTileAt(20, i, 203 - 181);
+        }
+        // use common tiles
+        change |= this->changeTileAt(11, 3, 18);
+        // use the new shadows
+        // - hallway (left)
+        change |= this->changeTileAt(3, 4, 52);
+        change |= this->changeTileAt(4, 4, 51);
+        change |= this->changeTileAt(5, 4, 51);
+        change |= this->changeTileAt(3, 5, 139);
+        change |= this->changeTileAt(3, 6, 139);
+        change |= this->changeTileAt(3, 7, 165);
+        // - room (left)
+        change |= this->changeTileAt(4, 7, 48);
+        change |= this->changeTileAt(5, 7, 164);
+        change |= this->changeTileAt(4, 8, 27);
+        change |= this->changeTileAt(5, 8, 49);
+        // - hallway (right)
+        change |= this->changeTileAt(11, 4, 46);
+        change |= this->changeTileAt(12, 4, 51);
+        change |= this->changeTileAt(13, 4, 51);
+        change |= this->changeTileAt(14, 4, 47);
+        // - room (right)
+        change |= this->changeTileAt(14, 5, 149);
+        change |= this->changeTileAt(14, 6, 139);
+        change |= this->changeTileAt(14, 7, 139);
+        change |= this->changeTileAt(12, 7, 50);
+        change |= this->changeTileAt(13, 7, 164);
+        change |= this->changeTileAt(13, 8, 49);
+        // - hallway (center)
+        change |= this->changeTileAt(9, 4, 140);
+        // - corners
+        change |= this->changeTileAt(4, 17, 159);
+        change |= this->changeTileAt(16, 10, 159);
+        // remove objects, monsters
+        for (int y = 0; y < 23 * 2; y++) {
+            for (int x = 0; x < 21 * 2; x++) {
+                change |= this->changeObjectAt(x, y, 0);
+                change |= this->changeMonsterAt(x, y, 0, false);
+            }
+        }
         // ensure the changing tiles are reserved
-        change |= this->changeTileProtectionAt(7, 1, Qt::Checked);
-        change |= this->changeTileProtectionAt(7, 2, Qt::Checked);
-        change |= this->changeTileProtectionAt(7, 3, Qt::Checked);
-        change |= this->changeTileProtectionAt(7, 4, Qt::Checked);
-        change |= this->changeTileProtectionAt(7, 5, Qt::Checked);
-        // - add the Warlord
-        change |= this->changeMonsterAt(6, 7, UMT_WARLORD + 1, true);
+        change |= this->changeTileProtectionAt( 4,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt( 4,  6, Qt::Checked);
+        change |= this->changeTileProtectionAt( 4,  7, Qt::Checked);
+        change |= this->changeTileProtectionAt( 5,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt( 6,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt(12,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt(13,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt(14,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt(15,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt(15,  6, Qt::Checked);
+        change |= this->changeTileProtectionAt(15,  7, Qt::Checked);
+        change |= this->changeTileProtectionAt( 7, 18, Qt::Checked);
+        change |= this->changeTileProtectionAt( 8, 18, Qt::Checked);
+        change |= this->changeTileProtectionAt( 9, 18, Qt::Checked);
+        change |= this->changeTileProtectionAt(10, 18, Qt::Checked);
+        change |= this->changeTileProtectionAt(11, 18, Qt::Checked);
+        change |= this->changeTileProtectionAt(12, 18, Qt::Checked);
+        change |= this->changeTileProtectionAt(14, 15, Qt::Checked);
         break;
     case DUN_WARLORD_PRE: // Warlord2.DUN
         // replace monsters from Warlord.DUN
@@ -3768,39 +3868,227 @@ void D1Dun::patch(int dunFileIndex)
             }
         }*/
         break;
+    case DUN_WARLORD_AFT: // Warlord.DUN
+        // ensure the changing tiles are reserved
+        change |= this->changeTileProtectionAt(7, 1, Qt::Checked);
+        change |= this->changeTileProtectionAt(7, 2, Qt::Checked);
+        change |= this->changeTileProtectionAt(7, 3, Qt::Checked);
+        change |= this->changeTileProtectionAt(7, 4, Qt::Checked);
+        change |= this->changeTileProtectionAt(7, 5, Qt::Checked);
+        // - add the Warlord
+        change |= this->changeMonsterAt(6, 7, UMT_WARLORD + 1, true);
+        break;
     case DUN_BANNER_PRE: // Banner2.DUN
-        // replace entry tile
-        change |= this->changeTileAt(7, 6, 193);
-        // replace monsters from Banner1.DUN
+        // useless tiles
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                if (x >= 3 && y >= 3 && x <= 3 && y <= 6) {
+                    continue;
+                }
+                if (x >= 3 && y >= 5 && x <= 6 && y <= 5) {
+                    continue;
+                }
+                change |= this->changeTileAt(x, y, 0);
+            }
+        }
+        // protect subtiles from spawning monsters/objects
+        // - protect objects from monsters/objects
+        change |= this->changeSubtileProtectionAt(10 + 0,  2 + 1, 3);
+        // - protect monsters from monsters/objects
+        change |= this->changeSubtileProtectionAt( 0 + 1,  0 + 1, 3);
+        change |= this->changeSubtileProtectionAt( 2 + 1,  2 + 0, 3);
+        change |= this->changeSubtileProtectionAt( 8 + 0,  0 + 1, 3);
+        change |= this->changeSubtileProtectionAt( 8 + 1,  4 + 0, 3);
+        change |= this->changeSubtileProtectionAt(10 + 1,  2 + 0, 3);
+        // - protect area from monsters/objects
+        for (int y = 7; y <= 13; y++) {
+            for (int x = 1; x <= 13; x++) {
+                change |= this->changeSubtileProtectionAt(x, y, 3);
+            }
+        }
+        // replace monsters
         for (int y = 7; y <= 9; y++) {
             for (int x = 7; x <= 13; x++) {
                 change |= this->changeMonsterAt(x, y, 16, false);
             }
         }
-        // remove monsters
+        // - remove monsters
         change |= this->changeMonsterAt(1, 4, 0, false);
         change |= this->changeMonsterAt(13, 5, 0, false);
         change |= this->changeMonsterAt(7, 12, 0, false);
-        /* fall-through */
-    case DUN_BANNER_AFT: // Banner1.DUN
-        // - add snotspil
+        // - add unique
         change |= this->changeMonsterAt(8, 12, UMT_SNOTSPIL + 1, true);
         // - add sign-chest
         change |= this->changeObjectAt(10, 3, 90);
         break;
+    case DUN_BANNER_AFT: // Banner1.DUN
+        // useless tiles
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                if (this->tiles[y][x] == 13) {
+                    change |= this->changeTileAt(x, y, 0);
+                }
+            }
+        }
+        // fix the shadows
+        change |= this->changeTileAt(0, 1, 11);
+        change |= this->changeTileAt(3, 1, 11);
+        // use the new shadows
+        change |= this->changeTileAt(0, 4, 56);
+        change |= this->changeTileAt(0, 5, 55);
+        // change |= this->changeTileAt(2, 3, 148);
+        change |= this->changeTileAt(2, 4, 53);
+        change |= this->changeTileAt(2, 5, 54);
+        change |= this->changeTileAt(6, 6, 139);
+        // protect the main structure
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                if (x >= 1 && y >= 3 && x <= 6 && y <= 5) {
+                    bool skip = true;
+                    if (x == 1 && y == 3) {
+                        skip = false;
+                    }
+                    if (x == 2 && y == 3) {
+                        skip = false;
+                    }
+                    if (x >= 4 && y == 4) {
+                        skip = false;
+                    }
+                    if (skip) {
+                        continue;
+                    }
+                }
+                if (x == 3 && y == 6) {
+                    continue;
+                }
+                change |= this->changeTileProtectionAt(x, y, Qt::PartiallyChecked);
+            }
+        }
+        // ensure the changing tiles are reserved
+        change |= this->changeTileProtectionAt(3, 6, Qt::Checked);
+        for (int y = 3; y <= 5; y++) {
+            for (int x = 1; x <= 6; x++) {
+                if (x == 1 && y == 3) {
+                    continue;
+                }
+                if (x == 2 && y == 3) {
+                    continue;
+                }
+                if (x >= 4 && y == 4) {
+                    continue;
+                }
+                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+            }
+        }
+        // remove monsters
+        for (int y = 0; y < 16; y++) {
+            for (int x = 0; x < 16; x++) {
+                change |= this->changeMonsterAt(x, y, 0, false);
+            }
+        }
+        break;
+    case DUN_SKELKING_PRE: // SklKng2.DUN
+        // external tiles
+        for (int y = 0; y < 25; y++) {
+            for (int x = 0; x < 37; x++) {
+                if (this->tiles[y][x] >= 181 + 18 && this->tiles[y][x] <= 181 + 24) {
+                    change |= this->changeTileAt(x, y, this->tiles[y][x] - 181);
+                }
+            }
+        }
+        // useless tiles
+        for (int y = 0; y < 25; y++) {
+            for (int x = 0; x < 37; x++) {
+                // large hidden room
+                if (x >= 8 && y >= 1 && x <= 15 && y <= 6) {
+                    continue;
+                }
+                if (x >= 10 && y >= 7 && x <= 13 && y <= 10) {
+                    continue;
+                }
+                if (x == 11 && y == 11) {
+                    continue;
+                }
+                // small hidden room
+                if (x >= 20 && y >= 7 && x <= 22 && y <= 10) {
+                    continue;
+                }
+                if (x == 23 && y == 8) {
+                    continue;
+                }
+                // grate
+                if (x >= 20 && y >= 14 && x <= 21 && y <= 16) {
+                    continue;
+                }
+                change |= this->changeTileAt(x, y, 0);
+            }
+        }
+        // add sarcophagi
+        change |= this->changeObjectAt(14, 23, 5);
+        change |= this->changeObjectAt(14, 41, 5);
+        change |= this->changeObjectAt(32, 23, 5);
+        change |= this->changeObjectAt(32, 41, 5);
+        change |= this->changeObjectAt(48, 45, 5);
+        change |= this->changeObjectAt(48, 17, 5);
+        // add the skeleton king
+        change |= this->changeMonsterAt(19, 31, UMT_SKELKING + 1, true);
+        // remove monsters
+        for (int y = 21; y <= 41; y++) {
+            for (int x = 13; x <= 39; x++) {
+                if (x >= 18 && y >= 30 && x <= 20 && y <= 32) {
+                    continue;
+                }
+                change |= this->changeMonsterAt(x, y, 0, false);
+            }
+        }
+        for (int y = 21; y <= 36; y++) {
+            for (int x = 43; x <= 59; x++) {
+                change |= this->changeMonsterAt(x, y, 0, false);
+            }
+        }
+        // protect subtiles from spawning monsters/objects
+        // - protect objects from monsters
+        change |= this->changeSubtileProtectionAt(10 + 1, 20 + 1, 1);
+        change |= this->changeSubtileProtectionAt(10 + 1, 36 + 1, 1);
+        change |= this->changeSubtileProtectionAt(30 + 0, 18 + 1, 1);
+        change |= this->changeSubtileProtectionAt(32 + 1, 36 + 1, 1);
+        change |= this->changeSubtileProtectionAt(14 + 0, 22 + 0, 1);
+        change |= this->changeSubtileProtectionAt(14 + 0, 22 + 1, 1);
+        change |= this->changeSubtileProtectionAt(14 + 0, 40 + 0, 1);
+        change |= this->changeSubtileProtectionAt(14 + 0, 40 + 1, 1);
+        change |= this->changeSubtileProtectionAt(32 + 0, 22 + 0, 1);
+        change |= this->changeSubtileProtectionAt(32 + 0, 22 + 1, 1);
+        change |= this->changeSubtileProtectionAt(32 + 0, 40 + 0, 1);
+        change |= this->changeSubtileProtectionAt(32 + 0, 40 + 1, 1);
+        change |= this->changeSubtileProtectionAt(48 + 0, 16 + 0, 1);
+        change |= this->changeSubtileProtectionAt(48 + 0, 16 + 1, 1);
+        change |= this->changeSubtileProtectionAt(48 + 0, 18 + 0, 1);
+        change |= this->changeSubtileProtectionAt(48 + 0, 42 + 1, 1);
+        change |= this->changeSubtileProtectionAt(48 + 0, 44 + 0, 1);
+        change |= this->changeSubtileProtectionAt(48 + 0, 44 + 1, 1);
+        // - protect the back-room from additional monsters
+        for (int y = 31; y <= 37; y++) {
+            for (int x = 3; x <= 9; x++) {
+                change |= this->changeSubtileProtectionAt(x, y, 1);
+            }
+        }
+        for (int y = 33; y <= 35; y++) {
+            for (int x = 10; x <= 13; x++) {
+                change |= this->changeSubtileProtectionAt(x, y, 1);
+            }
+        }
+        // - add empty space after the grate
+        for (int y = 29; y <= 33; y++) {
+            for (int x = 32; x <= 41; x++) {
+                if (x == 32 && (y == 30 || y == 32)) {
+                    continue;
+                }
+                change |= this->changeSubtileProtectionAt(x, y, 1);
+            }
+        }
+        break;
     case DUN_SKELKING_AFT: // SklKng1.DUN
-        // remove items
-        // - room via crux
-        change |= this->changeItemAt(17, 5, 0);
-        change |= this->changeItemAt(17, 7, 0);
-        change |= this->changeItemAt(17, 9, 0);
-        change |= this->changeItemAt(29, 5, 0);
-        change |= this->changeItemAt(29, 7, 0);
-        change |= this->changeItemAt(29, 9, 0);
-        // - room via lever
-        change |= this->changeItemAt(41, 15, 0);
-        change |= this->changeItemAt(41, 19, 0);
-        // add chests
+        /*// add chests
         // - room via crux
         change |= this->changeObjectAt(17, 10, 78);
         change |= this->changeObjectAt(29, 10, 78);
@@ -3809,8 +4097,8 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeObjectAt(3, 36, 78);
         change |= this->changeObjectAt(3, 34, 81);
         // - room via lever
-        change |= this->changeObjectAt(41, 17, 81);
-        // replace monsters from SklKng2.DUN
+        change |= this->changeObjectAt(41, 17, 81);*/
+        /*// replace monsters from SklKng2.DUN
         // - back room
         change |= this->changeMonsterAt(6, 32, 27, false);
         change |= this->changeMonsterAt(6, 33, 22, false);
@@ -3832,19 +4120,106 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(18, 30, 27, false);
         change |= this->changeMonsterAt(18, 32, 27, false);
         change |= this->changeMonsterAt(33, 41, 23, false);
-        change |= this->changeMonsterAt(39, 31, 11, false);
-        /* fall-through */
-    case DUN_SKELKING_PRE: // SklKng2.DUN
-        // - add the skeleton king
-        change |= this->changeMonsterAt(19, 31, UMT_SKELKING + 1, true);
-        // fix corners (L1)
+        change |= this->changeMonsterAt(39, 31, 11, false);*/
+        /*// fix corners (L1)
         for (int y = 0; y < 25; y++) {
             for (int x = 0; x < 37; x++) {
                 int currTileRef = this->tiles[y][x];
                 if (currTileRef >= 18 && currTileRef <= 24)
                     change |= this->changeTileAt(x, y, currTileRef + 181);
             }
+        }*/
+        // external tiles
+        for (int y = 0; y < 25; y++) {
+            for (int x = 0; x < 37; x++) {
+                if (this->tiles[y][x] >= 181 + 18 && this->tiles[y][x] <= 181 + 24) {
+                    change |= this->changeTileAt(x, y, this->tiles[y][x] - 181);
+                }
+            }
         }
+        // useless tiles
+        change |= this->changeTileAt(15, 12, 0);
+        change |= this->changeTileAt(15, 16, 0);
+        change |= this->changeTileAt(25, 11, 0);
+        change |= this->changeTileAt(24, 23, 0);
+        // fix the shadows
+        change |= this->changeTileAt( 9,  2, 143);
+        change |= this->changeTileAt(12,  2, 143);
+        change |= this->changeTileAt(10,  5, 157);
+        change |= this->changeTileAt(24, 18, 140);
+        // use common tiles
+        change |= this->changeTileAt(7, 14, 84);
+        // use the new shadows
+        change |= this->changeTileAt( 4, 15, 150);
+        change |= this->changeTileAt( 6, 16, 150);
+        change |= this->changeTileAt(15, 17, 159);
+        change |= this->changeTileAt(15, 13, 159);
+        change |= this->changeTileAt(27, 13, 159);
+        change |= this->changeTileAt( 8, 10, 159);
+        change |= this->changeTileAt( 8, 12, 144);
+        change |= this->changeTileAt(13, 12, 144);
+        change |= this->changeTileAt( 8, 17, 144);
+        change |= this->changeTileAt(13, 17, 144);
+        // remove fix decorations
+        change |= this->changeTileAt( 3, 15,   2);
+        change |= this->changeTileAt( 5, 20,   1);
+        change |= this->changeTileAt( 6,  9,   2);
+        change |= this->changeTileAt(10,  1,   2);
+        change |= this->changeTileAt(13,  1,   2);
+        change |= this->changeTileAt(15,  9,   2);
+        change |= this->changeTileAt(17, 14,   2);
+        change |= this->changeTileAt(22, 12,   2);
+        change |= this->changeTileAt(20,  8,   1);
+        change |= this->changeTileAt(21,  7,   2);
+        change |= this->changeTileAt(24,  7,   2);
+        change |= this->changeTileAt(25, 12,   2);
+        change |= this->changeTileAt(26, 12,   2);
+        change |= this->changeTileAt(29, 14,   2);
+        change |= this->changeTileAt(16, 15,  11);
+        change |= this->changeTileAt( 8,  3,   1);
+        change |= this->changeTileAt( 8,  4,   1);
+        change |= this->changeTileAt(10,  7,   1);
+        change |= this->changeTileAt(10,  9,   1);
+        change |= this->changeTileAt(21, 13,   1);
+        change |= this->changeTileAt(21, 17,   1);
+        change |= this->changeTileAt(23,  9,   1);
+        change |= this->changeTileAt(23, 10,   1);
+        change |= this->changeTileAt(23, 20,   1);
+        change |= this->changeTileAt(23, 21,   1);
+        change |= this->changeTileAt(31, 15,  11);
+        change |= this->changeTileAt(31, 16,  11);
+        change |= this->changeTileAt(32, 16,   0);
+        change |= this->changeTileAt(33, 16,   0);
+        // remove objects, monsters, items
+        // - remove sarcophagi tiles
+        change |= this->changeTileAt( 6, 11,   0);
+        change |= this->changeTileAt( 7, 11,   0);
+        change |= this->changeTileAt(15, 11,   0);
+        change |= this->changeTileAt(16, 11,   0);
+        change |= this->changeTileAt( 6, 20,   0);
+        change |= this->changeTileAt( 7, 20,   0);
+        change |= this->changeTileAt(15, 20,   0);
+        change |= this->changeTileAt(16, 20,   0);
+        change |= this->changeTileAt(24,  8,   0);
+        change |= this->changeTileAt(24, 22,   0);
+        for (int y = 0; y < 25 * 2; y++) {
+            for (int x = 0; x < 37 * 2; x++) {
+                change |= this->changeObjectAt(x, y, 0);
+                change |= this->changeMonsterAt(x, y, 0, false);
+                change |= this->changeItemAt(x, y, 0);
+            }
+        }
+        // ensure the changing tiles are reserved
+        change |= this->changeTileProtectionAt(10, 11, Qt::Checked);
+        change |= this->changeTileProtectionAt(11, 11, Qt::Checked);
+        change |= this->changeTileProtectionAt(12, 11, Qt::Checked);
+        change |= this->changeTileProtectionAt(20, 14, Qt::Checked);
+        change |= this->changeTileProtectionAt(20, 15, Qt::Checked);
+        change |= this->changeTileProtectionAt(20, 16, Qt::Checked);
+        change |= this->changeTileProtectionAt(21, 14, Qt::Checked);
+        change |= this->changeTileProtectionAt(21, 15, Qt::Checked);
+        change |= this->changeTileProtectionAt(21, 16, Qt::Checked);
+        change |= this->changeTileProtectionAt(23,  8, Qt::Checked);
         break;
     case DUN_BETRAYER: // Vile1.DUN
         // - add the unique monsters
