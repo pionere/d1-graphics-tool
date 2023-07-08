@@ -1038,6 +1038,9 @@ static void DRLG_LoadL1SP()
 		// patch set-piece - Banner1.DUN
 		if (pSetPieces[0]._spData != NULL && PatchDunFiles) {
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
+		// fix the shadows
+		lm[2 + 0 + 1 * 8] = SwapLE16(11);
+		lm[2 + 3 + 1 * 8] = SwapLE16(11);
 		// - protect the main structure
 		for (int y = 0; y < 8; y++) {
 			for (int x = 0; x < 8; x++) {
@@ -2962,6 +2965,27 @@ static void DRLG_L1FixMap()
 		for (int i = 1; i < 23; i++) {
 			lm[2 + 20 + i * 21] = SwapLE16(203 - 181);
 		}
+		// use common tiles
+		lm[2 + 11 +  3 * 21] = SwapLE16(18);
+		// ensure the changing tiles are reserved
+		lm[2 + 21 * 23 +  4 +  5 * 21] = SwapLE16(3);
+		lm[2 + 21 * 23 +  4 +  6 * 21] = SwapLE16(3);
+		lm[2 + 21 * 23 +  4 +  7 * 21] = SwapLE16(3);
+		lm[2 + 21 * 23 +  5 +  5 * 21] = SwapLE16(3);
+		lm[2 + 21 * 23 +  6 +  5 * 21] = SwapLE16(3);
+		lm[2 + 21 * 23 + 12 +  5 * 21] = SwapLE16(3);
+		lm[2 + 21 * 23 + 13 +  5 * 21] = SwapLE16(3);
+		lm[2 + 21 * 23 + 14 +  5 * 21] = SwapLE16(3);
+		lm[2 + 21 * 23 + 15 +  5 * 21] = SwapLE16(3);
+		lm[2 + 21 * 23 + 15 +  6 * 21] = SwapLE16(3);
+		lm[2 + 21 * 23 + 15 +  7 * 21] = SwapLE16(3);
+		lm[2 + 21 * 23 +  7 + 18 * 21] = SwapLE16(3);
+		lm[2 + 21 * 23 +  8 + 18 * 21] = SwapLE16(3);
+		lm[2 + 21 * 23 +  9 + 18 * 21] = SwapLE16(3);
+		lm[2 + 21 * 23 + 10 + 18 * 21] = SwapLE16(3);
+		lm[2 + 21 * 23 + 11 + 18 * 21] = SwapLE16(3);
+		lm[2 + 21 * 23 + 12 + 18 * 21] = SwapLE16(3);
+		lm[2 + 21 * 23 + 14 + 15 * 21] = SwapLE16(3);
 	} else if (pSetPieces[0]._sptype == SPT_LVL_SKELKING) {
 		// patch the map - SklKng1.DUN
 		// external tiles
@@ -2973,8 +2997,21 @@ static void DRLG_L1FixMap()
 				}
 			}
 		}
+		// useless tiles
+		lm[2 + 15 + 12 * 37] = 0;
+		lm[2 + 15 + 16 * 37] = 0;
+		lm[2 + 25 + 11 * 37] = 0;
+		lm[2 + 24 + 23 * 37] = 0;
+		// fix the shadows
+		lm[2 +  9 + 2 * 37] = SwapLE16(143);
+		lm[2 + 12 + 2 * 37] = SwapLE16(143);
+		lm[2 + 10 + 5 * 37] = SwapLE16(157);
+		lm[2 + 24, 18 * 37] = SwapLE16(140);
+		// use common tiles
+		lm[2 +  7 + 14 * 37] = SwapLE16(84);
 		// remove fix decorations
 		lm[2 +  3 + 15 * 37] = SwapLE16(2);
+		lm[2 +  5 + 20 * 37] = SwapLE16(1);
 		lm[2 +  6 +  9 * 37] = SwapLE16(2);
 		lm[2 + 10 +  1 * 37] = SwapLE16(2);
 		lm[2 + 13 +  1 * 37] = SwapLE16(2);
@@ -2992,7 +3029,10 @@ static void DRLG_L1FixMap()
 		lm[2 +  8 +  4 * 37] = SwapLE16(1);
 		lm[2 + 10 +  7 * 37] = SwapLE16(1);
 		lm[2 + 10 +  9 * 37] = SwapLE16(1);
+		lm[2 + 21 + 13 * 37] = SwapLE16(1);
+		lm[2 + 21 + 17 * 37] = SwapLE16(1);
 		lm[2 + 23 +  9 * 37] = SwapLE16(1);
+		lm[2 + 23 + 10 * 37] = SwapLE16(1);
 		lm[2 + 23 + 20 * 37] = SwapLE16(1);
 		lm[2 + 23 + 21 * 37] = SwapLE16(1);
 		lm[2 + 31 + 15 * 37] = SwapLE16(11);
@@ -3010,6 +3050,17 @@ static void DRLG_L1FixMap()
 		lm[2 + 16 + 20 * 37] = 0;
 		lm[2 + 24 +  8 * 37] = 0;
 		lm[2 + 24 + 22 * 37] = 0;
+		// ensure the changing tiles are reserved
+		lm[2 + 25 * 37 + 10 + 11 * 37] = SwapLE16(3);
+		lm[2 + 25 * 37 + 11 + 11 * 37] = SwapLE16(3);
+		lm[2 + 25 * 37 + 12 + 11 * 37] = SwapLE16(3);
+		lm[2 + 25 * 37 + 20 + 14 * 37] = SwapLE16(3);
+		lm[2 + 25 * 37 + 20 + 15 * 37] = SwapLE16(3);
+		lm[2 + 25 * 37 + 20 + 16 * 37] = SwapLE16(3);
+		lm[2 + 25 * 37 + 21 + 14 * 37] = SwapLE16(3);
+		lm[2 + 25 * 37 + 21 + 15 * 37] = SwapLE16(3);
+		lm[2 + 25 * 37 + 21 + 16 * 37] = SwapLE16(3);
+		lm[2 + 25 * 37 + 23 +  8 * 37] = SwapLE16(3);
 	}
 }
 
@@ -3083,7 +3134,10 @@ static void DRLG_L1FixPreMap(int idx)
 					continue;
 				}
 				// room on the right side
-				if (x >= 12 && y >= 5 && x <= 15 && y <= 7) {
+				if (x == 12 && y == 5) {
+					continue;
+				}
+				if (x >= 13 && y >= 5 && x <= 15 && y <= 7) {
 					continue;
 				}
 				if (x >= 12 && y >= 8 && x <= 14 && y <= 10) {

@@ -3742,7 +3742,10 @@ void D1Dun::patch(int dunFileIndex)
                     continue;
                 }
                 // room on the right side
-                if (x >= 12 && y >= 5 && x <= 15 && y <= 7) {
+                if (x == 12 && y == 5) {
+                    continue;
+                }
+                if (x >= 13 && y >= 5 && x <= 15 && y <= 7) {
                     continue;
                 }
                 if (x >= 12 && y >= 8 && x <= 14 && y <= 10) {
@@ -3792,6 +3795,8 @@ void D1Dun::patch(int dunFileIndex)
         for (int i = 1; i < 23; i++) {
             change |= this->changeTileAt(20, i, 203 - 181);
         }
+        // use common tiles
+        change |= this->changeTileAt(11, 3, 18);
         // use the new shadows
         // - hallway (left)
         change |= this->changeTileAt(3, 4, 52);
@@ -3803,7 +3808,8 @@ void D1Dun::patch(int dunFileIndex)
         // - room (left)
         change |= this->changeTileAt(4, 7, 48);
         change |= this->changeTileAt(5, 7, 164);
-        change |= this->changeTileAt(4, 8, 49);
+        change |= this->changeTileAt(4, 8, 27);
+        change |= this->changeTileAt(5, 8, 49);
         // - hallway (right)
         change |= this->changeTileAt(11, 4, 46);
         change |= this->changeTileAt(12, 4, 51);
@@ -3812,7 +3818,7 @@ void D1Dun::patch(int dunFileIndex)
         // - room (right)
         change |= this->changeTileAt(14, 5, 149);
         change |= this->changeTileAt(14, 6, 139);
-        change |= this->changeTileAt(14, 7, 165);
+        change |= this->changeTileAt(14, 7, 139);
         change |= this->changeTileAt(12, 7, 50);
         change |= this->changeTileAt(13, 7, 164);
         change |= this->changeTileAt(13, 8, 49);
@@ -3828,6 +3834,25 @@ void D1Dun::patch(int dunFileIndex)
                 change |= this->changeMonsterAt(x, y, 0, false);
             }
         }
+        // ensure the changing tiles are reserved
+        change |= this->changeTileProtectionAt( 4,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt( 4,  6, Qt::Checked);
+        change |= this->changeTileProtectionAt( 4,  7, Qt::Checked);
+        change |= this->changeTileProtectionAt( 5,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt( 6,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt(12,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt(13,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt(14,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt(15,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt(15,  6, Qt::Checked);
+        change |= this->changeTileProtectionAt(15,  7, Qt::Checked);
+        change |= this->changeTileProtectionAt( 7, 18, Qt::Checked);
+        change |= this->changeTileProtectionAt( 8, 18, Qt::Checked);
+        change |= this->changeTileProtectionAt( 9, 18, Qt::Checked);
+        change |= this->changeTileProtectionAt(10, 18, Qt::Checked);
+        change |= this->changeTileProtectionAt(11, 18, Qt::Checked);
+        change |= this->changeTileProtectionAt(12, 18, Qt::Checked);
+        change |= this->changeTileProtectionAt(14, 15, Qt::Checked);
         break;
     case DUN_WARLORD_PRE: // Warlord2.DUN
         // replace monsters from Warlord.DUN
@@ -3931,8 +3956,8 @@ void D1Dun::patch(int dunFileIndex)
             }
         }
         // fix the shadows
-        change |= this->changeTileAt(0, 2, 11);
-        change |= this->changeTileAt(6, 2, 11);
+        change |= this->changeTileAt(0, 1, 11);
+        change |= this->changeTileAt(3, 1, 11);
         // use the new shadows
         change |= this->changeTileAt(0, 4, 56);
         change |= this->changeTileAt(0, 5, 55);
@@ -4032,7 +4057,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeObjectAt(48, 17, 5);
         // add the skeleton king
         change |= this->changeMonsterAt(19, 31, UMT_SKELKING + 1, true);
-		// remove monsters
+        // remove monsters
         for (int y = 21; y <= 41; y++) {
             for (int x = 13; x <= 39; x++) {
                 if (x >= 18 && y >= 30 && x <= 20 && y <= 32) {
@@ -4137,22 +4162,32 @@ void D1Dun::patch(int dunFileIndex)
                 }
             }
         }
+        // useless tiles
+        change |= this->changeTileAt(15, 12, 0);
+        change |= this->changeTileAt(15, 16, 0);
+        change |= this->changeTileAt(25, 11, 0);
+        change |= this->changeTileAt(24, 23, 0);
         // fix the shadows
         change |= this->changeTileAt( 9,  2, 143);
         change |= this->changeTileAt(12,  2, 143);
         change |= this->changeTileAt(10,  5, 157);
+        change |= this->changeTileAt(24, 18, 140);
+        // use common tiles
+        change |= this->changeTileAt(7, 14, 84);
         // use the new shadows
         change |= this->changeTileAt( 4, 15, 150);
         change |= this->changeTileAt( 6, 16, 150);
         change |= this->changeTileAt(15, 17, 159);
         change |= this->changeTileAt(15, 13, 159);
         change |= this->changeTileAt(27, 13, 159);
+        change |= this->changeTileAt( 8, 10, 159);
         change |= this->changeTileAt( 8, 12, 144);
         change |= this->changeTileAt(13, 12, 144);
         change |= this->changeTileAt( 8, 17, 144);
         change |= this->changeTileAt(13, 17, 144);
         // remove fix decorations
         change |= this->changeTileAt( 3, 15,   2);
+        change |= this->changeTileAt( 5, 20,   1);
         change |= this->changeTileAt( 6,  9,   2);
         change |= this->changeTileAt(10,  1,   2);
         change |= this->changeTileAt(13,  1,   2);
@@ -4170,7 +4205,10 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt( 8,  4,   1);
         change |= this->changeTileAt(10,  7,   1);
         change |= this->changeTileAt(10,  9,   1);
+        change |= this->changeTileAt(21, 13,   1);
+        change |= this->changeTileAt(21, 17,   1);
         change |= this->changeTileAt(23,  9,   1);
+        change |= this->changeTileAt(23, 10,   1);
         change |= this->changeTileAt(23, 20,   1);
         change |= this->changeTileAt(23, 21,   1);
         change |= this->changeTileAt(31, 15,  11);
@@ -4196,6 +4234,17 @@ void D1Dun::patch(int dunFileIndex)
                 change |= this->changeItemAt(x, y, 0);
             }
         }
+        // ensure the changing tiles are reserved
+        change |= this->changeTileProtectionAt(10, 11, Qt::Checked);
+        change |= this->changeTileProtectionAt(11, 11, Qt::Checked);
+        change |= this->changeTileProtectionAt(12, 11, Qt::Checked);
+        change |= this->changeTileProtectionAt(20, 14, Qt::Checked);
+        change |= this->changeTileProtectionAt(20, 15, Qt::Checked);
+        change |= this->changeTileProtectionAt(20, 16, Qt::Checked);
+        change |= this->changeTileProtectionAt(21, 14, Qt::Checked);
+        change |= this->changeTileProtectionAt(21, 15, Qt::Checked);
+        change |= this->changeTileProtectionAt(21, 16, Qt::Checked);
+        change |= this->changeTileProtectionAt(23,  8, Qt::Checked);
         break;
     case DUN_BETRAYER: // Vile1.DUN
         // - add the unique monsters
