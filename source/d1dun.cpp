@@ -3588,7 +3588,9 @@ void D1Dun::patch(int dunFileIndex)
         // replace the door with wall
         change |= this->changeTileAt(4, 3, 25);
         // remove items
-        change |= this->changeItemAt(5, 5, 0);
+        //change |= this->changeItemAt(5, 5, 0);
+        // remove obsolete 'protection' (item)
+        change |= this->changeTileProtectionAt(5, 10, Qt::Unchecked);
         // protect inner tiles from spawning additional monsters/objects
         for (int y = 0; y < 6; y++) {
             for (int x = 0; x < 6; x++) {
@@ -3623,6 +3625,8 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(14, 17, 32, false);
         change |= this->changeMonsterAt(14, 11, 32, false);
         change |= this->changeMonsterAt(15, 13, 32, false);*/
+        // remove obsolete 'protection' (item)
+        // change |= this->changeTileProtectionAt(5, 10, Qt::Unchecked);
         // protect the main structure
         for (int y = 0; y < 7; y++) {
             for (int x = 0; x < 7; x++) {
@@ -3745,7 +3749,7 @@ void D1Dun::patch(int dunFileIndex)
             for (int x = 0; x < 10 * 2; x++) {
                 change |= this->changeObjectAt(x, y, 0);
                 change |= this->changeMonsterAt(x, y, 0, false);
-                change |= this->changeItemAt(x, y, 0);
+                // change |= this->changeItemAt(x, y, 0);
             }
         }
         break;
@@ -4250,7 +4254,7 @@ void D1Dun::patch(int dunFileIndex)
             for (int x = 0; x < 37 * 2; x++) {
                 change |= this->changeObjectAt(x, y, 0);
                 change |= this->changeMonsterAt(x, y, 0, false);
-                change |= this->changeItemAt(x, y, 0);
+                // change |= this->changeItemAt(x, y, 0);
             }
         }
         // ensure the changing tiles are reserved

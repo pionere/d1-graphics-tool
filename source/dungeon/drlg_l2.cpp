@@ -803,6 +803,8 @@ static void DRLG_LoadL2SP()
 		// place pieces with closed doors
 		lm[2 + 4 + 3 * 11] = SwapLE16(150);
 		lm[2 + 6 + 7 * 11] = SwapLE16(150);
+		// remove obsolete 'protection' (item)
+		// lm[2 + 11 * 11 + 5 + 10 * 11] = 0;
 		// protect the main structure
 		for (int y = 0; y < 7; y++) {
 			for (int x = 0; x < 7; x++) {
@@ -2578,6 +2580,8 @@ static void DRLG_L2FixPreMap(int idx)
 		}
 		// replace the door with wall
 		lm[2 + 4 + 3 * 11] = SwapLE16(25);
+		// remove obsolete 'protection' (item)
+		// lm[2 + 11 * 11 + 5 + 10 * 11] = 0;
 		// protect inner tiles from spawning additional monsters/objects
 		for (int y = 0; y <= 6; y++) {
 			for (int x = 0; x <= 6; x++) {
