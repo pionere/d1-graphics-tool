@@ -826,7 +826,7 @@ static void DRLG_LoadL2SP()
 		// patch the map - Blood1.DUN
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// eliminate invisible 'fancy' tile to leave space for shadow
-		lm[2 + 3 + 9 * 10] = SwapLE16(3);
+		lm[2 + 3 + 9 * 10] = 0;
 		// - place pieces with closed doors
 		lm[2 + 4 + 10 * 10] = SwapLE16(151);
 		lm[2 + 4 + 15 * 10] = SwapLE16(151);
@@ -851,13 +851,18 @@ static void DRLG_LoadL2SP()
 		}
 		// patch the map - Bonestr2.DUN
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
+		// useless tiles
+		lm[2 + 0 + 0 * 7] = 0;
+		lm[2 + 0 + 6 * 7] = 0;
+		lm[2 + 6 + 6 * 7] = 0;
+		lm[2 + 6 + 0 * 7] = 0;
 		// add tiles with subtiles for arches
 		lm[2 + 2 + 1 * 7] = SwapLE16(45);
-		lm[2 + 4 + 1 * 7] = SwapLE16(45);
+		lm[2 + 4 + 1 * 7] = SwapLE16(100);
 		lm[2 + 2 + 5 * 7] = SwapLE16(45);
 		lm[2 + 4 + 5 * 7] = SwapLE16(45);
 		lm[2 + 1 + 2 * 7] = SwapLE16(44);
-		lm[2 + 1 + 4 * 7] = SwapLE16(44);
+		lm[2 + 1 + 4 * 7] = SwapLE16(96);
 		lm[2 + 5 + 2 * 7] = SwapLE16(44);
 		lm[2 + 5 + 4 * 7] = SwapLE16(44);
 		// - remove tile to leave space for shadow
@@ -2635,12 +2640,7 @@ static void DRLG_L2FixPreMap(int idx)
 		lm[2 + 10 * 16 + 10 * 16 * 2 * 2 + 10 * 16 * 2 * 2 + 6 + 12 * 10 * 2] = 0;
 		// protect inner tiles from spawning additional monsters/objects
 		for (int y = 0; y < 15; y++) {
-			for (int x = 2; x <= 7; x++) {
-				lm[2 + 10 * 16 + x + y * 10] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
-			}
-		}
-		for (int y = 3; y < 9; y++) {
-			for (int x = 0; x <= 10; x++) {
+			for (int x = 2; x <= 6; x++) {
 				lm[2 + 10 * 16 + x + y * 10] = SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 			}
 		}
