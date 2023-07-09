@@ -5031,6 +5031,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 71 - 1, 1, 10 - 1, silent);
     ReplaceSubtile(this->til, 77 - 1, 3, 12 - 1, silent);
     ReplaceSubtile(this->til, 140 - 1, 1, 10 - 1, silent);
+    ReplaceSubtile(this->til, 140 - 1, 3, 162 - 1, silent);
     ReplaceSubtile(this->til, 142 - 1, 3, 162 - 1, silent);
 
     // use common subtiles instead of minor alterations
@@ -5059,6 +5060,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 106 - 1, 1, 10 - 1, silent);
     ReplaceSubtile(this->til, 110 - 1, 0, 9 - 1, silent);
     ReplaceSubtile(this->til, 111 - 1, 0, 9 - 1, silent);
+    ReplaceSubtile(this->til, 111 - 1, 3, 12 - 1, silent);
     ReplaceSubtile(this->til, 121 - 1, 0, 9 - 1, silent);
     ReplaceSubtile(this->til, 112 - 1, 2, 11 - 1, silent);
     ReplaceSubtile(this->til, 138 - 1, 2, 11 - 1, silent);
@@ -5071,6 +5073,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 135 - 1, 3, 12 - 1, silent);
     ReplaceSubtile(this->til, 51 - 1, 2, 155 - 1, silent);
     ReplaceSubtile(this->til, 141 - 1, 2, 155 - 1, silent);
+    ReplaceSubtile(this->til, 141 - 1, 3, 169 - 1, silent);
     ReplaceSubtile(this->til, 142 - 1, 2, 155 - 1, silent);
 
     // - reduce pointless bone-chamber complexity II.
@@ -5128,12 +5131,12 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 34 - 1, 0, 21 - 1, silent);
     ReplaceSubtile(this->til, 34 - 1, 1, 26 - 1, silent);
     ReplaceSubtile(this->til, 34 - 1, 2, 148 - 1, silent);
-    ReplaceSubtile(this->til, 34 - 1, 3, 517 - 1, silent);
+    ReplaceSubtile(this->til, 34 - 1, 3, 169 - 1, silent);
     // - vertical wall end for a horizontal arch
     ReplaceSubtile(this->til, 35 - 1, 0, 25 - 1, silent);
     ReplaceSubtile(this->til, 35 - 1, 1, 26 - 1, silent);
     ReplaceSubtile(this->til, 35 - 1, 2, 512 - 1, silent);
-    ReplaceSubtile(this->til, 35 - 1, 3, 513 - 1, silent);
+    ReplaceSubtile(this->til, 35 - 1, 3, 162 - 1, silent);
     // - horizontal wall end for a pillar
     ReplaceSubtile(this->til, 36 - 1, 0, 33 - 1, silent);
     ReplaceSubtile(this->til, 36 - 1, 1, 34 - 1, silent);
@@ -5143,7 +5146,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 37 - 1, 0, 268 - 1, silent);
     ReplaceSubtile(this->til, 37 - 1, 1, 515 - 1, silent);
     ReplaceSubtile(this->til, 37 - 1, 2, 148 - 1, silent);
-    ReplaceSubtile(this->til, 37 - 1, 3, 517 - 1, silent);
+    ReplaceSubtile(this->til, 37 - 1, 3, 169 - 1, silent);
     // - floor tile with vertical arch
     ReplaceSubtile(this->til, 44 - 1, 0, 150 - 1, silent);
     ReplaceSubtile(this->til, 44 - 1, 1, 10 - 1, silent);
@@ -5840,6 +5843,8 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(269, 7);
     Blk2Mcr(365, 1);
     Blk2Mcr(395, 1);
+    Blk2Mcr(513, 0);
+    Blk2Mcr(517, 1);
     Blk2Mcr(519, 0);
     Blk2Mcr(520, 0);
     Blk2Mcr(520, 1);
@@ -5933,7 +5938,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(559, 2);
     Blk2Mcr(559, 4);
     int unusedSubtiles[] = {
-        2, 7, 14, 19, 20, 48, 50, 53, 55, 56, 57, 58, 59, 70, 71, 106, 109, 110, 116, 117, 118, 120, 122, 123, 124, 126, 137, 140, 145, 149, 157, 159, 160, 168, 170, 171, 172, 173, 192, 193, 194, 195, 196, 197, 198, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 235, 243, 246, 247, 255, 256, 264, 327, 328, 329, 330, 335, 336, 337, 338, 343, 344, 345, 346, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 366, 367, 368, 369, 370, 376, 391, 400, 434, 487, 489, 491, 493, 504, 505, 507, 509, 511, 516, 518, 531, 533, 536, 541, 
+        2, 7, 14, 19, 20, 48, 50, 53, 55, 56, 57, 58, 59, 70, 71, 106, 109, 110, 116, 117, 118, 120, 122, 123, 124, 126, 137, 140, 145, 149, 157, 159, 160, 168, 170, 171, 172, 173, 192, 193, 194, 195, 196, 197, 198, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 235, 243, 246, 247, 255, 256, 264, 327, 328, 329, 330, 335, 336, 337, 338, 343, 344, 345, 346, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 366, 367, 368, 369, 370, 376, 391, 400, 434, 487, 489, 491, 493, 504, 505, 507, 509, 511, 516, 518, 525, 531, 533, 536, 541, 
     };
 
     for (int n = 0; n < lengthof(unusedSubtiles); n++) {
@@ -6148,18 +6153,18 @@ bool D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     const unsigned microIndex5 = MICRO_IDX(blockSize, 5);
     const unsigned microIndex6 = MICRO_IDX(blockSize, 6);
 
-    unsigned back3_FrameRef0 = back3FrameReferences[microIndex0]; // 719
-    unsigned back2_FrameRef1 = back2FrameReferences[microIndex1]; // 718
-    unsigned back0_FrameRef0 = back0FrameReferences[microIndex0]; // 716
+    unsigned back3_FrameRef0 = back3FrameReferences[microIndex0]; // 252[0]
+    unsigned back2_FrameRef1 = back2FrameReferences[microIndex1]; // 251[1]
+    unsigned back0_FrameRef0 = back0FrameReferences[microIndex0]; // 250[0]
 
-    unsigned stairs_FrameRef0 = stairs1FrameReferences[microIndex0]; // 770
-    unsigned stairs_FrameRef2 = stairs1FrameReferences[microIndex2]; // 769
-    unsigned stairs_FrameRef4 = stairs1FrameReferences[microIndex4]; // 768
-    unsigned stairs_FrameRef6 = stairs1FrameReferences[microIndex6]; // 767
+    unsigned stairs_FrameRef0 = stairs1FrameReferences[microIndex0]; // 267[0]
+    unsigned stairs_FrameRef2 = stairs1FrameReferences[microIndex2]; // 267[2]
+    unsigned stairs_FrameRef4 = stairs1FrameReferences[microIndex4]; // 267[4]
+    unsigned stairs_FrameRef6 = stairs1FrameReferences[microIndex6]; // 267[6]
 
-    unsigned stairsExt_FrameRef1 = stairsExt1FrameReferences[microIndex1]; // 762
-    unsigned stairsExt_FrameRef3 = stairsExt1FrameReferences[microIndex3]; // 761
-    unsigned stairsExt_FrameRef5 = stairsExt1FrameReferences[microIndex5]; // 760
+    unsigned stairsExt_FrameRef1 = stairsExt1FrameReferences[microIndex1]; // 265[1]
+    unsigned stairsExt_FrameRef3 = stairsExt1FrameReferences[microIndex3]; // 265[3]
+    unsigned stairsExt_FrameRef5 = stairsExt1FrameReferences[microIndex5]; // 265[5]
 
     if (back3_FrameRef0 == 0 || back2_FrameRef1 == 0 || back0_FrameRef0 == 0) {
         dProgressErr() << QApplication::tr("The back-stairs tile (%1) has invalid (missing) frames.").arg(backTileIndex1 + 1);
@@ -6173,7 +6178,7 @@ bool D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
         return false;
     }
 
-    if (stairs2FrameReferences[microIndex0] != stairs_FrameRef0) {
+    /*if (stairs2FrameReferences[microIndex0] != stairs_FrameRef0) {
         dProgressErr() << QApplication::tr("The stairs subtiles (%1, %2) have invalid (mismatching) floor frames.").arg(stairsSubtileRef1).arg(stairsSubtileRef2);
         return false;
     }
@@ -6182,20 +6187,20 @@ bool D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
         || stairsExt2FrameReferences[microIndex5] != stairsExt_FrameRef5) {
         dProgressErr() << QApplication::tr("The stairs external subtiles (%1, %2) have invalid (mismatching) frames.").arg(ext1SubtileRef1).arg(ext2SubtileRef1);
         return false;
-    }
+    }*/
 
-    D1GfxFrame *back3_LeftFrame = this->gfx->getFrame(back3_FrameRef0 - 1);  // 719
-    D1GfxFrame *back2_LeftFrame = this->gfx->getFrame(back2_FrameRef1 - 1);  // 718
-    D1GfxFrame *back0_RightFrame = this->gfx->getFrame(back0_FrameRef0 - 1); // 716
+    D1GfxFrame *back3_LeftFrame = this->gfx->getFrame(back3_FrameRef0 - 1);  // 252[0]
+    D1GfxFrame *back2_LeftFrame = this->gfx->getFrame(back2_FrameRef1 - 1);  // 251[1]
+    D1GfxFrame *back0_RightFrame = this->gfx->getFrame(back0_FrameRef0 - 1); // 250[0]
 
-    D1GfxFrame *stairs_LeftFrame0 = this->gfx->getFrame(stairs_FrameRef0 - 1); // 770
-    D1GfxFrame *stairs_LeftFrame2 = this->gfx->getFrame(stairs_FrameRef2 - 1); // 769
-    D1GfxFrame *stairs_LeftFrame4 = this->gfx->getFrame(stairs_FrameRef4 - 1); // 768
-    D1GfxFrame *stairs_LeftFrame6 = this->gfx->getFrame(stairs_FrameRef6 - 1); // 767
+    D1GfxFrame *stairs_LeftFrame0 = this->gfx->getFrame(stairs_FrameRef0 - 1); // 267[0]
+    D1GfxFrame *stairs_LeftFrame2 = this->gfx->getFrame(stairs_FrameRef2 - 1); // 267[2]
+    D1GfxFrame *stairs_LeftFrame4 = this->gfx->getFrame(stairs_FrameRef4 - 1); // 267[4]
+    D1GfxFrame *stairs_LeftFrame6 = this->gfx->getFrame(stairs_FrameRef6 - 1); // 267[6]
 
-    D1GfxFrame *stairsExt_RightFrame1 = this->gfx->getFrame(stairsExt_FrameRef1 - 1); // 762
-    D1GfxFrame *stairsExt_RightFrame3 = this->gfx->getFrame(stairsExt_FrameRef3 - 1); // 761
-    D1GfxFrame *stairsExt_RightFrame5 = this->gfx->getFrame(stairsExt_FrameRef5 - 1); // 760
+    D1GfxFrame *stairsExt_RightFrame1 = this->gfx->getFrame(stairsExt_FrameRef1 - 1); // 265[1]
+    D1GfxFrame *stairsExt_RightFrame3 = this->gfx->getFrame(stairsExt_FrameRef3 - 1); // 265[3]
+    D1GfxFrame *stairsExt_RightFrame5 = this->gfx->getFrame(stairsExt_FrameRef5 - 1); // 265[5]
 
     if (back3_LeftFrame->getWidth() != MICRO_WIDTH || back3_LeftFrame->getHeight() != MICRO_HEIGHT) {
         return false; // upscaled(?) frames -> assume it is already done
@@ -6222,108 +6227,108 @@ bool D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
     // move the frames to the back subtile
     /*const unsigned microIndex7 = MICRO_IDX(blockSize, 7);
     // - left side
-    back3FrameReferences[microIndex2] = stairsExt1FrameReferences[microIndex3]; // 761
+    back3FrameReferences[microIndex2] = stairsExt1FrameReferences[microIndex3]; // 265[3]
     stairsExt1FrameReferences[microIndex3] = 0;
     stairsExt2FrameReferences[microIndex3] = 0;
 
     // - right side
-    back3FrameReferences[microIndex1] = stairsExt1FrameReferences[microIndex5]; // 760
+    back3FrameReferences[microIndex1] = stairsExt1FrameReferences[microIndex5]; // 265[5]
     stairsExt1FrameReferences[microIndex5] = 0;
     stairsExt2FrameReferences[microIndex5] = 0;
 
-    back3FrameReferences[microIndex3] = stairs1FrameReferences[microIndex2]; // 769
+    back3FrameReferences[microIndex3] = stairs1FrameReferences[microIndex2]; // 267[2]
     stairs1FrameReferences[microIndex2] = 0;
-    // stairs2FrameReferences[microIndex2] = 0; // 1471
+    // stairs2FrameReferences[microIndex2] = 0; // 559[2]
 
-    back3FrameReferences[microIndex5] = stairs1FrameReferences[microIndex4]; // 768
+    back3FrameReferences[microIndex5] = stairs1FrameReferences[microIndex4]; // 267[4]
     stairs1FrameReferences[microIndex4] = 0;
-    // stairs2FrameReferences[microIndex4] = 0; // 1470
+    // stairs2FrameReferences[microIndex4] = 0; // 559[4]
 
-    back3FrameReferences[microIndex7] = stairs1FrameReferences[microIndex6]; // 767
+    back3FrameReferences[microIndex7] = stairs1FrameReferences[microIndex6]; // 267[6]
     stairs1FrameReferences[microIndex6] = 0;
-    // stairs2FrameReferences[microIndex6] = 0;*/
+    // stairs2FrameReferences[microIndex6] = 0; // 559[6] */
 
     this->min->setModified();
 
     // move external-stairs
-    // - from stairsExt_RightFrame1 (762) to the right side of the back3 frame 719
+    // - from 265[1] to the right side of 252[0]
     for (int x = 0; x < MICRO_WIDTH; x++) {
         for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
             D1GfxPixel pixel = stairsExt_RightFrame1->getPixel(x, y);
             if (pixel.isTransparent())
                 continue;
-            if (!back2_LeftFrame->getPixel(x, y).isTransparent()) // use 718 as a mask
+            if (!back2_LeftFrame->getPixel(x, y).isTransparent()) // use 251[1] as a mask
                 continue;
-            back3_LeftFrame->setPixel(x, y + MICRO_HEIGHT / 2, pixel);             // 719
-            stairsExt_RightFrame1->setPixel(x, y, D1GfxPixel::transparentPixel()); // 762
+            back3_LeftFrame->setPixel(x, y + MICRO_HEIGHT / 2, pixel);             // 252[0]
+            stairsExt_RightFrame1->setPixel(x, y, D1GfxPixel::transparentPixel()); // 265[1]
         }
     }
-    // - from stairsExt_RightFrame3 (761) to the right side of the back3 frame 719
+    // - from 265[3] to the right side of 252[0]
     //  and shift the external-stairs down
     for (int x = 0; x < MICRO_WIDTH; x++) {
         for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
             D1GfxPixel pixel0 = stairsExt_RightFrame3->getPixel(x, y);
             if (!pixel0.isTransparent()) {
-                back3_LeftFrame->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 719
+                back3_LeftFrame->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 252[0]
             }
             D1GfxPixel pixel1 = stairsExt_RightFrame3->getPixel(x, y - MICRO_HEIGHT / 2);
-            stairsExt_RightFrame3->setPixel(x, y, pixel1); // 761
+            stairsExt_RightFrame3->setPixel(x, y, pixel1); // 265[3]
         }
     }
     // shift the rest of the external-stairs down
     for (int x = 0; x < MICRO_WIDTH; x++) {
         for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
             D1GfxPixel pixel0 = stairsExt_RightFrame5->getPixel(x, y);
-            stairsExt_RightFrame3->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 761
+            stairsExt_RightFrame3->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 265[3]
             D1GfxPixel pixel1 = stairsExt_RightFrame5->getPixel(x, y - MICRO_HEIGHT / 2);
-            stairsExt_RightFrame5->setPixel(x, y, pixel1); // 760
+            stairsExt_RightFrame5->setPixel(x, y, pixel1); // 265[5]
         }
     }
 
     // move external-stairs
-    // move stairs from stairs_LeftFrame0 (770) to the new back3 right frame 760
+    // move stairs from 267[0] to 265[5]
     for (int x = 0; x < MICRO_WIDTH; x++) {
         for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
             D1GfxPixel pixel = stairs_LeftFrame0->getPixel(x, y);
-            if (!back0_RightFrame->getPixel(x, y).isTransparent()) // use 716 as a mask
+            if (!back0_RightFrame->getPixel(x, y).isTransparent()) // use 250[0] as a mask
                 continue;
-            stairsExt_RightFrame5->setPixel(x, y + MICRO_HEIGHT / 2, pixel);   // 760
-            stairs_LeftFrame0->setPixel(x, y, D1GfxPixel::transparentPixel()); // 770
+            stairsExt_RightFrame5->setPixel(x, y + MICRO_HEIGHT / 2, pixel);   // 265[5]
+            stairs_LeftFrame0->setPixel(x, y, D1GfxPixel::transparentPixel()); // 267[0]
         }
     }
     // shift the stairs down
     for (int x = 0; x < MICRO_WIDTH; x++) {
         for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
             D1GfxPixel pixel0 = stairs_LeftFrame2->getPixel(x, y);
-            stairsExt_RightFrame5->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 760
+            stairsExt_RightFrame5->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 265[5]
             D1GfxPixel pixel1 = stairs_LeftFrame2->getPixel(x, y - MICRO_HEIGHT / 2);
-            stairs_LeftFrame2->setPixel(x, y, pixel1); // 769
+            stairs_LeftFrame2->setPixel(x, y, pixel1); // 267[2]
         }
     }
     for (int x = 0; x < MICRO_WIDTH; x++) {
         for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
             D1GfxPixel pixel0 = stairs_LeftFrame4->getPixel(x, y);
-            stairs_LeftFrame2->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 769
+            stairs_LeftFrame2->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 267[2]
             D1GfxPixel pixel1 = stairs_LeftFrame4->getPixel(x, y - MICRO_HEIGHT / 2);
-            stairs_LeftFrame4->setPixel(x, y, pixel1); // 768
+            stairs_LeftFrame4->setPixel(x, y, pixel1); // 267[4]
         }
     }
     for (int x = 0; x < MICRO_WIDTH; x++) {
         for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
             D1GfxPixel pixel0 = stairs_LeftFrame6->getPixel(x, y);
-            stairs_LeftFrame4->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 768
+            stairs_LeftFrame4->setPixel(x, y - MICRO_HEIGHT / 2, pixel0); // 267[4]
             D1GfxPixel pixel1 = stairs_LeftFrame6->getPixel(x, y - MICRO_HEIGHT / 2);
-            stairs_LeftFrame6->setPixel(x, y, pixel1); // 767
+            stairs_LeftFrame6->setPixel(x, y, pixel1); // 267[6]
         }
     }
     for (int x = 0; x < MICRO_WIDTH; x++) {
         for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
-            stairs_LeftFrame6->setPixel(x, y, D1GfxPixel::transparentPixel()); // 767
+            stairs_LeftFrame6->setPixel(x, y, D1GfxPixel::transparentPixel()); // 267[6]
         }
     }
 
     // copy shadow
-    // - from back2_LeftFrame 718 to the back3 left frame 719
+    // - from 251[1] to 252[0]
     for (int x = 22; x < MICRO_WIDTH; x++) {
         for (int y = MICRO_HEIGHT / 2; y < 20; y++) {
             D1GfxPixel pixel = back2_LeftFrame->getPixel(x, y);
@@ -6333,10 +6338,10 @@ bool D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
                 continue;
             if (!back3_LeftFrame->getPixel(x, y - MICRO_HEIGHT / 2).isTransparent())
                 continue;
-            back3_LeftFrame->setPixel(x, y - MICRO_HEIGHT / 2, pixel); // 719
+            back3_LeftFrame->setPixel(x, y - MICRO_HEIGHT / 2, pixel); // 252[0]
         }
     }
-    // - from back2_LeftFrame 718 to the new back3 left frame 761
+    // - from 251[1] to 265[3]
     for (int x = 22; x < MICRO_WIDTH; x++) {
         for (int y = 12; y < MICRO_HEIGHT / 2; y++) {
             D1GfxPixel pixel = back2_LeftFrame->getPixel(x, y);
@@ -6346,10 +6351,10 @@ bool D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
                 continue;
             if (!stairsExt_RightFrame3->getPixel(x, y + MICRO_HEIGHT / 2).isTransparent())
                 continue;
-            stairsExt_RightFrame3->setPixel(x, y + MICRO_HEIGHT / 2, pixel); // 761
+            stairsExt_RightFrame3->setPixel(x, y + MICRO_HEIGHT / 2, pixel); // 265[3]
         }
     }
-    // - from back0_RightFrame 716 to the new back3 left frame 761
+    // - from 250[0] to 265[3]
     for (int x = 22; x < MICRO_WIDTH; x++) {
         for (int y = 20; y < MICRO_HEIGHT; y++) {
             D1GfxPixel pixel = back0_RightFrame->getPixel(x, y);
@@ -6359,22 +6364,33 @@ bool D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
                 continue;
             if (!stairsExt_RightFrame3->getPixel(x, y).isTransparent())
                 continue;
-            stairsExt_RightFrame3->setPixel(x, y, pixel); // 761
+            stairsExt_RightFrame3->setPixel(x, y, pixel); // 265[3]
         }
     }
 
+    // complete stairs-micro to square
+    stairs_LeftFrame2->setPixel(0, 0, D1GfxPixel::colorPixel(40)); // 267[2]
+
     // fix bad artifacts
-    stairsExt_RightFrame3->setPixel(23, 20, D1GfxPixel::transparentPixel()); // 761
-    stairsExt_RightFrame3->setPixel(24, 20, D1GfxPixel::transparentPixel()); // 761
-    stairsExt_RightFrame3->setPixel(22, 21, D1GfxPixel::transparentPixel()); // 761
-    stairsExt_RightFrame3->setPixel(23, 21, D1GfxPixel::transparentPixel()); // 761
+    stairsExt_RightFrame3->setPixel(23, 20, D1GfxPixel::transparentPixel()); // 265[3]
+    stairsExt_RightFrame3->setPixel(24, 20, D1GfxPixel::transparentPixel()); // 265[3]
+    stairsExt_RightFrame3->setPixel(22, 21, D1GfxPixel::transparentPixel()); // 265[3]
+    stairsExt_RightFrame3->setPixel(23, 21, D1GfxPixel::transparentPixel()); // 265[3]
+    stairsExt_RightFrame3->setPixel(22, 30, D1GfxPixel::colorPixel(78));     // 265[3]
+
+    stairs_LeftFrame4->setPixel(5, 22, D1GfxPixel::colorPixel(55)); // 267[4]
+    stairs_LeftFrame4->setPixel(19, 7, D1GfxPixel::colorPixel(71)); // 267[4]
+    stairs_LeftFrame4->setPixel(19, 9, D1GfxPixel::colorPixel(36)); // 267[4]
+
+    back3_LeftFrame->setPixel(22, 4, D1GfxPixel::colorPixel(78)); // 252[0]
+    back3_LeftFrame->setPixel(23, 4, D1GfxPixel::colorPixel(31)); // 252[0]
 
     // adjust the frame types
-    D1CelTilesetFrame::selectFrameType(stairs_LeftFrame0);     // 770
-    D1CelTilesetFrame::selectFrameType(stairs_LeftFrame2);     // 769
-    D1CelTilesetFrame::selectFrameType(stairsExt_RightFrame5); // 760
-    D1CelTilesetFrame::selectFrameType(stairsExt_RightFrame1); // 762
-    D1CelTilesetFrame::selectFrameType(back3_LeftFrame);       // 719
+    D1CelTilesetFrame::selectFrameType(stairs_LeftFrame0);     // 267[0]
+    D1CelTilesetFrame::selectFrameType(stairs_LeftFrame2);     // 267[2]
+    D1CelTilesetFrame::selectFrameType(stairsExt_RightFrame5); // 265[5]
+    D1CelTilesetFrame::selectFrameType(stairsExt_RightFrame1); // 265[1]
+    D1CelTilesetFrame::selectFrameType(back3_LeftFrame);       // 252[0]
 
     this->gfx->setModified();
 
