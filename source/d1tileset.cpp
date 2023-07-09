@@ -5031,6 +5031,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 71 - 1, 1, 10 - 1, silent);
     ReplaceSubtile(this->til, 77 - 1, 3, 12 - 1, silent);
     ReplaceSubtile(this->til, 140 - 1, 1, 10 - 1, silent);
+    ReplaceSubtile(this->til, 140 - 1, 3, 162 - 1, silent);
     ReplaceSubtile(this->til, 142 - 1, 3, 162 - 1, silent);
 
     // use common subtiles instead of minor alterations
@@ -5059,6 +5060,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 106 - 1, 1, 10 - 1, silent);
     ReplaceSubtile(this->til, 110 - 1, 0, 9 - 1, silent);
     ReplaceSubtile(this->til, 111 - 1, 0, 9 - 1, silent);
+    ReplaceSubtile(this->til, 111 - 1, 3, 12 - 1, silent);
     ReplaceSubtile(this->til, 121 - 1, 0, 9 - 1, silent);
     ReplaceSubtile(this->til, 112 - 1, 2, 11 - 1, silent);
     ReplaceSubtile(this->til, 138 - 1, 2, 11 - 1, silent);
@@ -5071,6 +5073,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 135 - 1, 3, 12 - 1, silent);
     ReplaceSubtile(this->til, 51 - 1, 2, 155 - 1, silent);
     ReplaceSubtile(this->til, 141 - 1, 2, 155 - 1, silent);
+    ReplaceSubtile(this->til, 141 - 1, 3, 169 - 1, silent);
     ReplaceSubtile(this->til, 142 - 1, 2, 155 - 1, silent);
 
     // - reduce pointless bone-chamber complexity II.
@@ -5128,12 +5131,12 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 34 - 1, 0, 21 - 1, silent);
     ReplaceSubtile(this->til, 34 - 1, 1, 26 - 1, silent);
     ReplaceSubtile(this->til, 34 - 1, 2, 148 - 1, silent);
-    ReplaceSubtile(this->til, 34 - 1, 3, 517 - 1, silent);
+    ReplaceSubtile(this->til, 34 - 1, 3, 169 - 1, silent);
     // - vertical wall end for a horizontal arch
     ReplaceSubtile(this->til, 35 - 1, 0, 25 - 1, silent);
     ReplaceSubtile(this->til, 35 - 1, 1, 26 - 1, silent);
     ReplaceSubtile(this->til, 35 - 1, 2, 512 - 1, silent);
-    ReplaceSubtile(this->til, 35 - 1, 3, 513 - 1, silent);
+    ReplaceSubtile(this->til, 35 - 1, 3, 162 - 1, silent);
     // - horizontal wall end for a pillar
     ReplaceSubtile(this->til, 36 - 1, 0, 33 - 1, silent);
     ReplaceSubtile(this->til, 36 - 1, 1, 34 - 1, silent);
@@ -5143,7 +5146,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 37 - 1, 0, 268 - 1, silent);
     ReplaceSubtile(this->til, 37 - 1, 1, 515 - 1, silent);
     ReplaceSubtile(this->til, 37 - 1, 2, 148 - 1, silent);
-    ReplaceSubtile(this->til, 37 - 1, 3, 517 - 1, silent);
+    ReplaceSubtile(this->til, 37 - 1, 3, 169 - 1, silent);
     // - floor tile with vertical arch
     ReplaceSubtile(this->til, 44 - 1, 0, 150 - 1, silent);
     ReplaceSubtile(this->til, 44 - 1, 1, 10 - 1, silent);
@@ -5840,6 +5843,8 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(269, 7);
     Blk2Mcr(365, 1);
     Blk2Mcr(395, 1);
+    Blk2Mcr(513, 0);
+    Blk2Mcr(517, 1);
     Blk2Mcr(519, 0);
     Blk2Mcr(520, 0);
     Blk2Mcr(520, 1);
@@ -5933,7 +5938,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(559, 2);
     Blk2Mcr(559, 4);
     int unusedSubtiles[] = {
-        2, 7, 14, 19, 20, 48, 50, 53, 55, 56, 57, 58, 59, 70, 71, 106, 109, 110, 116, 117, 118, 120, 122, 123, 124, 126, 137, 140, 145, 149, 157, 159, 160, 168, 170, 171, 172, 173, 192, 193, 194, 195, 196, 197, 198, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 235, 243, 246, 247, 255, 256, 264, 327, 328, 329, 330, 335, 336, 337, 338, 343, 344, 345, 346, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 366, 367, 368, 369, 370, 376, 391, 400, 434, 487, 489, 491, 493, 504, 505, 507, 509, 511, 516, 518, 531, 533, 536, 541, 
+        2, 7, 14, 19, 20, 48, 50, 53, 55, 56, 57, 58, 59, 70, 71, 106, 109, 110, 116, 117, 118, 120, 122, 123, 124, 126, 137, 140, 145, 149, 157, 159, 160, 168, 170, 171, 172, 173, 192, 193, 194, 195, 196, 197, 198, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 235, 243, 246, 247, 255, 256, 264, 327, 328, 329, 330, 335, 336, 337, 338, 343, 344, 345, 346, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 366, 367, 368, 369, 370, 376, 391, 397, 400, 434, 487, 489, 491, 493, 504, 505, 507, 509, 511, 516, 518, 531, 533, 536, 541, 
     };
 
     for (int n = 0; n < lengthof(unusedSubtiles); n++) {
@@ -6307,11 +6312,22 @@ bool D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int
         }
     }
 
+    // complete stairs-micro to square
+    stairs_LeftFrame2->setPixel(0, 0, D1GfxPixel::colorPixel(40)); // 267[2]
+
     // fix bad artifacts
     stairsExt_RightFrame3->setPixel(23, 20, D1GfxPixel::transparentPixel()); // 265[3]
     stairsExt_RightFrame3->setPixel(24, 20, D1GfxPixel::transparentPixel()); // 265[3]
     stairsExt_RightFrame3->setPixel(22, 21, D1GfxPixel::transparentPixel()); // 265[3]
     stairsExt_RightFrame3->setPixel(23, 21, D1GfxPixel::transparentPixel()); // 265[3]
+    stairsExt_RightFrame3->setPixel(22, 30, D1GfxPixel::colorPixel(78));     // 265[3]
+
+    stairs_LeftFrame4->setPixel(5, 22, D1GfxPixel::colorPixel(55)); // 267[4]
+    stairs_LeftFrame4->setPixel(19, 7, D1GfxPixel::colorPixel(71)); // 267[4]
+    stairs_LeftFrame4->setPixel(19, 9, D1GfxPixel::colorPixel(36)); // 267[4]
+
+    back3_LeftFrame->setPixel(22, 4, D1GfxPixel::colorPixel(78)); // 252[0]
+    back3_LeftFrame->setPixel(23, 4, D1GfxPixel::colorPixel(31)); // 252[0]
 
     // adjust the frame types
     D1CelTilesetFrame::selectFrameType(stairs_LeftFrame0);     // 267[0]
