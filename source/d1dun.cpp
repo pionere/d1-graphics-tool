@@ -659,8 +659,8 @@ bool D1Dun::save(const SaveAsParam &params)
             }
         }
         // report unsaved information
-        for (int y = 0; y < dunHeight; y++) {
-            for (int x = 0; x < dunWidth; x++) {
+        for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+            for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
                 if (this->items[y][x] != 0) {
                     dProgressWarn() << tr("Defined item at %1:%2 is not saved.").arg(x).arg(y);
                 }
