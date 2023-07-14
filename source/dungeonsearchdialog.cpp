@@ -63,7 +63,15 @@ void DungeonSearchDialog::search(bool next)
     DungeonSearchParam params;
 
     params.type = (DUN_SEARCH_TYPE)this->ui->searchTypeComboBox->currentIndex();
-    params.index = this->ui->searchIndexLineEdit->text().toInt();
+    bool ok;
+    params.index = this->ui->searchIndexLineEdit->text().toInt(&ok);
+    if (!ok) {
+        if (params.type == DUN_SEARCH_TYPE::Tile) {
+            params.index = UNDEF_TILE;
+        } else if (params.type == DUN_SEARCH_TYPE::Subtile) {
+            params.index = UNDEF_SUBTILE;
+        }
+    }
     params.replace = this->ui->replaceIndexLineEdit->text().toInt();
     params.doReplace = !this->ui->replaceIndexLineEdit->text().isEmpty();
     params.special = this->ui->searchSpecCheckBox->isChecked();
@@ -89,6 +97,11 @@ void DungeonSearchDialog::search(bool next)
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, next ? PAF_NONE : PAF_OPEN_DIALOG);
 
     QString msg = tr("Searching for %1 with index %2%3").arg(typeTxt).arg(params.index).arg(params.special ? "*" : "");
+    if (params.type == DUN_SEARCH_TYPE::Tile && params.index == UNDEF_TILE) {
+        msg = tr("Searching for Undefined Tiles");
+    } else if (params.type == DUN_SEARCH_TYPE::Subtile && params.index == UNDEF_SUBTILE) {
+        msg = tr("Searching for Undefined Subtiles");
+    }
     if (params.area.x() != 0 || params.area.y() != 0 || params.area.width() != this->dun->getWidth() || params.area.height() != this->dun->getHeight()) {
         msg += tr(" starting from %1:%2").arg(params.area.x()).arg(params.area.y());
         if (params.area.x() + params.area.width() != this->dun->getWidth() || params.area.y() + params.area.height() != this->dun->getHeight()) {
