@@ -63,7 +63,15 @@ void DungeonSearchDialog::search(bool next)
     DungeonSearchParam params;
 
     params.type = (DUN_SEARCH_TYPE)this->ui->searchTypeComboBox->currentIndex();
-    params.index = this->ui->searchIndexLineEdit->text().toInt();
+    bool ok;
+    params.index = this->ui->searchIndexLineEdit->text().toInt(&ok);
+    if (!ok) {
+        if (params.type == DUN_SEARCH_TYPE::Tile) {
+            params.index = UNDEF_TILE;
+        } else if (params.type == DUN_SEARCH_TYPE::Subtile) {
+            params.index = UNDEF_SUBTILE;
+        }
+    }
     params.replace = this->ui->replaceIndexLineEdit->text().toInt();
     params.doReplace = !this->ui->replaceIndexLineEdit->text().isEmpty();
     params.special = this->ui->searchSpecCheckBox->isChecked();

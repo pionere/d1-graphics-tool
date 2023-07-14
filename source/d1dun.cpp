@@ -653,14 +653,14 @@ bool D1Dun::save(const SaveAsParam &params)
         for (int y = 0; y < dunHeight; y++) {
             for (int x = 0; x < dunWidth; x++) {
                 if (this->tiles[y][x] == UNDEF_TILE) {
-                    dProgressFail() << tr("Undefined tiles (one at %1:%2) can not be saved in this format (DUN).").arg(x).arg(y);
+                    dProgressFail() << tr("Undefined tiles (one at %1:%2) can not be saved in this format (DUN).").arg(x * TILE_WIDTH).arg(y * TILE_HEIGHT);
                     return false;
                 }
             }
         }
         // report unsaved information
-        for (int y = 0; y < dunHeight; y++) {
-            for (int x = 0; x < dunWidth; x++) {
+        for (int y = 0; y < dunHeight * TILE_HEIGHT; y++) {
+            for (int x = 0; x < dunWidth * TILE_WIDTH; x++) {
                 if (this->items[y][x] != 0) {
                     dProgressWarn() << tr("Defined item at %1:%2 is not saved.").arg(x).arg(y);
                 }
