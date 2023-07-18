@@ -8509,7 +8509,7 @@ bool D1Tileset::patchCavesWall(bool silent)
 /* 16 */{ 322 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 17 */{ 321 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 18 */{ /*336*/ - 1, 0, D1CEL_FRAME_TYPE::Empty },
-/* 19 */{ /*335*/ - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 19 */{ 335 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 20 */{ 343 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 21 */{ 342 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 22 */{ 400 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
@@ -9267,7 +9267,7 @@ bool D1Tileset::patchCavesWall(bool silent)
 
         // mask walls leading to north west
         // mask 175[0], 320[0], 324[0], 341[0], 345[0], 402[0] + 37[0], 41[0], 49[0], 93[0], 466[0], 478[0]
-        if (i >= 153 && i < 177 && (i & 2) == 1) {
+        if (i >= 153 && i < 177 && (i % 2) == (154 % 2)) {
             const CelMicro &microSrc = micros[152];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
@@ -9284,7 +9284,7 @@ bool D1Tileset::patchCavesWall(bool silent)
             }
         }
         // mask 177[1], 322[1], 326[1], 343[1], 347[1], 404[1] + 39[1], 43[1], 51[1], 95[1], 468[1]
-        if (i >= 154 && i < 177 && (i & 2) == 0) {
+        if (i >= 154 && i < 177 && (i % 2) == (154 % 2)) {
             const CelMicro &microSrc1 = micros[152];
             std::pair<unsigned, D1GfxFrame *> mf1 = this->getFrame(microSrc1.subtileIndex, blockSize, microSrc1.microIndex);
             D1GfxFrame *frameSrc1 = mf1.second;
