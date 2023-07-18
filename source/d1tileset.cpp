@@ -6796,6 +6796,12 @@ static BYTE shadowColorCaves(BYTE color)
     }
     return 0;
 }
+static bool shadowColorCaves(D1GfxFrame* frame, int x, int y)
+{
+    D1GfxPixel pixel = frame->getPixel(x, y);
+    quint8 color = pixel.getPaletteIndex();
+    return frame->setPixel(x, y, D1GfxPixel::colorPixel(shadowColorCaves(color)));
+}
 bool D1Tileset::patchCavesFloor(bool silent)
 {
     typedef struct {
@@ -7189,7 +7195,7 @@ bool D1Tileset::patchCavesFloor(bool silent)
                     // reduce bottom-shadow
                     if (x < 13 && y > 14 + x / 2 && (color == 0 || color == 60 || color == 122 || color == 123 || color == 125)) {
                         pixel = frame->getPixel(x, y + (6 - 2 * (y - (15 + x / 2)))); // 500[1]
-                        change |= frame->setPixel(x, y, pixel];
+                        change |= frame->setPixel(x, y, pixel);
                     }
                     // add top-shadow
                     if (x > 15 && y > 2 * x - 22 && !pixel.isTransparent() && (color % 16) < 13) {
@@ -7266,9 +7272,9 @@ bool D1Tileset::patchCavesFloor(bool silent)
             change |= frame->setPixel(22, 8, D1GfxPixel::colorPixel(124));
         }
         if (i == 8) { // 540[0]
-            change |= frame->setPixel(14, 21, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(14, 21))));
-            change |= frame->setPixel(15, 20, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(15, 20))));
-            change |= frame->setPixel(15, 19, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(15, 19))));
+            change |= shadowColorCaves(frame, 14, 21);
+            change |= shadowColorCaves(frame, 15, 20);
+            change |= shadowColorCaves(frame, 15, 19);
 
             change |= frame->setPixel(13, 20, D1GfxPixel::colorPixel(68));
             change |= frame->setPixel(13, 21, D1GfxPixel::colorPixel(71));
@@ -7336,21 +7342,21 @@ bool D1Tileset::patchCavesFloor(bool silent)
             change |= frame->setPixel(7, 15, D1GfxPixel::colorPixel(119));
         }
         if (i == 18) { // 496[0]
-            change |= frame->setPixel(14, 13, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(14, 13))));
-            change |= frame->setPixel(14, 12, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(14, 12))));
-            change |= frame->setPixel(15, 12, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(15, 12))));
-            change |= frame->setPixel(16, 12, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(16, 12))));
-            change |= frame->setPixel(14, 11, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(14, 11))));
-            change |= frame->setPixel(15, 11, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(15, 11))));
-            change |= frame->setPixel(16, 11, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(16, 11))));
-            change |= frame->setPixel(17, 11, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(17, 11))));
-            change |= frame->setPixel(18, 11, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(18, 11))));
-            change |= frame->setPixel(17, 10, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(17, 10))));
-            change |= frame->setPixel(18, 10, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(18, 10))));
-            change |= frame->setPixel(19, 10, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(19, 10))));
-            change |= frame->setPixel(20, 10, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(20, 10))));
-            change |= frame->setPixel(21, 9, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(21, 9))));
-            change |= frame->setPixel(22, 9, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(22, 9))));
+            change |= shadowColorCaves(frame, 14, 13);
+            change |= shadowColorCaves(frame, 14, 12);
+            change |= shadowColorCaves(frame, 15, 12);
+            change |= shadowColorCaves(frame, 16, 12);
+            change |= shadowColorCaves(frame, 14, 11);
+            change |= shadowColorCaves(frame, 15, 11);
+            change |= shadowColorCaves(frame, 16, 11);
+            change |= shadowColorCaves(frame, 17, 11);
+            change |= shadowColorCaves(frame, 18, 11);
+            change |= shadowColorCaves(frame, 17, 10);
+            change |= shadowColorCaves(frame, 18, 10);
+            change |= shadowColorCaves(frame, 19, 10);
+            change |= shadowColorCaves(frame, 20, 10);
+            change |= shadowColorCaves(frame, 21, 9);
+            change |= shadowColorCaves(frame, 22, 9);
         }
         if (i == 19) { // 495[1]
             change |= frame->setPixel(18, 21, D1GfxPixel::colorPixel(68));
@@ -7434,14 +7440,14 @@ bool D1Tileset::patchCavesFloor(bool silent)
             change |= frame->setPixel(16, 23, D1GfxPixel::colorPixel(73));
         }
         if (i == 32) { // 476[1]
-            change |= frame->setPixel(26, 15, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(26, 15))));
-            change |= frame->setPixel(27, 16, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(27, 16))));
-            change |= frame->setPixel(28, 16, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(28, 16))));
-            change |= frame->setPixel(29, 16, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(29, 16))));
-            change |= frame->setPixel(29, 17, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(29, 17))));
-            change |= frame->setPixel(24, 17, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(24, 17))));
-            change |= frame->setPixel(25, 18, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(25, 18))));
-            change |= frame->setPixel(25, 19, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(25, 19))));
+            change |= shadowColorCaves(frame, 26, 15);
+            change |= shadowColorCaves(frame, 27, 16);
+            change |= shadowColorCaves(frame, 28, 16);
+            change |= shadowColorCaves(frame, 29, 16);
+            change |= shadowColorCaves(frame, 29, 17);
+            change |= shadowColorCaves(frame, 24, 17);
+            change |= shadowColorCaves(frame, 25, 18);
+            change |= shadowColorCaves(frame, 25, 19);
 
             change |= frame->setPixel(0, 10, D1GfxPixel::colorPixel(73)); // make it reusable in 484
         }
@@ -7451,14 +7457,14 @@ bool D1Tileset::patchCavesFloor(bool silent)
             change |= frame->setPixel(31, 10, D1GfxPixel::colorPixel(68));
         }
         if (i == 34) { // 490[0]
-            change |= frame->setPixel(18, 25, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(18, 25))));
-            change |= frame->setPixel(19, 25, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(19, 25))));
-            change |= frame->setPixel(20, 26, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(20, 26))));
-            change |= frame->setPixel(21, 26, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(21, 26))));
-            change |= frame->setPixel(22, 27, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(22, 27))));
-            change |= frame->setPixel(23, 27, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(23, 27))));
-            change |= frame->setPixel(24, 28, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(24, 28))));
-            change |= frame->setPixel(26, 29, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(26, 29))));
+            change |= shadowColorCaves(frame, 18, 25);
+            change |= shadowColorCaves(frame, 19, 25);
+            change |= shadowColorCaves(frame, 20, 26);
+            change |= shadowColorCaves(frame, 21, 26);
+            change |= shadowColorCaves(frame, 22, 27);
+            change |= shadowColorCaves(frame, 23, 27);
+            change |= shadowColorCaves(frame, 24, 28);
+            change |= shadowColorCaves(frame, 26, 29);
 
             change |= frame->setPixel(10, 15, D1GfxPixel::colorPixel(121));
             change |= frame->setPixel(10, 16, D1GfxPixel::colorPixel(68));
@@ -7525,36 +7531,36 @@ bool D1Tileset::patchCavesFloor(bool silent)
             change |= frame->setPixel(4, 4, D1GfxPixel::colorPixel(0));
             change |= frame->setPixel(4, 5, D1GfxPixel::colorPixel(125));
 
-            change |= frame->setPixel(25, 18, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(25, 18))));
-            change |= frame->setPixel(25, 19, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(25, 19))));
+            change |= shadowColorCaves(frame, 25, 18);
+            change |= shadowColorCaves(frame, 25, 19);
 
             change |= frame->setPixel(16, 9, D1GfxPixel::colorPixel(125));
             change |= frame->setPixel(17, 9, D1GfxPixel::colorPixel(127));
-            change |= frame->setPixel(17, 10, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(17, 10))));
-            change |= frame->setPixel(18, 10, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(18, 10))));
-            change |= frame->setPixel(19, 10, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(19, 10))));
-            change |= frame->setPixel(19, 11, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(19, 11))));
-            change |= frame->setPixel(20, 11, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(20, 11))));
-            change |= frame->setPixel(21, 11, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(21, 11))));
-            change |= frame->setPixel(20, 12, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(20, 12))));
-            change |= frame->setPixel(21, 12, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(21, 12))));
-            change |= frame->setPixel(22, 12, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(22, 12))));
-            change |= frame->setPixel(23, 12, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(23, 12))));
-            change |= frame->setPixel(22, 13, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(22, 13))));
-            change |= frame->setPixel(23, 13, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(23, 13))));
-            change |= frame->setPixel(24, 13, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(24, 13))));
-            change |= frame->setPixel(25, 13, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(25, 13))));
-            change |= frame->setPixel(24, 14, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(24, 14))));
-            change |= frame->setPixel(25, 14, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(25, 14))));
-            change |= frame->setPixel(26, 14, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(26, 14))));
-            change |= frame->setPixel(27, 14, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(27, 14))));
-            change |= frame->setPixel(26, 15, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(26, 15))));
-            change |= frame->setPixel(27, 15, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(27, 15))));
-            change |= frame->setPixel(28, 15, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(28, 15))));
-            change |= frame->setPixel(27, 16, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(27, 16))));
-            change |= frame->setPixel(28, 16, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(28, 16))));
-            change |= frame->setPixel(29, 16, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(29, 16))));
-            change |= frame->setPixel(29, 17, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(29, 17))));
+            change |= shadowColorCaves(frame, 17, 10);
+            change |= shadowColorCaves(frame, 18, 10);
+            change |= shadowColorCaves(frame, 19, 10);
+            change |= shadowColorCaves(frame, 19, 11);
+            change |= shadowColorCaves(frame, 20, 11);
+            change |= shadowColorCaves(frame, 21, 11);
+            change |= shadowColorCaves(frame, 20, 12);
+            change |= shadowColorCaves(frame, 21, 12);
+            change |= shadowColorCaves(frame, 22, 12);
+            change |= shadowColorCaves(frame, 23, 12);
+            change |= shadowColorCaves(frame, 22, 13);
+            change |= shadowColorCaves(frame, 23, 13);
+            change |= shadowColorCaves(frame, 24, 13);
+            change |= shadowColorCaves(frame, 25, 13);
+            change |= shadowColorCaves(frame, 24, 14);
+            change |= shadowColorCaves(frame, 25, 14);
+            change |= shadowColorCaves(frame, 26, 14);
+            change |= shadowColorCaves(frame, 27, 14);
+            change |= shadowColorCaves(frame, 26, 15);
+            change |= shadowColorCaves(frame, 27, 15);
+            change |= shadowColorCaves(frame, 28, 15);
+            change |= shadowColorCaves(frame, 27, 16);
+            change |= shadowColorCaves(frame, 28, 16);
+            change |= shadowColorCaves(frame, 29, 16);
+            change |= shadowColorCaves(frame, 29, 17);
 
             change |= frame->setPixel(16, 11, D1GfxPixel::colorPixel(120));
             change |= frame->setPixel(17, 11, D1GfxPixel::colorPixel(68));
@@ -7569,12 +7575,12 @@ bool D1Tileset::patchCavesFloor(bool silent)
             change |= frame->setPixel(31, 4, D1GfxPixel::colorPixel(70));
         }
         if (i == 39) { // 499[1]
-            change |= frame->setPixel(0, 10, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(0, 10))));
-            change |= frame->setPixel(1, 10, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(1, 10))));
-            change |= frame->setPixel(4, 11, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(4, 11))));
-            change |= frame->setPixel(8, 12, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(8, 12))));
-            change |= frame->setPixel(20, 11, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(20, 11))));
-            change |= frame->setPixel(21, 11, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(21, 11))));
+            change |= shadowColorCaves(frame, 0, 10);
+            change |= shadowColorCaves(frame, 1, 10);
+            change |= shadowColorCaves(frame, 4, 11);
+            change |= shadowColorCaves(frame, 8, 12);
+            change |= shadowColorCaves(frame, 20, 11);
+            change |= shadowColorCaves(frame, 21, 11);
         }
         if (i == 40) { // 500[0]
             change |= frame->setPixel(27, 13, D1GfxPixel::colorPixel(70));
@@ -7599,8 +7605,8 @@ bool D1Tileset::patchCavesFloor(bool silent)
             change |= frame->setPixel(28, 17, D1GfxPixel::colorPixel(71));
         }
         if (i == 41) { // 500[1]
-            change |= frame->setPixel(5, 12, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(5, 12))));
-            change |= frame->setPixel(6, 13, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(6, 13))));
+            change |= shadowColorCaves(frame, 5, 12);
+            change |= shadowColorCaves(frame, 6, 13);
 
             change |= frame->setPixel(7, 11, D1GfxPixel::colorPixel(73));
             change |= frame->setPixel(7, 12, D1GfxPixel::colorPixel(71));
@@ -7700,22 +7706,22 @@ bool D1Tileset::patchCavesFloor(bool silent)
             change |= frame->setPixel(18, 22, D1GfxPixel::colorPixel(71));
             change |= frame->setPixel(19, 22, D1GfxPixel::colorPixel(69));
 
-            change |= frame->setPixel(21, 13, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(21, 13))));
-            change |= frame->setPixel(22, 13, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(22, 13))));
-            change |= frame->setPixel(22, 14, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(22, 14))));
-            change |= frame->setPixel(22, 15, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(22, 15))));
-            change |= frame->setPixel(23, 15, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(23, 15))));
-            change |= frame->setPixel(23, 16, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(23, 16))));
-            change |= frame->setPixel(24, 16, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(24, 16))));
-            change |= frame->setPixel(24, 17, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(24, 17))));
-            change |= frame->setPixel(24, 18, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(24, 18))));
-            change |= frame->setPixel(24, 19, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(24, 19))));
-            change |= frame->setPixel(23, 20, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(23, 20))));
+            change |= shadowColorCaves(frame, 21, 13);
+            change |= shadowColorCaves(frame, 22, 13);
+            change |= shadowColorCaves(frame, 22, 14);
+            change |= shadowColorCaves(frame, 22, 15);
+            change |= shadowColorCaves(frame, 23, 15);
+            change |= shadowColorCaves(frame, 23, 16);
+            change |= shadowColorCaves(frame, 24, 16);
+            change |= shadowColorCaves(frame, 24, 17);
+            change |= shadowColorCaves(frame, 24, 18);
+            change |= shadowColorCaves(frame, 24, 19);
+            change |= shadowColorCaves(frame, 23, 20);
         }
         if (i == 46) { // 542[0]
-            change |= frame->setPixel(14, 15, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(14, 15))));
-            change |= frame->setPixel(15, 14, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(15, 14))));
-            change |= frame->setPixel(17, 13, D1GfxPixel::colorPixel(shadowColorCaves(frame->getPixel(17, 13))));
+            change |= shadowColorCaves(frame, 14, 15);
+            change |= shadowColorCaves(frame, 15, 14);
+            change |= shadowColorCaves(frame, 17, 13);
         }
         if (i == 47) { // 542[2]
             change |= frame->setPixel(21, 28, D1GfxPixel::colorPixel(124));
