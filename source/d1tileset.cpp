@@ -6769,6 +6769,33 @@ void D1Tileset::patchCavesSpec(bool silent)
     }
 }
 
+static BYTE shadowColorCaves(BYTE color)
+{
+    // assert(color < 128);
+    if (color == 0) {
+        return 0;
+    }
+    switch (color % 16) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+        return (color & ~15) + 13;
+    case 6:
+    case 7:
+    case 8:
+    case 9:
+    case 10:
+        return (color & ~15) + 14;
+    case 11:
+    case 12:
+    case 13:
+        return (color & ~15) + 15;
+    }
+    return 0;
+}
 bool D1Tileset::patchCavesFloor(bool silent)
 {
     typedef struct {
