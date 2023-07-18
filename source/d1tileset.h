@@ -64,6 +64,11 @@ private:
     void cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent);
     void patchCatacombsSpec(bool silent);
 
+    bool patchCavesFloor(bool silent);
+    bool patchCavesWall(bool silent);
+    void cleanupCaves(std::set<unsigned> &deletedFrames, bool silent);
+    void patchCavesSpec(bool silent);
+
     std::pair<unsigned, D1GfxFrame *> getFrame(int subtileIndex, int blockSize, unsigned microIndex);
     void fillCryptShapes(bool silent);
     void maskCryptBlacks(bool silent);
