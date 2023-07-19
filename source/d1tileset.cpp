@@ -8491,15 +8491,15 @@ bool D1Tileset::patchCavesStairs(bool silent)
     } CelMicro;
     const CelMicro micros[] = {
 /*  0 */{ 180 - 1, 2, D1CEL_FRAME_TYPE::Empty },              // sync stairs (used to block subsequent calls)
-/*  1 */{ 174 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
-/*  2 */{ 174 - 1, 2, D1CEL_FRAME_TYPE::Empty },
-/*  3 */{ 174 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
-/*  4 */{ 176 - 1, 0, D1CEL_FRAME_TYPE::Empty },
-/*  5 */{ 176 - 1, 2, D1CEL_FRAME_TYPE::Empty },
-/*  6 */{ 171 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
-/*  7 */{ 171 - 1, 1, D1CEL_FRAME_TYPE::RightTrapezoid },
-/*  8 */{ 171 - 1, 3, D1CEL_FRAME_TYPE::Square },
-/*  9 */{ 173 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/*  1 */{ 171 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/*  2 */{ 171 - 1, 1, D1CEL_FRAME_TYPE::RightTrapezoid },
+/*  3 */{ 171 - 1, 3, D1CEL_FRAME_TYPE::Square },
+/*  4 */{ 173 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/*  5 */{ 174 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/*  6 */{ 174 - 1, 2, D1CEL_FRAME_TYPE::Empty },
+/*  7 */{ 174 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  8 */{ 176 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/*  9 */{ 176 - 1, 2, D1CEL_FRAME_TYPE::Empty },
     };
     constexpr unsigned blockSize = BLOCK_SIZE_L3;
     for (int i = 0; i < lengthof(micros); i++) {
@@ -8513,26 +8513,9 @@ bool D1Tileset::patchCavesStairs(bool silent)
             return false;
         }
         bool change = false;
-        // move pixels to 174[5] from 180[2]
-        if (i == 3) {
-            const CelMicro &microSrc = micros[i - 3];
-            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
-            D1GfxFrame *frameSrc = mf.second;
-            // if (frameSrc == nullptr) {
-            //    return;
-            // }
-            for (int x = 0; x < MICRO_WIDTH; x++) {
-                for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
-                    D1GfxPixel pixel = frameSrc->getPixel(x, y - MICRO_HEIGHT / 2); // 180[2]
-                    if (!pixel.isTransparent()) {
-                        change |= frame->setPixel(x, y, pixel);
-                    }
-                }
-            }
-        }
         // move pixels to 171[0] from 176[2]
-        if (i == 6) {
-            const CelMicro &microSrc = micros[i - 1];
+        if (i == 1) {
+            const CelMicro &microSrc = micros[9];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
             // if (frameSrc == nullptr) {
@@ -8552,14 +8535,14 @@ bool D1Tileset::patchCavesStairs(bool silent)
         }
 
         // move pixels to 171[1] from 174[0] and 174[2]
-        if (i == 7) {
-            const CelMicro &microSrc1 = micros[i - 5];
+        if (i == 2) {
+            const CelMicro &microSrc1 = micros[6];
             std::pair<unsigned, D1GfxFrame *> mf1 = this->getFrame(microSrc1.subtileIndex, blockSize, microSrc1.microIndex);
             D1GfxFrame *frameSrc1 = mf1.second;
             // if (frameSrc1 == nullptr) {
             //    return;
             // }
-            const CelMicro &microSrc2 = micros[i - 6];
+            const CelMicro &microSrc2 = micros[5];
             std::pair<unsigned, D1GfxFrame *> mf2 = this->getFrame(microSrc2.subtileIndex, blockSize, microSrc2.microIndex);
             D1GfxFrame *frameSrc2 = mf2.second;
             // if (frameSrc2 == nullptr) {
@@ -8583,8 +8566,8 @@ bool D1Tileset::patchCavesStairs(bool silent)
             }
         }
         // move pixels to 171[3] from 174[2]
-        if (i == 8) {
-            const CelMicro &microSrc = micros[i - 6];
+        if (i == 3) {
+            const CelMicro &microSrc = micros[6];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
             // if (frameSrc == nullptr) {
@@ -8600,14 +8583,14 @@ bool D1Tileset::patchCavesStairs(bool silent)
             }
         }
         // move pixels to 173[1] from 176[0] and 176[2]
-        if (i == 9) {
-            const CelMicro &microSrc1 = micros[i - 4];
+        if (i == 4) {
+            const CelMicro &microSrc1 = micros[9];
             std::pair<unsigned, D1GfxFrame *> mf1 = this->getFrame(microSrc1.subtileIndex, blockSize, microSrc1.microIndex);
             D1GfxFrame *frameSrc1 = mf1.second;
             // if (frameSrc1 == nullptr) {
             //    return;
             // }
-            const CelMicro &microSrc2 = micros[i - 5];
+            const CelMicro &microSrc2 = micros[8];
             std::pair<unsigned, D1GfxFrame *> mf2 = this->getFrame(microSrc2.subtileIndex, blockSize, microSrc2.microIndex);
             D1GfxFrame *frameSrc2 = mf2.second;
             // if (frameSrc2 == nullptr) {
@@ -8624,6 +8607,23 @@ bool D1Tileset::patchCavesStairs(bool silent)
                     } else {
                         pixel = frameSrc2->getPixel(x, y - MICRO_HEIGHT / 2); // 176[0]
                     }
+                    if (!pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, pixel);
+                    }
+                }
+            }
+        }
+        // move pixels to 174[5] from 180[2]
+        if (i == 7) {
+            const CelMicro &microSrc = micros[0];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y - MICRO_HEIGHT / 2); // 180[2]
                     if (!pixel.isTransparent()) {
                         change |= frame->setPixel(x, y, pixel);
                     }
@@ -10211,6 +10211,7 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     // -  by patchCavesStairs
     Blk2Mcr(180, 2);
     Blk2Mcr(174, 2);
+    Blk2Mcr(176, 2);
 
     // mask walls
     // after patchCavesWallCel
@@ -10498,6 +10499,7 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     // Blk2Mcr(536, 5);
     // Blk2Mcr(536, 7);
     Blk2Mcr(552, 0);
+    Blk2Mcr(552, 2);
     Blk2Mcr(552, 3);
     Blk2Mcr(552, 4);
     Blk2Mcr(552, 5);
@@ -10509,6 +10511,7 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(556, 3);
     Blk2Mcr(556, 5);
     Blk2Mcr(556, 6);
+    Blk2Mcr(558, 2);
     Blk2Mcr(558, 6);
     Blk2Mcr(559, 4);
     Blk2Mcr(559, 5);
