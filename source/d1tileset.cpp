@@ -9559,10 +9559,6 @@ bool D1Tileset::patchCavesWall2(bool silent)
 /* 77 */{ 470 - 1, 3, D1CEL_FRAME_TYPE::Empty },
 /* 78 */{ 470 - 1, 5, D1CEL_FRAME_TYPE::Empty },
 /* 79 */{ 470 - 1, 7, D1CEL_FRAME_TYPE::Empty },
-/* 80 */{ /*478*/ - 1, 1, D1CEL_FRAME_TYPE::Empty },
-/* 81 */{ /*478*/ - 1, 3, D1CEL_FRAME_TYPE::Empty },
-/* 82 */{ /*478*/ - 1, 5, D1CEL_FRAME_TYPE::Empty },
-/* 83 */{ /*478*/ - 1, 7, D1CEL_FRAME_TYPE::Empty },
 /* 84 */{ 486 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 85 */{ 486 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 86 */{ 486 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
@@ -9773,9 +9769,9 @@ bool D1Tileset::patchCavesWall2(bool silent)
             }
         }
 
-        // mask 478[1] 486[1] using 470[1]
-        if (i >= 80 && i < 88 && (i % 4) == (80 % 4)) {
-            const CelMicro &microSrc = micros[119];
+        // mask 486[1] using 470[1]
+        if (i >= 80 && i < 84 && (i % 4) == (80 % 4)) {
+            const CelMicro &microSrc = micros[76];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
             // if (frameSrc == nullptr) {
@@ -9791,8 +9787,8 @@ bool D1Tileset::patchCavesWall2(bool silent)
             }
         }
         // mask 478[3] 486[3] using 470[3]
-        if (i >= 81 && i < 88 && (i % 4) == (81 % 4)) {
-            const CelMicro &microSrc = micros[76];
+        if (i >= 81 && i < 84 && (i % 4) == (81 % 4)) {
+            const CelMicro &microSrc = micros[77];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
             // if (frameSrc == nullptr) {
@@ -9808,8 +9804,8 @@ bool D1Tileset::patchCavesWall2(bool silent)
             }
         }
         // mask 478[5] 486[5] using 470[5]
-        if (i >= 82 && i < 88 && (i % 4) == (82 % 4)) {
-            const CelMicro &microSrc = micros[77];
+        if (i >= 82 && i < 84 && (i % 4) == (82 % 4)) {
+            const CelMicro &microSrc = micros[78];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
             // if (frameSrc == nullptr) {
@@ -9825,8 +9821,8 @@ bool D1Tileset::patchCavesWall2(bool silent)
             }
         }
         // mask 478[7] 486[7] using 470[7]
-        if (i >= 83 && i < 88 && (i % 4) == (83 % 4)) {
-            const CelMicro &microSrc = micros[78];
+        if (i >= 83 && i < 84 && (i % 4) == (83 % 4)) {
+            const CelMicro &microSrc = micros[79];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
             // if (frameSrc == nullptr) {
@@ -9843,7 +9839,7 @@ bool D1Tileset::patchCavesWall2(bool silent)
         }
 
         // sync overlapping micros 467[0], 459[0] with 471[0]
-        if (i >= 88 && i < 90) {
+        if (i >= 84 && i < 86) {
             const CelMicro &microSrc = micros[66];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
@@ -9861,15 +9857,15 @@ bool D1Tileset::patchCavesWall2(bool silent)
         }
 
         // fix micros after masking
-        if (i == 90) { // 9[0]
+        if (i == 86) { // 9[0]
             change |= frame->setPixel(1, 2, D1GfxPixel::colorPixel(70));
             change |= frame->setPixel(2, 1, D1GfxPixel::colorPixel(73));
         }
-        if (i == 91) { // 11[0]
+        if (i == 87) { // 11[0]
             change |= frame->setPixel(12, 7, D1GfxPixel::colorPixel(69));
             change |= frame->setPixel(5, 13, D1GfxPixel::colorPixel(70));
         }
-        if (i == 92) { // 92[0]
+        if (i == 88) { // 92[0]
             change |= frame->setPixel(0, 4, D1GfxPixel::colorPixel(119));
             change |= frame->setPixel(1, 2, D1GfxPixel::colorPixel(70));
             change |= frame->setPixel(1, 3, D1GfxPixel::colorPixel(70));
@@ -9877,7 +9873,7 @@ bool D1Tileset::patchCavesWall2(bool silent)
             change |= frame->setPixel(2, 2, D1GfxPixel::colorPixel(119));
             change |= frame->setPixel(3, 0, D1GfxPixel::colorPixel(120));
         }
-        if (i == 93) { // 92[2]
+        if (i == 89) { // 92[2]
             change |= frame->setPixel(4, 30, D1GfxPixel::colorPixel(71));
             change |= frame->setPixel(4, 31, D1GfxPixel::colorPixel(71));
             change |= frame->setPixel(5, 30, D1GfxPixel::colorPixel(68));
@@ -9928,7 +9924,7 @@ bool D1Tileset::patchCavesWall2(bool silent)
             change |= frame->setPixel(19, 1, D1GfxPixel::colorPixel(71));
             change |= frame->setPixel(19, 0, D1GfxPixel::colorPixel(88));
         }
-        if (i == 94) { // 94[0]
+        if (i == 90) { // 94[0]
             change |= frame->setPixel(7, 12, D1GfxPixel::colorPixel(70));
             change |= frame->setPixel(8, 11, D1GfxPixel::colorPixel(67));
             change |= frame->setPixel(9, 10, D1GfxPixel::colorPixel(70));
@@ -9943,18 +9939,18 @@ bool D1Tileset::patchCavesWall2(bool silent)
             change |= frame->setPixel(20, 0, D1GfxPixel::colorPixel(71));
             change |= frame->setPixel(5, 13, D1GfxPixel::colorPixel(70));
         }
-        if (i == 95) { // 252[2]
+        if (i == 91) { // 252[2]
             change |= frame->setPixel(11, 19, D1GfxPixel::colorPixel(119));
             change |= frame->setPixel(15, 11, D1GfxPixel::colorPixel(91));
         }
-        if (i == 96) { // 252[4]
+        if (i == 92) { // 252[4]
             change |= frame->setPixel(19, 29, D1GfxPixel::colorPixel(0));
             change |= frame->setPixel(20, 24, D1GfxPixel::colorPixel(0));
             change |= frame->setPixel(20, 25, D1GfxPixel::colorPixel(0));
             change |= frame->setPixel(21, 17, D1GfxPixel::colorPixel(0));
             change |= frame->setPixel(21, 18, D1GfxPixel::colorPixel(0));
         }
-        if (i == 97) { // 252[6]
+        if (i == 93) { // 252[6]
             change |= frame->setPixel(25, 20, D1GfxPixel::colorPixel(123));
             change |= frame->setPixel(25, 21, D1GfxPixel::colorPixel(75));
             change |= frame->setPixel(25, 22, D1GfxPixel::colorPixel(120));
@@ -9964,15 +9960,15 @@ bool D1Tileset::patchCavesWall2(bool silent)
             change |= frame->setPixel(26, 22, D1GfxPixel::colorPixel(122));
             change |= frame->setPixel(26, 23, D1GfxPixel::colorPixel(121));
         }
-        if (i == 98) { // 376[0]
+        if (i == 94) { // 376[0]
             change |= frame->setPixel(12, 7, D1GfxPixel::colorPixel(69));
             change |= frame->setPixel(5, 13, D1GfxPixel::colorPixel(70));
         }
-        if (i == 99) { // 374[0]
+        if (i == 95) { // 374[0]
             change |= frame->setPixel(1, 2, D1GfxPixel::colorPixel(70));
             change |= frame->setPixel(2, 1, D1GfxPixel::colorPixel(73));
         }
-        if (i == 100) { // 374[6]
+        if (i == 96) { // 374[6]
             change |= frame->setPixel(24, 26, D1GfxPixel::colorPixel(89));
             change |= frame->setPixel(24, 27, D1GfxPixel::colorPixel(121));
             change |= frame->setPixel(24, 28, D1GfxPixel::colorPixel(122));
