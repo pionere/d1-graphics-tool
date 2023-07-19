@@ -9428,11 +9428,11 @@ bool D1Tileset::patchCavesWall1(bool silent)
         }
 
         // fix artifacts
-        if (i == 34) { // 456[0]
+        /*if (i == 34) { // 456[0]
             change |= frame->setPixel(12, 17, D1GfxPixel::colorPixel(68));
             change |= frame->setPixel(13, 18, D1GfxPixel::colorPixel(67));
             change |= frame->setPixel(14, 19, D1GfxPixel::colorPixel(68));
-        }
+        }*/
         if (i == 115) { // 89[1]
             change |= frame->setPixel(24, 12, D1GfxPixel::colorPixel(72));
         }
@@ -10037,9 +10037,9 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 42 - 1, 1, 69 - 1, silent); // 147 (another option: 108)
     ReplaceSubtile(this->til, 43 - 1, 2, 86 - 1, silent); // 152
     ReplaceSubtile(this->til, 54 - 1, 3, 231 - 1, silent); // 195
-    ReplaceSubtile(this->til, 66 - 1, 0, 224 - 1, silent); // 240
-    ReplaceSubtile(this->til, 66 - 1, 1, 225 - 1, silent); // 241
-    ReplaceSubtile(this->til, 66 - 1, 3, 227 - 1, silent); // 243
+    // ReplaceSubtile(this->til, 66 - 1, 0, 224 - 1, silent); // 240
+    // ReplaceSubtile(this->til, 66 - 1, 1, 225 - 1, silent); // 241
+    // ReplaceSubtile(this->til, 66 - 1, 3, 227 - 1, silent); // 243
     ReplaceSubtile(this->til, 68 - 1, 2, 34 - 1, silent); // 250
     ReplaceSubtile(this->til, 68 - 1, 3, 35 - 1, silent); // 251
     ReplaceSubtile(this->til, 69 - 1, 1, 37 - 1, silent); // 253
@@ -10079,9 +10079,9 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 62 - 1, 2, 242 - 1, silent); // 226 - after patchCavesFloorCel
     ReplaceSubtile(this->til, 62 - 1, 3, 392 - 1, silent); // 227
     ReplaceSubtile(this->til, 61 - 1, 2, 238 - 1, silent); // 222 - after patchCavesFloorCel
-    ReplaceSubtile(this->til, 66 - 1, 0, 389 - 1, silent); // 224
-    ReplaceSubtile(this->til, 66 - 1, 1, 390 - 1, silent); // 225
-    ReplaceSubtile(this->til, 66 - 1, 3, 392 - 1, silent); // 227
+    ReplaceSubtile(this->til, 66 - 1, 0, 389 - 1, silent); // 240
+    ReplaceSubtile(this->til, 66 - 1, 1, 390 - 1, silent); // 241
+    ReplaceSubtile(this->til, 66 - 1, 3, 392 - 1, silent); // 243
 
     // - lava
     ReplaceSubtile(this->til, 44 - 1, 1, 57 - 1, silent); // 155
