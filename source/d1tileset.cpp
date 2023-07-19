@@ -8527,6 +8527,7 @@ bool D1Tileset::patchCavesStairs(bool silent)
 /*  7 */{ 174 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
 /*  8 */{ 176 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
 /*  9 */{ 176 - 1, 2, D1CEL_FRAME_TYPE::Empty },
+/* 10 */{ 163 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
     };
     constexpr unsigned blockSize = BLOCK_SIZE_L3;
     for (int i = 0; i < lengthof(micros); i++) {
@@ -10213,6 +10214,7 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(180, 2);
     Blk2Mcr(174, 2);
     Blk2Mcr(176, 2);
+    Blk2Mcr(163, 3);
 
     // mask walls
     // after patchCavesWallCel
@@ -10319,7 +10321,7 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(334, 3, 446, 3);
 
     // ReplaceMcr(292, 4, 254, 4);
-    ReplaceMcr(163, 3, 33, 3);
+    // ReplaceMcr(163, 3, 33, 3);
     ReplaceMcr(167, 3, 33, 3);
     ReplaceMcr(249, 3, 33, 3);
     ReplaceMcr(398, 3, 33, 3);
