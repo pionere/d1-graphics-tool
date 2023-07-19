@@ -8462,6 +8462,33 @@ bool D1Tileset::patchCavesFloor(bool silent)
             change |= frame->setPixel(31, 15, D1GfxPixel::colorPixel(93));
         }
 
+        // create new shadow 435[1] using 544[1] and 551[1]
+        if (i == 63) {
+            const CelMicro &microSrc1 = micros[i - 1];
+            std::pair<unsigned, D1GfxFrame *> mf1 = this->getFrame(microSrc1.subtileIndex, blockSize, microSrc1.microIndex);
+            D1GfxFrame *frameSrc1 = mf1.second;
+            // if (frameSrc1 == nullptr) {
+            //    return;
+            // }
+            const CelMicro &microSrc2 = micros[i - 38];
+            std::pair<unsigned, D1GfxFrame *> mf2 = this->getFrame(microSrc2.subtileIndex, blockSize, microSrc2.microIndex);
+            D1GfxFrame *frameSrc2 = mf2.second;
+            // if (frameSrc2 == nullptr) {
+            //    return;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = D1GfxPixel::transparentPixel();
+                    if (x < 9 && y > 18) {
+                        pixel = frameSrc1->getPixel(x, y); // 544[1]
+                    } else {
+                        pixel = frameSrc2->getPixel(x, y); // 551[1]
+                    }
+                    change |= frame->setPixel(x, y, pixel);
+                }
+            }
+        }
+
         if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {
             change = true;
             frame->setFrameType(micro.res_encoding);
