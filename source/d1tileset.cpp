@@ -8575,7 +8575,7 @@ bool D1Tileset::patchCavesStairs(bool silent)
             // }
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
-                    D1GfxPixel pixel = frameSrc->getPixel(x, y); // 174[2]
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y - MICRO_HEIGHT / 2); // 174[2]
                     if (!pixel.isTransparent()) {
                         change |= frame->setPixel(x, y, pixel);
                     }
