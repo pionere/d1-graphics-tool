@@ -9532,15 +9532,15 @@ bool D1Tileset::patchCavesWall2(bool silent)
 /* 76 */{ 467 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // sync overlapping micros
 /* 77 */{ 459 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 78 */{ 9 - 1, 0, MET_TRANSPARENT }, // fix micros after masking
-/* 79 */{ 11 - 1, 0, MET_TRANSPARENT },
-/* 80 */{ 92 - 1, 0, MET_TRANSPARENT },
-/* 81 */{ 92 - 1, 2, MET_TRANSPARENT },
-/* 82 */{ 92 - 1, 6, MET_TRANSPARENT },
-/* 83 */{ 94 - 1, 0, MET_TRANSPARENT },
-/* 84 */{ 252 - 1, 0, MET_TRANSPARENT },
-/* 85 */{ 376 - 1, 0, MET_TRANSPARENT },
-/* 86 */{ 374 - 1, 0, MET_TRANSPARENT },
+/* 78 */{ 9 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // fix micros after masking
+/* 79 */{ 11 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 80 */{ 92 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 81 */{ 92 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 82 */{ 92 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 83 */{ 94 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 84 */{ 252 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 85 */{ 376 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 86 */{ 374 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
     };
     constexpr unsigned blockSize = BLOCK_SIZE_L3;
     for (int i = 0; i < lengthof(micros); i++) {
