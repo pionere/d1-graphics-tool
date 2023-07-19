@@ -10019,7 +10019,7 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 42 - 1, 2, 7 - 1, silent); // 148
     ReplaceSubtile(this->til, 43 - 1, 1, 14 - 1, silent); // 151
     ReplaceSubtile(this->til, 57 - 1, 0, 393 - 1, silent); // 204
-    // ReplaceSubtile(this->til, 102 - 1, 0, 5 - 1, silent); // 370
+    ReplaceSubtile(this->til, 102 - 1, 0, 5 - 1, silent); // 370
     // ReplaceSubtile(this->til, 102 - 1, 1, 6 - 1, silent); // 371
     ReplaceSubtile(this->til, 143 - 1, 1, 506 - 1, silent); // 519
     ReplaceSubtile(this->til, 122 - 1, 1, 446 - 1, silent); // 442
