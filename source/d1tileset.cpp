@@ -9536,11 +9536,12 @@ bool D1Tileset::patchCavesWall2(bool silent)
 /* 79 */{ 11 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 80 */{ 92 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 81 */{ 92 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 82 */{ 92 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 83 */{ 94 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 84 */{ 252 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 82 */{ 94 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 83 */{ 252 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 84 */{ 252 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 85 */{ 376 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 86 */{ 374 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 87 */{ 374 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
     };
     constexpr unsigned blockSize = BLOCK_SIZE_L3;
     for (int i = 0; i < lengthof(micros); i++) {
@@ -9818,16 +9819,7 @@ bool D1Tileset::patchCavesWall2(bool silent)
             change |= frame->setPixel(19, 1, D1GfxPixel::colorPixel(71));
             change |= frame->setPixel(19, 0, D1GfxPixel::colorPixel(88));
         }
-        if (i == 82) { // 92[6]
-            change |= frame->setPixel(24, 26, D1GfxPixel::colorPixel(89));
-            change |= frame->setPixel(24, 27, D1GfxPixel::colorPixel(121));
-            change |= frame->setPixel(24, 28, D1GfxPixel::colorPixel(122));
-            change |= frame->setPixel(24, 29, D1GfxPixel::colorPixel(93));
-            change |= frame->setPixel(24, 30, D1GfxPixel::colorPixel(123));
-            change |= frame->setPixel(24, 31, D1GfxPixel::colorPixel(122));
-            change |= frame->setPixel(25, 20, D1GfxPixel::colorPixel(121));
-        }
-        if (i == 83) { // 94[0]
+        if (i == 82) { // 94[0]
             change |= frame->setPixel(7, 12, D1GfxPixel::colorPixel(70));
             change |= frame->setPixel(8, 11, D1GfxPixel::colorPixel(67));
             change |= frame->setPixel(9, 10, D1GfxPixel::colorPixel(70));
@@ -9842,9 +9834,16 @@ bool D1Tileset::patchCavesWall2(bool silent)
             change |= frame->setPixel(20, 0, D1GfxPixel::colorPixel(71));
             change |= frame->setPixel(5, 13, D1GfxPixel::colorPixel(70));
         }
-        if (i == 84) { // 252[0]
-            change |= frame->setPixel(12, 7, D1GfxPixel::colorPixel(69));
-            change |= frame->setPixel(5, 13, D1GfxPixel::colorPixel(70));
+        if (i == 83) { // 252[2]
+            change |= frame->setPixel(11, 19, D1GfxPixel::colorPixel(119));
+            change |= frame->setPixel(15, 11, D1GfxPixel::colorPixel(91));
+        }
+        if (i == 84) { // 252[4]
+            change |= frame->setPixel(19, 29, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(20, 24, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(20, 25, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(21, 17, D1GfxPixel::colorPixel(0));
+            change |= frame->setPixel(21, 18, D1GfxPixel::colorPixel(0));
         }
         if (i == 85) { // 376[0]
             change |= frame->setPixel(12, 7, D1GfxPixel::colorPixel(69));
@@ -9853,6 +9852,15 @@ bool D1Tileset::patchCavesWall2(bool silent)
         if (i == 86) { // 374[0]
             change |= frame->setPixel(1, 2, D1GfxPixel::colorPixel(70));
             change |= frame->setPixel(2, 1, D1GfxPixel::colorPixel(73));
+        }
+        if (i == 87) { // 374[6]
+            change |= frame->setPixel(24, 26, D1GfxPixel::colorPixel(89));
+            change |= frame->setPixel(24, 27, D1GfxPixel::colorPixel(121));
+            change |= frame->setPixel(24, 28, D1GfxPixel::colorPixel(122));
+            change |= frame->setPixel(24, 29, D1GfxPixel::colorPixel(93));
+            change |= frame->setPixel(24, 30, D1GfxPixel::colorPixel(123));
+            change |= frame->setPixel(24, 31, D1GfxPixel::colorPixel(122));
+            change |= frame->setPixel(25, 20, D1GfxPixel::colorPixel(121));
         }
 
         if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {
