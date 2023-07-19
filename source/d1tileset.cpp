@@ -10000,8 +10000,6 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     constexpr int blockSize = BLOCK_SIZE_L3;
 
     // reuse subtiles
-    // unified columns
-    ReplaceSubtile(this->til, 6 - 1, 1, 26 - 1, silent);
     // fix shadow
     ReplaceSubtile(this->til, 4 - 1, 2, 19 - 1, silent);  // 15
     ReplaceSubtile(this->til, 104 - 1, 2, 19 - 1, silent);  // 380
