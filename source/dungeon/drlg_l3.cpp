@@ -19,7 +19,7 @@ DEVILUTION_BEGIN_NAMESPACE
 unsigned _guLavapools;
 
 /* Tiles to build the theme rooms. */
-const BYTE themeTiles[NUM_DRT_TYPES] = { DEFAULT_MEGATILE_L3, 135, 134, 147, 146, 150, 151, 152, 138 };
+const BYTE themeTiles[NUM_DRT_TYPES] = { DEFAULT_MEGATILE_L3, 135, 134, 147, 146, 150, 144, 145, 138 };
 /**
  * A lookup table for the 16 possible patterns of a 2x2 area,
  * where each cell either contains a SW wall or it doesn't.
@@ -145,7 +145,7 @@ const BYTE L3BTYPES[157] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 80..
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 90..
 	0, 0, 0, 0, 0, 0, 1, 1, 1, 2, //100..
-	3, 0, 3, 0, 0, 0, 0, 0, 0, 0, //110..
+	3, 0, 0, 0, 0, 0, 0, 0, 0, 0, //110..
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //120..
 	0, 0, 0, 0, 4, 5, 4, 5, 0, 0, //130..
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //140..
@@ -171,7 +171,7 @@ const BYTE L3FTYPES[157] = {
 	12,  0,  4, 15, 15, 15, 15, 15, 15, 15, //110..
 	 3, 10, 10, 10, 10,  8, 12, 12, 12, 12, //120..
 	 0,  0,  0,  0,  3,  5,  3,  5,  1,  1, //130..
-	 1,  1,  1,  1,  5,  3,  3,  5,  3,  5, //140..
+	 1,  1,  1,  1, 11,  2,  3,  5,  3,  5, //140..
 	 7,  3,  5, 12, 12,  0,  0              //150..
 	// clang-format on
 };
@@ -1535,7 +1535,7 @@ typedef struct RiverTile {
 /*
  * Draw lava rivers.
  * Assumes the border of dungeon was empty.
- * New dungeon values: 19 20 21 22 23 24 38 39 40 41 42 43 44 45
+ * New dungeon values: 15 16 17 18 19 20 21 22 23 24 38 39 40 41 42 43 44 45
  */
 static void DRLG_L3River()
 {
@@ -1844,8 +1844,8 @@ static bool DRLG_L3SpawnLava(int x, int y, int dir)
 
 static void DRLG_L3DrawLava(int x, int y)
 {
-	BYTE i;                 //     0     1     2     3     4     5     6     7     8     9    10    11    12    13    14 
-	static BYTE poolsub[15] = { 0x00, 0x23, 0x1A, 0x24, 0x19, 0x1D, 0x22, 0x07, 0x21, 0x1C, 0x1B, 0x25, 0x20, 0x1F, 0x1E };
+	BYTE i;                 //   0   1   2   3   4   5   6   7   8   9  10  11  12  13  14 
+	static BYTE poolsub[15] = {  0, 35, 26, 36, 25, 29, 34,  7, 33, 28, 27, 37, 32, 31, 30 };
 
 	if (x < 0 || x >= DMAXX || y < 0 || y >= DMAXY) {
 		return;
@@ -1872,6 +1872,7 @@ static void DRLG_L3DrawLava(int x, int y)
  * Flood fills dirt and wall tiles looking for
  * an area of at most 40 tiles and disconnected from the map edge.
  * If it finds one, converts it to lava tiles and sets lavapool to TRUE.
+ * New dungeon values: 25 26 27 28 29 30 31 32 33 34 35 36 37
  */
 static void DRLG_L3Pool()
 {
@@ -2135,7 +2136,7 @@ static void DRLG_L6PlaceRndPool(const BYTE* miniset, int rndper)
 /*
  * Add fences and planks to the dungeon.
  * New dungeon values: 121, 122, 123, 124, 125, 126, 127, 128, 129, 130,
- *                     131, 132, 133, 134, 135, 139, 140, 142, 143, 151, 152
+ *                     131, 132, 133, 134, 135, 139, 140, 142, 143, 146, 147, 151, 152
  */
 static void DRLG_L3Wood()
 {
@@ -2201,7 +2202,7 @@ static void DRLG_L3Wood()
 	for (i = 0; i < DMAXX; i++) {
 		for (j = 0; j < DMAXY; j++) {
 			bv = dungeon[i][j];
-			if ((bv == 2 || bv == 134 || bv == 150 || bv == 151) && random_(0, 4) != 0) {
+			if ((bv == 2 || bv == 134 || bv == 150 || bv == 144) && random_(0, 4) != 0) {
 				if (InThemeRoom(i, j - 1))
 					continue; // in a theme room -> skip
 				y1 = j;
@@ -2252,7 +2253,11 @@ static void DRLG_L3Wood()
 					dungeon[i][j] = 139;
 				else if (dungeon[i][j] == 134)
 					dungeon[i][j] = 142;
-			} else if ((bv == 4 || bv == 135 || bv == 138 || bv == 152) && random_(0, 4) != 0) {
+				else if (dungeon[i][j] == 150)
+					dungeon[i][j] = 152;
+				else if (dungeon[i][j] == 144)
+					dungeon[i][j] = 143;
+			} else if ((bv == 4 || bv == 135 || bv == 145 || bv == 150) && random_(0, 4) != 0) {
 				if (InThemeRoom(i - 1, j))
 					continue; // in a theme room -> skip
 				x1 = i;
@@ -2303,6 +2308,10 @@ static void DRLG_L3Wood()
 					dungeon[i][j] = 140;
 				else if (dungeon[i][j] == 135)
 					dungeon[i][j] = 143;
+				else if (dungeon[i][j] == 145)
+					dungeon[i][j] = 142;
+				else if (dungeon[i][j] == 150)
+					dungeon[i][j] = 151;
 			}
 		}
 	}

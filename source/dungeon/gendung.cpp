@@ -374,7 +374,25 @@ void InitLvlDungeon()
 		nBlockTable[559] = false;
 		break;
 	case DTYPE_CAVES:
+		// patch dSolidTable - L3.SOL
 		nSolidTable[249] = false; // sync tile 68 and 69 by making subtile 249 of tile 68 walkable.
+		nBlockTable[146] = false; // fix unreasonable light-blocker
+		nBlockTable[150] = false; // fix unreasonable light-blocker
+		// fix fence subtiles
+		nSolidTable[474] = false;
+		nSolidTable[479] = false;
+		nSolidTable[487] = false; // unused after patch
+		nSolidTable[488] = true;
+		nSolidTable[540] = false; // unused in base game
+		// create new fences
+		pTiles[144][0] = 505;
+		pTiles[144][1] = 25;
+		pTiles[144][2] = 516;
+		pTiles[144][3] = 520;
+		pTiles[145][0] = 505;
+		pTiles[145][1] = 519;
+		pTiles[145][2] = 202;
+		pTiles[145][3] = 547;
 		break;
 	case DTYPE_HELL:
 		// patch dSolidTable - L4.SOL
