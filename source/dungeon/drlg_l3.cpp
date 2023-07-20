@@ -2307,7 +2307,7 @@ static void DRLG_L3Wood()
 				if (dungeon[i][j] == 4)
 					dungeon[i][j] = 140;
 				else if (dungeon[i][j] == 135)
-					dungeon[i][j] = 152;
+					dungeon[i][j] = 143;
 				else if (dungeon[i][j] == 145)
 					dungeon[i][j] = 142;
 				else if (dungeon[i][j] == 150)
