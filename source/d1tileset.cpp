@@ -12183,32 +12183,32 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
     // - shadows
     ReplaceSubtile(this->til, 66 - 1, 2, 105 - 1, silent); // 252
     ReplaceSubtile(this->til, 72 - 1, 2, 105 - 1, silent);
-    ReplaceSubtile(this->til, 74 - 1, 2, 105 - 1, silent);
+    // ReplaceSubtile(this->til, 74 - 1, 2, 105 - 1, silent);
     ReplaceSubtile(this->til, 76 - 1, 2, 105 - 1, silent);
     ReplaceSubtile(this->til, 82 - 1, 2, 105 - 1, silent);
     ReplaceSubtile(this->til, 99 - 1, 2, 105 - 1, silent);
     ReplaceSubtile(this->til, 80 - 1, 2, 105 - 1, silent); // 303
-    ReplaceSubtile(this->til, 79 - 1, 0, 25 - 1, silent);  // 297
-    ReplaceSubtile(this->til, 79 - 1, 1, 26 - 1, silent);  // 298
-    ReplaceSubtile(this->til, 79 - 1, 2, 27 - 1, silent);  // 299
+    // ReplaceSubtile(this->til, 79 - 1, 0, 25 - 1, silent);  // 297
+    // ReplaceSubtile(this->til, 79 - 1, 1, 26 - 1, silent);  // 298
+    // ReplaceSubtile(this->til, 79 - 1, 2, 27 - 1, silent);  // 299
     ReplaceSubtile(this->til, 70 - 1, 0, 103 - 1, silent); // 266
     ReplaceSubtile(this->til, 70 - 1, 1, 104 - 1, silent); // 267
     ReplaceSubtile(this->til, 71 - 1, 2, 27 - 1, silent);  // 264
     ReplaceSubtile(this->til, 85 - 1, 2, 27 - 1, silent);
-    ReplaceSubtile(this->til, 77 - 1, 0, 25 - 1, silent);  // 289
-    ReplaceSubtile(this->til, 77 - 1, 1, 26 - 1, silent);  // 290
-    ReplaceSubtile(this->til, 77 - 1, 3, 28 - 1, silent);  // 292
-    ReplaceSubtile(this->til, 73 - 1, 0, 25 - 1, silent);  // 276
-    ReplaceSubtile(this->til, 73 - 1, 1, 26 - 1, silent);  // 277
+    // ReplaceSubtile(this->til, 77 - 1, 0, 25 - 1, silent);  // 289
+    // ReplaceSubtile(this->til, 77 - 1, 1, 26 - 1, silent);  // 290
+    // ReplaceSubtile(this->til, 77 - 1, 3, 28 - 1, silent);  // 292
+    // ReplaceSubtile(this->til, 73 - 1, 0, 25 - 1, silent);  // 276
+    // ReplaceSubtile(this->til, 73 - 1, 1, 26 - 1, silent);  // 277
     // ReplaceSubtile(this->til, 67 - 1, 0, 25 - 1, silent); // 254
     // ReplaceSubtile(this->til, 67 - 1, 1, 26 - 1, silent); // 255
-    ReplaceSubtile(this->til, 75 - 1, 0, 25 - 1, silent);  // 262
+    // ReplaceSubtile(this->til, 75 - 1, 0, 25 - 1, silent);  // 262
     ReplaceSubtile(this->til, 83 - 1, 0, 25 - 1, silent);
-    ReplaceSubtile(this->til, 75 - 1, 1, 26 - 1, silent);  // 283
+    // ReplaceSubtile(this->til, 75 - 1, 1, 26 - 1, silent);  // 283
     ReplaceSubtile(this->til, 83 - 1, 1, 26 - 1, silent);  // 312
-    ReplaceSubtile(this->til, 84 - 1, 0, 103 - 1, silent); // 315
-    ReplaceSubtile(this->til, 84 - 1, 1, 104 - 1, silent); // 316
-    ReplaceSubtile(this->til, 84 - 1, 2, 105 - 1, silent); // 317
+    // ReplaceSubtile(this->til, 84 - 1, 0, 103 - 1, silent); // 315
+    // ReplaceSubtile(this->til, 84 - 1, 1, 104 - 1, silent); // 316
+    // ReplaceSubtile(this->til, 84 - 1, 2, 105 - 1, silent); // 317
     ReplaceSubtile(this->til, 100 - 1, 0, 25 - 1, silent); // 374
     ReplaceSubtile(this->til, 100 - 1, 1, 26 - 1, silent); // 375
     // - new shadows
@@ -12451,6 +12451,7 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
 
     // eliminate micros of unused subtiles
     // Blk2Mcr(560,  ...),
+    Blk2Mcr(78, 6);
     Blk2Mcr(79, 0);
     Blk2Mcr(79, 1);
     Blk2Mcr(79, 2);
@@ -12482,6 +12483,7 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(370, 6);
     Blk2Mcr(436, 1);
     Blk2Mcr(457, 1);
+    Blk2Mcr(472, 0);
     Blk2Mcr(479, 1);
     Blk2Mcr(481, 1);
     Blk2Mcr(482, 0);
@@ -12556,7 +12558,7 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(599, 7);
 
     const int unusedSubtiles[] = {
-        10, 18, 19, 74, 80, 81, 82, 83, 84, 85, 86, 87, 90, 98, 101, 102, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 252, 254, 255, 256, 258, 259, 262, 263, 264, 265, 266, 267, 268, 276, 277, 278, 281, 283, 284, 286, 289, 290, 291, 292, 297, 298, 299, 300, 301, 303, 305, 306, 307, 308, 312, 313, 315, 316, 317, 318, 323, 325, 326, 327, 328, 329, 330, 331, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 374, 375, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 389, 448, 449, 477, 478, 480, 483, 484, 486, 487, 488, 492, 495, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 563, 564, 569, 573, 574, 575, 576, 577, 578, 582, 583, 584, 593, 594, 595, 596, 597, 598, 600, 601, 602, 603, 604, 605, 606
+        10, 18, 19, 74, 80, 81, 82, 83, 84, 85, 86, 87, 90, 98, 101, 102, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 252, 254, 255, 256, 258, 259, 262, 263, 264, 265, 266, 267, 268, 276, 277, 278, 281, 283, 284, 286, 289, 290, 291, 292, 297, 298, 299, 300, 301, 303, 305, 306, 307, 308, 312, 313, 315, 316, 317, 318, 323, 325, 326, 327, 328, 329, 330, 331, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 374, 375, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 448, 449, 471, 477, 478, 480, 483, 484, 486, 487, 488, 492, 495, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 563, 564, 569, 573, 574, 575, 576, 577, 578, 582, 583, 584, 593, 594, 595, 596, 597, 598, 600, 601, 602, 603, 604, 605, 606
     };
 
     for (int n = 0; n < lengthof(unusedSubtiles); n++) {
