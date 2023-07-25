@@ -12163,7 +12163,6 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
 {
     constexpr int blockSize = BLOCK_SIZE_L6;
 
-    ReplaceSubtile(this->til, 4 - 1, 2, 19 - 1, silent);  // 15
     // redraw corner tile
     ReplaceSubtile(this->til, 3 - 1, 1, 30 - 1, silent); // 10
 
