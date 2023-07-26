@@ -18,21 +18,23 @@
   </property>
   <layout class="QVBoxLayout">
    <item alignment="Qt::AlignTop">
-    <layout class="QHBoxLayout" name="celLabelsHorizontalLayout">
-     <property name="topMargin">
-      <number>0</number>
-     </property>
-     <property name="bottomMargin">
-      <number>0</number>
-     </property>
-     <item>
-      <spacer>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </spacer>
-     </item>
-    </layout>
+    <widget class="QWidget">
+     <layout class="QHBoxLayout" name="celLabelsHorizontalLayout">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <spacer>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
    </item>
    <item>
     <widget class="QGraphicsView" name="celGraphicsView">
