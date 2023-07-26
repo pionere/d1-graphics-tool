@@ -17,24 +17,22 @@
    </sizepolicy>
   </property>
   <layout class="QVBoxLayout">
-   <item alignment="Qt::AlignTop">
-    <widget class="QWidget">
-     <layout class="QHBoxLayout" name="celLabelsHorizontalLayout">
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
-       <number>0</number>
-      </property>
-      <item>
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </widget>
+   <item>
+    <layout class="QHBoxLayout" name="celLabelsHorizontalLayout">
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <spacer>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QGraphicsView" name="celGraphicsView">
@@ -44,18 +42,12 @@
        <height>360</height>
       </size>
      </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
      <property name="sizeAdjustPolicy">
       <enum>QAbstractScrollArea::AdjustToContents</enum>
      </property>
     </widget>
    </item>
-   <item alignment="Qt::AlignBottom">
+   <item>
     <widget class="QWidget" name="tilesetWidget">
      <layout class="QGridLayout">
       <item row="0" column="0">
@@ -715,7 +707,7 @@
      </layout>
     </widget> <!-- tilesetWidget -->
    </item>
-   <item alignment="Qt::AlignBottom">
+   <item>
     <widget class="QWidget" name="dungeonWidget">
      <layout class="QGridLayout" name="dungeonLayout">
       <item row="0" column="0">
