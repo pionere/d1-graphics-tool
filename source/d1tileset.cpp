@@ -511,6 +511,12 @@ static void ChangeTileAmpFlags(D1Amp *amp, int tileIndex, int ampFlag, bool sile
     }
 }
 
+typedef struct {
+    int subtileIndex;
+    unsigned microIndex;
+    D1CEL_FRAME_TYPE res_encoding;
+} CelMicro;
+
 void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool silent)
 {
     std::vector<unsigned> &leftFrameReferences = this->min->getFrameReferences(potLeftSubtileRef - 1);
@@ -717,11 +723,6 @@ void D1Tileset::patchTownCathedral(int cathedralTopLeftRef, int cathedralTopRigh
 // should run only once
 bool D1Tileset::patchTownFloor(bool silent)
 {
-    typedef struct {
-        int subtileIndex;
-        unsigned microIndex;
-        D1CEL_FRAME_TYPE res_encoding;
-    } CelMicro;
     const CelMicro micros[] = {
         { 731 - 1, 9, D1CEL_FRAME_TYPE::TransparentSquare },  // 1923 move micro
         { 755 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },       // 1975 change type
@@ -939,12 +940,6 @@ bool D1Tileset::patchTownFloor(bool silent)
 // should run only once
 bool D1Tileset::patchTownDoor(bool silent)
 {
-    typedef struct {
-        int subtileIndex;
-        unsigned microIndex;
-        D1CEL_FRAME_TYPE res_encoding;
-    } CelMicro;
-
     const CelMicro micros[] = {
 /*  0 */{ 724 - 1, 0, D1CEL_FRAME_TYPE::Empty }, // 1903 move micro
 /*  1 */{ 724 - 1, 1, D1CEL_FRAME_TYPE::Empty }, // 1904
@@ -1824,12 +1819,6 @@ bool D1Tileset::patchTownDoor(bool silent)
 
 void D1Tileset::patchTownChop(bool silent)
 {
-    typedef struct {
-        int subtileIndex;
-        unsigned microIndex;
-        D1CEL_FRAME_TYPE res_encoding;
-    } CelMicro;
-
     const CelMicro micros[] = {
 /*  0 */{ 180 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1854
 /*  1 */{ 180 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare }, // 1854
@@ -2050,11 +2039,6 @@ void D1Tileset::patchTownChop(bool silent)
 
 bool D1Tileset::patchCathedralFloor(bool silent)
 {
-    typedef struct {
-        int subtileIndex;
-        unsigned microIndex;
-        D1CEL_FRAME_TYPE res_encoding;
-    } CelMicro;
     const CelMicro micros[] = {
 /*  0 */{ 137 - 1, 5, D1CEL_FRAME_TYPE::Square },     // change type
 // { 250 - 1, 0, D1CEL_FRAME_TYPE::LefttTrapezoid }, // change type
@@ -2357,11 +2341,6 @@ static BYTE shadowColorCathedral(BYTE color)
 
 bool D1Tileset::fixCathedralShadows(bool silent)
 {
-    typedef struct {
-        int subtileIndex;
-        unsigned microIndex;
-        D1CEL_FRAME_TYPE res_encoding;
-    } CelMicro;
     const CelMicro micros[] = {
         // add shadow of the grate
 /*  0 */{ 306 - 1, 1, D1CEL_FRAME_TYPE::Empty },
@@ -4108,11 +4087,6 @@ static BYTE shadowColorCatacombs(BYTE color)
 }
 bool D1Tileset::fixCatacombsShadows(bool silent)
 {
-    typedef struct {
-        int subtileIndex;
-        unsigned microIndex;
-        D1CEL_FRAME_TYPE res_encoding;
-    } CelMicro;
     const CelMicro micros[] = {
 /*  0 */{ 151 - 1, 0, D1CEL_FRAME_TYPE::Empty }, // used to block subsequent calls
 /*  1 */{  33 - 1, 0, D1CEL_FRAME_TYPE::Empty },
@@ -4296,11 +4270,6 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
 
 bool D1Tileset::patchCatacombsFloor(bool silent)
 {
-    typedef struct {
-        int subtileIndex;
-        unsigned microIndex;
-        D1CEL_FRAME_TYPE res_encoding;
-    } CelMicro;
     const CelMicro micros[] = {
 /*  0 */{ 323 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare }, // used to block subsequent calls
 /*  1 */{ 134 - 1, 5, D1CEL_FRAME_TYPE::Square },     // change type
@@ -6717,11 +6686,6 @@ static bool shadowColorCaves(D1GfxFrame* frame, int x, int y)
 }
 bool D1Tileset::patchCavesFloor(bool silent)
 {
-    typedef struct {
-        int subtileIndex;
-        unsigned microIndex;
-        D1CEL_FRAME_TYPE res_encoding;
-    } CelMicro;
     const CelMicro micros[] = {
 /*  0 */{ 537 - 1, 2, D1CEL_FRAME_TYPE::Empty },             // used to block subsequent calls
 /*  1 */{ 537 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // fix/mask door
@@ -8424,11 +8388,6 @@ bool D1Tileset::patchCavesFloor(bool silent)
 
 bool D1Tileset::patchCavesStairs(bool silent)
 {
-    typedef struct {
-        int subtileIndex;
-        unsigned microIndex;
-        D1CEL_FRAME_TYPE res_encoding;
-    } CelMicro;
     const CelMicro micros[] = {
 /*  0 */{ 180 - 1, 2, D1CEL_FRAME_TYPE::Empty },              // sync stairs (used to block subsequent calls)
 /*  1 */{ 171 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
@@ -8594,11 +8553,6 @@ bool D1Tileset::patchCavesStairs(bool silent)
 
 bool D1Tileset::patchCavesWall1(bool silent)
 {
-    typedef struct {
-        int subtileIndex;
-        unsigned microIndex;
-        D1CEL_FRAME_TYPE res_encoding;
-    } CelMicro;
     const CelMicro micros[] = {
 /*  0 */{ 446 - 1, 1, D1CEL_FRAME_TYPE::Empty },              // mask walls leading to north east
 /*  1 */{ 446 - 1, 3, D1CEL_FRAME_TYPE::Empty },
@@ -9384,11 +9338,6 @@ bool D1Tileset::patchCavesWall1(bool silent)
 
 bool D1Tileset::patchCavesWall2(bool silent)
 {
-    typedef struct {
-        int subtileIndex;
-        unsigned microIndex;
-        D1CEL_FRAME_TYPE res_encoding;
-    } CelMicro;
     const CelMicro micros[] = {
 /*  0 */{   38 - 1, 0, D1CEL_FRAME_TYPE::Empty },             // mask walls leading to north west
 /*  1 */{   38 - 1, 2, D1CEL_FRAME_TYPE::Empty },
@@ -10468,11 +10417,6 @@ std::pair<unsigned, D1GfxFrame *> D1Tileset::getFrame(int subtileIndex, int bloc
 
 void D1Tileset::fillCryptShapes(bool silent)
 {
-    typedef struct {
-        unsigned subtileIndex;
-        unsigned microIndex;
-        D1CEL_FRAME_TYPE res_encoding;
-    } CelMicro;
     const CelMicro micros[] = {
         // clang-format off
         { 159 - 1, 3, D1CEL_FRAME_TYPE::Square },            // 473
@@ -10562,10 +10506,6 @@ void D1Tileset::fillCryptShapes(bool silent)
 
 void D1Tileset::maskCryptBlacks(bool silent)
 {
-    typedef struct {
-        unsigned subtileIndex;
-        unsigned microIndex;
-    } CelMicro;
     const CelMicro micros[] = {
         // clang-format off
         { 126 - 1, 1 }, // 347
@@ -10650,11 +10590,6 @@ void D1Tileset::maskCryptBlacks(bool silent)
 
 void D1Tileset::fixCryptShadows(bool silent)
 {
-    typedef struct {
-        int subtileIndex;
-        unsigned microIndex;
-        D1CEL_FRAME_TYPE res_encoding;
-    } CelMicro;
     const CelMicro micros[] = {
         // clang-format off
         { 626 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },  // 1806 - 205
