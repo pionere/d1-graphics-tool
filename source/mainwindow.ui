@@ -18,7 +18,7 @@
   </property>
   <widget class="QWidget">
    <layout class="QHBoxLayout">
-    <item alignment="Qt::AlignBottom">
+    <item>
      <widget class="QFrame">
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
