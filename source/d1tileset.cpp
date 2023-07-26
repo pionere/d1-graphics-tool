@@ -11770,40 +11770,40 @@ bool D1Tileset::patchNestWall1(bool silent)
 bool D1Tileset::patchNestWall2(bool silent)
 {
     const CelMicro micros[] = {
-/*  0 */{   67 - 1, 0, D1CEL_FRAME_TYPE::Empty },               // mask walls leading to north west
-/*  1 */{   67 - 1, 2, D1CEL_FRAME_TYPE::Empty },
-/*  2 */{   38 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/*  3 */{   40 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/*  4 */{   42 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/*  5 */{   44 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/*  6 */{   50 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/*  7 */{   52 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/*  8 */{   70 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/*  9 */{   72 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 10 */{  140 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 11 */{  142 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 12 */{  144 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 13 */{  146 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 14 */{  148 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 15 */{  150 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 16 */{  152 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 17 */{  154 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 18 */{  156 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 19 */{  158 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 20 */{  160 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 21 */{  162 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 22 */{  164 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 23 */{  166 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 24 */{  176 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 25 */{  178 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 26 */{  180 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 27 */{  182 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 28 */{  184 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 29 */{  186 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 30 */{  188 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 31 */{  190 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 32 */{  502 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 33 */{  504 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  0 */{  67 - 1, 0, D1CEL_FRAME_TYPE::Empty },               // mask walls leading to north west
+/*  1 */{  67 - 1, 2, D1CEL_FRAME_TYPE::Empty },
+/*  2 */{  38 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  3 */{  40 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  4 */{  42 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  5 */{  44 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  6 */{  50 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  7 */{  52 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  8 */{  70 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  9 */{  72 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 10 */{ 140 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 11 */{ 142 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 12 */{ 144 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 13 */{ 146 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 14 */{ 148 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 15 */{ 150 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 16 */{ 152 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 17 */{ 154 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 18 */{ 156 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 19 */{ 158 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 20 */{ 160 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 21 */{ 162 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 22 */{ 164 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 23 */{ 166 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 24 */{ 176 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 25 */{ 178 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 26 */{ 180 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 27 */{ 182 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 28 */{ 184 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 29 */{ 186 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 30 */{ 188 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 31 */{ 190 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 32 */{ 502 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 33 */{ 504 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
 //                
 /* 34 */{  65 - 1, 0, D1CEL_FRAME_TYPE::Empty },
 /* 35 */{  65 - 1, 2, D1CEL_FRAME_TYPE::Empty },
@@ -11858,24 +11858,26 @@ bool D1Tileset::patchNestWall2(bool silent)
 /* 84 */{ 502 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 85 */{ 502 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 86 */{   53 - 1, 0, D1CEL_FRAME_TYPE::Empty },               // mask walls leading to north east
-/* 87 */{   53 - 1, 2, D1CEL_FRAME_TYPE::Empty },
-/* 88 */{   55 - 1, 2, D1CEL_FRAME_TYPE::Empty },
-/* 89 */{   55 - 1, 4, D1CEL_FRAME_TYPE::Empty },
-/* 90 */{   55 - 1, 6, D1CEL_FRAME_TYPE::Empty },
+/* 86 */{  53 - 1, 0, D1CEL_FRAME_TYPE::Empty },               // mask walls leading to north east
+/* 87 */{  53 - 1, 2, D1CEL_FRAME_TYPE::Empty },
+/* 88 */{  55 - 1, 2, D1CEL_FRAME_TYPE::Empty },
+/* 89 */{  55 - 1, 4, D1CEL_FRAME_TYPE::Empty },
+/* 90 */{  55 - 1, 6, D1CEL_FRAME_TYPE::Empty },
 
-/* 91 */{    2 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 92 */{    2 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 93 */{    6 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 94 */{    6 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 91 */{   2 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 92 */{   2 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 93 */{   6 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 94 */{   6 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 95 */{    1 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 96 */{    5 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 97 */{   17 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 98 */{    1 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 95 */{   1 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 96 */{   5 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 97 */{  17 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 98 */{   1 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 99 */{ 37 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare }, // fix micros after masking
+/* 99 */{  37 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare }, // fix micros after masking
 /*100 */{ 159 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/*101 */{   4 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare }, // move pixels to enable fix
     };
     constexpr unsigned blockSize = BLOCK_SIZE_L6;
     for (int i = 0; i < lengthof(micros); i++) {
@@ -12138,6 +12140,24 @@ bool D1Tileset::patchNestWall2(bool silent)
             change |= frame->setPixel(24, 29, D1GfxPixel::colorPixel(46));
         }
 
+        // move pixels to 4[5] from 1[3]
+        if (i == 101) {
+            const CelMicro &microSrc = micros[98];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y); // 1[3]
+                    if (!pixel.isTransparent()) {
+                        change |= frameSrc->setPixel(x, y, D1GfxPixel::transparentPixel()); // source is changed!
+                        change |= frame->setPixel(x, y, pixel);
+                    }
+                }
+            }
+        }
 
         if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {
             change = true;
@@ -12265,6 +12285,8 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
     // fix glitch
     ReplaceMcr(155, 6, 159, 6);
     ReplaceMcr(175, 6, 159, 6);
+    // - by patchNestWall2Cel
+    ReplaceMcr(8, 5, 4, 5);
 
     // new shadows
     ReplaceMcr(261, 0, 106, 0);
@@ -12352,7 +12374,7 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(7, 4, 31, 4);
 
     ReplaceMcr(8, 4, 29, 2);
-    ReplaceMcr(8, 5, 29, 3);
+    // ReplaceMcr(8, 5, 29, 3);
 
     ReplaceMcr(14, 4, 29, 2);
     ReplaceMcr(14, 5, 29, 3);
