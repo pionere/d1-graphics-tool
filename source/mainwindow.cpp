@@ -708,7 +708,6 @@ void MainWindow::on_actionLoad_triggered()
     if (!params.dunFilePath.isEmpty()) {
         D1Dun *dun = new D1Dun();
         if (dun->load(params.dunFilePath, params)) {
-            this->hide();
             dun->initialize(this->pal, this->tileset);
             // TODO: this->dunChanged(dun)
             delete this->dun;
@@ -723,7 +722,6 @@ void MainWindow::on_actionLoad_triggered()
                 this->builderWidget->setDungeon(dun);
             }
             this->ui->menuDungeon->setEnabled(true);
-            this->show();
             this->updateWindow();
         } else {
             delete dun;
