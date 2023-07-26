@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <layout class="QVBoxLayout">
-   <item>
+   <item alignment="Qt::AlignTop">
     <layout class="QHBoxLayout" name="celLabelsHorizontalLayout">
      <property name="topMargin">
       <number>0</number>
