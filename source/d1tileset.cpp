@@ -11611,7 +11611,7 @@ bool D1Tileset::patchNestWall1(bool silent)
 
 /* 11 */{    9 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 12 */{   13 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 13 */{   17 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 13 */{ /*17*/ - 1, 0, D1CEL_FRAME_TYPE::Empty },
 /* 14 */{    9 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
     };
     constexpr unsigned blockSize = BLOCK_SIZE_L6;
@@ -11854,9 +11854,9 @@ bool D1Tileset::patchNestWall2(bool silent)
 /* 80 */{ 188 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 81 */{ 188 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 82 */{ 188 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 83 */{ 502 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 84 */{ 502 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 85 */{ 502 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 83 */{ /*502*/ - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 84 */{ /*502*/ - 1, 3, D1CEL_FRAME_TYPE::Empty },
+/* 85 */{ /*502*/ - 1, 5, D1CEL_FRAME_TYPE::Empty },
 
 /* 86 */{  53 - 1, 0, D1CEL_FRAME_TYPE::Empty },               // mask walls leading to north east
 /* 87 */{  53 - 1, 2, D1CEL_FRAME_TYPE::Empty },
@@ -11871,7 +11871,7 @@ bool D1Tileset::patchNestWall2(bool silent)
 
 /* 95 */{   1 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 96 */{   5 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 97 */{  17 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 97 */{ /*17*/ - 1, 1, D1CEL_FRAME_TYPE::Empty },
 /* 98 */{   1 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
 
 /* 99 */{  37 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare }, // fix micros after masking
@@ -12022,6 +12022,13 @@ bool D1Tileset::patchNestWall2(bool silent)
                 }
             }
         }
+        // 55[6] - fix glitch (prepare mask)
+        if (i == 90) {
+            change |= frame->setPixel(20, 25, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(20, 26, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(20, 27, D1GfxPixel::colorPixel(61));
+            change |= frame->setPixel(20, 28, D1GfxPixel::colorPixel(61));
+        }
         // mask 2[0], 6[0] with 55[2]
         if (i >= 91 && i < 95 && (i % 2) == (91 % 2)) {
             const CelMicro &microSrc = micros[88];
@@ -12157,13 +12164,6 @@ bool D1Tileset::patchNestWall2(bool silent)
                     }
                 }
             }
-        }
-        // 55[6] - fix glitch
-        if (i == 90) {
-            change |= frame->setPixel(20, 25, D1GfxPixel::transparentPixel());
-            change |= frame->setPixel(20, 26, D1GfxPixel::transparentPixel());
-            change |= frame->setPixel(20, 27, D1GfxPixel::colorPixel(61));
-            change |= frame->setPixel(20, 28, D1GfxPixel::colorPixel(61));
         }
 
         if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {
