@@ -12158,6 +12158,13 @@ bool D1Tileset::patchNestWall2(bool silent)
                 }
             }
         }
+        // 14[6] - fix glitch
+        if (i == 102) {
+            change |= frame->setPixel(20, 25, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(20, 26, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(20, 27, D1GfxPixel::colorPixel(61));
+            change |= frame->setPixel(20, 28, D1GfxPixel::colorPixel(61));
+        }
 
         if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {
             change = true;
