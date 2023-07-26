@@ -436,7 +436,7 @@ void InitLvlDungeon()
 		//  - prevent non-crossable floor-tile configurations II.
 		nSolidTable[598] = false;
 		nSolidTable[600] = false;
-		// - adjust SOL after patchCryptMin
+		// - adjust SOL after cleanupCrypt
 		nSolidTable[238] = false;
 		nMissileTable[238] = false;
 		nBlockTable[238] = false;

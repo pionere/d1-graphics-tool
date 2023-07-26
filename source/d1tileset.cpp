@@ -8490,7 +8490,6 @@ bool D1Tileset::patchCavesStairs(bool silent)
 /* 11 */{ 176 - 1, 2, D1CEL_FRAME_TYPE::Empty },
 /* 12 */{ 163 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
     };
-
     constexpr unsigned blockSize = BLOCK_SIZE_L3;
     for (int i = 0; i < lengthof(micros); i++) {
         const CelMicro &micro = micros[i];
