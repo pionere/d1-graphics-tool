@@ -11362,11 +11362,11 @@ bool D1Tileset::patchNestStairs(bool silent)
 /* 10 */{ 71 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
 /* 11 */{ 71 - 1, 2, D1CEL_FRAME_TYPE::Empty },
 
-/* 12 */{ 58 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
-/* 13 */{ 58 - 1, 3, D1CEL_FRAME_TYPE::Empty },
+/* 12 */{ 64 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 13 */{ 63 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
 
-/* 14 */{ 64 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
-/* 15 */{ 63 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/* 14 */{ 58 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/* 15 */{ 58 - 1, 3, D1CEL_FRAME_TYPE::Empty },
     };
     constexpr unsigned blockSize = BLOCK_SIZE_L6;
     for (int i = 0; i < lengthof(micros); i++) {
@@ -11528,14 +11528,14 @@ bool D1Tileset::patchNestStairs(bool silent)
         }
 
         // move pixels to 64[0] from 58[1] and 58[3]
-        if (i == 14) {
-            const CelMicro &microSrc1 = micros[13];
+        if (i == 12) {
+            const CelMicro &microSrc1 = micros[15];
             std::pair<unsigned, D1GfxFrame *> mf1 = this->getFrame(microSrc1.subtileIndex, blockSize, microSrc1.microIndex);
             D1GfxFrame *frameSrc1 = mf1.second;
             // if (frameSrc1 == nullptr) {
             //    return;
             // }
-            const CelMicro &microSrc2 = micros[12];
+            const CelMicro &microSrc2 = micros[14];
             std::pair<unsigned, D1GfxFrame *> mf2 = this->getFrame(microSrc2.subtileIndex, blockSize, microSrc2.microIndex);
             D1GfxFrame *frameSrc2 = mf2.second;
             // if (frameSrc2 == nullptr) {
@@ -11556,8 +11556,8 @@ bool D1Tileset::patchNestStairs(bool silent)
             }
         }
         // move pixels to 63[1] from 58[3]
-        if (i == 15) {
-            const CelMicro &microSrc = micros[13];
+        if (i == 13) {
+            const CelMicro &microSrc = micros[15];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
             // if (frameSrc == nullptr) {
