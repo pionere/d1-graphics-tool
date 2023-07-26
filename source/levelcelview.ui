@@ -53,7 +53,7 @@
      </property>
     </widget>
    </item>
-   <item>
+   <item alignment="Qt::AlignBottom">
     <widget class="QWidget" name="tilesetWidget">
      <layout class="QGridLayout">
       <item row="0" column="0">
@@ -713,7 +713,7 @@
      </layout>
     </widget> <!-- tilesetWidget -->
    </item>
-   <item>
+   <item alignment="Qt::AlignBottom">
     <widget class="QWidget" name="dungeonWidget">
      <layout class="QGridLayout" name="dungeonLayout">
       <item row="0" column="0">
