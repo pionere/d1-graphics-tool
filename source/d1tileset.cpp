@@ -11862,7 +11862,7 @@ bool D1Tileset::patchNestWall2(bool silent)
 /* 87 */{  53 - 1, 2, D1CEL_FRAME_TYPE::Empty },
 /* 88 */{  55 - 1, 2, D1CEL_FRAME_TYPE::Empty },
 /* 89 */{  55 - 1, 4, D1CEL_FRAME_TYPE::Empty },
-/* 90 */{  55 - 1, 6, D1CEL_FRAME_TYPE::Empty },
+/* 90 */{  55 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare }, // fix glitch
 
 /* 91 */{   2 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 92 */{   2 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
@@ -12158,8 +12158,8 @@ bool D1Tileset::patchNestWall2(bool silent)
                 }
             }
         }
-        // 14[6] - fix glitch
-        if (i == 102) {
+        // 55[6] - fix glitch
+        if (i == 90) {
             change |= frame->setPixel(20, 25, D1GfxPixel::transparentPixel());
             change |= frame->setPixel(20, 26, D1GfxPixel::transparentPixel());
             change |= frame->setPixel(20, 27, D1GfxPixel::colorPixel(61));
