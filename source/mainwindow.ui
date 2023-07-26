@@ -27,6 +27,12 @@
        <enum>QFrame::Raised</enum>
       </property>
       <layout class="QVBoxLayout" name="mainFrameLayout">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
       </layout>
      </widget>
     </item>
