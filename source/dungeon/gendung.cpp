@@ -652,9 +652,10 @@ void DRLG_PlaceMegaTiles(int mt)
     switch (currLvl._dType) {
     case DTYPE_CATHEDRAL: et = 74; break;
     case DTYPE_CATACOMBS: et = 2;  break;
-    case DTYPE_CAVES: et = 2;  break;
+    case DTYPE_CAVES:     et = 2;  break;
 #ifdef  HELLFIRE
     case DTYPE_CRYPT:     et = 8;  break;
+    case DTYPE_NEST:      et = 10; break;
 #endif //  HELLFIRE
     }
 	yy = DBORDERY;
