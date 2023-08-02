@@ -14977,33 +14977,33 @@ void D1Tileset::patch(int dunType, bool silent)
         // patch automaptype - L5.AMP
         // adjust AMP after cleanupCrypt
         // - use the shadows created by fixCryptShadows
-        ChangeTileAmpFlags(this->amp, 109 - 1, 2, silent);
-        ChangeTileAmpFlags(this->amp, 110 - 1, 2, silent);
-        ChangeTileAmpFlags(this->amp, 111 - 1, MAPFLAG_VERTARCH | 2, silent);
-        ChangeTileAmpFlags(this->amp, 215 - 1, MAPFLAG_VERTGRATE | 2, silent);
+        ChangeTileAmpFlags(this->amp, 109 - 1, MWT_NORTH_WEST, silent);
+        ChangeTileAmpFlags(this->amp, 110 - 1, MWT_NORTH_WEST, silent);
+        ChangeTileAmpFlags(this->amp, 111 - 1, MAPFLAG_VERTARCH | MWT_NORTH_WEST, silent);
+        ChangeTileAmpFlags(this->amp, 215 - 1, MAPFLAG_VERTGRATE | MWT_NORTH_WEST, silent);
         // - 'add' new shadow-types with glow
-        ChangeTileAmpFlags(this->amp, 216 - 1, MAPFLAG_VERTARCH | 2, silent);
+        ChangeTileAmpFlags(this->amp, 216 - 1, MAPFLAG_VERTARCH | MWT_NORTH_WEST, silent);
         // - 'add' new shadow-types with horizontal arches
-        ChangeTileAmpFlags(this->amp, 71 - 1, 3, silent);
-        ChangeTileAmpFlags(this->amp, 80 - 1, 3, silent);
-        ChangeTileAmpFlags(this->amp, 81 - 1, MAPFLAG_HORZARCH | 3, silent);
-        ChangeTileAmpFlags(this->amp, 82 - 1, MAPFLAG_HORZARCH | 3, silent);
-        ChangeTileAmpFlags(this->amp, 83 - 1, MAPFLAG_HORZGRATE | 3, silent);
-        ChangeTileAmpFlags(this->amp, 84 - 1, MAPFLAG_HORZGRATE | 3, silent);
-        ChangeTileAmpFlags(this->amp, 85 - 1, 3, silent);
-        ChangeTileAmpFlags(this->amp, 86 - 1, 3, silent);
-        ChangeTileAmpFlags(this->amp, 87 - 1, MAPFLAG_HORZDOOR | 3, silent);
-        ChangeTileAmpFlags(this->amp, 88 - 1, MAPFLAG_HORZDOOR | 3, silent);
+        ChangeTileAmpFlags(this->amp, 71 - 1, MWT_NORTH_EAST, silent);
+        ChangeTileAmpFlags(this->amp, 80 - 1, MWT_NORTH_EAST, silent);
+        ChangeTileAmpFlags(this->amp, 81 - 1, MAPFLAG_HORZARCH | MWT_NORTH_EAST, silent);
+        ChangeTileAmpFlags(this->amp, 82 - 1, MAPFLAG_HORZARCH | MWT_NORTH_EAST, silent);
+        ChangeTileAmpFlags(this->amp, 83 - 1, MAPFLAG_HORZGRATE | MWT_NORTH_EAST, silent);
+        ChangeTileAmpFlags(this->amp, 84 - 1, MAPFLAG_HORZGRATE | MWT_NORTH_EAST, silent);
+        ChangeTileAmpFlags(this->amp, 85 - 1, MWT_NORTH_EAST, silent);
+        ChangeTileAmpFlags(this->amp, 86 - 1, MWT_NORTH_EAST, silent);
+        ChangeTileAmpFlags(this->amp, 87 - 1, MAPFLAG_HORZDOOR | MWT_NORTH_EAST, silent);
+        ChangeTileAmpFlags(this->amp, 88 - 1, MAPFLAG_HORZDOOR | MWT_NORTH_EAST, silent);
         // fix automap of the entrance II.
-        ChangeTileAmpFlags(this->amp, 47 - 1, MAPFLAG_STAIRS | 2, silent);
-        ChangeTileAmpFlags(this->amp, 50 - 1, 2, silent);
-        ChangeTileAmpFlags(this->amp, 48 - 1, MAPFLAG_STAIRS | 4, silent);
-        ChangeTileAmpFlags(this->amp, 51 - 1, 5, silent);
+        ChangeTileAmpFlags(this->amp, 47 - 1, MAPFLAG_STAIRS | MWT_NORTH_WEST, silent);
+        ChangeTileAmpFlags(this->amp, 50 - 1, MWT_NORTH_WEST, silent);
+        ChangeTileAmpFlags(this->amp, 48 - 1, MAPFLAG_STAIRS | MWT_NORTH, silent);
+        ChangeTileAmpFlags(this->amp, 51 - 1, MWT_NORTH_WEST_END, silent);
         ChangeTileAmpFlags(this->amp, 52 - 1, MAPFLAG_DIRT, silent);
-        ChangeTileAmpFlags(this->amp, 53 - 1, MAPFLAG_STAIRS | 4, silent);
+        ChangeTileAmpFlags(this->amp, 53 - 1, MAPFLAG_STAIRS | MWT_NORTH, silent);
         ChangeTileAmpFlags(this->amp, 54 - 1, MAPFLAG_DIRT, silent);
-        ChangeTileAmpFlags(this->amp, 56 - 1, 0, silent);
-        ChangeTileAmpFlags(this->amp, 58 - 1, MAPFLAG_DIRT | 5, silent);
+        ChangeTileAmpFlags(this->amp, 56 - 1, MWT_NONE, silent);
+        ChangeTileAmpFlags(this->amp, 58 - 1, MAPFLAG_DIRT | MWT_NORTH_WEST_END, silent);
         // patch automaptype - L5.TIL
         ReplaceSubtile(this->til, 52 - 1, 0, 73 - 1, silent); // copy from tile 23
         ReplaceSubtile(this->til, 52 - 1, 1, 64 - 1, silent);
