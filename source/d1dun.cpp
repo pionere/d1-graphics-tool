@@ -2759,8 +2759,11 @@ void D1Dun::loadTiles(const D1Dun *srcDun)
                 int posx = x * TILE_WIDTH;
                 int posy = y * TILE_HEIGHT;
                 this->setTileAt(posx, posy, newTile);
+                QString msg = tr("Tile '%1' at %2:%3 was replaced by '%4'.").arg(currTile).arg(posx).arg(posy).arg(newTile);
                 if (currTile != 0) {
-                    dProgress() << tr("Tile '%1' at %2:%3 was replaced by '%4'.").arg(currTile).arg(posx).arg(posy).arg(newTile);
+                    dProgress() << msg;
+                } else {
+                    dProgressWarn() << msg;
                 }
             }
         }
