@@ -196,6 +196,8 @@ private slots:
     void on_actionCheckMonsters_Dungeon_triggered();
     void on_actionCheckObjects_Dungeon_triggered();
     void on_actionCheckEntities_Dungeon_triggered();
+    void on_actionRemoveTiles_Dungeon_triggered();
+    void on_actionLoadTiles_Dungeon_triggered();
     void on_actionRemoveProtections_Dungeon_triggered();
     void on_actionLoadProtections_Dungeon_triggered();
     void on_actionRemoveItems_Dungeon_triggered();

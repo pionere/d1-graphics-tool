@@ -3148,6 +3148,15 @@ void LevelCelView::checkEntities() const
     this->checkObjects();
 }
 
+void LevelCelView::removeTiles()
+{
+    bool change = this->dun->removeTiles();
+    if (change) {
+        // update the view - done by the caller
+        // this->displayFrame();
+    }
+}
+
 void LevelCelView::removeProtections()
 {
     bool change = this->dun->removeProtections();
@@ -3191,6 +3200,16 @@ static bool dimensionMatch(const D1Dun *dun1, const D1Dun *dun2)
     }
     QMessageBox::critical(nullptr, QApplication::tr("Error"), QApplication::tr("Mismatching dungeons (Dimensions are %1:%2 vs %3:%4).").arg(dun1->getWidth()).arg(dun1->getHeight()).arg(dun2->getHeight()).arg(dun2->getWidth()));
     return false;
+}
+
+void LevelCelView::loadTiles(const D1Dun *srcDun)
+{
+    if (!dimensionMatch(this->dun, srcDun)) {
+        return;
+    }
+    this->dun->loadTiles(srcDun);
+    // update the view - done by the caller
+    // this->displayFrame();
 }
 
 void LevelCelView::loadProtections(const D1Dun *srcDun)

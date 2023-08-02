@@ -197,6 +197,7 @@
     <property name="toolTipsVisible">
      <bool>true</bool>
     </property>
+    <addaction name="actionRemoveTiles_Dungeon"/>
     <addaction name="actionRemoveProtections_Dungeon"/>
     <addaction name="actionRemoveItems_Dungeon"/>
     <addaction name="actionRemoveMonsters_Dungeon"/>
@@ -209,6 +210,7 @@
     <property name="toolTipsVisible">
      <bool>true</bool>
     </property>
+    <addaction name="actionLoadTiles_Dungeon"/>
     <addaction name="actionLoadProtections_Dungeon"/>
     <addaction name="actionLoadItems_Dungeon"/>
     <addaction name="actionLoadMonsters_Dungeon"/>
@@ -915,6 +917,22 @@
    </property>
    <property name="toolTip">
     <string>List inconsistent items/monsters/objects</string>
+   </property>
+  </action>
+  <action name="actionRemoveTiles_Dungeon">
+   <property name="text">
+    <string>Tiles</string>
+   </property>
+   <property name="toolTip">
+    <string>Remove every tile from the dungeon</string>
+   </property>
+  </action>
+  <action name="actionLoadTiles_Dungeon">
+   <property name="text">
+    <string>Tiles</string>
+   </property>
+   <property name="toolTip">
+    <string>Load tiles from another dungeon</string>
    </property>
   </action>
   <action name="actionRemoveProtections_Dungeon">
