@@ -2157,6 +2157,32 @@ D1Dun *MainWindow::loadDun(const QString &title)
     return nullptr;
 }
 
+void MainWindow::on_actionRemoveTiles_Dungeon_triggered()
+{
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->removeTiles();
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
+void MainWindow::on_actionLoadTiles_Dungeon_triggered()
+{
+    D1Dun *srcDun = this->loadDun(tr("Source of the tiles"));
+    if (srcDun == nullptr) {
+        return;
+    }
+
+    ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);
+
+    this->levelCelView->loadTiles(srcDun);
+    delete srcDun;
+
+    // Clear loading message from status bar
+    ProgressDialog::done();
+}
+
 void MainWindow::on_actionRemoveProtections_Dungeon_triggered()
 {
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_UPDATE_WINDOW);

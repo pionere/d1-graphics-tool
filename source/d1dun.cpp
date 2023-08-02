@@ -2657,6 +2657,17 @@ void D1Dun::checkObjects() const
     ProgressDialog::decBar();
 }
 
+bool D1Dun::removeTiles()
+{
+    bool result = false;
+    for (int y = 0; y < this->height; y += TILE_HEIGHT) {
+        for (int x = 0; x < this->width; x += TILE_WIDTH) {
+            result |= this->setTileAt(x, y, 0);
+        }
+    }
+    return result;
+}
+
 bool D1Dun::removeProtections()
 {
     bool result = false;
@@ -2736,6 +2747,24 @@ static QString protectionString(Qt::CheckState protectionState)
         return QApplication::tr("Partial Protection");
     }
     return QApplication::tr("Complete Protection");
+}
+
+void D1Dun::loadTiles(const D1Dun *srcDun)
+{
+    for (int y = 0; y < this->height / TILE_HEIGHT; y++) {
+        for (int x = 0; x < this->width / TILE_WIDTH; x++) {
+            int newTile = srcDun->tiles[y][x];
+            int currTile = this->tiles[y][x];
+            if (newTile != 0 && currTile != newTile) {
+                int posx = x * TILE_WIDTH;
+                int posy = y * TILE_HEIGHT;
+                this->setTileAt(posx, posy, newTile);
+                if (currTile != 0) {
+                    dProgress() << tr("Tile '%1' at %2:%3 was replaced by '%4'.").arg(currTile).arg(posx).arg(posy).arg(newTile);
+                }
+            }
+        }
+    }
 }
 
 void D1Dun::loadProtections(const D1Dun *srcDun)

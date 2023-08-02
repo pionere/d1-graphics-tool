@@ -107,10 +107,12 @@ public:
     void checkMonsters() const;
     void checkObjects() const;
     void checkEntities() const;
+    void removeTiles();
     void removeProtections();
     void removeItems();
     void removeMonsters();
     void removeObjects();
+    void loadTiles(const D1Dun *srcDun);
     void loadProtections(const D1Dun *srcDun);
     void loadItems(const D1Dun *srcDun);
     void loadMonsters(const D1Dun *srcDun);

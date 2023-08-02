@@ -181,10 +181,12 @@ public:
     void checkItems(const D1Sol *sol) const;
     void checkMonsters(const D1Sol *sol) const;
     void checkObjects() const;
+    bool removeTiles();
     bool removeProtections();
     bool removeItems();
     bool removeMonsters();
     bool removeObjects();
+    void loadTiles(const D1Dun *srcDun);
     void loadProtections(const D1Dun *srcDun);
     void loadItems(const D1Dun *srcDun);
     void loadMonsters(const D1Dun *srcDun);
