@@ -10432,6 +10432,7 @@ bool D1Tileset::patchHellChaos(bool silent)
         if (frame == nullptr) {
             return false;
         }
+		QMessageBox::critical(nullptr, "Error", QString("patchHellChaos %1.: %2[%3]").arg(i).arg(micro.subtileIndex).arg(micro.microIndex));
         bool change = false;
         // mask 54[5]
         if (i == 0) {

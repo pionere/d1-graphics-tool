@@ -3362,7 +3362,7 @@ void D1Dun::patch(int dunFileIndex)
 /* DUN_VILE_AFT*/            { 42, 46 }, // Vile1.DUN
 /* DUN_WARLORD_PRE*/         { 16, 14 }, // Warlord2.DUN
 /* DUN_WARLORD_AFT*/         { 16, 14 }, // Warlord.DUN
-/* DUN_DIAB_1*/              {  9,  9 }, // Diab1.DUN
+/* DUN_DIAB_1*/              { 12, 12 }, // Diab1.DUN
 /* DUN_DIAB_2_PRE*/          { 22, 24 }, // Diab2a.DUN
 /* DUN_DIAB_2_AFT*/          { 22, 24 }, // Diab2b.DUN
 /* DUN_DIAB_3_PRE*/          { 22, 22 }, // Diab3a.DUN
@@ -3931,6 +3931,15 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileProtectionAt(14, 15, Qt::Checked);
         break;
     case DUN_WARLORD_PRE: // Warlord2.DUN
+        // useless tiles
+        for (int y = 0; y < 7; y++) {
+            for (int x = 0; x < 8; x++) {
+                if (x >= 7 && y >= 1 && x <= 7 && y <= 6) {
+                    continue;
+                }
+                change |= this->changeTileAt(x, y, 0);
+            }
+        }
         // replace monsters from Warlord.DUN
         change |= this->changeMonsterAt(2, 2, 100, false);
         change |= this->changeMonsterAt(2, 10, 100, false);
@@ -3960,24 +3969,32 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeItemAt(5, 10, 0);
         change |= this->changeItemAt(8, 10, 0);
         // protect inner tiles from spawning additional monsters/objects
-        /*for (int y = 0; y <= 5; y++) {
+        for (int y = 0; y <= 5; y++) {
             for (int x = 0; x <= 6; x++) {
                 change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, 3);
                 change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, 3);
                 change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, 3);
                 change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, 3);
             }
-        }*/
+        }
         break;
     case DUN_WARLORD_AFT: // Warlord.DUN
+        // fix corner
+        change |= this->changeTileAt(6, 1, 10);
+        change |= this->changeTileAt(6, 5, 10);
         // ensure the changing tiles are reserved
         change |= this->changeTileProtectionAt(7, 1, Qt::Checked);
         change |= this->changeTileProtectionAt(7, 2, Qt::Checked);
         change |= this->changeTileProtectionAt(7, 3, Qt::Checked);
         change |= this->changeTileProtectionAt(7, 4, Qt::Checked);
         change |= this->changeTileProtectionAt(7, 5, Qt::Checked);
-        // - add the Warlord
-        change |= this->changeMonsterAt(6, 7, UMT_WARLORD + 1, true);
+        // remove monsters, objects
+        for (int y = 0; y < 7; y++) {
+            for (int x = 0; x < 8; x++) {
+                change |= this->changeMonsterAt(x, y, 0, false);
+                change |= this->changeObjectAt(x, y, 0);
+            }
+        }
         break;
     case DUN_BANNER_PRE: // Banner2.DUN
         // useless tiles
@@ -4323,6 +4340,14 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileProtectionAt(23,  8, Qt::Checked);
         break;
     case DUN_BETRAYER: // Vile1.DUN
+        // fix corner
+        change |= this->changeTileAt(5, 0, 16);
+        change |= this->changeTileAt(6, 1, 16);
+        // fix shadow + corner
+        change |= this->changeTileAt(4, 0, 76);
+        change |= this->changeTileAt(4, 1, 74);
+        change |= this->changeTileAt(5, 1, 62);
+        change |= this->changeTileAt(5, 2, 54);
         // - add the unique monsters
         change |= this->changeMonsterAt(3, 6, UMT_LAZARUS + 1, true);
         change |= this->changeMonsterAt(5, 3, UMT_RED_VEX + 1, true);
@@ -4336,6 +4361,7 @@ void D1Dun::patch(int dunFileIndex)
                 change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, 3);
             }
         }
+        // DRGL_L4PatchSetPiece(fileBuf, 2);
         break;
     case DUN_DIAB_1: // Diab1.DUN
         // - fix shadow of the left corner
@@ -4371,8 +4397,8 @@ void D1Dun::patch(int dunFileIndex)
         break;
     case DUN_DIAB_2_AFT: // Diab2b.DUN
         // external tiles
-        for (int y = 0; y < 24; y++) {
-            for (int x = 0; x < 22; x++) {
+        for (int y = 0; y < 12; y++) {
+            for (int x = 0; x < 11; x++) {
                 if (this->tiles[y][x] >= 98 + 18 && this->tiles[y][x] <= 98 + 30) {
                     int newTile = this->tiles[y][x] - 98;
                     // if (newTile == 20) {
