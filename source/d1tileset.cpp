@@ -10374,13 +10374,13 @@ bool D1Tileset::patchHellChaos(bool silent)
 /*  0 */{  54 - 1, 5, D1CEL_FRAME_TYPE::RightTriangle },   // redraw subtiles 
 /*  1 */{  54 - 1, 7, D1CEL_FRAME_TYPE::Empty },           // (used to block subsequent calls)
 /*  2 */{  55 - 1, 4, D1CEL_FRAME_TYPE::LeftTriangle },
-/*  3 */{ /*55*/ - 1, 6, D1CEL_FRAME_TYPE::Empty },
+/*  3 */{  55 - 1, 6, D1CEL_FRAME_TYPE::Empty },
 /*  4 */{  53 - 1, 2, D1CEL_FRAME_TYPE::LeftTrapezoid },
 /*  5 */{  53 - 1, 3, D1CEL_FRAME_TYPE::RightTrapezoid },
 /*  6 */{  53 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
 /*  7 */{  53 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
-/*  8 */{ /*53*/ - 1, 6, D1CEL_FRAME_TYPE::Empty },
-/*  9 */{ /*53*/ - 1, 7, D1CEL_FRAME_TYPE::Empty },
+/*  8 */{  53 - 1, 6, D1CEL_FRAME_TYPE::Empty },
+/*  9 */{  53 - 1, 7, D1CEL_FRAME_TYPE::Empty },
 
 /* 10 */{  48 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 11 */{  52 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },

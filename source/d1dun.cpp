@@ -4420,7 +4420,7 @@ void D1Dun::patch(int dunFileIndex)
         break;
     case DUN_DIAB_3_PRE: // Diab3a.DUN
         // useless tiles
-        for (int y = 0; y < 12; y++) {
+        for (int y = 0; y < 11; y++) {
             for (int x = 0; x < 11; x++) {
                 if (x >= 4 && x <= 6 && y >= 10 && y <= 10) {
                     continue; // SW-wall
