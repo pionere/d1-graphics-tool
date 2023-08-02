@@ -73,8 +73,17 @@ void PatchDungeonDialog::initialize(D1Dun *d)
     if (baseName == "warlord") {
         fileIndex = DUN_WARLORD_AFT;
     }
+    if (baseName == "diab1") {
+        fileIndex = DUN_DIAB_1;
+    }
+    if (baseName == "diab2a") {
+        fileIndex = DUN_DIAB_2_AFT;
+    }
     if (baseName == "diab2b") {
         fileIndex = DUN_DIAB_2_AFT;
+    }
+    if (baseName == "diab3a") {
+        fileIndex = DUN_DIAB_3_AFT;
     }
     if (baseName == "diab3b") {
         fileIndex = DUN_DIAB_3_AFT;

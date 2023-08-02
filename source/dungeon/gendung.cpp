@@ -425,7 +425,6 @@ void InitLvlDungeon()
 		pTiles[76][1] = 6;
 		pTiles[76][2] = 238; // 35;
 		pTiles[76][3] = 239;
-#endif
 		break;
 #ifdef HELLFIRE
 	case DTYPE_NEST:

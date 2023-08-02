@@ -3362,7 +3362,10 @@ void D1Dun::patch(int dunFileIndex)
 /* DUN_VILE_AFT*/            { 42, 46 }, // Vile1.DUN
 /* DUN_WARLORD_PRE*/         { 16, 14 }, // Warlord2.DUN
 /* DUN_WARLORD_AFT*/         { 16, 14 }, // Warlord.DUN
+/* DUN_DIAB_1*/              {  9,  9 }, // Diab1.DUN
+/* DUN_DIAB_2_PRE*/          { 22, 24 }, // Diab2a.DUN
 /* DUN_DIAB_2_AFT*/          { 22, 24 }, // Diab2b.DUN
+/* DUN_DIAB_3_PRE*/          { 22, 22 }, // Diab3a.DUN
 /* DUN_DIAB_3_AFT*/          { 22, 22 }, // Diab3b.DUN
 /* DUN_DIAB_4_PRE*/          { 18, 18 }, // Diab4a.DUN
 /* DUN_DIAB_4_AFT*/          { 18, 18 }, // Diab4b.DUN
@@ -4334,35 +4337,126 @@ void D1Dun::patch(int dunFileIndex)
             }
         }
         break;
+    case DUN_DIAB_1: // Diab1.DUN
+        // - fix shadow of the left corner
+        change |= this->changeTileAt(0, 4, 75);
+        change |= this->changeTileAt(0, 5, 74);
+        // - fix shadow of the right corner
+        change |= this->changeTileAt(4, 1, 61);
+        // DRGL_L4PatchSetPiece(fileBuf, 2);
+        break;
+    case DUN_DIAB_2_PRE: // Diab2a.DUN
+        // external tiles
+        for (int y = 1; y <= 3; y++) {
+            for (int x = 9; x <= 10; x++) {
+                if (this->tiles[y][x] >= 98 + 18 && this->tiles[y][x] <= 98 + 30) {
+                    int newTile = this->tiles[y][x] - 98;
+                    // if (newTile == 20) {
+                    //    newTile = 30;
+                    // }
+                    change |= this->changeTileAt(x, y, newTile);
+                }
+            }
+        }
+        // useless tiles
+        for (int y = 0; y < 12; y++) {
+            for (int x = 0; x < 11; x++) {
+                if (x >= 9 && x <= 10 && y >= 1 && y <= 3) {
+                    continue;
+                }
+                change |= this->changeTileAt(x, y, 0);
+            }
+        }
+        // DRGL_L4PatchSetPiece(fileBuf, 1);
+        break;
     case DUN_DIAB_2_AFT: // Diab2b.DUN
-        // replace monsters from Diab2a.DUN
-        change |= this->changeMonsterAt(11, 9, 101, false);
-        change |= this->changeMonsterAt(11, 13, 101, false);
-        change |= this->changeMonsterAt(16, 3, 101, false);
-        change |= this->changeMonsterAt(16, 5, 101, false);
-        change |= this->changeMonsterAt(17, 9, 101, false);
-        change |= this->changeMonsterAt(17, 13, 101, false);
-        change |= this->changeMonsterAt(14, 10, 101, false);
-        change |= this->changeMonsterAt(13, 12, 101, false);
+        // external tiles
+        for (int y = 0; y < 24; y++) {
+            for (int x = 0; x < 22; x++) {
+                if (this->tiles[y][x] >= 98 + 18 && this->tiles[y][x] <= 98 + 30) {
+                    int newTile = this->tiles[y][x] - 98;
+                    // if (newTile == 20) {
+                    //    newTile = 30;
+                    // }
+                    change |= this->changeTileAt(x, y, newTile);
+                }
+            }
+        }
+        // DRGL_L4PatchSetPiece(fileBuf, 0);
+        // remove monsters
+        for (int y = 0; y < 24; y++) {
+            for (int x = 0; x < 22; x++) {
+                change |= this->changeMonsterAt(x, y, 0, false);
+            }
+        }
+        // remove objects
+        change |= this->changeObjectAt(13, 10, 0);
+        break;
+    case DUN_DIAB_3_PRE: // Diab3a.DUN
+        // useless tiles
+        for (int y = 0; y < 12; y++) {
+            for (int x = 0; x < 11; x++) {
+                if (x >= 4 && x <= 6 && y >= 10 && y <= 10) {
+                    continue; // SW-wall
+                }
+                if (x >= 0 && x <= 0 && y >= 4 && y <= 6) {
+                    continue; // NW-wall
+                }
+                if (x >= 4 && x <= 6 && y >= 0 && y <= 0) {
+                    continue; // NE-wall
+                }
+                if (x >= 10 && x <= 10 && y >= 4 && y <= 6) {
+                    continue; // SE-wall
+                }
+                change |= this->changeTileAt(x, y, 0);
+            }
+        }
+        // DRGL_L4PatchSetPiece(fileBuf, 1);
         break;
     case DUN_DIAB_3_AFT: // Diab3b.DUN
-        // replace monsters from Diab3a.DUN
-        change |= this->changeMonsterAt(1, 5, 101, false);
-        change |= this->changeMonsterAt(1, 15, 101, false);
-        change |= this->changeMonsterAt(5, 1, 101, false);
-        change |= this->changeMonsterAt(5, 19, 101, false);
-        change |= this->changeMonsterAt(7, 7, 101, false);
-        change |= this->changeMonsterAt(7, 13, 101, false);
-        change |= this->changeMonsterAt(13, 7, 101, false);
-        change |= this->changeMonsterAt(13, 13, 101, false);
-        change |= this->changeMonsterAt(15, 1, 101, false);
-        change |= this->changeMonsterAt(15, 19, 101, false);
-        change |= this->changeMonsterAt(19, 5, 101, false);
-        change |= this->changeMonsterAt(19, 15, 101, false);
-        // replace objects from Diab3a.DUN
-        change |= this->changeObjectAt(8, 2, 51);
+        // external tiles
+        change |= this->changeTileAt(4, 4, 21);
+        change |= this->changeTileAt(4, 5, 18);
+        change |= this->changeTileAt(5, 4, 19);
+        change |= this->changeTileAt(5, 5, 30);
+        // DRGL_L4PatchSetPiece(fileBuf, 0);
+        // remove monsters
+        for (int y = 0; y < 22; y++) {
+            for (int x = 0; x < 22; x++) {
+                change |= this->changeMonsterAt(x, y, 0, false);
+            }
+        }
+        // remove objects
+        change |= this->changeObjectAt(8, 14, 0);
+        change |= this->changeObjectAt(8, 2, 0);
         break;
-    case DUN_DIAB_4_AFT: // Diab4b.DUN
+    case DUN_DIAB_4_PRE: // Diab4a.DUN
+        for (int y = 0; y < 9; y++) {
+            for (int x = 0; x < 9; x++) {
+                // external tiles
+                if (this->tiles[y][x] >= 98 + 18 && this->tiles[y][x] <= 98 + 30) {
+                    int newTile = this->tiles[y][x] - 98;
+                    // if (newTile == 20) {
+                    //    newTile = 30;
+                    // }
+                    change |= this->changeTileAt(x, y, newTile);
+                }
+                // useless tiles
+                if (x >= 2 && x <= 6 && y >= 7 && y <= 8) {
+                    continue; // SW-wall
+                }
+                if (x >= 0 && x <= 1 && y >= 2 && y <= 6) {
+                    continue; // NW-wall
+                }
+                if (x >= 2 && x <= 6 && y >= 0 && y <= 1) {
+                    continue; // NE-wall
+                }
+                if (x >= 7 && x <= 8 && y >= 2 && y <= 6) {
+                    continue; // SE-wall
+                }
+                change |= this->changeTileAt(x, y, 0);
+            }
+        }
         // replace monsters from Diab4a.DUN
         change |= this->changeMonsterAt(4, 4, 101, false);
         change |= this->changeMonsterAt(4, 8, 101, false);
@@ -4376,12 +4470,32 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeMonsterAt(6, 12, 101, false);
         change |= this->changeMonsterAt(12, 10, 101, false);
         change |= this->changeMonsterAt(10, 4, 101, false);
-        /* fall-through */
-    case DUN_DIAB_4_PRE: // Diab4a.DUN
         // add/replace monster
         change |= this->changeMonsterAt(4, 6, 101, false);
         // make diablo unique
         change |= this->changeMonsterAt(8, 8, UMT_DIABLO + 1, true);
+        // DRGL_L4PatchSetPiece(fileBuf, 1);
+        break;
+    case DUN_DIAB_4_AFT: // Diab4b.DUN
+        // external tiles
+        for (int y = 0; y < 9; y++) {
+            for (int x = 0; x < 9; x++) {
+                if (this->tiles[y][x] >= 98 + 18 && this->tiles[y][x] <= 98 + 30) {
+                    int newTile = this->tiles[y][x] - 98;
+                    // if (newTile == 20) {
+                    //    newTile = 30;
+                    // }
+                    change |= this->changeTileAt(x, y, newTile);
+                }
+            }
+        }
+        // DRGL_L4PatchSetPiece(fileBuf, 0);
+        // remove monsters
+        for (int y = 0; y < 18; y++) {
+            for (int x = 0; x < 18; x++) {
+                change |= this->changeMonsterAt(x, y, 0, false);
+            }
+        }
         break;
     }
     if (!change) {
