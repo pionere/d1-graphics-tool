@@ -54,6 +54,9 @@ void InitLvlAutomap()
 	}
 
 	mem_free_dbg(pAFile);
+	if (!PatchDunFiles) {
+		return;
+	}
 	// patch dAutomapData - L1.AMP
 	if (currLvl._dType == DTYPE_CATHEDRAL) {
 		// adjust AMP after fixCathedralShadows
@@ -86,14 +89,39 @@ void InitLvlAutomap()
 	}
 	// patch dAutomapData - L2.AMP
 	if (currLvl._dType == DTYPE_CATACOMBS) {
+		automaptype[17] = automaptype[5];
+		// automaptype[18] = automaptype[5];
+		automaptype[34] = automaptype[6];
+		automaptype[35] = automaptype[7];
+		automaptype[36] = automaptype[9];
+		automaptype[37] = automaptype[9];
+		// automaptype[44] = automaptype[3];
+		// automaptype[46] = automaptype[3];
+		// automaptype[47] = automaptype[3];
+		// automaptype[48] = automaptype[3];
+		// automaptype[49] = automaptype[3];
+		// automaptype[95] = automaptype[3];
+		// automaptype[96] = automaptype[3];
+		// automaptype[100] = automaptype[3];
 		automaptype[42] &= ~MAPFLAG_HORZARCH;
 		automaptype[156] &= ~(MAPFLAG_VERTDOOR | MAPFLAG_TYPE);
 		automaptype[157] &= ~(MAPFLAG_HORZDOOR | MAPFLAG_TYPE);
+	}
+	// patch dAutomapData - L3.AMP
+	if (currLvl._dType == DTYPE_CAVES) {
+		automaptype[144] = automaptype[151];
+		automaptype[145] = automaptype[152];
 	}
 	// patch dAutomapData - L4.AMP
 	if (currLvl._dType == DTYPE_HELL) {
 		automaptype[52] |= MAPFLAG_VERTGRATE;
 		automaptype[56] |= MAPFLAG_HORZGRATE;
+		automaptype[7] = MWT_NORTH_WEST_END;
+		automaptype[8] = MWT_NORTH_EAST_END;
+		automaptype[83] = MWT_NORTH_WEST_END;
+		automaptype[61] = automaptype[56];
+		automaptype[62] = automaptype[15];
+		automaptype[76] = automaptype[2];
 	}
 #ifdef HELLFIRE
 	// patch dAutomapData - L5.AMP

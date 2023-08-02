@@ -151,6 +151,10 @@ void InitLvlDungeon()
 		// nSolidTable[553] = false; // allow walking on the left side of the pot at Adria
 		// nSolidTable[761] = true;  // make the tile of the southern window of the church non-walkable
 		// nSolidTable[945] = true;  // make the eastern side of Griswold's house consistent (non-walkable)
+		// patch dMicroCels - TOWN.CEL
+		// - overwrite subtile 237 with subtile 402 to make the inner tile of Griswold's house non-walkable
+		// pSubtiles[237][0] = pSubtiles[402][0];
+		// pSubtiles[237][1] = pSubtiles[402][1];
 		break;
 	case DTYPE_CATHEDRAL:
 		// patch dSolidTable - L1.SOL
@@ -406,6 +410,22 @@ void InitLvlDungeon()
 		nSolidTable[211] = false;
 		nMissileTable[211] = false;
 		nBlockTable[211] = false;
+		// create the new shadows
+		// - new shadow-type for diab1.dun
+		pTiles[61][0] = 177;
+		pTiles[61][1] = 31;
+		pTiles[61][2] = 179;
+		pTiles[61][3] = 176;
+		// - new shadow-types for vile1.dun
+		pTiles[62][0] = 41;
+		pTiles[62][1] = 31;
+		pTiles[62][2] = 10;
+		pTiles[62][3] = 176;
+		pTiles[76][0] = 5;
+		pTiles[76][1] = 6;
+		pTiles[76][2] = 238; // 35;
+		pTiles[76][3] = 239;
+#endif
 		break;
 #ifdef HELLFIRE
 	case DTYPE_NEST:
@@ -653,6 +673,7 @@ void DRLG_PlaceMegaTiles(int mt)
     case DTYPE_CATHEDRAL: et = 74; break;
     case DTYPE_CATACOMBS: et = 2;  break;
     case DTYPE_CAVES:     et = 2;  break;
+    case DTYPE_HELL:      et = 14;  break;
 #ifdef  HELLFIRE
     case DTYPE_CRYPT:     et = 8;  break;
     case DTYPE_NEST:      et = 10; break;
