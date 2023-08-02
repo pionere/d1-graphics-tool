@@ -49,6 +49,12 @@
    </item>
    <item>
     <widget class="QWidget" name="tilesetWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <layout class="QGridLayout">
       <item row="0" column="0">
        <widget class="QLabel">
@@ -709,6 +715,12 @@
    </item>
    <item>
     <widget class="QWidget" name="dungeonWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <layout class="QGridLayout" name="dungeonLayout">
       <item row="0" column="0">
        <widget class="QLabel">
@@ -1435,13 +1447,13 @@
      </layout>
     </widget> <!-- dungeonWidget -->
    </item>
-   <item>
+   <!--item>
     <spacer>
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
     </spacer>
-   </item>
+   </item-->
   </layout>
  </widget>
  <layoutdefault spacing="4" margin="4"/>
