@@ -12435,6 +12435,7 @@ bool D1Tileset::patchHellWall2(bool silent)
 
 void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
 {
+    QMessageBox::critical(nullptr, "Error", "cleanupHell 0");
     constexpr int blockSize = BLOCK_SIZE_L4;
     // patch stairs III.
     ReplaceSubtile(this->til, 45 - 1, 0, 17 - 1, silent);  // 137
@@ -12578,8 +12579,11 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     }
 
 
+    QMessageBox::critical(nullptr, "Error", "cleanupHell 1");
     this->patchHellChaos(silent);
+    QMessageBox::critical(nullptr, "Error", "cleanupHell 2");
     this->patchHellFloor(silent);
+    QMessageBox::critical(nullptr, "Error", "cleanupHell 3");
     // patch stairs II.
     // if (pSubtiles[MICRO_IDX(137 - 1, blockSize, 1)] != NULL) {
     if (this->patchHellStairs(silent)) {
@@ -12594,8 +12598,11 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
 
         ReplaceMcr(111, 0, 91, 0);
     }
+    QMessageBox::critical(nullptr, "Error", "cleanupHell 4");
     this->patchHellWall1(silent);
+    QMessageBox::critical(nullptr, "Error", "cleanupHell 5");
     this->patchHellWall2(silent);
+    QMessageBox::critical(nullptr, "Error", "cleanupHell 6");
 
     // useless pixels
     Blk2Mcr(111, 1);
@@ -13190,6 +13197,7 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
             Blk2Mcr(unusedSubtiles[n], i);
         }
     }
+    QMessageBox::critical(nullptr, "Error", "cleanupHell 7");
 }
 
 bool D1Tileset::patchNestFloor(bool silent)
