@@ -206,7 +206,15 @@ void DRLG_L4Shadows()
 					} else if (dungeon[x - 1][y - 1] == 56) {
 						dungeon[x - 1][y] = 47;
 						dungeon[x - 1][y - 1] = 131;
+					} else if (dungeon[x - 1][y - 1] == 8) {
+						dungeon[x - 1][y] = 47;
+						dungeon[x - 1][y - 1] = 132;
+					} else if (dungeon[x - 1][y - 1] == 14) {
+						dungeon[x - 1][y] = 47;
+						dungeon[x - 1][y - 1] = 134;
 					} else {
+                        if (dungeon[x - 1][y - 1] == 32)
+                            continue; // not ok, but it would require new tile/subtiles/micros
 						dProgressWarn() << QString("Missing case %1:%2 for pillar %3 with floor @%4:%5").arg(dungeon[x - 1][y]).arg(dungeon[x - 1][y - 1]).arg(bv).arg(DBORDERX + 2 * x).arg(DBORDERY + 2 * y);
 						continue;
 					}
@@ -230,6 +238,12 @@ void DRLG_L4Shadows()
 					} else if (dungeon[x - 1][y - 1] == 2) {
 						dungeon[x - 1][y] = 54;
 						dungeon[x - 1][y - 1] = 129;
+					} else if (dungeon[x - 1][y - 1] == 15) {
+						dungeon[x - 1][y] = 54;
+						dungeon[x - 1][y - 1] = 62;
+					} else if (dungeon[x - 1][y - 1] == 14) {
+						dungeon[x - 1][y] = 54;
+						dungeon[x - 1][y - 1] = 135;
 					} else {
                         dProgressWarn() << QString("Missing case %1:%2 for door %3 with floor @%4:%5").arg(dungeon[x - 1][y]).arg(dungeon[x - 1][y - 1]).arg(bv).arg(DBORDERX + 2 * x).arg(DBORDERY + 2 * y);
 						continue;

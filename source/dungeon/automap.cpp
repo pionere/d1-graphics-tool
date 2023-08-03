@@ -119,9 +119,17 @@ void InitLvlAutomap()
 		automaptype[7] = MWT_NORTH_WEST_END;
 		automaptype[8] = MWT_NORTH_EAST_END;
 		automaptype[83] = MWT_NORTH_WEST_END;
-		automaptype[61] = automaptype[56];
-		automaptype[62] = automaptype[15];
+		// new shadow-types
 		automaptype[76] = automaptype[2];
+		automaptype[129] = automaptype[2];
+		automaptype[130] = automaptype[15];
+		automaptype[62] = automaptype[15];
+		automaptype[131] = automaptype[56];
+		automaptype[61] = automaptype[56];
+		automaptype[132] = automaptype[8];
+		automaptype[133] = automaptype[8];
+		automaptype[134] = automaptype[14];
+		automaptype[135] = automaptype[14];
 	}
 #ifdef HELLFIRE
 	// patch dAutomapData - L5.AMP
