@@ -12420,6 +12420,15 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 55 - 1, 2, 154 - 1, silent); // 175
 
     // create the new shadows
+    // - 'add' new base shadow-types
+    ReplaceSubtile(this->til,  76 - 1, 0, 5 - 1, silent); // copy from tile 2
+    ReplaceSubtile(this->til,  76 - 1, 1, 6 - 1, silent);
+    ReplaceSubtile(this->til,  76 - 1, 2, 35 - 1, silent);
+    ReplaceSubtile(this->til,  76 - 1, 3, 239 - 1, silent);
+    ReplaceSubtile(this->til, 116 - 1, 0, 5 - 1, silent); // copy from tile 2
+    ReplaceSubtile(this->til, 116 - 1, 1, 6 - 1, silent);
+    ReplaceSubtile(this->til, 116 - 1, 2, 35 - 1, silent);
+    ReplaceSubtile(this->til, 116 - 1, 3, 176 - 1, silent);
     // - 'add' new shadow-type for diab1.dun
     ReplaceSubtile(this->til,  61 - 1, 0, 177 - 1, silent); // copy from tile 56
     ReplaceSubtile(this->til,  61 - 1, 1, 31 - 1, silent);
@@ -12430,10 +12439,6 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til,  62 - 1, 1, 31 - 1, silent);
     ReplaceSubtile(this->til,  62 - 1, 2, 10 - 1, silent);
     ReplaceSubtile(this->til,  62 - 1, 3, 176 - 1, silent);
-    ReplaceSubtile(this->til,  76 - 1, 0, 5 - 1, silent); // copy from tile 2
-    ReplaceSubtile(this->til,  76 - 1, 1, 6 - 1, silent);
-    ReplaceSubtile(this->til,  76 - 1, 2, 35 - 1, silent);
-    ReplaceSubtile(this->til,  76 - 1, 3, 239 - 1, silent);
 
     // use common subtiles
     ReplaceSubtile(this->til,  4 - 1, 2, 10 - 1, silent);  // 13
@@ -12540,7 +12545,7 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
 
     // eliminate subtiles of unused tiles
     const int unusedTiles[] = {
-        20, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137
+        20, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137
     };
     constexpr int blankSubtile = 14;
     for (int n = 0; n < lengthof(unusedTiles); n++) {
@@ -17672,11 +17677,13 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeTileAmpFlags(this->amp, 7 - 1, MWT_NORTH_WEST_END, silent);
         ChangeTileAmpFlags(this->amp, 8 - 1, MWT_NORTH_EAST_END, silent);
         ChangeTileAmpFlags(this->amp, 83 - 1, MWT_NORTH_WEST_END, silent);
+        // - new base shadows
+        SetTileMapFlags(this->amp,  76 - 1, 2 - 1, silent);
+        SetTileMapFlags(this->amp, 116 - 1, 2 - 1, silent);
         // - shadows for the diab1 setpiece
         SetTileMapFlags(this->amp, 61 - 1, 56 - 1, silent);
         // - shadows for the vile setpiece
         SetTileMapFlags(this->amp, 62 - 1, 15 - 1, silent);
-        SetTileMapFlags(this->amp, 76 - 1, 2 - 1, silent);
         // patch dSolidTable - L4.SOL
         ChangeSubtileSolFlags(this->sol, 141 - 1, PFLAG_BLOCK_MISSILE, false, silent); // fix missile-blocking tile of down-stairs.
         // fix missile-blocking tile of down-stairs + fix non-walkable tile of down-stairs
