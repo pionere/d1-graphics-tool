@@ -3933,7 +3933,7 @@ void D1Dun::patch(int dunFileIndex)
         // useless tiles
         for (int y = 0; y < 7; y++) {
             for (int x = 0; x < 8; x++) {
-                if (x >= 7 && y >= 1 && x <= 7 && y <= 6) {
+                if (x >= 7 && y >= 1 && x <= 7 && y <= 5) {
                     continue;
                 }
                 change |= this->changeTileAt(x, y, 0);

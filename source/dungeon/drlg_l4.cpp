@@ -176,7 +176,7 @@ const BYTE L4FTYPES[138] = {
 };
 /*
  * Miniset replacement to add shadows.
- * New dungeon values: 47 48   54 55   58 59 60  71 72   74 75
+ * New dungeon values: 47 48   54 55   58 59 60
  * TODO: use DRLG_PlaceMiniSet instead?
  */
 void DRLG_L4Shadows()
@@ -187,15 +187,18 @@ void DRLG_L4Shadows()
 	for (x = 1; x < DMAXY; x++) {
 		for (y = 1; y < DMAXY; y++) {
 			bv = dungeon[x][y];
-			if (bv == 3 || bv == 4 || bv == 8 || bv == 15 || bv == 81) { // 81 only to support setpieces
+			if (bv == 3 || bv == 4 || bv == 8 || bv == 15) {
 				// 6, 0,
-				// 6, 3/4/8/15/81,  search
+				// 6, 3/4/8/15,  search
 
 				//48, 0, replace
 				//47, 0,
 				if (dungeon[x - 1][y] == 6 && dungeon[x - 1][y - 1] == 6) {
 					dungeon[x - 1][y] = 47;
 					dungeon[x - 1][y - 1] = 48;
+				} else {
+					dProgressWarn() << QString("Missing case %1:%2 for pillar %3 @%4:%5").arg(dungeon[x - 1][y]).arg(dungeon[x - 1][y - 1]).arg(bv).arg(DBORDERX + 2 * x).arg(DBORDERY + 2 * y);
+					continue;
 				}
 			} else if (bv == 53) {
 				// 6, 0,
@@ -203,43 +206,26 @@ void DRLG_L4Shadows()
 
 				//55, 0, replace
 				//54, 0,
-				if (dungeon[x - 1][y] == 6) {
+				if (dungeon[x - 1][y] == 6 && dungeon[x - 1][y - 1] == 6) {
 					dungeon[x - 1][y] = 54;
-				}
-				if (dungeon[x - 1][y - 1] == 6) {
 					dungeon[x - 1][y - 1] = 55;
+				} else {
+					dProgressWarn() << QString("Missing case %1:%2 for door %3 @%4:%5").arg(dungeon[x - 1][y]).arg(dungeon[x - 1][y - 1]).arg(bv).arg(DBORDERX + 2 * x).arg(DBORDERY + 2 * y);
+					continue;
 				}
 			} else if (bv == 56) {
 				// 6, 6, 0,
-				// 0, 6/50, 56,  search
+				// 0, 6, 56,  search
 
 				//58, 59, 0, replace
 				// 0, 60, 0,
-				if ((dungeon[x - 1][y] == 6 || (dungeon[x - 1][y] == 50 && !drlgFlags[x - 1][y]))
-				 && dungeon[x - 1][y - 1] == 6 && dungeon[x - 2][y - 1] == 6) {
+				if (dungeon[x - 1][y] == 6 && dungeon[x - 1][y - 1] == 6 && dungeon[x - 2][y - 1] == 6) {
 					dungeon[x - 1][y] = 60;
 					dungeon[x - 1][y - 1] = 59;
 					dungeon[x - 2][y - 1] = 58;
-				}
-			} else if (bv == 73) { // support setpieces
-				// 6, 0,
-				// 6, 73,  search
-
-				//72, 0, replace
-				//71, 0,
-				if (dungeon[x - 1][y] == 6 && dungeon[x - 1][y - 1] == 6) {
-					dungeon[x - 1][y] = 71;
-					dungeon[x - 1][y - 1] = 72;
-				}
-			} else if (bv == 76 || bv == 77) { // support setpieces
-				// 6, 0,
-				// 6, 76/77,  search
-
-				//75, 0, replace
-				//74, 0,
-				if (dungeon[x - 1][y] == 6 && dungeon[x - 1][y - 1] == 6) {
-					dungeon[x - 1][y] = 74;
-					dungeon[x - 1][y - 1] = 75;
+				} else {
+					dProgressWarn() << QString("Missing case %1:%2:%3 for door %4 @%5:%6").arg(dungeon[x - 1][y]).arg(dungeon[x - 1][y - 1]).arg(dungeon[x - 2][y - 1]).arg(bv).arg(DBORDERX + 2 * x).arg(DBORDERY + 2 * y);
+					continue;
 				}
 			}
 		}
