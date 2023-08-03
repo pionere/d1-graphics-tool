@@ -3097,7 +3097,7 @@ bool D1Dun::protectSubtiles()
     bool result = false;
     for (int duny = 0; duny < this->height; duny++) {
         for (int dunx = 0; dunx < this->width; dunx++) {
-            bool needsProtection = this->objects[duny][dunx] != 0 || this->monsters[duny][dunx] != 0;
+            bool needsProtection = this->objects[duny][dunx] != 0 || this->monsters[duny][dunx].first != 0;
             if (needsProtection && this->changeSubtileProtectionAt(dunx, duny, 3)) {
                 dProgress() << tr("Subtile at %1:%2 is now protected.").arg(dunx).arg(duny);
                 result = true;
