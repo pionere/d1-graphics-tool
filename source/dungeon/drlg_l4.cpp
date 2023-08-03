@@ -220,7 +220,7 @@ void DRLG_L4Shadows()
 						dungeon[x - 1][y - 1] = 55;
 					} else if (dungeon[x - 1][y - 1] == 2) {
 						dungeon[x - 1][y] = 54;
-						dungeon[x - 1][y - 1] = 116;
+						dungeon[x - 1][y - 1] = 129;
 					} else {
                         dProgressWarn() << QString("Missing case %1:%2 for door %3 with floor @%4:%5").arg(dungeon[x - 1][y]).arg(dungeon[x - 1][y - 1]).arg(bv).arg(DBORDERX + 2 * x).arg(DBORDERY + 2 * y);
 						continue;
