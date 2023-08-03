@@ -11136,7 +11136,7 @@ bool D1Tileset::patchHellStairs(bool silent)
                     if (pixel.isTransparent()) {
                         continue;
                     }
-                    if (x >= 15 || && pixel.getPaletteIndex() < 80) {
+                    if (x >= 15 || pixel.getPaletteIndex() < 80) {
                         change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                     }
                 }
