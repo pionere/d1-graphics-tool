@@ -10666,7 +10666,7 @@ bool D1Tileset::patchHellFloor(bool silent)
 /*  7 */{ 227 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
 /*  8 */{ 228 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
 /*  9 */{ 228 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 10 */{ 265 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 10 */{ /*265*/ - 1, 0, D1CEL_FRAME_TYPE::Empty },
 /* 11 */{ 272 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
 /* 12 */{ 277 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
 /* 13 */{ 289 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
@@ -10785,11 +10785,6 @@ bool D1Tileset::patchHellFloor(bool silent)
             change |= frame->setPixel(15, 24, D1GfxPixel::colorPixel(126));
 
             change |= frame->setPixel(0, 24, D1GfxPixel::colorPixel(116));
-        }
-        if (i == 10) { // 265[0] - adjust after reuse
-            change |= frame->setPixel(29, 4, D1GfxPixel::colorPixel(38));
-            change |= frame->setPixel(31, 27, D1GfxPixel::colorPixel(39));
-            change |= frame->setPixel(31, 28, D1GfxPixel::colorPixel(41));
         }
         if (i == 11) { // 272[0] - adjust after reuse
             change |= frame->setPixel(31, 15, D1GfxPixel::colorPixel(43));
@@ -10932,7 +10927,6 @@ bool D1Tileset::patchHellFloor(bool silent)
             change |= frame->setPixel(14, 21, D1GfxPixel::colorPixel(96));
             change |= frame->setPixel(13, 22, D1GfxPixel::colorPixel(112));
             change |= frame->setPixel(11, 25, D1GfxPixel::colorPixel(113));
-            change |= frame->setPixel(10, 27, D1GfxPixel::colorPixel(115));
 
             change |= frame->setPixel(12, 23, D1GfxPixel::colorPixel(112));
             change |= frame->setPixel(10, 26, D1GfxPixel::colorPixel(114));
@@ -11400,14 +11394,18 @@ bool D1Tileset::patchHellWall1(bool silent)
             }
         }
         if (i == 10) { // mask 1[3]
-            change |= frame->setPixel(17, 20, D1GfxPixel::transparentPixel());
-            change |= frame->setPixel(17, 21, D1GfxPixel::transparentPixel());
-            change |= frame->setPixel(17, 22, D1GfxPixel::transparentPixel());
+            // change |= frame->setPixel(17, 20, D1GfxPixel::transparentPixel());
+            // change |= frame->setPixel(17, 21, D1GfxPixel::transparentPixel());
+            // change |= frame->setPixel(17, 22, D1GfxPixel::transparentPixel());
 
             change |= frame->setPixel(17, 31, D1GfxPixel::transparentPixel());
         }
         if (i == 34) { // mask 208[3]
-            change |= frame->setPixel(17, 20, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(17,  8, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(17,  9, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(17, 10, D1GfxPixel::transparentPixel());
+
+            // change |= frame->setPixel(17, 20, D1GfxPixel::transparentPixel());
             change |= frame->setPixel(17, 21, D1GfxPixel::transparentPixel());
             change |= frame->setPixel(17, 22, D1GfxPixel::transparentPixel());
 
@@ -11928,7 +11926,6 @@ bool D1Tileset::patchHellWall1(bool silent)
             change |= frame->setPixel(17, 1, D1GfxPixel::colorPixel(118));
             change |= frame->setPixel(17, 2, D1GfxPixel::colorPixel(85));
             change |= frame->setPixel(16, 2, D1GfxPixel::colorPixel(100));
-            change |= frame->setPixel(16, 3, D1GfxPixel::colorPixel(98));
             change |= frame->setPixel(17, 3, D1GfxPixel::colorPixel(84));
             change |= frame->setPixel(17, 4, D1GfxPixel::colorPixel(81));
             change |= frame->setPixel(18, 4, D1GfxPixel::colorPixel(82));
@@ -11952,7 +11949,6 @@ bool D1Tileset::patchHellWall1(bool silent)
         }
         if (i == 59) { // 210[4] - fix connection
             change |= frame->setPixel(16, 2, D1GfxPixel::colorPixel(85));
-            change |= frame->setPixel(16, 3, D1GfxPixel::colorPixel(98));
             change |= frame->setPixel(17, 3, D1GfxPixel::colorPixel(85));
             change |= frame->setPixel(17, 4, D1GfxPixel::colorPixel(82));
             change |= frame->setPixel(18, 2, D1GfxPixel::colorPixel(86));
@@ -12591,27 +12587,27 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
 
     // fix chaos
     // - reuse
-    ReplaceMcr(48, 2, 55, 2);
+    // ReplaceMcr(48, 2, 55, 2);
     ReplaceMcr(46, 2, 53, 2);
     ReplaceMcr(46, 3, 53, 3);
     ReplaceMcr(50, 2, 53, 2);
     ReplaceMcr(50, 3, 53, 3);
     ReplaceMcr(50, 6, 5, 6);
-    ReplaceMcr(51, 3, 54, 3);
+    // ReplaceMcr(51, 3, 54, 3);
 
-    ReplaceMcr(58, 2, 55, 2);
+    // ReplaceMcr(58, 2, 55, 2);
     ReplaceMcr(56, 2, 53, 2);
     ReplaceMcr(56, 3, 53, 3);
-    ReplaceMcr(57, 3, 54, 3);
+    // ReplaceMcr(57, 3, 54, 3);
     ReplaceMcr(57, 5, 51, 5);
 
     // ReplaceMcr(61, 2, 55, 2);
     ReplaceMcr(59, 2, 53, 2);
     ReplaceMcr(59, 3, 53, 3);
-    ReplaceMcr(60, 3, 54, 3);
+    // ReplaceMcr(60, 3, 54, 3);
     ReplaceMcr(60, 5, 51, 5);
 
-    ReplaceMcr(64, 2, 55, 2);
+    // ReplaceMcr(64, 2, 55, 2);
     ReplaceMcr(64, 4, 58, 4);
     ReplaceMcr(62, 2, 53, 2);
     ReplaceMcr(62, 3, 53, 3);
@@ -12622,7 +12618,7 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(65, 2, 53, 2);
     ReplaceMcr(65, 3, 53, 3);
 
-    ReplaceMcr(70, 2, 55, 2);
+    // ReplaceMcr(70, 2, 55, 2);
     ReplaceMcr(70, 4, 48, 4);
     ReplaceMcr(68, 2, 53, 2);
     ReplaceMcr(68, 3, 53, 3);
@@ -17685,7 +17681,7 @@ void D1Tileset::patch(int dunType, bool silent)
         // patch dSolidTable - L4.SOL
         ChangeSubtileSolFlags(this->sol, 141 - 1, PFLAG_BLOCK_MISSILE, false, silent); // fix missile-blocking tile of down-stairs.
         // fix missile-blocking tile of down-stairs + fix non-walkable tile of down-stairs
-        ChangeSubtileSolFlags(this->sol, 137 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_MISSILE, false, silent);
+        // ChangeSubtileSolFlags(this->sol, 137 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 130 - 1, PFLAG_BLOCK_PATH, true, silent); // make the inner tiles of the down-stairs non-walkable I.
         ChangeSubtileSolFlags(this->sol, 132 - 1, PFLAG_BLOCK_PATH, true, silent); // make the inner tiles of the down-stairs non-walkable II.
         ChangeSubtileSolFlags(this->sol, 131 - 1, PFLAG_BLOCK_PATH, true, silent); // make the inner tiles of the down-stairs non-walkable III.
