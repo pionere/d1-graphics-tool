@@ -4000,6 +4000,8 @@ void D1Dun::patch(int dunFileIndex)
                 change |= this->changeObjectAt(x, y, 0);
             }
         }
+        // adjust the number of layers
+        this->numLayers = 1;
         break;
     case DUN_BANNER_PRE: // Banner2.DUN
         // useless tiles
@@ -4482,6 +4484,8 @@ void D1Dun::patch(int dunFileIndex)
         }
         // remove objects
         change |= this->changeObjectAt(13, 10, 0);
+        // adjust the number of layers
+        this->numLayers = 1;
         break;
     case DUN_DIAB_3_PRE: // Diab3a.DUN
         // useless tiles
@@ -4610,6 +4614,8 @@ void D1Dun::patch(int dunFileIndex)
         // remove objects
         change |= this->changeObjectAt(8, 14, 0);
         change |= this->changeObjectAt(8, 2, 0);
+        // adjust the number of layers
+        this->numLayers = 1;
         break;
     case DUN_DIAB_4_PRE: // Diab4a.DUN
         for (int y = 0; y < 9; y++) {
@@ -4748,6 +4754,8 @@ void D1Dun::patch(int dunFileIndex)
                 change |= this->changeMonsterAt(x, y, 0, false);
             }
         }
+        // adjust the number of layers
+        this->numLayers = 1;
         break;
     }
     if (!change) {

@@ -193,9 +193,17 @@ void DRLG_L4Shadows()
 
 				//48, 0, replace
 				//47, 0,
-				if (dungeon[x - 1][y] == 6 && dungeon[x - 1][y - 1] == 6) {
-					dungeon[x - 1][y] = 47;
-					dungeon[x - 1][y - 1] = 48;
+				if (dungeon[x - 1][y] == 6) {
+					if (dungeon[x - 1][y - 1] == 6) {
+						dungeon[x - 1][y] = 47;
+						dungeon[x - 1][y - 1] = 48;
+					} else if (dungeon[x - 1][y - 1] == 2) {
+						dungeon[x - 1][y] = 47;
+						dungeon[x - 1][y - 1] = 76;
+					} else {
+						dProgressWarn() << QString("Missing case %1:%2 for pillar %3 with floor @%4:%5").arg(dungeon[x - 1][y]).arg(dungeon[x - 1][y - 1]).arg(bv).arg(DBORDERX + 2 * x).arg(DBORDERY + 2 * y);
+						continue;
+					}
 				} else {
 					dProgressWarn() << QString("Missing case %1:%2 for pillar %3 @%4:%5").arg(dungeon[x - 1][y]).arg(dungeon[x - 1][y - 1]).arg(bv).arg(DBORDERX + 2 * x).arg(DBORDERY + 2 * y);
 					continue;
@@ -215,11 +223,11 @@ void DRLG_L4Shadows()
 				}
 			} else if (bv == 56) {
 				// 6, 6, 0,
-				// 0, 6, 56,  search
+				// 0, 50, 56,  search
 
 				//58, 59, 0, replace
 				// 0, 60, 0,
-				if (dungeon[x - 1][y] == 6 && dungeon[x - 1][y - 1] == 6 && dungeon[x - 2][y - 1] == 6) {
+				if (dungeon[x - 1][y] == 50 && dungeon[x - 1][y - 1] == 6 && dungeon[x - 2][y - 1] == 6) {
 					dungeon[x - 1][y] = 60;
 					dungeon[x - 1][y - 1] = 59;
 					dungeon[x - 2][y - 1] = 58;
