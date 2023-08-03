@@ -11038,12 +11038,12 @@ bool D1Tileset::patchHellStairs(bool silent)
 {
     const CelMicro micros[] = {
 /*  0 */{ 139 - 1, 1, D1CEL_FRAME_TYPE::Empty },              // merge subtiles (used to block subsequent calls)
-/*  1 */{ 137 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
-/*  2 */{ 137 - 1, 0, D1CEL_FRAME_TYPE::Square },
-/*  3 */{ 140 - 1, 0, D1CEL_FRAME_TYPE::LeftTrapezoid },
-/*  4 */{ 137 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/*  5 */{ 140 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/*  6 */{ 138 - 1, 0, D1CEL_FRAME_TYPE::Empty },
+/*  1 */{ 138 - 1, 0, D1CEL_FRAME_TYPE::Empty },
+/*  2 */{ 137 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  3 */{ 137 - 1, 0, D1CEL_FRAME_TYPE::Square },
+/*  4 */{ 140 - 1, 0, D1CEL_FRAME_TYPE::LeftTrapezoid },
+/*  5 */{ 137 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  6 */{ 140 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
 
 /*  7 */{ 136 - 1, 1, D1CEL_FRAME_TYPE::Empty },
 /*  8 */{ 126 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
@@ -11080,7 +11080,7 @@ bool D1Tileset::patchHellStairs(bool silent)
         bool change = false;
 
         // move pixels to 137[0] from 139[1]
-        if (i == 2) {
+        if (i == 3) {
             const CelMicro &microSrc = micros[0];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
@@ -11097,7 +11097,7 @@ bool D1Tileset::patchHellStairs(bool silent)
             }
         }
         // move pixels to 140[0] from 139[1]
-        if (i == 3) {
+        if (i == 4) {
             const CelMicro &microSrc = micros[0];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
@@ -11115,7 +11115,7 @@ bool D1Tileset::patchHellStairs(bool silent)
         }
 
         // mask 137[1]
-        if (i == 4) {
+        if (i == 5) {
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
@@ -11129,7 +11129,7 @@ bool D1Tileset::patchHellStairs(bool silent)
             }
         }
         // mask 138[0]
-        if (i == 6) {
+        if (i == 1) {
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
@@ -11144,8 +11144,8 @@ bool D1Tileset::patchHellStairs(bool silent)
         }
 
         // move pixels to 137[1] from 138[0]
-        if (i == 4) {
-            const CelMicro &microSrc = micros[6];
+        if (i == 5) {
+            const CelMicro &microSrc = micros[1];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
             // if (frameSrc == nullptr) {
@@ -11161,8 +11161,8 @@ bool D1Tileset::patchHellStairs(bool silent)
             }
         }
         // move pixels to 140[1] from 138[0]
-        if (i == 5) {
-            const CelMicro &microSrc = micros[6];
+        if (i == 6) {
+            const CelMicro &microSrc = micros[1];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
             if (frameSrc == nullptr) {
@@ -11246,10 +11246,10 @@ bool D1Tileset::patchHellStairs(bool silent)
         }
 
         // fix bad artifacts
-        if (i == 5) { // 140[1]
+        if (i == 6) { // 140[1]
             change |= frame->setPixel(14, 0, D1GfxPixel::transparentPixel());
         }
-        if (i == 4) { // 137[1] (140[3])
+        if (i == 5) { // 137[1] (140[3])
             change |= frame->setPixel(7, 7, D1GfxPixel::transparentPixel());
             change |= frame->setPixel(12, 29, D1GfxPixel::colorPixel(122));
             change |= frame->setPixel(13, 22, D1GfxPixel::transparentPixel());
