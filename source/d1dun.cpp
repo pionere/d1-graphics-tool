@@ -3994,8 +3994,8 @@ void D1Dun::patch(int dunFileIndex)
             }
         }
         // remove monsters, objects
-        for (int y = 0; y < 7; y++) {
-            for (int x = 0; x < 8; x++) {
+        for (int y = 0; y < 14; y++) {
+            for (int x = 0; x < 16; x++) {
                 change |= this->changeMonsterAt(x, y, 0, false);
                 change |= this->changeObjectAt(x, y, 0);
             }
