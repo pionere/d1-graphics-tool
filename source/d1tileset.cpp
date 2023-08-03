@@ -10374,13 +10374,13 @@ bool D1Tileset::patchHellChaos(bool silent)
 /*  0 */{  54 - 1, 5, D1CEL_FRAME_TYPE::RightTriangle },   // redraw subtiles 
 /*  1 */{  54 - 1, 7, D1CEL_FRAME_TYPE::Empty },           // (used to block subsequent calls)
 /*  2 */{  55 - 1, 4, D1CEL_FRAME_TYPE::LeftTriangle },
-/*  3 */{  55 - 1, 6, D1CEL_FRAME_TYPE::Empty },
+/*  3 */{ /*55*/ - 1, 6, D1CEL_FRAME_TYPE::Empty },
 /*  4 */{  53 - 1, 2, D1CEL_FRAME_TYPE::LeftTrapezoid },
 /*  5 */{  53 - 1, 3, D1CEL_FRAME_TYPE::RightTrapezoid },
 /*  6 */{  53 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
 /*  7 */{  53 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
-/*  8 */{  53 - 1, 6, D1CEL_FRAME_TYPE::Empty },
-/*  9 */{  53 - 1, 7, D1CEL_FRAME_TYPE::Empty },
+/*  8 */{ /*53*/ - 1, 6, D1CEL_FRAME_TYPE::Empty },
+/*  9 */{ /*53*/ - 1, 7, D1CEL_FRAME_TYPE::Empty },
 
 /* 10 */{  48 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 11 */{  52 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
@@ -10432,7 +10432,6 @@ bool D1Tileset::patchHellChaos(bool silent)
         if (frame == nullptr) {
             return false;
         }
-		QMessageBox::critical(nullptr, "Error", QString("patchHellChaos %1.: %2[%3]").arg(i).arg(micro.subtileIndex).arg(micro.microIndex));
         bool change = false;
         // mask 54[5]
         if (i == 0) {
@@ -10505,7 +10504,7 @@ bool D1Tileset::patchHellChaos(bool silent)
             // }
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
-                    D1GfxPixel pixel = frameSrc->getPixel(x, y);
+                    D1GfxPixel pixel = frame->getPixel(x, y);
                     D1GfxPixel pixelSrc = frameSrc->getPixel(x, y); // 55[4]
                     if (!pixel.isTransparent() && pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < 32 /*&& !pixelSrc.isTransparent()*/ || (pixel.isTransparent() && !pixelSrc.isTransparent())) {
                         change |= frame->setPixel(x, y, pixelSrc);
@@ -10513,20 +10512,13 @@ bool D1Tileset::patchHellChaos(bool silent)
                 }
             }
         }
-        // redraw 52[6], 67[6], 76[6] using 55[6]
+        // redraw 52[6], 67[6], 76[6] using '55[6]'
         if (i >= 14 && i < 17) {
-            const CelMicro &microSrc = micros[3];
-            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
-            D1GfxFrame *frameSrc = mf.second;
-            // if (frameSrc == nullptr) {
-            //    return false;
-            // }
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
-                    D1GfxPixel pixel = frameSrc->getPixel(x, y);
-                    D1GfxPixel pixelSrc = frameSrc->getPixel(x, y); // 55[6]
-                    if (!pixel.isTransparent() && pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < 32 /*&& !pixelSrc.isTransparent()*/ || (pixel.isTransparent() && !pixelSrc.isTransparent())) {
-                        change |= frame->setPixel(x, y, pixelSrc);
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < 32) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                     }
                 }
             }
@@ -10541,7 +10533,7 @@ bool D1Tileset::patchHellChaos(bool silent)
             // }
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
-                    D1GfxPixel pixel = frameSrc->getPixel(x, y);
+                    D1GfxPixel pixel = frame->getPixel(x, y);
                     D1GfxPixel pixelSrc = frameSrc->getPixel(x, y); // 53[4]
                     if (!pixel.isTransparent() && pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < 32 /*&& !pixelSrc.isTransparent()*/ || (pixel.isTransparent() && !pixelSrc.isTransparent())) {
                         change |= frame->setPixel(x, y, pixelSrc);
@@ -10559,7 +10551,7 @@ bool D1Tileset::patchHellChaos(bool silent)
             // }
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
-                    D1GfxPixel pixel = frameSrc->getPixel(x, y);
+                    D1GfxPixel pixel = frame->getPixel(x, y);
                     D1GfxPixel pixelSrc = frameSrc->getPixel(x, y); // 53[5]
                     if (!pixel.isTransparent() && pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < 32 /*&& !pixelSrc.isTransparent()*/ || (pixel.isTransparent() && !pixelSrc.isTransparent())) {
                         if (pixelSrc.isTransparent() && x < 17) {
@@ -10570,38 +10562,24 @@ bool D1Tileset::patchHellChaos(bool silent)
                 }
             }
         }
-        // redraw 74[6], 77[6] using 53[6]
+        // redraw 74[6], 77[6] using '53[6]'
         if (i >= 30 && i < 32) {
-            const CelMicro &microSrc = micros[8];
-            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
-            D1GfxFrame *frameSrc = mf.second;
-            // if (frameSrc == nullptr) {
-            //    return false;
-            // }
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
-                    D1GfxPixel pixel = frameSrc->getPixel(x, y);
-                    D1GfxPixel pixelSrc = frameSrc->getPixel(x, y); // 53[6]
-                    if (!pixel.isTransparent() && pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < 32 /*&& !pixelSrc.isTransparent()*/ || (pixel.isTransparent() && !pixelSrc.isTransparent())) {
-                        change |= frame->setPixel(x, y, pixelSrc);
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < 32) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                     }
                 }
             }
         }
-        // redraw 74[7], 77[7] using 53[7]
+        // redraw 74[7], 77[7] using '53[7]'
         if (i >= 32 && i < 34) {
-            const CelMicro &microSrc = micros[9];
-            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
-            D1GfxFrame *frameSrc = mf.second;
-            // if (frameSrc == nullptr) {
-            //    return false;
-            // }
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
-                    D1GfxPixel pixel = frameSrc->getPixel(x, y);
-                    D1GfxPixel pixelSrc = frameSrc->getPixel(x, y); // 53[7]
-                    if (!pixel.isTransparent() && pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < 32 /*&& !pixelSrc.isTransparent()*/ || (pixel.isTransparent() && !pixelSrc.isTransparent())) {
-                        change |= frame->setPixel(x, y, pixelSrc);
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (!pixel.isTransparent() && pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < 32) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                     }
                 }
             }
@@ -10617,7 +10595,7 @@ bool D1Tileset::patchHellChaos(bool silent)
             // }
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
-                    D1GfxPixel pixel = frameSrc->getPixel(x, y);
+                    D1GfxPixel pixel = frame->getPixel(x, y);
                     D1GfxPixel pixelSrc = frameSrc->getPixel(x, y); // 54[5]
                     if (!pixel.isTransparent() && pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < 32 /*&& !pixelSrc.isTransparent()*/ || (pixel.isTransparent() && !pixelSrc.isTransparent())) {
                         change |= frame->setPixel(x, y, pixelSrc);
@@ -12436,7 +12414,6 @@ bool D1Tileset::patchHellWall2(bool silent)
 
 void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
 {
-    QMessageBox::critical(nullptr, "Error", "cleanupHell 0");
     constexpr int blockSize = BLOCK_SIZE_L4;
     // patch stairs III.
     ReplaceSubtile(this->til, 45 - 1, 0, 17 - 1, silent);  // 137
@@ -12580,11 +12557,8 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     }
 
 
-    QMessageBox::critical(nullptr, "Error", "cleanupHell 1");
     this->patchHellChaos(silent);
-    QMessageBox::critical(nullptr, "Error", "cleanupHell 2");
     this->patchHellFloor(silent);
-    QMessageBox::critical(nullptr, "Error", "cleanupHell 3");
     // patch stairs II.
     // if (pSubtiles[MICRO_IDX(137 - 1, blockSize, 1)] != NULL) {
     if (this->patchHellStairs(silent)) {
@@ -12599,11 +12573,8 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
 
         ReplaceMcr(111, 0, 91, 0);
     }
-    QMessageBox::critical(nullptr, "Error", "cleanupHell 4");
     this->patchHellWall1(silent);
-    QMessageBox::critical(nullptr, "Error", "cleanupHell 5");
     this->patchHellWall2(silent);
-    QMessageBox::critical(nullptr, "Error", "cleanupHell 6");
 
     // useless pixels
     Blk2Mcr(111, 1);
@@ -13198,7 +13169,6 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
             Blk2Mcr(unusedSubtiles[n], i);
         }
     }
-    QMessageBox::critical(nullptr, "Error", "cleanupHell 7");
 }
 
 bool D1Tileset::patchNestFloor(bool silent)
