@@ -45,19 +45,19 @@ const BYTE L4ConvTbl[16] = { BASE_MEGATILE_L4, 6, 1, 6, 2, 6, 6, 6, 9, 6, 1, 6, 
 /** Miniset: Stairs up. */
 const BYTE L4USTAIRS[] = {
 	// clang-format off
-	4, 5, // width, height
+	5, 5, // width, height
 
-	 6, 6, 6, 6, // search
-	 6, 6, 6, 6,
-	 6, 6, 6, 6,
-	 6, 6, 6, 6,
-	 6, 6, 6, 6,
+	 6, 6, 6, 6, 6, // search
+	 6, 6, 6, 6, 6,
+	 6, 6, 6, 6, 6,
+	 6, 6, 6, 6, 6,
+	 6, 6, 6, 6, 6,
 
-	 0,  0,  0,  0, // replace
-	49, 38, 35,  0,
-	37, 34, 33, 32,
-	 0,  0, 31,  0,
-	 0,  0,  0,  0,
+	 0,  0,  0,  0, 0, // replace
+	49, 38, 35,  0, 0,
+	37, 34, 33, 32, 0,
+	 0,  0, 31,  0, 0,
+	 0,  0,  0,  0, 0,
 	// clang-format on
 };
 /** Miniset: Stairs up to town. */
@@ -213,14 +213,10 @@ void DRLG_L4Shadows()
 						dungeon[x - 1][y] = 47;
 						dungeon[x - 1][y - 1] = 134;
 					} else {
-                        if (dungeon[x - 1][y - 1] == 32)
-                            continue; // not ok, but it would require new tile/subtiles/micros
 						dProgressWarn() << QString("Missing case %1:%2 for pillar %3 with floor @%4:%5").arg(dungeon[x - 1][y]).arg(dungeon[x - 1][y - 1]).arg(bv).arg(DBORDERX + 2 * x).arg(DBORDERY + 2 * y);
 						continue;
 					}
 				} else {
-					if (dungeon[x - 1][y] == 32 || dungeon[x - 1][y - 1] == 32)
-						continue; // not ok, but it would require new tile/subtiles/micros
 					if (dungeon[x - 1][y] != 47 || (dungeon[x - 1][y - 1] != 48 && dungeon[x - 1][y - 1] != 76))
 					dProgressWarn() << QString("Missing case %1:%2 for pillar %3 @%4:%5").arg(dungeon[x - 1][y]).arg(dungeon[x - 1][y - 1]).arg(bv).arg(DBORDERX + 2 * x).arg(DBORDERY + 2 * y);                    
 					continue;
@@ -2014,21 +2010,21 @@ static void DRLG_L4ThemeExitFix()
 		case 0:
 			yy = (y1 + y2 + 1) / 2;
 			dungeon[x1][yy - 1] = 53;
-			dungeon[x1][yy + 0] = 6;
+			dungeon[x1][yy + 0] = 50;
 			dungeon[x1][yy + 1] = 52;
 			//dungeon[x2 - 1][yy - 1] = 54;
 			break;
 		case 1:
 			yy = (y1 + y2 + 1) / 2;
 			dungeon[x2][yy - 1] = 53;
-			dungeon[x2][yy + 0] = 6;
+			dungeon[x2][yy + 0] = 50;
 			dungeon[x2][yy + 1] = 52;
 			//dungeon[x2 - 1][yy - 1] = 54;
 			break;
 		case 2:
 			xx = (x1 + x2 + 1) / 2;
 			dungeon[xx - 1][y1] = 57;
-			dungeon[xx + 0][y1] = 6;
+			dungeon[xx + 0][y1] = 50;
 			dungeon[xx + 1][y1] = 56;
 			//dungeon[xx + 0][y2 - 1] = 59;
 			//dungeon[xx - 1][y2 - 1] = 58;
@@ -2036,7 +2032,7 @@ static void DRLG_L4ThemeExitFix()
 		case 3:
 			xx = (x1 + x2 + 1) / 2;
 			dungeon[xx - 1][y2] = 57;
-			dungeon[xx + 0][y2] = 6;
+			dungeon[xx + 0][y2] = 50;
 			dungeon[xx + 1][y2] = 56;
 			//dungeon[xx + 0][y2 - 1] = 59;
 			//dungeon[xx - 1][y2 - 1] = 58;

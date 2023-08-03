@@ -417,11 +417,11 @@ void InitLvlDungeon()
 		pTiles[76][3] = 239;
 		pTiles[129][0] = 5;
 		pTiles[129][1] = 6;
-		pTiles[129][2] = 238; // 35
+		pTiles[129][2] = 7;
 		pTiles[129][3] = 176;
 		pTiles[130][0] = 41;
 		pTiles[130][1] = 31;
-		pTiles[130][2] = 10;
+		pTiles[130][2] = 10; // 13
 		pTiles[130][3] = 239;
 		pTiles[62][0] = 41;
 		pTiles[62][1] = 31;
@@ -429,7 +429,7 @@ void InitLvlDungeon()
 		pTiles[62][3] = 176;
 		pTiles[131][0] = 177;
 		pTiles[131][1] = 31;
-		pTiles[131][2] = 179;
+		pTiles[131][2] = 179; // 37
 		pTiles[131][3] = 239;
 		pTiles[61][0] = 177;
 		pTiles[61][1] = 31;
@@ -437,7 +437,7 @@ void InitLvlDungeon()
 		pTiles[61][3] = 176;
 		pTiles[132][0] = 24;
 		pTiles[132][1] = 25;
-		pTiles[132][2] = 10;
+		pTiles[132][2] = 10; // 13
 		pTiles[132][3] = 239;
 		pTiles[133][0] = 24;
 		pTiles[133][1] = 25;
@@ -445,7 +445,7 @@ void InitLvlDungeon()
 		pTiles[133][3] = 176;
 		pTiles[134][0] = 38;
 		pTiles[134][1] = 31;
-		pTiles[134][2] = 16;
+		pTiles[134][2] = 16; // 26
 		pTiles[134][3] = 239;
 		pTiles[135][0] = 38;
 		pTiles[135][1] = 31;

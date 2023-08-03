@@ -12426,11 +12426,11 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til,  76 - 1, 3, 239 - 1, silent);
     ReplaceSubtile(this->til, 129 - 1, 0, 5 - 1, silent); // copy from tile 2
     ReplaceSubtile(this->til, 129 - 1, 1, 6 - 1, silent);
-    ReplaceSubtile(this->til, 129 - 1, 2, 35 - 1, silent);
+    ReplaceSubtile(this->til, 129 - 1, 2, 7 - 1, silent);
     ReplaceSubtile(this->til, 129 - 1, 3, 176 - 1, silent);
     ReplaceSubtile(this->til, 130 - 1, 0, 41 - 1, silent); // copy from tile 15
     ReplaceSubtile(this->til, 130 - 1, 1, 31 - 1, silent);
-    ReplaceSubtile(this->til, 130 - 1, 2, 10 - 1, silent);
+    ReplaceSubtile(this->til, 130 - 1, 2, 13 - 1, silent);
     ReplaceSubtile(this->til, 130 - 1, 3, 239 - 1, silent);
     ReplaceSubtile(this->til,  62 - 1, 0, 41 - 1, silent); // copy from tile 15
     ReplaceSubtile(this->til,  62 - 1, 1, 31 - 1, silent);
@@ -12438,7 +12438,7 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til,  62 - 1, 3, 176 - 1, silent);
     ReplaceSubtile(this->til, 131 - 1, 0, 177 - 1, silent); // copy from tile 56
     ReplaceSubtile(this->til, 131 - 1, 1, 31 - 1, silent);
-    ReplaceSubtile(this->til, 131 - 1, 2, 179 - 1, silent);
+    ReplaceSubtile(this->til, 131 - 1, 2, 37 - 1, silent);
     ReplaceSubtile(this->til, 131 - 1, 3, 239 - 1, silent);
     ReplaceSubtile(this->til,  61 - 1, 0, 177 - 1, silent); // copy from tile 56
     ReplaceSubtile(this->til,  61 - 1, 1, 31 - 1, silent);
@@ -12446,7 +12446,7 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til,  61 - 1, 3, 176 - 1, silent);
     ReplaceSubtile(this->til, 132 - 1, 0, 24 - 1, silent); // copy from tile 8
     ReplaceSubtile(this->til, 132 - 1, 1, 25 - 1, silent);
-    ReplaceSubtile(this->til, 132 - 1, 2, 10 - 1, silent);
+    ReplaceSubtile(this->til, 132 - 1, 2, 13 - 1, silent);
     ReplaceSubtile(this->til, 132 - 1, 3, 239 - 1, silent);
     ReplaceSubtile(this->til, 133 - 1, 0, 24 - 1, silent); // copy from tile 8
     ReplaceSubtile(this->til, 133 - 1, 1, 25 - 1, silent);
@@ -12454,7 +12454,7 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 133 - 1, 3, 176 - 1, silent);
     ReplaceSubtile(this->til, 134 - 1, 0, 38 - 1, silent); // copy from tile 14
     ReplaceSubtile(this->til, 134 - 1, 1, 31 - 1, silent);
-    ReplaceSubtile(this->til, 134 - 1, 2, 16 - 1, silent);
+    ReplaceSubtile(this->til, 134 - 1, 2, 26 - 1, silent);
     ReplaceSubtile(this->til, 134 - 1, 3, 239 - 1, silent);
     ReplaceSubtile(this->til, 135 - 1, 0, 38 - 1, silent); // copy from tile 14
     ReplaceSubtile(this->til, 135 - 1, 1, 31 - 1, silent);
@@ -12609,6 +12609,18 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     SetMcr(35, 6, 7, 6);
     HideMcr(35, 5);
     HideMcr(35, 7);
+	ReplaceMcr(26, 0, 238, 0);
+	ReplaceMcr(26, 1, 238, 1);
+	SetMcr(26, 4, 96, 6);
+	SetMcr(26, 6, 16, 6);
+	ReplaceMcr(37, 0, 238, 0);
+	SetMcr(37, 1, 238, 1);
+	HideMcr(37, 5);
+	HideMcr(37, 7);
+	SetMcr(37, 8, 179, 8);
+	SetMcr(37, 10, 179, 10);
+	ReplaceMcr(13, 0, 238, 0);
+	ReplaceMcr(13, 1, 238, 1);
 
     // fix chaos
     // - reuse
@@ -12971,6 +12983,11 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     // Blk2Mcr(137, 2);
     // reused for the new shadow
     // 35
+	// Blk2Mcr(26, 0);
+	// Blk2Mcr(26, 1);
+	// Blk2Mcr(37, 0);
+	// Blk2Mcr(13, 0);
+	// Blk2Mcr(13, 1);
     Blk2Mcr(385, 0);
     Blk2Mcr(385, 1);
     Blk2Mcr(385, 2);
@@ -13136,17 +13153,12 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(455, 8);
     Blk2Mcr(455, 10);
 
-    Blk2Mcr(13, 0);
-    Blk2Mcr(13, 1);
     Blk2Mcr(22, 0);
     Blk2Mcr(22, 5);
-    Blk2Mcr(26, 0);
-    Blk2Mcr(26, 1);
     Blk2Mcr(28, 0);
     Blk2Mcr(28, 1);
     Blk2Mcr(29, 0);
     Blk2Mcr(29, 1);
-    Blk2Mcr(37, 0);
     Blk2Mcr(39, 0);
     Blk2Mcr(39, 1);
     Blk2Mcr(40, 0);
