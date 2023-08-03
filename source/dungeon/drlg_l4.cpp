@@ -200,12 +200,18 @@ void DRLG_L4Shadows()
 					} else if (dungeon[x - 1][y - 1] == 2) {
 						dungeon[x - 1][y] = 47;
 						dungeon[x - 1][y - 1] = 76;
+					} else if (dungeon[x - 1][y - 1] == 15) {
+						dungeon[x - 1][y] = 47;
+						dungeon[x - 1][y - 1] = 130;
 					} else {
 						dProgressWarn() << QString("Missing case %1:%2 for pillar %3 with floor @%4:%5").arg(dungeon[x - 1][y]).arg(dungeon[x - 1][y - 1]).arg(bv).arg(DBORDERX + 2 * x).arg(DBORDERY + 2 * y);
 						continue;
 					}
 				} else {
-					dProgressWarn() << QString("Missing case %1:%2 for pillar %3 @%4:%5").arg(dungeon[x - 1][y]).arg(dungeon[x - 1][y - 1]).arg(bv).arg(DBORDERX + 2 * x).arg(DBORDERY + 2 * y);
+					if (dungeon[x - 1][y] == 32 || dungeon[x - 1][y - 1] == 32)
+						continue; // not ok, but it would require new tile/subtiles/micros
+					if (dungeon[x - 1][y] != 47 || (dungeon[x - 1][y - 1] != 48 && dungeon[x - 1][y - 1] != 76))
+					dProgressWarn() << QString("Missing case %1:%2 for pillar %3 @%4:%5").arg(dungeon[x - 1][y]).arg(dungeon[x - 1][y - 1]).arg(bv).arg(DBORDERX + 2 * x).arg(DBORDERY + 2 * y);                    
 					continue;
 				}
 			} else if (bv == 53) {
@@ -226,6 +232,7 @@ void DRLG_L4Shadows()
 						continue;
 					}
 				} else {
+					if (dungeon[x - 1][y] != 54 || (dungeon[x - 1][y - 1] != 55 && dungeon[x - 1][y - 1] != 61 && dungeon[x - 1][y - 1] != 129))
 					dProgressWarn() << QString("Missing case %1:%2 for door %3 @%4:%5").arg(dungeon[x - 1][y]).arg(dungeon[x - 1][y - 1]).arg(bv).arg(DBORDERX + 2 * x).arg(DBORDERY + 2 * y);
 					continue;
 				}
@@ -240,6 +247,7 @@ void DRLG_L4Shadows()
 					dungeon[x - 1][y - 1] = 59;
 					dungeon[x - 2][y - 1] = 58;
 				} else {
+					if (dungeon[x - 1][y] != 60 || dungeon[x - 1][y - 1] != 59 || dungeon[x - 2][y - 1] != 58)
 					dProgressWarn() << QString("Missing case %1:%2:%3 for door %4 @%5:%6").arg(dungeon[x - 1][y]).arg(dungeon[x - 1][y - 1]).arg(dungeon[x - 2][y - 1]).arg(bv).arg(DBORDERX + 2 * x).arg(DBORDERY + 2 * y);
 					continue;
 				}
@@ -262,7 +270,7 @@ static void DRLG_LoadL4SP()
 		pSetPieces[3]._spData = LoadFileInMem(setpiecedata[pSetPieces[3]._sptype]._spdDunFile);
 
 		if (pSetPieces[0]._spData != NULL && PatchDunFiles) {
-			// patch set-piece - diab1.DUN
+			// patch set-piece - Diab1.DUN
 			uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 			// - fix shadow of the left corner
 			lm[2 + 0 + 4 * 6] = SwapLE16(75);
@@ -289,7 +297,7 @@ static void DRLG_LoadL4SP()
 			lm[2 + 6 * 6 + 2 + 2 * 6] |= SwapLE16(3);
 		}
 		if (pSetPieces[1]._spData != NULL && PatchDunFiles) {
-			// patch set-piece - diab2b.DUN
+			// patch set-piece - Diab2b.DUN
 			uint16_t* lm = (uint16_t*)pSetPieces[1]._spData;
 			// external tiles
 			for (int y = 0; y < 12; y++) {
@@ -325,13 +333,15 @@ static void DRLG_LoadL4SP()
 			lm[2 + 11 * 12 + 6 + 5 * 11] = SwapLE16(3);
 		}
 		if (pSetPieces[2]._spData != NULL && PatchDunFiles) {
-			// patch set-piece - diab3b.DUN
+			// patch set-piece - Diab3b.DUN
 			uint16_t* lm = (uint16_t*)pSetPieces[2]._spData;
 			// external tiles
 			lm[2 + 4 + 4 * 11] = SwapLE16(21);
 			lm[2 + 4 + 5 * 11] = SwapLE16(18);
 			lm[2 + 5 + 4 * 11] = SwapLE16(19);
 			lm[2 + 5 + 5 * 11] = SwapLE16(30);
+			// remove partial shadow
+			lm[2 + 5 + 0 * 11] = 0;
 			// ensure the changing tiles are reserved
 			// - SW-wall
 			lm[2 + 11 * 11 + 4 + 10 * 11] = SwapLE16(3);
@@ -374,7 +384,7 @@ static void DRLG_LoadL4SP()
 			lm[2 + 11 * 11 + 9 + 7 * 11] = SwapLE16(3);
 		}
 		if (pSetPieces[3]._spData != NULL && PatchDunFiles) {
-			// patch set-piece - diab4b.DUN
+			// patch set-piece - Diab4b.DUN
 			uint16_t* lm = (uint16_t*)pSetPieces[3]._spData;
 			// external tiles
 			for (int y = 0; y < 9; y++) {
