@@ -203,6 +203,9 @@ void DRLG_L4Shadows()
 					} else if (dungeon[x - 1][y - 1] == 15) {
 						dungeon[x - 1][y] = 47;
 						dungeon[x - 1][y - 1] = 130;
+					} else if (dungeon[x - 1][y - 1] == 56) {
+						dungeon[x - 1][y] = 47;
+						dungeon[x - 1][y - 1] = 131;
 					} else {
 						dProgressWarn() << QString("Missing case %1:%2 for pillar %3 with floor @%4:%5").arg(dungeon[x - 1][y]).arg(dungeon[x - 1][y - 1]).arg(bv).arg(DBORDERX + 2 * x).arg(DBORDERY + 2 * y);
 						continue;
