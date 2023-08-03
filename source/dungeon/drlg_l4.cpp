@@ -232,98 +232,6 @@ void DRLG_L4Shadows()
 	}
 }
 
-static void DRGL_L4PatchSetPiece(BYTE *pMap)
-{
-	// patch setpieces - *.DUN in HELL
-	uint16_t* lm = (uint16_t*)pMap;
-	int w = lm[0];
-	int h = lm[1];
-
-	lm += 2;
-	for (int y = 0; y < h; y++) {
-		for (int x = 0; x < w; x++) {
-			int pn = lm[x + y * w];
-			
-			/*// remove generic shadows (going to be regenerated)
-			if ((pn == 3 || pn == 4 || pn == 8 || pn == 15 || pn == 81) && x != 0 && y != 0) {
-				if (lm[x - 1 + y * w] == 47 && lm[x - 1 + (y - 1) * w] == 48) {
-					lm[x - 1 + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-					lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-				}
-			} else if (pn == 53 && x != 0) {
-				if (lm[x - 1 + y * w] == 54) {
-					lm[x - 1 + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-				}
-				if (y != 0 && lm[x - 1 + (y - 1) * w] == 55) {
-					lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-				}
-			} else if (pn == 56 && x >= 2 && y != 0) {
-				if (lm[x - 1 + y * w] == 60 && lm[x - 1 + (y - 1) * w] == 59 && lm[x - 2 + (y - 1) * w] == 58) {
-					lm[x - 1 + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-					lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-					lm[x - 2 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-				}
-			} else if (pn == 73 && x != 0 && y != 0) {
-				if (lm[x - 1 + y * w] == 71 && lm[x - 1 + (y - 1) * w] == 72) {
-					lm[x - 1 + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-					lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-				}
-			} else if ((pn == 76 || pn == 77) && x != 0 && y != 0) {
-				if (lm[x - 1 + y * w] == 74 && lm[x - 1 + (y - 1) * w] == 75) {
-					lm[x - 1 + y * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-					lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-				}
-			//} else if ((pn == 78 || pn == 16) && x != 0 && y != 0) {
-			//	if (lm[x - 1 + (y - 1) * w] == 72) {
-			//		lm[x - 1 + (y - 1) * w] = SwapLE16(DEFAULT_MEGATILE_L4);
-			//	}
-			}
-			// remove standard decorations -- TODO: vanilla only?
-			if (pn == 95 || pn == 96 || pn == 97) {
-				lm[x + y * w] = SwapLE16(0);
-				pn = 0;
-			}
-			// remove standard substitutions -- TODO: vanilla only?
-			if (L4BTYPES[pn] == DEFAULT_MEGATILE_L4) {
-				lm[x + y * w] = SwapLE16(0);
-				pn = 0;
-			}*/
-			// protect tiles
-			uint16_t modp = 0;
-			if (pn != 0) {
-				modp |= 3;
-			}
-			// - tiles with monsters
-			if (lm[w * h + w * h * 2 * 2 + (2 * x + 0) + (2 * y + 0) * w * 2] != 0) {
-				modp |= 1 | (3 << 8);
-			}
-			if (lm[w * h + w * h * 2 * 2 + (2 * x + 1) + (2 * y + 0) * w * 2] != 0) {
-				modp |= 1 | (3 << 10);
-			}
-			if (lm[w * h + w * h * 2 * 2 + (2 * x + 0) + (2 * y + 1) * w * 2] != 0) {
-				modp |= 1 | (3 << 12);
-			}
-			if (lm[w * h + w * h * 2 * 2 + (2 * x + 1) + (2 * y + 1) * w * 2] != 0) {
-				modp |= 1 | (3 << 14);
-			}
-			// - tiles with objects
-			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + (2 * x + 0) + (2 * y + 0) * w * 2] != 0) {
-				modp |= 1 | (3 << 8);
-			}
-			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + (2 * x + 1) + (2 * y + 0) * w * 2] != 0) {
-				modp |= 1 | (3 << 10);
-			}
-			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + (2 * x + 0) + (2 * y + 1) * w * 2] != 0) {
-				modp |= 1 | (3 << 12);
-			}
-			if (lm[w * h + w * h * 2 * 2 + w * h * 2 * 2 + (2 * x + 1) + (2 * y + 1) * w * 2] != 0) {
-				modp |= 1 | (3 << 14);
-			}
-			lm[w * h + x + y * w] |= SwapLE16(modp);
-		}
-	}
-}
-
 static void DRLG_LoadL4SP()
 {
 	// assert(pSetPieces[0]._spData == NULL && ...);
@@ -345,6 +253,24 @@ static void DRLG_LoadL4SP()
 			lm[2 + 0 + 5 * 6] = SwapLE16(74);
 			// - fix shadow of the right corner
 			lm[2 + 4 + 1 * 6] = SwapLE16(61);
+			// protect tiles with monsters/objects from spawning additional monsters/objects
+			lm[2 + 6 * 6 + 1 + 1 * 6] = SwapLE16((3 << 14));
+			lm[2 + 6 * 6 + 1 + 4 * 6] = SwapLE16((3 << 14));
+			lm[2 + 6 * 6 + 2 + 3 * 6] = SwapLE16((3 << 12));
+			lm[2 + 6 * 6 + 3 + 3 * 6] = SwapLE16((3 << 14));
+			lm[2 + 6 * 6 + 3 + 2 * 6] = SwapLE16((3 << 10));
+			lm[2 + 6 * 6 + 4 + 1 * 6] = SwapLE16((3 << 14));
+			lm[2 + 6 * 6 + 4 + 4 * 6] = SwapLE16((3 << 14));
+			lm[2 + 6 * 6 + 2 + 2 * 6] = SwapLE16((3 << 14));
+			// protect tiles with monsters/objects from decoration
+			lm[2 + 6 * 6 + 1 + 4 * 6] |= SwapLE16(3);
+			lm[2 + 6 * 6 + 2 + 3 * 6] |= SwapLE16(3);
+			lm[2 + 6 * 6 + 1 + 1 * 6] |= SwapLE16(3);
+			lm[2 + 6 * 6 + 3 + 2 * 6] |= SwapLE16(3);
+			lm[2 + 6 * 6 + 3 + 3 * 6] |= SwapLE16(3);
+			lm[2 + 6 * 6 + 4 + 4 * 6] |= SwapLE16(3);
+			lm[2 + 6 * 6 + 4 + 1 * 6] |= SwapLE16(3);
+			lm[2 + 6 * 6 + 2 + 2 * 6] |= SwapLE16(3);
 		}
 		if (pSetPieces[1]._spData != NULL && PatchDunFiles) {
 			// patch set-piece - diab2b.DUN
@@ -354,10 +280,33 @@ static void DRLG_LoadL4SP()
 				for (int x = 0; x < 11; x++) {
 					uint16_t wv = SwapLE16(lm[2 + x + y * 11]);
 					if (wv >= 116 && wv <= 128) {
+						// if (wv == 118) {
+						// 	wv = 128;
+						// }
 						lm[2 + x + y * 11] = SwapLE16(wv - 98);
 					}
 				}
 			}
+			// ensure the changing tiles are reserved
+			lm[2 + 11 * 12 + 9 + 1 * 11] = SwapLE16(3);
+			lm[2 + 11 * 12 + 9 + 2 * 11] = SwapLE16(3);
+			lm[2 + 11 * 12 + 9 + 3 * 11] = SwapLE16(3);
+			lm[2 + 11 * 12 + 10 + 1 * 11] = SwapLE16(3);
+			lm[2 + 11 * 12 + 10 + 2 * 11] = SwapLE16(3);
+			lm[2 + 11 * 12 + 10 + 3 * 11] = SwapLE16(3);
+			// protect tiles with monsters/objects from decoration
+			lm[2 + 11 * 12 + 2 + 1 * 11] = SwapLE16(3);
+			lm[2 + 11 * 12 + 2 + 9 * 11] = SwapLE16(3);
+			lm[2 + 11 * 12 + 5 + 4 * 11] = SwapLE16(3);
+			lm[2 + 11 * 12 + 5 + 6 * 11] = SwapLE16(3);
+			lm[2 + 11 * 12 + 6 + 6 * 11] = SwapLE16(3);
+			lm[2 + 11 * 12 + 7 + 5 * 11] = SwapLE16(3);
+			lm[2 + 11 * 12 + 8 + 4 * 11] = SwapLE16(3);
+			lm[2 + 11 * 12 + 8 + 6 * 11] = SwapLE16(3);
+			lm[2 + 11 * 12 + 7 + 8 * 11] = SwapLE16(3);
+			lm[2 + 11 * 12 + 8 + 1 * 11] = SwapLE16(3);
+			lm[2 + 11 * 12 + 8 + 2 * 11] = SwapLE16(3);
+			lm[2 + 11 * 12 + 6 + 5 * 11] = SwapLE16(3);
 		}
 		if (pSetPieces[2]._spData != NULL && PatchDunFiles) {
 			// patch set-piece - diab3b.DUN
@@ -367,6 +316,46 @@ static void DRLG_LoadL4SP()
 			lm[2 + 4 + 5 * 11] = SwapLE16(18);
 			lm[2 + 5 + 4 * 11] = SwapLE16(19);
 			lm[2 + 5 + 5 * 11] = SwapLE16(30);
+			// ensure the changing tiles are reserved
+			// - SW-wall
+			lm[2 + 11 * 11 + 4 + 10 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 5 + 10 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 6 + 10 * 11] = SwapLE16(3);
+			// - NE-wall
+			lm[2 + 11 * 11 + 4 + 0 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 5 + 0 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 6 + 0 * 11] = SwapLE16(3);
+			// - NW-wall
+			lm[2 + 11 * 11 + 0 + 4 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 0 + 5 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 0 + 6 * 11] = SwapLE16(3);
+			// - SE-wall
+			lm[2 + 11 * 11 + 10 + 4 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 10 + 5 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 10 + 6 * 11] = SwapLE16(3);
+			// protect tiles with monsters/objects from decoration
+			lm[2 + 11 * 11 + 0 + 2 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 0 + 7 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 2 + 0 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 2 + 4 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 2 + 6 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 2 + 9 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 3 + 3 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 3 + 6 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 4 + 1 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 4 + 2 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 4 + 7 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 4 + 7 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 6 + 2 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 6 + 7 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 6 + 3 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 6 + 6 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 7 + 0 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 7 + 4 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 7 + 6 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 7 + 9 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 9 + 2 * 11] = SwapLE16(3);
+			lm[2 + 11 * 11 + 9 + 7 * 11] = SwapLE16(3);
 		}
 		if (pSetPieces[3]._spData != NULL && PatchDunFiles) {
 			// patch set-piece - diab4b.DUN
@@ -376,10 +365,60 @@ static void DRLG_LoadL4SP()
 				for (int x = 0; x < 9; x++) {
 					uint16_t wv = SwapLE16(lm[2 + x + y * 9]);
 					if (wv >= 116 && wv <= 128) {
+						// if (wv == 118) {
+						//	wv = 128;
+						// }
 						lm[2 + x + y * 9] = SwapLE16(wv - 98);
 					}
 				}
 			}
+			// ensure the changing tiles are reserved
+			// - SW-wall
+			for (int y = 7; y < 9; y++) {
+				for (int x = 2; x < 7; x++) {
+					lm[2 + 9 * 9 + x + y * 9] = SwapLE16(3);
+				}
+			}
+			// - NE-wall
+			for (int y = 2; y < 7; y++) {
+				for (int x = 0; x < 2; x++) {
+					lm[2 + 9 * 9 + x + y * 9] = SwapLE16(3);
+				}
+			}
+			// - NW-wall
+			for (int y = 0; y < 2; y++) {
+				for (int x = 2; x < 7; x++) {
+					lm[2 + 9 * 9 + x + y * 9] = SwapLE16(3);
+				}
+			}
+			// - SE-wall
+			for (int y = 2; y < 7; y++) {
+				for (int x = 7; x < 9; x++) {
+					lm[2 + 9 * 9 + x + y * 9] = SwapLE16(3);
+				}
+			}
+			// protect tiles with monsters/objects from decoration
+			lm[2 + 9 * 9 + 2 + 2 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 2 + 3 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 2 + 4 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 2 + 6 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 3 + 3 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 3 + 4 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 3 + 5 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 3 + 6 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 4 + 2 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 4 + 3 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 4 + 4 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 4 + 5 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 4 + 6 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 5 + 2 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 5 + 3 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 5 + 4 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 5 + 5 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 6 + 2 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 6 + 4 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 6 + 5 * 9] = SwapLE16(3);
+			lm[2 + 9 * 9 + 6 + 6 * 9] = SwapLE16(3);
 		}
 	} else if (QuestStatus(Q_BETRAYER)) {
 		pSetPieces[0]._sptype = IsMultiGame ? SPT_BETRAY_M : SPT_BETRAY_S;
@@ -405,6 +444,12 @@ static void DRLG_LoadL4SP()
 					lm[2 + 7 * 7 + x + y * 7] |= SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 				}
 			}
+			// protect inner tiles from decoration
+			for (int y = 0; y <= 5; y++) {
+				for (int x = 0; x <= 5; x++) {
+					lm[2 + 7 * 7 + x + y * 7] |= SwapLE16(3);
+				}
+			}
 		}
 	} else if (QuestStatus(Q_WARLORD)) {
 		pSetPieces[0]._sptype = SPT_WARLORD;
@@ -421,14 +466,16 @@ static void DRLG_LoadL4SP()
 		lm[2 + 8 * 7 + 7 + 3 * 8] = SwapLE16(3);
 		lm[2 + 8 * 7 + 7 + 4 * 8] = SwapLE16(3);
 		lm[2 + 8 * 7 + 7 + 5 * 8] = SwapLE16(3);
+		// protect inner tiles from decoration
+		for (int y = 0; y <= 5; y++) {
+			for (int x = 0; x <= 6; x++) {
+				lm[2 + 8 * 7 + x + y * 8] = SwapLE16(3);
+			}
+		}
 		}
 	}
 	for (int i = lengthof(pSetPieces) - 1; i >= 0; i--) {
-		if (pSetPieces[i]._spData != NULL) { // pSetPieces[0]._sptype != SPT_NONE
-			if (PatchDunFiles) {
-				DRGL_L4PatchSetPiece(pSetPieces[i]._spData);
-			}
-		} else {
+		if (pSetPieces[i]._spData == NULL) { // pSetPieces[0]._sptype != SPT_NONE
 			pSetPieces[i]._sptype = SPT_NONE;
 		}
 	}
@@ -2055,6 +2102,9 @@ static void DRLG_L4FixPreMap(int idx)
 			for (int x = 9; x <= 10; x++) {
 				uint16_t wv = SwapLE16(lm[2 + x + y * 11]);
 				if (wv >= 116 && wv <= 128) {
+					// if (wv == 118) {
+					// 	wv = 128;
+					// }
 					lm[2 + x + y * 11] = SwapLE16(wv - 98);
 				}
 			}
@@ -2068,6 +2118,26 @@ static void DRLG_L4FixPreMap(int idx)
 				lm[2 + x + y * 11] = 0;
 			}
 		}
+		// protect changing tiles from objects
+		lm[2 + 11 * 12 + 10 + 1 * 11] = SwapLE16((3 << 10));
+		lm[2 + 11 * 12 + 10 + 1 * 11] |= SwapLE16((3 << 14));
+		lm[2 + 11 * 12 + 10 + 2 * 11] = SwapLE16((3 << 10));
+		lm[2 + 11 * 12 + 10 + 2 * 11] |= SwapLE16((3 << 14));
+		lm[2 + 11 * 12 + 10 + 3 * 11] = SwapLE16((3 << 10));
+		lm[2 + 11 * 12 + 10 + 3 * 11] |= SwapLE16((3 << 14));
+		// protect tiles with monsters/objects from spawning additional monsters/objects
+		lm[2 + 11 * 12 + 2 + 1 * 11] = SwapLE16((3 << 14));
+		lm[2 + 11 * 12 + 2 + 9 * 11] = SwapLE16((3 << 14));
+		lm[2 + 11 * 12 + 5 + 4 * 11] = SwapLE16((3 << 14));
+		lm[2 + 11 * 12 + 5 + 6 * 11] = SwapLE16((3 << 14));
+		lm[2 + 11 * 12 + 6 + 6 * 11] = SwapLE16((3 << 10));
+		lm[2 + 11 * 12 + 7 + 5 * 11] = SwapLE16((3 << 8));
+		lm[2 + 11 * 12 + 8 + 4 * 11] = SwapLE16((3 << 14));
+		lm[2 + 11 * 12 + 8 + 6 * 11] = SwapLE16((3 << 14));
+		lm[2 + 11 * 12 + 7 + 8 * 11] = SwapLE16((3 << 14));
+		lm[2 + 11 * 12 + 8 + 1 * 11] = SwapLE16((3 << 12));
+		lm[2 + 11 * 12 + 8 + 2 * 11] = SwapLE16((3 << 14));
+		lm[2 + 11 * 12 + 6 + 5 * 11] = SwapLE16((3 << 10));
 	} else if (pSetPieces[idx]._sptype == SPT_DIAB_QUAD_3) {
 		// patch set-piece - Diab3a.DUN
 		// useless tiles
@@ -2088,6 +2158,58 @@ static void DRLG_L4FixPreMap(int idx)
 				lm[2 + x + y * 11] = 0;
 			}
 		}
+		// protect changing tiles from objects
+		// - SW-wall
+		lm[2 + 11 * 11 + 4 + 10 * 11] = SwapLE16((3 << 12));
+		lm[2 + 11 * 11 + 4 + 10 * 11] |= SwapLE16((3 << 14));
+		lm[2 + 11 * 11 + 5 + 10 * 11] = SwapLE16((3 << 12));
+		lm[2 + 11 * 11 + 5 + 10 * 11] |= SwapLE16((3 << 14));
+		lm[2 + 11 * 11 + 6 + 10 * 11] = SwapLE16((3 << 12));
+		lm[2 + 11 * 11 + 6 + 10 * 11] |= SwapLE16((3 << 14));
+		// - NE-wall
+		lm[2 + 11 * 11 + 4 + 0 * 11] = SwapLE16((3 << 12));
+		lm[2 + 11 * 11 + 4 + 0 * 11] |= SwapLE16((3 << 14));
+		lm[2 + 11 * 11 + 5 + 0 * 11] = SwapLE16((3 << 12));
+		lm[2 + 11 * 11 + 5 + 0 * 11] |= SwapLE16((3 << 14));
+		lm[2 + 11 * 11 + 6 + 0 * 11] = SwapLE16((3 << 12));
+		lm[2 + 11 * 11 + 6 + 0 * 11] |= SwapLE16((3 << 14));
+		// - NW-wall
+		lm[2 + 11 * 11 + 0 + 4 * 11] = SwapLE16((3 << 10));
+		lm[2 + 11 * 11 + 0 + 4 * 11] |= SwapLE16((3 << 14));
+		lm[2 + 11 * 11 + 0 + 5 * 11] = SwapLE16((3 << 10));
+		lm[2 + 11 * 11 + 0 + 5 * 11] |= SwapLE16((3 << 14));
+		lm[2 + 11 * 11 + 0 + 6 * 11] = SwapLE16((3 << 10));
+		lm[2 + 11 * 11 + 0 + 6 * 11] |= SwapLE16((3 << 14));
+		// - SE-wall
+		lm[2 + 11 * 11 + 10 + 4 * 11] = SwapLE16((3 << 10));
+		lm[2 + 11 * 11 + 10 + 4 * 11] |= SwapLE16((3 << 14));
+		lm[2 + 11 * 11 + 10 + 5 * 11] = SwapLE16((3 << 10));
+		lm[2 + 11 * 11 + 10 + 5 * 11] |= SwapLE16((3 << 14));
+		lm[2 + 11 * 11 + 10 + 6 * 11] = SwapLE16((3 << 10));
+		lm[2 + 11 * 11 + 10 + 6 * 11] |= SwapLE16((3 << 14));
+		// protect tiles with monsters/objects from spawning additional monsters/objects
+		lm[2 + 11 * 11 + 0 + 2 * 11] = SwapLE16((3 << 14));
+		lm[2 + 11 * 11 + 0 + 7 * 11] = SwapLE16((3 << 14));
+		lm[2 + 11 * 11 + 2 + 0 * 11] = SwapLE16((3 << 14));
+		lm[2 + 11 * 11 + 2 + 4 * 11] = SwapLE16((3 << 10));
+		lm[2 + 11 * 11 + 2 + 6 * 11] = SwapLE16((3 << 10));
+		lm[2 + 11 * 11 + 2 + 9 * 11] = SwapLE16((3 << 14));
+		lm[2 + 11 * 11 + 3 + 3 * 11] = SwapLE16((3 << 14));
+		lm[2 + 11 * 11 + 3 + 6 * 11] = SwapLE16((3 << 14));
+		lm[2 + 11 * 11 + 4 + 1 * 11] = SwapLE16((3 << 8));
+		lm[2 + 11 * 11 + 4 + 2 * 11] = SwapLE16((3 << 12));
+		lm[2 + 11 * 11 + 4 + 7 * 11] = SwapLE16((3 << 8));
+		lm[2 + 11 * 11 + 4 + 7 * 11] |= SwapLE16((3 << 12));
+		lm[2 + 11 * 11 + 6 + 2 * 11] = SwapLE16((3 << 12));
+		lm[2 + 11 * 11 + 6 + 7 * 11] = SwapLE16((3 << 12));
+		lm[2 + 11 * 11 + 6 + 3 * 11] = SwapLE16((3 << 14));
+		lm[2 + 11 * 11 + 6 + 6 * 11] = SwapLE16((3 << 14));
+		lm[2 + 11 * 11 + 7 + 0 * 11] = SwapLE16((3 << 14));
+		lm[2 + 11 * 11 + 7 + 4 * 11] = SwapLE16((3 << 10));
+		lm[2 + 11 * 11 + 7 + 6 * 11] = SwapLE16((3 << 10));
+		lm[2 + 11 * 11 + 7 + 9 * 11] = SwapLE16((3 << 14));
+		lm[2 + 11 * 11 + 9 + 2 * 11] = SwapLE16((3 << 14));
+		lm[2 + 11 * 11 + 9 + 7 * 11] = SwapLE16((3 << 14));
 	} else if (pSetPieces[idx]._sptype == SPT_DIAB_QUAD_4) {
 		// patch set-piece - Diab4a.DUN
 		for (int y = 0; y < 9; y++) {
@@ -2095,6 +2217,9 @@ static void DRLG_L4FixPreMap(int idx)
 				// external tiles
 				uint16_t wv = SwapLE16(lm[2 + x + y * 9]);
 				if (wv >= 116 && wv <= 128) {
+					// if (wv == 118) {
+					//	wv = 128;
+					// }
 					lm[2 + x + y * 9] = SwapLE16(wv - 98);
 				}
 				// useless tiles
@@ -2117,14 +2242,54 @@ static void DRLG_L4FixPreMap(int idx)
 		lm[2 + 9 * 9 + 9 * 9 * 2 * 2 + 8 + 8 * 9 * 2] = SwapLE16((UMT_DIABLO + 1) | (1 << 15));
 		// - replace the only black knight
 		lm[2 + 9 * 9 + 9 * 9 * 2 * 2 + 4 + 6 * 9 * 2] = SwapLE16(101);
+		// protect changing tiles from objects
+		// - SW-wall
+		for (int y = 2; y < 7; y++) {
+			lm[2 + 9 * 9 + 8 + y * 9] = SwapLE16((3 << 10) | (3 << 14));
+		}
+		// - NE-wall
+		for (int x = 2; x < 7; x++) {
+			lm[2 + 9 * 9 + x + 1 * 9] = SwapLE16((3 << 12) | (3 << 14));
+		}
+		// - NW-wall
+		for (int y = 2; y < 7; y++) {
+			lm[2 + 9 * 9 + 1 + y * 9] = SwapLE16((3 << 10) | (3 << 14));
+		}
+		// - SE-wall
+		for (int x = 2; x < 7; x++) {
+			lm[2 + 9 * 9 + x + 8 * 9] = SwapLE16((3 << 12) | (3 << 14));
+		}
+		// protect tiles with monsters/objects from spawning additional monsters/objects
+		lm[2 + 9 * 9 + 2 + 2 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 2 + 3 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 2 + 4 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 2 + 6 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 3 + 3 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 3 + 4 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 3 + 5 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 3 + 6 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 4 + 2 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 4 + 3 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 4 + 4 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 4 + 5 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 4 + 6 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 5 + 2 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 5 + 3 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 5 + 4 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 5 + 5 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 6 + 2 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 6 + 4 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 6 + 5 * 9] = SwapLE16((3 << 8));
+		lm[2 + 9 * 9 + 6 + 6 * 9] = SwapLE16((3 << 8));
 	} else if (pSetPieces[idx]._sptype == SPT_WARLORD) {
 		// patch set-piece - Warlord2.DUN
 		// useless tiles
 		for (int y = 0; y < 7; y++) {
 			for (int x = 0; x < 8; x++) {
-				if (x != 6 || y == 0 || y == 7) {
-					lm[2 + x + y * 8] = 0;
+				if (x >= 7 && y >= 1 && x <= 7 && y <= 5) {
+					continue;
 				}
+				lm[2 + x + y * 8] = 0;
 			}
 		}
 		// replace monsters
