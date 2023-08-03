@@ -4638,23 +4638,10 @@ void D1Dun::patch(int dunFileIndex)
                 change |= this->changeTileAt(x, y, 0);
             }
         }
-        // replace monsters from Diab4a.DUN
-        change |= this->changeMonsterAt(4, 4, 101, false);
-        change |= this->changeMonsterAt(4, 8, 101, false);
-        change |= this->changeMonsterAt(4, 12, 101, false);
-        change |= this->changeMonsterAt(8, 4, 101, false);
-        change |= this->changeMonsterAt(8, 12, 101, false);
-        change |= this->changeMonsterAt(12, 4, 101, false);
-        change |= this->changeMonsterAt(12, 8, 101, false);
-        change |= this->changeMonsterAt(12, 12, 101, false);
-        // add monsters from Diab4a.DUN
-        change |= this->changeMonsterAt(6, 12, 101, false);
-        change |= this->changeMonsterAt(12, 10, 101, false);
-        change |= this->changeMonsterAt(10, 4, 101, false);
-        // add/replace monster
-        change |= this->changeMonsterAt(4, 6, 101, false);
         // make diablo unique
         change |= this->changeMonsterAt(8, 8, UMT_DIABLO + 1, true);
+        // replace the only black knight
+        change |= this->changeMonsterAt(4, 6, 101, false);
         // protect changing tiles from objects
         // - SW-wall
         for (int y = 4; y < 14; y++) {

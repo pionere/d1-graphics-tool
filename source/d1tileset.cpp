@@ -11079,6 +11079,20 @@ bool D1Tileset::patchHellStairs(bool silent)
         }
         bool change = false;
 
+        // mask 138[0]
+        if (i == 1) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (pixel.isTransparent()) {
+                        continue;
+                    }
+                    if (x >= 15 || pixel.getPaletteIndex() < 80) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
         // move pixels to 137[0] from 139[1]
         if (i == 3) {
             const CelMicro &microSrc = micros[0];
@@ -11122,27 +11136,12 @@ bool D1Tileset::patchHellStairs(bool silent)
                     if (pixel.isTransparent()) {
                         continue;
                     }
-                    if (x >= 15 || ((x > 4 || y < 10) && pixel.getPaletteIndex() < 96)) {
+                    if (x >= 15 || && pixel.getPaletteIndex() < 80) {
                         change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                     }
                 }
             }
         }
-        // mask 138[0]
-        if (i == 1) {
-            for (int x = 0; x < MICRO_WIDTH; x++) {
-                for (int y = 0; y < MICRO_HEIGHT; y++) {
-                    D1GfxPixel pixel = frame->getPixel(x, y);
-                    if (pixel.isTransparent()) {
-                        continue;
-                    }
-                    if (x >= 15 || pixel.getPaletteIndex() < 96) {
-                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
-                    }
-                }
-            }
-        }
-
         // move pixels to 137[1] from 138[0]
         if (i == 5) {
             const CelMicro &microSrc = micros[1];
@@ -11246,13 +11245,13 @@ bool D1Tileset::patchHellStairs(bool silent)
         }
 
         // fix bad artifacts
-        if (i == 6) { // 140[1]
-            change |= frame->setPixel(14, 0, D1GfxPixel::transparentPixel());
-        }
         if (i == 5) { // 137[1] (140[3])
             change |= frame->setPixel(7, 7, D1GfxPixel::transparentPixel());
             change |= frame->setPixel(12, 29, D1GfxPixel::colorPixel(122));
             change |= frame->setPixel(13, 22, D1GfxPixel::transparentPixel());
+        }
+        if (i == 6) { // 140[1]
+            change |= frame->setPixel(14, 0, D1GfxPixel::transparentPixel());
         }
         if (i == 23) { // 133[0] - restore eliminated pixel
             change |= frame->setPixel(31, 3, D1GfxPixel::colorPixel(80));
