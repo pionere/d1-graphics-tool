@@ -11254,6 +11254,9 @@ bool D1Tileset::patchHellStairs(bool silent)
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (x == 29 && y == 9) {
+                        continue; // preserve pixel due to 'missing' pixel in the reused micro
+                    }
                     if (y >= 16 - x / 2 && (pixel.getPaletteIndex() % 16) > 12) {
                         change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                     }
