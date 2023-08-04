@@ -223,7 +223,7 @@ void DRLG_L4Shadows()
 				if (replaceB == 6) {
 					dungeon[x - 1][y] = 54;
 				} else {
-					if (replaceB != 54 || (dungeon[x - 1][y - 1] != 55 && dungeon[x - 1][y - 1] != 131 && dungeon[x - 1][y - 1] != 62))
+					if (replaceB != 54 || (dungeon[x - 1][y - 1] != 55 && dungeon[x - 1][y - 1] != 62 && dungeon[x - 1][y - 1] != 129 && dungeon[x - 1][y - 1] != 131))
 					dProgressWarn() << QString("Missing case %1:%2 for door %3 @%4:%5").arg(replaceB).arg(dungeon[x - 1][y - 1]).arg(bv).arg(DBORDERX + 2 * x).arg(DBORDERY + 2 * y);
 					continue;
 				}
@@ -280,7 +280,7 @@ static void DRLG_LoadL4SP()
 			lm[2 + 0 + 4 * 6] = SwapLE16(75);
 			lm[2 + 0 + 5 * 6] = SwapLE16(74);
 			// - fix shadow of the right corner
-			lm[2 + 4 + 1 * 6] = SwapLE16(61);
+			lm[2 + 4 + 1 * 6] = SwapLE16(131);
 			// protect tiles with monsters/objects from spawning additional monsters/objects
 			lm[2 + 6 * 6 + 1 + 1 * 6] = SwapLE16((3 << 14));
 			lm[2 + 6 * 6 + 1 + 4 * 6] = SwapLE16((3 << 14));
@@ -345,7 +345,7 @@ static void DRLG_LoadL4SP()
 			lm[2 + 5 + 4 * 11] = SwapLE16(19);
 			lm[2 + 5 + 5 * 11] = SwapLE16(30);
 			// remove partial shadow
-			lm[2 + 5 + 0 * 11] = 0;
+			lm[2 + 5 + 0 * 11] = SwapLE16(50);
 			// ensure the changing tiles are reserved
 			// - SW-wall
 			lm[2 + 11 * 11 + 4 + 10 * 11] = SwapLE16(3);
@@ -460,9 +460,9 @@ static void DRLG_LoadL4SP()
 			lm[2 + 5 + 0 * 7] = SwapLE16(16);
 			lm[2 + 6 + 1 * 7] = SwapLE16(16);
 			// fix shadow + corner
-			lm[2 + 4 + 0 * 7] = SwapLE16(76);
+			lm[2 + 4 + 0 * 7] = SwapLE16(61);
 			lm[2 + 4 + 1 * 7] = SwapLE16(74);
-			lm[2 + 5 + 1 * 7] = SwapLE16(62);
+			lm[2 + 5 + 1 * 7] = SwapLE16(129);
 			lm[2 + 5 + 2 * 7] = SwapLE16(54);
 			// add unique monsters
 			lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 3 + 6 * 7 * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
