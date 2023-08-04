@@ -164,19 +164,19 @@ const BYTE L4FTYPES[138] = {
 	 0, 15, 15,  0,  0,  0,  0, 15,  0, 15, // 30..
 	15, 15, 12,  0,  0,  3, 13, 15, 15, 15, // 40..
 	15, 15, 10, 10, 15, 15, 12, 12, 15, 15, // 50..
-	15, 10, 12, 10, 12, 10, 12, 10, 10, 12, // 60..
+	12, 12, 12, 10, 12, 10, 12, 10, 10, 12, // 60..
 	12, 15, 15, 15, 15, 15,  8,  8,  8,  8, // 70..
 	 8, 10, 12, 10, 15, 15, 15, 15, 15, 15, // 80..
 	15, 15, 15, 15, 15, 15, 15, 15, 15, 15, // 90..
 	15, 15, 15, 15, 15, 15, 15, 15, 15, 15, //100..
 	15, 15, 15, 15, 15, 15,  0,  0,  0,  0, //110..
-	 0,  0,  0,  0,  0,  0,  0,  0,  0, 15, //120..
-	15,  0,  0,  0,  0, 15,  0,  0,         //130..
+	 0,  0,  0,  0,  0,  0,  0,  0,  8, 15, //120..
+	12, 12, 12, 12, 12, 12,  0,  0,         //130..
 	// clang-format on
 };
 /*
  * Miniset replacement to add shadows.
- * New dungeon values: 47 48   54 55   58 59 60
+ * New dungeon values: 47 48   54 55   58 59 60   61 62 76 129 130 131 132 133 134 135
  */
 void DRLG_L4Shadows()
 {
@@ -236,6 +236,7 @@ void DRLG_L4Shadows()
 				case 56: replaceB = 131; break;
 				default:
                     dProgressWarn() << QString("Missing case %1:%2 for door %3 with floor @%4:%5").arg(replaceB).arg(dungeon[x - 1][y - 1]).arg(bv).arg(DBORDERX + 2 * x).arg(DBORDERY + 2 * y);
+					dungeon[x - 1][y] = replaceB; // restore original value
 					continue;
 				}
 				dungeon[x - 1][y - 1] = replaceB;
