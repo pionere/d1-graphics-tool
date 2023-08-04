@@ -4353,7 +4353,7 @@ void D1Dun::patch(int dunFileIndex)
         // fix shadow + corner
         change |= this->changeTileAt(4, 0, 76);
         change |= this->changeTileAt(4, 1, 74);
-        change |= this->changeTileAt(5, 1, 62);
+        change |= this->changeTileAt(5, 1, 129);
         change |= this->changeTileAt(5, 2, 54);
         // - add the unique monsters
         change |= this->changeMonsterAt(3, 6, UMT_LAZARUS + 1, true);
@@ -4380,7 +4380,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(0, 4, 75);
         change |= this->changeTileAt(0, 5, 74);
         // - fix shadow of the right corner
-        change |= this->changeTileAt(4, 1, 61);
+        change |= this->changeTileAt(4, 1, 131);
         // protect tiles with monsters/objects from spawning additional monsters/objects
         change |= this->changeSubtileProtectionAt(3, 3, 3);
         change |= this->changeSubtileProtectionAt(3, 9, 3);
