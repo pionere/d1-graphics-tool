@@ -12674,18 +12674,18 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     SetMcr(35, 6, 7, 6);
     HideMcr(35, 5);
     HideMcr(35, 7);
-	ReplaceMcr(26, 0, 238, 0);
-	ReplaceMcr(26, 1, 238, 1);
-	SetMcr(26, 4, 96, 6);
-	SetMcr(26, 6, 16, 6);
-	ReplaceMcr(37, 0, 238, 0);
-	SetMcr(37, 1, 238, 1);
-	HideMcr(37, 5);
-	HideMcr(37, 7);
-	SetMcr(37, 8, 179, 8);
-	SetMcr(37, 10, 179, 10);
-	ReplaceMcr(13, 0, 238, 0);
-	ReplaceMcr(13, 1, 238, 1);
+    ReplaceMcr(26, 0, 238, 0);
+    ReplaceMcr(26, 1, 238, 1);
+    SetMcr(26, 4, 96, 6);
+    SetMcr(26, 6, 16, 6);
+    ReplaceMcr(37, 0, 238, 0);
+    SetMcr(37, 1, 238, 1);
+    HideMcr(37, 5);
+    HideMcr(37, 7);
+    SetMcr(37, 8, 179, 8);
+    SetMcr(37, 10, 179, 10);
+    ReplaceMcr(13, 0, 238, 0);
+    ReplaceMcr(13, 1, 238, 1);
 
     // fix chaos
     // - reuse
@@ -13048,11 +13048,11 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     // Blk2Mcr(137, 2);
     // reused for the new shadow
     // 35
-	// Blk2Mcr(26, 0);
-	// Blk2Mcr(26, 1);
-	// Blk2Mcr(37, 0);
-	// Blk2Mcr(13, 0);
-	// Blk2Mcr(13, 1);
+    // Blk2Mcr(26, 0);
+    // Blk2Mcr(26, 1);
+    // Blk2Mcr(37, 0);
+    // Blk2Mcr(13, 0);
+    // Blk2Mcr(13, 1);
     Blk2Mcr(385, 0);
     Blk2Mcr(385, 1);
     Blk2Mcr(385, 2);
