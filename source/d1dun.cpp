@@ -4351,7 +4351,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(5, 0, 16);
         change |= this->changeTileAt(6, 1, 16);
         // fix shadow + corner
-        change |= this->changeTileAt(4, 0, 76);
+        change |= this->changeTileAt(4, 0, 61);
         change |= this->changeTileAt(4, 1, 74);
         change |= this->changeTileAt(5, 1, 129);
         change |= this->changeTileAt(5, 2, 54);

@@ -11418,11 +11418,11 @@ bool D1Tileset::patchHellWall1(bool silent)
 /* 65 */{ 201 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 66 */{ 217 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 67 */{ 244 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 67 */{ /*244*/ - 1, 0, D1CEL_FRAME_TYPE::Empty },
 /* 68 */{ 244 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 69 */{ 244 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 70 */{ 246 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 70 */{ /*246*/ - 1, 1, D1CEL_FRAME_TYPE::Empty },
 /* 71 */{ 246 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 72 */{ 246 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
 
