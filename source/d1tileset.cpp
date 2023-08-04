@@ -11061,10 +11061,16 @@ bool D1Tileset::patchHellStairs(bool silent)
 /* 18 */{ 112 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 19 */{ 113 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 20 */{ 113 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-
 /* 21 */{ 130 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 22 */{ 132 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 23 */{ 133 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 24 */{ 100 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 25 */{ 135 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 26 */{ 127 - 1, 9, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 27 */{ 134 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 28 */{ 134 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 29 */{ 134 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
     };
     constexpr unsigned blockSize = BLOCK_SIZE_L4;
     for (int i = 0; i < lengthof(micros); i++) {
@@ -11232,7 +11238,7 @@ bool D1Tileset::patchHellStairs(bool silent)
             }
         }
 
-        // eliminate pointless pixels
+        // eliminate pointless pixels of 91[0], 91[1], 110[0], 110[1], 112[0], 112[1], 113[0], 113[1], 130[0], 132[1], 133[0]
         if (i >= 13 && i < 24) {
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
@@ -11241,6 +11247,36 @@ bool D1Tileset::patchHellStairs(bool silent)
                         change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                     }
                 }
+            }
+        }
+        // eliminate pointless pixels of 100[2]
+        if (i == 24) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (y >= 16 - x / 2 && (pixel.getPaletteIndex() % 16) > 12) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // move pixels to 127[9] from 135[5]
+        {
+            if (i == 26) { // 127[9]
+                change |= frame->setPixel(31, 26, D1GfxPixel::colorPixel(115));
+                change |= frame->setPixel(27, 27, D1GfxPixel::colorPixel(106));
+                change |= frame->setPixel(28, 27, D1GfxPixel::colorPixel(104));
+                change |= frame->setPixel(29, 27, D1GfxPixel::colorPixel(115));
+                change |= frame->setPixel(30, 27, D1GfxPixel::colorPixel(113));
+                change |= frame->setPixel(31, 27, D1GfxPixel::colorPixel(113));
+            }
+            if (i == 25) { // 135[5]
+                change |= frame->setPixel(31, 26, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(27, 27, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(28, 27, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(29, 27, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(30, 27, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(31, 27, D1GfxPixel::transparentPixel());
             }
         }
 
@@ -11255,6 +11291,35 @@ bool D1Tileset::patchHellStairs(bool silent)
         }
         if (i == 23) { // 133[0] - restore eliminated pixel
             change |= frame->setPixel(31, 3, D1GfxPixel::colorPixel(80));
+        }
+        // move pixels to 100[2] from 110[1]
+        {
+            if (i == 24) { // 100[2]
+                change |= frame->setPixel( 2, 5, D1GfxPixel::colorPixel(106));
+                change |= frame->setPixel( 6, 7, D1GfxPixel::colorPixel(120));
+            }
+            if (i == 16) { // 110[1]
+                change |= frame->setPixel( 2, 21, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel( 6, 23, D1GfxPixel::transparentPixel());
+            }
+        }
+        if (i == 27) { // 134[0]
+            change |= frame->setPixel(29, 0, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(30, 0, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(31, 0, D1GfxPixel::transparentPixel());
+        }
+        if (i == 28) { // 134[1]
+            change |= frame->setPixel(0, 0, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(1, 0, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(2, 0, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(3, 0, D1GfxPixel::transparentPixel());
+        }
+        if (i == 29) { // 134[2]
+            change |= frame->setPixel(0, 31, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(1, 31, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(2, 31, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(3, 31, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(4, 31, D1GfxPixel::transparentPixel());
         }
 
         if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {

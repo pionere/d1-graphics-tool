@@ -4566,7 +4566,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(5, 4, 19);
         change |= this->changeTileAt(5, 5, 30);
         // remove partial shadow
-        change |= this->changeTileAt(5, 0, 0);
+        change |= this->changeTileAt(5, 0, 50);
         // ensure the changing tiles are reserved
         // - SW-wall
         change |= this->changeTileProtectionAt( 4, 10, Qt::Checked);
