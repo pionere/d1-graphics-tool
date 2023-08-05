@@ -2226,7 +2226,7 @@ static void DRLG_L5Crypt_pattern2(BYTE rndper)
 	DRLG_PlaceRndTile(2, 113, rndper);
 	/** Miniset: South-Edge column on the northern side 1. */
 	DRLG_PlaceRndTile(3, 114, rndper);
-	DRLG_PlaceRndTile(28, 114, rndper);
+	DRLG_PlaceRndTile(28, 126, rndper);
 	/** Miniset: Use random corner north 1. */
 	DRLG_PlaceRndTile(4, 115, rndper);
 	/** Miniset: North-Edge column on the northern side 1. */
@@ -2265,7 +2265,7 @@ static void DRLG_L5Crypt_pattern3(BYTE rndper)
 	DRLG_PlaceRndTile(2, 130, rndper);
 	/** Miniset: South-Edge column on the northern side 2. */
 	DRLG_PlaceRndTile(3, 131, rndper);
-	DRLG_PlaceRndTile(28, 131, rndper);
+	DRLG_PlaceRndTile(28, 143, rndper);
 	/** Miniset: Use random corner north 2. */
 	DRLG_PlaceRndTile(4, 132, rndper);
 	/** Miniset: North-Edge column on the northern side 2. */
@@ -2304,7 +2304,7 @@ static void DRLG_L5Crypt_pattern4(BYTE rndper)
 	DRLG_PlaceRndTile(2, 147, rndper);
 	/** Miniset: South-Edge column on the northern side 3. */
 	DRLG_PlaceRndTile(3, 148, rndper);
-	DRLG_PlaceRndTile(28, 148, rndper);
+	DRLG_PlaceRndTile(28, 160, rndper);
 	/** Miniset: Use random corner north 3. */
 	DRLG_PlaceRndTile(4, 149, rndper);
 	/** Miniset: North-Edge column on the northern side 3. */
