@@ -2215,7 +2215,7 @@ static bool IsPillar(BYTE bv)
 /*
  * Replace doors with arches.
  * TODO: skip if there is no corresponding shadow?
- * New dungeon values: (3) 39 40 41 42 43 44 45
+ * New dungeon values: (3) 39 40 41 42 43 44 45 52
  */
 static void L2CreateArches()
 {
@@ -2268,7 +2268,7 @@ static void L2CreateArches()
 					}
 					// convert corner tile to standalone pillar
 					if (dungeon[x][y + 1] == 3 && dungeon[x - 1][y + 1] == 45) {
-						dungeon[x][y + 1] = 28;
+						dungeon[x][y + 1] = 52;
 					}
 				} else if (pn == 1 && y < DMAXY - 2) {
 					if (IsPillar(dungeon[x][y + 2])) {
@@ -2284,7 +2284,7 @@ static void L2CreateArches()
 						dungeon[x][y] = 39;
 						// convert corner tile to standalone pillar
 						if (dungeon[x][y + 2] == 3 && dungeon[x - 1][y + 2] == 45) {
-							dungeon[x][y + 2] = 28;
+							dungeon[x][y + 2] = 52;
 						}
 					}
 				}
