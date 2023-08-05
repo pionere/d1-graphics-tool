@@ -459,11 +459,19 @@ static void DRLG_LoadL4SP()
 			// fix corner
 			lm[2 + 5 + 0 * 7] = SwapLE16(16);
 			lm[2 + 6 + 1 * 7] = SwapLE16(16);
-			// fix shadow + corner
-			lm[2 + 4 + 0 * 7] = SwapLE16(61);
-			lm[2 + 4 + 1 * 7] = SwapLE16(74);
-			lm[2 + 5 + 1 * 7] = SwapLE16(129);
-			lm[2 + 5 + 2 * 7] = SwapLE16(54);
+			lm[2 + 5 + 1 * 7] = SwapLE16(15);
+			// use base tiles and decorate the walls randomly
+			lm[2 + 0 + 0 * 7] = SwapLE16(9);
+			lm[2 + 0 + 6 * 7] = SwapLE16(15);
+			lm[2 + 1 + 0 * 7] = SwapLE16(2);
+			lm[2 + 2 + 0 * 7] = SwapLE16(2);
+			lm[2 + 3 + 0 * 7] = SwapLE16(2);
+			lm[2 + 4 + 0 * 7] = SwapLE16(2);
+			lm[2 + 0 + 1 * 7] = SwapLE16(2);
+			lm[2 + 0 + 2 * 7] = SwapLE16(2);
+			lm[2 + 0 + 3 * 7] = SwapLE16(2);
+			lm[2 + 0 + 4 * 7] = SwapLE16(2);
+			// lm[2 + 6 + 3 * 7] = SwapLE16(50);
 			// add unique monsters
 			lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 3 + 6 * 7 * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
 			lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 5 + 3 * 7 * 2] = SwapLE16((UMT_RED_VEX + 1) | (1 << 15));
@@ -474,9 +482,12 @@ static void DRLG_LoadL4SP()
 					lm[2 + 7 * 7 + x + y * 7] |= SwapLE16((3 << 8) | (3 << 10) | (3 << 12) | (3 << 14));
 				}
 			}
-			// protect inner tiles from decoration
-			for (int y = 0; y <= 5; y++) {
-				for (int x = 0; x <= 5; x++) {
+			// ensure the box is not connected to the rest of the dungeon + protect inner tiles from decoration
+			for (int y = 0; y <= 6; y++) {
+				for (int x = 0; x <= 6; x++) {
+					if (x == 6 && (y == 0 || y == 6)) {
+						continue;
+					}
 					lm[2 + 7 * 7 + x + y * 7] |= SwapLE16(3);
 				}
 			}
@@ -490,15 +501,23 @@ static void DRLG_LoadL4SP()
 		// fix corner
 		lm[2 + 6 + 1 * 8] = SwapLE16(10);
 		lm[2 + 6 + 5 * 8] = SwapLE16(10);
-		// ensure the changing tiles are protected
-		lm[2 + 8 * 7 + 7 + 1 * 8] = SwapLE16(3);
-		lm[2 + 8 * 7 + 7 + 2 * 8] = SwapLE16(3);
-		lm[2 + 8 * 7 + 7 + 3 * 8] = SwapLE16(3);
-		lm[2 + 8 * 7 + 7 + 4 * 8] = SwapLE16(3);
-		lm[2 + 8 * 7 + 7 + 5 * 8] = SwapLE16(3);
-		// protect inner tiles from decoration
-		for (int y = 0; y <= 5; y++) {
-			for (int x = 0; x <= 6; x++) {
+		// use base tiles and decorate the walls randomly
+		lm[2 + 0 + 0 * 8] = SwapLE16(9);
+		lm[2 + 0 + 6 * 8] = SwapLE16(15);
+		lm[2 + 1 + 0 * 8] = SwapLE16(2);
+		lm[2 + 2 + 0 * 8] = SwapLE16(2);
+		lm[2 + 3 + 0 * 8] = SwapLE16(2);
+		lm[2 + 4 + 0 * 8] = SwapLE16(2);
+		lm[2 + 5 + 0 * 8] = SwapLE16(2);
+		lm[2 + 1 + 6 * 8] = SwapLE16(2);
+		lm[2 + 2 + 6 * 8] = SwapLE16(2);
+		lm[2 + 3 + 6 * 8] = SwapLE16(2);
+		lm[2 + 4 + 6 * 8] = SwapLE16(2);
+		lm[2 + 5 + 6 * 8] = SwapLE16(2);
+		// lm[2 + 6 + 3 * 8] = SwapLE16(50);
+		// ensure the changing tiles are protected + protect inner tiles from decoration
+		for (int y = 1; y <= 5; y++) {
+			for (int x = 1; x <= 7; x++) {
 				lm[2 + 8 * 7 + x + y * 8] = SwapLE16(3);
 			}
 		}

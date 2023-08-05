@@ -3981,15 +3981,23 @@ void D1Dun::patch(int dunFileIndex)
         // fix corner
         change |= this->changeTileAt(6, 1, 10);
         change |= this->changeTileAt(6, 5, 10);
-        // ensure the changing tiles are reserved
-        change |= this->changeTileProtectionAt(7, 1, Qt::Checked);
-        change |= this->changeTileProtectionAt(7, 2, Qt::Checked);
-        change |= this->changeTileProtectionAt(7, 3, Qt::Checked);
-        change |= this->changeTileProtectionAt(7, 4, Qt::Checked);
-        change |= this->changeTileProtectionAt(7, 5, Qt::Checked);
-        // protect inner tiles from decoration
-        for (int y = 0; y <= 5; y++) {
-            for (int x = 0; x <= 6; x++) {
+        // use base tiles and decorate the walls randomly
+        change |= this->changeTileAt(0, 0, 9);
+        change |= this->changeTileAt(0, 6, 15);
+        change |= this->changeTileAt(1, 0, 2);
+        change |= this->changeTileAt(2, 0, 2);
+        change |= this->changeTileAt(3, 0, 2);
+        change |= this->changeTileAt(4, 0, 2);
+        change |= this->changeTileAt(5, 0, 2);
+        change |= this->changeTileAt(1, 6, 2);
+        change |= this->changeTileAt(2, 6, 2);
+        change |= this->changeTileAt(3, 6, 2);
+        change |= this->changeTileAt(4, 6, 2);
+        change |= this->changeTileAt(5, 6, 2);
+        // change |= this->changeTileAt(6, 3, 50);
+        // ensure the changing tiles are protected + protect inner tiles from decoration
+        for (int y = 1; y <= 5; y++) {
+            for (int x = 1; x <= 7; x++) {
                 change |= this->changeTileProtectionAt(x, y, Qt::Checked);
             }
         }
@@ -4350,11 +4358,19 @@ void D1Dun::patch(int dunFileIndex)
         // fix corner
         change |= this->changeTileAt(5, 0, 16);
         change |= this->changeTileAt(6, 1, 16);
-        // fix shadow + corner
-        change |= this->changeTileAt(4, 0, 61);
-        change |= this->changeTileAt(4, 1, 74);
-        change |= this->changeTileAt(5, 1, 129);
-        change |= this->changeTileAt(5, 2, 54);
+        change |= this->changeTileAt(5, 1, 15);
+        // use base tiles and decorate the walls randomly
+        change |= this->changeTileAt(0, 0, 9);
+        change |= this->changeTileAt(0, 6, 15);
+        change |= this->changeTileAt(1, 0, 2);
+        change |= this->changeTileAt(2, 0, 2);
+        change |= this->changeTileAt(3, 0, 2);
+        change |= this->changeTileAt(4, 0, 2);
+        change |= this->changeTileAt(0, 1, 2);
+        change |= this->changeTileAt(0, 2, 2);
+        change |= this->changeTileAt(0, 3, 2);
+        change |= this->changeTileAt(0, 4, 2);
+        // change |= this->changeTileAt(6, 3, 50);
         // - add the unique monsters
         change |= this->changeMonsterAt(3, 6, UMT_LAZARUS + 1, true);
         change |= this->changeMonsterAt(5, 3, UMT_RED_VEX + 1, true);
@@ -4368,9 +4384,12 @@ void D1Dun::patch(int dunFileIndex)
                 change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, 3);
             }
         }
-        // protect inner tiles from decoration
-        for (int y = 0; y <= 5; y++) {
-            for (int x = 0; x <= 5; x++) {
+        // ensure the box is not connected to the rest of the dungeon + protect inner tiles from decoration
+        for (int y = 0; y <= 6; y++) {
+            for (int x = 0; x <= 6; x++) {
+                if (x == 6 && (y == 0 || y == 6)) {
+                    continue;
+                }
                 change |= this->changeTileProtectionAt(x, y, Qt::Checked);
             }
         }
