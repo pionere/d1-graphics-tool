@@ -2552,134 +2552,134 @@ void LevelCelView::checkTileFlags() const
     for (int i = 0; i < this->til->getTileCount(); i++) {
         quint8 ampType = this->amp->getTileType(i);
         quint16 ampFlags = (quint16)this->amp->getTileProperties(i) << 8;
-        if (ampFlags & MAPFLAG_VERTDOOR) {
+        if (ampFlags & MAP_WEST_DOOR) {
             // western door
-            if (ampFlags & MAPFLAG_VERTARCH) {
+            if (ampFlags & MAP_WEST_ARCH) {
                 dProgressWarn() << tr("Tile %1 has both west-door and west-arch flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & MAPFLAG_VERTGRATE) {
+            if (ampFlags & MAP_WEST_GRATE) {
                 dProgressWarn() << tr("Tile %1 has both west-door and west-grate flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & MAPFLAG_DIRT) {
+            if (ampFlags & MAP_EXTERN) {
                 dProgressWarn() << tr("Tile %1 has both west-door and external flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & MAPFLAG_STAIRS) {
+            if (ampFlags & MAP_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both west-door and stairs flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampType != 2 && ampType != 4 && ampType != 5 && ampType != 10) {
+            if (ampType != MWT_NORTH_WEST && ampType != MWT_NORTH && ampType != MWT_NORTH_WEST_END && ampType != MWT_SOUTH_WEST) {
                 dProgressWarn() << tr("Tile %1 has a west-door but neither a wall (north-west), a wall intersection (north), a wall ending (north-west) nor a wall (south-west).").arg(i + 1);
                 result = true;
             }
         }
-        if (ampFlags & MAPFLAG_HORZDOOR) {
+        if (ampFlags & MAP_EAST_DOOR) {
             // eastern door
-            if (ampFlags & MAPFLAG_HORZARCH) {
+            if (ampFlags & MAP_EAST_ARCH) {
                 dProgressWarn() << tr("Tile %1 has both east-door and east-arch flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & MAPFLAG_HORZGRATE) {
+            if (ampFlags & MAP_EAST_GRATE) {
                 dProgressWarn() << tr("Tile %1 has both east-door and east-grate flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & MAPFLAG_DIRT) {
+            if (ampFlags & MAP_EXTERN) {
                 dProgressWarn() << tr("Tile %1 has both east-door and external flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & MAPFLAG_STAIRS) {
+            if (ampFlags & MAP_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both east-door and stairs flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampType != 3 && ampType != 4 && ampType != 6 && ampType != 11) {
+            if (ampType != MWT_NORTH_EAST && ampType != MWT_NORTH && ampType != MWT_NORTH_EAST_END && ampType != MWT_SOUTH_EAST) {
                 dProgressWarn() << tr("Tile %1 has an east-door but neither a wall (north-east), a wall intersection (north), a wall ending (north-east) nor a wall (south-east).").arg(i + 1);
                 result = true;
             }
         }
-        if (ampFlags & MAPFLAG_VERTARCH) {
+        if (ampFlags & MAP_WEST_ARCH) {
             // western arch
-            if (ampFlags & MAPFLAG_VERTGRATE) {
+            if (ampFlags & MAP_WEST_GRATE) {
                 dProgressWarn() << tr("Tile %1 has both west-arch and west-grate flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & MAPFLAG_DIRT) {
+            if (ampFlags & MAP_EXTERN) {
                 dProgressWarn() << tr("Tile %1 has both west-arch and external flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & MAPFLAG_STAIRS) {
+            if (ampFlags & MAP_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both west-arch and stairs flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampType != 2 && ampType != 4 && ampType != 5) {
+            if (ampType != MWT_NORTH_WEST && ampType != MWT_NORTH && ampType != MWT_NORTH_WEST_END) {
                 dProgressWarn() << tr("Tile %1 has a west-arch but neither a wall (north-west), a wall intersection (north) nor a wall ending (north-west).").arg(i + 1);
                 result = true;
             }
         }
-        if (ampFlags & MAPFLAG_HORZARCH) {
+        if (ampFlags & MAP_EAST_ARCH) {
             // eastern arch
-            if (ampFlags & MAPFLAG_HORZGRATE) {
+            if (ampFlags & MAP_EAST_GRATE) {
                 dProgressWarn() << tr("Tile %1 has both east-arch and east-grate flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & MAPFLAG_DIRT) {
+            if (ampFlags & MAP_EXTERN) {
                 dProgressWarn() << tr("Tile %1 has both east-arch and external flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & MAPFLAG_STAIRS) {
+            if (ampFlags & MAP_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both east-arch and stairs flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampType != 3 && ampType != 4 && ampType != 6) {
+            if (ampType != MWT_NORTH_EAST && ampType != MWT_NORTH && ampType != MWT_NORTH_EAST_END) {
                 dProgressWarn() << tr("Tile %1 has an east-arch but neither a wall (north-east), a wall intersection (north) nor a wall ending (north-east).").arg(i + 1);
                 result = true;
             }
         }
-        if (ampFlags & MAPFLAG_VERTGRATE) {
+        if (ampFlags & MAP_WEST_GRATE) {
             // western grate
-            if (ampFlags & MAPFLAG_DIRT) {
+            if (ampFlags & MAP_EXTERN) {
                 dProgressWarn() << tr("Tile %1 has both west-grate and external flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & MAPFLAG_STAIRS) {
+            if (ampFlags & MAP_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both west-grate and stairs flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampType != 2 && ampType != 4 && ampType != 5) {
+            if (ampType != MWT_NORTH_WEST && ampType != MWT_NORTH && ampType != MWT_NORTH_WEST_END) {
                 dProgressWarn() << tr("Tile %1 has a west-grate but neither a wall (north-west), a wall intersection (north) nor a wall ending (north-west).").arg(i + 1);
                 result = true;
             }
         }
-        if (ampFlags & MAPFLAG_HORZGRATE) {
+        if (ampFlags & MAP_EAST_GRATE) {
             // eastern grate
-            if (ampFlags & MAPFLAG_DIRT) {
+            if (ampFlags & MAP_EXTERN) {
                 dProgressWarn() << tr("Tile %1 has both east-grate and external flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampFlags & MAPFLAG_STAIRS) {
+            if (ampFlags & MAP_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both east-grate and stairs flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampType != 3 && ampType != 4 && ampType != 6) {
+            if (ampType != MWT_NORTH_EAST && ampType != MWT_NORTH && ampType != MWT_NORTH_EAST_END) {
                 dProgressWarn() << tr("Tile %1 has an east-grate but neither a wall (north-east), a wall intersection (north) nor a wall ending (north-east).").arg(i + 1);
                 result = true;
             }
         }
-        if (ampFlags & MAPFLAG_DIRT) {
+        if (ampFlags & MAP_EXTERN) {
             // external
-            if (ampFlags & MAPFLAG_STAIRS) {
+            if (ampFlags & MAP_STAIRS) {
                 dProgressWarn() << tr("Tile %1 has both external and stairs flags set.").arg(i + 1);
                 result = true;
             }
-            if (ampType == 1) {
+            if (ampType == MWT_PILLAR) {
                 dProgressWarn() << tr("Tile %1 is external but also a pillar.").arg(i + 1);
                 result = true;
             }
         }
-        if (ampFlags & MAPFLAG_STAIRS) {
+        if (ampFlags & MAP_STAIRS) {
             // stairs
-            if (ampType != 0) {
+            if (ampType != MWT_NONE) {
                 dProgressWarn() << tr("Tile %1 is stairs but its type is also set (not None).").arg(i + 1);
                 result = true;
             }

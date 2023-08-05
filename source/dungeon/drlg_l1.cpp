@@ -654,8 +654,8 @@ void DRLG_L5Shadows()
 				horizArch = true;
 				break;
 			}*/
-			horizArch = (automaptype[dungeon[i][j]] & (MAPFLAG_HORZARCH | MAPFLAG_HORZGRATE)) != 0;
-			vertArch = (automaptype[dungeon[i][j]] & (MAPFLAG_VERTARCH | MAPFLAG_VERTGRATE)) != 0;
+			horizArch = (automaptype[dungeon[i][j]] & (MAP_EAST_ARCH | MAP_EAST_GRATE)) != 0;
+			vertArch = (automaptype[dungeon[i][j]] & (MAP_WEST_ARCH | MAP_WEST_GRATE)) != 0;
 			switch (dungeon[i][j]) {
 			case 5:
 				pillar = true;
@@ -843,8 +843,8 @@ void DRLG_L1Shadows()
 				horizArch = true;
 				break;
 			}*/
-			horizArch = (automaptype[dungeon[i][j]] & (MAPFLAG_HORZARCH | MAPFLAG_HORZGRATE | MAPFLAG_HORZDOOR)) != 0;
-			vertArch = (automaptype[dungeon[i][j]] & (MAPFLAG_VERTARCH | MAPFLAG_VERTGRATE)) != 0; // MAPFLAG_VERTDOOR - not visible
+			horizArch = (automaptype[dungeon[i][j]] & (MAP_EAST_ARCH | MAP_EAST_GRATE | MAP_EAST_DOOR)) != 0;
+			vertArch = (automaptype[dungeon[i][j]] & (MAP_WEST_ARCH | MAP_WEST_GRATE)) != 0; // MAP_WEST_DOOR - not visible
 			switch (dungeon[i][j]) {
 			case 5:
 				pillar = true;
