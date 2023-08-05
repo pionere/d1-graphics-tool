@@ -54,7 +54,6 @@ void InitLvlAutomap()
 	}
 
 	mem_free_dbg(pAFile);
-
 	// patch dAutomapData - L1.AMP
 	if (currLvl._dType == DTYPE_CATHEDRAL) {
 		// separate pillar tile
