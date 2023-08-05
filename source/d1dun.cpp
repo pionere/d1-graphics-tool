@@ -1394,7 +1394,7 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
             quint8 mapType = this->tileset->amp->getTileType(tileRef - 1);
             quint8 mapProp = this->tileset->amp->getTileProperties(tileRef - 1);
 
-            if (mapType == 7 && mapProp == 0) {
+            /*if (mapType == 7 && mapProp == 0) {
                 if (dunCursorX >= 2 * TILE_WIDTH && dunCursorY >= 2 * TILE_HEIGHT) {
                     int tileRefLeft = this->tiles[dunCursorY / TILE_HEIGHT - 2][dunCursorX / TILE_WIDTH];
                     int tileRefTop = this->tiles[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH - 2];
@@ -1405,7 +1405,7 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
                         mapType = 1;
                     }
                 }
-            }
+            }*/
             D1Dun::DrawMap(drawCursorX + backWidth / 2, drawCursorY - 1, mapType | (mapProp << 8));
         }
     }
