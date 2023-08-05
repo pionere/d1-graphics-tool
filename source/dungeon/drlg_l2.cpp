@@ -2263,6 +2263,12 @@ static void L2CreateArches()
 						//0,
 						dungeon[x][y - 1] = 41;
 						dungeon[x][y] = 44;
+					} else {
+						continue;
+					}
+					// convert corner tile to standalone pillar
+					if (dungeon[x][y + 1] == 3 && dungeon[x - 1][y + 1] == 45) {
+						dungeon[x][y + 1] = 28;
 					}
 				} else if (pn == 1 && y < DMAXY - 2) {
 					if (IsPillar(dungeon[x][y + 2])) {
@@ -2276,6 +2282,10 @@ static void L2CreateArches()
 						// assert(!drlgFlags[x][y + 1]);
 						dungeon[x][y + 1] = 44;
 						dungeon[x][y] = 39;
+						// convert corner tile to standalone pillar
+						if (dungeon[x][y + 2] == 3 && dungeon[x - 1][y + 2] == 45) {
+							dungeon[x][y + 2] = 28;
+						}
 					}
 				}
 			} else if (dungeon[x][y] == 5) {
