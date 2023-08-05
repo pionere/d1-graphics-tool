@@ -1369,18 +1369,6 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
             quint8 mapType = this->tileset->amp->getTileType(tileRef - 1);
             quint8 mapProp = this->tileset->amp->getTileProperties(tileRef - 1);
 
-            if (mapType == 7 && mapProp == 0) {
-                if (dunCursorX >= 2 * TILE_WIDTH && dunCursorY >= 2 * TILE_HEIGHT) {
-                    int tileRefLeft = this->tiles[dunCursorY / TILE_HEIGHT - 2][dunCursorX / TILE_WIDTH];
-                    int tileRefTop = this->tiles[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH - 2];
-                    if (tileRefLeft > 0 && tileRefLeft <= this->til->getTileCount()  // !0 || !UNDEF_TILE
-                        && tileRefTop > 0 && tileRefTop <= this->til->getTileCount() // !0 || !UNDEF_TILE
-                        && (this->tileset->amp->getTileProperties(tileRefLeft - 1) & (MAPFLAG_HORZARCH >> 8))
-                        && (this->tileset->amp->getTileProperties(tileRefTop - 1) & (MAPFLAG_VERTARCH >> 8))) {
-                        mapType = 1;
-                    }
-                }
-            }
             D1Dun::DrawMap(drawCursorX + backWidth / 2, drawCursorY - 1, mapType | (mapProp << 8));
         }
     }
@@ -3407,6 +3395,8 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(0, 6, 0);
         change |= this->changeTileAt(6, 6, 0);
         change |= this->changeTileAt(6, 0, 0);
+        // add the separate pillar tile
+        change |= this->changeTileAt(5, 5, 52);
         // add tiles with subtiles for arches
         change |= this->changeTileAt(2, 1, 45);
         change |= this->changeTileAt(4, 1, 45);
