@@ -216,7 +216,7 @@ void LevelTabTileWidget::updateAmpProperty()
         flags |= (MAP_EAST_ARCH >> 8);
     if (this->ui->amp4->checkState())
         flags |= (MAP_WEST_GRATE >> 8);
-    if (this->ui->amp->checkState())
+    if (this->ui->amp5->checkState())
         flags |= (MAP_EAST_GRATE >> 8);
     if (this->ui->amp6->checkState())
         flags |= (MAP_EXTERN >> 8);

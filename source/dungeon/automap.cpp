@@ -49,7 +49,7 @@ void InitLvlAutomap()
 	lm = (uint16_t*)pAFile;
 	for (i = 1; i <= dwTiles; i++) {
 		automaptype[i] = SwapLE16(*lm);
-		// assert((automaptype[i] & MAPFLAG_TYPE) < 13); required by DrawAutomapTile and SetAutomapView
+		// assert((automaptype[i] & MAP_TYPE) < 13); required by DrawAutomapTile and SetAutomapView
 		lm++;
 	}
 
@@ -120,8 +120,8 @@ void InitLvlAutomap()
 	}
 	// patch dAutomapData - L4.AMP
 	if (currLvl._dType == DTYPE_HELL) {
-		automaptype[52] |= MAPFLAG_VERTGRATE;
-		automaptype[56] |= MAPFLAG_HORZGRATE;
+		automaptype[52] |= MAP_WEST_GRATE;
+		automaptype[56] |= MAP_EAST_GRATE;
 		automaptype[7] = MWT_NORTH_WEST_END;
 		automaptype[8] = MWT_NORTH_EAST_END;
 		automaptype[83] = MWT_NORTH_WEST_END;
@@ -157,7 +157,7 @@ void InitLvlAutomap()
 		automaptype[109] = MWT_NORTH_WEST;
 		automaptype[110] = MWT_NORTH_WEST;
 		automaptype[111] = MAP_WEST_ARCH | MWT_NORTH_WEST;
-		automaptype[215] = MAPFLAG_VERTGRATE | MWT_NORTH_WEST;
+		automaptype[215] = MAP_WEST_GRATE | MWT_NORTH_WEST;
 		// - 'add' new shadow-types with glow
 		automaptype[216] = MAP_WEST_ARCH | MWT_NORTH_WEST;
 		// - 'add' new shadow-types with horizontal arches
@@ -165,8 +165,8 @@ void InitLvlAutomap()
 		automaptype[80] = MWT_NORTH_EAST;
 		automaptype[81] = MAP_EAST_ARCH | MWT_NORTH_EAST;
 		automaptype[82] = MAP_EAST_ARCH | MWT_NORTH_EAST;
-		automaptype[83] = MAPFLAG_HORZGRATE | MWT_NORTH_EAST;
-		automaptype[84] = MAPFLAG_HORZGRATE | MWT_NORTH_EAST;
+		automaptype[83] = MAP_EAST_GRATE | MWT_NORTH_EAST;
+		automaptype[84] = MAP_EAST_GRATE | MWT_NORTH_EAST;
 		automaptype[85] = MWT_NORTH_EAST;
 		automaptype[86] = MWT_NORTH_EAST;
 		automaptype[87] = MAP_EAST_DOOR | MWT_NORTH_EAST;
