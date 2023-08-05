@@ -3432,6 +3432,8 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(0, 6, 0);
         change |= this->changeTileAt(6, 6, 0);
         change |= this->changeTileAt(6, 0, 0);
+        // add the separate pillar tile
+        change |= this->changeTileAt(5, 5, 52);
         // add tiles with subtiles for arches
         change |= this->changeTileAt(2, 1, 45);
         change |= this->changeTileAt(4, 1, 45);

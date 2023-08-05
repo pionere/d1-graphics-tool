@@ -272,7 +272,6 @@ static void DRLG_LoadL4SP()
 		pSetPieces[2]._spData = LoadFileInMem(setpiecedata[pSetPieces[2]._sptype]._spdDunFile);
 		pSetPieces[3]._sptype = SPT_DIAB_QUAD_4;
 		pSetPieces[3]._spData = LoadFileInMem(setpiecedata[pSetPieces[3]._sptype]._spdDunFile);
-
 		if (pSetPieces[0]._spData != NULL && PatchDunFiles) {
 			// patch set-piece - Diab1.DUN
 			uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;

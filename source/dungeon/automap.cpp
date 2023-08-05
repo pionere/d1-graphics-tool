@@ -54,12 +54,13 @@ void InitLvlAutomap()
 	}
 
 	mem_free_dbg(pAFile);
-	if (!PatchDunFiles) {
-		return;
-	}
+
 	// patch dAutomapData - L1.AMP
 	if (currLvl._dType == DTYPE_CATHEDRAL) {
-		// adjust AMP after fixCathedralShadows
+		// separate pillar tile
+		automaptype[28] = MWT_PILLAR; // automaptype[15]
+		// new shadows
+		// - shadows created by fixCathedralShadows
 		automaptype[145] = automaptype[11];
 		automaptype[147] = automaptype[6];
 		automaptype[149] = automaptype[12];
@@ -89,6 +90,9 @@ void InitLvlAutomap()
 	}
 	// patch dAutomapData - L2.AMP
 	if (currLvl._dType == DTYPE_CATACOMBS) {
+		// separate pillar tile
+		automaptype[52] = MWT_PILLAR;
+		// new shadows
 		automaptype[17] = automaptype[5];
 		// automaptype[18] = automaptype[5];
 		automaptype[34] = automaptype[6];
@@ -144,8 +148,10 @@ void InitLvlAutomap()
 		automaptype[54] = MAPFLAG_DIRT;
 		automaptype[56] = MWT_NONE;
 		automaptype[58] = MAPFLAG_DIRT | MWT_NORTH_WEST_END;
-		// adjust AMP after cleanupCrypt
-		// - use the shadows created by fixCryptShadows
+		// separate pillar tile
+		automaptype[28] = MWT_PILLAR; // automaptype[15]
+		// new shadows
+		// - shadows created by fixCryptShadows
 		automaptype[109] = MWT_NORTH_WEST;
 		automaptype[110] = MWT_NORTH_WEST;
 		automaptype[111] = MAPFLAG_VERTARCH | MWT_NORTH_WEST;

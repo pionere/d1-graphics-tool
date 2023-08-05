@@ -2888,6 +2888,11 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 130 - 1, 3, 4 - 1, silent);
     ReplaceSubtile(this->til, 137 - 1, 3, 4 - 1, silent);
     ReplaceSubtile(this->til, 193 - 1, 3, 4 - 1, silent);
+    // create separate pillar tile
+    ReplaceSubtile(this->til, 28 - 1, 0, 8 - 1, silent);
+    ReplaceSubtile(this->til, 28 - 1, 1, 2 - 1, silent);
+    ReplaceSubtile(this->til, 28 - 1, 2, 7 - 1, silent);
+    ReplaceSubtile(this->til, 28 - 1, 3, 4 - 1, silent);
     // create the new shadows
     // - use the shadows created by fixCathedralShadows
     ReplaceSubtile(this->til, 131 - 1, 0, 23 - 1, silent);
@@ -3046,7 +3051,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 46 - 1, 3, 302 - 1, silent);
     // eliminate subtiles of unused tiles
     const int unusedTiles[] = {
-        28, 30, 31, 34,/* 38,*/ 39, 40, 41, 42,/* 44,*/ 45, 79, 82, 86, 87, 88, 89, 90, 91, 92, 95, 96, 119, 120, 126, 127, 177, 178, 179, 180, 181, 182, 183, 184, 185, 187, 188, 189, 190, 191, 192, 195, 197, 198, 199, 200, 201, 202, 203, 204, 205
+        30, 31, 34,/* 38,*/ 39, 40, 41, 42,/* 44,*/ 45, 79, 82, 86, 87, 88, 89, 90, 91, 92, 95, 96, 119, 120, 126, 127, 177, 178, 179, 180, 181, 182, 183, 184, 185, 187, 188, 189, 190, 191, 192, 195, 197, 198, 199, 200, 201, 202, 203, 204, 205
     };
     constexpr int blankSubtile = 74 - 1;
     for (int n = 0; n < lengthof(unusedTiles); n++) {
@@ -5085,6 +5090,11 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 99 - 1, 0, 332 - 1, silent);
     ReplaceSubtile(this->til, 99 - 1, 2, 324 - 1, silent);
     ReplaceSubtile(this->til, 99 - 1, 3, 323 - 1, silent);
+    // create separate pillar tile
+    ReplaceSubtile(this->til, 52 - 1, 0, 21 - 1, silent);
+    ReplaceSubtile(this->til, 52 - 1, 1, 26 - 1, silent);
+    ReplaceSubtile(this->til, 52 - 1, 2, 23 - 1, silent);
+    ReplaceSubtile(this->til, 52 - 1, 3, 12 - 1, silent);
     // create the new shadows
     // - horizontal door for a pillar
     ReplaceSubtile(this->til, 17 - 1, 0, 540 - 1, silent);
@@ -5171,7 +5181,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 159 - 1, 2, 11 - 1, silent); // use common subtile
     // eliminate subtiles of unused tiles
     const int unusedTiles[] = {
-        52, 58, 61, 64, 65, 66, 67, 76, 93, 98, 101, 102, 103, 104, 143, 144, 145, 146, 147, 148, 149, 152, 153, 154, 155, 158, 159, 160
+        58, 61, 64, 65, 66, 67, 76, 93, 98, 101, 102, 103, 104, 143, 144, 145, 146, 147, 148, 149, 152, 153, 154, 155, 158, 159, 160
     };
     constexpr int blankSubtile = 2 - 1;
     for (int n = 0; n < lengthof(unusedTiles); n++) {
@@ -15769,6 +15779,11 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // - reduce glow
     ReplaceSubtile(this->til, 162 - 1, 1, 297 - 1, silent); // 489
     ReplaceSubtile(this->til, 162 - 1, 2, 266 - 1, silent); // 490
+    // create separate pillar tile
+    ReplaceSubtile(this->til, 28 - 1, 0, 9 - 1, silent);
+    ReplaceSubtile(this->til, 28 - 1, 1, 60 - 1, silent);
+    ReplaceSubtile(this->til, 28 - 1, 2, 4 - 1, silent);
+    ReplaceSubtile(this->til, 28 - 1, 3, 12 - 1, silent);
     // create the new shadows
     // - use the shadows created by fixCryptShadows
     ReplaceSubtile(this->til, 203 - 1, 0, 638 - 1, silent); // 619
@@ -16000,7 +16015,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 188 - 1, 2, 12 - 1, silent);
     // eliminate subtiles of unused tiles
     const int unusedTiles[] = {
-        28,/* 29,*/ 30, 31, 34,/* 38,*/ 39, 40, 41, 42,/* 43, 44, */ 61, 62, 63, 64, 65, 66, 67, 68, 72, 73, 74, 75, 76, 77, 78, 79, 212, 213, 214
+        /* 29,*/ 30, 31, 34,/* 38,*/ 39, 40, 41, 42,/* 43, 44, */ 61, 62, 63, 64, 65, 66, 67, 68, 72, 73, 74, 75, 76, 77, 78, 79, 212, 213, 214
     };
     constexpr int blankSubtile = 8 - 1;
     for (int n = 0; n < lengthof(unusedTiles); n++) {
@@ -17685,7 +17700,9 @@ void D1Tileset::patch(int dunType, bool silent)
         // - special subtile for the vile setmap
         ChangeSubtileSolFlags(this->sol, 335 - 1, PFLAG_BLOCK_MISSILE, false, silent);
         // patch dAutomapData - L1.AMP
-        // adjust AMP after fixCathedralShadows
+        // - separate pillar
+        SetTileMapFlags(this->amp, 28 - 1, 15 - 1, silent);
+        // new shadows
         SetTileMapFlags(this->amp, 145 - 1, 11 - 1, silent);
         SetTileMapFlags(this->amp, 147 - 1, 6 - 1, silent);
         SetTileMapFlags(this->amp, 149 - 1, 12 - 1, silent);
@@ -17719,6 +17736,9 @@ void D1Tileset::patch(int dunType, bool silent)
         // patch pSpecialsCel - L2S.CEL
         this->patchCatacombsSpec(silent);
         // patch dAutomapData - L2.AMP
+        // - separate pillar
+        ChangeTileMapType(this->amp, 52 - 1, MWT_PILLAR, silent);
+        // - new shadows
         SetTileMapFlags(this->amp, 17 - 1, 5 - 1, silent);
         // SetTileMapFlags(this->amp, 18 - 1, 5 - 1, silent);
         SetTileMapFlags(this->amp, 34 - 1, 6 - 1, silent);
@@ -17838,8 +17858,10 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeSubtileSolFlags(this->sol, 159 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 148 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, true, silent);
         // patch automaptype - L5.AMP
-        // adjust AMP after cleanupCrypt
-        // - use the shadows created by fixCryptShadows
+        // - separate pillar
+        SetTileMapFlags(this->amp, 28 - 1, 15 - 1, silent);
+        // new shadows
+        // - shadows created by fixCryptShadows
         ChangeTileAmpFlags(this->amp, 109 - 1, MWT_NORTH_WEST, silent);
         ChangeTileAmpFlags(this->amp, 110 - 1, MWT_NORTH_WEST, silent);
         ChangeTileAmpFlags(this->amp, 111 - 1, MAPFLAG_VERTARCH | MWT_NORTH_WEST, silent);
