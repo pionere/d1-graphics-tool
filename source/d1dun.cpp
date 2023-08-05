@@ -4389,7 +4389,11 @@ void D1Dun::patch(int dunFileIndex)
                 if (x == 6 && (y == 0 || y == 6)) {
                     continue;
                 }
-                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+                if (x == 0 || y == 0 || x == 6 || y == 6) {
+                    change |= this->changeTileProtectionAt(x, y, Qt::PartiallyChecked);
+                } else {
+                    change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+                }
             }
         }
         break;

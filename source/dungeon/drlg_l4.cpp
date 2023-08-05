@@ -487,7 +487,11 @@ static void DRLG_LoadL4SP()
 					if (x == 6 && (y == 0 || y == 6)) {
 						continue;
 					}
-					lm[2 + 7 * 7 + x + y * 7] |= SwapLE16(3);
+					if (x == 0 || y == 0 || x == 6 || y == 6) {
+						lm[2 + 7 * 7 + x + y * 7] |= SwapLE16(1);
+					} else {
+						lm[2 + 7 * 7 + x + y * 7] |= SwapLE16(3);
+					}
 				}
 			}
 		}
