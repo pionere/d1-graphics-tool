@@ -4366,10 +4366,9 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(2, 0, 2);
         change |= this->changeTileAt(3, 0, 2);
         change |= this->changeTileAt(4, 0, 2);
-        change |= this->changeTileAt(0, 1, 2);
-        change |= this->changeTileAt(0, 2, 2);
-        change |= this->changeTileAt(0, 3, 2);
-        change |= this->changeTileAt(0, 4, 2);
+        change |= this->changeTileAt(1, 6, 2);
+        change |= this->changeTileAt(2, 6, 2);
+        change |= this->changeTileAt(4, 6, 2);
         // change |= this->changeTileAt(6, 3, 50);
         // - add the unique monsters
         change |= this->changeMonsterAt(3, 6, UMT_LAZARUS + 1, true);

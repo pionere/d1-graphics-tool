@@ -467,10 +467,9 @@ static void DRLG_LoadL4SP()
 			lm[2 + 2 + 0 * 7] = SwapLE16(2);
 			lm[2 + 3 + 0 * 7] = SwapLE16(2);
 			lm[2 + 4 + 0 * 7] = SwapLE16(2);
-			lm[2 + 0 + 1 * 7] = SwapLE16(2);
-			lm[2 + 0 + 2 * 7] = SwapLE16(2);
-			lm[2 + 0 + 3 * 7] = SwapLE16(2);
-			lm[2 + 0 + 4 * 7] = SwapLE16(2);
+			lm[2 + 1 + 6 * 7] = SwapLE16(2);
+			lm[2 + 2 + 6 * 7] = SwapLE16(2);
+			lm[2 + 4 + 6 * 7] = SwapLE16(2);
 			// lm[2 + 6 + 3 * 7] = SwapLE16(50);
 			// add unique monsters
 			lm[2 + 7 * 7 + 7 * 7 * 2 * 2 + 3 + 6 * 7 * 2] = SwapLE16((UMT_LAZARUS + 1) | (1 << 15));
