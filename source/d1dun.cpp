@@ -3474,6 +3474,8 @@ void D1Dun::patch(int dunFileIndex)
                 change |= this->changeTileProtectionAt(x, y, Qt::Checked);
             }
         }
+        // adjust the number of layers
+        this->numLayers = 1;
         break;
     case DUN_BONECHAMB_PRE: // Bonecha1.DUN
         // external tiles
@@ -3608,6 +3610,8 @@ void D1Dun::patch(int dunFileIndex)
                 change |= this->changeMonsterAt(x, y, 0, false);
             }
         }
+        // adjust the number of layers
+        this->numLayers = 1;
         break;
     case DUN_BLIND_PRE: // Blind2.DUN
         // external tiles
@@ -3696,6 +3700,8 @@ void D1Dun::patch(int dunFileIndex)
                 change |= this->changeMonsterAt(x, y, 0, false);
             }
         }
+        // adjust the number of layers
+        this->numLayers = 1;
         break;
     case DUN_BLOOD_PRE: // Blood2.DUN
         // external tiles
@@ -3806,6 +3812,8 @@ void D1Dun::patch(int dunFileIndex)
                 // change |= this->changeItemAt(x, y, 0);
             }
         }
+        // adjust the number of layers
+        this->numLayers = 1;
         break;
     case DUN_VILE_PRE: // Vile2.DUN
         // useless tiles
@@ -3930,6 +3938,8 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileProtectionAt(11, 18, Qt::Checked);
         change |= this->changeTileProtectionAt(12, 18, Qt::Checked);
         change |= this->changeTileProtectionAt(14, 15, Qt::Checked);
+        // adjust the number of layers
+        this->numLayers = 1;
         break;
     case DUN_WARLORD_PRE: // Warlord2.DUN
         // useless tiles
@@ -4121,6 +4131,8 @@ void D1Dun::patch(int dunFileIndex)
                 change |= this->changeMonsterAt(x, y, 0, false);
             }
         }
+        // adjust the number of layers
+        this->numLayers = 1;
         break;
     case DUN_SKELKING_PRE: // SklKng2.DUN
         // external tiles
@@ -4355,6 +4367,8 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileProtectionAt(21, 15, Qt::Checked);
         change |= this->changeTileProtectionAt(21, 16, Qt::Checked);
         change |= this->changeTileProtectionAt(23,  8, Qt::Checked);
+        // adjust the number of layers
+        this->numLayers = 1;
         break;
     case DUN_BETRAYER: // Vile1.DUN
         // fix corner

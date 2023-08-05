@@ -663,7 +663,7 @@ void DRLG_L5Shadows()
 			case 28:
 			case 7:
 			case 15:
-			// case 16:
+			case 16:
 			// case 17:
 			// case 31:
 			case 85:
@@ -855,7 +855,7 @@ void DRLG_L1Shadows()
 			case 28:
 			case 7:
 			// case 15:
-			// case 16:
+			case 16:
 			// case 17:
 			// case 31:
 			case 154:
@@ -2304,7 +2304,7 @@ static void DRLG_L5Crypt_pattern4(BYTE rndper)
 	DRLG_PlaceRndTile(2, 147, rndper);
 	/** Miniset: South-Edge column on the northern side 3. */
 	DRLG_PlaceRndTile(3, 148, rndper);
-	DRLG_PlaceRndTile(28, 160, rndper);
+	// DRLG_PlaceRndTile(28, 160, rndper);
 	/** Miniset: Use random corner north 3. */
 	DRLG_PlaceRndTile(4, 149, rndper);
 	/** Miniset: North-Edge column on the northern side 3. */
