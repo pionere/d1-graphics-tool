@@ -5917,146 +5917,6 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     }
 }
 
-void D1Tileset::patchHellExit(int tileIndex, bool silent)
-{
-    std::vector<int> &tilSubtiles = this->til->getSubtileIndices(tileIndex);
-
-    if (tilSubtiles[0] != (137 - 1) || tilSubtiles[1] != (138 - 1) || tilSubtiles[2] != (139 - 1) || tilSubtiles[3] != (140 - 1)) {
-        if (tilSubtiles[0] != (17 - 1) || tilSubtiles[1] != (18 - 1))
-            dProgressErr() << QApplication::tr("The exit tile (%1) has invalid (not original) subtiles.").arg(tileIndex + 1);
-        else if (!silent)
-            dProgressWarn() << QApplication::tr("The exit tile (%1) is already patched.").arg(tileIndex + 1);
-        return;
-    }
-
-    this->til->setSubtileIndex(tileIndex, 0, 17 - 1);
-    this->til->setSubtileIndex(tileIndex, 1, 18 - 1);
-
-    std::vector<unsigned> &topLeftFrameReferences = this->min->getFrameReferences(137 - 1);
-    std::vector<unsigned> &topRightFrameReferences = this->min->getFrameReferences(138 - 1);
-    std::vector<unsigned> &bottomLeftFrameReferences = this->min->getFrameReferences(139 - 1);
-    std::vector<unsigned> &bottomRightFrameReferences = this->min->getFrameReferences(140 - 1);
-
-    constexpr unsigned blockSize = BLOCK_SIZE_L4;
-    if (topLeftFrameReferences.size() != blockSize || topRightFrameReferences.size() != blockSize || bottomLeftFrameReferences.size() != blockSize || bottomRightFrameReferences.size() != blockSize) {
-        dProgressErr() << QApplication::tr("The exit tile (%1) has invalid (upscaled?) subtiles.").arg(tileIndex + 1);
-        return;
-    }
-    unsigned topLeft_LeftIndex0 = MICRO_IDX(blockSize, 0);
-    unsigned topLeft_LeftFrameRef0 = topLeftFrameReferences[topLeft_LeftIndex0]; // 368
-    unsigned topLeft_RightIndex0 = MICRO_IDX(blockSize, 1);
-    unsigned topLeft_RightFrameRef0 = topLeftFrameReferences[topLeft_RightIndex0]; // 369
-    unsigned topRight_LeftIndex0 = MICRO_IDX(blockSize, 0);
-    unsigned topRight_LeftFrameRef0 = topRightFrameReferences[topRight_LeftIndex0]; // 370
-    unsigned bottomLeft_RightIndex0 = MICRO_IDX(blockSize, 1);
-    unsigned bottomLeft_RightFrameRef0 = bottomLeftFrameReferences[bottomLeft_RightIndex0]; // 375
-    unsigned bottomRight_RightIndex0 = MICRO_IDX(blockSize, 1);
-    unsigned bottomRight_RightFrameRef0 = bottomRightFrameReferences[bottomRight_RightIndex0]; // 377
-    unsigned bottomRight_LeftIndex0 = MICRO_IDX(blockSize, 0);
-    unsigned bottomRight_LeftFrameRef0 = bottomRightFrameReferences[bottomRight_LeftIndex0]; // 376
-
-    D1GfxFrame *topLeft_RightFrame = this->gfx->getFrame(topLeft_RightFrameRef0 - 1);         // 369
-    D1GfxFrame *topRight_LeftFrame = this->gfx->getFrame(topRight_LeftFrameRef0 - 1);         // 370
-    D1GfxFrame *bottomLeft_RightFrame = this->gfx->getFrame(bottomLeft_RightFrameRef0 - 1);   // 375
-    D1GfxFrame *bottomRight_LeftFrame = this->gfx->getFrame(bottomRight_LeftFrameRef0 - 1);   // 376
-    D1GfxFrame *topLeft_Left0Frame = this->gfx->getFrame(topLeft_LeftFrameRef0 - 1);          // 368
-    D1GfxFrame *bottomRight_RightFrame = this->gfx->getFrame(bottomRight_RightFrameRef0 - 1); // 377
-
-    if (topLeft_RightFrame->getWidth() != MICRO_WIDTH || topLeft_RightFrame->getHeight() != MICRO_HEIGHT) {
-        return; // upscaled(?) frames -> assume it is already done
-    }
-    if ((topRight_LeftFrame->getWidth() != MICRO_WIDTH || topRight_LeftFrame->getHeight() != MICRO_HEIGHT)
-        || (bottomLeft_RightFrame->getWidth() != MICRO_WIDTH || bottomLeft_RightFrame->getHeight() != MICRO_HEIGHT)
-        || (bottomRight_LeftFrame->getWidth() != MICRO_WIDTH || bottomRight_LeftFrame->getHeight() != MICRO_HEIGHT)
-        || (topLeft_Left0Frame->getWidth() != MICRO_WIDTH || topLeft_Left0Frame->getHeight() != MICRO_HEIGHT)
-        || (bottomRight_RightFrame->getWidth() != MICRO_WIDTH || bottomRight_RightFrame->getHeight() != MICRO_HEIGHT)) {
-        dProgressErr() << QApplication::tr("The exit tile (%1) has invalid (mismatching) frames.").arg(tileIndex + 1);
-        return;
-    }
-
-    // move the frames to the bottom right subtile
-    bottomRightFrameReferences[MICRO_IDX(blockSize, 3)] = topLeftFrameReferences[MICRO_IDX(blockSize, 1)]; // 369
-    topLeftFrameReferences[MICRO_IDX(blockSize, 1)] = 0;
-
-    bottomRightFrameReferences[MICRO_IDX(blockSize, 2)] = topLeftFrameReferences[MICRO_IDX(blockSize, 0)]; // 368
-    bottomRightFrameReferences[MICRO_IDX(blockSize, 4)] = topLeftFrameReferences[MICRO_IDX(blockSize, 2)]; // 367
-    topLeftFrameReferences[MICRO_IDX(blockSize, 0)] = 0;
-    topLeftFrameReferences[MICRO_IDX(blockSize, 2)] = 0;
-
-    // eliminate right frame of the bottom left subtile
-    bottomLeftFrameReferences[MICRO_IDX(blockSize, 1)] = 0;
-
-    this->min->setModified();
-
-    // copy 'bone' from topRight_LeftFrame (370) to the other frames 369  /377
-    for (int x = 0; x < 15; x++) {
-        for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
-            D1GfxPixel pixel = topRight_LeftFrame->getPixel(x, y);
-            if (pixel.isTransparent())
-                continue;
-            if (pixel.getPaletteIndex() < 96) // filter floor pixels
-                continue;
-            topLeft_RightFrame->setPixel(x, y + MICRO_HEIGHT / 2, pixel); // 369
-        }
-    }
-    for (int x = 0; x < 15; x++) {
-        for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
-            D1GfxPixel pixel = topRight_LeftFrame->getPixel(x, y);
-            if (pixel.isTransparent())
-                continue;
-            if (pixel.getPaletteIndex() < 96) // filter floor pixels
-                continue;
-            bottomRight_RightFrame->setPixel(x, y - MICRO_HEIGHT / 2, pixel); // 377
-        }
-    }
-    // copy content from topRight_LeftFrame (375) to the other frames 368  /376
-    for (int x = 0; x < MICRO_WIDTH; x++) {
-        for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
-            D1GfxPixel pixel = bottomLeft_RightFrame->getPixel(x, y);
-            if (pixel.isTransparent())
-                continue;
-            topLeft_Left0Frame->setPixel(x, y + MICRO_HEIGHT / 2, pixel); // 368
-        }
-    }
-    for (int x = 0; x < MICRO_WIDTH; x++) {
-        for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
-            D1GfxPixel pixel = bottomLeft_RightFrame->getPixel(x, y);
-            if (pixel.isTransparent())
-                continue;
-            bottomRight_LeftFrame->setPixel(x, y - MICRO_HEIGHT / 2, pixel); // 376
-        }
-    }
-
-    // eliminate floor pixels of the topLeft_Right frame (369)
-    for (int x = 0; x < MICRO_WIDTH; x++) {
-        for (int y = 0; y < MICRO_HEIGHT; y++) {
-            D1GfxPixel pixel = topLeft_RightFrame->getPixel(x, y);
-            if (pixel.isTransparent())
-                continue;
-            if (x >= 15 || pixel.getPaletteIndex() < 80) {
-                topLeft_RightFrame->setPixel(x, y, D1GfxPixel::transparentPixel());
-            }
-        }
-    }
-    // fix bad artifacts
-    topLeft_RightFrame->setPixel(7, 7, D1GfxPixel::transparentPixel());                  // 369
-    topLeft_RightFrame->setPixel(13, 22, D1GfxPixel::transparentPixel());                // 369
-    topLeft_RightFrame->setPixel(12, MICRO_HEIGHT - 1 - 2, D1GfxPixel::colorPixel(122)); // 369 (370)
-    bottomRight_RightFrame->setPixel(14, 0, D1GfxPixel::transparentPixel());             // 377 (370)
-
-    // adjust the frame types
-    D1CelTilesetFrame::selectFrameType(topLeft_Left0Frame);     // 368
-    D1CelTilesetFrame::selectFrameType(topLeft_RightFrame);     // 369
-    D1CelTilesetFrame::selectFrameType(bottomRight_LeftFrame);  // 376
-    D1CelTilesetFrame::selectFrameType(bottomRight_RightFrame); // 377
-
-    this->gfx->setModified();
-
-    if (!silent) {
-        dProgress() << QApplication::tr("The subtiles of Tile %1 are modified.").arg(tileIndex + 1);
-    }
-}
-
 bool D1Tileset::patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int extTileIndex1, int extTileIndex2, int stairsSubtileRef1, int stairsSubtileRef2, bool silent)
 {
     constexpr unsigned blockSize = BLOCK_SIZE_L2;
@@ -10412,6 +10272,2907 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
 
     const int unusedSubtiles[] = {
         2, 6, 15, 18, 21, 147, 149, 152, 153, 155, 157, 160, 161, 179, 195, 204, 205, 208, 209, 211, 218, 220, 221, 222, 224, 225, 226, 227, 240, 241, 243, 250, 251, 253, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 312, 314, 328, 332, 338, 339, 349, 356, 358, 361, 364, 365, 366, 367, 368, 369, 371, 380, 406, 407, 408, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 442, 448, 487, 503, 521, 522, 523, 524, 525, 526, 527, 529, 533, 537, 550, 554, 557, 558, 560
+    };
+
+    for (int n = 0; n < lengthof(unusedSubtiles); n++) {
+        for (int i = 0; i < blockSize; i++) {
+            Blk2Mcr(unusedSubtiles[n], i);
+        }
+    }
+}
+
+bool D1Tileset::patchHellChaos(bool silent)
+{
+    const CelMicro micros[] = {
+/*  0 */{  54 - 1, 5, D1CEL_FRAME_TYPE::RightTriangle },   // redraw subtiles 
+/*  1 */{  54 - 1, 7, D1CEL_FRAME_TYPE::Empty },           // (used to block subsequent calls)
+/*  2 */{  55 - 1, 4, D1CEL_FRAME_TYPE::LeftTriangle },
+/*  3 */{ /*55*/ - 1, 6, D1CEL_FRAME_TYPE::Empty },
+/*  4 */{  53 - 1, 2, D1CEL_FRAME_TYPE::LeftTrapezoid },
+/*  5 */{  53 - 1, 3, D1CEL_FRAME_TYPE::RightTrapezoid },
+/*  6 */{  53 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  7 */{  53 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  8 */{ /*53*/ - 1, 6, D1CEL_FRAME_TYPE::Empty },
+/*  9 */{ /*53*/ - 1, 7, D1CEL_FRAME_TYPE::Empty },
+
+/* 10 */{  48 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 11 */{  52 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 12 */{  58 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 13 */{  67 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 14 */{  52 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 15 */{  67 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 16 */{  76 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 17 */{  46 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 18 */{  50 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 19 */{  56 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 20 */{  62 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 21 */{  65 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 22 */{  68 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 23 */{  74 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 24 */{  46 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 25 */{  50 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 26 */{  56 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 27 */{  59 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 28 */{  65 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 29 */{  77 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 30 */{  74 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 31 */{ /*77*/ - 1, 6, D1CEL_FRAME_TYPE::Empty },
+
+/* 32 */{ /*74*/ - 1, 7, D1CEL_FRAME_TYPE::Empty },
+/* 33 */{  77 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 34 */{  47 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 35 */{  51 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 36 */{  66 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 37 */{  47 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 38 */{  66 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 39 */{  /*78*/ - 1, 7, D1CEL_FRAME_TYPE::Empty },
+    };
+
+    constexpr unsigned blockSize = BLOCK_SIZE_L4;
+    for (int i = 0; i < lengthof(micros); i++) {
+        const CelMicro &micro = micros[i];
+        if (micro.subtileIndex < 0) {
+            continue;
+        }
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
+        if (frame == nullptr) {
+            return false;
+        }
+        bool change = false;
+        // mask 54[5]
+        if (i == 0) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    if (y < 1 + x / 2 || y > 31 - x / 2) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // mask 55[4]
+        if (i == 2) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    if (y < 16 - x / 2 || y > 16 + x / 2) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // mask 53[2]
+        if (i == 4) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    if (y > 16 + x / 2) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // mask 53[3]
+        if (i == 5) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    if (y > 31 - x / 2) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // mask 53[4]
+        if (i == 6) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    if (y < 16 - x / 2) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // mask 53[5]
+        if (i == 7) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    if (y < 1 + x / 2) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+
+        // redraw 48[4], 52[4], 58[4], 67[4] using 55[4]
+        if (i >= 10 && i < 14) {
+            const CelMicro &microSrc = micros[2];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    D1GfxPixel pixelSrc = frameSrc->getPixel(x, y); // 55[4]
+                    if (!pixel.isTransparent() && pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < 32 /*&& !pixelSrc.isTransparent()*/ || (pixel.isTransparent() && !pixelSrc.isTransparent())) {
+                        change |= frame->setPixel(x, y, pixelSrc);
+                    }
+                }
+            }
+        }
+        // redraw 52[6], 67[6], 76[6] using '55[6]'
+        if (i >= 14 && i < 17) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < 32) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // redraw 46[4], 50[4], 56[4], 62[4], 65[4], 68[4], 74[4] using 53[4]
+        if (i >= 17 && i < 24) {
+            const CelMicro &microSrc = micros[6];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    D1GfxPixel pixelSrc = frameSrc->getPixel(x, y); // 53[4]
+                    if (!pixel.isTransparent() && pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < 32 /*&& !pixelSrc.isTransparent()*/ || (pixel.isTransparent() && !pixelSrc.isTransparent())) {
+                        change |= frame->setPixel(x, y, pixelSrc);
+                    }
+                }
+            }
+        }
+        // redraw 46[5], 50[5], 56[5], 59[5], 65[5], 77[5] using 53[5]
+        if (i >= 24 && i < 30) {
+            const CelMicro &microSrc = micros[7];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    D1GfxPixel pixelSrc = frameSrc->getPixel(x, y); // 53[5]
+                    if (!pixel.isTransparent() && pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < 32 /*&& !pixelSrc.isTransparent()*/ || (pixel.isTransparent() && !pixelSrc.isTransparent())) {
+                        if (pixelSrc.isTransparent() && x < 17) {
+                            continue; // preserve 'missing wall-pixel' of 46[5]
+                        }
+                        change |= frame->setPixel(x, y, pixelSrc);
+                    }
+                }
+            }
+        }
+        // redraw 74[6], 77[6] using '53[6]'
+        if (i >= 30 && i < 32) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < 32) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // redraw 74[7], 77[7] using '53[7]'
+        if (i >= 32 && i < 34) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (!pixel.isTransparent() && pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < 32) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+
+        // redraw 47[5], 51[5], 66[5] using 54[5]
+        if (i >= 34 && i < 37) {
+            const CelMicro &microSrc = micros[0];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    D1GfxPixel pixelSrc = frameSrc->getPixel(x, y); // 54[5]
+                    if (!pixel.isTransparent() && pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < 32 /*&& !pixelSrc.isTransparent()*/ || (pixel.isTransparent() && !pixelSrc.isTransparent())) {
+                        change |= frame->setPixel(x, y, pixelSrc);
+                    }
+                }
+            }
+        }
+        // redraw 47[7], 66[7] (using 54[7])
+        if (i >= 37 && i < 40) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (!pixel.isTransparent() && pixel.getPaletteIndex() != 0 && pixel.getPaletteIndex() < 32) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        if (i == 29) { // fix 77[5]
+            change |= frame->setPixel(28, 9, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(29, 1, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(29, 2, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(29, 3, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(29, 4, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(29, 5, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(29, 6, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(29, 7, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(30, 3, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(30, 4, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(30, 5, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(30, 6, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(30, 7, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(31, 6, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(31, 7, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(31, 8, D1GfxPixel::transparentPixel());
+        }
+
+        if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {
+            change = true;
+            frame->setFrameType(micro.res_encoding);
+            std::vector<FramePixel> pixels;
+            D1CelTilesetFrame::collectPixels(frame, micro.res_encoding, pixels);
+            for (const FramePixel &pix : pixels) {
+                D1GfxPixel resPix = pix.pixel.isTransparent() ? D1GfxPixel::colorPixel(0) : D1GfxPixel::transparentPixel();
+                change |= frame->setPixel(pix.pos.x(), pix.pos.y(), resPix);
+            }
+        }
+        if (change) {
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
+            }
+        }
+    }
+
+    return true;
+}
+
+bool D1Tileset::patchHellFloor(bool silent)
+{
+    const CelMicro micros[] = {
+/*  0 */{ 129 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // fix micros
+/*  1 */{ 171 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/*  2 */{ 172 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/*  3 */{ 187 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/*  4 */{ 200 - 1, 1, D1CEL_FRAME_TYPE::RightTrapezoid },
+/*  5 */{ 200 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  6 */{ 225 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/*  7 */{ 227 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/*  8 */{ 228 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  9 */{ 228 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 10 */{ /*265*/ - 1, 0, D1CEL_FRAME_TYPE::Empty },
+/* 11 */{ 272 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 12 */{ 277 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 13 */{ 289 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/* 14 */{ 302 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 15 */{ 337 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 16 */{ 371 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 17 */{ 340 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 18 */{ 373 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+
+/* 19 */{   1 - 1, 5, D1CEL_FRAME_TYPE::Empty },
+/* 20 */{ 188 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 21 */{   5 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 22 */{   8 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 23 */{  15 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 24 */{  50 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 25 */{  50 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 26 */{ 180 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 27 */{ 212 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 28 */{ 251 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 29 */{   1 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 30 */{  11 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 31 */{ 196 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 32 */{ 204 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 33 */{ 208 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 34 */{ 254 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 35 */{   4 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 36 */{ 155 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 37 */{ 152 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+
+/* 38 */{ 238 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 39 */{ 238 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+    };
+    constexpr unsigned blockSize = BLOCK_SIZE_L4;
+    for (int i = 0; i < lengthof(micros); i++) {
+        const CelMicro &micro = micros[i];
+        if (micro.subtileIndex < 0) {
+            continue;
+        }
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
+        if (frame == nullptr) {
+            return false;
+        }
+        bool change = false;
+        if (i == 0) { // 129[1] - adjust after reuse
+            change |= frame->setPixel(0, 25, D1GfxPixel::colorPixel(40));
+            change |= frame->setPixel(0, 26, D1GfxPixel::colorPixel(40));
+            change |= frame->setPixel(0, 27, D1GfxPixel::colorPixel(42));
+            change |= frame->setPixel(0, 28, D1GfxPixel::colorPixel(40));
+        }
+        if (i == 1) { // 171[1] - adjust shadow after reuse
+            change |= frame->setPixel(29, 15, D1GfxPixel::colorPixel(42));
+        }
+        if (i == 3) { // 187[1] - fix glitch
+            change |= frame->setPixel(11, 26, D1GfxPixel::colorPixel(40));
+        }
+
+        if (i == 4) { // 200[1] - fix glitch(?)
+            change |= frame->setPixel(0, 11, D1GfxPixel::colorPixel(115));
+            change |= frame->setPixel(1, 10, D1GfxPixel::colorPixel(115));
+            change |= frame->setPixel(1, 11, D1GfxPixel::colorPixel(117));
+            change |= frame->setPixel(1, 12, D1GfxPixel::colorPixel(115));
+
+            change |= frame->setPixel(0, 14, D1GfxPixel::colorPixel(118));
+            change |= frame->setPixel(0, 15, D1GfxPixel::colorPixel(120));
+            change |= frame->setPixel(0, 16, D1GfxPixel::colorPixel(117));
+            change |= frame->setPixel(0, 17, D1GfxPixel::colorPixel(116));
+
+            change |= frame->setPixel(0, 26, D1GfxPixel::colorPixel(43));
+            change |= frame->setPixel(1, 26, D1GfxPixel::colorPixel(44));
+            change |= frame->setPixel(1, 25, D1GfxPixel::colorPixel(41));
+        }
+        if (i == 5) { // 200[4] - adjust after reuse
+            change |= frame->setPixel(14, 0, D1GfxPixel::colorPixel(121));
+            change |= frame->setPixel(15, 0, D1GfxPixel::colorPixel(120));
+            change |= frame->setPixel(16, 0, D1GfxPixel::colorPixel(120));
+            change |= frame->setPixel(17, 0, D1GfxPixel::colorPixel(116));
+
+            change |= frame->setPixel(21, 0, D1GfxPixel::colorPixel(113));
+            change |= frame->setPixel(22, 0, D1GfxPixel::colorPixel(114));
+            change |= frame->setPixel(23, 0, D1GfxPixel::colorPixel(115));
+            change |= frame->setPixel(24, 0, D1GfxPixel::colorPixel(116));
+            change |= frame->setPixel(25, 0, D1GfxPixel::colorPixel(115));
+
+            change |= frame->setPixel(15, 1, D1GfxPixel::colorPixel(89));
+            change |= frame->setPixel(16, 1, D1GfxPixel::colorPixel(120));
+            change |= frame->setPixel(17, 1, D1GfxPixel::colorPixel(116));
+            change |= frame->setPixel(16, 2, D1GfxPixel::colorPixel(119));
+        }
+        if (i == 6) { // 225[0] - adjust after reuse
+            change |= frame->setPixel(30, 5, D1GfxPixel::colorPixel(40));
+            change |= frame->setPixel(31, 5, D1GfxPixel::colorPixel(39));
+            change |= frame->setPixel(31, 8, D1GfxPixel::colorPixel(40));
+            change |= frame->setPixel(31, 15, D1GfxPixel::colorPixel(39));
+        }
+        if (i == 7) { // 227[1] - fix shadow
+            change |= frame->setPixel(8, 10, D1GfxPixel::colorPixel(45));
+            change |= frame->setPixel(8, 11, D1GfxPixel::colorPixel(111));
+            change |= frame->setPixel(8, 12, D1GfxPixel::colorPixel(111));
+            change |= frame->setPixel(8, 13, D1GfxPixel::colorPixel(126));
+        }
+        if (i == 8) { // 228[3] - fix 'shadow'
+            change |= frame->setPixel(8, 10, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(6, 19, D1GfxPixel::colorPixel(108));
+            change |= frame->setPixel(6, 20, D1GfxPixel::colorPixel(107));
+            change |= frame->setPixel(6, 23, D1GfxPixel::colorPixel(125));
+            change |= frame->setPixel(6, 25, D1GfxPixel::colorPixel(109));
+            change |= frame->setPixel(6, 26, D1GfxPixel::colorPixel(125));
+            change |= frame->setPixel(6, 27, D1GfxPixel::colorPixel(109));
+            change |= frame->setPixel(6, 28, D1GfxPixel::colorPixel(125));
+            change |= frame->setPixel(6, 29, D1GfxPixel::colorPixel(107));
+        }
+        if (i == 9) { // 228[5] - fix shadow after reuse + fix glare
+            change |= frame->setPixel(15, 24, D1GfxPixel::colorPixel(126));
+
+            change |= frame->setPixel(0, 24, D1GfxPixel::colorPixel(116));
+        }
+        if (i == 11) { // 272[0] - adjust after reuse
+            change |= frame->setPixel(31, 15, D1GfxPixel::colorPixel(43));
+            change |= frame->setPixel(30, 3, D1GfxPixel::colorPixel(40));
+            change |= frame->setPixel(31, 3, D1GfxPixel::colorPixel(43));
+        }
+        if (i == 13) { // 289[1] - adjust after reuse
+            change |= frame->setPixel(0, 2, D1GfxPixel::colorPixel(40));
+            change |= frame->setPixel(1, 2, D1GfxPixel::colorPixel(42));
+            change |= frame->setPixel(0, 25, D1GfxPixel::colorPixel(53));
+            change |= frame->setPixel(0, 21, D1GfxPixel::colorPixel(42));
+            change |= frame->setPixel(0, 22, D1GfxPixel::colorPixel(40));
+        }
+        if (i == 14) { // 302[0] - adjust after reuse
+            change |= frame->setPixel(31, 5, D1GfxPixel::colorPixel(39));
+            change |= frame->setPixel(31, 12, D1GfxPixel::colorPixel(41));
+            change |= frame->setPixel(31, 13, D1GfxPixel::colorPixel(39));
+        }
+        // 337[0], 371[0] - adjust after reuse
+        if (i >= 15 && i < 17) {
+            change |= frame->setPixel(31, 7, D1GfxPixel::colorPixel(38));
+            change |= frame->setPixel(31, 8, D1GfxPixel::colorPixel(39));
+            change |= frame->setPixel(31, 9, D1GfxPixel::colorPixel(40));
+
+            change |= frame->setPixel(30, 25, D1GfxPixel::colorPixel(42));
+            change |= frame->setPixel(31, 25, D1GfxPixel::colorPixel(40));
+
+            change |= frame->setPixel(29, 28, D1GfxPixel::colorPixel(39));
+            change |= frame->setPixel(30, 28, D1GfxPixel::colorPixel(41));
+            change |= frame->setPixel(31, 28, D1GfxPixel::colorPixel(42));
+        }
+        // 340[0], 373[0] - adjust after reuse
+        if (i >= 17 && i < 19) {
+            change |= frame->setPixel(31, 10, D1GfxPixel::colorPixel(41));
+            change |= frame->setPixel(29, 10, D1GfxPixel::colorPixel(39));
+
+            change |= frame->setPixel(30, 11, D1GfxPixel::colorPixel(40));
+            change |= frame->setPixel(31, 12, D1GfxPixel::colorPixel(40));
+
+            change |= frame->setPixel(31, 20, D1GfxPixel::colorPixel(39));
+            change |= frame->setPixel(30, 21, D1GfxPixel::colorPixel(41));
+            change |= frame->setPixel(31, 21, D1GfxPixel::colorPixel(38));
+
+            change |= frame->setPixel(30, 28, D1GfxPixel::colorPixel(42));
+            change |= frame->setPixel(30, 29, D1GfxPixel::colorPixel(40));
+            change |= frame->setPixel(31, 29, D1GfxPixel::colorPixel(39));
+            change |= frame->setPixel(30, 30, D1GfxPixel::colorPixel(39));
+            change |= frame->setPixel(31, 30, D1GfxPixel::colorPixel(38));
+        }
+
+        // 188[5] - adjust after reuse/fix using 1[5]
+        if (i == 20) {
+            const CelMicro &microSrc = micros[19];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    if (y < 6 && y < x + 3) {
+                        change |= frame->setPixel(x, y, frameSrc->getPixel(x, y)); // 1[5]
+                    }
+                }
+            }
+        }
+        if (i == 21) { // 5[6] - adjust after reuse + sync
+            change |= frame->setPixel(31, 30, D1GfxPixel::transparentPixel());
+
+            // change |= frame->setPixel(17, 19, D1GfxPixel::colorPixel(102));
+            // change |= frame->setPixel(16, 19, D1GfxPixel::colorPixel(98));
+            change |= frame->setPixel(20, 20, D1GfxPixel::colorPixel(103));
+            change |= frame->setPixel(15, 20, D1GfxPixel::colorPixel(96));
+            change |= frame->setPixel(14, 21, D1GfxPixel::colorPixel(96));
+            change |= frame->setPixel(13, 22, D1GfxPixel::colorPixel(112));
+            change |= frame->setPixel(11, 25, D1GfxPixel::colorPixel(113));
+            change |= frame->setPixel(10, 27, D1GfxPixel::colorPixel(115));
+
+            change |= frame->setPixel(12, 23, D1GfxPixel::colorPixel(112));
+            change |= frame->setPixel(10, 26, D1GfxPixel::colorPixel(114));
+            change |= frame->setPixel(9, 29, D1GfxPixel::colorPixel(109));
+            change |= frame->setPixel(9, 30, D1GfxPixel::colorPixel(110));
+        }
+        if (i == 22) { // 8[7] - adjust after reuse
+            change |= frame->setPixel(0, 30, D1GfxPixel::transparentPixel());
+        }
+        if (i == 23) { // 15[6] - sync
+            change |= frame->setPixel(31, 29, D1GfxPixel::transparentPixel());
+            // change |= frame->setPixel(17, 19, D1GfxPixel::colorPixel(102));
+            // change |= frame->setPixel(16, 19, D1GfxPixel::colorPixel(98));
+            change |= frame->setPixel(12, 23, D1GfxPixel::colorPixel(112));
+        }
+        if (i == 24) { // 50[4] - sync
+            change |= frame->setPixel(12, 3, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(13, 4, D1GfxPixel::transparentPixel());
+
+            change |= frame->setPixel(14, 6, D1GfxPixel::colorPixel(126));
+            change |= frame->setPixel(15, 7, D1GfxPixel::colorPixel(111));
+            change |= frame->setPixel(15, 8, D1GfxPixel::colorPixel(126));
+        }
+        if (i == 25) { // 50[7] - adjust after reuse
+            change |= frame->setPixel(0, 31, D1GfxPixel::transparentPixel());
+        }
+        if (i == 26) { // 180[6] - sync
+            change |= frame->setPixel(31, 30, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(28, 28, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(27, 27, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(26, 26, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(25, 25, D1GfxPixel::colorPixel(106));
+            change |= frame->setPixel(24, 24, D1GfxPixel::colorPixel(106));
+            change |= frame->setPixel(23, 23, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(22, 22, D1GfxPixel::colorPixel(104));
+            change |= frame->setPixel(21, 21, D1GfxPixel::colorPixel(103));
+
+            change |= frame->setPixel(17, 19, D1GfxPixel::transparentPixel()); // 118
+            change |= frame->setPixel(16, 19, D1GfxPixel::transparentPixel()); // 114
+            change |= frame->setPixel(20, 20, D1GfxPixel::colorPixel(103));
+            change |= frame->setPixel(15, 20, D1GfxPixel::colorPixel(96));
+            change |= frame->setPixel(16, 20, D1GfxPixel::colorPixel(82));
+            change |= frame->setPixel(14, 21, D1GfxPixel::colorPixel(96));
+            change |= frame->setPixel(15, 21, D1GfxPixel::colorPixel(114));
+            change |= frame->setPixel(14, 22, D1GfxPixel::colorPixel(114));
+            change |= frame->setPixel(13, 22, D1GfxPixel::colorPixel(97));
+            change |= frame->setPixel(11, 25, D1GfxPixel::colorPixel(112));
+            change |= frame->setPixel(11, 26, D1GfxPixel::colorPixel(113));
+            change |= frame->setPixel(18, 24, D1GfxPixel::colorPixel(82));
+            change |= frame->setPixel(16, 27, D1GfxPixel::colorPixel(83));
+            change |= frame->setPixel(19, 20, D1GfxPixel::colorPixel(120));
+
+            change |= frame->setPixel(12, 23, D1GfxPixel::colorPixel(114));
+            change |= frame->setPixel(10, 26, D1GfxPixel::colorPixel(114));
+            change |= frame->setPixel(9, 29, D1GfxPixel::colorPixel(124));
+            change |= frame->setPixel(9, 30, D1GfxPixel::colorPixel(110));
+        }
+        if (i == 27) { // 212[6] - sync
+            // change |= frame->setPixel(17, 19, D1GfxPixel::colorPixel(102));
+            // change |= frame->setPixel(16, 19, D1GfxPixel::colorPixel(98));
+            change |= frame->setPixel(20, 20, D1GfxPixel::colorPixel(103));
+            change |= frame->setPixel(15, 20, D1GfxPixel::colorPixel(96));
+            change |= frame->setPixel(14, 21, D1GfxPixel::colorPixel(96));
+            change |= frame->setPixel(13, 22, D1GfxPixel::colorPixel(112));
+            change |= frame->setPixel(11, 25, D1GfxPixel::colorPixel(113));
+
+            change |= frame->setPixel(12, 23, D1GfxPixel::colorPixel(112));
+            change |= frame->setPixel(10, 26, D1GfxPixel::colorPixel(114));
+            change |= frame->setPixel(9, 29, D1GfxPixel::colorPixel(59));
+            change |= frame->setPixel(9, 30, D1GfxPixel::colorPixel(110));
+
+            change |= frame->setPixel(11, 27, D1GfxPixel::colorPixel(118));
+            change |= frame->setPixel(10, 27, D1GfxPixel::colorPixel(117));
+            change |= frame->setPixel(10, 28, D1GfxPixel::colorPixel(120));
+            change |= frame->setPixel(13, 25, D1GfxPixel::colorPixel(116));
+            change |= frame->setPixel(15, 22, D1GfxPixel::colorPixel(96));
+        }
+        if (i == 28) { // 251[6] - sync
+            // change |= frame->setPixel(16, 19, D1GfxPixel::colorPixel(98));
+            change |= frame->setPixel(15, 20, D1GfxPixel::colorPixel(96));
+            change |= frame->setPixel(14, 21, D1GfxPixel::colorPixel(96));
+            change |= frame->setPixel(13, 22, D1GfxPixel::colorPixel(112));
+            change |= frame->setPixel(11, 25, D1GfxPixel::colorPixel(113));
+            change |= frame->setPixel(10, 27, D1GfxPixel::colorPixel(117));
+
+            change |= frame->setPixel(12, 23, D1GfxPixel::colorPixel(112));
+            change |= frame->setPixel(10, 26, D1GfxPixel::colorPixel(114));
+            change |= frame->setPixel(9, 29, D1GfxPixel::colorPixel(59));
+            change |= frame->setPixel(9, 30, D1GfxPixel::colorPixel(110));
+
+            change |= frame->setPixel(10, 28, D1GfxPixel::colorPixel(104));
+        }
+        // 1[7], 11[7], 196[7], 204[7], 208[7], 254[7] - sync
+        if (i >= 29 && i < 35) {
+            change |= frame->setPixel(14, 19, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(15, 19, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(11, 20, D1GfxPixel::colorPixel(108));
+        }
+
+        // fix shadow on 227[1] using 4[1]
+        if (i == 7) {
+            const CelMicro &microSrc = micros[35];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            if (frameSrc == nullptr) {
+                return false;
+            }
+            for (int x = 7; x < 13; x++) {
+                for (int y = 22; y < 28; y++) {
+                    change |= frame->setPixel(x, y, frameSrc->getPixel(x, y)); // 4[1]
+                }
+            }
+        }
+        // fix shadow on 152[1] using 155[1]
+        if (i == 37) {
+            const CelMicro &microSrc = micros[36];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            if (frameSrc == nullptr) {
+                return false;
+            }
+            for (int x = 7; x < 13; x++) {
+                for (int y = 22; y < 28; y++) {
+                    change |= frame->setPixel(x, y, frameSrc->getPixel(x, y)); // 155[1]
+                }
+            }
+        }
+        // fix shadow on 238[0] to make it more usable
+        if (i == 38) {
+            for (int x = 26; x < MICRO_WIDTH; x++) {
+                for (int y = 26; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    quint8 color = pixel.getPaletteIndex();
+                    if (!pixel.isTransparent() && color != 0 && (color % 16) < 12) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::colorPixel((color & ~15) | (12 + (color % 16) / 4)));
+                    }
+                }
+            }
+        }
+        // fix shadow on 238[1] to make it more usable
+        if (i == 39) {
+            for (int x = 0; x < 8; x++) {
+                for (int y = 21; y < 29; y++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    quint8 color = pixel.getPaletteIndex();
+                    if (!pixel.isTransparent() && color != 0 && (color % 16) < 12) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::colorPixel((color & ~15) | (12 + (color % 16) / 4)));
+                    }
+                }
+            }
+        }
+
+        if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {
+            change = true;
+            frame->setFrameType(micro.res_encoding);
+            std::vector<FramePixel> pixels;
+            D1CelTilesetFrame::collectPixels(frame, micro.res_encoding, pixels);
+            for (const FramePixel &pix : pixels) {
+                D1GfxPixel resPix = pix.pixel.isTransparent() ? D1GfxPixel::colorPixel(0) : D1GfxPixel::transparentPixel();
+                change |= frame->setPixel(pix.pos.x(), pix.pos.y(), resPix);
+            }
+        }
+        if (change) {
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
+            }
+        }
+    }
+
+    return true;
+}
+
+bool D1Tileset::patchHellStairs(bool silent)
+{
+    const CelMicro micros[] = {
+/*  0 */{ 139 - 1, 1, D1CEL_FRAME_TYPE::Empty },              // merge subtiles (used to block subsequent calls)
+/*  1 */{ 138 - 1, 0, D1CEL_FRAME_TYPE::Empty },
+/*  2 */{ 137 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  3 */{ 137 - 1, 0, D1CEL_FRAME_TYPE::Square },
+/*  4 */{ 140 - 1, 0, D1CEL_FRAME_TYPE::LeftTrapezoid },
+/*  5 */{ 137 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  6 */{ 140 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/*  7 */{ 136 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/*  8 */{ 126 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/*  9 */{  98 - 1, 0, D1CEL_FRAME_TYPE::Empty },
+/* 10 */{  86 - 1, 4, D1CEL_FRAME_TYPE::Square },
+/* 11 */{  86 - 1, 2, D1CEL_FRAME_TYPE::Square },
+/* 12 */{  95 - 1, 1, D1CEL_FRAME_TYPE::RightTrapezoid },
+
+/* 13 */{  91 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // eliminate pointless pixels
+/* 14 */{  91 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 15 */{ 110 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 16 */{ 110 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 17 */{ 112 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 18 */{ 112 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 19 */{ 113 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 20 */{ 113 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 21 */{ 130 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 22 */{ 132 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 23 */{ 133 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 24 */{ 100 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 25 */{ 135 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 26 */{ 127 - 1, 9, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 27 */{ 134 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 28 */{ 134 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 29 */{ 134 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+    };
+    constexpr unsigned blockSize = BLOCK_SIZE_L4;
+    for (int i = 0; i < lengthof(micros); i++) {
+        const CelMicro &micro = micros[i];
+        if (micro.subtileIndex < 0) {
+            continue;
+        }
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
+        if (frame == nullptr) {
+            return false;
+        }
+        bool change = false;
+
+        // mask 138[0]
+        if (i == 1) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (pixel.isTransparent()) {
+                        continue;
+                    }
+                    if (x >= 15 || pixel.getPaletteIndex() < 80) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // move pixels to 137[0] from 139[1]
+        if (i == 3) {
+            const CelMicro &microSrc = micros[0];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y - MICRO_HEIGHT / 2); // 139[1]
+                    if (!pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, pixel);
+                    }
+                }
+            }
+        }
+        // move pixels to 140[0] from 139[1]
+        if (i == 4) {
+            const CelMicro &microSrc = micros[0];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y + MICRO_HEIGHT / 2); // 139[1]
+                    if (!pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, pixel);
+                    }
+                }
+            }
+        }
+
+        // mask 137[1]
+        if (i == 5) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (pixel.isTransparent()) {
+                        continue;
+                    }
+                    if (x >= 15 || pixel.getPaletteIndex() < 80) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // move pixels to 137[1] from 138[0]
+        if (i == 5) {
+            const CelMicro &microSrc = micros[1];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y - MICRO_HEIGHT / 2); // 138[0]
+                    if (!pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, pixel);
+                    }
+                }
+            }
+        }
+        // move pixels to 140[1] from 138[0]
+        if (i == 6) {
+            const CelMicro &microSrc = micros[1];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            if (frameSrc == nullptr) {
+                return false;
+            }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y + MICRO_HEIGHT / 2); // 138[0]
+                    if (!pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, pixel);
+                    }
+                }
+            }
+        }
+        // move pixels to 126[3] from 136[1]
+        if (i == 8) {
+            const CelMicro &microSrc = micros[7];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            if (frameSrc == nullptr) {
+                return false;
+            }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y); // 136[1]
+                    if (!pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, pixel);
+                    }
+                }
+            }
+        }
+        // move pixels to 86[4] from 98[0]
+        if (i == 10) {
+            const CelMicro &microSrc = micros[9];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y); // 98[0]
+                    if (!pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, pixel);
+                    }
+                }
+            }
+        }
+        // move pixels to 86[2] from 91[1]
+        {
+            if (i == 11) { // 86[2]
+                change |= frame->setPixel(0, 31, D1GfxPixel::colorPixel(125));
+            }
+            if (i == 14) { // 91[1]
+                change |= frame->setPixel(0, 15, D1GfxPixel::transparentPixel());
+            }
+
+        }
+        // move pixels to 95[1] from 113[0]
+        {
+            if (i == 12) { // 95[1]
+                change |= frame->setPixel(30, 0, D1GfxPixel::colorPixel(124));
+                change |= frame->setPixel(31, 0, D1GfxPixel::colorPixel(126));
+            }
+            if (i == 19) { // 113[0]
+                change |= frame->setPixel(30, 16, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(31, 16, D1GfxPixel::transparentPixel());
+            }
+        }
+
+        // eliminate pointless pixels of 91[0], 91[1], 110[0], 110[1], 112[0], 112[1], 113[0], 113[1], 130[0], 132[1], 133[0]
+        if (i >= 13 && i < 24) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (pixel.getPaletteIndex() == 80) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // eliminate pointless pixels of 100[2]
+        if (i == 24) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (y >= 16 - x / 2 && (pixel.getPaletteIndex() % 16) > 12) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // move pixels to 127[9] from 135[5]
+        {
+            if (i == 26) { // 127[9]
+                change |= frame->setPixel(31, 26, D1GfxPixel::colorPixel(115));
+                change |= frame->setPixel(27, 27, D1GfxPixel::colorPixel(106));
+                change |= frame->setPixel(28, 27, D1GfxPixel::colorPixel(104));
+                change |= frame->setPixel(29, 27, D1GfxPixel::colorPixel(115));
+                change |= frame->setPixel(30, 27, D1GfxPixel::colorPixel(113));
+                change |= frame->setPixel(31, 27, D1GfxPixel::colorPixel(113));
+            }
+            if (i == 25) { // 135[5]
+                change |= frame->setPixel(31, 26, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(27, 27, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(28, 27, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(29, 27, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(30, 27, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(31, 27, D1GfxPixel::transparentPixel());
+            }
+        }
+
+        // fix bad artifacts
+        if (i == 5) { // 137[1] (140[3])
+            change |= frame->setPixel(7, 7, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(12, 29, D1GfxPixel::colorPixel(122));
+            change |= frame->setPixel(13, 22, D1GfxPixel::transparentPixel());
+        }
+        if (i == 6) { // 140[1]
+            change |= frame->setPixel(14, 0, D1GfxPixel::transparentPixel());
+        }
+        if (i == 23) { // 133[0] - restore eliminated pixel
+            change |= frame->setPixel(31, 3, D1GfxPixel::colorPixel(80));
+        }
+        // move pixels to 100[2] from 110[1]
+        {
+            if (i == 24) { // 100[2]
+                change |= frame->setPixel( 2, 5, D1GfxPixel::colorPixel(106));
+                change |= frame->setPixel( 6, 7, D1GfxPixel::colorPixel(120));
+            }
+            if (i == 16) { // 110[1]
+                change |= frame->setPixel( 2, 21, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel( 6, 23, D1GfxPixel::transparentPixel());
+            }
+        }
+        if (i == 27) { // 134[0]
+            change |= frame->setPixel(29, 0, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(30, 0, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(31, 0, D1GfxPixel::transparentPixel());
+        }
+        if (i == 28) { // 134[1]
+            change |= frame->setPixel(0, 0, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(1, 0, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(2, 0, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(3, 0, D1GfxPixel::transparentPixel());
+        }
+        if (i == 29) { // 134[2]
+            change |= frame->setPixel(0, 31, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(1, 31, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(2, 31, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(3, 31, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(4, 31, D1GfxPixel::transparentPixel());
+        }
+
+        if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {
+            change = true;
+            frame->setFrameType(micro.res_encoding);
+            std::vector<FramePixel> pixels;
+            D1CelTilesetFrame::collectPixels(frame, micro.res_encoding, pixels);
+            for (const FramePixel &pix : pixels) {
+                D1GfxPixel resPix = pix.pixel.isTransparent() ? D1GfxPixel::colorPixel(0) : D1GfxPixel::transparentPixel();
+                change |= frame->setPixel(pix.pos.x(), pix.pos.y(), resPix);
+            }
+        }
+        if (change) {
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
+            }
+        }
+    }
+
+    return true;
+}
+
+bool D1Tileset::patchHellWall1(bool silent)
+{
+    const CelMicro micros[] = {
+/*  0 */{   8 - 1, 0, D1CEL_FRAME_TYPE::Empty }, // mask walls leading to north east
+/*  1 */{   8 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/*  2 */{   8 - 1, 2, D1CEL_FRAME_TYPE::Empty },
+/*  3 */{  21 - 1, 3, D1CEL_FRAME_TYPE::Empty },
+/*  4 */{   8 - 1, 4, D1CEL_FRAME_TYPE::Empty },
+/*  5 */{   8 - 1, 5, D1CEL_FRAME_TYPE::Empty },
+
+/*  6 */{  21 - 1, 0, D1CEL_FRAME_TYPE::LeftTrapezoid },
+/*  7 */{  21 - 1, 2, D1CEL_FRAME_TYPE::Square },
+/*  8 */{  21 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/*  9 */{   1 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 10 */{   1 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 11 */{   1 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 12 */{   1 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 13 */{  11 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 14 */{  11 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 15 */{  11 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 16 */{  11 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 17 */{ 167 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 18 */{ 167 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 19 */{ 167 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 20 */{ /*167*/ - 1, 7, D1CEL_FRAME_TYPE::Empty },
+/* 21 */{ /*188*/ - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 22 */{ /*188*/ - 1, 3, D1CEL_FRAME_TYPE::Empty },
+/* 23 */{ 188 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 24 */{ /*188*/ - 1, 7, D1CEL_FRAME_TYPE::Empty },
+/* 25 */{ /*196*/ - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 26 */{ /*196*/ - 1, 3, D1CEL_FRAME_TYPE::Empty },
+/* 27 */{ 196 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 28 */{ 196 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 29 */{ 204 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 30 */{ /*204*/ - 1, 3, D1CEL_FRAME_TYPE::Empty },
+/* 31 */{ 204 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 32 */{ 204 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 33 */{ 208 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 34 */{ 208 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 35 */{ 208 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 36 */{ 208 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 37 */{ /*251*/ - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 38 */{ 251 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 39 */{ 251 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 40 */{ 251 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 41 */{ /*254*/ - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 42 */{ /*254*/ - 1, 3, D1CEL_FRAME_TYPE::Empty },
+/* 43 */{ 254 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 44 */{ 254 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 45 */{   3 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 46 */{   3 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 47 */{ /*190*/ - 1, 0, D1CEL_FRAME_TYPE::Empty },
+/* 48 */{ 190 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 49 */{ 198 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 50 */{ /*198*/ - 1, 2, D1CEL_FRAME_TYPE::Empty },
+/* 51 */{ 206 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 52 */{ 206 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 53 */{ 210 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 54 */{ /*210*/ - 1, 2, D1CEL_FRAME_TYPE::Empty },
+
+/* 55 */{  23 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 56 */{ 190 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 57 */{ 198 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 58 */{ 206 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 59 */{ 210 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 60 */{  48 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 61 */{  58 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 62 */{   6 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 63 */{  51 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 64 */{ 193 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 65 */{ 201 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 66 */{ 217 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 67 */{ /*244*/ - 1, 0, D1CEL_FRAME_TYPE::Empty },
+/* 68 */{ 244 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 69 */{ 244 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 70 */{ /*246*/ - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 71 */{ 246 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 72 */{ 246 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 73 */{ 257 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+    };
+    constexpr unsigned blockSize = BLOCK_SIZE_L4;
+    for (int i = 0; i < lengthof(micros); i++) {
+        const CelMicro &micro = micros[i];
+        if (micro.subtileIndex < 0) {
+            continue;
+        }
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
+        if (frame == nullptr) {
+            return false;
+        }
+        bool change = false;
+        // mask 11[1], 167[1] using 1[1]
+        if (i >= 13 && i < 21 && (i % 4) == (13 % 4)) {
+            const CelMicro &microSrc = micros[9];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y); // 1[1]
+                    if (pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        if (i == 10) { // mask 1[3]
+            // change |= frame->setPixel(17, 20, D1GfxPixel::transparentPixel());
+            // change |= frame->setPixel(17, 21, D1GfxPixel::transparentPixel());
+            // change |= frame->setPixel(17, 22, D1GfxPixel::transparentPixel());
+
+            change |= frame->setPixel(17, 31, D1GfxPixel::transparentPixel());
+        }
+        if (i == 34) { // mask 208[3]
+            change |= frame->setPixel(17,  8, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(17,  9, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(17, 10, D1GfxPixel::transparentPixel());
+
+            // change |= frame->setPixel(17, 20, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(17, 21, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(17, 22, D1GfxPixel::transparentPixel());
+
+            change |= frame->setPixel(17, 31, D1GfxPixel::transparentPixel());
+        }
+        // mask 167[3]
+        if (i == 18) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    if (x < 17) {
+                        continue;
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // mask 11[3] using 21[3]
+        if (i == 14) {
+            const CelMicro &microSrc = micros[3];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    if (x < 17) {
+                        continue;
+                    }
+                    D1GfxPixel pixelSrc = frameSrc->getPixel(x, y); // 21[3]
+                    if (!pixelSrc.isTransparent()) {
+                        continue;
+                    }
+                    quint8 color = frame->getPixel(x, y).getPaletteIndex();
+                    if (color != 63 && color != 78 && color != 79 && color != 94 && color != 95 && (color < 107 || color > 111) && color != 126 && color != 127) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // mask 251[3]
+        if (i == 38) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    if (x < 17) {
+                        continue;
+                    }
+                    if (y < x - 18) {
+                        continue;
+                    }
+                    if (y == 14 || y == 15) {
+                        continue; // keep pixels continuous
+                    }
+                    quint8 color = frame->getPixel(x, y).getPaletteIndex();
+                    if (color != 63 && color != 78 && color != 79 && color != 94 && color != 95 && (color < 107 || color > 111) && color != 126 && color != 127) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // mask 1[5], 167[5], 188[5], 196[5], 204[5], 208[5]
+        if (i >= 11 && i < 37 && (i % 4) == (11 % 4)) {
+            if (i == 19) { // 167[5]
+                for (int x = 17; x < MICRO_WIDTH; x++) {
+                    for (int y = 0; y < MICRO_HEIGHT; y++) {
+                        if (y > 21 - x) {
+                            change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        }
+                    }
+                }
+            } else if (i != 15) { // 1[5], 188[5], 196[5], 204[5], 208[5]
+                change |= frame->setPixel(20, 2, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(19, 3, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(18, 4, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(17, 5, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(17, 6, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(17, 7, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(17, 8, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(17, 9, D1GfxPixel::transparentPixel());
+                if (i != 35) { // 208[5]
+                    change |= frame->setPixel(17, 10, D1GfxPixel::transparentPixel());
+                    change |= frame->setPixel(17, 11, D1GfxPixel::transparentPixel());
+                    change |= frame->setPixel(17, 12, D1GfxPixel::transparentPixel());
+                }
+                if (i == 31) { // 204[5]
+                    change |= frame->setPixel(17, 13, D1GfxPixel::transparentPixel());
+                    change |= frame->setPixel(17, 14, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // mask 11[7] using 1[7]
+        if (i == 16) {
+            const CelMicro &microSrc = micros[12];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    if (x >= 20 || y < 14) {
+                        continue; // preserve the tusk
+                    }
+                    if (x >= 9 && y >= 26) {
+                        continue; // preserve the shadow
+                    }
+                    change |= frame->setPixel(x, y, frameSrc->getPixel(x, y)); // 1[7]
+                }
+            }
+        }
+        // mask 3[0], 198[0], 206[0], 210[0] using 1[1] and 167[3]
+        if (i >= 45 && i < 55 && (i % 2) == (45 % 2)) {
+            const CelMicro &microSrc1 = micros[18];
+            std::pair<unsigned, D1GfxFrame *> mf1 = this->getFrame(microSrc1.subtileIndex, blockSize, microSrc1.microIndex);
+            D1GfxFrame *frameSrc1 = mf1.second;
+            // if (frameSrc1 == nullptr) {
+            //    return;
+            // }
+            const CelMicro &microSrc2 = micros[9];
+            std::pair<unsigned, D1GfxFrame *> mf2 = this->getFrame(microSrc2.subtileIndex, blockSize, microSrc2.microIndex);
+            D1GfxFrame *frameSrc2 = mf2.second;
+            // if (frameSrc2 == nullptr) {
+            //    return;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+
+                    D1GfxPixel pixel = D1GfxPixel::transparentPixel();
+                    if (y < MICRO_HEIGHT / 2) {
+                        pixel = frameSrc1->getPixel(x, y + MICRO_HEIGHT / 2); // 167[3]
+                    } else {
+                        pixel = frameSrc2->getPixel(x, y - MICRO_HEIGHT / 2); // 1[1]
+                    }
+
+                    if (!pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+            { // remove shadow using '167[3]'
+                change |= frame->setPixel(17, 0, D1GfxPixel::colorPixel(72));
+                change |= frame->setPixel(17, 1, D1GfxPixel::colorPixel(72));
+                change |= frame->setPixel(17, 2, D1GfxPixel::colorPixel(71));
+                change |= frame->setPixel(17, 3, D1GfxPixel::colorPixel(70));
+                change |= frame->setPixel(17, 4, D1GfxPixel::colorPixel(121));
+                change |= frame->setPixel(17, 5, D1GfxPixel::colorPixel(85));
+                change |= frame->setPixel(17, 6, D1GfxPixel::colorPixel(123));
+                change |= frame->setPixel(18, 0, D1GfxPixel::colorPixel(72));
+                change |= frame->setPixel(18, 1, D1GfxPixel::colorPixel(72));
+                change |= frame->setPixel(18, 2, D1GfxPixel::colorPixel(70));
+                change |= frame->setPixel(18, 3, D1GfxPixel::colorPixel(71));
+                change |= frame->setPixel(18, 4, D1GfxPixel::colorPixel(120));
+                change |= frame->setPixel(18, 5, D1GfxPixel::colorPixel(86));
+                change |= frame->setPixel(18, 6, D1GfxPixel::colorPixel(119));
+                change |= frame->setPixel(19, 0, D1GfxPixel::colorPixel(72));
+                change |= frame->setPixel(19, 1, D1GfxPixel::colorPixel(69));
+                change |= frame->setPixel(19, 2, D1GfxPixel::colorPixel(71));
+                change |= frame->setPixel(19, 3, D1GfxPixel::colorPixel(72));
+                change |= frame->setPixel(19, 4, D1GfxPixel::colorPixel(70));
+                change |= frame->setPixel(19, 5, D1GfxPixel::colorPixel(104));
+                change |= frame->setPixel(19, 6, D1GfxPixel::colorPixel(104));
+            }
+        }
+        // mask 3[2], 190[2], 206[2]
+        if (i >= 46 && i < 55 && (i % 2) == (46 % 2)) {
+            for (int x = 0; x < 17; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+            { // remove shadow using '167[3]'
+                change |= frame->setPixel(17, 21, D1GfxPixel::colorPixel(76));
+                change |= frame->setPixel(17, 22, D1GfxPixel::colorPixel(74));
+                change |= frame->setPixel(17, 23, D1GfxPixel::colorPixel(117));
+                change |= frame->setPixel(17, 24, D1GfxPixel::colorPixel(105));
+                change |= frame->setPixel(17, 25, D1GfxPixel::colorPixel(104));
+                change |= frame->setPixel(17, 26, D1GfxPixel::colorPixel(105));
+                change |= frame->setPixel(17, 27, D1GfxPixel::colorPixel(63));
+                change |= frame->setPixel(17, 28, D1GfxPixel::colorPixel(71));
+                change |= frame->setPixel(17, 29, D1GfxPixel::colorPixel(121));
+                change |= frame->setPixel(17, 30, D1GfxPixel::colorPixel(90));
+                change |= frame->setPixel(17, 31, D1GfxPixel::colorPixel(60));
+                change |= frame->setPixel(18, 21, D1GfxPixel::colorPixel(77));
+                change |= frame->setPixel(18, 22, D1GfxPixel::colorPixel(120));
+                change |= frame->setPixel(18, 23, D1GfxPixel::colorPixel(114));
+                change |= frame->setPixel(18, 24, D1GfxPixel::colorPixel(120));
+                change |= frame->setPixel(18, 25, D1GfxPixel::colorPixel(103));
+                change |= frame->setPixel(18, 26, D1GfxPixel::colorPixel(125));
+                change |= frame->setPixel(18, 27, D1GfxPixel::colorPixel(74));
+                change |= frame->setPixel(18, 28, D1GfxPixel::colorPixel(68));
+                change |= frame->setPixel(18, 29, D1GfxPixel::colorPixel(76));
+                change |= frame->setPixel(18, 30, D1GfxPixel::colorPixel(73));
+                change |= frame->setPixel(18, 31, D1GfxPixel::colorPixel(72));
+                change |= frame->setPixel(19, 21, D1GfxPixel::colorPixel(73));
+                change |= frame->setPixel(19, 22, D1GfxPixel::colorPixel(98));
+                change |= frame->setPixel(19, 23, D1GfxPixel::colorPixel(102));
+                change |= frame->setPixel(19, 24, D1GfxPixel::colorPixel(104));
+                change |= frame->setPixel(19, 25, D1GfxPixel::colorPixel(108));
+                change |= frame->setPixel(19, 26, D1GfxPixel::colorPixel(78));
+                change |= frame->setPixel(19, 27, D1GfxPixel::colorPixel(73));
+                change |= frame->setPixel(19, 28, D1GfxPixel::colorPixel(91));
+                change |= frame->setPixel(19, 29, D1GfxPixel::colorPixel(71));
+                change |= frame->setPixel(19, 30, D1GfxPixel::colorPixel(71));
+                change |= frame->setPixel(19, 31, D1GfxPixel::colorPixel(71));
+            }
+        }
+        // mask 23[4], 190[4], 198[4], 206[4] + 48[4], 58[4] using 1[7]
+        if (i >= 55 && i < 62) {
+            const CelMicro &microSrc = micros[12];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    if (y < MICRO_HEIGHT / 2) {
+                        D1GfxPixel pixel = frameSrc->getPixel(x, y + MICRO_HEIGHT / 2); // 1[7]
+                        if (!pixel.isTransparent()) {
+                            change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        }
+                    } else {
+                        if (x < 17 || (y < 38 - x)) {
+                            change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        }
+                    }
+                }
+            }
+        }
+        // fix 11[1], 246[1] using 8[1]
+        if (i == 13 || i == 70) {
+            const CelMicro &microSrc = micros[1];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < 3; x++) {
+                for (int y = 0; y < 3; y++) {
+                    change |= frame->setPixel(x, y, frameSrc->getPixel(x, y)); // 8[1]
+                }
+            }
+        }
+        // fix 11[3], 246[3] using 21[3]
+        if (i == 14 || i == 71) {
+            const CelMicro &microSrc = micros[3];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < 5; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    change |= frame->setPixel(x, y, frameSrc->getPixel(x, y)); // 21[3]
+                }
+            }
+        }
+        // fix 11[5], 246[5] using 8[5]
+        if (i == 15 || i == 72) {
+            const CelMicro &microSrc = micros[5];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < 5; x++) {
+                for (int y = 24; y < MICRO_HEIGHT; y++) {
+                    change |= frame->setPixel(x, y, frameSrc->getPixel(x, y)); // 8[5]
+                }
+            }
+        }
+        // remove shadow 254[5] using 8[5]
+        if (i == 43) {
+            const CelMicro &microSrc = micros[5];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < 5; x++) {
+                for (int y = 24; y < MICRO_HEIGHT; y++) {
+                    change |= frame->setPixel(x, y, frameSrc->getPixel(x, y)); // 8[5]
+                }
+            }
+        }
+        // fix 21[0], 244[0] using 8[0]
+        if (i == 6 || i == 67) {
+            const CelMicro &microSrc = micros[0];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 28; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < 3; y++) {
+                    change |= frame->setPixel(x, y, frameSrc->getPixel(x, y)); // 8[0]
+                }
+            }
+        }
+        // fix 21[2], 244[2] using 8[2]
+        if (i == 7 || i == 68) {
+            const CelMicro &microSrc = micros[2];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 27; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    change |= frame->setPixel(x, y, frameSrc->getPixel(x, y)); // 8[2]
+                }
+            }
+        }
+        // fix 21[4], 244[4] using 8[4]
+        if (i == 8 || i == 69) {
+            const CelMicro &microSrc = micros[4];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 27; x < MICRO_WIDTH; x++) {
+                for (int y = 24; y < MICRO_HEIGHT; y++) {
+                    change |= frame->setPixel(x, y, frameSrc->getPixel(x, y)); // 8[4]
+                }
+            }
+        }
+
+        // fix 11[3] - erase inconsistent shadow
+        if (i == 14) {
+            for (int x = 18; x < 25; x++) {
+                for (int y = 0; y < 10; y++) {
+                    if (y < 2 * x - 31) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+            change |= frame->setPixel(30, 20, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(31, 19, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(17, 23, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(18, 23, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(17, 24, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(18, 24, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(19, 24, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(20, 24, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(20, 25, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(21, 25, D1GfxPixel::transparentPixel());
+
+            change |= frame->setPixel(14, 12, D1GfxPixel::colorPixel(63));
+            change |= frame->setPixel(16, 11, D1GfxPixel::colorPixel(63));
+        }
+        // fix 11[5], 254[5] - erase inconsistent shadow
+        if (i == 15 || i == 43) {
+            for (int x = 18; x < 24; x++) {
+                for (int y = 26; y < MICRO_HEIGHT; y++) {
+                    if (y < 28) {
+                        continue; // keep pixels continuous
+                    }
+                    if (y > 47 - x && y > x + 5) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+            // change |= frame->setPixel(20, 26, D1GfxPixel::transparentPixel()); - keep pixels continuous
+            // change |= frame->setPixel(20, 27, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(24, 30, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(24, 31, D1GfxPixel::transparentPixel());
+        }
+        // fix 251[3]
+        if (i == 38) {
+            for (int x = 18; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < 10; y++) {
+                    // erase non-symmetric tusk
+                    if (y < 3 * x / 2 - 39) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                    // erase inconsistent shadow
+                    if (y == 0) {
+                        continue; // keep pixels continuous
+                    }
+                    if (y < 2 * x - 31 && y > x - 19) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+            change |= frame->setPixel(17, 1, D1GfxPixel::transparentPixel());
+            // change |= frame->setPixel(19,  0, D1GfxPixel::transparentPixel()); - keep pixels continuous
+
+            change |= frame->setPixel(31, 3, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(31, 4, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(31, 5, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(31, 6, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(31, 7, D1GfxPixel::colorPixel(116));
+            change |= frame->setPixel(31, 12, D1GfxPixel::transparentPixel());
+
+            change |= frame->setPixel(30, 20, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(31, 19, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(17, 23, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(18, 23, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(17, 24, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(18, 24, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(19, 24, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(20, 24, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(20, 25, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(21, 25, D1GfxPixel::transparentPixel());
+        }
+        // fix 251[5] - erase non-symmetric tusk
+        if (i == 39) {
+            for (int x = 25; x < MICRO_WIDTH; x++) {
+                for (int y = 22; y < MICRO_HEIGHT; y++) {
+                    if (y < 2 * x - 21) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        if (i == 10) { // 1[3] - add shadow
+            change |= frame->setPixel(19, 7, D1GfxPixel::colorPixel(126));
+            change |= frame->setPixel(18, 8, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(19, 8, D1GfxPixel::colorPixel(126));
+            change |= frame->setPixel(18, 9, D1GfxPixel::colorPixel(108));
+            change |= frame->setPixel(19, 9, D1GfxPixel::colorPixel(126));
+            change |= frame->setPixel(18, 10, D1GfxPixel::colorPixel(107));
+            change |= frame->setPixel(19, 10, D1GfxPixel::colorPixel(111));
+            change |= frame->setPixel(18, 11, D1GfxPixel::colorPixel(111));
+            change |= frame->setPixel(19, 11, D1GfxPixel::colorPixel(95));
+            change |= frame->setPixel(18, 12, D1GfxPixel::colorPixel(63));
+            change |= frame->setPixel(19, 12, D1GfxPixel::colorPixel(95));
+            change |= frame->setPixel(18, 13, D1GfxPixel::colorPixel(63));
+            change |= frame->setPixel(19, 13, D1GfxPixel::colorPixel(63));
+            change |= frame->setPixel(18, 14, D1GfxPixel::colorPixel(63));
+            change |= frame->setPixel(19, 14, D1GfxPixel::colorPixel(63));
+            change |= frame->setPixel(18, 15, D1GfxPixel::colorPixel(63));
+            change |= frame->setPixel(19, 15, D1GfxPixel::colorPixel(78));
+            change |= frame->setPixel(18, 16, D1GfxPixel::colorPixel(78));
+            change |= frame->setPixel(19, 16, D1GfxPixel::colorPixel(78));
+            change |= frame->setPixel(17, 17, D1GfxPixel::colorPixel(63));
+            change |= frame->setPixel(18, 17, D1GfxPixel::colorPixel(78));
+            change |= frame->setPixel(19, 17, D1GfxPixel::colorPixel(78));
+            change |= frame->setPixel(17, 18, D1GfxPixel::colorPixel(63));
+            change |= frame->setPixel(18, 18, D1GfxPixel::colorPixel(63));
+            change |= frame->setPixel(19, 18, D1GfxPixel::colorPixel(78));
+            change |= frame->setPixel(17, 19, D1GfxPixel::colorPixel(78));
+            change |= frame->setPixel(18, 19, D1GfxPixel::colorPixel(78));
+            change |= frame->setPixel(19, 19, D1GfxPixel::colorPixel(78));
+            change |= frame->setPixel(17, 20, D1GfxPixel::colorPixel(63));
+            change |= frame->setPixel(18, 20, D1GfxPixel::colorPixel(78));
+            change |= frame->setPixel(19, 20, D1GfxPixel::colorPixel(78));
+            change |= frame->setPixel(17, 21, D1GfxPixel::colorPixel(126));
+            change |= frame->setPixel(18, 21, D1GfxPixel::colorPixel(63));
+            change |= frame->setPixel(19, 21, D1GfxPixel::colorPixel(74));
+            change |= frame->setPixel(17, 22, D1GfxPixel::colorPixel(126));
+            change |= frame->setPixel(18, 22, D1GfxPixel::colorPixel(126));
+            change |= frame->setPixel(19, 22, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(17, 23, D1GfxPixel::colorPixel(109));
+            change |= frame->setPixel(18, 23, D1GfxPixel::colorPixel(105));
+            // keep pixels continuous
+            change |= frame->setPixel(17, 7, D1GfxPixel::colorPixel(117));
+            change |= frame->setPixel(18, 7, D1GfxPixel::colorPixel(114));
+            change |= frame->setPixel(17, 8, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(17, 9, D1GfxPixel::colorPixel(104));
+            change |= frame->setPixel(17, 10, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(17, 11, D1GfxPixel::colorPixel(63));
+            change |= frame->setPixel(17, 12, D1GfxPixel::colorPixel(71));
+            change |= frame->setPixel(17, 13, D1GfxPixel::colorPixel(121));
+            change |= frame->setPixel(17, 14, D1GfxPixel::colorPixel(90));
+            change |= frame->setPixel(17, 15, D1GfxPixel::colorPixel(60));
+            change |= frame->setPixel(17, 16, D1GfxPixel::colorPixel(72));
+        }
+        if (i == 34) { // 208[3] - add shadow
+            change |= frame->setPixel(17, 12, D1GfxPixel::colorPixel(77));
+            change |= frame->setPixel(17, 13, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(17, 14, D1GfxPixel::colorPixel(60));
+            change |= frame->setPixel(17, 15, D1GfxPixel::colorPixel(76));
+            change |= frame->setPixel(17, 16, D1GfxPixel::colorPixel(78));
+            change |= frame->setPixel(17, 17, D1GfxPixel::colorPixel(63));
+            change |= frame->setPixel(17, 18, D1GfxPixel::colorPixel(78));
+            change |= frame->setPixel(17, 19, D1GfxPixel::colorPixel(78));
+            change |= frame->setPixel(17, 20, D1GfxPixel::colorPixel(72));
+            change |= frame->setPixel(18, 16, D1GfxPixel::colorPixel(78));
+            change |= frame->setPixel(18, 17, D1GfxPixel::colorPixel(76));
+            change |= frame->setPixel(18, 18, D1GfxPixel::colorPixel(60));
+            change |= frame->setPixel(18, 19, D1GfxPixel::colorPixel(109));
+        }
+        if (i == 56) { // 190[4] - fix connection
+            change |= frame->setPixel(18, 5, D1GfxPixel::colorPixel(96));
+            change |= frame->setPixel(17, 4, D1GfxPixel::colorPixel(97));
+            change |= frame->setPixel(18, 4, D1GfxPixel::colorPixel(113));
+            change |= frame->setPixel(19, 4, D1GfxPixel::colorPixel(112));
+            change |= frame->setPixel(19, 5, D1GfxPixel::colorPixel(96));
+            change |= frame->setPixel(20, 5, D1GfxPixel::colorPixel(81));
+            change |= frame->setPixel(19, 6, D1GfxPixel::colorPixel(81));
+            change |= frame->setPixel(20, 6, D1GfxPixel::colorPixel(114));
+            change |= frame->setPixel(20, 7, D1GfxPixel::colorPixel(113));
+            change |= frame->setPixel(20, 8, D1GfxPixel::colorPixel(113));
+            change |= frame->setPixel(21, 9, D1GfxPixel::colorPixel(113));
+            change |= frame->setPixel(22, 11, D1GfxPixel::colorPixel(99));
+            change |= frame->setPixel(22, 12, D1GfxPixel::colorPixel(101));
+
+            change |= frame->setPixel(13, 3, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(14, 3, D1GfxPixel::colorPixel(103));
+        }
+        if (i == 57) { // 198[4] - fix connection
+            change |= frame->setPixel(20, 8, D1GfxPixel::colorPixel(114));
+            change |= frame->setPixel(22, 10, D1GfxPixel::colorPixel(117));
+            change |= frame->setPixel(22, 11, D1GfxPixel::colorPixel(83));
+            change |= frame->setPixel(22, 12, D1GfxPixel::colorPixel(101));
+            change |= frame->setPixel(23, 11, D1GfxPixel::colorPixel(120));
+            change |= frame->setPixel(23, 12, D1GfxPixel::colorPixel(122));
+
+            change |= frame->setPixel(13, 3, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(14, 3, D1GfxPixel::colorPixel(103));
+            change |= frame->setPixel(15, 3, D1GfxPixel::colorPixel(100));
+            change |= frame->setPixel(16, 3, D1GfxPixel::colorPixel(98));
+            change |= frame->setPixel(14, 2, D1GfxPixel::colorPixel(104));
+        }
+        if (i == 58) { // 206[4] - fix connection
+            change |= frame->setPixel(17, 1, D1GfxPixel::colorPixel(118));
+            change |= frame->setPixel(17, 2, D1GfxPixel::colorPixel(85));
+            change |= frame->setPixel(16, 2, D1GfxPixel::colorPixel(100));
+            change |= frame->setPixel(17, 3, D1GfxPixel::colorPixel(84));
+            change |= frame->setPixel(17, 4, D1GfxPixel::colorPixel(81));
+            change |= frame->setPixel(18, 4, D1GfxPixel::colorPixel(82));
+            change |= frame->setPixel(19, 5, D1GfxPixel::colorPixel(81));
+            change |= frame->setPixel(20, 6, D1GfxPixel::colorPixel(113));
+            change |= frame->setPixel(21, 8, D1GfxPixel::colorPixel(112));
+            change |= frame->setPixel(23, 8, D1GfxPixel::colorPixel(113));
+            change |= frame->setPixel(21, 9, D1GfxPixel::colorPixel(112));
+            change |= frame->setPixel(22, 9, D1GfxPixel::colorPixel(112));
+            change |= frame->setPixel(23, 9, D1GfxPixel::colorPixel(112));
+            change |= frame->setPixel(24, 9, D1GfxPixel::colorPixel(115));
+            change |= frame->setPixel(23, 10, D1GfxPixel::colorPixel(114));
+            change |= frame->setPixel(22, 10, D1GfxPixel::colorPixel(112));
+            change |= frame->setPixel(22, 11, D1GfxPixel::colorPixel(98));
+            change |= frame->setPixel(22, 12, D1GfxPixel::colorPixel(101));
+
+            change |= frame->setPixel(13, 3, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(14, 3, D1GfxPixel::colorPixel(101));
+            change |= frame->setPixel(15, 3, D1GfxPixel::colorPixel(100));
+            change |= frame->setPixel(16, 3, D1GfxPixel::colorPixel(100));
+        }
+        if (i == 59) { // 210[4] - fix connection
+            change |= frame->setPixel(16, 2, D1GfxPixel::colorPixel(85));
+            change |= frame->setPixel(17, 3, D1GfxPixel::colorPixel(85));
+            change |= frame->setPixel(17, 4, D1GfxPixel::colorPixel(82));
+            change |= frame->setPixel(18, 2, D1GfxPixel::colorPixel(86));
+            change |= frame->setPixel(18, 3, D1GfxPixel::colorPixel(84));
+            change |= frame->setPixel(18, 4, D1GfxPixel::colorPixel(83));
+            change |= frame->setPixel(18, 5, D1GfxPixel::colorPixel(82));
+            change |= frame->setPixel(19, 2, D1GfxPixel::colorPixel(85));
+            change |= frame->setPixel(19, 3, D1GfxPixel::colorPixel(83));
+            change |= frame->setPixel(19, 6, D1GfxPixel::colorPixel(113));
+            change |= frame->setPixel(20, 7, D1GfxPixel::colorPixel(81));
+            change |= frame->setPixel(22, 10, D1GfxPixel::colorPixel(112));
+            change |= frame->setPixel(22, 11, D1GfxPixel::colorPixel(99));
+            change |= frame->setPixel(22, 12, D1GfxPixel::colorPixel(101));
+
+            change |= frame->setPixel(13, 3, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(14, 3, D1GfxPixel::colorPixel(101));
+            change |= frame->setPixel(15, 3, D1GfxPixel::colorPixel(100));
+            change |= frame->setPixel(16, 3, D1GfxPixel::colorPixel(100));
+        }
+        // 48[4], 58[4] - fix connection
+        if (i >= 60 && i < 62) {
+            change |= frame->setPixel(13, 3, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(14, 3, D1GfxPixel::colorPixel(103));
+            change |= frame->setPixel(15, 3, D1GfxPixel::colorPixel(99));
+
+            change |= frame->setPixel(14, 2, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(15, 2, D1GfxPixel::colorPixel(101));
+            change |= frame->setPixel(16, 2, D1GfxPixel::colorPixel(98));
+        }
+        if (i == 55) { // 23[4] - fix connection
+            change |= frame->setPixel(13, 3, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(14, 3, D1GfxPixel::colorPixel(103));
+            change |= frame->setPixel(15, 3, D1GfxPixel::colorPixel(99));
+            change |= frame->setPixel(15, 2, D1GfxPixel::colorPixel(101));
+            change |= frame->setPixel(16, 2, D1GfxPixel::colorPixel(98));
+        }
+        if (i == 12) { // 1[7] - fix connection
+            change |= frame->setPixel(21, 28, D1GfxPixel::colorPixel(115));
+            change |= frame->setPixel(21, 29, D1GfxPixel::colorPixel(101));
+            change |= frame->setPixel(22, 29, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(21, 30, D1GfxPixel::colorPixel(102));
+            change |= frame->setPixel(22, 30, D1GfxPixel::colorPixel(108));
+            change |= frame->setPixel(21, 31, D1GfxPixel::colorPixel(106));
+        }
+        if (i == 28) { // 196[7] - fix connection
+            change |= frame->setPixel(21, 28, D1GfxPixel::colorPixel(115));
+            change |= frame->setPixel(21, 29, D1GfxPixel::colorPixel(101));
+            change |= frame->setPixel(22, 29, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(21, 30, D1GfxPixel::colorPixel(102));
+            change |= frame->setPixel(22, 30, D1GfxPixel::colorPixel(108));
+            change |= frame->setPixel(21, 31, D1GfxPixel::colorPixel(106));
+        }
+        if (i == 32) { // 204[7] - fix connection
+            change |= frame->setPixel(21, 28, D1GfxPixel::colorPixel(115));
+            change |= frame->setPixel(21, 29, D1GfxPixel::colorPixel(101));
+            change |= frame->setPixel(22, 29, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(21, 30, D1GfxPixel::colorPixel(102));
+            change |= frame->setPixel(22, 30, D1GfxPixel::colorPixel(108));
+            change |= frame->setPixel(21, 31, D1GfxPixel::colorPixel(106));
+        }
+        if (i == 36) { // 208[7] - fix connection
+            change |= frame->setPixel(21, 28, D1GfxPixel::colorPixel(115));
+            change |= frame->setPixel(21, 29, D1GfxPixel::colorPixel(101));
+            change |= frame->setPixel(22, 29, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(21, 30, D1GfxPixel::colorPixel(102));
+            change |= frame->setPixel(22, 30, D1GfxPixel::colorPixel(108));
+            change |= frame->setPixel(21, 31, D1GfxPixel::colorPixel(106));
+        }
+        if (i == 44) { // 251[7] - fix connection
+            change |= frame->setPixel(21, 28, D1GfxPixel::colorPixel(115));
+            change |= frame->setPixel(21, 29, D1GfxPixel::colorPixel(101));
+            change |= frame->setPixel(22, 29, D1GfxPixel::colorPixel(105));
+            change |= frame->setPixel(21, 30, D1GfxPixel::colorPixel(102));
+            change |= frame->setPixel(22, 30, D1GfxPixel::colorPixel(108));
+            change |= frame->setPixel(21, 31, D1GfxPixel::colorPixel(106));
+        }
+        // 6[5], 51[5], 193[5], 201[5], 217[5] - fix connection
+        if (i >= 62 && i < 67) {
+            change |= frame->setPixel(9, 12, D1GfxPixel::colorPixel(106));
+        }
+        if (i == 64) { // 193[5] - fix connection+
+            change |= frame->setPixel(13, 5, D1GfxPixel::colorPixel(96));
+            change |= frame->setPixel(14, 4, D1GfxPixel::colorPixel(112));
+            change |= frame->setPixel(16, 3, D1GfxPixel::colorPixel(98));
+            change |= frame->setPixel(17, 3, D1GfxPixel::colorPixel(100));
+            change |= frame->setPixel(18, 3, D1GfxPixel::colorPixel(104));
+        }
+
+        if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {
+            change = true;
+            frame->setFrameType(micro.res_encoding);
+            std::vector<FramePixel> pixels;
+            D1CelTilesetFrame::collectPixels(frame, micro.res_encoding, pixels);
+            for (const FramePixel &pix : pixels) {
+                D1GfxPixel resPix = pix.pixel.isTransparent() ? D1GfxPixel::colorPixel(0) : D1GfxPixel::transparentPixel();
+                change |= frame->setPixel(pix.pos.x(), pix.pos.y(), resPix);
+            }
+        }
+        if (change) {
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
+            }
+        }
+    }
+
+    return true;
+}
+
+bool D1Tileset::patchHellWall2(bool silent)
+{
+    const CelMicro micros[] = {
+/*  0 */{   8 - 1, 0, D1CEL_FRAME_TYPE::Empty }, // mask walls leading to north west
+/*  1 */{   8 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/*  2 */{   8 - 1, 2, D1CEL_FRAME_TYPE::Empty },
+/*  3 */{  21 - 1, 3, D1CEL_FRAME_TYPE::Empty },
+/*  4 */{   8 - 1, 4, D1CEL_FRAME_TYPE::Empty },
+/*  5 */{   5 - 1, 6, D1CEL_FRAME_TYPE::Empty },
+
+/*  6 */{   5 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  7 */{   5 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  8 */{   5 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  9 */{  15 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 10 */{  15 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 11 */{  15 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 12 */{  38 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 13 */{ /*38*/ - 1, 2, D1CEL_FRAME_TYPE::Empty },
+/* 14 */{ /*38*/ - 1, 4, D1CEL_FRAME_TYPE::Empty },
+/* 15 */{ 180 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 16 */{ 180 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 17 */{ 180 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 18 */{ 192 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 19 */{ /*192*/ - 1, 2, D1CEL_FRAME_TYPE::Empty },
+/* 20 */{ 192 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 21 */{ 200 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 22 */{ 200 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 23 */{ 200 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 24 */{ 212 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 25 */{ /*212*/ - 1, 2, D1CEL_FRAME_TYPE::Empty },
+/* 26 */{ 212 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 27 */{ 216 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 28 */{ /*216*/ - 1, 2, D1CEL_FRAME_TYPE::Empty },
+/* 29 */{ 216 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 30 */{ /*251*/ - 1, 0, D1CEL_FRAME_TYPE::Empty },
+/* 31 */{ 251 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 32 */{ 251 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 33 */{   6 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 34 */{   6 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 35 */{ /*193*/ - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 36 */{ /*193*/ - 1, 3, D1CEL_FRAME_TYPE::Empty },
+/* 37 */{ /*201*/ - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 38 */{ /*201*/ - 1, 3, D1CEL_FRAME_TYPE::Empty },
+/* 39 */{ 213 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 40 */{ /*213*/ - 1, 3, D1CEL_FRAME_TYPE::Empty },
+/* 41 */{ /*217*/ - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 42 */{ 217 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 43 */{   6 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 44 */{ 193 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 45 */{ 201 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 46 */{ 213 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 47 */{ 217 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 48 */{  51 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+    };
+    constexpr unsigned blockSize = BLOCK_SIZE_L4;
+    for (int i = 0; i < lengthof(micros); i++) {
+        const CelMicro &micro = micros[i];
+        if (micro.subtileIndex < 0) {
+            continue;
+        }
+        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
+        D1GfxFrame *frame = microFrame.second;
+        if (frame == nullptr) {
+            return false;
+        }
+        bool change = false;
+        // mask 15[0], 38[0], 180[0] using 5[0]
+        if (i >= 9 && i < 18 && (i % 3) == (9 % 3)) {
+            const CelMicro &microSrc = micros[6];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixelSrc = frameSrc->getPixel(x, y); // 5[0]
+                    if (pixelSrc.isTransparent()) {
+                        quint8 color = frame->getPixel(x, y).getPaletteIndex();
+                        if (x < 11 && y < 9 && color > 100 && (color < 112 || color == 126)) {
+                            continue; // preserve the shadow
+                        }
+                        if ((i == 9 || i == 12) && x == 10 && y == 7) {
+                            continue; // keep pixels continuous
+                        }
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+
+        // mask 5[2], 180[2], 200[2]
+        if (i >= 7 && i < 24 && (i % 3) == (7 % 3)) {
+            if (i == 7 || i == 16 || i == 22) {
+                for (int x = 14; x < 16; x++) {
+                    for (int y = 0; y < 23; y++) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        if (i == 22) { // mask++ 180[2]
+            change |= frame->setPixel(15, 23, D1GfxPixel::transparentPixel());
+        }
+
+        // mask 15[2] using 8[2]
+        if (i == 10) {
+            const CelMicro &microSrc = micros[2];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return false;
+            // }
+            for (int x = 0; x < 16; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    if (y > 29 && (x < 3 || x == 15)) {
+                        continue;
+                    }
+                    if (y == 29 && (x == 2 || x == 3)) {
+                        continue;
+                    }
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y); // 8[2]
+                    if (pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+
+        // mask 251[2]
+        if (i == 31) {
+            for (int x = 0; x < 16; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    if (y > 29 && (x < 3 || x == 15)) {
+                        continue; // preserve 'extra' shadow
+                    }
+                    if (y == 29 && (x == 2 || x == 3)) {
+                        continue; // preserve 'extra' shadow
+                    }
+                    if (y < 2) {
+                        continue; // keep pixels continuous
+                    }
+                    if (y > 12 || y > 14 - x) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+            change |= frame->setPixel(4, 10, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(3, 11, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(2, 12, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(0, 12, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(1, 12, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(12, 2, D1GfxPixel::colorPixel(126));
+            change |= frame->setPixel(13, 0, D1GfxPixel::colorPixel(126));
+        }
+
+        // mask 5[4], 15[4], 192[4], 200[4], 212[4], 216[4] + 180[4]
+        if (i >= 8 && i < 30 && (i % 3) == (8 % 3)) {
+            if (i == 11) { // 15[4] using 8[4]
+                const CelMicro &microSrc = micros[4];
+                std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+                D1GfxFrame *frameSrc = mf.second;
+                // if (frameSrc == nullptr) {
+                //    return false;
+                // }
+                for (int x = 0; x < 16; x++) {
+                    for (int y = 0; y < MICRO_HEIGHT; y++) {
+                        D1GfxPixel pixel = frameSrc->getPixel(x, y); // 8[4]
+                        if (pixel.isTransparent()) {
+                            change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        }
+                    }
+                }
+            } else if (i == 8 || i == 20 || i == 23 || i == 26 || i == 29) { // 5[4], 192[4], 200[4], 212[4], 216[4] + 180[4]
+             /*for (int x = 11; x < 16; x++) {
+                 for (int y = 1; y < 13; y++) {
+                     if (y > x - 11) {
+                         if (i == 26 && y > 9) {
+                             continue; // 212[4]
+                         }
+                         change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                     }
+                 }
+             }*/
+            } else if (i == 17) { // 180[4]
+             /*for (int x = 11; x < 16; x++) {
+                 for (int y = 2; y < 18; y++) {
+                     if (y > 2 * x - 24) {
+                         change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                     }
+                 }
+             }
+
+             change |= frame->setPixel(11,  1, D1GfxPixel::transparentPixel());
+             change |= frame->setPixel(10,  0, D1GfxPixel::transparentPixel());*/
+                change |= frame->setPixel(10, 0, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(11, 2, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(12, 3, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(13, 4, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(13, 5, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(14, 7, D1GfxPixel::transparentPixel());
+                change |= frame->setPixel(15, 17, D1GfxPixel::transparentPixel());
+            }
+        }
+
+        // mask 6[1], 213[1] using 5[0] and 5[2]
+        if (i >= 33 && i < 43 && (i % 2) == (33 % 2)) {
+            const CelMicro &microSrc1 = micros[7];
+            std::pair<unsigned, D1GfxFrame *> mf1 = this->getFrame(microSrc1.subtileIndex, blockSize, microSrc1.microIndex);
+            D1GfxFrame *frameSrc1 = mf1.second;
+            // if (frameSrc1 == nullptr) {
+            //    return;
+            // }
+            const CelMicro &microSrc2 = micros[6];
+            std::pair<unsigned, D1GfxFrame *> mf2 = this->getFrame(microSrc2.subtileIndex, blockSize, microSrc2.microIndex);
+            D1GfxFrame *frameSrc2 = mf2.second;
+            // if (frameSrc2 == nullptr) {
+            //    return;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = D1GfxPixel::transparentPixel();
+                    if (y < MICRO_HEIGHT / 2) {
+                        pixel = frameSrc1->getPixel(x, y + MICRO_HEIGHT / 2); // 5[2]
+                    } else {
+                        pixel = frameSrc2->getPixel(x, y - MICRO_HEIGHT / 2); // 5[0]
+                    }
+
+                    if (!pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+
+        // mask 6[3], 217[3]
+        if (i >= 34 && i < 43 && (i % 2) == (34 % 2)) {
+            for (int x = 16; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+            // fix shadow
+            change |= frame->setPixel(15, 23, D1GfxPixel::colorPixel(126));
+            change |= frame->setPixel(15, 24, D1GfxPixel::colorPixel(126));
+            change |= frame->setPixel(15, 25, D1GfxPixel::colorPixel(126));
+            change |= frame->setPixel(15, 26, D1GfxPixel::colorPixel(126));
+            change |= frame->setPixel(14, 24, D1GfxPixel::colorPixel(126));
+            change |= frame->setPixel(14, 25, D1GfxPixel::colorPixel(126));
+            change |= frame->setPixel(14, 26, D1GfxPixel::colorPixel(111));
+        }
+
+        // mask 6[5], 193[5], 201[5], 213[5], 217[5] + 51[5] using 180[4] and 5[6]
+        if (i >= 43 && i < 49) {
+            const CelMicro &microSrc1 = micros[5];
+            std::pair<unsigned, D1GfxFrame *> mf1 = this->getFrame(microSrc1.subtileIndex, blockSize, microSrc1.microIndex);
+            D1GfxFrame *frameSrc1 = mf1.second;
+            // if (frameSrc1 == nullptr) {
+            //    return;
+            // }
+            const CelMicro &microSrc2 = micros[17];
+            std::pair<unsigned, D1GfxFrame *> mf2 = this->getFrame(microSrc2.subtileIndex, blockSize, microSrc2.microIndex);
+            D1GfxFrame *frameSrc2 = mf2.second;
+            // if (frameSrc2 == nullptr) {
+            //    return;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    /*if (y < MICRO_HEIGHT / 2) {
+                        D1GfxPixel pixel = frameSrc1->getPixel(x, y + MICRO_HEIGHT / 2); // 5[6]
+                        if (!pixel.isTransparent()) {
+                            change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        }
+                    } else {
+                        if (x > 15 || (y < x + 6)) {
+                            change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                        }
+                    }*/
+                    D1GfxPixel pixel = D1GfxPixel::transparentPixel();
+                    if (y < MICRO_HEIGHT / 2) {
+                        pixel = frameSrc1->getPixel(x, y + MICRO_HEIGHT / 2); // 5[6]
+                    } else {
+                        pixel = frameSrc2->getPixel(x, y - MICRO_HEIGHT / 2); // 180[4]
+                    }
+
+                    if (!pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+            /*// fix shadow
+            if (i != 48) {
+                // change |= frame->setPixel(15, 21, D1GfxPixel::colorPixel(125));
+                change |= frame->setPixel(15, 22, D1GfxPixel::colorPixel(111));
+                change |= frame->setPixel(15, 23, D1GfxPixel::colorPixel(111));
+                change |= frame->setPixel(15, 24, D1GfxPixel::colorPixel(126));
+                change |= frame->setPixel(15, 25, D1GfxPixel::colorPixel(126));
+                change |= frame->setPixel(15, 26, D1GfxPixel::colorPixel(63));
+                change |= frame->setPixel(15, 27, D1GfxPixel::colorPixel(63));
+                change |= frame->setPixel(15, 28, D1GfxPixel::colorPixel(125));
+            }*/
+        }
+
+        if (i == 15) { // 180[0] - fix glitch(?) + sync
+            change |= frame->setPixel(14, 0, D1GfxPixel::colorPixel(107));
+            change |= frame->setPixel(14, 1, D1GfxPixel::colorPixel(99));
+        }
+        if (i == 24) { // 212[0] - fix glitch(?)
+            change |= frame->setPixel(14, 4, D1GfxPixel::colorPixel(100));
+            change |= frame->setPixel(13, 5, D1GfxPixel::colorPixel(116));
+            change |= frame->setPixel(14, 5, D1GfxPixel::colorPixel(119));
+            change |= frame->setPixel(12, 6, D1GfxPixel::colorPixel(98));
+            change |= frame->setPixel(13, 6, D1GfxPixel::colorPixel(118));
+            change |= frame->setPixel(12, 7, D1GfxPixel::colorPixel(116));
+            change |= frame->setPixel(11, 8, D1GfxPixel::colorPixel(115));
+        }
+        if (i == 27) { // 216[0] - fix glitch(?)
+            change |= frame->setPixel(14, 5, D1GfxPixel::colorPixel(99));
+        }
+        if (i == 39) { // 213[1] - fix glitch
+            change |= frame->setPixel(13, 19, D1GfxPixel::colorPixel(112));
+            change |= frame->setPixel(12, 20, D1GfxPixel::colorPixel(114));
+            change |= frame->setPixel(11, 22, D1GfxPixel::colorPixel(97));
+            change |= frame->setPixel(10, 23, D1GfxPixel::colorPixel(97));
+            change |= frame->setPixel(9, 24, D1GfxPixel::colorPixel(97));
+            change |= frame->setPixel(8, 25, D1GfxPixel::colorPixel(96));
+            change |= frame->setPixel(7, 26, D1GfxPixel::colorPixel(116));
+        }
+
+        if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {
+            change = true;
+            frame->setFrameType(micro.res_encoding);
+            std::vector<FramePixel> pixels;
+            D1CelTilesetFrame::collectPixels(frame, micro.res_encoding, pixels);
+            for (const FramePixel &pix : pixels) {
+                D1GfxPixel resPix = pix.pixel.isTransparent() ? D1GfxPixel::colorPixel(0) : D1GfxPixel::transparentPixel();
+                change |= frame->setPixel(pix.pos.x(), pix.pos.y(), resPix);
+            }
+        }
+        if (change) {
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
+            }
+        }
+    }
+
+    return true;
+}
+
+void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
+{
+    constexpr int blockSize = BLOCK_SIZE_L4;
+    // patch stairs III.
+    ReplaceSubtile(this->til, 45 - 1, 0, 17 - 1, silent);  // 137
+    ReplaceSubtile(this->til, 45 - 1, 1, 18 - 1, silent);  // 138
+
+    // fix shadow
+    ReplaceSubtile(this->til, 36 - 1, 3, 155 - 1, silent); // 105
+    ReplaceSubtile(this->til, 72 - 1, 0, 17 - 1, silent);  // 224
+    ReplaceSubtile(this->til, 55 - 1, 2, 154 - 1, silent); // 175
+
+    // create the new shadows
+    ReplaceSubtile(this->til,  61 - 1, 0, 5 - 1, silent); // copy from tile 2
+    ReplaceSubtile(this->til,  61 - 1, 1, 6 - 1, silent);
+    ReplaceSubtile(this->til,  61 - 1, 2, 35 - 1, silent);
+    ReplaceSubtile(this->til,  61 - 1, 3, 239 - 1, silent);
+    ReplaceSubtile(this->til,  62 - 1, 0, 5 - 1, silent); // copy from tile 2
+    ReplaceSubtile(this->til,  62 - 1, 1, 6 - 1, silent);
+    ReplaceSubtile(this->til,  62 - 1, 2, 7 - 1, silent);
+    ReplaceSubtile(this->til,  62 - 1, 3, 176 - 1, silent);
+    ReplaceSubtile(this->til,  76 - 1, 0, 41 - 1, silent); // copy from tile 15
+    ReplaceSubtile(this->til,  76 - 1, 1, 31 - 1, silent);
+    ReplaceSubtile(this->til,  76 - 1, 2, 13 - 1, silent);
+    ReplaceSubtile(this->til,  76 - 1, 3, 239 - 1, silent);
+    ReplaceSubtile(this->til, 129 - 1, 0, 41 - 1, silent); // copy from tile 15
+    ReplaceSubtile(this->til, 129 - 1, 1, 31 - 1, silent);
+    ReplaceSubtile(this->til, 129 - 1, 2, 10 - 1, silent);
+    ReplaceSubtile(this->til, 129 - 1, 3, 176 - 1, silent);
+    ReplaceSubtile(this->til, 130 - 1, 0, 177 - 1, silent); // copy from tile 56
+    ReplaceSubtile(this->til, 130 - 1, 1, 31 - 1, silent);
+    ReplaceSubtile(this->til, 130 - 1, 2, 37 - 1, silent);
+    ReplaceSubtile(this->til, 130 - 1, 3, 239 - 1, silent);
+    ReplaceSubtile(this->til, 131 - 1, 0, 177 - 1, silent); // copy from tile 56
+    ReplaceSubtile(this->til, 131 - 1, 1, 31 - 1, silent);
+    ReplaceSubtile(this->til, 131 - 1, 2, 179 - 1, silent);
+    ReplaceSubtile(this->til, 131 - 1, 3, 176 - 1, silent);
+    ReplaceSubtile(this->til, 132 - 1, 0, 24 - 1, silent); // copy from tile 8
+    ReplaceSubtile(this->til, 132 - 1, 1, 25 - 1, silent);
+    ReplaceSubtile(this->til, 132 - 1, 2, 13 - 1, silent);
+    ReplaceSubtile(this->til, 132 - 1, 3, 239 - 1, silent);
+    ReplaceSubtile(this->til, 133 - 1, 0, 24 - 1, silent); // copy from tile 8
+    ReplaceSubtile(this->til, 133 - 1, 1, 25 - 1, silent);
+    ReplaceSubtile(this->til, 133 - 1, 2, 10 - 1, silent);
+    ReplaceSubtile(this->til, 133 - 1, 3, 176 - 1, silent);
+    ReplaceSubtile(this->til, 134 - 1, 0, 38 - 1, silent); // copy from tile 14
+    ReplaceSubtile(this->til, 134 - 1, 1, 31 - 1, silent);
+    ReplaceSubtile(this->til, 134 - 1, 2, 26 - 1, silent);
+    ReplaceSubtile(this->til, 134 - 1, 3, 239 - 1, silent);
+    ReplaceSubtile(this->til, 135 - 1, 0, 38 - 1, silent); // copy from tile 14
+    ReplaceSubtile(this->til, 135 - 1, 1, 31 - 1, silent);
+    ReplaceSubtile(this->til, 135 - 1, 2, 16 - 1, silent);
+    ReplaceSubtile(this->til, 135 - 1, 3, 176 - 1, silent);
+
+    // use common subtiles
+    ReplaceSubtile(this->til,  4 - 1, 2, 10 - 1, silent);  // 13
+    ReplaceSubtile(this->til, 81 - 1, 2, 10 - 1, silent);
+    ReplaceSubtile(this->til,  6 - 1, 3, 4 - 1, silent);   // 20
+    ReplaceSubtile(this->til,  8 - 1, 2, 10 - 1, silent);  // 26
+    ReplaceSubtile(this->til, 15 - 1, 2, 10 - 1, silent);
+    ReplaceSubtile(this->til,  7 - 1, 1, 9 - 1, silent);   // 22
+    ReplaceSubtile(this->til,  9 - 1, 2, 23 - 1, silent);  // 29
+    ReplaceSubtile(this->til, 10 - 1, 2, 23 - 1, silent);
+    ReplaceSubtile(this->til, 12 - 1, 1, 12 - 1, silent);  // 35
+    ReplaceSubtile(this->til, 14 - 1, 2, 16 - 1, silent);  // 40
+    ReplaceSubtile(this->til, 16 - 1, 1, 9 - 1, silent);   // 43
+    ReplaceSubtile(this->til, 16 - 1, 2, 33 - 1, silent);  // 44
+    ReplaceSubtile(this->til, 22 - 1, 2, 58 - 1, silent);  // 61
+    ReplaceSubtile(this->til, 23 - 1, 1, 57 - 1, silent);  // 63
+    ReplaceSubtile(this->til, 25 - 1, 1, 66 - 1, silent);  // 69
+    ReplaceSubtile(this->til, 26 - 1, 1, 60 - 1, silent);  // 72
+    ReplaceSubtile(this->til, 26 - 1, 2, 67 - 1, silent);  // 73
+    ReplaceSubtile(this->til, 27 - 1, 1, 60 - 1, silent);  // 75
+    ReplaceSubtile(this->til, 32 - 1, 1, 157 - 1, silent); // 87
+    ReplaceSubtile(this->til, 32 - 1, 3, 158 - 1, silent); // 89
+    ReplaceSubtile(this->til, 36 - 1, 0, 149 - 1, silent); // 102
+    ReplaceSubtile(this->til, 36 - 1, 1, 153 - 1, silent); // 103
+    ReplaceSubtile(this->til, 36 - 1, 2, 154 - 1, silent); // 104
+    ReplaceSubtile(this->til, 37 - 1, 2, 147 - 1, silent); // 108
+    ReplaceSubtile(this->til, 39 - 1, 1, 157 - 1, silent); // 115
+    ReplaceSubtile(this->til, 39 - 1, 2, 147 - 1, silent); // 116
+    ReplaceSubtile(this->til, 39 - 1, 3, 158 - 1, silent); // 117
+    ReplaceSubtile(this->til, 40 - 1, 3, 4 - 1, silent);   // 121
+    ReplaceSubtile(this->til, 41 - 1, 0, 149 - 1, silent); // 122
+    ReplaceSubtile(this->til, 41 - 1, 1, 153 - 1, silent); // 123
+    ReplaceSubtile(this->til, 41 - 1, 3, 155 - 1, silent); // 125
+    ReplaceSubtile(this->til, 42 - 1, 2, 19 - 1, silent);  // 128
+    ReplaceSubtile(this->til, 46 - 1, 2, 19 - 1, silent);  // 143
+    ReplaceSubtile(this->til, 46 - 1, 3, 4 - 1, silent);   // 144
+    ReplaceSubtile(this->til, 47 - 1, 3, 158 - 1, silent); // 148
+    ReplaceSubtile(this->til, 54 - 1, 2, 161 - 1, silent); // 173
+    ReplaceSubtile(this->til, 54 - 1, 3, 162 - 1, silent); // 174
+    ReplaceSubtile(this->til, 57 - 1, 2, 19 - 1, silent);  // 182
+    ReplaceSubtile(this->til, 71 - 1, 2, 19 - 1, silent);  // 222
+    ReplaceSubtile(this->til, 71 - 1, 3, 4 - 1, silent);   // 223
+    ReplaceSubtile(this->til, 73 - 1, 3, 4 - 1, silent);   // 231
+    ReplaceSubtile(this->til, 74 - 1, 2, 19 - 1, silent);  // 234
+    ReplaceSubtile(this->til, 75 - 1, 0, 156 - 1, silent); // 236
+    ReplaceSubtile(this->til, 75 - 1, 1, 157 - 1, silent); // 237
+    ReplaceSubtile(this->til, 79 - 1, 2, 23 - 1, silent);  // 250
+    ReplaceSubtile(this->til, 84 - 1, 0, 159 - 1, silent); // 261
+    ReplaceSubtile(this->til, 85 - 1, 2, 147 - 1, silent); // 267
+    ReplaceSubtile(this->til, 86 - 1, 1, 153 - 1, silent); // 270
+    ReplaceSubtile(this->til, 87 - 1, 3, 4 - 1, silent);   // 276
+    ReplaceSubtile(this->til, 88 - 1, 2, 19 - 1, silent);  // 279
+    ReplaceSubtile(this->til, 89 - 1, 1, 160 - 1, silent); // 282
+    ReplaceSubtile(this->til, 90 - 1, 1, 153 - 1, silent); // 286
+    ReplaceSubtile(this->til, 91 - 1, 2, 19 - 1, silent);  // 291
+    ReplaceSubtile(this->til, 94 - 1, 2, 154 - 1, silent); // 303
+    ReplaceSubtile(this->til, 94 - 1, 3, 155 - 1, silent); // 304
+    ReplaceSubtile(this->til, 98 - 1, 0, 149 - 1, silent); // 317
+    ReplaceSubtile(this->til, 107 - 1, 0, 149 - 1, silent);
+    ReplaceSubtile(this->til, 101 - 1, 2, 147 - 1, silent); // 331
+    ReplaceSubtile(this->til, 110 - 1, 2, 147 - 1, silent);
+    ReplaceSubtile(this->til, 106 - 1, 3, 4 - 1, silent); // 352
+    ReplaceSubtile(this->til, 115 - 1, 3, 4 - 1, silent);
+
+    // use common subtiles instead of minor alterations
+    ReplaceSubtile(this->til,  9 - 1, 1, 25 - 1, silent);  // 28
+    ReplaceSubtile(this->til, 11 - 1, 1, 25 - 1, silent);
+    ReplaceSubtile(this->til, 13 - 1, 1, 12 - 1, silent);  // 37
+    ReplaceSubtile(this->til, 14 - 1, 1, 31 - 1, silent);  // 39
+    ReplaceSubtile(this->til, 15 - 1, 1, 31 - 1, silent);
+    ReplaceSubtile(this->til, 29 - 1, 1, 60 - 1, silent);  // 80
+    ReplaceSubtile(this->til, 29 - 1, 2, 70 - 1, silent);  // 81
+    ReplaceSubtile(this->til, 31 - 1, 2, 19 - 1, silent);  // 84
+    ReplaceSubtile(this->til, 31 - 1, 3, 4 - 1, silent);   // 85
+    ReplaceSubtile(this->til, 52 - 1, 2, 33 - 1, silent);  // 165
+    ReplaceSubtile(this->til, 52 - 1, 3, 4 - 1, silent);   // 166
+    ReplaceSubtile(this->til, 53 - 1, 1, 119 - 1, silent); // 168
+    ReplaceSubtile(this->til, 53 - 1, 3, 4 - 1, silent);   // 170
+    ReplaceSubtile(this->til, 56 - 1, 1, 31 - 1, silent);  // 178
+    ReplaceSubtile(this->til, 63 - 1, 3, 158 - 1, silent); // 191
+    ReplaceSubtile(this->til, 64 - 1, 3, 158 - 1, silent); // 195
+    ReplaceSubtile(this->til, 65 - 1, 3, 155 - 1, silent); // 199
+    ReplaceSubtile(this->til, 66 - 1, 3, 162 - 1, silent); // 203
+    ReplaceSubtile(this->til, 67 - 1, 3, 162 - 1, silent); // 207
+    ReplaceSubtile(this->til, 68 - 1, 3, 158 - 1, silent); // 211
+    ReplaceSubtile(this->til, 69 - 1, 3, 155 - 1, silent); // 215
+    ReplaceSubtile(this->til, 70 - 1, 3, 4 - 1, silent);   // 219
+    // ReplaceSubtile(this->til, 76 - 1, 3, 155 - 1, silent); // 243
+    ReplaceSubtile(this->til, 77 - 1, 3, 155 - 1, silent); // 243
+    ReplaceSubtile(this->til, 78 - 1, 3, 155 - 1, silent);
+    ReplaceSubtile(this->til, 79 - 1, 1, 25 - 1, silent);  // 249
+    ReplaceSubtile(this->til,  4 - 1, 3, 4 - 1, silent);   // 14
+    ReplaceSubtile(this->til, 81 - 1, 3, 4 - 1, silent);   // 256
+    ReplaceSubtile(this->til, 82 - 1, 3, 4 - 1, silent);   // 259
+    ReplaceSubtile(this->til, 83 - 1, 3, 4 - 1, silent);
+    ReplaceSubtile(this->til, 93 - 1, 1, 119 - 1, silent);  // 298
+    ReplaceSubtile(this->til, 95 - 1, 3, 162 - 1, silent);  // 308
+    ReplaceSubtile(this->til, 97 - 1, 1, 153 - 1, silent);  // 314
+    ReplaceSubtile(this->til, 97 - 1, 3, 155 - 1, silent);  // 316
+    ReplaceSubtile(this->til, 96 - 1, 1, 153 - 1, silent);  // 310
+    ReplaceSubtile(this->til, 96 - 1, 3, 155 - 1, silent);  // 312
+    ReplaceSubtile(this->til, 103 - 1, 1, 119 - 1, silent); // 338
+    ReplaceSubtile(this->til, 112 - 1, 1, 119 - 1, silent);
+
+    // eliminate subtiles of unused tiles
+    const int unusedTiles[] = {
+        20, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 136, 137
+    };
+    constexpr int blankSubtile = 14;
+    for (int n = 0; n < lengthof(unusedTiles); n++) {
+        int tileId = unusedTiles[n];
+        ReplaceSubtile(this->til, tileId - 1, 0, blankSubtile - 1, silent);
+        ReplaceSubtile(this->til, tileId - 1, 1, blankSubtile - 1, silent);
+        ReplaceSubtile(this->til, tileId - 1, 2, blankSubtile - 1, silent);
+        ReplaceSubtile(this->til, tileId - 1, 3, blankSubtile - 1, silent);
+    }
+
+
+    this->patchHellChaos(silent);
+    this->patchHellFloor(silent);
+    // patch stairs II.
+    // if (pSubtiles[MICRO_IDX(137 - 1, blockSize, 1)] != NULL) {
+    if (this->patchHellStairs(silent)) {
+        MoveMcr(140, 3, 137, 1);
+        MoveMcr(140, 2, 137, 0);
+        MoveMcr(140, 4, 137, 2);
+
+        Blk2Mcr(139, 1);
+        Blk2Mcr(136, 1);
+
+        Blk2Mcr(98, 0);
+
+        ReplaceMcr(111, 0, 131, 0);
+    }
+    this->patchHellWall1(silent);
+    this->patchHellWall2(silent);
+
+    // useless pixels
+    Blk2Mcr(111, 1);
+    Blk2Mcr(132, 0);
+    Blk2Mcr(172, 3);
+
+    // create new shadow
+    SetMcr(35, 0, 238, 0);
+    SetMcr(35, 1, 238, 1);
+    SetMcr(35, 4, 96, 6);
+    SetMcr(35, 6, 7, 6);
+    HideMcr(35, 5);
+    HideMcr(35, 7);
+    ReplaceMcr(26, 0, 238, 0);
+    ReplaceMcr(26, 1, 238, 1);
+    SetMcr(26, 4, 96, 6);
+    SetMcr(26, 6, 16, 6);
+    ReplaceMcr(37, 0, 238, 0);
+    SetMcr(37, 1, 238, 1);
+    HideMcr(37, 5);
+    HideMcr(37, 7);
+    SetMcr(37, 8, 179, 8);
+    SetMcr(37, 10, 179, 10);
+    ReplaceMcr(13, 0, 238, 0);
+    ReplaceMcr(13, 1, 238, 1);
+
+    // fix chaos
+    // - reuse
+    // ReplaceMcr(48, 2, 55, 2);
+    ReplaceMcr(46, 2, 53, 2);
+    ReplaceMcr(46, 3, 53, 3);
+    ReplaceMcr(50, 2, 53, 2);
+    ReplaceMcr(50, 3, 53, 3);
+    ReplaceMcr(50, 6, 5, 6);
+    // ReplaceMcr(51, 3, 54, 3);
+
+    // ReplaceMcr(58, 2, 55, 2);
+    ReplaceMcr(56, 2, 53, 2);
+    ReplaceMcr(56, 3, 53, 3);
+    // ReplaceMcr(57, 3, 54, 3);
+    ReplaceMcr(57, 5, 51, 5);
+
+    // ReplaceMcr(61, 2, 55, 2);
+    ReplaceMcr(59, 2, 53, 2);
+    ReplaceMcr(59, 3, 53, 3);
+    // ReplaceMcr(60, 3, 54, 3);
+    ReplaceMcr(60, 5, 51, 5);
+
+    // ReplaceMcr(64, 2, 55, 2);
+    ReplaceMcr(64, 4, 58, 4);
+    ReplaceMcr(62, 2, 53, 2);
+    ReplaceMcr(62, 3, 53, 3);
+    ReplaceMcr(62, 5, 56, 5); // lost details
+    // ReplaceMcr(63, 3, 54, 3);
+    // ReplaceMcr(63, 5, 51, 5);
+
+    ReplaceMcr(65, 2, 53, 2);
+    ReplaceMcr(65, 3, 53, 3);
+
+    // ReplaceMcr(70, 2, 55, 2);
+    ReplaceMcr(70, 4, 48, 4);
+    ReplaceMcr(68, 2, 53, 2);
+    ReplaceMcr(68, 3, 53, 3);
+    ReplaceMcr(68, 5, 65, 5); // lost details
+    ReplaceMcr(68, 7, 11, 7); // lost details
+    ReplaceMcr(68, 9, 11, 9);
+    // ReplaceMcr(69, 5, 66, 5); // lost details
+    // ReplaceMcr(69, 7, 66, 7); // lost details
+
+    // ReplaceMcr(73, 4, 58, 4);
+    // ReplaceMcr(73, 6, 64, 6);
+    ReplaceMcr(71, 2, 53, 2);
+    ReplaceMcr(71, 3, 53, 3);
+    ReplaceMcr(71, 5, 59, 5);
+    ReplaceMcr(71, 7, 1, 7);
+    ReplaceMcr(71, 4, 65, 4);
+    ReplaceMcr(71, 6, 65, 6);
+    // ReplaceMcr(72, 3, 54, 3);
+    // ReplaceMcr(72, 5, 51, 5);
+
+    ReplaceMcr(76, 4, 67, 4);
+    ReplaceMcr(74, 2, 53, 2);
+    ReplaceMcr(74, 3, 53, 3);
+    ReplaceMcr(74, 5, 59, 5);
+    ReplaceMcr(74, 7, 1, 7);
+
+    ReplaceMcr(77, 2, 53, 2);
+    ReplaceMcr(77, 3, 53, 3);
+    ReplaceMcr(77, 4, 62, 4);
+    ReplaceMcr(77, 6, 5, 6);
+    ReplaceMcr(78, 5, 66, 5); // lost details
+    ReplaceMcr(78, 7, 9, 7);
+
+    ReplaceMcr(79, 2, 53, 2);
+    ReplaceMcr(79, 3, 53, 3);
+    ReplaceMcr(79, 4, 62, 4);
+    ReplaceMcr(79, 5, 59, 5);
+    // - mask 1
+    Blk2Mcr(53, 0);
+    Blk2Mcr(53, 1);
+    Blk2Mcr(53, 6);
+    Blk2Mcr(53, 7);
+    Blk2Mcr(54, 3);
+    Blk2Mcr(54, 7);
+    Blk2Mcr(55, 2);
+    Blk2Mcr(55, 6);
+
+    Blk2Mcr(48, 2);
+    Blk2Mcr(58, 2);
+    // Blk2Mcr(61, 2);
+    Blk2Mcr(64, 2);
+    Blk2Mcr(70, 2);
+    Blk2Mcr(52, 2); Blk2Mcr(67, 2); Blk2Mcr(73, 2); Blk2Mcr(76, 2); Blk2Mcr(391, 2); Blk2Mcr(394, 2); Blk2Mcr(406, 2); /*Blk2Mcr(412, 2);*/ Blk2Mcr(415, 2); Blk2Mcr(454, 2);
+    Blk2Mcr(51, 3);
+    Blk2Mcr(57, 3);
+    Blk2Mcr(60, 3);
+    // Blk2Mcr(63, 3);
+    Blk2Mcr(46, 0); Blk2Mcr(50, 0); Blk2Mcr(56, 0); Blk2Mcr(59, 0); Blk2Mcr(62, 0); Blk2Mcr(65, 0); Blk2Mcr(68, 0); Blk2Mcr(71, 0); Blk2Mcr(74, 0); Blk2Mcr(77, 0); Blk2Mcr(79, 0); // Blk2Mcr(456, 6);
+    Blk2Mcr(46, 1); Blk2Mcr(50, 1); Blk2Mcr(56, 1); Blk2Mcr(59, 1); Blk2Mcr(62, 1); Blk2Mcr(65, 1); Blk2Mcr(68, 1); Blk2Mcr(71, 1); Blk2Mcr(74, 1); Blk2Mcr(77, 1); Blk2Mcr(79, 1); // Blk2Mcr(456, 7);
+
+    Blk2Mcr(392, 6); // Blk2Mcr(453, 10);
+    Blk2Mcr(392, 7); // Blk2Mcr(453, 11);
+
+    Blk2Mcr(393, 7); Blk2Mcr(455, 11);
+    Blk2Mcr(394, 6); Blk2Mcr(454, 6); Blk2Mcr(454, 10);
+
+    Blk2Mcr(47, 3); Blk2Mcr(66, 3); /*Blk2Mcr(69, 3); */ Blk2Mcr(78, 3); Blk2Mcr(386, 3); Blk2Mcr(393, 3); Blk2Mcr(405, 3); /*Blk2Mcr(408, 3); Blk2Mcr(417, 3);*/ Blk2Mcr(455, 7);
+
+    // reuse micros
+    ReplaceMcr(109, 0, 158, 0);
+    ReplaceMcr(99, 1, 157, 1);
+    ReplaceMcr(86, 1, 156, 1);
+    ReplaceMcr(82, 0, 141, 0);
+    ReplaceMcr(289, 0, 141, 0);
+    ReplaceMcr(124, 1, 154, 1);
+    ReplaceMcr(202, 0, 161, 0);
+    ReplaceMcr(307, 0, 161, 0); // lost details
+    ReplaceMcr(311, 0, 154, 0);
+    ReplaceMcr(205, 0, 160, 0); // lost details
+    ReplaceMcr(205, 1, 160, 1); // lost details
+    ReplaceMcr(189, 0, 157, 0); // lost details
+    ReplaceMcr(189, 1, 157, 1); // lost details
+    ReplaceMcr(209, 0, 157, 0); // lost details
+    ReplaceMcr(209, 1, 157, 1); // lost details
+    ReplaceMcr(197, 0, 153, 0); // lost details
+    ReplaceMcr(197, 1, 153, 1); // lost details
+    ReplaceMcr(241, 1, 153, 1); // lost details
+    ReplaceMcr(302, 1, 153, 1); // lost details
+    ReplaceMcr(164, 0, 2, 0); // lost details
+    ReplaceMcr(164, 1, 2, 1); // lost details
+    ReplaceMcr(225, 1, 2, 1);
+    // ReplaceMcr(43, 0, 22, 0); // lost details
+    ReplaceMcr(169, 0, 19, 0); // lost details
+    ReplaceMcr(255, 0, 258, 0); // lost details
+    ReplaceMcr(299, 0, 19, 0);
+    ReplaceMcr(272, 1, 155, 1);
+    ReplaceMcr(288, 1, 155, 1);
+    ReplaceMcr(265, 0, 156, 0);
+    // ReplaceMcr(281, 1, 159, 1);
+    ReplaceMcr(280, 0, 4, 0);
+    ReplaceMcr(129, 0, 4, 0);
+    ReplaceMcr(340, 1, 4, 1);
+    ReplaceMcr(373, 1, 4, 1);
+    ReplaceMcr(337, 1, 17, 1);
+    ReplaceMcr(371, 1, 17, 1);
+    ReplaceMcr(145, 0, 156, 0);
+    ReplaceMcr(329, 0, 156, 0);
+    ReplaceMcr(364, 0, 156, 0);
+    ReplaceMcr(332, 0, 158, 0);
+    ReplaceMcr(366, 0, 158, 0);
+
+    ReplaceMcr(194, 0, 147, 0);
+    ReplaceMcr(194, 1, 147, 1);
+    ReplaceMcr(214, 0, 154, 0);
+    ReplaceMcr(214, 1, 154, 1);
+    ReplaceMcr(242, 0, 154, 0);
+    ReplaceMcr(242, 1, 154, 1);
+
+    ReplaceMcr(232, 0, 17, 0);
+    ReplaceMcr(235, 0, 4, 0);
+    ReplaceMcr(239, 1, 158, 1);
+
+    ReplaceMcr(10, 0, 19, 0); // lost details
+    ReplaceMcr(10, 1, 19, 1); // lost details
+    ReplaceMcr(16, 0, 19, 0); // lost details
+    ReplaceMcr(16, 1, 19, 1); // lost details
+    ReplaceMcr(253, 0, 19, 0); // lost details
+    ReplaceMcr(253, 1, 19, 1); // lost details
+
+    ReplaceMcr(7, 0, 19, 0); // lost details
+    ReplaceMcr(7, 1, 19, 1); // lost details
+    // ReplaceMcr(26, 0, 19, 0); // lost details
+    // ReplaceMcr(26, 1, 19, 1); // lost details
+    // ReplaceMcr(40, 0, 19, 0); // lost details
+    // ReplaceMcr(40, 1, 19, 1); // lost details
+    ReplaceMcr(179, 0, 19, 0); // lost details
+    ReplaceMcr(179, 1, 19, 1); // lost details
+    ReplaceMcr(218, 0, 19, 0); // lost details
+    ReplaceMcr(218, 1, 19, 1); // lost details
+    ReplaceMcr(230, 0, 19, 0); // lost details
+    ReplaceMcr(230, 1, 19, 1); // lost details
+
+    ReplaceMcr(119, 0, 2, 0);
+    ReplaceMcr(119, 1, 2, 1);
+    // ReplaceMcr(168, 0, 2, 0); // lost details
+    // ReplaceMcr(168, 1, 2, 1); // lost details
+    // ReplaceMcr(298, 0, 2, 0); // lost details
+    // ReplaceMcr(298, 1, 2, 1); // lost details
+    // ReplaceMcr(338, 0, 2, 0); // lost details
+    // ReplaceMcr(338, 1, 2, 1); // lost details
+
+    // ReplaceMcr(37, 0, 9, 0); // lost details
+    ReplaceMcr(181, 0, 9, 0); // lost details
+    ReplaceMcr(229, 0, 9, 0); // lost details
+    ReplaceMcr(229, 1, 2, 1); // lost details
+
+    ReplaceMcr(258, 0, 255, 0); // lost details
+
+    ReplaceMcr(34, 1, 11, 1);
+    ReplaceMcr(34, 3, 11, 3);
+    ReplaceMcr(34, 5, 11, 5);
+    ReplaceMcr(34, 7, 11, 7);
+    ReplaceMcr(36, 1, 11, 1);
+    ReplaceMcr(36, 3, 11, 3);
+    ReplaceMcr(36, 5, 11, 5);
+    ReplaceMcr(36, 7, 11, 7);
+    ReplaceMcr(65, 7, 11, 7);
+    // ReplaceMcr(68, 9, 11, 9);
+    ReplaceMcr(251, 1, 11, 1);
+    ReplaceMcr(254, 1, 11, 1);
+    ReplaceMcr(254, 3, 11, 3);
+
+    ReplaceMcr(38, 7, 1, 7);
+
+    ReplaceMcr(23, 0, 3, 0);
+    ReplaceMcr(33, 0, 3, 0);
+    ReplaceMcr(190, 0, 3, 0);
+    ReplaceMcr(247, 0, 3, 0);
+    ReplaceMcr(23, 1, 3, 1);
+    ReplaceMcr(33, 1, 3, 1);
+    ReplaceMcr(3, 4, 23, 4);
+
+    ReplaceMcr(190, 8, 3, 8); // lost details
+    ReplaceMcr(48, 6, 3, 6);
+
+    ReplaceMcr(198, 2, 3, 2); // lost details
+    ReplaceMcr(210, 2, 3, 2); // lost details
+    ReplaceMcr(253, 4, 242, 4); // lost details
+
+    ReplaceMcr(193, 9, 6, 9);
+
+    ReplaceMcr(47, 7, 2, 7);
+    ReplaceMcr(189, 7, 2, 7);
+    ReplaceMcr(201, 7, 6, 7);
+    ReplaceMcr(258, 7, 9, 7);
+    ReplaceMcr(66, 7, 12, 7);
+    ReplaceMcr(252, 7, 12, 7);
+    ReplaceMcr(255, 7, 12, 7);
+
+    ReplaceMcr(9, 5, 2, 5);
+    ReplaceMcr(189, 5, 2, 5);
+    ReplaceMcr(258, 5, 2, 5);
+    ReplaceMcr(255, 5, 12, 5);
+
+    ReplaceMcr(241, 5, 252, 5);
+
+    ReplaceMcr(201, 3, 6, 3);
+    ReplaceMcr(213, 3, 6, 3);
+    ReplaceMcr(193, 3, 217, 3);
+
+    ReplaceMcr(25, 1, 6, 1);
+    ReplaceMcr(31, 1, 6, 1);
+    ReplaceMcr(193, 1, 6, 1);
+    ReplaceMcr(201, 1, 6, 1);
+    ReplaceMcr(245, 1, 6, 1);
+
+    ReplaceMcr(217, 1, 213, 1);
+
+    ReplaceMcr(25, 0, 6, 0);
+    ReplaceMcr(31, 0, 6, 0);
+    ReplaceMcr(217, 0, 6, 0);
+    ReplaceMcr(245, 0, 6, 0); // lost details
+
+    ReplaceMcr(21, 8, 260, 8);
+    ReplaceMcr(27, 8, 260, 8);
+    ReplaceMcr(30, 8, 260, 8);
+    ReplaceMcr(56, 8, 260, 8);
+    ReplaceMcr(59, 8, 260, 8);
+    ReplaceMcr(248, 8, 244, 8);
+
+    ReplaceMcr(192, 6, 5, 6); // fix glitch (connection)
+    ReplaceMcr(216, 6, 5, 6);
+    ReplaceMcr(38, 6, 15, 6);
+    ReplaceMcr(65, 6, 15, 6);
+    ReplaceMcr(71, 6, 15, 6);
+    ReplaceMcr(74, 6, 8, 6);
+    ReplaceMcr(200, 6, 180, 6);
+    ReplaceMcr(67, 6, 16, 6);
+
+    ReplaceMcr(248, 4, 21, 4);
+    ReplaceMcr(36, 4, 32, 4);
+    ReplaceMcr(34, 4, 15, 4);
+    ReplaceMcr(38, 4, 15, 4);
+
+    ReplaceMcr(36, 2, 21, 2);
+    ReplaceMcr(204, 2, 188, 2);
+    ReplaceMcr(192, 2, 5, 2);
+    ReplaceMcr(212, 2, 5, 2);
+    ReplaceMcr(216, 2, 5, 2);
+    ReplaceMcr(34, 2, 15, 2);
+    ReplaceMcr(38, 2, 15, 2);
+    ReplaceMcr(163, 2, 1, 2); // lost details
+    ReplaceMcr(196, 2, 1, 2);
+    ReplaceMcr(208, 2, 1, 2);
+
+    ReplaceMcr(11, 0, 8, 0);
+    ReplaceMcr(244, 0, 8, 0);
+    ReplaceMcr(254, 0, 8, 0);
+    ReplaceMcr(27, 0, 21, 0);
+    ReplaceMcr(30, 0, 21, 0);
+    ReplaceMcr(32, 0, 21, 0);
+    ReplaceMcr(45, 0, 21, 0);
+    ReplaceMcr(246, 0, 21, 0);
+    ReplaceMcr(248, 0, 21, 0);
+    ReplaceMcr(36, 0, 21, 0); // fix glitch(?)
+    ReplaceMcr(34, 0, 15, 0);
+    ReplaceMcr(251, 0, 15, 0);
+    ReplaceMcr(41, 0, 24, 0);
+
+    ReplaceMcr(24, 9, 260, 9);
+    ReplaceMcr(27, 9, 260, 9);
+    ReplaceMcr(32, 9, 260, 9);
+    ReplaceMcr(56, 9, 260, 9);
+    ReplaceMcr(62, 9, 260, 9);
+    ReplaceMcr(257, 9, 260, 9);
+    ReplaceMcr(248, 9, 246, 9);
+
+    ReplaceMcr(21, 7, 8, 7);
+    ReplaceMcr(42, 7, 8, 7);
+    ReplaceMcr(77, 7, 8, 7);
+    ReplaceMcr(46, 7, 1, 7);
+    ReplaceMcr(167, 7, 1, 7);
+    ReplaceMcr(188, 7, 1, 7); // fix glitch (connection)
+
+    ReplaceMcr(248, 5, 24, 5);
+
+    ReplaceMcr(24, 3, 27, 3);
+    ReplaceMcr(188, 3, 1, 3);
+    ReplaceMcr(196, 3, 1, 3);
+    ReplaceMcr(204, 3, 1, 3);
+    ReplaceMcr(212, 3, 5, 3);
+    ReplaceMcr(216, 3, 192, 3);
+    ReplaceMcr(8, 3, 21, 3);
+    ReplaceMcr(15, 3, 21, 3);
+    ReplaceMcr(257, 3, 21, 3);
+    ReplaceMcr(260, 3, 21, 3);
+
+    ReplaceMcr(188, 1, 1, 1);
+    ReplaceMcr(196, 1, 1, 1);
+    ReplaceMcr(24, 1, 27, 1);
+    ReplaceMcr(38, 1, 27, 1);
+    ReplaceMcr(41, 1, 27, 1);
+    ReplaceMcr(244, 1, 27, 1);
+    ReplaceMcr(15, 1, 8, 1);
+    ReplaceMcr(21, 1, 8, 1);
+    ReplaceMcr(42, 1, 8, 1);
+    ReplaceMcr(246, 1, 8, 1);
+    ReplaceMcr(257, 1, 8, 1);
+    ReplaceMcr(260, 1, 8, 1);
+
+    // ReplaceMcr(194, 4, 7, 4); // lost details
+    ReplaceMcr(7, 4, 96, 6); // lost details
+    ReplaceMcr(194, 4, 96, 6); // lost details
+    ReplaceMcr(16, 4, 96, 6); // lost details
+    // ReplaceMcr(40, 4, 96, 6); // lost details
+    ReplaceMcr(194, 6, 7, 6); // lost details
+
+    // ReplaceMcr(175, 0, 147, 0); // after patchHellFloorCel
+
+    // eliminate micros of unused subtiles
+    // Blk2Mcr(240,  ...),
+    // moved to other subtile
+    // Blk2Mcr(137, 0);
+    // Blk2Mcr(137, 1);
+    // Blk2Mcr(137, 2);
+    // reused for the new shadow
+    // 35
+    // Blk2Mcr(26, 0);
+    // Blk2Mcr(26, 1);
+    // Blk2Mcr(37, 0);
+    // Blk2Mcr(13, 0);
+    // Blk2Mcr(13, 1);
+    Blk2Mcr(385, 0);
+    Blk2Mcr(385, 1);
+    Blk2Mcr(385, 2);
+    Blk2Mcr(385, 3);
+    Blk2Mcr(385, 7);
+    Blk2Mcr(386, 0);
+    Blk2Mcr(386, 1);
+    Blk2Mcr(386, 7);
+    Blk2Mcr(387, 0);
+    Blk2Mcr(387, 1);
+    Blk2Mcr(387, 2);
+    Blk2Mcr(387, 6);
+    Blk2Mcr(389, 0);
+    Blk2Mcr(389, 1);
+    Blk2Mcr(389, 2);
+    Blk2Mcr(389, 3);
+    Blk2Mcr(389, 6);
+    Blk2Mcr(390, 0);
+    Blk2Mcr(390, 1);
+    Blk2Mcr(390, 3);
+    Blk2Mcr(391, 0);
+    Blk2Mcr(391, 1);
+    Blk2Mcr(392, 0);
+    Blk2Mcr(392, 1);
+    Blk2Mcr(393, 0);
+    Blk2Mcr(393, 1);
+    Blk2Mcr(394, 0);
+    Blk2Mcr(394, 1);
+    Blk2Mcr(395, 0);
+    Blk2Mcr(395, 1);
+    Blk2Mcr(395, 2);
+    Blk2Mcr(395, 3);
+    Blk2Mcr(395, 8);
+    Blk2Mcr(395, 9);
+    Blk2Mcr(396, 0);
+    Blk2Mcr(396, 1);
+    Blk2Mcr(396, 3);
+    Blk2Mcr(396, 5);
+    Blk2Mcr(397, 0);
+    Blk2Mcr(397, 1);
+    Blk2Mcr(397, 2);
+    Blk2Mcr(398, 0);
+    Blk2Mcr(398, 1);
+    Blk2Mcr(398, 2);
+    Blk2Mcr(398, 3);
+    Blk2Mcr(398, 8);
+    Blk2Mcr(399, 0);
+    Blk2Mcr(399, 1);
+    Blk2Mcr(399, 3);
+    Blk2Mcr(399, 5);
+    Blk2Mcr(400, 0);
+    Blk2Mcr(400, 1);
+    Blk2Mcr(400, 2);
+    Blk2Mcr(400, 4);
+    Blk2Mcr(401, 0);
+    Blk2Mcr(401, 1);
+    Blk2Mcr(401, 2);
+    Blk2Mcr(401, 3);
+    Blk2Mcr(401, 5);
+    Blk2Mcr(401, 9);
+    Blk2Mcr(402, 0);
+    Blk2Mcr(402, 1);
+    Blk2Mcr(402, 3);
+    Blk2Mcr(402, 5);
+    Blk2Mcr(403, 0);
+    Blk2Mcr(403, 1);
+    Blk2Mcr(403, 2);
+    Blk2Mcr(403, 4);
+    Blk2Mcr(404, 0);
+    Blk2Mcr(404, 1);
+    Blk2Mcr(404, 2);
+    Blk2Mcr(404, 3);
+    Blk2Mcr(404, 6);
+    Blk2Mcr(404, 7);
+    Blk2Mcr(405, 0);
+    Blk2Mcr(405, 1);
+    Blk2Mcr(405, 7);
+    Blk2Mcr(406, 0);
+    Blk2Mcr(406, 1);
+    Blk2Mcr(406, 6);
+    Blk2Mcr(407, 0);
+    Blk2Mcr(407, 1);
+    Blk2Mcr(407, 2);
+    Blk2Mcr(407, 3);
+    Blk2Mcr(407, 5);
+    Blk2Mcr(407, 7);
+    Blk2Mcr(409, 0);
+    Blk2Mcr(409, 1);
+    Blk2Mcr(409, 2);
+    Blk2Mcr(409, 4);
+    Blk2Mcr(410, 0);
+    Blk2Mcr(410, 1);
+    Blk2Mcr(410, 2);
+    Blk2Mcr(410, 3);
+    Blk2Mcr(410, 4);
+    Blk2Mcr(410, 5);
+    Blk2Mcr(410, 6);
+    Blk2Mcr(410, 7);
+    Blk2Mcr(411, 0);
+    Blk2Mcr(411, 1);
+    Blk2Mcr(411, 3);
+    Blk2Mcr(411, 5);
+    Blk2Mcr(413, 0);
+    Blk2Mcr(413, 1);
+    Blk2Mcr(413, 2);
+    Blk2Mcr(413, 3);
+    Blk2Mcr(413, 5);
+    Blk2Mcr(413, 6);
+    Blk2Mcr(413, 7);
+    Blk2Mcr(415, 0);
+    Blk2Mcr(415, 1);
+    Blk2Mcr(415, 4);
+    Blk2Mcr(416, 0);
+    Blk2Mcr(416, 1);
+    Blk2Mcr(416, 2);
+    Blk2Mcr(416, 3);
+    Blk2Mcr(416, 4);
+    Blk2Mcr(416, 6);
+    Blk2Mcr(416, 7);
+    Blk2Mcr(417, 0);
+    Blk2Mcr(417, 1);
+    Blk2Mcr(417, 3);
+    Blk2Mcr(417, 5);
+    Blk2Mcr(417, 7);
+    Blk2Mcr(418, 0);
+    Blk2Mcr(418, 1);
+    Blk2Mcr(418, 2);
+    Blk2Mcr(418, 3);
+    Blk2Mcr(418, 4);
+    Blk2Mcr(418, 5);
+    Blk2Mcr(419, 0);
+    Blk2Mcr(419, 1);
+    Blk2Mcr(419, 3);
+    Blk2Mcr(419, 5);
+    Blk2Mcr(420, 0);
+    Blk2Mcr(420, 1);
+    Blk2Mcr(420, 2);
+    Blk2Mcr(420, 4);
+    Blk2Mcr(422, 0);
+    Blk2Mcr(425, 1);
+    Blk2Mcr(427, 0);
+    Blk2Mcr(429, 0);
+    Blk2Mcr(430, 1);
+    Blk2Mcr(431, 0);
+    Blk2Mcr(432, 0);
+    Blk2Mcr(433, 1);
+    Blk2Mcr(434, 1);
+    Blk2Mcr(434, 5);
+    Blk2Mcr(435, 0);
+    Blk2Mcr(436, 0);
+    Blk2Mcr(437, 0);
+    Blk2Mcr(437, 3);
+    Blk2Mcr(437, 4);
+    Blk2Mcr(438, 0);
+    Blk2Mcr(438, 1);
+    Blk2Mcr(439, 0);
+    Blk2Mcr(439, 4);
+    Blk2Mcr(439, 6);
+    Blk2Mcr(445, 0);
+    Blk2Mcr(451, 1);
+    Blk2Mcr(454, 9);
+    Blk2Mcr(454, 11);
+    Blk2Mcr(455, 8);
+    Blk2Mcr(455, 10);
+
+    Blk2Mcr(22, 0);
+    Blk2Mcr(22, 5);
+    Blk2Mcr(28, 0);
+    Blk2Mcr(28, 1);
+    Blk2Mcr(29, 0);
+    Blk2Mcr(29, 1);
+    Blk2Mcr(39, 0);
+    Blk2Mcr(39, 1);
+    Blk2Mcr(40, 0);
+    Blk2Mcr(40, 1);
+    Blk2Mcr(40, 4);
+    Blk2Mcr(43, 0);
+    Blk2Mcr(43, 5);
+    Blk2Mcr(44, 0);
+    Blk2Mcr(44, 1);
+    Blk2Mcr(61, 2);
+    Blk2Mcr(61, 4);
+    Blk2Mcr(63, 3);
+    Blk2Mcr(63, 5);
+    Blk2Mcr(72, 3);
+    Blk2Mcr(72, 5);
+    Blk2Mcr(80, 3);
+    Blk2Mcr(80, 5);
+    Blk2Mcr(81, 2);
+    Blk2Mcr(81, 4);
+    Blk2Mcr(148, 1);
+    Blk2Mcr(173, 1);
+    Blk2Mcr(178, 1);
+    Blk2Mcr(178, 3);
+    Blk2Mcr(178, 5);
+    Blk2Mcr(240, 0);
+    Blk2Mcr(240, 1);
+    Blk2Mcr(249, 0);
+    Blk2Mcr(249, 1);
+    Blk2Mcr(249, 7);
+    Blk2Mcr(250, 0);
+    Blk2Mcr(250, 1);
+    Blk2Mcr(250, 6);
+    Blk2Mcr(259, 1);
+
+    const int unusedSubtiles[] = {
+        14, 20, 69, 73, 75, 84, 85, 87, 89, 102, 103, 104, 105, 108, 115, 116, 117, 121, 122, 123, 125, 128, 138, 143, 144, 165, 166, 168, 170, 174, 175, 182, 191, 195, 199, 203, 207, 211, 215, 219, 222, 223, 224, 231, 234, 236, 237, 243, 256, 261, 267, 270, 276, 279, 282, 286, 291, 298, 303, 304, 308, 310, 312, 314, 316, 317, 331, 338, 352, 388, 408, 412, 414, 421, 423, 424, 426, 428, 440, 441, 442, 443, 444, 446, 447, 448, 449, 450, 452, 453, 456
     };
 
     for (int n = 0; n < lengthof(unusedSubtiles); n++) {
@@ -14919,14 +17680,29 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeSubtileSolFlags(this->sol, 540 - 1, PFLAG_BLOCK_PATH, false, silent); // unused in base game
         break;
     case DTYPE_HELL:
-        this->patchHellExit(45 - 1, silent);
+        // patch dMiniTiles and dMegaTiles - L3.MIN and L3.TIL
+        this->cleanupHell(deletedFrames, silent);
         // patch dAutomapData - L4.AMP
         ChangeTileMapFlags(this->amp, 52 - 1, MAPFLAG_VERTGRATE, true, silent);
         ChangeTileMapFlags(this->amp, 56 - 1, MAPFLAG_HORZGRATE, true, silent);
+        ChangeTileAmpFlags(this->amp, 7 - 1, MWT_NORTH_WEST_END, silent);
+        ChangeTileAmpFlags(this->amp, 8 - 1, MWT_NORTH_EAST_END, silent);
+        ChangeTileAmpFlags(this->amp, 83 - 1, MWT_NORTH_WEST_END, silent);
+        // - new base shadows
+        SetTileMapFlags(this->amp,  61 - 1,  2 - 1, silent);
+        SetTileMapFlags(this->amp,  62 - 1,  2 - 1, silent);
+        SetTileMapFlags(this->amp,  76 - 1, 15 - 1, silent);
+        SetTileMapFlags(this->amp, 129 - 1, 15 - 1, silent);
+        SetTileMapFlags(this->amp, 130 - 1, 56 - 1, silent);
+        SetTileMapFlags(this->amp, 131 - 1, 56 - 1, silent);
+        SetTileMapFlags(this->amp, 132 - 1,  8 - 1, silent);
+        SetTileMapFlags(this->amp, 133 - 1,  8 - 1, silent);
+        SetTileMapFlags(this->amp, 134 - 1, 14 - 1, silent);
+        SetTileMapFlags(this->amp, 135 - 1, 14 - 1, silent);
         // patch dSolidTable - L4.SOL
         ChangeSubtileSolFlags(this->sol, 141 - 1, PFLAG_BLOCK_MISSILE, false, silent); // fix missile-blocking tile of down-stairs.
         // fix missile-blocking tile of down-stairs + fix non-walkable tile of down-stairs
-        ChangeSubtileSolFlags(this->sol, 137 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_MISSILE, false, silent);
+        // ChangeSubtileSolFlags(this->sol, 137 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 130 - 1, PFLAG_BLOCK_PATH, true, silent); // make the inner tiles of the down-stairs non-walkable I.
         ChangeSubtileSolFlags(this->sol, 132 - 1, PFLAG_BLOCK_PATH, true, silent); // make the inner tiles of the down-stairs non-walkable II.
         ChangeSubtileSolFlags(this->sol, 131 - 1, PFLAG_BLOCK_PATH, true, silent); // make the inner tiles of the down-stairs non-walkable III.

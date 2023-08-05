@@ -3336,7 +3336,10 @@ void D1Dun::patch(int dunFileIndex)
 /* DUN_VILE_AFT*/            { 42, 46 }, // Vile1.DUN
 /* DUN_WARLORD_PRE*/         { 16, 14 }, // Warlord2.DUN
 /* DUN_WARLORD_AFT*/         { 16, 14 }, // Warlord.DUN
+/* DUN_DIAB_1*/              { 12, 12 }, // Diab1.DUN
+/* DUN_DIAB_2_PRE*/          { 22, 24 }, // Diab2a.DUN
 /* DUN_DIAB_2_AFT*/          { 22, 24 }, // Diab2b.DUN
+/* DUN_DIAB_3_PRE*/          { 22, 22 }, // Diab3a.DUN
 /* DUN_DIAB_3_AFT*/          { 22, 22 }, // Diab3b.DUN
 /* DUN_DIAB_4_PRE*/          { 18, 18 }, // Diab4a.DUN
 /* DUN_DIAB_4_AFT*/          { 18, 18 }, // Diab4b.DUN
@@ -3902,6 +3905,15 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileProtectionAt(14, 15, Qt::Checked);
         break;
     case DUN_WARLORD_PRE: // Warlord2.DUN
+        // useless tiles
+        for (int y = 0; y < 7; y++) {
+            for (int x = 0; x < 8; x++) {
+                if (x >= 7 && y >= 1 && x <= 7 && y <= 5) {
+                    continue;
+                }
+                change |= this->changeTileAt(x, y, 0);
+            }
+        }
         // replace monsters from Warlord.DUN
         change |= this->changeMonsterAt(2, 2, 100, false);
         change |= this->changeMonsterAt(2, 10, 100, false);
@@ -3931,24 +3943,48 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeItemAt(5, 10, 0);
         change |= this->changeItemAt(8, 10, 0);
         // protect inner tiles from spawning additional monsters/objects
-        /*for (int y = 0; y <= 5; y++) {
+        for (int y = 0; y <= 5; y++) {
             for (int x = 0; x <= 6; x++) {
                 change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, 3);
                 change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, 3);
                 change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, 3);
                 change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, 3);
             }
-        }*/
+        }
         break;
     case DUN_WARLORD_AFT: // Warlord.DUN
-        // ensure the changing tiles are reserved
-        change |= this->changeTileProtectionAt(7, 1, Qt::Checked);
-        change |= this->changeTileProtectionAt(7, 2, Qt::Checked);
-        change |= this->changeTileProtectionAt(7, 3, Qt::Checked);
-        change |= this->changeTileProtectionAt(7, 4, Qt::Checked);
-        change |= this->changeTileProtectionAt(7, 5, Qt::Checked);
-        // - add the Warlord
-        change |= this->changeMonsterAt(6, 7, UMT_WARLORD + 1, true);
+        // fix corner
+        change |= this->changeTileAt(6, 1, 10);
+        change |= this->changeTileAt(6, 5, 10);
+        // use base tiles and decorate the walls randomly
+        change |= this->changeTileAt(0, 0, 9);
+        change |= this->changeTileAt(0, 6, 15);
+        change |= this->changeTileAt(1, 0, 2);
+        change |= this->changeTileAt(2, 0, 2);
+        change |= this->changeTileAt(3, 0, 2);
+        change |= this->changeTileAt(4, 0, 2);
+        change |= this->changeTileAt(5, 0, 2);
+        change |= this->changeTileAt(1, 6, 2);
+        change |= this->changeTileAt(2, 6, 2);
+        change |= this->changeTileAt(3, 6, 2);
+        change |= this->changeTileAt(4, 6, 2);
+        change |= this->changeTileAt(5, 6, 2);
+        // change |= this->changeTileAt(6, 3, 50);
+        // ensure the changing tiles are protected + protect inner tiles from decoration
+        for (int y = 1; y <= 5; y++) {
+            for (int x = 1; x <= 7; x++) {
+                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+            }
+        }
+        // remove monsters, objects
+        for (int y = 0; y < 14; y++) {
+            for (int x = 0; x < 16; x++) {
+                change |= this->changeMonsterAt(x, y, 0, false);
+                change |= this->changeObjectAt(x, y, 0);
+            }
+        }
+        // adjust the number of layers
+        this->numLayers = 1;
         break;
     case DUN_BANNER_PRE: // Banner2.DUN
         // useless tiles
@@ -4294,6 +4330,21 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileProtectionAt(23,  8, Qt::Checked);
         break;
     case DUN_BETRAYER: // Vile1.DUN
+        // fix corner
+        change |= this->changeTileAt(5, 0, 16);
+        change |= this->changeTileAt(6, 1, 16);
+        change |= this->changeTileAt(5, 1, 15);
+        // use base tiles and decorate the walls randomly
+        change |= this->changeTileAt(0, 0, 9);
+        change |= this->changeTileAt(0, 6, 15);
+        change |= this->changeTileAt(1, 0, 2);
+        change |= this->changeTileAt(2, 0, 2);
+        change |= this->changeTileAt(3, 0, 2);
+        change |= this->changeTileAt(4, 0, 2);
+        change |= this->changeTileAt(1, 6, 2);
+        change |= this->changeTileAt(2, 6, 2);
+        change |= this->changeTileAt(4, 6, 2);
+        // change |= this->changeTileAt(6, 3, 50);
         // - add the unique monsters
         change |= this->changeMonsterAt(3, 6, UMT_LAZARUS + 1, true);
         change |= this->changeMonsterAt(5, 3, UMT_RED_VEX + 1, true);
@@ -4307,55 +4358,403 @@ void D1Dun::patch(int dunFileIndex)
                 change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, 3);
             }
         }
+        // ensure the box is not connected to the rest of the dungeon + protect inner tiles from decoration
+        for (int y = 0; y <= 6; y++) {
+            for (int x = 0; x <= 6; x++) {
+                if (x == 6 && (y == 0 || y == 6)) {
+                    continue;
+                }
+                if (x == 0 || y == 0 || x == 6 || y == 6) {
+                    change |= this->changeTileProtectionAt(x, y, Qt::PartiallyChecked);
+                } else {
+                    change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+                }
+            }
+        }
+        break;
+    case DUN_DIAB_1: // Diab1.DUN
+        // - fix shadow of the left corner
+        change |= this->changeTileAt(0, 4, 75);
+        change |= this->changeTileAt(0, 5, 74);
+        // - fix shadow of the right corner
+        change |= this->changeTileAt(4, 1, 131);
+        // protect tiles with monsters/objects from spawning additional monsters/objects
+        change |= this->changeSubtileProtectionAt(3, 3, 3);
+        change |= this->changeSubtileProtectionAt(3, 9, 3);
+        change |= this->changeSubtileProtectionAt(4, 7, 3);
+        change |= this->changeSubtileProtectionAt(7, 7, 3);
+        change |= this->changeSubtileProtectionAt(7, 4, 3);
+        change |= this->changeSubtileProtectionAt(9, 3, 3);
+        change |= this->changeSubtileProtectionAt(9, 9, 3);
+        change |= this->changeSubtileProtectionAt(5, 5, 3);
+        // protect tiles with monsters/objects from decoration
+        change |= this->changeTileProtectionAt(1, 4, Qt::Checked);
+        change |= this->changeTileProtectionAt(2, 3, Qt::Checked);
+        change |= this->changeTileProtectionAt(1, 1, Qt::Checked);
+        change |= this->changeTileProtectionAt(3, 2, Qt::Checked);
+        change |= this->changeTileProtectionAt(3, 3, Qt::Checked);
+        change |= this->changeTileProtectionAt(4, 4, Qt::Checked);
+        change |= this->changeTileProtectionAt(4, 1, Qt::Checked);
+        change |= this->changeTileProtectionAt(2, 2, Qt::Checked);
+        break;
+    case DUN_DIAB_2_PRE: // Diab2a.DUN
+        // external tiles
+        for (int y = 1; y <= 3; y++) {
+            for (int x = 9; x <= 10; x++) {
+                if (this->tiles[y][x] >= 98 + 18 && this->tiles[y][x] <= 98 + 30) {
+                    int newTile = this->tiles[y][x] - 98;
+                    // if (newTile == 20) {
+                    //    newTile = 30;
+                    // }
+                    change |= this->changeTileAt(x, y, newTile);
+                }
+            }
+        }
+        // useless tiles
+        for (int y = 0; y < 12; y++) {
+            for (int x = 0; x < 11; x++) {
+                if (x >= 9 && x <= 10 && y >= 1 && y <= 3) {
+                    continue;
+                }
+                change |= this->changeTileAt(x, y, 0);
+            }
+        }
+        // protect changing tiles from objects
+        change |= this->changeSubtileProtectionAt(21,  2, 3);
+        change |= this->changeSubtileProtectionAt(21,  3, 3);
+        change |= this->changeSubtileProtectionAt(21,  4, 3);
+        change |= this->changeSubtileProtectionAt(21,  5, 3);
+        change |= this->changeSubtileProtectionAt(21,  6, 3);
+        change |= this->changeSubtileProtectionAt(21,  7, 3);
+        // protect tiles with monsters/objects from spawning additional monsters/objects
+        change |= this->changeSubtileProtectionAt( 5,  3, 3);
+        change |= this->changeSubtileProtectionAt( 5, 19, 3);
+        change |= this->changeSubtileProtectionAt(11,  9, 3);
+        change |= this->changeSubtileProtectionAt(11, 13, 3);
+        change |= this->changeSubtileProtectionAt(13, 12, 3);
+        change |= this->changeSubtileProtectionAt(14, 10, 3);
+        change |= this->changeSubtileProtectionAt(17,  9, 3);
+        change |= this->changeSubtileProtectionAt(17, 13, 3);
+        change |= this->changeSubtileProtectionAt(15, 17, 3);
+        change |= this->changeSubtileProtectionAt(16, 3, 3);
+        change |= this->changeSubtileProtectionAt(16, 5, 3);
+        change |= this->changeSubtileProtectionAt(13, 10, 3);
         break;
     case DUN_DIAB_2_AFT: // Diab2b.DUN
-        // replace monsters from Diab2a.DUN
-        change |= this->changeMonsterAt(11, 9, 101, false);
-        change |= this->changeMonsterAt(11, 13, 101, false);
-        change |= this->changeMonsterAt(16, 3, 101, false);
-        change |= this->changeMonsterAt(16, 5, 101, false);
-        change |= this->changeMonsterAt(17, 9, 101, false);
-        change |= this->changeMonsterAt(17, 13, 101, false);
-        change |= this->changeMonsterAt(14, 10, 101, false);
-        change |= this->changeMonsterAt(13, 12, 101, false);
+        // external tiles
+        for (int y = 0; y < 12; y++) {
+            for (int x = 0; x < 11; x++) {
+                if (this->tiles[y][x] >= 98 + 18 && this->tiles[y][x] <= 98 + 30) {
+                    int newTile = this->tiles[y][x] - 98;
+                    // if (newTile == 20) {
+                    //    newTile = 30;
+                    // }
+                    change |= this->changeTileAt(x, y, newTile);
+                }
+            }
+        }
+        // ensure the changing tiles are reserved
+        change |= this->changeTileProtectionAt( 9,  1, Qt::Checked);
+        change |= this->changeTileProtectionAt( 9,  2, Qt::Checked);
+        change |= this->changeTileProtectionAt( 9,  3, Qt::Checked);
+        change |= this->changeTileProtectionAt(10,  1, Qt::Checked);
+        change |= this->changeTileProtectionAt(10,  2, Qt::Checked);
+        change |= this->changeTileProtectionAt(10,  3, Qt::Checked);
+        // protect tiles with monsters/objects from decoration
+        change |= this->changeTileProtectionAt( 2,  1, Qt::Checked);
+        change |= this->changeTileProtectionAt( 2,  9, Qt::Checked);
+        change |= this->changeTileProtectionAt( 5,  4, Qt::Checked);
+        change |= this->changeTileProtectionAt( 5,  6, Qt::Checked);
+        change |= this->changeTileProtectionAt( 6,  6, Qt::Checked);
+        change |= this->changeTileProtectionAt( 7,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt( 8,  4, Qt::Checked);
+        change |= this->changeTileProtectionAt( 8,  6, Qt::Checked);
+        change |= this->changeTileProtectionAt( 7,  8, Qt::Checked);
+        change |= this->changeTileProtectionAt( 8,  1, Qt::Checked);
+        change |= this->changeTileProtectionAt( 8,  2, Qt::Checked);
+        change |= this->changeTileProtectionAt( 6,  5, Qt::Checked);
+        // remove monsters
+        for (int y = 0; y < 24; y++) {
+            for (int x = 0; x < 22; x++) {
+                change |= this->changeMonsterAt(x, y, 0, false);
+            }
+        }
+        // remove objects
+        change |= this->changeObjectAt(13, 10, 0);
+        // adjust the number of layers
+        this->numLayers = 1;
+        break;
+    case DUN_DIAB_3_PRE: // Diab3a.DUN
+        // useless tiles
+        for (int y = 0; y < 11; y++) {
+            for (int x = 0; x < 11; x++) {
+                if (x >= 4 && x <= 6 && y >= 10 && y <= 10) {
+                    continue; // SW-wall
+                }
+                if (x >= 0 && x <= 0 && y >= 4 && y <= 6) {
+                    continue; // NW-wall
+                }
+                if (x >= 4 && x <= 6 && y >= 0 && y <= 0) {
+                    continue; // NE-wall
+                }
+                if (x >= 10 && x <= 10 && y >= 4 && y <= 6) {
+                    continue; // SE-wall
+                }
+                change |= this->changeTileAt(x, y, 0);
+            }
+        }
+        // protect changing tiles from objects
+        // - SW-wall
+        change |= this->changeSubtileProtectionAt( 8, 21, 3);
+        change |= this->changeSubtileProtectionAt( 9, 21, 3);
+        change |= this->changeSubtileProtectionAt(10, 21, 3);
+        change |= this->changeSubtileProtectionAt(11, 21, 3);
+        change |= this->changeSubtileProtectionAt(12, 21, 3);
+        change |= this->changeSubtileProtectionAt(13, 21, 3);
+        // - NE-wall
+        change |= this->changeSubtileProtectionAt( 8,  1, 3);
+        change |= this->changeSubtileProtectionAt( 9,  1, 3);
+        change |= this->changeSubtileProtectionAt(10,  1, 3);
+        change |= this->changeSubtileProtectionAt(11,  1, 3);
+        change |= this->changeSubtileProtectionAt(12,  1, 3);
+        change |= this->changeSubtileProtectionAt(13,  1, 3);
+        // - NW-wall
+        change |= this->changeSubtileProtectionAt( 1,  8, 3);
+        change |= this->changeSubtileProtectionAt( 1,  9, 3);
+        change |= this->changeSubtileProtectionAt( 1, 10, 3);
+        change |= this->changeSubtileProtectionAt( 1, 11, 3);
+        change |= this->changeSubtileProtectionAt( 1, 12, 3);
+        change |= this->changeSubtileProtectionAt( 1, 13, 3);
+        // - SE-wall
+        change |= this->changeSubtileProtectionAt(21,  8, 3);
+        change |= this->changeSubtileProtectionAt(21,  9, 3);
+        change |= this->changeSubtileProtectionAt(21, 10, 3);
+        change |= this->changeSubtileProtectionAt(21, 11, 3);
+        change |= this->changeSubtileProtectionAt(21, 12, 3);
+        change |= this->changeSubtileProtectionAt(21, 13, 3);
+        // protect tiles with monsters/objects from spawning additional monsters/objects
+        change |= this->changeSubtileProtectionAt( 1,  5, 3);
+        change |= this->changeSubtileProtectionAt( 1, 15, 3);
+        change |= this->changeSubtileProtectionAt( 5,  1, 3);
+        change |= this->changeSubtileProtectionAt( 5,  8, 3);
+        change |= this->changeSubtileProtectionAt( 5, 12, 3);
+        change |= this->changeSubtileProtectionAt( 5, 19, 3);
+        change |= this->changeSubtileProtectionAt( 7,  7, 3);
+        change |= this->changeSubtileProtectionAt( 7, 13, 3);
+        change |= this->changeSubtileProtectionAt( 8,  2, 3);
+        change |= this->changeSubtileProtectionAt( 8,  5, 3);
+        change |= this->changeSubtileProtectionAt( 8, 14, 3);
+        change |= this->changeSubtileProtectionAt( 8, 15, 3);
+        change |= this->changeSubtileProtectionAt(12,  5, 3);
+        change |= this->changeSubtileProtectionAt(12, 15, 3);
+        change |= this->changeSubtileProtectionAt(13,  7, 3);
+        change |= this->changeSubtileProtectionAt(13, 13, 3);
+        change |= this->changeSubtileProtectionAt(15,  1, 3);
+        change |= this->changeSubtileProtectionAt(15,  8, 3);
+        change |= this->changeSubtileProtectionAt(15, 12, 3);
+        change |= this->changeSubtileProtectionAt(15, 19, 3);
+        change |= this->changeSubtileProtectionAt(19,  5, 3);
+        change |= this->changeSubtileProtectionAt(19, 15, 3);
         break;
     case DUN_DIAB_3_AFT: // Diab3b.DUN
-        // replace monsters from Diab3a.DUN
-        change |= this->changeMonsterAt(1, 5, 101, false);
-        change |= this->changeMonsterAt(1, 15, 101, false);
-        change |= this->changeMonsterAt(5, 1, 101, false);
-        change |= this->changeMonsterAt(5, 19, 101, false);
-        change |= this->changeMonsterAt(7, 7, 101, false);
-        change |= this->changeMonsterAt(7, 13, 101, false);
-        change |= this->changeMonsterAt(13, 7, 101, false);
-        change |= this->changeMonsterAt(13, 13, 101, false);
-        change |= this->changeMonsterAt(15, 1, 101, false);
-        change |= this->changeMonsterAt(15, 19, 101, false);
-        change |= this->changeMonsterAt(19, 5, 101, false);
-        change |= this->changeMonsterAt(19, 15, 101, false);
-        // replace objects from Diab3a.DUN
-        change |= this->changeObjectAt(8, 2, 51);
+        // external tiles
+        change |= this->changeTileAt(4, 4, 21);
+        change |= this->changeTileAt(4, 5, 18);
+        change |= this->changeTileAt(5, 4, 19);
+        change |= this->changeTileAt(5, 5, 30);
+        // remove partial shadow
+        change |= this->changeTileAt(5, 0, 50);
+        // ensure the changing tiles are reserved
+        // - SW-wall
+        change |= this->changeTileProtectionAt( 4, 10, Qt::Checked);
+        change |= this->changeTileProtectionAt( 5, 10, Qt::Checked);
+        change |= this->changeTileProtectionAt( 6, 10, Qt::Checked);
+        // - NE-wall
+        change |= this->changeTileProtectionAt( 4,  0, Qt::Checked);
+        change |= this->changeTileProtectionAt( 5,  0, Qt::Checked);
+        change |= this->changeTileProtectionAt( 6,  0, Qt::Checked);
+        // - NW-wall
+        change |= this->changeTileProtectionAt( 0,  4, Qt::Checked);
+        change |= this->changeTileProtectionAt( 0,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt( 0,  6, Qt::Checked);
+        // - SE-wall
+        change |= this->changeTileProtectionAt(10,  4, Qt::Checked);
+        change |= this->changeTileProtectionAt(10,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt(10,  6, Qt::Checked);
+        // protect tiles with monsters/objects from decoration
+        change |= this->changeTileProtectionAt( 0,  2, Qt::Checked);
+        change |= this->changeTileProtectionAt( 0,  7, Qt::Checked);
+        change |= this->changeTileProtectionAt( 2,  0, Qt::Checked);
+        change |= this->changeTileProtectionAt( 2,  4, Qt::Checked);
+        change |= this->changeTileProtectionAt( 2,  6, Qt::Checked);
+        change |= this->changeTileProtectionAt( 2,  9, Qt::Checked);
+        change |= this->changeTileProtectionAt( 3,  3, Qt::Checked);
+        change |= this->changeTileProtectionAt( 3,  6, Qt::Checked);
+        change |= this->changeTileProtectionAt( 4,  1, Qt::Checked);
+        change |= this->changeTileProtectionAt( 4,  2, Qt::Checked);
+        change |= this->changeTileProtectionAt( 4,  7, Qt::Checked);
+        change |= this->changeTileProtectionAt( 4,  7, Qt::Checked);
+        change |= this->changeTileProtectionAt( 6,  2, Qt::Checked);
+        change |= this->changeTileProtectionAt( 6,  7, Qt::Checked);
+        change |= this->changeTileProtectionAt( 6,  3, Qt::Checked);
+        change |= this->changeTileProtectionAt( 6,  6, Qt::Checked);
+        change |= this->changeTileProtectionAt( 7,  0, Qt::Checked);
+        change |= this->changeTileProtectionAt( 7,  4, Qt::Checked);
+        change |= this->changeTileProtectionAt( 7,  6, Qt::Checked);
+        change |= this->changeTileProtectionAt( 7,  9, Qt::Checked);
+        change |= this->changeTileProtectionAt( 9,  2, Qt::Checked);
+        change |= this->changeTileProtectionAt( 9,  7, Qt::Checked);
+        // remove monsters
+        for (int y = 0; y < 22; y++) {
+            for (int x = 0; x < 22; x++) {
+                change |= this->changeMonsterAt(x, y, 0, false);
+            }
+        }
+        // remove objects
+        change |= this->changeObjectAt(8, 14, 0);
+        change |= this->changeObjectAt(8, 2, 0);
+        // adjust the number of layers
+        this->numLayers = 1;
         break;
-    case DUN_DIAB_4_AFT: // Diab4b.DUN
-        // replace monsters from Diab4a.DUN
-        change |= this->changeMonsterAt(4, 4, 101, false);
-        change |= this->changeMonsterAt(4, 8, 101, false);
-        change |= this->changeMonsterAt(4, 12, 101, false);
-        change |= this->changeMonsterAt(8, 4, 101, false);
-        change |= this->changeMonsterAt(8, 12, 101, false);
-        change |= this->changeMonsterAt(12, 4, 101, false);
-        change |= this->changeMonsterAt(12, 8, 101, false);
-        change |= this->changeMonsterAt(12, 12, 101, false);
-        // add monsters from Diab4a.DUN
-        change |= this->changeMonsterAt(6, 12, 101, false);
-        change |= this->changeMonsterAt(12, 10, 101, false);
-        change |= this->changeMonsterAt(10, 4, 101, false);
-        /* fall-through */
     case DUN_DIAB_4_PRE: // Diab4a.DUN
-        // add/replace monster
-        change |= this->changeMonsterAt(4, 6, 101, false);
+        for (int y = 0; y < 9; y++) {
+            for (int x = 0; x < 9; x++) {
+                // external tiles
+                if (this->tiles[y][x] >= 98 + 18 && this->tiles[y][x] <= 98 + 30) {
+                    int newTile = this->tiles[y][x] - 98;
+                    // if (newTile == 20) {
+                    //    newTile = 30;
+                    // }
+                    change |= this->changeTileAt(x, y, newTile);
+                }
+                // useless tiles
+                if (x >= 2 && x <= 6 && y >= 7 && y <= 8) {
+                    continue; // SW-wall
+                }
+                if (x >= 0 && x <= 1 && y >= 2 && y <= 6) {
+                    continue; // NW-wall
+                }
+                if (x >= 2 && x <= 6 && y >= 0 && y <= 1) {
+                    continue; // NE-wall
+                }
+                if (x >= 7 && x <= 8 && y >= 2 && y <= 6) {
+                    continue; // SE-wall
+                }
+                change |= this->changeTileAt(x, y, 0);
+            }
+        }
         // make diablo unique
         change |= this->changeMonsterAt(8, 8, UMT_DIABLO + 1, true);
+        // replace the only black knight
+        change |= this->changeMonsterAt(4, 6, 101, false);
+        // protect changing tiles from objects
+        // - SW-wall
+        for (int y = 4; y < 14; y++) {
+            change |= this->changeSubtileProtectionAt(17, y, 3);
+        }
+        // - NE-wall
+        for (int x = 4; x < 14; x++) {
+            change |= this->changeSubtileProtectionAt(x, 3, 3);
+        }
+        // - NW-wall
+        for (int y = 4; y < 14; y++) {
+            change |= this->changeSubtileProtectionAt(3, y, 3);
+        }
+        // - SE-wall
+        for (int x = 4; x < 14; x++) {
+            change |= this->changeSubtileProtectionAt(x, 17, 3);
+        }
+        // protect tiles with monsters/objects from spawning additional monsters/objects
+        change |= this->changeSubtileProtectionAt( 4,  4, 3);
+        change |= this->changeSubtileProtectionAt( 4,  6, 3);
+        change |= this->changeSubtileProtectionAt( 4,  8, 3);
+        change |= this->changeSubtileProtectionAt( 4, 12, 3);
+        change |= this->changeSubtileProtectionAt( 6,  6, 3);
+        change |= this->changeSubtileProtectionAt( 6,  8, 3);
+        change |= this->changeSubtileProtectionAt( 6, 10, 3);
+        change |= this->changeSubtileProtectionAt( 6, 12, 3);
+        change |= this->changeSubtileProtectionAt( 8,  4, 3);
+        change |= this->changeSubtileProtectionAt( 8,  6, 3);
+        change |= this->changeSubtileProtectionAt( 8,  8, 3);
+        change |= this->changeSubtileProtectionAt( 8, 10, 3);
+        change |= this->changeSubtileProtectionAt( 8, 12, 3);
+        change |= this->changeSubtileProtectionAt(10,  4, 3);
+        change |= this->changeSubtileProtectionAt(10,  6, 3);
+        change |= this->changeSubtileProtectionAt(10,  8, 3);
+        change |= this->changeSubtileProtectionAt(10, 10, 3);
+        change |= this->changeSubtileProtectionAt(12,  4, 3);
+        change |= this->changeSubtileProtectionAt(12,  8, 3);
+        change |= this->changeSubtileProtectionAt(12, 10, 3);
+        change |= this->changeSubtileProtectionAt(12, 12, 3);
+        break;
+    case DUN_DIAB_4_AFT: // Diab4b.DUN
+        // external tiles
+        for (int y = 0; y < 9; y++) {
+            for (int x = 0; x < 9; x++) {
+                if (this->tiles[y][x] >= 98 + 18 && this->tiles[y][x] <= 98 + 30) {
+                    int newTile = this->tiles[y][x] - 98;
+                    // if (newTile == 20) {
+                    //    newTile = 30;
+                    // }
+                    change |= this->changeTileAt(x, y, newTile);
+                }
+            }
+        }
+        // ensure the changing tiles are reserved
+        // - SW-wall
+        for (int y = 7; y < 9; y++) {
+            for (int x = 2; x < 7; x++) {
+                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+            }
+        }
+        // - NE-wall
+        for (int y = 2; y < 7; y++) {
+            for (int x = 0; x < 2; x++) {
+                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+            }
+        }
+        // - NW-wall
+        for (int y = 0; y < 2; y++) {
+            for (int x = 2; x < 7; x++) {
+                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+            }
+        }
+        // - SE-wall
+        for (int y = 2; y < 7; y++) {
+            for (int x = 7; x < 9; x++) {
+                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
+            }
+        }
+        // protect tiles with monsters/objects from decoration
+        change |= this->changeTileProtectionAt( 2,  2, Qt::Checked);
+        change |= this->changeTileProtectionAt( 2,  3, Qt::Checked);
+        change |= this->changeTileProtectionAt( 2,  4, Qt::Checked);
+        change |= this->changeTileProtectionAt( 2,  6, Qt::Checked);
+        change |= this->changeTileProtectionAt( 3,  3, Qt::Checked);
+        change |= this->changeTileProtectionAt( 3,  4, Qt::Checked);
+        change |= this->changeTileProtectionAt( 3,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt( 3,  6, Qt::Checked);
+        change |= this->changeTileProtectionAt( 4,  2, Qt::Checked);
+        change |= this->changeTileProtectionAt( 4,  3, Qt::Checked);
+        change |= this->changeTileProtectionAt( 4,  4, Qt::Checked);
+        change |= this->changeTileProtectionAt( 4,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt( 4,  6, Qt::Checked);
+        change |= this->changeTileProtectionAt( 5,  2, Qt::Checked);
+        change |= this->changeTileProtectionAt( 5,  3, Qt::Checked);
+        change |= this->changeTileProtectionAt( 5,  4, Qt::Checked);
+        change |= this->changeTileProtectionAt( 5,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt( 6,  2, Qt::Checked);
+        change |= this->changeTileProtectionAt( 6,  4, Qt::Checked);
+        change |= this->changeTileProtectionAt( 6,  5, Qt::Checked);
+        change |= this->changeTileProtectionAt( 6,  6, Qt::Checked);
+        // remove monsters
+        for (int y = 0; y < 18; y++) {
+            for (int x = 0; x < 18; x++) {
+                change |= this->changeMonsterAt(x, y, 0, false);
+            }
+        }
+        // adjust the number of layers
+        this->numLayers = 1;
         break;
     }
     if (!change) {

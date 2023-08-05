@@ -56,7 +56,6 @@ private:
     bool patchCathedralFloor(bool silent);
     bool fixCathedralShadows(bool silent);
     void cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent);
-    void patchHellExit(int tileIndex, bool silent);
 
     bool patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int extTileIndex1, int extTileIndex2, int stairsSubtileRef1, int stairsSubtileRef2, bool silent);
     bool patchCatacombsFloor(bool silent);
@@ -70,6 +69,13 @@ private:
     bool patchCavesWall2(bool silent);
     void cleanupCaves(std::set<unsigned> &deletedFrames, bool silent);
     void patchCavesSpec(bool silent);
+
+    bool patchHellChaos(bool silent);
+    bool patchHellFloor(bool silent);
+    bool patchHellStairs(bool silent);
+    bool patchHellWall1(bool silent);
+    bool patchHellWall2(bool silent);
+    void cleanupHell(std::set<unsigned> &deletedFrames, bool silent);
 
     bool patchNestFloor(bool silent);
     bool patchNestStairs(bool silent);
