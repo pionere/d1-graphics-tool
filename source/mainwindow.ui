@@ -353,6 +353,7 @@
     <addaction name="menuSubtile"/>
     <addaction name="menuTile"/>
     <addaction name="separator"/>
+    <addaction name="actionPatch"/>
     <addaction name="actionResize"/>
     <addaction name="actionUpscale"/>
    </widget>
@@ -624,6 +625,14 @@
    </property>
    <property name="toolTip">
     <string>Delete the current tile</string>
+   </property>
+  </action>
+  <action name="actionPatch">
+   <property name="text">
+    <string>Patch</string>
+   </property>
+   <property name="toolTip">
+    <string>Patch the current graphics</string>
    </property>
   </action>
   <action name="actionResize">

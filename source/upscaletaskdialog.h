@@ -13,7 +13,6 @@
 typedef enum task_step {
     REGULAR_CEL,
     OBJECT_CEL,
-    // SPECIAL_CEL,
     CUTSCENE,
     ART_CEL,
     REGULAR_CL2_MISSILES,

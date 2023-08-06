@@ -24,6 +24,7 @@
 #include "paintwidget.h"
 #include "palettewidget.h"
 #include "patchdungeondialog.h"
+#include "patchgfxdialog.h"
 #include "patchtilesetdialog.h"
 #include "progressdialog.h"
 #include "remapdialog.h"
@@ -160,6 +161,7 @@ private slots:
     void on_actionTogglePalTrn_triggered();
     void on_actionToggleBottomPanel_triggered();
 
+    void on_actionPatch_triggered();
     void on_actionResize_triggered();
     void on_actionUpscale_triggered();
 
@@ -276,8 +278,9 @@ private:
     ExportDialog *exportDialog = nullptr;
     ResizeDialog *resizeDialog = nullptr;
     UpscaleDialog *upscaleDialog = nullptr;
-    PatchTilesetDialog *patchTilesetDialog = nullptr;
     PatchDungeonDialog *patchDungeonDialog = nullptr;
+    PatchGfxDialog *patchGfxDialog = nullptr;
+    PatchTilesetDialog *patchTilesetDialog = nullptr;
     RemapDialog *remapDialog = nullptr;
     UpscaleTaskDialog *upscaleTaskDialog = nullptr;
 
