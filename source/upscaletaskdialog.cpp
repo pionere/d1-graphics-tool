@@ -41,7 +41,7 @@ typedef struct MinAssetConfig {
     int numcolors;         // number of usable colors
     int fixcolors;         // fix (protected) colors at the beginning of the palette
     int dunType;           // dungeon_type
-	bool hasAmpFile;       // whether the tileset has a valid AMP file
+    bool hasAmpFile;       // whether the tileset has a valid AMP file
 } MinAssetConfig;
 
 UpscaleTaskDialog::UpscaleTaskDialog(QWidget *parent)
@@ -242,7 +242,7 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, O
         tileset.patch(dunType, true);
     }
     // upscale
-	// - upscale the tileset graphics
+    // - upscale the tileset graphics
     if (Upscaler::upscaleTileset(tileset.gfx, tileset.min, upParams, true)) {
         // compress subtiles
         std::set<int> removedIndices;
@@ -256,13 +256,14 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, O
         // if (params.patchTilesets) {
             saParams.tilFilePath = baseOutPath + ".til";
             saParams.solFilePath = baseOutPath + ".sol";
-            if (hasAmpFile) {
+//            if (hasAmpFile) {
                 saParams.ampFilePath = baseOutPath + ".amp";
-            }
+//            }
+dProgressErr() << QString("Tileset %1: AMP:%2 (%3 - %4)").arg(tileset.gfx->getFilePath()).arg(tileset.amp->getFilePath()).arg(tileset.amp->getModified().arg(hasAmpFile));
         // }
         tileset.save(saParams);
     }
-	// - upscale the special CEL
+    // - upscale the special CEL
     if (tileset.cls->getFrameCount() != 0 && Upscaler::upscaleGfx(tileset.cls, upParams, true)) {
         // store the result
         // - store the S.CEL
@@ -836,11 +837,11 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
             { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN,        false      },
             { "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1_1.PAL",     128,  0, DTYPE_CATHEDRAL,   true       },
             { "Levels\\L2Data\\L2.CEL",      "Levels\\L2Data\\L2_1.PAL",     128,  0, DTYPE_CATACOMBS,   true       },
-            { "Levels\\L3Data\\L3.CEL",      "Levels\\L3Data\\L3_1.PAL",     128, 32, DTYPE_CAVES    ,   true       },
-            { "Levels\\L4Data\\L4.CEL",      "Levels\\L4Data\\L4_1.PAL",     128, 32, DTYPE_HELL     ,   true       },
-            { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN     ,   false      },
-            { "NLevels\\L5Data\\L5.CEL",     "NLevels\\L5Data\\L5base.PAL",  128, 32, DTYPE_CRYPT    ,   true       },
-            { "NLevels\\L6Data\\L6.CEL",     "NLevels\\L6Data\\L6base1.PAL", 128, 32, DTYPE_NEST     ,   true       },
+            { "Levels\\L3Data\\L3.CEL",      "Levels\\L3Data\\L3_1.PAL",     128, 32, DTYPE_CAVES,       true       },
+            { "Levels\\L4Data\\L4.CEL",      "Levels\\L4Data\\L4_1.PAL",     128, 32, DTYPE_HELL,        true       },
+            { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN,        false      },
+            { "NLevels\\L5Data\\L5.CEL",     "NLevels\\L5Data\\L5base.PAL",  128, 32, DTYPE_CRYPT,       true       },
+            { "NLevels\\L6Data\\L6.CEL",     "NLevels\\L6Data\\L6base1.PAL", 128, 32, DTYPE_NEST,        true       },
             // clang-format on
         };
         ProgressDialog::incBar("Tilesets", lengthof(celPalPairs));
