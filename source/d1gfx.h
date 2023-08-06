@@ -94,6 +94,11 @@ protected:
     D1CEL_FRAME_TYPE frameType = D1CEL_FRAME_TYPE::TransparentSquare;
 };
 
+typedef enum gfx_file_index {
+    GFX_L2DOORS, // graphics of the doors in the Catacombs (L2Doors.CEL)
+    GFX_L3DOORS, // graphics of the doors in the Caves (L3Doors.CEL)
+} gfx_file_index;
+
 enum class D1CEL_TYPE {
     V1_REGULAR,
     V1_COMPILATION,
@@ -147,6 +152,12 @@ public:
     int getFrameWidth(int frameIndex) const;
     int getFrameHeight(int frameIndex) const;
     bool setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType);
+
+    void patch(int gfxFileIndex); // gfx_file_index
+
+private:
+    bool patchCatacombsDoors(bool silent);
+    bool patchCavesDoors(bool silent);
 
 protected:
     D1CEL_TYPE type = D1CEL_TYPE::V1_REGULAR;

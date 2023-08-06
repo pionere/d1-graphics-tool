@@ -86,8 +86,9 @@ MainWindow::~MainWindow()
     delete this->exportDialog;
     delete this->resizeDialog;
     delete this->upscaleDialog;
-    delete this->patchTilesetDialog;
     delete this->patchDungeonDialog;
+    delete this->patchGfxDialog;
+    delete this->patchTilesetDialog;
     delete this->remapDialog;
     delete this->upscaleTaskDialog;
 }
@@ -1262,6 +1263,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     this->ui->menuSubtile->setEnabled(isTileset);
     this->ui->menuTile->setEnabled(isTileset);
+    this->ui->actionPatch->setEnabled(this->celView != nullptr);
     this->ui->actionResize->setEnabled(this->celView != nullptr || this->gfxsetView != nullptr);
 
     this->ui->menuTileset->setEnabled(isTileset);
@@ -1779,6 +1781,15 @@ void MainWindow::on_actionToggleBottomPanel_triggered()
     if (this->tblView != nullptr) {
         this->tblView->toggleBottomPanel();
     }
+}
+
+void MainWindow::on_actionPatch_triggered()
+{
+    if (this->patchGfxDialog == nullptr) {
+        this->patchGfxDialog = new PatchGfxDialog(this);
+    }
+    this->patchGfxDialog->initialize(this->gfx);
+    this->patchGfxDialog->show();
 }
 
 void MainWindow::on_actionResize_triggered()

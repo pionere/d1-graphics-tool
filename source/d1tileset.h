@@ -68,7 +68,6 @@ private:
     bool patchCavesWall1(bool silent);
     bool patchCavesWall2(bool silent);
     void cleanupCaves(std::set<unsigned> &deletedFrames, bool silent);
-    void patchCavesSpec(bool silent);
 
     bool patchHellChaos(bool silent);
     bool patchHellFloor(bool silent);

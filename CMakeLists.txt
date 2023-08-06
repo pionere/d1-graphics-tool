@@ -161,6 +161,9 @@ set(PROJECT_SOURCES
         source/patchdungeondialog.cpp
         source/patchdungeondialog.h
         source/patchdungeondialog.ui
+        source/patchgfxdialog.cpp
+        source/patchgfxdialog.h
+        source/patchgfxdialog.ui
         source/patchtilesetdialog.cpp
         source/patchtilesetdialog.h
         source/patchtilesetdialog.ui
