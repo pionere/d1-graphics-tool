@@ -256,10 +256,10 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, O
         // if (params.patchTilesets) {
             saParams.tilFilePath = baseOutPath + ".til";
             saParams.solFilePath = baseOutPath + ".sol";
-//            if (hasAmpFile) {
+            if (hasAmpFile) {
                 saParams.ampFilePath = baseOutPath + ".amp";
-//            }
-dProgressErr() << QString("Tileset %1: AMP:%2 (%3 - %4)").arg(tileset.gfx->getFilePath()).arg(tileset.amp->getFilePath()).arg(tileset.amp->isModified()).arg(hasAmpFile);
+            }
+dProgressErr() << QString("Tileset %1: AMP:%2 (%3 - %4) to %5").arg(tileset.gfx->getFilePath()).arg(tileset.amp->getFilePath()).arg(tileset.amp->isModified()).arg(hasAmpFile).arg(saParams.ampFilePath);
         // }
         tileset.save(saParams);
     }
@@ -834,10 +834,10 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         const MinAssetConfig celPalPairs[] = {
             // clang-format off
             // celname,                      palette                   numcolors, numfixcolors, dunType, hasAmpFile
-            { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN,        false      },
-            { "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1_1.PAL",     128,  0, DTYPE_CATHEDRAL,   true       },
-            { "Levels\\L2Data\\L2.CEL",      "Levels\\L2Data\\L2_1.PAL",     128,  0, DTYPE_CATACOMBS,   true       },
-            { "Levels\\L3Data\\L3.CEL",      "Levels\\L3Data\\L3_1.PAL",     128, 32, DTYPE_CAVES,       true       },
+//            { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN,        false      },
+//            { "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1_1.PAL",     128,  0, DTYPE_CATHEDRAL,   true       },
+//            { "Levels\\L2Data\\L2.CEL",      "Levels\\L2Data\\L2_1.PAL",     128,  0, DTYPE_CATACOMBS,   true       },
+//            { "Levels\\L3Data\\L3.CEL",      "Levels\\L3Data\\L3_1.PAL",     128, 32, DTYPE_CAVES,       true       },
             { "Levels\\L4Data\\L4.CEL",      "Levels\\L4Data\\L4_1.PAL",     128, 32, DTYPE_HELL,        true       },
             { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN,        false      },
             { "NLevels\\L5Data\\L5.CEL",     "NLevels\\L5Data\\L5base.PAL",  128, 32, DTYPE_CRYPT,       true       },
