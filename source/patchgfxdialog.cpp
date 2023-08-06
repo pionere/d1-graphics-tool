@@ -22,10 +22,10 @@ void PatchGfxDialog::initialize(D1Gfx *g)
     // initialize the dropdown based on the filename
     int fileIndex = -1;
     QString baseName = QFileInfo(g->getFilePath()).completeBaseName().toLower();
-    if (baseName == "l2Doors") {
+    if (baseName == "l2doors") {
         fileIndex = GFX_L2DOORS;
     }
-    if (baseName == "l3Doors") {
+    if (baseName == "l3doors") {
         fileIndex = GFX_L3DOORS;
     }
     this->ui->gfxFileComboBox->setCurrentIndex(fileIndex);
