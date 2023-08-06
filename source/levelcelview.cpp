@@ -3266,7 +3266,11 @@ void LevelCelView::searchDungeon()
 
 void LevelCelView::upscale(const UpscaleParam &params)
 {
-    if (Upscaler::upscaleTileset(this->gfx, this->min, params, false)) {
+    bool change = Upscaler::upscaleTileset(this->gfx, this->min, params, false);
+    if (this->tileset->cls->getFrameCount() != 0) {
+        change |= Upscaler::upscaleGfx(this->tileset->cls, params, false);
+    }
+    if (change) {
         // std::set<int> removedIndices;
         // this->tileset->reuseFrames(removedIndices, true);
         // update the view - done by the caller

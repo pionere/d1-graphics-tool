@@ -13,7 +13,6 @@
 typedef enum task_step {
     REGULAR_CEL,
     OBJECT_CEL,
-    SPECIAL_CEL,
     CUTSCENE,
     ART_CEL,
     REGULAR_CL2_MISSILES,
@@ -50,7 +49,7 @@ private:
     static bool loadCustomPal(const QString &path, int numcolors, int fixcolors, const UpscaleTaskParam &params, D1Pal &pal, UpscaleParam &upParams);
     static void upscaleCel(const QString &path, D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams);
     static void upscaleCl2(const QString &path, D1Pal *pal, const UpscaleTaskParam &params, const OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams);
-    static void upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams, int dunType);
+    static void upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams, int dunType, bool hasAmpFile);
     static void runTask(const UpscaleTaskParam &params);
 
 private slots:
