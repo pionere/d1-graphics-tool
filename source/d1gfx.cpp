@@ -701,10 +701,10 @@ bool D1Gfx::patchCavesDoors(bool silent)
                 change |= frame->setPixel(39, 79, D1GfxPixel::colorPixel(124));
 
                 // fix outline
-                for (int y = 83; y < 91; y++) {
-                    change |= frame->setPixel(58, y, frame->getPixel(58, y - 20));
-                }
-                change |= frame->setPixel(57, 91, D1GfxPixel::colorPixel(126));
+                // for (int y = 83; y < 91; y++) {
+                //    change |= frame->setPixel(58, y, frame->getPixel(58, y - 20));
+                // }
+                // change |= frame->setPixel(57, 91, D1GfxPixel::colorPixel(126));
                 change |= frame->setPixel(56, 91, D1GfxPixel::colorPixel(126));
                 change |= frame->setPixel(55, 92, D1GfxPixel::colorPixel(126));
                 change |= frame->setPixel(54, 92, D1GfxPixel::colorPixel(126));
@@ -713,14 +713,14 @@ bool D1Gfx::patchCavesDoors(bool silent)
                 change |= frame->setPixel(51, 93, D1GfxPixel::colorPixel(126));
                 change |= frame->setPixel(50, 93, D1GfxPixel::colorPixel(126));
                 change |= frame->setPixel(49, 94, D1GfxPixel::colorPixel(126));
-                change |= frame->setPixel(48, 94, D1GfxPixel::colorPixel(126));
+                // change |= frame->setPixel(48, 94, D1GfxPixel::colorPixel(126));
                 change |= frame->setPixel(47, 95, D1GfxPixel::colorPixel(126));
                 change |= frame->setPixel(46, 95, D1GfxPixel::colorPixel(126));
                 change |= frame->setPixel(45, 96, D1GfxPixel::colorPixel(126));
                 change |= frame->setPixel(44, 96, D1GfxPixel::colorPixel(126));
                 change |= frame->setPixel(43, 97, D1GfxPixel::colorPixel(126));
-                change |= frame->setPixel(42, 97, D1GfxPixel::colorPixel(126));
-                change |= frame->setPixel(41, 98, D1GfxPixel::colorPixel(126));
+                // change |= frame->setPixel(42, 97, D1GfxPixel::colorPixel(126));
+                // change |= frame->setPixel(41, 98, D1GfxPixel::colorPixel(126));
 
                 change |= frame->setPixel(21, 107, D1GfxPixel::colorPixel(126));
                 change |= frame->setPixel(22, 108, D1GfxPixel::colorPixel(126));
@@ -772,7 +772,6 @@ bool D1Gfx::patchCavesDoors(bool silent)
                 change |= frame->setPixel(32, 103, D1GfxPixel::colorPixel(94));
                 change |= frame->setPixel(33, 104, D1GfxPixel::colorPixel(62));
                 change |= frame->setPixel(34, 104, D1GfxPixel::colorPixel(126));
-                change |= frame->setPixel(35, 106, D1GfxPixel::colorPixel(124));
                 change |= frame->setPixel(35, 106, D1GfxPixel::colorPixel(125));
                 change |= frame->setPixel(37, 107, D1GfxPixel::colorPixel(126));
 
