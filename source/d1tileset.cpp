@@ -2040,9 +2040,8 @@ void D1Tileset::patchTownChop(bool silent)
 bool D1Tileset::patchCathedralFloor(bool silent)
 {
     const CelMicro micros[] = {
-/*  0 */{ 137 - 1, 5, D1CEL_FRAME_TYPE::Square },     // change type
-// { 250 - 1, 0, D1CEL_FRAME_TYPE::LefttTrapezoid }, // change type
-/*  1 */{ 286 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },  // change type
+/*  0 */{ 137 - 1, 5, D1CEL_FRAME_TYPE::Square },        // change type
+/*  1 */{ 286 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // change type
 /*  2 */{ 408 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },  // change type
 /*  3 */{ 248 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },  // change type
 
@@ -2051,13 +2050,14 @@ bool D1Tileset::patchCathedralFloor(bool silent)
 /*  6 */{ 394 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
 /*  7 */{ 394 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/*  8 */{ 108 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/*  8 */{ 108 - 1, 1, D1CEL_FRAME_TYPE::Empty },            // used to block subsequent calls
 /*  9 */{ 106 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 10 */{ 109 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 11 */{ 106 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
 
 /* 12 */{ 178 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 13 */{ 450 - 1, 1, D1CEL_FRAME_TYPE::RightTrapezoid }, // unused
+
+/* 13 */{ 152 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare }, // blocks subsequent calls
 
 /* 14 */{ 2 - 1, 1, D1CEL_FRAME_TYPE::Empty },
 /* 15 */{ 276 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
@@ -2074,7 +2074,7 @@ bool D1Tileset::patchCathedralFloor(bool silent)
 
 /* 22 */{ 137 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 23 */{ 171 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare }, // unused
+/* 23 */{ 176 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
 /* 24 */{ 171 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
 
 /* 25 */{ 153 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
@@ -2156,6 +2156,18 @@ bool D1Tileset::patchCathedralFloor(bool silent)
                 for (int y = 0; y < MICRO_HEIGHT; y++) {
                     quint8 color = frame->getPixel(x, y).getPaletteIndex();
                     if (color == 46 && (y > 8 || i != 11) && (x > 22 || y < 22 || i != 10)) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // move pixels of 152[5] down to enable reuse as 153[6]
+        if (i == 12) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (!pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y + MICRO_HEIGHT / 2, pixel);
                         change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
                     }
                 }
@@ -2267,6 +2279,18 @@ bool D1Tileset::patchCathedralFloor(bool silent)
         }
         if (i == 21) { // 163[1]
             change |= frame->setPixel(0, 26, D1GfxPixel::colorPixel(110));
+        }
+        if (i == 23) { // 176[1] - fix connection
+            change |= frame->setPixel( 8, 5, D1GfxPixel::colorPixel(20));
+            change |= frame->setPixel( 9, 5, D1GfxPixel::colorPixel(20));
+            change |= frame->setPixel(10, 6, D1GfxPixel::colorPixel(19));
+            change |= frame->setPixel(11, 6, D1GfxPixel::colorPixel(5));
+            change |= frame->setPixel(12, 7, D1GfxPixel::colorPixel(2));
+            change |= frame->setPixel(13, 7, D1GfxPixel::colorPixel(4));
+            change |= frame->setPixel(14, 8, D1GfxPixel::colorPixel(17));
+            change |= frame->setPixel(15, 8, D1GfxPixel::colorPixel(6));
+            change |= frame->setPixel(16, 9, D1GfxPixel::colorPixel(3));
+            change |= frame->setPixel(17, 9, D1GfxPixel::colorPixel(41));
         }
         if (i == 24) { // 171[1]
             change |= frame->setPixel(17, 9, D1GfxPixel::colorPixel(20));
@@ -3063,11 +3087,11 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     }
 
     // patch dMiniTiles - L1.MIN
-    if (patchCathedralFloor(silent)) {
-    // adjust the frame types
-    Blk2Mcr(108, 1);
     // use micros created by patchCathedralFloor
-    ReplaceMcr(160, 0, 23, 0);
+    if (patchCathedralFloor(silent)) {
+        Blk2Mcr(108, 1);
+        MoveMcr(153, 6, 152, 5);
+        ReplaceMcr(160, 0, 23, 0);
     }
     // use micros created by fixCathedralShadows
     if (fixCathedralShadows(silent)) {
