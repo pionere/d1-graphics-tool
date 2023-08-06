@@ -131,11 +131,28 @@
       <item row="3" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Patch Tilesets:</string>
+         <string>Patch Graphics:</string>
         </property>
        </widget>
       </item>
       <item row="3" column="1">
+       <widget class="QCheckBox" name="patchGraphicsCheckBox">
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <property name="toolTip">
+         <string>Fix the original graphics</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Patch Tilesets:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
        <widget class="QCheckBox" name="patchTilesetsCheckBox">
         <property name="checked">
          <bool>true</bool>
@@ -145,42 +162,42 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
+      <item row="5" column="0">
        <widget class="QLabel">
         <property name="text">
          <string>Assets Folder:</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
+      <item row="5" column="1">
        <widget class="LineEditWidget" name="assetsFolderLineEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="4" column="2">
+      <item row="5" column="2">
        <widget class="QPushButton" name="assetsFolderBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
+      <item row="6" column="0">
        <widget class="QLabel">
         <property name="text">
          <string>Output Folder:</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
+      <item row="6" column="1">
        <widget class="LineEditWidget" name="outputFolderLineEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="5" column="2">
+      <item row="6" column="2">
        <widget class="QPushButton" name="outputFolderBrowseButton">
         <property name="text">
          <string>Browse</string>
