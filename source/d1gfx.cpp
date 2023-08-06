@@ -471,7 +471,7 @@ bool D1Gfx::setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType)
     return true;
 }
 
-void D1Gfx::patchCatacombsDoors(bool silent)
+bool D1Gfx::patchCatacombsDoors(bool silent)
 {
     typedef struct {
         int frameIndex;
@@ -483,6 +483,7 @@ void D1Gfx::patchCatacombsDoors(bool silent)
         { 1, 64, 128 },
     };
 
+    bool result = false;
     int idx = 0;
     for (int i = 0; i < this->getFrameCount(); i++) {
         const CelFrame &cFrame = celFrames[idx];
@@ -490,7 +491,7 @@ void D1Gfx::patchCatacombsDoors(bool silent)
             D1GfxFrame *frame = this->frames[i];
             if (frame->getWidth() != cFrame.frameWidth || frame->getHeight() != cFrame.frameHeight) {
                 dProgressErr() << tr("Framesize of the Catacombs-Doors does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(cFrame.frameWidth).arg(cFrame.frameHeight).arg(cFrame.frameIndex + 1);
-                return;
+                return result;
             }
             bool change = false;
             if (idx == 0) {
@@ -507,6 +508,7 @@ void D1Gfx::patchCatacombsDoors(bool silent)
                 }
             }
             if (change) {
+                result = true;
                 this->setModified();
                 if (!silent) {
                     dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
@@ -516,9 +518,10 @@ void D1Gfx::patchCatacombsDoors(bool silent)
             idx++;
         }
     }
+    return result;
 }
 
-void D1Gfx::patchCavesDoors(bool silent)
+bool D1Gfx::patchCavesDoors(bool silent)
 {
     typedef struct {
         int frameIndex;
@@ -532,6 +535,7 @@ void D1Gfx::patchCavesDoors(bool silent)
         { 3, 64, 128 },
     };
 
+    bool result = false;
     int idx = 0;
     for (int i = 0; i < this->getFrameCount(); i++) {
         const CelFrame &cFrame = celFrames[idx];
@@ -539,7 +543,7 @@ void D1Gfx::patchCavesDoors(bool silent)
             D1GfxFrame *frame = this->frames[i];
             if (frame->getWidth() != cFrame.frameWidth || frame->getHeight() != cFrame.frameHeight) {
                 dProgressErr() << tr("Framesize of the Caves-Doors does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(cFrame.frameWidth).arg(cFrame.frameHeight).arg(cFrame.frameIndex + 1);
-                return;
+                return result;
             }
 
             bool change = false;
@@ -813,6 +817,7 @@ void D1Gfx::patchCavesDoors(bool silent)
             }
 
             if (change) {
+                result = true;
                 this->setModified();
                 if (!silent) {
                     dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
@@ -822,6 +827,7 @@ void D1Gfx::patchCavesDoors(bool silent)
             idx++;
         }
     }
+    return result;
 }
 
 void D1Gfx::patch(int gfxFileIndex)
