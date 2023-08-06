@@ -42,7 +42,7 @@ const BYTE L4USTAIRS[] = {
 	 6, 6, 6, 6, 6,
 
 	 0,  0,  0,  0, 0, // replace
-	49, 38, 35,  0, 0,
+	36, 38, 35,  0, 0,
 	37, 34, 33, 32, 0,
 	 0,  0, 31,  0, 0,
 	 0,  0,  0,  0, 0,
@@ -296,7 +296,7 @@ static void DRLG_LoadL4SP()
 					uint16_t wv = SwapLE16(lm[2 + x + y * 11]);
 					if (wv >= 116 && wv <= 128) {
 						// if (wv == 118) {
-						// 	wv = 128;
+						//	wv = 128;
 						// }
 						lm[2 + x + y * 11] = SwapLE16(wv - 98);
 					}
@@ -2109,7 +2109,7 @@ static void DRLG_L4FixPreMap(int idx)
 				uint16_t wv = SwapLE16(lm[2 + x + y * 11]);
 				if (wv >= 116 && wv <= 128) {
 					// if (wv == 118) {
-					// 	wv = 128;
+					//	wv = 128;
 					// }
 					lm[2 + x + y * 11] = SwapLE16(wv - 98);
 				}

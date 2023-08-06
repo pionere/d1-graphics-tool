@@ -3944,7 +3944,7 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeItemAt(8, 10, 0);
         // protect inner tiles from spawning additional monsters/objects
         for (int y = 0; y <= 5; y++) {
-            for (int x = 0; x <= 6; x++) {
+            for (int x = 0; x <= 7; x++) {
                 change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, 3);
                 change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, 3);
                 change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, 3);
