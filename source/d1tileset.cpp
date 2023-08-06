@@ -2162,7 +2162,7 @@ bool D1Tileset::patchCathedralFloor(bool silent)
             }
         }
         // move pixels of 152[5] down to enable reuse as 153[6]
-        if (i == 12) {
+        if (i == 13) {
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
@@ -2367,7 +2367,7 @@ bool D1Tileset::fixCathedralShadows(bool silent)
 {
     const CelMicro micros[] = {
         // add shadow of the grate
-/*  0 */{ 306 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/*  0 */{ 306 - 1, 1, D1CEL_FRAME_TYPE::Empty },            // used to block subsequent calls
 /*  1 */{ 304 - 1, 0, D1CEL_FRAME_TYPE::Empty },
 /*  2 */{ 304 - 1, 1, D1CEL_FRAME_TYPE::Empty },
 /*  3 */{ 57 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
