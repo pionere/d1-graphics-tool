@@ -259,7 +259,7 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, O
 //            if (hasAmpFile) {
                 saParams.ampFilePath = baseOutPath + ".amp";
 //            }
-dProgressErr() << QString("Tileset %1: AMP:%2 (%3 - %4)").arg(tileset.gfx->getFilePath()).arg(tileset.amp->getFilePath()).arg(tileset.amp->isModified().arg(hasAmpFile));
+dProgressErr() << QString("Tileset %1: AMP:%2 (%3 - %4)").arg(tileset.gfx->getFilePath()).arg(tileset.amp->getFilePath()).arg(tileset.amp->isModified()).arg(hasAmpFile));
         // }
         tileset.save(saParams);
     }
