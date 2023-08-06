@@ -2074,7 +2074,7 @@ bool D1Tileset::patchCathedralFloor(bool silent)
 
 /* 22 */{ 137 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 23 */{ 176 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/* 23 */{ 176 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 24 */{ 171 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
 
 /* 25 */{ 153 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
