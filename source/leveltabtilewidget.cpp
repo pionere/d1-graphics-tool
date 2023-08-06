@@ -150,14 +150,14 @@ void LevelTabTileWidget::updateFields()
     // update the combo box of the amp-type
     this->ui->ampTypeComboBox->setCurrentIndex(ampType);
     // update the checkboxes
-    this->ui->amp0->setChecked((ampProperty & (MAP_WEST_DOOR >> 8)) != 0);
-    this->ui->amp1->setChecked((ampProperty & (MAP_EAST_DOOR >> 8)) != 0);
-    this->ui->amp2->setChecked((ampProperty & (MAP_WEST_ARCH >> 8)) != 0);
-    this->ui->amp3->setChecked((ampProperty & (MAP_EAST_ARCH >> 8)) != 0);
-    this->ui->amp4->setChecked((ampProperty & (MAP_WEST_GRATE >> 8)) != 0);
-    this->ui->amp5->setChecked((ampProperty & (MAP_EAST_GRATE >> 8)) != 0);
-    this->ui->amp6->setChecked((ampProperty & (MAP_EXTERN >> 8)) != 0);
-    this->ui->amp7->setChecked((ampProperty & (MAP_STAIRS >> 8)) != 0);
+    this->ui->amp0->setChecked((ampProperty & (MAF_WEST_DOOR >> 8)) != 0);
+    this->ui->amp1->setChecked((ampProperty & (MAF_EAST_DOOR >> 8)) != 0);
+    this->ui->amp2->setChecked((ampProperty & (MAF_WEST_ARCH >> 8)) != 0);
+    this->ui->amp3->setChecked((ampProperty & (MAF_EAST_ARCH >> 8)) != 0);
+    this->ui->amp4->setChecked((ampProperty & (MAF_WEST_GRATE >> 8)) != 0);
+    this->ui->amp5->setChecked((ampProperty & (MAF_EAST_GRATE >> 8)) != 0);
+    this->ui->amp6->setChecked((ampProperty & (MAF_EXTERN >> 8)) != 0);
+    this->ui->amp7->setChecked((ampProperty & (MAF_STAIRS >> 8)) != 0);
     // update combo box of the subtiles
     for (int i = this->ui->subtilesComboBox->count() - subtiles.size(); i > 0; i--)
         this->ui->subtilesComboBox->removeItem(0);
@@ -207,21 +207,21 @@ void LevelTabTileWidget::updateAmpProperty()
 {
     quint8 flags = 0;
     if (this->ui->amp0->checkState())
-        flags |= (MAP_WEST_DOOR >> 8);
+        flags |= (MAF_WEST_DOOR >> 8);
     if (this->ui->amp1->checkState())
-        flags |= (MAP_EAST_DOOR >> 8);
+        flags |= (MAF_EAST_DOOR >> 8);
     if (this->ui->amp2->checkState())
-        flags |= (MAP_WEST_ARCH >> 8);
+        flags |= (MAF_WEST_ARCH >> 8);
     if (this->ui->amp3->checkState())
-        flags |= (MAP_EAST_ARCH >> 8);
+        flags |= (MAF_EAST_ARCH >> 8);
     if (this->ui->amp4->checkState())
-        flags |= (MAP_WEST_GRATE >> 8);
+        flags |= (MAF_WEST_GRATE >> 8);
     if (this->ui->amp5->checkState())
-        flags |= (MAP_EAST_GRATE >> 8);
+        flags |= (MAF_EAST_GRATE >> 8);
     if (this->ui->amp6->checkState())
-        flags |= (MAP_EXTERN >> 8);
+        flags |= (MAF_EXTERN >> 8);
     if (this->ui->amp7->checkState())
-        flags |= (MAP_STAIRS >> 8);
+        flags |= (MAF_STAIRS >> 8);
 
     this->setAmpProperty(flags);
 }

@@ -3409,20 +3409,20 @@ typedef enum _automap_types {
 } _automap_types;
 
 typedef enum _automap_flags {
-	MAP_TYPE       = 0x00FF,
-	MAP_WEST_DOOR  = 0x0100,
-	MAP_EAST_DOOR  = 0x0200,
-	MAP_WEST_ARCH  = 0x0400,
-	MAP_EAST_ARCH  = 0x0800,
-	MAP_WEST_GRATE = 0x1000,
-	MAP_EAST_GRATE = 0x2000,
-	MAP_EXTERN     = 0x4000,
-	MAP_STAIRS     = 0x8000,
+	MAF_TYPE       = 0x00FF,
+	MAF_WEST_DOOR  = 0x0100,
+	MAF_EAST_DOOR  = 0x0200,
+	MAF_WEST_ARCH  = 0x0400,
+	MAF_EAST_ARCH  = 0x0800,
+	MAF_WEST_GRATE = 0x1000,
+	MAF_EAST_GRATE = 0x2000,
+	MAF_EXTERN     = 0x4000,
+	MAF_STAIRS     = 0x8000,
 	// calculated mapflags
-	MAP_DO_NORTH_WEST = 0x0010,
-	MAP_DO_NORTH_EAST = 0x0020,
-	MAP_DO_SOUTH_EAST = 0x0040,
-	MAP_DO_SOUTH_WEST = 0x0080,
+	MAF_DO_NORTH_WEST = 0x0010,
+	MAF_DO_NORTH_EAST = 0x0020,
+	MAF_DO_SOUTH_EAST = 0x0040,
+	MAF_DO_SOUTH_WEST = 0x0080,
 } _automap_flags;
 
 typedef enum dflag {

@@ -49,7 +49,7 @@ void InitLvlAutomap()
 	lm = (uint16_t*)pAFile;
 	for (i = 1; i <= dwTiles; i++) {
 		automaptype[i] = SwapLE16(*lm);
-		// assert((automaptype[i] & MAP_TYPE) < 13); required by DrawAutomapTile and SetAutomapView
+		// assert((automaptype[i] & MAF_TYPE) < 13); required by DrawAutomapTile and SetAutomapView
 		lm++;
 	}
 
@@ -90,7 +90,7 @@ void InitLvlAutomap()
 	// patch dAutomapData - L2.AMP
 	if (currLvl._dType == DTYPE_CATACOMBS) {
 		// fix automap type
-		automaptype[42] &= ~MAP_EAST_ARCH; // not a horizontal arch
+		automaptype[42] &= ~MAF_EAST_ARCH; // not a horizontal arch
 		automaptype[156] = 0; // no door is placed
 		automaptype[157] = 0;
 		// separate pillar tile
@@ -119,8 +119,8 @@ void InitLvlAutomap()
 	}
 	// patch dAutomapData - L4.AMP
 	if (currLvl._dType == DTYPE_HELL) {
-		automaptype[52] |= MAP_WEST_GRATE;
-		automaptype[56] |= MAP_EAST_GRATE;
+		automaptype[52] |= MAF_WEST_GRATE;
+		automaptype[56] |= MAF_EAST_GRATE;
 		automaptype[7] = MWT_NORTH_WEST_END;
 		automaptype[8] = MWT_NORTH_EAST_END;
 		automaptype[83] = MWT_NORTH_WEST_END;
@@ -140,36 +140,36 @@ void InitLvlAutomap()
 	// patch dAutomapData - L5.AMP
 	if (currLvl._dType == DTYPE_CRYPT) {
 		// fix automap of the entrance
-		automaptype[47] = MAP_STAIRS | MWT_NORTH_WEST;
+		automaptype[47] = MAF_STAIRS | MWT_NORTH_WEST;
 		automaptype[50] = MWT_NORTH_WEST;
-		automaptype[48] = MAP_STAIRS | MWT_NORTH;
+		automaptype[48] = MAF_STAIRS | MWT_NORTH;
 		automaptype[51] = MWT_NORTH_WEST_END;
-		automaptype[52] = MAP_EXTERN;
-		automaptype[53] = MAP_STAIRS | MWT_NORTH;
-		automaptype[54] = MAP_EXTERN;
+		automaptype[52] = MAF_EXTERN;
+		automaptype[53] = MAF_STAIRS | MWT_NORTH;
+		automaptype[54] = MAF_EXTERN;
 		automaptype[56] = MWT_NONE;
-		automaptype[58] = MAP_EXTERN | MWT_NORTH_WEST_END;
+		automaptype[58] = MAF_EXTERN | MWT_NORTH_WEST_END;
 		// separate pillar tile
 		automaptype[28] = MWT_PILLAR; // automaptype[15]
 		// new shadows
 		// - shadows created by fixCryptShadows
 		automaptype[109] = MWT_NORTH_WEST;
 		automaptype[110] = MWT_NORTH_WEST;
-		automaptype[111] = MAP_WEST_ARCH | MWT_NORTH_WEST;
-		automaptype[215] = MAP_WEST_GRATE | MWT_NORTH_WEST;
+		automaptype[111] = MAF_WEST_ARCH | MWT_NORTH_WEST;
+		automaptype[215] = MAF_WEST_GRATE | MWT_NORTH_WEST;
 		// - 'add' new shadow-types with glow
-		automaptype[216] = MAP_WEST_ARCH | MWT_NORTH_WEST;
+		automaptype[216] = MAF_WEST_ARCH | MWT_NORTH_WEST;
 		// - 'add' new shadow-types with horizontal arches
 		automaptype[71] = MWT_NORTH_EAST;
 		automaptype[80] = MWT_NORTH_EAST;
-		automaptype[81] = MAP_EAST_ARCH | MWT_NORTH_EAST;
-		automaptype[82] = MAP_EAST_ARCH | MWT_NORTH_EAST;
-		automaptype[83] = MAP_EAST_GRATE | MWT_NORTH_EAST;
-		automaptype[84] = MAP_EAST_GRATE | MWT_NORTH_EAST;
+		automaptype[81] = MAF_EAST_ARCH | MWT_NORTH_EAST;
+		automaptype[82] = MAF_EAST_ARCH | MWT_NORTH_EAST;
+		automaptype[83] = MAF_EAST_GRATE | MWT_NORTH_EAST;
+		automaptype[84] = MAF_EAST_GRATE | MWT_NORTH_EAST;
 		automaptype[85] = MWT_NORTH_EAST;
 		automaptype[86] = MWT_NORTH_EAST;
-		automaptype[87] = MAP_EAST_DOOR | MWT_NORTH_EAST;
-		automaptype[88] = MAP_EAST_DOOR | MWT_NORTH_EAST;
+		automaptype[87] = MAF_EAST_DOOR | MWT_NORTH_EAST;
+		automaptype[88] = MAF_EAST_DOOR | MWT_NORTH_EAST;
 	}
 #endif // HELLFIRE
 }

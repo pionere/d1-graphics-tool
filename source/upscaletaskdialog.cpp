@@ -41,6 +41,7 @@ typedef struct MinAssetConfig {
     int numcolors;         // number of usable colors
     int fixcolors;         // fix (protected) colors at the beginning of the palette
     int dunType;           // dungeon_type
+	bool hasAmpFile;       // whether the tileset has a valid AMP file
 } MinAssetConfig;
 
 UpscaleTaskDialog::UpscaleTaskDialog(QWidget *parent)
@@ -223,29 +224,11 @@ void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const Upscal
     }
 }
 
-void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams, int dunType)
+void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams, int dunType, bool hasAmpFile)
 {
     QString celFilePath = params.assetsFolder + "/" + opParams.celFilePath;
-    QString outFilePath = params.outFolder + "/" + opParams.celFilePath;
-
-    /*QString basePath = celFilePath;
-    basePath.chop(4);
-    QString minFilePath = opParams.minFilePath;
-    if (minFilePath.isEmpty()) {
-        minFilePath = basePath + ".min";
-    } else {
-        minFilePath = params.assetsFolder + "/" + minFilePath;
-    }
-    QString solFilePath = opParams.solFilePath;
-    if (solFilePath.isEmpty()) {
-        solFilePath = basePath + ".sol";
-    } else {
-        solFilePath = params.assetsFolder + "/" + solFilePath;
-    }*/
-
-    QString outMinPath = outFilePath;
-    outMinPath.chop(4);
-    outMinPath += ".min";
+    QString baseOutPath = params.outFolder + "/" + opParams.celFilePath;
+    baseOutPath.chop(4);
 
     D1Gfx gfx = D1Gfx();
     gfx.setPalette(pal);
@@ -259,15 +242,32 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, O
         tileset.patch(dunType, true);
     }
     // upscale
+	// - upscale the tileset graphics
     if (Upscaler::upscaleTileset(tileset.gfx, tileset.min, upParams, true)) {
         // compress subtiles
         std::set<int> removedIndices;
         tileset.reuseFrames(removedIndices, true);
         // store the result
-        saParams.celFilePath = outFilePath;
+        // - store the CEL
+        saParams.celFilePath = baseOutPath + ".cel";
         D1CelTileset::save(*tileset.gfx, saParams);
-        saParams.minFilePath = outMinPath;
-        tileset.min->save(saParams);
+        // - store the tileset
+        saParams.minFilePath = baseOutPath + ".min";
+        // if (params.patchTilesets) {
+            saParams.tilFilePath = baseOutPath + ".til";
+            saParams.solFilePath = baseOutPath + ".sol";
+            if (hasAmpFile) {
+                saParams.ampFilePath = baseOutPath + ".amp";
+            }
+        // }
+        tileset.save(saParams);
+    }
+	// - upscale the special CEL
+    if (tileset.cls->getFrameCount() != 0 && Upscaler::upscaleGfx(tileset.cls, upParams, true)) {
+        // store the result
+        // - store the S.CEL
+        saParams.celFilePath = baseOutPath + "s.cel";
+        D1Cel::save(*tileset.cls, saParams);
     }
 }
 
@@ -428,7 +428,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         // clang-format off
         2, // Regular CEL Files
         1, // Object CEL Files
-        1, // Special CEL Files
+        // 1, // Special CEL Files
         3, // Cutscenes
         2, // Art CEL Files
         2, // Regular CL2 Files - Missiles
@@ -533,7 +533,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         ProgressDialog::addValue(stepWeights[OBJECT_CEL]);
     }
     // dProgress() << QString(QApplication::tr("Time:%1")).arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
-    if (params.steps[SPECIAL_CEL]) {
+    /*if (params.steps[SPECIAL_CEL]) {
         // upscale special cells of the levels
         const AssetConfig celPalPairs[] = {
             // clang-format off
@@ -578,7 +578,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
         ProgressDialog::decBar();
         ProgressDialog::addValue(stepWeights[SPECIAL_CEL]);
-    }
+    }*/
     // dProgress() << QString(QApplication::tr("Time:%1")).arg(QDateTime::currentDateTime().toString("hh:mm:ss,zzz"));
     if (params.steps[CUTSCENE]) {
         // upscale cutscenes
@@ -832,15 +832,15 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         // upscale tiles of the levels
         const MinAssetConfig celPalPairs[] = {
             // clang-format off
-            // celname,                      palette                   numcolors, numfixcolors, dunType
-            { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN      },
-            { "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1_1.PAL",     128,  0, DTYPE_CATHEDRAL },
-            { "Levels\\L2Data\\L2.CEL",      "Levels\\L2Data\\L2_1.PAL",     128,  0, DTYPE_CATACOMBS },
-            { "Levels\\L3Data\\L3.CEL",      "Levels\\L3Data\\L3_1.PAL",     128, 32, DTYPE_CAVES     },
-            { "Levels\\L4Data\\L4.CEL",      "Levels\\L4Data\\L4_1.PAL",     128, 32, DTYPE_HELL      },
-            { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN      },
-            { "NLevels\\L5Data\\L5.CEL",     "NLevels\\L5Data\\L5base.PAL",  128, 32, DTYPE_CRYPT     },
-            { "NLevels\\L6Data\\L6.CEL",     "NLevels\\L6Data\\L6base1.PAL", 128, 32, DTYPE_NEST      },
+            // celname,                      palette                   numcolors, numfixcolors, dunType, hasAmpFile
+            { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN,        false      },
+            { "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1_1.PAL",     128,  0, DTYPE_CATHEDRAL,   true       },
+            { "Levels\\L2Data\\L2.CEL",      "Levels\\L2Data\\L2_1.PAL",     128,  0, DTYPE_CATACOMBS,   true       },
+            { "Levels\\L3Data\\L3.CEL",      "Levels\\L3Data\\L3_1.PAL",     128, 32, DTYPE_CAVES    ,   true       },
+            { "Levels\\L4Data\\L4.CEL",      "Levels\\L4Data\\L4_1.PAL",     128, 32, DTYPE_HELL     ,   true       },
+            { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN     ,   false      },
+            { "NLevels\\L5Data\\L5.CEL",     "NLevels\\L5Data\\L5base.PAL",  128, 32, DTYPE_CRYPT    ,   true       },
+            { "NLevels\\L6Data\\L6.CEL",     "NLevels\\L6Data\\L6base1.PAL", 128, 32, DTYPE_NEST     ,   true       },
             // clang-format on
         };
         ProgressDialog::incBar("Tilesets", lengthof(celPalPairs));
@@ -872,7 +872,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
             D1Pal pal;
             if (UpscaleTaskDialog::loadCustomPal(celPalPairs[i].palette, celPalPairs[i].numcolors, celPalPairs[i].fixcolors, params, pal, upParams)) {
-                UpscaleTaskDialog::upscaleMin(&pal, params, opParams, upParams, saParams, celPalPairs[i].dunType);
+                UpscaleTaskDialog::upscaleMin(&pal, params, opParams, upParams, saParams, celPalPairs[i].dunType, celPalPairs[i].hasAmpFile);
             }
 
             if (!ProgressDialog::incValue()) {

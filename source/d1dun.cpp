@@ -1268,90 +1268,90 @@ void D1Dun::DrawMap(int sx, int sy, uint16_t automap_type)
 {
     uint8_t type;
 
-    if (automap_type & MAP_EXTERN) {
+    if (automap_type & MAF_EXTERN) {
         D1Dun::DrawAutomapDirt(sx, sy);
     }
 
-    if (automap_type & MAP_STAIRS) {
+    if (automap_type & MAF_STAIRS) {
         D1Dun::DrawAutomapStairs(sx, sy);
     }
 
-    type = automap_type & MAP_TYPE;
-    automap_type &= ~MAP_TYPE;
+    type = automap_type & MAF_TYPE;
+    automap_type &= ~MAF_TYPE;
     switch (type) {
-    case 0:
-    case 7:
+    case MWT_NONE:
+    case MWT_CORNER:
         break;
-    case 1: // stand-alone column or other unpassable object
+    case MWT_PILLAR: // stand-alone column or other unpassable object
         D1Dun::DrawAutomapDiamond(sx, sy);
         break;
-    case 2:
-    case 5:
-        automap_type |= MAP_DO_NORTH_WEST;
+    case MWT_NORTH_WEST:
+    case MWT_NORTH_WEST_END:
+        automap_type |= MAF_DO_NORTH_WEST;
         break;
-    case 3:
-    case 6:
-        automap_type |= MAP_DO_NORTH_EAST;
+    case MWT_NORTH_EAST:
+    case MWT_NORTH_EAST_END:
+        automap_type |= MAF_DO_NORTH_EAST;
         break;
-    case 4:
-        automap_type |= MAP_DO_NORTH_EAST | MAP_DO_NORTH_WEST;
+    case MWT_NORTH:
+        automap_type |= MAF_DO_NORTH_EAST | MAF_DO_NORTH_WEST;
         break;
-    case 8:
-        automap_type |= MAP_DO_NORTH_WEST | MAP_DO_SOUTH_WEST;
+    case MWT_WEST:
+        automap_type |= MAF_DO_NORTH_WEST | MAF_DO_SOUTH_WEST;
         break;
-    case 9:
-        automap_type |= MAP_DO_NORTH_EAST | MAP_DO_SOUTH_EAST;
+    case MWT_EAST:
+        automap_type |= MAF_DO_NORTH_EAST | MAF_DO_SOUTH_EAST;
         break;
-    case 10:
-        automap_type |= MAP_DO_SOUTH_WEST;
+    case MWT_SOUTH_WEST:
+        automap_type |= MAF_DO_SOUTH_WEST;
         break;
-    case 11:
-        automap_type |= MAP_DO_SOUTH_EAST;
+    case MWT_SOUTH_EAST:
+        automap_type |= MAF_DO_SOUTH_EAST;
         break;
-    case 12:
-        automap_type |= MAP_DO_SOUTH_WEST | MAP_DO_SOUTH_EAST;
+    case MWT_SOUTH:
+        automap_type |= MAF_DO_SOUTH_WEST | MAF_DO_SOUTH_EAST;
         break;
     default:
         dProgressErr() << tr("Unknown automap-type: %1").arg(type);
         break;
     }
 
-    if (automap_type & MAP_DO_NORTH_WEST) {
-        if (automap_type & MAP_WEST_DOOR) {
+    if (automap_type & MAF_DO_NORTH_WEST) {
+        if (automap_type & MAF_WEST_DOOR) {
             unsigned d16 = AmLine16;
             unsigned d8 = (d16 >> 1);
             D1Dun::DrawAutomapVertDoor(sx - d16, sy - d8);
         }
-        if (automap_type & MAP_WEST_GRATE) {
+        if (automap_type & MAF_WEST_GRATE) {
             unsigned d32 = AmLine32;
             unsigned d16 = (d32 >> 1), d8 = (d32 >> 2);
             D1Dun::DrawLine(sx - d16, sy - d8, sx - d32, sy, COLOR_DIM);
         }
-        if (automap_type & (MAP_WEST_GRATE | MAP_WEST_ARCH)) {
+        if (automap_type & (MAF_WEST_GRATE | MAF_WEST_ARCH)) {
             D1Dun::DrawAutomapDiamond(sx, sy);
         }
-        if ((automap_type & (MAP_WEST_DOOR | MAP_WEST_GRATE | MAP_WEST_ARCH)) == 0) {
+        if ((automap_type & (MAF_WEST_DOOR | MAF_WEST_GRATE | MAF_WEST_ARCH)) == 0) {
             unsigned d32 = AmLine32;
             unsigned d16 = (d32 >> 1);
             D1Dun::DrawLine(sx, sy - d16, sx - d32, sy, COLOR_DIM);
         }
     }
 
-    if (automap_type & MAP_DO_NORTH_EAST) { // left-facing obstacle
-        if (automap_type & MAP_EAST_DOOR) {
+    if (automap_type & MAF_DO_NORTH_EAST) { // left-facing obstacle
+        if (automap_type & MAF_EAST_DOOR) {
             unsigned d16 = AmLine16;
             unsigned d8 = (d16 >> 1);
             D1Dun::DrawAutomapHorzDoor(sx + d16, sy - d8);
         }
-        if (automap_type & MAP_EAST_GRATE) {
+        if (automap_type & MAF_EAST_GRATE) {
             unsigned d32 = AmLine32;
             unsigned d16 = (d32 >> 1), d8 = (d32 >> 2);
             D1Dun::DrawLine(sx + d16, sy - d8, sx + d32, sy, COLOR_DIM);
         }
-        if (automap_type & (MAP_EAST_GRATE | MAP_EAST_ARCH)) {
+        if (automap_type & (MAF_EAST_GRATE | MAF_EAST_ARCH)) {
             D1Dun::DrawAutomapDiamond(sx, sy);
         }
-        if ((automap_type & (MAP_EAST_DOOR | MAP_EAST_GRATE | MAP_EAST_ARCH)) == 0) {
+        if ((automap_type & (MAF_EAST_DOOR | MAF_EAST_GRATE | MAF_EAST_ARCH)) == 0) {
             unsigned d32 = AmLine32;
             unsigned d16 = (d32 >> 1);
             D1Dun::DrawLine(sx, sy - d16, sx + d32, sy, COLOR_DIM);
@@ -1359,10 +1359,10 @@ void D1Dun::DrawMap(int sx, int sy, uint16_t automap_type)
     }
 
     // for caves the horz/vert flags are switched
-    if (automap_type & MAP_DO_SOUTH_WEST) {
+    if (automap_type & MAF_DO_SOUTH_WEST) {
         unsigned d32 = AmLine32;
         unsigned d16 = (d32 >> 1);
-        if (automap_type & MAP_WEST_DOOR) {
+        if (automap_type & MAF_WEST_DOOR) {
             unsigned d8 = (d32 >> 2);
             D1Dun::DrawAutomapHorzDoor(sx - d16, sy + d8);
         } else {
@@ -1370,10 +1370,10 @@ void D1Dun::DrawMap(int sx, int sy, uint16_t automap_type)
         }
     }
 
-    if (automap_type & MAP_DO_SOUTH_EAST) {
+    if (automap_type & MAF_DO_SOUTH_EAST) {
         unsigned d32 = AmLine32;
         unsigned d16 = (d32 >> 1);
-        if (automap_type & MAP_EAST_DOOR) {
+        if (automap_type & MAF_EAST_DOOR) {
             unsigned d8 = (d32 >> 2);
             D1Dun::DrawAutomapVertDoor(sx + d16, sy + d8);
         } else {
