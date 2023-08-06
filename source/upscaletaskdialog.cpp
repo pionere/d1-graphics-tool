@@ -133,6 +133,7 @@ void UpscaleTaskDialog::on_upscaleButton_clicked()
             params.steps[i] = !skipStep(skipSteps, i);
         }
     }
+    params.patchGraphics = this->ui->patchGraphicsCheckBox->isChecked();
     params.patchTilesets = this->ui->patchTilesetsCheckBox->isChecked();
 
     this->close();
@@ -195,6 +196,20 @@ void UpscaleTaskDialog::upscaleCel(const QString &path, D1Pal *pal, const Upscal
     if (!D1Cel::load(gfx, celFilePath, opParams)) {
         dProgressErr() << QApplication::tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(celFilePath));
         return;
+    }
+    // Patch CEL if requested
+    if (params.patchGraphics) {
+        int fileIndex = -1;
+        QString baseName = QFileInfo(celFilePath).completeBaseName().toLower();
+        if (baseName == "l2doors") {
+            fileIndex = GFX_L2DOORS;
+        }
+        if (baseName == "l3doors") {
+            fileIndex = GFX_L3DOORS;
+        }
+        if (fileIndex != -1) {
+            gfx.patch(fileIndex, true);
+        }
     }
     // upscale
     if (Upscaler::upscaleGfx(&gfx, upParams, true)) {

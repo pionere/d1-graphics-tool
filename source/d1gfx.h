@@ -153,7 +153,7 @@ public:
     int getFrameHeight(int frameIndex) const;
     bool setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType);
 
-    void patch(int gfxFileIndex); // gfx_file_index
+    void patch(int gfxFileIndex, bool silent); // gfx_file_index
 
 private:
     bool patchCatacombsDoors(bool silent);

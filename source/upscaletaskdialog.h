@@ -28,6 +28,7 @@ class UpscaleTaskParam {
 public:
     QString listfilesFile;
     bool steps[NUM_STEPS];
+    bool patchGraphics;
     bool patchTilesets;
     QString assetsFolder;
     QString outFolder;

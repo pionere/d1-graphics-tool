@@ -803,18 +803,18 @@ bool D1Gfx::patchCavesDoors(bool silent)
     return result;
 }
 
-void D1Gfx::patch(int gfxFileIndex)
+void D1Gfx::patch(int gfxFileIndex, bool silent)
 {
     bool change = false;
     switch (gfxFileIndex) {
     case GFX_L2DOORS: // patch L2Doors.CEL
-        change = this->patchCatacombsDoors(false);
+        change = this->patchCatacombsDoors(silent);
         break;
     case GFX_L3DOORS: // patch L3Doors.CEL
-        change = this->patchCavesDoors(false);
+        change = this->patchCavesDoors(silent);
         break;
     }
-    if (!change) {
+    if (!change && !silent) {
         dProgress() << tr("No change was necessary.");
     }
 }
