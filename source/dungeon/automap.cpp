@@ -91,8 +91,8 @@ void InitLvlAutomap()
 	if (currLvl._dType == DTYPE_CATACOMBS) {
 		// fix automap type
 		automaptype[42] &= ~MAF_EAST_ARCH; // not a horizontal arch
-		automaptype[156] = 0; // no door is placed
-		automaptype[157] = 0;
+		automaptype[156] = MWT_NONE; // no door is placed
+		automaptype[157] = MWT_NONE;
 		// separate pillar tile
 		automaptype[52] = MWT_PILLAR;
 		// new shadows
@@ -119,6 +119,9 @@ void InitLvlAutomap()
 	}
 	// patch dAutomapData - L4.AMP
 	if (currLvl._dType == DTYPE_HELL) {
+		// fix automap types
+		automaptype[27] = MAF_EXTERN | MWT_NORTH_EAST_END;
+		automaptype[28] = MAF_EXTERN | MWT_NORTH_WEST_END;
 		automaptype[52] |= MAF_WEST_GRATE;
 		automaptype[56] |= MAF_EAST_GRATE;
 		automaptype[7] = MWT_NORTH_WEST_END;
@@ -139,6 +142,10 @@ void InitLvlAutomap()
 #ifdef HELLFIRE
 	// patch dAutomapData - L5.AMP
 	if (currLvl._dType == DTYPE_CRYPT) {
+		// fix automap types
+		automaptype[20] = MAF_EXTERN | MWT_CORNER;
+		automaptype[23] = MAF_EXTERN | MWT_NORTH_WEST_END;
+		automaptype[24] = MAF_EXTERN | MWT_NORTH_EAST_END;
 		// fix automap of the entrance
 		automaptype[47] = MAF_STAIRS | MWT_NORTH_WEST;
 		automaptype[50] = MWT_NORTH_WEST;

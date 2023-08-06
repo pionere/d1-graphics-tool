@@ -86,11 +86,11 @@
           <string>Object CEL Files</string>
          </property>
         </item>
-        <item>
+        <!--item>
          <property name="text">
           <string>Special CEL Files</string>
          </property>
-        </item>
+        </item-->
         <item>
          <property name="text">
           <string>Cutscenes</string>

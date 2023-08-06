@@ -17736,6 +17736,12 @@ void D1Tileset::patch(int dunType, bool silent)
         // patch pSpecialsCel - L2S.CEL
         this->patchCatacombsSpec(silent);
         // patch dAutomapData - L2.AMP
+        // - fix automap types
+        ChangeTileMapFlags(this->amp, 42 - 1, MAF_EAST_ARCH, false, silent);
+        ChangeTileMapFlags(this->amp, 156 - 1, MAF_WEST_DOOR, false, silent);
+        ChangeTileMapType(this->amp, 156 - 1, MWT_NONE, silent);
+        ChangeTileMapFlags(this->amp, 157 - 1, MAF_EAST_DOOR, false, silent);
+        ChangeTileMapType(this->amp, 157 - 1, MWT_NONE, silent);
         // - separate pillar
         ChangeTileMapType(this->amp, 52 - 1, MWT_PILLAR, silent);
         // - new shadows
@@ -17753,11 +17759,6 @@ void D1Tileset::patch(int dunType, bool silent)
         // SetTileMapFlags(this->amp, 95 - 1, 3 - 1, silent);
         // SetTileMapFlags(this->amp, 96 - 1, 3 - 1, silent);
         // SetTileMapFlags(this->amp, 100 - 1, 3 - 1, silent);
-        ChangeTileMapFlags(this->amp, 42 - 1, MAF_EAST_ARCH, false, silent);
-        ChangeTileMapFlags(this->amp, 156 - 1, MAF_WEST_DOOR, false, silent);
-        ChangeTileMapType(this->amp, 156 - 1, 0, silent);
-        ChangeTileMapFlags(this->amp, 157 - 1, MAF_EAST_DOOR, false, silent);
-        ChangeTileMapType(this->amp, 157 - 1, 0, silent);
         // patch dSolidTable - L2.SOL
         // - fix the upstairs IV.
         ChangeSubtileSolFlags(this->sol, 252 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, true, silent);
@@ -17790,6 +17791,9 @@ void D1Tileset::patch(int dunType, bool silent)
         // patch dMiniTiles and dMegaTiles - L3.MIN and L3.TIL
         this->cleanupHell(deletedFrames, silent);
         // patch dAutomapData - L4.AMP
+        // - fix automap types
+        ChangeTileMapType(this->amp, 27 - 1, MWT_NORTH_EAST_END, silent);
+        ChangeTileMapType(this->amp, 28 - 1, MWT_NORTH_WEST_END, silent);
         ChangeTileMapFlags(this->amp, 52 - 1, MAF_WEST_GRATE, true, silent);
         ChangeTileMapFlags(this->amp, 56 - 1, MAF_EAST_GRATE, true, silent);
         ChangeTileAmpFlags(this->amp, 7 - 1, MWT_NORTH_WEST_END, silent);
@@ -17858,6 +17862,10 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeSubtileSolFlags(this->sol, 159 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 148 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, true, silent);
         // patch automaptype - L5.AMP
+        // - fix automap types
+        ChangeTileMapType(this->amp, 20 - 1, MWT_CORNER, silent);
+        ChangeTileMapType(this->amp, 23 - 1, MWT_NORTH_WEST_END, silent);
+        ChangeTileMapType(this->amp, 24 - 1, MWT_NORTH_EAST_END, silent);
         // - separate pillar
         SetTileMapFlags(this->amp, 28 - 1, 15 - 1, silent);
         // new shadows
