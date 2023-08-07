@@ -898,10 +898,6 @@ bool D1Gfx::patchWarriorStand(bool silent)
         dProgressErr() << tr("Not enough frame groups in '%1'.").arg(QDir::toNativeSeparators(atkPath));
         return false;
     }
-    if (atkGfx.getGroupFrameIndices(1).first != frameCount && atkGfx.getGroupFrameIndices(1).second != 2 * frameCount - 1) {
-        dProgressErr() << tr("Not enough frames in the first frame group of '%1'.").arg(QDir::toNativeSeparators(atkPath));
-        return false;
-    }
 
     bool result = false;
     for (int n = 1; n < frameCount + 1; n++) {
@@ -911,7 +907,7 @@ bool D1Gfx::patchWarriorStand(bool silent)
             return false;
         }
         constexpr int atkWidth = 128;
-        D1GfxFrame* frameSrcAtk = atkGfx.getFrame(atkGfx.getGroupFrameIndices(1).first + n - 1);
+        D1GfxFrame* frameSrcAtk = atkGfx.getFrame(atkGfx.getGroupFrameIndices(1).first);
         if (frameSrcAtk->getWidth() != atkWidth || frameSrcAtk->getHeight() != height) {
             dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(atkPath)).arg(atkWidth).arg(height);
             return false;
@@ -935,7 +931,11 @@ bool D1Gfx::patchWarriorStand(bool silent)
                 if (x == 31 && y >= 60) {
                     break;
                 }
-                frameSrcStd->setPixel(x, y + dy, frameSrcAtk->getPixel(x + 17, y));
+                D1GfxPixel pixel = frameSrcAtk->getPixel(x + 17, y);
+                if (pixel.isTransparent() || pixel.getPaletteIndex() == 0) {
+                    continue;
+                }
+                frameSrcStd->setPixel(x, y + dy, );
             }
         }
         // fix the shadow
