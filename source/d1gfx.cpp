@@ -3,6 +3,8 @@
 #include <QApplication>
 
 #include "d1image.h"
+#include "d1cl2.h"
+#include "openasdialog.h"
 #include "progressdialog.h"
 
 D1GfxPixel D1GfxPixel::transparentPixel()
@@ -802,6 +804,183 @@ bool D1Gfx::patchCavesDoors(bool silent)
     return result;
 }
 
+bool D1Gfx::patchWarriorStand(bool silent)
+{
+    QString baseFilePath = this->getFilePath();
+    if (baseFilePath.length() < 13) {
+        dProgressErr() << tr("Unrecognized file-path. Expected *WMH\\WMHAS.CL2");
+        return false;
+    }
+    // read WMHAT.CL2 from the same folder
+    QString atkPath = baseFilePath;
+    atkPath[atkPath.length() - 5] = QChar('T');
+
+    if (!QFileInfo::exists(atkPath)) {
+        dProgressErr() << tr("Could not find %1 to be used as a template file").arg(QDir::toNativeSeparators(atkPath));
+        return false;
+    }
+
+    // read WMMAS.CL2 from the same folder
+    QString stdPath = baseFilePath;
+    stdPath[stdPath.length() - 7] = QChar('M');
+    if (!QFileInfo::exists(stdPath)) {
+        // check for the standard file-structure of the MPQ file (WMMAS.CL2 in the WMM folder)
+        stdPath[stdPath.length() - 11] = QChar('M');
+        if (!QFileInfo::exists(stdPath)) {
+            dProgressErr() << tr("Could not find %1 to be used as a template file").arg(QDir::toNativeSeparators(stdPath));
+            return false;
+        }
+    }
+
+    OpenAsParam opParams = OpenAsParam();
+    D1Gfx atkGfx;
+    atkGfx.setPalette(this->palette);
+    if (!D1Cl2::load(atkGfx, atkPath, opParams)) {
+        dProgressErr() << (tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(atkPath)));
+        return false;
+    }
+
+    D1Gfx stdGfx;
+    stdGfx.setPalette(this->palette);
+    if (!D1Cl2::load(stdGfx, stdPath, opParams)) {
+        dProgressErr() << (tr("Failed loading CL2 file: %1.").arg(QDir::toNativeSeparators(stdPath)));
+        return false;
+    }
+
+    constexpr int frameCount = 10;
+    constexpr int height = 96;
+    constexpr int width = 96;
+
+    if (this->getGroupCount() < 2) {
+        dProgressErr() << tr("Not enough frame groups in the graphics.");
+        return false;
+    }
+    if (this->getGroupFrameIndices(1).first != frameCount && this->getGroupFrameIndices(1).second != 2 * frameCount - 1) {
+        dProgressErr() << tr("Not enough frames in the first frame group.");
+        return false;
+    }
+    if (stdGfx.getGroupCount() < 2) {
+        dProgressErr() << tr("Not enough frame groups in '%1'.").arg(QDir::toNativeSeparators(stdPath));
+        return false;
+    }
+    if (stdGfx.getGroupFrameIndices(1).first != frameCount && stdGfx.getGroupFrameIndices(1).second != 2 * frameCount - 1) {
+        dProgressErr() << tr("Not enough frames in the first frame group of '%1'.").arg(QDir::toNativeSeparators(stdPath));
+        return false;
+    }
+    if (atkGfx.getGroupCount() < 2) {
+        dProgressErr() << tr("Not enough frame groups in '%1'.").arg(QDir::toNativeSeparators(atkPath));
+        return false;
+    }
+
+    bool result = false;
+    for (int n = 1; n < frameCount + 1; n++) {
+        D1GfxFrame* frameSrcStd = stdGfx.getFrame(stdGfx.getGroupFrameIndices(1).first + n - 1);
+        if (frameSrcStd->getWidth() != width || frameSrcStd->getHeight() != height) {
+            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(stdPath)).arg(width).arg(height);
+            return false;
+        }
+        constexpr int atkWidth = 128;
+        D1GfxFrame* frameSrcAtk = atkGfx.getFrame(atkGfx.getGroupFrameIndices(1).first);
+        if (frameSrcAtk->getWidth() != atkWidth || frameSrcAtk->getHeight() != height) {
+            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(atkPath)).arg(atkWidth).arg(height);
+            return false;
+        }
+        // copy the shield to the stand frame
+        int dy = 0;
+        switch (n) {
+        case 1: dy = 0; break;
+        case 2: dy = 1; break;
+        case 3: dy = 2; break;
+        case 4: dy = 2; break;
+        case 5: dy = 3; break;
+        case 6: dy = 3; break;
+        case 7: dy = 3; break;
+        case 8: dy = 2; break;
+        case 9: dy = 2; break;
+        case 10: dy = 1; break;
+        }
+        for (int y = 38; y < 66; y++) {
+            for (int x = 19; x < 32; x++) {
+                if (x == 31 && y >= 60) {
+                    break;
+                }
+                D1GfxPixel pixel = frameSrcAtk->getPixel(x + 17, y);
+                if (pixel.isTransparent() || pixel.getPaletteIndex() == 0) {
+                    continue;
+                }
+                frameSrcStd->setPixel(x, y + dy, pixel);
+            }
+        }
+        // fix the shadow
+        // - main shield
+        for (int y = 72; y < 80; y++) {
+            for (int x = 12; x < 31; x++) {
+                D1GfxPixel pixel = frameSrcStd->getPixel(x, y);
+                if (!pixel.isTransparent()) {
+                    continue;
+                }
+                if (y < 67 + x / 2 && y > x + 48) {
+                    frameSrcStd->setPixel(x, y, D1GfxPixel::colorPixel(0));
+                }
+            }
+        }
+        // -  sink effect on the top-left side
+        //if (n > 2 && n < 10) {
+        if (dy > 1) {
+            // if (n >= 5 && n <= 7) {
+            if (dy == 3) {
+                frameSrcStd->setPixel(17, 75, D1GfxPixel::colorPixel(0));
+            }
+            else {
+                frameSrcStd->setPixel(15, 74, D1GfxPixel::colorPixel(0));
+            }
+        }
+        // - sink effect on the top-right side
+        // if (n > 2 && n < 10) {
+        if (dy > 1) {
+            frameSrcStd->setPixel(27, 75, D1GfxPixel::colorPixel(0));
+            // if (n > 4 && n < 8) {
+            if (dy == 3) {
+                frameSrcStd->setPixel(26, 74, D1GfxPixel::colorPixel(0));
+            }
+        }
+        // - sink effect on the bottom
+        // if (n > 1) {
+        if (dy != 0) {
+            frameSrcStd->setPixel(28, 80, D1GfxPixel::colorPixel(0));
+        }
+        // if (n > 2 && n < 6) {
+        if (dy > 1) {
+            frameSrcStd->setPixel(29, 80, D1GfxPixel::colorPixel(0));
+        }
+        // if (n > 4 && n < 8) {
+        if (dy == 3) {
+            frameSrcStd->setPixel(27, 80, D1GfxPixel::colorPixel(0));
+        }
+
+        // copy the result to the active graphics
+        D1GfxFrame* frame = this->getFrame(this->getGroupFrameIndices(1).first + n - 1);
+        if (frame->getWidth() != width || frame->getHeight() != height) {
+            dProgressErr() << tr("Frame size of '%1' does not fit (Expected %2x%3).").arg(QDir::toNativeSeparators(this->getFilePath())).arg(width).arg(height);
+            return result;
+        }
+
+        bool change = false;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                change |= frame->setPixel(x, y, frameSrcStd->getPixel(x, y));
+            }
+        }
+        if (change) {
+            result = true;
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 of group 2 is modified.").arg(n);
+            }
+        }
+    }
+    return result;
+}
+
 void D1Gfx::patch(int gfxFileIndex, bool silent)
 {
     bool change = false;
@@ -811,6 +990,9 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
         break;
     case GFX_L3DOORS: // patch L3Doors.CEL
         change = this->patchCavesDoors(silent);
+        break;
+    case GFX_PLR_WMHAS: // patch WMHAS.CL2
+        change = this->patchWarriorStand(silent);
         break;
     }
     if (!change && !silent) {

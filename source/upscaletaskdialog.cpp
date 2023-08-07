@@ -231,6 +231,17 @@ void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const Upscal
         dProgressErr() << QApplication::tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(cl2FilePath));
         return;
     }
+    // Patch CL2 if requested
+    if (params.patchGraphics) {
+        int fileIndex = -1;
+        QString baseName = QFileInfo(cl2FilePath).completeBaseName().toLower();
+        if (baseName == "wmhas") {
+            fileIndex = GFX_PLR_WMHAS;
+        }
+        if (fileIndex != -1) {
+            gfx.patch(fileIndex, true);
+        }
+    }
     // upscale
     if (Upscaler::upscaleGfx(&gfx, upParams, true)) {
         // store the result

@@ -28,6 +28,9 @@ void PatchGfxDialog::initialize(D1Gfx *g)
     if (baseName == "l3doors") {
         fileIndex = GFX_L3DOORS;
     }
+    if (baseName == "wmhas") {
+        fileIndex = GFX_PLR_WMHAS;
+    }
     this->ui->gfxFileComboBox->setCurrentIndex(fileIndex);
 }
 
