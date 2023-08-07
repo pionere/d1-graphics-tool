@@ -935,7 +935,7 @@ bool D1Gfx::patchWarriorStand(bool silent)
                 if (pixel.isTransparent() || pixel.getPaletteIndex() == 0) {
                     continue;
                 }
-                frameSrcStd->setPixel(x, y + dy, );
+                frameSrcStd->setPixel(x, y + dy, pixel);
             }
         }
         // fix the shadow
