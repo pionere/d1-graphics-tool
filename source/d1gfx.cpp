@@ -4,6 +4,8 @@
 #include <QMessageBox>
 
 #include "d1image.h"
+#include "d1cl2.h"
+#include "openasdialog.h"
 #include "progressdialog.h"
 
 D1GfxPixel D1GfxPixel::transparentPixel()
