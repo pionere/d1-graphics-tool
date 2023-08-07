@@ -97,6 +97,7 @@ protected:
 typedef enum gfx_file_index {
     GFX_L2DOORS, // graphics of the doors in the Catacombs (L2Doors.CEL)
     GFX_L3DOORS, // graphics of the doors in the Caves (L3Doors.CEL)
+    GFX_PLR_WMHAS, // graphics of the warrior with shield and mace standing in the dungeon (WMHAS.CL2)
 } gfx_file_index;
 
 enum class D1CEL_TYPE {
@@ -158,6 +159,7 @@ public:
 private:
     bool patchCatacombsDoors(bool silent);
     bool patchCavesDoors(bool silent);
+    bool patchWarriorStand(bool silent);
 
 protected:
     D1CEL_TYPE type = D1CEL_TYPE::V1_REGULAR;
