@@ -2683,8 +2683,8 @@ void LevelCelView::checkTileFlags() const
         }
         if (ampFlags & MAF_STAIRS) {
             // stairs
-            if (ampType != MWT_NONE) {
-                dProgressWarn() << tr("Tile %1 is stairs but its type is also set (not None).").arg(i + 1);
+            if (ampType == MWT_PILLAR) {
+                dProgressWarn() << tr("Tile %1 is stairs but also a pillar.").arg(i + 1);
                 result = true;
             }
         }
