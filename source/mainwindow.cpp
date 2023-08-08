@@ -1788,7 +1788,7 @@ void MainWindow::on_actionPatch_triggered()
     if (this->patchGfxDialog == nullptr) {
         this->patchGfxDialog = new PatchGfxDialog(this);
     }
-    this->patchGfxDialog->initialize(this->gfx);
+    this->patchGfxDialog->initialize(this->gfx, this->celView);
     this->patchGfxDialog->show();
 }
 

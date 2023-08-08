@@ -15,9 +15,10 @@ PatchGfxDialog::~PatchGfxDialog()
     delete ui;
 }
 
-void PatchGfxDialog::initialize(D1Gfx *g)
+void PatchGfxDialog::initialize(D1Gfx *g, CelView *cv)
 {
     this->gfx = g;
+    this->celView = cv;
 
     // initialize the dropdown based on the filename
     int fileIndex = -1;
@@ -50,6 +51,9 @@ void PatchGfxDialog::on_runButton_clicked()
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Processing..."), 1, PAF_OPEN_DIALOG | PAF_UPDATE_WINDOW);
 
     this->gfx->patch(fileIndex, false);
+
+    // trigger the update of the selected indices
+    this->celView->setGfx(this->gfx);
 
     // Clear loading message from status bar
     ProgressDialog::done();
