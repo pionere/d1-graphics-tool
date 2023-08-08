@@ -1008,6 +1008,31 @@ bool D1Gfx::patchWarriorStand(bool silent)
     return result;
 }
 
+bool D1Gfx::patchSplIcons(bool silent)
+{
+    int frameCount = this->getFrameCount();
+    int lastIdx = 0;
+    if (frameCount == 60) {
+        // SpelIcon.CEL of hellfire
+        lastIdx = 52;
+    } else if (frameCount == 51) {
+        // SpelIcon.CEL of hellfire
+        lastIdx = 43;
+    } else {
+        if (frameCount != 52 && frameCount != 43) {
+            dProgressWarn() << tr("Invalid SpelIcon.CEL (Number of frames: %1. Expected: 43 or 52.)").arg(frameCount);
+        }
+        return false;
+    }
+    for (int i = 0; i < 8; i++) {
+        this->removeFrame(lastIdx);
+    }
+    if (!silent) {
+        dProgress() << QApplication::tr("Removed the last 8 frames.");
+    }
+    return true;
+}
+
 void D1Gfx::patch(int gfxFileIndex, bool silent)
 {
     bool change = false;
@@ -1020,6 +1045,9 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
         break;
     case GFX_PLR_WMHAS: // patch WMHAS.CL2
         change = this->patchWarriorStand(silent);
+        break;
+    case GFX_SPL_ICONS: // patch SpelIcon.CEL
+        change = this->patchSplIcons(silent);
         break;
     }
     if (!change && !silent) {

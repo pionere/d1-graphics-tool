@@ -207,6 +207,9 @@ void UpscaleTaskDialog::upscaleCel(const QString &path, D1Pal *pal, const Upscal
         if (baseName == "l3doors") {
             fileIndex = GFX_L3DOORS;
         }
+        if (baseName == "spelicon") {
+            fileIndex = GFX_SPL_ICONS;
+        }
         if (fileIndex != -1) {
             gfx.patch(fileIndex, true);
         }

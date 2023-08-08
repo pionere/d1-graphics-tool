@@ -31,6 +31,9 @@ void PatchGfxDialog::initialize(D1Gfx *g)
     if (baseName == "wmhas") {
         fileIndex = GFX_PLR_WMHAS;
     }
+    if (baseName == "spelicon") {
+        fileIndex = GFX_SPL_ICONS;
+    }
     this->ui->gfxFileComboBox->setCurrentIndex(fileIndex);
 }
 
