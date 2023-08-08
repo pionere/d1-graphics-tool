@@ -2676,11 +2676,15 @@ void LevelCelView::checkTileFlags() const
                 dProgressWarn() << tr("Tile %1 is external but also a pillar.").arg(i + 1);
                 result = true;
             }
+            if (ampType == MWT_WEST || ampType == MWT_EAST || ampType == MWT_SOUTH_WEST || ampType == MWT_SOUTH_EAST || ampType == MWT_SOUTH) {
+                dProgressWarn() << tr("Tile %1 is external but its wall-type does not support it.").arg(i + 1);
+                result = true;
+            }
         }
         if (ampFlags & MAF_STAIRS) {
             // stairs
-            if (ampType != MWT_NONE) {
-                dProgressWarn() << tr("Tile %1 is stairs but its type is also set (not None).").arg(i + 1);
+            if (ampType == MWT_PILLAR) {
+                dProgressWarn() << tr("Tile %1 is stairs but also a pillar.").arg(i + 1);
                 result = true;
             }
         }
