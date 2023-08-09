@@ -3766,8 +3766,6 @@ typedef enum lvl_entry {
 typedef enum spell_id {
 	SPL_NULL,
 	SPL_WALK,
-	SPL_GETITEM,
-	SPL_OPERATE,
 	SPL_BLOCK,
 	SPL_ATTACK,
 	SPL_WHIPLASH,

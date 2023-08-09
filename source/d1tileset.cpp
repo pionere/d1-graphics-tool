@@ -17279,10 +17279,18 @@ void D1Tileset::patch(int dunType, bool silent)
     switch (dunType) {
     case DTYPE_TOWN: {
         // patch dMiniTiles - Town.MIN
-		this->cleanupTown(deletedFrames, silent);
+        if (this->min->getSubtileCount() < 1258) {
+            dProgressErr() << tr("Invalid MIN file. Subtile-count is less than %1").arg(1258);
+            break;
+        }
+        this->cleanupTown(deletedFrames, silent);
     } break;
     case DTYPE_CATHEDRAL:
         // patch dMiniTiles and dMegaTiles - L1.MIN and L1.TIL
+        if (this->min->getSubtileCount() < 453) {
+            dProgressErr() << tr("Invalid MIN file. Subtile-count is less than %1").arg(453);
+            break;
+        }
         this->cleanupCathedral(deletedFrames, silent);
         // patch dSolidTable - L1.SOL
         ChangeSubtileSolFlags(this->sol, 8 - 1, PFLAG_BLOCK_MISSILE, false, silent); // the only column which was blocking missiles
@@ -17329,6 +17337,10 @@ void D1Tileset::patch(int dunType, bool silent)
         break;
     case DTYPE_CATACOMBS:
         // patch dMiniTiles and dMegaTiles - L2.MIN and L2.TIL
+        if (this->min->getSubtileCount() < 559) {
+            dProgressErr() << tr("Invalid MIN file. Subtile-count is less than %1").arg(559);
+            break;
+        }
         this->cleanupCatacombs(deletedFrames, silent);
         // patch pSpecialsCel - L2S.CEL
         this->patchCatacombsSpec(silent);
@@ -17366,6 +17378,10 @@ void D1Tileset::patch(int dunType, bool silent)
         break;
     case DTYPE_CAVES:
         // patch dMiniTiles and dMegaTiles - L3.MIN and L3.TIL
+        if (this->min->getSubtileCount() < 560) {
+            dProgressErr() << tr("Invalid MIN file. Subtile-count is less than %1").arg(560);
+            break;
+        }
         this->cleanupCaves(deletedFrames, silent);
         // patch dAutomapData - L3.AMP
         // - new fences
@@ -17384,6 +17400,10 @@ void D1Tileset::patch(int dunType, bool silent)
         break;
     case DTYPE_HELL:
         // patch dMiniTiles and dMegaTiles - L3.MIN and L3.TIL
+        if (this->min->getSubtileCount() < 456) {
+            dProgressErr() << tr("Invalid MIN file. Subtile-count is less than %1").arg(456);
+            break;
+        }
         this->cleanupHell(deletedFrames, silent);
         // patch dAutomapData - L4.AMP
         // - fix automap types
@@ -17417,6 +17437,10 @@ void D1Tileset::patch(int dunType, bool silent)
         break;
     case DTYPE_NEST:
         // patch dMiniTiles and dMegaTiles - L6.MIN and L6.TIL
+        if (this->min->getSubtileCount() < 606) {
+            dProgressErr() << tr("Invalid MIN file. Subtile-count is less than %1").arg(606);
+            break;
+        }
         this->cleanupNest(deletedFrames, silent);
         // patch dSolidTable - L6.SOL
         ChangeSubtileSolFlags(this->sol, 390 - 1, PFLAG_BLOCK_PATH, false, silent); // make a pool tile walkable I.
@@ -17424,6 +17448,10 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeSubtileSolFlags(this->sol, 416 - 1, PFLAG_BLOCK_PATH, false, silent); // make a pool tile walkable III.
         break;
     case DTYPE_CRYPT:
+        if (this->min->getSubtileCount() < 650) {
+            dProgressErr() << tr("Invalid MIN file. Subtile-count is less than %1").arg(650);
+            break;
+        }
         this->fillCryptShapes(silent);
         this->maskCryptBlacks(silent);
         this->fixCryptShadows(silent);
