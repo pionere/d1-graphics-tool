@@ -2037,6 +2037,413 @@ void D1Tileset::patchTownChop(bool silent)
     }
 }
 
+void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
+{
+    // pointless tree micros (re-drawn by dSpecial)
+    Blk2Mcr(117, 3);
+    Blk2Mcr(117, 5);
+    Blk2Mcr(128, 2);
+    Blk2Mcr(128, 3);
+    Blk2Mcr(128, 4);
+    Blk2Mcr(128, 5);
+    Blk2Mcr(128, 6);
+    Blk2Mcr(128, 7);
+    Blk2Mcr(129, 3);
+    Blk2Mcr(129, 5);
+    Blk2Mcr(129, 7);
+    Blk2Mcr(130, 2);
+    Blk2Mcr(130, 4);
+    Blk2Mcr(130, 6);
+    Blk2Mcr(156, 2);
+    Blk2Mcr(156, 3);
+    Blk2Mcr(156, 4);
+    Blk2Mcr(156, 5);
+    Blk2Mcr(156, 6);
+    Blk2Mcr(156, 7);
+    Blk2Mcr(156, 8);
+    Blk2Mcr(156, 9);
+    Blk2Mcr(156, 10);
+    Blk2Mcr(156, 11);
+    Blk2Mcr(157, 3);
+    Blk2Mcr(157, 5);
+    Blk2Mcr(157, 7);
+    Blk2Mcr(157, 9);
+    Blk2Mcr(157, 11);
+    Blk2Mcr(158, 2);
+    Blk2Mcr(158, 4);
+    Blk2Mcr(160, 2);
+    Blk2Mcr(160, 3);
+    Blk2Mcr(160, 4);
+    Blk2Mcr(160, 5);
+    Blk2Mcr(160, 6);
+    Blk2Mcr(160, 7);
+    Blk2Mcr(160, 8);
+    Blk2Mcr(160, 9);
+    Blk2Mcr(162, 2);
+    Blk2Mcr(162, 4);
+    Blk2Mcr(162, 6);
+    Blk2Mcr(162, 8);
+    Blk2Mcr(162, 10);
+    Blk2Mcr(212, 3);
+    Blk2Mcr(212, 4);
+    Blk2Mcr(212, 5);
+    Blk2Mcr(212, 6);
+    Blk2Mcr(212, 7);
+    Blk2Mcr(212, 8);
+    Blk2Mcr(212, 9);
+    Blk2Mcr(212, 10);
+    Blk2Mcr(212, 11);
+    Blk2Mcr(214, 4);
+    Blk2Mcr(214, 6);
+    Blk2Mcr(216, 2);
+    Blk2Mcr(216, 4);
+    Blk2Mcr(216, 6);
+    Blk2Mcr(217, 4);
+    Blk2Mcr(217, 6);
+    Blk2Mcr(217, 8);
+    Blk2Mcr(358, 4);
+    Blk2Mcr(358, 5);
+    Blk2Mcr(358, 6);
+    Blk2Mcr(358, 7);
+    Blk2Mcr(358, 8);
+    Blk2Mcr(358, 9);
+    Blk2Mcr(358, 10);
+    Blk2Mcr(358, 11);
+    Blk2Mcr(358, 12);
+    Blk2Mcr(358, 13);
+    Blk2Mcr(360, 4);
+    Blk2Mcr(360, 6);
+    Blk2Mcr(360, 8);
+    Blk2Mcr(360, 10);
+    // fix bad artifacts
+    Blk2Mcr(233, 6);
+    Blk2Mcr(828, 13);
+    Blk2Mcr(1018, 2);
+    // useless black (hidden) micros
+    Blk2Mcr(426, 1);
+    Blk2Mcr(427, 0);
+    Blk2Mcr(427, 1);
+    Blk2Mcr(429, 1);
+    Blk2Mcr(494, 0);
+    Blk2Mcr(494, 1);
+    Blk2Mcr(550, 1);
+    HideMcr(587, 0);
+    Blk2Mcr(624, 1);
+    Blk2Mcr(626, 1);
+    HideMcr(926, 0);
+    HideMcr(926, 1);
+    HideMcr(928, 0);
+    HideMcr(928, 1);
+    // Blk2Mcr(1143, 0);
+    // Blk2Mcr(1145, 0);
+    // Blk2Mcr(1145, 1);
+    // Blk2Mcr(1146, 0);
+    // Blk2Mcr(1153, 0);
+    // Blk2Mcr(1155, 1);
+    // Blk2Mcr(1156, 0);
+    // Blk2Mcr(1169, 1);
+    Blk2Mcr(1172, 1);
+    Blk2Mcr(1176, 1);
+    Blk2Mcr(1199, 1);
+    Blk2Mcr(1203, 1);
+    Blk2Mcr(1205, 1);
+    Blk2Mcr(1212, 0);
+    Blk2Mcr(1219, 0);
+    bool isHellfireTown = this->min->getSubtileCount() == 1379;
+    if (isHellfireTown) {
+        // #ifdef HELLFIRE
+        // fix bad artifacts
+        Blk2Mcr(1273, 7);
+        Blk2Mcr(1303, 7);
+    }
+    // patch dMicroCels - TOWN.CEL
+    // - overwrite subtile 557 and 558 with subtile 939 and 940 to make the inner tile of Griswold's house non-walkable
+    // ReplaceMcr(237, 0, 402, 0);
+    // ReplaceMcr(237, 1, 402, 1);
+    // patch subtiles around the pot of Adria to prevent graphical glitch when a player passes it
+    this->patchTownPot(553, 554, silent);
+    // patch subtiles of the cathedral to fix graphical glitch
+    this->patchTownCathedral(805, 806, 807, silent);
+    // patch subtiles to reduce its memory footprint
+    if (this->patchTownFloor(silent)) {
+        // use the micros created by patchTownFloor
+        MoveMcr(732, 8, 731, 9);
+        Blk2Mcr(974, 2);
+        Blk2Mcr(1030, 2);
+        ReplaceMcr(220, 0, 17, 0);
+        SetMcr(221, 2, 220, 1);
+        SetMcr(220, 1, 17, 1);
+        ReplaceMcr(218, 1, 25, 1);
+        SetMcr(219, 3, 218, 0);
+        SetMcr(218, 0, 25, 0);
+        ReplaceMcr(1166, 1, 281, 1);
+        SetMcr(1167, 3, 1166, 0);
+        SetMcr(1166, 0, 19, 0);
+        ReplaceMcr(962, 0, 14, 0);
+        SetMcr(963, 2, 962, 1);
+        SetMcr(962, 1, 14, 1);
+    }
+    // merge subtiles of the 'entrances'
+    if (this->patchTownDoor(silent)) {
+        // use micros created by patchTownDoorCel
+        Blk2Mcr(724, 0);
+        Blk2Mcr(724, 1);
+        Blk2Mcr(724, 3);
+        Blk2Mcr(723, 1);
+        Blk2Mcr(715, 11);
+        Blk2Mcr(715, 9);
+        Blk2Mcr(715, 3);
+
+        Blk2Mcr(428, 4);
+        Blk2Mcr(428, 2);
+        Blk2Mcr(428, 0);
+        Blk2Mcr(428, 1);
+        Blk2Mcr(426, 2);
+        Blk2Mcr(426, 0);
+        Blk2Mcr(429, 0);
+
+        Blk2Mcr(911, 9);
+        Blk2Mcr(911, 7);
+        Blk2Mcr(911, 5);
+        Blk2Mcr(919, 9);
+        Blk2Mcr(919, 5);
+
+        // Blk2Mcr(402, 0);
+        Blk2Mcr(954, 2);
+        Blk2Mcr(956, 2);
+        Blk2Mcr(918, 9);
+        Blk2Mcr(927, 0);
+        Blk2Mcr(918, 3);
+        Blk2Mcr(918, 2);
+        Blk2Mcr(918, 8);
+        Blk2Mcr(928, 4);
+        Blk2Mcr(237, 0);
+        Blk2Mcr(237, 1);
+
+        Blk2Mcr(551, 0);
+        Blk2Mcr(552, 1);
+        Blk2Mcr(519, 0);
+        Blk2Mcr(510, 7);
+        Blk2Mcr(510, 5);
+
+        Blk2Mcr(728, 9);
+        Blk2Mcr(728, 7);
+
+        Blk2Mcr(910, 9);
+        Blk2Mcr(910, 7);
+
+        Blk2Mcr(537, 0);
+        Blk2Mcr(539, 0);
+        Blk2Mcr(478, 0);
+        Blk2Mcr(479, 1);
+
+        MoveMcr(927, 3, 919, 7);
+        MoveMcr(929, 2, 918, 4);
+        MoveMcr(929, 3, 918, 5);
+        MoveMcr(929, 4, 918, 6);
+        MoveMcr(929, 5, 918, 7);
+
+        MoveMcr(551, 5, 510, 9);
+
+        MoveMcr(529, 6, 537, 2);
+        MoveMcr(529, 8, 537, 4);
+        MoveMcr(529, 10, 537, 6);
+        MoveMcr(529, 12, 537, 8);
+
+        MoveMcr(480, 2, 477, 0);
+        MoveMcr(480, 3, 477, 1);
+        MoveMcr(480, 4, 477, 2);
+        MoveMcr(480, 5, 477, 3);
+        MoveMcr(480, 6, 477, 4);
+        MoveMcr(480, 7, 477, 5);
+        MoveMcr(480, 8, 477, 6);
+        MoveMcr(480, 9, 477, 7);
+        MoveMcr(480, 10, 477, 8);
+    }
+    // patch subtiles to reduce minor protrusions
+    this->patchTownChop(silent);
+    // eliminate micros after patchTownChop
+    {
+        Blk2Mcr(362, 11);
+        Blk2Mcr(832, 12);
+        Blk2Mcr(926, 14);
+        Blk2Mcr(926, 15);
+        Blk2Mcr(946, 15);
+        Blk2Mcr(947, 15);
+        Blk2Mcr(950, 15);
+        Blk2Mcr(951, 15);
+    }
+    // better shadows
+    ReplaceMcr(555, 0, 493, 0); // TODO: reduce edges on the right
+    ReplaceMcr(728, 0, 872, 0);
+    // adjust the shadow of the tree beside the church
+    ReplaceMcr(767, 0, 117, 0);
+    ReplaceMcr(767, 1, 117, 1);
+    ReplaceMcr(768, 0, 158, 0);
+    ReplaceMcr(768, 1, 159, 1);
+    // reuse subtiles
+    ReplaceMcr(129, 1, 2, 1);  // lost details
+    ReplaceMcr(160, 0, 11, 0); // lost details
+    ReplaceMcr(160, 1, 12, 1); // lost details
+    ReplaceMcr(165, 0, 2, 0);
+    ReplaceMcr(169, 0, 129, 0);
+    ReplaceMcr(169, 1, 2, 1);
+    ReplaceMcr(177, 0, 1, 0);
+    ReplaceMcr(178, 1, 118, 1);
+    ReplaceMcr(181, 0, 129, 0);
+    ReplaceMcr(181, 1, 2, 1);
+    ReplaceMcr(188, 0, 3, 0);  // lost details
+    ReplaceMcr(198, 1, 1, 1);  // lost details
+    ReplaceMcr(281, 0, 19, 0); // lost details
+    ReplaceMcr(319, 0, 7, 0);  // lost details
+    ReplaceMcr(414, 1, 9, 1);  // lost details
+    ReplaceMcr(443, 1, 379, 1);
+    ReplaceMcr(471, 0, 3, 0);  // lost details
+    ReplaceMcr(472, 0, 5, 0);  // lost details
+    ReplaceMcr(475, 0, 7, 0);  // lost details
+    ReplaceMcr(476, 0, 4, 0);  // lost details
+    ReplaceMcr(484, 1, 4, 1);  // lost details
+    ReplaceMcr(486, 1, 20, 1); // lost details
+    ReplaceMcr(488, 1, 14, 1); // lost details
+    ReplaceMcr(493, 1, 3, 1);  // lost details
+    ReplaceMcr(496, 1, 4, 1);  // lost details
+    ReplaceMcr(507, 1, 61, 1); // lost details
+    ReplaceMcr(512, 0, 3, 0);  // lost details
+    ReplaceMcr(532, 1, 14, 1); // lost details
+    ReplaceMcr(556, 0, 3, 0);  // lost details
+    ReplaceMcr(559, 0, 59, 0); // lost details
+    ReplaceMcr(559, 1, 59, 1); // lost details
+    ReplaceMcr(563, 0, 2, 0);  // lost details
+    ReplaceMcr(569, 1, 3, 1);  // lost details
+    ReplaceMcr(592, 0, 11, 0); // lost details
+    ReplaceMcr(611, 1, 9, 1);  // lost details
+    ReplaceMcr(612, 0, 3, 0);  // lost details
+    ReplaceMcr(614, 1, 14, 1); // lost details
+    ReplaceMcr(619, 1, 13, 1); // lost details
+    ReplaceMcr(624, 0, 1, 0);  // lost details
+    ReplaceMcr(640, 1, 9, 1);  // lost details
+    ReplaceMcr(653, 0, 1, 0);  // lost details
+    ReplaceMcr(660, 0, 10, 0); // lost details
+    ReplaceMcr(663, 1, 7, 1);  // lost details
+    ReplaceMcr(683, 1, 731, 1);
+    ReplaceMcr(685, 0, 15, 0); // lost details
+    // ReplaceMcr(690, 1, 2, 1); // lost details
+    ReplaceMcr(694, 0, 17, 0);
+    ReplaceMcr(774, 1, 16, 1); // lost details
+    ReplaceMcr(789, 1, 10, 1); // lost details
+    ReplaceMcr(795, 1, 13, 1); // lost details
+    ReplaceMcr(850, 1, 9, 1);  // lost details
+    ReplaceMcr(826, 12, 824, 12);
+    ReplaceMcr(892, 0, 92, 0);    // lost details
+    ReplaceMcr(871, 11, 824, 12); // lost details
+    ReplaceMcr(908, 0, 3, 0);     // lost details
+    ReplaceMcr(905, 1, 8, 1);     // lost details
+    ReplaceMcr(943, 1, 7, 1);     // lost details
+    // ReplaceMcr(955, 15, 950, 15); // lost details
+    ReplaceMcr(902, 1, 5, 1); // lost details
+    // ReplaceMcr(962, 0, 10, 0);    // lost details
+    ReplaceMcr(986, 0, 3, 0);  // lost details
+    ReplaceMcr(1011, 0, 7, 0); // lost details
+    ReplaceMcr(1028, 1, 3, 1); // lost details
+    // ReplaceMcr(1030, 2, 974, 2);
+    ReplaceMcr(1034, 1, 4, 1); // lost details
+    ReplaceMcr(1042, 0, 8, 0); // lost details
+    ReplaceMcr(1043, 1, 5, 1); // lost details
+    ReplaceMcr(1119, 0, 9, 0); // lost details
+    ReplaceMcr(1159, 1, 291, 1);
+    // ReplaceMcr(1166, 1, 281, 1);
+    ReplaceMcr(1180, 1, 2, 1);  // lost details
+    ReplaceMcr(1187, 0, 29, 0); // lost details
+    ReplaceMcr(1215, 0, 1207, 0);
+    ReplaceMcr(1215, 9, 1207, 9);
+    // ReplaceMcr(871, 11, 358, 12);
+    // ReplaceMcr(947, 15, 946, 15);
+    ReplaceMcr(1175, 4, 1171, 4);
+    // ReplaceMcr(1218, 3, 1211, 3);
+    // ReplaceMcr(1218, 5, 1211, 5);
+    // eliminate micros of unused subtiles
+    // Blk2Mcr(178, 538, 1133, 1134 ..); 
+    Blk2Mcr(107, 1);
+    Blk2Mcr(108, 1);
+    Blk2Mcr(110, 0);
+    Blk2Mcr(113, 0);
+    Blk2Mcr(235, 0);
+    Blk2Mcr(239, 0);
+    Blk2Mcr(240, 0);
+    Blk2Mcr(243, 0);
+    Blk2Mcr(244, 0);
+    Blk2Mcr(468, 0);
+    Blk2Mcr(1023, 0);
+    Blk2Mcr(1132, 2);
+    Blk2Mcr(1132, 3);
+    Blk2Mcr(1132, 4);
+    Blk2Mcr(1132, 5);
+    Blk2Mcr(1139, 0);
+    Blk2Mcr(1139, 1);
+    Blk2Mcr(1139, 2);
+    Blk2Mcr(1139, 3);
+    Blk2Mcr(1139, 4);
+    Blk2Mcr(1139, 5);
+    Blk2Mcr(1139, 6);
+    Blk2Mcr(1152, 0);
+    Blk2Mcr(1160, 1);
+    Blk2Mcr(1162, 1);
+    Blk2Mcr(1164, 1);
+    Blk2Mcr(1168, 0);
+    Blk2Mcr(1196, 0);
+    Blk2Mcr(1258, 0);
+    Blk2Mcr(1258, 1);
+    Blk2Mcr(1214, 1);
+    Blk2Mcr(1214, 2);
+    Blk2Mcr(1214, 3);
+    Blk2Mcr(1214, 4);
+    Blk2Mcr(1214, 5);
+    Blk2Mcr(1214, 6);
+    Blk2Mcr(1214, 7);
+    Blk2Mcr(1214, 8);
+    Blk2Mcr(1214, 9);
+    Blk2Mcr(1216, 8);
+    Blk2Mcr(1218, 3);
+    Blk2Mcr(1218, 5);
+    Blk2Mcr(1239, 1);
+    Blk2Mcr(1254, 0);
+    int unusedSubtiles[] = {
+        40, 43, 49, 50, 51, 52, 66, 67, 69, 70, 71, 72, 73, 74, 75, 76, 77, 79, 80, 81, 83, 85, 86, 89, 90, 91, 93, 94, 95, 97, 99, 100, 101, 102, 103, 122, 123, 124, 136, 137, 140, 141, 142, 145, 147, 150, 151, 155, 161, 163, 164, 166, 167, 171, 176, 179, 183, 190, 191, 193, 194, 195, 196, 197, 199, 204, 205, 206, 208, 209, 228, 230, 236, 238, 241, 242, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 256, 278, 280, 291, 298, 299, 304, 305, 314, 316, 318, 320, 321, 328, 329, 335, 336, 337, 342, 350, 351, 352, 353, 354, 355, 356, 357, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 380, 392, 411, 413, 415, 417, 442, 444, 446, 447, 448, 449, 450, 451, 452, 453, 455, 456, 457, 460, 461, 462, 464, 467, 490, 491, 492, 497, 499, 500, 505, 506, 508, 534, 536, 544, 546, 548, 549, 558, 560, 565, 566, 567, 568, 570, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 589, 591, 594, 595, 597, 598, 599, 600, 602, 609, 615, 622, 625, 648, 650, 654, 662, 664, 666, 667, 679, 680, 681, 682, 688, 690, 691, 693, 695, 696, 698, 699, 700, 701, 702, 703, 705, 730, 735, 737, 741, 742, 747, 748, 749, 750, 751, 752, 753, 756, 758, 760, 765, 766, 769, 790, 792, 796, 798, 800, 801, 802, 804, 851, 857, 859, 860, 861, 863, 865, 876, 877, 878, 879, 880, 881, 882, 883, 884, 885, 887, 888, 889, 890, 891, 893, 894, 895, 896, 897, 901, 903, 937, 960, 961, 964, 965, 967, 968, 969, 972, 973, 976, 977, 979, 980, 981, 984, 985, 988, 989, 991, 992, 993, 996, 997, 1000, 1001, 1003, 1004, 1005, 1008, 1009, 1012, 1013, 1016, 1017, 1019, 1020, 1021, 1022, 1024, 1029, 1032, 1033, 1035, 1036, 1037, 1039, 1040, 1041, 1044, 1045, 1047, 1048, 1049, 1050, 1051, 1064, 1066, 1067, 1068, 1069, 1070, 1071, 1072, 1073, 1075, 1076, 1077, 1078, 1079, 1080, 1081, 1084, 1085, 1088, 1092, 1093, 1100, 1101, 1102, 1103, 1104, 1105, 1106, 1107, 1108, 1109, 1110, 1111, 1112, 1113, 1114, 1115, 1116, 1117, 1118, 1121, 1123, 1135, 1136, 1137, 1138, 1140, 1141, 1142, 1143, 1144, 1145, 1146, 1147, 1148, 1149, 1150, 1151, 1153, 1154, 1155, 1156, 1157, 1158, 1159, 1161, 1163, 1165, 1169, 1170, 1184, 1186, 1189, 1190, 1193, 1194, 1198, 1199, 1200, 1201, 1202, 1221, 1222, 1223, 1224, 1225, 1226, 1227, 1228, 1229, 1230, 1231, 1232, 1233, 1234, 1235, 1236, 1237, 1256
+    };
+    for (int n = 0; n < lengthof(unusedSubtiles); n++) {
+        for (int i = 0; i < BLOCK_SIZE_TOWN; i++) {
+            Blk2Mcr(unusedSubtiles[n], i);
+        }
+    }
+    if (isHellfireTown) {
+        // reuse subtiles
+        ReplaceMcr(1269, 0, 302, 0);
+        ReplaceMcr(1281, 0, 290, 0);
+        ReplaceMcr(1273, 1, 2, 1);
+        ReplaceMcr(1276, 1, 11, 1);
+        ReplaceMcr(1265, 0, 1297, 0);
+        ReplaceMcr(1314, 0, 293, 0);
+        ReplaceMcr(1321, 0, 6, 0);
+        ReplaceMcr(1304, 1, 4, 1);
+        // eliminate micros of unused subtiles
+        Blk2Mcr(1266, 0);
+        Blk2Mcr(1267, 1);
+        Blk2Mcr(1295, 1);
+        Blk2Mcr(1298, 1);
+        Blk2Mcr(1360, 0);
+        Blk2Mcr(1370, 0);
+        Blk2Mcr(1376, 0);
+        int unusedSubtilesHellfire[] = {
+            1260, 1268, 1274, 1283, 1284, 1291, 1292, 1293, 1322, 1341, 1342, 1343, 1344, 1345, 1346, 1347, 1348, 1349, 1350, 1351, 1352, 1353, 1354, 1355, 1356, 1357, 1358, 1359, 1361, 1362, 1363, 1364, 1365, 1366, 1367, 1368, 1369, 1371, 1372, 1373, 1374, 1375, 1377, 1378, 1379
+        };
+        for (int n = 0; n < lengthof(unusedSubtilesHellfire); n++) {
+            for (int i = 0; i < BLOCK_SIZE_TOWN; i++) {
+                Blk2Mcr(unusedSubtilesHellfire[n], i);
+            }
+        }
+    }
+}
+
 bool D1Tileset::patchCathedralFloor(bool silent)
 {
     const CelMicro micros[] = {
@@ -16872,409 +17279,7 @@ void D1Tileset::patch(int dunType, bool silent)
     switch (dunType) {
     case DTYPE_TOWN: {
         // patch dMiniTiles - Town.MIN
-        // pointless tree micros (re-drawn by dSpecial)
-        Blk2Mcr(117, 3);
-        Blk2Mcr(117, 5);
-        Blk2Mcr(128, 2);
-        Blk2Mcr(128, 3);
-        Blk2Mcr(128, 4);
-        Blk2Mcr(128, 5);
-        Blk2Mcr(128, 6);
-        Blk2Mcr(128, 7);
-        Blk2Mcr(129, 3);
-        Blk2Mcr(129, 5);
-        Blk2Mcr(129, 7);
-        Blk2Mcr(130, 2);
-        Blk2Mcr(130, 4);
-        Blk2Mcr(130, 6);
-        Blk2Mcr(156, 2);
-        Blk2Mcr(156, 3);
-        Blk2Mcr(156, 4);
-        Blk2Mcr(156, 5);
-        Blk2Mcr(156, 6);
-        Blk2Mcr(156, 7);
-        Blk2Mcr(156, 8);
-        Blk2Mcr(156, 9);
-        Blk2Mcr(156, 10);
-        Blk2Mcr(156, 11);
-        Blk2Mcr(157, 3);
-        Blk2Mcr(157, 5);
-        Blk2Mcr(157, 7);
-        Blk2Mcr(157, 9);
-        Blk2Mcr(157, 11);
-        Blk2Mcr(158, 2);
-        Blk2Mcr(158, 4);
-        Blk2Mcr(160, 2);
-        Blk2Mcr(160, 3);
-        Blk2Mcr(160, 4);
-        Blk2Mcr(160, 5);
-        Blk2Mcr(160, 6);
-        Blk2Mcr(160, 7);
-        Blk2Mcr(160, 8);
-        Blk2Mcr(160, 9);
-        Blk2Mcr(162, 2);
-        Blk2Mcr(162, 4);
-        Blk2Mcr(162, 6);
-        Blk2Mcr(162, 8);
-        Blk2Mcr(162, 10);
-        Blk2Mcr(212, 3);
-        Blk2Mcr(212, 4);
-        Blk2Mcr(212, 5);
-        Blk2Mcr(212, 6);
-        Blk2Mcr(212, 7);
-        Blk2Mcr(212, 8);
-        Blk2Mcr(212, 9);
-        Blk2Mcr(212, 10);
-        Blk2Mcr(212, 11);
-        Blk2Mcr(214, 4);
-        Blk2Mcr(214, 6);
-        Blk2Mcr(216, 2);
-        Blk2Mcr(216, 4);
-        Blk2Mcr(216, 6);
-        Blk2Mcr(217, 4);
-        Blk2Mcr(217, 6);
-        Blk2Mcr(217, 8);
-        Blk2Mcr(358, 4);
-        Blk2Mcr(358, 5);
-        Blk2Mcr(358, 6);
-        Blk2Mcr(358, 7);
-        Blk2Mcr(358, 8);
-        Blk2Mcr(358, 9);
-        Blk2Mcr(358, 10);
-        Blk2Mcr(358, 11);
-        Blk2Mcr(358, 12);
-        Blk2Mcr(358, 13);
-        Blk2Mcr(360, 4);
-        Blk2Mcr(360, 6);
-        Blk2Mcr(360, 8);
-        Blk2Mcr(360, 10);
-        // fix bad artifacts
-        Blk2Mcr(233, 6);
-        Blk2Mcr(828, 13);
-        Blk2Mcr(1018, 2);
-        // useless black (hidden) micros
-        Blk2Mcr(426, 1);
-        Blk2Mcr(427, 0);
-        Blk2Mcr(427, 1);
-        Blk2Mcr(429, 1);
-        Blk2Mcr(494, 0);
-        Blk2Mcr(494, 1);
-        Blk2Mcr(550, 1);
-        HideMcr(587, 0);
-        Blk2Mcr(624, 1);
-        Blk2Mcr(626, 1);
-        HideMcr(926, 0);
-        HideMcr(926, 1);
-        HideMcr(928, 0);
-        HideMcr(928, 1);
-        // Blk2Mcr(1143, 0);
-        // Blk2Mcr(1145, 0);
-        // Blk2Mcr(1145, 1);
-        // Blk2Mcr(1146, 0);
-        // Blk2Mcr(1153, 0);
-        // Blk2Mcr(1155, 1);
-        // Blk2Mcr(1156, 0);
-        // Blk2Mcr(1169, 1);
-        Blk2Mcr(1172, 1);
-        Blk2Mcr(1176, 1);
-        Blk2Mcr(1199, 1);
-        Blk2Mcr(1203, 1);
-        Blk2Mcr(1205, 1);
-        Blk2Mcr(1212, 0);
-        Blk2Mcr(1219, 0);
-        bool isHellfireTown = this->min->getSubtileCount() == 1379;
-        if (isHellfireTown) {
-            // #ifdef HELLFIRE
-            // fix bad artifacts
-            Blk2Mcr(1273, 7);
-            Blk2Mcr(1303, 7);
-        }
-        // patch dMicroCels - TOWN.CEL
-        // - overwrite subtile 557 and 558 with subtile 939 and 940 to make the inner tile of Griswold's house non-walkable
-        // ReplaceMcr(237, 0, 402, 0);
-        // ReplaceMcr(237, 1, 402, 1);
-        // patch subtiles around the pot of Adria to prevent graphical glitch when a player passes it
-        this->patchTownPot(553, 554, silent);
-        // patch subtiles of the cathedral to fix graphical glitch
-        this->patchTownCathedral(805, 806, 807, silent);
-        // patch subtiles to reduce its memory footprint
-        if (this->patchTownFloor(silent)) {
-            // use the micros created by patchTownFloor
-            MoveMcr(732, 8, 731, 9);
-            Blk2Mcr(974, 2);
-            Blk2Mcr(1030, 2);
-            ReplaceMcr(220, 0, 17, 0);
-            SetMcr(221, 2, 220, 1);
-            SetMcr(220, 1, 17, 1);
-            ReplaceMcr(218, 1, 25, 1);
-            SetMcr(219, 3, 218, 0);
-            SetMcr(218, 0, 25, 0);
-            ReplaceMcr(1166, 1, 281, 1);
-            SetMcr(1167, 3, 1166, 0);
-            SetMcr(1166, 0, 19, 0);
-            ReplaceMcr(962, 0, 14, 0);
-            SetMcr(963, 2, 962, 1);
-            SetMcr(962, 1, 14, 1);
-        }
-        // merge subtiles of the 'entrances'
-        if (this->patchTownDoor(silent)) {
-            // use micros created by patchTownDoorCel
-            Blk2Mcr(724, 0);
-            Blk2Mcr(724, 1);
-            Blk2Mcr(724, 3);
-            Blk2Mcr(723, 1);
-            Blk2Mcr(715, 11);
-            Blk2Mcr(715, 9);
-            Blk2Mcr(715, 3);
-
-            Blk2Mcr(428, 4);
-            Blk2Mcr(428, 2);
-            Blk2Mcr(428, 0);
-            Blk2Mcr(428, 1);
-            Blk2Mcr(426, 2);
-            Blk2Mcr(426, 0);
-            Blk2Mcr(429, 0);
-
-            Blk2Mcr(911, 9);
-            Blk2Mcr(911, 7);
-            Blk2Mcr(911, 5);
-            Blk2Mcr(919, 9);
-            Blk2Mcr(919, 5);
-
-            // Blk2Mcr(402, 0);
-            Blk2Mcr(954, 2);
-            Blk2Mcr(956, 2);
-            Blk2Mcr(918, 9);
-            Blk2Mcr(927, 0);
-            Blk2Mcr(918, 3);
-            Blk2Mcr(918, 2);
-            Blk2Mcr(918, 8);
-            Blk2Mcr(928, 4);
-            Blk2Mcr(237, 0);
-            Blk2Mcr(237, 1);
-
-            Blk2Mcr(551, 0);
-            Blk2Mcr(552, 1);
-            Blk2Mcr(519, 0);
-            Blk2Mcr(510, 7);
-            Blk2Mcr(510, 5);
-
-            Blk2Mcr(728, 9);
-            Blk2Mcr(728, 7);
-
-            Blk2Mcr(910, 9);
-            Blk2Mcr(910, 7);
-
-            Blk2Mcr(537, 0);
-            Blk2Mcr(539, 0);
-            Blk2Mcr(478, 0);
-            Blk2Mcr(479, 1);
-
-            MoveMcr(927, 3, 919, 7);
-            MoveMcr(929, 2, 918, 4);
-            MoveMcr(929, 3, 918, 5);
-            MoveMcr(929, 4, 918, 6);
-            MoveMcr(929, 5, 918, 7);
-
-            MoveMcr(551, 5, 510, 9);
-
-            MoveMcr(529, 6, 537, 2);
-            MoveMcr(529, 8, 537, 4);
-            MoveMcr(529, 10, 537, 6);
-            MoveMcr(529, 12, 537, 8);
-
-            MoveMcr(480, 2, 477, 0);
-            MoveMcr(480, 3, 477, 1);
-            MoveMcr(480, 4, 477, 2);
-            MoveMcr(480, 5, 477, 3);
-            MoveMcr(480, 6, 477, 4);
-            MoveMcr(480, 7, 477, 5);
-            MoveMcr(480, 8, 477, 6);
-            MoveMcr(480, 9, 477, 7);
-            MoveMcr(480, 10, 477, 8);
-        }
-        // patch subtiles to reduce minor protrusions
-        this->patchTownChop(silent);
-        // eliminate micros after patchTownChop
-        {
-            Blk2Mcr(362, 11);
-            Blk2Mcr(832, 12);
-            Blk2Mcr(926, 14);
-            Blk2Mcr(926, 15);
-            Blk2Mcr(946, 15);
-            Blk2Mcr(947, 15);
-            Blk2Mcr(950, 15);
-            Blk2Mcr(951, 15);
-        }
-        // better shadows
-        ReplaceMcr(555, 0, 493, 0); // TODO: reduce edges on the right
-        ReplaceMcr(728, 0, 872, 0);
-        // adjust the shadow of the tree beside the church
-        ReplaceMcr(767, 0, 117, 0);
-        ReplaceMcr(767, 1, 117, 1);
-        ReplaceMcr(768, 0, 158, 0);
-        ReplaceMcr(768, 1, 159, 1);
-        // reuse subtiles
-        ReplaceMcr(129, 1, 2, 1);  // lost details
-        ReplaceMcr(160, 0, 11, 0); // lost details
-        ReplaceMcr(160, 1, 12, 1); // lost details
-        ReplaceMcr(165, 0, 2, 0);
-        ReplaceMcr(169, 0, 129, 0);
-        ReplaceMcr(169, 1, 2, 1);
-        ReplaceMcr(177, 0, 1, 0);
-        ReplaceMcr(178, 1, 118, 1);
-        ReplaceMcr(181, 0, 129, 0);
-        ReplaceMcr(181, 1, 2, 1);
-        ReplaceMcr(188, 0, 3, 0);  // lost details
-        ReplaceMcr(198, 1, 1, 1);  // lost details
-        ReplaceMcr(281, 0, 19, 0); // lost details
-        ReplaceMcr(319, 0, 7, 0);  // lost details
-        ReplaceMcr(414, 1, 9, 1);  // lost details
-        ReplaceMcr(443, 1, 379, 1);
-        ReplaceMcr(471, 0, 3, 0);  // lost details
-        ReplaceMcr(472, 0, 5, 0);  // lost details
-        ReplaceMcr(475, 0, 7, 0);  // lost details
-        ReplaceMcr(476, 0, 4, 0);  // lost details
-        ReplaceMcr(484, 1, 4, 1);  // lost details
-        ReplaceMcr(486, 1, 20, 1); // lost details
-        ReplaceMcr(488, 1, 14, 1); // lost details
-        ReplaceMcr(493, 1, 3, 1);  // lost details
-        ReplaceMcr(496, 1, 4, 1);  // lost details
-        ReplaceMcr(507, 1, 61, 1); // lost details
-        ReplaceMcr(512, 0, 3, 0);  // lost details
-        ReplaceMcr(532, 1, 14, 1); // lost details
-        ReplaceMcr(556, 0, 3, 0);  // lost details
-        ReplaceMcr(559, 0, 59, 0); // lost details
-        ReplaceMcr(559, 1, 59, 1); // lost details
-        ReplaceMcr(563, 0, 2, 0);  // lost details
-        ReplaceMcr(569, 1, 3, 1);  // lost details
-        ReplaceMcr(592, 0, 11, 0); // lost details
-        ReplaceMcr(611, 1, 9, 1);  // lost details
-        ReplaceMcr(612, 0, 3, 0);  // lost details
-        ReplaceMcr(614, 1, 14, 1); // lost details
-        ReplaceMcr(619, 1, 13, 1); // lost details
-        ReplaceMcr(624, 0, 1, 0);  // lost details
-        ReplaceMcr(640, 1, 9, 1);  // lost details
-        ReplaceMcr(653, 0, 1, 0);  // lost details
-        ReplaceMcr(660, 0, 10, 0); // lost details
-        ReplaceMcr(663, 1, 7, 1);  // lost details
-        ReplaceMcr(683, 1, 731, 1);
-        ReplaceMcr(685, 0, 15, 0); // lost details
-        // ReplaceMcr(690, 1, 2, 1); // lost details
-        ReplaceMcr(694, 0, 17, 0);
-        ReplaceMcr(774, 1, 16, 1); // lost details
-        ReplaceMcr(789, 1, 10, 1); // lost details
-        ReplaceMcr(795, 1, 13, 1); // lost details
-        ReplaceMcr(850, 1, 9, 1);  // lost details
-        ReplaceMcr(826, 12, 824, 12);
-        ReplaceMcr(892, 0, 92, 0);    // lost details
-        ReplaceMcr(871, 11, 824, 12); // lost details
-        ReplaceMcr(908, 0, 3, 0);     // lost details
-        ReplaceMcr(905, 1, 8, 1);     // lost details
-        ReplaceMcr(943, 1, 7, 1);     // lost details
-        // ReplaceMcr(955, 15, 950, 15); // lost details
-        ReplaceMcr(902, 1, 5, 1); // lost details
-        // ReplaceMcr(962, 0, 10, 0);    // lost details
-        ReplaceMcr(986, 0, 3, 0);  // lost details
-        ReplaceMcr(1011, 0, 7, 0); // lost details
-        ReplaceMcr(1028, 1, 3, 1); // lost details
-        // ReplaceMcr(1030, 2, 974, 2);
-        ReplaceMcr(1034, 1, 4, 1); // lost details
-        ReplaceMcr(1042, 0, 8, 0); // lost details
-        ReplaceMcr(1043, 1, 5, 1); // lost details
-        ReplaceMcr(1119, 0, 9, 0); // lost details
-        ReplaceMcr(1159, 1, 291, 1);
-        // ReplaceMcr(1166, 1, 281, 1);
-        ReplaceMcr(1180, 1, 2, 1);  // lost details
-        ReplaceMcr(1187, 0, 29, 0); // lost details
-        ReplaceMcr(1215, 0, 1207, 0);
-        ReplaceMcr(1215, 9, 1207, 9);
-        // ReplaceMcr(871, 11, 358, 12);
-        // ReplaceMcr(947, 15, 946, 15);
-        ReplaceMcr(1175, 4, 1171, 4);
-        // ReplaceMcr(1218, 3, 1211, 3);
-        // ReplaceMcr(1218, 5, 1211, 5);
-        // eliminate micros of unused subtiles
-        // Blk2Mcr(178, 538, 1133, 1134 ..); 
-        Blk2Mcr(107, 1);
-        Blk2Mcr(108, 1);
-        Blk2Mcr(110, 0);
-        Blk2Mcr(113, 0);
-        Blk2Mcr(235, 0);
-        Blk2Mcr(239, 0);
-        Blk2Mcr(240, 0);
-        Blk2Mcr(243, 0);
-        Blk2Mcr(244, 0);
-        Blk2Mcr(468, 0);
-        Blk2Mcr(1023, 0);
-        Blk2Mcr(1132, 2);
-        Blk2Mcr(1132, 3);
-        Blk2Mcr(1132, 4);
-        Blk2Mcr(1132, 5);
-        Blk2Mcr(1139, 0);
-        Blk2Mcr(1139, 1);
-        Blk2Mcr(1139, 2);
-        Blk2Mcr(1139, 3);
-        Blk2Mcr(1139, 4);
-        Blk2Mcr(1139, 5);
-        Blk2Mcr(1139, 6);
-        Blk2Mcr(1152, 0);
-        Blk2Mcr(1160, 1);
-        Blk2Mcr(1162, 1);
-        Blk2Mcr(1164, 1);
-        Blk2Mcr(1168, 0);
-        Blk2Mcr(1196, 0);
-        Blk2Mcr(1258, 0);
-        Blk2Mcr(1258, 1);
-        Blk2Mcr(1214, 1);
-        Blk2Mcr(1214, 2);
-        Blk2Mcr(1214, 3);
-        Blk2Mcr(1214, 4);
-        Blk2Mcr(1214, 5);
-        Blk2Mcr(1214, 6);
-        Blk2Mcr(1214, 7);
-        Blk2Mcr(1214, 8);
-        Blk2Mcr(1214, 9);
-        Blk2Mcr(1216, 8);
-        Blk2Mcr(1218, 3);
-        Blk2Mcr(1218, 5);
-        Blk2Mcr(1239, 1);
-        Blk2Mcr(1254, 0);
-        int unusedSubtiles[] = {
-            40, 43, 49, 50, 51, 52, 66, 67, 69, 70, 71, 72, 73, 74, 75, 76, 77, 79, 80, 81, 83, 85, 86, 89, 90, 91, 93, 94, 95, 97, 99, 100, 101, 102, 103, 122, 123, 124, 136, 137, 140, 141, 142, 145, 147, 150, 151, 155, 161, 163, 164, 166, 167, 171, 176, 179, 183, 190, 191, 193, 194, 195, 196, 197, 199, 204, 205, 206, 208, 209, 228, 230, 236, 238, 241, 242, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 256, 278, 280, 291, 298, 299, 304, 305, 314, 316, 318, 320, 321, 328, 329, 335, 336, 337, 342, 350, 351, 352, 353, 354, 355, 356, 357, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 380, 392, 411, 413, 415, 417, 442, 444, 446, 447, 448, 449, 450, 451, 452, 453, 455, 456, 457, 460, 461, 462, 464, 467, 490, 491, 492, 497, 499, 500, 505, 506, 508, 534, 536, 544, 546, 548, 549, 558, 560, 565, 566, 567, 568, 570, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 589, 591, 594, 595, 597, 598, 599, 600, 602, 609, 615, 622, 625, 648, 650, 654, 662, 664, 666, 667, 679, 680, 681, 682, 688, 690, 691, 693, 695, 696, 698, 699, 700, 701, 702, 703, 705, 730, 735, 737, 741, 742, 747, 748, 749, 750, 751, 752, 753, 756, 758, 760, 765, 766, 769, 790, 792, 796, 798, 800, 801, 802, 804, 851, 857, 859, 860, 861, 863, 865, 876, 877, 878, 879, 880, 881, 882, 883, 884, 885, 887, 888, 889, 890, 891, 893, 894, 895, 896, 897, 901, 903, 937, 960, 961, 964, 965, 967, 968, 969, 972, 973, 976, 977, 979, 980, 981, 984, 985, 988, 989, 991, 992, 993, 996, 997, 1000, 1001, 1003, 1004, 1005, 1008, 1009, 1012, 1013, 1016, 1017, 1019, 1020, 1021, 1022, 1024, 1029, 1032, 1033, 1035, 1036, 1037, 1039, 1040, 1041, 1044, 1045, 1047, 1048, 1049, 1050, 1051, 1064, 1066, 1067, 1068, 1069, 1070, 1071, 1072, 1073, 1075, 1076, 1077, 1078, 1079, 1080, 1081, 1084, 1085, 1088, 1092, 1093, 1100, 1101, 1102, 1103, 1104, 1105, 1106, 1107, 1108, 1109, 1110, 1111, 1112, 1113, 1114, 1115, 1116, 1117, 1118, 1121, 1123, 1135, 1136, 1137, 1138, 1140, 1141, 1142, 1143, 1144, 1145, 1146, 1147, 1148, 1149, 1150, 1151, 1153, 1154, 1155, 1156, 1157, 1158, 1159, 1161, 1163, 1165, 1169, 1170, 1184, 1186, 1189, 1190, 1193, 1194, 1198, 1199, 1200, 1201, 1202, 1221, 1222, 1223, 1224, 1225, 1226, 1227, 1228, 1229, 1230, 1231, 1232, 1233, 1234, 1235, 1236, 1237, 1256
-        };
-        for (int n = 0; n < lengthof(unusedSubtiles); n++) {
-            for (int i = 0; i < BLOCK_SIZE_TOWN; i++) {
-                Blk2Mcr(unusedSubtiles[n], i);
-            }
-        }
-        if (isHellfireTown) {
-            // reuse subtiles
-            ReplaceMcr(1269, 0, 302, 0);
-            ReplaceMcr(1281, 0, 290, 0);
-            ReplaceMcr(1273, 1, 2, 1);
-            ReplaceMcr(1276, 1, 11, 1);
-            ReplaceMcr(1265, 0, 1297, 0);
-            ReplaceMcr(1314, 0, 293, 0);
-            ReplaceMcr(1321, 0, 6, 0);
-            ReplaceMcr(1304, 1, 4, 1);
-            // eliminate micros of unused subtiles
-            Blk2Mcr(1266, 0);
-            Blk2Mcr(1267, 1);
-            Blk2Mcr(1295, 1);
-            Blk2Mcr(1298, 1);
-            Blk2Mcr(1360, 0);
-            Blk2Mcr(1370, 0);
-            Blk2Mcr(1376, 0);
-            int unusedSubtilesHellfire[] = {
-                1260, 1268, 1274, 1283, 1284, 1291, 1292, 1293, 1322, 1341, 1342, 1343, 1344, 1345, 1346, 1347, 1348, 1349, 1350, 1351, 1352, 1353, 1354, 1355, 1356, 1357, 1358, 1359, 1361, 1362, 1363, 1364, 1365, 1366, 1367, 1368, 1369, 1371, 1372, 1373, 1374, 1375, 1377, 1378, 1379
-            };
-            for (int n = 0; n < lengthof(unusedSubtilesHellfire); n++) {
-                for (int i = 0; i < BLOCK_SIZE_TOWN; i++) {
-                    Blk2Mcr(unusedSubtilesHellfire[n], i);
-                }
-            }
-        }
+		this->cleanupTown(deletedFrames, silent);
     } break;
     case DTYPE_CATHEDRAL:
         // patch dMiniTiles and dMegaTiles - L1.MIN and L1.TIL
