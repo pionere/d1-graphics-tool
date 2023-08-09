@@ -2162,7 +2162,7 @@ bool D1Tileset::patchCathedralFloor(bool silent)
             }
         }
         // move pixels of 152[5] down to enable reuse as 153[6]
-        if (i == 12) {
+        if (i == 13) {
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
                     D1GfxPixel pixel = frame->getPixel(x, y);
@@ -2367,7 +2367,7 @@ bool D1Tileset::fixCathedralShadows(bool silent)
 {
     const CelMicro micros[] = {
         // add shadow of the grate
-/*  0 */{ 306 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/*  0 */{ 306 - 1, 1, D1CEL_FRAME_TYPE::Empty },            // used to block subsequent calls
 /*  1 */{ 304 - 1, 0, D1CEL_FRAME_TYPE::Empty },
 /*  2 */{ 304 - 1, 1, D1CEL_FRAME_TYPE::Empty },
 /*  3 */{ 57 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
@@ -2871,6 +2871,8 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
 {
     constexpr int blockSize = BLOCK_SIZE_L1;
     // patch dMegaTiles - L1.TIL
+    // make the inner tile at the entrance non-walkable II.
+    ReplaceSubtile(this->til, 196 - 1, 3, 425 - 1, silent);
     // reuse subtiles
     ReplaceSubtile(this->til, 43 - 1, 2, 3 - 1, silent);
     ReplaceSubtile(this->til, 61 - 1, 0, 23 - 1, silent);
@@ -3176,6 +3178,9 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     SetMcr(335, 5, 29, 5);
     SetMcr(335, 7, 29, 7);
     }
+    // subtile to make the inner tile at the entrance non-walkable II.
+    Blk2Mcr(425, 0);
+    ReplaceMcr(425, 1, 299, 1);
     // pointless door micros (re-drawn by dSpecial or the object)
     // - vertical doors    
     ReplaceMcr(392, 4, 231, 4);
@@ -4022,7 +4027,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(449, 7);
 
     int unusedSubtiles[] = {
-        18, 19, 71, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 113, 117, 119, 120, 121, 122, 125, 200, 220, 250, 253, 267, 268, 273, 275, 278, 280, 281, 282, 303, 305, 316, 318, 329, 331, 341, 405, 425, 430, 432, 435, 436, 440
+        18, 19, 71, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 113, 117, 119, 120, 121, 122, 125, 200, 220, 250, 253, 267, 268, 273, 275, 278, 280, 281, 282, 303, 305, 316, 318, 329, 331, 341, 405, 430, 432, 435, 436, 440
     };
     for (int n = 0; n < lengthof(unusedSubtiles); n++) {
         for (int i = 0; i < blockSize; i++) {

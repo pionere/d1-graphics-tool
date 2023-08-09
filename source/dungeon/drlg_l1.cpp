@@ -1036,12 +1036,12 @@ static void DRLG_LoadL1SP()
 	} else if (QuestStatus(Q_SKELKING)) {
 		pSetPieces[0]._sptype = SPT_SKELKING;
 		pSetPieces[0]._spData = LoadFileInMem(setpiecedata[pSetPieces[0]._sptype]._spdDunFile);
-		// patch set-piece to use common tiles - SKngDO.DUN
+		// patch set- SKngDO.DUN
 		if (pSetPieces[0]._spData != NULL && PatchDunFiles) {
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
-		// lm[2 + 5 + 3 * 7] =  SwapLE16(203 - 181);
+		// use common tiles
 		lm[2 + 5 + 4 * 7] =  SwapLE16(203 - 181);
-		// patch set-piece to use common tiles and make the inner tile at the entrance non-walkable - SKngDO.DUN
+		//  use common tiles and make the inner tile at the entrance non-walkable
 		lm[2 + 5 + 2 * 7] =  SwapLE16(203 - 181);
 		// let the game generate the shadow
 		lm[2 + 0 + 5 * 7] = 0;
