@@ -69,7 +69,7 @@ bool D1Min::load(const QString &filePath, D1Tileset *ts, std::map<unsigned, D1CE
     // File size check
     int subtileNumberOfCelFrames = width * height; // TODO: check overflow
     if (subtileNumberOfCelFrames == 0 || (fileSize % (subtileNumberOfCelFrames * 2)) != 0) {
-        dProgressErr() << tr("Subtile width/height does not align with MIN file.");
+        dProgressErr() << tr("Subtile width/height does not align with MIN file. (SubtileCount:%1, W/H:%2/%3, FileSize:%4)").arg(subtileCount).arg(width).arg(height).arg(fileSize);
         return false;
     }
 

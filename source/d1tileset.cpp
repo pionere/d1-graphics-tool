@@ -2458,11 +2458,11 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
                 subtileRef = sn2;
                 n2--;
             }
-            this->min->removeSubtile(subtileRef - 1);
+            this->removeSubtile(subtileRef - 1, 0);
         }
     }
     const int unusedPartialSubtiles[] = {
-        107, 108, 110, 113, 178, 235, 239, 240, 243, 244, 468, 538, 1023, 1132, 1133, 1134, 1139, 1152, 1160, 1162, 1164, 1168, 1196, 1258, 1214, 1216,1218, 1239, 1254
+        107, 108, 110, 113, 178, 235, 239, 240, 243, 244, 468, 538, 1023, 1132, 1133, 1134, 1139, 1152, 1160, 1162, 1164, 1168, 1196, 1214, 1216,1218, 1239, 1254, 1258
     };
     int n1 = lengthof(unusedSubtiles) - 1;
     int n2 = lengthof(unusedPartialSubtiles) - 1;
@@ -2477,7 +2477,7 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
             subtileRef = sn2;
             n2--;
         }
-        this->min->removeSubtile(subtileRef - 1);
+        this->removeSubtile(subtileRef - 1, 0);
     }
 }
 
