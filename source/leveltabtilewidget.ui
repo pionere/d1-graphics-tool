@@ -216,7 +216,7 @@
       <item row="1" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Floor propagation:</string>
+         <string>Room propagation:</string>
         </property>
         <property name="toolTip">
          <string></string>
@@ -251,21 +251,21 @@
       </item>
       <item row="3" column="2">
        <widget class="QCheckBox" name="tlaS01">
-        <property name="text">
+        <property name="toolTip">
          <string>Eastern Arch (or Grate) in Cathedral or in Catacombs</string>
         </property>
        </widget>
       </item>
       <item row="4" column="1">
        <widget class="QCheckBox" name="tlaS02">
-        <property name="text">
+        <property name="toolTip">
          <string>Pillar with shadow in Cathedral, in Catacombs or in Hell</string>
         </property>
        </widget>
       </item>
       <item row="4" column="2">
        <widget class="QCheckBox" name="tlaS03">
-        <property name="text">
+        <property name="toolTip">
          <string>Western Wall in Cathedral or Eastern Door in Catacombs</string>
         </property>
        </widget>

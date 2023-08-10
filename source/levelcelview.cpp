@@ -335,12 +335,13 @@ void LevelCelView::updateLabel()
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(2)->widget()), this->til->getFilePath(), this->til->isModified());
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(3)->widget()), this->sol->getFilePath(), this->sol->isModified());
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(4)->widget()), this->amp->getFilePath(), this->amp->isModified());
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(5)->widget()), this->cls->getFilePath(), this->cls->isModified());
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(6)->widget()), this->spt->getFilePath(), this->spt->isModified());
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(7)->widget()), this->tmi->getFilePath(), this->tmi->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(5)->widget()), this->tla->getFilePath(), this->tla->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(6)->widget()), this->cls->getFilePath(), this->cls->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(7)->widget()), this->spt->getFilePath(), this->spt->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(8)->widget()), this->tmi->getFilePath(), this->tmi->isModified());
 
     if (hasDun) {
-        CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(8)->widget()), this->dun->getFilePath(), this->dun->isModified());
+        CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(9)->widget()), this->dun->getFilePath(), this->dun->isModified());
     }
 }
 

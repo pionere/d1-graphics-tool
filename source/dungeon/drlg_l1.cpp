@@ -865,9 +865,14 @@ void DRLG_L1Shadows()
 			case 8:
 			case 14:
 			case 37:
+			// case 29:
 			// case 32:
-			// case 39:
+			// case 33:
+			// case 38:
 			// case 42:
+			// case 44:
+			// case 46:
+			// case 85:
 			case 160:
 			case 161:
 				pillar = true;
