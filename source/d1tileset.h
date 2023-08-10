@@ -10,7 +10,7 @@
 #include "d1sol.h"
 #include "d1spt.h"
 #include "d1til.h"
-#include "d1tit.h"
+#include "d1tla.h"
 #include "d1tmi.h"
 #include "openasdialog.h"
 #include "saveasdialog.h"
@@ -44,7 +44,7 @@ public:
     D1Til *til;
     D1Sol *sol;
     D1Amp *amp;
-    D1Tit *tit;
+    D1Tit *tla;
     D1Spt *spt;
     D1Tmi *tmi;
 

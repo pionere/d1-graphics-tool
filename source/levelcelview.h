@@ -318,7 +318,7 @@ private:
     D1Til *til;
     D1Sol *sol;
     D1Amp *amp;
-    D1Tit *tit;
+    D1Tla *tla;
     D1Spt *spt;
     D1Tmi *tmi;
     D1Dun *dun;

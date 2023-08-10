@@ -107,7 +107,7 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
     this->setTileset(ts);
     this->dun = d;
 
-    this->tabTileWidget.initialize(this, this->undoStack, this->til, this->min, this->amp, this->tit);
+    this->tabTileWidget.initialize(this, this->undoStack, this->til, this->min, this->amp, this->tla);
     this->tabSubtileWidget.initialize(this, this->undoStack, this->gfx, this->min, this->sol, this->spt, this->tmi);
     this->tabFrameWidget.initialize(this, this->undoStack, this->gfx);
 
@@ -148,7 +148,7 @@ void LevelCelView::setTileset(D1Tileset *ts)
     this->til = ts->til;
     this->sol = ts->sol;
     this->amp = ts->amp;
-    this->tit = ts->tit;
+    this->tla = ts->tla;
     this->spt = ts->spt;
     this->tmi = ts->tmi;
 

@@ -5,12 +5,12 @@
 #include "openasdialog.h"
 #include "saveasdialog.h"
 
-class D1Tit : public QObject {
+class D1Tla : public QObject {
     Q_OBJECT
 
 public:
-    D1Tit() = default;
-    ~D1Tit() = default;
+    D1Tla() = default;
+    ~D1Tla() = default;
 
     bool load(const QString &titFilePath, int tileCount, const OpenAsParam &params);
     bool save(const SaveAsParam &params);

@@ -39,7 +39,7 @@ void OpenAsDialog::initialize()
     this->ui->minFileEdit->setText("");
     this->ui->solFileEdit->setText("");
     this->ui->ampFileEdit->setText("");
-    this->ui->titFileEdit->setText("");
+    this->ui->tlaFileEdit->setText("");
     this->ui->sptFileEdit->setText("");
     this->ui->tmiFileEdit->setText("");
     this->ui->dunFileEdit->setText("");
@@ -104,11 +104,11 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
             } else {
                 this->ui->ampFileEdit->setText("");
             }
-            QString titFilePath = basePath + ".tit";
-            if (QFileInfo::exists(titFilePath)) {
-                this->ui->titFileEdit->setText(titFilePath);
+            QString tlaFilePath = basePath + ".tla";
+            if (QFileInfo::exists(tlaFilePath)) {
+                this->ui->tlaFileEdit->setText(tlaFilePath);
             } else {
-                this->ui->titFileEdit->setText("");
+                this->ui->tlaFileEdit->setText("");
             }
             QString sptFilePath = basePath + ".spt";
             if (QFileInfo::exists(sptFilePath)) {
@@ -128,7 +128,7 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
             this->ui->minFileEdit->setText("");
             this->ui->solFileEdit->setText("");
             this->ui->ampFileEdit->setText("");
-            this->ui->titFileEdit->setText("");
+            this->ui->tlaFileEdit->setText("");
             this->ui->sptFileEdit->setText("");
             this->ui->tmiFileEdit->setText("");
         }
@@ -215,14 +215,14 @@ void OpenAsDialog::on_ampFileBrowseButton_clicked()
     this->ui->ampFileEdit->setText(openFilePath);
 }
 
-void OpenAsDialog::on_titFileBrowseButton_clicked()
+void OpenAsDialog::on_tlaFileBrowseButton_clicked()
 {
-    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select TIT file"), tr("TIT Files (*.tit *.TIT)"));
+    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select TLA file"), tr("TLA Files (*.tla *.TLA)"));
 
     if (openFilePath.isEmpty())
         return;
 
-    this->ui->titFileEdit->setText(openFilePath);
+    this->ui->tlaFileEdit->setText(openFilePath);
 }
 
 void OpenAsDialog::on_sptFileBrowseButton_clicked()
@@ -297,7 +297,7 @@ void OpenAsDialog::on_openButton_clicked()
     params.minFilePath = this->ui->minFileEdit->text();
     params.solFilePath = this->ui->solFileEdit->text();
     params.ampFilePath = this->ui->ampFileEdit->text();
-    params.titFilePath = this->ui->titFileEdit->text();
+    params.tlaFilePath = this->ui->tlaFileEdit->text();
     params.sptFilePath = this->ui->sptFileEdit->text();
     params.tmiFilePath = this->ui->tmiFileEdit->text();
     params.dunFilePath = this->ui->dunFileEdit->text();

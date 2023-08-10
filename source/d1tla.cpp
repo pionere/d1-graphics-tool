@@ -1,4 +1,4 @@
-#include "d1tit.h"
+#include "d1tla.h"
 
 #include <QBuffer>
 #include <QDataStream>
@@ -10,23 +10,23 @@
 
 #include "progressdialog.h"
 
-bool D1Tit::load(const QString &filePath, int tileCount, const OpenAsParam &params)
+bool D1Tla::load(const QString &filePath, int tileCount, const OpenAsParam &params)
 {
     // prepare file data source
     QFile file;
     // done by the caller
-    // if (!params.titFilePath.isEmpty()) {
-    //    filePath = params.titFilePath;
+    // if (!params.tlaFilePath.isEmpty()) {
+    //    filePath = params.tlaFilePath;
     // }
     if (!filePath.isEmpty()) {
         file.setFileName(filePath);
-        if (!file.open(QIODevice::ReadOnly) && !params.titFilePath.isEmpty()) {
+        if (!file.open(QIODevice::ReadOnly) && !params.tlaFilePath.isEmpty()) {
             return false; // report read-error only if the file was explicitly requested
         }
     }
 
     this->clear();
-    this->titFilePath = filePath;
+    this->tlaFilePath = filePath;
 
     bool changed = false; // !file.isOpen();
 
@@ -39,14 +39,14 @@ bool D1Tit::load(const QString &filePath, int tileCount, const OpenAsParam &para
         return false;
     }
 
-    int titTileCount = fileSize;
-    if (titTileCount != tileCount && titTileCount != 0) {
+    int tlaTileCount = fileSize;
+    if (tlaTileCount != tileCount && tlaTileCount != 0) {
         // warn about misalignment if the files are not empty
         if (tileCount != 0) {
             dProgressWarn() << tr("The size of TIT file does not align with TIL file.");
         }
-        if (titTileCount > tileCount) {
-            titTileCount = tileCount; // skip unusable data
+        if (tlaTileCount > tileCount) {
+            tlaTileCount = tileCount; // skip unusable data
         }
         changed = true;
     }
@@ -60,7 +60,7 @@ bool D1Tit::load(const QString &filePath, int tileCount, const OpenAsParam &para
     QDataStream in(fileData);
     // in.setByteOrder(QDataStream::LittleEndian);
 
-    for (int i = 0; i < titTileCount; i++) {
+    for (int i = 0; i < tlaTileCount; i++) {
         quint8 readByte;
         in >> readByte;
         this->properties[i] = readByte;
@@ -70,11 +70,11 @@ bool D1Tit::load(const QString &filePath, int tileCount, const OpenAsParam &para
     return true;
 }
 
-bool D1Tit::save(const SaveAsParam &params)
+bool D1Tla::save(const SaveAsParam &params)
 {
     QString filePath = this->getFilePath();
-    if (!params.titFilePath.isEmpty()) {
-        filePath = params.titFilePath;
+    if (!params.tlaFilePath.isEmpty()) {
+        filePath = params.tlaFilePath;
         if (!params.autoOverwrite && QFile::exists(filePath)) {
             QMessageBox::StandardButton reply;
             reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to overwrite %1?").arg(QDir::toNativeSeparators(filePath)), QMessageBox::Yes | QMessageBox::No);
@@ -121,29 +121,29 @@ bool D1Tit::save(const SaveAsParam &params)
         }
     }
 
-    this->titFilePath = filePath; // this->load(filePath, allocate);
+    this->tlaFilePath = filePath; // this->load(filePath, allocate);
     this->modified = false;
 
     return true;
 }
 
-void D1Tit::clear()
+void D1Tla::clear()
 {
     this->properties.clear();
     this->modified = true;
 }
 
-QString D1Tit::getFilePath() const
+QString D1Tla::getFilePath() const
 {
-    return this->titFilePath;
+    return this->tlaFilePath;
 }
 
-bool D1Tit::isModified() const
+bool D1Tla::isModified() const
 {
     return this->modified;
 }
 
-quint8 D1Tit::getTileProperties(int tileIndex) const
+quint8 D1Tla::getTileProperties(int tileIndex) const
 {
     if (tileIndex < 0 || tileIndex >= this->properties.count()) {
 #ifdef QT_DEBUG
@@ -155,7 +155,7 @@ quint8 D1Tit::getTileProperties(int tileIndex) const
     return this->properties.at(tileIndex);
 }
 
-bool D1Tit::setTileProperties(int tileIndex, quint8 value)
+bool D1Tla::setTileProperties(int tileIndex, quint8 value)
 {
     if (this->properties[tileIndex] == value) {
         return false;
@@ -165,19 +165,19 @@ bool D1Tit::setTileProperties(int tileIndex, quint8 value)
     return true;
 }
 
-void D1Tit::insertTile(int tileIndex)
+void D1Tla::insertTile(int tileIndex)
 {
     this->properties.insert(tileIndex, 0);
     this->modified = true;
 }
 
-void D1Tit::createTile()
+void D1Tla::createTile()
 {
     this->properties.append(0);
     this->modified = true;
 }
 
-void D1Tit::removeTile(int tileIndex)
+void D1Tla::removeTile(int tileIndex)
 {
     this->properties.removeAt(tileIndex);
     this->modified = true;

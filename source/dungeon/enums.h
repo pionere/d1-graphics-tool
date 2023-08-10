@@ -3430,10 +3430,23 @@ typedef enum _tile_flags {
     TIF_FLOOR_01  = 1 << 1,
     TIF_FLOOR_10  = 1 << 2,
     TIF_FLOOR_11  = 1 << 3,
-    TIF_WEST_ARCH = 1 << 4,
-    TIF_EAST_ARCH = 1 << 5,
-    TIF_WEST_WALL = 1 << 6,
-    TIF_EAST_DOOR = 1 << 7,
+
+    TIF_SHADOW_00 = 1 << 4,
+    TIF_SHADOW_01 = 1 << 5,
+    TIF_SHADOW_02 = 1 << 6,
+    TIF_SHADOW_03 = 1 << 7,
+
+    TIF_L1_WEST_ARCH_GRATE = 1 << 4,
+    TIF_L1_EAST_ARCH_GRATE = 1 << 5,
+    TIF_L1_PILLAR  = 1 << 6,
+    TIF_L1_WEST_WALL = 1 << 7,
+
+    TIF_L2_WEST_ARCH = 1 << 4,
+    TIF_L2_EAST_ARCH = 1 << 5,
+    TIF_L2_PILLAR    = 1 << 6,
+    TIF_L2_EAST_DOOR = 1 << 7,
+
+    TIF_L4_PILLAR    = 1 << 6,
 } _tile_flags;
 
 typedef enum dflag {
