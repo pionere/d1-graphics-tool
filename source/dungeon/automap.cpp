@@ -67,10 +67,14 @@ void InitLvlAutomap()
 		automaptype[150] = automaptype[2];
 		automaptype[151] = automaptype[12];
 		automaptype[152] = automaptype[36];
+		automaptype[153] = automaptype[36];
 		automaptype[154] = automaptype[7];
 		automaptype[155] = automaptype[2];
+		automaptype[156] = automaptype[26];
 		automaptype[157] = automaptype[35];
 		automaptype[159] = automaptype[13];
+		automaptype[160] = automaptype[14];
+		automaptype[161] = automaptype[37];
 		automaptype[164] = automaptype[13];
 		automaptype[165] = automaptype[13];
 		// - shadows for the banner setpiece

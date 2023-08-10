@@ -17369,10 +17369,14 @@ void D1Tileset::patch(int dunType, bool silent)
         SetTileMapFlags(this->amp, 150 - 1, 2 - 1, silent);
         SetTileMapFlags(this->amp, 151 - 1, 12 - 1, silent);
         SetTileMapFlags(this->amp, 152 - 1, 36 - 1, silent);
+        SetTileMapFlags(this->amp, 153 - 1, 36 - 1, silent);
         SetTileMapFlags(this->amp, 154 - 1, 7 - 1, silent);
         SetTileMapFlags(this->amp, 155 - 1, 2 - 1, silent);
+        SetTileMapFlags(this->amp, 156 - 1, 26 - 1, silent);
         SetTileMapFlags(this->amp, 157 - 1, 35 - 1, silent);
         SetTileMapFlags(this->amp, 159 - 1, 13 - 1, silent);
+        SetTileMapFlags(this->amp, 160 - 1, 14 - 1, silent);
+        SetTileMapFlags(this->amp, 161 - 1, 37 - 1, silent);
         SetTileMapFlags(this->amp, 164 - 1, 13 - 1, silent);
         SetTileMapFlags(this->amp, 165 - 1, 13 - 1, silent);
         // - shadows for the banner setpiece
