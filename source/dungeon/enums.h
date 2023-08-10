@@ -3425,6 +3425,17 @@ typedef enum _automap_flags {
 	MAF_DO_SOUTH_WEST = 0x0080,
 } _automap_flags;
 
+typedef enum _tile_flags {
+    TIF_FLOOR_00  = 1 << 0,
+    TIF_FLOOR_01  = 1 << 1,
+    TIF_FLOOR_10  = 1 << 2,
+    TIF_FLOOR_11  = 1 << 3,
+    TIF_WEST_ARCH = 1 << 4,
+    TIF_EAST_ARCH = 1 << 5,
+    TIF_WEST_WALL = 1 << 6,
+    TIF_EAST_DOOR = 1 << 7,
+} _tile_flags;
+
 typedef enum dflag {
 	BFLAG_MISSILE_PRE = 0x01, // 'missile-on-floor' flag, used by DrawView to draw missiles in pre-phase
 	BFLAG_ALERT       = 0x02, // alert flag, used by monsters to set squelch

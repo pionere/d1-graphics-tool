@@ -148,9 +148,13 @@ void InitLvlDungeon()
 	switch (currLvl._dType) {
 	case DTYPE_TOWN:
 		// patch dSolidTable - Town.SOL
-		// nSolidTable[553] = false; // allow walking on the left side of the pot at Adria
-		// nSolidTable[761] = true;  // make the tile of the southern window of the church non-walkable
-		// nSolidTable[945] = true;  // make the eastern side of Griswold's house consistent (non-walkable)
+		// nSolidTable[761] = true;   // make the tile of the southern window of the church non-walkable
+		// nSolidTable[945] = true;   // make the eastern side of Griswold's house consistent (non-walkable)
+		// nSolidTable[1240] = false; // make the eastern side of hell-entrance consistent (walkable)
+		// nSolidTable[1241] = false; // make the eastern side of hell-entrance consistent (walkable)
+		// nSolidTable[1247] = false; // let the player closer to the hell-entrance
+		// nSolidTable[1253] = false; // make the western side of hell-entrance consistent (walkable)
+		// nSolidTable[1255] = false; // make the western side of hell-entrance consistent (walkable)
 		// patch dMicroCels - TOWN.CEL
 		// - overwrite subtile 237 with subtile 402 to make the inner tile of Griswold's house non-walkable
 		// pSubtiles[237][0] = pSubtiles[402][0];

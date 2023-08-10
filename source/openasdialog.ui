@@ -420,19 +420,19 @@
       <item row="8" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Spt File:</string>
+         <string>Tit File:</string>
         </property>
        </widget>
       </item>
       <item row="8" column="1">
-       <widget class="LineEditWidget" name="sptFileEdit">
+       <widget class="LineEditWidget" name="titFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="8" column="2">
-       <widget class="QPushButton" name="sptFileBrowseButton">
+       <widget class="QPushButton" name="titFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
@@ -441,19 +441,19 @@
       <item row="9" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Tmi File:</string>
+         <string>Spt File:</string>
         </property>
        </widget>
       </item>
       <item row="9" column="1">
-       <widget class="LineEditWidget" name="tmiFileEdit">
+       <widget class="LineEditWidget" name="sptFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="9" column="2">
-       <widget class="QPushButton" name="tmiFileBrowseButton">
+       <widget class="QPushButton" name="sptFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
@@ -462,25 +462,46 @@
       <item row="10" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Dun File:</string>
+         <string>Tmi File:</string>
         </property>
        </widget>
       </item>
       <item row="10" column="1">
-       <widget class="LineEditWidget" name="dunFileEdit">
+       <widget class="LineEditWidget" name="tmiFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="10" column="2">
+       <widget class="QPushButton" name="tmiFileBrowseButton">
+        <property name="text">
+         <string>Browse</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Dun File:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="1">
+       <widget class="LineEditWidget" name="dunFileEdit">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="2">
        <widget class="QPushButton" name="dunFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
        </widget>
       </item>
-      <item row="11" column="0" colspan="3">
+      <item row="12" column="0" colspan="3">
        <layout class="QHBoxLayout">
         <property name="spacing">
          <number>4</number>

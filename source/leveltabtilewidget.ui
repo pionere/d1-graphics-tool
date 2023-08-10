@@ -208,6 +208,72 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox">
+     <property name="title">
+      <string>Tile flags</string>
+     </property>
+     <layout class="QGridLayout">
+      <item row="1" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Floor propagation:</string>
+        </property>
+        <property name="toolTip">
+         <string></string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="titF00"/>
+      </item>
+      <item row="1" column="2">
+       <widget class="QCheckBox" name="titF01"/>
+      </item>
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="titF10"/>
+      </item>
+      <item row="2" column="2">
+       <widget class="QCheckBox" name="titF11"/>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Shadow type:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="titFArch0">
+        <property name="text">
+         <string>Western Arch</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QCheckBox" name="titFArch1">
+        <property name="text">
+         <string>Eastern Arch</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QCheckBox" name="titFWall">
+        <property name="text">
+         <string>Western Wall</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QCheckBox" name="titFDoor">
+        <property name="text">
+         <string>Eastern Door</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <layout class="QHBoxLayout">
      <property name="leftMargin">
       <number>10</number>

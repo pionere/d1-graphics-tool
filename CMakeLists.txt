@@ -91,6 +91,8 @@ set(PROJECT_SOURCES
         source/d1til.h
         source/d1tileset.cpp
         source/d1tileset.h
+        source/d1tit.cpp
+        source/d1tit.h
         source/d1tmi.cpp
         source/d1tmi.h
         source/d1trn.cpp

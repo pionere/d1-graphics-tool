@@ -75,6 +75,33 @@ void EditAmpCommand::redo()
     this->undo();
 }
 
+EditTitCommand::EditTitCommand(D1Tit *tt, int ti, int v)
+    : QUndoCommand(nullptr)
+    , tit(tt)
+    , tileIndex(ti)
+    , value(v)
+{
+}
+
+void EditTitCommand::undo()
+{
+    if (this->tit.isNull()) {
+        this->setObsolete(true);
+        return;
+    }
+
+    int nv = this->value;
+    this->value = this->tit->getTileProperties(this->tileIndex);
+    this->tit->setTileProperties(this->tileIndex, nv);
+
+    emit this->modified();
+}
+
+void EditTitCommand::redo()
+{
+    this->undo();
+}
+
 LevelTabTileWidget::LevelTabTileWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::LevelTabTileWidget())
@@ -91,13 +118,14 @@ LevelTabTileWidget::~LevelTabTileWidget()
     delete ui;
 }
 
-void LevelTabTileWidget::initialize(LevelCelView *v, QUndoStack *us, D1Til *t, D1Min *m, D1Amp *a)
+void LevelTabTileWidget::initialize(LevelCelView *v, QUndoStack *us, D1Til *t, D1Min *m, D1Amp *a, D1Tit *tt)
 {
     this->levelCelView = v;
     this->undoStack = us;
     this->til = t;
     this->min = m;
     this->amp = a;
+    this->tit = tt;
 }
 
 void LevelTabTileWidget::updateFields()
@@ -120,6 +148,15 @@ void LevelTabTileWidget::updateFields()
     this->ui->amp6->setEnabled(hasTile);
     this->ui->amp7->setEnabled(hasTile);
 
+    this->ui->titF00->setEnabled(hasTile);
+    this->ui->titF01->setEnabled(hasTile);
+    this->ui->titF10->setEnabled(hasTile);
+    this->ui->titF11->setEnabled(hasTile);
+    this->ui->titFArch0->setEnabled(hasTile);
+    this->ui->titFArch1->setEnabled(hasTile);
+    this->ui->titFWall->setEnabled(hasTile);
+    this->ui->titFDoor->setEnabled(hasTile);
+
     this->ui->subtilesComboBox->setEnabled(hasTile);
 
     if (!hasTile) {
@@ -134,6 +171,15 @@ void LevelTabTileWidget::updateFields()
         this->ui->amp6->setChecked(false);
         this->ui->amp7->setChecked(false);
 
+        this->ui->titF00->setChecked(false);
+        this->ui->titF01->setChecked(false);
+        this->ui->titF10->setChecked(false);
+        this->ui->titF11->setChecked(false);
+        this->ui->titFArch0->setChecked(false);
+        this->ui->titFArch1->setChecked(false);
+        this->ui->titFWall->setChecked(false);
+        this->ui->titFDoor->setChecked(false);
+
         this->ui->subtilesComboBox->setCurrentIndex(-1);
         this->ui->subtilesPrevButton->setEnabled(false);
         this->ui->subtilesNextButton->setEnabled(false);
@@ -145,6 +191,7 @@ void LevelTabTileWidget::updateFields()
     int tileIdx = this->levelCelView->getCurrentTileIndex();
     quint8 ampType = this->amp->getTileType(tileIdx);
     quint8 ampProperty = this->amp->getTileProperties(tileIdx);
+    quint8 titProperty = this->tit->getTileProperties(tileIdx);
     std::vector<int> &subtiles = this->til->getSubtileIndices(tileIdx);
 
     // update the combo box of the amp-type
@@ -158,6 +205,16 @@ void LevelTabTileWidget::updateFields()
     this->ui->amp5->setChecked((ampProperty & (MAF_EAST_GRATE >> 8)) != 0);
     this->ui->amp6->setChecked((ampProperty & (MAF_EXTERN >> 8)) != 0);
     this->ui->amp7->setChecked((ampProperty & (MAF_STAIRS >> 8)) != 0);
+
+    this->ui->titF00->setChecked((titProperty & TIF_FLOOR_00) != 0);
+    this->ui->titF01->setChecked((titProperty & TIF_FLOOR_01) != 0);
+    this->ui->titF10->setChecked((titProperty & TIF_FLOOR_10) != 0);
+    this->ui->titF11->setChecked((titProperty & TIF_FLOOR_11) != 0);
+    this->ui->titFArch0->setChecked((titProperty & TIF_WEST_ARCH) != 0);
+    this->ui->titFArch1->setChecked((titProperty & TIF_EAST_ARCH) != 0);
+    this->ui->titFWall->setChecked((titProperty & TIF_WEST_WALL) != 0);
+    this->ui->titFDoor->setChecked((titProperty & TIF_EAST_DOOR) != 0);
+
     // update combo box of the subtiles
     for (int i = this->ui->subtilesComboBox->count() - subtiles.size(); i > 0; i--)
         this->ui->subtilesComboBox->removeItem(0);
@@ -203,6 +260,18 @@ void LevelTabTileWidget::setAmpProperty(quint8 flags)
     this->undoStack->push(command);
 }
 
+void LevelTabTileWidget::setTitProperty(quint8 flags)
+{
+    int tileIdx = this->levelCelView->getCurrentTileIndex();
+
+    // Build amp editing command and connect it to the views widget
+    // to update the label when undo/redo is performed
+    EditTitCommand *command = new EditTitCommand(this->tit, tileIdx, flags);
+    QObject::connect(command, &EditTitCommand::modified, this->levelCelView, &LevelCelView::updateFields);
+
+    this->undoStack->push(command);
+}
+
 void LevelTabTileWidget::updateAmpProperty()
 {
     quint8 flags = 0;
@@ -226,9 +295,33 @@ void LevelTabTileWidget::updateAmpProperty()
     this->setAmpProperty(flags);
 }
 
+void LevelTabTileWidget::updateTitProperty()
+{
+    quint8 flags = 0;
+    if (this->ui->titF00->checkState())
+        flags |= TIF_FLOOR_00;
+    if (this->ui->titF01->checkState())
+        flags |= TIF_FLOOR_01;
+    if (this->ui->titF10->checkState())
+        flags |= TIF_FLOOR_10;
+    if (this->ui->titF11->checkState())
+        flags |= TIF_FLOOR_11;
+    if (this->ui->titFArch0->checkState())
+        flags |= TIF_WEST_ARCH;
+    if (this->ui->titFArch1->checkState())
+        flags |= TIF_EAST_ARCH;
+    if (this->ui->titFWall->checkState())
+        flags |= TIF_WEST_WALL;
+    if (this->ui->titFDoor->checkState())
+        flags |= TIF_EAST_DOOR;
+
+    this->setTitProperty(flags);
+}
+
 void LevelTabTileWidget::on_clearPushButtonClicked()
 {
     this->setAmpProperty(0);
+    this->setTitProperty(0);
     this->updateFields();
 }
 
@@ -291,6 +384,46 @@ void LevelTabTileWidget::on_amp6_clicked()
 void LevelTabTileWidget::on_amp7_clicked()
 {
     this->updateAmpProperty();
+}
+
+void LevelTabTileWidget::on_titF00_clicked()
+{
+    this->updateTitProperty();
+}
+
+void LevelTabTileWidget::on_titF01_clicked()
+{
+    this->updateTitProperty();
+}
+
+void LevelTabTileWidget::on_titF10_clicked()
+{
+    this->updateTitProperty();
+}
+
+void LevelTabTileWidget::on_titF11_clicked()
+{
+    this->updateTitProperty();
+}
+
+void LevelTabTileWidget::on_titFArch0_clicked()
+{
+    this->updateTitProperty();
+}
+
+void LevelTabTileWidget::on_titFArch1_clicked()
+{
+    this->updateTitProperty();
+}
+
+void LevelTabTileWidget::on_titFWall_clicked()
+{
+    this->updateTitProperty();
+}
+
+void LevelTabTileWidget::on_titFDoor_clicked()
+{
+    this->updateTitProperty();
 }
 
 void LevelTabTileWidget::setSubtileIndex(int tileIndex, int index, int subtileIndex)
