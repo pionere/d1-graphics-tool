@@ -65,7 +65,7 @@ signals:
     void modified();
 
 private:
-    QPointer<D1Tit> amp;
+    QPointer<D1Tit> tit;
     int tileIndex;
     int value;
 };
