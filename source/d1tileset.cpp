@@ -17318,7 +17318,6 @@ void D1Tileset::patch(int dunType, bool silent)
             // dProgressErr() << QApplication::tr("Invalid MIN file. Subtile-count is less than %1").arg(1258);
             break; // -- assume it is already done
         }
-        this->cleanupTown(deletedFrames, silent);
         // patch dSolidTable - TOWN.SOL
         ChangeSubtileSolFlags(this->sol, 761 - 1, PFLAG_BLOCK_PATH, true, silent);   // make the tile of the southern window of the church non-walkable
         ChangeSubtileSolFlags(this->sol, 945 - 1, PFLAG_BLOCK_PATH, true, silent);   // make the eastern side of Griswold's house consistent (non-walkable)
@@ -17327,6 +17326,7 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeSubtileSolFlags(this->sol, 1247 - 1, PFLAG_BLOCK_PATH, false, silent); // let the player closer to the hell-entrance
         ChangeSubtileSolFlags(this->sol, 1253 - 1, PFLAG_BLOCK_PATH, false, silent); // make the western side of hell-entrance consistent (walkable)
         ChangeSubtileSolFlags(this->sol, 1255 - 1, PFLAG_BLOCK_PATH, false, silent); // make the western side of hell-entrance consistent (walkable)
+        this->cleanupTown(deletedFrames, silent);
     } break;
     case DTYPE_CATHEDRAL:
         // patch dMiniTiles and dMegaTiles - L1.MIN and L1.TIL
