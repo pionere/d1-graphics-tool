@@ -2391,8 +2391,6 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(1164, 1);
     Blk2Mcr(1168, 0);
     Blk2Mcr(1196, 0);
-    Blk2Mcr(1258, 0);
-    Blk2Mcr(1258, 1);
     Blk2Mcr(1214, 1);
     Blk2Mcr(1214, 2);
     Blk2Mcr(1214, 3);
@@ -2405,6 +2403,8 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(1216, 8);
     Blk2Mcr(1239, 1);
     Blk2Mcr(1254, 0);
+    Blk2Mcr(1258, 0);
+    Blk2Mcr(1258, 1);
     const int unusedSubtiles[] = {
         40, 43, 49, 50, 51, 52, 66, 67, 69, 70, 71, 72, 73, 74, 75, 76, 77, 79, 80, 81, 83, 85, 86, 89, 90, 91, 93, 94, 95, 97, 99, 100, 101, 102, 103, 122, 123, 124, 136, 137, 140, 141, 142, 145, 147, 150, 151, 155, 161, 163, 164, 166, 167, 171, 176, 179, 183, 190, 191, 193, 194, 195, 196, 197, 199, 204, 205, 206, 208, 209, 228, 230, 236, 238, 241, 242, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 256, 278, 280, 291, 298, 299, 304, 305, 314, 316, 318, 320, 321, 328, 329, 335, 336, 337, 342, 350, 351, 352, 353, 354, 355, 356, 357, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 380, 392, 411, 413, 415, 417, 442, 444, 446, 447, 448, 449, 450, 451, 452, 453, 455, 456, 457, 460, 461, 462, 464, 467, 490, 491, 492, 497, 499, 500, 505, 506, 508, 534, 536, 544, 546, 548, 549, 558, 560, 565, 566, 567, 568, 570, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 589, 591, 594, 595, 597, 598, 599, 600, 602, 609, 615, 622, 625, 648, 650, 654, 662, 664, 666, 667, 679, 680, 681, 682, 688, 690, 691, 693, 695, 696, 698, 699, 700, 701, 702, 703, 705, 730, 735, 737, 741, 742, 747, 748, 749, 750, 751, 752, 753, 756, 758, 760, 765, 766, 769, 790, 792, 796, 798, 800, 801, 802, 804, 851, 857, 859, 860, 861, 863, 865, 876, 877, 878, 879, 880, 881, 882, 883, 884, 885, 887, 888, 889, 890, 891, 893, 894, 895, 896, 897, 901, 903, 937, 960, 961, 964, 965, 967, 968, 969, 972, 973, 976, 977, 979, 980, 981, 984, 985, 988, 989, 991, 992, 993, 996, 997, 1000, 1001, 1003, 1004, 1005, 1008, 1009, 1012, 1013, 1016, 1017, 1019, 1020, 1021, 1022, 1024, 1029, 1032, 1033, 1035, 1036, 1037, 1039, 1040, 1041, 1044, 1045, 1047, 1048, 1049, 1050, 1051, 1064, 1066, 1067, 1068, 1069, 1070, 1071, 1072, 1073, 1075, 1076, 1077, 1078, 1079, 1080, 1081, 1084, 1085, 1088, 1092, 1093, 1100, 1101, 1102, 1103, 1104, 1105, 1106, 1107, 1108, 1109, 1110, 1111, 1112, 1113, 1114, 1115, 1116, 1117, 1118, 1121, 1123, 1135, 1136, 1137, 1138, 1140, 1141, 1142, 1143, 1144, 1145, 1146, 1147, 1148, 1149, 1150, 1151, 1153, 1154, 1155, 1156, 1157, 1158, 1159, 1161, 1163, 1165, 1169, 1170, 1184, 1186, 1189, 1190, 1193, 1194, 1198, 1199, 1200, 1201, 1202, 1218, 1221, 1222, 1223, 1224, 1225, 1226, 1227, 1228, 1229, 1230, 1231, 1232, 1233, 1234, 1235, 1236, 1237, 1256
     };
@@ -17315,10 +17315,18 @@ void D1Tileset::patch(int dunType, bool silent)
     case DTYPE_TOWN: {
         // patch dMiniTiles - Town.MIN
         if (this->min->getSubtileCount() < 1258) {
-            dProgressErr() << QApplication::tr("Invalid MIN file. Subtile-count is less than %1").arg(1258);
-            break;
+            // dProgressErr() << QApplication::tr("Invalid MIN file. Subtile-count is less than %1").arg(1258);
+            break; // -- assume it is already done
         }
         this->cleanupTown(deletedFrames, silent);
+        // patch dSolidTable - TOWN.SOL
+        ChangeSubtileSolFlags(this->sol, 761 - 1, PFLAG_BLOCK_PATH, true, silent);   // make the tile of the southern window of the church non-walkable
+        ChangeSubtileSolFlags(this->sol, 945 - 1, PFLAG_BLOCK_PATH, true, silent);   // make the eastern side of Griswold's house consistent (non-walkable)
+        ChangeSubtileSolFlags(this->sol, 1240 - 1, PFLAG_BLOCK_PATH, false, silent); // make the eastern side of hell-entrance consistent (walkable)
+        ChangeSubtileSolFlags(this->sol, 1241 - 1, PFLAG_BLOCK_PATH, false, silent); // make the eastern side of hell-entrance consistent (walkable)
+        ChangeSubtileSolFlags(this->sol, 1247 - 1, PFLAG_BLOCK_PATH, false, silent); // let the player closer to the hell-entrance
+        ChangeSubtileSolFlags(this->sol, 1253 - 1, PFLAG_BLOCK_PATH, false, silent); // make the western side of hell-entrance consistent (walkable)
+        ChangeSubtileSolFlags(this->sol, 1255 - 1, PFLAG_BLOCK_PATH, false, silent); // make the western side of hell-entrance consistent (walkable)
     } break;
     case DTYPE_CATHEDRAL:
         // patch dMiniTiles and dMegaTiles - L1.MIN and L1.TIL
