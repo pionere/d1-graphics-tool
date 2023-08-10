@@ -44,7 +44,7 @@ public:
     D1Til *til;
     D1Sol *sol;
     D1Amp *amp;
-    D1Tit *tla;
+    D1Tla *tla;
     D1Spt *spt;
     D1Tmi *tmi;
 

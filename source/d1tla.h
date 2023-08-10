@@ -25,7 +25,7 @@ public:
     void removeTile(int tileIndex);
 
 private:
-    QString titFilePath;
+    QString tlaFilePath;
     bool modified;
     QList<quint8> properties;
 };
