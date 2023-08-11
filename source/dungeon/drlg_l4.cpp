@@ -404,53 +404,12 @@ static void DRLG_LoadL4SP()
 					}
 				}
 			}
-			// ensure the changing tiles are reserved
-			// - SW-wall
-			for (int y = 7; y < 9; y++) {
-				for (int x = 2; x < 7; x++) {
+			// ensure the box is not connected to the rest of the dungeon and the changing tiles are reserved + protect inner tiles from decoration
+			for (int y = 0; y < 9; y++) {
+				for (int x = 0; x < 9; x++) {
 					lm[2 + 9 * 9 + x + y * 9] = SwapLE16(3);
 				}
 			}
-			// - NE-wall
-			for (int y = 2; y < 7; y++) {
-				for (int x = 0; x < 2; x++) {
-					lm[2 + 9 * 9 + x + y * 9] = SwapLE16(3);
-				}
-			}
-			// - NW-wall
-			for (int y = 0; y < 2; y++) {
-				for (int x = 2; x < 7; x++) {
-					lm[2 + 9 * 9 + x + y * 9] = SwapLE16(3);
-				}
-			}
-			// - SE-wall
-			for (int y = 2; y < 7; y++) {
-				for (int x = 7; x < 9; x++) {
-					lm[2 + 9 * 9 + x + y * 9] = SwapLE16(3);
-				}
-			}
-			// protect tiles with monsters/objects from decoration
-			lm[2 + 9 * 9 + 2 + 2 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 2 + 3 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 2 + 4 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 2 + 6 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 3 + 3 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 3 + 4 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 3 + 5 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 3 + 6 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 4 + 2 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 4 + 3 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 4 + 4 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 4 + 5 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 4 + 6 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 5 + 2 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 5 + 3 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 5 + 4 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 5 + 5 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 6 + 2 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 6 + 4 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 6 + 5 * 9] = SwapLE16(3);
-			lm[2 + 9 * 9 + 6 + 6 * 9] = SwapLE16(3);
 		}
 	} else if (QuestStatus(Q_BETRAYER)) {
 		pSetPieces[0]._sptype = IsMultiGame ? SPT_BETRAY_M : SPT_BETRAY_S;
