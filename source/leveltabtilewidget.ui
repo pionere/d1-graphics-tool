@@ -235,38 +235,38 @@
       <item row="2" column="2">
        <widget class="QCheckBox" name="tlaF11"/>
       </item>
-      <item row="3" column="0">
+      <item row="1" column="3">
        <widget class="QLabel">
         <property name="text">
          <string>Shadow flags:</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="1" column="4">
        <widget class="QCheckBox" name="tlaS00">
         <property name="toolTip">
-         <string>Western Arch (or Grate) in Cathedral, in Catacombs, in Hell or in Crypt</string>
+         <string>Western Arch (or Grate)</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="2">
+      <item row="1" column="5">
        <widget class="QCheckBox" name="tlaS01">
         <property name="toolTip">
-         <string>Eastern Arch (or Grate) in Cathedral, in Catacombs, in Hell or in Crypt, Eastern Door in Cathedral</string>
+         <string>Eastern Arch (or Grate) | Eastern Door in Cathedral</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
+      <item row="2" column="4">
        <widget class="QCheckBox" name="tlaS02">
         <property name="toolTip">
-         <string>Pillar with shadow in Cathedral, in Catacombs or in Hell</string>
+         <string>Pillar with shadow</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="2">
+      <item row="2" column="5">
        <widget class="QCheckBox" name="tlaS03">
         <property name="toolTip">
-         <string>Western Wall in Cathedral or Eastern Door in Catacombs</string>
+         <string>Western Wall in Cathedral or in Crypt | Eastern Door in Catacombs</string>
         </property>
        </widget>
       </item>

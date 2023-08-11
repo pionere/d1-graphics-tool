@@ -646,6 +646,16 @@ void DRLG_L2Shadows()
 			bool vertArch = false;
 			horizArch = (automaptype[dungeon[i][j]] & MAF_EAST_ARCH) != 0;
 			vertArch = (automaptype[dungeon[i][j]] & MAF_WEST_ARCH) != 0;
+			if ((automaptype[dungeon[i][j]] & MAF_EAST_DOOR) != ((nTrnShadowTable[dungeon[i][j]] & TIF_L2_EAST_DOOR) != 0)) {
+				dProgressErr() << QString("Mismatching flags %1. pillar %2 %3").arg(dungeon[i][j]).arg(pillar).arg(largePillar);
+			}
+			if (horizArch != ((nTrnShadowTable[dungeon[i][j]] & TIF_L2_EAST_ARCH) != 0)) {
+				dProgressErr() << QString("Mismatching flags %1. horzArch %2").arg(dungeon[i][j]).arg(horizArch);
+			}
+			if (vertArch != ((nTrnShadowTable[dungeon[i][j]] & TIF_L2_WEST_ARCH) != 0)) {
+				dProgressErr() << QString("Mismatching flags %1. vertArch %2").arg(dungeon[i][j]).arg(vertArch);
+			}
+
 			if (automaptype[dungeon[i][j]] & MAF_EAST_DOOR) {
 				// shadow of the horizontal doors
 				BYTE replaceB = dungeon[i][j - 1];
