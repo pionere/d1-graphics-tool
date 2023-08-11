@@ -939,7 +939,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     this->on_actionClose_triggered();
 
     ProgressDialog::start(PROGRESS_DIALOG_STATE::BACKGROUND, tr("Loading..."), 0, PAF_NONE); // PAF_UPDATE_WINDOW
-	QMessageBox::critical(nullptr, "Error", "openFile 0");
+
     // Loading default.pal
     D1Pal *newPal = new D1Pal();
     newPal->load(D1Pal::DEFAULT_PATH);
@@ -966,7 +966,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     QString tmiFilePath = params.tmiFilePath;
     QString dunFilePath = params.dunFilePath;
     QString tblFilePath = params.tblFilePath;
-	QMessageBox::critical(nullptr, "Error", "openFile 1");
+
     QString baseDir;
     if (fileType == 4) {
         if (tblFilePath.isEmpty()) {
@@ -1032,7 +1032,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     }
 
     bool isGfxset = params.gfxType == OPEN_GFX_TYPE::GFXSET;
-	QMessageBox::critical(nullptr, "Error", "openFile 2");
+
     this->gfx = new D1Gfx();
     this->gfx->setPalette(this->trnBase->getResultingPalette());
     if (isGfxset) {
@@ -1043,62 +1043,61 @@ void MainWindow::openFile(const OpenAsParam &params)
         }
     } else if (isTileset) {
         this->tileset = new D1Tileset(this->gfx);
-	QMessageBox::critical(nullptr, "Error", "openFile 3");
         // Loading SOL
         if (!this->tileset->sol->load(solFilePath)) {
             this->failWithError(tr("Failed loading SOL file: %1.").arg(QDir::toNativeSeparators(solFilePath)));
             return;
         }
-	QMessageBox::critical(nullptr, "Error", "openFile 4");
+
         // Loading MIN
         std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
         if (!this->tileset->min->load(minFilePath, this->tileset, celFrameTypes, params)) {
             this->failWithError(tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath)));
             return;
         }
-	QMessageBox::critical(nullptr, "Error", "openFile 5");
+
         // Loading TIL
         if (!this->tileset->til->load(tilFilePath, this->tileset->min)) {
             this->failWithError(tr("Failed loading TIL file: %1.").arg(QDir::toNativeSeparators(tilFilePath)));
             return;
         }
-	QMessageBox::critical(nullptr, "Error", "openFile 6");
+
         // Loading AMP
         if (!this->tileset->amp->load(ampFilePath, this->tileset->til->getTileCount(), params)) {
             this->failWithError(tr("Failed loading AMP file: %1.").arg(QDir::toNativeSeparators(ampFilePath)));
             return;
         }
-	QMessageBox::critical(nullptr, "Error", "openFile 7");
+
         // Loading TLA
         if (!this->tileset->tla->load(tlaFilePath, this->tileset->til->getTileCount(), params)) {
             this->failWithError(tr("Failed loading TLA file: %1.").arg(QDir::toNativeSeparators(tlaFilePath)));
             return;
         }
-	QMessageBox::critical(nullptr, "Error", "openFile 8");
+
         // Loading SPT
         if (!this->tileset->spt->load(sptFilePath, this->tileset->sol, params)) {
             this->failWithError(tr("Failed loading SPT file: %1.").arg(QDir::toNativeSeparators(sptFilePath)));
             return;
         }
-	QMessageBox::critical(nullptr, "Error", "openFile 9");
+
         // Loading TMI
         if (!this->tileset->tmi->load(tmiFilePath, this->tileset->sol, params)) {
             this->failWithError(tr("Failed loading TMI file: %1.").arg(QDir::toNativeSeparators(tmiFilePath)));
             return;
         }
-	QMessageBox::critical(nullptr, "Error", "openFile 10");
+
         // Loading CEL
         if (!D1CelTileset::load(*this->gfx, celFrameTypes, gfxFilePath, params)) {
             this->failWithError(tr("Failed loading Tileset-CEL file: %1.").arg(QDir::toNativeSeparators(gfxFilePath)));
             return;
         }
-	QMessageBox::critical(nullptr, "Error", "openFile 11");
+
         // Loading sCEL
         if (!this->tileset->loadCls(clsFilePath, params)) {
             this->failWithError(tr("Failed loading Special-CEL file: %1.").arg(QDir::toNativeSeparators(clsFilePath)));
             return;
         }
-	QMessageBox::critical(nullptr, "Error", "openFile 12");
+
         // Loading DUN
         if (!dunFilePath.isEmpty() || params.createDun) {
             this->dun = new D1Dun();
@@ -1142,7 +1141,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     palLayout->addWidget(this->palWidget);
     palLayout->addWidget(this->trnUniqueWidget);
     palLayout->addWidget(this->trnBaseWidget);
-	QMessageBox::critical(nullptr, "Error", "openFile 12");
+
     QWidget *view;
     if (isGfxset) {
         // build a GfxsetView
@@ -1160,7 +1159,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         // build a LevelCelView
         this->levelCelView = new LevelCelView(this, this->undoStack);
         this->levelCelView->initialize(this->pal, this->tileset, this->dun, this->bottomPanelHidden);
-	QMessageBox::critical(nullptr, "Error", "openFile 13");
+
         // Refresh palette widgets when frame, subtile or tile is changed
         QObject::connect(this->levelCelView, &LevelCelView::frameRefreshed, this->palWidget, &PaletteWidget::refresh);
 
@@ -1191,7 +1190,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     }
     // Add the view to the main frame
     this->ui->mainFrameLayout->addWidget(view);
-	QMessageBox::critical(nullptr, "Error", "openFile 14");
+
     // prepare the paint dialog
     if (fileType != 4) {
         this->paintWidget = new PaintWidget(this, this->undoStack, this->gfx, this->celView, this->levelCelView, this->gfxsetView);
@@ -1245,7 +1244,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     if (this->tblView != nullptr) {
         QObject::connect(this->palWidget, &PaletteWidget::colorsSelected, this->tblView, &TblView::palColorsSelected);
     }
-	QMessageBox::critical(nullptr, "Error", "openFile 15");
+
     // Look for all palettes in the same folder as the CEL/CL2 file
     QString firstPaletteFound = fileType == 3 ? D1Pal::DEFAULT_PATH : "";
     if (!baseDir.isEmpty()) {
@@ -1262,7 +1261,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         firstPaletteFound = D1Pal::DEFAULT_PATH;
     }
     this->setPal(firstPaletteFound); // should trigger view->displayFrame()
-	QMessageBox::critical(nullptr, "Error", "openFile 16");
+
     // update available menu entries
     this->ui->menuEdit->setEnabled(fileType != 4);
     this->ui->menuView->setEnabled(true);
@@ -1280,7 +1279,7 @@ void MainWindow::openFile(const OpenAsParam &params)
 
     this->ui->menuTileset->setEnabled(isTileset);
     this->ui->menuDungeon->setEnabled(this->dun != nullptr);
-	QMessageBox::critical(nullptr, "Error", "openFile 17");
+
     // Clear loading message from status bar
     ProgressDialog::done();
 }

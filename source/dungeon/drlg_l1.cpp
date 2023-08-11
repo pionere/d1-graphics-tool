@@ -882,12 +882,24 @@ void DRLG_L1Shadows()
 				pillar = true;
 				break;
 			}
+			if ((pillar || largePillar) != ((nTrnShadowTable[dungeon[i][j]] & TIF_L1_PILLAR) != 0)) {
+				dProgressErr() << QString("Mismatching flags %d. pillar %1 %2").arg(dungeon[i][j]).arg(pillar).arg(largePillar);
+			}
+			if (horizArch != ((nTrnShadowTable[dungeon[i][j]] & TIF_L1_EAST_ARCH_GRATE) != 0)) {
+				dProgressErr() << QString("Mismatching flags %d. horzArch %1").arg(dungeon[i][j]).arg(horizArch);
+			}
+			if (vertArch != ((nTrnShadowTable[dungeon[i][j]] & TIF_L1_WEST_ARCH_GRATE) != 0)) {
+				dProgressErr() << QString("Mismatching flags %d. vertArch %1").arg(dungeon[i][j]).arg(vertArch);
+			}
 			if (horizArch) {
 				BYTE replaceA; bool okB;
 				replaceA = dungeon[i][j - 1];
 				bool pillarC = i == DMAXX - 1 || ((automaptype[dungeon[i + 1][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i + 1][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i + 1][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END);
 				if (!pillarC && replaceA != 13 && replaceA != 164)
                     dProgressWarn() << QString("Missing case %1 for horizontal arch %2 with wall @%3:%4").arg(replaceA).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
+				if (((automaptype[dungeon[i + 1][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i + 1][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i + 1][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END) != ((nTrnShadowTable[dungeon[i + 1][j - 1]] & TIF_L1_WEST_WALL) == 0)) {
+					dProgressErr() << QString("Mismatching flags %d. west wall %1").arg(dungeon[i + 1][j - 1]).arg(automaptype[dungeon[i + 1][j - 1]] & MAF_TYPE);
+				}
 				switch (replaceA) {
 				case 13:  replaceA = pillarC ? 140 : 141; okB = false; break;
 				case 1:   replaceA = 146; okB = true;  break;
@@ -970,6 +982,9 @@ void DRLG_L1Shadows()
 				}
 				// pillar = pillar && (dungeon[i][j - 1] == 13 /* || 203 207 204 81 ... 2 3 7 9 12 15 16 17 26 36 */);
 				pillar = pillar && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END;
+				if (((automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END) != ((nTrnShadowTable[dungeon[i][j - 1]] & TIF_L1_WEST_WALL) == 0)) {
+					dProgressErr() << QString("Mismatching flags %d. west wall %1 over vertarch").arg(dungeon[i][j - 1]).arg(automaptype[dungeon[i][j - 1]] & MAF_TYPE);
+				}
 				switch (dungeon[i - 1][j - 1]) {
 				case 13: replaceB = pillar ? 143 : 159; break;
 				case 2:  replaceB = pillar ? 150 : 148; break;
@@ -991,6 +1006,9 @@ void DRLG_L1Shadows()
 					BYTE replace = dungeon[i - 1][j - 1];
 					// pillar = (dungeon[i][j - 1] == 13 /* || 203 207 204 81 ... 2 3 7 9 12 15 16 17 26 36 */);
 					pillar = (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END;
+					if (pillar != ((nTrnShadowTable[dungeon[i][j - 1]] & TIF_L1_WEST_WALL) == 0)) {
+						dProgressErr() << QString("Mismatching flags %d. west wall %1 over pillar").arg(dungeon[i][j - 1]).arg(automaptype[dungeon[i][j - 1]] & MAF_TYPE);
+					}
 					if (replace == 13) {
 						replace = pillar ? 143 : 159;
 					} else if (replace == 2) {
