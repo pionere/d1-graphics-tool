@@ -89,15 +89,15 @@ const BYTE L2BTYPES[159] = {
  */
 const BYTE L2FTYPES[159] = {
 	// clang-format off
-	 0, 10, 12, 15, 10, 12, 14, 10,  8, 12,
+	 0, 10, 12, 15, 10, 12,  8, 10,  8, 12,
 	 0,  0,  0,  0,  0,  0,  0, 12, 12, 10, // 10..
 	10, 12, 12, 10, 10, 10, 10, 10, 10, 12, // 20..
 	12, 12, 12, 12, 14, 10, 12, 12,  8, 10, // 30..
 	12,  8,  8,  8, 10, 12, 15, 15, 15, 15, // 40..
 	15, 15, 14, 10, 10,  8, 12, 12, 12, 15, // 50..
 	15, 15, 15, 15, 15, 15, 15, 15, 10, 10, // 60..
-	10,  7, 15, 12, 12, 12, 15, 10,  0, 10, // 70..
-	10, 10, 10, 14, 12, 12, 12,  8, 15, 15, // 80..
+	10,  3,  5, 12, 12, 12, 15, 10,  0, 10, // 70..
+	10, 10, 10,  8, 12, 12, 12,  8, 15, 15, // 80..
 	15, 15, 15, 15, 15, 12, 10, 15, 15, 15, // 90..
 	12, 15, 15, 15, 15, 15, 15, 15, 15, 15, //100..
 	15, 15, 15, 15, 15, 15, 10, 10, 12, 12, //110..
@@ -646,8 +646,8 @@ void DRLG_L2Shadows()
 			bool vertArch = false;
 			horizArch = (automaptype[dungeon[i][j]] & MAF_EAST_ARCH) != 0;
 			vertArch = (automaptype[dungeon[i][j]] & MAF_WEST_ARCH) != 0;
-			if ((automaptype[dungeon[i][j]] & MAF_EAST_DOOR) != ((nTrnShadowTable[dungeon[i][j]] & TIF_L2_EAST_DOOR) != 0)) {
-				dProgressErr() << QString("Mismatching flags %1. door %2").arg(dungeon[i][j]).arg(automaptype[dungeon[i][j]] & MAF_EAST_DOOR);
+			if (((automaptype[dungeon[i][j]] & MAF_EAST_DOOR) != 0) != ((nTrnShadowTable[dungeon[i][j]] & TIF_L2_EAST_DOOR) != 0)) {
+				dProgressErr() << QString("Mismatching flags %1. door %2").arg(dungeon[i][j]).arg((automaptype[dungeon[i][j]] & MAF_EAST_DOOR) != 0);
 			}
 			if (horizArch != ((nTrnShadowTable[dungeon[i][j]] & TIF_L2_EAST_ARCH) != 0)) {
 				dProgressErr() << QString("Mismatching flags %1. horzArch %2").arg(dungeon[i][j]).arg(horizArch);

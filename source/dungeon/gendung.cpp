@@ -923,72 +923,51 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 	for (i = DMAXX - 1; i >= 0; i--) {
 		for (j = DMAXY - 1; j >= 0; j--) {
 			BYTE tvm = floorTypes[drlg.transvalMap[i][j]];
+			if ((nTrnShadowTable[drlg.transvalMap[i][j]] & 0xF) != tvm) {
+				dProgressErr() << QString("Mismatching flags %1. %2 vs %3 at %4:%5").arg(drlg.transvalMap[i][j]).arg(tvm).arg(nTrnShadowTable[drlg.transvalMap[i][j]] & 0xF).arg(i).arg(j);
+			}
 			BYTE tpm;
 			// 1. subtile
-			if (tvm & (1 << 0)) {
-				if (!(nTrnShadowTable[drlg.transvalMap[i][j]] & TIF_FLOOR_00)) {
-					dProgressErr() << QString("Mismatching flags %1. 1 vs 0 at %2:%3").arg(drlg.transvalMap[i][j]).arg(i).arg(j);
-                }
+			if (tvm & (1 << 0)) { // TIF_FLOOR_00
 				tpm = (1 << 1) | (1 << 2) | (1 << 3); // DIR_NW, DIR_N, DIR_NE
 				if (tvm & (1 << 2)) // 3. subtile
 					tpm |= (1 << 0); // DIR_SE
 				if (tvm & (1 << 1)) // 2. subtile
 					tpm |= (1 << 6); // DIR_SW
 			} else {
-				if (nTrnShadowTable[drlg.transvalMap[i][j]] & TIF_FLOOR_00) {
-					dProgressErr() << QString("Mismatching flags %1. 0 vs 1 at %2:%3").arg(drlg.transvalMap[i][j]).arg(i).arg(j);
-                }
 				tpm = 0;
 			}
 			drlg.transDirMap[2 * i + 0][2 * j + 0] = tpm;
 			// 3. subtile
-			if (tvm & (1 << 2)) {
-				if (!(nTrnShadowTable[drlg.transvalMap[i][j]] & TIF_FLOOR_10)) {
-					dProgressErr() << QString("Mismatching flags %1. 4 vs 0 at %2:%3").arg(drlg.transvalMap[i][j]).arg(i).arg(j);
-                }
+			if (tvm & (1 << 2)) { // TIF_FLOOR_10
 				tpm = (1 << 3) | (1 << 4) | (1 << 0); // DIR_NE, DIR_E, DIR_SE
 				if (tvm & (1 << 0)) // 1. subtile
 					tpm |= (1 << 1); // DIR_NW
 				if (tvm & (1 << 3)) // 4. subtile
 					tpm |= (1 << 6); // DIR_SW
 			} else {
-				if (nTrnShadowTable[drlg.transvalMap[i][j]] & TIF_FLOOR_10) {
-					dProgressErr() << QString("Mismatching flags %1. 0 vs 4 at %2:%3").arg(drlg.transvalMap[i][j]).arg(i).arg(j);
-                }
 				tpm = 0;
 			}
 			drlg.transDirMap[2 * i + 0][2 * j + 1] = tpm;
 			// 2. subtile
-			if (tvm & (1 << 1)) {
-				if (!(nTrnShadowTable[drlg.transvalMap[i][j]] & TIF_FLOOR_01)) {
-					dProgressErr() << QString("Mismatching flags %1. 2 vs 0 at %2:%3").arg(drlg.transvalMap[i][j]).arg(i).arg(j);
-                }
+			if (tvm & (1 << 1)) { // TIF_FLOOR_01
 				tpm = (1 << 6) | (1 << 5) | (1 << 1); // DIR_SW, DIR_W, DIR_NW
 				if (tvm & (1 << 0)) // 1. subtile
 					tpm |= (1 << 3); // DIR_NE
 				if (tvm & (1 << 3)) // 4. subtile
 					tpm |= (1 << 0); // DIR_SE
 			} else {
-				if (nTrnShadowTable[drlg.transvalMap[i][j]] & TIF_FLOOR_01) {
-					dProgressErr() << QString("Mismatching flags %1. 0 vs 2 at %2:%3").arg(drlg.transvalMap[i][j]).arg(i).arg(j);
-                }
 				tpm = 0;
 			}
 			drlg.transDirMap[2 * i + 1][2 * j + 0] = tpm;
 			// 4. subtile
-			if (tvm & (1 << 3)) {
-				if (!(nTrnShadowTable[drlg.transvalMap[i][j]] & TIF_FLOOR_11)) {
-					dProgressErr() << QString("Mismatching flags %1. 8 vs 0 at %2:%3 = %4").arg(drlg.transvalMap[i][j]).arg(i).arg(j).arg(dungeon[i][j]);
-                }
+			if (tvm & (1 << 3)) { // TIF_FLOOR_11
 				tpm = (1 << 0) | (1 << 7) | (1 << 6); // DIR_SE, DIR_S, DIR_SW
 				if (tvm & (1 << 2)) // 3. subtile
 					tpm |= (1 << 3); // DIR_NE
 				if (tvm & (1 << 1)) // 2. subtile
 					tpm |= (1 << 1); // DIR_NW
 			} else {
-				if (nTrnShadowTable[drlg.transvalMap[i][j]] & TIF_FLOOR_11) {
-					dProgressErr() << QString("Mismatching flags %1. 0 vs 8 at %2:%3").arg(drlg.transvalMap[i][j]).arg(i).arg(j);
-                }
 				tpm = 0;
 			}
 			drlg.transDirMap[2 * i + 1][2 * j + 1] = tpm;
