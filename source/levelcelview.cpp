@@ -323,9 +323,9 @@ void LevelCelView::updateEntityOptions()
 void LevelCelView::updateLabel()
 {
     bool hasDun = this->dun != nullptr;
-
+	QMessageBox::critical(nullptr, "Error", "updateLabel 0");
     QHBoxLayout *layout = this->ui->celLabelsHorizontalLayout;
-    const int labelCount = hasDun ? 9 : 8;
+    const int labelCount = hasDun ? 10 : 9;
     while (layout->count() != labelCount + 1) {
         layout->insertWidget(0, new QLabel(""), 0, Qt::AlignLeft);
     }
@@ -339,7 +339,7 @@ void LevelCelView::updateLabel()
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(6)->widget()), this->cls->getFilePath(), this->cls->isModified());
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(7)->widget()), this->spt->getFilePath(), this->spt->isModified());
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(8)->widget()), this->tmi->getFilePath(), this->tmi->isModified());
-
+	QMessageBox::critical(nullptr, "Error", "updateLabel 10");
     if (hasDun) {
         CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(9)->widget()), this->dun->getFilePath(), this->dun->isModified());
     }
