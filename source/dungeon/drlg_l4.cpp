@@ -317,6 +317,23 @@ static void DRLG_LoadL4SP()
 					}
 				}
 			}
+			// use base tiles and let the engine decorate the walls
+			for (int y = 0; y < 12; y++) {
+				for (int x = 0; x < 11; x++) {
+					if (y == 1 && (x == 8 || x == 9)) {
+						continue; // skip protected tiles
+					}
+					uint16_t wv = SwapLE16(lm[2 + x + y * 11]);
+					if (wv >= 63 && wv <= 70) {
+						if (wv == 63 || wv == 65 || wv == 67 || wv == 68) {
+							wv = 1;
+						} else  {
+							wv = 2;
+						}
+						lm[2 + x + y * 11] = SwapLE16(wv);
+					}
+				}
+			}
 			// ensure the changing tiles are reserved
 			lm[2 + 11 * 12 + 9 + 1 * 11] = SwapLE16(3);
 			lm[2 + 11 * 12 + 9 + 2 * 11] = SwapLE16(3);
@@ -348,6 +365,17 @@ static void DRLG_LoadL4SP()
 			lm[2 + 5 + 5 * 11] = SwapLE16(30);
 			// remove partial shadow
 			lm[2 + 5 + 0 * 11] = SwapLE16(50);
+			// use base tiles and let the engine decorate the walls
+			lm[2 + 3 + 10 * 11] = SwapLE16(2);
+			lm[2 + 9 + 8 * 11] = SwapLE16(2);
+			lm[2 + 8 + 9 * 11] = SwapLE16(1);
+			lm[2 + 6 + 5 * 11] = SwapLE16(1);
+			lm[2 + 5 + 6 * 11] = SwapLE16(2);
+			lm[2 + 10 + 7 * 11] = SwapLE16(1);
+			lm[2 + 2 + 1 * 11] = SwapLE16(1);
+			lm[2 + 1 + 2 * 11] = SwapLE16(2);
+			lm[2 + 0 + 3 * 11] = SwapLE16(1);
+			lm[2 + 10 + 3 * 11] = SwapLE16(1);
 			// ensure the changing tiles are reserved
 			// - SW-wall
 			lm[2 + 11 * 11 + 4 + 10 * 11] = SwapLE16(3);

@@ -4457,6 +4457,23 @@ void D1Dun::patch(int dunFileIndex)
                 }
             }
         }
+        // use base tiles and let the engine decorate the walls
+        for (int y = 0; y < 12; y++) {
+            for (int x = 0; x < 11; x++) {
+                if (y == 1 && (x == 8 || x == 9)) {
+                    continue; // skip protected tiles
+                }
+                int wv = this->tiles[y][x];
+                if (wv >= 63 && wv <= 70) {
+                    if (wv == 63 || wv == 65 || wv == 67 || wv == 68) {
+                        wv = 1;
+                    } else {
+                        wv = 2;
+                    }
+                    change |= this->changeTileAt(x, y, wv);
+                }
+            }
+        }
         // ensure the changing tiles are reserved
         change |= this->changeTileProtectionAt( 9,  1, Qt::Checked);
         change |= this->changeTileProtectionAt( 9,  2, Qt::Checked);
@@ -4568,6 +4585,17 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(5, 5, 30);
         // remove partial shadow
         change |= this->changeTileAt(5, 0, 50);
+        // use base tiles and let the engine decorate the walls
+        change |= this->changeTileAt(3, 10, 2);
+        change |= this->changeTileAt(9, 8, 2);
+        change |= this->changeTileAt(8, 9, 1);
+        change |= this->changeTileAt(6, 5, 1);
+        change |= this->changeTileAt(5, 6, 2);
+        change |= this->changeTileAt(10, 7, 1);
+        change |= this->changeTileAt(2, 1, 1);
+        change |= this->changeTileAt(1, 2, 2);
+        change |= this->changeTileAt(0, 3, 1);
+        change |= this->changeTileAt(10, 3, 1);
         // ensure the changing tiles are reserved
         // - SW-wall
         change |= this->changeTileProtectionAt( 4, 10, Qt::Checked);
