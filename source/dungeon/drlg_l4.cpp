@@ -334,6 +334,9 @@ static void DRLG_LoadL4SP()
 					}
 				}
 			}
+			// remove shadow to enable optional connection
+			lm[2 + 0 + 10 * 11] = 0;
+			lm[2 + 0 + 11 * 11] = 0;
 			// ensure the changing tiles are reserved
 			lm[2 + 11 * 12 + 9 + 1 * 11] = SwapLE16(3);
 			lm[2 + 11 * 12 + 9 + 2 * 11] = SwapLE16(3);
@@ -365,6 +368,9 @@ static void DRLG_LoadL4SP()
 			lm[2 + 5 + 5 * 11] = SwapLE16(30);
 			// remove partial shadow
 			lm[2 + 5 + 0 * 11] = SwapLE16(50);
+			// remove shadow to enable optional connection
+			lm[2 + 1 + 9 * 11] = 0;
+			lm[2 + 1 + 10 * 11] = 0;
 			// use base tiles and let the engine decorate the walls
 			lm[2 + 3 + 10 * 11] = SwapLE16(2);
 			lm[2 + 9 + 8 * 11] = SwapLE16(2);

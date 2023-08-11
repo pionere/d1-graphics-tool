@@ -4474,6 +4474,9 @@ void D1Dun::patch(int dunFileIndex)
                 }
             }
         }
+        // remove shadow to enable optional connection
+        change |= this->changeTileAt(0, 10, 0);
+        change |= this->changeTileAt(0, 11, 0);
         // ensure the changing tiles are reserved
         change |= this->changeTileProtectionAt( 9,  1, Qt::Checked);
         change |= this->changeTileProtectionAt( 9,  2, Qt::Checked);
@@ -4585,6 +4588,9 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(5, 5, 30);
         // remove partial shadow
         change |= this->changeTileAt(5, 0, 50);
+        // remove shadow to enable optional connection
+        change |= this->changeTileAt(1,  9, 0);
+        change |= this->changeTileAt(1, 10, 0);
         // use base tiles and let the engine decorate the walls
         change |= this->changeTileAt(3, 10, 2);
         change |= this->changeTileAt(9, 8, 2);
