@@ -94,26 +94,26 @@ static const BYTE L1FTYPES[207] = {
 static const BYTE L5FTYPES[218] = {
 	// clang-format off
 	 0, 10, 12,  8,  8,  8, 10, 12, 10, 12,
-	 8, 10, 12, 15,  8,  8,  8,  8,  0,  0, // 10..
+	 8, 10, 12, 15,  8, 14,  8,  8,  0,  0, // 10..
 	 0,  0,  0,  0,  0, 10, 12,  8, 14,  8, // 20..
 	10, 12, 10, 12,  8, 10, 12,  8,  8,  8, // 30..
 	 8,  8,  8,  8,  8, 15, 15, 15, 15, 15, // 40..
-	15, 15, 15,  0,  0,  0,  0,  0, 15, 15, // 50..
+	10, 10,  0,  0,  0,  4,  0,  0, 15, 15, // 50..
 	15,  0,  0,  0,  0,  0, 15, 15, 15, 10, // 60..
 	12, 12,  8,  8,  8,  8,  8,  8,  8,  8, // 70..
 	12, 12, 12, 12, 12, 12, 12, 12, 12, 10, // 80..
 	10, 10, 12, 12, 12, 10, 12, 15, 15, 15, // 90..
 	15, 15, 10, 10, 10, 10, 15, 15, 15, 10, //100..
-	10, 10, 10, 12,  8,  8,  8,  8,  8,  8, //110..
-	 8,  8, 10, 12, 15,  8,  8,  8,  8, 10, //120..
-	12,  8,  8,  8,  8,  8,  8,  8,  8, 10, //130..
-	12, 15,  8,  8,  8,  8, 10, 12,  8,  8, //140..
-	 8,  8,  8,  8,  8,  8, 10, 12, 15,  8, //150..
-	15,  8,  8, 15, 15, 15, 15, 15, 15, 15, //160..
+	10, 10, 10, 12,  8,  8,  8, 10, 12, 10, //110..
+	12,  8, 10, 12, 15,  8, 14,  8,  8, 10, //120..
+	12,  8,  8,  8, 10, 12, 10, 12,  8, 10, //130..
+	12, 15,  8, 14,  8,  8, 10, 12,  8,  8, //140..
+	 8, 10, 12, 10, 12,  8, 10, 12, 15,  8, //150..
+	14,  8,  8, 15, 15, 15, 15, 15, 15, 15, //160..
 	15, 15, 15, 10, 10, 10, 10, 10, 10, 12, //170..
 	12, 12, 12, 12, 12, 10, 10, 12, 12, 15, //180..
-	15, 15, 15, 15, 15, 15, 15, 15, 15,  0, //190..
-	 0,  0,  0, 15, 15, 15, 15, 15, 15, 15, //200..
+	15, 15, 15, 15, 15, 15, 15, 15, 15, 10, //190..
+	12, 10, 12, 15, 15, 15, 15, 15, 15, 15, //200..
 	15, 15, 15, 15, 15, 10, 10, 15,         //210..
 	// clang-format on
 };
@@ -658,28 +658,58 @@ void DRLG_L5Shadows()
 			vertArch = (automaptype[dungeon[i][j]] & (MAF_WEST_ARCH | MAF_WEST_GRATE)) != 0;
 			switch (dungeon[i][j]) {
 			case 5:
+			// case 116:
+			// case 133:
+			// case 150:
 				pillar = true;
 				break;
 			case 28:
 			case 7:
+			// case 118:
+			// case 135:
+			// case 152:
 			case 15:
+			// case 126:
+			// case 143:
 			case 16:
+			// case 127:
+			// case 144:
+			// case 161:
+			// case 3:
+			// case 114:
+			// case 131:
+			// case 148:
 			// case 17:
+			// case 128:
+			// case 145:
+			// case 162:
 			// case 31:
+			// case 33:
 			case 85:
 			case 86:
 				pillar = true;
 				break;
 			case 8:
+			// case 119:
+			// case 136:
+			// case 153:
 			case 14:
+			// case 125:
+			// case 142:
+			// case 159:
 			case 37:
 			// case 32:
 			// case 39:
 			// case 42:
+			// case 29:
+			// case 38:
+			// case 44:
 				pillar = true;
 				break;
 			case 9:
-			// case 33:
+			// case 120:
+			// case 137:
+			// case 154:
 				pillar = true;
 				break;
 			}
@@ -766,7 +796,7 @@ void DRLG_L5Shadows()
 					// pillar = (dungeon[i][j - 1] == 13 /* || 203 207 204 81 ... 2 3 7 9 12 15 16 17 26 36 */);
 					pillar = (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END;
 					if (pillar != ((nTrnShadowTable[dungeon[i][j - 1]] & TIF_L1_WEST_WALL) == 0)) {
-						dProgressErr() << QString("Mismatching flags %1. pillar %2").arg(dungeon[i][j - 1]).arg(automaptype[dungeon[i][j - 1]] & MAF_TYPE);
+						dProgressErr() << QString("Mismatching flags %1. west wall %2").arg(dungeon[i][j - 1]).arg(automaptype[dungeon[i][j - 1]] & MAF_TYPE);
 					}
 					if (replace == 13) {
 						replace = pillar ? 207 : 203;
