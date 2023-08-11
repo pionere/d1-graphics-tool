@@ -3447,6 +3447,11 @@ typedef enum _tile_flags {
     TIF_L2_EAST_DOOR = 1 << 7,
 
     TIF_L4_PILLAR    = 1 << 6,
+
+    TIF_L5_WEST_ARCH_GRATE = 1 << 4,
+    TIF_L5_EAST_ARCH_GRATE = 1 << 5,
+    TIF_L5_PILLAR  = 1 << 6,
+    TIF_L5_WEST_WALL = 1 << 7,
 } _tile_flags;
 
 typedef enum dflag {

@@ -15052,7 +15052,7 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceSubtile(this->til, 84 - 1, 2, 105 - 1, silent); // 317
     ReplaceSubtile(this->til, 100 - 1, 0, 25 - 1, silent); // 374
     ReplaceSubtile(this->til, 100 - 1, 1, 26 - 1, silent); // 375
-    // - new shadows
+    // - adjusted shadows
     ReplaceSubtile(this->til, 66 - 1, 0, 103 - 1, silent); // 250
     ReplaceSubtile(this->til, 66 - 1, 3, 106 - 1, silent); // 253
     ReplaceSubtile(this->til, 67 - 1, 0, 25 - 1, silent);  // 254 same as tile 7, but needed for L6MITE-placements
