@@ -34,11 +34,6 @@ bool D1Tla::load(const QString &filePath, int tileCount, const OpenAsParam &para
 
     // File size check
     unsigned fileSize = fileData.size();
-    if (fileSize % 2 != 0) {
-        dProgressErr() << tr("Invalid TLA file.");
-        return false;
-    }
-
     int tlaTileCount = fileSize;
     if (tlaTileCount != tileCount + 1 && tlaTileCount != 0) {
         // warn about misalignment if the files are not empty
