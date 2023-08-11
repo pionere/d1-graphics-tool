@@ -19,6 +19,7 @@ extern DrlgMem drlg;
 extern SetPieceStruct pSetPieces[4];
 extern WarpStruct pWarps[NUM_DWARP];
 extern uint16_t pTiles[MAXTILES + 1][4];
+extern BYTE nTrnShadowTable[MAXTILES + 1];
 extern BYTE* pSolidTbl;
 extern BYTE microFlags[MAXSUBTILES + 1];
 extern bool nBlockTable[MAXSUBTILES + 1];
