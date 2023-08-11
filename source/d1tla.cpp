@@ -108,6 +108,7 @@ bool D1Tla::save(const SaveAsParam &params)
 
         // write to file
         QDataStream out(&outFile);
+        out << (quint8)0; // add leading zero
         for (int i = 0; i < this->properties.size(); i++) {
             out << this->properties[i];
         }
