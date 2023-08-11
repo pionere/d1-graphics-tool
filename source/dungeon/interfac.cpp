@@ -99,6 +99,13 @@ static void LoadTileset(D1Tileset *tileset)
 		automaptype[n + 1] = maptype;
 	}
 
+	// 'load' TLA
+	memset(nTrnShadowTable, 0, sizeof(nTrnShadowTable));
+	entries = std::min(lengthof(nTrnShadowTable) - 1, tileset->til->getTileCount());
+	for (int n = 0; n < entries; n++) {
+		nTrnShadowTable[n + 1] = tileset->tla->getTileProperties(n);
+	}
+
 	// 'load' tiles
 	memset(pTiles, 0, sizeof(pTiles));
 	entries = std::min(lengthof(pTiles) - 1, tileset->til->getTileCount());
