@@ -104,6 +104,7 @@ void InitLvlAutomap()
 		automaptype[35] = automaptype[7];
 		automaptype[36] = automaptype[9];
 		automaptype[37] = automaptype[9];
+		automaptype[101] = MWT_PILLAR;
 	}
 	// patch dAutomapData - L3.AMP
 	if (currLvl._dType == DTYPE_CAVES) {
