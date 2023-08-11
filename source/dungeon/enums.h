@@ -3446,6 +3446,8 @@ typedef enum _tile_flags {
     TIF_L2_PILLAR    = 1 << 6,
     TIF_L2_EAST_DOOR = 1 << 7,
 
+    TIF_L4_WEST_ARCH = 1 << 4,
+    TIF_L4_EAST_ARCH = 1 << 5,
     TIF_L4_PILLAR    = 1 << 6,
 
     TIF_L5_WEST_ARCH_GRATE = 1 << 4,

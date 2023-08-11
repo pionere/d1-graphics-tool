@@ -187,6 +187,7 @@ void DRLG_L4Shadows()
 		for (y = 1; y < DMAXY; y++) {
 			bv = dungeon[x][y];
 			if (bv == 3 || bv == 4 || bv == 8 || bv == 15) { // pillar
+			// if (nTrnShadowTable[bv] & TIF_L4_PILLAR) {
 				// 6, 0,
 				// 6, 3/4/8/15,  search
 
@@ -214,6 +215,7 @@ void DRLG_L4Shadows()
 				}
 				dungeon[x - 1][y - 1] = replaceB;
 			} else if (bv == 53) { // varch
+			// if (nTrnShadowTable[bv] & TIF_L4_WEST_ARCH) {
 				// 6, 0,
 				// 6, 53,  search
 
@@ -241,6 +243,7 @@ void DRLG_L4Shadows()
 				}
 				dungeon[x - 1][y - 1] = replaceB;
 			} else if (bv == 56) { // harch
+			// if (nTrnShadowTable[bv] & TIF_L4_EAST_ARCH) {
 				// 6, 6, 0,
 				// 0, 50, 56,  search
 

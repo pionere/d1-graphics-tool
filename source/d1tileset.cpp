@@ -17365,7 +17365,6 @@ void D1Tileset::patch(int dunType, bool silent)
         SetTileMapFlags(this->amp, 145 - 1, 11 - 1, silent);
         SetTileMapFlags(this->amp, 147 - 1, 6 - 1, silent);
         SetTileMapFlags(this->amp, 149 - 1, 12 - 1, silent);
-        SetTileMapFlags(this->amp, 149 - 1, 12 - 1, silent);
         SetTileMapFlags(this->amp, 150 - 1, 2 - 1, silent);
         SetTileMapFlags(this->amp, 151 - 1, 12 - 1, silent);
         SetTileMapFlags(this->amp, 152 - 1, 36 - 1, silent);
