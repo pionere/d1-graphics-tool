@@ -35,18 +35,18 @@ bool D1Tla::load(const QString &filePath, int tileCount, const OpenAsParam &para
     // File size check
     unsigned fileSize = fileData.size();
     if (fileSize % 2 != 0) {
-        dProgressErr() << tr("Invalid TIT file.");
+        dProgressErr() << tr("Invalid TLA file.");
         return false;
     }
 
     int tlaTileCount = fileSize;
-    if (tlaTileCount != tileCount && tlaTileCount != 0) {
+    if (tlaTileCount != tileCount + 1 && tlaTileCount != 0) {
         // warn about misalignment if the files are not empty
         if (tileCount != 0) {
-            dProgressWarn() << tr("The size of TIT file does not align with TIL file.");
+            dProgressWarn() << tr("The size of TLA file does not align with TIL file.");
         }
-        if (tlaTileCount > tileCount) {
-            tlaTileCount = tileCount; // skip unusable data
+        if (tlaTileCount > tileCount + 1) {
+            tlaTileCount = tileCount + 1; // skip unusable data
         }
         changed = true;
     }
@@ -56,12 +56,14 @@ bool D1Tla::load(const QString &filePath, int tileCount, const OpenAsParam &para
         this->properties.append(0);
     }
 
-    // Read AMP binary data
+    // Read TLA binary data
     QDataStream in(fileData);
     // in.setByteOrder(QDataStream::LittleEndian);
 
+    // skip the first byte
+    quint8 readByte;
+    in >> readByte;
     for (int i = 0; i < tlaTileCount; i++) {
-        quint8 readByte;
         in >> readByte;
         this->properties[i] = readByte;
     }
@@ -98,7 +100,7 @@ bool D1Tla::save(const SaveAsParam &params)
         }
     }
     if (!isEmpty) {
-        // TIT with content -> create or change
+        // TLA with content -> create or change
         QDir().mkpath(QFileInfo(filePath).absolutePath());
         QFile outFile = QFile(filePath);
         if (!outFile.open(QIODevice::WriteOnly)) {

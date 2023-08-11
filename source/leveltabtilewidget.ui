@@ -245,14 +245,14 @@
       <item row="3" column="1">
        <widget class="QCheckBox" name="tlaS00">
         <property name="toolTip">
-         <string>Western Arch (or Grate) in Cathedral or in Catacombs</string>
+         <string>Western Arch (or Grate) in Cathedral, in Catacombs, in Hell or in Crypt</string>
         </property>
        </widget>
       </item>
       <item row="3" column="2">
        <widget class="QCheckBox" name="tlaS01">
         <property name="toolTip">
-         <string>Eastern Arch (or Grate) in Cathedral or in Catacombs</string>
+         <string>Eastern Arch (or Grate) in Cathedral, in Catacombs, in Hell or in Crypt, Eastern Door in Cathedral</string>
         </property>
        </widget>
       </item>

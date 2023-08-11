@@ -927,7 +927,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 			// 1. subtile
 			if (tvm & (1 << 0)) {
 				if (!(nTrnShadowTable[drlg.transvalMap[i][j]] & TIF_FLOOR_00)) {
-					dProgressErr() << QString("Mismatching flags %d. 1 vs 0").arg(drlg.transvalMap[i][j]);
+					dProgressErr() << QString("Mismatching flags %1. 1 vs 0").arg(drlg.transvalMap[i][j]);
                 }
 				tpm = (1 << 1) | (1 << 2) | (1 << 3); // DIR_NW, DIR_N, DIR_NE
 				if (tvm & (1 << 2)) // 3. subtile
@@ -936,7 +936,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 					tpm |= (1 << 6); // DIR_SW
 			} else {
 				if (nTrnShadowTable[drlg.transvalMap[i][j]] & TIF_FLOOR_00) {
-					dProgressErr() << QString("Mismatching flags %d. 0 vs 1").arg(drlg.transvalMap[i][j]);
+					dProgressErr() << QString("Mismatching flags %1. 0 vs 1").arg(drlg.transvalMap[i][j]);
                 }
 				tpm = 0;
 			}
@@ -944,7 +944,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 			// 3. subtile
 			if (tvm & (1 << 2)) {
 				if (!(nTrnShadowTable[drlg.transvalMap[i][j]] & TIF_FLOOR_10)) {
-					dProgressErr() << QString("Mismatching flags %d. 4 vs 0").arg(drlg.transvalMap[i][j]);
+					dProgressErr() << QString("Mismatching flags %1. 4 vs 0").arg(drlg.transvalMap[i][j]);
                 }
 				tpm = (1 << 3) | (1 << 4) | (1 << 0); // DIR_NE, DIR_E, DIR_SE
 				if (tvm & (1 << 0)) // 1. subtile
@@ -953,7 +953,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 					tpm |= (1 << 6); // DIR_SW
 			} else {
 				if (nTrnShadowTable[drlg.transvalMap[i][j]] & TIF_FLOOR_10) {
-					dProgressErr() << QString("Mismatching flags %d. 0 vs 4").arg(drlg.transvalMap[i][j]);
+					dProgressErr() << QString("Mismatching flags %1. 0 vs 4").arg(drlg.transvalMap[i][j]);
                 }
 				tpm = 0;
 			}
@@ -961,7 +961,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 			// 2. subtile
 			if (tvm & (1 << 1)) {
 				if (!(nTrnShadowTable[drlg.transvalMap[i][j]] & TIF_FLOOR_01)) {
-					dProgressErr() << QString("Mismatching flags %d. 2 vs 0").arg(drlg.transvalMap[i][j]);
+					dProgressErr() << QString("Mismatching flags %1. 2 vs 0").arg(drlg.transvalMap[i][j]);
                 }
 				tpm = (1 << 6) | (1 << 5) | (1 << 1); // DIR_SW, DIR_W, DIR_NW
 				if (tvm & (1 << 0)) // 1. subtile
@@ -970,7 +970,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 					tpm |= (1 << 0); // DIR_SE
 			} else {
 				if (nTrnShadowTable[drlg.transvalMap[i][j]] & TIF_FLOOR_01) {
-					dProgressErr() << QString("Mismatching flags %d. 0 vs 2").arg(drlg.transvalMap[i][j]);
+					dProgressErr() << QString("Mismatching flags %1. 0 vs 2").arg(drlg.transvalMap[i][j]);
                 }
 				tpm = 0;
 			}
@@ -978,7 +978,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 			// 4. subtile
 			if (tvm & (1 << 3)) {
 				if (!(nTrnShadowTable[drlg.transvalMap[i][j]] & TIF_FLOOR_11)) {
-					dProgressErr() << QString("Mismatching flags %d. 8 vs 0").arg(drlg.transvalMap[i][j]);
+					dProgressErr() << QString("Mismatching flags %1. 8 vs 0").arg(drlg.transvalMap[i][j]);
                 }
 				tpm = (1 << 0) | (1 << 7) | (1 << 6); // DIR_SE, DIR_S, DIR_SW
 				if (tvm & (1 << 2)) // 3. subtile
@@ -987,7 +987,7 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 					tpm |= (1 << 1); // DIR_NW
 			} else {
 				if (nTrnShadowTable[drlg.transvalMap[i][j]] & TIF_FLOOR_11) {
-					dProgressErr() << QString("Mismatching flags %d. 0 vs 8").arg(drlg.transvalMap[i][j]);
+					dProgressErr() << QString("Mismatching flags %1. 0 vs 8").arg(drlg.transvalMap[i][j]);
                 }
 				tpm = 0;
 			}
