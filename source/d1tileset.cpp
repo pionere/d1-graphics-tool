@@ -10088,6 +10088,8 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(4, 6);
     Blk2Mcr(8, 1);
     Blk2Mcr(8, 3);
+    Blk2Mcr(8, 4);
+    Blk2Mcr(8, 6);
     Blk2Mcr(12, 1);
     Blk2Mcr(12, 3);
     Blk2Mcr(20, 1);
@@ -10095,6 +10097,8 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(373, 1);
     Blk2Mcr(373, 3);
     Blk2Mcr(511, 1);
+    Blk2Mcr(511, 4);
+    Blk2Mcr(511, 6);
     Blk2Mcr(16, 0);
     Blk2Mcr(16, 2);
     Blk2Mcr(20, 0);
@@ -10252,7 +10256,7 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(150, 2, 8, 5);
     ReplaceMcr(150, 0, 56, 0); // or 140
 
-    ReplaceMcr(4, 5, 8, 5);
+    ReplaceMcr(4, 5, 8, 5); // lost details
 
     ReplaceMcr(511, 3, 496, 3);
     ReplaceMcr(509, 1, 493, 1);
@@ -10388,7 +10392,9 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(409, 1);
     Blk2Mcr(436, 1);
     Blk2Mcr(436, 3);
+    Blk2Mcr(436, 4);
     Blk2Mcr(436, 5);
+    Blk2Mcr(436, 6);
     Blk2Mcr(519, 0);
     Blk2Mcr(548, 2);
     Blk2Mcr(548, 5);
