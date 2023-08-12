@@ -3519,7 +3519,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 46 - 1, 3, 302 - 1, silent);
     // eliminate subtiles of unused tiles
     const int unusedTiles[] = {
-        30, 31, 34,/* 38,*/ 39, 40, 41, 42,/* 44,*/ 45, 79, 82, 86, 87, 88, 89, 90, 91, 92, 95, 96, 119, 120, 126, 127, 177, 178, 179, 180, 181, 182, 183, 184, 185, 187, 188, 189, 190, 191, 192, 195, 197, 198, 199, 200, 201, 202, 203, 204, 205
+        30, 31, 34,/* 38,*/ 39, 40, 41, 42,/*43, 44,*/ 45, 79, 82, 86, 87, 88, 89, 90, 91, 92, 95, 96, 119, 120, 126, 127, 177, 178, 179, 180, 181, 182, 183, 184, 185, 187, 188, 189, 190, 191, 192, 195, 197, 198, 199, 200, 201, 202, 203, 204, 205
     };
     constexpr int blankSubtile = 74 - 1;
     for (int n = 0; n < lengthof(unusedTiles); n++) {
@@ -16068,7 +16068,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 188 - 1, 2, 12 - 1, silent);
     // eliminate subtiles of unused tiles
     const int unusedTiles[] = {
-        /* 29,*/ 30, 31, 34,/* 38,*/ 39, 40, 41, 42,/* 43, 44, */ 61, 62, 63, 64, 65, 66, 67, 68, 72, 73, 74, 75, 76, 77, 78, 79, 212, 213, 214
+        /* 29,*/ 30, 31,/* 32,*/ 34,/* 38,*/ 39, 40, 41, 42,/* 43, 44,*/ 61, 62, 63, 64, 65, 66, 67, 68, 72, 73, 74, 75, 76, 77, 78, 79, 212, 213, 214
     };
     constexpr int blankSubtile = 8 - 1;
     for (int n = 0; n < lengthof(unusedTiles); n++) {
@@ -17373,14 +17373,17 @@ void D1Tileset::patch(int dunType, bool silent)
         SetTileMapFlags(this->amp, 145 - 1, 11 - 1, silent);
         SetTileMapFlags(this->amp, 147 - 1, 6 - 1, silent);
         SetTileMapFlags(this->amp, 149 - 1, 12 - 1, silent);
-        SetTileMapFlags(this->amp, 149 - 1, 12 - 1, silent);
         SetTileMapFlags(this->amp, 150 - 1, 2 - 1, silent);
         SetTileMapFlags(this->amp, 151 - 1, 12 - 1, silent);
         SetTileMapFlags(this->amp, 152 - 1, 36 - 1, silent);
+        SetTileMapFlags(this->amp, 153 - 1, 36 - 1, silent);
         SetTileMapFlags(this->amp, 154 - 1, 7 - 1, silent);
         SetTileMapFlags(this->amp, 155 - 1, 2 - 1, silent);
+        SetTileMapFlags(this->amp, 156 - 1, 26 - 1, silent);
         SetTileMapFlags(this->amp, 157 - 1, 35 - 1, silent);
         SetTileMapFlags(this->amp, 159 - 1, 13 - 1, silent);
+        SetTileMapFlags(this->amp, 160 - 1, 14 - 1, silent);
+        SetTileMapFlags(this->amp, 161 - 1, 37 - 1, silent);
         SetTileMapFlags(this->amp, 164 - 1, 13 - 1, silent);
         SetTileMapFlags(this->amp, 165 - 1, 13 - 1, silent);
         // - shadows for the banner setpiece
