@@ -5637,6 +5637,11 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 100 - 1, 1, 165 - 1, silent);
     ReplaceSubtile(this->til, 100 - 1, 2, 155 - 1, silent);
     ReplaceSubtile(this->til, 100 - 1, 3, 169 - 1, silent);
+    // - shadow for the separate pillar
+    ReplaceSubtile(this->til, 101 - 1, 0, 21 - 1, silent);
+    ReplaceSubtile(this->til, 101 - 1, 1, 26 - 1, silent);
+    ReplaceSubtile(this->til, 101 - 1, 2, 148 - 1, silent);
+    ReplaceSubtile(this->til, 101 - 1, 3, 169 - 1, silent);
     // fix graphical glitch
     ReplaceSubtile(this->til, 157 - 1, 1, 99 - 1, silent);
     // fix the upstairs II.
@@ -5652,7 +5657,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 159 - 1, 2, 11 - 1, silent); // use common subtile
     // eliminate subtiles of unused tiles
     const int unusedTiles[] = {
-        58, 61, 64, 65, 66, 67, 76, 93, 98, 101, 102, 103, 104, 143, 144, 145, 146, 147, 148, 149, 152, 153, 154, 155, 158, 159, 160
+        58, 61, 64, 65, 66, 67, 76, 93, 98, 102, 103, 104, 143, 144, 145, 146, 147, 148, 149, 152, 153, 154, 155, 158, 159, 160
     };
     constexpr int blankSubtile = 2 - 1;
     for (int n = 0; n < lengthof(unusedTiles); n++) {
@@ -17425,6 +17430,8 @@ void D1Tileset::patch(int dunType, bool silent)
         // SetTileMapFlags(this->amp, 95 - 1, 3 - 1, silent);
         // SetTileMapFlags(this->amp, 96 - 1, 3 - 1, silent);
         // SetTileMapFlags(this->amp, 100 - 1, 3 - 1, silent);
+        // - shadow for the separate pillar
+        ChangeTileMapType(this->amp, 101 - 1, MWT_PILLAR, silent);
         // patch dSolidTable - L2.SOL
         // - fix the upstairs IV.
         ChangeSubtileSolFlags(this->sol, 252 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, true, silent);

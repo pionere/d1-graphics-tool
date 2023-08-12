@@ -99,7 +99,7 @@ const BYTE L2FTYPES[159] = {
 	10,  7, 15, 12, 12, 12, 15, 10,  0, 10, // 70..
 	10, 10, 10, 14, 12, 12, 12,  8, 15, 15, // 80..
 	15, 15, 15, 15, 15, 12, 10, 15, 15, 15, // 90..
-	12, 15, 15, 15, 15, 15, 15, 15, 15, 15, //100..
+	12, 14, 15, 15, 15, 15, 15, 15, 15, 15, //100..
 	15, 15, 15, 15, 15, 15, 10, 10, 12, 12, //110..
 	15, 15, 15, 15, 10, 10, 12, 12, 15, 15, //120..
 	15, 15, 10, 10, 15, 15, 12, 12, 15, 15, //130..
@@ -671,6 +671,7 @@ static void DRLG_L2Shadows()
 			}
 			switch (dungeon[i][j]) {
 			case 52:
+			case 101:
 			case 9:
 			case 36:
 			case 37:
@@ -739,6 +740,7 @@ static void DRLG_L2Shadows()
 					case 6:  replaceA = 34;  break;
 					case 9:  replaceA = 36;  break;
 					case 45: replaceA = 100;  break;
+					case 52: replaceA = 101;  break;
 					// case 157: replaceA = 18;  break;
 					default:
 						dProgressWarn() << QString("Missing case %1 for vertical arch %2 with floor @%3:%4").arg(replaceC).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
