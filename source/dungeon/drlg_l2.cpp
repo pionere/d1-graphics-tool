@@ -681,6 +681,7 @@ void DRLG_L2Shadows()
 			}
 			switch (dungeon[i][j]) {
 			case 52:
+			case 101:
 			case 9:
 			case 36:
 			case 37:
