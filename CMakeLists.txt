@@ -87,6 +87,8 @@ set(PROJECT_SOURCES
         source/d1tableset.h
         source/d1tbl.cpp
         source/d1tbl.h
+        source/d1tla.cpp
+        source/d1tla.h
         source/d1til.cpp
         source/d1til.h
         source/d1tileset.cpp

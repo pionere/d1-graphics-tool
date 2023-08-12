@@ -8,7 +8,10 @@
 #include "d1gfx.h"
 #include "d1min.h"
 #include "d1sol.h"
+#include "d1spt.h"
 #include "d1til.h"
+#include "d1tla.h"
+#include "d1tmi.h"
 #include "mainwindow.h"
 
 SaveAsDialog::SaveAsDialog(QWidget *parent)
@@ -48,6 +51,7 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Gfxset *gfxset, D1
     this->ui->outputTilFileEdit->setText(isTilesetGfx ? tileset->til->getFilePath() : "");
     this->ui->outputSolFileEdit->setText(isTilesetGfx ? tileset->sol->getFilePath() : "");
     this->ui->outputAmpFileEdit->setText(isTilesetGfx ? tileset->amp->getFilePath() : "");
+    this->ui->outputTlaFileEdit->setText(isTilesetGfx ? tileset->tla->getFilePath() : "");
     this->ui->outputSptFileEdit->setText(isTilesetGfx ? tileset->spt->getFilePath() : "");
     this->ui->outputTmiFileEdit->setText(isTilesetGfx ? tileset->tmi->getFilePath() : "");
     this->ui->tblFileEdit->setText(isTableset ? tableset->darkTbl->getFilePath() : "");
@@ -104,6 +108,7 @@ void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
             this->ui->outputTilFileEdit->setText(saveFilePath + (upperCase ? ".TIL" : ".til"));
             this->ui->outputSolFileEdit->setText(saveFilePath + (upperCase ? ".SOL" : ".sol"));
             this->ui->outputAmpFileEdit->setText(saveFilePath + (upperCase ? ".AMP" : ".amp"));
+            this->ui->outputTlaFileEdit->setText(saveFilePath + (upperCase ? ".TLA" : ".tla"));
             this->ui->outputSptFileEdit->setText(saveFilePath + (upperCase ? ".SPT" : ".spt"));
             this->ui->outputTmiFileEdit->setText(saveFilePath + (upperCase ? ".TMI" : ".tmi"));
         }
@@ -158,6 +163,16 @@ void SaveAsDialog::on_outputAmpFileBrowseButton_clicked()
         return;
 
     this->ui->outputAmpFileEdit->setText(saveFilePath);
+}
+
+void SaveAsDialog::on_outputTlaFileBrowseButton_clicked()
+{
+    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save TLA as..."), tr("TLA Files (*.tla *.TLA)"));
+
+    if (saveFilePath.isEmpty())
+        return;
+
+    this->ui->outputTlaFileEdit->setText(saveFilePath);
 }
 
 void SaveAsDialog::on_outputSptFileBrowseButton_clicked()
@@ -227,6 +242,7 @@ void SaveAsDialog::on_saveButton_clicked()
     params.tilFilePath = this->ui->outputTilFileEdit->text();
     params.solFilePath = this->ui->outputSolFileEdit->text();
     params.ampFilePath = this->ui->outputAmpFileEdit->text();
+    params.tlaFilePath = this->ui->outputTlaFileEdit->text();
     params.sptFilePath = this->ui->outputSptFileEdit->text();
     params.tmiFilePath = this->ui->outputTmiFileEdit->text();
     params.dunFilePath = this->ui->outputDunFileEdit->text();

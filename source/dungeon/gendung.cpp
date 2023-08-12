@@ -30,6 +30,10 @@ SetPieceStruct pSetPieces[4];
 WarpStruct pWarps[NUM_DWARP];
 /** Specifies the tiles (groups of four subtiles). */
 uint16_t pTiles[MAXTILES + 1][4];
+/**
+ * Flags of tiles to specify room propagation and shadow-type flags (_tile_flags)
+ */
+BYTE nTrnShadowTable[MAXTILES + 1];
 BYTE* pSolidTbl;
 /**
  * List of light blocking dPieces
@@ -121,6 +125,9 @@ void InitLvlDungeon()
 				pTiles[i][bv] = pTiles[i][bv] + 1;
 			}
 		}
+	}
+	if (lfd->dTileFlags != NULL) {
+		LoadFileWithMem(lfd->dTileFlags, nTrnShadowTable); // .TLA
 	}
 	LoadFileWithMem(lfd->dSpecFlags, &nSpecTrapTable[0]); // .SPT
 	static_assert(false == 0, "InitLvlDungeon fills tables with 0 instead of false values.");
@@ -895,7 +902,7 @@ static void DRLG_FTVR(unsigned offset)
 	}
 }
 
-void DRLG_FloodTVal(const BYTE *floorTypes)
+void DRLG_FloodTVal()
 {
 	int i, j;
 	BYTE *tdp = &drlg.transDirMap[0][0]; // Overlaps with transvalMap!
@@ -906,47 +913,47 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 	// prepare the propagation-directions
 	for (i = DMAXX - 1; i >= 0; i--) {
 		for (j = DMAXY - 1; j >= 0; j--) {
-			BYTE tvm = floorTypes[drlg.transvalMap[i][j]];
+			BYTE tvm = nTrnShadowTable[drlg.transvalMap[i][j]];
 			BYTE tpm;
 			// 1. subtile
-			if (tvm & (1 << 0)) {
+			if (tvm & TIF_FLOOR_00) {
 				tpm = (1 << 1) | (1 << 2) | (1 << 3); // DIR_NW, DIR_N, DIR_NE
-				if (tvm & (1 << 2)) // 3. subtile
+				if (tvm & TIF_FLOOR_10) // 3. subtile
 					tpm |= (1 << 0); // DIR_SE
-				if (tvm & (1 << 1)) // 2. subtile
+				if (tvm & TIF_FLOOR_01) // 2. subtile
 					tpm |= (1 << 6); // DIR_SW
 			} else {
 				tpm = 0;
 			}
 			drlg.transDirMap[2 * i + 0][2 * j + 0] = tpm;
 			// 3. subtile
-			if (tvm & (1 << 2)) {
+			if (tvm & TIF_FLOOR_10) {
 				tpm = (1 << 3) | (1 << 4) | (1 << 0); // DIR_NE, DIR_E, DIR_SE
-				if (tvm & (1 << 0)) // 1. subtile
+				if (tvm & TIF_FLOOR_00) // 1. subtile
 					tpm |= (1 << 1); // DIR_NW
-				if (tvm & (1 << 3)) // 4. subtile
+				if (tvm & TIF_FLOOR_11) // 4. subtile
 					tpm |= (1 << 6); // DIR_SW
 			} else {
 				tpm = 0;
 			}
 			drlg.transDirMap[2 * i + 0][2 * j + 1] = tpm;
 			// 2. subtile
-			if (tvm & (1 << 1)) {
+			if (tvm & TIF_FLOOR_01) {
 				tpm = (1 << 6) | (1 << 5) | (1 << 1); // DIR_SW, DIR_W, DIR_NW
-				if (tvm & (1 << 0)) // 1. subtile
+				if (tvm & TIF_FLOOR_00) // 1. subtile
 					tpm |= (1 << 3); // DIR_NE
-				if (tvm & (1 << 3)) // 4. subtile
+				if (tvm & TIF_FLOOR_11) // 4. subtile
 					tpm |= (1 << 0); // DIR_SE
 			} else {
 				tpm = 0;
 			}
 			drlg.transDirMap[2 * i + 1][2 * j + 0] = tpm;
 			// 4. subtile
-			if (tvm & (1 << 3)) {
+			if (tvm & TIF_FLOOR_11) {
 				tpm = (1 << 0) | (1 << 7) | (1 << 6); // DIR_SE, DIR_S, DIR_SW
-				if (tvm & (1 << 2)) // 3. subtile
+				if (tvm & TIF_FLOOR_10) // 3. subtile
 					tpm |= (1 << 3); // DIR_NE
-				if (tvm & (1 << 1)) // 2. subtile
+				if (tvm & TIF_FLOOR_01) // 2. subtile
 					tpm |= (1 << 1); // DIR_NW
 			} else {
 				tpm = 0;

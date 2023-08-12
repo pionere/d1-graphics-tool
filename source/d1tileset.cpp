@@ -26,6 +26,7 @@ D1Tileset::D1Tileset(D1Gfx *g)
     this->til = new D1Til();
     this->sol = new D1Sol();
     this->amp = new D1Amp();
+    this->tla = new D1Tla();
     this->spt = new D1Spt();
     this->tmi = new D1Tmi();
 }
@@ -37,6 +38,7 @@ D1Tileset::~D1Tileset()
     delete til;
     delete sol;
     delete amp;
+    delete tla;
     delete spt;
     delete tmi;
 }
@@ -63,6 +65,7 @@ bool D1Tileset::load(const OpenAsParam &params)
     QString minFilePath = params.minFilePath;
     QString solFilePath = params.solFilePath;
     QString ampFilePath = params.ampFilePath;
+    QString tlaFilePath = params.tlaFilePath;
     QString sptFilePath = params.sptFilePath;
     QString tmiFilePath = params.tmiFilePath;
 
@@ -86,6 +89,9 @@ bool D1Tileset::load(const OpenAsParam &params)
         if (ampFilePath.isEmpty()) {
             ampFilePath = basePath + ".amp";
         }
+        if (tlaFilePath.isEmpty()) {
+            tlaFilePath = basePath + ".tla";
+        }
         if (sptFilePath.isEmpty()) {
             sptFilePath = basePath + ".spt";
         }
@@ -103,6 +109,8 @@ bool D1Tileset::load(const OpenAsParam &params)
         dProgressErr() << QApplication::tr("Failed loading TIL file: %1.").arg(QDir::toNativeSeparators(tilFilePath));
     } else if (!this->amp->load(ampFilePath, this->til->getTileCount(), params)) {
         dProgressErr() << QApplication::tr("Failed loading AMP file: %1.").arg(QDir::toNativeSeparators(ampFilePath));
+    } else if (!this->tla->load(tlaFilePath, this->til->getTileCount(), params)) {
+        dProgressErr() << QApplication::tr("Failed loading TLA file: %1.").arg(QDir::toNativeSeparators(tlaFilePath));
     } else if (!this->spt->load(sptFilePath, this->sol, params)) {
         dProgressErr() << QApplication::tr("Failed loading SPT file: %1.").arg(QDir::toNativeSeparators(sptFilePath));
     } else if (!this->tmi->load(tmiFilePath, this->sol, params)) {
@@ -121,6 +129,7 @@ bool D1Tileset::load(const OpenAsParam &params)
     this->til->clear();
     this->sol->clear();
     this->amp->clear();
+    this->tla->clear();
     this->spt->clear();
     this->tmi->clear();
     return false;
@@ -133,6 +142,7 @@ void D1Tileset::save(const SaveAsParam &params)
     this->til->save(params);
     this->sol->save(params);
     this->amp->save(params);
+    this->tla->save(params);
     this->spt->save(params);
     this->tmi->save(params);
 }
@@ -141,6 +151,7 @@ void D1Tileset::createTile()
 {
     this->til->createTile();
     this->amp->createTile();
+    this->tla->createTile();
 }
 
 void D1Tileset::insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList)

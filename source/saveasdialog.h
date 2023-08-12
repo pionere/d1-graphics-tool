@@ -29,6 +29,7 @@ public:
     QString minFilePath;
     QString solFilePath;
     QString ampFilePath;
+    QString tlaFilePath;
     QString sptFilePath;
     QString tmiFilePath;
     QString dunFilePath;
@@ -60,8 +61,9 @@ private slots:
     void on_outputTilFileBrowseButton_clicked();
     void on_outputSolFileBrowseButton_clicked();
     void on_outputAmpFileBrowseButton_clicked();
-    void on_outputTmiFileBrowseButton_clicked();
+    void on_outputTlaFileBrowseButton_clicked();
     void on_outputSptFileBrowseButton_clicked();
+    void on_outputTmiFileBrowseButton_clicked();
     void on_outputDunFileBrowseButton_clicked();
     void on_tblFileBrowseButton_clicked();
     void on_saveButton_clicked();

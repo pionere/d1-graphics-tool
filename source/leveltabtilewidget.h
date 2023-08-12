@@ -9,6 +9,7 @@ class LevelCelView;
 class D1Til;
 class D1Min;
 class D1Amp;
+class D1Tla;
 
 class EditTileCommand : public QObject, public QUndoCommand {
     Q_OBJECT
@@ -50,6 +51,25 @@ private:
     bool type;
 };
 
+class EditTlaCommand : public QObject, public QUndoCommand {
+    Q_OBJECT
+
+public:
+    explicit EditTlaCommand(D1Tla *tla, int tileIndex, int value);
+    ~EditTlaCommand() = default;
+
+    void undo() override;
+    void redo() override;
+
+signals:
+    void modified();
+
+private:
+    QPointer<D1Tla> tla;
+    int tileIndex;
+    int value;
+};
+
 namespace Ui {
 class LevelTabTileWidget;
 } // namespace Ui
@@ -61,7 +81,7 @@ public:
     explicit LevelTabTileWidget(QWidget *parent);
     ~LevelTabTileWidget();
 
-    void initialize(LevelCelView *v, QUndoStack *undoStack, D1Til *t, D1Min *m, D1Amp *a);
+    void initialize(LevelCelView *v, QUndoStack *undoStack, D1Til *t, D1Min *m, D1Amp *a, D1Tla *tt);
     void updateFields();
 
     void selectSubtile(int index);
@@ -81,6 +101,15 @@ private slots:
     void on_amp6_clicked();
     void on_amp7_clicked();
 
+    void on_tlaF00_clicked();
+    void on_tlaF01_clicked();
+    void on_tlaF10_clicked();
+    void on_tlaF11_clicked();
+    void on_tlaS00_clicked();
+    void on_tlaS01_clicked();
+    void on_tlaS02_clicked();
+    void on_tlaS03_clicked();
+
     void on_subtilesPrevButton_clicked();
     void on_subtilesComboBox_activated(int index);
     void on_subtilesComboBox_currentTextChanged(const QString &arg1);
@@ -91,6 +120,8 @@ private:
     void updateSubtilesSelection(int index);
     void setAmpProperty(quint8 flags);
     void updateAmpProperty();
+    void setTlaProperty(quint8 flags);
+    void updateTlaProperty();
 
 private:
     Ui::LevelTabTileWidget *ui;
@@ -101,6 +132,7 @@ private:
     D1Til *til;
     D1Min *min;
     D1Amp *amp;
+    D1Tla *tla;
 
     bool onUpdate = false;
     int lastTileIndex = -1;

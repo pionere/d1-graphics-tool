@@ -107,7 +107,7 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
     this->setTileset(ts);
     this->dun = d;
 
-    this->tabTileWidget.initialize(this, this->undoStack, this->til, this->min, this->amp);
+    this->tabTileWidget.initialize(this, this->undoStack, this->til, this->min, this->amp, this->tla);
     this->tabSubtileWidget.initialize(this, this->undoStack, this->gfx, this->min, this->sol, this->spt, this->tmi);
     this->tabFrameWidget.initialize(this, this->undoStack, this->gfx);
 
@@ -148,6 +148,7 @@ void LevelCelView::setTileset(D1Tileset *ts)
     this->til = ts->til;
     this->sol = ts->sol;
     this->amp = ts->amp;
+    this->tla = ts->tla;
     this->spt = ts->spt;
     this->tmi = ts->tmi;
 
@@ -324,7 +325,7 @@ void LevelCelView::updateLabel()
     bool hasDun = this->dun != nullptr;
 
     QHBoxLayout *layout = this->ui->celLabelsHorizontalLayout;
-    const int labelCount = hasDun ? 9 : 8;
+    const int labelCount = hasDun ? 10 : 9;
     while (layout->count() != labelCount + 1) {
         layout->insertWidget(0, new QLabel(""), 0, Qt::AlignLeft);
     }
@@ -334,12 +335,13 @@ void LevelCelView::updateLabel()
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(2)->widget()), this->til->getFilePath(), this->til->isModified());
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(3)->widget()), this->sol->getFilePath(), this->sol->isModified());
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(4)->widget()), this->amp->getFilePath(), this->amp->isModified());
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(5)->widget()), this->cls->getFilePath(), this->cls->isModified());
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(6)->widget()), this->spt->getFilePath(), this->spt->isModified());
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(7)->widget()), this->tmi->getFilePath(), this->tmi->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(5)->widget()), this->tla->getFilePath(), this->tla->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(6)->widget()), this->cls->getFilePath(), this->cls->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(7)->widget()), this->spt->getFilePath(), this->spt->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(8)->widget()), this->tmi->getFilePath(), this->tmi->isModified());
 
     if (hasDun) {
-        CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(8)->widget()), this->dun->getFilePath(), this->dun->isModified());
+        CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(9)->widget()), this->dun->getFilePath(), this->dun->isModified());
     }
 }
 
