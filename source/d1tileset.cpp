@@ -9963,7 +9963,7 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 123 - 1, 3, 440 - 1, silent); // 448
     // ignore invisible parts
     ReplaceSubtile(this->til, 1 - 1, 1, 334 - 1, silent); // 2
-    // ReplaceSubtile(this->til, 101 - 1, 1, 334 - 1, silent); // 367
+    ReplaceSubtile(this->til, 101 - 1, 1, 334 - 1, silent); // 367
     ReplaceSubtile(this->til, 2 - 1, 1, 53 - 1, silent); // 6
     ReplaceSubtile(this->til, 5 - 1, 1, 53 - 1, silent); // 18
     ReplaceSubtile(this->til, 102 - 1, 1, 53 - 1, silent); // 371
