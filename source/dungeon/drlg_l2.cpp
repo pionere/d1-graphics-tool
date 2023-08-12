@@ -87,7 +87,7 @@ const BYTE L2BTYPES[159] = {
 /*
  * Specifies where the given tile ID should spread the room ID (transval).
  */
-const BYTE L2FTYPES[159] = {
+/*const BYTE L2FTYPES[159] = {
 	// clang-format off
 	 0, 10, 12, 15, 10, 12,  8, 10,  8, 12,
 	 0,  0,  0,  0,  0,  0,  0, 12, 12, 10, // 10..
@@ -106,7 +106,7 @@ const BYTE L2FTYPES[159] = {
 	10, 12, 12,  0,  0,  0,  0,  0,  0,  0, //140..
 	10, 12, 10, 12, 10, 12, 10, 12, 15,     //150..
 	// clang-format on
-};
+};*/
 /** Miniset: Stairs up. */
 const BYTE L2USTAIRS[] = {
 	// clang-format off
@@ -641,22 +641,16 @@ void DRLG_L2Shadows()
 
 	for (j = DMAXY - 1; j > 0; j--) {
 		for (i = DMAXX - 1; i > 0; i--) {
+			BYTE bv = dungeon[i][j];
 			bool pillar = false;
 			bool horizArch = false;
 			bool vertArch = false;
-			horizArch = (automaptype[dungeon[i][j]] & MAF_EAST_ARCH) != 0;
-			vertArch = (automaptype[dungeon[i][j]] & MAF_WEST_ARCH) != 0;
-			if (((automaptype[dungeon[i][j]] & MAF_EAST_DOOR) != 0) != ((nTrnShadowTable[dungeon[i][j]] & TIF_L2_EAST_DOOR) != 0)) {
-				dProgressErr() << QString("Mismatching flags %1. door %2").arg(dungeon[i][j]).arg((automaptype[dungeon[i][j]] & MAF_EAST_DOOR) != 0);
-			}
-			if (horizArch != ((nTrnShadowTable[dungeon[i][j]] & TIF_L2_EAST_ARCH) != 0)) {
-				dProgressErr() << QString("Mismatching flags %1. horzArch %2").arg(dungeon[i][j]).arg(horizArch);
-			}
-			if (vertArch != ((nTrnShadowTable[dungeon[i][j]] & TIF_L2_WEST_ARCH) != 0)) {
-				dProgressErr() << QString("Mismatching flags %1. vertArch %2").arg(dungeon[i][j]).arg(vertArch);
-			}
-
-			if (automaptype[dungeon[i][j]] & MAF_EAST_DOOR) {
+			// horizArch = (automaptype[bv] & MAF_EAST_ARCH) != 0;
+			// vertArch = (automaptype[bv] & MAF_WEST_ARCH) != 0;
+			horizArch = (nTrnShadowTable[bv] & TIF_L2_EAST_ARCH) != 0;
+			vertArch = (nTrnShadowTable[bv] & TIF_L2_WEST_ARCH) != 0;
+			// if (automaptype[bv] & MAF_EAST_DOOR) {
+			if (nTrnShadowTable[bv] & TIF_L2_EAST_DOOR) {
 				// shadow of the horizontal doors
 				BYTE replaceB = dungeon[i][j - 1];
 				if (replaceB == 3 || replaceB == 49) {
@@ -679,7 +673,7 @@ void DRLG_L2Shadows()
 				dungeon[i - 1][j - 1] = replaceB;
 				continue;
 			}
-			switch (dungeon[i][j]) {
+			/*switch (bv) {
 			case 52:
 			case 101:
 			case 9:
@@ -698,10 +692,8 @@ void DRLG_L2Shadows()
 			case 40:
 				pillar = true;
 				break;
-			}
-			if (pillar != ((nTrnShadowTable[dungeon[i][j]] & TIF_L2_PILLAR) != 0)) {
-				dProgressErr() << QString("Mismatching flags %1. pillar %2").arg(dungeon[i][j]).arg(pillar);
-			}
+			}*/
+			pillar = (nTrnShadowTable[dungeon[i][j]] & TIF_L2_PILLAR) != 0;
 			if (horizArch) {
 				BYTE replaceA;
 				BYTE replaceB = dungeon[i][j - 1];
@@ -1986,7 +1978,7 @@ void DRLG_L2InitTransVals()
 	static_assert(sizeof(drlg.transvalMap) == sizeof(dungeon), "transvalMap vs dungeon mismatch.");
 	memcpy(drlg.transvalMap, dungeon, sizeof(dungeon));
 
-	DRLG_FloodTVal(L2FTYPES);
+	DRLG_FloodTVal();
 	DRLG_L2TransFix();
 }
 

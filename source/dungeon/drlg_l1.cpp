@@ -62,7 +62,7 @@ static const BYTE L1BTYPES[207] = {
 /*
  * Specifies where the given tile ID should spread the room ID (transval). TODO: add to SOL with trap type?
  */
-static const BYTE L1FTYPES[207] = {
+/*static const BYTE L1FTYPES[207] = {
 	// clang-format off
 	 0, 10, 12,  8,  8,  8, 10, 12, 10, 12,
 	 8, 10, 12, 15,  8, 14, 14, 14,  0,  0, // 10..
@@ -91,7 +91,7 @@ static const BYTE L1FTYPES[207] = {
 /*
  * Specifies where the given tile ID should spread the room ID (transval).
  */
-static const BYTE L5FTYPES[218] = {
+/*static const BYTE L5FTYPES[218] = {
 	// clang-format off
 	 0, 10, 12,  8,  8,  8, 10, 12, 10, 12,
 	 8, 10, 12, 15,  8, 14,  8,  8,  0,  0, // 10..
@@ -117,7 +117,7 @@ static const BYTE L5FTYPES[218] = {
 	15, 15, 15, 15, 15, 10, 10, 15,         //210..
 	// clang-format on
 };
-#endif
+#endif*/
 /** Miniset: stairs up on a corner wall. */
 //const BYTE STAIRSUP[] = {
 //	// clang-format off
@@ -602,61 +602,13 @@ void DRLG_L5Shadows()
 
 	for (j = DMAXY - 1; j > 0; j--) {
 		for (i = DMAXX - 1; i > 0; i--) {
+			BYTE bv = dungeon[i][j];
 			bool horizArch = false;
 			bool vertArch = false;
 			bool pillar = false;
-			/*switch (dungeon[i][j]) {
-			case 5:
-			// case 29:
-			// case 38:
-			// case 44:
-				horizArch = true;
-				vertArch = true;
-				pillar = true;
-				break;
-			case 3:
-			case 7:
-			case 15:
-			case 16:
-			case 17:
-			// case 31:
-				pillar = true;
-				break;
-			case 8:
-			case 14:
-			case 37:
-			// case 32:
-			// case 39:
-			// case 42:
-				pillar = true;
-				// fall-through
-			case 11:
-			case 35:
-			case 215:
-			case 111:
-				vertArch = true;
-				break;
-			case 9:
-			// case 33:
-				pillar = true;
-				horizArch = true;
-				break;
-			case 10:
-			case 12:
-			// case 34:
-			// case 40:
-			case 27:
-			case 36:
-			case 81:
-			case 82:
-			case 83:
-			case 84:
-				horizArch = true;
-				break;
-			}*/
-			horizArch = (automaptype[dungeon[i][j]] & (MAF_EAST_ARCH | MAF_EAST_GRATE)) != 0;
-			vertArch = (automaptype[dungeon[i][j]] & (MAF_WEST_ARCH | MAF_WEST_GRATE)) != 0;
-			switch (dungeon[i][j]) {
+			/*horizArch = (automaptype[bv] & (MAF_EAST_ARCH | MAF_EAST_GRATE)) != 0;
+			vertArch = (automaptype[bv] & (MAF_WEST_ARCH | MAF_WEST_GRATE)) != 0;
+			switch (bv) {
 			case 5:
 			// case 116:
 			// case 133:
@@ -712,16 +664,10 @@ void DRLG_L5Shadows()
 			// case 154:
 				pillar = true;
 				break;
-			}
-			if (pillar != ((nTrnShadowTable[dungeon[i][j]] & TIF_L5_PILLAR) != 0)) {
-				dProgressErr() << QString("Mismatching flags %1. pillar %2").arg(dungeon[i][j]).arg(pillar);
-			}
-			if (horizArch != ((nTrnShadowTable[dungeon[i][j]] & TIF_L5_EAST_ARCH_GRATE) != 0)) {
-				dProgressErr() << QString("Mismatching flags %1. horzArch %2").arg(dungeon[i][j]).arg(horizArch);
-			}
-			if (vertArch != ((nTrnShadowTable[dungeon[i][j]] & TIF_L5_WEST_ARCH_GRATE) != 0)) {
-				dProgressErr() << QString("Mismatching flags %1. vertArch %2").arg(dungeon[i][j]).arg(vertArch);
-			}
+			}*/
+			pillar = (nTrnShadowTable[bv] & TIF_L5_PILLAR) != 0;
+			horizArch = (nTrnShadowTable[bv] & TIF_L5_EAST_ARCH_GRATE) != 0;
+			vertArch = (nTrnShadowTable[bv] & TIF_L5_WEST_ARCH_GRATE) != 0;
 			if (horizArch) {
 				if (dungeon[i][j - 1] == 13) {
 					dungeon[i][j - 1] = 205;
@@ -771,10 +717,8 @@ void DRLG_L5Shadows()
 					continue;
 				}
 				// pillar = pillar && (dungeon[i][j - 1] == 13 /* || 203 207 204 81 ... 2 3 7 9 12 15 16 17 26 36 */);
-				pillar = pillar && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END;
-				if (((automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END) != ((nTrnShadowTable[dungeon[i][j - 1]] & TIF_L1_WEST_WALL) == 0)) {
-					dProgressErr() << QString("Mismatching flags %1. west wall %2").arg(dungeon[i][j - 1]).arg(automaptype[dungeon[i][j - 1]] & MAF_TYPE);
-				}
+				// pillar = pillar && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END;
+				pillar = pillar && nTrnShadowTable[dungeon[i][j - 1]] & TIF_L1_WEST_WALL) == 0;
 				switch (dungeon[i - 1][j - 1]) {
 				case 13: replaceB = pillar ? 207 : 203; break;
 				case 2:  replaceB = pillar ? 71 : 80;   break;
@@ -794,10 +738,8 @@ void DRLG_L5Shadows()
 				if (dungeon[i - 1][j] == 13) {
 					BYTE replace = dungeon[i - 1][j - 1];
 					// pillar = (dungeon[i][j - 1] == 13 /* || 203 207 204 81 ... 2 3 7 9 12 15 16 17 26 36 */);
-					pillar = (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END;
-					if (pillar != ((nTrnShadowTable[dungeon[i][j - 1]] & TIF_L1_WEST_WALL) == 0)) {
-						dProgressErr() << QString("Mismatching flags %1. west wall %2").arg(dungeon[i][j - 1]).arg(automaptype[dungeon[i][j - 1]] & MAF_TYPE);
-					}
+					// pillar = (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END;
+					pillar = (nTrnShadowTable[dungeon[i][j - 1]] & TIF_L1_WEST_WALL) == 0;
 					if (replace == 13) {
 						replace = pillar ? 207 : 203;
 					} else if (replace == 2) {
@@ -834,62 +776,14 @@ void DRLG_L1Shadows()
 
 	for (j = DMAXY - 1; j > 0; j--) {
 		for (i = DMAXX - 1; i > 0; i--) {
+			BYTE bv = dungeon[i][j];
 			bool horizArch = false;
 			bool vertArch = false;
 			bool pillar = false;
 			bool largePillar = false;
-			/*switch (dungeon[i][j]) {
-			case 5:
-			// case 29:
-			// case 38:
-			// case 44:
-				horizArch = true;
-				vertArch = true;
-				pillar = true;
-				break;
-			case 3:
-			case 7:
-			case 15:
-			case 16:
-			case 17:
-			// case 31:
-				pillar = true;
-				break;
-			case 8:
-			case 14:
-			case 37:
-			// case 32:
-			// case 39:
-			// case 42:
-				pillar = true;
-				// fall-through
-			case 11:
-			case 35:
-			case 215:
-			case 111:
-				vertArch = true;
-				break;
-			case 9:
-			// case 33:
-				pillar = true;
-				horizArch = true;
-				break;
-			case 10:
-			case 12:
-			// case 34:
-			// case 40:
-			case 27:
-			case 36:
-			case 81:
-			case 82:
-			case 83:
-			case 84:
-				horizArch = true;
-				break;
-			}*/
-			horizArch = (automaptype[dungeon[i][j]] & (MAF_EAST_ARCH | MAF_EAST_GRATE | MAF_EAST_DOOR)) != 0;
-			vertArch = (automaptype[dungeon[i][j]] & (MAF_WEST_ARCH | MAF_WEST_GRATE)) != 0; // MAF_WEST_DOOR - not visible
-			switch (dungeon[i][j]) {
+			/*horizArch = (automaptype[bv] & (MAF_EAST_ARCH | MAF_EAST_GRATE | MAF_EAST_DOOR)) != 0;
+			vertArch = (automaptype[bv] & (MAF_WEST_ARCH | MAF_WEST_GRATE)) != 0; // MAF_WEST_DOOR - not visible
+			switch (bv) {
 			case 5:
 				pillar = true;
 				break;
@@ -925,25 +819,18 @@ void DRLG_L1Shadows()
 			// case 33:
 				pillar = true;
 				break;
-			}
-			if ((pillar || largePillar) != ((nTrnShadowTable[dungeon[i][j]] & TIF_L1_PILLAR) != 0)) {
-				dProgressErr() << QString("Mismatching flags %1. pillar %2 %3").arg(dungeon[i][j]).arg(pillar).arg(largePillar);
-			}
-			if (horizArch != ((nTrnShadowTable[dungeon[i][j]] & TIF_L1_EAST_ARCH_GRATE) != 0)) {
-				dProgressErr() << QString("Mismatching flags %1. horzArch %2").arg(dungeon[i][j]).arg(horizArch);
-			}
-			if (vertArch != ((nTrnShadowTable[dungeon[i][j]] & TIF_L1_WEST_ARCH_GRATE) != 0)) {
-				dProgressErr() << QString("Mismatching flags %1. vertArch %2").arg(dungeon[i][j]).arg(vertArch);
-			}
+			}*/
+			largePillar = bv == 15;
+			pillar = (nTrnShadowTable[bv] & TIF_L1_PILLAR) != 0;
+			horizArch = (nTrnShadowTable[bv] & TIF_L1_EAST_ARCH_GRATE) != 0;
+			vertArch = (nTrnShadowTable[bv] & TIF_L1_WEST_ARCH_GRATE) != 0;
 			if (horizArch) {
 				BYTE replaceA; bool okB;
 				replaceA = dungeon[i][j - 1];
-				bool pillarC = i == DMAXX - 1 || ((automaptype[dungeon[i + 1][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i + 1][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i + 1][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END);
+				// bool pillarC = i == DMAXX - 1 || ((automaptype[dungeon[i + 1][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i + 1][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i + 1][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END);
+				bool pillarC = i == DMAXX - 1 || (nTrnShadowTable[dungeon[i + 1][j - 1]] & TIF_L1_WEST_WALL) == 0;
 				if (!pillarC && replaceA != 13 && replaceA != 164)
                     dProgressWarn() << QString("Missing case %1 for horizontal arch %2 with wall @%3:%4").arg(replaceA).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
-				if (((automaptype[dungeon[i + 1][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i + 1][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i + 1][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END) != ((nTrnShadowTable[dungeon[i + 1][j - 1]] & TIF_L1_WEST_WALL) == 0)) {
-					dProgressErr() << QString("Mismatching flags %1. west wall %2").arg(dungeon[i + 1][j - 1]).arg(automaptype[dungeon[i + 1][j - 1]] & MAF_TYPE);
-				}
 				switch (replaceA) {
 				case 13:  replaceA = pillarC ? 140 : 141; okB = false; break;
 				case 1:   replaceA = 146; okB = true;  break;
@@ -1025,10 +912,8 @@ void DRLG_L1Shadows()
 					continue;
 				}
 				// pillar = pillar && (dungeon[i][j - 1] == 13 /* || 203 207 204 81 ... 2 3 7 9 12 15 16 17 26 36 */);
-				pillar = pillar && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END;
-				if (((automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END) != ((nTrnShadowTable[dungeon[i][j - 1]] & TIF_L1_WEST_WALL) == 0)) {
-					dProgressErr() << QString("Mismatching flags %1. west wall %2 over vertarch").arg(dungeon[i][j - 1]).arg(automaptype[dungeon[i][j - 1]] & MAF_TYPE);
-				}
+				// pillar = pillar && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END;
+				pillar = pillar && (nTrnShadowTable[dungeon[i][j - 1]] & TIF_L1_WEST_WALL) == 0;
 				switch (dungeon[i - 1][j - 1]) {
 				case 13: replaceB = pillar ? 143 : 159; break;
 				case 2:  replaceB = pillar ? 150 : 148; break;
@@ -1049,10 +934,8 @@ void DRLG_L1Shadows()
 				if (dungeon[i - 1][j] == 13) {
 					BYTE replace = dungeon[i - 1][j - 1];
 					// pillar = (dungeon[i][j - 1] == 13 /* || 203 207 204 81 ... 2 3 7 9 12 15 16 17 26 36 */);
-					pillar = (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END;
-					if (pillar != ((nTrnShadowTable[dungeon[i][j - 1]] & TIF_L1_WEST_WALL) == 0)) {
-						dProgressErr() << QString("Mismatching flags %1. west wall %2 over pillar").arg(dungeon[i][j - 1]).arg(automaptype[dungeon[i][j - 1]] & MAF_TYPE);
-					}
+					// pillar = (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END;
+					pillar = (nTrnShadowTable[dungeon[i][j - 1]] & TIF_L1_WEST_WALL) == 0;
 					if (replace == 13) {
 						replace = pillar ? 143 : 159;
 					} else if (replace == 2) {
@@ -2706,13 +2589,13 @@ void DRLG_L1InitTransVals()
 	static_assert(sizeof(drlg.transvalMap) == sizeof(dungeon), "transvalMap vs dungeon mismatch.");
 	memcpy(drlg.transvalMap, dungeon, sizeof(dungeon));
 
-	const BYTE *floorTypes = L1FTYPES;
+	/*const BYTE *floorTypes = L1FTYPES;
 #ifdef HELLFIRE
 	if (currLvl._dType == DTYPE_CRYPT) {
 		floorTypes = L5FTYPES;
 	}
-#endif
-	DRLG_FloodTVal(floorTypes);
+#endif*/
+	DRLG_FloodTVal();
 #ifdef HELLFIRE
 	if (currLvl._dType == DTYPE_CRYPT) {
 		DRLG_L5TransFix();

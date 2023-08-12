@@ -54,7 +54,7 @@ void DRLG_InitTrans();
 //void DRLG_RectTrans(int x1, int y1, int x2, int y2);
 //void DRLG_ListTrans(int num, const BYTE* List);
 //void DRLG_AreaTrans(int num, const BYTE* List);
-void DRLG_FloodTVal(const BYTE *floorTypes);
+void DRLG_FloodTVal();
 void DRLG_LoadSP(int idx, BYTE bv);
 void DRLG_PlaceThemeRooms(int minSize, int maxSize, const BYTE (&themeTiles)[NUM_DRT_TYPES], int rndSkip, bool rndSize);
 bool InThemeRoom(int x, int y);

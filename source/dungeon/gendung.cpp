@@ -916,7 +916,7 @@ static void DRLG_FTVR(unsigned offset)
 	}
 }
 
-void DRLG_FloodTVal(const BYTE *floorTypes)
+void DRLG_FloodTVal()
 {
 	int i, j;
 	BYTE *tdp = &drlg.transDirMap[0][0]; // Overlaps with transvalMap!
@@ -927,10 +927,8 @@ void DRLG_FloodTVal(const BYTE *floorTypes)
 	// prepare the propagation-directions
 	for (i = DMAXX - 1; i >= 0; i--) {
 		for (j = DMAXY - 1; j >= 0; j--) {
-			BYTE tvm = floorTypes[drlg.transvalMap[i][j]];
-			if ((nTrnShadowTable[drlg.transvalMap[i][j]] & 0xF) != tvm) {
-				dProgressErr() << QString("Mismatching flags %1. %2 vs %3 at %4:%5").arg(drlg.transvalMap[i][j]).arg(tvm).arg(nTrnShadowTable[drlg.transvalMap[i][j]] & 0xF).arg(i).arg(j);
-			}
+			// BYTE tvm = floorTypes[drlg.transvalMap[i][j]];
+			BYTE tvm = nTrnShadowTable[drlg.transvalMap[i][j]] & TIF_FLOOR_TYPE;
 			BYTE tpm;
 			// 1. subtile
 			if (tvm & (1 << 0)) { // TIF_FLOOR_00

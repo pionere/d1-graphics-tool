@@ -155,7 +155,7 @@ const BYTE L3BTYPES[157] = {
 /*
  * Specifies where the given tile ID should spread the room ID (transval).
  */
-const BYTE L3FTYPES[157] = {
+/*const BYTE L3FTYPES[157] = {
 	// clang-format off
 	 0,  2,  3,  4,  5,  7,  1, 15,  0, 10,
 	12,  8,  8, 13, 11,  3,  3,  5,  5,  7, // 10..
@@ -174,7 +174,7 @@ const BYTE L3FTYPES[157] = {
 	 1,  1,  1,  1,  3,  5,  3,  5,  3,  5, //140..
 	 7,  3,  5, 12, 12,  0,  0              //150..
 	// clang-format on
-};
+};*/
 #ifdef HELLFIRE
 /*
  * Maps tile IDs to their corresponding undecorated tile type.
@@ -202,7 +202,7 @@ const BYTE L6BTYPES[167] = {
 /*
  * Specifies where the given tile ID should spread the room ID (transval).
  */
-const BYTE L6FTYPES[167] = {
+/*const BYTE L6FTYPES[167] = {
 	// clang-format off
 	 0,  2,  3,  4,  5,  7,  1, 15,  0, 10,
 	12,  8,  8, 13, 11, 10, 10, 12, 12,  0, // 10..
@@ -222,7 +222,7 @@ const BYTE L6FTYPES[167] = {
 	 15, 0,  8,  0,  8,  8,  0,  0, 10,  0, //150..
 	 8,  8,  0,  0,  0,  0,  0,             //160..
 	// clang-format on
-};
+};*/
 #endif
 /** Miniset: Stalagmite white stalactite 1. */
 const BYTE L3TITEBASE[] = {
@@ -2400,13 +2400,13 @@ void DRLG_L3InitTransVals()
 	static_assert(sizeof(drlg.transvalMap) == sizeof(dungeon), "transvalMap vs dungeon mismatch.");
 	memcpy(drlg.transvalMap, dungeon, sizeof(dungeon));
 
-	const BYTE *floorTypes = L3FTYPES;
+	/*const BYTE *floorTypes = L3FTYPES;
 #ifdef HELLFIRE
 	if (currLvl._dType == DTYPE_NEST) {
 		floorTypes = L6FTYPES;
 	}
-#endif
-	DRLG_FloodTVal(floorTypes);
+#endif*/
+	DRLG_FloodTVal();
 }
 
 static void DRLG_L3()

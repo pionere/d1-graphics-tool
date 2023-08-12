@@ -156,7 +156,7 @@ const BYTE L4BTYPES[138] = {
 /*
  * Specifies where the given tile ID should spread the room ID (transval).
  */
-const BYTE L4FTYPES[138] = {
+/*const BYTE L4FTYPES[138] = {
 	// clang-format off
 	 0, 10, 12, 14, 10, 12, 15, 10, 12,  8,
 	 8,  8,  8, 10, 12,  8,  8,  8,  0,  0, // 10..
@@ -173,7 +173,7 @@ const BYTE L4FTYPES[138] = {
 	 0,  0,  0,  0,  0,  0,  0,  0,  8,  8, //120..
 	12, 12, 12, 12, 12, 12,  0,  0,         //130..
 	// clang-format on
-};
+};*/
 /*
  * Miniset replacement to add shadows.
  * New dungeon values: 47 48   54 55   58 59 60   61 62 76 129 130 131 132 133 134 135
@@ -1960,7 +1960,7 @@ void DRLG_L4InitTransVals()
 		}
 	}
 
-	DRLG_FloodTVal(L4FTYPES);
+	DRLG_FloodTVal();
 	DRLG_L4TransFix();
 }
 
