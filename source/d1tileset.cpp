@@ -8537,7 +8537,7 @@ bool D1Tileset::patchCavesStairs(bool silent)
             //    return;
             // }
             for (int x = 0; x < MICRO_WIDTH; x++) {
-                for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
                     D1GfxPixel pixel = D1GfxPixel::transparentPixel();
                     if (y < MICRO_HEIGHT / 2) {
                         pixel = frameSrc1->getPixel(x, y + MICRO_HEIGHT / 2); // 180[4]
@@ -8558,7 +8558,7 @@ bool D1Tileset::patchCavesStairs(bool silent)
             // if (frameSrc == nullptr) {
             //    return false;
             // }
-            for (int x = 0; x < MICRO_WIDTH; x++) {
+            for (int x = 0; x < MICRO_WIDTH / 2; x++) {
                 for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
                     D1GfxPixel pixel = frameSrc->getPixel(x, y - MICRO_HEIGHT / 2); // 180[4]
                     if (!pixel.isTransparent()) {
