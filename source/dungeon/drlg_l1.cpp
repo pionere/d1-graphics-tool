@@ -602,88 +602,69 @@ static void DRLG_L5Shadows()
 
 	for (j = DMAXY - 1; j > 0; j--) {
 		for (i = DMAXX - 1; i > 0; i--) {
+			BYTE bv = dungeon[i][j];
 			bool horizArch = false;
 			bool vertArch = false;
 			bool pillar = false;
-			/*switch (dungeon[i][j]) {
+			horizArch = (automaptype[bv] & (MAF_EAST_ARCH | MAF_EAST_GRATE)) != 0;
+			vertArch = (automaptype[bv] & (MAF_WEST_ARCH | MAF_WEST_GRATE)) != 0;
+			switch (bv) {
 			case 5:
-			// case 29:
-			// case 38:
-			// case 44:
-				horizArch = true;
-				vertArch = true;
-				pillar = true;
-				break;
-			case 3:
-			case 7:
-			case 15:
-			case 16:
-			case 17:
-			// case 31:
-				pillar = true;
-				break;
-			case 8:
-			case 14:
-			case 37:
-			// case 32:
-			// case 39:
-			// case 42:
-				pillar = true;
-				// fall-through
-			case 11:
-			case 35:
-			case 215:
-			case 111:
-				vertArch = true;
-				break;
-			case 9:
-			// case 33:
-				pillar = true;
-				horizArch = true;
-				break;
-			case 10:
-			case 12:
-			// case 34:
-			// case 40:
-			case 27:
-			case 36:
-			case 81:
-			case 82:
-			case 83:
-			case 84:
-				horizArch = true;
-				break;
-			}*/
-			horizArch = (automaptype[dungeon[i][j]] & (MAF_EAST_ARCH | MAF_EAST_GRATE)) != 0;
-			vertArch = (automaptype[dungeon[i][j]] & (MAF_WEST_ARCH | MAF_WEST_GRATE)) != 0;
-			switch (dungeon[i][j]) {
-			case 5:
+			// case 116:
+			// case 133:
+			// case 150:
 				pillar = true;
 				break;
 			case 28:
 			case 7:
+			// case 118:
+			// case 135:
+			// case 152:
 			case 15:
+			// case 126:
+			// case 143:
 			case 16:
+			// case 127:
+			// case 144:
+			// case 161:
+			// case 3:
+			// case 114:
+			// case 131:
+			// case 148:
 			// case 17:
+			// case 128:
+			// case 145:
+			// case 162:
 			// case 31:
+			// case 33:
 			case 85:
 			case 86:
 				pillar = true;
 				break;
 			case 8:
+			// case 119:
+			// case 136:
+			// case 153:
 			case 14:
+			// case 125:
+			// case 142:
+			// case 159:
 			case 37:
 			// case 32:
 			// case 39:
 			// case 42:
+			// case 29:
+			// case 38:
+			// case 44:
 				pillar = true;
 				break;
 			case 9:
-			// case 33:
+			// case 120:
+			// case 137:
+			// case 154:
 				pillar = true;
 				break;
 			}
-
 			if (horizArch) {
 				if (dungeon[i][j - 1] == 13) {
 					dungeon[i][j - 1] = 205;
@@ -790,13 +771,14 @@ static void DRLG_L1Shadows()
 
 	for (j = DMAXY - 1; j > 0; j--) {
 		for (i = DMAXX - 1; i > 0; i--) {
+			BYTE bv = dungeon[i][j];
 			bool horizArch = false;
 			bool vertArch = false;
 			bool pillar = false;
 			bool largePillar = false;
-			horizArch = (automaptype[dungeon[i][j]] & (MAF_EAST_ARCH | MAF_EAST_GRATE | MAF_EAST_DOOR)) != 0;
-			vertArch = (automaptype[dungeon[i][j]] & (MAF_WEST_ARCH | MAF_WEST_GRATE)) != 0; // MAF_WEST_DOOR - not visible
-			switch (dungeon[i][j]) {
+			horizArch = (automaptype[bv] & (MAF_EAST_ARCH | MAF_EAST_GRATE | MAF_EAST_DOOR)) != 0;
+			vertArch = (automaptype[bv] & (MAF_WEST_ARCH | MAF_WEST_GRATE)) != 0; // MAF_WEST_DOOR - not visible
+			switch (bv) {
 			case 5:
 				pillar = true;
 				break;
@@ -816,9 +798,14 @@ static void DRLG_L1Shadows()
 			case 8:
 			case 14:
 			case 37:
+			// case 29:
 			// case 32:
-			// case 39:
+			// case 33:
+			// case 38:
 			// case 42:
+			// case 44:
+			// case 46:
+			// case 85:
 			case 160:
 			case 161:
 				pillar = true;
@@ -1036,12 +1023,12 @@ static void DRLG_LoadL1SP()
 	} else if (QuestStatus(Q_SKELKING)) {
 		pSetPieces[0]._sptype = SPT_SKELKING;
 		pSetPieces[0]._spData = LoadFileInMem(setpiecedata[pSetPieces[0]._sptype]._spdDunFile);
-		// patch set- SKngDO.DUN
+		// patch set-piece - SKngDO.DUN
 		if (pSetPieces[0]._spData != NULL && PatchDunFiles) {
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
 		// use common tiles
 		lm[2 + 5 + 4 * 7] =  SwapLE16(203 - 181);
-		//  use common tiles and make the inner tile at the entrance non-walkable
+		// use common tiles and make the inner tile at the entrance non-walkable
 		lm[2 + 5 + 2 * 7] =  SwapLE16(203 - 181);
 		// let the game generate the shadow
 		lm[2 + 0 + 5 * 7] = 0;
