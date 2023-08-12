@@ -4457,6 +4457,26 @@ void D1Dun::patch(int dunFileIndex)
                 }
             }
         }
+        // use base tiles and let the engine decorate the walls
+        for (int y = 0; y < 12; y++) {
+            for (int x = 0; x < 11; x++) {
+                if (y == 1 && (x == 8 || x == 9)) {
+                    continue; // skip protected tiles
+                }
+                int wv = this->tiles[y][x];
+                if (wv >= 63 && wv <= 70) {
+                    if (wv == 63 || wv == 65 || wv == 67 || wv == 68) {
+                        wv = 1;
+                    } else {
+                        wv = 2;
+                    }
+                    change |= this->changeTileAt(x, y, wv);
+                }
+            }
+        }
+        // remove shadow to enable optional connection
+        change |= this->changeTileAt(0, 10, 0);
+        change |= this->changeTileAt(0, 11, 0);
         // ensure the changing tiles are reserved
         change |= this->changeTileProtectionAt( 9,  1, Qt::Checked);
         change |= this->changeTileProtectionAt( 9,  2, Qt::Checked);
@@ -4568,6 +4588,20 @@ void D1Dun::patch(int dunFileIndex)
         change |= this->changeTileAt(5, 5, 30);
         // remove partial shadow
         change |= this->changeTileAt(5, 0, 50);
+        // remove shadow to enable optional connection
+        change |= this->changeTileAt(1,  9, 0);
+        change |= this->changeTileAt(1, 10, 0);
+        // use base tiles and let the engine decorate the walls
+        change |= this->changeTileAt(3, 10, 2);
+        change |= this->changeTileAt(9, 8, 2);
+        change |= this->changeTileAt(8, 9, 1);
+        change |= this->changeTileAt(6, 5, 1);
+        change |= this->changeTileAt(5, 6, 2);
+        change |= this->changeTileAt(10, 7, 1);
+        change |= this->changeTileAt(2, 1, 1);
+        change |= this->changeTileAt(1, 2, 2);
+        change |= this->changeTileAt(0, 3, 1);
+        change |= this->changeTileAt(10, 3, 1);
         // ensure the changing tiles are reserved
         // - SW-wall
         change |= this->changeTileProtectionAt( 4, 10, Qt::Checked);
@@ -4704,53 +4738,12 @@ void D1Dun::patch(int dunFileIndex)
                 }
             }
         }
-        // ensure the changing tiles are reserved
-        // - SW-wall
-        for (int y = 7; y < 9; y++) {
-            for (int x = 2; x < 7; x++) {
+        // ensure the box is not connected to the rest of the dungeon and the changing tiles are reserved + protect inner tiles from decoration
+        for (int y = 0; y < 9; y++) {
+            for (int x = 0; x < 9; x++) {
                 change |= this->changeTileProtectionAt(x, y, Qt::Checked);
             }
         }
-        // - NE-wall
-        for (int y = 2; y < 7; y++) {
-            for (int x = 0; x < 2; x++) {
-                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
-            }
-        }
-        // - NW-wall
-        for (int y = 0; y < 2; y++) {
-            for (int x = 2; x < 7; x++) {
-                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
-            }
-        }
-        // - SE-wall
-        for (int y = 2; y < 7; y++) {
-            for (int x = 7; x < 9; x++) {
-                change |= this->changeTileProtectionAt(x, y, Qt::Checked);
-            }
-        }
-        // protect tiles with monsters/objects from decoration
-        change |= this->changeTileProtectionAt( 2,  2, Qt::Checked);
-        change |= this->changeTileProtectionAt( 2,  3, Qt::Checked);
-        change |= this->changeTileProtectionAt( 2,  4, Qt::Checked);
-        change |= this->changeTileProtectionAt( 2,  6, Qt::Checked);
-        change |= this->changeTileProtectionAt( 3,  3, Qt::Checked);
-        change |= this->changeTileProtectionAt( 3,  4, Qt::Checked);
-        change |= this->changeTileProtectionAt( 3,  5, Qt::Checked);
-        change |= this->changeTileProtectionAt( 3,  6, Qt::Checked);
-        change |= this->changeTileProtectionAt( 4,  2, Qt::Checked);
-        change |= this->changeTileProtectionAt( 4,  3, Qt::Checked);
-        change |= this->changeTileProtectionAt( 4,  4, Qt::Checked);
-        change |= this->changeTileProtectionAt( 4,  5, Qt::Checked);
-        change |= this->changeTileProtectionAt( 4,  6, Qt::Checked);
-        change |= this->changeTileProtectionAt( 5,  2, Qt::Checked);
-        change |= this->changeTileProtectionAt( 5,  3, Qt::Checked);
-        change |= this->changeTileProtectionAt( 5,  4, Qt::Checked);
-        change |= this->changeTileProtectionAt( 5,  5, Qt::Checked);
-        change |= this->changeTileProtectionAt( 6,  2, Qt::Checked);
-        change |= this->changeTileProtectionAt( 6,  4, Qt::Checked);
-        change |= this->changeTileProtectionAt( 6,  5, Qt::Checked);
-        change |= this->changeTileProtectionAt( 6,  6, Qt::Checked);
         // remove monsters
         for (int y = 0; y < 18; y++) {
             for (int x = 0; x < 18; x++) {
