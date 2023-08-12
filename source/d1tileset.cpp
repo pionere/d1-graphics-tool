@@ -8521,7 +8521,7 @@ bool D1Tileset::patchCavesStairs(bool silent)
             //    return;
             // }
             for (int x = 0; x < MICRO_WIDTH; x++) {
-                for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
                     D1GfxPixel pixel = D1GfxPixel::transparentPixel();
                     if (y < MICRO_HEIGHT / 2) {
                         pixel = frameSrc1->getPixel(x, y + MICRO_HEIGHT / 2); // 180[4]
@@ -8542,7 +8542,7 @@ bool D1Tileset::patchCavesStairs(bool silent)
             // if (frameSrc == nullptr) {
             //    return false;
             // }
-            for (int x = 0; x < MICRO_WIDTH; x++) {
+            for (int x = 0; x < MICRO_WIDTH / 2; x++) {
                 for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
                     D1GfxPixel pixel = frameSrc->getPixel(x, y - MICRO_HEIGHT / 2); // 180[4]
                     if (!pixel.isTransparent()) {
@@ -9902,6 +9902,8 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 42 - 1, 2, 7 - 1, silent); // 148
     ReplaceSubtile(this->til, 43 - 1, 1, 14 - 1, silent); // 151
     ReplaceSubtile(this->til, 57 - 1, 0, 393 - 1, silent); // 204
+    // ReplaceSubtile(this->til, 101 - 1, 1, 2 - 1, silent); // 367
+    ReplaceSubtile(this->til, 101 - 1, 3, 4 - 1, silent); // 369
     ReplaceSubtile(this->til, 102 - 1, 0, 5 - 1, silent); // 370
     // ReplaceSubtile(this->til, 102 - 1, 1, 6 - 1, silent); // 371
     ReplaceSubtile(this->til, 143 - 1, 1, 506 - 1, silent); // 519
@@ -9945,7 +9947,7 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 123 - 1, 3, 440 - 1, silent); // 448
     // ignore invisible parts
     ReplaceSubtile(this->til, 1 - 1, 1, 334 - 1, silent); // 2
-    // ReplaceSubtile(this->til, 101 - 1, 1, 334 - 1, silent); // 367
+    ReplaceSubtile(this->til, 101 - 1, 1, 334 - 1, silent); // 367
     ReplaceSubtile(this->til, 2 - 1, 1, 53 - 1, silent); // 6
     ReplaceSubtile(this->til, 5 - 1, 1, 53 - 1, silent); // 18
     ReplaceSubtile(this->til, 102 - 1, 1, 53 - 1, silent); // 371
@@ -9989,7 +9991,7 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
 
     // eliminate subtiles of unused tiles
     const int unusedTiles[] = {
-        70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 101, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 153, 154, 155, 156,
+        70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 153, 154, 155, 156,
     };
     constexpr int blankSubtile = 2 - 1;
     for (int n = 0; n < lengthof(unusedTiles); n++) {
@@ -10066,8 +10068,12 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(382, 6);
     Blk2Mcr(4, 1);
     Blk2Mcr(4, 3);
+    Blk2Mcr(4, 4);
+    Blk2Mcr(4, 6);
     Blk2Mcr(8, 1);
     Blk2Mcr(8, 3);
+    Blk2Mcr(8, 4);
+    Blk2Mcr(8, 6);
     Blk2Mcr(12, 1);
     Blk2Mcr(12, 3);
     Blk2Mcr(20, 1);
@@ -10075,6 +10081,8 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(373, 1);
     Blk2Mcr(373, 3);
     Blk2Mcr(511, 1);
+    Blk2Mcr(511, 4);
+    Blk2Mcr(511, 6);
     Blk2Mcr(16, 0);
     Blk2Mcr(16, 2);
     Blk2Mcr(20, 0);
@@ -10232,7 +10240,7 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(150, 2, 8, 5);
     ReplaceMcr(150, 0, 56, 0); // or 140
 
-    ReplaceMcr(4, 5, 8, 5);
+    ReplaceMcr(4, 5, 8, 5); // lost details
 
     ReplaceMcr(511, 3, 496, 3);
     ReplaceMcr(509, 1, 493, 1);
@@ -10255,6 +10263,8 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(24, 5, 28, 3);
     ReplaceMcr(3, 4, 30, 4);
     ReplaceMcr(3, 6, 30, 6);
+    ReplaceMcr(368, 4, 30, 4);
+    ReplaceMcr(368, 6, 30, 6);
     ReplaceMcr(183, 6, 30, 6);
     ReplaceMcr(350, 6, 30, 6);
     ReplaceMcr(359, 4, 30, 4);
@@ -10344,6 +10354,8 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     // ignore invisible parts
     ReplaceMcr(1, 1, 333, 1); // lost details
     ReplaceMcr(1, 3, 333, 3); // lost details
+    ReplaceMcr(366, 1, 333, 1); // lost details
+    ReplaceMcr(366, 3, 333, 3); // lost details
     ReplaceMcr(5, 1, 52, 1); // lost details
     ReplaceMcr(17, 1, 52, 1); // lost details
     // ReplaceMcr(370, 1, 52, 1); // lost details
@@ -10364,7 +10376,9 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(409, 1);
     Blk2Mcr(436, 1);
     Blk2Mcr(436, 3);
+    Blk2Mcr(436, 4);
     Blk2Mcr(436, 5);
+    Blk2Mcr(436, 6);
     Blk2Mcr(519, 0);
     Blk2Mcr(548, 2);
     Blk2Mcr(548, 5);
@@ -10402,7 +10416,7 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(559, 7);
 
     const int unusedSubtiles[] = {
-        2, 6, 15, 18, 21, 147, 149, 152, 153, 155, 157, 160, 161, 179, 195, 204, 205, 208, 209, 211, 218, 220, 221, 222, 224, 225, 226, 227, 240, 241, 243, 250, 251, 253, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 312, 314, 328, 332, 338, 339, 349, 356, 358, 361, 364, 365, 366, 367, 368, 369, 371, 380, 406, 407, 408, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 442, 448, 487, 503, 521, 522, 523, 524, 525, 526, 527, 529, 533, 537, 550, 554, 557, 558, 560
+        2, 6, 15, 18, 21, 147, 149, 152, 153, 155, 157, 160, 161, 179, 195, 204, 205, 208, 209, 211, 218, 220, 221, 222, 224, 225, 226, 227, 240, 241, 243, 250, 251, 253, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 312, 314, 328, 332, 338, 339, 349, 356, 358, 361, 364, 365, 367, 369, 371, 380, 406, 407, 408, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 442, 448, 487, 503, 521, 522, 523, 524, 525, 526, 527, 529, 533, 537, 550, 554, 557, 558, 560
     };
 
     for (int n = 0; n < lengthof(unusedSubtiles); n++) {
@@ -15041,7 +15055,7 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceSubtile(this->til, 84 - 1, 2, 105 - 1, silent); // 317
     ReplaceSubtile(this->til, 100 - 1, 0, 25 - 1, silent); // 374
     ReplaceSubtile(this->til, 100 - 1, 1, 26 - 1, silent); // 375
-    // - new shadows
+    // - adjusted shadows
     ReplaceSubtile(this->til, 66 - 1, 0, 103 - 1, silent); // 250
     ReplaceSubtile(this->til, 66 - 1, 3, 106 - 1, silent); // 253
     ReplaceSubtile(this->til, 67 - 1, 0, 25 - 1, silent);  // 254 same as tile 7, but needed for L6MITE-placements
