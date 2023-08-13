@@ -321,6 +321,7 @@ private:
     D1Tla *tla;
     D1Spt *spt;
     D1Tmi *tmi;
+    D1Smp *smp;
     D1Dun *dun;
     bool dunView = false;
     bool isScrolling = false;

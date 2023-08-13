@@ -169,6 +169,7 @@ private:
     void setTmiProperty(quint8 flags);
     void updateTmiProperty();
     void setTrapProperty(int trap);
+    void updateSmpProperty();
     void setSmpProperty(quint8 flags);
 
     Ui::LevelTabSubtileWidget *ui;
