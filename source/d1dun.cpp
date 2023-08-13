@@ -1195,6 +1195,8 @@ void D1Dun::DrawAutomapExtern(int x, int y)
        01    03
           00
     */
+    x += d8;
+    y -= d8;
     DrawPixel(x, y, COLOR_DIM);                 // 00
     DrawPixel(x - d8, y - d4, COLOR_DIM);       // 01
     DrawPixel(x + d8, y - d4, COLOR_DIM);       // 03
@@ -1227,7 +1229,7 @@ void D1Dun::DrawAutomapSubStairs(int x, int y)
     // DrawLine(x - d16, y - d8, x + d16, y + d8, COLOR_BRIGHT);
     // DrawLine(x - d32 + d8, y - d4, x + d8, y + d16 - d4, COLOR_BRIGHT);
     // DrawLine(x - d32, y, x, y + d16, COLOR_BRIGHT);
-    DrawLine(x - d16 + d4, y - d2, x + d4, y + d8 - d2, COLOR_BRIGHT);
+    DrawLine(x - d16 + d4 + d4, y - d2 - d2, x + d4 + d4, y + d8 - d2 - d2, COLOR_BRIGHT);
     DrawLine(x - d16, y, x, y + d8, COLOR_BRIGHT);
 }
 
@@ -1441,16 +1443,16 @@ void D1Dun::DrawSubMap(int sx, int sy, uint16_t automap_type)
     unsigned d16 = (d32 >> 1);
     unsigned d8 = (d32 >> 2);
     if (automap_type & MAT_WALL_NW) {
-        D1Dun::DrawLine(sx, sy - d8, sx - d16, sy, COLOR_DIM);
+        D1Dun::DrawLine(sx + d8, sy - d8 - d8, sx - d16 + d8, sy - d8, COLOR_DIM);
     }
     if (automap_type & MAT_WALL_NE) {
-        D1Dun::DrawLine(sx, sy - d8, sx + d16, sy, COLOR_DIM);
+        D1Dun::DrawLine(sx + d8, sy - d8 - d8, sx + d16 + d8, sy - d8, COLOR_DIM);
     }
     if (automap_type & MAT_WALL_SW) {
-        D1Dun::DrawLine(sx, sy + d8, sx - d16, sy, COLOR_DIM);
+        D1Dun::DrawLine(sx + d8, sy + d8 - d8, sx - d16 + d8, sy - d8, COLOR_DIM);
     }
     if (automap_type & MAT_WALL_SE) {
-        D1Dun::DrawLine(sx, sy + d8, sx + d16, sy, COLOR_DIM);
+        D1Dun::DrawLine(sx + d8, sy + d8 - d8, sx + d16 + d8, sy - d8, COLOR_DIM);
     }
 }
 
