@@ -73,6 +73,7 @@ public:
     void reloadConfig();
     void updateWindow();
 
+    void openArgFile(const char *arg);
     void openNew(OPEN_GFX_TYPE gfxType, OPEN_CLIPPED_TYPE clipped, bool createDun);
     void openFile(const OpenAsParam &params);
     void openFiles(const QStringList &filePaths);

@@ -29,9 +29,7 @@ int main(int argc, char *argv[])
         w.show();
 
         if (argc > 1) {
-            QStringList filePaths;
-            filePaths.append(argv[argc - 1]);
-            w.openFiles(filePaths);
+            w.openArgFile(argv[argc - 1]);
         }
         result = a.exec();
     }
