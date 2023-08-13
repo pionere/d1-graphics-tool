@@ -111,9 +111,9 @@ bool D1Tileset::load(const OpenAsParam &params)
         dProgressErr() << QApplication::tr("Failed loading AMP file: %1.").arg(QDir::toNativeSeparators(ampFilePath));
     } else if (!this->tla->load(tlaFilePath, this->til->getTileCount(), params)) {
         dProgressErr() << QApplication::tr("Failed loading TLA file: %1.").arg(QDir::toNativeSeparators(tlaFilePath));
-    } else if (!this->spt->load(sptFilePath, this->sol, params)) {
+    } else if (!this->spt->load(sptFilePath, this->sol->getSubtileCount(), params)) {
         dProgressErr() << QApplication::tr("Failed loading SPT file: %1.").arg(QDir::toNativeSeparators(sptFilePath));
-    } else if (!this->tmi->load(tmiFilePath, this->sol, params)) {
+    } else if (!this->tmi->load(tmiFilePath, this->sol->getSubtileCount(), params)) {
         dProgressErr() << QApplication::tr("Failed loading TMI file: %1.").arg(QDir::toNativeSeparators(tmiFilePath));
     } else if (!this->loadCls(clsFilePath, params)) {
         dProgressErr() << QApplication::tr("Failed loading Special-CEL file: %1.").arg(QDir::toNativeSeparators(clsFilePath));

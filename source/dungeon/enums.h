@@ -3392,6 +3392,13 @@ typedef enum _draw_mask_type {
 	DMT_EMPTY,
 } _draw_mask_type;
 
+typedef enum _automap_mode {
+	AMM_NONE,
+	AMM_MINI,
+	AMM_NORMAL,
+	NUM_AMMS
+} _automap_mode;
+
 typedef enum _automap_types {
 	MWT_NONE,
 	MWT_PILLAR,         // standalone pillar
