@@ -29,6 +29,7 @@ D1Tileset::D1Tileset(D1Gfx *g)
     this->tla = new D1Tla();
     this->spt = new D1Spt();
     this->tmi = new D1Tmi();
+    this->smp = new D1Smp();
 }
 
 D1Tileset::~D1Tileset()
@@ -41,6 +42,7 @@ D1Tileset::~D1Tileset()
     delete tla;
     delete spt;
     delete tmi;
+    delete smp;
 }
 
 bool D1Tileset::loadCls(const QString &clsFilePath, const OpenAsParam &params)
@@ -68,6 +70,7 @@ bool D1Tileset::load(const OpenAsParam &params)
     QString tlaFilePath = params.tlaFilePath;
     QString sptFilePath = params.sptFilePath;
     QString tmiFilePath = params.tmiFilePath;
+    QString smpFilePath = params.smpFilePath;
 
     if (!gfxFilePath.isEmpty()) {
         QFileInfo celFileInfo = QFileInfo(gfxFilePath);
@@ -98,6 +101,9 @@ bool D1Tileset::load(const OpenAsParam &params)
         if (tmiFilePath.isEmpty()) {
             tmiFilePath = basePath + ".tmi";
         }
+        if (smpFilePath.isEmpty()) {
+            smpFilePath = basePath + ".smp";
+        }
     }
 
     std::map<unsigned, D1CEL_FRAME_TYPE> celFrameTypes;
@@ -115,6 +121,8 @@ bool D1Tileset::load(const OpenAsParam &params)
         dProgressErr() << QApplication::tr("Failed loading SPT file: %1.").arg(QDir::toNativeSeparators(sptFilePath));
     } else if (!this->tmi->load(tmiFilePath, this->sol->getSubtileCount(), params)) {
         dProgressErr() << QApplication::tr("Failed loading TMI file: %1.").arg(QDir::toNativeSeparators(tmiFilePath));
+    } else if (!this->smp->load(smpFilePath, this->sol->getSubtileCount(), params)) {
+        dProgressErr() << QApplication::tr("Failed loading SMP file: %1.").arg(QDir::toNativeSeparators(smpFilePath));
     } else if (!this->loadCls(clsFilePath, params)) {
         dProgressErr() << QApplication::tr("Failed loading Special-CEL file: %1.").arg(QDir::toNativeSeparators(clsFilePath));
     } else if (!D1CelTileset::load(*this->gfx, celFrameTypes, gfxFilePath, params)) {
@@ -132,6 +140,7 @@ bool D1Tileset::load(const OpenAsParam &params)
     this->tla->clear();
     this->spt->clear();
     this->tmi->clear();
+    this->smp->clear();
     return false;
 }
 
@@ -145,6 +154,7 @@ void D1Tileset::save(const SaveAsParam &params)
     this->tla->save(params);
     this->spt->save(params);
     this->tmi->save(params);
+    this->smp->save(params);
 }
 
 void D1Tileset::createTile()
@@ -160,6 +170,7 @@ void D1Tileset::insertSubtile(int subtileIndex, const std::vector<unsigned> &fra
     this->sol->insertSubtile(subtileIndex);
     this->spt->insertSubtile(subtileIndex);
     this->tmi->insertSubtile(subtileIndex);
+    this->smp->insertSubtile(subtileIndex);
 }
 
 void D1Tileset::createSubtile()
@@ -168,6 +179,7 @@ void D1Tileset::createSubtile()
     this->sol->createSubtile();
     this->spt->createSubtile();
     this->tmi->createSubtile();
+    this->smp->createSubtile();
 }
 
 void D1Tileset::removeSubtile(int subtileIndex, int replacement)
@@ -176,6 +188,7 @@ void D1Tileset::removeSubtile(int subtileIndex, int replacement)
     this->sol->removeSubtile(subtileIndex);
     this->spt->removeSubtile(subtileIndex);
     this->tmi->removeSubtile(subtileIndex);
+    this->smp->removeSubtile(subtileIndex);
 }
 
 void D1Tileset::resetSubtileFlags(int subtileIndex)
@@ -184,6 +197,7 @@ void D1Tileset::resetSubtileFlags(int subtileIndex)
     this->spt->setSubtileTrapProperty(subtileIndex, 0);
     this->spt->setSubtileSpecProperty(subtileIndex, 0);
     this->tmi->setSubtileProperties(subtileIndex, 0);
+    this->smp->setSubtileProperties(subtileIndex, 0);
 }
 
 void D1Tileset::remapSubtiles(const std::map<unsigned, unsigned> &remap)
@@ -192,6 +206,7 @@ void D1Tileset::remapSubtiles(const std::map<unsigned, unsigned> &remap)
     this->sol->remapSubtiles(remap);
     this->spt->remapSubtiles(remap);
     this->tmi->remapSubtiles(remap);
+    this->smp->remapSubtiles(remap);
 }
 
 bool D1Tileset::reuseFrames(std::set<int> &removedIndices, bool silent)

@@ -38,6 +38,7 @@ public:
     QString tlaFilePath;
     QString sptFilePath;
     QString tmiFilePath;
+    QString smpFilePath;
     QString dunFilePath;
     QString tblFilePath;
     int minWidth = 0;
@@ -74,6 +75,7 @@ private slots:
     void on_tlaFileBrowseButton_clicked();
     void on_sptFileBrowseButton_clicked();
     void on_tmiFileBrowseButton_clicked();
+    void on_smpFileBrowseButton_clicked();
     void on_dunFileBrowseButton_clicked();
     void on_tblFileBrowseButton_clicked();
     void on_openButton_clicked();

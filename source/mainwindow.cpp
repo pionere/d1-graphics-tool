@@ -976,6 +976,7 @@ void MainWindow::openFile(const OpenAsParam &params)
     QString tlaFilePath = params.tlaFilePath;
     QString sptFilePath = params.sptFilePath;
     QString tmiFilePath = params.tmiFilePath;
+    QString smpFilePath = params.smpFilePath;
     QString dunFilePath = params.dunFilePath;
     QString tblFilePath = params.tblFilePath;
 
@@ -1019,6 +1020,9 @@ void MainWindow::openFile(const OpenAsParam &params)
         if (tmiFilePath.isEmpty()) {
             tmiFilePath = basePath + ".tmi";
         }
+        if (smpFilePath.isEmpty()) {
+            smpFilePath = basePath + ".smp";
+        }
     } else if (!dunFilePath.isEmpty()) {
         QFileInfo dunFileInfo = QFileInfo(dunFilePath);
 
@@ -1032,6 +1036,7 @@ void MainWindow::openFile(const OpenAsParam &params)
         findFirstFile(baseDir, QStringLiteral("*.tla"), tlaFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.spt"), sptFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.tmi"), tmiFilePath, baseName);
+        findFirstFile(baseDir, QStringLiteral("*.smp"), smpFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.cel"), gfxFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*s.cel"), clsFilePath, baseName);
     }
@@ -1095,6 +1100,12 @@ void MainWindow::openFile(const OpenAsParam &params)
         // Loading TMI
         if (!this->tileset->tmi->load(tmiFilePath, this->tileset->sol->getSubtileCount(), params)) {
             this->failWithError(tr("Failed loading TMI file: %1.").arg(QDir::toNativeSeparators(tmiFilePath)));
+            return;
+        }
+
+        // Loading SMP
+        if (!this->tileset->smp->load(smpFilePath, this->tileset->sol->getSubtileCount(), params)) {
+            this->failWithError(tr("Failed loading SMP file: %1.").arg(QDir::toNativeSeparators(smpFilePath)));
             return;
         }
 

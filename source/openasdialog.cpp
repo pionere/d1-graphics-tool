@@ -42,6 +42,7 @@ void OpenAsDialog::initialize()
     this->ui->tlaFileEdit->setText("");
     this->ui->sptFileEdit->setText("");
     this->ui->tmiFileEdit->setText("");
+    this->ui->smpFileEdit->setText("");
     this->ui->dunFileEdit->setText("");
     this->ui->minWidthEdit->setText("0");
     this->ui->minHeightEdit->setText("0");
@@ -122,6 +123,12 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
             } else {
                 this->ui->tmiFileEdit->setText("");
             }
+            QString smpFilePath = basePath + ".smp";
+            if (QFileInfo::exists(smpFilePath)) {
+                this->ui->smpFileEdit->setText(smpFilePath);
+            } else {
+                this->ui->smpFileEdit->setText("");
+            }
         } else {
             this->ui->clsFileEdit->setText("");
             this->ui->tilFileEdit->setText("");
@@ -131,6 +138,7 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
             this->ui->tlaFileEdit->setText("");
             this->ui->sptFileEdit->setText("");
             this->ui->tmiFileEdit->setText("");
+            this->ui->smpFileEdit->setText("");
         }
     }
     QString tblPath;
@@ -245,6 +253,16 @@ void OpenAsDialog::on_tmiFileBrowseButton_clicked()
     this->ui->tmiFileEdit->setText(openFilePath);
 }
 
+void OpenAsDialog::on_smpFileBrowseButton_clicked()
+{
+    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select SMP file"), tr("SMP Files (*.smp *.SMP)"));
+
+    if (openFilePath.isEmpty())
+        return;
+
+    this->ui->smpFileEdit->setText(openFilePath);
+}
+
 void OpenAsDialog::on_dunFileBrowseButton_clicked()
 {
     QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select DUN file"), tr("DUN Files (*.dun *.DUN *.rdun *.RDUN)"));
@@ -300,6 +318,7 @@ void OpenAsDialog::on_openButton_clicked()
     params.tlaFilePath = this->ui->tlaFileEdit->text();
     params.sptFilePath = this->ui->sptFileEdit->text();
     params.tmiFilePath = this->ui->tmiFileEdit->text();
+    params.smpFilePath = this->ui->smpFileEdit->text();
     params.dunFilePath = this->ui->dunFileEdit->text();
     params.createDun = this->ui->createDunCheckBox->isChecked();
     params.minWidth = this->ui->minWidthEdit->nonNegInt();

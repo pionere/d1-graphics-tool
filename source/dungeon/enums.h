@@ -3399,6 +3399,21 @@ typedef enum _automap_mode {
 	NUM_AMMS
 } _automap_mode;
 
+typedef enum _automap_subtypes {
+	MAT_NONE,
+	MAT_EXTERN,
+	MAT_STAIRS,
+	MAT_DOOR_NW,
+	MAT_DOOR_NE,
+	MAT_DOOR_SW,
+	MAT_DOOR_SE,
+	MAT_TYPE       = 0xF,
+	MAT_WALL_NW = 1 << 4;
+	MAT_WALL_NE = 1 << 5;
+	MAT_WALL_SW = 1 << 6;
+	MAT_WALL_SE = 1 << 7;
+} _automap_subtypes;
+
 typedef enum _automap_types {
 	MWT_NONE,
 	MWT_PILLAR,         // standalone pillar

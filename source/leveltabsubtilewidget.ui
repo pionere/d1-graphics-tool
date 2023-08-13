@@ -36,9 +36,6 @@
     <layout class="QHBoxLayout" name="solAndSptHorizontalLayout">
      <item>
       <widget class="QGroupBox" name="solSettingsGroupBox">
-       <!--property name="maximumHeight">
-        <number>80</number>
-       </property-->
        <property name="title">
         <string>SOL flags</string>
        </property>
@@ -76,9 +73,6 @@
      </item>
      <item>
       <widget class="QGroupBox" name="sptSettingsGroupBox">
-       <!--property name="maximumHeight">
-        <number>80</number>
-       </property-->
        <property name="title">
         <string>SPT flags</string>
        </property>
@@ -154,9 +148,6 @@
    </item>
    <item>
     <widget class="QGroupBox" name="tmiSettingsGroupBox">
-     <!--property name="maximumHeight">
-      <number>80</number>
-     </property-->
      <property name="title">
       <string>TMI flags</string>
      </property>
@@ -221,6 +212,96 @@
        <widget class="QCheckBox" name="tmi6">
         <property name="text">
          <string>Transparent</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="smpSettingsGroupBox">
+     <property name="title">
+      <string>SMP settings</string>
+     </property>
+     <layout class="QGridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Map feature:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="smpTypeComboBox">
+        <item>
+         <property name="text">
+          <string>None</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Extern</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Stairs</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>North-West Door</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>North-East Door</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>South-West Door</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>South-East Door</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel">
+        <property name="text">
+         <string>Walls:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QCheckBox" name="smp4">
+        <property name="toolTip">
+         <string>North-West</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QCheckBox" name="smp5">
+        <property name="toolTip">
+         <string>North-East</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QCheckBox" name="smp6">
+        <property name="toolTip">
+         <string>South-West</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QCheckBox" name="smp7">
+        <property name="toolTip">
+         <string>South-East</string>
         </property>
        </widget>
       </item>

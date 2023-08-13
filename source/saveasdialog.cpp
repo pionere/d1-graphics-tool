@@ -7,6 +7,7 @@
 #include "d1amp.h"
 #include "d1gfx.h"
 #include "d1min.h"
+#include "d1smp.h"
 #include "d1sol.h"
 #include "d1spt.h"
 #include "d1til.h"
@@ -54,6 +55,7 @@ void SaveAsDialog::initialize(D1Gfx *g, D1Tileset *tileset, D1Gfxset *gfxset, D1
     this->ui->outputTlaFileEdit->setText(isTilesetGfx ? tileset->tla->getFilePath() : "");
     this->ui->outputSptFileEdit->setText(isTilesetGfx ? tileset->spt->getFilePath() : "");
     this->ui->outputTmiFileEdit->setText(isTilesetGfx ? tileset->tmi->getFilePath() : "");
+    this->ui->outputSmpFileEdit->setText(isTilesetGfx ? tileset->smp->getFilePath() : "");
     this->ui->tblFileEdit->setText(isTableset ? tableset->darkTbl->getFilePath() : "");
 
     if (dun == nullptr) {
@@ -111,6 +113,7 @@ void SaveAsDialog::on_outputCelFileBrowseButton_clicked()
             this->ui->outputTlaFileEdit->setText(saveFilePath + (upperCase ? ".TLA" : ".tla"));
             this->ui->outputSptFileEdit->setText(saveFilePath + (upperCase ? ".SPT" : ".spt"));
             this->ui->outputTmiFileEdit->setText(saveFilePath + (upperCase ? ".TMI" : ".tmi"));
+            this->ui->outputSmpFileEdit->setText(saveFilePath + (upperCase ? ".SMP" : ".smp"));
         }
     }
 }
@@ -195,6 +198,16 @@ void SaveAsDialog::on_outputTmiFileBrowseButton_clicked()
     this->ui->outputTmiFileEdit->setText(saveFilePath);
 }
 
+void SaveAsDialog::on_outputSmpFileBrowseButton_clicked()
+{
+    QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save SMP as..."), tr("SMP Files (*.smp *.SMP)"));
+
+    if (saveFilePath.isEmpty())
+        return;
+
+    this->ui->outputSmpFileEdit->setText(saveFilePath);
+}
+
 void SaveAsDialog::on_outputDunFileBrowseButton_clicked()
 {
     QString saveFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::SAVE_NO_CONF, tr("Save DUN as..."), tr("DUN Files (*.dun *.DUN *.rdun *.RDUN)"));
@@ -245,6 +258,7 @@ void SaveAsDialog::on_saveButton_clicked()
     params.tlaFilePath = this->ui->outputTlaFileEdit->text();
     params.sptFilePath = this->ui->outputSptFileEdit->text();
     params.tmiFilePath = this->ui->outputTmiFileEdit->text();
+    params.smpFilePath = this->ui->outputSmpFileEdit->text();
     params.dunFilePath = this->ui->outputDunFileEdit->text();
     if (this->ui->dunLayerTilesRadioButton->isChecked()) {
         params.dunLayerNum = 0;

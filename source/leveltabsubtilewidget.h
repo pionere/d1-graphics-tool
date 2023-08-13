@@ -11,6 +11,7 @@ class D1Min;
 class D1Sol;
 class D1Spt;
 class D1Tmi;
+class D1Smp;
 
 class EditMinCommand : public QObject, public QUndoCommand {
     Q_OBJECT
@@ -51,25 +52,6 @@ private:
     quint8 flags;
 };
 
-class EditTmiCommand : public QObject, public QUndoCommand {
-    Q_OBJECT
-
-public:
-    explicit EditTmiCommand(D1Tmi *tmi, int subtileIndex, quint8 flags);
-    ~EditTmiCommand() = default;
-
-    void undo() override;
-    void redo() override;
-
-signals:
-    void modified();
-
-private:
-    QPointer<D1Tmi> tmi;
-    int subtileIndex;
-    quint8 flags;
-};
-
 class EditSptCommand : public QObject, public QUndoCommand {
     Q_OBJECT
 
@@ -91,6 +73,45 @@ private:
     bool trap;
 };
 
+class EditTmiCommand : public QObject, public QUndoCommand {
+    Q_OBJECT
+
+public:
+    explicit EditTmiCommand(D1Tmi *tmi, int subtileIndex, quint8 flags);
+    ~EditTmiCommand() = default;
+
+    void undo() override;
+    void redo() override;
+
+signals:
+    void modified();
+
+private:
+    QPointer<D1Tmi> tmi;
+    int subtileIndex;
+    quint8 flags;
+};
+
+class EditSmpCommand : public QObject, public QUndoCommand {
+    Q_OBJECT
+
+public:
+    explicit EditSmpCommand(D1Smp *smp, int subtileIndex, int value, int typeProp);
+    ~EditSmpCommand() = default;
+
+    void undo() override;
+    void redo() override;
+
+signals:
+    void modified();
+
+private:
+    QPointer<D1Smp> smp;
+    int subtileIndex;
+    int value;
+    int typeProp;
+};
+
 namespace Ui {
 class LevelTabSubtileWidget;
 } // namespace Ui
@@ -102,7 +123,7 @@ public:
     explicit LevelTabSubtileWidget(QWidget *parent);
     ~LevelTabSubtileWidget();
 
-    void initialize(LevelCelView *v, QUndoStack *undoStack, D1Gfx *gfx, D1Min *min, D1Sol *sol, D1Spt *spt, D1Tmi *tmi);
+    void initialize(LevelCelView *v, QUndoStack *undoStack, D1Gfx *gfx, D1Min *min, D1Sol *sol, D1Spt *spt, D1Tmi *tmi, D1Smp *smp);
     void updateFields();
 
     void selectFrame(int index);
@@ -129,6 +150,12 @@ private slots:
     void on_tmi5_clicked();
     void on_tmi6_clicked();
 
+    void on_smpTypeComboBox_activated(int index);
+    void on_smp4_clicked();
+    void on_smp5_clicked();
+    void on_smp6_clicked();
+    void on_smp7_clicked();
+
     void on_framesPrevButton_clicked();
     void on_framesComboBox_activated(int index);
     void on_framesComboBox_currentTextChanged(const QString &arg1);
@@ -142,6 +169,7 @@ private:
     void setTmiProperty(quint8 flags);
     void updateTmiProperty();
     void setTrapProperty(int trap);
+    void setSmpProperty(quint8 flags);
 
     Ui::LevelTabSubtileWidget *ui;
     QPushButton *clearButton;
@@ -153,6 +181,7 @@ private:
     D1Sol *sol;
     D1Spt *spt;
     D1Tmi *tmi;
+    D1Smp *smp;
 
     bool onUpdate = false;
     int lastSubtileIndex = -1;

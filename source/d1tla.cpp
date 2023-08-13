@@ -58,7 +58,7 @@ bool D1Tla::load(const QString &filePath, int tileCount, const OpenAsParam &para
     // skip the first byte
     quint8 readByte;
     in >> readByte;
-    for (int i = 0; i < tlaTileCount; i++) {
+    for (int i = 0; i < tlaTileCount - 1; i++) {
         in >> readByte;
         this->properties[i] = readByte;
     }
