@@ -1186,6 +1186,21 @@ void D1Dun::DrawAutomapDirt(int x, int y)
     DrawPixel(x, y + d16, COLOR_DIM);           // 15
 }
 
+void D1Dun::DrawAutomapExtern(int x, int y)
+{
+    unsigned d32 = AmLine32;
+    unsigned d16 = (d32 >> 1), d8 = (d32 >> 2), d4 = (d32 >> 3);
+
+    /*    02
+       01    03
+          00
+    */
+    DrawPixel(x, y, COLOR_DIM);                 // 00
+    DrawPixel(x - d8, y - d4, COLOR_DIM);       // 01
+    DrawPixel(x + d8, y - d4, COLOR_DIM);       // 03
+    DrawPixel(x, y - d8, COLOR_DIM);            // 02
+}
+
 void D1Dun::DrawAutomapStairs(int x, int y)
 {
     unsigned d32 = AmLine32;
@@ -1195,6 +1210,25 @@ void D1Dun::DrawAutomapStairs(int x, int y)
     DrawLine(x - d16, y - d8, x + d16, y + d8, COLOR_BRIGHT);
     DrawLine(x - d32 + d8, y - d4, x + d8, y + d16 - d4, COLOR_BRIGHT);
     DrawLine(x - d32, y, x, y + d16, COLOR_BRIGHT);
+}
+
+void D1Dun::DrawAutomapSubStairs(int x, int y)
+{
+    unsigned d32 = AmLine32;
+    unsigned d16 = (d32 >> 1), d8 = (d32 >> 2), d4 = (d32 >> 3), d2 = (d32 >> 4);
+
+    /* 
+          _____
+         _____
+        _____
+       ____._
+    */
+    // DrawLine(x - d8, y - d16 + d4, x + d32 - d8, y + d4, COLOR_BRIGHT);
+    // DrawLine(x - d16, y - d8, x + d16, y + d8, COLOR_BRIGHT);
+    // DrawLine(x - d32 + d8, y - d4, x + d8, y + d16 - d4, COLOR_BRIGHT);
+    // DrawLine(x - d32, y, x, y + d16, COLOR_BRIGHT);
+    DrawLine(x - d16 + d4, y - d2, x + d4, y + d8 - d2, COLOR_BRIGHT);
+    DrawLine(x - d16, y, x, y + d8, COLOR_BRIGHT);
 }
 
 void D1Dun::DrawAutomapHorzDoor(int x, int y)
@@ -1237,6 +1271,27 @@ void D1Dun::DrawAutomapDiamond(int x, int y)
     DrawLine(x, y, x + d16, y2, COLOR_DIM);       // top right
     DrawLine(x, y - d16, x + d16, y2, COLOR_DIM); // bottom right
     DrawLine(x - d16, y2, x, y - d16, COLOR_DIM); // bottom left
+}
+
+void D1Dun::DrawAutomapDoorDiamond(int dir, int x, int y)
+{
+    int y2;
+    unsigned d32 = AmLine32;
+    unsigned d16 = (d32 >> 1), d8 = (d32 >> 2), d4 = (d32 >> 3), d2 = (d32 >> 4);
+
+    switch (dir) {
+    case 0: x -= d16; y -= d8; break; // NW
+    case 1: x += d16; y -= d8; break; // NE
+    case 2: x -= d16; y += d8; break; // SW
+    case 3: x += d16; y += d8; break; // SE
+    }
+
+    y2 = y - (d16 >> 1);
+
+    DrawLine(x - d16, y2, x, y, COLOR_BRIGHT);       // top left
+    DrawLine(x, y, x + d16, y2, COLOR_BRIGHT);       // top right
+    DrawLine(x, y - d16, x + d16, y2, COLOR_BRIGHT); // bottom right
+    DrawLine(x - d16, y2, x, y - d16, COLOR_BRIGHT); // bottom left
 }
 
 void D1Dun::DrawMap(int sx, int sy, uint16_t automap_type)
@@ -1357,6 +1412,48 @@ void D1Dun::DrawMap(int sx, int sy, uint16_t automap_type)
     }
 }
 
+void D1Dun::DrawSubMap(int sx, int sy, uint16_t automap_type)
+{
+    switch (automap_type & MAT_TYPE) {
+    case MAT_NONE:
+        break;
+    case MAT_EXTERN:
+        D1Dun::DrawAutomapExtern(sx, sy);
+        break;
+    case MAT_STAIRS:
+        D1Dun::DrawAutomapSubStairs(sx, sy);
+        break;
+    case MAT_DOOR_NW:
+        D1Dun::DrawAutomapDoorDiamond(0, sx, sy);
+        break;
+    case MAT_DOOR_NE:
+        D1Dun::DrawAutomapDoorDiamond(1, sx, sy);
+        break;
+    case MAT_DOOR_SW:
+        D1Dun::DrawAutomapDoorDiamond(2, sx, sy);
+        break;
+    case MAT_DOOR_SE:
+        D1Dun::DrawAutomapDoorDiamond(3, sx, sy);
+        break;
+    }
+
+    unsigned d32 = AmLine32;
+    unsigned d16 = (d32 >> 1);
+    unsigned d8 = (d32 >> 2);
+    if (automap_Type & MAT_WALLS_NW) {
+        D1Dun::DrawLine(sx, sy - d8, sx - d16, sy, COLOR_DIM);
+    }
+    if (automap_Type & MAT_WALLS_NE) {
+        D1Dun::DrawLine(sx, sy - d8, sx + d16, sy, COLOR_DIM);
+    }
+    if (automap_Type & MAT_WALLS_SW) {
+        D1Dun::DrawLine(sx, sy + d8, sx - d16, sy, COLOR_DIM);
+    }
+    if (automap_Type & MAT_WALLS_SE) {
+        D1Dun::DrawLine(sx, sy + d8, sx + d16, sy, COLOR_DIM);
+    }
+}
+
 void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int drawCursorY, int dunCursorX, int dunCursorY, const DunDrawParam &params)
 {
     const unsigned backWidth = backImage.width() - 2 * CELL_BORDER;
@@ -1370,6 +1467,15 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
             quint8 mapProp = this->tileset->amp->getTileProperties(tileRef - 1);
 
             D1Dun::DrawMap(drawCursorX + backWidth / 2, drawCursorY - 1, mapType | (mapProp << 8));
+        }
+    }
+    if (params.showMap) {
+        int subtileRef = this->subtiles[dunCursorY][dunCursorX];
+        if (subtileRef > 0 && subtileRef <= this->min->getSubtileCount()) { // !0 || !UNDEF_SUBTILE
+            quint8 mapType = this->tileset->smp->getSubtileType(tileRef - 1);
+            quint8 mapProp = this->tileset->smp->getSubtileProperties(tileRef - 1);
+
+            D1Dun::DrawSubMap(drawCursorX + backWidth / 4, drawCursorY - 1, mapType | mapProp);
         }
     }
     if (params.showRooms) {

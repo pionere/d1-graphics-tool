@@ -142,7 +142,7 @@ EditSmpCommand::EditSmpCommand(D1Smp *s, int si, int v, int t)
 
 void EditSmpCommand::undo()
 {
-    if (this->spt.isNull()) {
+    if (this->smp.isNull()) {
         this->setObsolete(true);
         return;
     }
@@ -379,7 +379,7 @@ void LevelTabSubtileWidget::setSmpProperty(quint8 flags)
 
 void LevelTabSubtileWidget::updateSmpProperty()
 {
-    quint8 flags = this->ui->smpTypeComboBox->getCurrentIndex();
+    quint8 flags = this->ui->smpTypeComboBox->currentIndex();
     if (this->ui->smp4->checkState())
         flags |= MAT_WALL_NW;
     if (this->ui->smp5->checkState())
