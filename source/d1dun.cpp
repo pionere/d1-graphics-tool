@@ -1227,8 +1227,8 @@ void D1Dun::DrawAutomapSubStairs(int x, int y)
     // DrawLine(x - d16, y - d8, x + d16, y + d8, COLOR_BRIGHT);
     // DrawLine(x - d32 + d8, y - d4, x + d8, y + d16 - d4, COLOR_BRIGHT);
     // DrawLine(x - d32, y, x, y + d16, COLOR_BRIGHT);
-    DrawLine(x - d16 + d4 + d4, y - d2 - d2, x + d4 + d4, y + d8 - d2 - d2, COLOR_BRIGHT);
-    DrawLine(x - d16, y, x, y + d8, COLOR_BRIGHT);
+    DrawLine(x - d16 + d4 + d4, y - d8 - d2 - d2, x + d4 + d4, y - d2 - d2, COLOR_BRIGHT);
+    DrawLine(x - d16, y - d8, x, y, COLOR_BRIGHT);
 }
 
 void D1Dun::DrawAutomapHorzDoor(int x, int y)
@@ -1280,10 +1280,10 @@ void D1Dun::DrawAutomapDoorDiamond(int dir, int x, int y)
     unsigned d16 = (d32 >> 1), d8 = (d32 >> 2), d4 = (d32 >> 3), d2 = (d32 >> 4);
 
     switch (dir) {
-    case 0: x -= d16; y -= d8; break; // NW
-    case 1: x += d16; y -= d8; break; // NE
-    case 2: x -= d16; y += d8; break; // SW
-    case 3: x += d16; y += d8; break; // SE
+    case 0: x -= d8; y -= d4; break; // NW
+    case 1: x += d8; y -= d4; break; // NE
+    case 2: x -= d8; y += d4; break; // SW
+    case 3: x += d8; y += d4; break; // SE
     }
 
     y2 = y - (d16 >> 1);
