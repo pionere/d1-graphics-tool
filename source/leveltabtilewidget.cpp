@@ -75,7 +75,7 @@ void EditAmpCommand::redo()
     this->undo();
 }
 
-EditTitCommand::EditTitCommand(D1Tla *tt, int ti, int v)
+EditTlaCommand::EditTlaCommand(D1Tla *tt, int ti, int v)
     : QUndoCommand(nullptr)
     , tla(tt)
     , tileIndex(ti)
@@ -83,7 +83,7 @@ EditTitCommand::EditTitCommand(D1Tla *tt, int ti, int v)
 {
 }
 
-void EditTitCommand::undo()
+void EditTlaCommand::undo()
 {
     if (this->tla.isNull()) {
         this->setObsolete(true);
@@ -97,7 +97,7 @@ void EditTitCommand::undo()
     emit this->modified();
 }
 
-void EditTitCommand::redo()
+void EditTlaCommand::redo()
 {
     this->undo();
 }
@@ -260,14 +260,14 @@ void LevelTabTileWidget::setAmpProperty(quint8 flags)
     this->undoStack->push(command);
 }
 
-void LevelTabTileWidget::setTitProperty(quint8 flags)
+void LevelTabTileWidget::setTlaProperty(quint8 flags)
 {
     int tileIdx = this->levelCelView->getCurrentTileIndex();
 
     // Build amp editing command and connect it to the views widget
     // to update the label when undo/redo is performed
-    EditTitCommand *command = new EditTitCommand(this->tla, tileIdx, flags);
-    QObject::connect(command, &EditTitCommand::modified, this->levelCelView, &LevelCelView::updateFields);
+    EditTlaCommand *command = new EditTlaCommand(this->tla, tileIdx, flags);
+    QObject::connect(command, &EditTlaCommand::modified, this->levelCelView, &LevelCelView::updateFields);
 
     this->undoStack->push(command);
 }
@@ -295,7 +295,7 @@ void LevelTabTileWidget::updateAmpProperty()
     this->setAmpProperty(flags);
 }
 
-void LevelTabTileWidget::updateTitProperty()
+void LevelTabTileWidget::updateTlaProperty()
 {
     quint8 flags = 0;
     if (this->ui->tlaF00->checkState())
@@ -315,13 +315,13 @@ void LevelTabTileWidget::updateTitProperty()
     if (this->ui->tlaS03->checkState())
         flags |= TIF_SHADOW_03;
 
-    this->setTitProperty(flags);
+    this->setTlaProperty(flags);
 }
 
 void LevelTabTileWidget::on_clearPushButtonClicked()
 {
     this->setAmpProperty(0);
-    this->setTitProperty(0);
+    this->setTlaProperty(0);
     this->updateFields();
 }
 
@@ -388,42 +388,42 @@ void LevelTabTileWidget::on_amp7_clicked()
 
 void LevelTabTileWidget::on_tlaF00_clicked()
 {
-    this->updateTitProperty();
+    this->updateTlaProperty();
 }
 
 void LevelTabTileWidget::on_tlaF01_clicked()
 {
-    this->updateTitProperty();
+    this->updateTlaProperty();
 }
 
 void LevelTabTileWidget::on_tlaF10_clicked()
 {
-    this->updateTitProperty();
+    this->updateTlaProperty();
 }
 
 void LevelTabTileWidget::on_tlaF11_clicked()
 {
-    this->updateTitProperty();
+    this->updateTlaProperty();
 }
 
 void LevelTabTileWidget::on_tlaS00_clicked()
 {
-    this->updateTitProperty();
+    this->updateTlaProperty();
 }
 
 void LevelTabTileWidget::on_tlaS01_clicked()
 {
-    this->updateTitProperty();
+    this->updateTlaProperty();
 }
 
 void LevelTabTileWidget::on_tlaS02_clicked()
 {
-    this->updateTitProperty();
+    this->updateTlaProperty();
 }
 
 void LevelTabTileWidget::on_tlaS03_clicked()
 {
-    this->updateTitProperty();
+    this->updateTlaProperty();
 }
 
 void LevelTabTileWidget::setSubtileIndex(int tileIndex, int index, int subtileIndex)

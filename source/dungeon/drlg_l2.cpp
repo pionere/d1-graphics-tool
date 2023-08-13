@@ -96,7 +96,7 @@ const BYTE L2BTYPES[159] = {
 	12,  8,  8,  8, 10, 12, 15, 15, 15, 15, // 40..
 	15, 15, 14, 10, 10,  8, 12, 12, 12, 15, // 50..
 	15, 15, 15, 15, 15, 15, 15, 15, 10, 10, // 60..
-	10,  3,  5, 12, 12, 12, 15, 10,  0, 10, // 70..
+	10,  7,  5, 12, 12, 12, 15, 10,  0, 10, // 70..
 	10, 10, 10,  8, 12, 12, 12,  8, 15, 15, // 80..
 	15, 15, 15, 15, 15, 12, 10, 15, 15, 15, // 90..
 	12, 14, 15, 15, 15, 15, 15, 15, 15, 15, //100..
@@ -693,7 +693,7 @@ void DRLG_L2Shadows()
 				pillar = true;
 				break;
 			}*/
-			pillar = (nTrnShadowTable[dungeon[i][j]] & TIF_L2_PILLAR) != 0;
+			pillar = (nTrnShadowTable[bv] & TIF_L2_PILLAR) != 0;
 			if (horizArch) {
 				BYTE replaceA;
 				BYTE replaceB = dungeon[i][j - 1];

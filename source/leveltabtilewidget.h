@@ -51,12 +51,12 @@ private:
     bool type;
 };
 
-class EditTitCommand : public QObject, public QUndoCommand {
+class EditTlaCommand : public QObject, public QUndoCommand {
     Q_OBJECT
 
 public:
-    explicit EditTitCommand(D1Tla *tla, int tileIndex, int value);
-    ~EditTitCommand() = default;
+    explicit EditTlaCommand(D1Tla *tla, int tileIndex, int value);
+    ~EditTlaCommand() = default;
 
     void undo() override;
     void redo() override;
@@ -120,8 +120,8 @@ private:
     void updateSubtilesSelection(int index);
     void setAmpProperty(quint8 flags);
     void updateAmpProperty();
-    void setTitProperty(quint8 flags);
-    void updateTitProperty();
+    void setTlaProperty(quint8 flags);
+    void updateTlaProperty();
 
 private:
     Ui::LevelTabTileWidget *ui;

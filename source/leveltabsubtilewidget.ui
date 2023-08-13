@@ -36,9 +36,9 @@
     <layout class="QHBoxLayout" name="solAndSptHorizontalLayout">
      <item>
       <widget class="QGroupBox" name="solSettingsGroupBox">
-       <property name="maximumHeight">
+       <!--property name="maximumHeight">
         <number>80</number>
-       </property>
+       </property-->
        <property name="title">
         <string>SOL flags</string>
        </property>
@@ -76,9 +76,9 @@
      </item>
      <item>
       <widget class="QGroupBox" name="sptSettingsGroupBox">
-       <property name="maximumHeight">
+       <!--property name="maximumHeight">
         <number>80</number>
-       </property>
+       </property-->
        <property name="title">
         <string>SPT flags</string>
        </property>
@@ -154,9 +154,9 @@
    </item>
    <item>
     <widget class="QGroupBox" name="tmiSettingsGroupBox">
-     <property name="maximumHeight">
+     <!--property name="maximumHeight">
       <number>80</number>
-     </property>
+     </property-->
      <property name="title">
       <string>TMI flags</string>
      </property>

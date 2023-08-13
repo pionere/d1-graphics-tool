@@ -5648,7 +5648,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 100 - 1, 1, 165 - 1, silent);
     ReplaceSubtile(this->til, 100 - 1, 2, 155 - 1, silent);
     ReplaceSubtile(this->til, 100 - 1, 3, 169 - 1, silent);
-    // - pillar tile for a pillar
+    // - shadow for the separate pillar
     ReplaceSubtile(this->til, 101 - 1, 0, 21 - 1, silent);
     ReplaceSubtile(this->til, 101 - 1, 1, 26 - 1, silent);
     ReplaceSubtile(this->til, 101 - 1, 2, 148 - 1, silent);

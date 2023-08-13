@@ -97,7 +97,7 @@ static const BYTE L1BTYPES[207] = {
 	 8, 10, 12, 15,  8, 14,  8,  8,  0,  0, // 10..
 	 0,  0,  0,  0,  0, 10, 12,  8, 14,  8, // 20..
 	10, 12, 10, 12,  8, 10, 12,  8,  8,  8, // 30..
-	 8,  8,  8,  8,  8, 15, 12,  0,  0, 15, // 40..
+	 8,  8,  8,  8,  8, 15, 12,  0,  0, 14, // 40..
 	10, 10,  0,  0,  0,  4,  0,  0,  0, 15, // 50..
 	15,  0,  0,  0,  0,  0, 15, 15, 15, 10, // 60..
 	12, 12,  8,  8,  8,  8,  8,  8,  8,  8, // 70..
@@ -718,7 +718,7 @@ void DRLG_L5Shadows()
 				}
 				// pillar = pillar && (dungeon[i][j - 1] == 13 /* || 203 207 204 81 ... 2 3 7 9 12 15 16 17 26 36 */);
 				// pillar = pillar && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END;
-				pillar = pillar && (nTrnShadowTable[dungeon[i][j - 1]] & TIF_L1_WEST_WALL) == 0;
+				pillar = pillar && (nTrnShadowTable[dungeon[i][j - 1]] & TIF_L5_WEST_WALL) == 0;
 				switch (dungeon[i - 1][j - 1]) {
 				case 13: replaceB = pillar ? 207 : 203; break;
 				case 2:  replaceB = pillar ? 71 : 80;   break;
@@ -739,7 +739,7 @@ void DRLG_L5Shadows()
 					BYTE replace = dungeon[i - 1][j - 1];
 					// pillar = (dungeon[i][j - 1] == 13 /* || 203 207 204 81 ... 2 3 7 9 12 15 16 17 26 36 */);
 					// pillar = (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH && (automaptype[dungeon[i][j - 1]] & MAF_TYPE) != MWT_NORTH_WEST_END;
-					pillar = (nTrnShadowTable[dungeon[i][j - 1]] & TIF_L1_WEST_WALL) == 0;
+					pillar = (nTrnShadowTable[dungeon[i][j - 1]] & TIF_L5_WEST_WALL) == 0;
 					if (replace == 13) {
 						replace = pillar ? 207 : 203;
 					} else if (replace == 2) {
@@ -1035,12 +1035,13 @@ static void DRLG_LoadL1SP()
 	} else if (QuestStatus(Q_SKELKING)) {
 		pSetPieces[0]._sptype = SPT_SKELKING;
 		pSetPieces[0]._spData = LoadFileInMem(setpiecedata[pSetPieces[0]._sptype]._spdDunFile);
-		// patch set-piece to use common tiles - SKngDO.DUN
+		// patch set-piece - SKngDO.DUN
 		if (pSetPieces[0]._spData != NULL && PatchDunFiles) {
 		uint16_t* lm = (uint16_t*)pSetPieces[0]._spData;
+		// use common tiles
 		// lm[2 + 5 + 3 * 7] =  SwapLE16(203 - 181);
 		lm[2 + 5 + 4 * 7] =  SwapLE16(203 - 181);
-		// patch set-piece to use common tiles and make the inner tile at the entrance non-walkable - SKngDO.DUN
+		// use common tiles and make the inner tile at the entrance non-walkable
 		lm[2 + 5 + 2 * 7] =  SwapLE16(203 - 181);
 		// let the game generate the shadow
 		lm[2 + 0 + 5 * 7] = 0;
