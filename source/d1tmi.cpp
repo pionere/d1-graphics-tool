@@ -11,7 +11,7 @@
 #include "d1sol.h"
 #include "progressdialog.h"
 
-bool D1Tmi::load(const QString &filePath, const D1Sol *sol, const OpenAsParam &params)
+bool D1Tmi::load(const QString &filePath, int subtileCount, const OpenAsParam &params)
 {
     // prepare file data source
     QFile file;
@@ -35,7 +35,6 @@ bool D1Tmi::load(const QString &filePath, const D1Sol *sol, const OpenAsParam &p
 
     // File size check
     unsigned fileSize = fileData.size();
-    int subtileCount = sol->getSubtileCount();
     int tmiSubtileCount = fileSize;
     if (tmiSubtileCount != subtileCount + 1) {
         // warn about misalignment if the files are not empty

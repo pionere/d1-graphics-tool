@@ -7,8 +7,6 @@
 #include "openasdialog.h"
 #include "saveasdialog.h"
 
-class D1Sol;
-
 class D1Tmi : public QObject {
     Q_OBJECT
 
@@ -16,7 +14,7 @@ public:
     D1Tmi() = default;
     ~D1Tmi() = default;
 
-    bool load(const QString &tmiFilePath, const D1Sol *sol, const OpenAsParam &params);
+    bool load(const QString &tmiFilePath, int subtileCount, const OpenAsParam &params);
     bool save(const SaveAsParam &params);
     void clear();
 

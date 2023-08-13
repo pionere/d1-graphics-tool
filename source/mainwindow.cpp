@@ -1087,13 +1087,13 @@ void MainWindow::openFile(const OpenAsParam &params)
         }
 
         // Loading SPT
-        if (!this->tileset->spt->load(sptFilePath, this->tileset->sol, params)) {
+        if (!this->tileset->spt->load(sptFilePath, this->tileset->sol->getSubtileCount(), params)) {
             this->failWithError(tr("Failed loading SPT file: %1.").arg(QDir::toNativeSeparators(sptFilePath)));
             return;
         }
 
         // Loading TMI
-        if (!this->tileset->tmi->load(tmiFilePath, this->tileset->sol, params)) {
+        if (!this->tileset->tmi->load(tmiFilePath, this->tileset->sol->getSubtileCount(), params)) {
             this->failWithError(tr("Failed loading TMI file: %1.").arg(QDir::toNativeSeparators(tmiFilePath)));
             return;
         }
