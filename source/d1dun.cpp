@@ -1440,16 +1440,16 @@ void D1Dun::DrawSubMap(int sx, int sy, uint16_t automap_type)
     unsigned d32 = AmLine32;
     unsigned d16 = (d32 >> 1);
     unsigned d8 = (d32 >> 2);
-    if (automap_Type & MAT_WALLS_NW) {
+    if (automap_type & MAT_WALL_NW) {
         D1Dun::DrawLine(sx, sy - d8, sx - d16, sy, COLOR_DIM);
     }
-    if (automap_Type & MAT_WALLS_NE) {
+    if (automap_type & MAT_WALL_NE) {
         D1Dun::DrawLine(sx, sy - d8, sx + d16, sy, COLOR_DIM);
     }
-    if (automap_Type & MAT_WALLS_SW) {
+    if (automap_type & MAT_WALL_SW) {
         D1Dun::DrawLine(sx, sy + d8, sx - d16, sy, COLOR_DIM);
     }
-    if (automap_Type & MAT_WALLS_SE) {
+    if (automap_type & MAT_WALL_SE) {
         D1Dun::DrawLine(sx, sy + d8, sx + d16, sy, COLOR_DIM);
     }
 }
@@ -1472,8 +1472,8 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
     if (params.showMap) {
         int subtileRef = this->subtiles[dunCursorY][dunCursorX];
         if (subtileRef > 0 && subtileRef <= this->min->getSubtileCount()) { // !0 || !UNDEF_SUBTILE
-            quint8 mapType = this->tileset->smp->getSubtileType(tileRef - 1);
-            quint8 mapProp = this->tileset->smp->getSubtileProperties(tileRef - 1);
+            quint8 mapType = this->tileset->smp->getSubtileType(subtileRef - 1);
+            quint8 mapProp = this->tileset->smp->getSubtileProperties(subtileRef - 1);
 
             D1Dun::DrawSubMap(drawCursorX + backWidth / 4, drawCursorY - 1, mapType | mapProp);
         }
