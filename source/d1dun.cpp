@@ -1195,8 +1195,6 @@ void D1Dun::DrawAutomapExtern(int x, int y)
        01    03
           00
     */
-    x += d8;
-    y -= d8;
     DrawPixel(x, y, COLOR_DIM);                 // 00
     DrawPixel(x - d8, y - d4, COLOR_DIM);       // 01
     DrawPixel(x + d8, y - d4, COLOR_DIM);       // 03
@@ -1443,16 +1441,16 @@ void D1Dun::DrawSubMap(int sx, int sy, uint16_t automap_type)
     unsigned d16 = (d32 >> 1);
     unsigned d8 = (d32 >> 2);
     if (automap_type & MAT_WALL_NW) {
-        D1Dun::DrawLine(sx + d8, sy - d8 - d8, sx - d16 + d8, sy - d8, COLOR_DIM);
+        D1Dun::DrawLine(sx, sy - d8 - d8, sx - d16, sy - d8, COLOR_DIM);
     }
     if (automap_type & MAT_WALL_NE) {
-        D1Dun::DrawLine(sx + d8, sy - d8 - d8, sx + d16 + d8, sy - d8, COLOR_DIM);
+        D1Dun::DrawLine(sx, sy - d8 - d8, sx + d16, sy - d8, COLOR_DIM);
     }
     if (automap_type & MAT_WALL_SW) {
-        D1Dun::DrawLine(sx + d8, sy + d8 - d8, sx - d16 + d8, sy - d8, COLOR_DIM);
+        D1Dun::DrawLine(sx, sy + d8 - d8, sx - d16, sy - d8, COLOR_DIM);
     }
     if (automap_type & MAT_WALL_SE) {
-        D1Dun::DrawLine(sx + d8, sy + d8 - d8, sx + d16 + d8, sy - d8, COLOR_DIM);
+        D1Dun::DrawLine(sx, sy + d8 - d8, sx + d16, sy - d8, COLOR_DIM);
     }
 }
 
@@ -1477,7 +1475,7 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
             quint8 mapType = this->tileset->smp->getSubtileType(subtileRef - 1);
             quint8 mapProp = this->tileset->smp->getSubtileProperties(subtileRef - 1);
 
-            D1Dun::DrawSubMap(drawCursorX + backWidth / 4, drawCursorY - 1, mapType | mapProp);
+            D1Dun::DrawSubMap(drawCursorX + backWidth / 2, drawCursorY - 1, mapType | mapProp);
         }
     }
     if (params.showRooms) {
