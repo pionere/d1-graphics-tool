@@ -775,6 +775,18 @@ void MainWindow::dropEvent(QDropEvent *event)
     this->openFiles(filePaths);
 }
 
+void MainWindow::openArgFile(const char *arg)
+{
+    QStringList filePaths;
+    QString filePath = arg;
+    if (filePath.isEmpty()) {
+        return;
+    }
+    this->lastFilePath = filePath;
+    filePaths.append(filePath);
+    this->openFiles(filePaths);
+}
+
 void MainWindow::openFiles(const QStringList &filePaths)
 {
     for (const QString &filePath : filePaths) {
