@@ -34,8 +34,7 @@ bool D1Smp::load(const QString &filePath, int subtileCount, const OpenAsParam &p
 
     // File size check
     unsigned fileSize = fileData.size();
-
-    int smpSubtileCount = fileSize / 2;
+    int smpSubtileCount = fileSize;
     if (smpSubtileCount != subtileCount && smpSubtileCount != 0) {
         // warn about misalignment if the files are not empty
         if (subtileCount != 0) {
@@ -62,7 +61,8 @@ bool D1Smp::load(const QString &filePath, int subtileCount, const OpenAsParam &p
     in >> readByte;
     for (int i = 0; i < smpSubtileCount - 1; i++) {
         in >> readByte;
-        this->types[i] = readByte;
+        this->types[i] = readByte & MAT_TYPE;
+        this->properties[i] = readByte & ~MAT_TYPE;
     }
 
     this->modified = changed;
