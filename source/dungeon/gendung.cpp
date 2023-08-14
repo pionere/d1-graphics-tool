@@ -188,14 +188,14 @@ void InitLvlDungeon()
 		nMissileTable[61] = false;
 		// patch dMiniTiles - L1.MIN
 		// - subtile for the separate pillar tile
-		pSubtiles[61][0] = pSubtiles[8][0];
-		pSubtiles[61][1] = pSubtiles[8][1];
-		pSubtiles[61][2] = pSubtiles[8][2];
-		pSubtiles[61][3] = pSubtiles[8][3];
-		pSubtiles[61][4] = pSubtiles[8][4];
-		pSubtiles[61][5] = pSubtiles[8][5];
-		pSubtiles[61][6] = pSubtiles[8][6];
-		pSubtiles[61][7] = pSubtiles[8][7];
+		// pSubtiles[61][0] = pSubtiles[8][0];
+		// pSubtiles[61][1] = pSubtiles[8][1];
+		// pSubtiles[61][2] = pSubtiles[8][2];
+		// pSubtiles[61][3] = pSubtiles[8][3];
+		// pSubtiles[61][4] = pSubtiles[8][4];
+		// pSubtiles[61][5] = pSubtiles[8][5];
+		// pSubtiles[61][6] = pSubtiles[8][6];
+		// pSubtiles[61][7] = pSubtiles[8][7];
 		// patch dMegaTiles - L1.TIL
 		// make the inner tile at the entrance non-walkable II.
 		pTiles[196][3] = 425;
