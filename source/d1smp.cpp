@@ -10,6 +10,8 @@
 
 #include "progressdialog.h"
 
+#include "dungeon/all.h"
+
 bool D1Smp::load(const QString &filePath, int subtileCount, const OpenAsParam &params)
 {
     // prepare file data source

@@ -4193,10 +4193,6 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(406, 6, 1, 6);
     // ReplaceMcr(410, 6, 1, 6);
 
-    ReplaceMcr(72, 1, 45, 1);
-    ReplaceMcr(72, 3, 45, 3);
-    ReplaceMcr(72, 5, 45, 5);
-
     // eliminate micros of unused subtiles
     // Blk2Mcr(311 ...),
     Blk2Mcr(43, 0);
@@ -4407,6 +4403,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     // Blk2Mcr(344, 1);
     Blk2Mcr(345, 0);
     Blk2Mcr(345, 1);
+    Blk2Mcr(345, 2);
     Blk2Mcr(345, 4);
     Blk2Mcr(354, 5);
     Blk2Mcr(355, 4);
