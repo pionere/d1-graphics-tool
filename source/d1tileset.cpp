@@ -3341,49 +3341,67 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     // patch dMegaTiles - L1.TIL
     // make the inner tile at the entrance non-walkable II.
     ReplaceSubtile(this->til, 196 - 1, 3, 425 - 1, silent);
-    // reuse subtiles
+    // use common subtiles
+    ReplaceSubtile(this->til, 9 - 1, 2, 7 - 1, silent);    // 18
+    ReplaceSubtile(this->til, 9 - 1, 3, 4 - 1, silent);    // 19
+    ReplaceSubtile(this->til, 21 - 1, 2, 32 - 1, silent);  // 39
+    ReplaceSubtile(this->til, 23 - 1, 2, 32 - 1, silent);
+    ReplaceSubtile(this->til, 27 - 1, 2, 3 - 1, silent);   // 49
     ReplaceSubtile(this->til, 43 - 1, 2, 3 - 1, silent);
-    ReplaceSubtile(this->til, 61 - 1, 0, 23 - 1, silent);
-    ReplaceSubtile(this->til, 62 - 1, 0, 23 - 1, silent);
+    ReplaceSubtile(this->til, 32 - 1, 2, 53 - 1, silent);  // 58
+    ReplaceSubtile(this->til, 37 - 1, 2, 53 - 1, silent);
+    ReplaceSubtile(this->til, 38 - 1, 2, 53 - 1, silent);
+    ReplaceSubtile(this->til, 161 - 1, 2, 53 - 1, silent);
+    ReplaceSubtile(this->til, 33 - 1, 1, 48 - 1, silent);  // 60
+    ReplaceSubtile(this->til, 35 - 1, 2, 53 - 1, silent);  // 63
+    ReplaceSubtile(this->til, 58 - 1, 1, 2 - 1, silent);   // 111
+    ReplaceSubtile(this->til, 60 - 1, 1, 2 - 1, silent);   // 119
+    ReplaceSubtile(this->til, 61 - 1, 0, 23 - 1, silent);  // 122
+    ReplaceSubtile(this->til, 62 - 1, 0, 23 - 1, silent);  // 124
     ReplaceSubtile(this->til, 73 - 1, 0, 23 - 1, silent);
     ReplaceSubtile(this->til, 74 - 1, 0, 23 - 1, silent);
     ReplaceSubtile(this->til, 75 - 1, 0, 23 - 1, silent);
     ReplaceSubtile(this->til, 77 - 1, 0, 23 - 1, silent);
     ReplaceSubtile(this->til, 129 - 1, 0, 23 - 1, silent);
     ReplaceSubtile(this->til, 136 - 1, 0, 23 - 1, silent);
-    ReplaceSubtile(this->til, 105 - 1, 0, 23 - 1, silent);
-    ReplaceSubtile(this->til, 137 - 1, 0, 23 - 1, silent);
-    ReplaceSubtile(this->til, 130 - 1, 0, 23 - 1, silent);
-    ReplaceSubtile(this->til, 133 - 1, 0, 23 - 1, silent);
-    ReplaceSubtile(this->til, 58 - 1, 1, 2 - 1, silent);
-    ReplaceSubtile(this->til, 60 - 1, 1, 2 - 1, silent);
-    ReplaceSubtile(this->til, 103 - 1, 1, 2 - 1, silent);
+    ReplaceSubtile(this->til, 99 - 1, 1, 6 - 1, silent);   // 204
+    ReplaceSubtile(this->til, 103 - 1, 1, 2 - 1, silent);  // 213
     ReplaceSubtile(this->til, 186 - 1, 1, 2 - 1, silent);
-    ReplaceSubtile(this->til, 128 - 1, 1, 2 - 1, silent);
-    ReplaceSubtile(this->til, 134 - 1, 1, 2 - 1, silent);
-    ReplaceSubtile(this->til, 136 - 1, 1, 2 - 1, silent);
+    ReplaceSubtile(this->til, 105 - 1, 0, 23 - 1, silent); // 220
+    ReplaceSubtile(this->til, 114 - 1, 1, 6 - 1, silent);  // 242
+    ReplaceSubtile(this->til, 117 - 1, 1, 6 - 1, silent);
+    ReplaceSubtile(this->til, 130 - 1, 0, 23 - 1, silent); // 275
+    ReplaceSubtile(this->til, 133 - 1, 0, 23 - 1, silent); // 282
+    ReplaceSubtile(this->til, 137 - 1, 0, 23 - 1, silent); // 293
+    ReplaceSubtile(this->til, 128 - 1, 1, 2 - 1, silent);  // 271
+    ReplaceSubtile(this->til, 134 - 1, 1, 2 - 1, silent);  // 285
+    ReplaceSubtile(this->til, 136 - 1, 1, 2 - 1, silent);  // 290
     // ReplaceSubtile(this->til, 42 - 1, 2, 12 - 1, silent);
-    ReplaceSubtile(this->til, 44 - 1, 2, 12 - 1, silent);
-    // ReplaceSubtile(this->til, 159 - 1, 2, 12 - 1, silent);
-    ReplaceSubtile(this->til, 9 - 1, 2, 7 - 1, silent);
-    ReplaceSubtile(this->til, 59 - 1, 2, 7 - 1, silent);
-    ReplaceSubtile(this->til, 60 - 1, 2, 7 - 1, silent);
-    ReplaceSubtile(this->til, 62 - 1, 2, 7 - 1, silent);
-    ReplaceSubtile(this->til, 128 - 1, 2, 7 - 1, silent);
-    ReplaceSubtile(this->til, 129 - 1, 2, 7 - 1, silent);
-    ReplaceSubtile(this->til, 136 - 1, 2, 7 - 1, silent);
-    ReplaceSubtile(this->til, 9 - 1, 3, 4 - 1, silent);
-    ReplaceSubtile(this->til, 58 - 1, 3, 4 - 1, silent);
-    ReplaceSubtile(this->til, 59 - 1, 3, 4 - 1, silent);
-    ReplaceSubtile(this->til, 60 - 1, 3, 4 - 1, silent);
-    ReplaceSubtile(this->til, 74 - 1, 3, 4 - 1, silent);
-    ReplaceSubtile(this->til, 76 - 1, 3, 4 - 1, silent);
-    ReplaceSubtile(this->til, 97 - 1, 3, 4 - 1, silent);
-    ReplaceSubtile(this->til, 130 - 1, 3, 4 - 1, silent);
-    ReplaceSubtile(this->til, 137 - 1, 3, 4 - 1, silent);
-    ReplaceSubtile(this->til, 193 - 1, 3, 4 - 1, silent);
+    ReplaceSubtile(this->til, 44 - 1, 2, 12 - 1, silent);  // 71
+    // ReplaceSubtile(this->til, 159 - 1, 2, 12 - 1, silent); // 341
+    ReplaceSubtile(this->til, 59 - 1, 2, 7 - 1, silent);   // 116
+    ReplaceSubtile(this->til, 60 - 1, 2, 7 - 1, silent);   // 120
+    ReplaceSubtile(this->til, 62 - 1, 2, 7 - 1, silent);   // 125
+    ReplaceSubtile(this->til, 128 - 1, 2, 7 - 1, silent);  // 272
+    ReplaceSubtile(this->til, 129 - 1, 2, 7 - 1, silent);  // 273
+    ReplaceSubtile(this->til, 136 - 1, 2, 7 - 1, silent);  // 291
+    ReplaceSubtile(this->til, 58 - 1, 3, 4 - 1, silent);   // 113
+    ReplaceSubtile(this->til, 59 - 1, 3, 4 - 1, silent);   // 117
+    ReplaceSubtile(this->til, 60 - 1, 3, 4 - 1, silent);   // 121
+    ReplaceSubtile(this->til, 74 - 1, 3, 4 - 1, silent);   // 158
+    ReplaceSubtile(this->til, 76 - 1, 3, 4 - 1, silent);   // 161
+    ReplaceSubtile(this->til, 97 - 1, 3, 4 - 1, silent);   // 200
+    ReplaceSubtile(this->til, 130 - 1, 3, 4 - 1, silent);  // 277
+    ReplaceSubtile(this->til, 137 - 1, 3, 4 - 1, silent);  // 295
+    ReplaceSubtile(this->til, 196 - 1, 2, 36 - 1, silent); // 428
+    ReplaceSubtile(this->til, 193 - 1, 3, 4 - 1, silent);  // 419
+    // use common subtiles instead of minor alterations
+    // ReplaceSubtile(this->til, 93 - 1, 2, 177 - 1, silent); // 191
+    // simplified door subtiles
+    ReplaceSubtile(this->til, 25 - 1, 0, 392 - 1, silent); // 43
+    ReplaceSubtile(this->til, 26 - 1, 0, 394 - 1, silent); // 45
     // create separate pillar tile
-    ReplaceSubtile(this->til, 28 - 1, 0, 8 - 1, silent);
+    ReplaceSubtile(this->til, 28 - 1, 0, 61 - 1, silent);
     ReplaceSubtile(this->til, 28 - 1, 1, 2 - 1, silent);
     ReplaceSubtile(this->til, 28 - 1, 2, 7 - 1, silent);
     ReplaceSubtile(this->til, 28 - 1, 3, 4 - 1, silent);
@@ -3545,7 +3563,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 46 - 1, 3, 302 - 1, silent);
     // eliminate subtiles of unused tiles
     const int unusedTiles[] = {
-        30, 31, 34,/* 38,*/ 39, 40, 41, 42,/*43, 44,*/ 45, 79, 82, 86, 87, 88, 89, 90, 91, 92, 95, 96, 119, 120, 126, 127, 177, 178, 179, 180, 181, 182, 183, 184, 185, 187, 188, 189, 190, 191, 192, 195, 197, 198, 199, 200, 201, 202, 203, 204, 205
+        30, 31, 34,/* 38,*/ 39, 40, 41, 42,/*43, 44,*/ 45, 79, 82, 86, 87, 88, 89, 90, 91, 92, 93, 95, 96, 119, 120, 126, 127, 177, 178, 179, 180, 181, 182, 183, 184, 185, 187, 188, 189, 190, 191, 192, 195, 197, 198, 199, 200, 201, 202, 203, 204, 205
     };
     constexpr int blankSubtile = 74 - 1;
     for (int n = 0; n < lengthof(unusedTiles); n++) {
@@ -3575,7 +3593,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     SetMcr(304, 3, 47, 3);
     SetMcr(304, 5, 47, 5);
     SetMcr(304, 7, 64, 7);
-    SetMcr(334, 4, 63, 4);
+    SetMcr(334, 4, 53, 4);
     SetMcr(334, 6, 3, 6);
 
     SetMcr(339, 0, 9, 0);
@@ -3649,6 +3667,15 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     // subtile to make the inner tile at the entrance non-walkable II.
     Blk2Mcr(425, 0);
     ReplaceMcr(425, 1, 299, 1);
+    // subtile for the separate pillar tile
+    ReplaceMcr(61, 0, 8, 0);
+    SetMcr(61, 1, 8, 1);
+    ReplaceMcr(61, 2, 8, 2);
+    SetMcr(61, 3, 8, 3);
+    ReplaceMcr(61, 4, 8, 4);
+    SetMcr(61, 5, 8, 5);
+    SetMcr(61, 6, 8, 6);
+    SetMcr(61, 7, 8, 7);
     // pointless door micros (re-drawn by dSpecial or the object)
     // - vertical doors    
     ReplaceMcr(392, 4, 231, 4);
@@ -3672,9 +3699,9 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(393, 2);
     ReplaceMcr(393, 0, 7, 0);
     ReplaceMcr(393, 1, 7, 1);
-    ReplaceMcr(43, 0, 392, 0);
-    ReplaceMcr(43, 2, 392, 2);
-    ReplaceMcr(43, 4, 231, 4);
+    // ReplaceMcr(43, 0, 392, 0);
+    // ReplaceMcr(43, 2, 392, 2);
+    // ReplaceMcr(43, 4, 231, 4);
     HideMcr(51, 6);
     Blk2Mcr(51, 4);
     Blk2Mcr(51, 2);
@@ -3691,9 +3718,12 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(46, 3);
     ReplaceMcr(46, 1, 11, 1);
     ReplaceMcr(46, 0, 11, 0);
-    ReplaceMcr(45, 1, 394, 1); // lost details
-    ReplaceMcr(45, 3, 394, 3); // lost details
-    ReplaceMcr(45, 5, 5, 5);
+    // ReplaceMcr(45, 1, 394, 1); // lost details
+    // ReplaceMcr(45, 3, 394, 3); // lost details
+    // ReplaceMcr(45, 5, 5, 5);
+    ReplaceMcr(72, 1, 394, 1);
+    ReplaceMcr(72, 3, 394, 3);
+    ReplaceMcr(72, 5, 5, 5);
     // useless black micros
     Blk2Mcr(107, 0);
     Blk2Mcr(107, 1);
@@ -3713,8 +3743,8 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(247, 6);
     Blk2Mcr(426, 0);
     HideMcr(427, 1);
-    Blk2Mcr(428, 0);
-    Blk2Mcr(428, 1);
+    // Blk2Mcr(428, 0);
+    // Blk2Mcr(428, 1);
     // - pwater column
     ReplaceMcr(171, 6, 37, 6);
     ReplaceMcr(171, 7, 37, 7);
@@ -3758,26 +3788,27 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(320, 4, 3, 4);   // lost details
     ReplaceMcr(261, 2, 240, 2); // lost details
     ReplaceMcr(208, 2, 3, 2);   // lost details
-    ReplaceMcr(63, 0, 53, 0);
-    ReplaceMcr(49, 0, 3, 0);
+    // ReplaceMcr(63, 0, 53, 0);
+    // ReplaceMcr(49, 0, 3, 0);
     ReplaceMcr(206, 0, 3, 0);
     ReplaceMcr(208, 0, 3, 0); // lost details
     ReplaceMcr(240, 0, 3, 0);
-    ReplaceMcr(53, 1, 58, 1);
+    // ReplaceMcr(63, 1, 53, 1);
+    // ReplaceMcr(58, 1, 53, 1);
     ReplaceMcr(206, 1, 3, 1);
     ReplaceMcr(15, 7, 6, 7); // lost details
     // ReplaceMcr(56, 7, 6, 7); // lost details
-    ReplaceMcr(60, 7, 6, 7); // lost details
+    // ReplaceMcr(60, 7, 6, 7); // lost details
     ReplaceMcr(127, 7, 6, 7);
     ReplaceMcr(134, 7, 6, 7); // lost details
     ReplaceMcr(138, 7, 6, 7);
     ReplaceMcr(198, 7, 6, 7);
     ReplaceMcr(202, 7, 6, 7);
-    ReplaceMcr(204, 7, 6, 7);
+    // ReplaceMcr(204, 7, 6, 7);
     ReplaceMcr(230, 7, 6, 7);
     ReplaceMcr(234, 7, 6, 7);
     ReplaceMcr(238, 7, 6, 7);
-    ReplaceMcr(242, 7, 6, 7);
+    // ReplaceMcr(242, 7, 6, 7);
     ReplaceMcr(244, 7, 6, 7);
     ReplaceMcr(246, 7, 6, 7);
     // ReplaceMcr(251, 7, 6, 7);
@@ -3794,10 +3825,10 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(134, 5, 6, 5);
     ReplaceMcr(198, 5, 6, 5);
     ReplaceMcr(202, 5, 6, 5);
-    ReplaceMcr(204, 5, 6, 5);
+    // ReplaceMcr(204, 5, 6, 5);
     ReplaceMcr(230, 5, 6, 5); // lost details
     ReplaceMcr(234, 5, 6, 5); // lost details
-    ReplaceMcr(242, 5, 6, 5);
+    // ReplaceMcr(242, 5, 6, 5);
     ReplaceMcr(244, 5, 6, 5);
     ReplaceMcr(246, 5, 6, 5);
     // ReplaceMcr(251, 5, 6, 5);
@@ -3805,8 +3836,8 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(333, 5, 6, 5);
     // ReplaceMcr(416, 5, 6, 5);
     ReplaceMcr(6, 3, 15, 3);
-    ReplaceMcr(204, 3, 15, 3);
-    ReplaceMcr(242, 3, 15, 3);
+    // ReplaceMcr(204, 3, 15, 3);
+    // ReplaceMcr(242, 3, 15, 3);
     ReplaceMcr(244, 3, 15, 3); // lost details
     ReplaceMcr(246, 3, 15, 3); // lost details
     // ReplaceMcr(251, 3, 15, 3);
@@ -3904,7 +3935,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(203, 0, 8, 0);
     ReplaceMcr(5, 0, 8, 0); // TODO: triangle begin?
     ReplaceMcr(22, 0, 8, 0);
-    ReplaceMcr(45, 0, 8, 0);
+    // ReplaceMcr(45, 0, 8, 0);
     ReplaceMcr(64, 0, 8, 0);
     ReplaceMcr(201, 0, 8, 0);
     ReplaceMcr(229, 0, 8, 0);
@@ -3927,15 +3958,16 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(168, 0, 167, 0);
     // ReplaceMcr(168, 1, 167, 1);
     // ReplaceMcr(168, 3, 167, 2); // lost details
-    ReplaceMcr(191, 0, 167, 0); // lost details
-    ReplaceMcr(191, 1, 167, 1); // lost details
+    // ReplaceMcr(191, 0, 167, 0); // lost details
+    // ReplaceMcr(191, 1, 167, 1); // lost details
     ReplaceMcr(175, 1, 167, 1); // lost details
     ReplaceMcr(177, 0, 167, 0); // lost details
     ReplaceMcr(177, 1, 167, 1); // lost details
     ReplaceMcr(177, 2, 167, 2); // lost details
     // ReplaceMcr(177, 4, 168, 4); // lost details
     ReplaceMcr(175, 4, 177, 4);
-    ReplaceMcr(191, 4, 177, 4);
+    // ReplaceMcr(191, 2, 177, 2); // lost details
+    // ReplaceMcr(191, 4, 177, 4);
 
     // ReplaceMcr(181, 0, 169, 0);
 
@@ -3994,7 +4026,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(180, 5, 29, 5);
     // ReplaceMcr(179, 5, 171, 5);
     ReplaceMcr(14, 5, 5, 5); // TODO: 243 would be better?
-    ReplaceMcr(45, 5, 5, 5);
+    // ReplaceMcr(45, 5, 5, 5);
     // ReplaceMcr(50, 5, 5, 5);
     // ReplaceMcr(55, 5, 5, 5);
     ReplaceMcr(65, 5, 5, 5);
@@ -4053,7 +4085,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(110, 1, 8, 1); // lost details
     ReplaceMcr(1, 1, 8, 1);   // lost details TODO: triangle begin?
     ReplaceMcr(21, 1, 8, 1);  // lost details
-    ReplaceMcr(43, 1, 8, 1);  // lost details
+    // ReplaceMcr(43, 1, 8, 1);  // lost details
     ReplaceMcr(62, 1, 8, 1);  // lost details
     ReplaceMcr(205, 1, 8, 1); // lost details
     ReplaceMcr(207, 1, 8, 1); // lost details
@@ -4167,6 +4199,15 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
 
     // eliminate micros of unused subtiles
     // Blk2Mcr(311 ...),
+    Blk2Mcr(43, 0);
+    Blk2Mcr(43, 1);
+    Blk2Mcr(43, 2);
+    Blk2Mcr(43, 4);
+    Blk2Mcr(45, 0);
+    Blk2Mcr(45, 1);
+    Blk2Mcr(45, 3);
+    Blk2Mcr(45, 5);
+    Blk2Mcr(49, 0);
     Blk2Mcr(50, 0);
     Blk2Mcr(50, 1);
     Blk2Mcr(50, 2);
@@ -4188,9 +4229,13 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(56, 3);
     Blk2Mcr(56, 5);
     Blk2Mcr(56, 7);
-    Blk2Mcr(61, 0);
-    Blk2Mcr(61, 2);
-    Blk2Mcr(61, 4);
+    Blk2Mcr(58, 1);
+    Blk2Mcr(60, 7);
+    // Blk2Mcr(61, 0);
+    // Blk2Mcr(61, 2);
+    // Blk2Mcr(61, 4);
+    Blk2Mcr(63, 0);
+    Blk2Mcr(63, 1);
     Blk2Mcr(67, 0);
     Blk2Mcr(67, 1);
     Blk2Mcr(67, 3);
@@ -4214,6 +4259,12 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(70, 3);
     Blk2Mcr(70, 5);
     Blk2Mcr(70, 6);
+    Blk2Mcr(204, 3);
+    Blk2Mcr(204, 5);
+    Blk2Mcr(204, 7);
+    Blk2Mcr(242, 3);
+    Blk2Mcr(242, 5);
+    Blk2Mcr(242, 7);
     Blk2Mcr(354, 0);
     Blk2Mcr(354, 2);
     Blk2Mcr(354, 4);
@@ -4306,6 +4357,10 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(189, 0);
     Blk2Mcr(189, 1);
     Blk2Mcr(189, 3);
+    Blk2Mcr(191, 0);
+    Blk2Mcr(191, 1);
+    Blk2Mcr(191, 2);
+    Blk2Mcr(191, 4);
     Blk2Mcr(194, 1);
     Blk2Mcr(194, 3);
     Blk2Mcr(194, 5);
@@ -4465,6 +4520,8 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(423, 1);
     Blk2Mcr(424, 0);
     Blk2Mcr(424, 1);
+    Blk2Mcr(428, 0);
+    Blk2Mcr(428, 1);
     Blk2Mcr(437, 0);
     Blk2Mcr(437, 1);
     Blk2Mcr(437, 4);
@@ -17381,7 +17438,6 @@ void D1Tileset::patch(int dunType, bool silent)
         }
         this->cleanupCathedral(deletedFrames, silent);
         // patch dSolidTable - L1.SOL
-        ChangeSubtileSolFlags(this->sol, 8 - 1, PFLAG_BLOCK_MISSILE, false, silent); // the only column which was blocking missiles
         // adjust SOL after fixCathedralShadows
         ChangeSubtileSolFlags(this->sol, 298 - 1, PFLAG_BLOCK_PATH, true, silent);
         ChangeSubtileSolFlags(this->sol, 304 - 1, PFLAG_BLOCK_PATH, true, silent);
@@ -17392,6 +17448,8 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeSubtileSolFlags(this->sol, 338 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         // - special subtile for the vile setmap
         ChangeSubtileSolFlags(this->sol, 335 - 1, PFLAG_BLOCK_MISSILE, false, silent);
+        // - subtile for the separate pillar tile
+        ChangeSubtileSolFlags(this->sol, 61 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         // patch dAutomapData - L1.AMP
         // - separate pillar
         SetTileMapFlags(this->amp, 28 - 1, 15 - 1, silent);

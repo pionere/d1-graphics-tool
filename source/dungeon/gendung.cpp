@@ -168,8 +168,7 @@ void InitLvlDungeon()
 		// pSubtiles[237][1] = pSubtiles[402][1];
 		break;
 	case DTYPE_CATHEDRAL:
-		// patch dSolidTable - L1.SOL
-		nMissileTable[8] = false; // the only column which was blocking missiles
+		/*// patch dSolidTable - L1.SOL
 		// adjust SOL after fixCathedralShadows
 		nSolidTable[298] = true;
 		nSolidTable[304] = true;
@@ -184,6 +183,10 @@ void InitLvlDungeon()
 		nMissileTable[338] = false;
 		// - special subtile for the vile setmap
 		nMissileTable[335] = false;
+		// - subtile for the separate pillar tile
+		nBlockTable(61, false);
+		nMissileTable(61, false);
+		// patch dMegaTiles - L1.TIL
 		// make the inner tile at the entrance non-walkable II.
 		pTiles[196][3] = 425;
 		// create separate pillar tile
@@ -310,7 +313,7 @@ void InitLvlDungeon()
 		pTiles[46][0] = pTiles[7][0];
 		pTiles[46][1] = pTiles[7][1];
 		pTiles[46][2] = pTiles[7][2];
-		pTiles[46][3] = pTiles[7][3];
+		pTiles[46][3] = pTiles[7][3];*/
 		break;
 	case DTYPE_CATACOMBS:
 		// patch dMegaTiles, dMiniTiles and dSolidTable - L2.TIL, L2.MIN, L2.SOL

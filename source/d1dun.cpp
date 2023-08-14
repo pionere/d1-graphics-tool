@@ -1196,6 +1196,7 @@ void D1Dun::DrawAutomapExtern(int x, int y)
           00
     */
     DrawPixel(x, y, COLOR_DIM);                 // 00
+    // if (d4 < 8) return;
     DrawPixel(x - d8, y - d4, COLOR_DIM);       // 01
     DrawPixel(x + d8, y - d4, COLOR_DIM);       // 03
     DrawPixel(x, y - d8, COLOR_DIM);            // 02
