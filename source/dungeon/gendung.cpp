@@ -162,7 +162,7 @@ void InitLvlDungeon()
 		// nSolidTable[1247] = false; // let the player closer to the hell-entrance
 		// nSolidTable[1253] = false; // make the western side of hell-entrance consistent (walkable)
 		// nSolidTable[1255] = false; // make the western side of hell-entrance consistent (walkable)
-		// patch dMicroCels - TOWN.CEL
+		// patch dMiniTiles - TOWN.MIN
 		// - overwrite subtile 237 with subtile 402 to make the inner tile of Griswold's house non-walkable
 		// pSubtiles[237][0] = pSubtiles[402][0];
 		// pSubtiles[237][1] = pSubtiles[402][1];
@@ -184,8 +184,18 @@ void InitLvlDungeon()
 		// - special subtile for the vile setmap
 		nMissileTable[335] = false;
 		// - subtile for the separate pillar tile
-		nBlockTable(61, false);
-		nMissileTable(61, false);
+		nBlockTable[61] = false;
+		nMissileTable[61] = false;
+		// patch dMiniTiles - L1.MIN
+		// - subtile for the separate pillar tile
+		pSubtiles[61][0] = pSubtiles[8][0];
+		pSubtiles[61][1] = pSubtiles[8][1];
+		pSubtiles[61][2] = pSubtiles[8][2];
+		pSubtiles[61][3] = pSubtiles[8][3];
+		pSubtiles[61][4] = pSubtiles[8][4];
+		pSubtiles[61][5] = pSubtiles[8][5];
+		pSubtiles[61][6] = pSubtiles[8][6];
+		pSubtiles[61][7] = pSubtiles[8][7];
 		// patch dMegaTiles - L1.TIL
 		// make the inner tile at the entrance non-walkable II.
 		pTiles[196][3] = 425;
