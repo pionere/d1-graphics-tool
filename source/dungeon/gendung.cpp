@@ -168,7 +168,7 @@ void InitLvlDungeon()
 		// pSubtiles[237][1] = pSubtiles[402][1];
 		break;
 	case DTYPE_CATHEDRAL:
-		/*// patch dSolidTable - L1.SOL
+		// patch dSolidTable - L1.SOL
 		// adjust SOL after fixCathedralShadows
 		nSolidTable[298] = true;
 		nSolidTable[304] = true;
@@ -190,7 +190,7 @@ void InitLvlDungeon()
 		// make the inner tile at the entrance non-walkable II.
 		pTiles[196][3] = 425;
 		// create separate pillar tile
-		pTiles[28][0] = pTiles[3][0];
+		pTiles[28][0] = pTiles[3][0]; // 61
 		pTiles[28][1] = pTiles[3][1];
 		pTiles[28][2] = pTiles[3][2];
 		pTiles[28][3] = pTiles[3][3];
@@ -313,7 +313,7 @@ void InitLvlDungeon()
 		pTiles[46][0] = pTiles[7][0];
 		pTiles[46][1] = pTiles[7][1];
 		pTiles[46][2] = pTiles[7][2];
-		pTiles[46][3] = pTiles[7][3];*/
+		pTiles[46][3] = pTiles[7][3];
 		break;
 	case DTYPE_CATACOMBS:
 		// patch dMegaTiles, dMiniTiles and dSolidTable - L2.TIL, L2.MIN, L2.SOL

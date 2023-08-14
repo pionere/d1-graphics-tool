@@ -56,7 +56,7 @@ void InitLvlAutomap()
 	mem_free_dbg(pAFile);
 	// patch dAutomapData - L1.AMP
 	if (currLvl._dType == DTYPE_CATHEDRAL) {
-		/*// separate pillar tile
+		// separate pillar tile
 		automaptype[28] = MWT_PILLAR; // automaptype[15]
 		// new shadows
 		// - shadows created by fixCathedralShadows
@@ -88,7 +88,7 @@ void InitLvlAutomap()
 		automaptype[49] = automaptype[17];
 		automaptype[48] = automaptype[11];
 		automaptype[47] = automaptype[2];
-		automaptype[46] = automaptype[7];*/
+		automaptype[46] = automaptype[7];
 	}
 	// patch dAutomapData - L2.AMP
 	if (currLvl._dType == DTYPE_CATACOMBS) {

@@ -37,7 +37,7 @@ bool D1Smp::load(const QString &filePath, int subtileCount, const OpenAsParam &p
     // File size check
     unsigned fileSize = fileData.size();
     int smpSubtileCount = fileSize;
-    if (smpSubtileCount != subtileCount && smpSubtileCount != 0) {
+    if (smpSubtileCount != subtileCount + 1 && smpSubtileCount != 0) {
         // warn about misalignment if the files are not empty
         if (subtileCount != 0) {
             dProgressWarn() << tr("The size of SMP file does not align with SOL file.");
