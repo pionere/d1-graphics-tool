@@ -459,7 +459,14 @@ void InitLvlDungeon()
 		nSolidTable[211] = false;
 		nMissileTable[211] = false;
 		nBlockTable[211] = false;
-		// new shadow-types
+		// patch dMegaTiles - L4.TIL
+		// - separate subtiles for the automap
+		pTiles[44][2] = 136;
+		pTiles[136][0] = 149;
+		pTiles[136][1] = 153;
+		pTiles[136][2] = 136;
+		pTiles[136][3] = 136;
+		// - new shadow-types
 		pTiles[61][0] = 5;
 		pTiles[61][1] = 6;
 		pTiles[61][2] = 238; // 35
@@ -513,6 +520,9 @@ void InitLvlDungeon()
 		nSolidTable[143] = false; // make right side of down-stairs consistent (walkable)
 		nSolidTable[148] = false; // make the back of down-stairs consistent (walkable)
 		// make collision-checks more reasonable
+		//  - fix inconsistent  entrance to Na-Krul
+		nSolidTable[299] = false;
+		nMissileTable[299] = false;
 		//  - prevent non-crossable floor-tile configurations I.
 		nSolidTable[461] = false;
 		//  - set top right tile of an arch non-walkable (full of lava)
@@ -540,24 +550,26 @@ void InitLvlDungeon()
 		nMissileTable[242] = false;
 		nBlockTable[242] = false;
 		// - fix automap of the entrance I.
+		nBlockTable[130] = true;
+		nMissileTable[130] = true;
 		nMissileTable[158] = false;
 		nBlockTable[158] = false;
 		nSolidTable[159] = false;
 		nMissileTable[159] = false;
 		nBlockTable[159] = false;
-		nMissileTable[148] = true;
-		nBlockTable[148] = true;
-		nSolidTable[148] = true;
+		// nMissileTable[148] = true;
+		// nBlockTable[148] = true;
+		// nSolidTable[148] = true;
 		// patch dMegaTiles - L5.TIL
 		// - fix automap of the entrance II.
-		pTiles[52][0] = pTiles[23][0];
-		pTiles[52][1] = pTiles[23][1];
-		pTiles[52][2] = pTiles[23][2];
-		pTiles[52][3] = pTiles[23][3];
-		pTiles[58][0] = pTiles[18][0];
-		pTiles[58][1] = pTiles[18][1];
-		pTiles[58][2] = pTiles[18][2];
-		pTiles[58][3] = pTiles[18][3];
+		// pTiles[52][0] = pTiles[23][0];
+		// pTiles[52][1] = pTiles[23][1];
+		// pTiles[52][2] = pTiles[23][2];
+		// pTiles[52][3] = pTiles[23][3];
+		// pTiles[58][0] = pTiles[18][0];
+		// pTiles[58][1] = pTiles[18][1];
+		// pTiles[58][2] = pTiles[18][2];
+		// pTiles[58][3] = pTiles[18][3];
 		// create separate pillar tile
 		pTiles[28][0] = pTiles[3][0];
 		pTiles[28][1] = pTiles[3][1];
