@@ -445,7 +445,7 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
                 }
                 numLayers++;
             } else {
-                dProgressWarn() << tr("Monsters are not defined in the DUN file.");
+                dProgress() << tr("Monsters are not defined in the DUN file.");
             }
 
             if (dataSize >= dataUnitSize) {
@@ -459,7 +459,7 @@ bool D1Dun::load(const QString &filePath, const OpenAsParam &params)
                 }
                 numLayers++;
             } else {
-                dProgressWarn() << tr("Objects are not defined in the DUN file.");
+                dProgress() << tr("Objects are not defined in the DUN file.");
             }
 
             if (dataSize >= dataUnitSize) {
@@ -2820,7 +2820,8 @@ void D1Dun::loadTiles(const D1Dun *srcDun)
                 int posy = y * TILE_HEIGHT;
                 this->setTileAt(posx, posy, newTile);
                 QString msg = tr("Tile '%1' at %2:%3 was replaced by '%4'.").arg(currTile).arg(posx).arg(posy).arg(newTile);
-                if (currTile != 0) {
+                Qt::CheckState currProtections = this->tileProtections[y][x];
+                if (currTile == 0 || currProtections == Qt::Checked) {
                     dProgress() << msg;
                 } else {
                     dProgressWarn() << msg;

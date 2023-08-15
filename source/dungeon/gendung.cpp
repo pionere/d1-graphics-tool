@@ -183,11 +183,11 @@ void InitLvlDungeon()
 		nMissileTable[338] = false;
 		// - special subtile for the vile setmap
 		nMissileTable[335] = false;
-		// - subtile for the separate pillar tile
+		// - separate subtiles for the automap
 		nBlockTable[61] = false;
 		nMissileTable[61] = false;
 		// patch dMiniTiles - L1.MIN
-		// - subtile for the separate pillar tile
+		// - separate subtiles for the automap
 		// pSubtiles[61][0] = pSubtiles[8][0];
 		// pSubtiles[61][1] = pSubtiles[8][1];
 		// pSubtiles[61][2] = pSubtiles[8][2];
@@ -429,7 +429,15 @@ void InitLvlDungeon()
 		nSolidTable[487] = false; // unused after patch
 		nSolidTable[488] = true;
 		nSolidTable[540] = false; // unused in base game
-		// create new fences
+		// - separate subtiles for the automap
+		nSolidTable[258] = true;
+		nBlockTable[258] = true;
+		nMissileTable[258] = true;
+		// patch dMiniTiles - L3.MIN
+		// - separate subtiles for the automap
+		// pSubtiles[258][0] = 0;
+		// patch dMegaTiles - L3.TIL
+		// - create new fences
 		pTiles[144][0] = 505;
 		pTiles[144][1] = 25;
 		pTiles[144][2] = 516;
