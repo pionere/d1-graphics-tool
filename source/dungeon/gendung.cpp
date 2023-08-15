@@ -518,7 +518,6 @@ void InitLvlDungeon()
 	case DTYPE_CRYPT:
 		// patch dSolidTable - L5.SOL
 		nSolidTable[143] = false; // make right side of down-stairs consistent (walkable)
-		nSolidTable[148] = false; // make the back of down-stairs consistent (walkable)
 		// make collision-checks more reasonable
 		//  - fix inconsistent  entrance to Na-Krul
 		nSolidTable[299] = false;
@@ -550,16 +549,13 @@ void InitLvlDungeon()
 		nMissileTable[242] = false;
 		nBlockTable[242] = false;
 		// - fix automap of the entrance I.
-		nBlockTable[130] = true;
-		nMissileTable[130] = true;
 		nMissileTable[158] = false;
 		nBlockTable[158] = false;
 		nSolidTable[159] = false;
 		nMissileTable[159] = false;
 		nBlockTable[159] = false;
-		// nMissileTable[148] = true;
-		// nBlockTable[148] = true;
-		// nSolidTable[148] = true;
+		nMissileTable[148] = true;
+		nBlockTable[148] = true;
 		// patch dMegaTiles - L5.TIL
 		// - fix automap of the entrance II.
 		// pTiles[52][0] = pTiles[23][0];
@@ -768,7 +764,7 @@ void DRLG_PlaceMegaTiles(int mt)
     case DTYPE_HELL:      et = 14;  break;
 #ifdef  HELLFIRE
     case DTYPE_CRYPT:     et = 8;  break;
-    case DTYPE_NEST:      et = 10; break;
+    case DTYPE_NEST:      et = 18; break;
 #endif //  HELLFIRE
     }
 	yy = DBORDERY;
