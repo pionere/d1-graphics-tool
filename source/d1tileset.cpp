@@ -10113,7 +10113,7 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
 
     // eliminate subtiles of unused tiles
     const int unusedTiles[] = {
-        70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 153, 154, 155, 156,
+        70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 112, 113, 114, 115, 116, 117, 118, 119, 120, 153, 154, 155, 156,
     };
     constexpr int blankSubtile = 2 - 1;
     for (int n = 0; n < lengthof(unusedTiles); n++) {

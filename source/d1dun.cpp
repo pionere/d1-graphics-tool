@@ -3883,7 +3883,7 @@ void D1Dun::patch(int dunFileIndex)
         break;
     case DUN_FOULWATR: // Foulwatr.DUN
         // - separate subtiles for the automap
-        change |= this->changeTileAt(7, 19, 111);
+        change |= this->changeTileAt(6, 33, 111);
         // protect island tiles from spawning additional monsters
         for (int y = 1; y < 7; y++) {
             for (int x = 7; x < 14; x++) {
@@ -3893,10 +3893,12 @@ void D1Dun::patch(int dunFileIndex)
         // remove most of the monsters
         for (int y = 13; y < 61; y++) {
             for (int x = 4; x < 30; x++) {
+                if (x == 6 && y == 33) {
+                    continue;
+                }
                 change |= this->changeMonsterAt(x, y, 0, false);
             }
         }
-        change |= this->changeMonsterAt(6, 33, 33, false);
         break;
     case DUN_VILE_PRE: // Vile2.DUN
         // useless tiles
