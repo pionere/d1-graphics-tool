@@ -10014,7 +10014,6 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     // separate subtiles for the automap
     ReplaceSubtile(this->til, 51 - 1, 3, 258 - 1, silent);
     ReplaceSubtile(this->til, 111 - 1, 0, 28 - 1, silent);
-    ReplaceSubtile(this->til, 111 - 1, 2, 30 - 1, silent);
     // useless pixels
     ReplaceSubtile(this->til, 42 - 1, 3, 8 - 1, silent); // 149
     ReplaceSubtile(this->til, 43 - 1, 3, 16 - 1, silent); // 153

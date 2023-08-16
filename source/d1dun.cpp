@@ -3422,7 +3422,7 @@ void D1Dun::patch(int dunFileIndex)
 /* DUN_BLIND_AFT*/           { 22, 22 }, // Blind1.DUN
 /* DUN_BLOOD_PRE*/           { 20, 32 }, // Blood2.DUN
 /* DUN_BLOOD_AFT*/           { 20, 32 }, // Blood1.DUN
-/* DUN_FOULWATR*/            { 19, 37 }, // Foulwatr.DUN
+/* DUN_FOULWATR*/            { 38, 74 }, // Foulwatr.DUN
 /* DUN_VILE_PRE*/            { 42, 46 }, // Vile2.DUN
 /* DUN_VILE_AFT*/            { 42, 46 }, // Vile1.DUN
 /* DUN_WARLORD_PRE*/         { 16, 14 }, // Warlord2.DUN
