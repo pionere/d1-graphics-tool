@@ -15312,6 +15312,9 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
 
     // separate subtiles for the automap
     ReplaceSubtile(this->til, 20 - 1, 3, 87 - 1, silent);
+    ReplaceSubtile(this->til, 23 - 1, 3, 29 - 1, silent);
+    ReplaceSubtile(this->til, 23 - 1, 3, 31 - 1, silent);
+    ReplaceSubtile(this->til, 23 - 1, 3, 89 - 1, silent);
 
     // use common subtiles
     ReplaceSubtile(this->til, 5 - 1, 1, 6 - 1, silent);     // 18
@@ -15450,6 +15453,9 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(10, 6);
     ReplaceMcr(10, 5, 30, 5);
     ReplaceMcr(10, 7, 30, 7);
+    ReplaceMcr(74, 5, 30, 5);
+    ReplaceMcr(74, 7, 30, 7);
+    Blk2Mcr(89, 7);
     ReplaceMcr(78, 4, 31, 4);
     ReplaceMcr(78, 6, 31, 6);
     Blk2Mcr(87, 2);

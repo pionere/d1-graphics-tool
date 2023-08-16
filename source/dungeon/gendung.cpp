@@ -524,6 +524,10 @@ void InitLvlDungeon()
 		nSolidTable[390] = false; // make a pool tile walkable I.
 		nSolidTable[413] = false; // make a pool tile walkable II.
 		nSolidTable[416] = false; // make a pool tile walkable III.
+		// patch dMegaTiles - L6.TIL
+		// - separate subtiles for the automap
+		pTiles[23][0] = 29;
+		pTiles[23][2] = 31;
 		break;
 	case DTYPE_CRYPT:
 		// patch dSolidTable - L5.SOL
