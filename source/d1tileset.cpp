@@ -15455,7 +15455,7 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(10, 7, 30, 7);
     ReplaceMcr(74, 5, 30, 5);
     ReplaceMcr(74, 7, 30, 7);
-    Blk2Mcr(89, 5);
+    HideMcr(89, 5);
     Blk2Mcr(89, 7);
     ReplaceMcr(78, 4, 31, 4);
     ReplaceMcr(78, 6, 31, 6);
