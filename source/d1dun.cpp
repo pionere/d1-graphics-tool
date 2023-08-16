@@ -1279,10 +1279,10 @@ void D1Dun::DrawAutomapDoorDiamond(int dir, int x, int y)
 
     y2 = y - (d16 >> 1);
 
-    DrawLine(x - d16 + 1, y2, x, y + 1, COLOR_BRIGHT);       // top left
-    DrawLine(x, y + 1, x + d16 - 1, y2, COLOR_BRIGHT);       // top right
-    DrawLine(x, y - d16 - 1, x + d16 - 1, y2, COLOR_BRIGHT); // bottom right
-    DrawLine(x - d16 + 1, y2, x, y - d16 - 1, COLOR_BRIGHT); // bottom left
+    DrawLine(x - d16 + 1, y2, x, y - 1, COLOR_BRIGHT);       // bottom left
+    DrawLine(x, y - 1, x + d16 - 1, y2, COLOR_BRIGHT);       // bottom right
+    DrawLine(x, y - d16 + 1, x + d16 - 1, y2, COLOR_BRIGHT); // top right
+    DrawLine(x - d16 + 1, y2, x, y - d16 + 1, COLOR_BRIGHT); // top left
 }
 
 void D1Dun::DrawMap(int sx, int sy, uint16_t automap_type)
