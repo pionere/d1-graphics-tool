@@ -250,22 +250,12 @@
         </item>
         <item>
          <property name="text">
-          <string>North-West Door</string>
+          <string>West Door</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>North-East Door</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>South-West Door</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>South-East Door</string>
+          <string>East Door</string>
          </property>
         </item>
        </widget>

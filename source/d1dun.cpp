@@ -1270,11 +1270,18 @@ void D1Dun::DrawAutomapDoorDiamond(int dir, int x, int y)
     unsigned d32 = AmLine32;
     unsigned d16 = (d32 >> 1), d8 = (d32 >> 2), d4 = (d32 >> 3), d2 = (d32 >> 4);
 
-    switch (dir) {
+    /*switch (dir) {
     case 0: x -= d8; y -= d4; break; // NW
     case 1: x += d8; y -= d4; break; // NE
     case 2: x -= d8; y += d4; break; // SW
     case 3: x += d8; y += d4; break; // SE
+    }*/
+    if (dir == 0) { // WEST
+        x -= d8;
+        y -= d4;
+    } else {        // EAST
+        x += d8;
+        y -= d4;
     }
 
     y2 = y - (d16 >> 1);
@@ -1418,17 +1425,11 @@ void D1Dun::DrawSubMap(int sx, int sy, uint16_t automap_type)
     case MAT_STAIRS:
         D1Dun::DrawAutomapSubStairs(sx, sy);
         break;
-    case MAT_DOOR_NW:
+    case MAT_DOOR_WEST:
         D1Dun::DrawAutomapDoorDiamond(0, sx, sy);
         break;
-    case MAT_DOOR_NE:
+    case MAT_DOOR_EAST:
         D1Dun::DrawAutomapDoorDiamond(1, sx, sy);
-        break;
-    case MAT_DOOR_SW:
-        D1Dun::DrawAutomapDoorDiamond(2, sx, sy);
-        break;
-    case MAT_DOOR_SE:
-        D1Dun::DrawAutomapDoorDiamond(3, sx, sy);
         break;
     }
 
