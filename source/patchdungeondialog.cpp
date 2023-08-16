@@ -61,6 +61,9 @@ void PatchDungeonDialog::initialize(D1Dun *d)
     if (baseName == "blood1") {
         fileIndex = DUN_BLOOD_AFT;
     }
+    if (baseName == "foulwatr") {
+        fileIndex = DUN_FOULWATR;
+    }
     if (baseName == "vile2") {
         fileIndex = DUN_VILE_PRE;
     }

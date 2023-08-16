@@ -436,7 +436,17 @@ void InitLvlDungeon()
 		// patch dMiniTiles - L3.MIN
 		// - separate subtiles for the automap
 		// pSubtiles[258][0] = 0;
+		// pSubtiles[258][0] = 0;
+		// pSubtiles[406][0] = 0;
+		// pSubtiles[406][1] = 0;
+		// pSubtiles[406][3] = 0;
+		// pSubtiles[406][5] = 101;
+		// pSubtiles[406][7] = 100;
+		// pSubtiles[407][1] = 0;
 		// patch dMegaTiles - L3.TIL
+		// - separate subtiles for the automap
+		pTiles[111][0] = 28;
+		pTiles[111][2] = 30;
 		// - create new fences
 		pTiles[144][0] = 505;
 		pTiles[144][1] = 25;

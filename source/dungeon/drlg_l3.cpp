@@ -2615,6 +2615,8 @@ static void DRLG_L3FixMap()
 	}
 	if (pSetPieces[0]._sptype == SPT_LVL_PWATER) {
 		// patch the map - Foulwatr.DUN
+		// - separate subtiles for the automap
+		lm[2 + 7 + 33 * 19] = SwapLE16(111);
 		// protect island tiles from spawning additional monsters
 		for (int y = 1; y < 7; y++) {
 			for (int x = 7; x < 14; x++) {
