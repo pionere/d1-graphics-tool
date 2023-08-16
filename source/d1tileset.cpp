@@ -15373,7 +15373,7 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
     const int unusedTiles[] = {
         21, 22, 23, 24, 30, 31, 32, 61, 62, 63, 64, 65, 69, 73, 74, 75, 77, 79, 81, 84, 86, 87, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 101, 102, 103, 118, 125, 127, 128, 129, 130, 132, 133, 134, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166
     };
-    constexpr int blankSubtile = 10;
+    constexpr int blankSubtile = 18;
     for (int n = 0; n < lengthof(unusedTiles); n++) {
         int tileId = unusedTiles[n];
         ReplaceSubtile(this->til, tileId - 1, 0, blankSubtile - 1, silent);
@@ -15425,7 +15425,7 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(4, 4, 29, 2);
     ReplaceMcr(12, 4, 29, 2);
     ReplaceMcr(12, 5, 29, 3);
-    ReplaceMcr(12, 7, 29, 5);
+    Blk2Mcr(12, 7);
     ReplaceMcr(9, 5, 29, 5);
     ReplaceMcr(9, 7, 29, 7);
     // - after patchNestFloorCel
