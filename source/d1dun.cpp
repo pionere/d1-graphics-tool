@@ -3888,6 +3888,9 @@ void D1Dun::patch(int dunFileIndex)
         for (int y = 1; y < 7; y++) {
             for (int x = 7; x < 14; x++) {
                 change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, 3);
             }
         }
         // remove most of the monsters
