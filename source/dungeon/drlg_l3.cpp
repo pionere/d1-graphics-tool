@@ -77,9 +77,9 @@ const BYTE L6DSTAIRS[] = {
 	8, 9, 7,
 	0, 0, 0,
 
-	0, 16, 0, // replace
-	0, 15, 0,
-	0,  0, 0,
+	23, 16, 0, // replace
+	 0, 15, 0,
+	 0,  0, 0,
 	// clang-format on
 };
 #endif
