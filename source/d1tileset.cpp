@@ -15312,8 +15312,8 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
 
     // separate subtiles for the automap
     ReplaceSubtile(this->til, 20 - 1, 3, 87 - 1, silent);
-    ReplaceSubtile(this->til, 23 - 1, 3, 29 - 1, silent);
-    ReplaceSubtile(this->til, 23 - 1, 3, 31 - 1, silent);
+    ReplaceSubtile(this->til, 23 - 1, 0, 29 - 1, silent);
+    ReplaceSubtile(this->til, 23 - 1, 2, 31 - 1, silent);
     ReplaceSubtile(this->til, 23 - 1, 3, 89 - 1, silent);
 
     // use common subtiles
@@ -15383,7 +15383,7 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
 
     // eliminate subtiles of unused tiles
     const int unusedTiles[] = {
-        21, 22, 23, 24, 30, 31, 32, 61, 62, 63, 64, 65, 69, 73, 74, 75, 77, 79, 81, 84, 86, 87, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 101, 102, 103, 118, 125, 127, 128, 129, 130, 132, 133, 134, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166
+        21, 22, 24, 30, 31, 32, 61, 62, 63, 64, 65, 69, 73, 74, 75, 77, 79, 81, 84, 86, 87, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 101, 102, 103, 118, 125, 127, 128, 129, 130, 132, 133, 134, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166
     };
     constexpr int blankSubtile = 18;
     for (int n = 0; n < lengthof(unusedTiles); n++) {
