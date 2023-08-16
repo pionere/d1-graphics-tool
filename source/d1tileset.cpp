@@ -12725,7 +12725,7 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 44 - 1, 2, 136 - 1, silent);
     ReplaceSubtile(this->til, 136 - 1, 0, 149 - 1, silent);
     ReplaceSubtile(this->til, 136 - 1, 1, 153 - 1, silent);
-    ReplaceSubtile(this->til, 136 - 1, 2, 136 - 1, silent);
+    ReplaceSubtile(this->til, 136 - 1, 2, 97 - 1, silent);
     ReplaceSubtile(this->til, 136 - 1, 3, 136 - 1, silent);
     // use common subtiles
     ReplaceSubtile(this->til,  4 - 1, 2, 10 - 1, silent);  // 13

@@ -464,7 +464,7 @@ void InitLvlDungeon()
 		pTiles[44][2] = 136;
 		pTiles[136][0] = 149;
 		pTiles[136][1] = 153;
-		pTiles[136][2] = 136;
+		pTiles[136][2] = 97;
 		pTiles[136][3] = 136;
 		// - new shadow-types
 		pTiles[61][0] = 5;

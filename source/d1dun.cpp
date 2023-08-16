@@ -1451,7 +1451,7 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
     const unsigned backHeight = backImage.height() - 2 * CELL_BORDER;
 
     static_assert(TILE_WIDTH == 2 && TILE_HEIGHT == 2, "D1Dun::drawMeta skips boundary checks.");
-    if (params.showMap && (dunCursorX & 1) == 0 && (dunCursorY & 1) == 0) {
+    /*if (params.showMap && (dunCursorX & 1) == 0 && (dunCursorY & 1) == 0) {
         int tileRef = this->tiles[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
         if (tileRef > 0 && tileRef <= this->til->getTileCount()) { // !0 || !UNDEF_TILE
             quint8 mapType = this->tileset->amp->getTileType(tileRef - 1);
@@ -1459,7 +1459,7 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
 
             D1Dun::DrawMap(drawCursorX + backWidth / 2, drawCursorY - 1, mapType | (mapProp << 8));
         }
-    }
+    }*/
     if (params.showMap) {
         int subtileRef = this->subtiles[dunCursorY][dunCursorX];
         if (subtileRef > 0 && subtileRef <= this->min->getSubtileCount()) { // !0 || !UNDEF_SUBTILE
@@ -4054,6 +4054,8 @@ void D1Dun::patch(int dunFileIndex)
         // fix corner
         change |= this->changeTileAt(6, 1, 10);
         change |= this->changeTileAt(6, 5, 10);
+        // separate subtiles for the automap
+        change |= this->changeTileAt(1, 2, 136);
         // use base tiles and decorate the walls randomly
         change |= this->changeTileAt(0, 0, 9);
         change |= this->changeTileAt(0, 6, 15);
