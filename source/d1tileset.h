@@ -27,7 +27,9 @@ public:
     bool load(const OpenAsParam &params);
     void save(const SaveAsParam &params);
 
+    void insertTile(int tileIndex, const std::vector<int> &subtileIndices);
     void createTile();
+    void removeTile(int tileIndex);
     void insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList);
     void createSubtile();
     void removeSubtile(int subtileIndex, int replacement);

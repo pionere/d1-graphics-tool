@@ -1244,9 +1244,7 @@ void LevelCelView::insertTile(int tileIndex, const QImage &image)
             this->insertSubtile(index, subImage);
         }
     }
-
-    this->til->insertTile(tileIndex, subtileIndices);
-    this->amp->insertTile(tileIndex);
+    this->tileset->insertTile(tileIndex, subtileIndices);
 }
 
 void LevelCelView::insertTile(int tileIndex, const D1GfxFrame &frame)
@@ -1272,9 +1270,7 @@ void LevelCelView::insertTile(int tileIndex, const D1GfxFrame &frame)
             this->insertSubtile(index, subFrame);
         }
     }
-
-    this->til->insertTile(tileIndex, subtileIndices);
-    this->amp->insertTile(tileIndex);
+    this->tileset->insertTile(tileIndex, subtileIndices);
 }
 
 void LevelCelView::insertTiles(IMAGE_FILE_MODE mode, int index, const QImage &image)
@@ -1687,6 +1683,7 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
         this->assignSubtiles(frame, tileIndex, this->min->getSubtileCount());
         // reset tile flags
         this->amp->setTileProperties(tileIndex, 0);
+        this->tla->setTileProperties(tileIndex, 0);
         if (palMod) {
             // update the palette
             this->pal->updateColors(basePal);
@@ -1714,6 +1711,7 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
 
     // reset tile flags
     this->amp->setTileProperties(tileIndex, 0);
+    this->tla->setTileProperties(tileIndex, 0);
 
     // update the view - done by the caller
     // this->displayFrame();
@@ -1723,8 +1721,7 @@ void LevelCelView::removeCurrentTile()
 {
     int tileIndex = this->currentTileIndex;
 
-    this->til->removeTile(tileIndex);
-    this->amp->removeTile(tileIndex);
+    this->tileset->removeTile(tileIndex);
     // update tile index if necessary
     if (/*tileIndex < this->currentTileIndex ||*/ this->currentTileIndex == this->til->getTileCount()) {
         this->currentTileIndex = std::max(0, this->currentTileIndex - 1);

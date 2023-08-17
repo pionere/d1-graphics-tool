@@ -147,11 +147,25 @@ void D1Tileset::save(const SaveAsParam &params)
     this->tmi->save(params);
 }
 
+void D1Tileset::insertTile(int tileIndex, const std::vector<int> &subtileIndices)
+{
+    this->til->insertTile(tileIndex, subtileIndices);
+    this->amp->insertTile(tileIndex);
+    this->tla->insertTile(tileIndex);
+}
+
 void D1Tileset::createTile()
 {
     this->til->createTile();
     this->amp->createTile();
     this->tla->createTile();
+}
+
+void D1Tileset::removeTile(int tileIndex)
+{
+    this->til->removeTile(tileIndex);
+    this->amp->removeTile(tileIndex);
+    this->tla->removeTile(tileIndex);
 }
 
 void D1Tileset::insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList)
