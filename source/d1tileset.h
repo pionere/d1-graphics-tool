@@ -4,7 +4,6 @@
 #include <set>
 #include <vector>
 
-#include "d1amp.h"
 #include "d1gfx.h"
 #include "d1min.h"
 #include "d1smp.h"
@@ -28,7 +27,9 @@ public:
     bool load(const OpenAsParam &params);
     void save(const SaveAsParam &params);
 
+    void insertTile(int tileIndex, const std::vector<int> &subtileIndices);
     void createTile();
+    void removeTile(int tileIndex);
     void insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList);
     void createSubtile();
     void removeSubtile(int subtileIndex, int replacement);
@@ -44,7 +45,6 @@ public:
     D1Min *min;
     D1Til *til;
     D1Sol *sol;
-    D1Amp *amp;
     D1Tla *tla;
     D1Spt *spt;
     D1Tmi *tmi;

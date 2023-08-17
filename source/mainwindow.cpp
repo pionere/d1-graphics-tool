@@ -972,7 +972,6 @@ void MainWindow::openFile(const OpenAsParam &params)
     QString tilFilePath = params.tilFilePath;
     QString minFilePath = params.minFilePath;
     QString solFilePath = params.solFilePath;
-    QString ampFilePath = params.ampFilePath;
     QString tlaFilePath = params.tlaFilePath;
     QString sptFilePath = params.sptFilePath;
     QString tmiFilePath = params.tmiFilePath;
@@ -1008,9 +1007,6 @@ void MainWindow::openFile(const OpenAsParam &params)
         if (solFilePath.isEmpty()) {
             solFilePath = basePath + ".sol";
         }
-        if (ampFilePath.isEmpty()) {
-            ampFilePath = basePath + ".amp";
-        }
         if (tlaFilePath.isEmpty()) {
             tlaFilePath = basePath + ".tla";
         }
@@ -1032,7 +1028,6 @@ void MainWindow::openFile(const OpenAsParam &params)
         findFirstFile(baseDir, QStringLiteral("*.til"), tilFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.min"), minFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.sol"), solFilePath, baseName);
-        findFirstFile(baseDir, QStringLiteral("*.amp"), ampFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.tla"), tlaFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.spt"), sptFilePath, baseName);
         findFirstFile(baseDir, QStringLiteral("*.tmi"), tmiFilePath, baseName);
@@ -1076,12 +1071,6 @@ void MainWindow::openFile(const OpenAsParam &params)
         // Loading TIL
         if (!this->tileset->til->load(tilFilePath, this->tileset->min)) {
             this->failWithError(tr("Failed loading TIL file: %1.").arg(QDir::toNativeSeparators(tilFilePath)));
-            return;
-        }
-
-        // Loading AMP
-        if (!this->tileset->amp->load(ampFilePath, this->tileset->til->getTileCount(), params)) {
-            this->failWithError(tr("Failed loading AMP file: %1.").arg(QDir::toNativeSeparators(ampFilePath)));
             return;
         }
 

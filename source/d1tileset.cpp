@@ -25,7 +25,6 @@ D1Tileset::D1Tileset(D1Gfx *g)
     this->min = new D1Min();
     this->til = new D1Til();
     this->sol = new D1Sol();
-    this->amp = new D1Amp();
     this->tla = new D1Tla();
     this->spt = new D1Spt();
     this->tmi = new D1Tmi();
@@ -38,7 +37,6 @@ D1Tileset::~D1Tileset()
     delete min;
     delete til;
     delete sol;
-    delete amp;
     delete tla;
     delete spt;
     delete tmi;
@@ -66,7 +64,6 @@ bool D1Tileset::load(const OpenAsParam &params)
     QString tilFilePath = params.tilFilePath;
     QString minFilePath = params.minFilePath;
     QString solFilePath = params.solFilePath;
-    QString ampFilePath = params.ampFilePath;
     QString tlaFilePath = params.tlaFilePath;
     QString sptFilePath = params.sptFilePath;
     QString tmiFilePath = params.tmiFilePath;
@@ -89,9 +86,6 @@ bool D1Tileset::load(const OpenAsParam &params)
         if (solFilePath.isEmpty()) {
             solFilePath = basePath + ".sol";
         }
-        if (ampFilePath.isEmpty()) {
-            ampFilePath = basePath + ".amp";
-        }
         if (tlaFilePath.isEmpty()) {
             tlaFilePath = basePath + ".tla";
         }
@@ -113,8 +107,6 @@ bool D1Tileset::load(const OpenAsParam &params)
         dProgressErr() << QApplication::tr("Failed loading MIN file: %1.").arg(QDir::toNativeSeparators(minFilePath));
     } else if (!this->til->load(tilFilePath, this->min)) {
         dProgressErr() << QApplication::tr("Failed loading TIL file: %1.").arg(QDir::toNativeSeparators(tilFilePath));
-    } else if (!this->amp->load(ampFilePath, this->til->getTileCount(), params)) {
-        dProgressErr() << QApplication::tr("Failed loading AMP file: %1.").arg(QDir::toNativeSeparators(ampFilePath));
     } else if (!this->tla->load(tlaFilePath, this->til->getTileCount(), params)) {
         dProgressErr() << QApplication::tr("Failed loading TLA file: %1.").arg(QDir::toNativeSeparators(tlaFilePath));
     } else if (!this->spt->load(sptFilePath, this->sol->getSubtileCount(), params)) {
@@ -136,7 +128,6 @@ bool D1Tileset::load(const OpenAsParam &params)
     this->min->clear();
     this->til->clear();
     this->sol->clear();
-    this->amp->clear();
     this->tla->clear();
     this->spt->clear();
     this->tmi->clear();
@@ -150,18 +141,28 @@ void D1Tileset::save(const SaveAsParam &params)
     this->min->save(params);
     this->til->save(params);
     this->sol->save(params);
-    this->amp->save(params);
     this->tla->save(params);
     this->spt->save(params);
     this->tmi->save(params);
     this->smp->save(params);
 }
 
+void D1Tileset::insertTile(int tileIndex, const std::vector<int> &subtileIndices)
+{
+    this->til->insertTile(tileIndex, subtileIndices);
+    this->tla->insertTile(tileIndex);
+}
+
 void D1Tileset::createTile()
 {
     this->til->createTile();
-    this->amp->createTile();
     this->tla->createTile();
+}
+
+void D1Tileset::removeTile(int tileIndex)
+{
+    this->til->removeTile(tileIndex);
+    this->tla->removeTile(tileIndex);
 }
 
 void D1Tileset::insertSubtile(int subtileIndex, const std::vector<unsigned> &frameReferencesList)
@@ -460,50 +461,6 @@ static void ReplaceFrame(D1Min *min, int dstSubtileRef, int dstMicroIndex, int s
     }*/
 }
 
-static void ChangeTileMapFlags(D1Amp *amp, int tileIndex, int mapFlag, bool add, bool silent)
-{
-    quint8 currProperties = amp->getTileProperties(tileIndex);
-    quint8 newProperties = currProperties;
-    if (add) {
-        newProperties = currProperties | (mapFlag >> 8);
-    } else {
-        newProperties = currProperties & ~(mapFlag >> 8);
-    }
-    if (amp->setTileProperties(tileIndex, newProperties)) {
-        if (!silent) {
-            dProgress() << QApplication::tr("The automap flags of Tile %1 is changed from %2 to %3.").arg(tileIndex + 1).arg(currProperties).arg(newProperties);
-        }
-    }
-}
-
-static void ChangeTileMapType(D1Amp *amp, int tileIndex, int mapType, bool silent)
-{
-    quint8 currMapType = amp->getTileType(tileIndex);
-    if (amp->setTileType(tileIndex, mapType)) {
-        if (!silent) {
-            dProgress() << QApplication::tr("The automap type of Tile %1 is changed from %2 to %3.").arg(tileIndex + 1).arg(currMapType).arg(mapType);
-        }
-    }
-}
-
-static void SetTileMapFlags(D1Amp *amp, int dstTileIndex, int srcTileIndex, bool silent)
-{
-    quint8 currMapType = amp->getTileType(dstTileIndex);
-    quint8 newMapType = amp->getTileType(srcTileIndex);
-    if (amp->setTileType(dstTileIndex, newMapType)) {
-        if (!silent) {
-            dProgress() << QApplication::tr("The automap type of Tile %1 is changed from %2 to %3.").arg(dstTileIndex + 1).arg(currMapType).arg(newMapType);
-        }
-    }
-    quint8 currProperties = amp->getTileProperties(dstTileIndex);
-    quint8 newProperties = amp->getTileProperties(srcTileIndex);
-    if (amp->setTileProperties(dstTileIndex, newProperties)) {
-        if (!silent) {
-            dProgress() << QApplication::tr("The automap flags of Tile %1 is changed from %2 to %3.").arg(dstTileIndex + 1).arg(currProperties).arg(newProperties);
-        }
-    }
-}
-
 static void ChangeSubtileSolFlags(D1Sol *sol, int subtileIndex, int solFlag, bool add, bool silent)
 {
     quint8 currProperties = sol->getSubtileProperties(subtileIndex);
@@ -516,23 +473,6 @@ static void ChangeSubtileSolFlags(D1Sol *sol, int subtileIndex, int solFlag, boo
     if (sol->setSubtileProperties(subtileIndex, newProperties)) {
         if (!silent) {
             dProgress() << QApplication::tr("The SOL flags of Subtile %1 is changed from %2 to %3.").arg(subtileIndex + 1).arg(currProperties).arg(newProperties);
-        }
-    }
-}
-
-static void ChangeTileAmpFlags(D1Amp *amp, int tileIndex, int ampFlag, bool silent)
-{
-    quint8 currType = amp->getTileType(tileIndex);
-    quint8 newType = ampFlag & MAF_TYPE;
-    quint8 currProperties = amp->getTileProperties(tileIndex);
-    quint8 newProperties = ampFlag >> 8;
-
-    bool change = amp->setTileType(tileIndex, newType);
-    change |= amp->setTileProperties(tileIndex, newProperties);
-
-    if (change) {
-        if (!silent) {
-            dProgress() << QApplication::tr("The AMP flags of Tile %1 are modified.").arg(tileIndex + 1);
         }
     }
 }
@@ -3392,8 +3332,8 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 97 - 1, 3, 4 - 1, silent);   // 200
     ReplaceSubtile(this->til, 130 - 1, 3, 4 - 1, silent);  // 277
     ReplaceSubtile(this->til, 137 - 1, 3, 4 - 1, silent);  // 295
-    ReplaceSubtile(this->til, 196 - 1, 2, 36 - 1, silent); // 428
     ReplaceSubtile(this->til, 193 - 1, 3, 4 - 1, silent);  // 419
+    ReplaceSubtile(this->til, 196 - 1, 2, 36 - 1, silent); // 428
     // use common subtiles instead of minor alterations
     // ReplaceSubtile(this->til, 93 - 1, 2, 177 - 1, silent); // 191
     // simplified door subtiles
@@ -4193,7 +4133,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(410, 6, 1, 6);
 
     // eliminate micros of unused subtiles
-    // Blk2Mcr(311 ...),
+    // Blk2Mcr(39, 311 ...),
     Blk2Mcr(43, 0);
     Blk2Mcr(43, 1);
     Blk2Mcr(43, 2);
@@ -5556,7 +5496,6 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 140 - 1, 1, 10 - 1, silent);
     ReplaceSubtile(this->til, 140 - 1, 3, 162 - 1, silent);
     ReplaceSubtile(this->til, 142 - 1, 3, 162 - 1, silent);
-
     // use common subtiles instead of minor alterations
     ReplaceSubtile(this->til, 1 - 1, 1, 10 - 1, silent);
     ReplaceSubtile(this->til, 2 - 1, 2, 11 - 1, silent);
@@ -5598,7 +5537,6 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 141 - 1, 2, 155 - 1, silent);
     ReplaceSubtile(this->til, 141 - 1, 3, 169 - 1, silent);
     ReplaceSubtile(this->til, 142 - 1, 2, 155 - 1, silent);
-
     // - reduce pointless bone-chamber complexity II.
     // -- bones
     ReplaceSubtile(this->til, 54 - 1, 1, 181 - 1, silent);
@@ -6084,7 +6022,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(455, 5, 6, 5);
     ReplaceMcr(459, 5, 6, 5);
     ReplaceMcr(499, 5, 6, 5);
-    // ReplaceMcr(548, 5, 6, 5); // Frame 159 is used by subtiles 46, 529.
+    // ReplaceMcr(548, 5, 6, 5);
 
     ReplaceMcr(30, 3, 6, 3);
     ReplaceMcr(34, 3, 6, 3);
@@ -17732,39 +17670,6 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeSubtileSolFlags(this->sol, 140 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         // - subtile for the separate pillar tile
         ChangeSubtileSolFlags(this->sol, 61 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
-        // patch dAutomapData - L1.AMP
-        // - separate pillar
-        SetTileMapFlags(this->amp, 28 - 1, 15 - 1, silent);
-        // new shadows
-        SetTileMapFlags(this->amp, 145 - 1, 11 - 1, silent);
-        SetTileMapFlags(this->amp, 147 - 1, 6 - 1, silent);
-        SetTileMapFlags(this->amp, 149 - 1, 12 - 1, silent);
-        SetTileMapFlags(this->amp, 150 - 1, 2 - 1, silent);
-        SetTileMapFlags(this->amp, 151 - 1, 12 - 1, silent);
-        SetTileMapFlags(this->amp, 152 - 1, 36 - 1, silent);
-        SetTileMapFlags(this->amp, 153 - 1, 36 - 1, silent);
-        SetTileMapFlags(this->amp, 154 - 1, 7 - 1, silent);
-        SetTileMapFlags(this->amp, 155 - 1, 2 - 1, silent);
-        SetTileMapFlags(this->amp, 156 - 1, 26 - 1, silent);
-        SetTileMapFlags(this->amp, 157 - 1, 35 - 1, silent);
-        SetTileMapFlags(this->amp, 159 - 1, 13 - 1, silent);
-        SetTileMapFlags(this->amp, 160 - 1, 14 - 1, silent);
-        SetTileMapFlags(this->amp, 161 - 1, 37 - 1, silent);
-        SetTileMapFlags(this->amp, 164 - 1, 13 - 1, silent);
-        SetTileMapFlags(this->amp, 165 - 1, 13 - 1, silent);
-        // - shadows for the banner setpiece
-        SetTileMapFlags(this->amp, 56 - 1, 1 - 1, silent);
-        SetTileMapFlags(this->amp, 55 - 1, 1 - 1, silent);
-        SetTileMapFlags(this->amp, 54 - 1, 60 - 1, silent);
-        SetTileMapFlags(this->amp, 53 - 1, 58 - 1, silent);
-        // - shadows for the vile setmap
-        SetTileMapFlags(this->amp, 52 - 1, 2 - 1, silent);
-        SetTileMapFlags(this->amp, 51 - 1, 2 - 1, silent);
-        SetTileMapFlags(this->amp, 50 - 1, 1 - 1, silent);
-        SetTileMapFlags(this->amp, 49 - 1, 17 - 1, silent);
-        SetTileMapFlags(this->amp, 48 - 1, 11 - 1, silent);
-        SetTileMapFlags(this->amp, 47 - 1, 2 - 1, silent);
-        SetTileMapFlags(this->amp, 46 - 1, 7 - 1, silent);
         break;
     case DTYPE_CATACOMBS:
         // patch dMiniTiles and dMegaTiles - L2.MIN and L2.TIL
@@ -17775,32 +17680,6 @@ void D1Tileset::patch(int dunType, bool silent)
         this->cleanupCatacombs(deletedFrames, silent);
         // patch pSpecialsCel - L2S.CEL
         this->patchCatacombsSpec(silent);
-        // patch dAutomapData - L2.AMP
-        // - fix automap types
-        ChangeTileMapFlags(this->amp, 42 - 1, MAF_EAST_ARCH, false, silent);
-        ChangeTileMapFlags(this->amp, 156 - 1, MAF_WEST_DOOR, false, silent);
-        ChangeTileMapType(this->amp, 156 - 1, MWT_NONE, silent);
-        ChangeTileMapFlags(this->amp, 157 - 1, MAF_EAST_DOOR, false, silent);
-        ChangeTileMapType(this->amp, 157 - 1, MWT_NONE, silent);
-        // - separate pillar
-        ChangeTileMapType(this->amp, 52 - 1, MWT_PILLAR, silent);
-        // - new shadows
-        SetTileMapFlags(this->amp, 17 - 1, 5 - 1, silent);
-        // SetTileMapFlags(this->amp, 18 - 1, 5 - 1, silent);
-        SetTileMapFlags(this->amp, 34 - 1, 6 - 1, silent);
-        SetTileMapFlags(this->amp, 35 - 1, 7 - 1, silent);
-        SetTileMapFlags(this->amp, 36 - 1, 9 - 1, silent);
-        SetTileMapFlags(this->amp, 37 - 1, 9 - 1, silent);
-        // SetTileMapFlags(this->amp, 44 - 1, 3 - 1, silent);
-        // SetTileMapFlags(this->amp, 46 - 1, 3 - 1, silent);
-        // SetTileMapFlags(this->amp, 47 - 1, 3 - 1, silent);
-        // SetTileMapFlags(this->amp, 48 - 1, 3 - 1, silent);
-        // SetTileMapFlags(this->amp, 49 - 1, 3 - 1, silent);
-        // SetTileMapFlags(this->amp, 95 - 1, 3 - 1, silent);
-        // SetTileMapFlags(this->amp, 96 - 1, 3 - 1, silent);
-        // SetTileMapFlags(this->amp, 100 - 1, 3 - 1, silent);
-        // - shadow for the separate pillar
-        ChangeTileMapType(this->amp, 101 - 1, MWT_PILLAR, silent);
         // patch dSolidTable - L2.SOL
         // - fix the upstairs IV.
         ChangeSubtileSolFlags(this->sol, 252 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, true, silent);
@@ -17816,10 +17695,6 @@ void D1Tileset::patch(int dunType, bool silent)
             break;
         }
         this->cleanupCaves(deletedFrames, silent);
-        // patch dAutomapData - L3.AMP
-        // - new fences
-        SetTileMapFlags(this->amp, 144 - 1, 151 - 1, silent);
-        SetTileMapFlags(this->amp, 145 - 1, 152 - 1, silent);
         // patch dSolidTable - L3.SOL
         ChangeSubtileSolFlags(this->sol, 249 - 1, PFLAG_BLOCK_PATH, false, silent); // sync tile 68 and 69 by making subtile 249 of tile 68 walkable.
         ChangeSubtileSolFlags(this->sol, 146 - 1, PFLAG_BLOCK_LIGHT, false, silent); // fix unreasonable light-blocker
@@ -17841,26 +17716,6 @@ void D1Tileset::patch(int dunType, bool silent)
             break;
         }
         this->cleanupHell(deletedFrames, silent);
-        // patch dAutomapData - L4.AMP
-        // - fix automap types
-        ChangeTileMapType(this->amp, 27 - 1, MWT_NORTH_EAST_END, silent);
-        ChangeTileMapType(this->amp, 28 - 1, MWT_NORTH_WEST_END, silent);
-        ChangeTileMapFlags(this->amp, 52 - 1, MAF_WEST_GRATE, true, silent);
-        ChangeTileMapFlags(this->amp, 56 - 1, MAF_EAST_GRATE, true, silent);
-        ChangeTileAmpFlags(this->amp, 7 - 1, MWT_NORTH_WEST_END, silent);
-        ChangeTileAmpFlags(this->amp, 8 - 1, MWT_NORTH_EAST_END, silent);
-        ChangeTileAmpFlags(this->amp, 83 - 1, MWT_NORTH_WEST_END, silent);
-        // - new base shadows
-        SetTileMapFlags(this->amp,  61 - 1,  2 - 1, silent);
-        SetTileMapFlags(this->amp,  62 - 1,  2 - 1, silent);
-        SetTileMapFlags(this->amp,  76 - 1, 15 - 1, silent);
-        SetTileMapFlags(this->amp, 129 - 1, 15 - 1, silent);
-        SetTileMapFlags(this->amp, 130 - 1, 56 - 1, silent);
-        SetTileMapFlags(this->amp, 131 - 1, 56 - 1, silent);
-        SetTileMapFlags(this->amp, 132 - 1,  8 - 1, silent);
-        SetTileMapFlags(this->amp, 133 - 1,  8 - 1, silent);
-        SetTileMapFlags(this->amp, 134 - 1, 14 - 1, silent);
-        SetTileMapFlags(this->amp, 135 - 1, 14 - 1, silent);
         // patch dSolidTable - L4.SOL
         ChangeSubtileSolFlags(this->sol, 141 - 1, PFLAG_BLOCK_MISSILE, false, silent); // fix missile-blocking tile of down-stairs.
         // fix missile-blocking tile of down-stairs + fix non-walkable tile of down-stairs
@@ -17949,42 +17804,6 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeSubtileSolFlags(this->sol, 149 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         ChangeSubtileSolFlags(this->sol, 150 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         ChangeSubtileSolFlags(this->sol, 153 - 1, PFLAG_BLOCK_LIGHT, false, silent);
-        // patch automaptype - L5.AMP
-        // - fix automap types
-        ChangeTileMapType(this->amp, 20 - 1, MWT_CORNER, silent);
-        ChangeTileMapType(this->amp, 23 - 1, MWT_NORTH_WEST_END, silent);
-        ChangeTileMapType(this->amp, 24 - 1, MWT_NORTH_EAST_END, silent);
-        // - separate pillar
-        SetTileMapFlags(this->amp, 28 - 1, 15 - 1, silent);
-        // new shadows
-        // - shadows created by fixCryptShadows
-        ChangeTileAmpFlags(this->amp, 109 - 1, MWT_NORTH_WEST, silent);
-        ChangeTileAmpFlags(this->amp, 110 - 1, MWT_NORTH_WEST, silent);
-        ChangeTileAmpFlags(this->amp, 111 - 1, MAF_WEST_ARCH | MWT_NORTH_WEST, silent);
-        ChangeTileAmpFlags(this->amp, 215 - 1, MAF_WEST_GRATE | MWT_NORTH_WEST, silent);
-        // - 'add' new shadow-types with glow
-        ChangeTileAmpFlags(this->amp, 216 - 1, MAF_WEST_ARCH | MWT_NORTH_WEST, silent);
-        // - 'add' new shadow-types with horizontal arches
-        ChangeTileAmpFlags(this->amp, 71 - 1, MWT_NORTH_EAST, silent);
-        ChangeTileAmpFlags(this->amp, 80 - 1, MWT_NORTH_EAST, silent);
-        ChangeTileAmpFlags(this->amp, 81 - 1, MAF_EAST_ARCH | MWT_NORTH_EAST, silent);
-        ChangeTileAmpFlags(this->amp, 82 - 1, MAF_EAST_ARCH | MWT_NORTH_EAST, silent);
-        ChangeTileAmpFlags(this->amp, 83 - 1, MAF_EAST_GRATE | MWT_NORTH_EAST, silent);
-        ChangeTileAmpFlags(this->amp, 84 - 1, MAF_EAST_GRATE | MWT_NORTH_EAST, silent);
-        ChangeTileAmpFlags(this->amp, 85 - 1, MWT_NORTH_EAST, silent);
-        ChangeTileAmpFlags(this->amp, 86 - 1, MWT_NORTH_EAST, silent);
-        ChangeTileAmpFlags(this->amp, 87 - 1, MAF_EAST_DOOR | MWT_NORTH_EAST, silent);
-        ChangeTileAmpFlags(this->amp, 88 - 1, MAF_EAST_DOOR | MWT_NORTH_EAST, silent);
-        // fix automap of the entrance II.
-        ChangeTileAmpFlags(this->amp, 47 - 1, MAF_STAIRS | MWT_NORTH_WEST, silent);
-        ChangeTileAmpFlags(this->amp, 50 - 1, MWT_NORTH_WEST, silent);
-        ChangeTileAmpFlags(this->amp, 48 - 1, MAF_STAIRS | MWT_NORTH, silent);
-        ChangeTileAmpFlags(this->amp, 51 - 1, MWT_NORTH_WEST_END, silent);
-        ChangeTileAmpFlags(this->amp, 52 - 1, MAF_EXTERN, silent);
-        ChangeTileAmpFlags(this->amp, 53 - 1, MAF_STAIRS | MWT_NORTH, silent);
-        ChangeTileAmpFlags(this->amp, 54 - 1, MAF_EXTERN, silent);
-        ChangeTileAmpFlags(this->amp, 56 - 1, MWT_NONE, silent);
-        ChangeTileAmpFlags(this->amp, 58 - 1, MAF_EXTERN | MWT_NORTH_WEST_END, silent);
         break;
     }
     for (auto it = deletedFrames.crbegin(); it != deletedFrames.crend(); it++) {

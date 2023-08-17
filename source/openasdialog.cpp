@@ -38,7 +38,6 @@ void OpenAsDialog::initialize()
     this->ui->tilFileEdit->setText("");
     this->ui->minFileEdit->setText("");
     this->ui->solFileEdit->setText("");
-    this->ui->ampFileEdit->setText("");
     this->ui->tlaFileEdit->setText("");
     this->ui->sptFileEdit->setText("");
     this->ui->tmiFileEdit->setText("");
@@ -99,12 +98,6 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
             this->ui->tilFileEdit->setText(tilFilePath);
             this->ui->minFileEdit->setText(minFilePath);
             this->ui->solFileEdit->setText(solFilePath);
-            QString ampFilePath = basePath + ".amp";
-            if (QFileInfo::exists(ampFilePath)) {
-                this->ui->ampFileEdit->setText(ampFilePath);
-            } else {
-                this->ui->ampFileEdit->setText("");
-            }
             QString tlaFilePath = basePath + ".tla";
             if (QFileInfo::exists(tlaFilePath)) {
                 this->ui->tlaFileEdit->setText(tlaFilePath);
@@ -134,7 +127,6 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
             this->ui->tilFileEdit->setText("");
             this->ui->minFileEdit->setText("");
             this->ui->solFileEdit->setText("");
-            this->ui->ampFileEdit->setText("");
             this->ui->tlaFileEdit->setText("");
             this->ui->sptFileEdit->setText("");
             this->ui->tmiFileEdit->setText("");
@@ -211,16 +203,6 @@ void OpenAsDialog::on_solFileBrowseButton_clicked()
         return;
 
     this->ui->solFileEdit->setText(openFilePath);
-}
-
-void OpenAsDialog::on_ampFileBrowseButton_clicked()
-{
-    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select AMP file"), tr("AMP Files (*.amp *.AMP)"));
-
-    if (openFilePath.isEmpty())
-        return;
-
-    this->ui->ampFileEdit->setText(openFilePath);
 }
 
 void OpenAsDialog::on_tlaFileBrowseButton_clicked()
@@ -314,7 +296,6 @@ void OpenAsDialog::on_openButton_clicked()
     params.tilFilePath = this->ui->tilFileEdit->text();
     params.minFilePath = this->ui->minFileEdit->text();
     params.solFilePath = this->ui->solFileEdit->text();
-    params.ampFilePath = this->ui->ampFileEdit->text();
     params.tlaFilePath = this->ui->tlaFileEdit->text();
     params.sptFilePath = this->ui->sptFileEdit->text();
     params.tmiFilePath = this->ui->tmiFileEdit->text();

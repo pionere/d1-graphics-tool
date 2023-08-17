@@ -7,8 +7,8 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-/* Maps from tile_id to automap type (_automap_types + _automap_flags). */
-uint16_t automaptype[MAXTILES + 1];
+/* Maps from subtile_id to automap type (_automap_subtypes). */
+BYTE automaptype[MAXSUBTILES + 1];
 
 /**
  * @brief Initializes the automap of a dungeon level.
@@ -41,19 +41,8 @@ void InitLvlAutomap()
 		return;
 	}
 
-	pAFile = LoadFileInMem(mapData, &dwTiles);
-
-	dwTiles /= 2;
-	assert(dwTiles < (size_t)lengthof(automaptype));
-
-	lm = (uint16_t*)pAFile;
-	for (i = 1; i <= dwTiles; i++) {
-		automaptype[i] = SwapLE16(*lm);
-		// assert((automaptype[i] & MAF_TYPE) < 13); required by DrawAutomapTile and SetAutomapView
-		lm++;
-	}
-
-	mem_free_dbg(pAFile);
+	LoadFileWithMem(mapData, &automaptype);
+	/*
 	// patch dAutomapData - L1.AMP
 	if (currLvl._dType == DTYPE_CATHEDRAL) {
 		// separate pillar tile
@@ -173,7 +162,7 @@ void InitLvlAutomap()
 		automaptype[87] = MAF_EAST_DOOR | MWT_NORTH_EAST;
 		automaptype[88] = MAF_EAST_DOOR | MWT_NORTH_EAST;
 	}
-#endif // HELLFIRE
+#endif // HELLFIRE*/
 }
 
 DEVILUTION_END_NAMESPACE
