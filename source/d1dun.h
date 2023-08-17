@@ -35,6 +35,7 @@ typedef enum dun_file_index {
     DUN_BLIND_AFT,           // map tile for the "Halls of the Blind" quest after reading the book (Blind1.DUN)
     DUN_BLOOD_PRE,           // map tile for the "Valor" quest before and after placing the stones (Blood2.DUN)
     DUN_BLOOD_AFT,           // map tile for the "Valor" quest 'after' placing the stones (Blood1.DUN)
+    DUN_FOULWATR,            // setmap for the "Poisoned Water" quest (Foulwatr.DUN)
     DUN_VILE_PRE,            // setmap for the "Archbishop Lazarus" quest before reading the books (Vile2.DUN)
     DUN_VILE_AFT,            // setmap for the "Archbishop Lazarus" quest after reading the books (Vile1.DUN)
     DUN_WARLORD_PRE,         // map tile for the "Warlord" quest before reading the book (Warlord.DUN)

@@ -102,6 +102,11 @@
        </item>
        <item>
         <property name="text">
+         <string>Poisoned Water (Foulwatr.DUN)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Archbishop Lazarus - Before (Vile2.DUN)</string>
         </property>
        </item>

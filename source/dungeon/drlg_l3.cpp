@@ -2555,10 +2555,12 @@ static void DRLG_L3FixMap()
 		// remove most of the monsters
 		for (int y = 13; y < 61; y++) {
 			for (int x = 4; x < 30; x++) {
+				if (x == 6 && y == 33) {
+					continue;
+				}
 				lm[2 + 19 * 37 + 19 * 37 * 2 * 2 + x + y * 19 * 2] = 0;
 			}
 		}
-		lm[2 + 19 * 37 + 19 * 37 * 2 * 2 + 6 + 33 * 19 * 2] = SwapLE16(33);
 	}
 }
 

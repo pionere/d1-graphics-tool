@@ -3321,6 +3321,7 @@ void D1Dun::patch(int dunFileIndex)
 /* DUN_BLIND_AFT*/           { 22, 22 }, // Blind1.DUN
 /* DUN_BLOOD_PRE*/           { 20, 32 }, // Blood2.DUN
 /* DUN_BLOOD_AFT*/           { 20, 32 }, // Blood1.DUN
+/* DUN_FOULWATR*/            { 38, 74 }, // Foulwatr.DUN
 /* DUN_VILE_PRE*/            { 42, 46 }, // Vile2.DUN
 /* DUN_VILE_AFT*/            { 42, 46 }, // Vile1.DUN
 /* DUN_WARLORD_PRE*/         { 16, 14 }, // Warlord2.DUN
@@ -3778,6 +3779,28 @@ void D1Dun::patch(int dunFileIndex)
         }
         // adjust the number of layers
         this->numLayers = 1;
+        break;
+    case DUN_FOULWATR: // Foulwatr.DUN
+        // - separate subtiles for the automap
+        change |= this->changeTileAt(6, 33, 111);
+        // protect island tiles from spawning additional monsters
+        for (int y = 1; y < 7; y++) {
+            for (int x = 7; x < 14; x++) {
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 0, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 0, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 0, 2 * y + 1, 3);
+                change |= this->changeSubtileProtectionAt(2 * x + 1, 2 * y + 1, 3);
+            }
+        }
+        // remove most of the monsters
+        for (int y = 13; y < 61; y++) {
+            for (int x = 4; x < 30; x++) {
+                if (x == 6 && y == 33) {
+                    continue;
+                }
+                change |= this->changeMonsterAt(x, y, 0, false);
+            }
+        }
         break;
     case DUN_VILE_PRE: // Vile2.DUN
         // useless tiles
