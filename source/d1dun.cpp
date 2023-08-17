@@ -1186,22 +1186,22 @@ void D1Dun::DrawAutomapDirt(int x, int y)
     DrawPixel(x, y + d16, COLOR_DIM);           // 15
 }
 
-void D1Dun::DrawAutomapExtern(int x, int y)
+void D1Dun::DrawAutomapExtern(int sx, int sy)
 {
     unsigned d32 = AmLine32;
     unsigned d16 = (d32 >> 1), d8 = (d32 >> 2), d4 = (d32 >> 3);
 
-    DrawPixel(x, y - d8, COLOR_DIM);        // 00
+    DrawPixel(sx, sy - d8, COLOR_DIM);        // 00
     return;
 
     /*    02
        01    03
           00
     */
-    DrawPixel(x, y, COLOR_DIM);                 // 00
-    DrawPixel(x - d8, y - d4, COLOR_DIM);       // 01
-    DrawPixel(x + d8, y - d4, COLOR_DIM);       // 03
-    DrawPixel(x, y - d8, COLOR_DIM);            // 02
+    DrawPixel(sx, sy, COLOR_DIM);                 // 00
+    DrawPixel(sx - d8, sy - d4, COLOR_DIM);       // 01
+    DrawPixel(sx + d8, sy - d4, COLOR_DIM);       // 03
+    DrawPixel(sx, sy - d8, COLOR_DIM);            // 02
 }
 
 void D1Dun::DrawAutomapStairs(int x, int y)
@@ -1266,40 +1266,30 @@ void D1Dun::DrawAutomapDiamond(int x, int y)
     DrawLine(x - d16, y2, x, y - d16, COLOR_DIM); // bottom left
 }
 
-void D1Dun::DrawAutomapDoorDiamond(int dir, int x, int y)
+void D1Dun::DrawAutomapDoorDiamond(int dir, int sx, int sy)
 {
     // int y2;
     unsigned d32 = AmLine32;
     unsigned d16 = (d32 >> 1), d8 = (d32 >> 2), d4 = (d32 >> 3), d2 = (d32 >> 4);
 
     /*switch (dir) {
-    case 0: x -= d8; y -= d4; break; // NW
-    case 1: x += d8; y -= d4; break; // NE
-    case 2: x -= d8; y += d4; break; // SW
-    case 3: x += d8; y += d4; break; // SE
+    case 0: sx -= d8; sy -= d4; break; // NW
+    case 1: sx += d8; sy -= d4; break; // NE
+    case 2: sx -= d8; sy += d4; break; // SW
+    case 3: sx += d8; sy += d4; break; // SE
     }*/
     if (dir == 0) { // WEST
-        x -= d8;
-        y -= d4;
+        sx -= d8;
+        sy -= d4;
     } else {        // EAST
-        x += d8;
-        y -= d4;
+        sx += d8;
+        sy -= d4;
     }
 
     DrawLine(sx - d16 + 2, sy - d8, sx - 1, sy - d16 + 2, COLOR_BRIGHT); // top left
     DrawLine(sx, sy - d16 + 2, sx + d16 - 3, sy - d8, COLOR_BRIGHT);     // top right
     DrawLine(sx - d16 + 2, sy - d8 + 1, sx - 1, sy - 1, COLOR_BRIGHT);   // bottom left
     DrawLine(sx, sy - 1, sx + d16 - 3, sy - d8 + 1, COLOR_BRIGHT);       // bottom right
-    /*y2 = y - (d16 >> 1);
-
-    DrawLine(x - d16 + 1, y2, x, y - 1, COLOR_BRIGHT);       // bottom left
-    DrawLine(x, y - 1, x + d16 - 1, y2, COLOR_BRIGHT);       // bottom right
-    DrawLine(x, y - d16 + 1, x + d16 - 1, y2, COLOR_BRIGHT); // top right
-    DrawLine(x - d16 + 1, y2, x, y - d16 + 1, COLOR_BRIGHT); // top left
-    /*DrawLine(x - d8, y - d8 - d4, x + d16 - d8, y - d8 - d4, COLOR_BRIGHT);  // top
-    DrawLine(x - d8, y - d4, x + d16 - d8, y - d4, COLOR_BRIGHT);            // bottom
-    DrawLine(x - d8, y - d8 - d4, x - d8, y - d4, COLOR_BRIGHT);             // left
-    DrawLine(x + d16 - d8, y - d8 - d4, x + d16 - d8, y - d4, COLOR_BRIGHT); // right*/
 }
 
 void D1Dun::DrawMap(int sx, int sy, uint16_t automap_type)
