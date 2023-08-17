@@ -17708,6 +17708,8 @@ void D1Tileset::patch(int dunType, bool silent)
         // - with subtile-based automap
         ChangeSubtileSolFlags(this->sol, 166 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         ChangeSubtileSolFlags(this->sol, 168 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        // - separate subtiles for the automap
+        ChangeSubtileSolFlags(this->sol, 258 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_MISSILE, true, silent);
         break;
     case DTYPE_HELL:
         // patch dMiniTiles and dMegaTiles - L3.MIN and L3.TIL

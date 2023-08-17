@@ -437,7 +437,6 @@ void InitLvlDungeon()
 		nBlockTable[168] = false;
 		// - separate subtiles for the automap
 		nSolidTable[258] = true;
-		nBlockTable[258] = true;
 		nMissileTable[258] = true;
 		// patch dMiniTiles - L3.MIN
 		// - separate subtiles for the automap
