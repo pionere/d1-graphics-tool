@@ -5451,7 +5451,6 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 77 - 1, 1, 26 - 1, silent);
     ReplaceSubtile(this->til, 9 - 1, 2, 23 - 1, silent);
     ReplaceSubtile(this->til, 50 - 1, 3, 12 - 1, silent);
-
     // use common subtile
     ReplaceSubtile(this->til, 13 - 1, 1, 42 - 1, silent);
     ReplaceSubtile(this->til, 13 - 1, 2, 39 - 1, silent);
@@ -5489,7 +5488,6 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 140 - 1, 1, 10 - 1, silent);
     ReplaceSubtile(this->til, 140 - 1, 3, 162 - 1, silent);
     ReplaceSubtile(this->til, 142 - 1, 3, 162 - 1, silent);
-
     // use common subtiles instead of minor alterations
     ReplaceSubtile(this->til, 1 - 1, 1, 10 - 1, silent);
     ReplaceSubtile(this->til, 2 - 1, 2, 11 - 1, silent);
@@ -5531,7 +5529,6 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 141 - 1, 2, 155 - 1, silent);
     ReplaceSubtile(this->til, 141 - 1, 3, 169 - 1, silent);
     ReplaceSubtile(this->til, 142 - 1, 2, 155 - 1, silent);
-
     // - reduce pointless bone-chamber complexity II.
     // -- bones
     ReplaceSubtile(this->til, 54 - 1, 1, 181 - 1, silent);
@@ -5588,7 +5585,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 18 - 1, 1, 99 - 1, silent);
     ReplaceSubtile(this->til, 18 - 1, 2, 155 - 1, silent);
     ReplaceSubtile(this->til, 18 - 1, 3, 162 - 1, silent);
-    // - pillar tile for a pillar
+    // - corner tile for a pillar
     ReplaceSubtile(this->til, 34 - 1, 0, 21 - 1, silent);
     ReplaceSubtile(this->til, 34 - 1, 1, 26 - 1, silent);
     ReplaceSubtile(this->til, 34 - 1, 2, 148 - 1, silent);
@@ -17554,11 +17551,26 @@ void D1Tileset::patch(int dunType, bool silent)
         //  - prevent non-crossable floor-tile configurations II.
         ChangeSubtileSolFlags(this->sol, 598 - 1, PFLAG_BLOCK_PATH, false, silent);
         ChangeSubtileSolFlags(this->sol, 600 - 1, PFLAG_BLOCK_PATH, false, silent);
+        //  - fix inconsistent arches
+        ChangeSubtileSolFlags(this->sol, 33 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 39 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 42 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 91 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 466 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 470 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 557 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 559 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 561 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 563 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 101 - 1, PFLAG_BLOCK_MISSILE, true, silent);
+        ChangeSubtileSolFlags(this->sol, 104 - 1, PFLAG_BLOCK_MISSILE, true, silent);
+        ChangeSubtileSolFlags(this->sol, 355 - 1, PFLAG_BLOCK_MISSILE, true, silent);
+        ChangeSubtileSolFlags(this->sol, 357 - 1, PFLAG_BLOCK_MISSILE, true, silent);
         // - adjust SOL after cleanupCrypt
         ChangeSubtileSolFlags(this->sol, 238 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 178 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 242 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
-        // fix automap of the entrance I.
+        // - fix automap of the entrance I.
         ChangeSubtileSolFlags(this->sol, 158 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 159 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 148 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, true, silent);
