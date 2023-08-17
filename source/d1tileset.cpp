@@ -13397,6 +13397,19 @@ bool D1Tileset::patchNestFloor(bool silent)
 /* 45 */{ 334 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // fix glitch
 /* 46 */{ 217 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 47 */{ 207 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 48 */{ 24 - 1, 7, D1CEL_FRAME_TYPE::Empty },              // merge subtiles
+/* 49 */{ 22 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 50 */{ 22 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 51 */{ 24 - 1, 6, D1CEL_FRAME_TYPE::Empty },
+/* 52 */{ 23 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 53 */{ 23 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 54 */{ 16 - 1, 7, D1CEL_FRAME_TYPE::Empty },
+/* 55 */{ 14 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 56 */{ 14 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 57 */{  8 - 1, 6, D1CEL_FRAME_TYPE::Empty },
+/* 58 */{  7 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 59 */{  7 - 1, 7, D1CEL_FRAME_TYPE::TransparentSquare },
     };
     constexpr unsigned blockSize = BLOCK_SIZE_L6;
     for (int i = 0; i < lengthof(micros); i++) {
@@ -14154,6 +14167,146 @@ bool D1Tileset::patchNestFloor(bool silent)
             change |= frame->setPixel(0, 22, D1GfxPixel::colorPixel(125));
             change |= frame->setPixel(1, 16, D1GfxPixel::colorPixel(125));
             change |= frame->setPixel(1, 17, D1GfxPixel::colorPixel(125));
+        }
+
+        // move pixels to 22[4] from 24[7]
+        if (i == 49) {
+            const CelMicro &microSrc = micros[48];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y + MICRO_HEIGHT / 2); // 24[7]
+                    if (!pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, pixel);
+                    }
+                }
+            }
+        }
+        // move pixels to 22[6] from 24[7]
+        if (i == 50) {
+            const CelMicro &microSrc = micros[48];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y - MICRO_HEIGHT / 2); // 24[7]
+                    if (!pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, pixel);
+                    }
+                }
+            }
+        }
+
+        // move pixels to 23[5] from 24[6]
+        if (i == 52) {
+            const CelMicro &microSrc = micros[51];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y + MICRO_HEIGHT / 2); // 24[6]
+                    if (!pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, pixel);
+                    }
+                }
+            }
+        }
+        // move pixels to 23[7] from 24[6]
+        if (i == 53) {
+            const CelMicro &microSrc = micros[51];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y - MICRO_HEIGHT / 2); // 24[6]
+                    if (!pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, pixel);
+                    }
+                }
+            }
+        }
+
+        // move pixels to 23[5] from 16[7]
+        if (i == 55) {
+            const CelMicro &microSrc = micros[54];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y + MICRO_HEIGHT / 2); // 16[7]
+                    if (!pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, pixel);
+                    }
+                }
+            }
+        }
+        // move pixels to 23[7] from 16[7]
+        if (i == 56) {
+            const CelMicro &microSrc = micros[54];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y - MICRO_HEIGHT / 2); // 16[7]
+                    if (!pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, pixel);
+                    }
+                }
+            }
+        }
+
+        // move pixels to 7[5] from 8[6]
+        if (i == 58) {
+            const CelMicro &microSrc = micros[57];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = 0; y < MICRO_HEIGHT / 2; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y + MICRO_HEIGHT / 2); // 8[6]
+                    if (!pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, pixel);
+                    }
+                }
+            }
+        }
+        // move pixels to 7[7] from 8[6]
+        if (i == 59) {
+            const CelMicro &microSrc = micros[57];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            // if (frameSrc == nullptr) {
+            //    return;
+            // }
+            for (int x = 0; x < MICRO_WIDTH; x++) {
+                for (int y = MICRO_HEIGHT / 2; y < MICRO_HEIGHT; y++) {
+                    D1GfxPixel pixel = frameSrc->getPixel(x, y - MICRO_HEIGHT / 2); // 8[6]
+                    if (!pixel.isTransparent()) {
+                        change |= frame->setPixel(x, y, pixel);
+                    }
+                }
+            }
         }
 
         if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {
@@ -15123,6 +15276,8 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
     // fix glitch
     ReplaceMcr(155, 6, 159, 6);
     ReplaceMcr(175, 6, 159, 6);
+    ReplaceMcr(14, 6, 22, 6);
+    ReplaceMcr(14, 7, 22, 7);
     // - by patchNestWall2Cel
     ReplaceMcr(8, 5, 4, 5);
 
@@ -15140,16 +15295,20 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
 
     // redraw corner tile
     ReplaceMcr(1, 6, 100, 6);
+    ReplaceMcr(4, 4, 29, 2);
     ReplaceMcr(12, 4, 29, 2);
     ReplaceMcr(12, 5, 29, 3);
-    ReplaceMcr(12, 7, 29, 5);
+    Blk2Mcr(12, 7);
     ReplaceMcr(9, 5, 29, 5);
     ReplaceMcr(9, 7, 29, 7);
     // - after patchNestFloorCel
     Blk2Mcr(1, 4);
     Blk2Mcr(3, 7);
     Blk2Mcr(3, 5);
-    ReplaceMcr(4, 4, 29, 2);
+    Blk2Mcr(24, 7);
+    Blk2Mcr(24, 6);
+    Blk2Mcr(16, 7);
+    Blk2Mcr(8, 6);
 
     ReplaceMcr(17, 0, 13, 0); // mostly invisible
     ReplaceMcr(17, 1, 5, 1);
@@ -15214,12 +15373,12 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(8, 4, 29, 2);
     // ReplaceMcr(8, 5, 29, 3);
 
-    ReplaceMcr(14, 4, 29, 2);
+    // ReplaceMcr(14, 4, 29, 2);
     ReplaceMcr(14, 5, 29, 3);
     ReplaceMcr(16, 5, 30, 5);
-    ReplaceMcr(16, 7, 30, 7);
+    // ReplaceMcr(16, 7, 30, 7);
 
-    ReplaceMcr(22, 4, 16, 4);
+    // ReplaceMcr(22, 4, 16, 4);
     ReplaceMcr(22, 5, 30, 5);
     ReplaceMcr(23, 4, 29, 2);
     ReplaceMcr(24, 4, 29, 2);
