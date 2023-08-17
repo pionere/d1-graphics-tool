@@ -2554,12 +2554,12 @@ void LevelCelView::checkTileFlags() const
             int subtileIdx = subtileIndices[0];
             if (tlaFlags & TIF_FLOOR_00) {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
-                    dProgressWarn() << tr("Unreachable Subtile %1 in Tile %1 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             } else {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->spt->getSubtileSpecProperty(subtileIdx) == 0) {
-                    dProgressWarn() << tr("Walkable Subtile %1 in Tile %1 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             }
@@ -2568,12 +2568,12 @@ void LevelCelView::checkTileFlags() const
             int subtileIdx = subtileIndices[1];
             if (tlaFlags & TIF_FLOOR_01) {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
-                    dProgressWarn() << tr("Unreachable Subtile %1 in Tile %1 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             } else {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->spt->getSubtileSpecProperty(subtileIdx) == 0) {
-                    dProgressWarn() << tr("Walkable Subtile %1 in Tile %1 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             }
@@ -2582,12 +2582,12 @@ void LevelCelView::checkTileFlags() const
             int subtileIdx = subtileIndices[2];
             if (tlaFlags & TIF_FLOOR_10) {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
-                    dProgressWarn() << tr("Unreachable Subtile %1 in Tile %1 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             } else {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->spt->getSubtileSpecProperty(subtileIdx) == 0) {
-                    dProgressWarn() << tr("Walkable Subtile %1 in Tile %1 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             }
