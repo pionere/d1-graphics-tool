@@ -543,7 +543,7 @@ void InitLvlDungeon()
 	case DTYPE_CRYPT:
 		// patch dSolidTable - L5.SOL
 		// make collision-checks more reasonable
-		// - fix inconsistent subtile on the right side of down-stairs
+		//  - fix inconsistent subtile on the right side of down-stairs
 		nSolidTable[143] = false;
 		//  - fix inconsistent entrance to Na-Krul
 		nSolidTable[299] = false;
@@ -565,6 +565,21 @@ void InitLvlDungeon()
 		//  - prevent non-crossable floor-tile configurations II.
 		nSolidTable[598] = false;
 		nSolidTable[600] = false;
+		//  - fix inconsistent arches
+		nBlockTable[33] = false;
+		nBlockTable[39] = false;
+		nBlockTable[42] = false;
+		nBlockTable[91] = false;
+		nBlockTable[466] = false;
+		nBlockTable[470] = false;
+		nBlockTable[557] = false;
+		nBlockTable[559] = false;
+		nBlockTable[561] = false;
+		nBlockTable[563] = false;
+		nMissileTable[101] = true;
+		nMissileTable[104] = true;
+		nMissileTable[355] = true;
+		nMissileTable[357] = true;
 		// - adjust SOL after cleanupCrypt
 		nSolidTable[238] = false;
 		nMissileTable[238] = false;

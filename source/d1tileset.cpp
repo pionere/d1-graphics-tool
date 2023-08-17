@@ -17920,6 +17920,21 @@ void D1Tileset::patch(int dunType, bool silent)
         //  - prevent non-crossable floor-tile configurations II.
         ChangeSubtileSolFlags(this->sol, 598 - 1, PFLAG_BLOCK_PATH, false, silent);
         ChangeSubtileSolFlags(this->sol, 600 - 1, PFLAG_BLOCK_PATH, false, silent);
+        //  - fix inconsistent arches
+        ChangeSubtileSolFlags(this->sol, 33 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 39 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 42 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 91 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 466 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 470 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 557 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 559 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 561 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 563 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 101 - 1, PFLAG_BLOCK_MISSILE, true, silent);
+        ChangeSubtileSolFlags(this->sol, 104 - 1, PFLAG_BLOCK_MISSILE, true, silent);
+        ChangeSubtileSolFlags(this->sol, 355 - 1, PFLAG_BLOCK_MISSILE, true, silent);
+        ChangeSubtileSolFlags(this->sol, 357 - 1, PFLAG_BLOCK_MISSILE, true, silent);
         // - adjust SOL after cleanupCrypt
         ChangeSubtileSolFlags(this->sol, 238 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 178 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
