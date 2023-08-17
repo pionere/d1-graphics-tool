@@ -15972,7 +15972,6 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
 {
     constexpr int blockSize = BLOCK_SIZE_L5;
 
-    // patch dMegaTiles - L5.TIL
     // fix automap of the entrance I.
     ReplaceSubtile(this->til, 52 - 1, 0, 73 - 1, silent); // copy from tile 23
     ReplaceSubtile(this->til, 52 - 1, 1, 64 - 1, silent);
@@ -17702,8 +17701,11 @@ void D1Tileset::patch(int dunType, bool silent)
         this->fixCryptShadows(silent);
         this->cleanupCrypt(deletedFrames, silent);
         // patch dSolidTable - L5.SOL
-        ChangeSubtileSolFlags(this->sol, 143 - 1, PFLAG_BLOCK_PATH, false, silent); // make right side of down-stairs consistent (walkable)
         // make collision-checks more reasonable
+        // - fix inconsistent subtile on the right side of down-stairs
+        ChangeSubtileSolFlags(this->sol, 143 - 1, PFLAG_BLOCK_PATH, false, silent);
+        //  - fix inconsistent entrance to Na-Krul
+        ChangeSubtileSolFlags(this->sol, 299 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_MISSILE, false, silent);
         //  - prevent non-crossable floor-tile configurations I.
         ChangeSubtileSolFlags(this->sol, 461 - 1, PFLAG_BLOCK_PATH, false, silent);
         //  - set top right tile of an arch non-walkable (full of lava) - skip to prevent lockout

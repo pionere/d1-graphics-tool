@@ -494,6 +494,9 @@ void InitLvlDungeon()
 		// make collision-checks more reasonable
 		//  - fix inconsistent subtile on the right side of down-stairs
 		nSolidTable[143] = false;
+		//  - fix inconsistent entrance to Na-Krul
+		nSolidTable[299] = false;
+		nMissileTable[299] = false;
 		//  - prevent non-crossable floor-tile configurations I.
 		nSolidTable[461] = false;
 		//  - set top right tile of an arch non-walkable (full of lava)
