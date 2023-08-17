@@ -1191,12 +1191,14 @@ void D1Dun::DrawAutomapExtern(int x, int y)
     unsigned d32 = AmLine32;
     unsigned d16 = (d32 >> 1), d8 = (d32 >> 2), d4 = (d32 >> 3);
 
+    DrawPixel(x, y - d8, COLOR_DIM);        // 00
+    return;
+
     /*    02
        01    03
           00
     */
     DrawPixel(x, y, COLOR_DIM);                 // 00
-    // if (d4 < 8) return;
     DrawPixel(x - d8, y - d4, COLOR_DIM);       // 01
     DrawPixel(x + d8, y - d4, COLOR_DIM);       // 03
     DrawPixel(x, y - d8, COLOR_DIM);            // 02
@@ -1266,7 +1268,7 @@ void D1Dun::DrawAutomapDiamond(int x, int y)
 
 void D1Dun::DrawAutomapDoorDiamond(int dir, int x, int y)
 {
-    int y2;
+    // int y2;
     unsigned d32 = AmLine32;
     unsigned d16 = (d32 >> 1), d8 = (d32 >> 2), d4 = (d32 >> 3), d2 = (d32 >> 4);
 
@@ -1284,7 +1286,11 @@ void D1Dun::DrawAutomapDoorDiamond(int dir, int x, int y)
         y -= d4;
     }
 
-    y2 = y - (d16 >> 1);
+    DrawLine(sx - d16 + 2, sy - d8, sx - 1, sy - d16 + 2, COLOR_BRIGHT); // top left
+    DrawLine(sx, sy - d16 + 2, sx + d16 - 3, sy - d8, COLOR_BRIGHT);     // top right
+    DrawLine(sx - d16 + 2, sy - d8 + 1, sx - 1, sy - 1, COLOR_BRIGHT);   // bottom left
+    DrawLine(sx, sy - 1, sx + d16 - 3, sy - d8 + 1, COLOR_BRIGHT);       // bottom right
+    /*y2 = y - (d16 >> 1);
 
     DrawLine(x - d16 + 1, y2, x, y - 1, COLOR_BRIGHT);       // bottom left
     DrawLine(x, y - 1, x + d16 - 1, y2, COLOR_BRIGHT);       // bottom right
@@ -1437,16 +1443,16 @@ void D1Dun::DrawSubMap(int sx, int sy, uint16_t automap_type)
     unsigned d16 = (d32 >> 1);
     unsigned d8 = (d32 >> 2);
     if (automap_type & MAT_WALL_NW) {
-        D1Dun::DrawLine(sx, sy - d16, sx - d16, sy - d8, COLOR_DIM);
+        D1Dun::DrawLine(sx - d16, sy - d8, sx - 1, sy - d16 + 1, COLOR_DIM);
     }
     if (automap_type & MAT_WALL_NE) {
-        D1Dun::DrawLine(sx, sy - d16, sx + d16, sy - d8, COLOR_DIM);
+        D1Dun::DrawLine(sx, sy - d16 + 1, sx + d16 - 1, sy - d8, COLOR_DIM);
     }
     if (automap_type & MAT_WALL_SW) {
-        D1Dun::DrawLine(sx, sy, sx - d16, sy - d8, COLOR_DIM);
+        D1Dun::DrawLine(sx - d16, sy - d8 + 1, sx - 1, sy, COLOR_DIM);
     }
     if (automap_type & MAT_WALL_SE) {
-        D1Dun::DrawLine(sx, sy, sx + d16, sy - d8, COLOR_DIM);
+        D1Dun::DrawLine(sx, sy, sx + d16 - 1, sy - d8 + 1, COLOR_DIM);
     }
 }
 

@@ -183,6 +183,9 @@ void InitLvlDungeon()
 		nMissileTable[338] = false;
 		// - special subtile for the vile setmap
 		nMissileTable[335] = false;
+		// - with subtile-based automap
+		nBlockTable[139] = false;
+		nBlockTable[140] = false;
 		// - separate subtiles for the automap
 		nBlockTable[61] = false;
 		nMissileTable[61] = false;
@@ -429,6 +432,9 @@ void InitLvlDungeon()
 		nSolidTable[487] = false; // unused after patch
 		nSolidTable[488] = true;
 		nSolidTable[540] = false; // unused in base game
+		// - with subtile-based automap
+		nBlockTable[166] = false;
+		nBlockTable[168] = false;
 		// - separate subtiles for the automap
 		nSolidTable[258] = true;
 		nBlockTable[258] = true;
@@ -524,6 +530,11 @@ void InitLvlDungeon()
 		nSolidTable[390] = false; // make a pool tile walkable I.
 		nSolidTable[413] = false; // make a pool tile walkable II.
 		nSolidTable[416] = false; // make a pool tile walkable III.
+		// - with subtile-based automap
+		nBlockTable[61] = false;
+		nBlockTable[63] = false;
+		nBlockTable[65] = false;
+		nBlockTable[66] = false;
 		// patch dMegaTiles - L6.TIL
 		// - separate subtiles for the automap
 		pTiles[23][0] = 29;
@@ -531,9 +542,10 @@ void InitLvlDungeon()
 		break;
 	case DTYPE_CRYPT:
 		// patch dSolidTable - L5.SOL
-		nSolidTable[143] = false; // make right side of down-stairs consistent (walkable)
 		// make collision-checks more reasonable
-		//  - fix inconsistent  entrance to Na-Krul
+		// - fix inconsistent subtile on the right side of down-stairs
+		nSolidTable[143] = false;
+		//  - fix inconsistent entrance to Na-Krul
 		nSolidTable[299] = false;
 		nMissileTable[299] = false;
 		//  - prevent non-crossable floor-tile configurations I.
@@ -569,7 +581,12 @@ void InitLvlDungeon()
 		nMissileTable[159] = false;
 		nBlockTable[159] = false;
 		nMissileTable[148] = true;
-		nBlockTable[148] = true;
+		// nBlockTable[148] = true;
+		// -- with subtile-based automap
+		// nBlockTable[148] = false;
+		nBlockTable[149] = false;
+		nBlockTable[150] = false;
+		nBlockTable[153] = false;
 		// patch dMegaTiles - L5.TIL
 		// - fix automap of the entrance II.
 		// pTiles[52][0] = pTiles[23][0];

@@ -17727,6 +17727,9 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeSubtileSolFlags(this->sol, 338 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         // - special subtile for the vile setmap
         ChangeSubtileSolFlags(this->sol, 335 - 1, PFLAG_BLOCK_MISSILE, false, silent);
+        // - with subtile-based automap
+        ChangeSubtileSolFlags(this->sol, 139 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 140 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         // - subtile for the separate pillar tile
         ChangeSubtileSolFlags(this->sol, 61 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         // patch dAutomapData - L1.AMP
@@ -17827,6 +17830,9 @@ void D1Tileset::patch(int dunType, bool silent)
         // ChangeSubtileSolFlags(this->sol, 487 - 1, PFLAG_BLOCK_PATH, false, silent); // unused after patch
         ChangeSubtileSolFlags(this->sol, 488 - 1, PFLAG_BLOCK_PATH, true, silent);
         ChangeSubtileSolFlags(this->sol, 540 - 1, PFLAG_BLOCK_PATH, false, silent); // unused in base game
+        // - with subtile-based automap
+        ChangeSubtileSolFlags(this->sol, 166 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 168 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         break;
     case DTYPE_HELL:
         // patch dMiniTiles and dMegaTiles - L3.MIN and L3.TIL
@@ -17876,6 +17882,11 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeSubtileSolFlags(this->sol, 390 - 1, PFLAG_BLOCK_PATH, false, silent); // make a pool tile walkable I.
         ChangeSubtileSolFlags(this->sol, 413 - 1, PFLAG_BLOCK_PATH, false, silent); // make a pool tile walkable II.
         ChangeSubtileSolFlags(this->sol, 416 - 1, PFLAG_BLOCK_PATH, false, silent); // make a pool tile walkable III.
+        // - with subtile-based automap
+        ChangeSubtileSolFlags(this->sol, 61 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 63 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 65 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 66 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         break;
     case DTYPE_CRYPT:
         if (this->min->getSubtileCount() < 650) {
@@ -17887,8 +17898,9 @@ void D1Tileset::patch(int dunType, bool silent)
         this->fixCryptShadows(silent);
         this->cleanupCrypt(deletedFrames, silent);
         // patch dSolidTable - L5.SOL
-        ChangeSubtileSolFlags(this->sol, 143 - 1, PFLAG_BLOCK_PATH, false, silent); // make right side of down-stairs consistent (walkable)
         // make collision-checks more reasonable
+        // - fix inconsistent subtile on the right side of down-stairs
+        ChangeSubtileSolFlags(this->sol, 143 - 1, PFLAG_BLOCK_PATH, false, silent);
         //  - fix inconsistent entrance to Na-Krul
         ChangeSubtileSolFlags(this->sol, 299 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_MISSILE, false, silent);
         //  - prevent non-crossable floor-tile configurations I.
@@ -17912,10 +17924,16 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeSubtileSolFlags(this->sol, 238 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 178 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 242 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
-        // fix automap of the entrance I.
+        // - fix automap of the entrance I.
         ChangeSubtileSolFlags(this->sol, 158 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
         ChangeSubtileSolFlags(this->sol, 159 - 1, PFLAG_BLOCK_PATH | PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, false, silent);
-        ChangeSubtileSolFlags(this->sol, 148 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, true, silent);
+        // ChangeSubtileSolFlags(this->sol, 148 - 1, PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE, true, silent);
+        ChangeSubtileSolFlags(this->sol, 148 - 1, PFLAG_BLOCK_MISSILE, true, silent);
+        // -- with subtile-based automap
+        // ChangeSubtileSolFlags(this->sol, 148 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 149 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 150 - 1, PFLAG_BLOCK_LIGHT, false, silent);
+        ChangeSubtileSolFlags(this->sol, 153 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         // patch automaptype - L5.AMP
         // - fix automap types
         ChangeTileMapType(this->amp, 20 - 1, MWT_CORNER, silent);
