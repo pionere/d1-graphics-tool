@@ -9955,6 +9955,8 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     // useless pixels
     ReplaceSubtile(this->til, 42 - 1, 3, 8 - 1, silent); // 149
     ReplaceSubtile(this->til, 43 - 1, 3, 16 - 1, silent); // 153
+    ReplaceSubtile(this->til, 104 - 1, 3, 16 - 1, silent); // 381
+    ReplaceSubtile(this->til, 105 - 1, 3, 24 - 1, silent); // 384
     // use common subtiles
     ReplaceSubtile(this->til, 42 - 1, 2, 7 - 1, silent); // 148
     ReplaceSubtile(this->til, 43 - 1, 1, 14 - 1, silent); // 151
@@ -10133,21 +10135,35 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(8, 6);
     Blk2Mcr(12, 1);
     Blk2Mcr(12, 3);
+    Blk2Mcr(12, 5);
+    Blk2Mcr(12, 7);
+    Blk2Mcr(16, 5);
+    Blk2Mcr(16, 7);
     Blk2Mcr(20, 1);
     Blk2Mcr(20, 3);
+    Blk2Mcr(24, 4);
+    Blk2Mcr(24, 5);
+    Blk2Mcr(24, 6);
+    Blk2Mcr(24, 7);
     Blk2Mcr(373, 1);
     Blk2Mcr(373, 3);
+    Blk2Mcr(373, 4);
+    // Blk2Mcr(381, 5);
+    // Blk2Mcr(381, 7);
     Blk2Mcr(511, 1);
     Blk2Mcr(511, 4);
     Blk2Mcr(511, 6);
+    HideMcr(514, 5);
+    HideMcr(514, 7);
     Blk2Mcr(16, 0);
     Blk2Mcr(16, 2);
     Blk2Mcr(20, 0);
     Blk2Mcr(20, 2);
     Blk2Mcr(377, 0);
     Blk2Mcr(377, 2);
-    Blk2Mcr(381, 0);
-    Blk2Mcr(381, 2);
+    Blk2Mcr(377, 5);
+    // Blk2Mcr(381, 0);
+    // Blk2Mcr(381, 2);
     Blk2Mcr(514, 0);
     // - moved pixels
     HideMcr(146, 2);
@@ -10308,16 +10324,16 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
 
     ReplaceMcr(12, 4, 16, 4);
     ReplaceMcr(20, 4, 16, 4);
-    ReplaceMcr(381, 4, 16, 4);
+    // ReplaceMcr(381, 4, 16, 4);
     ReplaceMcr(377, 4, 16, 4); // lost details
-    ReplaceMcr(12, 5, 16, 5);
-    ReplaceMcr(381, 5, 16, 5);
+    // ReplaceMcr(12, 5, 16, 5);
+    // ReplaceMcr(381, 5, 16, 5);
 
     ReplaceMcr(13, 0, 47, 0); // lost details
     ReplaceMcr(378, 0, 17, 0); // lost details
 
-    ReplaceMcr(24, 4, 28, 2);
-    ReplaceMcr(24, 5, 28, 3);
+    // ReplaceMcr(24, 4, 28, 2);
+    // ReplaceMcr(24, 5, 28, 3);
     ReplaceMcr(3, 4, 30, 4);
     ReplaceMcr(3, 6, 30, 6);
     ReplaceMcr(368, 4, 30, 4);
@@ -10376,8 +10392,8 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(178, 5, 28, 5);
 
     ReplaceMcr(181, 6, 28, 6);
-    ReplaceMcr(384, 4, 28, 2);
-    ReplaceMcr(384, 5, 28, 3);
+    // ReplaceMcr(384, 4, 28, 2);
+    // ReplaceMcr(384, 5, 28, 3);
 
     ReplaceMcr(311, 7, 29, 7);
     ReplaceMcr(310, 2, 28, 2);
@@ -10473,7 +10489,7 @@ void D1Tileset::cleanupCaves(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(559, 7);
 
     const int unusedSubtiles[] = {
-        2, 6, 15, 18, 21, 147, 149, 152, 153, 155, 157, 160, 161, 179, 195, 204, 205, 208, 209, 211, 218, 220, 221, 222, 224, 225, 226, 227, 240, 241, 243, 250, 251, 253, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 312, 314, 328, 332, 338, 339, 349, 356, 358, 361, 364, 365, 367, 369, 371, 380, 406, 407, 408, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 442, 448, 487, 503, 521, 522, 523, 524, 525, 526, 527, 529, 533, 537, 550, 554, 557, 558, 560
+        2, 6, 15, 18, 21, 147, 149, 152, 153, 155, 157, 160, 161, 179, 195, 204, 205, 208, 209, 211, 218, 220, 221, 222, 224, 225, 226, 227, 240, 241, 243, 250, 251, 253, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 312, 314, 328, 332, 338, 339, 349, 356, 358, 361, 364, 365, 367, 369, 371, 380, 381, 384, 406, 407, 408, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 442, 448, 487, 503, 521, 522, 523, 524, 525, 526, 527, 529, 533, 537, 550, 554, 557, 558, 560
     };
 
     for (int n = 0; n < lengthof(unusedSubtiles); n++) {
