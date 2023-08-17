@@ -416,7 +416,8 @@ void InitLvlDungeon()
 		nSolidTable[487] = false; // unused after patch
 		nSolidTable[488] = true;
 		nSolidTable[540] = false; // unused in base game
-		// create new fences
+		// patch dMegaTiles - L3.TIL
+		// - create new fences
 		pTiles[144][0] = 505;
 		pTiles[144][1] = 25;
 		pTiles[144][2] = 516;
@@ -438,7 +439,8 @@ void InitLvlDungeon()
 		nSolidTable[211] = false;
 		nMissileTable[211] = false;
 		nBlockTable[211] = false;
-		// new shadow-types
+		// patch dMegaTiles - L4.TIL
+		// - new shadow-types
 		pTiles[61][0] = 5;
 		pTiles[61][1] = 6;
 		pTiles[61][2] = 238; // 35
@@ -489,9 +491,9 @@ void InitLvlDungeon()
 		break;
 	case DTYPE_CRYPT:
 		// patch dSolidTable - L5.SOL
-		nSolidTable[143] = false; // make right side of down-stairs consistent (walkable)
-		nSolidTable[148] = false; // make the back of down-stairs consistent (walkable)
 		// make collision-checks more reasonable
+		//  - fix inconsistent subtile on the right side of down-stairs
+		nSolidTable[143] = false;
 		//  - prevent non-crossable floor-tile configurations I.
 		nSolidTable[461] = false;
 		//  - set top right tile of an arch non-walkable (full of lava)

@@ -51,25 +51,6 @@ private:
     quint8 flags;
 };
 
-class EditTmiCommand : public QObject, public QUndoCommand {
-    Q_OBJECT
-
-public:
-    explicit EditTmiCommand(D1Tmi *tmi, int subtileIndex, quint8 flags);
-    ~EditTmiCommand() = default;
-
-    void undo() override;
-    void redo() override;
-
-signals:
-    void modified();
-
-private:
-    QPointer<D1Tmi> tmi;
-    int subtileIndex;
-    quint8 flags;
-};
-
 class EditSptCommand : public QObject, public QUndoCommand {
     Q_OBJECT
 
@@ -89,6 +70,25 @@ private:
     int subtileIndex;
     int value;
     bool trap;
+};
+
+class EditTmiCommand : public QObject, public QUndoCommand {
+    Q_OBJECT
+
+public:
+    explicit EditTmiCommand(D1Tmi *tmi, int subtileIndex, quint8 flags);
+    ~EditTmiCommand() = default;
+
+    void undo() override;
+    void redo() override;
+
+signals:
+    void modified();
+
+private:
+    QPointer<D1Tmi> tmi;
+    int subtileIndex;
+    quint8 flags;
 };
 
 namespace Ui {

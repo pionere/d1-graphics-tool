@@ -69,33 +69,6 @@ void EditSolCommand::redo()
     this->undo();
 }
 
-EditTmiCommand::EditTmiCommand(D1Tmi *t, int si, quint8 f)
-    : QUndoCommand(nullptr)
-    , tmi(t)
-    , subtileIndex(si)
-    , flags(f)
-{
-}
-
-void EditTmiCommand::undo()
-{
-    if (this->tmi.isNull()) {
-        this->setObsolete(true);
-        return;
-    }
-
-    quint8 nf = this->flags;
-    this->flags = this->tmi->getSubtileProperties(this->subtileIndex);
-    this->tmi->setSubtileProperties(this->subtileIndex, nf);
-
-    emit this->modified();
-}
-
-void EditTmiCommand::redo()
-{
-    this->undo();
-}
-
 EditSptCommand::EditSptCommand(D1Spt *s, int si, int v, bool t)
     : QUndoCommand(nullptr)
     , spt(s)
@@ -127,6 +100,33 @@ void EditSptCommand::undo()
 }
 
 void EditSptCommand::redo()
+{
+    this->undo();
+}
+
+EditTmiCommand::EditTmiCommand(D1Tmi *t, int si, quint8 f)
+    : QUndoCommand(nullptr)
+    , tmi(t)
+    , subtileIndex(si)
+    , flags(f)
+{
+}
+
+void EditTmiCommand::undo()
+{
+    if (this->tmi.isNull()) {
+        this->setObsolete(true);
+        return;
+    }
+
+    quint8 nf = this->flags;
+    this->flags = this->tmi->getSubtileProperties(this->subtileIndex);
+    this->tmi->setSubtileProperties(this->subtileIndex, nf);
+
+    emit this->modified();
+}
+
+void EditTmiCommand::redo()
 {
     this->undo();
 }
