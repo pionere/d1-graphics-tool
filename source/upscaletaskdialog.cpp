@@ -41,7 +41,6 @@ typedef struct MinAssetConfig {
     int numcolors;         // number of usable colors
     int fixcolors;         // fix (protected) colors at the beginning of the palette
     int dunType;           // dungeon_type
-    bool hasAmpFile;       // whether the tileset has a valid AMP file
 } MinAssetConfig;
 
 UpscaleTaskDialog::UpscaleTaskDialog(QWidget *parent)
@@ -253,7 +252,7 @@ void UpscaleTaskDialog::upscaleCl2(const QString &path, D1Pal *pal, const Upscal
     }
 }
 
-void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams, int dunType, bool hasAmpFile)
+void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, OpenAsParam &opParams, const UpscaleParam &upParams, SaveAsParam &saParams, int dunType)
 {
     QString celFilePath = params.assetsFolder + "/" + opParams.celFilePath;
     QString baseOutPath = params.outFolder + "/" + opParams.celFilePath;
@@ -285,9 +284,6 @@ void UpscaleTaskDialog::upscaleMin(D1Pal *pal, const UpscaleTaskParam &params, O
         // if (params.patchTilesets) {
             saParams.tilFilePath = baseOutPath + ".til";
             saParams.solFilePath = baseOutPath + ".sol";
-            if (hasAmpFile) {
-                saParams.ampFilePath = baseOutPath + ".amp";
-            }
         // }
         tileset.save(saParams);
     }
@@ -813,15 +809,15 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
         // upscale tiles of the levels
         const MinAssetConfig celPalPairs[] = {
             // clang-format off
-            // celname,                      palette                   numcolors, numfixcolors, dunType, hasAmpFile
-            { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN,        false      },
-            { "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1_1.PAL",     128,  0, DTYPE_CATHEDRAL,   true       },
-            { "Levels\\L2Data\\L2.CEL",      "Levels\\L2Data\\L2_1.PAL",     128,  0, DTYPE_CATACOMBS,   true       },
-            { "Levels\\L3Data\\L3.CEL",      "Levels\\L3Data\\L3_1.PAL",     128, 32, DTYPE_CAVES,       true       },
-            { "Levels\\L4Data\\L4.CEL",      "Levels\\L4Data\\L4_1.PAL",     128, 32, DTYPE_HELL,        true       },
-            { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN,        false      },
-            { "NLevels\\L5Data\\L5.CEL",     "NLevels\\L5Data\\L5base.PAL",  128, 32, DTYPE_CRYPT,       true       },
-            { "NLevels\\L6Data\\L6.CEL",     "NLevels\\L6Data\\L6base1.PAL", 128, 32, DTYPE_NEST,        true       },
+            // celname,                      palette                   numcolors, numfixcolors, dunType
+            { "Levels\\TownData\\Town.CEL",  "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN      },
+            { "Levels\\L1Data\\L1.CEL",      "Levels\\L1Data\\L1_1.PAL",     128,  0, DTYPE_CATHEDRAL },
+            { "Levels\\L2Data\\L2.CEL",      "Levels\\L2Data\\L2_1.PAL",     128,  0, DTYPE_CATACOMBS },
+            { "Levels\\L3Data\\L3.CEL",      "Levels\\L3Data\\L3_1.PAL",     128, 32, DTYPE_CAVES     },
+            { "Levels\\L4Data\\L4.CEL",      "Levels\\L4Data\\L4_1.PAL",     128, 32, DTYPE_HELL      },
+            { "NLevels\\TownData\\Town.CEL", "Levels\\TownData\\Town.PAL",   128,  0, DTYPE_TOWN      },
+            { "NLevels\\L5Data\\L5.CEL",     "NLevels\\L5Data\\L5base.PAL",  128, 32, DTYPE_CRYPT     },
+            { "NLevels\\L6Data\\L6.CEL",     "NLevels\\L6Data\\L6base1.PAL", 128, 32, DTYPE_NEST      },
             // clang-format on
         };
         ProgressDialog::incBar("Tilesets", lengthof(celPalPairs));
@@ -853,7 +849,7 @@ void UpscaleTaskDialog::runTask(const UpscaleTaskParam &params)
 
             D1Pal pal;
             if (UpscaleTaskDialog::loadCustomPal(celPalPairs[i].palette, celPalPairs[i].numcolors, celPalPairs[i].fixcolors, params, pal, upParams)) {
-                UpscaleTaskDialog::upscaleMin(&pal, params, opParams, upParams, saParams, celPalPairs[i].dunType, celPalPairs[i].hasAmpFile);
+                UpscaleTaskDialog::upscaleMin(&pal, params, opParams, upParams, saParams, celPalPairs[i].dunType);
             }
 
             if (!ProgressDialog::incValue()) {

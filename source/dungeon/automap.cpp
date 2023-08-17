@@ -17,9 +17,6 @@ BYTE automaptype[MAXSUBTILES + 1];
  */
 void InitLvlAutomap()
 {
-	size_t dwTiles, i;
-	BYTE* pAFile;
-	uint16_t* lm;
 	const char* mapData;
 
 	/* commented out because the flags are reset in gendung.cpp anyway
