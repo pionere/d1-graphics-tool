@@ -41,7 +41,7 @@ void InitLvlAutomap()
 		return;
 	}
 
-	LoadFileWithMem(mapData, &automaptype);
+	LoadFileWithMem(mapData, automaptype);
 	/*
 	// patch dAutomapData - L1.AMP
 	if (currLvl._dType == DTYPE_CATHEDRAL) {

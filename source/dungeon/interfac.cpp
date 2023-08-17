@@ -90,14 +90,6 @@ static void StoreProtections(D1Dun *dun)
 static void LoadTileset(D1Tileset *tileset)
 {
 	int entries;
-	// 'load' AMP
-	memset(automaptype, 0, sizeof(automaptype));
-	entries = std::min(lengthof(automaptype) - 1, tileset->til->getTileCount());
-	for (int n = 0; n < entries; n++) {
-		unsigned maptype = tileset->amp->getTileType(n);
-		maptype |= tileset->amp->getTileProperties(n) << 8;
-		automaptype[n + 1] = maptype;
-	}
 
 	// 'load' TLA
 	memset(nTrnShadowTable, 0, sizeof(nTrnShadowTable));
@@ -134,6 +126,15 @@ static void LoadTileset(D1Tileset *tileset)
 		nSolidTable[n + 1] = (bv & PFLAG_BLOCK_PATH) != 0;
 		nBlockTable[n + 1] = (bv & PFLAG_BLOCK_LIGHT) != 0;
 		nMissileTable[n + 1] = (bv & PFLAG_BLOCK_MISSILE) != 0;
+	}
+
+	// 'load' SMP
+	memset(automaptype, 0, sizeof(automaptype));
+	entries = std::min(lengthof(automaptype) - 1, tileset->sol->getSubtileCount());
+	for (int n = 0; n < entries; n++) {
+		quint8 maptype = tileset->smp->getSubtileType(n);
+		maptype |= tileset->smp->getSubtileProperties(n);
+		automaptype[n + 1] = maptype;
 	}
 }
 
