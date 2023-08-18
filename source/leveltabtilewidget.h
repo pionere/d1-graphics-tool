@@ -8,7 +8,6 @@
 class LevelCelView;
 class D1Til;
 class D1Min;
-class D1Amp;
 class D1Tla;
 
 class EditTileCommand : public QObject, public QUndoCommand {
@@ -29,26 +28,6 @@ private:
     int tileIndex;
     int index;
     int subtileIndex;
-};
-
-class EditAmpCommand : public QObject, public QUndoCommand {
-    Q_OBJECT
-
-public:
-    explicit EditAmpCommand(D1Amp *amp, int tileIndex, int value, bool type);
-    ~EditAmpCommand() = default;
-
-    void undo() override;
-    void redo() override;
-
-signals:
-    void modified();
-
-private:
-    QPointer<D1Amp> amp;
-    int tileIndex;
-    int value;
-    bool type;
 };
 
 class EditTlaCommand : public QObject, public QUndoCommand {
@@ -81,7 +60,7 @@ public:
     explicit LevelTabTileWidget(QWidget *parent);
     ~LevelTabTileWidget();
 
-    void initialize(LevelCelView *v, QUndoStack *undoStack, D1Til *t, D1Min *m, D1Amp *a, D1Tla *tt);
+    void initialize(LevelCelView *v, QUndoStack *undoStack, D1Til *t, D1Min *m, D1Tla *tt);
     void updateFields();
 
     void selectSubtile(int index);
@@ -89,17 +68,6 @@ public:
 private slots:
     void on_clearPushButtonClicked();
     void on_deletePushButtonClicked();
-
-    void on_ampTypeComboBox_activated(int index);
-
-    void on_amp0_clicked();
-    void on_amp1_clicked();
-    void on_amp2_clicked();
-    void on_amp3_clicked();
-    void on_amp4_clicked();
-    void on_amp5_clicked();
-    void on_amp6_clicked();
-    void on_amp7_clicked();
 
     void on_tlaF00_clicked();
     void on_tlaF01_clicked();
@@ -118,8 +86,6 @@ private slots:
 private:
     void setSubtileIndex(int tileIndex, int index, int subtileIndex);
     void updateSubtilesSelection(int index);
-    void setAmpProperty(quint8 flags);
-    void updateAmpProperty();
     void setTlaProperty(quint8 flags);
     void updateTlaProperty();
 
@@ -131,7 +97,6 @@ private:
     QUndoStack *undoStack;
     D1Til *til;
     D1Min *min;
-    D1Amp *amp;
     D1Tla *tla;
 
     bool onUpdate = false;

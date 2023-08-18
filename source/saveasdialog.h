@@ -28,10 +28,10 @@ public:
     QString tilFilePath;
     QString minFilePath;
     QString solFilePath;
-    QString ampFilePath;
     QString tlaFilePath;
     QString sptFilePath;
     QString tmiFilePath;
+    QString smpFilePath;
     QString dunFilePath;
     uint8_t dunLayerNum = UINT8_MAX;
     int groupNum = 0;
@@ -60,10 +60,10 @@ private slots:
     void on_outputMinFileBrowseButton_clicked();
     void on_outputTilFileBrowseButton_clicked();
     void on_outputSolFileBrowseButton_clicked();
-    void on_outputAmpFileBrowseButton_clicked();
     void on_outputTlaFileBrowseButton_clicked();
     void on_outputSptFileBrowseButton_clicked();
     void on_outputTmiFileBrowseButton_clicked();
+    void on_outputSmpFileBrowseButton_clicked();
     void on_outputDunFileBrowseButton_clicked();
     void on_tblFileBrowseButton_clicked();
     void on_saveButton_clicked();

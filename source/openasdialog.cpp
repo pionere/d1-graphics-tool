@@ -38,10 +38,10 @@ void OpenAsDialog::initialize()
     this->ui->tilFileEdit->setText("");
     this->ui->minFileEdit->setText("");
     this->ui->solFileEdit->setText("");
-    this->ui->ampFileEdit->setText("");
     this->ui->tlaFileEdit->setText("");
     this->ui->sptFileEdit->setText("");
     this->ui->tmiFileEdit->setText("");
+    this->ui->smpFileEdit->setText("");
     this->ui->dunFileEdit->setText("");
     this->ui->minWidthEdit->setText("0");
     this->ui->minHeightEdit->setText("0");
@@ -98,12 +98,6 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
             this->ui->tilFileEdit->setText(tilFilePath);
             this->ui->minFileEdit->setText(minFilePath);
             this->ui->solFileEdit->setText(solFilePath);
-            QString ampFilePath = basePath + ".amp";
-            if (QFileInfo::exists(ampFilePath)) {
-                this->ui->ampFileEdit->setText(ampFilePath);
-            } else {
-                this->ui->ampFileEdit->setText("");
-            }
             QString tlaFilePath = basePath + ".tla";
             if (QFileInfo::exists(tlaFilePath)) {
                 this->ui->tlaFileEdit->setText(tlaFilePath);
@@ -122,15 +116,21 @@ void OpenAsDialog::on_inputFileBrowseButton_clicked()
             } else {
                 this->ui->tmiFileEdit->setText("");
             }
+            QString smpFilePath = basePath + ".smp";
+            if (QFileInfo::exists(smpFilePath)) {
+                this->ui->smpFileEdit->setText(smpFilePath);
+            } else {
+                this->ui->smpFileEdit->setText("");
+            }
         } else {
             this->ui->clsFileEdit->setText("");
             this->ui->tilFileEdit->setText("");
             this->ui->minFileEdit->setText("");
             this->ui->solFileEdit->setText("");
-            this->ui->ampFileEdit->setText("");
             this->ui->tlaFileEdit->setText("");
             this->ui->sptFileEdit->setText("");
             this->ui->tmiFileEdit->setText("");
+            this->ui->smpFileEdit->setText("");
         }
     }
     QString tblPath;
@@ -205,16 +205,6 @@ void OpenAsDialog::on_solFileBrowseButton_clicked()
     this->ui->solFileEdit->setText(openFilePath);
 }
 
-void OpenAsDialog::on_ampFileBrowseButton_clicked()
-{
-    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select AMP file"), tr("AMP Files (*.amp *.AMP)"));
-
-    if (openFilePath.isEmpty())
-        return;
-
-    this->ui->ampFileEdit->setText(openFilePath);
-}
-
 void OpenAsDialog::on_tlaFileBrowseButton_clicked()
 {
     QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select TLA file"), tr("TLA Files (*.tla *.TLA)"));
@@ -243,6 +233,16 @@ void OpenAsDialog::on_tmiFileBrowseButton_clicked()
         return;
 
     this->ui->tmiFileEdit->setText(openFilePath);
+}
+
+void OpenAsDialog::on_smpFileBrowseButton_clicked()
+{
+    QString openFilePath = dMainWindow().fileDialog(FILE_DIALOG_MODE::OPEN, tr("Select SMP file"), tr("SMP Files (*.smp *.SMP)"));
+
+    if (openFilePath.isEmpty())
+        return;
+
+    this->ui->smpFileEdit->setText(openFilePath);
 }
 
 void OpenAsDialog::on_dunFileBrowseButton_clicked()
@@ -296,10 +296,10 @@ void OpenAsDialog::on_openButton_clicked()
     params.tilFilePath = this->ui->tilFileEdit->text();
     params.minFilePath = this->ui->minFileEdit->text();
     params.solFilePath = this->ui->solFileEdit->text();
-    params.ampFilePath = this->ui->ampFileEdit->text();
     params.tlaFilePath = this->ui->tlaFileEdit->text();
     params.sptFilePath = this->ui->sptFileEdit->text();
     params.tmiFilePath = this->ui->tmiFileEdit->text();
+    params.smpFilePath = this->ui->smpFileEdit->text();
     params.dunFilePath = this->ui->dunFileEdit->text();
     params.createDun = this->ui->createDunCheckBox->isChecked();
     params.minWidth = this->ui->minWidthEdit->nonNegInt();

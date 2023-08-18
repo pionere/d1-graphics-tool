@@ -276,19 +276,19 @@
       <item row="5" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Amp File:</string>
+         <string>Tla File:</string>
         </property>
        </widget>
       </item>
       <item row="5" column="1">
-       <widget class="LineEditWidget" name="outputAmpFileEdit">
+       <widget class="LineEditWidget" name="outputTlaFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="5" column="2">
-       <widget class="QPushButton" name="outputAmpFileBrowseButton">
+       <widget class="QPushButton" name="outputTlaFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
@@ -297,19 +297,19 @@
       <item row="6" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Tla File:</string>
+         <string>Spt File:</string>
         </property>
        </widget>
       </item>
       <item row="6" column="1">
-       <widget class="LineEditWidget" name="outputTlaFileEdit">
+       <widget class="LineEditWidget" name="outputSptFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="6" column="2">
-       <widget class="QPushButton" name="outputTlaFileBrowseButton">
+       <widget class="QPushButton" name="outputSptFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
@@ -318,19 +318,19 @@
       <item row="7" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Spt File:</string>
+         <string>Tmi File:</string>
         </property>
        </widget>
       </item>
       <item row="7" column="1">
-       <widget class="LineEditWidget" name="outputSptFileEdit">
+       <widget class="LineEditWidget" name="outputTmiFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="7" column="2">
-       <widget class="QPushButton" name="outputSptFileBrowseButton">
+       <widget class="QPushButton" name="outputTmiFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>
@@ -339,19 +339,19 @@
       <item row="8" column="0">
        <widget class="QLabel">
         <property name="text">
-         <string>Tmi File:</string>
+         <string>Smp File:</string>
         </property>
        </widget>
       </item>
       <item row="8" column="1">
-       <widget class="LineEditWidget" name="outputTmiFileEdit">
+       <widget class="LineEditWidget" name="outputSmpFileEdit">
         <property name="readOnly">
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="8" column="2">
-       <widget class="QPushButton" name="outputTmiFileBrowseButton">
+       <widget class="QPushButton" name="outputSmpFileBrowseButton">
         <property name="text">
          <string>Browse</string>
         </property>

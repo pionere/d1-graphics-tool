@@ -107,8 +107,8 @@ void LevelCelView::initialize(D1Pal *p, D1Tileset *ts, D1Dun *d, bool bottomPane
     this->setTileset(ts);
     this->dun = d;
 
-    this->tabTileWidget.initialize(this, this->undoStack, this->til, this->min, this->amp, this->tla);
-    this->tabSubtileWidget.initialize(this, this->undoStack, this->gfx, this->min, this->sol, this->spt, this->tmi);
+    this->tabTileWidget.initialize(this, this->undoStack, this->til, this->min, this->tla);
+    this->tabSubtileWidget.initialize(this, this->undoStack, this->gfx, this->min, this->sol, this->spt, this->tmi, this->smp);
     this->tabFrameWidget.initialize(this, this->undoStack, this->gfx);
 
     bool dunMode = d != nullptr;
@@ -147,10 +147,10 @@ void LevelCelView::setTileset(D1Tileset *ts)
     this->min = ts->min;
     this->til = ts->til;
     this->sol = ts->sol;
-    this->amp = ts->amp;
     this->tla = ts->tla;
     this->spt = ts->spt;
     this->tmi = ts->tmi;
+    this->smp = ts->smp;
 
     if (this->currentFrameIndex >= this->gfx->getFrameCount()) {
         this->currentFrameIndex = 0;
@@ -334,11 +334,11 @@ void LevelCelView::updateLabel()
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(1)->widget()), this->min->getFilePath(), this->min->isModified());
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(2)->widget()), this->til->getFilePath(), this->til->isModified());
     CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(3)->widget()), this->sol->getFilePath(), this->sol->isModified());
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(4)->widget()), this->amp->getFilePath(), this->amp->isModified());
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(5)->widget()), this->tla->getFilePath(), this->tla->isModified());
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(6)->widget()), this->cls->getFilePath(), this->cls->isModified());
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(7)->widget()), this->spt->getFilePath(), this->spt->isModified());
-    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(8)->widget()), this->tmi->getFilePath(), this->tmi->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(4)->widget()), this->tla->getFilePath(), this->tla->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(5)->widget()), this->cls->getFilePath(), this->cls->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(6)->widget()), this->spt->getFilePath(), this->spt->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(7)->widget()), this->tmi->getFilePath(), this->tmi->isModified());
+    CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(8)->widget()), this->smp->getFilePath(), this->smp->isModified());
 
     if (hasDun) {
         CelView::setLabelContent(qobject_cast<QLabel *>(layout->itemAt(9)->widget()), this->dun->getFilePath(), this->dun->isModified());
@@ -1682,7 +1682,6 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
         int tileIndex = this->currentTileIndex;
         this->assignSubtiles(frame, tileIndex, this->min->getSubtileCount());
         // reset tile flags
-        this->amp->setTileProperties(tileIndex, 0);
         this->tla->setTileProperties(tileIndex, 0);
         if (palMod) {
             // update the palette
@@ -1710,7 +1709,6 @@ void LevelCelView::replaceCurrentTile(const QString &imagefilePath)
     this->assignSubtiles(image, tileIndex, this->min->getSubtileCount());
 
     // reset tile flags
-    this->amp->setTileProperties(tileIndex, 0);
     this->tla->setTileProperties(tileIndex, 0);
 
     // update the view - done by the caller
@@ -2540,156 +2538,77 @@ void LevelCelView::checkSubtileFlags() const
 
 void LevelCelView::checkTileFlags() const
 {
-    ProgressDialog::incBar(tr("Checking AMP flags..."), 1);
+    ProgressDialog::incBar(tr("Checking TLA flags..."), 1);
     bool result = false;
 
-    // AMP:
+    // TLA:
     QPair<int, QString> progress;
     progress.first = -1;
-    progress.second = tr("AMP inconsistencies:");
+    progress.second = tr("TLA inconsistencies:");
     dProgress() << progress;
     for (int i = 0; i < this->til->getTileCount(); i++) {
-        quint8 ampType = this->amp->getTileType(i);
-        quint16 ampFlags = (quint16)this->amp->getTileProperties(i) << 8;
-        if (ampFlags & MAF_WEST_DOOR) {
-            // western door
-            if (ampFlags & MAF_WEST_ARCH) {
-                dProgressWarn() << tr("Tile %1 has both west-door and west-arch flags set.").arg(i + 1);
-                result = true;
-            }
-            if (ampFlags & MAF_WEST_GRATE) {
-                dProgressWarn() << tr("Tile %1 has both west-door and west-grate flags set.").arg(i + 1);
-                result = true;
-            }
-            if (ampFlags & MAF_EXTERN) {
-                dProgressWarn() << tr("Tile %1 has both west-door and external flags set.").arg(i + 1);
-                result = true;
-            }
-            if (ampFlags & MAF_STAIRS) {
-                dProgressWarn() << tr("Tile %1 has both west-door and stairs flags set.").arg(i + 1);
-                result = true;
-            }
-            if (ampType != MWT_NORTH_WEST && ampType != MWT_NORTH && ampType != MWT_NORTH_WEST_END && ampType != MWT_SOUTH_WEST) {
-                dProgressWarn() << tr("Tile %1 has a west-door but neither a wall (north-west), a wall intersection (north), a wall ending (north-west) nor a wall (south-west).").arg(i + 1);
-                result = true;
+        quint8 tlaFlags = this->tla->getTileProperties(i);
+        const std::vector<int> &subtileIndices = this->til->getSubtileIndices(i);
+
+        if (subtileIndices.size() > 0) {
+            int subtileIdx = subtileIndices[0];
+            if (tlaFlags & TIF_FLOOR_00) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
+                    dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    result = true;
+                }
+            } else {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->spt->getSubtileSpecProperty(subtileIdx) == 0) {
+                    dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    result = true;
+                }
             }
         }
-        if (ampFlags & MAF_EAST_DOOR) {
-            // eastern door
-            if (ampFlags & MAF_EAST_ARCH) {
-                dProgressWarn() << tr("Tile %1 has both east-door and east-arch flags set.").arg(i + 1);
-                result = true;
-            }
-            if (ampFlags & MAF_EAST_GRATE) {
-                dProgressWarn() << tr("Tile %1 has both east-door and east-grate flags set.").arg(i + 1);
-                result = true;
-            }
-            if (ampFlags & MAF_EXTERN) {
-                dProgressWarn() << tr("Tile %1 has both east-door and external flags set.").arg(i + 1);
-                result = true;
-            }
-            if (ampFlags & MAF_STAIRS) {
-                dProgressWarn() << tr("Tile %1 has both east-door and stairs flags set.").arg(i + 1);
-                result = true;
-            }
-            if (ampType != MWT_NORTH_EAST && ampType != MWT_NORTH && ampType != MWT_NORTH_EAST_END && ampType != MWT_SOUTH_EAST) {
-                dProgressWarn() << tr("Tile %1 has an east-door but neither a wall (north-east), a wall intersection (north), a wall ending (north-east) nor a wall (south-east).").arg(i + 1);
-                result = true;
+        if (subtileIndices.size() > 1) {
+            int subtileIdx = subtileIndices[1];
+            if (tlaFlags & TIF_FLOOR_01) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
+                    dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    result = true;
+                }
+            } else {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->spt->getSubtileSpecProperty(subtileIdx) == 0) {
+                    dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    result = true;
+                }
             }
         }
-        if (ampFlags & MAF_WEST_ARCH) {
-            // western arch
-            if (ampFlags & MAF_WEST_GRATE) {
-                dProgressWarn() << tr("Tile %1 has both west-arch and west-grate flags set.").arg(i + 1);
-                result = true;
-            }
-            if (ampFlags & MAF_EXTERN) {
-                dProgressWarn() << tr("Tile %1 has both west-arch and external flags set.").arg(i + 1);
-                result = true;
-            }
-            if (ampFlags & MAF_STAIRS) {
-                dProgressWarn() << tr("Tile %1 has both west-arch and stairs flags set.").arg(i + 1);
-                result = true;
-            }
-            if (ampType != MWT_NORTH_WEST && ampType != MWT_NORTH && ampType != MWT_NORTH_WEST_END) {
-                dProgressWarn() << tr("Tile %1 has a west-arch but neither a wall (north-west), a wall intersection (north) nor a wall ending (north-west).").arg(i + 1);
-                result = true;
+        if (subtileIndices.size() > 2) {
+            int subtileIdx = subtileIndices[2];
+            if (tlaFlags & TIF_FLOOR_10) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
+                    dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    result = true;
+                }
+            } else {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->spt->getSubtileSpecProperty(subtileIdx) == 0) {
+                    dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    result = true;
+                }
             }
         }
-        if (ampFlags & MAF_EAST_ARCH) {
-            // eastern arch
-            if (ampFlags & MAF_EAST_GRATE) {
-                dProgressWarn() << tr("Tile %1 has both east-arch and east-grate flags set.").arg(i + 1);
-                result = true;
-            }
-            if (ampFlags & MAF_EXTERN) {
-                dProgressWarn() << tr("Tile %1 has both east-arch and external flags set.").arg(i + 1);
-                result = true;
-            }
-            if (ampFlags & MAF_STAIRS) {
-                dProgressWarn() << tr("Tile %1 has both east-arch and stairs flags set.").arg(i + 1);
-                result = true;
-            }
-            if (ampType != MWT_NORTH_EAST && ampType != MWT_NORTH && ampType != MWT_NORTH_EAST_END) {
-                dProgressWarn() << tr("Tile %1 has an east-arch but neither a wall (north-east), a wall intersection (north) nor a wall ending (north-east).").arg(i + 1);
-                result = true;
-            }
-        }
-        if (ampFlags & MAF_WEST_GRATE) {
-            // western grate
-            if (ampFlags & MAF_EXTERN) {
-                dProgressWarn() << tr("Tile %1 has both west-grate and external flags set.").arg(i + 1);
-                result = true;
-            }
-            if (ampFlags & MAF_STAIRS) {
-                dProgressWarn() << tr("Tile %1 has both west-grate and stairs flags set.").arg(i + 1);
-                result = true;
-            }
-            if (ampType != MWT_NORTH_WEST && ampType != MWT_NORTH && ampType != MWT_NORTH_WEST_END) {
-                dProgressWarn() << tr("Tile %1 has a west-grate but neither a wall (north-west), a wall intersection (north) nor a wall ending (north-west).").arg(i + 1);
-                result = true;
-            }
-        }
-        if (ampFlags & MAF_EAST_GRATE) {
-            // eastern grate
-            if (ampFlags & MAF_EXTERN) {
-                dProgressWarn() << tr("Tile %1 has both east-grate and external flags set.").arg(i + 1);
-                result = true;
-            }
-            if (ampFlags & MAF_STAIRS) {
-                dProgressWarn() << tr("Tile %1 has both east-grate and stairs flags set.").arg(i + 1);
-                result = true;
-            }
-            if (ampType != MWT_NORTH_EAST && ampType != MWT_NORTH && ampType != MWT_NORTH_EAST_END) {
-                dProgressWarn() << tr("Tile %1 has an east-grate but neither a wall (north-east), a wall intersection (north) nor a wall ending (north-east).").arg(i + 1);
-                result = true;
-            }
-        }
-        if (ampFlags & MAF_EXTERN) {
-            // external
-            if (ampFlags & MAF_STAIRS) {
-                dProgressWarn() << tr("Tile %1 has both external and stairs flags set.").arg(i + 1);
-                result = true;
-            }
-            if (ampType == MWT_PILLAR) {
-                dProgressWarn() << tr("Tile %1 is external but also a pillar.").arg(i + 1);
-                result = true;
-            }
-            if (ampType == MWT_WEST || ampType == MWT_EAST || ampType == MWT_SOUTH_WEST || ampType == MWT_SOUTH_EAST || ampType == MWT_SOUTH) {
-                dProgressWarn() << tr("Tile %1 is external but its wall-type does not support it.").arg(i + 1);
-                result = true;
-            }
-        }
-        if (ampFlags & MAF_STAIRS) {
-            // stairs
-            if (ampType == MWT_PILLAR) {
-                dProgressWarn() << tr("Tile %1 is stairs but also a pillar.").arg(i + 1);
-                result = true;
+        if (subtileIndices.size() > 3) {
+            int subtileIdx = subtileIndices[3];
+            if (tlaFlags & TIF_FLOOR_11) {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
+                    dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    result = true;
+                }
+            } else {
+                if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->spt->getSubtileSpecProperty(subtileIdx) == 0) {
+                    dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    result = true;
+                }
             }
         }
     }
     if (!result) {
-        progress.second = tr("No inconsistency detected in the AMP flags.");
+        progress.second = tr("No inconsistency detected in the TLA flags.");
         dProgress() << progress;
     }
 

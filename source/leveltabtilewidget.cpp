@@ -2,7 +2,6 @@
 
 #include <QStyle>
 
-#include "d1amp.h"
 #include "d1min.h"
 #include "d1til.h"
 #include "levelcelview.h"
@@ -39,38 +38,6 @@ void EditTileCommand::undo()
 }
 
 void EditTileCommand::redo()
-{
-    this->undo();
-}
-
-EditAmpCommand::EditAmpCommand(D1Amp *a, int ti, int v, bool t)
-    : QUndoCommand(nullptr)
-    , amp(a)
-    , tileIndex(ti)
-    , value(v)
-    , type(t)
-{
-}
-
-void EditAmpCommand::undo()
-{
-    if (this->amp.isNull()) {
-        this->setObsolete(true);
-        return;
-    }
-
-    int nv = this->value;
-    if (this->type) {
-        this->value = this->amp->getTileType(this->tileIndex);
-        this->amp->setTileType(this->tileIndex, nv);
-    } else {
-        this->value = this->amp->getTileProperties(this->tileIndex);
-        this->amp->setTileProperties(this->tileIndex, nv);
-    }
-    emit this->modified();
-}
-
-void EditAmpCommand::redo()
 {
     this->undo();
 }
@@ -118,13 +85,12 @@ LevelTabTileWidget::~LevelTabTileWidget()
     delete ui;
 }
 
-void LevelTabTileWidget::initialize(LevelCelView *v, QUndoStack *us, D1Til *t, D1Min *m, D1Amp *a, D1Tla *tt)
+void LevelTabTileWidget::initialize(LevelCelView *v, QUndoStack *us, D1Til *t, D1Min *m, D1Tla *tt)
 {
     this->levelCelView = v;
     this->undoStack = us;
     this->til = t;
     this->min = m;
-    this->amp = a;
     this->tla = tt;
 }
 
@@ -136,17 +102,6 @@ void LevelTabTileWidget::updateFields()
 
     this->clearButton->setEnabled(hasTile);
     this->deleteButton->setEnabled(hasTile);
-
-    this->ui->ampTypeComboBox->setEnabled(hasTile);
-
-    this->ui->amp0->setEnabled(hasTile);
-    this->ui->amp1->setEnabled(hasTile);
-    this->ui->amp2->setEnabled(hasTile);
-    this->ui->amp3->setEnabled(hasTile);
-    this->ui->amp4->setEnabled(hasTile);
-    this->ui->amp5->setEnabled(hasTile);
-    this->ui->amp6->setEnabled(hasTile);
-    this->ui->amp7->setEnabled(hasTile);
 
     this->ui->tlaF00->setEnabled(hasTile);
     this->ui->tlaF01->setEnabled(hasTile);
@@ -160,17 +115,6 @@ void LevelTabTileWidget::updateFields()
     this->ui->subtilesComboBox->setEnabled(hasTile);
 
     if (!hasTile) {
-        this->ui->ampTypeComboBox->setCurrentIndex(-1);
-
-        this->ui->amp0->setChecked(false);
-        this->ui->amp1->setChecked(false);
-        this->ui->amp2->setChecked(false);
-        this->ui->amp3->setChecked(false);
-        this->ui->amp4->setChecked(false);
-        this->ui->amp5->setChecked(false);
-        this->ui->amp6->setChecked(false);
-        this->ui->amp7->setChecked(false);
-
         this->ui->tlaF00->setChecked(false);
         this->ui->tlaF01->setChecked(false);
         this->ui->tlaF10->setChecked(false);
@@ -189,22 +133,8 @@ void LevelTabTileWidget::updateFields()
     }
 
     int tileIdx = this->levelCelView->getCurrentTileIndex();
-    quint8 ampType = this->amp->getTileType(tileIdx);
-    quint8 ampProperty = this->amp->getTileProperties(tileIdx);
     quint8 tlaProperty = this->tla->getTileProperties(tileIdx);
     std::vector<int> &subtiles = this->til->getSubtileIndices(tileIdx);
-
-    // update the combo box of the amp-type
-    this->ui->ampTypeComboBox->setCurrentIndex(ampType);
-    // update the checkboxes
-    this->ui->amp0->setChecked((ampProperty & (MAF_WEST_DOOR >> 8)) != 0);
-    this->ui->amp1->setChecked((ampProperty & (MAF_EAST_DOOR >> 8)) != 0);
-    this->ui->amp2->setChecked((ampProperty & (MAF_WEST_ARCH >> 8)) != 0);
-    this->ui->amp3->setChecked((ampProperty & (MAF_EAST_ARCH >> 8)) != 0);
-    this->ui->amp4->setChecked((ampProperty & (MAF_WEST_GRATE >> 8)) != 0);
-    this->ui->amp5->setChecked((ampProperty & (MAF_EAST_GRATE >> 8)) != 0);
-    this->ui->amp6->setChecked((ampProperty & (MAF_EXTERN >> 8)) != 0);
-    this->ui->amp7->setChecked((ampProperty & (MAF_STAIRS >> 8)) != 0);
 
     this->ui->tlaF00->setChecked((tlaProperty & TIF_FLOOR_00) != 0);
     this->ui->tlaF01->setChecked((tlaProperty & TIF_FLOOR_01) != 0);
@@ -248,51 +178,16 @@ void LevelTabTileWidget::updateSubtilesSelection(int index)
     this->ui->subtilesNextButton->setEnabled(subtileIdx < this->min->getSubtileCount() - 1);
 }
 
-void LevelTabTileWidget::setAmpProperty(quint8 flags)
-{
-    int tileIdx = this->levelCelView->getCurrentTileIndex();
-
-    // Build amp editing command and connect it to the views widget
-    // to update the label when undo/redo is performed
-    EditAmpCommand *command = new EditAmpCommand(this->amp, tileIdx, flags, false);
-    QObject::connect(command, &EditAmpCommand::modified, this->levelCelView, &LevelCelView::updateFields);
-
-    this->undoStack->push(command);
-}
-
 void LevelTabTileWidget::setTlaProperty(quint8 flags)
 {
     int tileIdx = this->levelCelView->getCurrentTileIndex();
 
-    // Build amp editing command and connect it to the views widget
+    // Build tla editing command and connect it to the views widget
     // to update the label when undo/redo is performed
     EditTlaCommand *command = new EditTlaCommand(this->tla, tileIdx, flags);
     QObject::connect(command, &EditTlaCommand::modified, this->levelCelView, &LevelCelView::updateFields);
 
     this->undoStack->push(command);
-}
-
-void LevelTabTileWidget::updateAmpProperty()
-{
-    quint8 flags = 0;
-    if (this->ui->amp0->checkState())
-        flags |= (MAF_WEST_DOOR >> 8);
-    if (this->ui->amp1->checkState())
-        flags |= (MAF_EAST_DOOR >> 8);
-    if (this->ui->amp2->checkState())
-        flags |= (MAF_WEST_ARCH >> 8);
-    if (this->ui->amp3->checkState())
-        flags |= (MAF_EAST_ARCH >> 8);
-    if (this->ui->amp4->checkState())
-        flags |= (MAF_WEST_GRATE >> 8);
-    if (this->ui->amp5->checkState())
-        flags |= (MAF_EAST_GRATE >> 8);
-    if (this->ui->amp6->checkState())
-        flags |= (MAF_EXTERN >> 8);
-    if (this->ui->amp7->checkState())
-        flags |= (MAF_STAIRS >> 8);
-
-    this->setAmpProperty(flags);
 }
 
 void LevelTabTileWidget::updateTlaProperty()
@@ -320,7 +215,6 @@ void LevelTabTileWidget::updateTlaProperty()
 
 void LevelTabTileWidget::on_clearPushButtonClicked()
 {
-    this->setAmpProperty(0);
     this->setTlaProperty(0);
     this->updateFields();
 }
@@ -328,62 +222,6 @@ void LevelTabTileWidget::on_clearPushButtonClicked()
 void LevelTabTileWidget::on_deletePushButtonClicked()
 {
     dMainWindow().on_actionDel_Tile_triggered();
-}
-
-void LevelTabTileWidget::on_ampTypeComboBox_activated(int index)
-{
-    int tileIdx = this->levelCelView->getCurrentTileIndex();
-
-    if (this->onUpdate) {
-        return;
-    }
-
-    // Build amp editing command and connect it to the views widget
-    // to update the label when undo/redo is performed
-    EditAmpCommand *command = new EditAmpCommand(this->amp, tileIdx, index, true);
-    QObject::connect(command, &EditAmpCommand::modified, this->levelCelView, &LevelCelView::updateFields);
-
-    this->undoStack->push(command);
-}
-
-void LevelTabTileWidget::on_amp0_clicked()
-{
-    this->updateAmpProperty();
-}
-
-void LevelTabTileWidget::on_amp1_clicked()
-{
-    this->updateAmpProperty();
-}
-
-void LevelTabTileWidget::on_amp2_clicked()
-{
-    this->updateAmpProperty();
-}
-
-void LevelTabTileWidget::on_amp3_clicked()
-{
-    this->updateAmpProperty();
-}
-
-void LevelTabTileWidget::on_amp4_clicked()
-{
-    this->updateAmpProperty();
-}
-
-void LevelTabTileWidget::on_amp5_clicked()
-{
-    this->updateAmpProperty();
-}
-
-void LevelTabTileWidget::on_amp6_clicked()
-{
-    this->updateAmpProperty();
-}
-
-void LevelTabTileWidget::on_amp7_clicked()
-{
-    this->updateAmpProperty();
 }
 
 void LevelTabTileWidget::on_tlaF00_clicked()

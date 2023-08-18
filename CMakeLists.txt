@@ -49,8 +49,6 @@ set(PROJECT_SOURCES
         source/celview.ui
         source/config.cpp
         source/config.h
-        source/d1amp.cpp
-        source/d1amp.h
         source/d1cel.cpp
         source/d1celframe.cpp
         source/d1celframe.h
@@ -79,6 +77,8 @@ set(PROJECT_SOURCES
         source/d1palhits.h
         source/d1pcx.cpp
         source/d1pcx.h
+        source/d1smp.cpp
+        source/d1smp.h
         source/d1spt.cpp
         source/d1spt.h
         source/d1sol.cpp

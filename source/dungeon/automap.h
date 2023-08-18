@@ -12,8 +12,8 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-/* Maps from tile_id to automap type. */
-extern uint16_t automaptype[MAXTILES + 1];
+/* Maps from subtile_id to automap type (_automap_subtypes). */
+extern BYTE automaptype[MAXSUBTILES + 1];
 
 /**
  * @brief Initializes the automap of a dungeon level.

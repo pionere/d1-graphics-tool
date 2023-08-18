@@ -4,9 +4,9 @@
 #include <set>
 #include <vector>
 
-#include "d1amp.h"
 #include "d1gfx.h"
 #include "d1min.h"
+#include "d1smp.h"
 #include "d1sol.h"
 #include "d1spt.h"
 #include "d1til.h"
@@ -45,10 +45,10 @@ public:
     D1Min *min;
     D1Til *til;
     D1Sol *sol;
-    D1Amp *amp;
     D1Tla *tla;
     D1Spt *spt;
     D1Tmi *tmi;
+    D1Smp *smp;
 
 private:
     void patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool silent);

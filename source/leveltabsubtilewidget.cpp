@@ -131,6 +131,40 @@ void EditTmiCommand::redo()
     this->undo();
 }
 
+EditSmpCommand::EditSmpCommand(D1Smp *s, int si, int v, int t)
+    : QUndoCommand(nullptr)
+    , smp(s)
+    , subtileIndex(si)
+    , value(v)
+    , typeProp(t)
+{
+}
+
+void EditSmpCommand::undo()
+{
+    if (this->smp.isNull()) {
+        this->setObsolete(true);
+        return;
+    }
+
+    int nv = this->value;
+    if (this->typeProp & 1) {
+        this->value = this->smp->getSubtileType(this->subtileIndex);
+        this->smp->setSubtileType(this->subtileIndex, nv & MAT_TYPE);
+    }
+    if (this->typeProp & 2) {
+        this->value = this->smp->getSubtileProperties(this->subtileIndex);
+        this->smp->setSubtileProperties(this->subtileIndex, nv & ~MAT_TYPE);
+
+    }
+    emit this->modified();
+}
+
+void EditSmpCommand::redo()
+{
+    this->undo();
+}
+
 LevelTabSubtileWidget::LevelTabSubtileWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::LevelTabSubtileWidget())
@@ -147,7 +181,7 @@ LevelTabSubtileWidget::~LevelTabSubtileWidget()
     delete ui;
 }
 
-void LevelTabSubtileWidget::initialize(LevelCelView *v, QUndoStack *us, D1Gfx *g, D1Min *m, D1Sol *s, D1Spt *p, D1Tmi *t)
+void LevelTabSubtileWidget::initialize(LevelCelView *v, QUndoStack *us, D1Gfx *g, D1Min *m, D1Sol *s, D1Spt *p, D1Tmi *t, D1Smp *mp)
 {
     this->levelCelView = v;
     this->undoStack = us;
@@ -156,6 +190,7 @@ void LevelTabSubtileWidget::initialize(LevelCelView *v, QUndoStack *us, D1Gfx *g
     this->sol = s;
     this->spt = p;
     this->tmi = t;
+    this->smp = mp;
 }
 
 void LevelTabSubtileWidget::updateFields()
@@ -170,6 +205,7 @@ void LevelTabSubtileWidget::updateFields()
     this->ui->solSettingsGroupBox->setEnabled(hasSubtile);
     this->ui->sptSettingsGroupBox->setEnabled(hasSubtile);
     this->ui->tmiSettingsGroupBox->setEnabled(hasSubtile);
+    this->ui->smpSettingsGroupBox->setEnabled(hasSubtile);
 
     this->ui->framesComboBox->setEnabled(hasSubtile);
 
@@ -189,6 +225,12 @@ void LevelTabSubtileWidget::updateFields()
         this->ui->tmi5->setChecked(false);
         this->ui->tmi6->setChecked(false);
 
+        this->ui->smpTypeComboBox->setCurrentIndex(-1);
+        this->ui->smp4->setChecked(false);
+        this->ui->smp5->setChecked(false);
+        this->ui->smp6->setChecked(false);
+        this->ui->smp7->setChecked(false);
+
         this->ui->framesComboBox->setCurrentIndex(-1);
         this->ui->framesPrevButton->setEnabled(false);
         this->ui->framesNextButton->setEnabled(false);
@@ -202,6 +244,8 @@ void LevelTabSubtileWidget::updateFields()
     quint8 tmiFlags = this->tmi->getSubtileProperties(subtileIdx);
     int sptTrapFlags = this->spt->getSubtileTrapProperty(subtileIdx);
     int sptSpecCel = this->spt->getSubtileSpecProperty(subtileIdx);
+    quint8 smpType = this->smp->getSubtileType(subtileIdx);
+    quint8 smpFlags = this->smp->getSubtileProperties(subtileIdx);
     std::vector<unsigned> &frames = this->min->getFrameReferences(subtileIdx);
 
     this->ui->sol0->setChecked((solFlags & PFLAG_BLOCK_PATH) != 0);
@@ -223,6 +267,12 @@ void LevelTabSubtileWidget::updateFields()
     this->ui->tmi4->setChecked((tmiFlags & TMIF_RIGHT_REDRAW) != 0);
     this->ui->tmi5->setChecked((tmiFlags & TMIF_RIGHT_FOLIAGE) != 0);
     this->ui->tmi6->setChecked((tmiFlags & TMIF_RIGHT_WALL_TRANS) != 0);
+
+    this->ui->smpTypeComboBox->setCurrentIndex(smpType);
+    this->ui->smp4->setChecked((smpFlags & MAT_WALL_NW) != 0);
+    this->ui->smp5->setChecked((smpFlags & MAT_WALL_NE) != 0);
+    this->ui->smp6->setChecked((smpFlags & MAT_WALL_SW) != 0);
+    this->ui->smp7->setChecked((smpFlags & MAT_WALL_SE) != 0);
 
     // update combo box of the frames
     for (int i = this->ui->framesComboBox->count() - frames.size(); i > 0; i--)
@@ -315,11 +365,39 @@ void LevelTabSubtileWidget::updateTmiProperty()
     this->setTmiProperty(flags);
 }
 
+void LevelTabSubtileWidget::setSmpProperty(quint8 flags)
+{
+    int subtileIdx = this->levelCelView->getCurrentSubtileIndex();
+
+    // Build smp editing command and connect it to the views widget
+    // to update the label when undo/redo is performed
+    EditSmpCommand *command = new EditSmpCommand(this->smp, subtileIdx, flags, 3);
+    QObject::connect(command, &EditSmpCommand::modified, this->levelCelView, &LevelCelView::updateFields);
+
+    this->undoStack->push(command);
+}
+
+void LevelTabSubtileWidget::updateSmpProperty()
+{
+    quint8 flags = this->ui->smpTypeComboBox->currentIndex();
+    if (this->ui->smp4->checkState())
+        flags |= MAT_WALL_NW;
+    if (this->ui->smp5->checkState())
+        flags |= MAT_WALL_NE;
+    if (this->ui->smp6->checkState())
+        flags |= MAT_WALL_SW;
+    if (this->ui->smp7->checkState())
+        flags |= MAT_WALL_SE;
+
+    this->setSmpProperty(flags);
+}
+
 void LevelTabSubtileWidget::on_clearPushButtonClicked()
 {
     this->setSolProperty(0);
     this->setTrapProperty(PTT_NONE);
     this->setTmiProperty(0);
+    this->setSmpProperty(MAT_NONE);
     this->updateFields();
 }
 
@@ -427,6 +505,31 @@ void LevelTabSubtileWidget::on_tmi5_clicked()
 void LevelTabSubtileWidget::on_tmi6_clicked()
 {
     this->updateTmiProperty();
+}
+
+void LevelTabSubtileWidget::on_smpTypeComboBox_activated(int index)
+{
+    this->updateSmpProperty();
+}
+
+void LevelTabSubtileWidget::on_smp4_clicked()
+{
+    this->updateSmpProperty();
+}
+
+void LevelTabSubtileWidget::on_smp5_clicked()
+{
+    this->updateSmpProperty();
+}
+
+void LevelTabSubtileWidget::on_smp6_clicked()
+{
+    this->updateSmpProperty();
+}
+
+void LevelTabSubtileWidget::on_smp7_clicked()
+{
+    this->updateSmpProperty();
 }
 
 void LevelTabSubtileWidget::setFrameReference(int subtileIndex, int index, int frameRef)
