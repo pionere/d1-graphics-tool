@@ -37,6 +37,7 @@ public:
     void remapSubtiles(const std::map<unsigned, unsigned> &remap);
     bool reuseFrames(std::set<int> &removedIndices, bool silent);
     bool reuseSubtiles(std::set<int> &removedIndices);
+    bool reuseTiles(std::set<int> &removedIndices);
 
     void patch(int dunType, bool silent);
 

@@ -311,6 +311,22 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
             if (!match) {
                 continue;
             }
+            if (this->sol->getSubtileProperties(i) != this->sol->getSubtileProperties(j)) {
+                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the SOL-properties are different.").arg(i + 1).arg(j + 1);
+                continue;
+            }
+            if (this->tmi->getSubtileProperties(i) != this->tmi->getSubtileProperties(j)) {
+                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the TMI-properties are different.").arg(i + 1).arg(j + 1);
+                continue;
+            }
+            if (this->spt->getSubtileSpecProperty(i) != this->spt->getSubtileSpecProperty(j) || this->spt->getSubtileTrapProperty(i) != this->spt->getSubtileTrapProperty(j)) {
+                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the SPT-properties are different.").arg(i + 1).arg(j + 1);
+                continue;
+            }
+            if (this->smp->getSubtileType(i) != this->smp->getSubtileType(j) || this->smp->getSubtileProperties(i) != this->smp->getSubtileProperties(j)) {
+                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the SMP-properties are different.").arg(i + 1).arg(j + 1);
+                continue;
+            }
             // use subtile 'i' instead of subtile 'j'
             this->removeSubtile(j, i);
             // calculate the original indices
@@ -342,6 +358,72 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
     }
     auto amount = removedIndices.size();
     dProgress() << QString(QApplication::tr("Reused %n subtile(s).", "", amount)).arg(amount);
+
+    ProgressDialog::decBar();
+    return result != 0;
+}
+
+bool D1Tileset::reuseTiles(std::set<int> &removedIndices)
+{
+    ProgressDialog::incBar(QApplication::tr("Deduplicating tiles..."), this->til->getTileCount());
+    int result = 0;
+    for (int i = 0; i < this->til->getTileCount(); i++) {
+        if (ProgressDialog::wasCanceled()) {
+            result |= 2;
+            break;
+        }
+        for (int j = i + 1; j < this->til->getTileCount(); j++) {
+            std::vector<int> &subtileIndices0 = this->til->getSubtileIndices(i);
+            std::vector<int> &subtileIndices1 = this->til->getSubtileIndices(j);
+            if (subtileIndices0.size() != subtileIndices1.size()) {
+                continue; // should not happen, but better safe than sorry
+            }
+            bool match = true;
+            for (unsigned x = 0; x < subtileIndices0.size(); x++) {
+                if (subtileIndices0[x] == subtileIndices1[x]) {
+                    continue;
+                }
+                match = false;
+                break;
+            }
+            if (!match) {
+                continue;
+            }
+            if (this->tla->getTileProperties(i) != this->tla->getTileProperties(j)) {
+                dProgress() << QApplication::tr("Tile %1 has the same subtiles as Tile %2, but the TLA-properties are different.").arg(i + 1).arg(j + 1);
+                continue;
+            }
+            // remove tile 'j'
+            this->removeTile(j);
+            // calculate the original indices
+            int originalIndexI = i;
+            for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
+                if (*iter <= originalIndexI) {
+                    originalIndexI++;
+                    continue;
+                }
+                break;
+            }
+            int originalIndexJ = j;
+            for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
+                if (*iter <= originalIndexJ) {
+                    originalIndexJ++;
+                    continue;
+                }
+                break;
+            }
+            removedIndices.insert(originalIndexJ);
+            dProgress() << QApplication::tr("Removed Tile %1 because it was the same as Tile %2.").arg(originalIndexJ + 1).arg(originalIndexI + 1);
+            result = true;
+            j--;
+        }
+        if (!ProgressDialog::incValue()) {
+            result |= 2;
+            break;
+        }
+    }
+    auto amount = removedIndices.size();
+    dProgress() << QString(QApplication::tr("Removed %n tile(s).", "", amount)).arg(amount);
 
     ProgressDialog::decBar();
     return result != 0;

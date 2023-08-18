@@ -2264,20 +2264,6 @@ void LevelCelView::checkSubtileFlags() const
                 result = true;
             }
         }
-        /*if (tmiFlags & TMIF_LEFT_REDRAW) {
-            // left second pass
-            if (tmiFlags & TMIF_LEFT_FOLIAGE) {
-                dProgressWarn() << tr("Subtile %1 has both second pass and foliage enabled on the left side.").arg(i + 1);
-                result = true;
-            }
-        }*/
-        /*if (tmiFlags & TMIF_LEFT_FOLIAGE) {
-            // left foliage
-            if (tmiFlags & TMIF_LEFT_WALL_TRANS) {
-                dProgressWarn() << tr("Subtile %1 has both foliage and floor transparency enabled on the left side.").arg(i + 1);
-                result = true;
-            }
-        }*/
         if (tmiFlags & TMIF_LEFT_WALL_TRANS) {
             // left transparency
             // - wall transparency must be set
@@ -2286,20 +2272,6 @@ void LevelCelView::checkSubtileFlags() const
                 result = true;
             }
         }
-        /*if (tmiFlags & TMIF_RIGHT_REDRAW) {
-            // right second pass
-            if (tmiFlags & TMIF_RIGHT_FOLIAGE) {
-                dProgressWarn() << tr("Subtile %1 has both second pass and foliage enabled on the right side.").arg(i + 1);
-                result = true;
-            }
-        }*/
-        /*if (tmiFlags & TMIF_RIGHT_FOLIAGE) {
-            // right foliage
-            if (tmiFlags & TMIF_RIGHT_WALL_TRANS) {
-                dProgressWarn() << tr("Subtile %1 has both foliage and floor transparency enabled on the right side.").arg(i + 1);
-                result = true;
-            }
-        }*/
         if (tmiFlags & TMIF_RIGHT_WALL_TRANS) {
             // right transparency
             // - wall transparency must be set
@@ -2367,24 +2339,6 @@ void LevelCelView::checkSubtileFlags() const
                     result = true;
                 }
             }
-            /*if ((tmiFlags & TMIF_LEFT_REDRAW) && (tmiFlags & TMIF_RIGHT_REDRAW)) {
-                // left&right second pass
-                // - at least one not transparent frame above the floor or left floor with foliage or right floor with foliage
-                bool hasColor = leftPixels != 0 || rightPixels != 0 || leftAbove || rightAbove;
-                if (!hasColor) {
-                    this->warnOrReportSubtile(tr("Subtile %1 has second pass set on both sides, but it is completely transparent or just a left/right triangle on the floor.").arg(i + 1), i);
-                    result = true;
-                }
-            }
-            if ((tmiFlags & TMIF_LEFT_REDRAW) && !(tmiFlags & TMIF_RIGHT_REDRAW)) {
-                // left second pass without right
-                // - at least one not transparent frame above the floor or left floor is not triangle
-                bool hasColor = leftPixels != 0 || leftAbove;
-                if (!hasColor) {
-                    this->warnOrReportSubtile(tr("Subtile %1 has second pass set only on the left, but it is completely transparent or just a left triangle on the left-side.").arg(i + 1), i);
-                    result = true;
-                }
-            }*/
             if (tmiFlags & TMIF_LEFT_FOLIAGE) {
                 // left foliage
                 // - left floor has a foliage pixel
@@ -2406,15 +2360,6 @@ void LevelCelView::checkSubtileFlags() const
                     result = true;
                 }
             }
-            /*if ((tmiFlags & TMIF_RIGHT_REDRAW) && !(tmiFlags & TMIF_LEFT_REDRAW)) {
-                // right second pass without left
-                // - at least one not transparent frame above the floor or right floor is not triangle
-                bool hasColor = rightPixels != 0 || rightAbove;
-                if (!hasColor) {
-                    this->warnOrReportSubtile(tr("Subtile %1 has second pass set only on the right, but it is completely transparent or just a right triangle on the right-side.").arg(i + 1), i);
-                    result = true;
-                }
-            }*/
             if (tmiFlags & TMIF_RIGHT_FOLIAGE) {
                 // right foliage
                 // - right floor has a foliage pixel
@@ -2459,17 +2404,17 @@ void LevelCelView::checkTileFlags() const
     for (int i = 0; i < this->til->getTileCount(); i++) {
         quint8 tlaFlags = this->tla->getTileProperties(i);
         const std::vector<int> &subtileIndices = this->til->getSubtileIndices(i);
-        
+
         if (subtileIndices.size() > 0) {
             int subtileIdx = subtileIndices[0];
             if (tlaFlags & TIF_FLOOR_00) {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
-                    this->warnOrReportSubtile(tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1), subtileIdx);
+                    dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             } else {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->spt->getSubtileSpecProperty(subtileIdx) == 0) {
-                    this->warnOrReportSubtile(tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1), subtileIdx);
+                    dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             }
@@ -2478,12 +2423,12 @@ void LevelCelView::checkTileFlags() const
             int subtileIdx = subtileIndices[1];
             if (tlaFlags & TIF_FLOOR_01) {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
-                    this->warnOrReportSubtile(tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1), subtileIdx);
+                    dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             } else {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->spt->getSubtileSpecProperty(subtileIdx) == 0) {
-                    this->warnOrReportSubtile(tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1), subtileIdx);
+                    dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             }
@@ -2492,12 +2437,12 @@ void LevelCelView::checkTileFlags() const
             int subtileIdx = subtileIndices[2];
             if (tlaFlags & TIF_FLOOR_10) {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
-                    this->warnOrReportSubtile(tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1), subtileIdx);
+                    dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             } else {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->spt->getSubtileSpecProperty(subtileIdx) == 0) {
-                    this->warnOrReportSubtile(tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1), subtileIdx);
+                    dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             }
@@ -2506,12 +2451,12 @@ void LevelCelView::checkTileFlags() const
             int subtileIdx = subtileIndices[3];
             if (tlaFlags & TIF_FLOOR_11) {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
-                    this->warnOrReportSubtile(tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1), subtileIdx);
+                    dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             } else {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->spt->getSubtileSpecProperty(subtileIdx) == 0) {
-                    this->warnOrReportSubtile(tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1), subtileIdx);
+                    dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
                     result = true;
                 }
             }
@@ -2674,6 +2619,23 @@ bool LevelCelView::reuseSubtiles()
     return result;
 }
 
+bool LevelCelView::reuseTiles()
+{
+    std::set<int> removedIndices;
+
+    bool result = this->tileset->reuseTiles(removedIndices);
+
+    // update tile index if necessary
+    auto it = removedIndices.lower_bound(this->currentTileIndex);
+    if (it != removedIndices.begin()) {
+        if (*it == this->currentTileIndex)
+            it--;
+        this->currentTileIndex -= std::distance(removedIndices.begin(), it);
+    }
+
+    return result;
+}
+
 void LevelCelView::compressSubtiles()
 {
     if (this->reuseFrames()) {
@@ -2692,7 +2654,7 @@ void LevelCelView::compressTiles()
 
 void LevelCelView::compressTileset()
 {
-    ProgressDialog::incBar(tr("Compressing tileset..."), 2);
+    ProgressDialog::incBar(tr("Compressing tileset..."), 3);
 
     bool reusedFrame = this->reuseFrames();
 
@@ -2704,7 +2666,11 @@ void LevelCelView::compressTileset()
 
     bool reusedSubtile = this->reuseSubtiles();
 
-    if (reusedFrame || reusedSubtile) {
+    ProgressDialog::incValue();
+
+    bool reusedTile = this->reuseTiles();
+
+    if (reusedFrame || reusedSubtile || reusedTile) {
         // update the view - done by the caller
         // this->displayFrame();
     }

@@ -166,6 +166,7 @@ private:
     bool removeUnusedSubtiles();
     bool reuseFrames();
     bool reuseSubtiles();
+    bool reuseTiles();
     bool sortFrames_impl();
     bool sortSubtiles_impl();
     void setFrameIndex(int frameIndex);
