@@ -2250,7 +2250,7 @@ void LevelCelView::checkSubtileFlags() const
         if (tmiFlags & TMIF_WALL_TRANS) {
             // transp.wall
             // - at least one not transparent frame above the floor
-            bool hasColor = specFrame != 0;
+            bool hasColor = false;
             for (unsigned n = 0; n < frameRefs.size() - floorMicros; n++) {
                 unsigned frameRef = frameRefs[n];
                 if (frameRef == 0) {
@@ -2324,8 +2324,8 @@ void LevelCelView::checkSubtileFlags() const
                 rightPixels = rightFoliagePixels(this->gfx->getFrame(frameRefRight - 1));
                 rightType = this->gfx->getFrame(frameRefRight - 1)->getFrameType();
             }
-            bool leftAbove = specFrame != 0;
-            bool rightAbove = specFrame != 0;
+            bool leftAbove = false;
+            bool rightAbove = false;
             for (unsigned n = 0; n < frameRefs.size() - floorMicros; n++) {
                 unsigned frameRef = frameRefs[n];
                 if (frameRef == 0) {
@@ -2353,7 +2353,7 @@ void LevelCelView::checkSubtileFlags() const
                 if (leftType == D1CEL_FRAME_TYPE::Empty) {
                     this->warnOrReportSubtile(tr("Subtile %1 has second pass set on the left side, but the floor-frame is empty.").arg(i + 1), i);
                     result = true;
-                } else if (leftPixels == 0 && !leftAbove && !(tmiFlags & TMIF_RIGHT_REDRAW)) {
+                } else if (leftPixels == 0 && !leftAbove && specFrame == 0 && !(tmiFlags & TMIF_RIGHT_REDRAW)) {
                     this->warnOrReportSubtile(tr("Subtile %1 has second pass set on the left side, but it is just a left triangle on the floor and the right side is not redrawn.").arg(i + 1), i);
                     result = true;
                 }
@@ -2362,7 +2362,7 @@ void LevelCelView::checkSubtileFlags() const
                 if (rightType == D1CEL_FRAME_TYPE::Empty) {
                     this->warnOrReportSubtile(tr("Subtile %1 has second pass set on the right side, but the floor-frame is empty.").arg(i + 1), i);
                     result = true;
-                } else if (rightPixels == 0 && !rightAbove && !(tmiFlags & TMIF_LEFT_REDRAW)) {
+                } else if (rightPixels == 0 && !rightAbove && specFrame == 0 && !(tmiFlags & TMIF_LEFT_REDRAW)) {
                     this->warnOrReportSubtile(tr("Subtile %1 has second pass set on the right side, but it is just a right triangle on the floor and the left side is not redrawn.").arg(i + 1), i);
                     result = true;
                 }
