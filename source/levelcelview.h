@@ -139,6 +139,7 @@ public:
 private:
     void collectFrameUsers(int frameIndex, std::vector<int> &users) const;
     void collectSubtileUsers(int subtileIndex, std::vector<int> &users) const;
+    void warnOrReportSubtile(const QString &msg, int subtileIndex) const;
     void insertFrames(IMAGE_FILE_MODE mode, int index, const QImage &image);
     bool insertFrames(IMAGE_FILE_MODE mode, int index, const D1GfxFrame &frame);
     void insertFrames(IMAGE_FILE_MODE mode, int index, const QString &imagefilePath);

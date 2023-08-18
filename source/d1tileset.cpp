@@ -15574,7 +15574,6 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(88, 5);
     Blk2Mcr(88, 6);
     Blk2Mcr(88, 7);
-    Blk2Mcr(89, 7);
     Blk2Mcr(95, 7);
     Blk2Mcr(99, 6);
     Blk2Mcr(250, 1);

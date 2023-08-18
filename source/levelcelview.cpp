@@ -2075,6 +2075,18 @@ static int rightFoliagePixels(const D1GfxFrame *frame)
     return result;
 }
 
+void LevelCelView::warnOrReportSubtile(const QString &msg, int subtileIndex)
+{
+    std::vector<int> subtileUsers;
+    this->collectSubtileUsers(i, subtileUsers);
+    bool unused = subtileUsers.empty();
+    if (unused) {
+        dProgress() << msg;
+    } else {
+        dProgressWarn() << msg;
+    }
+}
+
 void LevelCelView::checkSubtileFlags() const
 {
     ProgressDialog::incBar(tr("Checking SOL flags..."), 1);
@@ -2095,33 +2107,18 @@ void LevelCelView::checkSubtileFlags() const
         if (solFlags & PFLAG_BLOCK_LIGHT) {
             // block light
             if (!(solFlags & PFLAG_BLOCK_PATH)) {
-                QString msg = tr("Subtile %1 blocks the light, but still passable (not solid).").arg(i + 1);
-                if (unused) {
-                    dProgress() << msg;
-                } else {
-                    dProgressWarn() << msg;
-                }
+                this->warnOrReportSubtile(tr("Subtile %1 blocks the light, but still passable (not solid).").arg(i + 1), i);
                 result = true;
             }
             if (!(solFlags & PFLAG_BLOCK_MISSILE)) {
-                QString msg = tr("Subtile %1 blocks the light, but it does not block missiles.").arg(i + 1);
-                if (unused) {
-                    dProgress() << msg;
-                } else {
-                    dProgressWarn() << msg;
-                }
+                this->warnOrReportSubtile(tr("Subtile %1 blocks the light, but it does not block missiles.").arg(i + 1), i);
                 result = true;
             }
         }
         if (solFlags & PFLAG_BLOCK_MISSILE) {
             // block missile
             if (!(solFlags & PFLAG_BLOCK_PATH)) {
-                QString msg = tr("Subtile %1 blocks missiles, but still passable (not solid).").arg(i + 1);
-                if (unused) {
-                    dProgress() << msg;
-                } else {
-                    dProgressWarn() << msg;
-                }
+                this->warnOrReportSubtile(tr("Subtile %1 blocks missiles, but still passable (not solid).").arg(i + 1), i);
                 result = true;
             }
         }
@@ -2168,12 +2165,7 @@ void LevelCelView::checkSubtileFlags() const
                     break;
                 }
                 if (!hasColor) {
-                    QString msg = tr("Subtile %1 blocks the light or missiles, but it is completely transparent above the floor.").arg(i + 1);
-                    if (unused) {
-                        dProgress() << msg;
-                    } else {
-                        dProgressWarn() << msg;
-                    }
+                    this->warnOrReportSubtile(tr("Subtile %1 blocks the light or missiles, but it is completely transparent above the floor.").arg(i + 1), i);
                     result = true;
                 }
             }
@@ -2206,9 +2198,6 @@ void LevelCelView::checkSubtileFlags() const
     dProgress() << progress;
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         int trapFlags = this->spt->getSubtileTrapProperty(i);
-        std::vector<int> subtileUsers;
-        this->collectSubtileUsers(i, subtileUsers);
-        bool unused = subtileUsers.empty();
         if (trapFlags != PTT_NONE) {
             const std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
             if (trapFlags == PTT_LEFT && this->min->getSubtileHeight() > 1) {
@@ -2216,12 +2205,7 @@ void LevelCelView::checkSubtileFlags() const
                 unsigned frameRefLeft = frameRefs[frameRefs.size() - 2 * floorMicros];
                 bool trapLeft = frameRefLeft != 0 && this->gfx->getFrame(frameRefLeft - 1)->getFrameType() == D1CEL_FRAME_TYPE::Square;
                 if (!trapLeft) {
-                    QString msg = tr("Subtile %1 is for traps, but the frames above the floor is not square on the left side.").arg(i + 1);
-                    if (unused) {
-                        dProgress() << msg;
-                    } else {
-                        dProgressWarn() << msg;
-                    }
+                    this->warnOrReportSubtile(tr("Subtile %1 is for traps, but the frames above the floor is not square on the left side.").arg(i + 1), i);
                     result = true;
                 }
             } else if (trapFlags == PTT_RIGHT && this->min->getSubtileHeight() > 1) {
@@ -2229,40 +2213,20 @@ void LevelCelView::checkSubtileFlags() const
                 unsigned frameRefRight = frameRefs[frameRefs.size() - (floorMicros + 1)];
                 bool trapRight = frameRefRight != 0 && this->gfx->getFrame(frameRefRight - 1)->getFrameType() == D1CEL_FRAME_TYPE::Square;
                 if (!trapRight) {
-                    QString msg = tr("Subtile %1 is for traps, but the frames above the floor is not square on the right side.").arg(i + 1);
-                    if (unused) {
-                        dProgress() << msg;
-                    } else {
-                        dProgressWarn() << msg;
-                    }
+                    this->warnOrReportSubtile(tr("Subtile %1 is for traps, but the frames above the floor is not square on the right side.").arg(i + 1), i);
                     result = true;
                 }
             } else {
-                QString msg = tr("Subtile %1 has an invalid trap-setting: %2.").arg(i + 1).arg(trapFlags);
-                if (unused) {
-                    dProgress() << msg;
-                } else {
-                    dProgressErr() << msg;
-                }
+                dProgressErr() << tr("Subtile %1 has an invalid trap-setting: %2.").arg(i + 1).arg(trapFlags);
                 result = true;
             }
         }
         int specFrame = this->spt->getSubtileSpecProperty(i);
         if ((unsigned)specFrame > ((1 << 6) - 1)) {
-            QString msg = tr("Subtile %1 has a too high special cel-frame setting: %2. Limit it %3").arg(i + 1).arg(specFrame).arg((1 << 6) - 1);
-            if (unused) {
-                dProgress() << msg;
-            } else {
-                dProgressErr() << msg;
-            }
+            dProgressErr() << tr("Subtile %1 has a too high special cel-frame setting: %2. Limit it %3").arg(i + 1).arg(specFrame).arg((1 << 6) - 1);
             result = true;
         } else if (specFrame != 0 && this->cls->getFrameCount() < specFrame) {
-            QString msg = tr("The special cel-frame (%1) referenced by Subtile %2 does not exist.").arg(specFrame).arg(i + 1);
-            if (unused) {
-                dProgress() << msg;
-            } else {
-                dProgressErr() << msg;
-            }
+            dProgressErr() << tr("The special cel-frame (%1) referenced by Subtile %2 does not exist.").arg(specFrame).arg(i + 1);
             result = true;
         }
     }
@@ -2282,9 +2246,6 @@ void LevelCelView::checkSubtileFlags() const
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         const std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
         quint8 tmiFlags = this->tmi->getSubtileProperties(i);
-        std::vector<int> subtileUsers;
-        this->collectSubtileUsers(i, subtileUsers);
-        bool unused = subtileUsers.empty();
         if (tmiFlags & TMIF_WALL_TRANS) {
             // transp.wall
             // - at least one not transparent frame above the floor
@@ -2298,12 +2259,7 @@ void LevelCelView::checkSubtileFlags() const
                 break;
             }
             if (!hasColor) {
-                QString msg = tr("Subtile %1 has wall transparency set, but it is completely transparent above the floor.").arg(i + 1);
-                if (unused) {
-                    dProgress() << msg;
-                } else {
-                    dProgressWarn() << msg;
-                }
+                this->warnOrReportSubtile(tr("Subtile %1 has wall transparency set, but it is completely transparent above the floor.").arg(i + 1), i);
                 result = true;
             }
         }
@@ -2325,12 +2281,7 @@ void LevelCelView::checkSubtileFlags() const
             // left transparency
             // - wall transparency must be set
             if (!(tmiFlags & TMIF_WALL_TRANS)) {
-                QString msg = tr("Subtile %1 has floor transparency on the left side, but no wall transparency.").arg(i + 1);
-                if (unused) {
-                    dProgress() << msg;
-                } else {
-                    dProgressWarn() << msg;
-                }
+                this->warnOrReportSubtile(tr("Subtile %1 has floor transparency on the left side, but no wall transparency.").arg(i + 1), i);
                 result = true;
             }
         }
@@ -2352,12 +2303,7 @@ void LevelCelView::checkSubtileFlags() const
             // right transparency
             // - wall transparency must be set
             if (!(tmiFlags & TMIF_WALL_TRANS)) {
-                QString msg = tr("Subtile %1 has floor transparency on the right side, but no wall transparency.").arg(i + 1);
-                if (unused) {
-                    dProgress() << msg;
-                } else {
-                    dProgressWarn() << msg;
-                }
+                this->warnOrReportSubtile(tr("Subtile %1 has floor transparency on the right side, but no wall transparency.").arg(i + 1), i);
                 result = true;
             }
         }
@@ -2393,36 +2339,39 @@ void LevelCelView::checkSubtileFlags() const
                 // transp.wall
                 // - trapezoid floor on the left without transparency
                 if ((/*(leftType == D1CEL_FRAME_TYPE::LeftTrapezoid || */ (leftAbove && leftPixels > 30)) && !(tmiFlags & TMIF_LEFT_WALL_TRANS)) {
-                    QString msg = tr("Subtile %1 has transparency on the wall while the frames above the left floor are not empty, but the left floor with many (%2) foliage pixels does not have transparency.").arg(i + 1).arg(leftPixels);
-                    if (unused) {
-                        dProgress() << msg;
-                    } else {
-                        dProgressWarn() << msg;
-                    }
+                    this->warnOrReportSubtile(tr("Subtile %1 has transparency on the wall while the frames above the left floor are not empty, but the left floor with many (%2) foliage pixels does not have transparency.").arg(i + 1).arg(leftPixels), i);
                     result = true;
                 }
                 // - trapezoid floor on the right without transparency
                 if ((/*(rightType == D1CEL_FRAME_TYPE::RightTrapezoid || */ (rightAbove && rightPixels > 30)) && !(tmiFlags & TMIF_RIGHT_WALL_TRANS)) {
-                    QString msg = tr("Subtile %1 has transparency on the wall while the frames above the right floor are not empty, but the right floor with many (%2) foliage pixels does not have transparency.").arg(i + 1).arg(rightPixels);
-                    if (unused) {
-                        dProgress() << msg;
-                    } else {
-                        dProgressWarn() << msg;
-                    }
+                    this->warnOrReportSubtile(tr("Subtile %1 has transparency on the wall while the frames above the right floor are not empty, but the right floor with many (%2) foliage pixels does not have transparency.").arg(i + 1).arg(rightPixels), i);
                     result = true;
                 }
             }
-            if ((tmiFlags & TMIF_LEFT_REDRAW) && (tmiFlags & TMIF_RIGHT_REDRAW)) {
+            if (tmiFlags & TMIF_LEFT_REDRAW) {
+                if (leftType == D1CEL_FRAME_TYPE::Empty) {
+                    this->warnOrReportSubtile(tr("Subtile %1 has second pass set on the left side, but the floor-frame is empty.").arg(i + 1), i);
+                    result = true;
+                } else if (leftPixels == 0 && !leftAbove && !(tmiFlags & TMIF_RIGHT_REDRAW)) {
+                    this->warnOrReportSubtile(tr("Subtile %1 has second pass set on the left side, but it is just a left triangle on the floor and the right side is not redrawn.").arg(i + 1), i);
+                    result = true;
+                }
+            }
+            if (tmiFlags & TMIF_RIGHT_REDRAW) {
+                if (rightType == D1CEL_FRAME_TYPE::Empty) {
+                    this->warnOrReportSubtile(tr("Subtile %1 has second pass set on the right side, but the floor-frame is empty.").arg(i + 1), i);
+                    result = true;
+                } else if (rightPixels == 0 && !rightAbove && !(tmiFlags & TMIF_LEFT_REDRAW)) {
+                    this->warnOrReportSubtile(tr("Subtile %1 has second pass set on the right side, but it is just a right triangle on the floor and the left side is not redrawn.").arg(i + 1), i);
+                    result = true;
+                }
+            }
+            /*if ((tmiFlags & TMIF_LEFT_REDRAW) && (tmiFlags & TMIF_RIGHT_REDRAW)) {
                 // left&right second pass
                 // - at least one not transparent frame above the floor or left floor with foliage or right floor with foliage
                 bool hasColor = leftPixels != 0 || rightPixels != 0 || leftAbove || rightAbove;
                 if (!hasColor) {
-                    QString msg = tr("Subtile %1 has second pass set on both sides, but it is completely transparent or just a left/right triangle on the floor.").arg(i + 1);
-                    if (unused) {
-                        dProgress() << msg;
-                    } else {
-                        dProgressWarn() << msg;
-                    }
+                    this->warnOrReportSubtile(tr("Subtile %1 has second pass set on both sides, but it is completely transparent or just a left/right triangle on the floor.").arg(i + 1), i);
                     result = true;
                 }
             }
@@ -2431,25 +2380,15 @@ void LevelCelView::checkSubtileFlags() const
                 // - at least one not transparent frame above the floor or left floor is not triangle
                 bool hasColor = leftPixels != 0 || leftAbove;
                 if (!hasColor) {
-                    QString msg = tr("Subtile %1 has second pass set only on the left, but it is completely transparent or just a left triangle on the left-side.").arg(i + 1);
-                    if (unused) {
-                        dProgress() << msg;
-                    } else {
-                        dProgressWarn() << msg;
-                    }
+                    this->warnOrReportSubtile(tr("Subtile %1 has second pass set only on the left, but it is completely transparent or just a left triangle on the left-side.").arg(i + 1), i);
                     result = true;
                 }
-            }
+            }*/
             if (tmiFlags & TMIF_LEFT_FOLIAGE) {
                 // left foliage
                 // - left floor has a foliage pixel
                 if (leftPixels == 0) {
-                    QString msg = tr("Subtile %1 has foliage set on the left, but no foliage pixel on the (left-)floor.").arg(i + 1);
-                    if (unused) {
-                        dProgress() << msg;
-                    } else {
-                        dProgressWarn() << msg;
-                    }
+                    this->warnOrReportSubtile(tr("Subtile %1 has foliage set on the left, but no foliage pixel on the (left-)floor.").arg(i + 1), i);
                     result = true;
                 }
             }
@@ -2457,49 +2396,29 @@ void LevelCelView::checkSubtileFlags() const
                 // left floor transparency
                 // - must have non-transparent bits above the (left-)floor
                 if (!leftAbove) {
-                    QString msg = tr("Subtile %1 has left floor transparency set, but the left side is completely transparent above the floor.").arg(i + 1);
-                    if (unused) {
-                        dProgress() << msg;
-                    } else {
-                        dProgressWarn() << msg;
-                    }
+                    this->warnOrReportSubtile(tr("Subtile %1 has left floor transparency set, but the left side is completely transparent above the floor.").arg(i + 1), i);
                     result = true;
                 }
                 // - must have wall transparency set if there are non-transparent bits above the floor
                 if (leftAbove && !(tmiFlags & TMIF_WALL_TRANS)) {
-                    QString msg = tr("Subtile %1 has left floor transparency set, but the parts above the floor are not going to be transparent (wall transparency not set).").arg(i + 1);
-                    if (unused) {
-                        dProgress() << msg;
-                    } else {
-                        dProgressWarn() << msg;
-                    }
+                    this->warnOrReportSubtile(tr("Subtile %1 has left floor transparency set, but the parts above the floor are not going to be transparent (wall transparency not set).").arg(i + 1), i);
                     result = true;
                 }
             }
-            if ((tmiFlags & TMIF_RIGHT_REDRAW) && !(tmiFlags & TMIF_LEFT_REDRAW)) {
+            /*if ((tmiFlags & TMIF_RIGHT_REDRAW) && !(tmiFlags & TMIF_LEFT_REDRAW)) {
                 // right second pass without left
                 // - at least one not transparent frame above the floor or right floor is not triangle
                 bool hasColor = rightPixels != 0 || rightAbove;
                 if (!hasColor) {
-                    QString msg = tr("Subtile %1 has second pass set only on the right, but it is completely transparent or just a right triangle on the right-side.").arg(i + 1);
-                    if (unused) {
-                        dProgress() << msg;
-                    } else {
-                        dProgressWarn() << msg;
-                    }
+                    this->warnOrReportSubtile(tr("Subtile %1 has second pass set only on the right, but it is completely transparent or just a right triangle on the right-side.").arg(i + 1), i);
                     result = true;
                 }
-            }
+            }*/
             if (tmiFlags & TMIF_RIGHT_FOLIAGE) {
                 // right foliage
                 // - right floor has a foliage pixel
                 if (rightPixels == 0) {
-                    QString msg = tr("Subtile %1 has foliage set on the right, but no foliage pixel on the (right-)floor.").arg(i + 1);
-                    if (unused) {
-                        dProgress() << msg;
-                    } else {
-                        dProgressWarn() << msg;
-                    }
+                    this->warnOrReportSubtile(tr("Subtile %1 has foliage set on the right, but no foliage pixel on the (right-)floor.").arg(i + 1), i);
                     result = true;
                 }
             }
@@ -2507,22 +2426,12 @@ void LevelCelView::checkSubtileFlags() const
                 // right floor transparency
                 // - must have non-transparent bits above the (right-)floor
                 if (!rightAbove) {
-                    QString msg = tr("Subtile %1 has right floor transparency set, but the right side is completely transparent above the floor.").arg(i + 1);
-                    if (unused) {
-                        dProgress() << msg;
-                    } else {
-                        dProgressWarn() << msg;
-                    }
+                    this->warnOrReportSubtile(tr("Subtile %1 has right floor transparency set, but the right side is completely transparent above the floor.").arg(i + 1), i);
                     result = true;
                 }
                 // - must have wall transparency set if there are non-transparent bits above the floor
                 if (rightAbove && !(tmiFlags & TMIF_WALL_TRANS)) {
-                    QString msg = tr("Subtile %1 has right floor transparency set, but the parts above the floor are not going to be transparent (wall transparency not set).").arg(i + 1);
-                    if (unused) {
-                        dProgress() << msg;
-                    } else {
-                        dProgressWarn() << msg;
-                    }
+                    this->warnOrReportSubtile(tr("Subtile %1 has right floor transparency set, but the parts above the floor are not going to be transparent (wall transparency not set).").arg(i + 1), i);
                     result = true;
                 }
             }
@@ -2554,12 +2463,12 @@ void LevelCelView::checkTileFlags() const
             int subtileIdx = subtileIndices[0];
             if (tlaFlags & TIF_FLOOR_00) {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
-                    dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    this->warnOrReportSubtile(tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1), subtileIdx);
                     result = true;
                 }
             } else {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->spt->getSubtileSpecProperty(subtileIdx) == 0) {
-                    dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    this->warnOrReportSubtile(tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1), subtileIdx);
                     result = true;
                 }
             }
@@ -2568,12 +2477,12 @@ void LevelCelView::checkTileFlags() const
             int subtileIdx = subtileIndices[1];
             if (tlaFlags & TIF_FLOOR_01) {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
-                    dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    this->warnOrReportSubtile(tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1), subtileIdx);
                     result = true;
                 }
             } else {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->spt->getSubtileSpecProperty(subtileIdx) == 0) {
-                    dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    this->warnOrReportSubtile(tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1), subtileIdx);
                     result = true;
                 }
             }
@@ -2582,12 +2491,12 @@ void LevelCelView::checkTileFlags() const
             int subtileIdx = subtileIndices[2];
             if (tlaFlags & TIF_FLOOR_10) {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
-                    dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    this->warnOrReportSubtile(tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1), subtileIdx);
                     result = true;
                 }
             } else {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->spt->getSubtileSpecProperty(subtileIdx) == 0) {
-                    dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    this->warnOrReportSubtile(tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1), subtileIdx);
                     result = true;
                 }
             }
@@ -2596,12 +2505,12 @@ void LevelCelView::checkTileFlags() const
             int subtileIdx = subtileIndices[3];
             if (tlaFlags & TIF_FLOOR_11) {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) != 0) {
-                    dProgressWarn() << tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    this->warnOrReportSubtile(tr("Unreachable Subtile %1 in Tile %2 propagates the room-index.").arg(subtileIdx + 1).arg(i + 1), subtileIdx);
                     result = true;
                 }
             } else {
                 if (subtileIdx != UNDEF_SUBTILE && (this->sol->getSubtileProperties(subtileIdx) & PFLAG_BLOCK_PATH) == 0 && this->spt->getSubtileSpecProperty(subtileIdx) == 0) {
-                    dProgressWarn() << tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1);
+                    this->warnOrReportSubtile(tr("Walkable Subtile %1 in Tile %2 does not propagate the room-index.").arg(subtileIdx + 1).arg(i + 1), subtileIdx);
                     result = true;
                 }
             }

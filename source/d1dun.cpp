@@ -1155,43 +1155,12 @@ void D1Dun::DrawLine(int x0, int y0, int x1, int y1, uint8_t color)
     DunPainter->setPen(basePen);
 }
 
-void D1Dun::DrawAutomapDirt(int x, int y)
-{
-    unsigned d32 = AmLine32;
-    unsigned d16 = (d32 >> 1), d8 = (d32 >> 2), d4 = (d32 >> 3);
-
-    /*            07
-              01      03
-          05      00      06
-      09      02      04      10
-          11      08      12
-              13      14
-                  15
-    */
-    DrawPixel(x, y, COLOR_DIM);                 // 00
-    DrawPixel(x - d8, y - d4, COLOR_DIM);       // 01
-    DrawPixel(x - d8, y + d4, COLOR_DIM);       // 02
-    DrawPixel(x + d8, y - d4, COLOR_DIM);       // 03
-    DrawPixel(x + d8, y + d4, COLOR_DIM);       // 04
-    DrawPixel(x - d16, y, COLOR_DIM);           // 05
-    DrawPixel(x + d16, y, COLOR_DIM);           // 06
-    DrawPixel(x, y - d8, COLOR_DIM);            // 07
-    DrawPixel(x, y + d8, COLOR_DIM);            // 08
-    DrawPixel(x - d32 + d8, y + d4, COLOR_DIM); // 09
-    DrawPixel(x + d32 - d8, y + d4, COLOR_DIM); // 10
-    DrawPixel(x - d16, y + d8, COLOR_DIM);      // 11
-    DrawPixel(x + d16, y + d8, COLOR_DIM);      // 12
-    DrawPixel(x - d8, y + d16 - d4, COLOR_DIM); // 13
-    DrawPixel(x + d8, y + d16 - d4, COLOR_DIM); // 14
-    DrawPixel(x, y + d16, COLOR_DIM);           // 15
-}
-
 void D1Dun::DrawAutomapExtern(int sx, int sy)
 {
     unsigned d32 = AmLine32;
     unsigned d16 = (d32 >> 1), d8 = (d32 >> 2), d4 = (d32 >> 3);
 
-    DrawPixel(sx, sy - d8, COLOR_DIM);        // 00
+    DrawPixel(sx, sy - d8, COLOR_DIM);
     return;
 
     /*    02
@@ -1204,71 +1173,17 @@ void D1Dun::DrawAutomapExtern(int sx, int sy)
     DrawPixel(sx, sy - d8, COLOR_DIM);            // 02
 }
 
-void D1Dun::DrawAutomapStairs(int x, int y)
+void D1Dun::DrawAutomapStairs(int sx, int sy)
 {
     unsigned d32 = AmLine32;
     unsigned d16 = (d32 >> 1), d8 = (d32 >> 2), d4 = (d32 >> 3);
 
-    DrawLine(x - d8, y - d16 + d4, x + d32 - d8, y + d4, COLOR_BRIGHT);
-    DrawLine(x - d16, y - d8, x + d16, y + d8, COLOR_BRIGHT);
-    DrawLine(x - d32 + d8, y - d4, x + d8, y + d16 - d4, COLOR_BRIGHT);
-    DrawLine(x - d32, y, x, y + d16, COLOR_BRIGHT);
-}
-
-void D1Dun::DrawAutomapSubStairs(int x, int y)
-{
-    unsigned d32 = AmLine32;
-    unsigned d16 = (d32 >> 1), d8 = (d32 >> 2), d4 = (d32 >> 3);
-
-    DrawLine(x - d16 + d8, y - d16 + d4, x + d8, y - d16 + d4 + d8, COLOR_BRIGHT);
-    DrawLine(x - d16, y - d8, x, y, COLOR_BRIGHT);
-}
-
-void D1Dun::DrawAutomapHorzDoor(int x, int y)
-{
-    unsigned d16 = AmLine16;
-    unsigned d8 = (d16 >> 1), d4 = (d16 >> 2);
-
-    DrawLine(x - d16, y - d8, x - d8, y - d4, COLOR_DIM); // left wall
-    DrawLine(x + d8, y + d4, x + d16, y + d8, COLOR_DIM); // right wall
-
-    // DrawAutomapDiamond(x, y + d8, COLOR_BRIGHT)
-    DrawLine(x - d16, y, x, y + d8, COLOR_BRIGHT); // top left
-    DrawLine(x, y + d8, x + d16, y, COLOR_BRIGHT); // top right
-    DrawLine(x, y - d8, x + d16, y, COLOR_BRIGHT); // bottom right
-    DrawLine(x - d16, y, x, y - d8, COLOR_BRIGHT); // bottom left
-}
-
-void D1Dun::DrawAutomapVertDoor(int x, int y)
-{
-    unsigned d16 = AmLine16;
-    unsigned d8 = (d16 >> 1), d4 = (d16 >> 2);
-
-    DrawLine(x - d16, y + d8, x - d8, y + d4, COLOR_DIM); // left wall
-    DrawLine(x + d8, y - d4, x + d16, y - d8, COLOR_DIM); // right wall
-
-    // DrawAutomapDiamond(x, y + d8, COLOR_BRIGHT)
-    DrawLine(x - d16, y, x, y + d8, COLOR_BRIGHT); // top left
-    DrawLine(x, y + d8, x + d16, y, COLOR_BRIGHT); // top right
-    DrawLine(x, y - d8, x + d16, y, COLOR_BRIGHT); // bottom right
-    DrawLine(x - d16, y, x, y - d8, COLOR_BRIGHT); // bottom left
-}
-
-void D1Dun::DrawAutomapDiamond(int x, int y)
-{
-    int d16 = AmLine16, y2;
-
-    y2 = y - (d16 >> 1);
-
-    DrawLine(x - d16, y2, x, y, COLOR_DIM);       // top left
-    DrawLine(x, y, x + d16, y2, COLOR_DIM);       // top right
-    DrawLine(x, y - d16, x + d16, y2, COLOR_DIM); // bottom right
-    DrawLine(x - d16, y2, x, y - d16, COLOR_DIM); // bottom left
+    DrawLine(sx - d16 + d8, sy - d16 + d4, sx + d8, sy - d16 + d4 + d8, COLOR_BRIGHT);
+    DrawLine(sx - d16, sy - d8, sx, sy, COLOR_BRIGHT);
 }
 
 void D1Dun::DrawAutomapDoorDiamond(int dir, int sx, int sy)
 {
-    // int y2;
     unsigned d32 = AmLine32;
     unsigned d16 = (d32 >> 1), d8 = (d32 >> 2), d4 = (d32 >> 3), d2 = (d32 >> 4);
 
@@ -1292,125 +1207,7 @@ void D1Dun::DrawAutomapDoorDiamond(int dir, int sx, int sy)
     DrawLine(sx, sy - 1, sx + d16 - 3, sy - d8 + 1, COLOR_BRIGHT);       // bottom right
 }
 
-void D1Dun::DrawMap(int sx, int sy, uint16_t automap_type)
-{
-    uint8_t type;
-
-    if (automap_type & MAF_EXTERN) {
-        D1Dun::DrawAutomapDirt(sx, sy);
-    }
-
-    if (automap_type & MAF_STAIRS) {
-        D1Dun::DrawAutomapStairs(sx, sy);
-    }
-
-    type = automap_type & MAF_TYPE;
-    automap_type &= ~MAF_TYPE;
-    switch (type) {
-    case MWT_NONE:
-    case MWT_CORNER:
-        break;
-    case MWT_PILLAR: // stand-alone column or other unpassable object
-        D1Dun::DrawAutomapDiamond(sx, sy);
-        break;
-    case MWT_NORTH_WEST:
-    case MWT_NORTH_WEST_END:
-        automap_type |= MAF_DO_NORTH_WEST;
-        break;
-    case MWT_NORTH_EAST:
-    case MWT_NORTH_EAST_END:
-        automap_type |= MAF_DO_NORTH_EAST;
-        break;
-    case MWT_NORTH:
-        automap_type |= MAF_DO_NORTH_EAST | MAF_DO_NORTH_WEST;
-        break;
-    case MWT_WEST:
-        automap_type |= MAF_DO_NORTH_WEST | MAF_DO_SOUTH_WEST;
-        break;
-    case MWT_EAST:
-        automap_type |= MAF_DO_NORTH_EAST | MAF_DO_SOUTH_EAST;
-        break;
-    case MWT_SOUTH_WEST:
-        automap_type |= MAF_DO_SOUTH_WEST;
-        break;
-    case MWT_SOUTH_EAST:
-        automap_type |= MAF_DO_SOUTH_EAST;
-        break;
-    case MWT_SOUTH:
-        automap_type |= MAF_DO_SOUTH_WEST | MAF_DO_SOUTH_EAST;
-        break;
-    default:
-        dProgressErr() << tr("Unknown automap-type: %1").arg(type);
-        break;
-    }
-
-    if (automap_type & MAF_DO_NORTH_WEST) {
-        if (automap_type & MAF_WEST_DOOR) {
-            unsigned d16 = AmLine16;
-            unsigned d8 = (d16 >> 1);
-            D1Dun::DrawAutomapVertDoor(sx - d16, sy - d8);
-        }
-        if (automap_type & MAF_WEST_GRATE) {
-            unsigned d32 = AmLine32;
-            unsigned d16 = (d32 >> 1), d8 = (d32 >> 2);
-            D1Dun::DrawLine(sx - d16, sy - d8, sx - d32, sy, COLOR_DIM);
-        }
-        if (automap_type & (MAF_WEST_GRATE | MAF_WEST_ARCH)) {
-            D1Dun::DrawAutomapDiamond(sx, sy);
-        }
-        if ((automap_type & (MAF_WEST_DOOR | MAF_WEST_GRATE | MAF_WEST_ARCH)) == 0) {
-            unsigned d32 = AmLine32;
-            unsigned d16 = (d32 >> 1);
-            D1Dun::DrawLine(sx, sy - d16, sx - d32, sy, COLOR_DIM);
-        }
-    }
-
-    if (automap_type & MAF_DO_NORTH_EAST) { // left-facing obstacle
-        if (automap_type & MAF_EAST_DOOR) {
-            unsigned d16 = AmLine16;
-            unsigned d8 = (d16 >> 1);
-            D1Dun::DrawAutomapHorzDoor(sx + d16, sy - d8);
-        }
-        if (automap_type & MAF_EAST_GRATE) {
-            unsigned d32 = AmLine32;
-            unsigned d16 = (d32 >> 1), d8 = (d32 >> 2);
-            D1Dun::DrawLine(sx + d16, sy - d8, sx + d32, sy, COLOR_DIM);
-        }
-        if (automap_type & (MAF_EAST_GRATE | MAF_EAST_ARCH)) {
-            D1Dun::DrawAutomapDiamond(sx, sy);
-        }
-        if ((automap_type & (MAF_EAST_DOOR | MAF_EAST_GRATE | MAF_EAST_ARCH)) == 0) {
-            unsigned d32 = AmLine32;
-            unsigned d16 = (d32 >> 1);
-            D1Dun::DrawLine(sx, sy - d16, sx + d32, sy, COLOR_DIM);
-        }
-    }
-
-    // for caves the horz/vert flags are switched
-    if (automap_type & MAF_DO_SOUTH_WEST) {
-        unsigned d32 = AmLine32;
-        unsigned d16 = (d32 >> 1);
-        if (automap_type & MAF_WEST_DOOR) {
-            unsigned d8 = (d32 >> 2);
-            D1Dun::DrawAutomapHorzDoor(sx - d16, sy + d8);
-        } else {
-            D1Dun::DrawLine(sx, sy + d16, sx - d32, sy, COLOR_DIM);
-        }
-    }
-
-    if (automap_type & MAF_DO_SOUTH_EAST) {
-        unsigned d32 = AmLine32;
-        unsigned d16 = (d32 >> 1);
-        if (automap_type & MAF_EAST_DOOR) {
-            unsigned d8 = (d32 >> 2);
-            D1Dun::DrawAutomapVertDoor(sx + d16, sy + d8);
-        } else {
-            D1Dun::DrawLine(sx, sy + d16, sx + d32, sy, COLOR_DIM);
-        }
-    }
-}
-
-void D1Dun::DrawSubMap(int sx, int sy, uint16_t automap_type)
+void D1Dun::DrawMap(int sx, int sy, uint8_t automap_type)
 {
     switch (automap_type & MAT_TYPE) {
     case MAT_NONE:
@@ -1419,7 +1216,7 @@ void D1Dun::DrawSubMap(int sx, int sy, uint16_t automap_type)
         D1Dun::DrawAutomapExtern(sx, sy);
         break;
     case MAT_STAIRS:
-        D1Dun::DrawAutomapSubStairs(sx, sy);
+        D1Dun::DrawAutomapStairs(sx, sy);
         break;
     case MAT_DOOR_WEST:
         D1Dun::DrawAutomapDoorDiamond(0, sx, sy);
@@ -1452,22 +1249,13 @@ void D1Dun::drawMeta(QPainter &dungeon, QImage &backImage, int drawCursorX, int 
     const unsigned backHeight = backImage.height() - 2 * CELL_BORDER;
 
     static_assert(TILE_WIDTH == 2 && TILE_HEIGHT == 2, "D1Dun::drawMeta skips boundary checks.");
-    /*if (params.showMap && (dunCursorX & 1) == 0 && (dunCursorY & 1) == 0) {
-        int tileRef = this->tiles[dunCursorY / TILE_HEIGHT][dunCursorX / TILE_WIDTH];
-        if (tileRef > 0 && tileRef <= this->til->getTileCount()) { // !0 || !UNDEF_TILE
-            quint8 mapType = this->tileset->amp->getTileType(tileRef - 1);
-            quint8 mapProp = this->tileset->amp->getTileProperties(tileRef - 1);
-
-            D1Dun::DrawMap(drawCursorX + backWidth / 2, drawCursorY - 1, mapType | (mapProp << 8));
-        }
-    }*/
     if (params.showMap) {
         int subtileRef = this->subtiles[dunCursorY][dunCursorX];
         if (subtileRef > 0 && subtileRef <= this->min->getSubtileCount()) { // !0 || !UNDEF_SUBTILE
             quint8 mapType = this->tileset->smp->getSubtileType(subtileRef - 1);
             quint8 mapProp = this->tileset->smp->getSubtileProperties(subtileRef - 1);
 
-            D1Dun::DrawSubMap(drawCursorX + backWidth / 2, drawCursorY - 1, mapType | mapProp);
+            D1Dun::DrawMap(drawCursorX + backWidth / 2, drawCursorY - 1, mapType | mapProp);
         }
     }
     if (params.showRooms) {

@@ -441,12 +441,11 @@ void InitLvlDungeon()
 		// patch dMiniTiles - L3.MIN
 		// - separate subtiles for the automap
 		// pSubtiles[258][0] = 0;
-		// pSubtiles[258][0] = 0;
 		// pSubtiles[406][0] = 0;
 		// pSubtiles[406][1] = 0;
 		// pSubtiles[406][3] = 0;
-		// pSubtiles[406][5] = 101;
-		// pSubtiles[406][7] = 100;
+		// pSubtiles[406][5] = 101 | (MET_TRANSPARENT << 12);
+		// pSubtiles[406][7] = 100 | (MET_TRANSPARENT << 12);
 		// pSubtiles[407][1] = 0;
 		// patch dMegaTiles - L3.TIL
 		// - separate subtiles for the automap
