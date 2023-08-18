@@ -278,7 +278,7 @@ bool D1Tileset::reuseFrames(std::set<int> &removedIndices, bool silent)
         }
     }
     auto amount = removedIndices.size();
-    progress.second = QString(QApplication::tr("Reused %n frame(s).", "", amount)).arg(amount);
+    progress.second = QApplication::tr("Reused %n frame(s).", "", amount);
     dProgress() << progress;
 
     ProgressDialog::decBar();
@@ -311,20 +311,20 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
             if (!match) {
                 continue;
             }
-            if (this->sol->getSubtileProperties(i) != this->sol->getSubtileProperties(j)) {
-                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the SOL-properties are different.").arg(i + 1).arg(j + 1);
-                continue;
-            }
-            if (this->tmi->getSubtileProperties(i) != this->tmi->getSubtileProperties(j)) {
-                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the TMI-properties are different.").arg(i + 1).arg(j + 1);
-                continue;
-            }
             if (this->spt->getSubtileSpecProperty(i) != this->spt->getSubtileSpecProperty(j) || this->spt->getSubtileTrapProperty(i) != this->spt->getSubtileTrapProperty(j)) {
                 dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the SPT-properties are different.").arg(i + 1).arg(j + 1);
                 continue;
             }
             if (this->smp->getSubtileType(i) != this->smp->getSubtileType(j) || this->smp->getSubtileProperties(i) != this->smp->getSubtileProperties(j)) {
                 dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the SMP-properties are different.").arg(i + 1).arg(j + 1);
+                continue;
+            }
+            if (this->sol->getSubtileProperties(i) != this->sol->getSubtileProperties(j)) {
+                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the SOL-properties are different.").arg(i + 1).arg(j + 1);
+                continue;
+            }
+            if (this->tmi->getSubtileProperties(i) != this->tmi->getSubtileProperties(j)) {
+                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the TMI-properties are different.").arg(i + 1).arg(j + 1);
                 continue;
             }
             // use subtile 'i' instead of subtile 'j'
@@ -357,7 +357,7 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
         }
     }
     auto amount = removedIndices.size();
-    dProgress() << QString(QApplication::tr("Reused %n subtile(s).", "", amount)).arg(amount);
+    dProgress() << QApplication::tr("Reused %n subtile(s).", "", amount);
 
     ProgressDialog::decBar();
     return result != 0;
@@ -423,7 +423,7 @@ bool D1Tileset::reuseTiles(std::set<int> &removedIndices)
         }
     }
     auto amount = removedIndices.size();
-    dProgress() << QString(QApplication::tr("Removed %n tile(s).", "", amount)).arg(amount);
+    dProgress() << QApplication::tr("Removed %n tile(s).", "", amount);
 
     ProgressDialog::decBar();
     return result != 0;
@@ -3363,6 +3363,9 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     // patch dMegaTiles - L1.TIL
     // make the inner tile at the entrance non-walkable II.
     ReplaceSubtile(this->til, 196 - 1, 3, 425 - 1, silent);
+    // fix shadow (use common subtiles)
+    ReplaceSubtile(this->til, 7 - 1, 1, 6 - 1, silent);
+    ReplaceSubtile(this->til, 37 - 1, 1, 6 - 1, silent);
     // use common subtiles
     ReplaceSubtile(this->til, 9 - 1, 2, 7 - 1, silent);    // 18
     ReplaceSubtile(this->til, 9 - 1, 3, 4 - 1, silent);    // 19
@@ -3421,6 +3424,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     // simplified door subtiles
     ReplaceSubtile(this->til, 25 - 1, 0, 392 - 1, silent); // 43
     ReplaceSubtile(this->til, 26 - 1, 0, 394 - 1, silent); // 45
+    ReplaceSubtile(this->til, 186 - 1, 0, 407 - 1, silent); // 212
     // create separate pillar tile
     ReplaceSubtile(this->til, 28 - 1, 0, 61 - 1, silent);
     ReplaceSubtile(this->til, 28 - 1, 1, 2 - 1, silent);
@@ -3497,7 +3501,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 153 - 1, 2, 328 - 1, silent);
     ReplaceSubtile(this->til, 153 - 1, 3, 299 - 1, silent);
     ReplaceSubtile(this->til, 154 - 1, 0, 14 - 1, silent);
-    ReplaceSubtile(this->til, 154 - 1, 1, 15 - 1, silent);
+    ReplaceSubtile(this->til, 154 - 1, 1, 6 - 1, silent);
     ReplaceSubtile(this->til, 154 - 1, 2, 328 - 1, silent);
     ReplaceSubtile(this->til, 154 - 1, 3, 299 - 1, silent);
     ReplaceSubtile(this->til, 155 - 1, 0, 340 - 1, silent);
@@ -3579,7 +3583,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 47 - 1, 2, 301 - 1, silent);
     ReplaceSubtile(this->til, 47 - 1, 3, 330 - 1, silent);
     ReplaceSubtile(this->til, 46 - 1, 0, 14 - 1, silent);
-    ReplaceSubtile(this->til, 46 - 1, 1, 15 - 1, silent);
+    ReplaceSubtile(this->til, 46 - 1, 1, 6 - 1, silent);
     ReplaceSubtile(this->til, 46 - 1, 2, 301 - 1, silent);
     ReplaceSubtile(this->til, 46 - 1, 3, 302 - 1, silent);
     // eliminate subtiles of unused tiles
@@ -3706,9 +3710,9 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(214, 2);
     ReplaceMcr(214, 0, 408, 0);
     ReplaceMcr(214, 1, 408, 1);
-    ReplaceMcr(212, 0, 407, 0);
-    ReplaceMcr(212, 2, 392, 2);
-    ReplaceMcr(212, 4, 231, 4);
+    // ReplaceMcr(212, 0, 407, 0);
+    // ReplaceMcr(212, 2, 392, 2);
+    // ReplaceMcr(212, 4, 231, 4);
     Blk2Mcr(408, 4);
     Blk2Mcr(408, 2);
     HideMcr(44, 6);
@@ -3773,7 +3777,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(171, 5);
     ReplaceMcr(171, 3, 176, 3); // lost details
     // fix graphical glitch
-    ReplaceMcr(15, 1, 6, 1);
+    // ReplaceMcr(15, 1, 6, 1);
     ReplaceMcr(134, 1, 6, 1);
     ReplaceMcr(65, 7, 9, 7);
     ReplaceMcr(66, 7, 9, 7);
@@ -3817,7 +3821,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(63, 1, 53, 1);
     // ReplaceMcr(58, 1, 53, 1);
     ReplaceMcr(206, 1, 3, 1);
-    ReplaceMcr(15, 7, 6, 7); // lost details
+    // ReplaceMcr(15, 7, 6, 7); // lost details
     // ReplaceMcr(56, 7, 6, 7); // lost details
     // ReplaceMcr(60, 7, 6, 7); // lost details
     ReplaceMcr(127, 7, 6, 7);
@@ -3839,7 +3843,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(369, 7, 6, 7);
     ReplaceMcr(373, 7, 6, 7);
 
-    ReplaceMcr(15, 5, 6, 5);
+    // ReplaceMcr(15, 5, 6, 5);
     // ReplaceMcr(46, 5, 6, 5);
     // ReplaceMcr(56, 5, 6, 5);
     ReplaceMcr(127, 5, 6, 5);
@@ -3863,13 +3867,13 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(246, 3, 15, 3); // lost details
     // ReplaceMcr(251, 3, 15, 3);
     // ReplaceMcr(416, 3, 15, 3);
-    ReplaceMcr(15, 1, 6, 1);
+    // ReplaceMcr(15, 1, 6, 1);
     ReplaceMcr(134, 1, 6, 1);
     ReplaceMcr(198, 1, 6, 1);
     ReplaceMcr(202, 1, 6, 1);
     ReplaceMcr(323, 1, 6, 1);
     // ReplaceMcr(416, 1, 6, 1);
-    ReplaceMcr(15, 0, 6, 0);
+    // ReplaceMcr(15, 0, 6, 0);
 
     ReplaceMcr(249, 1, 11, 1);
     ReplaceMcr(325, 1, 11, 1);
@@ -3895,7 +3899,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(205, 6, 1, 6);
     ReplaceMcr(207, 6, 1, 6);
     ReplaceMcr(209, 6, 1, 6);
-    ReplaceMcr(212, 6, 1, 6);
+    // ReplaceMcr(212, 6, 1, 6);
     ReplaceMcr(227, 6, 1, 6);
     ReplaceMcr(231, 6, 1, 6);
     ReplaceMcr(235, 6, 1, 6);
@@ -4110,7 +4114,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(62, 1, 8, 1);  // lost details
     ReplaceMcr(205, 1, 8, 1); // lost details
     ReplaceMcr(207, 1, 8, 1); // lost details
-    ReplaceMcr(212, 1, 8, 1); // lost details 
+    // ReplaceMcr(212, 1, 8, 1); // lost details 
     ReplaceMcr(407, 1, 8, 1); // lost details 
     ReplaceMcr(227, 1, 8, 1); // lost details
     ReplaceMcr(231, 1, 8, 1); // lost details
@@ -4216,6 +4220,10 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
 
     // eliminate micros of unused subtiles
     // Blk2Mcr(39, 311 ...),
+    Blk2Mcr(15, 0);
+    Blk2Mcr(15, 1);
+    Blk2Mcr(15, 5);
+    Blk2Mcr(15, 7);
     Blk2Mcr(43, 0);
     Blk2Mcr(43, 1);
     Blk2Mcr(43, 2);
@@ -4570,7 +4578,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(449, 7);
 
     const int unusedSubtiles[] = {
-        18, 19, 71, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 113, 117, 119, 120, 121, 122, 125, 200, 220, 250, 253, 267, 268, 273, 275, 278, 280, 281, 282, 303, 305, 316, 318, 329, 331, 341, 405, 430, 432, 435, 436, 440
+        18, 19, 71, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 113, 117, 119, 120, 121, 122, 125, 200, 212, 220, 250, 253, 267, 268, 273, 275, 278, 280, 281, 282, 303, 305, 316, 318, 329, 331, 341, 405, 430, 432, 435, 436, 440
     };
     for (int n = 0; n < lengthof(unusedSubtiles); n++) {
         for (int i = 0; i < blockSize; i++) {
