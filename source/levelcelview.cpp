@@ -2246,10 +2246,11 @@ void LevelCelView::checkSubtileFlags() const
     for (int i = 0; i < this->min->getSubtileCount(); i++) {
         const std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
         quint8 tmiFlags = this->tmi->getSubtileProperties(i);
+        int specFrame = this->spt->getSubtileSpecProperty(i);
         if (tmiFlags & TMIF_WALL_TRANS) {
             // transp.wall
             // - at least one not transparent frame above the floor
-            bool hasColor = false;
+            bool hasColor = specFrame != 0;
             for (unsigned n = 0; n < frameRefs.size() - floorMicros; n++) {
                 unsigned frameRef = frameRefs[n];
                 if (frameRef == 0) {
@@ -2323,8 +2324,8 @@ void LevelCelView::checkSubtileFlags() const
                 rightPixels = rightFoliagePixels(this->gfx->getFrame(frameRefRight - 1));
                 rightType = this->gfx->getFrame(frameRefRight - 1)->getFrameType();
             }
-            bool leftAbove = false;
-            bool rightAbove = false;
+            bool leftAbove = specFrame != 0;
+            bool rightAbove = specFrame != 0;
             for (unsigned n = 0; n < frameRefs.size() - floorMicros; n++) {
                 unsigned frameRef = frameRefs[n];
                 if (frameRef == 0) {
