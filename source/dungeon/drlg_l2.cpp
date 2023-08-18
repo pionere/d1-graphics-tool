@@ -645,11 +645,8 @@ void DRLG_L2Shadows()
 			bool pillar = false;
 			bool horizArch = false;
 			bool vertArch = false;
-			// horizArch = (automaptype[bv] & MAF_EAST_ARCH) != 0;
-			// vertArch = (automaptype[bv] & MAF_WEST_ARCH) != 0;
 			horizArch = (nTrnShadowTable[bv] & TIF_L2_EAST_ARCH) != 0;
 			vertArch = (nTrnShadowTable[bv] & TIF_L2_WEST_ARCH) != 0;
-			// if (automaptype[bv] & MAF_EAST_DOOR) {
 			if (nTrnShadowTable[bv] & TIF_L2_EAST_DOOR) {
 				// shadow of the horizontal doors
 				BYTE replaceB = dungeon[i][j - 1];
@@ -787,7 +784,7 @@ void DRLG_L2Shadows()
 					dungeon[i - 1][j - 1] = replace;
 					dungeon[i - 1][j] = 50;
 				} else {
-					if (drlgFlags[i - 1][j] == 0 && (automaptype[dungeon[i - 1][j]] & MAF_TYPE) != MWT_NORTH_EAST && (automaptype[dungeon[i - 1][j]] & MAF_TYPE) != MWT_NORTH && dungeon[i - 1][j] != 9 && dungeon[i - 1][j] != 45 && dungeon[i - 1][j] != 50)
+					if (drlgFlags[i - 1][j] == 0 && dungeon[i - 1][j] != 9 && dungeon[i - 1][j] != 45 && dungeon[i - 1][j] != 50)
 						dProgressWarn() << QString("Missing case %1 for pillar %2 @%3:%4").arg(dungeon[i - 1][j]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
 				}
 			}

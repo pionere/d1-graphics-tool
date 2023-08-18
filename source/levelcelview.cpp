@@ -2075,10 +2075,10 @@ static int rightFoliagePixels(const D1GfxFrame *frame)
     return result;
 }
 
-void LevelCelView::warnOrReportSubtile(const QString &msg, int subtileIndex)
+void LevelCelView::warnOrReportSubtile(const QString &msg, int subtileIndex) const
 {
     std::vector<int> subtileUsers;
-    this->collectSubtileUsers(i, subtileUsers);
+    this->collectSubtileUsers(subtileIndex, subtileUsers);
     bool unused = subtileUsers.empty();
     if (unused) {
         dProgress() << msg;
