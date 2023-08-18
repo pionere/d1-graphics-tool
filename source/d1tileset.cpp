@@ -6045,7 +6045,7 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(96, 0, 62, 0);
     // ReplaceMcr(117, 0, 62, 0);
     // ReplaceMcr(120, 0, 62, 0);
-    ReplaceMcr(236, 0, 62, 0);
+    // ReplaceMcr(236, 0, 62, 0);
     ReplaceMcr(240, 0, 62, 0);
     ReplaceMcr(244, 0, 62, 0);
     ReplaceMcr(277, 0, 66, 0);
@@ -13177,14 +13177,14 @@ void D1Tileset::cleanupHell(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(31, 1, 6, 1);
     ReplaceMcr(193, 1, 6, 1);
     ReplaceMcr(201, 1, 6, 1);
-    ReplaceMcr(245, 1, 6, 1);
+    // ReplaceMcr(245, 1, 6, 1);
 
     ReplaceMcr(217, 1, 213, 1);
 
     ReplaceMcr(25, 0, 6, 0);
     ReplaceMcr(31, 0, 6, 0);
     ReplaceMcr(217, 0, 6, 0);
-    ReplaceMcr(245, 0, 6, 0); // lost details
+    // ReplaceMcr(245, 0, 6, 0); // lost details
 
     ReplaceMcr(21, 8, 260, 8);
     ReplaceMcr(27, 8, 260, 8);
@@ -16202,10 +16202,10 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 43 - 1, 2, 15 - 1, silent);
     // ReplaceSubtile(this->til, 79 - 1, 2, 15 - 1, silent);
     ReplaceSubtile(this->til, 6 - 1, 2, 15 - 1, silent);    // 23
-    ReplaceSubtile(this->til, 7 - 1, 2, 18 - 1, silent);    // 27
-    ReplaceSubtile(this->til, 9 - 1, 2, 18 - 1, silent);
-    ReplaceSubtile(this->til, 33 - 1, 2, 18 - 1, silent);
-    ReplaceSubtile(this->til, 137 - 1, 2, 18 - 1, silent);
+    ReplaceSubtile(this->til, 7 - 1, 2, 7 - 1, silent);    // 27
+    ReplaceSubtile(this->til, 9 - 1, 2, 7 - 1, silent);
+    ReplaceSubtile(this->til, 33 - 1, 2, 7 - 1, silent);
+    ReplaceSubtile(this->til, 137 - 1, 2, 7 - 1, silent);
     ReplaceSubtile(this->til, 104 - 1, 3, 48 - 1, silent);  // 304
     ReplaceSubtile(this->til, 108 - 1, 0, 45 - 1, silent);  // 309
     ReplaceSubtile(this->til, 127 - 1, 2, 4 - 1, silent);   // 372
