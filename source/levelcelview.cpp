@@ -2619,6 +2619,23 @@ bool LevelCelView::reuseSubtiles()
     return result;
 }
 
+bool LevelCelView::reuseTiles()
+{
+    std::set<int> removedIndices;
+
+    bool result = this->tileset->reuseTiles(removedIndices);
+
+    // update tile index if necessary
+    auto it = removedIndices.lower_bound(this->currentTileIndex);
+    if (it != removedIndices.begin()) {
+        if (*it == this->currentTileIndex)
+            it--;
+        this->currentTileIndex -= std::distance(removedIndices.begin(), it);
+    }
+
+    return result;
+}
+
 void LevelCelView::compressSubtiles()
 {
     if (this->reuseFrames()) {
@@ -2637,7 +2654,7 @@ void LevelCelView::compressTiles()
 
 void LevelCelView::compressTileset()
 {
-    ProgressDialog::incBar(tr("Compressing tileset..."), 2);
+    ProgressDialog::incBar(tr("Compressing tileset..."), 3);
 
     bool reusedFrame = this->reuseFrames();
 
@@ -2649,7 +2666,11 @@ void LevelCelView::compressTileset()
 
     bool reusedSubtile = this->reuseSubtiles();
 
-    if (reusedFrame || reusedSubtile) {
+    ProgressDialog::incValue();
+
+    bool reusedTile = this->reuseTiles();
+
+    if (reusedFrame || reusedSubtile || reusedTile) {
         // update the view - done by the caller
         // this->displayFrame();
     }

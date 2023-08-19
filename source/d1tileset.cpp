@@ -363,6 +363,72 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
     return result != 0;
 }
 
+bool D1Tileset::reuseTiles(std::set<int> &removedIndices)
+{
+    ProgressDialog::incBar(QApplication::tr("Deduplicating tiles..."), this->til->getTileCount());
+    int result = 0;
+    for (int i = 0; i < this->til->getTileCount(); i++) {
+        if (ProgressDialog::wasCanceled()) {
+            result |= 2;
+            break;
+        }
+        for (int j = i + 1; j < this->til->getTileCount(); j++) {
+            std::vector<int> &subtileIndices0 = this->til->getSubtileIndices(i);
+            std::vector<int> &subtileIndices1 = this->til->getSubtileIndices(j);
+            if (subtileIndices0.size() != subtileIndices1.size()) {
+                continue; // should not happen, but better safe than sorry
+            }
+            bool match = true;
+            for (unsigned x = 0; x < subtileIndices0.size(); x++) {
+                if (subtileIndices0[x] == subtileIndices1[x]) {
+                    continue;
+                }
+                match = false;
+                break;
+            }
+            if (!match) {
+                continue;
+            }
+            if (this->tla->getTileProperties(i) != this->tla->getTileProperties(j)) {
+                dProgress() << QApplication::tr("Tile %1 has the same subtiles as Tile %2, but the TLA-properties are different.").arg(i + 1).arg(j + 1);
+                continue;
+            }
+            // remove tile 'j'
+            this->removeTile(j);
+            // calculate the original indices
+            int originalIndexI = i;
+            for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
+                if (*iter <= originalIndexI) {
+                    originalIndexI++;
+                    continue;
+                }
+                break;
+            }
+            int originalIndexJ = j;
+            for (auto iter = removedIndices.cbegin(); iter != removedIndices.cend(); ++iter) {
+                if (*iter <= originalIndexJ) {
+                    originalIndexJ++;
+                    continue;
+                }
+                break;
+            }
+            removedIndices.insert(originalIndexJ);
+            dProgress() << QApplication::tr("Removed Tile %1 because it was the same as Tile %2.").arg(originalIndexJ + 1).arg(originalIndexI + 1);
+            result = true;
+            j--;
+        }
+        if (!ProgressDialog::incValue()) {
+            result |= 2;
+            break;
+        }
+    }
+    auto amount = removedIndices.size();
+    dProgress() << QApplication::tr("Removed %n tile(s).", "", amount);
+
+    ProgressDialog::decBar();
+    return result != 0;
+}
+
 #define HideMcr(n, x) RemoveFrame(this->min, n, x, nullptr, silent);
 #define Blk2Mcr(n, x) RemoveFrame(this->min, n, x, &deletedFrames, silent);
 #define MICRO_IDX(blockSize, microIndex) ((blockSize) - (2 + ((microIndex) & ~1)) + ((microIndex)&1))
@@ -5464,7 +5530,6 @@ void D1Tileset::cleanupCatacombs(std::set<unsigned> &deletedFrames, bool silent)
 {
     constexpr int blockSize = BLOCK_SIZE_L2;
 
-    // reuse subtiles
     // unified columns
     ReplaceSubtile(this->til, 6 - 1, 1, 26 - 1, silent);
     ReplaceSubtile(this->til, 6 - 1, 3, 12 - 1, silent);
