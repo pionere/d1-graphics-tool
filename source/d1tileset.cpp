@@ -565,6 +565,29 @@ typedef struct {
     D1CEL_FRAME_TYPE res_encoding;
 } CelMicro;
 
+std::pair<unsigned, D1GfxFrame *> D1Tileset::getFrame(int subtileIndex, int blockSize, unsigned microIndex)
+{
+    // TODO: check if there are enough subtiles
+    std::vector<unsigned> &frameReferences = this->min->getFrameReferences(subtileIndex);
+    if (frameReferences.size() != blockSize) {
+        dProgressErr() << QApplication::tr("Subtile (%1) is invalid (upscaled?).").arg(subtileIndex + 1);
+        return std::pair<unsigned, D1GfxFrame *>(0, nullptr);
+    }
+    microIndex = MICRO_IDX(blockSize, microIndex);
+
+    unsigned frameRef = frameReferences[microIndex];
+    if (frameRef == 0) {
+        dProgressErr() << QApplication::tr("Subtile (%1) has invalid (missing) frames.").arg(subtileIndex + 1);
+        return std::pair<unsigned, D1GfxFrame *>(0, nullptr);
+    }
+    D1GfxFrame *frame = this->gfx->getFrame(frameRef - 1);
+    if (frame->getWidth() != MICRO_WIDTH || frame->getWidth() != MICRO_WIDTH) {
+        dProgressErr() << QApplication::tr("Subtile (%1) is invalid (upscaled?).").arg(subtileIndex + 1);
+        return std::pair<unsigned, D1GfxFrame *>(0, nullptr);
+    }
+    return std::pair<unsigned, D1GfxFrame *>(frameRef, frame);
+}
+
 void D1Tileset::patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool silent)
 {
     std::vector<unsigned> &leftFrameReferences = this->min->getFrameReferences(potLeftSubtileRef - 1);
@@ -15797,46 +15820,22 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
     }
 }
 
-std::pair<unsigned, D1GfxFrame *> D1Tileset::getFrame(int subtileIndex, int blockSize, unsigned microIndex)
-{
-    // TODO: check if there are enough subtiles
-    std::vector<unsigned> &frameReferences = this->min->getFrameReferences(subtileIndex);
-    if (frameReferences.size() != blockSize) {
-        dProgressErr() << QApplication::tr("Subtile (%1) is invalid (upscaled?).").arg(subtileIndex + 1);
-        return std::pair<unsigned, D1GfxFrame *>(0, nullptr);
-    }
-    microIndex = MICRO_IDX(blockSize, microIndex);
-
-    unsigned frameRef = frameReferences[microIndex];
-    if (frameRef == 0) {
-        dProgressErr() << QApplication::tr("Subtile (%1) has invalid (missing) frames.").arg(subtileIndex + 1);
-        return std::pair<unsigned, D1GfxFrame *>(0, nullptr);
-    }
-    D1GfxFrame *frame = this->gfx->getFrame(frameRef - 1);
-    if (frame->getWidth() != MICRO_WIDTH || frame->getWidth() != MICRO_WIDTH) {
-        dProgressErr() << QApplication::tr("Subtile (%1) is invalid (upscaled?).").arg(subtileIndex + 1);
-        return std::pair<unsigned, D1GfxFrame *>(0, nullptr);
-    }
-    return std::pair<unsigned, D1GfxFrame *>(frameRef, frame);
-}
-
-void D1Tileset::fillCryptShapes(bool silent)
+void D1Tileset::patchCryptFloor(bool silent)
 {
     const CelMicro micros[] = {
         // clang-format off
-        { 159 - 1, 3, D1CEL_FRAME_TYPE::Square },            // 473
-//      { 159 - 1, 3, D1CEL_FRAME_TYPE::RightTrapezoid },    // 475
-        { 336 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // 907
-        { 409 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // 1168
-        { 481 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },     // 1406
-        { 492 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // 1436
-        { 519 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // 1493
-        { 595 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },     // 1710
-        { 368 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },     // 1034
-        { 162 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare }, // 483
-        {  63 - 1, 4, D1CEL_FRAME_TYPE::Square },            // 239
-        { 450 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // 1315
-        { 206 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // 571
+/*  0 */ { 159 - 1, 3, D1CEL_FRAME_TYPE::Square },
+/*  1 */ { 336 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/*  2 */ { 409 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/*  3 */ { 481 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/*  4 */ { 492 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/*  5 */ { 519 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/*  6 */ { 595 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/*  7 */ { 368 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/*  8 */ { 162 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  9 */ {  63 - 1, 4, D1CEL_FRAME_TYPE::Square },
+/* 10 */ { 450 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 11 */ { 206 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
         // clang-format on
     };
 
@@ -15849,18 +15848,18 @@ void D1Tileset::fillCryptShapes(bool silent)
             return;
         }
         bool change = false;
-        if (i == 1) { // 907
+        if (i == 1) { // 336[0]
             change |= frame->setPixel(30, 1, D1GfxPixel::colorPixel(46));
             change |= frame->setPixel(31, 1, D1GfxPixel::colorPixel(76));
         }
-        if (i == 5) { // 1493
+        if (i == 5) { // 519[0]
             change |= frame->setPixel(0, 16, D1GfxPixel::colorPixel(43));
         }
-        if (i == 7) { // 1043
+        if (i == 7) { // 368[1]
             change |= frame->setPixel(0, 7, D1GfxPixel::colorPixel(43));
             change |= frame->setPixel(0, 9, D1GfxPixel::colorPixel(41));
         }
-        if (i == 8) { // 483
+        if (i == 8) { // 162[2]
             change |= frame->setPixel(31, 13, D1GfxPixel::colorPixel(41));
             change |= frame->setPixel(31, 14, D1GfxPixel::colorPixel(36));
             change |= frame->setPixel(31, 18, D1GfxPixel::colorPixel(36));
@@ -15870,11 +15869,11 @@ void D1Tileset::fillCryptShapes(bool silent)
             change |= frame->setPixel(31, 22, D1GfxPixel::colorPixel(40));
             change |= frame->setPixel(31, 29, D1GfxPixel::colorPixel(36));
         }
-        if (i == 9) { // 239
+        if (i == 9) { // 63[4]
             change |= frame->setPixel(0, 19, D1GfxPixel::colorPixel(91));
             change |= frame->setPixel(0, 20, D1GfxPixel::colorPixel(93));
         }
-        if (i == 10) { // 1315
+        if (i == 10) { // 450[0]
             for (int y = 13; y < 16; y++) {
                 for (int x = 2; x < 8; x++) {
                     if (y > 14 - (x - 2) / 2) {
@@ -17891,7 +17890,7 @@ void D1Tileset::patch(int dunType, bool silent)
             dProgressErr() << QApplication::tr("Invalid MIN file. Subtile-count is less than %1").arg(650);
             break;
         }
-        this->fillCryptShapes(silent);
+        this->patchCryptFloor(silent);
         this->maskCryptBlacks(silent);
         this->fixCryptShadows(silent);
         this->cleanupCrypt(deletedFrames, silent);

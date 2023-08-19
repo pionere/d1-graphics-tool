@@ -52,6 +52,8 @@ public:
     D1Smp *smp;
 
 private:
+    std::pair<unsigned, D1GfxFrame *> getFrame(int subtileIndex, int blockSize, unsigned microIndex);
+
     void patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool silent);
     void patchTownCathedral(int cathedralTopLeftRef, int cathedralTopRightRef, int cathedralBottomLeftRef, bool silent);
     bool patchTownFloor(bool silent);
@@ -88,8 +90,7 @@ private:
     bool patchNestWall2(bool silent);
     void cleanupNest(std::set<unsigned> &deletedFrames, bool silent);
 
-    std::pair<unsigned, D1GfxFrame *> getFrame(int subtileIndex, int blockSize, unsigned microIndex);
-    void fillCryptShapes(bool silent);
+    void patchCryptFloor(bool silent);
     void maskCryptBlacks(bool silent);
     void fixCryptShadows(bool silent);
     void cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent);
