@@ -278,7 +278,7 @@ bool D1Tileset::reuseFrames(std::set<int> &removedIndices, bool silent)
         }
     }
     auto amount = removedIndices.size();
-    progress.second = QString(QApplication::tr("Reused %n frame(s).", "", amount)).arg(amount);
+    progress.second = QApplication::tr("Reused %n frame(s).", "", amount);
     dProgress() << progress;
 
     ProgressDialog::decBar();
@@ -311,6 +311,22 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
             if (!match) {
                 continue;
             }
+            if (this->spt->getSubtileSpecProperty(i) != this->spt->getSubtileSpecProperty(j) || this->spt->getSubtileTrapProperty(i) != this->spt->getSubtileTrapProperty(j)) {
+                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the SPT-properties are different.").arg(i + 1).arg(j + 1);
+                continue;
+            }
+            if (this->smp->getSubtileType(i) != this->smp->getSubtileType(j) || this->smp->getSubtileProperties(i) != this->smp->getSubtileProperties(j)) {
+                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the SMP-properties are different.").arg(i + 1).arg(j + 1);
+                continue;
+            }
+            if (this->sol->getSubtileProperties(i) != this->sol->getSubtileProperties(j)) {
+                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the SOL-properties are different.").arg(i + 1).arg(j + 1);
+                continue;
+            }
+            if (this->tmi->getSubtileProperties(i) != this->tmi->getSubtileProperties(j)) {
+                dProgress() << QApplication::tr("Subtile %1 has the same frames as Subtile %2, but the TMI-properties are different.").arg(i + 1).arg(j + 1);
+                continue;
+            }
             // use subtile 'i' instead of subtile 'j'
             this->removeSubtile(j, i);
             // calculate the original indices
@@ -341,7 +357,7 @@ bool D1Tileset::reuseSubtiles(std::set<int> &removedIndices)
         }
     }
     auto amount = removedIndices.size();
-    dProgress() << QString(QApplication::tr("Reused %n subtile(s).", "", amount)).arg(amount);
+    dProgress() << QApplication::tr("Reused %n subtile(s).", "", amount);
 
     ProgressDialog::decBar();
     return result != 0;
