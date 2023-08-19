@@ -16007,16 +16007,18 @@ void D1Tileset::fixCryptShadows(bool silent)
 /*  8 */{ 634 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
 
 /*  9 */{ 277 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 10 */{ 620 - 1, 0, D1CEL_FRAME_TYPE::RightTriangle },
-/* 11 */{ 621 - 1, 1, D1CEL_FRAME_TYPE::Square },
-/* 12 */{ 625 - 1, 0, D1CEL_FRAME_TYPE::RightTriangle },
-/* 13 */{ 624 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 14 */{ 619 - 1, 1, D1CEL_FRAME_TYPE::LeftTrapezoid },
-/* 15 */{ 303 - 1, 1, D1CEL_FRAME_TYPE::Empty },
-/* 16 */{  15 - 1, 1, D1CEL_FRAME_TYPE::Empty },
-/* 17 */{  15 - 1, 2, D1CEL_FRAME_TYPE::Empty },
-/* 18 */{  89 - 1, 1, D1CEL_FRAME_TYPE::Empty },
-/* 19 */{  89 - 1, 2, D1CEL_FRAME_TYPE::Empty },
+/* 10 */{ 303 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+
+/* 11 */{ 620 - 1, 0, D1CEL_FRAME_TYPE::RightTriangle },
+/* 12 */{ 621 - 1, 1, D1CEL_FRAME_TYPE::Square },
+/* 13 */{ 625 - 1, 0, D1CEL_FRAME_TYPE::RightTriangle },
+/* 14 */{ 624 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 15 */{  15 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 16 */{  15 - 1, 2, D1CEL_FRAME_TYPE::Empty },
+/* 17 */{  89 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 18 */{  89 - 1, 2, D1CEL_FRAME_TYPE::Empty },
+
+/* 19 */{ 619 - 1, 1, D1CEL_FRAME_TYPE::LeftTrapezoid },
         // clang-format on
     };
 
@@ -16080,20 +16082,16 @@ void D1Tileset::fixCryptShadows(bool silent)
         }
         }
 
-    if (i >= 9 && i < 15) {
-        D1GfxFrame *frameSrc = nullptr;
-        if (i != 9 + 5) { // 619[1]
-            const CelMicro &microSrc = micros[i + 6];
+        //  use consistent lava + shadow micro II. 277[1]
+        if (i == 9) {
+            const CelMicro &microSrc = micros[10]; // 303[1]
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             frameSrc = mf.second;
             if (frameSrc == nullptr) {
                 return;
             }
-        }
-        for (int y = 0; y < MICRO_WIDTH; y++) {
-            for (int x = 0; x < MICRO_WIDTH; x++) {
-                //  use consistent lava + shadow micro II.
-                if (i == 9 + 0) { // 277[1]
+            for (int y = 0; y < MICRO_WIDTH; y++) {
+                for (int x = 0; x < MICRO_WIDTH; x++) {
                     if (x > 11) {
                         continue;
                     }
@@ -16103,19 +16101,27 @@ void D1Tileset::fixCryptShadows(bool silent)
                     if (x == 10 && (y == 18 || y == 19)) {
                         continue;
                     }
-                    D1GfxPixel pixelSrc = frameSrc->getPixel(x, y);
+                    D1GfxPixel pixelSrc = frameSrc->getPixel(x, y); // 303[1]
                     if (pixelSrc.isTransparent()) {
                         continue;
                     }
                     change |= frame->setPixel(x, y, pixelSrc);
-                    continue;
                 }
+            }
+        }
 
+        // draw the new micros
+    if (i >= 11 && i < 15) {
+            const CelMicro &microSrc = micros[i + 4];
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            if (frameSrc == nullptr) {
+                return;
+            }
+        for (int y = 0; y < MICRO_WIDTH; y++) {
+            for (int x = 0; x < MICRO_WIDTH; x++) {
                 D1GfxPixel srcPixel = frameSrc != nullptr ? frameSrc->getPixel(x, y) : SHADOW_COLOR;
-                if (i == 9 + 5) { // 619[1]
-                    srcPixel = y > 16 + x / 2 ? D1GfxPixel::transparentPixel() : SHADOW_COLOR;
-                }
-                if (i == 9 + 1 && !srcPixel.isTransparent()) { // 15[1] -> 620[0]
+                if (i == 11 && !srcPixel.isTransparent()) { // 15[1] -> 620[0]
                     // wall/floor in shadow
                     if (x <= 1) {
                         if (y >= 4 * x) {
@@ -16135,7 +16141,7 @@ void D1Tileset::fixCryptShadows(bool silent)
                         }
                     }
                 }
-                if (i == 9 + 3 && !srcPixel.isTransparent()) { // 89[1] -> 625[0]
+                if (i == 13 && !srcPixel.isTransparent()) { // 89[1] -> 625[0]
                     // grate/floor in shadow
                     if (x <= 1 && y >= 7 * x) {
                         srcPixel = SHADOW_COLOR;
@@ -16144,7 +16150,7 @@ void D1Tileset::fixCryptShadows(bool silent)
                         srcPixel = SHADOW_COLOR;
                     }
                 }
-                if (i == 9 + 2 || i == 9 + 4) { // 15[2], 89[2] -> 621[1], 624[0]
+                if (i == 12 || i == 14) { // 15[2], 89[2] -> 621[1], 624[0]
                     // wall/grate in shadow
                     if (y >= 7 * (x - 27) && !srcPixel.isTransparent()) {
                         srcPixel = SHADOW_COLOR;
@@ -16155,6 +16161,16 @@ void D1Tileset::fixCryptShadows(bool silent)
             }
         }
     }
+        // create shadow micro - 619[1]
+        if (i == 19) {
+            for (int y = 0; y < MICRO_WIDTH; y++) {
+                for (int x = 0; x < MICRO_WIDTH; x++) {
+                    D1GfxPixel pixel = y > 16 + x / 2 ? D1GfxPixel::transparentPixel() : SHADOW_COLOR;
+                    change |= frame->setPixel(x, y, pixel);
+                }
+            }
+        }
+
         // fix bad artifacts
         if (i == 7) { // 634[0]
             change |= frame->setPixel(22, 20, SHADOW_COLOR);
