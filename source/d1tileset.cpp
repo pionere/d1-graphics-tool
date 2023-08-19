@@ -15996,40 +15996,45 @@ void D1Tileset::fixCryptShadows(bool silent)
 {
     const CelMicro micros[] = {
         // clang-format off
-        { 626 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },  // 1806 - 205
-        { 626 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1807
-        // { 627 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },  // 1808
-        { 638 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1824 - 211
-        { 639 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },  // 1825
-        { 639 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1799
-        // { 631 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1815 - 207
-        { 634 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },  // 1818 - 208
-        { 634 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, // 1819
+/*  0 */{ 626 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/*  1 */{ 626 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/*  2 */{ /*627*/ - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/*  3 */{ 638 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/*  4 */{ 639 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/*  5 */{ 639 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/*  6 */{ /*631*/ - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/*  7 */{ 634 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/*  8 */{ 634 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
 
-        { 277 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare }, // 722 - 96
-        { 620 - 1, 0, D1CEL_FRAME_TYPE::RightTriangle },     // 1798 - '109'
-        { 621 - 1, 1, D1CEL_FRAME_TYPE::Square },            // 1800
-        { 625 - 1, 0, D1CEL_FRAME_TYPE::RightTriangle },     // 1805 - '215'
-        { 624 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare }, // 1804
-        { 619 - 1, 1, D1CEL_FRAME_TYPE::LeftTrapezoid },     // 1797 - '109' + '215'
-        { 303 - 1, 1, D1CEL_FRAME_TYPE::Empty }, // 797
-        {  15 - 1, 1, D1CEL_FRAME_TYPE::Empty }, // 14
-        {  15 - 1, 2, D1CEL_FRAME_TYPE::Empty }, // 12
-        {  89 - 1, 1, D1CEL_FRAME_TYPE::Empty }, // 311
-        {  89 - 1, 2, D1CEL_FRAME_TYPE::Empty }, // 309
+/*  9 */{ 277 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 10 */{ 620 - 1, 0, D1CEL_FRAME_TYPE::RightTriangle },
+/* 11 */{ 621 - 1, 1, D1CEL_FRAME_TYPE::Square },
+/* 12 */{ 625 - 1, 0, D1CEL_FRAME_TYPE::RightTriangle },
+/* 13 */{ 624 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 14 */{ 619 - 1, 1, D1CEL_FRAME_TYPE::LeftTrapezoid },
+/* 15 */{ 303 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 16 */{  15 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 17 */{  15 - 1, 2, D1CEL_FRAME_TYPE::Empty },
+/* 18 */{  89 - 1, 1, D1CEL_FRAME_TYPE::Empty },
+/* 19 */{  89 - 1, 2, D1CEL_FRAME_TYPE::Empty },
         // clang-format on
     };
 
     constexpr unsigned blockSize = BLOCK_SIZE_L5;
     const D1GfxPixel SHADOW_COLOR = D1GfxPixel::colorPixel(0); // 79;
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < lengthof(micros); i++) {
         const CelMicro &micro = micros[i];
+        if (micro.subtileIndex < 0) {
+            continue;
+        }
         std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
         D1GfxFrame *frame = microFrame.second;
         if (frame == nullptr) {
             return;
         }
         bool change = false;
+        // extend shadows of 626[0], 626[1], 638[1], 639[0], 639[1], 634[0], 634[1]
+        if (i < 9) {
         for (int y = 0; y < MICRO_WIDTH; y++) {
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 D1GfxPixel pixel = frame->getPixel(x, y);
@@ -16038,64 +16043,46 @@ void D1Tileset::fixCryptShadows(bool silent)
                 }
                 quint8 color = pixel.getPaletteIndex();
                 if (color != 79) {
-                    // extend the shadows to NE: 205[2][0, 1], 205[3][0]
-                    if (i == 0 && y <= (x / 2) + 13 - MICRO_HEIGHT / 2) { // 1806
+                    // extend the shadows to NE: 626[0], 626[1]
+                    if (i == 0 && y <= (x / 2) + 13 - MICRO_HEIGHT / 2) { // 626[0]
                         continue;
                     }
-                    if (i == 1 && y <= (x / 2) + 13) { // 1807
+                    if (i == 1 && y <= (x / 2) + 13) { // 626[1]
                         continue;
                     }
                     // if (i == 2 && y <= (x / 2) + 13 - MICRO_HEIGHT / 2) { // 1808
                     //    continue;
                     // }
                     // extend the shadows to NW: 211[0][1], 211[1][0]
-                    if (i == 2 && y <= 13 - (x / 2)) { // 1824
+                    if (i == 3 && y <= 13 - (x / 2)) { // 638[1]
                         continue;
                     }
-                    if (i == 3 && (x > 19 || y > 23) && (x != 16 || y != 24)) { // 1825
+                    if (i == 4 && (x > 19 || y > 23) && (x != 16 || y != 24)) { // 639[0]
                         continue;
                     }
-                    if (i == 4 && x <= 7) { // 1799
+                    if (i == 5 && x <= 7) { // 639[1]
                         continue;
                     }
-                    // extend the shadows to NW: 207[2][1]
-                    // if (i == 6 && y <= (x / 2) + 15) { // 1815
+                    // extend the shadows to NW: 631[1]
+                    // if (i == 6 && y <= (x / 2) + 15) { // 631[1]
                     //    continue;
                     // }
-                    // extend the shadows to NE: 208[2][0, 1]
-                    if (i == 5 && (y <= (x / 2) - 3 || (x >= 20 && y >= 14 && color >= 59 && color <= 95 && (color >= 77 || color <= 63)))) { // 1818
+                    // extend the shadows to NE: 634[0], 634[1]
+                    if (i == 7 && (y <= (x / 2) - 3 || (x >= 20 && y >= 14 && color >= 59 && color <= 95 && (color >= 77 || color <= 63)))) { // 634[0]
                         continue;
                     }
-                    if (i == 6 && (y <= (x / 2) + 13 || (x <= 8 && y >= 12 && color >= 62 && color <= 95 && (color >= 80 || color <= 63)))) { // 1819
+                    if (i == 8 && (y <= (x / 2) + 13 || (x <= 8 && y >= 12 && color >= 62 && color <= 95 && (color >= 80 || color <= 63)))) { // 634[1]
                         continue;
                     }
                 }
                 change |= frame->setPixel(x, y, SHADOW_COLOR);
             }
         }
-
-        // fix bad artifacts
-        if (i == 5) { // 1818
-            change |= frame->setPixel(22, 20, SHADOW_COLOR);
         }
 
-        if (change) {
-            // frame->setFrameType(micro.res_encoding);
-            this->gfx->setModified();
-            if (!silent) {
-                dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
-            }
-        }
-    }
-    for (int i = 7; i < 13; i++) {
-        const CelMicro &micro = micros[i];
-        std::pair<unsigned, D1GfxFrame *> microFrame = this->getFrame(micro.subtileIndex, blockSize, micro.microIndex);
-        D1GfxFrame *frame = microFrame.second;
-        if (frame == nullptr) {
-            return;
-        }
+    if (i >= 9 && i < 15) {
         D1GfxFrame *frameSrc = nullptr;
-        if (i != 7 + 5) { // 1797
+        if (i != 9 + 5) { // 619[1]
             const CelMicro &microSrc = micros[i + 6];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             frameSrc = mf.second;
@@ -16103,11 +16090,10 @@ void D1Tileset::fixCryptShadows(bool silent)
                 return;
             }
         }
-        bool change = false;
         for (int y = 0; y < MICRO_WIDTH; y++) {
             for (int x = 0; x < MICRO_WIDTH; x++) {
                 //  use consistent lava + shadow micro II.
-                if (i == 7 + 0) { // 722
+                if (i == 9 + 0) { // 277[1]
                     if (x > 11) {
                         continue;
                     }
@@ -16126,10 +16112,10 @@ void D1Tileset::fixCryptShadows(bool silent)
                 }
 
                 D1GfxPixel srcPixel = frameSrc != nullptr ? frameSrc->getPixel(x, y) : SHADOW_COLOR;
-                if (i == 7 + 5) { // 1797
+                if (i == 9 + 5) { // 619[1]
                     srcPixel = y > 16 + x / 2 ? D1GfxPixel::transparentPixel() : SHADOW_COLOR;
                 }
-                if (i == 7 + 1 && !srcPixel.isTransparent()) { // 14 -> 1798
+                if (i == 9 + 1 && !srcPixel.isTransparent()) { // 15[1] -> 620[0]
                     // wall/floor in shadow
                     if (x <= 1) {
                         if (y >= 4 * x) {
@@ -16149,7 +16135,7 @@ void D1Tileset::fixCryptShadows(bool silent)
                         }
                     }
                 }
-                if (i == 7 + 3 && !srcPixel.isTransparent()) { // 311 -> 1805
+                if (i == 9 + 3 && !srcPixel.isTransparent()) { // 89[1] -> 625[0]
                     // grate/floor in shadow
                     if (x <= 1 && y >= 7 * x) {
                         srcPixel = SHADOW_COLOR;
@@ -16158,7 +16144,7 @@ void D1Tileset::fixCryptShadows(bool silent)
                         srcPixel = SHADOW_COLOR;
                     }
                 }
-                if (i == 7 + 2 || i == 7 + 4) { // 12, 309 -> 1800, 1804
+                if (i == 9 + 2 || i == 9 + 4) { // 15[2], 89[2] -> 621[1], 624[0]
                     // wall/grate in shadow
                     if (y >= 7 * (x - 27) && !srcPixel.isTransparent()) {
                         srcPixel = SHADOW_COLOR;
@@ -16168,8 +16154,23 @@ void D1Tileset::fixCryptShadows(bool silent)
                 change |= frame->setPixel(x, y, srcPixel);
             }
         }
-        if (change) {
+    }
+        // fix bad artifacts
+        if (i == 7) { // 634[0]
+            change |= frame->setPixel(22, 20, SHADOW_COLOR);
+        }
+
+        if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {
+            change = true;
             frame->setFrameType(micro.res_encoding);
+            /*std::vector<FramePixel> pixels;
+            D1CelTilesetFrame::collectPixels(frame, micro.res_encoding, pixels);
+            for (const FramePixel &pix : pixels) {
+                D1GfxPixel resPix = pix.pixel.isTransparent() ? D1GfxPixel::colorPixel(0) : D1GfxPixel::transparentPixel();
+                change |= frame->setPixel(pix.pos.x(), pix.pos.y(), resPix);
+            }*/
+        }
+        if (change) {
             this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
