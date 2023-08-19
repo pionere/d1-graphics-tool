@@ -3551,7 +3551,7 @@
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="100"/>
         <source>Left</source>
-        <translatio>Bal</translation>
+        <translation>Bal</translation>
     </message>
     <message>
         <location filename="../source/leveltabsubtilewidget.ui" line="110"/>
