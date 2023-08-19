@@ -16086,7 +16086,7 @@ void D1Tileset::fixCryptShadows(bool silent)
         if (i == 9) {
             const CelMicro &microSrc = micros[10]; // 303[1]
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
-            frameSrc = mf.second;
+            D1GfxFrame *frameSrc = mf.second;
             if (frameSrc == nullptr) {
                 return;
             }
