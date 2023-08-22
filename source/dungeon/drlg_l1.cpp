@@ -929,9 +929,9 @@ void DRLG_L1Shadows()
 				case 36: replaceB = pillar ? 152 : 153; break;
 				case 164: continue;
 				default:
-					if (dungeon[i - 1][j - 1] != 54)
+					if (dungeon[i - 1][j - 1] != 53 && dungeon[i - 1][j - 1] != 54)
 					dProgressWarn() << QString("Missing case %1 for vertical arch %2 with floor @%3:%4").arg(dungeon[i - 1][j - 1]).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);
-					// 54 -> fix shadow in Banner1.DUN
+					// 53, 54 -> fix shadow in Banner1.DUN
 					dungeon[i - 1][j] = replaceB; // restore original value
 					continue;
 				}
