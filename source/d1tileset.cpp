@@ -3459,10 +3459,14 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 131 - 1, 1, 2 - 1, silent);
     ReplaceSubtile(this->til, 131 - 1, 2, 301 - 1, silent);
     ReplaceSubtile(this->til, 131 - 1, 3, 302 - 1, silent);
-    ReplaceSubtile(this->til, 132 - 1, 0, 296 - 1, silent);
-    ReplaceSubtile(this->til, 132 - 1, 1, 297 - 1, silent);
+    ReplaceSubtile(this->til, 132 - 1, 0, 23 - 1, silent);
+    ReplaceSubtile(this->til, 132 - 1, 1, 2 - 1, silent);
     ReplaceSubtile(this->til, 132 - 1, 2, 310 - 1, silent);
     ReplaceSubtile(this->til, 132 - 1, 3, 302 - 1, silent);
+    ReplaceSubtile(this->til, 126 - 1, 0, 296 - 1, silent);
+    ReplaceSubtile(this->til, 126 - 1, 1, 297 - 1, silent);
+    ReplaceSubtile(this->til, 126 - 1, 2, 310 - 1, silent);
+    ReplaceSubtile(this->til, 126 - 1, 3, 302 - 1, silent);
     // ReplaceSubtile(this->til, 139 - 1, 0, 296 - 1, silent);
     // ReplaceSubtile(this->til, 139 - 1, 1, 297 - 1, silent);
     ReplaceSubtile(this->til, 139 - 1, 2, 328 - 1, silent);
@@ -3471,10 +3475,14 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceSubtile(this->til, 140 - 1, 1, 2 - 1, silent);
     // ReplaceSubtile(this->til, 140 - 1, 2, 301 - 1, silent);
     ReplaceSubtile(this->til, 140 - 1, 3, 330 - 1, silent);
-    ReplaceSubtile(this->til, 141 - 1, 0, 296 - 1, silent);
-    ReplaceSubtile(this->til, 141 - 1, 1, 297 - 1, silent);
+    ReplaceSubtile(this->til, 141 - 1, 0, 23 - 1, silent);
+    ReplaceSubtile(this->til, 141 - 1, 1, 2 - 1, silent);
     ReplaceSubtile(this->til, 141 - 1, 2, 310 - 1, silent);
     ReplaceSubtile(this->til, 141 - 1, 3, 299 - 1, silent);
+    ReplaceSubtile(this->til, 127 - 1, 0, 296 - 1, silent);
+    ReplaceSubtile(this->til, 127 - 1, 1, 297 - 1, silent);
+    ReplaceSubtile(this->til, 127 - 1, 2, 310 - 1, silent);
+    ReplaceSubtile(this->til, 127 - 1, 3, 299 - 1, silent);
     // ReplaceSubtile(this->til, 142 - 1, 0, 307 - 1, silent);
     // ReplaceSubtile(this->til, 142 - 1, 1, 308 - 1, silent);
     // ReplaceSubtile(this->til, 142 - 1, 2, 7 - 1, silent);
@@ -3611,7 +3619,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 46 - 1, 3, 302 - 1, silent);
     // eliminate subtiles of unused tiles
     const int unusedTiles[] = {
-        30, 31, 34,/* 38,*/ 39, 40, 41, 42,/*43, 44,*/ 45, 79, 82, 86, 87, 88, 89, 90, 91, 92, 93, 95, 96, 119, 120, 126, 127, 177, 178, 179, 180, 181, 182, 183, 184, 185, 187, 188, 189, 190, 191, 192, 195, 197, 198, 199, 200, 201, 202, 203, 204, 205
+        30, 31, 34,/* 38,*/ 39, 40, 41, 42,/*43, 44,*/ 45, 79, 82, 86, 87, 88, 89, 90, 91, 92, 93, 95, 96, 119, 120, 177, 178, 179, 180, 181, 182, 183, 184, 185, 187, 188, 189, 190, 191, 192, 195, 197, 198, 199, 200, 201, 202, 203, 204, 205
     };
     constexpr int blankSubtile = 74 - 1;
     for (int n = 0; n < lengthof(unusedTiles); n++) {
@@ -15890,7 +15898,7 @@ void D1Tileset::patchCryptFloor(bool silent)
                 }
             }
         }
-        if (i == 11) { // 571
+        if (i == 11) { // 206[0]
             change |= frame->setPixel(26, 4, D1GfxPixel::colorPixel(45));
         }
         std::vector<FramePixel> pixels;
@@ -16037,49 +16045,49 @@ void D1Tileset::fixCryptShadows(bool silent)
         bool change = false;
         // extend shadows of 626[0], 626[1], 638[1], 639[0], 639[1], 634[0], 634[1]
         if (i < 9) {
-        for (int y = 0; y < MICRO_WIDTH; y++) {
-            for (int x = 0; x < MICRO_WIDTH; x++) {
-                D1GfxPixel pixel = frame->getPixel(x, y);
-                if (pixel.isTransparent()) {
-                    continue;
+            for (int y = 0; y < MICRO_WIDTH; y++) {
+                for (int x = 0; x < MICRO_WIDTH; x++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (pixel.isTransparent()) {
+                        continue;
+                    }
+                    quint8 color = pixel.getPaletteIndex();
+                    if (color != 79) {
+                        // extend the shadows to NE: 626[0], 626[1]
+                        if (i == 0 && y <= (x / 2) + 13 - MICRO_HEIGHT / 2) { // 626[0]
+                            continue;
+                        }
+                        if (i == 1 && y <= (x / 2) + 13) { // 626[1]
+                            continue;
+                        }
+                        // if (i == 2 && y <= (x / 2) + 13 - MICRO_HEIGHT / 2) { // 1808
+                        //    continue;
+                        // }
+                        // extend the shadows to NW: 211[0][1], 211[1][0]
+                        if (i == 3 && y <= 13 - (x / 2)) { // 638[1]
+                            continue;
+                        }
+                        if (i == 4 && (x > 19 || y > 23) && (x != 16 || y != 24)) { // 639[0]
+                            continue;
+                        }
+                        if (i == 5 && x <= 7) { // 639[1]
+                            continue;
+                        }
+                        // extend the shadows to NW: 631[1]
+                        // if (i == 6 && y <= (x / 2) + 15) { // 631[1]
+                        //    continue;
+                        // }
+                        // extend the shadows to NE: 634[0], 634[1]
+                        if (i == 7 && (y <= (x / 2) - 3 || (x >= 20 && y >= 14 && color >= 59 && color <= 95 && (color >= 77 || color <= 63)))) { // 634[0]
+                            continue;
+                        }
+                        if (i == 8 && (y <= (x / 2) + 13 || (x <= 8 && y >= 12 && color >= 62 && color <= 95 && (color >= 80 || color <= 63)))) { // 634[1]
+                            continue;
+                        }
+                    }
+                    change |= frame->setPixel(x, y, SHADOW_COLOR);
                 }
-                quint8 color = pixel.getPaletteIndex();
-                if (color != 79) {
-                    // extend the shadows to NE: 626[0], 626[1]
-                    if (i == 0 && y <= (x / 2) + 13 - MICRO_HEIGHT / 2) { // 626[0]
-                        continue;
-                    }
-                    if (i == 1 && y <= (x / 2) + 13) { // 626[1]
-                        continue;
-                    }
-                    // if (i == 2 && y <= (x / 2) + 13 - MICRO_HEIGHT / 2) { // 1808
-                    //    continue;
-                    // }
-                    // extend the shadows to NW: 211[0][1], 211[1][0]
-                    if (i == 3 && y <= 13 - (x / 2)) { // 638[1]
-                        continue;
-                    }
-                    if (i == 4 && (x > 19 || y > 23) && (x != 16 || y != 24)) { // 639[0]
-                        continue;
-                    }
-                    if (i == 5 && x <= 7) { // 639[1]
-                        continue;
-                    }
-                    // extend the shadows to NW: 631[1]
-                    // if (i == 6 && y <= (x / 2) + 15) { // 631[1]
-                    //    continue;
-                    // }
-                    // extend the shadows to NE: 634[0], 634[1]
-                    if (i == 7 && (y <= (x / 2) - 3 || (x >= 20 && y >= 14 && color >= 59 && color <= 95 && (color >= 77 || color <= 63)))) { // 634[0]
-                        continue;
-                    }
-                    if (i == 8 && (y <= (x / 2) + 13 || (x <= 8 && y >= 12 && color >= 62 && color <= 95 && (color >= 80 || color <= 63)))) { // 634[1]
-                        continue;
-                    }
-                }
-                change |= frame->setPixel(x, y, SHADOW_COLOR);
             }
-        }
         }
 
         //  use consistent lava + shadow micro II. 277[1]
@@ -16111,56 +16119,56 @@ void D1Tileset::fixCryptShadows(bool silent)
         }
 
         // draw the new micros
-    if (i >= 11 && i < 15) {
+        if (i >= 11 && i < 15) {
             const CelMicro &microSrc = micros[i + 4];
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
             if (frameSrc == nullptr) {
                 return;
             }
-        for (int y = 0; y < MICRO_WIDTH; y++) {
-            for (int x = 0; x < MICRO_WIDTH; x++) {
-                D1GfxPixel srcPixel = frameSrc != nullptr ? frameSrc->getPixel(x, y) : SHADOW_COLOR;
-                if (i == 11 && !srcPixel.isTransparent()) { // 15[1] -> 620[0]
-                    // wall/floor in shadow
-                    if (x <= 1) {
-                        if (y >= 4 * x) {
+            for (int y = 0; y < MICRO_WIDTH; y++) {
+                for (int x = 0; x < MICRO_WIDTH; x++) {
+                    D1GfxPixel srcPixel = frameSrc != nullptr ? frameSrc->getPixel(x, y) : SHADOW_COLOR;
+                    if (i == 11 && !srcPixel.isTransparent()) { // 15[1] -> 620[0]
+                        // wall/floor in shadow
+                        if (x <= 1) {
+                            if (y >= 4 * x) {
+                                srcPixel = SHADOW_COLOR;
+                            }
+                        } else if (x <= 3) {
+                            if (y > 6 + (x - 1) / 2) {
+                                srcPixel = SHADOW_COLOR;
+                            }
+                        } else if (x <= 5) {
+                            if (y >= 7 + 4 * (x - 3)) {
+                                srcPixel = SHADOW_COLOR;
+                            }
+                        } else {
+                            if (y > 14 + (x - 1) / 2) {
+                                srcPixel = SHADOW_COLOR;
+                            }
+                        }
+                    }
+                    if (i == 13 && !srcPixel.isTransparent()) { // 89[1] -> 625[0]
+                        // grate/floor in shadow
+                        if (x <= 1 && y >= 7 * x) {
                             srcPixel = SHADOW_COLOR;
                         }
-                    } else if (x <= 3) {
-                        if (y > 6 + (x - 1) / 2) {
-                            srcPixel = SHADOW_COLOR;
-                        }
-                    } else if (x <= 5) {
-                        if (y >= 7 + 4 * (x - 3)) {
-                            srcPixel = SHADOW_COLOR;
-                        }
-                    } else {
-                        if (y > 14 + (x - 1) / 2) {
+                        if (x > 1 && y > 14 + (x - 1) / 2) {
                             srcPixel = SHADOW_COLOR;
                         }
                     }
-                }
-                if (i == 13 && !srcPixel.isTransparent()) { // 89[1] -> 625[0]
-                    // grate/floor in shadow
-                    if (x <= 1 && y >= 7 * x) {
-                        srcPixel = SHADOW_COLOR;
+                    if (i == 12 || i == 14) { // 15[2], 89[2] -> 621[1], 624[0]
+                        // wall/grate in shadow
+                        if (y >= 7 * (x - 27) && !srcPixel.isTransparent()) {
+                            srcPixel = SHADOW_COLOR;
+                        }
                     }
-                    if (x > 1 && y > 14 + (x - 1) / 2) {
-                        srcPixel = SHADOW_COLOR;
-                    }
-                }
-                if (i == 12 || i == 14) { // 15[2], 89[2] -> 621[1], 624[0]
-                    // wall/grate in shadow
-                    if (y >= 7 * (x - 27) && !srcPixel.isTransparent()) {
-                        srcPixel = SHADOW_COLOR;
-                    }
-                }
 
-                change |= frame->setPixel(x, y, srcPixel);
+                    change |= frame->setPixel(x, y, srcPixel);
+                }
             }
         }
-    }
         // create shadow micro - 619[1]
         if (i == 19) {
             for (int y = 0; y < MICRO_WIDTH; y++) {

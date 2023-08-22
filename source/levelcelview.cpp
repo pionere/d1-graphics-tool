@@ -2155,7 +2155,7 @@ void LevelCelView::checkSubtileFlags() const
             if (solFlags & (PFLAG_BLOCK_LIGHT | PFLAG_BLOCK_MISSILE)) {
                 // block light or missile
                 // - at least one not transparent frame above the floor
-                bool hasColor = false;
+                bool hasColor = this->spt->getSubtileSpecProperty(i) != 0;
                 for (unsigned n = 0; n < frameRefs.size() - floorMicros; n++) {
                     unsigned frameRef = frameRefs[n];
                     if (frameRef == 0) {
