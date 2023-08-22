@@ -898,8 +898,8 @@ void DRLG_L1Shadows()
 				case 36:  replaceA = 152; okB = true;  break;
 				case 37:  replaceA = 161; okB = true;  break;
 				case 164: replaceA = 165; okB = false; break;
-				case 132: replaceA = 127; okB = false; break;
-				case 141: replaceA = 126; okB = false; break;
+				case 132: replaceA = 126; okB = false; break;
+				case 141: replaceA = 127; okB = false; break;
 				default:
 					// if (replaceB != 25)
 		                dProgressWarn() << QString("Missing case %1 for vertical arch %2 @%3:%4").arg(replaceB).arg(dungeon[i][j]).arg(DBORDERX + 2 * i).arg(DBORDERY + 2 * j);

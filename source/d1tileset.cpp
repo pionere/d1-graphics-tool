@@ -3466,7 +3466,7 @@ void D1Tileset::cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceSubtile(this->til, 126 - 1, 0, 296 - 1, silent);
     ReplaceSubtile(this->til, 126 - 1, 1, 297 - 1, silent);
     ReplaceSubtile(this->til, 126 - 1, 2, 310 - 1, silent);
-    ReplaceSubtile(this->til, 126 - 1, 3, 302 - 1, silent);
+    ReplaceSubtile(this->til, 126 - 1, 3, 344 - 1, silent);
     // ReplaceSubtile(this->til, 139 - 1, 0, 296 - 1, silent);
     // ReplaceSubtile(this->til, 139 - 1, 1, 297 - 1, silent);
     ReplaceSubtile(this->til, 139 - 1, 2, 328 - 1, silent);
