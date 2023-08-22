@@ -44,7 +44,7 @@ bool nBlockTable[MAXSUBTILES + 1];
  */
 bool nSolidTable[MAXSUBTILES + 1];
 /**
- * Flags of subtiles to specify trap-sources (_piece_trap_type) and special cel-frames
+ * Flags of subtiles to specify trap-sources and special cel-frames (_piece_spectrap_flag)
  */
 BYTE nSpecTrapTable[MAXSUBTILES + 1];
 /**
@@ -547,6 +547,14 @@ void InitLvlDungeon()
 		pTiles[23][2] = 31;
 		break;
 	case DTYPE_CRYPT:
+		// revert 'patched' L5.SPT
+		for (int i = 0; i < lengthof(nSpecTrapTable); i++) {
+			if ((nSpecTrapTable[i] & PST_SPEC_TYPE) <= 2) {
+				continue;
+			}
+			nSpecTrapTable[i] &= PST_TRAP_TYPE;
+			// microFlags[i] |= TMIF_WALL_TRANS | TMIF_LEFT_REDRAW | TMIF_RIGHT_REDRAW;
+		}
 		// patch dSolidTable - L5.SOL
 		// make collision-checks more reasonable
 		//  - fix inconsistent subtile on the right side of down-stairs
