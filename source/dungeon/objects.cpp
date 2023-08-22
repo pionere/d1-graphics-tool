@@ -530,7 +530,7 @@ static void AddL2Torches()
 			if (dFlags[i][j] & BFLAG_OBJ_PROTECT)
 				continue;
 			// select 'trapable' position
-			if ((nSpecTrapTable[dPiece[i][j]] PST_TRAP_TYPE) != PST_RIGHT)
+			if ((nSpecTrapTable[dPiece[i][j]] & PST_TRAP_TYPE) != PST_RIGHT)
 				continue;
 			if (random_(145, 32) != 0)
 				continue;
