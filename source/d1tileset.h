@@ -52,6 +52,8 @@ public:
     D1Smp *smp;
 
 private:
+    void saveCls(const SaveAsParam &params);
+
     std::pair<unsigned, D1GfxFrame *> getFrame(int subtileIndex, int blockSize, unsigned microIndex);
 
     void patchTownPot(int potLeftSubtileRef, int potRightSubtileRef, bool silent);
