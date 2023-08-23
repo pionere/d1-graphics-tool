@@ -473,6 +473,35 @@ bool D1Gfx::setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType)
     return true;
 }
 
+// TODO: copy-paste from d1tileset.cpp
+static BYTE shadowColorCathedral(BYTE color)
+{
+    // assert(color < 128);
+    if (color == 0) {
+        return 0;
+    }
+    switch (color % 16) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+        return (color & ~15) + 13;
+    case 6:
+    case 7:
+    case 8:
+    case 9:
+    case 10:
+        return (color & ~15) + 14;
+    case 11:
+    case 12:
+    case 13:
+        return (color & ~15) + 15;
+    }
+    return 0;
+}
+
 bool D1Gfx::patchCathedralDoors(bool silent)
 {
     constexpr int FRAME_WIDTH = 64;
@@ -496,6 +525,26 @@ bool D1Gfx::patchCathedralDoors(bool silent)
             change |= frame->setPixel(32, 79, D1GfxPixel::colorPixel(47));
             change |= frame->setPixel(33, 80, D1GfxPixel::colorPixel(47));
             change |= frame->setPixel(34, 81, D1GfxPixel::colorPixel(47));
+
+            // move the door-handle to the right
+            if (frame->getPixel(17, 112).getPaletteIndex() == 42) {
+                // copy the door-handle to the right
+                for (int y = 108; y < 117; y++) {
+                    for (int x = 16; x < 24; x++) {
+                        D1GfxPixel pixel = frame->getPixel(x, y);
+                        quint8 color = pixel.getPaletteIndex();
+                        color = shadowColorCathedral(color);
+                        change |= frame->setPixel(x + 20, y + 10, D1GfxPixel::colorPixel(color));
+
+                    }
+                }
+                // remove the original door-handle
+                for (int y = 108; y < 120; y++) {
+                    for (int x = 16; x < 24; x++) {
+                        change |= frame->setPixel(x, y, frame->getPixel(x + 8, y + 7));
+                    }
+                }
+            }
         }
         if (i == 2) {
             change |= frame->setPixel(29, 81, D1GfxPixel::colorPixel(47));
