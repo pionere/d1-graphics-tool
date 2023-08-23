@@ -135,9 +135,44 @@ bool D1Tileset::load(const OpenAsParam &params)
     return false;
 }
 
+void D1Tileset::saveCls(const SaveAsParam &params)
+{
+    QString filePath = this->cls->getFilePath();
+    if (!params.clsFilePath.isEmpty()) {
+        filePath = params.clsFilePath;
+        /*if (!params.autoOverwrite && QFile::exists(filePath)) {
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to overwrite %1?").arg(QDir::toNativeSeparators(filePath)), QMessageBox::Yes | QMessageBox::No);
+            if (reply != QMessageBox::Yes) {
+                return false;
+            }
+        }*/
+    } else if (!this->cls->isModified()) {
+        return false;
+    }
+
+    if (this->cls->getFrameCount() != 0) {
+        // SMP with content -> create or change
+        SaveAsParam clsParams;
+        clsParams.celFilePath = params.clsFilePath;
+        clsParams.autoOverwrite = params.autoOverwrite;
+        D1Cel::save(*this->cls, params);
+    } else {
+        // S.CEL without content -> delete
+        if (QFile::exists(filePath)) {
+            if (!QFile::remove(filePath)) {
+                dProgressFail() << QApplication::tr("Failed to remove file: %1.").arg(QDir::toNativeSeparators(filePath));
+                return;
+            }
+        }
+        this->cls->setFilePath(filePath); // this->cls->load(filePath, allocate);
+        this->cls->setModified(false);
+    }
+}
+
 void D1Tileset::save(const SaveAsParam &params)
 {
-    D1Cel::save(*this->cls, params);
+    this->saveCls(params);
     this->min->save(params);
     this->til->save(params);
     this->sol->save(params);
