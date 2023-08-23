@@ -501,6 +501,27 @@ bool D1Gfx::patchCathedralDoors(bool silent)
             change |= frame->setPixel(29, 81, D1GfxPixel::colorPixel(47));
             change |= frame->setPixel(30, 80, D1GfxPixel::colorPixel(46));
             change |= frame->setPixel(31, 79, D1GfxPixel::colorPixel(63));
+            // add pixels for better outline
+            for (int y = 72; y < 99; y++) {
+                for (int x = 18; x < 42; x++) {
+                    if (y == 72 && (x < 23 || x > 32)) {
+                        continue;
+                    }
+                    if (y == 73 && (x < 19 || x > 35)) {
+                        continue;
+                    }
+                    if (y == 74 && x > 38) {
+                        continue;
+                    }
+                    if (y == 75 && x > 40) {
+                        continue;
+                    }
+                    if (!frame->getPixel(x, y).isTransparent()) {
+                        continue;
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::colorPixel(47));
+                }
+            }
         }
         if (i == 3) {
             // add missing pixels after patchCathedralSpec
@@ -508,6 +529,27 @@ bool D1Gfx::patchCathedralDoors(bool silent)
             change |= frame->setPixel(32, 79, D1GfxPixel::colorPixel(46));
             change |= frame->setPixel(33, 80, D1GfxPixel::colorPixel(46));
             change |= frame->setPixel(34, 81, D1GfxPixel::colorPixel(46));
+            // add pixels for better outline
+            for (int y = 72; y < 102; y++) {
+                for (int x = 23; x < 47; x++) {
+                    if (y == 72 && (x < 32 || x > 41)) {
+                        continue;
+                    }
+                    if (y == 73 && (x < 29 || x > 45)) {
+                        continue;
+                    }
+                    if (y == 74 && x < 26) {
+                        continue;
+                    }
+                    if (y == 75 && x < 24) {
+                        continue;
+                    }
+                    if (!frame->getPixel(x, y).isTransparent()) {
+                        continue;
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::colorPixel(47));
+                }
+            }
         }
         if (change) {
             result = true;
