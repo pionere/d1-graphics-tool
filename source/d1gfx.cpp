@@ -543,7 +543,7 @@ bool D1Gfx::patchCathedralDoors(bool silent)
                 change |= frame->setPixel(22 + 21, 116 + 7, D1GfxPixel::colorPixel(0));
                 change |= frame->setPixel(18 + 21, 116 + 7, D1GfxPixel::colorPixel(0));
                 change |= frame->setPixel(18 + 21, 117 + 7, D1GfxPixel::colorPixel(0));
-                change |= frame->setPixel(18 + 21, 111 + 7, D1GfxPixel::colorPixel(0));
+                change |= frame->setPixel(17 + 21, 111 + 7, D1GfxPixel::colorPixel(0));
                 // remove the original door-handle
                 for (int y = 108; y < 120; y++) {
                     for (int x = 16; x < 24; x++) {
