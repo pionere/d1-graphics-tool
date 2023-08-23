@@ -151,8 +151,16 @@ void D1Tileset::saveCls(const SaveAsParam &params)
         return;
     }
 
+    // validate the frames
+    for (int i = 0; i < this->cls->getFrameCount(); i++) {
+        if (!this->cls->getFrame(i)->isClipped()) {
+            dProgressWarn() << QApplication::tr("Non-clipped Special-CEL %1 file is not supported by the game (Diablo 1/DevilutionX).").arg(QDir::toNativeSeparators(filePath));
+            break;
+        }
+    }
+
     if (this->cls->getFrameCount() != 0) {
-        // SMP with content -> create or change
+        // S.CEL with content -> create or change
         SaveAsParam clsParams;
         clsParams.celFilePath = params.clsFilePath;
         clsParams.autoOverwrite = true;
@@ -16174,8 +16182,7 @@ void D1Tileset::patchCryptSpec(bool silent)
             }
         } else {
             // TODO: move to d1gfx.cpp?
-            bool clipped;
-            frame = this->cls->insertFrame(i, &clipped);
+            frame = this->cls->insertFrame(i);
             for (int y = 0; y < FRAME_HEIGHT; y++) {
                 std::vector<D1GfxPixel> pixelLine;
                 for (int x = 0; x < FRAME_WIDTH; x++) {
