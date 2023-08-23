@@ -144,11 +144,11 @@ void D1Tileset::saveCls(const SaveAsParam &params)
             QMessageBox::StandardButton reply;
             reply = QMessageBox::question(nullptr, tr("Confirmation"), tr("Are you sure you want to overwrite %1?").arg(QDir::toNativeSeparators(filePath)), QMessageBox::Yes | QMessageBox::No);
             if (reply != QMessageBox::Yes) {
-                return false;
+                return;
             }
         }*/
     } else if (!this->cls->isModified()) {
-        return false;
+        return;
     }
 
     if (this->cls->getFrameCount() != 0) {
