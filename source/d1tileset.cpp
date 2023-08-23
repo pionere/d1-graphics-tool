@@ -137,7 +137,7 @@ bool D1Tileset::load(const OpenAsParam &params)
 
 void D1Tileset::save(const SaveAsParam &params)
 {
-    this->cls->save(params);
+    D1Cel::save(*this->cls, params);
     this->min->save(params);
     this->til->save(params);
     this->sol->save(params);

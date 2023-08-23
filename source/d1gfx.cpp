@@ -516,16 +516,17 @@ bool D1Gfx::patchCathedralDoors(bool silent)
         }
         bool change = false;
         if (i == 0) {
+            // add missing pixels after patchCathedralSpec
             change |= frame->setPixel(29, 81, D1GfxPixel::colorPixel(47));
             change |= frame->setPixel(30, 80, D1GfxPixel::colorPixel(110));
             change |= frame->setPixel(31, 79, D1GfxPixel::colorPixel(47));
         }
         if (i == 1) {
+            // add missing pixels after patchCathedralSpec
             change |= frame->setPixel(31, 79, D1GfxPixel::colorPixel(46));
             change |= frame->setPixel(32, 79, D1GfxPixel::colorPixel(47));
             change |= frame->setPixel(33, 80, D1GfxPixel::colorPixel(47));
             change |= frame->setPixel(34, 81, D1GfxPixel::colorPixel(47));
-
             // move the door-handle to the right
             if (frame->getPixel(17, 112).getPaletteIndex() == 42) {
                 // copy the door-handle to the right
@@ -552,6 +553,7 @@ bool D1Gfx::patchCathedralDoors(bool silent)
             }
         }
         if (i == 2) {
+            // add missing pixels after patchCathedralSpec
             change |= frame->setPixel(29, 81, D1GfxPixel::colorPixel(47));
             change |= frame->setPixel(30, 80, D1GfxPixel::colorPixel(46));
             change |= frame->setPixel(31, 79, D1GfxPixel::colorPixel(63));
@@ -578,6 +580,7 @@ bool D1Gfx::patchCathedralDoors(bool silent)
             }
         }
         if (i == 3) {
+            // add missing pixels after patchCathedralSpec
             change |= frame->setPixel(31, 79, D1GfxPixel::colorPixel(46));
             change |= frame->setPixel(32, 79, D1GfxPixel::colorPixel(46));
             change |= frame->setPixel(33, 80, D1GfxPixel::colorPixel(46));
