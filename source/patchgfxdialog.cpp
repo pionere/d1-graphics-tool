@@ -23,6 +23,9 @@ void PatchGfxDialog::initialize(D1Gfx *g, CelView *cv)
     // initialize the dropdown based on the filename
     int fileIndex = -1;
     QString baseName = QFileInfo(g->getFilePath()).completeBaseName().toLower();
+    if (baseName == "l1doors") {
+        fileIndex = GFX_OBJ_L1DOORS;
+    }
     if (baseName == "l2doors") {
         fileIndex = GFX_OBJ_L2DOORS;
     }

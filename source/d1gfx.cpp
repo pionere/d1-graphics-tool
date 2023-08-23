@@ -446,6 +446,56 @@ bool D1Gfx::setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType)
     return true;
 }
 
+bool D1Gfx::patchCathedralDoors(bool silent)
+{
+    constexpr int FRAME_WIDTH = 64;
+    constexpr int FRAME_HEIGHT = 160;
+
+    bool result = false;
+    for (int i = 0; i < this->getFrameCount(); i++) {
+        D1GfxFrame *frame = this->frames[i];
+        if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
+            dProgressErr() << tr("Framesize of the Cathedal-Doors does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
+            return result;
+        }
+        bool change = false;
+        if (i == 1) {
+            // move the door-handle to the right
+            if (frame->getPixel(17, 112).getPaletteIndex() == 42) {
+                // copy the door-handle to the right
+                for (int y = 108; y < 119; y++) {
+                    for (int x = 16; x < 24; x++) {
+                        D1GfxPixel pixel = frame->getPixel(x, y);
+                        quint8 color = pixel.getPaletteIndex();
+                        if (color == 47) {
+                            change |= frame->setPixel(x + 21, y + 7, D1GfxPixel::colorPixel(0));
+                        }
+
+                    }
+                }
+                change |= frame->setPixel(22 + 21, 116 + 7, D1GfxPixel::colorPixel(0));
+                change |= frame->setPixel(18 + 21, 116 + 7, D1GfxPixel::colorPixel(0));
+                change |= frame->setPixel(18 + 21, 117 + 7, D1GfxPixel::colorPixel(0));
+                change |= frame->setPixel(17 + 21, 111 + 7, D1GfxPixel::colorPixel(0));
+                // remove the original door-handle
+                for (int y = 108; y < 120; y++) {
+                    for (int x = 16; x < 24; x++) {
+                        change |= frame->setPixel(x, y, frame->getPixel(x + 8, y + 7));
+                    }
+                }
+            }
+        }
+        if (change) {
+            result = true;
+            this->setModified();
+            if (!silent) {
+                dProgress() << QApplication::tr("Frame %1 is modified.").arg(i + 1);
+            }
+        }
+    }
+    return result;
+}
+
 bool D1Gfx::patchCatacombsDoors(bool silent)
 {
     typedef struct {
@@ -1195,6 +1245,9 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
 {
     bool change = false;
     switch (gfxFileIndex) {
+    case GFX_OBJ_L1DOORS: // patch L1Doors.CEL
+        change = this->patchCathedralDoors(silent);
+        break;
     case GFX_OBJ_L2DOORS: // patch L2Doors.CEL
         change = this->patchCatacombsDoors(silent);
         break;
