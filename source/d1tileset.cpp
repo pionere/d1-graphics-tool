@@ -1000,6 +1000,7 @@ bool D1Tileset::patchTownFloor(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -1880,6 +1881,7 @@ bool D1Tileset::patchTownDoor(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -2101,6 +2103,7 @@ void D1Tileset::patchTownChop(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -2840,6 +2843,7 @@ bool D1Tileset::patchCathedralFloor(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -3372,6 +3376,7 @@ bool D1Tileset::fixCathedralShadows(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -4867,6 +4872,7 @@ bool D1Tileset::fixCatacombsShadows(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -5549,6 +5555,7 @@ bool D1Tileset::patchCatacombsFloor(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -8541,6 +8548,7 @@ bool D1Tileset::patchCavesFloor(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -8736,6 +8744,7 @@ bool D1Tileset::patchCavesStairs(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -9521,6 +9530,7 @@ bool D1Tileset::patchCavesWall1(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -10046,6 +10056,7 @@ bool D1Tileset::patchCavesWall2(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -10903,6 +10914,7 @@ bool D1Tileset::patchHellChaos(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -11284,6 +11296,7 @@ bool D1Tileset::patchHellFloor(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -11592,6 +11605,7 @@ bool D1Tileset::patchHellStairs(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -12371,6 +12385,7 @@ bool D1Tileset::patchHellWall1(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -12722,6 +12737,7 @@ bool D1Tileset::patchHellWall2(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -14516,6 +14532,7 @@ bool D1Tileset::patchNestFloor(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -14764,6 +14781,7 @@ bool D1Tileset::patchNestStairs(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -14938,6 +14956,7 @@ bool D1Tileset::patchNestWall1(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -15357,6 +15376,7 @@ bool D1Tileset::patchNestWall2(bool silent)
             }
         }
         if (change) {
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
@@ -15893,14 +15913,18 @@ void D1Tileset::patchCryptFloor(bool silent)
         if (i == 11) { // 206[0]
             change |= frame->setPixel(26, 4, D1GfxPixel::colorPixel(45));
         }
-        std::vector<FramePixel> pixels;
-        D1CelTilesetFrame::collectPixels(frame, micro.res_encoding, pixels);
-        for (const FramePixel &pix : pixels) {
-            D1GfxPixel resPix = pix.pixel.isTransparent() ? D1GfxPixel::colorPixel(0) : D1GfxPixel::transparentPixel();
-            change |= frame->setPixel(pix.pos.x(), pix.pos.y(), resPix);
+        if (/*micro.res_encoding != D1CEL_FRAME_TYPE::Empty &&*/ frame->getFrameType() != micro.res_encoding) {
+            change = true;
+            frame->setFrameType(micro.res_encoding);
+            std::vector<FramePixel> pixels;
+            D1CelTilesetFrame::collectPixels(frame, micro.res_encoding, pixels);
+            for (const FramePixel &pix : pixels) {
+                D1GfxPixel resPix = pix.pixel.isTransparent() ? D1GfxPixel::colorPixel(0) : D1GfxPixel::transparentPixel();
+                change |= frame->setPixel(pix.pos.x(), pix.pos.y(), resPix);
+            }
         }
         if (change) {
-            frame->setFrameType(micro.res_encoding);
+            this->gfx->setModified();
             if (!silent) {
                 dProgress() << QApplication::tr("Frame %1 of subtile %2 is modified.").arg(microFrame.first).arg(micro.subtileIndex + 1);
             }
