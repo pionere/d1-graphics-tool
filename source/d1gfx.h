@@ -61,6 +61,7 @@ class D1GfxFrame : public QObject {
     friend class D1Cl2Frame;
     friend class D1CelTileset;
     friend class D1CelTilesetFrame;
+    friend class D1Gfx;
     friend class D1ImageFrame;
     friend class D1Pcx;
     friend class Upscaler;
