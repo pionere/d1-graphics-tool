@@ -16539,7 +16539,6 @@ void D1Tileset::patchCryptFloor(bool silent)
 /*  8 */ { 162 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
 /*  9 */ {  63 - 1, 4, D1CEL_FRAME_TYPE::Square },
 /* 10 */ { 450 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
-/* 11 */ { 206 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 
 /* 11 */{ 206 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // mask doors
 /* 12 */{ 204 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
