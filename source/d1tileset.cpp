@@ -16066,11 +16066,8 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
     }
 }
 
-void D1Tileset::patchCryptSpec()
+void D1Tileset::patchCryptSpec(bool silent)
 {
-    constexpr int FRAME_WIDTH = 64;
-    constexpr int FRAME_HEIGHT = 160;
-
     typedef struct {
         int subtileIndex0;
         int8_t microIndices0[5];
@@ -16101,6 +16098,7 @@ void D1Tileset::patchCryptSpec()
 /* 19 */{ 562 - 1, { 1, 3, 5, 7, 9 }, 561 - 1, {-1,-1, 5, 7,-1 } },
     };
 
+    const unsigned blockSize = BLOCK_SIZE_L5;
     constexpr int FRAME_WIDTH = 64;
     constexpr int FRAME_HEIGHT = 160;
     constexpr int BASE_CEL_ENTRIES = 2;
@@ -16112,6 +16110,7 @@ void D1Tileset::patchCryptSpec()
     for (int i = 0; i < lengthof(frames); i++) {
         const SCelFrame &sframe = frames[i];
 
+        bool change = false;
         D1GfxFrame *frame;
         if (i < BASE_CEL_ENTRIES) {
             frame = this->cls->getFrame(i);
@@ -16122,14 +16121,15 @@ void D1Tileset::patchCryptSpec()
         } else {
             // TODO: move to d1gfx.cpp?
             bool clipped;
-            frame = insertFrame(i, &clipped);
+            frame = this->cls->insertFrame(i, &clipped);
             for (int y = 0; y < FRAME_HEIGHT; y++) {
                 std::vector<D1GfxPixel> pixelLine;
                 for (int x = 0; x < FRAME_WIDTH; x++) {
                     pixelLine.push_back(D1GfxPixel::transparentPixel());
                 }
-                frame->addPixelLine(pixelLine);
+                frame->addPixelLine(td::move(pixelLine));
             }
+            change = true;
         }
 
         for (int n = 0; n < lengthof(sframe.microIndices0) && sframe.subtileIndex0 >= 0; n++) {
@@ -16791,21 +16791,21 @@ void D1Tileset::patchCryptFloor(bool silent)
             change |= frame->setPixel(26, 4, D1GfxPixel::colorPixel(45));
         }
         if (i == 38) { // 559[4] - fix bad artifact after masking
-            change |= frame->setPixel(15, 11, D1GfxPixel::colorPixel(TRANS_COLOR));
-            change |= frame->setPixel(14, 12, D1GfxPixel::colorPixel(TRANS_COLOR));
-            change |= frame->setPixel(13, 13, D1GfxPixel::colorPixel(TRANS_COLOR));
-            change |= frame->setPixel(12, 14, D1GfxPixel::colorPixel(TRANS_COLOR));
-            change |= frame->setPixel(11, 15, D1GfxPixel::colorPixel(TRANS_COLOR));
-            change |= frame->setPixel(10, 16, D1GfxPixel::colorPixel(TRANS_COLOR));
+            change |= frame->setPixel(15, 11, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(14, 12, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(13, 13, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(12, 14, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(11, 15, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(10, 16, D1GfxPixel::transparentPixel());
         }
         if (i == 46) { // 563[5] - fix bad artifact after masking
-            change |= frame->setPixel(17, 13, D1GfxPixel::colorPixel(TRANS_COLOR));
-            change |= frame->setPixel(17, 14, D1GfxPixel::colorPixel(TRANS_COLOR));
-            change |= frame->setPixel(18, 14, D1GfxPixel::colorPixel(TRANS_COLOR));
-            change |= frame->setPixel(18, 15, D1GfxPixel::colorPixel(TRANS_COLOR));
-            change |= frame->setPixel(19, 15, D1GfxPixel::colorPixel(TRANS_COLOR));
-            change |= frame->setPixel(19, 16, D1GfxPixel::colorPixel(TRANS_COLOR));
-            change |= frame->setPixel(20, 16, D1GfxPixel::colorPixel(TRANS_COLOR));
+            change |= frame->setPixel(17, 13, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(17, 14, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(18, 14, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(18, 15, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(19, 15, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(19, 16, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(20, 16, D1GfxPixel::transparentPixel());
         }
         if (i == 48) { // 258[6] - fix micros after reuse
             change |= frame->setPixel(3, 3, D1GfxPixel::colorPixel(42));
