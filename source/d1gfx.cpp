@@ -928,7 +928,7 @@ bool D1Gfx::patchMagicCircle(bool silent)
         D1GfxFrame *frame = this->frames[i];
         if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
             dProgressErr() << tr("Framesize of the Magic Circle does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
-            return result;
+            return false;
         }
         if (i == 0 && frame->getPixel(5, 70).isTransparent()) {
             return false; // assume it is already done
@@ -1316,7 +1316,7 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
     case GFX_OBJ_L2DOORS: // patch L2Doors.CEL
         change = this->patchCatacombsDoors(silent);
         break;
-    case GFX__OBJ_L3DOORS: // patch L3Doors.CEL
+    case GFX_OBJ_L3DOORS: // patch L3Doors.CEL
         change = this->patchCavesDoors(silent);
         break;
     case GFX_OBJ_MCIRL: // patch Mcirl.CEL

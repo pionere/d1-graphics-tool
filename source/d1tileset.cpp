@@ -16127,7 +16127,7 @@ void D1Tileset::patchCryptSpec(bool silent)
                 for (int x = 0; x < FRAME_WIDTH; x++) {
                     pixelLine.push_back(D1GfxPixel::transparentPixel());
                 }
-                frame->addPixelLine(td::move(pixelLine));
+                frame->addPixelLine(std::move(pixelLine));
             }
             change = true;
         }
