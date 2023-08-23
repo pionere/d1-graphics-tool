@@ -2588,6 +2588,77 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
     }
 }
 
+void D1Tileset::patchCathedralSpec(bool silent)
+{
+    constexpr int FRAME_WIDTH = 64;
+    constexpr int FRAME_HEIGHT = 160;
+
+    for (int i = 0; i < this->cls->getFrameCount(); i++) {
+        D1GfxFrame *frame = this->cls->getFrame(i);
+        if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
+            dProgressErr() << QApplication::tr("Framesize of the Cathedal's Special-Cels does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
+            return;
+        }
+
+        bool change = false;
+        // eliminate unnecessary pixels on top
+        for (int y = 0; y < 47; y++) {
+            for (int x = 0; x < FRAME_WIDTH; x++) {
+                change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+            }
+        }
+        if (i == 7 - 1) {
+            for (int y = 71; y < 82; y++) {
+                for (int x = 28; x < 44; x++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    quint8 color = pixel.getPaletteIndex();
+                    if (!pixel.isTransparent() && (color == 14 || color == 29 || color == 30 || color == 46 || color == 47 || y > 112 - x)) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+            change |= frame->setPixel(38, 74, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(35, 77, D1GfxPixel::transparentPixel());
+
+            change |= frame->setPixel(28, 81, D1GfxPixel::colorPixel(22));
+            change |= frame->setPixel(29, 80, D1GfxPixel::colorPixel(10));
+            change |= frame->setPixel(30, 79, D1GfxPixel::colorPixel(10));
+            change |= frame->setPixel(31, 78, D1GfxPixel::colorPixel(23));
+        }
+        if (i == 8 - 1) {
+            for (int y = 71; y < 82; y++) {
+                for (int x = 19; x < 35; x++) {
+                    if (x == 34 && y == 71) {
+                        continue;
+                    }
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    quint8 color = pixel.getPaletteIndex();
+                    if (!pixel.isTransparent() && (color == 14 || color == 29 || color == 30 || color == 46 || color == 47)) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+            // change |= frame->setPixel(19, 70, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(32, 78, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(33, 79, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(34, 80, D1GfxPixel::colorPixel(28));
+        }
+        // eliminate pixels of the unused frames
+        if (i == 3 - 1 || i == 6 - 1) {
+            for (int y = 0; y < FRAME_HEIGHT; y++) {
+                for (int x = 0; x < FRAME_WIDTH; x++) {
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+
+        if (change && !silent) {
+            this->cls->setModified();
+            dProgress() << QApplication::tr("Special-Frame %1 is modified.").arg(i + 1);
+        }
+    }
+}
+
 bool D1Tileset::patchCathedralFloor(bool silent)
 {
     const CelMicro micros[] = {
@@ -2629,6 +2700,10 @@ bool D1Tileset::patchCathedralFloor(bool silent)
 /* 24 */{ 171 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
 
 /* 25 */{ 153 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+
+/* 26 */{ 231 - 1, 4, D1CEL_FRAME_TYPE::Empty },
+/* 27 */{ 417 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 28 */{ 418 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
     };
 
     constexpr unsigned blockSize = BLOCK_SIZE_L1;
@@ -2765,7 +2840,40 @@ bool D1Tileset::patchCathedralFloor(bool silent)
                 }
             }
         }
-
+        if (i == 27) { // 417[4] - add missing pixels after DRLP_L1_PatchSpec using 231[4]
+            const CelMicro &microSrc = micros[i - 1]; // 231[4]
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *frameSrc = mf.second;
+            if (frameSrc == nullptr) {
+                return false;
+            }
+            for (int x = 0; x < 12; x++) {
+                for (int y = 23; y < 31; y++) {
+                    if (y < 29 - x) {
+                        continue;
+                    }
+                    if (x > 1 && y < 30 - x) {
+                        continue;
+                    }
+                    if (x == 6 && y == 24) {
+                        continue;
+                    }
+                    if (y == 23 && (x == 7 || x == 8)) {
+                        continue;
+                    }
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (!pixel.isTransparent()) {
+                        continue;
+                    }
+                    change |= frame->setPixel(x, y, frameSrc->getPixel(x, y));
+                }
+            }
+        }
+        if (i == 28) { // 418[4] - add missing pixels after DRLP_L1_PatchSpec
+            change |= frame->setPixel(31, 15, D1GfxPixel::colorPixel(46));
+            change |= frame->setPixel(30, 16, D1GfxPixel::colorPixel(30));
+            change |= frame->setPixel(29, 17, D1GfxPixel::colorPixel(30));
+        }
         // fix artifacts
         /*if (i == 4) { // 392[0]
             change |= frame->setPixel(16, 24, D1GfxPixel::colorPixel(42));
@@ -17870,6 +17978,8 @@ void D1Tileset::patch(int dunType, bool silent)
             break;
         }
         this->cleanupCathedral(deletedFrames, silent);
+        // patch pSpecialsCel - L1S.CEL
+        this->patchCathedralSpec(silent);
         // patch dSolidTable - L1.SOL
         // adjust SOL after fixCathedralShadows
         ChangeSubtileSolFlags(this->sol, 298 - 1, PFLAG_BLOCK_PATH, true, silent);

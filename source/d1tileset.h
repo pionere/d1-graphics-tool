@@ -66,6 +66,7 @@ private:
     bool patchCathedralFloor(bool silent);
     bool fixCathedralShadows(bool silent);
     void cleanupCathedral(std::set<unsigned> &deletedFrames, bool silent);
+    void patchCathedralSpec(bool silent);
 
     bool patchCatacombsStairs(int backTileIndex1, int backTileIndex2, int extTileIndex1, int extTileIndex2, int stairsSubtileRef1, int stairsSubtileRef2, bool silent);
     bool patchCatacombsFloor(bool silent);
