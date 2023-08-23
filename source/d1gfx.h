@@ -61,6 +61,7 @@ class D1GfxFrame : public QObject {
     friend class D1Cl2Frame;
     friend class D1CelTileset;
     friend class D1CelTilesetFrame;
+    friend class D1Gfx;
     friend class D1ImageFrame;
     friend class D1Pcx;
     friend class Upscaler;
@@ -130,7 +131,7 @@ public:
     bool isFrameSizeConstant() const;
     QImage getFrameImage(int frameIndex) const;
     std::vector<std::vector<D1GfxPixel>> getFramePixelImage(int frameIndex) const;
-    D1GfxFrame *insertFrame(int frameIndex, bool *clipped);
+    D1GfxFrame *insertFrame(int frameIndex);
     D1GfxFrame *insertFrame(int frameIndex, const QImage &image);
     D1GfxFrame *addToFrame(int frameIndex, const QImage &image);
     D1GfxFrame *addToFrame(int frameIndex, const D1GfxFrame &frame);

@@ -750,8 +750,7 @@ void LevelCelView::assignFrames(const D1GfxFrame &frame, int subtileIndex, int f
                 continue;
             }
 
-            bool clipped;
-            D1GfxFrame *subFrame = this->gfx->insertFrame(frameIndex, &clipped);
+            D1GfxFrame *subFrame = this->gfx->insertFrame(frameIndex);
             for (int j = 0; j < MICRO_HEIGHT; j++) {
                 std::vector<D1GfxPixel> pixelLine;
                 for (int i = 0; i < MICRO_WIDTH; i++) {
@@ -1194,8 +1193,7 @@ void LevelCelView::insertSubtile(int subtileIndex, const D1GfxFrame &frame)
                 continue;
             }
 
-            bool clipped;
-            D1GfxFrame *subFrame = this->gfx->insertFrame(frameIndex, &clipped);
+            D1GfxFrame *subFrame = this->gfx->insertFrame(frameIndex);
             for (int j = 0; j < MICRO_HEIGHT; j++) {
                 std::vector<D1GfxPixel> pixelLine;
                 for (int i = 0; i < MICRO_WIDTH; i++) {

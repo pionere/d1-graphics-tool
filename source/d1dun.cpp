@@ -2304,7 +2304,7 @@ void D1Dun::checkTiles() const
                 }
             } else {
                 if ((unsigned)tileRef > UCHAR_MAX) {
-                    dProgressWarn() << tr("Tile-value at %1:%2 is not supported by the game.").arg(x).arg(y);
+                    dProgressWarn() << tr("Tile-value at %1:%2 is not supported by the game (Diablo 1/DevilutionX).").arg(x).arg(y);
                     result = true;
                 }
             }

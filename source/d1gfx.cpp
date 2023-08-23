@@ -229,15 +229,18 @@ std::vector<std::vector<D1GfxPixel>> D1Gfx::getFramePixelImage(int frameIndex) c
     return frame->getPixels();
 }
 
-D1GfxFrame *D1Gfx::insertFrame(int idx, bool *clipped)
+D1GfxFrame *D1Gfx::insertFrame(int idx)
 {
+    bool clipped;
     if (!this->frames.isEmpty()) {
-        *clipped = this->frames[0]->isClipped();
+        clipped = this->frames[0]->isClipped();
     } else {
-        *clipped = this->type == D1CEL_TYPE::V2_MONO_GROUP || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
+        clipped = this->type == D1CEL_TYPE::V2_MONO_GROUP || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
     }
 
-    this->frames.insert(idx, new D1GfxFrame());
+    D1GfxFrame* newFrame = new D1GfxFrame();
+    newFrame->clipped = clipped;
+    this->frames.insert(idx, newFrame);
 
     if (this->groupFrameIndices.empty()) {
         // create new group if this is the first frame
@@ -258,15 +261,13 @@ D1GfxFrame *D1Gfx::insertFrame(int idx, bool *clipped)
     }
 
     this->modified = true;
-    return this->frames[idx];
+    return newFrame;
 }
 
 D1GfxFrame *D1Gfx::insertFrame(int idx, const QImage &image)
 {
-    bool clipped;
-
-    D1GfxFrame *frame = this->insertFrame(idx, &clipped);
-    D1ImageFrame::load(*frame, image, clipped, this->palette);
+    D1GfxFrame *frame = this->insertFrame(idx);
+    D1ImageFrame::load(*frame, image, frame->isClipped(), this->palette);
     // this->modified = true;
 
     return this->frames[idx];

@@ -49,6 +49,8 @@ bool D1Tileset::loadCls(const QString &clsFilePath, const OpenAsParam &params)
         return D1Cel::load(*this->cls, clsFilePath, params);
     }
 
+    // fake D1CEL_TYPE to trigger clipped mode
+    this->cls->setType(D1CEL_TYPE::V2_MONO_GROUP);
     this->cls->setFilePath(clsFilePath);
     this->cls->setModified(false);
     return params.clsFilePath.isEmpty();
@@ -151,8 +153,16 @@ void D1Tileset::saveCls(const SaveAsParam &params)
         return;
     }
 
+    // validate the frames
+    for (int i = 0; i < this->cls->getFrameCount(); i++) {
+        if (!this->cls->getFrame(i)->isClipped()) {
+            dProgressWarn() << QApplication::tr("Non-clipped Special-CEL %1 file is not supported by the game (Diablo 1/DevilutionX).").arg(QDir::toNativeSeparators(filePath));
+            break;
+        }
+    }
+
     if (this->cls->getFrameCount() != 0) {
-        // SMP with content -> create or change
+        // S.CEL with content -> create or change
         SaveAsParam clsParams;
         clsParams.celFilePath = params.clsFilePath;
         clsParams.autoOverwrite = true;
