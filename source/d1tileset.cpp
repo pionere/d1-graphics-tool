@@ -124,7 +124,7 @@ bool D1Tileset::load(const OpenAsParam &params)
     }
     // clear possible inconsistent data
     // this->gfx->clear();
-    // this->cls->clear();
+    this->cls->clear();
     this->min->clear();
     this->til->clear();
     this->sol->clear();
@@ -137,7 +137,7 @@ bool D1Tileset::load(const OpenAsParam &params)
 
 void D1Tileset::save(const SaveAsParam &params)
 {
-    // this->cls->save(params);
+    this->cls->save(params);
     this->min->save(params);
     this->til->save(params);
     this->sol->save(params);

@@ -529,16 +529,20 @@ bool D1Gfx::patchCathedralDoors(bool silent)
             // move the door-handle to the right
             if (frame->getPixel(17, 112).getPaletteIndex() == 42) {
                 // copy the door-handle to the right
-                for (int y = 108; y < 117; y++) {
+                for (int y = 108; y < 119; y++) {
                     for (int x = 16; x < 24; x++) {
                         D1GfxPixel pixel = frame->getPixel(x, y);
                         quint8 color = pixel.getPaletteIndex();
                         if (color == 47) {
-                            change |= frame->setPixel(x + 20, y + 10, D1GfxPixel::colorPixel(0));
+                            change |= frame->setPixel(x + 21, y + 7, D1GfxPixel::colorPixel(0));
                         }
 
                     }
                 }
+                change |= frame->setPixel(22 + 21, 116 + 7, D1GfxPixel::colorPixel(0));
+                change |= frame->setPixel(18 + 21, 116 + 7, D1GfxPixel::colorPixel(0));
+                change |= frame->setPixel(18 + 21, 117 + 7, D1GfxPixel::colorPixel(0));
+                change |= frame->setPixel(18 + 21, 111 + 7, D1GfxPixel::colorPixel(0));
                 // remove the original door-handle
                 for (int y = 108; y < 120; y++) {
                     for (int x = 16; x < 24; x++) {
