@@ -533,8 +533,9 @@ bool D1Gfx::patchCathedralDoors(bool silent)
                     for (int x = 16; x < 24; x++) {
                         D1GfxPixel pixel = frame->getPixel(x, y);
                         quint8 color = pixel.getPaletteIndex();
-                        color = shadowColorCathedral(color);
-                        change |= frame->setPixel(x + 20, y + 10, D1GfxPixel::colorPixel(color));
+                        if (color == 47) {
+                            change |= frame->setPixel(x + 20, y + 10, D1GfxPixel::colorPixel(0));
+                        }
 
                     }
                 }

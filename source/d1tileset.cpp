@@ -17110,12 +17110,12 @@ void D1Tileset::fixCryptShadows(bool silent)
         if (micro.res_encoding != D1CEL_FRAME_TYPE::Empty && frame->getFrameType() != micro.res_encoding) {
             change = true;
             frame->setFrameType(micro.res_encoding);
-            /*std::vector<FramePixel> pixels;
+            std::vector<FramePixel> pixels;
             D1CelTilesetFrame::collectPixels(frame, micro.res_encoding, pixels);
             for (const FramePixel &pix : pixels) {
                 D1GfxPixel resPix = pix.pixel.isTransparent() ? D1GfxPixel::colorPixel(0) : D1GfxPixel::transparentPixel();
                 change |= frame->setPixel(pix.pos.x(), pix.pos.y(), resPix);
-            }*/
+            }
         }
         if (change) {
             this->gfx->setModified();
