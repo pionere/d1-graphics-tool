@@ -200,11 +200,17 @@ void UpscaleTaskDialog::upscaleCel(const QString &path, D1Pal *pal, const Upscal
     if (params.patchGraphics) {
         int fileIndex = -1;
         QString baseName = QFileInfo(celFilePath).completeBaseName().toLower();
+        if (baseName == "l1doors") {
+            fileIndex = GFX_OBJ_L1DOORS;
+        }
         if (baseName == "l2doors") {
-            fileIndex = GFX_L2DOORS;
+            fileIndex = GFX_OBJ_L2DOORS;
         }
         if (baseName == "l3doors") {
-            fileIndex = GFX_L3DOORS;
+            fileIndex = GFX_OBJ_L3DOORS;
+        }
+        if (baseName == "mcirl") {
+            fileIndex = GFX_OBJ_MCIRL;
         }
         if (baseName == "spelicon") {
             fileIndex = GFX_SPL_ICONS;

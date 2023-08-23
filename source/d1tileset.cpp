@@ -2558,7 +2558,7 @@ void D1Tileset::patchCathedralSpec(bool silent)
     for (int i = 0; i < this->cls->getFrameCount(); i++) {
         D1GfxFrame *frame = this->cls->getFrame(i);
         if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
-            dProgressErr() << tr("Framesize of the Cathedal's Special-Cels does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
+            dProgressErr() << QApplication::tr("Framesize of the Cathedal's Special-Cels does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
             return;
         }
 
@@ -2663,10 +2663,10 @@ bool D1Tileset::patchCathedralFloor(bool silent)
 
 /* 25 */{ 153 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
 
-/* 26 */{ 231 - 1, 4, -1 },
-/* 27 */{ 417 - 1, 4, MET_TRANSPARENT },
-/* 28 */{ 418 - 1, 4, MET_TRANSPARENT },
-/* 29 */{ 417 - 1, 2, MET_SQUARE },
+/* 26 */{ 231 - 1, 4, D1CEL_FRAME_TYPE::Empty },
+/* 27 */{ 417 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 28 */{ 418 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 29 */{ 417 - 1, 2, D1CEL_FRAME_TYPE::Square },
     };
 
     constexpr unsigned blockSize = BLOCK_SIZE_L1;
@@ -2807,8 +2807,8 @@ bool D1Tileset::patchCathedralFloor(bool silent)
         if (i == 27) {
             const CelMicro &microSrc = micros[i - 1]; // 231[4]
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
-            D1GfxFrame *microSrc = mf.second;
-            if (microSrc == nullptr) {
+            D1GfxFrame *frameSrc = mf.second;
+            if (frameSrc == nullptr) {
                 return false;
             }
             for (int x = 0; x < 12; x++) {
@@ -2829,142 +2829,142 @@ bool D1Tileset::patchCathedralFloor(bool silent)
                     if (!pixel.isTransparent()) {
                         continue;
                     }
-                    change |= frame->setPixel(x, y, microSrc->getPixel(x, y));
+                    change |= frame->setPixel(x, y, frameSrc->getPixel(x, y));
                 }
             }
 
             // fix glitch
-            change |= frame->setPixel(5 + 28, D1GfxPixel::colorPixel(29));
-            change |= frame->setPixel(6 + 28, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(7 + 28, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(3 + 29, D1GfxPixel::colorPixel(47));
-            change |= frame->setPixel(4 + 29, D1GfxPixel::colorPixel(47));
-            change |= frame->setPixel(5 + 29, D1GfxPixel::colorPixel(46));
-            change |= frame->setPixel(6 + 29, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(15 + 27, D1GfxPixel::colorPixel(6));
+            change |= frame->setPixel(5, 28, D1GfxPixel::colorPixel(29));
+            change |= frame->setPixel(6, 28, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(7, 28, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(3, 29, D1GfxPixel::colorPixel(47));
+            change |= frame->setPixel(4, 29, D1GfxPixel::colorPixel(47));
+            change |= frame->setPixel(5, 29, D1GfxPixel::colorPixel(46));
+            change |= frame->setPixel(6, 29, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(15, 27, D1GfxPixel::colorPixel(6));
 
             // fix shadow
-            change |= frame->setPixel(9 + 26, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(10 + 26, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(12 + 26, D1GfxPixel::colorPixel(11));
-            change |= frame->setPixel(13 + 26, D1GfxPixel::colorPixel(12));
-            change |= frame->setPixel(14 + 26, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(9, 26, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(10, 26, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(12, 26, D1GfxPixel::colorPixel(11));
+            change |= frame->setPixel(13, 26, D1GfxPixel::colorPixel(12));
+            change |= frame->setPixel(14, 26, D1GfxPixel::colorPixel(28));
 
-            change |= frame->setPixel(7 + 29, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(8 + 29, D1GfxPixel::colorPixel(42));
-            change |= frame->setPixel(9 + 29, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(5 + 30, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(6 + 30, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(7 + 30, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(8 + 30, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(9 + 30, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(10 + 30, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(11 + 30, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(12 + 30, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(4 + 31, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(5 + 31, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(6 + 31, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(7 + 31, D1GfxPixel::colorPixel(12));
-            change |= frame->setPixel(8 + 31, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(9 + 31, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(10 + 31, D1GfxPixel::colorPixel(44));
-            change |= frame->setPixel(11 + 31, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(12 + 31, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(13 + 31, D1GfxPixel::colorPixel(12));
-            change |= frame->setPixel(14 + 31, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(7, 29, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(8, 29, D1GfxPixel::colorPixel(42));
+            change |= frame->setPixel(9, 29, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(5, 30, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(6, 30, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(7, 30, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(8, 30, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(9, 30, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(10, 30, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(11, 30, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(12, 30, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(4, 31, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(5, 31, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(6, 31, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(7, 31, D1GfxPixel::colorPixel(12));
+            change |= frame->setPixel(8, 31, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(9, 31, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(10, 31, D1GfxPixel::colorPixel(44));
+            change |= frame->setPixel(11, 31, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(12, 31, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(13, 31, D1GfxPixel::colorPixel(12));
+            change |= frame->setPixel(14, 31, D1GfxPixel::colorPixel(26));
         }
         if (i == 28) { // 418[4] - add missing pixels after DRLP_L1_PatchSpec
-            change |= frame->setPixel(31 + 15, D1GfxPixel::colorPixel(46));
-            change |= frame->setPixel(30 + 16, D1GfxPixel::colorPixel(30));
-            change |= frame->setPixel(29 + 17, D1GfxPixel::colorPixel(30));
+            change |= frame->setPixel(31, 15, D1GfxPixel::colorPixel(46));
+            change |= frame->setPixel(30, 16, D1GfxPixel::colorPixel(30));
+            change |= frame->setPixel(29, 17, D1GfxPixel::colorPixel(30));
 
             // fix shadow
-            change |= frame->setPixel(31 + 23, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(30 + 24, D1GfxPixel::colorPixel(29));
-            change |= frame->setPixel(31 + 24, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(30 + 25, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(31 + 25, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(30 + 26, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(31 + 26, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(28 + 27, D1GfxPixel::colorPixel(29));
-            change |= frame->setPixel(29 + 27, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(30 + 27, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(27 + 28, D1GfxPixel::colorPixel(29));
-            change |= frame->setPixel(28 + 28, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(29 + 28, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(27 + 29, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(28 + 29, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(26 + 30, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(27 + 30, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(28 + 30, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(29 + 30, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(31, 23, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(30, 24, D1GfxPixel::colorPixel(29));
+            change |= frame->setPixel(31, 24, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(30, 25, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(31, 25, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(30, 26, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(31, 26, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(28, 27, D1GfxPixel::colorPixel(29));
+            change |= frame->setPixel(29, 27, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(30, 27, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(27, 28, D1GfxPixel::colorPixel(29));
+            change |= frame->setPixel(28, 28, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(29, 28, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(27, 29, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(28, 29, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(26, 30, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(27, 30, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(28, 30, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(29, 30, D1GfxPixel::colorPixel(28));
         }
         if (i == 29) { // 417[2] - fix shadow
-            change |= frame->setPixel(0 + 9, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(0 + 8, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(1 + 8, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(2 + 8, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(0, 9, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(0, 8, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(1, 8, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(2, 8, D1GfxPixel::colorPixel(26));
 
-            change |= frame->setPixel(0 + 7, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(1 + 7, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(2 + 7, D1GfxPixel::colorPixel(12));
-            change |= frame->setPixel(4 + 7, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(0, 7, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(1, 7, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(2, 7, D1GfxPixel::colorPixel(12));
+            change |= frame->setPixel(4, 7, D1GfxPixel::colorPixel(27));
 
-            change |= frame->setPixel(0 + 6, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(1 + 6, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(2 + 6, D1GfxPixel::colorPixel(25));
-            change |= frame->setPixel(3 + 6, D1GfxPixel::colorPixel(25));
-            change |= frame->setPixel(4 + 6, D1GfxPixel::colorPixel(11));
+            change |= frame->setPixel(0, 6, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(1, 6, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(2, 6, D1GfxPixel::colorPixel(25));
+            change |= frame->setPixel(3, 6, D1GfxPixel::colorPixel(25));
+            change |= frame->setPixel(4, 6, D1GfxPixel::colorPixel(11));
 
-            change |= frame->setPixel(0 + 5, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(1 + 5, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(2 + 5, D1GfxPixel::colorPixel(12));
-            change |= frame->setPixel(3 + 5, D1GfxPixel::colorPixel(10));
-            change |= frame->setPixel(4 + 5, D1GfxPixel::colorPixel(10));
-            change |= frame->setPixel(5 + 5, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(0, 5, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(1, 5, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(2, 5, D1GfxPixel::colorPixel(12));
+            change |= frame->setPixel(3, 5, D1GfxPixel::colorPixel(10));
+            change |= frame->setPixel(4, 5, D1GfxPixel::colorPixel(10));
+            change |= frame->setPixel(5, 5, D1GfxPixel::colorPixel(26));
 
-            change |= frame->setPixel(1 + 4, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(2 + 4, D1GfxPixel::colorPixel(11));
-            change |= frame->setPixel(3 + 4, D1GfxPixel::colorPixel(10));
-            change |= frame->setPixel(4 + 4, D1GfxPixel::colorPixel(11));
-            change |= frame->setPixel(5 + 4, D1GfxPixel::colorPixel(10));
-            change |= frame->setPixel(6 + 4, D1GfxPixel::colorPixel(25));
-            change |= frame->setPixel(7 + 4, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(1, 4, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(2, 4, D1GfxPixel::colorPixel(11));
+            change |= frame->setPixel(3, 4, D1GfxPixel::colorPixel(10));
+            change |= frame->setPixel(4, 4, D1GfxPixel::colorPixel(11));
+            change |= frame->setPixel(5, 4, D1GfxPixel::colorPixel(10));
+            change |= frame->setPixel(6, 4, D1GfxPixel::colorPixel(25));
+            change |= frame->setPixel(7, 4, D1GfxPixel::colorPixel(27));
 
-            change |= frame->setPixel(1 + 3, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(2 + 3, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(3 + 3, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(4 + 3, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(5 + 3, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(6 + 3, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(7 + 3, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(8 + 3, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(1, 3, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(2, 3, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(3, 3, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(4, 3, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(5, 3, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(6, 3, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(7, 3, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(8, 3, D1GfxPixel::colorPixel(26));
 
-            change |= frame->setPixel(2 + 2, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(3 + 2, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(4 + 2, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(5 + 2, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(6 + 2, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(7 + 2, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(8 + 2, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(2, 2, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(3, 2, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(4, 2, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(5, 2, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(6, 2, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(7, 2, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(8, 2, D1GfxPixel::colorPixel(26));
 
-            change |= frame->setPixel(3 + 1, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(4 + 1, D1GfxPixel::colorPixel(27));
-            change |= frame->setPixel(5 + 1, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(6 + 1, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(7 + 1, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(8 + 1, D1GfxPixel::colorPixel(29));
-            change |= frame->setPixel(9 + 1, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(10 + 1, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(3, 1, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(4, 1, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(5, 1, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(6, 1, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(7, 1, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(8, 1, D1GfxPixel::colorPixel(29));
+            change |= frame->setPixel(9, 1, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(10, 1, D1GfxPixel::colorPixel(26));
 
-            change |= frame->setPixel(4 + 0, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(5 + 0, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(6 + 0, D1GfxPixel::colorPixel(28));
-            change |= frame->setPixel(7 + 0, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(8 + 0, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(9 + 0, D1GfxPixel::colorPixel(12));
-            change |= frame->setPixel(10 + 0, D1GfxPixel::colorPixel(26));
-            change |= frame->setPixel(11 + 0, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(4, 0, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(5, 0, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(6, 0, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(7, 0, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(8, 0, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(9, 0, D1GfxPixel::colorPixel(12));
+            change |= frame->setPixel(10, 0, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(11, 0, D1GfxPixel::colorPixel(26));
         }
         // fix artifacts
         /*if (i == 4) { // 392[0]
@@ -16116,7 +16116,7 @@ void D1Tileset::patchCryptSpec()
         if (i < BASE_CEL_ENTRIES) {
             frame = this->cls->getFrame(i);
             if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
-                dProgressErr() << tr("Framesize of the Crypt's Special-Cels does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
+                dProgressErr() << QApplication::tr("Framesize of the Crypt's Special-Cels does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
                 return;
             }
         } else {
@@ -16140,11 +16140,11 @@ void D1Tileset::patchCryptSpec()
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(sframe.subtileIndex0, blockSize, sframe.microIndices0[n]);
             D1GfxFrame *frameSrc = mf.second;
             if (frameSrc == nullptr) {
-                dProgressErr() << tr("Missing 'template' subtile-frame (%1:%2) to create Crypt's Special-Cels.").arg(sframe.subtileIndex0 + 1).arg(sframe.microIndices0[n]);
+                dProgressErr() << QApplication::tr("Missing 'template' subtile-frame (%1:%2) to create Crypt's Special-Cels.").arg(sframe.subtileIndex0 + 1).arg(sframe.microIndices0[n]);
                 return;
             }
             if (frameSrc->getWidth() != MICRO_WIDTH || frameSrc->getHeight() != MICRO_HEIGHT) {
-                dProgressErr() << tr("Framesize of the 'template' subtile-frame does not fit to create Crypt's Special-Cels. (%1:%2 expected %3:%4. Index %5:%6.)").arg(frameSrc->getWidth()).arg(frameSrc->getHeight()).arg(MICRO_WIDTH).arg(MICRO_HEIGHT).arg(sframe.subtileIndex1 + 1).arg(sframe.microIndices1[n] + 1);
+                dProgressErr() << QApplication::tr("Framesize of the 'template' subtile-frame does not fit to create Crypt's Special-Cels. (%1:%2 expected %3:%4. Index %5:%6.)").arg(frameSrc->getWidth()).arg(frameSrc->getHeight()).arg(MICRO_WIDTH).arg(MICRO_HEIGHT).arg(sframe.subtileIndex1 + 1).arg(sframe.microIndices1[n] + 1);
                 return;
             }
 
@@ -16296,11 +16296,11 @@ void D1Tileset::patchCryptSpec()
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(sframe.subtileIndex1, blockSize, sframe.microIndices1[n]);
             D1GfxFrame *frameSrc = mf.second;
             if (frameSrc == nullptr) {
-                dProgressErr() << tr("Missing 'template' subtile-frame (%1:%2) to create Crypt's Special-Cels.").arg(sframe.subtileIndex1 + 1).arg(sframe.microIndices1[n] + 1);
+                dProgressErr() << QApplication::tr("Missing 'template' subtile-frame (%1:%2) to create Crypt's Special-Cels.").arg(sframe.subtileIndex1 + 1).arg(sframe.microIndices1[n] + 1);
                 return;
             }
             if (frameSrc->getWidth() != MICRO_HEIGHT || frameSrc->getWidth() != MICRO_WIDTH) {
-                dProgressErr() << tr("Framesize of the 'template' subtile-frame does not fit to create Crypt's Special-Cels. (%1:%2 expected %3:%4. Index %5:%6.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(sframe.subtileIndex1 + 1).arg(sframe.microIndices1[n] + 1);
+                dProgressErr() << QApplication::tr("Framesize of the 'template' subtile-frame does not fit to create Crypt's Special-Cels. (%1:%2 expected %3:%4. Index %5:%6.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(sframe.subtileIndex1 + 1).arg(sframe.microIndices1[n] + 1);
                 return;
             }
             if (i < 12 && i != 1) {
@@ -16486,50 +16486,50 @@ void D1Tileset::patchCryptFloor(bool silent)
 /* 10 */ { 450 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 11 */ { 206 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 11 */{ 206 - 1, 0, MET_LTRIANGLE },   // mask doors
-/* 12 */{ 204 - 1, 0, MET_TRANSPARENT },
-/* 13 */{ 204 - 1, 2, MET_TRANSPARENT },
-/* 14 */{ 204 - 1, 4, MET_TRANSPARENT },
-/* 15 */{ 209 - 1, 1, MET_RTRIANGLE },
-/* 16 */{ 208 - 1, 1, MET_TRANSPARENT },
-/* 17 */{ 208 - 1, 3, MET_TRANSPARENT },
-/* 18 */{ 208 - 1, 5, MET_TRANSPARENT },
+/* 11 */{ 206 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },      // mask doors
+/* 12 */{ 204 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 13 */{ 204 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 14 */{ 204 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 15 */{ 209 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/* 16 */{ 208 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 17 */{ 208 - 1, 3, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 18 */{ 208 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 19 */{ 290 - 1, 4, MET_TRANSPARENT },
-/* 20 */{ 292 - 1, 0, MET_TRANSPARENT },
-/* 21 */{ 292 - 1, 2, MET_TRANSPARENT },
-/* 22 */{ 292 - 1, 4, MET_TRANSPARENT },
-/* 23 */{ 294 - 1, 4, MET_TRANSPARENT },
-/* 24 */{ 296 - 1, 4, MET_TRANSPARENT },
-/* 25 */{ 296 - 1, 6, MET_TRANSPARENT },
+/* 19 */{ 290 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 20 */{ 292 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 21 */{ 292 - 1, 2, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 22 */{ 292 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 23 */{ 294 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 24 */{ 296 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 25 */{ 296 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 26 */{ 274 - 1, 0, MET_LTRIANGLE }, // with the new special cels
-/* 27 */{ 299 - 1, 0, MET_LTRIANGLE },
-/* 28 */{ 404 - 1, 0, MET_LTRIANGLE },
-/* 29 */{ 415 - 1, 0, MET_LTRIANGLE },
-/* 30 */{ 456 - 1, 0, MET_LTRIANGLE },
-/* 31 */{  18 - 1, 1, MET_RTRIANGLE },
-/*  *///{ 277 - 1, 1, MET_RTRIANGLE }, -- altered in fixCryptShadows
-/* 32 */{ 444 - 1, 1, MET_RTRIANGLE },
-/* 33 */{ 471 - 1, 1, MET_RTRIANGLE },
+/* 26 */{ 274 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle }, // with the new special cels
+/* 27 */{ 299 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 28 */{ 404 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 29 */{ 415 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 30 */{ 456 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+/* 31 */{  18 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/*  *///{ 277 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle }, -- altered in fixCryptShadows
+/* 32 */{ 444 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
+/* 33 */{ 471 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
 
-/* 34 */{  29 - 1, 4, MET_TRANSPARENT },
-/* 35 */{ 272 - 1, 4, MET_TRANSPARENT },
-/* 36 */{ 454 - 1, 4, MET_TRANSPARENT },
-/* 37 */{ 557 - 1, 4, MET_TRANSPARENT },
-/* 38 */{ 559 - 1, 4, MET_TRANSPARENT },
-/* 39 */{ 413 - 1, 4, MET_TRANSPARENT },
-/* 40 */{ 300 - 1, 4, MET_TRANSPARENT },
-/* 41 */{  33 - 1, 5, MET_TRANSPARENT },
-/* 42 */{ 347 - 1, 5, MET_TRANSPARENT },
-/* 43 */{ 357 - 1, 5, MET_TRANSPARENT },
-/* 44 */{ 400 - 1, 5, MET_TRANSPARENT },
-/* 45 */{ 458 - 1, 5, MET_TRANSPARENT },
-/* 46 */{ 563 - 1, 5, MET_TRANSPARENT },
-/* 47 */{ 276 - 1, 5, MET_TRANSPARENT },
+/* 34 */{  29 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 35 */{ 272 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 36 */{ 454 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 37 */{ 557 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 38 */{ 559 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 39 */{ 413 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 40 */{ 300 - 1, 4, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 41 */{  33 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 42 */{ 347 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 43 */{ 357 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 44 */{ 400 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 45 */{ 458 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 46 */{ 563 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
+/* 47 */{ 276 - 1, 5, D1CEL_FRAME_TYPE::TransparentSquare },
 
-/* 48 */{ 258 - 1, 6, MET_TRANSPARENT }, // fix micros after reuse
-/* 49 */{ 256 - 1, 6, MET_TRANSPARENT },
+/* 48 */{ 258 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare }, // fix micros after reuse
+/* 49 */{ 256 - 1, 6, D1CEL_FRAME_TYPE::TransparentSquare },
         // clang-format on
     };
 
