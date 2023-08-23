@@ -248,7 +248,9 @@ D1GfxFrame *D1Gfx::insertFrame(int idx, bool *clipped)
         *clipped = this->type == D1CEL_TYPE::V2_MONO_GROUP || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
     }
 
-    this->frames.insert(idx, new D1GfxFrame());
+    D1GfxFrame* newFrame = new D1GfxFrame();
+    newFrame->clipped = *clipped;
+    this->frames.insert(idx, newFrame);
 
     if (this->groupFrameIndices.empty()) {
         // create new group if this is the first frame
@@ -471,35 +473,6 @@ bool D1Gfx::setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType)
     this->frames[frameIndex]->setFrameType(frameType);
     this->modified = true;
     return true;
-}
-
-// TODO: copy-paste from d1tileset.cpp
-static quint8 shadowColorCathedral(quint8 color)
-{
-    // assert(color < 128);
-    if (color == 0) {
-        return 0;
-    }
-    switch (color % 16) {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-        return (color & ~15) + 13;
-    case 6:
-    case 7:
-    case 8:
-    case 9:
-    case 10:
-        return (color & ~15) + 14;
-    case 11:
-    case 12:
-    case 13:
-        return (color & ~15) + 15;
-    }
-    return 0;
 }
 
 bool D1Gfx::patchCathedralDoors(bool silent)
@@ -1367,7 +1340,7 @@ void D1Gfx::patch(int gfxFileIndex, bool silent)
 {
     bool change = false;
     switch (gfxFileIndex) {
-    case GFX_OBJ_L1DOORS: // patch L2Doors.CEL
+    case GFX_OBJ_L1DOORS: // patch L1Doors.CEL
         change = this->patchCathedralDoors(silent);
         break;
     case GFX_OBJ_L2DOORS: // patch L2Doors.CEL

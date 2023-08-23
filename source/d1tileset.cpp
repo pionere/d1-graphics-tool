@@ -2841,8 +2841,7 @@ bool D1Tileset::patchCathedralFloor(bool silent)
                 }
             }
         }
-        // add missing pixels after DRLP_L1_PatchSpec to 417[4] using 231[4]
-        if (i == 27) {
+        if (i == 27) { // add missing pixels after DRLP_L1_PatchSpec to 417[4] using 231[4]
             const CelMicro &microSrc = micros[i - 1]; // 231[4]
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;
