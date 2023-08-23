@@ -474,7 +474,7 @@ bool D1Gfx::setFrameType(int frameIndex, D1CEL_FRAME_TYPE frameType)
 }
 
 // TODO: copy-paste from d1tileset.cpp
-static BYTE shadowColorCathedral(BYTE color)
+static quint8 shadowColorCathedral(quint8 color)
 {
     // assert(color < 128);
     if (color == 0) {
