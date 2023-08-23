@@ -4172,6 +4172,12 @@ void D1Dun::patch(int dunFileIndex)
         // use common tiles
         change |= this->changeTileAt(7, 14, 84);
         // use the new shadows
+        change |= this->changeTileAt( 9,  3, 139);
+        change |= this->changeTileAt( 9,  4, 139);
+        change |= this->changeTileAt( 9,  5, 126);
+        change |= this->changeTileAt(12,  3, 139);
+        change |= this->changeTileAt(12,  4, 139);
+        change |= this->changeTileAt(12,  5, 127);
         change |= this->changeTileAt( 4, 15, 150);
         change |= this->changeTileAt( 6, 16, 150);
         change |= this->changeTileAt(15, 17, 159);

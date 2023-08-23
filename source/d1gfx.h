@@ -95,10 +95,12 @@ protected:
 };
 
 typedef enum gfx_file_index {
-    GFX_L2DOORS, // graphics of the doors in the Catacombs (L2Doors.CEL)
-    GFX_L3DOORS, // graphics of the doors in the Caves (L3Doors.CEL)
-    GFX_PLR_WMHAS, // graphics of the warrior with shield and mace standing in the dungeon (WMHAS.CL2)
-    GFX_SPL_ICONS, // spell icons (SpelIcon.CEL)
+    GFX_OBJ_L1DOORS, // graphics of the doors in the Cathedral (L1Doors.CEL)
+    GFX_OBJ_L2DOORS, // graphics of the doors in the Catacombs (L2Doors.CEL)
+    GFX_OBJ_L3DOORS, // graphics of the doors in the Caves (L3Doors.CEL)
+    GFX_OBJ_MCIRL,   // graphics of the magic circle object (Mcirl.CEL)
+    GFX_PLR_WMHAS,   // graphics of the warrior with shield and mace standing in the dungeon (WMHAS.CL2)
+    GFX_SPL_ICONS,   // spell icons (SpelIcon.CEL)
 } gfx_file_index;
 
 enum class D1CEL_TYPE {
@@ -158,8 +160,10 @@ public:
     void patch(int gfxFileIndex, bool silent); // gfx_file_index
 
 private:
+    bool patchCathedralDoors(bool silent);
     bool patchCatacombsDoors(bool silent);
     bool patchCavesDoors(bool silent);
+    bool patchMagicCircle(bool silent);
     bool patchWarriorStand(bool silent);
     bool patchSplIcons(bool silent);
 

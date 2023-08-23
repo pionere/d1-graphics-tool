@@ -37,12 +37,22 @@
       <widget class="QComboBox" name="gfxFileComboBox">
        <item>
         <property name="text">
+         <string>Doors in the Cathedral (L1Doors.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Doors in the Catacombs (L2Doors.CEL)</string>
         </property>
        </item>
        <item>
         <property name="text">
          <string>Doors in the Caves (L3Doors.CEL)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Magic circle object (Mcirl.CEL)</string>
         </property>
        </item>
        <item>

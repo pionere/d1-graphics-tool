@@ -2550,6 +2550,77 @@ void D1Tileset::cleanupTown(std::set<unsigned> &deletedFrames, bool silent)
     }
 }
 
+void D1Tileset::patchCathedralSpec(bool silent)
+{
+    constexpr int FRAME_WIDTH = 64;
+    constexpr int FRAME_HEIGHT = 160;
+
+    for (int i = 0; i < this->cls->getFrameCount(); i++) {
+        D1GfxFrame *frame = this->cls->getFrame(i);
+        if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
+            dProgressErr() << tr("Framesize of the Cathedal's Special-Cels does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
+            return;
+        }
+
+        bool change = false;
+        // eliminate unnecessary pixels on top
+        for (int y = 0; y < 47; y++) {
+            for (int x = 0; x < FRAME_WIDTH; x++) {
+                change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+            }
+        }
+        if (i == 7 - 1) {
+            for (int y = 71; y < 82; y++) {
+                for (int x = 28; x < 44; x++) {
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    quint8 color = pixel.getPaletteIndex();
+                    if (!pixel.isTransparent() && (color == 14 || color == 29 || color == 30 || color == 46 || color == 47 || y > 112 - x)) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+            change |= frame->setPixel(38, 74, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(35, 77, D1GfxPixel::transparentPixel());
+
+            change |= frame->setPixel(28, 81, D1GfxPixel::colorPixel(22));
+            change |= frame->setPixel(29, 80, D1GfxPixel::colorPixel(10));
+            change |= frame->setPixel(30, 79, D1GfxPixel::colorPixel(10));
+            change |= frame->setPixel(31, 78, D1GfxPixel::colorPixel(23));
+        }
+        if (i == 8 - 1) {
+            for (int y = 71; y < 82; y++) {
+                for (int x = 19; x < 35; x++) {
+                    if (x == 34 && y == 71) {
+                        continue;
+                    }
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    quint8 color = pixel.getPaletteIndex();
+                    if (!pixel.isTransparent() && (color == 14 || color == 29 || color == 30 || color == 46 || color == 47)) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+            // change |= frame->setPixel(19, 70, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(32, 78, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(33, 79, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(34, 80, D1GfxPixel::colorPixel(28));
+        }
+        // eliminate pixels of the unused frames
+        if (i == 3 - 1 || i == 6 - 1) {
+            for (int y = 0; y < FRAME_HEIGHT; y++) {
+                for (int x = 0; x < FRAME_WIDTH; x++) {
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+
+        if (change && !silent) {
+            this->cls->setModified();
+            dProgress() << QApplication::tr("Special-Frame %1 is modified.").arg(i + 1);
+        }
+    }
+}
+
 bool D1Tileset::patchCathedralFloor(bool silent)
 {
     const CelMicro micros[] = {
@@ -2591,6 +2662,11 @@ bool D1Tileset::patchCathedralFloor(bool silent)
 /* 24 */{ 171 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
 
 /* 25 */{ 153 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
+
+/* 26 */{ 231 - 1, 4, -1 },
+/* 27 */{ 417 - 1, 4, MET_TRANSPARENT },
+/* 28 */{ 418 - 1, 4, MET_TRANSPARENT },
+/* 29 */{ 417 - 1, 2, MET_SQUARE },
     };
 
     constexpr unsigned blockSize = BLOCK_SIZE_L1;
@@ -2727,7 +2803,169 @@ bool D1Tileset::patchCathedralFloor(bool silent)
                 }
             }
         }
+        // add missing pixels after DRLP_L1_PatchSpec to 417[4] using 231[4]
+        if (i == 27) {
+            const CelMicro &microSrc = micros[i - 1]; // 231[4]
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
+            D1GfxFrame *microSrc = mf.second;
+            if (microSrc == nullptr) {
+                return false;
+            }
+            for (int x = 0; x < 12; x++) {
+                for (int y = 23; y < 31; y++) {
+                    if (y < 29 - x) {
+                        continue;
+                    }
+                    if (x > 1 && y < 30 - x) {
+                        continue;
+                    }
+                    if (x == 6 && y == 24) {
+                        continue;
+                    }
+                    if (y == 23 && (x == 7 || x == 8)) {
+                        continue;
+                    }
+                    D1GfxPixel pixel = frame->getPixel(x, y);
+                    if (!pixel.isTransparent()) {
+                        continue;
+                    }
+                    change |= frame->setPixel(x, y, microSrc->getPixel(x, y));
+                }
+            }
 
+            // fix glitch
+            change |= frame->setPixel(5 + 28, D1GfxPixel::colorPixel(29));
+            change |= frame->setPixel(6 + 28, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(7 + 28, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(3 + 29, D1GfxPixel::colorPixel(47));
+            change |= frame->setPixel(4 + 29, D1GfxPixel::colorPixel(47));
+            change |= frame->setPixel(5 + 29, D1GfxPixel::colorPixel(46));
+            change |= frame->setPixel(6 + 29, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(15 + 27, D1GfxPixel::colorPixel(6));
+
+            // fix shadow
+            change |= frame->setPixel(9 + 26, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(10 + 26, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(12 + 26, D1GfxPixel::colorPixel(11));
+            change |= frame->setPixel(13 + 26, D1GfxPixel::colorPixel(12));
+            change |= frame->setPixel(14 + 26, D1GfxPixel::colorPixel(28));
+
+            change |= frame->setPixel(7 + 29, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(8 + 29, D1GfxPixel::colorPixel(42));
+            change |= frame->setPixel(9 + 29, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(5 + 30, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(6 + 30, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(7 + 30, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(8 + 30, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(9 + 30, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(10 + 30, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(11 + 30, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(12 + 30, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(4 + 31, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(5 + 31, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(6 + 31, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(7 + 31, D1GfxPixel::colorPixel(12));
+            change |= frame->setPixel(8 + 31, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(9 + 31, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(10 + 31, D1GfxPixel::colorPixel(44));
+            change |= frame->setPixel(11 + 31, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(12 + 31, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(13 + 31, D1GfxPixel::colorPixel(12));
+            change |= frame->setPixel(14 + 31, D1GfxPixel::colorPixel(26));
+        }
+        if (i == 28) { // 418[4] - add missing pixels after DRLP_L1_PatchSpec
+            change |= frame->setPixel(31 + 15, D1GfxPixel::colorPixel(46));
+            change |= frame->setPixel(30 + 16, D1GfxPixel::colorPixel(30));
+            change |= frame->setPixel(29 + 17, D1GfxPixel::colorPixel(30));
+
+            // fix shadow
+            change |= frame->setPixel(31 + 23, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(30 + 24, D1GfxPixel::colorPixel(29));
+            change |= frame->setPixel(31 + 24, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(30 + 25, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(31 + 25, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(30 + 26, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(31 + 26, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(28 + 27, D1GfxPixel::colorPixel(29));
+            change |= frame->setPixel(29 + 27, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(30 + 27, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(27 + 28, D1GfxPixel::colorPixel(29));
+            change |= frame->setPixel(28 + 28, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(29 + 28, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(27 + 29, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(28 + 29, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(26 + 30, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(27 + 30, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(28 + 30, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(29 + 30, D1GfxPixel::colorPixel(28));
+        }
+        if (i == 29) { // 417[2] - fix shadow
+            change |= frame->setPixel(0 + 9, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(0 + 8, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(1 + 8, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(2 + 8, D1GfxPixel::colorPixel(26));
+
+            change |= frame->setPixel(0 + 7, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(1 + 7, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(2 + 7, D1GfxPixel::colorPixel(12));
+            change |= frame->setPixel(4 + 7, D1GfxPixel::colorPixel(27));
+
+            change |= frame->setPixel(0 + 6, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(1 + 6, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(2 + 6, D1GfxPixel::colorPixel(25));
+            change |= frame->setPixel(3 + 6, D1GfxPixel::colorPixel(25));
+            change |= frame->setPixel(4 + 6, D1GfxPixel::colorPixel(11));
+
+            change |= frame->setPixel(0 + 5, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(1 + 5, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(2 + 5, D1GfxPixel::colorPixel(12));
+            change |= frame->setPixel(3 + 5, D1GfxPixel::colorPixel(10));
+            change |= frame->setPixel(4 + 5, D1GfxPixel::colorPixel(10));
+            change |= frame->setPixel(5 + 5, D1GfxPixel::colorPixel(26));
+
+            change |= frame->setPixel(1 + 4, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(2 + 4, D1GfxPixel::colorPixel(11));
+            change |= frame->setPixel(3 + 4, D1GfxPixel::colorPixel(10));
+            change |= frame->setPixel(4 + 4, D1GfxPixel::colorPixel(11));
+            change |= frame->setPixel(5 + 4, D1GfxPixel::colorPixel(10));
+            change |= frame->setPixel(6 + 4, D1GfxPixel::colorPixel(25));
+            change |= frame->setPixel(7 + 4, D1GfxPixel::colorPixel(27));
+
+            change |= frame->setPixel(1 + 3, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(2 + 3, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(3 + 3, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(4 + 3, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(5 + 3, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(6 + 3, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(7 + 3, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(8 + 3, D1GfxPixel::colorPixel(26));
+
+            change |= frame->setPixel(2 + 2, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(3 + 2, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(4 + 2, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(5 + 2, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(6 + 2, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(7 + 2, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(8 + 2, D1GfxPixel::colorPixel(26));
+
+            change |= frame->setPixel(3 + 1, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(4 + 1, D1GfxPixel::colorPixel(27));
+            change |= frame->setPixel(5 + 1, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(6 + 1, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(7 + 1, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(8 + 1, D1GfxPixel::colorPixel(29));
+            change |= frame->setPixel(9 + 1, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(10 + 1, D1GfxPixel::colorPixel(26));
+
+            change |= frame->setPixel(4 + 0, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(5 + 0, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(6 + 0, D1GfxPixel::colorPixel(28));
+            change |= frame->setPixel(7 + 0, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(8 + 0, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(9 + 0, D1GfxPixel::colorPixel(12));
+            change |= frame->setPixel(10 + 0, D1GfxPixel::colorPixel(26));
+            change |= frame->setPixel(11 + 0, D1GfxPixel::colorPixel(26));
+        }
         // fix artifacts
         /*if (i == 4) { // 392[0]
             change |= frame->setPixel(16, 24, D1GfxPixel::colorPixel(42));
@@ -15828,6 +16066,409 @@ void D1Tileset::cleanupNest(std::set<unsigned> &deletedFrames, bool silent)
     }
 }
 
+void D1Tileset::patchCryptSpec()
+{
+    constexpr int FRAME_WIDTH = 64;
+    constexpr int FRAME_HEIGHT = 160;
+
+    typedef struct {
+        int subtileIndex0;
+        int8_t microIndices0[5];
+        int subtileIndex1;
+        int8_t microIndices1[5];
+    } SCelFrame;
+    const SCelFrame frames[] = {
+/*  0 */{ 206 - 1, {-1,-1, 4,-1,-1 }, /*204*/ - 1, {-1,-1, 4, 6,-1 } },
+/*  1 */{     - 1, { 0 },             /*208*/ - 1, {-1,-1, 5, 7,-1 } },
+/*  2 */{  31 - 1, { 0, 2, 4, 6, 8 },  29 - 1, {-1,-1, 4, 6,-1 } },
+/*  3 */{ 274 - 1, { 0, 2, 4, 6, 8 }, 272 - 1, {-1,-1, 4, 6,-1 } },
+/*  4 */{ 558 - 1, { 0, 2, 4, 6, 8 }, 557 - 1, {-1,-1, 4, 6,-1 } },
+/*  5 */{ 299 - 1, { 0, 2, 4, 6, 8 }, 298 - 1, {-1,-1, 4, 6, 8 } },
+/*  6 */{ 301 - 1, {-1,-1, 4, 6, 8 }, 300 - 1, {-1,-1, 4, 6,-1 } },
+/*  7 */{ 333 - 1, { 0, 2, 4, 6, 8 }, 331 - 1, {-1,-1, 4, 6,-1 } },
+/*  8 */{ 356 - 1, { 0, 2, 4, 6, 8 }, 355 - 1, {-1,-1, 4, 6,-1 } },
+/*  9 */{ 404 - 1, { 0, 2, 4, 6, 8 },  29 - 1, {-1,-1, 4, 6,-1 } },
+/* 10 */{ 415 - 1, { 0, 2, 4, 6, 8 }, 413 - 1, {-1,-1, 4, 6,-1 } },
+/* 11 */{ 456 - 1, { 0, 2, 4, 6, 8 }, 454 - 1, {-1,-1, 4, 6,-1 } },
+
+/* 12 */{  18 - 1, { 1, 3, 5, 7, 9 },  17 - 1, {-1,-1, 5, 7,-1 } },
+/* 13 */{ 459 - 1, { 1, 3, 5, 7, 9 }, 458 - 1, {-1,-1, 5, 7,-1 } },
+/* 14 */{ 352 - 1, { 1, 3, 5, 7, 9 }, 351 - 1, {-1,-1, 5, 7,-1 } },
+/* 15 */{ 348 - 1, { 1, 3, 5, 7, 9 }, 347 - 1, {-1,-1, 5, 7,-1 } },
+/* 16 */{ 406 - 1, { 1, 3, 5, 7, 9 },  17 - 1, {-1,-1, 5, 7,-1 } },
+/* 17 */{ 444 - 1, { 1, 3, 5, 7, 9 },  17 - 1, {-1,-1, 5, 7,-1 } },
+/* 18 */{ 471 - 1, { 1, 3, 5, 7, 9 }, 470 - 1, {-1,-1, 5, 7,-1 } },
+/* 19 */{ 562 - 1, { 1, 3, 5, 7, 9 }, 561 - 1, {-1,-1, 5, 7,-1 } },
+    };
+
+    constexpr int FRAME_WIDTH = 64;
+    constexpr int FRAME_HEIGHT = 160;
+    constexpr int BASE_CEL_ENTRIES = 2;
+
+    if (this->cls->getFrameCount() != BASE_CEL_ENTRIES) {
+        return; // assume it is already done
+    }
+
+    for (int i = 0; i < lengthof(frames); i++) {
+        const SCelFrame &sframe = frames[i];
+
+        D1GfxFrame *frame;
+        if (i < BASE_CEL_ENTRIES) {
+            frame = this->cls->getFrame(i);
+            if (frame->getWidth() != FRAME_WIDTH || frame->getHeight() != FRAME_HEIGHT) {
+                dProgressErr() << tr("Framesize of the Crypt's Special-Cels does not match. (%1:%2 expected %3:%4. Index %5.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(i + 1);
+                return;
+            }
+        } else {
+            // TODO: move to d1gfx.cpp?
+            bool clipped;
+            frame = insertFrame(i, &clipped);
+            for (int y = 0; y < FRAME_HEIGHT; y++) {
+                std::vector<D1GfxPixel> pixelLine;
+                for (int x = 0; x < FRAME_WIDTH; x++) {
+                    pixelLine.push_back(D1GfxPixel::transparentPixel());
+                }
+                frame->addPixelLine(pixelLine);
+            }
+        }
+
+        for (int n = 0; n < lengthof(sframe.microIndices0) && sframe.subtileIndex0 >= 0; n++) {
+            if (sframe.microIndices0[n] < 0) {
+                continue;
+            }
+
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(sframe.subtileIndex0, blockSize, sframe.microIndices0[n]);
+            D1GfxFrame *frameSrc = mf.second;
+            if (frameSrc == nullptr) {
+                dProgressErr() << tr("Missing 'template' subtile-frame (%1:%2) to create Crypt's Special-Cels.").arg(sframe.subtileIndex0 + 1).arg(sframe.microIndices0[n]);
+                return;
+            }
+            if (frameSrc->getWidth() != MICRO_WIDTH || frameSrc->getHeight() != MICRO_HEIGHT) {
+                dProgressErr() << tr("Framesize of the 'template' subtile-frame does not fit to create Crypt's Special-Cels. (%1:%2 expected %3:%4. Index %5:%6.)").arg(frameSrc->getWidth()).arg(frameSrc->getHeight()).arg(MICRO_WIDTH).arg(MICRO_HEIGHT).arg(sframe.subtileIndex1 + 1).arg(sframe.microIndices1[n] + 1);
+                return;
+            }
+
+            if (i < 12 && i != 1) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    for (int x = 0; x < MICRO_WIDTH; x++) {
+                        if (i == 0) { // 206[4]
+                            if (y > 14 - x / 2) {
+                                continue;
+                            }
+                        }
+                        if ((i == 2 || i == 3 || i == 4 || i == 5 || i == 7 || i == 8 || i == 10 || i == 11) && n == 0) { // 31[0] - mask floor with left column
+                            if (x > 23) {
+                                continue;
+                            }
+                            if (x == 23 && (y != 17 && y != 18)) {
+                                continue;
+                            }
+                            if (x == 22 && (y < 16 || y > 19)) {
+                                continue;
+                            }
+                            if (x == 21 && (y == 21 || y == 22)) {
+                                continue;
+                            }
+                        }
+                        if (i == 9 && n == 0) { // 404[0] - mask floor with left column
+                            if (x > 23) {
+                                continue;
+                            }
+                            if (x == 23 && y > 18) {
+                                continue;
+                            }
+                            if (x == 22 && y > 19) {
+                                continue;
+                            }
+                            if (x == 21 && (y == 21 || y == 22)) {
+                                continue;
+                            }
+                        }
+                        if (i == 6 && n == 2) { // 301[4] eliminate 'bad' pixels
+                            if (y > 12 - (x + 1) / 2) {
+                                continue;
+                            }
+                        }
+                        if (i == 6 && n == 3) { // 301[6] eliminate 'bad' pixels
+                            if (y > 44 - (x + 1) / 2) {
+                                continue;
+                            }
+                        }
+                        D1GfxPixel pixelSrc = frameSrc->getPixel(x, y);
+                        if (!pixelSrc.isTransparent()) {
+                            int yy = FRAME_HEIGHT - MICRO_HEIGHT * (n + 1) + y;
+                            D1GfxPixel pixel = frame->getPixel(x, yy);
+                            if (pixel.isTransparent()) {
+                                change |= frame->setPixel(x, yy, pixelSrc);
+                            }
+                        }
+                    }
+                }
+            } else { //i >= 12 || i == 1
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    for (int x = 0; x < MICRO_WIDTH; x++) {
+                        if (i != 18 && i != 17 && i != 1 && n == 0) { // 18[1]
+                            if (x < 8) {
+                                continue;
+                            }
+                            if (x == 8 && (y != 18 && y != 19)) {
+                                continue;
+                            }
+                            if (x == 9 && (y < 17 || y > 20)) {
+                                continue;
+                            }
+                            if (x == 10 && (y == 22 || y == 23)) {
+                                continue;
+                            }
+                        }
+
+                        if (i == 17 && n == 0) { // 444[1] -- remove additional pixels due to brocken column
+                            if (x < 10) {
+                                continue;
+                            }
+                            if (x == 10 && (y < 17 || y > 19)) {
+                                continue;
+                            }
+                            if (x == 11 && (y < 16 || y == 22 || y == 23 || y == 26)) {
+                                continue;
+                            }
+                            if (x == 12 && y < 15) {
+                                continue;
+                            }
+                            if (x == 13 && y < 13) {
+                                continue;
+                            }
+                            if (x == 14 && y < 11) {
+                                continue;
+                            }
+                            if (x == 15 && y < 10) {
+                                continue;
+                            }
+                        }
+
+                        if (i == 18 && n == 0) { // 471[1]
+                            if (x < 5) {
+                                continue;
+                            }
+                            if (x == 5 && (y < 14 || y > 17)) {
+                                continue;
+                            }
+                            if (x == 6 && (y < 11 || y > 18)) {
+                                continue;
+                            }
+                            if (x == 7 && y > 20) {
+                                continue;
+                            }
+                            if (x == 8 && y > 22) {
+                                continue;
+                            }
+                            if (x == 9 && y > 23) {
+                                continue;
+                            }
+                        }
+
+                        if (i == 17 && n == 1) { // 444[3] - remove pixels from the left side of the arch
+                            if (x < 2) {
+                                continue;
+                            }
+                        }
+                        D1GfxPixel pixelSrc = frameSrc->getPixel(x, y);
+                        quint8 color = pixelSrc.getPaletteIndex();
+                        if (i == 19 && n == 0 && ((color < 16 && color != 0) /*|| (x == 8 && y == 18)*/)) {
+                            continue; // remove bright lava-pixels from 562[1]
+                        }
+                        if (!pixelSrc.isTransparent()) {
+                            int yy = FRAME_HEIGHT - MICRO_HEIGHT * (n + 1) + y;
+                            D1GfxPixel pixel = frame->getPixel(x + MICRO_WIDTH, yy);
+                            if (pixel.isTransparent()) {
+                                change |= frame->setPixel(x + MICRO_WIDTH, yy, pixelSrc);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        for (int n = 0; n < lengthof(sframe.microIndices1) && sframe.subtileIndex1 >= 0; n++) {
+            if (sframe.microIndices1[n] < 0) {
+                continue;
+            }
+            std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(sframe.subtileIndex1, blockSize, sframe.microIndices1[n]);
+            D1GfxFrame *frameSrc = mf.second;
+            if (frameSrc == nullptr) {
+                dProgressErr() << tr("Missing 'template' subtile-frame (%1:%2) to create Crypt's Special-Cels.").arg(sframe.subtileIndex1 + 1).arg(sframe.microIndices1[n] + 1);
+                return;
+            }
+            if (frameSrc->getWidth() != MICRO_HEIGHT || frameSrc->getWidth() != MICRO_WIDTH) {
+                dProgressErr() << tr("Framesize of the 'template' subtile-frame does not fit to create Crypt's Special-Cels. (%1:%2 expected %3:%4. Index %5:%6.)").arg(frame->getWidth()).arg(frame->getHeight()).arg(FRAME_WIDTH).arg(FRAME_HEIGHT).arg(sframe.subtileIndex1 + 1).arg(sframe.microIndices1[n] + 1);
+                return;
+            }
+            if (i < 12 && i != 1) {
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    for (int x = 0; x < MICRO_WIDTH; x++) {
+                        /*if (i == 0 && n == 2) { // 204[4]
+                            if (y > 14 - x / 2) {
+                                continue;
+                            }
+                        }*/
+
+                        if ((i == 2 || i == 3 || i == 4 || i == 7 || i == 8 || i == 9 || i == 11) && n == 2) { // 29[4]
+                            if (y > 16) {
+                                continue;
+                            }
+                            if (y > 25 - x) {
+                                continue;
+                            }
+                            /*if (x > 18 && y > 24 - x) {
+                                continue;
+                            }*/
+                        }
+                        if ((i == 2 || i == 3 || i == 4 || i == 7 || i == 8 || i == 9 || i == 11) && n == 3) { // 29[6]
+                            if (y > 57 - x) {
+                                continue;
+                            }
+                            if (x > 27) {
+                                continue;
+                            }
+                            if (y < x / 2 - 1) {
+                                continue;
+                            }
+                            if (y < 5 - x / 2) {
+                                continue;
+                            }
+                        }
+                        if (i == 10 && n == 2) { // 413[4]
+                            if (y > 10 - x) {
+                                continue;
+                            }
+                        }
+                        if (i == 10 && n == 3) { // 413[6]
+                            if (x > 26) {
+                                continue;
+                            }
+                            if (y > 45 - x) {
+                                continue;
+                            }
+                            if ((x < 19 || x > 21) && y > 44 - x) {
+                                continue;
+                            }
+                            if ((x < 16 || x > 22) && y > 43 - x) {
+                                continue;
+                            }
+                            if (x < 14 && y > 42 - x) {
+                                continue;
+                            }
+                            if (y < x / 2 - 1) {
+                                continue;
+                            }
+                            if (y < 5 - x / 2) {
+                                continue;
+                            }
+                        }
+                        if (i == 6 && n == 2) { // 331[4]
+                            if (y > 12 - (x + 1) / 2) {
+                                continue;
+                            }
+                        }
+                        if (i == 6 && n == 3) { // 331[6]
+                            if (x == 27 && y == 31) {
+                                continue;
+                            }
+                            if (x > 27) {
+                                continue;
+                            }
+                            if (y < x / 2 - 1) {
+                                continue;
+                            }
+                            if (y < 5 - x / 2) {
+                                continue;
+                            }
+                        }
+
+                        D1GfxPixel pixelSrc = frameSrc->getPixel(x, y);
+                        quint8 color = pixelSrc.getPaletteIndex();
+                        if ((i == 3 || i == 4) && n == 0 && ((color < 16 && color != 0) /*|| (x == 23 && y == 18)*/)) {
+                            continue; // remove bright lava-pixels from 274[0], 558[0]
+                        }
+                        if (!pixelSrc.isTransparent()) {
+                            int yy = FRAME_HEIGHT - MICRO_HEIGHT * (n + 1) + y;
+                            D1GfxPixel pixel = frame->getPixel(x + MICRO_WIDTH, yy - 16);
+                            if (pixel.isTransparent()) {
+                                change |= frame->setPixel(x + MICRO_WIDTH, yy - 16, pixelSrc);
+                            }
+
+                        }
+                    }
+                }
+            } else { // i >= 12 || i == 1
+                for (int y = 0; y < MICRO_HEIGHT; y++) {
+                    for (int x = 0; x < MICRO_WIDTH; x++) {
+                        if (i != 1 && n == 2) { // 17[5]
+                            if (y > 16) {
+                                continue;
+                            }
+                            if (y > x - 5) {
+                                continue;
+                            }
+                        }
+                        if (i != 1 && n == 3) { // 17[7]
+                            if (y > x + 27) {
+                                continue;
+                            }
+                            if (x < 4) {
+                                continue;
+                            }
+                            if (y < x / 2 - 10) {
+                                continue;
+                            }
+                            if (y < 14 - x / 2) {
+                                continue;
+                            }
+                        }
+
+                        D1GfxPixel pixelSrc = frameSrc->getPixel(x, y);
+                        if (!pixelSrc.isTransparent()) {
+                            int yy = FRAME_HEIGHT - MICRO_HEIGHT * (n + 1) + y;
+                            D1GfxPixel pixel = frame->getPixel(x, yy - 16);
+                            if (pixel.isTransparent()) {
+                                change |= frame->setPixel(x, yy - 16, pixelSrc);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (i == 0) {
+            change |= frame->setPixel(31, 63, D1GfxPixel::colorPixel(44));
+            change |= frame->setPixel(22, 155, D1GfxPixel::transparentPixel());
+            change |= frame->setPixel(59, 45, D1GfxPixel::colorPixel(44));
+            change |= frame->setPixel(58, 46, D1GfxPixel::colorPixel(42));
+            change |= frame->setPixel(58, 47, D1GfxPixel::colorPixel(41));
+        }
+
+        if (i == 6) {
+            change |= frame->setPixel(10, 32, D1GfxPixel::colorPixel(41));
+            change |= frame->setPixel(12, 31, D1GfxPixel::colorPixel(41));
+            change |= frame->setPixel(14, 30, D1GfxPixel::colorPixel(40));
+            change |= frame->setPixel(16, 29, D1GfxPixel::colorPixel(41));
+            change |= frame->setPixel(18, 28, D1GfxPixel::colorPixel(41));
+            change |= frame->setPixel(20, 27, D1GfxPixel::colorPixel(41));
+            change |= frame->setPixel(22, 26, D1GfxPixel::colorPixel(41));
+            change |= frame->setPixel(24, 25, D1GfxPixel::colorPixel(40));
+            change |= frame->setPixel(26, 24, D1GfxPixel::colorPixel(41));
+            change |= frame->setPixel(28, 23, D1GfxPixel::colorPixel(40));
+            change |= frame->setPixel(30, 22, D1GfxPixel::colorPixel(41));
+            change |= frame->setPixel(32, 21, D1GfxPixel::colorPixel(41));
+            change |= frame->setPixel(34, 20, D1GfxPixel::colorPixel(42));
+        }
+        if (change && !silent) {
+            this->cls->setModified();
+            dProgress() << QApplication::tr("Special-Frame %1 is modified.").arg(i + 1);
+        }
+    }
+}
+
 void D1Tileset::patchCryptFloor(bool silent)
 {
     const CelMicro micros[] = {
@@ -15844,6 +16485,51 @@ void D1Tileset::patchCryptFloor(bool silent)
 /*  9 */ {  63 - 1, 4, D1CEL_FRAME_TYPE::Square },
 /* 10 */ { 450 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
 /* 11 */ { 206 - 1, 0, D1CEL_FRAME_TYPE::TransparentSquare },
+
+/* 11 */{ 206 - 1, 0, MET_LTRIANGLE },   // mask doors
+/* 12 */{ 204 - 1, 0, MET_TRANSPARENT },
+/* 13 */{ 204 - 1, 2, MET_TRANSPARENT },
+/* 14 */{ 204 - 1, 4, MET_TRANSPARENT },
+/* 15 */{ 209 - 1, 1, MET_RTRIANGLE },
+/* 16 */{ 208 - 1, 1, MET_TRANSPARENT },
+/* 17 */{ 208 - 1, 3, MET_TRANSPARENT },
+/* 18 */{ 208 - 1, 5, MET_TRANSPARENT },
+
+/* 19 */{ 290 - 1, 4, MET_TRANSPARENT },
+/* 20 */{ 292 - 1, 0, MET_TRANSPARENT },
+/* 21 */{ 292 - 1, 2, MET_TRANSPARENT },
+/* 22 */{ 292 - 1, 4, MET_TRANSPARENT },
+/* 23 */{ 294 - 1, 4, MET_TRANSPARENT },
+/* 24 */{ 296 - 1, 4, MET_TRANSPARENT },
+/* 25 */{ 296 - 1, 6, MET_TRANSPARENT },
+
+/* 26 */{ 274 - 1, 0, MET_LTRIANGLE }, // with the new special cels
+/* 27 */{ 299 - 1, 0, MET_LTRIANGLE },
+/* 28 */{ 404 - 1, 0, MET_LTRIANGLE },
+/* 29 */{ 415 - 1, 0, MET_LTRIANGLE },
+/* 30 */{ 456 - 1, 0, MET_LTRIANGLE },
+/* 31 */{  18 - 1, 1, MET_RTRIANGLE },
+/*  *///{ 277 - 1, 1, MET_RTRIANGLE }, -- altered in fixCryptShadows
+/* 32 */{ 444 - 1, 1, MET_RTRIANGLE },
+/* 33 */{ 471 - 1, 1, MET_RTRIANGLE },
+
+/* 34 */{  29 - 1, 4, MET_TRANSPARENT },
+/* 35 */{ 272 - 1, 4, MET_TRANSPARENT },
+/* 36 */{ 454 - 1, 4, MET_TRANSPARENT },
+/* 37 */{ 557 - 1, 4, MET_TRANSPARENT },
+/* 38 */{ 559 - 1, 4, MET_TRANSPARENT },
+/* 39 */{ 413 - 1, 4, MET_TRANSPARENT },
+/* 40 */{ 300 - 1, 4, MET_TRANSPARENT },
+/* 41 */{  33 - 1, 5, MET_TRANSPARENT },
+/* 42 */{ 347 - 1, 5, MET_TRANSPARENT },
+/* 43 */{ 357 - 1, 5, MET_TRANSPARENT },
+/* 44 */{ 400 - 1, 5, MET_TRANSPARENT },
+/* 45 */{ 458 - 1, 5, MET_TRANSPARENT },
+/* 46 */{ 563 - 1, 5, MET_TRANSPARENT },
+/* 47 */{ 276 - 1, 5, MET_TRANSPARENT },
+
+/* 48 */{ 258 - 1, 6, MET_TRANSPARENT }, // fix micros after reuse
+/* 49 */{ 256 - 1, 6, MET_TRANSPARENT },
         // clang-format on
     };
 
@@ -15898,9 +16584,246 @@ void D1Tileset::patchCryptFloor(bool silent)
                 }
             }
         }
+
+        // mask doors 204[0]
+        if (i == 12) {
+            for (int y = 0; y < MICRO_HEIGHT; y++) {
+                for (int x = 0; x < 16; x++) {
+                    if (x < 14 || (x == 14 && y > 4) || (x == 15 && y > 14 && y < 23)) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // mask doors 204[2]
+        if (i == 13) {
+            for (int y = 0; y < MICRO_HEIGHT; y++) {
+                for (int x = 0; x < 14; x++) {
+                    if (x < 12 || (x == 12 && y > 12) || (x == 13 && y > 26)) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // mask doors 204[4]
+        if (i == 14) {
+            for (int y = 0; y < MICRO_HEIGHT; y++) {
+                for (int x = 0; x < 26; x++) {
+                    if (x > 10 && y > 14 - x / 2) {
+                        continue;
+                    }
+                    if (x == 10 && y > 9 && y < 17) {
+                        continue;
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // mask doors 208[1]
+        if (i == 16) {
+            for (int y = 0; y < MICRO_HEIGHT; y++) {
+                for (int x = 17; x < MICRO_WIDTH; x++) {
+                    if (x > 17 || (x == 17 && y > 5 && y < 23)) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // mask doors 208[3]
+        if (i == 17) {
+            for (int y = 0; y < MICRO_HEIGHT; y++) {
+                for (int x = 18; x < MICRO_WIDTH; x++) {
+                    if (x > 19 || (x == 19 && y > 0) || (x == 18 && y > 17)) {
+                        change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                    }
+                }
+            }
+        }
+        // mask doors 208[5]
+        if (i == 18) {
+            for (int y = 0; y < MICRO_HEIGHT; y++) {
+                for (int x = 6; x < MICRO_WIDTH; x++) {
+                    if (x < 20 && y > x / 2 - 1) {
+                        continue;
+                    }
+                    if (x == 20 && y > 9 && y < 17) {
+                        continue;
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // mask 'doors' 290[4]
+        if (i == 19) {
+            for (int y = 0; y < 13; y++) {
+                for (int x = 0; x < MICRO_WIDTH; x++) {
+                    if (y > 13 - (x + 1) / 2) {
+                        continue;
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // mask 'doors' 294[4], 296[4]
+        if (i >= 23 && i < 25) {
+            for (int y = 0; y < 13; y++) {
+                for (int x = 0; x < MICRO_WIDTH; x++) {
+                    if (y > 12 - (x + 1) / 2) {
+                        continue;
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // mask 'doors' 296[6]
+        if (i == 25) {
+            for (int y = 0; y < MICRO_HEIGHT; y++) {
+                for (int x = 0; x < MICRO_WIDTH; x++) {
+                    if (y > 44 - (x + 1) / 2) {
+                        continue;
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // mask 'doors' 292[0]
+        if (i == 20) {
+            for (int y = 0; y < MICRO_HEIGHT; y++) {
+                for (int x = 0; x < 24; x++) {
+                    if (x == 23 && (y < 17 || y > 18)) {
+                        continue;
+                    }
+                    if (x == 22 && (y < 16 || y > 19)) {
+                        continue;
+                    }
+                    if (x == 21 && (y == 21 || y == 22)) {
+                        continue;
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // mask 'doors' 292[2]
+        if (i == 21) {
+            for (int y = 0; y < MICRO_HEIGHT; y++) {
+                for (int x = 0; x < 26; x++) {
+                    if (x == 25 && y > 7) {
+                        continue;
+                    }
+                    if (x == 24 && y > 13) {
+                        continue;
+                    }
+                    if (x == 23 && y > 20) {
+                        continue;
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // mask 'doors' 292[4]
+        if (i == 22) {
+            for (int y = 0; y < MICRO_HEIGHT; y++) {
+                for (int x = 0; x < 30; x++) {
+                    if (x == 29 && (y < 14 || y > 17)) {
+                        continue;
+                    }
+                    if (x == 28 && (y < 13 || y > 18)) {
+                        continue;
+                    }
+                    if (x == 27 && ((y > 1 && y < 13) || y > 18)) {
+                        continue;
+                    }
+                    if (x == 26 && ((y > 2 && y < 10) || y > 30)) {
+                        continue;
+                    }
+                    if (x == 25 && (y > 3 && y < 6)) {
+                        continue;
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // mask the new special cels 29[4], 272[4], 454[4], 557[4], 559[4]
+        if (i >= 34 && i < 39) {
+            for (int y = 0; y < 17; y++) {
+                for (int x = 0; x < MICRO_WIDTH; x++) {
+                    if (y > 25 - x) {
+                        continue;
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // mask the new special cels 413[4]
+        if (i == 39) {
+            for (int y = 0; y < 9; y++) {
+                for (int x = 0; x < 11; x++) {
+                    if (y > 10 - x) {
+                        continue;
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // mask the new special cels 300[4]
+        if (i == 40) {
+            for (int y = 0; y < 14; y++) {
+                for (int x = 0; x < MICRO_WIDTH; x++) {
+                    if (x > 3 && y > 12 - ((x + 1) / 2)) {
+                        continue;
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
+        // mask the new special cels 33[5]
+        if (i >= 41 && i < 48) {
+            for (int y = 0; y < 17; y++) {
+                for (int x = 0; x < MICRO_WIDTH; x++) {
+                    if (y > x - 5) {
+                        continue;
+                    }
+                    change |= frame->setPixel(x, y, D1GfxPixel::transparentPixel());
+                }
+            }
+        }
         if (i == 11) { // 206[0]
             change |= frame->setPixel(26, 4, D1GfxPixel::colorPixel(45));
         }
+        if (i == 38) { // 559[4] - fix bad artifact after masking
+            change |= frame->setPixel(15, 11, D1GfxPixel::colorPixel(TRANS_COLOR));
+            change |= frame->setPixel(14, 12, D1GfxPixel::colorPixel(TRANS_COLOR));
+            change |= frame->setPixel(13, 13, D1GfxPixel::colorPixel(TRANS_COLOR));
+            change |= frame->setPixel(12, 14, D1GfxPixel::colorPixel(TRANS_COLOR));
+            change |= frame->setPixel(11, 15, D1GfxPixel::colorPixel(TRANS_COLOR));
+            change |= frame->setPixel(10, 16, D1GfxPixel::colorPixel(TRANS_COLOR));
+        }
+        if (i == 46) { // 563[5] - fix bad artifact after masking
+            change |= frame->setPixel(17, 13, D1GfxPixel::colorPixel(TRANS_COLOR));
+            change |= frame->setPixel(17, 14, D1GfxPixel::colorPixel(TRANS_COLOR));
+            change |= frame->setPixel(18, 14, D1GfxPixel::colorPixel(TRANS_COLOR));
+            change |= frame->setPixel(18, 15, D1GfxPixel::colorPixel(TRANS_COLOR));
+            change |= frame->setPixel(19, 15, D1GfxPixel::colorPixel(TRANS_COLOR));
+            change |= frame->setPixel(19, 16, D1GfxPixel::colorPixel(TRANS_COLOR));
+            change |= frame->setPixel(20, 16, D1GfxPixel::colorPixel(TRANS_COLOR));
+        }
+        if (i == 48) { // 258[6] - fix micros after reuse
+            change |= frame->setPixel(3, 3, D1GfxPixel::colorPixel(42));
+            change |= frame->setPixel(4, 3, D1GfxPixel::colorPixel(42));
+            change |= frame->setPixel(6, 2, D1GfxPixel::colorPixel(42));
+            change |= frame->setPixel(8, 1, D1GfxPixel::colorPixel(45));
+            change |= frame->setPixel(10, 0, D1GfxPixel::colorPixel(44));
+        }
+        if (i == 49) { // 256[6] - fix micros after reuse
+            change |= frame->setPixel(0, 5, D1GfxPixel::colorPixel(41));
+            change |= frame->setPixel(1, 5, D1GfxPixel::colorPixel(41));
+            change |= frame->setPixel(2, 4, D1GfxPixel::colorPixel(42));
+            change |= frame->setPixel(3, 4, D1GfxPixel::colorPixel(41));
+            change |= frame->setPixel(3, 0, D1GfxPixel::colorPixel(45));
+            change |= frame->setPixel(3, 1, D1GfxPixel::colorPixel(45));
+            change |= frame->setPixel(3, 2, D1GfxPixel::colorPixel(45));
+        }
+
         std::vector<FramePixel> pixels;
         D1CelTilesetFrame::collectPixels(frame, micro.res_encoding, pixels);
         for (const FramePixel &pix : pixels) {
@@ -16014,7 +16937,7 @@ void D1Tileset::fixCryptShadows(bool silent)
 /*  7 */{ 634 - 1, 0, D1CEL_FRAME_TYPE::LeftTriangle },
 /*  8 */{ 634 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
 
-/*  9 */{ 277 - 1, 1, D1CEL_FRAME_TYPE::TransparentSquare },
+/*  9 */{ 277 - 1, 1, D1CEL_FRAME_TYPE::RightTriangle },
 /* 10 */{ 303 - 1, 1, D1CEL_FRAME_TYPE::Empty },
 
 /* 11 */{ 620 - 1, 0, D1CEL_FRAME_TYPE::RightTriangle },
@@ -16522,19 +17445,23 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(242, 1, 626, 1);
     // SetMcr(242, 2, 31, 2);
     Blk2Mcr(242, 4);
-    ReplaceMcr(242, 6, 31, 6);
-    SetMcr(242, 8, 31, 8);
+    // ReplaceMcr(242, 6, 31, 6);
+    // SetMcr(242, 8, 31, 8);
+    Blk2Mcr(242, 6); // - with the new special cels
+    HideMcr(242, 8);
     ReplaceMcr(178, 0, 619, 1);
     ReplaceMcr(178, 1, 625, 0);
     SetMcr(178, 2, 624, 0);
     Blk2Mcr(178, 4);
-    ReplaceMcr(178, 6, 31, 6);
-    ReplaceMcr(178, 8, 31, 8);
+    ReplaceMcr(178, 6, 89, 6);
+    ReplaceMcr(178, 8, 89, 8);
     ReplaceMcr(238, 0, 634, 0);
     ReplaceMcr(238, 1, 634, 1);
     Blk2Mcr(238, 4);
-    SetMcr(238, 6, 31, 6);
-    SetMcr(238, 8, 31, 8);
+    // SetMcr(238, 6, 31, 6);
+    // SetMcr(238, 8, 31, 8);
+    HideMcr(238, 6); // - with the new special cels
+    HideMcr(238, 8);
     // pointless door micros (re-drawn by dSpecial or the object)
     Blk2Mcr(77, 2);
     Blk2Mcr(77, 4);
@@ -16552,18 +17479,22 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(99, 0, 204, 0);
     ReplaceMcr(99, 2, 204, 2);
     ReplaceMcr(99, 4, 204, 4);
+    ReplaceMcr(99, 6, 119, 6);
     ReplaceMcr(113, 0, 204, 0);
     ReplaceMcr(113, 2, 204, 2);
     ReplaceMcr(113, 4, 204, 4);
+    ReplaceMcr(113, 6, 119, 6);
     ReplaceMcr(115, 0, 204, 0);
     ReplaceMcr(115, 2, 204, 2);
     ReplaceMcr(115, 4, 204, 4);
+    ReplaceMcr(115, 6, 119, 6);
+    ReplaceMcr(204, 6, 119, 6);
     Blk2Mcr(80, 7);
     Blk2Mcr(80, 9);
     ReplaceMcr(80, 0, 209, 0);
     ReplaceMcr(80, 1, 209, 1);
-    ReplaceMcr(80, 3, 209, 3);
-    ReplaceMcr(80, 5, 209, 5);
+    Blk2Mcr(80, 3);
+    Blk2Mcr(80, 5);
     // ReplaceMcr(79, 0, 208, 0);
     // ReplaceMcr(79, 1, 208, 1);
     // ReplaceMcr(79, 3, 208, 3);
@@ -16584,6 +17515,8 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(206, 4);
     Blk2Mcr(206, 6);
     Blk2Mcr(206, 8);
+    Blk2Mcr(209, 3);
+    Blk2Mcr(209, 5);
     Blk2Mcr(209, 7);
     Blk2Mcr(209, 9);
     // Blk2Mcr(213, 6);
@@ -16669,6 +17602,145 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // fix automap of the entrance I.
     Blk2Mcr(148, 0);
     Blk2Mcr(148, 1);
+    // with the new special cels
+    ReplaceMcr(31, 0, 4, 0);
+    // ReplaceMcr(468, 0, 4, 0);
+    ReplaceMcr(333, 0, 31, 0); // lost details
+    ReplaceMcr(345, 0, 31, 0); // lost details
+    ReplaceMcr(356, 0, 7, 0);
+    ReplaceMcr(445, 0, 7, 0); // lost details
+    ReplaceMcr(404, 0, 474, 0); // lost details
+    // TODO: 274[0], 277[1] ?
+    Blk2Mcr(31, 2);
+    // Blk2Mcr(468, 2);
+    Blk2Mcr(274, 2);
+    Blk2Mcr(299, 2);
+    Blk2Mcr(333, 2);
+    Blk2Mcr(345, 2);
+    Blk2Mcr(356, 2);
+    Blk2Mcr(404, 2);
+    Blk2Mcr(415, 2);
+    Blk2Mcr(445, 2);
+    Blk2Mcr(456, 2);
+    ReplaceMcr(331, 4, 29, 4);
+    ReplaceMcr(343, 4, 29, 4);
+    ReplaceMcr(355, 4, 29, 4);
+    ReplaceMcr(363, 4, 29, 4);
+    ReplaceMcr(443, 4, 29, 4);
+    Blk2Mcr(31, 4);
+    // Blk2Mcr(468, 4);
+    Blk2Mcr(274, 4);
+    Blk2Mcr(298, 4);
+    Blk2Mcr(299, 4);
+    Blk2Mcr(301, 4);
+    Blk2Mcr(333, 4);
+    Blk2Mcr(345, 4);
+    Blk2Mcr(356, 4);
+    Blk2Mcr(404, 4);
+    Blk2Mcr(415, 4);
+    Blk2Mcr(445, 4);
+    Blk2Mcr(456, 4);
+    Blk2Mcr(31, 6);
+    // Blk2Mcr(468, 6);
+    Blk2Mcr(274, 6);
+    Blk2Mcr(298, 6);
+    Blk2Mcr(299, 6);
+    ReplaceMcr(300, 6, 119, 6); // lost details
+    ReplaceMcr(294, 6, 119, 6); // lost details
+    ReplaceMcr(454, 6, 252, 6); // lost details
+    ReplaceMcr(413, 6, 25, 6); // lost details
+    ReplaceMcr(331, 6, 25, 6); // lost details
+    ReplaceMcr(343, 6, 25, 6); // lost details
+    ReplaceMcr(355, 6, 25, 6); // lost details
+    ReplaceMcr(363, 6, 25, 6); // lost details
+    ReplaceMcr(557, 6, 25, 6); // lost details
+    ReplaceMcr(559, 6, 25, 6); // lost details
+    ReplaceMcr(290, 6, 296, 6);
+    ReplaceMcr(292, 6, 296, 6);
+    Blk2Mcr(301, 6);
+    Blk2Mcr(333, 6);
+    Blk2Mcr(345, 6);
+    Blk2Mcr(356, 6);
+    Blk2Mcr(404, 6);
+    Blk2Mcr(415, 6);
+    Blk2Mcr(445, 6);
+    Blk2Mcr(456, 6);
+    Blk2Mcr(31, 8);
+    // Blk2Mcr(468, 8);
+    Blk2Mcr(274, 8);
+    Blk2Mcr(290, 8);
+    Blk2Mcr(292, 8);
+    Blk2Mcr(296, 8);
+    Blk2Mcr(298, 8);
+    Blk2Mcr(299, 8);
+    Blk2Mcr(301, 8);
+    Blk2Mcr(333, 8);
+    Blk2Mcr(345, 8);
+    Blk2Mcr(356, 8);
+    Blk2Mcr(404, 8);
+    Blk2Mcr(415, 8);
+    Blk2Mcr(445, 8);
+    Blk2Mcr(456, 8);
+
+    ReplaceMcr(348, 1, 18, 1);
+    ReplaceMcr(352, 1, 18, 1);
+    ReplaceMcr(358, 1, 18, 1);
+    ReplaceMcr(406, 1, 18, 1);
+    ReplaceMcr(459, 1, 18, 1);
+    Blk2Mcr(18, 3);
+    Blk2Mcr(277, 3);
+    Blk2Mcr(332, 3);
+    Blk2Mcr(348, 3);
+    Blk2Mcr(352, 3);
+    Blk2Mcr(358, 3);
+    Blk2Mcr(406, 3);
+    Blk2Mcr(444, 3); // lost details
+    Blk2Mcr(459, 3);
+    Blk2Mcr(463, 3);
+    Blk2Mcr(471, 3);
+    Blk2Mcr(562, 3);
+    ReplaceMcr(470, 5, 276, 5);
+    Blk2Mcr(18, 5);
+    Blk2Mcr(277, 5);
+    Blk2Mcr(332, 5);
+    Blk2Mcr(348, 5);
+    Blk2Mcr(352, 5);
+    Blk2Mcr(358, 5);
+    Blk2Mcr(406, 5);
+    Blk2Mcr(444, 5);
+    Blk2Mcr(459, 5);
+    Blk2Mcr(463, 5);
+    Blk2Mcr(471, 5);
+    Blk2Mcr(562, 5);
+    ReplaceMcr(347, 7, 13, 7); // lost details
+    ReplaceMcr(276, 7, 13, 7); // lost details
+    ReplaceMcr(458, 7, 13, 7); // lost details
+    ReplaceMcr(561, 7, 13, 7); // lost details
+    ReplaceMcr(563, 7, 13, 7); // lost details
+    Blk2Mcr(18, 7);
+    Blk2Mcr(277, 7);
+    Blk2Mcr(332, 7);
+    Blk2Mcr(348, 7);
+    Blk2Mcr(352, 7);
+    Blk2Mcr(358, 7);
+    Blk2Mcr(406, 7);
+    Blk2Mcr(444, 7);
+    Blk2Mcr(459, 7);
+    Blk2Mcr(463, 7);
+    Blk2Mcr(471, 7);
+    Blk2Mcr(562, 7);
+    Blk2Mcr(18, 9);
+    Blk2Mcr(277, 9);
+    Blk2Mcr(332, 9);
+    Blk2Mcr(348, 9);
+    Blk2Mcr(352, 9);
+    Blk2Mcr(358, 9);
+    Blk2Mcr(406, 9);
+    Blk2Mcr(444, 9);
+    Blk2Mcr(459, 9);
+    Blk2Mcr(463, 9);
+    Blk2Mcr(471, 9);
+    Blk2Mcr(562, 9);
     // subtile for the separate pillar tile
     // - 91 == 9
     ReplaceMcr(91, 0, 33, 0);
@@ -16752,25 +17824,25 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(551, 1, 265, 1);
     ReplaceMcr(261, 0, 14, 0); // lost details
     // ReplaceMcr(545, 0, 14, 0); // lost details
-    ReplaceMcr(18, 9, 6, 9);   // lost details
+    // ReplaceMcr(18, 9, 6, 9);   // lost details
     // ReplaceMcr(34, 9, 6, 9);   // lost details
     // ReplaceMcr(37, 9, 6, 9);
-    ReplaceMcr(277, 9, 6, 9);   // lost details
-    ReplaceMcr(332, 9, 6, 9);   // lost details
-    ReplaceMcr(348, 9, 6, 9);   // lost details
-    ReplaceMcr(352, 9, 6, 9);   // lost details
-    ReplaceMcr(358, 9, 6, 9);   // lost details
-    ReplaceMcr(406, 9, 6, 9);   // lost details
-    ReplaceMcr(444, 9, 6, 9);   // lost details
-    ReplaceMcr(459, 9, 6, 9);   // lost details
-    ReplaceMcr(463, 9, 6, 9);   // lost details
-    ReplaceMcr(562, 9, 6, 9);   // lost details
+    // ReplaceMcr(277, 9, 6, 9);   // lost details
+    // ReplaceMcr(332, 9, 6, 9);   // lost details
+    // ReplaceMcr(348, 9, 6, 9);   // lost details
+    // ReplaceMcr(352, 9, 6, 9);   // lost details
+    // ReplaceMcr(358, 9, 6, 9);   // lost details
+    // ReplaceMcr(406, 9, 6, 9);   // lost details
+    // ReplaceMcr(444, 9, 6, 9);   // lost details
+    // ReplaceMcr(459, 9, 6, 9);   // lost details
+    // ReplaceMcr(463, 9, 6, 9);   // lost details
+    // ReplaceMcr(562, 9, 6, 9);   // lost details
     // ReplaceMcr(564, 9, 6, 9);   // lost details
-    ReplaceMcr(277, 7, 18, 7);  // lost details
-    ReplaceMcr(562, 7, 18, 7);  // lost details
-    ReplaceMcr(277, 5, 459, 5); // lost details
-    ReplaceMcr(562, 5, 459, 5); // lost details
-    ReplaceMcr(277, 3, 459, 3); // lost details
+    // ReplaceMcr(277, 7, 18, 7);  // lost details
+    // ReplaceMcr(562, 7, 18, 7);  // lost details
+    // ReplaceMcr(277, 5, 459, 5); // lost details
+    // ReplaceMcr(562, 5, 459, 5); // lost details
+    // ReplaceMcr(277, 3, 459, 3); // lost details
     ReplaceMcr(562, 1, 277, 1); // lost details
     // ReplaceMcr(564, 1, 277, 1); // lost details
     ReplaceMcr(585, 1, 284, 1);
@@ -16781,31 +17853,31 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(564, 3, 459, 3); // lost details
     // ReplaceMcr(34, 7, 18, 7); // lost details
     // ReplaceMcr(37, 7, 18, 7);
-    ReplaceMcr(84, 7, 18, 7);   // lost details
-    ReplaceMcr(406, 7, 18, 7);  // lost details
-    ReplaceMcr(444, 7, 18, 7);  // lost details
-    ReplaceMcr(463, 7, 18, 7);  // lost details
-    ReplaceMcr(332, 7, 18, 7);  // lost details
-    ReplaceMcr(348, 7, 18, 7);  // lost details
-    ReplaceMcr(352, 7, 18, 7);  // lost details
-    ReplaceMcr(358, 7, 18, 7);  // lost details
-    ReplaceMcr(459, 7, 18, 7);  // lost details
+    // ReplaceMcr(84, 7, 18, 7);   // lost details
+    // ReplaceMcr(406, 7, 18, 7);  // lost details
+    // ReplaceMcr(444, 7, 18, 7);  // lost details
+    // ReplaceMcr(463, 7, 18, 7);  // lost details
+    // ReplaceMcr(332, 7, 18, 7);  // lost details
+    // ReplaceMcr(348, 7, 18, 7);  // lost details
+    // ReplaceMcr(352, 7, 18, 7);  // lost details
+    // ReplaceMcr(358, 7, 18, 7);  // lost details
+    // ReplaceMcr(459, 7, 18, 7);  // lost details
     // ReplaceMcr(34, 5, 18, 5);   // lost details
-    ReplaceMcr(348, 5, 332, 5); // lost details
-    ReplaceMcr(352, 5, 332, 5); // lost details
-    ReplaceMcr(358, 5, 332, 5); // lost details
+    // ReplaceMcr(348, 5, 332, 5); // lost details
+    // ReplaceMcr(352, 5, 332, 5); // lost details
+    // ReplaceMcr(358, 5, 332, 5); // lost details
     // ReplaceMcr(34, 3, 18, 3);   // lost details
-    ReplaceMcr(358, 3, 18, 3);  // lost details
-    ReplaceMcr(348, 3, 332, 3); // lost details
-    ReplaceMcr(352, 3, 332, 3); // lost details
+    // ReplaceMcr(358, 3, 18, 3);  // lost details
+    // ReplaceMcr(348, 3, 332, 3); // lost details
+    // ReplaceMcr(352, 3, 332, 3); // lost details
     // ReplaceMcr(34, 0, 18, 0);
     ReplaceMcr(352, 0, 18, 0);
     ReplaceMcr(358, 0, 18, 0);
     ReplaceMcr(406, 0, 18, 0); // lost details
     // ReplaceMcr(34, 1, 18, 1);
     ReplaceMcr(332, 1, 18, 1);
-    ReplaceMcr(348, 1, 352, 1);
-    ReplaceMcr(358, 1, 352, 1);
+    // ReplaceMcr(348, 1, 352, 1);
+    // ReplaceMcr(358, 1, 352, 1);
     // ReplaceMcr(209, 7, 6, 7);
     // ReplaceMcr(80, 9, 6, 9);
     // ReplaceMcr(209, 9, 6, 9);
@@ -16830,8 +17902,8 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(206, 8, 3, 8);
     // ReplaceMcr(238, 8, 3, 8);
     ReplaceMcr(250, 8, 3, 8);
-    ReplaceMcr(292, 8, 3, 8);
-    ReplaceMcr(299, 8, 3, 8);
+    // ReplaceMcr(292, 8, 3, 8);
+    // ReplaceMcr(299, 8, 3, 8);
     ReplaceMcr(329, 8, 3, 8);
     ReplaceMcr(337, 8, 3, 8);
     ReplaceMcr(353, 8, 3, 8);
@@ -17024,9 +18096,9 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(199, 0, 48, 0);
     ReplaceMcr(572, 0, 48, 0);
     ReplaceMcr(507, 1, 48, 1);
-    ReplaceMcr(471, 7, 265, 7);
+    // ReplaceMcr(471, 7, 265, 7);
     ReplaceMcr(547, 7, 261, 7);
-    ReplaceMcr(471, 9, 6, 9);
+    // ReplaceMcr(471, 9, 6, 9);
     ReplaceMcr(569, 0, 283, 0);
     ReplaceMcr(565, 0, 283, 0);
     // ReplaceMcr(621, 1, 48, 1);
@@ -17040,45 +18112,45 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     // ReplaceMcr(388, 2, 15, 2);
     // ReplaceMcr(479, 5, 14, 5);
     ReplaceMcr(389, 6, 17, 6); // lost details
-    // ReplaceMcr(19, 8, 31, 8);  // lost details
-    // ReplaceMcr(390, 8, 31, 8);  // lost details
-    ReplaceMcr(89, 8, 31, 8);
-    ReplaceMcr(254, 8, 31, 8); // lost details
-    ReplaceMcr(534, 8, 31, 8); // lost details
-    ReplaceMcr(537, 8, 31, 8); // lost details
-    ReplaceMcr(333, 8, 31, 8); // lost details
-    ReplaceMcr(345, 8, 31, 8);
-    // ReplaceMcr(365, 8, 31, 8); // lost details
-    ReplaceMcr(456, 8, 31, 8);
-    ReplaceMcr(274, 8, 31, 8); // lost details
-    // ReplaceMcr(558, 8, 31, 8); // lost details
-    // ReplaceMcr(560, 8, 31, 8); // lost details
-    ReplaceMcr(258, 8, 296, 8); // lost details
-    ReplaceMcr(541, 8, 296, 8); // lost details
-    // ReplaceMcr(543, 8, 296, 8); // lost details
-    ReplaceMcr(89, 6, 31, 6);  // lost details
-    ReplaceMcr(274, 6, 31, 6); // lost details
-    // ReplaceMcr(558, 6, 31, 6); // lost details
-    // ReplaceMcr(560, 6, 31, 6); // lost details
-    ReplaceMcr(356, 6, 31, 6);  // lost details
-    ReplaceMcr(333, 6, 445, 6); // lost details
-    ReplaceMcr(345, 6, 445, 6); // lost details
+    // ReplaceMcr(19, 8, 89, 8);  // lost details
+    // ReplaceMcr(390, 8, 89, 8);  // lost details
+    // ReplaceMcr(31, 8, 89, 8);
+    ReplaceMcr(254, 8, 89, 8); // lost details
+    ReplaceMcr(534, 8, 89, 8); // lost details
+    ReplaceMcr(537, 8, 89, 8); // lost details
+    // ReplaceMcr(333, 8, 89, 8); // lost details
+    // ReplaceMcr(345, 8, 89, 8);
+    // ReplaceMcr(365, 8, 89, 8); // lost details
+    // ReplaceMcr(456, 8, 89, 8);
+    // ReplaceMcr(274, 8, 89, 8); // lost details
+    // ReplaceMcr(558, 8, 89, 8); // lost details
+    // ReplaceMcr(560, 8, 89, 8); // lost details
+    ReplaceMcr(258, 8, 3, 8); // lost details
+    ReplaceMcr(541, 8, 3, 8); // lost details
+    // ReplaceMcr(543, 8, 3, 8); // lost details
+    // ReplaceMcr(31, 6, 89, 6);  // lost details
+    // ReplaceMcr(274, 6, 89, 6); // lost details
+    // ReplaceMcr(558, 6, 89, 6); // lost details
+    // ReplaceMcr(560, 6, 89, 6); // lost details
+    // ReplaceMcr(356, 6, 89, 6);  // lost details
+    // ReplaceMcr(333, 6, 445, 6); // lost details
+    // ReplaceMcr(345, 6, 445, 6); // lost details
     // ReplaceMcr(365, 6, 445, 6); // lost details
-    ReplaceMcr(274, 4, 31, 4);  // lost details
+    // ReplaceMcr(274, 4, 31, 4);  // lost details
     // ReplaceMcr(560, 4, 31, 4); // lost details
-    ReplaceMcr(333, 4, 345, 4); // lost details
+    // ReplaceMcr(333, 4, 345, 4); // lost details
     // ReplaceMcr(365, 4, 345, 4); // lost details
-    ReplaceMcr(445, 4, 345, 4); // lost details
-    ReplaceMcr(299, 2, 274, 2); // lost details
+    // ReplaceMcr(445, 4, 345, 4); // lost details
+    // ReplaceMcr(299, 2, 274, 2); // lost details
     // ReplaceMcr(560, 2, 274, 2); // lost details
-    ReplaceMcr(333, 2, 345, 2); // lost details
+    // ReplaceMcr(333, 2, 345, 2); // lost details
     // ReplaceMcr(365, 2, 345, 2); // lost details
-    ReplaceMcr(415, 2, 345, 2); // lost details
-    ReplaceMcr(445, 2, 345, 2); // lost details
-    ReplaceMcr(333, 0, 31, 0);  // lost details
-    ReplaceMcr(345, 0, 31, 0);  // lost details
+    // ReplaceMcr(415, 2, 345, 2); // lost details
+    // ReplaceMcr(445, 2, 345, 2); // lost details
+    // ReplaceMcr(333, 0, 31, 0);  // lost details
+    // ReplaceMcr(345, 0, 31, 0);  // lost details
     // ReplaceMcr(365, 0, 31, 0);  // lost details
-    ReplaceMcr(445, 0, 31, 0);  // lost details
+    // ReplaceMcr(445, 0, 31, 0);  // lost details
     ReplaceMcr(333, 1, 31, 1);  // lost details
     // ReplaceMcr(365, 1, 31, 1);
 
@@ -17114,11 +18186,11 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(151, 8, 95, 8); // lost details
     // ReplaceMcr(172, 8, 95, 8);
     ReplaceMcr(204, 8, 95, 8);
-    ReplaceMcr(215, 8, 95, 8);
-    ReplaceMcr(220, 8, 95, 8); // lost details
-    ReplaceMcr(224, 8, 95, 8); // lost details
-    ReplaceMcr(226, 8, 95, 8); // lost details
-    ReplaceMcr(230, 8, 95, 8); // lost details
+    // ReplaceMcr(215, 8, 95, 8);
+    // ReplaceMcr(220, 8, 95, 8); // lost details
+    // ReplaceMcr(224, 8, 95, 8); // lost details
+    // ReplaceMcr(226, 8, 95, 8); // lost details
+    // ReplaceMcr(230, 8, 95, 8); // lost details
     ReplaceMcr(248, 8, 95, 8); // lost details
     ReplaceMcr(252, 8, 95, 8); // lost details
     ReplaceMcr(256, 8, 95, 8); // lost details
@@ -17160,9 +18232,9 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(611, 6, 119, 6); // lost details
     // ReplaceMcr(75, 6, 99, 6);   // lost details
     // ReplaceMcr(91, 6, 99, 6);   // lost details
-    ReplaceMcr(115, 6, 99, 6);  // lost details
-    ReplaceMcr(204, 6, 99, 6);  // lost details
-    ReplaceMcr(215, 6, 99, 6);  // lost details
+    // ReplaceMcr(115, 6, 99, 6);  // lost details
+    // ReplaceMcr(204, 6, 99, 6);  // lost details
+    // ReplaceMcr(215, 6, 99, 6);  // lost details
 
     ReplaceMcr(71, 6, 63, 6);
     ReplaceMcr(71, 7, 67, 7);
@@ -17186,7 +18258,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
 
     ReplaceMcr(542, 6, 256, 6); // lost details
 
-    ReplaceMcr(300, 6, 294, 6); // lost details
+    // ReplaceMcr(300, 6, 294, 6); // lost details
     ReplaceMcr(321, 6, 328, 6); // lost details
     ReplaceMcr(335, 6, 328, 6); // lost details
     ReplaceMcr(351, 6, 328, 6); // lost details
@@ -17208,7 +18280,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(248, 2, 256, 2); // lost details
     ReplaceMcr(83, 2, 256, 2);  // lost details
     ReplaceMcr(119, 2, 256, 2); // lost details
-    ReplaceMcr(230, 2, 256, 2); // lost details
+    // ReplaceMcr(230, 2, 256, 2); // lost details
 
     ReplaceMcr(13, 0, 1, 0);  // lost details
     ReplaceMcr(21, 0, 1, 0);  // lost details
@@ -17234,9 +18306,9 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(111, 8, 95, 8); // lost details
     ReplaceMcr(117, 8, 95, 8); // lost details
     ReplaceMcr(121, 8, 95, 8); // lost details
-    ReplaceMcr(218, 8, 95, 8); // lost details
-    ReplaceMcr(222, 8, 95, 8); // lost details
-    ReplaceMcr(228, 8, 95, 8); // lost details
+    // ReplaceMcr(218, 8, 95, 8); // lost details
+    // ReplaceMcr(222, 8, 95, 8); // lost details
+    // ReplaceMcr(228, 8, 95, 8); // lost details
     ReplaceMcr(272, 8, 95, 8);
     ReplaceMcr(331, 8, 95, 8); // lost details
     ReplaceMcr(339, 8, 95, 8); // lost details
@@ -17270,7 +18342,6 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(51, 6, 25, 6);  // lost details
     ReplaceMcr(93, 6, 25, 6);  // lost details
     ReplaceMcr(97, 6, 25, 6);  // lost details
-    ReplaceMcr(218, 6, 25, 6); // lost details
     ReplaceMcr(327, 6, 25, 6); // lost details
     ReplaceMcr(339, 6, 25, 6); // lost details
     ReplaceMcr(366, 6, 25, 6); // lost details
@@ -17289,8 +18360,8 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(111, 6, 95, 6); // lost details
     ReplaceMcr(117, 6, 95, 6); // lost details
     ReplaceMcr(121, 6, 95, 6); // lost details
-    ReplaceMcr(222, 6, 95, 6); // lost details
-    ReplaceMcr(228, 6, 95, 6); // lost details
+    // ReplaceMcr(222, 6, 95, 6); // lost details
+    // ReplaceMcr(228, 6, 95, 6); // lost details
     ReplaceMcr(272, 6, 95, 6); // lost details
     ReplaceMcr(389, 6, 95, 6); // lost details
     ReplaceMcr(397, 6, 95, 6); // lost details
@@ -17298,14 +18369,14 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(443, 6, 95, 6);  // lost details
     ReplaceMcr(466, 6, 95, 6);  // lost details
     ReplaceMcr(478, 6, 95, 6);  // lost details
-    ReplaceMcr(347, 6, 393, 6); // lost details
+    // ReplaceMcr(347, 6, 393, 6); // lost details
     ReplaceMcr(399, 6, 393, 6); // lost details
     ReplaceMcr(417, 6, 393, 6); // lost details
-    ReplaceMcr(331, 6, 343, 6); // lost details
-    ReplaceMcr(355, 6, 343, 6); // lost details
-    ReplaceMcr(363, 6, 343, 6); // lost details
-    ReplaceMcr(557, 6, 343, 6); // lost details
-    ReplaceMcr(559, 6, 343, 6); // lost details
+    // ReplaceMcr(331, 6, 343, 6); // lost details
+    // ReplaceMcr(355, 6, 343, 6); // lost details
+    // ReplaceMcr(363, 6, 343, 6); // lost details
+    // ReplaceMcr(557, 6, 343, 6); // lost details
+    // ReplaceMcr(559, 6, 343, 6); // lost details
 
     ReplaceMcr(17, 4, 29, 4);   // lost details
     ReplaceMcr(49, 4, 29, 4);   // lost details
@@ -17320,10 +18391,10 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(374, 4, 25, 4);  // lost details
     ReplaceMcr(383, 4, 25, 4);  // lost details
     ReplaceMcr(423, 4, 25, 4);  // lost details
-    ReplaceMcr(331, 4, 343, 4); // lost details
-    ReplaceMcr(355, 4, 343, 4); // lost details
-    ReplaceMcr(363, 4, 343, 4); // lost details
-    ReplaceMcr(443, 4, 343, 4); // lost details
+    // ReplaceMcr(331, 4, 343, 4); // lost details
+    // ReplaceMcr(355, 4, 343, 4); // lost details
+    // ReplaceMcr(363, 4, 343, 4); // lost details
+    // ReplaceMcr(443, 4, 343, 4); // lost details
     ReplaceMcr(339, 4, 347, 4); // lost details
 
     ReplaceMcr(393, 4, 347, 4); // lost details
@@ -17343,7 +18414,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(59, 2, 29, 2);   // lost details
     ReplaceMcr(93, 2, 29, 2);   // lost details
     ReplaceMcr(97, 2, 29, 2);   // lost details
-    ReplaceMcr(218, 2, 29, 2);  // lost details
+    // ReplaceMcr(218, 2, 29, 2);  // lost details
     ReplaceMcr(343, 2, 29, 2);  // lost details
     ReplaceMcr(363, 2, 29, 2);  // lost details
     ReplaceMcr(366, 2, 29, 2);  // lost details
@@ -17364,8 +18435,8 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(93, 0, 33, 0);
     ReplaceMcr(117, 0, 33, 0); // lost details
     ReplaceMcr(121, 0, 33, 0); // lost details
-    ReplaceMcr(218, 0, 33, 0);
-    ReplaceMcr(228, 0, 33, 0);  // lost details
+    // ReplaceMcr(218, 0, 33, 0);
+    // ReplaceMcr(228, 0, 33, 0);  // lost details
     ReplaceMcr(397, 0, 33, 0);  // lost details
     ReplaceMcr(466, 0, 33, 0);  // lost details
     ReplaceMcr(478, 0, 33, 0);  // lost details
@@ -17383,7 +18454,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(93, 9, 13, 9);
     ReplaceMcr(151, 9, 13, 9);
     ReplaceMcr(208, 9, 13, 9);
-    ReplaceMcr(218, 9, 13, 9);
+    // ReplaceMcr(218, 9, 13, 9);
     ReplaceMcr(260, 9, 13, 9); // lost details
     ReplaceMcr(264, 9, 13, 9); // lost details
     ReplaceMcr(268, 9, 13, 9); // lost details
@@ -17415,11 +18486,11 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(117, 7, 13, 7);
     ReplaceMcr(119, 7, 13, 7);
     ReplaceMcr(208, 7, 13, 7);
-    ReplaceMcr(218, 7, 13, 7);
-    ReplaceMcr(222, 7, 13, 7);
-    ReplaceMcr(226, 7, 13, 7);
-    ReplaceMcr(228, 7, 13, 7);
-    ReplaceMcr(230, 7, 13, 7);
+    // ReplaceMcr(218, 7, 13, 7);
+    // ReplaceMcr(222, 7, 13, 7);
+    // ReplaceMcr(226, 7, 13, 7);
+    // ReplaceMcr(228, 7, 13, 7);
+    // ReplaceMcr(230, 7, 13, 7);
     ReplaceMcr(363, 7, 13, 7);
     ReplaceMcr(393, 7, 13, 7);
     ReplaceMcr(413, 7, 13, 7);
@@ -17439,7 +18510,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(49, 5, 25, 5);
     ReplaceMcr(107, 5, 25, 5);
     ReplaceMcr(115, 5, 25, 5); // 18
-    ReplaceMcr(226, 5, 25, 5);
+    // ReplaceMcr(226, 5, 25, 5);
     ReplaceMcr(260, 5, 268, 5);
     ReplaceMcr(546, 5, 268, 5);
     ReplaceMcr(323, 5, 328, 5);
@@ -17451,7 +18522,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(49, 3, 25, 3);
     ReplaceMcr(107, 3, 25, 3);
     ReplaceMcr(115, 3, 25, 3);
-    ReplaceMcr(226, 3, 25, 3);
+    // ReplaceMcr(226, 3, 25, 3);
     ReplaceMcr(260, 3, 25, 3);
     ReplaceMcr(268, 3, 25, 3);
     ReplaceMcr(328, 3, 323, 3);
@@ -17483,9 +18554,9 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(109, 9, 13, 9); // lost details
     ReplaceMcr(113, 9, 13, 9); // lost details
     ReplaceMcr(121, 9, 13, 9); // lost details
-    ReplaceMcr(215, 9, 13, 9); // lost details
-    ReplaceMcr(220, 9, 13, 9); // lost details
-    ReplaceMcr(224, 9, 13, 9); // lost details
+    // ReplaceMcr(215, 9, 13, 9); // lost details
+    // ReplaceMcr(220, 9, 13, 9); // lost details
+    // ReplaceMcr(224, 9, 13, 9); // lost details
     ReplaceMcr(276, 9, 13, 9); // lost details
     ReplaceMcr(331, 9, 13, 9); // lost details
     ReplaceMcr(335, 9, 13, 9); // lost details
@@ -17526,8 +18597,8 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(109, 7, 17, 7);  // lost details
     ReplaceMcr(113, 7, 17, 7);  // lost details
     ReplaceMcr(121, 7, 17, 7);  // lost details
-    ReplaceMcr(220, 7, 17, 7);  // lost details
-    ReplaceMcr(224, 7, 17, 7);  // lost details
+    // ReplaceMcr(220, 7, 17, 7);  // lost details
+    // ReplaceMcr(224, 7, 17, 7);  // lost details
     ReplaceMcr(331, 7, 17, 7);  // lost details
     ReplaceMcr(351, 7, 17, 7);  // lost details
     ReplaceMcr(357, 7, 17, 7);  // lost details
@@ -17596,7 +18667,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     ReplaceMcr(59, 1, 55, 1);   // lost details
     // ReplaceMcr(91, 1, 55, 1);   // lost details
     ReplaceMcr(95, 1, 55, 1);   // lost details
-    ReplaceMcr(215, 1, 55, 1);  // lost details
+    // ReplaceMcr(215, 1, 55, 1);  // lost details
     ReplaceMcr(335, 1, 55, 1);  // lost details
     ReplaceMcr(391, 1, 55, 1);  // lost details
     ReplaceMcr(331, 1, 357, 1); // lost details
@@ -17613,6 +18684,9 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(14, 5);
     Blk2Mcr(14, 7);
     Blk2Mcr(14, 9);
+    HideMcr(37, 1);
+    Blk2Mcr(37, 3);
+    Blk2Mcr(37, 5);
     Blk2Mcr(37, 7);
     Blk2Mcr(37, 9);
     Blk2Mcr(236, 0);
@@ -17687,9 +18761,18 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(86, 6);
     Blk2Mcr(86, 7);
     Blk2Mcr(86, 8);
+    HideMcr(212, 0);
+    HideMcr(212, 1);
+    HideMcr(212, 2);
+    HideMcr(212, 3);
+    HideMcr(212, 4);
+    HideMcr(212, 5);
     Blk2Mcr(212, 6);
     Blk2Mcr(212, 7);
     Blk2Mcr(212, 8);
+    HideMcr(232, 0);
+    HideMcr(232, 2);
+    HideMcr(232, 4);
     Blk2Mcr(232, 1);
     Blk2Mcr(232, 3);
     Blk2Mcr(232, 5);
@@ -17702,16 +18785,77 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(234, 6);
     Blk2Mcr(234, 7);
     Blk2Mcr(234, 8);
+    HideMcr(234, 1);
+    HideMcr(234, 3);
+    HideMcr(234, 5);
+    HideMcr(234, 9);
     Blk2Mcr(213, 0);
     Blk2Mcr(213, 2);
     Blk2Mcr(213, 4);
     Blk2Mcr(213, 6);
     Blk2Mcr(213, 8);
+    HideMcr(215, 0);
+    HideMcr(215, 2);
+    HideMcr(215, 4);
+    Blk2Mcr(215, 1);
+    Blk2Mcr(215, 6);
+    Blk2Mcr(215, 8);
+    Blk2Mcr(215, 9);
     Blk2Mcr(216, 0);
     Blk2Mcr(216, 2);
     Blk2Mcr(216, 4);
     Blk2Mcr(216, 6);
     Blk2Mcr(216, 8);
+    HideMcr(218, 1);
+    HideMcr(218, 3);
+    HideMcr(218, 5);
+    HideMcr(218, 6);
+    Blk2Mcr(218, 0);
+    Blk2Mcr(218, 2);
+    Blk2Mcr(218, 7);
+    Blk2Mcr(218, 8);
+    Blk2Mcr(218, 9);
+    HideMcr(220, 0);
+    HideMcr(220, 2);
+    HideMcr(220, 4);
+    Blk2Mcr(220, 6);
+    Blk2Mcr(220, 7);
+    Blk2Mcr(220, 8);
+    Blk2Mcr(220, 9);
+    HideMcr(222, 1);
+    HideMcr(222, 3);
+    HideMcr(222, 5);
+    Blk2Mcr(222, 6);
+    Blk2Mcr(222, 7);
+    Blk2Mcr(222, 8);
+    HideMcr(224, 0);
+    HideMcr(224, 2);
+    HideMcr(224, 4);
+    Blk2Mcr(224, 6);
+    Blk2Mcr(224, 7);
+    Blk2Mcr(224, 8);
+    Blk2Mcr(224, 9);
+    Blk2Mcr(226, 3);
+    Blk2Mcr(226, 5);
+    Blk2Mcr(226, 6);
+    Blk2Mcr(226, 7);
+    Blk2Mcr(226, 8);
+    HideMcr(226, 0);
+    HideMcr(226, 2);
+    HideMcr(226, 4);
+    Blk2Mcr(228, 0);
+    Blk2Mcr(228, 6);
+    Blk2Mcr(228, 7);
+    Blk2Mcr(228, 8);
+    HideMcr(228, 1);
+    HideMcr(228, 3);
+    HideMcr(228, 5);
+    HideMcr(230, 1);
+    HideMcr(230, 3);
+    HideMcr(230, 5);
+    Blk2Mcr(230, 2);
+    Blk2Mcr(230, 7);
+    Blk2Mcr(230, 8);
     Blk2Mcr(304, 1);
     Blk2Mcr(309, 0);
     Blk2Mcr(340, 0);
@@ -17750,7 +18894,6 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(558, 6);
     Blk2Mcr(558, 8);
     Blk2Mcr(590, 1);
-    Blk2Mcr(468, 1);
     Blk2Mcr(41, 1);
     Blk2Mcr(53, 1);
     Blk2Mcr(54, 0);
@@ -17783,7 +18926,7 @@ void D1Tileset::cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent)
     Blk2Mcr(649, 1);
     Blk2Mcr(650, 0);
     const int unusedSubtiles[] = {
-        8, 10, 11, 16, 19, 20, 22, 23, 24, 26, 27, 28, 30, 34, 35, 38, 40, 43, 44, 50, 52, 56, 75, 76, 78, 79, 81, 82, 87, 90, 92, 94, 96, 98, 100, 102, 103, 105, 106, 108, 110, 112, 114, 116, 124, 127, 128, 137, 138, 139, 141, 143, 147, 167, 172, 174, 176, 177, 193, 202, 205, 207, 210, 211, 214, 217, 219, 221, 223, 225, 227, 233, 235, 239, 249, 251, 253, 257, 259, 262, 263, 270, 273, 275, 278, 279, 295, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 354, 365, 373, 381, 390, 398, 472, 489, 490, 540, 560, 564, 640, 643, 648
+        8, 10, 11, 16, 19, 20, 22, 23, 24, 26, 27, 28, 30, 34, 35, 38, 40, 43, 44, 50, 52, 56, 75, 76, 78, 79, 81, 82, 87, 90, 92, 94, 96, 98, 100, 102, 103, 105, 106, 108, 110, 112, 114, 116, 124, 127, 128, 137, 138, 139, 141, 143, 147, 167, 172, 174, 176, 177, 193, 202, 205, 207, 210, 211, 214, 217, 219, 221, 223, 225, 227, 233, 235, 239, 249, 251, 253, 257, 259, 262, 263, 270, 273, 275, 278, 279, 295, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 354, 365, 373, 381, 390, 398, 468, 472, 489, 490, 540, 560, 564, 640, 643, 648
     };
     for (int n = 0; n < lengthof(unusedSubtiles); n++) {
         for (int i = 0; i < blockSize; i++) {
@@ -17819,6 +18962,8 @@ void D1Tileset::patch(int dunType, bool silent)
             break;
         }
         this->cleanupCathedral(deletedFrames, silent);
+        // patch pSpecialsCel - L1S.CEL
+        this->patchCathedralSpec(silent);
         // patch dSolidTable - L1.SOL
         // adjust SOL after fixCathedralShadows
         ChangeSubtileSolFlags(this->sol, 298 - 1, PFLAG_BLOCK_PATH, true, silent);
@@ -17911,6 +19056,9 @@ void D1Tileset::patch(int dunType, bool silent)
         ChangeSubtileSolFlags(this->sol, 66 - 1, PFLAG_BLOCK_LIGHT, false, silent);
         break;
     case DTYPE_CRYPT:
+        // patch pSpecialsCel - L5S.CEL
+        this->patchCryptSpec(silent);
+        // patch dMiniTiles and dMegaTiles - L5.MIN and L5.TIL
         if (this->min->getSubtileCount() < 650) {
             dProgressErr() << QApplication::tr("Invalid MIN file. Subtile-count is less than %1").arg(650);
             break;
