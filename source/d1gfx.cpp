@@ -277,10 +277,8 @@ D1GfxFrame *D1Gfx::insertFrame(int idx)
 
 D1GfxFrame *D1Gfx::insertFrame(int idx, const QImage &image)
 {
-    bool clipped;
-
-    D1GfxFrame *frame = this->insertFrame(idx, &clipped);
-    D1ImageFrame::load(*frame, image, clipped, this->palette);
+    D1GfxFrame *frame = this->insertFrame(idx);
+    D1ImageFrame::load(*frame, image, frame->isClipped(), this->palette);
     // this->modified = true;
 
     return this->frames[idx];
