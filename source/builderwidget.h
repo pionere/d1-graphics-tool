@@ -12,6 +12,7 @@
 #include "d1dun.h"
 
 typedef enum builder_edit_mode {
+    BEM_SELECT,
     BEM_TILE,
     BEM_TILE_PROTECTION,
     BEM_SUBTILE,
