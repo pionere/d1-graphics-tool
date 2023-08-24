@@ -3462,7 +3462,7 @@ void LevelCelView::on_frameIndexEdit_escPressed()
 void LevelCelView::on_firstSubtileButton_clicked()
 {
     if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        this->tileset->swapSubtiles(UINT_MAX, this->currentFrameIndex);
+        this->tileset->swapSubtiles(UINT_MAX, this->currentSubtileIndex);
     }
     this->setSubtileIndex(0);
 }
@@ -3470,7 +3470,7 @@ void LevelCelView::on_firstSubtileButton_clicked()
 void LevelCelView::on_previousSubtileButton_clicked()
 {
     if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        this->tileset->swapSubtiles(this->currentFrameIndex - 1, this->currentFrameIndex);
+        this->tileset->swapSubtiles(this->currentSubtileIndex - 1, this->currentSubtileIndex);
     }
     this->setSubtileIndex(this->currentSubtileIndex - 1);
 }
@@ -3478,7 +3478,7 @@ void LevelCelView::on_previousSubtileButton_clicked()
 void LevelCelView::on_nextSubtileButton_clicked()
 {
     if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        this->tileset->swapSubtiles(this->currentFrameIndex, this->currentFrameIndex + 1);
+        this->tileset->swapSubtiles(this->currentSubtileIndex, this->currentSubtileIndex + 1);
     }
     this->setSubtileIndex(this->currentSubtileIndex + 1);
 }
@@ -3486,7 +3486,7 @@ void LevelCelView::on_nextSubtileButton_clicked()
 void LevelCelView::on_lastSubtileButton_clicked()
 {
     if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        this->tileset->swapSubtiles(this->currentFrameIndex, UINT_MAX);
+        this->tileset->swapSubtiles(this->currentSubtileIndex, UINT_MAX);
     }
     this->setSubtileIndex(this->min->getSubtileCount() - 1);
 }
@@ -3509,7 +3509,7 @@ void LevelCelView::on_subtileIndexEdit_escPressed()
 void LevelCelView::on_firstTileButton_clicked()
 {
     if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        this->tileset->swapTiles(UINT_MAX, this->currentFrameIndex);
+        this->tileset->swapTiles(UINT_MAX, this->currentTileIndex);
     }
     this->setTileIndex(0);
 }
@@ -3517,7 +3517,7 @@ void LevelCelView::on_firstTileButton_clicked()
 void LevelCelView::on_previousTileButton_clicked()
 {
     if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        this->tileset->swapTiles(this->currentFrameIndex - 1, this->currentFrameIndex);
+        this->tileset->swapTiles(this->currentTileIndex - 1, this->currentTileIndex);
     }
     this->setTileIndex(this->currentTileIndex - 1);
 }
@@ -3525,7 +3525,7 @@ void LevelCelView::on_previousTileButton_clicked()
 void LevelCelView::on_nextTileButton_clicked()
 {
     if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        this->tileset->swapTiles(this->currentFrameIndex, this->currentFrameIndex + 1);
+        this->tileset->swapTiles(this->currentTileIndex, this->currentTileIndex + 1);
     }
     this->setTileIndex(this->currentTileIndex + 1);
 }
@@ -3533,7 +3533,7 @@ void LevelCelView::on_nextTileButton_clicked()
 void LevelCelView::on_lastTileButton_clicked()
 {
     if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        this->tileset->swapTiles(this->currentFrameIndex, UINT_MAX);
+        this->tileset->swapTiles(this->currentTileIndex, UINT_MAX);
     }
     this->setTileIndex(this->til->getTileCount() - 1);
 }
