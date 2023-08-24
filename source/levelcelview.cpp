@@ -19,6 +19,7 @@
 #include <QScrollBar>
 #include <QTimer>
 
+#include "builderwidget.h"
 #include "config.h"
 #include "d1image.h"
 #include "d1pcx.h"
@@ -3821,36 +3822,43 @@ void LevelCelView::setPosition(int posx, int posy)
     }
 }
 
+void LevelCelView::shiftPosition(int dx, int dy)
+{
+    int posx0 = this->currentDunPosX, posy0 = this->currentDunPosY;
+    int posx1 = this->currentDunPosX + dx, posy1 = this->currentDunPosY + dy;
+    const bool movePos = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+
+    const int mode = dMainWindow().getDunBuilderMode();
+    if (mode == BEM_TILE || mode == BEM_TILE_PROTECTION || (mode == -1 && movePos)) {
+        posx1 += dx;
+        posy1 += dy;
+    }
+
+    this->setPosition(posx1, posy1);
+    if (movePos && this->dun->swapPositions(mode, posx0, posy0, posx1, posy1)) {
+        // update the view
+        this->displayFrame();
+    }
+}
+
 void LevelCelView::on_moveLeftButton_clicked()
 {
-    if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        dMainWindow().dunSwap(this->currentDunPosX - 1, this->currentDunPosY, this->currentDunPosX, this->currentDunPosY);
-    }
-    this->setPosition(this->currentDunPosX - 1, this->currentDunPosY);
+    this->shiftPosition(-1, 0);
 }
 
 void LevelCelView::on_moveRightButton_clicked()
 {
-    if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        dMainWindow().dunSwap(this->currentDunPosX, this->currentDunPosY, this->currentDunPosX + 1, this->currentDunPosY);
-    }
-    this->setPosition(this->currentDunPosX + 1, this->currentDunPosY);
+    this->shiftPosition(1, 0);
 }
 
 void LevelCelView::on_moveUpButton_clicked()
 {
-    if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        dMainWindow().dunSwap(this->currentDunPosX, this->currentDunPosY - 1, this->currentDunPosX, this->currentDunPosY);
-    }
-    this->setPosition(this->currentDunPosX, this->currentDunPosY - 1);
+    this->shiftPosition(0, -1);
 }
 
 void LevelCelView::on_moveDownButton_clicked()
 {
-    if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
-        dMainWindow().dunSwap(this->currentDunPosX, this->currentDunPosY, this->currentDunPosX, this->currentDunPosY + 1);
-    }
-    this->setPosition(this->currentDunPosX, this->currentDunPosY + 1);
+    this->shiftPosition(0, 1);
 }
 
 void LevelCelView::on_dungeonPosLineEdit_returnPressed()
