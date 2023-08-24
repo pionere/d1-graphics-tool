@@ -440,10 +440,12 @@ void CelView::addToCurrentFrame(const QString &imagefilePath)
     // this->displayFrame();
 }
 
-void CelView::duplicateCurrentFrame()
+void CelView::duplicateCurrentFrame(bool wholeGroup)
 {
-    this->currentFrameIndex = this->gfx->duplicateFrame(this->currentFrameIndex);
+    this->currentFrameIndex = this->gfx->duplicateFrame(this->currentFrameIndex, wholeGroup);
 
+    this->updateGroupIndex();
+    // update the view
     this->updateFields();
 }
 

@@ -1486,9 +1486,9 @@ void LevelCelView::addToCurrentFrame(const QString &imagefilePath)
     // this->displayFrame();
 }
 
-void LevelCelView::duplicateCurrentFrame()
+void LevelCelView::duplicateCurrentFrame(bool wholeGroup)
 {
-    this->currentFrameIndex = this->gfx->duplicateFrame(this->currentFrameIndex);
+    this->currentFrameIndex = this->gfx->duplicateFrame(this->currentFrameIndex, false);
 
     this->updateFields();
 }

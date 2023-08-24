@@ -1645,14 +1645,15 @@ void MainWindow::on_actionInsert_Frame_triggered()
 
 void MainWindow::on_actionDuplicate_Frame_triggered()
 {
+    const bool wholeGroup = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
     if (this->celView != nullptr) {
-        this->celView->duplicateCurrentFrame();
+        this->celView->duplicateCurrentFrame(wholeGroup);
     }
     if (this->levelCelView != nullptr) {
-        this->levelCelView->duplicateCurrentFrame();
+        this->levelCelView->duplicateCurrentFrame(wholeGroup);
     }
     if (this->gfxsetView != nullptr) {
-        this->gfxsetView->duplicateCurrentFrame();
+        this->gfxsetView->duplicateCurrentFrame(wholeGroup);
     }
 }
 

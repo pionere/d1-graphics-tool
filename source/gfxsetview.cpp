@@ -435,10 +435,12 @@ void GfxsetView::addToCurrentFrame(const QString &imagefilePath)
     // this->displayFrame();
 }
 
-void GfxsetView::duplicateCurrentFrame()
+void GfxsetView::duplicateCurrentFrame(bool wholeGroup)
 {
-    this->currentFrameIndex = this->gfx->duplicateFrame(this->currentFrameIndex);
+    this->currentFrameIndex = this->gfx->duplicateFrame(this->currentFrameIndex, wholeGroup);
 
+    this->updateGroupIndex();
+    // update the view
     this->updateFields();
 }
 
