@@ -1550,7 +1550,7 @@ void LevelCelView::removeFrame(int frameIndex)
     }
 }
 
-void LevelCelView::removeCurrentFrame()
+void LevelCelView::removeCurrentFrame(bool wholeGroup)
 {
     // check if the current frame is used
     std::vector<int> frameUsers;

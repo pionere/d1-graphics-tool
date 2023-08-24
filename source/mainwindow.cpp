@@ -1689,14 +1689,15 @@ void MainWindow::on_actionReplace_Frame_triggered()
 
 void MainWindow::on_actionDel_Frame_triggered()
 {
+    const bool wholeGroup = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
     if (this->celView != nullptr) {
-        this->celView->removeCurrentFrame();
+        this->celView->removeCurrentFrame(wholeGroup);
     }
     if (this->levelCelView != nullptr) {
-        this->levelCelView->removeCurrentFrame();
+        this->levelCelView->removeCurrentFrame(wholeGroup);
     }
     if (this->gfxsetView != nullptr) {
-        this->gfxsetView->removeCurrentFrame();
+        this->gfxsetView->removeCurrentFrame(wholeGroup);
     }
     this->updateWindow();
 }

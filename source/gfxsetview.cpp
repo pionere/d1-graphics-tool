@@ -479,12 +479,13 @@ void GfxsetView::replaceCurrentFrame(const QString &imagefilePath)
     // this->displayFrame();
 }
 
-void GfxsetView::removeCurrentFrame()
+void GfxsetView::removeCurrentFrame(bool wholeGroup)
 {
     // remove the frame
-    this->gfx->removeFrame(this->currentFrameIndex);
-    if (this->gfx->getFrameCount() == this->currentFrameIndex) {
-        this->currentFrameIndex = std::max(0, this->currentFrameIndex - 1);
+    this->gfx->removeFrame(this->currentFrameIndex, wholeGroup);
+    int numFrame = this->gfx->getFrameCount();
+    if (numFrame <= this->currentFrameIndex) {
+        this->currentFrameIndex = std::max(0, numFrame - 1);
     }
     this->updateGroupIndex();
     // update the view - done by the caller
