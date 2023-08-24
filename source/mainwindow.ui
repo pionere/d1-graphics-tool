@@ -311,6 +311,7 @@
     </property>
     <addaction name="actionAddTo_Frame"/>
     <addaction name="actionInsert_Frame"/>
+    <addaction name="actionDuplicate_Frame"/>
     <addaction name="actionAppend_Frame"/>
     <addaction name="actionReplace_Frame"/>
     <addaction name="actionDel_Frame"/>
@@ -324,6 +325,7 @@
     </property>
     <addaction name="actionCreate_Subtile"/>
     <addaction name="actionInsert_Subtile"/>
+    <addaction name="actionDuplicate_Subtile"/>
     <addaction name="actionAppend_Subtile"/>
     <addaction name="actionReplace_Subtile"/>
     <addaction name="actionDel_Subtile"/>
@@ -337,6 +339,7 @@
     </property>
     <addaction name="actionCreate_Tile"/>
     <addaction name="actionInsert_Tile"/>
+    <addaction name="actionDuplicate_Tile"/>
     <addaction name="actionAppend_Tile"/>
     <addaction name="actionReplace_Tile"/>
     <addaction name="actionDel_Tile"/>
@@ -523,6 +526,14 @@
     <string>Add new frames before the current one</string>
    </property>
   </action>
+  <action name="actionDuplicate_Frame">
+   <property name="text">
+    <string>Duplicate</string>
+   </property>
+   <property name="toolTip">
+    <string>Duplicate the current frame</string>
+   </property>
+  </action>
   <action name="actionAppend_Frame">
    <property name="text">
     <string>Append</string>
@@ -553,6 +564,14 @@
    </property>
    <property name="toolTip">
     <string>Create a new subtile</string>
+   </property>
+  </action>
+  <action name="actionDuplicate_Subtile">
+   <property name="text">
+    <string>Duplicate</string>
+   </property>
+   <property name="toolTip">
+    <string>Duplicate the current subtile</string>
    </property>
   </action>
   <action name="actionInsert_Subtile">
@@ -601,6 +620,14 @@
    </property>
    <property name="toolTip">
     <string>Add new tiles before the current one</string>
+   </property>
+  </action>
+  <action name="actionDuplicate_Tile">
+   <property name="text">
+    <string>Duplicate</string>
+   </property>
+   <property name="toolTip">
+    <string>Duplicate the current tile</string>
    </property>
   </action>
   <action name="actionAppend_Tile">

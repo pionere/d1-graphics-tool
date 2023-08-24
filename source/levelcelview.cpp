@@ -1486,6 +1486,13 @@ void LevelCelView::addToCurrentFrame(const QString &imagefilePath)
     // this->displayFrame();
 }
 
+void LevelCelView::duplicateCurrentFrame()
+{
+    this->currentFrameIndex = this->gfx->duplicateFrame(this->currentFrameIndex);
+
+    this->updateFields();
+}
+
 void LevelCelView::replaceCurrentFrame(const QString &imagefilePath)
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {
@@ -1570,6 +1577,13 @@ void LevelCelView::createSubtile()
     this->currentSubtileIndex = this->min->getSubtileCount() - 1;
     // update the view - done by the caller
     // this->displayFrame();
+}
+
+void LevelCelView::duplicateCurrentSubtile(bool deepCopy)
+{
+    this->currentSubtileIndex = this->tileset->duplicateSubtile(this->currentSubtileIndex, deepCopy);
+
+    this->updateFields();
 }
 
 void LevelCelView::replaceCurrentSubtile(const QString &imagefilePath)
@@ -1658,6 +1672,13 @@ void LevelCelView::createTile()
     this->currentTileIndex = this->til->getTileCount() - 1;
     // update the view - done by the caller
     // this->displayFrame();
+}
+
+void LevelCelView::duplicateCurrentTile(bool deepCopy)
+{
+    this->currentTileIndex = this->tileset->duplicateTile(this->currentTileIndex, deepCopy);
+
+    this->updateFields();
 }
 
 void LevelCelView::replaceCurrentTile(const QString &imagefilePath)

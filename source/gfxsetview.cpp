@@ -435,6 +435,13 @@ void GfxsetView::addToCurrentFrame(const QString &imagefilePath)
     // this->displayFrame();
 }
 
+void CelView::duplicateCurrentFrame()
+{
+    this->currentFrameIndex = this->gfx->duplicateFrame(this->currentFrameIndex);
+
+    this->updateFields();
+}
+
 void GfxsetView::replaceCurrentFrame(const QString &imagefilePath)
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {

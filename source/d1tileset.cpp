@@ -204,6 +204,25 @@ void D1Tileset::createTile()
     this->tla->createTile();
 }
 
+int D1Tileset::duplicateTile(int tileIndex, bool deepCopy)
+{
+    this->createTile();
+
+    int newTileIndex = this->til->getTileCount() - 1;
+    // D1Til::duplicate
+    std::vector<int> &baseSubtileIndices = this->til->getSubtileIndices(tileIndex);
+    std::vector<int> &newSubtileIndices = this->til->getSubtileIndices(newTileIndex);
+    newSubtileIndices = baseSubtileIndices;
+    // D1Tla::duplicate
+    this->tla->setTileProperties(newTileIndex, this->tla->getTileProperties(tileIndex));
+
+    if (deepCopy) {
+        for (unsigned i = 0; i < newSubtileIndices.size(); i++) {
+            newSubtileIndices[i] = this->duplicateSubtile(newSubtileIndices[i], true);
+        }
+    }
+}
+
 void D1Tileset::removeTile(int tileIndex)
 {
     this->til->removeTile(tileIndex);
@@ -226,6 +245,33 @@ void D1Tileset::createSubtile()
     this->spt->createSubtile();
     this->tmi->createSubtile();
     this->smp->createSubtile();
+}
+
+int D1Tileset::duplicateSubtile(int subtileIndex, bool deepCopy)
+{
+    this->createSubtile();
+
+    int newSubtileIndex = this->min->getSubtileCount() - 1;
+    // D1Min::duplicate
+    std::vector<int> &baseFrameReferences = this->min->getFrameReferences(subtileIndex);
+    std::vector<int> &newFrameReferences = this->min->getFrameReferences(newSubtileIndex);
+    newFrameReferences = baseFrameReferences;
+    // D1Sol::duplicate
+    this->sol->setSubtileProperties(newSubtileIndex, this->sol->getSubtileProperties(subtileIndex));
+    // D1Spt::duplicate
+    this->spt->setSubtileTrapProperty(newSubtileIndex, this->spt->getSubtileTrapProperty(subtileIndex));
+    this->spt->setSubtileSpecProperty(newSubtileIndex, this->spt->getSubtileSpecProperty(subtileIndex));
+    // D1Tmi::duplicate
+    this->tmi->setSubtileProperties(newSubtileIndex, this->tmi->getSubtileProperties(subtileIndex));
+    // D1Smp::duplicate
+    this->smp->setSubtileType(newSubtileIndex, this->smp->getSubtileType(subtileIndex));
+    this->smp->setSubtileProperties(newSubtileIndex, this->smp->getSubtileProperties(subtileIndex));
+
+    if (deepCopy) {
+        for (unsigned i = 0; i < newFrameReferences.size(); i++) {
+            newFrameReferences[i] = this->gfx->duplicateFrame(newFrameReferences[i]);
+        }
+    }
 }
 
 void D1Tileset::removeSubtile(int subtileIndex, int replacement)

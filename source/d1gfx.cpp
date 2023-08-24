@@ -314,6 +314,15 @@ D1GfxFrame *D1Gfx::replaceFrame(int idx, const QImage &image)
     return this->frames[idx];
 }
 
+int D1Gfx::duplicateFrame(int idx)
+{
+    D1GfxFrame *frame = this->frames[idx];
+    frame = new D1GfxFrame(*frame);
+
+    this->frames.push_back(frame);
+    return this->frames.count();
+}
+
 void D1Gfx::removeFrame(int idx)
 {
     delete this->frames[idx];

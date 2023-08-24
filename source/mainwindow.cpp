@@ -216,15 +216,18 @@ void MainWindow::updateWindow()
     // }
     // update menu options
     bool hasFrame = this->gfx != nullptr && this->gfx->getFrameCount() != 0;
+    this->ui->actionDuplicate_Frame->setEnabled(hasFrame);
     this->ui->actionReplace_Frame->setEnabled(hasFrame);
     this->ui->actionDel_Frame->setEnabled(hasFrame);
     bool hasSubtile = this->tileset != nullptr && this->tileset->min->getSubtileCount() != 0;
+    this->ui->actionDuplicate_Subtile->setEnabled(hasSubtile);
     this->ui->actionReplace_Subtile->setEnabled(hasSubtile);
     this->ui->actionDel_Subtile->setEnabled(hasSubtile);
     this->ui->actionCreate_Tile->setEnabled(hasSubtile);
     this->ui->actionInsert_Tile->setEnabled(hasSubtile);
     this->ui->actionAppend_Tile->setEnabled(hasSubtile);
     bool hasTile = this->tileset != nullptr && this->tileset->til->getTileCount() != 0;
+    this->ui->actionDuplicate_Tile->setEnabled(hasTile);
     this->ui->actionReplace_Tile->setEnabled(hasTile);
     this->ui->actionDel_Tile->setEnabled(hasTile);
 
@@ -1640,6 +1643,19 @@ void MainWindow::on_actionInsert_Frame_triggered()
     this->addFrames(false);
 }
 
+void MainWindow::on_actionDuplicate_Frame_triggered()
+{
+    if (this->celView != nullptr) {
+        this->celView->duplicateCurrentFrame();
+    }
+    if (this->levelCelView != nullptr) {
+        this->levelCelView->duplicateCurrentFrame();
+    }
+    if (this->gfxsetView != nullptr) {
+        this->gfxsetView->duplicateCurrentFrame();
+    }
+}
+
 void MainWindow::on_actionAppend_Frame_triggered()
 {
     this->addFrames(true);
@@ -1695,6 +1711,12 @@ void MainWindow::on_actionInsert_Subtile_triggered()
     this->addSubtiles(false);
 }
 
+void MainWindow::on_actionDuplicate_Subtile_triggered()
+{
+    const bool deepCopy = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+    this->levelCelView->duplicateCurrentSubtile(deepCopy);
+}
+
 void MainWindow::on_actionAppend_Subtile_triggered()
 {
     this->addSubtiles(true);
@@ -1732,6 +1754,12 @@ void MainWindow::on_actionCreate_Tile_triggered()
 void MainWindow::on_actionInsert_Tile_triggered()
 {
     this->addTiles(false);
+}
+
+void MainWindow::on_actionDuplicate_Tile_triggered()
+{
+    const bool deepCopy = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
+    this->levelCelView->duplicateCurrentTile(deepCopy);
 }
 
 void MainWindow::on_actionAppend_Tile_triggered()
