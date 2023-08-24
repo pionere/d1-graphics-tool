@@ -320,7 +320,7 @@ int D1Gfx::duplicateFrame(int idx)
     frame = new D1GfxFrame(*frame);
 
     this->frames.push_back(frame);
-    return this->frames.count();
+    return this->frames.count() - 1;
 }
 
 void D1Gfx::removeFrame(int idx)
