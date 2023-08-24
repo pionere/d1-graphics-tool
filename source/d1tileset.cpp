@@ -221,6 +221,7 @@ int D1Tileset::duplicateTile(int tileIndex, bool deepCopy)
             newSubtileIndices[i] = this->duplicateSubtile(newSubtileIndices[i], true);
         }
     }
+    return newTileIndex;
 }
 
 void D1Tileset::removeTile(int tileIndex)
@@ -276,6 +277,7 @@ int D1Tileset::duplicateSubtile(int subtileIndex, bool deepCopy)
             newFrameReferences[i] = this->gfx->duplicateFrame(frameRef - 1) + 1;
         }
     }
+    return newSubtileIndex;
 }
 
 void D1Tileset::removeSubtile(int subtileIndex, int replacement)
