@@ -346,6 +346,11 @@ void MainWindow::dunHovered(const QPoint &cell)
     this->builderWidget->dunHovered(cell);
 }
 
+int MainWindow::getDunBuilderMode() const
+{
+    return this->builderWidget == nullptr ? -1 : this->builderWidget->getOverlayType();
+}
+
 void MainWindow::frameModified(D1GfxFrame *frame)
 {
     if (this->gfxset != nullptr) {

@@ -106,6 +106,8 @@ BuilderWidget::BuilderWidget(QWidget *parent, QUndoStack *us, D1Dun *d, LevelCel
     layout = this->ui->rightButtonsHorizontalLayout;
     PushButtonWidget::addButton(this, layout, QStyle::SP_DialogCloseButton, tr("Close"), this, &BuilderWidget::on_closePushButtonClicked);
 
+    // initialize the drop-down
+    this->ui->builderModeComboBox->setCurrentIndex(this->mode);
     // initialize the edit fields
     this->on_tileLineEdit_escPressed();
     this->on_subtileLineEdit_escPressed();
@@ -159,6 +161,11 @@ void BuilderWidget::hide()
     QFrame::hide();
 }
 
+int BuilderWidget::getOverlayType() const
+{
+    return (this->isHidden() || this->mode == BEM_SELECT) ? -1 : this->mode;
+}
+
 bool BuilderWidget::dunClicked(const QPoint &cellClick, bool first)
 {
     if (this->isHidden()) {
@@ -200,6 +207,8 @@ bool BuilderWidget::dunClicked(const QPoint &cellClick, bool first)
     const QPoint cell = this->lastPos;
     int value, v;
     switch (this->mode) {
+    case BEM_SELECT:
+        return false;
     case BEM_TILE:
         value = this->currentTileIndex; // this->ui->tileLineEdit->text().toInt();
         if (value == this->dun->getTileAt(cell.x(), cell.y())) {
@@ -356,7 +365,7 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
     QList<QGraphicsItem *> items = scene->items();
     QGraphicsPixmapItem *overlay;
 
-    int overlayType = this->isHidden() ? -1 : this->mode;
+    int overlayType = this->getOverlayType();
     if (this->overlayType != overlayType || items.size() < 2 || forceRedraw) {
         this->overlayType = overlayType;
         QImage image;
@@ -581,6 +590,9 @@ void BuilderWidget::on_builderModeComboBox_activated(int index)
     int prevMode = this->mode;
     QWidget *layout;
     switch (prevMode) {
+    case BEM_SELECT:
+        layout = nullptr;
+        break;
     case BEM_TILE:
         layout = this->ui->tileModeWidget;
         break;
@@ -600,9 +612,14 @@ void BuilderWidget::on_builderModeComboBox_activated(int index)
         layout = this->ui->monsterModeWidget;
         break;
     }
-    layout->setVisible(false);
+    if (layout != nullptr) {
+        layout->setVisible(false);
+    }
     this->mode = index;
     switch (this->mode) {
+    case BEM_SELECT:
+        layout = nullptr;
+        break;
     case BEM_TILE:
         layout = this->ui->tileModeWidget;
         break;
@@ -622,7 +639,9 @@ void BuilderWidget::on_builderModeComboBox_activated(int index)
         layout = this->ui->monsterModeWidget;
         break;
     }
-    layout->setVisible(true);
+    if (layout != nullptr) {
+        layout->setVisible(true);
+    }
 
     this->adjustSize(); // not sure why this is necessary...
     this->resetPos();

@@ -10,6 +10,7 @@
 #include <QFontMetrics>
 #include <QMessageBox>
 
+#include "builderwidget.h"
 #include "config.h"
 #include "d1cel.h"
 #include "d1cl2.h"
@@ -1819,6 +1820,105 @@ bool D1Dun::setSubtileObjProtectionAt(int posx, int posy, bool protection)
     this->subtileProtections[posy][posx] = (this->subtileProtections[posy][posx] & ~2) | (protection ? 2 : 0);
     this->modified = true;
     return true;
+}
+
+bool D1Dun::swapPositions(int mode, int posx0, int posy0, int posx1, int posy1)
+{
+    if (posx0 < 0 || posx0 >= this->width) {
+        return false;
+    }
+    if (posx1 < 0 || posx1 >= this->width) {
+        return false;
+    }
+    if (posy0 < 0 || posy0 >= this->height) {
+        return false;
+    }
+    if (posy1 < 0 || posy1 >= this->height) {
+        return false;
+    }
+    if (mode == -1) {
+        posx0 &= ~1;
+        posy0 &= ~1;
+        posx1 &= ~1;
+        posy1 &= ~1;
+    }
+    if (posx0 == posx1 && posy0 == posy1) {
+        return false;
+    }
+    bool change = false;
+    if (mode == -1 || mode == BEM_TILE) {
+        int tile0 = this->getTileAt(posx0, posy0);
+        int tile1 = this->getTileAt(posx1, posy1);
+        change |= this->setTileAt(posx0, posy0, tile1);
+        change |= this->setTileAt(posx1, posy1, tile0);
+    }
+    if (mode == -1 || mode == BEM_TILE_PROTECTION) {
+        Qt::CheckState tile0 = this->getTileProtectionAt(posx0, posy0);
+        Qt::CheckState tile1 = this->getTileProtectionAt(posx1, posy1);
+        change |= this->setTileProtectionAt(posx0, posy0, tile1);
+        change |= this->setTileProtectionAt(posx1, posy1, tile0);
+    }
+    if (/*mode == -1 ||*/ mode == BEM_SUBTILE) {
+        int subtile0 = this->getSubtileAt(posx0, posy0);
+        int subtile1 = this->getSubtileAt(posx1, posy1);
+        change |= this->setSubtileAt(posx0, posy0, subtile1);
+        change |= this->setSubtileAt(posx1, posy1, subtile0);
+    }
+    if (mode == -1 || mode == BEM_SUBTILE_PROTECTION) {
+        for (int dy = 0; dy < (mode == -1 ? TILE_HEIGHT : 1); dy++) {
+            for (int dx = 0; dx < (mode == -1 ? TILE_WIDTH : 1); dx++) {
+                bool objProtection0 = this->getSubtileObjProtectionAt(posx0 + dx, posy0 + dy);
+                bool objProtection1 = this->getSubtileObjProtectionAt(posx1 + dx, posy1 + dy);
+                change |= this->setSubtileObjProtectionAt(posx0 + dx, posy0 + dy, objProtection1);
+                change |= this->setSubtileObjProtectionAt(posx1 + dx, posy1 + dy, objProtection0);
+                bool monProtection0 = this->getSubtileMonProtectionAt(posx0 + dx, posy0 + dy);
+                bool monProtection1 = this->getSubtileMonProtectionAt(posx1 + dx, posy1 + dy);
+                change |= this->setSubtileMonProtectionAt(posx0 + dx, posy0 + dy, monProtection1);
+                change |= this->setSubtileMonProtectionAt(posx1 + dx, posy1 + dy, monProtection0);
+            }
+        }
+    }
+    if (mode == -1 || mode == BEM_MONSTER) {
+        for (int dy = 0; dy < (mode == -1 ? TILE_HEIGHT : 1); dy++) {
+            for (int dx = 0; dx < (mode == -1 ? TILE_WIDTH : 1); dx++) {
+                DunMonsterType monType0 = this->getMonsterAt(posx0 + dx, posy0 + dy);
+                DunMonsterType monType1 = this->getMonsterAt(posx1 + dx, posy1 + dy);
+                change |= this->setMonsterAt(posx0 + dx, posy0 + dy, monType1);
+                change |= this->setMonsterAt(posx1 + dx, posy1 + dy, monType0);
+            }
+        }
+    }
+    if (mode == -1 || mode == BEM_OBJECT) {
+        for (int dy = 0; dy < (mode == -1 ? TILE_HEIGHT : 1); dy++) {
+            for (int dx = 0; dx < (mode == -1 ? TILE_WIDTH : 1); dx++) {
+                int objectIndex0 = this->getObjectAt(posx0 + dx, posy0 + dy);
+                int objectIndex1 = this->getObjectAt(posx1 + dx, posy1 + dy);
+                change |= this->setObjectAt(posx0 + dx, posy0 + dy, objectIndex1);
+                change |= this->setObjectAt(posx1 + dx, posy1 + dy, objectIndex0);
+            }
+        }
+    }
+    if (mode == -1) {
+        for (int dy = 0; dy < (mode == -1 ? TILE_HEIGHT : 1); dy++) {
+            for (int dx = 0; dx < (mode == -1 ? TILE_WIDTH : 1); dx++) {
+                int itemIndex0 = this->getItemAt(posx0 + dx, posy0 + dy);
+                int itemIndex1 = this->getItemAt(posx1 + dx, posy1 + dy);
+                change |= this->setItemAt(posx0 + dx, posy0 + dy, itemIndex1);
+                change |= this->setItemAt(posx1 + dx, posy1 + dy, itemIndex0);
+            }
+        }
+    }
+    if (mode == -1) {
+        for (int dy = 0; dy < (mode == -1 ? TILE_HEIGHT : 1); dy++) {
+            for (int dx = 0; dx < (mode == -1 ? TILE_WIDTH : 1); dx++) {
+                int roomIndex0 = this->getRoomAt(posx0 + dx, posy0 + dy);
+                int roomIndex1 = this->getRoomAt(posx1 + dx, posy1 + dy);
+                change |= this->setRoomAt(posx0 + dx, posy0 + dy, roomIndex1);
+                change |= this->setRoomAt(posx1 + dx, posy1 + dy, roomIndex0);
+            }
+        }
+    }
+    return change;
 }
 
 int D1Dun::getLevelType() const

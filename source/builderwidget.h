@@ -12,6 +12,7 @@
 #include "d1dun.h"
 
 typedef enum builder_edit_mode {
+    BEM_SELECT,
     BEM_TILE,
     BEM_TILE_PROTECTION,
     BEM_SUBTILE,
@@ -67,6 +68,8 @@ public:
 
     void show(); // override;
     void hide(); // override;
+
+    int getOverlayType() const;
 
 private:
     void resetPos();

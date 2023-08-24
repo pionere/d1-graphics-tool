@@ -71,6 +71,11 @@
       <widget class="QComboBox" name="builderModeComboBox">
        <item>
         <property name="text">
+         <string>Select position</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Tile</string>
         </property>
        </item>
