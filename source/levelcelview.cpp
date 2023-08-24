@@ -1808,6 +1808,7 @@ void LevelCelView::reportUsage() const
 
     bool hasFrame = this->gfx->getFrameCount() > this->currentFrameIndex;
     if (hasFrame) {
+        // collect users of the current frame
         std::vector<int> frameUsers;
         this->collectFrameUsers(this->currentFrameIndex, frameUsers);
 
@@ -1829,6 +1830,7 @@ void LevelCelView::reportUsage() const
 
     bool hasSubtile = this->min->getSubtileCount() > this->currentSubtileIndex;
     if (hasSubtile) {
+        // collect users of the current subtile
         std::vector<int> subtileUsers;
         this->collectSubtileUsers(this->currentSubtileIndex, subtileUsers);
 
@@ -1841,6 +1843,49 @@ void LevelCelView::reportUsage() const
             }
             subtileUses.chop(2);
             dProgress() << tr("Subtile %1 is used by tile %2.", "", subtileUsers.size()).arg(this->currentSubtileIndex + 1).arg(subtileUses);
+        }
+
+        dProgress() << "\n";
+
+        // collect users of the special frame(s)
+        int specType = this->spt->getSubtileSpecProperty(this->currentSubtileIndex);
+        if (specType != 0) {
+            if (specType < 0) {
+                // collect users of any special frame
+                std::map<int, std::vector<int>> specUsers;
+                for (int i = 0; i < this->min->getSubtileCount(); i++) {
+                    specType = this->spt->getSubtileSpecProperty(i);
+                    if (specType > 0) {
+                        specUsers[specType].push_back(i);
+                    }
+                }
+                if (specUsers.empty()) {
+                    dProgress() << tr("No valid special frame use in the tileset.");
+                } else {
+                    for (auto it = specUsers.cbegin(); it != specUsers.end(); it++) {
+                        QString specUses;
+                        for (int user : it->second) {
+                            specUses += QString::number(user + 1) + ", ";
+                        }
+                        subtileUses.chop(2);
+                        dProgress() << tr("Special-Frame %1 is used by subtile %2.", "", it->second.size()).arg(it->first).arg(specUses);
+                    }
+                }
+            } else {
+                // collect users of the 'current' special frame
+                std::vector<int> specUsers;
+                for (int i = 0; i < this->min->getSubtileCount(); i++) {
+                    if (this->spt->getSubtileSpecProperty(i) == specType) {
+                        specUsers.push_back(i);
+                    }
+                }
+                QString specUses;
+                for (int user : specUsers) {
+                    specUses += QString::number(user + 1) + ", ";
+                }
+                subtileUses.chop(2);
+                dProgress() << tr("Special-Frame %1 is used by subtile %2.", "", specUsers.size()).arg(specType).arg(specUses);
+            }
         }
     }
 
