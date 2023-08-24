@@ -138,6 +138,7 @@ public:
     D1GfxFrame *replaceFrame(int frameIndex, const QImage &image);
     void removeFrame(int frameIndex);
     void remapFrames(const std::map<unsigned, unsigned> &remap);
+    void swapFrames(unsigned frameIndex0, unsigned frameIndex1);
 
     D1CEL_TYPE getType() const;
     void setType(D1CEL_TYPE type);
