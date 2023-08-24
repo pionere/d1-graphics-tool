@@ -325,12 +325,12 @@ int D1Gfx::duplicateFrame(int idx, bool wholeGroup)
                 break;
             }
         }
-        for (unsigned n = this->groupFrameIndices[i].first; n < this->groupFrameIndices[i].second; n++) {
+        for (int n = this->groupFrameIndices[i].first; n <= this->groupFrameIndices[i].second; n++) {
             D1GfxFrame *frame = this->frames[n];
             frame = new D1GfxFrame(*frame);
             this->frames.push_back(frame);
         }
-        firstIdx = this->groupFrameIndices.back().second;
+        firstIdx = this->groupFrameIndices.back().second + 1;
         resIdx = firstIdx + idx - this->groupFrameIndices[i].first;
         lastIdx = this->frames.count() - 1;
     } else {

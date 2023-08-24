@@ -274,7 +274,7 @@ int D1Tileset::duplicateSubtile(int subtileIndex, bool deepCopy)
             if (frameRef == 0) {
                 continue;
             }
-            newFrameReferences[i] = this->gfx->duplicateFrame(frameRef - 1) + 1;
+            newFrameReferences[i] = this->gfx->duplicateFrame(frameRef - 1, false) + 1;
         }
     }
     return newSubtileIndex;
