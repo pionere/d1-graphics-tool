@@ -49,6 +49,8 @@ bool D1Tileset::loadCls(const QString &clsFilePath, const OpenAsParam &params)
         return D1Cel::load(*this->cls, clsFilePath, params);
     }
 
+    // fake D1CEL_TYPE to trigger clipped mode
+    this->cls->setType(D1CEL_TYPE::V2_MONO_GROUP);
     this->cls->setFilePath(clsFilePath);
     this->cls->setModified(false);
     return params.clsFilePath.isEmpty();
@@ -251,6 +253,166 @@ void D1Tileset::remapSubtiles(const std::map<unsigned, unsigned> &remap)
     this->spt->remapSubtiles(remap);
     this->tmi->remapSubtiles(remap);
     this->smp->remapSubtiles(remap);
+}
+
+void D1Tileset::swapFrames(unsigned frameIndex0, unsigned frameIndex1)
+{
+    this->gfx->swapFrames(frameIndex0, frameIndex1);
+    // D1Min::swapFrames
+    const unsigned numFrames = this->gfx->getFrameCount();
+    if (frameIndex0 >= numFrames) {
+        // move frameIndex1 to the front
+        if (frameIndex1 == 0 || frameIndex1 >= numFrames) {
+            return;
+        }
+        for (int i = 0; i < this->min->getSubtileCount(); i++) {
+            std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
+            for (unsigned n = 0; n < frameRefs.size(); n++) {
+                if (frameRefs[n] == frameIndex1 + 1) {
+                    frameRefs[n] = 1;
+                } else if (frameRefs[n] < frameIndex1 + 1 && frameRefs[n] != 0) {
+                    frameRefs[n] = frameRefs[n] + 1;
+                } else {
+                    continue;
+                }
+                this->min->setModified();
+            }
+        }
+    } else if (frameIndex1 >= numFrames) {
+        // move frameIndex0 to the end
+        if (frameIndex0 == numFrames - 1) {
+            return;
+        }
+        for (int i = 0; i < this->min->getSubtileCount(); i++) {
+            std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
+            for (unsigned n = 0; n < frameRefs.size(); n++) {
+                if (frameRefs[n] == frameIndex0 + 1) {
+                    frameRefs[n] = numFrames;
+                } else if (frameRefs[n] > frameIndex0 + 1) {
+                    frameRefs[n] = frameRefs[n] - 1;
+                } else {
+                    continue;
+                }
+                this->min->setModified();
+            }
+        }
+    } else {
+        // swap frameIndex0 and frameIndex1
+        if (frameIndex0 == frameIndex1) {
+            return;
+        }
+        for (int i = 0; i < this->min->getSubtileCount(); i++) {
+            std::vector<unsigned> &frameRefs = this->min->getFrameReferences(i);
+            for (unsigned n = 0; n < frameRefs.size(); n++) {
+                if (frameRefs[n] == frameIndex0 + 1) {
+                    frameRefs[n] = frameIndex1 + 1;
+                } else if (frameRefs[n] == frameIndex1 + 1) {
+                    frameRefs[n] = frameIndex0 + 1;
+                } else {
+                    continue;
+                }
+                this->min->setModified();
+            }
+        }
+    }
+}
+
+void D1Tileset::swapSubtiles(unsigned subtileIndex0, unsigned subtileIndex1)
+{
+    std::map<unsigned, unsigned> remap;
+    const int numSubtiles = this->sol->getSubtileCount();
+    if (subtileIndex0 >= numSubtiles) {
+        // move subtileIndex1 to the front
+        if (subtileIndex1 == 0 || subtileIndex1 >= numSubtiles) {
+            return;
+        }
+        for (unsigned i = 0; i < subtileIndex1; i++) {
+            remap[i] = i + 1;
+        }
+        remap[subtileIndex1] = 0;
+        for (unsigned i = subtileIndex1 + 1; i < numSubtiles; i++) {
+            remap[i] = i;
+        }
+    } else if (subtileIndex1 >= numSubtiles) {
+        // move subtileIndex0 to the end
+        if (subtileIndex0 == numSubtiles - 1) {
+            return;
+        }
+        for (unsigned i = 0; i < subtileIndex0; i++) {
+            remap[i] = i;
+        }
+        remap[subtileIndex0] = numSubtiles - 1;
+        for (unsigned i = subtileIndex0 + 1; i < numSubtiles; i++) {
+            remap[i] = i - 1;
+        }
+    } else {
+        // swap subtileIndex0 and subtileIndex1
+        if (subtileIndex0 == subtileIndex1) {
+            return;
+        }
+        for (unsigned i = 0; i < numSubtiles; i++) {
+            remap[i] = i;
+        }
+        remap[subtileIndex0] = subtileIndex1;
+        remap[subtileIndex1] = subtileIndex0;
+    }
+
+    this->remapSubtiles(remap);
+}
+
+void D1Tileset::swapTiles(unsigned tileIndex0, unsigned tileIndex1)
+{
+    const unsigned numTiles = this->til->getTileCount();
+    if (tileIndex0 >= numTiles) {
+        // move tileIndex1 to the front
+        if (tileIndex1 == 0 || tileIndex1 >= numTiles) {
+            return;
+        }
+        for (unsigned i = tileIndex1; i > 0; i--) {
+            // D1Til::swapTiles
+            std::vector<int> &subtiles0 = this->til->getSubtileIndices(i);
+            std::vector<int> &subtiles1 = this->til->getSubtileIndices(i - 1);
+            subtiles0.swap(subtiles1);
+            this->til->setModified();
+            // D1Tla::swapTiles
+            quint8 properties0 = this->tla->getTileProperties(i);
+            quint8 properties1 = this->tla->getTileProperties(i - 1);
+            this->tla->setTileProperties(i, properties1);
+            this->tla->setTileProperties(i - 1, properties0);
+        }
+    } else if (tileIndex1 >= numTiles) {
+        // move tileIndex0 to the end
+        // if (tileIndex0 == numTiles - 1) {
+        //    return;
+        // }
+        for (unsigned i = tileIndex0; i < numTiles - 1; i++) {
+            // D1Til::swapTiles
+            std::vector<int> &subtiles0 = this->til->getSubtileIndices(i);
+            std::vector<int> &subtiles1 = this->til->getSubtileIndices(i + 1);
+            subtiles0.swap(subtiles1);
+            this->til->setModified();
+            // D1Tla::swapTiles
+            quint8 properties0 = this->tla->getTileProperties(i);
+            quint8 properties1 = this->tla->getTileProperties(i + 1);
+            this->tla->setTileProperties(i, properties1);
+            this->tla->setTileProperties(i + 1, properties0);
+        }
+    } else {
+        // swap tileIndex0 and tileIndex1
+        if (tileIndex0 == tileIndex1) {
+            return;
+        }
+        // D1Til::swapTiles
+        std::vector<int> &subtiles0 = this->til->getSubtileIndices(tileIndex0);
+        std::vector<int> &subtiles1 = this->til->getSubtileIndices(tileIndex1);
+        subtiles0.swap(subtiles1);
+        this->til->setModified();
+        // D1Tla::swapTiles
+        quint8 properties0 = this->tla->getTileProperties(tileIndex0);
+        quint8 properties1 = this->tla->getTileProperties(tileIndex1);
+        this->tla->setTileProperties(tileIndex0, properties1);
+        this->tla->setTileProperties(tileIndex1, properties0);
+    }
 }
 
 bool D1Tileset::reuseFrames(std::set<int> &removedIndices, bool silent)
@@ -2849,7 +3011,7 @@ bool D1Tileset::patchCathedralFloor(bool silent)
                 }
             }
         }
-        if (i == 27) { // add missing pixels after DRLP_L1_PatchSpec to 417[4] using 231[4]
+        if (i == 27) { // 417[4] - add missing pixels after DRLP_L1_PatchSpec using 231[4]
             const CelMicro &microSrc = micros[i - 1]; // 231[4]
             std::pair<unsigned, D1GfxFrame *> mf = this->getFrame(microSrc.subtileIndex, blockSize, microSrc.microIndex);
             D1GfxFrame *frameSrc = mf.second;

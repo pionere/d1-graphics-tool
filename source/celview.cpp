@@ -836,8 +836,18 @@ void CelView::on_framesGroupCheckBox_clicked()
 void CelView::on_firstFrameButton_clicked()
 {
     int nextFrameIndex = 0;
+    const bool moveFrame = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
     if (this->ui->framesGroupCheckBox->isChecked() && this->gfx->getGroupCount() != 0) {
         nextFrameIndex = this->gfx->getGroupFrameIndices(this->currentGroupIndex).first;
+        if (moveFrame) {
+            for (int i = this->currentFrameIndex; i > nextFrameIndex; i--) {
+                this->gfx->swapFrames(i, i - 1);
+            }
+        }
+    } else {
+        if (moveFrame) {
+            this->gfx->swapFrames(UINT_MAX, this->currentFrameIndex);
+        }
     }
     this->setFrameIndex(nextFrameIndex);
 }
@@ -845,8 +855,12 @@ void CelView::on_firstFrameButton_clicked()
 void CelView::on_previousFrameButton_clicked()
 {
     int nextFrameIndex = this->currentFrameIndex - 1;
+    const bool moveFrame = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
     if (this->ui->framesGroupCheckBox->isChecked() && this->gfx->getGroupCount() != 0) {
         nextFrameIndex = std::max(nextFrameIndex, this->gfx->getGroupFrameIndices(this->currentGroupIndex).first);
+    }
+    if (moveFrame) {
+        this->gfx->swapFrames(nextFrameIndex, this->currentFrameIndex);
     }
     this->setFrameIndex(nextFrameIndex);
 }
@@ -854,8 +868,12 @@ void CelView::on_previousFrameButton_clicked()
 void CelView::on_nextFrameButton_clicked()
 {
     int nextFrameIndex = this->currentFrameIndex + 1;
+    const bool moveFrame = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
     if (this->ui->framesGroupCheckBox->isChecked() && this->gfx->getGroupCount() != 0) {
         nextFrameIndex = std::min(nextFrameIndex, this->gfx->getGroupFrameIndices(this->currentGroupIndex).second);
+    }
+    if (moveFrame) {
+        this->gfx->swapFrames(this->currentFrameIndex, nextFrameIndex);
     }
     this->setFrameIndex(nextFrameIndex);
 }
@@ -863,8 +881,18 @@ void CelView::on_nextFrameButton_clicked()
 void CelView::on_lastFrameButton_clicked()
 {
     int nextFrameIndex = this->gfx->getFrameCount() - 1;
+    const bool moveFrame = QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier;
     if (this->ui->framesGroupCheckBox->isChecked() && this->gfx->getGroupCount() != 0) {
         nextFrameIndex = this->gfx->getGroupFrameIndices(this->currentGroupIndex).second;
+        if (moveFrame) {
+            for (int i = this->currentFrameIndex; i < nextFrameIndex; i++) {
+                this->gfx->swapFrames(i, i + 1);
+            }
+        }
+    } else {
+        if (moveFrame) {
+            this->gfx->swapFrames(this->currentFrameIndex, UINT_MAX);
+        }
     }
     this->setFrameIndex(nextFrameIndex);
 }

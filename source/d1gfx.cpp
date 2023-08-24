@@ -346,6 +346,35 @@ void D1Gfx::remapFrames(const std::map<unsigned, unsigned> &remap)
     this->modified = true;
 }
 
+void D1Gfx::swapFrames(unsigned frameIndex0, unsigned frameIndex1)
+{
+	const unsigned numFrames = this->frames.count();
+    if (frameIndex0 >= numFrames) {
+        // move frameIndex1 to the front
+        if (frameIndex1 == 0 || frameIndex1 >= numFrames) {
+            return;
+        }
+        D1GfxFrame *tmp = this->frames.takeAt(frameIndex1);
+        this->frames.push_front(tmp);
+    } else if (frameIndex1 >= numFrames) {
+        // move frameIndex0 to the end
+        if (frameIndex0 == numFrames - 1) {
+            return;
+        }
+        D1GfxFrame *tmp = this->frames.takeAt(frameIndex0);
+        this->frames.push_back(tmp);
+    } else {
+        // swap frameIndex0 and frameIndex1
+        if (frameIndex0 == frameIndex1) {
+            return;
+        }
+        D1GfxFrame *tmp = this->frames[frameIndex0];
+        this->frames[frameIndex0] = this->frames[frameIndex1];
+        this->frames[frameIndex1] = tmp;
+    }
+    this->modified = true;
+}
+
 D1CEL_TYPE D1Gfx::getType() const
 {
     return this->type;
