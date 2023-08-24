@@ -159,6 +159,11 @@ void BuilderWidget::hide()
     QFrame::hide();
 }
 
+int BuilderWidget::getOverlayType() const
+{
+    return this->isHidden() ? -1 : this->mode;
+}
+
 bool BuilderWidget::dunClicked(const QPoint &cellClick, bool first)
 {
     if (this->isHidden()) {
@@ -356,7 +361,7 @@ void BuilderWidget::redrawOverlay(bool forceRedraw)
     QList<QGraphicsItem *> items = scene->items();
     QGraphicsPixmapItem *overlay;
 
-    int overlayType = this->isHidden() ? -1 : this->mode;
+    int overlayType = this->getOverlayType();
     if (this->overlayType != overlayType || items.size() < 2 || forceRedraw) {
         this->overlayType = overlayType;
         QImage image;

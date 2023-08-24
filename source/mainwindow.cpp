@@ -346,6 +346,12 @@ void MainWindow::dunHovered(const QPoint &cell)
     this->builderWidget->dunHovered(cell);
 }
 
+void MainWindow::dunSwap(int posx0, int posy0, int posx1, int posy1)
+{
+    int mode = this->builderWidget == nullptr ? -1 : this->builderWidget->getOverlayType();
+    this->dun->swapPositions(mode, posx0, posy0, posx1, posy1);
+}
+
 void MainWindow::frameModified(D1GfxFrame *frame)
 {
     if (this->gfxset != nullptr) {

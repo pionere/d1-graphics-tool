@@ -165,6 +165,7 @@ public:
     bool setSubtileObjProtectionAt(int posx, int posy, bool protection);
     bool getSubtileMonProtectionAt(int posx, int posy) const;
     bool setSubtileMonProtectionAt(int posx, int posy, bool protection);
+    void swapPositions(int mode, int posx0, int posy0, int posx1, int posy1);
 
     int getLevelType() const;
     bool setLevelType(int levelType);

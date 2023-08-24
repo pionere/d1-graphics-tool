@@ -348,7 +348,7 @@ void D1Gfx::remapFrames(const std::map<unsigned, unsigned> &remap)
 
 void D1Gfx::swapFrames(unsigned frameIndex0, unsigned frameIndex1)
 {
-	const unsigned numFrames = this->frames.count();
+    const unsigned numFrames = this->frames.count();
     if (frameIndex0 >= numFrames) {
         // move frameIndex1 to the front
         if (frameIndex1 == 0 || frameIndex1 >= numFrames) {

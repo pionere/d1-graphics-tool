@@ -10,6 +10,7 @@
 #include <QFontMetrics>
 #include <QMessageBox>
 
+#include "builderwidget.h"
 #include "config.h"
 #include "d1cel.h"
 #include "d1cl2.h"
@@ -1835,6 +1836,62 @@ bool D1Dun::setSubtileObjProtectionAt(int posx, int posy, bool protection)
     this->subtileProtections[posy][posx] = (this->subtileProtections[posy][posx] & ~2) | (protection ? 2 : 0);
     this->modified = true;
     return true;
+}
+
+void D1Dun::swapPositions(int mode, int posx0, int posy0, int posx1, int posy1)
+{
+    if (posx0 < 0 || posx0 >= this->width) {
+        return;
+    }
+    if (posx1 < 0 || posx1 >= this->width) {
+        return;
+    }
+    if (posy0 < 0 || posy0 >= this->height) {
+        return;
+    }
+    if (posy1 < 0 || posy1 >= this->height) {
+        return;
+    }
+    if (mode == -1 || mode == BEM_TILE) {
+        int tmp = this->tiles[posy0 / TILE_HEIGHT][posx0 / TILE_WIDTH];
+        this->tiles[posy0 / TILE_HEIGHT][posx0 / TILE_WIDTH] = this->tiles[posy1 / TILE_HEIGHT][posx1 / TILE_WIDTH];
+        this->tiles[posy1 / TILE_HEIGHT][posx1 / TILE_WIDTH] = tmp;
+    }
+    if (mode == -1 || mode == BEM_TILE_PROTECTION) {
+        Qt::CheckState tmp = this->tileProtections[posy0 / TILE_HEIGHT][posx0 / TILE_WIDTH];
+        this->tileProtections[posy0 / TILE_HEIGHT][posx0 / TILE_WIDTH] = this->tileProtections[posy1 / TILE_HEIGHT][posx1 / TILE_WIDTH];
+        this->tileProtections[posy1 / TILE_HEIGHT][posx1 / TILE_WIDTH] = tmp;
+    }
+    if (mode == -1 || mode == BEM_SUBTILE) {
+        int tmp = this->subtiles[posy0][posx0];
+        this->subtiles[posy0][posx0] = this->subtiles[posy1][posx1];
+        this->subtiles[posy1][posx1] = tmp;
+    }
+    if (mode == -1 || mode == BEM_SUBTILE_PROTECTION) {
+        int tmp = this->subtileProtections[posy0][posx0];
+        this->subtileProtections[posy0][posx0] = this->subtileProtections[posy1][posx1];
+        this->subtileProtections[posy1][posx1] = tmp;
+    }
+    if (mode == -1 || mode == BEM_MONSTER) {
+        DunMonsterType tmp = this->monsters[posy0][posx0];
+        this->monsters[posy0][posx0] = this->monsters[posy1][posx1];
+        this->monsters[posy1][posx1] = tmp;
+    }
+    if (mode == -1 || mode == BEM_OBJECT) {
+        int tmp = this->objects[posy0][posx0];
+        this->objects[posy0][posx0] = this->objects[posy1][posx1];
+        this->objects[posy1][posx1] = tmp;
+    }
+    if (mode == -1) {
+        int tmp = this->items[posy0][posx0];
+        this->items[posy0][posx0] = this->items[posy1][posx1];
+        this->items[posy1][posx1] = tmp;
+    }
+    if (mode == -1) {
+        int tmp = this->rooms[posy0][posx0];
+        this->rooms[posy0][posx0] = this->rooms[posy1][posx1];
+        this->rooms[posy1][posx1] = tmp;
+    }
 }
 
 int D1Dun::getLevelType() const

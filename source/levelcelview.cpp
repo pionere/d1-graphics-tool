@@ -3823,21 +3823,33 @@ void LevelCelView::setPosition(int posx, int posy)
 
 void LevelCelView::on_moveLeftButton_clicked()
 {
+    if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
+        dMainWindow().dunSwap(this->currentDunPosX - 1, this->currentDunPosY, this->currentDunPosX, this->currentDunPosY);
+    }
     this->setPosition(this->currentDunPosX - 1, this->currentDunPosY);
 }
 
 void LevelCelView::on_moveRightButton_clicked()
 {
+    if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
+        dMainWindow().dunSwap(this->currentDunPosX, this->currentDunPosY, this->currentDunPosX + 1, this->currentDunPosY);
+    }
     this->setPosition(this->currentDunPosX + 1, this->currentDunPosY);
 }
 
 void LevelCelView::on_moveUpButton_clicked()
 {
+    if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
+        dMainWindow().dunSwap(this->currentDunPosX, this->currentDunPosY - 1, this->currentDunPosX, this->currentDunPosY);
+    }
     this->setPosition(this->currentDunPosX, this->currentDunPosY - 1);
 }
 
 void LevelCelView::on_moveDownButton_clicked()
 {
+    if (QGuiApplication::queryKeyboardModifiers() & Qt::ShiftModifier) {
+        dMainWindow().dunSwap(this->currentDunPosX, this->currentDunPosY, this->currentDunPosX, this->currentDunPosY + 1);
+    }
     this->setPosition(this->currentDunPosX, this->currentDunPosY + 1);
 }
 
