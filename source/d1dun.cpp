@@ -1929,8 +1929,8 @@ bool D1Dun::swapPositions(int mode, int posx0, int posy0, int posx1, int posy1)
             for (int dx = 0; dx < (mode == -1 ? TILE_WIDTH : 1); dx++) {
                 int roomIndex0 = this->getRoomAt(posx0 + dx, posy0 + dy);
                 int roomIndex1 = this->getRoomAt(posx1 + dx, posy1 + dy);
-                change |= this->setRoomAt(posx0 + dx, posy0 + dy, itemIndex1);
-                change |= this->setRoomAt(posx1 + dx, posy1 + dy, itemIndex0);
+                change |= this->setRoomAt(posx0 + dx, posy0 + dy, roomIndex1);
+                change |= this->setRoomAt(posx1 + dx, posy1 + dy, roomIndex0);
             }
         }
     }

@@ -320,7 +320,7 @@ void D1Tileset::swapFrames(unsigned frameIndex0, unsigned frameIndex1)
 void D1Tileset::swapSubtiles(unsigned subtileIndex0, unsigned subtileIndex1)
 {
     std::map<unsigned, unsigned> remap;
-    const int numSubtiles = this->sol->getSubtileCount();
+    const unsigned numSubtiles = this->sol->getSubtileCount();
     if (subtileIndex0 >= numSubtiles) {
         // move subtileIndex1 to the front
         if (subtileIndex1 == 0 || subtileIndex1 >= numSubtiles) {
