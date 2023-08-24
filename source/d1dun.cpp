@@ -4094,47 +4094,6 @@ void D1Dun::patch(int dunFileIndex)
         }
         break;
     case DUN_SKELKING_AFT: // SklKng1.DUN
-        /*// add chests
-        // - room via crux
-        change |= this->changeObjectAt(17, 10, 78);
-        change |= this->changeObjectAt(29, 10, 78);
-        // - back room
-        change |= this->changeObjectAt(3, 31, 78);
-        change |= this->changeObjectAt(3, 36, 78);
-        change |= this->changeObjectAt(3, 34, 81);
-        // - room via lever
-        change |= this->changeObjectAt(41, 17, 81);*/
-        /*// replace monsters from SklKng2.DUN
-        // - back room
-        change |= this->changeMonsterAt(6, 32, 27, false);
-        change |= this->changeMonsterAt(6, 33, 22, false);
-        change |= this->changeMonsterAt(6, 34, 22, false);
-        change |= this->changeMonsterAt(6, 35, 27, false);
-        change |= this->changeMonsterAt(8, 32, 27, false);
-        change |= this->changeMonsterAt(8, 33, 27, false);
-        change |= this->changeMonsterAt(8, 34, 27, false);
-        change |= this->changeMonsterAt(8, 35, 27, false);
-        change |= this->changeMonsterAt(10, 33, 11, false);
-        change |= this->changeMonsterAt(10, 34, 11, false);
-        change |= this->changeMonsterAt(12, 33, 11, false);
-        change |= this->changeMonsterAt(12, 34, 11, false);
-        // - room via crux
-        change |= this->changeMonsterAt(19, 9, 24, false);
-        // - central room
-        change |= this->changeMonsterAt(12, 20, 24, false);
-        change |= this->changeMonsterAt(18, 25, 23, false);
-        change |= this->changeMonsterAt(18, 30, 27, false);
-        change |= this->changeMonsterAt(18, 32, 27, false);
-        change |= this->changeMonsterAt(33, 41, 23, false);
-        change |= this->changeMonsterAt(39, 31, 11, false);*/
-        /*// fix corners (L1)
-        for (int y = 0; y < 25; y++) {
-            for (int x = 0; x < 37; x++) {
-                int currTileRef = this->tiles[y][x];
-                if (currTileRef >= 18 && currTileRef <= 24)
-                    change |= this->changeTileAt(x, y, currTileRef + 181);
-            }
-        }*/
         // external tiles
         for (int y = 0; y < 25; y++) {
             for (int x = 0; x < 37; x++) {
@@ -4156,6 +4115,12 @@ void D1Dun::patch(int dunFileIndex)
         // use common tiles
         change |= this->changeTileAt(7, 14, 84);
         // use the new shadows
+        change |= this->changeTileAt( 9,  3, 139);
+        change |= this->changeTileAt( 9,  4, 139);
+        change |= this->changeTileAt( 9,  5, 126);
+        change |= this->changeTileAt(12,  3, 139);
+        change |= this->changeTileAt(12,  4, 139);
+        change |= this->changeTileAt(12,  5, 127);
         change |= this->changeTileAt( 4, 15, 150);
         change |= this->changeTileAt( 6, 16, 150);
         change |= this->changeTileAt(15, 17, 159);

@@ -213,10 +213,18 @@ void InitLvlDungeon()
 		pTiles[131][1] = pTiles[140][1];
 		pTiles[131][2] = pTiles[140][2];
 		pTiles[131][3] = pTiles[140][3];
-		pTiles[132][0] = pTiles[139][0];
-		pTiles[132][1] = pTiles[139][1];
+		pTiles[132][0] = pTiles[140][0];
+		pTiles[132][1] = pTiles[140][1];
 		pTiles[132][2] = pTiles[139][2];
 		pTiles[132][3] = pTiles[139][3];
+		pTiles[126][0] = pTiles[139][0];
+		pTiles[126][1] = pTiles[139][1];
+		pTiles[126][2] = pTiles[139][2];
+		pTiles[126][3] = pTiles[139][3];
+		pTiles[127][0] = pTiles[140][0];
+		pTiles[127][1] = pTiles[140][1];
+		pTiles[127][2] = pTiles[140][2];
+		pTiles[127][3] = pTiles[140][3];
 		pTiles[145][0] = pTiles[147][0];
 		pTiles[145][1] = pTiles[147][1];
 		pTiles[145][2] = pTiles[147][2];
@@ -539,6 +547,14 @@ void InitLvlDungeon()
 		pTiles[23][2] = 31;
 		break;
 	case DTYPE_CRYPT:
+		// revert 'patched' L5.SPT
+		for (int i = 0; i < lengthof(nSpecTrapTable); i++) {
+			if ((nSpecTrapTable[i] & PST_SPEC_TYPE) <= 2) {
+				continue;
+			}
+			nSpecTrapTable[i] &= PST_TRAP_TYPE;
+			// microFlags[i] |= TMIF_WALL_TRANS | TMIF_LEFT_REDRAW | TMIF_RIGHT_REDRAW;
+		}
 		// patch dSolidTable - L5.SOL
 		// make collision-checks more reasonable
 		//  - fix inconsistent subtile on the right side of down-stairs
