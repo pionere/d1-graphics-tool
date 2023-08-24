@@ -3368,6 +3368,12 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
     frameMenu.addAction(&actions[cursor]);
 
     cursor++;
+    actions[cursor].setText(tr("Duplicate"));
+    actions[cursor].setToolTip(tr("Duplicate the current frame"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDuplicate_Frame_triggered()));
+    frameMenu.addAction(&actions[cursor]);
+
+    cursor++;
     actions[cursor].setText(tr("Append"));
     actions[cursor].setToolTip(tr("Append new frames at the end"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAdd_Frame_triggered()));
@@ -3403,6 +3409,12 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
     actions[cursor].setToolTip(tr("Add new subtiles before the current one"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionInsert_Subtile_triggered()));
     subtileMenu.addAction(&actions[cursor]);
+
+    cursor++;
+    actions[cursor].setText(tr("Duplicate"));
+    actions[cursor].setToolTip(tr("Duplicate the current subtile"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDuplicate_Subtile_triggered()));
+    frameMenu.addAction(&actions[cursor]);
 
     cursor++;
     actions[cursor].setText(tr("Append"));
@@ -3441,6 +3453,12 @@ void LevelCelView::ShowContextMenu(const QPoint &pos)
     actions[cursor].setToolTip(tr("Add new tiles before the current one"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionInsert_Tile_triggered()));
     tileMenu.addAction(&actions[cursor]);
+
+    cursor++;
+    actions[cursor].setText(tr("Duplicate"));
+    actions[cursor].setToolTip(tr("Duplicate the current tile"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDuplicate_Tile_triggered()));
+    frameMenu.addAction(&actions[cursor]);
 
     cursor++;
     actions[cursor].setText(tr("Append"));

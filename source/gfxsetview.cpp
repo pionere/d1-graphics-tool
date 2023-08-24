@@ -860,6 +860,12 @@ void GfxsetView::ShowContextMenu(const QPoint &pos)
     contextMenu.addAction(&actions[cursor]);
 
     cursor++;
+    actions[cursor].setText(tr("Duplicate Frame"));
+    actions[cursor].setToolTip(tr("Duplicate the current frame"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDuplicate_Frame_triggered()));
+    contextMenu.addAction(&actions[cursor]);
+
+    cursor++;
     actions[cursor].setText(tr("Append Frame"));
     actions[cursor].setToolTip(tr("Append new frames at the end"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionAdd_Frame_triggered()));
