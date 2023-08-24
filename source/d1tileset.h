@@ -97,4 +97,5 @@ private:
     void maskCryptBlacks(bool silent);
     void fixCryptShadows(bool silent);
     void cleanupCrypt(std::set<unsigned> &deletedFrames, bool silent);
+    void patchCryptSpec(bool silent);
 };
