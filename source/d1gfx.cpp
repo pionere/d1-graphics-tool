@@ -1417,7 +1417,7 @@ bool D1Gfx::patchSplIcons(bool silent)
         return false;
     }
     for (int i = 0; i < 8; i++) {
-        this->removeFrame(lastIdx);
+        this->removeFrame(lastIdx, false);
     }
     if (!silent) {
         dProgress() << QApplication::tr("Removed the last 8 frames.");

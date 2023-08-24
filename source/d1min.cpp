@@ -500,7 +500,7 @@ bool D1Min::setFrameReference(int subtileIndex, int index, unsigned frameRef)
 void D1Min::removeFrame(int frameIndex, int replacement)
 {
     // remove the frame
-    this->gfx->removeFrame(frameIndex);
+    this->gfx->removeFrame(frameIndex, false);
     // shift references
     // - shift frame indices of the subtiles
     unsigned refIndex = frameIndex + 1;

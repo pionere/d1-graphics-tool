@@ -365,7 +365,7 @@ void CelView::insertFrame(IMAGE_FILE_MODE mode, int index, const QString &imagef
         bool palMod;
         D1GfxFrame *frame = this->gfx->insertFrame(index);
         if (!D1Pcx::load(*frame, imagefilePath, frame->isClipped(), this->pal, this->gfx->getPalette(), &palMod)) {
-            this->gfx->removeFrame(index);
+            this->gfx->removeFrame(index, false);
             this->gfx->setModified(wasModified);
             QString msg = tr("Failed to load file: %1.").arg(QDir::toNativeSeparators(imagefilePath));
             if (mode != IMAGE_FILE_MODE::AUTO) {
