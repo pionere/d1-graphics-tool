@@ -253,8 +253,8 @@ int D1Tileset::duplicateSubtile(int subtileIndex, bool deepCopy)
 
     int newSubtileIndex = this->min->getSubtileCount() - 1;
     // D1Min::duplicate
-    std::vector<int> &baseFrameReferences = this->min->getFrameReferences(subtileIndex);
-    std::vector<int> &newFrameReferences = this->min->getFrameReferences(newSubtileIndex);
+    std::vector<unsigned> &baseFrameReferences = this->min->getFrameReferences(subtileIndex);
+    std::vector<unsigned> &newFrameReferences = this->min->getFrameReferences(newSubtileIndex);
     newFrameReferences = baseFrameReferences;
     // D1Sol::duplicate
     this->sol->setSubtileProperties(newSubtileIndex, this->sol->getSubtileProperties(subtileIndex));
@@ -269,7 +269,11 @@ int D1Tileset::duplicateSubtile(int subtileIndex, bool deepCopy)
 
     if (deepCopy) {
         for (unsigned i = 0; i < newFrameReferences.size(); i++) {
-            newFrameReferences[i] = this->gfx->duplicateFrame(newFrameReferences[i]);
+            int frameRef = newFrameReferences[i];
+            if (frameRef == 0) {
+                continue;
+            }
+            newFrameReferences[i] = this->gfx->duplicateFrame(frameRef - 1) + 1;
         }
     }
 }
