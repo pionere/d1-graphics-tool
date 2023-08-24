@@ -303,6 +303,45 @@ D1GfxFrame *D1Gfx::replaceFrame(int idx, const QImage &image)
     return this->frames[idx];
 }
 
+int D1Gfx::duplicateFrame(int idx, bool wholeGroup)
+{
+    const bool multiGroup = this->type == D1CEL_TYPE::V1_COMPILATION || this->type == D1CEL_TYPE::V2_MULTIPLE_GROUPS;
+    int firstIdx, lastIdx, resIdx;
+    if (wholeGroup && multiGroup) {
+        unsigned i = 0;
+        for ( ; i < this->groupFrameIndices.size(); i++) {
+            if (/*this->groupFrameIndices[i].first <= idx &&*/ this->groupFrameIndices[i].second >= idx) {
+                break;
+            }
+        }
+        for (int n = this->groupFrameIndices[i].first; n <= this->groupFrameIndices[i].second; n++) {
+            D1GfxFrame *frame = this->frames[n];
+            frame = new D1GfxFrame(*frame);
+            this->frames.push_back(frame);
+        }
+        firstIdx = this->groupFrameIndices.back().second + 1;
+        resIdx = firstIdx + idx - this->groupFrameIndices[i].first;
+        lastIdx = this->frames.count() - 1;
+    } else {
+        D1GfxFrame *frame = this->frames[idx];
+        frame = new D1GfxFrame(*frame);
+        this->frames.push_back(frame);
+
+        firstIdx = lastIdx = resIdx = this->frames.count() - 1;
+    }
+    if (multiGroup) {
+        this->groupFrameIndices.push_back(std::pair<int, int>(firstIdx, lastIdx));
+    } else {
+        if (this->groupFrameIndices.empty()) {
+            this->groupFrameIndices.push_back(std::pair<int, int>(resIdx, resIdx));
+        } else {
+            this->groupFrameIndices.back().second = resIdx;
+        }
+    }
+
+    return resIdx;
+}
+
 void D1Gfx::removeFrame(int idx)
 {
     delete this->frames[idx];

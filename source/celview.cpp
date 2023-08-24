@@ -440,6 +440,15 @@ void CelView::addToCurrentFrame(const QString &imagefilePath)
     // this->displayFrame();
 }
 
+void CelView::duplicateCurrentFrame(bool wholeGroup)
+{
+    this->currentFrameIndex = this->gfx->duplicateFrame(this->currentFrameIndex, wholeGroup);
+
+    this->updateGroupIndex();
+    // update the view
+    this->updateFields();
+}
+
 void CelView::replaceCurrentFrame(const QString &imagefilePath)
 {
     if (imagefilePath.toLower().endsWith(".pcx")) {
@@ -802,6 +811,12 @@ void CelView::ShowContextMenu(const QPoint &pos)
     actions[cursor].setText(tr("Insert Frame"));
     actions[cursor].setToolTip(tr("Add new frames before the current one"));
     QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionInsert_Frame_triggered()));
+    contextMenu.addAction(&actions[cursor]);
+
+    cursor++;
+    actions[cursor].setText(tr("Duplicate Frame"));
+    actions[cursor].setToolTip(tr("Duplicate the current frame"));
+    QObject::connect(&actions[cursor], SIGNAL(triggered()), mw, SLOT(on_actionDuplicate_Frame_triggered()));
     contextMenu.addAction(&actions[cursor]);
 
     cursor++;
